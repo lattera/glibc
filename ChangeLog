@@ -1,5 +1,13 @@
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* timezone/antarctica: Update from tzdata2000a.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+
 	* nscd/connections.c (dbs): Use
 	PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP for .lock.
 	Pretty printing.

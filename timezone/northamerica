@@ -1,4 +1,4 @@
-# @(#)northamerica	7.49
+# @(#)northamerica	7.50
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
@@ -952,6 +952,14 @@ Zone America/Dawson_Creek -8:00:56 -	LMT	1884
 # their senses", but the locals evidently don't see any problem with
 # the current state of affairs.
 
+# From Michaela Rodrigue, writing in the
+# <a href="http://www.nunatsiaq.com/archives/nunavut991130/nvt91119_17.html">
+# Nunatsiaq News (1999-11-19)</a>:
+# Clyde River, Pangnirtung and Sanikiluaq now operate with two time zones,
+# central - or Nunavut time - for government offices, and eastern time
+# for municipal offices and schools....  Igloolik [was similar but then]
+# made the switch to central time on Saturday, Nov. 6.
+
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	NT_YK	1918	only	-	Apr	14	2:00	1:00	D
 Rule	NT_YK	1918	only	-	Oct	27	2:00	0	S
@@ -1079,6 +1087,12 @@ Zone America/Dawson	-9:17:40 -	LMT	1900 Aug 20
 # The State of Quintana Roo has reverted back to central STD and DST times
 # (i.e. UTC -0600 and -0500 as of 1998-08-02).
 
+# From Rives McDow (2000-01-10):
+# Effective April 4, 1999 at 2:00 AM local time, Sonora changed to the time
+# zone 5 hours from the International Date Line, and will not observe daylight
+# savings time so as to stay on the same time zone as the southern part of
+# Arizona year round.
+
 # From Shanks:
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Mexico	1939	only	-	Feb	5	0:00	1:00	D
@@ -1120,7 +1134,19 @@ Zone America/Chihuahua	-7:04:20 -	LMT	1921 Dec 31 23:55:40
 			-6:00	Mexico	C%sT	1998
 			-6:00	-	CST	1998 Apr Sun>=1 3:00
 			-7:00	Mexico	M%sT
-# S Baja California, Nayarit, Sinaloa, Sonora
+# Sonora
+Zone America/Hermosillo	-7:23:52 -	LMT	1921 Dec 31 23:36:08
+			-7:00	-	MST	1927 Jun 10 23:00
+			-6:00	-	CST	1930 Nov 15
+			-7:00	-	MST	1931 May  1 23:00
+			-6:00	-	CST	1931 Oct
+			-7:00	-	MST	1932 Mar 30 23:00
+			-6:00	-	CST	1942 Apr
+			-7:00	-	MST	1949 Jan 14
+			-8:00	-	PST	1970
+			-7:00	Mexico	M%sT	1999
+			-7:00	-	MST
+# S Baja California, Nayarit, Sinaloa
 Zone America/Mazatlan	-7:05:40 -	LMT	1921 Dec 31 23:54:20
 			-7:00	-	MST	1927 Jun 10 23:00
 			-6:00	-	CST	1930 Nov 15
@@ -1261,7 +1287,7 @@ Rule	Cuba	1996	only	-	Oct	 6	0:00s	0	S
 Rule	Cuba	1997	only	-	Oct	12	0:00s	0	S
 Rule	Cuba	1998	1999	-	Mar	lastSun	0:00s	1:00	D
 Rule	Cuba	1998	max	-	Oct	lastSun	0:00s	0	S
-Rule	Cuba	2000	max	-	Apr	 1	0:00s	1:00	D
+Rule	Cuba	2000	max	-	Apr	Sun>=1	0:00s	1:00	D
 
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	America/Havana	-5:29:28 -	LMT	1890

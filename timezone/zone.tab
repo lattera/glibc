@@ -1,4 +1,4 @@
-# @(#)zone.tab	1.17
+# @(#)zone.tab	1.18
 #
 # TZ zone descriptions
 #
@@ -234,7 +234,8 @@ MK	+4159+02126	Europe/Skopje
 ML	+1239-00800	Africa/Bamako	southwest Mali
 ML	+1446-00301	Africa/Timbuktu	northeast Mali
 MM	+1647+09610	Asia/Rangoon
-MN	+4755+10653	Asia/Ulan_Bator
+MN	+4755+10653	Asia/Ulaanbaatar	most locations
+MN	+4801+09139	Asia/Hovd	Bayan-Olgiy, Hovd, Uvs
 MO	+2214+11335	Asia/Macao
 MP	+1512+14545	Pacific/Saipan
 MQ	+1436-06105	America/Martinique
@@ -246,8 +247,9 @@ MV	+0410+07330	Indian/Maldives
 MW	-1547+03500	Africa/Blantyre
 MX	+1924-09909	America/Mexico_City	Central Time - most locations
 MX	+2105-08646	America/Cancun	Central Time - Quintana Roo
-MX	+2313-10625	America/Mazatlan	Mountain Time - most locations
+MX	+2313-10625	America/Mazatlan	Mountain Time - S Baja, Nayarit, Sinaloa
 MX	+2838-10605	America/Chihuahua	Mountain Time - Chihuahua
+MX	+2904-11058	America/Hermosillo	Mountain Standard Time - Sonora
 MX	+3232-11701	America/Tijuana	Pacific Time
 MY	+0310+10142	Asia/Kuala_Lumpur	peninsular Malaysia
 MY	+0133+11020	Asia/Kuching	Sabah & Sarawak

@@ -1,4 +1,4 @@
-# @(#)asia	7.50
+# @(#)asia	7.51
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -84,8 +84,7 @@ Zone	Asia/Kabul	4:36:48 -	LMT	1890
 # <edd@AIC.NET> reported (1996-05-04) that Yerevan probably wouldn't use DST
 # in 1996, though it did use DST in 1995.  IATA SSIM (1991/1998) reports that
 # Armenia switched from 3:00 to 4:00 in 1998 and observed DST after 1991,
-# but started switching at 3:00s in 1998.  IATA SSIM (1999-02) reports
-# that they switch one day later in 2001 (i.e. on Mondays).
+# but started switching at 3:00s in 1998.
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Yerevan	2:58:00 -	LMT	1924 May  2
 			3:00	-	YERT	1957 Mar    # Yerevan Time
@@ -235,8 +234,7 @@ Rule	HK	1979	1980	-	May	Sun>=8	3:30	1:00	S
 Rule	HK	1979	1980	-	Oct	Sun>=16	3:30	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Hong_Kong	7:36:36 -	LMT	1904 Oct 30
-			8:00	HK	HK%sT	1997 Jul  1 # return to China
-			8:00	PRC	C%sT
+			8:00	HK	HK%sT
 
 
 ###############################################################################
@@ -853,31 +851,62 @@ Zone	Indian/Maldives	4:54:00 -	LMT	1880	# Male
 			5:00	-	MVT		# Maldives Time
 
 # Mongolia
+
 # Shanks says that Mongolia has three time zones, but usno1995 and the CIA map
 # Standard Time Zones of the World (1997-01)
 # both say that it has just one.
-# Let's comment out the western and eastern Mongolian time zones
-# till we know what their principal towns are.
+
+# From Oscar van Vlijmen (1999-12-11):
+# <a href="http://www.mongoliatourism.gov.mn/general.htm">
+# General Information Mongolia
+# </a> (1999-09)
+# "Time: Mongolia has two time zones. Three westernmost provinces of
+# Bayan-Ulgii, Uvs, and Hovd are one hour earlier than the capital city, and
+# the rest of the country follows the Ulaanbaatar time, which is UTC/GMT plus
+# eight hours."
+
+# From Rives McDow (1999-12-13):
+# Mongolia discontinued the use of daylight savings time in 1999; 1998
+# being the last year it was implemented.  The dates of implementation I am
+# unsure of, but most probably it was similar to Russia, except for the time
+# of implementation may have been different....
+# Some maps in the past have indicated that there was an additional time
+# zone in the eastern part of Mongolia, including the provinces of Dornod,
+# Suhbaatar, and possibly Khentij.
+
+# From Paul Eggert (1999-12-15):
+# For now, we'll comment out the east zone (Choybalsan)
+# and use Shanks's and the IATA's data for the daylight-saving rules.
+# Naming and spelling is tricky in Mongolia.
+# We'll use Hovd (also spelled Chovd and Khovd) to represent the west zone;
+# the capital of the Hovd province is sometimes called Hovd, sometimes Dund-Us,
+# and sometimes Jirgalanta (with variant spellings), but the name Hovd
+# is good enough for our purposes.
+
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Mongol	1981	1984	-	Apr	1	0:00	1:00	S
 Rule	Mongol	1981	1984	-	Oct	1	0:00	0	-
 Rule	Mongol	1985	1990	-	Mar	lastSun	2:00	1:00	S
 Rule	Mongol	1985	1990	-	Sep	lastSun	3:00	0	-
-Rule	Mongol	1991	max	-	Mar	lastSun	0:00	1:00	S
+Rule	Mongol	1991	1998	-	Mar	lastSun	0:00	1:00	S
 Rule	Mongol	1991	1995	-	Sep	lastSun	0:00	0	-
 # IATA SSIM (1996-09) says 1996-10-25; go with Shanks.
 Rule	Mongol	1996	only	-	Oct	lastSun	0:00	0	-
-Rule	Mongol	1997	max	-	Sep	lastSun	0:00	0	-
+Rule	Mongol	1997	1998	-	Sep	lastSun	0:00	0	-
+# IATA SSIM (1999-09) says Mongolia no longer observes DST.
+
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-#Zone	Asia/Dariv	6:14:32 -	LMT	1905 Aug
-#			6:00	-	DART	1978	# Dariv Time
-#			7:00	Mongol	DAR%sT
-Zone	Asia/Ulan_Bator	7:07:32 -	LMT	1905 Aug
-			7:00	-	ULAT	1978	# Ulan Bator Time
+Zone	Asia/Hovd	6:06:36 -	LMT	1905 Aug
+			6:00	-	HOVT	1978	# Hovd Time
+			7:00	Mongol	HOV%sT
+Zone	Asia/Ulaanbaatar 7:07:32 -	LMT	1905 Aug
+			7:00	-	ULAT	1978	# Ulaanbaatar Time
 			8:00	Mongol	ULA%sT
-#Zone Asia/Baruun-Urt	7:33:00 -	LMT	1905 Aug
-#			8:00	-	BART	1978	# Baruun-Urt Time
-#			9:00	Mongol	BAR%sT
+# We're not sure about this entry yet, so we'll omit it for now.
+#Zone Asia/Choybalsan	7:38:00 -	LMT	1905 Aug
+#			8:00	-	CHOT	1978	# Choybalsan Time
+#			9:00	Mongol	CHO%sT	19??
+#			8:00	Mongol	ULA%sT
 
 # Nepal
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -1097,7 +1126,8 @@ Rule	Syria	1993	only	-	Mar	26	0:00	1:00	S
 Rule	Syria	1993	only	-	Sep	25	0:00	0	-
 # IATA SSIM (1998-02) says 1998-04-02;
 # (1998-09) says 1999-03-29 and 1999-09-29; (1999-02) says 1999-04-02,
-# 2000-04-02, and 2001-04-02; ignore all these claims and go with Shanks.
+# 2000-04-02, and 2001-04-02; (1999-09) says 2000-03-31 and 2001-03-31;
+# ignore all these claims and go with Shanks.
 Rule	Syria	1994	1996	-	Apr	 1	0:00	1:00	S
 Rule	Syria	1994	max	-	Oct	 1	0:00	0	-
 Rule	Syria	1997	1998	-	Mar	lastMon	0:00	1:00	S

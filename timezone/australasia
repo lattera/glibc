@@ -1,4 +1,4 @@
-# @(#)australasia	7.53
+# @(#)australasia	7.54
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -177,9 +177,6 @@ Zone Australia/Lord_Howe 10:36:20 -	LMT	1895 Feb
 # The Australian Bureau of Meteorology FAQ
 # </a> (1999-09-27) writes that Macquarie Island follows Tasmanian practice
 # irrespective of any local use of DST.  This is unclear; ignore it for now.
-#
-# Manihiki, Penrhyn, Rakehanga
-# no information
 
 # Christmas
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -348,7 +345,7 @@ Zone	Pacific/Norfolk	11:11:52 -	LMT	1901		# Kingston
 			11:12	-	NMT	1951	# Norfolk Mean Time
 			11:30	-	NFT		# Norfolk Time
 
-# Palau
+# Palau (Belau)
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Pacific/Palau	8:57:56 -	LMT	1901		# Koror
 			9:00	-	PWT	# Palau Time
@@ -854,8 +851,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 
 ###############################################################################
 
-# New Zealand, from Elz' asia 1.1
-# Elz says "no guarantees"
+# New Zealand
 
 # From Mark Davies (1990-10-03):
 # the 1989/90 year was a trial of an extended "daylight saving" period.
@@ -896,6 +892,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 
 ###############################################################################
 
+
 # Fiji
 
 # Howse writes (p 153) that in 1879 the British governor of Fiji
@@ -907,6 +904,9 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # until 0300 local time 1999-02-28.  Each year the DST period will 
 # be from the first Sunday in November until the last Sunday in February.
 
+# From Paul Eggert (2000-01-08):
+# IATA SSIM (1999-09) says DST ends 0100 local time.  Go with McDow.
+
 # From the BBC World Service (1998-10-31 11:32 UTC):
 # The Fijiian government says the main reasons for the time change is to
 # improve productivity and reduce road accidents.  But correspondents say it
@@ -914,9 +914,11 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # islands in the effort to attract tourists to witness the dawning of the new
 # millenium.
 
+
 # Johnston
 
 # Johnston data is from usno1995.
+
 
 # Kiribati
 
@@ -924,6 +926,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # Today's _Wall Street Journal_ (page 1) reports that Kiribati
 # ``declared it the same day throught the country as of Jan. 1, 1995''
 # as part of the competition to be first into the 21st century.
+
 
 # Kwajalein
 
@@ -933,12 +936,14 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # respect to the International Date Line, to rejoin its fellow islands,
 # going from 11:59 p.m. Thursday to 12:00 m. Saturday in a blink.
 
+
 # N Mariana Is, Guam
 
 # Howse writes (p 153) ``The Spaniards, on the other hand, reached the
 # Philippines and the Ladrones from America,'' and implies that the Ladrones
 # (now called the Marianas) kept American date for quite some time.
 # Ignore this for now, as we have no hard data.  See also Asia/Manila.
+
 
 # Micronesia
 
@@ -956,6 +961,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # </a> (1999-01-26)
 # that Truk and Yap are UTC+10, and Ponape and Kosrae are UTC+11.
 # We don't know when Kosrae switched from UTC+12; assume January 1 for now.
+
 
 # Pitcairn
 
@@ -980,6 +986,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # Pacific Standard Time. They used to be 1/2 hour different from us here in
 # Sacramento but it was changed a couple of years ago.
 
+
 # Samoa
 
 # Howse writes (p 153, citing p 10 of the 1883-11-18 New York Herald)
@@ -987,6 +994,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # ``the date in his kingdom from the Antipodean to the American system,
 # ordaining -- by a masterpiece of diplomatic flattery -- that
 # the Fourth of July should be celebrated twice in that year.''
+
 
 # Tonga
 
@@ -1057,3 +1065,31 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # From Rives McDow (1999-10-06):
 # Tonga started its Daylight Saving on Saturday morning October 2nd at 0200am.
 # Daylight Saving ends on April 16 at 0300am which is Sunday morning.
+
+
+###############################################################################
+
+# The International Date Line
+
+# From Gwillim Law (2000-01-03):
+# 
+# The International Date Line is not defined by any international standard,
+# convention, or treaty.  Mapmakers are free to draw it as they please.
+# Reputable mapmakers will simply ensure that every point of land appears on
+# the correct side of the IDL, according to the date legally observed there.
+#
+# When Kiribati adopted a uniform date in 1995, thereby moving the Phoenix and
+# Line Islands to the west side of the IDL (or, if you prefer, moving the IDL
+# to the east side of the Phoenix and Line Islands), I suppose that most
+# mapmakers redrew the IDL following the boundary of Kiribati.  Even that line
+# has a rather arbitrary nature.  The straight-line boundaries between Pacific
+# island nations that are shown on many maps are based on an international
+# convention, but are not legally binding national borders.
+#
+# An Anglo-French Conference on Time-Keeping at Sea (June, 1917) agreed that
+# legal time on the high seas would be zone time, i.e., the standard time at
+# the nearest meridian that is a multiple of fifteen degrees.  The date is
+# governed by the IDL; therefore, even on the high seas, there may be some
+# places as late as fourteen hours later than UTC.  And, since the IDL is not
+# an international standard, there are some places on the high seas where the
+# correct date is ambiguous.
