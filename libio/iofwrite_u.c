@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996-2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,3 +51,4 @@ fwrite_unlocked (buf, size, count, fp)
 
   return written / size;
 }
+libc_hidden_def (fwrite_unlocked)

@@ -1,4 +1,52 @@
+2002-08-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* manual/debug.texi: Fix spelling to programmatically.
+	Reported by <hayastan132@hotmail.com>.
+
 2002-08-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/libio.h: Add libc_hidden_proto for __uflow.
+	* include/stdio.h: Map fopen, fdopen, fclose, fputs, fsetpos, and
+	fgetpos to _IO_* names.
+	Add libc_hidden_proto for fileno, fwrite, fseek, fflush_unlocked,
+	fread_unlocked, fwrite_unlocked, fgets_unlocked, fputs_unlocked.
+	* include/wchar.h: Add libc_hidden_proto for fputws_unlocked,
+	putwc_unlocked, vswscanf.
+	* libio/iolibio.h: Add libc_hidden_proto for _IO_fputs.
+	* libio/fileno.c: Use <stdio.h> and libc_hidden_def.
+	* libio/fseek.c: Likewise.
+	* libio/fmemopen.c: Include "libioP.h".  Call _IO_fopencookie and
+	not fopencookie.
+	* libio/genops.c (__uflow): Add libc_hidden_def.
+	* libio/iofflush_u.c (fflush_unlocked): Likewise.
+	* libio/iofgets_u.c (fgets_unlocked): Likewise.
+	* libio/iofputs_u.c (fputs_unlocked): Likewise.
+	* libio/iofputws_u.c (fputws_unlocked): Likewise.
+	* libio/iofread_u.c (fread_unlocked): Likewise.
+	* libio/iofwrite_u.c (fwrite_unlocked): Likewise.
+	* libio/iovswscanf.c (vswscanf): Likewise.
+	* libio/putwc_u.c (putwc_unlocked): Likewise.
+	* libio/iofputs.c: Use libc_hidden_def instead of INTDEF.
+	* malloc/malloc.c: Redirect fwrite calls to _IO_fwrite.
+	* malloc/mtrace.c: Likewise.
+
+	* sunrpc/clnt_perr.c: Remove fputs macro.
+	* sunrpc/svc_simple.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_ref.c: Likewise.
+
+	* iconv/Makefile: Add CPPFLAGS definitions with -DNOT_in_libc for
+	iconv_prog, linereader, and charmap-dir.
+	* locale/Makefile: Likewise for locale and charmap-dir.
+	* malloc/Makefile: Likewise for memusagestat.
+	* nscd/Makefile: Likewise for nscd, nscd_conf, and dbg_log.
+	* sunrpc/Makefile: Likewise for rpc_main.
+	* sysdeps/unix/sysv/linux/Makefile: Likewise for lddlibc4.
+	* timezone/Makefile: Likewise for zic.
+
+	* stdio-common/perror.c: Avoid multiple calls to fileno_unlocked.
 
 	* elf/dl-addr.c (_dl_addr): Add libc_hidden_def.
 	* elf/dl-close.c (_dl_close): Add libc_hidden_def.

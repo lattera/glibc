@@ -1,5 +1,5 @@
 /* Fmemopen implementation.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by  Hanno Mueller, kontakt@hanno.de, 2000.
 
@@ -75,6 +75,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
+#include "libioP.h"
+
 
 typedef struct fmemopen_cookie_struct fmemopen_cookie_t;
 struct fmemopen_cookie_struct
@@ -237,5 +239,5 @@ fmemopen (void *buf, size_t len, const char *mode)
   iof.seek = fmemopen_seek;
   iof.close = fmemopen_close;
 
-  return fopencookie (c, mode, iof);
+  return _IO_fopencookie (c, mode, iof);
 }

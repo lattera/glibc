@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993,1997,1998,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1997,1998,2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,8 +65,8 @@ perror (const char *s)
      oriented yet?  In this case we'll create a new stream which is
      using the same underlying file descriptor.  */
   if (__builtin_expect (_IO_fwide (stderr, 0) != 0, 1)
-      || fileno_unlocked (stderr) == -1
-      || (fd = __dup (fileno_unlocked (stderr))) == -1
+      || (fd = fileno (stderr)) == -1
+      || (fd = __dup (fd)) == -1
       || (fp = fdopen (fd, "w+")) == NULL)
     {
       if (__builtin_expect (fd != -1, 0))

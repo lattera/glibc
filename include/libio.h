@@ -5,6 +5,7 @@
 
 libc_hidden_proto (__overflow)
 libc_hidden_proto (__underflow)
+libc_hidden_proto (__uflow)
 libc_hidden_proto (__woverflow)
 libc_hidden_proto (__wunderflow)
 libc_hidden_proto (__wuflow)

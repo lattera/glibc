@@ -62,9 +62,7 @@ extern void __funlockfile (FILE *__stream);
 extern int __ftrylockfile (FILE *__stream);
 
 extern int __getc_unlocked (FILE *__fp);
-#  ifdef USE_IN_LIBIO
 extern wint_t __getwc_unlocked (FILE *__fp);
-#  endif
 
 
 extern __const char *__const _sys_errlist_internal[] attribute_hidden;
@@ -76,7 +74,30 @@ extern int __asprintf_internal (char **__restrict __ptr,
 #  ifndef NOT_IN_libc
 #    define __asprintf(ptr, fmt, args...) \
   INTUSE(__asprintf) (ptr, fmt, ##args)
+
+extern _IO_FILE *_IO_new_fopen __P((const char*, const char*));
+#   define fopen(fname, mode) _IO_new_fopen (fname, mode)
+extern _IO_FILE *_IO_new_fdopen __P((int, const char*));
+#   define fdopen(fd, mode) _IO_new_fdopen (fd, mode)
+extern int _IO_new_fclose __P((_IO_FILE*));
+#   define fclose(fp) _IO_new_fclose (fp)
+extern int _IO_fputs __P((const char*, _IO_FILE*));
+libc_hidden_proto (_IO_fputs)
+#   define fputs(str, fp) _IO_fputs (str, fp)
+extern int _IO_new_fsetpos __P ((_IO_FILE *, const _IO_fpos_t *));
+#   define fsetpos(fp, posp) _IO_new_fsetpos (fp, posp)
+extern int _IO_new_fgetpos __P ((_IO_FILE *, _IO_fpos_t *));
+#   define fgetpos(fp, posp) _IO_new_fgetpos (fp, posp)
 #  endif
+
+libc_hidden_proto (fileno)
+libc_hidden_proto (fwrite)
+libc_hidden_proto (fseek)
+libc_hidden_proto (fflush_unlocked)
+libc_hidden_proto (fread_unlocked)
+libc_hidden_proto (fwrite_unlocked)
+libc_hidden_proto (fgets_unlocked)
+libc_hidden_proto (fputs_unlocked)
 
 # endif
 

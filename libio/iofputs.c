@@ -45,7 +45,7 @@ _IO_fputs (str, fp)
   _IO_cleanup_region_end (0);
   return result;
 }
-INTDEF(_IO_fputs)
+libc_hidden_def (_IO_fputs)
 
 #ifdef weak_alias
 weak_alias (_IO_fputs, fputs)

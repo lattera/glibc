@@ -110,4 +110,6 @@ endif
 
 ifeq ($(subdir),elf)
 sysdep-rtld-routines += dl-brk dl-sbrk
+
+CPPFLAGS-lddlibc4 += -DNOT_IN_libc
 endif

@@ -121,6 +121,7 @@ ifeq (yes,$(have_doors))
 CPPFLAGS-key_call.c += -DHAVE_DOORS=1
 endif
 CPPFLAGS += -D_RPC_THREAD_SAFE_
+CPPFLAGS-rpc_main += -DNOT_IN_libc
 
 include ../Rules
 

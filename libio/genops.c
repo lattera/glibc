@@ -383,11 +383,12 @@ __uflow (fp)
     INTUSE(_IO_free_backup_area) (fp);
   return _IO_UFLOW (fp);
 }
+libc_hidden_def (__uflow)
 
 void
 _IO_setb (f, b, eb, a)
      _IO_FILE *f;
-      char *b;
+     char *b;
      char *eb;
      int a;
 {

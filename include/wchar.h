@@ -14,6 +14,11 @@ libc_hidden_proto (__wcstoull_internal)
 libc_hidden_proto (__wcscasecmp_l)
 libc_hidden_proto (__wcsncasecmp_l)
 
+libc_hidden_proto (fputws_unlocked)
+libc_hidden_proto (putwc_unlocked)
+
+libc_hidden_proto (vswscanf)
+
 
 /* Now define the internal interfaces.  */
 extern int __wcscasecmp (__const wchar_t *__s1, __const wchar_t *__s2)

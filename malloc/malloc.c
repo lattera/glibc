@@ -490,6 +490,8 @@ Void_t *(*__morecore)(ptrdiff_t) = __default_morecore;
 
 #ifndef _LIBC
 #define __builtin_expect(expr, val)	(expr)
+
+#define fwrite(buf, size, count, fp) _IO_fwrite (buf, size, count, fp)
 #endif
 
 /*

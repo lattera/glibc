@@ -53,6 +53,9 @@ distribute := nscd.h nscd-client.h dbg_log.h \
 
 include ../Rules
 
+CPPFLAGS-nscd = -DNOT_IN_libc
+CPPFLAGS-nscd_conf = -DNOT_IN_libc
+CPPFLAGS-dbg_log = -DNOT_IN_libc
 CPPFLAGS-connections = -DNOT_IN_libc
 CPPFLAGS-hstcache = -DNOT_IN_libc
 

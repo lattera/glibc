@@ -45,3 +45,4 @@ fread_unlocked (buf, size, count, fp)
   bytes_read = INTUSE(_IO_sgetn) (fp, (char *) buf, bytes_requested);
   return bytes_requested == bytes_read ? count : bytes_read / size;
 }
+libc_hidden_def (fread_unlocked)

@@ -63,10 +63,13 @@ CFLAGS-gconv_cache.c += -DGCONV_DIR='"$(gconvdir)"'
 CFLAGS-gconv_conf.c = -DGCONV_PATH='"$(gconvdir)"'
 CFLAGS-iconvconfig.c = -DGCONV_PATH='"$(gconvdir)"' -DGCONV_DIR='"$(gconvdir)"'
 
+CPPFLAGS-iconv_prog = -DNOT_IN_libc
 CPPFLAGS-iconv_charmap = -DNOT_IN_libc
 CPPFLAGS-iconvconfig = -DNOT_IN_libc
+CPPFLAGS-linereader = -DNOT_IN_libc
 CPPFLAGS-strtab = -DNOT_IN_libc
 CPPFLAGS-charmap = -DNOT_IN_libc
+CPPFLAGS-charmap-dir = -DNOT_IN_libc
 
 include ../Rules
 

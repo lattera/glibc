@@ -40,3 +40,4 @@ fflush_unlocked (fp)
       return _IO_SYNC (fp) ? EOF : 0;
     }
 }
+libc_hidden_def (fflush_unlocked)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
    in files containing the exception.  */
 
 #include "libioP.h"
-#include "stdio.h"
+#include <stdio.h>
 
 int
 fileno (fp)
@@ -42,6 +42,7 @@ fileno (fp)
 
   return _IO_fileno (fp);
 }
+libc_hidden_def (fileno)
 
 #ifdef _IO_MTSAFE_IO
 #ifdef weak_alias

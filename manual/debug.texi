@@ -5,7 +5,7 @@
 
 Applications are usually debugged using dedicated debugger programs.
 But sometimes this is not possible and, in any case, it is useful to
-provide the developer with as much information as possible at the time 
+provide the developer with as much information as possible at the time
 the problems are experienced.  For this reason a few functions are
 provided which a program can use to help the developer more easily
 locate the problem.
@@ -26,7 +26,7 @@ locate the problem.
 A @dfn{backtrace} is a list of the function calls that are currently
 active in a thread.  The usual way to inspect a backtrace of a program
 is to use an external debugger such as gdb.  However, sometimes it is
-useful to obtain a backtrace programatically from within a program,
+useful to obtain a backtrace programmatically from within a program,
 e.g., for the purposes of logging or diagnostics.
 
 The header file @file{execinfo.h} declares three functions that obtain

@@ -59,3 +59,4 @@ fgets_unlocked (buf, n, fp)
   fp->_IO_file_flags |= old_error;
   return result;
 }
+libc_hidden_def (fgets_unlocked)

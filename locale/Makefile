@@ -99,6 +99,7 @@ CFLAGS-charmap.c = -Wno-write-strings -Wno-char-subscripts
 CFLAGS-locfile.c = -Wno-write-strings -Wno-char-subscripts
 CFLAGS-charmap-dir.c = -Wno-write-strings
 
+CPPFLAGS-locale = -DNOT_IN_libc
 CPPFLAGS-localedef = -DNOT_IN_libc
 CPPFLAGS-ld-ctype = -DNOT_IN_libc
 CPPFLAGS-ld-time = -DNOT_IN_libc
@@ -109,6 +110,7 @@ CPPFLAGS-ld-identification = -DNOT_IN_libc
 CPPFLAGS-charmap = -DNOT_IN_libc
 CPPFLAGS-locarchive = -DNOT_IN_libc
 CPPFLAGS-linereader = -DNOT_IN_libc
+CPPFLAGS-charmap-dir = -DNOT_IN_libc
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by

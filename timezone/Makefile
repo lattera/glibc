@@ -48,6 +48,8 @@ all: # Make this the default target; it will be defined in Rules.
 
 include ../Makeconfig	# Get objpfx defined so we can use it below.
 
+CPPFLAGS-zic = -DNOT_IN_libc
+
 # z.* use this variable.
 define nl
 
