@@ -333,6 +333,7 @@ _dl_allocate_tls_init (void *result)
 
   return result;
 }
+rtld_hidden_def (_dl_allocate_tls_init)
 
 void *
 internal_function

@@ -50,7 +50,7 @@ ld {
     _dl_relocate_object; _dl_signal_error; _dl_start_profile; _dl_starting_up;
     _dl_unload_cache;
     _rtld_global; _dl_tls_symaddr; _dl_allocate_tls; _dl_deallocate_tls;
-    _dl_get_tls_static_info;
+    _dl_get_tls_static_info; _dl_allocate_tls_init;
     _dl_get_origin;
   }
 }

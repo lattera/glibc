@@ -1,5 +1,11 @@
 2002-10-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/ldsodefs.h: Remove attribute_hidden from
+	_dl_allocate_tls_init.  Add rtld_hidden_proto.
+	* sysdeps/generic/dl-tls.c (_dl_allocate_tls_init): Add
+	rtld_hidden_def.
+	* elf/Versions (ld) [GLIBC_PRIVATE]: Add _dl_allocate_tls_init.
+
 	* version.h (VERSION): Bump to 2.3.1.
 
 	* Make-dist: Add back one of the tar invocations removed before.

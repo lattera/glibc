@@ -742,8 +742,8 @@ extern void _dl_get_tls_static_info (size_t *sizep, size_t *alignp)
    only used within rtld.c itself at startup time.  */
 extern void *_dl_allocate_tls_storage (void)
   internal_function attribute_hidden;
-extern void *_dl_allocate_tls_init (void *)
-  internal_function attribute_hidden;
+extern void *_dl_allocate_tls_init (void *) internal_function;
+rtld_hidden_proto (_dl_allocate_tls_init);
 
 /* Deallocate memory allocated with _dl_allocate_tls.  */
 extern void _dl_deallocate_tls (void *tcb, bool dealloc_tcb) internal_function;
