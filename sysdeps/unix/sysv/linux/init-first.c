@@ -27,7 +27,7 @@ extern void __libc_init (int, char **, char **);
 extern void __libc_global_ctors (void);
 
 /* The function is called from assembly stubs the compiler can't see.  */
-static void init (void *) __attribute__ ((unused));
+static void init (int, char **, char **) __attribute__ ((unused));
 
 extern int _dl_starting_up;
 weak_extern (_dl_starting_up)
@@ -40,26 +40,16 @@ int __libc_multiple_libcs = 1;
    later calls of initializers for dynamic libraries.  */
 int __libc_argc;
 char **__libc_argv;
-char **__libc_envp;
 
 
 static void
-init (void *data)
+init (int argc, char **argv, char **envp)
 {
   extern int __personality (int);
-
-  __libc_multiple_libcs = &_dl_starting_up && ! _dl_starting_up;
-
 
   /* We must not call `personality' twice.  */
   if (!__libc_multiple_libcs)
     {
-      /* The argument we got points to the values describing the
-	 command line argument etc.  */
-      __libc_argc = *(int *)data;
-      __libc_argv = (char **)data + 1;
-      __libc_envp = &__libc_argv[__libc_argc + 1];
-
       /* The `personality' system call takes one argument that chooses
 	 the "personality", i.e. the set of system calls and such.  We
 	 must make this call first thing to disable emulation of some
@@ -70,17 +60,13 @@ init (void *data)
       /* Set the FPU control word to the proper default value.  */
       __setfpucw (__fpu_control);
     }
-  else
-    {
-      /* The argument we got points to the values describing the
-	 command line argument etc.  */
-      __libc_argc = *((int *)data)++;
-      __libc_argv = *((char ***)data)++;
-      __libc_envp = *(char ***)data;
-    }
 
-  __environ = __libc_envp;
-  __libc_init (__libc_argc, __libc_argv, __libc_envp);
+  /* Save the command-line arguments.  */
+  __libc_argc = argc;
+  __libc_argv = argv;
+  __environ = envp;
+
+  __libc_init (argc, argv, envp);
 
 #ifdef PIC
   __libc_global_ctors ();

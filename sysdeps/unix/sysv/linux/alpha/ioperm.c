@@ -84,20 +84,21 @@ struct ioswtch {
 static struct platform {
   const char	*name;
   int		io_sys;
+  int		hae_shift;
   unsigned long	bus_memory_base;
   unsigned long	sparse_bus_memory_base;
 } platform[] = {
-  {"Alcor",	IOSYS_CIA,	CIA_DENSE_MEM,		CIA_SPARSE_MEM},
-  {"Avanti",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
-  {"Cabriolet",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
-  {"EB164",	IOSYS_CIA,	CIA_DENSE_MEM,		CIA_SPARSE_MEM},
-  {"EB64+",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
-  {"EB66",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
-  {"EB66P",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
-  {"Jensen",	IOSYS_JENSEN,	0,			JENSEN_SPARSE_MEM},
-  {"Mikasa",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
-  {"Mustang",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
-  {"Noname",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
+  {"Alcor",	IOSYS_CIA,	5, CIA_DENSE_MEM,	CIA_SPARSE_MEM},
+  {"Avanti",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
+  {"Cabriolet",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
+  {"EB164",	IOSYS_CIA,	5, CIA_DENSE_MEM,	CIA_SPARSE_MEM},
+  {"EB64+",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
+  {"EB66",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
+  {"EB66P",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
+  {"Jensen",	IOSYS_JENSEN,	7, 0,			JENSEN_SPARSE_MEM},
+  {"Mikasa",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
+  {"Mustang",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
+  {"Noname",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
 };
 
 
@@ -109,10 +110,10 @@ static struct {
   unsigned long		base;
   struct ioswtch *	swp;
   int			sys;
+  int			hae_shift;
+  unsigned long		bus_memory_base;
+  unsigned long		sparse_bus_memory_base;
 } io;
-
-static unsigned long bus_memory_base = -1;
-static unsigned long sparse_bus_memory_base = -1;
 
 extern void __sethae (unsigned long);	/* we can't use asm/io.h */
 
@@ -335,8 +336,9 @@ init_iosys (void)
     {
       if (strcmp (platform[i].name, systype) == 0)
 	{
-	  bus_memory_base = platform[i].bus_memory_base;
-	  sparse_bus_memory_base = platform[i].sparse_bus_memory_base;
+	  io.hae_shift = platform[i].hae_shift;
+	  io.bus_memory_base = platform[i].bus_memory_base;
+	  io.sparse_bus_memory_base = platform[i].sparse_bus_memory_base;
 	  io.sys = platform[i].io_sys;
 	  if (io.sys == IOSYS_JENSEN)
 	    io.swp = &ioswtch[0];
@@ -500,7 +502,7 @@ _bus_base(void)
 {
   if (!io.swp && init_iosys () < 0)
     return -1;
-  return bus_memory_base;
+  return io.bus_memory_base;
 }
 
 unsigned long
@@ -508,7 +510,15 @@ _bus_base_sparse(void)
 {
   if (!io.swp && init_iosys () < 0)
     return -1;
-  return sparse_bus_memory_base;
+  return io.sparse_bus_memory_base;
+}
+
+int
+_hae_shift(void)
+{
+  if (!io.swp && init_iosys () < 0)
+    return -1;
+  return io.hae_shift;
 }
 
 weak_alias (_sethae, sethae);
@@ -522,3 +532,4 @@ weak_alias (_outw, outw);
 weak_alias (_outl, outl);
 weak_alias (_bus_base, bus_base);
 weak_alias (_bus_base_sparse, bus_base_sparse);
+weak_alias (_hae_shift, hae_shift);

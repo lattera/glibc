@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <math.h>
 
 #ifndef FUNC
@@ -29,11 +28,16 @@ Cambridge, MA 02139, USA.  */
 #define __CONCATX(a,b) __CONCAT(a,b)
 
 float_type
-DEFUN(__CONCATX(__kernel_,FUNC), (x, y, iy),
-      float_type x AND float_type y AND int iy)
+__CONCATX(__kernel_,FUNC) (x, y, iy)
+     float_type x;
+     float_type y;
+     int iy;
 {
-  if (iy == 1)
-    return __CONCATX(__,FUNC) (x + y);
+  float_type tan_x, tan_y;
+  tan_x = __m81_u_(__CONCATX(__,FUNC)) (x);
+  tan_y = __m81_u_(__CONCATX(__,FUNC)) (y);
+  if (iy > 0)
+    return (tan_x + tan_y) / (1 - tan_x * tan_y);
   else
-    return ((float_type) -1.0) / __CONCATX(__,FUNC) (x + y);
+    return (tan_x * tan_y - 1) / (tan_x + tan_y);
 }

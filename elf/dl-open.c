@@ -29,8 +29,8 @@ extern int __libc_multiple_libcs;	/* Defined in init-first.c.  */
 
 extern int __libc_argc;
 extern char **__libc_argv;
-extern char **__libc_envp;
 
+extern char **__environ;
 
 size_t _dl_global_scope_alloc;
 
@@ -142,7 +142,7 @@ _dl_open (const char *file, int mode)
   /* Run the initializer functions of new objects.  */
   while (init = _dl_init_next (new))
     (*(void (*) (int, char **, char **)) init) (__libc_argc, __libc_argv,
-						__libc_envp);
+						__environ);
 
   if (dl_start_ptr == NULL)
     /* We must be the static _dl_open in libc.a because ld.so.1 is not

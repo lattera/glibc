@@ -159,7 +159,7 @@ on the lookup process.  Action items are placed between two service
 names and are written within brackets.  The general form is
 
 @display
-@t{[} ( @t{!}? @var{status} @t{=} @var{action} )+ @t{]}
+@code{[} ( @code{!}? @var{status} @code{=} @var{action} )+ @code{]}
 @end display
 
 @noindent

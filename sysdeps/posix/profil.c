@@ -78,6 +78,15 @@ profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
       return sigaction (SIGPROF, &oact, NULL);
     }
 
+ if (samples)
+    {
+      /* Was already turned on.  Restore old timer and signal handler
+	 first.  */
+      if (setitimer (ITIMER_PROF, &otimer, NULL) < 0
+	  || sigaction (SIGPROF, &oact, NULL) < 0)
+	return -1;
+    }
+
   samples = sample_buffer;
   nsamples = size / sizeof *samples;
   pc_offset = offset;

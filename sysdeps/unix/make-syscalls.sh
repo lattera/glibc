@@ -3,12 +3,11 @@
 # Usage: make-syscalls.sh ../sysdeps unix/common
 # Expects $sysdirs in environment.
 
-sysbase=$1; shift
 thisdir=$1; shift
 
 # Get the list of system calls for this directory.
 calls=`sed 's/#.*$//
-/^[ 	]*$/d' $sysbase/$thisdir/syscalls.list`
+/^[ 	]*$/d' $thisdir/syscalls.list`
 
 # Check each sysdep dir with higher priority than this one,
 # and remove from $calls all the functions found in other dirs.
@@ -21,13 +20,13 @@ for dir in $sysdirs; do
   # If a syscall specified a "caller", then only compile that syscall
   # if the caller function is also implemented in this directory.
   calls=`echo "$calls" | while read file caller rest; do
-	   test -f $sysbase/$dir/$file.c && continue
-	   test -f $sysbase/$dir/$file.S && continue
-	   test -f $sysbase/$dir/$file.s && continue
+	   test -f $dir/$file.c && continue
+	   test -f $dir/$file.S && continue
+	   test -f $dir/$file.s && continue
 	   if test x$caller != x-; then
-	     test -f $sysbase/$dir/$caller.c && continue
-	     test -f $sysbase/$dir/$caller.S && continue
-	     test -f $sysbase/$dir/$caller.s && continue
+	     test -f $dir/$caller.c && continue
+	     test -f $dir/$caller.S && continue
+	     test -f $dir/$caller.s && continue
 	   fi
 	   echo $file $caller $rest
          done`

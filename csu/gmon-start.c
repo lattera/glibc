@@ -40,6 +40,15 @@ void __gmon_start__ (void) __attribute__ ((constructor));
 void
 __gmon_start__ (void)
 {
+#ifdef HAVE_INITFINI
+  /* Protect from being called more than once.  Since crti.o is linked
+     into every shared library, each of their init functions will call us.  */
+  static int called;
+
+  if (called++)
+    return;
+#endif
+
   /* Start keeping profiling records.  */
   monstartup ((u_long) &_start, (u_long) &etext);
 
@@ -47,4 +56,3 @@ __gmon_start__ (void)
      collected data.  */
   atexit (&_mcleanup);
 }
-

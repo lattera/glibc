@@ -26,7 +26,7 @@ endif
 
 # This is the default target; it makes everything except the tests.
 .PHONY: all
-all: lib others
+all: lib extra_solibs others
 
 define autoconf-it
 @-rm -f $@.new
@@ -73,14 +73,13 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 
 
 # These are the targets that are made by making them in each subdirectory.
-+subdir_targets	:= subdir_lib objects objs others subdir_mostlyclean	\
-		   subdir_clean subdir_distclean subdir_realclean	\
-		   tests subdir_lint.out				\
++subdir_targets	:= subdir_lib extra_solibs objects objs others		\
+		   subdir_mostlyclean subdir_clean subdir_distclean	\
+		   subdir_realclean tests subdir_lint.out		\
 		   subdir_distinfo					\
 		   subdir_echo-headers subdir_echo-distinfo		\
-		   subdir_install $(addprefix install-,			\
-					      no-libc.a bin lib		\
-					      data headers others)
+		   subdir_install					\
+		   $(addprefix install-, no-libc.a bin lib data headers others)
 
 headers := errno.h sys/errno.h errnos.h limits.h values.h	\
 	   features.h gnu-versions.h libc-lock.h
@@ -117,9 +116,13 @@ endif
 
 $(objpfx)sysd-dirs: $(+sysdir_pfx)config.make
 	(echo define sysdep-subdirs;					      \
-	 for dir in $(sysdirs); do					      \
-	   if [ -r $(sysdep_dir)/$$dir/Subdirs ]; then			      \
-	     sed 's/#.*$$//' $(sysdep_dir)/$$dir/Subdirs;		      \
+	 for sysdir in $(config-sysdirs); do				      \
+	   case $$sysdir in						      \
+	     /*) dir=$$sysdir ;;					      \
+	     *)  dir=$(..)$$sysdir ;;					      \
+	   esac;							      \
+	   if [ -r $$dir/Subdirs ]; then				      \
+	     sed 's/#.*$$//' $$dir/Subdirs;				      \
 	   else true;							      \
 	   fi;								      \
 	 done;								      \

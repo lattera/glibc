@@ -689,6 +689,12 @@ ac_configure=$ac_aux_dir/configure # This should be Cygnus configure.
 
 subdirs="$add_ons"
 
+add_ons_pfx=
+if test x$add_ons != x; then
+  for f in $add_ons; do
+    add_ons_pfx="$add_ons_pfx $f/"
+  done
+fi
 
 
 # Make sure we can run config.sub.
@@ -819,23 +825,34 @@ done
 
 # Find what sysdep directories exist.
 sysnames=
-for b in $base ''; do
-  for m0 in $mach ''; do
-    for v in /$vendor ''; do
-      for o in /$ostry ''; do
-	for m in $mach ''; do
-	  try="$m0$b$v$o$m"
-	  test -n "$enable_debug_configure" && echo "$0 DEBUG: try $try" >&2
-	  if test -d $sysdep_dir$try; then
-	    sysnames="$sysnames $try"
-	    { test -n "$o" || test -n "$b"; } && os_used=t
-	    { test -n "$m" || test -n "$m0"; } && machine_used=t
-	  fi
+IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
+for d in $add_ons_pfx ''; do
+  for b in $base ''; do
+    for m0 in $mach ''; do
+      for v in /$vendor ''; do
+	for o in /$ostry ''; do
+	  for m in $mach ''; do
+	    if test "$m0$b$v$o$m"; then
+	      try="${d}sysdeps$m0$b$v$o$m"
+	      test -n "$enable_debug_configure" &&
+	      echo "$0 DEBUG: try $try" >&2
+	      case $try in
+		/*) dest=$try ;;
+		*)  dest=$srcdir/$try ;;
+	      esac
+	      if test -d $dest; then
+		sysnames="$sysnames $try"
+		{ test -n "$o" || test -n "$b"; } && os_used=t
+		{ test -n "$m" || test -n "$m0"; } && machine_used=t
+	      fi
+	    fi
+	  done
 	done
       done
     done
   done
 done
+IFS="$ac_save_ifs"
 
 if test -z "$os_used" && test "$os" != none; then
   { echo "configure: error: Operating system $os is not supported." 1>&2; exit 1; }
@@ -854,12 +871,18 @@ fi
 # machine (otherwise what's the point of an ABI?).
 if test "$elf" = yes; then
   elf_dirs=
-  for m in $mach; do
-    if test -d $sysdep_dir$m/elf; then
-      elf_dirs="$elf_dirs $m/elf"
-    fi
+  for d in $add_ons_pfx ''; do
+    case $d in
+      /*) xsrcdir= ;;
+      *)  xsrcdir=$srcdir/ ;;
+    esac
+    for m in $mach; do
+      if test -d $xsrcdir${d}sysdeps$m/elf; then
+	elf_dirs="$elf_dirs $d$m/elf"
+      fi
+    done
   done
-  sysnames="`echo $elf_dirs | sed -e 's,^/,,' -e 's, /,,g'` $sysnames"
+  sysnames="`echo $elf_dirs | sed -e 's,//,/,g'` $sysnames"
 fi
 
 
@@ -883,13 +906,25 @@ while test $# -gt 0; do
   # Report each name as we discover it, so there is no long pause in output.
   echo $ac_n "$name $ac_c" >&6
 
-  if test -f $sysdep_dir/$name/Implies; then
+  name_base=`echo $name | sed -e 's@\(.*sysdeps\)/.*@\1@'`
+
+  case $name in
+    /*) xsrcdir= ;;
+    *)  xsrcdir=$srcdir/ ;;
+  esac
+  test -n "$enable_debug_configure" &&
+  echo "DEBUG: name/Implies $xsrcdir$name/Implies" >&2
+
+  if test -f $xsrcdir$name/Implies; then
     # Collect more names from the `Implies' file (removing comments).
-    implied="`sed 's/#.*$//' < $sysdep_dir/$name/Implies`"
-    for x in $implied; do
-      test -d $sysdep_dir/$x || {
-        echo "configure: warning: sysdeps/$name/Implies specifies nonexistent $x" 1>&2
-      }
+    implied_candidate="`sed 's/#.*$//' < $xsrcdir$name/Implies`"
+    implied=
+    for x in $implied_candidate; do
+      if test -d $xsrcdir$name_base/$x; then
+	implied="$implied $name_base/$x";
+      else
+        echo "configure: warning: $name/Implies specifies nonexistent $x" 1>&2
+      fi
     done
   else
     implied=
@@ -899,7 +934,7 @@ while test $# -gt 0; do
   names="$names $name"
 
   # Find the parent of NAME, using the empty string if it has none.
-  parent="`echo $name | sed -n -e '/\//!q' -e 's=/[^/]*$==p'`"
+  parent="`echo $name | sed -n -e 's=/[^/]*$==' -e '/sysdeps$/q' -e p`"
 
   # Add the names implied by NAME, and NAME's parent (if it has one), to
   # the list of names to be processed (the argument list).  We prepend the
@@ -913,10 +948,10 @@ while test $# -gt 0; do
 done
 
 # Add the default directories.
-sysnames="$names generic stub"
+sysnames="$names sysdeps/generic sysdeps/stub"
 
 # The other names were emitted during the scan.
-echo "$ac_t""generic stub" 1>&6
+echo "$ac_t""sysdeps/generic sysdeps/stub" 1>&6
 
 
 ### Locate tools.
@@ -1139,13 +1174,13 @@ else
   # On the NeXT, cc -E runs the code through the compiler's parser,
   # not just through cpp.
   cat > conftest.$ac_ext <<EOF
-#line 1143 "configure"
+#line 1178 "configure"
 #include "confdefs.h"
 #include <assert.h>
 Syntax Error
 EOF
 ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
-{ (eval echo configure:1149: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+{ (eval echo configure:1184: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
 ac_err=`grep -v '^ *+' conftest.out`
 if test -z "$ac_err"; then
   :
@@ -1154,13 +1189,13 @@ else
   rm -rf conftest*
   CPP="${CC-cc} -E -traditional-cpp"
   cat > conftest.$ac_ext <<EOF
-#line 1158 "configure"
+#line 1193 "configure"
 #include "confdefs.h"
 #include <assert.h>
 Syntax Error
 EOF
 ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
-{ (eval echo configure:1164: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+{ (eval echo configure:1199: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
 ac_err=`grep -v '^ *+' conftest.out`
 if test -z "$ac_err"; then
   :
@@ -1302,7 +1337,7 @@ if eval "test \"`echo '$''{'libc_cv_friendly_stddef'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 1306 "configure"
+#line 1341 "configure"
 #include "confdefs.h"
 #define __need_size_t
 #define __need_wchar_t
@@ -1318,7 +1353,7 @@ size_t size; wchar_t wchar;
 if (&size == NULL || &wchar == NULL) abort ();
 ; return 0; }
 EOF
-if { (eval echo configure:1322: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:1357: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   libc_cv_friendly_stddef=yes
 else
@@ -1425,7 +1460,7 @@ if eval "test \"`echo '$''{'libc_cv_have_initfini'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 1429 "configure"
+#line 1464 "configure"
 #include "confdefs.h"
 
 int main() { return 0; }
@@ -1435,7 +1470,7 @@ asm (".section .init");
 				    asm (".text");
 ; return 0; }
 EOF
-if { (eval echo configure:1439: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:1474: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   libc_cv_have_initfini=yes
 else
@@ -1463,7 +1498,7 @@ if eval "test \"`echo '$''{'libc_cv_asm_underscores'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 1467 "configure"
+#line 1502 "configure"
 #include "confdefs.h"
 asm ("_glibc_foobar:");
 int main() { return 0; }
@@ -1471,7 +1506,7 @@ int t() {
 glibc_foobar ();
 ; return 0; }
 EOF
-if { (eval echo configure:1475: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; }; then
+if { (eval echo configure:1510: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; }; then
   rm -rf conftest*
   libc_cv_asm_underscores=yes
 else
@@ -1565,7 +1600,7 @@ __throw () {}
 EOF
 if { ac_try='${CC-cc} $CFLAGS
 			    -nostdlib -nostartfiles -Wl,--no-whole-archive
-			    -o conftest conftest.c'; { (eval echo configure:1569: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+			    -o conftest conftest.c'; { (eval echo configure:1604: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   libc_cv_ld_no_whole_archive=yes
 else
   libc_cv_ld_no_whole_archive=no
@@ -1586,7 +1621,7 @@ __throw () {}
 EOF
 if { ac_try='${CC-cc} $CFLAGS
 			    -nostdlib -nostartfiles -fno-exceptions
-			    -o conftest conftest.c'; { (eval echo configure:1590: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+			    -o conftest conftest.c'; { (eval echo configure:1625: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   libc_cv_gcc_no_exceptions=yes
 else
   libc_cv_gcc_no_exceptions=no
@@ -1607,9 +1642,13 @@ libc_link_sources=
 # configure fragments, and looking for a uname implementation.
 uname=
 for dir in $sysnames; do
-  if test -r $sysdep_dir/$dir/configure; then
-    echo "$ac_t""running configure fragment for $dir" 1>&6
-    . $sysdep_dir/$dir/configure
+  case $dir in
+    /*) dest=$dir ;;
+    *)  dest=$srcdir/$dir ;;
+  esac
+  if test -r $dest/configure; then
+    echo "$ac_t""running configure fragment for $dest" 1>&6
+    . $dest/configure
   fi
 
   if test -z "$uname"; then

@@ -78,9 +78,13 @@ endif
 sysdep_dir := $(..)sysdeps
 export sysdep_dir := $(sysdep_dir)
 
-
 # Get the values defined by options to `configure'.
 include $(common-objpfx)config.make
+
+# Complete path to sysdep dirs.
+full-config-sysdirs := $(filter /%, $(config-sysdirs)) \
+		       $(addprefix $(..), $(filter-out /%, $(config-sysdirs)))
+export full-config-sysdirs := $(full-config-sysdirs)
 
 # Run config.status to update config.make and config.h.  We don't show the
 # dependence of config.h to Make, because it is only touched when it
@@ -93,12 +97,12 @@ $(common-objpfx)config.make: $(common-objpfx)config.status $(..)config.h.in
 # Find all the sysdeps configure fragments, to make sure we re-run
 # configure when any of them changes.
 $(common-objpfx)config.status: $(..)configure \
-			       $(foreach dir,$(config-sysdirs),\
+			       $(foreach dir,$(full-config-sysdirs),\
 					 $(wildcard \
-					   $(sysdep_dir)/$(dir)/Implies) \
+					   $(dir)/Implies) \
 					 $(patsubst %.in,%,\
 						    $(firstword $(wildcard \
- $(addprefix $(sysdep_dir)/$(dir)/,configure configure.in)))))
+ $(addprefix $(dir)/,configure configure.in)))))
 	@cd $(@D); if test -f $(@F); then exec $(SHELL) $(@F) --recheck; else \
 	 echo The GNU C library has not been configured. >&2; \
 	 echo Run \`configure\' to configure it before building. >&2; \
@@ -299,8 +303,8 @@ ifndef +link
 +link = $(CC) -nostdlib -nostartfiles -o $@ \
 	      $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS)  \
 	      $(addprefix $(csu-objpfx),start.o) $(+preinit) \
-	      $(filter-out $(common-objpfx)libc%,$^) $(link-libc) \
-	      $(+postinit)
+	      $(filter-out $(common-objpfx)libc%,$^) \
+	      $(link-extra-libs) $(link-libc) $(+postinit)
 endif
 ifndef config-LDFLAGS
 ifeq (yes,$(build-shared))
@@ -330,6 +334,13 @@ else
 link-libc = $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
 endif
 endif
+ifndef link-extra-libs
+ifeq (yes,$(build-shared))
+link-extra-libs = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib).so$($(notdir $(lib)).so-version))
+else
+link-extra-libs = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib).a)
+endif
+endif
 ifndef gnulib
 gnulib := -lgcc
 endif
@@ -339,6 +350,7 @@ ifeq ($(elf),yes)
 endif
 csu-objpfx = $(common-objpfx)csu/
 elf-objpfx = $(common-objpfx)elf/
+db-objpfx = $(common-objpfx)db/
 
 ifeq (yes,$(build-shared))
 # The name under which the run-time dynamic linker is installed.

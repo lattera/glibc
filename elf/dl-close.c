@@ -99,7 +99,8 @@ _dl_close (struct link_map *map)
 	      }
 
 	  /* Finally, unlink the data structure and free it.  */
-	  map->l_prev->l_next = map->l_next;
+	  if (map->l_prev)
+	    map->l_prev->l_next = map->l_next;
 	  if (map->l_next)
 	    map->l_next->l_prev = map->l_prev;
 	  if (map->l_searchlist)

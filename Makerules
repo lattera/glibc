@@ -56,13 +56,13 @@ include $(..)Makeconfig
 endif
 
 # `configure' writes a definition of `config-sysdirs' in `config.make'.
-sysdirs = $(config-sysdirs)
+sysdirs = $(strip $(full-config-sysdirs))
 
 +sysdir_pfx = $(common-objpfx)
 
 export sysdirs := $(sysdirs)
 
-+sysdep_dirs := $(addprefix $(sysdep_dir)/,$(sysdirs))
++sysdep_dirs := $(full-config-sysdirs)
 ifdef objdir
 +sysdep_dirs := $(objdir) $(+sysdep_dirs)
 endif
@@ -86,8 +86,7 @@ endif
 # appropriate and not worry about where foo.h comes from, which may be
 # system dependent and not known by that Makefile.
 vpath %.h $(subst $(empty) ,:,$(strip $(common-objpfx) $(objpfx) \
-				      $(addprefix $(sysdep_dir)/,$(sysdirs)) \
-				      $(..)))
+				      $(+sysdep_dirs) $(..)))
 
 # Some sysdep makefiles use this to distinguish being included here from
 # being included individually by a subdir makefile (hurd/Makefile needs this).
@@ -95,18 +94,21 @@ in-Makerules := yes
 
 ifndef avoid-generated
 -include $(+sysdir_pfx)sysd-Makefile
-ifneq ($(sysd-Makefile-sysdirs),$(sysdirs))
+ifneq ($(sysd-Makefile-sysdirs),$(config-sysdirs))
 sysd-Makefile-force = FORCE
 FORCE:
 endif
 $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules \
 			     $(sysd-Makefile-force)
 	-@rm -f $@T
-	(echo 'sysd-Makefile-sysdirs := $(sysdirs)';			      \
-	 for dir in $(sysdirs); do		   			      \
-	   file=sysdeps/$$dir/Makefile;					      \
-	   if [ -f $(..)$$file ]; then					      \
-	     echo include "\$$(..)$$file";				      \
+	(echo 'sysd-Makefile-sysdirs := $(config-sysdirs)';		      \
+	 for dir in $(config-sysdirs); do	   			      \
+	   file=$$dir/Makefile;						      \
+	   if [ -f $$file ]; then					      \
+	     case $$dir in						      \
+	       /*) echo include "$$file" ;;				      \
+	       *)  echo include "\$$(..)$$file" ;;			      \
+	     esac;							      \
 	   else true; fi;						      \
 	 done; \
 	 echo 'sysd-Makefile-done=t') > $@T
@@ -213,8 +215,8 @@ endif
 # contents of sysd-rules.
 ifdef sysd-Makefile-done
 -include $(+sysdir_pfx)sysd-rules
-ifneq ($(sysd-rules-sysdirs),$(sysdirs))
-# The value of $(sysdirs) the sysd-rules was computed for
+ifneq ($(sysd-rules-sysdirs),$(config-sysdirs))
+# The value of $(+sysdep_dirs) the sysd-rules was computed for
 # differs from the one we are using now.  So force a rebuild of sysd-rules.
 sysd-rules-force = FORCE
 FORCE:
@@ -222,12 +224,15 @@ endif
 endif
 $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 			  $(wildcard $(foreach dir,$(sysdirs),\
-					       $(sysdep_dir)/$(dir)/Makefile))\
+					       $(dir)/Makefile))\
 			  $(sysd-rules-force)
 	-@rm -f $@T
-	(echo 'sysd-rules-sysdirs := $(sysdirs)';			      \
-	 for sysdir in $(sysdirs); do		   			      \
-	   dir="\$$(sysdep_dir)/$$sysdir";				      \
+	(echo 'sysd-rules-sysdirs := $(config-sysdirs)';		      \
+	 for sysdir in $(config-sysdirs); do				      \
+	   case $$sysdir in \
+	     /*) dir=$$sysdir ;; \
+	     *)  dir="\$$(..)$$sysdir" ;; \
+	   esac; \
 	   for o in $(object-suffixes); do \
 	     $(open-check-inhibit-asm) \
 	     echo "\$$(objpfx)%$$o: $$dir/%.S \$$(before-compile); \
@@ -596,10 +601,10 @@ $(slibdir)/libc-$(version).so: $(common-objpfx)libc.so; $(do-install-program)
 install: $(slibdir)/libc.so$(libc.so-version)
 
 ifndef subdir
-# What we install as libc.so for programs to link against is in fact an
-# archive.  It contains the various $(static-only-routines) objects, and
-# the special object libc-syms.so that contains just the dynamic symbol
-# table of the shared libc object.
+# What we install as libc.so for programs to link against is in fact a
+# link script.  It contains references for the various libraries we need.
+# The libc.so object is not complete since some functions are only defined
+# in libc.a and the dynamic linker is an etra object.
 install: $(libdir)/libc.so
 $(libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
 		   $(elfobjdir)/$(rtld-installed-name) \

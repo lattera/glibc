@@ -1,3 +1,132 @@
+Thu Sep  5 03:20:42 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	Change configuration and Makefiles to allow add-ons to have a
+	sysdeps/ directory hierachy.
+	* configure.in: Test for sysdeps/ directory in add-ons.  Before
+	all test and searches in these hierachies, too.
+	* Makeconfig (full-config-subdirs): Define based on $(config-sysdirs).
+	Extend with $(..) if not absolute path.
+	Use $(full-config-subdirs) where $(config-sysdirs) was used.
+	* Makefile ($(objpfx)sysd-dirs): Use config-sysdirs.
+	* MakeTAGS: Use $(full-config-subdirs).
+	* Makerules: Change comment to libc.so link script.
+	(sysdirs): Define based on $(full-config-subdirs).
+	(sysd-Makefile): Define using config-sysdirs.
+	(sysd-rules): Likewise.
+	* sysdeps/unix/Makefile (sysd-syscalls): Define based on +sysdep-dirs.
+	* sysdeps/unix/make-syscalls.sh: Remove basedir argument.
+
+Wed Sep  4 01:32:21 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/k_cos.c: Rewritten for better accuracy.
+	* sysdeps/m68k/fpu/k_sin.c: Likewise.
+	* sysdeps/m68k/fpu/k_tan.c: Likewise.
+
+Thu Sep  5 01:06:09 1996  Richard Henderson  <rth@tamu.edu>
+
+	* malloc/free.c (free): Protect by using __libc_malloc_lock.
+	* malloc/malloc-find.c (malloc_find_object_address): Likewise.
+	* malloc/malloc-size.c (malloc_usable_size): Likewise.
+	* malloc/malloc-walk.c (malloc_walk): Likewise.
+	* malloc/memalign.c (memalign): Likewise.
+	* malloc/realloc.c (realloc): Likewise.
+	* malloc/malloc.c: Define __libc_malloc_lock.
+	(_malloc_internal): Don't use `malloc'.  Instead look for
+	`__malloc_hook' or call `_malloc_internal'.
+	(malloc): Protect by using `__libc_malloc_lock'.
+	* malloc/malloc.h: Declare `__libc_malloc_lock'.
+
+Mon Sep  2 22:42:59 1996  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/alpha/elf/start.S: Use weak_alias for __start
+	instead of the hard definition.
+
+	* sysdeps/alpha/dl-machine.h (RTLD_START): Add type info for
+	_start and _dl_start_user.
+
+	* sysdeps/unix/sysv/linux/alpha/init-first.h (SYSDEP_CALL_INIT):
+	Make _dl_starting_up weak.  Add type info for NAME.
+
+Mon Sep  2 22:15:14 1996  Richard Henderson  <rth@tamu.edu>
+
+	* Makefile (all): Add extra_solibs pass.
+	(+subdir_targets): Same.
+	* Rules (extra_solibs): New phony empty target for subdirs without
+	extra libs.
+	* extra-lib.mk: Build lib*.so* in extra_solibs not lib-noranlib.
+	* manual/Makefile: Add dummy extra_solibs target.
+
+Sun Sep  1 15:41:22 1996  Richard Henderson  <rth@tamu.edu>
+
+	* Makeconfig (+link): Add $(link-extra-libs).
+	(link-extra-libs): New variable which expands to the full paths of
+	the other libraries needed by a program, as controled by LDLIBS-$(@F).
+	* db/Makefile: Use LDLIBS-makedb to link libdb not a dependency, as
+	the later attempts to install the library before linking it.
+
+	* sysdeps/unix/alpha/sysdep.S: Align errno.
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (struct platform): Add
+	hae_shift entry.
+	(io): Move bus_memory_base and sparse_bus_memory_base into struct.
+	(_hae_shift): New function.
+	* sysdeps/unix/sysv/linux/alpha/sys/io.h: New file.  Prototypes
+	for the bus query functions.
+
+Sat Aug 31 18:14:54 1996  Richard Henderson  <rth@tamu.edu>
+
+	* elf/dl-close.c (_dl_close): In static executables, map->l_prev
+	can be NULL when unloading a library.
+
+	* elf/dl-open.c (_dl_open): Pass __environ instead of __libc_envp
+	to the library .init function.
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela):  Since we omitted
+	part of the COPY reloc processing earlier, omit the rest now --
+	we'll get into less trouble later when some fool does use a COPY.
+
+	* sysdeps/unix/sysv/linux/init-first.c (init): Accept argc et al as
+	parameters.  Move all argc and __libc_multiple_libcs calculation out
+	to init-first.h.  Use __environ not __libc_envp.
+	* sysdeps/unix/sysv/linux/alpha/init-first.h: Rewrite.
+	* sysdeps/unix/sysv/linux/i386/init-first.h: Rewrite.
+
+Thu Aug 29 20:26:40 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/posix/profil.c (profil): Don't clobber saved timer and
+	signal settings when profiling was already turned on.
+
+	* csu/gmon-start.c (__gmon_start__) [HAVE_INITFINI]: Protect from
+	being called twice.
+
+Wed Sep  4 01:31:50 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/mmap.S: Test for
+	0 < return value < -4096 and not < 0 to decide about failure.
+	Reported by Andreas Jaeger.
+
+Tue Sep  3 19:04:05 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfscanf.c (__vfscanf): Don't count EOF char
+	in %c format.
+
+Sat Aug 31 18:10:51 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* wcsmbs/wchar.h: Define prototypes for wcstoq and wcstouq only
+	#ifdef __USE_GNU.
+
+Sat Aug 31 12:34:29 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.c: Add missing newline character in banner.
+
+	* sysdeps/unix/sysv/linux/alpha/Dist: Correct typo.
+	* sysdeps/unix/sysv/linux/i386/Dist: Likewise.
+
+Sat Aug 31 03:07:39 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/l10nflist.c (_nl_normalize_codeset): We convert to lower
+ 	case, so don't prepend uppercase `ISO' for only numeric arg.
+
 Tue Sep  3 11:16:07 1996  Thomas Bushnell/ n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* shadow/lckpwdf.c (__ulckpwdf): Don't take address of LOCK in

@@ -284,11 +284,11 @@ export asm_CPP := $(COMPILE.S) -E -x assembler-with-cpp
 
 $(common-objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
 			       $(wildcard $(+sysdep_dirs:%=%/syscalls.list))
-	for dir in $$sysdirs; do \
-	  test -f $(..)sysdeps/$$dir/syscalls.list && \
+	for dir in $(+sysdep_dirs); do \
+	  test -f $$dir/syscalls.list && \
 	  { $(SHELL) $(dir $<)$(notdir $<) \
-		     $(..)sysdeps $$dir $(object-suffixes) || exit 1; }; \
-	  test $$dir = unix && break; \
+		     $$dir $(object-suffixes) || exit 1; }; \
+	  test $$dir = sysdeps/unix && break; \
 	done > $@T
 	mv -f $@T $@
 

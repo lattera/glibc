@@ -1,4 +1,4 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -36,9 +36,9 @@ ENTRY (__mmap)
 	/* Restore registers.  */
 	movl %edx, %ebx
 
-	/* %eax is < 0 if there was an error.  */
-	testl %eax, %eax
-	jl syscall_error
+	/* If 0 > %eax > -4096 there was an error.  */
+	cmpl $-4096, %eax
+	ja syscall_error
 
 	/* Successful; return the syscall's value.  */
 	ret

@@ -27,7 +27,7 @@ Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
 PARTICULAR PURPOSE.\n\
-Report bugs to <bug-glibc@gnu.ai.mit.edu>.";
+Report bugs to <bug-glibc@gnu.ai.mit.edu>.\n";
 
 #include <unistd.h>
 

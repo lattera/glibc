@@ -1,3 +1,3 @@
 sys/perm.h sys/vm86.h
 init-first.h
-close.S
+clone.S

@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <sys/socket.h>
 #include <hurd.h>
@@ -25,8 +24,11 @@ Cambridge, MA 02139, USA.  */
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
 int
-DEFUN(__send, (fd, buf, n, flags),
-      int fd AND const PTR buf AND size_t n AND int flags)
+__send (fd, buf, n, flags)
+     int fd;
+     const void *buf;
+     size_t n;
+     int flags;
 {
   error_t err;
   int wrote;

@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <math.h>
 
 #ifndef FUNC
@@ -29,7 +28,14 @@ Cambridge, MA 02139, USA.  */
 #define __CONCATX(a,b) __CONCAT(a,b)
 
 float_type
-DEFUN(__CONCATX(__kernel_,FUNC), (x, y), float_type x AND float_type y)
+__CONCATX(__kernel_,FUNC) (x, y)
+     float_type x;
+     float_type y;
 {
-  return __CONCATX(__,FUNC) (x + y);
+  float_type sin_x, cos_x, sin_y, cos_y;
+  __asm__ __volatile__ ("fsincosx %2,%0:%1" : "=f" (cos_x), "=f" (sin_x)
+			: "f" (x));
+  __asm__ __volatile__ ("fsincosx %2,%0:%1" : "=f" (cos_y), "=f" (sin_y)
+			: "f" (y));
+  return cos_x * cos_y - sin_x * sin_y;
 }

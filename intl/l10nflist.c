@@ -369,7 +369,7 @@ _nl_normalize_codeset (codeset, name_len)
   if (retval != NULL)
     {
       if (only_digit)
-	wp = stpcpy (retval, "ISO");
+	wp = stpcpy (retval, "iso");
       else
 	wp = retval;
 

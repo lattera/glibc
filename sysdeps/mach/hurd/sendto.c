@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <sys/socket.h>
 #include <hurd.h>
@@ -28,9 +27,13 @@ Cambridge, MA 02139, USA.  */
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
 int
-DEFUN(sendto, (fd, buf, n, flags, addr, addr_len),
-      int fd AND const PTR buf AND size_t n AND int flags AND
-      const struct sockaddr_un *addr AND size_t addr_len)
+sendto (fd, buf, n, flags, addr, addr_len)
+     int fd;
+     const void *buf;
+     size_t n;
+     int flags;
+     const struct sockaddr_un *addr;
+     size_t addr_len;
 {
   addr_port_t aport;
   error_t err;
