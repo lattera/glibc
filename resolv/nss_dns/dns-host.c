@@ -132,11 +132,11 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
 			   char *buffer, size_t buflen, int *errnop,
 			   int *h_errnop)
 {
-  querybuf *host_buffer;
+  querybuf *host_buffer, *orig_host_buffer;
   char tmp[NS_MAXDNAME];
   int size, type, n;
   const char *cp;
-  int map = 0, use_malloc = 0;
+  int map = 0;
   int olderr = errno;
   enum nss_status status;
 
@@ -170,21 +170,10 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
       && (cp = res_hostalias (&_res, name, tmp, sizeof (tmp))) != NULL)
     name = cp;
 
-  if (!__libc_use_alloca (MAXPACKET))
-    {
-      host_buffer = (querybuf *) malloc (sizeof (querybuf));
-      if (host_buffer == NULL)
-	{
-	  *errnop = ENOMEM;
-	  return NSS_STATUS_UNAVAIL;
-	}
-      use_malloc = 1;
-    }
-  else
-    host_buffer = (querybuf *) alloca (sizeof (querybuf));
+  host_buffer = orig_host_buffer = (querybuf *) alloca (1024);
 
-  n = res_nsearch (&_res, name, C_IN, type, host_buffer->buf,
-		   sizeof (host_buffer->buf));
+  n = __libc_res_nsearch (&_res, name, C_IN, type, host_buffer->buf,
+			  1024, (u_char **) &host_buffer);
   if (n < 0)
     {
       enum nss_status status = (errno == ECONNREFUSED
@@ -199,12 +188,13 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
 	 by having the RES_USE_INET6 bit in _res.options set, we try
 	 another lookup.  */
       if (af == AF_INET6 && (_res.options & RES_USE_INET6))
-	n = res_nsearch (&_res, name, C_IN, T_A, host_buffer->buf,
-			 sizeof (host_buffer->buf));
+	n = __libc_res_nsearch (&_res, name, C_IN, T_A, host_buffer->buf,
+				host_buffer != orig_host_buffer
+				? MAXPACKET : 1024, (u_char **) &host_buffer);
 
       if (n < 0)
 	{
-	  if (use_malloc)
+	  if (host_buffer != orig_host_buffer)
 	    free (host_buffer);
 	  return status;
 	}
@@ -217,7 +207,7 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
 
   status = getanswer_r (host_buffer, n, name, type, result, buffer, buflen,
 			errnop, h_errnop, map);
-  if (use_malloc)
+  if (host_buffer != orig_host_buffer)
     free (host_buffer);
   return status;
 }
@@ -257,10 +247,10 @@ _nss_dns_gethostbyaddr_r (const void *addr, socklen_t len, int af,
     char *h_addr_ptrs[MAX_NR_ADDRS + 1];
     char linebuffer[0];
   } *host_data = (struct host_data *) buffer;
-  querybuf *host_buffer;
+  querybuf *host_buffer, *orig_host_buffer;
   char qbuf[MAXDNAME+1], *qp = NULL;
   size_t size;
-  int n, status, use_malloc = 0;
+  int n, status;
   int olderr = errno;
 
   if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
@@ -315,39 +305,29 @@ _nss_dns_gethostbyaddr_r (const void *addr, socklen_t len, int af,
       break;
     }
 
-  if (!__libc_use_alloca (MAXPACKET))
-    {
-      host_buffer = (querybuf *) malloc (sizeof (querybuf));
-      if (host_buffer == NULL)
-	{
-	  *errnop = ENOMEM;
-	  return NSS_STATUS_UNAVAIL;
-	}
-      use_malloc = 1;
-    }
-  else
-    host_buffer = (querybuf *) alloca (sizeof (querybuf));
+  host_buffer = orig_host_buffer = (querybuf *) alloca (1024);
 
-  n = res_nquery (&_res, qbuf, C_IN, T_PTR, host_buffer->buf,
-		  sizeof (host_buffer->buf));
+  n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR, host_buffer->buf,
+			 1024, (u_char **) &host_buffer);
   if (n < 0 && af == AF_INET6)
     {
       strcpy (qp, "ip6.int");
-      n = res_nquery (&_res, qbuf, C_IN, T_PTR, host_buffer->buf,
-		      sizeof (host_buffer->buf));
+      n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR, host_buffer->buf,
+			     host_buffer != orig_host_buffer
+			     ? MAXPACKET : 1024, (u_char **) &host_buffer);
     }
   if (n < 0)
     {
       *h_errnop = h_errno;
       __set_errno (olderr);
-      if (use_malloc)
+      if (host_buffer != orig_host_buffer)
 	free (host_buffer);
       return errno == ECONNREFUSED ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
     }
 
   status = getanswer_r (host_buffer, n, qbuf, T_PTR, result, buffer, buflen,
 			errnop, h_errnop, 0 /* XXX */);
-  if (use_malloc)
+  if (host_buffer != orig_host_buffer)
     free (host_buffer);
   if (status != NSS_STATUS_SUCCESS)
     {

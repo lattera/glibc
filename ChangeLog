@@ -1,3 +1,42 @@
+2002-10-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/resolv.h (__libc_res_nquery, __libc_res_nsearch,
+	__libc_res_nsend): New prototypes.
+	* resolv/res_query.c (QUERYSIZE): Define.
+	(__libc_res_nquery): Renamed from res_nquery.  Added answerp
+	argument.  Allocate only QUERYSIZE bytes first, if res_nmkquery
+	fails use MAXPACKET buffer.  Call __libc_res_nsend instead of
+	res_nsend, pass answerp.
+	(res_nquery): Changed into wrapper around __libc_res_nquery.
+	(__libc_res_nsearch): Renamed from res_nsearch.  Added answerp
+	argument.  Call __libc_res_nquerydomain and __libc_res_nquery
+	instead of the non-__libc_ variants, pass them answerp.
+	(res_nsearch): Changed into wrapper around __libc_res_nsearch.
+	(__libc_res_nquerydomain): Renamed from res_nquerydomain.
+	Added answerp argument.  Call __libc_res_nquery instead of
+	res_nquery, pass answerp.
+	(res_nquerydomain): Changed into wrapper around
+	__libc_res_nquerydomain.
+	* resolv/res_send.c: Include sys/ioctl.h.
+	(MAXPACKET): Define.
+	(send_vc): Change arguments.  Reallocate answer buffer if it is
+	too small.
+	(send_dg): Likewise.
+	(__libc_res_nsend): Renamed from res_nsend.  Added ansp argument.
+	Reallocate answer buffer if it is too small and hooks are in use.
+	Adjust calls to send_vc and send_dg.
+	(res_nsend): Changed into wrapper around __libc_res_nsend.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname2_r): Allocate
+	just 1K answer buffer on the stack, use __libc_res_nsearch instead
+	of res_nsearch.
+	(_nss_dns_gethostbyaddr_r): Similarly with __libc_res_nquery.
+	* resolv/nss_dns/dns-network.c (_nss_dns_getnetbyaddr_r): Likewise.
+	(_nss_dns_getnetbyname_r): Similarly with __libc_res_nsearch.
+	* resolv/gethnamaddr.c (gethostbyname2): Likewise.
+	(gethostbyaddr): Similarly with __libc_res_nquery.
+	* resolv/Versions (libresolv): Export __libc_res_nquery and
+	__libc_res_nsearch at GLIBC_PRIVATE.
+
 2002-10-17  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Do CHECK_STATIC_TLS

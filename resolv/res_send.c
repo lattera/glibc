@@ -85,6 +85,7 @@ static const char rcsid[] = "$BINDId: res_send.c,v 8.38 2000/03/30 20:16:51 vixi
 #include <netinet/in.h>
 #include <arpa/nameser.h>
 #include <arpa/inet.h>
+#include <sys/ioctl.h>
 
 #include <errno.h>
 #include <netdb.h>
@@ -94,6 +95,12 @@ static const char rcsid[] = "$BINDId: res_send.c,v 8.38 2000/03/30 20:16:51 vixi
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+#if PACKETSZ > 65536
+#define MAXPACKET       PACKETSZ
+#else
+#define MAXPACKET       65536
+#endif
 
 #ifndef _LIBC
 #include <isc/eventlib.h>
@@ -193,10 +200,10 @@ static const int highestFD = FD_SETSIZE - 1;
 /* Forward. */
 
 static int		send_vc(res_state, const u_char *, int,
-				u_char *, int, int *, int);
+				u_char **, int *, int *, int, u_char **);
 static int		send_dg(res_state, const u_char *, int,
-				u_char *, int, int *, int,
-				int *, int *);
+				u_char **, int *, int *, int,
+				int *, int *, u_char **);
 #ifdef DEBUG
 static void		Aerror(const res_state, FILE *, const char *, int,
 			       struct sockaddr_in);
@@ -371,8 +378,8 @@ res_queriesmatch(const u_char *buf1, const u_char *eom1,
 }
 
 int
-res_nsend(res_state statp,
-	  const u_char *buf, int buflen, u_char *ans, int anssiz)
+__libc_res_nsend(res_state statp, const u_char *buf, int buflen,
+		 u_char *ans, int anssiz, u_char **ansp)
 {
 	int gotsomewhere, terrno, try, v_circuit, resplen, ns, n;
 
@@ -380,10 +387,22 @@ res_nsend(res_state statp,
 		__set_errno (ESRCH);
 		return (-1);
 	}
+
 	if (anssiz < HFIXEDSZ) {
 		__set_errno (EINVAL);
 		return (-1);
 	}
+
+	if ((statp->qhook || statp->rhook) && anssiz < MAXPACKET && ansp) {
+		u_char *buf = malloc (MAXPACKET);
+		if (buf == NULL)
+			return (-1);
+		memcpy (buf, ans, HFIXEDSZ);
+		*ansp = buf;
+		ans = buf;
+		anssiz = MAXPACKET;
+	}
+
 	DprintQ((statp->options & RES_DEBUG) || (statp->pfcode & RES_PRF_QUERY),
 		(stdout, ";; res_send()\n"), buf, buflen);
 	v_circuit = (statp->options & RES_USEVC) || buflen > PACKETSZ;
@@ -578,8 +597,8 @@ res_nsend(res_state statp,
 		if (v_circuit) {
 			/* Use VC; at most one attempt per server. */
 			try = statp->retry;
-			n = send_vc(statp, buf, buflen, ans, anssiz, &terrno,
-				    ns);
+			n = send_vc(statp, buf, buflen, &ans, &anssiz, &terrno,
+				    ns, ansp);
 			if (n < 0)
 				return (-1);
 			if (n == 0)
@@ -587,8 +606,8 @@ res_nsend(res_state statp,
 			resplen = n;
 		} else {
 			/* Use datagrams. */
-			n = send_dg(statp, buf, buflen, ans, anssiz, &terrno,
-				    ns, &v_circuit, &gotsomewhere);
+			n = send_dg(statp, buf, buflen, &ans, &anssiz, &terrno,
+				    ns, &v_circuit, &gotsomewhere, ansp);
 			if (n < 0)
 				return (-1);
 			if (n == 0)
@@ -667,14 +686,23 @@ res_nsend(res_state statp,
 	return (-1);
 }
 
+int
+res_nsend(res_state statp,
+	  const u_char *buf, int buflen, u_char *ans, int anssiz)
+{
+	return __libc_res_nsend(statp, buf, buflen, ans, anssiz, NULL);
+}
+
 /* Private */
 
 static int
 send_vc(res_state statp,
-	const u_char *buf, int buflen, u_char *ans, int anssiz,
-	int *terrno, int ns)
+	const u_char *buf, int buflen, u_char **ansp, int *anssizp,
+	int *terrno, int ns, u_char **anscp)
 {
 	const HEADER *hp = (HEADER *) buf;
+	u_char *ans = *ansp;
+	int anssiz = *anssizp;
 	HEADER *anhp = (HEADER *) ans;
 #ifdef _LIBC
 	struct sockaddr_in6 *nsap = EXT(statp).nsaddrs[ns];
@@ -782,11 +810,26 @@ send_vc(res_state statp,
 	}
 	resplen = ns_get16(ans);
 	if (resplen > anssiz) {
-		Dprint(statp->options & RES_DEBUG,
-		       (stdout, ";; response truncated\n")
-		       );
-		truncating = 1;
-		len = anssiz;
+		if (anscp) {
+			ans = malloc (MAXPACKET);
+			if (ans == NULL) {
+				*terrno = ENOMEM;
+				res_nclose(statp);
+				return (0);
+			}
+			anssiz = MAXPACKET;
+			*anssizp = MAXPACKET;
+			*ansp = ans;
+			*anscp = ans;
+			anhp = (HEADER *) ans;
+			len = resplen;
+		} else {
+			Dprint(statp->options & RES_DEBUG,
+				(stdout, ";; response truncated\n")
+			);
+			truncating = 1;
+			len = anssiz;
+		}
 	} else
 		len = resplen;
 	if (len < HFIXEDSZ) {
@@ -851,10 +894,12 @@ send_vc(res_state statp,
 
 static int
 send_dg(res_state statp,
-	const u_char *buf, int buflen, u_char *ans, int anssiz,
-	int *terrno, int ns, int *v_circuit, int *gotsomewhere)
+	const u_char *buf, int buflen, u_char **ansp, int *anssizp,
+	int *terrno, int ns, int *v_circuit, int *gotsomewhere, u_char **anscp)
 {
 	const HEADER *hp = (HEADER *) buf;
+	u_char *ans = *ansp;
+	int anssiz = *anssizp;
 	HEADER *anhp = (HEADER *) ans;
 #ifdef _LIBC
 	struct sockaddr_in6 *nsap = EXT(statp).nsaddrs[ns];
@@ -992,6 +1037,21 @@ send_dg(res_state statp,
 #else
 	fromlen = sizeof(struct sockaddr_in);
 #endif
+	if (anssiz < MAXPACKET
+	    && anscp
+	    && (ioctl (s, FIONREAD, &resplen) < 0
+		|| anssiz < resplen)) {
+		ans = malloc (MAXPACKET);
+		if (ans == NULL)
+			ans = *ansp;
+		else {
+			anssiz = MAXPACKET;
+			*anssizp = MAXPACKET;
+			*ansp = ans;
+			*anscp = ans;
+			anhp = (HEADER *) ans;
+		}
+	}
 	resplen = recvfrom(s, (char*)ans, anssiz,0,
 			   (struct sockaddr *)&from, &fromlen);
 	if (resplen <= 0) {

@@ -510,10 +510,10 @@ gethostbyname2(name, af)
 	const char *name;
 	int af;
 {
-	querybuf *buf;
+	querybuf *buf, *origbuf;
 	register const char *cp;
 	char *bp;
-	int n, size, type, len, use_malloc = 0;
+	int n, size, type, len;
 	struct hostent *ret;
 	extern struct hostent *_gethtbyname2();
 
@@ -616,24 +616,19 @@ gethostbyname2(name, af)
 				break;
 		}
 
-	if (!__libc_use_alloca (MAXPACKET)) {
-		buf = (querybuf *) malloc (sizeof (*buf));
-		if (buf == NULL) {
-			__set_h_errno (NETDB_INTERNAL);
-			return NULL;
-		}
-		use_malloc = 1;
-	} else
-		buf = (querybuf *) alloca (sizeof (*buf));
+	buf = origbuf = (querybuf *) alloca (1024);
 
-	if ((n = res_nsearch(&_res, name, C_IN, type, buf->buf, sizeof(buf->buf))) < 0) {
+	if ((n = __libc_res_nsearch(&_res, name, C_IN, type, buf->buf, 1024,
+				    (u_char **) &buf)) < 0) {
+		if (buf != origbuf)
+			free (buf);
 		dprintf("res_nsearch failed (%d)\n", n);
 		if (errno == ECONNREFUSED)
 			return (_gethtbyname2(name, af));
 		return (NULL);
 	}
 	ret = getanswer(buf, n, name, type);
-	if (use_malloc)
+	if (buf != origbuf)
 		free (buf);
 	return ret;
 }
@@ -647,9 +642,9 @@ gethostbyaddr(addr, len, af)
 	const u_char *uaddr = (const u_char *)addr;
 	static const u_char mapped[] = { 0,0, 0,0, 0,0, 0,0, 0,0, 0xff,0xff };
 	static const u_char tunnelled[] = { 0,0, 0,0, 0,0, 0,0, 0,0, 0,0 };
-	int n, use_malloc = 0;
+	int n;
 	socklen_t size;
-	querybuf *buf;
+	querybuf *buf, *orig_buf;
 	register struct hostent *hp;
 	char qbuf[MAXDNAME+1], *qp = NULL;
 #ifdef SUNSECURITY
@@ -711,23 +706,18 @@ gethostbyaddr(addr, len, af)
 		abort();
 	}
 
-	if (!__libc_use_alloca (MAXPACKET)) {
-		buf = (querybuf *) malloc (sizeof (*buf));
-		if (buf == NULL) {
-			__set_h_errno (NETDB_INTERNAL);
-			return NULL;
-		}
-		use_malloc = 1;
-	} else
-		buf = (querybuf *) alloca (sizeof (*buf));
+	buf = orig_buf = (querybuf *) alloca (1024);
 
-	n = res_nquery(&_res, qbuf, C_IN, T_PTR, buf->buf, sizeof buf->buf);
+	n = __libc_res_nquery(&_res, qbuf, C_IN, T_PTR, buf->buf, 1024,
+			      (u_char **) &buf);
 	if (n < 0 && af == AF_INET6) {
 		strcpy(qp, "ip6.int");
-		n = res_nquery(&_res, qbuf, C_IN, T_PTR, buf->buf, sizeof buf->buf);
+		n = __libc_res_nquery(&_res, qbuf, C_IN, T_PTR, buf->buf,
+				      buf != orig_buf ? MAXPACKET : 1024,
+				      (u_char **) &buf);
 	}
 	if (n < 0) {
-		if (use_malloc)
+		if (buf != orig_buf)
 			free (buf);
 		dprintf("res_nquery failed (%d)\n", n);
 		if (errno == ECONNREFUSED)
@@ -735,7 +725,7 @@ gethostbyaddr(addr, len, af)
 		return (NULL);
 	}
 	hp = getanswer(buf, n, qbuf, T_PTR);
-	if (use_malloc)
+	if (buf != orig_buf)
 		free (buf);
 	if (!hp)
 		return (NULL);	/* h_errno was set by getanswer() */

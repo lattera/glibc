@@ -46,6 +46,15 @@ extern int res_ourserver_p (const res_state __statp,
 			    const struct sockaddr_in6 *__inp);
 libc_hidden_proto (__res_ninit)
 libc_hidden_proto (__res_randomid)
+
+int __libc_res_nquery (res_state, const char *, int, int, u_char *, int,
+		       u_char **);
+int __libc_res_nsearch (res_state, const char *, int, int, u_char *, int,
+			u_char **);
+int __libc_res_nsend (res_state, const u_char *, int, u_char *, int,
+		      u_char **)
+  attribute_hidden;
+
 #endif
 
 #endif

@@ -91,6 +91,13 @@ static const char rcsid[] = "$BINDId: res_query.c,v 8.20 2000/02/29 05:39:12 vix
 #define MAXPACKET	65536
 #endif
 
+#define QUERYSIZE	(HFIXEDSZ + QFIXEDSZ + MAXCDNAME + 1)
+
+static int
+__libc_res_nquerydomain(res_state statp, const char *name, const char *domain,
+			int class, int type, u_char *answer, int anslen,
+			u_char **answerp);
+
 /*
  * Formulate a normal query, send, and await answer.
  * Returned answer is placed in supplied buffer "answer".
@@ -102,11 +109,12 @@ static const char rcsid[] = "$BINDId: res_query.c,v 8.20 2000/02/29 05:39:12 vix
  * Caller must parse answer and determine whether it answers the question.
  */
 int
-res_nquery(res_state statp,
-	   const char *name,	/* domain name */
-	   int class, int type,	/* class and type of query */
-	   u_char *answer,	/* buffer to put answer */
-	   int anslen)		/* size of answer buffer */
+__libc_res_nquery(res_state statp,
+		  const char *name,	/* domain name */
+		  int class, int type,	/* class and type of query */
+		  u_char *answer,	/* buffer to put answer */
+		  int anslen,		/* size of answer buffer */
+		  u_char **answerp)	/* if buffer needs to be enlarged */
 {
 	u_char *buf;
 	HEADER *hp = (HEADER *) answer;
@@ -114,15 +122,7 @@ res_nquery(res_state statp,
 
 	hp->rcode = NOERROR;	/* default */
 
-	if (!__libc_use_alloca (MAXPACKET)) {
-		buf = malloc (MAXPACKET);
-		if (buf == NULL) {
-			__set_h_errno (NETDB_INTERNAL);
-			return -1;
-		}
-		use_malloc = 1;
-	} else
-		buf = alloca (MAXPACKET);
+	buf = alloca (QUERYSIZE);
 
 #ifdef DEBUG
 	if (statp->options & RES_DEBUG)
@@ -130,8 +130,18 @@ res_nquery(res_state statp,
 #endif
 
 	n = res_nmkquery(statp, QUERY, name, class, type, NULL, 0, NULL,
-			 buf, MAXPACKET);
-	if (n <= 0) {
+			 buf, QUERYSIZE);
+	if (__builtin_expect (n <= 0, 0)) {
+		/* Retry just in case res_nmkquery failed because of too
+		   short buffer.  Shouldn't happen.  */
+		buf = malloc (MAXPACKET);
+		if (buf != NULL) {
+			use_malloc = 1;
+			n = res_nmkquery(statp, QUERY, name, class, type, NULL,
+					 0, NULL, buf, MAXPACKET);
+		}		
+	}
+	if (__builtin_expect (n <= 0, 0)) {
 #ifdef DEBUG
 		if (statp->options & RES_DEBUG)
 			printf(";; res_query: mkquery failed\n");
@@ -141,7 +151,7 @@ res_nquery(res_state statp,
 			free (buf);
 		return (n);
 	}
-	n = res_nsend(statp, buf, n, answer, anslen);
+	n = __libc_res_nsend(statp, buf, n, answer, anslen, answerp);
 	if (use_malloc)
 		free (buf);
 	if (n < 0) {
@@ -181,6 +191,17 @@ res_nquery(res_state statp,
 	return (n);
 }
 
+int
+res_nquery(res_state statp,
+	   const char *name,	/* domain name */
+	   int class, int type,	/* class and type of query */
+	   u_char *answer,	/* buffer to put answer */
+	   int anslen)		/* size of answer buffer */
+{
+	return __libc_res_nquery(statp, name, class, type, answer, anslen,
+				 NULL);
+}
+
 /*
  * Formulate a normal query, send, and retrieve answer in supplied buffer.
  * Return the size of the response on success, -1 on error.
@@ -188,11 +209,12 @@ res_nquery(res_state statp,
  * is detected.  Error code, if any, is left in H_ERRNO.
  */
 int
-res_nsearch(res_state statp,
+__libc_res_nsearch(res_state statp,
 	    const char *name,	/* domain name */
 	    int class, int type,	/* class and type of query */
 	    u_char *answer,	/* buffer to put answer */
-	    int anslen)		/* size of answer */
+	    int anslen,		/* size of answer */
+	    u_char **answerp)
 {
 	const char *cp, * const *domain;
 	HEADER *hp = (HEADER *) answer;
@@ -214,7 +236,8 @@ res_nsearch(res_state statp,
 
 	/* If there aren't any dots, it could be a user-level alias. */
 	if (!dots && (cp = res_hostalias(statp, name, tmp, sizeof tmp))!= NULL)
-		return (res_nquery(statp, cp, class, type, answer, anslen));
+		return (__libc_res_nquery(statp, cp, class, type, answer,
+					  anslen, answerp));
 
 	/*
 	 * If there are enough dots in the name, let's just give it a
@@ -223,12 +246,16 @@ res_nsearch(res_state statp,
 	 */
 	saved_herrno = -1;
 	if (dots >= statp->ndots || trailing_dot) {
-		ret = res_nquerydomain(statp, name, NULL, class, type,
-					 answer, anslen);
+		ret = __libc_res_nquerydomain(statp, name, NULL, class, type,
+					      answer, anslen, answerp);
 		if (ret > 0 || trailing_dot)
 			return (ret);
 		saved_herrno = h_errno;
 		tried_as_is++;
+		if (answerp && *answerp != answer) {
+			answer = *answerp;
+			anslen = MAXPACKET;
+		}
 	}
 
 	/*
@@ -249,11 +276,16 @@ res_nsearch(res_state statp,
 			    (domain[0][0] == '.' && domain[0][1] == '\0'))
 				root_on_list++;
 
-			ret = res_nquerydomain(statp, name, *domain,
-					       class, type,
-					       answer, anslen);
+			ret = __libc_res_nquerydomain(statp, name, *domain,
+						      class, type,
+						      answer, anslen, answerp);
 			if (ret > 0)
 				return (ret);
+
+			if (answerp && *answerp != answer) {
+				answer = *answerp;
+				anslen = MAXPACKET;
+			}
 
 			/*
 			 * If no server present, give up.
@@ -306,8 +338,8 @@ res_nsearch(res_state statp,
 	 * query now.
 	 */
 	if (statp->ndots && !(tried_as_is || root_on_list)) {
-		ret = res_nquerydomain(statp, name, NULL, class, type,
-				       answer, anslen);
+		ret = __libc_res_nquerydomain(statp, name, NULL, class, type,
+					      answer, anslen, answerp);
 		if (ret > 0)
 			return (ret);
 	}
@@ -328,17 +360,29 @@ res_nsearch(res_state statp,
 	return (-1);
 }
 
+int
+res_nsearch(res_state statp,
+	    const char *name,	/* domain name */
+	    int class, int type,	/* class and type of query */
+	    u_char *answer,	/* buffer to put answer */
+	    int anslen)		/* size of answer */
+{
+	return __libc_res_nsearch(statp, name, class, type, answer,
+				  anslen, NULL);
+}
+
 /*
  * Perform a call on res_query on the concatenation of name and domain,
  * removing a trailing dot from name if domain is NULL.
  */
-int
-res_nquerydomain(res_state statp,
+static int
+__libc_res_nquerydomain(res_state statp,
 	    const char *name,
 	    const char *domain,
 	    int class, int type,	/* class and type of query */
 	    u_char *answer,		/* buffer to put answer */
-	    int anslen)		/* size of answer */
+	    int anslen,			/* size of answer */
+	    u_char **answerp)
 {
 	char nbuf[MAXDNAME];
 	const char *longname = nbuf;
@@ -374,7 +418,20 @@ res_nquerydomain(res_state statp,
 		}
 		sprintf(nbuf, "%s.%s", name, domain);
 	}
-	return (res_nquery(statp, longname, class, type, answer, anslen));
+	return (__libc_res_nquery(statp, longname, class, type, answer,
+				  anslen, answerp));
+}
+
+int
+res_nquerydomain(res_state statp,
+	    const char *name,
+	    const char *domain,
+	    int class, int type,	/* class and type of query */
+	    u_char *answer,		/* buffer to put answer */
+	    int anslen)		/* size of answer */
+{
+	return __libc_res_nquerydomain(statp, name, domain, class, type,
+				       answer, anslen, NULL);
 }
 
 const char *
