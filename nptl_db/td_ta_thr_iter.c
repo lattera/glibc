@@ -51,7 +51,7 @@ iterate_thread_list (const td_thragent_t *ta, td_thr_iter_f *callback,
   while (list.next != head)
     {
       psaddr_t addr = ((psaddr_t) list.next
-		       - offsetof (struct pthread, header.data.list));
+		       - offsetof (struct pthread, list));
 
       int schedpolicy;
       if (ps_pdread (ta->ph, &((struct pthread *) addr)->schedpolicy,
@@ -102,7 +102,7 @@ iterate_thread_list (const td_thragent_t *ta, td_thr_iter_f *callback,
 	}
 
       /* Get the pointer to the next element.  */
-      if (ps_pdread (ta->ph, &((struct pthread *) addr)->header.data.list,
+      if (ps_pdread (ta->ph, &((struct pthread *) addr)->list,
 		     &list, sizeof (list_t)) != PS_OK)
 	return TD_ERR;	/* XXX Other error value?  */
     }

@@ -1,5 +1,5 @@
 /* Validate a thread handle.
-   Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -32,7 +32,7 @@ check_thread_list (const td_thrhandle_t *th, psaddr_t head)
     return TD_ERR;	/* XXX Other error value?  */
 
   while (list.next != head)
-    if ((psaddr_t) list.next - offsetof (struct pthread, header.data.list)
+    if ((psaddr_t) list.next - offsetof (struct pthread, list)
 	== th->th_unique)
       {
 	result = TD_OK;

@@ -1,5 +1,5 @@
 /* Get address of thread local variable.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -39,8 +39,7 @@ td_thr_tls_get_addr (const td_thrhandle_t *th __attribute__ ((unused)),
   LOG ("td_thr_tls_get_addr");
 
   /* Get the DTV pointer from the thread descriptor.  */
-  if (ps_pdread (th->th_ta_p->ph,
-		 &((struct pthread *) th->th_unique)->header.data.dtvp,
+  if (ps_pdread (th->th_ta_p->ph, &((struct pthread *) th->th_unique)->dtv,
 		 &dtvp, sizeof dtvp) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
