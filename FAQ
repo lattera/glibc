@@ -43,6 +43,9 @@ please let me know.
 
 [Q11]	``Where are the DST_* constants found in <sys/time.h> on many
 	  systems?''
+
+[Q12]	``The `gencat' utility cannot process the input which are
+	  successfully used on my Linux libc based system.  Why?''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -133,12 +136,12 @@ Library.
   form the tools from the GNU gettext package are necessary.  See
   ftp://prep.ai.mit.edu/pub/gnu or better any mirror site.
 
-* lots of diskspace (for i386-linux this means, e.g., ~70MB).
+* lots of diskspace (for i?86-linux this means, e.g., ~70MB).
 
   You should avoid compiling on a NFS mounted device.  This is very
   slow.
 
-* plenty of time (approx 1h for i386-linux on i586@133 or 2.5h on
+* plenty of time (approx 1h for i?86-linux on i586@133 or 2.5h on
   i486@66 or 4.5h on i486@33).
 
   If you have some more measurements let me know.
@@ -191,7 +194,7 @@ For Linux there are today two libc versions:
 	libc-5		current ELF libc
 
 GNU libc will have the major number 6 and therefore you can have this
-additionally installed.  For more information consult documenation for
+additionally installed.  For more information consult documentation for
 shared library handling.  The Makefiles of GNU libc will automatically
 generate the needed symbolic links which the linker will use.
 
@@ -294,6 +297,44 @@ although the constants are defined).
 
 Instead GNU libc contains the zone database handling and compatibility
 code for POSIX TZ environment variable handling.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+[Q12]	``The `gencat' utility cannot process the input which are
+	  successfully used on my Linux libc based system.  Why?''
+
+[A12] {UD} Unlike the author of the `gencat' program which is distributed
+with Linux libc I have read the underlying standards before writing the
+code.  It is completely compatible with the specification given in
+X/Open Portability Guide.
+
+To ease the transition from the Linux version some of the non-standard
+features are also present in the `gencat' program of GNU libc.  This
+mainly includes the use of symbols for the message number and the automatic
+generation of header files which contain the needed #defines to map the
+symbols to integers.
+
+Here is a simple SED script to convert at least some Linux specific
+catalog files to the XPG4 form:
+
+-----------------------------------------------------------------------
+# Change catalog source in Linux specific format to standard XPG format.
+# Ulrich Drepper <drepper@cygnus.com>, 1996.
+#
+/^\$ #/ {
+  h
+  s/\$ #\([^ ]*\).*/\1/
+  x
+  s/\$ #[^ ]* *\(.*\)/\$ \1/
+}
+
+/^# / {
+  s/^# \(.*\)/\1/
+  G
+  s/\(.*\)\n\(.*\)/\2 \1/
+}
+-----------------------------------------------------------------------
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~

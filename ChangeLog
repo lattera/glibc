@@ -1,5 +1,10 @@
 Thu Jul 11 20:09:55 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* math/Makefile (calls): Add s_frexp, s_ldexp.
+	(routines): Remove them and &f from here.
+
+	* sys/socket.h: New file, wrapper for socket/sys/socket.h.
+
 	* nss/nss_files/files-service.c (getservbyname): Take second arg PROTO
 	and check it.
 
@@ -32,6 +37,16 @@ Thu Jul 11 03:21:10 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* catgets/gencat.c (write_out): Move code to determine new
 	best size out of inner loop.
+
+Thu Jul 11 00:22:40 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/s_frexpl.c: New file.  `long double'
+	implementation of frexp() function.
+	* sysdeps/libm-ieee754/s_ldexpl.c: New file.  `long double'
+	implementation of ldexp() function.
+
+	* sysdeps/libm-i387/s_isnanl.c (isnanl): Mask explicit one
+	out before or'ing.
 
 Wed Jul 10 05:24:40 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 

@@ -1,4 +1,4 @@
-/* s_isnanl.c -- long double version for i387 of s_isnan.c.
+/* s_ldexpl.c -- long double version of s_ldexp.c.
  * Conversion to long double by Ulrich Drepper,
  * Cygnus Support, drepper@cygnus.com.
  */
@@ -18,30 +18,20 @@
 static char rcsid[] = "$NetBSD: $";
 #endif
 
-/*
- * isnanl(x) returns 1 is x is nan, else 0;
- * no branching!
- */
-
 #include "math.h"
 #include "math_private.h"
+#include <errno.h>
 
 #ifdef __STDC__
-	int __isnanl(long double x)
+	long double __ldexpl(long double value, int exp)
 #else
-	int __isnanl(x)
-	long double x;
+	long double __ldexpl(value, exp)
+	long double value; int exp;
 #endif
 {
-	int32_t se,hx,lx;
-	GET_LDOUBLE_WORDS(se,hx,lx,x);
-	se = (se & 0x7fff) << 1;
-	/* The additional & 0x7fffffff is required because Intel's
-	   extended format has the normally implicit 1 explicit
-	   present.  Sigh!  */
-	lx |= hx & 0x7fffffff;
-	se |= (u_int32_t)(lx|(-lx))>>31;
-	se = 0xfffe - se;
-	return (int)((u_int32_t)(se))>>16;
+	if(!__finitel(value)||value==0.0) return value;
+	value = __scalbnl(value,exp);
+	if(!__finitel(value)||value==0.0) errno = ERANGE;
+	return value;
 }
-weak_alias (__isnanl, isnanl)
+weak_alias (__ldexpl, ldexpl)
