@@ -1,5 +1,17 @@
 2000-08-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ia64/bits/byteswap.h: New file.
+	Patch by Dan Pop <Dan.Pop@cern.ch>.
+
+	* misc/sys/cdefs.h: Define __attribute_format_arg__.
+	* intl/libintl.h: Use it here instead of using __attribute__ directly.
+
+2000-07-13  H.J. Lu  <hjl@gnu.org>
+
+	* posix/regex.c (re_max_failures): Set to 4000.
+
+2000-08-01  Ulrich Drepper  <drepper@redhat.com>
+
 	* gnulib/Makefile (tests): Add tst-gcc.
 	* gnulib/tst-gcc.c: New file.
 

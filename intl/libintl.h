@@ -31,41 +31,44 @@ __BEGIN_DECLS
 /* Look up MSGID in the current default message catalog for the current
    LC_MESSAGES locale.  If not found, returns MSGID itself (the default
    text).  */
-extern char *gettext (__const char *__msgid) __THROW;
+extern char *gettext (__const char *__msgid)
+     __THROW __attribute_format_arg__ (1);
 
 /* Look up MSGID in the DOMAINNAME message catalog for the current
    LC_MESSAGES locale.  */
-extern char *dgettext (__const char *__domainname,
-		       __const char *__msgid) __THROW;
-extern char *__dgettext (__const char *__domainname,
-			 __const char *__msgid) __THROW;
+extern char *dgettext (__const char *__domainname, __const char *__msgid)
+     __THROW __attribute_format_arg__ (2);
+extern char *__dgettext (__const char *__domainname, __const char *__msgid)
+     __THROW __attribute_format_arg__ (2);
 
 /* Look up MSGID in the DOMAINNAME message catalog for the current CATEGORY
    locale.  */
 extern char *dcgettext (__const char *__domainname,
-			__const char *__msgid, int __category) __THROW;
+			__const char *__msgid, int __category)
+     __THROW __attribute_format_arg__ (2);
 extern char *__dcgettext (__const char *__domainname,
-			  __const char *__msgid, int __category) __THROW;
+			  __const char *__msgid, int __category)
+     __THROW __attribute_format_arg__ (2);
 
 
 /* Similar to `gettext' but select the plural form corresponding to the
    number N.  */
 extern char *ngettext (__const char *__msgid1, __const char *__msgid2,
 		       unsigned long int __n)
-     __THROW __attribute__ ((__format_arg__ (1)));
+     __THROW __attribute_format_arg__ (1);
 
 /* Similar to `dgettext' but select the plural form corresponding to the
    number N.  */
 extern char *dngettext (__const char *__domainname, __const char *__msgid1,
 			__const char *__msgid2, unsigned long int __n)
-     __THROW __attribute__ ((__format_arg__ (2)));
+     __THROW __attribute_format_arg__ (2);
 
 /* Similar to `dcgettext' but select the plural form corresponding to the
    number N.  */
 extern char *dcngettext (__const char *__domainname, __const char *__msgid1,
 			 __const char *__msgid2, unsigned long int __n,
 			 int __category)
-     __THROW __attribute__ ((__format_arg__ (2)));
+     __THROW __attribute_format_arg__ (2);
 
 
 /* Set the current default message catalog to DOMAINNAME.

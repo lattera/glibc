@@ -141,6 +141,15 @@
 # define __attribute_pure__ /* Ignore */
 #endif
 
+/* At some point during the gcc 2.8 development the `format_arg' attribute
+   for functions was introduced.  We don't want to use it unconditionally
+   (although this would be possible) since it generates warnings.  */
+#if __GNUC_PREREQ (2,8)
+# define __attribute_format_arg__(x) __attribute__ ((__format_arg__ (x)))
+#else
+# define __attribute_format_arg__(x) /* Ignore */
+#endif
+
 /* It is possible to compile containing GCC extensions even if GCC is
    run in pedantic mode if the uses are carefully marked using the
    `__extension__' keyword.  But this is not generally available before

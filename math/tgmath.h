@@ -128,7 +128,7 @@
 # define __TGMATH_UNARY_REAL_IMAG(Val, Fct, Cfct) \
      (__extension__ ({ __tgmath_real_type (Val) __tgmres;		      \
 		       if (sizeof (__real__ (Val)) > sizeof (double)	      \
-			   && __builtin_classify_type (Val) == 8)	      \
+			   && __builtin_classify_type (__real__ (Val)) == 8)  \
 			 {						      \
 			   if (sizeof (__real__ (Val)) == sizeof (Val))	      \
 			     __tgmres = Fct##l (Val);			      \
@@ -136,7 +136,8 @@
 			     __tgmres = Cfct##l (Val);			      \
 			 }						      \
 		       else if (sizeof (__real__ (Val)) == sizeof (double)    \
-				|| __builtin_classify_type (Val) != 8)	      \
+				|| (__builtin_classify_type (__real__ (Val))  \
+				    != 8)				      \
 			 {						      \
 			   if (sizeof (__real__ (Val)) == sizeof (Val))	      \
 			     __tgmres = Fct (Val);			      \
@@ -157,7 +158,7 @@
 # define __TGMATH_UNARY_IMAG_ONLY(Val, Fct) \
      (__extension__ ({ __tgmath_real_type (Val) __tgmres;		      \
 		       if (sizeof (Val) == sizeof (__complex__ double)	      \
-			   || __builtin_classify_type (Val) != 8)	      \
+			   || __builtin_classify_type (__real__ (Val)) != 8)  \
 			 __tgmres = Fct (Val);				      \
 		       else if (sizeof (Val) == sizeof (__complex__ float))   \
 			 __tgmres = Fct##f (Val);			      \
@@ -171,7 +172,7 @@
      (__extension__ ({ __tgmath_real_type ((Val1) + (Val2)) __tgmres;	      \
 		       if ((sizeof (__real__ (Val1)) > sizeof (double)	      \
 			    || sizeof (__real__ (Val2)) > sizeof (double))    \
-			   && __builtin_classify_type (Val) == 8)	      \
+			   && __builtin_classify_type (__real__ (Val)) == 8)  \
 			 {						      \
 			   if (sizeof (__real__ (Val1)) == sizeof (Val1)      \
 			       && sizeof (__real__ (Val2)) == sizeof (Val2))  \
@@ -181,7 +182,8 @@
 			 }						      \
 		       else if (sizeof (__real__ (Val1)) == sizeof (double)   \
 				|| sizeof (__real__ (Val2)) == sizeof(double) \
-				|| __builtin_classify_type (Val) != 8)	      \
+				|| (__builtin_classify_type (__real__ (Val))  \
+				    != 8)				      \
 			 {						      \
 			   if (sizeof (__real__ (Val1)) == sizeof (Val1)      \
 			       && sizeof (__real__ (Val2)) == sizeof (Val2))  \

@@ -1234,7 +1234,7 @@ typedef struct
 # if defined MATCH_MAY_ALLOCATE
 /* 4400 was enough to cause a crash on Alpha OSF/1,
    whose default stack limit is 2mb.  */
-int re_max_failures = 20000;
+int re_max_failures = 4000;
 # else
 int re_max_failures = 2000;
 # endif
