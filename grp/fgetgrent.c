@@ -26,11 +26,12 @@
 /* We need to protect the dynamic buffer handling.  */
 __libc_lock_define_initialized (static, lock);
 
+static char *buffer;
+
 /* Read one entry from the given stream.  */
 struct group *
 fgetgrent (FILE *stream)
 {
-  static char *buffer;
   static size_t buffer_size;
   static struct group resbuf;
   fpos_t pos;
@@ -85,3 +86,14 @@ fgetgrent (FILE *stream)
 
   return result;
 }
+
+
+/* Free all resources if necessary.  */
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  if (buffer != NULL)
+    free (buffer);
+}
+
+text_set_element (__libc_subfreeres, free_mem);

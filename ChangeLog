@@ -1,5 +1,8 @@
 1999-06-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* grp/fgetgrent.c (buffer): Make file local variable.
+	(free_mem): New function.  Call for malloc debugging.
+
 	* grp/tst_fgetgrent.c (write_users): Correctly generate long line.
 
 1999-06-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
