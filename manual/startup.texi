@@ -316,7 +316,8 @@ Non-option argument -
 @subsection Parsing Long Options
 
 To accept GNU-style long options as well as single-character options,
-use @code{getopt_long} instead of @code{getopt}.  You should make every
+use @code{getopt_long} instead of @code{getopt}.  This function is
+declared in @file{getopt.h}, not @file{unistd.h}.  You should make every
 program accept long options if it uses any options, for this takes
 little extra work and helps beginners remember how to use the program.
 
@@ -493,7 +494,7 @@ may not be available in other systems.
 You can deal directly with the underlying representation of environment
 objects to add more variables to the environment (for example, to
 communicate with another program you are about to execute; see
-@ref{Executing a File}).  
+@ref{Executing a File}).
 
 @comment unistd.h
 @comment POSIX.1
@@ -564,7 +565,7 @@ use this environment variable, as do many shells and other utilities
 which are implemented in terms of those functions.
 
 The syntax of a path is a sequence of directory names separated by
-colons.  An empty string instead of a directory name stands for the 
+colons.  An empty string instead of a directory name stands for the
 current directory (@pxref{Working Directory}).
 
 A typical value for this environment variable might be a string like:
@@ -670,12 +671,12 @@ a signal that kills the program.
 @menu
 * Normal Termination::          If a program calls @code{exit}, a
                                  process terminates normally.
-* Exit Status::                 The @code{exit status} provides information 
-                                 about why the process terminated. 
+* Exit Status::                 The @code{exit status} provides information
+                                 about why the process terminated.
 * Cleanups on Exit::            A process can run its own cleanup
-                                 functions upon normal termination. 
+                                 functions upon normal termination.
 * Aborting a Program::          The @code{abort} function causes
-                                 abnormal program termination. 
+                                 abnormal program termination.
 * Termination Internals::       What happens when a process terminates.
 @end menu
 
@@ -696,7 +697,7 @@ The @code{exit} function terminates the process with status
 Normal termination causes the following actions:
 
 @enumerate
-@item 
+@item
 Functions that were registered with the @code{atexit} or @code{on_exit}
 functions are called in the reverse order of their registration.  This
 mechanism allows your application to specify its own ``cleanup'' actions
@@ -704,12 +705,12 @@ to be performed at program termination.  Typically, this is used to do
 things like saving program state information in a file, or unlocking
 locks in shared data bases.
 
-@item 
+@item
 All open streams are closed, writing out any buffered output data.  See
 @ref{Closing Streams}.  In addition, temporary files opened
 with the @code{tmpfile} function are removed; see @ref{Temporary Files}.
 
-@item 
+@item
 @code{_exit} is called, terminating the program.  @xref{Termination Internals}.
 @end enumerate
 
@@ -801,7 +802,7 @@ called at normal program termination.  The @var{function} is called with
 no arguments.
 
 The return value from @code{atexit} is zero on success and nonzero if
-the function cannot be registered. 
+the function cannot be registered.
 @end deftypefun
 
 @comment stdlib.h
