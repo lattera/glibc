@@ -175,7 +175,7 @@ print_header (const definition * def)
   if (inlineflag == 0)
     return;
   /*May cause lint to complain. but  ... */
-  f_print (fout, "\t register int32_t *buf;\n\n");
+  f_print (fout, "\tregister int32_t *buf;\n\n");
 }
 
 static void
