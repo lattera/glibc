@@ -183,12 +183,11 @@ AC_ARG_ENABLE([add-ons],
   [add_ons= add_ons_automatic=no])
 
 dnl Let the user avoid using TLS.  Don't know why but...
-dnl XXX For now we disable support by default.
 AC_ARG_WITH([tls],
             AC_HELP_STRING([--with-tls],
                            [enable support for TLS]),
 	    [usetls=$withval],
-	    [usetls=no])
+	    [usetls=yes])
 
 AC_ARG_WITH([__thread],
             AC_HELP_STRING([--without-__thread],
@@ -356,12 +355,9 @@ if test x"$add_ons" != x; then
     esac
 
     # Test whether such a subdir really exists.
-    if test -d $srcdir/$f; then
-      add_ons_pfx="$add_ons_pfx $f/"
-      add_ons_sfx="$add_ons_sfx /$f"
-    else
+    test -d $srcdir/$f || {
       AC_MSG_ERROR(add-on directory \"$f\" does not exist)
-    fi
+    }
   done
 
   # Now source each add-on's configure fragment.
@@ -378,7 +374,11 @@ if test x"$add_ons" != x; then
     else
       AC_MSG_WARN(add-on fragment $libc_add_on_frag missing)
     fi
-    use_add_ons="$use_add_ons $libc_add_on"
+    if test -n "$libc_add_on"; then
+      use_add_ons="$use_add_ons $libc_add_on"
+      add_ons_pfx="$add_ons_pfx $libc_add_on/"
+      add_ons_sfx="$add_ons_sfx /$libc_add_on"
+    fi
   done
   # Use echo to strip excess whitespace.
   add_ons="`echo $use_add_ons`"

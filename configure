@@ -1608,7 +1608,7 @@ if test "${with_tls+set}" = set; then
   withval="$with_tls"
   usetls=$withval
 else
-  usetls=no
+  usetls=yes
 fi;
 
 
@@ -1850,14 +1850,11 @@ echo "$as_me: error:
     esac
 
     # Test whether such a subdir really exists.
-    if test -d $srcdir/$f; then
-      add_ons_pfx="$add_ons_pfx $f/"
-      add_ons_sfx="$add_ons_sfx /$f"
-    else
+    test -d $srcdir/$f || {
       { { echo "$as_me:$LINENO: error: add-on directory \"$f\" does not exist" >&5
 echo "$as_me: error: add-on directory \"$f\" does not exist" >&2;}
    { (exit 1); exit 1; }; }
-    fi
+    }
   done
 
   # Now source each add-on's configure fragment.
@@ -1876,7 +1873,11 @@ echo "${ECHO_T}running configure fragment for add-on $libc_add_on" >&6
       { echo "$as_me:$LINENO: WARNING: add-on fragment $libc_add_on_frag missing" >&5
 echo "$as_me: WARNING: add-on fragment $libc_add_on_frag missing" >&2;}
     fi
-    use_add_ons="$use_add_ons $libc_add_on"
+    if test -n "$libc_add_on"; then
+      use_add_ons="$use_add_ons $libc_add_on"
+      add_ons_pfx="$add_ons_pfx $libc_add_on/"
+      add_ons_sfx="$add_ons_sfx /$libc_add_on"
+    fi
   done
   # Use echo to strip excess whitespace.
   add_ons="`echo $use_add_ons`"

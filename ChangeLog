@@ -1,3 +1,8 @@
+2004-08-27  Roland McGrath  <roland@redhat.com>
+
+	* configure.in (usetls): Default to yes.
+	* configure: Regenerated.
+
 2004-08-26  Roland McGrath  <roland@redhat.com>
 
 	* configure.in (add_ons_automatic): New variable, set to yes or no
