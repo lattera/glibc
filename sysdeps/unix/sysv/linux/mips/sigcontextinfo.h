@@ -20,6 +20,6 @@
 
 #define SIGCONTEXT struct sigcontext
 #define SIGCONTEXT_EXTRA_ARGS
-#define GET_PC(ctx)	((void *) ctx.pc)
+#define GET_PC(ctx)	((void *) ctx.sc_pc)
 #define GET_FRAME(ctx)	((void *) ctx.sc_regs[30])
 #define GET_STACK(ctx)	((void *) ctx.sc_regs[29])
