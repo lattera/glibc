@@ -26,8 +26,8 @@
 # it with the rest of us.  Send it using the `glibcbug' script to
 # bugs@gnu.org.
 
-bokmal		no_NO.ISO-8859-1
-bokmål		no_NO.ISO-8859-1
+bokmal		nb_NO.ISO-8859-1
+bokmål		nb_NO.ISO-8859-1
 catalan		ca_ES.ISO-8859-1
 croatian	hr_HR.ISO-8859-2
 czech		cs_CZ.ISO-8859-2

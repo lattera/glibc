@@ -34,7 +34,8 @@ distribute := confstr.h TESTS TESTS2C.sed testcases.h \
 	      PTESTS PTESTS2C.sed ptestcases.h \
 	      globtest.c globtest.sh wordexp-tst.sh annexc.c fnmatch_loop.c   \
 	      spawn_int.h tst-getconf.sh regcomp.c regexec.c regex_internal.c \
-	      regex_internal.h fork.h rxspencer/tests rxspencer/COPYRIGHT
+	      regex_internal.h fork.h rxspencer/tests rxspencer/COPYRIGHT     \
+	      PCRE.tests BOOST.tests
 
 routines :=								      \
 	uname								      \
@@ -78,7 +79,8 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   bug-regex8 bug-regex9 bug-regex10 bug-regex11 bug-regex12 \
 		   bug-regex13 bug-regex14 bug-regex15 bug-regex16 \
 		   bug-regex17 bug-regex18 bug-regex19 bug-regex20 \
-		   bug-regex21 tst-nice tst-nanosleep transbug tst-rxspencer
+		   bug-regex21 tst-nice tst-nanosleep transbug tst-rxspencer \
+		   tst-pcre tst-boost
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn
@@ -94,7 +96,8 @@ generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     annexc annexc.out wordexp-tst.out bug-regex2-mem \
 	     bug-regex2.mtrace bug-regex14-mem bug-regex14.mtrace \
 	     bug-regex21-mem bug-regex21.mtrace \
-	     tst-rxspencer-mem tst-rxspencer.mtrace tst-getconf.out
+	     tst-rxspencer-mem tst-rxspencer.mtrace tst-getconf.out \
+	     tst-pcre-mem tst-pcre.mtrace tst-boost-mem tst-boost.mtrace
 
 include ../Rules
 
@@ -161,6 +164,8 @@ bug-regex19-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex20-ENV = LOCPATH=$(common-objpfx)localedata
 tst-rxspencer-ARGS = --utf8 rxspencer/tests
 tst-rxspencer-ENV = LOCPATH=$(common-objpfx)localedata
+tst-pcre-ARGS = PCRE.tests
+tst-boost-ARGS = BOOST.tests
 
 testcases.h: TESTS TESTS2C.sed
 	sed -f TESTS2C.sed < $< > $@T
@@ -182,7 +187,7 @@ tests: $(objpfx)annexc.out
 ifeq (no,$(cross-compiling))
 tests: $(objpfx)bug-regex2-mem $(objpfx)bug-regex14-mem \
   $(objpfx)bug-regex21-mem $(objpfx)tst-rxspencer-mem \
-  $(objpfx)tst-getconf.out
+  $(objpfx)tst-pcre-mem $(objpfx)tst-boost-mem $(objpfx)tst-getconf.out
 endif
 
 $(objpfx)annexc.out: $(objpfx)annexc
@@ -216,6 +221,14 @@ $(objpfx)tst-rxspencer-mem: $(objpfx)tst-rxspencer.out
 	  $(run-program-prefix) $(objpfx)tst-rxspencer rxspencer/tests \
 	  > /dev/null
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-rxspencer.mtrace > $@
+
+tst-pcre-ENV = MALLOC_TRACE=$(objpfx)tst-pcre.mtrace
+$(objpfx)tst-pcre-mem: $(objpfx)tst-pcre.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-pcre.mtrace > $@
+
+tst-boost-ENV = MALLOC_TRACE=$(objpfx)tst-boost.mtrace
+$(objpfx)tst-boost-mem: $(objpfx)tst-boost.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-boost.mtrace > $@
 
 $(objpfx)tst-getconf.out: tst-getconf.sh $(objpfx)getconf
 	$(SHELL) -e $< $(common-objpfx) $(elf-objpfx) $(rtld-installed-name)

@@ -1,3 +1,28 @@
+2003-12-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/Makefile (distribute): Add BOOST.tests.
+	(tests): Add tst-boost, depend on tst-boost-mem.
+	(generated): Add tst-boost-mem and tst-boost.mtrace.
+	(tst-boost-ARGS, tst-boost-ENV): Set.
+	($(objpfx)tst-boost-mem): New.
+	* posix/tst-boost.c: New test.
+	* posix/BOOST.tests: New file.
+
+	* posix/Makefile (distribute): Add PCRE.tests.
+	(tests): Add tst-pcre, depend on tst-pcre-mem.
+	(generated): Add tst-pcre-mem and tst-pcre.mtrace.
+	(tst-pcre-ARGS, tst-pcre-ENV): Set.
+	($(objpfx)tst-pcre-mem): New.
+	* posix/tst-pcre.c: New test.
+	* posix/PCRE.tests: New file.
+
+2003-12-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* intl/locale.alias: Use nb_NO instead of no_NO for bokm.l.
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Regenerated.
+	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.
+
 2003-12-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/locarchive.c (enlarge_archive): Print size info
