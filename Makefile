@@ -322,12 +322,6 @@ rpm/%: subdir_distinfo
 iconvdata/% localedata/% po/% manual/%:
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
 
-# This is a special goal for people making binary distributions.  Normally
-# everybody uses the DES based crypt library but for the distribution we
-# need the only-MD5 based one as well.
-md5-crypt/libmd5crypt:
-	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
-
 # glibc 2.0 contains some header files which aren't used with glibc 2.1
 # anymore.
 # These rules should remove those headers
