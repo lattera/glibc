@@ -1,3 +1,4 @@
+
 /* Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,23 +17,14 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <abort-instr.h>
 
 
 void
 __attribute__ ((noreturn))
 __chk_fail (void)
 {
-  while (1)
-    {
-      /* This will leave a nice backtrace.  */
-      abort ();
-#ifdef ABORT_INSTRUCTION
-      ABORT_INSTRUCTION;
-#endif
-      _exit (127);
-    }
+  __libc_fatal ("*** buffer overflow detected ***\n");
 }
 libc_hidden_def (__chk_fail)

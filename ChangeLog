@@ -1,3 +1,19 @@
+2004-11-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/libc_fatal.c: Add new function __libc_message
+	which performs the printing and simple format string handling.  The
+	string is written to tty, stderr, syslog in this order, stopping after
+	the first successful output.
+	(__libc_fatal): Call __libc_message.
+	* include/stdio.h: Declare __libc_message.
+	* malloc/malloc.c (malloc_printerr): Use __libc_message.
+	* debug/chk_fail.c: Also print message with __libc_message.
+	* debug/test-strcpy_chk.c: Ensure that debug messages are not printed
+	to the terminal or stderr.
+	* debug/tst-chk1.c: Likewise.
+
+	* posix/Makefile: Remove gpl2lgpl variable.
+
 2004-11-12  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* elf/elf.h: Add 20 bit relocations R_390_*20.

@@ -17,6 +17,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <fcntl.h>
+#include <paths.h>
 #include <setjmp.h>
 #include <signal.h>
 #include <stdio.h>
@@ -105,6 +107,17 @@ do_test (void)
   sigemptyset (&sa.sa_mask);
 
   sigaction (SIGABRT, &sa, NULL);
+
+  /* Avoid all the buffer overflow messages on stderr.  */
+  int fd = open (_PATH_DEVNULL, O_WRONLY);
+  if (fd == -1)
+    close (STDERR_FILENO);
+  else
+    {
+      dup2 (fd, STDERR_FILENO);
+      close (fd);
+    }
+  setenv ("LIBC_FATAL_STDERR_", "1", 1);
 
   struct A { char buf1[9]; char buf2[1]; } a;
 

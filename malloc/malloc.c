@@ -5474,45 +5474,19 @@ malloc_printerr(int action, const char *str, void *ptr)
 {
   if (action & 1)
     {
-      /* output string will be ": ADDR ***\n"  */
-      static const char suffix[] = " ***\n";
-      static const char prefix[] = ": 0x";
-      char buf[sizeof (prefix) - 1 + sizeof (void *) * 2 + sizeof (suffix)];
-      char *cp;
-      if (action & 4)
-	cp = memcpy (&buf[sizeof (buf) - 2], "\n", 2);
-      else
-	{
-	  cp = memcpy (&buf[sizeof (buf) - sizeof (suffix)], suffix,
-		       sizeof (suffix));
-	  cp = _itoa_word ((unsigned long int) ptr, cp, 16, 0);
-	  while (cp > &buf[sizeof (prefix) - 1])
-	    *--cp = '0';
-	  cp = memcpy (buf, prefix, sizeof (prefix) - 1);
-	}
+      char buf[2 * sizeof (uintptr_t) + 1];
 
-      struct iovec iov[3];
-      int n = 0;
-      if ((action & 4) == 0)
-	{
-	  iov[0].iov_base = (char *) "*** glibc detected *** ";
-	  iov[0].iov_len = strlen (iov[0].iov_base);
-	  ++n;
-	}
-      iov[n].iov_base = (char *) str;
-      iov[n].iov_len = strlen (str);
-      ++n;
-      iov[n].iov_base = cp;
-      iov[n].iov_len = &buf[sizeof (buf) - 1] - cp;
-      ++n;
-      if (TEMP_FAILURE_RETRY (__writev (STDERR_FILENO, iov, n)) == -1
-	  && errno == EBADF)
-	/* Standard error is not opened.  Try using syslog.  */
-	syslog (LOG_ERR, "%s%s%s", (char *) iov[0].iov_base,
-		(char *) iov[1].iov_base,
-		n == 3 ? (const char *) iov[2].iov_base : "");
+      buf[sizeof (buf) - 1] = '\0';
+      char *cp = _itoa_word ((uintptr_t) ptr, &buf[sizeof (buf) - 1], 16, 0);
+      while (cp > buf)
+	*--cp = '0';
+
+      __libc_message (action & 2,
+		      action & 4
+		      ? "%s\n" : "*** glibc detected *** %s: 0x%s ***\n",
+		      str, cp);
     }
-  if (action & 2)
+  else if (action & 2)
     abort ();
 }
 
