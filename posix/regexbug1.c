@@ -23,9 +23,8 @@ main (void)
   if (regexec (&re, "002", 2, ma, 0) != 0)
     {
       error (0, 0, "\"0*[0-9][0-9]\" did not match \"002\"");
-      /* Comment the following line out until the bug is fixed.  */
-      //res = 1;
+      res = 1;
     }
 
-  return 0;
+  return res;
 }
