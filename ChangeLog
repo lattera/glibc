@@ -1,5 +1,7 @@
 2002-08-04  Roland McGrath  <roland@redhat.com>
 
+	* stdlib/lrand48_r.c: Add libc_hidden_def.
+
 	* sysdeps/generic/dl-tls.c (_dl_allocate_tls_storage): Allocate the
 	TCB with __libc_memalign instead of mmap.
 	(_dl_deallocate_tls): Free it with free instead of munmap.
@@ -211,6 +213,7 @@
 	setpriority.
 	* sysdeps/unix/sysv/linux/getpriority.c: Add libc_hidden_def.
 	* sysdeps/unix/sysv/irix4/getpriority.c: Likewise.
+	* sysdeps/unix/sysv/irix4/setpriority.c: Likewise.
 	* sysdeps/mach/hurd/setpriority.c: Likewise.
 	* sysdeps/mach/hurd/getpriority.c: Likewise.
 	* sysdeps/generic/setpriority.c: Likewise.
