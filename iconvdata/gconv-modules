@@ -669,11 +669,13 @@ module	INTERNAL		EUC-KR//		EUC-KR		1
 
 #	from			  to			module		cost
 alias	MSCP949//		UHC//
+alias	CP949//			UHC//
 module	UHC//			INTERNAL		UHC		1
 module	INTERNAL		UHC//			UHC		1
 
 #	from			  to			module		cost
 alias	MSCP1361//		JOHAB//
+alias	CP1361//		JOHAB//
 module	JOHAB//			INTERNAL		JOHAB		1
 module	INTERNAL		JOHAB//			JOHAB		1
 

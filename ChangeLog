@@ -1,3 +1,8 @@
+1998-05-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/gconv-modules: Add more aliases to please java
+	environments.
+
 1998-05-20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/vfprintf.c (process_arg): Fix typo.
