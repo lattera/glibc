@@ -1,3 +1,8 @@
+2002-01-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/stdlib.h: Define inlines for the _l variants of the strto*
+	functions.
+
 2002-01-01  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/powerpc/intr-msg.h: Remove extraneous backslash.
