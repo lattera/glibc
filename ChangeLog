@@ -1,5 +1,8 @@
 2000-03-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makerules: If make variable md5 is defined to yes after
+	generating dependencies generate MD5 sum for the object.
+
 	* iconv/gconv_builtin.h: Fix length in transformation definition
 	for UNICODEBIG.
 

@@ -337,6 +337,15 @@ COMPILE.S = \
   $(CC) -c $(CPPFLAGS) -DASSEMBLER $(asm-CPPFLAGS) $(ASFLAGS-$(suffix $@))
 COMPILE.s = $(filter-out -pipe,$(CC)) -c $(ASFLAGS)
 
+# If we want to generate MD% checksums for the sources do this now.
+ifeq ($(md5),yes)
+generate-md5 = ; rm -f $(@:.d=.md5); \
+$(CC) -E $< $(CFLAGS) $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
+sed '/^\#/d;/^[[:space:]]*$$/d' | md5sum > $(@:.d=.md5)
+else
+generate-md5 =
+endif
+
 # We need this for the output to go in the right place.  It will default to
 # empty if make was configured to work with a cc that can't grok -c and -o
 # together.  You can't compile the C library with such a compiler.
@@ -350,7 +359,7 @@ $(+mkdep) $< $(CFLAGS) $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
 sed \
 -e 's,$(subst .,\.,$*)\.o,$(foreach o,$(all-object-suffixes),$(@:.d=$o)) $@,' \
 $(sed-remove-objpfx) > $(@:.d=.T)
-mv -f $(@:.d=.T) $@
+mv -f $(@:.d=.T) $@ $(generate-md5)
 endef
 ifneq (,$(objpfx))
 # Continuation lines here are dangerous because they introduce spaces!
