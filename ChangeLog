@@ -1,5 +1,6 @@
 2000-05-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/Makefile (tests): Add tst-preadwrite64.
 	* posix/tst-preadwrite.c: Alloc file being used also for testing
 	pread64 and pwrite64.
 	* posix/tst-preadwrite64.c: New file.
