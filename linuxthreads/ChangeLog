@@ -1,3 +1,8 @@
+2001-01-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread.c (pthread_exit_process): Free memory allocated for
+	manager stack.
+
 2000-12-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* manager.c (pthread_alloca_stack): Remove MAP_FIXED from mmap calls.

@@ -2,6 +2,7 @@
 
 	* libio/bits/stdio.h (printf): Define macro to map printf call to
 	fprintf which gcc can optimize.
+	* stdio-common/printf.c: Undefine printf.
 
 2001-01-07  Ulrich Drepper  <drepper@redhat.com>
 
