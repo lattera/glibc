@@ -1,3 +1,8 @@
+1999-05-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/digits_dots.c: Correct return value interpretation of
+	inet_ntoa.  Fix PR libc/1109.
+
 1999-05-06  Zack Weinberg  <zack@rabi.columbia.edu>
 
 	* sysdeps/sparc/sparc32/sparcv9/Dist: New file.

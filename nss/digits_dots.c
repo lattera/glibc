@@ -98,7 +98,7 @@
 	    {
 	      if (!*cp)
 		{
-		  int not_ok;
+		  int ok;
 
 		  if (*--cp == '.')
 		    break;
@@ -108,13 +108,13 @@
 		     255.255.255.255?  The test below will succeed
 		     spuriously... ???  */
 		  if (af == AF_INET)
-		    not_ok = inet_aton (name, (struct in_addr *) host_addr);
+		    ok = inet_aton (name, (struct in_addr *) host_addr);
 		  else
 		    {
 		      assert (af == AF_INET6);
-		      not_ok = (inet_pton (af, name, host_addr) <= 0);
+		      ok = (inet_pton (af, name, host_addr) > 0);
 		    }
-		  if (not_ok)
+		  if (! ok)
 		    {
 		      __set_h_errno (HOST_NOT_FOUND);
 #ifndef HAVE_LOOKUP_BUFFER
