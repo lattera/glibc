@@ -27,6 +27,7 @@
 #include <unistd.h>
 #include <sys/resource.h>
 #include <sys/wait.h>
+#include <sys/param.h>
 
 /* The test function is normally called `do_test' and it is called
    with argc and argv as the arguments.  We nevertheless provide the
@@ -35,6 +36,9 @@
 # define TEST_FUNCTION do_test (argc, argv)
 #endif
 
+#ifndef TEST_DATA_LIMIT
+# define TEST_DATA_LIMIT (64 << 20) /* Data limit (bytes) to run with.  */
+#endif
 
 #define OPT_DIRECT 1000
 #define OPT_TESTDIR 1001
@@ -248,6 +252,23 @@ main (int argc, char *argv[])
       core_limit.rlim_cur = 0;
       core_limit.rlim_max = 0;
       setrlimit (RLIMIT_CORE, &core_limit);
+#endif
+
+#ifdef RLIMIT_DATA
+      /* Try to avoid eating all memory if a test leaks.  */
+      struct rlimit data_limit;
+      if (getrlimit (RLIMIT_DATA, &data_limit) == 0)
+	{
+	  if (TEST_DATA_LIMIT == RLIM_INFINITY)
+	    data_limit.rlim_cur = data_limit.rlim_max;
+	  else if (data_limit.rlim_cur > (rlim_t) TEST_DATA_LIMIT)
+	    data_limit.rlim_cur = MIN ((rlim_t) TEST_DATA_LIMIT,
+				       data_limit.rlim_max);
+	  if (setrlimit (RLIMIT_DATA, &data_limit) < 0)
+	    perror ("setrlimit: RLIMIT_DATA");
+	}
+      else
+	perror ("getrlimit: RLIMIT_DATA");
 #endif
 
       /* We put the test process in its own pgrp so that if it bogusly

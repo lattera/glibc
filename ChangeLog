@@ -1,3 +1,11 @@
+2002-12-13  Roland McGrath  <roland@redhat.com>
+
+	* posix/bug-regex15.c: New file.
+	* posix/Makefile (tests): Add it.
+
+	* test-skeleton.c (TEST_DATA_LIMIT): New macro, default to 64MB.
+	(main): Set RLIMIT_DATA limit to TEST_DATA_LIMIT (or lower if need be).
+
 2002-12-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-misc.c (_dl_debug_vdprintf): Don't depend on 5-digit PIDs.
