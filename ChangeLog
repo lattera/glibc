@@ -1,5 +1,7 @@
 2004-02-21  Andreas Jaeger  <aj@suse.de>
 
+	* posix/bug-ga1.c: Include <string.h> for memset prototype.
+
 	* elf/dl-load.c (_dl_map_object_from_fd): Fix casts used as lvalue.
 
 	* iconv/gconv_simple.c (internal_ucs4le_loop): Remove cast used as
