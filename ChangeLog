@@ -1,5 +1,8 @@
 1999-05-03  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/generic/strtok_r.c: Use rawmemchr instead of strchr.
+	* sysdeps/generic/strtok.c: Likewise.
+
 	* string/tester.c: Add test of rawmemchr.
 
 	* sysdeps/i386/bits/select.h (__FD_ZERO): Remove memory output

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ strtok (s, delim)
   s = strpbrk (token, delim);
   if (s == NULL)
     /* This token finishes the string.  */
-    olds = strchr (token, '\0');
+    olds = __rawmemchr (token, '\0');
   else
     {
       /* Terminate the token and make OLDS point past it.  */
