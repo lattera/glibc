@@ -1,3 +1,8 @@
+2003-11-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/tst-timer.c (main): Initialize
+	sigev2.sigev_value as well.
+
 2003-10-15  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/pthread/configure.in: Barf if visibility attribute support
