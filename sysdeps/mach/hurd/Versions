@@ -1,0 +1,9 @@
+libc {
+  GLIBC_2.0 {
+    # variables used for detecting cthreads
+    _cthread_exit_routine; _cthread_init_routine;
+
+    # functions with a weak definition in the dynamic linker
+    __getcwd; __mmap;
+  }
+}

@@ -1,3 +1,33 @@
+1998-10-24  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* mach/Versions: Add evc_wait, mach_error, mach_error_string,
+	mach_error_type, mach_msg_destroy, mig_deallocate_reply_port.
+	Remove __mach_host_self, __mach_reply_port, __mach_setup_thread,
+	__mach_port_allocate, __mach_port_allocate_name,
+	__mach_port_deallocate, __mach_port_insert_right, __mutex_init,
+	__mutex_trylock, __mutex_lock, __mutex_unlock, __swtch, __switch,
+	__task_create, __task_suspend, __task_set_special_port,
+	__task_terminate, __thread_depress_abort, __thread_switch,
+	__vm_allocate, __vm_deallocate, __vm_map.  These functions are not
+	used outside libc.
+
+	* sysdeps/mach/hurd/Versions: New file.
+	[libc, GLIBC_2.0]: Add _cthread_exit_routine and
+	_cthread_init_routine.  These are set by the Hurd cthreads library.
+	Add __getcwd, __mmap.  If we don't add these, the weak definitions in
+	the dynamic linker will not be replaced by the corresponding shared
+	library routines once they are loaded.
+
+1998-10-21  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/mach/hurd/i386/init-first.c: Only define
+	__libc_enable_secure if PIC is not defined.
+
+1998-10-25  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* argp/Versions: Add _argp_unlock_xxx.  Lock-savvy functions call this
+	to recurse into argp.
+
 1998-10-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* include/features.h: Define __USE_POSIS199506 is _POSIX_C_SOURCE is

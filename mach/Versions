@@ -1,46 +1,52 @@
 libc {
   GLIBC_2.0 {
-    __mach_msg; mach_msg; __mach_reply_port; mach_reply_port;
-    __mach_task_self_; __mach_thread_self; mach_thread_self;
-    mach_host_self; __mach_host_self;
-    swtch_pri; __swtch_pri; swtch; __swtch;
-    thread_switch; __thread_switch;
+    # variables used in Mach-specific macros
+    __mach_task_self_;
+    __vm_page_size;
 
-    mig_init;
-    __mig_allocate; __mig_deallocate; mig_deallocate; mig_allocate;
-    __mig_get_reply_port; __mig_put_reply_port; __mig_dealloc_reply_port;
-    mig_get_reply_port; mig_put_reply_port; mig_dealloc_reply_port;
-
-    mach_msg_server_timeout; mach_msg_server;
-    get_privileged_ports; __get_privileged_ports;
-    mach_setup_thread; __mach_setup_thread;
-    mach_open_devstream;
-
-    vm_page_size; __vm_page_size;
-
-    __spin_lock_solid;
-
-    # system call shortcuts
-    vm_map; __vm_map;
-    vm_allocate; __vm_allocate;
-    vm_deallocate; __vm_deallocate;
-    task_create; __task_create;
-    task_terminate; __task_terminate;
-    task_suspend; __task_suspend;
-    task_set_special_port; __task_set_special_port;
-    mach_port_allocate; __mach_port_allocate;
-    mach_port_deallocate; __mach_port_deallocate;
-    mach_port_insert_right; __mach_port_insert_right;
-    mach_port_allocate_name; __mach_port_allocate_name;
-    thread_depress_abort; __thread_depress_abort;
-
-    # Placeholders for the Hurd libthreads implementation.
-    cthread_getspecific; cthread_keycreate; cthread_setspecific;
-    __libc_getspecific;
-
-    # Function versions of Mach macros.
-    __mutex_init; __mutex_trylock;
-    __mutex_lock; __mutex_unlock;
+    # functions used in inline functions
+    __mach_thread_self;
     __mutex_lock_solid; __mutex_unlock_solid;
+    __spin_lock_solid; __spin_try_lock; __spin_unlock;
+
+    # functions used by RPC stubs
+    __mach_msg;
+    __mig_allocate; __mig_deallocate; __mig_deallocate_reply_port;
+    __mig_get_reply_port; __mig_put_reply_port;
+
+    # variables in normal name space
+    vm_page_size;
+
+    # functions in normal name space
+
+    # e*
+    evc_wait;
+
+    # g*
+    get_privileged_ports;
+
+    # m*
+    mach_error; mach_error_string; mach_error_type;
+    mach_host_self;
+    mach_msg; mach_msg_destroy;
+    mach_msg_server; mach_msg_server_timeout;
+    mach_open_devstream;
+    mach_port_allocate; mach_port_allocate_name; mach_port_deallocate;
+    mach_port_insert_right; mach_reply_port;
+    mach_setup_thread;
+    mach_task_self;
+    mach_thread_self;
+    mig_allocate; mig_dealloc_reply_port; mig_deallocate;
+    mig_get_reply_port; mig_init; mig_put_reply_port;
+
+    # v*
+    vm_allocate; vm_deallocate; vm_map;
+
+    # s*
+    swtch; swtch_pri;
+
+    # t*
+    task_create; task_set_special_port; task_suspend; task_terminate;
+    thread_depress_abort; thread_switch;
   }
 }

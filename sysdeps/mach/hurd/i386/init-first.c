@@ -35,7 +35,9 @@ unsigned int __hurd_threadvar_max;
 unsigned long int __hurd_threadvar_stack_offset;
 unsigned long int __hurd_threadvar_stack_mask;
 
+#ifndef PIC
 int __libc_enable_secure;
+#endif
 int __libc_multiple_libcs = 1;
 
 extern int __libc_argc;
