@@ -1,5 +1,5 @@
 /* Routines for dealing with '\0' separated arg vectors.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    Written by Miles Bader <miles@gnu.ai.mit.edu>
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,8 +22,17 @@
 #define __ARGZ_H__	1
 #include <features.h>
 
-#include <errno.h>		/* Define error_t.  */
+#define __need_error_t
+#include <errno.h>
 #include <string.h>		/* Need size_t, and strchr is called below.  */
+
+#ifndef __const
+#define __const const
+#endif
+
+#ifndef __error_t_defined
+typedef int error_t;
+#endif
 
 
 __BEGIN_DECLS
