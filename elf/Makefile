@@ -61,7 +61,7 @@ generated      += ldd
 endif
 
 others		= sprof
-install-bin	= sprof
+install-bin	+= sprof
 
 ifeq (yes,$(has-ldconfig))
 others-static	+= ldconfig

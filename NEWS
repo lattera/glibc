@@ -54,6 +54,11 @@ Version 2.1
 * The localedata addon is now part of glibc.
 
 * An implementation of profiling shared libraries was added by Ulrich Drepper.
+
+* Thorsten Kukuk provided an implementation for a caching daemon for NSS
+  (nscd).
+
+* Tim Waugh provided an implementation of the POSIX.2 wordexp function family.
 
 Version 2.0.5
 
@@ -503,7 +508,7 @@ Version 1.06
   `make dvi' will produce a DVI file of the printed manual.
   `make info' will produce Info files that you can read on line using C-h i
   in Emacs or the `info' program.
-  Please send comments on the manual to bug-glibc-manual@prep.ai.mit.edu.
+  Please send comments on the manual to bug-glibc-manual@gnu.org.
 
 * The library now supports SVR4 on i386s (i386-unknown-sysv4).
 

@@ -53,6 +53,15 @@ static void print_unresolved (int errcode, const char *objname,
 static void print_missing_version (int errcode, const char *objname,
 				   const char *errsting);
 
+
+/* This is a list of all the modes the dynamic loader can be in.  */
+enum mode { normal, list, verify, trace };
+
+/* Process all environments variables the dynamic linker must recognize.
+   Since all of them start with `LD_' we are a bit smarter while finding
+   all the entries.  */
+static void process_envvars (enum mode *modep, int *lazyp);
+
 int _dl_argc;
 char **_dl_argv;
 const char *_dl_rpath;
@@ -146,7 +155,6 @@ _dl_start (void *arg)
      entry point on the same stack we entered on.  */
   return _dl_sysdep_start (arg, &dl_main);
 }
-
 
 /* Now life is peachy; we can do all normal operations.
    On to the real work.  */
@@ -260,7 +268,7 @@ dl_main (const ElfW(Phdr) *phdr,
   const ElfW(Phdr) *ph;
   struct link_map *main_map;
   int lazy;
-  enum { normal, list, verify, trace } mode;
+  enum mode mode;
   struct link_map **preloads;
   unsigned int npreloads;
   const char *preloadlist;
@@ -268,41 +276,8 @@ dl_main (const ElfW(Phdr) *phdr,
   char *file;
   int has_interp = 0;
 
-  /* Test whether we want to see the content of the auxiliary array passed
-     up from the kernel.  */
-  if (getenv ("LD_SHOW_AUXV") != NULL)
-    _dl_show_auxv ();
-
-  mode = getenv ("LD_TRACE_LOADED_OBJECTS") != NULL ? trace : normal;
-  _dl_verbose = *(getenv ("LD_WARN") ?: "") == '\0' ? 0 : 1;
-
-  /* LAZY is determined by the environment variable LD_WARN and
-     LD_BIND_NOW if we trace the binary.  */
-  if (mode == trace)
-    lazy = (_dl_verbose
-	    ? (*(getenv ("LD_BIND_NOW") ?: "") == '\0' ? 1 : 0) : -1);
-  else
-    lazy = !__libc_enable_secure && *(getenv ("LD_BIND_NOW") ?: "") == '\0';
-
-  /* See whether we want to use profiling.  */
-  _dl_profile = getenv ("LD_PROFILE");
-  if (_dl_profile != NULL)
-    if (_dl_profile[0] == '\0')
-      /* An empty string is of not much help.  Disable profiling.  */
-      _dl_profile = NULL;
-    else
-      {
-	/* OK, we have the name of a shared object we want to
-	   profile.  It's up to the user to provide a good name, it
-	   must match the file name or soname of one of the loaded
-	   objects.  Now let's see where we are supposed to place the
-	   result.  */
-	_dl_profile_output = getenv ("LD_PROFILE_OUTPUT");
-
-	if (_dl_profile_output == NULL || _dl_profile_output[0] == '\0')
-	  /* This is the default place.  */
-	  _dl_profile_output = "/var/tmp";
-      }
+  /* Process the environment variable which control the behaviour.  */
+  process_envvars (&mode, &lazy);
 
   /* Set up a flag which tells we are just starting.  */
   _dl_starting_up = 1;
@@ -929,4 +904,96 @@ print_missing_version (int errcode __attribute__ ((unused)),
 {
   _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>", ": ",
 		    objname, ": ", errstring, "\n", NULL);
+}
+
+/* Process all environments variables the dynamic linker must recognize.
+   Since all of them start with `LD_' we are a bit smarter while finding
+   all the entries.  */
+static void
+process_envvars (enum mode *modep, int *lazyp)
+{
+  char **runp = NULL;
+  char *envline;
+  enum mode mode = normal;
+  int bind_now = 0;
+
+  /* This is the default place for profiling data file.  */
+  _dl_profile_output = "/var/tmp";
+
+  while ((envline = _dl_next_ld_env_entry (&runp)) != NULL)
+    {
+      int result;
+
+      /* Do we bind early?  */
+      result = strncmp (&envline[3], "BIND_NOW=", 9);
+      if (result == 0)
+	{
+	  bind_now = 1;
+	  continue;
+	}
+      if (result < 0)
+	continue;
+
+      /* Which shared object shall be profiled.  */
+      result = strncmp (&envline[3], "PROFILE=", 8);
+      if (result == 0)
+	{
+	  _dl_profile = &envline[11];
+	  if (*_dl_profile == '\0')
+	    _dl_profile = NULL;
+	  continue;
+	}
+      if (result < 0)
+	continue;
+
+      /* Where to place the profiling data file.  */
+      result = strncmp (&envline[3], "PROFILE_OUTPUT=", 15);
+      if (result == 0)
+	{
+	  _dl_profile_output = &envline[18];
+	  if (*_dl_profile_output == '\0')
+	    _dl_profile_output = "/var/tmp";
+	  continue;
+	}
+      if (result < 0)
+	continue;
+
+      /* Test whether we want to see the content of the auxiliary
+	 array passed up from the kernel.  */
+      result = strncmp (&envline[3], "SHOW_AUXV=", 10);
+      if (result == 0)
+	{
+	  _dl_show_auxv ();
+	  continue;
+	}
+      if (result < 0)
+	continue;
+
+      /* The mode of the dynamic linker can be set.  */
+      result = strncmp (&envline[3], "TRACE_LOADED_OBJECTS=", 21);
+      if (result == 0)
+	{
+	  mode = trace;
+	  continue;
+	}
+      if (result < 0)
+	continue;
+
+      /* Warning level, verbose or not.  */
+      result = strncmp (&envline[3], "WARN=", 5);
+      if (result == 0)
+	{
+	  _dl_verbose = envline[8] != '\0';
+	  continue;
+	}
+    }
+
+  /* LAZY is determined by the environment variable LD_WARN and
+     LD_BIND_NOW if we trace the binary.  */
+  if (mode == trace)
+    *lazyp = _dl_verbose ? !bind_now : -1;
+  else
+    *lazyp = !__libc_enable_secure && !bind_now;
+
+  *modep = mode;
 }

@@ -48,7 +48,7 @@ __nscd_getgrgid_r (gid_t gid, struct group *resultbuf, char *buffer,
 		   size_t buflen)
 {
   char *p = buffer;
-  char plen;
+  int plen;
 
   plen = snprintf (buffer, buflen, "%d", gid);
   if (plen == -1)
@@ -98,7 +98,8 @@ __nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
   ssize_t nbytes;
 
   if (sock == -1)
-    return 1;
+    /* Returning two signals that contacting the daemon failed.  */
+    return 2;
 
   req.version = NSCD_VERSION;
   req.type = type;

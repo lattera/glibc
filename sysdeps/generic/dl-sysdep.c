@@ -243,3 +243,29 @@ _dl_show_auxv (void)
 	break;
       }
 }
+
+/* Walk through the environment of the process and return all entries
+   starting with `LD_'.  */
+char *
+_dl_next_ld_env_entry (char ***position)
+{
+  char **current = *position;
+  char *result = NULL;
+
+  if (current == NULL)
+    /* We start over.  */
+    current = _environ;
+
+  while (result == NULL && *current != NULL)
+    {
+      if ((*current)[0] == 'L' && (*current)[1] == 'D' && (*current)[2] == '_')
+	result = *current;
+
+      ++current;
+    }
+
+  /* Save current position for next visit.  */
+  *position = current;
+
+  return result;
+}

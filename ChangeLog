@@ -1,3 +1,38 @@
+1998-03-05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c: Speed up processing of environment variables.  Do
+	only one run on the environment by avoiding to call getenv.
+	* sysdeps/generic/dl-sysdep.c (_dl_next_ld_env_entry): New
+	function.  Used by patch above.
+
+1998-03-05 10:25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/getXXbyYY_r.c: Don't try to contact nscd every time when it
+	failed.  Only do this every NSS_NSCD_RETRY times.
+	* nss/nsswitch.c: Define __nss_nscd_not_available, used by above
+	change.
+	* nscd/nscd_getgr_r.c (__nscd_getgr_r): Return 2 if contacting the
+	daemon failed.
+	* nscd/nscd_getpw_r.c (__nscd_getpw_r): Likewise.
+
+1998-03-05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nsswitch.c (nss_lookup_function): Don't modify errno if NSS
+	module cannot be found.  Reported by Andreas Jaeger.
+
+1998-03-05 11:40  Franz Sirl <Franz.Sirl-kernel@lauterbach.com>
+
+	* nscd/nscd_getgr_r.c: Change char to int to avoid compiler warning
+	on platforms which default to unsigned chars.
+	* nscd/nscd_getpw_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.h: Undefine L before
+	defining it.
+
+1998-03-05  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* elf/Makefile (install-bin): Change = to += for sprof to install
+	ldd also.
+
 1998-03-04 16:12  H.J. Lu  <hjl@gnu.org>
 
 	* libio/strops.c (_IO_str_seekoff): Handle MODE == 0.

@@ -377,7 +377,7 @@ doesn't tell you, that's a bug in the manual.  Report that too!  If the
 function's behavior disagrees with the manual, then either the library
 or the manual has a bug, so report the disagreement.  If you find any
 errors or omissions in this manual, please report them to the Internet
-address @email{bug-glibc-manual@@prep.ai.mit.edu}.
+address @email{bug-glibc-manual@@gnu.org}.
 
 @node Source Layout
 @appendixsec Adding New Functions

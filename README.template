@@ -73,9 +73,9 @@ GNU libc at http://www.gnu.org/software/libc/libc.html.
 
 The GNU C Library is completely documented by the Texinfo manual found
 in the `manual/' subdirectory.  The manual is still being updated and
-contains some known errors and omissions; we regret that we do not have
-the resources to work on the manual as much as we would like.  Please
-send comments on the manual to <bug-glibc-manual@prep.ai.mit.edu>, and
+contains some known errors and omissions; we regret that we do not
+have the resources to work on the manual as much as we would like.
+Please send comments on the manual to <bug-glibc-manual@gnu.org>, and
 not to the library bug-reporting address.
 
 The file NOTES contains a description of the feature-test macros used
