@@ -1,5 +1,13 @@
 2003-12-30  Jakub Jelinek  <jakub@redhat.com>
 
+	* posix/regexec.c (get_subexp): Only set bkref_str after the first
+	loop, use buf + bkref_str_off in the loop instead.
+	* posix/bug-regex11.c (tests): Add 3 new tests.
+
+	* posix/regexec.c (clean_state_log_if_need): Rename to...
+	(clean_state_log_if_needed): ...this.
+	(transit_state_mb, get_subexp_sub): Adjust callers.
+
 	* sunrpc/pmap_clnt.c (pmap_set): Do CLNT_DESTROY even if CLNT_CALL
 	failed.  Reported by Steve Grubb.
 

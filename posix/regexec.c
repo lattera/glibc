@@ -117,8 +117,8 @@ static reg_errcode_t sift_states_bkref (const regex_t *preg,
 					re_match_context_t *mctx,
 					re_sift_context_t *sctx,
 					int str_idx, re_node_set *dest_nodes) internal_function;
-static reg_errcode_t clean_state_log_if_need (re_match_context_t *mctx,
-					      int next_state_log_idx) internal_function;
+static reg_errcode_t clean_state_log_if_needed (re_match_context_t *mctx,
+					        int next_state_log_idx) internal_function;
 static reg_errcode_t merge_state_array (re_dfa_t *dfa, re_dfastate_t **dst,
 					re_dfastate_t **src, int num) internal_function;
 static re_dfastate_t *transit_state (reg_errcode_t *err, const regex_t *preg,
@@ -1553,7 +1553,7 @@ sift_states_backward (preg, mctx, sctx)
 /* Helper functions.  */
 
 static reg_errcode_t
-clean_state_log_if_need (mctx, next_state_log_idx)
+clean_state_log_if_needed (mctx, next_state_log_idx)
     re_match_context_t *mctx;
     int next_state_log_idx;
 {
@@ -2392,7 +2392,7 @@ transit_state_mb (preg, pstate, mctx)
       dest_idx = re_string_cur_idx (mctx->input) + naccepted;
       mctx->max_mb_elem_len = ((mctx->max_mb_elem_len < naccepted) ? naccepted
 			       : mctx->max_mb_elem_len);
-      err = clean_state_log_if_need (mctx, dest_idx);
+      err = clean_state_log_if_needed (mctx, dest_idx);
       if (BE (err != REG_NOERROR, 0))
 	return err;
 #ifdef DEBUG
@@ -2569,14 +2569,14 @@ get_subexp (preg, mctx, bkref_node, bkref_str_idx)
       reg_errcode_t err;
       re_sub_match_top_t *sub_top = mctx->sub_tops[sub_top_idx];
       re_sub_match_last_t *sub_last;
-      int sub_last_idx, sl_str;
+      int sub_last_idx, sl_str, bkref_str_off;
       const char *bkref_str;
 
       if (dfa->nodes[sub_top->node].opr.idx != subexp_num)
 	continue; /* It isn't related.  */
 
       sl_str = sub_top->str_idx;
-      bkref_str = buf + bkref_str_idx;
+      bkref_str_off = bkref_str_idx;
       /* At first, check the last node of sub expressions we already
 	 evaluated.  */
       for (sub_last_idx = 0; sub_last_idx < sub_top->nlasts; ++sub_last_idx)
@@ -2587,23 +2587,24 @@ get_subexp (preg, mctx, bkref_node, bkref_str_idx)
 	  /* The matched string by the sub expression match with the substring
 	     at the back reference?  */
 	  if (sl_str_diff > 0
-	      && memcmp (bkref_str, buf + sl_str, sl_str_diff) != 0)
+	      && memcmp (buf + bkref_str_off, buf + sl_str, sl_str_diff) != 0)
 	    break; /* We don't need to search this sub expression any more.  */
-	  bkref_str += sl_str_diff;
+	  bkref_str_off += sl_str_diff;
 	  sl_str += sl_str_diff;
 	  err = get_subexp_sub (preg, mctx, sub_top, sub_last, bkref_node,
 				bkref_str_idx);
 
-	  /* Reload buf and bkref_str, since the preceding call might
-	     have reallocated the buffer.  */
+	  /* Reload buf, since the preceding call might have reallocated
+	     the buffer.  */
 	  buf = (const char *) re_string_get_buffer (mctx->input);
-	  bkref_str = buf + bkref_str_idx;
 
 	  if (err == REG_NOMATCH)
 	    continue;
 	  if (BE (err != REG_NOERROR, 0))
 	    return err;
 	}
+      bkref_str = buf + bkref_str_off;	
+
       if (sub_last_idx < sub_top->nlasts)
 	continue;
       if (sub_last_idx > 0)
@@ -2678,7 +2679,7 @@ get_subexp_sub (preg, mctx, sub_top, sub_last, bkref_node, bkref_str)
   if (BE (err != REG_NOERROR, 0))
     return err;
   to_idx = bkref_str + sub_last->str_idx - sub_top->str_idx;
-  clean_state_log_if_need (mctx, to_idx);
+  clean_state_log_if_needed (mctx, to_idx);
   return REG_NOERROR;
 }
 
