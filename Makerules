@@ -554,7 +554,9 @@ lib-noranlib: libobjs
 # Makefiles can define `elide-routines.so = foo' to leave foo.so out.
 o-objects = $(patsubst %.o,%$o,$(filter-out $(patsubst %,$(objpfx)%.o,\
 						       $(elide-routines$o)),\
-					    $(objects)))
+					    $(objects))) \
+	    $(addprefix $(objpfx),$(o-objects$o))
+
 others: $(addprefix $(objpfx),$(install-lib))
 
 ifndef objects
