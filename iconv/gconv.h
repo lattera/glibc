@@ -57,8 +57,9 @@ struct gconv_loaded_object;
 
 /* Type of a conversion function.  */
 typedef int (*gconv_fct) __PMT ((struct gconv_step *,
-				 struct gconv_step_data *, __const char **,
-				 __const char *, size_t *, int));
+				 struct gconv_step_data *,
+				 __const unsigned char **,
+				 __const unsigned char *, size_t *, int));
 
 /* Constructor and destructor for local data for conversion step.  */
 typedef int (*gconv_init_fct) __PMT ((struct gconv_step *));
@@ -97,8 +98,8 @@ struct gconv_step
    allocated by the `init' function.  */
 struct gconv_step_data
 {
-  char *outbuf;		/* Output buffer for this step.  */
-  char *outbufend;	/* Address of first byte after the output buffer.  */
+  unsigned char *outbuf;    /* Output buffer for this step.  */
+  unsigned char *outbufend; /* Address of first byte after the output buffer.*/
 
   /* Is this the last module in the chain.  */
   int is_last;
