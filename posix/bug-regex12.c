@@ -24,21 +24,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Tests supposed to match.  */
+/* Tests supposed to not match.  */
 struct
 {
   const char *pattern;
   const char *string;
   int flags, nmatch;
-  regmatch_t rm[4];
 } tests[] = {
-  /* Test for newline handling in regex.  */
-  { "[^~]*~", "\nx~y", 0, 2, { { 0, 3 }, { -1, -1 } } },
-  /* Other tests.  */
-  { ".*|\\([KIO]\\)\\([^|]*\\).*|?[KIO]", "10~.~|P|K0|I10|O16|?KSb", 0, 3,
-    { { 0, 21 }, { 15, 16 }, { 16, 18 } } },
-  { ".*|\\([KIO]\\)\\([^|]*\\).*|?\\1", "10~.~|P|K0|I10|O16|?KSb", 0, 3,
-    { { 0, 21 }, { 8, 9 }, { 9, 10 } } }
+  { "^<\\([^~]*\\)\\([^~]\\)[^~]*~\\1\\(.\\).*|=.*\\3.*\\2",
+    "<,.8~2,~so-|=-~.0,123456789<><", REG_NOSUB, 0, }
 };
 
 int
@@ -63,25 +57,12 @@ main (void)
 	  continue;
 	}
 
-      if (regexec (&re, tests[i].string, tests[i].nmatch, rm, 0))
+      if (! regexec (&re, tests[i].string, tests[i].nmatch,
+		     tests[i].nmatch ? rm : NULL, 0))
 	{
-	  printf ("regexec %d failed\n", i);
+	  printf ("regexec %d incorrectly matched\n", i);
 	  ret = 1;
-	  regfree (&re);
-	  continue;
 	}
-
-      for (n = 0; n < tests[i].nmatch; ++n)
-	if (rm[n].rm_so != tests[i].rm[n].rm_so
-              || rm[n].rm_eo != tests[i].rm[n].rm_eo)
-	  {
-	    if (tests[i].rm[n].rm_so == -1 && tests[i].rm[n].rm_eo == -1)
-	      break;
-	    printf ("regexec match failure rm[%d] %d..%d\n",
-		    n, rm[n].rm_so, rm[n].rm_eo);
-	    ret = 1;
-	    break;
-	  }
 
       regfree (&re);
     }
