@@ -1,5 +1,6 @@
-1998-03-20 11:58  Ulrich Drepper  <drepper@cygnus.com>
+1998-03-20  Ulrich Drepper  <drepper@cygnus.com>
 
+	* libc.map: Add alphasort64, scandir64, versionsort64.
 	* dirent/Makefile (routines): Add scandir64, alphasort64, and
 	versionsort64.
 	* dirent/alphasort64.c: New file.

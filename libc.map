@@ -468,7 +468,7 @@ GLIBC_2.1 {
     # Please keep them sorted by name!
 
     # a*
-    addseverity;
+    addseverity; alphasort64;
 
     argp_error; argp_failure; argp_fmtstream_free; argp_fmtstream_point;
     argp_fmtstream_printf; argp_fmtstream_putc; argp_fmtstream_puts;
@@ -534,11 +534,13 @@ GLIBC_2.1 {
     readdir64; readdir64_r; rtime;
 
     # s*
-    setitimer; setrlimit64; setutxent; settimeofday;
+    scandir64; setitimer; setrlimit64; setutxent; settimeofday;
     sighold; sigrelse; sigignore; sigset; statfs64; strcasestr; sysv_signal;
 
     # New RT signal functions.
-    sigqueue; sigtimedwait; sigwaitinfo; strverscmp; strfxtime;
+    sigqueue; sigtimedwait; sigwaitinfo;
+
+    strverscmp; strfxtime;
 
     # t*
     tcgetsid; tdestroy; tmpfile64; truncate64;
@@ -547,7 +549,7 @@ GLIBC_2.1 {
     unlockpt; utimes; user2netname;
 
     # v*
-    versionsort;
+    versionsort; versionsort64;
 
     # w*
     wait4; wcscasecmp; wcsncasecmp; wcstoll; wcstoull; wcswcs; wmemrtombs;
