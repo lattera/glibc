@@ -1,4 +1,21 @@
+Sat Jun 22 10:44:09 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* posix/glob.c: Include <alloca.h> only [HAVE_ALLOCA_H], not [sparc].
+
+Fri Jun 21 00:27:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* posix/fnmatch.c (fnmatch): Fix \*[*?]+ case to increment name ptr
+ 	only for ?s, not for *s.  Fix from Chet Ramey.
+
+Wed May 22 17:22:14 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* posix/glob.c [VMS]: Don't include <pwd.h>.
+	[HAVE_VMSDIR_H]: Include "vmsdir.h".
+	(glob) [VMS]: Don't grok ~.
+
 Mon May 13 12:03:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* posix/glob.h [_AMIGA]: Remove `struct stat;' forward decl.
 
 	* posix/glob.c [_AMIGA]: Don't include <pwd.h>.
 	(glob): Remove bogus & in call to globfree.
