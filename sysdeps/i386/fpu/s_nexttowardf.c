@@ -67,7 +67,12 @@ static char rcsid[] = "$NetBSD: $";
 	    }
 	}
 	hy = hx&0x7f800000;
-	if(hy>=0x7f800000) return x+x;	/* overflow  */
+	if(hy>=0x7f800000) {
+	  x = x+x;	/* overflow  */
+	  /* Force conversion to float.  */
+	  asm ("" : "=m"(x) : "m"(x));
+	  return x;
+	}
 	if(hy<0x00800000) {		/* underflow */
 	    float x2 = x*x;
 	    if(x2!=x) {		/* raise underflow flag */

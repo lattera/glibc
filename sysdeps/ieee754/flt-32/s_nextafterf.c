@@ -59,12 +59,10 @@ static char rcsid[] = "$NetBSD: s_nextafterf.c,v 1.4 1995/05/10 20:48:01 jtc Exp
 	}
 	hy = hx&0x7f800000;
 	if(hy>=0x7f800000) {
-#if FLT_EVAL_METHOD == 0
-	  return x+x;	/* overflow  */
-#else
-	  /* Note that y is either +Inf or -Inf.  */
-	  return x+y;
-#endif
+	  x = x+x;	/* overflow  */
+	  if (FLT_EVAL_METHOD != 0)
+	    asm ("" : "=m"(x) : "m"(x));
+	  return x;	/* overflow  */
 	}
 	if(hy<0x00800000) {		/* underflow */
 	    y = x*x;

@@ -1,3 +1,17 @@
+2003-12-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/fpu/s_nexttowardf.c: Construct overflow value correctly.
+	* sysdeps/i386/fpu/s_nexttoward.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nexttoward.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nexttoward.c: Likewise.
+	* math/Makefile (tests): Add bug-nexttoward.
+	* math/bug-nexttowward.c: New file.
+
+	* sysdeps/generic/s_nextafter.c: Make sure overflow exception is set.
+	* sysdeps/ieee754/flt-32/s_nextafterf.c: Likewise.
+	* math/bug-nextafter.c (main): Add tests for overflow and negative
+	values.
+
 2003-12-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/Makefile (tests): Add bug-nextafter.

@@ -27,6 +27,7 @@ static char rcsid[] = "$NetBSD: $";
 
 #include "math.h"
 #include "math_private.h"
+#include <float.h>
 
 #ifdef __STDC__
 	double __nexttoward(double x, long double y)
@@ -80,7 +81,13 @@ static char rcsid[] = "$NetBSD: $";
 	    }
 	}
 	hy = hx&0x7ff00000;
-	if(hy>=0x7ff00000) return x+x;	/* overflow  */
+	if(hy>=0x7ff00000) {
+	  x = x+x;	/* overflow  */
+	  if (FLT_EVAL_METHOD != 0 && FLT_EVAL_METHOD != 1)
+	    /* Force conversion to float.  */
+	    asm ("" : "=m"(x) : "m"(x));
+	  return x;
+	}
 	if(hy<0x00100000) {		/* underflow */
 	    double x2 = x*x;
 	    if(x2!=x) {		/* raise underflow flag */
