@@ -216,7 +216,7 @@ struct ipv6_mreq
     struct in6_addr ipv6mr_multiaddr;
 
     /* local interface */
-    unsigned int ipv6mr_ifindex;
+    unsigned int ipv6mr_interface;
   };
 
 /* Get system-specific definitions.  */

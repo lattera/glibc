@@ -1,3 +1,8 @@
+1998-12-11  Kunihiro Ishiguro  <kunihiro@zebra.org>
+
+	* inet/netinet/in.h: Change obsolete structure member
+	ipv6mr_ifindex to new ipv6mr_interface.
+
 1998-12-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/ieee754/dbl2mpn.c: Changed '#include "ieee754.h"' to
