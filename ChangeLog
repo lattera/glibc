@@ -1,3 +1,12 @@
+2000-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/libioP.h (_IO_CHECK_WIDE): Define.
+	* libio/iosetbuffer.c (_IO_setbuffer): Use it.
+	Call _IO_WSETBUF even for _mode 1.
+	* libio/iosetvbuf.c (_IO_setvbuf): Likewise.
+	* libio/fileops.c (_IO_new_file_fopen): Return NULL if
+	_IO_CHECK_WIDE fails.
+
 2000-05-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/da.po: New file.

@@ -71,6 +71,8 @@ extern "C" {
 
 #define _IO_JUMPS(THIS) ((struct _IO_FILE_plus *) (THIS))->vtable
 #define _IO_WIDE_JUMPS(THIS) ((struct _IO_FILE *) (THIS))->_wide_data->_wide_vtable
+#define _IO_CHECK_WIDE(THIS) (((struct _IO_FILE *) (THIS))->_wide_data != NULL)
+
 #if _IO_JUMPS_OFFSET
 # define _IO_JUMPS_FUNC(THIS) \
  (*(struct _IO_jump_t **) ((void *) &((struct _IO_FILE_plus *) (THIS))->vtable\

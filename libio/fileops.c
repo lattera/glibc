@@ -278,9 +278,9 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
       /* Yep.  Load the appropriate conversions and set the orientation
 	 to wide.  */
 	struct gconv_fcts fcts;
-	struct _IO_codecvt *cc = &fp->_wide_data->_codecvt;
+	struct _IO_codecvt *cc;
 
-	if (__wcsmbs_named_conv (&fcts, cs + 5) != 0)
+	if (! _IO_CHECK_WIDE (fp) || __wcsmbs_named_conv (&fcts, cs + 5) != 0)
 	  {
 	    /* Something went wrong, we cannot load the conversion modules.
 	       This means we cannot proceed since the user explicitly asked
@@ -288,6 +288,8 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 	    _IO_new_fclose (result);
 	    return NULL;
 	  }
+
+	cc = &fp->_wide_data->_codecvt;
 
 	/* The functions are always the same.  */
 	*cc = __libio_codecvt;
