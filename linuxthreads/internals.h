@@ -359,10 +359,13 @@ static inline pthread_descr thread_self (void)
 
 /* If MEMORY_BARRIER isn't defined in pt-machine.h, assume the architecture
    doesn't need a memory barrier instruction (e.g. Intel x86).  Some
-   architectures distinguish between normal/read and write barriers.  */
+   architectures distinguish between full, read and write barriers.  */
 
 #ifndef MEMORY_BARRIER
 #define MEMORY_BARRIER()
+#endif
+#ifndef READ_MEMORY_BARRIER
+#define READ_MEMORY_BARRIER() MEMORY_BARRIER()
 #endif
 #ifndef WRITE_MEMORY_BARRIER
 #define WRITE_MEMORY_BARRIER() MEMORY_BARRIER()

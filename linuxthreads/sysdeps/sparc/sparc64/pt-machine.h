@@ -38,9 +38,11 @@ testandset (int *spinlock)
 
 
 /* Memory barrier; default is to do nothing */
-/* FIXME: is stbar OK, or should we use the more general membar instruction?
-   If so, which mode to pass to membar? */
-#define MEMORY_BARRIER() __asm__ __volatile__("stbar" : : : "memory")
+#define MEMORY_BARRIER() \
+     __asm__ __volatile__("membar #LoadLoad | #LoadStore | #StoreLoad | #StoreStore" : : : "memory")
+/* Read barrier.  */
+#define READ_MEMORY_BARRIER() \
+     __asm__ __volatile__("membar #LoadLoad | #LoadStore" : : : "memory")
 /* Write barrier.  */
 #define WRITE_MEMORY_BARRIER() \
      __asm__ __volatile__("membar #StoreLoad | #StoreStore" : : : "memory")

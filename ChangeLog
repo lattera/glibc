@@ -1,3 +1,8 @@
+2000-04-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/Makefile (tests): Add tst-getaddrinfo.
+	* posix/tst-getaddrinfo.c: New file.
+
 2000-04-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/sysinfo.texi: Document that umount2 is not widely available.
@@ -41,7 +46,7 @@
 2000-04-17  Thorsten Kukuk  <kukuk@suse.de>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile: Remove setresgid
-	and setresuid frm sysdep_routines.
+	and setresuid from sysdep_routines.
 
 2000-04-17  Ulrich Drepper  <drepper@redhat.com>
 

@@ -122,12 +122,12 @@ again:
        several iterations of the while loop.  Some processors (e.g.
        multiprocessor Alphas) could perform such reordering even though
        the loads are dependent. */
-    MEMORY_BARRIER();
+    READ_MEMORY_BARRIER();
     thr = *ptr;
   }
   /* Prevent reordering of the load of lock->__status above and
      thr->p_nextlock below */
-  MEMORY_BARRIER();
+  READ_MEMORY_BARRIER();
   /* Remove max prio thread from waiting list. */
   if (maxptr == (pthread_descr *) &lock->__status) {
     /* If max prio thread is at head, remove it with compare-and-swap

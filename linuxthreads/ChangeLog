@@ -1,3 +1,13 @@
+2000-04-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc64/pt-machine.h (MEMORY_BARRIER): Use membar,
+	not stbar.
+	(READ_MEMORY_BARRIER): Define.
+	* spinlock.c (__pthread_spin_unlock): Use READ_MEMORY_BARRIER, not
+	MEMORY_BARRIER.
+	* internals.h (READ_MEMORY_BARRIER): Define if not defined in sysdep
+	headers.
+
 2000-04-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/getcpuclockid.c
