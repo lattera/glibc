@@ -476,7 +476,18 @@ ftw_dir (struct ftw_data *data, struct STAT *st)
     {
       result = (*data->func) (data->dirbuf, st, FTW_D, &data->ftw);
       if (result != 0)
-	return result;
+	{
+	  int save_err;
+fail:
+	  save_err = errno;
+	  __closedir (dir.stream);
+	  __set_errno (save_err);
+
+	  if (data->actdir-- == 0)
+	    data->actdir = data->maxdir - 1;
+	  data->dirstreams[data->actdir] = NULL;
+	  return result;
+	}
     }
 
   /* If necessary, change to this directory.  */
@@ -484,15 +495,8 @@ ftw_dir (struct ftw_data *data, struct STAT *st)
     {
       if (__fchdir (dirfd (dir.stream)) < 0)
 	{
-	  int save_err = errno;
-	  __closedir (dir.stream);
-	  __set_errno (save_err);
-
-	  if (data->actdir-- == 0)
-	    data->actdir = data->maxdir - 1;
-	  data->dirstreams[data->actdir] = NULL;
-
-	  return -1;
+	  result = -1;
+	  goto fail;
 	}
     }
 

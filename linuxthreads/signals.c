@@ -78,6 +78,7 @@ int __pthread_sigaction(int sig, const struct sigaction * act,
 {
   struct sigaction newact;
   struct sigaction *newactp;
+  __sighandler_t old = SIG_DFL;
 
   if (sig == __pthread_sig_restart ||
       sig == __pthread_sig_cancel ||
@@ -86,6 +87,8 @@ int __pthread_sigaction(int sig, const struct sigaction * act,
       __set_errno (EINVAL);
       return -1;
     }
+  if (sig > 0 && sig < NSIG)
+    old = (__sighandler_t) __sighandler[sig].old;
   if (act)
     {
       newact = *act;
@@ -96,21 +99,27 @@ int __pthread_sigaction(int sig, const struct sigaction * act,
 	    newact.sa_handler = (__sighandler_t) __pthread_sighandler_rt;
 	  else
 	    newact.sa_handler = (__sighandler_t) __pthread_sighandler;
+	  if (old == SIG_IGN || old == SIG_DFL || old == SIG_ERR)
+	    __sighandler[sig].old = (arch_sighandler_t) act->sa_handler;
 	}
       newactp = &newact;
     }
   else
     newactp = NULL;
   if (__libc_sigaction(sig, newactp, oact) == -1)
-    return -1;
+    {
+      if (act)
+	__sighandler[sig].old = (arch_sighandler_t) old;
+      return -1;
+    }
   if (sig > 0 && sig < NSIG)
     {
       if (oact != NULL
 	  /* We may have inherited SIG_IGN from the parent, so return the
 	     kernel's idea of the signal handler the first time
 	     through.  */
-	  && (__sighandler_t) __sighandler[sig].old != SIG_ERR)
-	oact->sa_handler = (__sighandler_t) __sighandler[sig].old;
+	  && old != SIG_ERR)
+	oact->sa_handler = old;
       if (act)
 	/* For the assignment it does not matter whether it's a normal
 	   or real-time signal.  */
