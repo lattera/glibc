@@ -85,8 +85,8 @@
 
 #ifndef STATIC_GCONV
 # include <dlfcn.h>
-# include <elf/ldsodefs.h>
 #endif
+#include <ldsodefs.h>
 
 
 /* The direction objects.  */
@@ -222,15 +222,9 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 
 	  if (status == GCONV_OK)
 #endif
-	    {
-	      /* Give the modules below the same chance.  */
-#ifdef DL_CALL_FCT
-	      status = DL_CALL_FCT (fct, (next_step, next_data, NULL, NULL,
-					  written, 1));
-#else
-	      status = (*fct) (next_step, next_data, NULL, NULL, written, 1);
-#endif
-	    }
+	    /* Give the modules below the same chance.  */
+	    status = DL_CALL_FCT (fct, (next_step, next_data, NULL, NULL,
+					written, 1));
 	}
     }
   else
@@ -296,13 +290,8 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 	      const char *outerr = data->outbuf;
 	      int result;
 
-#ifdef DL_CALL_FCT
 	      result = DL_CALL_FCT (fct, (next_step, next_data, &outerr,
 					  outbuf, written, 0));
-#else
-	      result = (*fct) (next_step, next_data, &outerr, outbuf,
-			       written, 0);
-#endif
 
 	      if (result != GCONV_EMPTY_INPUT)
 		{

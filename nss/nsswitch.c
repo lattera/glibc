@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <elf/ldsodefs.h>	/* We need some help from ld.so.  */
+#include <ldsodefs.h>		/* We need some help from ld.so.  */
 
 #if !defined DO_STATIC_NSS || defined PIC
 # include <gnu/lib-names.h>

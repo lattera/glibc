@@ -118,9 +118,7 @@ cache_add (int type, void *key, size_t len, const void *packet, size_t total,
    must be invalidated and remember them.  Then we get the lock and
    actually remove them.  This is complicated by the way we have to
    free the data structures since some hash table entries share the same
-   data.
-
-   This function must be called with the write-lock held.  */
+   data.  */
 void
 prune_cache (struct database *table, time_t now)
 {

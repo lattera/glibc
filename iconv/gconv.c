@@ -23,9 +23,7 @@
 #include <gconv.h>
 #include <sys/param.h>
 
-#ifndef STATIC_GCONV
-# include <elf/ldsodefs.h>
-#endif
+#include <ldsodefs.h>
 
 int
 internal_function
@@ -43,12 +41,8 @@ __gconv (gconv_t cd, const char **inbuf, const char *inbufend, char **outbuf,
 
   if (inbuf == NULL || *inbuf == NULL)
     /* We just flush.  */
-#ifdef _CALL_DL_FCT
     result = _CALL_DL_FCT (cd->steps->fct,
 			   (cd->steps, cd->data, NULL, NULL, converted, 1));
-#else
-    result = cd->steps->fct (cd->steps, cd->data, NULL, NULL, converted, 1);
-#endif
   else
     {
       const char *last_start;
@@ -60,14 +54,9 @@ __gconv (gconv_t cd, const char **inbuf, const char *inbufend, char **outbuf,
       do
 	{
 	  last_start = *inbuf;
-#ifdef _CALL_DL_FCT
 	  result = _CALL_DL_FCT (cd->steps->fct,
 				 (cd->steps, cd->data, inbuf, inbufend,
 				  converted, 0));
-#else
-	  result = cd->steps->fct (cd->steps, cd->data, inbuf, inbufend,
-				   converted, 0);
-#endif
 	}
       while (result == GCONV_EMPTY_INPUT && last_start != *inbuf
 	     && *inbuf + cd->steps->min_needed_from <= inbufend);

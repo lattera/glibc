@@ -417,7 +417,9 @@ $(common-objdir):$(subst $(empty) ,:,$(patsubst ../$(subdir),.,$(rpath-dirs:%=$(
 elfobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)elf)
 dbobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)db2)
 else
-link-libc = $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
+nssobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)nss)
+resolvobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)resolv)
+link-libc = $(common-objpfx)libc.a $(otherlibs) $(gnulib) $(common-objpfx)libc.a
 endif
 endif
 

@@ -28,9 +28,7 @@
 #include <bits/libc-lock.h>
 #endif
 
-#ifdef HAVE_ELF
-#include <elf/ldsodefs.h>
-#endif
+#include <ldsodefs.h>
 
 #include <stdio.h>
 

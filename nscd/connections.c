@@ -197,7 +197,7 @@ static void
 handle_request (int fd, request_header *req, void *key)
 {
   if (debug_level > 0)
-    dbg_log (_("handle_requests: request received (Version = %d)"),
+    dbg_log (_("handle_request: request received (Version = %d)"),
 	     req->version);
 
   if (req->version != NSCD_VERSION)
@@ -219,7 +219,7 @@ cannot handle old request version %d; current version is %d"),
       /* Is this service enabled?  */
       if (!db->enabled)
 	{
-	  /* No sent the prepared record.  */
+	  /* No, sent the prepared record.  */
 	  if (TEMP_FAILURE_RETRY (write (fd, db->disabled_iov->iov_base,
 					 db->disabled_iov->iov_len))
 	      != db->disabled_iov->iov_len)
@@ -372,7 +372,7 @@ nscd_run (void *p)
 	     to 1kb.  */
 	  if (req.key_len < 0 || req.key_len > 1024)
 	    {
-	      dbg_log (_("key length in request to long: %Zd"), req.key_len);
+	      dbg_log (_("key length in request too long: %Zd"), req.key_len);
 	      close (fd);
 	      continue;
 	    }

@@ -36,8 +36,12 @@ extra-libs-others = $(extra-libs)
 libSegFault-routines = segfault
 libSegFault-inhibit-o = $(filter-out .os,$(object-suffixes))
 
+include ../Makeconfig
+
 distribute += catchsegv.sh
+ifeq ($(elf),yes)
 install-bin = catchsegv
+endif
 generated = catchsegv
 
 include ../Rules

@@ -26,7 +26,7 @@
 #include <nss.h>
 #include <resolv.h>
 #include <search.h>
-#include <elf/ldsodefs.h>
+#include <ldsodefs.h>
 
 
 /* Actions performed after lookup finished.  */

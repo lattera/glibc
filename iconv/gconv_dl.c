@@ -24,9 +24,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <bits/libc-lock.h>
-#include <elf/ldsodefs.h>
 #include <sys/param.h>
 
+#include <ldsodefs.h>
 #include <gconv_int.h>
 
 

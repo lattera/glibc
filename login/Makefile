@@ -53,6 +53,11 @@ libutil-routines:= login login_tty logout logwtmp openpty forkpty
 
 include ../Rules
 
+ifeq (yes,$(build-static-nss))
+otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
+	     $(resolvobjdir)/libresolv.a $(common-objpfx)libc.a
+endif
+
 # pt_chown needs to be setuid root.
 $(inst_libexecdir)/pt_chown: $(objpfx)pt_chown $(+force)
 	$(make-target-directory)

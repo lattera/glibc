@@ -62,3 +62,7 @@ CFLAGS-gethstbynm_r.c = -DUSE_NSCD=1
 CFLAGS-gethstbynm2_r.c = -DUSE_NSCD=1
 
 endif
+
+ifeq ($(build-static-nss),yes)
+CFLAGS += -DSTATIC_NSS
+endif

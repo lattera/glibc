@@ -1,3 +1,41 @@
+1998-10-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* include/ldsodefs.h: New file.
+
+	* iconv/gconv.c: Include ldsodefs.h, not elf/ldsodefs.h.
+	Remove change to avoid using _CALL_DL_FCT.
+	* iconv/gconv_db.c: Likewise.
+	* iconv/gconv_dl.c: Likewise.
+	* iconv/skeleton.c: Likewise, here for DL_CALL_FCT.
+	* malloc/mtrace.c: Include ldsodefs.h, not elf/ldsodefs.h.
+	* nss/nsswitch.c: Likewise.
+	* nss/nsswitch.h: Likewise.
+
+1998-10-19  Philip Blundell  <pb@nexus.co.uk>
+
+	* sunrpc/Makefile (otherlibs): If static NSS is in use, set to the
+	required libraries.
+	* login/Makefile (otherlibs): Likewise.
+	* nscd/Makefile (otherlibs): Likewise.
+	* Makeconfig (link-libc) [! build_shared]: Add $(otherlibs).
+
+	* debug/Makefile (install-bin): Only build catchsegv if using ELF.
+
+	* inet/Makefile: Add -DSTATIC_NSS to CFLAGS.
+
+1998-10-19  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: Added setfsgid
+	and setfsuid.
+
+1998-10-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nscd/connections.c: Fix typos in comments and strings.
+
+	* nscd/nscd.conf: Update according to recent changes to nscd.
+
+	* nscd/cache.c (prune_cache): Remove wrong comment.
+
 1998-10-19 13:24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-collate.c (collate_startup): Clear bit for this
@@ -14,7 +52,7 @@
 	(main): Before processing copy list add &copy_posix to copy_list.
 	* locale/programs/locales.h: Add definition of copy_def_list_t.
 	* locale/programs/locfile.c: Clear bit for appropriate category in
-	case of an copy instruction.
+	copy_posix.mask for copy instruction.
 
 1998-10-19  Ulrich Drepper  <drepper@cygnus.com>
 
