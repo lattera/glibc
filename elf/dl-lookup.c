@@ -68,14 +68,7 @@ struct sym_val
 #endif
 
 
-
-/* We have two different situations when looking up a simple: with or
-   without versioning.  gcc is not able to optimize a single function
-   definition serving for both purposes so we define two functions.  */
-#define VERSIONED	0
-#include "do-lookup.h"
-
-#define VERSIONED	1
+/* The actual lookup code.  */
 #include "do-lookup.h"
 
 
@@ -208,20 +201,6 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
   return result;
 }
 
-static int
-internal_function
-_dl_do_lookup (const char *undef_name, unsigned long int hash,
-	       const ElfW(Sym) *ref, struct sym_val *result,
-	       struct r_scope_elem *scope, size_t i, int flags,
-	       struct link_map *skip, int type_class);
-static int
-internal_function
-_dl_do_lookup_versioned (const char *undef_name, unsigned long int hash,
-			 const ElfW(Sym) *ref, struct sym_val *result,
-			 struct r_scope_elem *scope, size_t i,
-			 const struct r_found_version *const version,
-			 struct link_map *skip, int type_class);
-
 static void
 internal_function
 _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
@@ -230,45 +209,94 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 		    const struct r_found_version *version, int type_class,
 		    int protected);
 
-/* Search loaded objects' symbol tables for a definition of the symbol
-   UNDEF_NAME.  */
 
+/* Search loaded objects' symbol tables for a definition of the symbol
+   UNDEF_NAME, perhaps with a requested version for the symbol.  */
 lookup_t
 internal_function
-_dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
-		   const ElfW(Sym) **ref, struct r_scope_elem *symbol_scope[],
-		   int type_class, int flags)
+_dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
+		     const ElfW(Sym) **ref,
+		     struct r_scope_elem *symbol_scope[],
+		     const struct r_found_version *version,
+		     int type_class, int flags, struct link_map *skip_map)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { NULL, NULL };
-  struct r_scope_elem **scope;
-  int protected;
+  struct r_scope_elem **scope = symbol_scope;
 
   bump_num_relocations ();
 
+  /* No other flag than DL_LOOKUP_ADD_DEPENDENCY is allowed if we look
+     up a versioned symbol.  */
+  assert (version == NULL || flags == 0 || flags == DL_LOOKUP_ADD_DEPENDENCY);
+
+  size_t i = 0;
+  if (__builtin_expect (skip_map != NULL, 0))
+    {
+      /* Search the relevant loaded objects for a definition.  */
+      while ((*scope)->r_list[i] != skip_map)
+	++i;
+
+      assert (i < (*scope)->r_nlist);
+    }
+
   /* Search the relevant loaded objects for a definition.  */
-  for (scope = symbol_scope; *scope; ++scope)
-    if (do_lookup (undef_name, hash, *ref, &current_value, *scope, 0, flags,
-		   NULL, type_class))
-      break;
+  for (size_t start = i; *scope != NULL; start = 0, ++scope)
+    {
+      int res = do_lookup_x (undef_name, hash, *ref, &current_value, *scope,
+			     start, version, flags, skip_map, type_class);
+      if (res > 0)
+	break;
+
+      if (__builtin_expect (res, 0) < 0 && skip_map == NULL)
+	{
+	  /* Oh, oh.  The file named in the relocation entry does not
+	     contain the needed symbol.  This code is never reached
+	     for unversioned lookups.  */
+	  assert (version != NULL);
+	  const char *reference_name = undef_map ? undef_map->l_name : NULL;
+
+	  /* XXX We cannot translate the message.  */
+	  _dl_signal_cerror (0, (reference_name[0]
+				 ? reference_name
+				 : (rtld_progname ?: "<main program>")),
+			     N_("relocation error"),
+			     make_string ("symbol ", undef_name, ", version ",
+					  version->name,
+					  " not defined in file ",
+					  version->filename,
+					  " with link time reference",
+					  res == -2
+					  ? " (no version symbols)" : ""));
+	  *ref = NULL;
+	  return 0;
+	}
+    }
 
   if (__builtin_expect (current_value.s == NULL, 0))
     {
-      const char *reference_name = undef_map ? undef_map->l_name : NULL;
+      if ((*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
+	  && skip_map == NULL)
+	{
+	  /* We could find no value for a strong reference.  */
+	  const char *reference_name = undef_map ? undef_map->l_name : NULL;
+	  const char *versionstr = version ? ", version " : "";
+	  const char *versionname = (version && version->name
+				     ? version->name : "");
 
-      if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
-	/* We could find no value for a strong reference.  */
-	/* XXX We cannot translate the messages.  */
-	_dl_signal_cerror (0, (reference_name[0]
-			       ? reference_name
-			       : (rtld_progname ?: "<main program>")),
-			   N_("relocation error"),
-			   make_string (undefined_msg, undef_name));
+	  /* XXX We cannot translate the message.  */
+	  _dl_signal_cerror (0, (reference_name[0]
+				 ? reference_name
+				 : (rtld_progname ?: "<main program>")), NULL,
+			     make_string (undefined_msg, undef_name,
+					  versionstr, versionname));
+	}
       *ref = NULL;
       return 0;
     }
 
-  protected = *ref && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED;
+  int protected = (*ref
+		   && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED);
   if (__builtin_expect (protected != 0, 0))
     {
       /* It is very tricky.  We need to figure out what value to
@@ -285,10 +313,10 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 	{
 	  struct sym_val protected_value = { NULL, NULL };
 
-	  for (scope = symbol_scope; *scope; ++scope)
-	    if (_dl_do_lookup (undef_name, hash, *ref,
-			       &protected_value, *scope, 0, flags,
-			       NULL, ELF_RTYPE_CLASS_PLT))
+	  for (scope = symbol_scope; *scope; i = 0, ++scope)
+	    if (do_lookup_x (undef_name, hash, *ref, &protected_value,
+			     *scope, i, version, flags, skip_map,
+			     ELF_RTYPE_CLASS_PLT) != 0)
 	      break;
 
 	  if (protected_value.s != NULL
@@ -312,304 +340,14 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
       && add_dependency (undef_map, current_value.m) < 0)
       /* Something went wrong.  Perhaps the object we tried to reference
 	 was just removed.  Try finding another definition.  */
-      return _dl_lookup_symbol (undef_name, undef_map, ref, symbol_scope,
-				type_class, flags);
-
-  if (__builtin_expect (GLRO(dl_debug_mask)
-			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
-    _dl_debug_bindings (undef_name, undef_map, ref, symbol_scope,
-			&current_value, NULL, type_class, protected);
-
-  *ref = current_value.s;
-  return LOOKUP_VALUE (current_value.m);
-}
-
-
-/* This function is nearly the same as `_dl_lookup_symbol' but it
-   skips in the first list all objects until SKIP_MAP is found.  I.e.,
-   it only considers objects which were loaded after the described
-   object.  If there are more search lists the object described by
-   SKIP_MAP is only skipped.  */
-lookup_t
-internal_function
-_dl_lookup_symbol_skip (const char *undef_name,
-			struct link_map *undef_map, const ElfW(Sym) **ref,
-			struct r_scope_elem *symbol_scope[],
-			struct link_map *skip_map)
-{
-  const unsigned long int hash = _dl_elf_hash (undef_name);
-  struct sym_val current_value = { NULL, NULL };
-  struct r_scope_elem **scope;
-  size_t i;
-  int protected;
-
-  bump_num_relocations ();
-
-  /* Search the relevant loaded objects for a definition.  */
-  scope = symbol_scope;
-  for (i = 0; (*scope)->r_list[i] != skip_map; ++i)
-    assert (i < (*scope)->r_nlist);
-
-  if (! _dl_do_lookup (undef_name, hash, *ref, &current_value, *scope, i,
-		       DL_LOOKUP_RETURN_NEWEST, skip_map, 0))
-    while (*++scope)
-      if (_dl_do_lookup (undef_name, hash, *ref, &current_value, *scope, 0,
-			 DL_LOOKUP_RETURN_NEWEST, skip_map, 0))
-	break;
-
-  if (__builtin_expect (current_value.s == NULL, 0))
-    {
-      *ref = NULL;
-      return 0;
-    }
-
-  protected = *ref && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED;
-
-  if (__builtin_expect (protected != 0, 0))
-    {
-      /* It is very tricky.  We need to figure out what value to
-         return for the protected symbol.  */
-      struct sym_val protected_value = { NULL, NULL };
-
-      if (i >= (*scope)->r_nlist
-	  || !_dl_do_lookup (undef_name, hash, *ref, &protected_value, *scope,
-			     i, DL_LOOKUP_RETURN_NEWEST, skip_map,
-			     ELF_RTYPE_CLASS_PLT))
-	while (*++scope)
-	  if (_dl_do_lookup (undef_name, hash, *ref, &protected_value, *scope,
-			     0, DL_LOOKUP_RETURN_NEWEST, skip_map,
-			     ELF_RTYPE_CLASS_PLT))
-	    break;
-
-      if (protected_value.s != NULL && protected_value.m != undef_map)
-	{
-	  current_value.s = *ref;
-	  current_value.m = undef_map;
-	}
-    }
-
-  if (__builtin_expect (GLRO(dl_debug_mask)
-			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
-    _dl_debug_bindings (undef_name, undef_map, ref, symbol_scope,
-			&current_value, NULL, 0, protected);
-
-  *ref = current_value.s;
-  return LOOKUP_VALUE (current_value.m);
-}
-
-
-/* This function works like _dl_lookup_symbol but it takes an
-   additional argument with the version number of the requested symbol.
-
-   XXX We'll see whether we need this separate function.  */
-lookup_t
-internal_function
-_dl_lookup_versioned_symbol (const char *undef_name,
-			     struct link_map *undef_map, const ElfW(Sym) **ref,
-			     struct r_scope_elem *symbol_scope[],
-			     const struct r_found_version *version,
-			     int type_class, int flags)
-{
-  const unsigned long int hash = _dl_elf_hash (undef_name);
-  struct sym_val current_value = { NULL, NULL };
-  struct r_scope_elem **scope;
-  int protected;
-
-  bump_num_relocations ();
-
-  /* No other flag than DL_LOOKUP_ADD_DEPENDENCY is allowed.  */
-  assert (flags == 0 || flags == DL_LOOKUP_ADD_DEPENDENCY);
-
-  /* Search the relevant loaded objects for a definition.  */
-  for (scope = symbol_scope; *scope; ++scope)
-    {
-      int res = do_lookup_versioned (undef_name, hash, *ref, &current_value,
-				     *scope, 0, version, NULL, type_class);
-      if (res > 0)
-	break;
-
-      if (__builtin_expect (res, 0) < 0)
-	{
-	  /* Oh, oh.  The file named in the relocation entry does not
-	     contain the needed symbol.  */
-	  const char *reference_name = undef_map ? undef_map->l_name : NULL;
-
-	  /* XXX We cannot translate the message.  */
-	  _dl_signal_cerror (0, (reference_name[0]
-				 ? reference_name
-				 : (rtld_progname ?: "<main program>")),
-			     N_("relocation error"),
-			     make_string ("symbol ", undef_name, ", version ",
-					  version->name,
-					  " not defined in file ",
-					  version->filename,
-					  " with link time reference",
-					  res == -2
-					  ? " (no version symbols)" : ""));
-	  *ref = NULL;
-	  return 0;
-	}
-    }
-
-  if (__builtin_expect (current_value.s == NULL, 0))
-    {
-      if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
-	{
-	  /* We could find no value for a strong reference.  */
-	  const char *reference_name = undef_map ? undef_map->l_name : NULL;
-
-	  /* XXX We cannot translate the message.  */
-	  _dl_signal_cerror (0, (reference_name[0]
-				 ? reference_name
-				 : (rtld_progname ?: "<main program>")), NULL,
-			     make_string (undefined_msg, undef_name,
-					  ", version ",
-					  version->name ?: NULL));
-	}
-      *ref = NULL;
-      return 0;
-    }
-
-  protected = *ref && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED;
-
-  if (__builtin_expect (protected != 0, 0))
-    {
-      /* It is very tricky.  We need to figure out what value to
-         return for the protected symbol.  */
-      if (type_class == ELF_RTYPE_CLASS_PLT)
-	{
-	  if (current_value.s != NULL && current_value.m != undef_map)
-	    {
-	      current_value.s = *ref;
-	      current_value.m = undef_map;
-	    }
-	}
-      else
-	{
-	  struct sym_val protected_value = { NULL, NULL };
-
-	  for (scope = symbol_scope; *scope; ++scope)
-	    if (_dl_do_lookup_versioned (undef_name, hash, *ref,
-					 &protected_value,
-					 *scope, 0, version, NULL,
-					 ELF_RTYPE_CLASS_PLT))
-	      break;
-
-	  if (protected_value.s != NULL
-	      && protected_value.m != undef_map)
-	    {
-	      current_value.s = *ref;
-	      current_value.m = undef_map;
-	    }
-	}
-    }
-
-  /* We have to check whether this would bind UNDEF_MAP to an object
-     in the global scope which was dynamically loaded.  In this case
-     we have to prevent the latter from being unloaded unless the
-     UNDEF_MAP object is also unloaded.  */
-  if (__builtin_expect (current_value.m->l_type == lt_loaded, 0)
-      /* Don't do this for explicit lookups as opposed to implicit
-	 runtime lookups.  */
-      && flags != 0
-      /* Add UNDEF_MAP to the dependencies.  */
-      && add_dependency (undef_map, current_value.m) < 0)
-      /* Something went wrong.  Perhaps the object we tried to reference
-	 was just removed.  Try finding another definition.  */
-      return _dl_lookup_versioned_symbol (undef_name, undef_map, ref,
-					  symbol_scope, version, type_class,
-					  flags);
+      return _dl_lookup_symbol_x (undef_name, undef_map, ref,
+				  symbol_scope, version, type_class,
+				  flags, skip_map);
 
   if (__builtin_expect (GLRO(dl_debug_mask)
 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
     _dl_debug_bindings (undef_name, undef_map, ref, symbol_scope,
 			&current_value, version, type_class, protected);
-
-  *ref = current_value.s;
-  return LOOKUP_VALUE (current_value.m);
-}
-
-
-/* Similar to _dl_lookup_symbol_skip but takes an additional argument
-   with the version we are looking for.  */
-lookup_t
-internal_function
-_dl_lookup_versioned_symbol_skip (const char *undef_name,
-				  struct link_map *undef_map,
-				  const ElfW(Sym) **ref,
-				  struct r_scope_elem *symbol_scope[],
-				  const struct r_found_version *version,
-				  struct link_map *skip_map)
-{
-  const char *reference_name = undef_map->l_name;
-  const unsigned long int hash = _dl_elf_hash (undef_name);
-  struct sym_val current_value = { NULL, NULL };
-  struct r_scope_elem **scope;
-  size_t i;
-  int protected;
-
-  bump_num_relocations ();
-
-  /* Search the relevant loaded objects for a definition.  */
-  scope = symbol_scope;
-  for (i = 0; (*scope)->r_list[i] != skip_map; ++i)
-    assert (i < (*scope)->r_nlist);
-
-  if (! _dl_do_lookup_versioned (undef_name, hash, *ref, &current_value,
-				 *scope, i, version, skip_map, 0))
-    while (*++scope)
-      if (_dl_do_lookup_versioned (undef_name, hash, *ref, &current_value,
-				   *scope, 0, version, skip_map, 0))
-	break;
-
-  if (__builtin_expect (current_value.s == NULL, 0))
-    {
-      if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
-	{
-	  /* We could find no value for a strong reference.  */
-	  const size_t len = strlen (undef_name);
-	  char buf[sizeof undefined_msg + len];
-	  __mempcpy (__mempcpy (buf, undefined_msg, sizeof undefined_msg - 1),
-		     undef_name, len + 1);
-	  /* XXX We cannot translate the messages.  */
-	  _dl_signal_cerror (0, (reference_name[0]
-				 ? reference_name
-				 : (rtld_progname ?: "<main program>")),
-			     NULL, buf);
-	}
-      *ref = NULL;
-      return 0;
-    }
-
-  protected = *ref && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED;
-
-  if (__builtin_expect (protected != 0, 0))
-    {
-      /* It is very tricky.  We need to figure out what value to
-         return for the protected symbol.  */
-      struct sym_val protected_value = { NULL, NULL };
-
-      if (i >= (*scope)->r_nlist
-	  || !_dl_do_lookup_versioned (undef_name, hash, *ref,
-				       &protected_value, *scope, i, version,
-				       skip_map, ELF_RTYPE_CLASS_PLT))
-	while (*++scope)
-	  if (_dl_do_lookup_versioned (undef_name, hash, *ref,
-				       &protected_value, *scope, 0, version,
-				       skip_map, ELF_RTYPE_CLASS_PLT))
-	    break;
-
-      if (protected_value.s != NULL && protected_value.m != undef_map)
-	{
-	  current_value.s = *ref;
-	  current_value.m = undef_map;
-	}
-    }
-
-  if (__builtin_expect (GLRO(dl_debug_mask)
-			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
-    _dl_debug_bindings (undef_name, undef_map, ref, symbol_scope,
-			&current_value, version, 0, protected);
 
   *ref = current_value.s;
   return LOOKUP_VALUE (current_value.m);
@@ -672,14 +410,9 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 	{
 	  const unsigned long int hash = _dl_elf_hash (undef_name);
 
-	  if (version == 0)
-	    _dl_do_lookup (undef_name, hash, *ref, &val,
-			   undef_map->l_local_scope[0], 0, 0, NULL,
-			   type_class);
-	  else
-	    _dl_do_lookup_versioned (undef_name, hash, *ref, &val,
-				     undef_map->l_local_scope[0], 0, version,
-				     NULL, type_class);
+	  do_lookup_x (undef_name, hash, *ref, &val,
+		       undef_map->l_local_scope[0], 0, version, 0, NULL,
+		       type_class);
 
 	  if (val.s != value->s || val.m != value->m)
 	    conflict = 1;
@@ -719,29 +452,4 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 	}
     }
 #endif
-}
-
-/* These are here so that we only inline do_lookup{,_versioned} in the common
-   case, not everywhere.  */
-static int __attribute_noinline__
-internal_function
-_dl_do_lookup (const char *undef_name, unsigned long int hash,
-	       const ElfW(Sym) *ref, struct sym_val *result,
-	       struct r_scope_elem *scope, size_t i, int flags,
-	       struct link_map *skip, int type_class)
-{
-  return do_lookup (undef_name, hash, ref, result, scope, i, flags, skip,
-		    type_class);
-}
-
-static int __attribute_noinline__
-internal_function
-_dl_do_lookup_versioned (const char *undef_name, unsigned long int hash,
-			 const ElfW(Sym) *ref, struct sym_val *result,
-			 struct r_scope_elem *scope, size_t i,
-			 const struct r_found_version *const version,
-			 struct link_map *skip, int type_class)
-{
-  return do_lookup_versioned (undef_name, hash, ref, result, scope, i,
-			      version, skip, type_class);
 }
