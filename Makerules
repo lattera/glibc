@@ -872,8 +872,15 @@ versioned := $(strip $(foreach so,$(install-lib.so),\
 install-lib.so-versioned := $(filter $(versioned), $(install-lib.so))
 install-lib.so-unversioned := $(filter-out $(versioned), $(install-lib.so))
 
-install-lib-nosubdir: $(install-lib.so-versioned:%=$(inst_libdir)/%) \
-		      $(install-lib.so-unversioned:%=$(inst_slibdir)/%)
+# For versioned libraries, we install three files:
+#	$(inst_libdir)/libfoo.so	-- for linking, symlink or ld script
+#	$(inst_slibdir)/libfoo.so.NN	-- for loading by SONAME, symlink
+#	$(inst_slibdir)/libfoo-X.Y.Z.so -- the real shared object file
+install-lib-nosubdir: $(install-lib.so-unversioned:%=$(inst_slibdir)/%) \
+		      $(foreach L,$(install-lib.so-versioned),\
+				$(inst_libdir)/$L \
+				$(inst_slibdir)/$(L:.so=)-$(version).so \
+				$(inst_slibdir)/$L$($L-version))
 
 # Install all the unversioned shared libraries.
 $(install-lib.so-unversioned:%=$(inst_slibdir)/%): $(inst_slibdir)/%.so: \
