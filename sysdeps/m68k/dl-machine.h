@@ -81,38 +81,38 @@ elf_machine_rela (struct link_map *map,
   Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
   Elf32_Addr loadbase;
 
+#ifdef RTLD_BOOTSTRAP
+#define RESOLVE(noplt) map->l_addr
+#else
+#define RESOLVE(noplt) (*resolve) (&sym, (Elf32_Addr) reloc_addr, noplt)
+#endif
+
   switch (ELF32_R_TYPE (reloc->r_info))
     {
     case R_68K_COPY:
-      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = RESOLVE (0);
       memcpy (reloc_addr, (void *) (loadbase + sym->st_value), sym->st_size);
       break;
     case R_68K_GLOB_DAT:
-      loadbase = (resolve ? (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0) :
-		  /* RESOLVE is null during bootstrap relocation.  */
-		  map->l_addr);
+      loadbase = RESOLVE (0);
       *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
       break;
     case R_68K_JMP_SLOT:
-      loadbase = (resolve ? (*resolve) (&sym, (Elf32_Addr) reloc_addr, 1) :
-		  /* RESOLVE is null during bootstrap relocation.  */
-		  map->l_addr);
+      loadbase = RESOLVE (1);
       *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
       break;
     case R_68K_8:
-      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = RESOLVE (0);
       *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 			      + reloc->r_addend);
       break;
     case R_68K_16:
-      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = RESOLVE (0);
       *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 			       + reloc->r_addend);
       break;
     case R_68K_32:
-      loadbase = (resolve ? (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0) :
-		  /* RESOLVE is null during bootstrap relocation.  */
-		  map->l_addr);
+      loadbase = RESOLVE (0);
       *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 		     + reloc->r_addend);
       break;
@@ -120,19 +120,19 @@ elf_machine_rela (struct link_map *map,
       *reloc_addr = map->l_addr + reloc->r_addend;
       break;
     case R_68K_PC8:
-      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = RESOLVE (0);
       *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 			      + reloc->r_addend
 			      - (Elf32_Addr) reloc_addr);
       break;
     case R_68K_PC16:
-      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = RESOLVE (0);
       *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 			       + reloc->r_addend
 			       - (Elf32_Addr) reloc_addr);
       break;
     case R_68K_PC32:
-      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = RESOLVE (0);
       *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 		     + reloc->r_addend
 		     - (Elf32_Addr) reloc_addr);
@@ -143,6 +143,8 @@ elf_machine_rela (struct link_map *map,
       assert (! "unexpected dynamic reloc type");
       break;
     }
+
+#undef RESOLVE
 }
 
 static inline void
