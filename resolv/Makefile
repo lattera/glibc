@@ -34,6 +34,8 @@ routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init \
 
 tests = tst-aton tst-leaks
 
+generate := mtrace-tst-leaks tst-leaks.mtrace
+
 include ../Makeconfig
 
 extra-libs := libresolv libnss_dns

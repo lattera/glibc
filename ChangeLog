@@ -5,6 +5,10 @@
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (__NR_semtimedop):
 	Define if not defined.
 
+	* sunrpc/Makefile (generated-dirs): New.
+
+	* resolv/Makefile (generate): New.
+
 2003-05-04  Roland McGrath  <roland@redhat.com>
 
 	* csu/Makefile ($(csu-dummies) target rule): Don't use a temp C file.
