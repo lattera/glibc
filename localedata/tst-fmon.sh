@@ -32,15 +32,6 @@ here=`pwd`
 lang=`sed -e '/^#/d' -e '/^$/d' -e '/^C	/d' -e '/^tstfmon/d' -e 's/^\([^	]*\).*/\1/' $datafile | sort | uniq`
 
 # Generate data files.
-for l in $lang; do
-    cns=`echo $l | sed 's/\(.*\)[.][^.]*/\1/'`
-    cn=locales/$cns
-    fn=charmaps/`echo $l | sed 's/.*[.]\([^.]*\)/\1/'`
-    I18NPATH=. GCONV_PATH=${common_objpfx}/iconvdata \
-    ${common_objpfx}elf/ld.so --library-path $common_objpfx \
-    ${common_objpfx}locale/localedef \
-    --quiet -i $cn -f $fn ${common_objpfx}localedata/$cns
-done
 for cns in `cd ./tst-fmon-locales && ls tstfmon_*`; do
     cn=tst-fmon-locales/$cns
     fn=charmaps/ISO-8859-1
