@@ -1,5 +1,5 @@
 /* Prepare arguments for library initialization function.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,13 +35,13 @@ void NAME (void *arg)							      \
 									      \
   if (!__libc_multiple_libcs)						      \
     {									      \
-      argc = (int) arg;							      \
+      argc = (int) (long int) arg;					      \
       argv = (char **) &arg + 1;					      \
       envp = &argv[argc+1];						      \
     }									      \
   else									      \
     {									      \
-      argc = (int) arg;							      \
+      argc = (int) (long int) arg;					      \
       argv = ((char ***) &arg)[1];					      \
       envp = ((char ***) &arg)[2];					      \
     }									      \
