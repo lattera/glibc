@@ -1,3 +1,8 @@
+2000-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/Makefile (tests): Add tst-valloc.
+	* malloc/tst-valloc.c: New file.
+
 2000-02-21  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/bits/in.h (IPV6_RXSRCRT): Renamed to
