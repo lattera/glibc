@@ -566,6 +566,23 @@ weak_alias (__regerror, regerror)
 #endif
 
 
+#ifdef RE_ENABLE_I18N
+/* This static array is used for the map to single-byte characters when
+   UTF-8 is used.  Otherwise we would allocate memory just to initialize
+   it the same all the time.  UTF-8 is the preferred encoding so this is
+   a worthwhile optimization.  */
+static const bitset utf8_sb_map =
+{
+  /* Set the first 128 bits.  */
+# if UINT_MAX == 0xffffffff
+  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff
+# else
+#  error "Add case for new unsigned int size"
+# endif
+};
+#endif
+
+
 static void
 free_dfa_content (re_dfa_t *dfa)
 {
@@ -613,7 +630,8 @@ free_dfa_content (re_dfa_t *dfa)
       }
   re_free (dfa->state_table);
 #ifdef RE_ENABLE_I18N
-  re_free (dfa->sb_char);
+  if (dfa->sb_char != utf8_sb_map)
+    re_free (dfa->sb_char);
 #endif
 #ifdef DEBUG
   re_free (dfa->re_str);
@@ -824,6 +842,9 @@ init_dfa (dfa, pat_len)
      int pat_len;
 {
   int table_size;
+#ifndef _LIBC
+  char *codeset_name;
+#endif
 
   memset (dfa, '\0', sizeof (re_dfa_t));
 
@@ -853,22 +874,59 @@ init_dfa (dfa, pat_len)
     dfa->is_utf8 = 1;
   dfa->map_notascii = (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_TO_NONASCII)
 		       != 0);
+#else
+# ifdef HAVE_LANGINFO_CODESET
+  codeset_name = nl_langinfo (CODESET);
+# else
+  codeset_name = getenv ("LC_ALL");
+  if (codeset_name == NULL || codeset[0] == '\0')
+    codeset_name = getenv ("LC_CTYPE");
+  if (codeset_name == NULL || codeset[0] == '\0')
+    codeset_name = getenv ("LANG");
+  if (codeset_name == NULL)
+    codeset_name = "";
+  else if (strchr (codeset_name, '.') !=  NULL)
+    codeset_name = strchr (codeset_name, '.') + 1;
+# endif
+
+  if (strcasecmp (codeset_name, "UTF-8") == 0
+      || strcasecmp (codeset_name, "UTF8") == 0)
+    dfa->is_utf8 = 1;
+
+  /* We check exhaustively in the loop below if this charset is a
+     superset of ASCII.  */
+  dfa->map_notascii = 0;
 #endif
+
 #ifdef RE_ENABLE_I18N
   if (dfa->mb_cur_max > 1)
     {
-      int i, j, ch;
-
-      dfa->sb_char = (re_bitset_ptr_t) calloc (sizeof (bitset), 1);
-      if (BE (dfa->sb_char == NULL, 0))
-	return REG_ESPACE;
       if (dfa->is_utf8)
-	memset (dfa->sb_char, 255, sizeof (unsigned int) * BITSET_UINTS / 2);
+	dfa->sb_char = (re_bitset_ptr_t) utf8_sb_map;
       else
-	for (i = 0, ch = 0; i < BITSET_UINTS; ++i)
-	  for (j = 0; j < UINT_BITS; ++j, ++ch)
-	    if (__btowc (ch) != WEOF)
-	      dfa->sb_char[i] |= 1 << j;
+	{
+	  int i, j, ch;
+
+	  dfa->sb_char = (re_bitset_ptr_t) calloc (sizeof (bitset), 1);
+	  if (BE (dfa->sb_char == NULL, 0))
+	    return REG_ESPACE;
+
+	  /* Clear all bits by, then set those corresponding to single
+	     byte chars.  */
+	  bitset_empty (dfa->sb_char);
+
+	  for (i = 0, ch = 0; i < BITSET_UINTS; ++i)
+	    for (j = 0; j < UINT_BITS; ++j, ++ch)
+	      {
+		wchar_t wch = __btowc (ch);
+		if (wch != WEOF)
+		  dfa->sb_char[i] |= 1 << j;
+# ifndef _LIBC
+		if (isascii (ch) && wch != (wchar_t) ch)
+		  dfa->map_notascii = 1;
+# endif
+	      }
+	}
     }
 #endif
 

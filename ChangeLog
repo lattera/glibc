@@ -1,4 +1,49 @@
+2004-11-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c (utf8_sb_map): Define.
+	(free_dfa_content): Don't free dfa->sb_char if it's a pointer to
+	utf8_sb_map.
+	(init_dfa): Use utf8_sb_map instead of initializing memory when the
+	encoding is UTF-8.
+
 2004-11-03  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regcomp.c (init_dfa): Get the codeset name outside glibc as
+	well.  Check if it is spelled UTF8 as well as UTF-8, and check
+	case-insensitively.  Set dfa->map_notascii manually when outside
+	glibc.
+	* posix/regex_internal.c (build_wcs_upper_buffer) [!_LIBC]: Enable
+	optimizations based on map_notascii.
+	* posix/regex_internal.h [HAVE_LANGINFO_H || HAVE_LANGINFO_CODESET
+	|| _LIBC]: Include langinfo.h.
+
+	* posix/regex_internal.h (struct re_backref_cache_entry): Add "more"
+	field.
+	* posix/regexec.c (check_dst_limits): Hoist computation of the source
+	and destination bkref_idx out of the loop.  Pass it to
+	check_dst_limits_calc_pos.
+	(check_dst_limits_calc_pos_1): New function, containing the recursive
+	loop of check_dst_limits_calc_pos; uses the "more" field of
+	struct re_backref_cache to control the loop.
+	(check_dst_limits_calc_pos): Store into "boundaries" the position
+	relative to lim's start and end positions.  Do not accept eclosures,
+	accept bkref_idx instead.  Call check_dst_limits_calc_pos_1 to do the
+	work.
+	(sift_states_bkref): Use the "more" field of struct re_backref_cache
+	to control the loop.  A big "if" was turned into a continue and the
+	function was reindented.
+	(get_subexp): Use the "more" field of struct re_backref_cache
+	to control the loop.
+	(match_ctx_add_entry): Initialize the bkref_ents' "more" field.
+	(search_cur_bkref_entry): Return -1 if out of bounds.
+
+	* posix/regexec.c (empty_set): Remove.
+	(sift_states_backward): Remove cur_src variable.  Move inner loop
+	to build_sifted_states.
+	(build_sifted_states): Extract from sift_states_backward.  Do not
+	use empty_set.
+	(update_cur_sifted_state): Do not use empty_set.  Special case
+	dest_nodes->nelem == 0.
 
 	* posix/regex_internal.h (struct re_backref_cache_entry): Remove flag
 	field.

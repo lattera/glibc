@@ -27,6 +27,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if defined HAVE_LANGINFO_H || defined HAVE_LANGINFO_CODESET || defined _LIBC
+# include <langinfo.h>
+#endif
 #if defined HAVE_LOCALE_H || defined _LIBC
 # include <locale.h>
 #endif
@@ -545,6 +548,9 @@ struct re_backref_cache_entry
   int str_idx;
   int subexp_from;
   int subexp_to;
+  /* We need only one byte from the following field.  If other small
+     fields are added the type could be changed to 'char'.  */
+  int more;
 };
 
 typedef struct
