@@ -1,3 +1,9 @@
+2001-02-09  Andreas Jaeger  <aj@suse.de>
+
+	* locales/en_IN: Add newline at end of file.
+
+	* SUPPORTED: Add more entries.
+
 2001-02-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/en_HK: At newline at the end of the file.
