@@ -1,5 +1,8 @@
 2000-02-08  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/mips/register-dump.h (register_dump):
+	Fix usage of macro ADD_STRING.
+
 	* sysdeps/unix/sysv/linux/mips/bits/termios.h: Remove members
 	c_ispeed and c_ospeed which are not implemented.
 
