@@ -1,5 +1,5 @@
 /* Internal per-thread variables for the Hurd.
-   Copyright (C) 1994,95,97,98,99,2001 Free Software Foundation, Inc.
+   Copyright (C) 1994,95,97,98,99,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -94,7 +94,7 @@ __hurd_threadvar_location_from_sp (enum __hurd_threadvar_index __index,
    per-thread variable with index INDEX.  */
 
 extern unsigned long int *
-__hurd_threadvar_location (enum __hurd_threadvar_index __index)
+__hurd_threadvar_location (enum __hurd_threadvar_index __index) __THROW
      /* This declaration tells the compiler that the value is constant
 	given the same argument.  We assume this won't be called twice from
 	the same stack frame by different threads.  */
@@ -107,14 +107,5 @@ __hurd_threadvar_location (enum __hurd_threadvar_index __index)
 					    __thread_stack_pointer ());
 }
 
-/* Return the current thread's location for `errno'.
-   The syntax of this function allows redeclarations like `int errno'.  */
-extern int *__hurd_errno_location (void);
-
-_HURD_THREADVAR_H_EXTERN_INLINE int *
-__hurd_errno_location (void)
-{
-  return (int *) __hurd_threadvar_location (_HURD_THREADVAR_ERRNO);
-}
 
 #endif	/* hurd/threadvar.h */
