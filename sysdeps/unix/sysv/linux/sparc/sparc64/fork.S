@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza <miguel@gnu.ai.mit.edu>, 1997.
 
@@ -20,13 +20,9 @@
 #include <sysdep.h>
 
 PSEUDO (__libc_fork, fork, 0)
-	tst	%o1
-	be	%xcc, 1f
-	 nop
-	/* child: return 0 */
-	clr	%o0
-1:	ret
-
+	sub	%o1, 1, %o1
+	retl
+	 and	%o0, %o1, %o0
 PSEUDO_END (__libc_fork)
 
 weak_alias (__libc_fork, __fork)

@@ -1,7 +1,17 @@
 1999-01-29  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdeps/libm-i387/s_fdim.S: Change fsubp to fsubrp for picky
-	gas.
+	* sysdeps/unix/sparc/vfork.S: Correct comment.
+	* sysdeps/unix/sparc/fork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Remove vfork.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/fork.S: No special case for
+	child necessary.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/fork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S: New file.
+	Patches by Jakub Jelinek <jj@sunsite.ms.mff.cuni.cz>.
+
+	* sysdeps/libm-i387/s_fdim.S: Change fsubp to fsubrp for picky gas.
 	* sysdeps/libm-i387/s_fdimf.S: Likewise.
 	* sysdeps/libm-i387/s_fdiml.S: Likewise.
 

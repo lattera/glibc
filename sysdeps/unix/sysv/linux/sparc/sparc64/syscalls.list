@@ -11,7 +11,6 @@ setrlimit	-	setrlimit	2	setrlimit	setrlimit64
 ftruncate	-	ftruncate	2	__ftruncate	ftruncate ftruncate64
 truncate	-	truncate	2	truncate	truncate64
 mmap		-	mmap		6	__mmap		mmap __mmap64 mmap64
-vfork		-	vfork		0	__vfork		vfork
 
 # Override select.S in parent directory:
 select		-	select		5	__select	select
