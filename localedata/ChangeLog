@@ -1,3 +1,7 @@
+2000-01-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* SUPPORTED: Change lt_LT charset to ISO-8859-13.
+
 1999-12-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* collate-test.c (main): Correct logic in test.
