@@ -1,3 +1,19 @@
+2002-03-23  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/i386/Makefile
+	(sysdep_routines, shared-only-routines): Don't add framestate,
+	reverting 2001-10-02 change.
+	* sysdeps/unix/sysv/linux/arm/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/mips/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/Makefile: Likewise.
+	* sysdeps/generic/Makefile (sysdep_routines, shared-only-routines):
+	Do it here instead, only if [$(unwind-find-fde) = yes].
+
 2002-03-23  Andreas Jaeger  <aj@suse.de>
 
 	* signal/signal.h: Fix typo. Patch by Steve Kemp
