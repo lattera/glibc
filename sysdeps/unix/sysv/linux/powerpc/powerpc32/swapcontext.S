@@ -240,7 +240,7 @@ L(no_vec):
 	stw	r3,_UC_REGS_PTR(r12)
 	addi	r5,r12,_UC_SIGMASK
 	li	r3,SIG_SETMASK
-	bl	JUMPTARGET(sigprocmask)
+	bl	JUMPTARGET(__sigprocmask)
 	cmpwi	r3,0
 	bne	L(error_exit)
 
@@ -571,7 +571,7 @@ ENTRY(__novec_swapcontext)
 	addi	r5,r3,_UC_SIGMASK - _UC_REG_SPACE
 	addi	r4,r4,_UC_SIGMASK
 	li	r3,SIG_SETMASK
-	bl	JUMPTARGET(sigprocmask)
+	bl	JUMPTARGET(__sigprocmask)
 	cmpwi	r3,0
 	bne	L(novec_error_exit)
 

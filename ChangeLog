@@ -1,5 +1,10 @@
 2004-04-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S: Use
+	__sigprocmask not sigprocmask.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S: Likewise.
+
 	* include/string.h: Add libc_hidden_builtin_proto for memcmp.
 	* sysdeps/generic/memcmp.c: Add libc_hidden_builtin_def.
 	* sysdeps/i386/memcmp.S: Likewise.
@@ -8,6 +13,8 @@
 	* sysdeps/sparc/sparc64/memcmp.S: Likewise.
 
 	* sysdeps/unix/sysv/linux/sigprocmask.c: Include <string.h>.
+	* time/mktime.c: Likewise.
+	* misc/getpass.c: Likewise.
 
 	* time/difftime.c (__difftime): New renamed.  Make old name alias.
 	Use __difftime in recursive call.

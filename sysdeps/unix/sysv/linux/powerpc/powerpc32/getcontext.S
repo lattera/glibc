@@ -238,7 +238,7 @@ L(no_vec):
 	stw	r3,_UC_REGS_PTR(r12)
 	addi	r5,r12,_UC_SIGMASK
 	li	r3,SIG_BLOCK
-	bl	JUMPTARGET(sigprocmask)
+	bl	JUMPTARGET(__sigprocmask)
 
 	lwz	r0,_FRAME_LR_SAVE+16(r1)
 	addi	r1,r1,16
@@ -350,7 +350,7 @@ ENTRY(__novec_getcontext)
 	addi	r5,r3,_UC_SIGMASK - _UC_REG_SPACE
 	li	r4,0
 	li	r3,SIG_BLOCK
-	bl	JUMPTARGET(sigprocmask)
+	bl	JUMPTARGET(__sigprocmask)
 
 	lwz	r0,20(r1)
 	addi	r1,r1,16

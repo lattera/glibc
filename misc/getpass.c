@@ -1,4 +1,4 @@
-/* Copyright (C) 1992-1999, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1992-1999, 2001, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <stdio_ext.h>
+#include <string.h>		/* For string function builtin redirect.  */
 #include <termios.h>
 #include <unistd.h>
 

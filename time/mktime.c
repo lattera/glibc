@@ -1,5 +1,5 @@
 /* Convert a `struct tm' to a time_t value.
-   Copyright (C) 1993-1999, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1993-1999, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Eggert (eggert@twinsun.com).
 
@@ -37,11 +37,11 @@
 #include <time.h>
 
 #include <limits.h>
+#include <string.h>		/* For string function builtin redirect.  */
 
 #if DEBUG
 # include <stdio.h>
 # include <stdlib.h>
-# include <string.h>
 /* Make it work even if the system's libc has its own mktime routine.  */
 # define mktime my_mktime
 #endif /* DEBUG */
