@@ -1,3 +1,9 @@
+1998-10-12  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/generic/glob.c: #undef mempcpy before #define.
+
+	* sysdeps/unix/bsd/clock.c: Use prototype defns.
+
 1998-10-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Rules [posix in sysdirs]: Set L_tmpnam to 20.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,8 +24,7 @@
 __inline
 #endif
 static clock_t
-timeval_to_clock_t (tv)
-     const struct timeval *tv;
+timeval_to_clock_t (const struct timeval *tv)
 {
   return (clock_t) ((tv->tv_sec * CLK_TCK) +
 		    (tv->tv_usec * CLK_TCK / 1000000));
@@ -33,7 +32,7 @@ timeval_to_clock_t (tv)
 
 /* Return the time used by the program so far (user time + system time).  */
 clock_t
-clock ()
+clock (void)
 {
   struct rusage usage;
 
