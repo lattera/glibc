@@ -1,5 +1,5 @@
 /* Find matching transformation algorithms and initialize steps.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -182,8 +182,13 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	      || __builtin_expect (__gconv_translit_find (runp), 0) == 0)
 	    lastp = runp;
 	  else
-	    /* This means we haven't found the module.  Remove it.  */
-	    (lastp == NULL ? trans : lastp->next) = runp->next;
+	    {
+	      /* This means we haven't found the module.  Remove it.  */
+	      if (lastp == NULL)
+		trans  = runp->next;
+	      else
+		lastp->next  = runp->next;
+	    }
 	}
 
       /* Allocate room for handle.  */
