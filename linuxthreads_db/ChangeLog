@@ -1,3 +1,7 @@
+1999-11-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile: Correct dependency for shared object.
+
 1999-11-22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* td_ta_map_lwp2thr.c: Add missing brace in comparison.

@@ -895,11 +895,11 @@ shadow_compat: nis
 that have been linked against glibc 2.0 will continue to work.
 
 If you compile your own binaries against glibc 2.1, you also need to
-recompile some other libraries.  The problem is that libio had to be
-changed and therefore libraries that are based or depend on the libio
-of glibc, e.g. ncurses or slang, need to be recompiled.  If you
-experience strange segmentation faults in your programs linked against
-glibc 2.1, you might need to recompile your libraries.
+recompile some other libraries.  The problem is that libio had to be changed
+and therefore libraries that are based or depend on the libio of glibc,
+e.g. ncurses, slang and most C++ libraries, need to be recompiled.  If you
+experience strange segmentation faults in your programs linked against glibc
+2.1, you might need to recompile your libraries.
 
 Another problem is that older binaries that were linked statically against
 glibc 2.0 will reference the older nss modules (libnss_files.so.1 instead of

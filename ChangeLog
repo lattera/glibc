@@ -1,6 +1,6 @@
 1999-11-23  Thorsten Kukuk  <kukuk@suse.de>
 
-	* iconv/skeleton.c: Don't access next_step->fct if datat->is_last
+	* iconv/skeleton.c: Don't access next_step->fct if data->is_last
 	is true.
 
 1999-11-23  Andreas Jaeger  <aj@suse.de>
