@@ -138,6 +138,16 @@ __BEGIN_DECLS
 # endif
 #endif
 
+/* These are from POSIX.1b.  If the objects are not implemented using separate
+   distinct file types, the macros always will evaluate to zero.  Unlike the
+   other S_* macros the following three take a pointer to a `struct stat'
+   object as the argument.  */
+#ifdef	__USE_POSIX199309
+# define S_TYPEISMQ(buf) __S_TYPEISMQ(buf)
+# define S_TYPEISSEM(buf) __S_TYPEISSEM(buf)
+# define S_TYPEISSHM(buf) __S_TYPEISSHM(buf)
+#endif
+
 
 /* Protection bits.  */
 
