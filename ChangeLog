@@ -1,3 +1,20 @@
+2002-03-27  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h (struct
+	sigcontext): Follow further kernel change.
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/ucontext.h: Follow further
+	kernel change.
+
+	* sysdeps/unix/sysv/linux/x86_64/sigcontextinfo.h (GET_STACK):
+	Change for struct sigcontext change.
+
+	* sysdeps/unix/sysv/linux/x86_64/register-dump.h (register_dump):
+	Follow changes in struct sigcontext.
+
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Remove ptrace
+	sysycall, use wrapper instead.
+
 2002-03-26  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/i486/bits/string.h (__memcpy_by4): Describe memory

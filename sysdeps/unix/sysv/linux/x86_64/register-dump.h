@@ -67,7 +67,7 @@ hexvalue (unsigned long int value, char *buf, size_t len)
 static void
 register_dump (int fd, struct sigcontext *ctx)
 {
-  char regs[29][16];
+  char regs[25][16];
   char fpregs[30][8];
   char xmmregs[16][32];
   struct iovec iov[147];
@@ -104,16 +104,13 @@ register_dump (int fd, struct sigcontext *ctx)
 
   hexvalue (ctx->eflags, regs[17], 8);
   hexvalue (ctx->cs, regs[18], 4);
-  hexvalue (ctx->ds, regs[19], 4);
-  hexvalue (ctx->es, regs[20], 4);
-  hexvalue (ctx->fs, regs[21], 4);
-  hexvalue (ctx->gs, regs[22], 4);
+  hexvalue (ctx->fs, regs[19], 4);
+  hexvalue (ctx->gs, regs[20], 4);
   /* hexvalue (ctx->ss, regs[23], 4); */
-  hexvalue (ctx->trapno, regs[24], 8);
-  hexvalue (ctx->err, regs[25], 8);
-  hexvalue (ctx->oldmask, regs[26], 8);
-  hexvalue (ctx->rsp_at_signal, regs[27], 16);
-  hexvalue (ctx->cr2, regs[28], 8);
+  hexvalue (ctx->trapno, regs[21], 8);
+  hexvalue (ctx->err, regs[22], 8);
+  hexvalue (ctx->oldmask, regs[23], 8);
+  hexvalue (ctx->cr2, regs[24], 8);
 
   /* Generate the output.  */
   ADD_STRING ("Register dump:\n\n RAX: ");
@@ -154,28 +151,22 @@ register_dump (int fd, struct sigcontext *ctx)
   ADD_MEM (regs[17], 8);
   ADD_STRING ("\n\n CS: ");
   ADD_MEM (regs[18], 4);
-  ADD_STRING ("   DS: ");
-  ADD_MEM (regs[19], 4);
-  ADD_STRING ("   ES: ");
-  ADD_MEM (regs[20], 4);
   ADD_STRING ("   FS: ");
-  ADD_MEM (regs[21], 4);
+  ADD_MEM (regs[19], 4);
   ADD_STRING ("   GS: ");
-  ADD_MEM (regs[22], 4);
+  ADD_MEM (regs[20], 4);
   /*
   ADD_STRING ("   SS: ");
   ADD_MEM (regs[23], 4);
   */
   ADD_STRING ("\n\n Trap: ");
-  ADD_MEM (regs[24], 8);
+  ADD_MEM (regs[21], 8);
   ADD_STRING ("   Error: ");
-  ADD_MEM (regs[25], 8);
+  ADD_MEM (regs[22], 8);
   ADD_STRING ("   OldMask: ");
-  ADD_MEM (regs[26], 8);
-  ADD_STRING ("\n RSP/signal: ");
-  ADD_MEM (regs[27], 8);
+  ADD_MEM (regs[23], 8);
   ADD_STRING ("   CR2: ");
-  ADD_MEM (regs[28], 8);
+  ADD_MEM (regs[24], 8);
 
   if (ctx->fpstate != NULL)
     {

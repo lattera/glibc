@@ -134,10 +134,10 @@ struct sigcontext
   unsigned long rsp;
   unsigned long rip;
   unsigned long eflags;
-  unsigned short cs, __csh;
-  unsigned short gs, __gsh;
-  unsigned short fs, __fsh;
-  unsigned int __pad0;
+  unsigned short cs;
+  unsigned short gs;
+  unsigned short fs;
+  unsigned short __pad0;
   unsigned long err;
   unsigned long trapno;
   unsigned long oldmask;
