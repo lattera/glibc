@@ -1467,7 +1467,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 
       if (fd != -1)
 	{
-	  *realname = malloc (buflen);
+	  *realname = (char *) malloc (buflen);
 	  if (*realname != NULL)
 	    {
 	      memcpy (*realname, buf, buflen);
@@ -1573,8 +1573,11 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	      if (l->l_rpath_dirs.dirs == NULL)
 		{
 		  if (l->l_info[DT_RPATH] == NULL)
-		    /* There is no path.  */
-		    l->l_rpath_dirs.dirs = (void *) -1;
+		    {
+		      /* There is no path.  */
+		      l->l_rpath_dirs.dirs = (void *) -1;
+		      continue;
+		    }
 		  else
 		    {
 		      /* Make sure the cache information is available.  */
@@ -1582,13 +1585,10 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 				       + l->l_info[DT_RPATH]->d_un.d_val);
 		      decompose_rpath (&l->l_rpath_dirs,
 				       (const char *) ptrval, l, "RPATH");
-
-		      if (l->l_rpath_dirs.dirs != (void *) -1)
-			fd = open_path (name, namelen, preloaded,
-					&l->l_rpath_dirs, &realname, &fb);
 		    }
 		}
-	      else if (l->l_rpath_dirs.dirs != (void *) -1)
+
+	      if (l->l_rpath_dirs.dirs != (void *) -1)
 		fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
 				&realname, &fb);
 	    }
@@ -1607,15 +1607,22 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	fd = open_path (name, namelen, preloaded, &env_path_list,
 			&realname, &fb);
 
-      /* Look at the RUNPATH information for this binary.  */
-      if (fd == -1 && loader != NULL
-	  && loader->l_runpath_dirs.dirs != (void *) -1)
+      /* Look at the RUNPATH information for this binary.
+
+	 Note that this is no real loop.  'while' is used only to enable
+	 us to use 'break' instead of a 'goto' to jump to the end.  The
+	 loop is always left after the first round.  */
+      while (fd == -1 && loader != NULL
+	     && loader->l_runpath_dirs.dirs != (void *) -1)
 	{
 	  if (loader->l_runpath_dirs.dirs == NULL)
 	    {
 	      if (loader->l_info[DT_RUNPATH] == NULL)
-		/* No RUNPATH.  */
-		loader->l_runpath_dirs.dirs = (void *) -1;
+		{
+		  /* No RUNPATH.  */
+		  loader->l_runpath_dirs.dirs = (void *) -1;
+		  break;
+		}
 	      else
 		{
 		  /* Make sure the cache information is available.  */
@@ -1629,6 +1636,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  if (loader->l_runpath_dirs.dirs != (void *) -1)
 	    fd = open_path (name, namelen, preloaded,
 			    &loader->l_runpath_dirs, &realname, &fb);
+	  break;
 	}
 
       if (fd == -1
@@ -1638,17 +1646,22 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	     for compatibility with Linux's ldconfig program.  */
 	  const char *cached = _dl_load_cache_lookup (name);
 
+	  if (cached != NULL)
+	    {
 #ifdef SHARED
-	  l = loader ?: _dl_loaded;
+	      l = loader ?: _dl_loaded;
 #else
-	  l = loader;
+	      l = loader;
 #endif
 
-	  if (cached)
-	    {
 	      /* If the loader has the DF_1_NODEFLIB flag set we must not
 		 use a cache entry from any of these directories.  */
-	      if (l && __builtin_expect (l->l_flags_1 & DF_1_NODEFLIB, 0))
+	      if (
+#ifndef SHARED
+		  /* 'l' is always != NULL for dynamically linked objects.  */
+		  l != NULL &&
+#endif
+		  __builtin_expect (l->l_flags_1 & DF_1_NODEFLIB, 0))
 		{
 		  const char *dirp = system_dirs;
 		  unsigned int cnt = 0;
@@ -1668,10 +1681,10 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 		  while (cnt < nsystem_dirs_len);
 		}
 
-	      if (cached)
+	      if (cached != NULL)
 		{
 		  fd = open_verify (cached, &fb);
-		  if (__builtin_expect (fd, 0) != -1)
+		  if (__builtin_expect (fd != -1, 1))
 		    {
 		      realname = local_strdup (cached);
 		      if (realname == NULL)
@@ -1686,7 +1699,13 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       /* Finally, try the default path.  */
       if (fd == -1
-	  && (l == NULL ||
+	  && ((l = loader ?: _dl_loaded)
+	      /* 'l' is always != NULL for dynamically linked objects.  */
+#ifdef SHARED
+	      ,
+#else
+	      == NULL ||
+#endif
 	      __builtin_expect (!(l->l_flags_1 & DF_1_NODEFLIB), 1))
 	  && rtld_search_dirs.dirs != (void *) -1)
 	fd = open_path (name, namelen, preloaded, &rtld_search_dirs,

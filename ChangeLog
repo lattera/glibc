@@ -1,3 +1,8 @@
+2001-11-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object): Correct test of DF_1_NODEFLIB
+	for rtld_search_dirs content.  Minor optimizations.
+
 2001-10-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object): Make code a bit more compact by
