@@ -1,3 +1,9 @@
+2004-09-11  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/i386/init-first.c (init1) [! SHARED]:
+	Set _dl_phdr and _dl_phnum.
+	(init1): When bootstrap task, bail early and never examine *D.
+
 2004-09-11  Alfred M. Szmidt  <ams@kemisten.nu>
 
 	* sysdeps/mach/hurd/i386/tls.h (__i386_set_gdt) [!HAVE_I386_SET_GDT]:

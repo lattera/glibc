@@ -111,35 +111,51 @@ init1 (int argc, char *arg0, ...)
   /* If we are the bootstrap task started by the kernel,
      then after the environment pointers there is no Hurd
      data block; the argument strings start there.  */
-  if ((void *) d != argv[0])
+  if ((void *) d == argv[0])
     {
-      _hurd_init_dtable = d->dtable;
-      _hurd_init_dtablesize = d->dtablesize;
-
-      {
-	/* Check if the stack we are now on is different from
-	   the one described by _hurd_stack_{base,size}.  */
-
-	char dummy;
-	const vm_address_t newsp = (vm_address_t) &dummy;
-
-	if (d->stack_size != 0 && (newsp < d->stack_base ||
-				   newsp - d->stack_base > d->stack_size))
-	  /* The new stack pointer does not intersect with the
-	     stack the exec server set up for us, so free that stack.  */
-	  __vm_deallocate (__mach_task_self (), d->stack_base, d->stack_size);
-      }
+#ifndef SHARED
+      /* We may need to see our own phdrs, e.g. for TLS setup.
+         Try the usual kludge to find the headers without help from
+	 the exec server.  */
+      extern const void _start;
+      const ElfW(Ehdr) *const ehdr = &_start;
+      _dl_phdr = (const ElfW(Phdr) *) ((const void *) ehdr + ehdr->e_phoff);
+      _dl_phnum = ehdr->e_phnum;
+      assert (ehdr->e_phentsize == sizeof (ElfW(Phdr)));
+#endif
+      return;
     }
 
-  if ((void *) d != argv[0] && (d->portarray || d->intarray))
+#ifndef SHARED
+  __libc_enable_secure = d->flags & EXEC_SECURE;
+
+  _dl_phdr = (const ElfW(Phdr) *) d->phdr;
+  _dl_phnum = d->phdr_size / sizeof (ElfW(Phdr));
+  assert (d->phdr_size % sizeof (ElfW(Phdr)) == 0);
+#endif
+
+  _hurd_init_dtable = d->dtable;
+  _hurd_init_dtablesize = d->dtablesize;
+
+  {
+    /* Check if the stack we are now on is different from
+       the one described by _hurd_stack_{base,size}.  */
+
+    char dummy;
+    const vm_address_t newsp = (vm_address_t) &dummy;
+
+    if (d->stack_size != 0 && (newsp < d->stack_base ||
+			       newsp - d->stack_base > d->stack_size))
+      /* The new stack pointer does not intersect with the
+	 stack the exec server set up for us, so free that stack.  */
+      __vm_deallocate (__mach_task_self (), d->stack_base, d->stack_size);
+  }
+
+  if (d->portarray || d->intarray)
     /* Initialize library data structures, start signal processing, etc.  */
     _hurd_init (d->flags, argv,
 		d->portarray, d->portarraysize,
 		d->intarray, d->intarraysize);
-
-#ifndef SHARED
-  __libc_enable_secure = d->flags & EXEC_SECURE;
-#endif
 }
 
 
