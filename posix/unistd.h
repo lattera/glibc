@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -618,7 +618,7 @@ extern int setuid (__uid_t __uid) __THROW;
 extern int setreuid (__uid_t __ruid, __uid_t __euid) __THROW;
 #endif
 
-#ifdef	__USE_BSD
+#if defined __USE_BSD || defined __USE_XOPEN2K
 /* Set the effective user ID of the calling process to UID.  */
 extern int seteuid (__uid_t __uid) __THROW;
 #endif /* Use BSD.  */
@@ -635,7 +635,7 @@ extern int setgid (__gid_t __gid) __THROW;
 extern int setregid (__gid_t __rgid, __gid_t __egid) __THROW;
 #endif
 
-#ifdef __USE_BSD
+#if defined __USE_BSD || defined __USE_XOPEN2K
 /* Set the effective group ID of the calling process to GID.  */
 extern int setegid (__gid_t __gid) __THROW;
 #endif /* Use BSD.  */

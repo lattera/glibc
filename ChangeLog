@@ -1,5 +1,7 @@
 2001-01-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/unistd.h: Make seteuid and setegid available for XPG6.
+
 	* wcsmbs/wchar.h: Get FILE definition for XPG5.
 
 	* conform/data/ctype.h-data: Use correct comment form.
