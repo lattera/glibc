@@ -1,7 +1,7 @@
 /* stdio on a Mach device port.
-   Translates \n to \r\n on output, echos input.
+   Translates \n to \r\n on output, echos and translates \r to \n on input.
 
-Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
+Copyright (C) 1992, 1993, 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -63,6 +63,14 @@ input (FILE *f)
   err = device_write_inband ((device_t) f->__cookie, 0, f->__target,
 			     buffer, nread, (int *) &to_read);
 
+  /* Translate LF to CR.  */
+  {
+    char *p;
+    for (p = memchr (buffer, '\r', nread); p;
+	 p = memchr (p + 1, '\r', (buffer + nread) - (p + 1)))
+      *p = '\n';
+  }
+
   if (f->__buffer == NULL)
     return (unsigned char) c;
 
@@ -84,7 +92,7 @@ output (FILE *f, int c)
       while (to_write > 0)
 	{
 	  if (err = device_write ((device_t) f->__cookie, 0,
-				  f->__target, (char *)p, 
+				  f->__target, (char *)p,
 				  to_write, &wrote))
 	    {
 	      errno = err;

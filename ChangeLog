@@ -1,3 +1,7 @@
+Thu Mar 21 11:19:15 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* mach/devstream.c (input): Translate \r to \n on input.
+
 Wed Mar 20 11:28:49 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* stdio-common/printf.h, stdio-common/printf_fp.c,
