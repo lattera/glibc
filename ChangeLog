@@ -1,3 +1,8 @@
+Wed Jan 31 20:08:26 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): Clear SS->intr_port
+	when cancelled before RPC.
+
 Tue Jan 30 13:32:05 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* dirent/scandir.c: Allocate dirents with correct size for name, and
