@@ -1226,6 +1226,7 @@ _IO_list_lock()
   _IO_lock_lock (list_all_lock);
 #endif
 }
+libc_hidden_def (_IO_list_lock)
 
 void
 _IO_list_unlock()
@@ -1234,6 +1235,7 @@ _IO_list_unlock()
   _IO_lock_unlock (list_all_lock);
 #endif
 }
+libc_hidden_def (_IO_list_unlock)
 
 void
 _IO_list_resetlock()
@@ -1242,6 +1244,7 @@ _IO_list_resetlock()
   _IO_lock_init (list_all_lock);
 #endif
 }
+libc_hidden_def (_IO_list_resetlock)
 
 
 #ifdef TODO

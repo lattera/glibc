@@ -412,8 +412,11 @@ libc_hidden_proto (_IO_iter_next)
 extern _IO_FILE *_IO_iter_file __P ((_IO_ITER));
 libc_hidden_proto (_IO_iter_file)
 extern void _IO_list_lock __P ((void));
+libc_hidden_proto (_IO_list_lock)
 extern void _IO_list_unlock __P ((void));
+libc_hidden_proto (_IO_list_unlock)
 extern void _IO_list_resetlock __P ((void));
+libc_hidden_proto (_IO_list_resetlock)
 
 /* Default jumptable functions. */
 

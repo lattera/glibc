@@ -1,5 +1,10 @@
 2002-12-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/libioP.h: Add libc_hidden_proto for _IO_list_lock,
+	_IO_list_unlock, and _IO_list_resetlock.
+	* libio/genops.c: Add libc_hidden_def for _IO_list_lock,
+	_IO_list_unlock, and _IO_list_resetlock.
+
 	* libio/libioP.h: Add libc_hidden_proto for _IO_iter_begin,
 	_IO_iter_end, _IO_iter_next, and _IO_iter_file.
 	* libio/genops.c: Add libc_hidden_def for _IO_iter_begin,
