@@ -1,3 +1,7 @@
+2003-12-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h: Add a few definitions from Solaris 9.
+
 2003-12-29  Andreas Schwab  <schwab@suse.de>
 
 	* stdio-common/Makefile (CFLAGS-errlist.c, CFLAGS-siglist.c): Add

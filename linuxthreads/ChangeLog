@@ -1,3 +1,9 @@
+2003-12-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/tls.h: Include dl-sysdep.h.
+	(INIT_SYSINFO): Define.
+	(TLS_INIT_TP): Use it.
+
 2003-12-28  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* attr.c (pthread_getattr_np): Add _STACK_GROWS_UP case.
