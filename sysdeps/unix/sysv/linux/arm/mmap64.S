@@ -39,7 +39,7 @@ ENTRY (__mmap64)
 	swi	SYS_ify (mmap2)
 	cmn	r0, $4096
 	LOADREGS(ccfd, sp!, {r4, r5, pc})
-	cmn	r0, $(ENOSYS - 1)
+	cmn	r0, $ENOSYS
 	ldmnefd	sp!, {r4, r5, lr}
 	bne	PLTJMP(syscall_error)
 	/* The current kernel does not support mmap2.  Fall back to plain
