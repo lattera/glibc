@@ -46,6 +46,12 @@
 # define EFLAGS	18
 # define RSP	19
 # define SS	20
+# define FS_BASE 21
+# define GS_BASE 22
+# define DS	23
+# define ES	24
+# define FS	25
+# define GS	26
 #else
 
 /* Index into an array of 4 byte integers returned from ptrace for

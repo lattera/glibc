@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,21 +23,23 @@
    too much into it.  Don't use it for anything other than GDB unless
    you know what you are doing.  */
 
+#include <bits/wordsize.h>
+
+#if __WORDSIZE == 64
+
 struct user_fpregs_struct
 {
   unsigned short int cwd;
   unsigned short int swd;
   unsigned short int twd;
   unsigned short int fop;
-  unsigned int fip;
-  unsigned int fcs;
-  unsigned int foo;
-  unsigned int fos;
+  unsigned long int frip;
+  unsigned long int frdp;
   unsigned int mxcsr;
   unsigned int reserved;
   unsigned int st_space[32];   /* 8*16 bytes for each FP-reg = 128 bytes */
-  unsigned int xmm_space[32];  /* 8*16 bytes for each XMM-reg = 128 bytes */
-  unsigned int padding[56];
+  unsigned int xmm_space[64];  /* 16*16 bytes for each XMM-reg = 128 bytes */
+  unsigned int padding[24];
 };
 
 struct user_regs_struct
@@ -64,7 +66,82 @@ struct user_regs_struct
   unsigned long rsp;
   unsigned long ss;
   unsigned long fs_base;
-  unsigned long kernel_gs_base;
+  unsigned long gs_base;
+  unsigned long ds;
+  unsigned long es;
+  unsigned long fs;
+  unsigned long gs;  
+};
+
+struct user
+{
+  struct user_regs_struct	regs;
+  int				u_fpvalid;
+  struct user_fpregs_struct	i387;
+  unsigned long int		u_tsize;
+  unsigned long int		u_dsize;
+  unsigned long int		u_ssize;
+  unsigned long			start_code;
+  unsigned long			start_stack;
+  long int			signal;
+  int				reserved;
+  struct user_regs_struct*	u_ar0;
+  struct user_fpregs_struct*	u_fpstate;
+  unsigned long int		magic;
+  char				u_comm [32];
+  unsigned long int		u_debugreg [8];
+};
+
+#else
+/* These are the 32-bit x86 structures.  */
+struct user_fpregs_struct
+{
+  long int cwd;
+  long int swd;
+  long int twd;
+  long int fip;
+  long int fcs;
+  long int foo;
+  long int fos;
+  long int st_space [20];
+};
+
+struct user_fpxregs_struct
+{
+  unsigned short int cwd;
+  unsigned short int swd;
+  unsigned short int twd;
+  unsigned short int fop;
+  long int fip;
+  long int fcs;
+  long int foo;
+  long int fos;
+  long int mxcsr;
+  long int reserved;
+  long int st_space[32];   /* 8*16 bytes for each FP-reg = 128 bytes */
+  long int xmm_space[32];  /* 8*16 bytes for each XMM-reg = 128 bytes */
+  long int padding[56];
+};
+
+struct user_regs_struct
+{
+  long int ebx;
+  long int ecx;
+  long int edx;
+  long int esi;
+  long int edi;
+  long int ebp;
+  long int eax;
+  long int xds;
+  long int xes;
+  long int xfs;
+  long int xgs;
+  long int orig_eax;
+  long int eip;
+  long int xcs;
+  long int eflags;
+  long int esp;
+  long int xss;
 };
 
 struct user
@@ -85,6 +162,7 @@ struct user
   char				u_comm [32];
   int				u_debugreg [8];
 };
+#endif  /* __WORDSIZE */
 
 #define PAGE_SHIFT		12
 #define PAGE_SIZE		(1UL << PAGE_SHIFT)
