@@ -27,5 +27,5 @@ extern int __pgrpsys __P ((int type, ...));
 int
 DEFUN(__getpgrp, (pid), pid_t pid)
 {
-  return __pgrpsys (4, pid);
+  return __pgrpsys (0, pid);
 }
