@@ -1,6 +1,5 @@
-# Combine version map fragments into version files for the generated
-# shared object.
-# (C) Copyright 1998, 1999 Free Software Foundation, Inc.
+# Combine version map fragments into version scripts for our shared objects.
+# Copyright (C) 1998,99,2000 Free Software Foundation, Inc.
 # Written by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
 # This script expects the following variables to be defined:
@@ -16,8 +15,9 @@ BEGIN {
       libs[$1] = 1;
       curlib = $1;
       while (getline < defsfile && ! /^}/) {
-        if ($2 == "=")
-	  renamed[$1] = $3;
+      if ($2 == "=") {
+	  renamed[curlib "::" $1] = $3;
+      }
 	else
 	  versions[$1] = 1;
       }
@@ -36,7 +36,6 @@ BEGIN {
 
 # This matches the beginning of the version information for a new library.
 /^[a-zA-Z0-9_.]+/ {
-  delete renamed;
   actlib = $1;
   if (!libs[$1]) {
     printf("no versions defined for %s\n", $1) > "/dev/stderr";
@@ -47,8 +46,8 @@ BEGIN {
 
 # This matches the beginning of a new version for the current library.
 /^  [A-Za-z_]/ {
-  if (renamed[$1])
-    actver = renamed[$1];
+  if (renamed[actlib "::" $1])
+    actver = renamed[actlib "::" $1];
   else if (!versions[$1]) {
     printf("version %s not defined\n", $1) > "/dev/stderr";
     exit 1;
