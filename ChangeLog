@@ -1,3 +1,10 @@
+1998-03-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/chown.c: New file for compatibility of
+	Linux 2.0 and 2.1.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add chown.
+
 1998-03-08 14:58  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makeconfig (nisobjdir): Set to path to nis directory.
