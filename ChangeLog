@@ -1,3 +1,8 @@
+2003-01-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S (__clone): Use lg,
+	not l to load tls from stack.
+
 2003-01-30  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/dl-tls.c (_dl_allocate_tls_init): Move check for

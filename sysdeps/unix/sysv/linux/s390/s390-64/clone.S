@@ -1,5 +1,5 @@
 /* Wrapper around clone system call.  64 bit S/390 version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2003 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -41,7 +41,7 @@ ENTRY(__clone)
 	lgr	%r3,%r4			/* move flags to %r3 */
 	lgr	%r4,%r6			/* move parent_tid to %r4 */
 	lg	%r5,168(%r15)		/* load child_tid from stack */
-	l	%r6,160(%r15)		/* load tls from stack */
+	lg	%r6,160(%r15)		/* load tls from stack */
 	svc	SYS_ify(clone)
 	ltgr	%r2,%r2			/* check return code */
 	jz	thread_start
