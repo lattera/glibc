@@ -170,6 +170,8 @@ ildouble: 2
 ldouble: 2
 Test "Imaginary part of: catanh (-2 - 3 i) == -0.1469466662255297520 - 1.3389725222944935611 i":
 Test "Real part of: catanh (0.7 + 1.2 i) == 0.2600749516525135959 + 0.9702403077950989849 i":
+double: 1
+idouble: 1
 ildouble: 66
 ldouble: 66
 Test "Imaginary part of: catanh (0.7 + 1.2 i) == 0.2600749516525135959 + 0.9702403077950989849 i":

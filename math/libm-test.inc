@@ -3101,6 +3101,12 @@ nearbyint_test (void)
   TEST_f_f (nearbyint, minus_infty, minus_infty);
   TEST_f_f (nearbyint, nan_value, nan_value);
 
+  /* Default rounding mode is round to nearest.  */
+  TEST_f_f (nearbyint, 0.5, 0.0);
+  TEST_f_f (nearbyint, 1.5, 2.0);
+  TEST_f_f (nearbyint, -0.5, minus_zero);
+  TEST_f_f (nearbyint, -1.5, -2.0);
+  
   END (nearbyint);
 }
 
@@ -3383,6 +3389,12 @@ rint_test (void)
   TEST_f_f (rint, minus_zero, minus_zero);
   TEST_f_f (rint, plus_infty, plus_infty);
   TEST_f_f (rint, minus_infty, minus_infty);
+
+  /* Default rounding mode is round to nearest.  */
+  TEST_f_f (rint, 0.5, 0.0);
+  TEST_f_f (rint, 1.5, 2.0);
+  TEST_f_f (rint, -0.5, -0.0);
+  TEST_f_f (rint, -1.5, -2.0);
 
   END (rint);
 }
