@@ -310,16 +310,29 @@ static void
 write_gmon (void)
 {
     struct gmon_hdr ghdr __attribute__ ((aligned (__alignof__ (int))));
-    int fd;
+    int fd = -1;
+    char *env;
 
-    fd = __open ("gmon.out", O_CREAT|O_TRUNC|O_WRONLY, 0666);
-    if (fd < 0)
+    env = getenv ("GMON_OUT_PREFIX");
+    if (env != NULL && !__libc_enable_secure)
       {
-	char buf[300];
-	int errnum = errno;
-	fprintf (stderr, "_mcleanup: gmon.out: %s\n",
-		 _strerror_internal (errnum, buf, sizeof buf));
-	return;
+	size_t len = strlen (env);
+	char buf[len + 20];
+	sprintf (buf, "%s.%u", env, __getpid ());
+	fd = __open (buf, O_CREAT|O_TRUNC|O_WRONLY, 0666);
+      }
+
+    if (fd == -1)
+      {
+	fd = __open ("gmon.out", O_CREAT|O_TRUNC|O_WRONLY, 0666);
+	if (fd < 0)
+	  {
+	    char buf[300];
+	    int errnum = errno;
+	    fprintf (stderr, "_mcleanup: gmon.out: %s\n",
+		     _strerror_internal (errnum, buf, sizeof buf));
+	    return;
+	  }
       }
 
     /* write gmon.out header: */

@@ -1,3 +1,7 @@
+1998-03-13 16:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* weaks.c: Define pthread_attr_init as GLIBC_2.0 and GLIBC_2.1.
+
 1998-03-13 00:46  Ulrich Drepper  <drepper@cygnus.com>
 
 	* attr.c: Implement pthread_attr_[gs]etguardsize,

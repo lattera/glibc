@@ -29,7 +29,7 @@ headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 	   bits/sched.h re_comp.h wait.h bits/environments.h cpio.h
 
 distribute := confstr.h TESTS TESTS2C.sed testcases.h \
-	      globtest.c globtest.sh
+	      globtest.c globtest.sh wordexp-tst.sh
 
 routines :=								      \
 	uname								      \
@@ -64,8 +64,9 @@ before-compile	:= testcases.h
 include ../Rules
 
 ifeq (no,$(cross-compiling))
-tests: $(objpfx)globtest
+tests: $(objpfx)globtest $(objpfx)wordexp-test
 	$(SHELL) -e globtest.sh $(common-objpfx) $(elf-objpfx) $(rtld-installed-name)
+	$(SHELL) -e wordexp-tst.sh $(common-objpfx) $(elf-objpfx) $(rtld-installed-name)
 endif
 
 CFLAGS-regex.c = -Wno-unused -Wno-strict-prototypes

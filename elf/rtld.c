@@ -925,36 +925,25 @@ static int any_debug;
 /* Process the string given as the parameter which explains which debugging
    options are enabled.  */
 static void
-process_dl_debug (char *dl_debug)
+process_dl_debug (const char *dl_debug)
 {
+  size_t len;
+#define separators " ,:"
   do
     {
-#define issep(Ch) ((Ch) == ' ' || (Ch) == ',')
+      len = 0;
       /* Skip separating white spaces and commas.  */
-      while (issep (*dl_debug))
-	++dl_debug;
+      dl_debug += strspn (dl_debug, separators);
       if (*dl_debug != '\0')
 	{
-	  if (strncmp (dl_debug, "files", 5) == 0
-	      && (issep (dl_debug[5]) || dl_debug[5] == '\0'))
+	  len = strcspn (dl_debug, separators);
+
+	  switch (len)
 	    {
-	      _dl_debug_files = 1;
-	      _dl_debug_impcalls = 1;
-	      any_debug = 1;
-	      dl_debug += 5;
-	    }
-	  else if (strncmp (dl_debug, "bindings", 8) == 0
-	      && (issep (dl_debug[8]) || dl_debug[8] == '\0'))
-	    {
-	      _dl_debug_bindings = 1;
-	      _dl_debug_impcalls = 1;
-	      any_debug = 1;
-	      dl_debug += 8;
-	    }
-	  else if (strncmp (dl_debug, "help", 4) == 0
-		   && (issep (dl_debug[4]) || dl_debug[4] == '\0'))
-	    {
-	      _dl_sysdep_message ("\
+	    case 4:
+	      if (memcmp (dl_debug, "help", 4) == 0)
+		{
+		  _dl_sysdep_message ("\
 Valid options for the LD_DEBUG environment variable are:\n\
 \n\
   bindings  display information about symbol binding\n\
@@ -968,58 +957,77 @@ Valid options for the LD_DEBUG environment variable are:\n\
 To direct the debugging output into a file instead of standard output\n\
 a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",
 				  NULL);
-	      _exit (0);
-	    }
-	  else if (strncmp (dl_debug, "libs", 4) == 0
-	      && (issep (dl_debug[4]) || dl_debug[4] == '\0'))
-	    {
-	      _dl_debug_libs = 1;
-	      _dl_debug_impcalls = 1;
-	      any_debug = 1;
-	      dl_debug += 4;
-	    }
-	  else if (strncmp (dl_debug, "reloc", 4) == 0
-	      && (issep (dl_debug[5]) || dl_debug[5] == '\0'))
-	    {
-	      _dl_debug_reloc = 1;
-	      _dl_debug_impcalls = 1;
-	      any_debug = 1;
-	      dl_debug += 5;
-	    }
-	  else if (strncmp (dl_debug, "symbols", 7) == 0
-	      && (issep (dl_debug[7]) || dl_debug[7] == '\0'))
-	    {
-	      _dl_debug_symbols = 1;
-	      _dl_debug_impcalls = 1;
-	      any_debug = 1;
-	      dl_debug += 7;
-	    }
-	  else if (strncmp (dl_debug, "versions", 8) == 0
-	      && (issep (dl_debug[8]) || dl_debug[8] == '\0'))
-	    {
-	      _dl_debug_versions = 1;
-	      _dl_debug_impcalls = 1;
-	      any_debug = 1;
-	      dl_debug += 8;
-	    }
-	  else
-	    {
-	      /* Display a warning and skip everything until next
-                 separator.  */
-	      char *startp = dl_debug;
+		  _exit (0);
+		}
 
-	      do
-		++dl_debug;
-	      while (*dl_debug != '\0' && !issep (*dl_debug));
+	      if (memcmp (dl_debug, "libs", 4) == 0)
+		{
+		  _dl_debug_libs = 1;
+		  _dl_debug_impcalls = 1;
+		  any_debug = 1;
+		  continue;
+		}
+	      break;
 
-	      startp = strndupa (startp, dl_debug - startp);
-	      _dl_sysdep_error ("warning: debug option `", startp,
-				"' unknown; try LD_DEBUG=help\n", NULL);
+	    case 5:
+	      if (memcmp (dl_debug, "reloc", 5) == 0)
+		{
+		  _dl_debug_reloc = 1;
+		  _dl_debug_impcalls = 1;
+		  any_debug = 1;
+		  continue;
+		}
 
+	      if (memcmp (dl_debug, "files", 5) == 0)
+		{
+		  _dl_debug_files = 1;
+		  _dl_debug_impcalls = 1;
+		  any_debug = 1;
+		  continue;
+		}
+	      break;
+
+	    case 7:
+	      if (memcmp (dl_debug, "symbols", 7) == 0)
+		{
+		  _dl_debug_symbols = 1;
+		  _dl_debug_impcalls = 1;
+		  any_debug = 1;
+		  continue;
+		}
+	      break;
+
+	    case 8:
+	      if (memcmp (dl_debug, "bindings", 8) == 0)
+		{
+		  _dl_debug_bindings = 1;
+		  _dl_debug_impcalls = 1;
+		  any_debug = 1;
+		  continue;
+		}
+
+	      if (memcmp (dl_debug, "versions", 8) == 0)
+		{
+		  _dl_debug_versions = 1;
+		  _dl_debug_impcalls = 1;
+		  any_debug = 1;
+		  continue;
+		}
+	      break;
+
+	    default:
+	      break;
 	    }
+
+	  {
+	    /* Display a warning and skip everything until next separator.  */
+	    char *startp = strndupa (dl_debug, len);
+	    _dl_sysdep_error ("warning: debug option `", startp,
+			      "' unknown; try LD_DEBUG=help\n", NULL);
+	  }
 	}
     }
-  while (*dl_debug != '\0');
+  while (*(dl_debug += len) != '\0');
 }
 
 /* Process all environments variables the dynamic linker must recognize.
@@ -1039,126 +1047,94 @@ process_envvars (enum mode *modep, int *lazyp)
 
   while ((envline = _dl_next_ld_env_entry (&runp)) != NULL)
     {
-      int result;
+      size_t len = strcspn (envline, "=") - 3;
 
-      /* Do we bind early?  */
-      result = strncmp (&envline[3], "BIND_NOW=", 9);
-      if (result == 0)
+      switch (len)
 	{
-	  bind_now = 1;
-	  continue;
-	}
-      if (result < 0)
-	continue;
+	case 4:
+	  /* Warning level, verbose or not.  */
+	  if (memcmp (&envline[3], "WARN", 4) == 0)
+	    _dl_verbose = envline[8] != '\0';
+	  break;
 
-      /* Debugging of the dynamic linker?  */
-      result = strncmp (&envline[3], "DEBUG=", 6);
-      if (result == 0)
-	{
-	  process_dl_debug (&envline[9]);
-	  continue;
-	}
-      if (result < 0)
-	continue;
+	case 5:
+	  /* Debugging of the dynamic linker?  */
+	  if (memcmp (&envline[3], "DEBUG", 5) == 0)
+	    process_dl_debug (&envline[9]);
+	  break;
 
-      /* Where to place the profiling data file.  */
-      result = strncmp (&envline[3], "DEBUG_OUTPUT=", 13);
-      if (result == 0)
-	{
-	  debug_output = &envline[16];
-	  continue;
-	}
-      if (result < 0)
-	continue;
+	case 7:
+	  /* Print information about versions.  */
+	  if (memcmp (&envline[3], "VERBOSE", 7) == 0)
+	    {
+	      version_info = envline[11] != '\0';
+	      break;
+	    }
 
-      /* The library search path.  */
-      result = strncmp (&envline[3], "LIBRARY_PATH=", 13);
-      if (result == 0)
-	{
-	  library_path = &envline[16];
-	  continue;
-	}
-      if (result < 0)
-	continue;
+	  /* List of objects to be preloaded.  */
+	  if (memcmp (&envline[3], "PRELOAD", 7) == 0)
+	    {
+	      preloadlist = &envline[11];
+	      break;
+	    }
 
-      /* List of objects to be preloaded.  */
-      result = strncmp (&envline[3], "PRELOAD=", 8);
-      if (result == 0)
-	{
-	  preloadlist = &envline[11];
-	  continue;
-	}
-      if (result < 0)
-	continue;
+	  /* Which shared object shall be profiled.  */
+	  if (memcmp (&envline[3], "PROFILE", 7) == 0)
+	    {
+	      _dl_profile = &envline[11];
+	      if (*_dl_profile == '\0')
+		_dl_profile = NULL;
+	    }
+	  break;
 
-      /* Which shared object shall be profiled.  */
-      result = strncmp (&envline[3], "PROFILE=", 8);
-      if (result == 0)
-	{
-	  _dl_profile = &envline[11];
-	  if (*_dl_profile == '\0')
-	    _dl_profile = NULL;
-	  continue;
-	}
-      if (result < 0)
-	continue;
+	case 8:
+	  /* Do we bind early?  */
+	  if (memcmp (&envline[3], "BIND_NOW", 8) == 0)
+	    bind_now = 1;
+	  break;
 
-      /* Where to place the profiling data file.  */
-      result = strncmp (&envline[3], "PROFILE_OUTPUT=", 15);
-      if (result == 0)
-	{
-	  _dl_profile_output = &envline[18];
-	  if (*_dl_profile_output == '\0')
-	    _dl_profile_output = "/var/tmp";
-	  continue;
-	}
-      if (result < 0)
-	continue;
+	case 9:
+	  /* Test whether we want to see the content of the auxiliary
+	     array passed up from the kernel.  */
+	  if (memcmp (&envline[3], "SHOW_AUXV", 9) == 0)
+	    _dl_show_auxv ();
+	  break;
 
-      /* Test whether we want to see the content of the auxiliary
-	 array passed up from the kernel.  */
-      result = strncmp (&envline[3], "SHOW_AUXV=", 10);
-      if (result == 0)
-	{
-	  _dl_show_auxv ();
-	  continue;
-	}
-      if (result < 0)
-	continue;
+	case 12:
+	  /* Where to place the profiling data file.  */
+	  if (memcmp (&envline[3], "DEBUG_OUTPUT", 12) == 0)
+	    {
+	      debug_output = &envline[16];
+	      break;
+	    }
 
-      /* The mode of the dynamic linker can be set.  */
-      result = strncmp (&envline[3], "TRACE_LOADED_OBJECTS=", 21);
-      if (result == 0)
-	{
-	  mode = trace;
-	  continue;
-	}
-      if (result < 0)
-	continue;
+	  /* The library search path.  */
+	  if (memcmp (&envline[3], "LIBRARY_PATH", 12) == 0)
+	    library_path = &envline[16];
+	  break;
 
-      /* Print information about versions.  */
-      result = strncmp (&envline[3], "VERBOSE=", 8);
-      if (result == 0)
-	{
-	  version_info = envline[11] != '\0';
-	  continue;
-	}
-      if (result < 0)
-	continue;
+	case 14:
+	  /* Where to place the profiling data file.  */
+	  if (memcmp (&envline[3], "PROFILE_OUTPUT", 14) == 0)
+	    {
+	      _dl_profile_output = &envline[18];
+	      if (*_dl_profile_output == '\0')
+		_dl_profile_output = "/var/tmp";
+	    }
+	  break;
 
-      /* Warning level, verbose or not.  */
-      result = strncmp (&envline[3], "WARN=", 5);
-      if (result == 0)
-	{
-	  _dl_verbose = envline[8] != '\0';
-	  continue;
+	case 20:
+	  /* The mode of the dynamic linker can be set.  */
+	  if (memcmp (&envline[3], "TRACE_LOADED_OBJECTS", 20) == 0)
+	    mode = trace;
+	  break;
 	}
     }
 
   /* If we have to run the dynamic linker in debugging mode and the
      LD_DEBUG_OUTPUT environment variable is given, we write the debug
      messages to this file.  */
-  if (any_debug && debug_output != NULL)
+  if (any_debug && debug_output != NULL && !__libc_enable_secure)
     {
       _dl_debug_fd = __open (debug_output, O_WRONLY | O_APPEND | O_CREAT,
 			     0666);

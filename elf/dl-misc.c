@@ -110,7 +110,7 @@ _dl_debug_message (int new_line, const char *msg, ...)
   va_list ap;
 
   if (pid == 0)
-    pid = getpid ();
+    pid = __getpid ();
 
   va_start (ap, msg);
   do
@@ -125,17 +125,22 @@ _dl_debug_message (int new_line, const char *msg, ...)
 	   PID now if needed.  */
 	if (new_line)
 	  {
-	    char buf[7] = "00000:\t";
+	    char buf[7];
+	    char *p;
 	    assert (pid >= 0 && pid < 100000);
-	    _itoa_word (pid, &buf[5], 10, 0);
+	    p = _itoa_word (pid, &buf[5], 10, 0);
+	    while (p > buf)
+	      *--p = '0';
+	    buf[5] = ':';
+	    buf[6] = '\t';
 	    __libc_write (_dl_debug_fd, buf, 7);
 	    new_line = 0;
 	  }
 
-	endp = strchr (msg, '\n');
-	if (endp == NULL)
+	endp = msg + strcspn (msg, "\n");
+	if (*endp == '\0')
 	  {
-	    __libc_write (_dl_debug_fd, msg, strlen (msg));
+	    __libc_write (_dl_debug_fd, msg, endp - msg);
 	    msg = va_arg (ap, const char *);
 	  }
 	else

@@ -1,5 +1,5 @@
 /* The weak pthread functions for Linux.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,15 @@ extern int __pthread_return_1 __P ((void));
 extern void __pthread_return_void __P ((void));
 
 /* Those are pthread functions which return 0 if successful. */
+#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+weak_alias (__pthread_return_0, __libc_pthread_attr_init_2_0)
+symbol_version (__libc_pthread_attr_init_2_0, pthread_attr_init, GLIBC_2.0);
+weak_alias (__pthread_return_0, __libc_pthread_attr_init_2_1)
+default_symbol_version (__libc_pthread_attr_init_2_1, pthread_attr_init,
+			GLIBC_2.1);
+#else
 weak_alias (__pthread_return_0, pthread_attr_init)
+#endif
 weak_alias (__pthread_return_0, pthread_attr_destroy)
 weak_alias (__pthread_return_0, pthread_attr_setdetachstate)
 weak_alias (__pthread_return_0, pthread_attr_getdetachstate)

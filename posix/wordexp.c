@@ -48,7 +48,8 @@
  * This is a recursive-descent-style word expansion routine.
  */
 
-/* This variable is defined and initialized in the startup code.  */
+/* These variables are defined and initialized in the startup code.  */
+extern int __libc_argc;
 extern char **__libc_argv;
 
 /* Some forward declarations */
@@ -1016,9 +1017,8 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
   enum remove_pattern_enum remove = RP_NONE;
   int colon_seen = 0;
   int depth = 0;
-  int substitute_length = 0;
+  int seen_hash = 0;
   int error;
-  int star = 0;
 
   for (; words[*offset]; ++(*offset))
     {
@@ -1066,7 +1066,14 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	  goto envsubst;
 
 	case '#':
-	  /* '#' only has special meaning inside braces */
+	  /* '#' only has special meaning inside braces or as the very
+	   * first character after $ */
+	  if (*offset == start)
+	    {
+	      seen_hash = 1;
+	      goto envsubst;
+	    }
+
 	  if (words[start] != '{')
 	    {
 	      /* Evaluate */
@@ -1078,10 +1085,10 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	  /* At the start? (i.e. 'string length') */
 	  if (*offset == start + 1)
 	    {
-	      substitute_length = 1;
+	      seen_hash = 1;
 	      break;
 	    }
-	  else if (substitute_length)
+	  else if (seen_hash)
 	    goto syntax;
 
 	  /* Separating variable name from prefix pattern? */
@@ -1158,7 +1165,7 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	  if (!env || !*env)
 	    goto syntax;
 
-	  if (substitute_length)
+	  if (seen_hash)
 	    goto syntax;
 
 	  if (action != '\0' || remove != RP_NONE)
@@ -1206,22 +1213,29 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 
 	      break;
 	    }
-
-	  star = strchr ("*@", words[*offset]) != NULL;
-	  if (isalnum (words[*offset]) || star)
+	  else
 	    {
-	      env = w_addchar (env, &env_length, &env_maxlen, words[*offset]);
-	      if (env == NULL)
-		goto no_space;
+	      int special = (strchr ("*@$", words[*offset]) != NULL
+			     || isdigit (words[*offset]));
 
-	      if (star)
-		goto envsubst;
+	      if (isalpha (words[*offset]) || special)
+		{
+		  env = w_addchar (env, &env_length, &env_maxlen,
+				   words[*offset]);
+		  if (env == NULL)
+		    goto no_space;
 
-	      break;
+		  if (special && words[start] != '{')
+		    goto envsubst;
+
+		  /* Keep going (get next char) */
+		  break;
+		}
+
+	      /* Stop and evaluate, remembering char we stopped at */
+	      --(*offset);
+	      goto envsubst;
 	    }
-
-	  --(*offset);
-	  goto envsubst;
 	}
     }
 
@@ -1235,28 +1249,76 @@ envsubst:
 
   if (!env || !*env)
     {
-      *offset = start - 1;
-      *word = w_addchar (*word, word_length, max_length, '$');
-      free (env);
+      if (seen_hash)
+	{
+	  /* $# expands to the number of positional parameters */
+	  char buffer[21];
+	  buffer[20] = '\0';
+	  *word = w_addstr (*word, word_length, max_length,
+			    _itoa_word (__libc_argc - 1, &buffer[20], 10, 0));
+	}
+      else
+	{
+	  /* Just $ on its own */
+	  *offset = start - 1;
+	  *word = w_addchar (*word, word_length, max_length, '$');
+	}
+
+      if (env)
+	free (env);
+
       return *word ? 0 : WRDE_NOSPACE;
     }
 
-  /* Is it `$*' or `$@' ? */
-  if (strpbrk (env, "*@") != NULL)
+  /* Is it a special parameter? */
+  if (strpbrk (env, "0123456789*@$"))
     {
-      size_t plist_len = 1;
-      int p;
-
-      if (env[1] != '\0')
+      if (env[1])
 	{
 	  /* Bad substitution if there is more than one character */
+	  free (env);
 	  fprintf (stderr, "${%s}: bad substitution\n", env);
 	  return WRDE_SYNTAX;
 	}
 
-      if (!quoted || *env == '*')
+      /* Is it a digit? */
+      if (isdigit(*env))
 	{
+	  int n = *env - '0';
+	  char *param;
+
+	  free (env);
+	  if (n >= __libc_argc)
+	    /* Substitute NULL */
+	    return 0;
+
+	  /* Replace with the appropriate positional parameter */
+	  param = __strdup (__libc_argv[n]);
+	  if (!param)
+	    return WRDE_NOSPACE;
+
+	  *word = w_addstr (*word, word_length, max_length, param);
+	  return *word ? 0 : WRDE_NOSPACE;
+	}
+      /* Is it `$$' ? */
+      else if (*env == '$')
+	{
+	  char pidstr[21];
+
+	  free (env);
+	  pidstr[20] = '\0';
+	  *word = w_addstr (*word, word_length, max_length,
+			    _itoa_word (getpid(), &pidstr[20], 10, 0));
+	  return *word ? 0 : WRDE_NOSPACE;
+	}
+      /* Is it `$*' or `$@' (unquoted) ? */
+      else if (*env == '*' || (*env == '@' && !quoted))
+	{
+	  size_t plist_len = 1;
+	  int p;
+
 	  /* Build up value parameter by parameter (copy them) */
+	  free (env);
 	  for (p = 1; __libc_argv[p]; ++p)
 	    {
 	      char *old_pointer = value;
@@ -1287,7 +1349,14 @@ envsubst:
 
 	  if (value)
 	    goto maybe_fieldsplit;
+
+	  return 0;
 	}
+
+      /* Must be a quoted `$@' */
+      assert (*env == '@');
+      assert (quoted);
+      free (env);
 
       /* Each parameter is a separate word ("$@") */
       if (__libc_argv[0] == NULL)
@@ -1300,13 +1369,14 @@ envsubst:
 	}
       else
 	{
+	  int p;
+
 	  for (p = 1; __libc_argv[p + 1]; p++)
 	    {
 	      char *copy = __strdup (__libc_argv[p]);
 	      if (copy == NULL)
 		return WRDE_NOSPACE;
 
-	      strcpy (copy, __libc_argv[p]);
 	      error = w_addword (pwordexp, copy);
 	      if (error)
 		{
@@ -1319,6 +1389,9 @@ envsubst:
 	  if (__libc_argv[p])
 	    {
 	      *word = __strdup (__libc_argv[p]);
+	      if (*word == NULL)
+		return WRDE_NOSPACE;
+
 	      *max_length = *word_length = strlen (*word);
 	    }
 	}
@@ -1584,7 +1657,7 @@ envsubst:
       return 0;
     }
 
-  if (substitute_length)
+  if (seen_hash)
     {
       char param_length[21];
       param_length[20] = '\0';

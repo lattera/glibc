@@ -1,5 +1,5 @@
 /* Machine-independant string function optimizations.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -526,7 +526,15 @@ __STRING2_COPY_TYPE (8);
 		     ? strlen (s)					      \
 		     : (((__const unsigned char *) (reject))[1] == '\0'	      \
 			? __strcspn_c1 (s, ((__const char *) (reject))[0])    \
-			: strcspn (s, reject)))				      \
+			: (((__const unsigned char *) (reject))[2] == '\0'    \
+			   ? __strcspn_c2 (s, ((__const char *) (reject))[0], \
+					   ((__const char *) (reject))[1])    \
+			   : (((__const unsigned char *) (reject))[3] == '\0' \
+			      ? __strcspn_c3 (s,			      \
+					      ((__const char *) (reject))[0], \
+					      ((__const char *) (reject))[1], \
+					      ((__const char *) (reject))[2]) \
+			      : strcspn (s, reject)))))			      \
 		  : strcspn (s, reject)))
 
 __STRING_INLINE size_t __strcspn_c1 (__const char *__s, char __reject);
@@ -535,6 +543,31 @@ __strcspn_c1 (__const char *__s, char __reject)
 {
   register size_t __result = 0;
   while (__s[__result] != '\0' && __s[__result] != __reject)
+    ++__result;
+  return __result;
+}
+
+__STRING_INLINE size_t __strcspn_c2 (__const char *__s, char __reject1,
+				     char __reject2);
+__STRING_INLINE size_t
+__strcspn_c2 (__const char *__s, char __reject1, char __reject2)
+{
+  register size_t __result = 0;
+  while (__s[__result] != '\0' && __s[__result] != __reject1
+	 && __s[__result] != __reject2)
+    ++__result;
+  return __result;
+}
+
+__STRING_INLINE size_t __strcspn_c3 (__const char *__s, char __reject1,
+				     char __reject2, char __reject3);
+__STRING_INLINE size_t
+__strcspn_c3 (__const char *__s, char __reject1, char __reject2,
+	      char __reject3)
+{
+  register size_t __result = 0;
+  while (__s[__result] != '\0' && __s[__result] != __reject1
+	 && __s[__result] != __reject2 && __s[__result] != __reject3)
     ++__result;
   return __result;
 }
@@ -550,7 +583,15 @@ __strcspn_c1 (__const char *__s, char __reject)
 		     ? 0						      \
 		     : (((__const unsigned char *) (accept))[1] == '\0'	      \
 			? __strspn_c1 (s, ((__const char *) (accept))[0])     \
-			: strspn (s, accept)))				      \
+			: (((__const unsigned char *) (accept))[2] == '\0'    \
+			   ? __strspn_c2 (s, ((__const char *) (accept))[0],  \
+					  ((__const char *) (accept))[1])     \
+			   : (((__const unsigned char *) (accept))[3] == '\0' \
+			      ? __strspn_c3 (s,				      \
+					     ((__const char *) (accept))[0],  \
+					     ((__const char *) (accept))[1],  \
+					     ((__const char *) (accept))[2])  \
+			      : strspn (s, accept)))))			      \
 		  : strspn (s, accept)))
 
 __STRING_INLINE size_t __strspn_c1 (__const char *__s, char __accept);
@@ -560,6 +601,31 @@ __strspn_c1 (__const char *__s, char __accept)
   register size_t __result = 0;
   /* Please note that __accept never can be '\0'.  */
   while (__s[__result] == __accept)
+    ++__result;
+  return __result;
+}
+
+__STRING_INLINE size_t __strspn_c2 (__const char *__s, char __accept1,
+				    char __accept2);
+__STRING_INLINE size_t
+__strspn_c2 (__const char *__s, char __accept1, char __accept2)
+{
+  register size_t __result = 0;
+  /* Please note that __accept1 and __accept2 never can be '\0'.  */
+  while (__s[__result] == __accept1 || __s[__result] == __accept2)
+    ++__result;
+  return __result;
+}
+
+__STRING_INLINE size_t __strspn_c3 (__const char *__s, char __accept1,
+				    char __accept2, char __accept3);
+__STRING_INLINE size_t
+__strspn_c3 (__const char *__s, char __accept1, char __accept2, char __accept3)
+{
+  register size_t __result = 0;
+  /* Please note that __accept1 to __accept3 never can be '\0'.  */
+  while (__s[__result] == __accept1 || __s[__result] == __accept2
+	 || __s[__result] == __accept3)
     ++__result;
   return __result;
 }
@@ -574,8 +640,40 @@ __strspn_c1 (__const char *__s, char __accept)
 		     ? NULL						      \
 		     : (((__const unsigned char *) (accept))[1] == '\0'	      \
 			? strchr (s, ((__const unsigned char *) (accept))[0]) \
-			: strpbrk (s, accept)))				      \
+			: (((__const unsigned char *) (accept))[2] == '\0'    \
+			   ? __strpbrk_c2 (s, ((__const char *) (accept))[0], \
+					   ((__const char *) (accept))[1])    \
+			   : (((__const unsigned char *) (accept))[3] == '\0' \
+			      ? __strpbrk_c3 (s,			      \
+					      ((__const char *) (accept))[0], \
+					      ((__const char *) (accept))[1], \
+					      ((__const char *) (accept))[2]) \
+			      : strpbrk (s, accept)))))			      \
 		  : strpbrk (s, accept)))
+
+__STRING_INLINE char *__strpbrk_c2 (__const char *__s, char __accept1,
+				     char __accept2);
+__STRING_INLINE char *
+__strpbrk_c2 (__const char *__s, char __accept1, char __accept2)
+{
+  /* Please note that __accept1 and __accept2 never can be '\0'.  */
+  while (*__s != '\0' && *__s != __accept1 && *__s != __accept2)
+    ++__s;
+  return *__s == '\0' ? NULL : (char *) __s;
+}
+
+__STRING_INLINE char *__strpbrk_c3 (__const char *__s, char __accept1,
+				     char __accept2, char __accept3);
+__STRING_INLINE char *
+__strpbrk_c3 (__const char *__s, char __accept1, char __accept2,
+	      char __accept3)
+{
+  /* Please note that __accept1 to __accept3 never can be '\0'.  */
+  while (*__s != '\0' && *__s != __accept1 && *__s != __accept2
+	 && *__s != __accept3)
+    ++__s;
+  return *__s == '\0' ? NULL : (char *) __s;
+}
 #endif
 
 
@@ -612,8 +710,7 @@ strnlen (__const char *__string, size_t __maxlen)
   (__extension__ (__builtin_constant_p (sep) && __string2_1bptr_p (sep)	      \
 		  ? (((__const unsigned char *) (sep))[0] != '\0'	      \
 		     && ((__const unsigned char *) (sep))[1] == '\0'	      \
-		     ? __strtok_r_1c (s, ((__const unsigned char *) (sep))[0],\
-				      nextp)				      \
+		     ? __strtok_r_1c (s, ((__const char *) (sep))[0], nextp)  \
 		     : strtok_r (s, sep, nextp))			      \
 		  : strtok_r (s, sep, nextp)))
 
@@ -652,11 +749,18 @@ __strtok_r_1c (char *__s, char __sep, char **__nextp)
 
 #  define strsep(s, reject) \
   (__extension__ (__builtin_constant_p (reject) && __string2_1bptr_p (reject) \
-		  ? (((__const unsigned char *) (reject))[0] != '\0'	      \
-		     && ((__const unsigned char *) (reject))[1] == '\0'	      \
+		  && ((__const unsigned char *) (reject))[0] != '\0'	      \
+		  ? (((__const unsigned char *) (reject))[1] == '\0'	      \
 		     ? __strsep_1c (s,					      \
-				    ((__const unsigned char *) (reject))[0])  \
-		     : __strsep_g (s, reject))				      \
+				    ((__const char *) (reject))[0])	      \
+		     : (((__const unsigned char *) (reject))[2] == '\0'	      \
+			? __strsep_2c (s, ((__const char *) (reject))[0],     \
+				       ((__const char *) (reject))[1])	      \
+			: (((__const unsigned char *) (reject))[3] == '\0'    \
+			   ? __strsep_3c (s, ((__const char *) (reject))[0],  \
+					  ((__const char *) (reject))[1],     \
+					  ((__const char *) (reject))[2])     \
+			   : __strsep_g (s, reject))))			      \
 		  : __strsep_g (s, reject)))
 
 __STRING_INLINE char *__strsep_1c (char **__s, char __reject);
@@ -664,12 +768,68 @@ __STRING_INLINE char *
 __strsep_1c (char **__s, char __reject)
 {
   register char *__retval = *__s;
-  if (__retval == NULL || *__retval == '\0')
-    return NULL;
-  while (*__retval == __reject)
-    ++__retval;
-  if ((*__s = strchr (__retval, __reject)) != NULL)
+  if (__retval == NULL)
+    return *__s = NULL;
+  if (*__retval == __reject)
     *(*__s)++ = '\0';
+  else
+    if ((*__s = strchr (__retval, __reject)) != NULL)
+      *(*__s)++ = '\0';
+    else
+      *__s = NULL;
+  return __retval;
+}
+
+__STRING_INLINE char *__strsep_2c (char **__s, char __reject1, char __reject2);
+__STRING_INLINE char *
+__strsep_2c (char **__s, char __reject1, char __reject2)
+{
+  register char *__retval = *__s;
+  if (__retval == NULL)
+    return *__s = NULL;
+  if (*__retval == __reject1 || *__retval == __reject2)
+    *(*__s)++ = '\0';
+  else
+    {
+      register char *__cp = __retval;
+      while (*__cp != '\0' && *__cp != __reject1 && *__cp != __reject2)
+	++__cp;
+      if (*__cp != '\0')
+	{
+	  *__s = __cp;
+	  *(*__s)++ = '\0';
+	}
+      else
+	*__s = NULL;
+    }
+  return __retval;
+}
+
+__STRING_INLINE char *__strsep_3c (char **__s, char __reject1, char __reject2,
+				   char __reject3);
+__STRING_INLINE char *
+__strsep_3c (char **__s, char __reject1, char __reject2, char __reject3)
+{
+  register char *__retval = *__s;
+  if (__retval == NULL)
+    return *__s = NULL;
+  if (*__retval == __reject1 || *__retval == __reject2
+      || *__retval == __reject3)
+    *(*__s)++ = '\0';
+  else
+    {
+      register char *__cp = __retval;
+      while (*__cp != '\0' && *__cp != __reject1 && *__cp != __reject2
+	     && *__cp != __reject3)
+	++__cp;
+      if (*__cp != '\0')
+	{
+	  *__s = __cp;
+	  *(*__s)++ = '\0';
+	}
+      else
+	*__s = NULL;
+    }
   return __retval;
 }
 
@@ -680,7 +840,7 @@ __strsep_g (char **__s, __const char *__reject)
   register char *__retval = *__s;
   if (__retval == NULL || *__retval == '\0')
     return NULL;
-  if ((*__s = strpbrk (__retval, __reject)) != NULL)
+  if ((*__s = strpbrk (__retval, __reject)) != '\0')
     *(*__s)++ = '\0';
   return __retval;
 }

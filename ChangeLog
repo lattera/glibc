@@ -1,4 +1,54 @@
-Fri Mar 13 10:25:26 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-03-13 16:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/tester.c (test_strpbrk): Add more strpbrk tests.
+	(test_strsep): Likewise.  Correct horrible bugs.
+
+	* string/bits/string2.h (strcspn): Optimize also reject string of
+	length 2 and 3.
+	(strspn): Likewise.
+	(strpbrk): Likewise.
+	(strsep): Likewise.  Correct bug with successive separators and
+	separators at the end of the string.
+	* sysdeps/generic/strsep.c: Correct bug with successive separators
+	and separators at the end of the string.
+
+1998-03-13 13:11  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp.c (parse_param): Positional parameters ($1, $2
+	etc) now handled, as well as $$ (pid).
+
+	* posix/Makefile (tests): Execute wordexp-test.sh for `make check'.
+	(distribute): Add wordexp-tst.sh.
+
+	* posix/wordexp-tst.sh: New file.
+
+	* posix/wordexp.c (parse_param): $# (or ${#}) expands to the
+	number of positional parameters.  Renamed substitute_length to
+	seen_hash.
+	Don't free(env) is env is NULL.
+
+1998-03-13 16:50  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Add pthread_attr_init to GLIBC_2.1.
+
+1998-03-13 15:01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* gmon/gmon.c: Allow GMON_OUT_PREFIX variable to specify filename
+	for output file replacing gmon.out.
+	Patch by Dean Gaudet <dgaudet@arctic.org>.
+
+1998-03-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-misc.c (_dl_debug_message): Fix printing of pid.  Clean
+	up namespace.  Optimize finding end of line.
+
+1998-03-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/rtld.c (process_envvars): Ignore LD_DEBUG_OUTPUT if running
+	securely.  Optimized.
+	(process_dl_debug): Add ':' to list of separators.  Optimized.
+
+1998-03-13 10:25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/fpu/bits/mathinline.h (isgreater, isgreaterequal,
 	isless, islessequal, islessgreater, isunordered): Return zero or

@@ -1,5 +1,5 @@
 /* Tester for string functions.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -479,7 +479,16 @@ test_strpbrk (void)
   check(strpbrk(one, "db") == one+1, 9);	/* Another variant. */
   (void) strcpy(one, "");
   check(strpbrk(one, "bc") == NULL, 10);	/* Empty string. */
-  check(strpbrk(one, "") == NULL, 11);	/* Both strings empty. */
+  (void) strcpy(one, "");
+  check(strpbrk(one, "bcd") == NULL, 11);	/* Empty string. */
+  (void) strcpy(one, "");
+  check(strpbrk(one, "bcde") == NULL, 12);	/* Empty string. */
+  check(strpbrk(one, "") == NULL, 13);	/* Both strings empty. */
+  (void) strcpy(one, "abcabdea");
+  check(strpbrk(one, "befg") == one+1, 14);	/* Finding first. */
+  check(strpbrk(one, "cbr") == one+1, 15);	/* With multiple search. */
+  check(strpbrk(one, "db") == one+1, 16);	/* Another variant. */
+  check(strpbrk(one, "efgh") == one+6, 17);	/* And yet another. */
 }
 
 void
@@ -648,60 +657,86 @@ test_strsep (void)
   equal(strsep(&cp, ", "), "", 9);
   equal(strsep(&cp, ", "), "first", 10);	/* Extra delims, 1 tok. */
   equal(strsep(&cp, ", "), "", 11);
-  check(strsep(&cp, ", ") == NULL, 12);
+  equal(strsep(&cp, ", "), "", 12);
+  check(strsep(&cp, ", ") == NULL, 13);
   cp = strcpy(one, "1a, 1b; 2a, 2b");
-  equal(strsep(&cp, ", "), "1a", 13);	/* Changing delim lists. */
-  equal(strsep(&cp, ", "), "", 14);
-  equal(strsep(&cp, "; "), "1b", 15);
-  equal(strsep(&cp, ", "), "", 16);
-  equal(strsep(&cp, ", "), "2a", 17);
+  equal(strsep(&cp, ", "), "1a", 14);	/* Changing delim lists. */
+  equal(strsep(&cp, ", "), "", 15);
+  equal(strsep(&cp, "; "), "1b", 16);
+  equal(strsep(&cp, ", "), "", 17);
+  equal(strsep(&cp, ", "), "2a", 18);
   cp = strcpy(two, "x-y");
-  equal(strsep(&cp, "-"), "x", 18);	/* New string before done. */
-  equal(strsep(&cp, "-"), "y", 19);
-  check(strsep(&cp, "-") == NULL, 20);
-  cp = strcpy(one, "a,b, c,, ,d");
-  equal(strsep(&cp, ", "), "a", 21);	/* Different separators. */
-  equal(strsep(&cp, ", "), "b", 22);
-  equal(strsep(&cp, " ,"), "", 23);
-  equal(strsep(&cp, " ,"), "c", 24);	/* Permute list too. */
-  equal(strsep(&cp, " ,"), "", 25);
+  equal(strsep(&cp, "-"), "x", 19);	/* New string before done. */
+  equal(strsep(&cp, "-"), "y", 20);
+  check(strsep(&cp, "-") == NULL, 21);
+  cp = strcpy(one, "a,b, c,, ,d ");
+  equal(strsep(&cp, ", "), "a", 22);	/* Different separators. */
+  equal(strsep(&cp, ", "), "b", 23);
+  equal(strsep(&cp, " ,"), "", 24);
+  equal(strsep(&cp, " ,"), "c", 25);	/* Permute list too. */
   equal(strsep(&cp, " ,"), "", 26);
   equal(strsep(&cp, " ,"), "", 27);
-  equal(strsep(&cp, " ,"), "d", 28);
-  check(strsep(&cp, ", ") == NULL, 29);
-  check(strsep(&cp, ", ") == NULL, 30);	/* Persistence. */
+  equal(strsep(&cp, " ,"), "", 28);
+  equal(strsep(&cp, " ,"), "d", 29);
+  equal(strsep(&cp, " ,"), "", 30);
+  check(strsep(&cp, ", ") == NULL, 31);
+  check(strsep(&cp, ", ") == NULL, 32);	/* Persistence. */
   cp = strcpy(one, ", ");
-  equal(strsep(&cp, ", "), "", 31);
-  equal(strsep(&cp, ", "), "", 32);
-  check(strsep(&cp, ", ") == NULL, 33);	/* No tokens. */
+  equal(strsep(&cp, ", "), "", 33);
+  equal(strsep(&cp, ", "), "", 34);
+  equal(strsep(&cp, ", "), "", 35);
+  check(strsep(&cp, ", ") == NULL, 36);	/* No tokens. */
   cp = strcpy(one, "");
-  check(strsep(&cp, ", ") == NULL, 34);	/* Empty string. */
+  equal(strsep(&cp, ", "), "", 37);
+  check(strsep(&cp, ", ") == NULL, 38);	/* Empty string. */
   cp = strcpy(one, "abc");
-  equal(strsep(&cp, ", "), "abc", 35);	/* No delimiters. */
-  check(strsep(&cp, ", ") == NULL, 36);
+  equal(strsep(&cp, ", "), "abc", 39);	/* No delimiters. */
+  check(strsep(&cp, ", ") == NULL, 40);
   cp = strcpy(one, "abc");
-  equal(strsep(&cp, ""), "abc", 37);	/* Empty delimiter list. */
-  check(strsep(&cp, "") == NULL, 38);
+  equal(strsep(&cp, ""), "abc", 41);	/* Empty delimiter list. */
+  check(strsep(&cp, "") == NULL, 42);
   (void) strcpy(one, "abcdefgh");
   cp = strcpy(one, "a,b,c");
-  equal(strsep(&cp, ","), "a", 39);	/* Basics again... */
-  equal(strsep(&cp, ","), "b", 40);
-  equal(strsep(&cp, ","), "c", 41);
-  check(strsep(&cp, ",") == NULL, 42);
-  equal(one+6, "gh", 43);		/* Stomped past end? */
-  equal(one, "a", 44);			/* Stomped old tokens? */
-  equal(one+2, "b", 45);
-  equal(one+4, "c", 46);
+  equal(strsep(&cp, ","), "a", 43);	/* Basics again... */
+  equal(strsep(&cp, ","), "b", 44);
+  equal(strsep(&cp, ","), "c", 45);
+  check(strsep(&cp, ",") == NULL, 46);
+  equal(one+6, "gh", 47);		/* Stomped past end? */
+  equal(one, "a", 48);			/* Stomped old tokens? */
+  equal(one+2, "b", 49);
+  equal(one+4, "c", 50);
 
   {
     char text[] = "This,is,a,test";
     char *list = strdupa (text);
-    equal (strsep (&list, ","), "This", 47);
-    equal (strsep (&list, ","), "is", 48);
-    equal (strsep (&list, ","), "a", 49);
-    equal (strsep (&list, ","), "test", 50);
-    check (strsep (&list, ",") == NULL, 51);
+    equal (strsep (&list, ","), "This", 51);
+    equal (strsep (&list, ","), "is", 52);
+    equal (strsep (&list, ","), "a", 53);
+    equal (strsep (&list, ","), "test", 54);
+    check (strsep (&list, ",") == NULL, 55);
   }
+
+  cp = strcpy(one, "a,b, c,, ,d,");
+  equal(strsep(&cp, ","), "a", 56);	/* Different separators. */
+  equal(strsep(&cp, ","), "b", 57);
+  equal(strsep(&cp, ","), " c", 58);	/* Permute list too. */
+  equal(strsep(&cp, ","), "", 59);
+  equal(strsep(&cp, ","), " ", 60);
+  equal(strsep(&cp, ","), "d", 61);
+  equal(strsep(&cp, ","), "", 62);
+  check(strsep(&cp, ",") == NULL, 63);
+  check(strsep(&cp, ",") == NULL, 64);	/* Persistence. */
+
+  cp = strcpy(one, "a,b, c,, ,d,");
+  equal(strsep(&cp, "xy,"), "a", 65);	/* Different separators. */
+  equal(strsep(&cp, "x,y"), "b", 66);
+  equal(strsep(&cp, ",xy"), " c", 67);	/* Permute list too. */
+  equal(strsep(&cp, "xy,"), "", 68);
+  equal(strsep(&cp, "x,y"), " ", 69);
+  equal(strsep(&cp, ",xy"), "d", 70);
+  equal(strsep(&cp, "xy,"), "", 71);
+  check(strsep(&cp, "x,y") == NULL, 72);
+  check(strsep(&cp, ",xy") == NULL, 73);	/* Persistence. */
 }
 
 void
