@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -35,7 +35,7 @@ strchr (const char *str, int c)
     if (*char_ptr == '\0')
       return NULL;
     else if (*char_ptr == c)
-      return char_ptr;
+      return (char *) char_ptr;
 
   longword_ptr = (unsigned long int *) char_ptr;
 
@@ -63,7 +63,7 @@ strchr (const char *str, int c)
 	{
 	  /* Which of the bytes was the C?  */
 
-	  const char *cp = (const char *) (longword_ptr - 1);
+	  char *cp = (char *) (longword_ptr - 1);
 
 	  if (cp[0] == c)
 	    return cp;
