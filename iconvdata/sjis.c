@@ -4388,7 +4388,8 @@ static const char from_ucs4_extra[0x100][2] =
 									      \
 	ch2 = inptr[1];							      \
 	idx = ch * 256 + ch2;						      \
-	if (__builtin_expect (idx, 0x8140) < 0x8140			      \
+	if (__builtin_expect (ch < 0x81, 0)				      \
+	    || __builtin_expect (ch2 < 0x40, 0)				      \
 	    || (__builtin_expect (idx, 0x8140) > 0x84be && idx < 0x889f)      \
 	    || (__builtin_expect (idx, 0x8140) > 0x88fc && idx < 0x8940)      \
 	    || (__builtin_expect (idx, 0x8140) > 0x9ffc && idx < 0xe040)      \

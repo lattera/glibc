@@ -1,3 +1,51 @@
+2000-07-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/sjis.c (BODY for FROM_LOOP): Treat the case
+	ch >= 0x81 && ch2 < 0x40 as invalid.
+
+2000-07-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/uhc.c (BODY for FROM_LOOP): Reject ch2 == 0xff as invalid.
+	(BODY for TO_LOOP): Accept 0x7f. Increment outptr as needed.
+
+2000-07-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/johab.c (BODY for TO_LOOP): After calling
+	ucs4_to_ksc5601_sym, fix the conversion to JOHAB.
+
+2000-07-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/t.61.c (to_ucs4): Change values of 0xa4, 0a6, 0xa8, 0xb4,
+	0xb8.
+	(from_ucs4): Change values of U+00A4, U+00BB, U+00ED.
+
+2000-07-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/macintosh.c (HAS_HOLES): Set to 1.
+
+2000-07-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/iso_6937.c (to_ucs4): Change values of 0x24 and 0xb4.
+	(from_ucs4): Change values of U+00A4 and U+00ED.
+	(BODY of TO_LOOP): Remove mapping from U+02DC to 0x0020.
+
+2000-07-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/ansi_x3.110.c (from_ucs4): Change entry for 0xed.
+	(BODY for TO_LOOP): Map U+2122, U+2126, not U+2022, U+2026.
+
+2000-07-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/Makefile (gen-8bit-gap-modules): Remove isiri-3342.
+	* iconvdata/isiri-3342.h: New file.
+	* iconvdata/isiri-3342.c (HAS_HOLES): Avoid gaps >= 0xe0, but don't
+	treat 0x80 as a gap.
+
+2000-07-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* string/strxfrm.c (encoding_mask, encoding_byte): Remove.
+	(utf8_encode): Use simple shifts instead.  Fix return value.
+
 2000-07-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* timezone/private.h: Update from tzcode2000e.

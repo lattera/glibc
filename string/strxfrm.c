@@ -46,24 +46,11 @@
 
 
 #ifndef WIDE_CHAR_VERSION
-/* These are definitions used by some of the functions for handling
-   UTF-8 encoding below.  */
-static const uint32_t encoding_mask[] =
-{
-  ~0x7ff, ~0xffff, ~0x1fffff, ~0x3ffffff
-};
-
-static const unsigned char encoding_byte[] =
-{
-  0xc0, 0xe0, 0xf0, 0xf8, 0xfc
-};
-
 
 /* We need UTF-8 encoding of numbers.  */
 static inline int
 utf8_encode (char *buf, int val)
 {
-  char *startp = buf;
   int retval;
 
   if (val < 0x80)
@@ -76,11 +63,11 @@ utf8_encode (char *buf, int val)
       int step;
 
       for (step = 2; step < 6; ++step)
-	if ((val & encoding_mask[step - 2]) == 0)
+	if ((val & (~(uint32_t)0 << (5 * step + 1))) == 0)
 	  break;
       retval = step;
 
-      *buf = encoding_byte[step - 2];
+      *buf = (unsigned char) (~0xff >> step);
       --step;
       do
 	{
@@ -91,7 +78,7 @@ utf8_encode (char *buf, int val)
       *buf |= val;
     }
 
-  return buf - startp;
+  return retval;
 }
 #endif
 

@@ -413,6 +413,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	else								      \
 	  {								      \
 	    size_t written;						      \
+	    uint32_t temp;						      \
 									      \
 	    written = ucs4_to_ksc5601_sym (ch, outptr, outend - outptr);      \
 	    if (__builtin_expect (written, 1) == 0)			      \
@@ -425,14 +426,10 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		STANDARD_ERR_HANDLER (4);				      \
 	      }								      \
 									      \
-	    outptr[0] -= 0x4a;						      \
-	    outptr[1] += 0x80;						      \
-									      \
-	    outptr[1] += (outptr[0] % 2					      \
-			  ? 0 : (outptr[1] > 0xee ? 0x43 : 0x31));	      \
-	    outptr[1] -= 0xa1;						      \
-	    outptr[0] /= 2;						      \
-	    outptr[0] += 0xe0;						      \
+	    temp = (outptr[0] < 0x4a ? outptr[0] + 0x191 : outptr[0] + 0x176);\
+	    outptr[1] += (temp % 2 ? 0x5e : 0);				      \
+	    outptr[1] += (outptr[1] < 0x6f ? 0x10 : 0x22);		      \
+	    outptr[0] = temp / 2;					      \
 									      \
 	    outptr += 2;						      \
 	  }								      \

@@ -159,7 +159,7 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			inis-cyrillic iso_2033 iso_5427 iso_5427-ext	   \
 			iso_5428 iso_10367-box mac-is nats-dano nats-sefi  \
 			iso8859-13 iso8859-14 iso8859-15 mac-uk sami-ws2   \
-			iso-ir-197 cp1258 tis-620 koi8-u ibm874 isiri-3342
+			iso-ir-197 cp1258 tis-620 koi8-u ibm874
 
 gen-special-modules := iso8859-7jp
 

@@ -3118,6 +3118,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	  {								      \
 	    if (__builtin_expect (ch, 0xc5) > 0xc6			      \
 		|| __builtin_expect (ch2, 0x41) < 0x41			      \
+		|| __builtin_expect (ch2, 0x41) > 0xfe			      \
 		|| (__builtin_expect (ch2, 0x41) > 0x5a && ch2 < 0x61)	      \
 		|| (__builtin_expect (ch2, 0x41) > 0x7a && ch2 < 0x81)	      \
 		|| (__builtin_expect (ch, 0xc5) == 0xc6 && ch2 > 0x52))	      \
@@ -3194,9 +3195,9 @@ static const char uhc_hangul_from_ucs[11172][2] =
   {									      \
     uint32_t ch = get32 (inptr);					      \
 									      \
-    if (ch < 0x7f)							      \
+    if (ch <= 0x7f)							      \
       /* XXX Think about 0x5c ; '\'.  */				      \
-      *outptr = ch;							      \
+      *outptr++ = ch;							      \
     else if (ch >= 0xac00 && ch <= 0xd7a3)				      \
       {									      \
 	const char *s = uhc_hangul_from_ucs[ch - 0xac00];		      \

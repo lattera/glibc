@@ -319,7 +319,7 @@ static const char from_ucs4[][2] =
   /* 0x00dc */ "\xc8\x55", "\xc2\x59", "\xec\x00", "\xfb\x00", "\xc1\x61",
   /* 0x00e1 */ "\xc2\x61", "\xc3\x61", "\xc4\x61", "\xc8\x61", "\xca\x61",
   /* 0x00e6 */ "\xf1\x00", "\xcb\x63", "\xc1\x65", "\xc2\x65", "\xc3\x65",
-  /* 0x00eb */ "\xc8\x65", "\xc1\x69", "\xc2\xe9", "\xc3\x69", "\xc8\x69",
+  /* 0x00eb */ "\xc8\x65", "\xc1\x69", "\xc2\x69", "\xc3\x69", "\xc8\x69",
   /* 0x00f0 */ "\xf3\x00", "\xc4\x6e", "\xc1\x6f", "\xc2\x6f", "\xc3\x6f",
   /* 0x00f5 */ "\xc4\x6f", "\xc8\x6f", "\xb8\x00", "\xf9\x00", "\xc1\x75",
   /* 0x00fa */ "\xc2\x75", "\xc3\x75", "\xc8\x75", "\xc2\x79", "\xfc\x00",
@@ -487,13 +487,26 @@ static const char from_ucs4[][2] =
 	    tmp[1] = ' ';						      \
 	    cp = tmp;							      \
 	  }								      \
-	else if (ch >= 0x2014 && ch <= 0x2026)				      \
+	else if (ch >= 0x2014 && ch <= 0x201d)				      \
 	  {								      \
-	    static const char map[19] =					      \
-	      "\xd0\x00\x00\x00\xa9\xb9\x00\x00\xaa\xba\x00\x00\x00\x00"      \
-	      "\xd4\x00\x00\x00\xe0";					      \
+	    static const char map[10] =					      \
+	      "\xd0\x00\x00\x00\xa9\xb9\x00\x00\xaa\xba";		      \
 									      \
 	    tmp[0] = map[ch - 0x2014];					      \
+	    if (tmp[0] == '\0')						      \
+	      {								      \
+		/* Illegal characters.  */				      \
+		STANDARD_ERR_HANDLER (4);				      \
+	      }								      \
+	    tmp[1] = '\0';						      \
+	    cp = tmp;							      \
+	  }								      \
+	else if (ch >= 0x2122 && ch <= 0x2126)				      \
+	  {								      \
+	    static const char map[5] =					      \
+	      "\xd4\x00\x00\x00\xe0";					      \
+									      \
+	    tmp[0] = map[ch - 0x2122];					      \
 	    if (tmp[0] == '\0')						      \
 	      {								      \
 		/* Illegal characters.  */				      \
