@@ -1,3 +1,8 @@
+2003-11-09  Roland McGrath  <roland@redhat.com>
+
+	* manual/examples/dir2.c (one): Add const to argument type.
+	Reported by J de Haan <j.de.haan@home.nl>.
+
 2003-11-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/pl.po: Update from translation team.
