@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger.
 
@@ -86,10 +86,20 @@
 #define TSUNAMI_IO_BASE		(0x00000801fc000000UL + 0xfffffc0000000000UL)
 #define TSUNAMI_DENSE_MEM	(0x0000080000000000UL + 0xfffffc0000000000UL)
 
+/* Polaris has SPARSE space, but we prefer to use only DENSE */
+/* because of some idiosyncracies in actually using SPARSE */
+#define POLARIS_IO_BASE		(0xfffffcf9fc000000UL)
+#define POLARIS_DENSE_MEM	(0xfffffcf900000000UL)
+
 typedef enum {
   IOSYS_UNKNOWN, IOSYS_JENSEN, IOSYS_APECS, IOSYS_CIA, IOSYS_T2,
-  IOSYS_TSUNAMI, IOSYS_MCPCIA, IOSYS_GAMMA, IOSYS_CPUDEP
+  IOSYS_TSUNAMI, IOSYS_MCPCIA, IOSYS_GAMMA, IOSYS_POLARIS,
+  IOSYS_CPUDEP, IOSYS_PCIDEP
 } iosys_t;
+
+typedef enum {
+  IOSWIZZLE_JENSEN, IOSWIZZLE_SPARSE, IOSWIZZLE_DENSE
+} ioswizzle_t;
 
 static struct io_system {
   int		    hae_shift;
@@ -105,7 +115,9 @@ static struct io_system {
 /* TSUNAMI */	{0, TSUNAMI_DENSE_MEM, 0, TSUNAMI_IO_BASE},
 /* MCPCIA */	{5, MCPCIA_DENSE_MEM, MCPCIA_SPARSE_MEM, MCPCIA_IO_BASE},
 /* GAMMA */	{5, GAMMA_DENSE_MEM, GAMMA_SPARSE_MEM, GAMMA_IO_BASE},
-/* CPUDEP */	{0, 0, 0, 0},
+/* POLARIS */	{0, POLARIS_DENSE_MEM, 0, POLARIS_IO_BASE},
+/* CPUDEP */	{0, 0, 0, 0}, /* for platforms dependent on CPU type */
+/* PCIDEP */	{0, 0, 0, 0}, /* for platforms dependent on core logic */
 };
 
 static struct platform {
@@ -116,7 +128,7 @@ static struct platform {
   {"Avanti",	IOSYS_APECS},
   {"XL",	IOSYS_APECS},
   {"Cabriolet",	IOSYS_APECS},
-  {"EB164",	IOSYS_CIA},
+  {"EB164",	IOSYS_PCIDEP},
   {"EB64+",	IOSYS_APECS},
   {"EB66",	IOSYS_APECS},
   {"EB66P",	IOSYS_APECS},
@@ -153,38 +165,27 @@ static struct {
   unsigned long int	sparse_bus_memory_base;
   unsigned long int	io_base;
   iosys_t		sys;
+  ioswizzle_t		swiz;
   int			hae_shift;
 } io;
 
 extern void __sethae (unsigned long int);	/* we can't use asm/io.h */
 
-
 static inline unsigned long int
-port_to_cpu_addr (unsigned long int port, iosys_t iosys, int size)
+port_to_cpu_addr (unsigned long int port, ioswizzle_t ioswiz, int size)
 {
-  if (iosys == IOSYS_JENSEN)
-    return (port << 7) + ((size - 1) << 5) + io.base;
-  else if (iosys == IOSYS_TSUNAMI)
+  if (ioswiz == IOSWIZZLE_SPARSE)
+    return (port << 5) + ((size - 1) << 3) + io.base;
+  else if (ioswiz == IOSWIZZLE_DENSE)
     return port + io.base;
   else
-    return (port << 5) + ((size - 1) << 3) + io.base;
+    return (port << 7) + ((size - 1) << 5) + io.base;
 }
 
-
 static inline void
-inline_sethae (unsigned long int addr, iosys_t iosys)
+inline_sethae (unsigned long int addr, ioswizzle_t ioswiz)
 {
-  if (iosys == IOSYS_JENSEN)
-    {
-      /* hae on the Jensen is bits 31:25 shifted right */
-      addr >>= 25;
-      if (addr != io.hae.cache)
-	{
-	  __sethae (addr);
-	  io.hae.cache = addr;
-	}
-    }
-  else
+  if (ioswiz == IOSWIZZLE_SPARSE)
     {
       unsigned long int msb;
 
@@ -196,16 +197,25 @@ inline_sethae (unsigned long int addr, iosys_t iosys)
 	  io.hae.cache = msb;
 	}
     }
+  else
+    {
+      /* hae on the Jensen is bits 31:25 shifted right */
+      addr >>= 25;
+      if (addr != io.hae.cache)
+	{
+	  __sethae (addr);
+	  io.hae.cache = addr;
+	}
+    }
 }
 
-
 static inline void
-inline_outb (unsigned char b, unsigned long int port, iosys_t iosys)
+inline_outb (unsigned char b, unsigned long int port, ioswizzle_t ioswiz)
 {
   unsigned int w;
-  unsigned long int addr = port_to_cpu_addr (port, iosys, 1);
+  unsigned long int addr = port_to_cpu_addr (port, ioswiz, 1);
 
-  inline_sethae (0, iosys);
+  inline_sethae (0, ioswiz);
   asm ("insbl %2,%1,%0" : "=r" (w) : "ri" (port & 0x3), "r" (b));
   *(vuip)addr = w;
   mb ();
@@ -213,12 +223,12 @@ inline_outb (unsigned char b, unsigned long int port, iosys_t iosys)
 
 
 static inline void
-inline_outw (unsigned short int b, unsigned long int port, iosys_t iosys)
+inline_outw (unsigned short int b, unsigned long int port, ioswizzle_t ioswiz)
 {
   unsigned int w;
-  unsigned long int addr = port_to_cpu_addr (port, iosys, 2);
+  unsigned long int addr = port_to_cpu_addr (port, ioswiz, 2);
 
-  inline_sethae (0, iosys);
+  inline_sethae (0, ioswiz);
   asm ("inswl %2,%1,%0" : "=r" (w) : "ri" (port & 0x3), "r" (b));
   *(vuip)addr = w;
   mb ();
@@ -226,22 +236,22 @@ inline_outw (unsigned short int b, unsigned long int port, iosys_t iosys)
 
 
 static inline void
-inline_outl (unsigned int b, unsigned long int port, iosys_t iosys)
+inline_outl (unsigned int b, unsigned long int port, ioswizzle_t ioswiz)
 {
-  unsigned long int addr = port_to_cpu_addr (port, iosys, 4);
+  unsigned long int addr = port_to_cpu_addr (port, ioswiz, 4);
 
-  inline_sethae (0, iosys);
+  inline_sethae (0, ioswiz);
   *(vuip)addr = b;
   mb ();
 }
 
 
 static inline unsigned int
-inline_inb (unsigned long int port, iosys_t iosys)
+inline_inb (unsigned long int port, ioswizzle_t ioswiz)
 {
-  unsigned long int result, addr = port_to_cpu_addr (port, iosys, 1);
+  unsigned long int result, addr = port_to_cpu_addr (port, ioswiz, 1);
 
-  inline_sethae (0, iosys);
+  inline_sethae (0, ioswiz);
   result = *(vuip) addr;
   result >>= (port & 3) * 8;
   return 0xffUL & result;
@@ -249,11 +259,11 @@ inline_inb (unsigned long int port, iosys_t iosys)
 
 
 static inline unsigned int
-inline_inw (unsigned long int port, iosys_t iosys)
+inline_inw (unsigned long int port, ioswizzle_t ioswiz)
 {
-  unsigned long int result, addr = port_to_cpu_addr (port, iosys, 2);
+  unsigned long int result, addr = port_to_cpu_addr (port, ioswiz, 2);
 
-  inline_sethae (0, iosys);
+  inline_sethae (0, ioswiz);
   result = *(vuip) addr;
   result >>= (port & 3) * 8;
   return 0xffffUL & result;
@@ -261,11 +271,11 @@ inline_inw (unsigned long int port, iosys_t iosys)
 
 
 static inline unsigned int
-inline_inl (unsigned long int port, iosys_t iosys)
+inline_inl (unsigned long int port, ioswizzle_t ioswiz)
 {
-  unsigned long int addr = port_to_cpu_addr (port, iosys, 4);
+  unsigned long int addr = port_to_cpu_addr (port, ioswiz, 4);
 
-  inline_sethae (0, iosys);
+  inline_sethae (0, ioswiz);
   return *(vuip) addr;
 }
 
@@ -274,115 +284,115 @@ inline_inl (unsigned long int port, iosys_t iosys)
  * and whose core logic supports I/O space accesses utilizing them.
  *
  * These routines could be used by MIATA, for example, because it has
- * and EV56 plus PYXIS, but it currently uses SPARSE anyway.
+ * and EV56 plus PYXIS, but it currently uses SPARSE anyway. This is
+ * also true of RX164 which used POLARIS, but we will choose to use
+ * these routines in that case instead of SPARSE.
  *
  * These routines are necessary for TSUNAMI/TYPHOON based platforms,
  * which will have (at least) EV6.
  */
 
-static inline void
-inline_bwx_outb (unsigned char b, unsigned long int port, iosys_t iosys)
+static inline unsigned long int
+dense_port_to_cpu_addr (unsigned long int port)
 {
-  unsigned long int addr = port_to_cpu_addr (port, iosys, 4);
+  return port + io.base;
+}
+
+static inline void
+inline_bwx_outb (unsigned char b, unsigned long int port)
+{
+  unsigned long int addr = dense_port_to_cpu_addr (port);
 
   __asm__ __volatile__ ("stb %1,%0" : : "m"(*(unsigned char *)addr), "r"(b));
   mb ();
 }
 
-
 static inline void
-inline_bwx_outw (unsigned short int b, unsigned long int port, iosys_t iosys)
+inline_bwx_outw (unsigned short int b, unsigned long int port)
 {
-  unsigned long int addr = port_to_cpu_addr (port, iosys, 4);
+  unsigned long int addr = dense_port_to_cpu_addr (port);
 
   __asm__ __volatile__ ("stw %1,%0" : : "m"(*(unsigned short *)addr), "r"(b));
   mb ();
 }
 
-
 static inline void
-inline_bwx_outl (unsigned int b, unsigned long int port, iosys_t iosys)
+inline_bwx_outl (unsigned int b, unsigned long int port)
 {
-  unsigned long int addr = port_to_cpu_addr (port, iosys, 4);
+  unsigned long int addr = dense_port_to_cpu_addr (port);
 
   *(vuip)addr = b;
   mb ();
 }
 
-
 static inline unsigned int
-inline_bwx_inb (unsigned long int port, iosys_t iosys)
+inline_bwx_inb (unsigned long int port)
 {
-  unsigned long int r, addr = port_to_cpu_addr (port, iosys, 1);
+  unsigned long int r, addr = dense_port_to_cpu_addr (port);
 
   __asm__ __volatile__ ("ldbu %0,%1" : "=r"(r) : "m"(*(unsigned char *)addr));
   return 0xffUL & r;
 }
 
-
 static inline unsigned int
-inline_bwx_inw (unsigned long int port, iosys_t iosys)
+inline_bwx_inw (unsigned long int port)
 {
-  unsigned long int r, addr = port_to_cpu_addr (port, iosys, 1);
+  unsigned long int r, addr = dense_port_to_cpu_addr (port);
 
   __asm__ __volatile__ ("ldwu %0,%1" : "=r"(r) : "m"(*(unsigned short *)addr));
   return 0xffffUL & r;
 }
 
-
 static inline unsigned int
-inline_bwx_inl (unsigned long int port, iosys_t iosys)
+inline_bwx_inl (unsigned long int port)
 {
-  unsigned long int addr = port_to_cpu_addr (port, iosys, 4);
+  unsigned long int addr = dense_port_to_cpu_addr (port);
 
   return *(vuip) addr;
 }
 
+/* macros to define routines with appropriate names and functions */
 
-#define DCL_SETHAE(name, iosys)				\
-static void						\
-name##_sethae (unsigned long int addr)			\
-{							\
-  inline_sethae (addr, IOSYS_##iosys);			\
+/* these do either SPARSE or JENSEN swizzle */
+
+#define DCL_SETHAE(name, ioswiz)                        \
+static void                                             \
+name##_sethae (unsigned long int addr)                  \
+{                                                       \
+  inline_sethae (addr, IOSWIZZLE_##ioswiz);             \
 }
 
-#define DCL_OUT(name, func, type, iosys)		\
-static void						\
-name##_##func (unsigned type b, unsigned long int addr)	\
-{							\
-  inline_##func (b, addr, IOSYS_##iosys);		\
-}
-
-
-#define DCL_IN(name, func, iosys)			\
-static unsigned int					\
-name##_##func (unsigned long int addr)			\
-{							\
-  return inline_##func (addr, IOSYS_##iosys);		\
-}
-
-#define DCL_SETHAE_IGNORE(name, iosys)			\
-static void						\
-name##_sethae (unsigned long int addr)			\
-{							\
-/* do nothing */					\
-}
-
-#define DCL_OUT_BWX(name, func, type, iosys)		\
+#define DCL_OUT(name, func, type, ioswiz)		\
 static void						\
 name##_##func (unsigned type b, unsigned long int addr)	\
 {							\
-  inline_bwx_##func (b, addr, IOSYS_##iosys);		\
+  inline_##func (b, addr, IOSWIZZLE_##ioswiz);		\
 }
 
-
-#define DCL_IN_BWX(name, func, iosys)			\
+#define DCL_IN(name, func, ioswiz)			\
 static unsigned int					\
 name##_##func (unsigned long int addr)			\
 {							\
-  return inline_bwx_##func (addr, IOSYS_##iosys);	\
+  return inline_##func (addr, IOSWIZZLE_##ioswiz);	\
 }
 
+/* these do DENSE, so no swizzle is needed */
+
+#define DCL_OUT_BWX(name, func, type)			\
+static void						\
+name##_##func (unsigned type b, unsigned long int addr)	\
+{							\
+  inline_bwx_##func (b, addr);				\
+}
+
+#define DCL_IN_BWX(name, func)				\
+static unsigned int					\
+name##_##func (unsigned long int addr)			\
+{							\
+  return inline_bwx_##func (addr);			\
+}
+
+/* now declare/define the necessary routines */
 
 DCL_SETHAE(jensen, JENSEN)
 DCL_OUT(jensen, outb, char,  JENSEN)
@@ -392,25 +402,22 @@ DCL_IN(jensen, inb, JENSEN)
 DCL_IN(jensen, inw, JENSEN)
 DCL_IN(jensen, inl, JENSEN)
 
-/* The APECS functions are also used for CIA since they are
-   identical.  */
+DCL_SETHAE(sparse, SPARSE)
+DCL_OUT(sparse, outb, char,  SPARSE)
+DCL_OUT(sparse, outw, short int, SPARSE)
+DCL_OUT(sparse, outl, int,   SPARSE)
+DCL_IN(sparse, inb, SPARSE)
+DCL_IN(sparse, inw, SPARSE)
+DCL_IN(sparse, inl, SPARSE)
 
-DCL_SETHAE(apecs, APECS)
-DCL_OUT(apecs, outb, char,  APECS)
-DCL_OUT(apecs, outw, short int, APECS)
-DCL_OUT(apecs, outl, int,   APECS)
-DCL_IN(apecs, inb, APECS)
-DCL_IN(apecs, inw, APECS)
-DCL_IN(apecs, inl, APECS)
+DCL_OUT_BWX(dense, outb, char)
+DCL_OUT_BWX(dense, outw, short int)
+DCL_OUT_BWX(dense, outl, int)
+DCL_IN_BWX(dense, inb)
+DCL_IN_BWX(dense, inw)
+DCL_IN_BWX(dense, inl)
 
-DCL_SETHAE_IGNORE(tsunami, TSUNAMI)
-DCL_OUT_BWX(tsunami, outb, char,  TSUNAMI)
-DCL_OUT_BWX(tsunami, outw, short int, TSUNAMI)
-DCL_OUT_BWX(tsunami, outl, int,   TSUNAMI)
-DCL_IN_BWX(tsunami, inb, TSUNAMI)
-DCL_IN_BWX(tsunami, inw, TSUNAMI)
-DCL_IN_BWX(tsunami, inl, TSUNAMI)
-
+/* define the "swizzle" switch */
 static struct ioswtch ioswtch[] = {
   {
     jensen_sethae,
@@ -418,18 +425,63 @@ static struct ioswtch ioswtch[] = {
     jensen_inb, jensen_inw, jensen_inl
   },
   {
-    apecs_sethae,
-    apecs_outb, apecs_outw, apecs_outl,
-    apecs_inb, apecs_inw, apecs_inl
+    sparse_sethae,
+    sparse_outb, sparse_outw, sparse_outl,
+    sparse_inb, sparse_inw, sparse_inl
   },
   {
-    tsunami_sethae,
-    tsunami_outb, tsunami_outw, tsunami_outl,
-    tsunami_inb, tsunami_inw, tsunami_inl
+    NULL,
+    dense_outb, dense_outw, dense_outl,
+    dense_inb, dense_inw, dense_inl
   }
 };
 
+/* routine to process the /proc/cpuinfo information into the fields */
+/* that are required for correctly determining the platform parameters */
 
+char systype[256]; /* system type field */
+char sysvari[256]; /* system variation field */
+char cpumodel[256]; /* cpu model field */
+int got_type, got_vari, got_model;
+
+static int
+process_cpuinfo(void)
+{
+  char dummy[256];
+  FILE * fp;
+
+  fp = fopen (PATH_CPUINFO, "r");
+  if (!fp)
+    return 0;
+
+  got_type = got_vari = got_model = 0;
+  systype[0] = sysvari[0] = cpumodel[0] = 0;
+
+  while (1)
+    {
+      if (fgets (dummy, 256, fp) == NULL) break;
+      /*	  fprintf(stderr, "read: %s", dummy); */
+      if (!got_type &&
+	  sscanf (dummy, "system type : %256[^\n]\n", systype) == 1)
+	got_type = 1;
+      if (!got_vari &&
+	  sscanf (dummy, "system variation : %256[^\n]\n", sysvari) == 1)
+	got_vari = 1;
+      if (!got_model &&
+	  sscanf (dummy, "cpu model : %256[^\n]\n", cpumodel) == 1)
+	got_model = 1;
+    }
+
+  fclose (fp);
+
+#if 1
+  fprintf(stderr, "system type: %s\n", systype);
+  fprintf(stderr, "system vari: %s\n", sysvari);
+  fprintf(stderr, "cpu model: %s\n", cpumodel);
+#endif
+
+  return got_type+got_vari+got_model;
+}
 /*
  * Initialize I/O system.  To determine what I/O system we're dealing
  * with, we first try to read the value of symlink PATH_ALPHA_SYSTYPE,
@@ -443,7 +495,6 @@ static struct ioswtch ioswtch[] = {
 static int
 init_iosys (void)
 {
-  char systype[256];
   int i, n;
 
   n = readlink (PATH_ALPHA_SYSTYPE, systype, sizeof (systype) - 1);
@@ -456,7 +507,8 @@ init_iosys (void)
 		      &io.bus_memory_base, &io.sparse_bus_memory_base) == 4)
 	    {
 	      io.sys = IOSYS_UNKNOWN;
-	      io.swp = &ioswtch[1];
+	      io.swiz = IOSWIZZLE_SPARSE;
+	      io.swp = &ioswtch[IOSWIZZLE_SPARSE];
 	      return 0;
 	    }
 	  /* else we're likely going to fail with the system match below */
@@ -464,22 +516,9 @@ init_iosys (void)
     }
   else
     {
-      FILE * fp;
+      n = process_cpuinfo();
 
-      fp = fopen (PATH_CPUINFO, "r");
-      if (!fp)
-	return -1;
-      while ((n = fscanf (fp, "system type : %256[^\n]\n", systype))
-	     != EOF)
-	{
-	  if (n == 1)
-	    break;
-	  else
-	    fgets (systype, 256, fp);
-	}
-      fclose (fp);
-
-      if (n == EOF)
+      if (!n)
 	{
 	  /* this can happen if the format of /proc/cpuinfo changes...  */
 	  fprintf (stderr,
@@ -497,39 +536,46 @@ init_iosys (void)
 	{
 	  io.sys = platform[i].io_sys;
 	  /* some platforms can have either EV4 or EV5 CPUs */
-	  if (io.sys == IOSYS_CPUDEP)
+	  if (io.sys == IOSYS_CPUDEP) /* SABLE or MIKASA or NORITAKE so far */
 	    {
-	      FILE * fp;
-	      char cputype[256];
-	      fp = fopen (PATH_CPUINFO, "r");
-	      if (fp == NULL)
-		return -1;
-	      while ((n = fscanf (fp, "cpu model : %256[^\n]\n", cputype))
-		     != EOF
-		     && n != 1)
-		fgets (cputype, 256, fp);
-
-	      fclose (fp);
-
 	      if (strcmp (platform[i].name, "Sable") == 0)
 		{
-		  if (strncmp (cputype, "EV4", 3) == 0)
+		  if (strncmp (cpumodel, "EV4", 3) == 0)
 		    io.sys = IOSYS_T2;
-		  else if (strncmp (cputype, "EV5", 3) == 0)
+		  else if (strncmp (cpumodel, "EV5", 3) == 0)
 		    io.sys = IOSYS_GAMMA;
 		}
 	      else
-		{
-		  if (strncmp (cputype, "EV4", 3) == 0)
+		{ /* this covers MIKASA/NORITAKE */
+		  if (strncmp (cpumodel, "EV4", 3) == 0)
 		    io.sys = IOSYS_APECS;
-		  else if (strncmp (cputype, "EV5", 3) == 0)
+		  else if (strncmp (cpumodel, "EV5", 3) == 0)
 		    io.sys = IOSYS_CIA;
 		}
-	      if (n == EOF || io.sys == IOSYS_CPUDEP)
+	      if (io.sys == IOSYS_CPUDEP)
 		{
 		  /* This can happen if the format of /proc/cpuinfo changes.*/
 		  fprintf (stderr, "ioperm.init_iosys(): Unable to determine"
 			   " CPU model.\n");
+		  __set_errno (ENODEV);
+		  return -1;
+		}
+	    }
+	  /* some platforms can have different core logic chipsets */
+	  if (io.sys == IOSYS_PCIDEP) /* EB164 so far */
+	    {
+	      if (strcmp (systype, "EB164") == 0)
+		{
+		  if (strncmp (sysvari, "RX164", 5) == 0)
+		    io.sys = IOSYS_POLARIS;
+		  else
+		    io.sys = IOSYS_CIA;
+		}
+	      if (io.sys == IOSYS_PCIDEP)
+		{
+		  /* This can happen if the format of /proc/cpuinfo changes.*/
+		  fprintf (stderr, "ioperm.init_iosys(): Unable to determine"
+			   " core logic chipset.\n");
 		  __set_errno (ENODEV);
 		  return -1;
 		}
@@ -540,17 +586,21 @@ init_iosys (void)
 	  io.io_base = io_system[io.sys].bus_io_base;
 
 	  if (io.sys == IOSYS_JENSEN)
-	    io.swp = &ioswtch[0];
-	  else if (io.sys == IOSYS_TSUNAMI)
-	    io.swp = &ioswtch[2];
+	    io.swiz = IOSWIZZLE_JENSEN;
+	  else if (io.sys == IOSYS_TSUNAMI || io.sys == IOSYS_POLARIS)
+	    io.swiz = IOSWIZZLE_DENSE;
 	  else
-	    io.swp = &ioswtch[1];
+	    io.swiz = IOSWIZZLE_SPARSE;
+	  io.swp = &ioswtch[io.swiz];
 	  return 0;
 	}
     }
 
   /* systype is not a know platform name... */
   __set_errno (EINVAL);
+#if 1
+  fprintf(stderr, "init_iosys: platform not recognized\n");
+#endif
   return -1;
 }
 
@@ -559,17 +609,28 @@ int
 _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 {
   unsigned long int addr, len;
-  int prot;
+  int prot, err;
 
-  if (!io.swp && init_iosys () < 0)
+  if (!io.swp && init_iosys() < 0) {
+#if 1
+	    fprintf(stderr, "ioperm: init_iosys() failed\n");
+#endif
     return -1;
+  }
 
   /* this test isn't as silly as it may look like; consider overflows! */
   if (from >= MAX_PORT || from + num > MAX_PORT)
     {
       __set_errno (EINVAL);
+#if 1
+      fprintf(stderr, "ioperm: from/num out of range\n");
+#endif
       return -1;
     }
+
+#if 1
+      fprintf(stderr, "ioperm: turn_on %d io.base %ld\n", turn_on, io.base);
+#endif
 
   if (turn_on)
     {
@@ -579,19 +640,27 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 
 	  io.hae.reg   = 0;		/* not used in user-level */
 	  io.hae.cache = 0;
-	  if (io.sys != IOSYS_TSUNAMI)
+	  if (io.swiz != IOSWIZZLE_DENSE)
 	    __sethae (io.hae.cache);	/* synchronize with hw */
 
 	  fd = open ("/dev/mem", O_RDWR);
-	  if (fd < 0)
+	  if (fd < 0) {
+#if 1
+	    fprintf(stderr, "ioperm: /dev/mem open failed\n");
+#endif
 	    return -1;
+	  }
 
-	  addr = port_to_cpu_addr (0, io.sys, 1);
-	  len = port_to_cpu_addr (MAX_PORT, io.sys, 1) - addr;
+	  addr = port_to_cpu_addr (0, io.swiz, 1);
+	  len = port_to_cpu_addr (MAX_PORT, io.swiz, 1) - addr;
 	  io.base =
 	    (unsigned long int) __mmap (0, len, PROT_NONE, MAP_SHARED,
 					fd, io.io_base);
 	  close (fd);
+#if 1
+	  fprintf(stderr, "ioperm: mmap of len 0x%lx  returned 0x%lx\n",
+		  len, io.base);
+#endif
 	  if ((long) io.base == -1)
 	    return -1;
 	}
@@ -605,10 +674,14 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
       /* turnoff access to relevant pages: */
       prot = PROT_NONE;
     }
-  addr  = port_to_cpu_addr (from, io.sys, 1);
+  addr = port_to_cpu_addr (from, io.swiz, 1);
   addr &= PAGE_MASK;
-  len = port_to_cpu_addr (from + num, io.sys, 1) - addr;
-  return mprotect ((void *) addr, len, prot);
+  len = port_to_cpu_addr (from + num, io.swiz, 1) - addr;
+  err = mprotect ((void *) addr, len, prot);
+#if 1
+  fprintf(stderr, "ioperm: mprotect returned %d\n", err);
+#endif
+  return err;
 }
 
 
