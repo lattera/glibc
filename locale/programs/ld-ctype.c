@@ -2545,7 +2545,7 @@ with character code range values one must use the absolute ellipsis `...'"));
 
 		  /* Make sure the locale is read.  */
 		  add_to_readlist (LC_CTYPE, ctype->translit_copy_locale,
-				   repertoire_name, 1);
+				   repertoire_name, 1, NULL);
 		  continue;
 		}
 	      else if (now->tok == tok_default_missing)

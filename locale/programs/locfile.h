@@ -65,7 +65,7 @@ locale name should consist only of portable characters"));
       else
 	{
 	  (void) add_to_readlist (locale, now->val.str.startmb,
-				  repertoire_name, 1);
+				  repertoire_name, 1, NULL);
 	  result->copy_name[locale] = now->val.str.startmb;
 	}
     }

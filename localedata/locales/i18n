@@ -995,12 +995,8 @@ symbol-equivalence <HOOK>              <CROOK>
 symbol-equivalence <HORN>              <HORNU>
 symbol-equivalence <DOT-BELOW>         <POINS>
 
-order_start forward;forward;forward;forward,position
-
 % Copy the template from ISO/IEC 14651
 copy "iso14651_t1"
-
-order_end
 
 END LC_COLLATE
 

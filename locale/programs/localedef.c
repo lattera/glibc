@@ -296,7 +296,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1999");
+"), "2000");
   fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
 }
 
@@ -431,7 +431,7 @@ normalize_codeset (codeset, name_len)
 
 struct localedef_t *
 add_to_readlist (int locale, const char *name, const char *repertoire_name,
-		 int generate)
+		 int generate, struct localedef_t *copy_locale)
 {
   struct localedef_t *runp = locales;
 
@@ -463,6 +463,16 @@ add_to_readlist (int locale, const char *name, const char *repertoire_name,
   if (generate && (runp->needed & (1 << locale)) != 0)
     error (5, 0, _("circular dependencies between locale definitions"));
 
+  if (copy_locale != NULL)
+    {
+      if (runp->categories[locale].generic != NULL)
+	error (5, 0, _("cannot add already read locale `%s' a second time"),
+	       name);
+      else
+	runp->categories[locale].generic =
+	  copy_locale->categories[locale].generic;
+    }
+
   runp->needed |= 1 << locale;
 
   return runp;
@@ -476,7 +486,7 @@ find_locale (int locale, const char *name, const char *repertoire_name,
   struct localedef_t *result;
 
   /* Find the locale, but do not generate it since this would be a bug.  */
-  result = add_to_readlist (locale, name, repertoire_name, 0);
+  result = add_to_readlist (locale, name, repertoire_name, 0, NULL);
 
   assert (result != NULL);
 
@@ -491,12 +501,12 @@ find_locale (int locale, const char *name, const char *repertoire_name,
 
 struct localedef_t *
 load_locale (int locale, const char *name, const char *repertoire_name,
-	     struct charmap_t *charmap)
+	     struct charmap_t *charmap, struct localedef_t *copy_locale)
 {
   struct localedef_t *result;
 
   /* Generate the locale if it does not exist.  */
-  result = add_to_readlist (locale, name, repertoire_name, 1);
+  result = add_to_readlist (locale, name, repertoire_name, 1, copy_locale);
 
   assert (result != NULL);
 

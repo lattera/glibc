@@ -1,5 +1,5 @@
 /* General definitions for localedef(1).
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -124,7 +124,8 @@ extern char *xstrdup (const char *__str);
 /* Mark given locale as to be read.  */
 extern struct localedef_t *add_to_readlist (int locale, const char *name,
 					    const char *repertoire_name,
-					    int generate);
+					    int generate,
+					    struct localedef_t *copy_locale);
 
 /* Find the information for the locale NAME.  */
 extern struct localedef_t *find_locale (int locale, const char *name,
@@ -134,6 +135,7 @@ extern struct localedef_t *find_locale (int locale, const char *name,
 /* Load (if necessary) the information for the locale NAME.  */
 extern struct localedef_t *load_locale (int locale, const char *name,
 					const char *repertoire_name,
-					struct charmap_t *charmap);
+					struct charmap_t *charmap,
+					struct localedef_t *copy_locale);
 
 #endif /* localedef.h */

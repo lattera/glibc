@@ -98,6 +98,7 @@ enum token_t
   tok_collating_element,
   tok_collating_symbol,
   tok_symbol_equivalence,
+  tok_script,
   tok_order_start,
   tok_order_end,
   tok_from,

@@ -1,6 +1,6 @@
 #! /bin/sh
 # Testing the implementation of strfmon(3).
-# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Jochen Hein <jochen.hein@delphi.central.de>, 1997.
 #
@@ -36,7 +36,7 @@ for l in $lang; do
     cns=`echo $l | sed 's/\(.*\)[.][^.]*/\1/'`
     cn=locales/$cns
     fn=charmaps/`echo $l | sed 's/.*[.]\([^.]*\)/\1/'`
-    I18NPATH=. \
+    I18NPATH=. GCONV_PATH=${common_objpfx}/iconvdata \
     ${common_objpfx}elf/ld.so --library-path $common_objpfx \
     ${common_objpfx}locale/localedef \
     --quiet -i $cn -f $fn ${common_objpfx}localedata/$cns
@@ -44,7 +44,7 @@ done
 for cns in `cd ./tst-fmon-locales && ls tstfmon_*`; do
     cn=tst-fmon-locales/$cns
     fn=charmaps/ISO-8859-1
-    I18NPATH=. \
+    I18NPATH=. GCONV_PATH=${common_objpfx}/iconvdata \
     ${common_objpfx}elf/ld.so --library-path $common_objpfx \
     ${common_objpfx}locale/localedef \
     --quiet -i $cn -f $fn ${common_objpfx}localedata/$cns
@@ -55,6 +55,7 @@ IFS="	"                # This is a TAB
 while read locale format value expect; do
     if [ -n "$format" ]; then
 	LOCPATH=${common_objpfx}localedata \
+	GCONV_PATH=${common_objpfx}/iconvdata \
 	${common_objpfx}elf/ld.so --library-path $common_objpfx \
         ${common_objpfx}localedata/tst-fmon \
 	    "$locale" "$format" "$value" "$expect"

@@ -1,6 +1,24 @@
+2000-06-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-collate.c: Correct handling of different
+	collation sections.
+	* locale/programs/localedef.c (add_to_readlist): Take locale pointer
+	as extra parameter from which to copy category information.
+	Change all callers.
+	(load_locale): Likewise.
+	* locale/programs/localedef.h: Update prototypes of add_to_readlist
+	and load_locale.
+	* locale/programs/ld-ctype.c: Update call to add_to_readlist.
+	* locale/programs/locfile.h: Likewise.
+	* locale/programs/locfile-kw.gperf: Add entry for script.
+	* locale/programs/locfile-token.h: Add tok_script.
+
+	* locale/programs/locale.c: Update copyright year.
+	* locale/programs/localedef.c: Likewise.
+
 2000-06-23  Thorsten Kukuk  <kukuk@suse.de>
 
-	* xdr_rec.c (set_input_fragment) Fix PR libc/1549, patch from Jens
+	* xdr_rec.c (set_input_fragment): Fix PR libc/1549, patch from Jens
 	Moeller <jens.moeller@waii.com>.
 
 2000-06-24  Ulrich Drepper  <drepper@redhat.com>

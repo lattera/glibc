@@ -1,7 +1,5 @@
 LC_COLLATE
 
-COLL_WEIGHT_MAX=4
-
 # Déclaration des systèmes d'écriture / Declaration of scripts
 script <SPECIAL>
 script <LATIN>
@@ -106,6 +104,7 @@ collating-symbol <w>
 collating-symbol <x>
 collating-symbol <y>
 collating-symbol <z>
+collating-symbol <th>
 #
 # <ARABINT>/<ARABFOR>
 #
@@ -153,7 +152,7 @@ collating-symbol <yeh_barree>
 #
 # <HEBREU>
 #
-collating-symbol <alef>
+collating-symbol <halef>
 collating-symbol <bet>
 collating-symbol <gimel>
 collating-symbol <dalet>
@@ -164,7 +163,7 @@ collating-symbol <het>
 collating-symbol <tet>
 collating-symbol <yod>
 collating-symbol <kaf_fin>
-collating-symbol <kaf>
+collating-symbol <hkaf>
 collating-symbol <lamed>
 collating-symbol <mem_fin>
 collating-symbol <mem>
@@ -204,7 +203,7 @@ collating-symbol <SIGMA>
 collating-symbol <TAU>
 collating-symbol <UPSILON>
 collating-symbol <PHI>
-collating-symbol <KHI>
+collating-symbol <CHI>
 collating-symbol <PSI>
 collating-symbol <OMEGA>
 #
@@ -246,7 +245,6 @@ collating-symbol <CYR-OUBRE>
 collating-symbol <CYR-EF>
 collating-symbol <CYR-HA>
 collating-symbol <CYR-TSE>
-collating-symbol <CYR-TSHE>
 collating-symbol <CYR-DCHE>
 collating-symbol <CYR-SHA>
 collating-symbol <CYR-SHTSHA>
@@ -272,7 +270,6 @@ collating-symbol <CYR-YA>
 #
 #
 <ANO> # voir
-<MIN>
 <AIS> # isol.
 # 3
 <AFI> # final
@@ -411,7 +408,7 @@ collating-symbol <CYR-YA>
 #
 # <HEBREU>
 #
-<alef>
+<halef>
 <bet>
 <gimel>
 <dalet>
@@ -422,7 +419,7 @@ collating-symbol <CYR-YA>
 <tet>
 <yod>
 <kaf_fin>
-<kaf>
+<hkaf>
 <lamed>
 <mem_fin>
 <mem>
@@ -504,7 +501,6 @@ collating-symbol <CYR-YA>
 <CYR-EF>
 <CYR-HA>
 <CYR-TSE>
-<CYR-TSHE>
 <CYR-DCHE>
 <CYR-SHA>
 <CYR-SHTSHA>
@@ -573,7 +569,7 @@ order_start <SPECIAL>;forward;backward;forward;forward,position
 <U00A3> IGNORE;IGNORE;IGNORE;<U00A3> # 86 £
 <U00A5> IGNORE;IGNORE;IGNORE;<U00A5> # 87 ¥
 <U002A> IGNORE;IGNORE;IGNORE;<U002A> # 88 *
-<U005C> IGNORE;IGNORE;IGNORE;<U005C> # 89 \
+<U005C> IGNORE;IGNORE;IGNORE;<U005C> # 89
 <U0026> IGNORE;IGNORE;IGNORE;<U0026> # 90 &
 <U0023> IGNORE;IGNORE;IGNORE;<U0023> # 91 #
 <U0025> IGNORE;IGNORE;IGNORE;<U0025> # 92 %
@@ -680,7 +676,7 @@ order_start <SPECIAL>;forward;backward;forward;forward,position
 
 order_start <LATIN>;forward;backward;forward;forward,position
 #
-<U00A0> U0020;<BAS>;<MIN>;IGNORE # 170<NBSP>
+<U00A0> <U0020>;<BAS>;<MIN>;IGNORE # 170<NBSP>
 #
 <U0030> <0>;<BAS>;<MIN>;IGNORE # 171 0
 <U0031> <1>;<BAS>;<MIN>;IGNORE # 172 1
@@ -722,7 +718,7 @@ order_start <LATIN>;forward;backward;forward;forward,position
 <U0103> <a>;<BRE>;<MIN>;IGNORE # 206 <a(>
 <U0105> <a>;<OGO>;<MIN>;IGNORE # 207 <a;>
 <U0101> <a>;<MAC>;<MIN>;IGNORE # 208 <a->
-<U00E6> <a><e>;<LIG><LIG>;<MIN><MIN>;IGNORE # 209 æ
+<U00E6> "<a><e>";"<LIG><LIG>";"<MIN><MIN>";IGNORE # 209 æ
 <U0062> <b>;<BAS>;<MIN>;IGNORE # 210 b
 <U0063> <c>;<BAS>;<MIN>;IGNORE # 211 c
 <U00E7> <c>;<CDI>;<MIN>;IGNORE # 212 ç
@@ -803,7 +799,7 @@ order_start <LATIN>;forward;backward;forward;forward,position
 <U015D> <s>;<CIR>;<MIN>;IGNORE # 287 <s/>>
 <U0161> <s>;<CAR>;<MIN>;IGNORE # 288 <s<>
 <U015F> <s>;<CDI>;<MIN>;IGNORE # 289 <s,>
-<U00DF> <s><s>;<LIG><LIG>;<MIN><MIN>;IGNORE # 290 ß
+<U00DF> "<s><s>";"<LIG><LIG>";"<MIN><MIN>";IGNORE # 290 ß
 <U0074> <t>;<BAS>;<MIN>;IGNORE # 291 t
 <U0165> <t>;<CAR>;<MIN>;IGNORE # 292 <t<>
 <U0167> <t>;<OBL>;<MIN>;IGNORE # 293 <t//>
@@ -842,7 +838,7 @@ order_start <LATIN>;forward;backward;forward;forward,position
 <U0102> <a>;<BRE>;<CAP>;IGNORE # 326 <A(>
 <U0104> <a>;<OGO>;<CAP>;IGNORE # 327 <A;>
 <U0100> <a>;<MAC>;<CAP>;IGNORE # 328 <A->
-<U00C6> <a><e>;<LIG><LIG>;<CAP><CAP>;IGNORE # 329 Æ
+<U00C6> "<a><e>";"<LIG><LIG>";"<CAP><CAP>";IGNORE # 329 Æ
 <U0042> <b>;<BAS>;<CAP>;IGNORE # 330 B
 <U0043> <c>;<BAS>;<CAP>;IGNORE # 331 C
 <U00C7> <c>;<CDI>;<CAP>;IGNORE # 332 Ç
@@ -1176,7 +1172,7 @@ order_start <ARABFOR>;backward;backward;backward;forward,position
 <UFEFC> <lam><alef>;<BAS><BAS>;<AFI><AFI>;IGNORE
 
 order_start <HEBREU>;forward;forward;forward;forward,position
-<U05D0> <alef>;<BAS>;IGNORE;IGNORE
+<U05D0> <halef>;<BAS>;IGNORE;IGNORE
 <U05D1> <bet>;<BAS>;IGNORE;IGNORE
 <U05D2> <gimel>;<BAS>;IGNORE;IGNORE
 <U05D3> <dalet>;<BAS>;IGNORE;IGNORE
@@ -1187,7 +1183,7 @@ order_start <HEBREU>;forward;forward;forward;forward,position
 <U05D8> <tet>;<BAS>;IGNORE;IGNORE
 <U05D9> <yod>;<BAS>;IGNORE;IGNORE
 <U05DA> <kaf_fin>;<BAS>;IGNORE;IGNORE
-<U05DB> <kaf>;<BAS>;IGNORE;IGNORE
+<U05DB> <hkaf>;<BAS>;IGNORE;IGNORE
 <U05DC> <lamed>;<BAS>;IGNORE;IGNORE
 <U05DD> <mem_fin>;<BAS>;IGNORE;IGNORE
 <U05DE> <mem>;<BAS>;IGNORE;IGNORE
@@ -1204,7 +1200,7 @@ order_start <HEBREU>;forward;forward;forward;forward,position
 <U05E9> <shin>;<BAS>;IGNORE;IGNORE
 <U05EA> <tav>;<BAS>;IGNORE;IGNORE
 
-order_start <GREC>;forward;backward;forward
+order_start <GREC>;forward;backward;forward;forward,position
 <U0391> <ALPHA>;<BAS>;<CAP>;IGNORE
 <U03B1> <ALPHA>;<BAS>;<AMI>;IGNORE
 <U0386> <ALPHA>;<TNS>;<CAP>;IGNORE
