@@ -24,7 +24,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/param.h>
-#include <elf/ldsodefs.h>
+#include <ldsodefs.h>
 
 #include <dl-dst.h>
 
@@ -195,7 +195,7 @@ _dl_map_object_deps (struct link_map *map,
 
       if (l->l_info[DT_NEEDED] || l->l_info[AUXTAG] || l->l_info[FILTERTAG])
 	{
-	  const char *strtab = (const void *) l->l_info[DT_STRTAB]->d_un.d_ptr;
+	  const char *strtab = (const void *) D_PTR (l, l_info[DT_STRTAB]);
 	  struct openaux_args args;
 	  struct list *orig;
 	  const ElfW(Dyn) *d;

@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Stub version.
-   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -117,7 +117,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy)
          in.  Their initial contents will arrange when called to push an
          offset into the .rel.plt section, push _GLOBAL_OFFSET_TABLE_[1],
          and then jump to _GLOBAL_OFFSET_TABLE[2].  */
-      Elf32_Addr *got = (Elf32_Addr *) l->l_info[DT_PLTGOT]->d_un.d_ptr;
+      Elf32_Addr *got = (Elf32_Addr *) D_PTR (l, l_info[DT_PLTGOT]);
       got[1] = (Elf32_Addr) l;	/* Identify this shared object.  */
 
       /* This function will get called to fix up the GOT entry indicated by

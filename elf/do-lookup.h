@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,8 +67,8 @@ FCT (const char *undef_name, struct link_map *undef_map,
 			   map->l_name[0] ? map->l_name : _dl_argv[0],
 			   "\n", NULL);
 
-      symtab = (const void *) map->l_info[DT_SYMTAB]->d_un.d_ptr;
-      strtab = (const void *) map->l_info[DT_STRTAB]->d_un.d_ptr;
+      symtab = (const void *) D_PTR (map, l_info[DT_SYMTAB]);
+      strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
       verstab = map->l_versyms;
 
       /* Search the appropriate hash bucket in this object's symbol table

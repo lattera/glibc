@@ -22,7 +22,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>		/* Check if MAP_ANON is defined.  */
-#include <elf/ldsodefs.h>
+#include <ldsodefs.h>
 #include <stdio-common/_itoa.h>
 #include <entry.h>
 #include <fpu_control.h>
@@ -317,7 +317,7 @@ find_needed (const char *name)
 static int
 match_version (const char *string, struct link_map *map)
 {
-  const char *strtab = (const void *) map->l_info[DT_STRTAB]->d_un.d_ptr;
+  const char *strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
   ElfW(Verdef) *def;
 
 #define VERDEFTAG (DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (DT_VERDEF))
@@ -926,7 +926,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 		  if (dyn == NULL)
 		    continue;
 
-		  strtab = (const void *) map->l_info[DT_STRTAB]->d_un.d_ptr;
+		  strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
 		  ent = (ElfW(Verneed) *) (map->l_addr + dyn->d_un.d_ptr);
 
 		  if (first)

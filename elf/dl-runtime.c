@@ -20,7 +20,7 @@
 #include <alloca.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <elf/ldsodefs.h>
+#include <ldsodefs.h>
 #include "dynamic-link.h"
 
 #if !defined ELF_MACHINE_NO_RELA || ELF_MACHINE_NO_REL
@@ -50,11 +50,11 @@ fixup (
        struct link_map *l, ElfW(Word) reloc_offset)
 {
   const ElfW(Sym) *const symtab
-    = (const void *) l->l_info[DT_SYMTAB]->d_un.d_ptr;
-  const char *strtab = (const void *) l->l_info[DT_STRTAB]->d_un.d_ptr;
+    = (const void *) D_PTR (l, l_info[DT_SYMTAB]);
+  const char *strtab = (const void *) D_PTR (l, l_info[DT_STRTAB]);
 
   const PLTREL *const reloc
-    = (const void *) (l->l_info[DT_JMPREL]->d_un.d_ptr + reloc_offset);
+    = (const void *) (D_PTR (l, l_info[DT_JMPREL]) + reloc_offset);
   const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (reloc->r_info)];
   void *const rel_addr = (void *)(l->l_addr + reloc->r_offset);
   ElfW(Addr) value;
@@ -77,7 +77,7 @@ fixup (
 	default:
 	  {
 	    const ElfW(Half) *vernum =
-	      (const void *) l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr;
+	      (const void *) D_PTR (l, l_info[VERSYMIDX (DT_VERSYM)]);
 	    ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info)];
 	    const struct r_found_version *version = &l->l_versions[ndx];
 
@@ -141,11 +141,11 @@ profile_fixup (
     {
       /* This is the first time we have to relocate this object.  */
       const ElfW(Sym) *const symtab
-	= (const void *) l->l_info[DT_SYMTAB]->d_un.d_ptr;
-      const char *strtab = (const void *) l->l_info[DT_STRTAB]->d_un.d_ptr;
+	= (const void *) D_PTR (l, l_info[DT_SYMTAB]);
+      const char *strtab = (const void *) D_PTR (l, l_info[DT_STRTAB]);
 
       const PLTREL *const reloc
-	= (const void *) (l->l_info[DT_JMPREL]->d_un.d_ptr + reloc_offset);
+	= (const void *) (D_PTR (l, l_info[DT_JMPREL]) + reloc_offset);
       const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (reloc->r_info)];
 
       /* Sanity check that we're really looking at a PLT relocation.  */
@@ -160,7 +160,7 @@ profile_fixup (
 	    default:
 	      {
 		const ElfW(Half) *vernum =
-		  (const void *) l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr;
+		  (const void *) D_PTR (l,l_info[VERSYMIDX (DT_VERSYM)]);
 		ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info)];
 		const struct r_found_version *version = &l->l_versions[ndx];
 

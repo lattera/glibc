@@ -1,5 +1,5 @@
 /* Return the next shared object pre-initializer function not yet run.
-   Copyright (C) 1995, 1996, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stddef.h>
-#include <elf/ldsodefs.h>
+#include <ldsodefs.h>
 
 
 /* Run initializers for MAP and its dependencies, in inverse dependency

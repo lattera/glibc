@@ -1,5 +1,5 @@
-/* Look up a symbol's run-time value in the scope of a loaded object.
-   Copyright (C) 1995,96,98,99,2000 Free Software Foundation, Inc.
+/* Run-time dynamic linker data structures for loaded ELF shared objects.
+   Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,17 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stddef.h>
-#include <ldsodefs.h>
 
-/* Look up symbol NAME in MAP's scope and return its run-time address.  */
+/* The MIPS ABI specifies that the dynamic section has to be read-only.  */
 
-ElfW(Addr)
-internal_function
-_dl_symbol_value (struct link_map *map, const char *name)
-{
-  ElfW(Addr) loadbase;
-  const ElfW(Sym) *ref = NULL;
-  loadbase = _dl_lookup_symbol (name, map, &ref, map->l_local_scope, 0);
-  return loadbase + ref->st_value;
-}
+#define DL_RO_DYN_SECTION 1
+
+#include <sysdeps/generic/ldsodefs.h>

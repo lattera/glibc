@@ -1,3 +1,71 @@
+2000-03-23  Andreas Jaeger  <aj@suse.de>
+
+	* elf/dl-addr.c: Adjust include paths for ldsodefs location
+	change.
+	* elf/dl-debug.c: Likewise.
+	* elf/dl-deps.c: Likewise.
+	* elf/dl-error.c: Likewise.
+	* elf/dl-fini.c: Likewise.
+	* elf/dl-init.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-minimal.c: Likewise.
+	* elf/dl-object.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-preinit.c: Likewise.
+	* elf/dl-profile.c: Likewise.
+	* elf/dl-profstub.c: Likewise.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-runtime.c: Likewise.
+	* elf/dl-support.c: Likewise.
+	* elf/dl-symbol.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* elf/sprof.c: Likewise.
+	* sysdeps/generic/dl-cache.c: Likewise.
+	* sysdeps/generic/dl-origin.c: Likewise.
+	* sysdeps/generic/dl-sysdep.c: Likewise.
+	* sysdeps/generic/elf/backtracesyms.c: Likewise.
+	* sysdeps/generic/elf/backtracesymsfd.c: Likewise.
+	* sysdeps/generic/libc-start.c: Likewise.
+	* sysdeps/mach/hurd/dl-sysdep.c: Likewise.
+	* sysdeps/powerpc/dl-machine.c: Likewise.
+	* sysdeps/powerpc/elf/libc-start.c: Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h: Likewise.
+	* sysdeps/unix/sysv/linux/dl-origin.c: Likewise.
+
+	* elf/ldsodefs.h: Move file to ...
+	* sysdeps/generic/ldsodefs.h: ... here.
+
+	* sysdeps/generic/ldsodefs.h: Add definition for D_PTR.
+	
+	* sysdeps/mips/elf/ldsodefs.h: New file.
+
+	* elf/dl-version.c (match_symbol): Use D_PTR to access relocated
+	entries in l_info.
+	(_dl_check_map_versions): Likewise.
+	* elf/dl-reloc.c (_dl_relocate_object): Likewise.
+	* elf/dl-load.c (_dl_init_paths): Likewise.
+	(_dl_map_object): Likewise.
+	* elf/dynamic-link.h (_ELF_DYNAMIC_DO_RELOC): Likewise.
+	(elf_get_dynamic_info): Likewise.
+	* elf/do-lookup.h (FCT): Likewise.
+	* elf/do-rel.h (elf_dynamic_do_rel): Likewise.
+	* elf/dl-deps.c (_dl_map_object_deps): Likewise.
+	* elf/dl-addr.c (_dl_addr): Likewise.
+	* elf/dl-runtime.c (profile_fixup): Likewise.
+	(fixup): Likewise.
+	* elf/dl-init.c (_dl_init_next): Likewise.
+	* sysdeps/generic/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	* sysdeps/unix/sysv/linux/i386/dl-librecon.h
+	(DISTINGUISH_LIB_VERSIONS): Likewise.
+	* sysdeps/i386/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	(elf_machine_rel): Likewise.
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Only change l_info
+	for writable dynamic section.
+
 2000-03-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* inet/getnameinfo.c (getnameinfo): Check that addrlen value is

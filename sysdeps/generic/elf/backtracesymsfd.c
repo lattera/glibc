@@ -1,5 +1,5 @@
 /* Write formatted list with names for addresses in backtrace to a file.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -23,7 +23,7 @@
 #include <sys/uio.h>
 
 #include <stdio-common/_itoa.h>
-#include <elf/ldsodefs.h>
+#include <ldsodefs.h>
 
 #if __ELF_NATIVE_CLASS == 32
 # define WORD_WIDTH 8

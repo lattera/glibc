@@ -1,5 +1,5 @@
 /* Handle symbol and library versioning.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -22,7 +22,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
-#include <elf/ldsodefs.h>
+#include <ldsodefs.h>
 #include <stdio-common/_itoa.h>
 
 #include <assert.h>
@@ -77,7 +77,7 @@ internal_function
 match_symbol (const char *name, ElfW(Word) hash, const char *string,
 	      struct link_map *map, int verbose, int weak)
 {
-  const char *strtab = (const void *) map->l_info[DT_STRTAB]->d_un.d_ptr;
+  const char *strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
   ElfW(Addr) def_offset;
   ElfW(Verdef) *def;
 
@@ -175,7 +175,7 @@ _dl_check_map_versions (struct link_map *map, int verbose)
   /* If we don't have a string table, we must be ok.  */
   if (map->l_info[DT_STRTAB] == NULL)
     return 0;
-  strtab = (const void *) map->l_info[DT_STRTAB]->d_un.d_ptr;
+  strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
 
   dyn = map->l_info[VERSYMIDX (DT_VERNEED)];
   def = map->l_info[VERSYMIDX (DT_VERDEF)];
@@ -285,7 +285,7 @@ _dl_check_map_versions (struct link_map *map, int verbose)
 
 	  /* Compute the pointer to the version symbols.  */
 	  map->l_versyms =
-	    (void *) map->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr;
+	    (void *) D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
 
 	  if (dyn != NULL)
 	    {

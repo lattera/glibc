@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Sparc64 version.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 
 #include <string.h>
 #include <sys/param.h>
-#include <elf/ldsodefs.h>
+#include <ldsodefs.h>
 #include <sysdep.h>
 
 #define ELF64_R_TYPE_ID(info)	((info) & 0xff)

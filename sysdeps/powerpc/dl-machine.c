@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation functions.  PowerPC version.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 #include <sys/param.h>
 #include <link.h>
 #include <dl-machine.h>
-#include <elf/ldsodefs.h>
+#include <ldsodefs.h>
 #include <elf/dynamic-link.h>
 
 /* Because ld.so is now versioned, these functions can be in their own file;

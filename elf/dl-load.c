@@ -1,5 +1,5 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <elf/ldsodefs.h>
+#include <ldsodefs.h>
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/stat.h>
@@ -591,7 +591,7 @@ _dl_init_paths (const char *llp)
 	  /* Allocate room for the search path and fill in information
 	     from RUNPATH.  */
 	  l->l_runpath_dirs =
-	    decompose_rpath ((const void *) (l->l_info[DT_STRTAB]->d_un.d_ptr
+	    decompose_rpath ((const void *) (D_PTR (l, l_info[DT_STRTAB])
 					     + l->l_info[DT_RUNPATH]->d_un.d_val),
 			     l, "RUNPATH");
 
@@ -606,7 +606,7 @@ _dl_init_paths (const char *llp)
 	    /* Allocate room for the search path and fill in information
 	       from RPATH.  */
 	    l->l_rpath_dirs =
-	      decompose_rpath ((const void *) (l->l_info[DT_STRTAB]->d_un.d_ptr
+	      decompose_rpath ((const void *) (D_PTR (l, l_info[DT_STRTAB])
 					       + l->l_info[DT_RPATH]->d_un.d_val),
 			       l, "RPATH");
 	  else
@@ -1300,7 +1300,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  if (l->l_info[DT_SONAME] == NULL)
 	    continue;
 
-	  soname = (const void *) (l->l_info[DT_STRTAB]->d_un.d_ptr
+	  soname = (const void *) (D_PTR (l, l_info[DT_STRTAB])
 				   + l->l_info[DT_SONAME]->d_un.d_val);
 	  if (strcmp (name, soname) != 0)
 	    continue;
@@ -1343,7 +1343,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 		/* Make sure the cache information is available.  */
 		if (l->l_rpath_dirs == NULL)
 		  {
-		    size_t ptrval = (l->l_info[DT_STRTAB]->d_un.d_ptr
+		    size_t ptrval = (D_PTR (l, l_info[DT_STRTAB])
 				     + l->l_info[DT_RPATH]->d_un.d_val);
 		    l->l_rpath_dirs =
 		      decompose_rpath ((const char *) ptrval, l, "RPATH");
@@ -1373,7 +1373,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  /* Make sure the cache information is available.  */
 	   if (loader->l_runpath_dirs == NULL)
 	      {
-		size_t ptrval = (loader->l_info[DT_STRTAB]->d_un.d_ptr
+		size_t ptrval = (D_PTR (loader, l_info[DT_STRTAB])
 				 + loader->l_info[DT_RUNPATH]->d_un.d_val);
 		loader->l_runpath_dirs =
 		  decompose_rpath ((const char *) ptrval, loader, "RUNPATH");

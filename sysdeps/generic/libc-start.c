@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
-#include <elf/ldsodefs.h>
+#include <ldsodefs.h>
 
 extern void __libc_init_first (int argc, char **argv, char **envp);
 

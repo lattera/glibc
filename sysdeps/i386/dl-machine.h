@@ -90,7 +90,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 in.  Their initial contents will arrange when called to push an
 	 offset into the .rel.plt section, push _GLOBAL_OFFSET_TABLE_[1],
 	 and then jump to _GLOBAL_OFFSET_TABLE[2].  */
-      got = (Elf32_Addr *) l->l_info[DT_PLTGOT]->d_un.d_ptr;
+      got = (Elf32_Addr *) D_PTR (l, l_info[DT_PLTGOT]);
       got[1] = (Elf32_Addr) l;	/* Identify this shared object.  */
 
       /* The got[2] entry contains the address of a function which gets
@@ -348,7 +348,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	    {
 	      const char *strtab;
 
-	      strtab = (const char *) map->l_info[DT_STRTAB]->d_un.d_ptr;
+	      strtab = (const char *) D_PTR (map, l_info[DT_STRTAB]);
 	      _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>",
 				": Symbol `", strtab + refsym->st_name,
 				"' has different size in shared object, "

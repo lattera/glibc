@@ -1,5 +1,5 @@
 /* Inline functions for dynamic linking.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,42 +62,45 @@ elf_get_dynamic_info (struct link_map *l)
 	assert (! "bad dynamic tag");
       ++dyn;
     }
-
+#ifndef DL_RO_DYN_SECTION
   if (info[DT_PLTGOT] != NULL)
     info[DT_PLTGOT]->d_un.d_ptr += l_addr;
   if (info[DT_STRTAB] != NULL)
     info[DT_STRTAB]->d_un.d_ptr += l_addr;
   if (info[DT_SYMTAB] != NULL)
     info[DT_SYMTAB]->d_un.d_ptr += l_addr;
-#if ! ELF_MACHINE_NO_RELA
+# if ! ELF_MACHINE_NO_RELA
   if (info[DT_RELA] != NULL)
     {
       assert (info[DT_RELAENT]->d_un.d_val == sizeof (ElfW(Rela)));
       info[DT_RELA]->d_un.d_ptr += l_addr;
     }
-#endif
-#if ! ELF_MACHINE_NO_REL
+# endif
+# if ! ELF_MACHINE_NO_REL
   if (info[DT_REL] != NULL)
     {
       assert (info[DT_RELENT]->d_un.d_val == sizeof (ElfW(Rel)));
       info[DT_REL]->d_un.d_ptr += l_addr;
     }
+# endif
 #endif
   if (info[DT_PLTREL] != NULL)
     {
-#if ELF_MACHINE_NO_RELA
+# if ELF_MACHINE_NO_RELA
       assert (info[DT_PLTREL]->d_un.d_val == DT_REL);
-#elif ELF_MACHINE_NO_REL
+# elif ELF_MACHINE_NO_REL
       assert (info[DT_PLTREL]->d_un.d_val == DT_RELA);
-#else
+# else
       assert (info[DT_PLTREL]->d_un.d_val == DT_REL
 	      || info[DT_PLTREL]->d_un.d_val == DT_RELA);
-#endif
+# endif
     }
+#ifndef DL_RO_DYN_SECTION
   if (info[DT_JMPREL] != NULL)
     info[DT_JMPREL]->d_un.d_ptr += l_addr;
   if (info[VERSYMIDX (DT_VERSYM)] != NULL)
     info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr += l_addr;
+#endif
   if (info[DT_FLAGS] != NULL)
     {
       /* Flags are used.  Translate to the old form where available.
@@ -111,9 +114,11 @@ elf_get_dynamic_info (struct link_map *l)
       if (flags & DF_BIND_NOW)
 	info[DT_BIND_NOW] = info[DT_FLAGS];
     }
+#ifndef DL_RO_DYN_SECTION
   /* Determine how many constructors there are.  */
   if (info[DT_INIT_ARRAY] != NULL)
     info[DT_INIT_ARRAY]->d_un.d_ptr += l_addr;
+#endif
   l->l_initcount = 1 + (info[DT_INIT_ARRAY]
 			? (info[DT_INIT_ARRAYSZ]->d_un.d_val
 			   / sizeof (ElfW(Addr)))
@@ -151,7 +156,7 @@ elf_get_dynamic_info (struct link_map *l)
 									      \
     if ((map)->l_info[DT_##RELOC])					      \
       {									      \
-	ranges[0].start = (map)->l_info[DT_##RELOC]->d_un.d_ptr;	      \
+	ranges[0].start = D_PTR ((map), l_info[DT_##RELOC]);		      \
 	ranges[0].size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;	      \
       }									      \
 									      \
@@ -159,7 +164,7 @@ elf_get_dynamic_info (struct link_map *l)
 	&& (map)->l_info[DT_PLTREL]					      \
 	&& (!test_rel || (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)) \
       {									      \
-	ranges[1].start = (map)->l_info[DT_JMPREL]->d_un.d_ptr;		      \
+	ranges[1].start = D_PTR ((map), l_info[DT_JMPREL]);		      \
 	ranges[1].size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
 	ranges[2].start = ranges[1].start + ranges[1].size;		      \
 	ranges[2].size = ranges[0].start + ranges[0].size - ranges[2].start;  \
@@ -183,13 +188,13 @@ elf_get_dynamic_info (struct link_map *l)
 									      \
     if ((map)->l_info[DT_##RELOC])					      \
       {									      \
-        ranges[0].start = (map)->l_info[DT_##RELOC]->d_un.d_ptr;	      \
+        ranges[0].start = D_PTR ((map), l_info[DT_##RELOC]);		      \
         ranges[0].size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;	      \
       }									      \
     if ((map)->l_info[DT_PLTREL]					      \
 	&& (!test_rel || (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)) \
       {									      \
-	ElfW(Addr) start = (map)->l_info[DT_JMPREL]->d_un.d_ptr;	      \
+	ElfW(Addr) start = D_PTR ((map), l_info[DT_JMPREL]);		      \
 									      \
 	if ((do_lazy)							      \
 	    /* This test does not only detect whether the relocation	      \

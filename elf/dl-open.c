@@ -27,7 +27,7 @@
 #include <sys/mman.h>		/* Check whether MAP_COPY is defined.  */
 #include <sys/param.h>
 #include <bits/libc-lock.h>
-#include <elf/ldsodefs.h>
+#include <ldsodefs.h>
 
 #include <dl-dst.h>
 

@@ -1,5 +1,5 @@
 /* Do relocations for ELF dynamic linking.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,12 +53,12 @@ elf_dynamic_do_rel (struct link_map *map,
   else
     {
       const ElfW(Sym) *const symtab =
-	(const void *) map->l_info[DT_SYMTAB]->d_un.d_ptr;
+	(const void *) D_PTR (map, l_info[DT_SYMTAB]);
 
       if (map->l_info[VERSYMIDX (DT_VERSYM)])
 	{
 	  const ElfW(Half) *const version =
-	    (const void *) map->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr;
+	    (const void *) D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
 
 	  for (; r < end; ++r)
 	    {

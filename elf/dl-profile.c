@@ -1,5 +1,5 @@
 /* Profiling of shared libraries.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
    Based on the BSD mcount implementation.
@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <elf/ldsodefs.h>
+#include <ldsodefs.h>
 #include <sys/gmon.h>
 #include <sys/gmon_out.h>
 #include <sys/mman.h>
