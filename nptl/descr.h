@@ -32,6 +32,9 @@
 #include <dl-sysdep.h>
 #include "../nptl_db/thread_db.h"
 #include <tls.h>
+#ifdef HAVE_FORCED_UNWIND
+# include <unwind.h>
+#endif
 
 
 #ifndef TCB_ALIGNMENT
@@ -52,6 +55,45 @@
 #define PTHREAD_KEY_1STLEVEL_SIZE \
   ((PTHREAD_KEYS_MAX + PTHREAD_KEY_2NDLEVEL_SIZE - 1) \
    / PTHREAD_KEY_2NDLEVEL_SIZE)
+
+
+
+
+/* Internal version of the buffer to store cancellation handler
+   information.  */
+struct pthread_unwind_buf
+{
+  union
+  {
+    /* This is the placeholder of the public version.  */
+    void *pad[16];
+
+    struct
+    {
+#ifdef HAVE_FORCED_UNWIND
+      /* First the machine-specific unwind info.  */
+      struct _Unwind_Exception exc;
+#endif
+
+      /* Pointer to the previous cleanup buffer.  */
+      __pthread_unwind_buf_t *prev;
+
+      /* Backward compatibility: state of the old-style cleanup
+	 handler at the time of the previous new-style cleanup handler
+	 installment.  */
+      struct _pthread_cleanup_buffer *cleanup;
+
+      /* Cancellation type before the push call.  */
+      int canceltype;
+    } data;
+  } priv;
+
+  struct
+  {
+    __jmp_buf jmp_buf;
+    int mask_was_saved;
+  } cancel_jmp_buf[1];
+};
 
 
 /* Thread descriptor data structure.  */
@@ -85,6 +127,10 @@ struct pthread
 
   /* List of cleanup buffers.  */
   struct _pthread_cleanup_buffer *cleanup;
+
+  /* Unwind information.  */
+  __pthread_unwind_buf_t *cleanup_jmp_buf;
+#define HAVE_CLEANUP_JMP_BUF
 
   /* Flags determining processing of cancellation.  */
   int cancelhandling;
@@ -159,10 +205,6 @@ struct pthread
   struct pthread *joinid;
   /* Check whether a thread is detached.  */
 #define IS_DETACHED(pd) ((pd)->joinid == (pd))
-
-  /* Setjmp buffer to be used if try/finally is not available.  */
-  sigjmp_buf cancelbuf;
-#define HAVE_CANCELBUF	1
 
   /* Flags.  Including those copied from the thread attribute.  */
   int flags;

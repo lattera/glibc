@@ -19,10 +19,12 @@
 
 #include <dlfcn.h>
 #include <pthreadP.h>
+#include <signal.h>
 #include <stdlib.h>
 
 #include <shlib-compat.h>
 #include <atomic.h>
+#include <sysdep.h>
 
 
 /* Pointers to the libc functions.  */
@@ -170,3 +172,11 @@ FORWARD (pthread_setcancelstate, (int state, int *oldstate), (state, oldstate),
 	 0)
 
 FORWARD (pthread_setcanceltype, (int type, int *oldtype), (type, oldtype), 0)
+
+FORWARD2(__pthread_unwind,
+	 void attribute_hidden __attribute ((noreturn)) __cleanup_fct_attribute,
+	 (__pthread_unwind_buf_t *buf), (buf), {
+		       /* We cannot call abort() here.  */
+		       INTERNAL_SYSCALL_DECL (err);
+		       INTERNAL_SYSCALL (kill, err, 1, SIGKILL);
+		     })

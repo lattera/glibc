@@ -22,26 +22,34 @@
 
 
 void
-__cleanup_fct_attribute
-__pthread_register_cancel (__pthread_unwind_buf_t *buf)
+_pthread_cleanup_push (buffer, routine, arg)
+     struct _pthread_cleanup_buffer *buffer;
+     void (*routine) (void *);
+     void *arg;
 {
-  struct pthread_unwind_buf *ibuf = (struct pthread_unwind_buf *) buf;
   struct pthread *self = THREAD_SELF;
 
-  /* Store old info.  */
-  ibuf->priv.data.prev = THREAD_GETMEM (self, cleanup_jmp_buf);
-  ibuf->priv.data.cleanup = THREAD_GETMEM (self, cleanup);
+  buffer->__routine = routine;
+  buffer->__arg = arg;
+  buffer->__prev = THREAD_GETMEM (self, cleanup);
 
-  /* Store the new cleanup handler info.  */
-  THREAD_SETMEM (self, cleanup_jmp_buf, buf);
+  THREAD_SETMEM (self, cleanup, buffer);
 }
+strong_alias (_pthread_cleanup_push, __pthread_cleanup_push)
 
 
 void
-__cleanup_fct_attribute
-__pthread_unregister_cancel (__pthread_unwind_buf_t *buf)
+_pthread_cleanup_pop (buffer, execute)
+     struct _pthread_cleanup_buffer *buffer;
+     int execute;
 {
-  struct pthread_unwind_buf *ibuf = (struct pthread_unwind_buf *) buf;
+  struct pthread *self __attribute ((unused)) = THREAD_SELF;
 
-  THREAD_SETMEM (THREAD_SELF, cleanup_jmp_buf, ibuf->priv.data.prev);
+  THREAD_SETMEM (self, cleanup, buffer->__prev);
+
+  /* If necessary call the cleanup routine after we removed the
+     current cleanup block from the list.  */
+  if (execute)
+    buffer->__routine (buffer->__arg);
 }
+strong_alias (_pthread_cleanup_pop, __pthread_cleanup_pop)

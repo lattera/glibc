@@ -94,6 +94,29 @@ extern int __pthread_debug attribute_hidden;
       }									      \
   } while (0)
 
+
+extern void __pthread_unwind (__pthread_unwind_buf_t *__buf)
+     __cleanup_fct_attribute __attribute ((__noreturn__))
+#ifndef SHARED
+     weak_function
+#endif
+     ;
+
+/* Called when a thread reacts on a cancellation request.  */
+static inline void
+__attribute ((noreturn))
+__do_cancel (void)
+{
+  struct pthread *self = THREAD_SELF;
+
+  /* Make sure we get no more cancellations.  */
+  THREAD_ATOMIC_BIT_SET (self, cancelhandling, EXITING_BIT);
+
+  __pthread_unwind ((__pthread_unwind_buf_t *)
+		    THREAD_GETMEM (self, cleanup_jmp_buf));
+}
+
+
 /* Set cancellation mode to asynchronous.  */
 #define CANCEL_ASYNC() \
   __pthread_enable_asynccancel ()
@@ -141,38 +164,6 @@ extern int __pthread_debug attribute_hidden;
 # define THREAD_ATOMIC_BIT_SET(descr, member, bit) \
   atomic_bit_set (&(descr)->member, bit)
 #endif
-
-
-/* This function is responsible for calling all registered cleanup
-   handlers and then terminate the thread.  This includes dellocating
-   the thread-specific data.  The implementation is complicated by the
-   fact that we have to handle to cancellation handler registration
-   methods: exceptions using try/finally and setjmp.
-
-   The setjmp method is always available.  The user might compile some
-   code which uses this method because no modern compiler is
-   available.  So we have to handle these first since we cannot call
-   the cleanup handlers if the stack frames are gone.  At the same
-   time this opens a hole for the register exception handler blocks
-   since now they might be in danger of using an overwritten stack
-   frame.  The advise is to only use new or only old style cancellation
-   handling.  */
-static inline void
-__do_cancel (void)
-{
-  struct pthread *self = THREAD_SELF;
-
-  /* Make sure we get no more cancellations.  */
-  THREAD_ATOMIC_BIT_SET (self, cancelhandling, EXITING_BIT);
-
-  /* Throw an exception.  */
-  // XXX TBI
-
-  /* If throwing an exception didn't work try the longjmp.  */
-  __libc_longjmp (self->cancelbuf, 1);
-
-  /* NOTREACHED */
-}
 
 
 /* Internal prototypes.  */
@@ -344,7 +335,6 @@ extern int __pthread_cond_wait_2_0 (pthread_cond_2_0_t *cond,
 				    pthread_mutex_t *mutex);
 
 
-
 /* The two functions are in libc.so and not exported.  */
 extern int __libc_enable_asynccancel (void) attribute_hidden;
 extern void __libc_disable_asynccancel (int oldtype)
@@ -371,5 +361,15 @@ extern void __pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer
 					  void (*routine) (void *), void *arg);
 extern void __pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer,
 					   int execute);
+
+/* Old cleanup interfaces, still used in libc.so.  */
+extern void _pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
+                                   void (*routine) (void *), void *arg);
+extern void _pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer,
+                                  int execute);
+extern void _pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer,
+                                         void (*routine) (void *), void *arg);
+extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer,
+                                          int execute);
 
 #endif	/* pthreadP.h */
