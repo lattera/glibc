@@ -1,5 +1,8 @@
 2000-08-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/sq_AL: New file.
+	* SUPPORTED: Add sq_AL.ISO-8859-1.
+
 	* locales/vi_VN: New file.
 	* SUPPORTED: Add vi_VN.UTF-8.
 

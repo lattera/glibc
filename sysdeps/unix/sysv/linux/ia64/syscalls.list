@@ -51,7 +51,6 @@ pciconfig_read	EXTRA	pciconfig_read	5	pciconfig_read
 pciconfig_write	EXTRA	pciconfig_write	5	pciconfig_write
 
 ptrace		-	ptrace		4	__ptrace	ptrace
-sysctl		-	_sysctl		6	__sysctl	sysctl
 
 getresuid	-	getresuid	i:ppp	getresuid
 getresgid	-	getresgid	i:ppp	getresgid
@@ -77,3 +76,4 @@ s_ustat		ustat	ustat		i:ip	__syscall_ustat
 s_stat		xstat	stat		i:sp	__syscall_stat
 s_lstat		lxstat	lstat		i:sp	__syscall_lstat
 s_fstat		fxstat	fstat		i:ip	__syscall_fstat
+s_sysctl	sysctl	_sysctl		i:p	__syscall__sysctl
