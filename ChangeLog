@@ -2,7 +2,7 @@
 
 	* elf/dl-addr.c (_dl_addr): Fix tests to determine dli_sname.
 	* malloc/mtrace.c (tr_where): dli_sname always points to a
-	non-empty string is != NULL.
+	non-empty string if != NULL.
 	Reported by Tim Janik <timj@gtk.org>.
 
 2001-08-22  Jakub Jelinek  <jakub@redhat.com>
