@@ -138,7 +138,7 @@ main (int argc, char *argv[])
 
   /* First load the shared object to initialize version dependend
      variables.  */
-  if (load_db ())
+  if (load_db () != NSS_STATUS_SUCCESS)
     error (EXIT_FAILURE, 0, gettext ("No usable database library found."));
 
   /* Special handling if we are asked to print the database.  */

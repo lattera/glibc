@@ -1,5 +1,9 @@
 2000-07-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* nss/makedb.c (main): Compare result of load_db with
+	NSS_STATUS_SUCCESS and not 0.
+	Patch by Jan Rekorajski <baggins@sith.mimuw.edu.pl>.
+
 	* sysdeps/unix/sysv/linux/Versions: Export __sysctl for GLIBC_2.2.
 
 2000-07-18  Greg McGary  <greg@mcgary.org>
