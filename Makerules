@@ -677,13 +677,16 @@ mv -f $@.new $@
 endef
 endif
 
-ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
+ifeq (no,$(cross-compiling))
 symbolic-link-prog := $(common-objpfx)elf/sln
 symbolic-link-list := $(common-objpfx)elf/symlink.list
 define make-shlib-link
 echo $(<F) $@ >> $(symbolic-link-list)
 endef
+else # cross-compiling
+# We need a definition that can be used by elf/Makefile's install rules.
+symbolic-link-prog = $(LN_S)
 endif
 endif
 ifndef make-shlib-link

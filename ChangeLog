@@ -1,5 +1,8 @@
 2000-03-24  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* Makerules [$(cross-compiling) = yes] (symbolic-link-prog): Define
+	using $(LN_S).
+
 	* sysdeps/mach/hurd/if_index.c: New file.
 
 	* sysdeps/unix/sysv/linux/net/if.h: Moved to ...
