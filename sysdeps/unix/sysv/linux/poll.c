@@ -1,5 +1,5 @@
 /* Poll system call, with emulation if it is not available.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ extern int __syscall_poll (struct pollfd *__unbounded fds,
 			   unsigned int nfds, int timeout);
 
 # if __ASSUME_POLL_SYSCALL == 0
-static int __emulate_poll (struct pollfd *fds, unsigned long int nfds,
+static int __emulate_poll (struct pollfd *fds, nfds_t nfds,
 			   int timeout) internal_function;
 # endif
 
@@ -40,7 +40,7 @@ static int __emulate_poll (struct pollfd *fds, unsigned long int nfds,
 int
 __poll (fds, nfds, timeout)
      struct pollfd *fds;
-     unsigned long int nfds;
+     nfds_t nfds;
      int timeout;
 {
 # if __ASSUME_POLL_SYSCALL == 0

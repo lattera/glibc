@@ -1,5 +1,18 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/sys/poll.h: Define nfds_t and use it in poll prototype.
+	* sysdeps/generic/poll.c: Use nfds_t type in function definition.
+	* sysdeps/mach/hurd/poll.c: Likewise.
+	* sysdeps/unix/bsd/poll.c: Likewise.
+	* sysdeps/unix/sysv/linux/poll.c: Likewise.
+	* sysdeps/unix/sysv/aix/poll.c: Likewise.
+	* sysdeps/generic/bits/poll.h: Define NPOLLFILE only if __USE_MISC.
+	* sysdeps/unix/sysv/linux/bits/poll.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/poll.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/poll.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/poll.h: Likewise.
+	* conform/data/poll.h-data: Fix typo in poll prototype.
+
 	* sysdeps/gnu/netinet/tcp.h: Define everything but TCP_ macros
 	only if __USE_MISC.
 	* conform/data/netinet/tcp.h-data: Reserved prefix TCP_.

@@ -17,7 +17,7 @@ constant POLLERR
 constant POLLHUP
 constant POLLNVAL
 
-function int poll (struct pollfd[], nfsd_t, int)
+function int poll (struct pollfd[], nfds_t, int)
 
 allow pd_*
 allow ph_*
