@@ -118,6 +118,20 @@ typedef struct
 #ifdef __USE_XOPEN2K
 /* POSIX spinlock data type.  */
 typedef volatile int pthread_spinlock_t;
+
+/* POSIX barrier. */
+typedef struct {
+  struct _pthread_fastlock __ba_lock; /* Lock to guarantee mutual exclusion */
+  int __ba_required;                  /* Threads needed for completion */
+  int __ba_present;                   /* Threads waiting */
+  _pthread_descr __ba_waiting;        /* Queue of waiting threads */
+} pthread_barrier_t;
+
+/* barrier attribute */
+typedef struct {
+  int __pshared;
+} pthread_barrierattr_t;
+
 #endif
 
 

@@ -1,3 +1,20 @@
+2000-06-20  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: New file.
+
+2000-06-20  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/machine-gmon.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/profil-counter.h: New file.
+
+2000-06-20  David Mosberger-Tang  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/getpagesize.c: New file.
+
+2000-06-20  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sys/ucontext.h: Fix typo.
+
 2000-06-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-collate.c (insert_value): Now take string and

@@ -54,7 +54,7 @@ typedef struct
   unsigned long	int ss_flags;		/* Save state flags.  */
   unsigned long int br_1, br_2, br_3, br_4, br_5; /* Branch registers.  */
   unsigned long int p_regs;		/* Predicates.  */
-} mcountext_;
+} mcontext_t;
 
 
 typedef struct ucontext

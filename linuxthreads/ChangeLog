@@ -1,3 +1,16 @@
+2000-06-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define _POSIX_BARRIERS.
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.
+
+	* Makefile (libpthread-routines): Add barrier.
+	(tests): Add ex9.  Add rule to build ex9.
+	* Versions: Export barrier functions.
+	* barrier.c: New file.
+	* Examples/ex9.c: New file.
+	* sysdeps/pthread/pthread.h: Add barrier data types and declarations.
+	* sysdeps/pthread/bits/pthreadtypes.h: Likewise.
+
 2000-06-19  H.J. Lu  <hjl@gnu.org>
 
 	* spinlock.h (HAS_COMPARE_AND_SWAP): Defined if

@@ -46,7 +46,7 @@ timer_create (clock_id, evp, timerid)
 #endif
       )
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -54,7 +54,7 @@ timer_create (clock_id, evp, timerid)
 
   if (__timer_init_failed)
     {
-      errno = ENOMEM;
+      __set_errno (ENOMEM);
       return -1;
     }
 
@@ -63,7 +63,7 @@ timer_create (clock_id, evp, timerid)
   newtimer = __timer_alloc ();
   if (__builtin_expect (newtimer == NULL, 0))
     {
-      errno = EAGAIN;
+      __set_errno (EAGAIN);
       goto unlock_bail;
     }
 
@@ -106,13 +106,13 @@ timer_create (clock_id, evp, timerid)
 	  break;
 #endif
 	}
-      
+
       if (! thread->exists)
 	{
 	  if (__builtin_expect (__timer_thread_start (thread),
 				1) < 0)
 	    {
-	      errno = EAGAIN;
+	      __set_errno (EAGAIN);
 	      goto unlock_bail;
             }
         }
@@ -138,7 +138,7 @@ timer_create (clock_id, evp, timerid)
       /* Out of luck; no threads are available.  */
       if (__builtin_expect (thread == NULL, 0))
 	{
-	  errno = EAGAIN;
+	  __set_errno (EAGAIN);
 	  goto unlock_bail;
 	}
 
@@ -146,13 +146,13 @@ timer_create (clock_id, evp, timerid)
       if (! thread->exists
 	  && __builtin_expect (! __timer_thread_start (thread), 0))
 	{
-	  errno = EAGAIN;
+	  __set_errno (EAGAIN);
 	  goto unlock_bail;
 	}
       break;
 
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       goto unlock_bail;
     }
 

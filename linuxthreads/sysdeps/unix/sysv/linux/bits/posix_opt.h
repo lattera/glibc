@@ -131,4 +131,7 @@
 /* We have POSIX timers.  */
 #define _POSIX_TIMERS	1
 
+/* The barrier functions are available.  */
+#define _POSIX_BARRIERS	200912L
+
 #endif /* posix_opt.h */

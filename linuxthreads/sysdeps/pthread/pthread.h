@@ -109,6 +109,13 @@ enum
 
 #define PTHREAD_ONCE_INIT 0
 
+/* Special constants */
+
+#ifdef __USE_XOPEN2K
+/* -1 is distinct from 0 and all errno constants */
+# define PTHREAD_BARRIER_SERIAL_THREAD -1
+#endif
+
 /* Cleanup buffers */
 
 struct _pthread_cleanup_buffer
@@ -414,7 +421,7 @@ extern int pthread_rwlockattr_setkind_np (pthread_rwlockattr_t *__attr,
 #endif
 
 #ifdef __USE_XOPEN2K
-/* The IEEE Std. 10003.1j-2000 introduces functions to implement
+/* The IEEE Std. 1003.1j-2000 introduces functions to implement
    spinlocks.  */
 
 /* Initialize the spinlock LOCK.  If PSHARED is nonzero the spinlock can
@@ -433,6 +440,27 @@ extern int pthread_spin_trylock (pthread_spinlock_t *__lock) __THROW;
 
 /* Release spinlock LOCK.  */
 extern int pthread_spin_unlock (pthread_spinlock_t *__lock) __THROW;
+
+
+/* Barriers are a also a new feature in 1003.1j-2000. */
+
+extern int pthread_barrier_init (pthread_barrier_t *__barrier,
+				 __const pthread_barrierattr_t *__attr,
+				 unsigned int __count) __THROW;
+
+extern int pthread_barrier_destroy (pthread_barrier_t *__barrier) __THROW;
+
+extern int pthread_barrierattr_init (pthread_barrierattr_t *__attr) __THROW;
+
+extern int pthread_barrierattr_destroy (pthread_barrierattr_t *__attr) __THROW;
+
+extern int pthread_barrierattr_getpshared (__const pthread_barrierattr_t *__attr,
+					   int *__pshared) __THROW;
+
+extern int pthread_barrierattr_setpshared (pthread_barrierattr_t *__attr,
+					   int __pshared) __THROW;
+
+extern int pthread_barrier_wait (pthread_barrier_t *__barrier) __THROW;
 #endif
 
 

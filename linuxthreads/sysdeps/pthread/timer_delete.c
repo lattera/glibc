@@ -36,9 +36,9 @@ timer_delete (timerid)
   pthread_mutex_lock (&__timer_mutex);
 
   timer = timer_id2ptr (timerid);
-  if (timer == NULL || !timer->inuse)
+  if (! timer_valid (timer))
     /* Invalid timer ID or the timer is not in use.  */
-    errno = EINVAL;
+    __set_errno (EINVAL);
   else
     {
       if (timer->armed)
@@ -50,16 +50,17 @@ timer_delete (timerid)
 	     the mutex is unlocked and timer_delete is aborted.  */
 	  pthread_cleanup_push (__timer_mutex_cancel_handler, &__timer_mutex);
 
-	    /* If timer is currently being serviced, wait for it to finish.  */
-	    while (thread->current_timer == timer)
-	      pthread_cond_wait (&thread->cond, &__timer_mutex);
+	  /* If timer is currently being serviced, wait for it to finish.  */
+	  while (thread->current_timer == timer)
+	    pthread_cond_wait (&thread->cond, &__timer_mutex);
 
-	    pthread_cleanup_pop (0);
+	  pthread_cleanup_pop (0);
         }
 
       /* Remove timer from whatever queue it may be on and deallocate it.  */
+      timer->inuse = TIMER_DELETED;
       list_unlink_ip (&timer->links);
-      __timer_dealloc (timer);
+      timer_delref (timer);
       retval = 0;
     }
 

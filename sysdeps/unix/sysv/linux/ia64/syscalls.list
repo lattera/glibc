@@ -1,0 +1,77 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+umount2		-	umount		2	__umount2	umount2
+
+# Whee! 64-bit systems naturally implement llseek.
+llseek		EXTRA	lseek		3	__llseek	llseek __lseek64 lseek64
+pread		-	pread		4	__syscall_pread	__syscall_pread64 __pread pread __pread64 pread64
+pwrite		-	pwrite		4	__syscall_pwrite	__syscall_pwrite64 __pwrite pwrite __pwrite64 pwrite64
+fstatfs		-	fstatfs		2	__fstatfs	fstatfs fstatfs64
+statfs		-	statfs		2	__statfs	statfs statfs64
+mmap		-	mmap		6	__mmap		mmap __mmap64 mmap64
+getpeername	-	getpeername	3	__getpeername	getpeername
+getpriority	-	getpriority	2	__getpriority	getpriority
+
+# semaphore and shm system calls
+msgctl		-	msgctl		3	__msgctl	msgctl
+msgget		-	msgget		2	__msgget	msgget
+msgrcv		-	msgrcv		5	__msgrcv	msgrcv
+msgsnd		-	msgsnd		4	__msgsnd	msgsnd
+shmat		-	shmat		3	__shmat		shmat
+shmctl		-	shmctl		3	__shmctl	shmctl
+shmdt		-	shmdt		1	__shmdt		shmdt
+shmget		-	shmget		3	__shmget	shmget
+semop		-	semop		3	__semop		semop
+semget		-	semget		3	__semget	semget
+semctl		-	semctl		4	__semctl	semctl
+
+# proper socket implementations:
+accept		-	accept		3	__libc_accept	__accept accept
+bind		-	bind		3	__bind		bind
+connect		-	connect		3	__libc_connect	__connect connect
+getpeername	-	getpeername	3	__getpeername	getpeername
+getsockname	-	getsockname	3	__getsockname	getsockname
+getsockopt	-	getsockopt	5	__getsockopt	getsockopt
+listen		-	listen		2	__listen	listen
+recv		-	recv		4	__libc_recv	__recv recv
+recvfrom	-	recvfrom	6	__libc_recvfrom	__recvfrom recvfrom
+recvmsg		-	recvmsg		3	__libc_recvmsg	recvmsg
+send		-	send		4	__libc_send	__send send
+sendmsg		-	sendmsg		3	__libc_sendmsg	sendmsg
+sendto		-	sendto		6	__libc_sendto	__sendto sendto
+setsockopt	-	setsockopt	5	__setsockopt	setsockopt
+socket		-	socket		3	__socket	socket
+socketpair	-	socketpair	4	__socketpair	socketpair
+
+# DIG-compliant access to PCI configuration space:
+pciconfig_read	EXTRA	pciconfig_read	5	pciconfig_read
+pciconfig_write	EXTRA	pciconfig_write	5	pciconfig_write
+
+ptrace		-	ptrace		4	__ptrace	ptrace
+shutdown	-	shutdown	2	__shutdown	shutdown
+sysctl		-	_sysctl		6	__sysctl	sysctl
+
+getresuid	-	getresuid	3	getresuid
+getresgid	-	getresgid	3	getresgid
+
+rt_sigaction	EXTRA	rt_sigaction	4	__syscall_rt_sigaction		rt_sigaction
+rt_sigpending	EXTRA	rt_sigpending	2	__syscall_rt_sigpending		rt_sigpending
+rt_sigprocmask	EXTRA	rt_sigprocmask	4	__syscall_rt_sigprocmask	rt_sigprocmask
+rt_sigqueueinfo	EXTRA	rt_sigqueueinfo	3	__syscall_rt_sigqueueinfo	rt_sigqueueinfo	
+rt_sigsuspend	EXTRA	rt_sigsuspend	2	__syscall_rt_sigsuspend		rt_sigsuspend
+rt_sigtimedwait	EXTRA	rt_sigtimedwait	4	__syscall_rt_sigtimedwait	rt_sigtimedwait
+
+# System calls with wrappers.
+s_execve	execve	execve		3	__syscall_execve
+s_getcwd	getcwd	getcwd		2	__syscall_getcwd	getcwd
+s_getdents	getdents getdents	3	__syscall_getdents	getdents
+sys_mknod	xmknod	mknod		3	__syscall_mknod
+sys_readv	readv	readv		3	__syscall_readv
+sys_writev	writev	writev		3	__syscall_writev
+s_getpagesize	getpagesize getpagesize	0	__syscall_getpagesize
+s_poll		poll	poll		3	__syscall_poll
+s_reboot	reboot	reboot		3	__syscall_reboot
+s_ustat		ustat	ustat		2	__syscall_ustat
+s_stat		xstat	stat		2	__syscall_stat
+s_lstat		lxstat	lstat		2	__syscall_lstat
+s_fstat		fxstat	fstat		2	__syscall_fstat

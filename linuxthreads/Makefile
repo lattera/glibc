@@ -35,10 +35,10 @@ extra-libs-others := $(extra-libs)
 libpthread-routines := attr cancel condvar join manager mutex ptfork \
 		       ptlongjmp pthread signals specific errno lockfile \
 		       semaphore spinlock wrapsyscall rwlock pt-machine \
-		       oldsemaphore events getcpuclockid pspinlock
+		       oldsemaphore events getcpuclockid pspinlock barrier
 
 vpath %.c Examples
-tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 joinrace
+tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 joinrace
 
 include ../Rules
 
@@ -68,4 +68,5 @@ $(objpfx)ex5: $(libpthread)
 $(objpfx)ex6: $(libpthread)
 $(objpfx)ex7: $(libpthread)
 $(objpfx)ex8: $(libpthread)
+$(objpfx)ex9: $(libpthread)
 $(objpfx)joinrace: $(libpthread)
