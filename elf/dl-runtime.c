@@ -68,9 +68,9 @@ fixup (
   /* Sanity check that we're really looking at a PLT relocation.  */
   assert (ELFW(R_TYPE)(reloc->r_info) == ELF_MACHINE_JMP_SLOT);
 
-   /* Look up the target symbol.  If the symbol is marked STV_PROTECTED
-      don't look in the global scope.  */
-  if (ELFW(ST_VISIBILITY) (sym->st_other) != STV_PROTECTED)
+   /* Look up the target symbol.  If the normal lookup rules are not
+      used don't look in the global scope.  */
+  if (__builtin_expect (ELFW(ST_VISIBILITY) (sym->st_other), 0) == 0)
     {
       switch (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
 	{
@@ -153,7 +153,7 @@ profile_fixup (
 
       /* Look up the target symbol.  If the symbol is marked STV_PROTEXTED
 	 don't look in the global scope.  */
-      if (ELFW(ST_VISIBILITY) (sym->st_other) != STV_PROTECTED)
+      if (__builtin_expect (ELFW(ST_VISIBILITY) (sym->st_other), 0) == 0)
 	{
 	  switch (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
 	    {

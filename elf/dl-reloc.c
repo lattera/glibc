@@ -71,7 +71,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 
     /* This macro is used as a callback from the ELF_DYNAMIC_RELOCATE code.  */
 #define RESOLVE(ref, version, flags) \
-    (ELFW(ST_VISIBILITY) ((*ref)->st_other) != STV_PROTECTED		      \
+    (__builtin_expect (ELFW(ST_VISIBILITY) ((*ref)->st_other), 0) == 0	      \
      ? ((version) != NULL && (version)->hash != 0			      \
 	? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name, l, (ref),    \
 				       scope, (version), (flags))	      \
@@ -134,7 +134,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 
 #ifdef CLEAR_CACHE
 	    CLEAR_CACHE (mapstart, mapend);
-#endif 
+#endif
 	  }
     }
 }
