@@ -28,39 +28,38 @@
 
 #include "nss_hesiod.h"
 
-/* Hesiod uses a format for service entries that differs from the
-   traditional format.  We therefore declare our own parser.  */
+/* Declare a parser for Hesiod protocol entries.  Although the format
+   of the entries is identical to those in /etc/protocols, here is no
+   predefined parser for us to use.  */
 
-#define ENTNAME servent
+#define ENTNAME protoent
 
-struct servent_data {};
+struct protoent_data {};
 
-#define TRAILING_LIST_MEMBER		s_aliases
+#define TRAILING_LIST_MEMBER		p_aliases
 #define TRAILING_LIST_SEPARATOR_P	isspace
 #include <nss/nss_files/files-parse.c>
-#define ISSC_OR_SPACE(c)	((c) ==  ';' || isspace (c))
 LINE_PARSER
 ("#",
- STRING_FIELD (result->s_name, ISSC_OR_SPACE, 1);
- STRING_FIELD (result->s_proto, ISSC_OR_SPACE, 1);
- INT_FIELD (result->s_port, ISSC_OR_SPACE, 10, 0, htons);
+ STRING_FIELD (result->p_name, isspace, 1);
+ INT_FIELD (result->p_proto, isspace, 1, 10,);
  )
 
 enum nss_status
-_nss_hesiod_setservent (void)
+_nss_hesiod_setprotoent (void)
 {
   return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status
-_nss_hesiod_endservent (void)
+_nss_hesiod_endprotoent (void)
 {
   return NSS_STATUS_SUCCESS;
 }
 
 static enum nss_status
-lookup (const char *name, const char *type, const char *protocol,
-	struct servent *serv, char *buffer, size_t buflen, int *errnop)
+lookup (const char *name, const char *type, struct protoent *proto,
+	char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   size_t linebuflen;
@@ -98,7 +97,7 @@ lookup (const char *name, const char *type, const char *protocol,
 
       memcpy (data->linebuffer, *item, len);
 
-      parse_res = parse_line (buffer, serv, data, buflen, errnop);
+      parse_res = parse_line (buffer, proto, data, buflen, errnop);
       if (parse_res == -1)
 	{
 	  hesiod_free_list (context, list);
@@ -107,7 +106,7 @@ lookup (const char *name, const char *type, const char *protocol,
 	}
 
       if (parse_res > 0)
-	found = protocol == NULL || strcasecmp (serv->s_proto, protocol) == 0;
+	found = 1;
 
       ++item;
     }
@@ -120,21 +119,19 @@ lookup (const char *name, const char *type, const char *protocol,
 }
 
 enum nss_status
-_nss_hesiod_getservbyname_r (const char *name, const char *protocol,
-			     struct servent *serv,
-			     char *buffer, size_t buflen, int *errnop)
+_nss_hesiod_getprotobyname_r (const char *name, struct protoent *proto,
+			      char *buffer, size_t buflen, int *errnop)
 {
-  return lookup (name, "service", protocol, serv, buffer, buflen, errnop);
+  return lookup (name, "protocol", proto, buffer, buflen, errnop);
 }
 
 enum nss_status
-_nss_hesiod_getservbyport_r (const int port, const char *protocol,
-			     struct servent *serv,
-			     char *buffer, size_t buflen, int *errnop)
+_nss_hesiod_getprotobynumber_r (const int protocol, struct protoent *proto,
+				char *buffer, size_t buflen, int *errnop)
 {
-  char portstr[6];	    /* Port numbers are restricted to 16 bits. */
+  char protostr[21];
 
-  snprintf (portstr, sizeof portstr, "%d", ntohs (port));
+  snprintf (protostr, sizeof protostr, "%d", protocol);
 
-  return lookup (portstr, "port", protocol, serv, buffer, buflen, errnop);
+  return lookup (protostr, "protonum", proto, buffer, buflen, errnop);
 }

@@ -86,16 +86,20 @@ endif
 ifeq (yes,$(build-shared))
 tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	constload1 order $(tests-vis-$(have-protected)) noload \
-	$(tests-nodelete-$(have-z-nodelete))
+	$(tests-nodelete-$(have-z-nodelete)) \
+	$(tests-nodlopen-$(have-z-nodlopen))
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
+tests-nodlopen-yes = nodlopen
 endif
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 \
 		dep1 dep2 dep3 dep4 $(modules-vis-$(have-protected)) \
-		$(modules-nodelete-$(have-z-nodelete))
+		$(modules-nodelete-$(have-z-nodelete)) \
+		$(modules-nodlopen-$(have-z-nodlopen))
 modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2
+modules-nodlopen-yes = nodlopenmod
 extra-objs += $(addsuffix .os,$(strip $(modules-names)))
 
 include ../Rules
@@ -302,3 +306,7 @@ $(objpfx)noload.out: $(objpfx)testobj5.so
 LDFLAGS-nodelmod1.so = -Wl,--enable-new-dtags,-z,nodelete
 $(objpfx)nodelete: $(libdl)
 $(objpfx)nodelete.out: $(objpfx)nodelmod1.so $(objpfx)nodelmod2.so
+
+LDFLAGS-nodlopenmod.so = -Wl,--enable-new-dtags,-z,nodlopen
+$(objpfx)nodlopen: $(libdl)
+$(objpfx)nodlopen.out: $(objpfx)nodlopenmod.so

@@ -361,6 +361,9 @@ res_nsend(res_state statp,
 		else
 			for (ns = 0; ns < statp->nscount; ns++)
 				if (!sock_eq(&statp->nsaddr_list[ns],
+#ifdef _LIBC
+					     (struct sockaddr_in *)
+#endif
 					     &EXT(statp).nsaddrs[ns])) {
 					needclose++;
 					break;
@@ -374,7 +377,13 @@ res_nsend(res_state statp,
 	 */
 	if (EXT(statp).nscount == 0) {
 		for (ns = 0; ns < statp->nscount; ns++) {
+#ifdef _LIBC
+			memcpy(&EXT(statp).nsaddrs[ns],
+			       &statp->nsaddr_list[ns],
+			       sizeof (&EXT(statp).nsaddrs[0]));
+#else
 			EXT(statp).nsaddrs[ns] = statp->nsaddr_list[ns];
+#endif
 			EXT(statp).nstimes[ns] = RES_MAXTIME;
 			EXT(statp).nssocks[ns] = -1;
 		}

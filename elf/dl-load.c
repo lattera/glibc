@@ -688,7 +688,7 @@ static
 #endif
 struct link_map *
 _dl_map_object_from_fd (const char *name, int fd, char *realname,
-			struct link_map *loader, int l_type, int noload)
+			struct link_map *loader, int l_type, int mode)
 {
   /* This is the expected ELF header.  */
 #define ELF32_CLASS ELFCLASS32
@@ -752,7 +752,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	return l;
       }
 
-  if (noload)
+  if (mode & RTLD_NOLOAD)
     /* We are not supposed to load the object unless it is already
        loaded.  So return now.  */
     return NULL;
@@ -1097,6 +1097,35 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
     }
 
   elf_get_dynamic_info (l);
+
+  /* Make sure we are dlopen()ing an object which has the DF_1_NOOPEN
+     flag set.  */
+  if (__builtin_expect (l->l_flags_1 & DF_1_NOOPEN, 0)
+      && (mode & __RTLD_DLOPEN))
+    {
+      /* Remove from the module list.  */
+      assert (l->l_next == NULL);
+#ifdef SHARED
+      if (l->l_prev == NULL)
+	/* No other module loaded.  */
+	_dl_loaded = NULL;
+      else
+#endif
+	l->l_prev->l_next = NULL;
+
+      /* We are not supposed to load this object.  Free all resources.  */
+      __munmap ((void *) l->l_map_start, l->l_map_end - l->l_map_start);
+
+      free (l->l_libname);
+
+      if (l->l_phdr_allocated)
+	free ((void *) l->l_phdr);
+
+      free (l);
+
+      _dl_signal_error (0, name, N_("shared object cannot be dlopen()ed"));
+    }
+
   if (l->l_info[DT_HASH])
     _dl_setup_hash (l);
 
@@ -1306,7 +1335,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 struct link_map *
 internal_function
 _dl_map_object (struct link_map *loader, const char *name, int preloaded,
-		int type, int trace_mode, int noload)
+		int type, int trace_mode, int mode)
 {
   int fd;
   char *realname;
@@ -1506,5 +1535,5 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	_dl_signal_error (errno, name, N_("cannot open shared object file"));
     }
 
-  return _dl_map_object_from_fd (name, fd, realname, loader, type, noload);
+  return _dl_map_object_from_fd (name, fd, realname, loader, type, mode);
 }

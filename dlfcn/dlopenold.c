@@ -42,7 +42,8 @@ dlopen_doit (void *a)
 {
   struct dlopen_args *args = (struct dlopen_args *) a;
 
-  args->new = _dl_open (args->file ?: "", args->mode, args->caller);
+  args->new = _dl_open (args->file ?: "", args->mode | __RTLD_DLOPEN,
+			args->caller);
 }
 
 void *

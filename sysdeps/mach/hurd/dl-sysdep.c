@@ -170,7 +170,7 @@ unfmh();			/* XXX */
 
 	    lastslash = strrchr (p, '/');
 	    l = _dl_map_object_from_fd (lastslash ? lastslash + 1 : p,
-					memobj, strdup (p));
+					memobj, strdup (p), 0);
 
 	    /* Squirrel away the memory object port where it
 	       can be retrieved by the program later.  */

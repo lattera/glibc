@@ -145,7 +145,7 @@ dl_open_worker (void *a)
 
   /* Load the named object.  */
   args->map = new = _dl_map_object (NULL, file, 0, lt_loaded, 0,
-				    mode & RTLD_NOLOAD);
+				    mode);
 
   /* If the pointer returned is NULL this means the RTLD_NOLOAD flag is
      set and the object is not already loaded.  */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996 by Internet Software Consortium.
+ * Copyright (c) 1996,1999 by Internet Software Consortium.
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,26 +16,33 @@
  */
 
 /*
- * $Id$
+ * This file is primarily maintained by <tytso@mit.edu> and <ghudson@mit.edu>.
+ */
+
+/*
+ * $BINDId: hesiod_p.h,v 1.9 1999/01/08 19:24:39 vixie Exp $
  */
 
 /*
  * hesiod_p.h -- private definitions for the hesiod library
  */
 
-#ifndef HESIOD_P_H_INCLUDED
-#define HESIOD_P_H_INCLUDED
+#ifndef _HESIOD_P_H_INCLUDED
+#define _HESIOD_P_H_INCLUDED
 
-/* Defaults if the configuration file is not present. */
-#define DEF_RHS ".athena.mit.edu"
-#define DEF_LHS ".ns"
-
+#define DEF_RHS		".Athena.MIT.EDU"	/* Defaults if HESIOD_CONF */
+#define DEF_LHS		".ns"			/*    file is not */
+						/*    present. */
 struct hesiod_p {
-  char *lhs;			/* normally ".ns" */
-  char *rhs;			/* AKA the default hesiod domain */
-  int classes[2];		/* The class search order. */
+	char *		LHS;		/* normally ".ns" */
+	char *		RHS;		/* AKA the default hesiod domain */
+	struct __res_state * res;	/* resolver context */
+	void		(*free_res)(void *);
+	void		(*res_set)(struct hesiod_p *, struct __res_state *,
+				   void (*)(void *));
+	struct __res_state * (*res_get)(struct hesiod_p *);
 };
 
-#define MAX_HESRESP 1024
+#define MAX_HESRESP	1024
 
-#endif /*HESIOD_P_H_INCLUDED*/
+#endif /*_HESIOD_P_H_INCLUDED*/

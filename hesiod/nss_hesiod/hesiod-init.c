@@ -1,6 +1,6 @@
-/* Load a shared object at run time.
-   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,39 +17,23 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <dlfcn.h>
+#include <sys/cdefs.h>		/* Needs to come before <hesiod.h>.  */
+#include <hesiod.h>
+#include <resolv.h>
 #include <stddef.h>
 
-struct dlopen_args
-{
-  /* The arguments for dlopen_doit.  */
-  const char *file;
-  int mode;
-  /* The return value of dlopen_doit.  */
-  void *new;
-  /* Address of the caller.  */
-  const void *caller;
-};
-
-static void
-dlopen_doit (void *a)
-{
-  struct dlopen_args *args = (struct dlopen_args *) a;
-
-  args->new = _dl_open (args->file ?: "", args->mode | __RTLD_DLOPEN,
-			args->caller);
-}
-
+#include "nss_hesiod.h"
 
 void *
-__dlopen_check (const char *file, int mode)
+_nss_hesiod_init (void)
 {
-  struct dlopen_args args;
-  args.file = file;
-  args.mode = mode;
-  args.caller = RETURN_ADDRESS (0);
+  void *context;
 
-  return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
+  if (hesiod_init (&context) == -1)
+    return NULL;
+
+  /* Use the default (per-thread) resolver state.  */
+  __hesiod_res_set (context, &_res, NULL);
+
+  return context;
 }
-#include <shlib-compat.h>
-versioned_symbol (libdl, __dlopen_check, dlopen, GLIBC_2_1);

@@ -1,7 +1,5 @@
-/* $Id$ */
-
 /*
- * Copyright (c) 1996 by Internet Software Consortium.
+ * Copyright (c) 1996,1999 by Internet Software Consortium.
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,57 +15,26 @@
  * SOFTWARE.
  */
 
-#ifndef HESIOD__INCLUDED
-#define HESIOD__INCLUDED
+/*
+ * This file is primarily maintained by <tytso@mit.edu> and <ghudson@mit.edu>.
+ */
 
-#include <sys/types.h>
-#include <pwd.h>
-#include <netdb.h>
+/*
+ * $BINDId: hesiod.h,v 1.7 1999/01/08 19:22:45 vixie Exp $
+ */
 
-/* Application-visible define to signal that we have the new interfaces. */
-#define HESIOD_INTERFACES
+#ifndef _HESIOD_H_INCLUDED
+#define _HESIOD_H_INCLUDED
 
-struct hesiod_postoffice {
-  char *hesiod_po_type;
-  char *hesiod_po_host;
-  char *hesiod_po_name;
-};
+int		hesiod_init __P((void **context));
+void		hesiod_end __P((void *context));
+char *		hesiod_to_bind __P((void *context, const char *name,
+				    const char *type));
+char **		hesiod_resolve __P((void *context, const char *name,
+				    const char *type));
+void		hesiod_free_list __P((void *context, char **list));
+struct __res_state * __hesiod_res_get __P((void *context));
+void		__hesiod_res_set __P((void *context, struct __res_state *,
+				      void (*)(void *)));
 
-int hesiod_init(void **context);
-void hesiod_end(void *context);
-char *hesiod_to_bind(void *context, const char *name, const char *type);
-char **hesiod_resolve(void *context, const char *name, const char *type);
-void hesiod_free_list(void *context, char **list);
-struct passwd *hesiod_getpwnam(void *context, const char *name);
-struct passwd *hesiod_getpwuid(void *context, uid_t uid);
-void hesiod_free_passwd(void *context, struct passwd *pw);
-struct servent *hesiod_getservbyname(void *context, const char *name,
-				     const char *proto);
-void hesiod_free_servent(void *context, struct servent *serv);
-struct hesiod_postoffice *hesiod_getmailhost(void *context, const char *user);
-void hesiod_free_postoffice(void *context, struct hesiod_postoffice *po);
-
-/* Compatibility stuff. */
-
-#define HES_ER_UNINIT	-1	/* uninitialized */
-#define HES_ER_OK	0	/* no error */
-#define HES_ER_NOTFOUND	1	/* Hesiod name not found by server */
-#define HES_ER_CONFIG	2	/* local problem (no config file?) */
-#define HES_ER_NET	3	/* network problem */
-
-struct hes_postoffice {
-  char *po_type;
-  char *po_host;
-  char *po_name;
-};
-
-int hes_init(void);
-char *hes_to_bind(const char *name, const char *type);
-char **hes_resolve(const char *name, const char *type);
-int hes_error(void);
-struct passwd *hes_getpwnam(const char *name);
-struct passwd *hes_getpwuid(uid_t uid);
-struct servent *hes_getservbyname(const char *name, const char *proto);
-struct hes_postoffice *hes_getmailhost(const char *name);
-
-#endif
+#endif /*_HESIOD_H_INCLUDED*/

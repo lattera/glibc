@@ -1,4 +1,4 @@
-# Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -29,13 +29,12 @@ extra-libs-others = $(extra-libs)
 subdir-dirs = nss_hesiod
 vpath %.c nss_hesiod
 
-libnss_hesiod-routines	:= hesiod hesiod-grp hesiod-pwd hesiod-service
+libnss_hesiod-routines	:= hesiod hesiod-grp hesiod-init hesiod-proto \
+                           hesiod-pwd hesiod-service
 # Build only shared library
 libnss_hesiod-inhibit-o	= $(filter-out .os,$(object-suffixes))
 
 include ../Rules
-
-CFLAGS-hesiod.c = -DSYSCONFDIR='"$(sysconfdir)"'
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by

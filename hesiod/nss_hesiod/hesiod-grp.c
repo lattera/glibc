@@ -21,11 +21,12 @@
 #include <errno.h>
 #include <grp.h>
 #include <hesiod.h>
+#include <nss.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <nss.h>
-#include <bits/libc-lock.h>
+
+#include "nss_hesiod.h"
 
 /* Get the declaration of the parser function.  */
 #define ENTNAME grent
@@ -33,50 +34,15 @@
 #define EXTERN_PARSER
 #include <nss/nss_files/files-parse.c>
 
-/* Locks the static variables in this file.  */
-__libc_lock_define_initialized (static, lock);
-
-static void *context = NULL;
-
-static enum nss_status
-internal_setgrent (void)
-{
-  if (!context)
-    {
-      if (hesiod_init (&context) == -1)
-	return NSS_STATUS_UNAVAIL;
-    }
-
-  return NSS_STATUS_SUCCESS;
-}
-
 enum nss_status
 _nss_hesiod_setgrent (void)
 {
-  enum nss_status status;
-
-  __libc_lock_lock (lock);
-
-  status = internal_setgrent ();
-
-  __libc_lock_unlock (lock);
-
-  return status;
+  return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status
 _nss_hesiod_endgrent (void)
 {
-  __libc_lock_lock (lock);
-
-  if (context)
-    {
-      hesiod_end (context);
-      context = NULL;
-    }
-
-  __libc_lock_unlock (lock);
-
   return NSS_STATUS_SUCCESS;
 }
 
@@ -84,32 +50,37 @@ static enum nss_status
 lookup (const char *name, const char *type, struct group *grp,
 	char *buffer, size_t buflen, int *errnop)
 {
-  enum nss_status status;
   struct parser_data *data = (void *) buffer;
   size_t linebuflen;
+  void *context;
   char **list;
   int parse_res;
   size_t len;
 
-  status = internal_setgrent ();
-  if (status != NSS_STATUS_SUCCESS)
-    return status;
+  context = _nss_hesiod_init ();
+  if (context == NULL)
+    return NSS_STATUS_UNAVAIL;
 
   list = hesiod_resolve (context, name, type);
   if (list == NULL)
-    return errno == ENOENT ? NSS_STATUS_NOTFOUND : NSS_STATUS_UNAVAIL;
+    {
+      hesiod_end (context);
+      return errno == ENOENT ? NSS_STATUS_NOTFOUND : NSS_STATUS_UNAVAIL;
+    }
 
   linebuflen = buffer + buflen - data->linebuffer;
   len = strlen (*list) + 1;
   if (linebuflen < len)
     {
       hesiod_free_list (context, list);
+      hesiod_end (context);
       *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
   memcpy (data->linebuffer, *list, len);
   hesiod_free_list (context, list);
+  hesiod_end (context);
 
   parse_res = _nss_files_parse_grent (buffer, grp, data, buflen, errnop);
   if (parse_res < 1)
@@ -122,34 +93,19 @@ enum nss_status
 _nss_hesiod_getgrnam_r (const char *name, struct group *grp,
 			char *buffer, size_t buflen, int *errnop)
 {
-  enum nss_status status;
-
-  __libc_lock_lock (lock);
-
-  status = lookup (name, "group", grp, buffer, buflen, errnop);
-
-  __libc_lock_unlock (lock);
-
-  return status;
+  return lookup (name, "group", grp, buffer, buflen, errnop);
 }
 
 enum nss_status
 _nss_hesiod_getgrgid_r (gid_t gid, struct group *grp,
 			char *buffer, size_t buflen, int *errnop)
 {
-  enum nss_status status = NSS_STATUS_UNAVAIL;
   char gidstr[21];	/* We will probably never have a gid_t with more
 			   than 64 bits.  */
 
   snprintf (gidstr, sizeof gidstr, "%d", gid);
 
-  __libc_lock_lock (lock);
-
-  status = lookup (gidstr, "gid", grp, buffer, buflen, errnop);
-
-  __libc_lock_unlock (lock);
-
-  return status;
+  return lookup (gidstr, "gid", grp, buffer, buflen, errnop);
 }
 
 static int
@@ -217,7 +173,8 @@ _nss_hesiod_initgroups (const char *user, gid_t group, long int *start,
   char *p;
   void *context;
 
-  if (hesiod_init (&context) == -1)
+  context = _nss_hesiod_init ();
+  if (context == NULL)
     return NSS_STATUS_UNAVAIL;
 
   list = hesiod_resolve (context, user, "grplist");

@@ -1,5 +1,50 @@
 2000-07-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Makefile (tests): Add nodlopen.  Add rules to generate nodlopen.
+	* include/dlfcn.h: Define __RTLD_DLOPEN.
+	* elf/dl-load.c (_dl_map_object_from_fd): If DF_1_NOOPEN is set
+	and this is a dlopen() call, do not load the binary.
+	* dlfcn/dlopen.c: Add __RTLD_DLOPEN to mode passed down to _dl_open.
+	* dlfcn/dlopenold.c: Likewise.
+	* configure.in: Add test for -z nodelete option.
+	* config.make.in: Define have-z-nodelete with libc_cv_z_nodelete.
+
+2000-07-20  Mark Kettenis  <kettenis@gnu.org>
+
+	Make Hesiod NSS module thread-safe.
+
+	* hesiod/README.hesiod: Update.
+
+	* hesiod/Versions [GLIBC_2.2]: Add _nss_hesiod_getservbyport_r,
+	_nss_hesiod_setprotoent, _nss_hesiod_endprotoent,
+	_nss_hesiod_getprotobyname_r, and _nss_hesiod_getprotobynumber_r.
+	* hesiod/Makefile (libnss_hesiod-routines): Add hesiod-init and
+	hesiod-proto.
+	* hesiod/nss_hesiod/hesiod-init.c: New file.
+	* hesiod/nss_hesiod/hesiod-pwd.c: Rewritten for thread-safeness.
+	* hesiod/nss_hesiod/hesiod-grp.c: Likewise.
+	* hesiod/nss_hesiod/nss_hesiod.h: New file.
+	* hesiod/nss_hesiod/hesiod-service.c
+	(_nss_hesiod_getservbyport_r): New function.  Provide support for
+	looking up services by port number.
+	* hesiod/nss_hesiod/hesiod-proto.c: New file.
+
+	* hesiod/hesiod.c: Update from BIND 8.2.3-T5B.
+	* hesiod/hesiod.h: Likewise.
+	* hesiod/hesiod_p.h: Likewise.
+
+2000-07-20  Mark Kettenis  <kettenis@gnu.org>
+
+	Fix problems with `struct __res_state' getting too big.
+	* resolv/resolv.h (struct __sockaddr_in): New definition.
+	(struct __res_state): Use __sockaddr_in instead of sockaddr_in in
+	the private parts of the structure to save some space.
+	* resolv/res_send.c (res_nsend): Cast &EXT(statp).nsaddrs[ns] to
+	(struct sockaddr_in *) in call to sock_eq.
+	Use memcpy to copy statp->nsaddr_list[ns] to &EXT(statp).nsaddrs[ns].
+
+2000-07-20  Ulrich Drepper  <drepper@redhat.com>
+
 	* elf/elf.h: Add various DF_1_*, DTF_1_*, and DF_P1_* entries.
 	* elf/dl-close.c (_dl_close): Don't close an object if it is marked
 	with nodelete.
@@ -15,6 +60,7 @@
 	* sysdeps/generic/ldsodefs.h: Update prototype.
 	* elf/dl-deps.c: Add new parameter to _dl_map_object calls.
 	* elf/rtld.c: Likewise.
+	* sysdeps/mach/hurd/dl-sysdep.c: Likewise.
 	* elf/Makefile (tests): Add noload.  Add rules to generate noload.
 	* elf/noload.c: New file.
 	* include/link.h (struct link_map): Add l_feature_1 and l_flags_1.

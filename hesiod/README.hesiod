@@ -65,18 +65,15 @@ Configuring Hesiod
 Next, you will have to configure Hesiod.  If you are already running
 Hesiod in your network, you probably already have a file named
 `hesiod.conf' on your machines (probably as `/etc/hesiod.conf' or
-`/usr/local/etc/hesiod.conf').  The Hesiod NSS module expects this
-file to be found in the sysconfdir (`/usr/local/etc/hesiod.conf' by
-default, see the installation notes on how to change this) or in the
-location specified by the environment variable `HESIOD_CONFIG'.  If
-there is no configuration file you will want to create your own.  It
-should look something like:
+`/usr/local/etc/hesiod.conf').  The Hesiod NSS module looks for
+`/etc/hesiod.conf' by default.  If there is no configuration file you
+will want to create your own.  It should look something like:
 
   rhs=.your.domain
   lhs=.ns
 
 The value of rhs can be overridden by the environment variable
-HES_DOMAIN.
+`HES_DOMAIN'.
 
 Configuring your name servers
 -----------------------------
@@ -115,8 +112,8 @@ file `named.hesiod' containing data that looks something like:
   123.gid         CNAME   libc.group
   gnu.passwd      TXT     "gnu:*:4567:123:GNU:/home/gnu:/bin/bash"
   456.uid         CNAME   mark.passwd
-  nss.service     TXT     "nss;tcp;789;switch sw "
-  nss.service     TXT     "nss;udp;789;switch sw"
+  nss.service     TXT     "nss tcp 789 switch sw "
+  nss.service     TXT     "nss udp 789 switch sw"
 
 where `libc' is an example of a group, `gnu' an example of an user,
 and `nss' an example of a service.  Note that the format used to

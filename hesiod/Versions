@@ -9,5 +9,8 @@ libnss_hesiod {
   }
   GLIBC_2.2 {
     _nss_hesiod_initgroups;
+    _nss_hesiod_getservbyport_r;
+    _nss_hesiod_setprotoent; _nss_hesiod_endprotoent;
+    _nss_hesiod_getprotobyname_r; _nss_hesiod_getprotobynumber_r;
   }
 }
