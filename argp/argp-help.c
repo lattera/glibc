@@ -31,13 +31,11 @@
 #include <ctype.h>
 
 #ifndef _
-/* This is for other GNU distributions with internationalized messages.
-   When compiling libc, the _ macro is predefined.  */
+/* This is for other GNU distributions with internationalized messages.  */
 #ifdef HAVE_LIBINTL_H
 # include <libintl.h>
 #else
 # define dgettext(domain, msgid) (msgid)
-# define gettext(msgid) (msgid)
 #endif
 #endif
 

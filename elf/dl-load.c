@@ -805,7 +805,7 @@ print_search_path (struct r_search_path_elem **list,
 {
   int first = 1;
 
-  _dl_sysdep_message ("\t search path=", NULL);
+  _dl_debug_message ("\t search path=", NULL);
 
   while (*list != NULL && (*list)->what == what) /* Yes, ==.  */
     {
@@ -814,23 +814,23 @@ print_search_path (struct r_search_path_elem **list,
       if ((*list)->machdirstatus != nonexisting)
 	{
 	  buf[(*list)->machdirnamelen - 1] = '\0';
-	  _dl_sysdep_message (first ? "" : ":", buf, NULL);
+	  _dl_debug_message (first ? "" : ":", buf, NULL);
 	  first = 0;
 	}
       if ((*list)->dirstatus != nonexisting)
 	{
 	  buf[(*list)->dirnamelen - 1] = '\0';
-	  _dl_sysdep_message (first ? "" : ":", buf, NULL);
+	  _dl_debug_message (first ? "" : ":", buf, NULL);
 	  first = 0;
 	}
       ++list;
     }
 
   if (name != NULL)
-    _dl_sysdep_message ("\t\t(", what, " from file ",
+    _dl_debug_message ("\t\t(", what, " from file ",
 			name[0] ? name : _dl_argv[0], ")\n", NULL);
   else
-    _dl_sysdep_message ("\t\t(", what, ")\n", NULL);
+    _dl_debug_message ("\t\t(", what, ")\n", NULL);
 }
 
 /* Try to open NAME in one of the directories in DIRS.
