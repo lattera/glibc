@@ -61,4 +61,4 @@ ENTRY (__sigsetjmp)
 .L1:
 	.long	C_SYMBOL_NAME(__sigjmp_save)
 #endif
-END (__setjmp)
+END (__sigsetjmp)

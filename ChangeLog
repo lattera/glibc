@@ -1,3 +1,16 @@
+2001-02-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/alpha/strrchr.S: Little optimization.
+	Patch by Richard Henderson <rth@redhat.com>.
+
+	* sysdeps/alpha/alphaev67/strrchr.S: New file.
+	Contributed by Rick Gorton <rick.gorton@alpha-processor.com>..
+
+2001-02-08  kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/sh3/setjmp.S (__sigsetjmp): Correct function name
+	in the assembler end directive.
+
 2001-02-08  Andreas Jaeger  <aj@suse.de>
 
 	* manual/stdio.texi (Closing Streams): Fix typos.
@@ -9,7 +22,7 @@
 	Reported by Claus-Justus Heine <heine@instmath.rwth-aachen.de>.
 
 	* stdlib/strfmon.c [USE_IN_LIBIO]: Define lock variable and store
-	point in FILE structure before calling _IO_init.
+	pointer in FILE structure before calling _IO_init.
 	* stdlib/Makefile: Add -D_IO_MTSAFE_IO to CFLAGS for strfmon and
 	strfmon_l if necessary.
 	Reported by Jury Gerold <gjury@grips.com>.
@@ -36,7 +49,7 @@
 
 	* stdlib/strtod.c: Never stop prematurely reading digits before the
 	decimal point is found.  Compute exponent limit for negative exponents
-	correctly.  For numbers ending in all zeros eat the zeroes even before
+	correctly.  For numbers ending in all zeros eat the zeros even before
 	the decimal point if the exponent is negative [PR libc/2072].
 	* stdlib/Makefile (tests): Add bug-strtod.
 	* stdlib/bug-strtod.c: New file.
