@@ -1,3 +1,9 @@
+2004-11-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (malloc_state): stat_lock_* elements need only
+	be defined if THREAD_STATS is defined.  Remove pad0_ since it does
+	not align with cache line sizes in general anyway.
+
 2004-11-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/rtld.c (print_statistics): Avoid segfaults if not all namespaces

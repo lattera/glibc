@@ -2192,10 +2192,12 @@ typedef struct malloc_chunk* mfastbinptr;
 struct malloc_state {
   /* Serialize access.  */
   mutex_t mutex;
+  // Should we have padding to move the mutex to its own cache line?
 
+#if THREAD_STATS
   /* Statistics for locking.  Only used if THREAD_STATS is defined.  */
   long stat_lock_direct, stat_lock_loop, stat_lock_wait;
-  long pad0_[1]; /* try to give the mutex its own cacheline */
+#endif
 
   /* The maximum chunk size to be eligible for fastbin */
   INTERNAL_SIZE_T  max_fast;   /* low 2 bits used as flags */
