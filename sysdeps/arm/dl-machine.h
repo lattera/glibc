@@ -103,8 +103,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       if (profile)
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
-	  /* Say that we really want profiling and the timers are started.  */
-	  _dl_profile_map = l;
+
+	  if (_dl_name_match_p (_dl_profile, l))
+	    /* Say that we really want profiling and the timers are
+	       started.  */
+	    _dl_profile_map = l;
 	}
       else
 	/* This function will get called to fix up the GOT entry indicated by

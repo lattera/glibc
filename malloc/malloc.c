@@ -1680,6 +1680,42 @@ ptmalloc_init_all __MALLOC_P((void))
 static void ptmalloc_init __MALLOC_P ((void)) __attribute__ ((constructor));
 #endif
 
+#ifdef _LIBC
+#include <string.h>
+extern char **_environ;
+
+static char *
+internal_function
+next_env_entry (char ***position)
+{
+  char **current = *position;
+  char *result = NULL;
+
+  while (*current != NULL)
+    {
+      if (__builtin_expect ((*current)[0] == 'M', 0)
+	  && (*current)[1] == 'A'
+	  && (*current)[2] == 'L'
+	  && (*current)[3] == 'L'
+	  && (*current)[4] == 'O'
+	  && (*current)[5] == 'C'
+	  && (*current)[6] == '_')
+	{
+	  result = &(*current)[7];
+
+	  /* Save current position for next visit.  */
+	  *position = ++current;
+
+	  break;
+	}
+
+      ++current;
+    }
+
+  return result;
+}
+#endif
+
 static void
 ptmalloc_init __MALLOC_P((void))
 #else
@@ -1728,6 +1764,52 @@ ptmalloc_init __MALLOC_P((void))
   __free_hook = save_free_hook;
 #endif
   secure = __libc_enable_secure;
+#ifdef _LIBC
+  s = NULL;
+  {
+    char **runp = _environ;
+    char *envline;
+
+    while (__builtin_expect ((envline = next_env_entry (&runp)) != NULL,
+			     0))
+      {
+	size_t len = strcspn (envline, "=");
+
+	if (envline[len] != '=')
+	  /* This is a "MALLOC_" variable at the end of the string
+	     without a '=' character.  Ignore it since otherwise we
+	     will access invalid memory below.  */
+	  continue;
+
+	switch (len)
+	  {
+	  case 6:
+	    if (memcmp (envline, "CHECK_", 6) == 0)
+	      s = &envline[7];
+	    break;
+	  case 8:
+	    if (! secure && memcmp (envline, "TOP_PAD_", 8) == 0)
+	      mALLOPt(M_TOP_PAD, atoi(&envline[9]));
+	    break;
+	  case 9:
+	    if (! secure && memcmp (envline, "MMAP_MAX_", 9) == 0)
+	      mALLOPt(M_MMAP_MAX, atoi(&envline[10]));
+	    break;
+	  case 15:
+	    if (! secure)
+	      {
+		if (memcmp (envline, "TRIM_THRESHOLD_", 15) == 0)
+		  mALLOPt(M_TRIM_THRESHOLD, atoi(&envline[16]));
+		else if (memcmp (envline, "MMAP_THRESHOLD_", 15) == 0)
+		  mALLOPt(M_MMAP_THRESHOLD, atoi(&envline[16]));
+	      }
+	    break;
+	  default:
+	    break;
+	  }
+      }
+  }
+#else
   if (! secure)
     {
       if((s = getenv("MALLOC_TRIM_THRESHOLD_")))
@@ -1740,6 +1822,7 @@ ptmalloc_init __MALLOC_P((void))
 	mALLOPt(M_MMAP_MAX, atoi(s));
     }
   s = getenv("MALLOC_CHECK_");
+#endif
   if(s) {
     if(s[0]) mALLOPt(M_CHECK_ACTION, (int)(s[0] - '0'));
     __malloc_check_init();
@@ -2050,7 +2133,8 @@ new_heap(size) size_t size;
       return 0;
     }
   }
-  if(mprotect(p2, size, PROT_READ|PROT_WRITE) != 0) {
+  if(MMAP(p2, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED)
+     == (char *) MAP_FAILED) {
     munmap(p2, HEAP_MAX_SIZE);
     return 0;
   }
@@ -2078,7 +2162,8 @@ grow_heap(h, diff) heap_info *h; long diff;
     new_size = (long)h->size + diff;
     if(new_size > HEAP_MAX_SIZE)
       return -1;
-    if(mprotect((char *)h + h->size, diff, PROT_READ|PROT_WRITE) != 0)
+    if(MMAP((char *)h + h->size, diff, PROT_READ|PROT_WRITE,
+	    MAP_PRIVATE|MAP_FIXED) == (char *) MAP_FAILED)
       return -2;
   } else {
     new_size = (long)h->size + diff;

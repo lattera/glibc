@@ -91,7 +91,7 @@ cannot make segment writable for relocation"));
 #include "dynamic-link.h"
     ELF_DYNAMIC_RELOCATE (l, lazy, consider_profiling);
 
-    if (__builtin_expect (_dl_profile != NULL, 0))
+    if (__builtin_expect (consider_profiling, 0))
       {
 	/* Allocate the array which will contain the already found
 	   relocations.  If the shared object lacks a PLT (for example

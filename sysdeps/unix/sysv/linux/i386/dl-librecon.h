@@ -49,10 +49,10 @@
 /* Recognizing extra environment variables.  */
 #define EXTRA_LD_ENVVARS \
   case 13:								      \
-    if (memcmp (&envline[3], "ASSUME_KERNEL", 13) == 0)			      \
+    if (memcmp (envline, "ASSUME_KERNEL", 13) == 0)			      \
       {									      \
 	unsigned long int i, j, osversion = 0;				      \
-	char *p = &envline[17], *q;					      \
+	char *p = &envline[14], *q;					      \
 									      \
 	for (i = 0; i < 3; i++, p = q + 1)				      \
 	  {								      \
@@ -72,9 +72,9 @@
       }									      \
 									      \
   case 15:								      \
-    if (memcmp (&envline[3], "LIBRARY_VERSION", 15) == 0)		      \
+    if (memcmp (envline, "LIBRARY_VERSION", 15) == 0)		      \
       {									      \
-	_dl_correct_cache_id = envline[19] == '5' ? 2 : 3;		      \
+	_dl_correct_cache_id = envline[16] == '5' ? 2 : 3;		      \
 	break;								      \
       }
 

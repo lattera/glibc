@@ -1282,10 +1282,12 @@ warning: debug option `%s' unknown; try LD_DEBUG=help\n", startp);
 /* Process all environments variables the dynamic linker must recognize.
    Since all of them start with `LD_' we are a bit smarter while finding
    all the entries.  */
+extern char **_environ;
+
 static void
 process_envvars (enum mode *modep)
 {
-  char **runp = NULL;
+  char **runp = _environ;
   char *envline;
   enum mode mode = normal;
   char *debug_output = NULL;
@@ -1301,98 +1303,98 @@ process_envvars (enum mode *modep)
 	/* This is a "LD_" variable at the end of the string without
 	   a '=' character.  Ignore it since otherwise we will access
 	   invalid memory below.  */
-	break;
+	continue;
 
-      switch (len - 3)
+      switch (len)
 	{
 	case 4:
 	  /* Warning level, verbose or not.  */
-	  if (memcmp (&envline[3], "WARN", 4) == 0)
-	    _dl_verbose = envline[8] != '\0';
+	  if (memcmp (envline, "WARN", 4) == 0)
+	    _dl_verbose = envline[5] != '\0';
 	  break;
 
 	case 5:
 	  /* Debugging of the dynamic linker?  */
-	  if (memcmp (&envline[3], "DEBUG", 5) == 0)
-	    process_dl_debug (&envline[9]);
+	  if (memcmp (envline, "DEBUG", 5) == 0)
+	    process_dl_debug (&envline[6]);
 	  break;
 
 	case 7:
 	  /* Print information about versions.  */
-	  if (memcmp (&envline[3], "VERBOSE", 7) == 0)
+	  if (memcmp (envline, "VERBOSE", 7) == 0)
 	    {
-	      version_info = envline[11] != '\0';
+	      version_info = envline[8] != '\0';
 	      break;
 	    }
 
 	  /* List of objects to be preloaded.  */
-	  if (memcmp (&envline[3], "PRELOAD", 7) == 0)
+	  if (memcmp (envline, "PRELOAD", 7) == 0)
 	    {
-	      preloadlist = &envline[11];
+	      preloadlist = &envline[8];
 	      break;
 	    }
 
 	  /* Which shared object shall be profiled.  */
-	  if (memcmp (&envline[3], "PROFILE", 7) == 0)
-	    _dl_profile = &envline[11];
+	  if (memcmp (envline, "PROFILE", 7) == 0)
+	    _dl_profile = &envline[8];
 	  break;
 
 	case 8:
 	  /* Do we bind early?  */
-	  if (memcmp (&envline[3], "BIND_NOW", 8) == 0)
+	  if (memcmp (envline, "BIND_NOW", 8) == 0)
 	    {
-	      _dl_lazy = envline[12] == '\0';
+	      _dl_lazy = envline[9] == '\0';
 	      break;
 	    }
-	  if (memcmp (&envline[3], "BIND_NOT", 8) == 0)
-	    _dl_bind_not = envline[12] != '\0';
+	  if (memcmp (envline, "BIND_NOT", 8) == 0)
+	    _dl_bind_not = envline[9] != '\0';
 	  break;
 
 	case 9:
 	  /* Test whether we want to see the content of the auxiliary
 	     array passed up from the kernel.  */
-	  if (memcmp (&envline[3], "SHOW_AUXV", 9) == 0)
+	  if (memcmp (envline, "SHOW_AUXV", 9) == 0)
 	    _dl_show_auxv ();
 	  break;
 
 	case 10:
 	  /* Mask for the important hardware capabilities.  */
-	  if (memcmp (&envline[3], "HWCAP_MASK", 10) == 0)
-	    _dl_hwcap_mask = __strtoul_internal (&envline[14], NULL, 0, 0);
+	  if (memcmp (envline, "HWCAP_MASK", 10) == 0)
+	    _dl_hwcap_mask = __strtoul_internal (&envline[11], NULL, 0, 0);
 	  break;
 
 	case 11:
 	  /* Path where the binary is found.  */
 	  if (!__libc_enable_secure
-	      && memcmp (&envline[3], "ORIGIN_PATH", 11) == 0)
-	    _dl_origin_path = &envline[15];
+	      && memcmp (envline, "ORIGIN_PATH", 11) == 0)
+	    _dl_origin_path = &envline[12];
 	  break;
 
 	case 12:
 	  /* The library search path.  */
-	  if (memcmp (&envline[3], "LIBRARY_PATH", 12) == 0)
+	  if (memcmp (envline, "LIBRARY_PATH", 12) == 0)
 	    {
-	      library_path = &envline[16];
+	      library_path = &envline[13];
 	      break;
 	    }
 
 	  /* Where to place the profiling data file.  */
-	  if (memcmp (&envline[3], "DEBUG_OUTPUT", 12) == 0)
+	  if (memcmp (envline, "DEBUG_OUTPUT", 12) == 0)
 	    {
-	      debug_output = &envline[16];
+	      debug_output = &envline[13];
 	      break;
 	    }
 
-	  if (memcmp (&envline[3], "DYNAMIC_WEAK", 12) == 0)
+	  if (memcmp (envline, "DYNAMIC_WEAK", 12) == 0)
 	    _dl_dynamic_weak = 1;
 	  break;
 
 	case 14:
 	  /* Where to place the profiling data file.  */
 	  if (!__libc_enable_secure
-	      && memcmp (&envline[3], "PROFILE_OUTPUT", 14) == 0)
+	      && memcmp (envline, "PROFILE_OUTPUT", 14) == 0)
 	    {
-	      _dl_profile_output = &envline[18];
+	      _dl_profile_output = &envline[15];
 	      if (*_dl_profile_output == '\0')
 		_dl_profile_output = "/var/tmp";
 	    }
@@ -1400,7 +1402,7 @@ process_envvars (enum mode *modep)
 
 	case 20:
 	  /* The mode of the dynamic linker can be set.  */
-	  if (memcmp (&envline[3], "TRACE_LOADED_OBJECTS", 20) == 0)
+	  if (memcmp (envline, "TRACE_LOADED_OBJECTS", 20) == 0)
 	    mode = trace;
 	  break;
 

@@ -1,3 +1,27 @@
+2001-08-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (ptmalloc_init): Don't call getenv five times.
+	Instead use new function next_env_entry which iterates over the
+	environment once.
+
+	* sysdeps/arm/dl-machine.h (elf_machine_runtime_setup): Only set
+	_dl_profile_map for the right object.
+
+	* elf/dl-reloc.c (_dl_relocate_object): Allocate l_reloc_result
+	only if consider_profiling is != 0, not if _dl_profile != NULL.
+
+	* sysdeps/generic/dl-environ.c (_dl_next_ld_env_entry): Optimize a bit.
+	Now returns pointer to first character set "LD_".
+	* elf/rtld.c (process_envvars): Adjust for change above.
+	* sysdeps/unix/sysv/linux/dl-librecon.h (EXTRA_LD_ENVVARS): Likewise.
+	* sysdeps/unix/sysv/linux/i386/dl-librecon.h (EXTRA_LD_ENVVARS):
+	Likewise.
+
+2001-08-10  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/malloc.c (grow_heap): Use mmap() rather than mprotect()
+	to allocate new memory, for better performance with Linux-2.4.x.
+
 2001-08-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/getopt_init.c (__getopt_clean_environment): Avoid making

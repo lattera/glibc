@@ -1,5 +1,5 @@
 /* Environment handling for dynamic loader.
-   Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,20 +32,21 @@ _dl_next_ld_env_entry (char ***position)
   char **current = *position;
   char *result = NULL;
 
-  if (current == NULL)
-    /* We start over.  */
-    current = _environ;
-
-  while (result == NULL && *current != NULL)
+  while (*current != NULL)
     {
-      if ((*current)[0] == 'L' && (*current)[1] == 'D' && (*current)[2] == '_')
-	result = *current;
+      if (__builtin_expect ((*current)[0] == 'L', 0)
+	  && (*current)[1] == 'D' && (*current)[2] == '_')
+	{
+	  result = &(*current)[3];
+
+	  /* Save current position for next visit.  */
+	  *position = ++current;
+
+	  break;
+	}
 
       ++current;
     }
-
-  /* Save current position for next visit.  */
-  *position = current;
 
   return result;
 }
