@@ -5,7 +5,7 @@
 	* sysdeps/powerpc/powerpc64/dl-trampoline.S: New file.
 	* sysdeps/powerpc/powerpc64/dl-machine.h: Remove trampoline code here.
 	Define ARCH_LA_PLTENTER and ARCH_LA_PLTEXIT.
-	* sysdeps/generic/ldsodefs.h (struct audif_ifaces): Add ppc64 variants.
+	* sysdeps/generic/ldsodefs.h (struct audit_ifaces): Add ppc64 variants.
 	* elf/tst-auditmod1.c: Add ppc64 support.
 	* sysdeps/powerpc/powerpc64/bits/link.h: New file.
 
