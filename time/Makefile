@@ -34,7 +34,8 @@ aux :=	    era alt_digit lc-time-cleanup
 distribute := datemsk
 
 tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \
-	   tst-getdate tst-mktime tst-mktime2 tst-ftime_l tst-strftime
+	   tst-getdate tst-mktime tst-mktime2 tst-ftime_l tst-strftime \
+	   tst-mktime3
 
 include ../Rules
 

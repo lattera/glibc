@@ -1,5 +1,12 @@
 2004-12-01  Jakub Jelinek  <jakub@redhat.com>
 
+	* time/mktime.c (__mktime_internal): If SEC_REQUESTED != SEC,
+	convert T2, not T.
+	* time/Makefile (tests): Add tst-mktime3.
+	* time/tst-mktime3.c: New test.
+
+2004-12-01  Jakub Jelinek  <jakub@redhat.com>
+
 	* stdlib/stdlib.h (realpath): Remove nonnull attribute.
 
 	* posix/fnmatch_loop.c (internal_fnmatch): Clear is_seqval after
