@@ -1,0 +1,97 @@
+comment_char %
+escape_char  /
+%
+% French Language Locale for France with Euro
+% Language: fr
+% Territory: FR
+% Option: euro
+% Date: 2000-08-20
+% Users: general
+% Charset: ISO-8859-1
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_IDENTIFICATION
+title      "French locale for France with Euro"
+source     "Free Software Foundation, Inc."
+address    "59 Temple Place - Suite 330, Boston, MA 02111-1307, USA"
+email      "bug-glibc@gnu.org"
+tel        ""
+fax        ""
+language   "French"
+territory  "France"
+revision   "1.0"
+date       "2000-08-20"
+%
+category  "fr_FR@euro:2000";LC_IDENTIFICATION
+category  "fr_FR@euro:2000";LC_CTYPE
+category  "fr_FR@euro:2000";LC_COLLATE
+category  "fr_FR@euro:2000";LC_TIME
+category  "fr_FR@euro:2000";LC_NUMERIC
+category  "fr_FR@euro:2000";LC_MONETARY
+category  "fr_FR@euro:2000";LC_MESSAGES
+category  "fr_FR@euro:2000";LC_PAPER
+category  "fr_FR@euro:2000";LC_NAME
+category  "fr_FR@euro:2000";LC_ADDRESS
+category  "fr_FR@euro:2000";LC_TELEPHONE
+
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+END LC_CTYPE
+
+LC_COLLATE
+% Copy the template from ISO/IEC 14651
+copy "iso14651_t1"
+END LC_COLLATE
+
+LC_MESSAGES
+copy "fr_FR"
+END LC_MESSAGES
+
+LC_MONETARY
+int_curr_symbol           "<U0045><U0055><U0052><U0020>"
+currency_symbol           "<U20AC>"
+mon_decimal_point         "<U002C>"
+mon_thousands_sep         "<U0020>"
+mon_grouping              3;3
+positive_sign             ""
+negative_sign             "<U002D>"
+int_frac_digits           2
+frac_digits               2
+p_cs_precedes             0
+p_sep_by_space            1
+n_cs_precedes             0
+n_sep_by_space            1
+p_sign_posn               1
+n_sign_posn               1
+END LC_MONETARY
+
+LC_NUMERIC
+copy "fr_FR"
+END LC_NUMERIC
+
+LC_TIME
+copy "fr_FR"
+END LC_TIME
+
+LC_PAPER
+copy "fr_FR"
+END LC_PAPER
+
+LC_TELEPHONE
+copy "fr_FR"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+copy "fr_FR"
+END LC_MEASUREMENT
+
+LC_NAME
+copy "fr_FR"
+END LC_NAME
+
+LC_ADDRESS
+copy "fr_FR"
+END LC_ADDRESS

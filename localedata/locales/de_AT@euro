@@ -1,0 +1,106 @@
+comment_char %
+escape_char  /
+
+% German Language Locale for Austria with Euro
+% Source: O:sterreiches Normungsinstitut
+% Address: Postfach 130, A-1021 Wien
+% Contact: Gerhard Budin
+% Email: not available
+% Tel: +43-222-25 75 35 ext 310
+% Fax: +43-222-216 32 72
+% Language: de
+% Territory: AT
+% Option: euro
+% Revision: 4.3
+% Date: 2000-08-20
+% Users: general
+% Charset: ISO-8859-1
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_IDENTIFICATION
+title      "German locale for Austria with Euro"
+source     "O:sterreiches Normungsinstitut"
+address    "Postfach 130, A-1021 Wien"
+contact    "Gerhard Budin"
+email      "bug-glibc@gnu.org"
+tel        ""
+fax        ""
+language   "German"
+territory  "Austria"
+revision   "1.0"
+date       "2000-08-20"
+%
+category  "de_AT@euro:2000";LC_IDENTIFICATION
+category  "de_AT@euro:2000";LC_CTYPE
+category  "de_AT@euro:2000";LC_COLLATE
+category  "de_AT@euro:2000";LC_TIME
+category  "de_AT@euro:2000";LC_NUMERIC
+category  "de_AT@euro:2000";LC_MONETARY
+category  "de_AT@euro:2000";LC_MESSAGES
+category  "de_AT@euro:2000";LC_PAPER
+category  "de_AT@euro:2000";LC_NAME
+category  "de_AT@euro:2000";LC_ADDRESS
+category  "de_AT@euro:2000";LC_TELEPHONE
+
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+END LC_CTYPE
+
+LC_COLLATE
+% Copy the template from ISO/IEC 14651
+copy "iso14651_t1"
+END LC_COLLATE
+
+LC_MESSAGES
+copy "de_AT"
+END LC_MESSAGES
+
+LC_MONETARY
+int_curr_symbol           "<U0045><U0055><U0052><U0020>"
+currency_symbol           "<U20AC>"
+mon_decimal_point         "<U002C>"
+mon_thousands_sep         "<U0020>"
+mon_grouping              3;3
+positive_sign             ""
+negative_sign             "<U002D>"
+int_frac_digits           2
+frac_digits               2
+p_cs_precedes             1
+p_sep_by_space            1
+n_cs_precedes             1
+n_sep_by_space            1
+p_sign_posn               1
+n_sign_posn               1
+
+END LC_MONETARY
+
+LC_NUMERIC
+copy "de_AT"
+END LC_NUMERIC
+
+LC_TIME
+copy "de_AT"
+END LC_TIME
+
+LC_PAPER
+copy "de_AT"
+END LC_PAPER
+
+LC_TELEPHONE
+copy "de_AT"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+copy "de_AT"
+END LC_MEASUREMENT
+
+LC_NAME
+copy "de_AT"
+END LC_NAME
+
+LC_ADDRESS
+copy "de_AT"
+END LC_ADDRESS

@@ -1,3 +1,21 @@
+2000-08-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/ca_ES: Correct comment.
+
+	* locales/ca_ES@euro: New file.
+	* locales/de_AT@euro: New file.
+	* locales/de_DE@euro: New file.
+	* locales/de_LU@euro: New file.
+	* locales/en_IE@euro: New file.
+	* locales/es_ES@euro: New file.
+	* locales/fi_FI@euro: New file.
+	* locales/fr_BE@euro: New file.
+	* locales/fr_FR@euro: New file.
+	* locales/fr_LU@euro: New file.
+	* locales/it_IT@euro: New file.
+	* locales/nl_NL@euro: New file.
+	* locales/pt_PT@euro: New file.
+
 2000-08-19  Andreas Jaeger  <aj@suse.de>
 
 	* tst-digits.c: Include stdlib.h and string.h to provide
