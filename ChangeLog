@@ -1,3 +1,7 @@
+1998-04-13 16:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/texinfo.texi: Updated from last version.
+
 1998-04-13 14:52  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/cns11643.c: New file.
