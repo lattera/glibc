@@ -73,43 +73,67 @@ elf_machine_load_address (void)
 
 static inline void
 elf_machine_rela (struct link_map *map,
-		  const Elf32_Rela *reloc,
-		  Elf32_Addr sym_loadaddr, const Elf32_Sym *sym)
+		  const Elf32_Rel *reloc, const Elf32_Sym *sym,
+		  Elf32_Addr (*resolve) (const Elf32_Sym **ref,
+					 Elf32_Addr reloc_addr,
+					 int noplt))
 {
   Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
-  const Elf32_Addr sym_value = sym ? sym_loadaddr + sym->st_value : 0;
+  Elf32_Addr loadbase;
 
   switch (ELF32_R_TYPE (reloc->r_info))
     {
     case R_68K_COPY:
-      memcpy (reloc_addr, (void *) sym_value, sym->st_size);
+      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      memcpy (reloc_addr, (void *) (loadbase + sym->st_value), sym->st_size);
       break;
     case R_68K_GLOB_DAT:
+      loadbase = (resolve ? (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0) :
+		  /* RESOLVE is null during bootstrap relocation.  */
+		  map->l_addr);
+      *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
+      break;
     case R_68K_JMP_SLOT:
-      *reloc_addr = sym_value;
+      loadbase = (resolve ? (*resolve) (&sym, (Elf32_Addr) reloc_addr, 1) :
+		  /* RESOLVE is null during bootstrap relocation.  */
+		  map->l_addr);
+      *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
       break;
     case R_68K_8:
-      *(char *) reloc_addr = sym_value + reloc->r_addend;
+      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
+			      + reloc->r_addend);
       break;
     case R_68K_16:
-      *(short *) reloc_addr = sym_value + reloc->r_addend;
+      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
+			       + reloc->r_addend);
       break;
     case R_68K_32:
-      *reloc_addr = sym_value + reloc->r_addend;
+      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
+		     + reloc->r_addend);
       break;
     case R_68K_RELATIVE:
       *reloc_addr = map->l_addr + reloc->r_addend;
       break;
     case R_68K_PC8:
-      *(char *) reloc_addr = (sym_value + reloc->r_addend
+      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
+			      + reloc->r_addend
 			      - (Elf32_Addr) reloc_addr);
       break;
     case R_68K_PC16:
-      *(short *) reloc_addr = (sym_value + reloc->r_addend
+      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
+			       + reloc->r_addend
 			       - (Elf32_Addr) reloc_addr);
       break;
     case R_68K_PC32:
-      *reloc_addr = sym_value + reloc->r_addend - (Elf32_Addr) reloc_addr;
+      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
+		     + reloc->r_addend
+		     - (Elf32_Addr) reloc_addr);
       break;
     case R_68K_NONE:		/* Alright, Wilbur.  */
       break;
