@@ -83,7 +83,7 @@ __idna_to_unicode_lzlz (const char *input, char **output, int flags)
 	break;
 
       /* On to the next part of the name.  */
-      cp = strchrnul (cp, '.');
+      cp = __strchrnul (cp, '.');
       if (*cp == '.')
 	++cp;
     }
