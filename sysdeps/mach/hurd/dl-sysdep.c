@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Hurd version.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -518,6 +518,22 @@ mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 		  flags & (MAP_COPY|MAP_PRIVATE),
 		  vmprot, VM_PROT_ALL,
 		  (flags & MAP_SHARED) ? VM_INHERIT_SHARE : VM_INHERIT_COPY);
+  if (err == KERN_NO_SPACE && (flags & MAP_FIXED))
+    {
+      /* XXX this is not atomic as it is in unix! */
+      /* The region is already allocated; deallocate it first.  */
+      err = __vm_deallocate (__mach_task_self (), mapaddr, len);
+      if (! err)
+	err = __vm_map (__mach_task_self (),
+			&mapaddr, (vm_size_t) len, 0 /*ELF_MACHINE_USER_ADDRESS_MASK*/,
+			!(flags & MAP_FIXED),
+			(mach_port_t) fd, (vm_offset_t) offset,
+			flags & (MAP_COPY|MAP_PRIVATE),
+			vmprot, VM_PROT_ALL,
+			(flags & MAP_SHARED)
+			? VM_INHERIT_SHARE : VM_INHERIT_COPY);
+    }
+
   return err ? (caddr_t) __hurd_fail (err) : (caddr_t) mapaddr;
 }
 

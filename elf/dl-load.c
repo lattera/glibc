@@ -355,20 +355,23 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
 	   kernel map it anywhere it likes, but we must have space for all
 	   the segments in their specified positions relative to the first.
 	   So we map the first segment without MAP_FIXED, but with its
-	   extent increased to cover all the segments.  Then we unmap the
-	   excess portion, and there is known sufficient space there to map
-	   the later segments.  */
+	   extent increased to cover all the segments.  Then we remove
+	   access from excess portion, and there is known sufficient space
+	   there to remap from the later segments.  */
  	caddr_t mapat;
 	mapat = map_segment (c->mapstart,
 			     loadcmds[nloadcmds - 1].allocend - c->mapstart,
 			     c->prot, 0, c->mapoff);
 	l->l_addr = (Elf32_Addr) mapat - c->mapstart;
 
-	/* Unmap the excess portion, and then jump into the normal
-	   segment-mapping loop to handle the portion of the segment past
-	   the end of the file mapping.  */
-	munmap (mapat + c->mapend,
-		loadcmds[nloadcmds - 1].allocend - c->mapend);
+	/* Change protection on the excess portion to disallow all access;
+	   the portions we do not remap later will be inaccessible as if
+	   unallocated.  Then jump into the normal segment-mapping loop to
+	   handle the portion of the segment past the end of the file
+	   mapping.  */
+	mprotect (mapat + c->mapend,
+		  loadcmds[nloadcmds - 1].allocend - c->mapend,
+		  0);
 	goto postmap;
       }
 

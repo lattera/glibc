@@ -1,3 +1,12 @@
+Tue Jan  9 16:10:26 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): After mapping first
+ 	segment to find location, mprotect excess region to no access,
+ 	don't munmap it.
+
+	* sysdeps/mach/hurd/dl-sysdep.c (mmap): If vm_map returns
+	KERN_NO_SPACE for fixed location, deallocate it and try again.
+
 Mon Jan  8 17:43:23 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* locale/Makefile (lib-modules): Renamed hash to locfile-hash.
