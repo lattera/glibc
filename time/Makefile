@@ -117,17 +117,12 @@ endif
 
 $(objpfx)zic: $(objpfx)scheck.o $(objpfx)ialloc.o
 
-$(objpfx)tzfile.o: tzfile.c; $(tz-cc)
-$(objpfx)zic.o: zic.c; $(tz-cc)
-
-# Some versions of GNU make have a bug with backslashes in define directives.
-tz-cc = $(COMPILE.c) $(+gcc-nowarn) \
-	     -DTZDIR='"$(zonedir)"' \
-	     -DTZDEFAULT='"$(localtime-file)"' \
-	     -DTZDEFRULES='"$(posixrules-file)"' \
-	     $< $(OUTPUT_OPTION)
+tz-cflags = -DTZDIR='"$(zonedir)"' \
+	    -DTZDEFAULT='"$(localtime-file)"' \
+	    -DTZDEFRULES='"$(posixrules-file)"'
 
 CFLAGS-zdump.c = -Wno-strict-prototypes -DNOID
-CFLAGS-zic.c = -Wno-strict-prototypes -DNOID
+CFLAGS-zic.c = -Wno-strict-prototypes -DNOID $(tz-cflags)
 CFLAGS-ialloc.c = -Wno-strict-prototypes -DNOID
 CFLAGS-scheck.c = -Wno-strict-prototypes -DNOID
+CFLAGS-tzfile.c = $(tz-cflags)
