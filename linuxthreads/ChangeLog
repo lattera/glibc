@@ -1,3 +1,15 @@
+2002-08-30  Roland McGrath  <roland@redhat.com>
+
+	* Makefile (extra-objs, omit-deps): Add crtn.
+	($(objpfx)libpthread.so): Depend on $(objpfx)crtn.o.
+	($(objpfx)libpthread.so: +postinit): Append $(objpfx)crtn.o.
+	($(objpfx)crtn.S): New target.
+	($(objpfx)crt%.o): Pattern rule replaces crti.o target.
+	(generated): Add crtn.S.
+
+	* sysdeps/unix/sysv/linux/x86_64/Makefile ($(objpfx)specs): Massage
+	crtn.o pathname too.
+
 2002-08-30  Jakub Jelinek  <jakub@redhat.com>
 
         * pthread.c (__pthread_initialize_minimal): Call __uselocale even
