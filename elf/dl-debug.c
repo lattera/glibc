@@ -1,5 +1,5 @@
 /* Communicate dynamic linker state to the debugger at runtime.
-   Copyright (C) 1996, 1998, 2000, 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998,2000,2002,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,20 +32,25 @@ struct r_debug _r_debug;
 
 struct r_debug *
 internal_function
-_dl_debug_initialize (ElfW(Addr) ldbase)
+_dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
 {
-  if (_r_debug.r_brk == 0 || ldbase != 0)
+  struct r_debug *r;
+
+  if (ns == LM_ID_BASE)
+    r = &_r_debug;
+  else
+    r = &GL(dl_ns)[ns]._ns_debug;
+
+  if (r->r_brk == 0 || ldbase != 0)
     {
       /* Tell the debugger where to find the map of loaded objects.  */
-      _r_debug.r_version = 1	/* R_DEBUG_VERSION XXX */;
-      _r_debug.r_ldbase = ldbase;
-      // XXX This is problematic.  It means we cannot tell the debugger
-      // XXX about namespaces other than the main one.
-      _r_debug.r_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
-      _r_debug.r_brk = (ElfW(Addr)) &_dl_debug_state;
+      r->r_version = 1	/* R_DEBUG_VERSION XXX */;
+      r->r_ldbase = ldbase ?: _r_debug.r_ldbase;
+      r->r_map = GL(dl_ns)[ns]._ns_loaded;
+      r->r_brk = (ElfW(Addr)) &_dl_debug_state;
     }
 
-  return &_r_debug;
+  return r;
 }
 
 

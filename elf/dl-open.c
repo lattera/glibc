@@ -1,5 +1,5 @@
 /* Load a shared object at runtime, relocate it, and run its initializer.
-   Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -174,8 +174,6 @@ dl_open_worker (void *a)
 #endif
   struct link_map *call_map = NULL;
 
-  assert (_dl_debug_initialize (0)->r_state == RT_CONSISTENT);
-
   /* Check whether _dl_open() has been called from a valid DSO.  */
   if (__check_caller (args->caller_dl_open,
 		      allow_libc|allow_libdl|allow_ldso) != 0)
@@ -219,6 +217,8 @@ dl_open_worker (void *a)
 	    args->nsid = call_map->l_ns;
 	}
     }
+
+  assert (_dl_debug_initialize (0, args->nsid)->r_state == RT_CONSISTENT);
 
   /* Maybe we have to expand a DST.  */
   if (__builtin_expect (dst != NULL, 0))
@@ -298,7 +298,7 @@ dl_open_worker (void *a)
 	/* Increment just the reference counter of the object.  */
 	++new->l_opencount;
 
-      assert (_dl_debug_initialize (0)->r_state == RT_CONSISTENT);
+      assert (_dl_debug_initialize (0, args->nsid)->r_state == RT_CONSISTENT);
 
       return;
     }
@@ -338,7 +338,7 @@ dl_open_worker (void *a)
 #endif
 
   /* Notify the debugger all new objects are now ready to go.  */
-  struct r_debug *r = _dl_debug_initialize (0);
+  struct r_debug *r = _dl_debug_initialize (0, args->nsid);
   r->r_state = RT_CONSISTENT;
   _dl_debug_state ();
 
@@ -525,8 +525,6 @@ _dl_open (const char *file, int mode, const void *caller_dlopen, Lmid_t nsid,
   /* Make sure we are alone.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
 
-  assert (_dl_debug_initialize (0)->r_state == RT_CONSISTENT);
-
   if (nsid == LM_ID_NEWLM)
     {
       /* Find a new namespace.  */
@@ -542,6 +540,8 @@ _dl_open (const char *file, int mode, const void *caller_dlopen, Lmid_t nsid,
 	  _dl_signal_error (EINVAL, file, NULL, N_("\
 no more namespaces available for dlmopen()"));
 	}
+
+      _dl_debug_initialize (0, nsid)->r_state = RT_CONSISTENT;
     }
   /* Never allow loading a DSO in a namespace which is empty.  Such
      direct placements is only causing problems.  Also don't allow
@@ -621,13 +621,13 @@ no more namespaces available for dlmopen()"));
       if (errstring != INTUSE(_dl_out_of_memory))
 	free ((char *) errstring);
 
-      assert (_dl_debug_initialize (0)->r_state == RT_CONSISTENT);
+      assert (_dl_debug_initialize (0, args.nsid)->r_state == RT_CONSISTENT);
 
       /* Reraise the error.  */
       _dl_signal_error (errcode, objname, NULL, local_errstring);
     }
 
-  assert (_dl_debug_initialize (0)->r_state == RT_CONSISTENT);
+  assert (_dl_debug_initialize (0, args.nsid)->r_state == RT_CONSISTENT);
 
 #ifndef SHARED
   DL_STATIC_INIT (args.map);

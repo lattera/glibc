@@ -1,5 +1,5 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -827,7 +827,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
   /* Initialize to keep the compiler happy.  */
   const char *errstring = NULL;
   int errval = 0;
-  struct r_debug *r = _dl_debug_initialize (0);
+  struct r_debug *r = _dl_debug_initialize (0, nsid);
   bool make_consistent = false;
 
   /* Get file information.  */
@@ -1467,7 +1467,8 @@ cannot enable executable stack as shared object requires");
 
 #ifdef SHARED
   /* Auditing checkpoint: we have a new object.  */
-  if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+  if (__builtin_expect (GLRO(dl_naudit) > 0, 0)
+      && !GL(dl_ns)[l->l_ns]._ns_loaded->l_auditing)
     {
       struct audit_ifaces *afct = GLRO(dl_audit);
       for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)

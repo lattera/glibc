@@ -1,3 +1,19 @@
+2005-01-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-debug.c (_dl_debug_initialize): Take extra parameter and
+	use it to select the r_debug structure for that namespace.
+	* elf/dl-close.c (_dl_close): Adjust call to _dl_debug_initialize.
+	* elf/dl-load.c (_dl_map_object_from_fd): Likewise.
+	* elf/dl-open.c (_dl_open): Likewise.
+	* elf/rtld.c (dl_main): Likewise.
+	* sysdeps/generic/ldsodefs.h (struct link_namespaces): Add _ns_debug
+	member.
+	(_dl_debug_initialize): Add new parameter in declaration.
+
+	* elf/dl-close.c (_dl_close): Make sure auditing callbacks are not
+	called for the auditing objects themselves.
+	* elf/dl-load.c (_dl_map_object_from_fd): Likewise.
+
 2005-01-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/powerpc/powerpc64/dl-machine.h

@@ -1208,7 +1208,8 @@ ld.so does not support TLS, but program uses it!\n");
     _dl_init_paths (library_path);
 
   /* Initialize _r_debug.  */
-  struct r_debug *r = _dl_debug_initialize (GL(dl_rtld_map).l_addr);
+  struct r_debug *r = _dl_debug_initialize (GL(dl_rtld_map).l_addr,
+					    LM_ID_BASE);
   r->r_state = RT_CONSISTENT;
 
   /* Put the link_map for ourselves on the chain so it can be found by
@@ -2257,7 +2258,7 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 
   /* Notify the debugger all new objects are now ready to go.  We must re-get
      the address since by now the variable might be in another object.  */
-  r = _dl_debug_initialize (0);
+  r = _dl_debug_initialize (0, LM_ID_BASE);
   r->r_state = RT_CONSISTENT;
   _dl_debug_state ();
 

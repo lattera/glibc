@@ -296,6 +296,8 @@ struct rtld_global
        allocated by rtld.  Later it keeps the size of the map.  It might be
        reset if in _dl_close if the last global object is removed.  */
     size_t _ns_global_scope_alloc;
+    /* Keep track of changes to each namespace' list.  */
+    struct r_debug _ns_debug;
   } _dl_ns[DL_NNS];
 
   /* During the program run we must not modify the global data of
@@ -844,7 +846,7 @@ rtld_hidden_proto (_dl_debug_state)
 /* Initialize `struct r_debug' if it has not already been done.  The
    argument is the run-time load address of the dynamic linker, to be put
    in the `r_ldbase' member.  Returns the address of the structure.  */
-extern struct r_debug *_dl_debug_initialize (ElfW(Addr) ldbase)
+extern struct r_debug *_dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
      internal_function;
 
 /* Initialize the basic data structure for the search paths.  */

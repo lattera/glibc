@@ -1,5 +1,5 @@
 /* Close a shared object opened by `_dl_open'.
-   Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -266,6 +266,9 @@ _dl_close (void *_map)
   assert (new_opencount[0] == 0);
 
   /* Call all termination functions at once.  */
+#ifdef SHARED
+  bool do_audit = GLRO(dl_naudit) > 0 && !GL(dl_ns)[ns]._ns_loaded->l_auditing;
+#endif
   for (i = 0; list[i] != NULL; ++i)
     {
       struct link_map *imap = list[i];
@@ -306,7 +309,7 @@ _dl_close (void *_map)
 
 #ifdef SHARED
 	  /* Auditing checkpoint: we have a new object.  */
-	  if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+	  if (__builtin_expect (do_audit, 0))
 	    {
 	      struct audit_ifaces *afct = GLRO(dl_audit);
 	      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
@@ -388,7 +391,7 @@ _dl_close (void *_map)
 
 #ifdef SHARED
   /* Auditing checkpoint: we will start deleting objects.  */
-  if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+  if (__builtin_expect (do_audit, 0))
     {
       struct link_map *head = GL(dl_ns)[ns]._ns_loaded;
       struct audit_ifaces *afct = GLRO(dl_audit);
@@ -407,7 +410,7 @@ _dl_close (void *_map)
 #endif
 
   /* Notify the debugger we are about to remove some loaded objects.  */
-  struct r_debug *r = _dl_debug_initialize (0);
+  struct r_debug *r = _dl_debug_initialize (0, ns);
   r->r_state = RT_DELETE;
   _dl_debug_state ();
 
@@ -629,7 +632,7 @@ _dl_close (void *_map)
 
 #ifdef SHARED
   /* Auditing checkpoint: we have deleted all objects.  */
-  if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+  if (__builtin_expect (do_audit, 0))
     {
       struct link_map *head = GL(dl_ns)[ns]._ns_loaded;
       /* Do not call the functions for any auditing object.  */
