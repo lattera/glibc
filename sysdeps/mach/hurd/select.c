@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -275,6 +275,10 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
   if (err)
     return __hurd_fail (err);
 
+  /* Below we recalculate GOT to include an increment for each operation
+     allowed on each fd.  */
+  got = 0;
+
   /* Set the user bitarrays.  We only ever have to clear bits, as all desired
      ones are initially set.  */
   for (i = 0; i < nfds; ++i)
@@ -286,10 +290,16 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 
       if (readfds != NULL && (type & SELECT_READ) == 0)
 	FD_CLR (i, readfds);
+      else
+	got++;
       if (writefds != NULL && (type & SELECT_WRITE) == 0)
 	FD_CLR (i, writefds);
+      else
+	got++;
       if (exceptfds != NULL && (type & SELECT_URG) == 0)
 	FD_CLR (i, exceptfds);
+      else
+	got++;
     }
 
   return got;
