@@ -14,7 +14,7 @@ static pthread_mutex_t locks[] =
   PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP,
   PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP
 };
-#define nlocks (sizeof (locks) / sizeof (locks[0]))
+#define nlocks ((int) (sizeof (locks) / sizeof (locks[0])))
 
 static pthread_barrier_t barrier;
 #define SYNC pthread_barrier_wait (&barrier)
@@ -30,7 +30,7 @@ worker (void *arg)
   /* We are locking the and unlocked the locks and check the errors.
      Since we are using the error-checking variant the implementation
      should report them.  */
-  int nr = (int) arg;
+  int nr = (long int) arg;
   int i;
   void *result = NULL;
   int retval;
@@ -141,7 +141,7 @@ do_test (void)
   pthread_barrier_init (&barrier, NULL, NTHREADS);
 
   for (i = 0; i < NTHREADS; ++i)
-    if (pthread_create (&threads[i], NULL, worker, (void *) i) != 0)
+    if (pthread_create (&threads[i], NULL, worker, (void *) (long int) i) != 0)
       {
 	printf ("failed to create thread %d: %m\n", i);
 	exit (1);

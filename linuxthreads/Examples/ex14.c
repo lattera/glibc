@@ -19,7 +19,7 @@ static void *
 worker (void *arg)
 {
   void *result = NULL;
-  int nr = (int) arg;
+  int nr = (long int) arg;
   int i;
 
   for (i = 0; i < ROUNDS; ++i)
@@ -110,7 +110,7 @@ do_test (void)
 
   /* Start the threads.  */
   for (i = 0; i < NTHREADS; ++i)
-    if (pthread_create (&threads[i], NULL, worker, (void *) i) != 0)
+    if (pthread_create (&threads[i], NULL, worker, (void *) (long int) i) != 0)
       {
 	printf ("Failed to start thread %d\n", i);
 	exit (1);

@@ -122,9 +122,9 @@ do_test (int argc, char *argv[])
     error (0, errno, "stat64 is not supported");
   else if (ret == -1)
     error (EXIT_FAILURE, errno, "cannot stat file `%s'", name);
-  else if (statbuf.st_size != (TWO_GB+100+5))
+  else if (statbuf.st_size != (TWO_GB + 100 + 5))
     error (EXIT_FAILURE, 0, "stat reported size %lld instead of %lld.",
-	   statbuf.st_size, (TWO_GB+100+5));
+	   (long long int) statbuf.st_size, (TWO_GB + 100 + 5));
 
   return 0;
 }

@@ -68,7 +68,7 @@ main (void)
 
   pthread_join (th, &res);
 
-  return (int) res;
+  return (int) (long int) res;
 }
 
 
@@ -97,5 +97,5 @@ thread (void *arg)
   if (status == 0)
     status = var != (PREPARE_BIT | PARENT_BIT);
 
-  return (void *) status;
+  return (void *) (long int) status;
 }

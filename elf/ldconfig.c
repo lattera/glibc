@@ -191,10 +191,12 @@ path_hwcap (const char *path)
 
       h = _dl_string_hwcap (ptr + 1);
 
-      if (h == -1)
-	h = _dl_string_platform (ptr + 1);
-      if (h == -1)
-	break;
+      if (h == (uint64_t) -1)
+	{
+	  h = _dl_string_platform (ptr + 1);
+	  if (h == (uint64_t) -1)
+	    break;
+	}
       hwcap += 1ULL << h;
 
       /* Search the next part of the path.  */

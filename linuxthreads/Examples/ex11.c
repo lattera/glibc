@@ -128,7 +128,8 @@ main (void)
 
   for (n = 0; n < NWRITERS; ++n)
     {
-      int err = pthread_create (&thwr[n], NULL, writer_thread, (void *) n);
+      int err = pthread_create (&thwr[n], NULL, writer_thread,
+				(void *) (long int) n);
 
       if (err != 0)
 	error (EXIT_FAILURE, err, "cannot create writer thread");
@@ -136,7 +137,8 @@ main (void)
 
   for (n = 0; n < NREADERS; ++n)
     {
-      int err = pthread_create (&thrd[n], NULL, reader_thread, (void *) n);
+      int err = pthread_create (&thrd[n], NULL, reader_thread,
+				(void *) (long int) n);
 
       if (err != 0)
 	error (EXIT_FAILURE, err, "cannot create reader thread");

@@ -102,7 +102,7 @@ extern const char *server_user;
 /* Prototypes for global functions.  */
 
 /* nscd.c */
-extern void termination_handler (int signum);
+extern void termination_handler (int signum) __attribute__ ((__noreturn__));
 extern int nscd_open_socket (void);
 
 /* connections.c */
@@ -115,7 +115,7 @@ extern int nscd_parse_file (const char *fname, struct database dbs[lastdb]);
 
 /* nscd_stat.c */
 extern void send_stats (int fd, struct database dbs[lastdb]);
-extern int receive_print_stats (void);
+extern int receive_print_stats (void) __attribute__ ((__noreturn__));
 
 /* cache.c */
 extern struct hashentry *cache_search (int type, void *key, size_t len,

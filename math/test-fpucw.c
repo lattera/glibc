@@ -32,8 +32,8 @@ main (void)
   cw &= ~_FPU_RESERVED;
 
   if (cw != (_FPU_DEFAULT & ~_FPU_RESERVED))
-    printf ("control word is 0x%x but should be 0x%x.\n",
-	    cw, (_FPU_DEFAULT & ~_FPU_RESERVED));
+    printf ("control word is 0x%lx but should be 0x%lx.\n",
+	    (long int) cw, (long int) (_FPU_DEFAULT & ~_FPU_RESERVED));
 
   return cw != (_FPU_DEFAULT & ~_FPU_RESERVED);
 

@@ -1,3 +1,13 @@
+2000-11-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* Examples/ex3.c (main): Cast int to long before casting to void *.
+	(search): Cast void * to long, not int.
+	* Examples/ex8.c (main, thread): Similarly.
+	* Examples/ex11.c (main): Similarly.
+	* Examples/ex14.c (worker, do_test): Similarly.
+	* ecmutex.c (worker, do_test): Similarly.
+	(nlocks): Cast to int.
+
 2000-11-08  Bruce Mitchener  <bruce@cubik.org>
 
 	* linuxthreads.texi:  Add documentation for pthreads attributes

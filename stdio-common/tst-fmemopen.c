@@ -34,7 +34,7 @@ main (void)
       fputc (ch, stdout);
       if (ch != *cp)
 	{
-	  printf ("\ncharacter %d: '%c' instead of '%c'\n",
+	  printf ("\ncharacter %td: '%c' instead of '%c'\n",
 		  cp - blah, ch, *cp);
 	  exit (1);
 	}
@@ -79,7 +79,7 @@ main (void)
       fputc (ch, stdout);
       if (ch != *cp)
 	{
-	  printf ("%d character: '%c' instead of '%c'\n",
+	  printf ("%td character: '%c' instead of '%c'\n",
 		  cp - blah, ch, *cp);
 	  exit (1);
 	}

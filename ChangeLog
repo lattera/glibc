@@ -1,3 +1,25 @@
+2000-11-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* iconvdata/bug-iconv2.c (main): Use %zd in format string.
+	* io/test-lfs.c (do_test): Cast statbuf.st_size to long long.
+	* malloc/tst-valloc.c (main): Cast valloc return value to long.
+	* malloc/tst-obstack.c (verbose_malloc): Use %zd in format string.
+	* math/test-fpucw.c (main): Use %lx in format string, cast
+	control words to long.
+	* stdio-common/tst-fmemopen.c (main): Use %td in format strings.
+	* stdlib/tst-strtol.c (tests): Avoid (bogus?) decimal constant is so
+	large that it is unsigned warning.
+
+	* sysdeps/unix/sysv/linux/sparc/bits/types.h (__ssize_t): Changing
+	it to long on sparc64.
+
+2000-11-20  Andreas Jaeger  <aj@suse.de>
+
+	* nscd/nscd.h (termination_handler): Add noreturn attribute.
+	(receiv_print_stats): Likewise.
+
+	* elf/ldconfig.c (path_hwcap): Cast -1 for proper comparison.
+
 2000-11-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/thread-m.h: gcc doesn't tolerate zero-sized types anymore.

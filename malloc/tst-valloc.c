@@ -3,19 +3,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(void)
+int
+main (void)
 {
   char *p;
   int pagesize = getpagesize ();
   int i;
 
   p = valloc (pagesize);
-  i = (int) p;
+  i = (long int) p;
 
-  if ((i & (pagesize-1)) != 0) {
-    fprintf (stderr, "Alignment problem: valloc returns %p\n", p);
-    exit(1);
-  }
+  if ((i & (pagesize-1)) != 0)
+    {
+      fprintf (stderr, "Alignment problem: valloc returns %p\n", p);
+      exit (1);
+    }
 
   return 0;
 }

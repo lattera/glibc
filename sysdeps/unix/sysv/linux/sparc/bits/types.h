@@ -81,7 +81,7 @@ typedef __quad_t  __off64_t;		/*  "" (LFS) */
 typedef __quad_t __loff_t;		/* Type of file sizes and offsets.  */
 typedef int __pid_t;			/* Type of process identifications.  */
 #if __WORDSIZE == 64
-typedef long long int __ssize_t;	/* Type of a byte count, or error.  */
+typedef long int __ssize_t;		/* Type of a byte count, or error.  */
 #else
 typedef int __ssize_t;			/* Type of a byte count, or error.  */
 #endif

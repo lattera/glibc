@@ -38,7 +38,7 @@ main (void)
     exit (1);
 
   puts ("This used to crash");
-  printf ("%d\n", iconv (cd_a, &from, &from_left, &to, &to_left));
+  printf ("%zd\n", iconv (cd_a, &from, &from_left, &to, &to_left));
   iconv_close (cd_a);
 
   puts ("works now");

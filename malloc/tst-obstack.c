@@ -14,7 +14,7 @@ static void *
 verbose_malloc (size_t size)
 {
   void *buf = malloc (size);
-  printf ("malloc (%u) => %p\n", size, buf);
+  printf ("malloc (%zu) => %p\n", size, buf);
   return buf;
 }
 

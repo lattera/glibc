@@ -35,7 +35,7 @@ int main(int argc, char ** argv)
 
   /* Create the searching threads */
   for (started=0; started<NUM_THREADS; started++)
-    pthread_create(&threads[started], NULL, search, (void *)pid);
+    pthread_create(&threads[started], NULL, search, (void *) (long int) pid);
 
   /* Wait for (join) all the searching threads */
   for (i=0; i<NUM_THREADS; i++)
@@ -66,7 +66,7 @@ void print_it(void *arg)
 
 void *search(void *arg)
 {
-  int num = (int) arg;
+  int num = (long int) arg;
   int i, j, ntries;
   pthread_t tid;
 
