@@ -156,7 +156,7 @@ timeout_handler (int sig __attribute__ ((unused)))
     }
   if (killed != 0 && killed != pid)
     {
-      perror ("Failed to killed test process");
+      perror ("Failed to kill test process");
       exit (1);
     }
 

@@ -1,13 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 #
 # nscd:		Starts the Name Switch Cache Daemon
 #
-# chkconfig: - 30 80
+# chkconfig: - 30 74
 # description:  This is a daemon which handles passwd and group lookups \
 #		for running programs and cache the results for the next \
-#		query.  You should start this daemon only if you use \
-#		slow Services like NIS or NIS+
-# processname: nscd
+#		query.  You should start this daemon if you use \
+#		slow naming services like NIS, NIS+, LDAP, or hesiod.
+# processname: /usr/sbin/nscd
 # config: /etc/nscd.conf
 #
 
@@ -16,7 +16,7 @@
 [ -x /usr/sbin/nscd ] || exit 0
 
 # Source function library.
-. /etc/rc.d/init.d/functions
+. /etc/init.d/functions
 
 # nscd does not run on any kernel lower than 2.2.0 because of threading
 # problems, so we require that in first place.
@@ -34,51 +34,77 @@ case $(uname -r) in
 esac
 
 RETVAL=0
+prog=nscd
+
+start () {
+    [ -d /var/run/nscd ] || mkdir /var/run/nscd
+    secure=""
+#   for table in passwd group hosts
+#   do
+#   	if egrep -q '^'$table':.*nisplus' /etc/nsswitch.conf; then
+#   	    /usr/lib/nscd_nischeck $table || secure="$secure -S $table,yes"
+#   	fi
+#   done
+    echo -n $"Starting $prog: "
+    daemon /usr/sbin/nscd $secure
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && touch /var/lock/subsys/nscd
+    return $RETVAL
+}
+
+stop () {
+    echo -n $"Stopping $prog: "
+    /usr/sbin/nscd -K
+    RETVAL=$?
+    if [ $RETVAL -eq 0 ]; then
+       	rm -f /var/lock/subsys/nscd
+	# nscd won't be able to remove these if it is running as
+	# a non-privileged user
+	rm -f /var/run/nscd/nscd.pid
+	rm -f /var/run/nscd/.socket
+       	success $"$prog shutdown"
+    else
+       	failure $"$prog shutdown"
+    fi
+    echo
+    return $RETVAL
+}
+
+restart() {
+    stop
+    start
+}
 
 # See how we were called.
 case "$1" in
     start)
-	secure=""
-#	for table in passwd group
-#	do
-#		if egrep '^'$table':.*nisplus' /etc/nsswitch.conf >/dev/null
-#		then
-#			/usr/lib/nscd_nischeck $table ||
-#				secure="$secure -S $table,yes"
-#		fi
-#	done
-        echo -n "Starting Name Switch Cache Daemon: "
-	daemon nscd $secure
+	start
 	RETVAL=$?
-        echo
-        [ $RETVAL -eq 0 ] && touch /var/lock/subsys/nscd
 	;;
     stop)
-	echo -n "Stopping Name Switch Cache Daemon: "
-	/usr/sbin/nscd -K
+	stop
 	RETVAL=$?
-	if [ $RETVAL -eq 0 ]; then
-		rm -f /var/lock/subsys/nscd
-        	echo nscd
-	else
-		echo
-	fi
 	;;
-  status)
+    status)
         status nscd
 	RETVAL=$?
         ;;
-  restart)
-        $0 stop
-        $0 start
+    restart)
+	restart
 	RETVAL=$?
 	;;
-  reload)
-  	killproc -HUP nscd
+    condrestart)
+	[ -e /var/lock/subsys/nscd ] && restart
+	RETVAL=$?
+	;;
+    reload)
+  	killproc /usr/sbin/nscd -HUP
 	RETVAL=$?
         ;;
     *)
-	echo "Usage: $0 {start|stop|status|restart}"
+	echo $"Usage: $0 {start|stop|status|restart|reload|condrestart}"
+	RETVAL=1
 	;;
 esac
 exit $RETVAL

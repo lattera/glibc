@@ -1,5 +1,17 @@
 2003-12-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/rcmd.c: Provide better error message in case of unknown
+	host.  Remove USE_IN_LIBIO.
+
+	* nscd/nscd.init: Updated version, more conforming with current
+	init file standards.
+
+	* nscd/nscd-client.h (_PATH_NSCDPID): Move the file into
+	/var/run/nscd directory.
+	(_PATH_NSCDSOCKET): Likewise.
+
+	* test-skeleton.c (timeout_handler): Fix error message.
+
 	* elf/dl-dst.h (DL_DST_REQUIRED): Avoid the complex operations if
 	CNT == 0.
 

@@ -29,10 +29,10 @@
 #define NSCD_VERSION 2
 
 /* Path of the file where the PID of the running system is stored.  */
-#define _PATH_NSCDPID	 "/var/run/nscd.pid"
+#define _PATH_NSCDPID	 "/var/run/nscd/nscd.pid"
 
 /* Path for the Unix domain socket.  */
-#define _PATH_NSCDSOCKET "/var/run/.nscd_socket"
+#define _PATH_NSCDSOCKET "/var/run/nscd/socket"
 
 /* Path for the configuration file.  */
 #define _PATH_NSCDCONF	 "/etc/nscd.conf"

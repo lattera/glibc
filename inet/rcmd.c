@@ -80,9 +80,7 @@ static char sccsid[] = "@(#)rcmd.c	8.3 (Berkeley) 3/26/94";
 #include <string.h>
 #include <libintl.h>
 #include <stdlib.h>
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-#endif
+#include <wchar.h>
 #include <sys/uio.h>
 
 
@@ -139,14 +137,20 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 	(void)__snprintf(num, sizeof(num), "%d", ntohs(rport));
 	error = getaddrinfo(*ahost, num, &hints, &res);
 	if (error) {
-#ifdef USE_IN_LIBIO
-		if (_IO_fwide (stderr, 0) > 0)
-			__fwprintf(stderr, L"rcmd: getaddrinfo: %s\n",
-				   gai_strerror(error));
-		else
-#endif
-			fprintf(stderr, "rcmd: getaddrinfo: %s\n",
-				gai_strerror(error));
+		if (error == EAI_NONAME && *ahost != NULL) {
+			if (_IO_fwide (stderr, 0) > 0)
+				__fwprintf(stderr, L"%s: Unknown host\n",
+					   *ahost);
+			else
+				fprintf(stderr, "%s: Unknown host\n", *ahost);
+		} else {
+			if (_IO_fwide (stderr, 0) > 0)
+				__fwprintf(stderr, L"rcmd: getaddrinfo: %s\n",
+					   gai_strerror(error));
+			else
+				fprintf(stderr, "rcmd: getaddrinfo: %s\n",
+					gai_strerror(error));
+		}
                 return (-1);
 	}
 
@@ -157,12 +161,10 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 		free (ahostbuf);
 		ahostbuf = strdup (res->ai_canonname);
 		if (ahostbuf == NULL) {
-#ifdef USE_IN_LIBIO
 			if (_IO_fwide (stderr, 0) > 0)
 				__fwprintf(stderr, L"%s",
 					   _("rcmd: Cannot allocate memory\n"));
 			else
-#endif
 				fputs(_("rcmd: Cannot allocate memory\n"),
 				      stderr);
 			return (-1);
@@ -179,21 +181,17 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 		s = rresvport_af(&lport, ai->ai_family);
 		if (s < 0) {
 			if (errno == EAGAIN) {
-#ifdef USE_IN_LIBIO
 				if (_IO_fwide (stderr, 0) > 0)
 					__fwprintf(stderr, L"%s",
 						   _("rcmd: socket: All ports in use\n"));
 				else
-#endif
 					fputs(_("rcmd: socket: All ports in use\n"),
 					      stderr);
 			} else {
-#ifdef USE_IN_LIBIO
 				if (_IO_fwide (stderr, 0) > 0)
 					__fwprintf(stderr,
 						   L"rcmd: socket: %m\n");
 				else
-#endif
 					fprintf(stderr, "rcmd: socket: %m\n");
 			}
 			__sigsetmask(oldmask);
@@ -222,11 +220,9 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 			if (__asprintf (&buf, _("connect to address %s: "),
 					paddr) >= 0)
 			  {
-#ifdef USE_IN_LIBIO
 			    if (_IO_fwide (stderr, 0) > 0)
 			      __fwprintf(stderr, L"%s", buf);
 			    else
-#endif
 			      fputs (buf, stderr);
 			    free (buf);
 			  }
@@ -239,11 +235,9 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 				    NI_NUMERICHOST);
 			if (__asprintf (&buf, _("Trying %s...\n"), paddr) >= 0)
 			  {
-#ifdef USE_IN_LIBIO
 			    if (_IO_fwide (stderr, 0) > 0)
 			      __fwprintf (stderr, L"%s", buf);
 			    else
-#endif
 			      fputs (buf, stderr);
 			    free (buf);
 			  }
@@ -257,13 +251,11 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 			continue;
 		}
 		freeaddrinfo(res);
-#ifdef USE_IN_LIBIO
 		if (_IO_fwide (stderr, 0) > 0)
 			(void)__fwprintf(stderr, L"%s: %s\n", *ahost,
 					 __strerror_r(errno,
 						      errbuf, sizeof (errbuf)));
 		else
-#endif
 			(void)fprintf(stderr, "%s: %s\n", *ahost,
 				      __strerror_r(errno,
 						   errbuf, sizeof (errbuf)));
@@ -289,11 +281,9 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 			if (__asprintf (&buf, _("\
 rcmd: write (setting up stderr): %m\n")) >= 0)
 			  {
-#ifdef USE_IN_LIBIO
 			    if (_IO_fwide (stderr, 0) > 0)
 			      __fwprintf(stderr, L"%s", buf);
 			    else
-#endif
 			      fputs (buf, stderr);
 			    free (buf);
 			  }
@@ -313,11 +303,9 @@ rcmd: poll (setting up stderr): %m\n")) >= 0)
 				&& __asprintf(&buf, _("\
 poll: protocol failure in circuit setup\n")) >= 0))
 			  {
-#ifdef USE_IN_LIBIO
 			    if (_IO_fwide (stderr, 0) > 0)
 			      __fwprintf (stderr, L"%s", buf);
 			    else
-#endif
 			      fputs (buf, stderr);
 			    free  (buf);
 			  }
@@ -339,12 +327,10 @@ poll: protocol failure in circuit setup\n")) >= 0))
 		}
 		(void)__close(s2);
 		if (s3 < 0) {
-#ifdef USE_IN_LIBIO
 			if (_IO_fwide (stderr, 0) > 0)
 				(void)__fwprintf(stderr,
 						 L"rcmd: accept: %m\n");
 			else
-#endif
 				(void)fprintf(stderr,
 					      "rcmd: accept: %m\n");
 			lport = 0;
@@ -358,11 +344,9 @@ poll: protocol failure in circuit setup\n")) >= 0))
 			if (__asprintf(&buf, _("\
 socket: protocol failure in circuit setup\n")) >= 0)
 			  {
-#ifdef USE_IN_LIBIO
 			    if (_IO_fwide (stderr, 0) > 0)
 			      __fwprintf (stderr, L"%s", buf);
 			    else
-#endif
 			      fputs (buf, stderr);
 			    free (buf);
 			  }
@@ -389,11 +373,9 @@ socket: protocol failure in circuit setup\n")) >= 0)
 		    || (n != 0
 			&& __asprintf(&buf, "rcmd: %s: %m\n", *ahost) >= 0))
 		  {
-#ifdef USE_IN_LIBIO
 		    if (_IO_fwide (stderr, 0) > 0)
 		      __fwprintf (stderr, L"%s", buf);
 		    else
-#endif
 		      fputs (buf, stderr);
 		    free (buf);
 		  }
