@@ -10,6 +10,9 @@
 
 2002-10-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/execve.c: Don't try calling
+	__pthread_kill_other_threads_np.
+
 	* sysdeps/generic/pselect.c: Avoid unnecessary sigprocmask calls.
 
 2002-10-08  Roland McGrath  <roland@redhat.com>
@@ -35,8 +38,8 @@
 	* sysdeps/ia64/bzero.S: Rewritten by Sverre Jarp to tune for
 	Itanium 2 (and Itanium).
 	Fix unwind directives and make it fit in 80 columns.
-	* sysdeps/ia64/memset.S: Ditto.
-	* sysdeps/ia64/memcpy.S: Ditto.
+	* sysdeps/ia64/memset.S: Likewise.
+	* sysdeps/ia64/memcpy.S: Likewise.
 	Move jump table to .rodata section.
 
 2002-10-03  Roland McGrath  <roland@frob.com>
