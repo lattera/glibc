@@ -42,18 +42,17 @@ ENTRY (BP_SYM (__clone))
 
 	/* Check for child_stack == NULL || fn == NULL.  */
 	cmpdi	cr0,r4,0
-	ld	r0,0(r3)
-	cmpdi	cr1,r0,0
+	cmpdi	cr1,r3,0
 	cror	cr0*4+eq,cr1*4+eq,cr0*4+eq
 	beq-	cr0,L(badargs)
 
 	/* Set up stack frame for parent.  */
-	stdu	r1,-88(r1)
+	stdu	r1,-80(r1)
 	std	r29,56(r1)
 	std	r30,64(r1)
 	std	r31,72(r1)
 #ifdef RESET_PID
-	std	r28,80(r1)
+	std	r28,48(r1)
 #endif
 
 	/* Set up stack frame for child.  */
@@ -85,18 +84,12 @@ ENTRY (BP_SYM (__clone))
 	crandc	cr1*4+eq,cr1*4+eq,cr0*4+so
 	bne-	cr1,L(parent)		/* The '-' is to minimise the race.  */
 
-	/* On at least mklinux DR3a5, clone() doesn't actually change
-	   the stack pointer.  I'm pretty sure this is a bug, because
-	   it adds a race condition if a signal is sent to a thread
-	   just after it is created (in the previous three instructions).  */
-	mr	r1,r30
-
 #ifdef RESET_PID
-	rldicl.	r0,r28,48,63	/* This is & CLONE_THREAD */
-	bne+	r0,L(oldpid)
-	rldicl.	r0,r28,56,63	/* This is & CLONE_VM */
+	andis.	r0,r28,CLONE_THREAD>>16
+	bne+	cr0,L(oldpid)
+	andi.	r0,r28,CLONE_VM
 	li	r3,-1
-	bne-	r0,L(nomoregetpid)
+	bne-	cr0,L(nomoregetpid)
 	DO_CALL(SYS_ify(getpid))
 L(nomoregetpid):
 	stw	r3,TID(r13)
@@ -122,12 +115,12 @@ L(oldpid):
 L(parent):
 	/* Parent.  Restore registers & return.  */
 #ifdef RESET_PID
-	ld	r28,88(r1)
+	ld	r28,48(r1)
 #endif
 	ld	r31,72(r1)
 	ld	r30,64(r1)
 	ld	r29,56(r1)
-	addi	r1,r1,88
+	addi	r1,r1,80
 	bnslr+
 	b	JUMPTARGET(__syscall_error)
 
