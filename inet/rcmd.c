@@ -472,8 +472,7 @@ __icheckhost (raddr, lhost, rhost)
 	buffer = __alloca (buflen);
 	save_errno = errno;
 	while (__gethostbyname_r (lhost, &hostbuf, buffer, buflen, &hp, &herr)
-	       != 0
-	       || hp = NULL)
+	       != 0)
 		if (herr != NETDB_INTERNAL || errno != ERANGE)
 			return (0);
 		else {

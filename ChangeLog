@@ -1,3 +1,19 @@
+1999-07-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* inet/rcmd.c (__icheckhost): Fix typo in last patch.
+
+1999-07-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* wcsmbs/wcschr.c (wcschr): Fix last patch: Add missing semicolon.
+	* wcsmbs/wcsrchr.c (wcsrchr): Likewise.
+
+1999-07-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* posix/wordexp.c (parse_tilde): Handle failing call to
+	get.*_r functions correctly for non-existing entry.
+	* sysdeps/posix/cuserid.c (cuserid): Likewise.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet_serv): Likewise.
+
 1999-06-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/gethostid.c: Handle failing call to

@@ -206,7 +206,7 @@ gaih_inet_serv (const char *servicename, struct gaih_typeproto *tp,
 
       r = __getservbyname_r (servicename, tp->name, &ts, tmpbuf, tmpbuflen,
 			     &s);
-      if (r)
+      if (r || s == NULL)
 	{
 	  if (errno == ERANGE)
 	    tmpbuflen *= 2;

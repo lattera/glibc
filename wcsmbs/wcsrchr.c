@@ -31,7 +31,7 @@ wcsrchr (wcs, wc)
   do
     if (*wcs == wc)
       retval = wcs;
-  while (*wcs++ != L'\0')
+  while (*wcs++ != L'\0');
 
   return (wchar_t *) retval;
 }

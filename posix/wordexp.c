@@ -311,7 +311,7 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
 	  buffer = __alloca (buflen);
 	}
 
-      if (result == 0 && pwd.pw_dir != NULL)
+      if (result == 0 && tpwd != NULL && pwd.pw_dir != NULL)
 	{
 	  *word = w_addstr (*word, word_length, max_length, pwd.pw_dir);
 	  if (*word == NULL)
@@ -340,7 +340,7 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
 	  buffer = __alloca (buflen);
 	}
 
-      if (result == 0 && pwd.pw_dir)
+      if (result == 0 && tpwd != NULL && pwd.pw_dir)
 	*word = w_addstr (*word, word_length, max_length, pwd.pw_dir);
       else
 	{

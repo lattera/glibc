@@ -28,7 +28,7 @@ wcschr (wcs, wc)
   do
     if (*wcs == wc)
       return (wchar_t *) wcs;
-  while (*wcs++ != L'\0')
+  while (*wcs++ != L'\0');
 
   return NULL;
 }
