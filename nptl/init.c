@@ -47,7 +47,7 @@ size_t __default_stacksize attribute_hidden;
 
 /* Size and alignment of static TLS block.  */
 size_t __static_tls_size;
-size_t __static_tls_align;
+size_t __static_tls_align_m1;
 
 /* Version of the library, used in libthread_db to detect mismatches.  */
 static const char nptl_version[] = VERSION;
@@ -228,12 +228,15 @@ __pthread_initialize_minimal_internal (void)
 
   /* Get the size of the static and alignment requirements for the TLS
      block.  */
-  _dl_get_tls_static_info (&__static_tls_size, &__static_tls_align);
+  size_t static_tls_align;
+  _dl_get_tls_static_info (&__static_tls_size, &static_tls_align);
 
   /* Make sure the size takes all the alignments into account.  */
-  if (STACK_ALIGN > __static_tls_align)
-    __static_tls_align = STACK_ALIGN;
-  __static_tls_size = roundup (__static_tls_size, __static_tls_align);
+  if (STACK_ALIGN > static_tls_align)
+    static_tls_align = STACK_ALIGN;
+  __static_tls_align_m1 = static_tls_align - 1;
+
+  __static_tls_size = roundup (__static_tls_size, static_tls_align);
 
 #ifdef SHARED
   /* Transfer the old value from the dynamic linker's internal location.  */
