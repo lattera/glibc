@@ -17,7 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <localeinfo.h>
+#include "../locale/localeinfo.h"
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,12 +32,14 @@ extern long int _mb_shift;	/* Defined in mbtowc.c.  */
 int
 DEFUN(wctomb, (s, wchar), register char *s AND wchar_t wchar)
 {
+#if 0
   register CONST mb_char *mb;
 
   if (_ctype_info->mbchar == NULL)
     mb = NULL;
   else
     mb = _ctype_info->mbchar->mb_chars;
+#endif
 
   /* If S is NULL, just say if we're shifted or not.  */
   if (s == NULL)
@@ -63,10 +65,14 @@ DEFUN(wctomb, (s, wchar), register char *s AND wchar_t wchar)
       return -1;
     }
 
+#if 1
+  return -1;
+#else
   mb += wchar + _mb_shift;
   if (mb->string == NULL || mb->len == 0)
     return -1;
   memcpy((PTR) s, (CONST PTR) mb->string, mb->len + 1);
   _mb_shift += mb->shift;
   return mb->len;
+#endif
 }

@@ -17,7 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <localeinfo.h>
+#include "../locale/localeinfo.h"
 #include <ctype.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -33,8 +33,10 @@ long int _mb_shift = 0;
 int
 DEFUN(mbtowc, (pwc, s, n), wchar_t *pwc AND CONST char *s AND size_t n)
 {
+#if 0
   register CONST mb_char *mb;
   register wchar_t i;
+#endif
 
   if (s == NULL)
     return _mb_shift != 0;
@@ -51,6 +53,7 @@ DEFUN(mbtowc, (pwc, s, n), wchar_t *pwc AND CONST char *s AND size_t n)
       return 1;
     }
 
+#if 0
   if (_ctype_info->mbchar == NULL ||
       _ctype_info->mbchar->mb_chars == NULL)
     return -1;
@@ -79,6 +82,7 @@ DEFUN(mbtowc, (pwc, s, n), wchar_t *pwc AND CONST char *s AND size_t n)
 	  return mb->len;
 	}
     }
+#endif
 
   return -1;
 }
