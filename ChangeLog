@@ -1,3 +1,16 @@
+2003-05-30  Guido Guenther  <agx@sigxcpu.org>
+
+	* sysdeps/mips/mips64/bsd-_setjmp.S: Include <sys/asm.h> for
+	SETUP_GP64 and friends.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h: Fix register
+	names in internal_syscall{6,7}.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread.c [_MIPS_SIM == _ABI64]: Fix
+	number of syscall arguments.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c: Likewise.
+
 2003-05-30  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE):
