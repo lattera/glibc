@@ -233,7 +233,12 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-popen1 \
 	tst-clock1 tst-clock2 \
 	tst-context1 \
-	tst-sched1
+	tst-sched1 \
+	tst-oddstacklimit
+
+# This sets the stack resource limit to 1023kb, which is not a multiple
+# of the page size since every architecture's page size is > 1k.
+tst-oddstacklimit-ENV = ; ulimit -s 1023;
 
 distribute = eintr.c tst-cleanup4aux.c
 
