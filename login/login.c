@@ -116,7 +116,7 @@ login (const struct utmp *ut)
 	  strncpy (tmp.ut_line, ttyp, UT_LINESIZE);
 
 	  /* Read the record.  */
-	  if (getutline_r (&tmp, &old, &data) >= 0 || errno == ESRCH)
+	  if (getutline_r (&tmp, &old, &data) >= 0)
 	    {
 #if _HAVE_UT_TYPE - 0
 	      /* We have to fake the old entry because this `login'
@@ -126,6 +126,10 @@ login (const struct utmp *ut)
 #endif
 	      pututline_r (ut, &data);
 	    }
+	  else if (errno == ESRCH)
+	    /* We didn't find anything.  pututline_r will add UT at the end
+	       of the file in this case.  */
+	    pututline_r (ut, &data);
 
 	  /* Close UTMP file.  */
 	  endutent_r (&data);
