@@ -1,5 +1,8 @@
 2002-07-06  Bruno Haible  <bruno@clisp.org>
 
+	* include/sys/socket.h (__libc_sendto, __libc_recvfrom): New
+	declarations.
+
 	* sysdeps/i386/fpu/libm-test-ulps: Add some ulps for AMD K7.
 
 	* rt/Makefile (tests): Don't add tst-aio* in a single-threaded build.

@@ -2,6 +2,10 @@
 #include <socket/sys/socket.h>
 
 /* Now define the internal interfaces.  */
+
+/* Create a new socket of type TYPE in domain DOMAIN, using
+   protocol PROTOCOL.  If PROTOCOL is zero, one is chosen automatically.
+   Returns a file descriptor for the new socket, or -1 for errors.  */
 extern int __socket (int __domain, int __type,
 		     int __protocol) attribute_hidden;
 
@@ -23,6 +27,20 @@ extern int __getpeername (int __fd, __SOCKADDR_ARG __addr,
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
 extern ssize_t __send (int __fd, __const void *__buf, size_t __n, int __flags);
+
+/* Send N bytes of BUF on socket FD to peer at address ADDR (which is
+   ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
+extern ssize_t __libc_sendto (int __fd, __const void *__buf, size_t __n,
+			      int __flags, __CONST_SOCKADDR_ARG __addr,
+			      socklen_t __addr_len);
+
+/* Read N bytes into BUF through socket FD.
+   If ADDR is not NULL, fill in *ADDR_LEN bytes of it with tha address of
+   the sender, and store the actual size of the address in *ADDR_LEN.
+   Returns the number of bytes read or -1 for errors.  */
+extern ssize_t __libc_recvfrom (int __fd, void *__restrict __buf, size_t __n,
+				int __flags, __SOCKADDR_ARG __addr,
+				socklen_t *__restrict __addr_len);
 
 /* Open a connection on socket FD to peer at ADDR (which LEN bytes long).
    For connectionless socket types, just set the default address to send to
