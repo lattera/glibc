@@ -1,3 +1,9 @@
+2003-04-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_getgr_r.c: Compact code a bit.  Add some __builtin_expect.
+	* nscd/nscd_getpw_r.c: Likewise.
+	* nscd/nscd_gethst_r.c: Likewise.
+
 2003-04-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/pwdcache.c: Initialize .version element in result.

@@ -124,6 +124,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
   request_header req;
   ssize_t nbytes;
   struct iovec vec[4];
+  int result = -1;
 
   if (sock == -1)
     {
@@ -142,25 +143,18 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 
   nbytes = TEMP_FAILURE_RETRY (__writev (sock, vec, 2));
   if ((size_t) nbytes != sizeof (request_header) + req.key_len)
-    {
-      __close (sock);
-      return -1;
-    }
+    goto out;
 
   nbytes = TEMP_FAILURE_RETRY (__read (sock, &hst_resp,
 				       sizeof (hst_response_header)));
-  if (nbytes != sizeof (hst_response_header))
-    {
-      __close (sock);
-      return -1;
-    }
+  if (__builtin_expect (nbytes != sizeof (hst_response_header), 0))
+    goto out;
 
   if (hst_resp.found == -1)
     {
       /* The daemon does not cache this database.  */
-      __close (sock);
       __nss_not_use_nscd_hosts = 1;
-      return -1;
+      goto out;
     }
 
   if (hst_resp.found == 1)
@@ -190,8 +184,8 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	{
 	no_room:
 	  __set_errno (ERANGE);
-	  __close (sock);
-	  return ERANGE;
+	  result = ERANGE;
+	  goto out;
 	}
       cp += align1;
 
@@ -264,10 +258,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
       resultbuf->h_addr_list[cnt] = NULL;
 
       if ((size_t) TEMP_FAILURE_RETRY (__readv (sock, vec, n)) != total_len)
-	{
-	  __close (sock);
-	  return -1;
-	}
+	goto out;
 
       /*  Now we also can read the aliases.  */
       total_len = 0;
@@ -285,23 +276,21 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 
       /* And finally read the aliases.  */
       if ((size_t) TEMP_FAILURE_RETRY (__read (sock, resultbuf->h_aliases[0],
-					       total_len)) != total_len)
-	{
-	  __close (sock);
-	  return -1;
-	}
-
-      __close (sock);
-      return 0;
+					       total_len)) == total_len)
+	result = 0;
     }
   else
     {
       /* Store the error number.  */
       *h_errnop = hst_resp.error;
 
-      __close (sock);
       /* The `errno' to some value != ERANGE.  */
       __set_errno (ENOENT);
-      return ENOENT;
+      result = ENOENT;
     }
+
+ out:
+  __close (sock);
+
+  return result;
 }

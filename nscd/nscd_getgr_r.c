@@ -70,6 +70,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
   gr_response_header gr_resp;
   ssize_t nbytes;
   struct iovec vec[2];
+  int result = -1;
 
   if (sock == -1)
     {
@@ -88,25 +89,18 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 
   nbytes = TEMP_FAILURE_RETRY (__writev (sock, vec, 2));
   if (nbytes != (ssize_t) (sizeof (request_header) + keylen))
-    {
-      __close (sock);
-      return -1;
-    }
+    goto out;
 
   nbytes = TEMP_FAILURE_RETRY (__read (sock, &gr_resp,
 				       sizeof (gr_response_header)));
   if (nbytes != (ssize_t) sizeof (gr_response_header))
-    {
-      __close (sock);
-      return -1;
-    }
+    goto out;
 
   if (gr_resp.found == -1)
     {
       /* The daemon does not cache this database.  */
-      __close (sock);
       __nss_not_use_nscd_group = 1;
-      return -1;
+      goto out;
     }
 
   if (gr_resp.found == 1)
@@ -123,12 +117,12 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	       & (__alignof__ (char *) - 1));
       total_len = align + (1 + gr_resp.gr_mem_cnt) * sizeof (char *)
 		  + gr_resp.gr_name_len + gr_resp.gr_passwd_len;
-      if (buflen < total_len)
+      if (__builtin_expect (buflen < total_len, 0))
 	{
 	no_room:
 	  __set_errno (ERANGE);
-	  __close (sock);
-	  return ERANGE;
+	  result = ERANGE;
+	  goto out;
 	}
       buflen -= total_len;
 
@@ -156,11 +150,9 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       total_len += gr_resp.gr_name_len + gr_resp.gr_passwd_len;
 
       /* Get this data.  */
-      if ((size_t) TEMP_FAILURE_RETRY (__readv (sock, vec, 2)) != total_len)
-	{
-	  __close (sock);
-	  return -1;
-	}
+      size_t n = TEMP_FAILURE_RETRY (__readv (sock, vec, 2));
+      if (__builtin_expect (n != total_len, 0))
+	goto out;
 
       /* Clear the terminating entry.  */
       resultbuf->gr_mem[gr_resp.gr_mem_cnt] = NULL;
@@ -174,26 +166,28 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	  p += len[cnt];
 	}
 
-      if (total_len > buflen)
+      if (__builtin_expect (total_len > buflen, 0))
 	goto no_room;
 
-      if ((size_t) TEMP_FAILURE_RETRY (__read (sock, resultbuf->gr_mem[0],
-					       total_len)) != total_len)
+      result = 0;
+      n = TEMP_FAILURE_RETRY (__read (sock, resultbuf->gr_mem[0],
+					     total_len));
+      if (__builtin_expect (n != total_len, 0))
 	{
-	  __close (sock);
 	  /* The `errno' to some value != ERANGE.  */
 	  __set_errno (ENOENT);
-	  return ENOENT;
+	  result = ENOENT;
 	}
-
-      __close (sock);
-      return 0;
     }
   else
     {
-      __close (sock);
       /* The `errno' to some value != ERANGE.  */
       __set_errno (ENOENT);
-      return ENOENT;
+      result = ENOENT;
     }
+
+ out:
+  __close (sock);
+
+  return result;
 }

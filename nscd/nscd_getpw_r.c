@@ -71,6 +71,7 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
   pw_response_header pw_resp;
   ssize_t nbytes;
   struct iovec vec[2];
+  int result = -1;
 
   if (sock == -1)
     {
@@ -89,25 +90,18 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
 
   nbytes = TEMP_FAILURE_RETRY (__writev (sock, vec, 2));
   if (nbytes != (ssize_t) (sizeof (request_header) + keylen))
-    {
-      __close (sock);
-      return -1;
-    }
+    goto out;
 
   nbytes = TEMP_FAILURE_RETRY (__read (sock, &pw_resp,
 				       sizeof (pw_response_header)));
   if (nbytes != (ssize_t) sizeof (pw_response_header))
-    {
-      __close (sock);
-      return -1;
-    }
+    goto out;
 
-  if (pw_resp.found == -1)
+  if (__builtin_expect (pw_resp.found == -1, 0))
     {
       /* The daemon does not cache this database.  */
-      __close (sock);
       __nss_not_use_nscd_passwd = 1;
-      return -1;
+      goto out;
     }
 
   if (pw_resp.found == 1)
@@ -117,11 +111,11 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
 		      + pw_resp.pw_gecos_len + pw_resp.pw_dir_len
 		      + pw_resp.pw_shell_len);
 
-      if (buflen < total)
+      if (__builtin_expect (buflen < total, 0))
 	{
 	  __set_errno (ERANGE);
-	  __close (sock);
-	  return ERANGE;
+	  result = ERANGE;
+	  goto out;
 	}
 
       /* Set the information we already have.  */
@@ -145,15 +139,18 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
 
       nbytes = TEMP_FAILURE_RETRY (__read (sock, buffer, total));
 
-      __close (sock);
-
-      return nbytes == (ssize_t) total ? 0 : -1;
+      if (nbytes == (ssize_t) total)
+	result = 0;
     }
   else
     {
-      __close (sock);
       /* The `errno' to some value != ERANGE.  */
       __set_errno (ENOENT);
-      return ENOENT;
+      result = ENOENT;
     }
+
+ out:
+  __close (sock);
+
+  return result;
 }
