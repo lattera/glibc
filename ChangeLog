@@ -1,3 +1,11 @@
+2000-05-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/iconv.h (iconv): Remove const from inbuf parameter.
+	* iconv/iconv.c: Likewise.
+	* conform/data/iconv.h-data: Likewise.
+
+	* intl/dcigettext.c: Fix typo in comment.
+
 2000-05-20 2000  H.J. Lu  <hjl@gnu.org>
 
 	* resolv/res_libc.c (_res): Initialize _sock to -1.
@@ -82,7 +90,7 @@
 	Reported by lrgallardo@yahoo.com, closes PR libc/1421.
 
 2000-05-16  Andreas Jaeger  <aj@suse.de>,
-            David Huggins-Daines <dhd@linuxcare.com>
+	    David Huggins-Daines <dhd@linuxcare.com>
 
 	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Set
 	cache_data in case of only new cache format correctly.

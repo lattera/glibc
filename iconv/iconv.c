@@ -29,7 +29,7 @@
 
 
 size_t
-iconv (iconv_t cd, const char **inbuf, size_t *inbytesleft, char **outbuf,
+iconv (iconv_t cd, char **inbuf, size_t *inbytesleft, char **outbuf,
        size_t *outbytesleft)
 {
   __gconv_t gcd = (__gconv_t) cd;
