@@ -40,17 +40,17 @@ extern const char *__ctype32_wctrans[2] attribute_hidden;
 func (iswalnum, __ISwalnum)
 #undef iswalpha
 func (iswalpha, __ISwalpha)
-libc_hidden_def (iswalpha)
+libc_hidden_weak (iswalpha)
 #undef iswblank
 func (iswblank, __ISwblank)
 #undef iswcntrl
 func (iswcntrl, __ISwcntrl)
 #undef iswdigit
 func (iswdigit, __ISwdigit)
-libc_hidden_def (iswdigit)
+libc_hidden_weak (iswdigit)
 #undef iswlower
 func (iswlower, __ISwlower)
-libc_hidden_def (iswlower)
+libc_hidden_weak (iswlower)
 #undef iswgraph
 func (iswgraph, __ISwgraph)
 #undef iswprint
@@ -59,23 +59,25 @@ func (iswprint, __ISwprint)
 func (iswpunct, __ISwpunct)
 #undef iswspace
 func (iswspace, __ISwspace)
-libc_hidden_def (iswspace)
+libc_hidden_weak (iswspace)
 #undef iswupper
 func (iswupper, __ISwupper)
 #undef iswxdigit
 func (iswxdigit, __ISwxdigit)
-libc_hidden_def (iswxdigit)
+libc_hidden_weak (iswxdigit)
 
+#undef towlower
 wint_t
-(towlower) (wc)
+towlower (wc)
      wint_t wc;
 {
   return wctrans_table_lookup (__ctype32_wctrans[__TOW_tolower], wc);
 }
 libc_hidden_def (towlower)
 
+#undef towupper
 wint_t
-(towupper) (wc)
+towupper (wc)
      wint_t wc;
 {
   return wctrans_table_lookup (__ctype32_wctrans[__TOW_toupper], wc);
