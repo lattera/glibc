@@ -1,3 +1,8 @@
+2003-08-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/nsswitch.c: Add libc_hidden_def for __nss_lookup_function.
+	* nss/nsswitch.h: Add libc_hidden_proto for __nss_lookup_function.
+
 2003-08-26  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/elf/Makefile: New file.

@@ -414,6 +414,7 @@ __nss_lookup_function (service_user *ni, const char *fct_name)
 
   return result;
 }
+libc_hidden_def (__nss_lookup_function)
 
 
 static name_database *

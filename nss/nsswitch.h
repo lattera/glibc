@@ -131,6 +131,7 @@ libc_hidden_proto (__nss_next)
 /* Search for the service described in NI for a function named FCT_NAME
    and return a pointer to this function if successful.  */
 extern void *__nss_lookup_function (service_user *ni, const char *fct_name);
+libc_hidden_proto (__nss_lookup_function)
 
 
 /* Called by NSCD to disable recursive calls.  */
