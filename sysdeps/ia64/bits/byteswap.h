@@ -1,5 +1,5 @@
 /* Macros to swap the order of bytes in integer values.
-   Copyright (C) 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,18 +31,22 @@
 #if defined __GNUC__ && __GNUC__ >= 2
 # define __bswap_16(x) \
      (__extension__							      \
-      ({ register unsigned short int __v;				      \
+      ({ register unsigned short int __v, __x = (x);			      \
 	 if (__builtin_constant_p (x))					      \
-	   __v = __bswap_constant_16 (x);				      \
+	   __v = __bswap_constant_16 (__x);				      \
 	 else								      \
 	   __asm__ __volatile__ ("shl %0 = %1, 48 ;;"			      \
 				 "mux1 %0 = %0, @rev ;;"		      \
 				 : "=r" (__v)				      \
-				 : "r" ((unsigned short int) (x)));	      \
+				 : "r" ((unsigned short int) (__x)));	      \
 	 __v; }))
 #else
 /* This is better than nothing.  */
-# define __bswap_16(x) __bswap_constant_16 (x)
+static __inline unsigned short int
+__bswap_16 (unsigned short int __bsx)
+{
+  return __bswap_constant_16 (__bsx);
+}
 #endif
 
 
@@ -54,17 +58,21 @@
 #if defined __GNUC__ && __GNUC__ >= 2
 # define __bswap_32(x) \
      (__extension__							      \
-      ({ register unsigned int __v;					      \
+      ({ register unsigned int __v, __x = (x);				      \
 	 if (__builtin_constant_p (x))					      \
-	   __v = __bswap_constant_32 (x);				      \
+	   __v = __bswap_constant_32 (__x);				      \
 	 else								      \
 	   __asm__ __volatile__ ("shl %0 = %1, 32 ;;"			      \
 				 "mux1 %0 = %0, @rev ;;"		      \
 				 : "=r" (__v)				      \
-				 : "r" ((unsigned int) (x)));		      \
+				 : "r" ((unsigned int) (__x)));		      \
 	 __v; }))
 #else
-# define __bswap_32(x) __bswap_constant_32 (x)
+static __inline unsigned int
+__bswap_32 (unsigned int __bsx)
+{
+  return __bswap_constant_32 (__bsx);
+}
 #endif
 
 
@@ -82,17 +90,21 @@
 #if defined __GNUC__ && __GNUC__ >= 2
 # define __bswap_64(x) \
      (__extension__							      \
-      ({ register unsigned long int __v;				      \
+      ({ register unsigned long int __v, __x = (x);			      \
 	 if (__builtin_constant_p (x))					      \
-	   __v = __bswap_constant_64 (x);				      \
+	   __v = __bswap_constant_64 (__x);				      \
 	 else								      \
 	   __asm__ __volatile__ ("mux1 %0 = %1, @rev ;;"		      \
 				 : "=r" (__v)				      \
-				 : "r" ((unsigned long int) (x)));	      \
+				 : "r" ((unsigned long int) (__x)));	      \
          __v; }))
 
 #else
-# define __bswap_64(x) __bswap_constant_64 (x)
+static __inline unsigned long int
+__bswap_64 (unsigned long int __bsx)
+{
+  return __bswap_constant_64 (__bsx);
+}
 #endif
 
 #endif /* _BITS_BYTESWAP_H */

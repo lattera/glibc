@@ -1,5 +1,7 @@
 2003-01-07  Jakub Jelinek  <jakub@redhat.com>
 
+	* pthreadP.h (__pthread_cond_timedwait): Add prototype.
+
 	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h
 	(RTLD_CORRECT_DYNAMIC_WEAK): Remove.
 	(DL_SYSINFO_IMPLEMENTATION): Change into .text section and back.

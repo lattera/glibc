@@ -49,14 +49,13 @@
 #undef	PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
-  .type syscall_error,%function;					      \
   ENTRY (name);								      \
     DO_CALL (syscall_name, args);					      \
     cmn r0, $4096;
 
 #define PSEUDO_RET							      \
     RETINSTR(movcc, pc, lr);						      \
-    b PLTJMP(__syscall_error)
+    b PLTJMP(SYSCALL_ERROR)
 #undef ret
 #define ret PSEUDO_RET
 
@@ -65,7 +64,22 @@
   SYSCALL_ERROR_HANDLER							      \
   END (name)
 
-#define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
+#if NOT_IN_libc
+# define SYSCALL_ERROR __local_syscall_error
+# define SYSCALL_ERROR_HANDLER					\
+__local_syscall_error:						\
+	str	lr, [sp, #-4]!;					\
+	str	r0, [sp, #-4]!;					\
+	bl	PLTJMP(C_SYMBOL_NAME(__errno_location)); 	\
+	ldr	r1, [sp], #4;					\
+	rsb	r1, r1, #0;					\
+	str	r1, [r0];					\
+	mvn	r0, #0;						\
+	ldr	pc, [sp], #4;
+#else
+# define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
+# define SYSCALL_ERROR __syscall_error
+#endif
 
 /* Linux takes system call args in registers:
 	syscall number	in the SWI instruction
@@ -123,7 +137,17 @@
 /* Define a macro which expands into the inline wrapper code for a system
    call.  */
 #undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)			\
+#define INLINE_SYSCALL(name, nr, args...)				\
+  ({ unsigned int _sys_result = INTERNAL_SYSCALL (name, nr, args);	\
+     if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (_sys_result), 0))	\
+       {								\
+	 __set_errno (INTERNAL_SYSCALL_ERRNO (_sys_result));		\
+	 _sys_result = (unsigned int) -1;				\
+       }								\
+     (int) _sys_result; })
+
+#undef INTERNAL_SYSCALL
+#define INTERNAL_SYSCALL(name, nr, args...)			\
   ({ unsigned int _sys_result;					\
      {								\
        register int _a1 asm ("a1");				\
@@ -134,12 +158,13 @@
 		     : "a1", "memory");				\
        _sys_result = _a1;					\
      }								\
-     if (_sys_result >= (unsigned int) -4095)			\
-       {							\
-	 __set_errno (-_sys_result);				\
-	 _sys_result = (unsigned int) -1;			\
-       }							\
      (int) _sys_result; })
+
+#undef INTERNAL_SYSCALL_ERROR_P
+#define INTERNAL_SYSCALL_ERROR_P(val)	((unsigned int) (val) >= 0xfffff001u)
+
+#undef INTERNAL_SYSCALL_ERRNO
+#define INTERNAL_SYSCALL_ERRNO(val)	(-(val))
 
 #define LOAD_ARGS_0()
 #define ASM_ARGS_0

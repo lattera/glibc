@@ -1,3 +1,40 @@
+2003-01-06  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/arm/sysdep.S (syscall_error): Optimise a little.
+	[__LIBC_REENTRANT]: Unify PIC and non-PIC cases.
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (PSEUDO): Remove .type
+	directive.
+	(PSEUDO_RET): Use SYSCALL_ERROR in place of __syscall_error.
+	(SYSCALL_ERROR): New.
+	(SYSCALL_ERROR_HANDLER) [NOT_IN_libc]: Provide local copy of error
+	handling code.
+	(INTERNAL_SYSCALL): Define.
+	(INLINE_SYSCALL): Use it.
+	(INTERNAL_SYSCALL_ERROR_P, INTERNAL_SYSCALL_ERRNO): Define.
+	* sysdeps/unix/sysv/linux/arm/socket.S (__socket): Use
+	SYSCALL_ERROR in place of __syscall_error.
+
+2003-01-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/bits/byteswap.h [__GNUC__ >= 2] (__bswap_16,
+	__bswap_32, __bswap_64): Put x into temporary variable
+	to avoid warnings.
+	[!__GNUC__] (__bswap_16, __bswap_32, __bswap_64): Change into static
+	(inline) functions.
+	* sysdeps/s390/bits/byteswap.h [__GNUC__ >= 2] (__bswap_16,
+	__bswap_32, __bswap_64): Put x into temporary variable
+	to avoid warnings.
+	[!__GNUC__] (__bswap_16, __bswap_32, __bswap_64): Change into static
+	(inline) functions.
+	* sysdeps/i386/bits/byteswap.h [!__GNUC__] (__bswap_16, __bswap_32):
+	Likewise.
+
+2003-01-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/adjtime.c (ntp_adjtime): New weak
+	alias.
+
 2003-01-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/rtld.c (_rtld_global): Remove _dl_dynamic_weak initializer.

@@ -28,8 +28,9 @@
 #define __bswap_constant_16(x) \
      ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8))
 
-#if defined __GNUC__ && __GNUC__ >= 2
-# define __bswap_16(x) \
+#ifdef __GNUC__
+# if __GNUC__ >= 2
+#  define __bswap_16(x) \
      (__extension__							      \
       ({ register unsigned short int __v, __x = (x);			      \
 	 if (__builtin_constant_p (__x))				      \
@@ -40,24 +41,31 @@
  		    : "0" (__x)						      \
  		    : "cc");						      \
 	 __v; }))
-#else
+# else
 /* This is better than nothing.  */
-# define __bswap_16(x) \
+#  define __bswap_16(x) \
      (__extension__							      \
       ({ register unsigned short int __x = (x); __bswap_constant_16 (__x); }))
+# endif
+#else
+static __inline unsigned short int
+__bswap_16 (unsigned short int __bsx)
+{
+  return __bswap_constant_16 (__bsx);
+}
 #endif
-
 
 /* Swap bytes in 32 bit value.  */
 #define __bswap_constant_32(x) \
      ((((x) & 0xff000000) >> 24) | (((x) & 0x00ff0000) >>  8) |		      \
       (((x) & 0x0000ff00) <<  8) | (((x) & 0x000000ff) << 24))
 
-#if defined __GNUC__ && __GNUC__ >= 2
+#ifdef __GNUC__
+# if __GNUC__ >= 2
 /* To swap the bytes in a word the i486 processors and up provide the
    `bswap' opcode.  On i386 we have to use three instructions.  */
-# if !defined __i486__ && !defined __pentium__ && !defined __pentiumpro__
-#  define __bswap_32(x)							      \
+#  if !defined __i486__ && !defined __pentium__ && !defined __pentiumpro__
+#   define __bswap_32(x)						      \
      (__extension__							      \
       ({ register unsigned int __v, __x = (x);				      \
 	 if (__builtin_constant_p (__x))				      \
@@ -70,8 +78,8 @@
 		    : "0" (__x)						      \
 		    : "cc");						      \
 	 __v; }))
-# else
-#  define __bswap_32(x) \
+#  else
+#   define __bswap_32(x) \
      (__extension__							      \
       ({ register unsigned int __v, __x = (x);				      \
 	 if (__builtin_constant_p (__x))				      \
@@ -79,11 +87,18 @@
 	 else								      \
 	   __asm__ ("bswap %0" : "=r" (__v) : "0" (__x));		      \
 	 __v; }))
-# endif
-#else
-# define __bswap_32(x) \
+#  endif
+# else
+#  define __bswap_32(x) \
      (__extension__							      \
       ({ register unsigned int __x = (x); __bswap_constant_32 (__x); }))
+# endif
+#else
+static __inline unsigned int
+__bswap_32 (unsigned int __bsx)
+{
+  return __bswap_constant_32 (__bsx);
+}
 #endif
 
 

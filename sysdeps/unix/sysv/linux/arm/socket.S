@@ -79,7 +79,7 @@ ENTRY (__socket)
 	/* r0 is < 0 if there was an error.  */
 	cmn r0, $124
 	RETINSTR(movcc, pc, r14)
-	b PLTJMP(syscall_error)
+	b PLTJMP(SYSCALL_ERROR)
 
 PSEUDO_END (__socket)
 

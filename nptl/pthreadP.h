@@ -260,6 +260,9 @@ extern int __pthread_cond_init (pthread_cond_t *cond,
 				const pthread_condattr_t *cond_attr);
 extern int __pthread_cond_signal (pthread_cond_t *cond);
 extern int __pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex);
+extern int __pthread_cond_timedwait (pthread_cond_t *cond,
+				     pthread_mutex_t *mutex,
+				     const struct timespec *abstime);
 extern int __pthread_condattr_destroy (pthread_condattr_t *attr);
 extern int __pthread_condattr_init (pthread_condattr_t *attr);
 extern int __pthread_key_create (pthread_key_t *key, void (*destr) (void *));
