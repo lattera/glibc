@@ -174,7 +174,7 @@ CFLAGS-scheck.c = -Wno-strict-prototypes -DNOID
 # leapseconds.
 testdata = $(objpfx)testdata
 define build-testdata
-GCONV_PATH=${common-objpfx}iconvdata \
+GCONV_PATH=${common-objpfx}iconvdata LANGUAGE=C LC_ALL=C \
   $(built-program-cmd) -d $(testdata) -y ./yearistype $<
 endef
 

@@ -1,3 +1,7 @@
+2000-06-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* gen-locale.sh: Print that it might take a while to finish.
+
 2000-06-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (install-locales): Remove the -u switch from localedef

@@ -37,9 +37,9 @@ generate_locale ()
     fi
 }
 
+echo "Generating locale data: this might take a while..."
 generate_locale UTF8 de_DE de_DE.UTF-8
 generate_locale ISO-8859-1 de_DE de_DE.ISO-8859-1
 generate_locale ISO-8859-1 en_US en_US.ISO-8859-1
 generate_locale EUC-JP ja_JP ja_JP.EUC-JP
 generate_locale ANSI_X3.4-1968 en_US en_US.ANSI_X3.4-1968
-

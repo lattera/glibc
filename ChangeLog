@@ -1,5 +1,10 @@
 2000-06-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* timezone/Makefile (build-testdata): Set LANGUAGE and LC_ALL
+	since zic uses setlocale and gettext but we cannot make it use the
+	new locale data since zic calls a shell which might not use the
+	new libc.
+
 	* stdlib/strfmon.c: Move somewhat closer to the standard wrt to
 	handling the internation currency symbol.  POSIX says that the
 	fourth character is used to separate the currency symbol from the
