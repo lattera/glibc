@@ -97,10 +97,11 @@
   extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
 
 /* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */
+#  define weak_extern(symbol) _weak_extern (symbol)
 #  ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
-#   define weak_extern(symbol) asm (".weakext " __SYMBOL_PREFIX #symbol);
+#   define _weak_extern(symbol) asm (".weakext " __SYMBOL_PREFIX #symbol);
 #  else
-#   define weak_extern(symbol)      asm (".weak " __SYMBOL_PREFIX #symbol);
+#   define _weak_extern(symbol)    asm (".weak " __SYMBOL_PREFIX #symbol);
 #  endif
 
 # else
@@ -267,22 +268,18 @@
 #endif	/* Have GNU ld.  */
 
 #if DO_VERSIONING
-# ifdef __ASSEMBLER__
-#  define symbol_version(real, name, version) \
+# define symbol_version(real, name, version) \
      _symbol_version(real, name, version)
+# define default_symbol_version(real, name, version) \
+     _default_symbol_version(real, name, version)
+# ifdef __ASSEMBLER__
 #  define _symbol_version(real, name, version) \
      .symver real, name##@##version
-#  define default_symbol_version(real, name, version) \
-     _default_symbol_version(real, name, version)
 #  define _default_symbol_version(real, name, version) \
      .symver real, name##@##@##version
 # else
-#  define symbol_version(real, name, version) \
-     _symbol_version(real, name, version)
 #  define _symbol_version(real, name, version) \
      __asm__ (".symver " #real "," #name "@" #version)
-#  define default_symbol_version(real, name, version) \
-     _default_symbol_version(real, name, version)
 #  define _default_symbol_version(real, name, version) \
      __asm__ (".symver " #real "," #name "@@" #version)
 # endif

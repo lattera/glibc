@@ -28,6 +28,7 @@
 #include <sys/param.h>
 #include <bits/libc-lock.h>
 #include <ldsodefs.h>
+#include <bp-sym.h>
 
 #include <dl-dst.h>
 
@@ -36,7 +37,7 @@ extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
 				    void (*dl_main) (const ElfW(Phdr) *phdr,
 						     ElfW(Word) phnum,
 						     ElfW(Addr) *user_entry));
-weak_extern (_dl_sysdep_start)
+weak_extern (BP_SYM (_dl_sysdep_start))
 
 /* This function is used to unload the cache file if necessary.  */
 extern void _dl_unload_cache (void);
