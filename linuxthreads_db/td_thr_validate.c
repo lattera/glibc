@@ -28,19 +28,26 @@ td_thr_validate (const td_thrhandle_t *th)
   struct pthread_handle_struct *handles = th->th_ta_p->handles;
   int pthread_threads_max = th->th_ta_p->pthread_threads_max;
   int cnt;
+  struct pthread_handle_struct phc;
 
   LOG ("td_thr_validate");
 
   /* A special case: if the program just starts up the handle is
      NULL.  */
   if (th->th_unique == NULL)
-    return TD_OK;
+    {
+      /* Read the first handle.  If the pointer to the thread
+	 descriptor is not NULL this is an error.  */
+      if (ps_pdread (th->th_ta_p->ph, handles, &phc,
+		     sizeof (struct pthread_handle_struct)) != PS_OK)
+	return TD_ERR;	/* XXX Other error value?  */
+
+      return phc.h_descr == NULL ? TD_OK : TD_NOTHR;
+    }
 
   /* Now get all descriptors, one after the other.  */
   for (cnt = 0; cnt < pthread_threads_max; ++cnt, ++handles)
     {
-      struct pthread_handle_struct phc;
-
       if (ps_pdread (th->th_ta_p->ph, handles, &phc,
 		     sizeof (struct pthread_handle_struct)) != PS_OK)
 	return TD_ERR;	/* XXX Other error value?  */

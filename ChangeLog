@@ -1,8 +1,14 @@
 2002-07-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* catgets/tst-catgets.c (main): Don't expect results for
+	untranslated messages.
+
 	* glibcbug.in: Fix little typo.  Remove STDIO.
 
 	* config.h.in: Fail if __FAST_MATH__ is defined.
+	* math/Makefile (CPPFLAGS-test-ifloat.c): Also define TEST_FAST_MATH.
+	(CPPFLAGS-test-idouble.c): Likewise.
+	(CPPFLAGS-test-ildouble.c): Likewise.
 
 2002-07-15  Ulrich Drepper  <drepper@redhat.com>
 

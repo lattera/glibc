@@ -4,7 +4,7 @@
 
 /* Another evil option when it comes to compiling the C library is
    --ffast-math since it alters the ABI.  */
-#ifdef __FAST_MATH__
+#if defined __FAST_MATH__ && !defined TEST_FAST_MATH
 # error "glibc must not be compiled with -ffast-math"
 #endif
 

@@ -122,9 +122,12 @@ CFLAGS-test-float.c = -fno-inline -ffloat-store
 CFLAGS-test-double.c = -fno-inline -ffloat-store
 CFLAGS-test-ldouble.c = -fno-inline -ffloat-store
 CFLAGS-test-tgmath.c = -fno-builtin
-CPPFLAGS-test-ifloat.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
-CPPFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
-CPPFLAGS-test-ildoubl.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
+CPPFLAGS-test-ifloat.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__ \
+			 -DTEST_FAST_MATH
+CPPFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__ \
+			 -DTEST_FAST_MATH
+CPPFLAGS-test-ildoubl.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__ \
+			  -DTEST_FAST_MATH
 
 distribute += libm-test.inc gen-libm-test.pl README.libm-test
 

@@ -41,14 +41,14 @@ main (void)
 	  char *trans;
 
 	  trans = catgets (cd, 1, 1 + cnt,
-			   "+#+# is this comes backs it's an error");
+			   "+#+# if this comes backs it's an error");
 
 	  if (trans == NULL)
 	    {
 	      printf ("catgets return NULL for %d\n", cnt);
 	      result = 1;
 	    }
-	  else if (strcmp (trans, msgs[cnt]) != 0)
+	  else if (strcmp (trans, msgs[cnt]) != 0 && msgs[cnt][0] != '\0')
 	    {
 	      printf ("expected \"%s\", got \"%s\"\n", msgs[cnt], trans);
 	      result = 1;
