@@ -12,6 +12,12 @@ sysdep-dl-routines += dl-procinfo
 sysdep_routines += dl-procinfo
 # extra shared linker files to link only into dl-allobjs.so
 sysdep-rtld-routines += dl-procinfo
+
+ifeq (yes,$(build-shared))
+# This is needed to support g++ v2 and v3.
+sysdep_routines += framestate
+shared-only-routines += framestate
+endif
 endif
 
 ifeq ($(subdir),resource)

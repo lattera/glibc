@@ -2,6 +2,9 @@ libc {
   GLIBC_2.0 {
     # functions used in other libraries
     _dl_open; _dl_close; _dl_addr;
+%ifdef EXPORT_UNWIND_FIND_FDE
+    __register_frame_info; __deregister_frame_info;
+%endif
   }
   GLIBC_2.1 {
     # functions used in other libraries
@@ -17,6 +20,12 @@ libc {
   GLIBC_2.2.4 {
     dl_iterate_phdr;
   }
+%ifdef EXPORT_UNWIND_FIND_FDE
+  GLIBC_2.2.5 {
+    __register_frame_info_bases; __deregister_frame_info_bases;
+    __register_frame_info_table_bases; _Unwind_Find_FDE;
+  }
+%endif
 }
 
 ld {

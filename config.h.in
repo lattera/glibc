@@ -48,6 +48,9 @@
 /* Define a symbol_name as a global .symbol_name for ld.  */
 #undef	HAVE_ASM_GLOBAL_DOT_NAME
 
+/* Define if _Unwind_Find_FDE should be exported from glibc.  */
+#undef  EXPORT_UNWIND_FIND_FDE
+
 /* Define to use GNU libio instead of GNU stdio.
    This is defined by configure under --enable-libio.  */
 #undef	USE_IN_LIBIO

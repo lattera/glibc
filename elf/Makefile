@@ -66,6 +66,11 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 
 include ../Makeconfig
 
+ifeq ($(unwind-find-fde),yes)
+routines += unwind-dw2-fde
+shared-only-routines = unwind-dw2-fde
+endif
+
 before-compile  = $(objpfx)trusted-dirs.h
 generated	:= trusted-dirs.h trusted-dirs.st for-renamed/renamed.so
 generated-dirs	:= for-renamed

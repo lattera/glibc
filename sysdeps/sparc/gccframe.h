@@ -1,5 +1,5 @@
-/* Definition of object in frame unwind info.  Generic version.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Definition of object in frame unwind info.  sparc version.
+   Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,34 +17,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sys/types.h>
+#define FIRST_PSEUDO_REGISTER 101
 
-struct dwarf_fde;
-struct fde_vector;
-
-struct object
-{
-  void *pc_begin;
-  void *tbase;
-  void *dbase;
-  union {
-    struct dwarf_fde *single;
-    struct dwarf_fde **array;
-    struct fde_vector *sort;
-  } u;
-
-  union {
-    struct {
-      unsigned long sorted : 1;
-      unsigned long from_array : 1;
-      unsigned long mixed_encoding : 1;
-      unsigned long encoding : 8;
-      /* ??? Wish there was an easy way to detect a 64-bit host here;
-	 we've got 32 bits left to play with... */
-      unsigned long count : 21;
-    } b;
-    size_t i;
-  } s;
-
-  struct object *next;
-};
+#include <sysdeps/generic/gccframe.h>

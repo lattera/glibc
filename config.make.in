@@ -46,6 +46,9 @@ have-Bgroup = @libc_cv_Bgroup@
 need-nopic-initfini = @nopic_initfini@
 with-cvs = @with_cvs@
 old-glibc-headers = @old_glibc_headers@
+unwind-find-fde = @libc_cv_gcc_unwind_find_fde@
+
+static-libgcc = @libc_cv_gcc_static_libgcc@
 
 versioning = @VERSIONING@
 oldest-abi = @oldest_abi@

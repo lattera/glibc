@@ -636,27 +636,6 @@ test -n "$aux_missing" && AC_MSG_WARN([
 CCVERSION=`$CC -v 2>&1 | sed -n 's/gcc version //p'`
 AC_SUBST(CCVERSION)
 
-case $CCVERSION in
-  3.*) gcc3=yes;;
-esac
-
-if test x"$gcc3" = xyes; then
-    echo "\
-*** This version of GNU libc cannot be compiled by GCC 3.x.
-*** GCC 3.x will generate a library that is binary incompatible to
-*** older and future releases of GNU libc.
-*** You should compile this GNU libc release by an older GCC version
-*** or wait for the next GNU libc release."
-  if test $enable_sanity = yes; then
-    echo "\
-*** If you really mean to use GCC 3.x, run configure again
-*** using the extra parameter \`--disable-sanity-checks'."
-    exit 1
-  else
-    echo "\
-*** This configuration is not supported by the GNU libc developers."
-  fi
-fi
 # if using special system headers, find out the compiler's sekrit
 # header directory and add that to the list.  NOTE: Only does the right
 # thing on a system that doesn't need fixincludes.  (Not presently a problem.)
@@ -712,6 +691,14 @@ AC_MSG_ERROR([
 *** building glibc. Please change the environment variable
 *** and run configure again.])
 fi
+
+AC_CACHE_CHECK(whether GCC supports -static-libgcc, libc_cv_gcc_static_libgcc, [dnl
+if $CC -v -static-libgcc 2>&1 | grep -q 'unrecognized option.*static-libgcc'; then
+  libc_cv_gcc_static_libgcc=
+else
+  libc_cv_gcc_static_libgcc=-static-libgcc
+fi])
+AC_SUBST(libc_cv_gcc_static_libgcc)
 
 AC_PATH_PROG(BASH, bash, no)
 if test "$BASH" != no &&
@@ -1459,6 +1446,7 @@ libc_link_sources=
 use_ldconfig=no
 ldd_rewrite_script=no
 libc_cv_sysconfdir=$sysconfdir
+libc_cv_gcc_unwind_find_fde=no
 
 # Iterate over all the sysdep directories we will use, running their
 # configure fragments, and looking for a uname implementation.
@@ -1483,6 +1471,11 @@ for dir in $sysnames; do
   fi
 ]dnl
 done
+
+if test x$libc_cv_gcc_unwind_find_fde = xyes; then
+  AC_DEFINE(EXPORT_UNWIND_FIND_FDE)
+fi
+AC_SUBST(libc_cv_gcc_unwind_find_fde)
 
 AC_LINK_FILES(`echo $libc_link_sources`, `echo $libc_link_dests`)
 

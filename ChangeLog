@@ -1,3 +1,69 @@
+2001-10-02  Jakub Jelinek  <jakub@redhat.com>
+	    H.J. Lu  <hjl@gnu.org>
+
+	* configure.in (libc_cv_gcc_static_libgcc): Set to -static-libgcc
+	if gcc supports this flag.
+	(EXPORT_UNWIND_FIND_FDE): Define unless target configure disables it.
+	(gcc3): Allow glibc to be compiled with gcc 3.x.
+	* config.h.in (EXPORT_UNWIND_FIND_FDE): Add.
+	* config.make.in (static-libgcc, unwind-find-fde): Add.
+	* Makerules (build-shlib-helper, build-module-helper): Use it.
+	* scripts/versions.awk: Make sure GLIBC_ versions come first.
+	* elf/soinit.c (__libc_global_ctors): Set tbases and dbases if
+	necessary.
+	(_fini): Call __deregister_frame_info_bases if
+	__register_frame_info_bases was used to register.
+	* elf/Versions (__register_frame_info, __deregister_frame_info): Add
+	for GLIBC_2.0.
+	(__register_frame_info_bases, __register_frame_info_table_bases,
+	__deregister_frame_info_bases, _Unwind_Find_FDE): Add for GLIBC_2.2.5.
+	* elf/Makefile (routines): Add unwind-dw2-fde.
+	(shared-only-routines): Add unwind-dw2-fde.
+	* sysdeps/alpha/gccframe.h: New file.
+	* sysdeps/arm/gccframe.h: New file.
+	* sysdeps/generic/framestate.c: New file.
+	* sysdeps/generic/dwarf2.h: New file.
+	* sysdeps/generic/gccframe.h (struct object): Update from gcc 3.0.
+	* sysdeps/generic/unwind-dw2-fde.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/unwind-dw2-fde.c: New file.
+	* sysdeps/generic/unwind-dw2-fde.h: New file.
+	* sysdeps/generic/unwind-dw2.c: New file.
+	* sysdeps/generic/unwind-pe.h: New file.
+	* sysdeps/generic/unwind.h: New file.
+	* sysdeps/hppa/gccframe.h: New file.
+	* sysdeps/i386/gccframe.h: New file.
+	* sysdeps/m68k/gccframe.h: New file.
+	* sysdeps/mips/gccframe.h: New file.
+	* sysdeps/powerpc/gccframe.h: New file.
+	* sysdeps/s390/gccframe.h: New file.
+	* sysdeps/sh/gccframe.h: New file.
+	* sysdeps/sparc/gccframe.h: New file.
+	* sysdeps/vax/gccframe.h: New file.
+	* sysdeps/unix/sysv/linux/configure.in (libc_cv_gcc_unwind_find_fde):
+	Set on all architectures except ia64.
+	* sysdeps/mach/hurd/configure.in (libc_cv_gcc_unwind_find_fde): Set
+	for i386.
+	* sysdeps/mach/hurd/i386/Versions (__register_frame_info,
+	__deregister_frame_info): Move to elf/Versions.
+	* sysdeps/unix/sysv/linux/m68k/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/arm/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/mips/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Versions: Likewise.
+	* sysdeps/mach/hurd/i386/Makefile (sysdep-routines): Add framestate.
+	* sysdeps/unix/sysv/linux/arm/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/mips/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/Makefile: Likewise.
+
 2001-11-15  Jeff Law  <law@redhat.com>
 
 	* posix/regex.c (uintptr_t): Do not provide a definition if the
@@ -798,8 +864,8 @@
 
 2001-09-18  Jakub Jelinek  <jakub@redhat.com>
 
-	* sysdeps/unix/sysv/linux/ia64/ldd-rewrite.sed: New.
-	* sysdeps/unix/sysv/linux/s390/ldd-rewrite.sed: New.
+	* sysdeps/unix/sysv/linux/ia64/ldd-rewrite.sed: New file.
+	* sysdeps/unix/sysv/linux/s390/ldd-rewrite.sed: New file.
 	* sysdeps/unix/sysv/linux/configure.in: Add ia64 and s390
 	ldd-rewrite scripts.
 
@@ -1632,7 +1698,7 @@
 2001-08-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* string/strnlen.c: Remove.
-	* sysdeps/generic/strnlen.c: New.
+	* sysdeps/generic/strnlen.c: New file.
 	* sysdeps/i386/i486/bits/string.h (strnlen): Remove.
 
 2001-08-21  Roland McGrath  <roland@frob.com>
