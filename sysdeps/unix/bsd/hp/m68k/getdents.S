@@ -1,1 +1,1 @@
-#include <sysdeps/unix/bsd/sun/__getdirentries.S>
+#include <sysdeps/unix/bsd/sun/__getdents.S>
