@@ -16,7 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* This code wants to be run through m4.  */
+/* This code wants to be run through m4; see sysdeps/m68k/Makefile.  */
 
 #include <sysdeps/unix/sysdep.h>
 
