@@ -1,5 +1,5 @@
 /* Mapping tables for UHC handling.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jungshik Shin <jshin@pantheon.yale.edu>, 1998.
 
@@ -3140,7 +3140,8 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	  }								      \
       }									      \
 									      \
-    *((uint32_t *) outptr)++ = ch;					      \
+    put32 (outptr, ch);							      \
+    outptr += 4;							      \
   }
 #include <iconv/loop.c>
 
@@ -3152,7 +3153,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
-    uint32_t ch = *((uint32_t *) inptr);				      \
+    uint32_t ch = get32 (inptr);					      \
 									      \
     if (ch < 0x7f)							      \
       /* XXX Think about 0x5c ; '\'.  */				      \

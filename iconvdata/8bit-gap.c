@@ -1,6 +1,6 @@
 /* Generic conversion to and from 8bit charsets,
    converting from UCS using gaps.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -55,7 +55,8 @@ struct gap
 	break;								      \
       }									      \
 									      \
-    *((uint32_t *) outptr)++ = ch;					      \
+    put32 (outptr, ch);							      \
+    outptr += 4;							      \
     ++inptr;								      \
   }
 #include <iconv/loop.c>
@@ -68,7 +69,7 @@ struct gap
 #define BODY \
   {									      \
     const struct gap *rp = from_idx;					      \
-    uint32_t ch = *((uint32_t *) inptr);				      \
+    uint32_t ch = get32 (inptr);					      \
     unsigned char res;							      \
 									      \
     if (ch >= 0xffff)							      \

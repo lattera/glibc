@@ -1,5 +1,5 @@
 /* Mapping tables for GBK handling.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Sean Chen <sean.chen@turbolinux.com>, 1999.
 
@@ -13167,7 +13167,8 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  inptr += 2;							      \
 	}								      \
 									      \
-    *((uint32_t *) outptr)++ = ch;					      \
+    put32 (outptr, ch);							      \
+    outptr += 4;							      \
   }
 #include <iconv/loop.c>
 
@@ -13179,7 +13180,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
-    uint32_t ch = *((uint32_t *) inptr);				      \
+    uint32_t ch = get32 (inptr);					      \
     unsigned char buf[2];						      \
     const unsigned char *cp = buf;					      \
 									      \

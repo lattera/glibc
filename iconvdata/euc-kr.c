@@ -1,5 +1,5 @@
 /* Mapping tables for EUC-KR handling.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jungshik Shin <jshin@pantheon.yale.edu>
    and Ulrich Drepper <drepper@cygnus.com>, 1998.
@@ -104,7 +104,8 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 	  }								      \
       }									      \
 									      \
-    *((uint32_t *) outptr)++ = ch;					      \
+    put32 (outptr, ch);							      \
+    outptr += 4;							      \
   }
 #include <iconv/loop.c>
 
@@ -116,7 +117,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
-    uint32_t ch = *((uint32_t *) inptr);				      \
+    uint32_t ch = get32 (inptr);					      \
     unsigned char cp[2];						      \
 									      \
     /* Decomposing Hangul syllables not available in KS C 5601 into	      \

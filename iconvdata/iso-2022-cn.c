@@ -1,5 +1,5 @@
 /* Conversion module for ISO-2022-CN.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -221,7 +221,8 @@ enum
 	  }								      \
       }									      \
 									      \
-    *((uint32_t *) outptr)++ = ch;					      \
+    put32 (outptr, ch);							      \
+    outptr += 4;							      \
   }
 #define EXTRA_LOOP_DECLS	, int *setp
 #define INIT_PARAMS		int set = *setp & CURRENT_MASK; \
@@ -240,7 +241,7 @@ enum
     uint32_t ch;							      \
     size_t written = 0;							      \
 									      \
-    ch = *((uint32_t *) inptr);						      \
+    ch = get32 (inptr);							      \
 									      \
     /* First see whether we can write the character using the currently	      \
        selected character set.  */					      \

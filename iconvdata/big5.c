@@ -1,5 +1,5 @@
 /* Mapping tables for Big5 handling.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -8475,7 +8475,8 @@ static const char from_ucs4_tab13[][2] =
     else								      \
       ++inptr;								      \
 									      \
-    *((uint32_t *) outptr)++ = ch;					      \
+    putr32 (outptr, ch);						      \
+    outptr += 4;							      \
   }
 #include <iconv/loop.c>
 
@@ -8487,7 +8488,7 @@ static const char from_ucs4_tab13[][2] =
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
-    uint32_t ch = *((uint32_t *) inptr);				      \
+    uint32_t ch = get32 (inptr);					      \
     char buf[2];							      \
     const char *cp;							      \
 									      \

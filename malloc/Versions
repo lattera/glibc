@@ -50,6 +50,6 @@ libc {
   }
   GLIBC_2.2 {
     # m*
-    mcheck_pedantic;
+    mcheck_check_all; mcheck_pedantic;
   }
 }

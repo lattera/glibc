@@ -1,5 +1,5 @@
 /* Conversion to and from the various ISO 646 CCS.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -410,7 +410,8 @@ gconv_end (struct __gconv_step *data)
 	result = failure;						      \
 	break;								      \
       }									      \
-    *((uint32_t *) outptr)++ = ch;					      \
+    put32 (outptr, ch);							      \
+    outptr += 4;							      \
     ++inptr;								      \
   }
 #define EXTRA_LOOP_DECLS	, enum variant var
@@ -426,7 +427,7 @@ gconv_end (struct __gconv_step *data)
     unsigned char ch;							      \
     int failure = __GCONV_OK;						      \
 									      \
-    ch = *((uint32_t *) inptr);						      \
+    ch = get32 (inptr);							      \
     switch (*((uint32_t *) inptr))					      \
       {									      \
       case 0x23:							      \

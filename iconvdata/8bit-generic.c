@@ -1,5 +1,5 @@
 /* Generic conversion to and from 8bit charsets.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -41,7 +41,8 @@
 	break;								      \
       }									      \
 									      \
-    *((uint32_t *) outptr)++ = ch;					      \
+    put32 (outptr, ch);							      \
+    outptr += 4;							      \
     ++inptr;								      \
   }
 #include <iconv/loop.c>
@@ -53,7 +54,7 @@
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
-    uint32_t ch = *((uint32_t *) inptr);				      \
+    uint32_t ch = get32 (inptr);					      \
 									      \
     if (ch >= sizeof (from_ucs4) / sizeof (from_ucs4[0])		      \
 	|| (ch != 0 && from_ucs4[ch] == '\0'))				      \

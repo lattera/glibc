@@ -1,5 +1,5 @@
 /* Mapping tables for JOHAB handling.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jungshik Shin <jshin@pantheon.yale.edu>
    and Ulrich Drepper <drepper@cygnus.com>, 1998.
@@ -274,7 +274,8 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	inptr += 2;							      \
       }									      \
 									      \
-    *((uint32_t *) outptr)++ = ch;					      \
+    put32 (outptr, ch);							      \
+    outptr += 4;							      \
   }
 #include <iconv/loop.c>
 
@@ -286,7 +287,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
-    uint32_t ch = *((uint32_t *) inptr);				      \
+    uint32_t ch = get32 (inptr);					      \
     /*									      \
        if (ch >= (sizeof (from_ucs4_lat1) / sizeof (from_ucs4_lat1[0])))      \
 	 {								      \

@@ -1,5 +1,5 @@
 # Available tests for iconv(1) (and therefore iconv(3)) in GNU libc.
-# Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 #
@@ -38,12 +38,12 @@ ISO-8859-6		ISO-8859-6		Y	UTF8
 ISO-8859-7		ISO-8859-7		Y	UTF8
 ISO-8859-8		ISO-8859-8		Y	UTF8
 ISO-8859-9		ISO-8859-9		Y	UTF8
-ISO-8859-10		ISO-8859-10		Y	UCS2 UTF8
+ISO-8859-10		ISO-8859-10		Y	UCS-2BE UTF8
 ISO-8859-14		ISO-8859-14		Y	UTF8
 ISO-8859-15		ISO-8859-15		Y	UTF8
 ANSI_X3.4-1968		ANSI_X3.4-1968		Y	UTF8
 BS_4730			BS_4730			Y	UTF8
-CSA_Z243.4-1985-1	CSA_Z243.4-1985-1	Y	UCS2
+CSA_Z243.4-1985-1	CSA_Z243.4-1985-1	Y	UCS-2BE
 CSA_Z243.4-1985-2	CSA_Z243.4-1985-2	Y	UCS4
 DIN_66003		DIN_66003		Y	UTF8
 DS_2089			DS_2089			Y	UTF8

@@ -45,6 +45,9 @@ extern int mcheck (void (*__abortfunc) (enum mcheck_status)) __THROW;
    the memory handling functions is called.  This can be very slow.  */
 extern int mcheck_pedantic (void (*__abortfunc) (enum mcheck_status)) __THROW;
 
+/* Force check of all blocks now.  */
+extern void mcheck_check_all (void);
+
 /* Check for aberrations in a particular malloc'd block.  You must have
    called `mcheck' already.  These are the same checks that `mcheck' does
    when you free or reallocate a block.  */

@@ -1,5 +1,5 @@
 /* Generic conversion to and from T.61.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -422,7 +422,8 @@ static const char from_ucs4[][2] =
 	break;								      \
       }									      \
 									      \
-    *((uint32_t *) outptr)++ = ch;					      \
+    put32 (outptr, ch);							      \
+    outptr += 4;							      \
   }
 #include <iconv/loop.c>
 
@@ -435,7 +436,7 @@ static const char from_ucs4[][2] =
 #define BODY \
   {									      \
     char tmp[2];							      \
-    uint32_t ch = *((uint32_t *) inptr);				      \
+    uint32_t ch = get32 (inptr);					      \
     const char *cp;							      \
 									      \
     if (ch >= sizeof (from_ucs4) / sizeof (from_ucs4[0]))		      \

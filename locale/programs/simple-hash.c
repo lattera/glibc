@@ -1,5 +1,5 @@
 /* Implement simple hashing table with string based keys.
-   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, October 1994.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,7 +53,8 @@
 # define bcopy(s, d, n)	memcpy ((d), (s), (n))
 #endif
 
-void *xmalloc __P ((size_t __n));
+extern void *xmalloc (size_t __n);
+extern void *xcalloc (size_t __n, size_t __m);
 
 typedef struct hash_entry
 {
@@ -66,15 +67,14 @@ typedef struct hash_entry
 hash_entry;
 
 /* Prototypes for local functions.  */
-static void insert_entry_2 __P ((hash_table *htab, const void *key,
-				 size_t keylen, unsigned long hval,
-				 size_t idx, void *data));
-static size_t lookup __P ((hash_table *htab, const void *key, size_t keylen,
-			   unsigned long int hval));
-static size_t lookup_2 __P ((hash_table *htab, const void *key,
-			     size_t keylen, unsigned long int hval));
-static unsigned long compute_hashval __P ((const void *key, size_t keylen));
-static int is_prime __P ((unsigned long int candidate));
+static void insert_entry_2 (hash_table *htab, const void *key, size_t keylen,
+			    unsigned long hval, size_t idx, void *data);
+static size_t lookup (hash_table *htab, const void *key, size_t keylen,
+		      unsigned long int hval);
+static size_t lookup_2 (hash_table *htab, const void *key, size_t keylen,
+			unsigned long int hval);
+static unsigned long compute_hashval (const void *key, size_t keylen);
+static int is_prime (unsigned long int candidate);
 
 
 int
@@ -89,11 +89,10 @@ init_hash (htab, init_size)
   htab->size = init_size;
   htab->filled = 0;
   htab->first = NULL;
-  htab->table = (void *) xmalloc ((init_size + 1) * sizeof (hash_entry));
+  htab->table = (void *) xcalloc (init_size + 1, sizeof (hash_entry));
   if (htab->table == NULL)
     return -1;
 
-  memset (htab->table, '\0', (init_size + 1) * sizeof (hash_entry));
   obstack_init (&htab->mem_pool);
 
   return 0;
@@ -171,9 +170,7 @@ insert_entry_2 (htab, key, keylen, hval, idx, data)
       htab->size = next_prime (htab->size * 2);
       htab->filled = 0;
       htab->first = NULL;
-      htab->table = (void *) xmalloc ((1 + htab->size)
-				      * sizeof (hash_entry));
-      memset (htab->table, '\0', (1 + htab->size) * sizeof (hash_entry));
+      htab->table = (void *) xcalloc (1 + htab->size, sizeof (hash_entry));
 
       for (idx = 1; idx <= old_size; ++idx)
 	if (table[idx].used)

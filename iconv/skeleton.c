@@ -117,6 +117,73 @@ static int to_object;
 #endif
 
 
+/* Define macros which can access unaligned buffers.  These macros are
+   supposed to be used only in code outside the inner loops.  For the inner
+   loops we have other definitions which allow optimized access.  */
+#ifdef _STRING_ARCH_unaligned
+/* We can handle unaligned memory access.  */
+# define get16(addr) *((uint16_t *) (addr))
+# define get32(addr) *((uint32_t *) (addr))
+
+/* We need no special support for writing values either.  */
+# define put16(addr, val) *((uint16_t *) (addr)) = (val)
+# define put32(addr, val) *((uint32_t *) (addr)) = (val)
+#else
+/* Distinguish between big endian and little endian.  */
+# if __BYTE_ORDER == __LITTLE_ENDIAN
+#  define get16(addr) \
+     (((__const unsigned char *) (addr))[1] << 8			      \
+      | ((__const unsigned char *) (addr))[0])
+#  define get32(addr) \
+     (((((__const unsigned char *) (addr))[3] << 8			      \
+	| ((__const unsigned char *) (addr))[2]) << 8			      \
+       | ((__const unsigned char *) (addr))[1]) << 8			      \
+      | ((__const unsigned char *) (addr))[0])
+
+# define put16(addr, val) \
+     ({ uint16_t __val = (val);						      \
+	((__const unsigned char *) (addr))[0] = __val;			      \
+	((__const unsigned char *) (addr))[1] = __val >> 8;		      \
+	(void) 0; })
+# define put32(addr, val) \
+     ({ uint16_t __val = (val);						      \
+	((__const unsigned char *) (addr))[0] = __val;			      \
+	__val >>= 8;							      \
+	((__const unsigned char *) (addr))[1] = __val;			      \
+	__val >>= 8;							      \
+	((__const unsigned char *) (addr))[2] = __val;			      \
+	__val >>= 8;							      \
+	((__const unsigned char *) (addr))[3] = __val;			      \
+	(void) 0; })
+# else
+#  define get16(addr) \
+     (((__const unsigned char *) (addr))[0] << 8			      \
+      | ((__const unsigned char *) (addr))[1])
+#  define get32(addr) \
+     (((((__const unsigned char *) (addr))[0] << 8			      \
+	| ((__const unsigned char *) (addr))[1]) << 8			      \
+       | ((__const unsigned char *) (addr))[2]) << 8			      \
+      | ((__const unsigned char *) (addr))[3])
+
+# define put16(addr, val) \
+     ({ uint16_t __val = (val);						      \
+	((__const unsigned char *) (addr))[1] = __val;			      \
+	((__const unsigned char *) (addr))[2] = __val >> 8;		      \
+	(void) 0; })
+# define put32(addr, val) \
+     ({ uint16_t __val = (val);						      \
+	((__const unsigned char *) (addr))[3] = __val;			      \
+	__val >>= 8;							      \
+	((__const unsigned char *) (addr))[2] = __val;			      \
+	__val >>= 8;							      \
+	((__const unsigned char *) (addr))[1] = __val;			      \
+	__val >>= 8;							      \
+	((__const unsigned char *) (addr))[0] = __val;			      \
+	(void) 0; })
+# endif
+#endif
+
+
 /* For conversions from a fixed width character sets to another fixed width
    character set we we can define RESET_INPUT_BUFFER is necessary.  */
 #if !defined RESET_INPUT_BUFFER && !defined SAVE_RESET_STATE
@@ -230,6 +297,33 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
       unsigned char *outbuf = data->__outbuf;
       unsigned char *outend = data->__outbufend;
       unsigned char *outstart;
+#ifdef _STRING_ARCH_unaligned
+# define unaligned 0
+#else
+      /* The following assumes that encodings, which have a variable length
+	 what might unalign a buffer even though it is a aligned in the
+	 beginning, either don't have the minimal number of bytes as a divisor
+	 of the maximum length or have a minimum length of 1.  This is true
+	 for all known and supported encodings.  */
+      int unaligned;
+
+      unaligned = ((FROM_DIRECTION
+		    && ((MIN_NEEDED_FROM > 1
+			 && MAX_NEEDED_FROM % MIN_NEEDED_FROM == 0
+			 && (uintptr_t) inptr % MIN_NEEDED_FROM != 0)
+			|| (MIN_NEEDED_TO > 1
+			    && MAX_NEEDED_TO % MIN_NEEDED_TO == 0
+			    && (uintptr_t) outbuf % MIN_NEEDED_TO != 0)))
+		   || (!FROM_DIRECTION
+		       && ((MIN_NEEDED_FROM > 1
+			    && MAX_NEEDED_FROM % MIN_NEEDED_FROM == 0
+			    && (uintptr_t) outbuf % MIN_NEEDED_FROM != 0)
+			   || (MIN_NEEDED_TO > 1
+			       && MAX_NEEDED_TO % MIN_NEEDED_TO == 0
+			       && (uintptr_t) inptr % MIN_NEEDED_TO != 0))));
+# define GEN_unaligned(name) GEN_unaligned2 (name)
+# define GEN_unaligned2(name) name##_unaligned
+#endif
 
       /* This variable is used to count the number of characters we
 	 actually converted.  */
@@ -250,16 +344,36 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	  SAVE_RESET_STATE (1);
 #endif
 
-	  if (FROM_DIRECTION)
-	    /* Run the conversion loop.  */
-	    status = FROM_LOOP (inbuf, inbufend, &outbuf, outend,
-				data->__statep, step->__data, &converted
-				EXTRA_LOOP_ARGS);
+	  if (!unaligned)
+	    {
+	      if (FROM_DIRECTION)
+		/* Run the conversion loop.  */
+		status = FROM_LOOP (inbuf, inbufend, &outbuf, outend,
+				    data->__statep, step->__data, &converted
+				    EXTRA_LOOP_ARGS);
+	      else
+		/* Run the conversion loop.  */
+		status = TO_LOOP (inbuf, inbufend, &outbuf, outend,
+				  data->__statep, step->__data, &converted
+				  EXTRA_LOOP_ARGS);
+	    }
+#ifndef _STRING_ARCH_unaligned
 	  else
-	    /* Run the conversion loop.  */
-	    status = TO_LOOP (inbuf, inbufend, &outbuf, outend,
-			      data->__statep, step->__data, &converted
-			      EXTRA_LOOP_ARGS);
+	    {
+	      if (FROM_DIRECTION)
+		/* Run the conversion loop.  */
+		status = GEN_unaligned (FROM_LOOP) (inbuf, inbufend, &outbuf,
+						    outend, data->__statep,
+						    step->__data, &converted
+						    EXTRA_LOOP_ARGS);
+	      else
+		/* Run the conversion loop.  */
+		status = GEN_unaligned (TO_LOOP) (inbuf, inbufend, &outbuf,
+						  outend, data->__statep,
+						  step->__data, &converted
+						  EXTRA_LOOP_ARGS);
+	    }
+#endif
 
 	  /* We finished one use of the loops.  */
 	  ++data->__invocation_counter;

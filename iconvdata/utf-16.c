@@ -52,10 +52,10 @@
 	  if (inptr + 2 > inbufend)					      \
 	    return __GCONV_EMPTY_INPUT;					      \
 									      \
-	  if (*(uint16_t *) inptr == BOM)				      \
+	  if (get16u (inptr) == BOM)					      \
 	    /* Simply ignore the BOM character.  */			      \
 	    inptr += 2;							      \
-	  else if (*(uint16_t *) inptr == BOM_OE)			      \
+	  else if (get16u (inptr) == BOM_OE)				      \
 	    {								      \
 	      ((struct utf16_data *) step->__data)->swap = 1;		      \
 	      inptr += 2;						      \
@@ -69,7 +69,7 @@
       if (outbuf + 2 > outend)						      \
 	return __GCONV_FULL_OUTPUT;					      \
 									      \
-      *(uint16_t *) outbuf = BOM;					      \
+      put16u (outbuf, BOM);						      \
       outbuf += 2;							      \
     }
 #define EXTRA_LOOP_ARGS		, var, data, swap
@@ -193,7 +193,7 @@ gconv_end (struct __gconv_step *data)
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
-    uint32_t c = *((uint32_t *) inptr);					      \
+    uint32_t c = get32 (inptr);						      \
 									      \
     if (swap)								      \
       {									      \
@@ -213,12 +213,12 @@ gconv_end (struct __gconv_step *data)
 		break;							      \
 	      }								      \
 									      \
-	    *((uint16_t *) outptr) = bswap_16 (0xd7c0 + (c >> 10));	      \
+	    put16 (outptr, bswap_16 (0xd7c0 + (c >> 10)));		      \
 	    outptr += 2;						      \
-	    *((uint16_t *) outptr) = bswap_16 (0xdc00 + (c & 0x3ff));	      \
+	    put16 (outptr, bswap_16 (0xdc00 + (c & 0x3ff)));		      \
 	  }								      \
 	else								      \
-	  *((uint16_t *) outptr) = bswap_16 (c);			      \
+	  put16 (outptr, bswap_16 (c));					      \
       }									      \
     else								      \
       {									      \
@@ -238,12 +238,12 @@ gconv_end (struct __gconv_step *data)
 		break;							      \
 	      }								      \
 									      \
-	    *((uint16_t *) outptr) = 0xd7c0 + (c >> 10);		      \
+	    put16 (outptr, 0xd7c0 + (c >> 10));				      \
 	    outptr += 2;						      \
-	    *((uint16_t *) outptr) = 0xdc00 + (c & 0x3ff);		      \
+	    put16 (outptr, 0xdc00 + (c & 0x3ff));			      \
 	  }								      \
 	else								      \
-	  *((uint16_t *) outptr) = c;					      \
+	  put16 (outptr, c);						      \
       }									      \
     outptr += 2;							      \
     inptr += 4;								      \
@@ -260,7 +260,7 @@ gconv_end (struct __gconv_step *data)
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    uint16_t u1 = *(uint16_t *) inptr;					      \
+    uint16_t u1 = get16 (inptr);					      \
 									      \
     if (swap)								      \
       {									      \
@@ -269,7 +269,7 @@ gconv_end (struct __gconv_step *data)
 	if (u1 < 0xd800 || u1 > 0xdfff)					      \
 	  {								      \
 	    /* No surrogate.  */					      \
-	    *((uint32_t *) outptr) = u1;				      \
+	    put32 (outptr, u1);				      \
 	    inptr += 2;							      \
 	  }								      \
 	else								      \
@@ -286,16 +286,18 @@ gconv_end (struct __gconv_step *data)
 		break;							      \
 	      }								      \
 									      \
-	    u2 = bswap_16 (((uint16_t *) inptr)[1]);			      \
+	    inptr += 2;							      \
+	    u2 = bswap_16 (get16 (inptr));				      \
 	    if (u2 < 0xdc00 || u2 >= 0xdfff)				      \
 	      {								      \
 		/* This is no valid second word for a surrogate.  */	      \
 		result = __GCONV_ILLEGAL_INPUT;				      \
+		inptr -= 2;						      \
 		break;							      \
 	      }								      \
 									      \
-	    *((uint32_t *) outptr) = ((u1 - 0xd7c0) << 10) + (u2 - 0xdc00);   \
-	    inptr += 4;							      \
+	    put32 (outptr, ((u1 - 0xd7c0) << 10) + (u2 - 0xdc00));	      \
+	    inptr += 2;							      \
 	  }								      \
       }									      \
     else								      \
@@ -303,7 +305,7 @@ gconv_end (struct __gconv_step *data)
 	if (u1 < 0xd800 || u1 > 0xdfff)					      \
 	  {								      \
 	    /* No surrogate.  */					      \
-	    *((uint32_t *) outptr) = u1;				      \
+	    put32 (outptr, u1);						      \
 	    inptr += 2;							      \
 	  }								      \
 	else								      \
@@ -320,16 +322,18 @@ gconv_end (struct __gconv_step *data)
 		break;							      \
 	      }								      \
 									      \
-	    u2 = ((uint16_t *) inptr)[1];				      \
+	    inptr += 2;							      \
+	    u2 = get16 (inptr);						      \
 	    if (u2 < 0xdc00 || u2 >= 0xdfff)				      \
 	      {								      \
 		/* This is no valid second word for a surrogate.  */	      \
 		result = __GCONV_ILLEGAL_INPUT;				      \
+		inptr -= 2;						      \
 		break;							      \
 	      }								      \
 									      \
-	    *((uint32_t *) outptr) = ((u1 - 0xd7c0) << 10) + (u2 - 0xdc00);   \
-	    inptr += 4;							      \
+	    put32 (outptr, ((u1 - 0xd7c0) << 10) + (u2 - 0xdc00));	      \
+	    inptr += 2;							      \
 	  }								      \
       }									      \
     outptr += 4;							      \

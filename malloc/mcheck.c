@@ -103,9 +103,8 @@ checkhdr (hdr)
   return status;
 }
 
-static void check_all __P ((void));
-static void
-check_all ()
+void
+mcheck_check_all ()
 {
   /* Walk through all the active blocks and test whether they were tempered
      with.  */
@@ -172,7 +171,7 @@ freehook (ptr, caller)
      const __ptr_t caller;
 {
   if (pedantic)
-    check_all ();
+    mcheck_check_all ();
   if (ptr)
     {
       struct hdr *hdr = ((struct hdr *) ptr) - 1;
@@ -200,7 +199,7 @@ mallochook (size, caller)
   struct hdr *hdr;
 
   if (pedantic)
-    check_all ();
+    mcheck_check_all ();
 
   __malloc_hook = old_malloc_hook;
   if (old_malloc_hook != NULL)
@@ -230,7 +229,7 @@ reallochook (ptr, size, caller)
   __malloc_size_t osize;
 
   if (pedantic)
-    check_all ();
+    mcheck_check_all ();
 
   if (ptr)
     {
@@ -331,8 +330,10 @@ int
 mcheck_pedantic (func)
       void (*func) __P ((enum mcheck_status));
 {
-  pedantic = 1;
-  return mcheck (func);
+  int res = mcheck (func);
+  if (res == 0)
+    pedantic = 1;
+  return res;
 }
 
 enum mcheck_status

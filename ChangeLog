@@ -1,3 +1,55 @@
+2000-03-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/TESTS: Use UCS-2BE instead of UCS2.
+
+	* iconv/loop.c: Define get16, get32, put16, and put32 macros to
+	allow as well reading from/writing to unaligned addresses on machines
+	which don't support this in hardware.  Use FCTNAME macro to define
+	function name.  Include the file a second time for platforms which
+	need special unaligned handling.
+	* iconv/skeleton.c: Define get16u, get32u, put16u, and put32u macros
+	to access potentially unaligned addresses.  These macros are intended
+	to be used only outside the loops.
+	(unaligned): New definition.  In case the machine can handle unaligned
+	access define as zero.  Otherwise as a variable which is initialized
+	as nonzero in case the buffer passed in at runtime is unaligned with
+	respect to the character set encoding involved.
+	Call aligned or unaligned looop functions according to unaligned
+	variable.
+	* iconvdata/8bit-gap.c: Use get16, get32, put16, and put32 instead
+	of direct casting pointer to potentially handle unaligned memory
+	accesses.
+	* iconvdata/8bit-generic.c: Likewise.
+	* iconvdata/ansi_x3.110.c: Likewise.
+	* iconvdata/big5.c: Likewise.
+	* iconvdata/euc-cn.c: Likewise.
+	* iconvdata/euc-jp.c: Likewise.
+	* iconvdata/euc-kr.c: Likewise.
+	* iconvdata/euc-tw.c: Likewise.
+	* iconvdata/gbk.c: Likewise.
+	* iconvdata/iso-2022-cn.c: Likewise.
+	* iconvdata/iso-2022-jp.c: Likewise.
+	* iconvdata/iso-2022-kr.c: Likewise.
+	* iconvdata/iso646.c: Likewise.
+	* iconvdata/iso_6937-2.c: Likewise.
+	* iconvdata/iso_6937.c: Likewise.
+	* iconvdata/johab.c: Likewise.
+	* iconvdata/sjis.c: Likewise.
+	* iconvdata/t.61.c: Likewise.
+	* iconvdata/uhc.c: Likewise.
+	* iconvdata/unicode.c: Likewise.
+	* iconvdata/utf-16.c: Likewise.
+
+	* locale/programs/simple-hash.c: Little optimizations.  Remove K&R
+	prototypes.
+
+	* malloc/Versions [libc] (GLIBC_2.2): Add mcheck_check_all.
+	* malloc/mcheck.c (mcheck_check_all): Renamed from check_all and made
+	public.
+	* malloc/mcheck.h (mcheck_check_all): Declare.
+
+	* stdio-common/Makefile (tests): Add tst-obprintf.
+
 2000-03-28  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/generic/bits/sigthread.h: Clean up conditionals.

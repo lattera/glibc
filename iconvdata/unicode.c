@@ -50,10 +50,10 @@
 	  if (inptr + 2 > inbufend)					      \
 	    return __GCONV_EMPTY_INPUT;					      \
 									      \
-	  if (*(uint16_t *) inptr == BOM)				      \
+	  if (get16u (inptr) == BOM)					      \
 	    /* Simply ignore the BOM character.  */			      \
 	    inptr += 2;							      \
-	  else if (*(uint16_t *) inptr == BOM_OE)			      \
+	  else if (get16u (inptr) == BOM_OE)				      \
 	    {								      \
 	      ((struct unicode_data *) step->__data)->swap = 1;		      \
 	      inptr += 2;						      \
@@ -66,7 +66,7 @@
       if (outbuf + 2 > outend)						      \
 	return __GCONV_FULL_OUTPUT;					      \
 									      \
-      *(uint16_t *) outbuf = BOM;					      \
+      put16u (outbuf, BOM);						      \
       outbuf += 2;							      \
     }									      \
   swap = ((struct unicode_data *) step->__data)->swap;
@@ -147,7 +147,7 @@ gconv_end (struct __gconv_step *data)
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
-    uint32_t c = *((uint32_t *) inptr);					      \
+    uint32_t c = get32 (inptr);						      \
 									      \
     if (c >= 0x10000)							      \
       {									      \
@@ -155,7 +155,7 @@ gconv_end (struct __gconv_step *data)
 	break;								      \
       }									      \
 									      \
-    *((uint16_t *) outptr) = c;						      \
+    put16 (outptr, c);							      \
 									      \
     outptr += 2;							      \
     inptr += 4;								      \
@@ -171,12 +171,12 @@ gconv_end (struct __gconv_step *data)
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    uint16_t u1 = *(uint16_t *) inptr;					      \
+    uint16_t u1 = get16 (inptr);					      \
 									      \
     if (swap)								      \
       u1 = bswap_16 (u1);						      \
 									      \
-    *((uint32_t *) outptr) = u1;					      \
+    put32 (outptr, u1);							      \
 									      \
     inptr += 2;								      \
     outptr += 4;							      \
