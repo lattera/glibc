@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  m68k version.
-   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -158,7 +158,7 @@ _dl_start_user:\n\
 	| Save the user entry point address in %a4.\n\
 	move.l %d0, %a4\n\
 	| Remember the highest stack address.\n\
-	lea __libc_stack_end(%pc), %a0\n\
+	move.l __libc_stack_end@GOTPC(%pc), %a0\n\
 	move.l %sp, (%a0)\n\
 	| See if we were run as a command with the executable file\n\
 	| name as an extra leading argument.\n\
