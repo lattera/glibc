@@ -1,3 +1,9 @@
+2001-08-14  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ieee754/ldbl-128/w_expl.c: New file, copy from
+	ldbl-96/w_expl.c with tweaked constants.  Patch by Stephen L
+	Moshier.
+
 2001-08-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/memusage.c (me): Allow creating the output file.
