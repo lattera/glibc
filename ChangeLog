@@ -1,5 +1,8 @@
 2002-11-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/tls-macros.h: Add IA-64 definitions.
+	Patch by Ian Wienand <ianw@gelato.unsw.edu.au>.
+
 	* iconv/Makefile (tests): Add tst-iconv4.
 	* iconv/tst-iconv4.c: New file.
 
