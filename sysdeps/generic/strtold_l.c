@@ -20,21 +20,39 @@
 #include <stdlib.h>
 #include <xlocale.h>
 
+#ifdef USE_WIDE_CHAR
+# define STRING_TYPE	wchar_t
+# define STRTOLD	wcstold_l
+# define __STRTOLD	__wcstold_l
+# define __STRTOD	__wcstod_l
+#else
+# define STRING_TYPE	char
+# define STRTOLD	strtold_l
+# define __STRTOLD	__strtold_l
+# define __STRTOD	__strtod_l
+#endif
 
-extern double ____strtod_l_internal (const char *, char **, int, __locale_t);
+#define INTERNAL(x) INTERNAL1(x)
+#define INTERNAL1(x) __##x##_internal
 
+extern double INTERNAL (__STRTOD) (const STRING_TYPE *, STRING_TYPE **,
+				   int, __locale_t);
 
 /* There is no `long double' type, use the `double' implementations.  */
 long double
-____strtold_l_internal (const char *nptr, char **endptr, int group,
-			__locale_t loc)
+INTERNAL (__STRTOLD) (const STRING_TYPE *nptr, STRING_TYPE **endptr,
+		      int group, __locale_t loc)
 {
-  return ____strtod_l_internal (nptr, endptr, group, loc);
+  return INTERNAL (__STRTOD) (nptr, endptr, group, loc);
 }
-
+#ifndef USE_WIDE_CHAR
+libc_hidden_def (INTERNAL (__STRTOLD))
+#endif
 
 long double
-strtold (const char *nptr, char **endptr, __locale_t loc)
+weak_function
+__STRTOLD (const STRING_TYPE *nptr, STRING_TYPE **endptr, __locale_t loc)
 {
-  return ____strtod_l_internal (nptr, endptr, 0, loc);
+  return INTERNAL (__STRTOD) (nptr, endptr, 0, loc);
 }
+weak_alias (__STRTOLD, STRTOLD)

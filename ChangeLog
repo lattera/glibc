@@ -1,3 +1,16 @@
+2004-03-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/sparc/fpu/bits/mathinline.h: Restore missing #ifdef.
+	Patch by Richard Henderson.
+
+2004-03-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/strtold_l.c (STRING_TYPE, STRTOLD, __STRTOLD,
+	__STRTOD, INTERNAL, INTERNAL1): Define, use them.
+	[! USE_WIDE_CHAR] (INTERNAL (__STRTOLD)): Add libc_hidden_def.
+
+	* inet/getnameinfo.c: Include stdlib.h.
+
 2004-03-15  Richard Henderson  <rth@redhat.com>
 
 	* math/Makefile (headers): Add bits/huge_valf.h, bits/huge_vall.h,
