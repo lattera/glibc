@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1996, 1997, 1998, 1999  Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -55,9 +55,8 @@ endif
 ifeq (no,$(cross-compiling))
 # tst_fgetgrent currently only works with shared libraries
 ifeq (yes,$(build-shared))
-.PHONY: do-tst-fgetgrent
-tests: do-tst-fgetgrent
-do-tst-fgetgrent: $(objpfx)tst_fgetgrent
+tests: $(objpfx)tst_fgetgrent.out
+$(objpfx)tst_fgetgrent.out: tst_fgetgrent.sh $(objpfx)tst_fgetgrent
 	$(SHELL) -e tst_fgetgrent.sh $(common-objpfx) $(elf-objpfx) \
 		 $(rtld-installed-name)
 

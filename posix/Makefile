@@ -88,12 +88,11 @@ include ../Rules
 ifeq (no,$(cross-compiling))
 # globtest and wordexp-test currently only works with shared libraries
 ifeq (yes,$(build-shared))
-.PHONY: do-globtest do-wordexp-test
-tests: do-globtest do-wordexp-test
-do-globtest: $(objpfx)globtest
+tests: $(objpfx)globtest.out $(objpfx)wordexp-tst.out
+$(objpfx)globtest.out: globtest.sh $(objpfx)globtest
 	$(SHELL) -e globtest.sh $(common-objpfx) $(elf-objpfx) \
 		 $(rtld-installed-name)
-do-wordexp-test: $(objpfx)wordexp-test
+$(objpfx)wordexp-tst.out: wordexp-tst.sh $(objpfx)wordexp-test
 	$(SHELL) -e wordexp-tst.sh $(common-objpfx) $(elf-objpfx) \
 		 $(rtld-installed-name)
 endif
@@ -160,9 +159,10 @@ endif
 
 # Run a test on the header files we use.
 # XXX Please note that for now we ignore the result of this test.
-tests: $(objpfx)annexc
+tests: $(objpfx)annexc.out
+$(objpfx)annexc.out: $(objpfx)annexc
 	-$(dir $<)$(notdir $<) '$(CC)' \
-			       '-I../include -I.. $(+sysdep-includes)' > $<.out
+			       '-I../include -I.. $(+sysdep-includes)' > $@
 
 $(objpfx)annexc: annexc.c
 	$(native-compile)

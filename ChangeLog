@@ -1,3 +1,13 @@
+2000-07-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* grp/Makefile: Change Makefiles and tests to run only when necessary.
+	* malloc/Makefile: Likewise.
+	* malloc/tst-mtrace.sh: Likewise.
+	* posix/Makefile: Likewise.
+	* posix/globtest.sh: Likewise.
+	* posix/wordexp-tst.sh: Likewise.
+	* string/Makefile: Likewise.
+
 2000-07-22  Mark Kettenis  <kettenis@gnu.org>
 
 	* locale/findlocale.c (locale_file_list): Use __LC_LAST as array

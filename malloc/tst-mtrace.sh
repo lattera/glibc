@@ -21,15 +21,19 @@
 common_objpfx=$1; shift
 
 status=0
+trap "rm -f ${common_objpfx}malloc/tst-mtrace.leak; exit 1" 1 2 15
 
-MALLOC_TRACE=${common_objpfx}tst-mtrace.out \
+MALLOC_TRACE=${common_objpfx}malloc/tst-mtrace.leak \
 LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
 ${common_objpfx}elf/ld.so --library-path $common_objpfx \
   ${common_objpfx}malloc/tst-mtrace || status=1
 
 if test $status -eq 0 && test -f ${common_objpfx}malloc/mtrace; then
   ${common_objpfx}malloc/mtrace ${common_objpfx}malloc/tst-mtrace \
-    ${common_objpfx}tst-mtrace.out || status=1
+    ${common_objpfx}malloc/tst-mtrace.leak \
+    > ${common_objpfx}malloc/tst-mtrace.out|| status=1
 fi
+
+rm -f ${common_objpfx}malloc/tst-mtrace.leak
 
 exit $status

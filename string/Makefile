@@ -62,5 +62,7 @@ CFLAGS-test-ffs.c = -fno-builtin
 
 ifeq ($(cross-compiling),no)
 tests: $(objpfx)tst-svc.out
-	cmp tst-svc.expect $(objpfx)tst-svc.out
+$(objpfx)tst-svc.out: $(objpfx)tst-svc
+	$(built-program-cmd) $< > $@
+	-cmp tst-svc.expect $(objpfx)tst-svc.out
 endif

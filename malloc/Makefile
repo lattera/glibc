@@ -92,9 +92,8 @@ $(objpfx)libmcheck.a: $(objpfx)mcheck-init.o
 lib: $(objpfx)libmcheck.a
 
 ifeq (yes,$(build-shared))
-.PHONY: do-tst-mtrace
-tests: do-tst-mtrace
-do-tst-mtrace: tst-mtrace.sh $(objpfx)tst-mtrace
+tests: $(objpfx)tst-mtrace.out
+$(objpfx)tst-mtrace.out: tst-mtrace.sh $(objpfx)tst-mtrace
 	$(SHELL) -e $< $(common-objpfx)
 endif
 
