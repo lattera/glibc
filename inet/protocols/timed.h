@@ -10,10 +10,6 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
@@ -58,14 +54,14 @@ struct tsp {
 
 #define	tsp_time	tsp_u.tspu_time
 #define	tsp_hopcnt	tsp_u.tspu_hopcnt
- 
+
 /*
  * Command types.
  */
 #define	TSP_ANY			0	/* match any types */
 #define	TSP_ADJTIME		1	/* send adjtime */
 #define	TSP_ACK			2	/* generic acknowledgement */
-#define	TSP_MASTERREQ		3	/* ask for master's name */ 
+#define	TSP_MASTERREQ		3	/* ask for master's name */
 #define	TSP_MASTERACK		4	/* acknowledge master request */
 #define	TSP_SETTIME		5	/* send network time */
 #define	TSP_MASTERUP		6	/* inform slaves that master is up */
@@ -92,8 +88,8 @@ struct tsp {
 
 #ifdef TSPTYPES
 char *tsptype[TSPTYPENUMBER] =
-  { "ANY", "ADJTIME", "ACK", "MASTERREQ", "MASTERACK", "SETTIME", "MASTERUP", 
-  "SLAVEUP", "ELECTION", "ACCEPT", "REFUSE", "CONFLICT", "RESOLVE", "QUIT", 
+  { "ANY", "ADJTIME", "ACK", "MASTERREQ", "MASTERACK", "SETTIME", "MASTERUP",
+  "SLAVEUP", "ELECTION", "ACCEPT", "REFUSE", "CONFLICT", "RESOLVE", "QUIT",
   "DATE", "DATEREQ", "DATEACK", "TRACEON", "TRACEOFF", "MSITE", "MSITEREQ",
   "TEST", "SETDATE", "SETDATEREQ", "LOOP" };
 #endif

@@ -1,5 +1,73 @@
 1999-06-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* gmon/gmon.c: Remove advertising clause of copyright.
+	* gmon/mcount.c: Likewise.
+	* gmon/sys/gmon.h: Likewise.
+	* inet/arpa/ftp.h: Likewise.
+	* inet/arpa/telnet.h: Likewise.
+	* inet/arpa/tftp.h: Likewise.
+	* inet/inet_lnaof.c: Likewise.
+	* inet/inet_mkadr.c: Likewise.
+	* inet/inet_net.c: Likewise.
+	* inet/inet_netof.c: Likewise.
+	* inet/protocols/routed.h: Likewise.
+	* inet/protocols/rwhod.h: Likewise.
+	* inet/protocols/talkd.h: Likewise.
+	* inet/protocols/timed.h: Likewise.
+	* inet/rcmd.c: Likewise.
+	* inet/rexec.c: Likewise.
+	* inet/ruserpass.c: Likewise.
+	* io/fts.c: Likewise.
+	* io/fts.h: Likewise.
+	* login/login_tty.c: Likewise.
+	* misc/fstab.h: Likewise.
+	* misc/getttyent.c: Likewise.
+	* misc/getusershell.c: Likewise.
+	* misc/sys/queue.h: Likewise.
+	* misc/sys/syslog.h: Likewise.
+	* misc/syslog.c: Likewise.
+	* misc/ttyent.h: Likewise.
+	* misc/ttyslot.c: Likewise.
+	* resolv/arpa/nameser.h: Likewise.
+	* resolv/gethnamaddr.c: Likewise.
+	* resolv/herror.c: Likewise.
+	* resolv/inet_addr.c: Likewise.
+	* resolv/mapv4v6addr.h: Likewise.
+	* resolv/mapv4v6hostent.h: Likewise
+	* resolv/nss_dns/dns-host.c: Likewise.
+	* resolv/nss_dns/dns-network.c: Likewise.
+	* resolv/res_comp.c: Likewise.
+	* resolv/res_data.c: Likewise.
+	* resolv/res_debug.c: Likewise.
+	* resolv/res_init.c: Likewise.
+	* resolv/res_mkquery.c: Likewise.
+	* resolv/res_query.c: Likewise.
+	* resolv/res_send.c: Likewise.
+	* resolv/resolv.h: Likewise.
+	* sysdeps/generic/div.c: Likewise.
+	* sysdeps/generic/netinet/ip.h: Likewise.
+	* sysdeps/generic/netinet/tcp.h: Likewise.
+	* sysdeps/generic/paths.h: Likewise.
+	* sysdeps/generic/prof-freq.c: Likewise.
+	* sysdeps/generic/sys/ttydefaults.h: Likewise.
+	* sysdeps/gnu/netinet/ip_icmp.h: Likewise.
+	* sysdeps/gnu/netinet/tcp.h: Likewise.
+	* sysdeps/ieee754/support.c: Likewise.
+	* sysdeps/mach/hurd/sys/param.h: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/bits/errno.h: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/bits/ioctls.h: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/sys/ttydefaults.h: Likewise.
+	* sysdeps/unix/bsd/sys/reboot.h: Likewise.
+	* sysdeps/unix/sysv/linux/netinet/if_ether.h: Likewise.
+	* sysdeps/unix/sysv/linux/netinet/igmp.h: Likewise.
+	* sysdeps/unix/sysv/linux/netinet/ip.h: Likewise.
+	* sysdeps/unix/sysv/linux/paths.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/quota.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/ttydefaults.h: Likewise.
+	* sysdeps/vax/DEFS.h: Likewise.
+	* termios/sys/ttychars.h: Likewise.
+	* misc/daemon.c: Likewise.  Call fork.
+
 	* grp/fgetgrent.c (buffer): Make file local variable.
 	(free_mem): New function.  Call for malloc debugging.
 
