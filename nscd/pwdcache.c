@@ -146,15 +146,15 @@ save_pwd (struct passwd *src)
 
   cp = (char *) (dest + 1);
   dest->pw_name = cp;
-  cp = mempcpy (cp, src->pw_name, name_len) + 1;
+  cp = mempcpy (cp, src->pw_name, name_len);
   dest->pw_passwd = cp;
-  cp = mempcpy (cp, src->pw_passwd, passwd_len) + 1;
+  cp = mempcpy (cp, src->pw_passwd, passwd_len);
   dest->pw_uid = src->pw_uid;
   dest->pw_gid = src->pw_gid;
   dest->pw_gecos = cp;
-  cp = mempcpy (cp, src->pw_gecos, gecos_len) + 1;
+  cp = mempcpy (cp, src->pw_gecos, gecos_len);
   dest->pw_dir = cp;
-  cp = mempcpy (cp, src->pw_dir, dir_len) + 1;
+  cp = mempcpy (cp, src->pw_dir, dir_len);
   dest->pw_shell = cp;
   mempcpy (cp, src->pw_shell, shell_len);
 

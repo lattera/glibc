@@ -1,3 +1,9 @@
+1998-09-15  David S. Miller  <davem@pierdol.cobaltmicro.com> 
+ 
+	* sysdeps/sparc/sparc32/pt-machine.h (INIT_THREAD_SELF): Add nr 
+	argument. 
+	* sysdeps/sparc/sparc64/pt-machine.h (INIT_THREAD_SELF): Likewise. 
+ 
 1998-09-12 14:24 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu> 
  
 	* linuxthreads/sysdeps/unix/sysv/linux/bits/sigthread.h: Add 

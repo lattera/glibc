@@ -309,10 +309,12 @@ Regular Expressions
 
 Word Expansion
 
-* Expansion Stages::	What word expansion does to a string.
-* Calling Wordexp::	How to call @code{wordexp}.
-* Flags for Wordexp::   Options you can enable in @code{wordexp}.
-* Wordexp Example::	A sample program that does word expansion.
+* Expansion Stages::            What word expansion does to a string.
+* Calling Wordexp::             How to call @code{wordexp}.
+* Flags for Wordexp::           Options you can enable in @code{wordexp}.
+* Wordexp Example::             A sample program that does word expansion.
+* Tilde Expansion::             Details of how tilde expansion works.
+* Variable Substitution::       Different types of variable substitution.
 
 I/O Overview
 
