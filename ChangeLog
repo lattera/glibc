@@ -1,3 +1,8 @@
+Mon Jul 17 08:45:40 1995  Jim Meyering  (meyering@comco.com)
+
+	* strtol.c: Portability changes from Uli Drepper.
+	[!STDC_HEADERS && !defined(NULL)]: Define NULL.
+
 Mon Jul 10 05:39:21 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/i386/init-first.c (init): Take just one arg,
