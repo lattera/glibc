@@ -368,7 +368,7 @@ _IO_doallocbuf (fp)
 {
   if (fp->_IO_buf_base)
     return;
-  if (!(fp->_flags & _IO_UNBUFFERED))
+  if (!(fp->_flags & _IO_UNBUFFERED) || fp->_mode > 0)
     if (_IO_DOALLOCATE (fp) != EOF)
       return;
   _IO_setb (fp, fp->_shortbuf, fp->_shortbuf+1, 0);

@@ -2062,6 +2062,11 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
   register _IO_FILE *hp = (_IO_FILE *) &helper._f;
   int result, to_flush;
 
+  /* Orient the stream.  */
+#ifdef ORIENT
+  ORIENT;
+#endif
+
   /* Initialize helper.  */
   helper._put_stream = s;
 #ifdef COMPILE_WPRINTF
@@ -2121,6 +2126,11 @@ buffered_vfprintf (register FILE *s, const CHAR_T *format, va_list args)
 {
   char buf[BUFSIZ];
   int result;
+
+  /* Orient the stream.  */
+#ifdef ORIENT
+  ORIENT;
+#endif
 
   s->__bufp = s->__buffer = buf;
   s->__bufsize = sizeof buf;

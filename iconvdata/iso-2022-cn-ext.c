@@ -123,12 +123,12 @@ enum
    the output state to the initial state.  This has to be done during the
    flushing.  */
 #define EMIT_SHIFT_TO_INIT \
-  if (data->__statep->__count >> 2 != ASCII_set)			      \
+  if (data->__statep->__count >> 3 != ASCII_set)			      \
     {									      \
       if (FROM_DIRECTION)						      \
 	/* It's easy, we don't have to emit anything, we just reset the	      \
 	   state for the input.  */					      \
-	data->__statep->__count = ASCII_set << 2;			      \
+	data->__statep->__count = ASCII_set << 3;			      \
       else								      \
 	{								      \
 	  unsigned char *outbuf = data->__outbuf;			      \
@@ -145,7 +145,7 @@ enum
 	      if (data->__flags & __GCONV_IS_LAST)			      \
 		*irreversible += 1;					      \
 	      data->__outbuf = outbuf;					      \
-	      data->__statep->__count = ASCII_set << 2;			      \
+	      data->__statep->__count = ASCII_set << 3;			      \
 	    }								      \
 	}								      \
     }
@@ -394,9 +394,9 @@ enum
     *((uint32_t *) outptr)++ = ch;					      \
   }
 #define EXTRA_LOOP_DECLS	, int *setp
-#define INIT_PARAMS		int set = (*setp >> 2) & CURRENT_MASK; \
-				int ann = (*setp >> 2) & ~CURRENT_MASK
-#define UPDATE_PARAMS		*setp = (set | ann) << 2
+#define INIT_PARAMS		int set = (*setp >> 3) & CURRENT_MASK; \
+				int ann = (*setp >> 3) & ~CURRENT_MASK
+#define UPDATE_PARAMS		*setp = (set | ann) << 3
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
@@ -644,9 +644,9 @@ enum
     inptr += 4;								      \
   }
 #define EXTRA_LOOP_DECLS	, int *setp
-#define INIT_PARAMS		int set = (*setp >> 2) & CURRENT_MASK; \
-				int ann = (*setp >> 2) & ~CURRENT_MASK
-#define UPDATE_PARAMS		*setp = (set | ann) << 2
+#define INIT_PARAMS		int set = (*setp >> 3) & CURRENT_MASK; \
+				int ann = (*setp >> 3) & ~CURRENT_MASK
+#define UPDATE_PARAMS		*setp = (set | ann) << 3
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

@@ -134,6 +134,8 @@ prefix  6d      6o      6x      6X      6u
 0.10000000000000009
 Test ok.
 sprintf (buf, "%07Lo", 040000000000ll) = 40000000000
+printf ("%hhu", 257) = 1
+printf ("%hu", 65537) = 1
 --- Should be no further output. ---
 EOF
 cmp - ${common_objpfx}stdio-common/tst-printf.out >& /dev/null ||
@@ -243,6 +245,8 @@ prefix  6d      6o      6x      6X      6u
 0.10000000000000009
 Test ok.
 sprintf (buf, "%07Lo", 040000000000ll) = 40000000000
+printf ("%hhu", 257) = 1
+printf ("%hu", 65537) = 1
 --- Should be no further output. ---
 EOF
 cmp - ${common_objpfx}stdio-common/tst-printf.out >& /dev/null ||
