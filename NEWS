@@ -38,6 +38,9 @@ Version 2.2.3
 
 * Martin Schwidefsky <schwidefsky@de.ibm.com> implemented the setcontext
   family of functions for Linux/S390.
+
+* Ulrich Drepper <drepper@redhat.com> implemented the setcontext family
+  of functions for Linux/x86.
 
 Version 2.2.2
 

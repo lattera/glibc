@@ -1,5 +1,7 @@
 2001-04-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/tst-setcontext.c (main): Add a test for setcontext.
+
 	* sysdeps/unix/sysv/linux/i386/getcontext.S: New file.
 	* sysdeps/unix/sysv/linux/i386/setcontext.S: New file.
 	* sysdeps/unix/sysv/linux/i386/makecontext.S: New file.

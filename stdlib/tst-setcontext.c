@@ -71,6 +71,8 @@ f2 (void)
   was_in_f2 = 1;
 }
 
+volatile int global;
+
 int
 main (void)
 {
@@ -85,6 +87,20 @@ main (void)
       printf ("%s: getcontext: %m\n", __FUNCTION__);
       exit (1);
     }
+
+  /* Play some tricks with this context.  */
+  if (++global == 1)
+    if (setcontext (&ctx[1]) != 0)
+      {
+	printf ("%s: setcontext: %m\n", __FUNCTION__);
+	exit (1);
+      }
+  if (global != 2)
+    {
+      printf ("%s: 'global' not incremented twice\n", __FUNCTION__);
+      exit (1);
+    }
+
   ctx[1].uc_stack.ss_sp = st1;
   ctx[1].uc_stack.ss_size = sizeof st1;
   ctx[1].uc_link = &ctx[0];
