@@ -1,3 +1,7 @@
+2002-11-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h (EM_ST19): Fix typo.
+
 2002-11-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/errno.h (__set_errno): Define as errno = val
