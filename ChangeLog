@@ -1,3 +1,13 @@
+1999-07-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/efgcvt.c: Use IEEE 854 formula to compute the number of digits
+	to print.
+	* misc/efgcvt_r.c: Likewise.
+	* misc/qefgcvt.c: Likewise.
+	* misc/qefgcvt_r.c: Likewise.
+	* misc/tst-efgcvt.c: Remove one test which cannot reliably be run
+	anymore.
+
 1999-07-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/math.texi (FP Function Optimization): Mention drawbacks.

@@ -18,10 +18,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <float.h>
+
 #define FLOAT_TYPE long double
 #define FUNC_PREFIX q
 #define FLOAT_FMT_FLAG "L"
 #define FLOAT_NAME_EXT l
-# define NDIGIT_MAX LDBL_DIG
+#if LDBL_MANT_DIG == 64
+# define NDIGIT_MAX 21
+#else
+/* See IEEE 854 5.6, table 2 for this formula.  */
+# define NDIGIT_MAX (lrint (ceil (M_LN2 / M_LN10 * LDBL_MANT_DIG + 1.0)))
+#endif
 
 #include "efgcvt_r.c"

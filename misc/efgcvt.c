@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/param.h>
@@ -29,8 +30,13 @@
 # define FLOAT_FMT_FLAG
 /* Actually we have to write (DBL_DIG + log10 (DBL_MAX_10_EXP)) but we
    don't have log10 available in the preprocessor.  */
-# define MAXDIG (DBL_DIG + 3)
-# define NDIGIT_MAX DBL_DIG
+# define MAXDIG (NDIGIT_MAX + 3)
+# if DBL_MANT_DIG == 53
+#  define NDIGIT_MAX 17
+# else
+/* See IEEE 854 5.6, table 2 for this formula.  */
+#  define NDIGIT_MAX (lrint (ceil (M_LN2 / M_LN10 * DBL_MANT_DIG + 1.0)))
+# endif
 #endif
 
 #define APPEND(a, b) APPEND2 (a, b)

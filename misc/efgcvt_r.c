@@ -30,7 +30,12 @@
 # define FUNC_PREFIX
 # define FLOAT_FMT_FLAG
 # define FLOAT_NAME_EXT
-# define NDIGIT_MAX DBL_DIG
+# if DBL_MANT_DIG == 53
+#  define NDIGIT_MAX 17
+# else
+/* See IEEE 854 5.6, table 2 for this formula.  */
+#  define NDIGIT_MAX (lrint (ceil (M_LN2 / M_LN10 * DBL_MANT_DIG + 1.0)))
+# endif
 #endif
 
 #define APPEND(a, b) APPEND2 (a, b)

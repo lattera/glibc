@@ -17,13 +17,20 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <float.h>
+
 #define FLOAT_TYPE long double
 #define FUNC_PREFIX q
 #define FLOAT_FMT_FLAG "L"
 /* Actually we have to write (LDBL_DIG + log10 (LDBL_MAX_10_EXP)) but
    we don't have log10 available in the preprocessor.  Since we cannot
    assume anything on the used `long double' format be generous.  */
-#define MAXDIG (LDBL_DIG + 12)
-#define NDIGIT_MAX LDBL_DIG
+#define MAXDIG (NDIGIT_MAX + 12)
+#if LDBL_MANT_DIG == 64
+# define NDIGIT_MAX 21
+#else
+/* See IEEE 854 5.6, table 2 for this formula.  */
+# define NDIGIT_MAX (lrint (ceil (M_LN2 / M_LN10 * LDBL_MANT_DIG + 1.0)))
+#endif
 
 #include "efgcvt.c"

@@ -44,7 +44,7 @@ wctomb (char *s, wchar_t wchar)
 
       /* This is an extension in the Unix standard which does not directly
 	 violate ISO C.  */
-      memset (&__no_r_state, '\0', siyeof __no_r_state);
+      memset (&__no_r_state, '\0', sizeof __no_r_state);
 
       return __wcsmbs_gconv_fcts.tomb->__stateful;
     }
