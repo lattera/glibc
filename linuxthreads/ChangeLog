@@ -1,3 +1,8 @@
+2003-02-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* specific.c (pthread_key_delete_helper): Don't use GETMEM, we
+	need the target thread's lock.
+
 2003-02-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/local_lim.h: Define TTY_NAME_MAX

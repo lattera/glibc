@@ -80,10 +80,10 @@ static void pthread_key_delete_helper(void *arg, pthread_descr th)
 
   if (!th->p_terminated) {
     /* pthread_exit() may try to free th->p_specific[idx1st] concurrently. */
-    __pthread_lock(THREAD_GETMEM(th, p_lock), self);
+    __pthread_lock(th->p_lock, self);
     if (th->p_specific[idx1st] != NULL)
       th->p_specific[idx1st][idx2nd] = NULL;
-    __pthread_unlock(THREAD_GETMEM(th, p_lock));
+    __pthread_unlock(th->p_lock);
   }
 }
 
