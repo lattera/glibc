@@ -96,7 +96,7 @@ extern int mount __P ((__const char *__special_file, __const char *__dir,
 /* Unmount a filesystem.  */
 extern int umount __P ((__const char *__special_file));
 
-/* Unmount a filesystem.  Forst unmounting if FALGS is set to MNT_FORCE.  */
+/* Unmount a filesystem.  Force unmounting if FLAGS is set to MNT_FORCE.  */
 extern int umount2 __P ((__const char *__special_file, int __flags));
 
 __END_DECLS

@@ -87,6 +87,11 @@ static int db_fd __P((DB *, int *));
 		}							\
 }
 
+#ifdef _LIBC
+#define db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp) \
+  __nss_db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
+#endif
+
 /*
  * db_open --
  *	Main library interface to the DB access methods.
@@ -690,6 +695,11 @@ err:	/* Close the file descriptor. */
 
 	return (ret);
 }
+
+#ifdef _LIBC
+# undef db_open
+weak_alias (__nss_db_open, db_open)
+#endif
 
 /*
  * db_close --

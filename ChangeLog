@@ -1,3 +1,38 @@
+1998-08-21 17:21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/glob64.c: Define __stat using __xstat64.
+
+1998-08-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (elf/ldso_install): Put back.  The problem still persists.
+	* elf/Makefile (ldso_install): Likewise.
+
+1998-08-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* db2/db/db.c (db_open) [_LIBC]: Rename to __nss_db_open and
+	create weak alias.
+	* include/db.h: Declare __nss_db_open.
+	* db2/Versions: Export it.
+
+	* db2/makedb.c: Convert to use db2 API.
+	* nss/nss_db/db-XXX.c: Likewise.
+	* nss/nss_db/db-netgrp.c: Likewise.
+	* nss/nss_db/db-alias.c: Likewise.
+	(_nss_db_getaliasent_r): Allow retrying with a larger buffer.
+
+1998-08-19  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Remove
+	sys_setresuid, already built automatically (or not).
+	* sysdeps/unix/sysv/linux/syscalls.list: Define __setresuid
+	instead of __syscall_setresuid and add back setresuid.
+	* sysdeps/unix/sysv/linux/seteuid.c: Use __setresuid instead of
+	__syscall_setresuid.
+
+1998-08-21  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/sys/mount.h: Fix typo.
+
 1998-08-20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/Makefile (sh-ldd-rewrite): Remove expression to remove
@@ -11,7 +46,7 @@
 
 	* libio/iolibio.h (_IO_pos_BAD): Define of type _IO_fpos64_t.
 
-	* libio/oldfileops.c (FILEBUF_LITERAL): Also initialize new _offset
+	* libio/libioP.c (FILEBUF_LITERAL): Also initialize new _offset
 	element.
 
 1998-08-21  Roland McGrath  <roland@baalperazim.frob.com>

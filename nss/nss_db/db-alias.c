@@ -21,7 +21,7 @@
 #include <aliases.h>
 #include <alloca.h>
 #include <ctype.h>
-#include <db_185.h>
+#include <db.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <bits/libc-lock.h>
@@ -44,29 +44,42 @@ static enum nss_status
 internal_setent (int stayopen)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
+  int err;
 
   if (db == NULL)
     {
-      db = __dbopen (_PATH_VARDB "aliases.db", O_RDONLY, 0, DB_BTREE, NULL);
+      err = __nss_db_open (_PATH_VARDB "aliases.db", DB_BTREE, DB_RDONLY, 0,
+			   NULL, NULL, &db);
 
-      if (db == NULL)
-	status = NSS_STATUS_UNAVAIL;
+      if (err != 0)
+	{
+	  __set_errno (err);
+	  status = NSS_STATUS_UNAVAIL;
+	}
       else
 	{
 	  /* We have to make sure the file is  `closed on exec'.  */
+	  int fd;
 	  int result, flags;
 
-	  result = flags = fcntl ((*db->fd) (db), F_GETFD, 0);
+	  err = db->fd (db, &fd);
+	  if (err != 0)
+	    {
+	      __set_errno (err);
+	      result = -1;
+	    }
+	  else
+	    result = flags = fcntl (fd, F_GETFD, 0);
 	  if (result >= 0)
 	    {
 	      flags |= FD_CLOEXEC;
-	      result = fcntl ((*db->fd) (db), F_SETFD, flags);
+	      result = fcntl (fd, F_SETFD, flags);
 	    }
 	  if (result < 0)
 	    {
 	      /* Something went wrong.  Close the stream and return a
 		 failure.  */
-	      (*db->close) (db);
+	      db->close (db, 0);
 	      db = NULL;
 	      status = NSS_STATUS_UNAVAIL;
 	    }
@@ -106,7 +119,7 @@ internal_endent (void)
 {
   if (db != NULL)
     {
-      (*db->close) (db);
+      db->close (db, 0);
       db = NULL;
     }
 }
@@ -133,7 +146,7 @@ _nss_db_endaliasent (void)
    :include: statements so we simply have to parse the list and store
    the result.  */
 static enum nss_status
-lookup (const DBT *key, struct aliasent *result, char *buffer,
+lookup (DBT *key, struct aliasent *result, char *buffer,
 	size_t buflen, int *errnop)
 {
   enum nss_status status;
@@ -142,9 +155,13 @@ lookup (const DBT *key, struct aliasent *result, char *buffer,
   /* Open the database.  */
   status = internal_setent (keep_db);
   if (status != NSS_STATUS_SUCCESS)
-    return status;
+    {
+      *errnop = errno;
+      return status;
+    }
 
-  if ((*db->get) (db, key, &value, 0) == 0)
+  value.flags = 0;
+  if (db->get (db, NULL, key, &value, 0) == 0)
     {
       const char *src = value.data;
 
@@ -228,7 +245,11 @@ _nss_db_getaliasent_r (struct aliasent *result, char *buffer, size_t buflen,
 
   __libc_lock_lock (lock);
   key.size = snprintf (key.data = buf, sizeof buf, "0%u", entidx++);
+  key.flags = 0;
   status = lookup (&key, result, buffer, buflen, errnop);
+  if (status == NSS_STATUS_TRYAGAIN && *errnop == ERANGE)
+    /* Give the user a chance to get the same entry with a larger buffer.  */
+    --entidx;
   __libc_lock_unlock (lock);
 
   return status;
@@ -247,6 +268,7 @@ _nss_db_getaliasbyname_r (const char *name, struct aliasent *result,
   key.data = __alloca (key.size);
   ((char *) key.data)[0] = '.';
   memcpy (&((char *) key.data)[1], name, key.size - 1);
+  key.flags = 0;
 
   __libc_lock_lock (lock);
   status = lookup (&key, result, buffer, buflen, errnop);

@@ -71,13 +71,13 @@ sendfile	EXTRA	sendfile	4	sendfile
 setfsgid	EXTRA	setfsgid	1	setfsgid
 setfsuid	EXTRA	setfsuid	1	setfsuid
 setpgid		-	setpgid		2	__setpgid	setpgid
+setresuid	EXTRA	setresuid	3	__setresuid	setresuid
 setresgid	EXTRA	setresgid	3	setresgid
 sigaltstack	-	sigaltstack	2	__sigaltstack	sigaltstack
 sys_fstat	fxstat	fstat		2	__syscall_fstat
 sys_lstat	lxstat	lstat		2	__syscall_lstat
 sys_mknod	xmknod	mknod		3	__syscall_mknod
 sys_readv	readv	readv		3	__syscall_readv
-sys_setresuid	EXTRA	setresuid	3	__syscall_setresuid
 sys_stat	xstat	stat		2	__syscall_stat
 sys_writev	writev	writev		3	__syscall_writev
 sysinfo		EXTRA	sysinfo		1	sysinfo

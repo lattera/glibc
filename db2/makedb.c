@@ -20,7 +20,7 @@
 
 #include <argp.h>
 #include <ctype.h>
-#include <db_185.h>
+#include <db.h>
 #include <errno.h>
 #include <error.h>
 #include <fcntl.h>
@@ -140,16 +140,17 @@ main (argc, argv)
   /* Special handling if we are asked to print the database.  */
   if (do_undo)
     {
-      db_file = dbopen (input_name, O_RDONLY, 0666, DB_BTREE, NULL);
-      if (db_file == NULL)
+      status = db_open (input_name, DB_BTREE, DB_RDONLY, 0666, NULL, NULL,
+			&db_file);
+      if (status != 0)
 	error (EXIT_FAILURE, 0, gettext ("cannot open database file `%s': %s"),
 	       input_name,
-	       errno == EINVAL ? gettext ("incorrectly formatted file")
-			       : strerror (errno));
+	       (status == EINVAL ? gettext ("incorrectly formatted file")
+		: strerror (status)));
 
       status = print_database (db_file);
 
-      db_file->close (db_file);
+      db_file->close (db_file, 0);
 
       return status;
     }
@@ -174,10 +175,10 @@ main (argc, argv)
 
   /* Open output file.  This must not be standard output so we don't
      handle "-" and "/dev/stdout" special.  */
-  db_file = dbopen (output_name, O_CREAT | O_RDWR | O_TRUNC, mode,
-		    DB_BTREE, NULL);
-  if (db_file == NULL)
-    error (EXIT_FAILURE, errno, gettext ("cannot open output file `%s'"),
+  status = db_open (output_name, DB_BTREE, DB_CREATE | DB_TRUNCATE, mode,
+		    NULL, NULL, &db_file);
+  if (status != 0)
+    error (EXIT_FAILURE, status, gettext ("cannot open output file `%s'"),
 	   output_name);
 
   /* Start the real work.  */
@@ -187,7 +188,7 @@ main (argc, argv)
   /* Close files.  */
   if (input_file != stdin)
     fclose (input_file);
-  db_file->close (db_file);
+  db_file->close (db_file, 0);
 
   return status;
 }
@@ -307,18 +308,20 @@ process_input (input, inname, output, to_lowercase, be_quiet)
 	continue;
 
       key.size = cp - (char *) key.data;
+      key.flags = 0;
 
       while (isspace (*cp))
 	++cp;
 
       val.data = cp;
       val.size = (&line[n] - cp) + 1;
+      val.flags = 0;
 
       /* Store the value.  */
-      status = output->put (output, &key, &val, R_NOOVERWRITE);
+      status = output->put (output, NULL, &key, &val, DB_NOOVERWRITE);
       if (status != 0)
 	{
-	  if (status == 1)
+	  if (status == DB_KEYEXIST)
 	    {
 	      if (!be_quiet)
 		error_at_line (0, 0, inname, linenr,
@@ -328,7 +331,7 @@ process_input (input, inname, output, to_lowercase, be_quiet)
 	      continue;
 	    }
 	  else
-	    error (0, errno, gettext ("while writing database file"));
+	    error (0, status, gettext ("while writing database file"));
 
 	  status = EXIT_FAILURE;
 
@@ -353,20 +356,30 @@ print_database (db)
 {
   DBT key;
   DBT val;
-  int no_more;
+  DBC *cursor;
+  int status;
 
-  no_more = db->seq (db, &key, &val, R_FIRST);
-  while (!no_more)
+  status = db->cursor (db, NULL, &cursor);
+  if (status != 0)
+    {
+      error (0, status, gettext ("while reading database"));
+      return EXIT_FAILURE;
+    }
+
+  key.flags = 0;
+  val.flags = 0;
+  status = cursor->c_get (cursor, &key, &val, DB_FIRST);
+  while (status == 0)
     {
       printf ("%.*s %s\n", (int) key.size, (char *) key.data,
 	      (char *) val.data);
 
-      no_more = db->seq (db, &key, &val, R_NEXT);
+      status = cursor->c_get (cursor, &key, &val, DB_NEXT);
     }
 
-  if (no_more == -1)
+  if (status != DB_NOTFOUND)
     {
-      error (0, errno, gettext ("while reading database"));
+      error (0, status, gettext ("while reading database"));
       return EXIT_FAILURE;
     }
 

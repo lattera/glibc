@@ -23,7 +23,7 @@
 
 #ifdef __NR_setresuid
 
-extern int __syscall_setresuid (uid_t ruid, uid_t euid, uid_t suid);
+extern int __setresuid (uid_t ruid, uid_t euid, uid_t suid);
 
 int
 seteuid (uid_t uid)
@@ -37,7 +37,7 @@ seteuid (uid_t uid)
     }
 
   /* First try the syscall.  */
-  result = __syscall_setresuid (-1, uid, -1);
+  result = __setresuid (-1, uid, -1);
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use emulation.  This may not work
        since `setreuid' also sets the saved user ID when UID is not

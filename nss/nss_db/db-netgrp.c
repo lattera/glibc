@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <db_185.h>
+#include <db.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
@@ -43,32 +43,44 @@ enum nss_status
 _nss_db_setnetgrent (const char *group)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
+  int err;
 
   __libc_lock_lock (lock);
 
   /* Make sure the data base file is open.  */
   if (db == NULL)
     {
-      db = __dbopen (DBFILE, O_RDONLY, 0, DB_BTREE, NULL);
+      err = __nss_db_open (DBFILE, DB_BTREE, O_RDONLY, 0, NULL, NULL, &db);
 
-      if (db == NULL)
-	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+      if (err != 0)
+	{
+	  __set_errno (err);
+	  status = err == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+	}
       else
 	{
 	  /* We have to make sure the file is  `closed on exec'.  */
+	  int fd;
 	  int result, flags;
 
-	  result = flags = fcntl ((*db->fd) (db), F_GETFD, 0);
+	  err = db->fd (db, &fd);
+	  if (err != 0)
+	    {
+	      __set_errno (err);
+	      result = -1;
+	    }
+	  else
+	    result = flags = fcntl (fd, F_GETFD, 0);
 	  if (result >= 0)
 	    {
 	      flags |= FD_CLOEXEC;
-	      result = fcntl ((*db->fd) (db), F_SETFD, flags);
+	      result = fcntl (fd, F_SETFD, flags);
 	    }
 	  if (result < 0)
 	    {
 	      /* Something went wrong.  Close the stream and return a
 		 failure.  */
-	      (*db->close) (db);
+	      db->close (db, 0);
 	      db = NULL;
 	      status = NSS_STATUS_UNAVAIL;
 	    }
@@ -77,10 +89,11 @@ _nss_db_setnetgrent (const char *group)
 
   if (status == NSS_STATUS_SUCCESS)
     {
-      DBT key = { data: (void *) group, size: strlen (group) };
+      DBT key = { data: (void *) group, size: strlen (group), flags: 0 };
       DBT value;
 
-      if ((*db->get) (db, &key, &value, 0) != 0)
+      value.flags = 0;
+      if (db->get (db, NULL, &key, &value, 0) != 0)
 	status = NSS_STATUS_NOTFOUND;
       else
 	cursor = entry = value.data;
@@ -100,7 +113,7 @@ _nss_db_endnetgrent (void)
 
   if (db != NULL)
     {
-      (*db->close) (db);
+      db->close (db, 0);
       db = NULL;
     }
 

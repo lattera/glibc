@@ -17,7 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <db_185.h>
+#include <db.h>
 #include <fcntl.h>
 #include <bits/libc-lock.h>
 #include "nsswitch.h"
@@ -60,29 +60,41 @@ static enum nss_status
 internal_setent (int stayopen)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
+  int err;
 
   if (db == NULL)
     {
-      db = __dbopen (DBFILE, O_RDONLY, 0, DB_BTREE, NULL);
+      err = __nss_db_open (DBFILE, DB_BTREE, DB_RDONLY, 0, NULL, NULL, &db);
 
-      if (db == NULL)
-	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+      if (err != 0)
+	{
+	  __set_errno (err);
+	  status = err == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+	}
       else
 	{
 	  /* We have to make sure the file is  `closed on exec'.  */
+	  int fd;
 	  int result, flags;
 
-	  result = flags = fcntl ((*db->fd) (db), F_GETFD, 0);
+	  err = db->fd (db, &fd);
+	  if (err != 0)
+	    {
+	      __set_errno (err);
+	      result = -1;
+	    }
+	  else
+	    result = flags = fcntl (fd, F_GETFD, 0);
 	  if (result >= 0)
 	    {
 	      flags |= FD_CLOEXEC;
-	      result = fcntl ((*db->fd) (db), F_SETFD, flags);
+	      result = fcntl (fd, F_SETFD, flags);
 	    }
 	  if (result < 0)
 	    {
 	      /* Something went wrong.  Close the stream and return a
 		 failure.  */
-	      (*db->close) (db);
+	      db->close (db, 0);
 	      db = NULL;
 	      status = NSS_STATUS_UNAVAIL;
 	    }
@@ -122,7 +134,7 @@ internal_endent (void)
 {
   if (db != NULL)
     {
-      (*db->close) (db);
+      db->close (db, 0);
       db = NULL;
     }
 }
@@ -146,7 +158,7 @@ CONCAT(_nss_db_end,ENTNAME) (void)
 
 /* Do a database lookup for KEY.  */
 static enum nss_status
-lookup (const DBT *key, struct STRUCTURE *result,
+lookup (DBT *key, struct STRUCTURE *result,
 	void *buffer, size_t buflen, int *errnop H_ERRNO_PROTO)
 {
   char *p;
@@ -164,17 +176,21 @@ lookup (const DBT *key, struct STRUCTURE *result,
     }
 
   /* Succeed iff it matches a value that parses correctly.  */
-  err = (*db->get) (db, key, &value, 0);
-  if (err < 0)
+  value.flags = 0;
+  err = db->get (db, NULL, key, &value, 0);
+  if (err != 0)
     {
-      *errnop = errno;
-      H_ERRNO_SET (NETDB_INTERNAL);
-      status = NSS_STATUS_UNAVAIL;
-    }
-  else if (err != 0)
-    {
-      H_ERRNO_SET (HOST_NOT_FOUND);
-      status = NSS_STATUS_NOTFOUND;
+      if (err == DB_NOTFOUND)
+	{
+	  H_ERRNO_SET (HOST_NOT_FOUND);
+	  status = NSS_STATUS_NOTFOUND;
+	}
+      else
+	{
+	  *errnop = err;
+	  H_ERRNO_SET (NETDB_INTERNAL);
+	  status = NSS_STATUS_UNAVAIL;
+	}
     }
   else if (buflen < value.size)
     {
@@ -253,6 +269,7 @@ _nss_db_get##name##_r (proto,						      \
   const size_t size = (keysize) + 1;					      \
   key.data = __alloca (size);						      \
   key.size = KEYPRINTF keypattern;					      \
+  key.flags = 0;							      \
   __libc_lock_lock (lock);						      \
   status = lookup (&key, result, buffer, buflen, errnop H_ERRNO_ARG);	      \
   __libc_lock_unlock (lock);						      \
@@ -281,6 +298,7 @@ CONCAT(_nss_db_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
   do
     {
       key.size = snprintf (key.data = buf, sizeof buf, "0%u", entidx++);
+      key.flags = 0;
       status = lookup (&key, result, buffer, buflen, errnop H_ERRNO_ARG);
       if (status == NSS_STATUS_TRYAGAIN
 #ifdef NEED_H_ERRNO

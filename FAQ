@@ -118,6 +118,8 @@ please let me know.
 3.13.	When using the db-2 library which comes with glibc is used in
 	the Perl db modules the testsuite is not passed.  This did not
 	happen with db-1, gdbm, or ndbm.
+3.14.	The pow() inline function I get when including <math.h> is broken.
+	I get segmentation faults when I run the program.
 
 4. Miscellaneous
 
@@ -1177,6 +1179,16 @@ an error which leads to easier debugging.  The DB_File module maintainer
 Paul Marquess <pmarquess@bfsec.bt.co.uk> acknowledged this change and fixed
 the testsuite so that if you use DB_File v1.60 or later you should not have
 any more problems with db-2.
+
+
+3.14.	The pow() inline function I get when including <math.h> is broken.
+	I get segmentation faults when I run the program.
+
+{UD} Nope, the implementation is correct.  The problem is with egcs version
+prior to 1.1.  I.e., egcs 1.0 to 1.0.3 are all broken (at least on Intel).
+If you have to use this compiler you must define __NO_MATH_INLINES before
+including <math.h> to prevent the inline functions from being used.  egcs 1.1
+fixes the problem.  I don't know about gcc 2.8 and 2.8.1.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 

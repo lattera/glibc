@@ -20,6 +20,9 @@ libdb {
     __memp_dump_region;
     __txn_init_print;
 
+    # Functions used by other libraries.
+    __nss_db_open;
+
     # Constants
     db_rw_conflicts; db_riw_conflicts;
 

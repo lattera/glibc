@@ -163,6 +163,10 @@ $(inst_slibdir)/$(rtld-installed-name): \
   $(inst_slibdir)/$(rtld-version-installed-name)
 	$(make-shlib-link)
 
+# Special target called by parent to install just the dynamic linker.
+.PHONY: ldso_install
+ldso_install: $(inst_slibdir)/$(rtld-installed-name)
+
 
 common-ldd-rewrite = -e 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' \
 		     -e 's%@VERSION@%$(version)%g'
