@@ -64,7 +64,7 @@ ac_help="$ac_help
   --disable-force-install don't force installation of files from this package,
 			  even if they are older than the installed files"
 ac_help="$ac_help
-  --enable-kernel=VERSION compile for copmatibility with kernel not older
+  --enable-kernel=VERSION compile for compatibility with kernel not older
                            than VERSION"
 
 # Initialize some variables set by options.

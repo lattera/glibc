@@ -1,3 +1,8 @@
+1999-05-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/libm-test.c: Adjust a few more deltas for the poor ARM
+	FPU emulator.
+
 1999-05-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* configure.in: Fix typo.
