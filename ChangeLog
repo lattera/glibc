@@ -1,5 +1,38 @@
 2004-09-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/setegid.c [HAVE_PTR__NPTL_SETXID]: Call
+	callback to set IDs in all other threads as well.
+	* sysdeps/unix/sysv/linux/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/setuid.c: New file.
+	* sysdeps/unix/sysv/linux/setgid.c: New file.
+	* sysdeps/unix/sysv/linux/setreuid.c: New file.
+	* sysdeps/unix/sysv/linux/setregid.c: New file.
+	* sysdeps/unix/sysv/linux/setresuid.c: New file.
+	* sysdeps/unix/sysv/linux/setresgid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Define INTERNAL_SYSCALL_NCS.
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setegid.c: Use x86 version.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setresgid.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setresuid.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Remove setresgid
+	and setresuid.
+	* nscd/aicache.c: Use pthread_seteuid_np instead of seteuid.
+	* nscd/grpcache.c: Likewise.
+	* nscd/hstcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+
 	* resolv/res_mkquery.c (res_nmkquery): Fix typo.
 
 2004-09-18  Ulrich Drepper  <drepper@redhat.com>

@@ -32,6 +32,7 @@
 #include <version.h>
 #include <shlib-compat.h>
 #include <smp.h>
+#include <lowlevellock.h>
 
 
 #ifndef __NR_set_tid_address
@@ -131,7 +132,8 @@ static const struct pthread_functions pthread_functions =
     .ptr__pthread_cleanup_pop_restore = __pthread_cleanup_pop_restore,
     .ptr_nthreads = &__nptl_nthreads,
     .ptr___pthread_unwind = &__pthread_unwind,
-    .ptr__nptl_deallocate_tsd = __nptl_deallocate_tsd
+    .ptr__nptl_deallocate_tsd = __nptl_deallocate_tsd,
+    .ptr__nptl_setxid = __nptl_setxid
   };
 # define ptr_pthread_functions &pthread_functions
 #else
@@ -144,7 +146,7 @@ static void
 sigcancel_handler (int sig, siginfo_t *si, void *ctx)
 {
   /* Safety check.  It would be possible to call this function for
-     other signals and send a signal from another thread.  This is not
+     other signals and send a signal from another process.  This is not
      correct and might even be a security problem.  Try to catch as
      many incorrect invocations as possible.  */
   if (sig != SIGCANCEL
@@ -187,6 +189,34 @@ sigcancel_handler (int sig, siginfo_t *si, void *ctx)
 
       oldval = curval;
     }
+}
+
+
+struct xid_command *__xidcmd attribute_hidden;
+
+/* For asynchronous cancellation we use a signal.  This is the handler.  */
+static void
+sighandler_setxid (int sig, siginfo_t *si, void *ctx)
+{
+  /* Safety check.  It would be possible to call this function for
+     other signals and send a signal from another process.  This is not
+     correct and might even be a security problem.  Try to catch as
+     many incorrect invocations as possible.  */
+  if (sig != SIGSETXID
+#ifdef __ASSUME_CORRECT_SI_PID
+      /* Kernels before 2.5.75 stored the thread ID and not the process
+	 ID in si_pid so we skip this test.  */
+      || si->si_pid != THREAD_GETMEM (THREAD_SELF, pid)
+#endif
+      || si->si_code != SI_TKILL)
+    return;
+
+  INTERNAL_SYSCALL_DECL (err);
+  INTERNAL_SYSCALL_NCS (__xidcmd->syscall_no, err, 3, __xidcmd->id[0],
+			__xidcmd->id[1], __xidcmd->id[2]);
+
+  if (atomic_decrement_val (&__xidcmd->cntr) == 0)
+    lll_futex_wake (&__xidcmd->cntr, 1);
 }
 
 
@@ -241,6 +271,12 @@ __pthread_initialize_minimal_internal (void)
   sigemptyset (&sa.sa_mask);
 
   (void) __libc_sigaction (SIGCANCEL, &sa, NULL);
+
+  /* Install the handle to change the threads' uid/gid.  */
+  sa.sa_sigaction = sighandler_setxid;
+  sa.sa_flags = SA_SIGINFO | SA_RESTART;
+
+  (void) __libc_sigaction (SIGSETXID, &sa, NULL);
 
   /* The parent process might have left the signal blocked.  Just in
      case, unblock it.  We reuse the signal mask in the sigaction

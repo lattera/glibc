@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,8 @@
 
 #include <sysdep.h>
 #include "kernel-features.h"
+#include <pthread-functions.h>
+
 
 #if defined __NR_setresgid || __ASSUME_SETRESGID_SYSCALL > 0
 
@@ -40,10 +42,10 @@ setegid (gid_t gid)
     }
 
 # if __ASSUME_32BITUIDS > 0 && defined __NR_setresgid32
-  return INLINE_SYSCALL (setresgid32, 3, -1, gid, -1);
+  result = INLINE_SYSCALL (setresgid32, 3, -1, gid, -1);
 # else
   /* First try the syscall.  */
-  result = __setresgid (-1, gid, -1);
+  result = INLINE_SYSCALL (setresgid, 3, -1, gid, -1);
 #  if __ASSUME_SETRESGID_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use emulation.  This may not work
@@ -51,11 +53,29 @@ setegid (gid_t gid)
        equal to the real group ID, making it impossible to switch back. */
     result = __setregid (-1, gid);
 #  endif
+# endif
+
+#if defined HAVE_PTR__NPTL_SETXID && !defined SINGLE_THREAD
+  if (result == 0 && __libc_pthread_functions.ptr__nptl_setxid != NULL)
+    {
+      struct xid_command cmd;
+# ifdef __NR_setresgid32
+      cmd.syscall_no = __NR_setresgid32;
+# else
+      cmd.syscall_no = __NR_setresgid;
+# endif
+      cmd.id[0] = -1;
+      cmd.id[1] = gid;
+      cmd.id[2] = -1;
+      __libc_pthread_functions.ptr__nptl_setxid (&cmd);
+    }
+#endif
 
   return result;
-# endif
 }
+#ifndef setegid
 libc_hidden_def (setegid)
+#endif
 #else
 # include <sysdeps/unix/bsd/setegid.c>
 #endif

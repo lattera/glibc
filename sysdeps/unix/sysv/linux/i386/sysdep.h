@@ -1,4 +1,5 @@
-/* Copyright (C) 1992,1993,1995-2000,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1992,1993,1995-2000,2002,2003,2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>, August 1995.
 
@@ -343,7 +344,10 @@ asm (".L__X'%ebx = 1\n\t"
 /* Define a macro which expands inline into the wrapper code for a system
    call.  This use is for internal calls that do not need to handle errors
    normally.  It will never touch errno.  This returns just what the kernel
-   gave back.  */
+   gave back.
+
+   The _NCS variant allows non-constant syscall numbers but it is not
+   possible to use more than four parameters.  */
 #undef INTERNAL_SYSCALL
 #ifdef I386_USE_SYSENTER
 # ifdef SHARED
@@ -360,6 +364,18 @@ asm (".L__X'%ebx = 1\n\t"
     : "i" (__NR_##name), "i" (offsetof (tcbhead_t, sysinfo))		      \
       ASMFMT_##nr(args) : "memory", "cc");				      \
     (int) resultvar; })
+#  define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
+  ({									      \
+    register unsigned int resultvar;					      \
+    EXTRAVAR_##nr							      \
+    asm volatile (							      \
+    LOADARGS_##nr							      \
+    "call *%%gs:%P2\n\t"						      \
+    RESTOREARGS_##nr							      \
+    : "=a" (resultvar)							      \
+    : "0" (name), "i" (offsetof (tcbhead_t, sysinfo))			      \
+      ASMFMT_##nr(args) : "memory", "cc");				      \
+    (int) resultvar; })
 # else
 #  define INTERNAL_SYSCALL(name, err, nr, args...) \
   ({									      \
@@ -372,6 +388,17 @@ asm (".L__X'%ebx = 1\n\t"
     RESTOREARGS_##nr							      \
     : "=a" (resultvar)							      \
     : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc");		      \
+    (int) resultvar; })
+#  define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
+  ({									      \
+    register unsigned int resultvar;					      \
+    EXTRAVAR_##nr							      \
+    asm volatile (							      \
+    LOADARGS_##nr							      \
+    "call *_dl_sysinfo\n\t"						      \
+    RESTOREARGS_##nr							      \
+    : "=a" (resultvar)							      \
+    : "0" (name) ASMFMT_##nr(args) : "memory", "cc");			      \
     (int) resultvar; })
 # endif
 #else
@@ -386,6 +413,17 @@ asm (".L__X'%ebx = 1\n\t"
     RESTOREARGS_##nr							      \
     : "=a" (resultvar)							      \
     : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc");		      \
+    (int) resultvar; })
+# define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
+  ({									      \
+    register unsigned int resultvar;					      \
+    EXTRAVAR_##nr							      \
+    asm volatile (							      \
+    LOADARGS_##nr							      \
+    "int $0x80\n\t"							      \
+    RESTOREARGS_##nr							      \
+    : "=a" (resultvar)							      \
+    : "0" (name) ASMFMT_##nr(args) : "memory", "cc");			      \
     (int) resultvar; })
 #endif
 

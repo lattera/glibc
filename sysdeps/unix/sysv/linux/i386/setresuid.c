@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,8 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 #include "kernel-features.h"
+#include <pthread-functions.h>
+
 
 #ifdef __NR_setresuid
 
@@ -39,17 +41,20 @@ extern int __libc_missing_32bit_uids;
 int
 __setresuid (uid_t ruid, uid_t euid, uid_t suid)
 {
+  int result;
+
 # if __ASSUME_32BITUIDS > 0
-  return INLINE_SYSCALL (setresuid32, 3, ruid, euid, suid);
+  result = INLINE_SYSCALL (setresuid32, 3, ruid, euid, suid);
 # else
 #  ifdef __NR_setresuid32
   if (__libc_missing_32bit_uids <= 0)
     {
-      int result;
       int saved_errno = errno;
 
       result = INLINE_SYSCALL (setresuid32, 3, ruid, euid, suid);
-      if (result == 0 || errno != ENOSYS)
+      if (result == 0)
+	goto out;
+      if (errno != ENOSYS)
 	return result;
 
       __set_errno (saved_errno);
@@ -65,11 +70,30 @@ __setresuid (uid_t ruid, uid_t euid, uid_t suid)
       return -1;
     }
 
-  return INLINE_SYSCALL (setresuid, 3, ruid, euid, suid);
+  result = INLINE_SYSCALL (setresuid, 3, ruid, euid, suid);
+#  ifdef __NR_setresuid32
+ out:
+#  endif
 # endif
+
+#if defined HAVE_PTR__NPTL_SETXID && !defined SINGLE_THREAD
+  if (result == 0 && __libc_pthread_functions.ptr__nptl_setxid != NULL)
+    {
+      struct xid_command cmd;
+      cmd.syscall_no = __NR_setresuid32;
+      cmd.id[0] = ruid;
+      cmd.id[1] = euid;
+      cmd.id[2] = suid;
+      __libc_pthread_functions.ptr__nptl_setxid (&cmd);
+    }
+#endif
+
+  return result;
 }
 libc_hidden_def (__setresuid)
+#ifndef __setresuid
 weak_alias (__setresuid, setresuid)
+#endif
 
 #else
 

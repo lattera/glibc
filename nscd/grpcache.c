@@ -419,7 +419,7 @@ addgrbyX (struct database_dyn *db, int fd, request_header *req,
   if (db->secure)
     {
       oldeuid = geteuid ();
-      seteuid (uid);
+      pthread_seteuid_np (uid);
     }
 
   while (lookup (req->type, key, &resultbuf, buffer, buflen, &grp) != 0
@@ -456,7 +456,7 @@ addgrbyX (struct database_dyn *db, int fd, request_header *req,
     }
 
   if (db->secure)
-    seteuid (oldeuid);
+    pthread_seteuid_np (oldeuid);
 
   cache_addgr (db, fd, req, keystr, grp, uid, he, dh, errval);
 

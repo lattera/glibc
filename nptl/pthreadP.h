@@ -206,6 +206,13 @@ __do_cancel (void)
 #define SIGTIMER	SIGCANCEL
 
 
+/* Signal used to implement the setuid et.al. functions.  */
+#define SIGSETXID	(__SIGRTMIN + 1)
+
+/* Used to communicate with signal handler.  */
+extern struct xid_command *__xidcmd attribute_hidden;
+
+
 /* Internal prototypes.  */
 
 /* Thread list handling.  */
@@ -440,5 +447,7 @@ extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer
                                           int execute);
 
 extern void __nptl_deallocate_tsd (void) attribute_hidden;
+
+extern void __nptl_setxid (struct xid_command *cmdp) attribute_hidden;
 
 #endif	/* pthreadP.h */

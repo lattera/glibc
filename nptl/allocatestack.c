@@ -19,6 +19,7 @@
 
 #include <assert.h>
 #include <errno.h>
+#include <signal.h>
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
@@ -26,7 +27,7 @@
 #include <sys/param.h>
 #include <dl-sysdep.h>
 #include <tls.h>
-
+#include <lowlevellock.h>
 
 
 #ifndef NEED_SEPARATE_REGISTER_STACK
@@ -814,6 +815,84 @@ __find_thread_by_id (pid_t tid)
   return result;
 }
 #endif
+
+void
+attribute_hidden
+__nptl_setxid (struct xid_command *cmdp)
+{
+  lll_lock (stack_cache_lock);
+
+  __xidcmd = cmdp;
+  cmdp->cntr = 0;
+
+  INTERNAL_SYSCALL_DECL (err);
+
+  struct pthread *self = THREAD_SELF;
+
+  /* Iterate over the list with system-allocated threads first.  */
+  list_t *runp;
+  list_for_each (runp, &stack_used)
+    {
+      struct pthread *t = list_entry (runp, struct pthread, list);
+      if (t != self)
+	{
+	  int val;
+#if __ASSUME_TGKILL
+	  val = INTERNAL_SYSCALL (tgkill, err, 3,
+				  THREAD_GETMEM (THREAD_SELF, pid),
+				  t->tid, SIGSETXID);
+#else
+# ifdef __NR_tgkill
+	  val = INTERNAL_SYSCALL (tgkill, err, 3,
+				  THREAD_GETMEM (THREAD_SELF, pid),
+				  t->tid, SIGSETXID);
+	  if (INTERNAL_SYSCALL_ERROR_P (val, err)
+	      && INTERNAL_SYSCALL_ERRNO (val, err) == ENOSYS)
+# endif
+	    val = INTERNAL_SYSCALL (tkill, err, 2, t->tid, SIGSETXID);
+#endif
+
+	  if (!INTERNAL_SYSCALL_ERROR_P (val, err))
+	    atomic_increment (&cmdp->cntr);
+	}
+    }
+
+  /* Now the list with threads using user-allocated stacks.  */
+  list_for_each (runp, &__stack_user)
+    {
+      struct pthread *t = list_entry (runp, struct pthread, list);
+      if (t != self)
+	{
+	  int val;
+#if __ASSUME_TGKILL
+	  val = INTERNAL_SYSCALL (tgkill, err, 3,
+				  THREAD_GETMEM (THREAD_SELF, pid),
+				  t->tid, SIGSETXID);
+#else
+# ifdef __NR_tgkill
+	  val = INTERNAL_SYSCALL (tgkill, err, 3,
+				  THREAD_GETMEM (THREAD_SELF, pid),
+				  t->tid, SIGSETXID);
+	  if (INTERNAL_SYSCALL_ERROR_P (val, err)
+	      && INTERNAL_SYSCALL_ERRNO (val, err) == ENOSYS)
+# endif
+	    val = INTERNAL_SYSCALL (tkill, err, 2, t->tid, SIGSETXID);
+#endif
+
+	  if (!INTERNAL_SYSCALL_ERROR_P (val, err))
+	    atomic_increment (&cmdp->cntr);
+	}
+    }
+
+  int cur = cmdp->cntr;
+  while (cur != 0)
+    {
+      lll_futex_wait (&cmdp->cntr, cur);
+      cur = cmdp->cntr;
+    }
+
+  lll_unlock (stack_cache_lock);
+}
 
 static inline void __attribute__((always_inline))
 init_one_static_tls (struct pthread *curp, struct link_map *map)

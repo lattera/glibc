@@ -80,7 +80,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
   if (db->secure)
     {
       oldeuid = geteuid ();
-      seteuid (uid);
+      pthread_seteuid_np (uid);
     }
 
   static service_user *hosts_database;
@@ -426,7 +426,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
   _res.options = old_res_options;
 
   if (db->secure)
-    seteuid (oldeuid);
+    pthread_seteuid_np (oldeuid);
 
   if (dataset != NULL && !alloca_used)
     {

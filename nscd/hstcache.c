@@ -442,7 +442,7 @@ addhstbyX (struct database_dyn *db, int fd, request_header *req,
   if (db->secure)
     {
       oldeuid = geteuid ();
-      seteuid (uid);
+      pthread_seteuid_np (uid);
     }
 
   while (lookup (req->type, key, &resultbuf, buffer, buflen, &hst) != 0
@@ -480,7 +480,7 @@ addhstbyX (struct database_dyn *db, int fd, request_header *req,
     }
 
   if (db->secure)
-    seteuid (oldeuid);
+    pthread_seteuid_np (oldeuid);
 
   cache_addhst (db, fd, req, key, hst, uid, he, dh,
 		h_errno == TRY_AGAIN ? errval : 0);

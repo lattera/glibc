@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -20,7 +20,7 @@
 #include <signal.h>
 
 
-static int current_rtmin = __SIGRTMIN + 1;
+static int current_rtmin = __SIGRTMIN + 2;
 static int current_rtmax = __SIGRTMAX;
 
 

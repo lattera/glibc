@@ -1,6 +1,5 @@
-/* Copyright (C) 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,35 +16,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <signal.h>
-
-
-/* These are defined in libc.  We want to have only one definition
-   so we "forward" the calls.  */
-extern int __libc_current_sigrtmin_private (void);
-extern int __libc_current_sigrtmax_private (void);
-extern int __libc_allocate_rtsig_private (int high);
-
-
-/* We reserve __SIGRTMIN for use as the cancellation signal and
-   __SIGRTMIN+1 to andle setuid et.al.  These signals are used
-   internally.  */
-int
-__libc_current_sigrtmin (void)
-{
-  return __libc_current_sigrtmin_private ();
-}
+#include <pthread.h>
+#include <unistd.h>
 
 
 int
-__libc_current_sigrtmax (void)
+pthread_setregid_np (gid_t rgid, gid_t egid)
 {
-  return __libc_current_sigrtmax_private ();
-}
-
-
-int
-__libc_allocate_rtsig (int high)
-{
-  return __libc_allocate_rtsig_private (high);
+  return setregid (rgid, egid);
 }

@@ -92,6 +92,16 @@ struct pthread_unwind_buf
 };
 
 
+/* Opcodes and data types for communication with the signal handler to
+   change user/group IDs.  */
+struct xid_command
+{
+  int syscall_no;
+  id_t id[3];
+  volatile int cntr;
+};
+
+
 /* Thread descriptor data structure.  */
 struct pthread
 {

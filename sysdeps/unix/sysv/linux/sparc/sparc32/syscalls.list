@@ -2,7 +2,5 @@
 
 setrlimit	-	setrlimit	2	__setrlimit	setrlimit
 getrlimit	-	getrlimit	2	__getrlimit	getrlimit
-setresuid	-	setresuid32	3	__setresuid	setresuid
-setresgid	-	setresgid32	3	__setresgid	setresgid
 getresuid	-	getresuid32	3	getresuid
 getresgid	-	getresgid32	3	getresgid

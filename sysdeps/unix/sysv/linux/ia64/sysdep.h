@@ -199,33 +199,33 @@
 
 #ifdef IA64_USE_NEW_STUB
 
-#define DO_INLINE_SYSCALL(name, nr, args...)					\
-    LOAD_ARGS_##nr (args)							\
-    register long _r8 __asm ("r8");						\
-    register long _r10 __asm ("r10");						\
-    register long _r15 __asm ("r15") = __NR_##name;				\
-    register void *_b7 __asm ("b7") = ((tcbhead_t *) __thread_self)->private;	\
-    long _retval;								\
-    LOAD_REGS_##nr								\
-    /*										\
-     * Don't specify any unwind info here.  We mark ar.pfs as			\
-     * clobbered.  This will force the compiler to save ar.pfs			\
-     * somewhere and emit appropriate unwind info for that save.		\
-     */										\
-    __asm __volatile ("br.call.sptk.many b6=%0;;\n"				\
-		      : "=b"(_b7), "=r" (_r8), "=r" (_r10), "=r" (_r15)		\
-			ASM_OUTARGS_##nr					\
-		      : "0" (_b7), "3" (_r15) ASM_ARGS_##nr			\
-		      : "memory", "ar.pfs" ASM_CLOBBERS_##nr);			\
+# define DO_INLINE_SYSCALL(name, nr, args...)				      \
+    LOAD_ARGS_##nr (args)						      \
+    register long _r8 __asm ("r8");					      \
+    register long _r10 __asm ("r10");					      \
+    register long _r15 __asm ("r15") = name;				      \
+    register void *_b7 __asm ("b7") = ((tcbhead_t *) __thread_self)->private; \
+    long _retval;							      \
+    LOAD_REGS_##nr							      \
+    /*									      \
+     * Don't specify any unwind info here.  We mark ar.pfs as		      \
+     * clobbered.  This will force the compiler to save ar.pfs		      \
+     * somewhere and emit appropriate unwind info for that save.	      \
+     */									      \
+    __asm __volatile ("br.call.sptk.many b6=%0;;\n"			      \
+		      : "=b"(_b7), "=r" (_r8), "=r" (_r10), "=r" (_r15)	      \
+			ASM_OUTARGS_##nr				      \
+		      : "0" (_b7), "3" (_r15) ASM_ARGS_##nr		      \
+		      : "memory", "ar.pfs" ASM_CLOBBERS_##nr);		      \
     _retval = _r8;
 
 #else /* !IA64_USE_NEW_STUB */
 
-#define DO_INLINE_SYSCALL(name, nr, args...)			\
+# define DO_INLINE_SYSCALL(name, nr, args...)			\
     LOAD_ARGS_##nr (args)					\
     register long _r8 asm ("r8");				\
     register long _r10 asm ("r10");				\
-    register long _r15 asm ("r15") = __NR_##name;		\
+    register long _r15 asm ("r15") = name;			\
     long _retval;						\
     LOAD_REGS_##nr						\
     __asm __volatile (BREAK_INSN (__BREAK_SYSCALL)		\
@@ -240,7 +240,7 @@
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...)	\
   ({						\
-    DO_INLINE_SYSCALL(name, nr, args)		\
+    DO_INLINE_SYSCALL(__NR_##name, nr, args)	\
     if (_r10 == -1)				\
       {						\
 	__set_errno (_retval);			\
@@ -252,11 +252,13 @@
 #define INTERNAL_SYSCALL_DECL(err) long int err
 
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...)	\
+#define INTERNAL_SYSCALL_NCS(name, err, nr, args...)	\
   ({							\
     DO_INLINE_SYSCALL(name, nr, args)			\
     err = _r10;						\
     _retval; })
+#define INTERNAL_SYSCALL(name, err, nr, args...)	\
+  INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, ##args)
 
 #undef INTERNAL_SYSCALL_ERROR_P
 #define INTERNAL_SYSCALL_ERROR_P(val, err)	(err == -1)

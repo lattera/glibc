@@ -1,3 +1,25 @@
+2004-09-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread.h: Declare pthread_setgid_np,
+	pthread_setuid_np, pthread_setegid_np, pthread_seteuid_np,
+	pthread_setregid_np, pthread_setreuid_np, pthread_setresgid_np,
+	and pthread_setresuid_np.
+	* pthread_setgid_np.c: New file.
+	* pthread_setuid_np.c: New file.
+	* pthread_setegid_np.c: New file.
+	* pthread_seteuid_np.c: New file.
+	* pthread_setregid_np.c: New file.
+	* pthread_setreuid_np.c: New file.
+	* pthread_setresgid_np.c: New file.
+	* pthread_setresuid_np.c: New file.
+	* Versions [libpthread, GLIBC_2.3.4]: Add pthread_setgid_np,
+	pthread_setuid_np, pthread_setegid_np, pthread_seteuid_np,
+	pthread_setregid_np, pthread_setreuid_np, pthread_setresgid_np,
+	and pthread_setresuid_np.
+	* Makefile (libpthread-routines): Add pthread_setuid, pthread_seteuid,
+	pthread_setreuid, pthread_setresuid, pthread_setgid, pthread_setegid,
+	pthread_setregid, and pthread_setresgid.
+
 2004-09-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread.h: Make rwlock prototypes available also

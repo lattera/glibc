@@ -236,18 +236,19 @@
 #undef INTERNAL_SYSCALL_DECL
 #define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
-#undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...) \
+#define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
   ({									      \
     unsigned long resultvar;						      \
     LOAD_ARGS_##nr (args)						      \
     LOAD_REGS_##nr							      \
     asm volatile (							      \
-    "movq %1, %%rax\n\t"						      \
     "syscall\n\t"							      \
     : "=a" (resultvar)							      \
-    : "i" (__NR_##name) ASM_ARGS_##nr : "memory", "cc", "r11", "cx");	      \
+    : "0" (name) ASM_ARGS_##nr : "memory", "cc", "r11", "cx");		      \
     (long) resultvar; })
+#undef INTERNAL_SYSCALL
+#define INTERNAL_SYSCALL(name, err, nr, args...) \
+  INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, ##args)
 
 #undef INTERNAL_SYSCALL_ERROR_P
 #define INTERNAL_SYSCALL_ERROR_P(val, err) \

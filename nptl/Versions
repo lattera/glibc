@@ -228,6 +228,11 @@ libpthread {
     # New affinity interfaces.
     pthread_getaffinity_np; pthread_setaffinity_np;
     pthread_attr_getaffinity_np; pthread_attr_setaffinity_np;
+
+    pthread_setuid_np; pthread_seteuid_np; pthread_setreuid_np;
+    pthread_setresuid_np;
+    pthread_setgid_np; pthread_setegid_np; pthread_setregid_np;
+    pthread_setresgid_np;
   }
 
   GLIBC_PRIVATE {

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,8 @@
 
 #include <sysdep.h>
 #include "kernel-features.h"
+#include <pthread-functions.h>
+
 
 #if defined __NR_setresuid || __ASSUME_SETRESUID_SYSCALL > 0
 
@@ -40,22 +42,40 @@ seteuid (uid_t uid)
     }
 
 # if __ASSUME_32BITUIDS > 0 && defined __NR_setresuid32
-  return INLINE_SYSCALL (setresuid32, 3, -1, uid, -1);
+  result = INLINE_SYSCALL (setresuid32, 3, -1, uid, -1);
 # else
   /* First try the syscall.  */
-  result = __setresuid (-1, uid, -1);
-# if __ASSUME_SETRESUID_SYSCALL == 0
+  result = INLINE_SYSCALL (setresuid, 3, -1, uid, -1);
+#  if __ASSUME_SETRESUID_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use emulation.  This may not work
        since `setreuid' also sets the saved user ID when UID is not
        equal to the real user ID, making it impossible to switch back.  */
     result = __setreuid (-1, uid);
+#  endif
 # endif
 
-  return result;
+#if defined HAVE_PTR__NPTL_SETXID && !defined SINGLE_THREAD
+  if (result == 0 && __libc_pthread_functions.ptr__nptl_setxid != NULL)
+    {
+      struct xid_command cmd;
+# ifdef __NR_setresuid32
+      cmd.syscall_no = __NR_setresuid32;
+# else
+      cmd.syscall_no = __NR_setresuid;
 # endif
+      cmd.id[0] = -1;
+      cmd.id[1] = uid;
+      cmd.id[2] = -1;
+      __libc_pthread_functions.ptr__nptl_setxid (&cmd);
+    }
+#endif
+
+  return result;
 }
+#ifndef seteuid
 libc_hidden_def (seteuid)
+#endif
 #else
 # include <sysdeps/unix/bsd/seteuid.c>
 #endif

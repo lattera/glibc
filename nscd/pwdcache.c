@@ -415,7 +415,7 @@ addpwbyX (struct database_dyn *db, int fd, request_header *req,
   if (db->secure)
     {
       oldeuid = geteuid ();
-      seteuid (c_uid);
+      pthread_seteuid_np (c_uid);
     }
 
   while (lookup (req->type, key, &resultbuf, buffer, buflen, &pwd) != 0
@@ -452,7 +452,7 @@ addpwbyX (struct database_dyn *db, int fd, request_header *req,
     }
 
   if (db->secure)
-    seteuid (oldeuid);
+    pthread_seteuid_np (oldeuid);
 
   /* Add the entry to the cache.  */
   cache_addpw (db, fd, req, keystr, pwd, c_uid, he, dh, errval);
