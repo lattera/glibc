@@ -1,6 +1,7 @@
 2001-02-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/Makefile: Add rules to build and run bug-regex2.
+	* posix/bug-regex2.c: New file.
 
 2001-02-10  Jakub Jelinek  <jakub@redhat.com>
 
