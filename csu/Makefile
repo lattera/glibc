@@ -1,5 +1,5 @@
 # Makefile for csu code for GNU C library.
-# Copyright (C) 1995-2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1995-2004, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -54,11 +54,13 @@ include ../Makeconfig
 ifeq (yes,$(build-shared))
 extra-objs += S$(start-installed-name)
 install-lib += S$(start-installed-name)
+generated += start.os
 endif
 
 ifeq (yes,$(build-bounded))
 extra-objs += b$(start-installed-name)
 install-lib += b$(start-installed-name)
+generated += start.ob
 endif
 
 ifneq ($(start-installed-name),$(static-start-installed-name))
