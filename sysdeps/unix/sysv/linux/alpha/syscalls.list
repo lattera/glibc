@@ -20,6 +20,7 @@ getpeername	-	getpeername	3	__getpeername	getpeername
 getpriority	-	getpriority	2	__getpriority	getpriority
 mmap		-	mmap		6	__mmap		mmap __mmap64 mmap64
 llseek		EXTRA	lseek		C:3	__libc_lseek64	__llseek llseek __lseek64 lseek64
+posix_fadvise64	-	fadvise64	4	posix_fadvise64	posix_fadvise
 pread		-	pread		C:4	__libc_pread	__libc_pread64 __pread pread __pread64 pread64
 pwrite		-	pwrite		C:4	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64
 fstatfs		-	fstatfs		2	__fstatfs	fstatfs __fstatfs64 fstatfs64
