@@ -1,3 +1,7 @@
+2001-10-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/elf/start.S (_fp_hw): Define object type.
+
 2001-10-18  Andreas Schwab  <schwab@suse.de>
 
 	* math/libm-test.inc (print_ulps): Print ulp values rounded to
@@ -25,8 +29,8 @@
 2001-10-16  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/ldbl-96/s_nextafterl.c (__nextafterl): Fix
-	parentheses.
-	Reported by David Byron <dbyron@porto.coactive.com>, close PR libc/2589.
+	parentheses.  Reported by David Byron <dbyron@porto.coactive.com>,
+	close PR libc/2589.
 
 2001-10-15  Ulrich Drepper  <drepper@redhat.com>
 
