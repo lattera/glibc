@@ -42,7 +42,7 @@ pthread_timedjoin_np (threadid, thread_return, abstime)
   int result;
 
   /* Make sure the descriptor is valid.  */
-  if (DEBUGGING_P && __find_in_stack_list (pd) == NULL)
+  if ((DEBUGGING_P && __find_in_stack_list (pd) == NULL) || pd->tid <= 0)
     /* Not a valid thread handle.  */
     return ESRCH;
 

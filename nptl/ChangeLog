@@ -1,3 +1,9 @@
+2003-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_join.c (pthread_join): Limited checking for invalid
+	descriptors.
+	* pthread_timedjoin.c (pthread_timedjoin_np): Likewise.
+
 2003-02-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_create.c (deallocate_tsd): Reset found_nonzero at the
