@@ -45,16 +45,17 @@ static char rcsid[] = "$NetBSD: w_powf.c,v 1.3 1995/05/10 20:49:41 jtc Exp $";
 	    else
 		return z;
 	}
-	if(x==(float)0.0){
+	if(x==(float)0.0) {
 	    if(y==(float)0.0)
 	        /* powf(0.0,0.0) */
 	        return (float)__kernel_standard((double)x,(double)y,120);
-	    if(__finitef(y)&&y<(float)0.0)
+	    if(__finitef(y)&&y<(float)0.0) {
 	      if (signbit (x) && signbit (z))
 	        /* powf(0.0,negative) */
 	        return (float)__kernel_standard((double)x,(double)y,123);
 	      else
 	        return (float)__kernel_standard((double)x,(double)y,143);
+	    }
 	    return z;
 	}
 	if(!__finitef(z)) {

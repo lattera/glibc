@@ -1,7 +1,13 @@
 #ifndef _STDLIB_H
+
+#ifdef __need_malloc_and_calloc
+#define __Need_M_And_C
+#endif
+
 #include <stdlib/stdlib.h>
 
 /* Now define the internal interfaces.  */
+#ifndef __Need_M_And_C
 extern int32_t __random __P ((void));
 extern void __srandom __P ((unsigned int __seed));
 extern __ptr_t __initstate __P ((unsigned int __seed, __ptr_t __statebuf,
@@ -41,3 +47,6 @@ extern char *__realpath __P ((__const char *__name, char *__resolved));
 extern int __ptsname_r __P ((int __fd, char *__buf, size_t __buflen));
 extern int __getpt __P ((void));
 #endif
+#undef __Need_M_And_C
+
+#endif  /* include/stdlib.h */

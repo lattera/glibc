@@ -231,19 +231,21 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
   char *ans;
 
   if (question_count == 0)
-    /* FIXME: the Sun version uses for host name lookup an additional
-       parameter for pointing to h_errno.  this is missing here.
-       OSF/1 has a per-thread h_errno variable.  */
-    if (header_pointer->aa != 0)
-      {
-	__set_h_errno (HOST_NOT_FOUND);
-	return NSS_STATUS_NOTFOUND;
-      }
-    else
-      {
-	__set_h_errno (TRY_AGAIN);
-	return NSS_STATUS_TRYAGAIN;
-      }
+    {
+      /* FIXME: the Sun version uses for host name lookup an additional
+	 parameter for pointing to h_errno.  this is missing here.
+	 OSF/1 has a per-thread h_errno variable.  */
+      if (header_pointer->aa != 0)
+	{
+	  __set_h_errno (HOST_NOT_FOUND);
+	  return NSS_STATUS_NOTFOUND;
+	}
+      else
+	{
+	  __set_h_errno (TRY_AGAIN);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+    }
 
   /* Skip the question part.  */
   while (question_count-- > 0)

@@ -128,7 +128,7 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
 	  char *endp;
 	  size_t restlen;
 
-	  if (encrypted != NULL
+	  if (encrypted == NULL
 	      || (endp = strchr (++encrypted, ':')) == NULL
 	      || (p = strchr (p + 1, ':')) == NULL)
 	    {

@@ -29,10 +29,6 @@
 extern char *__progname;
 char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
 
-/* This defines the default search path for libraries.
-   For the dynamic linker it is set by -rpath when linking.  */
-const char *_dl_rpath = DEFAULT_RPATH;
-
 /* Name of the architecture.  */
 const char *_dl_platform;
 size_t _dl_platformlen;

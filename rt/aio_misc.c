@@ -162,11 +162,13 @@ __aio_find_req (aiocb_union *elem)
     runp = runp->next_fd;
 
   if (runp != NULL)
-    if (runp->aiocbp->aiocb.aio_fildes != fildes)
-      runp = NULL;
-    else
-      while (runp != NULL && runp->aiocbp != elem)
-	runp = runp->next_prio;
+    {
+      if (runp->aiocbp->aiocb.aio_fildes != fildes)
+	runp = NULL;
+      else
+	while (runp != NULL && runp->aiocbp != elem)
+	  runp = runp->next_prio;
+    }
 
   return runp;
 }

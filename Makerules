@@ -651,14 +651,8 @@ endif
 
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
-# We need to clean the symbolic link list first.
 symbolic-link-prog := $(common-objpfx)elf/sln
 symbolic-link-list := $(common-objpfx)elf/symlink.list
-install: install-clean-symbolic-link-list
-.PHONY: install-clean-symbolic-link-list
-install-clean-symbolic-link-list:
-	rm -f $(symbolic-link-list)
-
 define make-shlib-link
 echo $(<F) $@ >> $(symbolic-link-list)
 endef

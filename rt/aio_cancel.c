@@ -106,24 +106,26 @@ aio_cancel (fildes, aiocbp)
       /* If any request is worked on by a thread it must be the first.
 	 So either we can delete all requests or all but the first.  */
       if (req != NULL)
-	if (req->running == allocated)
-	  {
-	    struct requestlist *old = req;
-	    req = req->next_prio;
-	    old->next_prio = NULL;
+	{
+	  if (req->running == allocated)
+	    {
+	      struct requestlist *old = req;
+	      req = req->next_prio;
+	      old->next_prio = NULL;
 
-	    result = AIO_NOTCANCELED;
-	  }
-	else
-	  {
-	    /* Remove entry from the file descriptor list.  */
-	    if (req->last_fd != NULL)
-	      req->last_fd->next_fd = req->next_fd;
-	    if (req->next_fd != NULL)
-	      req->next_fd->last_fd = req->last_fd;
+	      result = AIO_NOTCANCELED;
+	    }
+	  else
+	    {
+	      /* Remove entry from the file descriptor list.  */
+	      if (req->last_fd != NULL)
+		req->last_fd->next_fd = req->next_fd;
+	      if (req->next_fd != NULL)
+		req->next_fd->last_fd = req->last_fd;
 
-	    result = AIO_CANCELED;
-	  }
+	      result = AIO_CANCELED;
+	    }
+	}
     }
 
   /* Mark requests as canceled and send signal.  */

@@ -89,32 +89,6 @@ endif
 # Don't compile the ctype glue code, since there is no old non-GNU C library.
 inhibit-glue = yes
 
-# Tell sysdeps/posix/Makefile that we create stdio_lim.h differently.
-inhibit-stdio_lim = yes
-
-$(common-objpfx)bits/stdio_%.h $(common-objpfx)bits/stdio_%.d: \
- $(..)sysdeps/unix/sysv/linux/stdio_%.h.in
-	rm -f $(@:.h=.d) $(@:.d=.h)-t
-	echo '#include <linux/limits.h>' | \
-	SUNPRO_DEPENDENCIES='$(@:.h=.d) \
-			     $(patsubst $(common-objpfx)%,$$(common-objpfx)%,\
-					$(@:.d=.h) $(@:.h=.d))' \
-	$(CC) -E -dM - > $(@:.d=.h)-t
-	fopen_max=`sed -n 's/^#define OPEN_MAX //p' $(@:.d=.h)-t`; \
-	filename_max=`sed -n 's/^#define PATH_MAX //p' $(@:.d=.h)-t`; \
-	if test -n "$$fopen_max" && test -n "$$filename_max"; then \
-		sed -e "s/DEFAULT_FOPEN_MAX/$$fopen_max/" \
-		    -e "s/DEFAULT_FILENAME_MAX/$$filename_max/" $< \
-		    > $(@:.d=.h).new && \
-		mv -f $(@:.d=.h).new $(@:.d=.h); \
-	else exit 1; fi
-# Remove this last so that it can be examined if something went wrong.
-	rm -f $(@:.d=.h)-t
-ifndef no_deps
-# Get the list of dependencies (probably /usr/include/linux/limits.h).
--include $(common-objpfx)bits/stdio_lim.d
-endif
-
 ifeq ($(subdir),signal)
 sysdep_routines += rt_sigsuspend rt_sigprocmask rt_sigtimedwait	\
 		   rt_sigqueueinfo rt_sigaction rt_sigpending
@@ -128,4 +102,3 @@ ifeq ($(subdir),nis)
 CFLAGS-ypclnt.c = -DUSE_BINDINGDIR=1
 endif
 
-common-generated += bits/stdio_lim.h bits/stdio_lim.d

@@ -33,6 +33,7 @@
 
 #include <gconv.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* Definitions used in the body of the `gconv' function.  */

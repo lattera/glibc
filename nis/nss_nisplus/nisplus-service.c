@@ -80,7 +80,7 @@ _nss_nisplus_parse_servent (nis_result *result, struct servent *serv,
   room_left -= strlen (first_unused) + 1;
   first_unused += strlen (first_unused) + 1;
 
-  serv->s_port = atoi (NISENTRYVAL (0, 3, result));
+  serv->s_port = htons (atoi (NISENTRYVAL (0, 3, result)));
   p = first_unused;
 
   line = p;

@@ -21,17 +21,21 @@
  */
 
 #ifndef	_STDLIB_H
-#define	_STDLIB_H	1
 
 #include <features.h>
 
 /* Get size_t, wchar_t and NULL from <stddef.h>.  */
-#define	__need_size_t
-#define	__need_wchar_t
-#define	__need_NULL
+#define		__need_size_t
+#ifndef __need_malloc_and_calloc
+# define	__need_wchar_t
+# define	__need_NULL
+#endif
 #include <stddef.h>
 
 __BEGIN_DECLS
+
+#ifndef __need_malloc_and_calloc
+#define	_STDLIB_H	1
 
 /* Returned by `div'.  */
 typedef struct
@@ -440,14 +444,20 @@ extern int lcong48_r __P ((unsigned short int __param[7],
 # endif	/* Use misc.  */
 #endif	/* Use SVID or X/Open.  */
 
+#endif /* don't just need malloc and calloc */
 
+#ifndef __malloc_and_calloc_defined
+#define __malloc_and_calloc_defined
 /* Allocate SIZE bytes of memory.  */
 extern __ptr_t malloc __P ((size_t __size));
+/* Allocate NMEMB elements of SIZE bytes each, all initialized to 0.  */
+extern __ptr_t calloc __P ((size_t __nmemb, size_t __size));
+#endif
+
+#ifndef __need_malloc_and_calloc
 /* Re-allocate the previously allocated block
    in __ptr_t, making the new block SIZE bytes long.  */
 extern __ptr_t realloc __P ((__ptr_t __ptr, size_t __size));
-/* Allocate NMEMB elements of SIZE bytes each, all initialized to 0.  */
-extern __ptr_t calloc __P ((size_t __nmemb, size_t __size));
 /* Free a block allocated by `malloc', `realloc' or `calloc'.  */
 extern void free __P ((__ptr_t __ptr));
 
@@ -719,6 +729,9 @@ extern int ptsname_r __P ((int __fd, char *__buf, size_t __buflen));
 /* Open a master pseudo terminal and return its file descriptor.  */
 extern int getpt __P ((void));
 #endif
+
+#endif /* don't just need malloc and calloc */
+#undef __need_malloc_and_calloc
 
 __END_DECLS
 

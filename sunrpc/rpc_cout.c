@@ -453,8 +453,8 @@ inline_struct (definition *def, int flag)
   if (flag == PUT)
     f_print (fout, "\n\tif (xdrs->x_op == XDR_ENCODE) {\n");
   else
-    f_print(fout,
-	    "\t\treturn TRUE;\n\t} else if (xdrs->x_op == XDR_DECODE) {\n");
+    f_print (fout,
+	     "\t\treturn TRUE;\n\t} else if (xdrs->x_op == XDR_DECODE) {\n");
 
   i = 0;
   size = 0;
@@ -506,49 +506,51 @@ inline_struct (definition *def, int flag)
       else
 	{
 	  if (i > 0)
-	    if (sizestr == NULL && size < inlineflag)
-	      {
-		/* don't expand into inline code if size < inlineflag */
-		while (cur != dl)
-		  {
-		    print_stat (indent + 1, &cur->decl);
-		    cur = cur->next;
-		  }
-	      }
-	    else
-	      {
-		/* were already looking at a xdr_inlineable structure */
-		tabify (fout, indent + 1);
-		if (sizestr == NULL)
-		  f_print (fout, "buf = XDR_INLINE (xdrs, %d * BYTES_PER_XDR_UNIT);", size);
-		else if (size == 0)
-		  f_print (fout,
-			   "buf = XDR_INLINE (xdrs, %s * BYTES_PER_XDR_UNIT);",
-			   sizestr);
-		else
-		  f_print (fout,
-			   "buf = XDR_INLINE(xdrs, (%d + (%s)) * BYTES_PER_XDR_UNIT);",
-			   size, sizestr);
-		f_print (fout, "\n");
-		tabify (fout, indent + 1);
-		fprintf (fout, "if (buf == NULL) {\n");
-		psav = cur;
-		while (cur != dl)
-		  {
-		    print_stat (indent + 2, &cur->decl);
-		    cur = cur->next;
-		  }
+	    {
+	      if (sizestr == NULL && size < inlineflag)
+		{
+		  /* don't expand into inline code if size < inlineflag */
+		  while (cur != dl)
+		    {
+		      print_stat (indent + 1, &cur->decl);
+		      cur = cur->next;
+		    }
+		}
+	      else
+		{
+		  /* were already looking at a xdr_inlineable structure */
+		  tabify (fout, indent + 1);
+		  if (sizestr == NULL)
+		    f_print (fout, "buf = XDR_INLINE (xdrs, %d * BYTES_PER_XDR_UNIT);", size);
+		  else if (size == 0)
+		    f_print (fout,
+			     "buf = XDR_INLINE (xdrs, %s * BYTES_PER_XDR_UNIT);",
+			     sizestr);
+		  else
+		    f_print (fout,
+			     "buf = XDR_INLINE(xdrs, (%d + (%s)) * BYTES_PER_XDR_UNIT);",
+			     size, sizestr);
+		  f_print (fout, "\n");
+		  tabify (fout, indent + 1);
+		  fprintf (fout, "if (buf == NULL) {\n");
+		  psav = cur;
+		  while (cur != dl)
+		    {
+		      print_stat (indent + 2, &cur->decl);
+		      cur = cur->next;
+		    }
 
-		f_print (fout, "\n\t\t} else {\n");
-		cur = psav;
-		while (cur != dl)
-		  {
-		    emit_inline (indent + 1, &cur->decl, flag);
-		    cur = cur->next;
-		  }
-		tabify (fout, indent + 1);
-		f_print (fout, "}\n");
-	      }
+		  f_print (fout, "\n\t\t} else {\n");
+		  cur = psav;
+		  while (cur != dl)
+		    {
+		      emit_inline (indent + 1, &cur->decl, flag);
+		      cur = cur->next;
+		    }
+		  tabify (fout, indent + 1);
+		  f_print (fout, "}\n");
+		}
+	    }
 	  size = 0;
 	  i = 0;
 	  sizestr = NULL;
@@ -556,46 +558,49 @@ inline_struct (definition *def, int flag)
 	}
     }
   if (i > 0)
-    if (sizestr == NULL && size < inlineflag)
-      {
-	/* don't expand into inline code if size < inlineflag */
-	while (cur != dl)
-	  {
-	    print_stat (indent + 1, &cur->decl);
-	    cur = cur->next;
-	  }
-      }
-    else
-      {
-	/* were already looking at a xdr_inlineable structure */
-	if (sizestr == NULL)
-	  f_print (fout, "\t\tbuf = XDR_INLINE(xdrs,%d * BYTES_PER_XDR_UNIT);",
-		   size);
-	else if (size == 0)
-	  f_print (fout,
-		   "\t\tbuf = XDR_INLINE(xdrs,%s * BYTES_PER_XDR_UNIT);",
-		   sizestr);
-	else
-	  f_print (fout,
-		   "\t\tbuf = XDR_INLINE(xdrs,(%d + %s)* BYTES_PER_XDR_UNIT);",
-		   size, sizestr);
-	f_print (fout, "\n\t\tif (buf == NULL) {\n");
-	psav = cur;
-	while (cur != NULL)
-	  {
-	    print_stat (indent + 2, &cur->decl);
-	    cur = cur->next;
-	  }
-	f_print (fout, "\t\t} else {\n");
+    {
+      if (sizestr == NULL && size < inlineflag)
+	{
+	  /* don't expand into inline code if size < inlineflag */
+	  while (cur != dl)
+	    {
+	      print_stat (indent + 1, &cur->decl);
+	      cur = cur->next;
+	    }
+	}
+      else
+	{
+	  /* were already looking at a xdr_inlineable structure */
+	  if (sizestr == NULL)
+	    f_print (fout,
+		     "\t\tbuf = XDR_INLINE(xdrs,%d * BYTES_PER_XDR_UNIT);",
+		     size);
+	  else if (size == 0)
+	    f_print (fout,
+		     "\t\tbuf = XDR_INLINE(xdrs,%s * BYTES_PER_XDR_UNIT);",
+		     sizestr);
+	  else
+	    f_print (fout,
+		     "\t\tbuf = XDR_INLINE(xdrs,(%d + %s)* BYTES_PER_XDR_UNIT);",
+		     size, sizestr);
+	  f_print (fout, "\n\t\tif (buf == NULL) {\n");
+	  psav = cur;
+	  while (cur != NULL)
+	    {
+	      print_stat (indent + 2, &cur->decl);
+	      cur = cur->next;
+	    }
+	  f_print (fout, "\t\t} else {\n");
 
-	cur = psav;
-	while (cur != dl)
-	  {
-	    emit_inline (indent + 2, &cur->decl, flag);
-	    cur = cur->next;
-	  }
-	f_print (fout, "\t\t}\n");
-      }
+	  cur = psav;
+	  while (cur != dl)
+	    {
+	      emit_inline (indent + 2, &cur->decl, flag);
+	      cur = cur->next;
+	    }
+	  f_print (fout, "\t\t}\n");
+	}
+    }
 }
 
 /* this may be const.  i haven't traced this one through yet. */
@@ -724,7 +729,7 @@ emit_inline (int indent, declaration * decl, int flag)
       f_print (fout, "register %s *genp;\n\n", decl->type);
       tabify (fout, indent + 1);
       f_print (fout,
-	      "for (i = 0, genp = objp->%s;\n", decl->name);
+	       "for (i = 0, genp = objp->%s;\n", decl->name);
       tabify (fout, indent + 2);
       f_print (fout, "i < %s; ++i) {\n", decl->array_max);
       emit_single_in_line (indent + 2, decl, flag, REL_VECTOR);

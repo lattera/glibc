@@ -101,6 +101,7 @@ install: install-symbolic-link
 .PHONY: install-symbolic-link
 install-symbolic-link: subdir_install
 	$(symbolic-link-prog) $(symbolic-link-list)
+	rm -f $(symbolic-link-list)
 
 install:
 	-test ! -x $(common-objpfx)elf/ldconfig || \

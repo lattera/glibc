@@ -116,13 +116,9 @@ endif
 
 $(objpfx)ld.so: $(objpfx)librtld.os $(addprefix $(objpfx),$(rtld-ldscript)) \
 		$(ld-map)
-	$(LINK.o) -nostdlib -nostartfiles -shared -o $@		\
-		-Wl,-rpath=$(default-rpath) $(LDFLAGS-rtld)	\
-		$(filter-out $(rtld-ldscript) $(map-file),$^)	\
-		$(load-map-file) -Wl,-soname=$(rtld-installed-name)
-
-# The dl code in the static libc needs a default library path.
-CFLAGS-dl-support.c = -D'DEFAULT_RPATH="$(default-rpath)"'
+	$(LINK.o) -nostdlib -nostartfiles -shared -o $@ $(LDFLAGS-rtld) \
+		  $(filter-out $(rtld-ldscript) $(map-file),$^)		\
+		  $(load-map-file) -Wl,-soname=$(rtld-installed-name)
 
 # interp.c exists just to get this string into the libraries.
 CFLAGS-interp.c = -D'RUNTIME_LINKER="$(slibdir)/$(rtld-installed-name)"'

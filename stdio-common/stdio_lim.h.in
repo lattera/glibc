@@ -1,5 +1,4 @@
-/* Stdio limits for non-POSIX systems.
-   Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,20 +20,18 @@
 # error "Never include <bits/stdio_lim.h> directly; use <stdio.h> instead."
 #endif
 
-#ifndef __need_FOPEN_MAX
-# define L_tmpnam	1
-# define TMP_MAX	0
+#ifdef _STDIO_H
+# define L_tmpnam @L_tmpnam@
+# define TMP_MAX @TMP_MAX@
+# define FILENAME_MAX @FILENAME_MAX@
 
 # ifdef __USE_POSIX
-#  define L_ctermid	1
-#  define L_cuserid	1
+#  define L_ctermid @L_ctermid@
+#  define L_cuserid @L_cuserid@
 # endif
-
-# define FILENAME_MAX	14
 #endif
 
-#if defined __need_FOPEN_MAX && !defined __defined_FOPEN_MAX
-# define __defined_FOPEN_MAX
-# define FOPEN_MAX	16
+#if defined __need_FOPEN_MAX || defined _STDIO_H
+# undef  FOPEN_MAX
+# define FOPEN_MAX @FOPEN_MAX@
 #endif
-#undef __need_FOPEN_MAX

@@ -85,11 +85,12 @@ __STRING2_COPY_TYPE (8);
 # undef __STRING2_COPY_TYPE
 #endif
 
-/* Dereferencing a pointer arg to run sizeof on it fails for the
-   void pointer case, so we use this instead.  Note that the argument
-   must not contain any side effects.  */
-#define __string2_1bptr_p(x) (((size_t) ((x) + 1) - (size_t) (x)) == 1)
-
+/* Dereferencing a pointer arg to run sizeof on it fails for the void
+   pointer case, so we use this instead.
+   Note that __x is evaluated twice. */
+#define __string2_1bptr_p(__x) \
+	(({ const void *__a, *__b; __a = (__x) + 1; __b = (__x); \
+	    (size_t)__a - (size_t)__b; }) == 1)
 
 /* Set N bytes of S to C.  */
 #ifndef _HAVE_STRING_ARCH_memset
@@ -862,12 +863,17 @@ __strsep_g (char **__s, __const char *__reject)
 # endif
 #endif
 
+/* We need the memory allocation functions for inline strdup().
+   Referring to stdlib.h (even minimally) is not allowed if
+   __STRICT_ANSI__. */
+#ifndef __STRICT_ANSI__
 
-#if !defined _HAVE_STRING_ARCH_strdup && !defined __STRICT_ANSI__
-
-/* We need the memory allocation functions.  Including this header is
-   not allowed. */
+#if !defined _HAVE_STRING_ARCH_strdup || !defined _HAVE_STRING_ARCH_strndup
+# define __need_malloc_and_calloc
 # include <stdlib.h>
+#endif
+
+#ifndef _HAVE_STRING_ARCH_strdup
 
 # define __strdup(s) \
   (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)	      \
@@ -885,12 +891,7 @@ __strsep_g (char **__s, __const char *__reject)
 # endif
 #endif
 
-
-#if !defined _HAVE_STRING_ARCH_strndup && !defined __STRICT_ANSI__
-
-/* We need the memory allocation functions.  Including this header is
-   not allowed. */
-# include <stdlib.h>
+#ifndef _HAVE_STRING_ARCH_strndup
 
 # define __strndup(s, n) \
   (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)	      \
@@ -916,6 +917,7 @@ __strsep_g (char **__s, __const char *__reject)
 # endif
 #endif
 
+#endif /* Strict ANSI */
 
 #undef __STRING_INLINE
 

@@ -99,9 +99,8 @@ size_t _dl_pagesize;
 extern const char *_dl_platform;
 extern size_t _dl_platformlen;
 
-/* This is a fake list to store the RPATH information for static
-   binaries.  */
-static struct r_search_path_elem **fake_path_list;
+/* This is the decomposed LD_LIBRARY_PATH search path.  */
+static struct r_search_path_elem **env_path_list;
 
 /* List of the hardware capabilities we might end up using.  */
 static const struct r_strlenpair *capstr;
@@ -175,7 +174,8 @@ expand_dynamic_string_token (struct link_map *l, const char *s)
     {
       assert (l->l_name[0] == '\0');
       l->l_origin = get_origin ();
-      origin_len = l->l_origin ? strlen (l->l_origin) : 0;
+      origin_len = (l->l_origin && l->l_origin != (char *) -1
+		    ? strlen (l->l_origin) : 0);
     }
   else
     origin_len = l->l_origin == (char *) -1 ? 0 : strlen (l->l_origin);
@@ -293,8 +293,8 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
          interpreted as `use the current directory'. */
       if (len == 0)
 	{
-	  static char curwd[2];
-	  cp = strcpy (curwd, ".");
+	  static char curwd[] = "./";
+	  cp = curwd;
 	}
 
       /* Remove trailing slashes (except for "/").  */
@@ -388,7 +388,7 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 
 static struct r_search_path_elem **
 internal_function
-decompose_rpath (const char *rpath, size_t additional_room, struct link_map *l)
+decompose_rpath (const char *rpath, struct link_map *l)
 {
   /* Make a copy we can work with.  */
   const char *where = l->l_name;
@@ -410,7 +410,7 @@ decompose_rpath (const char *rpath, size_t additional_room, struct link_map *l)
 	      /* This object is on the list of objects for which the RPATH
 		 must not be used.  */
 	      result = (struct r_search_path_elem **)
-		malloc ((additional_room + 1) * sizeof (*result));
+		malloc (sizeof (*result));
 	      if (result == NULL)
 		_dl_signal_error (ENOMEM, NULL,
 				  "cannot create cache for search path");
@@ -433,10 +433,9 @@ decompose_rpath (const char *rpath, size_t additional_room, struct link_map *l)
     if (*cp == ':')
       ++nelems;
 
-  /* Allocate room for the result.  NELEMS + 1 + ADDITIONAL_ROOM is an upper
-     limit for the number of necessary entries.  */
-  result = (struct r_search_path_elem **) malloc ((nelems + 1
-						   + additional_room + 1)
+  /* Allocate room for the result.  NELEMS + 1 is an upper limit for the
+     number of necessary entries.  */
+  result = (struct r_search_path_elem **) malloc ((nelems + 1 + 1)
 						  * sizeof (*result));
   if (result == NULL)
     _dl_signal_error (ENOMEM, NULL, "cannot create cache for search path");
@@ -458,32 +457,9 @@ _dl_init_paths (const char *llp)
   struct r_search_path_elem *pelem, **aelem;
   size_t round_size;
 
-#ifdef PIC
-  /* We have in `search_path' the information about the RPATH of the
-     dynamic loader.  Now fill in the information about the applications
-     RPATH and the directories addressed by the LD_LIBRARY_PATH environment
-     variable.  */
+  /* Fill in the information about the application's RPATH and the
+     directories addressed by the LD_LIBRARY_PATH environment variable.  */
   struct link_map *l;
-#endif
-
-  /* Number of elements in the library path.  */
-  size_t nllp;
-
-  /* First determine how many elements the LD_LIBRARY_PATH contents has.  */
-  if (llp != NULL && *llp != '\0')
-    {
-      /* Simply count the number of colons.  */
-      const char *cp = llp;
-      nllp = 1;
-      while (*cp)
-	{
-	  if (*cp == ':' || *cp == ';')
-	    ++nllp;
-	  ++cp;
-	}
-    }
-  else
-    nllp = 0;
 
   /* Get the capabilities.  */
   capstr = _dl_important_hwcaps (_dl_platform, _dl_platformlen,
@@ -533,81 +509,44 @@ _dl_init_paths (const char *llp)
   l = _dl_loaded;
   if (l != NULL)
     {
-      /* We should never get here when initializing in a static application.
-	 If this is a dynamically linked application _dl_loaded always
-	 points to the main map which is not dlopen()ed.  */
       assert (l->l_type != lt_loaded);
 
       if (l->l_info[DT_RPATH])
-	{
-	  /* Allocate room for the search path and fill in information
-	     from RPATH.  */
-	  l->l_rpath_dirs =
-	    decompose_rpath ((const char *)
-			     (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr
-			      + l->l_info[DT_RPATH]->d_un.d_val),
-			     nllp, l);
-	}
+	/* Allocate room for the search path and fill in information
+	   from RPATH.  */
+	l->l_rpath_dirs =
+	  decompose_rpath ((const char *)
+			   (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr
+			    + l->l_info[DT_RPATH]->d_un.d_val), l);
       else
-	{
-	  /* If we have no LD_LIBRARY_PATH and no RPATH we must tell
-	     this somehow to prevent we look this up again and again.  */
-	  if (nllp == 0)
-	    l->l_rpath_dirs = (struct r_search_path_elem **) -1l;
-	  else
-	    {
-	      l->l_rpath_dirs = (struct r_search_path_elem **)
-		malloc ((nllp + 1) * sizeof (*l->l_rpath_dirs));
-	      if (l->l_rpath_dirs == NULL)
-		_dl_signal_error (ENOMEM, NULL,
-				  "cannot create cache for search path");
-	      l->l_rpath_dirs[0] = NULL;
-	    }
-	}
-
-      /* We don't need to search the list of fake entries which is searched
-	 when no dynamic objects were loaded at this time.  */
-      fake_path_list = NULL;
-
-      if (nllp > 0)
-	{
-	  char *copy = local_strdup (llp);
-
-	  /* Decompose the LD_LIBRARY_PATH and fill in the result.
-	     First search for the next place to enter elements.  */
-	  struct r_search_path_elem **result = l->l_rpath_dirs;
-	  while (*result != NULL)
-	    ++result;
-
-	  /* We need to take care that the LD_LIBRARY_PATH environment
-	     variable can contain a semicolon.  */
-	  (void) fillin_rpath (copy, result, ":;",
-			       __libc_enable_secure ? system_dirs : NULL,
-			       "LD_LIBRARY_PATH", NULL);
-	}
+	l->l_rpath_dirs = NULL;
     }
-  else
 #endif	/* PIC */
+
+  if (llp != NULL && *llp != '\0')
     {
-      /* This is a statically linked program but we still have to take
-	 care for the LD_LIBRARY_PATH environment variable.  We use a fake
-	 link_map entry.  This will only contain the l_rpath_dirs
-	 information.  */
+      size_t nllp;
+      const char *cp = llp;
 
-      if (nllp == 0)
-	fake_path_list = NULL;
-      else
+      /* Decompose the LD_LIBRARY_PATH contents.  First determine how many
+	 elements it has.  */
+      nllp = 1;
+      while (*cp)
 	{
-	  fake_path_list = (struct r_search_path_elem **)
-	    malloc ((nllp + 1) * sizeof (struct r_search_path_elem *));
-	  if (fake_path_list == NULL)
-	    _dl_signal_error (ENOMEM, NULL,
-			      "cannot create cache for search path");
-
-	  (void) fillin_rpath (local_strdup (llp), fake_path_list, ":;",
-			       __libc_enable_secure ? system_dirs : NULL,
-			       "LD_LIBRARY_PATH", NULL);
+	  if (*cp == ':' || *cp == ';')
+	    ++nllp;
+	  ++cp;
 	}
+
+      env_path_list = (struct r_search_path_elem **)
+	malloc ((nllp + 1) * sizeof (struct r_search_path_elem *));
+      if (env_path_list == NULL)
+	_dl_signal_error (ENOMEM, NULL,
+			  "cannot create cache for search path");
+
+      (void) fillin_rpath (local_strdup (llp), env_path_list, ":;",
+			   __libc_enable_secure ? system_dirs : NULL,
+			   "LD_LIBRARY_PATH", NULL);
     }
 }
 
@@ -1243,25 +1182,23 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 				 + l->l_info[DT_STRTAB]->d_un.d_ptr
 				 + l->l_info[DT_RPATH]->d_un.d_val);
 		l->l_rpath_dirs =
-		  decompose_rpath ((const char *) ptrval, 0, l);
+		  decompose_rpath ((const char *) ptrval, l);
 	      }
 
-	    if (l->l_rpath_dirs != (struct r_search_path_elem **) -1l)
+	    if (l->l_rpath_dirs != NULL)
 	      fd = open_path (name, namelen, preloaded, l->l_rpath_dirs,
 			      &realname);
 	  }
 
-      /* If dynamically linked, try the DT_RPATH of the executable itself
-	 and the LD_LIBRARY_PATH environment variable.  */
+      /* If dynamically linked, try the DT_RPATH of the executable itself.  */
       l = _dl_loaded;
       if (fd == -1 && l && l->l_type != lt_loaded && l != loader
-	  && l->l_rpath_dirs != (struct r_search_path_elem **) -1l)
+	  && l->l_rpath_dirs != NULL)
 	fd = open_path (name, namelen, preloaded, l->l_rpath_dirs, &realname);
 
-      /* This is used if a static binary uses dynamic loading and there
-	 is a LD_LIBRARY_PATH given.  */
-      if (fd == -1 && fake_path_list != NULL)
-	fd = open_path (name, namelen, preloaded, fake_path_list, &realname);
+      /* Try the LD_LIBRARY_PATH environment variable.  */
+      if (fd == -1 && env_path_list != NULL)
+	fd = open_path (name, namelen, preloaded, env_path_list, &realname);
 
       if (fd == -1)
 	{

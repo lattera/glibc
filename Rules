@@ -200,3 +200,47 @@ $(common-objpfx)dummy$o: $(common-objpfx)dummy.c $(before-compile);
 endef
 object-suffixes-left := $(object-suffixes)
 include $(o-iterator)
+
+# There's no good place to put this - here will do.
+# The dependencies are wrong if it's run from the top level.
+ifeq ($(filter %posix, $(sysdirs)),)
+L_tmpnam  = 1
+TMP_MAX   = 0
+L_ctermid = 1
+L_cuserid = 1
+else
+L_tmpnam  = 19
+TMP_MAX   = 238328
+L_ctermid = 9
+L_cuserid = 9
+endif
+
+$(common-objpfx)bits/stdio_%.h $(common-objpfx)bits/stdio_%.d: 		\
+			$(..)stdio-common/stdio_%.h.in
+	$(make-target-directory)
+	echo '#include "$(..)posix/bits/posix1_lim.h"' |		\
+	SUNPRO_DEPENDENCIES='$(@:.h=.d)T MARKER' 			\
+	$(CC) $(+includes) -E -dM -xc - -o $(@:.d=.h)T
+	sed -e 's!MARKER!$(@:.h=.d) $(@:.d=.h)!'			\
+	    -e 's!$(common-objpfx)!$$(common-objpfx)!g'			\
+		$(@:.h=.d)T > $(@:.h=.d)t &&				\
+	mv -f $(@:.h=.d)t $(@:.h=.d)
+	fopen_max=`sed -n 's/^#define OPEN_MAX //p' $(@:.d=.h)T`; 	\
+	filename_max=`sed -n 's/^#define PATH_MAX //p' $(@:.d=.h)T`;	\
+	fopen_max=$${fopen_max:-16};					\
+	filename_max=$${filename_max:-1024};				\
+	sed -e "s/@FOPEN_MAX@/$$fopen_max/"				\
+	    -e "s/@FILENAME_MAX@/$$filename_max/"			\
+	    -e "s/@L_tmpnam@/$(L_tmpnam)/"				\
+	    -e "s/@TMP_MAX@/$(TMP_MAX)/"				\
+	    -e "s/@L_ctermid@/$(L_ctermid)/"				\
+	    -e "s/@L_cuserid@/$(L_cuserid)/"				\
+	    $< > $(@:.d=.h).new &&					\
+	mv -f $(@:.d=.h).new $(@:.d=.h);				\
+# Remove these last so that they can be examined if something went wrong.
+	rm -f $(@:.d=.h)T $(@:.h=.d)T
+# Get dependencies.
+ifndef no_deps
+-include $(common-objpfx)bits/stdio_lim.d
+endif
+common-generated += bits/stdio_lim.h bits/stdio_lim.d

@@ -186,6 +186,62 @@ copy_pwd_changes (struct passwd *dest, struct passwd *src,
 }
 
 static enum nss_status
+insert_passwd_adjunct (char **result, int *len, char *domain, int *errnop)
+{
+  char *p1, *p2, *result2, *res;
+  int len2;
+  size_t namelen;
+
+  /* Check for adjunct style secret passwords.  They can be
+     recognized by a password starting with "##".  */
+  p1 = strchr (*result, ':');
+  if (p1 == NULL || p1[1] != '#' || p1[2] != '#')
+    return NSS_STATUS_SUCCESS;
+  p2 = strchr (p1 + 3, ':');
+
+  namelen = p2 - p1 - 3;
+
+  if (yp_match (domain, "passwd.adjunct.byname", &p1[3], namelen,
+		&result2, &len2) == YPERR_SUCCESS)
+    {
+      /* We found a passwd.adjunct entry.  Merge encrypted
+	 password therein into original result.  */
+      char *encrypted = strchr (result2, ':');
+      char *endp;
+      size_t restlen;
+
+      if (encrypted == NULL || (endp = strchr (++encrypted, ':')) == NULL)
+	{
+	  /* Invalid format of the entry.  This never should happen
+	     unless the data from which the NIS table is generated is
+	     wrong.  We simply ignore it.  */
+	  free (result2);
+	  return NSS_STATUS_SUCCESS;
+	}
+
+      restlen = *len - (p2 - *result);
+      if ((res = malloc (namelen + restlen + (endp - encrypted) + 2)) == NULL)
+	{
+	  free (result2);
+	  *errnop = ENOMEM;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      __mempcpy (__mempcpy (__mempcpy (__mempcpy
+				       (res, *result, (p1 - *result)),
+				       ":", 1),
+			    encrypted, endp - encrypted),
+		 p2, restlen + 1);
+
+      free (result2);
+      free (*result);
+      *result = res;
+      *len = strlen (res);
+    }
+  return NSS_STATUS_SUCCESS;
+}
+
+static enum nss_status
 internal_setpwent (ent_t *ent)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
@@ -402,6 +458,13 @@ getpwent_next_nis_netgr (const char *name, struct passwd *result, ent_t *ent,
 		    strlen (user), &outval, &outvallen)
 	  != YPERR_SUCCESS)
 	continue;
+
+      if (insert_passwd_adjunct (&outval, &outvallen, ypdomain, errnop)
+	  != NSS_STATUS_SUCCESS)
+	{
+	  free (outval);
+	  return NSS_STATUS_TRYAGAIN;
+	}
 
       p2len = pwd_need_buflen (&ent->pwd);
       if (p2len > buflen)
@@ -659,6 +722,13 @@ getpwent_next_nis (struct passwd *result, ent_t *ent, char *buffer,
 	      return NSS_STATUS_UNAVAIL;
 	    }
 
+	  if (insert_passwd_adjunct (&outval, &outvallen, domain, errnop) !=
+	      NSS_STATUS_SUCCESS)
+	    {
+	      free (outval);
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
 	  if (buflen < ((size_t) outvallen + 1))
 	    {
 	      free (outval);
@@ -683,6 +753,13 @@ getpwent_next_nis (struct passwd *result, ent_t *ent, char *buffer,
 	      give_pwd_free (&ent->pwd);
 	      *errnop = ENOENT;
 	      return NSS_STATUS_NOTFOUND;
+	    }
+
+	  if (insert_passwd_adjunct (&outval, &outvallen, domain, errnop)
+	      != NSS_STATUS_SUCCESS)
+	    {
+	      free (outval);
+	      return NSS_STATUS_TRYAGAIN;
 	    }
 
 	  if (buflen < ((size_t) outvallen + 1))
@@ -794,6 +871,13 @@ getpwnam_plususer (const char *name, struct passwd *result, char *buffer,
 	{
 	  *errnop = ENOENT;
 	  return NSS_STATUS_NOTFOUND;
+	}
+
+      if (insert_passwd_adjunct (&outval, &outvallen, domain, errnop)
+	  != NSS_STATUS_SUCCESS)
+	{
+	  free (outval);
+	  return NSS_STATUS_TRYAGAIN;
 	}
 
       if (buflen < ((size_t) outvallen + 1))
@@ -1307,7 +1391,14 @@ getpwuid_plususer (uid_t uid, struct passwd *result, char *buffer,
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
-      if ( buflen < ((size_t) outvallen + 1))
+      if (insert_passwd_adjunct (&outval, &outvallen, domain, errnop)
+	  != NSS_STATUS_SUCCESS)
+	{
+	  free (outval);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      if (buflen < ((size_t) outvallen + 1))
 	{
 	  free (outval);
 	  *errnop = ERANGE;

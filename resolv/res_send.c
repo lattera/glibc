@@ -782,12 +782,12 @@ read_len:
 	   } /*foreach ns*/
 	} /*foreach retry*/
 	res_close();
-	if (!v_circuit)
+	if (!v_circuit) {
 		if (!gotsomewhere)
 			__set_errno (ECONNREFUSED); /* no nameservers found */
 		else
 			__set_errno (ETIMEDOUT);    /* no answer obtained */
-	else
+	} else
 		__set_errno (terrno);
 	return (-1);
 }

@@ -833,11 +833,12 @@ hol_append (struct hol *hol, struct hol *more)
 
 	  __mempcpy (short_options, hol->short_options, hol_so_len);
 
-	/* Fix up the short options pointers from HOL.  */
+	  /* Fix up the short options pointers from HOL.  */
 	  for (e = entries, left = hol->num_entries; left > 0; e++, left--)
 	    e->short_options += (short_options - hol->short_options);
 
-	/* Now add the short options from MORE, fixing up its entries too.  */
+	  /* Now add the short options from MORE, fixing up its entries
+	     too.  */
 	  so = short_options + hol_so_len;
 	  more_so = more->short_options;
 	  for (left = more->num_entries; left > 0; e++, left--)
@@ -872,7 +873,7 @@ hol_append (struct hol *hol, struct hol *more)
 	  hol->num_entries = num_entries;
 	  hol->short_options = short_options;
 	}
-      }
+    }
 
   hol_free (more);
 }

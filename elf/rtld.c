@@ -69,7 +69,6 @@ static void process_envvars (enum mode *modep, int *lazyp);
 int _dl_argc;
 char **_dl_argv;
 unsigned int _dl_skip_args;	/* Nonzero if we were run directly.  */
-const char *_dl_rpath;
 int _dl_verbose;
 const char *_dl_platform;
 size_t _dl_platformlen;
@@ -163,15 +162,6 @@ _dl_start (void *arg)
   memcpy (_dl_rtld_map.l_info, bootstrap_map.l_info,
 	  sizeof _dl_rtld_map.l_info);
   _dl_setup_hash (&_dl_rtld_map);
-
-  /* Cache the DT_RPATH stored in ld.so itself; this will be
-     the default search path.  */
-  if (_dl_rtld_map.l_info[DT_STRTAB] && _dl_rtld_map.l_info[DT_RPATH])
-    {
-      _dl_rpath = (void *) (_dl_rtld_map.l_addr +
-			    _dl_rtld_map.l_info[DT_STRTAB]->d_un.d_ptr +
-			    _dl_rtld_map.l_info[DT_RPATH]->d_un.d_val);
-    }
 
 /* Don't bother trying to work out how ld.so is mapped in memory.  */
   _dl_rtld_map.l_map_start = ~0;

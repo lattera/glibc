@@ -1,3 +1,98 @@
+1998-09-14 11:26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* wcsmbs/wcsmbs-tst1.c: Include stdlib.h.
+
+1998-09-14  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* libc-work/nis/nss_nisplus/nisplus-service.c
+	(_nss_nisplus_parse_servent): Convert port in network byte order.
+
+1998-09-14 07:53 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* stdlib/stdlib.h: Add a switch, __need_malloc_and_calloc,
+	to provide only malloc and calloc.
+	* include/stdlib.h: Support the above.
+	* string/bits/string2.h: Use __need_malloc_and_calloc when
+	including stdlib.h.
+	(__string2_1bptr_p): Avoid -Wbad-function-cast warnings.
+
+	* iconvdata/iso-2022-jp.c: Include <stdlib.h>.
+	* iconvdata/iso646.c: Include <stdlib.h>.
+
+1998-09-14 07:51 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sunrpc/rpc_cout.c: Add braces around ambiguous else.
+	* sysdeps/libm-ieee754/w_pow.c: Likewise.
+	* sysdeps/libm-ieee754/w_powf.c: Likewise.
+	* sysdeps/libm-ieee754/w_powl.c: Likewise.
+
+1998-09-14 07:57 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* stdio-common/stdio_lim.h.in: New file.  All parameters
+	are adjustable at build time.
+	* Rules: Add a rule to build bits/stdio_lim.h from
+	stdio-common/stdio_lim.h.in.  (It has to be in Rules so that
+	all subdirectories know how to make the file.  It can't be
+	in Makerules because then it gets built at top level and the
+	dependencies are wrong.)
+
+	* stdio-common/Makefile (distribute): Add stdio_lim.h.in.
+	* sysdeps/unix/sysv/linux/Makefile: Delete rules to make
+	stdio_lim.h.
+	* sysdeps/unix/sysv/linux/stdio_lim.h.in: Removed.
+	* sysdeps/unix/sysv/linux/Dist: Take out stdio_lim.h.in.
+	* sysdeps/posix/Makefile: Removed.
+	* sysdeps/posix/mk-stdiolim.c: Removed.
+	* sysdeps/generic/bits/stdio_lim.h: Removed.
+
+1998-09-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* argp/argp-help.c: Fixup indentation.
+	* nss/nss_files/files-alias.c: Quiet -Wparentheses warning.
+	* resolv/nss_dns/dns-network.c: Likewise.
+	* resolv/res_send.c: Likewise.
+	* rt/aio_cancel.c: Likewise.
+	* rt/aio_misc.c: Likewise.
+
+1998-09-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (install-symbolic-link): Remove the link list file at last.
+	* Makerules (install-clean-symbolic-link-list): Removed.
+
+1998-09-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* timezone/tst-timezone.c: Print time in UTC to get consistent
+	output.
+
+1998-09-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/rtld.c (_dl_rpath): Removed.
+	* elf/dl-support.c (_dl_path): Removed.
+	* elf/Makefile ($(objpfx)ld.so): Don't pass -rpath.
+	(CFLAGS-dl-support.c): Removed.
+
+	* elf/dl-load.c (env_path_list): Renamed from fake_path_list.  All
+	uses changed.
+	(_dl_init_paths): Always set env_path_list from LD_LIBRARY_PATH,
+	instead of appending it to the main map's rpath info.
+	(_dl_map_object): Consistently use LD_LIBRARY_PATH after all
+	DT_RPATHs.  This makes it effective again.
+	(decompose_rpath): Remove second parameter, callers changed.
+	(fillin_rpath): Allocate enough space in curwd.
+	(expand_dynamic_string_token): Cope with get_origin returning -1.
+
+1998-09-14  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* libc-work/nis/nss_compat/compat-pwd.c: Add support for
+	passwd.adjunct.
+
+	* nis/nss_nis/nis-pwd.c (_nss_nis_getpwent_r): Correct test for
+	invalid password.
+
+1998-09-13 18:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/locale.c: Update dates.
+
 1998-09-13  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* sysdeps/generic/bits/types.h: Include <features.h>.  Make sure

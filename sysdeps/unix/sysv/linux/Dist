@@ -1,5 +1,4 @@
 bits/pthreadtypes.h
-stdio_lim.h.in
 cmsg_nxthdr.c
 errlist.h
 init-first.h

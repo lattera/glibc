@@ -20,6 +20,7 @@
 
 #include <gconv.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 #include "jis0201.h"
 #include "jis0208.h"

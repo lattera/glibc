@@ -89,9 +89,9 @@ main (int argc, char ** argv)
   const struct test_times *pt;
   char buf[BUFSIZ];
 
-  /* This should be: Thu May 14 18:02:16 1998.  */
+  /* This should be: Fri May 15 01:02:16 1998 (UTC).  */
   t = 895194136;
-  printf ("We use this date: %s\n", ctime (&t));
+  printf ("We use this date: %s\n", asctime (gmtime (&t)));
 
   for (pt = tests; pt->name != NULL; ++pt)
     {

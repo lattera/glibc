@@ -382,10 +382,12 @@ _nss_files_getaliasent_r (struct aliasent *result, char *buffer, size_t buflen,
       /* If the last use was not by the getent function we need the
 	 position the stream.  */
       if (last_use != getent)
-	if (fsetpos (stream, &position) < 0)
-	  status = NSS_STATUS_UNAVAIL;
-	else
-	  last_use = getent;
+	{
+	  if (fsetpos (stream, &position) < 0)
+	    status = NSS_STATUS_UNAVAIL;
+	  else
+	    last_use = getent;
+	}
 
       if (status == NSS_STATUS_SUCCESS)
 	{
