@@ -223,8 +223,12 @@ _nl_load_domain (domain_file)
      entry does not exist or if this does not contain the `charset='
      information, we will assume the charset matches the one the
      current locale and we don't have to perform any conversion.  */
-#if HAVE_ICONV || defined _LIBC
+#ifdef _LIBC
+  domain->conv = (__gconv_t) -1;
+#else
+# if HAVE_ICONV
   domain->conv = (iconv_t) -1;
+# endif
 #endif
   nullentry = _nl_find_msg (domain_file, "");
   if (nullentry != NULL)
@@ -235,6 +239,7 @@ _nl_load_domain (domain_file)
 	{
 	  size_t len;
 	  char *charset;
+	  const char *outcharset;
 
 	  charsetstr += strlen ("charset=");
 	  len = strcspn (charsetstr, " \t\n");
@@ -247,8 +252,22 @@ _nl_load_domain (domain_file)
 	  charset[len] = '\0';
 #endif
 
-#if HAVE_ICONV || defined _LIBC
-	  domain->conv = iconv_open ((*_nl_current[LC_CTYPE])->values[_NL_ITEM_INDEX (CODESET)].string, charset);
+	  /* The output charset should normally be determined by the
+	     locale.  But sometimes the locale is not used or not correctly
+	     set up so we provide a possibility to override this.  */
+	  outcharset = getenv ("OUTPUT_CHARSET");
+	  if (outcharset == NULL || outcharset[0] == '\0')
+	    outcharset = (*_nl_current[LC_CTYPE])->values[_NL_ITEM_INDEX (CODESET)].string;
+
+#ifdef _LIBC
+	  if (__gconv_open (outcharset, charset, &domain->conv,
+			    GCONV_AVOID_NOCONV)
+	      != __GCONV_OK)
+	    domain->conv = (__gconv_t) -1;
+#else
+# if HAVE_ICONV
+	  domain->conv = iconv_open (outcharset, charset);
+# endif
 #endif
 	}
     }

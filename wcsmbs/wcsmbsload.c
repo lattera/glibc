@@ -89,7 +89,7 @@ getfct (const char *to, const char *from)
   size_t nstateful;
   size_t cnt;
 
-  if (__gconv_find_transform (to, from, &result, &nsteps) != __GCONV_OK)
+  if (__gconv_find_transform (to, from, &result, &nsteps, 0) != __GCONV_OK)
     /* Loading the conversion step is not possible.  */
     return NULL;
 

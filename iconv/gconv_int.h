@@ -83,6 +83,13 @@ struct gconv_module
 };
 
 
+/* Flags for `gconv_open'.  */
+enum
+{
+  GCONV_AVOID_NOCONV = 1 << 0
+};
+
+
 /* Global variables.  */
 
 /* Database of alias names.  */
@@ -95,7 +102,7 @@ extern struct gconv_module *__gconv_modules_db;
 
 /* Return in *HANDLE decriptor for transformation from FROMSET to TOSET.  */
 extern int __gconv_open (const char *__toset, const char *__fromset,
-			 __gconv_t *__handle)
+			 __gconv_t *__handle, int flags)
      internal_function;
 
 /* Free resources associated with transformation descriptor CD.  */
@@ -115,7 +122,7 @@ extern int __gconv (__gconv_t __cd, const unsigned char **__inbuf,
    the single steps necessary for transformation from FROMSET to TOSET.  */
 extern int __gconv_find_transform (const char *__toset, const char *__fromset,
 				   struct __gconv_step **__handle,
-				   size_t *__nsteps)
+				   size_t *__nsteps, int flags)
      internal_function;
 
 /* Read all the configuration data and cache it.  */

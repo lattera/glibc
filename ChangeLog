@@ -1,3 +1,23 @@
+1999-08-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv_int.h (GCONV_AVOID_NOCONV): New definition.
+	(__gconv_find_transform): Update prototype.
+	(__gconv_open): Likewise.
+	* iconv/gconv_open.c: Take extra parameter and pass it to
+	__gconv_find_transform.
+	* iconv/gconv_db.c (__gconv_find_transform): Take extra parameter with
+	flags.  If GCONV_AVOID_NOCONV flag is set don't return copying
+	transformation.
+	* iconv/iconv_open.c: Pass extra parameter to __gconv_open.
+	* wcsmbs/wcsmbsload.c: Likewise.
+	* intl/dcgettext.c (_nl_find_msg): Rewrite to use gconv instead of
+	iconv for glibc.
+	* intl/gettextP.h: Likewise.
+	* intl/loadmsgcat.c: Likewise.
+
+	* posix/regexbug1.c: New file.
+	* posix/Makefile (tests): Add regexbug1.
+
 1999-08-22  Mark Kettenis  <kettenis@gnu.org>
 
 	* hurd/new-fd.c (_hurd_new_fd): Initialize fcntl flags.

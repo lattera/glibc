@@ -20,8 +20,12 @@
 #ifndef _GETTEXTP_H
 #define _GETTEXTP_H
 
-#if defined HAVE_ICONV || defined _LIBC
-# include <iconv.h>
+#ifdef _LIBC
+# include "../iconv/gconv_int.h"
+#else
+# if HAVE_ICONV
+#  include <iconv.h>
+# endif
 #endif
 
 #include "loadinfo.h"
@@ -71,8 +75,12 @@ struct loaded_domain
   struct string_desc *trans_tab;
   nls_uint32 hash_size;
   nls_uint32 *hash_tab;
-#if defined HAVE_ICONV || defined _LIBC
+#ifdef _LIBC
+  __gconv_t conv;
+#else
+# if HAVE_ICONV
   iconv_t conv;
+# endif
 #endif
   char **conv_tab;
 };

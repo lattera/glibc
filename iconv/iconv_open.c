@@ -85,7 +85,7 @@ iconv_open (const char *tocode, const char *fromcode)
   fromcode = (fromcode_conv[2] == '\0'
 	      ? upstr (fromcode_conv, fromcode) : fromcode_conv);
 
-  res = __gconv_open (tocode, fromcode, &cd);
+  res = __gconv_open (tocode, fromcode, &cd, 0);
 
   if (res != __GCONV_OK)
     {

@@ -57,7 +57,7 @@ include ../Makeconfig
 
 aux		:= init-posix environ
 tests		:= tstgetopt testfnm runtests runptests	     \
-		   tst-preadwrite test-vfork
+		   tst-preadwrite test-vfork regexbug1
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test
@@ -91,7 +91,7 @@ do-wordexp-test: $(objpfx)wordexp-test
 endif
 endif
 
-CFLAGS-regex.c = -Wno-unused -Wno-strict-prototypes
+CFLAGS-regex.c = -Wno-unused -Wno-strict-prototypes -DDEBUG
 CFLAGS-getaddrinfo.c = -DRESOLVER
 
 $(objpfx)libposix.a: $(dep-dummy-lib); $(make-dummy-lib)

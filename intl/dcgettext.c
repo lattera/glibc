@@ -479,8 +479,12 @@ _nl_find_msg (domain_file, msgid)
 				       domain->trans_tab[nstr - 1].offset);
 
 	  if (
-#if HAVE_ICONV || defined _LIBC
+#ifdef _LIBC
+	      domain->conv != (__gconv_t) -1
+#else
+# if HAVE_ICONV
 	      domain->conv != (iconv_t) -1
+# endif
 #endif
 	      )
 	    {
@@ -508,21 +512,23 @@ _nl_find_msg (domain_file, msgid)
 		     We allocate always larger blocks which get used over
 		     time.  This is faster than many small allocations.   */
 		  __libc_lock_define_initialized (static, lock)
-		  static char *freemem;
+		  static unsigned char *freemem;
 		  static size_t freemem_size;
 		  /* Note that we include the NUL byte.  */
 		  size_t resultlen = strlen (result) + 1;
-		  const char *inbuf = result;
-		  size_t inbytesleft = resultlen;
-		  char *outbuf = freemem;
-		  size_t outbytesleft = freemem_size;
+		  const unsigned char *inbuf = result;
+		  unsigned char *outbuf = freemem;
+		  size_t written;
+		  int res;
 
 		  __libc_lock_lock (lock);
 
-		  while (iconv (domain->conv, &inbuf, &inbytesleft, &outbuf,
-				&outbytesleft) == (size_t) -1L)
+		  while ((res = __gconv (domain->conv,
+					 &inbuf, inbuf + resultlen,
+					 &outbuf, outbuf + freemem_size,
+					 &written)) == __GCONV_OK)
 		    {
-		      if (errno != E2BIG)
+		      if (res != __GCONV_FULL_OUTPUT)
 			goto out;
 
 		      /* We must resize the buffer.  */
@@ -532,16 +538,14 @@ _nl_find_msg (domain_file, msgid)
 			goto out;
 
 		      inbuf = result;
-		      inbytesleft = resultlen;
 		      outbuf = freemem;
-		      outbytesleft = freemem_size;
 		    }
 
 		  /* We have now in our buffer a converted string.  Put this
 		     in the hash table  */
 		  domain->conv_tab[idx] = freemem;
+		  freemem_size -= outbuf - freemem;
 		  freemem = outbuf;
-		  freemem_size = outbytesleft;
 
 		out:
 		  __libc_lock_unlock (lock);

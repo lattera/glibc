@@ -27,7 +27,8 @@
 
 int
 internal_function
-__gconv_open (const char *toset, const char *fromset, __gconv_t *handle)
+__gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
+	      int flags)
 {
   struct __gconv_step *steps;
   size_t nsteps;
@@ -35,7 +36,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle)
   size_t cnt = 0;
   int res;
 
-  res = __gconv_find_transform (toset, fromset, &steps, &nsteps);
+  res = __gconv_find_transform (toset, fromset, &steps, &nsteps, flags);
   if (res == __GCONV_OK)
     {
       /* Allocate room for handle.  */
