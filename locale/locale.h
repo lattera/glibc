@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -90,6 +90,22 @@ struct lconv
      4 The sign string immediately follows the currency_symbol.  */
   char p_sign_posn;
   char n_sign_posn;
+  /* 1 if int_curr_symbol precedes a positive value, 0 if succeeds.  */
+  char int_p_cs_precedes;
+  /* 1 iff a space separates int_curr_symbol from a positive value.  */
+  char int_p_sep_by_space;
+  /* 1 if int_curr_symbol precedes a negative value, 0 if succeeds.  */
+  char int_n_cs_precedes;
+  /* 1 iff a space separates int_curr_symbol from a negative value.  */
+  char int_n_sep_by_space;
+  /* Positive and negative sign positions:
+     0 Parentheses surround the quantity and int_curr_symbol.
+     1 The sign string precedes the quantity and int_curr_symbol.
+     2 The sign string follows the quantity and int_curr_symbol.
+     3 The sign string immediately precedes the int_curr_symbol.
+     4 The sign string immediately follows the int_curr_symbol.  */
+  char int_p_sign_posn;
+  char int_n_sign_posn;
 };
 
 

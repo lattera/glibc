@@ -1,8 +1,14 @@
 2000-05-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/locale.h (struct lconv): Add new elements from ISO C99.
+	* locale/localeconv.c: Initialize new elements from ISO C99.
+
 	* iconv/iconv.h (iconv): Remove const from inbuf parameter.
 	* iconv/iconv.c: Likewise.
 	* conform/data/iconv.h-data: Likewise.
+	* iconv/iconv_prog.c (process_block): Remove const from second
+	parameter.
+	(main): Remove const from addr definition.
 
 	* intl/dcigettext.c: Fix typo in comment.
 

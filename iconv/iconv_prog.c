@@ -98,8 +98,7 @@ static int verbose;
 static int list;
 
 /* Prototypes for the functions doing the actual work.  */
-static int process_block (iconv_t cd, const char *addr, size_t len,
-			  FILE *output);
+static int process_block (iconv_t cd, char *addr, size_t len, FILE *output);
 static int process_fd (iconv_t cd, int fd, FILE *output);
 static int process_file (iconv_t cd, FILE *input, FILE *output);
 static void print_known_names (void) internal_function;
@@ -172,7 +171,7 @@ main (int argc, char *argv[])
     do
       {
 	struct stat st;
-	const char *addr;
+	char *addr;
 	int fd;
 
 
@@ -323,7 +322,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 
 
 static int
-process_block (iconv_t cd, const char *addr, size_t len, FILE *output)
+process_block (iconv_t cd, char *addr, size_t len, FILE *output)
 {
 #define OUTBUF_SIZE	32768
   const char *start = addr;

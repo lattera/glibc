@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95, 97, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,6 +47,12 @@ localeconv (void)
   result.n_sep_by_space = *(char *) _NL_CURRENT (LC_MONETARY, N_SEP_BY_SPACE);
   result.p_sign_posn = *(char *) _NL_CURRENT (LC_MONETARY, P_SIGN_POSN);
   result.n_sign_posn = *(char *) _NL_CURRENT (LC_MONETARY, N_SIGN_POSN);
+  result.p_cs_precedes = *(char *) _NL_CURRENT (LC_MONETARY, INT_P_CS_PRECEDES);
+  result.p_sep_by_space = *(char *) _NL_CURRENT (LC_MONETARY, INT_P_SEP_BY_SPACE);
+  result.n_cs_precedes = *(char *) _NL_CURRENT (LC_MONETARY, INT_N_CS_PRECEDES);
+  result.n_sep_by_space = *(char *) _NL_CURRENT (LC_MONETARY, INT_N_SEP_BY_SPACE);
+  result.p_sign_posn = *(char *) _NL_CURRENT (LC_MONETARY, INT_P_SIGN_POSN);
+  result.n_sign_posn = *(char *) _NL_CURRENT (LC_MONETARY, INT_N_SIGN_POSN);
 
   return &result;
 }
