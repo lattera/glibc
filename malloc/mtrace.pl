@@ -1,7 +1,7 @@
 #! @PERL@
 eval "exec @PERL@ -S $0 $*"
     if 0;
-# Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@gnu.org>, 1997.
 # Based on the mtrace.awk script.
@@ -196,4 +196,4 @@ if ($#addrs >= 0) {
 }
 print "No memory leaks.\n" if ($anything == 0);
 
-exit 0;
+exit $anything != 0;
