@@ -1,5 +1,5 @@
 /* `ptrace' debugger support interface.  Linux/SPARC version.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -120,15 +120,18 @@ enum __ptrace_request
   PTRACE_ATTACH = 16,
 #define PT_ATTACH PTRACE_ATTACH
 
+  /* Write several bytes at a time. */
+  PTRACE_WRITEDATA = 17,
+#define PTRACE_WRITEDATA PTRACE_WRITEDATA
+
   /* Read several bytes at a time. */
   PTRACE_READTEXT = 18,
- #define PTRACE_READTEXT PTRACE_READTEXT
- #define PTRACE_READDATA PTRACE_READTEXT
+#define PTRACE_READTEXT PTRACE_READTEXT
+#define PTRACE_READDATA PTRACE_READTEXT
 
   /* Write several bytes at a time. */
   PTRACE_WRITETEXT = 19,
- #define PTRACE_WRITETEXT PTRACE_WRITETEXT
- #define PTRACE_WRITEDATA PTRACE_WRITETEXT
+#define PTRACE_WRITETEXT PTRACE_WRITETEXT
 
 #if __WORDSIZE == 64
 

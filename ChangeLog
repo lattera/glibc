@@ -1,3 +1,17 @@
+2000-03-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/sigcontext.h: Clean up namespace.
+	Lay out struct sigcontext according to what really gets passed on
+	the stack.
+	* sysdeps/unix/sysv/linux/sparc/sys/procfs.h: Don't include asm/elf.h.
+	(elf_gregset_t, elf_greg_t, elf_fpregset_t, ELF_NGREG): Define.
+	(prgregset_t, prfpregset_t): Define to elf_* types.
+	* sysdeps/unix/sysv/linux/sparc/sys/ptrace.h (PTRACE_WRITEDATA):
+	Define to correct value.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/profil-counter.h: Use struct
+	sigcontext.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigcontextinfo.h: Likewise.
+
 2000-03-21  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* scripts/firstversions.awk: Allow multiple version sets in the

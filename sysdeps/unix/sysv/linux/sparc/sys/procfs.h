@@ -29,10 +29,45 @@
 #include <sys/types.h>
 #include <sys/ucontext.h>
 #include <sys/user.h>
-#include <asm/elf.h>
 #include <bits/wordsize.h>
 
 __BEGIN_DECLS
+
+#if __WORDSIZE == 64
+
+#define ELF_NGREG		20
+
+typedef struct
+  {
+    unsigned long	pr_regs[32];
+    unsigned long	pr_fsr;
+    unsigned long	pr_gsr;
+    unsigned long	pr_fprs;
+  } elf_fpregset_t;
+
+#else /* sparc32 */
+
+#define ELF_NGREG		38
+
+typedef struct
+  {
+    union
+      {
+	unsigned long	pr_regs[32];
+	double		pr_dregs[16];
+      }			pr_fr;
+    unsigned long	__unused;
+    unsigned long	pr_fsr;
+    unsigned char	pr_qcnt;
+    unsigned char	pr_q_entrysize;
+    unsigned char	pr_en;
+    unsigned int	pr_q[64];
+  } elf_fpregset_t;
+
+#endif /* sparc32 */
+
+typedef unsigned long elf_greg_t;
+typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 
 struct elf_siginfo
   {
@@ -93,11 +128,11 @@ struct elf_prpsinfo
 typedef void *psaddr_t;
 
 /* Register sets.  Linux has different names.  */
-typedef gregset_t prgregset_t;
-typedef fpregset_t prfpregset_t;
+typedef elf_gregset_t prgregset_t;
+typedef elf_fpregset_t prfpregset_t;
 
 /* We don't have any differences between processes and threads,
-   therefore habe only ine PID type.  */
+   therefore have only one PID type.  */
 typedef __pid_t lwpid_t;
 
 

@@ -20,7 +20,7 @@
 #include <signal.h>
 
 void
-profil_counter (int signo, __siginfo_t *si)
+profil_counter (int signo, struct sigcontext *si)
 {
   profil_count ((void *) si->si_regs.pc);
 }
