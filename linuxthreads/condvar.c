@@ -115,7 +115,7 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
     pthread_exit(PTHREAD_CANCELED);
   }
   /* If not signaled: also remove ourselves and return an error code, but
-     only if the timeout has elapsed.  If not, jsut continue waiting. */
+     only if the timeout has elapsed.  If not, just continue waiting. */
   if (THREAD_GETMEM(self, p_signal) == 0) {
     if (retsleep != 0)
       goto continue_waiting;

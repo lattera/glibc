@@ -1,3 +1,18 @@
+1999-09-27  Andreas Jaeger  <aj@suse.de>
+
+	* resolv/netdb.h: Remove declaration of getnodebyname.  It has
+ 	been renamed to getipnodebyname.  Move flags around.
+
+1999-09-27  Andreas Schwab  <schwab@suse.de>
+
+	* manual/message.texi (Locating gettext catalog): Fix typos.
+
+1999-09-27  Andreas Jaeger  <aj@suse.de>
+
+	* manual/socket.texi (Out-of-Band Data): Correct example program,
+	rename some variables for clarity.
+	Reported by James Antill <james@and.org>, close PR libc/1329.
+
 1999-09-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-collate.c (insert_value): Add hack to not

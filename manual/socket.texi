@@ -2512,7 +2512,7 @@ makes room.  Here is an example:
 @smallexample
 struct buffer
 @{
-  char *buffer;
+  char *buf;
   int size;
   struct buffer *next;
 @};
@@ -2536,18 +2536,19 @@ read_oob (int socket)
     @{
       /* @r{This is an arbitrary limit.}
          @r{Does anyone know how to do this without a limit?}  */
-      char *buffer = (char *) xmalloc (1024);
+#define BUF_SZ 1024
+      char *buf = (char *) xmalloc (BUF_SZ);
       int success;
       int atmark;
 
       /* @r{Try again to read the out-of-band data.}  */
-      success = recv (socket, buffer, sizeof buffer, MSG_OOB);
+      success = recv (socket, buf, BUF_SZ, MSG_OOB);
       if (success >= 0)
         @{
           /* @r{We got it, so return it.}  */
           struct buffer *link
             = (struct buffer *) xmalloc (sizeof (struct buffer));
-          link->buffer = buffer;
+          link->buf = buf;
           link->size = success;
           link->next = list;
           return link;
@@ -2568,7 +2569,7 @@ read_oob (int socket)
       /* @r{Otherwise, read a bunch of ordinary data and save it.}
          @r{This is guaranteed not to read past the mark}
          @r{if it starts before the mark.}  */
-      success = read (socket, buffer, sizeof buffer);
+      success = read (socket, buf, BUF_SZ);
       if (success < 0)
         perror ("read");
 
@@ -2576,7 +2577,7 @@ read_oob (int socket)
       @{
         struct buffer *link
           = (struct buffer *) xmalloc (sizeof (struct buffer));
-        link->buffer = buffer;
+        link->buf = buf;
         link->size = success;
 
         /* @r{Add the new link to the end of the list.}  */

@@ -1024,7 +1024,7 @@ really never should be used.
 @end deftypefun
 
 @deftypefun {char *} bindtextdomain (const char *@var{domainname}, const char *@var{dirname})
-The @code{bindtextdomain} function can be used to specify the directly
+The @code{bindtextdomain} function can be used to specify the directory
 which contains the message catalogs for domain @var{domainname} for the
 different languages.  To be correct, this is the directory where the
 hierarchy of directories is expected.  Details are explained below.
@@ -1051,7 +1051,7 @@ If the @var{dirname} parameter is the null pointer @code{bindtextdomain}
 returns the currently selected directory for the domain with the name
 @var{domainname}.
 
-the @code{bindtextdomain} function returns a pointer to a string
+The @code{bindtextdomain} function returns a pointer to a string
 containing the name of the selected directory name.  The string is
 allocated internally in the function and must not be changed by the
 user.  If the system went out of core during the execution of
