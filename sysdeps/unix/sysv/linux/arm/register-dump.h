@@ -20,6 +20,7 @@
 
 #include <sys/uio.h>
 #include <stdio-common/_itoa.h>
+#include <bits/armsigctx.h>
 
 /* We will print the register dump in this format:
 
@@ -43,7 +44,7 @@ hexvalue (unsigned long int value, char *buf, size_t len)
 }
 
 static void
-register_dump (int fd, struct sigcontext *ctx)
+register_dump (int fd, union k_sigcontext *ctx)
 {
   char regs[20][8];
   struct iovec iov[97];
@@ -59,26 +60,52 @@ register_dump (int fd, struct sigcontext *ctx)
   ++nr
 
   /* Generate strings of register contents.  */
-  hexvalue (ctx->arm_r0, regs[0], 8);
-  hexvalue (ctx->arm_r1, regs[1], 8);
-  hexvalue (ctx->arm_r2, regs[2], 8);
-  hexvalue (ctx->arm_r3, regs[3], 8);
-  hexvalue (ctx->arm_r4, regs[4], 8);
-  hexvalue (ctx->arm_r5, regs[5], 8);
-  hexvalue (ctx->arm_r6, regs[6], 8);
-  hexvalue (ctx->arm_r7, regs[7], 8);
-  hexvalue (ctx->arm_r8, regs[8], 8);
-  hexvalue (ctx->arm_r9, regs[9], 8);
-  hexvalue (ctx->arm_r10, regs[10], 4);
-  hexvalue (ctx->arm_fp, regs[11], 4);
-  hexvalue (ctx->arm_ip, regs[12], 4);
-  hexvalue (ctx->arm_sp, regs[13], 4);
-  hexvalue (ctx->arm_lr, regs[14], 4);
-  hexvalue (ctx->arm_pc, regs[15], 4);
-  hexvalue (ctx->arm_cpsr, regs[16], 8);
-  hexvalue (ctx->trap_no, regs[17], 8);
-  hexvalue (ctx->error_code, regs[18], 8);
-  hexvalue (ctx->old_mask, regs[19], 8);
+  if (ctx->v20.magic == SIGCONTEXT_2_0_MAGIC)
+    {
+      hexvalue (ctx->v20.reg.ARM_r0, regs[0], 8);
+      hexvalue (ctx->v20.reg.ARM_r1, regs[1], 8);
+      hexvalue (ctx->v20.reg.ARM_r2, regs[2], 8);
+      hexvalue (ctx->v20.reg.ARM_r3, regs[3], 8);
+      hexvalue (ctx->v20.reg.ARM_r4, regs[4], 8);
+      hexvalue (ctx->v20.reg.ARM_r5, regs[5], 8);
+      hexvalue (ctx->v20.reg.ARM_r6, regs[6], 8);
+      hexvalue (ctx->v20.reg.ARM_r7, regs[7], 8);
+      hexvalue (ctx->v20.reg.ARM_r8, regs[8], 8);
+      hexvalue (ctx->v20.reg.ARM_r9, regs[9], 8);
+      hexvalue (ctx->v20.reg.ARM_r10, regs[10], 4);
+      hexvalue (ctx->v20.reg.ARM_fp, regs[11], 4);
+      hexvalue (ctx->v20.reg.ARM_ip, regs[12], 4);
+      hexvalue (ctx->v20.reg.ARM_sp, regs[13], 4);
+      hexvalue (ctx->v20.reg.ARM_lr, regs[14], 4);
+      hexvalue (ctx->v20.reg.ARM_pc, regs[15], 4);
+      hexvalue (ctx->v20.reg.ARM_cpsr, regs[16], 8);
+      hexvalue (ctx->v20.trap_no, regs[17], 8);
+      hexvalue (ctx->v20.error_code, regs[18], 8);
+      hexvalue (ctx->v20.oldmask, regs[19], 8);
+    }
+  else
+    {
+      hexvalue (ctx->v21.arm_r0, regs[0], 8);
+      hexvalue (ctx->v21.arm_r1, regs[1], 8);
+      hexvalue (ctx->v21.arm_r2, regs[2], 8);
+      hexvalue (ctx->v21.arm_r3, regs[3], 8);
+      hexvalue (ctx->v21.arm_r4, regs[4], 8);
+      hexvalue (ctx->v21.arm_r5, regs[5], 8);
+      hexvalue (ctx->v21.arm_r6, regs[6], 8);
+      hexvalue (ctx->v21.arm_r7, regs[7], 8);
+      hexvalue (ctx->v21.arm_r8, regs[8], 8);
+      hexvalue (ctx->v21.arm_r9, regs[9], 8);
+      hexvalue (ctx->v21.arm_r10, regs[10], 4);
+      hexvalue (ctx->v21.arm_fp, regs[11], 4);
+      hexvalue (ctx->v21.arm_ip, regs[12], 4);
+      hexvalue (ctx->v21.arm_sp, regs[13], 4);
+      hexvalue (ctx->v21.arm_lr, regs[14], 4);
+      hexvalue (ctx->v21.arm_pc, regs[15], 4);
+      hexvalue (ctx->v21.arm_cpsr, regs[16], 8);
+      hexvalue (ctx->v21.trap_no, regs[17], 8);
+      hexvalue (ctx->v21.error_code, regs[18], 8);
+      hexvalue (ctx->v21.oldmask, regs[19], 8);
+    }
 
   /* Generate the output.  */
   ADD_STRING ("Register dump:\n\n R0: ");
