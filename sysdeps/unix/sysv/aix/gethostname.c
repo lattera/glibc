@@ -21,7 +21,7 @@
 int
 __gethostname (name, len)
      char *name;
-     size_t len;
+     socklen_t len;
 {
   return gethostname (name, len);
 }
