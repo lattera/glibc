@@ -1,3 +1,9 @@
+1998-04-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/mktemp.c: Increment `value' in a way which touches
+	all needed 36 bits.
+	* sysdeps/posix/mkstemp.c: Likewise.
+
 1998-04-13 17:40  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/8bit-gap.c: Simplify step data handling.

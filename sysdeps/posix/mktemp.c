@@ -35,7 +35,7 @@ mktemp (template)
 {
   static const char letters[]
     = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  static uint32_t value;
+  static uint64_t value;
   struct timeval tv;
   char *XXXXXX;
   size_t len;
@@ -53,12 +53,12 @@ mktemp (template)
 
   /* Get some more or less random data.  */
   __gettimeofday (&tv, NULL);
-  value += tv.tv_usec | getpid ();
+  value += ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec ^ getpid ();
 
   for (count = 0; count < TMP_MAX; ++count)
     {
       struct stat ignored;
-      uint32_t v = value;
+      uint64_t v = value;
 
       /* Fill in the random bits.  */
       XXXXXX[0] = letters[v % 62];
