@@ -106,41 +106,41 @@ struct in_addr
    On subnets, host and network parts are found according to
    the subnet mask, not these masks.  */
 
-#define	IN_CLASSA(a)		((((unsigned) (a)) & 0x80000000) == 0)
+#define	IN_CLASSA(a)		((((uint32_t) (a)) & 0x80000000) == 0)
 #define	IN_CLASSA_NET		0xff000000
 #define	IN_CLASSA_NSHIFT	24
 #define	IN_CLASSA_HOST		(0xffffffff & ~IN_CLASSA_NET)
 #define	IN_CLASSA_MAX		128
 
-#define	IN_CLASSB(a)		((((unsigned) (a)) & 0xc0000000) == 0x80000000)
+#define	IN_CLASSB(a)		((((uint32_t) (a)) & 0xc0000000) == 0x80000000)
 #define	IN_CLASSB_NET		0xffff0000
 #define	IN_CLASSB_NSHIFT	16
 #define	IN_CLASSB_HOST		(0xffffffff & ~IN_CLASSB_NET)
 #define	IN_CLASSB_MAX		65536
 
-#define	IN_CLASSC(a)		((((unsigned) (a)) & 0xc0000000) == 0xc0000000)
+#define	IN_CLASSC(a)		((((uint32_t) (a)) & 0xc0000000) == 0xc0000000)
 #define	IN_CLASSC_NET		0xffffff00
 #define	IN_CLASSC_NSHIFT	8
 #define	IN_CLASSC_HOST		(0xffffffff & ~IN_CLASSC_NET)
 
-#define	IN_CLASSD(a)		((((unsigned) (a)) & 0xf0000000) == 0xe0000000)
+#define	IN_CLASSD(a)		((((uint32_t) (a)) & 0xf0000000) == 0xe0000000)
 #define	IN_MULTICAST(a)		IN_CLASSD(a)
 
-#define	IN_EXPERIMENTAL(a)	((((unsigned) (a)) & 0xe0000000) == 0xe0000000)
-#define	IN_BADCLASS(a)		((((unsigned) (a)) & 0xf0000000) == 0xf0000000)
+#define	IN_EXPERIMENTAL(a)	((((uint32_t) (a)) & 0xe0000000) == 0xe0000000)
+#define	IN_BADCLASS(a)		((((uint32_t) (a)) & 0xf0000000) == 0xf0000000)
 
 /* Address to accept any incoming messages.  */
-#define	INADDR_ANY		((unsigned) 0x00000000)
+#define	INADDR_ANY		((uint32_t) 0x00000000)
 /* Address to send to all hosts.  */
-#define	INADDR_BROADCAST	((unsigned) 0xffffffff)
+#define	INADDR_BROADCAST	((uint32_t) 0xffffffff)
 /* Address indicating an error return.  */
-#define	INADDR_NONE		((unsigned) 0xffffffff)
+#define	INADDR_NONE		((uint32_t) 0xffffffff)
 
 /* Network number for local host loopback.  */
-#define	IN_LOOPBACKNET	127
+#define	IN_LOOPBACKNET		127
 /* Address to loopback in software to local host.  */
 #ifndef INADDR_LOOPBACK
-# define INADDR_LOOPBACK	((unsigned) 0x7f000001)	/* Inet 127.0.0.1.  */
+# define INADDR_LOOPBACK	((uint32_t) 0x7f000001)	/* Inet 127.0.0.1.  */
 #endif
 
 

@@ -1,3 +1,8 @@
+1998-03-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/netinet/in.h: Use cast to uint32_t in IPv4 macros.
+	Reported by Andreas Jaeger.
+
 1998-03-29 20:59  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/Makefile: Fix typo.
