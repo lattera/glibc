@@ -12,4 +12,5 @@ net/if_arp.h
 net/if_ether.h
 net/if_ppp.h
 net/route.h
+nfs/nfs.h
 siglist.h
