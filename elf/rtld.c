@@ -1138,103 +1138,114 @@ of this helper program; chances are you did not intend to run this program.\n\
       HP_TIMING_ACCUM_NT (load_time, diff);
     }
 
-  /* Read the contents of the file.  */
-  const char preload_file[] = "/etc/ld.so.preload";
-  file = _dl_sysdep_read_whole_file (preload_file, &file_size,
-				     PROT_READ | PROT_WRITE);
-  if (__builtin_expect (file != MAP_FAILED, 0))
+  /* There usually is no ld.so.preload file, it should only be used
+     for emergencies and testing.  So the open call etc should usually
+     fail.  Using access() on a non-existing file is faster than using
+     open().  So we do this first.  If it succeeds we do almost twice
+     the work but this does not matter, since it is not for production
+     use.  */
+  static const char preload_file[] = "/etc/ld.so.preload";
+  if (__builtin_expect (__access (preload_file, R_OK) == 0, 0))
     {
-      /* Parse the file.  It contains names of libraries to be loaded,
-	 separated by white spaces or `:'.  It may also contain
-	 comments introduced by `#'.  */
-      char *problem;
-      char *runp;
-      size_t rest;
-
-      /* Eliminate comments.  */
-      runp = file;
-      rest = file_size;
-      while (rest > 0)
+      /* Read the contents of the file.  */
+      file = _dl_sysdep_read_whole_file (preload_file, &file_size,
+					 PROT_READ | PROT_WRITE);
+      if (__builtin_expect (file != MAP_FAILED, 0))
 	{
-	  char *comment = memchr (runp, '#', rest);
-	  if (comment == NULL)
-	    break;
+	  /* Parse the file.  It contains names of libraries to be loaded,
+	     separated by white spaces or `:'.  It may also contain
+	     comments introduced by `#'.  */
+	  char *problem;
+	  char *runp;
+	  size_t rest;
 
-	  rest -= comment - runp;
-	  do
-	    *comment = ' ';
-	  while (--rest > 0 && *++comment != '\n');
-	}
-
-      /* We have one problematic case: if we have a name at the end of
-	 the file without a trailing terminating characters, we cannot
-	 place the \0.  Handle the case separately.  */
-      if (file[file_size - 1] != ' ' && file[file_size - 1] != '\t'
-	  && file[file_size - 1] != '\n' && file[file_size - 1] != ':')
-	{
-	  problem = &file[file_size];
-	  while (problem > file && problem[-1] != ' ' && problem[-1] != '\t'
-		 && problem[-1] != '\n' && problem[-1] != ':')
-	    --problem;
-
-	  if (problem > file)
-	    problem[-1] = '\0';
-	}
-      else
-	{
-	  problem = NULL;
-	  file[file_size - 1] = '\0';
-	}
-
-      HP_TIMING_NOW (start);
-
-      if (file != problem)
-	{
-	  char *p;
+	  /* Eliminate comments.  */
 	  runp = file;
-	  while ((p = strsep (&runp, ": \t\n")) != NULL)
-	    if (p[0] != '\0')
-	      {
-		const char *objname;
-		const char *err_str = NULL;
-		struct map_args args;
+	  rest = file_size;
+	  while (rest > 0)
+	    {
+	      char *comment = memchr (runp, '#', rest);
+	      if (comment == NULL)
+		break;
 
-		args.str = p;
-		args.loader = GL(dl_loaded);
-		args.is_preloaded = 1;
-		args.mode = 0;
+	      rest -= comment - runp;
+	      do
+		*comment = ' ';
+	      while (--rest > 0 && *++comment != '\n');
+	    }
 
-		(void) _dl_catch_error (&objname, &err_str, map_doit, &args);
-		if (__builtin_expect (err_str != NULL, 0))
+	  /* We have one problematic case: if we have a name at the end of
+	     the file without a trailing terminating characters, we cannot
+	     place the \0.  Handle the case separately.  */
+	  if (file[file_size - 1] != ' ' && file[file_size - 1] != '\t'
+	      && file[file_size - 1] != '\n' && file[file_size - 1] != ':')
+	    {
+	      problem = &file[file_size];
+	      while (problem > file && problem[-1] != ' '
+		     && problem[-1] != '\t'
+		     && problem[-1] != '\n' && problem[-1] != ':')
+		--problem;
+
+	      if (problem > file)
+		problem[-1] = '\0';
+	    }
+	  else
+	    {
+	      problem = NULL;
+	      file[file_size - 1] = '\0';
+	    }
+
+	  HP_TIMING_NOW (start);
+
+	  if (file != problem)
+	    {
+	      char *p;
+	      runp = file;
+	      while ((p = strsep (&runp, ": \t\n")) != NULL)
+		if (p[0] != '\0')
 		  {
-		    _dl_error_printf ("\
+		    const char *objname;
+		    const char *err_str = NULL;
+		    struct map_args args;
+
+		    args.str = p;
+		    args.loader = GL(dl_loaded);
+		    args.is_preloaded = 1;
+		    args.mode = 0;
+
+		    (void) _dl_catch_error (&objname, &err_str, map_doit,
+					    &args);
+		    if (__builtin_expect (err_str != NULL, 0))
+		      {
+			_dl_error_printf ("\
 ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
-				      p, preload_file);
-		    /* No need to call free, this is still before the libc's
-		       malloc is used.  */
+					  p, preload_file);
+			/* No need to call free, this is still before
+			   the libc's malloc is used.  */
+		      }
+		    else if (++args.map->l_opencount == 1)
+		      /* It is no duplicate.  */
+		      ++npreloads;
 		  }
-		else if (++args.map->l_opencount == 1)
-		  /* It is no duplicate.  */
-		  ++npreloads;
-	      }
+	    }
+
+	  if (problem != NULL)
+	    {
+	      char *p = strndupa (problem, file_size - (problem - file));
+	      struct link_map *new_map = _dl_map_object (GL(dl_loaded), p, 1,
+							 lt_library, 0, 0);
+	      if (++new_map->l_opencount == 1)
+		/* It is no duplicate.  */
+		++npreloads;
+	    }
+
+	  HP_TIMING_NOW (stop);
+	  HP_TIMING_DIFF (diff, start, stop);
+	  HP_TIMING_ACCUM_NT (load_time, diff);
+
+	  /* We don't need the file anymore.  */
+	  __munmap (file, file_size);
 	}
-
-      if (problem != NULL)
-	{
-	  char *p = strndupa (problem, file_size - (problem - file));
-	  struct link_map *new_map = _dl_map_object (GL(dl_loaded), p, 1,
-						     lt_library, 0, 0);
-	  if (++new_map->l_opencount == 1)
-	    /* It is no duplicate.  */
-	    ++npreloads;
-	}
-
-      HP_TIMING_NOW (stop);
-      HP_TIMING_DIFF (diff, start, stop);
-      HP_TIMING_ACCUM_NT (load_time, diff);
-
-      /* We don't need the file anymore.  */
-      __munmap (file, file_size);
     }
 
   if (__builtin_expect (npreloads, 0) != 0)
