@@ -1,3 +1,8 @@
+2002-07-02  Andreas Schwab  <schwab@suse.de>
+
+	* resolv/nss_dns/dns-network.c (getanswer_r): Reduce linebuflen
+	in parallel to bumping up the buffer pointer.
+
 2002-07-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* math/libm-test.inc (acos_test): Add missing L suffix for
