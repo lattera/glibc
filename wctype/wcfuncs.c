@@ -36,6 +36,7 @@
 
 #undef iswalnum
 func (iswalnum, __ISwalnum)
+libc_hidden_weak (iswalnum)
 #undef iswalpha
 func (iswalpha, __ISwalpha)
 libc_hidden_weak (iswalpha)

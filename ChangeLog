@@ -1,3 +1,9 @@
+2002-12-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* wctype/wcfuncs.c: Add libc_hidden_def for iswalnum.
+
+	* sysdeps/posix/raise.c: Add libc_hidden_def for raise.
+
 2002-12-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h [RTLD_PRIVATE_ERRNO]
