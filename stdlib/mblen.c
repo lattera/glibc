@@ -17,19 +17,22 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdlib.h>
+#include <string.h>
 #include <wchar.h>
 #include <gconv.h>
 #include <wcsmbs/wcsmbsload.h>
 
 
+/* Internal state.  */
+static mbstate_t state;
+
 /* Return the length of the multibyte character (if there is one)
    at S which is no longer than N characters.
    The ISO C standard says that the `mblen' function must not change
-   the global state.  */
+   the state of the `mbtowc' function.  */
 int
 mblen (const char *s, size_t n)
 {
-  mbstate_t state;
   int result;
 
   /* If S is NULL the function has to return null or not null
@@ -40,11 +43,13 @@ mblen (const char *s, size_t n)
       /* Make sure we use the correct value.  */
       update_conversion_ptrs ();
 
+      /* Reset the state.  */
+      memset (&state, '\0', sizeof state);
+
       result = __wcsmbs_gconv_fcts.towc->__stateful;
     }
   else if (*s == '\0')
-    /* According to the ISO C 89 standard this is the expected behaviour.
-       Idiotic, but true.  */
+    /* According to the ISO C 89 standard this is the expected behaviour.  */
     result = 0;
   else
     {

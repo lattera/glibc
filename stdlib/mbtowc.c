@@ -46,6 +46,10 @@ mbtowc (wchar_t *pwc, const char *s, size_t n)
       /* Make sure we use the correct value.  */
       update_conversion_ptrs ();
 
+      /* This is an extension in the Unix standard which does not directly
+	 violate ISO C.  */
+      memset (&__no_r_state, '\0', siyeof __no_r_state);
+
       result = __wcsmbs_gconv_fcts.towc->__stateful;
     }
   else if (*s == '\0')

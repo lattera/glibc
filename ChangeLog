@@ -1,3 +1,15 @@
+1999-07-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/mblen.c: Use static state.
+	Reported by Bruno Haible <haible@ilog.fr>.
+
+	* stdlib/mbtowc.c: Reset state for s == NULL.
+	* stdlib/wctomb.c: Likewise.
+	Reported by Bruno Haible <haible@ilog.fr>.
+
+	* stdlib/mbstowcs.c: Do not use global state.
+	Reported by Bruno Haible <haible@ilog.fr>.
+
 1999-07-28  Andeas Schwab  <schwab@suse.de>
 
 	* iconvdata/Makefile: Don't try to run iconv tests when cross

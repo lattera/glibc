@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,10 +17,9 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdlib.h>
+#include <string.h>
 #include <wchar.h>
 
-
-extern mbstate_t __no_r_state;	/* Defined in mbtowc.c.  */
 
 /* Convert the string of multibyte characters in S to `wchar_t's in
    PWCS, writing no more than N.  Return the number written,
@@ -33,14 +32,9 @@ extern mbstate_t __no_r_state;	/* Defined in mbtowc.c.  */
 size_t
 mbstowcs (wchar_t *pwcs, const char *s, size_t n)
 {
-  mbstate_t save_shift = __no_r_state;
-  size_t written;
+  mbstate_t state;
 
-  written = __mbsrtowcs (pwcs, &s, n, &__no_r_state);
-
-  /* Restore the old shift state.  */
-  __no_r_state = save_shift;
-
+  memset (&state, '\0', sizeof state);
   /* Return how many we wrote (or maybe an error).  */
-  return written;
+  return __mbsrtowcs (pwcs, &s, n, &state);
 }
