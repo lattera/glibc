@@ -1,3 +1,19 @@
+2002-12-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/libc-symbols.h: Fix a comment typo.
+
+	* sysdeps/unix/sysv/linux/alpha/select.S (__libc_select): New alias.
+	* sysdeps/unix/sysv/linux/alpha/sigsuspend.S (__libc_sigsuspend):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigsuspend.c (__libc_sigsuspend):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigsuspend.c
+	(__libc_sigsuspend): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigsuspend.c
+	(__libc_sigsuspend): Likewise.
+	* sysdeps/generic/creat.c (__libc_creat): Renamed from creat.
+	(creat): New weak alias.
+
 2002-12-10  Roland McGrath  <roland@redhat.com>
 
 	* manual/libc-texinfo.sh: Emit @set ADD-ON for each ADD-ON that

@@ -44,7 +44,6 @@ const int __pthread_provide_wrappers = 0;
 #define CANCELABLE_SYSCALL(res_type, name, param_list, params) \
 extern res_type __libc_##name param_list;				      \
 res_type								      \
-__attribute__ ((weak))							      \
 name param_list								      \
 {									      \
   res_type result;							      \
@@ -58,7 +57,6 @@ name param_list								      \
 #define CANCELABLE_SYSCALL_VA(res_type, name, param_list, params, last_arg) \
 res_type __libc_##name param_list;					      \
 res_type								      \
-__attribute__ ((weak))							      \
 name param_list								      \
 {									      \
   res_type result;							      \

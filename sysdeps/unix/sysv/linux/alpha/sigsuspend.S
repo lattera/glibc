@@ -53,3 +53,4 @@ error:
 
 libc_hidden_def (__sigsuspend)
 weak_alias(__sigsuspend, sigsuspend)
+strong_alias (__sigsuspend, __libc_sigsuspend)

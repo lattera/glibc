@@ -655,7 +655,7 @@
    There is no reason to use hidden_weak over hidden_def in assembly,
    but we provide it for consistency with the C usage.
    hidden_proto doesn't make sense for assembly but the equivalent
-   is to call via the HIDDEN_JUMPTARGET macro einstead of JUMPTARGET.  */
+   is to call via the HIDDEN_JUMPTARGET macro instead of JUMPTARGET.  */
 #  define hidden_def(name)	strong_alias (name, __GI_##name)
 #  define hidden_weak(name)	hidden_def (name)
 #  define hidden_ver(local, name) strong_alias (local, __GI_##name)

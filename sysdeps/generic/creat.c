@@ -23,9 +23,10 @@
 
 /* Create FILE with protections MODE.  */
 int
-creat (file, mode)
+__libc_creat (file, mode)
      const char *file;
      mode_t mode;
 {
   return __open (file, O_WRONLY|O_CREAT|O_TRUNC, mode);
 }
+weak_alias (__libc_creat, creat)

@@ -1,3 +1,9 @@
+2002-12-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* wrapsyscall.c (CANCELABLE_SYSCALL): Don't define function as
+	weak.  There is no reason for that.
+	(CANCELABLE_SYSCALL_VA): Likewise.
+
 2002-12-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* wrapsyscall.c: Add wrappers for creat, poll, pselect, readv, select,

@@ -1,3 +1,7 @@
+2002-12-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): We can run tst-locale2 now.
+
 2002-12-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* Versions: Remove duplicated sigwait entry.
