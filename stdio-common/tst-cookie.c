@@ -39,7 +39,7 @@ cookiewrite (void *cookie, const char *buf, size_t count)
 
 static int cookieseek_called;
 static int
-cookieseek (void *cookie, off_t offset, int whence)
+cookieseek (void *cookie, off64_t *offset, int whence)
 {
   printf ("`%s' called with cookie %#lx\n", __FUNCTION__,
 	  (unsigned long int) cookie);

@@ -1,5 +1,10 @@
 2000-03-23  Andreas Jaeger  <aj@suse.de>
 
+	* stdio-common/tst-cookie.c (cookieseek): Change prototype to
+	follow change for libio.h from 2000-03-10.
+
+2000-03-23  Andreas Jaeger  <aj@suse.de>
+
 	* elf/dl-addr.c: Adjust include paths for ldsodefs location
 	change.
 	* elf/dl-debug.c: Likewise.
@@ -39,7 +44,7 @@
 	* sysdeps/generic/ldsodefs.h: ... here.
 
 	* sysdeps/generic/ldsodefs.h: Add definition for D_PTR.
-	
+
 	* sysdeps/mips/elf/ldsodefs.h: New file.
 
 	* elf/dl-version.c (match_symbol): Use D_PTR to access relocated
