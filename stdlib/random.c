@@ -199,17 +199,17 @@ weak_alias (__srandom, srand)
    Note: The first thing we do is save the current state, if any, just like
    setstate so that it doesn't matter when initstate is called.
    Returns a pointer to the old state.  */
-void *
+char *
 __initstate (seed, arg_state, n)
      unsigned int seed;
-     void *arg_state;
+     char *arg_state;
      size_t n;
 {
-  void *ostate;
+  char *ostate;
 
   __libc_lock_lock (lock);
 
-  ostate = (void *) &unsafe_state.state[-1];
+  ostate = (char *) &unsafe_state.state[-1];
 
   __initstate_r (seed, arg_state, n, &unsafe_state);
 
@@ -228,15 +228,15 @@ weak_alias (__initstate, initstate)
    to the order in which things are done, it is OK to call setstate with the
    same state as the current state
    Returns a pointer to the old state information.  */
-void *
+char *
 __setstate (arg_state)
-     void *arg_state;
+     char *arg_state;
 {
-  void *ostate;
+  char *ostate;
 
   __libc_lock_lock (lock);
 
-  ostate = (void *) &unsafe_state.state[-1];
+  ostate = (char *) &unsafe_state.state[-1];
 
   if (__setstate_r (arg_state, &unsafe_state) < 0)
     ostate = NULL;

@@ -32,6 +32,11 @@
 #endif
 #include <stddef.h>
 
+__BEGIN_DECLS
+
+#ifndef __need_malloc_and_calloc
+#define	_STDLIB_H	1
+
 #ifdef __USE_XOPEN
 /* XPG requires a few symbols from <sys/wait.h> being defined.  */
 # include <bits/waitflags.h>
@@ -86,11 +91,6 @@ typedef union
 #  define WIFSTOPPED(status)	__WIFSTOPPED(__WAIT_INT(status))
 # endif
 #endif
-
-__BEGIN_DECLS
-
-#ifndef __need_malloc_and_calloc
-#define	_STDLIB_H	1
 
 /* Returned by `div'.  */
 typedef struct
