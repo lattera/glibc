@@ -22,10 +22,10 @@ Cambridge, MA 02139, USA.  */
    reliably access the stack or frame pointers, so we pass them in as
    extra arguments.  */
 ENTRY (__sigsetjmp)
-	move a1, sp
+	move a2, sp
 #ifdef __sgi__
-	move a2, fp
+	move a3, fp
 #else
-	move a2, $fp
+	move a3, $fp
 #endif
 	j __sigsetjmp_aux
