@@ -40,15 +40,13 @@ __ptr_t
 __mmap64 (__ptr_t addr, size_t len, int prot, int flags, int fd, off64_t offset)
 {
 #ifdef __NR_mmap2
-  if (! (offset & PAGE_MASK))
-    {
-      __set_errno (EINVAL);
-      return MAP_FAILED;
-    }
-      
+  if (
 # ifndef __ASSUME_MMAP2_SYSCALL
-  if (! have_no_mmap2)
+      ! have_no_mmap2 &&
+# endif
+      ! (offset & ~PAGE_MASK))
     {
+# ifndef __ASSUME_MMAP2_SYSCALL
       int saved_errno = errno;
 # endif
       /* This will be always 12, no matter what page size is.  */
@@ -67,6 +65,7 @@ __mmap64 (__ptr_t addr, size_t len, int prot, int flags, int fd, off64_t offset)
 # ifndef __ASSUME_MMAP2_SYSCALL
       __set_errno (saved_errno);
       have_no_mmap2 = 1;
+# endif
     }
 #endif
   if (offset != (off_t) offset || (offset + len) != (off_t) (offset + len))
