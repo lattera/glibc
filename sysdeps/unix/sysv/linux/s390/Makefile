@@ -6,3 +6,7 @@ endif
 ifeq ($(subdir),csu)
 CFLAGS-initfini.s += -DWEAK_GMON_START
 endif
+
+ifeq ($(subdir),resource)
+sysdep_routines += oldgetrlimit64
+endif

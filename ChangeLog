@@ -1,3 +1,26 @@
+2000-08-28  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* shlib-versions: Add a rule for S/390 to the libm version list.
+	* sysdeps/s390/Versions: New file.
+	* sysdeps/unix/sysv/linux/s390/Dist: Add oldgetrlimit64.c.
+	* sysdeps/unix/sysv/linux/s390/Makefile: Add oldgetrlimit64.
+	* sysdeps/unix/sysv/linux/s390/Versions: New file.
+	* sysdeps/unix/sysv/linux/s390/alphasort64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/chown.c: New file.
+	* sysdeps/unix/sysv/linux/s390/fxstat.c: New file.
+	* sysdeps/unix/sysv/linux/s390/getdents64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/getrlimit.c: New file.
+	* sysdeps/unix/sysv/linux/s390/getrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/lxstat.c: New file.
+	* sysdeps/unix/sysv/linux/s390/oldgetrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/readdir64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/readdir64_r.c: New file.
+	* sysdeps/unix/sysv/linux/s390/scandir64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/setrlimit.c: New file.
+	* sysdeps/unix/sysv/linux/s390/syscalls.list: New file.
+	* sysdeps/unix/sysv/linux/s390/versionsort64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/xstat.c: New file.
+
 2000-08-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/Makefile [$(subdir)==csu]

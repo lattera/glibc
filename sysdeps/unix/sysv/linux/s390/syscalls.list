@@ -1,0 +1,4 @@
+# File name	Caller	Syscall name	Args	Strong name	Weak names
+
+oldgetrlimit	EXTRA	getrlimit	i:ip	__old_getrlimit	getrlimit@GLIBC_2.0
+oldsetrlimit	EXTRA	setrlimit	i:ip	__old_setrlimit	setrlimit@GLIBC_2.0
