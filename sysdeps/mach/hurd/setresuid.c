@@ -1,5 +1,5 @@
 /* setresuid -- set effective user ID, real user ID, and saved-set user ID
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -75,3 +75,4 @@ __setresuid (uid_t euid, uid_t ruid, uid_t suid)
   return err;
 }
 libc_hidden_def (__setresuid)
+weak_alias (__setresuid, setresuid)

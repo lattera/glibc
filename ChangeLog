@@ -1,3 +1,9 @@
+2005-02-11  Barry deFrese  <bddebian@comcast.net>
+
+	[BZ #722]
+	* sysdeps/mach/hurd/setresgid.c: Use weak_alias.
+	* sysdeps/mach/hurd/setresuid.c: Likewise.
+
 2005-02-14  GOTO Masanori  <gotom@debian.or.jp>
 
 	* misc/sys/syslog.h: Fix typo in comment.
