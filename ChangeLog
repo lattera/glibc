@@ -1,3 +1,10 @@
+2003-01-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/alpha/sysdep.h (PSEUDO): Use PSEUDO_PREPARE_ARGS.
+	* sysdeps/unix/sysv/linux/alpha/sigsuspend.S: Add cancellation
+	handling.
+	* sysdeps/unix/sysv/linux/alpha/select.S: Likewise.
+
 2003-01-06  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/powerpc/powerpc32/sysdep.h (PSEUDO_RET): Add branch hint.

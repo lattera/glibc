@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -97,6 +97,7 @@
 	.ent name,0;				\
 __LABEL(name)					\
 	PSEUDO_PROLOGUE;			\
+	PSEUDO_PREPARE_ARGS			\
 	lda	v0, SYS_ify(syscall_name);	\
 	call_pal PAL_callsys;			\
 	bne	a3, __syscall_error !samegp;	\
@@ -109,6 +110,7 @@ __LABEL(name)					\
 	.align 4;				\
 	.ent name,0;				\
 __LABEL(name)					\
+	PSEUDO_PREPARE_ARGS			\
 	lda	v0, SYS_ify(syscall_name);	\
 	call_pal PAL_callsys;			\
 	bne	a3, 1996f;			\
@@ -121,6 +123,9 @@ __LABEL(name)					\
 	SYSCALL_ERROR_HANDLER;			\
 	END(sym)
 #endif /* PIC && !RTLD_PRIVATE_ERRNO */
+
+#undef PSEUDO_PREPARE_ARGS
+#define PSEUDO_PREPARE_ARGS	/* Nothing.  */
 
 #define r0	v0
 #define r1	a4

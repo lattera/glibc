@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #define _ERRNO_H        1
 #include <bits/errno.h>
 
@@ -49,11 +49,19 @@ LEAF(SELECT, 64)
 #endif
 	.prologue 1
 
+#ifdef CENABLE
+	SINGLE_THREAD_P (t1)
+#else
 	ldl	t0, __libc_missing_axp_tv64
+#endif
 
 	/* Save timeout early, since we'll need to recover this after 
 	   the system call.  */
 	stq	a4, 48(sp)
+
+#ifdef CENABLE
+	bne	t1, $do_cancel
+#endif
 
 	bne	t0, $do32
 
@@ -108,6 +116,93 @@ $do32:
 
 2:	addq	sp, 64, sp
 	ret
+
+#ifdef CENABLE
+	.align	3
+$do_cancel:
+	/* Save arguments.  */
+	stq	a0, 8(sp)
+	stq	a1, 16(sp)
+	stq	a2, 24(sp)
+	stq	a3, 32(sp)
+	stq	ra, 40(sp)
+
+	CENABLE
+
+	ldl	t0, __libc_missing_axp_tv64
+	bne	t0, $do_cancel32
+
+	/* Recover the saved arguments.  */
+	ldq	a4, 48(sp)
+	ldq	a3, 32(sp)
+	ldq	a2, 24(sp)
+	ldq	a1, 16(sp)
+	ldq	a0, 8(sp)
+
+	ldi	v0, SYS_ify(select)
+	callsys
+	bne	a3, $cancel_err64
+
+	stq	v0, 8(sp)
+	CDISABLE
+	ldq	v0, 8(sp)
+	ldq	ra, 40(sp)
+
+	/* Everything ok.  */
+	addq	sp, 64, sp
+	ret
+
+	/* If we didn't get ENOSYS, it is a real error.  */
+	.align 3
+$cancel_err64:
+	cmpeq	v0, ENOSYS, t0
+	beq	t0, $cancel_error
+	stl	t0, __libc_missing_axp_tv64
+
+	/* Recover the saved arguments.  */
+	.align 3
+$do_cancel32:
+	ldq	a4, 48(sp)
+	ldq	a3, 32(sp)
+	ldq	a2, 24(sp)
+	ldq	a1, 16(sp)
+	ldq	a0, 8(sp)
+
+	/* If the timeout argument is present bounce to the smaller fmt.  */
+	beq	a4, 1f
+	ldq	t0, 0(a4)
+	ldq	t1, 8(a4)
+	stl	t0, 0(sp)
+	stl	t1, 4(sp)
+	mov	sp, a4
+
+1:	ldi	v0, SYS_ify(osf_select)
+	callsys
+	bne	a3, $cancel_error
+
+	/* ... and bounce the remaining timeout back.  */
+	ldq	a4, 48(sp)
+	beq	a4, 2f
+	ldl	t0, 0(sp)
+	ldl	t1, 4(sp)
+	stq	t0, 0(a4)
+	stq	t1, 8(a4)
+
+2:	stq	v0, 8(sp)
+	CDISABLE
+	ldq	v0, 8(sp)
+	ldq	ra, 40(sp)
+
+	addq	sp, 64, sp
+	ret
+
+	.align 3
+$cancel_error:
+	stq	v0, 8(sp)
+	CDISABLE
+	ldq	v0, 8(sp)
+	ldq	ra, 40(sp)
+#endif
 
 	.align 3
 $error:

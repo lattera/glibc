@@ -42,8 +42,9 @@ __LABEL(name)							\
 	ldgp	gp, 0(pv);					\
 	.prologue 1;						\
 	PSEUDO_PROF;						\
+	PSEUDO_PREPARE_ARGS					\
 	SINGLE_THREAD_P(t0);					\
-	beq	t0, $pseudo_cancel;				\
+	bne	t0, $pseudo_cancel;				\
 	lda	v0, SYS_ify(syscall_name);			\
 	call_pal PAL_callsys;					\
 	bne	a3, $syscall_error;				\

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1996,1997,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger <davidm@cs.arizona.edu>, 1995.
 
@@ -20,37 +20,14 @@
 /* sigsuspend is a special syscall since it needs to dereference the
    sigset.  This will have to change when we have more than 64 signals.  */
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 
-	.text
+#undef PSEUDO_PREPARE_ARGS
+#define PSEUDO_PREPARE_ARGS	ldq	a0, 0(a0);
 
-LEAF(__sigsuspend, 0)
-#ifdef PROF
-	ldgp	gp, 0(pv)
-	.set noat
-	lda	AT, _mcount
-	jsr	AT, (AT), _mcount
-	.set at
-	.prologue 1
-#else
-	.prologue 0
-#endif
-
-	ldq	a0, 0(a0)
-	ldi	v0, __NR_sigsuspend
-	call_pal PAL_callsys
-	bne	a3, error
+PSEUDO(__sigsuspend, sigsuspend, 1)
 	ret
-
-error:
-#ifndef PROF
-	br	gp, 1f
-1:	ldgp	gp, 0(gp)
-#endif
-	SYSCALL_ERROR_HANDLER
-
-	END(__sigsuspend)
-
+PSEUDO_END(__sigsuspend)
 libc_hidden_def (__sigsuspend)
 weak_alias(__sigsuspend, sigsuspend)
 strong_alias (__sigsuspend, __libc_sigsuspend)

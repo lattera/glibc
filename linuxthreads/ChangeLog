@@ -1,3 +1,8 @@
+2003-01-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h (PSEUDO): Use
+	PSEUDO_PREPARE_ARGS.  Fix branch condition after SINGLE_THREAD_P.
+
 2003-01-06  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/sysdep-cancel.h: New file.
