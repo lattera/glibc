@@ -1,3 +1,8 @@
+2002-05-16  Bruno Haible  <bruno@clisp.org>
+
+	* sysdeps/unix/sysv/aix/bits/ioctl-types.h: Don't use multiline
+	string as argument of #error.
+
 2002-05-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/canonicalize.c (canonicalize): Rename to __realpath and
