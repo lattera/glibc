@@ -1,3 +1,9 @@
+2004-10-02  Simon Josefsson  <jas@extundo.com>
+
+	[BZ #420]
+	* sysdeps/generic/memmem.c [!_LIBC]: Define __builtin_expect, to
+	make the file usable inside gnulib.
+
 2004-10-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Always add the
