@@ -212,6 +212,8 @@ gconv_end (struct __gconv_step *data)
 	      *outbuf++ = ESC;						      \
 	      *outbuf++ = '(';						      \
 	      *outbuf++ = 'B';						      \
+	      if (data->__is_last)					      \
+	        *written += 3;						      \
 	      data->__outbuf = outbuf;					      \
 	      /* Note that this also clears the G2 designation.  */	      \
 	      data->__statep->count = ASCII_set;			      \
