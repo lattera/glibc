@@ -1,3 +1,10 @@
+2002-08-13  Jakub Jelinek  <jakub@redhat.com>
+
+        * locale/loadarchive.c (archfname): Add missing slash.
+
+        * sysdeps/generic/strtold.c (__strtold_internal): Add libc_hidden_def.
+        * wcsmbs/wcstold.c (__wcstold_internal): Add libc_hidden_def.
+
 2002-08-12  Roland McGrath  <roland@redhat.com>
 
 	* include/sys/wait.h (__waitpid): Add libc_hidden_proto.

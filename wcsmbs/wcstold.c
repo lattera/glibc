@@ -52,6 +52,7 @@ __wcstold_internal (const wchar_t *nptr, wchar_t **endptr, int group)
 {
   return __wcstod_internal (nptr, endptr, group);
 }
+libc_hidden_def (__wcstold_internal)
 
 long double
 wcstold (const wchar_t *nptr, wchar_t **endptr)

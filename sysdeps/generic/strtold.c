@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@ __strtold_internal (const char *nptr, char **endptr, int group)
 {
   return __strtod_internal (nptr, endptr, group);
 }
+libc_hidden_def (__strtold_internal)
 
 long double
 strtold (const char *nptr, char **endptr)

@@ -39,7 +39,7 @@
 
 
 /* Name of the locale archive file.  */
-static const char archfname[] = LOCALEDIR "locale-archive";
+static const char archfname[] = LOCALEDIR "/locale-archive";
 
 
 /* Record of contiguous pages already mapped from the locale archive.  */
