@@ -1,5 +1,10 @@
 2004-02-20  Jakub Jelinek  <jakub@redhat.com>
 
+	* Makefile (generated): Remove tst-stack1.mtrace and tst-stack1-mem.
+	(tests): Remove $(objpfx)tst-stack1-mem.
+	(tst-stack1-ENV): Remove.
+	($(objpfx)tst-stack1-mem): Remove.
+
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep-cancel.h
 	(__syscall_error_handler2): Call CDISABLE.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep-cancel.h

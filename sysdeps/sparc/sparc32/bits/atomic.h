@@ -1,5 +1,5 @@
 /* Atomic operations.  sparc32 version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -26,8 +26,12 @@
    per library and assumes no variable will be accessed using atomic.h
    macros from two different libraries.  */
 
+__make_section_unallocated
+  (".gnu.linkonce.b.__sparc32_atomic_locks, \"aw\", %nobits");
+
 volatile unsigned char __sparc32_atomic_locks[64]
-  __attribute__ ((nocommon, section (".gnu.linkonce.b.__sparc32_atomic_locks"),
+  __attribute__ ((nocommon, section (".gnu.linkonce.b.__sparc32_atomic_locks"
+				     __sec_comment),
 		  visibility ("hidden")));
 
 #define __sparc32_atomic_do_lock(addr) \

@@ -1,5 +1,10 @@
 2004-02-20  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep-cancel.h
+	(__syscall_error_handler2): Call CDISABLE.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep-cancel.h
+	(__syscall_error_handler2): Call CDISABLE.
+
 	* sysdeps/pthread/pthread_barrier_wait.c (pthread_barrier_wait):
 	Release lock before the loop, don't reacquire it.
 	* DESIGN-barrier.txt: Likewise.

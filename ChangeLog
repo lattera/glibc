@@ -16,6 +16,12 @@
 	* sysdeps/ia64/dl-sysdep.h: New file.
 	* sysdeps/sparc/dl-sysdep.h: New file.
 
+2004-02-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/bits/atomic.h: Add __make_section_unallocated
+	for .gnu.linkonce.b.__sparc32_atomic_locks section.
+	(__sparc32_atomic_locks): Add __sec_comment at the end of section name.
+
 2004-02-19  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/generic/libc-start.c [LIBC_START_DISABLE_INLINE] (STATIC):
