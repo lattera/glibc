@@ -1,5 +1,8 @@
 2003-01-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd.c (main): Make code to close all file descriptors
+	faster and more robust.
+
 	* nscd/nscd_getpw_r.c (nscd_getpw_r): Consolidate writing of the
 	request with one writev call.  Protect all read calls with
 	TEMP_FAILURE_RETRY.

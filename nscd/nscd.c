@@ -21,10 +21,13 @@
 
 #include <argp.h>
 #include <assert.h>
+#include <dirent.h>
 #include <errno.h>
 #include <error.h>
+#include <fcntl.h>
 #include <libintl.h>
 #include <locale.h>
+#include <paths.h>
 #include <pthread.h>
 #include <signal.h>
 #include <stdio.h>
@@ -33,10 +36,12 @@
 #include <syslog.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <sys/un.h>
 
 #include "dbg_log.h"
 #include "nscd.h"
+#include <device-nrs.h>
 
 /* Get libc version number.  */
 #include <version.h>
@@ -133,8 +138,54 @@ main (int argc, char **argv)
       if (fork ())
 	exit (0);
 
-      for (i = 0; i < getdtablesize (); i++)
-	close (i);
+      int nullfd = open (_PATH_DEVNULL, O_RDWR);
+      if (nullfd != -1)
+	{
+	  struct stat64 st;
+
+	  if (fstat64 (nullfd, &st) == 0 && S_ISCHR (st.st_mode) != 0
+#if defined DEV_NULL_MAJOR && defined DEV_NULL_MINOR
+	      && st.st_rdev == makedev (DEV_NULL_MAJOR, DEV_NULL_MINOR)
+#endif
+	      )
+	    {
+	      /* It is the /dev/null special device alright.  */
+	      (void) dup2 (nullfd, STDIN_FILENO);
+	      (void) dup2 (nullfd, STDOUT_FILENO);
+	      (void) dup2 (nullfd, STDERR_FILENO);
+
+	      if (nullfd > 2)
+		close (nullfd);
+	    }
+	  else
+	    {
+	      /* Ugh, somebody is trying to play a trick on us.  */
+	      close (nullfd);
+	      nullfd = -1;
+	    }
+	}
+      int min_close_fd = nullfd == -1 ? 0 : STDERR_FILENO + 1;
+
+      DIR *d = opendir ("/proc/self/fd");
+      if (d != NULL)
+	{
+	  struct dirent64 *dirent;
+	  int dfdn = dirfd (d);
+
+	  while ((dirent = readdir64 (d)) != NULL)
+	    {
+	      char *endp;
+	      unsigned long int fdn = strtoul (dirent->d_name, &endp, 10);
+
+	      if (*endp == '\0' && fdn != dfdn && fdn >= min_close_fd)
+		close ((int) fdn);
+	    }
+
+	  closedir (d);
+	}
+      else
+	for (i = min_close_fd; i < getdtablesize (); i++)
+	  close (i);
 
       if (fork ())
 	exit (0);
