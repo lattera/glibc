@@ -17,8 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* Finds characters in a memory area.  Optimized for the Alpha
-architecture:
+/* Finds characters in a memory area.  Optimized for the Alpha:
 
       - memory accessed as aligned quadwords only
       - uses cmpbge to compare 8 bytes in parallel
@@ -48,119 +47,124 @@ ENTRY(memchr)
 	.prologue 0
 #endif
 
-	beq	a2, $not_found
-        ldq_u   t0, 0(a0)       # load first quadword (a0 may be misaligned)
-	addq	a0, a2, t4
-	and	a1, 0xff, a1	# a1 = 00000000000000ch
-	sll	a1,  8, t1	# t1 = 000000000000ch00
-	cmpult	a2, 9, t3
-	or	t1, a1, a1	# a1 = 000000000000chch
-	sll	a1, 16, t1	# t1 = 00000000chch0000
-        lda     t2, -1(zero)
-	or	t1, a1, a1	# a1 = 00000000chchchch
-	sll	a1, 32, t1	# t1 = chchchch00000000
-	extql	t0, a0, t6
-	or	t1, a1, a1	# a1 = chchchchchchchch
+	# Hack -- if someone passes in (size_t)-1, hoping to just
+	# search til the end of the address space, we will overflow
+	# below when we find the address of the last byte.  Given
+	# that we will never have a 56-bit address space, cropping
+	# the length is the easiest way to avoid trouble.
+	zap	a2, 0x80, t4	#-e0	:
 
-	beq	t3, $first_quad
+	beq	a2, $not_found	# .. e1 :
+        ldq_u   t0, 0(a0)       # e1	: load first quadword
+	insbl	a1, 1, t1	# .. e0 : t1 = 000000000000ch00
+	and	a1, 0xff, a1	#-e0    : a1 = 00000000000000ch
+	cmpult	a2, 9, t3	# .. e1 :
+	or	t1, a1, a1	# e0    : a1 = 000000000000chch
+        lda     t2, -1(zero)	# .. e1 :
+	sll	a1, 16, t1	#-e0    : t1 = 00000000chch0000
+	addq	a0, t4, t4	# .. e1 :
+	or	t1, a1, a1	# e1    : a1 = 00000000chchchch
+	unop			#	:
+	sll	a1, 32, t1	#-e0    : t1 = chchchch00000000
+	or	t1, a1, a1	# e1	: a1 = chchchchchchchch
+	extql	t0, a0, t6	# e0    : 
+	beq	t3, $first_quad	# .. e1 :
 
-	ldq_u	t5, -1(t4)
-	extqh	t5, a0, t5
-	mov	a0, v0
-	or	t6, t5, t0	# t0 = quadword starting at a0
+	ldq_u	t5, -1(t4)	#-e1	: eight or less bytes to search
+	extqh	t5, a0, t5	# .. e0 :
+	mov	a0, v0		# e0	:
+	or	t6, t5, t0	# .. e1 : t0 = quadword starting at a0
 
-	#
 	# Deal with the case where at most 8 bytes remain to be searched
 	# in t0.  E.g.:
 	#	a2 = 6
 	#	t0 = ????c6c5c4c3c2c1
 $last_quad:
-	negq	a2, t5
-	srl	t2, t5, t5	# t5 = mask of a2 bits set
-        xor	a1, t0, t0
-        cmpbge  zero, t0, t1
-	and	t1, t5, t1
-        beq     t1, $not_found
+	negq	a2, t5		#-e0	:
+        xor	a1, t0, t0	# .. e1 :
+	srl	t2, t5, t5	# e0    : t5 = mask of a2 bits set
+        cmpbge  zero, t0, t1	# .. e1 :
+	and	t1, t5, t1	#-e0	:
+        beq     t1, $not_found	# .. e1 :
 
 $found_it:
-	# now, determine which byte matched:
-        negq    t1, t2
-        and     t1, t2, t1
+	# Now, determine which byte matched:
+        negq    t1, t2		# e0	:
+        and     t1, t2, t1	# e1	:
 
-        and     t1, 0x0f, t0
-        addq    v0, 4, t2
-        cmoveq  t0, t2, v0
+        and     t1, 0x0f, t0	#-e0	:
+        addq    v0, 4, t2	# .. e1 :
+        cmoveq  t0, t2, v0	# e0	:
 
-        and     t1, 0x33, t0
-        addq    v0, 2, t2
-        cmoveq  t0, t2, v0
+        addq    v0, 2, t2	# .. e1 :
+        and     t1, 0x33, t0	#-e0	:
+        cmoveq  t0, t2, v0	# .. e1 :
 
-        and     t1, 0x55, t0
-        addq    v0, 1, t2
-        cmoveq  t0, t2, v0
+        and     t1, 0x55, t0	# e0	:
+        addq    v0, 1, t2	# .. e1 :
+        cmoveq  t0, t2, v0	#-e0	:
 
-$done:	ret
+$done:	ret			# .. e1 :
 
-
-	#
 	# Deal with the case where a2 > 8 bytes remain to be
 	# searched.  a0 may not be aligned.
-	#
+	.align 4
 $first_quad:
-	andnot	a0, 0x7, v0
-        insqh   t2, a0, t1	# t1 = 0000ffffffffffff (a0<0:2> ff bytes)
-        xor	t0, a1, t0
-	or	t0, t1, t0	# t0 = ====ffffffffffff
-        cmpbge  zero, t0, t1
-        bne     t1, $found_it
+	andnot	a0, 0x7, v0	#-e1	:
+        insqh   t2, a0, t1	# .. e0	: t1 = 0000ffffffffffff (a0<0:2> ff)
+        xor	t0, a1, t0	# e0	:
+	or	t0, t1, t0	# e1	: t0 = ====ffffffffffff
+        cmpbge  zero, t0, t1	#-e0	:
+        bne     t1, $found_it	# .. e1 :
 
-	/* at least one byte left to process */
+	# At least one byte left to process.
 
-	ldq	t0, 8(v0)
-	addq	v0, 8, v0
-	/*
-	 * Make a2 point to last quad to be accessed (the
-	 * last quad may or may not be partial).
-	 */
-	subq	t4, 1, a2
-	andnot	a2, 0x7, a2
-	cmpult	v0, a2, t1
-	beq	t1, $final
+	ldq	t0, 8(v0)	# e0	:
+	subq	t4, 1, a2	# .. e1 :
+	addq	v0, 8, v0	#-e0	:
 
-	/* at least two quads remain to be accessed */
+	# Make a2 point to last quad to be accessed (the
+	# last quad may or may not be partial).
 
-	subq	a2, v0, t3	# t3 <- number of quads to be processed in loop
-	and	t3, 8, t3	# odd number of quads?
-	bne	t3, $odd_quad_count
+	andnot	a2, 0x7, a2	# .. e1 :
+	cmpult	v0, a2, t1	# e0	:
+	beq	t1, $final	# .. e1 :
 
-	/* at least three quads remain to be accessed */
+	# At least two quads remain to be accessed.
 
-	mov	t0, t3		# move prefetched value into correct register
+	subq	a2, v0, t3	#-e0	: t3 <- nr quads to be processed
+	and	t3, 8, t3	# e1	: odd number of quads?
+	bne	t3, $odd_quad_count # e1 :
 
-	.align	3
+	# At least three quads remain to be accessed
+
+	mov	t0, t3		# e0	: move prefetched value to correct reg
+
+	.align	4
 $unrolled_loop:
-	ldq	t0, 8(v0)	# prefetch t0
-	xor	a1, t3, t1
-	cmpbge	zero, t1, t1
-	bne	t1, $found_it
+	ldq	t0, 8(v0)	#-e0	: prefetch t0
+	xor	a1, t3, t1	# .. e1 :
+	cmpbge	zero, t1, t1	# e0	:
+	bne	t1, $found_it	# .. e1 :
 
-	addq	v0, 8, v0
+	addq	v0, 8, v0	#-e0	:
 $odd_quad_count:
-	xor	a1, t0, t1
-	ldq	t3, 8(v0)	# prefetch t3
-	cmpbge	zero, t1, t1
-	bne	t1, $found_it
+	xor	a1, t0, t1	# .. e1 :
+	ldq	t3, 8(v0)	# e0	: prefetch t3
+	cmpbge	zero, t1, t1	# .. e1 :
+	addq	v0, 8, t5	#-e0	:
+	bne	t1, $found_it	# .. e1	:
 
-	addq	v0, 8, v0
-	cmpult	v0, a2, t5
-	bne	t5, $unrolled_loop
+	cmpult	t5, a2, t5	# e0	:
+	addq	v0, 8, v0	# .. e1 :
+	bne	t5, $unrolled_loop #-e1 :
 
-	mov	t3, t0		# move prefetched value into t0
-$final:	subq	t4, v0, a2	# a2 <- number of bytes left to do
-	bne	a2, $last_quad
+	mov	t3, t0		# e0	: move prefetched value into t0
+$final:	subq	t4, v0, a2	# .. e1	: a2 <- number of bytes left to do
+	bne	a2, $last_quad	# e1	:
 
 $not_found:
-	mov	zero, v0
-	ret
+	mov	zero, v0	#-e0	:
+	ret			# .. e1 :
 
         END(memchr)

@@ -1,3 +1,7 @@
+1999-05-18  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/alpha/memchr.S: Zap high byte of length.  Reschedule.
+
 1999-05-04  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
 	* argp/argp.h, assert/assert.h, misc/sys/cdefs.h,
