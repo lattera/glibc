@@ -47,7 +47,7 @@ routines	:=							      \
 	libc_fatal fmemopen
 
 tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
-	tst_wprintf2 tst-widetext test-fmemopen tst-ext
+	tst_wprintf2 tst-widetext test-fmemopen tst-ext tst-fopenloc
 test-srcs = test-freopen
 
 all: # Make this the default target; it will be defined in Rules.
@@ -80,6 +80,10 @@ CFLAGS-tst_putwc.c = -DOBJPFX=\"$(objpfx)\"
 tst_wprintf2-ARGS = "Some Text"
 
 tst-widetext-ENV = LOCPATH=$(common-objpfx)localedata LANGUAGE=C
+tst-fopenloc-ENV = LOCPATH=$(common-objpfx)localedata \
+		   MALLOC_TRACE=$(objpfx)tst-fopenloc.mtrace
+
+generated = tst-fopenloc.mtrace tst-fopenloc.check
 
 aux	:= fileops genops stdfiles stdio strops
 
@@ -98,9 +102,14 @@ distribute := iolibio.h libioP.h strfile.h Banner test-freopen.sh \
 include ../Rules
 
 ifeq (no,$(cross-compiling))
-tests: $(objpfx)test-freopen.out
+tests: $(objpfx)test-freopen.out $(objpfx)tst-fopenloc.check
 endif
 
 $(objpfx)test-freopen.out: test-freopen.sh $(objpfx)test-freopen
 	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)'	\
 	$(common-objpfx)libio/
+
+$(objpfx)tst-fopenloc.check: $(objpfx)tst-fopenloc.out
+	cmp ../iconvdata/testdata/ISO-8859-1..UTF8 $(objpfx)tst-fopenloc.out \
+	  > $@
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-fopenloc.mtrace >> $@

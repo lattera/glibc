@@ -1,5 +1,9 @@
 2001-07-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/Makefile: Add rules to check output of tst-fopenloc and
+	for memory leaks.
+	* libio/tst-fopenloc.c: New file.
+
 	* iconv/gconv_cache.c (__gconv_compare_alias_cache): New function.
 	* iconv/gconv_int.h: Add prototype for __gconv_compare_alias_cache.
 	* iconv/gconv_charset.h: Replace __gconv_lookup_alias prototype with
