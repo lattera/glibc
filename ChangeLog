@@ -1,5 +1,7 @@
 2003-04-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* intl/Makefile ($(objpfx)msgs.h): Use C locale for sed run.
+
 	* configure.in: Add AC_PROG_CXX.
 	* config.make.in (CXX): Define.
 
