@@ -1,4 +1,4 @@
-# SOME DESCRIPTIVE TITLE.
+# GNU libc message catalog of translations
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #

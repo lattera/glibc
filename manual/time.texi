@@ -624,7 +624,20 @@ time conversion (@pxref{Locales}).
 
 Ordinary characters appearing in the @var{template} are copied to the
 output string @var{s}; this can include multibyte character sequences.
-Conversion specifiers are introduced by a @samp{%} character, and are
+Conversion specifiers are introduced by a @samp{%} character.  Now can
+follow an optional flag which can be one of the following.  These flags
+only affect the output of numbers:
+
+@table @code
+@item _
+The number is padded with spaces.
+
+@item -
+The number is not padded at all.
+@end table
+
+The default action is to pad the number with zeros.  Following to the
+flag comes the format specifier.  The whole @samp{%} sequence is
 replaced in the output string as follows:
 
 @table @code
@@ -643,8 +656,28 @@ The full month name according to the current locale.
 @item %c
 The preferred date and time representation for the current locale.
 
+@item %C
+The century of the year.
+
 @item %d
 The day of the month as a decimal number (range @code{01} to @code{31}).
+
+@item %D
+The date using the format @code{%m/%d/%y}.
+
+This format is a GNU extension.
+
+@item %d
+The day of the month like with @code{%d}, but padded with blank (range
+@code{ 1} to @code{31}).
+
+This format is a GNU extension.
+
+@item %h
+The abbreviated month name according to the current locale.  The action
+is the same as for @code{%b}.
+
+This format is a GNU extension.
 
 @item %H
 The hour as a decimal number, using a 24-hour clock (range @code{00} to
@@ -657,18 +690,63 @@ The hour as a decimal number, using a 12-hour clock (range @code{01} to
 @item %j
 The day of the year as a decimal number (range @code{001} to @code{366}).
 
+@item %k
+The hour as a decimal number, using a 24-hour clock like @code{%H}, but
+padded with blank (range @code{ 0} to @code{23}).
+
+This format is a GNU extension.
+
+@item %l
+The hour as a decimal number, using a 12-hour clock like @code{%I}, but
+padded with blank (range @code{ 0} to @code{12}).
+
+This format is a GNU extension.
+
 @item %m
 The month as a decimal number (range @code{01} to @code{12}).
 
 @item %M
 The minute as a decimal number.
 
+@item %n
+A single @samp{\n} (newline) character.
+
+This format is a GNU extension.
+
 @item %p
 Either @samp{am} or @samp{pm}, according to the given time value; or the
 corresponding strings for the current locale.
 
+@item %r
+The time in decinal numbers using the format @code{%I:%M:%S %p}.
+
+This format is a GNU extension.
+
+@item %R
+The hour and minute in decimal numbers using the format @code{%H:%M}.
+
+This format is a GNU extension.
+
+@item %s
+The seconds since the epoch, i.e., 1 January 1970 00:00:00 UTC.  Note
+that this value is the number of seconds between the epoch and the
+current date as defined by the @code{localtime} system call.  It is not
+changed by the @code{--date} option.
+
+This format is a GNU extension.
+
 @item %S
 The second as a decimal number.
+
+@item %t
+A single @samp{\t} (tabulator) character.
+
+This format is a GNU extension.
+
+@item %T
+The time using decimal numbers using the format @code{%H:%M:%S}.
+
+This format is a GNU extension.
 
 @item %U
 The week number of the current year as a decimal number, starting with
@@ -682,13 +760,13 @@ containing January 1 has four or more days in the new year it is
 considered to be week @code{1}.  Otherwise it is week @code{53} of the
 previous year.  This is standardized in @w{ISO 8601:1988}.
 
+@item %w
+The day of the week as a decimal number, Sunday being @code{0}.
+
 @item %W
 The week number of the current year as a decimal number, starting with
 the first Monday as the first day of the first week.  All days preceding
 the first Monday in the year are considered to be in week @code{0}.
-
-@item %w
-The day of the week as a decimal number, Sunday being @code{0}.
 
 @item %x
 The preferred date representation for the current locale, but without the
@@ -703,6 +781,12 @@ The year as a decimal number, but without a century (range @code{00} to
 
 @item %Y
 The year as a decimal number, including the century.
+
+@item %z
+@w{RFC 822}/@w{ISO 8601:1988} style numeric time zone (e.g., -0600 or
++0100), or nothing if no time zone is determinable.  This value reflects
+the @emph{current} time zone.  It is not changed by the @code{--date}
+option.
 
 @item %Z
 The time zone or name or abbreviation (empty if the time zone can't be

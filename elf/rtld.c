@@ -126,9 +126,11 @@ dl_main (const ElfW(Phdr) *phdr,
   const ElfW(Phdr) *ph;
   struct link_map *l;
   int lazy;
-  enum { normal, list, verify } mode = normal;
+  enum { normal, list, verify, trace } mode;
   struct link_map **preloads;
   unsigned int npreloads;
+
+  mode = getenv ("LD_TRACE_LOADED_OBJECTS") != NULL ? trace : normal;
 
   if (*user_entry == (ElfW(Addr)) &_start)
     {
@@ -187,7 +189,22 @@ of this helper program; chances are you did not intend to run this program.\n",
       --_dl_argc;
       ++_dl_argv;
 
-      l = _dl_map_object (NULL, _dl_argv[0], lt_library);
+      if (mode == verify)
+	{
+	  void doit (void)
+	    {
+	      l = _dl_map_object (NULL, _dl_argv[0], lt_library);
+	    }
+	  const char *err_str = NULL;
+	  const char *obj_name __attribute__ ((unused));
+
+	  (void) _dl_catch_error (&err_str, &obj_name, doit);
+	  if (err_str != NULL)
+	    _exit (EXIT_FAILURE);
+	}
+      else
+	l = _dl_map_object (NULL, _dl_argv[0], lt_library);
+
       phdr = l->l_phdr;
       phent = l->l_phnum;
       l->l_name = (char *) "";
@@ -197,7 +214,7 @@ of this helper program; chances are you did not intend to run this program.\n",
     {
       /* Create a link_map for the executable itself.
 	 This will be what dlopen on "" returns.  */
-      l = _dl_new_object ((char *) "", "", lt_library);
+      l = _dl_new_object ((char *) "", "", lt_executable);
       l->l_phdr = phdr;
       l->l_phnum = phent;
       l->l_entry = *user_entry;
@@ -340,7 +357,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	}
     }
 
-  if (mode != normal || getenv ("LD_TRACE_LOADED_OBJECTS") != NULL)
+  if (mode != normal)
     {
       /* We were run just to list the shared libraries.  It is
 	 important that we do this before real relocation, because the
@@ -363,7 +380,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 				" (0x", bp, ")\n", NULL);
 	  }
 
-      if (mode != normal)
+      if (mode != trace)
 	for (i = 1; i < _dl_argc; ++i)
 	  {
 	    const ElfW(Sym) *ref = NULL;

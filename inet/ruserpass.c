@@ -38,8 +38,9 @@ static char sccsid[] = "@(#)ruserpass.c	8.3 (Berkeley) 4/2/94";
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <assert.h>
 #include <ctype.h>
-/*#include <err.h> */
+#include <err.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -81,7 +82,7 @@ int
 ruserpass(host, aname, apass)
 	char *host, **aname, **apass;
 {
-	char *hdir, buf[BUFSIZ], *tmp;
+	char *hdir, *buf, *tmp;
 	char myname[1024], *mydomain;
 	int t, i, c, usedefault = 0;
 	struct stat stb;
@@ -89,11 +90,14 @@ ruserpass(host, aname, apass)
 	hdir = getenv("HOME");
 	if (hdir == NULL)
 		hdir = ".";
+
+	buf = alloca (strlen (hdir) + 8);
+
 	(void) sprintf(buf, "%s/.netrc", hdir);
 	cfile = fopen(buf, "r");
 	if (cfile == NULL) {
-/*		if (errno != ENOENT)
-			warn("%s", buf);*/
+		if (errno != ENOENT)
+			warn("%s", buf);
 		return (0);
 	}
 	if (gethostname(myname, sizeof(myname)) < 0)
@@ -113,13 +117,13 @@ next:
 				continue;
 			/*
 			 * Allow match either for user's input host name
-			 * or official hostname.  Also allow match of 
+			 * or official hostname.  Also allow match of
 			 * incompletely-specified host in local domain.
 			 */
 			if (strcasecmp(host, tokval) == 0)
 				goto match;
 /*			if (strcasecmp(hostname, tokval) == 0)
-				goto match; 
+				goto match;
 			if ((tmp = strchr(hostname, '.')) != NULL &&
 			    strcasecmp(tmp, mydomain) == 0 &&
 			    strncasecmp(hostname, tokval, tmp-hostname) == 0 &&
@@ -137,7 +141,7 @@ next:
 
 		case LOGIN:
 			if (token())
-				if (*aname == 0) { 
+				if (*aname == 0) {
 					*aname = malloc((unsigned) strlen(tokval) + 1);
 					(void) strcpy(*aname, tokval);
 				} else {
@@ -149,8 +153,8 @@ next:
 			if (strcmp(*aname, "anonymous") &&
 			    fstat(fileno(cfile), &stb) >= 0 &&
 			    (stb.st_mode & 077) != 0) {
-/*	warnx("Error: .netrc file is readable by others.");
-	warnx("Remove password or make file unreadable by others.");*/
+	warnx(_("Error: .netrc file is readable by others."));
+	warnx(_("Remove password or make file unreadable by others."));
 				goto bad;
 			}
 			if (token() && *apass == 0) {
@@ -177,7 +181,7 @@ next:
 			if (proxy) {
 				(void) fclose(cfile);
 				return (0);
-			} 
+			}
 			while ((c=getc(cfile)) != EOF && c == ' ' || c == '\t');
 			if (c == EOF || c == '\n') {
 				printf("Missing macdef name argument.\n");
@@ -234,7 +238,7 @@ next:
 #endif
 			break;
 		default:
-/*			warnx("Unknown .netrc keyword %s", tokval);*/
+			warnx(_("Unknown .netrc keyword %s"), tokval);
 			break;
 		}
 		goto done;

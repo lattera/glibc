@@ -42,7 +42,7 @@ struct timeval;
 typedef __fd_mask fd_mask;
 
 /* Representation of a set of file descriptors.  */
-#define	fd_set			__fd_set
+typedef __fd_set fd_set;
 
 /* Maximum number of file descriptors in `fd_set'.  */
 #define	FD_SETSIZE		__FD_SETSIZE
