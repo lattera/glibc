@@ -1,3 +1,14 @@
+1999-01-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* elf/Makefile: Make dependencies between test modules explicit.
+	(preloadtest-preloads): New variable.
+	($(objpfx)preloadtest.out): Use it.
+	(preloadtest-ENV): Use it.
+
+1999-01-22  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/arm/Dist: Undo last change.  Not needed.
+
 1999-01-22  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/Makefile ($(common-objpfx)stamp-errnos): Depend on
@@ -7,6 +18,10 @@
 
 	* manual/errno.texi (Error Codes): Fix ENOSYS description.
 	Add ENOTSUP.
+
+1999-01-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile: Add missing dependency for preloadtest binary.
 
 1999-01-21  Ulrich Drepper  <drepper@cygnus.com>
 

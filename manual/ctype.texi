@@ -656,7 +656,7 @@ is_in_class (int c, const char *class)
 @}
 @end smallexample
 
-@xref{Converting a Character} for more information on @code{btowc}.
+@xref{Converting a Character}, for more information on @code{btowc}.
 Please note that this change probably does not improve the performance
 of the program a lot since the @code{wctype} function still has to make
 the string comparisons.  But it gets really interesting if the

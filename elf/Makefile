@@ -209,16 +209,14 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 generated += $(test-modules)
 
-LDLIBS-testobj1.so = -ldl
-$(objpfx)testobj1_1.so: $(objpfx)testobj1.so
-LDLIBS-testobj1_1.so = $(objpfx)testobj1.so
-$(objpfx)testobj2.so: $(objpfx)testobj1.so
-LDLIBS-testobj2.so = $(objpfx)testobj1.so -ldl
-LDLIBS-testobj3.so = -ldl
-LDLIBS-testobj4.so = -ldl
-LDLIBS-testobj5.so = -ldl
-LDLIBS-testobj6.so = -ldl
-LDLIBS-failobj.so = $(objpfx)testobj6.so
+$(objpfx)testobj1.so: $(objpfx)libdl.so
+$(objpfx)testobj1_1.so: $(objpfx)testobj1.so $(objpfx)libdl.so
+$(objpfx)testobj2.so: $(objpfx)testobj1.so $(objpfx)libdl.so
+$(objpfx)testobj3.so: $(objpfx)libdl.so
+$(objpfx)testobj4.so: $(objpfx)libdl.so
+$(objpfx)testobj5.so: $(objpfx)libdl.so
+$(objpfx)testobj6.so: $(objpfx)libdl.so
+$(objpfx)failobj.so: $(objpfx)testobj6.so
 
 $(test-modules): $(objpfx)%.so: $(objpfx)%.os
 	$(build-module)
@@ -228,15 +226,18 @@ LDFLAGS-loadtest = -rdynamic
 
 $(objpfx)loadtest.out: $(test-modules)
 
-$(objpfx)restest1: $(objpfx)libdl.so
-LDFLAGS-restest1 = -rdynamic $(objpfx)testobj1.so $(objpfx)testobj1_1.so
+$(objpfx)restest1: $(objpfx)testobj1.so $(objpfx)testobj1_1.so \
+		   $(objpfx)libdl.so
+LDFLAGS-restest1 = -rdynamic
 
 $(objpfx)restest1.out: $(test-modules)
 
+preloadtest-preloads = testobj1 testobj2 testobj3 testobj4 testobj5
 $(objpfx)preloadtest: $(objpfx)testobj6.so
-$(objpfx)preloadtest.out: $(test-modules)
 LDFLAGS-preloadtest = -rdynamic
-preloadtest-ENV = LD_PRELOAD=testobj1.so:testobj2.so:testobj3.so:testobj4.so:testobj5.so
+$(objpfx)preloadtest.out: $(preloadtest-preloads:%=$(objpfx)%.so)
+preloadtest-ENV = \
+  LD_PRELOAD=$(subst $(empty) ,:,$(strip $(preloadtest-preloads:=.so)))
 
 $(objpfx)loadfail: $(objpfx)libdl.so
 LDFLAGS-loadfail = -rdynamic
