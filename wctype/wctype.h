@@ -67,9 +67,9 @@ typedef unsigned long int wctype_t;
 
 #  include <endian.h>
 #  if __BYTE_ORDER == __BIG_ENDIAN
-#   define _ISwbit(bit)	(1 << bit)
+#   define _ISwbit(bit)	(1 << (bit))
 #  else /* __BYTE_ORDER == __LITTLE_ENDIAN */
-#   define _ISwbit(bit)	(bit < 8 ? 1UL << bit << 24 : 1UL << (bit + 8))
+#   define _ISwbit(bit)	((bit) < 8 ? 1UL << (bit) << 24 : 1UL << ((bit) + 8))
 #  endif
 
 enum
