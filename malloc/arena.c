@@ -495,7 +495,8 @@ ptmalloc_init (void)
 #endif
   if(s) {
     if(s[0]) mALLOPt(M_CHECK_ACTION, (int)(s[0] - '0'));
-    __malloc_check_init();
+    if (check_action != 0)
+      __malloc_check_init();
   }
   if(__malloc_initialize_hook != NULL)
     (*__malloc_initialize_hook)();

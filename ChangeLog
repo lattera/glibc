@@ -1,5 +1,8 @@
 2004-09-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/arena.c (ptmalloc_init): Allow MALLOC_CHECK_==0 to
+	disable all checking.
+
 	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h (si_flags): Add
 	support to get this value.
 
