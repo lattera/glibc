@@ -1,5 +1,5 @@
 /* Common code for file-based database parsers in nss_files module.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -152,7 +152,7 @@ parse_line (char *line, struct STRUCTURE *result,			      \
   if (list)								      \
     result->TRAILING_LIST_MEMBER = list;				      \
   else 									      \
-    return 0;								      \
+    return -1;		/* -1 indicates we ran out of space.  */	      \
 }
 
 static inline char **
@@ -189,29 +189,26 @@ parse_list (char *line, struct parser_data *data, size_t datalen)
       if (*line == '\0')
 	break;
 
+      /* Skip leading white space.  This might not be portable but useful.  */
+      while (isspace (*line))
+	++line;
+
       elt = line;
       while (1)
 	{
-	  if (TRAILING_LIST_SEPARATOR_P (*line))
+	  if (*line == '\0' || TRAILING_LIST_SEPARATOR_P (*line))
 	    {
-	      *p++ = elt;
-	      *line = '\0';
-	      do
-		++line;
-	      while (isspace (*line));
-	      elt = line;
-	    }
-	  else if (*line == '\0')
-	    {
-	      /* End of the line.  */
+	      /* End of the next entry.  */
 	      if (line > elt)
-		/* Last element.  */
+		/* We really found some data.  */
 		*p++ = elt;
-	      *line = '\0';
+
+	      /* Terminate string if necessary.  */
+	      if (*line != '\0')
+		*line++ = '\0';
 	      break;
 	    }
-	  else
-	    ++line;
+	  ++line;
 	}
     }
   *p = NULL;

@@ -77,6 +77,13 @@ please let me know.
 
 [Q21]    ``On Linux I've got problems with the declarations in Linux
            kernel headers.''
+
+[Q22]	``When I try to compile code which uses IPv6 header and
+	  definitions on my Linux 2.x.y system I am in trouble.
+	  Nothing seems to work.''
+
+[Q23]	``When compiling GNU libc I get lots of errors saying functions
+	  in glibc are duplicated in libgcc.''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -637,6 +644,37 @@ results because of type conflicts.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q22]	``When I try to compile code which uses IPv6 header and
+	  definitions on my Linux 2.x.y system I am in trouble.
+	  Nothing seems to work.''
+
+[A22] {UD} The problem is that the IPv6 development still has not reached
+a point where it is stable.  There are still lots of incompatible changes
+made and the libc headers have to follow.
+
+Currently (as of 970401) according to Philip Blundell <pjb27@cam.ac.uk>
+the required kernel version is 2.1.30.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q23]	``When compiling GNU libc I get lots of errors saying functions
+	  in glibc are duplicated in libgcc.''
+
+[A23] {EY} This is *exactly* the same problem that I was having.  The
+problem was due to the fact that the autoconfigure didn't correctly
+detect that linker flag --no-whole-archive was supported in my linker.
+In my case it was because I had run ./configure with bogus CFLAGS, and
+the test failed.
+
+One thing that is particularly annoying about this problem is that
+once this is misdetected, running configure again won't fix it unless
+you first delete config.cache.
+
+{UD} Starting with glibc-2.0.3 there should be a better test to avoid
+some problems of this kind.  The setting of CFLAGS is checked at the
+very beginning and if it is not usable `configure' will bark.
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 Answers were given by:
 {UD} Ulrich Drepper, <drepper@cygnus.com>
@@ -644,6 +682,7 @@ Answers were given by:
 {RM} Roland McGrath, <roland@gnu.ai.mit.edu>
 {HJL} H.J. Lu, <hjl@gnu.ai.mit.edu>
 {AJ} Andreas Jaeger, <aj@arthur.pfalz.de>
+{EY} Eric Youngdale, <eric@andante.jic.com>
 
 Local Variables:
  mode:text

@@ -797,6 +797,14 @@ TRANS This error code has no purpose. */
 /* */
     [EREMOTEIO] = N_("Remote I/O error"),
 #endif
+#ifdef ENOMEDIUM
+/* */
+    [ENOMEDIUM] = N_("No medium found"),
+#endif
+#ifdef EMEDIUMTYPE
+/* */
+    [EMEDIUMTYPE] = N_("Wrong medium type"),
+#endif
   };
 
 const int _sys_nerr = sizeof _sys_errlist / sizeof _sys_errlist[0];

@@ -122,6 +122,9 @@ FUNCTION_NAME (ADD_PARAMS)
       buffer = new_buf;
     }
 
+  if (buffer == NULL)
+    result = NULL;
+
 #ifdef HANDLE_DIGITS_DOTS
 done:
 #endif

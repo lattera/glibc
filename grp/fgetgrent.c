@@ -16,20 +16,60 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <grp.h>
-#include <stdio.h>
+#include <libc-lock.h>
+#include <stdlib.h>
 
+
+/* We need to protect the dynamic buffer handling.  */
+__libc_lock_define_initialized (static, lock);
 
 /* Read one entry from the given stream.  */
 struct group *
 fgetgrent (FILE *stream)
 {
-  static char buffer[BUFSIZ];
+  static char *buffer;
+  static size_t buffer_size;
   static struct group resbuf;
   struct group *result;
+  int save;
 
-  if (__fgetgrent_r (stream, &resbuf, buffer, sizeof buffer, &result) != 0)
-    return NULL;
+  /* Get lock.  */
+  __libc_lock_lock (lock);
+
+  /* Allocate buffer if not yet available.  */
+  if (buffer == NULL)
+    {
+      buffer_size = NSS_BUFLEN_GROUP;
+      buffer = malloc (buffer_size);
+    }
+
+  while (buffer != NULL
+	 && __fgetgrent_r (stream, &resbuf, buffer, buffer_size, &result) != 0
+	 && errno == ERANGE)
+    {
+      char *new_buf;
+      buffer_size += NSS_BUFLEN_GROUP;
+      new_buf = realloc (buffer, buffer_size);
+      if (new_buf == NULL)
+	{
+	  /* We are out of memory.  Free the current buffer so that the
+	     process gets a chance for a normal termination.  */
+	  save = errno;
+	  free (buffer);
+	  __set_errno (save);
+	}
+      buffer = new_buf;
+    }
+
+  if (buffer == NULL)
+    result = NULL;
+
+  /* Release lock.  Preserve error value.  */
+  save = errno;
+  __libc_lock_unlock (lock);
+  __set_errno (save);
 
   return result;
 }

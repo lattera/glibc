@@ -437,6 +437,7 @@ extern void unsetenv __P ((__const char *__name));
 /* The `clearenv' was planned to be added to POSIX.1 but probably
    never made it.  Nevertheless the POSIX.9 standard (POSIX bindings
    for Fortran 77) requires this function.  */
+extern int __clearenv __P ((void));
 extern int clearenv __P ((void));
 #endif
 

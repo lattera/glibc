@@ -16,7 +16,7 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-# errno.texinfo contains lines like:
+# errno.texi contains lines like:
 # @comment errno.h
 # @comment POSIX.1: Function not implemented
 # @deftypevr Macro int ENOSYS

@@ -1186,6 +1186,18 @@ They are not yet documented.}
 @comment errno ???/121
 @end deftypevr
 
+@comment errno.h
+@comment Linux???: No medium found
+@deftypevr Macro int ENOMEDIUM
+@comment errno ???/???
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Wrong medium type
+@deftypevr Macro int EMEDIUMTYPE
+@comment errno ???/???
+@end deftypevr
+
 @node Error Messages,  , Error Codes, Error Reporting
 @section Error Messages
 
@@ -1212,6 +1224,25 @@ overwritten.  (But it's guaranteed that no library function ever calls
 @code{strerror} behind your back.)
 
 The function @code{strerror} is declared in @file{string.h}.
+@end deftypefun
+
+@comment string.h
+@comment GNU
+@deftypefun {char *} strerror_r (int @var{errnum}, char *@var{buf}, size_t @var{n})
+The @code{strerror_r} function works like @code{strerror} but instead of
+returning the error message in a statically allocated buffer shared by
+all threads in the process, it writes the message string in the user
+supplied buffer starting at @var{buf} with the length of @var{n} bytes.
+
+At most @var{n} characters are written (including the NUL byte) so it is
+up to the user to select the buffer large enough.
+
+This function should always be used in multi-threaded programs since
+there is no way to guarantee the string returned by @code{strerror}
+really belongs to the last call of the current thread.
+
+This function @code{strerror_r} is a GNU extension and it is declared in
+@file{string.h}.
 @end deftypefun
 
 @comment stdio.h

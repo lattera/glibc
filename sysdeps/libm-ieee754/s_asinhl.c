@@ -65,6 +65,6 @@ huge=  1.000000000000000000e+4900L;
 	    t = x*x;
 	    w =__log1pl(fabsl(x)+t/(one+__ieee754_sqrtl(one+t)));
 	}
-	if(hx>0x8000) return -w; else return w;
+	if(hx&0x8000) return -w; else return w;
 }
 weak_alias (__asinhl, asinhl)

@@ -18,31 +18,25 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* XXX The ISO C 9X standard mentions a `n-char-sequence' which is provided
-   as the argument to this function but I have no clue what this means.
-   Perhaps it is a description of the bits set in the mantissa.  */
 #include <math.h>
-#ifdef HANDLE_TAGP
-# include <stdlib.h>
-# include <string.h>
-#else
-# include <ieee754.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
+#include <ieee754.h>
 
 
 float
 __nanf (const char *tagp)
 {
-#ifdef HANDLE_TAGP
-  /* If we ever should have use of the TAGP parameter we will use the
-     strtod function to analyze it.  */
-  char buf[6 + strlen (tagp)];
-  sprintf (buf, "NAN(%s)", tagp);
-  return strtof (buf, NULL);
-#else
   static const union ieee754_float nan_value =
-  { ieee: { mantissa: 0x1, exponent: 0xff, negative: 0 } };
+  { ieee: { mantissa: 0x400000, exponent: 0xff, negative: 0 } };
+
+  if (tagp[0] != '\0')
+    {
+      char buf[6 + strlen (tagp)];
+      sprintf (buf, "NAN(%s)", tagp);
+      return strtof (buf, NULL);
+    }
+
   return nan_value.f;
-#endif
 }
 weak_alias (__nanf, nanf)

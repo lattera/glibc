@@ -901,9 +901,10 @@ log2_test (void)
 
   check_isinfp ("log2 (+inf) == +inf", FUNC(log2) (plus_infty));
 
-  check ("log2 (e) == M_LOG2E", FUNC(log2) (M_E), M_LOG2E);
+  check_eps ("log2 (e) == M_LOG2E", FUNC(log2) (M_E), M_LOG2E,
+	     CHOOSE (1e-18L, 0, 0));
   check ("log2 (2) == 1", FUNC(log2) (2.0), 1);
-  check ("log2 (16) == 4", FUNC(log2) (16.0), 4);
+  check_eps ("log2 (16) == 4", FUNC(log2) (16.0), 4, CHOOSE (1e-18L, 0, 0));
   check ("log2 (256) == 8", FUNC(log2) (256.0), 8);
 
 }
@@ -944,7 +945,7 @@ modf_test (void)
 
   result = FUNC(modf) (nan_value, &intpart);
   check_isnan ("modf (NaN, &x) returns NaN", result);
-  check_isnan ("modf (-inf, &x) sets x to NaN", intpart);
+  check_isnan ("modf (NaN, &x) sets x to NaN", intpart);
 
   result = FUNC(modf) (0, &intpart);
   check ("modf (0, &x) returns 0", result, 0);
@@ -1498,7 +1499,7 @@ sqrt_test (void)
   check_isinfp ("sqrt (+inf) == +inf", FUNC(sqrt) (plus_infty));
 
   x = random_value (0, 10000);
-  check_ext ("sqrt (x*x) == x", sqrt (x*x), x, x);
+  check_ext ("sqrt (x*x) == x", FUNC(sqrt) (x*x), x, x);
   check ("sqrt (4) == 2", FUNC(sqrt) (4), 2);
 }
 

@@ -16,33 +16,63 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
+#include <libc-lock.h>
 #include <shadow.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
+/* A reasonable size for a buffer to start with.  */
+#define BUFLEN_SPWD 1024
+
+/* We need to protect the dynamic buffer handling.  */
+__libc_lock_define_initialized (static, lock);
 
 /* Read one shadow entry from the given stream.  */
 struct spwd *
 sgetspent (const char *string)
 {
+  static char *buffer;
+  static size_t buffer_size;
   static struct spwd resbuf;
-  static int max_size = 0;
-  static char *buffer = NULL;
   struct spwd *result;
-  int len;
+  int save;
 
-  len = strlen (string) + 1;
-  if (len > max_size)
+  /* Get lock.  */
+  __libc_lock_lock (lock);
+
+  /* Allocate buffer if not yet available.  */
+  if (buffer == NULL)
     {
-      max_size = MAX (128, len + 32);
-      buffer = realloc (buffer, max_size);
-      if (buffer == NULL)
-	return NULL;
+      buffer_size = BUFLEN_SPWD;
+      buffer = malloc (buffer_size);
     }
 
-  return __sgetspent_r (string, &resbuf, buffer, max_size, &result)
-    ? NULL : result;
+  while (buffer != NULL
+	 && __sgetspent_r (string, &resbuf, buffer, buffer_size, &result) != 0
+	 && errno == ERANGE)
+    {
+      char *new_buf;
+      buffer_size += BUFLEN_SPWD;
+      new_buf = realloc (buffer, buffer_size);
+      if (new_buf == NULL)
+	{
+	  /* We are out of memory.  Free the current buffer so that the
+	     process gets a chance for a normal termination.  */
+	  save = errno;
+	  free (buffer);
+	  __set_errno (save);
+	}
+      buffer = new_buf;
+    }
+
+  if (buffer == NULL)
+    result = NULL;
+
+  /* Release lock.  Preserve error value.  */
+  save = errno;
+  __libc_lock_unlock (lock);
+  __set_errno (save);
+
+  return result;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,6 +56,7 @@ __fgetgrent_r (FILE *stream, struct group *resbuf, char *buffer, size_t buflen,
 	       struct group **result)
 {
   char *p;
+  int parse_result;
 
   do
     {
@@ -69,10 +70,18 @@ __fgetgrent_r (FILE *stream, struct group *resbuf, char *buffer, size_t buflen,
       /* Skip leading blanks.  */
       while (isspace (*p))
 	++p;
-    } while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines.  */
+    } while (*p == '\0' || *p == '#'	/* Ignore empty and comment lines.  */
 	     /* Parse the line.  If it is invalid, loop to
 		get the next line of the file to parse.  */
-	     ! parse_line (p, resbuf, (void *) buffer, buflen));
+	     || ! (parse_result = parse_line (p, resbuf,
+					      (void *) buffer, buflen)));
+
+  if (parse_result == -1)
+    {
+      /* The parser ran out of space.  */
+      *result = NULL;
+      return errno;
+    }
 
   *result = resbuf;
   return 0;

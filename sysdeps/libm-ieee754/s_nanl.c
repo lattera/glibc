@@ -18,32 +18,26 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* XXX The ISO C 9X standard mentions a `n-char-sequence' which is provided
-   as the argument to this function but I have no clue what this means.
-   Perhaps it is a description of the bits set in the mantissa.  */
 #include <math.h>
-#ifdef HANDLE_TAGP
-# include <stdlib.h>
-# include <string.h>
-#else
-# include <ieee754.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
+#include <ieee754.h>
 
 
 long double
 __nanl (const char *tagp)
 {
-#ifdef HANDLE_TAGP
-  /* If we ever should have use of the TAGP parameter we will use the
-     strtod function to analyze it.  */
-  char buf[6 + strlen (tagp)];
-  sprintf (buf, "NAN(%s)", tagp);
-  return strtold (buf, NULL);
-#else
   static const union ieee854_long_double nan_value =
-  { ieee: { mantissa1: 0x1, mantissa0: 0x80000000,
+  { ieee: { mantissa1: 0, mantissa0: 0xc0000000,
 	    exponent: 0x7fff, negative: 0 } };
+
+  if (tagp[0] != '\0')
+    {
+      char buf[6 + strlen (tagp)];
+      sprintf (buf, "NAN(%s)", tagp);
+      return strtold (buf, NULL);
+    }
+
   return nan_value.d;
-#endif
 }
 weak_alias (__nanl, nanl)

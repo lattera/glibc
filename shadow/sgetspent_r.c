@@ -90,8 +90,9 @@ int
 __sgetspent_r (const char *string, struct spwd *resbuf, char *buffer,
 	       size_t buflen, struct spwd **result)
 {
-  *result = parse_line (strncpy (buffer, string, buflen), resbuf, NULL, 0)
-    ? resbuf : NULL;
+  int parse_result = parse_line (strncpy (buffer, string, buflen),
+				 resbuf, NULL, 0);
+  *result = parse_result > 0 ? resbuf : NULL;
 
   return *result == NULL ? errno : 0;
 }

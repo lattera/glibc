@@ -25,6 +25,7 @@
 
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <netinet/in.h>
 
 
 /* This structure gets passed by the SIOCADDRT and SIOCDELRT calls. */
@@ -50,6 +51,21 @@ struct rtentry
 #define rt_mss	rt_mtu
 
 
+struct in6_rtmsg
+  {
+    struct in6_addr rtmsg_dst;
+    struct in6_addr rtmsg_src;
+    struct in6_addr rtmsg_gateway;
+    unsigned long int rtmsg_type;
+    unsigned short int rtmsg_dst_len;
+    unsigned short int rtmsg_src_len;
+    unsigned long int rtmsg_metric;
+    unsigned long int rtmsg_info;
+    unsigned long int rtmsg_flags;
+    int rtmsg_ifindex;
+  };
+
+
 #define	RTF_UP		0x0001		/* Route usable.  */
 #define	RTF_GATEWAY	0x0002		/* Destination is a gateway.  */
 
@@ -68,17 +84,17 @@ struct rtentry
 #define RTF_THROW	0x2000		/* Go to next class.  */
 #define RTF_NOPMTUDISC  0x4000		/* Do not send packets with DF.  */
 
-/* Bad idea. IPv6 should not use broken IPv4 interface.  */
+/* for IPv6 */
+#define RTF_DEFAULT	0x00010000	/* default - learned via ND	*/
+#define RTF_ALLONLINK	0x00020000	/* fallback, no routers on link	*/
+#define RTF_ADDRCONF	0x00040000	/* addrconf route - RA		*/
 
-#define RTF_ADDRCONF	0x0800		/* Announced on link prefix.  */
-#define RTF_INVALID	0x1000
-#define RTF_DCACHE	0x2000
-#define RTF_DEFAULT	0x4000		/* Route is a default route.  */
-#define RTF_NEXTHOP	0x8000		/* Non gateway route with nexthop.  */
+#define RTF_LINKRT	0x00100000	/* link specific - device match	*/
+#define RTF_NONEXTHOP	0x00200000	/* route with no nexthop	*/
 
-
-#define RTF_MAGIC	0x10000		/* Route added/deleted automatically,
-					   when interface changes its state. */
+#define RTF_CACHE	0x01000000	/* cache entry			*/
+#define RTF_FLOW	0x02000000	/* flow significant route	*/
+#define RTF_POLICY	0x04000000	/* policy route			*/
 
 #define RTCF_VALVE	0x00200000
 #define RTCF_MASQ	0x00400000

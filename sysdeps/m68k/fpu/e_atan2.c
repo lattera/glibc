@@ -27,10 +27,12 @@
 #define float_type double
 #endif
 
-#define __CONCATX(a,b) __CONCAT(a,b)
+#define CONCATX(a,b) __CONCAT(a,b)
+#define s(name) CONCATX(name,SUFF)
+#define m81(func) __m81_u(s(func))
 
 float_type
-__CONCATX(__ieee754_atan2,SUFF) (float_type y, float_type x)
+s(__ieee754_atan2) (float_type y, float_type x)
 {
   float_type pi, pi_2, z;
 
@@ -40,41 +42,41 @@ __CONCATX(__ieee754_atan2,SUFF) (float_type y, float_type x)
     z = x + y;
   else if (y == 0)
     {
-      if (signbit (x))
-	z = signbit (y) ? -pi : pi;
+      if (m81(__signbit) (x))
+	z = m81(__signbit) (y) ? -pi : pi;
       else
 	z = y;
     }
-  else if (__m81_u(__CONCATX(__isinf,SUFF)) (x))
+  else if (m81(__isinf) (x))
     {
-      if (__m81_u(__CONCATX(__isinf,SUFF)) (y))
+      if (m81(__isinf) (y))
 	{
 	  float_type pi_4;
-	  __asm ("fscale%.w %#-1, %0" : "=f" (pi_4) : "0" (pi_2));
+	  __asm ("fscale%.w %#-2, %0" : "=f" (pi_4) : "0" (pi));
 	  z = x > 0 ? pi_4 : 3 * pi_4;
 	}
       else
 	z = x > 0 ? 0 : pi;
-      if (signbit (y))
+      if (m81(__signbit) (y))
 	z = -z;
     }
-  else if (__m81_u(__CONCATX(__isinf,SUFF)) (y))
+  else if (m81(__isinf) (y))
     z = y > 0 ? pi_2 : -pi_2;
   else if (x > 0)
     {
       if (y > 0)
 	{
 	  if (x > y)
-	    z = __m81_u(__CONCATX(__atan,SUFF)) (y / x);
+	    z = m81(__atan) (y / x);
 	  else
-	    z = pi_2 - __m81_u(__CONCATX(__atan,SUFF)) (x / y);
+	    z = pi_2 - m81(__atan) (x / y);
 	}
       else
 	{
 	  if (x > -y)
-	    z = __m81_u(__CONCATX(__atan,SUFF)) (y / x);
+	    z = m81(__atan) (y / x);
 	  else
-	    z = -pi_2 - __m81_u(__CONCATX(__atan,SUFF)) (x / y);
+	    z = -pi_2 - m81(__atan) (x / y);
 	}
     }
   else
@@ -82,16 +84,16 @@ __CONCATX(__ieee754_atan2,SUFF) (float_type y, float_type x)
       if (y < 0)
 	{
 	  if (-x > y)
-	    z = -pi + __m81_u(__CONCATX(__atan,SUFF)) (y / x);
+	    z = -pi + m81(__atan) (y / x);
 	  else
-	    z = -pi_2 - __m81_u(__CONCATX(__atan,SUFF)) (x / y);
+	    z = -pi_2 - m81(__atan) (x / y);
 	}
       else
 	{
 	  if (-x > y)
-	    z = pi + __m81_u(__CONCATX(__atan,SUFF)) (y / x);
+	    z = pi + m81(__atan) (y / x);
 	  else
-	    z = pi_2 - __m81_u(__CONCATX(__atan,SUFF)) (x / y);
+	    z = pi_2 - m81(__atan) (x / y);
 	}
     }
   return z;

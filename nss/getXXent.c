@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -69,7 +69,7 @@ GETFUNC_NAME (void)
   static char *buffer;
   static size_t buffer_size;
   static LOOKUP_TYPE resbuf;
-  LOOKUP_TYPE *result = NULL;
+  LOOKUP_TYPE *result;
   int save;
 
   /* Get lock.  */
@@ -102,6 +102,9 @@ GETFUNC_NAME (void)
 	}
       buffer = new_buf;
     }
+
+  if (buffer == NULL)
+    result = NULL;
 
   /* Release lock.  Preserve error value.  */
   save = errno;

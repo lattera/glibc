@@ -1,3 +1,117 @@
+1997-04-02 16:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* grp/fgetgrent.c: Don't use fixed buffer length.  Allow dynamic
+	adjustment if the underlying function say it is too small.
+	* pwd/fgetpwent.c: Likewise.
+	* shadow/fgetspent.c: Likewise.
+	* shadow/sgetspent.c: Likewise.
+
+	* grp/fgetgrent_r.c (__fgetgrent_r): If `parse_result' returns -1
+	this means there was not enough room for the gr_mem array.
+
+	* nss/nss_files/files-XXX.c: Leave loop and return error if
+	`parse_result' returns -1.
+
+	* nss/nss_files/files-parse.c (parse_line): Return -1 if parsing
+	of trailing list fails because of low memory.
+	(parse_list): Rewrite.  The logic was completly incorrect since
+	the checks for overflowing the array were not executed when
+	needed.
+
+	* shadow/sgetspent_r.c: Only a return value > 0 from parse_line
+	signals success.
+
+	* nss/getXXbyYY.c: Make sure NULL is returned if we ran out of memory.
+	* nss/getXXent.c: Likewise.
+
+	* stdlib/strtod.c (SET_MANTISSA): Make sure that at least one bit
+	is set in mantissa.
+	* stdlib/strtof.c: Likewise.
+	* stdlib/strtold.c: Likewise.
+	* wcsmbs/wcstof.c: Likewise.
+	* wcsmbs/wcstold.c: Likewise.
+
+	* sysdeps/libm-ieee754/s_nan.c: Use strtod is parameter is not empty
+	string.
+	* sysdeps/libm-ieee754/s_nanf.c: Likewise.
+	* sysdeps/libm-ieee754/s_nanld.c: Likewise.
+
+1997-04-02 13:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/errno.texi: Add description of strerror_r.
+
+1997-04-01 19:07  H.J. Lu (hjl@gnu.ai.mit.edu)
+
+	* manual/errno.texi: Add ENOMEDIUM and EMEDIUMTYPE.
+
+1997-04-02 13:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/gnu/errlist.awk: The Texinfo file is named errno.texi.
+
+1997-03-30 10:59  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/s_cexp.c: New file.
+	* sysdeps/m68k/fpu/s_cexpf.c: New file.
+	* sysdeps/m68k/fpu/s_cexpl.c: New file.
+	* sysdeps/m68k/fpu/s_nearbyint.c: New file.
+	* sysdeps/m68k/fpu/s_nearbyintf.c: New file.
+	* sysdeps/m68k/fpu/s_nearbyintl.c: New file.
+	* sysdeps/m68k/fpu/s_trunc.c: New file.
+	* sysdeps/m68k/fpu/s_truncf.c: New file.
+	* sysdeps/m68k/fpu/s_truncl.c: New file.
+
+	* sysdeps/m68k/fpu/s_modf.c: Rewritten.
+	* sysdeps/m68k/fpu/s_modff.c: Adapted.
+	* sysdeps/m68k/fpu/s_modfl.c: Likewise.
+
+	* sysdeps/m68k/fpu/e_atan2.c: Use __signbit inline.
+	* sysdeps/m68k/fpu/e_pow.c: Likewise.  Write 0.0/0.0 for NaN.  Fix
+	typo in test for `y = 0.5'.
+
+	* sysdeps/m68k/fpu/__math.h: Define __trunc, __signbit,
+	__nearbyint.  Remove __modf.
+
+	* sysdeps/m68k/Makefile (CFLAGS-s_copysignl.c) [$(subdir)=math]:
+	Define for gcc bug workaround.
+
+	* math/libm-test.c (log2_test): Add epsilon for long double to
+	"log2 (e)" and "log2 (16)".
+	(modf_test): Fix test name.
+	(sqrt_test): Add missing FUNC.
+
+1997-03-29 16:24  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sunrpc/Makefile (CFLAGS-xrquota.c): Fix typo in variable name.
+
+1997-03-28 20:56  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdlib/stdlib.h: Declare __clearenv.
+
+1997-03-28 18:03  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/s_asinhl.c: Fix Ulrich Dreppers mangling of
+	the last change.
+
+1997-03-28 17:55  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* configure.in: Call AC_CANONICAL_BUILD before referencing
+	$build.  Fix test for BUILD_CC.
+
+1997-04-02 01:29  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* sysdeps/libm-ieee754/s_log2f.c (__log2f): Fix typo.
+
+1997-03-31 18:53  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* sysdeps/unix/sysv/linux/net/route.h: Add new IPv6 definitions.
+
+1997-04-01 14:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/memset.c: Fix typo.
+	* sysdeps/stub/fchmod.c: Fix typo.
+	* sysdeps/stub/fchdir.c: Fix typo.
+	Reported by Fila Kolodny <fila@ibi.com>.
+
 1997-04-01 00:37  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/Makefile: Prevent inlining for test-{float,double,longdouble}.

@@ -34,6 +34,8 @@
 # define SET_MANTISSA(flt, mant) \
   do { union ieee754_double u;						      \
        u.d = (flt);							      \
+       if ((mant & 0xfffffffffffffULL) == 0)				      \
+	 mant = 0x8000000000000ULL;					      \
        u.ieee.mantissa0 = ((mant) >> 32) & 0xfffff;			      \
        u.ieee.mantissa1 = (mant) & 0xffffffff;				      \
   } while (0)
@@ -627,7 +629,8 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   expp = cp;
 
   /* Read exponent.  */
-  if (TOLOWER (c) == (base == 16 ? L_('p') : L_('e')))
+  if ((base == 16 && TOLOWER (c) == L_('p'))
+      || (base != 16 && TOLOWER (c) == L_('e')))
     {
       int exp_negative = 0;
 

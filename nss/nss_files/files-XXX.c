@@ -1,5 +1,5 @@
 /* Common code for file-based databases in nss_files module.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -146,6 +146,7 @@ internal_getent (struct STRUCTURE *result,
   char *p;
   struct parser_data *data = (void *) buffer;
   int linebuflen = buffer + buflen - data->linebuffer;
+  int parse_result;
 
   if (buflen < (int) sizeof *data + 1)
     {
@@ -182,10 +183,10 @@ internal_getent (struct STRUCTURE *result,
   while (*p == '\0' || *p == '#' /* Ignore empty and comment lines.  */
 	 /* Parse the line.  If it is invalid, loop to get the next
 	    line of the file to parse.  */
-	 || ! parse_line (p, result, data, buflen));
+	 || ! (parse_result = parse_line (p, result, data, buflen)));
 
   /* Filled in RESULT with the next entry from the database file.  */
-  return NSS_STATUS_SUCCESS;
+  return parse_result == -1 ? NSS_STATUS_TRYAGAIN : NSS_STATUS_SUCCESS;
 }
 
 

@@ -69,7 +69,7 @@ static float zero   =  0.0;
 	if((0x007fffff&(15+ix))<16) {	/* |f| < 2**-20 */
 	    if(f==zero) return dk;
 	    R = f*f*((float)0.5-(float)0.33333333333333333*f);
-	    return dk-(R-f);}
+	    return dk-(R-f);
 	}
  	s = f/((float)2.0+f);
 	z = s*s;

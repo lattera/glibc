@@ -23,7 +23,7 @@
 
 #ifdef	__GNUC__
 
-vod *
+void *
 memset (void *dstpp, int c, size_t len)
 {
   unsigned long int dstp = (unsigned long int) dstpp;
