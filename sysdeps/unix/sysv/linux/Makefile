@@ -106,3 +106,7 @@ endif
 ifeq ($(subdir),nis)
 CFLAGS-ypclnt.c = -DUSE_BINDINGDIR=1
 endif
+
+ifeq ($(subdir),elf)
+sysdep-rtld-routines += dl-brk dl-sbrk
+endif
