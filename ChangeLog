@@ -1,3 +1,11 @@
+2000-10-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/hppa/brk.c: Cleanups.
+	* sysdeps/unix/sysv/linux/hppa/umount.c: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/signum.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/sys/ucontext.h: Likewise.
+
 2000-10-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/libm-test.inc (frexp_test): Add L suffix also to parameters.
@@ -96,6 +104,7 @@
 	* sysdeps/unix/sysv/linux/hppa/syscalls.list: New file.
 	* sysdeps/unix/sysv/linux/hppa/sysdep.c: New file.
 	* sysdeps/unix/sysv/linux/hppa/sysdep.h: New file.
+
 
 	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h: New file.
 	* sysdeps/unix/sysv/linux/hppa/bits/ioctls.h: New file.

@@ -1,4 +1,4 @@
-/* Signal number definitions.  Linux version.
+/* Signal number definitions.  Linux/HPPA version.
    Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
