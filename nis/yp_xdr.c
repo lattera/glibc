@@ -28,6 +28,7 @@
  */
 
 #include <rpcsvc/yp.h>
+#include <rpcsvc/ypclnt.h>
 
 bool_t
 xdr_ypstat (XDR *xdrs, ypstat *objp)
@@ -297,4 +298,48 @@ xdr_ypbind_setdom (XDR *xdrs, ypbind_setdom *objp)
   if (!xdr_u_int (xdrs, &objp->ypsetdom_vers))
     return FALSE;
   return TRUE;
+}
+
+bool_t
+xdr_ypall(XDR *xdrs, struct ypall_callback *incallback)
+{
+    struct ypresp_key_val out;
+    char key[YPMAXRECORD], val[YPMAXRECORD];
+
+    /*
+     * Set up key/val struct to be used during the transaction.
+     */
+    memset(&out, 0, sizeof out);
+    out.key.keydat_val = key;
+    out.key.keydat_len = sizeof(key);
+    out.val.valdat_val = val;
+    out.val.valdat_len = sizeof(val);
+
+    for (;;) {
+	bool_t more, status;
+
+	/* Values pending? */
+	if (!xdr_bool(xdrs, &more))
+	    return FALSE;           /* can't tell! */
+	if (!more)
+	    return TRUE;            /* no more */
+
+	/* Transfer key/value pair. */
+	status = xdr_ypresp_key_val(xdrs, &out);
+
+	/*
+	 * If we succeeded, call the callback function.
+	 * The callback will return TRUE when it wants
+	 * no more values.  If we fail, indicate the
+	 * error.
+	 */
+	if (status) {
+	    if ((*incallback->foreach)(out.stat,
+				       (char *)out.key.keydat_val, out.key.keydat_len,
+				       (char *)out.val.valdat_val, out.val.valdat_len,
+				       incallback->data))
+		return TRUE;
+	} else
+	    return FALSE;
+    }
 }

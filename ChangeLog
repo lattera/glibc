@@ -1,3 +1,12 @@
+1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Versions.def (libnsl): Add GLIBC_2.2.
+	* nis/Versions (libnsl) [GLIBC_2.2]: Add xdr_ypall.
+
+1999-07-08  Cristian Gafton  <gafton@redhat.com>
+
+	* nis/yp_xdr.c (xdr_ypall): New function.
+
 1999-07-09  Andreas Schwab  <schwab@suse.de>
 
 	* elf/Makefile (headers): Remove bits/dlfcn.h and dlfcn.h.
