@@ -327,7 +327,27 @@ $(objpfx)defs.h: $(objpfx)pt-initfini.s
 $(objpfx)crti.o: $(objpfx)crti.S $(objpfx)defs.h
 	$(compile.S) -g0 $(ASFLAGS-.os) -o $@
 
-generated += crti.S defs.h pt-initfini.s $(objpfx)tst-atfork2.mtrace \
+# Set the `multidir' variable by grabbing the variable from the compiler.
+# We do it once and save the result in a generated makefile.
+-include $(objpfx)multidir.mk
+$(objpfx)multidir.mk: $(common-objpfx)config.make
+	dir=`$(CC) $(CFLAGS) $(CPPFLAGS) -print-multi-directory`; \
+	echo "multidir := $$dir" > $@T
+	mv -f $@T $@
+
+generated += crti.S defs.h pt-initfini.s multidir.mk
+
+extra-objs += crti.o
+omit-deps += crti
+ifneq (,$(filter-out .,$(multidir)))
+generated-dirs := $(firstword $(subst /, , $(multidir)))
+extra-objs += $(multidir)/crti.o
+omit-deps += $(multidir)/crti
+$(objpfx)$(multidir)/crti.o: $(objpfx)crti.o $(objpfx)$(multidir)/
+	ln -f $< $@
+endif
+
+generated += $(objpfx)tst-atfork2.mtrace \
 	     $(addsuffix .so,$(strip $(modules-names)))
 
 $(objpfx)version.d: $(objpfx)banner.h
