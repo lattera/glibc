@@ -30,11 +30,15 @@ static long int posix_pathconf (const char *file, int name);
 long int
 __pathconf (const char *file, int name)
 {
-  if (name == _PC_LINK_MAX)
-    {
-      struct statfs fsbuf;
-      return statfs_link_max (__statfs (file, &fsbuf), &fsbuf);
-    }
+  struct statfs fsbuf;
 
-  return posix_pathconf (file, name);
+  switch (name)
+    {
+    case _PC_LINK_MAX:
+      return statfs_link_max (__statfs (file, &fsbuf), &fsbuf);
+    case _PC_FILESIZEBITS:
+      return statfs_filesize_max (__statfs (file, &fsbuf), &fsbuf);
+    default:
+      return posix_pathconf (file, name);
+    }
 }

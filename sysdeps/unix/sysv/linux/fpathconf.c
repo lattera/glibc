@@ -32,11 +32,15 @@ __fpathconf (fd, name)
      int fd;
      int name;
 {
-  if (name == _PC_LINK_MAX)
-    {
-      struct statfs fsbuf;
-      return statfs_link_max (__fstatfs (fd, &fsbuf), &fsbuf);
-    }
+  struct statfs fsbuf;
 
-  return posix_fpathconf (fd, name);
+  switch (name)
+    {
+    case _PC_LINK_MAX:
+      return statfs_link_max (__fstatfs (fd, &fsbuf), &fsbuf);
+    case _PC_FILESIZEBITS:
+      return statfs_filesize_max (__fstatfs (fd, &fsbuf), &fsbuf);
+    default:
+      return posix_fpathconf (fd, name);
+    }
 }

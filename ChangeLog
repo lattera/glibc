@@ -1,3 +1,16 @@
+2002-10-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/pathconf.h (statfs_link_max): Add inline.
+	(statfs_filesize_max): New function.
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h (JFFS_SUPER_MAGIC,
+	JFFS2_SUPER_MAGIC, JFS_SUPER_MAGIC, NTFS_SUPER_MAGIC,
+	ROMFS_SUPER_MAGIC, UDF_SUPER_MAGIC): Define.
+	* sysdeps/unix/sysv/linux/fpathconf.c (__fpathconf): Use
+	statfs_filesize_max.
+	* sysdeps/unix/sysv/linux/pathconf.c (__pathconf): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/fpathconf.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/pathconf.c: Removed.
+
 2002-10-17  Roland McGrath  <roland@redhat.com>
 
 	* configure.in (MIG): Just AC_SUBST it here.

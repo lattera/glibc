@@ -58,6 +58,15 @@
 /* Constant that identifies the `iso9660' filesystem.  */
 #define ISOFS_SUPER_MAGIC	0x9660
 
+/* Constant that identifies the `jffs' filesystem.  */
+#define JFFS_SUPER_MAGIC	0x07c0
+
+/* Constant that identifies the `jffs2' filesystem.  */
+#define JFFS2_SUPER_MAGIC	0x72b6
+
+/* Constant that identifies the `jfs' filesystem.  */
+#define JFS_SUPER_MAGIC		0x3153464a
+
 /* Constants that identify the `minix2' filesystem.  */
 #define MINIX2_SUPER_MAGIC	0x2468
 #define MINIX2_SUPER_MAGIC2	0x2478
@@ -75,6 +84,9 @@
 /* Constants that identify the `nfs' filesystem.  */
 #define NFS_SUPER_MAGIC		0x6969
 
+/* Constants that identify the `ntfs' filesystem.  */
+#define NTFS_SUPER_MAGIC	0x5346544e
+
 /* Constants that identify the `proc' filesystem.  */
 #define PROC_SUPER_MAGIC	0x9fa0
 
@@ -84,12 +96,18 @@
 /* Constants that identify the `reiser' filesystem.  */
 #define REISERFS_SUPER_MAGIC	0x52654973
 
+/* Constant that identifies the `romfs' filesystem.  */
+#define ROMFS_SUPER_MAGIC	0x7275
+
 /* Constants that identify the `smb' filesystem.  */
 #define SMB_SUPER_MAGIC		0x517b
 
 /* Constants that identify the `sysV' filesystem.  */
 #define SYSV2_SUPER_MAGIC	0x012ff7b6
 #define SYSV4_SUPER_MAGIC	0x012ff7b5
+
+/* Constants that identify the `udf' filesystem.  */
+#define UDF_SUPER_MAGIC		0x15013346
 
 /* Constants that identify the `ufs' filesystem.  */
 #define UFS_MAGIC		0x00011954

@@ -24,7 +24,7 @@
 
 /* Used like: return statfs_link_max (__statfs (name, &buf), &buf); */
 
-static long int
+static inline long int
 statfs_link_max (int result, const struct statfs *fsbuf)
 {
   if (result < 0)
@@ -72,5 +72,45 @@ statfs_link_max (int result, const struct statfs *fsbuf)
 
     default:
       return LINUX_LINK_MAX;
+    }
+}
+
+/* Used like: return statfs_filesize_max (__statfs (name, &buf), &buf); */
+
+static inline long int
+statfs_filesize_max (int result, const struct statfs *fsbuf)
+{
+  if (result < 0)
+    {
+      if (errno == ENOSYS)
+	/* Not possible, return the default value.  */
+	return 32;
+
+      /* Some error occured.  */
+      return -1;
+    }
+
+  switch (fsbuf->f_type)
+    {
+    case EXT2_SUPER_MAGIC:
+    case UFS_MAGIC:
+    case UFS_CIGAM:
+    case REISERFS_SUPER_MAGIC:
+    case XFS_SUPER_MAGIC:
+    case SMB_SUPER_MAGIC:
+    case NTFS_SUPER_MAGIC:
+    case UDF_SUPER_MAGIC:
+    case JFS_SUPER_MAGIC:
+      return 64;
+
+    case MSDOS_SUPER_MAGIC:
+    case JFFS_SUPER_MAGIC:
+    case JFFS2_SUPER_MAGIC:
+    case NCP_SUPER_MAGIC:
+    case ROMFS_SUPER_MAGIC:
+      return 32;
+
+    default:
+      return 32;
     }
 }
