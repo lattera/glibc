@@ -329,13 +329,13 @@ void *
 internal_function
 _dl_allocate_tls_init (void *result)
 {
-  dtv_t *dtv = GET_DTV (result);
-  struct dtv_slotinfo_list *listp;
-  size_t total = 0;
-
   if (result == NULL)
     /* The memory allocation failed.  */
     return NULL;
+
+  dtv_t *dtv = GET_DTV (result);
+  struct dtv_slotinfo_list *listp;
+  size_t total = 0;
 
   /* We have to look prepare the dtv for all currently loaded
      modules using TLS.  For those which are dynamically loaded we
