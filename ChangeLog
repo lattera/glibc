@@ -1,5 +1,19 @@
 2000-12-17  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/generic/k_sinl.c (__kernel_sinl): Fix functions
+	parameter.
+
+	* sysdeps/unix/sysv/linux/shm_open.c (freeit): Make static and add
+	unused attribute to shut up gcc warnings.
+
+	* sysdeps/generic/k_sinl.c: Include math_private for prototypes.
+	* sysdeps/generic/k_tanl.c: Likewise.
+	* sysdeps/generic/k_cosl.c: Likewise.
+	* sysdeps/generic/e_j0l.c: Likewise.
+	* sysdeps/generic/e_j1l.c: Likewise.
+	* sysdeps/generic/e_jnl.c: Likewise.
+	* sysdeps/generic/e_lgammal_r.c: Likewise.
+
 	* elf/vismain.c: Move prototypes for functions in vismod*.c to
 	vismod.h.
 	* elf/vismod.h: New file.

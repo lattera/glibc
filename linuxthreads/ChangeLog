@@ -1,3 +1,8 @@
+2000-12-17  Andreas Jaeger  <aj@suse.de>
+
+	* internals.h: Add prototypes for testandset and
+	__compare_and_swap to shut up gcc warnings.
+
 2000-12-06  Wolfram Gloger  <wg@malloc.de>
 
 	* join.c (pthread_detach): Allow case where the thread has already

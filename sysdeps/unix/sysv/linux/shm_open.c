@@ -223,7 +223,7 @@ shm_unlink (const char *name)
 }
 
 
-void
+static void  __attribute__ ((unused))
 freeit (void)
 {
   if (mountpoint.dir != defaultdir)
