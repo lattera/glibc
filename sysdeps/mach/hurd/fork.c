@@ -1,4 +1,4 @@
-/* Copyright (C) 1994,95,96,97,99,2001,02 Free Software Foundation, Inc.
+/* Copyright (C) 1994,95,96,97,99,2001,02, 04 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@
 #include "set-hooks.h"
 #include <assert.h>
 #include "hurdmalloc.h"		/* XXX */
+#include <tls.h>
 
 #undef __fork
 
@@ -529,6 +530,13 @@ __fork (void)
 
       /* Set the child user thread up to return 1 from the setjmp above.  */
       _hurd_longjmp_thread_state (&state, env, 1);
+
+#if USE_TLS
+      /* Do special thread setup for TLS if needed.  */
+      if (err = _hurd_tls_fork (thread, &state))
+	LOSE;
+#endif
+
       if (err = __thread_set_state (thread, MACHINE_THREAD_STATE_FLAVOR,
 				    (natural_t *) &state, statecount))
 	LOSE;
