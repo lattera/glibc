@@ -78,7 +78,11 @@
 	__re_search_2 (bufp, st1, s1, st2, s2, startpos, range, regs, stop)
 # define re_compile_fastmap(bufp) __re_compile_fastmap (bufp)
 
-#define btowc __btowc
+# define btowc __btowc
+
+/* We are also using some library internals.  */
+# include <locale/localeinfo.h>
+# include <langinfo.h>
 #endif
 
 /* This is for other GNU distributions with internationalized messages.  */
@@ -2374,6 +2378,136 @@ regex_compile (pattern, size, syntax, bufp)
                         had_char_class = false;
                       }
                   }
+#ifdef _LIBC
+                else if (syntax & RE_CHAR_CLASSES && c == '[' && *p == '=')
+		  {
+		    unsigned char str[MB_LEN_MAX + 1];
+		    uint32_t nrules =
+		      _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
+
+		    PATFETCH (c);
+		    c1 = 0;
+
+		    /* If pattern is `[[='.  */
+		    if (p == pend) FREE_STACK_RETURN (REG_EBRACK);
+
+		    for (;;)
+		      {
+			PATFETCH (c);
+			if ((c == '=' && *p == ']') || p == pend)
+			  break;
+			if (c1 < MB_LEN_MAX)
+			  str[c1++] = c;
+			else
+			  /* This is in any case an invalid class name.  */
+			  str[0] = '\0';
+                      }
+		    str[c1] = '\0';
+
+		    if (c == '=' && *p == ']' && str[0] != '\0')
+		      {
+			/* If we have no collation data we use the default
+			   collation in which each character is in a class
+			   by itself.  It also means that ASCII is the
+			   character set and therefore we cannot have character
+			   with more than one byte in the multibyte
+			   representation.  */
+			if (nrules == 0)
+			  {
+			    if (c1 != 1)
+			      FREE_STACK_RETURN (REG_ECOLLATE);
+
+			    /* Throw away the ] at the end of the equivalence
+			       class.  */
+			    PATFETCH (c);
+
+			    /* Set the bit for the character.  */
+			    SET_LIST_BIT (str[0]);
+			  }
+			else
+			  {
+			    /* Try to match the byte sequence in `str' against
+			       those known to the collate implementation.
+			       First find out whether the bytes in `str' are
+			       actually from exactly one character.  */
+			    const int32_t *table;
+			    const unsigned char *weights;
+			    const unsigned char *extra;
+			    const int32_t *indirect;
+			    int32_t idx;
+			    const unsigned char *cp = str;
+			    int32_t weight;
+			    int ch;
+
+			    /* This #include defines a local function!  */
+# include <locale/weight.h>
+
+			    table = (const int32_t *)
+			      _NL_CURRENT (LC_COLLATE, _NL_COLLATE_TABLEMB);
+			    weights = (const unsigned char *)
+			      _NL_CURRENT (LC_COLLATE, _NL_COLLATE_WEIGHTMB);
+			    extra = (const unsigned char *)
+			      _NL_CURRENT (LC_COLLATE, _NL_COLLATE_EXTRAMB);
+			    indirect = (const int32_t *)
+			      _NL_CURRENT (LC_COLLATE, _NL_COLLATE_INDIRECTMB);
+
+			    idx = findidx (&cp);
+			    if (idx == 0 || cp < str + c1)
+			      /* This is no valid character.  */
+			      FREE_STACK_RETURN (REG_ECOLLATE);
+
+			    /* Throw away the ] at the end of the equivalence
+			       class.  */
+			    PATFETCH (c);
+
+			    /* Now we have to go throught the whole table
+			       and find all characters which have the same
+			       first level weight.
+
+			       XXX Note that this is not entirely correct.
+			       we would have to match multibyte sequences
+			       but this is not possible with the current
+			       implementation.  */
+			    for (ch = 1; ch < 256; ++ch)
+			      /* XXX This test would have to be changed if we
+				 would allow matching multibyte sequences.  */
+			      if (table[ch] > 0)
+				{
+				  int32_t idx2 = table[ch];
+				  size_t len = weights[idx2];
+
+				  /* Test whether the lenghts match.  */
+				  if (weights[idx] == len)
+				    {
+				      /* They do.  New compare the bytes of
+					 the weight.  */
+				      size_t cnt = 0;
+
+				      while (cnt < len
+					     && (weights[idx + 1 + cnt]
+						 == weights[idx2 + 1 + cnt]))
+					++len;
+
+				      if (cnt == len)
+					/* They match.  Mark the character as
+					   acceptable.  */
+					SET_LIST_BIT (ch);
+				    }
+				}
+			  }
+			had_char_class = true;
+		      }
+                    else
+                      {
+                        c1++;
+                        while (c1--)
+                          PATUNFETCH;
+                        SET_LIST_BIT ('[');
+                        SET_LIST_BIT ('=');
+                        had_char_class = false;
+                      }
+		  }
+#endif
                 else
                   {
                     had_char_class = false;
