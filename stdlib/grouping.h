@@ -1,5 +1,5 @@
 /* Internal header for proving correct grouping in strings of numbers.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,19 +30,24 @@
 
 static inline const STRING_TYPE *
 correctly_grouped_prefix (const STRING_TYPE *begin, const STRING_TYPE *end,
-			  wchar_t thousands, const char *grouping)
+#ifdef USE_WIDE_CHAR
+			  wchar_t thousands,
+#else
+			  const char *thousands,
+#endif
+			  const char *grouping)
 {
+#ifndef USE_WIDE_CHAR
+  size_t thousands_len;
+  int cnt;
+#endif
+
   if (grouping == NULL)
     return end;
 
-  if (*grouping == '\0')
-    {
-      /* No grouping allowed.  Accept all characters up to the first
-	 thousands separator.  */
-      while (begin < end && *begin != thousands)
-	++begin;
-      return begin;
-    }
+#ifndef USE_WIDE_CHAR
+  thousands_len = strlen (thousands);
+#endif
 
   while (end > begin)
     {
@@ -50,8 +55,23 @@ correctly_grouped_prefix (const STRING_TYPE *begin, const STRING_TYPE *end,
       const char *gp = grouping;
 
       /* Check first group.  */
-      while (cp >= begin && (wchar_t) *cp != thousands)
-	--cp;
+      while (cp >= begin)
+	{
+#ifdef USE_WIDE_CHAR
+	  if (*cp == thousands)
+	    break;
+#else
+	  if (cp[thousands_len - 1] == *thousands)
+	    {
+	      for (cnt = 1; thousands[cnt] != '\0'; ++cnt)
+		if (thousands[cnt] != cp[thousands_len - 1 - cnt])
+		  break;
+	      if (thousands[cnt] == '\0')
+		break;
+	    }
+#endif
+	  --cp;
+	}
 
       /* We allow the representation to contain no grouping at all even if
 	 the locale specifies we can have grouping.  */
@@ -93,8 +113,20 @@ correctly_grouped_prefix (const STRING_TYPE *begin, const STRING_TYPE *end,
 		  )
 	        {
 	          /* No more thousands separators are allowed to follow.  */
-	          while (cp >= begin && (wchar_t) *cp != thousands)
-		    --cp;
+	          while (cp >= begin)
+		    {
+#ifdef USE_WIDE_CHAR
+		      if (*cp == thousands)
+			break;
+#else
+		      for (cnt = 0; thousands[cnt] != '\0'; ++cnt)
+			if (thousands[cnt] != cp[thousands_len - cnt - 1])
+			  break;
+		      if (thousands[cnt] == '\0')
+			break;
+#endif
+		      --cp;
+		    }
 
 	          if (cp < begin)
 		    /* OK, only digits followed.  */
@@ -105,8 +137,20 @@ correctly_grouped_prefix (const STRING_TYPE *begin, const STRING_TYPE *end,
 		  /* Check the next group.  */
 	          const STRING_TYPE *group_end = cp;
 
-		  while (cp >= begin && (wchar_t) *cp != thousands)
-		    --cp;
+		  while (cp >= begin)
+		    {
+#ifdef USE_WIDE_CHAR
+		      if (*cp == thousands)
+			break;
+#else
+		      for (cnt = 0; thousands[cnt] != '\0'; ++cnt)
+			if (thousands[cnt] != cp[thousands_len - cnt - 1])
+			  break;
+		      if (thousands[cnt] == '\0')
+			break;
+#endif
+		      --cp;
+		    }
 
 		  if (cp < begin && group_end - cp <= (int) *gp)
 		    /* Final group is correct.  */

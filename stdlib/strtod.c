@@ -1,6 +1,6 @@
 /* Read decimal floating point numbers.
    This file is part of the GNU C Library.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -301,7 +301,12 @@ round_and_return (mp_limb_t *retval, int exponent, int negative,
    factor for the resulting number (see code) multiply by it.  */
 static inline const STRING_TYPE *
 str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb_t *n, mp_size_t *nsize,
-	    int *exponent)
+	    int *exponent
+#ifndef USE_WIDE_CHAR
+	    , const char *decimal, size_t decimal_len, const char *thousands
+#endif
+
+	    )
 {
   /* Number of digits for actual limb.  */
   int cnt = 0;
@@ -338,8 +343,22 @@ str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb_t *n, mp_size_t *nsize,
 	 the string.  But these all can be ignored because we know the
 	 format of the number is correct and we have an exact number
 	 of characters to read.  */
-      while (*str < L_('0') || *str > L_('9'))
+#ifdef USE_WIDE_CHAR
+      if (*str < L'0' || *str > L'9')
 	++str;
+#else
+      if (*str < '0' || *str > '9')
+	{
+	  if (thousands != NULL && *str == *thousands
+	      && ({ for (cnt == 1; thousands[cnt] != '\0'; ++cnt)
+		      if (thousands[cnt] != str[cnt])
+			break;
+		    thousands[cnt] == '\0'; }))
+	    str += cnt;
+	  else
+	    str += decimal_len;
+	}
+#endif
       low = low * 10 + *str++ - L_('0');
       ++cnt;
     }
@@ -451,12 +470,23 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
   typedef unsigned int wint_t;
 #endif
   /* The radix character of the current locale.  */
+#ifdef USE_WIDE_CHAR
   wchar_t decimal;
+#else
+  const char *decimal;
+  size_t decimal_len;
+#endif
   /* The thousands character of the current locale.  */
+#ifdef USE_WIDE_CHAR
   wchar_t thousands = L'\0';
+#else
+  const char *thousands = NULL;
+#endif
   /* The numeric grouping specification of the current locale,
      in the format described in <locale.h>.  */
   const char *grouping;
+  /* Used in several places.  */
+  int cnt;
 
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
   struct locale_data *current = loc->__locales[LC_NUMERIC];
@@ -470,21 +500,34 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
       else
 	{
 	  /* Figure out the thousands separator character.  */
-	  thousands = __btowc (*_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP));
-	  if (thousands == WEOF)
-	    thousands = L'\0';
+#ifdef USE_WIDE_CHAR
+	  thousands = _NL_CURRENT_WORD (LC_NUMERIC,
+					_NL_NUMERIC_THOUSANDS_SEP_WC);
 	  if (thousands == L'\0')
 	    grouping = NULL;
+#else
+	  thousands = _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+	  if (*thousands == '\0')
+	    {
+	      thousands = NULL;
+	      grouping = NULL;
+	    }
+#endif
 	}
     }
   else
     grouping = NULL;
 
   /* Find the locale's decimal point character.  */
-  decimal = __btowc (*_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT));
-  if (decimal == WEOF)
-    decimal = L'.';
+#ifdef USE_WIDE_CHAR
+  decimal = _NL_CURRENT_WORD (LC_NUMERIC, _NL_NUMERIC_DECIMAL_POINT_WC);
   assert (decimal != L'\0');
+# define decimal_len 1
+#else
+  decimal = _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
+  decimal_len = strlen (decimal);
+  assert (decimal_len > 0);
+#endif
 
   /* Prepare number representation.  */
   exponent = 0;
@@ -510,8 +553,23 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 
   /* Return 0.0 if no legal string is found.
      No character is used even if a sign was found.  */
-  if ((c < L_('0') || c > L_('9'))
-      && ((wchar_t) c != decimal || cp[1] < L_('0') || cp[1] > L_('9')))
+#ifdef USE_WIDE_CHAR
+  if (c == decimal && cp[1] >= L'0' && cp[1] <= L'9')
+    {
+      /* We accept it.  This funny construct is here only to indent
+	 the code directly.  */
+    }
+#else
+  for (cnt = 0; decimal[cnt] != '\0'; ++cnt)
+    if (cp[cnt] != decimal[cnt])
+      break;
+  if (decimal[cnt] == '\0' && cp[1] >= '0' && cp[1] <= '9')
+    {
+      /* We accept it.  This funny construct is here only to indent
+	 the code directly.  */
+    }
+#endif
+  else if (c < L_('0') || c > L_('9'))
     {
       int matched = 0;
       /* Check for `INF' or `INFINITY'.  */
@@ -588,16 +646,45 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
   start_of_digits = startp = cp;
 
   /* Ignore leading zeroes.  This helps us to avoid useless computations.  */
-  while (c == L_('0') || (thousands != L'\0' && (wchar_t) c == thousands))
+#ifdef USE_WIDE_CHAR
+  while (c == L'0' || (thousands != L'\0' && c == thousands))
     c = *++cp;
+#else
+  if (thousands == NULL)
+    while (c == '0')
+      c = *++cp;
+  else
+    {
+      /* We also have the multibyte thousands string.  */
+      while (1)
+	{
+	  if (c != '0')
+	    {
+	      for (cnt = 0; thousands[cnt] != '\0'; ++cnt)
+		if (c != thousands[cnt])
+		  break;
+	      if (thousands[cnt] != '\0')
+		break;
+	    }
+	  c = *++cp;
+	}
+    }
+#endif
 
   /* If no other digit but a '0' is found the result is 0.0.
      Return current read pointer.  */
-  if ((c < L_('0') || c > L_('9')) &&
-      (base == 16 && (c < TOLOWER (L_('a')) || c > TOLOWER (L_('f')))) &&
-      (wchar_t) c != decimal &&
-      (base == 16 && (cp == start_of_digits || TOLOWER (c) != L_('p'))) &&
-      (base != 16 && TOLOWER (c) != L_('e')))
+  if ((c < L_('0') || c > L_('9'))
+      && (base == 16 && (c < TOLOWER (L_('a')) || c > TOLOWER (L_('f'))))
+#ifdef USE_WIDE_CHAR
+      && c != decimal
+#else
+      && ({ for (cnt = 0; decimal[cnt] != '\0'; ++cnt)
+	      if (decimal[cnt] != cp[cnt])
+		break;
+	    decimal[cnt] != '\0'; })
+#endif
+      && (base == 16 && (cp == start_of_digits || TOLOWER (c) != L_('p')))
+      && (base != 16 && TOLOWER (c) != L_('e')))
     {
       tp = correctly_grouped_prefix (start_of_digits, cp, thousands, grouping);
       /* If TP is at the start of the digits, there was no correctly
@@ -617,9 +704,25 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
       if ((c >= L_('0') && c <= L_('9'))
 	  || (base == 16 && TOLOWER (c) >= L_('a') && TOLOWER (c) <= L_('f')))
 	++dig_no;
-      else if (thousands == L'\0' || (wchar_t) c != thousands)
-	/* Not a digit or separator: end of the integer part.  */
-	break;
+      else
+	{
+#ifdef USE_WIDE_CHAR
+	  if (thousands == L'\0' || c != thousands)
+	    /* Not a digit or separator: end of the integer part.  */
+	    break;
+#else
+	  if (thousands == NULL)
+	    break;
+	  else
+	    {
+	      for (cnt = 0; thousands[cnt] != '\0'; ++cnt)
+		if (thousands[cnt] != cp[cnt])
+		  break;
+	      if (thousands[cnt] != '\0')
+		break;
+	    }
+#endif
+	}
       c = *++cp;
     }
 
@@ -667,9 +770,19 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 
   /* Read the fractional digits.  A special case are the 'american style'
      numbers like `16.' i.e. with decimal but without trailing digits.  */
-  if ((wchar_t) c == decimal)
+  if (
+#ifdef USE_WIDE_CHAR
+      c == decimal
+#else
+      ({ for (cnt = 0; decimal[cnt] != '\0'; ++cnt)
+	   if (decimal[cnt] != cp[cnt])
+	     break;
+	 decimal[cnt] == '\0'; })
+#endif
+      )
     {
-      c = *++cp;
+      cp += decimal_len;
+      c = *cp;
       while ((c >= L_('0') && c <= L_('9')) ||
 	     (base == 16 && TOLOWER (c) >= L_('a') && TOLOWER (c) <= L_('f')))
 	{
@@ -779,9 +892,24 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
   if (lead_zero)
     {
       /* Find the decimal point */
-      while ((wchar_t) *startp != decimal)
+#ifdef USE_WIDE_CHAR
+      while (*startp != decimal)
 	++startp;
-      startp += lead_zero + 1;
+#else
+      while (1)
+	{
+	  if (*startp == decimal[0])
+	    {
+	      for (cnt = 1; decimal[cnt] != '\0'; ++cnt)
+		if (decimal[cnt] != startp[cnt])
+		  break;
+	      if (decimal[cnt] == '\0')
+		break;
+	    }
+	  ++startp;
+	}
+#endif
+      startp += lead_zero + decimal_len;
       exponent -= base == 16 ? 4 * lead_zero : lead_zero;
       dig_no -= lead_zero;
     }
@@ -828,8 +956,8 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 
       while (--dig_no > 0 && idx >= 0)
 	{
-	  while (!ISXDIGIT (*startp))
-	    ++startp;
+	  if (!ISXDIGIT (*startp))
+	    startp += decimal_len;
 	  if (ISDIGIT (*startp))
 	    val = *startp++ - L_('0');
 	  else
@@ -885,7 +1013,11 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
   if (int_no > 0)
     {
       /* Read the integer part as a multi-precision number to NUM.  */
-      startp = str_to_mpn (startp, int_no, num, &numsize, &exponent);
+      startp = str_to_mpn (startp, int_no, num, &numsize, &exponent
+#ifndef USE_WIDE_CHAR
+			   , decimal, decimal_len, thousands
+#endif
+			   );
 
       if (exponent > 0)
 	{
@@ -1031,7 +1163,6 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
        123e-6 gives 123 / 1000000.  */
 
     int expbit;
-    int cnt;
     int neg_exp;
     int more_bits;
     mp_limb_t cy;
@@ -1095,8 +1226,11 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
       memcpy (den, num, densize * sizeof (mp_limb_t));
 
     /* Read the fractional digits from the string.  */
-    (void) str_to_mpn (startp, dig_no - int_no, num, &numsize, &exponent);
-
+    (void) str_to_mpn (startp, dig_no - int_no, num, &numsize, &exponent
+#ifndef USE_WIDE_CHAR
+		       , decimal, decimal_len, thousands
+#endif
+		       );
 
     /* We now have to shift both numbers so that the highest bit in the
        denominator is set.  In the same process we copy the numerator to

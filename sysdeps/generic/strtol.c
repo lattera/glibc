@@ -1,5 +1,5 @@
 /* Convert string representation of a number into an integer value.
-   Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -243,13 +243,20 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
   register UCHAR_TYPE c;
   const STRING_TYPE *save, *end;
   int overflow;
+#ifndef USE_WIDE_CHAR
+  int cnt;
+#endif
 
 #ifdef USE_NUMBER_GROUPING
 # ifdef USE_IN_EXTENDED_LOCALE_MODEL
   struct locale_data *current = loc->__locales[LC_NUMERIC];
 # endif
   /* The thousands character of the current locale.  */
+# ifdef USE_WIDE_CHAR
   wchar_t thousands = L'\0';
+# else
+  const char *thousands = NULL;
+# endif
   /* The numeric grouping specification of the current locale,
      in the format described in <locale.h>.  */
   const char *grouping;
@@ -262,13 +269,23 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
       else
 	{
 	  /* Figure out the thousands separator character.  */
-# if defined _LIBC || defined _HAVE_BTOWC
-	  thousands = __btowc (*_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP));
-	  if (thousands == WEOF)
-	    thousands = L'\0';
-# endif
+# ifdef USE_WIDE_CHAR
+#  ifdef _LIBC
+	  thousands = _NL_CURRENT_WORD (LC_NUMERIC,
+					_NL_NUMERIC_THOUSANDS_SEP_WC);
+#  endif
 	  if (thousands == L'\0')
 	    grouping = NULL;
+# else
+#  ifdef _LIBC
+	  thousands = _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+#  endif
+	  if (*thousands == '\0')
+	    {
+	      thousands = NULL;
+	      grouping = NULL;
+	    }
+# endif
 	}
     }
   else
@@ -325,15 +342,33 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
     {
       /* Find the end of the digit string and check its grouping.  */
       end = s;
-      for (c = *end; c != L_('\0'); c = *++end)
-	if ((wchar_t) c != thousands
-	    && ((wchar_t) c < L_('0') || (wchar_t) c > L_('9'))
-	    && (!ISALPHA (c) || (int) (TOUPPER (c) - L_('A') + 10) >= base))
-	  break;
-      if (*s == thousands)
-	end = s;
-      else
-	end = correctly_grouped_prefix (s, end, thousands, grouping);
+      if (
+# ifdef USE_WIDE_CHAR
+	  *s != thousands
+# else
+	  ({ for (cnt = 0; thousands[cnt] != '\0'; ++cnt)
+	       if (thousands[cnt] != end[cnt])
+		 break;
+	     thousands[cnt] != '\0'; })
+# endif
+	  )
+	{
+	  for (c = *end; c != L_('\0'); c = *++end)
+	    if (((wchar_t) c < L_('0') || (wchar_t) c > L_('9'))
+# ifdef USE_WIDE_CHAR
+		&& c != thousands
+# else
+		&& ({ for (cnt = 0; thousands[cnt] != '\0'; ++cnt)
+		      if (thousands[cnt] != end[cnt])
+			break;
+		      thousands[cnt] != '\0'; })
+# endif
+		&& (!ISALPHA (c)
+		    || (int) (TOUPPER (c) - L_('A') + 10) >= base))
+	      break;
+
+	  end = correctly_grouped_prefix (s, end, thousands, grouping);
+	}
     }
   else
 #endif

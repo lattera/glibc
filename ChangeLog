@@ -1,9 +1,27 @@
+2000-06-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/grouping.h: Correctly handle multibyte thousands
+	separator and decimal point.
+	* stdlib/stdtod.c: Likewise.
+	* sysdeps/generic/strtol.c: Likewise.
+
+	* locale/categories.def: Add entries for wide character decimal point
+	and thousands separator in numeric and monetary category.
+
+2000-06-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/printf_fp.c (__printf_fp): Remove unnecessary
+	second definition and initialization of decimal.
+
 2000-06-28  Greg McGary  <greg@mcgary.org>
 
-	* libio/libio.h (struct _IO_cookie_file): Move struct type defintion out.
+	* libio/libio.h (struct _IO_cookie_file): Move struct type defintion
+	out.
 	(_IO_FILE): Declare chain as (struct _IO_FILE_plus *).
-	* libio/libioP.h (struct _IO_cookie_file): Move struct type defintion in.
-	(_IO_JUMPS): Don't cast THIS--expect arg to be a (struct _IO_FILE_plus *).
+	* libio/libioP.h (struct _IO_cookie_file): Move struct type defintion
+	in.
+	(_IO_JUMPS): Don't cast THIS--expect arg to be a
+	(struct _IO_FILE_plus *).
 	(_IO_JUMPS_FUNC): Express in terms of _IO_JUMPS, and add cast to
 	THIS, since _IO_JUMPS no longer does it implicitly.
 	(_IO_file_init, _IO_old_file_init, _IO_new_file_init): Declare
@@ -18,10 +36,12 @@
 	* libio/genops.c (_IO_link_in, _IO_un_link): Likewise.
 	(_IO_flush_all, _IO_flush_all_linebuffered, _IO_unbuffer_write):
 	Declare iteration pointer as (struct _IO_FILE_plus *).
-	(_IO_iter_next, _IO_iter_file): _IO_ITER is now (struct _IO_FILE_plus *).
+	(_IO_iter_next, _IO_iter_file): _IO_ITER is now
+		(struct _IO_FILE_plus *).
 	* libio/stdfiles.c (_IO_list_all): Declare as (struct _IO_FILE_plus *).
 	* libio/oldstdfiles.c (_IO_list_all): Likewise.
-	(_IO_check_libio): Set user-visible handles to (struct _IO_FILE_plus *).
+	(_IO_check_libio): Set user-visible handles to
+	(struct _IO_FILE_plus *).
 	* libio/stdio.c (stdin, stdout, stderr): Set user-visible handles
 	to (struct _IO_FILE_plus *).
 
