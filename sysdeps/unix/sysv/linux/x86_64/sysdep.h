@@ -84,16 +84,18 @@
 #define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
 #elif USE___THREAD
 # define SYSCALL_ERROR_HANDLER			\
+0:						\
   movq errno@GOTTPOFF(%rip), %rcx;		\
   xorq %rdx, %rdx;				\
   subq %rax, %rdx;				\
-  movl %eax, %fs:0(%rcx)
+  movl %eax, %fs:0(%rcx);
 #elif RTLD_PRIVATE_ERRNO
 # define SYSCALL_ERROR_HANDLER			\
+0:						\
   leaq errno(%rip), %rcx;			\
   xorq %rdx, %rdx;				\
   subq %rax, %rdx;				\
-  movl %eax, (%rcx)
+  movl %eax, (%rcx);
 #elif defined _LIBC_REENTRANT
 /* Store (- %rax) into errno through the GOT.
    Note that errno occupies only 4 bytes.  */
