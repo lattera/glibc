@@ -144,22 +144,11 @@ ldouble: 1
 
 # cbrt
 Test "cbrt (-0.001) == -0.1":
-ildouble: 102
-ldouble: 102
-Test "cbrt (-27.0) == -3.0":
-ildouble: 948
-ldouble: 948
+ildouble: 1
+ldouble: 1
 Test "cbrt (0.7) == 0.8879040017426007084":
 double: 1
 idouble: 1
-ildouble: 345
-ldouble: 345
-Test "cbrt (0.970299) == 0.99":
-ildouble: 142
-ldouble: 142
-Test "cbrt (8) == 2":
-ildouble: 191
-ldouble: 191
 
 # ccos
 Test "Real part of: ccos (-2 - 3 i) == -4.1896256909688072301 - 9.1092278937553365979 i":
@@ -241,9 +230,9 @@ double: 1
 idouble: 1
 Test "cos (M_PI_6l * 2.0) == 0.5":
 double: 1
-float: 0.5
+float: 1
 idouble: 1
-ifloat: 0.5
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "cos (M_PI_6l * 4.0) == -0.5":
@@ -254,12 +243,12 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "cos (pi/2) == 0":
-double: 0.2758
-float: 0.3667
-idouble: 0.2758
-ifloat: 0.3667
-ildouble: 0.25
-ldouble: 0.25
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 
 # cosh
 Test "cosh (0.7) == 1.255169005630943018":
@@ -283,13 +272,13 @@ ifloat: 6
 ildouble: 2
 ldouble: 2
 Test "Real part of: cpow (e + 0 i, 0 + 2 * M_PIl i) == 1.0 + 0.0 i":
-float: 0.5
-ifloat: 0.5
+float: 1
+ifloat: 1
 Test "Imaginary part of: cpow (e + 0 i, 0 + 2 * M_PIl i) == 1.0 + 0.0 i":
-double: 1.1031
-float: 2.5333
-idouble: 1.1031
-ifloat: 2.5333
+double: 2
+float: 3
+idouble: 2
+ifloat: 3
 ildouble: 1
 ldouble: 1
 
@@ -353,8 +342,8 @@ Test "Imaginary part of: ctanh (-2 - 3 i) == -0.9653858790221331242 + 0.00988437
 ildouble: 25
 ldouble: 25
 Test "Imaginary part of: ctanh (0 + pi/4 i) == 0.0 + 1.0 i":
-double: 0.5
-idouble: 0.5
+double: 1
+idouble: 1
 Test "Real part of: ctanh (0.7 + 1.2 i) == 1.3472197399061191630 + 0.4778641038326365540 i":
 float: 1
 ifloat: 1
@@ -632,8 +621,8 @@ Test "log (2) == M_LN2l":
 ildouble: 1
 ldouble: 1
 Test "log (e) == 1":
-float: 0.5
-ifloat: 0.5
+float: 1
+ifloat: 1
 
 # log10
 Test "log10 (0.7) == -0.15490195998574316929":
@@ -682,9 +671,9 @@ double: 1
 idouble: 1
 Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.5 in cos_res":
 double: 1
-float: 0.5
+float: 1
 idouble: 1
-ifloat: 0.5
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.86602540378443864676372317075293616 in sin_res":
@@ -695,12 +684,12 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "sincos (pi/2, &sin_res, &cos_res) puts 0 in cos_res":
-double: 0.2758
-float: 0.3667
-idouble: 0.2758
-ifloat: 0.3667
-ildouble: 0.25
-ldouble: 0.25
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 
 # sinh
 Test "sinh (0.7) == 0.75858370183953350346":
@@ -712,8 +701,8 @@ Test "tan (0.7) == 0.84228838046307944812813500221293775":
 ildouble: 1
 ldouble: 1
 Test "tan (pi/4) == 1":
-double: 0.5
-idouble: 0.5
+double: 1
+idouble: 1
 
 # tgamma
 Test "tgamma (-0.5) == -2 sqrt (pi)":
@@ -988,8 +977,8 @@ ldouble: 1
 Function: "cbrt":
 double: 1
 idouble: 1
-ildouble: 948
-ldouble: 948
+ildouble: 1
+ldouble: 1
 
 Function: Real part of "ccos":
 float: 1
@@ -1064,9 +1053,9 @@ ildouble: 5
 ldouble: 5
 
 Function: Imaginary part of "cpow":
-double: 1.1031
+double: 2
 float: 6
-idouble: 1.1031
+idouble: 2
 ifloat: 6
 ildouble: 2
 ldouble: 2
@@ -1238,8 +1227,8 @@ float: 1
 ifloat: 1
 
 Function: "tan":
-double: 0.5
-idouble: 0.5
+double: 1
+idouble: 1
 ildouble: 1
 ldouble: 1
 
