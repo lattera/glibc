@@ -1,5 +1,8 @@
 2000-01-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/i386/mmap64.S: Handle unaligned offsets.
+	* sysdeps/unix/sysv/linux/i386/mmap.S: Likewise.
+
 	* iconvdata/ksc5601.c (__ksc5601_sym_to_ucs): Add mapping for
 	0xa2e6 and 0xa2e7.
 	(__ksc5601_sym_from_ucs): Add mapping back from U00AE and U20AC.

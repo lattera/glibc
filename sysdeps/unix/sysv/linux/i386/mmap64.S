@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,10 +35,10 @@ ENTRY (__mmap64)
 	pushl %esi
 	pushl %edi
 
-	movl $SYS_ify(mmap2), %eax	/* System call number in %eax.  */
-
 	movl 40(%esp), %edx
 	movl 44(%esp), %ecx
+	testl $0x3ff, %edx
+	jne L(einval)
 	shrdl $12, %ecx, %edx		/* mmap2 takes the offset in pages.  */
 	shrl $12, %ecx
 	jne L(einval)
@@ -49,6 +49,8 @@ ENTRY (__mmap64)
 	movl 28(%esp), %edx
 	movl 32(%esp), %esi
 	movl 36(%esp), %edi
+
+	movl $SYS_ify(mmap2), %eax	/* System call number in %eax.  */
 
 	/* Do the system call trap.  */
 L(do_syscall):
