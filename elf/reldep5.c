@@ -9,7 +9,6 @@ main (void)
   void *h1;
   void *h2;
   int (*fp) (void);
-  int *vp;
 
   mtrace ();
 

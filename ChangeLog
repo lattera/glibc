@@ -1,5 +1,9 @@
 2001-09-22  Andreas Jaeger  <aj@suse.de>
 
+	* elf/reldep4.c (main): Add proper prototype to fix warning.
+
+	* elf/reldep5.c (main): Remove unused variable.
+
 	* math/math_private.h: Add prototypes.
 
 2001-09-21  Andreas Jaeger  <aj@suse.de>
