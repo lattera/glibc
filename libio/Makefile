@@ -43,7 +43,7 @@ routines	:=							      \
 									      \
 	libc_fatal
 
-tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf
+tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc
 
 all: # Make this the default target; it will be defined in Rules.
 
@@ -62,6 +62,8 @@ routines += clearerr_u feof_u ferror_u fputc_u getc_u getchar_u		      \
 
 CPPFLAGS += -D_IO_MTSAFE_IO
 endif
+
+CFLAGS-tst_putwc.c = -DOBJPFX=\"$(objpfx)\"
 
 aux	:= fileops genops stdfiles stdio strops
 

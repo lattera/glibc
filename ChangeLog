@@ -1,5 +1,11 @@
 2000-06-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/Makefile (tests): Add tst-getwc and tst_putwc.
+	(CFLAGS-tst_putwc.c): New definition.
+	* libio/tst_getwc.c: New file.
+	* libio/tst_getwc.input: New file.
+	* libio/tst_putwc.c: New file.
+
 	* include/string.h: Add prototype for __strdup.
 
 2000-06-22  Greg McGary  <greg@mcgary.org>
