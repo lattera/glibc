@@ -2083,9 +2083,12 @@ temporary failure, with the macro @code{TEMP_FAILURE_RETRY}:
 @comment unistd.h
 @comment GNU
 @defmac TEMP_FAILURE_RETRY (@var{expression})
-This macro evaluates @var{expression} once.  If it fails and reports
-error code @code{EINTR}, @code{TEMP_FAILURE_RETRY} evaluates it again,
-and over and over until the result is not a temporary failure.
+This macro evaluates @var{expression} once, and examines its value as
+type @code{long int}.  If the value equals @code{-1}, that indicates a
+failure and @code{errno} should be set to show what kind of failure.
+If it fails and reports error code @code{EINTR},
+@code{TEMP_FAILURE_RETRY} evaluates it again, and over and over until
+the result is not a temporary failure.
 
 The value returned by @code{TEMP_FAILURE_RETRY} is whatever value
 @var{expression} produced.
