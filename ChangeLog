@@ -1,3 +1,12 @@
+2000-03-21  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* scripts/firstversions.awk: Allow multiple version sets in the
+	"earliest version" specification, meaning that version sets in the
+	gaps between listed versions should be folded into the earliest later
+	version that is explicitly listed.
+	* shlib-versions (mips.*-.*-linux.*): Use that syntax for to say
+	we support GLIBC_2.0 and GLIBC_2.2 but not the intervening sets.
+
 2000-03-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_builtin.c: Include <endian.h>.
