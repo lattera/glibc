@@ -51,8 +51,11 @@ name_startup (struct linereader *lr, struct localedef_t *locale,
     locale->categories[LC_NAME].name =
       (struct locale_name_t *) xcalloc (1, sizeof (struct locale_name_t));
 
-  lr->translate_strings = 1;
-  lr->return_widestr = 0;
+  if (lr != NULL)
+    {
+      lr->translate_strings = 1;
+      lr->return_widestr = 0;
+    }
 }
 
 
@@ -60,10 +63,44 @@ void
 name_finish (struct localedef_t *locale, struct charmap_t *charmap)
 {
   struct locale_name_t *name = locale->categories[LC_NAME].name;
+  int nothing = 0;
+
+  /* Now resolve copying and also handle completely missing definitions.  */
+  if (name == NULL)
+    {
+      /* First see whether we were supposed to copy.  If yes, find the
+	 actual definition.  */
+      if (locale->copy_name[LC_NAME] != NULL)
+	{
+	  /* Find the copying locale.  This has to happen transitively since
+	     the locale we are copying from might also copying another one.  */
+	  struct localedef_t *from = locale;
+
+	  do
+	    from = find_locale (LC_NAME, from->copy_name[LC_NAME],
+				from->repertoire_name, charmap);
+	  while (from->categories[LC_NAME].name == NULL
+		 && from->copy_name[LC_NAME] != NULL);
+
+	  name = locale->categories[LC_NAME].name
+	    = from->categories[LC_NAME].name;
+	}
+
+      /* If there is still no definition issue an warning and create an
+	 empty one.  */
+      if (name == NULL)
+	{
+	  error (0, 0, _("No definition for %s category found"), "LC_NAME");
+	  name_startup (NULL, locale, 0);
+	  name = locale->categories[LC_NAME].name;
+	  nothing = 1;
+	}
+    }
 
   if (name->name_fmt == NULL)
     {
-      error (0, 0, _("%s: field `%s' not defined"), "LC_NAME", "name_fmt");
+      if (! nothing)
+	error (0, 0, _("%s: field `%s' not defined"), "LC_NAME", "name_fmt");
       /* Use as the default value the value of the i18n locale.  */
       name->name_fmt = "%p%t%g%t%m%t%f";
     }
@@ -99,7 +136,7 @@ name_finish (struct localedef_t *locale, struct charmap_t *charmap)
 #define TEST_ELEM(cat) \
   if (name->cat == NULL)						      \
     {									      \
-      if (verbose)							      \
+      if (verbose && ! nothing)						      \
 	error (0, 0, _("%s: field `%s' not defined"), "LC_NAME", #cat);	      \
       name->cat = "";							      \
     }
@@ -198,7 +235,7 @@ name_read (struct linereader *ldfile, struct localedef_t *result,
   /* If we see `copy' now we are almost done.  */
   if (nowtok == tok_copy)
     {
-      handle_copy (ldfile, charmap, repertoire, tok_lc_name, LC_NAME,
+      handle_copy (ldfile, charmap, repertoire, result, tok_lc_name, LC_NAME,
 		   "LC_NAME", ignore_content);
       return;
     }
@@ -225,6 +262,14 @@ name_read (struct linereader *ldfile, struct localedef_t *result,
 	{
 #define STR_ELEM(cat) \
 	case tok_##cat:							      \
+	  /* Ignore the rest of the line if we don't need the input of	      \
+	     this line.  */						      \
+	  if (ignore_content)						      \
+	    {								      \
+	      lr_ignore_rest (ldfile, 0);				      \
+	      break;							      \
+	    }								      \
+									      \
 	  arg = lr_token (ldfile, charmap, NULL);			      \
 	  if (arg->tok != tok_string)					      \
 	    goto err_label;						      \

@@ -54,8 +54,11 @@ messages_startup (struct linereader *lr, struct localedef_t *locale,
       (struct locale_messages_t *) xcalloc (1,
 					    sizeof (struct locale_messages_t));
 
-  lr->translate_strings = 1;
-  lr->return_widestr = 0;
+  if (lr != NULL)
+    {
+      lr->translate_strings = 1;
+      lr->return_widestr = 0;
+    }
 }
 
 
@@ -64,6 +67,40 @@ messages_finish (struct localedef_t *locale, struct charmap_t *charmap)
 {
   struct locale_messages_t *messages
     = locale->categories[LC_MESSAGES].messages;
+  int nothing = 0;
+
+  /* Now resolve copying and also handle completely missing definitions.  */
+  if (messages == NULL)
+    {
+      /* First see whether we were supposed to copy.  If yes, find the
+	 actual definition.  */
+      if (locale->copy_name[LC_MESSAGES] != NULL)
+	{
+	  /* Find the copying locale.  This has to happen transitively since
+	     the locale we are copying from might also copying another one.  */
+	  struct localedef_t *from = locale;
+
+	  do
+	    from = find_locale (LC_MESSAGES, from->copy_name[LC_MESSAGES],
+				from->repertoire_name, charmap);
+	  while (from->categories[LC_MESSAGES].messages == NULL
+		 && from->copy_name[LC_MESSAGES] != NULL);
+
+	  messages = locale->categories[LC_MESSAGES].messages
+	    = from->categories[LC_MESSAGES].messages;
+	}
+
+      /* If there is still no definition issue an warning and create an
+	 empty one.  */
+      if (messages == NULL)
+	{
+	  error (0, 0, _("No definition for %s category found"),
+		 "LC_MESSAGES");
+	  messages_startup (NULL, locale, 0);
+	  messages = locale->categories[LC_MESSAGES].messages;
+	  nothing = 1;
+	}
+    }
 
   /* The fields YESSTR and NOSTR are optional.  */
   if (messages->yesstr == NULL)
@@ -73,7 +110,7 @@ messages_finish (struct localedef_t *locale, struct charmap_t *charmap)
 
   if (messages->yesexpr == NULL)
     {
-      if (!be_quiet)
+      if (! be_quiet && ! nothing)
 	error (0, 0, _("%s: field `%s' undefined"), "LC_MESSAGES", "yesexpr");
       messages->yesexpr = "";
     }
@@ -106,7 +143,7 @@ messages_finish (struct localedef_t *locale, struct charmap_t *charmap)
 
   if (messages->noexpr == NULL)
     {
-      if (!be_quiet)
+      if (! be_quiet && ! nothing)
 	error (0, 0, _("%s: field `%s' undefined"), "LC_MESSAGES", "noexpr");
       messages->noexpr = "";
     }
@@ -215,8 +252,8 @@ messages_read (struct linereader *ldfile, struct localedef_t *result,
   /* If we see `copy' now we are almost done.  */
   if (nowtok == tok_copy)
     {
-      handle_copy (ldfile, charmap, repertoire, tok_lc_messages, LC_MESSAGES,
-		   "LC_MESSAGES", ignore_content);
+      handle_copy (ldfile, charmap, repertoire, result, tok_lc_messages,
+		   LC_MESSAGES, "LC_MESSAGES", ignore_content);
       return;
     }
 
@@ -244,6 +281,14 @@ messages_read (struct linereader *ldfile, struct localedef_t *result,
 	{
 #define STR_ELEM(cat) \
 	case tok_##cat:							      \
+	  /* Ignore the rest of the line if we don't need the input of	      \
+	     this line.  */						      \
+	  if (ignore_content)						      \
+	    {								      \
+	      lr_ignore_rest (ldfile, 0);				      \
+	      break;							      \
+	    }								      \
+									      \
 	  if (messages->cat != NULL)					      \
 	    {								      \
 	      lr_error (ldfile, _("\

@@ -322,6 +322,37 @@ ctype_finish (struct localedef_t *locale, struct charmap_t *charmap)
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
   int warned;
 
+  /* Now resolve copying and also handle completely missing definitions.  */
+  if (ctype == NULL)
+    {
+      /* First see whether we were supposed to copy.  If yes, find the
+	 actual definition.  */
+      if (locale->copy_name[LC_CTYPE] != NULL)
+	{
+	  /* Find the copying locale.  This has to happen transitively since
+	     the locale we are copying from might also copying another one.  */
+	  struct localedef_t *from = locale;
+
+	  do
+	    from = find_locale (LC_CTYPE, from->copy_name[LC_CTYPE],
+				from->repertoire_name, charmap);
+	  while (from->categories[LC_CTYPE].ctype == NULL
+		 && from->copy_name[LC_CTYPE] != NULL);
+
+	  ctype = locale->categories[LC_CTYPE].ctype
+	    = from->categories[LC_CTYPE].ctype;
+	}
+
+      /* If there is still no definition issue an warning and create an
+	 empty one.  */
+      if (ctype == NULL)
+	{
+	  error (0, 0, _("No definition for %s category found"), "LC_CTYPE");
+	  ctype_startup (NULL, locale, charmap, 0);
+	  ctype = locale->categories[LC_CTYPE].ctype;
+	}
+    }
+
   /* Set default value for classes not specified.  */
   set_class_defaults (ctype, charmap, ctype->repertoire);
 
@@ -1732,7 +1763,7 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
   /* If we see `copy' now we are almost done.  */
   if (nowtok == tok_copy)
     {
-      handle_copy (ldfile, charmap, repertoire, tok_lc_ctype, LC_CTYPE,
+      handle_copy (ldfile, charmap, repertoire, result, tok_lc_ctype, LC_CTYPE,
 		   "LC_CTYPE", ignore_content);
       return;
     }
@@ -1766,6 +1797,14 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
       switch (nowtok)
 	{
 	case tok_class:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  /* We simply forget the `class' keyword and use the following
 	     operand to determine the bit.  */
 	  now = lr_token (ldfile, charmap, NULL);
@@ -1829,6 +1868,14 @@ unknown character class `%s' in category `LC_CTYPE'"),
 	case tok_print:
 	case tok_xdigit:
 	case tok_blank:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  class_bit = BITw (now->tok);
 	  class256_bit = BIT (now->tok);
 	  handle_digits = 0;
@@ -1871,11 +1918,11 @@ unknown character class `%s' in category `LC_CTYPE'"),
 		      /* We must store the digit values.  */
 		      if (ctype->mbdigits_act == ctype->mbdigits_max)
 			{
-			  ctype->mbdigits_max *= 2;
+			  ctype->mbdigits_max += 10;
 			  ctype->mbdigits = xrealloc (ctype->mbdigits,
 						      (ctype->mbdigits_max
 						       * sizeof (char *)));
-			  ctype->wcdigits_max *= 2;
+			  ctype->wcdigits_max += 10;
 			  ctype->wcdigits = xrealloc (ctype->wcdigits,
 						      (ctype->wcdigits_max
 						       * sizeof (uint32_t)));
@@ -1987,6 +2034,11 @@ with character code range values one must use the absolute ellipsis `...'"));
 	  break;
 
 	case tok_digit:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    break;
+
 	handle_tok_digit:
 	  class_bit = _ISwdigit;
 	  class256_bit = _ISdigit;
@@ -1994,6 +2046,14 @@ with character code range values one must use the absolute ellipsis `...'"));
 	  goto read_charclass;
 
 	case tok_outdigit:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  if (ctype->outdigits_act != 0)
 	    lr_error (ldfile, _("\
 %s: field `%s' declared more than once"),
@@ -2004,14 +2064,38 @@ with character code range values one must use the absolute ellipsis `...'"));
 	  goto read_charclass;
 
 	case tok_toupper:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  mapidx = 0;
 	  goto read_mapping;
 
 	case tok_tolower:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  mapidx = 1;
 	  goto read_mapping;
 
 	case tok_map:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  /* We simply forget the `map' keyword and use the following
 	     operand to determine the mapping.  */
 	  now = lr_token (ldfile, charmap, NULL);
@@ -2113,6 +2197,14 @@ with character code range values one must use the absolute ellipsis `...'"));
 	  break;
 
 	case tok_translit_start:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  /* The rest of the line better should be empty.  */
 	  lr_ignore_rest (ldfile, 1);
 
@@ -2186,6 +2278,14 @@ with character code range values one must use the absolute ellipsis `...'"));
 	  break;
 
 	case tok_ident:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  /* This could mean one of several things.  First test whether
 	     it's a character class name.  */
 	  for (cnt = 0; cnt < ctype->nr_charclass; ++cnt)
@@ -2785,6 +2885,26 @@ no output digits defined and none of the standard names in the charmap"));
 		  /* This is better than nothing.  */
 		  ctype->mboutdigits[cnt]->bytes[0] = digits[cnt];
 		  ctype->mboutdigits[cnt]->nbytes = 1;
+		}
+	    }
+
+	  ctype->wcoutdigits[cnt] = repertoire_find_value (repertoire,
+							   digits + cnt, 1);
+
+	  if (ctype->wcoutdigits[cnt] == ILLEGAL_CHAR_VALUE)
+	    {
+	      ctype->wcoutdigits[cnt] = repertoire_find_value (repertoire,
+							       longnames[cnt],
+							       strlen (longnames[cnt]));
+
+	      if (ctype->wcoutdigits[cnt] == ILLEGAL_CHAR_VALUE)
+		{
+		  /* Provide a replacement.  */
+		  error (0, 0, _("\
+no output digits defined and none of the standard names in the repertoire"));
+
+		  /* This is better than nothing.  */
+		  ctype->wcoutdigits[cnt] = (uint32_t) digits[cnt];
 		}
 	    }
 	}

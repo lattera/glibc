@@ -41,6 +41,7 @@ locfile_read (struct localedef_t *result, struct charmap_t *charmap)
   const char *repertoire_name = result->repertoire_name;
   int locale_mask = result->needed ^ result->avail;
   struct linereader *ldfile;
+  int not_here = ALL_LOCALES;
 
   /* If no repertoire name was specified use the global one.  */
   if (repertoire_name == NULL)
@@ -158,72 +159,84 @@ argument to `%s' must be a single character"),
 	  ctype_read (ldfile, result, charmap, repertoire_name,
 		      (locale_mask & CTYPE_LOCALE) == 0);
 	  result->avail |= locale_mask & CTYPE_LOCALE;
+	  not_here ^= CTYPE_LOCALE;
 	  continue;
 
 	case tok_lc_collate:
 	  collate_read (ldfile, result, charmap, repertoire_name,
 			(locale_mask & COLLATE_LOCALE) == 0);
 	  result->avail |= locale_mask & COLLATE_LOCALE;
+	  not_here ^= COLLATE_LOCALE;
 	  continue;
 
 	case tok_lc_monetary:
 	  monetary_read (ldfile, result, charmap, repertoire_name,
 			 (locale_mask & MONETARY_LOCALE) == 0);
 	  result->avail |= locale_mask & MONETARY_LOCALE;
+	  not_here ^= MONETARY_LOCALE;
 	  continue;
 
 	case tok_lc_numeric:
 	  numeric_read (ldfile, result, charmap, repertoire_name,
 			(locale_mask & NUMERIC_LOCALE) == 0);
 	  result->avail |= locale_mask & NUMERIC_LOCALE;
+	  not_here ^= NUMERIC_LOCALE;
 	  continue;
 
 	case tok_lc_time:
 	  time_read (ldfile, result, charmap, repertoire_name,
 		     (locale_mask & TIME_LOCALE) == 0);
 	  result->avail |= locale_mask & TIME_LOCALE;
+	  not_here ^= TIME_LOCALE;
 	  continue;
 
 	case tok_lc_messages:
 	  messages_read (ldfile, result, charmap, repertoire_name,
 			 (locale_mask & MESSAGES_LOCALE) == 0);
 	  result->avail |= locale_mask & MESSAGES_LOCALE;
+	  not_here ^= MESSAGES_LOCALE;
 	  continue;
 
 	case tok_lc_paper:
 	  paper_read (ldfile, result, charmap, repertoire_name,
 		      (locale_mask & PAPER_LOCALE) == 0);
 	  result->avail |= locale_mask & PAPER_LOCALE;
+	  not_here ^= PAPER_LOCALE;
 	  continue;
 
 	case tok_lc_name:
 	  name_read (ldfile, result, charmap, repertoire_name,
 		     (locale_mask & NAME_LOCALE) == 0);
 	  result->avail |= locale_mask & NAME_LOCALE;
+	  not_here ^= NAME_LOCALE;
 	  continue;
 
 	case tok_lc_address:
 	  address_read (ldfile, result, charmap, repertoire_name,
 			(locale_mask & ADDRESS_LOCALE) == 0);
 	  result->avail |= locale_mask & ADDRESS_LOCALE;
+	  not_here ^= ADDRESS_LOCALE;
 	  continue;
 
 	case tok_lc_telephone:
 	  telephone_read (ldfile, result, charmap, repertoire_name,
 			  (locale_mask & TELEPHONE_LOCALE) == 0);
 	  result->avail |= locale_mask & TELEPHONE_LOCALE;
+	  not_here ^= TELEPHONE_LOCALE;
 	  continue;
 
 	case tok_lc_measurement:
 	  measurement_read (ldfile, result, charmap, repertoire_name,
 			    (locale_mask & MEASUREMENT_LOCALE) == 0);
 	  result->avail |= locale_mask & MEASUREMENT_LOCALE;
+	  not_here ^= MEASUREMENT_LOCALE;
 	  continue;
 
 	case tok_lc_identification:
 	  identification_read (ldfile, result, charmap, repertoire_name,
 			       (locale_mask & IDENTIFICATION_LOCALE) == 0);
 	  result->avail |= locale_mask & IDENTIFICATION_LOCALE;
+	  not_here ^= IDENTIFICATION_LOCALE;
 	  continue;
 
 	default:
@@ -238,6 +251,10 @@ syntax error: not inside a locale definition section"));
 
   /* We read all of the file.  */
   lr_close (ldfile);
+
+  /* Mark the categories which are not contained in the file.  We assume
+     them to be available and the default data will be used.  */
+  result->avail |= not_here;
 
   return 0;
 }
@@ -299,7 +316,7 @@ write_all_categories (struct localedef_t *definitions,
   int cnt;
 
   for (cnt = 0; cnt < sizeof (write_funcs) / sizeof (write_funcs[0]); ++cnt)
-    if (check_funcs[cnt] != NULL)
+    if (write_funcs[cnt] != NULL)
       write_funcs[cnt] (definitions, charmap, output_path);
 }
 

@@ -26,6 +26,7 @@
 #include <fcntl.h>
 #include <libintl.h>
 #include <locale.h>
+#include <mcheck.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -134,6 +135,9 @@ main (int argc, char *argv[])
   struct localedef_t global;
   int remaining;
 
+  /* Enable `malloc' debugging.  */
+  mcheck (NULL);
+
   /* Set initial values for global variables.  */
   copy_list = NULL;
   posix_conformance = getenv ("POSIXLY_CORRECT") != NULL;
@@ -196,7 +200,7 @@ main (int argc, char *argv[])
     {
       struct localedef_t *runp = locales;
 
-      while (runp != NULL && runp->needed == runp->avail)
+      while (runp != NULL && (runp->needed & runp->avail) == runp->needed)
 	runp = runp->next;
 
       if (runp == NULL)
@@ -429,7 +433,8 @@ normalize_codeset (codeset, name_len)
 
 
 struct localedef_t *
-add_to_readlist (int locale, const char *name, const char *repertoire_name)
+add_to_readlist (int locale, const char *name, const char *repertoire_name,
+		 int generate)
 {
   struct localedef_t *runp = locales;
 
@@ -439,7 +444,11 @@ add_to_readlist (int locale, const char *name, const char *repertoire_name)
   if (runp == NULL)
     {
       /* Add a new entry at the end.  */
-      struct localedef_t *newp = xcalloc (1, sizeof (struct localedef_t));
+      struct localedef_t *newp;
+
+      assert (generate == 1);
+
+      newp = xcalloc (1, sizeof (struct localedef_t));
       newp->name = name;
       newp->repertoire_name = repertoire_name;
 
@@ -454,7 +463,7 @@ add_to_readlist (int locale, const char *name, const char *repertoire_name)
 	}
     }
 
-  if ((runp->needed & (1 << locale)) != 0)
+  if (generate && (runp->needed & (1 << locale)) != 0)
     error (5, 0, _("circular dependencies between locale definitions"));
 
   runp->needed |= 1 << locale;
@@ -467,9 +476,15 @@ struct localedef_t *
 find_locale (int locale, const char *name, const char *repertoire_name,
 	     struct charmap_t *charmap)
 {
-  struct localedef_t *result = add_to_readlist (locale, name, repertoire_name);
+  struct localedef_t *result;
 
-  if (locfile_read (result, charmap) != 0)
+  /* Find the locale, but do not generate it since this would be a bug.  */
+  result = add_to_readlist (locale, name, repertoire_name, 0);
+
+  assert (result != NULL);
+
+  if ((result->avail & (1 << locale)) == 0
+      && locfile_read (result, charmap) != 0)
     error (4, errno, _("cannot open locale definition file `%s'"),
 	   result->name);
 

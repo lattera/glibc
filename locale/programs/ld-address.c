@@ -87,8 +87,11 @@ address_startup (struct linereader *lr, struct localedef_t *locale,
       (struct locale_address_t *) xcalloc (1,
 					   sizeof (struct locale_address_t));
 
-  lr->translate_strings = 1;
-  lr->return_widestr = 0;
+  if (lr != NULL)
+    {
+      lr->translate_strings = 1;
+      lr->return_widestr = 0;
+    }
 }
 
 
@@ -98,11 +101,45 @@ address_finish (struct localedef_t *locale, struct charmap_t *charmap)
   struct locale_address_t *address = locale->categories[LC_ADDRESS].address;
   size_t cnt;
   int helper;
+  int nothing = 0;
+
+  /* Now resolve copying and also handle completely missing definitions.  */
+  if (address == NULL)
+    {
+      /* First see whether we were supposed to copy.  If yes, find the
+	 actual definition.  */
+      if (locale->copy_name[LC_ADDRESS] != NULL)
+	{
+	  /* Find the copying locale.  This has to happen transitively since
+	     the locale we are copying from might also copying another one.  */
+	  struct localedef_t *from = locale;
+
+	  do
+	    from = find_locale (LC_ADDRESS, from->copy_name[LC_ADDRESS],
+				from->repertoire_name, charmap);
+	  while (from->categories[LC_ADDRESS].address == NULL
+		 && from->copy_name[LC_ADDRESS] != NULL);
+
+	  address = locale->categories[LC_ADDRESS].address
+	    = from->categories[LC_ADDRESS].address;
+	}
+
+      /* If there is still no definition issue an warning and create an
+	 empty one.  */
+      if (address == NULL)
+	{
+	  error (0, 0, _("No definition for %s category found"), "LC_ADDRESS");
+	  address_startup (NULL, locale, 0);
+	  address = locale->categories[LC_ADDRESS].address;
+	  nothing = 1;
+	}
+    }
 
   if (address->postal_fmt == NULL)
     {
-      error (0, 0, _("%s: field `%s' not defined"),
-	     "LC_ADDRESS", "postal_fmt");
+      if (! nothing)
+	error (0, 0, _("%s: field `%s' not defined"),
+	       "LC_ADDRESS", "postal_fmt");
       /* Use as the default value the value of the i18n locale.  */
       address->postal_fmt = "%a%N%f%N%d%N%b%N%s %h %e %r%N%C-%z %T%N%c%N";
     }
@@ -138,7 +175,7 @@ address_finish (struct localedef_t *locale, struct charmap_t *charmap)
 #define TEST_ELEM(cat) \
   if (address->cat == NULL)						      \
     {									      \
-      if (verbose)							      \
+      if (verbose && ! nothing)						      \
 	error (0, 0, _("%s: field `%s' not defined"), "LC_ADDRESS", #cat);    \
       address->cat = "";						      \
     }
@@ -155,7 +192,7 @@ address_finish (struct localedef_t *locale, struct charmap_t *charmap)
   helper = 1;
   if (address->lang_term == NULL)
     {
-      if (verbose)
+      if (verbose && ! nothing)
 	error (0, 0, _("%s: field `%s' not defined"), "LC_ADDRESS",
 	       "lang_term");
       address->lang_term = "";
@@ -182,7 +219,7 @@ address_finish (struct localedef_t *locale, struct charmap_t *charmap)
 
   if (address->lang_ab == NULL)
     {
-      if (verbose)
+      if (verbose && ! nothing)
 	error (0, 0, _("%s: field `%s' not defined"), "LC_ADDRESS", "lang_ab");
       address->lang_ab = "";
     }
@@ -242,7 +279,7 @@ address_finish (struct localedef_t *locale, struct charmap_t *charmap)
 
   if (address->country_num == 0)
     {
-      if (verbose)
+      if (verbose && ! nothing)
 	error (0, 0, _("%s: field `%s' not defined"),
 	       "LC_ADDRESS", "country_num");
       cnt = sizeof (iso3166) / sizeof (iso3166[0]);
@@ -262,7 +299,7 @@ address_finish (struct localedef_t *locale, struct charmap_t *charmap)
 
   if (address->country_ab2 == NULL)
     {
-      if (verbose)
+      if (verbose && ! nothing)
 	error (0, 0, _("%s: field `%s' not defined"),
 	       "LC_ADDRESS", "country_ab2");
       address->country_ab2 = "  ";
@@ -274,7 +311,7 @@ address_finish (struct localedef_t *locale, struct charmap_t *charmap)
 
   if (address->country_ab3 == NULL)
     {
-      if (verbose)
+      if (verbose && ! nothing)
 	error (0, 0, _("%s: field `%s' not defined"),
 	       "LC_ADDRESS", "country_ab3");
       address->country_ab3 = "   ";
@@ -416,8 +453,8 @@ address_read (struct linereader *ldfile, struct localedef_t *result,
   /* If we see `copy' now we are almost done.  */
   if (nowtok == tok_copy)
     {
-      handle_copy (ldfile, charmap, repertoire, tok_lc_address, LC_ADDRESS,
-		   "LC_ADDRESS", ignore_content);
+      handle_copy (ldfile, charmap, repertoire, result, tok_lc_address,
+		   LC_ADDRESS, "LC_ADDRESS", ignore_content);
       return;
     }
 
@@ -443,6 +480,14 @@ address_read (struct linereader *ldfile, struct localedef_t *result,
 	{
 #define STR_ELEM(cat) \
 	case tok_##cat:							      \
+	  /* Ignore the rest of the line if we don't need the input of	      \
+	     this line.  */						      \
+	  if (ignore_content)						      \
+	    {								      \
+	      lr_ignore_rest (ldfile, 0);				      \
+	      break;							      \
+	    }								      \
+									      \
 	  arg = lr_token (ldfile, charmap, NULL);			      \
 	  if (arg->tok != tok_string)					      \
 	    goto err_label;						      \
@@ -473,6 +518,14 @@ address_read (struct linereader *ldfile, struct localedef_t *result,
 
 #define INT_ELEM(cat) \
 	case tok_##cat:							      \
+	  /* Ignore the rest of the line if we don't need the input of	      \
+	     this line.  */						      \
+	  if (ignore_content)						      \
+	    {								      \
+	      lr_ignore_rest (ldfile, 0);				      \
+	      break;							      \
+	    }								      \
+									      \
 	  arg = lr_token (ldfile, charmap, NULL);			      \
 	  if (arg->tok != tok_number)					      \
 	    goto err_label;						      \

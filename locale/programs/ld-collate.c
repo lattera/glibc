@@ -601,6 +601,14 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
       switch (nowtok)
 	{
 	case tok_coll_weight_max:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  if (state != 0)
 	    goto err_label;
 
@@ -616,6 +624,14 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	  break;
 
 	case tok_section_symbol:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  if (state != 0)
 	    goto err_label;
 
@@ -652,6 +668,14 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	  break;
 
 	case tok_collating_element:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  if (state != 0)
 	    goto err_label;
 
@@ -732,6 +756,14 @@ error while adding collating element"));
 	  break;
 
 	case tok_collating_symbol:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  if (state != 0)
 	    goto err_label;
 
@@ -774,6 +806,14 @@ error while adding collating symbol"));
 	  break;
 
 	case tok_symbol_equivalence:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  if (state != 0)
 	    goto err_label;
 
@@ -853,6 +893,14 @@ error while adding equivalent collating symbol"));
 	  break;
 
 	case tok_order_start:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  if (state != 0 && state != 1)
 	    goto err_label;
 	  state = 1;
@@ -933,6 +981,14 @@ error while adding equivalent collating symbol"));
 	  break;
 
 	case tok_order_end:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  if (state != 1)
 	    goto err_label;
 	  state = 2;
@@ -940,6 +996,14 @@ error while adding equivalent collating symbol"));
 	  break;
 
 	case tok_reorder_after:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  if (state != 2 && state != 3)
 	    goto err_label;
 	  state = 3;
@@ -947,6 +1011,11 @@ error while adding equivalent collating symbol"));
 	  break;
 
 	case tok_reorder_end:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    break;
+
 	  if (state != 3)
 	    goto err_label;
 	  state = 4;
@@ -954,6 +1023,14 @@ error while adding equivalent collating symbol"));
 	  break;
 
 	case tok_bsymbol:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  if (state != 1 && state != 3)
 	    goto err_label;
 
@@ -996,12 +1073,28 @@ error while adding equivalent collating symbol"));
 	  break;
 
 	case tok_undefined:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  if (state != 1)
 	    goto err_label;
 	  /* XXX handle UNDEFINED weight */
 	  break;
 
 	case tok_ellipsis3:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  if (state != 1 && state != 3)
 	    goto err_label;
 
@@ -1012,16 +1105,21 @@ error while adding equivalent collating symbol"));
 
 	case tok_end:
 	  /* Next we assume `LC_COLLATE'.  */
-	  if (state == 0)
-	    /* We must either see a copy statement or have ordering values.  */
-	    lr_error (ldfile, _("%s: empty category description not allowed"),
-		      "LC_COLLATE");
-	  else if (state == 1)
-	    lr_error (ldfile, _("%s: missing `order_end' keyword"),
-		      "LC_COLLATE");
-	  else if (state == 3)
-	    error (0, 0, _("%s: missing `reorder-end' keyword"),
-		   "LC_COLLATE");
+	  if (!ignore_content)
+	    {
+	      if (state == 0)
+		/* We must either see a copy statement or have
+		   ordering values.  */
+		lr_error (ldfile,
+			  _("%s: empty category description not allowed"),
+			  "LC_COLLATE");
+	      else if (state == 1)
+		lr_error (ldfile, _("%s: missing `order_end' keyword"),
+			  "LC_COLLATE");
+	      else if (state == 3)
+		error (0, 0, _("%s: missing `reorder-end' keyword"),
+		       "LC_COLLATE");
+	    }
 	  arg = lr_token (ldfile, charmap, NULL);
 	  if (arg->tok == tok_eof)
 	    break;
@@ -3007,8 +3105,8 @@ read_lc_collate (struct linereader *ldfile, struct localedef_t *result,
   /* If we see `copy' now we are almost done.  */
   if (nowtok == tok_copy)
     {
-      handle_copy (ldfile, charmap, tok_lc_collate, LC_COLLATE, "LC_COLLATE",
-                   ignore_content);
+      handle_copy (ldfile, charmap, repertoire, result, tok_lc_collate,
+		   LC_COLLATE, "LC_COLLATE", ignore_content);
       did_copy = 1;
     }
 

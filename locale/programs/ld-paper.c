@@ -51,8 +51,11 @@ paper_startup (struct linereader *lr, struct localedef_t *locale,
     locale->categories[LC_PAPER].paper =
       (struct locale_paper_t *) xcalloc (1, sizeof (struct locale_paper_t));
 
-  lr->translate_strings = 1;
-  lr->return_widestr = 0;
+  if (lr != NULL)
+    {
+      lr->translate_strings = 1;
+      lr->return_widestr = 0;
+    }
 }
 
 
@@ -60,10 +63,44 @@ void
 paper_finish (struct localedef_t *locale, struct charmap_t *charmap)
 {
   struct locale_paper_t *paper = locale->categories[LC_PAPER].paper;
+  int nothing = 0;
+
+  /* Now resolve copying and also handle completely missing definitions.  */
+  if (paper == NULL)
+    {
+      /* First see whether we were supposed to copy.  If yes, find the
+	 actual definition.  */
+      if (locale->copy_name[LC_PAPER] != NULL)
+	{
+	  /* Find the copying locale.  This has to happen transitively since
+	     the locale we are copying from might also copying another one.  */
+	  struct localedef_t *from = locale;
+
+	  do
+	    from = find_locale (LC_PAPER, from->copy_name[LC_PAPER],
+				from->repertoire_name, charmap);
+	  while (from->categories[LC_PAPER].paper == NULL
+		 && from->copy_name[LC_PAPER] != NULL);
+
+	  paper = locale->categories[LC_PAPER].paper
+	    = from->categories[LC_PAPER].paper;
+	}
+
+      /* If there is still no definition issue an warning and create an
+	 empty one.  */
+      if (paper == NULL)
+	{
+	  error (0, 0, _("No definition for %s category found"), "LC_PAPER");
+	  paper_startup (NULL, locale, 0);
+	  paper = locale->categories[LC_PAPER].paper;
+	  nothing = 1;
+	}
+    }
 
   if (paper->height == 0)
     {
-      error (0, 0, _("%s: field `%s' not defined"), "LC_PAPER", "height");
+      if (! nothing)
+	error (0, 0, _("%s: field `%s' not defined"), "LC_PAPER", "height");
       /* Use as default values the values from the i18n locale.  */
       paper->height = 297;
     }
@@ -71,7 +108,8 @@ paper_finish (struct localedef_t *locale, struct charmap_t *charmap)
 
   if (paper->width == 0)
     {
-      error (0, 0, _("%s: field `%s' not defined"), "LC_PAPER", "width");
+      if (! nothing)
+	error (0, 0, _("%s: field `%s' not defined"), "LC_PAPER", "width");
       /* Use as default values the values from the i18n locale.  */
       paper->width = 210;
     }
@@ -167,8 +205,8 @@ paper_read (struct linereader *ldfile, struct localedef_t *result,
   /* If we see `copy' now we are almost done.  */
   if (nowtok == tok_copy)
     {
-      handle_copy (ldfile, charmap, repertoire, tok_lc_paper, LC_PAPER,
-		   "LC_PAPER", ignore_content);
+      handle_copy (ldfile, charmap, repertoire, result, tok_lc_paper,
+		   LC_PAPER, "LC_PAPER", ignore_content);
       return;
     }
 
@@ -194,6 +232,14 @@ paper_read (struct linereader *ldfile, struct localedef_t *result,
 	{
 #define INT_ELEM(cat) \
 	case tok_##cat:							      \
+	  /* Ignore the rest of the line if we don't need the input of	      \
+	     this line.  */						      \
+	  if (ignore_content)						      \
+	    {								      \
+	      lr_ignore_rest (ldfile, 0);				      \
+	      break;							      \
+	    }								      \
+									      \
 	  arg = lr_token (ldfile, charmap, NULL);			      \
 	  if (arg->tok != tok_number)					      \
 	    goto err_label;						      \

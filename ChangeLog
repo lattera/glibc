@@ -1,3 +1,36 @@
+1999-09-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-address.c: Fix handling of non-existing
+	definitions for this category.  Correctly ignore content of this
+	category is this is necessary.
+	* locale/programs/ld-collate.c: Likewise.
+	* locale/programs/ld-ctype.c: Likewise.
+	* locale/programs/ld-identification.c: Likewise.
+	* locale/programs/ld-measurement.c: Likewise.
+	* locale/programs/ld-messages.c: Likewise.
+	* locale/programs/ld-monetary.c: Likewise.
+	* locale/programs/ld-name.c: Likewise.
+	* locale/programs/ld-numeric.c: Likewise.
+	* locale/programs/ld-paper.c: Likewise.
+	* locale/programs/ld-telephone.c: Likewise.
+	* locale/programs/ld-time.c: Likewise.
+	* locale/programs/locfile.h (handle_copy): Take extra parameter
+	with result pointer.  Fill in name of locale from which to copy.
+	Correctly read token after `END'.
+
+	* locale/programs/localedef.c (main): Correct handling copy.
+	(add_to_readlist): Take extra parameter which says whether we
+	are supposed to read the file or not.
+	(find_locale): Call add_to_readlist with extra parameter set to 0.
+
+	* locale/programs/localedef.h (struct localedef_t): Use __LC_LAST
+	instead of wrong number in array definitions.
+	(add_to_readlist): Update prototype.
+
+	* locale/programs/locfile.c (locfile_read): Mark categories not
+	available in source file as read.
+	(write_all_categories): Fix typo.
+
 1999-09-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/elf.h (SHF_MASKOS): Added.

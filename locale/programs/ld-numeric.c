@@ -58,8 +58,11 @@ numeric_startup (struct linereader *lr, struct localedef_t *locale,
       numeric->grouping_len = 0;
     }
 
-  lr->translate_strings = 1;
-  lr->return_widestr = 0;
+  if (lr != NULL)
+    {
+      lr->translate_strings = 1;
+      lr->return_widestr = 0;
+    }
 }
 
 
@@ -67,9 +70,42 @@ void
 numeric_finish (struct localedef_t *locale, struct charmap_t *charmap)
 {
   struct locale_numeric_t *numeric = locale->categories[LC_NUMERIC].numeric;
+  int nothing = 0;
+
+  /* Now resolve copying and also handle completely missing definitions.  */
+  if (numeric == NULL)
+    {
+      /* First see whether we were supposed to copy.  If yes, find the
+	 actual definition.  */
+      if (locale->copy_name[LC_NUMERIC] != NULL)
+	{
+	  /* Find the copying locale.  This has to happen transitively since
+	     the locale we are copying from might also copying another one.  */
+	  struct localedef_t *from = locale;
+
+	  do
+	    from = find_locale (LC_NUMERIC, from->copy_name[LC_NUMERIC],
+				from->repertoire_name, charmap);
+	  while (from->categories[LC_NUMERIC].numeric == NULL
+		 && from->copy_name[LC_NUMERIC] != NULL);
+
+	  numeric = locale->categories[LC_NUMERIC].numeric
+	    = from->categories[LC_NUMERIC].numeric;
+	}
+
+      /* If there is still no definition issue an warning and create an
+	 empty one.  */
+      if (numeric == NULL)
+	{
+	  error (0, 0, _("No definition for %s category found"), "LC_NUMERIC");
+	  numeric_startup (NULL, locale, 0);
+	  numeric = locale->categories[LC_NUMERIC].numeric;
+	  nothing = 1;
+	}
+    }
 
 #define TEST_ELEM(cat)							      \
-  if (numeric->cat == NULL && !be_quiet)				      \
+  if (numeric->cat == NULL && ! be_quiet && ! nothing)			      \
     error (0, 0, _("%s: field `%s' not defined"), "LC_NUMERIC", #cat)
 
   TEST_ELEM (decimal_point);
@@ -78,14 +114,14 @@ numeric_finish (struct localedef_t *locale, struct charmap_t *charmap)
   /* The decimal point must not be empty.  This is not said explicitly
      in POSIX but ANSI C (ISO/IEC 9899) says in 4.4.2.1 it has to be
      != "".  */
-  if (numeric->decimal_point[0] == '\0' && !be_quiet)
+  if (numeric->decimal_point[0] == '\0' && ! be_quiet && ! nothing)
     {
       error (0, 0, _("\
 %s: value for field `%s' must not be the empty string"),
 	     "LC_NUMERIC", "decimal_point");
     }
 
-  if (numeric->grouping_len == 0 && !be_quiet)
+  if (numeric->grouping_len == 0 && ! be_quiet && ! nothing)
     error (0, 0, _("%s: field `%s' not defined"), "LC_NUMERIC", "grouping");
 }
 
@@ -160,8 +196,8 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
   /* If we see `copy' now we are almost done.  */
   if (nowtok == tok_copy)
     {
-      handle_copy (ldfile, charmap, repertoire, tok_lc_numeric, LC_NUMERIC,
-		   "LC_NUMERIC", ignore_content);
+      handle_copy (ldfile, charmap, repertoire, result, tok_lc_numeric,
+		   LC_NUMERIC, "LC_NUMERIC", ignore_content);
       return;
     }
 
@@ -187,6 +223,14 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 	{
 #define STR_ELEM(cat) \
 	case tok_##cat:							      \
+	  /* Ignore the rest of the line if we don't need the input of	      \
+	     this line.  */						      \
+	  if (ignore_content)						      \
+	    {								      \
+	      lr_ignore_rest (ldfile, 0);				      \
+	      break;							      \
+	    }								      \
+									      \
 	  now = lr_token (ldfile, charmap, NULL);			      \
 	  if (now->tok != tok_string)					      \
 	    goto err_label;						      \
@@ -207,6 +251,14 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 	  STR_ELEM (thousands_sep);
 
 	case tok_grouping:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  now = lr_token (ldfile, charmap, NULL);
 	  if (now->tok != tok_minus1 && now->tok != tok_number)
 	    goto err_label;

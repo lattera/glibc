@@ -131,8 +131,11 @@ time_startup (struct linereader *lr, struct localedef_t *locale,
     locale->categories[LC_TIME].time =
       (struct locale_time_t *) xcalloc (1, sizeof (struct locale_time_t));
 
-  lr->translate_strings = 1;
-  lr->return_widestr = 0;
+  if (time != NULL)
+    {
+      lr->translate_strings = 1;
+      lr->return_widestr = 0;
+    }
 }
 
 
@@ -141,10 +144,46 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 {
   struct locale_time_t *time = locale->categories[LC_TIME].time;
   size_t cnt;
+  int nothing = 0;
+
+  /* Now resolve copying and also handle completely missing definitions.  */
+  if (time == NULL)
+    {
+      /* First see whether we were supposed to copy.  If yes, find the
+	 actual definition.  */
+      if (locale->copy_name[LC_TIME] != NULL)
+	{
+	  /* Find the copying locale.  This has to happen transitively since
+	     the locale we are copying from might also copying another one.  */
+	  struct localedef_t *from = locale;
+
+	  do
+	    from = find_locale (LC_TIME, from->copy_name[LC_TIME],
+				from->repertoire_name, charmap);
+	  while (from->categories[LC_TIME].time == NULL
+		 && from->copy_name[LC_TIME] != NULL);
+
+	  time = locale->categories[LC_TIME].time
+	    = from->categories[LC_TIME].time;
+	}
+
+      /* If there is still no definition issue an warning and create an
+	 empty one.  */
+      if (time == NULL)
+	{
+	  error (0, 0, _("No definition for %s category found"), "LC_TIME");
+	  time_startup (NULL, locale, 0);
+	  time = locale->categories[LC_TIME].time;
+	  nothing = 1;
+	}
+    }
 
 #define TESTARR_ELEM(cat) \
-  if (!time->cat##_defined && !be_quiet)				      \
-    error (0, 0, _("%s: field `%s' not defined"), "LC_TIME", #cat);	      \
+  if (!time->cat##_defined)						      \
+    {									      \
+      if(! be_quiet && ! nothing)					      \
+	error (0, 0, _("%s: field `%s' not defined"), "LC_TIME", #cat);	      \
+    }									      \
   else if (time->w##cat != NULL)					      \
     {									      \
       size_t n;								      \
@@ -169,8 +208,11 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
   TESTARR_ELEM (am_pm);
 
 #define TEST_ELEM(cat) \
-  if (time->cat == NULL && !be_quiet)					      \
-    error (0, 0, _("%s: field `%s' not defined"), "LC_TIME", #cat);	      \
+  if (time->cat == NULL)						      \
+    {									      \
+      if (! be_quiet && ! nothing)					      \
+	error (0, 0, _("%s: field `%s' not defined"), "LC_TIME", #cat);	      \
+    }									      \
   else if (time->w##cat != NULL)					      \
     {									      \
       size_t len = wcslen ((wchar_t *) time->w##cat) + 1;		      \
@@ -1154,7 +1196,6 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
 
   iov[2 + cnt].iov_base = (void *) time->timezone;
   iov[2 + cnt].iov_len = strlen (time->timezone) + 1;
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
   ++cnt;
   ++last_idx;
 
@@ -1198,8 +1239,8 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
   /* If we see `copy' now we are almost done.  */
   if (nowtok == tok_copy)
     {
-      handle_copy (ldfile, charmap, repertoire, tok_lc_time, LC_TIME,
-		   "LC_TIME", ignore_content);
+      handle_copy (ldfile, charmap, repertoire, result, tok_lc_time,
+		   LC_TIME, "LC_TIME", ignore_content);
       return;
     }
 
@@ -1225,6 +1266,14 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 	{
 #define STRARR_ELEM(cat, min, max) \
 	case tok_##cat:							      \
+	  /* Ignore the rest of the line if we don't need the input of	      \
+	     this line.  */						      \
+	  if (ignore_content)						      \
+	    {								      \
+	      lr_ignore_rest (ldfile, 0);				      \
+	      break;							      \
+	    }								      \
+									      \
 	  for (cnt = 0; cnt < max; ++cnt)				      \
 	    {								      \
 	      now = lr_token (ldfile, charmap, repertoire);		      \
@@ -1300,6 +1349,14 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 	  STRARR_ELEM (alt_digits, 0, 100);
 
 	case tok_era:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  do
 	    {
 	      now = lr_token (ldfile, charmap, NULL);
@@ -1335,6 +1392,14 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 
 #define STR_ELEM(cat) \
 	case tok_##cat:							      \
+	  /* Ignore the rest of the line if we don't need the input of	      \
+	     this line.  */						      \
+	  if (ignore_content)						      \
+	    {								      \
+	      lr_ignore_rest (ldfile, 0);				      \
+	      break;							      \
+	    }								      \
+									      \
 	  now = lr_token (ldfile, charmap, NULL);			      \
 	  if (now->tok != tok_string)					      \
 	    goto err_label;						      \
@@ -1368,6 +1433,14 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 
 #define INT_ELEM(cat) \
 	case tok_##cat:							      \
+	  /* Ignore the rest of the line if we don't need the input of	      \
+	     this line.  */						      \
+	  if (ignore_content)						      \
+	    {								      \
+	      lr_ignore_rest (ldfile, 0);				      \
+	      break;							      \
+	    }								      \
+									      \
 	  now = lr_token (ldfile, charmap, NULL);			      \
 	  if (now->tok != tok_number)					      \
 	    goto err_label;						      \
@@ -1383,6 +1456,14 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 	  INT_ELEM (cal_direction);
 
 	case tok_week:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  now = lr_token (ldfile, charmap, NULL);
 	  if (now->tok != tok_number)
 	    goto err_label;

@@ -148,8 +148,11 @@ monetary_startup (struct linereader *lr, struct localedef_t *locale,
       monetary->duo_int_n_sign_posn = -2;
     }
 
-  lr->translate_strings = 1;
-  lr->return_widestr = 0;
+  if (lr != NULL)
+    {
+      lr->translate_strings = 1;
+      lr->return_widestr = 0;
+    }
 }
 
 
@@ -158,12 +161,47 @@ monetary_finish (struct localedef_t *locale, struct charmap_t *charmap)
 {
   struct locale_monetary_t *monetary
     = locale->categories[LC_MONETARY].monetary;
+  int nothing = 0;
+
+  /* Now resolve copying and also handle completely missing definitions.  */
+  if (monetary == NULL)
+    {
+      /* First see whether we were supposed to copy.  If yes, find the
+	 actual definition.  */
+      if (locale->copy_name[LC_MONETARY] != NULL)
+	{
+	  /* Find the copying locale.  This has to happen transitively since
+	     the locale we are copying from might also copying another one.  */
+	  struct localedef_t *from = locale;
+
+	  do
+	    from = find_locale (LC_MONETARY, from->copy_name[LC_MONETARY],
+				from->repertoire_name, charmap);
+	  while (from->categories[LC_MONETARY].monetary == NULL
+		 && from->copy_name[LC_MONETARY] != NULL);
+
+	  monetary = locale->categories[LC_MONETARY].monetary
+	    = from->categories[LC_MONETARY].monetary;
+	}
+
+      /* If there is still no definition issue an warning and create an
+	 empty one.  */
+      if (monetary == NULL)
+	{
+	  error (0, 0, _("No definition for %s category found"),
+		 "LC_MONETARY");
+	  monetary_startup (NULL, locale, 0);
+	  monetary = locale->categories[LC_MONETARY].monetary;
+	  nothing = 1;
+	}
+    }
 
 #define TEST_ELEM(cat) \
   if (monetary->cat == NULL && !be_quiet)				      \
     {									      \
-      error (0, 0, _("%s: field `%s' not defined"),			      \
-	     "LC_MONETARY", #cat);					      \
+      if (! nothing)							      \
+	error (0, 0, _("%s: field `%s' not defined"),			      \
+	       "LC_MONETARY", #cat);					      \
       monetary->cat = "";						      \
     }
 
@@ -197,20 +235,20 @@ not correspond to a valid name in ISO 4217"),
   /* The decimal point must not be empty.  This is not said explicitly
      in POSIX but ANSI C (ISO/IEC 9899) says in 4.4.2.1 it has to be
      != "".  */
-  if (monetary->mon_decimal_point[0] == '\0' && !be_quiet)
+  if (monetary->mon_decimal_point[0] == '\0' && ! be_quiet && ! nothing)
     {
       error (0, 0, _("\
 %s: value for field `%s' must not be the empty string"),
 	     "LC_MONETARY", "mon_decimal_point");
     }
 
-  if (monetary->mon_grouping_len == 0 && !be_quiet)
+  if (monetary->mon_grouping_len == 0 && ! be_quiet && ! nothing)
     error (0, 0, _("%s: field `%s' not defined"),
 	   "LC_MONETARY", "mon_grouping");
 
 #undef TEST_ELEM
 #define TEST_ELEM(cat, min, max) \
-  if (monetary->cat == -2 && !be_quiet)					      \
+  if (monetary->cat == -2 && ! be_quiet && ! nothing)			      \
     error (0, 0, _("%s: field `%s' not defined"),			      \
 	   "LC_MONETARY", #cat);					      \
   else if ((monetary->cat < min || monetary->cat > max) && !be_quiet)	      \
@@ -244,9 +282,10 @@ not correspond to a valid name in ISO 4217"),
 
 #undef TEST_ELEM
 #define TEST_ELEM(cat, alt, min, max) \
-  if (monetary->cat == -2 && !be_quiet)					      \
+  if (monetary->cat == -2)						      \
     monetary->cat = monetary->alt;					      \
-  else if ((monetary->cat < min || monetary->cat > max) && !be_quiet)	      \
+  else if ((monetary->cat < min || monetary->cat > max) && !be_quiet	      \
+	   && ! nothing)						      \
     error (0, 0, _("\
 %s: value for field `%s' must be in range %d...%d"),			      \
 	   "LC_MONETARY", #cat, min, max)
@@ -577,8 +616,8 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
   /* If we see `copy' now we are almost done.  */
   if (nowtok == tok_copy)
     {
-      handle_copy (ldfile, charmap, repertoire, tok_lc_monetary, LC_MONETARY,
-		   "LC_MONETARY", ignore_content);
+      handle_copy (ldfile, charmap, repertoire, result, tok_lc_monetary,
+		   LC_MONETARY, "LC_MONETARY", ignore_content);
       return;
     }
 
@@ -604,6 +643,14 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 	{
 #define STR_ELEM(cat) \
 	case tok_##cat:							      \
+	  /* Ignore the rest of the line if we don't need the input of	      \
+	     this line.  */						      \
+	  if (ignore_content)						      \
+	    {								      \
+	      lr_ignore_rest (ldfile, 0);				      \
+	      break;							      \
+	    }								      \
+									      \
 	  now = lr_token (ldfile, charmap, NULL);			      \
 	  if (now->tok != tok_string)					      \
 	    goto err_label;						      \
@@ -632,6 +679,14 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 
 #define INT_ELEM(cat) \
 	case tok_##cat:							      \
+	  /* Ignore the rest of the line if we don't need the input of	      \
+	     this line.  */						      \
+	  if (ignore_content)						      \
+	    {								      \
+	      lr_ignore_rest (ldfile, 0);				      \
+	      break;							      \
+	    }								      \
+									      \
 	  now = lr_token (ldfile, charmap, NULL);			      \
 	  if (now->tok != tok_minus1 && now->tok != tok_number)		      \
 	    goto err_label;						      \
@@ -676,6 +731,14 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 	  INT_ELEM (duo_valid_to);
 
 	case tok_mon_grouping:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  now = lr_token (ldfile, charmap, NULL);
 	  if (now->tok != tok_minus1 && now->tok != tok_number)
 	    goto err_label;
@@ -746,6 +809,14 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 	  break;
 
 	case tok_conversion_rate:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  now = lr_token (ldfile, charmap, NULL);
 	  if (now->tok != tok_number)
 	    goto err_label;

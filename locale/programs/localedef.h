@@ -98,9 +98,11 @@ struct localedef_t
     struct locale_telephone_t *telephone;
     struct locale_measurement_t *measurement;
     struct locale_identification_t *identification;
-  } categories[12];
+  } categories[__LC_LAST];
 
-  size_t len[12];
+  size_t len[__LC_LAST];
+
+  const char *copy_name[__LC_LAST];
 
   const char *repertoire_name;
 };
@@ -121,7 +123,8 @@ extern char *xstrdup (const char *__str);
 
 /* Mark given locale as to be read.  */
 extern struct localedef_t *add_to_readlist (int locale, const char *name,
-					    const char *repertoire_name);
+					    const char *repertoire_name,
+					    int generate);
 
 /* Find the information for the locale NAME.  */
 extern struct localedef_t *find_locale (int locale, const char *name,

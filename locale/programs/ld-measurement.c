@@ -48,8 +48,11 @@ measurement_startup (struct linereader *lr, struct localedef_t *locale,
       (struct locale_measurement_t *)
       xcalloc (1, sizeof (struct locale_measurement_t));
 
-  lr->translate_strings = 1;
-  lr->return_widestr = 0;
+  if (lr != NULL)
+    {
+      lr->translate_strings = 1;
+      lr->return_widestr = 0;
+    }
 }
 
 
@@ -58,11 +61,47 @@ measurement_finish (struct localedef_t *locale, struct charmap_t *charmap)
 {
   struct locale_measurement_t *measurement =
     locale->categories[LC_MEASUREMENT].measurement;
+  int nothing = 0;
+
+  /* Now resolve copying and also handle completely missing definitions.  */
+  if (measurement == NULL)
+    {
+      /* First see whether we were supposed to copy.  If yes, find the
+	 actual definition.  */
+      if (locale->copy_name[LC_MEASUREMENT] != NULL)
+	{
+	  /* Find the copying locale.  This has to happen transitively since
+	     the locale we are copying from might also copying another one.  */
+	  struct localedef_t *from = locale;
+
+	  do
+	    from = find_locale (LC_MEASUREMENT,
+				from->copy_name[LC_MEASUREMENT],
+				from->repertoire_name, charmap);
+	  while (from->categories[LC_MEASUREMENT].measurement == NULL
+		 && from->copy_name[LC_MEASUREMENT] != NULL);
+
+	  measurement = locale->categories[LC_MEASUREMENT].measurement
+	    = from->categories[LC_MEASUREMENT].measurement;
+	}
+
+      /* If there is still no definition issue an warning and create an
+	 empty one.  */
+      if (measurement == NULL)
+	{
+	  error (0, 0, _("No definition for %s category found"),
+		 "LC_MEASUREMENT");
+	  measurement_startup (NULL, locale, 0);
+	  measurement = locale->categories[LC_MEASUREMENT].measurement;
+	  nothing = 1;
+	}
+    }
 
   if (measurement->measurement == 0)
     {
-      error (0, 0, _("%s: field `%s' not defined"),
-	     "LC_MEASUREMENT", "measurement");
+      if (! nothing)
+	error (0, 0, _("%s: field `%s' not defined"),
+	       "LC_MEASUREMENT", "measurement");
       /* Use as the default value the value of the i18n locale.  */
       measurement->measurement = 1;
     }
@@ -137,7 +176,7 @@ measurement_read (struct linereader *ldfile, struct localedef_t *result,
   /* If we see `copy' now we are almost done.  */
   if (nowtok == tok_copy)
     {
-      handle_copy (ldfile, charmap, repertoire, tok_lc_measurement,
+      handle_copy (ldfile, charmap, repertoire, result, tok_lc_measurement,
 		   LC_MEASUREMENT, "LC_MEASUREMENT", ignore_content);
       return;
     }
@@ -164,6 +203,14 @@ measurement_read (struct linereader *ldfile, struct localedef_t *result,
 	{
 #define INT_ELEM(cat) \
 	case tok_##cat:							      \
+	  /* Ignore the rest of the line if we don't need the input of	      \
+	     this line.  */						      \
+	  if (ignore_content)						      \
+	    {								      \
+	      lr_ignore_rest (ldfile, 0);				      \
+	      break;							      \
+	    }								      \
+									      \
 	  arg = lr_token (ldfile, charmap, NULL);			      \
 	  if (arg->tok != tok_number)					      \
 	    goto err_label;						      \

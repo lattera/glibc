@@ -47,8 +47,9 @@ struct locale_file
 /* General handling of `copy'.  */
 static inline void
 handle_copy (struct linereader *ldfile, struct charmap_t *charmap,
-	     struct repertoire_t *repertoire, enum token_t token, int locale,
-	     const char *locale_name, int ignore_content)
+	     struct repertoire_t *repertoire, struct localedef_t *result,
+	     enum token_t token, int locale, const char *locale_name,
+	     int ignore_content)
 {
   struct token *now;
   int warned = 0;
@@ -62,15 +63,19 @@ handle_copy (struct linereader *ldfile, struct charmap_t *charmap,
 	lr_error (ldfile, _("\
 locale name should consist only of portable characters"));
       else
-	(void) add_to_readlist (locale, now->val.str.startmb,
-				repertoire->name);
+	{
+	  (void) add_to_readlist (locale, now->val.str.startmb,
+				  repertoire->name, 1);
+	  result->copy_name[locale] = now->val.str.startmb;
+	}
     }
 
   lr_ignore_rest (ldfile, now->tok == tok_string);
 
   /* The rest of the line must be empty and the next keyword must be
      `END xxx'.  */
-  while (lr_token (ldfile, charmap, NULL)->tok != tok_end)
+  while ((now = lr_token (ldfile, charmap, NULL))->tok != tok_end
+	 && now->tok != tok_eof)
     {
       if (warned == 0)
 	{
@@ -82,12 +87,20 @@ no other keyword shall be specified when `copy' is used"));
       lr_ignore_rest (ldfile, 0);
     }
 
-  /* Handle `END xxx'.  */
-  if (now->tok != token)
-    lr_error (ldfile, _("\
+  if (now->tok != tok_eof)
+    {
+      /* Handle `END xxx'.  */
+      now = lr_token (ldfile, charmap, NULL);
+
+      if (now->tok != token)
+	lr_error (ldfile, _("\
 `%1$s' definition does not end with `END %1$s'"), locale_name);
 
-  lr_ignore_rest (ldfile, now->tok == token);
+      lr_ignore_rest (ldfile, now->tok == token);
+    }
+  else
+    /* When we come here we reached the end of the file.  */
+    lr_error (ldfile, _("%s: premature end of file"), locale_name);
 }
 
 

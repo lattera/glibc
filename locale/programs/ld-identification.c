@@ -54,6 +54,24 @@ struct locale_identification_t
 };
 
 
+static const char *category_name[__LC_LAST] =
+{
+  [LC_CTYPE] = "LC_CTYPE",
+  [LC_NUMERIC] = "LC_NUMERIC",
+  [LC_TIME] = "LC_TIME",
+  [LC_COLLATE] = "LC_COLLATE",
+  [LC_MONETARY] = "LC_MONETARY",
+  [LC_MESSAGES] = "LC_MESSAGES",
+  [LC_ALL] = "LC_ALL",
+  [LC_PAPER] = "LC_PAPER",
+  [LC_NAME] = "LC_NAME",
+  [LC_ADDRESS] = "LC_ADDRESS",
+  [LC_TELEPHONE] = "LC_TELEPHONE",
+  [LC_MEASUREMENT] = "LC_MEASUREMENT",
+  [LC_IDENTIFICATION] = "LC_IDENTIFICATION"
+};
+
+
 static void
 identification_startup (struct linereader *lr, struct localedef_t *locale,
 			int ignore_content)
@@ -68,8 +86,11 @@ identification_startup (struct linereader *lr, struct localedef_t *locale,
 	"";
     }
 
-  lr->translate_strings = 1;
-  lr->return_widestr = 0;
+  if (lr != NULL)
+    {
+      lr->translate_strings = 1;
+      lr->return_widestr = 0;
+    }
 }
 
 
@@ -78,11 +99,48 @@ identification_finish (struct localedef_t *locale, struct charmap_t *charmap)
 {
   struct locale_identification_t *identification
     = locale->categories[LC_IDENTIFICATION].identification;
+  int nothing = 0;
+  size_t num;
+
+  /* Now resolve copying and also handle completely missing definitions.  */
+  if (identification == NULL)
+    {
+      /* First see whether we were supposed to copy.  If yes, find the
+	 actual definition.  */
+      if (locale->copy_name[LC_IDENTIFICATION] != NULL)
+	{
+	  /* Find the copying locale.  This has to happen transitively since
+	     the locale we are copying from might also copying another one.  */
+	  struct localedef_t *from = locale;
+
+	  do
+	    from = find_locale (LC_IDENTIFICATION,
+				from->copy_name[LC_IDENTIFICATION],
+				from->repertoire_name, charmap);
+	  while (from->categories[LC_IDENTIFICATION].identification == NULL
+		 && from->copy_name[LC_IDENTIFICATION] != NULL);
+
+	  identification = locale->categories[LC_IDENTIFICATION].identification
+	    = from->categories[LC_IDENTIFICATION].identification;
+	}
+
+      /* If there is still no definition issue an warning and create an
+	 empty one.  */
+      if (identification == NULL)
+	{
+	  error (0, 0, _("No definition for %s category found"),
+		 "LC_IDENTIFICATION");
+	  identification_startup (NULL, locale, 0);
+	  identification
+	    = locale->categories[LC_IDENTIFICATION].identification;
+	  nothing = 1;
+	}
+    }
 
 #define TEST_ELEM(cat) \
   if (identification->cat == NULL)					      \
     {									      \
-      if (verbose)							      \
+      if (verbose && ! nothing)						      \
 	error (0, 0, _("%s: field `%s' not defined"),			      \
 	       "LC_IDENTIFICATION", #cat);				      \
       identification->cat = "";						      \
@@ -102,6 +160,15 @@ identification_finish (struct localedef_t *locale, struct charmap_t *charmap)
   TEST_ELEM (abbreviation);
   TEST_ELEM (revision);
   TEST_ELEM (date);
+
+  for (num = 0; num < __LC_LAST; ++num)
+    if (num != LC_ALL && identification->category[num] == NULL)
+      {
+	if (verbose && ! nothing)
+	  error (0, 0, _("%s: no identification for category `%s'"),
+		 "LC_IDENTIFICATION", category_name[num]);
+	identification->category[num] = "";
+      }
 }
 
 
@@ -112,7 +179,7 @@ identification_output (struct localedef_t *locale, struct charmap_t *charmap,
   struct locale_identification_t *identification
     = locale->categories[LC_IDENTIFICATION].identification;
   struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_IDENTIFICATION)
-		  + (__LC_LAST - 1)];
+		  + (__LC_LAST - 2)];
   struct locale_file data;
   uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_IDENTIFICATION)];
   size_t cnt = 0;
@@ -200,14 +267,15 @@ identification_output (struct localedef_t *locale, struct charmap_t *charmap,
 
   idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
   for (num = 0; num < __LC_LAST; ++num)
-    {
-      iov[cnt].iov_base = (void *) identification->category[num];
-      iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
-      ++cnt;
-    }
+    if (num != LC_ALL)
+      {
+	iov[cnt].iov_base = (void *) identification->category[num];
+	iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
+	++cnt;
+      }
 
   assert (cnt == (2 + _NL_ITEM_INDEX (_NL_NUM_LC_IDENTIFICATION)
-		  + (__LC_LAST - 1)));
+		  + (__LC_LAST - 2)));
 
   write_locale_data (output_path, "LC_IDENTIFICATION",
 		     2 + _NL_ITEM_INDEX (_NL_NUM_LC_IDENTIFICATION), iov);
@@ -245,7 +313,7 @@ identification_read (struct linereader *ldfile, struct localedef_t *result,
   /* If we see `copy' now we are almost done.  */
   if (nowtok == tok_copy)
     {
-      handle_copy (ldfile, charmap, repertoire, tok_lc_identification,
+      handle_copy (ldfile, charmap, repertoire, result, tok_lc_identification,
 		   LC_IDENTIFICATION, "LC_IDENTIFICATION", ignore_content);
       return;
     }
@@ -272,6 +340,14 @@ identification_read (struct linereader *ldfile, struct localedef_t *result,
 	{
 #define STR_ELEM(cat) \
 	case tok_##cat:							      \
+	  /* Ignore the rest of the line if we don't need the input of	      \
+	     this line.  */						      \
+	  if (ignore_content)						      \
+	    {								      \
+	      lr_ignore_rest (ldfile, 0);				      \
+	      break;							      \
+	    }								      \
+									      \
 	  arg = lr_token (ldfile, charmap, NULL);			      \
 	  if (arg->tok != tok_string)					      \
 	    goto err_label;						      \
@@ -304,6 +380,14 @@ identification_read (struct linereader *ldfile, struct localedef_t *result,
 	  STR_ELEM (date);
 
 	case tok_category:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
 	  /* We expect two operands.  */
 	  arg = lr_token (ldfile, charmap, NULL);
 	  if (arg->tok != tok_string && arg->tok != tok_ident)
