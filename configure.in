@@ -145,6 +145,10 @@ AC_ARG_WITH(tls, dnl
 [  --with-tls              enable support for TLS],
 	    usetls=$withval, usetls=no)
 
+AC_ARG_WITH(__thread, dnl
+[  --without-__thread      do not use TLS features even when supporting them],
+	    use__thread=$withval, use__thread=yes)
+
 AC_ARG_ENABLE(hidden-plt, dnl
 [  --disable-hidden-plt    do not hide internal function calls to avoid PLT],
 	      hidden=$enableval, hidden=yes)
@@ -1610,18 +1614,22 @@ if test "$libc_cv_gcc_subtract_local_labels" = yes; then
 fi
 
 dnl Check whether the compiler supports the __thread keyword.
-AC_CACHE_CHECK([for __thread], libc_cv_gcc___thread,
-[cat > conftest.c <<\EOF
-__thread int a = 42;
-EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS -c conftest.c >&AC_FD_CC]); then
-  libc_cv_gcc___thread=yes
+if test "x$use__thread" != xno; then
+  AC_CACHE_CHECK([for __thread], libc_cv_gcc___thread,
+  [cat > conftest.c <<\EOF
+  __thread int a = 42;
+  EOF
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS -c conftest.c >&AC_FD_CC]); then
+    libc_cv_gcc___thread=yes
+  else
+    libc_cv_gcc___thread=no
+  fi
+  rm -f conftest*])
+  if test "$libc_cv_gcc___thread" = yes; then
+    AC_DEFINE(HAVE___THREAD)
+  fi
 else
   libc_cv_gcc___thread=no
-fi
-rm -f conftest*])
-if test "$libc_cv_gcc___thread" = yes; then
-  AC_DEFINE(HAVE___THREAD)
 fi
 
 if test "$libc_cv_gcc___thread" = yes; then
