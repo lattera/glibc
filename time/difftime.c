@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1996, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 
 /* Return the difference between TIME1 and TIME0.  */
 double
-difftime (time1, time0)
+__difftime (time1, time0)
      time_t time1;
      time_t time0;
 {
@@ -36,7 +36,7 @@ difftime (time1, time0)
     return (long double) time1 - (long double) time0;
 
   if (time1 < time0)
-    return - difftime (time0, time1);
+    return - __difftime (time0, time1);
 
   /* As much as possible, avoid loss of precision by computing the
     difference before converting to double.  */
@@ -64,3 +64,4 @@ difftime (time1, time0)
      double-rounding problem.  */
   return delta - 2 * (long double) hibit;
 }
+strong_alias (__difftime, difftime)

@@ -1,5 +1,8 @@
 2004-04-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/difftime.c (__difftime): New renamed.  Make old name alias.
+	Use __difftime in recursive call.
+
 	* sysdeps/unix/sysv/linux/powerpc/ioctl.c (__ioctl): Use
 	__tcgetattr() instead of tcgetattr().
 
@@ -9,7 +12,7 @@
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S [SHARED]: Use
 	__GI__exit.
 
-	* sysdeps/powerpc/fpu/bits/mathinline.h: Addn __signbitf and
+	* sysdeps/powerpc/fpu/bits/mathinline.h: Add __signbitf and
 	__signbit inlines.
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S: Use
