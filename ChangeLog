@@ -1,3 +1,8 @@
+2003-06-15  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE):
+	Add CFI directives.
+
 2003-06-15  Guido Guenther  <agx@sigxcpu.org>
 
 	* sysdeps/unix/sysv/linux/mips/Makefile: Add missing endif and
