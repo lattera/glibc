@@ -1,5 +1,10 @@
 2002-12-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/Makefile: iconv-rules: Add definition to use gconv.map
+	linker map for all iconv modules.
+	(distribute): Add gconv.map.
+	* iconvdata/gconv.map: New file.
+
 	* elf/Makefile: Also check all iconv modules for text relocations.
 
 	* stdlib/Makefile: Remove code to automatically import GMP.

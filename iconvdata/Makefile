@@ -110,7 +110,7 @@ LDFLAGS-libCNS.so = $(LDFLAGS-soname-fname)
 LDFLAGS-libISOIR165.so = $(LDFLAGS-soname-fname)
 LDFLAGS-libJISX0213.so = $(LDFLAGS-soname-fname)
 
-distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
+distribute := gconv-modules extra-module.mk gap.awk gaptab.awk gconv.map    \
 	      gen-8bit.sh gen-8bit-gap.sh gen-8bit-gap-1.sh		    \
 	      TESTS $(filter-out testdata/CVS%, $(wildcard testdata/*))	    \
 	      TESTS2 run-iconv-test.sh tst-tables.sh tst-table.sh	    \
@@ -249,8 +249,10 @@ $(objpfx)iconv-rules: Makefile
 	  echo 8bit $(gen-8bit-modules); \
 	  echo 8bit-gap $(gen-8bit-gap-modules); } | \
 	$(AWK) 'NR == 1 { \
-		  for (i = 1; i <= NF; i++) \
+		  for (i = 1; i <= NF; i++) { \
 		    printf "%s-routines := %s\n", $$i, tolower($$i); \
+		    printf "%s-map := gconv.map\n", $$i; \
+		  } \
 		}; \
 		NR > 1 { \
 		  for (i = 2; i <= NF; i++) { \
