@@ -31,10 +31,6 @@ Cambridge, MA 02139, USA.  */
 # define __ptr_t char *
 #endif /* C++ or ANSI C.  */
 
-#if defined (HAVE_STRING_H) || defined (_LIBC)
-# include <string.h>
-#endif
-
 #if defined (HAVE_LIMITS_H) || defined (_LIBC)
 # include <limits.h>
 #endif
