@@ -1,3 +1,9 @@
+2001-04-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/confstr.c (confstr) [_CS_V6_WIDTH_RESTRICTED_ENVS]: Move so
+	that _CS_LFS_CFLAGS can fall through to the empty returned string
+	case.  Add FALLTHROUGH comment.
+
 2001-04-29  Ralf Baechle  <ralf@gnu.org>
 
 	* sysdeps/unix/sysv/linux/mips/bits/sem.h: Make structure

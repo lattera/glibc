@@ -44,19 +44,6 @@ confstr (name, buf, len)
       }
       break;
 
-    case _CS_XBS5_ILP32_OFFBIG_CFLAGS:
-    case _CS_POSIX_V6_ILP32_OFFBIG_CFLAGS:
-    case _CS_LFS_CFLAGS:
-#if _XBS5_LP64_OFF64 == -1 && _XBS5_LPBIG_OFFBIG == -1 && _XBS5_ILP32_OFFBIG == 1
-      /* Signal that we want the new ABI.  */
-      {
-	static const char file_offset[] = "-D_FILE_OFFSET_BITS=64";
-	string = file_offset;
-	string_len = sizeof (file_offset);
-      }
-      break;
-#endif
-
     case _CS_V6_WIDTH_RESTRICTED_ENVS:
       /* We have to return a newline-separated list of named of
 	 programming environements in which the widths of blksize_t,
@@ -94,6 +81,20 @@ confstr (name, buf, len)
 	string_len = sizeof (restenvs);
       }
       break;
+
+    case _CS_XBS5_ILP32_OFFBIG_CFLAGS:
+    case _CS_POSIX_V6_ILP32_OFFBIG_CFLAGS:
+    case _CS_LFS_CFLAGS:
+#if _XBS5_LP64_OFF64 == -1 && _XBS5_LPBIG_OFFBIG == -1 && _XBS5_ILP32_OFFBIG == 1
+      /* Signal that we want the new ABI.  */
+      {
+	static const char file_offset[] = "-D_FILE_OFFSET_BITS=64";
+	string = file_offset;
+	string_len = sizeof (file_offset);
+      }
+      break;
+#endif
+      /* FALLTHROUGH */
 
     case _CS_LFS_LINTFLAGS:
     case _CS_LFS_LDFLAGS:
