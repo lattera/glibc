@@ -235,8 +235,10 @@ extern const char _libc_intl_domainname[];
 
 /* Declare SET for use in this module, if defined in another module.  */
 #define symbol_set_declare(set)	\
-  extern void *const __start_##set __attribute__ ((__weak__));	\
-  extern void *const __stop_##set __attribute__ ((__weak__));
+  extern void *const __start_##set __attribute__ ((__weak__));		\
+  extern void *const __stop_##set __attribute__ ((__weak__));		\
+  /* Gratuitously repeat weak decl, in case using broken GCC (<2.8).  */\
+  weak_symbol (__start_##set) weak_symbol (__stop_##set)
 
 /* Return a pointer (void *const *) to the first element of SET.  */
 #define symbol_set_first_element(set)	(&__start_##set)

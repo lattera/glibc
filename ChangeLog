@@ -1,3 +1,22 @@
+Wed Nov 15 19:22:07 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/dl-sysdep.c: Include _itoa.h from stdio-common
+	instead of stdio.
+	(_dl_sysdep_start): If passed user entry is zero and
+	EXEC_STACK_ARGS flag set, reset user entry to &_start.
+
+	* elf/rtld.c (dl_main): Only call _dl_setup_hash if there is a
+	DT_HASH element.
+
+	* libc-symbols.h [HAVE_ELF] (symbol_set_declare): Gratuitously
+	repeat weak decl using weak_symbol macro, in case using broken GCC
+	(<2.8).
+
+Wed Nov 15 18:49:55 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
+
+	* sysdeps/i386/isnanl.c: New file.
+	* sysdeps/i386/isinfl.c: New file.
+
 Tue Nov 14 18:44:21 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* malloc/free.c (free): Moved null and aligned_blocks checks

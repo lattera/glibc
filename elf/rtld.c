@@ -226,8 +226,9 @@ of this helper program; chances are you did not intend to run this program.\n",
 
       /* Extract the contents of the dynamic section for easy access.  */
       elf_get_dynamic_info (l->l_ld, l->l_info);
-      /* Set up our cache of pointers into the hash table.  */
-      _dl_setup_hash (l);
+      if (l->l_info[DT_HASH])
+	/* Set up our cache of pointers into the hash table.  */
+	_dl_setup_hash (l);
 
       if (l->l_info[DT_DEBUG])
 	/* There is a DT_DEBUG entry in the dynamic section.  Fill it in

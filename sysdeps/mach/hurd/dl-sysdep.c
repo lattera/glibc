@@ -29,7 +29,7 @@ Cambridge, MA 02139, USA.  */
 #include <mach/mig_support.h>
 #include "hurdstartup.h"
 #include <mach/host_info.h>
-#include "../stdio/_itoa.h"
+#include "../stdio-common/_itoa.h"
 #include <hurd/auth.h>
 #include <hurd/term.h>
 #include <stdarg.h>
@@ -104,6 +104,10 @@ _dl_sysdep_start (void **start_argptr,
 
       _dl_secure = _dl_hurd_data->flags & EXEC_SECURE;
 
+      if (_dl_hurd_data->flags & EXEC_STACK_ARGS &&
+	  _dl_hurd_data->user_entry == 0)
+	_dl_hurd_data->user_entry = (vm_address_t) &_start;
+
 unfmh();			/* XXX */
 
       if (_dl_hurd_data->user_entry == (vm_address_t) &_start)
@@ -132,14 +136,14 @@ unfmh();			/* XXX */
 	      _dl_sysdep_fatal ("Bogus library spec: ", p, "\n", NULL);
 	    *memobjname++ = '\0';
 	    memobj = (mach_port_t) atoi (memobjname);
-      
+
 	    /* Add a user reference on the memory object port, so we will
 	       still have one after _dl_map_object_from_fd calls our
 	       `close'.  */
 	    err = __mach_port_mod_refs (__mach_task_self (), memobj,
 					MACH_PORT_RIGHT_SEND, +1);
 	    assert_perror (err);
-	    
+
 	    lastslash = strrchr (p, '/');
 	    l = _dl_map_object_from_fd (lastslash ? lastslash + 1 : p,
 					memobj, strdup (p));
@@ -278,7 +282,7 @@ open (const char *file_name, int mode, ...)
 
   dealloc_dir = 0;
   nloops = 0;
-  
+
   while (1)
     {
       if (dealloc_dir)
@@ -468,7 +472,7 @@ open (const char *file_name, int mode, ...)
 	    bad_magic:
 	      return __hurd_fail (EGRATUITOUS);
 	    }
-	  break;		
+	  break;
 
 	default:
 	  return __hurd_fail (EGRATUITOUS);
@@ -574,7 +578,7 @@ weak_symbol (free)
 
 /* Avoid signal frobnication in setjmp/longjmp.  */
 
-int __sigjmp_save (sigjmp_buf env, int savemask) 
+int __sigjmp_save (sigjmp_buf env, int savemask)
 { env[0].__mask_was_saved = savemask; return 0; }
 weak_symbol (__sigjmp_save)
 
