@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -18,27 +18,43 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <limits.h>
 #include <pthreadP.h>
 #include <string.h>
 #include <sysdep.h>
+#include <sys/param.h>
 #include <sys/types.h>
+#include <shlib-compat.h>
 
 
 int
-pthread_getaffinity_np (th, cpuset)
-     pthread_t th;
-     cpu_set_t *cpuset;
+__pthread_getaffinity_new (pthread_t th, size_t cpusetsize, cpu_set_t *cpuset)
 {
-  struct pthread *pd = (struct pthread *) th;
+  const struct pthread *pd = (const struct pthread *) th;
+
   INTERNAL_SYSCALL_DECL (err);
   int res = INTERNAL_SYSCALL (sched_getaffinity, err, 3, pd->tid,
-			      sizeof (cpu_set_t), cpuset);
+			      MIN (UINT_MAX, cpusetsize), cpuset);
   if (INTERNAL_SYSCALL_ERROR_P (res, err))
     return INTERNAL_SYSCALL_ERRNO (res, err);
 
   /* Clean the rest of the memory the kernel didn't do.  */
-  memset ((char *) cpuset + res, '\0', sizeof (cpu_set_t) - res);
+  memset ((char *) cpuset + res, '\0', cpusetsize - res);
 
   return 0;
 }
-hidden_def (pthread_getaffinity_np)
+strong_alias (__pthread_getaffinity_new, __pthread_getaffinity_np)
+versioned_symbol (libpthread, __pthread_getaffinity_new,
+		  pthread_getaffinity_np, GLIBC_2_3_4);
+
+
+#if SHLIB_COMPAT(libpthread, 2_3_3, 2_3_4)
+int
+__pthread_getaffinity_old (const pthread_attr_t *attr, cpu_set_t *cpuset)
+{
+  /* The old interface by default assumed a 1024 processor bitmap.  */
+  return __pthread_getaffinity_new (attr, 128, cpuset);
+}
+compat_symbol (libpthread, __pthread_getaffinity_old, pthread_getaffinity_np,
+	       GLIBC_2_3_3);
+#endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,25 +21,38 @@
 #include <string.h>
 #include <sysdep.h>
 #include <sys/types.h>
+#include <shlib-compat.h>
 
 
 #ifdef __NR_sched_getaffinity
 int
-sched_getaffinity (pid, cpuset)
-     pid_t pid;
-     cpu_set_t *cpuset;
+__sched_getaffinity_new (pid_t pid, size_t cpusetsize, cpu_set_t *cpuset)
 {
   int res = INLINE_SYSCALL (sched_getaffinity, 3, pid, sizeof (cpu_set_t),
 			    cpuset);
   if (res != -1)
     {
       /* Clean the rest of the memory the kernel didn't do.  */
-      memset ((char *) cpuset + res, '\0', sizeof (cpu_set_t) - res);
+      memset ((char *) cpuset + res, '\0', cpusetsize - res);
 
       res = 0;
     }
   return res;
 }
+versioned_symbol (libc, __sched_getaffinity_new, sched_getaffinity,
+		  GLIBC_2_3_4);
+
+
+# if SHLIB_COMPAT(libc, 2_3_3, 2_3_4)
+int
+attribute_compat_text_section
+__sched_getaffinity_old (const pthread_attr_t *attr, cpu_set_t *cpuset)
+{
+  /* The old interface by default assumed a 1024 processor bitmap.  */
+  return __sched_getaffinity_new (attr, 128, cpuset);
+}
+compat_symbol (libc, __sched_getaffinity_old, sched_getaffinity, GLIBC_2_3_3);
+# endif
 #else
 # include <sysdeps/generic/sched_getaffinity.c>
 #endif

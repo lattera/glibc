@@ -1,5 +1,5 @@
 /* pthread_getattr_np test.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -168,10 +168,10 @@ tf (void *arg)
     }
 
   cpu_set_t c1, c2;
-  err = pthread_getaffinity_np (pthread_self (), &c1);
+  err = pthread_getaffinity_np (pthread_self (), sizeof (c1), &c1);
   if (err == 0)
     {
-      err = pthread_attr_getaffinity_np (&a, &c2);
+      err = pthread_attr_getaffinity_np (&a, sizeof (c2), &c2);
       if (err)
 	{
 	  error (0, err, "pthread_attr_getaffinity_np failed");
@@ -219,7 +219,7 @@ do_test (void)
       result = 1;
     }
 
-  err = pthread_attr_getaffinity_np (&a, &c1);
+  err = pthread_attr_getaffinity_np (&a, sizeof (c1), &c1);
   if (err && err != ENOSYS)
     {
       error (0, err, "pthread_attr_getaffinity_np failed");
@@ -313,10 +313,10 @@ do_test (void)
       result = 1;
     }
 
-  err = pthread_getaffinity_np (pthread_self (), &c1);
+  err = pthread_getaffinity_np (pthread_self (), sizeof (c1), &c1);
   if (err == 0)
     {
-      err = pthread_attr_getaffinity_np (&a, &c2);
+      err = pthread_attr_getaffinity_np (&a, sizeof (c2), &c2);
       if (err)
 	{
 	  error (0, err, "pthread_attr_getaffinity_np failed");

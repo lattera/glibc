@@ -112,6 +112,9 @@ libc {
   GLIBC_2.3.3 {
     gnu_dev_major; gnu_dev_minor; gnu_dev_makedev;
   }
+  GLIBC_2.3.4 {
+    sched_getaffinity; sched_setaffinity;
+  }
   GLIBC_PRIVATE {
     # needed by libpthread.
     __libc_sigaction;

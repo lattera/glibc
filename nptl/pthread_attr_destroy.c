@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -36,42 +36,10 @@ __pthread_attr_destroy (attr)
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
   /* In old struct pthread_attr, neither next nor cpuset are
      present.  */
-  if (__builtin_expect ((iattr->flags & ATTR_FLAG_OLDATTR), 0))
-    return 0;
+  if (__builtin_expect ((iattr->flags & ATTR_FLAG_OLDATTR), 0) == 0)
 #endif
-
-  /* Enqueue the attributes to the list of all known variables.  */
-  if (DEBUGGING_P)
-    {
-      struct pthread_attr *prevp = NULL;
-      struct pthread_attr *runp;
-
-      lll_lock (__attr_list_lock);
-
-      runp = __attr_list;
-      while (runp != NULL && runp != iattr)
-	{
-	  prevp = runp;
-	  runp = runp->next;
-	}
-
-      if (runp != NULL)
-	{
-	  if (prevp == NULL)
-	    __attr_list = iattr->next;
-	  else
-	    prevp->next = iattr->next;
-	}
-
-      lll_unlock (__attr_list_lock);
-
-      if (runp == NULL)
-	/* Not a valid attribute.  */
-	return EINVAL;
-    }
-
-  /* The affinity CPU set might be allocated dynamically.  */
-  free (iattr->cpuset);
+    /* The affinity CPU set might be allocated dynamically.  */
+    free (iattr->cpuset);
 
   return 0;
 }

@@ -135,18 +135,35 @@ pthread_getattr_np (thread_id, attr)
 
   if (ret == 0)
     {
-      iattr->cpuset = (cpu_set_t *) malloc (sizeof (cpu_set_t));
-      if (iattr->cpuset == NULL)
-	ret = ENOMEM;
+      size_t size = 32;
+      cpu_set_t *cpuset = NULL;
+
+      do
+	{
+	  void *newp = realloc (cpuset, size);
+	  if (newp == NULL)
+	    {
+	      free (cpuset);
+	      ret = ENOMEM;
+	    }
+	  cpuset = (cpu_set_t *) newp;
+
+	  ret = __pthread_getaffinity_np (thread_id, size, cpuset);
+	}
+      /* Pick some ridiculous upper limit.  Is 8 million CPUs enough?  */
+      while (ret == EINVAL && size < 1024 * 1024);
+
+      if (ret == 0)
+	{
+	  iattr->cpuset = cpuset;
+	  iattr->cpusetsize = size;
+	}
       else
 	{
-	  ret = pthread_getaffinity_np (thread_id, iattr->cpuset);
+	  free (cpuset);
 	  if (ret == ENOSYS)
-	    {
-	      free (iattr->cpuset);
-	      iattr->cpuset = NULL;
-	      ret = 0;
-	    }
+	    /* There is no such functionality.  */
+	    ret = 0;
 	}
     }
 

@@ -384,6 +384,8 @@ extern int __pthread_cond_timedwait_2_0 (pthread_cond_2_0_t *cond,
 extern int __pthread_cond_wait_2_0 (pthread_cond_2_0_t *cond,
 				    pthread_mutex_t *mutex);
 
+extern int __pthread_getaffinity_np (pthread_t th, size_t cpusetsize,
+				     cpu_set_t *cpuset);
 
 /* The two functions are in libc.so and not exported.  */
 extern int __libc_enable_asynccancel (void) attribute_hidden;
@@ -427,9 +429,5 @@ extern void _pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer,
                                          void (*routine) (void *), void *arg);
 extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer,
                                           int execute);
-
-#if defined NOT_IN_libc && defined IS_IN_libpthread
-hidden_proto (pthread_getaffinity_np)
-#endif
 
 #endif	/* pthreadP.h */

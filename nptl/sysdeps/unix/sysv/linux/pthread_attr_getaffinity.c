@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -23,22 +23,47 @@
 #include <string.h>
 #include <sysdep.h>
 #include <sys/types.h>
+#include <shlib-compat.h>
 
 
 int
-pthread_attr_getaffinity_np (attr, cpuset)
-     const pthread_attr_t *attr;
-     cpu_set_t *cpuset;
+__pthread_attr_getaffinity_new (const pthread_attr_t *attr, size_t cpusetsize,
+				cpu_set_t *cpuset)
 {
-  struct pthread_attr *iattr;
+  const struct pthread_attr *iattr;
 
   assert (sizeof (*attr) >= sizeof (struct pthread_attr));
-  iattr = (struct pthread_attr *) attr;
+  iattr = (const struct pthread_attr *) attr;
 
-  if (iattr->cpuset)
-    memcpy (cpuset, iattr->cpuset, sizeof (cpu_set_t));
+  if (iattr->cpuset != NULL)
+    {
+      /* Check whether there are any bits set beyond the limits
+	 the user requested.  */
+      for (size_t cnt = cpusetsize; cnt < iattr->cpusetsize; ++cnt)
+	if (((char *) iattr->cpuset)[cnt] != 0)
+	  return EINVAL;
+
+      void *p = mempcpy (cpuset, iattr->cpuset, iattr->cpusetsize);
+      if (cpusetsize > iattr->cpusetsize)
+	memset (p, '\0', cpusetsize - iattr->cpusetsize);
+    }
   else
-    memset (cpuset, -1, sizeof (cpu_set_t));
+    /* We have no information.  */
+    memset (cpuset, -1, cpusetsize);
 
   return 0;
 }
+versioned_symbol (libpthread, __pthread_attr_getaffinity_new,
+		  pthread_attr_getaffinity_np, GLIBC_2_3_4);
+
+
+#if SHLIB_COMPAT(libpthread, 2_3_3, 2_3_4)
+int
+__pthread_attr_getaffinity_old (const pthread_attr_t *attr, cpu_set_t *cpuset)
+{
+  /* The old interface by default assumed a 1024 processor bitmap.  */
+  return __pthread_attr_getaffinity_new (attr, 128, cpuset);
+}
+compat_symbol (libpthread, __pthread_attr_getaffinity_old,
+	       pthread_attr_getaffinity_np, GLIBC_2_3_3);
+#endif

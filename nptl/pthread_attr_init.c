@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -46,17 +46,6 @@ __pthread_attr_init_2_1 (attr)
 
   /* Default guard size specified by the standard.  */
   iattr->guardsize = __getpagesize ();
-
-  /* Enqueue the attributes to the list of all known variables.  */
-  if (DEBUGGING_P)
-    {
-      lll_lock (__attr_list_lock);
-
-      iattr->next = __attr_list;
-      __attr_list = iattr;
-
-      lll_unlock (__attr_list_lock);
-    }
 
   return 0;
 }

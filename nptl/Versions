@@ -219,6 +219,12 @@ libpthread {
     __pthread_unwind_next;
     __pthread_cleanup_routine;
 
+    # affinity interfaces without size parameter
+    pthread_getaffinity_np; pthread_setaffinity_np;
+    pthread_attr_getaffinity_np; pthread_attr_setaffinity_np;
+  }
+
+  GLIBC_2.3.4 {
     # New affinity interfaces.
     pthread_getaffinity_np; pthread_setaffinity_np;
     pthread_attr_getaffinity_np; pthread_attr_setaffinity_np;

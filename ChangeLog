@@ -1,3 +1,15 @@
+2004-03-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/sched.h: Change sched_getaffinity and sched_setaffinity
+	interfaces: add new second parameter.
+	* sysdeps/generic/sched_getaffinity.c: Implement interface change.
+	* sysdeps/generic/sched_setaffinity.c: Likewise.
+	* sysdeps/unix/sysv/linux/sched_getaffinity.c: Likewise.  Add
+	compatibility interface.
+	* sysdeps/unix/sysv/linux/sched_setaffinity.c: Likewise.
+	* sysdeps/unix/sysv/linux/Versions: Add versions for changed
+	interfaces.
+
 2004-03-18  Roland McGrath  <roland@redhat.com>
 
 	* manual/Makefile (stamp-summary): Use -k option to sort,

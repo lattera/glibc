@@ -1,5 +1,5 @@
 /* Definitions for POSIX 1003.1b-1993 (aka POSIX.4) scheduling interface.
-   Copyright (C) 1996,1997,1999,2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1999,2001-2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -73,11 +73,12 @@ extern int sched_rr_get_interval (__pid_t __pid, struct timespec *__t) __THROW;
 
 
 /* Set the CPU affinity for a task */
-extern int sched_setaffinity (__pid_t __pid, __const cpu_set_t *__mask)
-     __THROW;
+extern int sched_setaffinity (__pid_t __pid, size_t __cpusetsize,
+			      __const cpu_set_t *__cpuset) __THROW;
 
 /* Get the CPU affinity for a task */
-extern int sched_getaffinity (__pid_t __pid, cpu_set_t *__mask) __THROW;
+extern int sched_getaffinity (__pid_t __pid, size_t __cpusetsize,
+			      cpu_set_t *__cpuset) __THROW;
 #endif
 
 __END_DECLS

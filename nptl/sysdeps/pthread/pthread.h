@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -326,11 +326,13 @@ extern int pthread_attr_setstack (pthread_attr_t *__attr, void *__stackaddr,
 /* Thread created with attribute ATTR will be limited to run only on
    the processors represented in CPUSET.  */
 extern int pthread_attr_setaffinity_np (pthread_attr_t *__attr,
+					size_t __cpusetsize,
 					__const cpu_set_t *__cpuset) __THROW;
 
 /* Get bit set in CPUSET representing the processors threads created with
    ATTR can run on.  */
 extern int pthread_attr_getaffinity_np (__const pthread_attr_t *__attr,
+					size_t __cpusetsize,
 					cpu_set_t *__cpuset) __THROW;
 
 
@@ -374,12 +376,12 @@ extern int pthread_yield (void) __THROW;
 
 /* Limit specified thread TH to run only on the processors represented
    in CPUSET.  */
-extern int pthread_setaffinity_np (pthread_t __th, __const cpu_set_t *__cpuset)
-     __THROW;
+extern int pthread_setaffinity_np (pthread_t __th, size_t __cpusetsize,
+				   __const cpu_set_t *__cpuset) __THROW;
 
 /* Get bit set in CPUSET representing the processors TH can run on.  */
-extern int pthread_getaffinity_np (pthread_t __th, cpu_set_t *__cpuset)
-     __THROW;
+extern int pthread_getaffinity_np (pthread_t __th, size_t __cpusetsize,
+				   cpu_set_t *__cpuset) __THROW;
 #endif
 
 
