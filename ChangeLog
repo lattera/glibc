@@ -30,7 +30,7 @@
 
 1999-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
-	* Rules: Add dummp.c and dummy.o to common-generated.
+	* Rules: Add dummy.c and dummy.o to common-generated.
 	Patch by Andreas Schwab.
 
 1999-01-18 10:07 -0500  Zack Weinberg  <zack@rabi.phys.columbia.edu>
