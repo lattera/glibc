@@ -1,3 +1,11 @@
+2000-03-22  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* include/shlib-compat.h (SHLIB_COMPAT): Take a third argument,
+	indicating the first version set to obsolete the conditionalized code.
+	* scripts/abi-versions.awk: For subsumed versions, make ABI_* defn's
+	rhs be the ABI_* macro for the subsuming version.  Assign increasing
+	integer values to the ABI_* macros for supported versions.
+
 2000-03-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/connections.c (nscd_run): Pretty print.
