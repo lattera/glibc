@@ -1,8 +1,13 @@
+2002-01-28  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/pspinlock.c (__pthread_spin_init): Clear *LOCK to
+	0. Patch by Machida Hiroyuki <machida@sm.sony.co.jp>.
+
 2002-01-16  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
-     * sysdeps/s390/s390-32/pt-machine.h (MEMORY_BARRIER): Define.
-     (CURRENT_STACK_FRAME): Remove duplicate definition.
-     * sysdeps/s390/s390-64/pt-machine.h: Likewise.
+	* sysdeps/s390/s390-32/pt-machine.h (MEMORY_BARRIER): Define.
+	(CURRENT_STACK_FRAME): Remove duplicate definition.
+	* sysdeps/s390/s390-64/pt-machine.h: Likewise.
 
 2002-01-14  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 

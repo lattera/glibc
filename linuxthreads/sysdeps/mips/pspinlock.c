@@ -1,5 +1,5 @@
 /* POSIX spinlock implementation.  MIPS version.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -92,7 +92,7 @@ __pthread_spin_init (pthread_spinlock_t *lock, int pshared)
   /* We can ignore the `pshared' parameter.  Since we are busy-waiting
      all processes which can access the memory location `lock' points
      to can use the spinlock.  */
-  *lock = 1;
+  *lock = 0;
   return 0;
 }
 weak_alias (__pthread_spin_init, pthread_spin_init)
