@@ -48,8 +48,8 @@ sched_setp	-	sched_setparam	i:ip	__sched_setparam	sched_setparam
 sched_sets	-	sched_setscheduler	i:iip	__sched_setscheduler	sched_setscheduler
 sched_yield	-	sched_yield	i:	__sched_yield	sched_yield
 select		-	_newselect	i:iPPPP	__select	select
-sendfile	EXTRA	sendfile	i:iipi	sendfile
-sendfile64	EXTRA	sendfile64	i:iipi	sendfile64
+sendfile	-	sendfile	i:iipi	sendfile
+sendfile64	-	sendfile64	i:iipi	sendfile64
 setfsgid	EXTRA	setfsgid	i:i	setfsgid
 setfsuid	EXTRA	setfsuid	i:i	setfsuid
 setpgid		-	setpgid		i:ii	__setpgid	setpgid

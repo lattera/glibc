@@ -29,7 +29,7 @@ setrlimit	-	setrlimit	2	__setrlimit	setrlimit64 setrlimit
 ftruncate	-	ftruncate	2	__ftruncate	ftruncate __ftruncate64 ftruncate64
 truncate	-	truncate	2	truncate	truncate64
 readahead	EXTRA	readahead	3	__readahead	readahead
-sendfile	EXTRA	sendfile	i:iipi	sendfile	sendfile64
+sendfile	-	sendfile	i:iipi	sendfile	sendfile64
 
 # these are actually common with the x86:
 sys_ustat	ustat	ustat		2	__syscall_ustat
