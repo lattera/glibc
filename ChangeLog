@@ -1,3 +1,10 @@
+2002-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/rpc_svcout.c (printif): Remove third parameter.  It was
+	always "&".  Adjust callers.
+	Add "_" prefix to several generated definitions.
+	Patch by paul@serice.net [PR libc/3158].
+
 2002-04-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/arm/dl-procinfo.c: Completely specify

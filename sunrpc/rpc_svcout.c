@@ -57,8 +57,7 @@ static void p_xdrfunc (const char *rname, const char *typename);
 static void write_real_program (const definition * def);
 static void write_program (const definition * def, const char *storage);
 static void printerr (const char *err, const char *transp);
-static void printif (const char *proc, const char *transp,
-		     const char *prefix, const char *arg);
+static void printif (const char *proc, const char *transp, const char *arg);
 static void write_inetmost (const char *infile);
 static void print_return (const char *space);
 static void print_pmapunset (const char *space);
@@ -514,7 +513,7 @@ write_program (const definition * def, const char *storage)
 	}
       else
 	{
-	  f_print (fout, "\tbool_t (*xdr_%s)(), (*xdr_%s)();\n", ARG, RESULT);
+	  f_print (fout, "\tbool_t (*_xdr_%s)(), (*_xdr_%s)();\n", ARG, RESULT);
 	  if (mtflag)
 	    f_print(fout, "\tbool_t (*%s)();\n", ROUTINE);
 	  else
@@ -540,9 +539,7 @@ write_program (const definition * def, const char *storage)
 	{
 	  f_print (fout, "\tcase NULLPROC:\n");
 	  f_print (fout,
-		   Cflag
-		   ? "\t\t(void) svc_sendreply (%s, (xdrproc_t) xdr_void, (char *)NULL);\n"
-		: "\t\t(void) svc_sendreply (%s, xdr_void, (char *)NULL);\n",
+		   "\t\t(void) svc_sendreply (%s, (xdrproc_t) xdr_void, (char *)NULL);\n",
 		   TRANSP);
 	  print_return ("\t\t");
 	  f_print (fout, "\n");
@@ -593,10 +590,7 @@ write_program (const definition * def, const char *storage)
       f_print (fout, "\t}\n");
 
       f_print (fout, "\tmemset ((char *)&%s, 0, sizeof (%s));\n", ARG, ARG);
-      if (Cflag)
-	printif ("getargs", TRANSP, "(caddr_t) &", ARG);
-      else
-	printif ("getargs", TRANSP, "&", ARG);
+      printif ("getargs", TRANSP, ARG);
       printerr ("decode", TRANSP);
       print_return ("\t\t");
       f_print (fout, "\t}\n");
@@ -619,20 +613,17 @@ write_program (const definition * def, const char *storage)
 		  RETVAL, ROUTINE, ARG, RESULT, RQSTP);
       if (mtflag)
 	f_print(fout,
-		"\tif (%s > 0 && !svc_sendreply(%s, _xdr_%s, (char *)&%s)) {\n",
+		"\tif (%s > 0 && !svc_sendreply(%s, (xdrproc_t) _xdr_%s, (char *)&%s)) {\n",
 		RETVAL, TRANSP, RESULT, RESULT);
       else
 	f_print(fout,
-		"\tif (%s != NULL && !svc_sendreply(%s, _xdr_%s, %s)) {\n",
+		"\tif (%s != NULL && !svc_sendreply(%s, (xdrproc_t) _xdr_%s, %s)) {\n",
 		RESULT, TRANSP, RESULT, RESULT);
 
       printerr ("systemerr", TRANSP);
       f_print (fout, "\t}\n");
 
-      if (Cflag)
-	printif ("freeargs", TRANSP, "(caddr_t) &", ARG);
-      else
-	printif ("freeargs", TRANSP, "&", ARG);
+      printif ("freeargs", TRANSP, ARG);
 
       sprintf (_errbuf, "unable to free arguments");
       print_err_message ("\t\t");
@@ -661,11 +652,10 @@ printerr (const char *err, const char *transp)
 }
 
 static void
-printif (const char *proc, const char *transp, const char *prefix,
-	 const char *arg)
+printif (const char *proc, const char *transp, const char *arg)
 {
-  f_print (fout, "\tif (!svc_%s (%s, _xdr_%s, %s%s)) {\n",
-	   proc, transp, arg, prefix, arg);
+  f_print (fout, "\tif (!svc_%s (%s, (xdrproc_t) _xdr_%s, (caddr_t) &%s)) {\n",
+	   proc, transp, arg, arg);
 }
 
 int
