@@ -227,14 +227,14 @@ extern __ptr_t __initstate __P ((unsigned int __seed, __ptr_t __statebuf,
    which should have been previously initialized by `initstate'.  */
 extern __ptr_t __setstate __P ((__ptr_t __statebuf));
 
-extern long int random __P ((void));
+extern int32_t random __P ((void));
 extern void srandom __P ((unsigned int __seed));
 extern __ptr_t initstate __P ((unsigned int __seed, __ptr_t __statebuf,
 			       size_t __statelen));
 extern __ptr_t setstate __P ((__ptr_t __statebuf));
 
 #if defined (__OPTIMIZE__) && __GNUC__ >= 2
-extern __inline long int random (void)
+extern __inline int32_t random (void)
 { return __random(); }
 extern __inline void srandom (unsigned int __seed)
 { __srandom(__seed); }
