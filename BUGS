@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <2001-06-15T21:21:36 drepper>
+Time-stamp: <02/09/30 13:49:48 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -55,21 +55,6 @@ Severity: [  *] to [***]
 [  *]  The libm-ieee `scalb' function gives wrong results for
        non-integral second parameters.
 
-[  *]  Collation symbol and equivalence class handling in regex are not
-       yet 100% correct.
-       - [. .] at end of a range does not work
-       - [. .] and [= =] do not handle collating symbols (where a symbol
-         stands for multiple character) and multibyte character in
-         general not correctly.
-
-       This is *extremely* hard to fix since regex has to be rewritten
-       completely.
-
-[  *]  The regex implementation has various other problems, like limitations
-       of the expression size etc. [PR libc/1570, PR libc/1777]
-
-       None of these can be fixed without a rewrite.
-
 [  *]  Several (most?) collation specifications are broken.  The code which
        is currently there is in most cases inherited from the originial
        author (in case there is a LC_COLLATE specification in the locale
@@ -86,10 +71,11 @@ Severity: [  *] to [***]
        of the whole LC_COLLATE description.
 
 [  *]  Some of the functions which also handled IPv6 are currently broken.
-       This includes getaddrinfo() and getnameinfo().  IPv4 handling of
+       IPv6 and IPv4 lookups occasionally happen when not needed.  This
+       happens in getaddrinfo() and getnameinfo().  IPv4 handling of
        these functions is OK though and there are patches available to fix
        the IPv6 code as well.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Ulrich Drepper
-drepper@cygnus.com
+drepper@redhat.com
