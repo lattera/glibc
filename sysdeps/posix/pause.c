@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1996, 2002, 2003 Free Software Foundation, Inc.
+/* pause -- suspend the process until a signal arrives.  POSIX.1 version.
+   Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,32 +19,20 @@
 
 #include <signal.h>
 #include <unistd.h>
-#include <sysdep-cancel.h>
 
 /* Suspend the process until a signal arrives.
    This always returns -1 and sets errno to EINTR.  */
-static void
-do_pause (void)
-{
-  sigset_t set;
-
-  sigemptyset (&set);
-
-  __sigsuspend (&set);
-}
-
 int
 __libc_pause (void)
 {
-  if (SINGLE_THREAD_P)
-    {
-      do_pause ();
-      return -1;
-    }
+  sigset_t set;
 
-  int oldtype = LIBC_CANCEL_ASYNC ();
-  (void) do_pause ();
-  LIBC_CANCEL_RESET (oldtype);
-  return -1;
+  __sigemptyset (&set);
+  __sigprocmask (SIG_BLOCK, NULL, &set);
+
+  /* pause is a cancellation point, but so is sigsuspend.
+     So no need for anything special here.  */
+
+  return __sigsuspend (&set);
 }
 weak_alias (__libc_pause, pause)
