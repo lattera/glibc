@@ -1,5 +1,8 @@
 2003-05-04  Roland McGrath  <roland@redhat.com>
 
+	* csu/Makefile ($(csu-dummies) target rule): Don't use a temp C file.
+	Depend on $(before-compile).
+
 	* csu/Makefile ($(objpfx)crt%.o): Replace implicit rule with a static
 	pattern rule.  The implicit rule could be ruled out when $(objpfx)
 	didn't exist at the time of its consideration (ugh!).

@@ -222,6 +222,7 @@ $(addprefix $(objpfx), \
 $(addprefix $(objpfx), $(tests-reverse)): \
   $(objpfx)../libc.so $(objpfx)libpthread.so \
   $(objpfx)libpthread_nonshared.a
+$(objpfx)../libc.so: $(common-objpfx)libc.so ;
 $(addprefix $(objpfx),$(librt-tests)): $(common-objpfx)rt/librt.so
 $(objpfx)unload: $(common-objpfx)dlfcn/libdl.so
 $(objpfx)unload.out: $(objpfx)libpthread.so $(objpfx)libpthread_nonshared.a

@@ -179,11 +179,9 @@ $(addprefix $(objpfx),$(sort g$(start-installed-name) \
 
 # These extra files are sometimes expected by system standard linking
 # procedures, but we have nothing for them to do.  So compile empty files.
-$(addprefix $(objpfx),$(filter-out $(start-installed-name),$(csu-dummies))):
-	@-rm -f $(@:.o=.c)
-	echo > $(@:.o=.c)
-	$(COMPILE.c) $(@:.o=.c) $(OUTPUT_OPTION)
-	rm -f $(@:.o=.c)
+$(addprefix $(objpfx),$(filter-out $(start-installed-name),$(csu-dummies))):\
+  $(before-compile)
+	$(COMPILE.c) -o $@ -x c /dev/null
 
 # These headers are used by the startup code.
 $(objpfx)abi-tag.h: $(..)abi-tags

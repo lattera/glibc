@@ -314,6 +314,7 @@ $(objpfx)tst-unload: $(common-objpfx)dlfcn/libdl.so
 $(addprefix $(objpfx), $(tests-reverse)): \
   $(objpfx)../libc.so $(objpfx)libpthread.so \
   $(objpfx)libpthread_nonshared.a
+$(objpfx)../libc.so: $(common-objpfx)libc.so ;
 $(addprefix $(objpfx),$(tests-static)): $(objpfx)libpthread.a
 
 $(objpfx)tst-atfork2.out: $(objpfx)tst-atfork2mod.so
