@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ struct timex32 {
 
 #define TIMEVAL		timeval32
 #define TIMEX		timex32
-#define ADJTIME		__adjtime_tv32
+#define ADJTIME		attribute_compat_text_section __adjtime_tv32
 #define ADJTIMEX(x)	INLINE_SYSCALL (old_adjtimex, 1, x)
 #define ADJTIMEX32(x)	INLINE_SYSCALL (old_adjtimex, 1, x)
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
@@ -72,7 +72,9 @@ LINKAGE int ADJTIME (const struct TIMEVAL *itv, struct TIMEVAL *otv);
 #include <sysdeps/unix/sysv/linux/adjtime.c>
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-int __adjtimex_tv32 (struct timex32 *tx) { return ADJTIMEX (tx); }
+int
+attribute_compat_text_section
+__adjtimex_tv32 (struct timex32 *tx) { return ADJTIMEX (tx); }
 strong_alias (__adjtimex_tv32, __adjtimex_tv32_1);
 strong_alias (__adjtimex_tv32, __adjtimex_tv32_2);
 compat_symbol (libc, __adjtimex_tv32_1, __adjtimex, GLIBC_2_0);
