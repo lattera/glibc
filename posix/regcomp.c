@@ -607,6 +607,9 @@ free_dfa_content (re_dfa_t *dfa)
       }
   re_free (dfa->state_table);
   re_free (dfa->word_char);
+#ifdef RE_ENABLE_I18N
+  re_free (dfa->sb_char);
+#endif  
 #ifdef DEBUG
   re_free (dfa->re_str);
 #endif
@@ -831,7 +834,7 @@ init_dfa (dfa, pat_len)
 
   dfa->subexps_alloc = 1;
   dfa->subexps = re_malloc (re_subexp_t, dfa->subexps_alloc);
-  dfa->word_char = NULL;
+  /* dfa->word_char = NULL; */
 
   dfa->mb_cur_max = MB_CUR_MAX;
 #ifdef _LIBC
@@ -840,6 +843,25 @@ init_dfa (dfa, pat_len)
     dfa->is_utf8 = 1;
   dfa->map_notascii = (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_TO_NONASCII)
 		       != 0);
+#endif
+#ifdef RE_ENABLE_I18N
+  if (dfa->mb_cur_max > 1)
+    {
+      int i, j, ch;
+
+      dfa->sb_char = (re_bitset_ptr_t) calloc (sizeof (bitset), 1);
+      if (BE (dfa->sb_char == NULL, 0))
+	return REG_ESPACE;
+#ifdef _LIBC
+      if (dfa->is_utf8)
+	memset (dfa->sb_char, 255, sizeof (unsigned int) * BITSET_UINTS / 2);
+      else
+#endif
+	for (i = 0, ch = 0; i < BITSET_UINTS; ++i)
+	  for (j = 0; j < UINT_BITS; ++j, ++ch)
+	    if (btowc (ch) != WEOF)
+	      dfa->sb_char[i] |= 1 << j;
+    }
 #endif
 
   if (BE (dfa->nodes == NULL || dfa->state_table == NULL
@@ -1311,6 +1333,8 @@ duplicate_node_closure (dfa, top_org_node, top_clone_node, root_node,
 	  if (BE (err != REG_NOERROR, 0))
 	    return err;
 	  dfa->nexts[clone_node] = dfa->nexts[org_node];
+	  if (clone_dest == -1)
+	    break;
 	  ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
 	  if (BE (ret < 0, 0))
 	    return REG_ESPACE;
@@ -1348,6 +1372,8 @@ duplicate_node_closure (dfa, top_org_node, top_clone_node, root_node,
 	  err = duplicate_node (&clone_dest, dfa, org_dest, constraint);
 	  if (BE (err != REG_NOERROR, 0))
 	    return err;
+	  if (clone_dest == -1)
+	    break;
 	  ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
 	  if (BE (ret < 0, 0))
 	    return REG_ESPACE;
@@ -1366,13 +1392,16 @@ duplicate_node_closure (dfa, top_org_node, top_clone_node, root_node,
 	      err = duplicate_node (&clone_dest, dfa, org_dest, constraint);
 	      if (BE (err != REG_NOERROR, 0))
 		return err;
-	      ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
-	      if (BE (ret < 0, 0))
-		return REG_ESPACE;
-	      err = duplicate_node_closure (dfa, org_dest, clone_dest,
-					    root_node, constraint);
-	      if (BE (err != REG_NOERROR, 0))
-		return err;
+	      if (clone_dest != -1)
+		{
+		  ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
+		  if (BE (ret < 0, 0))
+		    return REG_ESPACE;
+		  err = duplicate_node_closure (dfa, org_dest, clone_dest,
+						root_node, constraint);
+		  if (BE (err != REG_NOERROR, 0))
+		    return err;
+		}
 	    }
 	  else
 	    {
@@ -1387,6 +1416,8 @@ duplicate_node_closure (dfa, top_org_node, top_clone_node, root_node,
 	  err = duplicate_node (&clone_dest, dfa, org_dest, constraint);
 	  if (BE (err != REG_NOERROR, 0))
 	    return err;
+	  if (clone_dest == -1)
+	    break;
 	  ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
 	  if (BE (ret < 0, 0))
 	    return REG_ESPACE;
@@ -1426,7 +1457,21 @@ duplicate_node (new_idx, dfa, org_idx, constraint)
      int *new_idx, org_idx;
      unsigned int constraint;
 {
-  int dup_idx = re_dfa_add_node (dfa, dfa->nodes[org_idx], 1);
+  int dup_idx;
+
+  if (dfa->nodes[org_idx].type == CHARACTER
+      && (((constraint & NEXT_WORD_CONSTRAINT)
+	   && !dfa->nodes[org_idx].word_char)
+	  || ((constraint & NEXT_NOTWORD_CONSTRAINT)
+	      && dfa->nodes[org_idx].word_char)))
+    {
+      /* \<!, \>W etc. can never match.  Don't duplicate them, instead
+	 tell the caller they shouldn't be added to edests.  */
+      *new_idx = -1;
+      return REG_NOERROR;
+    }
+
+  dup_idx = re_dfa_add_node (dfa, dfa->nodes[org_idx], 1);
   if (BE (dup_idx == -1, 0))
     return REG_ESPACE;
   dfa->nodes[dup_idx].constraint = constraint;
@@ -1614,6 +1659,7 @@ peek_token (token, input, syntax)
   c = re_string_peek_byte (input, 0);
   token->opr.c = c;
 
+  token->word_char = 0;
 #ifdef RE_ENABLE_I18N
   token->mb_partial = 0;
   if (input->mb_cur_max > 1 &&
@@ -1636,6 +1682,17 @@ peek_token (token, input, syntax)
       c2 = re_string_peek_byte_case (input, 1);
       token->opr.c = c2;
       token->type = CHARACTER;
+#ifdef RE_ENABLE_I18N
+      if (input->mb_cur_max > 1)
+	{
+	  wint_t wc = re_string_wchar_at (input,
+					  re_string_cur_idx (input) + 1);
+	  token->word_char = IS_WIDE_WORD_CHAR (wc) != 0;
+	}
+      else
+#endif
+	token->word_char = IS_WORD_CHAR (c2) != 0;
+
       switch (c2)
 	{
 	case '|':
@@ -1739,6 +1796,16 @@ peek_token (token, input, syntax)
     }
 
   token->type = CHARACTER;
+#ifdef RE_ENABLE_I18N
+  if (input->mb_cur_max > 1)
+    {
+      wint_t wc = re_string_wchar_at (input, re_string_cur_idx (input));
+      token->word_char = IS_WIDE_WORD_CHAR (wc) != 0;
+    }
+  else
+#endif
+    token->word_char = IS_WORD_CHAR (token->opr.c);
+
   switch (c)
     {
     case '\n':
@@ -2140,6 +2207,8 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 
       /* Then we can these characters as normal characters.  */
       token->type = CHARACTER;
+      /* mb_partial and word_char bits should be initialized already
+	 by peek_token.  */
       tree = re_dfa_add_tree_node (dfa, NULL, NULL, token);
       if (BE (tree == NULL, 0))
 	{
@@ -2475,6 +2544,8 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
   re_string_set_index (regexp, start_idx);
   *token = start_token;
   token->type = CHARACTER;
+  /* mb_partial and word_char bits should be already initialized by
+     peek_token.  */
   return dup_elem;
 }
 
@@ -2952,7 +3023,6 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
   if (token->type == OP_NON_MATCH_LIST)
     {
 #ifdef RE_ENABLE_I18N
-      int i;
       mbcset->non_match = 1;
 #else /* not RE_ENABLE_I18N */
       non_match = 1;
@@ -2966,12 +3036,6 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 	  *err = REG_BADPAT;
 	  goto parse_bracket_exp_free_return;
 	}
-#ifdef RE_ENABLE_I18N
-      if (dfa->mb_cur_max > 1)
-	for (i = 0; i < SBC_MAX; ++i)
-	  if (__btowc (i) == WEOF)
-	    bitset_set (sbcset, i);
-#endif /* RE_ENABLE_I18N */
     }
 
   /* We treat the first ']' as a normal character.  */
@@ -3126,6 +3190,11 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
   if (non_match)
 #endif /* not RE_ENABLE_I18N */
     bitset_not (sbcset);
+#ifdef RE_ENABLE_I18N
+  /* Ensure only single byte characters are set.  */
+  if (dfa->mb_cur_max > 1)
+    bitset_mask (sbcset, dfa->sb_char);
+#endif /* RE_ENABLE_I18N */
 
   /* Build a tree for simple bracket.  */
   br_token.type = SIMPLE_BRACKET;
@@ -3493,16 +3562,11 @@ build_charclass_op (dfa, trans, class_name, extra, not, err)
   if (not)
     {
 #ifdef RE_ENABLE_I18N
-      int i;
       /*
       if (syntax & RE_HAT_LISTS_NOT_NEWLINE)
 	bitset_set(cset->sbcset, '\0');
       */
       mbcset->non_match = 1;
-      if (dfa->mb_cur_max > 1)
-	for (i = 0; i < SBC_MAX; ++i)
-	  if (__btowc (i) == WEOF)
-	    bitset_set (sbcset, i);
 #else /* not RE_ENABLE_I18N */
       non_match = 1;
 #endif /* not RE_ENABLE_I18N */
@@ -3535,6 +3599,12 @@ build_charclass_op (dfa, trans, class_name, extra, not, err)
   if (non_match)
 #endif /* not RE_ENABLE_I18N */
     bitset_not (sbcset);
+
+#ifdef RE_ENABLE_I18N
+  /* Ensure only single byte characters are set.  */
+  if (dfa->mb_cur_max > 1)
+    bitset_mask (sbcset, dfa->sb_char);
+#endif
 
   /* Build a tree for simple bracket.  */
   br_token.type = SIMPLE_BRACKET;

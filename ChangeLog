@@ -1,3 +1,31 @@
+2003-11-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex_internal.h (re_token_t): Add word_char bit.  Add
+	comment.
+	(re_dfa_t): Add sb_char field.
+	(bitset_mask): New function.
+	* posix/regcomp.c (free_dfa_content): Free sb_char.
+	(init_dfa): Don't initialize word_char unnecessarily.
+	Initialize sb_char.
+	(duplicate_node): Don't duplicate !word_char CHARACTERs with
+	NEXT_WORD_CONSTRAINT constraint or word_char CHARACTERs with
+	NEXT_NOTWORD_CONSTRAINT.  Return -1 in *new_idx instead.
+	(duplicate_node_closure): Handle clone_dest == -1 from
+	duplicate_node.
+	(peek_token): Initialize word_char bit.
+	(parse_expression, parse_dup_op): Add comments.
+	(parse_bracket_exp): Don't set bitmask bits for multi-byte char
+	starting bytes here at the beginning.  Mask off the bits right
+	before creating SIMPLE_BRACKET.
+	(build_charclass_op): Likewise.
+	* posix/regexec.c (group_nodes_into_DFAstates) <case OP_PERIOD>: Only
+	set accept bits for single-byte characters.
+	(group_nodes_into_DFAstates): Don't rely on characters 0 .. 127
+	being single byte encoded and the rest multi-byte.
+	* posix/bug-regex19.c (tests): Add new tests.
+	(do_mb_tests): Initialize t to *test.
+	(main): Fail even on do_mb_tests errors.
+
 2003-11-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regexec.c: Correct several memory allocation problems.

@@ -133,6 +133,7 @@ typedef unsigned int *re_bitset_ptr_t;
 static inline void bitset_not (bitset set);
 static inline void bitset_merge (bitset dest, const bitset src);
 static inline void bitset_not_merge (bitset dest, const bitset src);
+static inline void bitset_mask (bitset dest, const bitset src);
 
 #define PREV_WORD_CONSTRAINT 0x0001
 #define PREV_NOTWORD_CONSTRAINT 0x0002
@@ -281,8 +282,11 @@ typedef struct
   unsigned int constraint : 10;	/* context constraint */
   unsigned int duplicated : 1;
 #ifdef RE_ENABLE_I18N
+  /* These 2 bits can be moved into the union if needed (e.g. if running out
+     of bits; move opr.c to opr.c.c and move the flags to opr.c.flags).  */
   unsigned int mb_partial : 1;
 #endif
+  unsigned int word_char : 1;
 } re_token_t;
 
 #define IS_EPSILON_NODE(type) ((type) & EPSILON_BIT)
@@ -601,6 +605,7 @@ struct re_dfa_t
   re_dfastate_t *init_state_begbuf;
   bin_tree_t *str_tree;
   bin_tree_storage_t *str_tree_storage;
+  re_bitset_ptr_t sb_char;
   int str_tree_storage_idx;
 
   /* number of subexpressions `re_nsub' is in regex_t.  */
@@ -709,6 +714,16 @@ bitset_not_merge (dest, src)
   int i;
   for (i = 0; i < BITSET_UINTS; ++i)
     dest[i] |= ~src[i];
+}
+
+static inline void
+bitset_mask (dest, src)
+     bitset dest;
+     const bitset src;
+{
+  int bitset_i;
+  for (bitset_i = 0; bitset_i < BITSET_UINTS; ++bitset_i)
+    dest[bitset_i] &= src[bitset_i];
 }
 
 #if defined RE_ENABLE_I18N && !defined RE_NO_INTERNAL_PROTOTYPES

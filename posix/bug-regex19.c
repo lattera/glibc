@@ -102,6 +102,20 @@ static struct test_s
   {ERE, ".\\b.", "=A=", 0, 0},
   {ERE, ".\\b.", "==", 0, -1},
   {ERE, ".\\b.", "ABA", 0, -1},
+  {ERE, "[^k]\\b[^k]", "AA~", 0, 1},
+  {ERE, "[^k]\\b[^k]", "=A=", 0, 0},
+  {ERE, "[^k]\\b[^k]", "Ak~kA~", 0, 4},
+  {ERE, "[^k]\\b[^k]", "==", 0, -1},
+  {ERE, "[^k]\\b[^k]", "ABA", 0, -1},
+  {ERE, "[^k]\\b[^k]", "Ak~", 0, -1},
+  {ERE, "[^k]\\b[^k]", "k=k", 0, -1},
+  {ERE, "[^C]\\b[^C]", "AA~", 0, 1},
+  {ERE, "[^C]\\b[^C]", "=A=", 0, 0},
+  {ERE, "[^C]\\b[^C]", "AC~CA~", 0, 4},
+  {ERE, "[^C]\\b[^C]", "==", 0, -1},
+  {ERE, "[^C]\\b[^C]", "ABA", 0, -1},
+  {ERE, "[^C]\\b[^C]", "AC~", 0, -1},
+  {ERE, "[^C]\\b[^C]", "C=C", 0, -1},
   {ERE, "\\<(A|!|.B)", "A=AC", 0, 0},
   {ERE, "\\<(A|!|.B)", "=AC", 0, 1},
   {ERE, "\\<(A|!|.B)", "!AC", 0, 1},
@@ -140,12 +154,38 @@ static struct test_s
   {ERE, ".\\<.", "AA~", 0, -1},
   {ERE, ".\\<.", "==", 0, -1},
   {ERE, ".\\<.", "ABA", 0, -1},
+  {ERE, "[^k]\\<[^k]", "=k=A=", 0, 2},
+  {ERE, "[^k]\\<[^k]", "kk~", 0, -1},
+  {ERE, "[^k]\\<[^k]", "==", 0, -1},
+  {ERE, "[^k]\\<[^k]", "ABA", 0, -1},
+  {ERE, "[^k]\\<[^k]", "=k=", 0, -1},
+  {ERE, "[^C]\\<[^C]", "=C=A=", 0, 2},
+  {ERE, "[^C]\\<[^C]", "CC~", 0, -1},
+  {ERE, "[^C]\\<[^C]", "==", 0, -1},
+  {ERE, "[^C]\\<[^C]", "ABA", 0, -1},
+  {ERE, "[^C]\\<[^C]", "=C=", 0, -1},
   {ERE, ".\\B.", "ABA", 0, 0},
   {ERE, ".\\B.", "=BDC", 0, 1},
+  {ERE, "[^k]\\B[^k]", "kkkABA", 0, 3},
+  {ERE, "[^k]\\B[^k]", "kBk", 0, -1},
+  {ERE, "[^C]\\B[^C]", "CCCABA", 0, 3},
+  {ERE, "[^C]\\B[^C]", "CBC", 0, -1},
   {ERE, ".(\\b|\\B).", "=~AB", 0, 1},
   {ERE, ".(\\b|\\B).", "A=C", 0, 0},
   {ERE, ".(\\b|\\B).", "ABC", 0, 0},
   {ERE, ".(\\b|\\B).", "=~\\!", 0, -1},
+  {ERE, "[^k](\\b|\\B)[^k]", "=~AB", 0, 1},
+  {ERE, "[^k](\\b|\\B)[^k]", "A=C", 0, 0},
+  {ERE, "[^k](\\b|\\B)[^k]", "ABC", 0, 0},
+  {ERE, "[^k](\\b|\\B)[^k]", "=~kBD", 0, 3},
+  {ERE, "[^k](\\b|\\B)[^k]", "=~\\!", 0, -1},
+  {ERE, "[^k](\\b|\\B)[^k]", "=~kB", 0, -1},
+  {ERE, "[^C](\\b|\\B)[^C]", "=~AB", 0, 1},
+  {ERE, "[^C](\\b|\\B)[^C]", "A=C", 0, 0},
+  {ERE, "[^C](\\b|\\B)[^C]", "ABC", 0, 0},
+  {ERE, "[^C](\\b|\\B)[^C]", "=~CBD", 0, 3},
+  {ERE, "[^C](\\b|\\B)[^C]", "=~\\!", 0, -1},
+  {ERE, "[^C](\\b|\\B)[^C]", "=~CB", 0, -1},
   {ERE, "\\b([A]|[!]|.B)", "A=AC", 0, 0},
   {ERE, "\\b([A]|[!]|.B)", "=AC", 0, 1},
   {ERE, "\\b([A]|[!]|.B)", "!AC", 0, 1},
@@ -288,6 +328,7 @@ do_mb_tests (const struct test_s *test)
   char string[strlen (test->string) * 4 + 1];
   char fail[8 + sizeof ("UTF-8 ")];
 
+  t = *test;
   t.pattern = pattern;
   t.string = string;
   strcpy (fail, "UTF-8 ");
@@ -367,9 +408,7 @@ main (void)
 	  ret = 1;
 	}
       ret |= do_one_test (&tests[i], "UTF-8 ");
-      // Until the implementation is fixed, ignore the results of the
-      // MB tests.
-      /* ret |= */do_mb_tests (&tests[i]);
+      ret |= do_mb_tests (&tests[i]);
     }
 
   return ret;

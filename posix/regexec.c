@@ -3341,7 +3341,12 @@ group_nodes_into_DFAstates (preg, state, dests_node, dests_ch)
 	}
       else if (type == OP_PERIOD)
 	{
-	  bitset_set_all (accepts);
+#ifdef RE_ENABLE_I18N
+	  if (dfa->mb_cur_max > 1)
+	    bitset_merge (accepts, dfa->sb_char);
+	  else
+#endif	  
+	    bitset_set_all (accepts);
 	  if (!(preg->syntax & RE_DOT_NEWLINE))
 	    bitset_clear (accepts, '\n');
 	  if (preg->syntax & RE_DOT_NOT_NULL)
@@ -3362,8 +3367,6 @@ group_nodes_into_DFAstates (preg, state, dests_node, dests_ch)
 	 match it the context.  */
       if (constraint)
 	{
-	  int word_char_max;
-
 	  if (constraint & NEXT_NEWLINE_CONSTRAINT)
 	    {
 	      int accepts_newline = bitset_contain (accepts, NEWLINE_CHAR);
@@ -3379,16 +3382,28 @@ group_nodes_into_DFAstates (preg, state, dests_node, dests_ch)
 	      continue;
 	    }
 
-	  /* This assumes ASCII compatible locale.  We cannot say
-	     anything about the non-ascii chars.  */
-	  word_char_max
-	    = dfa->mb_cur_max > 1 ? BITSET_UINTS / 2 : BITSET_UINTS;
 	  if (constraint & NEXT_WORD_CONSTRAINT)
-	    for (j = 0; j < word_char_max; ++j)
-	      accepts[j] &= dfa->word_char[j];
+	    {
+#ifdef RE_ENABLE_I18N
+	      if (dfa->mb_cur_max > 1)
+		for (j = 0; j < BITSET_UINTS; ++j)
+		  accepts[j] &= (dfa->word_char[j] | ~dfa->sb_char[j]);
+	      else
+#endif
+		for (j = 0; j < BITSET_UINTS; ++j)
+		  accepts[j] &= dfa->word_char[j];
+	    }
 	  if (constraint & NEXT_NOTWORD_CONSTRAINT)
-	    for (j = 0; j < word_char_max; ++j)
-	      accepts[j] &= ~dfa->word_char[j];
+	    {
+#ifdef RE_ENABLE_I18N
+	      if (dfa->mb_cur_max > 1)
+		for (j = 0; j < BITSET_UINTS; ++j)
+		  accepts[j] &= ~(dfa->word_char[j] & dfa->sb_char[j]);
+	      else
+#endif
+		for (j = 0; j < BITSET_UINTS; ++j)
+		  accepts[j] &= ~dfa->word_char[j];
+	    }
 	}
 
       /* Then divide `accepts' into DFA states, or create a new
