@@ -36,7 +36,8 @@
 #  ifndef __STRICT_ANSI__
 /* Even though CLOCKS_PER_SEC has such a strange value CLK_TCK
    presents the real value for clock ticks per second for the system.  */
-#   define CLK_TCK 1024
+extern long int __sysconf (int);
+#   define CLK_TCK (__sysconf (2))	/* 2 is _SC_CLK_TCK */
 #  endif
 
 #  ifdef __USE_POSIX199309
