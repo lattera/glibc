@@ -1,13 +1,12 @@
+2002-08-03  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/mempcpy.c (__mempcpy): #undef it before defn.
+
 2002-08-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in (HAVE_BROKEN_ALIAS_ATTRIBUTE): Add check for
 	broken alias attribute handling.
 	* config.h.in (HAVE_BROKEN_ALIAS_ATTRIBUTE): Add.
-
-2002-08-02  Roland McGrath  <roland@redhat.com>
-
-	* include/rpc/rpc.h: Declare RPC_VARS tsd as extern.
-	* sunrpc/rpc_thread.c: Define it without static.
 
 2002-08-02  Roland McGrath  <roland@frob.com>
 
@@ -31,10 +30,8 @@
 
 	* assert/assert.c (__assert_fail): Fix typo in comment.
 
-	* include/rpc/rpc.h: Declare __libc_tsd_RPC_VARS if USE_TLS &&
-	HAVE___THREAD.
-	* sunrpc/rpc_thread.c: Don't define __libc_tsd_RPC_VARS as static
-	if USE_TLS && HAVE___THREAD.
+	* include/rpc/rpc.h: Declare RPC_VARS tsd as extern.
+	* sunrpc/rpc_thread.c: Define it without static.
 	* sunrpc/Versions [libc] (GLIBC_PRIVATE): Export __libc_tsd_RPC_VARS.
 
 2002-08-02  Jakub Jelinek  <jakub@redhat.com>
