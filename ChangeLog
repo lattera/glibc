@@ -1,3 +1,9 @@
+1998-04-06  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/socket.S: Revert 03-01 change,
+	as the buffer is not properly aligned.
+	Reported by Juan Cespedes <cespedes@debian.org>.
+
 1998-04-05  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/examples/mkfsock.c (make_named_socket): Use AF_LOCAL
