@@ -130,7 +130,8 @@ __pthread_manager(void *arg)
   /* Raise our priority to match that of main thread */
   __pthread_manager_adjust_prio(__pthread_main_thread->p_priority);
   /* Synchronize debugging of the thread manager */
-  n = __libc_read(reqfd, (char *)&request, sizeof(request));
+  n = TEMP_FAILURE_RETRY(__libc_read(reqfd, (char *)&request,
+				     sizeof(request)));
   ASSERT(n == sizeof(request) && request.req_kind == REQ_DEBUG);
   ufd.fd = reqfd;
   ufd.events = POLLIN;
@@ -150,8 +151,17 @@ __pthread_manager(void *arg)
     }
     /* Read and execute request */
     if (n == 1 && (ufd.revents & POLLIN)) {
-      n = __libc_read(reqfd, (char *)&request, sizeof(request));
-      ASSERT(n == sizeof(request));
+      n = TEMP_FAILURE_RETRY(__libc_read(reqfd, (char *)&request,
+					 sizeof(request)));
+#ifdef DEBUG
+      if (n < 0) {
+	char d[64];
+	write(STDERR_FILENO, d, snprintf(d, sizeof(d), "*** read err %m\n"));
+      } else if (n != sizeof(request)) {
+	write(STDERR_FILENO, "*** short read in manager\n", 26);
+      }
+#endif
+
       switch(request.req_kind) {
       case REQ_CREATE:
         request.req_thread->p_retcode =
@@ -266,8 +276,8 @@ pthread_start_thread(void *arg)
   if (__pthread_threads_debug && __pthread_sig_debug > 0) {
     request.req_thread = self;
     request.req_kind = REQ_DEBUG;
-    __libc_write(__pthread_manager_request,
-                 (char *) &request, sizeof(request));
+    TEMP_FAILURE_RETRY(__libc_write(__pthread_manager_request,
+				    (char *) &request, sizeof(request)));
     suspend(self);
   }
   /* Run the thread code */
@@ -921,7 +931,8 @@ void __pthread_manager_sighandler(int sig)
     struct pthread_request request;
     request.req_thread = 0;
     request.req_kind = REQ_KICK;
-    __libc_write(__pthread_manager_request, (char *) &request, sizeof(request));
+    TEMP_FAILURE_RETRY(__libc_write(__pthread_manager_request,
+				    (char *) &request, sizeof(request)));
   }
 }
 

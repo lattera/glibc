@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -219,10 +219,6 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	  vec[2].iov_base = cp;
 	  vec[2].iov_len = hst_resp.h_addr_list_cnt * INADDRSZ;
 
-	  ignore = alloca (hst_resp.h_addr_list_cnt * IN6ADDRSZ);
-	  vec[3].iov_base = ignore;
-	  vec[3].iov_len = hst_resp.h_addr_list_cnt * IN6ADDRSZ;
-
 	  for (cnt = 0; cnt < hst_resp.h_addr_list_cnt; ++cnt)
 	    {
 	      resultbuf->h_addr_list[cnt] = cp;
@@ -232,9 +228,9 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	  resultbuf->h_addrtype = AF_INET;
 	  resultbuf->h_length = INADDRSZ;
 
-	  total_len += hst_resp.h_addr_list_cnt * (INADDRSZ + IN6ADDRSZ);
+	  total_len += hst_resp.h_addr_list_cnt * INADDRSZ;
 
-	  n = 4;
+	  n = 3;
 	}
       else
 	{

@@ -1,3 +1,12 @@
+2001-09-11  Ulrich Drepper  <drepper@redhat.com>
+            Wolfram Gloger <wg@malloc.de>
+
+	* join.c: Protect all communications from and to manager with
+	TEMP_FAILURE_RETRY.
+	* manager.c: Likewise.
+	* pthread.c: Likewise.
+	* smeaphore.c: Likewise.
+
 2001-08-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* spinlock.c (__pthread_lock): Top max_count value with

@@ -631,7 +631,8 @@ int __pthread_initialize_manager(void)
     }
   /* Synchronize debugging of the thread manager */
   request.req_kind = REQ_DEBUG;
-  __libc_write(__pthread_manager_request, (char *) &request, sizeof(request));
+  TEMP_FAILURE_RETRY(__libc_write(__pthread_manager_request,
+				  (char *) &request, sizeof(request)));
   return 0;
 }
 
@@ -653,7 +654,8 @@ int __pthread_create_2_1(pthread_t *thread, const pthread_attr_t *attr,
   request.req_args.create.arg = arg;
   sigprocmask(SIG_SETMASK, (const sigset_t *) NULL,
               &request.req_args.create.mask);
-  __libc_write(__pthread_manager_request, (char *) &request, sizeof(request));
+  TEMP_FAILURE_RETRY(__libc_write(__pthread_manager_request,
+				  (char *) &request, sizeof(request)));
   suspend(self);
   retval = THREAD_GETMEM(self, p_retcode);
   if (__builtin_expect (retval, 0) == 0)
@@ -785,8 +787,8 @@ static void pthread_onexit_process(int retcode, void *arg)
     request.req_thread = self;
     request.req_kind = REQ_PROCESS_EXIT;
     request.req_args.exit.code = retcode;
-    __libc_write(__pthread_manager_request,
-		 (char *) &request, sizeof(request));
+    TEMP_FAILURE_RETRY(__libc_write(__pthread_manager_request,
+				    (char *) &request, sizeof(request)));
     suspend(self);
     /* Main thread should accumulate times for thread manager and its
        children, so that timings for main thread account for all threads. */
@@ -1151,7 +1153,7 @@ void __pthread_message(char * fmt, ...)
   va_start(args, fmt);
   vsnprintf(buffer + 8, sizeof(buffer) - 8, fmt, args);
   va_end(args);
-  __libc_write(2, buffer, strlen(buffer));
+  TEMP_FAILURE_RETRY(__libc_write(2, buffer, strlen(buffer)));
 }
 
 #endif

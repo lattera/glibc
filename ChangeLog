@@ -1,3 +1,8 @@
+2001-09-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_gethst_r.c: Don't expect IPv6 addresses for IPv4 lookup.
+	Patch by Stephan Kulow.
+
 2001-09-08  Ben Collins  <bcollins@debian.org>
 
 	* sysdeps/arm/dl-machine.h (elf_machine_rel): Fix thinko in

@@ -168,8 +168,8 @@ int __new_sem_post(sem_t * sem)
     }
     request.req_kind = REQ_POST;
     request.req_args.post = sem;
-    __libc_write(__pthread_manager_request,
-                 (char *) &request, sizeof(request));
+    TEMP_FAILURE_RETRY(__libc_write(__pthread_manager_request,
+				    (char *) &request, sizeof(request)));
   }
   return 0;
 }
