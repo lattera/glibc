@@ -45,7 +45,7 @@ tf1 (void *arg)
   /* This call must never return.  */
   int e = pthread_mutex_timedlock (&m1, &ts);
   char buf[100];
-  printf ("tf1: mutex_lock returned: %s\n",
+  printf ("tf1: mutex_timedlock returned: %s\n",
 	  strerror_r (e, buf, sizeof (buf)));
 
   exit (1);
