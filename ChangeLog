@@ -1,5 +1,10 @@
 2004-03-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/dl-machine.h: Define ARCH_FIXUP_ATTRIBUTE and use
+	it in the fixup function declarations.
+	* elf/dl-runtime.c: If ARCH_FIXUP_ATTRIBUTE is not defined,
+	provide dummy definition.  Use macro in fixup function
+	definitions.
 
 	* sysdeps/unix/sysv/linux/i386/vfork.S: If SAVE_PID and
 	RESTORE_PID are defined, use it.

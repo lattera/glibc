@@ -36,6 +36,12 @@
 # define VERSYMIDX(sym)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (sym))
 #endif
 
+/* The fixup functions might have need special attributes.  If none
+   are provided define the macro as empty.  */
+#ifndef ARCH_FIXUP_ATTRIBUTE
+# define ARCH_FIXUP_ATTRIBUTE
+#endif
+
 
 /* This function is called through a special trampoline from the PLT the
    first time each PLT entry is called.  We must perform the relocation
@@ -46,7 +52,7 @@
 
 #ifndef ELF_MACHINE_NO_PLT
 static ElfW(Addr)
-__attribute ((used, noinline))
+__attribute ((used, noinline)) ARCH_FIXUP_ATTRIBUTE
 fixup (
 # ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
         ELF_MACHINE_RUNTIME_FIXUP_ARGS,
@@ -122,7 +128,7 @@ fixup (
 #if !defined PROF && !defined ELF_MACHINE_NO_PLT && !__BOUNDED_POINTERS__
 
 static ElfW(Addr)
-__attribute ((used, noinline))
+__attribute ((used, noinline)) ARCH_FIXUP_ATTRIBUTE
 profile_fixup (
 #ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
        ELF_MACHINE_RUNTIME_FIXUP_ARGS,
