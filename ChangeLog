@@ -1,3 +1,11 @@
+1998-10-19  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/i386/init-first.c (init1): Don't call
+	__libc_init_secure.  Instead set __libc_enable_secure here from
+	the exec flags.
+	(__libc_enable_secure): New variable it.
+	* sysdeps/mach/hurd/enbl-secure.c: New file, empty placeholder module.
+
 1998-10-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/posix/getcwd.c (__getcwd): Don't stop processing
