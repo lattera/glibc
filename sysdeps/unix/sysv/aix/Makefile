@@ -6,7 +6,7 @@
 static-start-installed-name = /usr/lib/crt0.o
 
 ifeq ($(subdir),misc)
-sysdep_routines += dl-open dl-sym dl-close restf savef uitrunc
+sysdep_routines += dl-open dl-sym dl-close uitrunc
 endif
 
 ifeq ($(subdir),login)
