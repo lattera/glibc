@@ -26,6 +26,7 @@ for l in $lang; do
   if test $here -eq 0; then
     echo "$l OK"
   else
+    echo "$l FAIL"
     status=1
   fi
 done
