@@ -1,4 +1,4 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -22,6 +22,10 @@ Boston, MA 02111-1307, USA.  */
 
 #define MAX_SEC	(LONG_MAX / 1000000L - 2)
 #define MIN_SEC	(LONG_MIN / 1000000L + 2)
+
+#ifndef MOD_OFFSET
+#define modes mode
+#endif
 
 int
 __adjtime (itv, otv)

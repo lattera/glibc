@@ -29,6 +29,31 @@ Tue Jan 16 17:37:39 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* csu/Makefile [have-initfini=yes] (CPPFLAGS): Append -DHAVE_INITFINI.
 	(initfini): Compile initfini.c with -fPIC.
 
+Sun Jan 14 01:01:10 1996  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
+
+	* sysdeps/mips/bytesex.h: Add default byte sex.  By Ralf Baechle.
+
+	* sysdeps/unix/sysv/linux/adjtime.c [! MOD_OFFSET]: Use `mode'
+	member of `struct timex' instead of `modes'.  From Andreas Schwab.
+
+	* sysdeps/unix/sysv/linux/mknod.c: New file.  Generic C version.
+	* sysdeps/unix/sysv/linux/i386/mknod.S: Remove assembler version.
+
+	* sysdeps/unix/sysv/linux/Makefile (inhibit-glue): New variable.
+	[$(subdir) = misc] (sysdep_routines): Add mount, umount, and s_ptrace.
+	[$(subdir) = misc] (headers): Append sys/mount.h.
+
+	* sysdeps/unix/sysv/linux/mount.S, sysdeps/unix/sysv/linux/umount.S:
+	New files.  Implement system calls.
+	* sysdeps/unix/sysv/linux/sys/mount.h: New header file.
+
+	* sysdeps/unix/sysv/linux/ptrace.c: New file.  Wrapper around
+	ptrace system call.
+	* sysdeps/unix/sysv/linux/s_ptrace.S: New file: ptrace system call.
+
+	* sysdeps/unix/sysv/linux/i386/gnu/types.h: New file with correct
+	types for i386/Linux.
+
 Sun Jan 14 17:51:09 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* MakeTAGS (all-sources, all-headers): Always search the
