@@ -205,6 +205,7 @@ ENTRY(strncpy)
 	st1	[in0] = c, 1		// *dest++ = c
 (p6)	cmp.ne	p6, p0 = c, r0
 	br.cloop.dptk .l8
+	;;
 	mov 	ar.lc = saved_lc	// restore the loop counter
 	mov	pr = saved_pr, -1	// restore the predicate registers
 	br.ret.sptk.many b0
@@ -213,11 +214,11 @@ ENTRY(strncpy)
 	ld8	r[0] = [tmp]
 	br.cond.sptk .back2
 .recovery3:
-	add	tmp = -(MEMLAT + 1) * 8, src ;;
+	add	tmp = -MEMLAT * 8, src ;;
 	ld8	r[MEMLAT] = [tmp]
 	br.cond.sptk .back3
 .recovery4:
-	add	tmp = -(MEMLAT + 1) * 8, src ;;
-	ld8	r[MEMLAT] = [tmp]
+	add	tmp = -(MEMLAT - 1) * 8, src ;;
+	ld8	r[MEMLAT - 1] = [tmp]
 	br.cond.sptk .back4
 END(strncpy)
