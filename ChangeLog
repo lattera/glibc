@@ -13,9 +13,10 @@
 	* elf/dl-open.c (_dl_open): Likewise.
 	* elf/rtld.c (dl_main): Likewise.
 	* elf/dl-error.c: Define _dl_out_of_memory.
-	(_dl_signal_error): Return _dl_signal_error if we cannot duplicate
+	(_dl_signal_error): Return _dl_out_of_memory if we cannot duplicate
 	the error string.
 	* sysdeps/generic/ldsodefs.h: Declare _dl_out_of_memory.
+	[PR libc/1813].
 
 	* dlfcn/dlerror.c (free_key_mem): Also free error string.
 
