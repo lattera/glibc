@@ -1,5 +1,13 @@
 2002-01-02  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/mach/hurd/sigwait.c (__sigwait): Use __sigandset,
+	__sigisemptyset.  Don't use MASK uninitialized.
+
+	* sysdeps/mach/hurd/sigprocmask.c (__sigprocmask): Use __sigorset.
+	* hurd/hurdinit.c (_hurd_new_proc_init): Use __sigisemptyset.
+	* hurd/hurdsig.c (_hurd_internal_post_signal): Use __sigismember,
+	__sigdelset, __sigaddset, __sigorset.
+
 	* sysdeps/generic/htonl.c: Use uint32_t instead of u_int32_t.
 	* sysdeps/generic/htons.c: Use uint16_t instead of u_int16_t.
 

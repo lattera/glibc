@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,97,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -68,13 +68,15 @@ __sigwait (const sigset_t *set, int *sig)
   if (set != NULL)
     /* Crash before locking */
     mask = *set;
+  else
+    __sigemptyset (&mask);
 
   ss = _hurd_self_sigstate ();
   __spin_lock (&ss->lock);
 
   /* See if one of these signals is currently pending.  */
-  ready = ss->pending & mask;
-  if (ready)
+  __sigandset (&ready, &ss->pending, &mask);
+  if (! __sigisemptyset (&ready))
     {
       for (signo = 1; signo < NSIG; signo++)
 	if (__sigismember (&ready, signo))

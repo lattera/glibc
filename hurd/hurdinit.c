@@ -166,7 +166,7 @@ _hurd_new_proc_init (char **argv,
      while.  Eventually it probably makes most sense for the exec server to
      mask out EXEC_SIGTRAP so the debugged program is closer to not being
      able to tell it's being debugged.  */
-  if (_hurdsig_traced
+  if (!__sigisemptyset (&_hurdsig_traced)
 #ifdef EXEC_SIGTRAP
       && !(_hurd_exec_flags & EXEC_SIGTRAP)
 #endif

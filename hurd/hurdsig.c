@@ -588,7 +588,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
     handler = ss->preemptors ? try_preemptor (ss->preemptors) : SIG_ERR;
 
     /* If no thread-specific preemptor, check for a global one.  */
-    if (handler == SIG_ERR && (__sigmask (signo) & _hurdsig_preempted_set))
+    if (handler == SIG_ERR && __sigismember (signo, _hurdsig_preempted_set))
       {
 	__mutex_lock (&_hurd_siglock);
 	handler = try_preemptor (_hurdsig_preemptors);
@@ -689,7 +689,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       if (__sigmask (signo) & STOPSIGS)
 	/* Stop signals clear a pending SIGCONT even if they
 	   are handled or ignored (but not if preempted).  */
-	ss->pending &= ~sigmask (SIGCONT);
+	__sigdelset (&ss->pending, SIGCONT);
       else
 	{
 	  if (signo == SIGCONT)
@@ -928,11 +928,11 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
 	/* Block requested signals while running the handler.  */
 	scp->sc_mask = ss->blocked;
-	ss->blocked |= ss->actions[signo].sa_mask;
+	__sigorset (&ss->blocked, &ss->blocked, &ss->actions[signo].sa_mask);
 
 	/* Also block SIGNO unless we're asked not to.  */
 	if (! (ss->actions[signo].sa_flags & (SA_RESETHAND | SA_NODEFER)))
-	  ss->blocked |= __sigmask (signo);
+	  __sigaddset (&ss->blocked, signo);
 
 	/* Reset to SIG_DFL if requested.  SIGILL and SIGTRAP cannot
            be automatically reset when delivered; the system silently
