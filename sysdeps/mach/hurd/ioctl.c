@@ -135,10 +135,10 @@ __ioctl (int fd, unsigned long int request, ...)
 	  /* The RPC takes a single integer_t argument.
 	     Rather than pointing to the value, ARG is the value itself.  */
 #ifdef MACH_MSG_TYPE_BIT
-	  *t++ = io2mach_type (1, _IOTS (int));
-	  *((int *) t)++ = (int) arg;
+	  *t++ = io2mach_type (1, _IOTS (integer_t));
+	  *((integer_t *) t)++ = (integer_t) arg;
 #else
-	  *((int *) p)++ = (int) arg;
+	  *((integer_t *) p)++ = (integer_t) arg;
 #endif
 	}
 
@@ -191,7 +191,7 @@ __ioctl (int fd, unsigned long int request, ...)
 #ifdef MACH_MSG_TYPE_BIT
       if (*(int *) &msg.header.RetCodeType !=
 	  ((union { mach_msg_type_t t; int i; })
-	   { t: io2mach_type (1, _IOTS (sizeof msg.header.RetCode)) }).i)
+	   { t: io2mach_type (1, _IOTS (msg.header.RetCode)) }).i)
 	return MIG_TYPE_ERROR;
 #endif
       return msg.header.RetCode;
