@@ -46,7 +46,7 @@ __dlopen_check (const char *file, int mode)
   struct dlopen_args args;
   args.file = file;
   args.mode = mode;
-  args.caller = __builtin_return_address (0);
+  args.caller = RETURN_ADDRESS (0);
 
   return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
 }

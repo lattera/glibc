@@ -345,7 +345,7 @@ static void wait_node_dequeue(struct wait_node **pp_head,
   if (pp_node == pp_head) {
     long oldvalue = (long) p_node;
     long newvalue = (long) p_node->next;
-       
+
     if (__compare_and_swap((long *) pp_node, oldvalue, newvalue))
       return;
 
@@ -388,7 +388,7 @@ void __pthread_alt_lock(struct _pthread_fastlock * lock,
 
       wait_node.abandoned = 0;
       wait_node.next = (struct wait_node *) lock->__status;
-      wait_node.thr = self = thread_self();
+      wait_node.thr = self;
       suspend_needed = 1;
     }
 
@@ -408,7 +408,8 @@ void __pthread_alt_lock(struct _pthread_fastlock * lock,
       newstatus = 1;
     } else {
       if (self == NULL)
-	wait_node.thr = self = thread_self();
+	self = thread_self();
+      wait_node.thr = self;
       newstatus = (long) &wait_node;
     }
     wait_node.abandoned = 0;
@@ -461,7 +462,7 @@ int __pthread_alt_timedlock(struct _pthread_fastlock * lock,
 
       p_wait_node->abandoned = 0;
       p_wait_node->next = (struct wait_node *) lock->__status;
-      p_wait_node->thr = self = thread_self();
+      p_wait_node->thr = self;
     }
 
     WRITE_MEMORY_BARRIER();
@@ -478,7 +479,7 @@ int __pthread_alt_timedlock(struct _pthread_fastlock * lock,
       newstatus = 1;
     } else {
       if (self == NULL)
-	p_wait_node->thr = self = thread_self();
+	p_wait_node->thr = self;
       newstatus = (long) p_wait_node;
     }
     p_wait_node->abandoned = 0;

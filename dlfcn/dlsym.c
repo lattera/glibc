@@ -1,5 +1,5 @@
 /* Look up a symbol in a shared object loaded by `dlopen'.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +44,7 @@ void *
 dlsym (void *handle, const char *name)
 {
   struct dlsym_args args;
-  args.who = __builtin_return_address (0);
+  args.who = RETURN_ADDRESS (0);
   args.handle = handle;
   args.name = name;
 

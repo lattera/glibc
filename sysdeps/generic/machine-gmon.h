@@ -1,5 +1,5 @@
 /* Machine-dependent definitions for profiling support.  Generic GCC 2 version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
      void *__builtin_return_address (unsigned int N)
    returns the return address of the frame N frames up.  */
 
-/* Be warned that GCC cannot usefully compile __builtin_return_address(N) 
+/* Be warned that GCC cannot usefully compile __builtin_return_address(N)
    for N != 0 on all machines.  In this case, you may have to write
    your own version of _mcount().  */
 
@@ -50,6 +50,5 @@ static inline void mcount_internal (u_long frompc, u_long selfpc)
 #define MCOUNT \
 void _mcount (void)							      \
 {									      \
-  mcount_internal ((u_long) __builtin_return_address (1),		      \
-		   (u_long) __builtin_return_address (0));		      \
+  mcount_internal ((u_long) RETURN_ADDRESS (1), (u_long) RETURN_ADDRESS (0)); \
 }

@@ -30,8 +30,7 @@ extern struct link_map *_dl_profile_map;
 void
 _dl_mcount_wrapper (void *selfpc)
 {
-  _dl_mcount ((ElfW(Addr)) __builtin_return_address (0),
-	      (ElfW(Addr)) selfpc);
+  _dl_mcount ((ElfW(Addr)) RETURN_ADDRESS (0), (ElfW(Addr)) selfpc);
 }
 
 
@@ -39,6 +38,5 @@ void
 _dl_mcount_wrapper_check (void *selfpc)
 {
   if (_dl_profile_map != NULL)
-    _dl_mcount ((ElfW(Addr)) __builtin_return_address (0),
-		(ElfW(Addr)) selfpc);
+    _dl_mcount ((ElfW(Addr)) RETURN_ADDRESS (0), (ElfW(Addr)) selfpc);
 }

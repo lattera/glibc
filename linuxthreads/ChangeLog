@@ -1,3 +1,10 @@
+2000-07-18 Kaz Kylheku <kaz@ashi.footprints.net>
+
+	* spinlock.c (__pthread_alt_lock, __pthread_alt_timedlock): Fixed
+	bug whereby thr field of waitnode structure would not be correctly
+	set unless a null self pointer is passed to the functions.
+	Eliminated redundant calls to thread_self().
+
 2000-07-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthread.c (__pthread_initialize_manager): Lock

@@ -50,7 +50,7 @@ __dlopen_nocheck (const char *file, int mode)
 {
   struct dlopen_args args;
   args.file = file;
-  args.caller = __builtin_return_address (0);
+  args.caller = RETURN_ADDRESS (0);
 
   if ((mode & RTLD_BINDING_MASK) == 0)
     /* By default assume RTLD_LAZY.  */

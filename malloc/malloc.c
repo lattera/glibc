@@ -2678,7 +2678,7 @@ Void_t* mALLOc(bytes) size_t bytes;
     Void_t* result;
 
 #if defined __GNUC__ && __GNUC__ >= 2
-    result = (*__malloc_hook)(bytes, __builtin_return_address (0));
+    result = (*__malloc_hook)(bytes, RETURN_ADDRESS (0));
 #else
     result = (*__malloc_hook)(bytes, NULL);
 #endif
@@ -2996,7 +2996,7 @@ void fREe(mem) Void_t* mem;
 #if defined _LIBC || defined MALLOC_HOOKS
   if (__free_hook != NULL) {
 #if defined __GNUC__ && __GNUC__ >= 2
-    (*__free_hook)(mem, __builtin_return_address (0));
+    (*__free_hook)(mem, RETURN_ADDRESS (0));
 #else
     (*__free_hook)(mem, NULL);
 #endif
@@ -3201,7 +3201,7 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
     Void_t* result;
 
 #if defined __GNUC__ && __GNUC__ >= 2
-    result = (*__realloc_hook)(oldmem, bytes, __builtin_return_address (0));
+    result = (*__realloc_hook)(oldmem, bytes, RETURN_ADDRESS (0));
 #else
     result = (*__realloc_hook)(oldmem, bytes, NULL);
 #endif
@@ -3478,8 +3478,7 @@ Void_t* mEMALIGn(alignment, bytes) size_t alignment; size_t bytes;
     Void_t* result;
 
 #if defined __GNUC__ && __GNUC__ >= 2
-    result = (*__memalign_hook)(alignment, bytes,
-				__builtin_return_address (0));
+    result = (*__memalign_hook)(alignment, bytes, RETURN_ADDRESS (0));
 #else
     result = (*__memalign_hook)(alignment, bytes, NULL);
 #endif
@@ -3671,7 +3670,7 @@ Void_t* cALLOc(n, elem_size) size_t n; size_t elem_size;
   if (__malloc_hook != NULL) {
     sz = n * elem_size;
 #if defined __GNUC__ && __GNUC__ >= 2
-    mem = (*__malloc_hook)(sz, __builtin_return_address (0));
+    mem = (*__malloc_hook)(sz, RETURN_ADDRESS (0));
 #else
     mem = (*__malloc_hook)(sz, NULL);
 #endif
