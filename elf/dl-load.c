@@ -1949,7 +1949,6 @@ cannot create shared object descriptor"));
 				  N_("cannot open shared object file"));
     }
 
-  extern void *__libc_stack_end;
   void *stack_end = __libc_stack_end;
   return _dl_map_object_from_fd (name, fd, &fb, realname, loader, type, mode,
 				 &stack_end);

@@ -1,5 +1,5 @@
 /* Return backtrace of current program state.  Generic version.
-   Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -23,11 +23,7 @@
 #include <frame.h>
 #include <sigcontextinfo.h>
 #include <bp-checks.h>
-
-/* This is a global variable set at program start time.  It marks the
-   highest used stack address.  */
-extern void *__libc_stack_end;
-
+#include <ldsodefs.h>
 
 /* This implementation assumes a stack layout that matches the defaults
    used by gcc's `__builtin_frame_address' and `__builtin_return_address'

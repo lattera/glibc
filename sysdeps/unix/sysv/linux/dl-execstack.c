@@ -26,8 +26,6 @@
 #include "kernel-features.h"
 
 
-extern void *__libc_stack_end attribute_hidden;
-
 int
 internal_function
 _dl_make_stack_executable (void **stack_endp)

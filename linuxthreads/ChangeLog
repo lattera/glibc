@@ -1,3 +1,8 @@
+2004-01-16  Richard Henderson  <rth@redhat.com>
+
+        * attr.c: Include ldsodefs.h.
+        (pthread_getattr_np): Don't declare __libc_stack_end.
+
 2004-01-09  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -71,9 +71,6 @@ pthread_getattr_np (thread_id, attr)
       /* No stack information available.  This must be for the initial
 	 thread.  Get the info in some magical way.  */
       assert (abs (thread->pid) == thread->tid);
-
-      /* Defined in ld.so.  */
-      extern void *__libc_stack_end;
 
       /* Stack size limit.  */
       struct rlimit rl;

@@ -1,5 +1,6 @@
 /* Catch segmentation faults and print backtrace.
-   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -28,6 +29,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdio-common/_itoa.h>
+#include <ldsodefs.h>
 
 #include <bp-checks.h>
 
@@ -40,11 +42,6 @@
 
 /* Get code to possibly dump the content of all registers.  */
 #include <register-dump.h>
-
-/* This is a global variable set at program start time.  It marks the
-   highest used stack address.  */
-extern void *__libc_stack_end;
-
 
 /* This implementation assumes a stack layout that matches the defaults
    used by gcc's `__builtin_frame_address' and `__builtin_return_address'

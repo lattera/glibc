@@ -26,7 +26,6 @@
 extern void __libc_init_first (int argc, char **argv, char **envp);
 
 extern int __libc_multiple_libcs;
-extern void *__libc_stack_end;
 
 #include <tls.h>
 #ifndef SHARED

@@ -26,6 +26,8 @@
 #include "pthread.h"
 #include "internals.h"
 #include <shlib-compat.h>
+#include <ldsodefs.h>
+
 
 int __pthread_attr_init_2_1(pthread_attr_t *attr)
 {
@@ -415,9 +417,6 @@ int pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
   if (descr == &__pthread_initial_thread)
 #endif
     {
-      /* Defined in ld.so.  */
-      extern void *__libc_stack_end;
-
       /* Stack size limit.  */
       struct rlimit rl;
 

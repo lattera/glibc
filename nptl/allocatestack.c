@@ -661,8 +661,6 @@ __deallocate_stack (struct pthread *pd)
 }
 
 
-extern void *__libc_stack_end;
-
 int
 internal_function
 __make_stacks_executable (void **stack_endp)
