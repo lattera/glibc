@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -132,6 +132,20 @@ do_test (void)
       exit (1);
     }
 
+  pthread_attr_t a;
+
+  if (pthread_attr_init (&a) != 0)
+    {
+      puts ("attr_init failed");
+      exit (1);
+    }
+
+  if (pthread_attr_setstacksize (&a, 1 * 1024 * 1024) != 0)
+    {
+      puts ("attr_setstacksize failed");
+      return 1;
+    }
+
   for (i = 0; i < N; ++i)
     {
       if (pthread_mutex_init (&lock[i], NULL) != 0)
@@ -144,11 +158,17 @@ do_test (void)
 	  printf ("mutex_lock[%d] failed\n", i);
 	}
 
-      if (pthread_create (&th[i], NULL, tf, (void *) (long int) i) != 0)
+      if (pthread_create (&th[i], &a, tf, (void *) (long int) i) != 0)
 	{
 	  printf ("create of thread %d failed\n", i);
 	  exit (1);
 	}
+    }
+
+  if (pthread_attr_destroy (&a) != 0)
+    {
+      puts ("attr_destroy failed");
+      exit (1);
     }
 
   int result = 0;

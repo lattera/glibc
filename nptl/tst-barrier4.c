@@ -64,7 +64,20 @@ tf (void *arg)
 static int
 do_test (void)
 {
+  pthread_attr_t at;
   int cnt;
+
+  if (pthread_attr_init (&at) != 0)
+    {
+      puts ("attr_init failed");
+      return 1;
+    }
+
+  if (pthread_attr_setstacksize (&at, 1 * 1024 * 1024) != 0)
+    {
+      puts ("attr_setstacksize failed");
+      return 1;
+    }
 
   if (pthread_barrier_init (&b1, NULL, N) != 0)
     {
@@ -80,11 +93,17 @@ do_test (void)
 
   pthread_t th[N - 1];
   for (cnt = 0; cnt < N - 1; ++cnt)
-    if (pthread_create (&th[cnt], NULL, tf, NULL) != 0)
+    if (pthread_create (&th[cnt], &at, tf, NULL) != 0)
       {
 	puts ("pthread_create failed");
 	return 1;
       }
+
+  if (pthread_attr_destroy (&at) != 0)
+    {
+      puts ("attr_destroy failed");
+      return 1;
+    }
 
   tf (NULL);
 

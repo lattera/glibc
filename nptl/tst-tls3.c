@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -127,12 +127,26 @@ do_test (void)
       exit (1);
     }
 
+  pthread_attr_t a;
+
+  if (pthread_attr_init (&a) != 0)
+    {
+      puts ("attr_init failed");
+      exit (1);
+    }
+
+  if (pthread_attr_setstacksize (&a, 1 * 1024 * 1024) != 0)
+    {
+      puts ("attr_setstacksize failed");
+      return 1;
+    }
+
   int r;
   for (r = 0; r < 10; ++r)
     {
       int i;
       for (i = 0; i < N; ++i)
-	if (pthread_create (&th[i], NULL, tf, cbs[i]) != 0)
+	if (pthread_create (&th[i], &a, tf, cbs[i]) != 0)
 	  {
 	    puts ("pthread_create failed");
 	    exit (1);
@@ -183,6 +197,12 @@ do_test (void)
 	    puts ("join failed");
 	    exit (1);
 	  }
+    }
+
+  if (pthread_attr_destroy (&a) != 0)
+    {
+      puts ("attr_destroy failed");
+      exit (1);
     }
 
   return 0;

@@ -1,3 +1,24 @@
+2004-03-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-once4.c: Remove unnecessary macro definition.
+
+	* tst-mutex7.c (do_test): Limit thread stack size.
+	* tst-once2.c (do_test): Likewise.
+	* tst-tls3.c (do_test): Likewise.
+	* tst-tls1.c (do_test): Likewise.
+	* tst-signal3.c (do_test): Likewise.
+	* tst-kill6.c (do_test): Likewise.
+	* tst-key4.c (do_test): Likewise.
+	* tst-join4.c (do_test): Likewise.
+	* tst-fork1.c (do_test): Likewise.
+	* tst-context1.c (do_test): Likewise.
+	* tst-cond2.c (do_test): Likewise.
+	* tst-cond10.c (do_test): Likewise.
+	* tst-clock2.c (do_test): Likewise.
+	* tst-cancel10.c (do_test): Likewise.
+	* tst-basic2.c (do_test): Likewise.
+	* tst-barrier4.c (do_test): Likewise.
+
 2004-03-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/tls.h: Use GLRO instead of GL where appropriate.
