@@ -171,8 +171,8 @@ local_strdup (const char *s)
 
 
 static size_t
-is_dst (const char *start, const char *name, const char *str, size_t cmplen, int is_path,
-	int secure)
+is_dst (const char *start, const char *name, const char *str, size_t cmplen,
+	int is_path, int secure)
 {
   size_t len;
 
