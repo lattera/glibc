@@ -32,25 +32,19 @@
 #endif
 
 #ifndef _RTLD_PROLOGUE
-#ifdef __STDC__
-#define _RTLD_PROLOGUE(entry) "\n\t.globl " #entry \
-			      "\n\t.ent " #entry \
-			      "\n\t" #entry ":\n\t"
-#else
-#define _RTLD_PROLOGUE(entry) "\n\t.globl entry\n\t.ent entry\n\t entry:\n\t"
-#endif
+# define _RTLD_PROLOGUE(entry) "\n\t.globl " #entry \
+			       "\n\t.ent " #entry \
+			       "\n\t" #entry ":\n\t"
 #endif
 
 #ifndef _RTLD_EPILOGUE
-#ifdef __STDC__
-#define _RTLD_EPILOGUE(entry) "\t.end " #entry "\n"
-#else
-#define _RTLD_EPILOGUE(entry) "\t.end entry\n"
-#endif
+# define _RTLD_EPILOGUE(entry) "\t.end " #entry "\n"
 #endif
 
-/* I have no idea what I am doing. */
-#define ELF_MACHINE_RELOC_NOPLT			-1
+/* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.
+   This makes no sense on MIPS but we have to define this to R_MIPS_REL32
+   to avoid the asserts in dl-lookup.c from blowing.  */
+#define ELF_MACHINE_JMP_SLOT			R_MIPS_REL32
 #define elf_machine_lookup_noplt_p(type)	(1)
 #define elf_machine_lookup_noexec_p(type)	(0)
 
@@ -104,14 +98,13 @@ elf_mips_got_from_gpreg (ElfW(Addr) gpreg)
   return (ElfW(Addr) *) (gpreg - 0x7ff0);
 }
 
-/* Return the run-time address of the _GLOBAL_OFFSET_TABLE_.
-   Must be inlined in a function which uses global data.  */
-static inline ElfW(Addr) *
-elf_machine_got (void)
+/* Return the link-time address of _DYNAMIC.  Conveniently, this is the
+   first element of the GOT.  This must be inlined in a function which
+   uses global data.  */
+static inline ElfW(Addr)
+elf_machine_dynamic (void)
 {
-  ElfW(Addr) gp;
-
-  __asm__ __volatile__("move %0, $28\n\t" : "=r" (gp));
+  register ElfW(Addr) gp __asm__ ("$28");
   return elf_mips_got_from_gpreg (gp);
 }
 
@@ -151,7 +144,7 @@ elf_machine_got_rel (struct link_map *map, int lazy)
       ElfW(Addr) sym_loadaddr; \
       sym_loadaddr = _dl_lookup_symbol (strtab + sym->st_name, &ref, \
 					map->l_scope, \
-					map->l_name, ELF_MACHINE_RELOC_NOPLT);\
+					map->l_name, R_MIPS_REL32);\
       (ref)? sym_loadaddr + ref->st_value: 0; \
     })
 
@@ -361,7 +354,7 @@ __dl_runtime_resolve (ElfW(Word) sym_index,				      \
 									      \
   loadbase = _dl_lookup_symbol (strtab + definer->st_name, &definer,	      \
 				l->l_scope, l->l_name,			      \
-				ELF_MACHINE_RELOC_NOPLT);		      \
+				R_MIPS_REL32);				      \
 									      \
   /* Apply the relocation with that value.  */				      \
   funcaddr = loadbase + definer->st_value;				      \
