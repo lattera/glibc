@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <paths.h>
 
 /* Execute FILE, searching in the `PATH' environment variable if it contains
    no slashes, with arguments ARGV and environment from `environ'.  */
@@ -29,9 +30,34 @@ execvp (file, argv)
      const char *file;
      char *const argv[];
 {
+  void execute (const char *file, char *const argv[])
+    {
+      execv (file, argv);
+
+      if (errno == ENOEXEC)
+	{
+	  /* The file is accessible but it is not an executable file.
+	     Invoke the shell to interpret it as a script.  */
+
+	  int argc;
+	  char **new_argv;
+
+	  /* Count the arguments.  */
+	  for (argc = 0; argv[argc++];);
+
+	  /* Construct an argument list for the shell.  */
+	  new_argv = __alloca ((argc + 1) * sizeof (char *));
+	  for (new_argv[0] = _PATH_BSHELL; argc > 0; --argc)
+	    new_argv[argc] = argv[argc - 1];
+
+	  /* Execute the shell.  */
+	  execv (new_argv[0], new_argv);
+	}
+    }
+
   if (strchr (file, '/') != NULL)
     /* Don't search when it contains a slash.  */
-    return execv (file, argv);
+    execute (file, argv);
   else
     {
       char *path, *p, *name;
@@ -72,14 +98,23 @@ execvp (file, argv)
 	    }
 
 	  /* Try to execute this name.  If it works, execv will not return.  */
-	  execv (name, argv);
-	  if (errno != ENOENT && errno != EACCES)
-	    /* Those errors indicate the file is missing or not executable
-	       by us, in which case we want to just try the next path
-	       directory.  Some other error means we found an executable
-	       file, but something went wrong executing it; return the
-	       error to our caller.  */
-	    return -1;
+	  execute (name, argv);
+
+	  switch (errno)
+	    {
+	    case ENOENT:
+	    case EACCES:
+	      /* Those errors indicate the file is missing or not executable
+		 by us, in which case we want to just try the next path
+		 directory.  */
+	      break;
+
+	    default:
+	      /* Some other error means we found an executable file, but
+		 something went wrong executing it; return the error to our
+		 caller.  */
+	      return -1;
+	    }
 	}
       while (*p++ != '\0');
     }

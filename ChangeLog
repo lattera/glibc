@@ -1,3 +1,15 @@
+Sat Feb 10 04:18:48 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/execvp.c: If execv fails with ENOEXEC, run the shell on
+	the file.
+
+Fri Feb  9 11:46:45 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* time/Makefile (CFLAGS-zdump.c, CFLAGS-zic.c, CFLAGS-ialloc.c,
+	CFLAGS-scheck.c): Use -DNOID instead of -Wno-unused.
+
+	* hurd/Makefile (user-interfaces): Added hurd/tioctl.
+
 Thu Feb  8 18:55:27 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* hurd/hurdioctl.c (tiocsctty): Set the terminal's pgrp to our own.

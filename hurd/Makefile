@@ -37,7 +37,7 @@ user-interfaces		:= $(addprefix hurd/,\
 				       process process_request \
 				       msg msg_reply msg_request \
 				       exec exec_startup crash interrupt \
-				       fs fsys io term socket ifsock)
+				       fs fsys io term tioctl socket ifsock)
 server-interfaces	:= hurd/msg
 
 routines = hurdstartup hurdinit \

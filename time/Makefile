@@ -125,7 +125,7 @@ tz-cc = $(COMPILE.c) $(+gcc-nowarn) \
 	     -DTZDEFRULES='"$(posixrules-file)"' \
 	     $< $(OUTPUT_OPTION)
 
-CFLAGS-zdump.c = -Wno-strict-prototypes
-CFLAGS-zic.c = -Wno-strict-prototypes
-CFLAGS-ialloc.c = -Wno-strict-prototypes -Wno-unused
-CFLAGS-scheck.c = -Wno-strict-prototypes -Wno-unused
+CFLAGS-zdump.c = -Wno-strict-prototypes -DNOID
+CFLAGS-zic.c = -Wno-strict-prototypes -DNOID
+CFLAGS-ialloc.c = -Wno-strict-prototypes -DNOID
+CFLAGS-scheck.c = -Wno-strict-prototypes -DNOID
