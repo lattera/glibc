@@ -271,6 +271,7 @@ extern uintmax_t wcstoumax __P ((__const wchar_t * __restrict __nptr,
 
 /* Like `strtol' but convert to `intmax_t'.  */
 # ifndef __strtoll_internal_defined
+__extension__
 extern long long int __strtoll_internal __P ((__const char *__restrict __nptr,
 					      char **__restrict __endptr,
 					      int __base, int __group));
@@ -284,6 +285,7 @@ strtoimax (__const char *__restrict nptr, char **__restrict endptr, int base)
 
 /* Like `strtoul' but convert to `uintmax_t'.  */
 # ifndef __strtoull_internal_defined
+__extension__
 extern unsigned long long int __strtoull_internal __P ((__const char *
 							__restrict __nptr,
 							char **
@@ -300,6 +302,7 @@ strtoumax (__const char *__restrict nptr, char **__restrict endptr, int base)
 
 /* Like `wcstol' but convert to `intmax_t'.  */
 # ifndef __wcstoll_internal_defined
+__extension__
 extern long long int __wcstoll_internal __P ((__const wchar_t *
 					      __restrict __nptr,
 					      wchar_t **__restrict __endptr,
@@ -316,6 +319,7 @@ wcstoimax (__const wchar_t *__restrict nptr, wchar_t **__restrict endptr,
 
 /* Like `wcstoul' but convert to `uintmax_t'.  */
 # ifndef __wcstoull_internal_defined
+__extension__
 extern unsigned long long int __wcstoull_internal __P ((__const wchar_t *
 							__restrict __nptr,
 							wchar_t **

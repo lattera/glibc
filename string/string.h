@@ -239,7 +239,8 @@ extern int ffs __P ((int __i)) __attribute__ ((const));
 # ifdef	__USE_GNU
 extern int ffsl __P ((long int __l)) __attribute__ ((const));
 #  ifdef __GNUC__
-extern int ffsll __P ((long long int __ll)) __attribute__ ((const));
+__extension__ extern int ffsll __P ((long long int __ll))
+     __attribute__ ((const));
 #  endif
 # endif
 

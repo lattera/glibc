@@ -310,11 +310,13 @@ extern unsigned long int wcstoul __P ((__const wchar_t *__restrict __nptr,
 #if defined __GNUC__ && defined __USE_GNU
 /* Convert initial portion of wide string NPTR to `long int'
    representation.  */
+__extension__
 extern long long int wcstoq __P ((__const wchar_t *__restrict __nptr,
 				  wchar_t **__restrict __endptr, int __base));
 
 /* Convert initial portion of wide string NPTR to `unsigned long long int'
    representation.  */
+__extension__
 extern unsigned long long int wcstouq __P ((__const wchar_t *__restrict __nptr,
 					    wchar_t **__restrict __endptr,
 					    int __base));
@@ -323,11 +325,13 @@ extern unsigned long long int wcstouq __P ((__const wchar_t *__restrict __nptr,
 #if defined __USE_ISOC9X || (defined __GNUC__ && defined __USE_GNU)
 /* Convert initial portion of wide string NPTR to `long int'
    representation.  */
+__extension__
 extern long long int wcstoll __P ((__const wchar_t *__restrict __nptr,
 				   wchar_t **__restrict __endptr, int __base));
 
 /* Convert initial portion of wide string NPTR to `unsigned long long int'
    representation.  */
+__extension__
 extern unsigned long long int wcstoull __P ((__const wchar_t *
 					     __restrict __nptr,
 					     wchar_t **__restrict __endptr,
@@ -360,10 +364,12 @@ extern unsigned long int __wcstoul_l __P ((__const wchar_t *__restrict __nptr,
 					   wchar_t **__restrict __endptr,
 					   int __base, __locale_t __loc));
 
+__extension__
 extern long long int __wcstoll_l __P ((__const wchar_t *__restrict __nptr,
 				       wchar_t **__restrict __endptr,
 				       int __base, __locale_t __loc));
 
+__extension__
 extern unsigned long long int __wcstoull_l __P ((__const wchar_t *__restrict
 						 __nptr,
 						 wchar_t **__restrict __endptr,
@@ -412,6 +418,7 @@ extern unsigned long int __wcstoul_internal __P ((__const wchar_t *
 # define __wcstoul_internal_defined	1
 #endif
 #ifndef __wcstoll_internal_defined
+__extension__
 extern long long int __wcstoll_internal __P ((__const wchar_t *
 					      __restrict __nptr,
 					      wchar_t **__restrict __endptr,
@@ -419,6 +426,7 @@ extern long long int __wcstoll_internal __P ((__const wchar_t *
 # define __wcstoll_internal_defined	1
 #endif
 #ifndef __wcstoull_internal_defined
+__extension__
 extern unsigned long long int __wcstoull_internal __P ((__const wchar_t *
 							__restrict __nptr,
 							wchar_t **
@@ -452,10 +460,12 @@ extern __inline __long_double_t wcstold (__const wchar_t *__restrict __nptr,
 { return __wcstold_internal (__nptr, __endptr, 0); }
 
 
+__extension__
 extern __inline long long int wcstoq (__const wchar_t *__restrict __nptr,
 				      wchar_t **__restrict __endptr,
 				      int __base)
 { return __wcstoll_internal (__nptr, __endptr, __base, 0); }
+__extension__
 extern __inline unsigned long long int wcstouq (__const wchar_t *
 						__restrict __nptr,
 						wchar_t **__restrict __endptr,

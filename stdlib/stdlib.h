@@ -53,7 +53,7 @@ typedef struct
 
 #ifdef __USE_ISOC9X
 /* Returned by `lldiv'.  */
-typedef struct
+__extension__ typedef struct
   {
     long long int quot;		/* Quotient.  */
     long long int rem;		/* Remainder.  */
@@ -85,7 +85,7 @@ extern long int atol __P ((__const char *__nptr));
 
 #if defined __USE_ISOC9X || (defined __GNUC__ && defined __USE_MISC)
 /* These functions will part of the standard C library in ISO C 9X.  */
-extern long long int atoll __P ((__const char *__nptr));
+__extension__ extern long long int atoll __P ((__const char *__nptr));
 #endif
 
 /* Convert a string to a floating-point number.  */
@@ -111,9 +111,11 @@ extern unsigned long int strtoul __P ((__const char *__restrict __nptr,
 
 #if defined __GNUC__ && defined __USE_BSD
 /* Convert a string to a quadword integer.  */
+__extension__
 extern long long int strtoq __P ((__const char *__restrict __nptr,
 				  char **__restrict __endptr, int __base));
 /* Convert a string to an unsigned quadword integer.  */
+__extension__
 extern unsigned long long int strtouq __P ((__const char *__restrict __nptr,
 					    char **__restrict __endptr,
 					    int __base));
@@ -123,9 +125,11 @@ extern unsigned long long int strtouq __P ((__const char *__restrict __nptr,
 /* These functions will part of the standard C library in ISO C 9X.  */
 
 /* Convert a string to a quadword integer.  */
+__extension__
 extern long long int strtoll __P ((__const char *__restrict __nptr,
 				   char **__restrict __endptr, int __base));
 /* Convert a string to an unsigned quadword integer.  */
+__extension__
 extern unsigned long long int strtoull __P ((__const char *__restrict __nptr,
 					     char **__restrict __endptr,
 					     int __base));
@@ -158,10 +162,12 @@ extern unsigned long int __strtoul_l __P ((__const char *__restrict __nptr,
 					   char **__restrict __endptr,
 					   int __base, __locale_t __loc));
 
+__extension__
 extern long long int __strtoll_l __P ((__const char *__restrict __nptr,
 				       char **__restrict __endptr, int __base,
 				       __locale_t __loc));
 
+__extension__
 extern unsigned long long int __strtoull_l __P ((__const char *__restrict
 						 __nptr,
 						 char **__restrict __endptr,
@@ -207,12 +213,14 @@ extern unsigned long int __strtoul_internal __P ((__const char *
 #endif
 #if defined __GNUC__ || defined __USE_ISOC9X
 # ifndef __strtoll_internal_defined
+__extension__
 extern long long int __strtoll_internal __P ((__const char *__restrict __nptr,
 					      char **__restrict __endptr,
 					      int __base, int __group));
 #  define __strtoll_internal_defined	1
 # endif
 # ifndef __strtoull_internal_defined
+__extension__
 extern unsigned long long int __strtoull_internal __P ((__const char *
 							__restrict __nptr,
 							char **
@@ -259,13 +267,13 @@ strtold (__const char *__restrict __nptr, char **__restrict __endptr)
 # endif
 
 # ifdef __USE_BSD
-extern __inline long long int
+__extension__ extern __inline long long int
 strtoq (__const char *__restrict __nptr, char **__restrict __endptr,
 	int __base)
 {
   return __strtoll_internal (__nptr, __endptr, __base, 0);
 }
-extern __inline unsigned long long int
+__extension__ extern __inline unsigned long long int
 strtouq (__const char *__restrict __nptr, char **__restrict __endptr,
 	 int __base)
 {
@@ -274,13 +282,13 @@ strtouq (__const char *__restrict __nptr, char **__restrict __endptr,
 # endif
 
 # if defined __USE_MISC || defined __USE_ISOC9X
-extern __inline long long int
+__extension__ extern __inline long long int
 strtoll (__const char *__restrict __nptr, char **__restrict __endptr,
 	 int __base)
 {
   return __strtoll_internal (__nptr, __endptr, __base, 0);
 }
-extern __inline unsigned long long int
+__extension__ extern __inline unsigned long long int
 strtoull (__const char * __restrict __nptr, char **__restrict __endptr,
 	  int __base)
 {
@@ -305,7 +313,7 @@ atol (__const char *__nptr)
 }
 
 # if defined __USE_MISC || defined __USE_ISOC9X
-extern __inline long long int
+__extension__ extern __inline long long int
 atoll (__const char *__nptr)
 {
   return strtoll (__nptr, (char **) NULL, 10);
@@ -594,7 +602,7 @@ extern void qsort __PMT ((__ptr_t __base, size_t __nmemb, size_t __size,
 extern int abs __P ((int __x)) __attribute__ ((__const__));
 extern long int labs __P ((long int __x)) __attribute__ ((__const__));
 #ifdef __USE_ISOC9X
-extern long long int llabs __P ((long long int __x))
+__extension__ extern long long int llabs __P ((long long int __x))
      __attribute__ ((__const__));
 #endif
 
@@ -606,7 +614,8 @@ extern div_t div __P ((int __numer, int __denom)) __attribute__ ((__const__));
 extern ldiv_t ldiv __P ((long int __numer, long int __denom))
      __attribute__ ((__const__));
 #ifdef __USE_ISOC9X
-extern lldiv_t lldiv __P ((long long int __numer, long long int __denom))
+__extension__ extern lldiv_t lldiv __P ((long long int __numer,
+					 long long int __denom))
      __attribute__ ((__const__));
 #endif
 

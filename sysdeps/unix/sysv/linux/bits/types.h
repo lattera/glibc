@@ -34,8 +34,8 @@ typedef unsigned short __u_short;
 typedef unsigned int __u_int;
 typedef unsigned long __u_long;
 #ifdef __GNUC__
-typedef unsigned long long int __u_quad_t;
-typedef long long int __quad_t;
+__extension__ typedef unsigned long long int __u_quad_t;
+__extension__ typedef long long int __quad_t;
 #else
 typedef struct
   {
@@ -53,8 +53,8 @@ typedef unsigned short int __uint16_t;
 typedef signed int __int32_t;
 typedef unsigned int __uint32_t;
 #ifdef __GNUC__
-typedef signed long long int __int64_t;
-typedef unsigned long long int __uint64_t;
+__extension__ typedef signed long long int __int64_t;
+__extension__ typedef unsigned long long int __uint64_t;
 #endif
 typedef __quad_t *__qaddr_t;
 

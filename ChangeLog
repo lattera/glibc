@@ -4,6 +4,18 @@
 	* timezone/europe: Update from tzdata1998i.
 	* timezone/southamerica: Likewise.
 
+	* sys/types.h: Protect use of long long by __extension__.
+	* stdlib/stdlib.h: Likewise.
+	* string/string.h: Likewise.
+	* sysdeps/i386/bits/byteswap.h: Likewise.
+	* sysdeps/geeric/bits/byteswap.h: Likewise.
+	* sysdeps/i386/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: Likewise.
+	* sysdeps/wordsize-32/inttypes.h: Likewise.
+	* sysdeps/wordsize-32/stdint.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+
 1998-09-29  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de> 
  
 	* string/bits/string2.h (__string2_1bptr_p): Don't use a statement 
