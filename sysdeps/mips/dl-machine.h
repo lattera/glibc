@@ -67,14 +67,13 @@ elf_mips_got_from_gpreg (ElfW(Addr) gpreg)
   /* FIXME: the offset of gp from GOT may be system-dependent. */
   return (ElfW(Addr) *) (gpreg - 0x7ff0);
 }
-
 /* Return the run-time address of the _GLOBAL_OFFSET_TABLE_.
    Must be inlined in a function which uses global data.  */
 static inline ElfW(Addr) *
 elf_machine_got (void)
 {
-  register ElfW(Addr) gpreg asm ("$28");
-  return elf_mips_got_from_gpreg (gpreg);
+  register ElfW(Addr) gp asm ("$28");
+  return (ElfW(Addr) *) (gp - 0x7ff0);
 }
 
 
@@ -93,56 +92,6 @@ elf_machine_load_address (void)
   return addr;
 }
 
-/* Perform the relocation specified by RELOC and SYM (which is fully resolved).
-   MAP is the object containing the reloc.  */
-
-static inline void
-elf_machine_rel (struct link_map *map,
-		 const ElfW(Rel) *reloc, const ElfW(Sym) *sym,
-		 ElfW(Addr) (*resolve) (const ElfW(Sym) **ref,
-					ElfW(Addr) reloc_addr,
-					int noplt))
-{
-  ElfW(Addr) *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
-  ElfW(Addr) loadbase, undo;
-
-  switch (ELFW(R_TYPE) (reloc->r_info))
-    {
-    case R_MIPS_REL32:
-      if (ELFW(ST_BIND) (sym->st_info) == STB_LOCAL
-	  && (ELFW(ST_TYPE) (sym->st_info) == STT_SECTION
-	      || ELFW(ST_TYPE) (sym->st_info) == STT_NOTYPE))
-	*reloc_addr += map->l_addr;
-      else
-	{
-	  if (resolve && map == &_dl_rtld_map)
-	    /* Undo the relocation done here during bootstrapping.  Now we will
-	       relocate it anew, possibly using a binding found in the user
-	       program or a loaded library rather than the dynamic linker's
-	       built-in definitions used while loading those libraries.  */
-	    undo = map->l_addr + sym->st_value;
-	  else
-	    undo = 0;
-	  loadbase = (resolve ? (*resolve) (&sym, (ElfW(Addr)) reloc_addr, 0) :
-		      /* RESOLVE is null during bootstrap relocation.  */
-		      map->l_addr);
-	  *reloc_addr += (sym ? (loadbase + sym->st_value) : 0) - undo;
-	}
-      break;
-    case R_MIPS_NONE:		/* Alright, Wilbur.  */
-      break;
-    default:
-      assert (! "unexpected dynamic reloc type");
-      break;
-    }
-}
-
-static inline void
-elf_machine_lazy_rel (struct link_map *map, const ElfW(Rel) *reloc)
-{
-  /* Do nothing.  */
-}
-
 /* The MSB of got[1] of a gnu object is set to identify gnu objects. */
 #define ELF_MIPS_GNU_GOT1_MASK 0x80000000
 
@@ -159,7 +108,7 @@ elf_machine_got_rel (struct link_map *map)
 
   ElfW(Addr) resolve (const ElfW(Sym) *sym)
     {
-      ElfW(Sym) *ref = sym;
+      const ElfW(Sym) *ref = sym;
       ElfW(Addr) sym_loadaddr;
       sym_loadaddr = _dl_lookup_symbol (strtab + sym->st_name, &ref, scope,
 					map->l_name, 0, 1);
@@ -304,6 +253,10 @@ elf_machine_runtime_link_map (ElfW(Addr) gpreg)
    to usual c arguments.  */
 
 #define ELF_MACHINE_RUNTIME_TRAMPOLINE \
+/* This is called from assembly stubs below which the compiler can't see.  */ \
+static ElfW(Addr) __dl_runtime_resolve (ElfW(Word), ElfW(Word), ElfW(Addr)) \
+                  __attribute__ ((unused)); \
+\
 static ElfW(Addr) \
 __dl_runtime_resolve (ElfW(Word) sym_index,\
 		      ElfW(Word) return_address,\
@@ -387,8 +340,6 @@ _dl_runtime_resolve:\n\
    where the dynamic linker should not map anything.  */
 #define ELF_MACHINE_USER_ADDRESS_MASK	0x00000000UL
 
-
-
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
    its return value is the user program's entry point.  */
@@ -464,3 +415,60 @@ _dl_start_user:\n\
 	.end _start\n\
 ");
 
+#ifdef RESOLVE
+
+/* Perform the relocation specified by RELOC and SYM (which is fully resolved).
+   MAP is the object containing the reloc.  */
+
+static inline void
+elf_machine_rel (struct link_map *map,
+		 const ElfW(Rel) *reloc, const ElfW(Sym) *sym)
+{
+  ElfW(Addr) *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
+  ElfW(Addr) loadbase, undo;
+
+  switch (ELFW(R_TYPE) (reloc->r_info))
+    {
+    case R_MIPS_REL32:
+      if (ELFW(ST_BIND) (sym->st_info) == STB_LOCAL
+	  && (ELFW(ST_TYPE) (sym->st_info) == STT_SECTION
+	      || ELFW(ST_TYPE) (sym->st_info) == STT_NOTYPE))
+	*reloc_addr += map->l_addr;
+      else
+	{
+#ifndef RTLD_BOOTSTRAP
+	  /* This is defined in rtld.c, but nowhere in the static libc.a;
+	     make the reference weak so static programs can still link.  This
+	     declaration cannot be done when compiling rtld.c (i.e.  #ifdef
+	     RTLD_BOOTSTRAP) because rtld.c contains the common defn for
+	     _dl_rtld_map, which is incompatible with a weak decl in the same
+	     file.  */
+	  weak_extern (_dl_rtld_map);
+	  if (map == &_dl_rtld_map)
+	    /* Undo the relocation done here during bootstrapping.  Now we will
+	       relocate it anew, possibly using a binding found in the user
+	       program or a loaded library rather than the dynamic linker's
+	       built-in definitions used while loading those libraries.  */
+	    undo = map->l_addr + sym->st_value;
+	  else
+#endif
+	    undo = 0;
+	  loadbase = RESOLVE (&sym, (ElfW(Addr)) reloc_addr, 0);
+	  *reloc_addr += (sym ? (loadbase + sym->st_value) : 0) - undo;
+	}
+      break;
+    case R_MIPS_NONE:		/* Alright, Wilbur.  */
+      break;
+    default:
+      assert (! "unexpected dynamic reloc type");
+      break;
+    }
+}
+
+static inline void
+elf_machine_lazy_rel (struct link_map *map, const ElfW(Rel) *reloc)
+{
+  /* Do nothing.  */
+}
+
+#endif /* RESOLVE */
