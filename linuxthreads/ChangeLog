@@ -1,3 +1,7 @@
+2000-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* condvar.c: Make tests for ownership of mutex less strict.
+
 2000-03-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* condvar.c (pthread_cond_wait): Check whether mutex is owned by
