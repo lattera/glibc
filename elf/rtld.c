@@ -94,7 +94,6 @@ struct rtld_global _rtld_global =
   {
     /* Get architecture specific initializer.  */
 #include <dl-procinfo.c>
-    ._dl_debug_fd = STDERR_FILENO,
     /* Default presumption without further information is executable stack.  */
     ._dl_stack_flags = PF_R|PF_W|PF_X,
 #ifdef _LIBC_REENTRANT
@@ -116,6 +115,7 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
 #ifdef NEED_DL_SYSINFO
     ._dl_sysinfo = DL_SYSINFO_DEFAULT,
 #endif
+    ._dl_debug_fd = STDERR_FILENO,
     ._dl_use_load_bias = -2,
     ._dl_correct_cache_id = _DL_CACHE_DEFAULT_ID,
     ._dl_hwcap_mask = HWCAP_IMPORTANT,
@@ -2190,10 +2190,10 @@ process_envvars (enum mode *modep)
       *--startp = '.';
       startp = memcpy (startp - name_len, debug_output, name_len);
 
-      GL(dl_debug_fd) = __open (startp, flags, DEFFILEMODE);
-      if (GL(dl_debug_fd) == -1)
+      GLRO(dl_debug_fd) = __open (startp, flags, DEFFILEMODE);
+      if (GLRO(dl_debug_fd) == -1)
 	/* We use standard output if opening the file failed.  */
-	GL(dl_debug_fd) = STDOUT_FILENO;
+	GLRO(dl_debug_fd) = STDOUT_FILENO;
     }
 }
 

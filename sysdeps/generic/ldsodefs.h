@@ -259,9 +259,6 @@ struct rtld_global
   EXTERN struct r_search_path_elem *_dl_all_dirs;
   EXTERN struct r_search_path_elem *_dl_init_all_dirs;
 
-  /* File descriptor to write debug messages to.  */
-  EXTERN int _dl_debug_fd;
-
 #ifdef _LIBC_REENTRANT
   EXTERN void **(*_dl_error_catch_tsd) (void) __attribute__ ((const));
 #endif
@@ -394,6 +391,9 @@ struct rtld_global_ro
 
   /* If nonzero print warnings messages.  */
   EXTERN int _dl_verbose;
+
+  /* File descriptor to write debug messages to.  */
+  EXTERN int _dl_debug_fd;
 
   /* Do we do lazy relocations?  */
   EXTERN int _dl_lazy;

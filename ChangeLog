@@ -1,5 +1,10 @@
 2004-03-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Move
+	dl_debug_fd to rtld_global_ro.
+	* elf/rtld.c: Use GLRO instead of GL for dl_debug_fd.
+	* elf/dl-misc.c: Likewise.
+
 	* malloc/malloc.c: Don't call exported interface in the implementation.
 
 	* include/wctype.h: Add libc_hidden_proto for __towctrans.

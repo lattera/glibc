@@ -276,7 +276,7 @@ _dl_debug_printf (const char *fmt, ...)
   va_list arg;
 
   va_start (arg, fmt);
-  _dl_debug_vdprintf (GL(dl_debug_fd), 1, fmt, arg);
+  _dl_debug_vdprintf (GLRO(dl_debug_fd), 1, fmt, arg);
   va_end (arg);
 }
 INTDEF(_dl_debug_printf)
@@ -289,7 +289,7 @@ _dl_debug_printf_c (const char *fmt, ...)
   va_list arg;
 
   va_start (arg, fmt);
-  _dl_debug_vdprintf (GL(dl_debug_fd), -1, fmt, arg);
+  _dl_debug_vdprintf (GLRO(dl_debug_fd), -1, fmt, arg);
   va_end (arg);
 }
 
