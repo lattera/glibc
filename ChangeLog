@@ -1,3 +1,8 @@
+2002-10-17  Roland McGrath  <roland@redhat.com>
+
+	* Makeconfig (CPPFLAGS): Fix last change to use $(libof-$(<F))
+	instead of $(libof-$<).
+
 2002-10-16  Roland McGrath  <roland@redhat.com>
 
 	* cppflags-iterator.mk (CPPFLAGS-$(cpp-src)): Variable removed.

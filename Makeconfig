@@ -633,8 +633,8 @@ libio-include = -I$(..)libio
 CPPFLAGS = $($(subdir)-CPPFLAGS) $(+includes) $(defines) \
 	   -include $(..)include/libc-symbols.h $(sysdep-CPPFLAGS) \
 	   $(CPPFLAGS-$(suffix $@)) \
-	   $(foreach L,$(libof-$(basename $(@F))) $(libof-$<) $(libof-$(@F)),\
-		     $(CPPFLAGS-$L)) \
+	   $(foreach lib,$(libof-$(basename $(@F))) \
+		         $(libof-$(<F)) $(libof-$(@F)),$(CPPFLAGS-$(lib))) \
 	   $(CPPFLAGS-$(<F)) $(CPPFLAGS-$(@F)) $(CPPFLAGS-$(basename $(@F)))
 override CFLAGS	= -std=gnu99 \
 		  $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
