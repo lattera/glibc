@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,11 +21,15 @@ Cambridge, MA 02139, USA.  */
 
 /* Defined in locale/C-ctype.c.  */
 extern const char _nl_C_LC_CTYPE_class[];
+extern const char _nl_C_LC_CTYPE_class32[];
 extern const char _nl_C_LC_CTYPE_toupper[];
 extern const char _nl_C_LC_CTYPE_tolower[];
+extern const char _nl_C_LC_CTYPE_names[];
 
-#define b(u,x) (((u int *) _nl_C_LC_CTYPE_##x) + 128);
+#define b(u,x,o) (((const u int *) _nl_C_LC_CTYPE_##x) + o);
 
-const unsigned short int *__ctype_b = b(unsigned short, class);
-const int *__ctype_tolower = b(, tolower);
-const int *__ctype_toupper = b(, toupper);
+const unsigned short int *__ctype_b = b (unsigned short, class, 128);
+const unsigned int *__ctype32_b = b (unsigned, class32, 0);
+const int *__ctype_tolower = b (, tolower, 128);
+const int *__ctype_toupper = b (, toupper, 128);
+const unsigned int *__ctype_names = b (unsigned, names, 0);

@@ -36,7 +36,7 @@ ifdef gettext-srcdir
 %.h:: ../gpl2lgpl.sed $(gettext-srcdir)/intl/%.h; $(copysrc)
 
 define copysrc
-sed -f $^ $@.new
+sed -f $^ > $@.new
 chmod a-w $@.new
 mv -f $@.new $@
 test ! -d CVS || cvs commit -m'Updated from $<' $@

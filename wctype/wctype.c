@@ -1,6 +1,6 @@
-/* Define current locale data for LC_COLLATE category.
-Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
+Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -17,31 +17,40 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-#include "localeinfo.h"
 #include <endian.h>
+#include <string.h>
+#include <wctype.h>
+#include "localeinfo.h"
 
-_NL_CURRENT_DEFINE (LC_COLLATE);
-
-const u32_t *__collate_table;
-const u32_t *__collate_extra;
-
-
-void
-_nl_postload_collate (void)
+wctype_t
+wctype (const char *property)
 {
-#if BYTE_ORDER == BIG_ENDIAN
-#define bo(x) x##_EB
-#elif BYTE_ORDER == LITTLE_ENDIAN
-#define bo(x) x##_EL
+  const char *names;
+  wctype_t result;
+
+  names = _NL_CURRENT (LC_CTYPE, _NL_CTYPE_CLASS_NAMES);
+  for (result = 1; result != 0; result <<= 1)
+    {
+      if (strcmp (property, names) == 0)
+	break;
+
+      names = strchr (names, '\0') + 1;
+      if (names[0] == '\0')
+	return 0;
+    }
+
+#if __BYTE_ORDER == __BIG_ENDIAN
+  return result;
 #else
-#error bizarre byte order
+# define SWAPU32(w) \
+  (((w) << 24) | (((w) & 0xff00) << 8) | (((w) >> 8) & 0xff00) | ((w) >> 24))
+
+# define SWAPU16(w) \
+  (((w) >> 8) | ((w) << 8))
+
+  if (sizeof (wctype_t) == 4)
+    return SWAPU32 (result);
+  else
+    return SWAPU16 (result);
 #endif
-#define paste(a,b) paste1(a,b)
-#define paste1(a,b) a##b
-
-#define current(x)							      \
-  ((const unsigned int *) _NL_CURRENT (LC_COLLATE, paste(_NL_COLLATE_,x)))
-
-  __collate_table = current (bo (TABLE));
-  __collate_extra = current (bo (EXTRA));
 }

@@ -625,11 +625,22 @@ __printf_fp (FILE *fp,
       /* All factors but 10^-1 are tested now.	*/
       if (exponent > 0)
 	{
+	  int cnt_l;
+
 	  cy = __mpn_mul_1 (tmp, frac, fracsize, 10);
 	  tmpsize = fracsize;
 	  assert (cy == 0 || tmp[tmpsize - 1] < 20);
 
-	  (void) __mpn_rshift (frac, tmp, tmpsize, MIN (4, exponent));
+	  count_trailing_zeros (cnt_l, tmp[0]);
+	  if (cnt_l < MIN (4, exponent))
+	    {
+	      cy = __mpn_lshift (frac, tmp, tmpsize,
+				 BITS_PER_MP_LIMB - MIN (4, exponent));
+	      if (cy != 0)
+		frac[tmpsize++] = cy;
+	    }
+	  else
+	    (void) __mpn_rshift (frac, tmp, tmpsize, MIN (4, exponent));
 	  fracsize = tmpsize;
 	  exp10 |= 1;
 	  assert (frac[fracsize - 1] < 10);

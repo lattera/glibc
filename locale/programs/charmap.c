@@ -1,0 +1,593 @@
+/* Copyright (C) 1996 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
+Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
+
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
+#include <ctype.h>
+#include <errno.h>
+#include <libintl.h>
+#include <obstack.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#include "error.h"
+#include "linereader.h"
+#include "charset.h"
+
+
+/* Uncomment following line for production version.  */
+/* define NDEBUG 1 */
+#include <assert.h>
+
+
+/* Define the lookup function.  */
+#include "charmap-kw.h"
+
+
+void *xmalloc (size_t __n);
+
+/* Prototypes for local functions.  */
+static struct charset_t *parse_charmap (const char *filename);
+
+
+
+struct charset_t *
+charmap_read (const char *filename)
+{
+  const char *pathnfile;
+  struct charset_t *result = NULL;
+
+  if (filename != NULL)
+    {
+      if (euidaccess (filename, R_OK) >= 0)
+	pathnfile = filename;
+      else
+	{
+	  char *cp = xmalloc (strlen (filename) + sizeof CHARMAP_PATH + 1);
+	  stpcpy (stpcpy (stpcpy (cp, CHARMAP_PATH), "/"), filename);
+
+	  pathnfile = (const char *) cp;
+	}
+
+      result = parse_charmap (pathnfile);
+
+      if (result == NULL)
+	error (0, errno, _("character map file `%s' not found"), filename);
+    }
+
+  if (result == NULL)
+    {
+      pathnfile = CHARMAP_PATH "/" DEFAULT_CHARMAP;
+
+      result = parse_charmap (pathnfile);
+
+      if (result == NULL)
+	error (4, errno, _("default character map file `%s' not found"),
+	       DEFAULT_CHARMAP);
+    }
+
+  return result;
+}
+
+
+static struct charset_t *
+parse_charmap (const char *filename)
+{
+  struct linereader *cmfile;
+  struct charset_t *result;
+  int state;
+  enum token_t expected_tok = tok_error;
+  const char *expected_str = NULL;
+  char *from_name = NULL;
+  char *to_name = NULL;
+
+  /* Determine path.  */
+  cmfile = lr_open (filename, charmap_hash);
+  if (cmfile == NULL)
+    {
+      if (strchr (filename, '/') == NULL)
+	{
+	  /* Look in the systems charmap directory.  */
+	  char *buf = xmalloc (strlen (filename) + 1 + sizeof (CHARMAP_PATH));
+
+	  stpcpy (stpcpy (stpcpy (buf, CHARMAP_PATH), "/"), filename);
+	  cmfile = lr_open (buf, charmap_hash);
+
+	  if (cmfile == NULL)
+	    free (buf);
+	}
+
+      if (cmfile == NULL)
+	return NULL;
+    }
+
+  /* Allocate room for result.  */
+  result = (struct charset_t *) xmalloc (sizeof (struct charset_t));
+  memset (result, '\0', sizeof (struct charset_t));
+
+#define obstack_chunk_alloc xmalloc
+#define obstack_chunk_free free
+  obstack_init (&result->mem_pool);
+
+  if (init_hash (&result->char_table, 256))
+    {
+      free (result);
+      return NULL;
+    }
+
+  /* We use a state machine to describe the charmap description file
+     format.  */
+  state = 1;
+  while (1)
+    {
+      /* What's on?  */
+      struct token *now = lr_token (cmfile, NULL);
+      enum token_t nowtok = now->tok;
+      struct token *arg;
+
+      if (nowtok == tok_eof)
+	break;
+
+      switch (state)
+	{
+	case 1:
+	  /* The beginning.  We expect the special declarations, EOL or
+	     `CHARMAP'.  */
+	  if (nowtok == tok_eol)
+	    /* Ignore empty lines.  */
+	    continue;
+
+	  if (nowtok == tok_charmap)
+	    {
+	      from_name = NULL;
+	      to_name = NULL;
+
+	      /* We have to set up the real work.  Fill in some
+		 default values.  */
+	      if (result->mb_cur_max == 0)
+		result->mb_cur_max = 1;
+	      if (result->mb_cur_min == 0)
+		result->mb_cur_min = result->mb_cur_max;
+	      if (result->mb_cur_min > result->mb_cur_max)
+		{
+		  error (0, 0, _("\
+%s: <mb_cur_max> must be greater than <mb_cur_min>\n"),
+			 cmfile->fname);
+
+		  result->mb_cur_min = result->mb_cur_max;
+		}
+
+	      lr_ignore_rest (cmfile, 1);
+
+	      state = 2;
+	      continue;
+	    }
+
+	  if (nowtok != tok_code_set_name && nowtok != tok_mb_cur_max
+	      && nowtok != tok_mb_cur_min && nowtok != tok_escape_char
+	      && nowtok != tok_comment_char && nowtok != tok_g0esc
+	      && nowtok != tok_g1esc && nowtok != tok_g2esc
+	      && nowtok != tok_g3esc)
+	    {
+	      lr_error (cmfile, _("syntax error in prolog: %s"),
+			_("illegal definition"));
+
+	      lr_ignore_rest (cmfile, 0);
+	      continue;
+	    }
+
+	  /* We know that we need an argument.  */
+	  arg = lr_token (cmfile, NULL);
+
+	  switch (nowtok)
+	    {
+	    case tok_code_set_name:
+	      if (arg->tok != tok_ident)
+		{
+		badarg:
+		  lr_error (cmfile, _("syntax error in prolog: %s"),
+			    _("bad argument"));
+
+		  lr_ignore_rest (cmfile, 0);
+		  continue;
+		}
+
+	      result->code_set_name = obstack_copy0 (&result->mem_pool,
+						     arg->val.str.start,
+						     arg->val.str.len);
+
+	      lr_ignore_rest (cmfile, 1);
+	      continue;
+
+	    case tok_mb_cur_max:
+	    case tok_mb_cur_min:
+	      if (arg->tok != tok_number)
+		goto badarg;
+
+	      if (arg->val.num < 1 || arg->val.num > 4)
+		{
+		  lr_error (cmfile,
+			    _("value for <%s> must lie between 1 and 4"),
+			    nowtok == tok_mb_cur_min ? "mb_cur_min"
+						     : "mb_cur_max");
+
+		  lr_ignore_rest (cmfile, 0);
+		  continue;
+		}
+	      if ((nowtok == tok_mb_cur_max && result->mb_cur_min != 0
+		   && arg->val.num < result->mb_cur_min)
+		  || (nowtok == tok_mb_cur_min && result->mb_cur_max != 0
+		      && arg->val.num > result->mb_cur_max))
+		{
+		  lr_error (cmfile, _("\
+value of <mb_cur_max> must be greater than the value of <mb_cur_min>"));
+
+		  lr_ignore_rest (cmfile, 0);
+		  continue;
+		}
+
+	      if (nowtok == tok_mb_cur_max)
+		result->mb_cur_max = arg->val.num;
+	      else
+		result->mb_cur_min = arg->val.num;
+
+	      lr_ignore_rest (cmfile, 1);
+	      continue;
+
+	    case tok_escape_char:
+	    case tok_comment_char:
+	      if (arg->tok != tok_ident)
+		goto badarg;
+
+	      if (arg->val.str.len != 1)
+		{
+		  lr_error (cmfile, _("\
+argument to <%s> must be a single character"),
+			    nowtok == tok_escape_char ? "escape_char"
+						      : "comment_char");
+
+		  lr_ignore_rest (cmfile, 0);
+		  continue;
+		}
+
+	      if (nowtok == tok_escape_char)
+		cmfile->escape_char = *arg->val.str.start;
+	      else
+		cmfile->comment_char = *arg->val.str.start;
+
+	      lr_ignore_rest (cmfile, 1);
+	      continue;
+
+	    case tok_g0esc:
+	    case tok_g1esc:
+	    case tok_g2esc:
+	    case tok_g3esc:
+	      lr_ignore_rest (cmfile, 0); /* XXX */
+	      continue;
+
+	    default:
+	      /* Cannot happen.  */
+	      assert (! "Should not happen");
+	    }
+	  break;
+
+	case 2:
+	  /* We have seen `CHARMAP' and now are in the body.  Each line
+	     must have the format "%s %s %s\n" or "%s...%s %s %s\n".  */
+	  if (nowtok == tok_eol)
+	    /* Ignore empty lines.  */
+	    continue;
+
+	  if (nowtok == tok_end)
+	    {
+	      expected_tok = tok_charmap;
+	      expected_str = "CHARMAP";
+	      state = 90;
+	      continue;
+	    }
+
+	  if (nowtok != tok_bsymbol)
+	    {
+	      lr_error (cmfile, _("syntax error in %s definition: %s"),
+			"CHARMAP", _("no symbolic name given"));
+
+	      lr_ignore_rest (cmfile, 0);
+	      continue;
+	    }
+
+	  /* If the previous line was not completely correct free the
+	     used memory.  */
+	  if (from_name != NULL)
+	    obstack_free (&result->mem_pool, from_name);
+
+	  from_name = (char *) obstack_copy0 (&result->mem_pool,
+					      now->val.str.start,
+					      now->val.str.len);
+	  to_name = NULL;
+
+	  state = 3;
+	  continue;
+
+	case 3:
+	  /* We have two possibilities: We can see an ellipsis or an
+	     encoding value.  */
+	  if (nowtok == tok_ellipsis)
+	    {
+	      state = 4;
+	      continue;
+	    }
+	  /* FALLTHROUGH */
+
+	case 5:
+	  if (nowtok != tok_charcode && nowtok != tok_ucs2
+	      && nowtok != tok_ucs4)
+	    {
+	      lr_error (cmfile, _("syntax error in %s definition: %s"),
+			"CHARMAP", _("illegal encoding given"));
+
+	      lr_ignore_rest (cmfile, 0);
+
+	      state = 2;
+	      continue;
+	    }
+
+	  if (nowtok == tok_charcode)
+	    /* Write char value in table.  */
+	    charset_new_char (cmfile, result, now->val.charcode.nbytes,
+			      now->val.charcode.val, from_name, to_name);
+	  else
+	    /* Determine ISO 10646 value and write into table.  */
+	    charset_new_unicode (cmfile, result, now->val.charcode.nbytes,
+				 now->val.charcode.val, from_name, to_name);
+
+	  /* Ignore trailing comment silently.  */
+	  lr_ignore_rest (cmfile, 0);
+
+	  from_name = NULL;
+	  to_name = NULL;
+
+	  state = 2;
+	  continue;
+
+	case 4:
+	  if (nowtok != tok_bsymbol)
+	    {
+	      lr_error (cmfile, _("syntax error in %s definition: %s"),
+			"CHARMAP",
+			_("no symbolic name given for end of range"));
+
+	      lr_ignore_rest (cmfile, 0);
+	      continue;
+	    }
+
+	  /* If the previous line was not completely correct free the
+	     used memory.  */
+	  to_name = (char *) obstack_copy0 (&result->mem_pool,
+					    cmfile->token.val.str.start,
+					    cmfile->token.val.str.len);
+
+	  state = 3;
+	  continue;
+
+	case 90:
+	  if (nowtok != expected_tok)
+	    lr_error (cmfile, _("\
+`%1$s' definition does not end with `END %1$s'"), expected_str);
+
+	  lr_ignore_rest (cmfile, nowtok == expected_tok);
+	  state = 91;
+	  continue;
+
+	case 91:
+	  /* Waiting for WIDTH... */
+	  if (nowtok == tok_width_default)
+	    {
+	      state = 92;
+	      continue;
+	    }
+
+	  if (nowtok == tok_width)
+	    {
+	      lr_ignore_rest (cmfile, 1);
+	      state = 93;
+	      continue;
+	    }
+
+	  if (nowtok == tok_width_variable)
+	    {
+	      lr_ignore_rest (cmfile, 1);
+	      state = 98;
+	      continue;
+	    }
+
+	  lr_error (cmfile, _("\
+only WIDTH definitions are allowed to follow the CHARMAP definition"));
+
+	  lr_ignore_rest (cmfile, 0);
+	  continue;
+
+	case 92:
+	  if (nowtok != tok_number)
+	    lr_error (cmfile, _("value for %s must be an integer"),
+		      "WIDTH_DEFAULT");
+	  else
+	    result->width_default = now->val.num;
+
+	  lr_ignore_rest (cmfile, nowtok == tok_number);
+
+	  state = 91;
+	  continue;
+
+	case 93:
+	  /* We now expect `END WIDTH' or lines of the format "%s %d\n" or
+	     "%s...%s %d\n".  */
+	  if (nowtok == tok_eol)
+	    /* ignore empty lines.  */
+	    continue;
+
+	  if (nowtok == tok_end)
+	    {
+	      expected_tok = tok_width;
+	      expected_str = "WIDTH";
+	      state = 90;
+	      continue;
+	    }
+
+	  if (nowtok != tok_bsymbol)
+	    {
+	      lr_error (cmfile, _("syntax error in %s definition: %s"),
+			"WIDTH", _("no symbolic name given"));
+
+	      lr_ignore_rest (cmfile, 0);
+	      continue;
+	    }
+
+	  if (from_name != NULL)
+	    obstack_free (&result->mem_pool, from_name);
+
+	  from_name = (char *) obstack_copy0 (&result->mem_pool,
+					      now->val.str.start,
+					      now->val.str.len);
+	  to_name = NULL;
+
+	  state = 94;
+	  continue;
+
+	case 94:
+	  if (nowtok == tok_ellipsis)
+	    state = 95;
+
+	case 96:
+	  if (nowtok != tok_number)
+	    lr_error (cmfile, _("value for %s must be an integer"),
+		      "WIDTH");
+	  else
+	    {
+	      /* XXX Store width for chars.  */
+	      from_name = NULL;
+	    }
+
+	  lr_ignore_rest (cmfile, nowtok == tok_number);
+
+	  state = 93;
+	  continue;
+
+	case 95:
+	  if (nowtok != tok_bsymbol)
+	    {
+	      lr_error (cmfile, _("syntax error in %s definition: %s"),
+			"WIDTH", _("no symbolic name given for end of range"));
+
+	      lr_ignore_rest (cmfile, 0);
+
+	      state = 93;
+	      continue;
+	    }
+
+	  to_name = (char *) obstack_copy0 (&result->mem_pool,
+					    now->val.str.start,
+					    now->val.str.len);
+
+	  lr_ignore_rest (cmfile, 1);
+
+	  state = 96;
+	  continue;
+
+	case 98:
+	  /* We now expect `END WIDTH_VARIABLE' or lines of the format
+	     "%s\n" or "%s...%s\n".  */
+	  if (nowtok == tok_eol)
+	    /* ignore empty lines.  */
+	    continue;
+
+	  if (nowtok == tok_end)
+	    {
+	      expected_tok = tok_width_variable;
+	      expected_str = "WIDTH_VARIABLE";
+	      state = 90;
+	      continue;
+	    }
+
+	  if (nowtok != tok_bsymbol)
+	    {
+	      lr_error (cmfile, _("syntax error in %s definition: %s"),
+			"WIDTH_VARIABLE", _("no symbolic name given"));
+
+	      lr_ignore_rest (cmfile, 0);
+
+	      continue;
+	    }
+
+	  if (from_name != NULL)
+	    obstack_free (&result->mem_pool, from_name);
+
+	  from_name = (char *) obstack_copy0 (&result->mem_pool,
+					      now->val.str.start,
+					      now->val.str.len);
+	  to_name = NULL;
+
+	  state = 99;
+	  continue;
+
+	case 99:
+	  if (nowtok == tok_ellipsis)
+	    state = 100;
+
+	  /* Store info.  */
+	  from_name = NULL;
+
+	  /* Warn */
+	  state = 98;
+	  continue;
+
+	case 100:
+	  if (nowtok != tok_bsymbol)
+	    lr_error (cmfile, _("syntax error in %s definition: %s"),
+		      "WIDTH_VARIABLE",
+		      _("no symbolic name given for end of range"));
+	  else
+	    {
+	      to_name = (char *) obstack_copy0 (&result->mem_pool,
+						now->val.str.start,
+						now->val.str.len);
+	      /* XXX Enter value into table.  */
+	    }
+
+	  lr_ignore_rest (cmfile, nowtok == tok_bsymbol);
+
+	  state = 98;
+	  continue;
+
+	default:
+	  error (5, 0, _("%s: error in state machine"), __FILE__);
+	  /* NOTREACHED */
+	}
+      break;
+    }
+
+  if (state != 91)
+    error (0, 0, _("%s: premature end of file"), cmfile->fname);
+
+  lr_close (cmfile);
+
+  return result;
+}

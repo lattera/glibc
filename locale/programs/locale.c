@@ -1,4 +1,4 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -26,7 +26,8 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <errno.h>
 
-#include "localedef.h"
+/*#include "localedef.h"*/
+#include "localeinfo.h"
 
 
 /* If set dump C code describing the current locale.  */
@@ -40,16 +41,16 @@ static int show_keyword_name;
 
 /* Long options.  */
 static const struct option long_options[] =
-  {
-    { "all-locales", no_argument, NULL, 'a' },
-    { "category-name", no_argument, &show_category_name, 1 },
-    { "charmaps", no_argument, NULL, 'm' },
-    { "dump", no_argument, &do_dump, 1 },
-    { "help", no_argument, NULL, 'h' },
-    { "keyword-name", no_argument, &show_keyword_name, 1 },
-    { "version", no_argument, NULL, 'v' },
-    { NULL, 0, NULL, 0 }
-  };
+{
+  { "all-locales", no_argument, NULL, 'a' },
+  { "category-name", no_argument, &show_category_name, 1 },
+  { "charmaps", no_argument, NULL, 'm' },
+  { "dump", no_argument, &do_dump, 1 },
+  { "help", no_argument, NULL, 'h' },
+  { "keyword-name", no_argument, &show_keyword_name, 1 },
+  { "version", no_argument, NULL, 'v' },
+  { NULL, 0, NULL, 0 }
+};
 
 
 /* We don't have these constants defined because we don't use them.  Give
@@ -63,7 +64,18 @@ static const struct option long_options[] =
 #define CTYPE_TOLOWER_EB 0
 #define CTYPE_TOUPPER_EL 0
 #define CTYPE_TOLOWER_EL 0
- 
+
+/* XXX Hack */
+struct cat_item
+{
+  int item_id;
+  const char *name;
+  enum { std, opt } status;
+  enum value_type value_type;
+  int min;
+  int max;
+};
+
 
 /* We have all categories defined in `categories.def'.  Now construct
    the description and data structure used for all categories.  */
@@ -73,7 +85,7 @@ static const struct option long_options[] =
         NO_PAREN items							      \
       };
 
-#include "categories.def"
+#include "locale/aux/categories.def"
 #undef DEFINE_CATEGORY
 
 static struct category category[] =
@@ -81,7 +93,7 @@ static struct category category[] =
 #define DEFINE_CATEGORY(category, name, items, postload, in, check, out)      \
     { _NL_NUM_##category, name, NELEMS (category##_desc) - 1,                 \
       category##_desc, NULL, NULL, NULL, out },
-#include "categories.def"
+#include "locale/aux/categories.def"
 #undef DEFINE_CATEGORY
   };
 #define NCATEGORIES NELEMS (category)
@@ -404,7 +416,7 @@ show_info (const char *name)
 
 	  return;
 	}
-      
+
       for (item_no = 0; item_no < category[cat_no].number; ++item_no)
 	if (strcmp (name, category[cat_no].item_desc[item_no].name) == 0)
 	  {
@@ -530,10 +542,3 @@ dump_category (const char *name)
 
   puts ("  }\n};");
 }
-
-/*
- * Local Variables:
- *  mode:c
- *  c-basic-offset:2
- * End:
- */

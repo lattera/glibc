@@ -13,8 +13,8 @@
 
 # You should have received a copy of the GNU Library General Public
 # License along with the GNU C Library; see the file COPYING.LIB.  If
-# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-# Cambridge, MA 02139, USA.
+# not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 #
 #	Makefile for locales.
@@ -24,20 +24,25 @@ subdir	:= locale
 headers		= locale.h
 distribute	= localeinfo.h categories.def \
 		  $(localedef-modules:=.c) $(locale-modules:=.c) \
-		  $(lib-modules:=.c) config.h hash.h iso-4217.def \
-		  keyword.gperf keyword.h localedef.h token.h
+		  $(lib-modules:=.c) config.h simple-hash.h iso-4217.def \
+		  charmap-kw.gperf charmap-kw.h locfile-token.h \
+		  locfile-kw.gperf locfile-kw.h linereader.h \
+		  locales.h locfile.h stringtrans.h
 routines	= setlocale loadlocale localeconv nl_langinfo
 categories	= ctype messages monetary numeric time collate
 aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc
-others		= localedef locale
-install-bin	= localedef locale
+others		= localedef# locale
+install-bin	= localedef# locale
 extra-objs	= $(localedef-modules:=.o) $(locale-modules:=.o) \
 		  $(lib-modules:=.o)
 
-localedef-modules	:= charmap locfile-lex locfile-parse locale-ctype \
-			   monetary messages collate numeric
+vpath %.c programs
+vpath %.h programs
+
+localedef-modules	:= $(categories:%=ld-%) charmap charset linereader \
+			   locfile stringtrans
 locale-modules		:= ctypedump
-lib-modules		:= locfile-hash xmalloc
+lib-modules		:= simple-hash xmalloc xstrdup
 
 
 GPERF = gperf
@@ -45,14 +50,18 @@ GPERFFLAGS = -acCgopt -k1,2,5,$$
 
 include ../Rules
 
-keyword.h: keyword.gperf
-	$(GPERF) $(GPERFFLAGS) $< > $@.new
+programs/%-kw.h: programs/%-kw.gperf
+	$(GPERF) $(GPERFFLAGS) -N $(@F:-kw.h=_hash) $< > $@.new
 	mv -f $@.new $@
 
 $(objpfx)localedef: $(localedef-modules:%=$(objpfx)%.o)
 $(objpfx)locale: $(locale-modules:%=$(objpfx)%.o)
 $(objpfx)localedef $(objpfx)locale: $(lib-modules:%=$(objpfx)%.o)
 
-CPPFLAGS += -DLOCALE_PATH='"$(localedir)"' -DCHARMAP_PATH='"$(nlsdir)/charmap"'
+CPPFLAGS := -DLOCALE_PATH='"$(localedir)"' \
+	    -DCHARMAP_PATH='"$(i18ndir)/charmap"' \
+	    -DLOCSRCDIR='"$(i18ndir)/locales"' -DHAVE_CONFIG_H \
+	    -Iliblib -Iprograms $(CPPFLAGS)
 
-CFLAGS-locfile-lex.c = -Wno-write-strings
+CFLAGS-charmap.c = -Wno-write-strings
+CFLAGS-locfile.c = -Wno-write-strings

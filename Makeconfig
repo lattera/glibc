@@ -171,8 +171,8 @@ localedir = $(datadir)/locale
 endif
 
 # Where to install the locale charmap source files.
-ifndef nlsdir
-nlsdir = $(datadir)/nls
+ifndef i18ndir
+i18ndir = $(datadir)/i18n
 endif
 
 

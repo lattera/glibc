@@ -1,3 +1,108 @@
+Thu Mar 28 03:25:10 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* intl/Makefile (copysrc): Add missing > in sed cmd.
+
+Sat Mar 23 17:52:49 1996  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
+
+	* Makeconfig: Rename Makefile variable nlsdir to i18ndir and
+	change value to $(datadir)/i18n.  `nls' is not an appropriate
+	name.
+
+	* Makefile (subdirs): Add new subdir wctype.
+
+	* ctype/ctype-info.c: Add new global variable __ctype_names
+	and initialize from _nl_C_LC_CTYPE.
+
+	* ctype/ctype.h: In P1003.3b/D11 `alnum' is a separate character
+        class.  Use bit 11.
+	[_ISbit]: Protect definition of bitmasks because they are also
+	used in wctype.h.
+
+	* libio/genops.c (_IO_sputbackc, _IO_sungetc): Clear EOF flag
+	after successfully pushing back a character.
+
+	Fundamental changes in locale implementation.  Almost nothing
+	from the old code is used anymore.
+	* locale/charmap.c, locale/collate.c, locale/config.h,
+ 	locale/ctypedump.c, locale/hash.h, locale/keyword.gperf,
+ 	locale/keyword.h, locale/loadlocale.c, locale/locale-ctype.c,
+ 	locale/locale.c locale/localeconv.c, locale/localedef.c,
+ 	locale/localedef.h, locale/locfile-hash.c, locale/locfile-lex.c,
+ 	locale/locfile-parse.c, locale/messages.c, locale/monetary.c,
+ 	locale/numeric.c, locale/setlocale.c, locale/token.h,
+ 	locale/xmalloc.c: Removed.
+
+	* locale/Makefile: Update for new locale implementation with
+	program source code distributed in subdir.
+
+	* locale/categories.def, locale/iso-4217.def: Updated file
+        for new locale implementation.
+
+	* locale/langinfo.h: Updated for new locale implementation.
+	(ERA_D_T_FMT, ERA_T_FMT): New official values according to
+	P1003.2b/D11.
+	(_NL_COLLATE_NRULES, _NL_COLLATE_RULES, _NL_COLLATE_HASH_SIZE,
+	_NL_COLLATE_HASH_LAYERS, _NL_COLLATE_TABLE_EB,
+	_NL_COLLATE_TABLE_EL, _NL_COLLATE_UNDEFINED, _NL_COLLATE_EXTRA_EB,
+	_NL_COLLATE_EXTRA_EL, _NL_CTYPE_NAMES_EB, _NL_CTYPE_NAMES_EL,
+	_NL_CTYPE_HASH_SIZE, _NL_CTYPE_HASH_LAYERS, _NL_CTYPE_CLASS_NAMES,
+	_NL_CTYPE_MAP_NAMES, _NL_CTYPE_WIDTH): New internal values for
+	extended LC_CTYPE and LC_COLLATE implementation.
+
+	* locale/simple-hash.c, locale/simple-hash.h, locale/xmalloc.c,
+ 	locale/xstrdup.c: Helper functions for locale related programs.
+
+	* locale/C-collate.c, locale/C-ctype.c,
+        locale/C-messages.c, locale/C-monetary.c,
+        locale/C-numeric.c, locale/C-time.c,
+        locale/lc-collate.c, locale/lc-ctype.c,
+        locale/lc-messages.c, locale/lc-monetary.c,
+        locale/lc-numeric.c, locale/lc-time.c: New implementation of locale
+        functions, and new generated "C" locale data.
+
+	* locale/loadlocale.c: Now handles word fields in locale binary
+        automatically by changing the endianess if necessary.
+
+	* locale/localeinfo.h (LIMAGIC): Changed magic number because
+	of incompatible changes.
+	(locale_data): Changed definition to allow word as a value type.
+	(coll_sort_rule): Values for collation sorting mode.
+	(_NL_CURRENT_WORD): New macro to access word value of locale entry.
+	(__collate_table, __collate_extra): Declare new global variables
+	for collation tables.
+
+	* locale/programs/charmap-kw.gperf, locale/programs/charmap-kw.h,
+        locale/programs/charmap.c, locale/programs/charset.c,
+        locale/programs/charset.h, locale/programs/config.h,
+        locale/programs/ctypedump.c, locale/programs/ld-collate.c,
+        locale/programs/ld-ctype.c, locale/programs/ld-messages.c,
+        locale/programs/ld-monetary.c, locale/programs/ld-numeric.c,
+        locale/programs/ld-time.c, locale/programs/linereader.c,
+        locale/programs/linereader.h, locale/programs/locale.c,
+        locale/programs/localedef.c, locale/programs/locales.h,
+        locale/programs/locfile-kw.gperf, locale/programs/locfile-kw.h,
+        locale/programs/locfile-token.h, locale/programs/locfile.c,
+        locale/programs/locfile.h, locale/programs/stringtrans.c,
+        locale/programs/stringtrans.h: Implementation of locale related
+        programs.
+
+	* locale/weight.h: Functions to access collation tables.
+
+	* posix/unistd.h: Define _POSIX2_LOCALEDEF.
+
+	* stdio-common/printf_fp.c: Fix bug with printing certain numbers
+	< 10^-1.  Reported by Bill Metzenthen.
+
+	* stdio-common/tfformat.c: Add new test for above bug.
+
+	* string/strcoll.c, string/strxfrm.c: Real implementation of
+        string collation according to ISO C.
+
+	* wctype/Makefile, wctype/cname-lookup.h, wctype/iswctype.c,
+        wctype/test_wctype.c, wctype/towctrans.c, wctype/wcfuncs.c,
+        wctype/wctrans.c, wctype/wctype.c, wctype/wctype.h: New files.
+        Implementation of wide character classes and mapping.
+
 Wed Mar 27 14:52:11 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* elf/rtld.c (dl_main): Call _dl_sysdep_start_cleanup after

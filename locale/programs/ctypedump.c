@@ -1,4 +1,4 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <netinet/in.h>        /* Just for htons() */
 
-#include "localedef.h"
+/*#include "localedef.h"*/
 #include "localeinfo.h"
 
 
@@ -31,10 +31,10 @@ Cambridge, MA 02139, USA.  */
 
 
 #define SWAP32(v)							     \
-	((u32) (((((u32) (v)) & 0x000000ff) << 24)			     \
-		| ((((u32) (v)) & 0x0000ff00) << 8)			     \
-		| ((((u32) (v)) & 0x00ff0000) >> 8)			     \
-		| ((((u32) (v)) & 0xff000000) >> 24)))
+	((u32_t) (((((u32_t) (v)) & 0x000000ff) << 24)			     \
+		| ((((u32_t) (v)) & 0x0000ff00) << 8)			     \
+		| ((((u32_t) (v)) & 0x00ff0000) >> 8)			     \
+		| ((((u32_t) (v)) & 0xff000000) >> 24)))
 
 
 
@@ -53,13 +53,13 @@ print_int_in_char (unsigned int val)
   printf ("\"\\%03o\\%03o\\%03o\\%03o\"", p[0], p[1], p[2], p[3]);
 }
 
- 
+
 int
 ctype_output (void)
 {
   int ch;
   int result = 0;
-  const char *locname = (getenv ("LC_ALL") ?: getenv ("LC_CTYPE") ?: 
+  const char *locname = (getenv ("LC_ALL") ?: getenv ("LC_CTYPE") ?:
 			 getenv ("LANG") ?: "POSIX");
 
   puts ("#include <endian.h>\n");

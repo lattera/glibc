@@ -54,7 +54,7 @@ endif
 subdirs = csu assert ctype db locale intl math setjmp signal stdlib	\
 	  stdio-common $(stdio) malloc string wcsmbs time dirent grp pwd\
 	  posix io termios resource misc socket sysvipc gmon gnulib	\
-	  $(wildcard crypt) manual $(sysdep-subdirs) elf
+	  wctype $(wildcard crypt) manual $(sysdep-subdirs) elf
 export subdirs := $(subdirs)	# Benign, useless in GNU make before 3.63.
 
 # The mach and hurd subdirectories have many generated header files which

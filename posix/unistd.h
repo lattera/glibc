@@ -50,6 +50,10 @@ __BEGIN_DECLS
    Software Development Utilities Option.  */
 #define	_POSIX2_SW_DEV	1
 
+/* If defined, the implementation supports the
+   creation of locales with the localedef utility.  */
+#define _POSIX2_LOCALEDEF       1
+
 
 /* Get values of POSIX options:
 

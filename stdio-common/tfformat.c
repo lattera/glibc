@@ -10,7 +10,7 @@ typedef struct
   const char *format_string;
 } sprint_double_type;
 
-sprint_double_type sprint_doubles[] = 
+sprint_double_type sprint_doubles[] =
 {
 __LINE__,  30.3,			"<          +30.3>", "<%+15.10g>",
 __LINE__,  10.0,			"<10.00>", "<%5.2f>",
@@ -4070,6 +4070,23 @@ int main()
 	}
       testcount++;
     }
+
+  /* And one special test.  */
+  {
+    const char ref[] = "1.7763568394002504646778106689453125e-15";
+    int i;
+    d = 1.0;
+    for (i = 1; i < 50; ++i)
+      d /= 2;
+    sprintf (buffer, "%.100g", d);
+    if (!matches (buffer, ref))
+      {
+	++errcount;
+	printf (
+    "Error in line %d using \"%s\".  Result is \"%s\"; should be: \"%s\".\n",
+		__LINE__, "%.100g", buffer, ref);
+      }
+  }
 
   if (errcount == 0)
     {

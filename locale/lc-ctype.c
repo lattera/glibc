@@ -1,5 +1,5 @@
 /* Define current locale data for LC_CTYPE category.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -47,7 +47,10 @@ _nl_postload_ctype (void)
   ((const unsigned int *) _NL_CURRENT (LC_CTYPE, paste(_NL_CTYPE_,x)) \
    + 128)
 
+  extern const unsigned int *__ctype_names;
+
   __ctype_b = current (unsigned short, CLASS);
   __ctype_toupper = current (, bo (TOUPPER));
   __ctype_tolower = current (, bo (TOLOWER));
+  __ctype_names = current (unsigned, bo (NAMES));
 }

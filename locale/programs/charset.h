@@ -1,0 +1,61 @@
+/* Copyright (C) 1996 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
+Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
+
+#ifndef _CHARSET_H
+#define _CHARSET_H
+
+#include <obstack.h>
+
+#include "simple-hash.h"
+#include "linereader.h"
+
+
+struct charset_t
+{
+  const char *code_set_name;
+  int mb_cur_min;
+  int mb_cur_max;
+  int width_default;
+
+  struct obstack mem_pool;
+  hash_table char_table;
+};
+
+
+/* We need one value to mark the error case.  Let's use 0xffffffff.
+   I.e., it is placed in the last page of ISO 10646.  For now only the
+   first is used and we have plenty of room.  */
+#define ILLEGAL_CHAR_VALUE 0xffffffffu
+
+
+/* Prototypes for charmap handling functions.  */
+struct charset_t *charmap_read (const char *filename);
+
+/* Prototypes for funciton to insert new character.  */
+void charset_new_char (struct linereader *lr, struct charset_t *cs, int bytes,
+		       unsigned int value, const char *from, const char *to);
+
+void charset_new_unicode (struct linereader *lr, struct charset_t *cs,
+			  int bytes, unsigned int value, const char *from,
+			  const char *to);
+
+unsigned int charset_find_value (const struct charset_t *__cs,
+				 const char *__name, size_t __len);
+
+#endif /* charset.h */

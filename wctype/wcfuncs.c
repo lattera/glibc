@@ -1,5 +1,4 @@
-/* Define current locale data for LC_COLLATE category.
-Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,31 +16,37 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-#include "localeinfo.h"
-#include <endian.h>
+#define	__NO_WCTYPE
+#include <wctype.h>
+#include <ctype.h>	/* For __ctype_tolower and __ctype_toupper.  */
 
-_NL_CURRENT_DEFINE (LC_COLLATE);
+/* Provide real-function versions of all the wctype macros.  */
 
-const u32_t *__collate_table;
-const u32_t *__collate_extra;
+#define	func(name, type) \
+  int name (wc) wint_t wc; { return iswctype (wc, type); }
 
+func (iswalnum, _ISalnum)
+func (iswalpha, _ISalpha)
+func (iswcntrl, _IScntrl)
+func (iswdigit, _ISdigit)
+func (iswlower, _ISlower)
+func (iswgraph, _ISgraph)
+func (iswprint, _ISprint)
+func (iswpunct, _ISpunct)
+func (iswspace, _ISspace)
+func (iswupper, _ISupper)
+func (iswxdigit, _ISxdigit)
 
-void
-_nl_postload_collate (void)
+wint_t
+towlower (wc)
+     wint_t wc;
 {
-#if BYTE_ORDER == BIG_ENDIAN
-#define bo(x) x##_EB
-#elif BYTE_ORDER == LITTLE_ENDIAN
-#define bo(x) x##_EL
-#else
-#error bizarre byte order
-#endif
-#define paste(a,b) paste1(a,b)
-#define paste1(a,b) a##b
+  return towctrans (wc, __ctype_tolower);
+}
 
-#define current(x)							      \
-  ((const unsigned int *) _NL_CURRENT (LC_COLLATE, paste(_NL_COLLATE_,x)))
-
-  __collate_table = current (bo (TABLE));
-  __collate_extra = current (bo (EXTRA));
+wint_t
+towupper (wc)
+     wint_t wc;
+{
+  return towctrans (wc, __ctype_toupper);
 }

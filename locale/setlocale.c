@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -290,7 +290,7 @@ setlocale (int category, const char *name)
 	      /* The composite name did not specify all categories.  */
 	      return NULL;
 	}
-	
+
       /* Load the new data for each category.  */
       while (category-- > 0)
 	/* Only actually load the data if anything will use it.  */

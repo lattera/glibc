@@ -1,0 +1,33 @@
+#ifndef _LD_CONFIG_H
+#define _LD_CONFIG_H
+
+/* Use the internal textdomain used for libc messages.  */
+#define PACKAGE _libc_intl_domainname
+#ifndef VERSION
+/* Get libc version number.  */
+#include "../../version.h"
+#endif
+
+#define DEFAULT_CHARMAP "POSIX"
+
+#ifndef PARAMS
+# if __STDC__
+#  define PARAMS(args) args
+# else
+#  define PARAMS(args) ()
+# endif
+#endif
+
+
+
+#define HAVE_VPRINTF 1
+
+
+typedef int wint_t;
+typedef unsigned short int u16_t;
+
+
+
+int euidaccess (__const char *__name, int __type);
+
+#endif

@@ -511,26 +511,41 @@ int
 DEFUN(_IO_sputbackc, (fp, c),
       register _IO_FILE *fp AND int c)
 {
+  int result;
+  
   if (fp->_IO_read_ptr > fp->_IO_read_base
       && (unsigned char)fp->_IO_read_ptr[-1] == (unsigned char)c)
     {
       fp->_IO_read_ptr--;
-      return (unsigned char)c;
+      result = (unsigned char)c;
     }
-  return _IO_PBACKFAIL (fp, c);
+  else
+    result = _IO_PBACKFAIL (fp, c);
+
+  if (result != EOF)
+    fp->_flags &= ~_IO_EOF_SEEN;
+
+  return result;
 }
 
 int
 DEFUN(_IO_sungetc, (fp),
       register _IO_FILE *fp)
 {
+  int result;
+  
   if (fp->_IO_read_ptr > fp->_IO_read_base)
     {
       fp->_IO_read_ptr--;
-      return (unsigned char)*fp->_IO_read_ptr;
+      result = (unsigned char)*fp->_IO_read_ptr;
     }
   else
-    return _IO_PBACKFAIL (fp, EOF);
+    result = _IO_PBACKFAIL (fp, EOF);
+
+  if (result != EOF)
+    fp->_flags &= ~_IO_EOF_SEEN;
+
+  return result;
 }
 
 #if 0 /* Work in progress */

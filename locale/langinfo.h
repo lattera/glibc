@@ -1,5 +1,5 @@
 /* nl_langinfo -- Access to locale-dependent parameters.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -98,8 +98,24 @@ typedef enum
   ERA_YEAR,			/* Year in alternate era format.  */
   ERA_D_FMT,			/* Date in alternate era format.  */
   ALT_DIGITS,			/* Alternate symbols for digits.  */
+  ERA_D_T_FMT,			/* Date and time in alternate era format.  */
+  ERA_T_FMT,			/* Time in alternate era format.  */
 
   _NL_NUM_LC_TIME,		/* Number of indices in LC_TIME category.  */
+
+  /* LC_COLLATE category: text sorting.
+     This information is accessed by the strcoll and strxfrm functions.
+     These `nl_langinfo' names are used only internally.  */
+  _NL_COLLATE_NRULES = _NL_ITEM (LC_COLLATE, 0),
+  _NL_COLLATE_RULES,
+  _NL_COLLATE_HASH_SIZE,
+  _NL_COLLATE_HASH_LAYERS,
+  _NL_COLLATE_TABLE_EB,
+  _NL_COLLATE_TABLE_EL,
+  _NL_COLLATE_UNDEFINED,
+  _NL_COLLATE_EXTRA_EB,
+  _NL_COLLATE_EXTRA_EL,
+  _NL_NUM_LC_COLLATE,
 
   /* LC_CTYPE category: character classification.
      This information is accessed by the functions in <ctype.h>.
@@ -109,6 +125,14 @@ typedef enum
   _NL_CTYPE_TOLOWER_EB,
   _NL_CTYPE_TOUPPER_EL,
   _NL_CTYPE_TOLOWER_EL,
+  _NL_CTYPE_CLASS32,
+  _NL_CTYPE_NAMES_EB,
+  _NL_CTYPE_NAMES_EL,
+  _NL_CTYPE_HASH_SIZE,
+  _NL_CTYPE_HASH_LAYERS,
+  _NL_CTYPE_CLASS_NAMES,
+  _NL_CTYPE_MAP_NAMES,
+  _NL_CTYPE_WIDTH,
   _NL_NUM_LC_CTYPE,
 
   /* LC_MONETARY category: formatting of monetary quantities.
@@ -143,9 +167,6 @@ typedef enum
   YESSTR,			/* Output string for ``yes''.  */
   NOSTR,			/* Output string for ``no''.  */
   _NL_NUM_LC_MESSAGES,
-
-  /* Stubs for unfinished categories.  */
-  _NL_NUM_LC_COLLATE = _NL_ITEM (LC_COLLATE, 0),
 
   /* This marks the highest value used.  */
   _NL_NUM

@@ -1,5 +1,5 @@
 /* Functions to read locale data files.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,12 +28,31 @@ Cambridge, MA 02139, USA.  */
 #include "localeinfo.h"
 
 const size_t _nl_category_num_items[] =
-  {
+{
 #define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
-    [category] = _NL_ITEM_INDEX (_NL_NUM_##category),
+  [category] = _NL_ITEM_INDEX (_NL_NUM_##category),
 #include "categories.def"
 #undef	DEFINE_CATEGORY
-  };
+};
+
+
+#define NO_PAREN(arg, rest...) arg, ##rest
+
+#define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
+static const enum value_type _nl_value_type_##category[] = { NO_PAREN items };
+#define DEFINE_ELEMENT(element, element_name, optstd, type, rest...) \
+  [_NL_ITEM_INDEX (element)] = type,
+#include "categories.def"
+#undef DEFINE_CATEGORY
+
+static const enum value_type *_nl_value_types[] =
+{
+#define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
+  [category] = _nl_value_type_##category,
+#include "categories.def"
+#undef DEFINE_CATEGORY
+};
+
 
 struct locale_data *
 _nl_load_locale (int category, char **name)
@@ -178,7 +197,7 @@ _nl_load_locale (int category, char **name)
     }
 
   newdata = malloc (sizeof *newdata +
-		    W (filedata->nstrings) * sizeof (char *));
+		    W (filedata->nstrings) * sizeof (union locale_data_value));
   if (! newdata)
     goto puntmap;
 
@@ -194,7 +213,10 @@ _nl_load_locale (int category, char **name)
 	  errno = EINVAL;
 	  goto puntmap;
 	}
-      newdata->strings[i] = newdata->filedata + idx;
+      if (_nl_value_types[category][i] == word)
+	newdata->values[i].word = W (*((u32_t *) (newdata->filedata + idx)));
+      else
+	newdata->values[i].string = newdata->filedata + idx;
     }
 
   __close (fd);

@@ -1,5 +1,5 @@
 /* localeinfo.h -- declarations for internal libc locale interfaces
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,17 +25,51 @@ Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 
 /* Magic number at the beginning of a locale data file for CATEGORY.  */
-#define	LIMAGIC(category)	(0x051472CA ^ (category))
+#define	LIMAGIC(category)	(0x960316de ^ (category))
+
+/* Two special weight constants for the collation data.  */
+#define FORWARD_CHAR 0xfffffffd
+#define ELLIPSIS_CHAR 0xfffffffe
+#define IGNORE_CHAR 0xffffffff
 
 /* Structure describing locale data in core for a category.  */
 struct locale_data
-  {
-    const char *filedata;	/* Region mapping the file data.  */
-    off_t filesize;		/* Size of the file (and the region).  */
+{
+  const char *filedata;		/* Region mapping the file data.  */
+  off_t filesize;		/* Size of the file (and the region).  */
 
-    unsigned int nstrings;	/* Number of strings below.  */
-    const char *strings[0];	/* Items, usually pointers into `filedata'.  */
-  };
+  unsigned int nstrings;	/* Number of strings below.  */
+  union locale_data_value
+  {
+    const char *string;
+    unsigned int word;
+  }
+  values[0];	/* Items, usually pointers into `filedata'.  */
+};
+
+/* We know three kinds of collation sorting rules.  */
+enum coll_sort_rule
+{
+  illegal_0__,
+  sort_forward,
+  sort_backward,
+  illegal_3__,
+  sort_position,
+  sort_forward_position,
+  sort_backward_position,
+  sort_mask
+};
+
+/* We can map the types of the entries into four categories.  */
+enum value_type
+{
+  none,
+  string,
+  stringarray,
+  byte,
+  bytearray,
+  word
+};
 
 
 /* For each category declare the variable for the current locale data.  */
@@ -49,7 +83,11 @@ extern const struct locale_data * *const _nl_current[LC_ALL];
 
 /* Extract the current CATEGORY locale's string for ITEM.  */
 #define _NL_CURRENT(category, item) \
-  (_nl_current_##category->strings[_NL_ITEM_INDEX (item)])
+  (_nl_current_##category->values[_NL_ITEM_INDEX (item)].string)
+
+/* Extract the current CATEGORY locale's word for ITEM.  */
+#define _NL_CURRENT_WORD(category, item) \
+  (_nl_current_##category->values[_NL_ITEM_INDEX (item)].word)
 
 /* This is used in lc-CATEGORY.c to define _nl_current_CATEGORY.  */
 #define _NL_CURRENT_DEFINE(category) \
@@ -64,5 +102,12 @@ extern struct locale_data *_nl_load_locale (int category, char **name);
 /* Free the locale data read in by a `_nl_load_locale' call.  */
 extern void _nl_free_locale (struct locale_data *);
 
+
+/* XXX For now.  */
+typedef unsigned int u32_t;
+
+/* Global variables for LC_COLLATE category data.  */
+extern const u32_t *__collate_table;
+extern const u32_t *__collate_extra;
 
 #endif	/* localeinfo.h */

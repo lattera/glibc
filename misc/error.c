@@ -47,11 +47,15 @@ Cambridge, MA 02139, USA.  */
 void exit ();
 #endif
 
+#ifndef _
+#define _(String) String
+#endif
+
 /* If NULL, error will flush stdout, then print on stderr the program
    name, a colon and a space.  Otherwise, error will call this
    function without parameters instead.  */
 void (*error_print_progname) (
-#if __STDC__
+#if __STDC__ - 0
 			      void
 #endif
 			      );
@@ -85,7 +89,7 @@ private_strerror (errnum)
 
   if (errnum > 0 && errnum <= sys_nerr)
     return sys_errlist[errnum];
-  return "Unknown system error";
+  return _("Unknown system error");
 }
 #define strerror private_strerror
 #endif	/* HAVE_STRERROR */
@@ -133,7 +137,74 @@ error (status, errnum, message, va_alist)
 #endif
 
   ++error_message_count;
+  if (errnum)
+    fprintf (stderr, ": %s", strerror (errnum));
+  putc ('\n', stderr);
+  fflush (stderr);
+  if (status)
+    exit (status);
+}
+
+/* Sometimes we want to have at most one error per line.  This
+   variable controls whether this mode is selected or not.  */
+int error_one_per_line;
 
+void
+#if defined(VA_START) && __STDC__
+error_at_line (int status, int errnum, const char *file_name,
+	       unsigned int line_number, const char *message, ...)
+#else
+error_at_line (status, errnum, file_name, line_number, message, va_alist)
+     int status;
+     int errnum;
+     const char *file_name;
+     unsigned int line_number;
+     char *message;
+     va_dcl
+#endif
+{
+#ifdef VA_START
+  va_list args;
+#endif
+
+  if (error_one_per_line)
+    {
+      static const char *old_file_name;
+      static unsigned int old_line_number;
+
+      if (old_line_number == line_number
+	  && (file_name == old_file_name || !strcmp (old_file_name, file_name))
+	/* Simply return and print nothing.  */
+	return;
+
+      old_file_name = file_name;
+      old_line_number = line_number;
+    }
+
+  if (error_print_progname)
+    (*error_print_progname) ();
+  else
+    {
+      fflush (stdout);
+      fprintf (stderr, "%s:", program_name);
+    }
+
+  if (file_name != NULL)
+    fprintf (stderr, "%s:%d: ", file_name, line_number);
+
+#ifdef VA_START
+  VA_START (args, message);
+# if HAVE_VPRINTF || _LIBC
+  vfprintf (stderr, message, args);
+# else
+  _doprnt (message, args, stderr);
+# endif
+  va_end (args);
+#else
+  fprintf (stderr, message, a1, a2, a3, a4, a5, a6, a7, a8);
+#endif
+
+  ++error_message_count;
   if (errnum)
     fprintf (stderr, ": %s", strerror (errnum));
   putc ('\n', stderr);

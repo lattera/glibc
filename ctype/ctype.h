@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@ Cambridge, MA 02139, USA.  */
 
 __BEGIN_DECLS
 
+#ifndef _ISbit
 /* These are all the characteristics of characters.
    If there get to be more than 16 distinct characteristics,
    many things must be changed that use `unsigned short int's.
@@ -55,11 +56,9 @@ enum
   _ISblank = _ISbit (8),	/* Blank (usually SPC and TAB).  */
   _IScntrl = _ISbit (9),	/* Control character.  */
   _ISpunct = _ISbit (10),	/* Punctuation.  */
-
-  /* The following are defined in POSIX.2 as being combinations of the
-     classes above.  */
-  _ISalnum = _ISalpha | _ISdigit	/* Alphanumeric.  */
+  _ISalnum = _ISbit (11)	/* Alphanumeric.  */
 };
+#endif /* ! _ISbit  */
 
 /* These are defined in ctype-info.c.
    The declarations here must match those in localeinfo.h.
@@ -70,7 +69,8 @@ enum
    char' values and for EOF; we also support negative `signed char' values
    for broken old programs.  The case conversion arrays are of `int's
    rather than `unsigned char's because tolower (EOF) must be EOF, which
-   doesn't fit into an `unsigned char'.  */
+   doesn't fit into an `unsigned char'.  But today more important is that
+   the arrays are also used for multi-byte character sets.  */
 extern __const unsigned short int *__ctype_b;	/* Characteristics.  */
 extern __const int *__ctype_tolower; /* Case conversions.  */
 extern __const int *__ctype_toupper; /* Case conversions.  */
