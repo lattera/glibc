@@ -158,15 +158,15 @@ _dl_reloc_bad_type (struct link_map *map, uint_fast8_t type, int plt)
   if (plt)
     {
       char msg[] = "unexpected reloc type 0x??";
-      msg[sizeof msg - 2] = DIGIT(type >> 8);
-      msg[sizeof msg - 1] = DIGIT(type);
+      msg[sizeof msg - 3] = DIGIT(type >> 8);
+      msg[sizeof msg - 2] = DIGIT(type);
       _dl_signal_error (0, map->l_name, msg);
     }
   else
     {
       char msg[] = "unexpected PLT reloc type 0x??";
-      msg[sizeof msg - 2] = DIGIT(type >> 8);
-      msg[sizeof msg - 1] = DIGIT(type);
+      msg[sizeof msg - 3] = DIGIT(type >> 8);
+      msg[sizeof msg - 2] = DIGIT(type);
       _dl_signal_error (0, map->l_name, msg);
     }
 }
