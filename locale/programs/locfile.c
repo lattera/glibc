@@ -51,7 +51,7 @@ locfile_read (struct localedef_t *result, struct charmap_t *charmap)
   ldfile = lr_open (filename, locfile_hash);
   if (ldfile == NULL)
     {
-      if (filename[0] != '/')
+      if (filename != NULL && filename[0] != '/')
 	{
 	  char *i18npath = getenv ("I18NPATH");
 	  if (i18npath != NULL && *i18npath != '\0')

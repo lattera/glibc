@@ -194,7 +194,7 @@ main (int argc, char *argv[])
 
   /* Add the first entry in the locale list.  */
   memset (&global, '\0', sizeof (struct localedef_t));
-  global.name = input_file;
+  global.name = input_file ?: "/dev/stdin";
   global.needed = ALL_LOCALES;
   locales = &global;
 

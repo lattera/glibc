@@ -1,3 +1,10 @@
+2001-04-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/localedef.c (main): Always set a file name for
+	the initial locale.
+	* locale/programs/locfile.c (locfile_read): filename is allowed to
+	be NULL.
+
 2001-04-12  Paul Bame  <paul_bame@hp.com>
 
 	* sysdeps/hppa/fpu/fclrexcpt.c: Clear the exception flags, not the
