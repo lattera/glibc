@@ -119,7 +119,7 @@ struct translit_include_t
 /* Sparse table of uint32_t.  */
 #define TABLE idx_table
 #define ELEMENT uint32_t
-#define DEFAULT ~((uint32_t) 0)
+#define DEFAULT ((uint32_t) ~0)
 #define NO_FINALIZE
 #include "3level.h"
 
@@ -204,6 +204,10 @@ struct locale_ctype_t
 
   struct obstack mempool;
 };
+
+/* Marker for an empty slot.  This has the value 0xFFFFFFFF, regardless
+   whether 'int' is 16 bit, 32 bit, or 64 bit.  */
+#define EMPTY ((uint32_t) ~0)
 
 
 #define obstack_chunk_alloc xmalloc
@@ -1287,7 +1291,7 @@ find_idx (struct locale_ctype_t *ctype, uint32_t **table, size_t *max,
   /* Use the charnames_idx lookup table instead of the slow search loop.  */
 #if 1
   cnt = idx_table_get (&ctype->charnames_idx, idx);
-  if (cnt == ~((uint32_t) 0))
+  if (cnt == EMPTY)
     /* Not found.  */
     cnt = ctype->charnames_act;
 #else
@@ -3407,12 +3411,12 @@ wctype_table_get (struct wctype_table *t, uint32_t wc)
   if (index1 < t->level1_size)
     {
       uint32_t lookup1 = t->level1[index1];
-      if (lookup1 != ~((uint32_t) 0))
+      if (lookup1 != EMPTY)
 	{
 	  uint32_t index2 = ((wc >> (t->p + 5)) & ((1 << t->q) - 1))
 			    + (lookup1 << t->q);
 	  uint32_t lookup2 = t->level2[index2];
-	  if (lookup2 != ~((uint32_t) 0))
+	  if (lookup2 != EMPTY)
 	    {
 	      uint32_t index3 = ((wc >> 5) & ((1 << t->p) - 1))
 				+ (lookup2 << t->p);
@@ -3448,10 +3452,10 @@ wctype_table_add (struct wctype_table *t, uint32_t wc)
 	  t->level1_alloc = alloc;
 	}
       while (index1 >= t->level1_size)
-	t->level1[t->level1_size++] = ~((uint32_t) 0);
+	t->level1[t->level1_size++] = EMPTY;
     }
 
-  if (t->level1[index1] == ~((uint32_t) 0))
+  if (t->level1[index1] == EMPTY)
     {
       if (t->level2_size == t->level2_alloc)
 	{
@@ -3463,13 +3467,13 @@ wctype_table_add (struct wctype_table *t, uint32_t wc)
       i1 = t->level2_size << t->q;
       i2 = (t->level2_size + 1) << t->q;
       for (i = i1; i < i2; i++)
-	t->level2[i] = ~((uint32_t) 0);
+	t->level2[i] = EMPTY;
       t->level1[index1] = t->level2_size++;
     }
 
   index2 += t->level1[index1] << t->q;
 
-  if (t->level2[index2] == ~((uint32_t) 0))
+  if (t->level2[index2] == EMPTY)
     {
       if (t->level3_size == t->level3_alloc)
 	{
@@ -3520,7 +3524,7 @@ wctype_table_finalize (struct wctype_table *t)
   t->level3_size = k;
 
   for (i = 0; i < (t->level2_size << t->q); i++)
-    if (t->level2[i] != ~((uint32_t) 0))
+    if (t->level2[i] != EMPTY)
       t->level2[i] = reorder3[t->level2[i]];
 
   /* Uniquify level2 blocks.  */
@@ -3544,7 +3548,7 @@ wctype_table_finalize (struct wctype_table *t)
   t->level2_size = k;
 
   for (i = 0; i < t->level1_size; i++)
-    if (t->level1[i] != ~((uint32_t) 0))
+    if (t->level1[i] != EMPTY)
       t->level1[i] = reorder2[t->level1[i]];
 
   /* Create and fill the resulting compressed representation.  */
@@ -3573,13 +3577,13 @@ wctype_table_finalize (struct wctype_table *t)
 
   for (i = 0; i < t->level1_size; i++)
     ((uint32_t *) (t->result + level1_offset))[i] =
-      (t->level1[i] == ~((uint32_t) 0)
+      (t->level1[i] == EMPTY
        ? 0
        : (t->level1[i] << t->q) * sizeof (uint32_t) + level2_offset);
 
   for (i = 0; i < (t->level2_size << t->q); i++)
     ((uint32_t *) (t->result + level2_offset))[i] =
-      (t->level2[i] == ~((uint32_t) 0)
+      (t->level2[i] == EMPTY
        ? 0
        : (t->level2[i] << t->p) * sizeof (uint32_t) + level3_offset);
 
