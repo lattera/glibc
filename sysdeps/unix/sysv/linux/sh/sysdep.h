@@ -1,5 +1,5 @@
-/* Copyright (C) 1992, 1993, 1995, 1996, 1997, 1998, 1999, 2000, 2002,
-   2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1992,1993,1995,1996,1997,1998,1999,2000,2002,2003,2004
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
    Changed by Kaz Kojima, <kkojima@rr.iij4u.or.jp>.
@@ -109,7 +109,7 @@
 	 mov _IMM1,r0; \
 	.align 2; \
      0: .long _GLOBAL_OFFSET_TABLE_; \
-     1: .long errno@GOTOFF
+     1: .long rtld_errno@GOTOFF
 
 # elif defined _LIBC_REENTRANT
 

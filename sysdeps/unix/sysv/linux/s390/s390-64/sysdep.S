@@ -74,7 +74,7 @@ ENTRY(__syscall_error)
 #endif
 #else
 # if RTLD_PRIVATE_ERRNO
-	larl	%r1,errno
+	larl	%r1,rtld_errno
 	lcr	%r2,%r2
 	st	%r2,0(%r1)
 	lghi	%r2,-1
@@ -100,7 +100,7 @@ ENTRY(__syscall_error)
 	lcr	%r2,%r2
 	st	%r2,0(%r1)
 	lghi	%r2,-1
-	br	%r14	
+	br	%r14
 # else
 	stmg	%r13,%r15,104(%r15)
 	cfi_offset (%r15,-40)

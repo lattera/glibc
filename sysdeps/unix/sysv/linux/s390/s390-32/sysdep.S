@@ -82,7 +82,7 @@ ENTRY(__syscall_error)
 	st	%r2,0(%r1)
 	lhi	%r2,-1
 	br	%r14
-1:	.long	errno - 0b
+1:	.long	rtld_errno - 0b
 # elif USE___THREAD
 #  ifndef NOT_IN_libc
 #   define SYSCALL_ERROR_ERRNO __libc_errno

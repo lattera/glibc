@@ -98,7 +98,7 @@
 # if RTLD_PRIVATE_ERRNO
 #  define SYSCALL_ERROR_HANDLER						      \
 SYSCALL_ERROR_LABEL:							      \
-    lea (errno, %pc), %a0;					      	      \
+    lea (rtld_errno, %pc), %a0;					      	      \
     neg.l %d0;								      \
     move.l %d0, (%a0);							      \
     move.l &-1, %d0;							      \

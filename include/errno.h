@@ -14,8 +14,8 @@
    so a single (hidden) global variable is all it needs.  */
 
 #  undef  errno
-#  define errno errno		/* For #ifndef errno tests.  */
-extern int errno attribute_hidden;
+#  define errno rtld_errno
+extern int rtld_errno attribute_hidden;
 
 # else
 

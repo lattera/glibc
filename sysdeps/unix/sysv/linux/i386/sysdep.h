@@ -136,7 +136,7 @@ __i686.get_pc_thunk.reg:						      \
   addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \
-  movl %edx, errno@GOTOFF(%ecx);					      \
+  movl %edx, rtld_errno@GOTOFF(%ecx);					      \
   orl $-1, %eax;							      \
   jmp L(pseudo_end);
 

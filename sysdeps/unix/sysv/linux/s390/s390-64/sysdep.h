@@ -101,7 +101,7 @@
 # if RTLD_PRIVATE_ERRNO
 #  define SYSCALL_ERROR_LABEL 0f
 #  define SYSCALL_ERROR_HANDLER \
-0:  larl  %r1,errno;							      \
+0:  larl  %r1,rtld_errno;						      \
     lcr   %r2,%r2;							      \
     st    %r2,0(%r1);							      \
     lghi  %r2,-1;							      \

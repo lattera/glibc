@@ -118,7 +118,7 @@
 #elif RTLD_PRIVATE_ERRNO
 # define SYSCALL_ERROR_HANDLER			\
 0:						\
-  leaq errno(%rip), %rcx;			\
+  leaq rtld_errno(%rip), %rcx;			\
   xorq %rdx, %rdx;				\
   subq %rax, %rdx;				\
   movl %edx, (%rcx);				\

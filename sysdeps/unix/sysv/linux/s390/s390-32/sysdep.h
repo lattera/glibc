@@ -97,7 +97,7 @@
     st    %r2,0(%r1);							      \
     lhi   %r2,-1;							      \
     br    %r14;								      \
-2:  .long errno-1b
+2:  .long rtld_errno-1b
 # elif defined _LIBC_REENTRANT
 #  if USE___THREAD
 #   ifndef NOT_IN_libc

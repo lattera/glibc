@@ -83,7 +83,7 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7;			\
 	call	__sparc_get_pic_l7;					\
 	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7;			\
-	ld	[%l7 + errno], %l0;					\
+	ld	[%l7 + rtld_errno], %l0;				\
 	st	%i0, [%l0];						\
 	jmpl	%i7+8, %g0;						\
 	 restore %g0, -1, %o0;						\

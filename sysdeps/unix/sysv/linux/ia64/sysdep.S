@@ -30,7 +30,7 @@ ENTRY(__syscall_error)
 	 * be fine.  Otherwise, we would have to first load the global
 	 * pointer register from __gp.
 	 */
-	addl	r2=@gprel(errno),gp
+	addl	r2=@gprel(rtld_errno),gp
 	;;
 	st4	[r2]=r8
 	mov	r8=-1

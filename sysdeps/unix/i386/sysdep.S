@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 2000, 2002
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 2000, 2002, 2004
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -68,7 +68,7 @@ notb:
 	popl %ebx
 	movl %eax, %gs:0(%ecx)
 # elif RTLD_PRIVATE_ERRNO
-	movl %eax, C_SYMBOL_NAME(errno@GOTOFF)(%ebx)
+	movl %eax, C_SYMBOL_NAME(rtld_errno@GOTOFF)(%ebx)
 
 	/* Pop %ebx value saved before jumping here.  */
 	popl %ebx

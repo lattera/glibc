@@ -67,7 +67,7 @@ notb:
 # endif
 #else
 # if RTLD_PRIVATE_ERRNO
-	leaq errno(%rip), %rcx
+	leaq rtld_errno(%rip), %rcx
 	movl %eax, (%rcx)
 # elif !defined _LIBC_REENTRANT
 	movq C_SYMBOL_NAME(errno)@GOTPCREL(%rip), %rcx
