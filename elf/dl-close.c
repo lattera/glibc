@@ -224,8 +224,8 @@ _dl_close (void *_map)
 	      struct reldep_list *newrel;
 
 	      newrel = (struct reldep_list *) alloca (sizeof (*reldeps));
-	      newrel->rellist = map->l_reldeps;
-	      newrel->nrellist = map->l_reldepsact;
+	      newrel->rellist = imap->l_reldeps;
+	      newrel->nrellist = imap->l_reldepsact;
 	      newrel->next = reldeps;
 
 	      reldeps = newrel;

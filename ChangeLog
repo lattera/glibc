@@ -1,3 +1,17 @@
+2001-05-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-close.c (_dl_close): Save imap->l_reldeps, not map->l_reldeps.
+
+	* elf/Makefile (distribute): Add reldep4mod[1234].c.
+	(tests): Add reldep4.
+	(modules-names): Add reldep4mod[1234].
+	(reldep4mod1.so, reldep4mod2.so, reldep4, reldep4.out): New rules.
+	* elf/reldep4.c: New file.
+	* elf/reldep4mod1.c: Likewise.
+	* elf/reldep4mod2.c: Likewise.
+	* elf/reldep4mod3.c: Likewise.
+	* elf/reldep4mod4.c: Likewise.
+
 2001-05-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-lookup.c (PROTECTED): Remove defines.

@@ -53,6 +53,7 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   nodlopenmod.c nodelete.c nodelmod1.c nodelmod2.c \
 		   nodelmod3.c nodelmod4.c nodlopen.c dl-osinfo.h \
 		   reldepmod1.c reldepmod2.c reldepmod3.c reldepmod4.c \
+		   reldep4mod1.c reldep4mod2.c reldep4mod3.c reldep4mod4.c \
 		   nextmod1.c nextmod2.c pathoptobj.c tst-pathopt.sh \
 		   neededobj1.c neededobj2.c neededobj3.c neededobj4.c \
 		   neededobj5.c neededobj6.c firstobj.c \
@@ -99,7 +100,7 @@ endif
 ifeq (yes,$(build-shared))
 tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	constload1 order $(tests-vis-$(have-protected)) noload filter unload \
-	reldep reldep2 reldep3 next $(tests-nodelete-$(have-z-nodelete)) \
+	reldep reldep2 reldep3 reldep4 next $(tests-nodelete-$(have-z-nodelete)) \
 	$(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
 	neededtest3 neededtest4 unload2 lateglobal initfirst global \
 	restest2
@@ -114,6 +115,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		$(modules-nodelete-$(have-z-nodelete)) \
 		$(modules-nodlopen-$(have-z-nodlopen)) filtmod1 filtmod2 \
 		reldepmod1 reldepmod2 reldepmod3 reldepmod4 nextmod1 nextmod2 \
+		reldep4mod1 reldep4mod2 reldep4mod3 reldep4mod4 \
 		neededobj1 neededobj2 neededobj3 neededobj4 \
 		neededobj5 neededobj6 firstobj globalmod1 \
 		unload2mod unload2dep ltglobmod1 ltglobmod2 pathoptobj
@@ -275,6 +277,8 @@ $(objpfx)unload2mod.so: $(objpfx)unload2dep.so
 $(objpfx)ltglobmod2.so: $(libdl)
 $(objpfx)firstobj.so: $(shared-thread-library)
 $(objpfx)globalmod1.so: $(libdl)
+$(objpfx)reldep4mod1.so: $(objpfx)reldep4mod3.so
+$(objpfx)reldep4mod2.so: $(objpfx)reldep4mod4.so
 
 # filtmod1.so has a special rule
 $(filter-out $(objpfx)filtmod1.so, $(test-modules)): $(objpfx)%.so: $(objpfx)%.os
@@ -385,6 +389,9 @@ $(objpfx)reldep2.out: $(objpfx)reldepmod1.so $(objpfx)reldepmod3.so
 
 $(objpfx)reldep3: $(libdl)
 $(objpfx)reldep3.out: $(objpfx)reldepmod1.so $(objpfx)reldepmod4.so
+
+$(objpfx)reldep4: $(libdl)
+$(objpfx)reldep4.out: $(objpfx)reldep4mod1.so $(objpfx)reldep4mod2.so
 
 $(objpfx)next: $(objpfx)nextmod1.so $(objpfx)nextmod2.so $(libdl)
 
