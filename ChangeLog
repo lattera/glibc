@@ -1,3 +1,8 @@
+2001-10-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ieee754/dbl-64/mpa.h: Add prototypes for internal
+	functions.
+
 2001-10-29  Kevin Ryde <user42@zip.com.au>
 
 	* stdio.texi (Integer Conversions): Corrections to sample printf
