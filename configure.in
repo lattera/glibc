@@ -118,8 +118,9 @@ changequote([,])dnl
 AC_SUBST(base_machine)
 
 # Compute the list of sysdep directories for this configuration.
+# This can take a while to compute.
 sysdep_dir=$srcdir/sysdeps
-AC_CACHE_CHECK(sysdep dirs, libc_cv_sysdirs, [dnl
+AC_MSG_CHECKING(sysdep dirs)
 dnl We need to use [ and ] for other purposes for a while now.
 changequote(,)dnl
 # Make sco3.2v4 become sco3.2.4 and sunos4.1.1_U1 become sunos4.1.1.U1.
@@ -232,15 +233,26 @@ sysnames="`echo $sysnames | sed -e 's@^/@@' -e 's@ /@ @g'`"
 # Expand the list of system names into a full list of directories
 # from each element's parent name and Implies file (if present).
 set $sysnames
+names= seen=
 while test $# -gt 0; do
   name=$1
   shift
+
+  if echo "$seen" | fgrep -x $name >/dev/null; then
+    # Already in the list.
+    continue
+  fi
+
+  # Report each name as we discover it, so there is no long pause in output.
+  echo $ac_n "$name $ac_c" >&AC_FD_MSG
 
   if test -f $sysdep_dir/$name/Implies; then
     # Collect more names from the `Implies' file (removing comments).
     implied="`sed 's/#.*$//' < $sysdep_dir/$name/Implies`"
     for x in $implied; do
-      test -d $sysdep_dir/$x || echo "Warning: $name implies nonexistent $x">&2
+      test -d $sysdep_dir/$x || {
+        AC_MSG_WARN(sysdeps/$name/Implies specifies nonexistent $x)
+      }
     done
   else
     implied=
@@ -248,6 +260,9 @@ while test $# -gt 0; do
 
   # Add NAME to the list of names.
   names="$names $name"
+  # We maintain a parallel newline-separated list for the fgrep check above.
+  seen="$seen
+$name"
 
   # Find the parent of NAME, using the empty string if it has none.
 changequote(,)dnl
@@ -266,28 +281,13 @@ changequote([,])dnl
 done
 
 # Add the default directories.
-names="$names generic stub"
+sysnames="$names generic stub"
+AC_SUBST(sysnames)
+# The other names were emitted during the scan.
+AC_MSG_RESULT(generic stub)
 
-# Now uniquize the list.
-seen=
-sysnames=
-for name in $names; do
-  if echo "$seen" | fgrep -x $name >/dev/null; then
-    # Already in the list.
-    true;
-  else
-    # A new one.
-    if test -z "$seen"; then
-      seen="$name" sysnames="$name"
-    else
-      seen="$seen
-$name"
-      sysnames="$sysnames $name"
-    fi
-  fi
-done
-libc_cv_sysdirs="$sysnames"])
-AC_SUBST(sysnames) sysnames="$libc_cv_sysdirs"
+
+### Locate tools.
 
 AC_PROG_INSTALL
 if test "$INSTALL" = "${srcdir}/install-sh"; then

@@ -74,6 +74,10 @@ common-objdir = .
 endif
 endif
 
+# Root of the sysdeps tree.
+sysdep_dir := $(..)sysdeps
+export sysdep_dir := $(sysdep_dir)
+
 
 # Get the values defined by options to `configure'.
 include $(common-objpfx)config.make
@@ -86,17 +90,15 @@ include $(common-objpfx)config.make
 $(common-objpfx)config.make: $(common-objpfx)config.status $(..)config.h.in
 	cd $(<D); $(SHELL) $(<F)
 
+sysdep-configures = \
+
 # Find all the sysdeps configure fragments, to make sure we re-run
 # configure when any of them changes.
-sysdep-configures = \
-  $(foreach dir,$(config-sysdirs),\
-	    $(patsubst %.in,%,\
-		       $(firstword $(wildcard \
-		         $(sysdep_dir)/$(dir)/configure \
-			 $(sysdep_dir)/$(dir)/configure.in))))
-
-# Force the user to configure before making.
-$(common-objpfx)config.status: $(..)configure $(sysdep-configures)
+$(common-objpfx)config.status: $(..)configure \
+			       $(foreach dir,$(config-sysdirs),\
+					 $(patsubst %.in,%,\
+						    $(firstword $(wildcard \
+ $(addprefix $(sysdep_dir)/$(dir)/,configure configure.in Implies)))))
 	@cd $(@D); if test -f $(@F); then exec $(SHELL) $(@F) --recheck; else \
 	 echo The GNU C library has not been configured. >&2; \
 	 echo Run \`configure\' to configure it before building. >&2; \
@@ -112,9 +114,6 @@ ifneq ($(wildcard $(objpfx)configparms),)
 include $(objpfx)configparms
 endif
 endif
-
-sysdep_dir := $(..)sysdeps
-export sysdep_dir := $(sysdep_dir)
 
 ####
 ####	These are the configuration variables.  You can define values for

@@ -99,7 +99,7 @@ ifneq (ld.so, $(rtld-installed-name))
 # against it.
 $(objpfx)$(rtld-installed-name): $(objpfx)ld.so
 	rm -f $@
-	ln $< $@
+	ln -s $(<F) $@
 endif
 
 # The Linux-compatible dynamic linker shared object is just the same

@@ -1,9 +1,39 @@
+Fri Jun 14 01:51:47 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* version.c (banner): New static const variable, complete version
+	banner text.
+	(__libc_print_version): Use it, and use __write instead of printf.
+
+	* configure.in (sysnames): Don't cache the value, because it
+ 	depends only on libc sources.  Merge uniquifying third pass into
+	Implies/parent expansion second pass.  Report each unique name as
+	it is added in partial report string, terminated when finished.
+
+	* Makeconfig (sysdep_dir): Move defn before config.status rule that
+	expands it.
+	(sysdep-configures): Variable removed.
+	(config.status): Use its contents directly, tighten up a bit, and
+	include Implies files.
+
+	* elf/dl-open.c (_dl_open) [PIC]: Set PARENT to _dl_loaded if null.
+
+	* elf/Makefile ($(objpfx)$(rtld-installed-name)): Make a symlink.
+
 Thu Jun 13 14:29:56 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* hurd/hurdsig.c (_hurd_internal_post_signal): Rename `deliver:'
 	label to `deliver_pending:' to match goto.
 
 Thu Jun 13 00:02:25 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_open_zero_fill):
+	Add comment.
+
+	* elf/rtld.c (dl_main): Close _dl_zerofd after mapping deps.
+
+	* sysdeps/generic/machine-gmon.h [NO_UNDERSCORES]: Define mcount as
+	weak alias for _mcount.
+	* sysdeps/alpha/_mcount.S (mcount): Define as weak alias.
 
 	* elf/dl-lookup.c (_dl_lookup_symbol): If no value and *REF is
 	null, consider it a strong reference and give the error.

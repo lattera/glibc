@@ -213,6 +213,8 @@ _dl_sysdep_start_cleanup (void)
 int
 _dl_sysdep_open_zero_fill (void)
 {
+  /* The minimal mmap below uses the fd as a memory object port.
+     The real mmap used for dlopen ignores the fd for MAP_ANON.  */
   return (int) MACH_PORT_NULL;
 }
 

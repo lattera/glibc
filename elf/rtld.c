@@ -239,6 +239,10 @@ of this helper program; chances are you did not intend to run this program.\n",
   /* Load all the libraries specified by DT_NEEDED entries.  */
   _dl_map_object_deps (l);
 
+  /* We are done mapping things, so close the zero-fill descriptor.  */
+  __close (_dl_zerofd);
+  _dl_zerofd = -1;
+
   /* XXX if kept, move it so l_next list is in dep order because
      it will determine gdb's search order.
      Perhaps do this always, so later dlopen by name finds it?

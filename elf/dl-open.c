@@ -32,6 +32,13 @@ _dl_open (struct link_map *parent, const char *file, int mode)
   struct r_debug *r;
 
 
+#ifdef PIC
+  if (! parent)
+    /* If no particular dependent object caused this load,
+       then use the DT_RPATH of the executable itself.  */
+      parent = _dl_loaded;
+#endif
+
   /* Load the named object.  */
   new = _dl_map_object (parent, file, lt_loaded);
   if (new->l_searchlist)

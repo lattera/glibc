@@ -16,38 +16,35 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <stdio.h>
-
 #include "version.h"
 const char __libc_release[] = RELEASE;
 const char __libc_version[] = VERSION;
 
-void
-__libc_print_version (void)
-{
-  printf ("GNU C Library %s release version %s, by Roland McGrath et al.\n",
-	  __libc_release, __libc_version);
-#ifdef	__VERSION__
-  printf ("Compiled by GNU CC version %s.\n", __VERSION__);
-#endif
-  puts ("\
+static const char banner[] =
+"GNU C Library "RELEASE" release version "VERSION", by Roland McGrath et al.\n\
+Compiled by GNU CC version "__VERSION__".\n\
 Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
-PARTICULAR PURPOSE.");
+PARTICULAR PURPOSE.";
+
+#include <unistd.h>
+
+void
+__libc_print_version (void)
+{
+  __write (STDOUT_FILENO, banner, sizeof banner - 1);
 }
 
 #ifdef HAVE_ELF
 /* This function is the entry point for the shared object.
    Running the library as a program will get here.  */
 
-#include <stdlib.h>
-
 void
 __libc_main (void)
 {
   __libc_print_version ();
-  exit (0);
+  _exit (0);
 }
 #endif
 
