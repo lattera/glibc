@@ -232,16 +232,18 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
 		  Elf32_Addr *const reloc_addr)
 {
-  if (ELF32_R_TYPE (reloc->r_info) == R_68K_RELATIVE)
+  const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
+
+  if (__builtin_expect (r_type == R_68K_RELATIVE, 0))
     *reloc_addr = map->l_addr + reloc->r_addend;
   else
     {
       const Elf32_Sym *const refsym = sym;
-      Elf32_Addr value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
+      Elf32_Addr value = RESOLVE (&sym, version, r_type);
       if (sym)
 	value += sym->st_value;
 
-      switch (ELF32_R_TYPE (reloc->r_info))
+      switch (r_type)
 	{
 	case R_68K_COPY:
 	  if (sym == NULL)
@@ -290,10 +292,17 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	case R_68K_NONE:		/* Alright, Wilbur.  */
 	  break;
 	default:
-	  _dl_reloc_bad_type (map, ELF32_R_TYPE (reloc->r_info), 0);
+	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
 	}
     }
+}
+
+static inline void
+elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
+			  Elf32_Addr *const reloc_addr)
+{
+  *reloc_addr = l_addr + reloc->r_addend;
 }
 
 static inline void

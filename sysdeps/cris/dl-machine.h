@@ -284,40 +284,28 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
 		  Elf32_Addr *const reloc_addr)
 {
-#ifndef RTLD_BOOTSTRAP
-  /* This is defined in rtld.c, but nowhere in the static libc.a; make the
-     reference weak so static programs can still link.  This declaration
-     cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
-     because rtld.c contains the common defn for _dl_rtld_map, which is
-     incompatible with a weak decl in the same file.  */
-  weak_extern (_dl_rtld_map);
-#endif
+  const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
 
-  if (ELF32_R_TYPE (reloc->r_info) == R_CRIS_RELATIVE)
-    {
-#ifndef RTLD_BOOTSTRAP
-      if (map != &_dl_rtld_map) /* Already done in rtld itself. */
-#endif
-	*reloc_addr = map->l_addr + reloc->r_addend;
-    }
+  if (__builtin_expect (r_type == R_CRIS_RELATIVE, 0))
+    *reloc_addr = map->l_addr + reloc->r_addend;
   else
     {
 #ifndef RTLD_BOOTSTRAP
       const Elf32_Sym *const refsym = sym;
 #endif
       Elf32_Addr value;
-      if (sym->st_shndx != SHN_UNDEF &&
-	  ELF32_ST_BIND (sym->st_info) == STB_LOCAL)
+      if (sym->st_shndx != SHN_UNDEF
+	  && ELF32_ST_BIND (sym->st_info) == STB_LOCAL)
 	value = map->l_addr;
       else
 	{
-	  value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
+	  value = RESOLVE (&sym, version, r_type);
 	  if (sym)
 	    value += sym->st_value;
 	}
       value += reloc->r_addend;	/* Assume copy relocs have zero addend.  */
 
-      switch (ELF32_R_TYPE (reloc->r_info))
+      switch (r_type)
 	{
 #ifndef RTLD_BOOTSTRAP
 	case R_CRIS_COPY:
@@ -370,7 +358,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  break;
 #if !defined RTLD_BOOTSTRAP || defined _NDEBUG
 	default:
-	  _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 0);
+	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
 #endif
 	}
@@ -378,15 +366,22 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 }
 
 static inline void
+elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
+			  Elf32_Addr *const reloc_addr)
+{
+  *reloc_addr = l_addr + reloc->r_addend;
+}
+
+static inline void
 elf_machine_lazy_rel (struct link_map *map,
 		      Elf32_Addr l_addr, const Elf32_Rela *reloc)
 {
   Elf32_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
-  if (__builtin_expect (ELF32_R_TYPE (reloc->r_info), R_CRIS_JUMP_SLOT)
-      == R_CRIS_JUMP_SLOT)
+  const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
+  if (__builtin_expect (r_type == R_CRIS_JUMP_SLOT, 1))
     *reloc_addr += l_addr;
   else
-    _dl_reloc_bad_type (map, ELF32_R_TYPE (reloc->r_info), 1);
+    _dl_reloc_bad_type (map, r_type, 1);
 }
 
 #endif /* RESOLVE */
