@@ -1,5 +1,8 @@
 2004-08-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* nss/getent.c (ahosts_keys): ai_canonname is NULL for all but the
+	first returned entry.  Print name only if not NULL.
+
 	* nis/nss_nis/nis-netgrp.c: Remove locking by using data in struct
 	__netgrent object passed in instead of global variables.
 	Optimize.

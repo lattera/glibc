@@ -348,7 +348,7 @@ ahosts_keys (int number, char *key[])
 				 &((struct sockaddr_in *) runp->ai_addr)->sin_addr,
 				 buf, sizeof (buf)),
 		      sockstr,
-		      runp->ai_canonname);
+		      runp->ai_canonname ?: "");
 
 	      runp = runp->ai_next;
 	    }
