@@ -1,5 +1,8 @@
 2002-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/Makefile (tests): Add bug-ungetwc2.
+	* libio/bug-ungetwc2.c: New file.
+
 	* manual/install.texi: Typographical and grammatical cleanup.
 	Patch by Dennis Grace <dgrace@us.ibm.com>.
 

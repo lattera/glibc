@@ -36,6 +36,7 @@ do_test (void)
       printf ("cannot open temporary file: %m\n");
       return 1;
     }
+  add_temp_file (fname);
 
   setlocale(LC_ALL, "");
 
@@ -45,7 +46,6 @@ do_test (void)
       fprintf (stderr, "Cannot make `%s' file\n", fname);
       exit (EXIT_FAILURE);
     }
-  add_temp_file (fname);
 
   fprintf (fp, "%s", write_chars);
   fclose (fp);
