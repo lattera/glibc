@@ -1,5 +1,7 @@
 1999-07-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/sparc/Dist: Add ldd-rewrite.sed.
+
 	* inet/Makefile (routines): Add getipnodebyad and freehostent.
 	* inet/Versions [GLIBC_2.2] (libc): Add getipnodebyad and freehostent.
 	* inet/freehostent.c: New file.
@@ -74,6 +76,7 @@
 	* sysdeps/generic/bits/types.h: Likewise.
 	* posix/sys/types.h: Define suseconds_t for X/Open.
 
+>>>>>>> 1.2438
 1999-07-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/bug1.c: Avoid memory leak.
