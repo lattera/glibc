@@ -1,8 +1,10 @@
 clone.S
 ldd-rewrite.sed
+ucontext_i.h
+umount.c
+sys/debugreg.h
 sys/io.h
 sys/perm.h
 sys/procfs.h
 sys/reg.h
 sys/user.h
-umount.c
