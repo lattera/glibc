@@ -1,3 +1,8 @@
+2002-10-18  Art Haas  <ahaas@neosoft.com>
+
+	* configure.in: Remove remaining AC_FD_CC macros, and replace
+	AC_FD_MSG with AS_MESSAGE_FD.
+
 2002-10-18  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/powerpc/powerpc32/dl-machine.c (__process_machine_rela): Fix

@@ -507,7 +507,7 @@ while test $# -gt 0; do
   esac
 
   # Report each name as we discover it, so there is no long pause in output.
-  echo $ECHO_N "$name $ECHO_C" >&AC_FD_MSG
+  echo $ECHO_N "$name $ECHO_C" >&AS_MESSAGE_FD
 
   name_base=`echo $name | sed -e 's@\(.*sysdeps\)/.*@\1@'`
 
@@ -900,7 +900,7 @@ extern int glibc_conftest_frobozz;
 main () { printf ("%d\n", glibc_conftest_frobozz); }
 EOF
 if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
-	    -o conftest conftest.s conftest1.c 1>&AS_MESSAGE_LOG_FD 2>&AC_FD_CC; then
+	    -o conftest conftest.s conftest1.c 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
   libc_cv_asm_set_directive=yes
 else
   libc_cv_asm_set_directive=no
@@ -945,7 +945,7 @@ ${libc_cv_dot_text}
 _sym:
 .symver _sym,sym@VERS
 EOF
-if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD 2>&AC_FD_CC; then
+if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
   libc_cv_asm_symver_directive=yes
 else
   libc_cv_asm_symver_directive=no
@@ -967,7 +967,7 @@ VERS_2 {
         global: sym;
 } VERS_1;
 EOF
-  if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD 2>&AC_FD_CC; then
+  if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
     if AC_TRY_COMMAND([${CC-cc} $CFLAGS -shared -o conftest.so conftest.o
 					-nostartfiles -nostdlib
 					-Wl,--version-script,conftest.map
@@ -1838,7 +1838,7 @@ cat > conftest.c <<EOF
 # error PIC is default.
 #endif
 EOF
-if eval "${CC-cc} -S conftest.c 2>&AS_MESSAGE_LOG_FD 1>&AC_FD_CC"; then
+if eval "${CC-cc} -S conftest.c 2>&AS_MESSAGE_LOG_FD 1>&AS_MESSAGE_LOG_FD"; then
   pic_default=no
 fi
 rm -f conftest.*])
