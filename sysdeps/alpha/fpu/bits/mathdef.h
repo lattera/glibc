@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,9 +33,6 @@
 typedef float float_t;
 typedef double double_t;
 
-/* Signal that types stay as they were declared.  */
-#   define FLT_EVAL_METHOD	0
-
 /* Define `INFINITY' as value of type `float'.  */
 #   define INFINITY	HUGE_VALF
 
@@ -44,9 +41,6 @@ typedef double double_t;
 /* For `gcc -traditional', `float' expressions are evaluated as `double'. */
 typedef double float_t;
 typedef double double_t;
-
-/* Signal that both types are `double'.  */
-#   define FLT_EVAL_METHOD	1
 
 /* Define `INFINITY' as value of type `float'.  */
 #   define INFINITY	HUGE_VALF
