@@ -1,3 +1,8 @@
+2002-07-29  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* stdlib/longlong.h [_ARCH_PPC && W_TYPE_SIZE!=32]: Add powerpc64
+	specific asm macros for multiple percision integer math.
+
 2002-06-04  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/generic/ldconfig.h (FLAG_POWERPC_LIB64) New macro.
