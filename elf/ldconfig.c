@@ -26,6 +26,7 @@
 #include <inttypes.h>
 #include <libintl.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -77,10 +78,10 @@ static struct dir_entry *dir_entries;
 
 /* Flags for different options.  */
 /* Print Cache.  */
-static int opt_print_cache = 0;
+static int opt_print_cache;
 
 /* Be verbose.  */
-int opt_verbose = 0;
+int opt_verbose;
 
 /* Format to support.  */
 /* 0: only libc5/glibc2; 1: both; 2: only glibc 2.2.  */
@@ -93,13 +94,13 @@ static int opt_build_cache = 1;
 static int opt_link = 1;
 
 /* Only process directories specified on the command line.  */
-static int opt_only_cline = 0;
+static int opt_only_cline;
 
 /* Path to root for chroot.  */
 static char *opt_chroot;
 
 /* Manually link given shared libraries.  */
-static int opt_manual_link = 0;
+static int opt_manual_link;
 
 /* Cache file to use.  */
 static char *cache_file;
@@ -907,6 +908,9 @@ parse_conf (const char *filename)
 	free ((char *) canon);
       return;
     }
+
+  /* No threads use this stream.  */
+  __fsetlocking (file, FSETLOCKING_BYCALLER);
 
   if (canon != filename)
     free ((char *) canon);
