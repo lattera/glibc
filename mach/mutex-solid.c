@@ -1,4 +1,5 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Stub versions of mutex_lock_solid/mutex_unlock_solid for no -lthreads.
+Copyright (C) 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,32 +20,18 @@ Cambridge, MA 02139, USA.  */
 #include <lock-intern.h>
 #include <cthreads.h>
 
-/* If cthreads is linked in, it will define these variables with values
-   that point to its mutex functions.  */
-void (*_cthread_mutex_lock_routine) (struct mutex *);
-void (*_cthread_mutex_unlock_routine) (struct mutex *);
+/* If cthreads is linked in, it will define these functions itself to do
+   real cthreads mutex locks.  This file will only be linked in when
+   cthreads is not used, and `mutexes' are in fact just spin locks (and
+   some unused storage).  */
 
 void
 __mutex_lock_solid (void *lock)
 {
-  if (_cthread_mutex_lock_routine)
-    (*_cthread_mutex_lock_routine) (lock);
-  else
-    __spin_lock_solid (lock);
+  __spin_lock_solid (lock);
 }
 
 void
 __mutex_unlock_solid (void *lock)
 {
-  if (_cthread_mutex_unlock_routine)
-    (*_cthread_mutex_unlock_routine) (lock);
-}
-
-void
-__mutex_init (void *lock)
-{
-  /* This happens to be name space-safe because it is a macro.
-     It invokes only spin_lock_init, which is a macro for __spin_lock_init;
-     and cthread_queue_init, which is a macro for some simple code.  */
-  mutex_init ((struct mutex *) lock);
 }

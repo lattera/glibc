@@ -1,3 +1,18 @@
+Sat Apr  1 00:08:06 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* locale/loadlocale.c (_nl_load_locale) [MAP_FILE]: Define it zero
+ 	if undefined.
+
+	* string/strxfrm.c: Just copy the string (for now).
+	* string/strcoll.c: Just call strcmp (for now).
+
+	* mach/Makefile (lock): Add mutex-init.
+	* mach/mutex-solid.c (_cthread_mutex_lock_routine,
+ 	_cthread_mutex_unlock_routine): Variables removed.
+	(__mutex_lock_solid, __mutex_unlock_solid): Don't use them; just stub.
+	(__mutex_init): Function moved to new file mutex-init.c.
+	* mach/mutex-init.c: New file, broken out of mutex-solid.c.
+
 Thu Mar 30 20:43:02 1995  Brendan Kehoe  <brendan@zen.org>
 
 	* sysdeps/mips/__longjmp.c (__longjmp): Take out CONST.

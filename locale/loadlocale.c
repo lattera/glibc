@@ -102,6 +102,10 @@ _nl_load_locale (int category, char **name)
     /* Linux seems to lack read-only copy-on-write.  */
 #define MAP_COPY MAP_PRIVATE
 #endif
+#ifndef	MAP_FILE
+    /* Some systems do not have this flag; it is superfluous.  */
+#define	MAP_FILE 0
+#endif
     filedata = (void *) __mmap ((caddr_t) 0, st.st_size,
 				PROT_READ, MAP_FILE|MAP_COPY, fd, 0);
     if (filedata == (void *) -1)
