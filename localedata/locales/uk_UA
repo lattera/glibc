@@ -733,9 +733,9 @@ tolower (<A>,<a>);(<A!>,<a!>);/
         (<Sc>,<sc>);(<T=>,<t=>);/
         (<Ts>,<ts>);(<U=>,<u=>);/
         (<V3>,<v3>);(<V=>,<v=>);/
-        (<Y3>,<y3>);(<Y=>,<y=>);/
-        (<YI>,<yi>);(<Z%>,<z%>);/
-        (<Z=>,<z=>)
+        (<V%>,<v%>);(<Y3>,<y3>);/
+        (<Y=>,<y=>);(<YI>,<yi>);/
+        (<Z%>,<z%>);(<Z=>,<z=>)
 
 toupper (<a>,<A>);(<a!>,<A!>);/
         (<a!!>,<A!!>);(<a'>,<A'>);/
@@ -935,10 +935,9 @@ toupper (<a>,<A>);(<a!>,<A!>);/
         (<sc>,<Sc>);(<t=>,<T=>);/
         (<ts>,<Ts>);(<u=>,<U=>);/
         (<v3>,<V3>);(<v=>,<V=>);/
-        (<y3>,<Y3>);(<y=>,<Y=>);/
-        (<yi>,<YI>);(<z%>,<Z%>);/
-        (<z=>,<Z=>);/
-        (<*s>,<S*>)
+        (<v%>,<V%>);(<y3>,<Y3>);/
+        (<y=>,<Y=>);(<yi>,<YI>);/
+        (<z%>,<Z%>);(<z=>,<Z=>)
 
 END LC_CTYPE
 
@@ -2819,14 +2818,14 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <8a>	<8>;<8a>;IGNORE;IGNORE
 <9a>	<9>;<9a>;IGNORE;IGNORE
 
-<lM->	"<l+><aM>";"<l+><aM>";"<lM-><lM->";IGNORE
-<lM.>	"<l+><aM>";"<l+><aM.>";"<lM.><lM.>";IGNORE
-<lH->	"<l+><aH>";"<l+><aH>";"<lH-><lH->";IGNORE
-<lH.>	"<l+><aH>";"<l+><aH.>";"<lH.><lH.>";IGNORE
-<lh->	"<l+><ah>";"<l+><ah>";"<lh-><lh->";IGNORE
-<lh.>	"<l+><ah>";"<l+><ah.>";"<lh.><lh.>";IGNORE
-<la->	"<l+><a+>";"<l+><a+->";"<la-><la->";IGNORE
-<la.>	"<l+><a+>";"<l+><a+.>";"<la.><la.>";IGNORE
+<lM->	<l+><aM>;<l+><aM>;<lM-><lM->;IGNORE
+<lM.>	<l+><aM>;<l+><aM.>;<lM.><lM.>;IGNORE
+<lH->	<l+><aH>;<l+><aH>;<lH-><lH->;IGNORE
+<lH.>	<l+><aH>;<l+><aH.>;<lH.><lH.>;IGNORE
+<lh->	<l+><ah>;<l+><ah>;<lh-><lh->;IGNORE
+<lh.>	<l+><ah>;<l+><ah.>;<lh.><lh.>;IGNORE
+<la->	<l+><a+>;<l+><a+->;<la-><la->;IGNORE
+<la.>	<l+><a+>;<l+><a+.>;<la.><la.>;IGNORE
 
 % katakana/hiragana sorting
 % base is katakana, as this is present in most charsets

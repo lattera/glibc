@@ -1901,14 +1901,14 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <8a>	<8>;<8a>;IGNORE;IGNORE	<U0668>	ARABIC-INDIC DIGIT EIGHT
 <9a>	<9>;<9a>;IGNORE;IGNORE	<U0669>	ARABIC-INDIC DIGIT NINE
 
-<lM->	"<l+><aM>";"<l+><aM>";"<lM-><lM->";IGNORE	<Ufef5>	ARABIC LIGATURE LAM WITH ALEF WITH MADDA ABOVE ISOLATED FORM
-<lM.>	"<l+><aM>";"<l+><aM.>";"<lM.><lM.>";IGNORE	<Ufef6>	ARABIC LIGATURE LAM WITH ALEF WITH MADDA ABOVE FINAL FORM
-<lH->	"<l+><aH>";"<l+><aH>";"<lH-><lH->";IGNORE	<Ufef7>	ARABIC LIGATURE LAM WITH ALEF WITH HAMZA ABOVE ISOLATED FORM
-<lH.>	"<l+><aH>";"<l+><aH.>";"<lH.><lH.>";IGNORE	<Ufef8>	ARABIC LIGATURE LAM WITH ALEF WITH HAMZA ABOVE FINAL FORM
-<lh->	"<l+><ah>";"<l+><ah>";"<lh-><lh->";IGNORE	<Ufef9>	ARABIC LIGATURE LAM WITH ALEF WITH HAMZA BELOW ISOLATED FORM
-<lh.>	"<l+><ah>";"<l+><ah.>";"<lh.><lh.>";IGNORE	<Ufefa>	ARABIC LIGATURE LAM WITH ALEF WITH HAMZA BELOW FINAL FORM
-<la->	"<l+><a+>";"<l+><a+->";"<la-><la->";IGNORE	<Ufefb>	ARABIC LIGATURE LAM WITH ALEF ISOLATED FORM
-<la.>	"<l+><a+>";"<l+><a+.>";"<la.><la.>";IGNORE	<Ufefc>	ARABIC LIGATURE LAM WITH ALEF FINAL FORM
+<lM->	<l+><aM>;<l+><aM>;<lM-><lM->;IGNORE	<Ufef5>	ARABIC LIGATURE LAM WITH ALEF WITH MADDA ABOVE ISOLATED FORM
+<lM.>	<l+><aM>;<l+><aM.>;<lM.><lM.>;IGNORE	<Ufef6>	ARABIC LIGATURE LAM WITH ALEF WITH MADDA ABOVE FINAL FORM
+<lH->	<l+><aH>;<l+><aH>;<lH-><lH->;IGNORE	<Ufef7>	ARABIC LIGATURE LAM WITH ALEF WITH HAMZA ABOVE ISOLATED FORM
+<lH.>	<l+><aH>;<l+><aH.>;<lH.><lH.>;IGNORE	<Ufef8>	ARABIC LIGATURE LAM WITH ALEF WITH HAMZA ABOVE FINAL FORM
+<lh->	<l+><ah>;<l+><ah>;<lh-><lh->;IGNORE	<Ufef9>	ARABIC LIGATURE LAM WITH ALEF WITH HAMZA BELOW ISOLATED FORM
+<lh.>	<l+><ah>;<l+><ah.>;<lh.><lh.>;IGNORE	<Ufefa>	ARABIC LIGATURE LAM WITH ALEF WITH HAMZA BELOW FINAL FORM
+<la->	<l+><a+>;<l+><a+->;<la-><la->;IGNORE	<Ufefb>	ARABIC LIGATURE LAM WITH ALEF ISOLATED FORM
+<la.>	<l+><a+>;<l+><a+.>;<la.><la.>;IGNORE	<Ufefc>	ARABIC LIGATURE LAM WITH ALEF FINAL FORM
 
 % katakana/hiragana sorting
 % base is katakana, as this is present in most charsets
@@ -2799,9 +2799,10 @@ tolower (<A>,<a>);(<A!>,<a!>);/
         (<S=>,<s=>);(<Sc>,<sc>);/
         (<T=>,<t=>);(<Ts>,<ts>);/
         (<U=>,<u=>);(<V3>,<v3>);/
-        (<V=>,<v=>);(<Y3>,<y3>);/
-        (<Y=>,<y=>);(<YI>,<yi>);/
-        (<Z%>,<z%>);(<Z=>,<z=>)
+        (<V=>,<v=>);(<V%>,<v%>);/
+        (<Y3>,<y3>);(<Y=>,<y=>);/
+        (<YI>,<yi>);(<Z%>,<z%>);/
+        (<Z=>,<z=>)
 
 toupper (<a>,<A>);(<a!>,<A!>);/
         (<a!!>,<A!!>);(<a'>,<A'>);/
@@ -2999,10 +3000,10 @@ toupper (<a>,<A>);(<a!>,<A!>);/
         (<s=>,<S=>);(<sc>,<Sc>);/
         (<t=>,<T=>);(<ts>,<Ts>);/
         (<u=>,<U=>);(<v3>,<V3>);/
-        (<v=>,<V=>);(<y3>,<Y3>);/
-        (<y=>,<Y=>);(<yi>,<YI>);/
-        (<z%>,<Z%>);(<z=>,<Z=>);/
-        (<*s>,<S*>)
+        (<v=>,<V=>);(<v%>,<V%>);/
+        (<y3>,<Y3>);(<y=>,<Y=>);/
+        (<yi>,<YI>);(<z%>,<Z%>);/
+        (<z=>,<Z=>)
 
 END LC_CTYPE
 
