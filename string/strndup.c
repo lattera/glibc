@@ -35,7 +35,9 @@ char *malloc ();
 #endif
 
 char *
-__strndup (const char *s, size_t n)
+__strndup (s, n)
+     const char *s;
+     size_t n;
 {
   size_t len = strnlen (s, n);
   char *new = malloc (len + 1);

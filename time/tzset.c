@@ -616,8 +616,7 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
     }
   else
     {
-      __offtime (timer, 0, tp);
-      if (! tz_compute (*timer, tp))
+      if (! (__offtime (timer, 0, tp) && tz_compute (*timer, tp)))
 	tp = NULL;
       leap_correction = 0L;
       leap_extra_secs = 0;
@@ -638,8 +637,10 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
 	  tp->tm_gmtoff = 0L;
 	}
 
-      __offtime (timer, tp->tm_gmtoff - leap_correction, tp);
-      tp->tm_sec += leap_extra_secs;
+      if (__offtime (timer, tp->tm_gmtoff - leap_correction, tp))
+        tp->tm_sec += leap_extra_secs;
+      else
+	tp = NULL;
     }
 
   __libc_lock_unlock (tzset_lock);

@@ -26,12 +26,7 @@
 
 #ifdef	__GNUC__
 
-# define NAN                                                                 \
-  (__extension__                                                            \
-   ((union { unsigned __l __attribute__((__mode__(__DI__))); double __d; }) \
-    { __l: 0x7ff8000000000000ULL }).__d)
-
-# define NANF                                                                \
+# define NAN \
   (__extension__                                                            \
    ((union { unsigned __l __attribute__((__mode__(__SI__))); float __d; })  \
     { __l: 0x7fc00000UL }).__d)
@@ -41,23 +36,13 @@
 # include <endian.h>
 
 # if __BYTE_ORDER == __BIG_ENDIAN
-#  define __nan_bytes		{ 0x7f, 0xf8, 0, 0, 0, 0, 0, 0 }
-#  define __nanf_bytes		{ 0x7f, 0xc0, 0, 0 }
+#  define __nan_bytes		{ 0x7f, 0xc0, 0, 0 }
 # endif
 # if __BYTE_ORDER == __LITTLE_ENDIAN
-#  define __nan_bytes		{ 0, 0, 0, 0, 0, 0, 0xf8, 0x7f }
-#  define __nanf_bytes		{ 0, 0, 0xc0, 0x7f }
+#  define __nan_bytes		{ 0, 0, 0xc0, 0x7f }
 # endif
 
-static union { unsigned char __c[8]; double __d; } __nan = { __nan_bytes };
+static union { unsigned char __c[4]; double __d; } __nan = { __nan_bytes };
 # define NAN	(__nan.__d)
 
-static union { unsigned char __c[4]; double __d; } __nanf = { __nanf_bytes };
-# define NANF	(__nanf.__d)
-
 #endif	/* GCC.  */
-
-/* Generally there is no separate `long double' format and it is the
-   same as `double'.  */
-
-#define NANL  NAN

@@ -68,37 +68,37 @@ __BEGIN_DECLS
 /* Include the file of declarations again, this time using `float'
    instead of `double' and appending f to each function name.  */
 
-#ifndef _Mfloat_
-# define _Mfloat_		float
-#endif
-#define _Mdouble_ 		_Mfloat_
-#ifdef __STDC__
-# define __MATH_PRECNAME(name,r) name##f##r
-#else
-# define __MATH_PRECNAME(name,r) name/**/f/**/r
-#endif
-#include <bits/mathcalls.h>
-#undef	_Mdouble_
-#undef	__MATH_PRECNAME
-
-#if __STDC__ - 0 || __GNUC__ - 0
-/* Include the file of declarations again, this time using `long double'
-   instead of `double' and appending l to each function name.  */
-
-# ifndef _Mlong_double_
-#  define _Mlong_double_	long double
+# ifndef _Mfloat_
+#  define _Mfloat_		float
 # endif
-# define _Mdouble_ 		_Mlong_double_
+# define _Mdouble_ 		_Mfloat_
 # ifdef __STDC__
-#  define __MATH_PRECNAME(name,r) name##l##r
+#  define __MATH_PRECNAME(name,r) name##f##r
 # else
-#  define __MATH_PRECNAME(name,r) name/**/l/**/r
+#  define __MATH_PRECNAME(name,r) name/**/f/**/r
 # endif
 # include <bits/mathcalls.h>
 # undef	_Mdouble_
 # undef	__MATH_PRECNAME
 
-#endif /* __STDC__ || __GNUC__ */
+# if __STDC__ - 0 || __GNUC__ - 0
+/* Include the file of declarations again, this time using `long double'
+   instead of `double' and appending l to each function name.  */
+
+#  ifndef _Mlong_double_
+#   define _Mlong_double_	long double
+#  endif
+#  define _Mdouble_ 		_Mlong_double_
+#  ifdef __STDC__
+#   define __MATH_PRECNAME(name,r) name##l##r
+#  else
+#   define __MATH_PRECNAME(name,r) name/**/l/**/r
+#  endif
+#  include <bits/mathcalls.h>
+#  undef _Mdouble_
+#  undef __MATH_PRECNAME
+
+# endif /* __STDC__ || __GNUC__ */
 
 #endif	/* Use misc or ISO C 9X.  */
 #undef	__MATHDECL_1
@@ -118,23 +118,23 @@ extern int signgam;
 /* Get the architecture specific values describing the floating-point
    evaluation.  The following symbols will get defined:
 
-     float_t	floating-point type at least as wide as `float' used
+    float_t	floating-point type at least as wide as `float' used
 		to evaluate `float' expressions
-     double_t	floating-point type at least as wide as `double' used
+    double_t	floating-point type at least as wide as `double' used
 		to evaluate `double' expressions
 
-     FLT_EVAL_METHOD
+    FLT_EVAL_METHOD
 		Defined to
 		  0	if `float_t' is `float' and `double_t' is `double'
 		  1	if `float_t' and `double_t' are `double'
 		  2	if `float_t' and `double_t' are `long double'
 		  else	`float_t' and `double_t' are unspecified
 
-     INFINITY	representation of the infinity value of type `float_t'
+    INFINITY	representation of the infinity value of type `float'
 
-     FP_FAST_FMA
-     FP_FAST_FMAF
-     FP_FAST_FMAL
+    FP_FAST_FMA
+    FP_FAST_FMAF
+    FP_FAST_FMAL
 		If defined it indicates that the the `fma' function
 		generally executes about as fast as a multiply and an add.
 		This macro is defined only iff the `fma' function is
@@ -142,6 +142,9 @@ extern int signgam;
 
     FP_ILOGB0	Expands to a value returned by `ilogb (0.0)'.
     FP_ILOGBNAN	Expands to a value returned by `ilogb (NAN)'.
+
+    DECIMAL_DIG	Number of decimal digits supported by conversion between
+		decimal and all internal floating-point formats.
 
 */
 # include <bits/mathdef.h>
@@ -211,8 +214,8 @@ extern _LIB_VERSION_TYPE _LIB_VERSION;
 /* In SVID error handling, `matherr' is called with this description
    of the exceptional condition.
 
-   We have a problem when using C++ since `exception' is reserved in
-   C++.  */
+   We have a problem when using C++ since `exception' is a reserved
+   name in C++.  */
 # ifdef __cplusplus
 struct __exception
 # else
@@ -307,7 +310,7 @@ extern int matherr __P ((struct exception *__exc));
    for unordered numbers.  Since many FPUs provide special
    instructions to support these operations and these tests are
    defined in <bits/mathinline.h>, we define the generic macros at
-   this late point.  */
+   this late point and only if they are not defined yet.  */
 
 /* Return nonzero value if X is greater than Y.  */
 # ifndef isgreater

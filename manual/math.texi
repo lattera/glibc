@@ -1,4 +1,5 @@
 @c We need some definitions here.
+@ifclear cdot
 @ifhtml
 @set cdot ·
 @end ifhtml
@@ -8,15 +9,16 @@
 @ifclear cdot
 @set cdot x
 @end ifclear
+@macro mul
+@value{cdot}
+@end macro
+@end ifclear
 @iftex
 @set infty @infty
 @end iftex
 @ifclear infty
 @set infty oo
 @end ifclear
-@macro mul
-@value{cdot}
-@end macro
 @macro infinity
 @value{infty}
 @end macro

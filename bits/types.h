@@ -67,6 +67,8 @@ typedef __u_quad_t __fsid_t;	/* Type of file system IDs.  */
 typedef long int __clock_t;	/* Type of CPU usage counts.  */
 typedef long int __rlim_t;	/* Type for resource measurement.  */
 typedef __quad_t __rlim64_t;	/* Type for resource measurement (LFS).  */
+typedef __quad_t __ino64_t;	/* Type for file serial numbers.  */
+typedef __loff_t __off64_t;	/* Type of file izes and offsets.  */
 
 /* Everythin' else.  */
 typedef long int __daddr_t;	/* The type of a disk address.  */

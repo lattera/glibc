@@ -226,10 +226,11 @@ extern struct tm *localtime_r __P ((__const time_t *__timer,
 
 /* Compute the `struct tm' representation of *T,
    offset OFFSET seconds east of UTC,
-   and store year, yday, mon, mday, wday, hour, min, sec into *TP.  */
-extern void __offtime __P ((__const time_t *__timer,
-			    long int __offset,
-			    struct tm *__TP));
+   and store year, yday, mon, mday, wday, hour, min, sec into *TP.
+   Return nonzero if successful.  */
+extern int __offtime __P ((__const time_t *__timer,
+			   long int __offset,
+			   struct tm *__tp));
 
 /* Return a string of the form "Day Mon dd hh:mm:ss yyyy\n"
    that is the representation of TP in this format.  */

@@ -31,10 +31,13 @@ typedef double double_t;	/* `double' expressions are evaluated as
 /* Signal that both types are `double'.  */
 #define FLT_EVAL_METHOD	1
 
-/* Define `INFINITY' as value of type `float_t'.  */
-#define INFINITY	HUGE_VAL
+/* Define `INFINITY' as value of type `float'.  */
+#define INFINITY	HUGE_VALF
 
 
 /* The values returned by `ilogb' for 0 and NaN respectively.  */
 #define FP_ILOGB0	0x80000001
 #define FP_ILOGBNAN	0x7fffffff
+
+/* Number of decimal digits for the `double' type.  */
+#define DECIMAL_DIG	15

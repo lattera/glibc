@@ -18,13 +18,13 @@
 
 #include <sysdep.h>
 #define _ERRNO_H
-#include <errnos.h>
+#include <bits/errno.h>
 
 .globl C_SYMBOL_NAME(errno)
 .globl syscall_error
 
 _errno_loc:	.long C_SYMBOL_NAME(errno)
-	
+
 #undef syscall_error
 #ifdef NO_UNDERSCORES
 __syscall_error:
@@ -39,7 +39,7 @@ syscall_error:
 	moveq r0, $EAGAIN	/* Yes; translate it to EAGAIN.  */
 #endif
 #ifndef	PIC
-	ldr r1, _errno_loc	
+	ldr r1, _errno_loc
 	str r0, [r1]
 #endif
 	mvn r0, $0

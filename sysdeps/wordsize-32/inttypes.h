@@ -353,7 +353,7 @@ typedef unsigned long long int uint_fast64_t;
 
 /* Limits of `sig_atomic_t'.  */
 #define SIG_ATOMIC_MIN	(-2147483647-1)
-#define SIG_ATOMIC_MAX	(-2147483647-1)
+#define SIG_ATOMIC_MAX	(2147483647)
 
 /* Limit of `size_t' type.  */
 #define SIZE_MAX	(4294967295U)

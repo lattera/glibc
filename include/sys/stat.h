@@ -8,6 +8,7 @@
 #define stat(fname, buf) __xstat (_STAT_VER, fname, buf)
 #define fstat(fd, buf) __fxstat (_STAT_VER, fd, buf)
 #define lstat(fname, buf)  __lxstat (_STAT_VER, fname, buf)
+#define __lstat(fname, buf)  __lxstat (_STAT_VER, fname, buf)
 #define stat64(fname, buf) __xstat64 (_STAT_VER, fname, buf)
 #define fstat64(fd, buf) __fxstat64 (_STAT_VER, fd, buf)
 #define lstat64(fname, buf)  __lxstat64 (_STAT_VER, fname, buf)

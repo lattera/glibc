@@ -4813,6 +4813,50 @@ llround_test (void)
 
 
 static void
+fma_test (void)
+{
+  check ("fma(1.0, 2.0, 3.0) = 5.0", FUNC(fma) (1.0, 2.0, 3.0), 5.0);
+  check_isnan ("fma(NaN, 2.0, 3.0) = NaN", FUNC(fma) (nan_value, 2.0, 3.0));
+  check_isnan ("fma(1.0, NaN, 3.0) = NaN", FUNC(fma) (1.0, nan_value, 3.0));
+  check_isnan_maybe_exc ("fma(1.0, 2.0, NaN) = NaN",
+			 FUNC(fma) (1.0, 2.0, nan_value), INVALID_EXCEPTION);
+  check_isnan_maybe_exc ("fma(+Inf, 0.0, NaN) = NaN",
+			 FUNC(fma) (plus_infty, 0.0, nan_value),
+			 INVALID_EXCEPTION);
+  check_isnan_maybe_exc ("fma(-Inf, 0.0, NaN) = NaN",
+			 FUNC(fma) (minus_infty, 0.0, nan_value),
+			 INVALID_EXCEPTION);
+  check_isnan_maybe_exc ("fma(0.0, +Inf, NaN) = NaN",
+			 FUNC(fma) (0.0, plus_infty, nan_value),
+			 INVALID_EXCEPTION);
+  check_isnan_maybe_exc ("fma(0.0, -Inf, NaN) = NaN",
+			 FUNC(fma) (0.0, minus_infty, nan_value),
+			 INVALID_EXCEPTION);
+  check_isnan_exc ("fma(+Inf, 0.0, 1.0) = NaN",
+		   FUNC(fma) (plus_infty, 0.0, 1.0), INVALID_EXCEPTION);
+  check_isnan_exc ("fma(-Inf, 0.0, 1.0) = NaN",
+		   FUNC(fma) (minus_infty, 0.0, 1.0), INVALID_EXCEPTION);
+  check_isnan_exc ("fma(0.0, +Inf, 1.0) = NaN",
+		   FUNC(fma) (0.0, plus_infty, 1.0), INVALID_EXCEPTION);
+  check_isnan_exc ("fma(0.0, -Inf, 1.0) = NaN",
+		   FUNC(fma) (0.0, minus_infty, 1.0), INVALID_EXCEPTION);
+
+  check_isnan_exc ("fma(+Inf, +Inf, -Inf) = NaN",
+		   FUNC(fma) (plus_infty, plus_infty, minus_infty),
+		   INVALID_EXCEPTION);
+  check_isnan_exc ("fma(-Inf, +Inf, +Inf) = NaN",
+		   FUNC(fma) (minus_infty, plus_infty, plus_infty),
+		   INVALID_EXCEPTION);
+  check_isnan_exc ("fma(+Inf, -Inf, +Inf) = NaN",
+		   FUNC(fma) (plus_infty, minus_infty, plus_infty),
+		   INVALID_EXCEPTION);
+  check_isnan_exc ("fma(-Inf, -Inf, -Inf) = NaN",
+		   FUNC(fma) (minus_infty, minus_infty, minus_infty),
+		   INVALID_EXCEPTION);
+}
+
+
+static void
 inverse_func_pair_test (const char *test_name,
 			mathfunc f1, mathfunc inverse,
 			MATHTYPE x, MATHTYPE epsilon)
@@ -5205,6 +5249,7 @@ main (int argc, char *argv[])
   ctanh_test ();
   csqrt_test ();
   cpow_test ();
+  fma_test ();
 
   /* special tests */
   identities ();

@@ -29,8 +29,8 @@
    of the kernel.  But these symbols do not follow the SYS_* syntax
    so we have to redefine the `SYS_ify' macro here.  */
 #undef SYS_ify
-#define SWI_BASE  (9 << 20)
-#define SYS_ify(syscall_name)	(SWI_BASE + __NR_##syscall_name)
+#define SWI_BASE  (0x900000)
+#define SYS_ify(syscall_name)	(__NR_##syscall_name)
 
 
 #ifdef ASSEMBLER

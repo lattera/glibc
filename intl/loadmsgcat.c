@@ -48,7 +48,6 @@
 /* Rename the non ISO C functions.  This is required by the standard
    because some ISO C functions will require linking with this object
    file and the name space must not be polluted.  */
-# define fstat  __fstat
 # define open   __open
 # define close  __close
 # define read   __read

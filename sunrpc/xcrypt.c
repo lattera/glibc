@@ -31,7 +31,9 @@
  * Copyright (c) 1986-1991 by Sun Microsystems Inc.
  */
 
+#if 0
 #ident	"@(#)xcrypt.c	1.11	94/08/23 SMI"
+#endif
 
 #if !defined(lint) && defined(SCCSIDS)
 static char sccsid[] = "@(#)xcrypt.c 1.3 89/03/24 Copyr 1986 Sun Micro";

@@ -40,9 +40,10 @@ __BEGIN_DECLS
    XXX This probably has to go into a gcc related file.  */
 #define _Complex_I	(1.0iF)
 
-/* Another more descriptive name is `I'.  */
+/* Another more descriptive name is `I'.
+   XXX Once we have the imaginary support switch this to _Imaginary_I.  */
 #undef I
-#define I _Imaginary_I
+#define I _Complex_I
 
 
 /* Optimization aids.  This is not yet implemented in gcc and once it

@@ -531,6 +531,10 @@ might be overwritten by subsequent calls to @code{ctime}, @code{gmtime},
 or @code{localtime}.  (But no other library function overwrites the contents
 of this object.)
 
+The return value is the null pointer if @var{time} cannot be represented
+as a broken-down time; typically this is because the year cannot fit into
+an @code{int}.
+
 Calling @code{localtime} has one other effect: it sets the variable
 @code{tzname} with information about the current time zone.  @xref{Time
 Zone Functions}.
@@ -783,6 +787,18 @@ The day of the month like with @code{%d}, but padded with blank (range
 @code{ 1} through @code{31}).
 
 This format is a POSIX.2 extension.
+
+@item %f
+The day of the week as a decimal number (range @code{1} through
+@code{7}), Monday being @code{1}.
+
+This format is a @w{ISO C 9X} extension.
+
+@item %F
+The date using the format @code{%Y-%m-%d}.  This is the form specified
+in the @w{ISO 8601} standard and is the preferred form for all uses.
+
+This format is a @w{ISO C 9X} extension.
 
 @item %g
 The year corresponding to the ISO week number, but without the century

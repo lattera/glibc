@@ -190,12 +190,17 @@ extern char *alloca ();
 # define __getcwd getcwd
 #endif
 
+#ifndef GETCWD_STORAGE_CLASS
+# define GETCWD_STORAGE_CLASS
+#endif
+
 /* Get the pathname of the current working directory, and put it in SIZE
    bytes of BUF.  Returns NULL if the directory couldn't be determined or
    SIZE was too small.  If successful, returns BUF.  In GNU, if BUF is
    NULL, an array is allocated with `malloc'; the array is SIZE bytes long,
    unless SIZE <= 0, in which case it is as big as necessary.  */
 
+GETCWD_STORAGE_CLASS
 char *
 __getcwd (buf, size)
      char *buf;
@@ -396,6 +401,6 @@ __getcwd (buf, size)
   return NULL;
 }
 
-#ifdef _LIBC
+#if defined _LIBC && !defined __getcwd
 weak_alias (__getcwd, getcwd)
 #endif

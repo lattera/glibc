@@ -1,3 +1,101 @@
+1997-11-13 01:07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/arith.texi: Update documentation according to most recent
+	ISO C 9X draft.
+	Document fma, fdim, fmin, and fmax.
+	* manual/math.texi: Allow multiple defitino of mul etc.
+
+	* math/complex.h (I): Define using _Complex_U not _Imaginary_I.
+
+	* math/libm-test.c: Add tests for fma.
+
+	* math/math.h: Describe DECIMAL_DIG macro.  Pretty print.
+
+	* sysdeps/alpha/fpu/bits/mathdef.h: Define INFINITY as of type float.
+	Define DECIMAL_DIG.
+	* sysdeps/generic/bits/mathdef.h: Likewise.
+	* sysdeps/i386/bits/mathdef.h: Likewise.
+	* sysdeps/m68k/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/powerpc/bits/mathdef.h: Likewise.
+	* sysdeps/sparc/fpu/bits/mathdef.h: Likewise.
+
+	* sysdeps/ieee754/bits/nan.h: Define NAN as of type float.
+	* sysdeps/m68k/bits/nan.h. Likewise.  Remove NANF and NANL.
+
+1997-11-12 17:50  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/xcrypt.c: Don't process #ident preprocessor instruction.
+	Reported by Philip Blundell <pb@nexus.co.uk>.
+
+	* string/strndup.c: Use K&R like definition.
+
+	* sysdeps/unix/sysv/linux/getcwd.c: New file.  Use kernel information
+	instead of longish search for the name.
+	* sysdeps/posix/getcwd.c: Add support for use of the code as a
+	backup solution.
+
+1997-11-12 15:31  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (SYS_ify): Don't add
+	SWI_BASE in twice.
+
+	* sysdeps/unix/sysv/linux/arm/profil-counter.h (profil_counter):
+	Use correct name to access PC.
+
+	* sysdeps/unix/arm/sysdep.S: Include <bits/errno.h> not <errnos.h>.
+
+	* sysdeps/generic/bits/types.h: Add __ino64_t and __off64_t.
+	* sysdeps/generic/bits/stat.h: Add struct stat64.
+
+1997-11-12 16:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/loadmsgcat.c [_LIBC] (fstat): Don't define as __fstat since
+	now we have a definition as _fxstat.
+	* libio/fileops.c: Likewise.
+	* libio/oldfileops.c: Likewise.
+	Reported by Andreas Jaeger <aj@arthur.rhein-neckar.de>.
+
+1997-11-12  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/wordsize-32/inttypes.h (SIG_ATOMIC_MAX): Correct value.
+	* sysdeps/wordsize-64/inttypes.h (SIG_ATOMIC_MAX): Likewise.
+
+1997-11-11  Paul Eggert  <eggert@twinsun.com>
+
+	Add overflow checking for 64-bit time_t and 32-bit int.
+
+	* time/time.h (__offtime): Now returns int.
+
+	* time/offtime.c (__offtime): Return nonzero if successful;
+	check for tm_year overflow.
+	(DIV): New macro.
+	(LEAPS_THRU_END_OF): Handle negative years correctly.
+
+	* time/tzset.c (__tz_convert): Return NULL if offtime cannot convert.
+
+	* time/mktime.c (ranged_convert): New function.
+	(ydhms_tm_diff): Return nonzero if TP is null.
+	(__mktime_internal): Handle cases correctly even if they are near or
+	past the limits of time_t values that can be broken down to struct tm.
+	(print_tm, check_result, main): Diagnose localtime failures.
+
+	* manual/time.texi: Document the fact that localtime returns 0
+	if the time can't be represented.
+
+1997-11-12 06:03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strftime.c (memset_space, memset_zero): Use MEMPCPY, not
+	mempcpy.  Patch by Ken'ichi Handa  <handa@etl.go.jp>.
+
+	* manual/time.texi: Document %F and %f format for strftime.
+
+	* manual/arith.texi: Document copysign, nextafter and nan.
+
+1997-11-06  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* test-installation.pl: New file. Tests for some installation
+	problems.
+
 1997-11-11 21:30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* include/sys/stat.h: Define stat, fstat, lstat and *64 variants

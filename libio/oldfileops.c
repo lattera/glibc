@@ -49,7 +49,6 @@ extern int errno;
 #ifdef _LIBC
 # define open(Name, Flags, Prot) __open (Name, Flags, Prot)
 # define close(FD) __close (FD)
-# define fstat(FD, Statbuf) __fstat (FD, Statbuf)
 # define lseek(FD, Offset, Whence) __lseek (FD, Offset, Whence)
 # define read(FD, Buf, NBytes) __read (FD, Buf, NBytes)
 # define write(FD, Buf, NBytes) __write (FD, Buf, NBytes)

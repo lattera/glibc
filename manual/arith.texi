@@ -1,3 +1,19 @@
+@c We need some definitions here.
+@ifclear cdor
+@ifhtml
+@set cdot ·
+@end ifhtml
+@iftex
+@set cdot @cdot
+@end iftex
+@ifclear cdot
+@set cdot x
+@end ifclear
+@macro mul
+@value{cdot}
+@end macro
+@end ifclear
+
 @node Arithmetic, Date and Time, Mathematics, Top
 @chapter Low-Level Arithmetic Functions
 
@@ -18,6 +34,8 @@ These functions are declared in the header files @file{math.h} and
 * Normalization Functions::     Hacks for radix-2 representations.
 * Rounding and Remainders::     Determining the integer and
 			         fractional parts of a float.
+* Arithmetic on FP Values::     Setting and Modifying Single Bits of FP Values.
+* Special arithmetic on FPs::   Special Arithmetic on FPs.
 * Integer Division::            Functions for performing integer
 				 division.
 * Parsing of Numbers::          Functions for ``reading'' numbers
@@ -40,7 +58,7 @@ these situations.  There is a special value for infinity.
 
 @comment math.h
 @comment ISO
-@deftypevr Macro float_t INFINITY
+@deftypevr Macro float INFINITY
 An expression representing the infinite value.  @code{INFINITY} values are
 produced by mathematical operations like @code{1.0 / 0.0}.  It is
 possible to continue the computations with this value since the basic
@@ -85,7 +103,7 @@ a NaN.
 
 @comment math.h
 @comment GNU
-@deftypevr Macro double NAN
+@deftypevr Macro float NAN
 An expression representing a value which is ``not a number''.  This
 macro is a GNU extension, available only on machines that support ``not
 a number'' values---that is to say, on all machines that support IEEE
@@ -106,15 +124,39 @@ imaginary part of the numbers.  In mathematics one uses the symbol ``i''
 to mark a number as imaginary.  For convenience the @file{complex.h}
 header defines two macros which allow to use a similar easy notation.
 
-@deftypevr Macro float_t _Imaginary_I
-This macro is a (compiler specific) representation of the value ``1i''.
-I.e., it is the value for which
+@deftypevr Macro {const float complex} _Complex_I
+This macro is a representation of the complex number ``@math{0+1i}''.
+Computing
+
+@smallexample
+_Complex_I * _Complex_I = -1
+@end smallexample
+
+@noindent
+leads to a real-valued result.  If no @code{imaginary} types are
+available it is easiest to use this value to construct complex numbers
+from real values:
+
+@smallexample
+3.0 - _Complex_I * 4.0
+@end smallexample
+
+@noindent
+Without an optimizing compiler this is more expensive than the use of
+@code{_Imaginary_I} but with is better than nothing.  You can avoid all
+the hassles if you use the @code{I} macro below if the name is not
+problem.
+
+@deftypevr Macro {const float imaginary} _Imaginary_I
+This macro is a representation of the value ``@math{1i}''.  I.e., it is
+the value for which
 
 @smallexample
 _Imaginary_I * _Imaginary_I = -1
 @end smallexample
 
 @noindent
+The result is not of type @code{float imaginary} but instead @code{float}.
 One can use it to easily construct complex number like in
 
 @smallexample
@@ -129,11 +171,16 @@ imaginary part -4.0.
 @noindent
 A more intuitive approach is to use the following macro.
 
-@deftypevr Macro float_t I
+@deftypevr Macro {const float imaginary} I
 This macro has exactly the same value as @code{_Imaginary_I}.  The
 problem is that the name @code{I} very easily can clash with macros or
 variables in programs and so it might be a good idea to avoid this name
 and stay at the safe side by using @code{_Imaginary_I}.
+
+If the implementation does not support the @code{imaginary} types
+@code{I} is defined as @code{_Complex_I} which is the second best
+solution.  It still can be used in the same way but requires a most
+clever compiler to get the same results.
 @end deftypevr
 
 
@@ -379,7 +426,7 @@ whose imaginary part is @var{y}, the absolute value is @w{@code{sqrt
 
 @pindex math.h
 @pindex stdlib.h
-Prototypes for @code{abs} and @code{labs} are in @file{stdlib.h};
+Prototypes for @code{abs}, @code{labs} and @code{llabs} are in @file{stdlib.h};
 @code{fabs}, @code{fabsf} and @code{fabsl} are declared in @file{math.h};
 @code{cabs}, @code{cabsf} and @code{cabsl} are declared in @file{complex.h}.
 
@@ -398,6 +445,15 @@ cannot be represented; thus, @w{@code{abs (INT_MIN)}} is not defined.
 @deftypefun {long int} labs (long int @var{number})
 This is similar to @code{abs}, except that both the argument and result
 are of type @code{long int} rather than @code{int}.
+@end deftypefun
+
+@comment stdlib.h
+@comment ISO
+@deftypefun {long long int} llabs (long long int @var{number})
+This is similar to @code{abs}, except that both the argument and result
+are of type @code{long long int} rather than @code{int}.
+
+This function is defined in @w{ISO C 9X}.
 @end deftypefun
 
 @comment math.h
@@ -510,29 +566,6 @@ value is infinity.
 
 The value returned by @code{logb} is one less than the value that
 @code{frexp} would store into @code{*@var{exponent}}.
-@end deftypefun
-
-@comment math.h
-@comment ISO
-@deftypefun double copysign (double @var{value}, double @var{sign})
-@deftypefunx float copysignf (float @var{value}, float @var{sign})
-@deftypefunx {long double} copysignl (long double @var{value}, long double @var{sign})
-These functions return a value whose absolute value is the
-same as that of @var{value}, and whose sign matches that of @var{sign}.
-This function appears in BSD and was standardized in @w{ISO C 9X}.
-@end deftypefun
-
-@comment math.h
-@comment ISO
-@deftypefun int signbit (@emph{float-type} @var{x})
-@code{signbit} is a generic macro which can work on all floating-point
-types.  It returns a nonzero value if the value of @var{x} has its sign
-bit set.
-
-This is not the same as @code{x < 0.0} since in some floating-point
-formats (e.g., @w{IEEE 754}) the zero value is optionally signed.  The
-comparison @code{-0.0 < 0.0} will not be true while @code{signbit
-(-0.0)} will return a nonzero value.
 @end deftypefun
 
 @node Rounding and Remainders
@@ -649,6 +682,161 @@ absolute value of the @var{denominator}.  The difference between
 
 If @var{denominator} is zero, @code{drem} fails and sets @code{errno} to
 @code{EDOM}.
+@end deftypefun
+
+
+@node Arithmetic on FP Values
+@section Setting and modifying Single Bits of FP Values
+@cindex FP arithmetic
+
+In certain situations it is too complicated (or expensive) to modify a
+floating-point value by the normal operations.  For a few operations
+@w{ISO C 9X} defines functions to modify the floating-point value
+directly.
+
+@comment math.h
+@comment ISO
+@deftypefun double copysign (double @var{x}, double @var{y})
+@deftypefunx float copysignf (float @var{x}, float @var{y})
+@deftypefunx {long double} copysignl (long double @var{x}, long double @var{y})
+The @code{copysign} function allows to specifiy the sign of the
+floating-point value given in the parameter @var{x} by discarding the
+prior content and replacing it with the sign of the value @var{y}.
+The so found value is returned.
+
+This function also works and throws no exception if the parameter
+@var{x} is a @code{NaN}.  If the platform supports the signed zero
+representation @var{x} might also be zero.
+
+This function is defined in @w{IEC 559} (and the appendix with
+recommended functions in @w{IEEE 754}/@w{IEEE 854}).
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun int signbit (@emph{float-type} @var{x})
+@code{signbit} is a generic macro which can work on all floating-point
+types.  It returns a nonzero value if the value of @var{x} has its sign
+bit set.
+
+This is not the same as @code{x < 0.0} since in some floating-point
+formats (e.g., @w{IEEE 754}) the zero value is optionally signed.  The
+comparison @code{-0.0 < 0.0} will not be true while @code{signbit
+(-0.0)} will return a nonzero value.
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun double nextafter (double @var{x}, double @var{y})
+@deftypefunx float nextafterf (float @var{x}, float @var{y})
+@deftypefunx {long double} nextafterl (long double @var{x}, long double @var{y})
+The @code{nextafter} function returns the next representable neighbor of
+@var{x} in the direction towards @var{y}.  Depending on the used data
+type the steps make have a different size.  If @math{@var{x} = @var{y}}
+the function simply returns @var{x}.  If either value is a @code{NaN}
+one the @code{NaN} values is returned.  Otherwise a value corresponding
+to the value of the least significant bit in the mantissa is
+added/subtracted (depending on the direction).  If the resulting value
+is not finite but @var{x} is, overflow is signaled.  Underflow is
+signaled if the resulting value is a denormalized number (if the @w{IEEE
+754}/@w{IEEE 854} representation is used).
+
+This function is defined in @w{IEC 559} (and the appendix with
+recommended functions in @w{IEEE 754}/@w{IEEE 854}).
+@end deftypefun
+
+@cindex NaN
+@comment math.h
+@comment ISO
+@deftypefun double nan (const char *@var{tagp})
+@deftypefunx float nanf (const char *@var{tagp})
+@deftypefunx {long double} nanl (const char *@var{tagp})
+The @code{nan} function returns a representation of the NaN value.  If
+quiet NaNs are supported by the platform a call like @code{nan
+("@var{n-char-sequence}")} is equivalent to @code{strtod
+("NAN(@var{n-char-sequence})")}.  The exact implementation is left
+unspecified but on systems using IEEE arithmethic the
+@var{n-char-sequence} specifies the bits of the mantissa for the NaN
+value.
+@end deftypefun
+
+
+@node Special arithmetic on FPs
+@section Special Arithmetic on FPs
+@cindex positive difference
+@cindex minimum
+@cindex maximum
+
+A frequent operation of numbers is the determination of mimuma, maxima,
+or the difference between numbers.  The @w{ISO C 9X} standard introduces
+three functions which implement this efficiently while also providing
+some useful functions which is not so efficient to implement.  Machine
+specific implementation might perform this very efficient.
+
+@comment math.h
+@comment ISO
+@deftypefun double fmin (double @var{x}, double @var{y})
+@deftypefunx float fminf (float @var{x}, float @var{y})
+@deftypefunx {long double} fminl (long double @var{x}, long double @var{y})
+The @code{fmin} function determine the minimum of the two values @var{x}
+and @var{y} and returns it.
+
+If an argument is NaN it as treated as missing and the other value is
+returned.  If both values are NaN one of the values is returned.
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun double fmax (double @var{x}, double @var{y})
+@deftypefunx float fmaxf (float @var{x}, float @var{y})
+@deftypefunx {long double} fmaxl (long double @var{x}, long double @var{y})
+The @code{fmax} function determine the maximum of the two values @var{x}
+and @var{y} and returns it.
+
+If an argument is NaN it as treated as missing and the other value is
+returned.  If both values are NaN one of the values is returned.
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun double fdim (double @var{x}, double @var{y})
+@deftypefunx float fdimf (float @var{x}, float @var{y})
+@deftypefunx {long double} fdiml (long double @var{x}, long double @var{y})
+The @code{fdim} function computes the positive difference between
+@var{x} and @var{y} and returns this value.  @dfn{Positive difference}
+means that if @var{x} is greater than @var{y} the value @math{@var{x} -
+@var{y}} is returned.  Otherwise the return value is @math{+0}.
+
+If any of the arguments is NaN this value is returned.  If both values
+are NaN, one of the values is returned.
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun double fma (double @var{x}, double @var{y}, double @var{z})
+@deftypefunx float fmaf (float @var{x}, float @var{y}, float @var{z})
+@deftypefunx {long double} fmal (long double @var{x}, long double @var{y}, long double @var{z})
+@cindex butterfly
+The name of the function @code{fma} means floating-point multiply-add.
+I.e., the operation performed is @math{(@var{x} @mul{} @var{y}) +
+@var{z}}.  The speciality of this function is that the intermediate
+result is not rounded and the addition is performed with the full
+precision of the multiplcation.
+
+This function was introduced because some processors provide such a
+function in their FPU implementation.  Since compilers cannot optimize
+code which performs the operation in single steps using this opcode
+because of rounding differences the operation is available separately so
+the programmer can select when the rounding of the intermediate result
+is not important.
+
+@vindex FP_FAST_FMA
+If the @file{math.h} header defines the symbol @code{FP_FAST_FMA} (or
+@code{FP_FAST_FMAF} and @code{FP_FAST_FMAL} for @code{float} and
+@code{long double} respectively) the processor typically defines the
+operation in hardware.  The symbols might also be defined if the
+software implementation is as fast as a multiply and an add but in the
+GNU C Library the macros indicate hardware support.
 @end deftypefun
 
 

@@ -26,8 +26,9 @@ extern const unsigned short int __mon_yday[2][13];
 
 /* Compute the `struct tm' representation of *T,
    offset OFFSET seconds east of UTC,
-   and store year, yday, mon, mday, wday, hour, min, sec into *TP.  */
-void
+   and store year, yday, mon, mday, wday, hour, min, sec into *TP.
+   Return nonzero if successful.  */
+int
 __offtime (t, offset, tp)
      const time_t *t;
      long int offset;
@@ -59,7 +60,8 @@ __offtime (t, offset, tp)
     tp->tm_wday += 7;
   y = 1970;
 
-#define LEAPS_THRU_END_OF(y) ((y) / 4 - (y) / 100 + (y) / 400)
+#define DIV(a, b) ((a) / (b) - ((a) % (b) < 0))
+#define LEAPS_THRU_END_OF(y) (DIV (y, 4) - DIV (y, 100) + DIV (y, 400))
 
   while (days < 0 || days >= (__isleap (y) ? 366 : 365))
     {
@@ -73,6 +75,8 @@ __offtime (t, offset, tp)
       y = yg;
     }
   tp->tm_year = y - 1900;
+  if (tp->tm_year != y - 1900)
+    return 0;
   tp->tm_yday = days;
   ip = __mon_yday[__isleap(y)];
   for (y = 11; days < (long int) ip[y]; --y)
@@ -80,4 +84,5 @@ __offtime (t, offset, tp)
   days -= ip[y];
   tp->tm_mon = y;
   tp->tm_mday = days + 1;
+  return 1;
 }
