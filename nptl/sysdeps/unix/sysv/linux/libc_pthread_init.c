@@ -33,7 +33,7 @@ struct fork_handler __pthread_child_handler attribute_hidden;
 #ifdef TLS_MULTIPLE_THREADS_IN_TCB
 void
 #else
-int __libc_multiple_threads attribute_hidden;
+extern int __libc_multiple_threads attribute_hidden;
 
 int *
 #endif

@@ -1,5 +1,24 @@
 2003-03-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add
+	libc_multiple_threads.
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c: Move definition of
+	__libc_multiple_threads to...
+	* sysdeps/unix/sysv/linux/libc_multiple_threads.c: ...here.  New file.
+
+	* sysdeps/unix/sysv/linux/x86_64/sem_post.S: Remove unnecessary
+	versioning.
+	* sysdeps/unix/sysv/linux/x86_64/sem_trywait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S
+	(__pthread_once_internal): Define.
+
+	* sysdeps/unix/sysv/linux/i386/i486/sem_post.S: Use shlib-compat.h
+	macros instead of .symver directly.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_trywait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_wait.S: Likewise.
+
 	* sysdeps/x86_64/tls.h [__ASSEMBLER__]: Include tcb-offsets.h.
 	* sysdeps/x86_64/tcb-offsets.sym: New file.
 	* sysdeps/x86_64/Makefile: New file.

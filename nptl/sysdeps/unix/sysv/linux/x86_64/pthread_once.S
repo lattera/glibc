@@ -118,6 +118,10 @@ __pthread_once:
 
 	.size	__pthread_once,.-__pthread_once
 
+
+	.globl	__pthread_once_internal
+__pthread_once_internal = __pthread_once
+
 	.globl	pthread_once
 pthread_once = __pthread_once
 

@@ -17,50 +17,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
-#include <shlib-compat.h>
-#include <pthread-errnos.h>
+#include <pthreadP.h>
 
-#ifndef UP
-# define LOCK lock
-#else
-# define
+#ifndef NOT_IN_libc
+# ifndef TLS_MULTIPLE_THREADS_IN_TCB
+int __libc_multiple_threads attribute_hidden;
+# endif
 #endif
-
-#define SYS_futex		202
-#define FUTEX_WAKE		1
-
-
-	.text
-
-	.globl	sem_post
-	.type	sem_post,@function
-	.align	16
-sem_post:
-	movl	$1, %edx
-	LOCK
-	xaddl	%edx, (%rdi)
-
-	movq	$SYS_futex, %rax
-	movq	$FUTEX_WAKE, %rsi
-	incl	%edx
-	syscall
-
-	testq	%rax, %rax
-	js	1f
-
-	xorl	%eax, %eax
-	retq
-
-1:
-#if USE___THREAD
-	movq	errno@gottpoff(%rip), %rdx
-	movl	$EINVAL, %fs:(%rdx)
-#else
-	callq	__errno_location@plt
-	movl	$EINVAL, (%rax)
-#endif
-
-	orl	$-1, %eax
-	retq
-	.size	sem_post,.-sem_post

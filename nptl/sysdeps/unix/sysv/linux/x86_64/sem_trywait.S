@@ -33,10 +33,10 @@
 
 	.text
 
-	.globl	__new_sem_trywait
-	.type	__new_sem_trywait,@function
+	.globl	sem_trywait
+	.type	sem_trywait,@function
 	.align	16
-__new_sem_trywait:
+sem_trywait:
 	movl	(%rdi), %eax
 2:	testl	%eax, %eax
 	jz	1f
@@ -59,10 +59,5 @@ __new_sem_trywait:
 #endif
 	orl	$-1, %eax
 	retq
-	.size	__new_sem_trywait,.-__new_sem_trywait
-	.symver	__new_sem_trywait, sem_trywait@@GLIBC_2.1
-#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
-	.global	__old_sem_trywait
-__old_sem_trywait = __new_sem_trywait
-	.symver	__old_sem_trywait, sem_trywait@GLIBC_2.0
-#endif
+	.size	sem_trywait,.-sem_trywait
+	versioned_symbol(libpthread, __new_sem_trywait, sem_trywait, GLIBC_2_1)

@@ -32,10 +32,10 @@
 
 	.text
 
-	.globl	__new_sem_wait
-	.type	__new_sem_wait,@function
+	.globl	sem_wait
+	.type	sem_wait,@function
 	.align	16
-__new_sem_wait:
+sem_wait:
 3:	movl	(%rdi), %eax
 2:	testl	%eax, %eax
 	je	1f
@@ -69,10 +69,4 @@ __new_sem_wait:
 #endif
 	orl	$-1, %eax
 	retq
-	.size	__new_sem_wait,.-__new_sem_wait
-	.symver	__new_sem_wait, sem_wait@@GLIBC_2.1
-#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
-	.global	__old_sem_wait
-__old_sem_wait = __new_sem_wait
-	.symver	__old_sem_wait, sem_wait@GLIBC_2.0
-#endif
+	.size	sem_wait,.-sem_wait
