@@ -50,7 +50,6 @@ struct thread_node
 /* Internal representation of a timer.  */
 struct timer_node
 {
-  pid_t creator_pid;
   struct list_links links;
   struct sigevent event;
   clockid_t clock;
@@ -61,6 +60,7 @@ struct timer_node
   unsigned int armed;
   unsigned int inuse;
   struct thread_node *thread;
+  pid_t creator_pid;
 };
 
 
@@ -94,7 +94,7 @@ timer_id2ptr (timer_t timerid)
 static inline int
 timer_ptr2id (struct timer_node *timer)
 {
-  return __timer_array - timer;
+  return timer - __timer_array;
 }
 
 
