@@ -1,3 +1,13 @@
+Wed Aug 16 17:04:26 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/intr-msg.c: Fixed calculation of syscall %esp.
+
+Tue Aug 15 12:26:18 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c (_hurdsig_abort_rpcs): Remove `static'.
+
+	* hurd/Makefile (sig): Add intr-msg.
+
 Mon Aug 14 16:51:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* hurd/thread-cancel.c: New file.

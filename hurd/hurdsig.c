@@ -267,7 +267,7 @@ interrupted_reply_port_location (struct machine_thread_all_state *thread_state,
    *STATE_CHANGE is set nonzero if STATE->basic was modified and should
    be applied back to the thread if it might ever run again, else zero.  */
 
-static mach_port_t
+mach_port_t
 _hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread, 
 		     struct machine_thread_all_state *state, int *state_change,
 		     mach_port_t *reply_port,

@@ -66,7 +66,7 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	 "				movl $-25, %%eax\n"
 	 "_hurd_intr_rpc_msg_do_trap:	lcall $7, $0 # status in %0\n"
 	 "_hurd_intr_rpc_msg_in_trap:	movl %%ecx, %%esp"
-	 : "=a" (err) : "m" ((&msg)[1]) : "%ecx");
+	 : "=a" (err) : "m" ((&msg)[-1]) : "%ecx");
 
   switch (err)
     {
