@@ -19,7 +19,7 @@
 #include <sysdep.h>
 
 /* Please consult the file sysdeps/unix/sysv/linux/m68k/sysdep.h for
-   more information about the value -4096 used below.*/
+   more information about the value -4095 used below.*/
 
 	.text
 ENTRY (syscall)
@@ -27,8 +27,7 @@ ENTRY (syscall)
 	_DOARGS_5 (24)		/* Frob arguments.  */
 	trap &0			/* Do the system call.  */
 	UNDOARGS_5		/* Unfrob arguments.  */
-	moveq.l &-4096, %d1
-	cmp.l %d1, %d0		/* Check %d0 for error.  */
+	cmp.l &-4095, %d0	/* Check %d0 for error.  */
 	jcc syscall_error	/* Jump to error handler if negative.  */
 	rts			/* Return to caller.  */
 PSEUDO_END (syscall)
