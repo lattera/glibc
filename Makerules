@@ -754,12 +754,12 @@ stubs: $(common-objpfx)stub-$(subdir)
 s = $(sysdep_dir)/stub
 $(common-objpfx)stub-$(subdir): $(+depfiles)
 # Use /dev/null since `...` might expand to empty.
-	s=`cd $s; /bin/pwd`; \
-	$(patsubst %,cd %;,$(objdir)) \
-	sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
-	    `sed -n 's@^.*$s/\([a-z0-9_-]*\.c\).*$$@'"$$s"/'\1@p' \
-		 $(patsubst $(objpfx)%,%,$^) /dev/null` \
-	    /dev/null > $(@F)T
+	(s=`cd $s; /bin/pwd`; \
+	 $(patsubst %,cd %;,$(objdir)) \
+	 sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
+	     `sed -n 's@^.*$s/\([a-z0-9_-]*\.c\).*$$@'"$$s"/'\1@p' \
+		  $(patsubst $(objpfx)%,%,$^) /dev/null` \
+	     /dev/null) > $@T
 	mv -f $@T $@
 
 # Make the distribution tar file.
