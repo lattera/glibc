@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -91,8 +91,7 @@ _IO_getwline_info (fp, buf, n, delim, extract_delim, eof)
 	    wchar_t *t;
 	    if ((_IO_size_t) len >= n)
 	      len = n;
-	    t = (wchar_t *) memchr ((void *) fp->_wide_data->_IO_read_ptr,
-				    delim, len);
+	    t = wmemchr ((void *) fp->_wide_data->_IO_read_ptr, delim, len);
 	    if (t != NULL)
 	      {
 		_IO_size_t old_len = ptr - buf;
@@ -103,12 +102,12 @@ _IO_getwline_info (fp, buf, n, delim, extract_delim, eof)
 		    if (extract_delim > 0)
 		      ++len;
 		  }
-		memcpy ((void *) ptr, (void *) fp->_wide_data->_IO_read_ptr,
-			len);
+		wmemcpy ((void *) ptr, (void *) fp->_wide_data->_IO_read_ptr,
+			 len);
 		fp->_wide_data->_IO_read_ptr = t;
 		return old_len + len;
 	      }
-	    memcpy ((void *) ptr, (void *) fp->_wide_data->_IO_read_ptr, len);
+	    wmemcpy ((void *) ptr, (void *) fp->_wide_data->_IO_read_ptr, len);
 	    fp->_wide_data->_IO_read_ptr += len;
 	    ptr += len;
 	    n -= len;

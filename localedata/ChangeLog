@@ -1,3 +1,10 @@
+2000-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Add rules to build, run, and distribute tst-wctype.
+	* tst-wctype.c: New file.
+	* tst-wctype.input: New file.
+	* tst-wctype.sh: New file.
+
 2000-07-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* locales/de_DE (LC_TIME): Use `Mit', not `Mot' as abbreviation

@@ -43,7 +43,7 @@ vpath %.h tests-mbwc
 
 test-srcs := collate-test xfrm-test tst-fmon tst-rpmatch tst-trans \
 	     tst-mbswcs1 tst-mbswcs2 tst-mbswcs3 tst-mbswcs4 tst-mbswcs5 \
-	     tst-ctype
+	     tst-ctype tst-wctype
 #test-input := de_DE.ISO-8859-1 da_DK.ISO-8859-1 fr_CA,2.13.ISO-8859-1 \
 #	      hr_HR.ISO-8859-2 # once it is fixed: cs_CZ.ISO-8859-2
 test-input := de_DE.ISO-8859-1 en_US.ISO-8859-1
@@ -70,7 +70,8 @@ distribute := CHECKSUMS README SUPPORTED ChangeLog			\
 	      th_TH.in cs_CZ.in tst-mbswcs.sh tst-trans.sh tst-ctype.sh \
 	      tst-ctype-de_DE.in $(wildcard tests-mbwc/*.[ch])		\
 	      $(addprefix tst-fmon-locales/tstfmon_,$(fmon-tests))	\
-	      gen-locale.sh show-ucs-data.c
+	      gen-locale.sh show-ucs-data.c				\
+	      tst-wctype.sh tst-wctype.input
 
 # Get $(inst_i18ndir) defined.
 include ../Makeconfig
@@ -136,7 +137,7 @@ $(addsuffix .out,$(addprefix $(objpfx),$(locale_test_suite))): %: \
 
 tests: $(objpfx)sort-test.out $(objpfx)tst-fmon.out $(objpfx)tst-locale.out \
        $(objpfx)tst-rpmatch.out $(objpfx)tst-trans.out \
-       $(objpfx)tst-mbswcs.out $(objpfx)tst-ctype.out
+       $(objpfx)tst-mbswcs.out $(objpfx)tst-ctype.out $(objpfx)tst-wctype.out
 
 $(objpfx)sort-test.out: sort-test.sh $(objpfx)collate-test $(objpfx)xfrm-test \
 		       $(test-input-data) $(addprefix $(objpfx),$(CTYPE_FILES))
@@ -164,6 +165,10 @@ $(objpfx)tst-mbswcs.out: tst-mbswcs.sh $(objpfx)tst-mbswcs1 \
 	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)'
 $(objpfx)tst-ctype.out: tst-ctype.sh $(objpfx)tst-ctype \
 			$(objpfx)sort-test.out \
+			$(addprefix $(objpfx),$(CTYPE_FILES))
+	$(SHELL) -e $< $(common-objpfx) '$(built-program-cmd)'
+$(objpfx)tst-wctype.out: tst-wctype.sh $(objpfx)tst-wctype \
+			$(objpfx)sort-test.out tst-wctype.input \
 			$(addprefix $(objpfx),$(CTYPE_FILES))
 	$(SHELL) -e $< $(common-objpfx) '$(built-program-cmd)'
 endif

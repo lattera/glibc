@@ -1,3 +1,8 @@
+2000-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/iogetwline.c (_IO_getwline_info): Use wide character
+	string functions.
+
 2000-07-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/wfiledoalloc.c (_IO_wfile_doallocate): Measure size
