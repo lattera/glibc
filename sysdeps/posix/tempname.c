@@ -107,6 +107,15 @@
 # define __secure_getenv getenv
 #endif
 
+/* Use the widest available unsigned type if uint64_t is not
+   available.  The algorithm below extracts a number less than 62**6
+   (approximately 2**35.725) from uint64_t, so ancient hosts where
+   uintmax_t is only 32 bits lose about 3.725 bits of randomness,
+   which is better than not having mkstemp at all.  */
+#if !defined UINT64_MAX && !defined uint64_t
+# define uint64_t uintmax_t
+#endif
+
 /* Return nonzero if DIR is an existent directory.  */
 static int
 direxists (const char *dir)
@@ -218,14 +227,18 @@ __gen_tempname (char *tmpl, int kind)
   XXXXXX = &tmpl[len - 6];
 
   /* Get some more or less random data.  */
-#if HAVE_GETTIMEOFDAY || _LIBC
+#ifdef RANDOM_BITS
+  RANDOM_BITS (random_time_bits);
+#else
+# if HAVE_GETTIMEOFDAY || _LIBC
   {
     struct timeval tv;
     __gettimeofday (&tv, NULL);
     random_time_bits = ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec;
   }
-#else
+# else
   random_time_bits = time (NULL);
+# endif
 #endif
   value += random_time_bits ^ __getpid ();
 

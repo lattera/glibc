@@ -1445,6 +1445,9 @@ c = 0xb = 11
 but they can also be changed by the user.  @code{m} is of course 2^48
 since the state consists of a 48-bit array.
 
+The prototypes for these functions are in @file{stdlib.h}.
+@pindex stdlib.h
+
 
 @comment stdlib.h
 @comment SVID

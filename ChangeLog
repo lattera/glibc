@@ -1,5 +1,18 @@
 2001-03-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/i386/i686/tempname.c: New file.
+
+	* sysdeps/posix/tempname.c (__gen_tempname): If RANDOM_BITS is
+	defined use this macro to get some bits of randomness instead of
+	the usual gettimeofday or time calls.
+
+2001-03-16  Paul Eggert  <eggert@twinsun.com>
+
+	* sysdeps/posix/tempname.c (uint64_t): Define to uintmax_t if
+	not defined, and if UINT64_MAX is not defined.
+
+2001-03-19  Ulrich Drepper  <drepper@redhat.com>
+
 	* elf/cache.c: Mark and have translated a few more messages.
 
 2001-03-19  Martin Schwidefsky  <schwidefsky@de.ibm.com>
