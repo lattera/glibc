@@ -1353,7 +1353,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
     LABEL (flag_i18n):
       use_outdigits = 1;
-      break;
+      JUMP (*++f, step0_jumps);
 
       /* Get width from argument.  */
     LABEL (width_asterics):

@@ -1,5 +1,7 @@
 2000-06-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/vfprintf.c (vfprintf): Fix handling of I flag.
+
 	* iconv/gconv_trans.c: Implement handling if translit_ignore.
 	* locale/langinfo.h: Add entries for translit_ignore information.
 	* locale/categories.def: Add entries for new LC_CTYPE elements.
@@ -3974,7 +3976,7 @@
 2000-03-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/skeleton.c: Avoid compiling unaligned versions in some
-	with size of dynamic sectionmore cases.
+	more cases.
 	* iconv/loop.c: Likewise.
 
 2000-03-29  Bruno Haible  <haible@clisp.cons.org>
@@ -4354,7 +4356,7 @@
 
 2000-03-24  Geoff Clare  <gwc@unisoft.com>
 
-	* stdlib/strfmon.c: corrected problems with missing signs and
+	* stdlib/strfmon.c: Corrected problems with missing signs and
 	missing or extra spaces; allow for sign strings longer than
 	one character; add padding to ensure positive and negative
 	formats are aligned when a left precision is used.
@@ -4956,19 +4958,19 @@
 
 2000-03-09  Martin Buchholz  <martin@xemacs.org>
 
-	* sysdeps/unix/sysv/linux/alpha/syscall.S:
-	* manual/message.texi (Using gettextized software):
+	* sysdeps/unix/sysv/linux/alpha/syscall.S: Doc Fixes.
+	* manual/message.texi (Using gettextized software): Doc Fixes.
 	* manual/message.texi (Message Translation): Doc Fixes.
-	* manual/filesys.texi (File Size):
-	* manual/charset.texi (glibc iconv Implementation):
-	* locale/programs/ld-collate.c (collate_output):
-	* iconv/gconv_db.c (find_derivation):
-	* manual/install.texi:
-	* manual/search.texi (Hash Search Function):
-	* manual/stdio.texi (Output Conversion Syntax):
-	* FAQ.in:
-	* config.h.in:
-	* sysdeps/generic/dl-sysdep.c:
+	* manual/filesys.texi (File Size): Doc Fixes.
+	* manual/charset.texi (glibc iconv Implementation): Doc Fixes.
+	* locale/programs/ld-collate.c (collate_output): Doc Fixes.
+	* iconv/gconv_db.c (find_derivation): Doc Fixes.
+	* manual/install.texi: Doc Fixes.
+	* manual/search.texi (Hash Search Function): Doc Fixes.
+	* manual/stdio.texi (Output Conversion Syntax): Doc Fixes.
+	* FAQ.in: Doc Fixes.
+	* config.h.in: Doc Fixes.
+	* sysdeps/generic/dl-sysdep.c: Doc Fixes.
 	Doc Fixes.  `allows to' is not correct English.
 
 	* elf/rtld.c: Doc fixes.
