@@ -1,5 +1,8 @@
 1999-10-31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Makefile (pdf): New goal.
+	* manual/Makefile: Add definitions and rules for PDF generation.
+
 	* Versions.def (libm): Add GLIBC_2.1.3.
 
 	ISO C99 TR1 changes various fe* functions to return an error value.

@@ -24,9 +24,10 @@ export subdir := $(subdir)
 # Allow override
 INSTALL_INFO = install-info
 
-.PHONY: all dvi info
+.PHONY: all dvi pdf info
 all: dvi
 dvi: libc.dvi
+pdf: libc.pdf
 
 # Get glibc's configuration info.
 ifneq (,$(wildcard ../Makeconfig))
@@ -36,6 +37,8 @@ MAKEINFO = makeinfo
 TEXI2DVI = texi2dvi
 AWK = gawk
 endif
+
+TEXI2PDF = pdftexinfo
 
 ifneq ($(strip $(MAKEINFO)),)
 all: info
@@ -69,8 +72,8 @@ examples = $(filter-out $(foreach d, $(add-ons), ../$d/%.c.texi), \
 chapters.% top-menu.%: libc-texinfo.sh $(texis)
 	AWK=$(AWK) $(SHELL) $< '$(chapters)' '$(add-chapters)' '$(appendices)'
 
-libc.dvi libc.info: chapters.texi top-menu.texi libm-err.texi
-libc.dvi: texinfo.tex
+libc.dvi libc.pdf libc.info: chapters.texi top-menu.texi libm-err.texi
+libc.dvi libc.pdf: texinfo.tex
 
 # Generate the summary from the Texinfo source files for each chapter.
 summary.texi: stamp-summary ;
@@ -113,6 +116,9 @@ stamp-libm-err: libm-err-tab.pl $(wildcard $(foreach dir,$(sysdirs),\
 %.dvi: %.texinfo
 	$(TEXI2DVI) $<
 
+%.pdf: %.texinfo
+	$(TEXI2PDF) $<
+
 # Distribution.
 minimal-dist = summary.awk texis.awk tsort.awk libc-texinfo.sh libc.texinfo \
 	       libm-err.texi stamp-libm-err				    \
@@ -151,7 +157,7 @@ glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
 
 .PHONY: mostlyclean distclean realclean clean
 mostlyclean:
-	-rm -f libc.dvi libc.tmp libc.info* dir-add.info
+	-rm -f libc.dvi libc.pdf libc.tmp libc.info* dir-add.info
 	-rm -f $(objpfx)stubs $(objpfx)distinfo
 	-rm -f $(foreach o,$(object-suffixes-for-libc),$(objpfx)stamp$o)
 clean: mostlyclean
