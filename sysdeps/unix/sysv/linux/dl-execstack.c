@@ -29,15 +29,23 @@ int
 internal_function
 _dl_make_stack_executable (void)
 {
-  if (__libc_stack_end == 0)
-    /* XXX for a DT_NEEDED library that requires the change,
-       this is not initialized yet!
-    */
-    return ENOSYS;
-
 #if _STACK_GROWS_DOWN
   /* This gives us the highest page that needs to be changed.  */
   uintptr_t page = (uintptr_t) __libc_stack_end & -(intptr_t) GL(dl_pagesize);
+
+  /* Newer Linux kernels support a flag to make our job easy.  */
+# ifdef PROT_GROWSDOWN
+  static bool no_growsdown;
+  if (! no_growsdown)
+    {
+      if (__mprotect ((void *) page, GL(dl_pagesize),
+		      PROT_READ|PROT_WRITE|PROT_EXEC|PROT_GROWSDOWN) == 0)
+	return 0;
+      if (errno != EINVAL)
+	return errno;
+      no_growsdown = true;
+    }
+# endif
 
   /* There is always a hole in the address space below the bottom of the
      stack.  So when we make an mprotect call that starts below the bottom
@@ -75,6 +83,20 @@ _dl_make_stack_executable (void)
 
   /* This gives us the lowest page that needs to be changed.  */
   uintptr_t page = (uintptr_t) __libc_stack_end & -(intptr_t) GL(dl_pagesize);
+
+  /* Newer Linux kernels support a flag to make our job easy.  */
+# ifdef PROT_GROWSUP
+  static bool no_growsup;
+  if (! no_growsup)
+    {
+      if (__mprotect ((void *) page, GL(dl_pagesize),
+		      PROT_READ|PROT_WRITE|PROT_EXEC|PROT_GROWSUP) == 0)
+	return 0;
+      if (errno != EINVAL)
+	return errno;
+      no_growsup = true;
+    }
+# endif
 
   /* There is always a hole in the address space above the top of the
      stack.  So when we make an mprotect call that spans past the top
