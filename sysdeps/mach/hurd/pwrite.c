@@ -1,5 +1,6 @@
-/* _hurd_fd_write -- write to a file descriptor; handles job control et al.
-   Copyright (C) 1993,94,95,97,99 Free Software Foundation, Inc.
+/* Write block at given position in file without changing file pointer.
+   Hurd version.
+   Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,25 +20,14 @@
 
 #include <errno.h>
 #include <unistd.h>
-#include <hurd.h>
-#include <hurd/fd.h>
 
-error_t
-_hurd_fd_write (struct hurd_fd *fd,
-		const void *buf, size_t *nbytes, off_t offset)
+/* Write NBYTES of BUF to FD at given position OFFSET without changing
+   the file position.  Return the number written, or -1.  */
+ssize_t
+__pwrite (int fd, const void *buf, size_t nbytes, off_t offset)
 {
-  error_t err;
-  mach_msg_type_number_t wrote;
-
-  error_t writefd (io_t port)
-    {
-      return __io_write (port, buf, *nbytes, offset, &wrote);
-    }
-
-  err = HURD_FD_PORT_USE (fd, _hurd_ctty_output (port, ctty, writefd));
-
-  if (! err)
-    *nbytes = wrote;
-
-  return err;
+  error_t err = HURD_FD_USE (fd, _hurd_fd_write (descriptor,
+						 buf, &nbytes, offset));
+  return err ? __hurd_dfail (fd, err) : nbytes;
 }
+weak_alias (__pwrite, pwrite)

@@ -1,3 +1,18 @@
+1999-06-23  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/read.c (__libc_read): Just call __pread with
+	OFFSET argument of (off_t) -1.
+	* sysdeps/mach/hurd/write.c (__libc_write): Just call __pwrite with
+	OFFSET argument of (off_t) -1.
+
+	* sysdeps/mach/hurd/pwrite.c: New file.
+	* sysdeps/mach/hurd/pread.c: New file.
+
+	* hurd/fd-read.c (_hurd_fd_read): Take new parameter OFFSET and
+	pass it in the RPC instead of always -1.
+	* hurd/fd-write.c (_hurd_fd_write): Likewise.
+	* hurd/hurd/fd.h: Update decls.
+
 1999-06-22  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* libio/wscanf.c: Include <wchar.h> for prototype.
