@@ -98,7 +98,6 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 		 void (*fini) (void),
 		 void (*rtld_fini) (void), void *__unbounded stack_end)
 {
-  char *__unbounded *__unbounded ubp_ev = &ubp_av[argc + 1];
 #if __BOUNDED_POINTERS__
   char **argv;
 #else
@@ -111,6 +110,8 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   __libc_multiple_libcs = &_dl_starting_up && !_dl_starting_up;
 
 #ifndef SHARED
+  char *__unbounded *__unbounded ubp_ev = &ubp_av[argc + 1];
+
   INIT_ARGV_and_ENVIRON;
 
   /* Store the lowest stack address.  This is done in ld.so if this is

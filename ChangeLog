@@ -1,3 +1,8 @@
+2005-02-16  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/libc-start.c (LIBC_START_MAIN): Move UBP_EV defn
+	inside [! SHARED] where it's used.
+
 2005-02-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/bits/byteswap.h: Make sure result of all the
