@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1997,1998,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ __mpn_construct_long_double (mp_srcptr frac_ptr, int expt, int sign)
   u.ieee.mantissa1 = frac_ptr[0];
   u.ieee.mantissa0 = frac_ptr[1];
 #elif BITS_PER_MP_LIMB == 64
-  u.ieee.mantissa1 = frac_ptr[0] & ((1L << 32) - 1);
+  u.ieee.mantissa1 = frac_ptr[0] & (((mp_limb_t) 1 << 32) - 1);
   u.ieee.mantissa0 = frac_ptr[0] >> 32;
 #else
   #error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"

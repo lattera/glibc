@@ -1,5 +1,54 @@
 2003-03-13  Roland McGrath  <roland@redhat.com>
 
+	* elf/dl-load.c (_dl_map_object_from_fd): Bail if no PT_LOAD phdrs
+	found.  Reported by Alexandre Oliva <aoliva@redhat.com>.
+
+2003-03-13  Alexandre Oliva  <aoliva@redhat.com>
+
+	* stdio-common/_itoa.c (_itoa_base_table): Make 64-bit
+	literals long long.
+	* stdlib/fpioconst.c: Likewise.
+	* stdlib/strtod.c: Likewise.
+
+	* sysdeps/mips/add_n.S: Use L macro for local labels.
+	* sysdeps/mips/addmul_1.S: Likewise.
+	* sysdeps/mips/lshift.S: Likewise.
+	* sysdeps/mips/memcpy.S: Likewise.
+	* sysdeps/mips/memset.S: Likewise.
+	* sysdeps/mips/mul_1.S: Likewise.
+	* sysdeps/mips/rshift.S: Likewise.
+	* sysdeps/mips/sub_n.S: Likewise.
+	* sysdeps/mips/submul_1.S: Likewise.
+	* sysdeps/mips/mips64/add_n.S: Likewise.
+	* sysdeps/mips/mips64/addmul_1.S: Likewise.
+	* sysdeps/mips/mips64/lshift.S: Likewise.
+	* sysdeps/mips/mips64/mul_1.S: Likewise.
+	* sysdeps/mips/mips64/rshift.S: Likewise.
+	* sysdeps/mips/mips64/sub_n.S: Likewise.
+	* sysdeps/mips/mips64/submul_1.S: Likewise.
+	* sysdeps/unix/mips/sysdep.h: Define L() according to ABI
+	conventions.  Define END as in sys/asm.h.
+	* sysdeps/unix/mips/sysdep.S: Likewise.
+	* sysdeps/unix/mips/wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/clone.S: Likewise.
+
+	* sysdeps/ieee754/dbl-64/dbl2mpn.c (__mpn_extract_double):
+	Cast shifted values that may be too narrow to mp_limb_t.
+	* sysdeps/ieee754/dbl-64/mpn2dbl.c (__mpn_construct_double):
+	Likewise.
+	* sysdeps/ieee754/flt-32/mpn2flt.c (__mpn_construct_float):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/ldbl2mpn.c
+	(__mpn_extract_long_double): Likewise.
+	* sysdeps/ieee754/ldbl-128/mpn2ldbl.c
+	(__mpn_construct_long_double): Likewise.
+	* sysdeps/ieee754/ldbl-96/ldbl2mpn.c
+	(__mpn_extract_long_double): Likewise.
+	* sysdeps/ieee754/ldbl-96/mpn2ldbl.c
+	(__mpn_construct_long_double): Likewise.
+
+2003-03-13  Roland McGrath  <roland@redhat.com>
+
 	* elf/Makefile ($(objpfx)librtld.mk): Tweak regexp so that one-line
 	entries in the map file match too.
 

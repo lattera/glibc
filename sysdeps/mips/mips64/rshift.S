@@ -1,6 +1,6 @@
 /* MIPS3 __mpn_rshift --
  *
- * Copyright (C) 1995, 2000 Free Software Foundation, Inc.
+ * Copyright (C) 1995, 2000, 2002, 2003 Free Software Foundation, Inc.
  *
  * This file is part of the GNU MP Library.
  *
@@ -21,6 +21,7 @@
  */
 
 #include <sysdep.h>
+#include <sys/asm.h>
 
 /* INPUT PARAMETERS
  * res_ptr	$4
@@ -37,22 +38,22 @@
 	.globl	__mpn_rshift
 	.ent	__mpn_rshift
 __mpn_rshift:
-	.set	noreorder
 #ifdef __PIC__
-	.cpload t9
+	SETUP_GP /* ??? unused */
 #endif
+	.set	noreorder
 	.set	nomacro
 
 	ld	$10,0($5)	# load first limb
 	dsubu	$13,$0,$7
 	daddiu	$6,$6,-1
 	and	$9,$6,4-1	# number of limbs in first loop
-	beq	$9,$0,.L0	# if multiple of 4 limbs, skip first loop
-	 dsll	$2,$10,$13	# compute function result
+	beq	$9,$0,L(L0)	# if multiple of 4 limbs, skip first loop
+	dsll	$2,$10,$13	# compute function result
 
 	dsubu	$6,$6,$9
 
-.Loop0:	ld	$3,8($5)
+L(Loop0):	ld	$3,8($5)
 	daddiu	$4,$4,8
 	daddiu	$5,$5,8
 	daddiu	$9,$9,-1
@@ -60,13 +61,13 @@ __mpn_rshift:
 	dsll	$12,$3,$13
 	move	$10,$3
 	or	$8,$11,$12
-	bne	$9,$0,.Loop0
-	 sd	$8,-8($4)
+	bne	$9,$0,L(Loop0)
+	sd	$8,-8($4)
 
-.L0:	beq	$6,$0,.Lend
-	 nop
+L(L0):	beq	$6,$0,L(Lend)
+	nop
 
-.Loop:	ld	$3,8($5)
+L(Loop):	ld	$3,8($5)
 	daddiu	$4,$4,32
 	daddiu	$6,$6,-4
 	dsrl	$11,$10,$7
@@ -92,10 +93,10 @@ __mpn_rshift:
 
 	daddiu	$5,$5,32
 	or	$8,$14,$9
-	bgtz	$6,.Loop
-	 sd	$8,-8($4)
+	bgtz	$6,L(Loop)
+	sd	$8,-8($4)
 
-.Lend:	dsrl	$8,$10,$7
+L(Lend):	dsrl	$8,$10,$7
 	j	$31
 	sd	$8,0($4)
 	.end	__mpn_rshift

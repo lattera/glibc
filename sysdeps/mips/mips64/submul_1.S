@@ -1,7 +1,8 @@
 /* MIPS3 __mpn_submul_1 -- Multiply a limb vector with a single limb and
  * subtract the product from a second limb vector.
  *
- * Copyright (C) 1992, 1994, 1995, 2000 Free Software Foundation, Inc.
+ * Copyright (C) 1992, 1994, 1995, 2000, 2002, 2003
+ * Free Software Foundation, Inc.
  *
  * This file is part of the GNU MP Library.
  *
@@ -22,6 +23,7 @@
  */
 
 #include <sysdep.h>
+#include <sys/asm.h>
 
 /* INPUT PARAMETERS
  * res_ptr	$4
@@ -38,10 +40,10 @@
 	.globl	__mpn_submul_1
 	.ent	__mpn_submul_1
 __mpn_submul_1:
-	.set    noreorder
 #ifdef __PIC__
-	.cpload t9
+	SETUP_GP /* ??? unused */
 #endif
+	.set    noreorder
 	.set    nomacro
 
  # warm up phase 0
@@ -52,14 +54,14 @@ __mpn_submul_1:
 	dmultu	$8,$7
 
 	daddiu	$6,$6,-1
-	beq	$6,$0,$LC0
-	 move	$2,$0		# zero cy2
+	beq	$6,$0,L(LC0)
+	move	$2,$0		# zero cy2
 
 	daddiu	$6,$6,-1
-	beq	$6,$0,$LC1
+	beq	$6,$0,L(LC1)
 	ld	$8,0($5)	# load new s1 limb as early as possible
 
-Loop:	ld	$10,0($4)
+L(Loop):	ld	$10,0($4)
 	mflo	$3
 	mfhi	$9
 	daddiu	$5,$5,8
@@ -73,11 +75,11 @@ Loop:	ld	$10,0($4)
 	daddu	$2,$2,$10
 	sd	$3,0($4)
 	daddiu	$4,$4,8
-	bne	$6,$0,Loop
-	 daddu	$2,$9,$2	# add high product limb and carry from addition
+	bne	$6,$0,L(Loop)
+	daddu	$2,$9,$2	# add high product limb and carry from addition
 
  # cool down phase 1
-$LC1:	ld	$10,0($4)
+L(LC1):	ld	$10,0($4)
 	mflo	$3
 	mfhi	$9
 	daddu	$3,$3,$2
@@ -91,7 +93,7 @@ $LC1:	ld	$10,0($4)
 	daddu	$2,$9,$2	# add high product limb and carry from addition
 
  # cool down phase 0
-$LC0:	ld	$10,0($4)
+L(LC0):	ld	$10,0($4)
 	mflo	$3
 	mfhi	$9
 	daddu	$3,$3,$2

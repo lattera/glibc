@@ -1028,6 +1028,15 @@ cannot allocate TLS data structures for initial thread");
 	  break;
 	}
 
+    if (__builtin_expect (nloadcmds == 0, 0))
+      {
+	/* This only happens for a bogus object that will be caught with
+	   another error below.  But we don't want to go through the
+	   calculations below using NLOADCMDS - 1.  */
+	errstring = N_("object file has no loadable segments");
+	goto call_lose;
+      }
+
     /* Now process the load commands and map segments into memory.  */
     c = loadcmds;
 

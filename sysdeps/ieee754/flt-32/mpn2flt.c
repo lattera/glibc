@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1997,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ __mpn_construct_float (mp_srcptr frac_ptr, int expt, int sign)
   u.ieee.negative = sign;
   u.ieee.exponent = expt + IEEE754_FLOAT_BIAS;
 #if BITS_PER_MP_LIMB > FLT_MANT_DIG
-  u.ieee.mantissa = frac_ptr[0] & ((1 << FLT_MANT_DIG) - 1);
+  u.ieee.mantissa = frac_ptr[0] & (((mp_limb_t) 1 << FLT_MANT_DIG) - 1);
 #else
   #error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
 #endif

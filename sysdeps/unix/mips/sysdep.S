@@ -1,4 +1,5 @@
-/* Copyright (C) 1992,93,94,97,98,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994, 1997, 1998, 1999, 2000, 2002, 2003 
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -46,10 +47,10 @@ ENTRY(__syscall_error)
 	/* We translate the system's EWOULDBLOCK error into EAGAIN.
 	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
 	   EWOULDBLOCK_sys is the original number.  */
-	bne	v0, EWOULDBLOCK_sys, skip
+	bne	v0, EWOULDBLOCK_sys, L(skip)
 	nop
 	li	v0, EAGAIN
-skip:
+L(skip):
 #endif
 	/* Find our per-thread errno address  */
 	jal	__errno_location
@@ -84,9 +85,9 @@ ENTRY(__syscall_error)
 	/* We translate the system's EWOULDBLOCK error into EAGAIN.
 	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
 	   EWOULDBLOCK_sys is the original number.  */
-	bne v0, EWOULDBLOCK_sys, skip
+	bne v0, EWOULDBLOCK_sys, L(skip)
 	li v0, EAGAIN
-skip:
+L(skip):
 #endif
 	/* Store it in errno... */
 	sw v0, errno

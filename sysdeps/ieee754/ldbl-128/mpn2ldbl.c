@@ -1,4 +1,5 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1997,1998,1999,2002,2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,12 +38,14 @@ __mpn_construct_long_double (mp_srcptr frac_ptr, int expt, int sign)
   u.ieee.mantissa3 = frac_ptr[0];
   u.ieee.mantissa2 = frac_ptr[1];
   u.ieee.mantissa1 = frac_ptr[2];
-  u.ieee.mantissa0 = frac_ptr[3] & ((1 << (LDBL_MANT_DIG - 96)) - 1);
+  u.ieee.mantissa0 = frac_ptr[3] & (((mp_limb_t) 1
+				     << (LDBL_MANT_DIG - 96)) - 1);
 #elif BITS_PER_MP_LIMB == 64
-  u.ieee.mantissa3 = frac_ptr[0] & ((1L << 32) - 1);
+  u.ieee.mantissa3 = frac_ptr[0] & (((mp_limb_t) 1 << 32) - 1);
   u.ieee.mantissa2 = frac_ptr[0] >> 32;
-  u.ieee.mantissa1 = frac_ptr[1] & ((1L << 32) - 1);
-  u.ieee.mantissa0 = (frac_ptr[1] >> 32) & ((1 << (LDBL_MANT_DIG - 96)) - 1);
+  u.ieee.mantissa1 = frac_ptr[1] & (((mp_limb_t) 1 << 32) - 1);
+  u.ieee.mantissa0 = (frac_ptr[1] >> 32) & (((mp_limb_t) 1
+					     << (LDBL_MANT_DIG - 96)) - 1);
 #else
   #error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
 #endif
