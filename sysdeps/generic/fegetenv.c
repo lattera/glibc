@@ -23,7 +23,7 @@
 #include <bp-sym.h>
 
 int
-fegetenv (fenv_t *envp)
+__fegetenv (fenv_t *envp)
 {
   /* This always fails.  */
   return 1;
