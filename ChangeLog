@@ -1,3 +1,7 @@
+2000-12-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss_nis/nis-netgrp.c: Remove unnecessary initializations.
+
 2000-12-18  Andreas Jaeger  <aj@suse.de>
 
 	* test-skeleton.c: Use temp_name_list instead of temp_name_list to
