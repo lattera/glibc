@@ -94,6 +94,12 @@
 # define F_GETSIG	11	/* Get number of signal to be sent.  */
 #endif
 
+#ifdef __USE_GNU
+# define F_SETLEASE     1024	/* Set a lease.  */
+# define F_GETLEASE     1025	/* Enquire what lease is active.  */
+# define F_NOTIFY       1026	/* Request notfications on a directory.  */
+#endif
+
 #if __WORDSIZE == 64
 # define F_GETLK64	7	/* Get record locking info.  */
 # define F_SETLK64	8	/* Set record locking info (non-blocking).  */
@@ -124,6 +130,22 @@
 				   blocking */
 # define LOCK_UN	8	/* remove lock */
 #endif
+
+#ifdef __USE_GNU
+# define LOCK_MAND	32	/* This is a mandatory flock:	*/
+# define LOCK_READ	64	/* ... which allows concurrent read operations.  */
+# define LOCK_WRITE	128	/* ... which allows concurrent write operations.  */
+# define LOCK_RW	192	/* ... Which allows concurrent read & write operations.  */
+#endif
+
+/* Types of directory notifications that may be requested with F_NOTIFY.  */
+#define DN_ACCESS      0x00000001      /* File accessed.  */
+#define DN_MODIFY      0x00000002      /* File modified.  */
+#define DN_CREATE      0x00000004      /* File created.  */
+#define DN_DELETE      0x00000008      /* File removed.  */
+#define DN_RENAME      0x00000010      /* File renamed.  */
+#define DN_ATTRIB      0x00000020      /* File changed attibutes.  */
+#define DN_MULTISHOT   0x80000000      /* Don't remove notifier.  */
 
 struct flock
   {
