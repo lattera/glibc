@@ -54,8 +54,7 @@
    This makes no sense on MIPS but we have to define this to R_MIPS_REL32
    to avoid the asserts in dl-lookup.c from blowing.  */
 #define ELF_MACHINE_JMP_SLOT			R_MIPS_REL32
-#define elf_machine_lookup_noplt_p(type)	(1)
-#define elf_machine_lookup_noexec_p(type)	(0)
+#define elf_machine_type_class(type)		ELF_RTYPE_CLASS_PLT
 
 /* Translate a processor specific dynamic tag to the index
    in l_info array.  */
