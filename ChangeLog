@@ -1,3 +1,8 @@
+2002-01-18  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/configure.in
+	(libc_cv_gcc_unwind_find_fde): Set for m68k, too.
+
 2002-01-16  Roger Sayle  <roger@eyesopen.com>
 
 	* stdlib/msort.c (msort_with_tmp): Replace implementation with
