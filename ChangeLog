@@ -1,3 +1,10 @@
+2002-07-24  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/arm/brk.S: Improve schedule.
+	* sysdeps/unix/sysv/linux/arm/socket.S (PUSHARGS_1): Use more
+	efficient instruction.
+	(__socket): Optimize return sequence.
+
 2002-07-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/opensock.c (__opensock): Prefer inet
@@ -11,7 +18,7 @@
 
 2002-07-24  Ulrich Drepper  <drepper@redhat.com>
 
-	* locale/hashval.h: Make more self-containedby defining LONG_BITS.
+	* locale/hashval.h: Make more self-contained by defining LONG_BITS.
 	* locale/programs/simple-hash.c: Remove LONG_BITS definition.
 
 	* locale/programs/locarchive.c (add_locale_to_archive): Correct
