@@ -30,7 +30,7 @@ ENTRY (__longjmp)
 	movs	r0, r1		/* get the return value in place */
 	moveq	r0, #1		/* can't let setjmp() return zero! */
 
-	lfmia	f4, 4, [ip] !	/* load the floating point regs */
+	lfmfd	f4, 4, [ip] !	/* load the floating point regs */
 
 	LOADREGS(ia, ip, {v1-v6, sl, fp, sp, pc})
 END (__longjmp)
