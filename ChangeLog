@@ -1,7 +1,14 @@
 Sat Dec  2 03:47:27 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
-	* sysdeps/unix/sysv/linux/i386/sbrk.S: File removed.
+	* sysdeps/mach/hurd/brk.c (DATA_SIZE): Bump to 128MB.
+	(_hurd_set_brk): Try to allocate more space when we run out.
 
+	* sysdeps/generic/sbrk.c: If __curbrk is zero, call __brk with
+	zero and examine it again.
+	* sysdeps/unix/sysv/linux/i386/brk.c: New file.
+	* sysdeps/unix/sysv/linux/i386/brk.S: File removed.
+	* sysdeps/unix/sysv/linux/i386/sbrk.S: File removed.
+	* sysdeps/unix/sysv/linux/dl-sysdep.c: New file.
 	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start) [DL_SYSDEP_INIT]:
 	Invoke this macro before calling DL_MAIN.
 

@@ -15,26 +15,30 @@ You should have received a copy of the GNU General Public License
 along with the GNU C Library; see the file COPYING.  If not, write to
 the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
+#include <unistd.h>
+#include <errno.h>
 
 /* Defined in brk.c.  */
-extern PTR __curbrk;
-extern int EXFUN(__brk, (PTR addr));
+extern void *__curbrk;
+extern int __brk (void *addr);
 
 /* Extend the process's data space by INCREMENT.
    If INCREMENT is negative, shrink data space by - INCREMENT.
    Return start of new space allocated, or -1 for errors.  */
-PTR
-DEFUN(__sbrk, (increment), int increment)
+void *
+__sbrk (int increment)
 {
-  char *oldbrk;
+  void *oldbrk;
+
+  if (__curbrk == 0 && __brk (0) < 0)
+    return (void *) -1;
 
   if (increment == 0)
     return __curbrk;
 
   oldbrk = __curbrk;
-  if (__brk(oldbrk + increment) < 0)
-    return (PTR) -1;
+  if (__brk (oldbrk + increment) < 0)
+    return (void *) -1;
 
   return oldbrk;
 }

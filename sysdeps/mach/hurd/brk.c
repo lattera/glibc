@@ -23,8 +23,8 @@ Cambridge, MA 02139, USA.  */
 #include <cthreads.h>		/* For `struct mutex'.  */
 
 
-/* Initial maximum size of the data segment (32MB, which is arbitrary).  */
-#define	DATA_SIZE	(32 * 1024 * 1024)
+/* Initial maximum size of the data segment (this is arbitrary).  */
+#define	DATA_SIZE	(128 * 1024 * 1024)
 
 
 /* Up to the page including this address is allocated from the kernel.
@@ -85,13 +85,20 @@ _hurd_set_brk (vm_address_t addr)
       return -1;
     }
 
-  /* Make the memory accessible.  */
-  if (err = __vm_protect (__mach_task_self (), pagebrk, pagend - pagebrk,
-			  0, VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE))
+  if (pagend > _hurd_data_end)
     {
-      errno = err;
-      return -1;
+      /* We didn't allocate enough space!  Hopefully we can get some more!  */
+      err = __vm_allocate (__mach_task_self (), &pagebrk, pagend - pagebrk, 0);
+      if (! err)
+	_hurd_data_end = pagend;
     }
+  else
+    /* Make the memory accessible.  */
+    err = __vm_protect (__mach_task_self (), pagebrk, pagend - pagebrk,
+			0, VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE);
+
+  if (err)
+    return __hurd_fail (err);
 
   _hurd_brk = addr;
   return 0;
@@ -112,7 +119,7 @@ init_brk (void)
 
   pagend = round_page (_hurd_brk);
 
-  _hurd_data_end = (vm_address_t) &__data_start + DATA_SIZE;
+  _hurd_data_end = round_page ((vm_address_t) &__data_start + DATA_SIZE);
 
   if (pagend < _hurd_data_end)
     {
