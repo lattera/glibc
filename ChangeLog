@@ -1,5 +1,8 @@
 2002-11-19  Roland McGrath  <roland@redhat.com>
 
+	* posix/Versions (libc: GLIBC_2.3.2): Add sched_getaffinity and
+	sched_setaffinity.
+
 	* configure.in (libc_cv_gcc_dwarf2_unwind_info check): Use libraries
 	`-lgcc -lgcc_eh -lgcc', not just `-lgcc -lgcc_eh' in link commands for
 	test leading to libc_cv_gcc_dwarf2_unwind_info=no_registry_needed.
