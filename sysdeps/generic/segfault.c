@@ -1,5 +1,5 @@
 /* Catch segmentation faults and print backtrace.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -168,6 +168,23 @@ catch_segfault (int signal, SIGCONTEXT ctx)
 
   /* Now generate nicely formatted output.  */
   __backtrace_symbols_fd (arr, cnt, fd);
+
+#ifdef HAVE_PROC_SELF
+  /* Now the link map.  */
+  int mapfd = open ("/proc/self/maps", O_RDONLY);
+  if (mapfd != -1)
+    {
+      write (fd, "\nMemory map:\n\n", 14);
+
+      char buf[256];
+      ssize_t n;
+
+      while ((n = TEMP_FAILURE_RETRY (read (mapfd, buf, sizeof (buf)))) > 0)
+	TEMP_FAILURE_RETRY (write (fd, buf, n));
+
+      close (mapfd);
+    }
+#endif
 
   /* Pass on the signal (so that a core file is produced).  */
   sa.sa_handler = SIG_DFL;
