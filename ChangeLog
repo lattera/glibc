@@ -1,3 +1,11 @@
+2000-05-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/Makefile (locale-CPPFLAGS): Renamed from CPPFLAGS.  It's
+	only needed for locale.
+	* catgets/Makefile (catgets-CPPFLAGS): Renamed from CPPFLAGS.
+	It's only needed for catgets.
+	Patches by Greg McGary <gkm@eng.ascend.com>.
+
 2000-05-07  Mark Kettenis  <kettenis@gnu.org>
 
 	* nss/nss_db/db-open.c: Cleanup and add comments.  Pretty print.

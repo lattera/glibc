@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -38,8 +38,8 @@ include ../Rules
 
 $(objpfx)gencat: $(gencat-modules:%=$(objpfx)%.o)
 
-CPPFLAGS := -DNLSPATH='"$(msgcatdir)/%L/%N:$(msgcatdir)/%L/LC_MESSAGES/%N:$(msgcatdir)/%l/%N:$(msgcatdir)/%l/LC_MESSAGES/%N:"' \
-	    -DHAVE_CONFIG_H $(CPPFLAGS)
+catgets-CPPFLAGS := -DNLSPATH='"$(msgcatdir)/%L/%N:$(msgcatdir)/%L/LC_MESSAGES/%N:$(msgcatdir)/%l/%N:$(msgcatdir)/%l/LC_MESSAGES/%N:"' \
+	    -DHAVE_CONFIG_H
 
 generated = de.msg de.cat test1.cat test1.h
 
