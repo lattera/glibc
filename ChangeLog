@@ -1,5 +1,9 @@
 1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/rtld.c: Split _dl_start in two pieces to prevent GOT usage
+	before the relocation happened.
+	Patch by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
+
 	* Versions.def (libnsl): Add GLIBC_2.2.
 	* nis/Versions (libnsl) [GLIBC_2.2]: Add xdr_ypall.
 

@@ -74,6 +74,7 @@ struct _pthread_descr_struct {
   pthread_descr p_nextlive, p_prevlive;
                                 /* Double chaining of active threads */
   pthread_descr p_nextwaiting;  /* Next element in the queue holding the thr */
+  pthread_descr p_nextlock;	/* can be on a queue and waiting on a lock */
   pthread_t p_tid;              /* Thread identifier */
   int p_pid;                    /* PID of Unix process */
   int p_priority;               /* Thread priority (== 0 if not realtime) */

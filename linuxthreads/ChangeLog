@@ -1,3 +1,11 @@
+1999-06-23  Robey Pointer  <robey@netscape.com>
+
+	* internals.h: Added p_nextlock entry to separate queueing for a
+	lock from queueing for a CV (sometimes a thread queues on a lock
+	to serialize removing itself from a CV queue).
+	* pthread.c: Added p_nextlock to initializers.
+	* spinlock.c: Changed to use p_nextlock instead of p_nextwaiting.
+
 1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manager.c (pthread_handle_create): Free mmap region after stack

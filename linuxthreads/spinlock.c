@@ -27,7 +27,7 @@
      1: fastlock is taken, no thread is waiting on it
   ADDR: fastlock is taken, ADDR is address of thread descriptor for
         first waiting thread, other waiting threads are linked via
-        their p_nextwaiting field.
+        their p_nextlock field.
    The waiting list is not sorted by priority order.
    Actually, we always insert at top of list (sole insertion mode
    that can be performed without locking).
@@ -50,8 +50,10 @@ void internal_function __pthread_lock(struct _pthread_fastlock * lock,
 	self = thread_self();
       newstatus = (long) self;
     }
-    if (self != NULL)
-      THREAD_SETMEM(self, p_nextwaiting, (pthread_descr) oldstatus);
+    if (self != NULL) {
+      ASSERT(self->p_nextlock == NULL);
+      THREAD_SETMEM(self, p_nextlock, (pthread_descr) oldstatus);
+    }
   } while(! compare_and_swap(&lock->__status, oldstatus, newstatus,
                              &lock->__spinlock));
   if (oldstatus != 0) suspend(self);
@@ -83,7 +85,7 @@ again:
       maxptr = ptr;
       maxprio = thr->p_priority;
     }
-    ptr = &(thr->p_nextwaiting);
+    ptr = &(thr->p_nextlock);
     thr = *ptr;
   }
   /* Remove max prio thread from waiting list. */
@@ -92,16 +94,16 @@ again:
        to guard against concurrent lock operation */
     thr = (pthread_descr) oldstatus;
     if (! compare_and_swap(&lock->__status,
-                           oldstatus, (long)(thr->p_nextwaiting),
+                           oldstatus, (long)(thr->p_nextlock),
                            &lock->__spinlock))
       goto again;
   } else {
     /* No risk of concurrent access, remove max prio thread normally */
     thr = *maxptr;
-    *maxptr = thr->p_nextwaiting;
+    *maxptr = thr->p_nextlock;
   }
   /* Wake up the selected waiting thread */
-  thr->p_nextwaiting = NULL;
+  thr->p_nextlock = NULL;
   restart(thr);
 }
 

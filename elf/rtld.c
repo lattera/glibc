@@ -129,6 +129,9 @@ static hp_timing_t relocate_time;
 static hp_timing_t load_time;
 extern unsigned long int _dl_num_relocations;	/* in dl-lookup.c */
 
+static ElfW(Addr) _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
+				   hp_timing_t start_time);
+
 #ifdef RTLD_START
 RTLD_START
 #else
@@ -140,7 +143,6 @@ _dl_start (void *arg)
 {
   struct link_map bootstrap_map;
   hp_timing_t start_time;
-  ElfW(Addr) start_addr;
 
   /* This #define produces dynamic linking inline functions for
      bootstrap relocation instead of general-purpose relocation.  */
@@ -175,7 +177,22 @@ _dl_start (void *arg)
   /* Now life is sane; we can call functions and access global data.
      Set up to use the operating system facilities, and find out from
      the operating system's program loader where to find the program
-     header table in core.  */
+     header table in core.  Put the rest of _dl_start into a separate
+     function, that way the compiler cannot put accesses to the GOT
+     before ELF_DYNAMIC_RELOCATE.  */
+  return _dl_start_final (arg, &bootstrap_map, start_time);
+}
+
+
+static ElfW(Addr)
+_dl_start_final (void *arg, struct link_map *bootstrap_map_p,
+		 hp_timing_t start_time)
+{
+  /* The use of `alloca' here looks ridiculous but it helps.  The goal
+     is to avoid the function from being inlined.  There is no official
+     way to do this so we use this trick.  gcc never inlines functions
+     which use `alloca'.  */
+  ElfW(Addr) *start_addr = alloca (sizeof (ElfW(Addr)));
 
   if (HP_TIMING_AVAIL)
     {
@@ -188,10 +205,10 @@ _dl_start (void *arg)
     }
 
   /* Transfer data about ourselves to the permanent link_map structure.  */
-  _dl_rtld_map.l_addr = bootstrap_map.l_addr;
-  _dl_rtld_map.l_ld = bootstrap_map.l_ld;
+  _dl_rtld_map.l_addr = bootstrap_map_p->l_addr;
+  _dl_rtld_map.l_ld = bootstrap_map_p->l_ld;
   _dl_rtld_map.l_opencount = 1;
-  memcpy (_dl_rtld_map.l_info, bootstrap_map.l_info,
+  memcpy (_dl_rtld_map.l_info, bootstrap_map_p->l_info,
 	  sizeof _dl_rtld_map.l_info);
   _dl_setup_hash (&_dl_rtld_map);
 
@@ -203,7 +220,7 @@ _dl_start (void *arg)
      file access.  It will call `dl_main' (below) to do all the real work
      of the dynamic linker, and then unwind our frame and run the user
      entry point on the same stack we entered on.  */
-  start_addr =  _dl_sysdep_start (arg, &dl_main);
+  *start_addr =  _dl_sysdep_start (arg, &dl_main);
 
   if (HP_TIMING_AVAIL)
     {
@@ -219,7 +236,7 @@ _dl_start (void *arg)
   if (_dl_debug_statistics)
     print_statistics ();
 
-  return start_addr;
+  return *start_addr;
 }
 
 /* Now life is peachy; we can do all normal operations.

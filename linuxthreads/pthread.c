@@ -34,6 +34,7 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   &__pthread_initial_thread,  /* pthread_descr p_nextlive */
   &__pthread_initial_thread,  /* pthread_descr p_prevlive */
   NULL,                       /* pthread_descr p_nextwaiting */
+  NULL,			      /* pthread_descr p_nextlock */
   PTHREAD_THREADS_MAX,        /* pthread_t p_tid */
   0,                          /* int p_pid */
   0,                          /* int p_priority */
@@ -75,6 +76,7 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   NULL,                       /* pthread_descr p_nextlive */
   NULL,                       /* pthread_descr p_prevlive */
   NULL,                       /* pthread_descr p_nextwaiting */
+  NULL,			      /* pthread_descr p_nextlock */
   0,                          /* int p_tid */
   0,                          /* int p_pid */
   0,                          /* int p_priority */
