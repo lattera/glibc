@@ -117,7 +117,7 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 	char num[8];
 	ssize_t n;
 
-	if (af != AF_INET && af != AF_INET6)
+	if (af != AF_INET && af != AF_INET6 && af != AF_UNSPEC)
 	  {
 	    __set_errno (EAFNOSUPPORT);
 	    return -1;
