@@ -1,3 +1,11 @@
+1998-09-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* localedata/charmaps/ISO-8859-10: Character 0xBD is HORIZONTAL
+	BAR and not EM DASH.
+	* localedata/charmaps/ISO_8859-SUPP: Likewise (character 0xD0).
+	* localedata/charmaps/ISO-8859-7: Likewise (character 0xAF).
+	Fixes PR libc/717.
+
 1998-09-10 11:53  Ulrich Drepper  <drepper@cygnus.com>
 
 	* timezone/Makefile: Add rules to generate Asia/Tokyo zoneinfo files

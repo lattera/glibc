@@ -184,7 +184,7 @@ CHARMAP
 <<<>                   /xAB   <U00AB> LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
 <NO>                   /xAC   <U00AC> NOT SIGN
 <-->                   /xAD   <U00AD> SOFT HYPHEN
-<-M>                   /xAF   <U2014> EM DASH
+<-3>                   /xAF   <U2015> HORIZONTAL BAR
 <DG>                   /xB0   <U00B0> DEGREE SIGN
 <+->                   /xB1   <U00B1> PLUS-MINUS SIGN
 <2S>                   /xB2   <U00B2> SUPERSCRIPT TWO

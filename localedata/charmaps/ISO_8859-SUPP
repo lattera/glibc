@@ -210,7 +210,7 @@ CHARMAP
 <L,>                   /xCD   <U013B> LATIN CAPITAL LETTER L WITH CEDILLA
 <L.>                   /xCE   <U013F> LATIN CAPITAL LETTER L WITH MIDDLE DOT
 <N,>                   /xCF   <U0145> LATIN CAPITAL LETTER N WITH CEDILLA
-<-M>                   /xD0   <U2014> EM DASH
+<-3>                   /xD0   <U2015> HORIZONTAL BAR
 <NG>                   /xD1   <U014A> LATIN CAPITAL LETTER ENG (Sami)
 <O->                   /xD2   <U014C> LATIN CAPITAL LETTER O WITH MACRON
 <OE>                   /xD3   <U0152> LATIN CAPITAL LIGATURE OE

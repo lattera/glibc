@@ -200,7 +200,7 @@ CHARMAP
 <s<>                   /xBA   <U0161> LATIN SMALL LETTER S WITH CARON
 <t//>                  /xBB   <U0167> LATIN SMALL LETTER T WITH STROKE
 <z<>                   /xBC   <U017E> LATIN SMALL LETTER Z WITH CARON
-<-M>                   /xBD   <U2014> EM DASH
+<-3>                   /xBD   <U2015> HORIZONTAL BAR
 <u->                   /xBE   <U016B> LATIN SMALL LETTER U WITH MACRON
 <ng>                   /xBF   <U014B> LATIN SMALL LETTER ENG (Sami)
 <A->                   /xC0   <U0100> LATIN CAPITAL LETTER A WITH MACRON
