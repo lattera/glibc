@@ -1,19 +1,7 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
 arch_prctl	EXTRA	arch_prctl	i:ii	__arch_prctl	arch_prctl
-mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64
 modify_ldt	EXTRA	modify_ldt	i:ipi	__modify_ldt	modify_ldt
-llseek		EXTRA	lseek		Ci:iii	__libc_lseek64	__llseek llseek __lseek64 lseek64
-pread		-	pread		Ci:ibni	__libc_pread	__libc_pread64 __pread pread __pread64 pread64
-pwrite		-	pwrite		Ci:ibni	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64
-fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs __fstatfs64 fstatfs64
-statfs		-	statfs		i:sp	__statfs	statfs statfs64
-getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit getrlimit64
-setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit64 setrlimit
-ftruncate	-	ftruncate	i:ii	__ftruncate	ftruncate ftruncate64 __ftruncate64
-truncate	-	truncate	i:si	truncate	truncate64
-readahead	-	readahead	i:iii	__readahead	readahead
-sendfile	-	sendfile	i:iipi	sendfile	sendfile64
 
 # semaphore and shm system calls
 msgctl		-	msgctl		i:iip	__msgctl	msgctl

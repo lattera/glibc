@@ -33,14 +33,13 @@
 
 /*
  * Newer kernel versions redefined __NR_pread and __NR_pwrite to
- * __NR_pread64 and __NR_pwrite64. We use the new names but have
- * to define them on our own for compiling against older kernels.
+ * __NR_pread64 and __NR_pwrite64.
  */
-#ifndef __NR_pread64
-# define __NR_pread64 __NR_pread
+#ifndef __NR_pread
+# define __NR_pread __NR_pread64
 #endif
-#ifndef __NR_pwrite64
-# define __NR_pwrite64 __NR_pwrite
+#ifndef __NR_pwrite
+# define __NR_pwrite __NR_pwrite64
 #endif
 
 #undef SYS_ify

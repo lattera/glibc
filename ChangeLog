@@ -1,3 +1,178 @@
+2004-03-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h (__NR_pread, __NR_pwrite):
+	Define to __NR_p{read,write}64 if not defined.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h (__NR_pread,
+	__NR_pwrite): Define to __NR_p{read,write}64 if not defined instead
+	of defining it the other way around.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Move common syscalls
+	for 64bit arches to sysdeps/unix/sysv/linux/wordsize-64/syscalls.list.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/pread64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/getrlimit64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/glob64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/truncate64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/xstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/pwrite64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/posix_fadvise.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/mmap64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/fxstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/setrlimit64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/ftruncate64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/sendfile64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/lxstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/posix_fadvise64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/statfs64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/fstatfs64.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/pread64.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/getrlimit64.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/glob64.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/readdir64_r.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/truncate64.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/xstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/pwrite64.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/getdents64.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/readdir_r.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/lxstat.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/readdir.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/posix_fadvise.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/mmap64.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/xstat.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/fxstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/setrlimit64.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/ftruncate64.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/getdents.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/lxstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/posix_fadvise64.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/readdir64.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/fxstat.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/statfs64.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/fstatfs64.c: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/glob64.c: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/truncate64.c: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/xstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/posix_fadvise.c: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fxstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ftruncate64.c: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/lxstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/posix_fadvise64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pread64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/getrlimit64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/glob64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/readdir64_r.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/truncate64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/xstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pwrite64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/getdents64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/readdir_r.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/readdir.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/posix_fadvise.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/mmap64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/fxstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/setrlimit64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/ftruncate64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sendfile64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/getdents.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/lxstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/posix_fadvise64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/readdir64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/statfs64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/fstatfs64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/pread64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/getrlimit64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/glob64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/readdir64_r.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/truncate64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/xstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/pwrite64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/getdents64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/readdir_r.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/lxstat.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/readdir.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/posix_fadvise.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/mmap64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/xstat.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/fxstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/setrlimit64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/ftruncate64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/sendfile64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/getdents.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/lxstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/posix_fadvise64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/readdir64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/fxstat.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/statfs64.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/fstatfs64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/pread64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/getrlimit64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/glob64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/readdir64_r.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/truncate64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/xstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/pwrite64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/getdents64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/readdir_r.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/lxstat.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/readdir.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/posix_fadvise.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/mmap64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/xstat.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/fxstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/setrlimit64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/ftruncate64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/sendfile64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/getdents.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/lxstat64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/posix_fadvise64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/readdir64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/fxstat.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/statfs64.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/fstatfs64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/Implies: New file.
+	* sysdeps/unix/sysv/linux/alpha/getdents64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/syscalls.list: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Implies: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/lxstat.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/xstat.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/fxstat.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/statvfs64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/fstatvfs64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/pread64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/fstatvfs.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/getrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/glob64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/readdir64_r.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/truncate64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/xstat64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/pwrite64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/getdents64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/readdir_r.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/lxstat.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/readdir.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/posix_fadvise.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/mmap64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/xstat.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstat64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/setrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/ftruncate64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/sendfile64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/getdents.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/statvfs.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/lxstat64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/posix_fadvise64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/readdir64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstat.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/statfs64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/fstatfs64.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/Implies: New file.
+	* sysdeps/unix/sysv/linux/x86_64/Implies: New file.
+
 2004-03-22  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/s_fabs.S: Remove file.

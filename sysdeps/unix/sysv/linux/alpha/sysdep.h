@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1995, 1996, 1997, 2002, 2003
+/* Copyright (C) 1992, 1993, 1995, 1996, 1997, 2002, 2003, 2004
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
@@ -63,6 +63,16 @@
 /* Help old kernel headers where particular syscalls are not available.  */
 #ifndef __NR_semtimedop
 # define __NR_semtimedop	423
+#endif
+
+/* This is a kludge to make syscalls.list find these under the names
+   pread and pwrite, since some kernel headers define those names
+   and some define the *64 names for the same system calls.  */
+#if !defined __NR_pread && defined __NR_pread64
+# define __NR_pread __NR_pread64
+#endif
+#if !defined __NR_pwrite && defined __NR_pwrite64
+# define __NR_pwrite __NR_pwrite64
 #endif
 
 /*

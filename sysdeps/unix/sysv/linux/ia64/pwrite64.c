@@ -1,1 +1,0 @@
-/* Empty since the pread syscall is equivalent.  */

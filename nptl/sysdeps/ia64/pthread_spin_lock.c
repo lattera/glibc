@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -29,7 +29,7 @@ pthread_spin_lock (lock)
     {
       /* Spin without using the atomic instruction.  */
       do
-	__asm __volatile ("" : : : "memory");
+	__asm __volatile ("hint @pause" : : : "memory");
       while (*p);
     }
   return 0;

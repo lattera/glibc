@@ -1,5 +1,8 @@
 2004-03-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ia64/pthread_spin_lock.c (pthread_spin_lock): Use hint
+	@pause in the loop.
+
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (lll_mutex_trylock):
 	No need to restrict type of ret.  Make it int.  Add comment.
 

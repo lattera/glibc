@@ -1,16 +1,6 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-llseek		EXTRA	lseek		C:3	__libc_lseek	__lseek lseek __libc_lseek64 __llseek llseek __lseek64 lseek64
-lseek		llseek	-
-pread		-	pread64		C:4	__libc_pread	__libc_pread64 __pread pread __pread64 pread64
-pwrite		-	pwrite64	C:4	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64
-fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs fstatfs64 __fstatfs64
-statfs		-	statfs		i:sp	__statfs	statfs statfs64
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
-ftruncate	-	ftruncate	2	__ftruncate	ftruncate ftruncate64 __ftruncate64
-truncate	-	truncate	2	truncate	truncate64
-getrlimit	-	getrlimit	2	__getrlimit	getrlimit getrlimit64
-setrlimit	-	setrlimit	2	__setrlimit	setrlimit setrlimit64
 vfork		-	vfork		0	__vfork		vfork
 
 # semaphore and shm system calls

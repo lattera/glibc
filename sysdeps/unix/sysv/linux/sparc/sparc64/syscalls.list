@@ -1,19 +1,5 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-# Whee! 64-bit systems naturally implement llseek.
-llseek		EXTRA	lseek		C:3	__llseek	llseek	__libc_lseek64 __lseek64 lseek64
-pread		-	pread		C:4	__libc_pread	__libc_pread64 __pread pread __pread64 pread64
-pwrite		-	pwrite		C:4	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64
-fstatfs		-	fstatfs		2	__fstatfs	fstatfs __fstatfs64 fstatfs64
-statfs		-	statfs		2	__statfs	statfs statfs64
-getrlimit	-	getrlimit	2	__getrlimit	getrlimit getrlimit64
-setrlimit	-	setrlimit	2	__setrlimit	setrlimit64 setrlimit
-ftruncate	-	ftruncate	2	__ftruncate	ftruncate __ftruncate64 ftruncate64
-truncate	-	truncate	2	truncate	truncate64
-mmap		-	mmap		6	__mmap		mmap __mmap64 mmap64
-readahead	-	readahead	3	__readahead	readahead
-sendfile	-	sendfile	i:iipi	sendfile	sendfile64
-
 # Override select.S in parent directory:
 select		-	select		C:5	__select	select
 accept		-	accept		C:3	__libc_accept	__accept accept

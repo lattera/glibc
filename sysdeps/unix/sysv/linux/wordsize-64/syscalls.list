@@ -1,0 +1,16 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+# Whee! 64-bit systems naturally implement llseek.
+llseek		EXTRA	lseek		Ci:iii	__libc_lseek	__lseek lseek __libc_lseek64 __llseek llseek __lseek64 lseek64
+lseek		llseek	-
+pread		-	pread		Ci:ibni	__libc_pread	__libc_pread64 __pread pread __pread64 pread64
+pwrite		-	pwrite		Ci:ibni	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64
+fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs fstatfs64 __fstatfs64
+statfs		-	statfs		i:sp	__statfs	statfs statfs64
+mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64
+ftruncate	-	ftruncate	i:ii	__ftruncate	ftruncate ftruncate64 __ftruncate64
+truncate	-	truncate	i:si	truncate	truncate64
+getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit getrlimit64
+setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit setrlimit64
+readahead	-	readahead	i:iii	__readahead	readahead
+sendfile	-	sendfile	i:iipi	sendfile	sendfile64
