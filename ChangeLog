@@ -1,3 +1,12 @@
+Sat Apr  8 00:40:59 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* malloc/free.c: Remove use of `assert'.
+
+	* malloc/realloc.c [! emacs] (safe_bcopy): Renamed to
+ 	__malloc_safe_bcopy; #define safe_bcopy.
+	* malloc/free.c: Cope with systems lacking `memmove'.
+	(_free_internal): Cast result of _malloc_internal.
+
 Wed Apr  5 00:13:45 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* hurd/hurdinline.c: Include signal.h first, so we don't define
