@@ -19,12 +19,14 @@
 
 #include <fenv.h>
 #include <errno.h>
+#include <sysdep.h>
+#include <sys/syscall.h>
 #include <sys/prctl.h>
 
 const fenv_t *
 __fe_nomask_env (void)
 {
-  __prctl (PR_SET_FPEXC, PR_FP_EXC_PRECISE);
+  INLINE_SYSCALL (prctl, 2, PR_SET_FPEXC, PR_FP_EXC_PRECISE);
 
   return FE_ENABLED_ENV;
 }

@@ -1,3 +1,8 @@
+2003-01-28  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fe_nomask.c
+	(__fe_nomask_env): Change __prctl call to INLINE_SYSCALL.
+
 2003-01-28  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S: Reorder additional
