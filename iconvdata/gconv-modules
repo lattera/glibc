@@ -199,6 +199,7 @@ module	INTERNAL		SEN_850200_C//		ISO646		2
 alias	ISO-IR-100//		ISO-8859-1//
 alias	ISO_8859-1:1987//	ISO-8859-1//
 alias	ISO_8859-1//		ISO-8859-1//
+alias	ISO8859-1//		ISO-8859-1//
 alias	LATIN1//		ISO-8859-1//
 alias	L1//			ISO-8859-1//
 alias	IBM819//		ISO-8859-1//
@@ -213,11 +214,14 @@ module	INTERNAL		ISO-8859-1//		ISO8859-1	1
 alias	ISO-IR-101//		ISO-8859-2//
 alias	ISO_8859-2:1987//	ISO-8859-2//
 alias	ISO_8859-2//		ISO-8859-2//
+alias	ISO8859-2//		ISO-8859-2//
 alias	LATIN2//		ISO-8859-2//
 alias	L2//			ISO-8859-2//
 alias	CSISOLATIN2//		ISO-8859-2//
 alias	8859_2//		ISO-8859-2//
 alias	OSF00010002//		ISO-8859-2//
+alias	IBM912//		ISO-8859-2//
+alias	CP912//			ISO-8859-2//
 module	ISO-8859-2//		INTERNAL		ISO8859-2	1
 module	INTERNAL		ISO-8859-2//		ISO8859-2	1
 
@@ -225,6 +229,7 @@ module	INTERNAL		ISO-8859-2//		ISO8859-2	1
 alias	ISO-IR-109//		ISO-8859-3//
 alias	ISO_8859-3:1988//	ISO-8859-3//
 alias	ISO_8859-3//		ISO-8859-3//
+alias	ISO8859-3//		ISO-8859-3//
 alias	LATIN3//		ISO-8859-3//
 alias	L3//			ISO-8859-3//
 alias	CSISOLATIN3//		ISO-8859-3//
@@ -237,6 +242,7 @@ module	INTERNAL		ISO-8859-3//		ISO8859-3	1
 alias	ISO-IR-110//		ISO-8859-4//
 alias	ISO_8859-4:1988//	ISO-8859-4//
 alias	ISO_8859-4//		ISO-8859-4//
+alias	ISO8859-4//		ISO-8859-4//
 alias	LATIN4//		ISO-8859-4//
 alias	L4//			ISO-8859-4//
 alias	CSISOLATIN4//		ISO-8859-4//
@@ -249,10 +255,13 @@ module	INTERNAL		ISO-8859-4//		ISO8859-4	1
 alias	ISO-IR-144//		ISO-8859-5//
 alias	ISO_8859-5:1988//	ISO-8859-5//
 alias	ISO_8859-5//		ISO-8859-5//
+alias	ISO8859-5//		ISO-8859-5//
 alias	CYRILLIC//		ISO-8859-5//
 alias	CSISOLATINCYRILLIC//	ISO-8859-5//
 alias	8859_5//		ISO-8859-5//
 alias	OSF00010005//		ISO-8859-5//
+alias	IBM915//		ISO-8859-5//
+alias	CP915//			ISO-8859-5//
 module	ISO-8859-5//		INTERNAL		ISO8859-5	1
 module	INTERNAL		ISO-8859-5//		ISO8859-5	1
 
@@ -260,12 +269,15 @@ module	INTERNAL		ISO-8859-5//		ISO8859-5	1
 alias	ISO-IR-127//		ISO-8859-6//
 alias	ISO_8859-6:1987//	ISO-8859-6//
 alias	ISO_8859-6//		ISO-8859-6//
+alias	ISO8859-6//		ISO-8859-6//
 alias	ECMA-114//		ISO-8859-6//
 alias	ASMO-708//		ISO-8859-6//
 alias	ARABIC//		ISO-8859-6//
 alias	CSISOLATINARABIC//	ISO-8859-6//
 alias	8859_6//		ISO-8859-6//
 alias	OSF00010006//		ISO-8859-6//
+alias	IBM1089//		ISO-8859-6//
+alias	CP1089//		ISO-8859-6//
 module	ISO-8859-6//		INTERNAL		ISO8859-6	1
 module	INTERNAL		ISO-8859-6//		ISO8859-6	1
 
@@ -273,6 +285,7 @@ module	INTERNAL		ISO-8859-6//		ISO8859-6	1
 alias	ISO-IR-126//		ISO-8859-7//
 alias	ISO_8859-7:1987//	ISO-8859-7//
 alias	ISO_8859-7//		ISO-8859-7//
+alias	ISO8859-7//		ISO-8859-7//
 alias	ELOT_928//		ISO-8859-7//
 alias	ECMA-118//		ISO-8859-7//
 alias	GREEK//			ISO-8859-7//
@@ -280,6 +293,8 @@ alias	GREEK8//		ISO-8859-7//
 alias	CSISOLATINGREEK//	ISO-8859-7//
 alias	8859_7//		ISO-8859-7//
 alias	OSF00010007//		ISO-8859-7//
+alias	IBM813//		ISO-8859-7//
+alias	CP813//			ISO-8859-7//
 module	ISO-8859-7//		INTERNAL		ISO8859-7	1
 module	INTERNAL		ISO-8859-7//		ISO8859-7	1
 
@@ -287,10 +302,13 @@ module	INTERNAL		ISO-8859-7//		ISO8859-7	1
 alias	ISO-IR-138//		ISO-8859-8//
 alias	ISO_8859-8:1988//	ISO-8859-8//
 alias	ISO_8859-8//		ISO-8859-8//
+alias	ISO8859-8//		ISO-8859-8//
 alias	HEBREW//		ISO-8859-8//
 alias	CSISOLATINHEBREW//	ISO-8859-8//
 alias	8859_8//		ISO-8859-8//
 alias	OSF00010008//		ISO-8859-8//
+alias	IBM916//		ISO-8859-8//
+alias	CP916//			ISO-8859-8//
 module	ISO-8859-8//		INTERNAL		ISO8859-8	1
 module	INTERNAL		ISO-8859-8//		ISO8859-8	1
 
@@ -298,11 +316,16 @@ module	INTERNAL		ISO-8859-8//		ISO8859-8	1
 alias	ISO-IR-148//		ISO-8859-9//
 alias	ISO_8859-9:1989//	ISO-8859-9//
 alias	ISO_8859-9//		ISO-8859-9//
+alias	ISO8859-9//		ISO-8859-9//
 alias	LATIN5//		ISO-8859-9//
 alias	L5//			ISO-8859-9//
 alias	CSISOLATIN5//		ISO-8859-9//
 alias	8859_9//		ISO-8859-9//
 alias	OSF00010009//		ISO-8859-9//
+alias	IBM920//		ISO-8859-9//
+alias	CP920//			ISO-8859-9//
+alias	TS-5881//		ISO-8859-9//
+alias	ECMA-128//		ISO-8859-9//
 module	ISO-8859-9//		INTERNAL		ISO8859-9	1
 module	INTERNAL		ISO-8859-9//		ISO8859-9	1
 
@@ -310,6 +333,7 @@ module	INTERNAL		ISO-8859-9//		ISO8859-9	1
 alias	ISO-IR-157//		ISO-8859-10//
 alias	ISO_8859-10:1992//	ISO-8859-10//
 alias	ISO_8859-10//		ISO-8859-10//
+alias	ISO8859-10//		ISO-8859-10//
 alias	LATIN6//		ISO-8859-10//
 alias	L6//			ISO-8859-10//
 alias	CSISOLATIN6//		ISO-8859-10//
@@ -322,6 +346,7 @@ module	ISO-8859-11//		INTERNAL		ISO8859-11	1
 module	INTERNAL		ISO-8859-11//		ISO8859-11	1
 
 #	from			to			module		cost
+alias	ISO8859-13//		ISO-8859-13//
 alias	ISO-IR-179//		ISO-8859-13//
 alias	LATIN7//		ISO-8859-13//
 alias	L7//			ISO-8859-13//
@@ -330,6 +355,7 @@ module	ISO-8859-13//		INTERNAL		ISO8859-13	1
 module	INTERNAL		ISO-8859-13//		ISO8859-13	1
 
 #	from			to			module		cost
+alias	ISO8859-14//		ISO-8859-14//
 alias	ISO-IR-199//		ISO-8859-14//
 alias	LATIN8//		ISO-8859-14//
 alias	L8//			ISO-8859-14//
@@ -338,12 +364,14 @@ module	ISO-8859-14//		INTERNAL		ISO8859-14	1
 module	INTERNAL		ISO-8859-14//		ISO8859-14	1
 
 #	from			to			module		cost
+alias	ISO8859-15//		ISO-8859-15//
 alias	ISO-IR-203//		ISO-8859-15//
 alias	ISO_8859-15:1998//	ISO-8859-15//
 module	ISO-8859-15//		INTERNAL		ISO8859-15	1
 module	INTERNAL		ISO-8859-15//		ISO8859-15	1
 
 #	from			to			module		cost
+alias	ISO8859-16//		ISO-8859-16//
 alias	ISO-IR-226//		ISO-8859-16//
 alias	LATIN10//		ISO-8859-16//
 alias	L10//			ISO-8859-16//
@@ -497,6 +525,8 @@ alias	EBCDIC-CP-WT//		IBM037//
 alias	EBCDIC-CP-NL//		IBM037//
 alias	CSIBM037//		IBM037//
 alias	OSF10020025//		IBM037//
+alias	CP1070//		IBM037//
+alias	CP282//			IBM037//
 module	IBM037//		INTERNAL		IBM037		1
 module	INTERNAL		IBM037//		IBM037		1
 
@@ -570,6 +600,7 @@ alias	CP284//			IBM284//
 alias	EBCDIC-CP-ES//		IBM284//
 alias	CSIBM284//		IBM284//
 alias	OSF1002011C//		IBM284//
+alias	CP1079//		IBM284//
 module	IBM284//		INTERNAL		IBM284		1
 module	INTERNAL		IBM284//		IBM284		1
 
@@ -594,6 +625,7 @@ alias	CP297//			IBM297//
 alias	EBCDIC-CP-FR//		IBM297//
 alias	CSIBM297//		IBM297//
 alias	OSF10020129//		IBM297//
+alias	CP1081//		IBM297//
 module	IBM297//		INTERNAL		IBM297		1
 module	INTERNAL		IBM297//		IBM297		1
 
@@ -636,6 +668,7 @@ alias	EBCDIC-CP-BE//		IBM500//
 alias	EBCDIC-CP-CH//		IBM500//
 alias	CSIBM500//		IBM500//
 alias	OSF100201F4//		IBM500//
+alias	CP1084//		IBM500//
 module	IBM500//		INTERNAL		IBM500		1
 module	INTERNAL		IBM500//		IBM500		1
 
