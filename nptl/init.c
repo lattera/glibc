@@ -139,10 +139,12 @@ sigcancel_handler (int sig, siginfo_t *si, void *ctx)
      correct and might even be a security problem.  Try to catch as
      many incorrect invocations as possible.  */
   if (sig != SIGCANCEL
+#ifdef __ASSUME_CORRECT_SI_PID
+      /* Kernels before 2.5.75 stored the thread ID and not the process
+	 ID in si_pid so we skip this test.  */
+      || si->si_pid != THREAD_GETMEM (THREAD_SELF, pid)
+#endif
       || si->si_code != SI_TKILL)
-    /* XXX The Linux kernel currently does not report the correct PID
-       in the si->si_pid field.  Once this is changed another test
-       will be added.  */
     return;
 
   struct pthread *self = THREAD_SELF;
@@ -202,7 +204,7 @@ __pthread_initialize_minimal_internal (void)
   /* Minimal initialization of the thread descriptor.  */
   struct pthread *pd = THREAD_SELF;
   INTERNAL_SYSCALL_DECL (err);
-  pd->tid = INTERNAL_SYSCALL (set_tid_address, err, 1, &pd->tid);
+  pd->pid = pd->tid = INTERNAL_SYSCALL (set_tid_address, err, 1, &pd->tid);
   THREAD_SETMEM (pd, specific[0], &pd->specific_1stblock[0]);
   THREAD_SETMEM (pd, user_stack, true);
   if (LLL_LOCK_INITIALIZER != 0)

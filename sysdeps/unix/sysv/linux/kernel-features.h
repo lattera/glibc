@@ -333,3 +333,15 @@
 #if __LINUX_KERNEL_VERSION >= 132426
 # define __ASSUME_AT_SECURE	1
 #endif
+
+/* Starting with the 2.5.75 kernel the kernel fills in the correct value
+   in the si_pid field passed as part of the siginfo_t struct to signal
+   handlers.  */
+#if __LINUX_KERNEL_VERSION >= 132427
+# define __ASSUME_CORRECT_SI_PID	1
+#endif
+
+/* The tgkill syscall was instroduced for i386 in 2.5.75.  */
+#if __LINUX_KERNEL_VERSION >= 132427 && defined __i386__
+# define __ASSUME_TGKILL	1
+#endif

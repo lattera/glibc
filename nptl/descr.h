@@ -177,6 +177,9 @@ struct pthread
   /* Two-level array for the thread-specific data.  */
   struct pthread_key_data *specific[PTHREAD_KEY_1STLEVEL_SIZE];
 
+  /* Process ID - thread group ID in kernel speak.  */
+  pid_t pid;
+
   /* True if events must be reported.  */
   bool report_events;
 

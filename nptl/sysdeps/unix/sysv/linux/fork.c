@@ -134,6 +134,9 @@ __libc_fork (void)
       if (__fork_generation_pointer != NULL)
 	*__fork_generation_pointer += 4;
 
+      /* Adjust the PID field for the new process.  */
+      self->pid = self->tid;
+
 #if HP_TIMING_AVAIL
       /* The CPU clock of the thread and process have to be set to zero.  */
       hp_timing_t now;

@@ -332,6 +332,9 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       pd->header.sysinfo = THREAD_GETMEM (THREAD_SELF, header.sysinfo);
 #endif
 
+      /* The process ID is also the same as that of the caller.  */
+      pd->pid = THREAD_GETMEM (THREAD_SELF, pid);
+
       /* Allocate the DTV for this thread.  */
       if (_dl_allocate_tls (TLS_TPADJ (pd)) == NULL)
 	/* Something went wrong.  */
@@ -463,6 +466,9 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  /* Copy the sysinfo value from the parent.  */
 	  pd->header.sysinfo = THREAD_GETMEM (THREAD_SELF, header.sysinfo);
 #endif
+
+	  /* The process ID is also the same as that of the caller.  */
+	  pd->pid = THREAD_GETMEM (THREAD_SELF, pid);
 
 	  /* Allocate the DTV for this thread.  */
 	  if (_dl_allocate_tls (TLS_TPADJ (pd)) == NULL)
@@ -625,6 +631,9 @@ __reclaim_stacks (void)
 	{
 	  /* This marks the stack as free.  */
 	  curp->tid = 0;
+
+	  /* The PID field must be initialized for the new process.  */
+	  curp->pid = self->pid;
 
 	  /* Account for the size of the stack.  */
 	  stack_cache_actsize += curp->stackblock_size;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -21,11 +21,23 @@
 #include <signal.h>
 #include <sysdep.h>
 #include <tls.h>
+#include <kernel-features.h>
 
 
 int
 raise (sig)
      int sig;
 {
-  return INLINE_SYSCALL (tkill, 2, THREAD_SELF->tid, sig);
+#if __ASSUME_TGKILL
+  return INLINE_SYSCALL (tgkill, 3, THREAD_GETMEM (THREAD_SELF, pid),
+			 THREAD_GETMEM (THREAD_SELF, tid), sig);
+#else
+# ifdef __NR_tgkill
+  int res = INLINE_SYSCALL (tgkill, 3, THREAD_GETMEM (THREAD_SELF, pid),
+			    THREAD_GETMEM (THREAD_SELF, tid), sig);
+  if (res != -1 || errno != ENOSYS)
+    return res;
+# endif
+  return INLINE_SYSCALL (tkill, 2, THREAD_GETMEM (THREAD_SELF, tid), sig);
+#endif
 }

@@ -22,6 +22,7 @@
 #include <pthreadP.h>
 #include <tls.h>
 #include <sysdep.h>
+#include <kernel-features.h>
 
 
 int
@@ -43,7 +44,19 @@ __pthread_kill (threadid, signo)
   /* We have a special syscall to do the work.  */
   INTERNAL_SYSCALL_DECL (err);
 
-  int val = INTERNAL_SYSCALL (tkill, err, 2, pd->tid, signo);
+  int val;
+#if __ASSUME_TGKILL
+  val = INTERNAL_SYSCALL (tgkill, err, 3, THREAD_GETMEM (THREAD_SELF, pid),
+			  pd->tid, signo);
+#else
+# ifdef __NR_tgkill
+  val = INTERNAL_SYSCALL (tgkill, err, 3, THREAD_GETMEM (THREAD_SELF, pid),
+			  pd->tid, signo);
+  if (INTERNAL_SYSCALL_ERROR_P (val, err)
+      && INTERNAL_SYSCALL_ERRNO (val, err) == ENOSYS)
+# endif
+    val = INTERNAL_SYSCALL (tkill, err, 2, pd->tid, signo);
+#endif
 
   return (INTERNAL_SYSCALL_ERROR_P (val, err)
 	  ? INTERNAL_SYSCALL_ERRNO (val, err) : 0);

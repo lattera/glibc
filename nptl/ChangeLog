@@ -1,3 +1,18 @@
+2003-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* descr.h (struct pthread): Add pid field.
+	* allocatestack.c (allocate_stack): Initialize pid field in descriptor.
+	(__reclaim_stacks): Likewise.
+	* init.c (sigcancel_handler): If __ASSUME_CORRECT_SI_PID is defined
+	also check for PID of the signal source.
+	(__pthread_initialize_minimal_internal): Also initialize pid field
+	of initial thread's descriptor.
+	* pthread_cancel.c: Use tgkill instead of tkill if possible.
+	* sysdeps/unix/sysv/linux/fork.c: Likewise.
+	* sysdeps/unix/sysv/linux/pt-raise.c: Likewise.
+	* sysdeps/unix/sysv/linux/pthread_kill.c: Likewise.
+	* sysdeps/unix/sysv/linux/raise.c: Likewise.
+
 2003-07-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/bits/libc-lock.h (__libc_cleanup_push): Renamed.

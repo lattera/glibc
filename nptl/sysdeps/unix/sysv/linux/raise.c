@@ -21,6 +21,7 @@
 #include <signal.h>
 #include <sysdep.h>
 #include <nptl/pthreadP.h>
+#include <kernel-features.h>
 
 
 int
@@ -28,7 +29,7 @@ raise (sig)
      int sig;
 {
   struct pthread *pd = THREAD_SELF;
-  pid_t selftid = pd->tid;
+  pid_t selftid = THREAD_GETMEM (pd, tid);
   if (selftid == 0)
     {
       /* This system call is not supposed to fail.  */
@@ -39,9 +40,21 @@ raise (sig)
       selftid = INLINE_SYSCALL (gettid, 0);
 #endif
       THREAD_SETMEM (pd, tid, selftid);
+
+      /* In this case the TID and PID are the same.  */
+      THREAD_SETMEM (pd, pid, selftid);
     }
 
+#if __ASSUME_TGKILL
+  return INLINE_SYSCALL (tgkill, 3, THREAD_GETMEM (pd, pid), selftid, sig);
+#else
+# ifdef __NR_tgkill
+  int res = INLINE_SYSCALL (tgkill, 3, THREAD_GETMEM (pd, pid), selftid, sig);
+  if (res != -1 || errno != ENOSYS)
+    return res;
+# endif
   return INLINE_SYSCALL (tkill, 2, selftid, sig);
+#endif
 }
 libc_hidden_def (raise)
 weak_alias (raise, gsignal)

@@ -22,6 +22,7 @@
 #include "pthreadP.h"
 #include "atomic.h"
 #include <sysdep.h>
+#include <kernel-features.h>
 
 
 int
@@ -61,7 +62,21 @@ pthread_cancel (th)
 	     thread as canceled.  */
 	  INTERNAL_SYSCALL_DECL (err);
 
-	  int val = INTERNAL_SYSCALL (tkill, err, 2, pd->tid, SIGCANCEL);
+	  int val;
+#if __ASSUME_TGKILL
+	  val = INTERNAL_SYSCALL (tgkill, err, 3,
+				  THREAD_GETMEM (THREAD_SELF, pid), pd->tid,
+				  SIGCANCEL);
+#else
+# ifdef __NR_tgkill
+	  val = INTERNAL_SYSCALL (tgkill, err, 3,
+				  THREAD_GETMEM (THREAD_SELF, pid), pd->tid,
+				  SIGCANCEL);
+	  if (INTERNAL_SYSCALL_ERROR_P (val, err)
+	      && INTERNAL_SYSCALL_ERRNO (val, err) == ENOSYS)
+# endif
+	    val = INTERNAL_SYSCALL (tkill, err, 2, pd->tid, SIGCANCEL);
+#endif
 
 	  if (INTERNAL_SYSCALL_ERROR_P (val, err))
 	    result = INTERNAL_SYSCALL_ERRNO (val, err);
