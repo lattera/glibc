@@ -86,8 +86,8 @@
 
 # ifndef __ASSEMBLER__
 #  define SINGLE_THREAD_P						\
-  __builtin_expect (THREAD_GETMEM (THREAD_SELF, multiple_threads) \
-		    == 0, 1)
+  __builtin_expect (THREAD_GETMEM (THREAD_SELF,				\
+				   header.multiple_threads) == 0, 1)
 # else
 #   define SINGLE_THREAD_P						\
   lwz   10,MULTIPLE_THREADS_OFFSET(13);				\

@@ -1,0 +1,12 @@
+GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+ GLIBC_2.0 A
+GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+| GLIBC_2.2.5 x86_64-.*-linux.*
+ forkpty F
+ login F
+ login_tty F
+ logout F
+ logwtmp F
+ openpty F
+GLIBC_2.2.5 x86_64-.*-linux.*
+ GLIBC_2.2.5 A

@@ -1235,13 +1235,16 @@ check-abi: subdir_check-abi
 update-abi: subdir_update-abi
 endif
 
-# Enable this when all the .abilist files are in place.
-#tests: check-abi
-
 ifeq ($(subdir),elf)
 check-abi: check-abi-libc
 update-abi: update-abi-libc
 common-generated += libc.symlist
+endif
+
+ifeq ($(build-shared),yes)
+ifdef subdir
+tests: check-abi
+endif
 endif
 
 endif

@@ -1,5 +1,11 @@
 2003-03-18  Roland McGrath  <roland@redhat.com>
 
+	* abilist: New directory of libfoo.abilist files maintained using
+	scripts/merge-abilist.awk and "make update-abi" rules.
+	* Makefile (distribute): Add abilist/*.abilist.
+	* Makerules [$(build-shared) = yes] [$(subdir)] (tests):
+	Depend on check-abi.
+
 	* configure.in: Move $critic_missing check after all AC_CHECK_PROG_VER.
 	* configure: Regenerated.
 

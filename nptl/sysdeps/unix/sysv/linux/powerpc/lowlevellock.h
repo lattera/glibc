@@ -102,12 +102,13 @@
 /* Atomically store newval and return the old value.  */
 #define __lll_test_and_set(futex, newval)				      \
   ({ int __val;								      \
-      __asm __volatile ("1:	lwarx	%0,0,%3\n"			      \
+      __asm __volatile (__lll_rel_instr "\n"				      \
+			"1:	lwarx	%0,0,%3\n"			      \
 			"	stwcx.	%2,0,%3\n"			      \
 			"	bne-	1b"				      \
 			: "=&r" (__val), "=m" (*futex)			      \
 			: "r" (futex), "r" (newval), "1" (*futex)	      \
-			: "cr0");					      \
+			: "cr0", "memory");				      \
       __val; })
 
 
@@ -135,16 +136,12 @@ extern int __lll_timedlock_wait
   })
 
 #define lll_mutex_unlock(lock) \
-  (void) ({								      \
+  ((void) ({								      \
     int *__futex = &(lock);						      \
-     __asm __volatile (__lll_rel_instr ::: "memory");			      \
-    int __val = __lll_add (__futex, -1);				      \
-    if (__builtin_expect (__val != 1, 0))				      \
-      {									      \
-	*__futex = 0;							      \
-	lll_futex_wake (__futex, 1);					      \
-      }									      \
-  })
+    int __val = __lll_test_and_set (__futex, 0);			      \
+    if (__builtin_expect (__val > 1, 0))				      \
+      lll_futex_wake (__futex, 1);					      \
+  }))
 
 #define lll_mutex_islocked(futex) \
   (futex != 0)

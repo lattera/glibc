@@ -1,5 +1,16 @@
 2003-03-18  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h (__lll_test_and_set):
+	Add __lll_rel_instr first.  Add memory clobber.
+	(lll_mutex_unlock): Use __lll_test_and_set.
+	From Paul Mackerras <paulus@samba.org>.
+
+	* sysdeps/powerpc/tls.h (TLS_MULTIPLE_THREADS_IN_TCB): Define
+	unconditionally.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h
+	(SINGLE_THREAD_P):  Add `header.' prefix.
+	From Paul Mackerras <paulus@samba.org>.
+
 	* Versions (libpthread: GLIBC_2.3.2): Move pthread_tryjoin_np and
 	pthread_timedjoin_np to ...
 	(libpthread: GLIBC_2.3.3): ... here.
