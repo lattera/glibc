@@ -1,3 +1,8 @@
+1998-10-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Remove EXTRAVARS_* macros
+	and adjust formats.
+
 1998-10-21 14:38  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysdep.h (INLINE_SYSCALL): New macro.  Simply call
