@@ -1835,6 +1835,11 @@ unknown character class `%s' in category `LC_CTYPE'"),
 	      uint32_t wch;
 	      struct charseq *seq;
 
+	      if (now->tok != tok_bsymbol)
+		/* XXX Cannot be handled yet.  We will have support
+		   for tok_ucs4 soon.  */
+		goto err_label;
+
 	      if (ellipsis_token == tok_none)
 		{
 		  if (get_character (now, charmap, repertoire, &seq, &wch))

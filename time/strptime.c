@@ -235,7 +235,7 @@ day_of_the_week (struct tm *tm)
 	      + (((corr_year / 4) / 25) / 4)
 	      + __mon_yday[0][tm->tm_mon]
 	      + tm->tm_mday - 1);
-  tm->tm_wday = wday % 7;
+  tm->tm_wday = ((wday % 7) + 7) % 7;
 }
 
 /* Compute the day of the year.  */
@@ -830,8 +830,14 @@ strptime_internal (buf, format, tm, decided)
   if (have_I && is_pm)
     tm->tm_hour += 12;
 
-  if (want_century && century != -1)
-    tm->tm_year = tm->tm_year % 100 + (century - 19) * 100;
+  if (century != -1)
+    {
+      if (want_century)
+	tm->tm_year = tm->tm_year % 100 + (century - 19) * 100;
+      else
+	/* Only the century, but not the year.  Strange, but so be it.  */
+	tm->tm_year = (century - 19) * 100;
+    }
 
   if (want_xday && !have_wday) {
       if ( !(have_mon && have_mday) && have_yday)  {

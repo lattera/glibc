@@ -1,5 +1,8 @@
 1999-11-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-ctype.c: Punt if character class definitions
+	to not consists of tok_bsymbol (for now).
+
 	* time/strptime.c (day_of_the_week): Make sure result is never
 	negative.
 	(strptime_internal): Allow %C without %y.
