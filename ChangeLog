@@ -3,6 +3,7 @@
 	* sunrpc/rpc/xdr.h (IXDR_GET_INT32): Case pointer before reading from
 	it.
 	(IXDR_PUT_INT32): Likewise for writing.
+	Patch by Bruce Elliott <bde@nwlink.com>.
 
 1998-12-08  H.J. Lu  <hjl@gnu.org> 
  
