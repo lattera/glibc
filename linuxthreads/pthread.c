@@ -46,9 +46,9 @@ extern int _h_errno;
 /* We need the global/static resolver state here.  */
 # include <resolv.h>
 # undef _res
-#endif
 
 extern struct __res_state _res;
+#endif
 
 #ifdef USE_TLS
 

@@ -1,5 +1,8 @@
 2002-08-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthread.c: Declare _errno, _h_errno, and _res unless we use TLS
+	internally.
+
 	* cancel.c (__pthread_perform_cleanup) [USE_TLS && HAVE___THREAD]:
 	Don't use p_libc_specific element in thread descriptor.
 
