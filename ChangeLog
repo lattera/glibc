@@ -1,3 +1,11 @@
+2000-06-21  Andreas Jaeger  <aj@suse.de>
+
+	* io/Makefile (tests): Add test-stat.
+	(CFLAGS-test-stat.c): New.
+
+	* io/test-stat.c: New file from Maciej W. Rozycki
+	<macro@ds2.pg.gda.pl>.
+
 2000-06-21  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/resource.h: Reorder elements

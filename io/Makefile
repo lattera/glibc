@@ -55,13 +55,14 @@ static-only-routines = stat fstat lstat mknod stat64 fstat64 lstat64
 
 others		:= pwd
 test-srcs	:= ftwtest
-tests		:= test-utime
+tests		:= test-utime test-stat
 
 distribute	:= ftwtest-sh
 
 include ../Rules
 
 CFLAGS-fts.c = -Wno-uninitialized
+CFLAGS-test-stat.c = -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE
 
 ifeq ($(cross-compiling),no)
 tests: $(objpfx)ftwtest
