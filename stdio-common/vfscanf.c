@@ -1163,9 +1163,15 @@ _IO_vfscanf (s, format, argptr, errp)
 	      int level;
 #ifdef COMPILE_WSCANF
 	      const wchar_t *wcdigits[10];
+	      const wchar_t *wcdigits_extended[10];
 #else
 	      const char *mbdigits[10];
+	      const char *mbdigits_extended[10];
 #endif
+	      /*  "to_inpunct" is a map from ASCII digits to their
+		  equivalent in locale. This is defined for locales
+		  which use an extra digits set.  */
+	      wctrans_t map = __wctrans ("to_inpunct");
 	      int n;
 
 	      from_level = 0;
@@ -1176,6 +1182,66 @@ _IO_vfscanf (s, format, argptr, errp)
 	      to_level = (uint32_t) curctype->values[_NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_MB_LEN)].word - 1;
 #endif
 
+	      /* Get the alternative digit forms if there are any.  */
+	      if (__builtin_expect (map != NULL, 0))
+		{
+		  /*  Adding new level for extra digits set in locale file.  */
+		  ++to_level;
+
+		  for (n = 0; n < 10; ++n)
+		    {
+#ifdef COMPILE_WSCANF
+		      wcdigits[n] = (const wchar_t *)
+                        _NL_CURRENT (LC_CTYPE, _NL_CTYPE_INDIGITS0_WC + n);
+
+		      wchar_t *wc_extended = (wchar_t *)
+			alloca ((to_level + 2) * sizeof (wchar_t));
+		      __wmemcpy (wc_extended, wcdigits[n], to_level);
+		      wc_extended[to_level] = __towctrans (L'0' + n, map);
+		      wc_extended[to_level + 1] = '\0';
+		      wcdigits_extended[n] = wc_extended;
+#else
+		      mbdigits[n]
+                        = curctype->values[_NL_CTYPE_INDIGITS0_MB + n].string;
+
+		      /*  Get the equivalent wide char in map.  */
+		      wint_t extra_wcdigit = __towctrans (L'0' + n, map);
+
+		      /*  Convert it to multibyte representation.  */
+		      mbstate_t state;
+		      memset (&state, '\0', sizeof (state));
+
+		      char extra_mbdigit[MB_LEN_MAX];
+		      size_t mblen
+			= __wcrtomb (extra_mbdigit, extra_wcdigit, &state);
+
+		      if (mblen == (size_t) -1)
+			{
+			  /*  Ignore this new level.  */
+			  map = NULL;
+			  break;
+			}
+
+		      /*  Calculate the length of mbdigits[n].  */
+		      const char *last_char = mbdigits[n];
+		      for (level = 0; level < to_level; ++level)
+			last_char = strchr (last_char, '\0') + 1;
+
+		      size_t mbdigits_len = last_char - mbdigits[n];
+
+		      /*  Allocate memory for extended multibyte digit.  */
+		      char *mb_extended;
+		      mb_extended = (char *) alloca (mbdigits_len + mblen + 1);
+
+		      /*  And get the mbdigits + extra_digit string.  */
+		      *(char *) __mempcpy (__mempcpy (mb_extended, mbdigits[n],
+						      mbdigits_len),
+					   extra_mbdigit, mblen) = '\0';
+		      mbdigits_extended[n] = mb_extended;
+#endif
+		    }
+		}
+
 	      /* Read the number into workspace.  */
 	      while (c != EOF && width != 0)
 		{
@@ -1185,8 +1251,11 @@ _IO_vfscanf (s, format, argptr, errp)
 		    {
 		      /* Get the string for the digits with value N.  */
 #ifdef COMPILE_WSCANF
-		      wcdigits[n] = (const wchar_t *)
-			_NL_CURRENT (LC_CTYPE, _NL_CTYPE_INDIGITS0_WC + n);
+		      if (__builtin_expect (map != NULL, 0))
+			wcdigits[n] = wcdigits_extended[n];
+		      else
+			wcdigits[n] = (const wchar_t *)
+			  _NL_CURRENT (LC_CTYPE, _NL_CTYPE_INDIGITS0_WC + n);
 		      wcdigits[n] += from_level;
 
 		      if (c == (wint_t) *wcdigits[n])
@@ -1201,8 +1270,11 @@ _IO_vfscanf (s, format, argptr, errp)
 		      const char *cmpp;
 		      int avail = width > 0 ? width : INT_MAX;
 
-		      mbdigits[n]
-			= curctype->values[_NL_CTYPE_INDIGITS0_MB + n].string;
+		      if (__builtin_expect (map != NULL, 0))
+			mbdigits[n] = mbdigits_extended[n];
+		      else
+			mbdigits[n]
+			  = curctype->values[_NL_CTYPE_INDIGITS0_MB + n].string;
 
 		      for (level = 0; level < from_level; level++)
 			mbdigits[n] = strchr (mbdigits[n], '\0') + 1;

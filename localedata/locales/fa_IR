@@ -10,8 +10,8 @@ escape_char  /
 % Fax: +98 21 6019568
 % Language: fa
 % Territory: IR
-% Revision: 2.3
-% Date: 2004-03-16
+% Revision: 2.4
+% Date: 2004-09-04
 % Users: general
 % Repertoiremap:
 % Charset: UTF-8
@@ -49,6 +49,20 @@ LC_CTYPE
 copy "i18n"
 
 outdigit <U06F0>..<U06F9>
+
+map to_inpunct; /
+  (<U0030>,<U06F0>); /
+  (<U0031>,<U06F1>); /
+  (<U0032>,<U06F2>); /
+  (<U0033>,<U06F3>); /
+  (<U0034>,<U06F4>); /
+  (<U0035>,<U06F5>); /
+  (<U0036>,<U06F6>); /
+  (<U0037>,<U06F7>); /
+  (<U0038>,<U06F8>); /
+  (<U0039>,<U06F9>); /
+  (<U002E>,<U066B>); /
+  (<U002C>,<U066C>)
 
 map to_outpunct; /
   (<U002E>,<U066B>); /

@@ -1,5 +1,8 @@
 2004-10-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/vfscanf.c: Add support for reading localized
+	digits.  Patch mainly by Hamed Malek <hamed@bamdad.org>.
+
 	* resolv/res_init.c (res_thread_freeres): Reset _res.options.
 	[BZ #434]
 
