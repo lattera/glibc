@@ -1,12 +1,21 @@
 2001-08-07  Andreas Jaeger  <aj@suse.de>
+	    Andreas Schwab  <schwab@suse.de>
+	    Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/programs/3level.h (EMPTY): New macro.
+	(*_get, *_add, *_iterate, *_finalize): Use it instead of ~(uint32_t) 0.
+
+2001-08-08  GOTO Masanori  <gotom@debian.or.jp>
+
+	* locale/iso-3166.def: Updates from latest official list.
+
+2001-08-07  Andreas Jaeger  <aj@suse.de>
 
 	* stdlib/tst-strtod.c: Disable HUGE_VAL tests for older GCCs.
 
-	* iconv/gconv_charset.h (upstr): Add unused attribute to avoid
-	warning.
+	* iconv/gconv_charset.h (upstr): Add unused attribute to avoid warning.
 
-	* libio/iopopen.c (_IO_new_proc_open): Fix typos, it's
-	_IO_MTSAFE_IO.
+	* libio/iopopen.c (_IO_new_proc_open): Fix typos, it's _IO_MTSAFE_IO.
 	(_IO_new_proc_close): Likewise.
 	* libio/oldiopopen.c (_IO_old_proc_open): Likewise.
 	(_IO_old_proc_close): Likewise.
