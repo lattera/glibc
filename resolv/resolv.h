@@ -189,6 +189,8 @@ extern struct __res_state _res;
 #define	res_ownok	__res_ownok
 #define	res_mailok	__res_mailok
 #define	res_dnok	__res_dnok
+#define	loc_ntoa	__loc_ntoa
+#define	loc_aton	__loc_aton
 #define	dn_skipname	__dn_skipname
 #define	fp_query	__fp_query
 #define	fp_nquery	__fp_nquery
@@ -212,6 +214,8 @@ int	 __res_hnok __P((const char *));
 int	 __res_ownok __P((const char *));
 int	 __res_mailok __P((const char *));
 int	 __res_dnok __P((const char *));
+int	 __loc_aton __P((const char *ascii, u_char *binary));
+char *	 __loc_ntoa __P((const u_char *binary, char *ascii));
 int	 __dn_skipname __P((const u_char *, const u_char *));
 void	 __fp_resstat __P((struct __res_state *, FILE *));
 void	 __fp_query __P((const u_char *, FILE *));

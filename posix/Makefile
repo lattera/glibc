@@ -39,7 +39,7 @@ routines :=								      \
 	getpid getppid							      \
 	getuid geteuid getgid getegid getgroups setuid setgid group_member    \
 	getpgid setpgid getpgrp setpgrp getsid setsid			      \
-	getlogin setlogin						      \
+	getlogin getlogin_r setlogin					      \
 	pathconf sysconf fpathconf					      \
 	glob fnmatch regex						      \
 	confstr								      \

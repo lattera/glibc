@@ -5,7 +5,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -33,7 +33,7 @@ static const double zero = 0.0;	/* used as const */
 static double zero = 0.0;	/* used as const */
 #endif
 
-/* 
+/*
  * Standard conformance (non-IEEE) on exception cases.
  * Mapping:
  *	1 -- acos(|x|>1)
@@ -58,7 +58,7 @@ static double zero = 0.0;	/* used as const */
  *	20-- pow(0.0,0.0)
  *	21-- pow(x,y) overflow
  *	22-- pow(x,y) underflow
- *	23-- pow(0,negative) 
+ *	23-- pow(0,negative)
  *	24-- pow(neg,non-integral)
  *	25-- sinh(finite) overflow
  *	26-- sqrt(negative)
@@ -82,14 +82,14 @@ static double zero = 0.0;	/* used as const */
 
 
 #ifdef __STDC__
-	double __kernel_standard(double x, double y, int type) 
+	double __kernel_standard(double x, double y, int type)
 #else
-	double __kernel_standard(x,y,type) 
+	double __kernel_standard(x,y,type)
 	double x,y; int type;
 #endif
 {
 	struct exception exc;
-#ifndef HUGE_VAL	/* this is the only routine that uses HUGE_VAL */ 
+#ifndef HUGE_VAL	/* this is the only routine that uses HUGE_VAL */
 #define HUGE_VAL inf
 	double inf = 0.0;
 
@@ -104,9 +104,11 @@ static double zero = 0.0;	/* used as const */
 	switch(type) {
 	    case 1:
 	    case 101:
+	    case 201:
 		/* acos(|x|>1) */
 		exc.type = DOMAIN;
-		exc.name = type < 100 ? "acos" : "acosf";
+		exc.name = type < 100 ? "acos" : (type < 200
+						  ? "acosf" : "acosl");;
 		exc.retval = zero;
 		if (_LIB_VERSION == _POSIX_)
 		  errno = EDOM;
@@ -119,9 +121,11 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 2:
 	    case 102:
+	    case 202:
 		/* asin(|x|>1) */
 		exc.type = DOMAIN;
-		exc.name = type < 100 ? "asin" : "asinf";
+		exc.name = type < 100 ? "asin" : (type < 200
+						  ? "asinf" : "asinl");
 		exc.retval = zero;
 		if(_LIB_VERSION == _POSIX_)
 		  errno = EDOM;
@@ -134,11 +138,13 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 3:
 	    case 103:
+	    case 203:
 		/* atan2(+-0,+-0) */
 		exc.arg1 = y;
 		exc.arg2 = x;
 		exc.type = DOMAIN;
-		exc.name = type < 100 ? "atan2" : "atan2f";
+		exc.name = type < 100 ? "atan2" : (type < 200
+						   ? "atan2f" : "atan2l");
 		exc.retval = zero;
 		if(_LIB_VERSION == _POSIX_)
 		  errno = EDOM;
@@ -151,9 +157,11 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 4:
 	    case 104:
+	    case 204:
 		/* hypot(finite,finite) overflow */
 		exc.type = OVERFLOW;
-		exc.name = type < 100 ? "hypot" : "hypotf";
+		exc.name = type < 100 ? "hypot" : (type < 200
+						   ? "hypotf" : "hypotl");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = HUGE;
 		else
@@ -166,9 +174,11 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 5:
 	    case 105:
+	    case 205:
 		/* cosh(finite) overflow */
 		exc.type = OVERFLOW;
-		exc.name = type < 100 ? "cosh" : "coshf";
+		exc.name = type < 100 ? "cosh" : (type < 200
+						  ? "coshf" : "coshl");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = HUGE;
 		else
@@ -181,9 +191,11 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 6:
 	    case 106:
+	    case 206:
 		/* exp(finite) overflow */
 		exc.type = OVERFLOW;
-		exc.name = type < 100 ? "exp" : "expf";
+		exc.name = type < 100 ? "exp" : (type < 200
+						 ? "expf" : "expl");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = HUGE;
 		else
@@ -196,9 +208,11 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 7:
 	    case 107:
+	    case 207:
 		/* exp(finite) underflow */
 		exc.type = UNDERFLOW;
-		exc.name = type < 100 ? "exp" : "expf";
+		exc.name = type < 100 ? "exp" : (type < 200
+						 ? "expf" : "expl");
 		exc.retval = zero;
 		if (_LIB_VERSION == _POSIX_)
 		  errno = ERANGE;
@@ -208,9 +222,10 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 8:
 	    case 108:
+	    case 208:
 		/* y0(0) = -inf */
 		exc.type = DOMAIN;	/* should be SING for IEEE */
-		exc.name = type < 100 ? "y0" : "y0f";
+		exc.name = type < 100 ? "y0" : (type < 200 ? "y0f" : "y0l");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = -HUGE;
 		else
@@ -226,9 +241,10 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 9:
 	    case 109:
+	    case 209:
 		/* y0(x<0) = NaN */
 		exc.type = DOMAIN;
-		exc.name = type < 100 ? "y0" : "y0f";
+		exc.name = type < 100 ? "y0" : (type < 200 ? "y0f" : "y0l");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = -HUGE;
 		else
@@ -244,9 +260,10 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 10:
 	    case 110:
+	    case 210:
 		/* y1(0) = -inf */
 		exc.type = DOMAIN;	/* should be SING for IEEE */
-		exc.name = type < 100 ? "y1" : "y1f";
+		exc.name = type < 100 ? "y1" : (type < 200 ? "y1f" : "y1l");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = -HUGE;
 		else
@@ -262,9 +279,10 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 11:
 	    case 111:
+	    case 211:
 		/* y1(x<0) = NaN */
 		exc.type = DOMAIN;
-		exc.name = type < 100 ? "y1" : "y1f";
+		exc.name = type < 100 ? "y1" : (type < 200 ? "y1f" : "y1l");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = -HUGE;
 		else
@@ -280,9 +298,10 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 12:
 	    case 112:
+	    case 212:
 		/* yn(n,0) = -inf */
 		exc.type = DOMAIN;	/* should be SING for IEEE */
-		exc.name = type < 100 ? "yn" : "ynf";
+		exc.name = type < 100 ? "yn" : (type < 200 ? "ynf" : "ynl");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = -HUGE;
 		else
@@ -298,9 +317,10 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 13:
 	    case 113:
+	    case 213:
 		/* yn(x<0) = NaN */
 		exc.type = DOMAIN;
-		exc.name = type < 100 ? "yn" : "ynf";
+		exc.name = type < 100 ? "yn" : (type < 200 ? "ynf" : "ynl");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = -HUGE;
 		else
@@ -316,9 +336,11 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 14:
 	    case 114:
+	    case 214:
 		/* lgamma(finite) overflow */
 		exc.type = OVERFLOW;
-		exc.name = type < 100 ? "lgamma" : "lgammaf";
+		exc.name = type < 100 ? "lgamma" : (type < 200
+						    ? "lgammaf" : "lgammal");
                 if (_LIB_VERSION == _SVID_)
                   exc.retval = HUGE;
                 else
@@ -331,9 +353,11 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 15:
 	    case 115:
+	    case 215:
 		/* lgamma(-integer) or lgamma(0) */
 		exc.type = SING;
-		exc.name = type < 100 ? "lgamma" : "lgammaf";
+		exc.name = type < 100 ? "lgamma" : (type < 200
+						    ? "lgammaf" : "lgammal");
                 if (_LIB_VERSION == _SVID_)
                   exc.retval = HUGE;
                 else
@@ -349,9 +373,10 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 16:
 	    case 116:
+	    case 216:
 		/* log(0) */
 		exc.type = SING;
-		exc.name = type < 100 ? "log" : "logf";
+		exc.name = type < 100 ? "log" : (type < 200 ? "logf" : "logl");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = -HUGE;
 		else
@@ -367,9 +392,10 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 17:
 	    case 117:
+	    case 217:
 		/* log(x<0) */
 		exc.type = DOMAIN;
-		exc.name = type < 100 ? "log" : "logf";
+		exc.name = type < 100 ? "log" : (type < 200 ? "logf" : "logl");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = -HUGE;
 		else
@@ -385,9 +411,11 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 18:
 	    case 118:
+	    case 218:
 		/* log10(0) */
 		exc.type = SING;
-		exc.name = type < 100 ? "log10" : "log10f";
+		exc.name = type < 100 ? "log10" : (type < 200
+						   ? "log10f" : "log10l");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = -HUGE;
 		else
@@ -403,9 +431,11 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 19:
 	    case 119:
+	    case 219:
 		/* log10(x<0) */
 		exc.type = DOMAIN;
-		exc.name = type < 100 ? "log10" : "log10f";
+		exc.name = type < 100 ? "log10" : (type < 200
+						   ? "log10f" : "log10l");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = -HUGE;
 		else
@@ -421,10 +451,11 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 20:
 	    case 120:
+	    case 220:
 		/* pow(0.0,0.0) */
 		/* error only if _LIB_VERSION == _SVID_ */
 		exc.type = DOMAIN;
-		exc.name = type < 100 ? "pow" : "powf";
+		exc.name = type < 100 ? "pow" : (type < 200 ? "powf" : "powl");
 		exc.retval = zero;
 		if (_LIB_VERSION != _SVID_) exc.retval = 1.0;
 		else if (!matherr(&exc)) {
@@ -434,9 +465,10 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 21:
 	    case 121:
+	    case 221:
 		/* pow(x,y) overflow */
 		exc.type = OVERFLOW;
-		exc.name = type < 100 ? "pow" : "powf";
+		exc.name = type < 100 ? "pow" : (type < 200 ? "powf" : "powl");
 		if (_LIB_VERSION == _SVID_) {
 		  exc.retval = HUGE;
 		  y *= 0.5;
@@ -454,9 +486,10 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 22:
 	    case 122:
+	    case 222:
 		/* pow(x,y) underflow */
 		exc.type = UNDERFLOW;
-		exc.name = type < 100 ? "pow" : "powf";
+		exc.name = type < 100 ? "pow" : (type < 200 ? "powf" : "powl");
 		exc.retval =  zero;
 		if (_LIB_VERSION == _POSIX_)
 		  errno = ERANGE;
@@ -466,10 +499,11 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 23:
 	    case 123:
+	    case 223:
 		/* 0**neg */
 		exc.type = DOMAIN;
-		exc.name = type < 100 ? "pow" : "powf";
-		if (_LIB_VERSION == _SVID_) 
+		exc.name = type < 100 ? "pow" : (type < 200 ? "powf" : "powl");
+		if (_LIB_VERSION == _SVID_)
 		  exc.retval = zero;
 		else
 		  exc.retval = -HUGE_VAL;
@@ -484,14 +518,15 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 24:
 	    case 124:
+	    case 224:
 		/* neg**non-integral */
 		exc.type = DOMAIN;
-		exc.name = type < 100 ? "pow" : "powf";
-		if (_LIB_VERSION == _SVID_) 
+		exc.name = type < 100 ? "pow" : (type < 200 ? "powf" : "powl");
+		if (_LIB_VERSION == _SVID_)
 		    exc.retval = zero;
-		else 
+		else
 		    exc.retval = zero/zero;	/* X/Open allow NaN */
-		if (_LIB_VERSION == _POSIX_) 
+		if (_LIB_VERSION == _POSIX_)
 		   errno = EDOM;
 		else if (!matherr(&exc)) {
 		  if (_LIB_VERSION == _SVID_) {
@@ -502,9 +537,11 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 25:
 	    case 125:
+	    case 225:
 		/* sinh(finite) overflow */
 		exc.type = OVERFLOW;
-		exc.name = type < 100 ? "sinh" : "sinhf";
+		exc.name = type < 100 ? "sinh" : (type < 200
+						  ? "sinhf" : "sinhl");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = ( (x>zero) ? HUGE : -HUGE);
 		else
@@ -517,9 +554,11 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 26:
 	    case 126:
+	    case 226:
 		/* sqrt(x<0) */
 		exc.type = DOMAIN;
-		exc.name = type < 100 ? "sqrt" : "sqrtf";
+		exc.name = type < 100 ? "sqrt" : (type < 200
+						  ? "sqrtf" : "sqrtl");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = zero;
 		else
@@ -535,9 +574,11 @@ static double zero = 0.0;	/* used as const */
 		break;
             case 27:
 	    case 127:
+	    case 227:
                 /* fmod(x,0) */
                 exc.type = DOMAIN;
-                exc.name = type < 100 ? "fmod" : "fmodf";
+                exc.name = type < 100 ? "fmod" : (type < 200
+						  ? "fmodf" : "fmodl");
                 if (_LIB_VERSION == _SVID_)
                     exc.retval = x;
 		else
@@ -553,9 +594,12 @@ static double zero = 0.0;	/* used as const */
                 break;
             case 28:
 	    case 128:
+	    case 228:
                 /* remainder(x,0) */
                 exc.type = DOMAIN;
-                exc.name = type < 100 ? "remainder" : "remainderf";
+                exc.name = type < 100 ? "remainder" : (type < 200
+						       ? "remainderf"
+						       : "remainderl");
                 exc.retval = zero/zero;
                 if (_LIB_VERSION == _POSIX_)
                   errno = EDOM;
@@ -568,9 +612,11 @@ static double zero = 0.0;	/* used as const */
                 break;
             case 29:
 	    case 129:
+	    case 229:
                 /* acosh(x<1) */
                 exc.type = DOMAIN;
-                exc.name = type < 100 ? "acosh" : "acoshf";
+                exc.name = type < 100 ? "acosh" : (type < 200
+						   ? "acoshf" : "acoshl");
                 exc.retval = zero/zero;
                 if (_LIB_VERSION == _POSIX_)
                   errno = EDOM;
@@ -583,9 +629,11 @@ static double zero = 0.0;	/* used as const */
                 break;
             case 30:
 	    case 130:
+	    case 230:
                 /* atanh(|x|>1) */
                 exc.type = DOMAIN;
-                exc.name = type < 100 ? "atanh" : "atanhf";
+                exc.name = type < 100 ? "atanh" : (type < 200
+						   ? "atanhf" : "atanhl");
                 exc.retval = zero/zero;
                 if (_LIB_VERSION == _POSIX_)
                   errno = EDOM;
@@ -598,9 +646,11 @@ static double zero = 0.0;	/* used as const */
                 break;
             case 31:
 	    case 131:
+	    case 231:
                 /* atanh(|x|=1) */
                 exc.type = SING;
-                exc.name = type < 100 ? "atanh" : "atanhf";
+                exc.name = type < 100 ? "atanh" : (type < 200
+						   ? "atanhf" : "atanhl");
 		exc.retval = x/zero;	/* sign(x)*inf */
                 if (_LIB_VERSION == _POSIX_)
                   errno = EDOM;
@@ -613,9 +663,11 @@ static double zero = 0.0;	/* used as const */
                 break;
 	    case 32:
 	    case 132:
+	    case 232:
 		/* scalb overflow; SVID also returns +-HUGE_VAL */
 		exc.type = OVERFLOW;
-		exc.name = type < 100 ? "scalb" : "scalbf";
+		exc.name = type < 100 ? "scalb" : (type < 200
+						   ? "scalbf" : "scalbl");
 		exc.retval = x > zero ? HUGE_VAL : -HUGE_VAL;
 		if (_LIB_VERSION == _POSIX_)
 		  errno = ERANGE;
@@ -625,9 +677,11 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 33:
 	    case 133:
+	    case 233:
 		/* scalb underflow */
 		exc.type = UNDERFLOW;
-		exc.name = type < 100 ? "scalb" : "scalbf";
+		exc.name = type < 100 ? "scalb" : (type < 200
+						   ? "scalbf" : "scalbl");
 		exc.retval = __copysign(zero,x);
 		if (_LIB_VERSION == _POSIX_)
 		  errno = ERANGE;
@@ -637,9 +691,10 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 34:
 	    case 134:
+	    case 234:
 		/* j0(|x|>X_TLOSS) */
                 exc.type = TLOSS;
-                exc.name = type < 100 ? "j0" : "j0f";
+                exc.name = type < 100 ? "j0" : (type < 200 ? "j0f" : "j0l");
                 exc.retval = zero;
                 if (_LIB_VERSION == _POSIX_)
                         errno = ERANGE;
@@ -649,13 +704,14 @@ static double zero = 0.0;	/* used as const */
                                 (void) WRITE2(": TLOSS error\n", 14);
                         }
                         errno = ERANGE;
-                }        
+                }
 		break;
 	    case 35:
 	    case 135:
+	    case 235:
 		/* y0(x>X_TLOSS) */
                 exc.type = TLOSS;
-                exc.name = type < 100 ? "y0" : "y0f";
+                exc.name = type < 100 ? "y0" : (type < 200 ? "y0f" : "y0l");
                 exc.retval = zero;
                 if (_LIB_VERSION == _POSIX_)
                         errno = ERANGE;
@@ -665,13 +721,14 @@ static double zero = 0.0;	/* used as const */
                                 (void) WRITE2(": TLOSS error\n", 14);
                         }
                         errno = ERANGE;
-                }        
+                }
 		break;
 	    case 36:
 	    case 136:
+	    case 236:
 		/* j1(|x|>X_TLOSS) */
                 exc.type = TLOSS;
-                exc.name = type < 100 ? "j1" : "j1f";
+                exc.name = type < 100 ? "j1" : (type < 200 ? "j1f" : "j1l");
                 exc.retval = zero;
                 if (_LIB_VERSION == _POSIX_)
                         errno = ERANGE;
@@ -681,13 +738,14 @@ static double zero = 0.0;	/* used as const */
                                 (void) WRITE2(": TLOSS error\n", 14);
                         }
                         errno = ERANGE;
-                }        
+                }
 		break;
 	    case 37:
 	    case 137:
+	    case 237:
 		/* y1(x>X_TLOSS) */
                 exc.type = TLOSS;
-                exc.name = type < 100 ? "y1" : "y1f";
+                exc.name = type < 100 ? "y1" : (type < 200 ? "y1f" : "y1l");
                 exc.retval = zero;
                 if (_LIB_VERSION == _POSIX_)
                         errno = ERANGE;
@@ -697,13 +755,14 @@ static double zero = 0.0;	/* used as const */
                                 (void) WRITE2(": TLOSS error\n", 14);
                         }
                         errno = ERANGE;
-                }        
+                }
 		break;
 	    case 38:
 	    case 138:
+	    case 238:
 		/* jn(|x|>X_TLOSS) */
                 exc.type = TLOSS;
-                exc.name = type < 100 ? "jn" : "jnf";
+                exc.name = type < 100 ? "jn" : (type < 200 ? "jnf" : "jnl");
                 exc.retval = zero;
                 if (_LIB_VERSION == _POSIX_)
                         errno = ERANGE;
@@ -713,13 +772,14 @@ static double zero = 0.0;	/* used as const */
                                 (void) WRITE2(": TLOSS error\n", 14);
                         }
                         errno = ERANGE;
-                }        
+                }
 		break;
 	    case 39:
 	    case 139:
+	    case 239:
 		/* yn(x>X_TLOSS) */
                 exc.type = TLOSS;
-                exc.name = type < 100 ? "yn" : "ynf";
+                exc.name = type < 100 ? "yn" : (type < 200 ? "ynf" : "ynl");
                 exc.retval = zero;
                 if (_LIB_VERSION == _POSIX_)
                         errno = ERANGE;
@@ -729,13 +789,15 @@ static double zero = 0.0;	/* used as const */
                                 (void) WRITE2(": TLOSS error\n", 14);
                         }
                         errno = ERANGE;
-                }        
+                }
 		break;
 	    case 40:
 	    case 140:
+	    case 240:
 		/* gamma(finite) overflow */
 		exc.type = OVERFLOW;
-		exc.name = type < 100 ? "gamma" : "gammaf";
+		exc.name = type < 100 ? "gamma" : (type < 200
+						   ? "gammaf" : "gammal");
                 if (_LIB_VERSION == _SVID_)
                   exc.retval = HUGE;
                 else
@@ -748,9 +810,11 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 41:
 	    case 141:
+	    case 241:
 		/* gamma(-integer) or gamma(0) */
 		exc.type = SING;
-		exc.name = type < 100 ? "gamma" : "gammaf";
+		exc.name = type < 100 ? "gamma" : (type < 200
+						   ? "gammaf" : "gammal");
                 if (_LIB_VERSION == _SVID_)
                   exc.retval = HUGE;
                 else
@@ -766,10 +830,11 @@ static double zero = 0.0;	/* used as const */
 		break;
 	    case 42:
 	    case 142:
+	    case 242:
 		/* pow(NaN,0.0) */
 		/* error only if _LIB_VERSION == _SVID_ & _XOPEN_ */
 		exc.type = DOMAIN;
-		exc.name = type < 100 ? "pow" : "powf";
+		exc.name = type < 100 ? "pow" : (type < 200 ? "powf" : "powl");
 		exc.retval = x;
 		if (_LIB_VERSION == _IEEE_ ||
 		    _LIB_VERSION == _POSIX_) exc.retval = 1.0;
@@ -778,5 +843,5 @@ static double zero = 0.0;	/* used as const */
 		}
 		break;
 	}
-	return exc.retval; 
+	return exc.retval;
 }

@@ -1,0 +1,56 @@
+/* s_ilogbl.c -- long double version of s_ilogb.c.
+ * Conversion to long double by Ulrich Drepper,
+ * Cygnus Support, drepper@cygnus.com.
+ */
+
+/*
+ * ====================================================
+ * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
+ *
+ * Developed at SunPro, a Sun Microsystems, Inc. business.
+ * Permission to use, copy, modify, and distribute this
+ * software is freely granted, provided that this notice
+ * is preserved.
+ * ====================================================
+ */
+
+#if defined(LIBM_SCCS) && !defined(lint)
+static char rcsid[] = "$NetBSD: $";
+#endif
+
+/* ilogbl(long double x)
+ * return the binary exponent of non-zero x
+ * ilogbl(0) = 0x80000001
+ * ilogbl(inf/NaN) = 0x7fffffff (no signal is raised)
+ */
+
+#include "math.h"
+#include "math_private.h"
+
+#ifdef __STDC__
+	int __ilogbl(long double x)
+#else
+	int __ilogbl(x)
+	long double x;
+#endif
+{
+	int32_t es,hx,lx,ix;
+
+	GET_LDOUBLE_EXP(es,x);
+	es &= 0x7fff;
+	if(es==0) {
+	    GET_LDOUBLE_WORDS(es,hx,lx,x);
+	    if((hx|lx)==0)
+		return 0x80000001;	/* ilogbl(0) = 0x80000001 */
+	    else			/* subnormal x */
+		if(hx==0) {
+		    for (ix = -16415; lx>0; lx<<=1) ix -=1;
+		} else {
+		    for (ix = -16383; hx>0; hx<<=1) ix -=1;
+		}
+	    return ix;
+	}
+	else if (es<0x7fff) return es-0x3fff;
+	else return 0x7fffffff;
+}
+weak_alias (__ilogbl, ilogbl)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -48,7 +48,7 @@ ttyname_r (fd, buf, buflen)
 
   /* Test for the absolute minimal size.  This makes life easier inside
      the loop.  */
-  if (buflen < sizeof (dev) + 2)
+  if (buflen < (int) (sizeof (dev) + 2))
     {
       errno = EINVAL;
       return -1;
@@ -73,8 +73,8 @@ ttyname_r (fd, buf, buflen)
       {
 	char *cp;
 
-	cp = stpncpy (&buf[sizeof (dev) + 1], d->d_name,
-		      MIN (d->d_namlen + 1, buflen));
+	cp = __stpncpy (&buf[sizeof (dev) + 1], d->d_name,
+			MIN ((int) (_D_EXACT_NAMLEN (d) + 1), buflen));
 	cp[0] = '\0';
 
 	if (stat (buf, &st) == 0 && st.st_dev == mydev)

@@ -110,11 +110,39 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
 
   if (weak_value.s == NULL && ELF32_ST_BIND ((*ref)->st_info) != STB_WEAK)
     {
-      const char msg[] = "undefined symbol: ";
-      char buf[sizeof msg + strlen (undef_name)];
-      memcpy (buf, msg, sizeof msg - 1);
-      memcpy (&buf[sizeof msg - 1], undef_name, sizeof buf - sizeof msg + 1);
-      _dl_signal_error (0, reference_name, buf);
+      /* The symbol was not defined by any object in scope.  To allow
+	 access to dynamic linker functionality without using -ldl and
+	 thereby brining the dynamic linker's symbols into scope, we
+	 recognize a few magical symbol names and resolve them to the
+	 addresses of functions inside the dynamic linker.  */
+
+      struct magic
+	{
+	  unsigned long int hash;
+	  const char *name;
+	  Elf32_Addr value;
+	};
+      static struct magic magic[] =
+	{
+	  { 0xd6a2a5e, "_GNU_libc_dl_open", (Elf32_Addr) &_dl_open },
+	  { 0x69ef845, "_GNU_libc_dl_close", (Elf32_Addr) &_dl_close },
+	  { 0xae4d63c, "_GNU_libc_dl_symbol", (Elf32_Addr) &_dl_symbol_value },
+	  { 0, NULL, 0 }
+	};
+      struct magic *m;
+
+      for (m = magic; m->hash; ++m)
+	if (hash == m->hash && !strcmp (name, m->name))
+	  return m->value;
+
+      {
+	const char msg[] = "undefined symbol: ";
+	char buf[sizeof msg + strlen (undef_name)];
+	memcpy (buf, msg, sizeof msg - 1);
+	memcpy (&buf[sizeof msg - 1], undef_name,
+		sizeof buf - sizeof msg + 1);
+	_dl_signal_error (0, reference_name, buf);
+      }
     }
 
   *ref = weak_value.s;
@@ -134,4 +162,16 @@ _dl_setup_hash (struct link_map *map)
   map->l_buckets = hash;
   hash += map->l_nbuckets;
   map->l_chain = hash;
+}
+
+/* Look up symbol NAME in MAP's scope and return its run-time address.  */
+
+Elf32_Addr
+_dl_symbol_value (struct link_map *map, const char *name)
+{
+  Elf32_Addr loadbase;
+  const Elf32_Sym *ref = NULL;
+  struct link_map *scope[2] = { map, NULL };
+  loadbase = _dl_lookup_symbol (name, &ref, scope, map->l_name, 0, 0);
+  return loadbase + ref->st_value;
 }

@@ -541,6 +541,12 @@ extern int tcsetpgrp __P ((int __fd, __pid_t __pgrp_id));
 
 /* Return the login name of the user.  */
 extern char *getlogin __P ((void));
+#ifdef __USE_REENTRANT
+/* Return at most NAME_LEN characters of the login name of the user in NAME.
+   If it cannot be determined or some other error occured, return the error
+   code.  Otherwise return 0.  */
+extern int getlogin_r __P ((char *__name, size_t __name_len));
+#endif
 
 #ifdef	__USE_BSD
 /* Set the login name returned by `getlogin'.  */

@@ -52,7 +52,7 @@ static void dl_main (const Elf32_Phdr *phdr,
 		     Elf32_Word phent,
 		     Elf32_Addr *user_entry);
 
-static struct link_map rtld_map;
+struct link_map _dl_rtld_map;
 
 Elf32_Addr
 _dl_start (void *arg)
@@ -92,16 +92,17 @@ _dl_start (void *arg)
 
 
   /* Transfer data about ourselves to the permanent link_map structure.  */
-  rtld_map.l_addr = bootstrap_map.l_addr;
-  rtld_map.l_ld = bootstrap_map.l_ld;
-  memcpy (rtld_map.l_info, bootstrap_map.l_info, sizeof rtld_map.l_info);
-  _dl_setup_hash (&rtld_map);
+  _dl_rtld_map.l_addr = bootstrap_map.l_addr;
+  _dl_rtld_map.l_ld = bootstrap_map.l_ld;
+  memcpy (_dl_rtld_map.l_info, bootstrap_map.l_info,
+	  sizeof _dl_rtld_map.l_info);
+  _dl_setup_hash (&_dl_rtld_map);
 
   /* Cache the DT_RPATH stored in ld.so itself; this will be
      the default search path.  */
-  _dl_rpath = (void *) (rtld_map.l_addr +
-			rtld_map.l_info[DT_STRTAB]->d_un.d_ptr +
-			rtld_map.l_info[DT_RPATH]->d_un.d_val);
+  _dl_rpath = (void *) (_dl_rtld_map.l_addr +
+			_dl_rtld_map.l_info[DT_STRTAB]->d_un.d_ptr +
+			_dl_rtld_map.l_info[DT_RPATH]->d_un.d_val);
 
   /* Call the OS-dependent function to set up life so we can do things like
      file access.  It will call `dl_main' (below) to do all the real work
@@ -243,12 +244,12 @@ of this helper program; chances are you did not intend to run this program.\n",
 
   /* Put the link_map for ourselves on the chain so it can be found by
      name.  */
-  rtld_map.l_name = (char *) rtld_map.l_libname = interpreter_name;
-  rtld_map.l_type = lt_interpreter;
+  _dl_rtld_map.l_name = (char *) _dl_rtld_map.l_libname = interpreter_name;
+  _dl_rtld_map.l_type = lt_interpreter;
   while (l->l_next)
     l = l->l_next;
-  l->l_next = &rtld_map;
-  rtld_map.l_prev = l;
+  l->l_next = &_dl_rtld_map;
+  _dl_rtld_map.l_prev = l;
 
   /* Load all the libraries specified by DT_NEEDED entries.  */
   _dl_map_object_deps (l);
@@ -257,12 +258,12 @@ of this helper program; chances are you did not intend to run this program.\n",
      it will determine gdb's search order.
      Perhaps do this always, so later dlopen by name finds it?
      XXX But then gdb always considers it present.  */
-  if (rtld_map.l_opencount == 0)
+  if (_dl_rtld_map.l_opencount == 0)
     {
       /* No DT_NEEDED entry referred to the interpreter object itself,
 	 so remove it from the list of visible objects.  */
-      rtld_map.l_prev->l_next = rtld_map.l_next;
-      rtld_map.l_next->l_prev = rtld_map.l_prev;
+      _dl_rtld_map.l_prev->l_next = _dl_rtld_map.l_next;
+      _dl_rtld_map.l_next->l_prev = _dl_rtld_map.l_prev;
     }
 
   if (list_only)
@@ -325,7 +326,7 @@ of this helper program; chances are you did not intend to run this program.\n",
     l = l->l_next;
   do
     {
-      if (l != &rtld_map)
+      if (l != &_dl_rtld_map)
 	_dl_relocate_object (l, lazy);
       l = l->l_prev;
     } while (l);
@@ -337,28 +338,28 @@ of this helper program; chances are you did not intend to run this program.\n",
      _dl_relocate_object might need to call `mprotect' for DT_TEXTREL.  */
   _dl_sysdep_start_cleanup ();
 
-  if (rtld_map.l_opencount > 0)
+  if (_dl_rtld_map.l_opencount > 0)
     /* There was an explicit ref to the dynamic linker as a shared lib.
        Re-relocate ourselves with user-controlled symbol definitions.  */
-    _dl_relocate_object (&rtld_map, lazy);
+    _dl_relocate_object (&_dl_rtld_map, lazy);
 
   /* Tell the debugger where to find the map of loaded objects.  */
   dl_r_debug.r_version = 1	/* R_DEBUG_VERSION XXX */;
-  dl_r_debug.r_ldbase = rtld_map.l_addr; /* Record our load address.  */
+  dl_r_debug.r_ldbase = _dl_rtld_map.l_addr; /* Record our load address.  */
   dl_r_debug.r_map = _dl_loaded;
   dl_r_debug.r_brk = (Elf32_Addr) &_dl_r_debug_state;
 
-  if (rtld_map.l_info[DT_INIT])
+  if (_dl_rtld_map.l_info[DT_INIT])
     {
       /* Call the initializer for the compatibility version of the
 	 dynamic linker.  There is no additional initialization
 	 required for the ABI-compliant dynamic linker.  */
 
-      (*(void (*) (void)) (rtld_map.l_addr +
-			   rtld_map.l_info[DT_INIT]->d_un.d_ptr)) ();
+      (*(void (*) (void)) (_dl_rtld_map.l_addr +
+			   _dl_rtld_map.l_info[DT_INIT]->d_un.d_ptr)) ();
 
       /* Clear the field so a future dlopen won't run it again.  */
-      rtld_map.l_info[DT_INIT] = NULL;
+      _dl_rtld_map.l_info[DT_INIT] = NULL;
     }
 
   /* Once we return, _dl_sysdep_start will invoke

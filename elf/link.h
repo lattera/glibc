@@ -216,6 +216,12 @@ extern Elf32_Addr _dl_lookup_symbol (const char *undef,
 				     Elf32_Addr reloc_addr,
 				     int noplt);
 
+/* Look up symbol NAME in MAP's scope and return its run-time address.  */
+extern Elf32_Addr _dl_symbol_value (struct link_map *map, const char *name);
+
+
+/* Structure describing the dynamic linker itself.  */
+extern struct link_map _dl_rtld_map;
 
 /* List of objects currently loaded.  */
 extern struct link_map *_dl_loaded;

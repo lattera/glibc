@@ -1,4 +1,77 @@
+Tue Jun  4 21:01:20 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/getlogin_r.c: New file.
+
+Wed Jun  5 02:11:30 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* io/Makefile (routines): Add ttyname_r.
+
+	* resolv/res_debug.c, resolv/resolv.h: Update from bind-4.3.4-T4A.
+
+	* sysdeps/libm-i387/e_asinl.S, sysdeps/libm-i387/e_atan2l.S,
+	sysdeps/libm-i387/e_expl.S, sysdeps/libm-i387/e_fmodl.S,
+	sysdeps/libm-i387/e_log10l.S, sysdeps/libm-i387/e_logl.S,
+	sysdeps/libm-i387/e_remainderl.S, sysdeps/libm-i387/e_scalbl.S,
+	sysdeps/libm-i387/e_sqrtl.S, sysdeps/libm-i387/s_atanl.S,
+	sysdeps/libm-i387/s_cosl.S, sysdeps/libm-i387/s_ilogbl.S,
+	sysdeps/libm-i387/s_log1pl.S, sysdeps/libm-i387/s_logbl.S,
+	sysdeps/libm-i387/s_scalbnl.S, sysdeps/libm-i387/s_sinl.S,
+	sysdeps/libm-i387/s_tanl.S: New files.  i387 assembler versions
+	of `long double' math functions.
+
+	* sysdeps/libm-ieee754/k_standard.c: Add handling for errors
+	in long double functions.
+
+	* sysdeps/libm-ieee754/s_ilogbl.c, sysdeps/libm-ieee754/s_logbl.c,
+	sysdeps/libm-ieee754/s_modfl.c:  New files.  Generic versions
+	of `long double' math functions.
+
+	* sysdeps/libm-ieee754/s_isinf.c [NO_LONG_DOUBLE]: Add string
+        alias for __isinfl.
+
+	* sysdeps/libm-ieee754/w_acoshl.c, sysdeps/libm-ieee754/w_acosl.c,
+	sysdeps/libm-ieee754/w_asinl.c, sysdeps/libm-ieee754/w_atan2l.c,
+	sysdeps/libm-ieee754/w_atanhl.c, sysdeps/libm-ieee754/w_cabsl.c,
+	sysdeps/libm-ieee754/w_coshl.c, sysdeps/libm-ieee754/w_dreml.c,
+	sysdeps/libm-ieee754/w_expl.c, sysdeps/libm-ieee754/w_fmodl.c,
+	sysdeps/libm-ieee754/w_gammal.c, sysdeps/libm-ieee754/w_gammal_r.c,
+	sysdeps/libm-ieee754/w_hypotl.c, sysdeps/libm-ieee754/w_j0l.c,
+	sysdeps/libm-ieee754/w_j1l.c, sysdeps/libm-ieee754/w_jnl.c,
+	sysdeps/libm-ieee754/w_lgammal.c, sysdeps/libm-ieee754/w_lgammal_r.c,
+	sysdeps/libm-ieee754/w_log10l.c, sysdeps/libm-ieee754/w_logl.c,
+	sysdeps/libm-ieee754/w_powl.c, sysdeps/libm-ieee754/w_remainderl.c,
+	sysdeps/libm-ieee754/w_scalbl.c, sysdeps/libm-ieee754/w_sinhl.c,
+	sysdeps/libm-ieee754/w_sqrtl.c: New files.  Wrapper functions
+	around long double function implementations.
+
+	* sysdeps/posix/ttyname_r.c (ttyname_r): Use _D_EXACT_NAMLEN
+	to determine length of directory entry name.
+
+	* posix/Makefile (routines): Add getlogin_r.
+	* posix/unistd.h: Add prototype for getlogin_r.
+	* sysdeps/stub/getlogin_r.c: New file.  Reentrant version of
+	getlogin function, specified in P1003.1c/D6.  Stub version.
+	* sysdeps/unix/getlogin.c (getlogin): Use ttyname_r instead of
+	ttyname.  This avoids saving and restoring the old content.
+	Also use setutent_r, getutline_r and endutent_r instead of
+	accing UTMP file directly.
+	* sysdeps/unix/getlogin_r.c: New file.  Reentrant version of
+	getlogin function, specified in P1003.1c/D6.
+
+Tue Jun  4 20:10:09 1996  J.T. Conklin  <jtc@cygnus.com>
+
+	* sysdeps/libm-i387/s_finitef.S: Fix mask for exponent.
+
 Tue Jun  4 18:57:57 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): Grok magical undefined symbols
+	_GNU_libc_dl_{open,close,symbol} and resolve them to dl functions.
+
+	* elf/rtld.c (rtld_map): Renamed to _dl_rtld_map, made global.
+	* elf/link.h: Declare _dl_rtld_map.
+
+	* elf/dl-lookup.c (_dl_symbol_value): New function.
+	* elf/link.h: Declare it.
 
 	* elf/dladdr.c: Remove #include <setjmp.h>, we don't use it.
 
@@ -1353,12 +1426,12 @@ Tue May  7 23:43:07 1996  Ulrich Drepper  <drepper@cygnus.com>
 	libio/iosetvbuf.c, libio/ioungetc.c, libio/iovsprintf.c,
 	libio/libio.h, libio/putc.c, libio/putchar.c, libio/rewind.c,
 	libio/stdio.h, stdio-common/printf_fp.c, stdio-common/vfprintf.c,
-	stdio-common/vfscanf.c: Prepare for reentrent libio.
+	stdio-common/vfscanf.c: Prepare for reentrant libio.
 
 	* libio/clearerr_u.c, libio/feof_u.c, libio/ferror_u.c,
 	libio/fputc_u.c, libio/getc_u.c, libio/getchar_u.c,
 	libio/iofflush_u.c, libio/putc_u.c, libio/putchar_u.c: New files.
-	Used in reentrent libio.
+	Used in reentrant libio.
 
 	* misc/getusershell.c: Prevent warnings.
 

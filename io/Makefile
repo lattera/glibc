@@ -40,7 +40,7 @@ routines :=							      \
 	chdir fchdir						      \
 	getcwd getwd getdirname					      \
 	chown fchown						      \
-	ttyname isatty						      \
+	ttyname ttyname_r isatty				      \
 	link symlink readlink					      \
 	unlink rmdir						      \
 	ftw fts poll
