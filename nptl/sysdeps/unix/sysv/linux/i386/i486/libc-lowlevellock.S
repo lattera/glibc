@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -66,9 +66,7 @@ __lll_lock_wait:
 	.size	__lll_lock_wait,.-__lll_lock_wait
 
 
-	.globl	lll_unlock_wake_cb
 	.type	lll_unlock_wake_cb,@function
-	.hidden	lll_unlock_wake_cb
 	.align	16
 lll_unlock_wake_cb:
 	pushl	%esi
