@@ -20,6 +20,25 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <mach.h>
 #include <hurd.h>
+#include <sys/sysinfo.h>
+
+
+/* Return the number of processors configured on the system. */
+int
+__get_nproc_conf ()
+{
+  struct host_basic_info hbi;
+  kern_return_t err;
+  mach_msg_type_number_t cnt = HOST_BASIC_INFO_COUNT;
+  
+  err = __host_info (__mach_host_self (), HOST_BASIC_INFO, &hbi, &cnt);
+  if (err)
+    return __hurd_fail (err);
+  else if (cnt != HOST_BASIC_INFO_COUNT)
+    return __hurd_fail (EIEIO);
+
+  return hbi.max_cpus;
+}
 
 /* Return the number of processors currently available on the system. */
 int
