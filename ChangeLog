@@ -1,5 +1,34 @@
 2002-08-03  Roland McGrath  <roland@redhat.com>
 
+	* include/libc-symbols.h (hidden_weak): Define it for [__ASSEMBLER__].
+
+	* sysdeps/unix/make-syscalls.sh: Generate libc_hidden_def or
+	libc_hidden_weak for every system call symbol defined.
+
+	* include/time.h: Use libc_hidden_proto for time, asctime, mktime,
+	timelocal, localtime, strftime.
+	* time/asctime.c: Add libc_hidden_def.
+	* time/mktime.c: Likewise.
+	* time/localtime.c: Likewise.
+	* time/strftime.c: Likewise.
+	* time/strptime.c: Likewise.
+	* sysdeps/generic/time.c: Likewise.
+	* sysdeps/unix/time.c: Likewise.
+	* sysdeps/unix/sysv/i386/time.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/time.S: Likewise.
+
+	* include/arpa/inet.h: Use libc_hidden_proto for inet_ntop, inet_pton.
+	inet_makeaddr, inet_netof, inet_addr, __inet_addr.
+	* resolv/inet_ntop.c: Likewise.
+	* resolv/inet_pton.c: Likewise.
+	* inet/inet_mkadr.c: Add libc_hidden_def.
+	* inet/inet_netof.c: Likewise.
+	* resolv/inet_addr.c: Likewise.
+
+	* include/libc-symbols.h: Remove `defined HAVE_BROKEN_ALIAS_ATTRIBUTE'
+	clauses from conditionals for now.  Will have to be fixed later
+	for older compilers.
+
 	* sysdeps/generic/mempcpy.c (__mempcpy): #undef it before defn.
 
 2002-08-02  Ulrich Drepper  <drepper@redhat.com>

@@ -65,6 +65,7 @@ inet_pton(af, src, dst)
 	}
 	/* NOTREACHED */
 }
+libc_hidden_def (inet_pton)
 
 /* int
  * inet_pton4(src, dst)

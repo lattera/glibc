@@ -36,7 +36,7 @@ asctime (const struct tm *tp)
 {
   return __asctime_r (tp, result);
 }
-
+libc_hidden_def (asctime)
 
 char *
 __asctime_r (const struct tm *tp, char *buf)

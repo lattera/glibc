@@ -56,3 +56,4 @@ inet_makeaddr(net, host)
 	addr = htonl(addr);
 	return (*(struct in_addr *)&addr);
 }
+libc_hidden_def (inet_makeaddr)

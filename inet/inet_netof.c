@@ -52,3 +52,4 @@ inet_netof(in)
 	else
 		return (((i)&IN_CLASSC_NET) >> IN_CLASSC_NSHIFT);
 }
+libc_hidden_def (inet_netof)

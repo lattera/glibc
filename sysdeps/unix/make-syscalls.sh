@@ -130,7 +130,8 @@ shared-only-routines += $file
 	(echo '#include <sysdep.h>'; \\
 	 echo 'PSEUDO ($strong, $syscall, $nargs)'; \\
 	 echo '	ret'; \\
-	 echo 'PSEUDO_END($strong)'; \\"
+	 echo 'PSEUDO_END($strong)'; \\
+	 echo 'libc_hidden_def ($strong)'; \\"
 
   # Append any weak aliases or versions defined for this syscall function.
 
@@ -168,6 +169,7 @@ shared-only-routines += $file
 	;;
       *)
 	echo "	 echo 'weak_alias ($strong, $name)'; \\"
+	echo "	 echo 'libc_hidden_weak ($name)'; \\"
 	;;
     esac
   done
@@ -275,9 +277,12 @@ shared-only-routines += $file
 
     echo "	 echo '} \\'; \\"
 
+    echo "	 echo 'libc_hidden_def (BP_SYM ($strong)) \\'; \\"
+
     # generate thunk aliases
     for name in $nv_weak; do
       echo "	 echo 'weak_alias (BP_SYM ($strong), BP_SYM ($name)) \\'; \\"
+      echo "	 echo 'libc_hidden_weak (BP_SYM ($name)) \\'; \\"
     done
 
     # wrap up

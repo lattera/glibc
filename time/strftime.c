@@ -1361,6 +1361,9 @@ my_strftime (s, maxsize, format, tp ut_argument)
     *p = L_('\0');
   return i;
 }
+#ifdef _LIBC
+libc_hidden_def (strftime)
+#endif
 
 
 #ifdef emacs

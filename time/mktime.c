@@ -405,6 +405,11 @@ mktime (tp)
 #ifdef weak_alias
 weak_alias (mktime, timelocal)
 #endif
+
+#ifdef _LIBC
+libc_hidden_def (mktime)
+libc_hidden_weak (timelocal)
+#endif
 
 #if DEBUG
 

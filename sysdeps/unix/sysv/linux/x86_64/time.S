@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,3 +40,4 @@ L(pseudo_end):
 	add	$0x8, %rsp
 	ret
 PSEUDO_END(time)
+libc_hidden_def (time)

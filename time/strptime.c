@@ -1037,3 +1037,6 @@ strptime (buf, format, tm)
 #endif
   return strptime_internal (buf, format, tm, &decided, -1);
 }
+#ifdef _LIBC
+libc_hidden_def (strptime)
+#endif

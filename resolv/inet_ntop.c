@@ -73,6 +73,7 @@ inet_ntop(af, src, dst, size)
 	}
 	/* NOTREACHED */
 }
+libc_hidden_def (inet_ntop)
 
 /* const char *
  * inet_ntop4(src, dst, size)
@@ -184,7 +185,7 @@ inet_ntop6(src, dst, size)
 		tp += SPRINTF((tp, "%x", words[i]));
 	}
 	/* Was it a trailing run of 0x00's? */
-	if (best.base != -1 && (best.base + best.len) == 
+	if (best.base != -1 && (best.base + best.len) ==
 	    (NS_IN6ADDRSZ / NS_INT16SZ))
 		*tp++ = ':';
 	*tp++ = '\0';

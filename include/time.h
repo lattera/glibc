@@ -4,6 +4,14 @@
 #else
 # include <time/time.h>
 
+libc_hidden_proto (time)
+libc_hidden_proto (asctime)
+libc_hidden_proto (mktime)
+libc_hidden_proto (timelocal)
+libc_hidden_proto (localtime)
+libc_hidden_proto (strftime)
+libc_hidden_proto (strptime)
+
 /* Now define the internal interfaces.  */
 struct tm;
 

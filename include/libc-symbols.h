@@ -440,8 +440,7 @@
    versioned_symbol (libc, __real_foo, foo, GLIBC_2_1);
    libc_hidden_ver (__real_foo, foo)  */
 
-#if defined SHARED && defined DO_VERSIONING \
-    && defined HAVE_BROKEN_ALIAS_ATTRIBUTE
+#if defined SHARED && defined DO_VERSIONING
 # ifndef __ASSEMBLER__
 #  ifdef HAVE_BROKEN_VISIBILITY_ATTRIBUTE
 #   define __hidden_proto_hiddenattr
@@ -514,6 +513,7 @@
    to use __GI_* name and we need to add alias to the real name.
    hidden_proto and hidden_weak don't make sense for assembly.  */
 #  define hidden_def(name) strong_alias (name, __GI_##name)
+#  define hidden_weak(name) weak_alias (name, __GI_##name)
 #  define hidden_ver(local, name) strong_alias (local, __GI_##name)
 # endif
 #else
@@ -525,7 +525,7 @@
 # define hidden_ver(local, name)
 #endif
 
-#if !defined NOT_IN_libc && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE
+#if !defined NOT_IN_libc
 # define libc_hidden_proto(name) hidden_proto (name)
 # define libc_hidden_def(name) hidden_def (name)
 # define libc_hidden_weak(name) hidden_weak (name)
@@ -537,8 +537,7 @@
 # define libc_hidden_ver(local, name)
 #endif
 
-#if defined NOT_IN_libc && defined IS_IN_rtld \
-    && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE
+#if defined NOT_IN_libc && defined IS_IN_rtld
 # define rtld_hidden_proto(name) hidden_proto (name)
 # define rtld_hidden_def(name) hidden_def (name)
 # define rtld_hidden_weak(name) hidden_weak (name)
@@ -550,8 +549,7 @@
 # define rtld_hidden_ver(local, name)
 #endif
 
-#if defined NOT_IN_libc && defined IS_IN_libm \
-    && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE
+#if defined NOT_IN_libc && defined IS_IN_libm
 # define libm_hidden_proto(name) hidden_proto (name)
 # define libm_hidden_def(name) hidden_def (name)
 # define libm_hidden_weak(name) hidden_weak (name)
