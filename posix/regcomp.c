@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -894,9 +894,9 @@ init_dfa (dfa, pat_len)
   codeset_name = nl_langinfo (CODESET);
 # else
   codeset_name = getenv ("LC_ALL");
-  if (codeset_name == NULL || codeset[0] == '\0')
+  if (codeset_name == NULL || codeset_name[0] == '\0')
     codeset_name = getenv ("LC_CTYPE");
-  if (codeset_name == NULL || codeset[0] == '\0')
+  if (codeset_name == NULL || codeset_name[0] == '\0')
     codeset_name = getenv ("LANG");
   if (codeset_name == NULL)
     codeset_name = "";
@@ -1164,7 +1164,7 @@ optimize_subexps (so, node, sidx, depth)
               && so->nodes[node->left->node_idx].type == OP_OPEN_SUBEXP
               ? depth + 1 : 0;
   node->right = optimize_subexps (so, node->right, sidx, new_depth);
-                                     
+
   if (node->type != CONCAT)
     return node;
   if ((depth & 1) == 0

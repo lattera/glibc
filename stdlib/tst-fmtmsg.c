@@ -48,5 +48,11 @@ main (void)
       != MM_OK)
     result = 1;
 
+  if (addseverity (MM_TEST, NULL) != MM_OK)
+    {
+      puts ("second addseverity failed");
+      result = 1;
+    }
+
   return result;
 }

@@ -1,3 +1,11 @@
+2005-01-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c [!_LIBC] (init_dfa): Fix determining of relevant
+	LC_* variable.  Patch by Aharon Robbins <arnold@skeeve.com>.
+
+	* stdlib/fmtmsg.c (internal_addseverity): Remove incorrect free call.
+	* stdlib/tst-fmtmsg.c (main): Add another addseverity test.
+
 2005-01-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): We don't have to allow
