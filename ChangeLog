@@ -2,6 +2,7 @@
 
 	* sysdeps/mips/__longjmp.c (__longjmp): Change call to abort into
 	infinite loop to avoid pulling in stdio in the dynamic linker.
+	* sysdeps/mips/mips64/__longjmp.c (__longjmp): Likewise.
 
 2000-01-10  Andreas Jaeger  <aj@suse.de>
 
