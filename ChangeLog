@@ -1,3 +1,7 @@
+2001-08-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/stratcliff.c (main): Add strncpy test.
+
 2001-08-22  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/generic/dl-environ.c: Include <stdlib.h> and <unistd.h>,
