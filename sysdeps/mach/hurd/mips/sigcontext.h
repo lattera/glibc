@@ -44,11 +44,13 @@ struct sigcontext
 	  struct mips_float_state fs;
 	}
        trampoline.c knows this, so it must be changed if this changes.  */
+#define	sc_mips_thread_state sc_gpr /* Beginning of correspondence.  */
     int sc_gpr[31];		/* "General" registers; [0] is r1.  */
     int sc_mdlo, sc_mdhi;	/* Low and high multiplication results.  */
     int sc_pc;			/* Instruction pointer.  */
 
     /* struct mips_exc_state */
+#define sc_mips_exc_state sc_cause
     unsigned int sc_cause;	/* Machine-level trap code.  */
 #define SC_CAUSE_SST	0x00000044
     unsigned int sc_badvaddr;
@@ -62,6 +64,7 @@ struct sigcontext
     /* struct mips_float_state
        This is only filled in if the SC_COPROC_USE_FPU bit
        is set in sc_coproc_used.  */
+#define sc_mips_float_state sc_fpr
     int sc_fpr[32];		/* FP registers.  */
     int sc_fpcsr;		/* FPU status register.  */
     int sc_fpeir;		/* FP exception instruction register.  */
