@@ -29,8 +29,7 @@
 #include <sysdep.h>
 #include <mach/mig_support.h>
 #include "hurdstartup.h"
-#include <mach/host_info.h>
-#include <stdio-common/_itoa.h>
+#include <hurd/lookup.h>
 #include <hurd/auth.h>
 #include <hurd/term.h>
 #include <stdarg.h>
@@ -266,20 +265,37 @@ _dl_sysdep_start_cleanup (void)
    dynamic linker re-relocates itself to be user-visible (for -ldl),
    it will get the user's definition (i.e. usually libc's).  */
 
-/* Open FILE_NAME and return a Hurd I/O for it in *PORT, or
-   return an error.  If STAT is non-zero, stat the file into that stat buffer.  */
+/* Open FILE_NAME and return a Hurd I/O for it in *PORT, or return an
+   error.  If STAT is non-zero, stat the file into that stat buffer.  */
 static error_t
-open_file (const char *file_name, int mode,
+open_file (const char *file_name, int flags,
 	   mach_port_t *port, struct stat *stat)
 {
   enum retry_type doretry;
   char retryname[1024];		/* XXX string_t LOSES! */
-  file_t startdir, newpt, fileport;
-  int dealloc_dir;
-  int nloops;
+  file_t startdir;
   error_t err;
 
-  assert (!(mode & ~O_READ));
+  error_t use_init_port (int which, error_t (*operate) (file_t))
+    {
+      return (which < _dl_hurd_data->portarraysize
+	      ? ((*operate) (_dl_hurd_data->portarray[which]))
+	      : EGRATUITOUS);
+    }
+  file_t get_dtable_port (int fd)
+    {
+      if ((unsigned int) fd < _dl_hurd_data->dtablesize
+	  && _dl_hurd_data->dtable[fd] != MACH_PORT_NULL)
+	{
+	  __mach_port_mod_refs (__mach_task_self (), _dl_hurd_data->dtable[fd],
+				MACH_PORT_RIGHT_SEND, +1);
+	  return _dl_hurd_data->dtable[fd];
+	}
+      errno = EBADF;
+      return MACH_PORT_NULL;
+    }
+
+  assert (!(flags & ~O_READ));
 
   startdir = _dl_hurd_data->portarray[file_name[0] == '/' ?
 				      INIT_PORT_CRDIR : INIT_PORT_CWDIR];
@@ -287,216 +303,21 @@ open_file (const char *file_name, int mode,
   while (file_name[0] == '/')
     file_name++;
 
-  if (err = __dir_lookup (startdir, (char *)file_name, mode, 0,
-			  &doretry, retryname, &fileport))
-    return err;
+  err = __dir_lookup (startdir, (char *)file_name, O_RDONLY, 0,
+		      &doretry, retryname, port);
 
-  dealloc_dir = 0;
-  nloops = 0;
-
-  while (1)
+  if (!err)
+    err = __hurd_file_name_lookup_retry (use_init_port, get_dtable_port,
+					 __dir_lookup, doretry, retryname,
+					 O_RDONLY, 0, port);
+  if (!err && stat)
     {
-      if (dealloc_dir)
-	__mach_port_deallocate (__mach_task_self (), startdir);
+      err = __io_stat (*port, stat);
       if (err)
-	return err;
-
-      switch (doretry)
-	{
-	case FS_RETRY_REAUTH:
-	  {
-	    mach_port_t ref = __mach_reply_port ();
-	    err = __io_reauthenticate (fileport, ref, MACH_MSG_TYPE_MAKE_SEND);
-	    if (! err)
-	      err = __auth_user_authenticate
-		(_dl_hurd_data->portarray[INIT_PORT_AUTH],
-		 ref, MACH_MSG_TYPE_MAKE_SEND,
-		 &newpt);
-	    __mach_port_destroy (__mach_task_self (), ref);
-	  }
-	  __mach_port_deallocate (__mach_task_self (), fileport);
-	  if (err)
-	    return err;
-	  fileport = newpt;
-	  /* Fall through.  */
-
-	case FS_RETRY_NORMAL:
-#ifdef SYMLOOP_MAX
-	  if (nloops++ >= SYMLOOP_MAX)
-	    return ELOOP;
-#endif
-
-	  /* An empty RETRYNAME indicates we have the final port.  */
-	  if (retryname[0] == '\0')
-	    {
-	      dealloc_dir = 1;
-	    opened:
-	      /* We have the file open.  Now map it.  */
-	      if (stat)
-		err = __io_stat (fileport, stat);
-
-	      if (err)
-		{
-		  if (dealloc_dir)
-		    __mach_port_deallocate (__mach_task_self (), fileport);
-		}
-	      else
-		{
-		  if (!dealloc_dir)
-		    __mach_port_mod_refs (__mach_task_self (), fileport,
-					  MACH_PORT_RIGHT_SEND, 1);
-		  *port = fileport;
-		}
-
-	      return err;
-	    }
-
-	  startdir = fileport;
-	  dealloc_dir = 1;
-	  file_name = retryname;
-	  break;
-
-	case FS_RETRY_MAGICAL:
-	  switch (retryname[0])
-	    {
-	    case '/':
-	      startdir = _dl_hurd_data->portarray[INIT_PORT_CRDIR];
-	      dealloc_dir = 0;
-	      if (fileport != MACH_PORT_NULL)
-		__mach_port_deallocate (__mach_task_self (), fileport);
-	      file_name = &retryname[1];
-	      break;
-
-	    case 'f':
-	      if (retryname[1] == 'd' && retryname[2] == '/' &&
-		  isdigit (retryname[3]))
-		{
-		  /* We can't use strtol for the decoding here
-		     because it brings in hairy locale bloat.  */
-		  char *p;
-		  int fd = 0;
-		  for (p = &retryname[3]; isdigit (*p); ++p)
-		    fd = (fd * 10) + (*p - '0');
-		  /* Check for excess text after the number.  A slash is
-		     valid; it ends the component.  Anything else does not
-		     name a numeric file descriptor.  */
-		  if (*p != '/' && *p != '\0')
-		    return ENOENT;
-		  if (fd < 0 || fd >= _dl_hurd_data->dtablesize ||
-		      _dl_hurd_data->dtable[fd] == MACH_PORT_NULL)
-		    /* If the name was a proper number, but the file
-		       descriptor does not exist, we return EBADF instead
-		       of ENOENT.  */
-		    return EBADF;
-		  fileport = _dl_hurd_data->dtable[fd];
-		  if (*p == '\0')
-		    {
-		      /* This descriptor is the file port we want.  */
-		      dealloc_dir = 0;
-		      goto opened;
-		    }
-		  else
-		    {
-		      /* Do a normal retry on the remaining components.  */
-		      startdir = fileport;
-		      dealloc_dir = 1;
-		      file_name = p + 1; /* Skip the slash.  */
-		      break;
-		    }
-		}
-	      else
-		goto bad_magic;
-	      break;
-
-	    case 'm':
-	      if (retryname[1] == 'a' && retryname[2] == 'c' &&
-		  retryname[3] == 'h' && retryname[4] == 't' &&
-		  retryname[5] == 'y' && retryname[6] == 'p' &&
-		  retryname[7] == 'e')
-		{
-		  error_t err;
-		  struct host_basic_info hostinfo;
-		  mach_msg_type_number_t hostinfocnt = HOST_BASIC_INFO_COUNT;
-		  char *p;
-		  if (err = __host_info (__mach_host_self (), HOST_BASIC_INFO,
-					 (natural_t *) &hostinfo,
-					 &hostinfocnt))
-		    return err;
-		  if (hostinfocnt != HOST_BASIC_INFO_COUNT)
-		    return EGRATUITOUS;
-		  p = _itoa (hostinfo.cpu_subtype, &retryname[8], 10, 0);
-		  *--p = '/';
-		  p = _itoa (hostinfo.cpu_type, &retryname[8], 10, 0);
-		  if (p < retryname)
-		    abort ();	/* XXX write this right if this ever happens */
-		  if (p > retryname)
-		    strcpy (retryname, p);
-		  startdir = fileport;
-		  dealloc_dir = 1;
-		}
-	      else
-		goto bad_magic;
-	      break;
-
-	    case 't':
-	      if (retryname[1] == 't' && retryname[2] == 'y')
-		switch (retryname[3])
-		  {
-		    error_t opentty (file_t *result)
-		      {
-			error_t err;
-			file_t unauth;
-			err = __termctty_open_terminal
-			  (_dl_hurd_data->portarray[INIT_PORT_CTTYID],
-			   mode, &unauth);
-			if (! err)
-			  {
-			    mach_port_t ref = __mach_reply_port ();
-			    err = __io_reauthenticate
-			      (unauth, ref, MACH_MSG_TYPE_MAKE_SEND);
-			    if (! err)
-			      err = __auth_user_authenticate
-				(_dl_hurd_data->portarray[INIT_PORT_AUTH],
-				 ref, MACH_MSG_TYPE_MAKE_SEND,
-				 result);
-			    __mach_port_deallocate (__mach_task_self (),
-						    unauth);
-			    __mach_port_destroy (__mach_task_self (), ref);
-			  }
-			return err;
-		      }
-
-		  case '\0':
-		    if (err = opentty (&fileport))
-		      return err;
-		    dealloc_dir = 1;
-		    goto opened;
-		  case '/':
-		    if (err = opentty (&startdir))
-		      return err;
-		    dealloc_dir = 1;
-		    strcpy (retryname, &retryname[4]);
-		    break;
-		  default:
-		    goto bad_magic;
-		  }
-	      else
-		goto bad_magic;
-	      break;
-
-	    default:
-	    bad_magic:
-	      return EGRATUITOUS;
-	    }
-	  break;
-
-	default:
-	  return EGRATUITOUS;
-	}
-
-      err = __dir_lookup (startdir, (char *)file_name, mode, 0,
-			  &doretry, retryname, &fileport);
+	__mach_port_deallocate (__mach_task_self (), *port);
     }
+
+  return err;
 }
 
 int weak_function

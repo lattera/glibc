@@ -1,3 +1,13 @@
+2001-06-16  Roland McGrath  <roland@frob.com>
+
+	* hurd/Makefile (routines): Add lookup-retry.
+	* hurd/hurdlookup.c (__hurd_file_name_lookup_retry): Broken out ...
+	* hurd/lookup-retry.c: ... into here, new file.
+	* sysdeps/mach/hurd/dl-sysdep.c (open_file): Call that instead
+	using of duplicate code here.
+
+	* hurd/hurdexec.c (_hurd_exec): Be robust for DTABLESIZE==0.
+
 2001-06-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/ja.po: Update from translation team.
@@ -2589,7 +2599,7 @@
 
 2001-03-30  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
-	* posix/regex.c: Avoid an access violation if malloc failes.
+	* posix/regex.c: Avoid an access violation if malloc fails.
 
 2001-03-30  Andreas Jaeger  <aj@suse.de>
 
@@ -2606,7 +2616,7 @@
 	* include/endian.h: Define BIG_ENDI, LITTLE_ENDI, HIGH_HALF,
 	and LOW_HALF only if _LIBC is defined and _ISOMAC is not defined.
 	* stdlib/isomac.c (fmt): Define _LIBC and _ISOMAC.
-	.
+
 2001-03-29  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* posix/regex.c: Fix typo and add a sentinel.

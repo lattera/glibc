@@ -1,4 +1,5 @@
-# Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,97,98,99,2001
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +45,8 @@ user-interfaces		:= $(addprefix hurd/,\
 server-interfaces	:= hurd/msg faultexc
 
 routines = hurdstartup hurdinit \
-	   hurdid hurdlookup hurdpid hurdrlimit hurdprio hurdexec hurdselect \
+	   hurdid hurdpid hurdrlimit hurdprio hurdexec hurdselect \
+	   hurdlookup lookup-retry \
 	   get-host set-host \
 	   path-lookup \
 	   setauth \
