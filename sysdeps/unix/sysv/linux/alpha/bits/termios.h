@@ -150,6 +150,8 @@ struct termios
 #define  B3500000 00035
 #define  B4000000 00036
 
+#define __MAX_BAUD B4000000
+
 #define CSIZE	00001400
 #define   CS5	00000000
 #define   CS6	00000400
