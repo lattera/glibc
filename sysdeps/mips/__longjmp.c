@@ -69,7 +69,7 @@ __longjmp (env, val_arg)
   asm volatile ("lw $23, %0" : : "m" (env[0].__regs[7]));
 
   /* Get the PC.  */
-  asm volatile ("lw $31, %0" : : "m" (env[0].__pc));
+  asm volatile ("lw $25, %0" : : "m" (env[0].__pc));
 
   /* Give setjmp 1 if given a 0, or what they gave us if non-zero.  */
   if (val == 0)
@@ -77,7 +77,7 @@ __longjmp (env, val_arg)
   else
     asm volatile ("move $2, %0" : : "r" (val));
 
-  asm volatile ("j $31");
+  asm volatile ("jr $25");
 
   /* Avoid `volatile function does return' warnings.  */
   for (;;);

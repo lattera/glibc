@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,11 +21,11 @@
 /* The function __sigsetjmp_aux saves all the registers, but it can't
    reliably access the stack or frame pointers, so we pass them in as
    extra arguments.  */
-#ifdef PIC
+#ifdef __PIC__
 	.option pic2
 #endif
 ENTRY (__sigsetjmp)
-#ifdef PIC
+#ifdef __PIC__
 	.set	noreorder
 	.cpload	t9
 	.set	reorder
@@ -36,7 +36,7 @@ ENTRY (__sigsetjmp)
 #else
 	move	a3, $fp
 #endif
-#ifdef PIC
+#ifdef __PIC__
 	la	t9, __sigsetjmp_aux
 	jr	t9
 #else
