@@ -1,3 +1,27 @@
+Fri Aug 30 19:55:27 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/genops.c: Make _cleanup an alias of _IO_cleanup.
+	Reported by Erik Troan.
+
+Fri Aug 30 15:40:04 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Dist: Add sys/procfs.h and
+ 	sys/sysmacros.h.  Reported by Curtiss <1CMC3466@IBM.MTSAC.EDU>.
+
+Fri Aug 30 13:53:32 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* sysdeps/unix/mman/syscalls.list: `mmap' has 6 arguments, not 5.
+
+Fri Aug 30 13:01:10 1996  NIIBE Yutaka  <gniibe@mri.co.jp>
+
+	* sysdeps/i386/fpu/__math.h (tan): Pop 1.0 in ST to get
+	real result.
+
+Fri Aug 30 03:33:33 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/s_cbrtl.c: New file.  `long double'
+	implementation.
+
 Fri Aug 30 13:39:21 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* Makerules (BUILD_CFLAGS): Use @(common-objpfx) for config.h, not
@@ -23,7 +47,7 @@ Fri Aug 30 13:39:21 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 Fri Aug 30 01:26:44 1996  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdeps/unix/sysv/linux/i386/Dist: Add close.S.
+	* sysdeps/unix/sysv/linux/i386/Dist: Add clone.S.
 	* sysdeps/unix/sysv/linux/m68k/Dist: Likewise.
 	* sysdeps/unix/sysv/linux/alpha/Dist: Likewise.
 

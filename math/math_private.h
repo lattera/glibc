@@ -204,6 +204,15 @@ do {								\
   (d) = iw_u.value;						\
 } while (0)
 
+/* Get the more significant 32 bits of a long double mantissa.  */
+
+#define GET_LDOUBLE_MSW(v,d)					\
+do {								\
+  ieee_long_double_shape_type sh_u;				\
+  sh_u.value = (d);						\
+  (v) = sh_u.parts.msw;						\
+} while (0)
+
 /* Set the more significant 32 bits of a long double mantissa from an int.  */
 
 #define SET_LDOUBLE_MSW(d,v)					\

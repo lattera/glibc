@@ -1,4 +1,4 @@
-/* 
+/*
 Copyright (C) 1993, 1995 Free Software Foundation
 
 This file is part of the GNU IO Library.  This library is free
@@ -503,7 +503,7 @@ DEFUN(_IO_default_finish, (fp),
 #ifdef _IO_MTSAFE_IO
   _IO_mutex_destroy (fp->_lock);
 #endif
-  
+
   _IO_un_link(fp);
 }
 
@@ -519,7 +519,7 @@ DEFUN(_IO_sputbackc, (fp, c),
       register _IO_FILE *fp AND int c)
 {
   int result;
-  
+
   if (fp->_IO_read_ptr > fp->_IO_read_base
       && (unsigned char)fp->_IO_read_ptr[-1] == (unsigned char)c)
     {
@@ -540,7 +540,7 @@ DEFUN(_IO_sungetc, (fp),
       register _IO_FILE *fp)
 {
   int result;
-  
+
   if (fp->_IO_read_ptr > fp->_IO_read_base)
     {
       fp->_IO_read_ptr--;
@@ -591,7 +591,7 @@ int
 DEFUN(_IO_get_column, (fp),
       register _IO_FILE *fp)
 {
-  if (fp->_cur_column) 
+  if (fp->_cur_column)
     return _IO_adjust_column(fp->_cur_column - 1,
 			      fp->_IO_write_base,
 			      fp->_IO_write_ptr - fp->_IO_write_base);
@@ -638,7 +638,7 @@ DEFUN_VOID(_IO_cleanup)
      So it is possible that other static destructord might want to
      write to cout - and they're supposed to be able to do so.
 
-     The following will make the standard streambufs be unbuffered, 
+     The following will make the standard streambufs be unbuffered,
      which forces any output from late destructors to be written out. */
   _IO_unbuffer_all ();
 }
@@ -654,7 +654,7 @@ DEFUN(_IO_init_marker, (marker, fp),
     marker->_pos = fp->_IO_read_ptr - fp->_IO_read_end;
   else
     marker->_pos = fp->_IO_read_ptr - fp->_IO_read_base;
-  
+
   /* Should perhaps sort the chain? */
   marker->_next = fp->_markers;
   fp->_markers = marker;
@@ -775,7 +775,7 @@ DEFUN(_IO_default_pbackfail, (fp, c),
 	/* Need to handle a filebuf in write mode (switch to read mode). FIXME!*/
 	if (_IO_have_backup(fp) && !_IO_in_backup(fp))
 	  _IO_switch_to_backup_area(fp);
-	
+
 	if (!_IO_have_backup(fp))
 	  {
 	    /* No backup buffer: allocate one. */
@@ -852,8 +852,12 @@ DEFUN(_IO_default_write, (fp, data, n),
 struct __io_defs {
     __io_defs() { }
     ~__io_defs() { _IO_cleanup(); }
-};   
+};
 __io_defs io_defs__;
 #endif
 
 #endif /* TODO */
+
+#ifdef weak_alias
+weak_alias (_IO_cleanup, _cleanup)
+#endif

@@ -25,7 +25,6 @@ k_sinl.c
 k_tanl.c
 
 s_atanl.c
-s_cbrtl.c
 s_erfl.c
 s_expm1l.c
 s_log1pl.c

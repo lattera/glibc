@@ -1,6 +1,6 @@
 /* Inline math functions for i387.
 Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-Contributed by John C. Bowman <bowman@hagar.ph.utexas.edu>
+Contributed by John C. Bowman <bowman@ipp-garching.mpg.de>
 
 This file is part of the GNU C Library.
 
@@ -119,7 +119,8 @@ tan (double __x)
 {
   register double __value;
   __asm __volatile__
-    ("fptan"
+    ("fptan\n\t"
+     "fincstp"
      : "=t" (__value) : "0" (__x));
 
   return __value;

@@ -7,10 +7,12 @@ sys/kdaemon.h
 sys/klog.h
 sys/module.h
 sys/mount.h
+sys/procfs.h
 sys/quota.h
 sys/socketcall.h
 sys/sysctl.h
 sys/sysinfo.h
+sys/sysmacros.h
 sys/timex.h
 sys/user.h
 termio.h
