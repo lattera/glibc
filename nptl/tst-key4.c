@@ -62,7 +62,7 @@ tf2 (void *arg)
 }
 
 
-int
+static int
 do_test (void)
 {
   keys = alloca (max * sizeof (pthread_key_t));
