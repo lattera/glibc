@@ -1,3 +1,13 @@
+2003-02-15  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/Makefile (mach-before-compile rule): Pass generating=t,
+	use target mach-before-compile instead of generated.
+	(mach-before-compile): New target.
+	* Makerules: Disable use of tls.make if $(generating) is set.
+	* mach/Makefile: Include mach-syscalls.mk even if no_deps=t.
+	* sysdeps/mach/hurd/Makefile: Make generated hurd headers depend on
+	mach-shortcuts.h so mach/ generation happens before hurd/.
+
 2003-02-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/fpu/s_nextafterl.c: Decrement high word of mantissa
