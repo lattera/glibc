@@ -1,3 +1,8 @@
+2004-11-03  Marcus Brinkmann  <marcus@gnu.org>
+
+	* sysdeps/generic/tempname.c (__path_search): Add missing argument
+	TRY_TMPDIR.
+
 2004-10-31  Mariusz Mazur <mmazur@kernel.pl>
 
 	* sysdeps/unix/sysv/linux/alpha/setregid.c: New file.
