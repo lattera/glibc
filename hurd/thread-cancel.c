@@ -1,5 +1,5 @@
 /* Thread cancellation support.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,7 +43,14 @@ hurd_thread_cancel (thread_t thread)
   if (! ss)
     return EINVAL;
   if (ss == _hurd_self_sigstate ())
-    return EINTR;		/* Bozo.  */
+    {
+      /* We are cancelling ourselves, so it is easy to succeed
+	 quickly.  Since this function is not a cancellation point, we
+	 just leave the flag set pending the next cancellation point
+	 (hurd_check_cancel or RPC) and return success.  */
+      ss->cancel = 1;
+      return 0;
+    }
 
   assert (! __spin_lock_locked (&ss->critical_section_lock));
   __spin_lock (&ss->critical_section_lock);
