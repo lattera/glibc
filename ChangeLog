@@ -1,5 +1,8 @@
 2000-11-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/i486/bits/string.h (__strncat_g) [i686]: Fourth
+	parameter of asm must be in %ecx.
+
 	* string/tester.c: Mark test functions as static to avoid warnings.
 
 	* iconv/gconv_conf.c (read_conf_file): Make mod_counter static to

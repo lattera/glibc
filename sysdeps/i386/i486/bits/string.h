@@ -1015,7 +1015,7 @@ __strncat_g (char *__dest, __const char __src[], size_t __n)
      "decl	%1\n"
      "2:\n\t"
      "movb	$0,(%1)"
-     : "=&a" (__dummy), "=&D" (__tmp), "=&S" (__src), "=&r" (__n)
+     : "=&a" (__dummy), "=&D" (__tmp), "=&S" (__src), "=&c" (__n)
      : "0" (0), "1" (__tmp), "2" (__src), "3" (__n)
      : "memory", "cc");
 #else
