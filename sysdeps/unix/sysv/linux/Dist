@@ -1,6 +1,8 @@
 bits/initspin.h
 bits/pthreadtypes.h
 cmsg_nxthdr.c
+dl-brk.c
+dl-sbrk.c
 getdirentries.c
 getdirentries64.c
 ipc_priv.h
@@ -61,6 +63,7 @@ sys/kdaemon.h
 sys/klog.h
 sys/mount.h
 sys/pci.h
+sys/personality.h
 sys/prctl.h
 sys/procfs.h
 sys/quota.h
