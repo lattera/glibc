@@ -81,11 +81,8 @@
 
 /* Copyright 2001 by Stephen L. Moshier (moshier@na-net.onrl.gov).  */
 
-extern long double fabsl (long double);
-extern long double cosl (long double);
-extern long double sinl (long double);
-extern long double sqrtl (long double);
-extern long double logl (long double);
+#include "math.h"
+#include "math_private.h"
 
 /* 1 / sqrt(pi) */
 static const long double ONEOSQPI = 5.6418958354775628694807945156077258584405E-1L;
@@ -634,7 +631,7 @@ static const long double Q2_2r3D[NQ2_2r3D + 1] = {
 /* Evaluate P[n] x^n  +  P[n-1] x^(n-1)  +  ...  +  P[0] */
 
 static long double
-neval (long double x, long double *p, int n)
+neval (long double x, const long double *p, int n)
 {
   long double y;
 
@@ -652,7 +649,7 @@ neval (long double x, long double *p, int n)
 /* Evaluate x^n+1  +  P[n] x^(n)  +  P[n-1] x^(n-1)  +  ...  +  P[0] */
 
 static long double
-deval (long double x, long double *p, int n)
+deval (long double x, const long double *p, int n)
 {
   long double y;
 

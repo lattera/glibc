@@ -1,3 +1,22 @@
+2001-11-26  Stephen L Moshier <moshier@mediaone.net>
+
+	* sysdeps/ieee754/ldbl-128/e_log10l.c (L102B): Fix typo in
+	initialization.
+
+	* sysdeps/ieee754/ldbl-128/e_coshl.c (__ieee754_coshl): Remove
+	unused variables.  Fix threshold for returning 1.0.
+
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c (neval, deval): Constify
+	argument.
+
+	* sysdeps/ieee754/ldbl-128/s_erfl.c (neval, deval): Likewise, and
+	remove unused variables.
+
+	* sysdeps/ieee754/ldbl-128/e_j0l.c (neval, deval): Likewise.
+
+	* sysdeps/ieee754/ldbl-128/e_j1l.c (neval, deval): Likewise, and
+	include local math header files.
+
 2001-11-22  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/ldbl-96/s_ilogbl.c (__ilogbl): Add brace to

@@ -84,7 +84,7 @@
 /* Evaluate P[n] x^n  +  P[n-1] x^(n-1)  +  ...  +  P[0] */
 
 static long double
-neval (long double x, long double *p, int n)
+neval (long double x, const long double *p, int n)
 {
   long double y;
 
@@ -102,7 +102,7 @@ neval (long double x, long double *p, int n)
 /* Evaluate x^n+1  +  P[n] x^(n)  +  P[n-1] x^(n-1)  +  ...  +  P[0] */
 
 static long double
-deval (long double x, long double *p, int n)
+deval (long double x, const long double *p, int n)
 {
   long double y;
 
@@ -746,7 +746,7 @@ __erfl (x)
 #endif
 {
   long double a, y, z;
-  int32_t i, ix, sign, flag;
+  int32_t i, ix, sign;
   ieee854_long_double_shape_type u;
 
   u.value = x;
@@ -804,8 +804,8 @@ weak_alias (__erf, erfl)
        x;
 #endif
 {
-  long double P, Q, s, y, z, p, r;
-  int32_t i, ix, sign, flag;
+  long double y, z, p, r;
+  int32_t i, ix, sign;
   ieee854_long_double_shape_type u;
 
   u.value = x;

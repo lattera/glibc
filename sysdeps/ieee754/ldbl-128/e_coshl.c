@@ -55,7 +55,6 @@ __ieee754_coshl (x)
 {
   long double t, w;
   int32_t ex;
-  u_int32_t mx, lx;
   ieee854_long_double_shape_type u;
 
   u.value = x;
@@ -73,7 +72,7 @@ __ieee754_coshl (x)
     {
       t = __expm1l (u.value);
       w = one + t;
-      if (ex < 0x3fc60000) /* |x| < 2^-57 */
+      if (ex < 0x3fb80000) /* |x| < 2^-116 */
 	return w;		/* cosh(tiny) = 1 */
 
       return one + (t * t) / (w + w);

@@ -707,7 +707,7 @@ static const long double RDr9[NRDr9 + 1] =
 /* Evaluate P[n] x^n  +  P[n-1] x^(n-1)  +  ...  +  P[0] */
 
 static long double
-neval (long double x, long double *p, int n)
+neval (long double x, const long double *p, int n)
 {
   long double y;
 
@@ -725,7 +725,7 @@ neval (long double x, long double *p, int n)
 /* Evaluate x^n+1  +  P[n] x^(n)  +  P[n-1] x^(n-1)  +  ...  +  P[0] */
 
 static long double
-deval (long double x, long double *p, int n)
+deval (long double x, const long double *p, int n)
 {
   long double y;
 
