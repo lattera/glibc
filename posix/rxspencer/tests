@@ -505,3 +505,8 @@ Char \([a-z0-9_]*\)\[.*	b	Char xyz[k	Char xyz[k	xyz
 a?b	-	ab	ab
 -\{0,1\}[0-9]*$	b	-5	-5
 a*a*a*a*a*a*a*	&	aaaaaa	aaaaaa
+(\b){0}	-	x	@x	-
+\(\b\)\{0,0\}	b	abc	@abc	-
+a(\b){0}c	-	ac	ac	-
+a(.*)b(\0){0}c	-	abc	abc	@bc,-
+a(.*)b(\0){0}c	-	axbc	axbc	x,-

@@ -1,3 +1,9 @@
+2004-11-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c (calc_eclosure_iter): Don't access
+	dfa->edests[node].elems[0] if dfa->edests[node].nelem == 0.
+	* posix/rxspencer/tests: Add 5 new tests.
+
 2004-11-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ifaddrs.c: Determine sin6_scope_id field

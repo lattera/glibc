@@ -610,8 +610,8 @@ getifaddrs (struct ifaddrs **ifap)
 			    {
 			      memcpy (&ifas[ifa_index].addr.s6.sin6_addr,
 				      rta_data, rta_payload);
-			      if (IN6_IS_ADDR_LINKLOCAL (rta_data) ||
-				  IN6_IS_ADDR_MC_LINKLOCAL (rta_data))
+			      if (IN6_IS_ADDR_LINKLOCAL (rta_data)
+				  || IN6_IS_ADDR_MC_LINKLOCAL (rta_data))
 				ifas[ifa_index].addr.s6.sin6_scope_id =
 				  ifam->ifa_index;
 			    }

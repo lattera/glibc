@@ -1602,7 +1602,9 @@ calc_eclosure_iter (new_set, dfa, node, root)
 		? dfa->nodes[node].opr.ctx_type : 0);
   /* If the current node has constraints, duplicate all nodes.
      Since they must inherit the constraints.  */
-  if (constraint && !dfa->nodes[dfa->edests[node].elems[0]].duplicated)
+  if (constraint
+      && dfa->edests[node].nelem
+      && !dfa->nodes[dfa->edests[node].elems[0]].duplicated)
     {
       int org_node, cur_node;
       org_node = cur_node = node;
