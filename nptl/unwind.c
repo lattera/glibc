@@ -50,7 +50,13 @@ unwind_stop (int version, _Unwind_Action actions,
 static void
 unwind_cleanup (_Unwind_Reason_Code reason, struct _Unwind_Exception *exc)
 {
-  /* Nothing to do.  */
+  /* When we get here a C++ catch block didn't rethrow the object.  We
+     cannot handle this case and therefore abort.  */
+# define STR_N_LEN(str) str, strlen (str)
+  INTERNAL_SYSCALL_DECL (err);
+  INTERNAL_SYSCALL (write, err, 3, STDERR_FILENO,
+		    STR_N_LEN ("FATAL: exception not rethrown\n"));
+  abort ();
 }
 
 #endif	/* have forced unwind */
