@@ -1,0 +1,2 @@
+# For x86 machines with FPU, use the i387 port of libm by JT Conklin.
+libm-i387

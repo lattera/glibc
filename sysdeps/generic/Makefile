@@ -16,18 +16,6 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-ifeq	($(subdir),math)
-ifndef	math-twiddled
-
-sysdep_routines += sincos asincos exp__E log__L
-elided-routines += acos asin cos sin
-
-math-twiddled := t
-override +gccwarn := -w
-endif
-
-endif
-
 ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
 	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/bytesex.h))))))
 

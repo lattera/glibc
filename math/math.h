@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
+/* Declarations for math functions.
+Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +31,8 @@ __BEGIN_DECLS
 #define	__need_Emath
 #include <errno.h>
 
-/* Get machine-dependent HUGE_VAL value (returned on overflow).  */
+/* Get machine-dependent HUGE_VAL value (returned on overflow).
+   On all IEEE754 machines, this is +Infinity.  */
 #include <huge_val.h>
 
 /* Get machine-dependent NAN value (returned for some domain errors).  */
@@ -39,259 +41,83 @@ __BEGIN_DECLS
 #endif
 
 
-/* Trigonometric functions.  */
+/* The file <mathcalls.h> contains the prototypes for all the actual
+   math functions.  These macros are used for those prototypes, so
+   we can easily declare each function as both `name' and `__name',
+   and can declare the float versions `namef' and `__namef'.  */
 
-/* Arc cosine of X.  */
-extern double acos __P ((double __x)) __attribute__ ((__const__));
-/* Arc sine of X.  */
-extern double asin __P ((double __x)) __attribute__ ((__const__));
-/* Arc tangent of X.  */
-extern double atan __P ((double __x)) __attribute__ ((__const__));
-/* Arc tangent of Y/X.  */
-extern double atan2 __P ((double __y, double __x)) __attribute__ ((__const__));
+#define __MATHCALL(function,suffix, args)	\
+  __MATHDECL (_Mdouble_, function,suffix, args)
+#define __MATHDECL(type, function,suffix, args) \
+  __MATHDECL_1(type, function,suffix, args); \
+  __MATHDECL_1(type, __##function,suffix, args)
+#define __MATHDECL_1(type, function,suffix, args) \
+  extern type __MATH_PRECNAME(function,suffix) args
 
-/* Cosine of X.  */
-extern double cos __P ((double __x)) __attribute__ ((__const__));
-/* Sine of X.  */
-extern double sin __P ((double __x)) __attribute__ ((__const__));
-/* Tangent of X.  */
-extern double tan __P ((double __x)) __attribute__ ((__const__));
+#define _Mdouble_ 		double
+#define __MATH_PRECNAME(name,r)	name##r
+#include <mathcalls.h>
+#undef	_Mdouble_
+#undef	__MATH_PRECNAME
 
+#ifdef __USE_MISC
+/* Include the file of declarations again, this type using `float'
+   instead of `double' and appending f to each function name.  */
 
-/* Hyperbolic functions.  */
+#define _Mdouble_ 		float
+#define __MATH_PRECNAME(name,r)	name##f##r
+#include <mathcalls.h>
+#undef	_Mdouble_
+#undef	__MATH_PRECNAME
+#endif
 
-/* Hyperbolic cosine of X.  */
-extern double cosh __P ((double __x)) __attribute__ ((__const__));
-/* Hyperbolic sine of X.  */
-extern double sinh __P ((double __x)) __attribute__ ((__const__));
-/* Hyperbolic tangent of X.  */
-extern double tanh __P ((double __x)) __attribute__ ((__const__));
 
 #ifdef	__USE_MISC
-/* Hyperbolic arc cosine of X.  */
-extern double acosh __P ((double __x)) __attribute__ ((__const__));
-/* Hyperbolic arc sine of X.  */
-extern double asinh __P ((double __x)) __attribute__ ((__const__));
-/* Hyperbolic arc tangent of X.  */
-extern double atanh __P ((double __x)) __attribute__ ((__const__));
-#endif
+/* Support for various different standard error handling behaviors.  */
 
-/* Exponential and logarithmic functions.  */
+typedef enum { _IEEE_ = -1, _SVID_, _XOPEN_, _POSIX_ } _LIB_VERSION_TYPE;
 
-/* Exponentional function of X.  */
-extern double exp __P ((double __x)) __attribute__ ((__const__));
-
-/* Break VALUE into a normalized fraction and an integral power of 2.  */
-extern double frexp __P ((double __value, int *__exp));
-
-/* X times (two to the EXP power).  */
-extern double ldexp __P ((double __x, int __exp)) __attribute__ ((__const__));
-
-/* Natural logarithm of X.  */
-extern double log __P ((double __x)) __attribute__ ((__const__));
-
-/* Base-ten logarithm of X.  */
-extern double log10 __P ((double __x)) __attribute__ ((__const__));
-
-#ifdef	__USE_MISC
-/* Return exp(X) - 1.  */
-extern double __expm1 __P ((double __x)) __attribute__ ((__const__));
-extern double expm1 __P ((double __x)) __attribute__ ((__const__));
-
-/* Return log(1 + X).  */
-extern double log1p __P ((double __x)) __attribute__ ((__const__));
-#endif
-
-/* Break VALUE into integral and fractional parts.  */
-extern double modf __P ((double __value, double *__iptr));
-
-
-/* Power functions.  */
-
-/* Return X to the Y power.  */
-extern double pow __P ((double __x, double __y)) __attribute__ ((__const__));
-
-/* Return the square root of X.  */
-extern double sqrt __P ((double __x)) __attribute__ ((__const__));
-
-#ifdef	__USE_MISC
-/* Return the cube root of X.  */
-extern double cbrt __P ((double __x)) __attribute__ ((__const__));
+/* This variable can be changed at run-time to any of the values above to
+   affect floating point error handling behavior (it may also be necessary
+   to change the hardware FPU exception settings).  */
+extern _LIB_VERSION_TYPE _LIB_VERSION;
 #endif
 
 
-/* Nearest integer, absolute value, and remainder functions.  */
+#ifdef __USE_SVID
+/* In SVID error handling, `matherr' is called with this description
+   of the exceptional condition.  */
+struct exception
+  {
+    int type;
+    char *name;
+    double arg1;
+    double arg2;
+    double retval;
+  };
 
-/* Smallest integral value not less than X.  */
-extern double ceil __P ((double __x)) __attribute__ ((__const__));
+extern int matherr __P ((struct exception *));
 
-/* Absolute value of X.  */
-extern double fabs __P ((double __x)) __attribute__ ((__const__));
+#define X_TLOSS		1.41484755040568800000e+16
 
-/* Largest integer not greater than X.  */
-extern double floor __P ((double __x)) __attribute__ ((__const__));
+/* Types of exceptions in the `type' field.  */
+#define	DOMAIN		1
+#define	SING		2
+#define	OVERFLOW	3
+#define	UNDERFLOW	4
+#define	TLOSS		5
+#define	PLOSS		6
 
-/* Floating-point modulo remainder of X/Y.  */
-extern double fmod __P ((double __x, double __y)) __attribute__ ((__const__));
+/* SVID mode specifies returning this large value instead of infinity.  */
+#define HUGE		FLT_MAX
+#include <float.h>		/* Defines FLT_MAX.  */
 
-
-/* Return 0 if VALUE is finite or NaN, +1 if it
-   is +Infinity, -1 if it is -Infinity.  */
-extern int __isinf __P ((double __value)) __attribute__ ((__const__));
-
-/* Return nonzero if VALUE is not a number.  */
-extern int __isnan __P ((double __value)) __attribute__ ((__const__));
-
-/* Return nonzero if VALUE is finite and not NaN.  */
-extern int __finite __P ((double __value)) __attribute__ ((__const__));
-#ifdef	__OPTIMIZE__
-#define	__finite(value)	(!__isinf(value))
 #endif
 
-/* Deal with an infinite or NaN result.
-   If ERROR is ERANGE, result is +Inf;
-   if ERROR is - ERANGE, result is -Inf;
-   otherwise result is NaN.
-   This will set `errno' to either ERANGE or EDOM,
-   and may return an infinity or NaN, or may do something else.  */
-extern double __infnan __P ((int __error));
-
-/* Return X with its signed changed to Y's.  */
-extern double __copysign __P ((double __x, double __y))
-     __attribute__ ((__const__));
-
-/* Return X times (2 to the Nth power).  */
-extern double __scalb __P ((double __x, int __n))
-     __attribute__ ((__const__));
-
-#ifdef	__OPTIMIZE__
-#define	__scalb(x, n)	ldexp ((x), (n))
-#endif
-
-/* Return the remainder of X/Y.  */
-extern double __drem __P ((double __x, double __y))
-     __attribute__ ((__const__));
-
-/* Return the base 2 signed integral exponent of X.  */
-extern double __logb __P ((double __x)) __attribute__ ((__const__));
-
-#ifdef	__USE_MISC
-
-/* Return the integer nearest X in the direction of the
-   prevailing rounding mode.  */
-extern double __rint __P ((double __x)) __attribute__ ((__const__));
-extern double rint __P ((double __x)) __attribute__ ((__const__));
-
-/* Return `sqrt(X*X + Y*Y)'.  */
-extern double hypot __P ((double __x, double __y)) __attribute__ ((__const__));
-
-struct __cabs_complex
-{
-  double __x, __y;
-};
-
-/* Return `sqrt(X*X + Y*Y)'.  */
-extern double cabs __P ((struct __cabs_complex)) __attribute__ ((__const__));
-
-extern int isinf __P ((double __value)) __attribute__ ((__const__));
-extern int isnan __P ((double __value)) __attribute__ ((__const__));
-extern int finite __P ((double __value)) __attribute__ ((__const__));
-extern double infnan __P ((int __error)) __attribute__ ((__const__));
-extern double copysign __P ((double __x, double __y))
-     __attribute__ ((__const__));
-extern double scalb __P ((double __x, int __n)) __attribute__ ((__const__));
-extern double drem __P ((double __x, double __y)) __attribute__ ((__const__));
-extern double logb __P ((double __x)) __attribute__ ((__const__));
-
-#ifdef	__OPTIMIZE__
-#define	isinf(value)	__isinf(value)
-#define	isnan(value)	__isnan(value)
-#define	infnan(error)	__infnan(error)
-#define	finite(value)	__finite(value)
-#define	copysign(x, y)	__copysign((x), (y))
-#define	scalb(x, n)	__scalb((x), (n))
-#define	drem(x, y)	__drem((x), (y))
-#define	logb(x)		__logb(x)
-#endif /* Optimizing.  */
-
-#endif /* Use misc.  */
-
-
-#if 0
-/* The "Future Library Directions" section of the
-   ANSI Standard reserves these as `float' and
-   `long double' versions of the above functions.  */
-
-extern float acosf __P ((float __x)) __attribute__ ((__const__));
-extern float asinf __P ((float __x)) __attribute__ ((__const__));
-extern float atanf __P ((float __x)) __attribute__ ((__const__));
-extern float atan2f __P ((float __y, float __x)) __attribute__ ((__const__));
-extern float cosf __P ((float __x)) __attribute__ ((__const__));
-extern float sinf __P ((float __x)) __attribute__ ((__const__));
-extern float tanf __P ((float __x)) __attribute__ ((__const__));
-extern float coshf __P ((float __x)) __attribute__ ((__const__));
-extern float sinhf __P ((float __x)) __attribute__ ((__const__));
-extern float tanhf __P ((float __x)) __attribute__ ((__const__));
-extern float expf __P ((float __x)) __attribute__ ((__const__));
-extern float frexpf __P ((float __value, int *__exp));
-extern float ldexpf __P ((float __x, int __exp)) __attribute__ ((__const__));
-extern float logf __P ((float __x)) __attribute__ ((__const__));
-extern float log10f __P ((float __x)) __attribute__ ((__const__));
-extern float modff __P ((float __value, float *__iptr));
-extern float powf __P ((float __x, float __y)) __attribute__ ((__const__));
-extern float sqrtf __P ((float __x)) __attribute__ ((__const__));
-extern float ceilf __P ((float __x)) __attribute__ ((__const__));
-extern float fabsf __P ((float __x)) __attribute__ ((__const__));
-extern float floorf __P ((float __x)) __attribute__ ((__const__));
-extern float fmodf __P ((float __x, float __y)) __attribute__ ((__const__));
-
-extern __long_double_t acosl __P ((__long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t asinl __P ((__long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t atanl __P ((__long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t atan2l __P ((__long_double_t __y, __long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t cosl __P ((__long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t sinl __P ((__long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t tanl __P ((__long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t coshl __P ((__long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t sinhl __P ((__long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t tanhl __P ((__long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t expl __P ((__long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t frexpl __P ((__long_double_t __value, int *__exp));
-extern __long_double_t ldexpl __P ((__long_double_t __x, int __exp))
-     __attribute__ ((__const__));
-extern __long_double_t logl __P ((__long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t log10l __P ((__long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t modfl __P ((__long_double_t __value,
-				   __long_double_t *__ip));
-extern __long_double_t powl __P ((__long_double_t __x, __long_double_t __y))
-     __attribute__ ((__const__));
-extern __long_double_t sqrtl __P ((__long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t ceill __P ((__long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t fabsl __P ((__long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t floorl __P ((__long_double_t __x))
-     __attribute__ ((__const__));
-extern __long_double_t fmodl __P ((__long_double_t __x, __long_double_t __y))
-     __attribute__ ((__const__));
-#endif /* 0 */
 
 /* Get machine-dependent inline versions (if there are any).  */
 #include <__math.h>
+
 
 __END_DECLS
 

@@ -37,6 +37,11 @@ Version 1.10
   through the interface in <sys/gmon.h>.  The profiling code was adapted
   from 4.4 BSD-Lite.
 
+* The math code has been replaced with a math library based on fdlibm from
+  Sun, and modified by JT Conklin with i387 support and by Ian Taylor with
+  `float' functions.  The math functions now reside in a separate library,
+  so programs using them will need to use `-lm' their linking commands.
+
 * The new functions `strtoq' and `strtouq' parse integer values from
   strings, like `strtol' and `strtoul', but they return `long long int' and
   `unsigned long long int' values, respectively (64-bit quantities).
@@ -52,6 +57,10 @@ Version 1.10
 
 * The new header <langinfo.h> defines an interface for accessing
   various locale-dependent data (using the locale chosen with `setlocale').
+
+* Ulrich Drepper has contributed a new suite of functions for operation on
+  wide-character and multibyte-character strings; see <wcstr.h> and <mbstr.h>.
+  These new functions are intended to conform to the ISO C specification.
 
 * You can now use positional parameter specifications in format strings
   for the `printf' and `scanf' families of functions.  For example,
@@ -163,10 +172,13 @@ Version 1.10
 
 * New function `getsid' returns session ID number on systems that support it.
 
-* The 4.4 BSD `db' library has been incorporated into the GNU C library.
-  New header files <db.h> and <mpool.h> provide a rich set of functions for
-  several types of simple databases stored in memory and in files, and
-  <ndbm.h> is an old `ndbm'-compatbile interface using the `db' functions.
+* We have incorporated the 4.4 BSD `db' library (version 1.85).  New header
+  files <db.h> and <mpool.h> provide a rich set of functions for several
+  types of simple databases stored in memory and in files, and <ndbm.h> is
+  an old `ndbm'-compatbile interface using the `db' functions.
+
+* New macro `strdupa' copies a string like `strdup', but uses local stack
+  space from `alloca' instead of dynamic heap space from `malloc'.
 
 Version 1.09
 

@@ -1,0 +1,2 @@
+# For all IEEE machines, use Sun's fdlibm code.
+libm-ieee754

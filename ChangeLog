@@ -1,3 +1,7 @@
+Mon Mar  4 20:54:40 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makeconfig ($(common-objpfx)config.make): Depend on config.h.in.
+
 Tue Mar  5 12:14:57 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/select.c (__select): Also don't fault just
@@ -9,7 +13,32 @@ Mon Mar  4 17:35:35 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 	Don't increment GOT only because READ/WRITE/EXCEPTFDS is 0!
 	Don't return without frobbing the bitmasks after a timeout.
 	When clearing the bitmasks, only loop from FIRSTFD to LASTFD.
-	
+
+Mon Mar  4 17:35:09 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* hurd/catch-signal.c (hurd_safe_memmove): New function.
+	(hurd_safe_copyin, hurd_safe_copyout): New functions.
+	* hurd/hurd/sigpreempt.h: Declare them.
+
+Sun Mar  3 08:43:44 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	Replace math code with fdlibm from Sun as modified for netbsd by
+	JT Conklin and Ian Taylor, including x86 FPU support.
+	* sysdeps/libm-ieee754, sysdeps/libm-i387: New directories.
+	* math/math_private.h: New file.
+	* sysdeps/i386/fpu/Implies: New file.
+	* sysdeps/ieee754/Implies: New file.
+	* math/machine/asm.h, math/machine/endian.h: New files.
+	* math/Makefile, math/math.h: Rewritten.
+	* mathcalls.h, math/mathcalls.h: New file, broken out of math.h.
+	* math/finite.c: File removed.
+	* sysdeps/generic/Makefile [$(subdir)=math]: Frobnication removed.
+
+	* math/test-math.c: Include errno.h and string.h.
+
+	* sysdeps/unix/bsd/dirstream.h: File removed.
+	* sysdeps/unix/bsd/readdir.c: File removed.
+
 Sat Mar  2 16:35:40 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/m68k/profil-counter.h: File removed.
