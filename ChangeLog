@@ -1,7 +1,7 @@
 2004-12-08  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nis/nss_nisplus/nisplus-netgrp.c (_nss_nisplus_getnetgrent_r):
-	Add check if the value is not an empty string.  [BZ #305]
+	Add check if the value is not an empty string.  [BZ #597]
 
 2004-11-29  Jakub Jelinek  <jakub@redhat.com>
 
