@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,94,97,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1994,1997,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,10 @@ alarm (seconds)
     return 0;
 
   retval = old.it_value.tv_sec;
-  if (old.it_value.tv_usec)
+  /* Round to the nearest second, but never report zero seconds when
+     the alarm is still set.  */
+  if (old.it_value.tv_usec >= 500000
+      || (retval == 0 && old.it_value.tv_usec > 0))
     ++retval;
   return retval;
 }
