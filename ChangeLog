@@ -1,3 +1,10 @@
+1998-12-03  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* hurd/Versions [GLIBC_2.1]: Add _hurd_proc_init.
+
+	* hurd/Versions: Move geteuids and seteuids from GLIBC_2.0 to
+	GLIBC_2.1.
+
 1998-12-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/elf.h: Add R_MIPS_JALR and adjust R_MIPS_NUM appropriately.
