@@ -50,8 +50,10 @@
 
 #define _FP_NANFRAC_S		_FP_QNANBIT_S
 #define _FP_NANFRAC_D		_FP_QNANBIT_D, 0
+#define _FP_NANFRAC_Q		_FP_QNANBIT_Q, 0, 0, 0
 #define _FP_NANSIGN_S		1
 #define _FP_NANSIGN_D		1
+#define _FP_NANSIGN_Q		1
 
 #define _FP_KEEPNANFRACP 1
 /* Here is something Intel misdesigned: the specs don't define

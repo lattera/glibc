@@ -1,5 +1,5 @@
 /* Software floating-point emulation.
-   Copyright (C) 1997,1998,1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
 		  Jakub Jelinek (jj@ultra.linux.cz),
@@ -42,9 +42,9 @@
 # define FP_RND_ZERO		1
 # define FP_RND_PINF		2
 # define FP_RND_MINF		3
+#endif
 #ifndef FP_ROUNDMODE
 # define FP_ROUNDMODE		FP_RND_NEAREST
-#endif
 #endif
 
 /* By default don't care about exceptions. */

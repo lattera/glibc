@@ -1,3 +1,12 @@
+2002-10-31  Roger Sayle  <roger@eyesopen.com>
+
+	* sysdeps/i386/soft-fp/sfp-machine.h (_FP_NANFRAC_Q, _FP_NANSIGN_Q):
+	New macros.
+	* sysdeps/x86_64/soft-fp/sfp-machine.h: Likewise.
+
+	* soft-fp/soft-fp.h: Allow sfp-machine.h to define FP_RND_NEAREST
+	without defining FP_ROUNDMODE.
+
 2002-10-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/gnu/siglist.c (PTR_SIZE_STR): Remove.
