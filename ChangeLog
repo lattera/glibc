@@ -1,3 +1,8 @@
+2003-06-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sleep.c (__sleep): Handle parameter
+	values which cannot be handled in one nanosleep call.
+
 2003-06-25  Alfred M. Szmidt  <ams@kemisten.nu>
 
 	* sysdeps/generic/bits/in.h (IPV6_HOPOPTS, IPV6_DSTOPTS): New macros.

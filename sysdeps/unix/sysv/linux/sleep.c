@@ -22,6 +22,17 @@
 #include <time.h>
 #include <signal.h>
 #include <unistd.h>
+#include <sys/param.h>
+
+
+#if 0
+static void
+cl (void *arg)
+{
+  (void) __sigprocmask (SIG_SETMASK, arg, (sigset_t *) NULL);
+}
+#endif
+
 
 /* We are going to use the `nanosleep' syscall of the kernel.  But the
    kernel does not implement the stupid SysV SIGCHLD vs. SIG_IGN
@@ -29,7 +40,8 @@
 unsigned int
 __sleep (unsigned int seconds)
 {
-  struct timespec ts = { .tv_sec = (long int) seconds, .tv_nsec = 0 };
+  const unsigned int max = ((unsigned long int) (~((time_t) 0))) >> 1;
+  struct timespec ts;
   sigset_t set, oset;
   unsigned int result;
 
@@ -42,12 +54,28 @@ __sleep (unsigned int seconds)
       return 0;
     }
 
+  ts.tv_sec = 0;
+  ts.tv_nsec = 0;
+ again:
+  if (sizeof (ts.tv_sec) <= sizeof (seconds))
+    {
+      /* Since SECONDS is unsigned assigning the value to .tv_sec can
+	 overflow it.  In this case we have to wait in steps.  */
+      ts.tv_sec += MIN (seconds, max);
+      seconds -= (unsigned int) ts.tv_sec;
+    }
+  else
+    {
+      ts.tv_sec = (time_t) seconds;
+      seconds = 0;
+    }
+
   /* Linux will wake up the system call, nanosleep, when SIGCHLD
      arrives even if SIGCHLD is ignored.  We have to deal with it
      in libc.  We block SIGCHLD first.  */
-  if (__sigemptyset (&set) < 0
-      || __sigaddset (&set, SIGCHLD) < 0
-      || __sigprocmask (SIG_BLOCK, &set, &oset))
+  __sigemptyset (&set);
+  __sigaddset (&set, SIGCHLD);
+  if (__sigprocmask (SIG_BLOCK, &set, &oset))
     return -1;
 
   /* If SIGCHLD is already blocked, we don't have to do anything.  */
@@ -56,8 +84,8 @@ __sleep (unsigned int seconds)
       int saved_errno;
       struct sigaction oact;
 
-      if (__sigemptyset (&set) < 0 || __sigaddset (&set, SIGCHLD) < 0)
-	return -1;
+      __sigemptyset (&set);
+      __sigaddset (&set, SIGCHLD);
 
       /* We get the signal handler for SIGCHLD.  */
       if (__sigaction (SIGCHLD, (struct sigaction *) NULL, &oact) < 0)
@@ -74,27 +102,45 @@ __sleep (unsigned int seconds)
 	 have to do anything here.  */
       if (oact.sa_handler == SIG_IGN)
 	{
+	  //__libc_cleanup_push (cl, &oset);
+
 	  /* We should leave SIGCHLD blocked.  */
-	  result = __nanosleep (&ts, &ts);
+	  while (1)
+	    {
+	      result = __nanosleep (&ts, &ts);
+
+	      if (result != 0 || seconds == 0)
+		break;
+
+	      if (sizeof (ts.tv_sec) <= sizeof (seconds))
+		{
+		  ts.tv_sec = MIN (seconds, max);
+		  seconds -= (unsigned int) ts.tv_nsec;
+		}
+	    }
+
+	  //__libc_cleanup_pop (0);
 
 	  saved_errno = errno;
 	  /* Restore the original signal mask.  */
 	  (void) __sigprocmask (SIG_SETMASK, &oset, (sigset_t *) NULL);
 	  __set_errno (saved_errno);
-	}
-      else
-	{
-	  /* We should unblock SIGCHLD.  Restore the original signal mask.  */
-	  (void) __sigprocmask (SIG_SETMASK, &oset, (sigset_t *) NULL);
-	  result = __nanosleep (&ts, &ts);
-	}
-    }
-  else
-    result = __nanosleep (&ts, &ts);
 
+	  goto out;
+	}
+
+      /* We should unblock SIGCHLD.  Restore the original signal mask.  */
+      (void) __sigprocmask (SIG_SETMASK, &oset, (sigset_t *) NULL);
+    }
+
+  result = __nanosleep (&ts, &ts);
+  if (result == 0 && seconds != 0)
+    goto again;
+
+ out:
   if (result != 0)
     /* Round remaining time.  */
-    result = (unsigned int) ts.tv_sec + (ts.tv_nsec >= 500000000L);
+    result = seconds + (unsigned int) ts.tv_sec + (ts.tv_nsec >= 500000000L);
 
   return result;
 }
