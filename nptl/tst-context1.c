@@ -36,9 +36,23 @@ static volatile int failures;
 static void
 fct (long int n)
 {
+  char on_stack[1];
+
   /* Just to use the thread local descriptor.  */
-  printf ("%ld: in %s now\n", n, __FUNCTION__);
+  printf ("%ld: in %s now, on_stack = %p\n", n, __FUNCTION__, on_stack);
   errno = 0;
+
+  if (n < 0 || n >= N)
+    {
+      printf ("%ld out of range\n", n);
+      exit (1);
+    }
+
+  if (on_stack < stacks[n] || on_stack >= stacks[n] + sizeof (stacks[0]))
+    {
+      printf ("%ld: on_stack not on appropriate stack\n", n);
+      exit (1);
+    }
 }
 
 
