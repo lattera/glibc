@@ -1,5 +1,5 @@
 /* Tests for UTMP functions.
-   Copyright (C) 1998, 2001-2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2001-2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1998.
 
@@ -77,23 +77,23 @@ do_prepare (int argc, char *argv[])
 struct utmp entry[] =
 {
 #if _HAVE_UT_TV || defined UTMPX
-#define UT(a)  ut_tv:{tv_sec:(a)}
+#define UT(a)  .ut_tv = { .tv_sec = (a)}
 #else
-#define UT(a)  ut_time:(a)
+#define UT(a)  .ut_time = (a)
 #endif
 
-  { ut_type: BOOT_TIME, ut_pid: 1, UT(1000) },
-  { ut_type: RUN_LVL, ut_pid: 1, UT(2000) },
-  { ut_type: INIT_PROCESS, ut_pid: 5, ut_id: "si", UT(3000) },
-  { ut_type: LOGIN_PROCESS, ut_pid: 23, ut_line: "tty1", ut_id: "1",
-    ut_user: "LOGIN", UT(4000) },
-  { ut_type: USER_PROCESS, ut_pid: 24, ut_line: "tty2", ut_id: "2",
-    ut_user: "albert", UT(8000) },
-  { ut_type: USER_PROCESS, ut_pid: 196, ut_line: "ttyp0", ut_id: "p0",
-    ut_user: "niels", UT(10000) },
-  { ut_type: DEAD_PROCESS, ut_line: "ttyp1", ut_id: "p1", UT(16000) },
-  { ut_type: EMPTY },
-  { ut_type: EMPTY }
+  { .ut_type = BOOT_TIME, .ut_pid = 1, UT(1000) },
+  { .ut_type = RUN_LVL, .ut_pid = 1, UT(2000) },
+  { .ut_type = INIT_PROCESS, .ut_pid = 5, .ut_id = "si", UT(3000) },
+  { .ut_type = LOGIN_PROCESS, .ut_pid = 23, .ut_line = "tty1", .ut_id = "1",
+    .ut_user = "LOGIN", UT(4000) },
+  { .ut_type = USER_PROCESS, .ut_pid = 24, .ut_line = "tty2", .ut_id = "2",
+    .ut_user = "albert", UT(8000) },
+  { .ut_type = USER_PROCESS, .ut_pid = 196, .ut_line = "ttyp0", .ut_id = "p0",
+    .ut_user = "niels", UT(10000) },
+  { .ut_type = DEAD_PROCESS, .ut_line = "ttyp1", .ut_id = "p1", UT(16000) },
+  { .ut_type = EMPTY },
+  { .ut_type = EMPTY }
 };
 int num_entries = sizeof entry / sizeof (struct utmp);
 
