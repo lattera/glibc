@@ -1,3 +1,7 @@
+2003-07-02  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/epoll.h: New file.
+
 2003-05-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* malloc/arena.c (arena_get2): Add atomic_write_barrier.
