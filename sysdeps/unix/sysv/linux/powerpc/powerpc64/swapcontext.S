@@ -287,6 +287,7 @@ compat_symbol (libc, __novec_swapcontext, swapcontext, GLIBC_2_3)
 #endif
 	.section ".text"
 
+	.machine	"altivec"
 ENTRY(__swapcontext)
 #ifdef __ASSUME_NEW_RT_SIGRETURN_SYSCALL
   std  r0,(SIGCONTEXT_GP_REGS+(PT_R0*8))(r3)

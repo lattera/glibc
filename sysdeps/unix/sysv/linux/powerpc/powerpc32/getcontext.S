@@ -25,6 +25,7 @@
 #include <asm/ptrace.h>
 #include "ucontext_i.h"
 
+	.machine	"altivec"
 ENTRY(__getcontext)
 	stw	r3,_FRAME_PARM_SAVE1(r1)
 	addi	r3,r3,_UC_REG_SPACE+12

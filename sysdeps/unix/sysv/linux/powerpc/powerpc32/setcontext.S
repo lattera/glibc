@@ -25,6 +25,7 @@
 #include <asm/ptrace.h>
 #include "ucontext_i.h"
 
+	.machine	"altivec"
 ENTRY(__setcontext)
 	mflr	r0
 	stwu	r1,-16(r1)

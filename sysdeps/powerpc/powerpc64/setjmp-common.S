@@ -39,6 +39,7 @@
 	.section ".text"
 #endif
 
+	.machine	"altivec"
 ENTRY (BP_SYM (__sigsetjmp))
 	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
 	std  r1,(JB_GPR1*8)(3)

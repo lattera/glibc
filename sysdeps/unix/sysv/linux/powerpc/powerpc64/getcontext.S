@@ -165,6 +165,7 @@ compat_symbol (libc, __novec_getcontext, getcontext, GLIBC_2_3)
 #endif
 	.section ".text"
 
+	.machine	"altivec"
 ENTRY(__getcontext)
 #ifdef __ASSUME_NEW_RT_SIGRETURN_SYSCALL
   std  r0,(SIGCONTEXT_GP_REGS+(PT_R0*8))(r3)

@@ -1,0 +1,38 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+ # Local configure fragment for sysdeps/powerpc.
+
+# Accept binutils which knows about ".machine".
+echo "$as_me:$LINENO: checking for .machine support" >&5
+echo $ECHO_N "checking for .machine support... $ECHO_C" >&6
+if test "${libc_cv_ppc_machine+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat > conftest.s <<\EOF
+	.machine "altivec"
+	blr
+EOF
+if { ac_try='${CC-cc} -c $CFLAGS conftest.s 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  libc_cv_ppc_machine=yes
+else
+  libc_cv_ppc_machine=no
+fi
+rm -f conftest*
+fi
+echo "$as_me:$LINENO: result: $libc_cv_ppc_machine" >&5
+echo "${ECHO_T}$libc_cv_ppc_machine" >&6
+if test $libc_cv_ppc_machine != yes; then
+  { { echo "$as_me:$LINENO: error:
+*** A binutils version which can handle
+***    .machine \"altivec\"
+*** is needed." >&5
+echo "$as_me: error:
+*** A binutils version which can handle
+***    .machine \"altivec\"
+*** is needed." >&2;}
+   { (exit 1); exit 1; }; }
+fi

@@ -192,6 +192,7 @@ compat_symbol (libc, __novec_setcontext, setcontext, GLIBC_2_3)
 #endif
 	.section ".text"
 
+	.machine	"altivec"
 ENTRY(__setcontext)
 #ifdef __ASSUME_NEW_RT_SIGRETURN_SYSCALL
   mflr  r0

@@ -25,6 +25,7 @@
 #include <asm/ptrace.h>
 #include "ucontext_i.h"
 
+	.machine	"altivec"
 ENTRY(__swapcontext)
 	/* Save the current context */
 	stw	r3,_FRAME_PARM_SAVE1(r1)

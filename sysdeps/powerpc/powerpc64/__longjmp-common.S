@@ -40,6 +40,7 @@
 	.section ".text"
 #endif
 
+	.machine	"altivec"
 ENTRY (BP_SYM (__longjmp))
 	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
 #ifndef __NO_VMX__
