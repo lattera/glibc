@@ -1,5 +1,5 @@
 /* File descriptors.
-   Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1993,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -221,6 +221,20 @@ extern error_t _hurd_fd_write (struct hurd_fd *fd,
 
 extern error_t _hurd_ctty_input (io_t port, io_t ctty, error_t (*rpc) (io_t));
 extern error_t _hurd_ctty_output (io_t port, io_t ctty, error_t (*rpc) (io_t));
+
+
+/* The guts of `select' and `poll'.  Check the first NFDS descriptors
+   either in POLLFDS (if nonnull) or in each of READFDS, WRITEFDS,
+   EXCEPTFDS that is nonnull.  If TIMEOUT is not NULL, time out after
+   waiting the interval specified therein.  If SIGMASK is nonnull,
+   the set of blocked signals is temporarily set to that during this call.
+   Returns the number of ready descriptors, or -1 for errors.  */
+struct pollfd;
+struct timespec;
+extern int _hurd_select (int nfds, struct pollfd *pollfds,
+			 fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+			 const struct timespec *timeout,
+			 const sigset_t *sigmask);
 
 
 #endif	/* hurd/fd.h */

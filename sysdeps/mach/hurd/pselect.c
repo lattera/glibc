@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* pselect for Hurd.
+   Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,35 +17,29 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sys/types.h>
+#include <errno.h>
+#include <signal.h>
 #include <sys/time.h>
+#include <sys/select.h>
 #include <hurd.h>
 #include <hurd/fd.h>
 
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read
    readiness, in WRITEFDS (if not NULL) for write readiness, and in EXCEPTFDS
    (if not NULL) for exceptional conditions.  If TIMEOUT is not NULL, time out
-   after waiting the interval specified therein.  Returns the number of ready
-   descriptors, or -1 for errors.  */
+   after waiting the interval specified therein.  Additionally set the sigmask
+   SIGMASK for this call.  Returns the number of ready descriptors, or -1 for
+   errors.  */
 int
-__select (nfds, readfds, writefds, exceptfds, timeout)
+__pselect (nfds, readfds, writefds, exceptfds, timeout, sigmask)
      int nfds;
      fd_set *readfds;
      fd_set *writefds;
      fd_set *exceptfds;
-     struct timeval *timeout;
+     const struct timespec *timeout;
+     const sigset_t *sigmask;
 {
-  struct timespec ts, *to;
-
-  if (timeout)
-    {
-      to = &ts;
-      TIMEVAL_TO_TIMESPEC (timeout, to);
-    }
-  else
-    to = NULL;
-
-  return _hurd_select (nfds, NULL, readfds, writefds, exceptfds, to, NULL);
+  return _hurd_select (nfds, NULL,
+		       readfds, writefds, exceptfds, timeout, sigmask);
 }
-
-weak_alias (__select, select)
+weak_alias (__pselect, pselect)

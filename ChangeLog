@@ -1,3 +1,20 @@
+1998-12-05  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/pselect.c: New file.
+
+	* sysdeps/mach/hurd/poll.c: New file.
+
+	* hurd/Makefile (routines): Add hurdselect.
+	* hurd/hurdselect.c: New file.
+	(_hurd_select): New function, guts taken from ...
+	* sysdeps/mach/hurd/select.c (__select): ... here.
+	Now work by just calling _hurd_select.
+	* hurd/hurd/fd.h: Declare _hurd_select.
+
+1998-12-05  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* time/strptime.c: Fix unterminated comment in last change.
+
 1998-12-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* ctype/ctype.h (_ISbit): Protect use of parameter with
@@ -13,7 +30,7 @@
 
 1998-12-04  Ulrich Drepper  <drepper@cygnus.com>
 
-	* argp/argp.h: Add __retrict.
+	* argp/argp.h: Add __restrict.
 	* dirent/dirent.h: Likewise.
 	* elf/dlfcn.h: Likewise.
 	* grp/grp.h: Likewise.

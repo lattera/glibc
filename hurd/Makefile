@@ -41,7 +41,7 @@ user-interfaces		:= $(addprefix hurd/,\
 server-interfaces	:= hurd/msg faultexc
 
 routines = hurdstartup hurdinit \
-	   hurdid hurdlookup hurdpid hurdrlimit hurdprio hurdexec \
+	   hurdid hurdlookup hurdpid hurdrlimit hurdprio hurdexec hurdselect \
 	   get-host set-host \
 	   path-lookup \
 	   setauth \
