@@ -18,6 +18,7 @@
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <wchar.h>
 
 
 /* Read formatted input from stdin according to the format string FORMAT.  */

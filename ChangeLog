@@ -1,3 +1,7 @@
+1999-06-22  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libio/wscanf.c: Include <wchar.h> for prototype.
+
 1999-06-22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/io.texi. Fix typos.
