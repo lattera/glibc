@@ -223,7 +223,10 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 			  newp = (struct __gconv_trans_data *)
 			    malloc (sizeof (struct __gconv_trans_data));
 			  if (newp == NULL)
-			    goto bail;
+			    {
+			      res = __GCONV_NOMEM;
+			      goto bail;
+			    }
 
 			  newp->__trans_fct = runp->trans_fct;
 			  newp->__trans_context_fct = runp->trans_context_fct;
@@ -251,7 +254,10 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 
 		  result->__data[cnt].__outbuf = (char *) malloc (size);
 		  if (result->__data[cnt].__outbuf == NULL)
-		    goto bail;
+		    {
+		      res = __GCONV_NOMEM;
+		      goto bail;
+		    }
 
 		  result->__data[cnt].__outbufend =
 		    result->__data[cnt].__outbuf + size;
