@@ -369,6 +369,30 @@ define sed-remove-objpfx
 endef
 endif
 
+# Modify the list of routines we build for different targets
+
+ifeq (yes,$(build-shared))
+ifndef libc.so-version
+# Undefine this because it can't work when we libc.so is unversioned.
+static-only-routines =
+endif
+endif
+
+# Bounded pointer thunks are only built for *.ob
+elide-bp-thunks = $(addprefix $(bppfx),$(bp-thunks))
+
+elide-routines.oS += $(filter-out $(static-only-routines),\
+				  $(routines) $(aux) $(sysdep_routines)) \
+		     $(elide-bp-thunks)
+elide-routines.os += $(static-only-routines) $(elide-bp-thunks)
+
+# If we have versioned code we don't need the old versions in any of the
+# static libraries.
+elide-routines.o  += $(shared-only-routines) $(elide-bp-thunks)
+elide-routines.op += $(shared-only-routines) $(elide-bp-thunks)
+elide-routines.og += $(shared-only-routines) $(elide-bp-thunks)
+elide-routines.ob += $(shared-only-routines)
+
 # Shared library building.
 
 ifeq (yes,$(build-shared))
@@ -412,26 +436,6 @@ $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  $(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
 	  $(no-whole-archive) $(LDLIBS-$(@F:%.so=%).so)
 endef
-
-ifndef libc.so-version
-# Undefine this because it can't work when we libc.so is unversioned.
-static-only-routines =
-endif
-
-# Bounded pointer thunks are only built for *.ob
-elide-bp-thunks = $(addprefix $(bppfx),$(bp-thunks))
-
-elide-routines.oS += $(filter-out $(static-only-routines),\
-				  $(routines) $(aux) $(sysdep_routines)) \
-		     $(elide-bp-thunks)
-elide-routines.os += $(static-only-routines) $(elide-bp-thunks)
-
-# If we have versioned code we don't need the old versions in any of the
-# static libraries.
-elide-routines.o  += $(shared-only-routines) $(elide-bp-thunks)
-elide-routines.op += $(shared-only-routines) $(elide-bp-thunks)
-elide-routines.og += $(shared-only-routines) $(elide-bp-thunks)
-elide-routines.ob += $(shared-only-routines)
 
 # Don't try to use -lc when making libc.so itself.
 # Also omits crti.o and crtn.o, which we do not want
