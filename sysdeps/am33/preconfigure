@@ -1,0 +1,5 @@
+case "$machine" in
+am33*)
+  base_machine=am33 machine=am33
+  ;;
+esac
