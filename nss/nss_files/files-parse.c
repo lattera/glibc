@@ -1,5 +1,5 @@
 /* Common code for file-based database parsers in nss_files module.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -250,7 +250,7 @@ parse_list (char *line, struct parser_data *data, size_t datalen, int *errnop)
   if (! __strcasecmp (name, result->nameelt))				      \
     break;								      \
   for (ap = result->aliaselt; *ap; ++ap)				      \
-    if (! strcasecmp (name, *ap))					      \
+    if (! __strcasecmp (name, *ap))					      \
       break;								      \
   if (*ap)								      \
     break;								      \

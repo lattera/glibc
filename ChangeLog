@@ -1,5 +1,8 @@
 2000-07-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* nss/nss_files/files-parse.c: Don't pollute namespace by using
+	strcasecmp.
+
 	* grp/Makefile: Change Makefiles and tests to run only when necessary.
 	* malloc/Makefile: Likewise.
 	* malloc/tst-mtrace.sh: Likewise.

@@ -1,5 +1,8 @@
 2000-07-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/ja_JP (yesexpr): U0060 should be U005E.
+	(noexpr): Likewise.
+
 	* locales/i18n: Remove U00A0 from blank as well.
 	* tst-ctype-de_DE.ISO-8859-1.in: Remove U00A0 from blank as well.
 
