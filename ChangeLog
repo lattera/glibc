@@ -1,3 +1,7 @@
+2003-10-14  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/dl-iteratephdr-static.c: Really implement it.
+
 2003-10-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/rtld.c (print_statistics): Print also number of relative
