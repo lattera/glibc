@@ -1,5 +1,8 @@
 libc {
   GLIBC_2.0 {
+    # Needed by gcc:
+    _flush_cache;
+
     # c*
     cachectl; cacheflush;
 

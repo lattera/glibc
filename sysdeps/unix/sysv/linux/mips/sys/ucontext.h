@@ -37,13 +37,15 @@ typedef unsigned long int greg_t;
 #define NFPREG	33
 
 /* Container for all general registers.  */
+typedef greg_t gregset_t[NGREG];
+/* gregset_t must be an array.  The array correspondends to:
 typedef struct gregset {
 	greg_t	g_regs[32];
 	greg_t	g_hi;
 	greg_t	g_lo;
 	greg_t	g_pad[3];
 } gregset_t;
-
+*/
 /* Container for all FPU registers.  */
 typedef struct fpregset {
 	union {
@@ -56,6 +58,7 @@ typedef struct fpregset {
 	unsigned int	fp_csr;
 	unsigned int	fp_pad;
 } fpregset_t;
+
 
 /* Context to describe whole processor state.  */
 typedef struct
