@@ -1,5 +1,18 @@
 2001-02-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/Makefile (modules): Add GBBIG5.
+	(distribute): Add gbbig5.c.
+	* iconvdata/gbbig5.c: New file.
+	* iconvdata/gconv-modules: Add entries for GBBIG5 module.
+
+2001-02-13  Philip Blundell  <pb@futuretv.com>
+
+	* manual/crypt.texi: Remove outdated references to crypt add-on.
+
+	* manual/creature.texi: Improve wording slightly.
+
+2001-02-13  Ulrich Drepper  <drepper@redhat.com>
+
 	* io/ftw.c: Always use readdir64.
 	* io/ftw64.c: Likewise.
 	* sysdeps/unix/sysv/linux/ttyname.c: Likewise.

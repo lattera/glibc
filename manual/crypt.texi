@@ -152,14 +152,11 @@ For the DES-based algorithm, the @var{salt} should consist of two
 characters from the alphabet @code{./0-9A-Za-z}, and the result of
 @code{crypt} will be those two characters followed by 11 more from the
 same alphabet, 13 in total.  Only the first 8 characters in the
-@var{key} are significant.  If the @code{crypt} add-on is not installed,
-trying to use the DES-based algorithm will return an empty string and
-set @code{errno} to @code{EOPNOTSUPP}.
+@var{key} are significant.
 
-The MD5-based algorithm is available in the GNU C library even if the
-@code{crypt} add-on is not installed.  It also has no limit on the
-useful length of the password used, and is slightly more secure.  It is
-therefore preferred over the DES-based algorithm.
+The MD5-based algorithm has no limit on the useful length of the
+password used, and is slightly more secure.  It is therefore preferred
+over the DES-based algorithm.
 
 When the user enters their password for the first time, the @var{salt}
 should be set to a new string which is reasonably random.  To verify a
@@ -271,11 +268,6 @@ The @code{setkey_r} and @code{encrypt_r} functions are GNU extensions.
 @code{setkey}, @code{encrypt}, @code{setkey_r}, and @code{encrypt_r} are
 defined in @file{crypt.h}.
 
-If the @code{crypt} add-on is not used to build the library, programs
-that use these four functions will crash when the functions are called.
-If this is a problem, the @code{ecb_crypt} function described below is
-recommended instead.
-
 @comment rpc/des_crypt.h
 @comment SUNRPC
 @deftypefun int ecb_crypt (char *@var{key}, char *@var{blocks}, unsigned @var{len}, unsigned @var{mode})
@@ -340,9 +332,7 @@ The encryption succeeded, but there was no hardware device available.
 @comment rpc/des_crypt.h
 @comment SUNRPC
 @item DESERR_HWERROR
-The encryption failed because of a hardware problem.  In the GNU
-library, this error code is also returned if the @code{crypt} add-on was
-not used to build the library.
+The encryption failed because of a hardware problem.
 
 @comment rpc/des_crypt.h
 @comment SUNRPC

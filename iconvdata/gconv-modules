@@ -1,5 +1,5 @@
 # GNU libc iconv configuration.
-# Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 #
@@ -974,6 +974,10 @@ alias	csGB2312//		EUC-CN//
 alias	CN-GB//			EUC-CN//
 module	EUC-CN//		INTERNAL		EUC-CN		1
 module	INTERNAL		EUC-CN//		EUC-CN		1
+
+#	from			to			module		cost
+module	EUC-CN//		BIG5//			GBBIG5		1
+module	BIG5//			EUC-CN//		GBBIG5		1
 
 #	from			to			module		cost
 alias	GB13000//		GBK//

@@ -131,7 +131,7 @@ Single Unix Specification, @w{version 2}.
 @comment X/Open
 @defvr Macro _LARGEFILE_SOURCE
 If this macro is defined some extra functions are available which
-rectify a few shortcomings in all previous standards.  More concrete
+rectify a few shortcomings in all previous standards.  Specifically,
 the functions @code{fseeko} and @code{ftello} are available.  Without
 these functions the difference between the @w{ISO C} interface
 (@code{fseek}, @code{ftell}) and the low-level POSIX interface
@@ -156,16 +156,16 @@ contain @code{64} to indicate the intention, e.g., @code{off_t}
 vs. @code{off64_t} and @code{fseeko} vs. @code{fseeko64}.
 
 This macro was introduced as part of the Large File Support extension
-(LFS).  It is a transition interface for the time @w{64 bit} offsets are
-not generally used (see @code{_FILE_OFFSET_BITS}).
+(LFS).  It is a transition interface for the period when @w{64 bit}
+offsets are not generally used (see @code{_FILE_OFFSET_BITS}).
 @end defvr
 
 @comment (NONE)
 @comment X/Open
 @defvr Macro _FILE_OFFSET_BITS
 This macro determines which file system interface shall be used, one
-replacing the other.  While @code{_LARGEFILE64_SOURCE} makes the @w{64
-bit} interface available as an additional interface
+replacing the other.  Whereas @code{_LARGEFILE64_SOURCE} makes the @w{64
+bit} interface available as an additional interface,
 @code{_FILE_OFFSET_BITS} allows the @w{64 bit} interface to
 replace the old interface.
 
@@ -176,9 +176,9 @@ systems.
 
 If the macro is defined to the value @code{64}, the large file interface
 replaces the old interface.  I.e., the functions are not made available
-under different names as @code{_LARGEFILE64_SOURCE} does.  Instead the
-old function names now reference the new functions, e.g., a call to
-@code{fseeko} now indeed calls @code{fseeko64}.
+under different names (as they are with @code{_LARGEFILE64_SOURCE}).
+Instead the old function names now reference the new functions, e.g., a
+call to @code{fseeko} now indeed calls @code{fseeko64}.
 
 This macro should only be selected if the system provides mechanisms for
 handling large files.  On @w{64 bit} systems this macro has no effect

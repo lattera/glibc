@@ -47,7 +47,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   ISO_5428 ISO_10367-BOX MAC-IS MAC-UK NATS-DANO NATS-SEFI	 \
 	   SAMI-WS2 ISO-IR-197 TIS-620 KOI8-U GBK ISIRI-3342 GBGBK	 \
 	   ISO-2022-CN libISOIR165 UTF-16 UNICODE UTF-7 BIG5HKSCS	 \
-	   GB18030 ISO-2022-CN-EXT VISCII
+	   GB18030 ISO-2022-CN-EXT VISCII GBBIG5
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -136,7 +136,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      isiri-3342.c isiri-3342.h gbgbk.c iso-2022-cn.c cns11643l2.h  \
 	      iso8859-16.c utf-16.c unicode.c utf-7.c big5hkscs.c	    \
 	      iso-ir-165.c iso-ir-165.h gb18030.c iso-2022-cn-ext.c	    \
-	      ibm932.c ibm932.h ibm943.c ibm943.h
+	      ibm932.c ibm932.h ibm943.c ibm943.h gbbig5.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
