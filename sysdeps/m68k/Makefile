@@ -7,5 +7,5 @@ crypt := crypt.sun3	# Use crypt/crypt.sun3.S.
 # Disgusting magic to get `#'s into the asm code.
 define compile-command.S
 $(CC) $(CPPFLAGS) -E $< \
-| sed 's/(@@@Hash-Here@@@)/#/g' | $(AS) $(ASFLAGS) -o $@
+| sed -e '/^#/d' -e 's/(@@@Hash-Here@@@)/#/g' | $(AS) $(ASFLAGS) -o $@
 endef
