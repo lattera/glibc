@@ -1,9 +1,9 @@
 # Begin of automatic generation
 
 # acos
-Test "acos (0.7) == 0.7953988301841435554":
-ildouble: 1150
-ldouble: 1150
+Test "acos (0.7) == 0.79539883018414355549096833892476432":
+ildouble: 1
+ldouble: 1
 
 # acosh
 Test "acosh (7) == 2.6339157938496334172":
@@ -11,36 +11,21 @@ ildouble: 1
 ldouble: 1
 
 # asin
-Test "asin (0.7) == 0.7753974966107530637":
+Test "asin (0.7) == 0.77539749661075306374035335271498708":
 double: 1
 idouble: 1
-ildouble: 1147
-ldouble: 1147
+ildouble: 1
+ldouble: 1
 
 # asinh
 Test "asinh (0.7) == 0.652666566082355786":
-ildouble: 656
-ldouble: 656
-
-# atan
-Test "atan (0.7) == 0.6107259643892086165":
-ildouble: 549
-ldouble: 549
-
-# atan2
-Test "atan2 (0.4, 0.0003) == 1.5700463269355215718":
-ildouble: 1
-ldouble: 1
-Test "atan2 (0.7, 1) == 0.6107259643892086165":
-ildouble: 549
-ldouble: 549
+ildouble: 14
+ldouble: 14
 
 # atanh
 Test "atanh (0.7) == 0.8673005276940531944":
 double: 1
 idouble: 1
-ildouble: 1606
-ldouble: 1606
 
 # cabs
 Test "cabs (-0.7 + 12.4 i) == 12.41974234837422060118":
@@ -56,8 +41,8 @@ Test "cabs (-12.4 - 0.7 i) == 12.41974234837422060118":
 float: 1
 ifloat: 1
 Test "cabs (0.7 + 1.2 i) == 1.3892443989449804508":
-ildouble: 560
-ldouble: 560
+ildouble: 1
+ldouble: 1
 Test "cabs (0.7 + 12.4 i) == 12.41974234837422060118":
 float: 1
 ifloat: 1
@@ -71,13 +56,13 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 151
-ldouble: 151
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacos (0.7 + 1.2 i) == 1.1351827477151551089 - 1.0927647857577371459 i":
 float: 2
 ifloat: 2
-ildouble: 329
-ldouble: 329
+ildouble: 1
+ldouble: 1
 
 # cacosh
 Test "Real part of: cacosh (-2 - 3 i) == -1.9833870299165354323 + 2.1414491111159960199 i":
@@ -95,11 +80,11 @@ ldouble: 2
 Test "Real part of: cacosh (0.7 + 1.2 i) == 1.0927647857577371459 + 1.1351827477151551089 i":
 double: 1
 idouble: 1
-ildouble: 328
-ldouble: 328
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacosh (0.7 + 1.2 i) == 1.0927647857577371459 + 1.1351827477151551089 i":
-ildouble: 151
-ldouble: 151
+ildouble: 1
+ldouble: 1
 
 # casin
 Test "Imaginary part of: casin (-2 - 3 i) == -0.5706527843210994007 - 1.9833870299165354323 i":
@@ -110,13 +95,13 @@ double: 3
 float: 2
 idouble: 3
 ifloat: 2
-ildouble: 603
-ldouble: 603
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (0.7 + 1.2 i) == 0.4356135790797415103 + 1.0927647857577371459 i":
 float: 2
 ifloat: 2
-ildouble: 329
-ldouble: 329
+ildouble: 1
+ldouble: 1
 
 # casinh
 Test "Real part of: casinh (-2 - 3 i) == -1.9686379257930962917 - 0.9646585044076027920 i":
@@ -136,13 +121,13 @@ ldouble: 7
 Test "Real part of: casinh (0.7 + 1.2 i) == 0.9786545955936738768 + 0.9113541895315601156 i":
 double: 1
 idouble: 1
-ildouble: 891
-ldouble: 891
+ildouble: 3
+ldouble: 3
 Test "Imaginary part of: casinh (0.7 + 1.2 i) == 0.9786545955936738768 + 0.9113541895315601156 i":
 float: 2
 ifloat: 2
-ildouble: 11
-ldouble: 11
+ildouble: 3
+ldouble: 3
 
 # catan
 Test "Imaginary part of: catan (-2 - 3 i) == -1.4099210495965755225 - 0.2290726829685387662 i":
@@ -153,29 +138,26 @@ ifloat: 1
 ildouble: 7
 ldouble: 7
 Test "Real part of: catan (0.7 + 1.2 i) == 1.0785743834118921877 + 0.5770573776534306764 i":
-ildouble: 250
-ldouble: 250
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: catan (0.7 + 1.2 i) == 1.0785743834118921877 + 0.5770573776534306764 i":
 float: 1
 ifloat: 1
-ildouble: 474
-ldouble: 474
+ildouble: 1
+ldouble: 1
 
 # catanh
 Test "Real part of: catanh (-2 - 3 i) == -0.1469466662255297520 - 1.3389725222944935611 i":
 ildouble: 2
 ldouble: 2
-Test "Real part of: catanh (0.7 + 1.2 i) == 0.2600749516525135959 + 0.9702403077950989849 i":
-ildouble: 66
-ldouble: 66
 Test "Imaginary part of: catanh (0.7 + 1.2 i) == 0.2600749516525135959 + 0.9702403077950989849 i":
-ildouble: 447
-ldouble: 447
+ildouble: 2
+ldouble: 2
 
 # cbrt
 Test "cbrt (-0.001) == -0.1":
-ildouble: 717
-ldouble: 717
+ildouble: 102
+ldouble: 102
 Test "cbrt (-27.0) == -3.0":
 ildouble: 948
 ldouble: 948
@@ -185,8 +167,8 @@ idouble: 1
 ildouble: 345
 ldouble: 345
 Test "cbrt (0.970299) == 0.99":
-ildouble: 306
-ldouble: 306
+ildouble: 142
+ldouble: 142
 Test "cbrt (8) == 2":
 ildouble: 191
 ldouble: 191
@@ -200,14 +182,11 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "Real part of: ccos (0.7 + 1.2 i) == 1.3848657645312111080 - 0.97242170335830028619 i":
-ildouble: 5
-ldouble: 5
 Test "Imaginary part of: ccos (0.7 + 1.2 i) == 1.3848657645312111080 - 0.97242170335830028619 i":
 double: 1
 idouble: 1
-ildouble: 1901
-ldouble: 1901
+ildouble: 1
+ldouble: 1
 
 # ccosh
 Test "Real part of: ccosh (-2 - 3 i) == -3.7245455049153225654 + 0.5118225699873846088 i":
@@ -223,11 +202,11 @@ double: 1
 float: 3
 idouble: 1
 ifloat: 3
-ildouble: 1467
-ldouble: 1467
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ccosh (0.7 + 1.2 i) == 0.4548202223691477654 + 0.7070296600921537682 i":
-ildouble: 1182
-ldouble: 1182
+ildouble: 2
+ldouble: 2
 
 # cexp
 Test "Real part of: cexp (-2.0 - 3.0 i) == -0.1339809149295426134 - 0.0190985162611351964 i":
@@ -241,15 +220,17 @@ ifloat: 1
 ildouble: 19
 ldouble: 19
 Test "Real part of: cexp (0.7 + 1.2 i) == 0.7296989091503236012 + 1.8768962328348102821 i":
+ifloat: 3
+Test "Imaginary part of: cexp (0.7 + 1.2 i) == 0.7296989091503236012 + 1.8768962328348102821 i":
+ifloat: 2
+Test "Real part of: cexp (0.7 + 1.2 i) == 0.72969890915032360123451688642930727 + 1.8768962328348102821139467908203072 i":
 float: 3
 ifloat: 3
-ildouble: 940
-ldouble: 940
-Test "Imaginary part of: cexp (0.7 + 1.2 i) == 0.7296989091503236012 + 1.8768962328348102821 i":
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: cexp (0.7 + 1.2 i) == 0.72969890915032360123451688642930727 + 1.8768962328348102821139467908203072 i":
 float: 2
 ifloat: 2
-ildouble: 1067
-ldouble: 1067
 
 # clog
 Test "Imaginary part of: clog (-2 - 3 i) == 1.2824746787307683680 - 2.1587989303424641704 i":
@@ -271,20 +252,18 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1402
-ldouble: 1402
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: clog10 (0.7 + 1.2 i) == 0.1427786545038868803 + 0.4528483579352493248 i":
 float: 1
 ifloat: 1
-ildouble: 187
-ldouble: 187
+ildouble: 3
+ldouble: 3
 
 # cos
-Test "cos (0.7) == 0.7648421872844884262":
+Test "cos (0.7) == 0.76484218728448842625585999019186495":
 double: 1
 idouble: 1
-ildouble: 529
-ldouble: 529
 Test "cos (M_PI_6l * 2.0) == 0.5":
 double: 1
 float: 0.5
@@ -309,8 +288,8 @@ ldouble: 0.25
 
 # cosh
 Test "cosh (0.7) == 1.255169005630943018":
-ildouble: 309
-ldouble: 309
+ildouble: 2
+ldouble: 2
 
 # cpow
 Test "Real part of: cpow (2 + 0 i, 10 + 0 i) == 1024.0 + 0.0 i":
@@ -346,14 +325,9 @@ ifloat: 1
 Test "Imaginary part of: csin (-2 - 3 i) == -9.1544991469114295734 + 4.1689069599665643507 i":
 float: 1
 ifloat: 1
-Test "Real part of: csin (0.7 + 1.2 i) == 1.1664563419657581376 + 1.1544997246948547371 i":
-ildouble: 966
-ldouble: 966
 Test "Imaginary part of: csin (0.7 + 1.2 i) == 1.1664563419657581376 + 1.1544997246948547371 i":
 float: 1
 ifloat: 1
-ildouble: 168
-ldouble: 168
 
 # csinh
 Test "Real part of: csinh (-2 - 3 i) == 3.5905645899857799520 - 0.5309210862485198052 i":
@@ -367,13 +341,11 @@ ldouble: 2
 Test "Real part of: csinh (0.7 + 1.2 i) == 0.27487868678117583582 + 1.1698665727426565139 i":
 float: 1
 ifloat: 1
-ildouble: 413
-ldouble: 413
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: csinh (0.7 + 1.2 i) == 0.27487868678117583582 + 1.1698665727426565139 i":
 float: 1
 ifloat: 1
-ildouble: 477
-ldouble: 477
 
 # csqrt
 Test "Real part of: csqrt (-2 + 3 i) == 0.8959774761298381247 + 1.6741492280355400404 i":
@@ -385,11 +357,9 @@ ldouble: 1
 Test "Real part of: csqrt (0.7 + 1.2 i) == 1.0220676100300264507 + 0.5870453129635652115 i":
 float: 1
 ifloat: 1
-ildouble: 237
-ldouble: 237
 Test "Imaginary part of: csqrt (0.7 + 1.2 i) == 1.0220676100300264507 + 0.5870453129635652115 i":
-ildouble: 128
-ldouble: 128
+ildouble: 1
+ldouble: 1
 
 # ctan
 Test "Real part of: ctan (-2 - 3 i) == 0.0037640256415042482 - 1.0032386273536098014 i":
@@ -403,11 +373,11 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 689
-ldouble: 689
+ildouble: 2
+ldouble: 2
 Test "Imaginary part of: ctan (0.7 + 1.2 i) == 0.1720734197630349001 + 0.9544807059989405538 i":
-ildouble: 367
-ldouble: 367
+ildouble: 2
+ldouble: 2
 
 # ctanh
 Test "Real part of: ctanh (-2 - 3 i) == -0.9653858790221331242 + 0.0098843750383224937 i":
@@ -422,13 +392,11 @@ idouble: 0.5
 Test "Real part of: ctanh (0.7 + 1.2 i) == 1.3472197399061191630 + 0.4778641038326365540 i":
 float: 1
 ifloat: 1
-ildouble: 285
-ldouble: 285
 Test "Imaginary part of: ctanh (0.7 + 1.2 i) == 1.3472197399061191630 + 0.4778641038326365540 i":
 double: 1
 idouble: 1
-ildouble: 3074
-ldouble: 3074
+ildouble: 1
+ldouble: 1
 
 # erfc
 Test "erfc (0.7) == 0.32219880616258152702":
@@ -446,30 +414,14 @@ float: 11
 idouble: 24
 ifloat: 11
 
-# exp
-Test "exp (0.7) == 2.0137527074704765216":
-ildouble: 412
-ldouble: 412
-
 # exp10
-Test "exp10 (-1) == 0.1":
-ildouble: 819
-ldouble: 819
-Test "exp10 (0.7) == 5.0118723362727228500":
+Test "exp10 (0.7) == 5.0118723362727228500155418688494574":
 double: 1
 idouble: 1
-ildouble: 1182
-ldouble: 1182
-
-# exp2
-Test "exp2 (0.7) == 1.6245047927124710452":
-ildouble: 461
-ldouble: 461
+ildouble: 1
+ldouble: 1
 
 # expm1
-Test "expm1 (0.7) == 1.0137527074704765216":
-ildouble: 825
-ldouble: 825
 Test "expm1 (1) == M_El - 1.0":
 ildouble: 1
 ldouble: 1
@@ -480,74 +432,58 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
-ildouble: 4096
-ldouble: 4096
+ildouble: 1
+ldouble: 1
 Test "fmod (-6.5, 2.3) == -1.9":
 double: 2
 float: 1
 idouble: 2
 ifloat: 1
-ildouble: 4096
-ldouble: 4096
+ildouble: 1
+ldouble: 1
 Test "fmod (6.5, -2.3) == 1.9":
 double: 2
 float: 1
 idouble: 2
 ifloat: 1
-ildouble: 4096
-ldouble: 4096
+ildouble: 1
+ldouble: 1
 Test "fmod (6.5, 2.3) == 1.9":
 double: 2
 float: 1
 idouble: 2
 ifloat: 1
-ildouble: 4096
-ldouble: 4096
+ildouble: 1
+ldouble: 1
 
 # hypot
 Test "hypot (-0.7, -12.4) == 12.41974234837422060118":
 float: 1
 ifloat: 1
-ildouble: 406
-ldouble: 406
 Test "hypot (-0.7, 12.4) == 12.41974234837422060118":
 float: 1
 ifloat: 1
-ildouble: 406
-ldouble: 406
 Test "hypot (-12.4, -0.7) == 12.41974234837422060118":
 float: 1
 ifloat: 1
-ildouble: 406
-ldouble: 406
 Test "hypot (-12.4, 0.7) == 12.41974234837422060118":
 float: 1
 ifloat: 1
-ildouble: 406
-ldouble: 406
 Test "hypot (0.7, -12.4) == 12.41974234837422060118":
 float: 1
 ifloat: 1
-ildouble: 406
-ldouble: 406
 Test "hypot (0.7, 1.2) == 1.3892443989449804508":
-ildouble: 560
-ldouble: 560
+ildouble: 1
+ldouble: 1
 Test "hypot (0.7, 12.4) == 12.41974234837422060118":
 float: 1
 ifloat: 1
-ildouble: 406
-ldouble: 406
 Test "hypot (12.4, -0.7) == 12.41974234837422060118":
 float: 1
 ifloat: 1
-ildouble: 406
-ldouble: 406
 Test "hypot (12.4, 0.7) == 12.41974234837422060118":
 float: 1
 ifloat: 1
-ildouble: 406
-ldouble: 406
 
 # j0
 Test "j0 (1.5) == 0.51182767173591812875":
@@ -644,8 +580,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2342
-ldouble: 2342
+ildouble: 2
+ldouble: 2
 Test "log (2) == M_LN2l":
 ildouble: 1
 ldouble: 1
@@ -657,8 +593,8 @@ ifloat: 0.5
 Test "log10 (0.7) == -0.15490195998574316929":
 double: 1
 idouble: 1
-ildouble: 2033
-ldouble: 2033
+ildouble: 1
+ldouble: 1
 Test "log10 (e) == log10(e)":
 float: 1
 ifloat: 1
@@ -669,8 +605,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 584
-ldouble: 584
+ildouble: 2
+ldouble: 2
 
 # log2
 Test "log2 (0.7) == -0.51457317282975824043":
@@ -678,28 +614,26 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1689
-ldouble: 1689
+ildouble: 1
+ldouble: 1
 
 # pow
 Test "pow (0.7, 1.2) == 0.65180494056638638188":
-ildouble: 725
-ldouble: 725
+ildouble: 1
+ldouble: 1
 
 # sin
-Test "sin (0.7) == 0.64421768723769105367":
-ildouble: 627
-ldouble: 627
+Test "sin (0.7) == 0.64421768723769105367261435139872014":
+ildouble: 1
+ldouble: 1
 
 # sincos
-Test "sincos (0.7, &sin_res, &cos_res) puts 0.64421768723769105367 in sin_res":
-ildouble: 627
-ldouble: 627
-Test "sincos (0.7, &sin_res, &cos_res) puts 0.76484218728448842626 in cos_res":
+Test "sincos (0.7, &sin_res, &cos_res) puts 0.64421768723769105367261435139872014 in sin_res":
+ildouble: 1
+ldouble: 1
+Test "sincos (0.7, &sin_res, &cos_res) puts 0.76484218728448842625585999019186495 in cos_res":
 double: 1
 idouble: 1
-ildouble: 528
-ldouble: 528
 Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.5 in cos_res":
 double: 1
 float: 0.5
@@ -707,13 +641,15 @@ idouble: 1
 ifloat: 0.5
 ildouble: 1
 ldouble: 1
-Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.866025403784438646764 in sin_res":
+Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.86602540378443864676372317075293616 in sin_res":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.866025403784438646764 in sin_res":
+ifloat: 1
 Test "sincos (pi/2, &sin_res, &cos_res) puts 0 in cos_res":
 double: 0.2758
 float: 0.3667
@@ -726,29 +662,14 @@ ldouble: 0.25
 Test "sinh (0.7) == 0.75858370183953350346":
 float: 1
 ifloat: 1
-ildouble: 1028
-ldouble: 1028
-
-# sqrt
-Test "sqrt (0.7) == 0.83666002653407554798":
-ildouble: 489
-ldouble: 489
-Test "sqrt (15239.9025) == 123.45":
-ildouble: 325
-ldouble: 325
 
 # tan
 Test "tan (0.7) == 0.84228838046307944813":
-ildouble: 1401
-ldouble: 1401
+ildouble: 1
+ldouble: 1
 Test "tan (pi/4) == 1":
 double: 0.5
 idouble: 0.5
-
-# tanh
-Test "tanh (0.7) == 0.60436777711716349631":
-ildouble: 519
-ldouble: 519
 
 # tgamma
 Test "tgamma (-0.5) == -2 sqrt (pi)":
@@ -881,8 +802,8 @@ ifloat: 1
 
 # Maximal error of functions:
 Function: "acos":
-ildouble: 1150
-ldouble: 1150
+ildouble: 1
+ldouble: 1
 
 Function: "acosh":
 ildouble: 1
@@ -891,110 +812,22 @@ ldouble: 1
 Function: "asin":
 double: 1
 idouble: 1
-ildouble: 1147
-ldouble: 1147
+ildouble: 1
+ldouble: 1
 
 Function: "asinh":
-ildouble: 656
-ldouble: 656
-
-Function: "atan":
-ildouble: 549
-ldouble: 549
-
-Function: "atan2":
-ildouble: 549
-ldouble: 549
+ildouble: 14
+ldouble: 14
 
 Function: "atanh":
 double: 1
 idouble: 1
-ildouble: 1606
-ldouble: 1606
 
 Function: "cabs":
 float: 1
 ifloat: 1
-ildouble: 560
-ldouble: 560
-
-Function: Real part of "cacos":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 151
-ldouble: 151
-
-Function: Imaginary part of "cacos":
-float: 2
-ifloat: 2
-ildouble: 329
-ldouble: 329
-
-Function: Real part of "cacosh":
-double: 1
-float: 7
-idouble: 1
-ifloat: 7
-ildouble: 328
-ldouble: 328
-
-Function: Imaginary part of "cacosh":
-double: 1
-idouble: 1
-ildouble: 151
-ldouble: 151
-
-Function: Real part of "casin":
-double: 3
-float: 2
-idouble: 3
-ifloat: 2
-ildouble: 603
-ldouble: 603
-
-Function: Imaginary part of "casin":
-float: 2
-ifloat: 2
-ildouble: 329
-ldouble: 329
-
-Function: Real part of "casinh":
-double: 6
-float: 19
-idouble: 6
-ifloat: 19
-ildouble: 891
-ldouble: 891
-
-Function: Imaginary part of "casinh":
-double: 13
-float: 2
-idouble: 13
-ifloat: 2
-ildouble: 11
-ldouble: 11
-
-Function: Real part of "catan":
-ildouble: 250
-ldouble: 250
-
-Function: Imaginary part of "catan":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 474
-ldouble: 474
-
-Function: Real part of "catanh":
-ildouble: 66
-ldouble: 66
-
-Function: Imaginary part of "catanh":
-ildouble: 447
-ldouble: 447
+ildouble: 1
+ldouble: 1
 
 Function: "cbrt":
 double: 1
@@ -1002,151 +835,25 @@ idouble: 1
 ildouble: 948
 ldouble: 948
 
-Function: Real part of "ccos":
-float: 1
-ifloat: 1
-ildouble: 5
-ldouble: 5
-
-Function: Imaginary part of "ccos":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1901
-ldouble: 1901
-
-Function: Real part of "ccosh":
-double: 1
-float: 3
-idouble: 1
-ifloat: 3
-ildouble: 1467
-ldouble: 1467
-
-Function: Imaginary part of "ccosh":
-float: 1
-ifloat: 1
-ildouble: 1182
-ldouble: 1182
-
-Function: Real part of "cexp":
-float: 3
-ifloat: 3
-ildouble: 940
-ldouble: 940
-
-Function: Imaginary part of "cexp":
-float: 2
-ifloat: 2
-ildouble: 1067
-ldouble: 1067
-
-Function: Imaginary part of "clog":
-ildouble: 1
-ldouble: 1
-
-Function: Real part of "clog10":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 1402
-ldouble: 1402
-
-Function: Imaginary part of "clog10":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 187
-ldouble: 187
-
 Function: "cos":
 double: 2
 float: 1
 idouble: 2
 ifloat: 1
-ildouble: 529
-ldouble: 529
+ildouble: 1
+ldouble: 1
 
 Function: "cosh":
-ildouble: 309
-ldouble: 309
-
-Function: Real part of "cpow":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 5
-ldouble: 5
-
-Function: Imaginary part of "cpow":
-double: 1.103
-float: 6
-idouble: 1.103
-ifloat: 6
 ildouble: 2
 ldouble: 2
 
-Function: Real part of "csin":
-float: 1
-ifloat: 1
-ildouble: 966
-ldouble: 966
-
-Function: Imaginary part of "csin":
-float: 1
-ifloat: 1
-ildouble: 168
-ldouble: 168
-
-Function: Real part of "csinh":
-float: 1
-ifloat: 1
-ildouble: 413
-ldouble: 413
-
-Function: Imaginary part of "csinh":
-float: 1
-ifloat: 1
-ildouble: 477
-ldouble: 477
-
-Function: Real part of "csqrt":
-float: 1
-ifloat: 1
-ildouble: 237
-ldouble: 237
-
-Function: Imaginary part of "csqrt":
-ildouble: 128
-ldouble: 128
-
-Function: Real part of "ctan":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-ildouble: 689
-ldouble: 689
-
-Function: Imaginary part of "ctan":
-ildouble: 367
-ldouble: 367
-
-Function: Real part of "ctanh":
-float: 1
-ifloat: 1
-ildouble: 285
-ldouble: 285
-
-Function: Imaginary part of "ctanh":
+Function: Real part of "cpow":
 double: 1
 idouble: 1
-ildouble: 3074
-ldouble: 3074
+
+Function: Imaginary part of "cpow":
+double: 1.103
+idouble: 1.103
 
 Function: "erfc":
 double: 24
@@ -1154,37 +861,29 @@ float: 11
 idouble: 24
 ifloat: 11
 
-Function: "exp":
-ildouble: 412
-ldouble: 412
-
 Function: "exp10":
 double: 1
 idouble: 1
-ildouble: 1182
-ldouble: 1182
-
-Function: "exp2":
-ildouble: 461
-ldouble: 461
+ildouble: 1
+ldouble: 1
 
 Function: "expm1":
-ildouble: 825
-ldouble: 825
+ildouble: 1
+ldouble: 1
 
 Function: "fmod":
 double: 2
 float: 1
 idouble: 2
 ifloat: 1
-ildouble: 4096
-ldouble: 4096
+ildouble: 1
+ldouble: 1
 
 Function: "hypot":
 float: 1
 ifloat: 1
-ildouble: 560
-ldouble: 560
+ildouble: 1
+ldouble: 1
 
 Function: "j0":
 float: 3
@@ -1211,68 +910,58 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2342
-ldouble: 2342
+ildouble: 2
+ldouble: 2
 
 Function: "log10":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 2033
-ldouble: 2033
+ildouble: 1
+ldouble: 1
 
 Function: "log1p":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 584
-ldouble: 584
+ildouble: 2
+ldouble: 2
 
 Function: "log2":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1689
-ldouble: 1689
+ildouble: 1
+ldouble: 1
 
 Function: "pow":
-ildouble: 725
-ldouble: 725
+ildouble: 1
+ldouble: 1
 
 Function: "sin":
-ildouble: 627
-ldouble: 627
+ildouble: 1
+ldouble: 1
 
 Function: "sincos":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 627
-ldouble: 627
+ildouble: 1
+ldouble: 1
 
 Function: "sinh":
 float: 1
 ifloat: 1
-ildouble: 1028
-ldouble: 1028
-
-Function: "sqrt":
-ildouble: 489
-ldouble: 489
 
 Function: "tan":
 double: 0.5
 idouble: 0.5
-ildouble: 1401
-ldouble: 1401
-
-Function: "tanh":
-ildouble: 519
-ldouble: 519
+ildouble: 1
+ldouble: 1
 
 Function: "tgamma":
 double: 1
