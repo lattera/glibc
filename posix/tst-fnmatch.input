@@ -1,5 +1,5 @@
 # Tests for fnmatch.
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributes by Ulrich Drepper <drepper@redhat.com>.
 #
@@ -459,6 +459,96 @@ de_DE.ISO-8859-1 "�"			"[[=�=]b]"	       0
 de_DE.ISO-8859-1 "�"			"[[=�=]b]"	       0
 de_DE.ISO-8859-1 "b"			"[[=�=]b]"	       0
 de_DE.ISO-8859-1 "c"			"[[=�=]b]"	       NOMATCH
+
+
+# And with a multibyte character set.
+de_DE.UTF-8	 "a"			"[a-z]"		       0
+de_DE.UTF-8	 "z"			"[a-z]"		       0
+de_DE.UTF-8	 "ä"			"[a-z]"		       0
+de_DE.UTF-8	 "ö"			"[a-z]"		       0
+de_DE.UTF-8	 "ü"			"[a-z]"		       0
+de_DE.UTF-8	 "A"			"[a-z]"		       NOMATCH
+de_DE.UTF-8	 "Z"			"[a-z]"		       NOMATCH
+de_DE.UTF-8	 "Ä"			"[a-z]"		       NOMATCH
+de_DE.UTF-8	 "Ö"			"[a-z]"		       NOMATCH
+de_DE.UTF-8	 "Ü"			"[a-z]"		       NOMATCH
+de_DE.UTF-8	 "a"			"[A-Z]"		       NOMATCH
+de_DE.UTF-8	 "z"			"[A-Z]"		       NOMATCH
+de_DE.UTF-8	 "ä"			"[A-Z]"		       NOMATCH
+de_DE.UTF-8	 "ö"			"[A-Z]"		       NOMATCH
+de_DE.UTF-8	 "ü"			"[A-Z]"		       NOMATCH
+de_DE.UTF-8	 "A"			"[A-Z]"		       0
+de_DE.UTF-8	 "Z"			"[A-Z]"		       0
+de_DE.UTF-8	 "Ä"			"[A-Z]"		       0
+de_DE.UTF-8	 "Ö"			"[A-Z]"		       0
+de_DE.UTF-8	 "Ü"			"[A-Z]"		       0
+de_DE.UTF-8	 "a"			"[[:lower:]]"	       0
+de_DE.UTF-8	 "z"			"[[:lower:]]"	       0
+de_DE.UTF-8	 "ä"			"[[:lower:]]"	       0
+de_DE.UTF-8	 "ö"			"[[:lower:]]"	       0
+de_DE.UTF-8	 "ü"			"[[:lower:]]"	       0
+de_DE.UTF-8	 "A"			"[[:lower:]]"	       NOMATCH
+de_DE.UTF-8	 "Z"			"[[:lower:]]"	       NOMATCH
+de_DE.UTF-8	 "Ä"			"[[:lower:]]"	       NOMATCH
+de_DE.UTF-8	 "Ö"			"[[:lower:]]"	       NOMATCH
+de_DE.UTF-8	 "Ü"			"[[:lower:]]"	       NOMATCH
+de_DE.UTF-8	 "a"			"[[:upper:]]"	       NOMATCH
+de_DE.UTF-8	 "z"			"[[:upper:]]"	       NOMATCH
+de_DE.UTF-8	 "ä"			"[[:upper:]]"	       NOMATCH
+de_DE.UTF-8	 "ö"			"[[:upper:]]"	       NOMATCH
+de_DE.UTF-8	 "ü"			"[[:upper:]]"	       NOMATCH
+de_DE.UTF-8	 "A"			"[[:upper:]]"	       0
+de_DE.UTF-8	 "Z"			"[[:upper:]]"	       0
+de_DE.UTF-8	 "Ä"			"[[:upper:]]"	       0
+de_DE.UTF-8	 "Ö"			"[[:upper:]]"	       0
+de_DE.UTF-8	 "Ü"			"[[:upper:]]"	       0
+de_DE.UTF-8	 "a"			"[[:alpha:]]"	       0
+de_DE.UTF-8	 "z"			"[[:alpha:]]"	       0
+de_DE.UTF-8	 "ä"			"[[:alpha:]]"	       0
+de_DE.UTF-8	 "ö"			"[[:alpha:]]"	       0
+de_DE.UTF-8	 "ü"			"[[:alpha:]]"	       0
+de_DE.UTF-8	 "A"			"[[:alpha:]]"	       0
+de_DE.UTF-8	 "Z"			"[[:alpha:]]"	       0
+de_DE.UTF-8	 "Ä"			"[[:alpha:]]"	       0
+de_DE.UTF-8	 "Ö"			"[[:alpha:]]"	       0
+de_DE.UTF-8	 "Ü"			"[[:alpha:]]"	       0
+
+de_DE.UTF-8	 "a"			"[[=a=]b]"	       0
+de_DE.UTF-8	 "â"			"[[=a=]b]"	       0
+de_DE.UTF-8	 "à"			"[[=a=]b]"	       0
+de_DE.UTF-8	 "á"			"[[=a=]b]"	       0
+de_DE.UTF-8	 "ä"			"[[=a=]b]"	       0
+de_DE.UTF-8	 "b"			"[[=a=]b]"	       0
+de_DE.UTF-8	 "c"			"[[=a=]b]"	       NOMATCH
+de_DE.UTF-8	 "a"			"[[=â=]b]"	       0
+de_DE.UTF-8	 "â"			"[[=â=]b]"	       0
+de_DE.UTF-8	 "à"			"[[=â=]b]"	       0
+de_DE.UTF-8	 "á"			"[[=â=]b]"	       0
+de_DE.UTF-8	 "ä"			"[[=â=]b]"	       0
+de_DE.UTF-8	 "b"			"[[=â=]b]"	       0
+de_DE.UTF-8	 "c"			"[[=â=]b]"	       NOMATCH
+de_DE.UTF-8	 "a"			"[[=à=]b]"	       0
+de_DE.UTF-8	 "â"			"[[=à=]b]"	       0
+de_DE.UTF-8	 "à"			"[[=à=]b]"	       0
+de_DE.UTF-8	 "á"			"[[=à=]b]"	       0
+de_DE.UTF-8	 "ä"			"[[=à=]b]"	       0
+de_DE.UTF-8	 "b"			"[[=à=]b]"	       0
+de_DE.UTF-8	 "c"			"[[=à=]b]"	       NOMATCH
+de_DE.UTF-8	 "a"			"[[=á=]b]"	       0
+de_DE.UTF-8	 "â"			"[[=á=]b]"	       0
+de_DE.UTF-8	 "à"			"[[=á=]b]"	       0
+de_DE.UTF-8	 "á"			"[[=á=]b]"	       0
+de_DE.UTF-8	 "ä"			"[[=á=]b]"	       0
+de_DE.UTF-8	 "b"			"[[=á=]b]"	       0
+de_DE.UTF-8	 "c"			"[[=á=]b]"	       NOMATCH
+de_DE.UTF-8	 "a"			"[[=ä=]b]"	       0
+de_DE.UTF-8	 "â"			"[[=ä=]b]"	       0
+de_DE.UTF-8	 "à"			"[[=ä=]b]"	       0
+de_DE.UTF-8	 "á"			"[[=ä=]b]"	       0
+de_DE.UTF-8	 "ä"			"[[=ä=]b]"	       0
+de_DE.UTF-8	 "b"			"[[=ä=]b]"	       0
+de_DE.UTF-8	 "c"			"[[=ä=]b]"	       NOMATCH
+
 
 # Test of GNU extensions.
 C		 "x"			"x"		       0       PATHNAME|LEADING_DIR

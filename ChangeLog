@@ -1,3 +1,8 @@
+2001-01-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/tst-fnmatch.input: Add test cases for de_DE.UTF-8 locale.
+	* posix/fnmatch_loop.c: Fix handling of [= =] for multibyte charsets.
+
 2001-01-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_open.c (__gconv_open): Set conv_flags if IGNORE is

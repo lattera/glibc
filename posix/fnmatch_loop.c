@@ -353,17 +353,11 @@ FCT (pattern, string, no_leading_period, flags)
 			    /* We found a table entry.  Now see whether the
 			       character we are currently at has the same
 			       equivalance class value.  */
-# if !WIDE_CHAR_VERSION
 			    int len = weights[idx];
-# endif
 			    int32_t idx2;
 			    const UCHAR *np = (const UCHAR *) n;
 
 			    idx2 = findidx (&np);
-# if WIDE_CHAR_VERSION
-			    if (idx2 != 0 && weights[idx] == weights[idx2])
-			      goto matched;
-# else
 			    if (idx2 != 0 && len == weights[idx2])
 			      {
 				int cnt = 0;
@@ -376,7 +370,6 @@ FCT (pattern, string, no_leading_period, flags)
 				if (cnt == len)
 				  goto matched;
 			      }
-# endif
 			  }
 		      }
 
