@@ -1,5 +1,11 @@
 2000-05-15  Andreas Jaeger  <aj@suse.de>
 
+	* tst-fmon.data: Change testcase following fixes for
+	de_DE.
+
+	* locales/de_DE: Remove space after DEM since DEM is
+	now placed after the value.
+
 	* locales/de_DE: Fix currency placement to use "12.345,68 DM".
 	Reported by Christopher Creutzig <ccr@nescio.foebud.org>, closes
 	PR libc/1713.
