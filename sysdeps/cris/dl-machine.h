@@ -129,27 +129,27 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    and the link map in MOF.  */
 
 #define TRAMPOLINE_TEMPLATE(tramp_name, fixup_name) \
-"; Trampoline for " #fixup_name "
-	.globl " #tramp_name "
-	.type " #tramp_name ", @function
-" #tramp_name ":
-	push	$r13
-	push	$r12
-	push	$r11
-	push	$r10
-	push	$r9
-	push	$srp
-	move.d	[$sp+6*4],$r11
-	move	$mof,$r10
-	" CALL_FN (fixup_name) "
-	move.d	$r10,[$sp+6*4]
-	pop	$srp
-	pop	$r9
-	pop	$r10
-	pop	$r11
-	pop	$r12
-	pop	$r13
-	jump	[$sp+]
+"; Trampoline for " #fixup_name "\n\
+	.globl " #tramp_name "\n\
+	.type " #tramp_name ", @function\n\
+" #tramp_name ":\n\
+	push	$r13\n\
+	push	$r12\n\
+	push	$r11\n\
+	push	$r10\n\
+	push	$r9\n\
+	push	$srp\n\
+	move.d	[$sp+6*4],$r11\n\
+	move	$mof,$r10\n\
+	" CALL_FN (fixup_name) "\n\
+	move.d	$r10,[$sp+6*4]\n\
+	pop	$srp\n\
+	pop	$r9\n\
+	pop	$r10\n\
+	pop	$r11\n\
+	pop	$r12\n\
+	pop	$r13\n\
+	jump	[$sp+]\n\
 	.size " #tramp_name ", . - " #tramp_name "\n"
 #ifndef PROF
 #define ELF_MACHINE_RUNTIME_TRAMPOLINE \
@@ -172,60 +172,60 @@ asm (TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup) \
    its return value is the user program's entry point.  */
 
 #define RTLD_START asm ("\
-	.text
-	.globl	_start
-	.type	_start,@function
-_start:
-	move.d	$sp,$r10
-	" CALL_FN (_dl_start) "
-	/* FALLTHRU */
-
-	.globl _dl_start_user
-	.type _dl_start_user,@function
-_dl_start_user:
-	; Save the user entry point address in R1.
-	move.d	$r10,$r1
-	; Point R0 at the GOT.
-	move.d	$pc,$r0
-	sub.d	.:GOTOFF,$r0
-	; Remember the highest stack address.
-	move.d	[$r0+__libc_stack_end:GOT16],$r13
-	move.d	$sp,[$r13]
-	; See if we were run as a command with the executable file
-	; name as an extra leading argument.
-	move.d	[$r0+_dl_skip_args:GOT16],$r13
-	move.d	[$r13],$r9
-	; Get the original argument count
-	move.d	[$sp],$r11
-	; Subtract _dl_skip_args from it.
-	sub.d	$r9,$r11
-	; Adjust the stack pointer to skip _dl_skip_args words.
-	addi	$r9.d,$sp
-	; Put the new argc in place as expected by the user entry.
-	move.d	$r11,[$sp]
-	; Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
-	;  env: skip scaled argc and skip stored argc and NULL at end of argv[].
-	move.d	$sp,$r13
-	addi	$r11.d,$r13
-	addq	8,$r13
-	;  argv: skip stored argc.
-	move.d	$sp,$r12
-	addq	4,$r12
-	;  main_map: at _dl_loaded.
-	move.d	[$r0+_rtld_local:GOT16],$r9
-	move.d	[$r9],$r10
-	move.d	_dl_init_internal:PLTG,$r9
-	add.d	$r0,$r9
-	jsr	$r9
-	; Pass our finalizer function to the user in R10.
-	move.d [$r0+_dl_fini:GOT16],$r10
-	; Terminate the frame-pointer.
-	moveq	0,$r8
-	; Cause SEGV if user entry returns.
-	move	$r8,$srp
-	; Jump to the user's entry point.
-	jump	$r1
-	.size _dl_start_user, . - _dl_start_user
+	.text\n\
+	.globl	_start\n\
+	.type	_start,@function\n\
+_start:\n\
+	move.d	$sp,$r10\n\
+	" CALL_FN (_dl_start) "\n\
+	/* FALLTHRU */\n\
+\n\
+	.globl _dl_start_user\n\
+	.type _dl_start_user,@function\n\
+_dl_start_user:\n\
+	; Save the user entry point address in R1.\n\
+	move.d	$r10,$r1\n\
+	; Point R0 at the GOT.\n\
+	move.d	$pc,$r0\n\
+	sub.d	.:GOTOFF,$r0\n\
+	; Remember the highest stack address.\n\
+	move.d	[$r0+__libc_stack_end:GOT16],$r13\n\
+	move.d	$sp,[$r13]\n\
+	; See if we were run as a command with the executable file\n\
+	; name as an extra leading argument.\n\
+	move.d	[$r0+_dl_skip_args:GOT16],$r13\n\
+	move.d	[$r13],$r9\n\
+	; Get the original argument count\n\
+	move.d	[$sp],$r11\n\
+	; Subtract _dl_skip_args from it.\n\
+	sub.d	$r9,$r11\n\
+	; Adjust the stack pointer to skip _dl_skip_args words.\n\
+	addi	$r9.d,$sp\n\
+	; Put the new argc in place as expected by the user entry.\n\
+	move.d	$r11,[$sp]\n\
+	; Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env)\n\
+	;  env: skip scaled argc and skip stored argc and NULL at end of argv[].\n\
+	move.d	$sp,$r13\n\
+	addi	$r11.d,$r13\n\
+	addq	8,$r13\n\
+	;  argv: skip stored argc.\n\
+	move.d	$sp,$r12\n\
+	addq	4,$r12\n\
+	;  main_map: at _dl_loaded.\n\
+	move.d	[$r0+_rtld_local:GOT16],$r9\n\
+	move.d	[$r9],$r10\n\
+	move.d	_dl_init_internal:PLTG,$r9\n\
+	add.d	$r0,$r9\n\
+	jsr	$r9\n\
+	; Pass our finalizer function to the user in R10.\n\
+	move.d [$r0+_dl_fini:GOT16],$r10\n\
+	; Terminate the frame-pointer.\n\
+	moveq	0,$r8\n\
+	; Cause SEGV if user entry returns.\n\
+	move	$r8,$srp\n\
+	; Jump to the user's entry point.\n\
+	jump	$r1\n\
+	.size _dl_start_user, . - _dl_start_user\n\
 	.previous");
 
 /* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so

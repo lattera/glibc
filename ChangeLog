@@ -1,3 +1,13 @@
+2002-08-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/s390/s390-64/dl-machine.h: Avoid unescaped newlines in
+	string constants.
+	* sysdeps/sparc/sparc32/dl-machine.h: Likewise.
+	* sysdeps/arm/dl-machine.h: Likewise.
+	* sysdeps/cris/dl-machine.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/register-dump.h: Likewise.
+	* sysdeps/unix/sysv/aix/gettimeofday.c: Likewise.
+
 2002-08-28  Roland McGrath  <roland@redhat.com>
 
 	* Makeconfig (default_cflags): Revert unintended change.

@@ -32,12 +32,12 @@ extern int rtc_upper (void);
 extern int rtc_lower (void);
 
 /* Assembler Routines to access the timer registers */
-asm("
-.rtc_upper: mfspr   3,4         # copy RTCU to return register
-            blr
-
-.rtc_lower: mfspr   3,5         # copy RTCL to return register
-            blr
+asm("\n\
+.rtc_upper: mfspr   3,4         # copy RTCU to return register\n\
+            blr\n\
+\n\
+.rtc_lower: mfspr   3,5         # copy RTCL to return register\n\
+            blr\n\
 ");
 
 /* Get the current time of day and timezone information,

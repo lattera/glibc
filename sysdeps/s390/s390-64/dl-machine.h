@@ -148,7 +148,7 @@ _dl_runtime_resolve:\n\
     stg	   0,0(15)\n\
     # load args saved by PLT\n\
     lmg	   2,3,208(15)\n\
-    brasl  14,fixup	# call fixup
+    brasl  14,fixup	# call fixup\n\
     lgr	   1,2		# function addr returned in r2\n\
     # restore registers\n\
     aghi   15,160\n\
@@ -236,12 +236,12 @@ _dl_start_user:\n\
 	# Point %r12 at the GOT.\n\
 	larl  %r12,_GLOBAL_OFFSET_TABLE_\n\
 	# Store the highest stack address\n\
-	lghi  %r1,__libc_stack_end@GOT
+	lghi  %r1,__libc_stack_end@GOT\n\
 	lg    %r1,0(%r1,%r12)\n\
 	stg   %r15, 0(%r1)\n\
 	# See if we were run as a command with the executable file\n\
 	# name as an extra leading argument.\n\
-	lghi  %r1,_dl_skip_args@GOT
+	lghi  %r1,_dl_skip_args@GOT\n\
 	lg    %r1,0(%r1,%r12)\n\
 	lgf   %r1,0(%r1)	  # load _dl_skip_args\n\
 	# Get the original argument count.\n\
@@ -262,7 +262,7 @@ _dl_start_user:\n\
 	# Call the function to run the initializers.\n\
 	# Load the parameters:\n\
 	# (%r2, %r3, %r4, %r5) = (_dl_loaded, argc, argv, envp)\n\
-	lghi  %r2,_rtld_local@GOT
+	lghi  %r2,_rtld_local@GOT\n\
 	lg    %r2,0(%r2,%r12)\n\
 	lg    %r2,0(%r2)\n\
 	lg    %r3,160(%r15)\n\
@@ -270,9 +270,9 @@ _dl_start_user:\n\
 	lgr   %r5,%r3\n\
 	sllg  %r5,%r5,3\n\
 	la    %r5,176(%r5,%r15)\n\
-	brasl %r14,_dl_init_internal@PLT\n
+	brasl %r14,_dl_init_internal@PLT\n\
 	# Pass our finalizer function to the user in %r14, as per ELF ABI.\n\
-	lghi  %r14,_dl_fini@GOT
+	lghi  %r14,_dl_fini@GOT\n\
 	lg    %r14,0(%r14,%r12)\n\
 	# Free stack frame\n\
 	aghi  %r15,160\n\
