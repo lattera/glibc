@@ -12,7 +12,7 @@ ENTRY(__nearbyintf)
 	pushl	%ecx
 	fnstcw	(%esp)
 	movl	(%esp), %eax
-	andl	$~0x20, %eax
+	orl	$0x20, %eax
 	movl	%eax, 4(%esp)
 	fldcw	4(%esp)
 	frndint

@@ -1,3 +1,13 @@
+2000-02-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/sigwait.c: Don't look for signal 0 since it does
+	not exist.  Patch by Miloslav Trmac <mitr@volny.cz> (PR libc/1601).
+
+	* sysdeps/i386/fpu/s_nearbyint.S: Disable raising exception, not
+	enable it.  Patch by Miloslav Trmac <mitr@volny.cz> (PR libc/1600).
+	* sysdeps/i386/fpu/s_nearbyintf.S: Likewise.
+	* sysdeps/i386/fpu/s_nearbyintf.l: Likewise.
+
 2000-02-14  Andreas Jaeger  <aj@suse.de>
 
 	* elf/rtld.c (dl_main): Fix check for references to dynamic linker.

@@ -1,5 +1,5 @@
 /* Implementation of sigwait function from POSIX.1c.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -52,7 +52,7 @@ __sigwait (const sigset_t *set, int *sig)
      value which does not describe a legal signal number.  */
   was_sig = -1;
 
-  for (this = 0; this < NSIG; ++this)
+  for (this = 1; this < NSIG; ++this)
     if (__sigismember (set, this))
       {
 	/* Unblock this signal.  */
@@ -69,7 +69,7 @@ __sigwait (const sigset_t *set, int *sig)
  restore_handler:
   save_errno = errno;
 
-  while (--this >= 0)
+  while (--this >= 1)
     if (__sigismember (set, this))
       /* We ignore errors here since we must restore all handlers.  */
       __sigaction (this, &saved[this], NULL);
