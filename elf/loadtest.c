@@ -83,17 +83,23 @@ main (int argc, char *argv[])
   int debug = argc > 1 && argv[1][0] != '\0';
   int count = TEST_ROUNDS;
   int result = 0;
+  struct link_map *map;
 
   mtrace ();
 
   /* Just a seed.  */
   srandom (TEST_ROUNDS);
 
+  if (debug)
+    {
+      puts ("in the beginning");
+      OUT;
+    }
+
   while (count--)
     {
       int nr = random () % NTESTS;
       int index = tests[nr].index;
-      struct link_map *map;
 
       printf ("%4d: %4d: ", count + 1, nr);
       fflush (stdout);

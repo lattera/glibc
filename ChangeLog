@@ -1,3 +1,19 @@
+2000-10-24  Ulrich Drepper  <drepper@redhat.com>
+
+	Complete revamp of the reference counter handling.
+	* include/link.h (struct link_map): Add l_idx field.
+	* elf/dl-close.c: Handle decrementing of reference counters more
+	correctly. If necessary decrement reference counters of dependencies
+	of dependencies.
+	* elf/dl-lookup.c (add_dependency): Only increment reference counter
+	of the object itself and not also its dependencies.
+	* elf/dl-open.c: Increment reference counters here.
+	* elf/dl-deps.c: Remove reference counter handling here.
+	* elf/dl-load.c: Likewise.
+	* elf/rtld.c: Adjust for _dl_map_deps not handling reference counters.
+
+	* elf/loadtest.c: Print loaded objects at the beginning.
+
 2000-10-24  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/dl-machine.h: Partly revert patch from 2000-10-18.

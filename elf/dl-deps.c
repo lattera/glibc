@@ -243,18 +243,7 @@ _dl_map_object_deps (struct link_map *map,
 		dtail = newp;
 		++nduplist;
 
-		if (dep->l_reserved)
-		  {
-		    /* This object is already in the search list we are
-		       building.  Don't add a duplicate pointer.
-		       Release the reference just added by
-		       _dl_map_object.  */
-		    if (dep->l_initfini != NULL)
-		      for (i = 1; dep->l_initfini[i] != NULL; ++i)
-			--dep->l_initfini[i]->l_opencount;
-		    --dep->l_opencount;
-		  }
-		else
+		if (! dep->l_reserved)
 		  {
 		    /* Append DEP to the unique list.  */
 		    newp->done = 0;
@@ -363,13 +352,7 @@ _dl_map_object_deps (struct link_map *map,
 
 		    /* This object is already in the search list we
 		       are building.  Don't add a duplicate pointer.
-		       Release the reference just added by
-		       _dl_map_object.  */
-		    if (args.aux->l_initfini != NULL)
-		      for (i = 1; args.aux->l_initfini[i] != NULL; ++i)
-			--args.aux->l_initfini[i]->l_opencount;
-		    --args.aux->l_opencount;
-
+		       Just added by _dl_map_object.  */
 		    for (late = newp; late->unique; late = late->unique)
 		      if (late->unique->map == args.aux)
 			break;

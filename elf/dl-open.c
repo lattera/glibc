@@ -238,7 +238,8 @@ dl_open_worker (void *a)
       return;
     }
 
-  if (new->l_searchlist.r_list)
+  /* It was already open.  */
+  if (new->l_searchlist.r_list != NULL)
     {
       /* Let the user know about the opencount.  */
       if (__builtin_expect (_dl_debug_files, 0))
@@ -259,12 +260,18 @@ dl_open_worker (void *a)
       if ((mode & RTLD_GLOBAL) && new->l_global == 0)
 	(void) add_to_global (new);
 
-      /* It was already open.  */
+      /* Increment just the reference counter of the object.  */
+      ++new->l_opencount;
+
       return;
     }
 
   /* Load that object's dependencies.  */
   _dl_map_object_deps (new, NULL, 0, 0);
+
+  /* Increment the open count for all dependencies.  */
+  for (i = 0; i < new->l_searchlist.r_nlist; ++i)
+    ++new->l_searchlist.r_list[i]->l_opencount;
 
   /* So far, so good.  Now check the versions.  */
   for (i = 0; i < new->l_searchlist.r_nlist; ++i)

@@ -49,6 +49,7 @@ _dl_close (void *_map)
   unsigned int nsearchlist;
   unsigned int nrellist;
   unsigned int i;
+  unsigned int *new_opencount;
 
   /* First see whether we can remove the object at all.  */
   if (map->l_flags_1 & DF_1_NODELETE)
@@ -60,9 +61,6 @@ _dl_close (void *_map)
 
   /* Acquire the lock.  */
   __libc_lock_lock (_dl_load_lock);
-
-  list = map->l_searchlist.r_list;
-  nsearchlist = map->l_searchlist.r_nlist;
 
   /* Decrement the reference count.  */
   if (map->l_opencount > 1 || map->l_type != lt_loaded)
@@ -81,13 +79,45 @@ _dl_close (void *_map)
 			     "\n", NULL);
 	}
 
-      for (i = 0; i < nsearchlist; ++i)
-	if (! (list[i]->l_flags_1 & DF_1_NODELETE))
-	  --list[i]->l_opencount;
+      /* One decrement the object itself, not the dependencies.  */
+      --map->l_opencount;
 
       __libc_lock_unlock (_dl_load_lock);
       return;
     }
+
+  list = map->l_searchlist.r_list;
+  nsearchlist = map->l_searchlist.r_nlist;
+
+  /* Compute the new l_opencount values.  */
+  new_opencount = (unsigned int *) alloca (nsearchlist
+					   * sizeof (unsigned int));
+  for (i = 0; i < nsearchlist; ++i)
+    {
+      list[i]->l_idx = i;
+      new_opencount[i] = list[i]->l_opencount;
+    }
+  --new_opencount[0];
+  for (i = 1; i < nsearchlist; ++i)
+    if (! (list[i]->l_flags_1 & DF_1_NODELETE)
+	/* Decrement counter.  */
+	&& --new_opencount[i] == 0
+	/* Test whether this object was also loaded directly.  */
+	&& list[i]->l_searchlist.r_list != NULL)
+      {
+	/* In this case we have the decrement all the dependencies of
+           this object.  They are all in MAP's dependency list.  */
+	unsigned int j;
+	struct link_map **dep_list = list[i]->l_searchlist.r_list;
+
+	for (j = 1; j < list[i]->l_searchlist.r_nlist; ++j)
+	  if (! (dep_list[j]->l_flags_1 & DF_1_NODELETE))
+	    {
+	      assert (dep_list[j]->l_idx < nsearchlist);
+	      --new_opencount[dep_list[j]->l_idx];
+	    }
+      }
+  assert (new_opencount[0] == 0);
 
   rellist = map->l_reldeps;
   nrellist = map->l_reldepsact;
@@ -96,7 +126,7 @@ _dl_close (void *_map)
   for (i = 0; i < nsearchlist; ++i)
     {
       struct link_map *imap = map->l_initfini[i];
-      if (imap->l_opencount == 1 && imap->l_type == lt_loaded
+      if (new_opencount[i] == 0 && imap->l_type == lt_loaded
 	  && (imap->l_info[DT_FINI] || imap->l_info[DT_FINI_ARRAY])
 	  && ! (imap->l_flags_1 & DF_1_NODELETE)
 	  /* Skip any half-cooked objects that were never initialized.  */
@@ -126,18 +156,16 @@ _dl_close (void *_map)
 	    (*(void (*) (void)) ((void *) imap->l_addr
 				 + imap->l_info[DT_FINI]->d_un.d_ptr)) ();
 	}
+
+      /* Store the new l_opencount value.  */
+      imap->l_opencount = new_opencount[i];
+      /* Just a sanity check.  */
+      assert (imap->l_type == lt_loaded || imap->l_opencount > 0);
     }
 
   /* Notify the debugger we are about to remove some loaded objects.  */
   _r_debug.r_state = RT_DELETE;
   _dl_debug_state ();
-
-  /* The search list contains a counted reference to each object it
-     points to, the 0th elt being MAP itself.  Decrement the reference
-     counts on all the objects MAP depends on.  */
-  for (i = 0; i < nsearchlist; ++i)
-    if (! (list[i]->l_flags_1 & DF_1_NODELETE))
-      --list[i]->l_opencount;
 
   /* Check each element of the search list to see if all references to
      it are gone.  */

@@ -550,7 +550,6 @@ of this helper program; chances are you did not intend to run this program.\n\
       _dl_loaded->l_phdr = phdr;
       _dl_loaded->l_phnum = phent;
       _dl_loaded->l_entry = *user_entry;
-      _dl_loaded->l_opencount = 1;
 
       /* At this point we are in a bit of trouble.  We would have to
 	 fill in the values for l_dev and l_ino.  But in general we
@@ -707,7 +706,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  {
 	    struct link_map *new_map = _dl_map_object (_dl_loaded, p, 1,
 						       lt_library, 0, 0);
-	    if (new_map->l_opencount == 1)
+	    if (++new_map->l_opencount == 1)
 	      /* It is no duplicate.  */
 	      ++npreloads;
 	  }
@@ -775,7 +774,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	      {
 		struct link_map *new_map = _dl_map_object (_dl_loaded, p, 1,
 							   lt_library, 0, 0);
-		if (new_map->l_opencount == 1)
+		if (++new_map->l_opencount == 1)
 		  /* It is no duplicate.  */
 		  ++npreloads;
 	      }
@@ -786,7 +785,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  char *p = strndupa (problem, file_size - (problem - file));
 	  struct link_map *new_map = _dl_map_object (_dl_loaded, p, 1,
 						     lt_library, 0, 0);
-	  if (new_map->l_opencount == 1)
+	  if (++new_map->l_opencount == 1)
 	    /* It is no duplicate.  */
 	    ++npreloads;
 	}
@@ -823,9 +822,14 @@ of this helper program; chances are you did not intend to run this program.\n\
   HP_TIMING_DIFF (diff, start, stop);
   HP_TIMING_ACCUM_NT (load_time, diff);
 
-  /* Mark all objects as being in the global scope.  */
+  /* Mark all objects as being in the global scope and set the open
+     counter.  */
   for (i = _dl_loaded->l_searchlist.r_nlist; i > 0; )
-    _dl_loaded->l_searchlist.r_list[--i]->l_global = 1;
+    {
+      --i;
+      _dl_loaded->l_searchlist.r_list[i]->l_global = 1;
+      ++_dl_loaded->l_searchlist.r_list[i]->l_opencount;
+    }
 
 #ifndef MAP_ANON
   /* We are done mapping things, so close the zero-fill descriptor.  */

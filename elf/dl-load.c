@@ -785,10 +785,6 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	free (realname);
 	add_name_to_object (l, name);
 
-	if (l->l_initfini != NULL)
-	  for (i = 1; l->l_initfini[i] != NULL; ++i)
-	    ++l->l_initfini[i]->l_opencount;
-	++l->l_opencount;
 	return l;
       }
 
@@ -821,7 +817,6 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
   l = _dl_new_object (realname, name, l_type, loader);
   if (__builtin_expect (! l, 0))
     LOSE (ENOMEM, N_("cannot create shared object descriptor"));
-  l->l_opencount = 1;
 
   /* Extract the remaining details we need from the ELF header
      and then read in the program header table.  */
@@ -1467,7 +1462,9 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       /* If the requested name matches the soname of a loaded object,
 	 use that object.  Elide this check for names that have not
 	 yet been opened.  */
-      if (l->l_opencount <= 0)
+      /* XXX Is this test still correct after the reference counter
+	 handling rewrite?  */
+      if (l->l_opencount == 0)
 	continue;
       if (!_dl_name_match_p (name, l))
 	{
@@ -1487,11 +1484,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  l->l_soname_added = 1;
 	}
 
-      /* We have a match -- bump the reference count and return it.  */
-      if (l->l_initfini != NULL)
-	for (i = 1; l->l_initfini[i] != NULL; ++i)
-	  ++l->l_initfini[i]->l_opencount;
-      ++l->l_opencount;
+      /* We have a match.  */
       return l;
     }
 
