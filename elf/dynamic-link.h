@@ -18,22 +18,9 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <elf.h>
-
-/* This machine-dependent file defines these inline functions.  */
-
-static void elf_machine_rel (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
-			     const Elf32_Rel *reloc, 
-			     Elf32_Addr sym_loadaddr, const Elf32_Sym *sym);
-static void elf_machine_rela (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
-			      const Elf32_Rela *reloc, 
-			      Elf32_Addr sym_loadaddr, const Elf32_Sym *sym);
-static Elf32_Addr *elf_machine_got (void);
-static Elf32_Addr elf_machine_load_address (void);
-
 #include <dl-machine.h>
-
-
 #include <assert.h>
+
 
 /* Read the dynamic section at DYN and fill in INFO with indices DT_*.  */
 
@@ -60,60 +47,36 @@ elf_get_dynamic_info (Elf32_Dyn *dyn, Elf32_Dyn *info[DT_NUM])
 	    info[DT_PLTREL]->d_un.d_val == DT_RELA);
 }
 
-/* Perform the relocations specified by DYNAMIC on the running program
-   image.  If LAZY is nonzero, don't relocate PLT entries.  *RESOLVE is
-   called to resolve symbol values; it modifies its argument pointer to
-   point to the defining symbol, and returns the base load address of the
-   defining object.  */
+/* Get the definitions of `elf_dynamic_do_rel' and `elf_dynamic_do_rela'.
+   These functions are almost identical, so we use cpp magic to avoid
+   duplicating their code.  It cannot be done in a more general function
+   because we must be able to completely inline.  */
 
-static inline void
-elf_dynamic_relocate (Elf32_Dyn *dynamic[DT_NUM], Elf32_Addr loadaddr,
-		      int lazy, Elf32_Addr (*resolve) (const Elf32_Sym **))
-{
-  const Elf32_Sym *const symtab
-    = (const Elf32_Sym *) dynamic[DT_SYMTAB]->d_un.d_ptr;
+#if ! ELF_MACHINE_NO_REL
+#include "do-rel.h"
+#define ELF_DYNAMIC_DO_REL(map, lazy, resolve)				      \
+  if ((map)->l_info[DT_REL])						      \
+    elf_dynamic_do_rel ((map), DT_REL, DT_RELSZ, (resolve));		      \
+  if (!(lazy) && (map)->l_info[DT_PLTREL]->d_un.d_val == DT_REL)	      \
+    elf_dynamic_do_rel ((map), DT_JMPREL, DT_PLTRELSZ, (resolve));
+#else
+#define ELF_DYNAMIC_DO_RELA(map, lazy, resolve) /* Nothing to do.  */
+#endif
 
-  inline Elf32_Addr symvalue (Elf32_Word info, const Elf32_Sym **definer)
-    {
-      if (ELF32_R_SYM (info) == STN_UNDEF)
-	return 0;		/* This value will not be consulted.  */
-      *definer = &symtab[ELF32_R_SYM (info)];
-      return (*resolve) (definer);
-    }
+#if ! ELF_MACHINE_NO_RELA
+#define DO_RELA
+#include "do-rel.h"
+#define ELF_DYNAMIC_DO_RELA(map, lazy, resolve)				      \
+  if ((map)->l_info[DT_RELA])						      \
+    elf_dynamic_do_rela ((map), DT_RELA, DT_RELASZ, (resolve));		      \
+  if (!(lazy) && (map)->l_info[DT_PLTREL]->d_un.d_val == DT_RELA)	      \
+    elf_dynamic_do_rela ((map), DT_JMPREL, DT_PLTRELSZ, (resolve);
+#else
+#define ELF_DYNAMIC_DO_RELA(map, lazy, resolve) /* Nothing to do.  */
+#endif
 
-  /* Perform Elf32_Rel relocations in the section found by RELTAG, SZTAG.  */
-  inline void do_rel (Elf32_Word reltag, Elf32_Word sztag)
-    {
-      const Elf32_Rel *r = (const Elf32_Rel *) dynamic[reltag]->d_un.d_ptr;
-      const Elf32_Rel *end = &r[dynamic[sztag]->d_un.d_val / sizeof *r];
-      while (r < end)
-	{
-	  const Elf32_Sym *definer;
-	  Elf32_Addr loadbase = symvalue (r->r_info, &definer);
-	  elf_machine_rel (loadaddr, dynamic, r, loadbase, definer);
-	  ++r;
-	}
-    }
-  /* Perform Elf32_Rela relocations in the section found by RELTAG, SZTAG.  */
-  inline void do_rela (Elf32_Word reltag, Elf32_Word sztag)
-    {
-      const Elf32_Rela *r = (const Elf32_Rela *) dynamic[reltag]->d_un.d_ptr;
-      const Elf32_Rela *end = &r[dynamic[sztag]->d_un.d_val / sizeof *r];
-      while (r < end)
-	{
-	  const Elf32_Sym *definer;
-	  Elf32_Addr loadbase = symvalue (r->r_info, &definer);
-	  elf_machine_rela (loadaddr, dynamic, r, loadbase, definer);
-	  ++r;
-	}
-    }
-
-  if (dynamic[DT_RELA])
-    do_rela (DT_RELA, DT_RELASZ);
-  if (dynamic[DT_REL])
-    do_rel (DT_REL, DT_RELSZ);
-  if (dynamic[DT_JMPREL] && ! lazy)
-    /* Relocate the PLT right now.  */
-    (dynamic[DT_PLTREL]->d_un.d_val == DT_REL ? do_rel : do_rela)
-      (DT_JMPREL, DT_PLTRELSZ);
-}
+/* This can't just be an inline function because GCC is too dumb
+   to inline functions containing inlines themselves.  */
+#define ELF_DYNAMIC_RELOCATE(map, lazy, resolve) \
+  do { ELF_DYNAMIC_DO_REL ((map), (lazy), (resolve)); \
+       ELF_DYNAMIC_DO_RELA ((map), (lazy), (resolve)); } while (0)

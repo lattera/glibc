@@ -68,11 +68,10 @@ elf_machine_load_address (void)
   ++(const Elf32_Rel *) (dynamic_info)[DT_REL]->d_un.d_ptr;
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
-   LOADADDR is the load address of the object; INFO is an array indexed
-   by DT_* of the .dynamic section info.  */
+   MAP is the object containing the reloc.  */
 
 static inline void
-elf_machine_rel (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
+elf_machine_rel (struct link_map *map,
 		 const Elf32_Rel *reloc,
 		 Elf32_Addr sym_loadaddr, const Elf32_Sym *sym)
 {
@@ -92,7 +91,7 @@ elf_machine_rel (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
       *reloc_addr += sym_value;
       break;
     case R_386_RELATIVE:
-      *reloc_addr += loadaddr;
+      *reloc_addr += map->l_addr;
       break;
     case R_386_PC32:
       *reloc_addr = sym_value - (Elf32_Addr) reloc_addr;
@@ -105,13 +104,7 @@ elf_machine_rel (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
 
 
 /* The i386 never uses Elf32_Rela relocations.  */
-static inline void
-elf_machine_rela (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
-		  const Elf32_Rela *reloc, 
-		  Elf32_Addr sym_loadaddr, const Elf32_Sym *sym)
-{
-  _dl_signal_error (0, "Elf32_Rela relocation requested -- unused on i386");
-}
+#define ELF_MACHINE_NO_RELA 1
 
 
 /* Set up the loaded object described by L so its unrelocated PLT
@@ -140,9 +133,16 @@ elf_machine_runtime_setup (struct link_map *l)
 #define RTLD_START asm ("\
 .text\n\
 .globl _start\n\
-_start:	call _dl_start\n\
-	# Save the user entry point address in %ebx.\n\
-	movl %eax, %ebx\n\
+.globl _dl_start_user\n\
+_start:\n\
+	call _dl_start\n\
+_dl_start_user:\n\
+	# Save the user entry point address in %edi.\n\
+	movl %eax, %edi\n\
+	# Point %ebx at the GOT.
+1:	call 2f\n\
+2:	popl %ebx\n\
+	addl $_GLOBAL_OFFSET_TABLE_+[.-2b], %ebx\n\
 	# Call _dl_init_next to return the address of an initializer\n\
 	# function to run.\n\
 0:	call _dl_init_next@PLT\n\
@@ -160,10 +160,7 @@ _start:	call _dl_start\n\
 	# Loop to call _dl_init_next for the next initializer.\n\
 	jmp 0b\n\
 	# Pass our finalizer function to the user in %edx, as per ELF ABI.\n\
-1:	call 2f\n\
-2:	popl %eax\n\
-	addl $_GLOBAL_OFFSET_TABLE_+[.-2b], %eax\n\
-	leal _dl_fini@GOT(%eax), %edx\n\
-	# Jump to the user entry point.\n\
-	jmp *%ebx\n\
+	leal _dl_fini@GOT(%ebx), %edx\n\
+	# Jump to the user's entry point.\n\
+	jmp *%edi\n\
 ");

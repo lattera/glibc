@@ -131,17 +131,23 @@ extern void _dl_sysdep_fatal (const char *string, ...)
 extern int _dl_secure;
 
 /* This function is called by all the internal dynamic linker functions
-   when they encounter an error.  ERRCODE is either an `errno' code
-   or zero; ERRSTRING is a string describing the specific problem.  */
+   when they encounter an error.  ERRCODE is either an `errno' code or
+   zero; OBJECT is the name of the problematical shared object, or null if
+   it is a general problem; ERRSTRING is a string describing the specific
+   problem.  */
    
-extern void _dl_signal_error (int errcode, const char *errstring)
+extern void _dl_signal_error (int errcode,
+			      const char *object,
+			      const char *errstring)
      __attribute__ ((__noreturn__));
 
 /* Call OPERATE, catching errors from `dl_signal_error'.  If there is no
-   error, *ERRSTRING is set to null.  If there is an error, *ERRSTRING is
-   set to the string passed to _dl_signal_error, and the error code passed
-   is the return value.  */
-extern int _dl_catch_error (const char **errstring, void (*operate) (void));
+   error, *ERRSTRING is set to null.  If there is an error, *ERRSTRING and
+   *OBJECT are set to the strings passed to _dl_signal_error, and the error
+   code passed is the return value.  */
+extern int _dl_catch_error (const char **errstring,
+			    const char **object,
+			    void (*operate) (void));
 
 
 /* Helper function for <dlfcn.h> functions.  Runs the OPERATE function via
@@ -166,10 +172,12 @@ extern void _dl_setup_hash (struct link_map *map);
    referred to by UNDEF.  *SYM is the symbol table entry containing the
    reference; it is replaced with the defining symbol, and the base load
    address of the defining object is returned.  SYMBOL_SCOPE is the head of
-   the chain used for searching.  */
+   the chain used for searching.  REFERENCE_NAME should name the object
+   containing the reference; it is used in error messages.  */
 extern Elf32_Addr _dl_lookup_symbol (const char *undef,
 				     const Elf32_Sym **sym,
-				     struct link_map *symbol_scope);
+				     struct link_map *symbol_scope,
+				     const char *reference_name);
 
 
 /* List of objects currently loaded.  */

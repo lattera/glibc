@@ -27,7 +27,8 @@ Cambridge, MA 02139, USA.  */
 
 Elf32_Addr
 _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
-		   struct link_map *symbol_scope)
+		   struct link_map *symbol_scope,
+		   const char *reference_name)
 {
   unsigned long int hash = elf_hash (undef_name);
   struct link_map *map;
@@ -106,7 +107,7 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
       char buf[sizeof msg + strlen (undef_name)];
       memcpy (buf, msg, sizeof msg - 1);
       memcpy (&buf[sizeof msg - 1], undef_name, sizeof buf - sizeof msg);
-      _dl_signal_error (0, msg);
+      _dl_signal_error (0, reference_name, msg);
     }
 
   *ref = weak_value.s;

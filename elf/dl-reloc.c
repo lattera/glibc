@@ -48,7 +48,7 @@ _dl_relocate_object (struct link_map *l, int lazy)
 			       & ~(pagesize - 1)));
 	    if (mprotect (mapstart, mapend - mapstart,
 			  PROT_READ|PROT_WRITE) < 0)
-	      _dl_signal_error (errno,
+	      _dl_signal_error (errno, l->l_name,
 				"cannot make segment writable for relocation");
 	  }
     }
@@ -62,7 +62,8 @@ _dl_relocate_object (struct link_map *l, int lazy)
 
     Elf32_Addr resolve (const Elf32_Sym **ref)
       {
-	return _dl_lookup_symbol (strtab + (*ref)->st_name, ref, scope);
+	return _dl_lookup_symbol (strtab + (*ref)->st_name, ref, scope,
+				  l->l_name);
       }
 
     real_next = l->l_next;
@@ -75,7 +76,7 @@ _dl_relocate_object (struct link_map *l, int lazy)
     else
       scope = _dl_loaded;
 
-    elf_dynamic_relocate (l->l_info, l->l_addr, lazy, resolve);
+    ELF_DYNAMIC_RELOCATE (l, lazy, resolve);
 
     /* Restore list frobnication done above for DT_SYMBOLIC.  */
     l->l_next = real_next;
@@ -107,7 +108,7 @@ _dl_relocate_object (struct link_map *l, int lazy)
 	    if (ph->p_flags & PF_X)
 	      prot |= PROT_EXEC;
 	    if (mprotect (mapstart, mapend - mapstart, prot) < 0)
-	      _dl_signal_error (errno,
+	      _dl_signal_error (errno, l->l_name,
 				"can't restore segment prot after reloc");
 	  }
     }

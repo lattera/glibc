@@ -73,23 +73,11 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 		  sizeof (state->basic));
 	  memcpy (&state->fpu, &ss->context->sc_i386_float_state,
 		  sizeof (state->fpu));
-	  state->set = (1 << i386_THREAD_STATE) | (1 << i386_FLOAT_STATE);
-	  assert (! rpc_wait);
-	  /* The intr_port slot was cleared before sigreturn sent us the
-	     sig_post that made us notice this pending signal, so
-	     _hurd_internal_post_signal wouldn't do interrupt_operation.
-	     After we return, our caller will set SCP->sc_intr_port (in the
-	     new context) from SS->intr_port and clear SS->intr_port.  Now
-	     that we are restoring this old context recorded by sigreturn,
-	     we want to restore its intr_port too; so store it in
-	     SS->intr_port now, so it will end up in SCP->sc_intr_port
-	     later.  */
-	  ss->intr_port = ss->context->sc_intr_port;
+	  state->set |= (1 << i386_THREAD_STATE) | (1 << i386_FLOAT_STATE);
 	}
-      /* If the sigreturn context was bogus, just ignore it.  */
-      ss->context = NULL;
     }
-  else if (! machine_get_basic_state (ss->thread, state))
+
+  if (! machine_get_basic_state (ss->thread, state))
     return NULL;
 
   if ((ss->actions[signo].sa_flags & SA_ONSTACK) &&

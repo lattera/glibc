@@ -37,7 +37,8 @@ _dl_new_object (char *realname, const char *libname, int type)
 {
   struct link_map *new = malloc (sizeof *new);
   if (! new)
-    _dl_signal_error (ENOMEM, "can't open new object");
+    _dl_signal_error (ENOMEM, libname,
+		      "cannot allocate shared object descriptor");
 
   memset (new, 0, sizeof *new);
   new->l_name = realname;

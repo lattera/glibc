@@ -22,23 +22,28 @@ Cambridge, MA 02139, USA.  */
 #include <setjmp.h>
 
 static jmp_buf catch_env;
-static const char *signalled_errstring;
+static const char *signalled_errstring, *signalled_objname;
 
 void
-_dl_signal_error (int errcode, const char *errstring)
+_dl_signal_error (int errcode,
+		  const char *objname,
+		  const char *errstring)
 {
   signalled_errstring = errstring ?: "DYNAMIC LINKER BUG!!!";
   longjmp (catch_env, errcode ?: -1);
 }
 
 int
-_dl_catch_error (const char **errstring, void (*operate) (void))
+_dl_catch_error (const char **errstring,
+		 const char **objname,
+		 void (*operate) (void))
 {
   int errcode;
 
-  signalled_errstring = NULL;
+  signalled_errstring = signalled_objname = NULL;
   errcode = setjmp (catch_env);
   (*operate) ();
   *errstring = signalled_errstring;
+  *objname = signalled_objname;
   return *errstring ? errcode : 0;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <string.h>
 #include <mach/error.h>
-#include <mach/errorlib.h>
+#include <errorlib.h>
 
 /* Return a string describing the errno code in ERRNUM.  */
 char *
@@ -38,7 +38,7 @@ DEFUN(_strerror_internal, (errnum, buf), int errnum AND char buf[1024])
   sub = err_get_sub (errnum);
   code = err_get_code (errnum);
 
-  if (system > err_max_system)
+  if (system > err_max_system || ! __mach_error_systems[system].bad_sub)
     {
       sprintf (buf, "Unknown error system %d", system);
       return buf;

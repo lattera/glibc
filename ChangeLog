@@ -1,3 +1,25 @@
+Sat May  6 11:06:47 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makeconfig (+gccwarn): Add -Winline.
+
+	* hurd/hurdsig.c (_hurd_internal_post_signal): If SS->context is
+ 	set, avoid abort_rpcs, and use reply and intr ports saved in
+ 	SS->context.
+	* sysdeps/mach/hurd/i386/trampoline.c: Don't set SS->intr_port
+ 	from SS->context.  Don't clear SS->context.
+	* sysdeps/mach/hurd/i386/sigreturn.c: Don't set SS->intr_port when
+ 	setting SS->context.  If msg_sig_post returns, re-lock and clear
+ 	SS->context.
+
+Fri May  5 10:37:09 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* mach/Makefile (errsystems.c): Comment out generation rule.
+
+	* sysdeps/mach/_strerror.c: Consider a system unknown if its
+ 	bad_sub member is null.
+
+	* mach/mig-alloc.c: Add weak alias to non-__ name.
+
 Wed May  3 11:56:35 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/dup2.c: Fixed broken test in last change.

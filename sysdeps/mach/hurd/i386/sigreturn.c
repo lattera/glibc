@@ -57,15 +57,13 @@ __sigreturn (struct sigcontext *scp)
 	 the signal thread will notice it if it runs another handler, and
 	 arrange to have us called over again in the new reality.  */
       ss->context = scp;
-      /* Clear the intr_port slot, since we are not in fact doing
-	 an interruptible RPC right now.  If SS->intr_port is not null,
-	 the SCP context is doing an interruptible RPC, but the signal
-	 thread will examine us while we are blocked in the sig_post RPC.  */
-      ss->intr_port = MACH_PORT_NULL;
       __spin_unlock (&ss->lock);
       __msg_sig_post (_hurd_msgport, 0, __mach_task_self ());
-      /* If a pending signal was handled, sig_post never returned.  */
+      /* If a pending signal was handled, sig_post never returned.
+	 If it did return, the pending signal didn't run a handler;
+	 proceed as usual.  */
       __spin_lock (&ss->lock);
+      ss->context = NULL;
     }
 
   if (scp->sc_onstack)

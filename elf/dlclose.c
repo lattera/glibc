@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/mman.h>
 
 
-#define LOSE(s) _dl_signal_error (0, s)
+#define LOSE(s) _dl_signal_error (0, map->l_name, s)
 
 int
 dlclose (void *handle)

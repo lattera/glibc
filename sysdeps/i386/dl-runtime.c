@@ -17,8 +17,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-register void *sp asm ("%esp");
-
 #include <link.h>
 #include "dynamic-link.h"
 
@@ -30,7 +28,7 @@ register void *sp asm ("%esp");
    0(%esp)	identifier for this shared object (struct link_map *)
 
    The user expects the real function the PLT refers to to be entered
-   8(%esp) as the top of stack.  */
+   with 8(%esp) as the top of stack.  */
 
 void
 _dl_runtime_resolve (Elf32_Word reloc_offset)
@@ -63,14 +61,15 @@ _dl_runtime_resolve (Elf32_Word reloc_offset)
     scope = _dl_loaded;
   
   definer = &symtab[ELF32_R_SYM (reloc->r_info)];
-  loadbase = _dl_lookup_symbol (strtab + definer->st_name, &definer, scope);
+  loadbase = _dl_lookup_symbol (strtab + definer->st_name, &definer,
+				scope, l->l_name);
   
   /* Restore list frobnication done above for DT_SYMBOLIC.  */
   l->l_next = real_next;
   l->l_prev->l_next = l;
 
   /* Apply the relocation with that value.  */
-  elf_machine_rel (l->l_addr, l->l_info, reloc, loadbase, definer);
+  elf_machine_rel (l, reloc, loadbase, definer);
 
   /* The top of the stack is the word we set L from; but this location
      holds the address we will return to.  Store there the address of a

@@ -107,10 +107,20 @@ _dl_map_object (struct link_map *loader, const char *name,
 		Elf32_Addr *entry_point)
 {
   int fd;
+  struct link_map *l = NULL;
   char *realname;
   const size_t pagesize = getpagesize ();
   void *file_mapping = NULL;
   size_t mapping_size = 0;
+
+  void lose (int code, const char *msg)
+    {
+      (void) close (fd);
+      if (file_mapping)
+	munmap (file_mapping, mapping_size);
+      _dl_signal_error (code, l ? l->l_name : name, msg);
+    }
+
   /* Make sure LOCATION is mapped in.  */
   void *map (off_t location, size_t size)
     {
@@ -124,14 +134,13 @@ _dl_map_object (struct link_map *loader, const char *name,
 	  result = mmap (file_mapping, mapping_size, PROT_READ,
 			 MAP_COPY|MAP_FILE, fd, 0);
 	  if (result == (void *) -1)
-	    return NULL;
+	    lose (errno, "cannot map file data");
 	  file_mapping = result;
 	}
       return file_mapping + location;
     }
 
   const Elf32_Ehdr *header;
-  struct link_map *l;
 
   /* Look for this name among those already loaded.  */
   for (l = _dl_loaded; l; l = l->l_next)
@@ -170,7 +179,7 @@ _dl_map_object (struct link_map *loader, const char *name,
     }
 
   if (fd == -1)
-    return NULL;
+    lose (errno, "cannot open shared object file");
 
   /* Look again to see if the real name matched another already loaded.  */
   for (l = _dl_loaded; l; l = l->l_next)
@@ -186,17 +195,9 @@ _dl_map_object (struct link_map *loader, const char *name,
 
   /* Map in the first page to read the header.  */
   header = map (0, sizeof *header);
-  if (! header)
-    {
-    lose:
-      (void) close (fd);
-      if (file_mapping)
-	munmap (file_mapping, mapping_size);
-      return NULL;
-    }
 
 #undef LOSE
-#define LOSE(s) _dl_signal_error (0, s)
+#define LOSE(s) lose (0, (s))
   /* Check the header for basic validity.  */
   if (*(Elf32_Word *) &header->e_ident != ((ELFMAG0 << (EI_MAG0 * 8)) |
 					   (ELFMAG1 << (EI_MAG1 * 8)) |
@@ -224,7 +225,7 @@ _dl_map_object (struct link_map *loader, const char *name,
     {
       _dl_zerofd = _dl_sysdep_open_zero_fill ();
       if (_dl_zerofd == -1)
-	_dl_signal_error (errno, "cannot open zero fill device");
+	_dl_signal_error (errno, NULL, "cannot open zero fill device");
     }
 
   {
@@ -235,8 +236,6 @@ _dl_map_object (struct link_map *loader, const char *name,
     int anywhere;
 
     ph = map (header->e_phoff, header->e_phnum * sizeof (Elf32_Phdr));
-    if (! ph)
-      goto lose;
     memcpy (phdr, ph, sizeof phdr);
     l->l_phnum = header->e_phnum;
 
@@ -288,7 +287,8 @@ _dl_map_object (struct link_map *loader, const char *name,
 	      {
 		/* XXX this loses if the first segment mmap call puts
 		   it someplace where the later segments cannot fit.  */
-		mapat = mmap ((caddr_t) l->l_addr + mapstart, mapend - mapstart,
+		mapat = mmap ((caddr_t) (l->l_addr + mapstart),
+			      mapend - mapstart,
 			      prot, MAP_COPY|MAP_FILE|MAP_INHERIT |
 			      /* Let the system choose any convenient
 				 location if this is the first segment.
@@ -312,8 +312,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 		l->l_addr = 0;
 	      }
 	    if (mapat == (caddr_t) -1)
-	      _dl_signal_error (errno,
-				"failed to map region from shared object");
+	      lose (errno, "failed to map segment from shared object");
 
 	    if (ph->p_memsz > ph->p_filesz)
 	      {
@@ -341,8 +340,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 						 & ~(pagesize - 1)),
 				      pagesize,
 				      prot|PROT_WRITE) < 0)
-			  _dl_signal_error (errno,
-					    "cannot change protections");
+			  lose (errno, "cannot change memory protections");
 		      }
 		    memset (zero, 0, zeroend - zero);
 		    if ((prot & PROT_WRITE) == 0)

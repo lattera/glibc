@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <hurd.h>
 #include <hurd/fd.h>
+#include <hurd/resource.h>
 
 /* Return the maximum number of file descriptors the current process
    could possibly have (until it raises the resource limit).  */
@@ -29,9 +30,9 @@ DEFUN_VOID(__getdtablesize)
 {
   int size;
   HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_rlimits_lock);
-  size = _hurd_rlimits[RLIM_NOFILE].rlim_cur; /* XXX RLIM_INFINITY?? */
-  __mutex_unlock (&_hurd_rlimits_lock);
+  __mutex_lock (&_hurd_rlimit_lock);
+  size = _hurd_rlimits[RLIMIT_NOFILE].rlim_cur;
+  __mutex_unlock (&_hurd_rlimit_lock);
   HURD_CRITICAL_END;
   return size;
 }

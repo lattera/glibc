@@ -23,42 +23,49 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <stdlib.h>
 
-static int _dl_last_errcode;
-static const char *_dl_last_errstring;
+static int last_errcode;
+static const char *last_errstring;
+static const char *last_object_name;
 
 char *
 dlerror (void)
 {
- char *ret;
+  static char *buf;
+  char *ret;
 
-  if (! _dl_last_errstring)
+  if (buf)
+    {
+      free (buf);
+      buf = NULL;
+    }
+
+  if (! last_errstring)
     return NULL;
 
-  if (_dl_last_errcode)
-    {
-      static char *buf;
-      if (buf)
-	{
-	  free (buf);
-	  buf = NULL;
-	}
-      if (asprintf (&buf, "%s: %s",
-		    _dl_last_errstring, strerror (_dl_last_errcode)) == -1)
-	return NULL;
-      else
-	ret = buf;
-    }
- else
-   ret = (char *) _dl_last_errstring;
+  if (last_errcode == 0 && ! last_object_name)
+    ret = (char *) last_errstring;
+  else if (last_errcode == 0)
+    ret = (asprintf (&buf, "%s: %s", last_object_name, last_errstring) == -1
+	   ? NULL : buf);
+  else if (! last_object_name)
+    ret = (asprintf (&buf, "%s: %s",
+		     last_errstring, strerror (last_errcode)) == -1
+	   ? NULL : buf);
+  else
+    ret = (asprintf (&buf, "%s: %s: %s",
+		     last_object_name, last_errstring,
+		     strerror (last_errcode)) == -1
+	   ? NULL : buf);
 
- /* Reset the error indicator.  */
- _dl_last_errstring = NULL;
- return ret;
+  /* Reset the error indicator.  */
+  last_errstring = NULL;
+  return ret;
 }
 
 int
 _dlerror_run (void (*operate) (void))
 {
-  _dl_last_errcode = _dl_catch_error (&_dl_last_errstring, operate);
-  return _dl_last_errstring != NULL;
+  last_errcode = _dl_catch_error (&last_errstring, &last_object_name,
+				  operate);
+  return last_errstring != NULL;
 }

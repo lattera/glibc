@@ -667,9 +667,16 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       /* Nobody cares about this signal.  */
       break;
 
+    sigbomb:
+      /* We got a fault setting up the stack frame for the handler.
+	 Nothing to do but die; BSD gets SIGILL in this case.  */
+      sigcode = signo;	/* XXX ? */
+      signo = SIGILL;
+      act = core;
+      /* FALLTHROUGH */
+
     case term:			/* Time to die.  */
     case core:			/* And leave a rotting corpse.  */
-    nirvana:
       /* Have the proc server stop all other threads in our task.  */
       err = __USEPORT (PROC, __proc_dostop (port, _hurd_msgport_thread));
       assert_perror (err);
@@ -693,7 +700,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
     case handle:
       /* Call a handler for this signal.  */
       {
-	struct sigcontext *scp;
+	struct sigcontext *scp, ocontext;
 	int wait_for_reply, state_changed;
 
 	/* Stop the thread and abort its pending RPC operations.  */
@@ -710,19 +717,64 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	   thread_get_state is never kosher before thread_abort.  */
 	abort_thread (ss, &thread_state, NULL, 0, 0);
 
-	wait_for_reply = (abort_rpcs (ss, signo, &thread_state, &state_changed,
-				      &reply_port, reply_port_type, untraced)
-			  != MACH_PORT_NULL);
-
-	if (ss->critical_section)
+	if (ss->context)
 	  {
-	    /* The thread is in a critical section.  Mark the signal as
-	       pending.  When it finishes the critical section, it will
-	       check for pending signals.  */
-	    mark_pending ();
-	    assert (! state_changed);
-	    __thread_resume (ss->thread);
-	    break;
+	    /* We have a previous sigcontext that sigreturn was about
+	       to restore when another signal arrived.  */
+
+	    mach_port_t *loc;
+
+	    if (_hurdsig_catch_fault (SIGSEGV))
+	      {
+		assert (_hurdsig_fault_sigcode >= (long int) ss->context &&
+			_hurdsig_fault_sigcode < (long int) (ss->context + 1));
+		/* We faulted reading the thread's stack.  Forget that
+		   context and pretend it wasn't there.  It almost
+		   certainly crash if this handler returns, but that's it's
+		   problem.  */
+		ss->context = NULL;
+	      }
+	    else
+	      {
+		/* Copy the context from the thread's stack before
+		   we start diddling the stack to set up the handler.  */
+		ocontext = *ss->context;
+		ss->context = &ocontext;
+	      }
+	    _hurdsig_end_catch_fault ();
+	    
+	    if (! machine_get_basic_state (ss->thread, &thread_state))
+	      goto sigbomb;
+	    loc = interrupted_reply_port_location (&thread_state);
+	    if (loc && *loc != MACH_PORT_NULL)
+	      /* This is the reply port for the context which called
+		 sigreturn.  Since we are abandoning that context entirely
+		 and restoring SS->context instead, destroy this port.  */
+	      __mach_port_destroy (__mach_task_self (), *loc);
+
+	    /* The thread was in sigreturn, not in any interruptible RPC.  */
+	    wait_for_reply = 0;
+
+	    assert (! ss->critical_section);
+	  }
+	else
+	  {
+	    wait_for_reply = (abort_rpcs (ss, signo,
+					  &thread_state, &state_changed,
+					  &reply_port, reply_port_type,
+					  untraced)
+			      != MACH_PORT_NULL);
+
+	    if (ss->critical_section)
+	      {
+		/* The thread is in a critical section.  Mark the signal as
+		   pending.  When it finishes the critical section, it will
+		   check for pending signals.  */
+		mark_pending ();
+		assert (! state_changed);
+		__thread_resume (ss->thread);
+		break;
+	      }
 	  }
 
 	/* Call the machine-dependent function to set the thread up
@@ -731,18 +783,10 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 				      signo, sigcode,
 				      wait_for_reply, &thread_state);
 	if (scp == NULL)
-	  {
-	    /* We got a fault setting up the stack frame for the handler.
-	       Nothing to do but die; BSD gets SIGILL in this case.  */
-	    sigcode = signo;	/* XXX ? */
-	    signo = SIGILL;
-	    act = core;
-	    goto nirvana;
-	  }
+	  goto sigbomb;
 
 	/* Set the machine-independent parts of the signal context.  */
 
-	scp->sc_error = sigerror;
 	{
 	  /* Fetch the thread variable for the MiG reply port,
 	     and set it to MACH_PORT_NULL.  */
@@ -754,16 +798,31 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	    }
 	  else
 	    scp->sc_reply_port = MACH_PORT_NULL;
+
+	  /* Save the intr_port in use by the interrupted code,
+	     and clear the cell before running the trampoline.  */
+	  scp->sc_intr_port = ss->intr_port;
+	  ss->intr_port = MACH_PORT_NULL;
+
+	  if (ss->context)
+	    {
+	      /* After the handler runs we will restore to the state in
+		 SS->context, not the state of the thread now.  So restore
+		 that context's reply port and intr port.  */
+
+	      scp->sc_reply_port = ss->context->sc_reply_port;
+	      scp->sc_intr_port = ss->context->sc_intr_port;
+
+	      ss->context = NULL;
+	    }
 	}
+
+	/* Backdoor extra argument to signal handler.  */
+	scp->sc_error = sigerror;
 
 	/* Block SIGNO and requested signals while running the handler.  */
 	scp->sc_mask = ss->blocked;
 	ss->blocked |= __sigmask (signo) | ss->actions[signo].sa_mask;
-
-	/* Save the intr_port in use by the interrupted code,
-	   and clear the cell before running the trampoline.  */
-	scp->sc_intr_port = ss->intr_port;
-	ss->intr_port = MACH_PORT_NULL;
 
 	/* Start the thread running the handler (or possibly waiting for an
 	   RPC reply before running the handler).  */
