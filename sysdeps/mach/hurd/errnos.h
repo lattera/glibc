@@ -188,6 +188,28 @@ enum __error_t_codes
 #define	EIEIO           _HURD_ERRNO (104)/* Computer bought the farm */
 	EGRATUITOUS     = _HURD_ERRNO (105),
 #define	EGRATUITOUS     _HURD_ERRNO (105)/* Gratuitous error */
+	EBADMSG         = _HURD_ERRNO (107),
+#define	EBADMSG         _HURD_ERRNO (107)/* Bad message */
+	EIDRM           = _HURD_ERRNO (108),
+#define	EIDRM           _HURD_ERRNO (108)/* Identifier removed */
+	EMULTIHOP       = _HURD_ERRNO (109),
+#define	EMULTIHOP       _HURD_ERRNO (109)/* Multihop attempted */
+	ENODATA         = _HURD_ERRNO (110),
+#define	ENODATA         _HURD_ERRNO (110)/* No data available */
+	ENOLINK         = _HURD_ERRNO (111),
+#define	ENOLINK         _HURD_ERRNO (111)/* Link has been severed */
+	ENOMSG          = _HURD_ERRNO (112),
+#define	ENOMSG          _HURD_ERRNO (112)/* No message of desired type */
+	ENOSR           = _HURD_ERRNO (113),
+#define	ENOSR           _HURD_ERRNO (113)/* Out of streams resources */
+	ENOSTR          = _HURD_ERRNO (114),
+#define	ENOSTR          _HURD_ERRNO (114)/* Device not a stream */
+	EOVERFLOW       = _HURD_ERRNO (115),
+#define	EOVERFLOW       _HURD_ERRNO (115)/* Value too large for defined data type */
+	EPROTO          = _HURD_ERRNO (116),
+#define	EPROTO          _HURD_ERRNO (116)/* Protocol error */
+	ETIME           = _HURD_ERRNO (117),
+#define	ETIME           _HURD_ERRNO (117)/* Timer expired */
 
 	/* Errors from <mach/message.h>.  */
 	EMACH_SEND_IN_PROGRESS          = 0x10000001,
@@ -271,7 +293,7 @@ enum __error_t_codes
 
 };
 
-#define	_HURD_ERRNOS	107
+#define	_HURD_ERRNOS	118
 
 /* User-visible type of error codes.  It is ok to use `int' or
    `kern_return_t' for these, but with `error_t' the debugger prints
