@@ -1,6 +1,34 @@
 GLIBC_2.0 {
   global:
 
+    # Many programs expect this, but every user program should
+    # have it's own version, since the interface is different on
+    # various platforms.
+    xdr_domainname;       xdr_keydat;          xdr_mapname;
+    xdr_peername;         xdr_valdat;          xdr_yp_buf;
+    xdr_ypbind_binding;   xdr_ypbind_resp;     xdr_ypbind_resptype;
+    xdr_ypbind_setdom;    xdr_ypdelete_args;   xdr_ypmap_parms;
+    xdr_ypmaplist;        xdr_yppush_status;   xdr_yppushresp_xfr;
+    xdr_ypreq_key;        xdr_ypreq_nokey;     xdr_ypreq_xfr;
+    xdr_ypresp_all;       xdr_ypresp_key_val;  xdr_ypresp_maplist;
+    xdr_ypresp_master;    xdr_ypresp_order;    xdr_ypresp_val;
+    xdr_ypresp_xfr;       xdr_ypstat;          xdr_ypupdate_args;
+    xdr_ypxfrstat;
+
+    __yp_check;
+    yp_all;               yp_bind;             yp_first;
+    yp_get_default_domain; yp_maplist;         yp_master;
+    yp_match;             yp_next;             yp_order;
+    yp_unbind;            yp_update;           ypbinderr_string;
+    yperr_string;         ypprot_err;
+
+  local:
+    *;
+};
+
+GLIBC_2.1 {
+  global:
+
     nis_add;              nis_add_entry;       nis_addmember;
     nis_checkpoint;       nis_clone_directory; nis_clone_object;
     nis_clone_result;     nis_creategroup;     nis_destroy_object;
@@ -25,42 +53,8 @@ GLIBC_2.0 {
 
     # This functions are needed by the NIS+ tools and rpc.nisd,
     # they should never be used in a normal user program !
-    __nis_default_access; __nis_default_group; __nis_default_owner;
-    __nis_default_ttl;    __free_fdresult;     __nis_finddirectory;
-    __nis_hash;		  readColdStartFile;   writeColdStartFile;
-    __do_niscall2;
-
-    # Many programs expect this, but every user program should
-    # have it's own version, since the interface is different on
-    # various platforms.
-    xdr_cp_result;        xdr_directory_obj;   xdr_domainname;
-    xdr_dump_args;        xdr_endpoint;        xdr_entry_col;
-    xdr_entry_obj;        xdr_fd_args;         xdr_fd_result;
-    xdr_group_obj;        xdr_ib_request;      xdr_keydat;
-    xdr_link_obj;         xdr_log_entry;       xdr_log_entry_t;
-    xdr_log_result;       xdr_mapname;         xdr_nis_attr;
-    xdr_nis_error;        xdr_nis_name;        xdr_nis_object;
-    xdr_nis_oid;          xdr_nis_result;      xdr_nis_server;
-    xdr_nis_tag;          xdr_nis_taglist;     xdr_ns_request;
-    xdr_nstype;           xdr_oar_mask;        xdr_objdata;
-    xdr_peername;         xdr_ping_args;       xdr_table_col;
-    xdr_table_obj;        xdr_valdat;          xdr_yp_buf;
-    xdr_ypbind_binding;   xdr_ypbind_resp;     xdr_ypbind_resptype;
-    xdr_ypbind_setdom;    xdr_ypdelete_args;   xdr_ypmap_parms;
-    xdr_ypmaplist;        xdr_yppush_status;   xdr_yppushresp_xfr;
-    xdr_ypreq_key;        xdr_ypreq_nokey;     xdr_ypreq_xfr;
-    xdr_ypresp_all;       xdr_ypresp_key_val;  xdr_ypresp_maplist;
-    xdr_ypresp_master;    xdr_ypresp_order;    xdr_ypresp_val;
-    xdr_ypresp_xfr;       xdr_ypstat;          xdr_ypupdate_args;
-    xdr_ypxfrstat;        xdr_zotypes;
-
-    __yp_check;
-    yp_all;               yp_bind;             yp_first;
-    yp_get_default_domain; yp_maplist;         yp_master;
-    yp_match;             yp_next;             yp_order;
-    yp_unbind;            yp_update;           ypbinderr_string;
-    yperr_string;         ypprot_err;
-
-  local:
-    *;
-};
+    __do_niscall2;        __free_fdresult;     __nis_default_access;
+    __nis_default_group;  __nis_default_owner; __nis_default_ttl;
+    __nis_finddirectory;  __nis_hash;
+    readColdStartFile;    writeColdStartFile;
+} GLIBC_2.0;

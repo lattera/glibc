@@ -1,3 +1,43 @@
+1998-02-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sigqueue.c: Fix weak alias definition.
+
+1998-02-19 17:16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: More reordering for GLIBC_2.1 symbols.
+
+1998-02-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libc.map: Move some functions from version GLIBC_2.0 to
+	GLIBC_2.1, reorder declarations.
+
+1998-02-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/gethnamaddr.c (addrsort): Make this function extern.
+	Patch by zab@thebrain.grumblesmurf.net.
+
+1998-02-19  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/libnsl.map: NIS+ support is new in glibc 2.1, add
+	NIS+ functions with version GLIBC_2.1.
+
+1998-02-19 14:05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Add __sbrk, __setpgid, __getpgid for binary compatibility
+	with 2.0 binaries.  Reported by Thorsten Kukuk.
+
+1998-02-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* elf/dlvsym.c (dlvsym_doit): Correct last patch.
+
+	* elf/dlsym.c (dlsym_doit): Likewise.
+
+1998-02-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* elf/link.h: Correct typos.
+
+	* iconv/iconv_prog.c: Correct typo.
+
 1998-02-18 17:57  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/Makefile: Add rules to build and install iconv program.
@@ -136,7 +176,7 @@
 
 1998-02-17 11:37  Ulrich Drepper  <drepper@cygnus.com>
 
-	* eld/dl-open.c (_dl_open): Assign correct value to new->l_global.
+	* elf/dl-open.c (_dl_open): Assign correct value to new->l_global.
 	Patch forwarded by Cristian Gafton <gafton@redhat.com>.
 
 	* math/math.h: Define M_* constants always as `double' and add new

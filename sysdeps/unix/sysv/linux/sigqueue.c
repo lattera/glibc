@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,4 +52,4 @@ __sigqueue (pid, sig, val)
 
   return __syscall_rt_sigqueueinfo (pid, sig, &info);
 }
-weak_alias (__sigwaitinfo, sigwaitinfo)
+weak_alias (__sigqueue, sigqueue)

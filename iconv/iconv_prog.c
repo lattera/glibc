@@ -111,7 +111,7 @@ main (int argc, char *argv[])
      since we do not know what to do.  */
   if (from_code == NULL && to_code == NULL)
     error (EXIT_FAILURE, 0,
-	   _("neither original not target encoding specified"));
+	   _("neither original nor target encoding specified"));
   if (from_code == NULL)
     error (EXIT_FAILURE, 0, _("original encoding not specified using `-f'"));
   if (to_code == NULL)

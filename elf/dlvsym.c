@@ -67,11 +67,15 @@ RTLD_NEXT used in code not dynamically loaded"));
       while (l->l_loader)
 	l = l->l_loader;
 
-      args->loadbase = _dl_lookup_versioned_symbol_skip	(args->name,
-							 &args->ref,
-							 mapscope,
-							 NULL,
-							 match);
+      {
+	struct link_map *map = l;
+	struct link_map *mapscope[2] = { map, NULL };
+	args->loadbase = _dl_lookup_versioned_symbol_skip (args->name,
+							   &args->ref,
+							   mapscope,
+							   NULL,
+							   match);
+      }
     }
   else
     {
