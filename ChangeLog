@@ -1,5 +1,8 @@
 2002-03-26  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/x86_64/sys/reg.h: Fix typo.  Reported by
+	Michal Ludvig <mludvig@suse.cz>.
+
 	* sysdeps/unix/sysv/linux/x86_64/sys/ucontext.h: Add 32-bit
 	compatibilty, adjust for kernel changes.
 
