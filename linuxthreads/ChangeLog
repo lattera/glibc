@@ -1,5 +1,8 @@
 2000-09-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Remove
+	_POSIX_MONOTONIC_CLOCK.
+
 	* spinlock.h (__pthread_set_own_extricate_if): Add back locking
 	and explain why.
 

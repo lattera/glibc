@@ -116,9 +116,6 @@
 /* We support the clock also in threads.  */
 #define _POSIX_THREAD_CPUTIME	200912L
 
-/* Monotonic clock is supported.  */
-#define _POSIX_MONOTONIC_CLOCK	200912L
-
 /* GNU libc provides regular expression handling.  */
 #define _POSIX_REGEXP	1
 
