@@ -1,5 +1,7 @@
 2002-02-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/stat.h: Undo last patch.
+
 	* sysdeps/i386/dl-tls.h (__tls_get_addr): Call
 	___tls_get_addr_internal.
 	(___tls_get_addr_internal): Define as alias for ___tls_get_addr.

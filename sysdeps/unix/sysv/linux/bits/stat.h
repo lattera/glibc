@@ -36,7 +36,7 @@
 struct stat
   {
     __dev_t st_dev;			/* Device.  */
-    unsigned int __pad1;
+    unsigned short int __pad1;
 #ifndef __USE_FILE_OFFSET64
     __ino_t st_ino;			/* File serial number.	*/
 #else
@@ -47,7 +47,7 @@ struct stat
     __uid_t st_uid;			/* User ID of the file's owner.	*/
     __gid_t st_gid;			/* Group ID of the file's group.*/
     __dev_t st_rdev;			/* Device number, if device.  */
-    unsigned int __pad2;
+    unsigned short int __pad2;
 #ifndef __USE_FILE_OFFSET64
     __off_t st_size;			/* Size of file, in bytes.  */
 #else
