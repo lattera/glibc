@@ -1,3 +1,14 @@
+2001-06-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex.c (regex_compile, re_match_2_internal): Fix comment
+	typos.
+
+2001-06-01  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/malloc.c (malloc_atfork, free_atfork): Use a unique value
+	ATFORK_ARENA_PTR, not 0, for the thread-specific arena pointer
+	when malloc_atfork is in use.
+
 2001-06-22  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/fpu/s_nextafterl.c (__nextafterl): Add parenthese

@@ -2339,7 +2339,7 @@ PREFIX(regex_compile) (ARG_PREFIX(pattern), ARG_PREFIX(size), syntax, bufp)
   /* A temporary space to keep wchar_t pattern and compiled pattern.  */
   CHAR_T *pattern, *COMPILED_BUFFER_VAR;
   size_t size;
-  /* offset buffer for optimizatoin. See convert_mbs_to_wc.  */
+  /* offset buffer for optimization. See convert_mbs_to_wc.  */
   int *mbs_offset = NULL;
   /* It hold whether each wchar_t is binary data or not.  */
   char *is_binary = NULL;
@@ -5468,7 +5468,7 @@ PREFIX(re_match_2_internal) (bufp, ARG_PREFIX(string1), ARG_PREFIX(size1),
   CHAR_T *string1 = NULL, *string2 = NULL;
   /* We need the size of wchar_t buffers correspond to csize1, csize2.  */
   int size1 = 0, size2 = 0;
-  /* offset buffer for optimizatoin. See convert_mbs_to_wc.  */
+  /* offset buffer for optimization. See convert_mbs_to_wc.  */
   int *mbs_offset1 = NULL, *mbs_offset2 = NULL;
   /* They hold whether each wchar_t is binary data or not.  */
   char *is_binary = NULL;

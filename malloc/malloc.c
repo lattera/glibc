@@ -1595,6 +1595,11 @@ int __malloc_initialized = -1;
 
 #ifndef NO_THREADS
 
+/* Magic value for the thread-specific arena pointer when
+   malloc_atfork() is in use.  */
+
+#define ATFORK_ARENA_PTR ((Void_t*)-1)
+
 /* The following two functions are registered via thread_atfork() to
    make sure that the mutexes remain in a consistent state in the
    fork()ed version of a thread.  Also adapt the malloc and free hooks
@@ -1627,7 +1632,7 @@ ptmalloc_lock_all __MALLOC_P((void))
   __free_hook = free_atfork;
   /* Only the current thread may perform malloc/free calls now. */
   tsd_getspecific(arena_key, save_arena);
-  tsd_setspecific(arena_key, (Void_t*)0);
+  tsd_setspecific(arena_key, ATFORK_ARENA_PTR);
 #endif
 }
 
@@ -4169,6 +4174,8 @@ struct mallinfo mALLINFo()
 
 #ifndef NO_THREADS
   tsd_getspecific(arena_key, vptr);
+  if(vptr == ATFORK_ARENA_PTR)
+    vptr = (Void_t*)&main_arena;
 #endif
   malloc_update_mallinfo((vptr ? (arena*)vptr : &main_arena), &mi);
   return mi;
@@ -4724,7 +4731,8 @@ malloc_atfork(sz, caller) size_t sz; const Void_t *caller;
   mchunkptr victim;
 
   tsd_getspecific(arena_key, vptr);
-  if(!vptr) {
+  if(vptr == ATFORK_ARENA_PTR) {
+    /* We are the only thread that may allocate at all.  */
     if(save_malloc_hook != malloc_check) {
       if(request2size(sz, nb))
         return 0;
@@ -4772,10 +4780,10 @@ free_atfork(mem, caller) Void_t* mem; const Void_t *caller;
 
   ar_ptr = arena_for_ptr(p);
   tsd_getspecific(arena_key, vptr);
-  if(vptr)
+  if(vptr != ATFORK_ARENA_PTR)
     (void)mutex_lock(&ar_ptr->mutex);
   chunk_free(ar_ptr, p);
-  if(vptr)
+  if(vptr != ATFORK_ARENA_PTR)
     (void)mutex_unlock(&ar_ptr->mutex);
 }
 

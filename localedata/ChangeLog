@@ -1,3 +1,7 @@
+2001-06-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* SUPPORTED (zh_HK): Update character map name to BIG5-HKSCS.
+
 2001-06-09  Bruno Haible  <haible@clisp.cons.org>
 
 	* charmaps/BIG5-HKSCS: Renamed from charmaps/BIG5HKSCS.  Change
