@@ -103,7 +103,7 @@ __yp_bind (const char *domain, dom_binding **ypdb)
 	{
 	  char path[sizeof (BINDINGDIR) - 1 + strlen (domain) + 10];
 	  struct iovec vec[2];
-	  u_short port;
+	  unsigned short port;
 	  int fd;
 
 	  sprintf (path, "%s/%s.%ld", BINDINGDIR, domain, YPBINDVERS);
@@ -138,8 +138,7 @@ __yp_bind (const char *domain, dom_binding **ypdb)
 	{
 	  if (ysd->dom_client)
 	    {
-	      clnt_destroy(ysd->dom_client);
-	      close (ysd->dom_socket);
+	      clnt_destroy (ysd->dom_client);
 	      ysd->dom_client = NULL;
 	      ysd->dom_socket = -1;
 	    }
@@ -163,7 +162,6 @@ __yp_bind (const char *domain, dom_binding **ypdb)
           if (ntohs (clnt_saddr.sin_port) >= IPPORT_RESERVED)
             {
               clnt_destroy (client);
-	      close (clnt_sock);
               if (is_new)
                 free (ysd);
               return YPERR_YPBIND;
@@ -175,14 +173,12 @@ __yp_bind (const char *domain, dom_binding **ypdb)
                          (caddr_t) &ypbr, RPCTIMEOUT) != RPC_SUCCESS)
             {
               clnt_destroy (client);
-	      close (clnt_sock);
               if (is_new)
                 free (ysd);
               return YPERR_YPBIND;
             }
 
           clnt_destroy (client);
-	  close (clnt_sock);
 
           if (ypbr.ypbind_status != YPBIND_SUCC_VAL)
             {
@@ -714,7 +710,6 @@ yp_all (const char *indomain, const char *inmap,
 	res = YPERR_SUCCESS;
 
       clnt_destroy (clnt);
-      close (clnt_sock);
 
       if (status != YP_NOMORE)
 	{

@@ -1,3 +1,7 @@
+1998-09-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/ypclnt.c: Remove not needed close calls.
+
 1998-09-28 23:55  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nis/ypclnt.c (__yp_bind): Pretty print.  Optimize readv result
