@@ -1,3 +1,10 @@
+Thu Mar 14 06:01:07 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* posix/glob.c (glob): In GLOB_BRACE brace expansion, fix buffer size
+	calculation to include trailing invariant portion.  Don't use alloca;
+	instead use a dynamic auto array for GCC, malloc for non-GCC.
+	Handle nested braces properly.
+
 Fri Mar  1 10:09:46 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* posix/glob.c: Use canonical code from autoconf manual for dirent
