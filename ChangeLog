@@ -1,3 +1,8 @@
+2003-04-30  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h (ucontext): Make
+	uc_flags long for all ABIs.
+
 2003-04-30  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/sys/debugreg.h

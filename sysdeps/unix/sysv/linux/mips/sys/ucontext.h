@@ -99,11 +99,7 @@ typedef struct
 /* Userlevel context.  */
 typedef struct ucontext
   {
-#if defined _ABIN32 && _MIPS_SIM == _ABIN32
-    __extension__ unsigned long long int uc_flags;
-#else
     unsigned long int uc_flags;
-#endif
     struct ucontext *uc_link;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
