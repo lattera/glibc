@@ -635,7 +635,7 @@ mmap_remap_check (_IO_FILE *fp)
 	{
 	  /* The file added some pages.  We need to remap it.  */
 	  void *p;
-#if defined __linux__		/* XXX */
+#ifdef _G_HAVE_MREMAP
 	  p = __mremap (fp->_IO_buf_base, ROUNDED (fp->_IO_buf_end
 						   - fp->_IO_buf_base),
 			ROUNDED (st.st_size), MREMAP_MAYMOVE);
