@@ -109,11 +109,12 @@ __hurd_threadvar_location (enum __hurd_threadvar_index __index)
 
 /* Return the current thread's location for `errno'.
    The syntax of this function allows redeclarations like `int errno'.  */
+extern int *__hurd_errno_location (void);
+
 _HURD_THREADVAR_H_EXTERN_INLINE int *
 __hurd_errno_location (void)
 {
   return (int *) __hurd_threadvar_location (_HURD_THREADVAR_ERRNO);
 }
-
 
 #endif	/* hurd/threadvar.h */

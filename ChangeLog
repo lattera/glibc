@@ -1,3 +1,7 @@
+2001-06-10  Mark Kettenis  <kettenis@gnu.org>
+
+	* hurd/hurd/threadvar.h: Add prototype for __hurd_errno_location.
+
 2001-06-08  Andreas Schwab  <schwab@suse.de>
 
 	* posix/regex.c (re_match_2_internal) [case wordbeg, wordend]:
