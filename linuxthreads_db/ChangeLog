@@ -1,3 +1,9 @@
+2003-01-29  Roland McGrath  <roland@redhat.com>
+
+	* td_ta_new.c (td_ta_new): Cap the `sizeof_descr' value read from the
+	inferior at `sizeof (struct _pthread_descr_struct)', since we use it
+	as a length in copies to our own structures.
+
 2003-01-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (libthread_db.so-no-z-defs): Define.
