@@ -1,3 +1,10 @@
+2003-12-05  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Turn vm86 into vm86old
+	for vm86@GLIBC_2.0 version.  Add new vm86@GLIBC_2.3.4.
+	* sysdeps/unix/sysv/linux/i386/Versions (libc: GLIBC_2.3.4): Add vm86.
+	* sysdeps/unix/sysv/linux/i386/sys/vm86.h: Update vm86 prototype.
+
 2004-02-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/ypclnt.c: Cleanup last patch.
