@@ -49,15 +49,17 @@
 typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__SI__)));
 
 /* Macros for accessing the hardware control word.  */
-#define _FPU_GETCW(cw) ( { \
-  union { double d; fpu_control_t cw[2]; } tmp __attribute__ ((__aligned__(8))); \
+#define _FPU_GETCW(__cw) ( { \
+  union { double d; fpu_control_t cw[2]; } \
+    tmp __attribute__ ((__aligned__(8))); \
   __asm__ ("mffs 0; stfd%U0 0,%0" : "=m" (tmp.d) : : "fr0"); \
-  (cw)=tmp.cw[1]; \
+  (__cw)=tmp.cw[1]; \
   tmp.cw[1]; } )
-#define _FPU_SETCW(cw) { \
-  union { double d; fpu_control_t cw[2]; } tmp __attribute__ ((__aligned__(8))); \
+#define _FPU_SETCW(__cw) { \
+  union { double d; fpu_control_t cw[2]; } \
+    tmp __attribute__ ((__aligned__(8))); \
   tmp.cw[0] = 0xFFF80000; /* More-or-less arbitrary; this is a QNaN. */ \
-  tmp.cw[1] = cw; \
+  tmp.cw[1] = __cw; \
   __asm__ ("lfd%U0 0,%0; mtfsf 255,0" : : "m" (tmp.d) : "fr0"); \
 }
 

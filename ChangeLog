@@ -1,3 +1,11 @@
+2003-02-26  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/fpu/fpu_control.h (_FPU_GETCW, _FPU_SETCW):
+	Rename argument to avoid symbol conflict.
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h
+	[__USE_GNU] (O_DIRECT): New macro.
+
 2003-02-24  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sysdep.S (__syscall_error): Fix

@@ -1,5 +1,5 @@
-/* O_*, F_*, FD_* bit values for Linux.
-   Copyright (C) 1995-1998, 2000 Free Software Foundation, Inc.
+/* O_*, F_*, FD_* bit values for Linux/PowerPC.
+   Copyright (C) 1995,1996,1997,1998,2000,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,8 @@
 #define O_ASYNC		020000
 
 #ifdef __USE_GNU
-# define O_DIRECTORY	040000	/* Must be a directory.	 */
+# define O_DIRECT	0400000	/* Direct disk access.	*/
+# define O_DIRECTORY	 040000	/* Must be a directory.	 */
 # define O_NOFOLLOW	0100000	/* Do not follow links.	 */
 #endif
 
@@ -64,7 +65,6 @@
 #define F_SETFD		2	/* Set file descriptor flags.  */
 #define F_GETFL		3	/* Get file status flags.  */
 #define F_SETFL		4	/* Set file status flags.  */
-
 #ifndef __USE_FILE_OFFSET64
 # define F_GETLK	5	/* Get record locking info.  */
 # define F_SETLK	6	/* Set record locking info (non-blocking).  */
@@ -74,7 +74,6 @@
 # define F_SETLK	F_SETLK64  /* Set record locking info (non-blocking).*/
 # define F_SETLKW	F_SETLKW64 /* Set record locking info (blocking).  */
 #endif
-
 #define F_GETLK64	12	/* Get record locking info.  */
 #define F_SETLK64	13	/* Set record locking info (non-blocking).  */
 #define F_SETLKW64	14	/* Set record locking info (blocking).	*/
@@ -103,12 +102,12 @@
 #define F_WRLCK		1	/* Write lock.	*/
 #define F_UNLCK		2	/* Remove lock.	 */
 
-/* for old implementation of bsd flock () */
+/* For old implementation of bsd flock().  */
 #define F_EXLCK		4	/* or 3 */
 #define F_SHLCK		8	/* or 4 */
 
 #ifdef __USE_BSD
-/* Operations for bsd flock(), also used by the kernel implementation */
+/* Operations for bsd flock(), also used by the kernel implementation.	*/
 # define LOCK_SH	1	/* shared lock */
 # define LOCK_EX	2	/* exclusive lock */
 # define LOCK_NB	4	/* or'd with one of the above to prevent
