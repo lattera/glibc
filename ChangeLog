@@ -1,3 +1,13 @@
+2004-03-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/dl-machine.c (_dl_reloc_overflow):
+	Don't use INTUSE with _dl_signal_error.
+
+2004-03-08  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/dl-machine.c(_dl_reloc_overflow): Replace
+	INTUSE with GLRO.
+
 2004-03-08  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/soft-fp/ots_cvtxt.c (_OtsConvertFloatXT): Fix typo

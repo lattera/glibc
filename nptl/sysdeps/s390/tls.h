@@ -108,7 +108,7 @@ typedef struct
 
 #if defined NEED_DL_SYSINFO && defined SHARED
 # define INIT_SYSINFO \
-  _head->sysinfo = GL(dl_sysinfo)
+  _head->sysinfo = GLRO(dl_sysinfo)
 #else
 # define INIT_SYSINFO
 #endif

@@ -1,7 +1,12 @@
+2004-03-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/s390/tls.h (INIT_SYSINFO): _dl_sysinfo is now in
+	_rtld_global_ro.
+
 2004-03-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/tls.h (INIT_SYSINFO): _dl_sysinfo is now in
-	_rtlf_global_ro.
+	_rtld_global_ro.
 
 	* tst-once4.c: Remove unnecessary macro definition.
 

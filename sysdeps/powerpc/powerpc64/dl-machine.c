@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation functions.  PowerPC64 version.
-   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,5 +44,5 @@ _dl_reloc_overflow (struct link_map *map,
       t = stpcpy (t, "'");
     }
   t = stpcpy (t, " out of range");
-  INTUSE (_dl_signal_error) (0, map->l_name, NULL, buffer);
+  _dl_signal_error (0, map->l_name, NULL, buffer);
 }
