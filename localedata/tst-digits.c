@@ -18,8 +18,11 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
+#include <langinfo.h>
 #include <locale.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <wchar.h>
 #include <wctype.h>
 #include <sys/types.h>
 
@@ -63,13 +66,52 @@ static struct printf_int_test
   { 1234567, "%I'10d", ONE "," TWO THREE FOUR "," FIVE SIX SEVEN }
 };
 
+#define WZERO  L"\x2080"
+#define WONE   L"\x2081"
+#define WTWO   L"\x2082"
+#define WTHREE L"\x2083"
+#define WFOUR  L"\x2084"
+#define WFIVE  L"\x2085"
+#define WSIX   L"\x2086"
+#define WSEVEN L"\x2087"
+#define WEIGHT L"\x2088"
+#define WNINE  L"\x2089"
+
+static struct wprintf_int_test
+{
+  int n;
+  const wchar_t *format;
+  const wchar_t *expected;
+} wprintf_int_tests[] =
+{
+  {       0, L"%I'10d", L"         " WZERO },
+  {       1, L"%I'10d", L"         " WONE },
+  {       2, L"%I'10d", L"         " WTWO },
+  {       3, L"%I'10d", L"         " WTHREE },
+  {       4, L"%I'10d", L"         " WFOUR },
+  {       5, L"%I'10d", L"         " WFIVE },
+  {       6, L"%I'10d", L"         " WSIX },
+  {       7, L"%I'10d", L"         " WSEVEN },
+  {       8, L"%I'10d", L"         " WEIGHT },
+  {       9, L"%I'10d", L"         " WNINE },
+  {      11, L"%I'10d", L"        " WONE WONE },
+  {      12, L"%I'10d", L"        " WONE WTWO },
+  {     123, L"%I10d",  L"       " WONE WTWO WTHREE },
+  {     123, L"%I'10d", L"       " WONE WTWO WTHREE },
+  {    1234, L"%I10d",  L"      " WONE WTWO WTHREE WFOUR },
+  {    1234, L"%I'10d", L"     " WONE L"," WTWO WTHREE WFOUR },
+  {   12345, L"%I'10d", L"    " WONE WTWO L"," WTHREE WFOUR WFIVE },
+  {  123456, L"%I'10d", L"   " WONE WTWO WTHREE L"," WFOUR WFIVE WSIX },
+  { 1234567, L"%I'10d", L" " WONE L"," WTWO WTHREE WFOUR L"," WFIVE WSIX WSEVEN }
+};
+
 
 
 int
 main (void)
 {
   int cnt;
-  int failures = 0;
+  int failures;
   int status;
 
   if (setlocale (LC_ALL, "test7") == NULL)
@@ -77,8 +119,10 @@ main (void)
       puts ("cannot set locale `test7'");
       exit (1);
     }
+  printf ("CODESET = \"%s\"\n", nl_langinfo (CODESET));
 
   /* First: printf tests.  */
+  failures = 0;
   for (cnt = 0; cnt < sizeof (printf_int_tests) / sizeof (printf_int_tests[0]);
        ++cnt)
     {
@@ -88,20 +132,54 @@ main (void)
       n = snprintf (buf, sizeof buf, printf_int_tests[cnt].format,
 		    printf_int_tests[cnt].n);
 
+      printf ("%3d: got \"%s\", expected \"%s\"",
+	      cnt, buf, printf_int_tests[cnt].expected);
+
       if (n != strlen (printf_int_tests[cnt].expected)
 	  || strcmp (buf, printf_int_tests[cnt].expected) != 0)
 	{
-	  printf ("%3d: got \"%s\", expected \"%s\"\n",
-		  cnt, buf, printf_int_tests[cnt].expected);
+	  puts ("  -> FAILED");
 	  ++failures;
 	}
+      else
+	puts ("  -> OK");
     }
 
-  printf ("\n%d failures in printf tests\n", failures);
+  printf ("%d failures in printf tests\n", failures);
+  status = failures != 0;
+
+  /* wprintf tests.  */
+  failures = 0;
+  for (cnt = 0;
+       cnt < sizeof (wprintf_int_tests) / sizeof (wprintf_int_tests[0]);
+       ++cnt)
+    {
+      wchar_t buf[100];
+      ssize_t n;
+
+      n = swprintf (buf, sizeof buf / sizeof (buf[0]),
+		    wprintf_int_tests[cnt].format,
+		    wprintf_int_tests[cnt].n);
+
+      printf ("%3d: got \"%ls\", expected \"%ls\"",
+	      cnt, buf, wprintf_int_tests[cnt].expected);
+
+      if (n != wcslen (wprintf_int_tests[cnt].expected)
+	  || wcscmp (buf, wprintf_int_tests[cnt].expected) != 0)
+	{
+	  puts ("  -> FAILED");
+	  ++failures;
+	}
+      else
+	puts ("  -> OK");
+    }
+
+  printf ("%d failures in wprintf tests\n", failures);
   status = failures != 0;
 
   /* ctype tests.  This makes sure that the multibyte chracter digit
      representations are not handle in this table.  */
+  failures = 0;
   for (cnt = 0; cnt < 256; ++cnt)
     if (cnt >= '0' && cnt <= '9')
       {
@@ -120,11 +198,12 @@ main (void)
 	  }
       }
 
-  printf ("\n%d failures in ctype tests\n", failures);
+  printf ("%d failures in ctype tests\n", failures);
   status = failures != 0;
 
   /* wctype tests.  This makes sure the second set of digits is also
      recorded.  */
+  failures = 0;
   for (cnt = 0; cnt < 256; ++cnt)
     if (cnt >= '0' && cnt <= '9')
       {
@@ -161,7 +240,7 @@ main (void)
 	  }
       }
 
-  printf ("\n%d failures in wctype tests\n", failures);
+  printf ("%d failures in wctype tests\n", failures);
   status = failures != 0;
 
   return status;
