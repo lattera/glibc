@@ -45,7 +45,8 @@ routines	:=							      \
 	rpmatch strfmon
 
 distribute	:= exit.h grouping.h
-tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv
+tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv \
+		   test-canon
 
 
 # Several mpn functions from GNU MP are used by the strtod function.
