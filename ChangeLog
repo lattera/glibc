@@ -1,3 +1,59 @@
+1998-03-27 22:46  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Rules: Allow Makefiles to specify test-static for tests which
+	cannot be linked dynamically.
+	* math/Makefile: Move atest-exp, atest-sincos, atest-exp2 to
+	tests-static.
+
+	* libc.map: Add __nss_passwd_lookup, __nss_group_lookup, __nss_next.
+
+	* misc/error.c: Pretty print.
+
+1998-03-27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (libc_nonshared-name): Remove variable.
+	(installed-libcs): Use libc-name instead.
+	($(inst_libdir)/libc.so): Likewise.  Remove explicit reference to
+	dynamic linker.
+
+	* Makeconfig (link-libc): Link against libc_nonshared.a instead of
+	libc.a.  Remove explicit reference to dynamic linker.
+
+1998-03-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/iso8859-1.c (gconv): Add cast to assignment from char
+	to wchar_t.
+	* iconv/iconv_prog.c: Correctly test for write failure.
+	* iconvdata/Makefile: Add rules for EUC-KR, UHC, and JOHAB conversions.
+	* iconvdata/gconv-modules: Likewise.
+	* iconvdata/euckr.c: New file.
+	* iconvdata/johab.c: New file.
+	* iconvdata/ksc5601.c: New file.
+	* iconvdata/ksc5601.h: New file.
+	* iconvdata/uhc.c: New file.
+	Contributed by Jungshik Shin <jshin@pantheon.yale.edu>.
+
+	* libio/fileops.c (_IO_file_fopen): Interpret x flag to fopen.
+	* stdio/fopen.c: Correct handling of 'x' flag.
+	Reported by Jason M. Petry <jason@ps.ohio-state.edu>.
+
+1998-03-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sunrpc/rpc/key_prot.h: Prevent warning by unknown pragma ident.
+	* sunrpc/rpcsvc/key_prot.x: Likewise.
+	* sunrpc/key_prot.c: Likewise.
+
+1998-03-27 13:49  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/bits/string.h: Correct things which never worked.
+	* sysdeps/i386/i486/bits/string.h: Add clobber marks.
+	Patches by Bernd Schmidt <crux@Pool.Informatik.RWTH-Aachen.DE>.
+
+1998-03-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/textdomain.c [_LIBC]: Define strdup only if not yet
+	defined.  Reported by Thorsten Kukuk.
+
 1998-03-26 18:50  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/lddlibc4.c: New file.

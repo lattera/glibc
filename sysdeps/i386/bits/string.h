@@ -48,7 +48,7 @@
 __STRING_INLINE void *
 __memcpy_c (void *__dest, __const void *__src, size_t __n)
 {
-  unsigned long int __d0, __d1, __d2;
+  register unsigned long int __d0, __d1, __d2;
   switch (__n)
     {
     case 0:
@@ -138,7 +138,7 @@ __memcpy_c (void *__dest, __const void *__src, size_t __n)
 __STRING_INLINE void *
 memmove (void *__dest, __const void *__src, size_t __n)
 {
-  unsigned long int __d0, __d1, __d2;
+  register unsigned long int __d0, __d1, __d2;
   if (__dest < __src)
     __asm__ __volatile__
       ("cld\n\t"
@@ -173,7 +173,7 @@ memmove (void *__dest, __const void *__src, size_t __n)
 __STRING_INLINE void *
 __memset_cc (void *__s, unsigned long int __pattern, size_t __n)
 {
-  unsigned long int __d0, __d1;
+  register unsigned long int __d0, __d1;
   switch (__n)
     {
     case 0:
@@ -198,7 +198,7 @@ __memset_cc (void *__s, unsigned long int __pattern, size_t __n)
      "rep; stosl"							      \
      x									      \
      : "=&c" (__d0), "=&D" (__d1)					      \
-     : "a" (__pattern),"0" (__n / 4), "1" (__s)				      \
+     : "a" (__pattern), "0" (__n / 4), "1" (__s)			      \
      : "memory")
 
   switch (__n % 4)
@@ -222,7 +222,7 @@ __memset_cc (void *__s, unsigned long int __pattern, size_t __n)
 __STRING_INLINE void *
 __memset_cg (void *__s, unsigned long __c, size_t __n)
 {
-  unsigned long int __d0, __d1;
+  register unsigned long int __d0, __d1;
   __asm__ __volatile__
     ("cld\n\t"
      "rep; stosl\n\t"
@@ -243,7 +243,7 @@ __memset_cg (void *__s, unsigned long __c, size_t __n)
 __STRING_INLINE void *
 __memset_gg (void *__s, char __c, size_t __n)
 {
-  unsigned long int __d0, __d1;
+  register unsigned long int __d0, __d1;
   __asm__ __volatile__
     ("cld\n\t"
      "rep; stosb"
@@ -261,16 +261,15 @@ __memset_gg (void *__s, char __c, size_t __n)
 __STRING_INLINE void *
 memchr (__const void *__s, int __c, size_t __n)
 {
-  unsigned long int __d0;
+  register unsigned long int __d0;
   register void *__res;
-  if (count == 0)
+  if (__n == 0)
     return NULL;
   __asm__ __volatile__
     ("cld\n\t"
-     "repne\n\t"
-     "scasb\n\t"
-     "je	1f\n\t"
-     "movl	$1,%0\n"
+     "repne; scasb\n\t"
+     "je 1f\n\t"
+     "movl $1,%0\n"
      "1:"
      : "=D" (__res), "=&c" (__d0)
      : "a" (__c), "0" (__s), "1" (__n));
@@ -283,7 +282,7 @@ memchr (__const void *__s, int __c, size_t __n)
 __STRING_INLINE size_t
 strlen (__const char *__str)
 {
-  unsigned long int __d0;
+  register unsigned long int __d0;
   register size_t __res;
   __asm__ __volatile__
     ("cld\n\t"
@@ -301,7 +300,7 @@ strlen (__const char *__str)
 __STRING_INLINE char *
 strcpy (char *__dest, __const char *__src)
 {
-  unsigned long int __d0, __d1;
+  register unsigned long int __d0, __d1;
   __asm__ __volatile__
     ("cld\n"
      "1:\n\t"
@@ -321,7 +320,7 @@ strcpy (char *__dest, __const char *__src)
 __STRING_INLINE char *
 strncpy (char *__dest, __const char *__src, size_t __n)
 {
-  unsigned long int __d0, __d1, __d2;
+  register unsigned long int __d0, __d1, __d2;
   __asm__ __volatile__
     ("cld\n"
      "1:\n\t"
@@ -345,7 +344,7 @@ strncpy (char *__dest, __const char *__src, size_t __n)
 __STRING_INLINE char *
 strcat (char *__dest, __const char *__src)
 {
-  unsigned long int __d0, __d1, __d2, __d3;
+  register unsigned long int __d0, __d1, __d2, __d3;
   __asm__ __volatile__
     ("cld\n\t"
      "repne; scasb\n\t"
@@ -367,7 +366,7 @@ strcat (char *__dest, __const char *__src)
 __STRING_INLINE char *
 strncat (char *__dest, __const char *__src, size_t __n)
 {
-  unsigned long int __d0, __d1, __d2, __d3;
+  register unsigned long int __d0, __d1, __d2, __d3;
   __asm__ __volatile__
     ("cld\n\t"
      "repne; scasb\n\t"
@@ -395,7 +394,7 @@ strncat (char *__dest, __const char *__src, size_t __n)
 __STRING_INLINE int
 strcmp (__const char *__s1, __const char *__s2)
 {
-  unsigned long int __d0, __d1;
+  register unsigned long int __d0, __d1;
   register int __res;
   __asm__ __volatile__
     ("cld\n"
@@ -423,7 +422,7 @@ strcmp (__const char *__s1, __const char *__s2)
 __STRING_INLINE int
 strncmp (__const char *__s1, __const char *__s2, size_t __n)
 {
-  unsigned long int __d0, __d1, __d2;
+  register unsigned long int __d0, __d1, __d2;
   register int __res;
   __asm__ __volatile__
     ("cld\n"
@@ -459,7 +458,7 @@ strncmp (__const char *__s1, __const char *__s2, size_t __n)
 __STRING_INLINE char *
 __strchr_g (__const char *__s, int __c)
 {
-  unsigned long int __d0;
+  register unsigned long int __d0;
   register char *__res;
   __asm__ __volatile__
     ("cld\n\t"
@@ -482,7 +481,7 @@ __strchr_g (__const char *__s, int __c)
 __STRING_INLINE char *
 __strchr_c (__const char *__s, int __c)
 {
-  unsigned long int __d0;
+  register unsigned long int __d0;
   register char *__res;
   __asm__ __volatile__
     ("cld\n\t"
@@ -509,7 +508,7 @@ __strchr_c (__const char *__s, int __c)
 __STRING_INLINE size_t
 strcspn (__const char *__s, __const char *__reject)
 {
-  unsigned long int __d0, __d1, __d2;
+  register unsigned long int __d0, __d1, __d2;
   register char *__res;
   __asm__ __volatile__
     ("pushl	%%ebx\n\t"
@@ -538,7 +537,7 @@ strcspn (__const char *__s, __const char *__reject)
 __STRING_INLINE size_t
 strcspn (__const char *__s, __const char *__reject)
 {
-  unsigned long int __d0, __d1, __d2, __d3;
+  register unsigned long int __d0, __d1, __d2, __d3;
   register char *__res;
   __asm__ __volatile__
     ("cld\n\t"
@@ -571,7 +570,7 @@ strcspn (__const char *__s, __const char *__reject)
 __STRING_INLINE size_t
 strspn (__const char *__s, __const char *__accept)
 {
-  unsigned long int __d0, __d1, __d2;
+  register unsigned long int __d0, __d1, __d2;
   register char *__res;
   __asm__ __volatile__
     ("pushl	%%ebx\n\t"
@@ -600,7 +599,7 @@ strspn (__const char *__s, __const char *__accept)
 __STRING_INLINE size_t
 strspn (__const char *__s, __const char *__accept)
 {
-  unsigned long int __d0, __d1, __d2, __d3;
+  register unsigned long int __d0, __d1, __d2, __d3;
   register char *__res;
   __asm__ __volatile__
     ("cld\n\t"
@@ -665,7 +664,7 @@ strpbrk (__const char *__s, __const char *__accept)
 __STRING_INLINE char *
 strpbrk (__const char *__s, __const char *__accept)
 {
-  unsigned long int __d0, __d1, __d2, __d3;
+  register unsigned long int __d0, __d1, __d2, __d3;
   register char *__res;
   __asm__ __volatile__
     ("cld\n\t"
@@ -701,7 +700,7 @@ strpbrk (__const char *__s, __const char *__accept)
 __STRING_INLINE char *
 strstr (__const char *__haystack, __const char *__needle)
 {
-  unsigned long int __d0, __d1, __d2, __d3;
+  register unsigned long int __d0, __d1, __d2, __d3;
   register char *__res;
   __asm__ __volatile__
     ("pushl	%%ebx\n\t"
@@ -733,7 +732,7 @@ strstr (__const char *__haystack, __const char *__needle)
 __STRING_INLINE char *
 strstr (__const char *__haystack, __const char *__needle)
 {
-  unsigned long int __d0, __d1, __d2, __d3;
+  register unsigned long int __d0, __d1, __d2, __d3;
   register char *__res;
   __asm__ __volatile__
     ("cld\n\t" \

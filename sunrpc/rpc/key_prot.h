@@ -36,8 +36,9 @@
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
+#if 0
 #pragma ident	"@(#)key_prot.x	1.7	94/04/29 SMI"
-
+#endif
 /* Copyright (c)  1990, 1991 Sun Microsystems, Inc. */
 
 /* 

@@ -1,5 +1,5 @@
 # GNU libc iconv configuration.
-# Copyright (C) 1997 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 #
@@ -145,9 +145,9 @@ module	ISO_6937//		ISO-10646/UCS4/		ISO_6937	1
 module	ISO-10646/UCS4/		ISO_6937//		ISO_6937	1
 
 #	from			  to			  module	cost
-alias	SHIFT-JIS//		SJIS
+alias	SHIFT-JIS//		SJIS//
 module	SJIS//			ISO-10646/UCS4/		SJIS		1
-module	ISO-10646/UCS4/		SJIS			SJIS		1
+module	ISO-10646/UCS4/		SJIS//			SJIS		1
 
 #	from			  to			  module	cost
 module	KOI-8//			ISO-10646/UCS4/		KOI-8		1
@@ -184,3 +184,18 @@ module	ISO-10646/UCS4/		EBCDIC-AT-DE-A//	EBCDIC-AT-DE-A	1
 #	from			  to			  module	cost
 module	EBCDIC-CA-FR//		ISO-10646/UCS4/		EBCDIC-CA-FR	1
 module	ISO-10646/UCS4/		EBCDIC-CA-FR//		EBCDIC-CA-FR	1
+
+#	from			  to			  module	cost
+alias	EUCKR//			EUC-KR//
+module	EUC-KR//		ISO-10646/UCS4/		EUC-KR		1
+module	ISO-10646/UCS4/		EUC-KR//		EUC-KR		1
+
+#	from			  to			  module	cost
+alias	MSCP949//		UHC//
+module	UHC//			ISO-10646/UCS4/		UHC		1
+module	ISO-10646/UCS4/		UHC//			UHC		1
+
+#	from			  to			  module	cost
+alias	MSCP1361//		JOHAB//
+module	JOHAB//			ISO-10646/UCS4/		JOHAB		1
+module	ISO-10646/UCS4/		JOHAB//			JOHAB		1

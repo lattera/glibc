@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,26 +51,27 @@ __getmode (const char *mode, __io_mode *mptr)
       badmode ();
     }
 
-  for (i = 1; i < 3; ++i)
+  for (i = 1; i < 4; ++i)
     {
-      ++mode;
-      if (*mode == '\0')
-	break;
-      switch (*mode)
+      switch (*++mode)
 	{
+	case '\0':
+	  break;
 	case '+':
 	  mptr->__read = mptr->__write = 1;
-	  break;
+	  continue;
 	case 'b':
 	  mptr->__binary = 1;
-	  break;
+	  continue;
+	case 'x':
+	  mptr->__exclusive = 1;
+	  continue;
 	}
+      break;
     }
 
   if (!mptr->__read && !mptr->__write)
     badmode ();
-
-  mptr->__exclusive = *mode == 'x';
 
   return 1;
 }

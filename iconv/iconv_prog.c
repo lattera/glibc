@@ -289,7 +289,7 @@ process_block (iconv_t cd, const char *addr, size_t len, FILE *output)
       if (outptr != outbuf)
 	{
 	  /* We have something to write out.  */
-	  if (fwrite (outbuf, 1, outptr - outbuf, output) != 0
+	  if (fwrite (outbuf, 1, outptr - outbuf, output)  < outptr - outbuf
 	      || ferror (output))
 	    {
 	      /* Error occurred while printing the result.  */

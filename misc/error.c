@@ -1,5 +1,5 @@
 /* Error handler for noninteractive utilities
-   Copyright (C) 1990,91,92,93,94,95,96,97 Free Software Foundation, Inc.
+   Copyright (C) 1990,91,92,93,94,95,96,97,98 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
@@ -22,7 +22,7 @@
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu>.  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #include <stdio.h>
@@ -50,7 +50,7 @@ void exit ();
 #include "error.h"
 
 #ifndef _
-#define _(String) String
+# define _(String) String
 #endif
 
 /* If NULL, error will flush stdout, then print on stderr the program
@@ -68,26 +68,28 @@ unsigned int error_message_count;
 #ifdef _LIBC
 /* In the GNU C library, there is a predefined variable for this.  */
 
-#define program_name program_invocation_name
-#include <errno.h>
+# define program_name program_invocation_name
+# include <errno.h>
 
 /* In GNU libc we want do not want to use the common name `error' directly.
    Instead make it a weak alias.  */
-#define error __error
-#define error_at_line __error_at_line
+# define error __error
+# define error_at_line __error_at_line
 
-#else
+#else /* not _LIBC */
 
 /* The calling program should define program_name and set it to the
    name of the executing program.  */
 extern char *program_name;
 
-#ifndef HAVE_STRERROR_R
-# if HAVE_STRERROR
-#  ifndef strerror		/* On some systems, strerror is a macro */
-char *strerror ();
-#  endif
+# ifdef HAVE_STRERROR_R
+#  define __strerror_r strerror_r
 # else
+#  if HAVE_STRERROR
+#   ifndef strerror		/* On some systems, strerror is a macro */
+char *strerror ();
+#   endif
+#  else
 static char *
 private_strerror (errnum)
      int errnum;
@@ -99,10 +101,10 @@ private_strerror (errnum)
     return _(sys_errlist[errnum]);
   return _("Unknown system error");
 }
-#  define strerror private_strerror
-# endif	/* HAVE_STRERROR */
-#endif	/* HAVE_STRERROR_R */
-#endif	/* _LIBC */
+#   define strerror private_strerror
+#  endif /* HAVE_STRERROR */
+# endif	/* HAVE_STRERROR_R */
+#endif	/* not _LIBC */
 
 /* Print the program name and error message MESSAGE, which is a printf-style
    format string with optional args.
@@ -111,7 +113,7 @@ private_strerror (errnum)
 /* VARARGS */
 
 void
-#if defined(VA_START) && __STDC__
+#if defined VA_START && __STDC__
 error (int status, int errnum, const char *message, ...)
 #else
 error (status, errnum, message, va_alist)
@@ -166,7 +168,7 @@ error (status, errnum, message, va_alist)
 int error_one_per_line;
 
 void
-#if defined(VA_START) && __STDC__
+#if defined VA_START && __STDC__
 error_at_line (int status, int errnum, const char *file_name,
 	       unsigned int line_number, const char *message, ...)
 #else
@@ -238,8 +240,8 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
 
 #ifdef _LIBC
 /* Make the weak alias.  */
-#undef error
-#undef error_at_line
+# undef error
+# undef error_at_line
 weak_alias (__error, error)
 weak_alias (__error_at_line, error_at_line)
 #endif

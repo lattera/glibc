@@ -1,4 +1,4 @@
-# Copyright (C) 1997 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		\
 	   ISO8859-6 ISO8859-7 ISO8859-8 ISO8859-9 ISO8859-10		\
 	   T.61 ISO_6937 SJIS KOI-8 KOI8-R LATIN-GREEK LATIN-GREEK-1	\
 	   HP-ROMAN8 EBCDIC-AT-DE EBCDIC-AT-DE-A EBCDIC-CA-FR		\
-	   libJIS
+	   EUC-KR UHC JOHAB libJIS libKSC
 modules.so := $(addsuffix .so, $(modules))
 
 
@@ -53,7 +53,11 @@ HP-ROMAN8-routines := hp-roman8
 EBCDIC-AT-DE-routines := ebcdic-at-de
 EBCDIC-AT-DE-A-routines := ebcdic-at-de-a
 EBCDIC-CA-FR-routines := ebcdic-ca-fr
+EUC-KR-routines := euckr ksc5601
+JOHAB-routines := johab ksc5601
+UHC-routines := uhc ksc5601
 libJIS-routines := jis0201 jis0208 jis0212
+libKSC-routines := ksc5601
 
 distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl gconv-modules	    \
 	      iso8859-1.c iso8859-2.c iso8859-3.c iso8859-4.c iso8859-5.c   \
@@ -62,7 +66,7 @@ distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl gconv-modules	    \
 	      koi-8.c koi8-r.c koi8-r.h hp-roman8.c latin-greek.c	    \
 	      latin-greek.h latin-greek-1.c latin-greek-1.h ebcdic-at-de.c  \
 	      ebcdic-at-de-a.c ebcdic-ca-fr.c jis0201.c jis0208.c jis0212.c \
-	      extra-module.mk
+	      extra-module.mk euckr.c johab.c uhc.c ksc5601.c ksc5601.h
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))

@@ -602,9 +602,6 @@ endef
 ifndef libc-name
 libc-name := c
 endif
-ifndef libc_nonshared-name
-libc_nonshared-name := $(libc-name)_nonshared
-endif
 
 define do-install
 $(make-target-directory)
@@ -628,7 +625,7 @@ installed-libcs := $(foreach o,$(object-suffixes),\
 installed-libcs := $(filter-out %_pic.a,$(installed-libcs))
 ifdef libc.so-version
 installed-libcs += $(inst_libdir)/$(patsubst %,$(libtype.oS),\
-					     $(libprefix)$(libc_nonshared-name))
+					     $(libprefix)$(libc-name))
 endif
 install: $(installed-libcs)
 $(installed-libcs): $(inst_libdir)/lib$(libprefix)%: lib
@@ -706,18 +703,15 @@ ifndef subdir
 # in libc.a and the dynamic linker is an extra object.
 install: $(inst_libdir)/libc.so
 $(inst_libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
-			$(elfobjdir)/$(rtld-installed-name) \
-			$(inst_libdir)/lib$(libc_nonshared-name).a
+			$(inst_libdir)/$(patsubst %,$(libtype.oS),\
+						  $(libprefix)$(libc-name))
 	(echo '/* GNU ld script';\
 	 echo '   Use the shared library, but some functions are only in';\
-	 echo '   the static library, so try that secondarily.'; \
-	 echo '   The dynamic linker defines some functions used by $(<F),';\
-	 echo '	  but ld uses definitions from libc.a before examining the';\
-	 echo '   dependencies of $(<F) to find $(rtld-installed-name).  */';\
+	 echo '   the static library, so try that secondarily.  */';\
 	 echo 'GROUP ( $(slibdir)/libc.so$(libc.so-version)' \
-	      '$(slibdir)/$(rtld-installed-name)' \
-	      '$(libdir)/lib$(libc_nonshared-name).a )' \
-	      ) > $@.new
+	      '$(libdir)/$(patsubst %,$(libtype.oS),$(libprefix)$(libc-name))'\
+	      ')' \
+	) > $@.new
 	mv -f $@.new $@
 
 endif

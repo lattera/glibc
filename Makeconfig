@@ -404,8 +404,7 @@ ifeq (yes,$(build-shared))
 # run the linked programs.
 link-libc = -Wl,-rpath-link=$(rpath-link) \
 	    $(common-objpfx)libc.so$(libc.so-version) \
-	    $(elfobjdir)/$(rtld-installed-name) \
-	    $(common-objpfx)libc_nonshared.a $(gnulib)
+	    $(common-objpfx)$(patsubst %,$(libtype.oS),c) $(gnulib)
 # Choose the default search path for the dynamic linker based on
 # where we will install libraries.
 ifneq ($(libdir),$(slibdir))

@@ -71,6 +71,7 @@ GLIBC_2.0 {
 
     # functions used in other libraries
     __printf_fp; __stpncpy; __stpcpy; __strdup; __mempcpy;
+    __nss_passwd_lookup; __nss_group_lookup; __nss_next;
     _nss_files_parse_grent; _nss_files_parse_pwent; _nss_files_parse_spent;
     __nss_database_lookup; __internal_endnetgrent; __internal_getnetgrent_r;
     __internal_setnetgrent; __gmtime_r; __secure_getenv;
