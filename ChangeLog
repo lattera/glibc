@@ -1,3 +1,30 @@
+2000-10-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/powerpc/fpu/bits/mathinline.h: Pretty print.
+
+2000-10-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* hesiod/nss_hesiod/hesiod-grp.c (_nss_hesiod_initgroups_dyn):
+	Correctly handle numeric group member information.
+	Patch by tomasw@cs.huji.ac.il.
+
+	* hesiod/nss_hesiod/hesiod-grp.c (_nss_hesiod_initgroups_dyn):
+	Complete test for strtol overflow.
+
+2000-10-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/semctl.c (__new_semctl): Pass union
+	semun as 4th argument to semctl syscall, not address of it.
+
+2000-10-18  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add fcntl64() syscall.
+
+2000-10-17  Andreas Schwab  <schwab@suse.de>
+
+	* string/string.h: Remove declaration of __strcasecmp and __strcasestr.
+	* include/string.h: Declare them here.
+
 2000-10-18  Ralf Baechle  <ralf@gnu.org>
 
 	* sysdeps/unix/sysv/linux/mips/sys/syscall.h: Include <asm/unistd.h>.
