@@ -1,4 +1,4 @@
-# Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -54,11 +54,13 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 
 modules.so := $(addsuffix .so, $(modules))
 
+include ../Makeconfig
+
+ifeq (yes,$(build-shared))
 tests = bug-iconv1 bug-iconv2 tst-loading
 
 test-srcs := tst-table-from tst-table-to
-
-include ../Makeconfig
+endif
 
 libJIS-routines := jis0201 jis0208 jis0212
 libKSC-routines := ksc5601
