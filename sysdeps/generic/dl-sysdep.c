@@ -39,7 +39,7 @@
 #include <hp-timing.h>
 
 extern char **_environ;
-extern void _end;
+extern void _end attribute_hidden;
 
 /* Protect SUID program against misuse of file descriptors.  */
 extern void __libc_check_standard_fds (void);

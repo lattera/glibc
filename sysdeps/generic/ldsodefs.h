@@ -392,7 +392,7 @@ extern struct rtld_global _rtld_local __rtld_local_attribute__;
 #undef EXTERN
 
 /* Parameters passed to the dynamic linker.  */
-extern int _dl_argc;
+extern int _dl_argc attribute_hidden;
 extern char **_dl_argv;
 #ifdef _RTLD_LOCAL
 extern char **_dl_argv_internal attribute_hidden;

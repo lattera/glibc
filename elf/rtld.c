@@ -58,10 +58,12 @@ enum mode { normal, list, verify, trace };
    all the entries.  */
 static void process_envvars (enum mode *modep);
 
-int _dl_argc;
+int _dl_argc attribute_hidden;
 char **_dl_argv = NULL;
 INTDEF(_dl_argv)
-unsigned int _dl_skip_args;	/* Nonzero if we were run directly.  */
+
+/* Nonzero if we were run directly.  */
+unsigned int _dl_skip_args attribute_hidden;
 
 /* Set nonzero during loading and initialization of executable and
    libraries, cleared before the executable's entry point runs.  This
@@ -216,7 +218,8 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
      way to do this so we use this trick.  gcc never inlines functions
      which use `alloca'.  */
   ElfW(Addr) *start_addr = alloca (sizeof (ElfW(Addr)));
-  extern char _begin[], _end[];
+  extern char _begin[] attribute_hidden;
+  extern char _end[] attribute_hidden;
 #ifdef USE_TLS
   ElfW(Ehdr) *ehdr;
   ElfW(Phdr) *phdr;

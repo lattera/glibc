@@ -1,3 +1,17 @@
+2002-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-minimal.c (malloc): Declare _end as hidden.
+	(__errno_location): New function.  Declare errno as hidden.
+	* elf/rtld.c (_dl_argc): Define as hidden.
+	(_dl_skip_args): Define as hidden.
+	(_begin, _end): Declare as hidden.
+	* sysdeps/generic/dl-sysdep.c (_end): Declare as hidden.
+	* sysdeps/generic/entry.h (_start): Declare as hidden.
+	* sysdeps/generic/ldsodefs.h (_dl_argc): Declare as hidden.
+	* sysdeps/i386/dl-machine.h (elf_machine_runtime_setup): Declare
+	_dl_runtime_resolve and _dl_runtime_profile as hidden.
+	(RTLD_START): Use GOTOFF to access _dl_skip_args and _dl_fini.
+
 2002-03-14  Roland McGrath  <roland@frob.com>
 
 	* Makerules ($(common-objpfx)Versions.v.i): Depend on abi-versions.h.

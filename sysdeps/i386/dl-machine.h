@@ -79,8 +79,8 @@ static inline int __attribute__ ((unused))
 elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
   Elf32_Addr *got;
-  extern void _dl_runtime_resolve (Elf32_Word);
-  extern void _dl_runtime_profile (Elf32_Word);
+  extern void _dl_runtime_resolve (Elf32_Word) attribute_hidden;
+  extern void _dl_runtime_profile (Elf32_Word) attribute_hidden;
 
   if (l->l_info[DT_JMPREL] && lazy)
     {
@@ -223,8 +223,7 @@ _dl_start_user:\n\
 	movl %esp, (%eax)\n\
 	# See if we were run as a command with the executable file\n\
 	# name as an extra leading argument.\n\
-	movl _dl_skip_args@GOT(%ebx), %eax\n\
-	movl (%eax), %eax\n\
+	movl _dl_skip_args@GOTOFF(%ebx), %eax\n\
 	# Pop the original argument count.\n\
 	popl %edx\n\
 	# Adjust the stack pointer to skip _dl_skip_args words.\n\
@@ -246,7 +245,7 @@ _dl_start_user:\n\
 	# Call the function to run the initializers.\n\
 	call _dl_init_internal@PLT\n\
 	# Pass our finalizer function to the user in %edx, as per ELF ABI.\n\
-	movl _dl_fini@GOT(%ebx), %edx\n\
+	leal _dl_fini@GOTOFF(%ebx), %edx\n\
 	# Jump to the user's entry point.\n\
 	jmp *%edi\n\
 	.previous\n\
