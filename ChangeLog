@@ -1,5 +1,7 @@
 2000-12-28  Andreas Jaeger  <aj@suse.de>
 
+	* catgets/Makefile (generated): Add sample.SJIS.cat.
+
 	* sunrpc/rpc_dtable.c: Include rpc/clnt.h for prototypes.
 
 	* elf/dl-minimal.c: Add prototypes.

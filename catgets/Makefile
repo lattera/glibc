@@ -45,7 +45,7 @@ $(objpfx)gencat: $(gencat-modules:%=$(objpfx)%.o)
 catgets-CPPFLAGS := -DNLSPATH='"$(msgcatdir)/%L/%N:$(msgcatdir)/%L/LC_MESSAGES/%N:$(msgcatdir)/%l/%N:$(msgcatdir)/%l/LC_MESSAGES/%N:"' \
 	    -DHAVE_CONFIG_H
 
-generated = de.msg test1.cat test1.h
+generated = de.msg test1.cat test1.h sample.SJIS.cat
 generated-dirs = de
 
 tst-catgets-ENV = NLSPATH="$(objpfx)%l/%N.cat" LANG=de
