@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
    ARM changes by Philip Blundell, <pjb27@cam.ac.uk>, May 1997.
@@ -69,6 +69,8 @@
 	arg 3		r2
 	arg 4		r3
 	arg 5		r4	(this is different from the APCS convention)
+	arg 6		r5
+	arg 7		r6
 
    The compiler is going to form a call by coming here, through PSEUDO, with
    arguments
@@ -78,9 +80,12 @@
    	arg 3		r2
    	arg 4		r3
    	arg 5		[sp]
+	arg 6		[sp+4]
+	arg 7		[sp+8]
 
-   We need to shuffle values between R4 and the stack so that the caller's
-   R4 is not corrupted, and the kernel sees the right argument there.
+   We need to shuffle values between R4..R6 and the stack so that the
+   caller's v1..v3 and stack frame are not corrupted, and the kernel
+   sees the right arguments.
 
 */
 
@@ -95,14 +100,18 @@
 #define DOARGS_2 /* nothing */
 #define DOARGS_3 /* nothing */
 #define DOARGS_4 /* nothing */
-#define DOARGS_5 ldr ip, [sp]; str r4, [sp]; mov r4, ip;
+#define DOARGS_5 str r4, [sp, $-4]!; ldr r4, [sp, $4];
+#define DOARGS_6 mov ip, sp; stmfd sp!, {r4, r5}; ldmia ip, {r4, r5};
+#define DOARGS_7 mov ip, sp; stmfd sp!, {r4, r5, r6}; ldmia ip, {r4, r5, r6};
 
 #define UNDOARGS_0 /* nothing */
 #define UNDOARGS_1 /* nothing */
 #define UNDOARGS_2 /* nothing */
 #define UNDOARGS_3 /* nothing */
 #define UNDOARGS_4 /* nothing */
-#define UNDOARGS_5 ldr r4, [sp];
+#define UNDOARGS_5 ldr r4, [sp, $4]!;
+#define UNDOARGS_6 ldmfd sp!, {r4, r5};
+#define UNDOARGS_7 ldmfd sp!, {r4, r5, r6};
 
 #else /* not __ASSEMBLER__ */
 
@@ -149,6 +158,14 @@
   register int _v1 asm ("v1") = (int) (a5);	\
   LOAD_ARGS_4 (a1, a2, a3, a4)
 #define ASM_ARGS_5	ASM_ARGS_4, "r" (_v1)
+#define LOAD_ARGS_6(a1, a2, a3, a4, a5, a6)	\
+  register int _v2 asm ("v2") = (int) (a6);	\
+  LOAD_ARGS_5 (a1, a2, a3, a4, a5)
+#define ASM_ARGS_6	ASM_ARGS_5, "r" (_v2)
+#define LOAD_ARGS_7(a1, a2, a3, a4, a5, a6, a7)	\
+  register int _v3 asm ("v3") = (int) (a7);	\
+  LOAD_ARGS_6 (a1, a2, a3, a4, a5, a6)
+#define ASM_ARGS_7	ASM_ARGS_6, "r" (_v3)
 
 #endif	/* __ASSEMBLER__ */
 
