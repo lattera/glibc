@@ -1,3 +1,9 @@
+2001-08-17  Roland McGrath  <roland@frob.com>
+
+	* stdio-common/perror.c (perror) [! USE_IN_LIBIO]: Don't use _IO_fwide.
+	* misc/error.c (error_tail, error, error_at_line) [! USE_IN_LIBIO]:
+	Likewise.
+
 2001-08-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/duplocale.c (__duplocale): Also initialize the special
