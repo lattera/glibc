@@ -1,3 +1,12 @@
+2000-06-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/Makefile (librt-routines): Add clock_nanosleep.
+	* rt/Versions [GLIBC_2.2] (librt): Add clock_nanosleep.
+	* sysdeps/generic/clock_nanosleep.c: New file.
+	* sysdeps/unix/clock_nanosleep.c: New file.
+	* sysdeps/unix/i386/i586/clock_nanosleep.c: New file.
+	* time/time.h: Declare clock_nanosleep.
+
 2000-06-26  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/i386/asm-syntax.h (R, MEM, MEM_DISP, MEM_INDEX,

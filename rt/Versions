@@ -8,6 +8,7 @@ librt {
   GLIBC_2.2 {
     # c*
     clock_getres; clock_gettime; clock_settime; clock_getcpuclockid;
+    clock_nanosleep;
 
     # s*
     shm_open; shm_unlink;

@@ -28,7 +28,7 @@
 	* tst-fmon-locales/tstfmon_y40y00: Likewise.
 	* tst-fmon-locales/tstfmon_y42n21: Likewise.
 
-	* tst-rpmatch.c: Avoid warning with borken compiler.
+	* tst-rpmatch.c: Avoid warning with broken compiler.
 
 	* locales/i18n: Take CJK ideographs and Hangul out of `alpha' table.
 

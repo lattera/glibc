@@ -277,6 +277,11 @@ extern int clock_settime (clockid_t __clock_id, __const struct timespec *__tp)
      __THROW;
 
 #  ifdef __USE_XOPEN2K
+/* High-resolution sleep with the specified clock.  */
+extern int clock_nanosleep (clockid_t __clock_id, int __flags,
+			    __const struct timespec *__req,
+			    struct timespec *__rem) __THROW;
+
 /* Return clock ID for CPU-time clock.  */
 extern int clock_getcpuclockid (pid_t __pid, clockid_t *__clock_id) __THROW;
 #  endif
