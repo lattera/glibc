@@ -25,6 +25,15 @@ cleanup (void *arg)
 }
 
 
+volatile int cleanupokcnt;
+
+static void
+cleanupok (void *arg)
+{
+  ++cleanupokcnt;
+}
+
+
 static void *
 t1 (void *arg)
 {
@@ -54,24 +63,40 @@ t2 (void *arg)
 }
 
 
+static void
+innerok (int a)
+{
+  pthread_cleanup_push (cleanup, (void *) (long int) a);
+  if (a)
+    return;
+  pthread_cleanup_pop (0);
+}
+
+
 static void *
 t3 (void *arg)
 {
-  pthread_cleanup_push (cleanup, (void *) (long int) 4);
-  inner ((int) (long int) arg);
+  pthread_cleanup_push (cleanupok, (void *) (long int) 4);
+  innerok ((int) (long int) arg);
   pthread_exit (NULL);
   pthread_cleanup_pop (0);
 }
 
 
 int
-main (void)
+main (int argc, char *argv[])
 {
   pthread_t td;
   int err;
-  char tmp[] = "thtstXXXXXX";
+  char *tmp;
+  const char *path;
+  const char template[] = "thtstXXXXXX";
   struct stat64 st;
   int result = 0;
+
+  path = argc > 1 ? argv[1] : "";
+  tmp = (char *) alloca (strlen (path) + sizeof template);
+  strcpy (stpcpy (tmp, path), template);
 
   fd = mkstemp (tmp);
   if (fd == -1)
@@ -140,6 +165,7 @@ main (void)
       char buf[512];
       puts ("some cleanup handlers ran:");
       fflush (stdout);
+      __lseek (fd, 0, SEEK_SET);
       while (1)
 	{
 	  ssize_t n = read (fd, buf, sizeof buf);
@@ -147,6 +173,12 @@ main (void)
 	    break;
 	  write (STDOUT_FILENO, buf, n);
 	}
+      result = 1;
+    }
+
+  if (cleanupokcnt != 1)
+    {
+      printf ("cleanupokcnt = %d\n", cleanupokcnt);
       result = 1;
     }
 

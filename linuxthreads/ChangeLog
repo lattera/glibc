@@ -1,3 +1,10 @@
+2001-04-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-cancel.c (main): Cleanup 4 is supposed to run.  Create
+	temporary file in object directory.
+	* Makefile: Don't allow inlining when compiling tst-cancel.c.
+	Pass $(objpfx) to tst-cancel.
+
 2001-04-11  David S. Miller  <davem@redhat.com>
 
 	* sysdeps/sparc/sparc32/pt-machine.h (stack_pointer): Advance
