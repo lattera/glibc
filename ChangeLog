@@ -1,3 +1,8 @@
+2004-11-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (_int_free): Add a few more cheap tests for
+	corruption.
+
 2004-11-17  Randolph Chung  <tausq@debian.org>
 
 	* sysdeps/hppa/dl-machine.h (TRAMPOLINE_TEMPLATE): Add unwind
@@ -27,7 +32,7 @@
 
 	* libio/libio.h (_IO_FLAGS2_FORTIFY): Renamed from
 	_IO_FLAGS2_CHECK_PERCENT_N.
-	* debug/fprintff_chk.c: Adjust all users.
+	* debug/fprintf_chk.c: Adjust all users.
 	* debug/printf_chk.c: Likewise.
 	* debug/vfprintf_chk.c: Likewise.
 	* debug/vprintf_chk.c: Likewise.
