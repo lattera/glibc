@@ -47,13 +47,12 @@ l64a (n)
     /* The value for N == 0 is defined to be the empty string. */
     return (char *) "";
 
-  result[6] = '\0';
-
-  for (cnt = 5; m > 0ul; --cnt)
+  for (cnt = 0; m > 0ul; ++cnt)
     {
       result[cnt] = conv_table[m & 0x3f];
       m >>= 6;
     }
+  result[cnt] = '\0';
 
-  return &result[cnt + 1];
+  return result;
 }

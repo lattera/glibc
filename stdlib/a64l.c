@@ -43,6 +43,7 @@ a64l (string)
   const char *ptr = string;
   unsigned long int result = 0ul;
   const char *end = ptr + 6;
+  int shift = 0;
 
   do
     {
@@ -55,9 +56,9 @@ a64l (string)
       value = (int) a64l_table[index];
       if (value == (int) XX)
 	break;
-      result <<= 6;
       ++ptr;
-      result |= value;
+      result |= value << shift;
+      shift += 6;
     }
   while (ptr != end);
 
