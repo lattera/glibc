@@ -41,7 +41,7 @@
 #include "math_private.h"
 
 /*********************************************************************/
-/* An ultimate aqrt routine. Given an IEEE double machine number x   */
+/* An ultimate sqrt routine. Given an IEEE double machine number x   */
 /* it computes the correctly rounded (to nearest) value of square    */
 /* root of x.                                                        */
 /*********************************************************************/
@@ -52,7 +52,7 @@ double __ieee754_sqrt(double x) {
     rt1 = 4.99999999495955425917856814202739E-01,
     rt2 = 3.75017500867345182581453026130850E-01,
     rt3 = 3.12523626554518656309172508769531E-01;
-  static const double big =  134217728.0, big1 =  134217729.0;
+  static const double big =  134217728.0;
   double y,t,del,res,res1,hy,z,zz,p,hx,tx,ty,s;
   mynumber a,c={{0,0}};
   int4 k;
@@ -79,13 +79,10 @@ double __ieee754_sqrt(double x) {
     }
   }
   else {
-    if (k>0x7ff00000)            /* x -> infinity */
-       return (big1-big1)/(big-big);
-      if (k<0x00100000) {        /* x -> -infinity */
-      if (x==0) return x;
-      if (k<0) return (big1-big1)/(big-big);
-      else return tm256.x*__ieee754_sqrt(x*t512.x);
-    }
-    else return (a.i[LOW_HALF]==0)?x:(big1-big1)/(big-big);
+    if ((k & 0x7ff00000) == 0x7ff00000)
+      return x*x+x;	/* sqrt(NaN)=NaN, sqrt(+inf)=+inf, sqrt(-inf)=sNaN */
+    if (x==0) return x;	/* sqrt(+0)=+0, sqrt(-0)=-0 */
+    if (k<0) return (x-x)/(x-x); /* sqrt(-ve)=sNaN */
+    return tm256.x*__ieee754_sqrt(x*t512.x);
   }
 }

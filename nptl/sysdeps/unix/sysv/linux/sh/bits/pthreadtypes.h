@@ -77,11 +77,12 @@ typedef union
   struct
   {
     int __lock;
-    int __clock;
+    unsigned int __futex;
     unsigned long long int __total_seq;
     unsigned long long int __wakeup_seq;
     unsigned long long int __woken_seq;
     void *__mutex;
+    int __clock;
     unsigned int __broadcast_seq;
   } __data;
   char __size[__SIZEOF_PTHREAD_COND_T];

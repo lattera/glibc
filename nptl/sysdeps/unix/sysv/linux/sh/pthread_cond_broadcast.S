@@ -26,6 +26,7 @@
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
 #define FUTEX_REQUEUE		3
+#define FUTEX_CMP_REQUEUE	4
 
 #define EINVAL			22
 
@@ -36,6 +37,7 @@
 	.type	__pthread_cond_broadcast, @function
 	.align	5
 __pthread_cond_broadcast:
+	mov.l   r10, @-r15
 	mov.l   r9, @-r15
 	mov.l	r8, @-r15
 	sts.l	pr, @-r15
@@ -72,6 +74,9 @@ __pthread_cond_broadcast:
 	mov.l	@(broadcast_seq,r8), r2
 	add	#1, r2
 	mov.l	r2, @(broadcast_seq,r8)
+	add	r1, r1
+	mov	r1, r10
+	mov.l	r10, @(cond_futex,r8)
 
 	/* Get the address of the mutex used.  */
 	mov.l	@(dep_mutex,r8), r9
@@ -91,10 +96,10 @@ __pthread_cond_broadcast:
 	cmp/eq	r0, r9
 	mov	r8, r4
 	bt/s	9f
-	 add	#wakeup_seq, r4
+	 add	#cond_futex, r4
 
 	/* Wake up all threads.  */
-	mov	#FUTEX_REQUEUE, r5
+	mov	#FUTEX_CMP_REQUEUE, r5
 	mov	#1, r6
 	mov	#-1, r7
 	shlr	r7		/* r7 = 0x7fffffff */
@@ -102,17 +107,31 @@ __pthread_cond_broadcast:
 # if MUTEX_FUTEX != 0
 	add	#MUTEX_FUTEX, r0
 # endif
+	mov	r10, r1
 	mov	#SYS_futex, r3
 	extu.b	r3, r3
-	trapa	#0x15
+	trapa	#0x16
 	SYSCALL_INST_PAD
+
+	/* For any kind of error, which mainly is EAGAIN, we try again
+	   with WAKE.  The general test also covers running on old
+	   kernels.  */
+	mov	r0, r1
+	mov	#-12, r2
+	shad	r2, r1
+	not	r1, r1
+	tst	r1, r1
+	mov	r8, r4
+	bt/s	9f
+	 add	#cond_futex, r4
 
 10:
 	mov	#0, r0
 	lds.l	@r15+, pr
 	mov.l	@r15+, r8
+	mov.l	@r15+, r9
 	rts
-	 mov.l	@r15+, r9
+	 mov.l	@r15+, r10
 
 4:
 	/* Unlock.  */
@@ -127,8 +146,9 @@ __pthread_cond_broadcast:
 	mov	#0, r0
 	lds.l	@r15+, pr
 	mov.l	@r15+, r8
+	mov.l	@r15+, r9
 	rts
-	 mov.l	@r15+, r9
+	 mov.l	@r15+, r10
 
 1:
 	/* Initial locking failed.  */

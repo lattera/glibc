@@ -72,10 +72,13 @@ __pthread_cond_signal:
 	addc	r3, r1
 	mov.l	r0,@(wakeup_seq,r8)
 	mov.l	r1,@(wakeup_seq+4,r8)
+	mov.l	@(cond_futex,r8),r0
+	add	r2, r0
+	mov.l	r0,@(cond_futex,r8)
 
 	/* Wake up one thread.  */
 	mov	r8, r4
-	add	#wakeup_seq, r4
+	add	#cond_futex, r4
 	mov	#FUTEX_WAKE, r5
 	mov	#1, r6
 	mov	#0, r7

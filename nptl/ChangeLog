@@ -1,3 +1,24 @@
+2004-06-13  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h (pthread_cond_t):
+	Add __data.__futex field, reshuffle __data.__clock.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_signal.S
+	(__pthread_cond_signal): Increment __futex at the same time as
+	__wakeup_seq or __total_seq.  Pass address of __futex instead of
+	address of low 32-bits of __wakeup_seq to futex syscall.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S
+	(__pthread_cond_wait): Likewise.  Pass __futex value from before
+	releasing internal lock to FUTEX_WAIT.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_broadcast.S
+	(FUTEX_CMP_REQUEUE): Define.
+	(__pthread_cond_broadcast): Set __futex to 2 * __total_seq.
+	Use FUTEX_CMP_REQUEUE operation instead of FUTEX_REQUEUE.
+	Pass __futex value from before the unlock and __futex address instead
+	of address of low 32-bits of __wakeup_seq to futex syscall.
+	Fallback to FUTEX_WAKE all on any errors.
+
 2004-06-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthread_mutexattr_getpshared.c (pthread_mutex_getpshared): Fix

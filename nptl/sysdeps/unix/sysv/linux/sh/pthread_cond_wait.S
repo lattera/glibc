@@ -104,6 +104,9 @@ __pthread_cond_wait:
 	addc	r3, r1
 	mov.l	r0,@(total_seq,r8)
 	mov.l	r1,@(total_seq+4,r8)
+	mov.l	@(cond_futex,r8),r0
+	add	r2, r0
+	mov.l	r0,@(cond_futex,r8)
 
 	/* Get and store current wakeup_seq value.  */
 	mov.l	@(wakeup_seq,r8), r10
@@ -112,6 +115,9 @@ __pthread_cond_wait:
 	mov.l	r0, @(4,r15)
 
 8:
+	mov.l	@(cond_futex,r8),r0
+	mov.l	r0, @(8,r15)
+
 	/* Unlock.  */
 #if cond_lock != 0
 	DEC (@(cond_lock,r8), r2)
@@ -130,9 +136,9 @@ __pthread_cond_wait:
 
 	mov	#0, r7
 	mov	#FUTEX_WAIT, r5
-	mov	r10, r6
+	mov.l	@(8,r15), r6
 	mov	r8, r4
-	add	#wakeup_seq, r4
+	add	#cond_futex, r4
 	mov	#SYS_futex, r3
 	extu.b	r3, r3
 	trapa	#0x14
@@ -353,6 +359,9 @@ __condvar_w_cleanup:
 	addc	r3, r1
 	mov.l	r0,@(wakeup_seq,r8)
 	mov.l	r1,@(wakeup_seq+4,r8)
+	mov.l	@(cond_futex,r8),r0
+	add	r2, r0
+	mov.l	r0,@(cond_futex,r8)
 
 	clrt
 	mov.l	@(woken_seq,r8),r0
@@ -383,7 +392,7 @@ __condvar_w_cleanup:
 2:
 	/* Wake up all waiters to make sure no signal gets lost.  */
 	mov	r8, r4
-	add	#wakeup_seq, r4
+	add	#cond_futex, r4
 	mov	#FUTEX_WAKE, r5
 	mov	#-1, r6
 	shlr	r6		/* r6 = 0x7fffffff */
