@@ -34,6 +34,7 @@ dl-routines	= $(addprefix dl-,load cache lookup object reloc deps \
 all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 # But they are absent from the shared libc, because that code is in ld.so.
 elide-routines.os = $(all-dl-routines) dl-support enbl-secure dl-origin
+shared-only-routines += dl-caller
 
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
@@ -91,7 +92,7 @@ include ../Makeconfig
 
 ifeq ($(unwind-find-fde),yes)
 routines += unwind-dw2-fde-glibc
-shared-only-routines = unwind-dw2-fde-glibc
+shared-only-routines += unwind-dw2-fde-glibc
 endif
 
 before-compile  = $(objpfx)trusted-dirs.h
