@@ -294,7 +294,7 @@ _dl_allocate_tls_storage (void)
 
   /* Allocate a correctly aligned chunk of memory.  */
   result = __libc_memalign (GL(dl_tls_static_align), size);
-  if (__builtin_expect (result != NULL, 0))
+  if (__builtin_expect (result != NULL, 1))
     {
       /* Allocate the DTV.  */
       void *allocated = result;
