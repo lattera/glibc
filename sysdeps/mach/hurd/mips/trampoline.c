@@ -40,15 +40,6 @@ _hurd_setup_sighandler (int flags,
   struct mips_thread_state *ts;
   void *sigsp;
   struct sigcontext *scp;
-  struct 
-    {
-      void *retaddr;		/* Never used.  */
-      __sighandler_t handler;
-      int signo;
-      int sigcode;
-      struct sigcontext *scp;	/* Points to ctx, below.  */
-      struct sigcontext ctx;
-    } *stackframe;
 
   ts = state;
 
@@ -61,18 +52,16 @@ _hurd_setup_sighandler (int flags,
   else
     sigsp = (char *) ts->r29;
 
-  /* Push the arguments to call `trampoline' on the stack.  */
-  sigsp -= sizeof (*stackframe);
-  stackframe = sigsp;
-  stackframe->handler = handler;
-  stackframe->signo = signo;
-  stackframe->sigcode = sigcode;
-  stackframe->scp = scp = &stackframe->ctx;
+  /* Set up the sigcontext structure on the stack.  This is all the stack
+     needs, since the args are passed in registers (below).  */
+  sigsp -= sizeof (*scp);
+  scp = sigsp;
 
   /* Set up the sigcontext from the current state of the thread.  */
 
   scp->sc_onstack = sigaltstack->ss_flags & SA_ONSTACK ? 1 : 0;
 
+  scp->sc_gpr[2] = ts->r2;
   scp->sc_gpr[16] = ts->r16;
   scp->sc_gpr[17] = ts->r17;
   scp->sc_gpr[18] = ts->r18;
@@ -89,7 +78,16 @@ _hurd_setup_sighandler (int flags,
   scp->sc_fp = ts->r30;
 
   /* Modify the thread state to call `trampoline' on the new stack.  */
-  ts->r29 = (int) sigsp;
+
+  /* These registers are used for passing the first four arguments to a
+     function (the rest go on the stack).  Fortunately `trampoline' takes
+     just four arguments, so they all fit in registers.  */
+  ts->r4 = (int) handler;
+  ts->r5 = signo;
+  ts->r6 = sigcode;
+  ts->r7 = (int) scp;
+
+  ts->r29 = (int) sigsp;	/* r29 is the stack pointer register.  */
   ts->pc = (int) &trampoline;
 
   return scp;
