@@ -50,7 +50,7 @@ ENTRY (BP_SYM (__longjmp))
 	lwz     r5,_dl_hwcap@l(r5)
 # endif
 	andis.	r5,r5,(PPC_FEATURE_HAS_ALTIVEC >> 16)
-	beq	no_vmx
+	beq	L(no_vmx)
 	la	r5,((JB_VRS)*4)(3)
 	andi.	r6,r5,0xf
 	lwz	r0,((JB_VRSAVE)*4)(3)
@@ -78,7 +78,7 @@ ENTRY (BP_SYM (__longjmp))
 	load_misaligned_vmx_lo_loaded(v30,v31,v0,r6,r5)
 	lvx	v1,0,r5
 	vperm   v31,v31,v1,v0
-	b       no_vmx
+	b       L(no_vmx)
 aligned_restore_vmx:
 	addi	r6,r5,16
 	lvx	v20,0,r5
@@ -103,7 +103,7 @@ aligned_restore_vmx:
 	addi	r6,r6,32
 	lvx	v30,0,r5
 	lvx	v31,0,r6
-no_vmx:
+L(no_vmx):
 #endif
 	lwz r1,(JB_GPR1*4)(r3)
 	lwz r0,(JB_LR*4)(r3)

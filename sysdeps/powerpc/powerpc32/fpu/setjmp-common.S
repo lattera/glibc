@@ -92,13 +92,13 @@ ENTRY (BP_SYM (__sigsetjmp))
 	lwz     r5,_dl_hwcap@l(r5)
 #endif
 	andis.	r5,r5,(PPC_FEATURE_HAS_ALTIVEC >> 16)
-	beq	no_vmx
+	beq	L(no_vmx)
 	la	r5,((JB_VRS)*4)(3)
 	andi.	r6,r5,0xf
 	mfspr	r0,VRSAVE
 	stw	r0,((JB_VRSAVE)*4)(3)
 	addi	r6,r5,16
-	beq+	aligned_save_vmx
+	beq+	L(aligned_save_vmx)
 	lvsr	v0,0,r5
 	vspltisb v1,-1         /* set v1 to all 1's */
 	vspltisb v2,0          /* set v2 to all 0's */
@@ -137,9 +137,9 @@ ENTRY (BP_SYM (__sigsetjmp))
 	stvx    v5,0,r6
 	vsel    v4,v31,v4,v3
 	stvx    v4,0,r5
-	b	no_vmx
+	b	L(no_vmx)
 
-aligned_save_vmx:
+L(aligned_save_vmx):
 	stvx	20,0,r5
 	addi	r5,r5,32
 	stvx	21,0,r6
@@ -162,7 +162,7 @@ aligned_save_vmx:
 	addi	r6,r6,32
 	stvx	30,0,r5
 	stvx	31,0,r6
-no_vmx:
+L(no_vmx):
 #endif
 	b JUMPTARGET (BP_SYM (__sigjmp_save))
 END (BP_SYM (__sigsetjmp))
