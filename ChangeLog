@@ -1,3 +1,32 @@
+1999-04-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/install.texi (Configuring and compiling): Explain that
+	files are changed in the source directory.
+	Closes PR libc/981.
+	(Configuring and compiling): Explain situation with PARALLELMFLAGS
+	in the source directory.
+
+1999-04-24  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* locale/programs/ld-ctype.c: Spelling fixes.
+	(ctype_finish): Fix argument of error message format.
+	* locale/programs/ld-messages.c: Spelling fixes.
+	* locale/programs/ld-monetary.c: Spelling fixes.
+	* locale/programs/ld-time.c (time_finish): Make sure that name and
+	format of era_entries are adjacent.
+	(time_output): Reduce the size of the io vector.
+
+1999-04-25  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* manual/filesys.texi (Attribute Meanings): Move a misplaced
+	paragraph.
+
+1999-04-23  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* locale/programs/ld-collate.c (collate_output): Convert
+	undefined_offset to an array index.  Fix computation of other
+	endian extra table.
+
 1999-04-26  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/get-host.c (_hurd_get_host_config): If ENOENT opening file,

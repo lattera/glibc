@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -268,7 +268,7 @@ ctype_finish (struct localedef_t *locale, struct charset_t *charset)
 			if (!be_quiet)
 			  error (0, 0, _("\
 character %s'%s' in class `%s' must be in class `%s'"), value > 256 ? "L" : "",
-				 cp, valid_table[cls1].name,
+				 buf, valid_table[cls1].name,
 				 valid_table[cls2].name);
 		      }
 		    break;
@@ -293,7 +293,7 @@ character %s'%s' in class `%s' must be in class `%s'"), value > 256 ? "L" : "",
 			if (!be_quiet)
 			  error (0, 0, _("\
 character %s'%s' in class `%s' must not be in class `%s'"),
-				 value > 256 ? "L" : "", cp,
+				 value > 256 ? "L" : "", buf,
 				 valid_table[cls1].name,
 				 valid_table[cls2].name);
 		      }
@@ -882,7 +882,7 @@ implementation limit: no more than %d character maps allowed"),
 
 
 /* We have to be prepared that TABLE, MAX, and ACT can be NULL.  This
-   is possible if we only want ot extend the name array.  */
+   is possible if we only want to extend the name array.  */
 static u_int32_t *
 find_idx (struct locale_ctype_t *ctype, u_int32_t **table, size_t *max,
 	  size_t *act, unsigned int idx)
@@ -896,7 +896,7 @@ find_idx (struct locale_ctype_t *ctype, u_int32_t **table, size_t *max,
     if (ctype->charnames[cnt] == idx)
       break;
 
-  /* We have to distinguish two cases: the names is found or not.  */
+  /* We have to distinguish two cases: the name is found or not.  */
   if (cnt == ctype->charnames_act)
     {
       /* Extend the name array.  */

@@ -91,7 +91,7 @@ messages_finish (struct localedef_t *locale)
       int result;
       regex_t re;
 
-      /* Test whether it are correct regular expressions.  */
+      /* Test whether it is a correct regular expression.  */
       result = regcomp (&re, messages->yesexpr, REG_EXTENDED);
       if (result != 0 && !be_quiet)
 	{
@@ -115,7 +115,7 @@ no correct regular expression for field `%s' in category `%s': %s"),
       int result;
       regex_t re;
 
-      /* Test whether it are correct regular expressions.  */
+      /* Test whether it is a correct regular expression.  */
       result = regcomp (&re, messages->noexpr, REG_EXTENDED);
       if (result != 0 && !be_quiet)
 	{

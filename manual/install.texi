@@ -60,6 +60,10 @@ at the top level of the source tree.  In the scenario above, you'd type
 $ ../glibc-2.1.0/configure @var{args...}
 @end smallexample
 
+Please note that even if you're building in a separate build directory,
+the compiliation needs to modify a few files in the source
+directory, especially some files in the manual subdirectory.
+
 @noindent
 @code{configure} takes many options, but you can get away with knowing
 only two: @samp{--prefix} and @samp{--enable-add-ons}.  The
@@ -193,7 +197,11 @@ Instead, edit the generated @file{Makefile} and uncomment the line
 
 @noindent
 You can change the @samp{4} to some other number as appropriate for
-your system.
+your system.  Instead of changing the @file{Makefile}, you could give
+this option directly to @code{make} and call it as, e.g. 
+@code{make PARALLELMFLAGS=-j4}.  If you're building in the source
+directory, you've got to use the latter approach since in this case no
+new @file{Makefile} is generated which you can change.
 
 To build and run some test programs which exercise some of the library
 facilities, type @code{make check}.  This should complete successfully;

@@ -62,7 +62,7 @@ struct locale_monetary_t
 };
 
 
-/* The content iof the field int_curr_symbol has to be taken from
+/* The contents of the field int_curr_symbol have to be taken from
    ISO-4217.  We test for correct values.  */
 #define DEFINE_INT_CURR(str) str,
 static const char *const valid_int_curr[] =
@@ -174,8 +174,8 @@ value for field `%s' in category `%s' must be in range %d...%d"),	      \
 	   #cat, "LC_MONETARY", min, max)
 
 #if 0
-										/* The following two test are not really necessary because all values
-    the variable could have are valid.  */
+  /* The following two tests are not really necessary because all values
+     the variable could have are valid.  */
   TEST_ELEM (int_frac_digits, -128, 127);	/* No range check.  */
   TEST_ELEM (frac_digits, -128, 127);		/* No range check.  */
 #endif

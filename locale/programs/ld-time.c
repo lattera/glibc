@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -357,8 +357,11 @@ time_finish (struct localedef_t *locale)
 	      if (!be_quiet)
 		error (0, 0, _("missing era name in string %d in `era' field"
 			       " in category `%s'"), idx + 1, "LC_TIME");
-	      time->era_entries[idx].name =
-		time->era_entries[idx].format = "";
+	      /* Make sure that name and format are adjacent strings
+		 in memory.  */
+	      time->era_entries[idx].name = "\0";
+	      time->era_entries[idx].format
+		= time->era_entries[idx].name + 1;
 	    }
 	  else
 	    {
@@ -370,8 +373,11 @@ time_finish (struct localedef_t *locale)
 		    error (0, 0, _("missing era format in string %d in `era'"
 				   " field in category `%s'"),
 			   idx + 1, "LC_TIME");
-		  time->era_entries[idx].name =
-		    time->era_entries[idx].format = "";
+		  /* Make sure that name and format are adjacent strings
+		     in memory.  */
+		  time->era_entries[idx].name = "\0";
+		  time->era_entries[idx].format
+		    = time->era_entries[idx].name + 1;
 		}
 	      else
 		time->era_entries[idx].format = str;
@@ -589,22 +595,10 @@ time_output (struct localedef_t *locale, const char *output_path)
       iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
       iov[2 + cnt].iov_base = (void *) &ERA_B1[num].start_date[0];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].start_date[1];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].start_date[2];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
+      iov[2 + cnt].iov_len = 3 * sizeof (int32_t);
       ++cnt;
       iov[2 + cnt].iov_base = (void *) &ERA_B1[num].stop_date[0];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].stop_date[1];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].stop_date[2];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
+      iov[2 + cnt].iov_len = 3 * sizeof (int32_t);
       ++cnt;
 
       l = (strchr (ERA_B1[num].format, '\0') - ERA_B1[num].name) + 1;
@@ -631,22 +625,10 @@ time_output (struct localedef_t *locale, const char *output_path)
       iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
       iov[2 + cnt].iov_base = (void *) &ERA_B2[num].start_date[0];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].start_date[1];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].start_date[2];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
+      iov[2 + cnt].iov_len = 3 * sizeof (int32_t);
       ++cnt;
       iov[2 + cnt].iov_base = (void *) &ERA_B2[num].stop_date[0];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].stop_date[1];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].stop_date[2];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
+      iov[2 + cnt].iov_len = 3 * sizeof (int32_t);
       ++cnt;
 
       l = (strchr (ERA_B2[num].format, '\0') - ERA_B2[num].name) + 1;
