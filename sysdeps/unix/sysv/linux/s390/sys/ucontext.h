@@ -19,7 +19,9 @@
 
 #ifndef _SYS_UCONTEXT_H
 #define _SYS_UCONTEXT_H	1
-
+/* Forward definition to avoid parse errors */
+struct ucontext;
+typedef struct ucontext ucontext_t;
 #include <features.h>
 #include <signal.h>
 
@@ -28,62 +30,39 @@
 #include <bits/sigcontext.h>
 
 
-/* Type for general register.  */
-typedef int greg_t;
+/* Type for a general-purpose register.  */
+typedef unsigned long greg_t;
 
-/* Number of general registers.  */
-#define NGREG	16
+/* And the whole bunch of them.  We should have used `struct s390_regs',
+   but to avoid name space pollution and since the tradition says that
+   the register set is an array, we make gregset_t a simple array
+   that has the same size as s390_regs. */
+#define NGREG 36
+#define NUM_FPRS 16
+typedef greg_t gregset_t[NGREG];
 
-/* Number of each register is the `gregset_t' array.  */
-enum
+typedef union
 {
-  GPR0 = 0,
-#define GPR0 GPR0
-  GPR1,
-#define GPR1 GPR1
-  GPR2,
-#define GPR2 GPR2
-  GPR3,
-#define GPR3 GPR3
-  GPR4,
-#define GPR4 GPR4
-  GPR5,
-#define GPR5 GPR5
-  GPR6,
-#define GPR6 GPR6
-  GPR7,
-#define GPR7 GPR7
-  GPR8,
-#define GPR8 GPR8
-  GPR9,
-#define GPR9 GPR9
-  GPRA,
-#define GPRA GPRA
-  GPRB,
-#define GPRB GPRB
-  GPRC,
-#define GPRC GPRC
-  GPRD,
-#define GPRD GPRD
-  GPRE,
-#define GPRE GPRE
-  GPRF
-#define GPRF GPRF
-};
+  double  d;
+  float   f;
+} fpreg_t;
 
-/* Structure to describe FPU registers.  */
-typedef long long fpreg_t;
+/* Register set for the floating-point registers.  */
+typedef struct {
+  unsigned int fpc;
+  fpreg_t fprs[NUM_FPRS];
+} fpregset_t;
 
 /* Context to describe whole processor state.  */
 typedef struct
   {
     int version;
-    greg_t gregs[NGREG];
-    fpreg_t fpregs[16];
+    gregset_t    gregs;
+    fpregset_t   fpregs;
   } mcontext_t;
 
 /* Userlevel context.  */
-typedef struct ucontext
+struct ucontext
   {
     unsigned long int uc_flags;
     struct ucontext *uc_links;
@@ -91,6 +70,7 @@ typedef struct ucontext
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     long int uc_filler[170];
-  } ucontext_t;
+  };
+
 
 #endif /* sys/ucontext.h */

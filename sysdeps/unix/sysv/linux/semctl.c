@@ -93,7 +93,7 @@ __new_semctl (int semid, int semnum, int cmd, ...)
 
   va_end (ap);
 
-#if __ASSUME_32BITUIDS > 0
+#if __ASSUME_IPC64 > 0
   return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd | __IPC_64,
 			 CHECK_SEMCTL (&arg, semid, cmd | __IPC_64));
 #else

@@ -110,13 +110,21 @@
 # define __ASSUME_NEW_GETRLIMIT_SYSCALL	1
 #endif
 
-/* Linux 2.3.39 introduced 32bit UID/GIDs.  Some platforms had 32 bit
-   type all along.  */
+/* Linux 2.3.39 introduced 32bit UID/GIDs and IPC64.  Some platforms had 32
+   bit type all along.  */
 #if __LINUX_KERNEL_VERSION >= 131879 || defined __powerpc__ || defined __mips__
 # define __ASSUME_32BITUIDS		1
+# ifndef __powerpc__
+#  define __ASSUME_IPC64		1
+# endif
 # ifdef __sparc__
 #  define __ASSUME_SETRESUID_SYSCALL	1
 # endif
+#endif
+
+/* Linux 2.4.0 on PPC introduced a correct IPC64.  */
+#if __LINUX_KERNEL_VERSION >= 132096 && defined __powerpc__
+# define __ASSUME_IPC64			1
 #endif
 
 /* We can use the LDTs for threading with Linux 2.3.99 and newer.  */

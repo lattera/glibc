@@ -1,3 +1,7 @@
+2000-09-28  Martin Schwidefsksy    <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/pt-machine.h: Make %a0 the thread register.
+
 2000-09-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* mutex.c (__pthread_mutex_unlock): For PTHREAD_MUTEX_RECURSIVE_NP

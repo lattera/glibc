@@ -65,7 +65,7 @@ compat_symbol (libc, __old_msgctl, msgctl, GLIBC_2_0);
 int
 __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
 {
-#if __ASSUME_32BITUIDS > 0
+#if __ASSUME_IPC64 > 0
   return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl,
 			 msqid, cmd | __IPC_64, 0, CHECK_1 (buf));
 #else

@@ -1,6 +1,91 @@
+2000-09-28  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Add __ASSUME_IPC64, only
+	define it for powerpc for kernel >= 2.4.0.
+	* sysdeps/unix/sysv/linux/msgctl.c: Test for __ASSUME_IPC64, not
+	__ASSUME_32BITUIDS.
+	* sysdeps/unix/sysv/linux/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/ipc.h: Sync with kernel.
+	* sysdeps/unix/sysv/linux/powerpc/bits/msq.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/bits/sem.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/bits/shm.h: New file.
+
+2000-09-28  Martin Schwidefsksy    <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/atomicity.h: Fix compare_and_swap.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h
+	(F_GETLK64,F_SETLK64,F_SETLKW64): Use values from 2.4.0-test8.
+
+2000-09-28  Denis Joseph Barrow     <djbarrow@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/sys/procfs.h: Use definitions from
+	ucontext.h.
+	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h: Fix ucontext structure.
+
+2000-09-27  Andreas Schwab  <schwab@suse.de>
+
+	* math/Makefile (distribute): Explicitly add the long double test
+	sources, to get them included even if long double is not supported.
+
+2000-09-27  Jes Sorensen  <jes@linuxcare.com>
+
+	* elf/soinit.c (struct object): Move definition to gccframe.h and
+	include it.  Problem identified by HJ Lu.
+
+	* sysdeps/ia64/gccframe.h: New file.  ia64 specific version of
+	struct object to be searched for frame unwind info.
+	* sysdeps/generic/gccframe.h: New file.  Generic version of
+	struct object to be searched for frame unwind info.
+
+2000-09-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/errno.texi: Correct error text for ENXIO.
+	Reported by Jörg Schilling <schilling@fokus.gmd.de>.
+
+2000-09-27  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/ia64/fpu/fsetexcptflg.c (fesetexceptflag): Set the
+	exception status bits rather than the exception disable bits.
+	Don't include math.h.
+
+	* sysdeps/ia64/fpu/fgetexcptflg.c (fegetexceptflag): Report the
+	status of exceptions currently raised rather than which exceptions
+	are enabled.
+
+	* sysdeps/ia64/fpu/fclrexcpt.c (feclearexcept): Typecase to fenv_t
+	rather than unsigned long int.
+
+	* sysdeps/ia64/fpu/fedisblxcpt.c (fedisableexcept): Only disable
+	the exceptions actually requested by the caller and not just
+	disable all exceptions.
+
+	* sysdeps/ia64/fpu/feenablxcpt.c (feenableexcept): Exceptions on
+	the ia64 are enabled by clearing the respective bits in the fpsr,
+	not setting them.
+
+	* sysdeps/ia64/bits/fenv.h: typedef fexcept_t and fenv_t to
+	unsigned long int rather than unsigned long to be consistent with
+	the coding conventions.
+
+2000-09-20  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ia64/fpu/fesetenv.c (fesetenv): Use fenv_t instead of
+	unsigned long int.
+	* sysdeps/ia64/fpu/fesetround.c (fesetround): Likewise.
+
+2000-09-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/bits/string2.h: Unify #if usage.
+
+2000-09-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/test-fenv.c (feexcp_mask_test): If enabling all exceptions
+	and disabling underflow or overflow, disable inexact as well.
+
 2000-09-26  Andreas Jaeger  <aj@suse.de>
 
-	* sysdeps/gnu/netinet/tcp.h: Add tcp_info defines and types. 
+	* sysdeps/gnu/netinet/tcp.h: Add tcp_info defines and types.
 
 	* sysdeps/unix/sysv/linux/sys/mount.h (enum): New flag MS_BIND.
 

@@ -61,13 +61,15 @@ compare_and_swap (volatile long int *p, long int oldval, long int newval)
   int retval;
 
   __asm__ __volatile__(
-        "  cs   %2,%3,%1\n"
+        "  la   1,%1\n"
+        "  lr   0,%2\n"
+        "  cs   0,%3,0(1)\n"
         "  ipm  %0\n"
         "  srl  %0,28\n"
         "0:"
         : "=&r" (retval), "+m" (*p)
         : "d" (oldval) , "d" (newval)
-        : "memory", "cc");
+        : "memory", "0", "1", "cc");
   return !retval;
 }
 

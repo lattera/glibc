@@ -48,7 +48,10 @@ struct ipc_perm
     __uid_t cuid;		/* Creator's user ID.  */
     __gid_t cgid;		/* Creator's group ID.  */
     __mode_t mode;		/* Read/write permission.  */
-    unsigned short int __seq;	/* Sequence number.  */
+    unsigned long int __seq;	/* Sequence number.  */
+    unsigned int __pad1;
+    unsigned long long int __unused1;
+    unsigned long long int __unused2;
   };
 
 

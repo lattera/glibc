@@ -32,31 +32,15 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/user.h>
+#include <sys/ucontext.h>
 
 __BEGIN_DECLS
 
-/* Type for a general-purpose register.  */
-typedef unsigned long elf_greg_t;
-
-/* And the whole bunch of them.  We should have used `struct s390_regs',
-   but to avoid name space pollution and since the tradition says that
-   the register set is an array, we make elf_gregset_t a simple array
-   that has the same size as s390_regs. */
-#define ELF_NGREG 35
-typedef elf_greg_t elf_gregset_t[ELF_NGREG];
-
-typedef union
-{
-  double  d;
-  float   f;
-} elf_fpreg_t;
-
-/* Register set for the floating-point registers.  */
-typedef struct {
-  unsigned int fpc;
-  elf_fpreg_t fprs[NUM_FPRS];
-} elf_fpregset_t;
-
+typedef greg_t elf_greg_t;
+#define ELF_NGREG NGREG
+typedef gregset_t elf_gregset_t;
+typedef fpreg_t   elf_fpreg_t;
+typedef fpregset_t elf_fpregset_t;
 
 /* Signal info.  */
 struct elf_siginfo
