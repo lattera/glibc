@@ -45,7 +45,7 @@
 	.type	condvar_cleanup, @function
 condvar_cleanup:
 	pushl	%ebx
-	movl	4(%esp), %ebx
+	movl	8(%esp), %ebx
 #if cond_lock != 0
 	addl	$cond_lock, %ebx
 #endif

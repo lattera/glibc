@@ -1,5 +1,8 @@
 2003-01-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelcond.S
+	(condvar_cleanup): Get condvar address from the right place.
+
 	* atomic.h: Correct definitions of atomic_full_barrier,
 	atomic_read_barrier, atomic_write_barrier.
 
