@@ -109,7 +109,7 @@ __fork (void)
 	  __mutex_lock (*p);
       }
       __mutex_lock (&_hurd_siglock);
-      
+
       newtask = MACH_PORT_NULL;
       thread = sigthread = MACH_PORT_NULL;
       newproc = MACH_PORT_NULL;
@@ -120,6 +120,8 @@ __fork (void)
       for (i = 0; i < _hurd_nports; ++i)
 	__spin_lock (&_hurd_ports[i].lock);
       ports_locked = 1;
+
+      *(volatile task_t *) &__mach_task_self_; /* XXX work around kernel bug */
 
       /* Stop all other threads while copying the address space,
 	 so nothing changes.  */
@@ -189,7 +191,7 @@ __fork (void)
 			     (__task_get_special_port (newtask,
 						       TASK_NOTIFY_PORT,
 						       &notify_port) == 0 &&
-			      __mach_port_extract_right 
+			      __mach_port_extract_right
 			      (newtask,
 			       portnames[i],
 			       MACH_MSG_TYPE_MAKE_SEND,
@@ -442,7 +444,7 @@ __fork (void)
 	if (err)
 	  LOSE;
       }
-	    
+
       /* Set the child signal thread up to run the msgport server function
 	 using the same signal thread stack copied from our address space.
 	 We fetch the state before longjmp'ing it so that miscellaneous
@@ -457,7 +459,7 @@ __fork (void)
       state.SP = __hurd_sigthread_stack_base;
 #else
       state.SP = __hurd_sigthread_stack_end;
-#endif      
+#endif
       MACHINE_THREAD_STATE_SET_PC (&state,
 				   (unsigned long int) _hurd_msgport_receive);
       if (err = __thread_set_state (sigthread, MACHINE_THREAD_STATE_FLAVOR,
