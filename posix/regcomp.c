@@ -2239,22 +2239,20 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	dfa->has_mb_node = 1;
       break;
     case OP_WORD:
-      tree = build_charclass_op (dfa, regexp->trans, "alnum", "_", 0, err);
-      if (BE (*err != REG_NOERROR && tree == NULL, 0))
-	return NULL;
-      break;
     case OP_NOTWORD:
-      tree = build_charclass_op (dfa, regexp->trans, "alnum", "_", 1, err);
+      tree = build_charclass_op (dfa, regexp->trans,
+				 (const unsigned char *) "alnum",
+				 (const unsigned char *) "_",
+				 token->type == OP_NOTWORD, err);
       if (BE (*err != REG_NOERROR && tree == NULL, 0))
 	return NULL;
       break;
     case OP_SPACE:
-      tree = build_charclass_op (dfa, regexp->trans, "space", "", 0, err);
-      if (BE (*err != REG_NOERROR && tree == NULL, 0))
-	return NULL;
-      break;
     case OP_NOTSPACE:
-      tree = build_charclass_op (dfa, regexp->trans, "space", "", 1, err);
+      tree = build_charclass_op (dfa, regexp->trans,
+				 (const unsigned char *) "space",
+				 (const unsigned char *) "",
+				 token->type == OP_NOTSPACE, err);
       if (BE (*err != REG_NOERROR && tree == NULL, 0))
 	return NULL;
       break;

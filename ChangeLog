@@ -1,3 +1,8 @@
+2004-02-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c (parse_expression): Avoid duplication in calls
+	to build_charclass_op.
+
 2004-02-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/rtld.c (dl_main): Correctly set up l_map_end and l_addr
@@ -24,6 +29,8 @@
 
 2004-02-24  Nelson H.F. Beebe  <beebe@math.utah.edu>
 
+	* posix/regcomp.c (parse_expression): Add cast to (const unsigned
+	char *) in calls to `build_charclass_op'.
 	* posix/regex_internal.c (build_wcs_buffer): Add cast to char* in call
 	to `wcrtomb'.
 	* posix/regex_internal.h (bitset_not, bitset_merge, bitset_not_merge,
