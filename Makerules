@@ -269,7 +269,7 @@ ifdef sysd-dirs-done
 ifeq ($(versioning),yes)
 -include $(common-objpfx)sysd-versions
 $(addprefix $(common-objpfx),$(version-maps)): $(common-objpfx)sysd-versions
-common-generated += $(version-maps) sysd-versions $(common-objpfx)Versions.all
+common-generated += $(version-maps) sysd-versions Versions.all
 
 ifndef avoid-generated
 ifneq ($(sysd-versions-subdirs),$(all-subdirs) $(config-sysdirs))
