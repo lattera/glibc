@@ -1,3 +1,10 @@
+2001-11-09  Roland McGrath  <roland@frob.com>
+
+	* hurd/privports.c (__get_privileged_ports):
+	Only contact the proc server if necessary for this call.
+	Suggested by Neal H Walfield <neal@cs.uml.edu>.
+	Check error return for mach_port_mod_refs.
+
 2001-11-09  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/bits/resource.h: New file.
