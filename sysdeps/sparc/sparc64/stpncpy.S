@@ -2,7 +2,7 @@
    SRC to DEST, returning the address of the terminating '\0' in
    DEST, if any, or else DEST + N.
    For SPARC v9.
-   Copyright (C) 1998, 1999, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz> and
 		  Jan Vondrak <jvon4518@ss1000.ms.mff.cuni.cz>.
@@ -29,7 +29,7 @@
 #define USE_BPR
 	.register	%g2, #scratch
 	.register	%g3, #scratch
-	.register	%g7, #scratch
+	.register	%g6, #scratch
 #endif
 
 	/* Normally, this uses
@@ -112,7 +112,7 @@ ENTRY(__stpncpy)
 	 srlx		%g3, 8, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 10f			/* CTI				*/
-	 sub		%o0, 1, %g7			/* IEU0				*/
+	 sub		%o0, 1, %g6			/* IEU0				*/
 
 	andcc		%g3, 0xff, %g0			/* IEU1		Group		*/
 	bne,pt		%icc, 2b			/* CTI				*/
@@ -156,31 +156,31 @@ ENTRY(__stpncpy)
 
 	 stb		%g0, [%o0]			/* Store			*/
 9:	retl						/* CTI+IEU1	Group		*/
-	 mov		%g7, %o0			/* IEU0				*/
-10:	subcc		%o0, 2, %g7			/* IEU1		Group		*/
+	 mov		%g6, %o0			/* IEU0				*/
+10:	subcc		%o0, 2, %g6			/* IEU1		Group		*/
 
 	ba,pt		%xcc, 3b			/* CTI				*/
 	 sllx		%g5, 8, %g3			/* IEU0				*/
-11:	subcc		%o0, 3, %g7			/* IEU1		Group		*/
+11:	subcc		%o0, 3, %g6			/* IEU1		Group		*/
 	ba,pt		%xcc, 3b			/* CTI				*/
 
 	 sllx		%g4, 16, %g3			/* IEU0				*/
-12:	subcc		%o0, 4, %g7			/* IEU1		Group		*/
+12:	subcc		%o0, 4, %g6			/* IEU1		Group		*/
 	ba,pt		%xcc, 3b			/* CTI				*/
 	 sllx		%g5, 24, %g3			/* IEU0				*/
 
-13:	subcc		%o0, 5, %g7			/* IEU1		Group		*/
+13:	subcc		%o0, 5, %g6			/* IEU1		Group		*/
 	ba,pt		%xcc, 3b			/* CTI				*/
 	 sllx		%g4, 32, %g3			/* IEU0				*/
-14:	subcc		%o0, 6, %g7			/* IEU1		Group		*/
+14:	subcc		%o0, 6, %g6			/* IEU1		Group		*/
 
 	ba,pt		%xcc, 3b			/* CTI				*/
 	 sllx		%g5, 40, %g3			/* IEU0				*/
-15:	subcc		%o0, 7, %g7			/* IEU1		Group		*/
+15:	subcc		%o0, 7, %g6			/* IEU1		Group		*/
 	ba,pt		%xcc, 3b			/* CTI				*/
 
 	 sllx		%g4, 48, %g3			/* IEU0				*/
-16:	subcc		%o0, 8, %g7			/* IEU1		Group		*/
+16:	subcc		%o0, 8, %g6			/* IEU1		Group		*/
 	ba,pt		%xcc, 3b			/* CTI				*/
 	 clr		%g3				/* IEU0				*/
 
@@ -255,7 +255,7 @@ ENTRY(__stpncpy)
 19:	retl						/* CTI+IEU1	Group		*/
 	 nop						/* IEU0				*/
 
-20:	mov		%o0, %g7			/* IEU0		Group		*/
+20:	mov		%o0, %g6			/* IEU0		Group		*/
 	subcc		%o2, 1, %o2			/* IEU1				*/
 	be,pn		%XCC, 51f			/* CTI				*/
 	 add		%o0, 1, %o0			/* IEU0		Group		*/
@@ -266,7 +266,7 @@ ENTRY(__stpncpy)
 	 add		%o0, 1, %o0			/* IEU0				*/
 
 51:	retl						/* CTI+IEU1	Group		*/
-	 mov		%g7, %o0			/* IEU0				*/
+	 mov		%g6, %o0			/* IEU0				*/
 
 	.align		16
 21:	andcc		%o2, 4, %g0			/* IEU1		Group		*/
@@ -295,7 +295,7 @@ ENTRY(__stpncpy)
 	 add		%o0, 1, %o0			/* IEU0				*/
 
 	.align		16
-55:	sub		%o0, 1, %g7			/* IEU0		Group		*/
+55:	sub		%o0, 1, %g6			/* IEU0		Group		*/
 25:	andcc		%o0, 7, %g0			/* IEU1				*/
 	be,a,pn		%icc, 4b			/* CTI				*/
 	 andncc		%o2, 31, %g3			/* IEU1		Group		*/
@@ -306,7 +306,7 @@ ENTRY(__stpncpy)
 	 add		%o0, 1, %o0			/* IEU0		Group		*/
 
 	retl						/* CTI+IEU1	Group		*/
-	 mov		%g7, %o0			/* IEU0				*/
+	 mov		%g6, %o0			/* IEU0				*/
 
 	.align		16
 26:	ldub		[%o1], %o3			/* Load				*/
@@ -363,23 +363,23 @@ ENTRY(__stpncpy)
 	andcc		%o4, 0xff, %g0			/* IEU1		Group		*/
 
 	be,pn		%icc, 36f			/* CTI				*/
-	 srlx		%o3, 48, %g7			/* IEU0				*/
-	andcc		%g7, 0xff, %g0			/* IEU1		Group		*/
+	 srlx		%o3, 48, %g6			/* IEU0				*/
+	andcc		%g6, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 35f			/* CTI				*/
 
 	 srlx		%o3, 40, %o4			/* IEU0				*/
 	andcc		%o4, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 34f			/* CTI				*/
-	 srlx		%o3, 32, %g7			/* IEU0				*/
+	 srlx		%o3, 32, %g6			/* IEU0				*/
 
-	andcc		%g7, 0xff, %g0			/* IEU1		Group		*/
+	andcc		%g6, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 33f			/* CTI				*/
 	 srlx		%o3, 24, %o4			/* IEU0				*/
 	andcc		%o4, 0xff, %g0			/* IEU1		Group		*/
 
 	be,pn		%icc, 32f			/* CTI				*/
-	 srlx		%o3, 16, %g7			/* IEU0				*/
-	andcc		%g7, 0xff, %g0			/* IEU1		Group		*/
+	 srlx		%o3, 16, %g6			/* IEU0				*/
+	andcc		%g6, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 31f			/* CTI				*/
 
 	 srlx		%o3, 8, %o4			/* IEU0				*/
@@ -389,33 +389,33 @@ ENTRY(__stpncpy)
 
 	bne,pn		%icc, 29b			/* CTI				*/
 	 stx		%o3, [%o0-8]			/* Store			*/
-	sub		%o0, 1, %g7			/* IEU0		Group		*/
+	sub		%o0, 1, %g6			/* IEU0		Group		*/
 	ba,pt		%xcc, 4b			/* CTI				*/
 
 	 andncc		%o2, 31, %g3			/* IEU1				*/
-30:	subcc		%o0, 2, %g7			/* IEU0				*/
+30:	subcc		%o0, 2, %g6			/* IEU0				*/
 	ba,pt		%xcc, 3b			/* CTI				*/
 	 sllx		%o4, 8, %g3			/* IEU0		Group		*/
 
-31:	sllx		%g7, 16, %g3			/* IEU0		Group		*/
+31:	sllx		%g6, 16, %g3			/* IEU0		Group		*/
 	ba,pt		%xcc, 3b			/* CTI				*/
-	 sub		%o0, 3, %g7			/* IEU1				*/
-32:	subcc		%o0, 4, %g7			/* IEU1		Group		*/
+	 sub		%o0, 3, %g6			/* IEU1				*/
+32:	subcc		%o0, 4, %g6			/* IEU1		Group		*/
 
 	ba,pt		%xcc, 3b			/* CTI				*/
 	 sllx		%o4, 24, %g3			/* IEU0				*/
-33:	sllx		%g7, 32, %g3			/* IEU0		Group		*/
+33:	sllx		%g6, 32, %g3			/* IEU0		Group		*/
 	ba,pt		%xcc, 3b			/* CTI				*/
 
-	 sub		%o0, 5, %g7			/* IEU1				*/
-34:	subcc		%o0, 6, %g7			/* IEU1		Group		*/
+	 sub		%o0, 5, %g6			/* IEU1				*/
+34:	subcc		%o0, 6, %g6			/* IEU1		Group		*/
 	ba,pt		%xcc, 3b			/* CTI				*/
 	 sllx		%o4, 40, %g3			/* IEU0				*/
 
-35:	sllx		%g7, 48, %g3			/* IEU0		Group		*/
+35:	sllx		%g6, 48, %g3			/* IEU0		Group		*/
 	ba,pt		%xcc, 3b			/* CTI				*/
-	 sub		%o0, 7, %g7			/* IEU1				*/
-36:	subcc		%o0, 8, %g7			/* IEU1		Group		*/
+	 sub		%o0, 7, %g6			/* IEU1				*/
+36:	subcc		%o0, 8, %g6			/* IEU1		Group		*/
 
 	ba,pt		%xcc, 3b			/* CTI				*/
 	 sllx		%o4, 56, %g3			/* IEU0				*/

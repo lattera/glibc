@@ -1,7 +1,7 @@
 /* memchr (str, ch, n) -- Return pointer to first occurrence of CH in STR less
    than N.
    For SPARC v7.
-   Copyright (C) 1996,1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz> and
 		  David S. Miller <davem@caip.rutgers.edu>.
@@ -67,23 +67,23 @@
 
 ENTRY(__memchr)
 	andcc		%o1, 0xff, %o1
-	sll		%o1, 8, %g7
+	sll		%o1, 8, %g6
 	andcc		%o0, 3, %g0
-	or		%o1, %g7, %g7
-	sll		%g7, 16, %o3
+	or		%o1, %g6, %g6
+	sll		%g6, 16, %o3
 	bne		0b
-	 or		%o3, %g7, %g2
+	 or		%o3, %g6, %g2
 	sethi		%hi(0x80808080), %o4
 	or		%o4, %lo(0x80808080), %o3
 4:	sethi		%hi(0x01010101), %o5
 5:	and		%o2, 3, %g1
 7:	andcc		%o2, 0xfffffffc, %o2
 	be		0f
-	 or		%o5, %lo(0x01010101), %g7
+	 or		%o5, %lo(0x01010101), %g6
 	ld		[%o0], %g4
 6:	xor		%g4, %g2, %g5
 	add		%o0, 4, %o0
-	sub		%g5, %g7, %g5
+	sub		%g5, %g6, %g5
 	andcc		%g5, %o3, %g0
 	bne		8f
 	 subcc		%o2, 4, %o2

@@ -21,13 +21,6 @@
 
 #include <inttypes.h>
 
-#ifdef SHARED
-/* This is an ugly trick.  We cause the C code generated for the code
-   in lldiv.c to use __divdi3_internal instead of __divdi3 by defining
-   an alias on the assembler level.  */
-asm ("__divdi3 = __divdi3_internal");
-#endif
-
 #include <sysdeps/generic/lldiv.c>
 
 #undef imaxdiv

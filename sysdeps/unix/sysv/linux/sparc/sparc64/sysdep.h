@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <richard@gnu.ai.mit.edu>, 1997.
 
@@ -134,7 +134,7 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 	" sub	%%g0, %%o0, %%o0;"					\
 	"1:"
 
-#define __SYSCALL_CLOBBERS "g2", "g3", "g4", "g5", "g7",		\
+#define __SYSCALL_CLOBBERS "g2", "g3", "g4", "g5", "g6",		\
 	"f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7",			\
 	"f8", "f9", "f10", "f11", "f12", "f13", "f14", "f15",		\
 	"f16", "f17", "f18", "f19", "f20", "f21", "f22", "f23",		\

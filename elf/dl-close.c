@@ -238,10 +238,9 @@ _dl_close (void *_map)
 				    + imap->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
 		  unsigned int sz = (imap->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
 				     / sizeof (ElfW(Addr)));
-		  unsigned int cnt;
 
-		  for (cnt = 0; cnt < sz; ++cnt)
-		    ((fini_t) (imap->l_addr + array[cnt])) ();
+		  while (sz-- > 0)
+		    ((fini_t) array[sz]) ();
 		}
 
 	      /* Next try the old-style destructor.  */

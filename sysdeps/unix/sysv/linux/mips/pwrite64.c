@@ -21,11 +21,18 @@
 #include <unistd.h>
 #include <endian.h>
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
 #include <kernel-features.h>
+
+#ifdef __NR_pwrite64            /* Newer kernels renamed but it's the same.  */
+# ifdef __NR_pwrite
+#  error "__NR_pwrite and __NR_pwrite64 both defined???"
+# endif
+# define __NR_pwrite __NR_pwrite64
+#endif
 
 #if defined __NR_pwrite || __ASSUME_PWRITE_SYSCALL > 0
 
@@ -46,6 +53,23 @@ __libc_pwrite64 (fd, buf, count, offset)
 {
   ssize_t result;
 
+  if (SINGLE_THREAD_P)
+    {
+     /* First try the syscall.  */
+     result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
+			      __LONG_LONG_PAIR ((off_t) (offset >> 32),
+			     (off_t) (offset & 0xffffffff)));
+# if __ASSUME_PWRITE_SYSCALL == 0
+     if (result == -1 && errno == ENOSYS)
+     /* No system call available.  Use the emulation.  */
+     result = __emulate_pwrite64 (fd, buf, count, offset);
+# endif
+
+     return result;
+    }
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
   /* First try the syscall.  */
   result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
 			   __LONG_LONG_PAIR ((off_t) (offset >> 32),
@@ -55,6 +79,8 @@ __libc_pwrite64 (fd, buf, count, offset)
     /* No system call available.  Use the emulation.  */
     result = __emulate_pwrite64 (fd, buf, count, offset);
 # endif
+
+  LIBC_CANCEL_RESET (oldtype);
 
   return result;
 }

@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    Sparc v9 version.
-   Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -59,10 +59,10 @@ testandset (int *spinlock)
 register char *stack_pointer __asm__ ("%sp");
 
 
-/* Registers %g6 and %g7 are reserved by the ABI for "system use".  It
-   happens that Solaris uses %g6 for the thread pointer -- we do the same.  */
+/* Registers %g6 and %g7 are reserved by the ABI for "system use".  The
+   TLS ABI specifies %g7 as the thread pointer.  */
 struct _pthread_descr_struct;
-register struct _pthread_descr_struct *__thread_self __asm__ ("%g6");
+register struct _pthread_descr_struct *__thread_self __asm__ ("%g7");
 
 /* Return the thread descriptor for the current thread.  */
 #define THREAD_SELF  __thread_self

@@ -1,5 +1,5 @@
 /* High precision, low overhead timing functions.  sparc64 version.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David S. Miller <davem@redhat.com>, 2001.
 
@@ -63,7 +63,7 @@ do {								\
 		       " nop"					\
 		       : "=&r" (tmp1), "=&r" (tmp2)		\
 		       : "r" (__diff), "r" (&(Sum))		\
-		       : "memory", "g1", "g5", "g7");		\
+		       : "memory", "g1", "g5", "g6");		\
 } while(0)
 
 #define HP_TIMING_ACCUM_NT(Sum, Diff)	(Sum) += (Diff)

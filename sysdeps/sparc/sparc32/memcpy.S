@@ -1,6 +1,6 @@
 /* Copy SIZE bytes from SRC to DEST.
    For SPARC v7.
-   Copyright (C) 1996, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David S. Miller <davem@caip.rutgers.edu>,
 		  Eddie C. Dost <ecd@skynet.be> and
@@ -196,7 +196,7 @@ ENTRY(memmove)
 	st		%o4, [%o0 - 4]
 	sub		%o1, 4, %o1
 	sub		%o0, 4, %o0
-2:	andcc		%g1, 0xffffff80, %g7
+2:	andcc		%g1, 0xffffff80, %g6
 	be		3f
 	 andcc		%o0, 4, %g0
 
@@ -205,23 +205,23 @@ ENTRY(memmove)
 	RMOVE_BIGCHUNK(o1, o0, 0x20, o2, o3, o4, o5, g2, g3, g4, g5)
 	RMOVE_BIGCHUNK(o1, o0, 0x40, o2, o3, o4, o5, g2, g3, g4, g5)
 	RMOVE_BIGCHUNK(o1, o0, 0x60, o2, o3, o4, o5, g2, g3, g4, g5)
-	subcc		%g7, 128, %g7
+	subcc		%g6, 128, %g6
 	sub		%o1, 128, %o1
 	bne		5b
 	 sub		%o0, 128, %o0
 
-3:	andcc		%g1, 0x70, %g7
+3:	andcc		%g1, 0x70, %g6
 	be		72f
 	 andcc		%g1, 8, %g0
 
-	srl		%g7, 1, %o4
+	srl		%g6, 1, %o4
 	mov		%o7, %g2
-	add		%g7, %o4, %o4
+	add		%g6, %o4, %o4
 101:	call		100f
-	 sub		%o1, %g7, %o1
+	 sub		%o1, %g6, %o1
 	mov		%g2, %o7
 	jmpl		%o5 + (72f - 101b), %g0
-	 sub		%o0, %g7, %o0
+	 sub		%o0, %g6, %o0
 
 71:	RMOVE_LASTCHUNK(o1, o0, 0x60, g2, g3, g4, g5)
 	RMOVE_LASTCHUNK(o1, o0, 0x50, g2, g3, g4, g5)
@@ -264,23 +264,23 @@ ENTRY(memmove)
 	RMOVE_BIGALIGNCHUNK(o1, o0, 0x20, o2, o3, o4, o5, g2, g3, g4, g5)
 	RMOVE_BIGALIGNCHUNK(o1, o0, 0x40, o2, o3, o4, o5, g2, g3, g4, g5)
 	RMOVE_BIGALIGNCHUNK(o1, o0, 0x60, o2, o3, o4, o5, g2, g3, g4, g5)
-	subcc		%g7, 128, %g7
+	subcc		%g6, 128, %g6
 	sub		%o1, 128, %o1
 	bne		74b
 	 sub		%o0, 128, %o0
 
-	andcc		%g1, 0x70, %g7
+	andcc		%g1, 0x70, %g6
 	be		72b
 	 andcc		%g1, 8, %g0
 
-	srl		%g7, 1, %o4
+	srl		%g6, 1, %o4
 	mov		%o7, %g2
-	add		%g7, %o4, %o4
+	add		%g6, %o4, %o4
 102:	call		100f
-	 sub		%o1, %g7, %o1
+	 sub		%o1, %g6, %o1
 	mov		%g2, %o7
 	jmpl		%o5 + (72b - 102b), %g0
-	 sub		%o0, %g7, %o0
+	 sub		%o0, %g6, %o0
 
 75:	and		%o2, 0xe, %o3
 	mov		%o7, %g2
@@ -351,7 +351,7 @@ ENTRY(memmove)
 	sll		%g2, 3, %g4
 	mov		32, %g2
 	be		4f
-	 sub		%g2, %g4, %g7
+	 sub		%g2, %g4, %g6
 
 	blu		3f
 	 cmp		%g3, 8
@@ -386,22 +386,22 @@ ENTRY(memmove)
 
 	ld		[%o1 + 12], %o3
 5:	sll		%o5, %g4, %g2
-	srl		%g1, %g7, %g5
+	srl		%g1, %g6, %g5
 	or		%g2, %g5, %g2
 	st		%g2, [%o0 + 12]
 6:	ld		[%o1 + 8], %o4
 	sll		%o3, %g4, %g2
-	srl		%o5, %g7, %g5
+	srl		%o5, %g6, %g5
 	or		%g2, %g5, %g2
 	st		%g2, [%o0 + 8]
 7:	ld		[%o1 + 4], %g1
 	sll		%o4, %g4, %g2
-	srl		%o3, %g7, %g5
+	srl		%o3, %g6, %g5
 	or		%g2, %g5, %g2
 	st		%g2, [%o0 + 4]
 8:	ld		[%o1], %o5
 	sll		%g1, %g4, %g2
-	srl		%o4, %g7, %g5
+	srl		%o4, %g6, %g5
 	addcc		%g3, -4, %g3
 	or		%g2, %g5, %g2
 	add		%o1, -16, %o1
@@ -410,7 +410,7 @@ ENTRY(memmove)
 	bne,a		5b	
 	 ld		[%o1 + 12], %o3
 	sll		%o5, %g4, %g2
-	srl		%g1, %g7, %g5
+	srl		%g1, %g6, %g5
 	srl		%g4, 3, %g3
 	or		%g2, %g5, %g2
 	add		%o1, %g3, %o1
@@ -471,7 +471,7 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	st		%o4, [%o0]
 	add		%o1, 4, %o1
 	add		%o0, 4, %o0
-2:	andcc		%g1, 0xffffff80, %g7
+2:	andcc		%g1, 0xffffff80, %g6
 	be		3f
 	 andcc		%o0, 4, %g0
 
@@ -480,20 +480,20 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	MOVE_BIGCHUNK(o1, o0, 0x20, o2, o3, o4, o5, g2, g3, g4, g5)
 	MOVE_BIGCHUNK(o1, o0, 0x40, o2, o3, o4, o5, g2, g3, g4, g5)
 	MOVE_BIGCHUNK(o1, o0, 0x60, o2, o3, o4, o5, g2, g3, g4, g5)
-	subcc		%g7, 128, %g7
+	subcc		%g6, 128, %g6
 	add		%o1, 128, %o1
 	bne		5b
 	 add		%o0, 128, %o0
-3:	andcc		%g1, 0x70, %g7
+3:	andcc		%g1, 0x70, %g6
 	be		80f
 	 andcc		%g1, 8, %g0
 
-	srl		%g7, 1, %o4
+	srl		%g6, 1, %o4
 	mov		%o7, %g2
-	add		%g7, %o4, %o4
-	add		%o1, %g7, %o1
+	add		%g6, %o4, %o4
+	add		%o1, %g6, %o1
 104:	call		100f
-	 add		%o0, %g7, %o0
+	 add		%o0, %g6, %o0
 	jmpl		%o5 + (80f - 104b), %g0
 	 mov		%g2, %o7
 
@@ -541,21 +541,21 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	MOVE_BIGALIGNCHUNK(o1, o0, 0x20, o2, o3, o4, o5, g2, g3, g4, g5)
 	MOVE_BIGALIGNCHUNK(o1, o0, 0x40, o2, o3, o4, o5, g2, g3, g4, g5)
 	MOVE_BIGALIGNCHUNK(o1, o0, 0x60, o2, o3, o4, o5, g2, g3, g4, g5)
-	subcc		%g7, 128, %g7
+	subcc		%g6, 128, %g6
 	add		%o1, 128, %o1
 	bne		82b
 	 add		%o0, 128, %o0
 
-	andcc		%g1, 0x70, %g7
+	andcc		%g1, 0x70, %g6
 	be		84f
 	 andcc		%g1, 8, %g0
 
 	mov		%o7, %g2
 111:	call		110f
-	 add		%o1, %g7, %o1
+	 add		%o1, %g6, %o1
 	mov		%g2, %o7
 	jmpl		%o5 + (84f - 111b), %g0
-	 add		%o0, %g7, %o0
+	 add		%o0, %g6, %o0
 
 83:	MOVE_LASTALIGNCHUNK(o1, o0, 0x60, g2, g3, g4, g5)
 	MOVE_LASTALIGNCHUNK(o1, o0, 0x50, g2, g3, g4, g5)
@@ -626,7 +626,7 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	sll		%g2, 3, %g4
 	mov		32, %g2
 	be		4f
-	 sub		%g2, %g4, %g7
+	 sub		%g2, %g4, %g6
 	
 	blu		3f
 	 cmp		%g3, 0x8
@@ -661,22 +661,22 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	ld		[%o1], %o3
 	add		%g3, -1, %g3
 5:	sll		%o5, %g4, %g2
-	srl		%g1, %g7, %g5
+	srl		%g1, %g6, %g5
 	or		%g2, %g5, %g2
 	st		%g2, [%o0]
 7:	ld		[%o1 + 4], %o4
 	sll		%g1, %g4, %g2
-	srl		%o3, %g7, %g5
+	srl		%o3, %g6, %g5
 	or		%g2, %g5, %g2
 	st		%g2, [%o0 + 4]
 8:	ld		[%o1 + 8], %o5
 	sll		%o3, %g4, %g2
-	srl		%o4, %g7, %g5
+	srl		%o4, %g6, %g5
 	or		%g2, %g5, %g2
 	st		%g2, [%o0 + 8]
 9:	ld		[%o1 + 12], %g1
 	sll		%o4, %g4, %g2
-	srl		%o5, %g7, %g5
+	srl		%o5, %g6, %g5
 	addcc		%g3, -4, %g3
 	or		%g2, %g5, %g2
 	add		%o1, 16, %o1
@@ -685,8 +685,8 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	bne,a		5b
 	 ld		[%o1], %o3
 10:	sll		%o5, %g4, %g2
-	srl		%g1, %g7, %g5
-	srl		%g7, 3, %g3
+	srl		%g1, %g6, %g5
+	srl		%g6, 3, %g3
 	or		%g2, %g5, %g2
 	sub		%o1, %g3, %o1
 	andcc		%o2, 2, %g0
@@ -758,10 +758,10 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	be		41f
 	 and		%o2, 0xffffffc0, %o3
 	ld		[%o0 - 7], %o4
-4:	SMOVE_CHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g7, g1, 8, 24, -3)
-	SMOVE_CHUNK(o1, o0, 0x10, g2, g3, g4, g5, o4, o5, g7, g1, 8, 24, -3)
-	SMOVE_CHUNK(o1, o0, 0x20, g2, g3, g4, g5, o4, o5, g7, g1, 8, 24, -3)
-	SMOVE_CHUNK(o1, o0, 0x30, g2, g3, g4, g5, o4, o5, g7, g1, 8, 24, -3)
+4:	SMOVE_CHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g6, g1, 8, 24, -3)
+	SMOVE_CHUNK(o1, o0, 0x10, g2, g3, g4, g5, o4, o5, g6, g1, 8, 24, -3)
+	SMOVE_CHUNK(o1, o0, 0x20, g2, g3, g4, g5, o4, o5, g6, g1, 8, 24, -3)
+	SMOVE_CHUNK(o1, o0, 0x30, g2, g3, g4, g5, o4, o5, g6, g1, 8, 24, -3)
 	subcc		%o3, 64, %o3
 	add		%o1, 64, %o1
 	bne		4b
@@ -770,7 +770,7 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	andcc		%o2, 0x30, %o3
 	be,a		1f
 	 srl		%g1, 16, %g2
-4:	SMOVE_CHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g7, g1, 8, 24, -3)
+4:	SMOVE_CHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g6, g1, 8, 24, -3)
 	subcc		%o3, 16, %o3
 	add		%o1, 16, %o1
 	bne		4b
@@ -793,10 +793,10 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	be		42f
 	 and		%o2, 0xffffffc0, %o3
 	ld		[%o0 - 6], %o4
-4:	SMOVE_CHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g7, g1, 16, 16, -2)
-	SMOVE_CHUNK(o1, o0, 0x10, g2, g3, g4, g5, o4, o5, g7, g1, 16, 16, -2)
-	SMOVE_CHUNK(o1, o0, 0x20, g2, g3, g4, g5, o4, o5, g7, g1, 16, 16, -2)
-	SMOVE_CHUNK(o1, o0, 0x30, g2, g3, g4, g5, o4, o5, g7, g1, 16, 16, -2)
+4:	SMOVE_CHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g6, g1, 16, 16, -2)
+	SMOVE_CHUNK(o1, o0, 0x10, g2, g3, g4, g5, o4, o5, g6, g1, 16, 16, -2)
+	SMOVE_CHUNK(o1, o0, 0x20, g2, g3, g4, g5, o4, o5, g6, g1, 16, 16, -2)
+	SMOVE_CHUNK(o1, o0, 0x30, g2, g3, g4, g5, o4, o5, g6, g1, 16, 16, -2)
 	subcc		%o3, 64, %o3
 	add		%o1, 64, %o1
 	bne		4b
@@ -805,7 +805,7 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	andcc		%o2, 0x30, %o3
 	be,a		1f
 	 srl		%g1, 16, %g2
-4:	SMOVE_CHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g7, g1, 16, 16, -2)
+4:	SMOVE_CHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g6, g1, 16, 16, -2)
 	subcc		%o3, 16, %o3
 	add		%o1, 16, %o1
 	bne		4b
@@ -830,10 +830,10 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 
 	ld		[%o0 - 1], %o4
 	add		%o0, 4, %o0
-4:	SMOVE_CHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g7, g1, 24, 8, -1)
-	SMOVE_CHUNK(o1, o0, 0x10, g2, g3, g4, g5, o4, o5, g7, g1, 24, 8, -1)
-	SMOVE_CHUNK(o1, o0, 0x20, g2, g3, g4, g5, o4, o5, g7, g1, 24, 8, -1)
-	SMOVE_CHUNK(o1, o0, 0x30, g2, g3, g4, g5, o4, o5, g7, g1, 24, 8, -1)
+4:	SMOVE_CHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g6, g1, 24, 8, -1)
+	SMOVE_CHUNK(o1, o0, 0x10, g2, g3, g4, g5, o4, o5, g6, g1, 24, 8, -1)
+	SMOVE_CHUNK(o1, o0, 0x20, g2, g3, g4, g5, o4, o5, g6, g1, 24, 8, -1)
+	SMOVE_CHUNK(o1, o0, 0x30, g2, g3, g4, g5, o4, o5, g6, g1, 24, 8, -1)
 	subcc		%o3, 64, %o3
 	add		%o1, 64, %o1
 	bne		4b
@@ -842,7 +842,7 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	andcc		%o2, 0x30, %o3
 	be,a		1f
 	 srl		%g1, 24, %g2
-4:	SMOVE_CHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g7, g1, 24, 8, -1)
+4:	SMOVE_CHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g6, g1, 24, 8, -1)
 	subcc		%o3, 16, %o3
 	add		%o1, 16, %o1
 	bne		4b
@@ -852,10 +852,10 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 1:	st		%o4, [%o0 - 5]
 	b		88f
 	 stb		%g2, [%o0 - 1]
-41:	SMOVE_ALIGNCHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g7, g1, 8, 24, -3)
-	SMOVE_ALIGNCHUNK(o1, o0, 0x10, g2, g3, g4, g5, o4, o5, g7, g1, 8, 24, -3)
-	SMOVE_ALIGNCHUNK(o1, o0, 0x20, g2, g3, g4, g5, o4, o5, g7, g1, 8, 24, -3)
-	SMOVE_ALIGNCHUNK(o1, o0, 0x30, g2, g3, g4, g5, o4, o5, g7, g1, 8, 24, -3)
+41:	SMOVE_ALIGNCHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g6, g1, 8, 24, -3)
+	SMOVE_ALIGNCHUNK(o1, o0, 0x10, g2, g3, g4, g5, o4, o5, g6, g1, 8, 24, -3)
+	SMOVE_ALIGNCHUNK(o1, o0, 0x20, g2, g3, g4, g5, o4, o5, g6, g1, 8, 24, -3)
+	SMOVE_ALIGNCHUNK(o1, o0, 0x30, g2, g3, g4, g5, o4, o5, g6, g1, 8, 24, -3)
 	subcc		%o3, 64, %o3
 	add		%o1, 64, %o1
 	bne		41b
@@ -864,7 +864,7 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	andcc		%o2, 0x30, %o3
 	be,a		1f
 	 srl		%g1, 16, %g2
-4:	SMOVE_ALIGNCHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g7, g1, 8, 24, -3)
+4:	SMOVE_ALIGNCHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g6, g1, 8, 24, -3)
 	subcc		%o3, 16, %o3
 	add		%o1, 16, %o1
 	bne		4b
@@ -875,10 +875,10 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	srl		%g1, 8, %g4
 	b		88f
 	 stb		%g4, [%o0 - 1]
-43:	SMOVE_ALIGNCHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g7, g1, 24, 8, 3)
-	SMOVE_ALIGNCHUNK(o1, o0, 0x10, g2, g3, g4, g5, o4, o5, g7, g1, 24, 8, 3)
-	SMOVE_ALIGNCHUNK(o1, o0, 0x20, g2, g3, g4, g5, o4, o5, g7, g1, 24, 8, 3)
-	SMOVE_ALIGNCHUNK(o1, o0, 0x30, g2, g3, g4, g5, o4, o5, g7, g1, 24, 8, 3)
+43:	SMOVE_ALIGNCHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g6, g1, 24, 8, 3)
+	SMOVE_ALIGNCHUNK(o1, o0, 0x10, g2, g3, g4, g5, o4, o5, g6, g1, 24, 8, 3)
+	SMOVE_ALIGNCHUNK(o1, o0, 0x20, g2, g3, g4, g5, o4, o5, g6, g1, 24, 8, 3)
+	SMOVE_ALIGNCHUNK(o1, o0, 0x30, g2, g3, g4, g5, o4, o5, g6, g1, 24, 8, 3)
 	subcc		%o3, 64, %o3
 	add		%o1, 64, %o1
 	bne		43b
@@ -887,7 +887,7 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	andcc		%o2, 0x30, %o3
 	be,a		1f
 	 srl		%g1, 24, %g2
-4:	SMOVE_ALIGNCHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g7, g1, 24, 8, 3)
+4:	SMOVE_ALIGNCHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g6, g1, 24, 8, 3)
 	subcc		%o3, 16, %o3
 	add		%o1, 16, %o1
 	bne		4b
@@ -897,10 +897,10 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 1:	stb		%g2, [%o0 + 3]
 	b		88f
 	 add		%o0, 4, %o0
-42:	SMOVE_ALIGNCHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g7, g1, 16, 16, -2)
-	SMOVE_ALIGNCHUNK(o1, o0, 0x10, g2, g3, g4, g5, o4, o5, g7, g1, 16, 16, -2)
-	SMOVE_ALIGNCHUNK(o1, o0, 0x20, g2, g3, g4, g5, o4, o5, g7, g1, 16, 16, -2)
-	SMOVE_ALIGNCHUNK(o1, o0, 0x30, g2, g3, g4, g5, o4, o5, g7, g1, 16, 16, -2)
+42:	SMOVE_ALIGNCHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g6, g1, 16, 16, -2)
+	SMOVE_ALIGNCHUNK(o1, o0, 0x10, g2, g3, g4, g5, o4, o5, g6, g1, 16, 16, -2)
+	SMOVE_ALIGNCHUNK(o1, o0, 0x20, g2, g3, g4, g5, o4, o5, g6, g1, 16, 16, -2)
+	SMOVE_ALIGNCHUNK(o1, o0, 0x30, g2, g3, g4, g5, o4, o5, g6, g1, 16, 16, -2)
 	subcc		%o3, 64, %o3
 	add		%o1, 64, %o1
 	bne		42b
@@ -909,7 +909,7 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 	andcc		%o2, 0x30, %o3
 	be,a		1f
 	 srl		%g1, 16, %g2
-4:	SMOVE_ALIGNCHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g7, g1, 16, 16, -2)
+4:	SMOVE_ALIGNCHUNK(o1, o0, 0x00, g2, g3, g4, g5, o4, o5, g6, g1, 16, 16, -2)
 	subcc		%o3, 16, %o3
 	add		%o1, 16, %o1
 	bne		4b
@@ -964,5 +964,5 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 100:	retl
 	 sub		%o7, %o4, %o5
 110:	retl
-	 sub		%o7, %g7, %o5
+	 sub		%o7, %g6, %o5
 END(memcpy)

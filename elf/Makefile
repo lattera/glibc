@@ -121,7 +121,7 @@ endif
 
 tests = tst-tls1 tst-tls2 tst-tls9
 ifeq (yes,$(have-initfini-array))
-tests += tst-array1 tst-array2 tst-array3
+tests += tst-array1 tst-array2 tst-array3 tst-array4
 endif
 ifeq (yes,$(build-static))
 tests-static = tst-tls1-static tst-tls2-static
@@ -594,6 +594,12 @@ $(objpfx)tst-array3.out: $(objpfx)tst-array3
 	  $(objpfx)tst-array3 > $@
 	cmp $@ tst-array1.exp > /dev/null
 
+$(objpfx)tst-array4: $(libdl)
+$(objpfx)tst-array4.out: $(objpfx)tst-array4 $(objpfx)tst-array2dep.so
+	$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $< > $@
+	cmp $@ tst-array4.exp > /dev/null
 
 check-textrel-CFLAGS = -O
 $(objpfx)check-textrel: check-textrel.c

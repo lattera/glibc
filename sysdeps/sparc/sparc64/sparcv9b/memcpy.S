@@ -1,6 +1,6 @@
 /* Copy SIZE bytes from SRC to DEST.
    For UltraSPARC-III.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David S. Miller (davem@redhat.com)
 
@@ -547,13 +547,13 @@ ENTRY(memmove)
 	sth		%g2, [%o0]			/* Store	Group + bubble	*/
 5:	andcc		%o1, 4, %g0			/* IEU1				*/
 236:	be,a,pn		%xcc, 2f			/* CTI				*/
-	 andcc		%o2, -128, %g7			/* IEU1		Group		*/
+	 andcc		%o2, -128, %g6			/* IEU1		Group		*/
 	lduw		[%o1 - 4], %g5			/* Load		Group		*/
 	sub		%o1, 4, %o1			/* IEU0				*/
 	sub		%o0, 4, %o0			/* IEU1				*/
 	sub		%o2, 4, %o2			/* IEU0		Group		*/
 	stw		%g5, [%o0]			/* Store			*/
-	andcc		%o2, -128, %g7			/* IEU1		Group		*/
+	andcc		%o2, -128, %g6			/* IEU1		Group		*/
 2:	be,pn		%xcc, 235f			/* CTI				*/
 	 andcc		%o0, 4, %g0			/* IEU1		Group		*/
 	be,pn		%xcc, 282f + 4			/* CTI		Group		*/
@@ -561,11 +561,11 @@ ENTRY(memmove)
 	RMOVE_BIGCHUNK(o1, o0, 0x20, g1, g3, g5, o5)
 	RMOVE_BIGCHUNK(o1, o0, 0x40, g1, g3, g5, o5)
 	RMOVE_BIGCHUNK(o1, o0, 0x60, g1, g3, g5, o5)
-	subcc		%g7, 128, %g7			/* IEU1		Group		*/
+	subcc		%g6, 128, %g6			/* IEU1		Group		*/
 	sub		%o1, 128, %o1			/* IEU0				*/
 	bne,pt		%xcc, 5b			/* CTI				*/
 	 sub		%o0, 128, %o0			/* IEU0		Group		*/
-235:	andcc		%o2, 0x70, %g7			/* IEU1		Group		*/
+235:	andcc		%o2, 0x70, %g6			/* IEU1		Group		*/
 41:	be,pn		%xcc, 280f			/* CTI				*/
 	 andcc		%o2, 8, %g0			/* IEU1		Group		*/
 							/* Clk1 8-(			*/
@@ -573,11 +573,11 @@ ENTRY(memmove)
 							/* Clk3 8-(			*/
 							/* Clk4 8-(			*/
 279:	rd		%pc, %o5			/* PDU		Group		*/
-	sll		%g7, 1, %g5			/* IEU0		Group		*/
-	sub		%o1, %g7, %o1			/* IEU1				*/
+	sll		%g6, 1, %g5			/* IEU0		Group		*/
+	sub		%o1, %g6, %o1			/* IEU1				*/
 	sub		%o5, %g5, %o5			/* IEU0  	Group		*/
 	jmpl		%o5 + %lo(280f - 279b), %g0	/* CTI		Group brk forced*/
-	 sub		%o0, %g7, %o0			/* IEU0		Group		*/
+	 sub		%o0, %g6, %o0			/* IEU0		Group		*/
 	RMOVE_LASTCHUNK(o1, o0, 0x60, g2, g3, g5, o5)
 	RMOVE_LASTCHUNK(o1, o0, 0x50, g2, g3, g5, o5)
 	RMOVE_LASTCHUNK(o1, o0, 0x40, g2, g3, g5, o5)
@@ -614,11 +614,11 @@ ENTRY(memmove)
 
 282:	RMOVE_BIGALIGNCHUNK(o1, o0, 0x00, g1, g3, g5, o5)
 	RMOVE_BIGALIGNCHUNK(o1, o0, 0x40, g1, g3, g5, o5)
-	subcc		%g7, 128, %g7			/* IEU1		Group		*/
+	subcc		%g6, 128, %g6			/* IEU1		Group		*/
 	sub		%o1, 128, %o1			/* IEU0				*/
 	bne,pt		%xcc, 282b			/* CTI				*/
 	 sub		%o0, 128, %o0			/* IEU0		Group		*/
-	andcc		%o2, 0x70, %g7			/* IEU1				*/
+	andcc		%o2, 0x70, %g6			/* IEU1				*/
 	be,pn		%xcc, 284f			/* CTI				*/
 	 andcc		%o2, 8, %g0			/* IEU1		Group		*/
 							/* Clk1 8-(			*/
@@ -626,10 +626,10 @@ ENTRY(memmove)
 							/* Clk3 8-(			*/
 							/* Clk4 8-(			*/
 283:	rd		%pc, %o5			/* PDU		Group		*/
-	sub		%o1, %g7, %o1			/* IEU0		Group		*/
-	sub		%o5, %g7, %o5			/* IEU1				*/
+	sub		%o1, %g6, %o1			/* IEU0		Group		*/
+	sub		%o5, %g6, %o5			/* IEU1				*/
 	jmpl		%o5 + %lo(284f - 283b), %g0	/* CTI		Group brk forced*/
-	 sub		%o0, %g7, %o0			/* IEU0		Group		*/
+	 sub		%o0, %g6, %o0			/* IEU0		Group		*/
 	RMOVE_LASTALIGNCHUNK(o1, o0, 0x60, g2, g3)
 	RMOVE_LASTALIGNCHUNK(o1, o0, 0x50, g2, g3)
 	RMOVE_LASTALIGNCHUNK(o1, o0, 0x40, g2, g3)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -29,7 +29,7 @@
 # define PSEUDO(name, syscall_name, args)				      \
 	.text;								      \
 ENTRY(name)								      \
-	ld [%g6 + MULTIPLE_THREADS_OFFSET], %g1;			      \
+	ld [%g7 + MULTIPLE_THREADS_OFFSET], %g1;			      \
 	cmp %g1, 0;							      \
 	bne 1f;								      \
 	 mov SYS_ify(syscall_name), %g1;				      \
@@ -86,7 +86,7 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler2)			      \
   __builtin_expect (THREAD_GETMEM (THREAD_SELF,				      \
 				   p_header.data.multiple_threads) == 0, 1)
 # else
-#  define SINGLE_THREAD_P ld [%g6 + MULTIPLE_THREADS_OFFSET], %g1
+#  define SINGLE_THREAD_P ld [%g7 + MULTIPLE_THREADS_OFFSET], %g1
 # endif
 
 #elif !defined __ASSEMBLER__

@@ -1,4 +1,3 @@
-divdi3.c
 dl-machine.c
 dl-start.S
 libgcc-compat.S

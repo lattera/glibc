@@ -1,5 +1,5 @@
 /* High precision, low overhead timing functions.  sparcv9 version.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David S. Miller <davem@redhat.com>, 2001.
 
@@ -58,17 +58,17 @@ typedef unsigned long long int hp_timing_t;
 do {								\
   hp_timing_t __diff = (Diff) - GL(dl_hp_timing_overhead);	\
   __asm__ __volatile__("srl	%L0, 0, %%g1\n\t"		\
-		       "sllx	%H0, 32, %%g7\n\t"		\
-		       "or	%%g1, %%g7, %%g1\n\t"		\
+		       "sllx	%H0, 32, %%g6\n\t"		\
+		       "or	%%g1, %%g6, %%g1\n\t"		\
 		       "1: ldx	[%1], %%g5\n\t"			\
-		       "add	%%g5, %%g1, %%g7\n\t"		\
-		       "casx	[%1], %%g5,  %%g7\n\t"		\
-		       "cmp	%%g5, %%g7\n\t"			\
+		       "add	%%g5, %%g1, %%g6\n\t"		\
+		       "casx	[%1], %%g5,  %%g6\n\t"		\
+		       "cmp	%%g5, %%g6\n\t"			\
 		       "bne,pn	%%xcc, 1b\n\t"			\
 		       " nop"					\
 		       : /* no outputs */			\
 		       : "r" (__diff), "r" (&(Sum))		\
-		       : "memory", "g1", "g5", "g7");		\
+		       : "memory", "g1", "g5", "g6");		\
 } while(0)
 
 #define HP_TIMING_ACCUM_NT(Sum, Diff)	(Sum) += (Diff)

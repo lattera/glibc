@@ -1,6 +1,6 @@
 /* strchr (str, ch) -- Return pointer to first occurrence of CH in STR.
    For SPARC v7.
-   Copyright (C) 1996, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz> and
 		  David S. Miller <davem@caip.rutgers.edu>.
@@ -86,9 +86,9 @@ ENTRY(strchr)
 6:	xor		%g4, %g2, %g5
 	sub		%g4, %o2, %o4
 #ifdef EIGHTBIT_NOT_RARE
-	sub		%g5, %o2, %g7
+	sub		%g5, %o2, %g6
 	andn		%o4, %g4, %o4
-	andn		%g7, %g5, %g5
+	andn		%g6, %g5, %g5
 #else
 	sub		%g5, %o2, %g5
 #endif
@@ -237,9 +237,9 @@ ENTRY(strrchr)
 7:	xor		%g4, %g2, %g5
 	sub		%g4, %o2, %o4
 #ifdef EIGHTBIT_NOT_RARE
-	sub		%g5, %o2, %g7
+	sub		%g5, %o2, %g6
 	andn		%o4, %g4, %o4
-	andn		%g7, %g5, %g5
+	andn		%g6, %g5, %g5
 #else
 	sub		%g5, %o2, %g5
 #endif

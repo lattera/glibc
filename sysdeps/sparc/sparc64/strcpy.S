@@ -1,6 +1,6 @@
 /* Copy SRC to DEST returning DEST.
    For SPARC v9.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jan Vondrak <jvon4518@ss1000.ms.mff.cuni.cz> and
                   Jakub Jelinek <jj@ultra.linux.cz>.
@@ -25,7 +25,7 @@
 #ifndef XCC
 	.register	%g2, #scratch
 	.register	%g3, #scratch
-	.register	%g7, #scratch
+	.register	%g6, #scratch
 #endif
 
 	/* Normally, this uses
@@ -48,7 +48,7 @@
 	.align		32
 ENTRY(strcpy)
 	sethi		%hi(0x01010101), %g1		/* IEU0		Group		*/
-	mov		%o0, %g7			/* IEU1				*/
+	mov		%o0, %g6			/* IEU1				*/
 	or		%g1, %lo(0x01010101), %g1	/* IEU0		Group		*/
 	andcc		%o0, 7, %g0			/* IEU1				*/
 
@@ -108,7 +108,7 @@ ENTRY(strcpy)
 	bne,pt		%icc, 3b			/* CTI				*/
 	 mov		%o3, %g3			/* IEU0		Group		*/
 4:	retl						/* CTI+IEU1	Group		*/
-	 mov		%g7, %o0			/* IEU0				*/
+	 mov		%g6, %o0			/* IEU0				*/
 
 	.align		16
 5:	stb		%g5, [%o0 - 2]			/* Store	Group		*/
@@ -118,23 +118,23 @@ ENTRY(strcpy)
 
 	stw		%g4, [%o0 - 8]			/* Store	Group		*/
 	retl						/* CTI+IEU1	Group		*/
-	 mov		%g7, %o0			/* IEU0				*/
+	 mov		%g6, %o0			/* IEU0				*/
 7:	stb		%g5, [%o0 - 4]			/* Store	Group		*/
 
 	srlx		%g3, 32, %g4			/* IEU0				*/
 8:	stw		%g4, [%o0 - 8]			/* Store	Group		*/
 	retl						/* CTI+IEU1	Group		*/
-	 mov		%g7, %o0 			/* IEU0				*/
+	 mov		%g6, %o0 			/* IEU0				*/
 
 9:	stb		%g5, [%o0 - 6]			/* Store	Group		*/
 	srlx		%g3, 48, %g4			/* IEU0				*/
 10:	sth		%g4, [%o0 - 8]			/* Store	Group		*/
 	retl						/* CTI+IEU1	Group		*/
 
-	 mov		%g7, %o0			/* IEU0				*/
+	 mov		%g6, %o0			/* IEU0				*/
 11:	stb		%g5, [%o0 - 8]			/* Store	Group		*/
 	retl						/* CTI+IEU1	Group		*/
-	 mov		%g7, %o0			/* IEU0				*/
+	 mov		%g6, %o0			/* IEU0				*/
 
 12:	or		%g1, %g2, %g1			/* IEU0		Group		*/
 	ldub		[%o1], %o3			/* Load				*/
@@ -214,7 +214,7 @@ ENTRY(strcpy)
 	 stx		%o3, [%o0 - 8]			/* Store			*/
 	retl						/* CTI+IEU1	Group		*/
 
-	 mov		%g7, %o0			/* IEU0				*/
+	 mov		%g6, %o0			/* IEU0				*/
 
 	.align		16
 16:	srlx		%o3, 8, %o4			/* IEU0		Group		*/
@@ -228,7 +228,7 @@ ENTRY(strcpy)
 	stw		%o4, [%o0 - 8]			/* Store			*/
 
 	retl						/* CTI+IEU1	Group		*/
-	 mov		%g7, %o0 			/* IEU0				*/
+	 mov		%g6, %o0 			/* IEU0				*/
 	nop
 	nop
 
@@ -240,5 +240,5 @@ ENTRY(strcpy)
 22:	srlx		%o3, 56, %o4			/* IEU0		Group		*/
 	stb		%o4, [%o0 - 8]			/* Store			*/
 	retl						/* CTI+IEU1	Group		*/
-	 mov		%g7, %o0			/* IEU0				*/
+	 mov		%g6, %o0			/* IEU0				*/
 END(strcpy)

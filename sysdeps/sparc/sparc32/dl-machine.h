@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  SPARC version.
-   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,11 +17,15 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef dl_machine_h
+#define dl_machine_h
+
 #define ELF_MACHINE_NAME "sparc"
 
 #include <string.h>
 #include <sys/param.h>
 #include <ldsodefs.h>
+#include <tls.h>
 
 #ifndef VALIDX
 # define VALIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
@@ -237,9 +241,17 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    PLT entries should not be allowed to define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#define elf_machine_type_class(type) \
-  ((((type) == R_SPARC_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)	\
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+# define elf_machine_type_class(type) \
+  ((((type) == R_SPARC_JMP_SLOT						      \
+     || ((type) >= R_SPARC_TLS_GD_HI22 && (type) <= R_SPARC_TLS_TPOFF64))     \
+    * ELF_RTYPE_CLASS_PLT)						      \
    | (((type) == R_SPARC_COPY) * ELF_RTYPE_CLASS_COPY))
+#else
+# define elf_machine_type_class(type) \
+  ((((type) == R_SPARC_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)			      \
+   | (((type) == R_SPARC_COPY) * ELF_RTYPE_CLASS_COPY))
+#endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_SPARC_JMP_SLOT
@@ -413,6 +425,8 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
   return value + reloc->r_addend;
 }
 
+#endif /* dl_machine_h */
+
 #ifdef RESOLVE
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
@@ -448,16 +462,29 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 #if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
       const Elf32_Sym *const refsym = sym;
 #endif
+#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+      struct link_map *sym_map;
+#endif
       Elf32_Addr value;
 #ifndef RESOLVE_CONFLICT_FIND_MAP
       if (sym->st_shndx != SHN_UNDEF &&
 	  ELF32_ST_BIND (sym->st_info) == STB_LOCAL)
-	value = map->l_addr;
+	{
+	  value = map->l_addr;
+# if defined USE_TLS && !defined RTLD_BOOTSTRAP
+	  sym_map = map;
+# endif
+	}
       else
 	{
+# if defined USE_TLS && !defined RTLD_BOOTSTRAP
+	  sym_map = RESOLVE_MAP (&sym, version, r_type);
+	  value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
+# else	  
 	  value = RESOLVE (&sym, version, r_type);
 	  if (sym)
 	    value += sym->st_value;
+# endif
 	}
 #else
       value = 0;
@@ -496,6 +523,43 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	     so we can optimize the first instruction of .plt out.  */
 	  sparc_fixup_plt (reloc, reloc_addr, value, 0);
 	  break;
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD) \
+    && !defined RESOLVE_CONFLICT_FIND_MAP
+	case R_SPARC_TLS_DTPMOD32:
+	  /* Get the information from the link map returned by the
+	     resolv function.  */
+	  if (sym_map != NULL)
+	    *reloc_addr = sym_map->l_tls_modid;
+	  break;
+	case R_SPARC_TLS_DTPOFF32:
+	  /* During relocation all TLS symbols are defined and used.
+	     Therefore the offset is already correct.  */
+	  *reloc_addr = (sym == NULL ? 0 : sym->st_value) + reloc->r_addend;
+	  break;
+	case R_SPARC_TLS_TPOFF32:
+	  /* The offset is negative, forward from the thread pointer.  */
+	  /* We know the offset of object the symbol is contained in.
+	     It is a negative value which will be added to the
+	     thread pointer.  */
+	  CHECK_STATIC_TLS (map, sym_map);
+	  *reloc_addr
+	    = (sym == NULL ? 0 : sym->st_value - sym_map->l_tls_offset)
+	      + reloc->r_addend;
+	  break;
+# ifndef RTLD_BOOTSTRAP
+	case R_SPARC_TLS_LE_HIX22:
+	case R_SPARC_TLS_LE_LOX10:
+	  CHECK_STATIC_TLS (map, sym_map);
+	  value = (sym == NULL ? 0 : sym->st_value - sym_map->l_tls_offset)
+		  + reloc->r_addend;
+	  if (r_type == R_SPARC_TLS_LE_HIX22)
+	    *reloc_addr = (*reloc_addr & 0xffc00000) | ((~value) >> 10);
+	  else
+	    *reloc_addr = (*reloc_addr & 0xffffe000) | (value & 0x3ff)
+			  | 0x1c00;
+	  break;
+# endif
+#endif
 #ifndef RTLD_BOOTSTRAP
 	case R_SPARC_8:
 	  *(char *) reloc_addr = value;

@@ -2,7 +2,7 @@
    equal to or greater than zero if S1 is lexicographically less than, 
    equal to or greater than S2.
    For SPARC v9.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jan Vondrak <jvon4518@ss1000.ms.mff.cuni.cz> and
                   Jakub Jelinek <jj@ultra.linux.cz>.
@@ -29,7 +29,7 @@
 #define USE_BPR
 	.register	%g2, #scratch
 	.register	%g3, #scratch
-	.register	%g7, #scratch
+	.register	%g6, #scratch
 #endif
 
 	/* Normally, this uses
@@ -79,14 +79,14 @@ ENTRY(strncmp)
 	sub		%g4, %g1, %g3			/* IEU0		Group		*/
 	subcc		%g4, %o3, %o4			/* IEU1				*/
 #ifdef EIGHTBIT_NOT_RARE
-	andn		%g3, %g4, %g7			/* IEU0		Group		*/
+	andn		%g3, %g4, %g6			/* IEU0		Group		*/
 #endif
 	bne,pn		%xcc, 6f			/* CTI				*/
 	 ldxa		[%o0] ASI_PNF, %g4		/* Load		Group		*/
 
 	add		%o0, 8, %o0			/* IEU0				*/
 #ifdef EIGHTBIT_NOT_RARE
-	andcc		%g7, %g2, %g0			/* IEU1				*/
+	andcc		%g6, %g2, %g0			/* IEU1				*/
 #else
 	andcc		%g3, %g2, %g0			/* IEU1				*/
 #endif
@@ -95,8 +95,8 @@ ENTRY(strncmp)
 
 	addcc		%g3, %g1, %o4			/* IEU1				*/
 #ifdef EIGHTBIT_NOT_RARE
-	srlx		%g7, 32, %g7			/* IEU0				*/
-	andcc		%g7, %g2, %g0			/* IEU1		Group		*/
+	srlx		%g6, 32, %g6			/* IEU0				*/
+	andcc		%g6, %g2, %g0			/* IEU1		Group		*/
 #else
 	srlx		%g3, 32, %g3			/* IEU0				*/
 	andcc		%g3, %g2, %g0			/* IEU1		Group		*/
@@ -289,11 +289,11 @@ ENTRY(strncmp)
 
 	 ldxa		[%o0] ASI_PNF, %g4		/* Load				*/
 11:	sllx		%g3, 3, %g5			/* IEU0		Group		*/
-	mov		64, %g7				/* IEU1				*/
+	mov		64, %g6				/* IEU1				*/
 	or		%g1, %g2, %g1			/* IEU0		Group		*/
 	sub		%o1, %g3, %o1			/* IEU1				*/
 
-	sub		%g7, %g5, %g7			/* IEU0		Group		*/
+	sub		%g6, %g5, %g6			/* IEU0		Group		*/
 	ldxa		[%o1] ASI_PNF, %o4		/* Load				*/
 	sllx		%g1, 7, %g2			/* IEU1				*/
 	add		%o1, 8, %o1			/* IEU0		Group		*/
@@ -301,7 +301,7 @@ ENTRY(strncmp)
 							   %g2 = 8080808080808080
 							   %g3 = %o1 alignment
 							   %g5 = number of bits to shift left
-							   %g7 = number of bits to shift right */
+							   %g6 = number of bits to shift right */
 
 12:	sllx		%o4, %g5, %o3			/* IEU0		Group		*/
 	ldxa		[%o1] ASI_PNF, %o4		/* Load				*/
@@ -309,7 +309,7 @@ ENTRY(strncmp)
 13:	ldxa		[%o0] ASI_PNF, %g4		/* Load		Group		*/
 
 	addcc		%o0, 8, %o0			/* IEU1				*/
-	srlx		%o4, %g7, %o5			/* IEU0				*/
+	srlx		%o4, %g6, %o5			/* IEU0				*/
 	subcc		%o2, 8, %o2			/* IEU1		Group		*/
 	bl,pn		%XCC, 5b			/* CTI				*/
 

@@ -1,6 +1,6 @@
 /* strcat (dest, src) -- Append SRC on the end of DEST.
    For SPARC v7.
-   Copyright (C) 1996, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>.
 
@@ -183,7 +183,7 @@ ENTRY(strcat)
 	srl		%o5, 8, %g5
 	sth		%g5, [%o0 + 2]
 1:	add		%o0, 4, %o0
-4:	sll		%o5, 24, %g7
+4:	sll		%o5, 24, %g6
 	ld		[%o1], %o5
 	add		%o1, 4, %o1
 	srl		%o5, 8, %g5
@@ -191,7 +191,7 @@ ENTRY(strcat)
 #ifdef EIGHTBIT_NOT_RARE
 	andn		%o4, %o5, %o4
 #endif
-	or		%g5, %g7, %g5
+	or		%g5, %g6, %g5
 	andcc		%o4, %o3, %g0
 	be,a		1b
 	 st		%g5, [%o0]
@@ -249,7 +249,7 @@ ENTRY(strcat)
 	sth		%g5, [%o0]
 	sub		%o0, 2, %o0
 1:	add		%o0, 4, %o0
-4:	sll		%o5, 16, %g7
+4:	sll		%o5, 16, %g6
 	ld		[%o1], %o5
 	add		%o1, 4, %o1
 	srl		%o5, 16, %g5
@@ -257,7 +257,7 @@ ENTRY(strcat)
 #ifdef EIGHTBIT_NOT_RARE
 	andn		%o4, %o5, %o4
 #endif
-	or		%g5, %g7, %g5
+	or		%g5, %g6, %g5
 	andcc		%o4, %o3, %g0
 	be,a		1b
 	 st		%g5, [%o0]
@@ -305,7 +305,7 @@ ENTRY(strcat)
 	stb		%g5, [%o0]
 	sub		%o0, 3, %o0
 1:	add		%o0, 4, %o0
-4:	sll		%o5, 8, %g7
+4:	sll		%o5, 8, %g6
 	ld		[%o1], %o5
 	add		%o1, 4, %o1
 	srl		%o5, 24, %g5
@@ -313,7 +313,7 @@ ENTRY(strcat)
 #ifdef EIGHTBIT_NOT_RARE
 	andn		%o4, %o5, %o4
 #endif
-	or		%g5, %g7, %g5
+	or		%g5, %g6, %g5
 	andcc		%o4, %o3, %g0
 	be		1b
 	 st		%g5, [%o0]

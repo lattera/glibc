@@ -1,6 +1,6 @@
 /* Compare two strings for differences.
    For SPARC v9.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jan Vondrak <jvon4518@ss1000.ms.mff.cuni.cz> and
                   Jakub Jelinek <jj@ultra.linux.cz>.
@@ -25,7 +25,7 @@
 #ifndef XCC
 	.register	%g2, #scratch
 	.register	%g3, #scratch
-	.register	%g7, #scratch
+	.register	%g6, #scratch
 #endif
 
 	/* Normally, this uses
@@ -117,7 +117,7 @@ ENTRY(strcmp)
 	 clr		%o0					/* IEU0				*/
 
 	.align		32
-13:	mov		0xff, %g7				/* IEU0		Group		*/
+13:	mov		0xff, %g6				/* IEU0		Group		*/
 #ifdef EIGHTBIT_NOT_RARE
 	andcc		%g4, %g2, %g0				/* IEU1				*/
 #else
@@ -129,34 +129,34 @@ ENTRY(strcmp)
 	srlx		%g3, 32, %g3				/* IEU0				*/
 	andcc		%g3, %g2, %g0				/* IEU1		Group		*/
 	be,pt		%xcc, 23f				/* CTI				*/
-	 sllx		%g7, 56, %o5				/* IEU0				*/
+	 sllx		%g6, 56, %o5				/* IEU0				*/
 
 	andcc		%o4, %o5, %g0				/* IEU1		Group		*/
 	be,pn		%xcc, 24f				/* CTI				*/
-	 sllx		%g7, 48, %o5				/* IEU0				*/
+	 sllx		%g6, 48, %o5				/* IEU0				*/
 	andcc		%o4, %o5, %g0				/* IEU1		Group		*/
 
 	be,pn		%xcc, 24f				/* CTI				*/
-	 sllx		%g7, 40, %o5				/* IEU0				*/
+	 sllx		%g6, 40, %o5				/* IEU0				*/
 	andcc		%o4, %o5, %g0				/* IEU1		Group		*/
 	be,pn		%xcc, 24f				/* CTI				*/
 
-	 sllx		%g7, 32, %o5				/* IEU0				*/
+	 sllx		%g6, 32, %o5				/* IEU0				*/
 	andcc		%o4, %o5, %g0				/* IEU1		Group		*/
 	be,pn		%xcc, 24f				/* CTI				*/
-23:	 sllx		%g7, 24, %o5				/* IEU0				*/
+23:	 sllx		%g6, 24, %o5				/* IEU0				*/
 
 	andcc		%o4, %o5, %g0				/* IEU1		Group		*/
 	be,pn		%icc, 24f				/* CTI				*/
-	 sllx		%g7, 16, %o5				/* IEU0				*/
+	 sllx		%g6, 16, %o5				/* IEU0				*/
 	andcc		%o4, %o5, %g0				/* IEU1		Group		*/
 
 	be,pn		%icc, 24f				/* CTI				*/
-	 sllx		%g7, 8, %o5				/* IEU0				*/
+	 sllx		%g6, 8, %o5				/* IEU0				*/
 	andcc		%o4, %o5, %g0				/* IEU1		Group		*/
 	be,pn		%icc, 24f				/* CTI				*/
 
-	 mov		%g7, %o5				/* IEU0				*/
+	 mov		%g6, %o5				/* IEU0				*/
 25:	cmp		%o4, %o3				/* IEU1		Group		*/
 5:	mov		-1, %o0					/* IEU0				*/
 	retl							/* CTI+IEU1	Group		*/
@@ -164,9 +164,9 @@ ENTRY(strcmp)
 	 movgu		%xcc, 1, %o0				/* Single	Group		*/
 
 	.align		16
-24:	sub		%o5, 1, %g7				/* IEU0		Group		*/
+24:	sub		%o5, 1, %g6				/* IEU0		Group		*/
 	clr		%o0					/* IEU1				*/
-	or		%o5, %g7, %o5				/* IEU0		Group		*/
+	or		%o5, %g6, %o5				/* IEU0		Group		*/
 	andn		%o4, %o5, %o4				/* IEU0		Group		*/
 
 	andn		%o3, %o5, %o3				/* IEU1				*/
@@ -205,7 +205,7 @@ ENTRY(strcmp)
 	sub		%o1, %g3, %o1				/* IEU0		Group		*/
 
 	sub		%o5, %g5, %o5				/* IEU1				*/
-	ldxa		[%o1] ASI_PNF, %g7			/* Load		Group		*/
+	ldxa		[%o1] ASI_PNF, %g6			/* Load		Group		*/
 	or		%g1, %g2, %g1				/* IEU0				*/
 	sub		%o1, %o0, %o1				/* IEU1				*/
 
@@ -215,10 +215,10 @@ ENTRY(strcmp)
 								 * %g2 = 8080808080800880
 								 * %g5 = number of bits to shift left
 								 * %o5 = number of bits to shift right */
-10:	sllx		%g7, %g5, %o3				/* IEU0		Group		*/
-	ldxa		[%o1 + %o0] ASI_PNF, %g7		/* Load				*/
+10:	sllx		%g6, %g5, %o3				/* IEU0		Group		*/
+	ldxa		[%o1 + %o0] ASI_PNF, %g6		/* Load				*/
 
-11:	srlx		%g7, %o5, %o4				/* IEU0		Group		*/
+11:	srlx		%g6, %o5, %o4				/* IEU0		Group		*/
 	ldxa		[%o0] ASI_PNF, %o2			/* Load				*/
 	or		%o3, %o4, %o3				/* IEU1				*/
 	add		%o0, 8, %o0				/* IEU0		Group		*/
@@ -272,8 +272,8 @@ ENTRY(strcmp)
 	be,pn		%icc, 4b				/* CTI				*/
 	 andcc		%o2, 0xff, %g0				/* IEU1		Group		*/
 	be,pn		%icc, 4b				/* CTI				*/
-	 sllx		%g7, %g5, %o3				/* IEU0				*/
+	 sllx		%g6, %g5, %o3				/* IEU0				*/
 
 	ba,pt		%xcc, 11b				/* CTI		Group		*/
-	 ldxa		[%o1 + %o0] ASI_PNF, %g7		/* Load				*/
+	 ldxa		[%o1 + %o0] ASI_PNF, %g6		/* Load				*/
 END(strcmp)

@@ -34,7 +34,6 @@ endif
 ifeq (yes,$(build-shared))
 # Compatibility
 ifeq (yes,$(have-protected))
-CPPFLAGS-divdi3.c = -DHAVE_DOT_HIDDEN
 CPPFLAGS-libgcc-compat.S = -DHAVE_DOT_HIDDEN
 endif
 sysdep_routines += libgcc-compat

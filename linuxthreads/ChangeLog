@@ -1,3 +1,19 @@
+2003-01-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/pt-machine.h (__thread_self): Change to %g7,
+	as required by TLS ABI.
+	* sysdeps/sparc/sparc64/pt-machine.h (__thread_self): Likewise.
+	* sysdeps/sparc/tls.h [HAVE_TLS_SUPPORT] (USE_TLS, TLS_INIT_TCB_SIZE,
+	TLS_INIT_TCB_ALIGN, TLS_TCB_SIZE, TLS_TCB_ALIGN, TLS_TCB_AT_TP,
+	INSTALL_DTV, INSTALL_NEW_DTV, GET_DTV, TLS_INIT_TP, THREAD_DTV):
+	Define.
+	[HAVE_TLS_SUPPORT]: Include descr.h and sysdep.h.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep-cancel.h: Use %g7
+	instead of %g6 for thread pointer.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S: Likewise.
+
 2003-01-25  Guido Guenther  <agx@sigxcpu.org>
 
 	* sysdeps/unix/sysv/linux/mips/sysdep-cancel.h: New file.

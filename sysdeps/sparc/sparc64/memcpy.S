@@ -1,6 +1,6 @@
 /* Copy SIZE bytes from SRC to DEST.
    For UltraSPARC.
-   Copyright (C) 1996, 97, 98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1996, 97, 98, 99, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David S. Miller (davem@caip.rutgers.edu) and
 		  Jakub Jelinek (jakub@redhat.com).
@@ -26,7 +26,7 @@
 #define USE_BPR
 	.register	%g2, #scratch
 	.register	%g3, #scratch
-	.register	%g7, #scratch
+	.register	%g6, #scratch
 #define XCC	xcc
 #endif
 #define FPRS_FEF	4
@@ -256,24 +256,24 @@ END(bcopy)
 	 add		%o0, 8, %o0			/* IEU0				*/
 202:	membar	  #LoadStore | #StoreStore | #StoreLoad	/* LSU		Group		*/
 	wr		%g0, ASI_BLK_P, %asi		/* LSU		Group		*/
-	subcc		%o2, 0x40, %g7			/* IEU1		Group		*/
+	subcc		%o2, 0x40, %g6			/* IEU1		Group		*/
 	mov		%o1, %g1			/* IEU0				*/
-	andncc		%g7, (0x40 - 1), %g7		/* IEU1		Group		*/
+	andncc		%g6, (0x40 - 1), %g6		/* IEU1		Group		*/
 	srl		%g1, 3, %g2			/* IEU0				*/
-	sub		%o2, %g7, %g3			/* IEU0		Group		*/
+	sub		%o2, %g6, %g3			/* IEU0		Group		*/
 	andn		%o1, (0x40 - 1), %o1		/* IEU1				*/
 	and		%g2, 7, %g2			/* IEU0		Group		*/
 	andncc		%g3, 0x7, %g3			/* IEU1				*/
 	fmovd		%f0, %f2			/* FPU				*/
 	sub		%g3, 0x10, %g3			/* IEU0		Group		*/
-	sub		%o2, %g7, %o2			/* IEU1				*/
+	sub		%o2, %g6, %o2			/* IEU1				*/
 	alignaddr	%g1, %g0, %g0			/* GRU		Group		*/
-	add		%g1, %g7, %g1			/* IEU0		Group		*/
+	add		%g1, %g6, %g1			/* IEU0		Group		*/
 	subcc		%o2, %g3, %o2			/* IEU1				*/
 	ldda		[%o1 + 0x00] %asi, %f0		/* LSU		Group		*/
 	add		%g1, %g3, %g1			/* IEU0				*/
 	ldda		[%o1 + 0x40] %asi, %f16		/* LSU		Group		*/
-	sub		%g7, 0x80, %g7			/* IEU0				*/
+	sub		%g6, 0x80, %g6			/* IEU0				*/
 	ldda		[%o1 + 0x80] %asi, %f32		/* LSU		Group		*/
 							/* Clk1		Group 8-(	*/
 							/* Clk2		Group 8-(	*/
@@ -286,9 +286,9 @@ END(bcopy)
 	 addcc		%o1, 0xc0, %o1			/* IEU1		Group		*/
 
 	.align		512		/* OK, here comes the fun part... */
-300:	FREG_FROB(f0, f2, f4, f6, f8, f10,f12,f14,f16)	LOOP_CHUNK1(o1, o0, g7, 301f)
-	FREG_FROB(f16,f18,f20,f22,f24,f26,f28,f30,f32)	LOOP_CHUNK2(o1, o0, g7, 302f)
-	FREG_FROB(f32,f34,f36,f38,f40,f42,f44,f46,f0)	LOOP_CHUNK3(o1, o0, g7, 303f)
+300:	FREG_FROB(f0, f2, f4, f6, f8, f10,f12,f14,f16)	LOOP_CHUNK1(o1, o0, g6, 301f)
+	FREG_FROB(f16,f18,f20,f22,f24,f26,f28,f30,f32)	LOOP_CHUNK2(o1, o0, g6, 302f)
+	FREG_FROB(f32,f34,f36,f38,f40,f42,f44,f46,f0)	LOOP_CHUNK3(o1, o0, g6, 303f)
 	b,pt		%xcc, 300b+4; faligndata %f0, %f2, %f48
 301:	FREG_FROB(f16,f18,f20,f22,f24,f26,f28,f30,f32)	STORE_SYNC(o0, f48) membar #Sync
 	FREG_FROB(f32,f34,f36,f38,f40,f42,f44,f46,f0)	STORE_JUMP(o0, f48, 400f) membar #Sync
@@ -297,9 +297,9 @@ END(bcopy)
 303:	FREG_FROB(f0, f2, f4, f6, f8, f10,f12,f14,f16)	STORE_SYNC(o0, f48) membar #Sync
 	FREG_FROB(f16,f18,f20,f22,f24,f26,f28,f30,f32)	STORE_JUMP(o0, f48, 432f) membar #Sync
 	VISLOOP_PAD
-310:	FREG_FROB(f2, f4, f6, f8, f10,f12,f14,f16,f18)	LOOP_CHUNK1(o1, o0, g7, 311f)
-	FREG_FROB(f18,f20,f22,f24,f26,f28,f30,f32,f34)	LOOP_CHUNK2(o1, o0, g7, 312f)
-	FREG_FROB(f34,f36,f38,f40,f42,f44,f46,f0, f2)	LOOP_CHUNK3(o1, o0, g7, 313f)
+310:	FREG_FROB(f2, f4, f6, f8, f10,f12,f14,f16,f18)	LOOP_CHUNK1(o1, o0, g6, 311f)
+	FREG_FROB(f18,f20,f22,f24,f26,f28,f30,f32,f34)	LOOP_CHUNK2(o1, o0, g6, 312f)
+	FREG_FROB(f34,f36,f38,f40,f42,f44,f46,f0, f2)	LOOP_CHUNK3(o1, o0, g6, 313f)
 	b,pt		%xcc, 310b+4; faligndata %f2, %f4, %f48
 311:	FREG_FROB(f18,f20,f22,f24,f26,f28,f30,f32,f34)	STORE_SYNC(o0, f48) membar #Sync
 	FREG_FROB(f34,f36,f38,f40,f42,f44,f46,f0, f2)	STORE_JUMP(o0, f48, 402f) membar #Sync
@@ -308,9 +308,9 @@ END(bcopy)
 313:	FREG_FROB(f2, f4, f6, f8, f10,f12,f14,f16,f18)	STORE_SYNC(o0, f48) membar #Sync
 	FREG_FROB(f18,f20,f22,f24,f26,f28,f30,f32,f34)	STORE_JUMP(o0, f48, 434f) membar #Sync
 	VISLOOP_PAD
-320:	FREG_FROB(f4, f6, f8, f10,f12,f14,f16,f18,f20)	LOOP_CHUNK1(o1, o0, g7, 321f)
-	FREG_FROB(f20,f22,f24,f26,f28,f30,f32,f34,f36)	LOOP_CHUNK2(o1, o0, g7, 322f)
-	FREG_FROB(f36,f38,f40,f42,f44,f46,f0, f2, f4)	LOOP_CHUNK3(o1, o0, g7, 323f)
+320:	FREG_FROB(f4, f6, f8, f10,f12,f14,f16,f18,f20)	LOOP_CHUNK1(o1, o0, g6, 321f)
+	FREG_FROB(f20,f22,f24,f26,f28,f30,f32,f34,f36)	LOOP_CHUNK2(o1, o0, g6, 322f)
+	FREG_FROB(f36,f38,f40,f42,f44,f46,f0, f2, f4)	LOOP_CHUNK3(o1, o0, g6, 323f)
 	b,pt		%xcc, 320b+4; faligndata %f4, %f6, %f48
 321:	FREG_FROB(f20,f22,f24,f26,f28,f30,f32,f34,f36)	STORE_SYNC(o0, f48) membar #Sync
 	FREG_FROB(f36,f38,f40,f42,f44,f46,f0, f2, f4)	STORE_JUMP(o0, f48, 404f) membar #Sync
@@ -319,9 +319,9 @@ END(bcopy)
 323:	FREG_FROB(f4, f6, f8, f10,f12,f14,f16,f18,f20)	STORE_SYNC(o0, f48) membar #Sync
 	FREG_FROB(f20,f22,f24,f26,f28,f30,f32,f34,f36)	STORE_JUMP(o0, f48, 436f) membar #Sync
 	VISLOOP_PAD
-330:	FREG_FROB(f6, f8, f10,f12,f14,f16,f18,f20,f22)	LOOP_CHUNK1(o1, o0, g7, 331f)
-	FREG_FROB(f22,f24,f26,f28,f30,f32,f34,f36,f38)	LOOP_CHUNK2(o1, o0, g7, 332f)
-	FREG_FROB(f38,f40,f42,f44,f46,f0, f2, f4, f6)	LOOP_CHUNK3(o1, o0, g7, 333f)
+330:	FREG_FROB(f6, f8, f10,f12,f14,f16,f18,f20,f22)	LOOP_CHUNK1(o1, o0, g6, 331f)
+	FREG_FROB(f22,f24,f26,f28,f30,f32,f34,f36,f38)	LOOP_CHUNK2(o1, o0, g6, 332f)
+	FREG_FROB(f38,f40,f42,f44,f46,f0, f2, f4, f6)	LOOP_CHUNK3(o1, o0, g6, 333f)
 	b,pt		%xcc, 330b+4; faligndata %f6, %f8, %f48
 331:	FREG_FROB(f22,f24,f26,f28,f30,f32,f34,f36,f38)	STORE_SYNC(o0, f48) membar #Sync
 	FREG_FROB(f38,f40,f42,f44,f46,f0, f2, f4, f6)	STORE_JUMP(o0, f48, 406f) membar #Sync
@@ -330,9 +330,9 @@ END(bcopy)
 333:	FREG_FROB(f6, f8, f10,f12,f14,f16,f18,f20,f22)	STORE_SYNC(o0, f48) membar #Sync
 	FREG_FROB(f22,f24,f26,f28,f30,f32,f34,f36,f38)	STORE_JUMP(o0, f48, 438f) membar #Sync
 	VISLOOP_PAD
-340:	FREG_FROB(f8, f10,f12,f14,f16,f18,f20,f22,f24)	LOOP_CHUNK1(o1, o0, g7, 341f)
-	FREG_FROB(f24,f26,f28,f30,f32,f34,f36,f38,f40)	LOOP_CHUNK2(o1, o0, g7, 342f)
-	FREG_FROB(f40,f42,f44,f46,f0, f2, f4, f6, f8)	LOOP_CHUNK3(o1, o0, g7, 343f)
+340:	FREG_FROB(f8, f10,f12,f14,f16,f18,f20,f22,f24)	LOOP_CHUNK1(o1, o0, g6, 341f)
+	FREG_FROB(f24,f26,f28,f30,f32,f34,f36,f38,f40)	LOOP_CHUNK2(o1, o0, g6, 342f)
+	FREG_FROB(f40,f42,f44,f46,f0, f2, f4, f6, f8)	LOOP_CHUNK3(o1, o0, g6, 343f)
 	b,pt		%xcc, 340b+4; faligndata %f8, %f10, %f48
 341:	FREG_FROB(f24,f26,f28,f30,f32,f34,f36,f38,f40)	STORE_SYNC(o0, f48) membar #Sync
 	FREG_FROB(f40,f42,f44,f46,f0, f2, f4, f6, f8)	STORE_JUMP(o0, f48, 408f) membar #Sync
@@ -341,9 +341,9 @@ END(bcopy)
 343:	FREG_FROB(f8, f10,f12,f14,f16,f18,f20,f22,f24)	STORE_SYNC(o0, f48) membar #Sync
 	FREG_FROB(f24,f26,f28,f30,f32,f34,f36,f38,f40)	STORE_JUMP(o0, f48, 440f) membar #Sync
 	VISLOOP_PAD
-350:	FREG_FROB(f10,f12,f14,f16,f18,f20,f22,f24,f26)	LOOP_CHUNK1(o1, o0, g7, 351f)
-	FREG_FROB(f26,f28,f30,f32,f34,f36,f38,f40,f42)	LOOP_CHUNK2(o1, o0, g7, 352f)
-	FREG_FROB(f42,f44,f46,f0, f2, f4, f6, f8, f10)	LOOP_CHUNK3(o1, o0, g7, 353f)
+350:	FREG_FROB(f10,f12,f14,f16,f18,f20,f22,f24,f26)	LOOP_CHUNK1(o1, o0, g6, 351f)
+	FREG_FROB(f26,f28,f30,f32,f34,f36,f38,f40,f42)	LOOP_CHUNK2(o1, o0, g6, 352f)
+	FREG_FROB(f42,f44,f46,f0, f2, f4, f6, f8, f10)	LOOP_CHUNK3(o1, o0, g6, 353f)
 	b,pt		%xcc, 350b+4; faligndata %f10, %f12, %f48
 351:	FREG_FROB(f26,f28,f30,f32,f34,f36,f38,f40,f42)	STORE_SYNC(o0, f48) membar #Sync
 	FREG_FROB(f42,f44,f46,f0, f2, f4, f6, f8, f10)	STORE_JUMP(o0, f48, 410f) membar #Sync
@@ -352,9 +352,9 @@ END(bcopy)
 353:	FREG_FROB(f10,f12,f14,f16,f18,f20,f22,f24,f26)	STORE_SYNC(o0, f48) membar #Sync
 	FREG_FROB(f26,f28,f30,f32,f34,f36,f38,f40,f42)	STORE_JUMP(o0, f48, 442f) membar #Sync
 	VISLOOP_PAD
-360:	FREG_FROB(f12,f14,f16,f18,f20,f22,f24,f26,f28)	LOOP_CHUNK1(o1, o0, g7, 361f)
-	FREG_FROB(f28,f30,f32,f34,f36,f38,f40,f42,f44)	LOOP_CHUNK2(o1, o0, g7, 362f)
-	FREG_FROB(f44,f46,f0, f2, f4, f6, f8, f10,f12)	LOOP_CHUNK3(o1, o0, g7, 363f)
+360:	FREG_FROB(f12,f14,f16,f18,f20,f22,f24,f26,f28)	LOOP_CHUNK1(o1, o0, g6, 361f)
+	FREG_FROB(f28,f30,f32,f34,f36,f38,f40,f42,f44)	LOOP_CHUNK2(o1, o0, g6, 362f)
+	FREG_FROB(f44,f46,f0, f2, f4, f6, f8, f10,f12)	LOOP_CHUNK3(o1, o0, g6, 363f)
 	b,pt		%xcc, 360b+4; faligndata %f12, %f14, %f48
 361:	FREG_FROB(f28,f30,f32,f34,f36,f38,f40,f42,f44)	STORE_SYNC(o0, f48) membar #Sync
 	FREG_FROB(f44,f46,f0, f2, f4, f6, f8, f10,f12)	STORE_JUMP(o0, f48, 412f) membar #Sync
@@ -363,9 +363,9 @@ END(bcopy)
 363:	FREG_FROB(f12,f14,f16,f18,f20,f22,f24,f26,f28)	STORE_SYNC(o0, f48) membar #Sync
 	FREG_FROB(f28,f30,f32,f34,f36,f38,f40,f42,f44)	STORE_JUMP(o0, f48, 444f) membar #Sync
 	VISLOOP_PAD
-370:	FREG_FROB(f14,f16,f18,f20,f22,f24,f26,f28,f30)	LOOP_CHUNK1(o1, o0, g7, 371f)
-	FREG_FROB(f30,f32,f34,f36,f38,f40,f42,f44,f46)	LOOP_CHUNK2(o1, o0, g7, 372f)
-	FREG_FROB(f46,f0, f2, f4, f6, f8, f10,f12,f14)	LOOP_CHUNK3(o1, o0, g7, 373f)
+370:	FREG_FROB(f14,f16,f18,f20,f22,f24,f26,f28,f30)	LOOP_CHUNK1(o1, o0, g6, 371f)
+	FREG_FROB(f30,f32,f34,f36,f38,f40,f42,f44,f46)	LOOP_CHUNK2(o1, o0, g6, 372f)
+	FREG_FROB(f46,f0, f2, f4, f6, f8, f10,f12,f14)	LOOP_CHUNK3(o1, o0, g6, 373f)
 	b,pt		%xcc, 370b+4; faligndata %f14, %f16, %f48
 371:	FREG_FROB(f30,f32,f34,f36,f38,f40,f42,f44,f46)	STORE_SYNC(o0, f48) membar #Sync
 	FREG_FROB(f46,f0, f2, f4, f6, f8, f10,f12,f14)	STORE_JUMP(o0, f48, 414f) membar #Sync
@@ -476,11 +476,11 @@ ENTRY(__align_cpy_8)
 	 cmp		%o2, (64 * 6)			/* IEU1		Group		*/
 	bgeu,pn		%xcc, 201b			/* CTI				*/
 	 andcc		%o0, 0x38, %g5			/* IEU1		Group		*/
-	andcc		%o2, -128, %g7			/* IEU1		Group		*/
+	andcc		%o2, -128, %g6			/* IEU1		Group		*/
 	bne,a,pt	%xcc, 82f + 4			/* CTI				*/
 	 ldx		[%o1], %g1			/* Load				*/
 	ba,pt		%xcc, 41f			/* CTI		Group		*/
-	 andcc		%o2, 0x70, %g7			/* IEU1				*/
+	 andcc		%o2, 0x70, %g6			/* IEU1				*/
 END(__align_cpy_8)
 
 	/* void *__align_cpy_16(void *dest, void *src, size_t n)
@@ -494,11 +494,11 @@ ENTRY(__align_cpy_16)
 	cmp		%o2, (64 * 6)			/* IEU1				*/
 	bgeu,pn		%xcc, 201b			/* CTI				*/
 	 andcc		%o0, 0x38, %g5			/* IEU1		Group		*/
-	andcc		%o2, -128, %g7			/* IEU1		Group		*/
+	andcc		%o2, -128, %g6			/* IEU1		Group		*/
 	bne,a,pt	%xcc, 82f + 4			/* CTI				*/
 	 ldx		[%o1], %g1			/* Load				*/
 	ba,pt		%xcc, 41f			/* CTI		Group		*/
-	 andcc		%o2, 0x70, %g7			/* IEU1				*/
+	 andcc		%o2, 0x70, %g6			/* IEU1				*/
 END(__align_cpy_16)
 
 #endif
@@ -538,13 +538,13 @@ ENTRY(memcpy)
 	sth		%g2, [%o0 - 2]			/* Store	Group + bubble	*/
 5:	andcc		%o1, 4, %g0			/* IEU1				*/
 216:	be,a,pn		%xcc, 2f			/* CTI				*/
-	 andcc		%o2, -128, %g7			/* IEU1		Group		*/
+	 andcc		%o2, -128, %g6			/* IEU1		Group		*/
 	lduw		[%o1], %g5			/* Load		Group		*/
 	add		%o1, 4, %o1			/* IEU0				*/
 	add		%o0, 4, %o0			/* IEU1				*/
 	sub		%o2, 4, %o2			/* IEU0		Group		*/
 	stw		%g5, [%o0 - 4]			/* Store			*/
-	andcc		%o2, -128, %g7			/* IEU1		Group		*/
+	andcc		%o2, -128, %g6			/* IEU1		Group		*/
 2:	be,pn		%xcc, 215f			/* CTI				*/
 	 andcc		%o0, 4, %g0			/* IEU1		Group		*/
 	be,pn		%xcc, 82f + 4			/* CTI		Group		*/
@@ -552,11 +552,11 @@ ENTRY(memcpy)
 	MOVE_BIGCHUNK(o1, o0, 0x20, g1, g3, g5, o5)
 	MOVE_BIGCHUNK(o1, o0, 0x40, g1, g3, g5, o5)
 	MOVE_BIGCHUNK(o1, o0, 0x60, g1, g3, g5, o5)
-35:	subcc		%g7, 128, %g7			/* IEU1		Group		*/
+35:	subcc		%g6, 128, %g6			/* IEU1		Group		*/
 	add		%o1, 128, %o1			/* IEU0				*/
 	bne,pt		%xcc, 5b			/* CTI				*/
 	 add		%o0, 128, %o0			/* IEU0		Group		*/
-215:	andcc		%o2, 0x70, %g7			/* IEU1		Group		*/
+215:	andcc		%o2, 0x70, %g6			/* IEU1		Group		*/
 41:	be,pn		%xcc, 80f			/* CTI				*/
 	 andcc		%o2, 8, %g0			/* IEU1		Group		*/
 							/* Clk1 8-(			*/
@@ -564,11 +564,11 @@ ENTRY(memcpy)
 							/* Clk3 8-(			*/
 							/* Clk4 8-(			*/
 79:	rd		%pc, %o5			/* PDU		Group		*/
-	sll		%g7, 1, %g5			/* IEU0		Group		*/
-	add		%o1, %g7, %o1			/* IEU1				*/
+	sll		%g6, 1, %g5			/* IEU0		Group		*/
+	add		%o1, %g6, %o1			/* IEU1				*/
 	sub		%o5, %g5, %o5			/* IEU0  	Group		*/
 	jmpl		%o5 + %lo(80f - 79b), %g0	/* CTI		Group brk forced*/
-	 add		%o0, %g7, %o0			/* IEU0		Group		*/
+	 add		%o0, %g6, %o0			/* IEU0		Group		*/
 36:	MOVE_LASTCHUNK(o1, o0, 0x60, g2, g3, g5, o5)
 	MOVE_LASTCHUNK(o1, o0, 0x50, g2, g3, g5, o5)
 	MOVE_LASTCHUNK(o1, o0, 0x40, g2, g3, g5, o5)
@@ -605,11 +605,11 @@ ENTRY(memcpy)
 
 82:	MOVE_BIGALIGNCHUNK(o1, o0, 0x00, g1, g3, g5, o5)
 	MOVE_BIGALIGNCHUNK(o1, o0, 0x40, g1, g3, g5, o5)
-37:	subcc		%g7, 128, %g7			/* IEU1		Group		*/
+37:	subcc		%g6, 128, %g6			/* IEU1		Group		*/
 	add		%o1, 128, %o1			/* IEU0				*/
 	bne,pt		%xcc, 82b			/* CTI				*/
 	 add		%o0, 128, %o0			/* IEU0		Group		*/
-	andcc		%o2, 0x70, %g7			/* IEU1				*/
+	andcc		%o2, 0x70, %g6			/* IEU1				*/
 	be,pn		%xcc, 84f			/* CTI				*/
 	 andcc		%o2, 8, %g0			/* IEU1		Group		*/
 							/* Clk1 8-(			*/
@@ -617,10 +617,10 @@ ENTRY(memcpy)
 							/* Clk3 8-(			*/
 							/* Clk4 8-(			*/
 83:	rd		%pc, %o5			/* PDU		Group		*/
-	add		%o1, %g7, %o1			/* IEU0		Group		*/
-	sub		%o5, %g7, %o5			/* IEU1				*/
+	add		%o1, %g6, %o1			/* IEU0		Group		*/
+	sub		%o5, %g6, %o5			/* IEU1				*/
 	jmpl		%o5 + %lo(84f - 83b), %g0	/* CTI		Group brk forced*/
-	 add		%o0, %g7, %o0			/* IEU0		Group		*/
+	 add		%o0, %g6, %o0			/* IEU0		Group		*/
 38:	MOVE_LASTALIGNCHUNK(o1, o0, 0x60, g2, g3)
 	MOVE_LASTALIGNCHUNK(o1, o0, 0x50, g2, g3)
 	MOVE_LASTALIGNCHUNK(o1, o0, 0x40, g2, g3)
@@ -756,13 +756,13 @@ ENTRY(memmove)
 	sth		%g2, [%o0]			/* Store	Group + bubble	*/
 5:	andcc		%o1, 4, %g0			/* IEU1				*/
 236:	be,a,pn		%xcc, 2f			/* CTI				*/
-	 andcc		%o2, -128, %g7			/* IEU1		Group		*/
+	 andcc		%o2, -128, %g6			/* IEU1		Group		*/
 	lduw		[%o1 - 4], %g5			/* Load		Group		*/
 	sub		%o1, 4, %o1			/* IEU0				*/
 	sub		%o0, 4, %o0			/* IEU1				*/
 	sub		%o2, 4, %o2			/* IEU0		Group		*/
 	stw		%g5, [%o0]			/* Store			*/
-	andcc		%o2, -128, %g7			/* IEU1		Group		*/
+	andcc		%o2, -128, %g6			/* IEU1		Group		*/
 2:	be,pn		%xcc, 235f			/* CTI				*/
 	 andcc		%o0, 4, %g0			/* IEU1		Group		*/
 	be,pn		%xcc, 282f + 4			/* CTI		Group		*/
@@ -770,11 +770,11 @@ ENTRY(memmove)
 	RMOVE_BIGCHUNK(o1, o0, 0x20, g1, g3, g5, o5)
 	RMOVE_BIGCHUNK(o1, o0, 0x40, g1, g3, g5, o5)
 	RMOVE_BIGCHUNK(o1, o0, 0x60, g1, g3, g5, o5)
-	subcc		%g7, 128, %g7			/* IEU1		Group		*/
+	subcc		%g6, 128, %g6			/* IEU1		Group		*/
 	sub		%o1, 128, %o1			/* IEU0				*/
 	bne,pt		%xcc, 5b			/* CTI				*/
 	 sub		%o0, 128, %o0			/* IEU0		Group		*/
-235:	andcc		%o2, 0x70, %g7			/* IEU1		Group		*/
+235:	andcc		%o2, 0x70, %g6			/* IEU1		Group		*/
 41:	be,pn		%xcc, 280f			/* CTI				*/
 	 andcc		%o2, 8, %g0			/* IEU1		Group		*/
 							/* Clk1 8-(			*/
@@ -782,11 +782,11 @@ ENTRY(memmove)
 							/* Clk3 8-(			*/
 							/* Clk4 8-(			*/
 279:	rd		%pc, %o5			/* PDU		Group		*/
-	sll		%g7, 1, %g5			/* IEU0		Group		*/
-	sub		%o1, %g7, %o1			/* IEU1				*/
+	sll		%g6, 1, %g5			/* IEU0		Group		*/
+	sub		%o1, %g6, %o1			/* IEU1				*/
 	sub		%o5, %g5, %o5			/* IEU0  	Group		*/
 	jmpl		%o5 + %lo(280f - 279b), %g0	/* CTI		Group brk forced*/
-	 sub		%o0, %g7, %o0			/* IEU0		Group		*/
+	 sub		%o0, %g6, %o0			/* IEU0		Group		*/
 	RMOVE_LASTCHUNK(o1, o0, 0x60, g2, g3, g5, o5)
 	RMOVE_LASTCHUNK(o1, o0, 0x50, g2, g3, g5, o5)
 	RMOVE_LASTCHUNK(o1, o0, 0x40, g2, g3, g5, o5)
@@ -823,11 +823,11 @@ ENTRY(memmove)
 
 282:	RMOVE_BIGALIGNCHUNK(o1, o0, 0x00, g1, g3, g5, o5)
 	RMOVE_BIGALIGNCHUNK(o1, o0, 0x40, g1, g3, g5, o5)
-	subcc		%g7, 128, %g7			/* IEU1		Group		*/
+	subcc		%g6, 128, %g6			/* IEU1		Group		*/
 	sub		%o1, 128, %o1			/* IEU0				*/
 	bne,pt		%xcc, 282b			/* CTI				*/
 	 sub		%o0, 128, %o0			/* IEU0		Group		*/
-	andcc		%o2, 0x70, %g7			/* IEU1				*/
+	andcc		%o2, 0x70, %g6			/* IEU1				*/
 	be,pn		%xcc, 284f			/* CTI				*/
 	 andcc		%o2, 8, %g0			/* IEU1		Group		*/
 							/* Clk1 8-(			*/
@@ -835,10 +835,10 @@ ENTRY(memmove)
 							/* Clk3 8-(			*/
 							/* Clk4 8-(			*/
 283:	rd		%pc, %o5			/* PDU		Group		*/
-	sub		%o1, %g7, %o1			/* IEU0		Group		*/
-	sub		%o5, %g7, %o5			/* IEU1				*/
+	sub		%o1, %g6, %o1			/* IEU0		Group		*/
+	sub		%o5, %g6, %o5			/* IEU1				*/
 	jmpl		%o5 + %lo(284f - 283b), %g0	/* CTI		Group brk forced*/
-	 sub		%o0, %g7, %o0			/* IEU0		Group		*/
+	 sub		%o0, %g6, %o0			/* IEU0		Group		*/
 	RMOVE_LASTALIGNCHUNK(o1, o0, 0x60, g2, g3)
 	RMOVE_LASTALIGNCHUNK(o1, o0, 0x50, g2, g3)
 	RMOVE_LASTALIGNCHUNK(o1, o0, 0x40, g2, g3)

@@ -1,6 +1,6 @@
 /* Compare two strings for differences.
    For SPARC v7.
-   Copyright (C) 1996, 97, 99 Free Software Foundation, Inc.
+   Copyright (C) 1996, 97, 99, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>.
 
@@ -144,13 +144,13 @@ ENTRY(strcmp)
 	andn		%i1, 3, %i1
 	mov		32, %l1
 	ld		[%i1], %l2
-	mov		-1, %g7
+	mov		-1, %g6
 	add		%i1, 4, %i1
 	sub		%l1, %g3, %l1
-	sll		%g7, %g3, %g7
+	sll		%g6, %g3, %g6
 
 1:	sll		%l2, %g3, %g5
-	and		%i4, %g7, %l3
+	and		%i4, %g6, %l3
 	sub		%i4, %i2, %g1
 #ifdef EIGHTBIT_NOT_RARE
 	andn		%g1, %i4, %g1

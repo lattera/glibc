@@ -1,3 +1,80 @@
+2003-01-26  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/wordsize-32/divdi3.c: Export the functions only as
+	compatibility symbols.  Remove INTDEF for __divdi3.
+	* sysdeps/wordsize-32/lldiv.c: Don't use __divdi3_internal.
+	* sysdeps/powerpc/powerpc32/divdi3.c: Remove.
+	* sysdeps/powerpc/powerpc32/Makefile (CPPFLAGS-divdi3.c): Don't
+	define.
+	* sysdeps/powerpc/powerpc32/Dist: Remove divdi3.c.
+
+2003-01-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/tls-macros.h: Add SPARC 32-bit definitions.
+	* sysdeps/sparc/sparc32/elf/configure.in: Add TLS check.
+	* sysdeps/sparc/sparc32/dl-machine.h: Add dl_machine_h guards
+	for the first half of the header.  Include tls.h.
+	(elf_machine_type_class): Return ELF_RTYPE_CLASS_PLT for TLS
+	relocs too.
+	(elf_machine_rela): Handle TLS relocs.
+	* sysdeps/sparc/dl-tls.h: New file.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/socket.S: Add cancellation
+	support.
+
+	* sysdeps/sparc/sparc32/sparcv9/hp-timing.h: Use %g6 instead of %g7.
+	* sysdeps/sparc/sparc32/memchr.S: Likewise.
+	* sysdeps/sparc/sparc32/memcpy.S: Likewise.
+	* sysdeps/sparc/sparc32/strcat.S: Likewise.
+	* sysdeps/sparc/sparc32/strchr.S: Likewise.
+	* sysdeps/sparc/sparc32/strcmp.S: Likewise.
+	* sysdeps/sparc/sparc32/strcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/hp-timing.h: Likewise.
+	* sysdeps/sparc/sparc64/memcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/stpcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/stpncpy.S: Likewise.
+	* sysdeps/sparc/sparc64/strcat.S: Likewise.
+	* sysdeps/sparc/sparc64/strchr.S: Likewise.
+	* sysdeps/sparc/sparc64/strcmp.S: Likewise.
+	* sysdeps/sparc/sparc64/strcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/strncmp.S: Likewise.
+	* sysdeps/sparc/sparc64/strncpy.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Likewise.
+
+2003-01-24  Andreas Schwab  <schwab@suse.de>
+
+	* elf/dl-close.c (_dl_close): Don't relocate DT_FINI_ARRAY
+	elements, and process them backwards.
+	* elf/Makefile ($(objpfx)tst-array4): New target.
+	($(objpfx)tst-array4.out): Likewise.
+	(tests) [$(have-initfini-array) = yes]: Add tst-array4.
+	* elf/tst-array4.c: New file.
+	* elf/tst-array4.exp: Likewise.
+
+2003-01-24  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fe_nomask.c: New file.
+
+2003-01-27  Guido Guenther  <agx@sigxcpu.org>
+
+	* sysdeps/unix/sysv/linux/mips/sysdep.h (SYSCALL_ERROR_LABEL): Define.
+	* sysdeps/unix/sysv/linux/mips/pread.c: Add support for
+	cancellation handling and handle both __NR_pread64 and __NR_pread.
+	* sysdeps/unix/sysv/linux/mips/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c: Add support for
+	cancellation handling and handle both __NR_pwrite64 and __NR_pwrite.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c: Likewise.
+	* sysdeps/unix/mips/sysdep.S: Don't set errno in the _LIBC_REENTRANT
+	case, use register names consistently.
+
+2003-01-27  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/hooks.c (mem2chunk_check): Check alignment of mem
+	pointer, not of the computed chunk.  Bug report from Carlos
+	O'Donell <carlos@baldric.uwo.ca>.
+
 2003-01-25  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/dl-machine.h (_dl_start_user): Use pc-relative

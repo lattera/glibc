@@ -1,6 +1,6 @@
 /* strchr (str, ch) -- Return pointer to first occurrence of CH in STR.
    For SPARC v9.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jan Vondrak <jvon4518@ss1000.ms.mff.cuni.cz> and
 		  Jakub Jelinek <jj@ultra.linux.cz>.
@@ -27,7 +27,7 @@
 #define USE_BPR
 	.register	%g2, #scratch
 	.register	%g3, #scratch
-	.register	%g7, #scratch
+	.register	%g6, #scratch
 #endif
 
 	/* Normally, this uses
@@ -86,10 +86,10 @@ ENTRY(strchr)
 
 	sub		%o4, %g1, %o5			/* IEU1				*/
 #ifdef EIGHTBIT_NOT_RARE
-	andn		%o2, %o3, %g7			/* IEU0		Group		*/
+	andn		%o2, %o3, %g6			/* IEU0		Group		*/
 	andn		%o5, %o4, %o5			/* IEU1				*/
 	ldxa		[%o0] ASI_PNF, %o3		/* Load				*/
-	or		%o5, %g7, %o5			/* IEU0		Group		*/
+	or		%o5, %g6, %o5			/* IEU0		Group		*/
 #else
 	ldxa		[%o0] ASI_PNF, %o3		/* Load				*/
 	or		%o5, %o2, %o5			/* IEU0		Group		*/
@@ -240,9 +240,9 @@ ENTRY(strchr)
 19:	sub		%o3, %g1, %o2			/* IEU0		Group		*/
 
 #ifdef EIGHTBIT_NOT_RARE
-	andn		%o2, %o3, %g7			/* IEU0		Group		*/
+	andn		%o2, %o3, %g6			/* IEU0		Group		*/
 	ldxa		[%o0] ASI_PNF, %o3		/* Load				*/
-	andcc		%g7, %g2, %g0			/* IEU1		Group		*/
+	andcc		%g6, %g2, %g0			/* IEU1		Group		*/
 #else
 	ldxa		[%o0] ASI_PNF, %o3		/* Load				*/
 	andcc		%o2, %g2, %g0			/* IEU1		Group		*/
@@ -364,11 +364,11 @@ ENTRY(strrchr)
 
 3:	sub		%o4, %g1, %o5			/* IEU1				*/
 #ifdef EIGHTBIT_NOT_RARE
-	andn		%o2, %o3, %g7			/* IEU0		Group		*/
+	andn		%o2, %o3, %g6			/* IEU0		Group		*/
 	andn		%o5, %o4, %o5			/* IEU1				*/
 	ldxa		[%o0] ASI_PNF, %o3		/* Load				*/
 
-	or		%o5, %g7, %o5			/* IEU0		Group		*/
+	or		%o5, %g6, %o5			/* IEU0		Group		*/
 #else
 	ldxa		[%o0] ASI_PNF, %o3		/* Load				*/
 

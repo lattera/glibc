@@ -2,7 +2,7 @@
    null-terminated string from SRC to DST.  If SRC does not cover all of
    COUNT, the balance is zeroed.
    For SPARC v9.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jan Vondrak <jvon4518@ss1000.ms.mff.cuni.cz> and
                   Jakub Jelinek <jj@ultra.linux.cz>.
@@ -29,7 +29,7 @@
 #define USE_BPR
 	.register	%g2, #scratch
 	.register	%g3, #scratch
-	.register	%g7, #scratch
+	.register	%g6, #scratch
 #endif
 
 	/* Normally, this uses
@@ -58,7 +58,7 @@ ENTRY(strncpy)
 	tst		%o2				/* IEU1				*/
 	be,pn		%XCC, 19f			/* CTI				*/
 #endif
-	 mov		%o0, %g7			/* IEU0		Group		*/
+	 mov		%o0, %g6			/* IEU0		Group		*/
 	or		%g1, %lo(0x01010101), %g1	/* IEU1				*/
 
 	andcc		%o0, 7, %g0			/* IEU1		Group		*/
@@ -156,7 +156,7 @@ ENTRY(strncpy)
 
 	 stb		%g0, [%o0]			/* Store			*/
 9:	retl						/* CTI+IEU1	Group		*/
-	 mov		%g7, %o0			/* IEU0				*/
+	 mov		%g6, %o0			/* IEU0				*/
 
 	.align		16
 10:	ba,pt		%xcc, 3b			/* CTI				*/
@@ -240,14 +240,14 @@ ENTRY(strncpy)
 	stb		%g5, [%o0]			/* Store			*/ 
 
 19:	retl						/* CTI+IEU1	Group		*/
-	 mov		%g7, %o0			/* IEU0				*/
+	 mov		%g6, %o0			/* IEU0				*/
 50:	stb		%g0, [%o0]			/* Store	Group		*/
 20:	subcc		%o2, 1, %o2			/* IEU1		Group		*/
 
 	bne,pt		%XCC, 50b			/* CTI				*/
 	 add		%o0, 1, %o0			/* IEU0				*/
 	retl						/* CTI+IEU1	Group		*/
-	 mov		%g7, %o0			/* IEU0				*/
+	 mov		%g6, %o0			/* IEU0				*/
 
 21:	andcc		%o2, 4, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 22f			/* CTI				*/
@@ -270,7 +270,7 @@ ENTRY(strncpy)
 	 stb		%g4, [%o0]			/* Store	Group		*/
 
 24:	retl						/* CTI+IEU1	Group		*/
-	 mov		%g7, %o0			/* IEU0				*/
+	 mov		%g6, %o0			/* IEU0				*/
 25:	andcc		%o0, 7, %g0			/* IEU1		Group		*/
 	be,a,pn		%icc, 4b			/* CTI				*/
 
@@ -281,7 +281,7 @@ ENTRY(strncpy)
 
 	 add		%o0, 1, %o0			/* IEU0		Group		*/
 	retl						/* CTI+IEU1	Group		*/
-	 mov		%g7, %o0			/* IEU0				*/
+	 mov		%g6, %o0			/* IEU0				*/
 
 	.align		16
 26:	ldub		[%o1], %o3			/* Load				*/

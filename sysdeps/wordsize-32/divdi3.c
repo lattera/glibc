@@ -1,5 +1,5 @@
 /* 64-bit multiplication and division
-   Copyright (C) 1989, 1992-1999, 2000, 2001, 2002
+   Copyright (C) 1989, 1992-1999, 2000, 2001, 2002, 2003
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -294,7 +294,6 @@ __divdi3 (DWtype u, DWtype v)
     w = -w;
   return w;
 }
-INTDEF(__divdi3)
 
 DWtype
 __moddi3 (DWtype u, DWtype v)
@@ -329,3 +328,13 @@ __umoddi3 (UDWtype u, UDWtype v)
   __udivmoddi4 (u, v, &w);
   return w;
 }
+
+/* We declare these with compat_symbol so that they are not visible at
+   link time.  Programs must use the functions from libgcc.  */
+#if defined HAVE_ELF && defined SHARED && defined DO_VERSIONING
+# include <shlib-compat.h>
+compat_symbol (libc, __divdi3, __divdi3, GLIBC_2_0);
+compat_symbol (libc, __moddi3, __moddi3, GLIBC_2_0);
+compat_symbol (libc, __udivdi3, __udivdi3, GLIBC_2_0);
+compat_symbol (libc, __umoddi3, __umoddi3, GLIBC_2_0);
+#endif

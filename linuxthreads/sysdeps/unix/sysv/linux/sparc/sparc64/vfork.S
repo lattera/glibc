@@ -21,7 +21,7 @@
 
 	.text
 ENTRY(__vfork)
-	ld	[%g6 + MULTIPLE_THREADS_OFFSET], %o0
+	ld	[%g7 + MULTIPLE_THREADS_OFFSET], %o0
 #ifdef SHARED
 	cmp	%o0, 0
 	bne	HIDDEN_JUMPTARGET (__fork)
