@@ -4,6 +4,9 @@
 
 2005-01-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/init-first.c (__libc_init_first): Don't
+	make __libc_init_first hidden.
+
 	* elf/rtld.c [!DONT_USE_BOOTSTRAP_MAP] (_dl_start_final): Initialize
 	l_relocated of rtld map.
 	* sysdeps/powerpc/powerpc64/dl-trampoline.S: New file.
