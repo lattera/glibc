@@ -23,12 +23,12 @@
 #include <elf.h>
 #include <error.h>
 #include <errno.h>
+#include <inttypes.h>
 #include <libintl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <stdint.h>
 #include <sys/fcntl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -597,7 +597,7 @@ search_dir (const struct dir_entry *entry)
   if (opt_verbose)
     {
       if (hwcap != 0)
-	printf ("%s: (hwcap: 0x%Lx)\n", entry->path, hwcap);
+	printf ("%s: (hwcap: 0x%" PRIx64 ")\n", entry->path, hwcap);
       else
 	printf ("%s:\n", entry->path);
     }

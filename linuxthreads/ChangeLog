@@ -1,3 +1,7 @@
+2001-02-05  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c: New file.
+
 2001-02-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* Versions: Remove __pthread_initialize_minimal.
