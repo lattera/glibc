@@ -1,3 +1,12 @@
+1998-10-24  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/Makefile [subdir=signal]: Remove
+	rt_sigsuspend, rt_sigprocmask, rt_sigtimedwait, rt_sigqueueinfo,
+	rt_sigaction and rt_sigpending.
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list: Remove all entries
+	for __syscall_* functions.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Implement INLINE_SYSCALL.
+
 1998-10-26  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/Versions: Add _hurd_dtable, _hurd_dtablesize,
