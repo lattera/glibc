@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -380,9 +380,15 @@
 # define __ASSUME_PROT_GROWSUPDOWN	1
 #endif
 
-/* Starting with 2.6.0 PowerPC adds signal/swapcontext support for Vector 
-   SIMD (AKA Altivec, VMX) instructions and register state.  This changes 
+/* Starting with 2.6.0 PowerPC adds signal/swapcontext support for Vector
+   SIMD (AKA Altivec, VMX) instructions and register state.  This changes
    the overall size of the sigcontext and adds the swapcontext syscall.  */
-#if __LINUX_KERNEL_VERSION >= (132608) && defined __powerpc__
+#if __LINUX_KERNEL_VERSION >= 132608 && defined __powerpc__
 # define __ASSUME_SWAPCONTEXT_SYSCALL		1
+#endif
+
+/* The CLONE_DETACHED flag is not necessary in 2.6.2 kernels, it is
+   implied.  */
+#if __LINUX_KERNEL_VERSION >= 132610
+# define __ASSUME_NO_CLONE_DETACHED		1
 #endif
