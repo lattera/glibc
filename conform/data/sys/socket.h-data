@@ -103,6 +103,7 @@ function int setsockopt (int, int, int, const void*, socklen_t)
 function int shutdown (int, int)
 function int socket (int, int, int)
 function int socketpair (int, int, int, int[2])
+function int sockatmark (int)
 
 allow-header sys/uio.h
 

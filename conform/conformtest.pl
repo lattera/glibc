@@ -224,11 +224,19 @@ sub newtoken {
   if ($isknown{$token}) {
     ++$nknown;
   } else {
-    ++$nerrors;
-    if ($nerrors == 1) {
-      printf ("FAIL\n    " . "-" x 72 . "\n");
-    }
-    printf ("    Namespace violation: \"%s\"\n", $token);
+    $errors{$token} = 1;
+  }
+}
+
+
+sub removetoken {
+  my($token) = @_;
+  my($idx);
+
+  return if ($token =~ /^[0-9_]/ || $iskeyword{$token});
+
+  if (exists $errors{$token}) {
+    undef $errors{$token};
   }
 }
 
@@ -243,14 +251,15 @@ sub checknamespace {
   print TESTFILE "#include <$h>\n";
   close (TESTFILE);
 
-  $nerrors = 0;
+  undef %errors;
   $nknown = 0;
   open (CONTENT, "$CC $CFLAGS{$dialect} -E $fnamebase.c -P -Wp,-dN | sed -e '/^# [1-9]/d' -e '/^[[:space:]]*\$/d' |");
   loop: while (<CONTENT>) {
-    next loop if (/^#undef /);
     chop;
     if (/^#define (.*)/) {
       newtoken ($1, @allow);
+    } elsif (/^#undef (.*)/) {
+      removetoken ($1);
     } else {
       # We have to tokenize the line.
       my($str) = $_;
@@ -266,14 +275,28 @@ sub checknamespace {
   }
   close (CONTENT);
   unlink "$fnamebase.c";
-  if ($nerrors != 0) {
-    printf ("    " . "-" x 72 . "\n");
-    ++$errors;
-  } elsif ($nknown > 0) {
-    printf ("EXPECTED FAILURES\n");
-    ++$known;
-  } else {
-    printf ("OK\n");
+  $realerror = 0;
+  if ($#errors != 0) {
+    foreach $f (%errors) {
+      if ($errors{$f} == 1) {
+	if ($realerror == 0) {
+	  printf ("FAIL\n    " . "-" x 72 . "\n");
+	  $realerror = 1;
+	  ++$errors;
+	}
+	printf ("    Namespace violation: \"%s\"\n", $f);
+      }
+    }
+    printf ("    " . "-" x 72 . "\n") if ($realerror != 0);
+  }
+
+  if ($realerror == 0) {
+    if ($nknown > 0) {
+      printf ("EXPECTED FAILURES\n");
+      ++$known;
+    } else {
+      printf ("OK\n");
+    }
   }
 }
 

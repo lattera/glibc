@@ -653,7 +653,7 @@ fts_build(sp, type)
 			cur->fts_flags |= FTS_DONTCHDIR;
 			descend = 0;
 			cderrno = errno;
-			(void)closedir(dirp);
+			(void)__closedir(dirp);
 			dirp = NULL;
 		} else
 			descend = 1;
@@ -685,7 +685,7 @@ fts_build(sp, type)
 
 	/* Read the directory, attaching each entry to the `link' pointer. */
 	doadjust = 0;
-	for (head = tail = NULL, nitems = 0; dirp && (dp = readdir(dirp));) {
+	for (head = tail = NULL, nitems = 0; dirp && (dp = __readdir(dirp));) {
 		if (!ISSET(FTS_SEEDOT) && ISDOT(dp->d_name))
 			continue;
 
