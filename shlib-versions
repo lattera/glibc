@@ -23,6 +23,7 @@ sparc.*-.*-.*		libm=6
 alpha.*-.*-linux.*	libm=6.1
 alpha.*-.*-.*		libm=6
 powerpc-.*-.*		libm=6
+mips.*-.*-linux.*	libm=6			GLIBC_2.0 GLIBC_2.2
 mips.*-.*-.*		libm=6
 arm.*-.*-.*		libm=6
 ia64-.*-.*		libm=6			GLIBC_2.2
@@ -54,11 +55,13 @@ sparc.*-.*-linux.*	ld=ld-linux.so.2
 alpha.*-.*-linux.*	ld=ld-linux.so.2
 arm.*-.*-linux.*	ld=ld-linux.so.2
 ia64-.*-linux.*		ld=ld-linux.so.2	GLIBC_2.2
+mips.*-.*-linux.*	ld=ld.so.1		GLIBC_2.0 GLIBC_2.2
 # We use the ELF ABI standard name for the default.
 .*-.*-.*		ld=ld.so.1
 
 # The -ldl interface (see <dlfcn.h>) is the same on all platforms.
 alpha.*-.*-linux.*	libdl=2.1
+mips.*-.*-linux.*	libdl=2			GLIBC_2.0 GLIBC_2.2
 .*-.*-.*		libdl=2
 
 # So far the -lutil interface is the same on all platforms, except for the

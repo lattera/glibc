@@ -7,6 +7,9 @@
 
 2000-04-14  Andreas Jaeger  <aj@suse.de>
 
+	* shlib-versions (mips.*-.*-linux.*): Support only GLIBC 2.0 and
+	2.2 for libdl, ld and libm.
+
 	* sysdeps/generic/madvise.c: Fix typos.
 
 	* sysdeps/unix/sysv/linux/mips/clone.S (error): Use __PIC__.
