@@ -1,3 +1,17 @@
+2002-07-06  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/fpu/bits/mathinline.h: New.
+	* sysdeps/x86_64/fpu/s_copysign.S: New.
+	* sysdeps/x86_64/fpu/s_copysignf.S: New.
+	* sysdeps/x86_64/fpu/s_copysignl.S: New.
+	* sysdeps/x86_64/fpu/s_finitel.S: New.
+	* sysdeps/x86_64/fpu/s_fmax.S: New.
+	* sysdeps/x86_64/fpu/s_fmaxf.S: New.
+	* sysdeps/x86_64/fpu/s_fmaxl.S: New.
+	* sysdeps/x86_64/fpu/s_fmin.S: New.
+	* sysdeps/x86_64/fpu/s_fminf.S: New.
+	* sysdeps/x86_64/fpu/s_fminl.S: New.
+
 2002-06-05  Brian Youmans <3diff@gnu.org>
 
 	* sysdeps/ia64/fpu/e_acos.S: Added text of Intel license.
