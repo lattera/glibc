@@ -1,5 +1,6 @@
 /* Machine-dependent ELF dynamic relocation functions.  PowerPC version.
-   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,9 +22,9 @@
 #include <string.h>
 #include <sys/param.h>
 #include <link.h>
-#include <dl-machine.h>
 #include <ldsodefs.h>
 #include <elf/dynamic-link.h>
+#include <dl-machine.h>
 
 /* Because ld.so is now versioned, these functions can be in their own file;
    no relocations need to be done to call them.
@@ -299,8 +300,7 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 	 there may be a little overlap at the start and the end.
 
 	 Assumes that dcbst and icbi apply to lines of 16 bytes or
-	 more.  At present, all PowerPC processors have line sizes of
-	 16 or 32 bytes.  */
+	 more.  Current known line sizes are 16, 32, and 128 bytes.  */
 
       size_modified = lazy ? rel_offset_words : 6;
       for (i = 0; i < size_modified; i += 4)
@@ -315,7 +315,7 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
   return lazy;
 }
 
-void
+Elf32_Addr
 __elf_machine_fixup_plt(struct link_map *map, const Elf32_Rela *reloc,
 			Elf32_Addr *reloc_addr, Elf32_Addr finaladdr)
 {
@@ -361,6 +361,7 @@ __elf_machine_fixup_plt(struct link_map *map, const Elf32_Rela *reloc,
 	}
     }
   MODIFIED_CODE (reloc_addr);
+  return finaladdr;
 }
 
 void

@@ -1,5 +1,5 @@
 /* Round a 64-bit floating point value to the nearest integer.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,8 +33,8 @@ __rint (double x)
 	}
       else if (x < 0.0)
 	{
-	  x -= TWO52;
-	  x += TWO52;
+	  x = TWO52 - x;
+	  x = -(x - TWO52);
 	}
     }
 

@@ -56,7 +56,7 @@ ENTRY(_dl_start_user)
 	lwz	r29,_dl_argc@got(r31)
 	lwz	r27,_dl_argv@got(r31)
 
-/* Call _dl_init (_dl_loaded, _dl_argc, _dl_argv, _dl_argv+_dl_argc+1)
+/* Call _dl_init (_dl_loaded, _dl_argc, _dl_argv, _dl_argv+_dl_argc+1). */
 	lwz	r3,0(r28)
 	lwz	r4,0(r29)
 	lwz	r5,0(r27)

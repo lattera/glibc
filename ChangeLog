@@ -1,3 +1,18 @@
+2000-04-11  Geoff Keating  <geoffk@cygnus.com>
+
+	* sysdeps/powerpc/dl-machine.c: Include dl-machine.h after the
+	other header files.  Mention about 128-byte cache line sizes.
+	(__elf_machine_fixup_plt): Make types match elf_machine_fixup_plt.
+	* sysdeps/powerpc/dl-machine.h (elf_machine_fixup_plt): Update
+	for current calling sequence.
+	* sysdeps/powerpc/dl-start.S (_dl_start_user): Close comment.
+
+	* sysdeps/powerpc/fpu/s_rint.c: Handle rounding to -0 correctly.
+	* sysdeps/powerpc/fpu/s_rintf.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add getrlimit
+	and setrlimit syscalls for backwards compatibility.
+
 2000-06-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/skeleton.c:  Rename converted written to correcter name

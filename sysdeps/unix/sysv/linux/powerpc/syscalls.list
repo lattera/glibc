@@ -46,3 +46,5 @@ sys_mknod	xmknod	mknod		3	__syscall_mknod
 sys_readv	readv	readv		3	__syscall_readv
 sys_stat	xstat	stat		2	__syscall_stat
 sys_writev	writev	writev		3	__syscall_writev
+oldgetrlimit	EXTRA	getrlimit	2	__old_getrlimit	getrlimit@GLIBC_2.0
+oldsetrlimit	EXTRA	setrlimit	2	__old_setrlimit	setrlimit@GLIBC_2.0
