@@ -1,5 +1,8 @@
 2002-06-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/lug_UG: New file.
+	Contributed by Kizito Birabwa <kompyuta@kizito.uklinux.net>.
+
 	* locales/iso14651_t1: Fix U0406 handling (MIN -> CAP).
 	Patch by Alexander Mikhailian <lowry@altern.org> [PR libc/3566].
 

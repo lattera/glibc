@@ -1,11 +1,16 @@
 2002-06-30  Ulrich Drepper  <drepper@redhat.com>
 
-	* iconvdata/Makefile: Recreate gconv-modules.cache file in taret
+	* locale/iso-639.def: Add entry for Ganda.
+	* locale/programs/ld-address.c (DEFINE_LANGUAGE_CODE3): New
+	definition.
+	(address_finish): Handle entries with two letter ISO 639 code.
+
+	* iconvdata/Makefile: Recreate gconv-modules.cache file in target
 	directory if it existed before.
 	* iconv/iconvconfig.c: Implement --prefix option.
 
 	* math/libm-test.inc (cexp_test): Add missing L suffix for
-	expected result.  Reported by 	Stephen L Moshier <steve@moshier.net>.
+	expected result.  Reported by Stephen L Moshier <steve@moshier.net>.
 	* sysdeps/i386/fpu/libm-test-ulps: Adjust error for cexp (0.75 +
 	1.25 i).
 

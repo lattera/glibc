@@ -56,6 +56,8 @@ static struct
 {
 #define DEFINE_LANGUAGE_CODE(Name, Ab, Term, Lib) \
   { #Ab, #Term, #Lib },
+#define DEFINE_LANGUAGE_CODE3(Name, Term, Lib) \
+  { "", #Term, #Lib },
 #include "iso-639.def"
 };
 
@@ -247,7 +249,8 @@ No definition for %s category found"), "LC_ADDRESS"));
 				    "LC_ADDRESS", address->lang_ab));
 	}
       else
-	if (strcmp (iso639[cnt].ab, address->lang_ab) != 0)
+	if (strcmp (iso639[cnt].ab, address->lang_ab) != 0
+	    && iso639[cnt].ab[0] != '\0')
 	  WITH_CUR_LOCALE (error (0, 0, _("\
 %s: `%s' value does not match `%s' value"),
 				  "LC_ADDRESS", "lang_ab", "lang_term"));
