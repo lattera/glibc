@@ -1,5 +1,13 @@
 2000-08-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_conf.c (insert_module): Take extra parameter to decide
+	whether the new record should be freed if it's a duplicate.
+	(add_module): Adjust insert_module call.
+	(__gconv_read_conf): Likewise.
+	* iconvdata/Makefile (generated): Add tst-loading.mtrace and
+	mtrace-tst-loading.
+	(tests): Make $(objpfx)mtrace-tst-loading a dependency.  Add rule.
+
 	* sysdeps/generic/ldsodefs.h: Add declaration for _dl_all_dirs and
 	_dl_all_init_dirs.
 	* include/link.h (struct r_search_path_struct): New.

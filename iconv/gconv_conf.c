@@ -170,7 +170,7 @@ add_alias (char *rp, void *modules)
 /* Insert a data structure for a new module in the search tree.  */
 static inline void
 internal_function
-insert_module (struct gconv_module *newp)
+insert_module (struct gconv_module *newp, int tobefreed)
 {
   struct gconv_module **rootp = &__gconv_modules_db;
 
@@ -194,8 +194,12 @@ insert_module (struct gconv_module *newp)
 	    }
 
 	  if (root != NULL)
-	    /* This is a no new conversion.  */
-	    return;
+	    {
+	      /* This is a no new conversion.  */
+	      if (tobefreed)
+		free (newp);
+	      return;
+	    }
 
 	  break;
 	}
@@ -324,7 +328,7 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
 	memcpy (tmp - 1, gconv_module_ext, sizeof (gconv_module_ext));
 
       /* Now insert the new module data structure in our search tree.  */
-      insert_module (new_module);
+      insert_module (new_module, 1);
     }
 }
 
@@ -529,7 +533,7 @@ __gconv_read_conf (void)
 	/* It'll conflict so don't add it.  */
 	continue;
 
-      insert_module (&builtin_modules[cnt]);
+      insert_module (&builtin_modules[cnt], 0);
     }
 
   /* Add aliases for builtin conversions.  */
