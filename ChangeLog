@@ -1,5 +1,7 @@
 1998-05-15  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconv/gconv_db.c (derivation_lookup): Use __tfind correctly.
+
 	* sysdeps/generic/setenv.c (setenv): Remove optimization for
 	overwriting existing values if it fits.
 

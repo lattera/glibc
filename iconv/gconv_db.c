@@ -102,15 +102,15 @@ derivation_lookup (const char *fromset, const char *toset,
 		   struct gconv_step **handle, size_t *nsteps)
 {
   struct known_derivation key = { fromset, toset, NULL, 0 };
-  struct known_derivation *result;
+  struct known_derivation **result;
 
   result = __tfind (&key, &known_derivations, derivation_compare);
 
   if (result == NULL)
     return GCONV_NOCONV;
 
-  *handle = result->steps;
-  *nsteps = result->nsteps;
+  *handle = (*result)->steps;
+  *nsteps = (*result)->nsteps;
 
   /* Please note that we return GCONV_OK even if the last search for
      this transformation was unsuccessful.  */
