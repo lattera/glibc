@@ -136,7 +136,8 @@ target-zone-flavor = $(filter /posix /right, \
 					  $(patsubst $(inst_zonedir)/%,%,$@))))
 
 ifdef localtime
-$(installed-localtime-file): $(inst_zonedir)/$(localtime) $(objpfx)zic
+$(installed-localtime-file): $(inst_zonedir)/$(localtime) $(objpfx)zic \
+			     $(+force)
 	$(make-target-directory)
 	if test -r $@; then \
 	  echo Site timezone NOT reset to Factory.; \
@@ -147,7 +148,8 @@ $(installed-localtime-file): $(inst_zonedir)/$(localtime) $(objpfx)zic
 	fi
 endif
 ifdef posixrules
-$(installed-posixrules-file): $(inst_zonedir)/$(posixrules) $(objpfx)zic
+$(installed-posixrules-file): $(inst_zonedir)/$(posixrules) $(objpfx)zic \
+			      $(+force)
 	$(zic-cmd) -p $(posixrules)
 endif
 
@@ -188,5 +190,6 @@ $(objpfx)tzselect: tzselect.ksh $(common-objpfx)config.make
 	chmod 555 $@.new
 	mv -f $@.new $@
 
-$(addprefix $(inst_zonedir)/,iso3166.tab zone.tab): $(inst_zonedir)/%: %
+$(addprefix $(inst_zonedir)/,iso3166.tab zone.tab): \
+    $(inst_zonedir)/%: % $(+force)
 	$(do-install)

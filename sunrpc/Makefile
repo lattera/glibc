@@ -124,12 +124,12 @@ rpcgen-cmd = $(built-program-cmd)
 # a shorter name.  But if the filesystem can handle it, we want to
 # install under the proper name as well.
 $(inst_includedir)/rpcsvc/bootparam_prot.h: \
-  $(inst_includedir)/rpcsvc/bootparam.h
+  $(inst_includedir)/rpcsvc/bootparam.h $(+force)
 	@echo It is safe to ignore an error here if this file name is too long.
 	-$(do-install)
 
 # Install the rpc data base file.
-$(inst_sysconfdir)/rpc: etc.rpc
+$(inst_sysconfdir)/rpc: etc.rpc $(+force)
 	$(do-install)
 
 # Generate the rpcsvc headers with rpcgen.

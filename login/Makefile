@@ -53,7 +53,7 @@ libutil-map	:= libutil.map
 include ../Rules
 
 # pt_chown needs to be setuid root.
-$(inst_libexecdir)/pt_chown: $(objpfx)pt_chown
+$(inst_libexecdir)/pt_chown: $(objpfx)pt_chown $(+force)
 	$(make-target-directory)
 	-$(INSTALL) -m 4755 -o root $< $@
 

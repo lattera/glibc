@@ -112,11 +112,11 @@ endif
 $(objpfx)libdb.so: $(common-objpfx)libc.so
 
 subdir_install: $(inst_libdir)/libndbm.a
-$(inst_libdir)/libndbm.a: $(inst_libdir)/libdb.a
+$(inst_libdir)/libndbm.a: $(inst_libdir)/libdb.a $(+force)
 	$(make-link)
 
 ifeq ($(build-shared),yes)
 subdir_install: $(inst_libdir)/libndbm.so
-$(inst_libdir)/libndbm.so: $(inst_libdir)/libdb.so
+$(inst_libdir)/libndbm.so: $(inst_libdir)/libdb.so $(+force)
 	$(make-link)
 endif

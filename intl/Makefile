@@ -32,7 +32,7 @@ include ../Rules
 CPPFLAGS += -D'GNULOCALEDIR="$(localedir)"' \
 	    -D'LOCALE_ALIAS_PATH="$(localedir):$(i18ndir)"'
 
-$(inst_localedir)/locale.alias: locale.alias
+$(inst_localedir)/locale.alias: locale.alias $(+force)
 	$(do-install)
 
 ifdef gettext-srcdir

@@ -59,7 +59,7 @@ include ../Rules
 	$(MSGFMT) -o $@ $<
 
 # Install the message object files as libc.po in the language directory.
-$(mo-installed): %.mo; $(do-install) || exit 0
+$(mo-installed): %.mo $(+force); $(do-install) || exit 0
 
 .PHONY: linguas linguas.mo
 linguas: $(ALL_LINGUAS:=.po)

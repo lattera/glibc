@@ -656,7 +656,7 @@ the file name string.  This can be done using the macro @code{SUN_LEN}:
 
 @comment sys/un.h
 @comment BSD
-@deftypefn {Macro} int SUNLEN (@emph{struct sockaddr_un *} @var{ptr})
+@deftypefn {Macro} int SUN_LEN (@emph{struct sockaddr_un *} @var{ptr})
 The macro computes the length of socket address in the local namespace.
 @end deftypefn
 
@@ -921,7 +921,7 @@ example the class A network 10 is written as @samp{10.0.0.0/8}.
 
 IPv6 addresses contain 128 bits (IPv4 has 32 bits) of data.  A host
 address is usually written as eight 16-bit hexadecimal numbers that are
-separated by colons.  Two colons are used to appreviated strings of
+separated by colons.  Two colons are used to abbreviate strings of
 consecutive zeros.  For example the IPv6 loopback address which is
 @samp{0:0:0:0:0:0:0:1} can be just written as @samp{::1}.
 
@@ -1056,7 +1056,7 @@ given in the standard numbers-and-dots notation. The returned address is
 in host order. If the input is not valid, @code{inet_network} returns
 @code{-1}.
 
-The function works only with traditional IPv4 class A,B and C network
+The function works only with traditional IPv4 class A, B and C network
 types.  It doesn't work with classless addresses and shouldn't be used
 anymore.
 @end deftypefun
@@ -1093,7 +1093,7 @@ number @var{net} with the local-address-within-network number
 This function returns the local-address-within-network part of the
 Internet host address @var{addr}.
 
-The function works only with traditional IPv4 class A,B and C network
+The function works only with traditional IPv4 class A, B and C network
 types.  It doesn't work with classless addresses and shouldn't be used
 anymore.
 @end deftypefun
@@ -1104,7 +1104,7 @@ anymore.
 This function returns the network number part of the Internet host
 address @var{addr}.
 
-The function works only with traditional IPv4 class A,B and C network
+The function works only with traditional IPv4 class A, B and C network
 types.  It doesn't work with classless addresses and shouldn't be used
 anymore.
 @end deftypefun

@@ -64,7 +64,7 @@ __getcwd (char *buf, size_t size)
 	  return NULL;
 	}
 
-      alloc_size = PATH_MAX + 1;
+      alloc_size = PATH_MAX;
     }
 
   if (buf != NULL)
@@ -88,9 +88,9 @@ __getcwd (char *buf, size_t size)
 	{
 	  if (buf == NULL)
 	    {
-	      buf = realloc (path, strlen (path) + 1);
+	      buf = realloc (path, (size_t) retval);
 	      if (buf == NULL)
-		/* `relloc' failed but we still have the original string.  */
+		/* `realloc' failed but we still have the original string.  */
 		buf = path;
 	    }
 	  return buf;

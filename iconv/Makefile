@@ -35,5 +35,5 @@ include ../Rules
 
 subdir_install: $(inst_bindir)/iconv
 
-$(inst_bindir)/iconv: $(objpfx)iconv_prog
+$(inst_bindir)/iconv: $(objpfx)iconv_prog $(+force)
 	$(do-install-program)

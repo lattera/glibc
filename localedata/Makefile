@@ -55,8 +55,8 @@ install-others := $(addprefix $(inst_i18ndir)/, $(charmaps) $(locales))
 include ../Rules
 
 # Install the source files in the appropriate directories.
-$(inst_i18ndir)/charmaps/%: charmaps/%; $(do-install)
-$(inst_i18ndir)/locales/%: locales/%; $(do-install)
+$(inst_i18ndir)/charmaps/%: charmaps/% $(+force); $(do-install)
+$(inst_i18ndir)/locales/%: locales/% $(+force); $(do-install)
 
 
 ifeq (no,$(cross-compiling))

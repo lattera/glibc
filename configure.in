@@ -91,8 +91,9 @@ AC_ARG_ENABLE(versioning, dnl
 
 dnl Generic infrastructure for drop-in additions to libc.
 AC_ARG_ENABLE(add-ons, dnl
-[  --enable-add-ons[=DIR1,DIR2]... configure and build add-ons in DIR1,DIR2,...
-                                  search for add-ons if no parameter given],
+[  --enable-add-ons[=DIR1,DIR2]...
+			  configure and build add-ons in DIR1,DIR2,...
+                          search for add-ons if no parameter given],
   [case "$enableval" in
     yes) if test "$srcdir" = "."; then
 	   add_ons=`echo */configure | sed -e 's!/configure!!g'`
@@ -125,6 +126,12 @@ AC_ARG_ENABLE(static-nss, dnl
 if test x"$static_nss" = xyes; then
   AC_DEFINE(DO_STATIC_NSS)
 fi
+
+AC_ARG_ENABLE(force-install,
+[  --enable-force-install  force installation of files from this package,
+			  even if they are older than the installed files],
+	      force_install=$enableval, force_install=yes)
+AC_SUBST(force_install)
 
 AC_CANONICAL_HOST
 

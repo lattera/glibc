@@ -1,3 +1,40 @@
+1998-04-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* configure.in: Add new option --enable-force-install.  Substitute
+	force_install.
+	* config.make.in (force-install): Set from configure.
+	* Makerules (force-install): New phony target.
+	* Makeconfig (+force): New variable.
+	* Makefile: Use it in dependency list of installation targets.
+	* db/Makefile: Likewise.
+	* db2/Makefile: Likewise.
+	* elf/Makefile: Likewise.
+	* hurd/Makefile: Likewise.
+	* iconv/Makefile: Likewise.
+	* iconvdata/Makefile: Likewise.
+	* intl/Makefile: Likewise.
+	* localedata/Makefile: Likewise.
+	* login/Makefile: Likewise.
+	* po/Makefile: Likewise.
+	* sunrpc/Makefile: Likewise.
+	* sysdeps/mach/hurd/Makefile: Likewise.
+	* sysdeps/standalone/i386/force_cpu386/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile: Likewise.
+	* timezone/Makefile: Likewise.
+
+1998-04-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/getcwd.c: Use PATH_MAX as default
+	alloc_size.  Pass return value of getcwd syscall to realloc.
+
+1998-04-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/socket.texi: Spelling fixes.
+
+1998-04-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-load.c (print_search_path): Remove unused variable.
+
 1998-04-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* login/utmp_file.c: use __ftruncate not ftruncate.

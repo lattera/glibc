@@ -155,7 +155,7 @@ CFLAGS-dl-load.c += -Wno-uninitialized
 # rule to build a shared library.
 $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
 
-$(inst_slibdir)/$(rtld-version-installed-name): $(objpfx)ld.so
+$(inst_slibdir)/$(rtld-version-installed-name): $(objpfx)ld.so $(+force)
 	$(do-install-program)
 
 $(inst_slibdir)/$(rtld-installed-name): \

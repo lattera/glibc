@@ -37,7 +37,7 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscal
 	} > $(@:.d=.h).new
 	mv -f $(@:.d=.h).new $(@:.d=.h)
 
-$(inst_includedir)/bits/syscall.h: $(objpfx)syscall-list.h
+$(inst_includedir)/bits/syscall.h: $(objpfx)syscall-list.h $(+force)
 	$(make-target-directory)
 	if test -r $@ && cmp -s $< $@; \
         then echo 'bits/syscall.h unchanged'; \

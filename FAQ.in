@@ -945,6 +945,31 @@ Also, make sure you have a suitably recent kernel.  As of the 970401
 snapshot, according to Philip Blundell <Philip.Blundell@pobox.com>, the
 required kernel version is at least 2.1.30.
 
+??	When I set the timezone I'm by setting the TZ environment variable
+	to EST5EDT things go wrong since glibc computes the wrong time
+	from this information.
+
+{UD} The problem is that people still use the braindamaged POSIX
+method to select the timezone using the TZ environment variable with a
+format EST5EDT or whatever.  People, read the POSIX standard, the
+implemented behaviour is correct!  What you see is in fact the result
+of the decisions made while POSIX.1 was created.  We've only
+implemented the handling of TZ this way to be POSIX compliant.  It is
+not really meant to be used.
+
+The alternative approach to handle timezones which is implemented is
+the correct one to use: use the timezone database.  This avoids all
+the problems the POSIX method has plus it is much easier to use.
+Simply run the tzselect shell script, answer the question and use the
+name printed in the end by making a symlink to
+/usr/share/zoneinfo/NAME (NAME is the returned value from tzselect)
+from the file /etc/localtime.  That's all.  You never again have to
+worry.
+
+So, please avoid sending bug reports about time related problems if
+you use the POSIX method and you have not verified something is really
+broken by reading the POSIX standards.
+
 
 Answers were given by:
 {UD} Ulrich Drepper, <drepper@cygnus.com>

@@ -830,7 +830,6 @@ print_search_path (struct r_search_path_elem **list,
                    const char *what, const char *name)
 {
   char buf[max_dirnamelen + max_capstrlen];
-  char *endp;
   int first = 1;
 
   _dl_debug_message (1, " search path=", NULL);

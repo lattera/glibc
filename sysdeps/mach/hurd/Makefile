@@ -106,8 +106,8 @@ libc-name = crt
 
 ifeq (,$(subdir))
 install-others += $(inst_libdir)/libc.a $(inst_libdir)/libc_p.a
-$(inst_libdir)/libc.a: $(hurd)/libc-ldscript; $(do-install)
-$(inst_libdir)/libc_p.a: $(hurd)/libc_p-ldscript; $(do-install)
+$(inst_libdir)/libc.a: $(hurd)/libc-ldscript $(+force); $(do-install)
+$(inst_libdir)/libc_p.a: $(hurd)/libc_p-ldscript $(+force); $(do-install)
 endif
 
 # Make sure these are used to build the libc.so shared object too.

@@ -497,6 +497,15 @@ ETAGS	:= etags -T
 # perhaps others) to preprocess assembly code in some cases.
 M4 = m4
 
+# To force installation of files even if they are older than the
+# installed files.  This variable is included in the dependency list
+# of all installation targets.
+ifeq ($(force-install),yes)
++force = force-install
+else
++force =
+endif
+
 ####
 #### End of configuration variables.
 ####

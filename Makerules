@@ -625,6 +625,9 @@ endef
 
 # Installation.
 
+.PHONY: force-install
+force-install:
+
 # $(install-lib) are installed from the object directory into $(libdir);
 # files in $(install-lib) matching `lib%.a' are ranlib'd after installation
 # unless they also appear in $(non-lib.a).  $(install-data) are installed
@@ -660,7 +663,7 @@ installed-libcs := $(foreach o,$(filter-out .os,$(object-suffixes-for-libc)),\
 			     $(inst_libdir)/$(patsubst %,$(libtype$o),\
 						     $(libprefix)$(libc-name)))
 install: $(installed-libcs)
-$(installed-libcs): $(inst_libdir)/lib$(libprefix)%: lib
+$(installed-libcs): $(inst_libdir)/lib$(libprefix)%: lib $(+force)
 	$(make-target-directory)
 	$(INSTALL_DATA) $(common-objpfx)lib$(*:$(libc-name)%=c%) $@
 # Running ranlib after installing makes the __.SYMDEF time stamp up to
@@ -686,7 +689,7 @@ versioned := $(strip $(foreach so,$(install-lib.so),\
 
 # Install all the unversioned shared libraries.
 $(addprefix $(inst_slibdir)/, $(filter-out $(versioned),$(install-lib.so))): \
-	$(inst_slibdir)/%.so: $(objpfx)%.so; $(do-install-program)
+	$(inst_slibdir)/%.so: $(objpfx)%.so $(+force); $(do-install-program)
 
 ifneq ($(findstring -s,$(LN_S)),)
 define make-link
@@ -722,9 +725,10 @@ ifdef libc.so-version
 # libc.so	->	libc.so.N	(e.g. libc.so.6)
 # libc.so.6	->	libc-VERSION.so	(e.g. libc-1.10.so)
 
-$(inst_slibdir)/libc.so$(libc.so-version): $(inst_slibdir)/libc-$(version).so
+$(inst_slibdir)/libc.so$(libc.so-version): $(inst_slibdir)/libc-$(version).so \
+					   $(+force)
 	$(make-shlib-link)
-$(inst_slibdir)/libc-$(version).so: $(common-objpfx)libc.so
+$(inst_slibdir)/libc-$(version).so: $(common-objpfx)libc.so $(+force)
 	$(do-install-program)
 install: $(inst_slibdir)/libc.so$(libc.so-version)
 
@@ -736,7 +740,8 @@ ifndef subdir
 install: $(inst_libdir)/libc.so
 $(inst_libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
 			$(inst_libdir)/$(patsubst %,$(libtype.oS),\
-						  $(libprefix)$(libc-name))
+						  $(libprefix)$(libc-name)) \
+			$(+force)
 	(echo '/* GNU ld script';\
 	 echo '   Use the shared library, but some functions are only in';\
 	 echo '   the static library, so try that secondarily.  */';\
@@ -750,7 +755,7 @@ endif
 
 else
 install: $(inst_slibdir)/libc.so
-$(inst_slibdir)/libc.so: $(common-objpfx)libc.so
+$(inst_slibdir)/libc.so: $(common-objpfx)libc.so $(+force)
 	$(do-install-program)
 endif
 
@@ -758,7 +763,7 @@ ifneq (,$(versioned))
 # Produce three sets of rules as above for all the smaller versioned libraries.
 
 define o-iterator-doit
-$(inst_libdir)/$o: $(inst_slibdir)/$o$($o-version); $$(make-link)
+$(inst_libdir)/$o: $(inst_slibdir)/$o$($o-version) $(+force); $$(make-link)
 endef
 object-suffixes-left := $(versioned)
 include $(o-iterator)
@@ -775,28 +780,30 @@ generated += $(foreach o,$(versioned),$o$($o-version))
 
 ifeq (,$($(subdir)-version))
 define o-iterator-doit
-$(inst_slibdir)/$o$($o-version): $(inst_slibdir)/$(o:.so=)-$(version).so;
+$(inst_slibdir)/$o$($o-version): $(inst_slibdir)/$(o:.so=)-$(version).so \
+				 $(+force);
 	$$(make-shlib-link)
 endef
 object-suffixes-left := $(versioned)
 include $(o-iterator)
 
 define o-iterator-doit
-$(inst_slibdir)/$(o:.so=)-$(version).so: $(objpfx)$o; $$(do-install-program)
+$(inst_slibdir)/$(o:.so=)-$(version).so: $(objpfx)$o $(+force);
+	$$(do-install-program)
 endef
 object-suffixes-left := $(versioned)
 include $(o-iterator)
 else
 define o-iterator-doit
 $(inst_slibdir)/$o$($o-version): \
-  $(inst_slibdir)/$(o:.so=)-$($(subdir)-version).so;
+  $(inst_slibdir)/$(o:.so=)-$($(subdir)-version).so $(+force);
 	$$(make-shlib-link)
 endef
 object-suffixes-left := $(versioned)
 include $(o-iterator)
 
 define o-iterator-doit
-$(inst_slibdir)/$(o:.so=)-$($(subdir)-version).so: $(objpfx)$o;
+$(inst_slibdir)/$(o:.so=)-$($(subdir)-version).so: $(objpfx)$o $(+force);
 	$$(do-install-program)
 endef
 object-suffixes-left := $(versioned)
@@ -812,24 +819,27 @@ endef
 
 so-versions := $(sort $(foreach so,$(install-lib.so),.so$($(so)-version)))
 $(foreach v,$(so-versions),\
-	  $(inst_slibdir)/lib$(libprefix)%$v): $(common-objpfx)lib%.so
+	  $(inst_slibdir)/lib$(libprefix)%$v): $(common-objpfx)lib%.so \
+					       $(+force)
 	$(do-install-so)
 $(foreach v,$(so-versions),\
-	  $(inst_slibdir)/$(libprefix)%$v): $(common-objpfx)%.so
+	  $(inst_slibdir)/$(libprefix)%$v): $(common-objpfx)%.so $(+force)
 	$(do-install-so)
 endif
 
 ifdef install-bin
-$(addprefix $(inst_bindir)/,$(install-bin)): $(inst_bindir)/%: $(objpfx)%
+$(addprefix $(inst_bindir)/,$(install-bin)): \
+    $(inst_bindir)/%: $(objpfx)% $(+force)
 	$(do-install-program)
 endif
 ifdef install-rootsbin
-$(addprefix $(inst_rootsbindir)/,$(install-rootsbin)):
-   $(inst_rootsbindir)/%: $(objpfx)%
+$(addprefix $(inst_rootsbindir)/,$(install-rootsbin)): \
+   $(inst_rootsbindir)/%: $(objpfx)% $(+force)
 	$(do-install-program)
 endif
 ifdef install-sbin
-$(addprefix $(inst_sbindir)/,$(install-sbin)): $(inst_sbindir)/%: $(objpfx)%
+$(addprefix $(inst_sbindir)/,$(install-sbin)): \
+    $(inst_sbindir)/%: $(objpfx)% $(+force)
 	$(do-install-program)
 endif
 ifdef install-lib
@@ -837,23 +847,23 @@ install-lib.a := $(filter lib%.a,$(install-lib))
 install-lib-non.a := $(filter-out lib%.a,$(install-lib))
 ifdef install-lib-non.a
 $(addprefix $(inst_libdir)/$(libprefix),$(install-lib-non.a)): \
-  $(inst_libdir)/$(libprefix)%: $(objpfx)%
+  $(inst_libdir)/$(libprefix)%: $(objpfx)% $(+force)
 	$(do-install)
 endif
 ifdef install-lib.a
 $(install-lib.a:lib%.a=$(inst_libdir)/lib$(libprefix)%.a): \
-  $(inst_libdir)/lib$(libprefix)%.a: $(objpfx)lib%.a
+  $(inst_libdir)/lib$(libprefix)%.a: $(objpfx)lib%.a $(+force)
 	$(do-install)
 	$(patsubst %,$(RANLIB) $@,$(filter-out $(non-lib.a),$(<F)))
 endif
 endif
 ifdef install-data
-$(addprefix $(inst_datadir)/,$(install-data)): $(inst_datadir)/%: %;
+$(addprefix $(inst_datadir)/,$(install-data)): $(inst_datadir)/%: % $(+force)
 	$(do-install)
 endif
 headers := $(strip $(headers))
 ifdef headers
-$(addprefix $(inst_includedir)/,$(headers)): $(inst_includedir)/%: %;
+$(addprefix $(inst_includedir)/,$(headers)): $(inst_includedir)/%: % $(+force)
 	$(do-install)
 endif	# headers
 

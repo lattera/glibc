@@ -54,6 +54,7 @@ build-static-nss = @static_nss@
 stdio = @stdio@
 add-ons = @subdirs@
 cross-compiling = @cross_compiling@
+force-install = @force_install@
 
 LDAP = @LDAP@
 
