@@ -1,5 +1,5 @@
 /* High precision, low overhead timing functions.  IA-64 version.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2001.
 
@@ -86,7 +86,7 @@ typedef unsigned long int hp_timing_t;
    is not correct in some situations.  The solution is to read again.
    For now we always do this until we know how to recognize a fixed
    processor implementation.  */
-#define REPEAT_READ(val) __builtin_expect ((int) val == -1, 0)
+#define REPEAT_READ(val) __builtin_expect ((long int) val == -1, 0)
 
 /* That's quite simple.  Use the `ar.itc' instruction.  */
 #define HP_TIMING_NOW(Var) \

@@ -1,3 +1,7 @@
+2003-07-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ia64/hp-timing.h (REPEAT_READ): Cast to long int not to int.
+
 2003-07-20  Andreas Jaeger  <aj@suse.de>
 
 	* iconvdata/cp932.c (BODY): STANDARD_ERR_HANDLER is now called
