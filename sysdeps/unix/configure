@@ -15,9 +15,7 @@ else
     which can conflict with char $ac_func(); below.  */
 #include <assert.h>
 /* Override any gcc2 internal prototype to avoid an error.  */
-/* We use char because int might match the return type of a gcc2
-    builtin and then its argument prototype would still apply.  */
-char $ac_func();
+char $ac_func(); 
 
 int main() { return 0; }
 int t() {
@@ -33,7 +31,7 @@ $ac_func();
 
 ; return 0; }
 EOF
-if { (eval echo configure:37: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; }; then
+if eval $ac_link; then
   rm -rf conftest*
   eval "ac_cv_func_$ac_func=yes"
 else
@@ -45,7 +43,7 @@ rm -f conftest*
 fi
 if eval "test \"`echo '$ac_cv_func_'$ac_func`\" = yes"; then
   echo "$ac_t""yes" 1>&6
-    ac_tr_func=HAVE_`echo $ac_func | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
+    ac_tr_func=HAVE_`echo $ac_func | tr '[a-z]' '[A-Z]'`
   cat >> confdefs.h <<EOF
 #define $ac_tr_func 1
 EOF
