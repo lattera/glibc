@@ -40,10 +40,10 @@ __curbrk: .skip 8
 ENTRY(__brk)
 	save	%sp, -160, %sp
 #ifdef PIC
-1:	rd	%pc, %g1
+1:	call	2f
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
-	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
-	add	%l7, %g1, %l7
+2:	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
+	add	%l7, %o7, %l7
 #endif
 
 	LOADSYSCALL(brk)

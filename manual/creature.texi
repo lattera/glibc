@@ -73,6 +73,7 @@ included as well as the @w{ISO C}, POSIX.1, POSIX.2, and X/Open material.
 @comment (none)
 @comment XOPEN
 @defvr Macro _XOPEN_SOURCE
+@defvrx Macro _XOPEN_SOURCE_EXTENDED
 If you define this macro, functionality described in the X/Open
 Portability Guide is included.  This is a superset of the POSIX.1 and
 POSIX.2 functionality and in fact @code{_POSIX_SOURCE} and

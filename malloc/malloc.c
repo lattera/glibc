@@ -1185,6 +1185,8 @@ static Void_t*   realloc_check(Void_t* oldmem, size_t bytes);
 static Void_t*   memalign_check(size_t alignment, size_t bytes);
 static Void_t*   malloc_starter(size_t sz);
 static void      free_starter(Void_t* mem);
+static Void_t*   malloc_atfork(size_t sz);
+static void      free_atfork(Void_t* mem);
 #endif
 
 #else
@@ -1204,6 +1206,8 @@ static Void_t*   realloc_check();
 static Void_t*   memalign_check();
 static Void_t*   malloc_starter();
 static void      free_starter();
+static Void_t*   malloc_atfork();
+static void      free_atfork();
 #endif
 
 #endif
@@ -1510,6 +1514,58 @@ static unsigned long max_mmapped_mem = 0;
 int __malloc_initialized = 0;
 
 
+/* The following two functions are registered via thread_atfork() to
+   make sure that the mutexes remain in a consistent state in the
+   fork()ed version of a thread.  Also adapt the malloc and free hooks
+   temporarily, because the `atfork' handler mechanism may use
+   malloc/free internally (e.g. in LinuxThreads). */
+
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
+static __malloc_ptr_t (*save_malloc_hook) __MALLOC_P ((size_t __size));
+static void           (*save_free_hook) __MALLOC_P ((__malloc_ptr_t __ptr));
+static Void_t*        save_arena;
+#endif
+
+static void
+ptmalloc_lock_all __MALLOC_P((void))
+{
+  arena *ar_ptr;
+
+  (void)mutex_lock(&list_lock);
+  for(ar_ptr = &main_arena;;) {
+    (void)mutex_lock(&ar_ptr->mutex);
+    ar_ptr = ar_ptr->next;
+    if(ar_ptr == &main_arena) break;
+  }
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
+  save_malloc_hook = __malloc_hook;
+  save_free_hook = __free_hook;
+  __malloc_hook = malloc_atfork;
+  __free_hook = free_atfork;
+  /* Only the current thread may perform malloc/free calls now. */
+  tsd_getspecific(arena_key, save_arena);
+  tsd_setspecific(arena_key, (Void_t*)0);
+#endif
+}
+
+static void
+ptmalloc_unlock_all __MALLOC_P((void))
+{
+  arena *ar_ptr;
+
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
+  tsd_setspecific(arena_key, save_arena);
+  __malloc_hook = save_malloc_hook;
+  __free_hook = save_free_hook;
+#endif
+  for(ar_ptr = &main_arena;;) {
+    (void)mutex_unlock(&ar_ptr->mutex);
+    ar_ptr = ar_ptr->next;
+    if(ar_ptr == &main_arena) break;
+  }
+  (void)mutex_unlock(&list_lock);
+}
+
 /* Initialization routine. */
 #if defined(_LIBC)
 #if 0
@@ -1524,8 +1580,6 @@ ptmalloc_init __MALLOC_P((void))
 #endif
 {
 #if defined(_LIBC) || defined(MALLOC_HOOKS)
-  __malloc_ptr_t (*save_malloc_hook) __MALLOC_P ((size_t __size));
-  void (*save_free_hook) __MALLOC_P ((__malloc_ptr_t __ptr));
   const char* s;
 #endif
 
@@ -1550,6 +1604,7 @@ ptmalloc_init __MALLOC_P((void))
   mutex_init(&list_lock);
   tsd_key_create(&arena_key, NULL);
   tsd_setspecific(arena_key, (Void_t *)&main_arena);
+  thread_atfork(ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_unlock_all);
 #endif
 #if defined(_LIBC) || defined(MALLOC_HOOKS)
   if((s = getenv("MALLOC_TRIM_THRESHOLD_")))
@@ -1571,6 +1626,12 @@ ptmalloc_init __MALLOC_P((void))
     (*__malloc_initialize_hook)();
 #endif
 }
+
+/* There are platforms (e.g. Hurd) with a link-time hook mechanism. */
+#ifdef thread_atfork_static
+thread_atfork_static(ptmalloc_lock_all, ptmalloc_unlock_all, \
+                     ptmalloc_unlock_all)
+#endif
 
 #if defined(_LIBC) || defined(MALLOC_HOOKS)
 
@@ -4238,6 +4299,65 @@ free_starter(mem) Void_t* mem;
   }
 #endif
   chunk_free(&main_arena, p);
+}
+
+/* The following hooks are used while the `atfork' handling mechanism
+   is active. */
+
+static Void_t*
+#if __STD_C
+malloc_atfork(size_t sz)
+#else
+malloc_atfork(sz) size_t sz;
+#endif
+{
+  Void_t *vptr = NULL;
+
+  tsd_getspecific(arena_key, vptr);
+  if(!vptr) {
+    mchunkptr victim = chunk_alloc(&main_arena, request2size(sz));
+    return victim ? chunk2mem(victim) : 0;
+  } else {
+    /* Suspend the thread until the `atfork' handlers have completed.
+       By that time, the hooks will have been reset as well, so that
+       mALLOc() can be used again. */
+    (void)mutex_lock(&list_lock);
+    (void)mutex_unlock(&list_lock);
+    return mALLOc(sz);
+  }
+}
+
+static void
+#if __STD_C
+free_atfork(Void_t* mem)
+#else
+free_atfork(mem) Void_t* mem;
+#endif
+{
+  Void_t *vptr = NULL;
+  arena *ar_ptr;
+  mchunkptr p;                          /* chunk corresponding to mem */
+
+  if (mem == 0)                              /* free(0) has no effect */
+    return;
+
+  p = mem2chunk(mem);
+
+#if HAVE_MMAP
+  if (chunk_is_mmapped(p))                       /* release mmapped memory. */
+  {
+    munmap_chunk(p);
+    return;
+  }
+#endif
+
+  ar_ptr = arena_for_ptr(p);
+  tsd_getspecific(arena_key, vptr);
+  if(vptr)
+    (void)mutex_lock(&ar_ptr->mutex);
+  chunk_free(ar_ptr, p);
+  if(vptr)
+    (void)mutex_unlock(&ar_ptr->mutex);
 }
 
 #endif /* defined(_LIBC) || defined(MALLOC_HOOKS) */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 #if (defined (__cplusplus) || (defined (__STDC__) && __STDC__) \
-     || defined (WIN32))
+     || defined (WINDOWS32))
 #undef	__P
 #define	__P(protos)	protos
 #else /* Not C++ or ANSI C.  */

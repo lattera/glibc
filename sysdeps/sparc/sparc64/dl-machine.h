@@ -26,6 +26,9 @@
 #include <sysdep.h>
 
 
+/* Translate a processor-specific dynamic tag to the index into l_info.  */
+#define DT_SPARC(x)	(DT_SPARC_##x - DT_LOPROC + DT_NUM)
+
 /* Return nonzero iff E_MACHINE is compatible with the running host.  */
 static inline int
 elf_machine_matches_host (Elf64_Half e_machine)
@@ -33,15 +36,15 @@ elf_machine_matches_host (Elf64_Half e_machine)
   return e_machine == EM_SPARC64;
 }
 
-
 /* Return the link-time address of _DYNAMIC.  Conveniently, this is the
    first element of the GOT.  This must be inlined in a function which
    uses global data.  */
 static inline Elf64_Addr
 elf_machine_dynamic (void)
 {
-  register Elf64_Addr *got asm ("%l7");
-  return *got;
+  register Elf64_Addr elf_pic_register __asm__("%l7");
+
+  return *(Elf64_Addr *)elf_pic_register;
 }
 
 
@@ -49,17 +52,19 @@ elf_machine_dynamic (void)
 static inline Elf64_Addr
 elf_machine_load_address (void)
 {
-  Elf64_Addr here;
+  register Elf64_Addr elf_pic_register __asm__("%l7");
+  Elf64_Addr pc, la;
 
-  __asm("rd %pc,%0\n\t"
-	"ba 1f\n\t"
-	" add %0,12,%0\n\t"
-	".weak __load_address_undefined\n\t"
-	"call __load_address_undefined\n"
-	"1:"
-	: "=r"(here));
+  /* Utilize the fact that a local .got entry will be partially
+     initialized at startup awaiting its RELATIVE fixup.  */
 
-  return here + (*(int *)here << 2);
+  __asm("sethi %%hi(.Load_address), %1\n"
+	".Load_address:\n\t"
+	"rd %%pc, %0\n\t"
+	"or %1, %%lo(.Load_address), %1\n\t"
+	: "=r"(pc), "=r"(la));
+
+  return pc - *(Elf64_Addr *)(elf_pic_register + la);
 }
 
 #ifdef RESOLVE
@@ -71,8 +76,6 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 		  const Elf64_Sym *sym, const struct r_found_version *version,
 		  Elf64_Addr *const reloc_addr)
 {
-  Elf64_Addr loadbase;
-
 #ifndef RTLD_BOOTSTRAP
   /* This is defined in rtld.c, but nowhere in the static libc.a; make the
      reference weak so static programs can still link.  This declaration
@@ -87,7 +90,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 #ifndef RTLD_BOOTSTRAP
       if (map != &_dl_rtld_map) /* Already done in rtld itself. */
 #endif
-	*reloc_addr += map->l_addr + reloc->r_addend;
+	*reloc_addr = map->l_addr + reloc->r_addend;
     }
   else
     {
@@ -123,9 +126,9 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
 						   refsym->st_size));
 	  break;
+
+	case R_SPARC_64:
 	case R_SPARC_GLOB_DAT:
-	/* case R_SPARC_64: */
-	case R_SPARC_JMP_SLOT:
 	  *reloc_addr = value;
 	  break;
 	case R_SPARC_8:
@@ -155,6 +158,25 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  *(unsigned *)reloc_addr = (*(unsigned *)reloc_addr & 0xffc00000)
 				     | (value >> 10);
 	  break;
+
+	case R_SPARC_JMP_SLOT:
+	  {
+	    Elf64_Dyn *pltfmt = map->l_info[DT_SPARC(PLTFMT)];
+	    switch (pltfmt ? pltfmt->d_un.d_val : 0)
+	      {
+	      case 1: /* .got.plt with absolute addresses */
+		*reloc_addr = value;
+	        break;
+	      case 2: /* .got.plt with got-relative addresses */
+		*reloc_addr = value - (map->l_info[DT_PLTGOT]->d_un.d_ptr
+				       + map->l_addr);
+		break;
+	      default:
+		assert (! "unexpected .plt format type");
+	      }
+	  }
+	  break;
+
 	case R_SPARC_NONE:		/* Alright, Wilbur.  */
 	  break;
 	default:
@@ -195,6 +217,8 @@ elf_machine_lazy_rel (struct link_map *map, const Elf64_Rela *reloc)
 /* The SPARC never uses Elf64_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
 
+/* The SPARC overlaps DT_RELA and DT_PLTREL.  */
+#define ELF_MACHINE_PLTREL_OVERLAP 1
 
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
@@ -203,7 +227,7 @@ static inline int
 elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
   Elf64_Addr *got;
-  extern void _dl_runtime_resolve (Elf64_Word);
+  extern void _dl_runtime_resolve (void);
 
   if (l->l_info[DT_JMPREL] && lazy)
     {
@@ -224,9 +248,9 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	.type _dl_runtime_resolve, @function
 _dl_runtime_resolve:
 	save %sp, -160, %sp
-	mov %g1, %o1
+	mov %g5, %o0
 	call fixup
-	 mov %g2, %o0
+	 mov %g6, %o1
 	jmp %o0
 	 restore
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve
@@ -235,10 +259,6 @@ _dl_runtime_resolve:
 /* The PLT uses Elf64_Rela relocs.  */
 #define elf_machine_relplt elf_machine_rela
 
-
-/* Mask identifying addresses reserved for the user program,
-   where the dynamic linker should not map anything.  */
-#define ELF_MACHINE_USER_ADDRESS_MASK	???
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
@@ -257,33 +277,59 @@ _start:
 	call	_dl_start
 	 add	 %sp," __S(STACK_BIAS) "+22*8,%o0
 	/* FALLTHRU */
+	.size _start, .-_start
 
 	.global _dl_start_user
 	.type _dl_start_user, @function
 _dl_start_user:
    /* Load the GOT register.  */
-1:	rd	%pc,%g1
+1:	call	11f
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)),%l7
-	or	%l2,%lo(_GLOBAL_OFFSET_TABLE_-(1b-.)),%l7
-	add	%l7,%g1,%l7
+11:	or	%l7,%lo(_GLOBAL_OFFSET_TABLE_-(1b-.)),%l7
+	add	%l7,%o7,%l7
    /* Save the user entry point address in %l0.  */
 	mov	%o0,%l0
    /* See if we were run as a command with the executable file name as an
-      extra leading argument.  If so, adjust the stack pointer.  */
+      extra leading argument.  If so, we must shift things around since we
+      must keep the stack doubleword aligned.  */
 	sethi	%hi(_dl_skip_args), %g2
 	or	%g2, %lo(_dl_skip_args), %g2
-	ld	[%l7+%g2], %i0
+	ldx	[%l7+%g2], %i0
+	ld	[%i0], %i0
 	brz,pt	%i0, 2f
-	 ldx	[%sp+" __S(STACK_BIAS) "+22*8], %i1
+	 nop
+	/* Find out how far to shift.  */
+	ldx	[%sp+" __S(STACK_BIAS) "+22*8], %i1
 	sub	%i1, %i0, %i1
 	sllx	%i0, 3, %i2
-	add	%sp, %i2, %sp
 	stx	%i1, [%sp+" __S(STACK_BIAS) "+22*8]
+	add	%sp, " __S(STACK_BIAS) "+23*8, %i1
+	add	%i1, %i2, %i2
+	/* Copy down argv.  */
+12:	ldx	[%i2], %i3
+	add	%i2, 8, %i2
+	stx	%i3, [%i1]
+	brnz,pt	%i3, 12b
+	 add	%i1, 8, %i1
+	/* Copy down envp.  */
+13:	ldx	[%i2], %i3
+	add	%i2, 8, %i2
+	stx	%i3, [%i1]
+	brnz,pt	%i3, 13b
+	 add	%i1, 8, %i1
+	/* Copy down auxiliary table.  */
+14:	ldx	[%i2], %i3
+	ldx	[%i2+8], %i4
+	add	%i2, 16, %i2
+	stx	%i3, [%i1]
+	stx	%i4, [%i1+8]
+	brnz,pt	%i3, 13b
+	 add	%i1, 16, %i1
    /* Load _dl_default_scope[2] to pass to _dl_init_next.  */
 2:	sethi	%hi(_dl_default_scope), %g2
-	or	%g2, %lo(_dl_defalt_scope), %g2
-	add	%g2, 2*8, %g2
-	ldx	[%l7+%g2], %l1
+	or	%g2, %lo(_dl_default_scope), %g2
+	ldx	[%l7+%g2], %g2
+	ldx	[%g2+2*8], %l1
    /* Call _dl_init_next to return the address of an initializer to run.  */
 3:	call	_dl_init_next
 	 mov	%l1, %o0
@@ -295,8 +341,9 @@ _dl_start_user:
    /* Clear the startup flag.  */
 4:	sethi	%hi(_dl_starting_up), %g2
 	or	%g2, %lo(_dl_starting_up), %g2
-	st	%g0, [%l7+%g2]
-   /* Pass our finalizer function to the user in %g1
+	ldx	[%l7+%g2], %g2
+	st	%g0, [%g2]
+   /* Pass our finalizer function to the user in %g1.  */
 	sethi	%hi(_dl_fini), %g1
 	or	%g1, %lo(_dl_fini), %g1
 	ldx	[%l7+%g1], %g1

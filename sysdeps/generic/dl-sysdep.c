@@ -25,6 +25,7 @@
 #include <fcntl.h>
 #include <link.h>
 #include <unistd.h>
+#include <stdio-common/_itoa.h>
 
 #include <dl-machine.h>
 
@@ -40,6 +41,7 @@ extern void ENTRY_POINT (void);
 int __libc_enable_secure;
 int __libc_multiple_libcs;	/* Defining this here avoids the inclusion
 				   of init-first.  */
+static ElfW(auxv_t) *_dl_auxv;
 
 ElfW(Addr)
 _dl_sysdep_start (void **start_argptr,
@@ -68,7 +70,7 @@ _dl_sysdep_start (void **start_argptr,
   seen = 0;
 #define M(type) (1 << (type))
 
-  for (av = (void *) ++start_argptr;
+  for (av = _dl_auxv = (void *) ++start_argptr;
        av->a_type != AT_NULL;
        seen |= M ((++av)->a_type))
     switch (av->a_type)
@@ -147,4 +149,77 @@ _dl_sysdep_start (void **start_argptr,
 void
 _dl_sysdep_start_cleanup (void)
 {
+}
+
+void
+_dl_show_auxv (void)
+{
+  char buf[64];
+  ElfW(auxv_t) *av;
+
+  /* Terminate string.  */
+  buf[63] = '\0';
+
+  for (av = _dl_auxv; av->a_type != AT_NULL; ++av)
+    switch (av->a_type)
+      {
+      case AT_PHDR:
+	_dl_sysdep_message ("AT_PHDR:     0x",
+			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
+					16, 0),
+			    "\n", NULL);
+	break;
+      case AT_PHNUM:
+	_dl_sysdep_message ("AT_PHNUM:    ",
+			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
+					10, 0),
+			    "\n", NULL);
+	break;
+      case AT_PAGESZ:
+	_dl_sysdep_message ("AT_PAGESZ:   ",
+			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
+					10, 0),
+			    "\n", NULL);
+	break;
+      case AT_ENTRY:
+	_dl_sysdep_message ("AT_ENTRY:    0x",
+			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
+					16, 0),
+			    "\n", NULL);
+	break;
+      case AT_UID:
+	_dl_sysdep_message ("AT_UID:      ",
+			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
+					10, 0),
+			    "\n", NULL);
+	break;
+      case AT_GID:
+	_dl_sysdep_message ("AT_GID:      ",
+			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
+					10, 0),
+			    "\n", NULL);
+	break;
+      case AT_EUID:
+	_dl_sysdep_message ("AT_EUID:     ",
+			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
+					10, 0),
+			    "\n", NULL);
+	break;
+      case AT_EGID:
+	_dl_sysdep_message ("AT_EGID:     ",
+			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
+					10, 0),
+			    "\n", NULL);
+	break;
+      case AT_PLATFORM:
+	_dl_sysdep_message ("AT_PLATFORM: ", av->a_un.a_ptr, NULL);
+	break;
+      case AT_HWCAP:
+	/* Well, what shall we use?  A string or an integer with bits?  */
+	_dl_sysdep_message ("AT_HWCAP:    ",
+			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
+					10, 0),
+			    "\n", NULL);
+	break;
+      }
 }

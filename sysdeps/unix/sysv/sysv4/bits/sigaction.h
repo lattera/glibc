@@ -35,13 +35,13 @@ struct sigaction
 
 /* Bits in `sa_flags'.  */
 #ifdef __USE_MISC
-#define	SA_ONSTACK	0x1	/* Take signal on signal stack.  */
-#define SA_RESETHAND	0x2	/* Reset to SIG_DFL on entry to handler.  */
-#define	SA_RESTART	0x4	/* Don't restart syscall on signal return.  */
-#define SA_SIGINFO	0x8	/* Provide additional info to the handler.  */
-#define SA_NODEFER	0x10	/* Don't automatically block the signal when
+# define SA_ONSTACK	0x1	/* Take signal on signal stack.  */
+# define SA_RESETHAND	0x2	/* Reset to SIG_DFL on entry to handler.  */
+# define SA_RESTART	0x4	/* Restart syscall on signal return.  */
+# define SA_SIGINFO	0x8	/* Provide additional info to the handler.  */
+# define SA_NODEFER	0x10	/* Don't automatically block the signal when
 				   its handler is being executed.  */
-#define SA_NOCLDWAIT	0x10000	/* Don't save zombie processes.  */
+# define SA_NOCLDWAIT	0x10000	/* Don't save zombie processes.  */
 #endif
 #define	SA_NOCLDSTOP	0x20000	/* Don't send SIGCHLD when children stop.  */
 

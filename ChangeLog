@@ -1,3 +1,250 @@
+1997-08-14 03:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-minimal.c: Don't use relative #include paths.
+	(malloc): Don't try to initialize _dl_pagesize, it already is.
+	(__sigjmp_save, longjmp): Reformat.
+
+	* sysdeps/generic/dl-sysdep.c: Implement _dl_show_auxv function to
+	show content of auxiliary array.
+	(_dl_sysdep_start): Remember start of auxiliary vector.
+	* sysdeps/mach/hurd/dl-sysdep.c: (_dl_show_auxv): New dummy function.
+	* elf/link.h: Add prototype for _dl_show_auxv.
+	* elf/rtld.c (dl_main): Call _dl_show_auxv if LD_SHOW_AUXV envvar
+	is present.
+
+	* libio/iofdopen.c: Better prepare for use in libstdc++.
+	* libio/iofflush.c: Likewise.
+	* libio/iofgetpos.c: Likewise.
+	* libio/iofgets.c: Likewise.
+	* libio/iofopen.c: Likewise.
+	* libio/iofputs.c: Likewise.
+	* libio/iofread.c: Likewise.
+	* libio/iofsetpos.c: Likewise.
+	* libio/ioftell.c: Likewise.
+	* libio/iofwrite.c: Likewise.
+	* libio/iogetdelim.c: Likewise.
+	* libio/iogets.c: Likewise.
+	* libio/iopopen.c: Likewise.
+	* libio/ioputs.c: Likewise.
+	* libio/iosetbuffer.c: Likewise.
+	* libio/iosetvbuf.c: Likewise.
+	* libio/ioungetc.c: Likewise.
+	* libio/iovsprintf.c: Likewise.
+	* libio/iovsscanf.c: Likewise.
+
+	* manual/creature.texi: Mention _XOPEN_SOURCE_EXTENDED in correct
+	place.
+
+	* manual/math.texi: Add comment to sincos decsription to say it's a
+	GNU extension.
+	Fix description of random function.
+
+	* posix/fnmatch.h: Recognize Windog by _WINDOWS32 not WIN32.
+	* posix/glob.c: Likewise.  Handle stupid system headers on SunOS.
+	Add casts for all __alloca calls.
+	* posix/glob.h: Recognize Windog by _WINDOWS32 not WIN32.
+	Declare additional GLOB_* constants also if _GNU_SOURCE is defined.
+	Patches by Paul D. Smith <psmith@BayNetworks.COM>.
+
+	* stdio-common/_itoa.c: Don't use relateive #include paths.
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Enable optimizations even for
+	gcc 2.7.
+	(atan): Loading 1.0 from memory does not pay off.
+	(asinh): Fix typo.
+
+1997-08-13 09:44  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/stub/accept.c: Use socklen_t where necessary.
+	* sysdeps/stub/bind.c: Likewise.
+	* sysdeps/stub/connect.c: Likewise.
+	* sysdeps/stub/getsockname.c: Likewise.
+	* sysdeps/stub/getsockopt.c: Likewise.
+	* sysdeps/stub/recvfrom.c: Likewise.
+	* sysdeps/stub/sendto.c: Likewise.
+	* sysdeps/stub/setsockopt.c: Likewise.
+
+1997-08-11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* io/ftw.c (object_compare): Avoid memcmp when comparing scalar
+	types.
+
+1997-08-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/libm-test.c (cbrt_test): Add epsilon for long double to
+	`cbrt (-0.001)'.
+
+1997-08-11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/stub/bits/string.h: Fix comment.
+
+1997-08-01  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/Makefile (routines): Remove dl-version.
+	(dl-routines): Add it here instead.  This removes dead code from
+	libc.so.
+
+1997-08-12 17:17  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/thread-m.h (thread_atfork, thread_atfork_static): New
+	macros to encapsulate pthread_atfork's functionality.
+	* malloc/malloc.c (ptmalloc_lock_all, ptmalloc_unlock_all): New
+	functions, registered via thread_atfork in the initialization
+	routine or via thread_atfork_static in global scope.  This
+	ensures a consistent state of all locks across fork().
+
+1997-08-11 23:00:32 1997  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/programs/xtmp.c (compare_entry):
+	Partially undo patch made by Klaus Espenlaub.  There
+	was no xtmp/utmp typo.  Added comment to cclarify this.
+	* login/programs/xtmp.h: Likewise.
+
+	* posix/getopt.c: Recognize Windog by _WINDOWS32 not WIN32.
+	Patch by Paul D. Smith <psmith@BayNetworks.COM>.
+
+1997-08-12 13:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* login/getutid.c: Rename to __getutid and make getutid and getutxid
+	weak aliases.
+	Patch by ir. Mark M._Kettenis <kettenis@phys.uva.nl>.
+
+1997-08-11 23:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Makefile [subdir=misc] (sysdep_headers):
+	Add bits/mman.h.
+
+1997-08-11 08:51:21 1997  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* stdlib/fmtmsg.c (fmtmsg): Add static to
+	__libc_once_define macro.
+
+	* libc.map (__progname_full, __progname): Added.
+
+1997-08-04 08:31  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/if_index.c (if_nametoindex): Return 0
+	if SIOGIFINDEX is not defined.
+	(if_indextoname): Initialize "result" to NULL.
+	(if_nametoindex, if_nameindex): Fix ENOSYS setting.
+
+1997-08-11 11:58  Richard Henderson  <rth@cygnus.com>
+
+	Sparc ISO C 9x exception handling:
+	* sysdeps/sparc/fpu/bits/mathdef.h: New file.
+	* sysdeps/sparc/fpu/fclrexcpt.c: New file.
+	* sysdeps/sparc/fpu/fegetenv.c: New file.
+	* sysdeps/sparc/fpu/fegetround.c: New file.
+	* sysdeps/sparc/fpu/feholdexcpt.c: New file.
+	* sysdeps/sparc/fpu/fesetenv.c: New file.
+	* sysdeps/sparc/fpu/fesetround.c: New file.
+	* sysdeps/sparc/fpu/feupdateenv.c: New file.
+	* sysdeps/sparc/fpu/fgetexcptflg.c: New file.
+	* sysdeps/sparc/fpu/fraiseexcpt.c: New file.
+	* sysdeps/sparc/fpu/fsetexcptflg.c: New file.
+	* sysdeps/sparc/fpu/ftestexcept.c: New file.
+	* sysdeps/sparc/sparc32/fpu/bits/fenv.h: New file.
+	* sysdeps/sparc/sparc64/fpu/bits/fenv.h: New file.
+
+1997-08-11 11:58  Richard Henderson  <rth@cygnus.com>
+
+	Sparc64 merge:
+	* configure.in: Change up subdirectories, rename sparc8->sparcv8.
+
+	* csu/Makefile: Nuke need-nopic-initfini bits.  The problem was
+	that sparc64 ld did not recognize pic relocs at all.
+
+	* elf/dl-deps.c: Include <string.h>.
+	* elf/do-rel.h (elf_dynamic_do_rel): Take reloc address and size
+	directly instead of the DT names to get them from.
+	* elf/dynamic-link.h (_ELF_DYNAMIC_DO_RELOC): New macro distilled
+	from ELF_DYNAMIC_DO_REL{,A}.  Define a second version that accounts
+	for the possibility that DT_RELA and DT_JMPPLT overlap, as such is
+	the case on the Sparc.
+
+	* elf/elf.h: Stub out Elf64_Ver*, and make them the same as the
+	Elf32_Ver* bits.  The linker does not even know to differentiate
+	between the word sizes.  Someone should examine this and figure
+	out what the proper sizes of things should be for 64-bit hosts
+	before the sparc64 libraries are distributed.
+
+	* shlib-versions: Rename sparc64 ld.so to not conflict with sparc32
+	on the same machine.
+
+	Move old sysdeps/sparc contents to sysdeps/sparc/sparc32,
+	rename sparc8 subdir to sparcv8, move sysdeps/sparc64 content to
+	sysdeps/sparc/sparc64.  Same for sysdeps/unix/sysv/linux/sparc.
+
+	* sysdeps/sparc/Implies: Do ieee754 here.
+	* sysdeps/sparc/configure.in: Move from sparc32/.
+	* sysdeps/sparc/sparc32/Implies: Do wordsize here.
+	* sysdeps/sparc/sparc64/Implies: Likewise.
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_load_address):
+	Use uninitialized .got to find load address instead of AT_BASE, as
+	the later does not exist when running ld.so directly.
+
+	* sysdeps/sparc/sparc32/fpu/fpu_control.h: Move from ../.
+	* sysdeps/sparc/sparc64/fpu/fpu_control.h: Likewise.
+
+	* sysdeps/sparc/sparc32/udiv_qrnnd.S: Clean up PIC support.
+
+	* sysdeps/sparc/sparc64/Makefile (sysdep_routines): Add s_finitel
+	and s_signbitl for stdio.
+	* sysdeps/sparc/sparc64/configure.in: Remove, we no longer need
+	nopic_initfini.
+
+	* sysdeps/sparc/sparc64/bsd-_setjmp.S: Remove.
+	* sysdeps/sparc/sparc64/bsd-setjmp.S: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bsd-_setjmp.S: New empty file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bsd-setjmp.S: New empty file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/longjmp.S: Add __longjmp alias.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/setjmp.S: Add weak _setjmp
+	and setjmp entry points.
+
+	* sysdeps/sparc/sparc64/dl-machine.h: Finish real implementation.
+
+	* sysdeps/sparc/sparc64/elf/crtbegin.S: Add copyright, fix PIC.
+	* sysdeps/sparc/sparc64/elf/crtend.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h (struct sigaction):
+	Fix sa_flags size for sparc64; add sa_restorer for kernel.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/brk.S: Fix PIC.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/init-first.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscall.S: New file.
+
+1997-08-10 18:29:08 1997  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/login.c (login): Check for correct return value of
+	utmpname.
+
+1997-08-11 16:49  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/tzset.c (__tzset_internal): Correctly handle TZ strings
+	following incorrect old POSIX specs.
+	Patch by Paul Eggert <eggert@twinsun.com>.
+
+	* sysdeps/generic/bits/sigaction.h: Correct comment for SA_RESTART.
+	* sysdeps/unix/bsd/osf/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/minix/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/bits/sigaction.h: Likewise.
+	Reported by NIIBE Yutaka <gniibe@mri.co.jp>.
+
+1997-08-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/math.texi: Define the macros @mul and @infinity and use
+	them to format the multiplication and infinity signs.
+	(FP Comparison Functions): Use @code, not @math, for C code
+	examples.
+
 1997-08-10 18:48  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makeconfig: Define build-programs to no if not set and $(config-os)
@@ -49,7 +296,7 @@
 
 	* gmon/sys/gmon.h: Add prototype for write_profiling.
 
-	* elf/dl-profile.c: Add decsriptions and implement reading of
+	* elf/dl-profile.c: Add descriptions and implement reading of
 	existing data in profiling file.
 	* gmon/sys/gmon_out.h (GMON_SHOBJ_VERSION): New macro for shared
 	lib profiling data.

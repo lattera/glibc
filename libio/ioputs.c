@@ -41,4 +41,7 @@ _IO_puts (str)
   _IO_cleanup_region_end (1);
   return result;
 }
+
+#ifdef weak_alias
 weak_alias (_IO_puts, puts)
+#endif

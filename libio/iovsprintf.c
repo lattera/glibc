@@ -51,4 +51,6 @@ _IO_vsprintf (string, format, args)
   return ret;
 }
 
+#ifdef weak_alias
 weak_alias (_IO_vsprintf, vsprintf)
+#endif

@@ -31,21 +31,21 @@ struct sigaction
   };
 
 /* Bits in `sa_flags'.  */
-#define	SA_NOCLDSTOP 0x00000004	/* Don't send SIGCHLD when children stop.  */
+#define	SA_NOCLDSTOP  0x00000004 /* Don't send SIGCHLD when children stop.  */
 #ifdef __USE_MISC
-#define SA_STACK     0x00000001	/* Use signal stack by using `sa_restorer'.  */
-#define SA_RESTART   0x00000002	/* Don't restart syscall on signal return.  */
-#define SA_INTERRUPT 0x20000000	/* Historical no-op.  */
-#define SA_NOMASK    0x00000008	/* Don't automatically block the signal when
-				   its handler is being executed.  */
-#define SA_ONESHOT   0x00000010	/* Reset to SIG_DFL on entry to handler.  */
+# define SA_STACK     0x00000001 /* Use signal stack by using `sa_restorer'. */
+# define SA_RESTART   0x00000002 /* Restart syscall on signal return.  */
+# define SA_INTERRUPT 0x20000000 /* Historical no-op.  */
+# define SA_NOMASK    0x00000008 /* Don't automatically block the signal
+				    when its handler is being executed.  */
+# define SA_ONESHOT   0x00000010 /* Reset to SIG_DFL on entry to handler.  */
 
 /* Some aliases for the SA_ constants.  */
-#define SA_NODEFER	SA_NOMASK
-#define SA_RESETHAND	SA_ONESHOT
+# define SA_NODEFER   SA_NOMASK
+# define SA_RESETHAND SA_ONESHOT
 #endif
 
 /* Values for the HOW argument to `sigprocmask'.  */
-#define	SIG_BLOCK	1	/* Block signals.  */
-#define	SIG_UNBLOCK	2	/* Unblock signals.  */
-#define	SIG_SETMASK	3	/* Set the set of blocked signals.  */
+#define	SIG_BLOCK     1		 /* Block signals.  */
+#define	SIG_UNBLOCK   2		 /* Unblock signals.  */
+#define	SIG_SETMASK   3		 /* Set the set of blocked signals.  */

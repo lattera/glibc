@@ -42,4 +42,7 @@ _IO_fread (buf, size, count, fp)
   _IO_cleanup_region_end (1);
   return bytes_requested == bytes_read ? count : bytes_read / size;
 }
+
+#ifdef weak_alias
 weak_alias (_IO_fread, fread)
+#endif

@@ -24,7 +24,7 @@ int
 bind (fd, addr, len)
      int fd;
      __CONST_SOCKADDR_ARG addr;
-     size_t len;
+     socklen_t len;
 {
   __set_errno (ENOSYS);
   return -1;

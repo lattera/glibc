@@ -44,43 +44,65 @@
 	.type name,@function;
 
 #ifdef PIC
-#define SYSCALL_ERROR_HANDLER1(R)					\
+# ifdef _LIBC_REENTRANT
+#  define SYSCALL_ERROR_HANDLER						\
 	.global C_SYMBOL_NAME(errno);					\
 	.type C_SYMBOL_NAME(errno),@object;				\
-0:	rd %pc,%g1;							\
-	sethi %hi(_GLOBAL_OFFSET_TABLE_-(0b-.)),%g2;			\
-	add %g2,%lo(_GLOBAL_OFFSET_TABLE_-(0b-.)),%g2;			\
-	add %g2,%g1,%g1;						\
-	sethi %hi(errno),%g2;						\
-	add %g2,%lo(errno),%g2;						\
-	ldx [%g1+%g2],%g2;						\
-	st R,[%g2]
-#else
-#define SYSCALL_ERROR_HANDLER1(R)					\
-	.global C_SYMBOL_NAME(errno);					\
-	.type C_SYMBOL_NAME(errno),@object;				\
-	sethi %hi(errno),%g1;						\
-	add %g1,%g4,%g1;						\
-	st R,[%g1+%lo(errno)]
-#endif
-
-#ifdef _LIBC_REENTRANT
-#define SYSCALL_ERROR_HANDLER						\
-	.global C_SYMBOL_NAME(__errno_location);			\
-        .type C_SYMBOL_NAME(__errno_location),@function;		\
-	save %sp,-128,%sp;						\
-	SYSCALL_ERROR_HANDLER1(%i0);					\
+	save %sp,-160,%sp;						\
+  101:	call 102f;							\
+	sethi %hi(_GLOBAL_OFFSET_TABLE_-(101b-.)),%g2;			\
+  102:	or %g2,%lo(_GLOBAL_OFFSET_TABLE_-(101b-.)),%g2;			\
+	sethi %hi(errno),%i1;						\
+	add %g2,%o7,%l7;						\
+	or %i1,%lo(errno),%i1;						\
+	ldx [%l7+%i1],%g2;						\
+	st %i0,[%g2];							\
 	call __errno_location;						\
 	 nop;								\
 	st %i0,[%o0];							\
 	sub %g0,1,%i0;							\
 	jmpl %i7+8, %g0;						\
 	 restore
+# else
+#  define SYSCALL_ERROR_HANDLER						\
+	.global C_SYMBOL_NAME(errno);					\
+	.type C_SYMBOL_NAME(errno),@object;				\
+	mov %o7,%g3;							\
+  101:	call 102f;							\
+	sethi %hi(_GLOBAL_OFFSET_TABLE_-(101b-.)),%g2;			\
+  102:	or %g2,%lo(_GLOBAL_OFFSET_TABLE_-(101b-.)),%g2;			\
+	sethi %hi(errno),%o1;						\
+	add %g2,%o7,%l7;						\
+	or %o1,%lo(errno),%o1;						\
+	mov %g3,%o7;							\
+	ldx [%l7+%o1],%g2;						\
+	st %o0,[%g2]
+# endif
 #else
-#define SYSCALL_ERROR_HANDLER						\
-	SYSCALL_ERROR_HANDLER1(%o0);					\
+# ifdef _LIBC_REENTRANT
+#  define SYSCALL_ERROR_HANDLER						\
+	.global C_SYMBOL_NAME(errno);					\
+	.type C_SYMBOL_NAME(errno),@object;				\
+	save %sp,-160,%sp;						\
+	sethi %hi(errno),%g1;						\
+	or %g1,%lo(errno),%g1;						\
+	st %i0,[%g1+%g4];						\
+	call __errno_location;						\
+	 nop;								\
+	st %i0,[%o0];							\
+	sub %g0,1,%i0;							\
+	jmpl %i7+8, %g0;						\
+	 restore
+# else
+#  define SYSCALL_ERROR_HANDLER						\
+	.global C_SYMBOL_NAME(errno);					\
+	.type C_SYMBOL_NAME(errno),@object;				\
+	sethi %hi(errno),%g1;						\
+	or %g1,%lo(errno),%g1;						\
+	st %i0,[%g1+%g4];						\
 	retl;								\
 	 sub %g0,1,%i0
+# endif
 #endif
 
 #define PSEUDO(name, syscall_name, args)				\

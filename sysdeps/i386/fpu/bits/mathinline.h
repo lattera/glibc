@@ -70,15 +70,6 @@
 #endif
 
 
-#if defined __GNUC__ && \
-    (__GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ <= 7))
-/* gcc 2.7.2 and 2.7.2.1 have problems with inlining `long double'
-   functions so we disable this now.  */
-# undef __NO_MATH_INLINES
-# define __NO_MATH_INLINES
-#endif
-
-
 #ifdef	__GNUC__
 #if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 
@@ -301,7 +292,7 @@ __inline_mathop (sin, "fsin")
 /* The argument range of this inline version is reduced.  */
 __inline_mathop (cos, "fcos")
 
-__inline_mathop_decl (atan, "fpatan", "u" (__x), "0" (1.0) : "st(1)")
+__inline_mathop (atan, "fld1; fpatan")
 __inline_mathop (log, "fldln2; fxch; fyl2x")
 __inline_mathop (log10, "fldlg2; fxch; fyl2x")
 
@@ -390,7 +381,7 @@ __inline_mathcode (log1p, __x, \
 __inline_mathcode (asinh, __x, \
   register long double  __y = __fabsl (__x);				      \
   return (log1pl (__y * __y / (__sqrtl (__y * __y + 1.0) + 1.0) + __y)	      \
-	  * __sgn1l (__x))
+	  * __sgn1l (__x)))
 
 __inline_mathcode (acosh, __x, \
   return logl (__x + __sqrtl (__x - 1.0) * __sqrtl (__x + 1.0)))

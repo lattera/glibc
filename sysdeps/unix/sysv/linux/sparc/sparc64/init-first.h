@@ -33,33 +33,33 @@
 	.global " #NAME "
 	.type " #NAME ",@function
 " #NAME ":
-	save	%sp, -64, %sp
-1:	rd	%pc, %g1
+	save	%sp, -128, %sp
+1:	call	11f
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
-	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
+11:	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
 	add	%l7, %o7, %l7
 	/* Are we a dynamic libc being loaded into a static program?  */
-	sethi	%hi(_dl_starting_up), %g2
-	or	%g2, %lo(_dl_starting_up), %g2
-	ld	[%l7+%g2], %g2
-	brz,pn	%g2, 3f
-	 sethi	%hi(__libc_multiple_libcs), %g3
-	ld	[%g2], %g2
-	subcc	%g0, %g2, %g0
-	subc	%g0, -1, %g2
-3:	or	%g3, %lo(__libc_multiple_libcs), %g3
-	ld	[%l7+%g3], %g3
-	st	%g2, [%g3]
+	sethi	%hi(_dl_starting_up), %l2
+	or	%l2, %lo(_dl_starting_up), %l2
+	ldx	[%l7+%l2], %l2
+	brz,pn	%l2, 3f
+	 sethi	%hi(__libc_multiple_libcs), %l3
+	ld	[%l2], %l4
+	mov	%g0, %l2
+	movrz	%l4, 1, %l2
+3:	or	%l3, %lo(__libc_multiple_libcs), %l3
+	ldx	[%l7+%l3], %l3
+	st	%l2, [%l3]
 	/* If so, argc et al are in %o0-%o2 already.  Otherwise, load them.  */
-	brnz,pn	%g2, " #INIT "
+	brnz,pn	%l2, " #INIT "
 	 restore
-	ld	[%sp+" __S(STACK_BIAS) "+22*8], %o0
+	ldx	[%sp+" __S(STACK_BIAS) "+22*8], %o0
 	add	%sp, " __S(STACK_BIAS) "+23*8, %o1
 	sll	%o0, 3, %o2
 	add	%o2, %o1, %o2
-	add	%o2, 8, %o2
-	ba,a	" #INIT "
-	.size "#NAME " .-" #NAME);
+	ba	" #INIT "
+	 add	%o2, 8, %o2
+	.size "#NAME ", .-" #NAME);
 
 #else
 
@@ -73,15 +73,15 @@
 	or	%g2, %lo(_dl_starting_up), %g2
 	brz,pt	%g2, 3f
 	 sethi	%hi(__libc_multiple_libcs), %g3
-	ld	[%g4+%g2], %g2
-	subcc	%g0, %g2, %g0
-	subc	%g0, -1, %g2
-3:	add	%g3, %g4, %g3
-	st	%g2, [%g3+%lo(__libc_multiple_libcs)]
+	ld	[%g4+%g2], %g1
+	mov	%g0, %g2
+	movrz	%g1, 1, %g2
+3:	or	%g3, %lo(__libc_multiple_libcs), %g3
+	st	%g2, [%g3+%g4]
 	/* If so, argc et al are in %o0-%o2 already.  Otherwise, load them.  */
 	brnz,pn	%g2, " #INIT "
 	 nop
-	ld	[%sp+" __S(STACK_BIAS) "+22*8], %o0
+	ldx	[%sp+" __S(STACK_BIAS) "+22*8], %o0
 	add	%sp, " __S(STACK_BIAS) "+23*8, %o1
 	sll	%o0, 3, %o2
 	add	%o2, %o1, %o2

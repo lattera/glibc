@@ -68,20 +68,21 @@ if_nametoindex (const char *ifname)
 {
 #ifndef SIOGIFINDEX
   __set_errno (ENOSYS);
+  return 0;
 #else
   struct ifreq ifr;
-  int rc;
   int fd = opensock ();
 
   if (fd < 0)
     return 0;
 
   strncpy (ifr.ifr_name, ifname, sizeof (ifr.ifr_name));
-  rc = ioctl (fd, SIOGIFINDEX, &ifr);
-  if (rc < 0)
+  if (ioctl (fd, SIOGIFINDEX, &ifr) < 0)
     {
+      int saved_errno = errno;
       close (fd);
-      __set_errno (rc == -EINVAL ? ENOSYS : -rc);
+      if (saved_errno == EINVAL)
+	__set_errno (ENOSYS);
       return 0;
     }
   close (fd);
@@ -109,7 +110,6 @@ if_nameindex (void)
   __set_errno (ENOSYS);
   return NULL;
 #else
-  int rc;
   int fd = opensock ();
   struct ifconf ifc;
   unsigned int rq_ifs = 4, nifs, i;
@@ -153,12 +153,13 @@ if_nameindex (void)
 	  goto jump;
 	}
       strcpy (idx[i].if_name, ifr->ifr_name);
-      rc = ioctl (fd, SIOGIFINDEX, ifr);
-      if (rc < 0)
+      if (ioctl (fd, SIOGIFINDEX, ifr) < 0)
 	{
+	  int saved_errno = errno;
 	  free (idx);
 	  idx = NULL;
-	  __set_errno (rc == -EINVAL ? ENOSYS : -rc);
+	  if (saved_errno == EINVAL)
+	    __set_errno (ENOSYS);
 	  goto jump;
 	}
       idx[i].if_index = ifr->ifr_ifindex;

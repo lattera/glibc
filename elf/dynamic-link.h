@@ -75,14 +75,75 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
    duplicating their code.  It cannot be done in a more general function
    because we must be able to completely inline.  */
 
+/* On some machines, notably Sparc, DT_REL* includes DT_JMPREL in its
+   range.  Note that according to the ELF spec, this is completely legal!
+   But conditionally define things so that on machines we know this will
+   not happen we do something more optimal.  */
+
+#ifdef ELF_MACHINE_PLTREL_OVERLAP
+#define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, lazy) \
+  do {									      \
+    ElfW(Addr) r_addr, r_size, p_addr, p_size;				      \
+    if ((map)->l_info[DT_##RELOC])					      \
+      {									      \
+        r_addr = (map)->l_info[DT_##RELOC]->d_un.d_ptr;			      \
+        r_size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;		      \
+        if ((map)->l_info[DT_PLTREL] &&					      \
+            (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)		      \
+	  {								      \
+	    p_addr = (map)->l_info[DT_JMPREL]->d_un.d_ptr;		      \
+	    p_size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;		      \
+	    if (r_addr <= p_addr && r_addr+r_size > p_addr)		      \
+	      {								      \
+		ElfW(Addr) r2_addr, r2_size;				      \
+		r2_addr = p_addr+p_size;				      \
+		if (r2_addr < r_addr+r_size)				      \
+		  {							      \
+		    r2_size = r_addr+r_size - r2_addr;			      \
+		    elf_dynamic_do_##reloc ((map), r2_addr, r2_size, 0);      \
+		  }							      \
+		r_size = p_addr - r_addr;				      \
+	      }								      \
+	  }								      \
+									      \
+	elf_dynamic_do_##reloc ((map), r_addr, r_size, 0);		      \
+	if (p_addr)							      \
+	  elf_dynamic_do_##reloc ((map), p_addr, p_size, (lazy));	      \
+      }									      \
+    else if ((map)->l_info[DT_PLTREL] &&				      \
+	     (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)	      \
+      {									      \
+	p_addr = (map)->l_info[DT_JMPREL]->d_un.d_ptr;			      \
+	p_size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;		      \
+									      \
+	elf_dynamic_do_##reloc ((map), p_addr, p_size, (lazy));		      \
+      }									      \
+  } while (0)
+#else
+#define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, lazy) \
+  do {									      \
+    if ((map)->l_info[DT_##RELOC])					      \
+      {									      \
+	ElfW(Addr) r_addr, r_size;					      \
+        r_addr = (map)->l_info[DT_##RELOC]->d_un.d_ptr;			      \
+        r_size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;		      \
+	elf_dynamic_do_##reloc ((map), r_addr, r_size, 0);		      \
+      }									      \
+    if ((map)->l_info[DT_PLTREL] &&					      \
+	(map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)		      \
+      {									      \
+	ElfW(Addr) p_addr, p_size;					      \
+	p_addr = (map)->l_info[DT_JMPREL]->d_un.d_ptr;			      \
+	p_size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;		      \
+	elf_dynamic_do_##reloc ((map), p_addr, p_size, (lazy));		      \
+      }									      \
+  } while (0)
+#endif
+
 #if ! ELF_MACHINE_NO_REL
 #include "do-rel.h"
-#define ELF_DYNAMIC_DO_REL(map, lazy)					      \
-  if ((map)->l_info[DT_REL])						      \
-    elf_dynamic_do_rel ((map), DT_REL, DT_RELSZ, 0);			      \
-  if ((map)->l_info[DT_PLTREL] &&					      \
-      (map)->l_info[DT_PLTREL]->d_un.d_val == DT_REL)			      \
-    elf_dynamic_do_rel ((map), DT_JMPREL, DT_PLTRELSZ, (lazy));
+#define ELF_DYNAMIC_DO_REL(map, lazy) \
+  _ELF_DYNAMIC_DO_RELOC (REL, rel, map, lazy)
 #else
 #define ELF_DYNAMIC_DO_REL(map, lazy) /* Nothing to do.  */
 #endif
@@ -90,12 +151,8 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
 #if ! ELF_MACHINE_NO_RELA
 #define DO_RELA
 #include "do-rel.h"
-#define ELF_DYNAMIC_DO_RELA(map, lazy)					      \
-  if ((map)->l_info[DT_RELA])						      \
-    elf_dynamic_do_rela ((map), DT_RELA, DT_RELASZ, 0);			      \
-  if ((map)->l_info[DT_PLTREL] &&					      \
-      (map)->l_info[DT_PLTREL]->d_un.d_val == DT_RELA)			      \
-    elf_dynamic_do_rela ((map), DT_JMPREL, DT_PLTRELSZ, (lazy));
+#define ELF_DYNAMIC_DO_RELA(map, lazy) \
+  _ELF_DYNAMIC_DO_RELOC (RELA, rela, map, lazy)
 #else
 #define ELF_DYNAMIC_DO_RELA(map, lazy) /* Nothing to do.  */
 #endif

@@ -29,11 +29,10 @@ recvfrom (fd, buf, n, flags, addr, addr_len)
      size_t n;
      int flags;
      __SOCKADDR_ARG addr;
-     size_t *addr_len;
+     socklen_t *addr_len;
 {
   __set_errno (ENOSYS);
   return -1;
 }
-
 
 stub_warning (recvfrom)

@@ -50,4 +50,6 @@ _IO_fsetpos (fp, posp)
   return result;
 }
 
+#ifdef weak_alias
 weak_alias (_IO_fsetpos, fsetpos)
+#endif

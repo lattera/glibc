@@ -58,4 +58,6 @@ _IO_fopen (filename, mode)
   return NULL;
 }
 
+#ifdef weak_alias
 weak_alias (_IO_fopen, fopen)
+#endif

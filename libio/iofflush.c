@@ -43,4 +43,6 @@ _IO_fflush (fp)
     }
 }
 
+#ifdef weak_alias
 weak_alias (_IO_fflush, fflush)
+#endif

@@ -99,7 +99,7 @@ int
 fmtmsg (long int classification, const char *label, int severity,
 	const char *text, const char *action, const char *tag)
 {
-  __libc_once_define (once);
+  __libc_once_define (static, once);
   int result = MM_OK;
   struct severity_info *severity_rec;
 

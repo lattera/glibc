@@ -23,7 +23,7 @@
 #include <assert.h>
 #include <string.h>
 #include <link.h>
-#include "../stdio-common/_itoa.h"
+#include <stdio-common/_itoa.h>
 
 /* Minimal `malloc' allocator for use while loading shared libraries.
    Only small blocks are allocated, and none are ever freed.  */
@@ -42,9 +42,6 @@ malloc (size_t n)
     _dl_zerofd = _dl_sysdep_open_zero_fill ();
 #define MAP_ANON 0
 #endif
-
-  if (_dl_pagesize == 0)
-    _dl_pagesize = __getpagesize ();
 
   if (alloc_end == 0)
     {
@@ -115,10 +112,16 @@ realloc (void *ptr, size_t n)
 
 int weak_function
 __sigjmp_save (sigjmp_buf env, int savemask)
-{ env[0].__mask_was_saved = savemask; return 0; }
+{
+  env[0].__mask_was_saved = savemask;
+  return 0;
+}
 
 void weak_function
-longjmp (jmp_buf env, int val) { __longjmp (env[0].__jmpbuf, val); }
+longjmp (jmp_buf env, int val)
+{
+  __longjmp (env[0].__jmpbuf, val);
+}
 
 /* Define our own stub for the localization function used by strerror.
    English-only in the dynamic linker keeps it smaller.  */

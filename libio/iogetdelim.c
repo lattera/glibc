@@ -118,5 +118,7 @@ unlock_return:
   return result;
 }
 
+#ifdef weak_alias
 weak_alias (_IO_getdelim, __getdelim)
 weak_alias (_IO_getdelim, getdelim)
+#endif

@@ -1,10 +1,25 @@
 @c We need some definitions here.
-@iftex
-@set TEXFORMULAS
-@end iftex
 @ifhtml
 @set cdot ·
 @end ifhtml
+@iftex
+@set cdot @cdot
+@end iftex
+@ifclear cdot
+@set cdot x
+@end ifclear
+@iftex
+@set infty @infty
+@end iftex
+@ifclear infty
+@set infty oo
+@end ifclear
+@macro mul
+@value{cdot}
+@end macro
+@macro infinity
+@value{infty}
+@end macro
 
 @node Mathematics, Arithmetic, Low-Level Terminal Interface, Top
 @chapter Mathematics
@@ -53,7 +68,7 @@ in case of double using @code{double} is a good compromise.
 @cindex domain error
 Many of the functions listed in this chapter are defined mathematically
 over a domain that is only a subset of real numbers.  For example, the
-@code{acos} function is defined over the domain between @code{-1} and
+@code{acos} function is defined over the domain between @code{@minus{}1} and
 @code{1}.  If you pass an argument to one of these functions that is
 outside the domain over which it is defined, the function sets
 @code{errno} to @code{EDOM} to indicate a @dfn{domain error}.  On
@@ -73,7 +88,7 @@ be representable as a floating point number.  If magnitude of the
 correct result is too large to be represented, the function sets
 @code{errno} to @code{ERANGE} to indicate a @dfn{range error}, and
 returns a particular very large value (named by the macro
-@code{HUGE_VAL}) or its negation (@w{@code{- HUGE_VAL}}).
+@code{HUGE_VAL}) or its negation (@code{@minus{}HUGE_VAL}).
 
 If the magnitude of the result is too small, a value of zero is returned
 instead.  In this case, @code{errno} might or might not be
@@ -191,46 +206,19 @@ operation to be performed.  Examples are
 Any operation on a signalling NaN.
 @item
 Addition or subtraction; magnitude subtraction of infinities such as
-@iftex
-@tex
-$(+\infty) + (-\infty)$.
-@end tex
-@end iftex
-@ifclear TEXFORMULAS
-@math{(+oo) + (-oo)}.
-@end ifclear
+@math{(+@infinity{}) + (-@infinity{})}.
 @item
 Multiplication:
-@iftex
-@tex
-$0 \cdot \infty$.
-@end tex
-@end iftex
-@ifclear TEXFORMULAS
-@ifset cdot
-@math{0 @value{cdot} oo}.
-@end ifset
-@ifclear cdot
-@math{0 x oo}.
-@end ifclear
-@end ifclear
+@math{0 @mul{} @infinity{}}.
 
 @item
-Division: @math{0/0} or
-@iftex
-@tex
-$\infty/\infty$.
-@end tex
-@end iftex
-@ifclear TEXFORMULAS
-@math{oo/oo}.
-@end ifclear
+Division: @math{0/0} or @math{@infinity{}/@infinity{}}.
 
 @item
 Remainder: @math{x} REM @math{y}, where @math{y} is zero or @math{x} is
 infinite.
 @item
-Squre root if the operand is less then zero.
+Square root if the operand is less then zero.
 @item
 Conversion of an internal floating-point number to an integer or to a
 decimal string when overflow, infinity, or NaN precludes a faithful
@@ -249,24 +237,7 @@ of the operation is taken as a quiet NaN.
 @item Division by Zero
 This exception is raised if the devisor is zero and the dividend is a
 finite nonzero number.  If no trap occurs the result is either
-@iftex
-@tex
-$\infty$
-@end tex
-@end iftex
-@ifclear TEXFORMULAS
-@math{+oo}
-@end ifclear
-or
-@iftex
-@tex
-$-\infty$
-@end tex
-@end iftex
-@ifclear TEXFORMULAS
-@math{-oo}
-@end ifclear
-, depending on the
+@math{+@infinity{}} or @math{-@infinity{}}, depending on the
 signs of the operands.
 
 @item Overflow
@@ -276,61 +247,20 @@ occurs the result depends on the sign of the intermediate result and the
 current rounding mode (@w{IEEE 754}, @w{section 7.3}):
 @enumerate
 @item
-Round to nearest carries all overflows to
-@iftex
-@tex
-$\infty$
-@end tex
-@end iftex
-@ifclear TEXFORMULAS
-@math{oo}
-@end ifclear
+Round to nearest carries all overflows to @math{@infinity{}}
 with the sign of the intermediate result.
 @item
-Round towards @math{0} carries all overflows to the precision's largest
+Round toward @math{0} carries all overflows to the precision's largest
 finite number with the sign of the intermediate result.
 @item
-Round towards
-@iftex
-@tex
-$-\infty$
-@end tex
-@end iftex
-@ifclear TEXFORMULAS
-@math{-oo}
-@end ifclear
-carries positive overflows to the
+Round toward @math{-@infinity{}} carries positive overflows to the
 precision's largest finite number and carries negative overflows to
-@iftex
-@tex
-$-\infty$.
-@end tex
-@end iftex
-@ifclear TEXFORMULAS
-@math{-oo}.
-@end ifclear
+@math{-@infinity{}}.
 
 @item
-Round towards
-@iftex
-@tex
-$\infty$
-@end tex
-@end iftex
-@ifclear TEXFORMULAS
-@math{oo}
-@end ifclear
-carries negative overflows to the
+Round toward @math{@infinity{}} carries negative overflows to the
 precision's most negative finite number and carries positive overflows
-to
-@iftex
-@tex
-$\infty$.
-@end tex
-@end iftex
-@ifclear TEXFORMULAS
-@math{oo}.
-@end ifclear
+to @math{@infinity{}}.
 @end enumerate
 
 @item Underflow
@@ -565,9 +495,10 @@ unwanted exception and raise the remaining exceptions.
 mode is supported by the floating-point implementation the corresponding
 of the following macros is defined:
 
-@vtable @code
+@table @code
 @comment fenv.h
 @comment ISO
+@vindex FE_TONEAREST
 @item FE_TONEAREST
 Round to nearest.  This is the default mode and should always be used
 except when a different mode is explicitely required.  Only rounding to
@@ -575,35 +506,22 @@ nearest guarantees numeric stability of the computations.
 
 @comment fenv.h
 @comment ISO
+@vindex FE_UPWARD
 @item FE_UPWARD
-Round toward
-@iftex
-@tex
-$+\infty$.
-@end tex
-@end iftex
-@ifclear TEXFORMULAS
-@math{+oo}.
-@end ifclear
+Round toward @math{+@infinity{}}.
 
 @comment fenv.h
 @comment ISO
+@vindex FE_DOWNWARD
 @item FE_DOWNWARD
-Round toward
-@iftex
-@tex
-$-\infty$.
-@end tex
-@end iftex
-@ifclear TEXFORMULAS
-@math{-oo}.
-@end ifclear
+Round toward @math{-@infinity{}}.
 
 @comment fenv.h
 @comment ISO
+@vindex FE_TOWARDZERO
 @item FE_TOWARDZERO
 Round toward zero.
-@end vtable
+@end table
 
 At any time one of the above four rounding modes is selected.  To get
 information about the currently selected mode one can use this function:
@@ -682,10 +600,10 @@ The value is the square root of the value of the number pi.
 The value is the reziprocal of the square root of the value of the number pi.
 @end vtable
 
-ALl values are defined as @code{long double} values unless the compiler
+All values are defined as @code{long double} values unless the compiler
 does not support this type or @code{__STDC__} is not defined (both is
 unlikely).  Historically the numbers were @code{double} values and some
-old code still relies on this so you might want to add explizit casts if
+old code still relies on this so you might want to add explicit casts if
 the extra precision of the @code{long double} value is not needed.  One
 critical case are functions with a variable number of arguments, such as
 @code{printf}.
@@ -697,7 +615,7 @@ book about his C++ programming language where this value is used in
 examples (and perhaps some AT&T headers contain this value).  But due to
 possible name space problems (@code{PI} is a quite frequently used name)
 this value is not added to @file{math.h}.  Every program should use
-@code{M_PI} instead or add on the the compiler command line
+@code{M_PI} instead or add on the compiler command line
 @code{-DPI=M_PI}.
 
 
@@ -727,15 +645,15 @@ double} type.
 @comment ISO
 @deftypefn {Macro} int isgreater (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
 This macro determines whether the argument @var{x} is greater than
-@var{y}.  This is equivalent to @math{(x) > (y)} but no exception is
-raised if @var{x} or @var{y} are unordered.
+@var{y}.  This is equivalent to @code{(@var{x}) > (@var{y})} but no
+exception is raised if @var{x} or @var{y} are unordered.
 @end deftypefn
 
 @comment math.h
 @comment ISO
 @deftypefn {Macro} int isgreaterequal (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
 This macro determines whether the argument @var{x} is greater than or
-equal to @var{y}.  This is equivalent to @math{(x) >= (y)} but no
+equal to @var{y}.  This is equivalent to @code{(@var{x}) >= (@var{y})} but no
 exception is raised if @var{x} or @var{y} are unordered.
 @end deftypefn
 
@@ -743,7 +661,7 @@ exception is raised if @var{x} or @var{y} are unordered.
 @comment ISO
 @deftypefn {Macro} int isless (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
 This macro determines whether the argument @var{x} is less than @var{y}.
-This is equivalent @math{(x) < (y)} but no exception is raised if
+This is equivalent @code{(@var{x}) < (@var{y})} but no exception is raised if
 @var{x} or @var{y} are unordered.
 @end deftypefn
 
@@ -751,17 +669,18 @@ This is equivalent @math{(x) < (y)} but no exception is raised if
 @comment ISO
 @deftypefn {Macro} int islessequal (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
 This macro determines whether the argument @var{x} is less than or equal
-to @var{y}.  This is equivalent to @math{(x) <= (y)} but no exception
-is raised if @var{x} or @var{y} are unordered.
+to @var{y}.  This is equivalent to @code{(@var{x}) <= (@var{y})} but no
+exception is raised if @var{x} or @var{y} are unordered.
 @end deftypefn
 
 @comment math.h
 @comment ISO
 @deftypefn {Macro} int islessgreater (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
 This macro determines whether the argument @var{x} is less or greater
-than @var{y}.  This is equivalent to @math{(x) < (y) || (x) > (y)}
-(except that @var{x} and @var{y} are only evaluated once) but no
-exception is raised if @var{x} or @var{y} are unordered.
+than @var{y}.  This is equivalent to @code{(@var{x}) < (@var{y}) ||
+(@var{x}) > (@var{y})} (except that @var{x} and @var{y} are only
+evaluated once) but no exception is raised if @var{x} or @var{y} are
+unordered.
 @end deftypefn
 
 @comment math.h
@@ -774,7 +693,7 @@ All the macros are defined in a way to ensure that both arguments are
 evaluated exactly once and so they can be used exactly like the builtin
 operators.
 
-On several platform these macros are mapped to very efficient functions
+On several platform these macros are mapped to efficient instructions
 the processor understands.  But on machines missing these functions, the
 macros above might be rather slow.  So it is best to use the builtin
 operators unless it is necessary to use unordered comparisons.
@@ -855,6 +774,10 @@ These functions return the sine of @var{x} in @code{*@var{sinx}} and the
 cosine of @var{x} in @code{*@var{cos}}, where @var{x} is given in
 radians.  Both values, @code{*@var{sinx}} and @code{*@var{cosx}}, are in
 the range of @code{-1} to @code{1}.
+
+This function is a GNU extension.  It should be used whenever both sine
+and cosine are needed but in protable applications there should be a
+fallback method for systems without this function.
 @end deftypefun
 
 @cindex complex trigonometric functions
@@ -1533,7 +1456,7 @@ may be as low as @code{32767}.
 
 @comment stdlib.h
 @comment ISO
-@deftypefun int rand ()
+@deftypefun int rand (void)
 The @code{rand} function returns the next pseudo-random number in the
 series.  The value is in the range from @code{0} to @code{RAND_MAX}.
 @end deftypefun
@@ -1562,9 +1485,14 @@ The prototypes for these functions are in @file{stdlib.h}.
 
 @comment stdlib.h
 @comment BSD
-@deftypefun {long int} random ()
+@deftypefun {int32_t} random (void)
 This function returns the next pseudo-random number in the sequence.
 The range of values returned is from @code{0} to @code{RAND_MAX}.
+
+@strong{Please note:} Historically this function returned a @code{long
+int} value.  But with the appearence of 64bit machines this could lead
+to severe compatibility problems and therefore the type now explicitly
+limits the return value to 32bit.
 @end deftypefun
 
 @comment stdlib.h

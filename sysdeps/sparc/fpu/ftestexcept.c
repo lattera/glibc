@@ -1,5 +1,6 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
-   Contributed by Richard Henderson (rth@tamu.edu).
+/* Test exception in current environment.
+   Copyright (C) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,29 +17,14 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* longjmp is implemented in terms of the setcontext trap on Linux/Sparc64.  */
+#include <fenv.h>
 
-#include <sysdep.h>
+int
+fetestexcept (int excepts)
+{
+  int tmp;
 
-/* Offsets into the jmp_buf structure.  */
+  __fenv_stfsr (tmp);
 
-#define O_mask_was_saved	512
-#define O_gregs			32
-#define O_g1			(O_gregs + 4*8)
-
-
-/* void longjmp (sigjmp_buf env, int val) */
-
-ENTRY(longjmp)
-
-	/* Modify the context with the value we want to return.  */
-	movre	%o1, 1, %o1
-	stx	%o1, [%o0 + O_g1]
-
-	/* Let setcontext know if we want to modify the current sigmask. */
-	ld	[%o0 + O_mask_was_saved], %o1
-
-	/* And bamf back to where we belong!  */
-	ta	0x6f
-
-END(longjmp)
+  return tmp & excepts & FE_ALL_EXCEPT;
+}

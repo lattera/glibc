@@ -999,7 +999,8 @@ cbrt_test (void)
   check_isinfn ("cbrt (-inf) == -inf", FUNC(cbrt) (minus_infty));
   check_isnan ("cbrt (NaN) == NaN", FUNC(cbrt) (nan_value));
 #endif
-  check ("cbrt (-0.001) == -0.1", FUNC(cbrt) (-0.001), -0.1);
+  check_eps ("cbrt (-0.001) == -0.1", FUNC(cbrt) (-0.001), -0.1,
+	     CHOOSE (5e-18L, 0, 0));
   check_eps ("cbrt (8) == 2", FUNC(cbrt) (8), 2, CHOOSE (5e-17L, 0, 0));
   check_eps ("cbrt (-27) == -3", FUNC(cbrt) (-27.0), -3.0,
 	     CHOOSE (3e-16L, 0, 0));
@@ -1120,10 +1121,12 @@ static void
 expm1_test (void)
 {
   check ("expm1 (+0) == 0", FUNC(expm1) (0), 0);
+#ifndef TEST_INLINE
   check ("expm1 (-0) == -0", FUNC(expm1) (minus_zero), minus_zero);
 
   check_isinfp ("expm1 (+inf) == +inf", FUNC(expm1) (plus_infty));
   check ("expm1 (-inf) == -1", FUNC(expm1) (minus_infty), -1);
+#endif
 
   check_eps ("expm1 (1) == e-1", FUNC(expm1) (1), M_E - 1.0,
 	     CHOOSE (4e-18L, 0, 0));
@@ -4652,6 +4655,7 @@ identities1_test (MATHTYPE x, MATHTYPE epsilon)
 static void
 identities2_test (MATHTYPE x, MATHTYPE epsilon)
 {
+#ifndef TEST_INLINE
   MATHTYPE res1, res2, res3, res4, diff;
   int result;
 
@@ -4668,6 +4672,7 @@ identities2_test (MATHTYPE x, MATHTYPE epsilon)
   result = check_equal (res4, res3, epsilon, &diff);
   output_result_ext ("sin/cos == tan", result,
 		     res4, res3, diff, x, PRINT, PRINT);
+#endif
 }
 
 

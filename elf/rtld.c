@@ -261,6 +261,11 @@ dl_main (const ElfW(Phdr) *phdr,
   char *file;
   int has_interp = 0;
 
+  /* Test whether we want to see the content of the auxiliary array passed
+     up from the kernel.  */
+  if (getenv ("LD_SHOW_AUXV") != NULL)
+    _dl_show_auxv ();
+
   mode = getenv ("LD_TRACE_LOADED_OBJECTS") != NULL ? trace : normal;
   _dl_verbose = *(getenv ("LD_WARN") ?: "") == '\0' ? 0 : 1;
 

@@ -713,3 +713,10 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
   return __mach_msg (msg, option, send_size, rcv_size, rcv_name,
 		     timeout, notify);
 }
+
+
+void
+_dl_show_auxv (void)
+{
+  /* There is nothing to print.  Hurd has no auxiliary vector.  */
+}

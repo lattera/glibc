@@ -43,4 +43,6 @@ _IO_fputs (str, fp)
   return result;
 }
 
+#ifdef weak_alias
 weak_alias (_IO_fputs, fputs)
+#endif

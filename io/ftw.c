@@ -105,10 +105,10 @@ object_compare (const void *p1, const void *p2)
      accidentally compare `holes' in the structure.  */
   const struct known_object *kp1 = p1, *kp2 = p2;
   int cmp1;
-  cmp1 = memcmp(&kp1->dev, &kp2->dev, sizeof(kp1->dev));
+  cmp1 = (kp1->dev > kp2->dev) - (kp1->dev < kp2->dev);
   if (cmp1 != 0)
     return cmp1;
-  return memcmp (&kp1->ino, &kp2->ino, sizeof (kp1->ino));
+  return (kp1->ino > kp2->ino) - (kp1->ino < kp2->ino);
 }
 
 

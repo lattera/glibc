@@ -94,4 +94,6 @@ unlock_return:
   return result;
 }
 
+#ifdef weak_alias
 weak_alias (_IO_setvbuf, setvbuf)
+#endif

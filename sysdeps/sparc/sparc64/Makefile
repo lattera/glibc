@@ -7,5 +7,5 @@ omit-long-double-fcts = yes
 
 # But we do need these few functions to even link stdio proggies
 ifeq ($(subdir),math)
-sysdep_routines += s_isinfl s_isnanl
+sysdep_routines += s_isinfl s_isnanl s_finitel s_signbitl
 endif

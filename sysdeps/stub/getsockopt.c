@@ -28,11 +28,10 @@ getsockopt (fd, level, optname, optval, optlen)
      int level;
      int optname;
      void *optval;
-     size_t *optlen;
+     socklen_t *optlen;
 {
   __set_errno (ENOSYS);
   return -1;
 }
-
 
 stub_warning (getsockopt)

@@ -1,4 +1,4 @@
-/* BSD `_setjmp' entry point to `sigsetjmp (..., 0)'.  Sparc64 version.
+/* Install given floating-point environment and raise exceptions.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,27 +17,22 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
+#include <fenv.h>
 
-ENTRY(_setjmp)
+void
+feupdateenv (const fenv_t *envp)
+{
+  fexcept_t tmp;
 
-#ifdef PIC
-1:	rd	%pc,%g1
-	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)),%g2
-	or	%g2,%lo(_GLOBAL_OFFSET_TABLE_-(1b-.)),%g2
-	add	%g1,%g2,%g1
-	sethi	%hi(C_SYMBOL_NAME(__sigsetjmp)),%g2
-	or	%g2,%lo(C_SYMBOL_NAME(__sigsetjmp)),%g2
-	ld	[%g1+%g2], %g1
-#else
-	sethi	%hi(C_SYMBOL_NAME(__sigsetjmp)), %g1
-	or	%lo(C_SYMBOL_NAME(__sigsetjmp)), %g1, %g1
-	add	%g1, %g4, %g1
-#endif
+  /* Save current exceptions.  */
+  __fenv_stfsr (tmp);
+  tmp &= FE_ALL_EXCEPT;
 
-	jmp %g1
-	 mov %g0, %o1		/* Pass second argument of zero.  */
+  /* Install new environment.  */
+  fesetenv (envp);
 
-END(_setjmp)
-
-strong_alias(_setjmp, __setjmp)
+  /* Raise the safed exception.  Incidently for us the implementation
+     defined format of the values in objects of type fexcept_t is the
+     same as the ones specified using the FE_* constants.  */
+  feraiseexcept ((int) tmp);
+}

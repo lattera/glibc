@@ -50,4 +50,6 @@ _IO_fgets (buf, n, fp)
   return result;
 }
 
+#ifdef weak_alias
 weak_alias (_IO_fgets, fgets)
+#endif

@@ -159,9 +159,12 @@ m88???)		base_machine=m88k machine=m88k/$machine ;;
 m88k)		base_machine=m88k machine=m88k/m88100 ;;
 mips64*)	base_machine=mips64 machine=mips/mips64/$machine ;;
 mips*)		base_machine=mips machine=mips/$machine ;;
-sparc[6789])	base_machine=sparc machine=sparc/$machine ;;
-supersparc)	base_machine=sparc machine=sparc/sparc8 ;;
-sparc64)	base_machine=sparc64 machine=sparc64/$machine ;;
+sparc | sparcv[67])
+		base_machine=sparc machine=sparc/sparc32 ;;
+sparcv8 | supersparc | hypersparc)
+		base_machine=sparc machine=sparc/sparc32/sparcv8 ;;
+sparc64 | ultrasparc)
+		base_machine=sparc machine=sparc/sparc64 ;;
 esac
 changequote([,])dnl
 AC_SUBST(base_machine)

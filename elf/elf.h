@@ -505,6 +505,7 @@ typedef struct
 					   entry */
 } Elf32_Verdef;
 
+#if 0
 /* XXX We have no information what types should be used for 64 bit
    architectures.  What is following is only an intelligent guess.  */
 typedef struct
@@ -518,6 +519,11 @@ typedef struct
   Elf64_Word	vd_next;		/* Offset in bytes to next verdef
 					   entry */
 } Elf64_Verdef;
+#else
+/* The linker doesn't even parameterize the version info swapping
+   routines.  I wonder if it should or is this good enough.  */
+typedef Elf32_Verdef Elf64_Verdef;
+#endif
 
 /* Legal values for vd_version (version revision).  */
 #define VER_DEF_NONE	0		/* No version */
@@ -537,6 +543,7 @@ typedef struct
 					   entry */
 } Elf32_Verdaux;
 
+#if 0
 /* XXX We have no information what types should be used for 64 bit
    architectures.  What is following is only an intelligent guess.  */
 typedef struct
@@ -545,6 +552,10 @@ typedef struct
   Elf64_Word	vda_next;		/* Offset in bytes to next verdaux
 					   entry */
 } Elf64_Verdaux;
+#else
+/* The linker doesn't even parameterize this -- should it?  */
+typedef Elf32_Verdaux Elf64_Verdaux;
+#endif
 
 /* Version dependency section.  */
 
@@ -559,6 +570,7 @@ typedef struct
 					   entry */
 } Elf32_Verneed;
 
+#if 0
 /* XXX We have no information what types should be used for 64 bit
    architectures.  What is following is only an intelligent guess.  */
 typedef struct
@@ -571,6 +583,10 @@ typedef struct
   Elf64_Word	vn_next;		/* Offset in bytes to next verneed
 					   entry */
 } Elf64_Verneed;
+#else
+/* The linker doesn't even parameterize this -- should it?  */
+typedef Elf32_Verneed Elf64_Verneed;
+#endif
 
 /* Legal values for vn_version (version revision).  */
 #define VER_NEED_NONE	 0		/* No version */
@@ -589,6 +605,7 @@ typedef struct
 					   entry */
 } Elf32_Vernaux;
 
+#if 0
 /* XXX We have no information what types should be used for 64 bit
    architectures.  What is following is only an intelligent guess.  */
 typedef struct
@@ -600,6 +617,10 @@ typedef struct
   Elf64_Word	vna_next;		/* Offset in bytes to next vernaux
 					   entry */
 } Elf64_Vernaux;
+#else
+/* The linker doesn't even parameterize these -- should it?  */
+typedef Elf32_Vernaux Elf64_Vernaux;
+#endif
 
 /* Legal values for vna_flags.  */
 #define VER_FLG_WEAK	0x2		/* Weak verison identifier */
@@ -731,6 +752,36 @@ typedef struct
 #define R_SPARC_JMP_SLOT 21		/* Create PLT entry */
 #define R_SPARC_RELATIVE 22		/* Adjust by program base */
 #define R_SPARC_UA32	23		/* Direct 32 bit unaligned */
+
+/* Additional Sparc64 relocs.  */
+
+#define R_SPARC_PLT32	24		/* Direct 32 bit ref to PLT entry */
+#define R_SPARC_HIPLT22	25		/* High 22 bit PLT entry */
+#define R_SPARC_LOPLT10	26		/* Truncated 10 bit PLT entry */
+#define R_SPARC_PCPLT32	27		/* PC rel 32 bit ref to PLT entry */
+#define R_SPARC_PCPLT22	28		/* PC rel high 22 bit PLT entry */
+#define R_SPARC_PCPLT10	29		/* PC rel trunc 10 bit PLT entry */
+#define R_SPARC_10	30		/* Direct 10 bit */
+#define R_SPARC_11	31		/* Direct 11 bit */
+#define R_SPARC_64	32		/* Direct 64 bit */
+#define R_SPARC_OLO10	33		/* ?? */
+#define R_SPARC_HH22	34		/* Top 22 bits of direct 64 bit */
+#define R_SPARC_HM10	35		/* High middle 10 bits of ... */
+#define R_SPARC_LM22	36		/* Low middle 22 bits of ... */
+#define R_SPARC_PC_HH22	37		/* Top 22 bits of pc rel 64 bit */
+#define R_SPARC_PC_HM10	38		/* High middle 10 bit of ... */
+#define R_SPARC_PC_LM22	39		/* Low miggle 22 bits of ... */
+#define R_SPARC_WDISP16	40		/* PC relative 16 bit shifted */
+#define R_SPARC_WDISP19	41		/* PC relative 19 bit shifted */
+#define R_SPARC_GLOB_JMP 42		/* ?? */
+#define R_SPARC_7	43		/* Direct 7 bit */
+#define R_SPARC_5	44		/* Direct 5 bit */
+#define R_SPARC_6	45		/* Direct 6 bit */
+
+/* For Sparc64, legal values for d_tag of Elf64_Dyn.  */
+
+#define DT_SPARC_PLTFMT	0x70000001	/* .plt format version/type */
+#define DT_SPARC_NUM	2
 
 /* MIPS R3000 specific definitions.  */
 

@@ -31,14 +31,14 @@ struct sigaction
 
 /* Bits in `sa_flags'.  */
 #ifdef	__USE_MISC
-#define	SA_ONSTACK	0x1	/* Take signal on signal stack.  */
-#define	SA_RESETHAND	0x2	/* Reset signal handler when signal caught.  */
-#define	SA_NODEFER	0x4	/* Don't block signal while catching it.  */
-#define	SA_RESTART	0x8	/* Don't restart syscall on signal return.  */
-#define	SA_SIGINFO	0x10	/* Extended signal handling.  */
-#define	SA_NOCLDWAIT	0x20	/* Don't create zombies.  */
-#define	SA_COMPAT	0x80	/* Internal flag for old signal catchers.  */
-#define	SA_DISABLE	0x100	/* Disable alternate signal stack.  */
+# define SA_ONSTACK	0x1	/* Take signal on signal stack.  */
+# define SA_RESETHAND	0x2	/* Reset signal handler when signal caught.  */
+# define SA_NODEFER	0x4	/* Don't block signal while catching it.  */
+# define SA_RESTART	0x8	/* Restart syscall on signal return.  */
+# define SA_SIGINFO	0x10	/* Extended signal handling.  */
+# define SA_NOCLDWAIT	0x20	/* Don't create zombies.  */
+# define SA_COMPAT	0x80	/* Internal flag for old signal catchers.  */
+# define SA_DISABLE	0x100	/* Disable alternate signal stack.  */
 #endif
 #define	SA_NOCLDSTOP	0x40	/* Don't send SIGCHLD when children stop.  */
 

@@ -28,7 +28,7 @@ int
 accept (fd, addr, addr_len)
      int fd;
      __SOCKADDR_ARG addr;
-     size_t *addr_len;
+     socklen_t *addr_len;
 {
   __set_errno (ENOSYS);
   return -1;

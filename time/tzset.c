@@ -328,12 +328,9 @@ __tzset_internal (always)
     {
       register tz_rule *tzr = &tz_rules[whichrule];
 
-      if (*tz == ',')
-	{
-	  ++tz;
-	  if (*tz == '\0')
-	    return;
-	}
+      /* Ignore comma to support string following the incorrect
+	 specification in early POSIX.1 printings.  */
+      tz += *tz == ',';
 
       /* Get the date of the change.  */
       if (*tz == 'J' || isdigit (*tz))

@@ -63,10 +63,10 @@
 /* The gmp headers need some configuration frobs.  */
 #define HAVE_ALLOCA 1
 
-#include "gmp.h"
-#include "gmp-impl.h"
+#include <gmp.h>
+#include <gmp-impl.h>
 #include <gmp-mparam.h>
-#include "longlong.h"
+#include <longlong.h>
 #include "fpioconst.h"
 
 #define NDEBUG 1

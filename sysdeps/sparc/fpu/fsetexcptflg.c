@@ -1,5 +1,6 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
-   Contributed by Richard Henderson (rth@tamu.edu).
+/* Set floating-point environment exception handling.
+   Copyright (C) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,33 +17,18 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* __sigsetjmp is implemented in terms of the getcontext trap on
-   Linux/Sparc64.  */
+#include <fenv.h>
+#include <math.h>
 
-#include <sysdep.h>
+void
+fesetexceptflag (const fexcept_t *flagp, int excepts)
+{
+  fenv_t tmp;
 
-/* Offsets into the jmp_buf structure.  */
+  __fenv_stfsr (tmp);
 
-#define O_mask_was_saved	512
-#define O_gregs			32
-#define O_g1			(O_gregs + 4*8)
+  tmp &= ~(excepts & FE_ALL_EXCEPT);
+  tmp |= *flagp & excepts & FE_ALL_EXCEPT;
 
-
-/* int __sigsetjmp(jmp_buf, savemask)  */
-
-ENTRY(__sigsetjmp)
-
-	/* Record whether the user is intending to save the sigmask.  */
-	st	%o1, [%o0 + O_mask_was_saved]
-
-	/* Load up our return value, as longjmp is going to override
-	   the jmp_buf on its way back.  */
-	mov	%g0, %g1
-
-	/* And call getcontext!  */
-	ta	0x6e
-
-	retl
-	 mov	%g1, %o0
-
-END(__sigsetjmp)
+  __fenv_ldfsr (tmp);
+}

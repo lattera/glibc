@@ -21,7 +21,7 @@
 #include <errno.h>
 #include <dlfcn.h>
 #include <stdlib.h>
-
+#include <string.h>
 #include <assert.h>
 
 /* Whether an shared object references one or more auxiliary objects

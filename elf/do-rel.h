@@ -37,12 +37,11 @@
 
 static inline void
 elf_dynamic_do_rel (struct link_map *map,
-		    int reltag, int sztag,
+		    ElfW(Addr) reladdr, ElfW(Addr) relsize,
 		    int lazy)
 {
-  const ElfW(Rel) *r
-    = (const ElfW(Rel) *) (map->l_addr + map->l_info[reltag]->d_un.d_ptr);
-  const ElfW(Rel) *end = &r[map->l_info[sztag]->d_un.d_val / sizeof *r];
+  const ElfW(Rel) *r = (const ElfW(Rel) *)(map->l_addr + reladdr);
+  const ElfW(Rel) *end = (const ElfW(Rel) *)(map->l_addr + reladdr + relsize);
 
   if (lazy)
     /* Doing lazy PLT relocations; they need very little info.  */

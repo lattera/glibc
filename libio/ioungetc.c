@@ -40,4 +40,6 @@ _IO_ungetc (c, fp)
   return result;
 }
 
+#ifdef weak_alias
 weak_alias (_IO_ungetc, ungetc)
+#endif

@@ -51,11 +51,25 @@ elf_machine_dynamic (void)
   return *got;
 }
 
-
 /* Return the run-time load address of the shared object.  */
 static inline Elf32_Addr
 elf_machine_load_address (void)
 {
+  register Elf32_Addr pc __asm("%o7"), got;
+
+  /* Utilize the fact that a local .got entry will be partially
+     initialized at startup awaiting its RELATIVE fixup.  */
+
+  __asm("sethi %%hi(.Load_address),%1\n"
+        ".Load_address:\n\t"
+        "call 1f\n\t"
+        "or %1,%%lo(.Load_address),%1\n"
+        "1:\tld [%%l7+%1],%1"
+        : "=r"(pc), "=r"(got));
+
+  return pc - got;
+}
+
   Elf32_Addr addr;
 
   asm (
@@ -219,6 +233,8 @@ elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
 /* The SPARC never uses Elf32_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
 
+/* The SPARC overlaps DT_RELA and DT_PLTREL.  */
+#define ELF_MACHINE_PLTREL_OVERLAP 1
 
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */

@@ -11,7 +11,8 @@ GLIBC_2.0 {
     _nl_current_LC_COLLATE; __collate_element_hash;
     __collate_element_strings; __collate_symbol_classes;
     __collate_symbol_hash; __collate_symbol_strings;
-    _obstack;
+    _obstack; _libio_using_thunks;
+    __progname_full; __progname;
 
     # helper functions
     __errno_location; __libc_init_first; __h_errno_location;
@@ -84,6 +85,7 @@ GLIBC_2.0 {
     _IO_str_underflow; _IO_str_init_static; _IO_str_init_readonly;
     _IO_str_seekoff; _IO_str_pbackfail; _IO_list_all; _IO_file_jumps;
     _IO_peekc_locked;
+    __vsscanf; __vfscanf; __vsnprintf;
     _rpc_dtablesize; _null_auth; _seterr_reply;
     __res_randomid;
 

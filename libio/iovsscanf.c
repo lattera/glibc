@@ -44,5 +44,8 @@ DEFUN(_IO_vsscanf, (string, format, args),
   _IO_cleanup_region_end (1);
   return ret;
 }
+
+#ifdef weak_alias
 weak_alias (_IO_vsscanf, __vsscanf)
 weak_alias (_IO_vsscanf, vsscanf)
+#endif

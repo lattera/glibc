@@ -115,7 +115,7 @@ login (const struct utmp *ut)
       strncpy (copy.ut_line, ttyp, UT_LINESIZE);
 
       /* Tell that we want to use the UTMP file.  */
-      if (utmpname (_PATH_UTMP) != 0)
+      if (utmpname (_PATH_UTMP) == 0)
 	{
 	  struct utmp *old;
 

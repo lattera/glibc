@@ -20,9 +20,9 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <gmp-mparam.h>
-#include "../stdlib/gmp.h"
-#include "../stdlib/gmp-impl.h"
-#include "../stdlib/longlong.h"
+#include <stdlib/gmp.h>
+#include <stdlib/gmp-impl.h>
+#include <stdlib/longlong.h>
 
 #include "_itoa.h"
 

@@ -20,7 +20,6 @@
 
 #ifndef _XTMP_H
 #define _XTMP_H		1
-#include <features.h>
 
 #include <sys/time.h>
 #include <sys/types.h>
@@ -50,7 +49,7 @@ struct xtmp
 
 extern void xtmp_to_utmp (const struct xtmp *xtmp, struct utmp *utmp);
 extern void utmp_to_xtmp (const struct utmp *utmp, struct xtmp *xtmp);
-extern int compare_entry (const struct xtmp *xtmp,
+extern int compare_entry (const struct utmp *xtmp,
 			  const struct utmp *utmp);
 
 #endif /* xtmp.h  */

@@ -85,30 +85,37 @@ utmp_to_xtmp (const struct utmp *utmp, struct xtmp *xtmp)
 
 /* Compare an old style entry XTMP with a new style entry UTMP.  The
    function returns 1 if the information that is in both old and new
-   style entries is identical.  Otherwise this function returns 0.  */
+   style entries is identical.  Otherwise this function returns 0.
+   
+   The type of the argument `xtmp' is `struct utmp *', not `struct
+   utmp *'.  This is intentional!  We convert from and to `struct
+   xtmp' directly when we read and write an old style entry.  But
+   since XTMP is converted from an old style entry, we compare only
+   those elements of the structure that are common to both the new and
+   the old style entry.  */
 int
-compare_entry (const struct xtmp *xtmp, const struct utmp *utmp)
+compare_entry (const struct utmp *xtmp, const struct utmp *utmp)
 {
   return
     (
 #if _HAVE_XT_TYPE - 0
-     xtmp->xt_type == utmp->ut_type
+     xtmp->ut_type == utmp->ut_type
 #endif
 #if _HAVE_XT_PID - 0
-     && xtmp->xt_pid == utmp->ut_pid
+     && xtmp->ut_pid == utmp->ut_pid
 #endif
-     && !strncmp (xtmp->xt_line, utmp->ut_line, XT_LINESIZE - 1)
+     && !strncmp (xtmp->ut_line, utmp->ut_line, XT_LINESIZE - 1)
 #if _HAVE_XT_ID - 0
-     && !strncmp (xtmp->xt_id, utmp->ut_id, sizeof utmp->ut_id)
+     && !strncmp (xtmp->ut_id, utmp->ut_id, sizeof utmp->ut_id)
 #endif
 #if _HAVE_UT_TV - 0
-     && xtmp->xt_time == utmp->ut_tv.tv_sec
+     && xtmp->ut_tv.tv_sec == utmp->ut_tv.tv_sec
 #else
-     && xtmp->xt_time == utmp->ut_time
+     && xtmp->ut_time == utmp->ut_time
 #endif
-     && !strncmp (xtmp->xt_user, utmp->ut_user, XT_NAMESIZE)
+     && !strncmp (xtmp->ut_user, utmp->ut_user, XT_NAMESIZE)
 #if _HAVE_XT_HOST - 0
-     && !strncmp (xtmp->xt_host, utmp->ut_host, XT_HOSTSIZE - 1)
+     && !strncmp (xtmp->ut_host, utmp->ut_host, XT_HOSTSIZE - 1)
 #endif
-     && xtmp->xt_addr == utmp->ut_addr);
+     && xtmp->ut_addr == utmp->ut_addr);
 }

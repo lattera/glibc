@@ -444,6 +444,10 @@ extern void _dl_start_profile (struct link_map *map, const char *output_dir);
 /* The actual functions used to keep book on the calls.  */
 extern void _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc);
 
+
+/* Show the member of the auxiliry aray passed up from the kernel.  */
+extern void _dl_show_auxv (void);
+
 __END_DECLS
 
 #endif /* link.h */

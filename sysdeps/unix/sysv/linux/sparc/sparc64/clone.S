@@ -54,10 +54,10 @@ __libc_clone:
 	 restore
 99:
 #ifdef PIC
-	rd	%pc, %g1
+	call	1f
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(99b-.)), %l7
-	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(99b-.)), %l7
-	add	%l7, %g1, %l7
+1:	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(99b-.)), %l7
+	add	%l7, %o7, %l7
 	set	EINVAL, %i0
 	sethi	%hi(errno), %g2
 	or	%g2, %lo(errno), %g2
@@ -76,7 +76,7 @@ __libc_clone:
 	mov	-1,%i0
 	ret
 	 restore
-	.size __libc_clone,.-__libc_clone
+	.size __libc_clone, .-__libc_clone
 
 	.type __thread_start,@function
 __thread_start:
@@ -86,4 +86,4 @@ __thread_start:
 	 mov	%l3,%o0
 	call	_exit,0
 	 nop
-	.size __thread_start,.-__thread_start
+	.size __thread_start, .-__thread_start
