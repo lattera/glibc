@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
@@ -19,6 +19,8 @@
    Boston, MA 02111-1307, USA.  */
 
 /* $Id$ */
+
+#include <stdbool.h>
 
 /* Compile-time constants.  */
 
@@ -353,8 +355,6 @@ libc_hidden_proto (_dl_open_hook);
 # endif
 
 # if defined SHARED && defined USE_TLS && !USE___THREAD
-# include <stdbool.h>
-
 /* This is called by __pthread_initialize_minimal when it needs to use
    malloc to set up the TLS state.  We cannot do the full work of
    ptmalloc_init (below) until __pthread_initialize_minimal has finished,
