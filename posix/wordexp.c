@@ -1220,10 +1220,9 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	  continue;
 	}
 
-      special = (strchr ("*@$", words[*offset]) != NULL
-		 || isdigit (words[*offset]));
+      special = strchr ("*@$", words[*offset]) != NULL;
 
-      if (!isalpha (words[*offset]) && !special)
+      if (!isalnum (words[*offset]) && !special)
 	/* Stop and evaluate, remembering char we stopped at */
 	break;
 
@@ -1273,11 +1272,13 @@ envsubst:
     }
 
   /* Is it a special parameter? */
-  if (strpbrk (env, "0123456789*@$"))
+  if (strpbrk (env, "*@$") || isdigit (*env))
     {
-      if (env[1])
+      if ((isdigit(*env) && strcspn (env, "1234567890")) ||
+	  (!isdigit(*env) && env[1] != '\0'))
 	{
-	  /* Bad substitution if there is more than one character */
+	  /* Bad substitution if it isn't "*", "@", "$", or just a number.  */
+	bad_subst:
 	  free (env);
 	  fprintf (stderr, "${%s}: bad substitution\n", env);
 	  return WRDE_SYNTAX;
@@ -1286,7 +1287,11 @@ envsubst:
       /* Is it a digit? */
       if (isdigit(*env))
 	{
-	  int n = *env - '0';
+	  char *endp;
+	  int n = strtol (env, &endp, 10);
+
+	  if (*endp != '\0')
+	    goto bad_subst;
 
 	  free (env);
 	  if (n >= __libc_argc)

@@ -977,19 +977,19 @@ They are not yet documented.}
 @end deftypevr
 
 @comment errno.h
-@comment Linux???: Level 2 not synchronized
+@comment Obsolete: Level 2 not synchronized
 @deftypevr Macro int EL2NSYNC
 @comment errno ???/45
 @end deftypevr
 
 @comment errno.h
-@comment Linux???: Level 3 halted
+@comment Obsolete: Level 3 halted
 @deftypevr Macro int EL3HLT
 @comment errno ???/46
 @end deftypevr
 
 @comment errno.h
-@comment Linux???: Level 3 reset
+@comment Obsolete: Level 3 reset
 @deftypevr Macro int EL3RST
 @comment errno ???/47
 @end deftypevr
@@ -1013,7 +1013,7 @@ They are not yet documented.}
 @end deftypevr
 
 @comment errno.h
-@comment Linux???: Level 2 halted
+@comment Obsolete: Level 2 halted
 @deftypevr Macro int EL2HLT
 @comment errno ???/51
 @end deftypevr

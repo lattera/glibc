@@ -315,6 +315,10 @@ Here are the symbolic constants for use as the @var{parameter} argument
 to @code{sysconf}.  The values are all integer constants (more
 specifically, enumeration type values).
 
+@c This table runs a bit wide.
+@iftex
+@indexfonts
+@end iftex
 @table @code
 @comment unistd.h
 @comment POSIX.1
@@ -604,7 +608,7 @@ Inquire about the parameter corresponding to @code{_POSIX_TTY_NAME_MAX}.
 @comment POSIX.1
 @item _SC_THREAD_DESTRUCTOR_ITERATIONS
 Inquire about the parameter corresponding to
-@code{_POSIX_THREAD_DESTRUCTOR_ITERATIONS}.
+@code{_POSIX_THREAD_DESTRUCTOR_@*ITERATIONS}.
 
 @comment unistd.h
 @comment POSIX.1
@@ -960,6 +964,9 @@ Inquire about  the parameter corresponding to @code{NL_SETMAX}.
 @item _SC_NL_TEXTMAX
 Inquire about  the parameter corresponding to @code{NL_TEXTMAX}.
 @end table
+@iftex
+@textfonts
+@end iftex
 
 @node Examples of Sysconf
 @subsection Examples of @code{sysconf}

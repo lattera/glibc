@@ -409,7 +409,7 @@ these environment variable names for some other purpose.
 @comment Extra blank lines make it look better.
 @table @code
 @item HOME
-@cindex HOME environment variable
+@cindex @code{HOME} environment variable
 @cindex home directory
 
 This is a string representing the user's @dfn{home directory}, or
@@ -425,7 +425,7 @@ this lets the user specify the value.
 
 @c !!! also USER
 @item LOGNAME
-@cindex LOGNAME environment variable
+@cindex @code{LOGNAME} environment variable
 
 This is the name that the user used to log in.  Since the value in the
 environment can be tweaked arbitrarily, this is not a reliable way to
@@ -436,7 +436,7 @@ For most purposes, it is better to use @code{LOGNAME}, precisely because
 this lets the user specify the value.
 
 @item PATH
-@cindex PATH environment variable
+@cindex @code{PATH} environment variable
 
 A @dfn{path} is a sequence of directory names which is used for
 searching for a file.  The variable @code{PATH} holds a path used
@@ -463,7 +463,7 @@ the one that is executed.
 
 @c !!! also TERMCAP
 @item TERM
-@cindex TERM environment variable
+@cindex @code{TERM} environment variable
 
 This specifies the kind of terminal that is receiving program output.
 Some programs can make use of this information to take advantage of
@@ -473,13 +473,13 @@ of terminals.  Many programs which use the termcap library
 Manual}) use the @code{TERM} environment variable, for example.
 
 @item TZ
-@cindex TZ environment variable
+@cindex @code{TZ} environment variable
 
 This specifies the time zone.  @xref{TZ Variable}, for information about
 the format of this string and how it is used.
 
 @item LANG
-@cindex LANG environment variable
+@cindex @code{LANG} environment variable
 
 This specifies the default locale to use for attribute categories where
 neither @code{LC_ALL} nor the specific environment variable for that
@@ -489,7 +489,7 @@ locales.
 @ignore
 @c I doubt this really exists
 @item LC_ALL
-@cindex LC_ALL environment variable
+@cindex @code{LC_ALL} environment variable
 
 This is similar to the @code{LANG} environment variable.  However, its
 value takes precedence over any values provided for the individual
@@ -498,7 +498,7 @@ environment variable.
 @end ignore
 
 @item LC_ALL
-@cindex LC_ALL environment variable
+@cindex @code{LC_ALL} environment variable
 
 If this environment variable is set it overrides the selection for all
 the locales done using the other @code{LC_*} environment variables.  The
@@ -506,45 +506,45 @@ value of the other @code{LC_*} environment variables is simply ignored
 in this case.
 
 @item LC_COLLATE
-@cindex LC_COLLATE environment variable
+@cindex @code{LC_COLLATE} environment variable
 
 This specifies what locale to use for string sorting.
 
 @item LC_CTYPE
-@cindex LC_CTYPE environment variable
+@cindex @code{LC_CTYPE} environment variable
 
 This specifies what locale to use for character sets and character
 classification.
 
 @item LC_MESSAGES
-@cindex LC_MESSAGES environment variable
+@cindex @code{LC_MESSAGES} environment variable
 
 This specifies what locale to use for printing messages and to parse
 responses.
 
 @item LC_MONETARY
-@cindex LC_MONETARY environment variable
+@cindex @code{LC_MONETARY} environment variable
 
 This specifies what locale to use for formatting monetary values.
 
 @item LC_NUMERIC
-@cindex LC_NUMERIC environment variable
+@cindex @code{LC_NUMERIC} environment variable
 
 This specifies what locale to use for formatting numbers.
 
 @item LC_TIME
-@cindex LC_TIME environment variable
+@cindex @code{LC_TIME} environment variable
 
 This specifies what locale to use for formatting date/time values.
 
 @item NLSPATH
-@cindex NLSPATH environment variable
+@cindex @code{NLSPATH} environment variable
 
 This specifies the directories in which the @code{catopen} function
 looks for message translation catalogs.
 
 @item _POSIX_OPTION_ORDER
-@cindex _POSIX_OPTION_ORDER environment variable.
+@cindex @code{_POSIX_OPTION_ORDER} environment variable.
 
 If this environment variable is defined, it suppresses the usual
 reordering of command line arguments by @code{getopt} and

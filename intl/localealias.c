@@ -1,5 +1,5 @@
 /* Handle aliases for locale names.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.
@@ -82,12 +82,11 @@ void free ();
    because some ANSI C functions will require linking with this object
    file and the name space must not be polluted.  */
 # define strcasecmp __strcasecmp
-# define strdup __strdup
 
 # define mempcpy __mempcpy
 # define HAVE_MEMPCPY	1
 
-/* We need locking here since we can be called from different palces.  */
+/* We need locking here since we can be called from different places.  */
 # include <bits/libc-lock.h>
 
 __libc_lock_define_initialized (static, lock);

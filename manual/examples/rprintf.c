@@ -10,7 +10,9 @@ typedef struct
 /*@end group*/
 
 int
-print_widget (FILE *stream, const struct printf_info *info, va_list *app)
+print_widget (FILE *stream,
+	      const struct printf_info *info,
+	      va_list *app)
 {
   Widget *w;
   char *buffer;

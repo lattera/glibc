@@ -112,7 +112,7 @@ works together with the library.
 General Public License rather than by this special one.
 
 @iftex
-@unnumberedsec TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+@unnumberedsec TERMS AND CONDITIONS FOR COPYING,@*DISTRIBUTION AND MODIFICATION
 @end iftex
 @ifinfo
 @center TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION

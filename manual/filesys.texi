@@ -86,7 +86,7 @@ Permission to read or search a component of the file name was denied.
 @end table
 @end deftypefun
 
-Here is an example showing how you could implement the behavior of GNU's
+Here is an example showing how you could implement the behavior of GNU's@*
 @w{@code{getcwd (NULL, 0)}} using only the standard behavior of
 @code{getcwd}:
 
@@ -230,17 +230,18 @@ A character device.
 A block device.
 @end table
 
-This member is a BSD extension.  Each value except DT_UNKNOWN
+This member is a BSD extension.  On systems where it is used, it
 corresponds to the file type bits in the @code{st_mode} member of
-@code{struct statbuf}.  These two macros convert between @code{d_type}
-values and @code{st_mode} values:
+@code{struct statbuf}.  On other systems it will always be DT_UNKNOWN.
+These two macros convert between @code{d_type} values and @code{st_mode}
+values:
 
 @deftypefun int IFTODT (mode_t @var{mode})
 This returns the @code{d_type} value corresponding to @var{mode}.
 @end deftypefun
 
-@deftypefun mode_t DTTOIF (int @var{dirtype})
-This returns the @code{st_mode} value corresponding to @var{dirtype}.
+@deftypefun mode_t DTTOIF (int @var{dtype})
+This returns the @code{st_mode} value corresponding to @var{dtype}.
 @end deftypefun
 @end table
 

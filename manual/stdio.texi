@@ -1,5 +1,9 @@
 @node I/O on Streams, Low-Level I/O, I/O Overview, Top
 @chapter Input/Output on Streams
+@c fix an overfull:
+@tex
+\hyphenation{which-ever}
+@end tex
 
 This chapter describes the functions for creating streams and performing
 input and output operations on them.  As discussed in @ref{I/O
@@ -1541,11 +1545,13 @@ make_message (char *name, char *value)
 @group
   if (nchars >= size)
     @{
-      /* @r{Reallocate buffer now that we know how much space is needed.} */
+      /* @r{Reallocate buffer now that we know 
+         how much space is needed.} */
       buffer = (char *) xrealloc (buffer, nchars + 1);
 
       /* @r{Try again.} */
-      snprintf (buffer, size, "value of %s is %s", name, value);
+      snprintf (buffer, size, "value of %s is %s", 
+                name, value);
     @}
   /* @r{The last call worked, return the string.} */
   return buffer;
@@ -1621,7 +1627,8 @@ the GNU C compiler provides a way to do this much more easily with macros.
 For example:
 
 @smallexample
-#define myprintf(a, b, c, d, e, rest...) printf (mytemplate , ## rest...)
+#define myprintf(a, b, c, d, e, rest...) \
+            printf (mytemplate , ## rest...)
 @end smallexample
 
 @noindent
@@ -2057,11 +2064,11 @@ If you define a meaning for @samp{%A}, what if the template contains
 the handler when called needs to be able to get the options specified in
 the template.
 
-Both the @var{handler-function} and @var{arginfo-function} arguments
-to @code{register_printf_function} accept an argument that points to a
-@code{struct printf_info}, which contains information about the options
-appearing in an instance of the conversion specifier.  This data type
-is declared in the header file @file{printf.h}.
+Both the @var{handler-function} and @var{arginfo-function} accept an
+argument that points to a @code{struct printf_info}, which contains
+information about the options appearing in an instance of the conversion
+specifier.  This data type is declared in the header file
+@file{printf.h}.
 @pindex printf.h
 
 @comment printf.h

@@ -709,19 +709,19 @@ the following members:
 
 @table @code
 @item int w_termsig
-The value of this member is the same as the result of the
+The value of this member is the same as that of the
 @code{WTERMSIG} macro.
 
 @item int w_coredump
-The value of this member is the same as the result of the
+The value of this member is the same as that of the
 @code{WCOREDUMP} macro.
 
 @item int w_retcode
-The value of this member is the same as the result of the
+The value of this member is the same as that of the
 @code{WEXITSTATUS} macro.
 
 @item int w_stopsig
-The value of this member is the same as the result of the
+The value of this member is the same as that of the
 @code{WSTOPSIG} macro.
 @end table
 

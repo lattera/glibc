@@ -73,18 +73,17 @@ The @dfn{terminal input queue} is also sometimes referred to as its
 @dfn{typeahead buffer}.  It holds the characters that have been received
 from the terminal but not yet read by any process.
 
-The size of the terminal's input queue is described by the
-@code{MAX_INPUT} and @w{@code{_POSIX_MAX_INPUT}} parameters; see @ref{Limits
-for Files}.  You are guaranteed a queue size of at least
-@code{MAX_INPUT}, but the queue might be larger, and might even
-dynamically change size.  If input flow control is enabled by setting
-the @code{IXOFF} input mode bit (@pxref{Input Modes}), the terminal
-driver transmits STOP and START characters to the terminal when
-necessary to prevent the queue from overflowing.  Otherwise, input may
-be lost if it comes in too fast from the terminal.  In canonical mode,
-all input stays in the queue until a newline character is received, so
-the terminal input queue can fill up when you type a very long line.
-@xref{Canonical or Not}.
+The size of the input queue is described by the @code{MAX_INPUT} and
+@w{@code{_POSIX_MAX_INPUT}} parameters; see @ref{Limits for Files}.  You
+are guaranteed a queue size of at least @code{MAX_INPUT}, but the queue
+might be larger, and might even dynamically change size.  If input flow
+control is enabled by setting the @code{IXOFF} input mode bit
+(@pxref{Input Modes}), the terminal driver transmits STOP and START
+characters to the terminal when necessary to prevent the queue from
+overflowing.  Otherwise, input may be lost if it comes in too fast from
+the terminal.  In canonical mode, all input stays in the queue until a
+newline character is received, so the terminal input queue can fill up
+when you type a very long line.  @xref{Canonical or Not}.
 
 @cindex terminal output queue
 The @dfn{terminal output queue} is like the input queue, but for output;

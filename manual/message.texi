@@ -673,7 +673,8 @@ int
 main (void)
 @{
   nl_catd catdesc = catopen ("hello.cat", NL_CAT_LOCALE);
-  printf (catgets (catdesc, SetMainSet, SetMainHello, "Hello, world!\n"));
+  printf (catgets (catdesc, SetMainSet, SetMainHello, 
+                   "Hello, world!\n"));
   catclose (catdesc);
   return 0;
 @}

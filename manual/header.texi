@@ -7,8 +7,15 @@ standard or other source from which each facility is derived, and tells
 you where in the manual you can find more information about how to use
 it.
 
+@c This table runs wide.  Shrink fonts.
+@iftex
+@indexfonts @rm
+@end iftex
 @table @code
 @comment summary.texi is generated from the other Texinfo files.
 @comment See the Makefile and summary.awk for the details.
 @include summary.texi
 @end table
+@iftex
+@textfonts @rm
+@end iftex

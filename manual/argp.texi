@@ -480,7 +480,8 @@ case ARGP_KEY_ARG:
     /* First argument */
     first_arg = @var{arg};
   else
-    return ARGP_KEY_UNKNOWN;    /* Let the next case parse it.  */
+    /* Let the next case parse it.  */
+    return ARGP_KEY_UNKNOWN;
   break;
 case ARGP_KEY_ARGS:
   remaining_args = @var{state}->argv + @var{state}->next;

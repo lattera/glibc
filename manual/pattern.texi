@@ -196,8 +196,8 @@ This is a GNU extension.
 The address of an alternative implementation of the @code{lstat}
 function to get information about an object in the filesystems, not
 following symbolic links.  It is used if the @code{GLOB_ALTDIRFUNC} bit
-is set in the flag parameter.  The type of this field is @w{@code{int
-(*) (const char *, struct stat *)}}.
+is set in the flag parameter.  The type of this field is @code{@w{int
+(*) (const char *,} @w{struct stat *)}}.
 
 This is a GNU extension.
 @end table
@@ -847,13 +847,16 @@ actually matches is near the end of the first word.  But it is
 @code{regexec} reports nonuse of the ``na'' subexpression.
 
 Another place where this rule applies is when the regular expression
-@w{@samp{\(ba\(na\)*s \|nefer\(ti\)* \)*}} matches @samp{bananas nefertiti}.
-The ``na'' subexpression does match in the first word, but it doesn't
-match in the second word because the other alternative is used there.
-Once again, the second repetition of the outer subexpression overrides
-the first, and within that second repetition, the ``na'' subexpression
-is not used.  So @code{regexec} reports nonuse of the ``na''
-subexpression.
+@smallexample
+\(ba\(na\)*s \|nefer\(ti\)* \)*
+@end smallexample
+@noindent
+matches @samp{bananas nefertiti}.  The ``na'' subexpression does match
+in the first word, but it doesn't match in the second word because the
+other alternative is used there.  Once again, the second repetition of
+the outer subexpression overrides the first, and within that second
+repetition, the ``na'' subexpression is not used.  So @code{regexec}
+reports nonuse of the ``na'' subexpression.
 
 @node Regexp Cleanup
 @subsection POSIX Regexp Matching Cleanup

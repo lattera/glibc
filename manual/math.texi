@@ -1,24 +1,16 @@
 @c We need some definitions here.
-@ifclear cdot
 @ifhtml
-@set cdot ·
-@macro mul
-·
-@end macro
+@set mult ·
 @end ifhtml
 @iftex
-@set cdot ·
-@macro mul
-@cdot
-@end macro
+@set mult @cdot
 @end iftex
-@ifclear cdot
-@set cdot x
+@ifclear mult
+@set mult x
+@end ifclear
 @macro mul
-x
+@value{mult}
 @end macro
-@end ifclear
-@end ifclear
 @iftex
 @set infty @infty
 @end iftex
@@ -443,7 +435,7 @@ Another possibility which is useful in several situations is
 @deftypefun int feholdexcept (fenv_t *@var{envp})
 Store the current floating-point environment in the object pointed to by
 @var{envp}.  Afterwards, all exception flags are cleared and if
-available a mode is installed which continues on all exception and does
+available a mode is installed which continues on all exceptions and does
 not cause a trap to occur.  In this case a nonzero value is returned.
 
 If the floating-point implementation does not support such a non-stop
@@ -455,8 +447,8 @@ restored can take two kinds of arguments:
 
 @itemize @bullet
 @item
-Pointed to objects which previously were initialized by a call to
-@code{fegetenv} or @code{feholdexcept}.
+Pointers to @code{fenv_t} objects which were initialized previously by a
+call to @code{fegetenv} or @code{feholdexcept}.
 @item
 @vindex FE_DFL_ENV
 The special macro @code{FE_DFL_ENV} which represents the floating-point
@@ -466,10 +458,11 @@ Implementation defined macros with names starting with @code{FE_}.
 
 @vindex FE_NOMASK_ENV
 If possible, the GNU C Library defines a macro @code{FE_NOMASK_ENV}
-which represents an environment where no exception is masked and so each
-raised exception causes a trap to occur.  Whether this macro is available can easily be tested using @code{#ifdef}.
+which represents an environment where no exceptions are masked, so every
+exception raised causes a trap to occur.  You can test for this macro
+using @code{#ifdef}.
 
-Some platforms might define further predefined environments.
+Some platforms might define other predefined environments.
 @end itemize
 
 @noindent

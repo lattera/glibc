@@ -1,3 +1,46 @@
+1998-03-19 14:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/strtok_r.c: Make __strtok_r real name and strtok_r
+	weak alias.
+	* sysdeps/i386/strtok_r.c: Likewise.
+
+	* sysdeps/libm-i387/i686/s_fdim.S: Make it really work.
+	* sysdeps/libm-i387/i686/s_fdimf.S: Likewise.
+	* sysdeps/libm-i387/i686/s_fdiml.S: Likewise.
+	* sysdeps/libm-i387/i686/s_fmin.S: Likewise.
+	* sysdeps/libm-i387/i686/s_fminf.S: Likewise.
+	* sysdeps/libm-i387/i686/s_fminl.S: Likewise.
+
+1998-03-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* intl/localealias.c: Remove unneeded define for strdup.
+
+1998-03-19 13:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/argp.texi: Adjust for better TeX output.
+	* manual/arith.texi: Likewise.
+	* manual/conf.texi: Likewise.
+	* manual/filesys.texi: Likewise.
+	* manual/header.texi: Likewise.
+	* manual/lgpl.texinfo: Likewise.
+	* manual/math.texi: Likewise.
+	* manual/message.texi: Likewise.
+	* manual/pattern.texi: Likewise.
+	* manual/process.texi: Likewise.
+	* manual/signal.texi: Likewise.
+	* manual/socket.texi: Likewise.
+	* manual/startup.texi: Likewise.
+	* manual/stdio.texi: Likewise.
+	* manual/terminal.texi: Likewise.
+	* manual/examples/rprintf.c: Likewise.
+	* manual/examples/testopt.c: Likewise.
+	Patches by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+1998-03-19 20:45  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp.c (parse_param): Don't immediately stop parsing a
+	parameter name after seeing a digit if it's enclosed in braces.
+
 1998-03-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/memory.texi (Heap Consistency Checking): Document

@@ -2285,12 +2285,12 @@ for some special system processes.  Otherwise, send the signal to all
 processes with the same effective user ID.
 @end table
 
-A process can send a signal @var{signum} to itself with a call like
-@w{@code{kill (getpid(), @var{signum})}}.  If @code{kill} is used by a
-process to send a signal to itself, and the signal is not blocked, then
-@code{kill} delivers at least one signal (which might be some other
-pending unblocked signal instead of the signal @var{signum}) to that
-process before it returns.
+A process can send a signal to itself with a call like @w{@code{kill
+(getpid(), @var{signum})}}.  If @code{kill} is used by a process to send
+a signal to itself, and the signal is not blocked, then @code{kill}
+delivers at least one signal (which might be some other pending
+unblocked signal instead of the signal @var{signum}) to that process
+before it returns.
 
 The return value from @code{kill} is zero if the signal can be sent
 successfully.  Otherwise, no signal is sent, and a value of @code{-1} is

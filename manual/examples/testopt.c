@@ -41,7 +41,8 @@ main (int argc, char **argv)
 /*@end group*/
 
 /*@group*/
-  printf ("aflag = %d, bflag = %d, cvalue = %s\n", aflag, bflag, cvalue);
+  printf ("aflag = %d, bflag = %d, cvalue = %s\n",
+	  aflag, bflag, cvalue);
 
   for (index = optind; index < argc; index++)
     printf ("Non-option argument %s\n", argv[index]);

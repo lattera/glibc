@@ -1,5 +1,5 @@
 /* Compute minimum of two numbers, regarding NaN as missing argument.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -29,7 +29,7 @@ ENTRY(__fmin)
 	fcmovu	%st(1), %st	// now %st contains y if not NaN, x otherwise
 
 	fucomi	%st(1), %st
-	fcmovb	%st(1), %st
+	fcmovnb	%st(1), %st
 
 	fstp	%st(1)
 

@@ -792,7 +792,7 @@ be better if the usage were made consistent, but it is not hard to extract
 the integer from the structure or put the integer into a structure.
 
 The following basic definitions for Internet addresses appear in the
-header file @file{netinet/in.h}:
+header file@*@file{netinet/in.h}:
 @pindex netinet/in.h
 
 @comment netinet/in.h
@@ -866,8 +866,9 @@ own variables to this value.
 @subsubsection Host Address Functions
 
 @pindex arpa/inet.h
+@noindent
 These additional functions for manipulating Internet addresses are
-declared in @file{arpa/inet.h}.  They represent Internet addresses in
+declared in@*@file{arpa/inet.h}.  They represent Internet addresses in
 network byte order; they represent network numbers and
 local-address-within-network numbers in host byte order.
 @xref{Byte Order}, for an explanation of network and host byte order.
@@ -1244,6 +1245,7 @@ service at port @var{port} using protocol @var{proto}.  If it can't
 find such a service, it returns a null pointer.
 @end deftypefun
 
+@noindent
 You can also scan the services database using @code{setservent},
 @code{getservent}, and @code{endservent}.  Be careful in using these
 functions, because they are not reentrant.
@@ -2689,8 +2691,17 @@ This function is used to set the socket option @var{optname} at level
 @var{level} for socket @var{socket}.  The value of the option is passed
 in the buffer @var{optval}, which has size @var{optlen}.
 
+@c Argh. -zw
+@iftex
+@hfuzz 6pt
 The return value and error codes for @code{setsockopt} are the same as
 for @code{getsockopt}.
+@end iftex
+@ifinfo
+The return value and error codes for @code{setsockopt} are the same as
+for @code{getsockopt}.
+@end ifinfo
+
 @end deftypefun
 
 @node Socket-Level Options
@@ -2705,8 +2716,9 @@ this section.
 @end deftypevr
 
 @pindex sys/socket.h
+@noindent
 Here is a table of socket-level option names; all are defined in the
-header file @file{sys/socket.h}.
+header file@*@file{sys/socket.h}.
 
 @table @code
 @comment sys/socket.h

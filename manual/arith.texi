@@ -1,4 +1,6 @@
 @c We need some definitions here.
+@c No we don't, they were done by math.texi. -zw
+@ignore
 @ifclear cdot
 @ifhtml
 @set cdot ·
@@ -19,6 +21,7 @@ x
 @end macro
 @end ifclear
 @end ifclear
+@end ignore
 
 @node Arithmetic, Date and Time, Mathematics, Top
 @chapter Low-Level Arithmetic Functions

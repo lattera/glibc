@@ -1,5 +1,5 @@
 /* Compute positive difference.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -30,11 +30,12 @@ ENTRY(__fdiml)
 
 	fsubp	%st(1), %st
 	fldz
-	fcmovnb	%st(1), %st
+	fcomi	%st(1), %st
+	fcmovb	%st(1), %st
 	jmp	2f
 
 1:	fucomi	%st(0), %st
-	fcmovu	%st, %st(1)
+	fcmovnu	%st(1), %st
 2:	fstp	%st(1)
 	ret
 END(__fdiml)
