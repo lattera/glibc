@@ -1,3 +1,9 @@
+2003-03-19  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/mips/ieee754.h: New file, suitable to replace both 
+	../ieee754/ieee754.h and ../ieee754/ldbl-128/ieee754.h, kept
+	mips-specific for now.
+
 2003-03-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/tst-nice.c (do_test): Remove invalid of return value.
