@@ -1,3 +1,13 @@
+2000-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/Makefile (tests): Remove tst-printf here...
+	(tests-srcs): ...and add it here.
+	(distribute): Add tst-unbputc.sh and tst-printf.sh.
+	Add rules to run tst-printf.sh.
+	* stdio-common/tst-printf.c: Move code around so that there is really
+	no further output where it's stated.
+	* stdio-common/tst-printf.sh: New file.
+
 2000-07-07  Mark Kettenis  <kettenis@gnu.org>
 
 	* hurd/vpprintf.c [USE_IN_LIBIO]: Include <libioP.h>.

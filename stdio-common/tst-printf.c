@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -237,10 +237,6 @@ I am ready for my first lesson today.";
     printf("%.17f\n",(1.0/x/10.0+1.0)*x-x);
   }
 
-  puts ("--- Should be no further output. ---");
-  rfg1 ();
-  rfg2 ();
-
   {
     char buf[200];
 
@@ -256,7 +252,7 @@ I am ready for my first lesson today.";
     char buf[200];
 
     sprintf (buf, "%07Lo", 040000000000ll);
-    printf ("sprintf (buf, \"%%07Lo\", 040000000000ll) = %s\n", buf);
+    printf ("sprintf (buf, \"%%07Lo\", 040000000000ll) = %s", buf);
 
     if (strcmp (buf, "40000000000") != 0)
       {
@@ -265,6 +261,10 @@ I am ready for my first lesson today.";
       }
     puts ("");
   }
+
+  puts ("--- Should be no further output. ---");
+  rfg1 ();
+  rfg2 ();
 
   return result != 0;
 }
