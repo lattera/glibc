@@ -2820,16 +2820,46 @@ error while adding collating element"));
 	    goto err_label;
 	  else
 	    {
-	      const char *symbol = arg->val.str.startmb;
+	      char *symbol = arg->val.str.startmb;
 	      size_t symbol_len = arg->val.str.lenmb;
+	      char *endsymbol = NULL;
+	      size_t endsymbol_len = 0;
+	      enum token_t ellipsis = tok_none;
+
+	      arg = lr_token (ldfile, charmap, repertoire);
+	      if (arg->tok == tok_ellipsis2 || arg->tok == tok_ellipsis4)
+		{
+		  ellipsis = arg->tok;
+
+		  arg = lr_token (ldfile, charmap, repertoire);
+		  if (arg->tok != tok_bsymbol)
+		    {
+		      free (symbol);
+		      goto err_label;
+		    }
+
+		  endsymbol = arg->val.str.startmb;
+		  endsymbol_len = arg->val.str.lenmb;
+
+		  lr_ignore_rest (ldfile, 1);
+		}
+	      else if (arg->tok != tok_eol)
+		{
+		  free (symbol);
+		  goto err_label;
+		}
 
 	      if (!ignore_content)
 		{
-		  if (symbol == NULL)
-		    lr_error (ldfile, _("\
+		  if (symbol == NULL
+		      || (ellipsis != tok_none && endsymbol == NULL))
+		    {
+		      lr_error (ldfile, _("\
 %s: unknown character in collating symbol name"),
-			      "LC_COLLATE");
-		  else
+				"LC_COLLATE");
+		      goto col_sym_free;
+		    }
+		  else if (ellipsis == tok_none)
 		    {
 		      /* The name is already defined.  */
 		      if (check_duplicate (ldfile, collate, charmap,
@@ -2842,14 +2872,84 @@ error while adding collating element"));
 			lr_error (ldfile, _("\
 error while adding collating symbol"));
 		    }
+		  else if (symbol_len != endsymbol_len)
+		    {
+		    col_sym_inv_range:
+		      lr_error (ldfile,
+				_("invalid names for character range"));
+		      goto col_sym_free;
+		    }
+		  else
+		    {
+		      /* Oh my, we have to handle an ellipsis.  First, as
+			 usual, determine the common prefix and then
+			 convert the rest into a range.  */
+		      size_t prefixlen;
+		      unsigned long int from;
+		      unsigned long int to;
+		      char *endp;
+
+		      for (prefixlen = 0; prefixlen < symbol_len; ++prefixlen)
+			if (symbol[prefixlen] != endsymbol[prefixlen])
+			  break;
+
+		      /* Convert the rest into numbers.  */
+		      symbol[symbol_len] = '\0';
+		      from = strtoul (&symbol[prefixlen], &endp,
+				      ellipsis == tok_ellipsis2 ? 16 : 10);
+		      if (*endp != '\0')
+			goto col_sym_inv_range;
+
+		      endsymbol[symbol_len] = '\0';
+		      to = strtoul (&endsymbol[prefixlen], &endp,
+				    ellipsis == tok_ellipsis2 ? 16 : 10);
+		      if (*endp != '\0')
+			goto col_sym_inv_range;
+
+		      if (from > to)
+			goto col_sym_inv_range;
+
+		      /* Now loop over all entries.  */
+		      while (from <= to)
+			{
+			  char *symbuf;
+
+			  symbuf = (char *) obstack_alloc (&collate->mempool,
+							   symbol_len + 1);
+
+			  /* Create the name.  */
+			  sprintf (symbuf,
+				   ellipsis == tok_ellipsis2
+				   ? "%.*s%.*lX" : "%.*s%.*lX",
+				   (int) prefixlen, symbol,
+				   (int) (symbol_len - prefixlen), from);
+
+			  /* The name is already defined.  */
+			  if (check_duplicate (ldfile, collate, charmap,
+					       repertoire, symbuf, symbol_len))
+			    goto col_sym_free;
+
+			  if (insert_entry (&collate->sym_table,
+					    symbuf, symbol_len,
+					    new_symbol (collate)) < 0)
+			    lr_error (ldfile, _("\
+error while adding collating symbol"));
+
+			  /* Increment the counter.  */
+			  ++from;
+			}
+
+		      goto col_sym_free;
+		    }
 		}
 	      else
 		{
 		col_sym_free:
 		  if (symbol != NULL)
-		    free ((char *) symbol);
+		    free (symbol);
+		  if (endsymbol != NULL)
+		    free (endsymbol);
 		}
-	      lr_ignore_rest (ldfile, 1);
 	    }
 	  break;
 
@@ -2907,10 +3007,6 @@ error while adding collating symbol"));
 			    "LC_COLLATE");
 		  goto sym_equiv_free;
 		}
-	      /* The name is already defined.  */
-	      if (check_duplicate (ldfile, collate, charmap,
-				   repertoire, symname, symname_len))
-		goto col_sym_free;
 
 	      /* See whether the symbol name is already defined.  */
 	      if (find_entry (&collate->sym_table, symname, symname_len,

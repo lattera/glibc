@@ -1,5 +1,9 @@
 2000-04-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-collate.c (collate_read): Handle ellipsis in
+	collation symbol definition.  Value in quivalence definition must
+	be defined, don't check that it is not.
+
 	* locale/programs/charmap.c (parse_charmap): Recognize <Uxxxx>
 	values as character names.
 
