@@ -100,12 +100,6 @@ __attribute ((constructor))
 #endif
 __pthread_initialize_minimal (void)
 {
-  struct sigaction sa;
-  struct rlimit limit;
-#ifdef USE_TLS
-  struct pthread *pd;
-#endif
-
 #ifndef SHARED
   /* Unlike in the dynamically linked case the dynamic linker has not
      taken care of initializing the TLS data structures.  */
@@ -113,7 +107,7 @@ __pthread_initialize_minimal (void)
 #endif
 
   /* Minimal initialization of the thread descriptor.  */
-  pd = THREAD_SELF;
+  struct pthread *pd = THREAD_SELF;
   pd->tid = INTERNAL_SYSCALL (set_tid_address, 1, &pd->tid);
   THREAD_SETMEM (pd, specific[0], &pd->specific_1stblock[0]);
   THREAD_SETMEM (pd, user_stack, true);
@@ -131,18 +125,17 @@ __pthread_initialize_minimal (void)
   /* Install the cancellation signal handler.  If for some reason we
      cannot install the handler we do not abort.  Maybe we should, but
      it is only asynchronous cancellation which is affected.  */
+  struct sigaction sa;
   sa.sa_handler = sigcancel_handler;
   sa.sa_flags = 0;
-
-  /* Avoid another cancellation signal when we process one.  */
   sigemptyset (&sa.sa_mask);
-  sigaddset (&sa.sa_mask, SIGCANCEL);
 
   (void) __libc_sigaction (SIGCANCEL, &sa, NULL);
 
 
   /* Determine the default allowed stack size.  This is the size used
      in case the user does not specify one.  */
+  struct rlimit limit;
   if (getrlimit (RLIMIT_STACK, &limit) != 0
       || limit.rlim_cur == RLIM_INFINITY)
     /* The system limit is not usable.  Use an architecture-specific
