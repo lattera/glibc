@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,8 +27,14 @@ clock (void)
   struct tms buf;
   long clk_tck = __sysconf (_SC_CLK_TCK);
 
-  if (__times (&buf) < 0)
-    return (clock_t) -1;
+  /* We don't check for errors here.  The only error the kernel
+     returns is EFAULT if the value cannot be written to the struct we
+     pass a pointer to.  Otherwise the kernel returns an `unsigned
+     long' value which is the number of jiffies since system start.
+     But this number can be negative (when read as `long') when the
+     system is up for some time.  Ignoring errors should therefore
+     have no negative impacts but solve the problem.  */
+  __times (&buf);
 
   return
     (clk_tck <= CLOCKS_PER_SEC)

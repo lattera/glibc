@@ -1,3 +1,8 @@
+1999-02-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/clock.c: Don't test return value of
+	__times [PR libc/990].
+
 1999-02-21  David S. Miller  <davem@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sigcontextinfo.h: Fix
