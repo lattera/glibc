@@ -2,6 +2,7 @@
 
 	* sunrpc/svc_udp.c (svcudp_recv): Remove all control messages
 	except the PKTINFO.  Reset interface in PKTINFO.
+	Patch by Neil Brown <neilb@cse.unsw.edu.au> [PR libc/4973].
 
 2003-02-25  Steven Munroe  <sjmunroe@us.ibm.com>
 

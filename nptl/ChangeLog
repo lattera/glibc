@@ -1,5 +1,12 @@
 2003-02-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-rwlock10 and tst-rwlock11.
+	* tst-rwlock8.c: Initialize lock with INIT.  Allow INIT to be
+	predefined.
+	* tst-rwlock9.c: Likewise.
+	* tst-rwlock10.c: New file.
+	* tst-rwlock11.c: New file.
+
 	* Makefile (tests): Add tst-dlsym1.
 	* tst-dlsym1.c: New file.
 
