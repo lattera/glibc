@@ -1,7 +1,7 @@
 extern int test (void);
 
 int
-main()
+main (void)
 {
   return test ();
 }
