@@ -1,5 +1,16 @@
 2000-07-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/POSIX: Remove repertoire map reference.
+	* locales/ar_SA: Remove repertoire map reference.
+
+	* locales/zh_CN.GBK: Removed.
+
+	* repertoiremaps/charids.894: Removed.
+	* repertoiremaps/mnemonics.ds: Removed.
+	* repertoiremaps/mnemonics.ja: Removed.
+	* repertoiremaps/mnemonics.ko: Removed.
+	* repertoiremaps/mnemonics.zh: Removed.
+
 	* charmaps/SJIS: New file.
 
 2000-07-06  Ulrich Drepper  <drepper@redhat.com>

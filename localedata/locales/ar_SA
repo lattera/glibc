@@ -3,7 +3,6 @@ escape_char  /
 
 % Arabic Locale
 % Charset: ISO-8859-6
-% repertoiremap mnemonic.ds
 % By: Salvador Sabanal, LinuxLab, SAP AG <salvador.sabanal@sap.com>
 % Date: Oct. 18, 1999
 % Adjusted to glibc mnemonics --drepper 2000-02-12

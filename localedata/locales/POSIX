@@ -21,8 +21,6 @@
 # Distribution and use is free, also for
 # commercial purposes.
 
-repertoiremap mnemonic.ds
-
 LC_CTYPE
 # The following is the POSIX Locale LC_CTYPE.
 # "alpha" is by default "upper" and "lower"

@@ -1,5 +1,8 @@
 2000-07-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/sjis.c (from_ucs4_lat1): Fix mappng of U005C and
+	U007E.
+
 	* stdio-common/Makefile (tests): Remove tst-printf here...
 	(tests-srcs): ...and add it here.
 	(distribute): Add tst-unbputc.sh and tst-printf.sh.
