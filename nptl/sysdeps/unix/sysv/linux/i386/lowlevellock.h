@@ -52,9 +52,9 @@
 
 #ifdef I386_USE_SYSENTER
 # ifdef SHARED
-# define LLL_ENTER_KERNEL	"call *%%gs:%P6\n\t"
+#  define LLL_ENTER_KERNEL	"call *%%gs:%P6\n\t"
 # else
-# define LLL_ENTER_KERNEL	"call *_dl_sysinfo\n\t"
+#  define LLL_ENTER_KERNEL	"call *_dl_sysinfo\n\t"
 # endif
 #else
 # define LLL_ENTER_KERNEL	"int $0x80\n\t"
@@ -69,7 +69,7 @@
 		      LLL_ENTER_KERNEL					      \
 		      LLL_EBX_LOAD					      \
 		      : "=a" (__ignore)					      \
-		      : "0" (SYS_futex), LLL_EBX_REG (&futex), "S" (0),	      \
+		      : "0" (SYS_futex), LLL_EBX_REG (futex), "S" (0),	      \
 			"c" (FUTEX_WAIT), "d" (_val),			      \
 			"i" (offsetof (tcbhead_t, sysinfo)));		      \
   } while (0)
@@ -83,7 +83,7 @@
 		      LLL_ENTER_KERNEL					      \
 		      LLL_EBX_LOAD					      \
 		      : "=a" (__ignore)					      \
-		      : "0" (SYS_futex), LLL_EBX_REG (&futex),		      \
+		      : "0" (SYS_futex), LLL_EBX_REG (futex),		      \
 			"c" (FUTEX_WAKE), "d" (_nr),			      \
 			"i" (0) /* phony, to align next arg's number */,      \
 			"i" (offsetof (tcbhead_t, sysinfo)));		      \
@@ -93,7 +93,7 @@
 /* Does not preserve %eax and %ecx.  */
 extern int __lll_mutex_lock_wait (int val, int *__futex)
      __attribute ((regparm (2))) attribute_hidden;
-/* Does not preserver %eax, %ecx, and %edx.  */
+/* Does not preserve %eax, %ecx, and %edx.  */
 extern int __lll_mutex_timedlock_wait (int val, int *__futex,
 				       const struct timespec *abstime)
      __attribute ((regparm (3))) attribute_hidden;

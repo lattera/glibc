@@ -3,6 +3,9 @@
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (lll_futex_wait):
 	Assume parameter is a pointer.
 	(lll_futex_wake): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (lll_futex_wait):
+	Likewise.
+	(lll_futex_wake): Likewise.
 	Reported by Boris Hu.
 	* sysdeps/unix/sysv/linux/unregister-atfork.c
 	(__unregister_atfork): Pass pointer to refcntr to lll_futex_wait.

@@ -49,7 +49,7 @@
     __asm __volatile ("xorq %%r10, %%r10\n\t"				      \
 		      "syscall"						      \
 		      : "=a" (__ignore)					      \
-		      : "0" (SYS_futex), "D" (&futex), "S" (FUTEX_WAIT),      \
+		      : "0" (SYS_futex), "D" (futex), "S" (FUTEX_WAIT),	      \
 			"d" (_val)					      \
 		      : "memory", "cc", "r10", "r11", "cx");		      \
   } while (0)
@@ -61,7 +61,7 @@
     register __typeof (nr) _nr asm ("edx") = (nr);			      \
     __asm __volatile ("syscall"						      \
 		      : "=a" (__ignore)					      \
-		      : "0" (SYS_futex), "D" (&futex), "S" (FUTEX_WAKE),      \
+		      : "0" (SYS_futex), "D" (futex), "S" (FUTEX_WAKE),	      \
 			"d" (_nr)					      \
 		      : "memory", "cc", "r10", "r11", "cx");		      \
   } while (0)
