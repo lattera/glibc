@@ -841,12 +841,23 @@ _IO_new_file_overflow (f, ch)
 	 makes room for subsequent output.
 	 Otherwise, set the read pointers to _IO_read_end (leaving that
 	 alone, so it can continue to correspond to the external position). */
-      if (f->_IO_read_ptr == f->_IO_buf_end)
-	f->_IO_read_end = f->_IO_read_ptr = f->_IO_buf_base;
-      f->_IO_write_ptr = f->_IO_read_ptr;
-      f->_IO_write_base = f->_IO_write_ptr;
-      f->_IO_write_end = f->_IO_buf_end;
-      f->_IO_read_base = f->_IO_read_ptr = f->_IO_read_end;
+      if (__builtin_expect (_IO_in_backup (f), 0))
+	{
+	  size_t nbackup = f->_IO_read_end - f->_IO_read_ptr;
+	  _IO_free_backup_area (f);
+	  f->_IO_read_base -= MIN (nbackup,
+				   f->_IO_read_base - f->_IO_buf_base);
+	  f->_IO_read_ptr = f->_IO_read_base;
+	}
+      else
+	{
+	  if (f->_IO_read_ptr == f->_IO_buf_end)
+	    f->_IO_read_end = f->_IO_read_ptr = f->_IO_buf_base;
+	  f->_IO_write_ptr = f->_IO_read_ptr;
+	  f->_IO_write_base = f->_IO_write_ptr;
+	  f->_IO_write_end = f->_IO_buf_end;
+	  f->_IO_read_base = f->_IO_read_ptr = f->_IO_read_end;
+	}
 
       f->_flags |= _IO_CURRENTLY_PUTTING;
       if (f->_mode <= 0 && f->_flags & (_IO_LINE_BUF+_IO_UNBUFFERED))
