@@ -163,7 +163,7 @@ init_module (void)
       __timer_array[i].inuse = 0;
     }
 
-  for (i = 0; i < THREAD_MAXNODES - 1; ++i)
+  for (i = 0; i < THREAD_MAXNODES; ++i)
     list_append (&thread_free_list, &thread_array[i].links);
 
   thread_init (&__timer_signal_thread, 0);
