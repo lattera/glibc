@@ -1,3 +1,8 @@
+1999-05-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/i486/bits/string.h: Don't use and define __memset_gg.
+	Prevent warnings from multiplication with 0x01010101 by another cast.
+
 1999-04-30  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* string/bits/string2.h (memset): Revert to previous version if

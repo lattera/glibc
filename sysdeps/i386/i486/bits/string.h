@@ -190,18 +190,16 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
 #define _HAVE_STRING_ARCH_memset 1
 #define memset(s, c, n) \
   (__extension__ (__builtin_constant_p (n) && (n) <= 16			      \
-		  ? (__builtin_constant_p (c)				      \
-		     ? __memset_gc (s, ((unsigned char) (c)) * 0x01010101, n) \
-		     : ((n) == 1					      \
-			? __memset_c1 (s, c)				      \
-			: __memset_gc (s, c, n)))			      \
+		  ? ((n) == 1						      \
+		     ? __memset_c1 (s, c)				      \
+		     : __memset_gc (s, c, n))				      \
 		  : (__builtin_constant_p (c)				      \
 		     ? (__builtin_constant_p (n)			      \
 			? __memset_ccn (s, c, n)			      \
-			: __memset_gg (s, c, n))			      \
+			: memset (s, c, n))				      \
 		     : (__builtin_constant_p (n)			      \
 			? __memset_gcn (s, c, n)			      \
-			: __memset_gg (s, c, n)))))
+			: memset (s, c, n)))))
 
 #define __memset_c1(s, c) ({ void *__s = (s);				      \
 			     *((unsigned char *) __s) = (unsigned char) (c);  \
@@ -210,7 +208,7 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
 #define __memset_gc(s, c, n) \
   ({ void *__s = (s);							      \
      unsigned int *__ts = (unsigned int *) __s;				      \
-     unsigned int __c = ((unsigned char) (c)) * 0x01010101;		      \
+     unsigned int __c = ((unsigned int) ((unsigned char) (c))) * 0x01010101;  \
 									      \
      /* We apply a trick here.  `gcc' would implement the following	      \
 	assignments using absolute operands.  But this uses to much	      \
@@ -268,15 +266,19 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
 
 #define __memset_ccn(s, c, n) \
   (((n) % 4 == 0)							      \
-   ? __memset_ccn_by4 (s, ((unsigned char) (c)) * 0x01010101, n)	      \
+   ? __memset_ccn_by4 (s, ((unsigned int) ((unsigned char) (c))) * 0x01010101,\
+		       n)						      \
    : (((n) % 2 == 0)							      \
-      ? __memset_ccn_by2 (s, ((unsigned char) (c)) * 0x01010101, n)	      \
-      : __memset_gg (s, c, n)))
+      ? __memset_ccn_by2 (s,						      \
+			  ((unsigned int) ((unsigned char) (c))) * 0x01010101,\
+			   n)						      \
+      : memset (s, c, n)))
 
-__STRING_INLINE void *__memset_ccn_by4 (void *__s, int __c, size_t __n);
+__STRING_INLINE void *__memset_ccn_by4 (void *__s, unsigned int __c,
+					size_t __n);
 
 __STRING_INLINE void *
-__memset_ccn_by4 (void *__s, int __c, size_t __n)
+__memset_ccn_by4 (void *__s, unsigned int __c, size_t __n)
 {
   register void *__tmp = __s;
   register unsigned long int __d0;
@@ -301,10 +303,11 @@ __memset_ccn_by4 (void *__s, int __c, size_t __n)
   return __s;
 }
 
-__STRING_INLINE void *__memset_ccn_by2 (void *__s, int __c, size_t __n);
+__STRING_INLINE void *__memset_ccn_by2 (void *__s, unsigned int __c,
+					size_t __n);
 
 __STRING_INLINE void *
-__memset_ccn_by2 (void *__s, int __c, size_t __n)
+__memset_ccn_by2 (void *__s, unsigned int __c, size_t __n)
 {
   register unsigned long int __d0, __d1;
   register void *__tmp = __s;
@@ -335,7 +338,7 @@ __memset_ccn_by2 (void *__s, int __c, size_t __n)
    ? __memset_gcn_by4 (s, c, n)						      \
    : (((n) % 2 == 0)							      \
       ? __memset_gcn_by2 (s, c, n)					      \
-      : __memset_gg (s, c, n)))
+      : memset (s, c, n)))
 
 __STRING_INLINE void *__memset_gcn_by4 (void *__s, int __c, size_t __n);
 
@@ -380,27 +383,6 @@ __memset_gcn_by2 (void *__s, int __c, size_t __n)
      "movw	%w0,(%1)"
      : "=&q" (__d0), "=&r" (__tmp), "=&r" (__d1)
      : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 4)
-     : "memory", "cc");
-  return __s;
-}
-
-__STRING_INLINE void *__memset_gg (void *__s, int __c, size_t __n);
-
-__STRING_INLINE void *
-__memset_gg (void *__s, int __c, size_t __n)
-{
-  register unsigned long int __d0, __d1;
-  register void *__tmp = __s;
-  __asm__ __volatile__
-    ("cld\n\t"
-     "movb	%%al,%%ah\n\t"
-     "shrl	$1,%%ecx\n\t"
-     "rep; stosw\n\t"
-     "jnc	1f\n\t"
-     "movb	%%al,(%%edi)\n"
-     "1:"
-     : "=&c" (__d0), "=&D" (__d1)
-     : "0" (__n), "1" (__tmp), "a" (__c)
      : "memory", "cc");
   return __s;
 }
