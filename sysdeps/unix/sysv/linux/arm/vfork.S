@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Pat Beirne <patb@corelcomputer.com>
+   Contributed by Philip Blundell <philb@gnu.org>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,46 +17,30 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* clone() is even more special than fork() as it mucks with stacks
-   and invokes a function in the right context after its all over.  */
-
 #include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
+#define _SIGNAL_H
+#include <bits/signum.h>
 
-/* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg); */
+#define CLONE_VM      0x00000100 /* Set if VM shared between processes.  */
+#define CLONE_VFORK   0x00004000 /* Set if the parent wants the child to
+				     wake it up on mm_release.  */
+	
+/* Clone the calling process, but without copying the whole address space.
+   The calling process is suspended until the new process exits or is
+   replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
+   and the process ID of the new process to the old process.  */
 
-        .text
-ENTRY(__clone)
-	@ sanity check args
-	cmp	r0, #0
-	cmpne	r1, #0
-	moveq	r0, #-EINVAL
-	beq	PLTJMP(syscall_error)
-
-	@ insert the args onto the new stack
-	sub	r1, r1, #8
-	str	r3, [r1, #4]
-	@ save the function pointer as the 0th element
-	str	r0, [r1]
-
-	@ do the system call
-	@ get flags 
-	mov	r0, r2
-	@ new sp is already in r1
+ENTRY (__vfork)
+	mov	a1, $SIGCLD
+	orr	a1, a1, $(CLONE_VM | CLONE_VFORK)
+	mov	a2, $0
 	swi	SYS_ify(clone)
 	cmn	a1, $4096
 	bhs	PLTJMP(C_SYMBOL_NAME(__syscall_error))
-	RETINSTR(movne,pc,lr)
+	RETINSTR(mov, pc, lr)
+	
+PSEUDO_END (__vfork)
 
-	@ pick the function arg and call address off the stack and execute
-	ldr	r0, [sp, #4]
-	mov	lr, pc
-	ldr 	pc, [sp]
-
-	@ and we are done, passing the return value through r0
-	b	PLTJMP(_exit)
-
-PSEUDO_END (__clone)
-
-weak_alias (__clone, clone)
+weak_alias (__vfork, vfork)

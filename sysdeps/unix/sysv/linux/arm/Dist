@@ -1,3 +1,4 @@
+vfork.S
 clone.S
 init-first.h
 ioperm.c
