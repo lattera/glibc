@@ -81,3 +81,65 @@ xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 
   return 0;
 }
+
+static inline int
+xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
+{
+#ifdef XSTAT_IS_XSTAT64
+  return xstat_conv (vers, kbuf, ubuf);
+#else
+  switch (vers)
+    {
+    case _STAT_VER_LINUX:
+      {
+	struct stat64 *buf = ubuf;
+
+	/* Convert to current kernel version of `struct stat64'.  */
+	buf->st_dev = kbuf->st_dev;
+#ifdef _HAVE___PAD1
+	buf->__pad1 = 0;
+#endif
+	buf->st_ino = kbuf->st_ino;
+	buf->st_mode = kbuf->st_mode;
+	buf->st_nlink = kbuf->st_nlink;
+	buf->st_uid = kbuf->st_uid;
+	buf->st_gid = kbuf->st_gid;
+	buf->st_rdev = kbuf->st_rdev;
+#ifdef _HAVE___PAD2
+	buf->__pad2 = 0;
+#endif
+	buf->st_size = kbuf->st_size;
+	buf->st_blksize = kbuf->st_blksize;
+	buf->st_blocks = kbuf->st_blocks;
+	buf->st_atime = kbuf->st_atime;
+#ifdef _HAVE___UNUSED1
+	buf->__unused1 = 0;
+#endif
+	buf->st_mtime = kbuf->st_mtime;
+#ifdef _HAVE___UNUSED2
+	buf->__unused2 = 0;
+#endif
+	buf->st_ctime = kbuf->st_ctime;
+#ifdef _HAVE___UNUSED3
+	buf->__unused3 = 0;
+#endif
+#ifdef _HAVE___UNUSED4
+	buf->__unused4 = 0;
+#endif
+#ifdef _HAVE___UNUSED5
+	buf->__unused5 = 0;
+#endif
+      }
+      break;
+
+      /* If struct stat64 is different from struct stat then
+	 _STAT_VER_KERNEL does not make sense.  */
+    case _STAT_VER_KERNEL:
+    default:
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  return 0;
+#endif
+}

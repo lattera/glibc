@@ -98,8 +98,7 @@ GLIBC_2.0 {
 
     # Exception handling support functions from libgcc
     __register_frame; __register_frame_table; __deregister_frame;
-    __register_frame_new; __register_frame_table_new; __deregister_frame_new;
-    __frame_state_for;
+    __register_frame_info; __deregister_frame_info;
 
     # variables in normal name space
     argp_err_exit_status; argp_program_bug_address; argp_program_version;
@@ -193,7 +192,7 @@ GLIBC_2.0 {
 
     # g*
     gai_strerror; gcvt; get_avphys_pages; get_current_dir_name;
-    get_myaddress; get_nprocs; get_nprocs_conf;
+    get_kernel_syms; get_myaddress; get_nprocs; get_nprocs_conf;
     get_phys_pages; getaddrinfo; getaliasbyname; getaliasbyname_r;
     getaliasent; getaliasent_r; getc; getc_unlocked; getchar;
     getchar_unlocked; getcontext;

@@ -21,10 +21,10 @@
    or (US mail) as Mike Haertel c/o Free Software Foundation.  */
 
 #ifndef	_MALLOC_INTERNAL
-#define	_MALLOC_INTERNAL
-#include <malloc.h>
-#include <mcheck.h>
-#include <stdio.h>
+# define _MALLOC_INTERNAL
+# include <malloc.h>
+# include <mcheck.h>
+# include <stdio.h>
 #endif
 
 /* Old hook values.  */
@@ -49,9 +49,9 @@ struct hdr
     unsigned long int magic;	/* Magic number to check header integrity.  */
   };
 
-#if	defined(_LIBC) || defined(STDC_HEADERS) || defined(USG)
-#include <string.h>
-#define flood memset
+#if defined _LIBC || defined STDC_HEADERS || defined USG
+# include <string.h>
+# define flood memset
 #else
 static void flood __P ((__ptr_t, int, __malloc_size_t));
 static void
@@ -196,25 +196,25 @@ mabort (status)
   switch (status)
     {
     case MCHECK_OK:
-      msg = _("memory is consistent, library is buggy");
+      msg = _("memory is consistent, library is buggy\n");
       break;
     case MCHECK_HEAD:
-      msg = _("memory clobbered before allocated block");
+      msg = _("memory clobbered before allocated block\n");
       break;
     case MCHECK_TAIL:
-      msg = _("memory clobbered past end of allocated block");
+      msg = _("memory clobbered past end of allocated block\n");
       break;
     case MCHECK_FREE:
-      msg = _("block freed twice");
+      msg = _("block freed twice\n");
       break;
     default:
-      msg = _("bogus mcheck_status, library is buggy");
+      msg = _("bogus mcheck_status, library is buggy\n");
       break;
     }
 #ifdef _LIBC
   __libc_fatal (msg);
 #else
-  fprintf (stderr, "mcheck: %s\n", msg);
+  fprintf (stderr, "mcheck: %s", msg);
   fflush (stderr);
   abort ();
 #endif
@@ -229,7 +229,7 @@ mcheck (func)
   abortfunc = (func != NULL) ? func : &mabort;
 
   /* These hooks may not be safely inserted if malloc is already in use.  */
-  if (!__malloc_initialized && !mcheck_used)
+  if (__malloc_initialized <= 0 && !mcheck_used)
     {
       old_free_hook = __free_hook;
       __free_hook = freehook;

@@ -88,7 +88,7 @@ struct FTW
 /* Convenient types for callback functions.  */
 typedef int (*__ftw_func_t) __P ((__const char *__filename,
 				  __const struct stat *__status, int __flag));
-#if defined __USE_LARGEFILE64 || defined __USE_FILE_OFFSET64
+#ifdef __USE_LARGEFILE64
 typedef int (*__ftw64_func_t) __P ((__const char *__filename,
 				    __const struct stat64 *__status,
 				    int __flag));
@@ -97,7 +97,7 @@ typedef int (*__ftw64_func_t) __P ((__const char *__filename,
 typedef int (*__nftw_func_t) __P ((__const char *__filename,
 				   __const struct stat *__status, int __flag,
 				   struct FTW *__info));
-# if defined __USE_LARGEFILE64 || defined __USE_FILE_OFFSET64
+# ifdef __USE_LARGEFILE64
 typedef int (*__nftw64_func_t) __P ((__const char *__filename,
 				     __const struct stat64 *__status,
 				     int __flag, struct FTW *__info));
@@ -109,7 +109,7 @@ typedef int (*__nftw64_func_t) __P ((__const char *__filename,
 extern int ftw __P ((__const char *__dir, __ftw_func_t __func,
 		     int __descriptors));
 #else
-extern int ftw __P ((__const char *__dir, __ftw64_func_t __func,
+extern int ftw __P ((__const char *__dir, __ftw_func_t __func,
 		     int __descriptors)) __asm__ ("ftw64");
 #endif
 #ifdef __USE_LARGEFILE64
@@ -124,7 +124,7 @@ extern int ftw64 __P ((__const char *__dir, __ftw64_func_t __func,
 extern int nftw __P ((__const char *__dir, __nftw_func_t __func,
 		      int __descriptors, int __flag));
 # else
-extern int nftw __P ((__const char *__dir, __nftw64_func_t __func,
+extern int nftw __P ((__const char *__dir, __nftw_func_t __func,
 		      int __descriptors, int __flag)) __asm__ ("nftw64");
 # endif
 # ifdef __USE_LARGEFILE64

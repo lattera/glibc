@@ -975,7 +975,7 @@ main (int argc, char *argv[])
 @}
 @end example
 
-I.e., the user can start the memory debugger any time he wants if the
+I.e., the user can start the memory debugger any time s/he wants if the
 program was started with @code{MALLOC_TRACE} set in the environment.
 The output will of course not show the allocations which happened before
 the first signal but if there is a memory leak this will show up
@@ -1004,9 +1004,9 @@ readability.  Instead there is a program which comes with the GNU C
 library which interprets the traces and outputs a summary in on
 user-friendly way.  The program is called @code{mtrace} (it is in fact a
 Perl script) and it takes one or two arguments.  In any case the name of
-the file with the trace must be specified.  If an optional precedes the
-name of the trace file this must be the name of the program which
-generated the trace.
+the file with the trace output must be specified.  If an optional argument
+precedes the name of the trace file this must be the name of the program
+which generated the trace.
 
 @example
 drepper$ mtrace tst-mtrace log
@@ -1057,6 +1057,21 @@ Memory not freed:
 
 Suddenly the output makes much more sense and the user can see
 immediately where the function calls causing the trouble can be found.
+
+Interpreting this output is not complicated.  There are at most two
+different situations being detected.  First, @code{free} was called for
+pointers which were never returned by one of the allocation functions.
+This is usually a very bad problem and how this looks like is shown in
+the first three lines of the output.  Situations like this are quite
+rare and if they appear they show up very drastically: the program
+normally crashes.
+
+The other situation which is much harder to detect are memory leaks.  As
+you can see in the output the @code{mtrace} function collects all this
+information and so can say that the program calls an allocation function
+from line 33 in the source file @file{/home/drepper/tst-mtrace.c} four
+times without freeing this memory before the program terminates.
+Whether this is a real problem keeps to be investigated.
 
 @node Obstacks
 @section Obstacks

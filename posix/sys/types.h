@@ -39,23 +39,38 @@ typedef __u_quad_t u_quad_t;
 typedef __fsid_t fsid_t;
 #endif
 
-typedef __dev_t dev_t;
-typedef __mode_t mode_t;
-typedef __nlink_t nlink_t;
 typedef __loff_t loff_t;
 
-#ifndef __USE_FILE_OFFSET64
+#ifndef ino_t
+# ifndef __USE_FILE_OFFSET64
 typedef __ino_t ino_t;
-#else
+# else
 typedef __ino64_t ino_t;
+# endif
+# define ino_t ino_t
 #endif
 #ifdef __USE_LARGEFILE64
 typedef __ino64_t ino64_t;
 #endif
 
+#ifndef dev_t
+typedef __dev_t dev_t;
+# define dev_t dev_t
+#endif
+
 #ifndef gid_t
 typedef __gid_t gid_t;
 # define gid_t gid_t
+#endif
+
+#ifndef mode_t
+typedef __mode_t mode_t;
+# define mode_t mode_t
+#endif
+
+#ifndef nlink_t
+typedef __nlink_t nlink_t;
+# define nlink_t nlink_t
 #endif
 
 #ifndef uid_t
@@ -99,6 +114,9 @@ typedef __caddr_t caddr_t;
 typedef __key_t key_t;
 #endif
 
+#ifdef __USE_XOPEN
+# define __need_clock_t
+#endif
 #define	__need_time_t
 #include <time.h>
 

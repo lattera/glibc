@@ -29,6 +29,11 @@ __BEGIN_DECLS
 
 #include <bits/types.h>
 
+#if defined __USE_UNIX98 && !defined pid_t
+typedef __pid_t pid_t;
+# define pid_t pid_t
+#endif
+
 /* This will define the `W*' macros for the flag
    bits to `waitpid', `wait3', and `wait4'.  */
 #include <bits/waitflags.h>

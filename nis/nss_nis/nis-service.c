@@ -168,7 +168,7 @@ internal_nis_getservent_r (struct servent *serv, char *buffer,
     {
       if (data->next == NULL)
 	return NSS_STATUS_NOTFOUND;
-      p = strcpy (buffer, data->next->val);
+      p = strncpy (buffer, data->next->val, buflen);
            while (isspace (*p))
         ++p;
 

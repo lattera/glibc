@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -241,6 +241,15 @@ __sysconf (name)
     case _SC_NL_NMAX:
     case _SC_NL_SETMAX:
     case _SC_NL_TEXTMAX:
+
+    case _SC_XBS5_ILP32_OFF32:
+    case _SC_XBS5_ILP32_OFFBIG:
+    case _SC_XBS5_LP64_OFF64:
+    case _SC_XBS5_LPBIG_OFFBIG:
+
+    case _SC_XOPEN_LEGACY:
+    case _SC_XOPEN_REALTIME:
+    case _SC_XOPEN_REALTIME_THREADS:
 
       break;
     }

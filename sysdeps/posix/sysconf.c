@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -443,9 +443,7 @@ __sysconf (name)
 #endif
 
     case _SC_2_VERSION:
-      /* This is actually supposed to return the version
-	 of the 1003.2 utilities on the system {POSIX2_VERSION}.  */
-      return _POSIX2_C_VERSION;
+      return _POSIX2_VERSION;
 
     case _SC_2_C_BIND:
 #ifdef	_POSIX2_C_BIND
@@ -780,6 +778,47 @@ __sysconf (name)
     case _SC_NL_TEXTMAX:
 #ifdef	NL_TEXTMAX
       return NL_TEXTMAX;
+#else
+      return -1;
+#endif
+
+    case _SC_XBS5_ILP32_OFF32:
+#ifdef _XBS5_ILP32_OFF32
+      return _XBS5_ILP32_OFF32;
+#else
+      return -1;
+#endif
+    case _SC_XBS5_ILP32_OFFBIG:
+#ifdef _XBS5_ILP32_OFFBIG
+      return _XBS5_ILP32_OFFBIG;
+#else
+      return -1;
+#endif
+    case _SC_XBS5_LP64_OFF64:
+#ifdef _XBS5_LP64_OFF64
+      return _XBS5_LP64_OFF64;
+#else
+      return -1;
+#endif
+    case _SC_XBS5_LPBIG_OFFBIG:
+#ifdef _XBS5_LPBIG_OFFBIG
+      return _XBS5_LPBIG_OFFBIG;
+#else
+      return -1;
+#endif
+
+    case _SC_XOPEN_LEGACY:
+      return _XOPEN_LEGACY;
+
+    case _SC_XOPEN_REALTIME:
+#ifdef _XOPEN_REALTIME
+      return _XOPEN_REALTIME;
+#else
+      return -1;
+#endif
+    case _SC_XOPEN_REALTIME_THREADS:
+#ifdef _XOPEN_REALTIME_THREADS
+      return _XOPEN_REALTIME_THREADS;
 #else
       return -1;
 #endif

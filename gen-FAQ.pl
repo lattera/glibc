@@ -1,4 +1,4 @@
-#! /usr/local/bin/perl
+#! /usr/bin/perl
 
 =pod
 This is a silly little program for generating the libc FAQ.

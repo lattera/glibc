@@ -492,8 +492,9 @@ ctype_output (struct localedef_t *locale, struct charset_t *charset,
 	    else
 	      {
 		iov[2 + elem + offset].iov_base = alloca ((total + 3) & ~3);
-		memcpy (iov[2 + elem + offset].iov_base, ctype->codeset_name,
-			total);
+		memset (mempcpy (iov[2 + elem + offset].iov_base,
+				 ctype->codeset_name, total),
+			'\0', 4 - (total & 3));
 		total = (total + 3) & ~3;
 	      }
 	    iov[2 + elem + offset].iov_len = total;

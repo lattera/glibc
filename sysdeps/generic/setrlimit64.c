@@ -16,8 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sys/resource.h>
 #include <errno.h>
+#include <sys/resource.h>
+#include <sys/types.h>
 
 /* Set the soft and hard limits for RESOURCE to *RLIMITS.
    Only the super-user can increase hard limits.
@@ -27,8 +28,18 @@ setrlimit64 (resource, rlimits)
      enum __rlimit_resource resource;
      struct rlimit64 *rlimits;
 {
-  __set_errno (ENOSYS);
-  return -1;
+  struct rlimit rlimits32;
+
+  if (rlimits->rlim_cur >= RLIM_INFINITY)
+    rlimits32.rlim_cur = RLIM_INFINITY;
+  else
+    rlimits32.rlim_cur = rlimits->rlim_cur;
+  if (rlimits->rlim_max >= RLIM_INFINITY)
+    rlimits32.rlim_max = RLIM_INFINITY;
+  else
+    rlimits32.rlim_max = rlimits->rlim_max;
+
+  return setrlimit (resource, &rlimits32);
 }
 
 stub_warning (setrlimit64)

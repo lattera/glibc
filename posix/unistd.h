@@ -40,6 +40,9 @@ __BEGIN_DECLS
 /* POSIX Standard approved as ISO/IEC 9945-2 as of December, 1993.  */
 #define	_POSIX2_C_VERSION	199209L
 
+/* The utilities on GNU systems also correspond to this version.  */
+#define _POSIX2_VERSION	199209L
+
 /* If defined, the implementation supports the
    C Language Bindings Option.  */
 #define	_POSIX2_C_BIND	1
@@ -56,8 +59,12 @@ __BEGIN_DECLS
    creation of locales with the localedef utility.  */
 #define _POSIX2_LOCALEDEF       1
 
-/* Library conforms to X/Open version 4.  */
-#define _XOPEN_VERSION	4
+/* X/Open version number to which the library conforms.  It is selectable.  */
+#ifdef __USE_UNIX98
+# define _XOPEN_VERSION	500
+#else
+# define _XOPEN_VERSION	4
+#endif
 
 /* Commands and utilities from XPG4 are available.  */
 #define _XOPEN_XCU_VERSION	4

@@ -32,6 +32,20 @@ __BEGIN_DECLS
 #define __need_size_t
 #include <stddef.h>
 
+#ifdef __USE_UNIX98
+/* The Single Unix specification says that some more types are
+   available here.  */
+# ifndef gid_t
+typedef __gid_t gid_t;
+#  define gid_t gid_t
+# endif
+
+# ifndef uid_t
+typedef __uid_t uid_t;
+#  define uid_t uid_t
+# endif
+#endif
+
 /* The passwd structure.  */
 struct passwd
 {

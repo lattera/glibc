@@ -1,4 +1,5 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* xstat64 using old-style Unix stat system call.
+   Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,8 +17,25 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
+#include <errno.h>
+#include <stddef.h>
+#include <sys/stat.h>
+#include <kernel_stat.h>
 
-PSEUDO (__sigreturn, sigreturn, 1)
-	/* Shouldn't get here.  */
-PSEUDO_END(__sigreturn)
+#include <xstatconv.c>
+
+extern int __syscall_stat (const char *, struct kernel_stat *);
+
+/* Get information about the file NAME in BUF.  */
+int
+__xstat64 (int vers, const char *name, struct stat64 *buf)
+{
+  struct kernel_stat kbuf;
+  int result;
+
+  result =  __syscall_stat (name, &kbuf);
+  if (result == 0)
+    result = xstat64_conv (vers, &kbuf, buf);
+
+  return result;
+}

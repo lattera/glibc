@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,9 @@ __BEGIN_DECLS
 
 /* Message catalog descriptor type.  */
 typedef void *nl_catd;
+
+/* Type used by `nl_langinfo'.  */
+typedef int nl_item;
 
 /* Open message catalog for later use, returning descriptor.  */
 extern nl_catd catopen __P ((__const char *__cat_name, int __flag));

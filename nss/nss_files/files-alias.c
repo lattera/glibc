@@ -131,7 +131,7 @@ _nss_files_endaliasent (void)
 /* Parsing the database file into `struct aliasent' data structures.  */
 static enum nss_status
 get_next_alias (const char *match, struct aliasent *result,
-		char *buffer, int *errnop, size_t buflen)
+		char *buffer, size_t buflen, int *errnop)
 {
   enum nss_status status = NSS_STATUS_NOTFOUND;
   int ignore = 0;

@@ -21,7 +21,7 @@
 
 #ifndef lint
 #ifndef NOID
-static char	tzfilehid[] = "@(#)tzfile.h	7.9";
+static char	tzfilehid[] = "@(#)tzfile.h	7.13";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -45,8 +45,11 @@ static char	tzfilehid[] = "@(#)tzfile.h	7.9";
 ** Each file begins with. . .
 */
 
+#define	TZ_MAGIC	"TZif"
+
 struct tzhead {
-	char	tzh_reserved[20];	/* reserved for future use */
+ 	char	tzh_magic[4];		/* TZ_MAGIC */
+	char	tzh_reserved[16];	/* reserved for future use */
 	char	tzh_ttisgmtcnt[4];	/* coded number of trans. time flags */
 	char	tzh_ttisstdcnt[4];	/* coded number of trans. time flags */
 	char	tzh_leapcnt[4];		/* coded number of leap seconds */

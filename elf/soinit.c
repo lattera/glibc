@@ -21,8 +21,23 @@ run_hooks (void (*const list[]) (void))
 static char __EH_FRAME_BEGIN__[]
      __attribute__ ((section (".eh_frame")))
      = { };
+# ifdef HAVE_DWARF2_UNWIND_INFO_STATIC
+/* This must match what's in frame.h in gcc. How can one do that? */
+struct object
+{
+  void *pc_begin;
+  void *pc_end;
+  void *fde_begin;
+  void *fde_array;
+  __SIZE_TYPE__ count;
+  struct object *next;
+};
+extern void __register_frame_info (const void *, struct object *);
+extern void __deregister_frame_info (const void *);
+# else
 extern void __register_frame (const void *);
 extern void __deregister_frame (const void *);
+# endif
 #endif
 
 /* This function will be called from _init in init-first.c.  */
@@ -32,7 +47,14 @@ __libc_global_ctors (void)
   /* Call constructor functions.  */
   run_hooks (__CTOR_LIST__);
 #ifdef HAVE_DWARF2_UNWIND_INFO
+# ifdef HAVE_DWARF2_UNWIND_INFO_STATIC
+  {
+    static struct object ob;
+    __register_frame_info (__EH_FRAME_BEGIN__, &ob);
+  }
+# else
   __register_frame (__EH_FRAME_BEGIN__);
+# endif
 #endif
 }
 
@@ -46,6 +68,10 @@ _fini (void)
   /* Call destructor functions.  */
   run_hooks (__DTOR_LIST__);
 #ifdef HAVE_DWARF2_UNWIND_INFO
+# ifdef HAVE_DWARF2_UNWIND_INFO_STATIC
+  __deregister_frame_info (__EH_FRAME_BEGIN__);
+# else
   __deregister_frame (__EH_FRAME_BEGIN__);
+# endif
 #endif
 }

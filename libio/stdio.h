@@ -22,7 +22,7 @@
 
 #ifndef _STDIO_H
 
-#if !defined __need_FILE
+#ifndef __need_FILE
 # define _STDIO_H	1
 # include <features.h>
 
@@ -31,6 +31,9 @@ __BEGIN_DECLS
 # define __need_size_t
 # define __need_NULL
 # include <stddef.h>
+
+# define __need___va_list
+# include <stdarg.h>
 
 # include <bits/types.h>
 #endif /* Don't need FILE.  */
@@ -282,7 +285,7 @@ vprintf (__const char *__restrict __fmt, _G_va_list __arg)
 }
 #endif /* Optimizing.  */
 
-#if defined __USE_BSD || defined __USE_ISOC9X
+#if defined __USE_BSD || defined __USE_ISOC9X || defined __USE_UNIX98
 /* Maximum chars of output to write in MAXLEN.  */
 extern int __snprintf __P ((char *__restrict __s, size_t __maxlen,
 			    __const char *__restrict __format, ...))
@@ -452,7 +455,7 @@ putchar_unlocked (int __c)
 #endif /* Use POSIX or MISc.  */
 
 
-#if defined __USE_SVID || defined __USE_MISC
+#if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
 /* Get a word (int) from STREAM.  */
 extern int getw __P ((FILE *__stream));
 
@@ -700,6 +703,21 @@ extern int ftrylockfile __P ((FILE *__stream));
 /* Relinquish the ownership granted for STREAM.  */
 extern void funlockfile __P ((FILE *__stream));
 #endif /* POSIX || misc */
+
+#if defined __USE_XOPEN && !defined __USE_GNU
+/* The X/Open standard requires some functions and variables to be
+   declared here which do not belong into this header.  But we have to
+   follow.  In GNU mode we don't do this nonsense.  */
+
+/* For more information on these symbols look in <getopt.h>.  */
+extern char *optarg;
+extern int optind;
+extern int opterr;
+extern int optopt;
+
+extern int getopt __P ((int __argc, char *__const *__argv,
+			__const char *__shortopts));
+#endif
 
 __END_DECLS
 

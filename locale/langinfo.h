@@ -1,5 +1,5 @@
-/* nl_langinfo -- Access to locale-dependent parameters.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Access to locale-dependent parameters.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,10 @@
 
 #include <locale.h>		/* Define the LC_* category names.  */
 
+/* Get the type definition.  */
+#include <nl_types.h>
+
+
 __BEGIN_DECLS
 
 /* Construct an `nl_item' value for `nl_langinfo' from a locale category
@@ -36,7 +40,7 @@ __BEGIN_DECLS
 
 
 /* Enumeration of locale items that can be queried with `nl_langinfo'.  */
-typedef enum
+enum
 {
   /* LC_TIME category: date and time formatting.  */
 
@@ -153,6 +157,9 @@ typedef enum
   _NL_CTYPE_WIDTH,
   _NL_CTYPE_MB_CUR_MAX,
   _NL_CTYPE_CODESET_NAME,
+#ifdef __USE_UNIX98
+  CODESET = _NL_CTYPE_CODESET_NAME,
+#endif
   _NL_NUM_LC_CTYPE,
 
   /* LC_MONETARY category: formatting of monetary quantities.
@@ -160,6 +167,9 @@ typedef enum
      defined in <locale.h>.  */
   INT_CURR_SYMBOL = _NL_ITEM (LC_MONETARY, 0),
   CURRENCY_SYMBOL,
+#ifdef __USE_UNIX98
+  CRNCYSTR = CURRENCY_SYMBOL,
+#endif
   MON_DECIMAL_POINT,
   MON_THOUSANDS_SEP,
   MON_GROUPING,
@@ -178,7 +188,13 @@ typedef enum
   /* LC_NUMERIC category: formatting of numbers.
      These also correspond to members of `struct lconv'; see <locale.h>.  */
   DECIMAL_POINT = _NL_ITEM (LC_NUMERIC, 0),
+#ifdef __USE_UNIX98
+  RADIXCHAR = DECIMAL_POINT,
+#endif
   THOUSANDS_SEP,
+#ifdef __USE_UNIX98
+  THOUSEP = THOUSANDS_SEP,
+#endif
   GROUPING,
   _NL_NUM_LC_NUMERIC,
 
@@ -190,7 +206,7 @@ typedef enum
 
   /* This marks the highest value used.  */
   _NL_NUM
-} nl_item;
+};
 
 
 /* Return the current locale's value for ITEM.

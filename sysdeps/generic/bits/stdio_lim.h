@@ -17,17 +17,24 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _STDIO_H
+#if !defined _STDIO_H && !defined __need_FOPEN_MAX
 # error "Never include <bits/stdio_lim.h> directly; use <stdio.h> instead."
 #endif
 
-#define	L_tmpnam	1
-#define	TMP_MAX		0
+#ifndef __need_FOPEN_MAX
+# define L_tmpnam	1
+# define TMP_MAX	0
 
-#ifdef __USE_POSIX
-# define L_ctermid	1
-# define L_cuserid	1
+# ifdef __USE_POSIX
+#  define L_ctermid	1
+#  define L_cuserid	1
+# endif
+
+# define FILENAME_MAX	14
 #endif
 
-#define	FOPEN_MAX	16
-#define	FILENAME_MAX	14
+#if defined __need_FOPEN_MAX && !defined __defined_FOPEN_MAX
+# define __defined_FOPEN_MAX
+# define FOPEN_MAX	16
+#endif
+#undef __need_FOPEN_MAX

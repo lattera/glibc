@@ -32,6 +32,7 @@ netinet/udp.h
 netipx/ipx.h
 nfs/nfs.h
 rt_sigaction.c
+rt_sigpending.c
 rt_sigprocmask.c
 rt_sigqueueinfo.c
 rt_sigreturn.c
@@ -61,3 +62,4 @@ sys/ultrasound.h
 sys/user.h
 sys/vt.h
 xstatconv.c
+getdents64.c

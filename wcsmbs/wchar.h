@@ -26,7 +26,9 @@
 
 #include <features.h>
 
-__BEGIN_DECLS
+/* Get FILE definition.  */
+#define __need_FILE
+#include <stdio.h>
 
 /* Get size_t, wchar_t, wint_t and NULL from <stddef.h>.  */
 #define __need_size_t
@@ -34,7 +36,6 @@ __BEGIN_DECLS
 #define __need_wint_t
 #define __need_NULL
 #include <stddef.h>
-
 
 /* We try to get wint_t from <stddef.h>, but not all GCC versions define it
    there.  So define it ourselves if it remains undefined.  */
@@ -65,6 +66,12 @@ typedef struct
 # define WEOF (0xffffffffu)
 #endif
 
+/* This incomplete type is defined in <time.h> but needed here because
+   of `wcsftime'.  */
+struct tm;
+
+
+__BEGIN_DECLS
 
 /* Copy SRC to DEST.  */
 extern wchar_t *wcscpy __P ((wchar_t *__restrict __dest,
@@ -283,17 +290,18 @@ extern size_t wmemrtombs __P ((char *__restrict __dst,
 			       __const wchar_t **__restrict __src,
 			       size_t __nwc, size_t len,
 			       mbstate_t *__restrict __ps));
+#endif	/* use GNU */
 
 
 /* The following functions are extensions found in X/Open CAE.  */
-
+#ifdef __USE_XOPEN
 /* Determine number of column positions required for C.  */
 extern int wcwidth __P ((wint_t __c));
 
 /* Determine number of column positions required for first N wide
    characters (or fewer if S ends before this) in S.  */
 extern int wcswidth __P ((__const wchar_t *__s, size_t __n));
-#endif	/* use GNU */
+#endif	/* Use X/Open.  */
 
 
 /* Convert initial portion of the wide string NPTR to `double'
@@ -493,6 +501,17 @@ extern wchar_t *wcpncpy __P ((wchar_t *__dest, __const wchar_t *__src,
 			      size_t __n));
 #endif	/* use GNU */
 
+
+/* The X/Open standard demands that most of the functions defined in
+   the <wctype.h> header must also appear here.  This is probably
+   because some X/Open members wrote their implementation before the
+   ISO C standard was published and introduced the better solution.
+   We have to provide these definitions for compliance reasons but we
+   do this nonsense only if really necessary.  */
+#if defined __USE_UNIX98 && !defined __USE_GNU
+# define __need_iswxxx
+# include <wctype.h>
+#endif
 
 __END_DECLS
 

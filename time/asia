@@ -1,4 +1,4 @@
-# @(#)asia	7.30
+# @(#)asia	7.33
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -45,8 +45,6 @@
 #	9:30	CST	(Australian) Central Standard Time
 #
 # See the `europe' file for Russia and Turkey in Asia.
-#
-# See the `africa' file for time zone naming and abbreviation conventions.
 
 # From Guy Harris:
 # Incorporates data for Singapore from Robert Elz' asia 1.1, as well as

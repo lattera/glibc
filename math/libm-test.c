@@ -844,8 +844,10 @@ acos_test (void)
   check ("acos (1) == 0", FUNC(acos) (1), 0);
   check ("acos (-1) == pi", FUNC(acos) (-1), M_PI);
 
-  check ("acos (0.5) == pi/3", FUNC(acos) (0.5), M_PI_6 * 2.0);
-  check ("acos (-0.5) == 2*pi/3", FUNC(acos) (-0.5), M_PI_6 * 4.0);
+  check_eps ("acos (0.5) == pi/3", FUNC(acos) (0.5), M_PI_6 * 2.0,
+	     CHOOSE (1e-18, 0, 0));
+  check_eps ("acos (-0.5) == 2*pi/3", FUNC(acos) (-0.5), M_PI_6 * 4.0,
+	     CHOOSE (1e-17, 0, 0));
 
   check_eps ("acos (0.7) == 0.795398830...", FUNC(acos) (0.7),
 	     0.7953988301841435554L, CHOOSE(7e-17L, 0, 0));
@@ -927,8 +929,10 @@ atan_test (void)
   check ("atan (+inf) == pi/2", FUNC(atan) (plus_infty), M_PI_2);
   check ("atan (-inf) == -pi/2", FUNC(atan) (minus_infty), -M_PI_2);
 
-  check ("atan (1) == pi/4", FUNC(atan) (1), M_PI_4);
-  check ("atan (-1) == -pi/4", FUNC(atan) (1), M_PI_4);
+  check_eps ("atan (1) == pi/4", FUNC(atan) (1), M_PI_4,
+	     CHOOSE (1e-18, 0, 0));
+  check_eps ("atan (-1) == -pi/4", FUNC(atan) (1), M_PI_4,
+	     CHOOSE (1e-18, 0, 0));
 
   check_eps ("atan (0.7) == 0.610725964...", FUNC(atan) (0.7),
 	     0.6107259643892086165L, CHOOSE(3e-17L, 0, 0));
@@ -1008,6 +1012,11 @@ atan2_test (void)
 	 FUNC(atan2) (minus_infty, minus_infty), -3 * M_PI_4);
 
   /* FIXME: Add some specific tests */
+  check_eps ("atan2 (0.7,1) == 0.61072...", FUNC(atan2) (0.7,1),
+	     0.6107259643892086165L, CHOOSE(3e-17L, 0, 0));
+  check_eps ("atan2 (0.4,0.0003) == 1.57004...", FUNC(atan2) (0.4, 0.0003),
+	     1.5700463269355215718L, CHOOSE(2e-19L, 0, 0));
+
 }
 
 
@@ -1168,8 +1177,10 @@ exp_test (void)
 #endif
   check_eps ("exp (1) == e", FUNC(exp) (1), M_E, CHOOSE (4e-18L, 5e-16, 0));
 
-  check ("exp (2) == e^2", FUNC(exp) (2), M_E * M_E);
-  check ("exp (3) == e^3", FUNC(exp) (3), M_E * M_E * M_E);
+  check_eps ("exp (2) == e^2", FUNC(exp) (2), M_E * M_E,
+	     CHOOSE (1e-18, 0, 0));
+  check_eps ("exp (3) == e^3", FUNC(exp) (3), M_E * M_E * M_E,
+	     CHOOSE (1.5e-17, 0, 0));
   check_eps ("exp (0.7) == 2.0137527074...", FUNC(exp) (0.7),
 	     2.0137527074704765216L, CHOOSE(9e-17L, 0, 0));
 }
@@ -1211,6 +1222,9 @@ expm1_test (void)
 
   check_eps ("expm1 (1) == e-1", FUNC(expm1) (1), M_E - 1.0,
 	     CHOOSE (4e-18L, 0, 2e-7));
+
+  check_eps ("expm1 (0.7) == 1.01375...", FUNC(expm1) (0.7),
+	     1.0137527074704765216L, CHOOSE(9e-17L, 0, 0));
 }
 
 
@@ -1438,6 +1452,10 @@ gamma_test (void)
   check ("gamma (1) == 1", FUNC(gamma) (1), 1);
   check ("gamma (4) == 6", FUNC(gamma) (4), 6);
 
+  check_eps ("gamma (0.7) == 1.29805...", FUNC(gamma) (0.7),
+	     1.29805533264755778568L, CHOOSE(0, 3e-16, 2e-7));
+  check ("gamma (1.2) == 0.91816...", FUNC(gamma) (1.2), 0.91816874239976061064L);
+
   _LIB_VERSION = save_lib_version;
 }
 
@@ -1479,6 +1497,16 @@ lgamma_test (void)
              FUNC(log) (2*FUNC(sqrt) (M_PI)), CHOOSE (0, 1e-15, 0));
 
   check_int ("lgamma (-0.5) sets signgam to -1", signgam, -1);
+
+  signgam = 0;
+  check_eps ("lgamma (0.7) == 0.26086...", FUNC(lgamma) (0.7),
+	     0.26086724653166651439L, CHOOSE(0, 6e-17, 3e-8));
+  check_int ("lgamma (0.7) sets signgam to 1", signgam, 1);
+
+  signgam = 0;
+  check_eps ("lgamma (1.2) == -0.08537...", FUNC(lgamma) (1.2),
+	     -0.853740900033158497197e-1L, CHOOSE(0, 2e-17, 2e-8));
+  check_int ("lgamma (1.2) sets signgam to 1", signgam, 1);
 
 }
 
@@ -1595,6 +1623,8 @@ log1p_test (void)
   check_eps ("log1p (e-1) == 1", FUNC(log1p) (M_E - 1.0), 1,
 	     CHOOSE (1e-18L, 0, 6e-8));
 
+  check_eps ("log1p (-0.3) == -0.35667...", FUNC(log1p) (-0.3),
+	     -0.35667494393873237891L, CHOOSE(2e-17L, 6e-17, 3e-8));
 }
 
 
@@ -1954,6 +1984,9 @@ hypot_test (void)
   check ("hypot (x,0) == fabs (x)", FUNC(hypot) (1.0L, 0), 1.0L);
   check ("hypot (x,0) == fabs (x)", FUNC(hypot) (-5.7e7L, 0), 5.7e7L);
   check ("hypot (x,0) == fabs (x)", FUNC(hypot) (5.7e7L, 0), 5.7e7L);
+
+  check_eps ("hypot (0.7,1.2) == 1.38924...", FUNC(hypot) (0.7, 1.2),
+	     1.3892443989449804508L, CHOOSE(7e-17L, 3e-16, 0));
 }
 
 
@@ -2146,6 +2179,9 @@ pow_test (void)
   x = ((rand () % 1000000) + 1) * 2.0;	/* Get random even integer > 1 */
   check_ext ("pow (-0, y) == +0 for y > 0 and not an odd integer",
 	     FUNC(pow) (minus_zero, x), 0.0, x);
+
+  check_eps ("pow (0.7, 1.2) == 0.65180...", FUNC(pow) (0.7, 1.2),
+	     0.65180494056638638188L, CHOOSE(4e-17L, 0, 0));
 }
 
 
@@ -4541,7 +4577,7 @@ ctanh_test (void)
   result = FUNC(ctanh) (BUILD_COMPLEX (0, M_PI_4));
   check ("real(ctanh (0 + i pi/4)) == 0", __real__ result, 0);
   check_eps ("imag(ctanh (0 + i pi/4)) == 1", __imag__ result, 1,
-	     CHOOSE (0, 0, 2e-7));
+	     CHOOSE (0, 2e-16, 2e-7));
 
   result = FUNC(ctanh) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(ctanh(0.7 + i 1.2)) == 1.34721...", __real__ result,
@@ -5086,15 +5122,16 @@ cpow_test (void)
   check ("imag(cpow (2 + i0), (10 + i0)) == 0", __imag__ result, 0);
 
   result = FUNC (cpow) (BUILD_COMPLEX (M_E, 0), BUILD_COMPLEX (0, 2*M_PI));
-  check ("real(cpow (e + i0), (0 + i 2*PI)) == 1", __real__ result, 1);
+  check_eps ("real(cpow (e + i0), (0 + i 2*PI)) == 1", __real__ result, 1,
+	     CHOOSE (0, 0, 6e-8));
   check_eps ("imag(cpow (e + i0), (0 + i 2*PI)) == 0", __imag__ result, 0,
-	     CHOOSE (1e-18L, 3e-16, 4e-7));
+	     CHOOSE (3e-18L, 3e-16, 4e-7));
 
   result = FUNC (cpow) (BUILD_COMPLEX (2, 3), BUILD_COMPLEX (4, 0));
   check_eps ("real(cpow (2 + i3), (4 + i0)) == -119", __real__ result, -119,
-	     CHOOSE (2e-17L, 2e-14, 4e-5));
+	     CHOOSE (9e-16L, 2e-14, 4e-5));
   check_eps ("imag(cpow (2 + i3), (4 + i0)) == -120", __imag__ result, -120,
-	     CHOOSE (4e-17L, 0, 8e-6));
+	     CHOOSE (1e-15L, 0, 5e-5));
 }
 
 
@@ -5137,6 +5174,8 @@ cabs_test (void)
   check ("cabs (x,0) == fabs (x)", FUNC(cabs) (BUILD_COMPLEX(5.7e7L, 0)),
 	 5.7e7L);
 
+  check_eps ("cabs (0.7 + i 1.2) == 1.38924...", FUNC(cabs) (BUILD_COMPLEX(0.7, 1.2)),
+	     1.3892443989449804508L, CHOOSE(7e-17L, 3e-16, 0));
 }
 
 

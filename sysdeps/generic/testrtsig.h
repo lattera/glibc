@@ -21,7 +21,7 @@
 #include <string.h>
 #include <sys/utsname.h>
 
-int
+static int
 kernel_has_rtsig (void)
 {
   return 0;

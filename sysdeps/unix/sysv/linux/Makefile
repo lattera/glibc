@@ -120,4 +120,8 @@ sysdep_routines += rt_sigsuspend rt_sigprocmask rt_sigtimedwait	\
 		   rt_sigqueueinfo rt_sigaction rt_sigpending
 endif
 
+ifeq ($(subdir),dirent)
+sysdep_routines += getdents64
+endif
+
 common-generated += bits/stdio_lim.h bits/stdio_lim.d

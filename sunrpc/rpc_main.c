@@ -38,6 +38,7 @@ char main_rcsid[] =
  * rpc_main.c, Top level of the RPC protocol compiler.
  */
 
+#include <errno.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -79,7 +80,7 @@ static const char *cmdname;
 static const char *svcclosetime = "120";
 static const char *CPP = SVR4_CPP;
 static char CPPFLAGS[] = "-C";
-static char pathbuf[FILENAME_MAX + 1];
+static char *pathbuf;
 static const char *allv[] = {
 	"rpcgen", "-s", "udp", "-s", "tcp",
 };
@@ -165,6 +166,10 @@ static int allfiles;   /* generate all files */
 int tirpcflag = 0;       /* generating code for tirpc, by default */
 #else
 int tirpcflag = 1;       /* generating code for tirpc, by default */
+#endif
+
+#ifdef __GNU_LIBRARY__
+int building_libc = 0;	/* running as part of libc built process */
 #endif
 
 int
@@ -334,6 +339,13 @@ open_input(const char *infile, const char *define)
 	(void) pipe(pd);
 	switch (fork()) {
 	case 0:
+#ifdef __GNU_LIBRARY__
+		/* While building libc we don't want to use the libc from
+		   the build directory which may be incompatible with the
+		   installed dynamic linker.  */
+		if (building_libc)
+		  unsetenv ("LD_LIBRARY_PATH");
+#endif
 		find_cpp();
 		putarg(0, CPP);
 		putarg(1, CPPFLAGS);
@@ -939,7 +951,9 @@ parseargs(int argc, const char *argv[], struct commandline *cmd)
 					    */
 					tirpcflag = 1;
 					break;
-
+				case '$':
+					building_libc = 1;
+					break;
 #endif
 				case 'I':
 					inetdflag = 1;
@@ -998,12 +1012,21 @@ parseargs(int argc, const char *argv[], struct commandline *cmd)
 					if (++i == argc) {
 						return (0);
 					}
-					(void) strcpy(pathbuf, argv[i]);
-					(void) strcat(pathbuf, "/cpp");
-					CPP = pathbuf;
-					cppDefined = 1;
-					goto nextarg;
-
+					{
+						size_t len = strlen (argv[i]);
+						pathbuf = malloc (len + 5);
+						if (pathbuf == NULL) {
+							f_print(stderr, "%s\n",
+								strerror (errno));
+							crash();
+						}
+						stpcpy (stpcpy (pathbuf,
+								argv[i]),
+							"/cpp");
+						CPP = pathbuf;
+						cppDefined = 1;
+						goto nextarg;
+					}
 
 
 				default:

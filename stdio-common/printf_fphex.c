@@ -237,18 +237,17 @@ __printf_fphex (FILE *fp,
 			info->spec == 'A');
 
       /* Fill with zeroes.  */
-      while (numstr > numbuf + (sizeof numbuf - 13))	/* 52 ÷ 4 = 13 */
+      while (numstr > numbuf + (sizeof numbuf - 52 / 4))
 	*--numstr = '0';
 
       leading = fpnum.dbl.ieee.exponent == 0 ? '0' : '1';
 
       exponent = fpnum.dbl.ieee.exponent;
 
-      if ((exponent != 0 && exponent < IEEE754_DOUBLE_BIAS)
-	  || (exponent == 0 && !zero_mantissa))
+      if (exponent == 0 ? !zero_mantissa : exponent < IEEE754_DOUBLE_BIAS)
 	{
 	  expnegative = 1;
-	  exponent = abs (exponent - IEEE754_DOUBLE_BIAS);
+	  exponent = -(exponent - IEEE754_DOUBLE_BIAS);
 	}
       else
 	{
@@ -276,27 +275,27 @@ __printf_fphex (FILE *fp,
       else
 	numstr = _itoa (num, numbuf + sizeof numbuf, 16, info->spec == 'A');
 
+      /* Fill with zeroes.  */
+      while (numstr > numbuf + (sizeof numbuf - 64 / 4))
+	*--numstr = '0';
+
       /* We use a full nibble for the leading digit.  */
       leading = *numstr++;
 
-      /* Fill with zeroes.  */
-      while (numstr > numbuf + (sizeof numbuf - 15))	/* 60 ÷ 4 = 15 */
-	*--numstr = '0';
-
       /* We have 3 bits from the mantissa in the leading nibble.  */
-      exponent = fpnum.ldbl.ieee.exponent - 3;
+      exponent = fpnum.ldbl.ieee.exponent;
 
-      if ((exponent != 0 && exponent < IEEE854_LONG_DOUBLE_BIAS)
-	  || (exponent == 0 && !zero_mantissa))
+      if (exponent == 0 ? !zero_mantissa
+	  : exponent < IEEE854_LONG_DOUBLE_BIAS + 3)
 	{
 	  expnegative = 1;
-	  exponent = abs (exponent - IEEE854_LONG_DOUBLE_BIAS);
+	  exponent = -(exponent - (IEEE854_LONG_DOUBLE_BIAS + 3));
 	}
       else
 	{
 	  expnegative = 0;
 	  if (exponent != 0)
-	    exponent -= IEEE854_LONG_DOUBLE_BIAS;
+	    exponent -= IEEE854_LONG_DOUBLE_BIAS + 3;
 	}
     }
 
@@ -310,8 +309,10 @@ __printf_fphex (FILE *fp,
       if (precision == -1)
 	precision = numend - numstr;
       else if (precision < numend - numstr
-	       && (numstr[precision] > 5
-		   || (numstr[precision] == 5
+	       && (numstr[precision] > '8'
+		   || (('A' < '0' || 'a' < '0')
+		       && numstr[precision] < '0')
+		   || (numstr[precision] == '8'
 		       && (precision + 1 < numend - numstr
 			   /* Round to even.  */
 			   || (precision > 0

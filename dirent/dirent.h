@@ -123,7 +123,7 @@ extern struct dirent *__readdir __P ((DIR *__dirp));
 #ifndef __USE_FILE_OFFSET64
 extern struct dirent *readdir __P ((DIR *__dirp));
 #else
-extern struct dirent64 *readdir __P ((DIR *__dirp)) __asm__ ("readdir64");
+extern struct dirent *readdir __P ((DIR *__dirp)) __asm__ ("readdir64");
 #endif
 
 #ifdef __USE_LARGEFILE64
@@ -139,8 +139,8 @@ extern int __readdir_r __P ((DIR *__dirp, struct dirent *__entry,
 extern int readdir_r __P ((DIR *__dirp, struct dirent *__entry,
 			   struct dirent **__result));
 # else
-extern int readdir_r __P ((DIR *__dirp, struct dirent64 *__entry,
-			   struct dirent64 **__result))
+extern int readdir_r __P ((DIR *__dirp, struct dirent *__entry,
+			   struct dirent **__result))
      __asm__ ("readdir64_r");
 # endif
 

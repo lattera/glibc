@@ -23,7 +23,7 @@
 #include "cname-lookup.h"
 
 wint_t
-towctrans (wint_t wc, wctrans_t desc)
+__towctrans (wint_t wc, wctrans_t desc)
 {
   size_t idx;
 
@@ -34,3 +34,4 @@ towctrans (wint_t wc, wctrans_t desc)
 
   return (wint_t) desc[idx];
 }
+weak_alias (__towctrans, towctrans)

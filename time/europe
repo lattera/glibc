@@ -1,4 +1,4 @@
-# @(#)europe	7.46
+# @(#)europe	7.49
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -36,8 +36,6 @@
 #	 1:00	CET CEST Central Europe
 #	 2:00	EET EEST Eastern Europe
 #	 3:00	MSK MSD	Moscow
-#
-# See the `africa' file for time zone naming and abbreviation conventions.
 #
 # A reliable and entertaining source about time zones, especially in Britain,
 # is Derek Howse, Greenwich time and the discovery of the longitude,

@@ -1,4 +1,4 @@
-# @(#)australasia	7.34
+# @(#)australasia	7.37
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -472,8 +472,6 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 #
 # See the `northamerica' file for Hawaii.
 # See the `southamerica' file for Easter I and the Galapagos Is.
-#
-# See the `africa' file for time zone naming and abbreviation conventions.
 
 ###############################################################################
 

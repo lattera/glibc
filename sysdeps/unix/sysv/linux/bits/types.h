@@ -103,6 +103,9 @@ typedef struct
 
 typedef int __key_t;
 
+/* Used in `struct shmid_ds'.  */
+typedef short int __ipc_pid_t;
+
 
 /* Types from the Large File Support interface.  */
 

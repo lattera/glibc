@@ -16,10 +16,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
-#include <sys/resource.h>
-#include <unistd.h>
 #include <errno.h>
+#include <stdarg.h>
+#include <sysdep.h>
+#include <unistd.h>
+#include <sys/resource.h>
 
 /* Function depends on CMD:
    1 = Return the limit on the size of a file, in units of 512 bytes.
@@ -31,42 +32,46 @@
        can open.
    Returns -1 on errors.  */
 long int
-__ulimit (cmd, newlimit)
-     int cmd;
-     long int newlimit;
+__ulimit (int cmd, ...)
 {
-  int status;
+  struct rlimit limit;
+  va_list va;
+  long int result = -1;
+
+  va_start (va, cmd);
 
   switch (cmd)
     {
-    case 1:
-      {
-	/* Get limit on file size.  */
-	struct rlimit fsize;
-
-	status = getrlimit (RLIMIT_FSIZE, &fsize);
-	if (status < 0)
-	  return -1;
-
+    case UL_GETFSIZE:
+      /* Get limit on file size.  */
+      if (getrlimit (RLIMIT_FSIZE, &limit) == 0)
 	/* Convert from bytes to 512 byte units.  */
-	return fsize.rlim_cur / 512;
-      }
-    case 2:
+	result =  limit.rlim_cur / 512;
+      break;
+
+    case UL_SETFSIZE:
       /* Set limit on file size.  */
       {
-	struct rlimit fsize;
-	fsize.rlim_cur = newlimit * 512;
-	fsize.rlim_max = newlimit * 512;
+	long int newlimit = va_arg (va, long int);
 
-	return setrlimit (RLIMIT_FSIZE, &fsize);
+	limit.rlim_cur = newlimit * 512;
+	limit.rlim_max = newlimit * 512;
+
+	result = setrlimit (RLIMIT_FSIZE, &limit);
       }
-    case 4:
-      return sysconf (_SC_OPEN_MAX);
+      break;
+
+    case __UL_GETOPENMAX:
+      result = sysconf (_SC_OPEN_MAX);
+      break;
 
     default:
       __set_errno (EINVAL);
-      return -1;
     }
+
+  va_end (va);
+
+  return result;
 }
 
 weak_alias (__ulimit, ulimit);

@@ -1,3 +1,320 @@
+1997-12-22 18:10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Stop with error if --disable-static is used when
+	the shared lib uses this library.
+
+	* gen-FAQ.pl: I've perl installed in /usr/bin.
+
+	* include/bits/xopen_lim.h (STREAM_MAX): Define using FOPEN_MAX.
+
+	Fix Unix98 conformance problems in the headers.
+	* catgets/nl_types.h: Define nl_item.
+	* grp/grp.h: Define gid_t.
+	* include/features.h [_POSIX_C_SOURCE]: Don't define _XOPEN_SOURCE.
+	* include/nl_types.h: New file.
+	* include/ulimit.h: New file.
+	* io/fcntl.h: Include sys/stat.h for Unix98.  Don't define locking
+	constants in POSIX mode.
+	* io/utime.h: Get definition for time_t.
+	* io/sys/stat.h: Define dev_t, gid_t, ino_t, mode_t, nlink_t, off_t,
+	uid_t, pid_t.  Define D_IFLNK and S_IFSOCK only if !__USE_UNIX98.
+	* libio/stdio.h: Define va_list.  Make snprintf also available is
+	__USE_UNIX98.  Declare getopt function and variables.
+	* locale/langinfo.h: Include nl_types.h.  Don't define nl_item.
+	Define CODESET, CRNCYSTR, RADIXCHAR and THOUSEP as aliases.
+	* math/math.h: Defined M_* constants as double for Unix98 mode.
+	* posix/fnmatch.h: Pretty print.  Define FNM_NOSYS.
+	* posix/glob.h: Pretty print.  Define GLOB_NOSYS.
+	* posix/regex.h: Define REG_NOSYS.
+	* posix/wordexp.h: Define WRDE_NOSYS.
+	* posix/unistd.h: Define _POSIX2_VERSION.  Define _XOPEN_VERSION to
+	500 for Unix98.
+	* posix/sys/types.h: Alloc dev_t, mode_t, nlink_t to be defined
+	somewhere else as well.  Define clock_t for Unix98.
+	* posix/sys/wait.h: Define pid_t.
+	* pwd/pwd.h: Define gid_t, uid_t.
+	* resource/Makefile (headers): Add ulimit.h.
+	* resource/ulimit.h: New file.
+	* sysdeps/generic/ulimit.c: Define according to X/Open using varargs
+	instead of second argument.
+	* sysdeps/unix/bsd/ulimit.c: Likewise.  Use UL_* constants.
+	* sysdeps/unix/sysv/linux/ulimit.c: Likewise.
+	* resource/sys/resource.h: Don't declare ulimit here, include ulimit.h.
+	* signal/signal.h: Define pid_t.
+	* string/string.h: Don't declare BSD string functions in POSIX mode.
+	* sysdeps/generic/bits/confname.h: Define _PC_VDISABLE.  Add
+	_SC_XOPEN_LEGACY, _SC_XOPEN_REALTIME and _SC_XOPEN_REALTIME_THREADS.
+	* sysdeps/unix/sysv/linux/bits/termios.h: Clean namespace for Unix98
+	and POSIX.
+
+	* inet/test_ifindex.c: Change test so that it does not fail for
+	interface aliases.
+
+	* locale/programs/locale.c (show_info): Use correct cast sequence
+	for 64bit machines.
+
+	* malloc/malloc.c: __malloc_initialized now signals three states:
+	uninitialized, initializing, initialized.  Used in mcheck.
+	* malloc/mcheck.c (mabort): Add '\n' to messages.
+	(mcheck): Allow installation when malloc is uninitialized or is
+	just initializing.
+
+	* manual/memory.texi: Explain mtrace output a bit more.
+
+	* math/libm-test.c: Add more epsilons.
+
+	* misc/regexp.h (compile): Remove __ prefix from parameter names.
+
+	* nis/nss_nis/nis-ethers.c (internal_nis_getetherent_r): Use strncpy
+	instead of strcpy for security.
+	* nis/nss_nis/nis-proto.c (internal_nis_getprotoent_r): Likewise.
+	* nis/nss_nis/nis-rpc.c (internal_nis_getrpcent_r): Likewise.
+	* nis/nss_nis/nis-service.c (internal_nis_getservent_r): Likewise.
+
+	* nss/digits_dots.c: Pretty print.
+
+	* posix/getconf.c (vars): Add symbols for programming environment
+	recognition.  Recognize --version.
+
+	* sysdeps/generic/sysconf.c: Handle _SC_XBS5_*, _SC_XOPEN_LEGACY,
+	_SC_XOPEN_REALTIME, and _SC_XOPEN_REALTIME_THREADS.
+	* sysdeps/posix/sysconf.c: Handle _SC_XBS5_* and new _XOPEN_* symbols.
+
+	* sysdeps/generic/bits/stdio_lim.h: Implement handling of
+	__need_FOPEN_MAX.
+	* sysdeps/unix/sysv/linux/stdio_lim.h.in: Likewise.
+	* sysdeps/posix/mk-stdiolim.c: Change to generate file handling
+	__need_FOPEN_MAX.
+
+	* sysdeps/unix/sysv/linux/Dist: Add rt_sigpending.c.
+	* sysdeps/unix/sysv/linux/rt_sigpending.c: New file.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Define __ipc_pid_t.
+	* sysdeps/unix/sysv/linux/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/msq.h: Use __ipc_pid_t.
+	* sysdeps/unix/sysv/linux/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: New file.
+
+	* sysdeps/wordsize-32/inttypes.h: Add SCNd8, SCNi8, SCNo8, SCNx8,
+	SCNu*.
+	* sysdeps/wordsize-64/inttypes.h: Likewise.
+
+	* time/africa: Update from tzdata1997j.
+	* time/antarctica: Likewise.
+	* time/asia: Likewise.
+	* time/australasia: Likewise.
+	* time/backward: Likewise.
+	* time/etcetera: Likewise.
+	* time/europe: Likewise.
+	* time/factory: Likewise.
+	* time/northamerica: Likewise.
+	* time/pacificnew: Likewise.
+	* time/southamerica: Likewise.
+
+	* time/tzfile.h: Update from tzcode1997h.
+	* time/zic.c: Likewise.
+
+	* wcsmbs/wchar.h: Get definition of FILE.  Define `struct tm' tag.
+	Declare wcwidth and wcswidth for __USE_XOPEN.  Declare the
+	isw*() functions for Unix98.
+	* wctype/towctrans.c: Define as __towctrans, make towctrans weak alias.
+	* wctype/wctype.h: Declare isw*() functions also if __need_iswxxx
+	is defined.
+
+1997-12-21  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locale/duplocale.c: Increase usage_count only if less than
+	MAX_USAGE_COUNT.
+	* locale/freelocale.c: Test usage_count against UNDELETABLE, not
+	MAX_USAGE_COUNT.
+	* locale/setlocale.c: Likewise.
+
+1997-12-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile ($(inst_includedir)/gnu/stubs.h): Use a more direct
+	dependency to make it easier to install it selectively.
+
+	* Makerules (.SUFFIXES): Don't define any suffixes.
+
+1997-12-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/fstatfs64.c: Emulate using fstatfs.
+	* sysdeps/generic/statfs64.c: Emulate using statfs.
+	* sysdeps/generic/getrlimit64.c: Emulate using getrlimit.
+	* sysdeps/generic/setrlimit64.c: Emulate using setrlimit.
+	* sysdpes/generic/ftruncate64.c: New file.
+	* sysdpes/generic/truncate64.c: New file.
+
+	* sysdeps/generic/bits/stat.h: Add LFS support.
+	* sysdeps/generic/bits/statfs.h: Likewise.
+
+	* sysdeps/unix/bsd/sun/sunos4/bits/resource.h (RLIM_INFINITY)
+	[__USE_FILE_OFFSET64]: Make long long constant.
+	(RLIM64_INFINITY): Likewise.
+
+	* sysdeps/unix/sysv/linux/bits/resource.h (RLIM_INFINITY): Correct
+	for LFS support.
+	(RLIM64_INFINITY) [__USE_LARGEFILE64]: Define.
+	* sysdeps/generic/bits/resource.h: Likewise.
+
+	* misc/Makefile (routines): Add truncate64 and ftruncate64.
+
+	* include/features.h: Don't prevent LFS support from defining BSD
+	and SYSV things.
+
+	* dirent/dirent.h [__USE_FILE_OFFSET64]: Don't use xxx64 names.
+	* io/ftw.h [__USE_FILE_OFFSET64]: Likewise.
+	* io/sys/stat.h [__USE_FILE_OFFSET64]: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add xxx64 alias for
+	fstatfs, statfs, getrlimit, setrlimit, ftruncate and truncate.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/fstatfs64.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/statfs64.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/getrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/setrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/ftruncate64.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/truncate64.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/readdir.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/readdir64.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/readdir64_r.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/readdir_r.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/fstatfs64.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/statfs64.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/getrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/setrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/ftruncate64.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/truncate64.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/readdir.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/readdir64.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/readdir64_r.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/readdir_r.c: New file.
+
+	* sysdeps/unix/sysv/linux/fxstat64.c: New file.
+	* sysdeps/unix/sysv/linux/lxstat64.c: New file.
+	* sysdeps/unix/sysv/linux/xstat64.c: New file.
+	* sysdeps/unix/sysv/linux/readdir64.c: New file.
+	* sysdeps/unix/sysv/linux/readdir64_r.c: New file.
+
+	* sysdeps/unix/sysv/linux/getdents64.c: New file.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines)
+	[$(subdir)=dirent]: Add getdents64.
+	* sysdeps/unix/sysv/linux/Dist: Add getdents64.c.
+
+	* sysdeps/unix/sysv/linux/xstatconv.c: LFS support.
+
+1997-12-18 12:07  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/generic/bits/statfs.h (struct statfs64): Added.
+
+	* sysdeps/generic/getrlimit.c: Include <sys/types.h>.
+	* sysdeps/generic/getrlimit64.c: Likewise.
+	* sysdeps/generic/setrlimit.c: Likewise.
+	* sysdeps/generic/setrlimit64.c: Likewise.
+
+1997-12-17 13:57  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/sysv/linux/siglist.c: Fix compile problem if not
+	using versioning.
+
+	* sysdeps/generic/waitid.c: Include <sys/types.h> for id_t.
+
+	* sysdeps/standalone/arm/bits/errno.h (EBUSY): Added.
+
+1997-12-16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locale/programs/ld-ctype.c (ctype_output): Clear out the padding
+	after the codeset name.
+
+1997-12-16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libc.map: Add get_kernel_syms.
+
+1997-12-16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/testrtsig.h (kernel_has_rtsig): Make
+	static.
+	* sysdeps/unix/sysv/linux/testrtsig.h (kernel_has_rtsig):
+	Likewise.  Fix condition.
+
+1997-12-16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libio/Makefile (routines) [$(versioning)=yes]: Add oldiofdopen.
+
+1997-12-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/bits/mathinline.h: Don't define exp2 inline.
+	Define scalbln{,f,l} under __USE_ISOC9X, not __USE_MISC.
+
+1997-12-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/powerpc/syscall.S: Put back.
+	* sysdeps/unix/sysv/linux/powerpc/sigreturn.S: Delete this
+	instead.  Oops.
+
+1997-12-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* configure.in (libc_cv_gcc_alpha_ng_prefix): Correct quoting.
+
+1997-12-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c (catanh_test): Change epsilon.
+	Reported by H.J. Lu.
+
+1997-12-14 19:39  H.J. Lu  <hjl@gnu.org>
+
+	* libc.map (__getpid): Added for linuxthreads.
+
+1997-12-13 21:09  H.J. Lu  <hjl@gnu.org>
+
+	* configure.in (HAVE_DWARF2_UNWIND_INFO_STATIC): Define
+	it if gcc uses static variable in DWARF2 unwind information
+	for exception support.
+
+	* config.h.in (HAVE_DWARF2_UNWIND_INFO_STATIC): New.
+
+	* elf/soinit.c (__libc_global_ctors, _fini): Handle
+	HAVE_DWARF2_UNWIND_INFO_STATIC.
+
+	* libc.map (__register_frame*, __deregister_frame*): Make them
+	global.
+
+1997-12-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c: Add more tests for "normal" values.
+
+1997-12-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdio-common/printf_fphex.c: Fix printing of long double number
+	with a biased exponent of zero.  Fix rounding.
+
+1997-12-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sunrpc/rpc_main.c: Accept new flag -$.
+	* sunrpc/Makefile (rpcgen-cmd): Pass it here.
+
+1997-12-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile ($(inst_slibdir)/libc-$(version).so): Install the
+	dynamic linker first, in case the interface has changed.
+
+1997-12-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* nss/nss_files/files-alias.c (get_next_alias): Fix parameter
+	order.
+
+1997-12-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/tgmath.h: Check for double first, for architectures where
+	sizeof (long double) == sizeof (double).
+
+1997-12-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c: New tests for "normal" values added for most
+	functions.
+
 1997-12-14 21:33  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.91.

@@ -28,8 +28,10 @@
    should be used to obtain the actual value.  */
 
 #ifndef _XOPEN_LIM_H
-
 #define _XOPEN_LIM_H	1
+
+#define __need_FOPEN_MAX
+#include <bits/stdio_lim.h>
 
 /* We do not provide fixed values for
 
@@ -57,7 +59,7 @@
 #define IOV_MAX		_XOPEN_IOV_MAX
 
 /* The number of streams that one process can have open at one time.  */
-#define STREAM_MAX	_POSIX_STREAM_MAX
+#define STREAM_MAX	FOPEN_MAX
 
 /* Maximum number of bytes supported for the name of a time zone.  */
 #define TZNAME_MAX	_POSIX_TZNAME_MAX

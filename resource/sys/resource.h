@@ -21,10 +21,13 @@
 
 #include <features.h>
 
-__BEGIN_DECLS
-
 /* Get the system-dependent definitions of structures and bit values.  */
 #include <bits/resource.h>
+
+/* Get the definitions for the `ulimit' function.  */
+#include <ulimit.h>
+
+__BEGIN_DECLS
 
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
@@ -62,16 +65,6 @@ extern int setrlimit64 __P ((enum __rlimit_resource __resource,
 extern int __getrusage __P ((enum __rusage_who __who, struct rusage *__usage));
 extern int getrusage __P ((enum __rusage_who __who, struct rusage *__usage));
 
-/* Function depends on CMD:
-   1 = Return the limit on the size of a file, in units of 512 bytes.
-   2 = Set the limit on the size of a file to NEWLIMIT.  Only the
-       super-user can increase the limit.
-   3 = Return the maximum possible address of the data segment.
-   4 = Return the maximum number of files that the calling process can open.
-   Returns -1 on errors.  */
-extern long int __ulimit __P ((int __cmd, long int __newlimit));
-extern long int ulimit __P ((int __cmd, long int __newlimit));
-
 /* Return the highest priority of any process specified by WHICH and WHO
    (see above); if WHO is zero, the current process, process group, or user
    (as specified by WHO) is used.  A lower priority number means higher
@@ -82,7 +75,6 @@ extern int getpriority __P ((enum __priority_which __which, int __who));
    to PRIO.  Returns 0 on success, -1 on errors.  */
 extern int setpriority __P ((enum __priority_which __which, int __who,
 			     int __prio));
-
 
 __END_DECLS
 

@@ -38,7 +38,7 @@ __freelocale (__locale_t dataset)
   __libc_lock_lock (__libc_setlocale_lock);
 
   for (cnt = 0; cnt < LC_ALL; ++cnt)
-    if (dataset->__locales[cnt]->usage_count != MAX_USAGE_COUNT)
+    if (dataset->__locales[cnt]->usage_count != UNDELETABLE)
       /* We can remove the data.  */
       _nl_remove_locale (cnt, dataset->__locales[cnt]);
 

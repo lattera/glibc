@@ -45,7 +45,7 @@ __duplocale (__locale_t dataset)
       for (cnt = 0; cnt < LC_ALL; ++cnt)
 	{
 	  result->__locales[cnt] = dataset->__locales[cnt];
-	  if (result->__locales[cnt]->usage_count != MAX_USAGE_COUNT)
+	  if (result->__locales[cnt]->usage_count < MAX_USAGE_COUNT)
 	    ++result->__locales[cnt]->usage_count;
 	}
     }

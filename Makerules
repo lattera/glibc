@@ -448,9 +448,7 @@ endif
 endif
 
 # Maximize efficiency by minimizing the number of rules.
-.SUFFIXES:	# Clear the suffix list.
-# Add the suffixes we use.
-.SUFFIXES: .a $(object-suffixes) .S .s .c .h .d
+.SUFFIXES:	# Clear the suffix list.  We don't use suffix rules.
 
 # Generic rule for making directories.
 %/:

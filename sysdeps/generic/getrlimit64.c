@@ -16,17 +16,28 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sys/resource.h>
 #include <errno.h>
+#include <sys/resource.h>
+#include <sys/types.h>
 
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
 int
 getrlimit64 (enum __rlimit_resource resource, struct rlimit64 *rlimits)
 {
-  __set_errno (ENOSYS);
-  return -1;
-}
+  struct rlimit rlimits32;
 
-stub_warning (getrlimit64)
-#include <stub-tag.h>
+  if (getrlimit (resource, &rlimits32) < 0)
+    return -1;
+
+  if (rlimits32.rlim_cur == RLIM_INFINITY)
+    rlimits->rlim_cur = RLIM64_INFINITY;
+  else
+    rlimits->rlim_cur = rlimits32.rlim_cur;
+  if (rlimits32.rlim_max == RLIM_INFINITY)
+    rlimits->rlim_max = RLIM64_INFINITY;
+  else
+    rlimits->rlim_max = rlimits32.rlim_max;
+
+  return 0;
+}

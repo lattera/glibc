@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_MSG_H
-#error "Never use <bits/msq.h> directly; include <sys/msg.h> instead."
+# error "Never use <bits/msq.h> directly; include <sys/msg.h> instead."
 #endif
 
 #include <sys/types.h>
@@ -28,7 +28,7 @@
 
 
 /* Structure of record for one message inside the kernel.
-   The type `struct __msg' is opaque.  */
+   The type `struct msg' is opaque.  */
 struct msqid_ds
 {
   struct ipc_perm msg_perm;	/* structure describing operation permission */
@@ -42,17 +42,17 @@ struct msqid_ds
   unsigned short int __msg_cbytes;/* current number of bytes on queue */
   unsigned short int msg_qnum;	/* number of messages currently on queue */
   unsigned short int msg_qbytes;/* max number of bytes allowed on queue */
-  int msg_lspid;		/* pid of last msgsnd() */
-  int msg_lrpid;		/* pid of last msgrcv() */
+  __ipc_pid_t msg_lspid;	/* pid of last msgsnd() */
+  __ipc_pid_t msg_lrpid;	/* pid of last msgrcv() */
 };
 
 #ifdef __USE_MISC
 
-#define msg_cbytes	__msg_cbytes
+# define msg_cbytes	__msg_cbytes
 
 /* ipcs ctl commands */
-#define MSG_STAT 11
-#define MSG_INFO 12
+# define MSG_STAT 11
+# define MSG_INFO 12
 
 /* buffer for msgctl calls IPC_INFO, MSG_INFO */
 struct msginfo
@@ -64,7 +64,7 @@ struct msginfo
     int msgmni;
     int msgssz;
     int msgtql;
-    ushort  msgseg;
+    unsigned short int msgseg;
   };
 
 #endif /* __USE_MISC */

@@ -1,4 +1,4 @@
-# @(#)southamerica	7.18
+# @(#)southamerica	7.21
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -28,7 +28,6 @@
 #	-4:00	AST	ADT	Atlantic
 #	-5:00	AST	ADT	Acre
 #
-# See the `africa' file for time zone naming and abbreviation conventions.
 # Earlier editions of these tables used the North American style (e.g. ARST and
 # ARDT for Argentine Standard and Daylight Time), but the following quote
 # suggests that it's better to use European style (e.g. ART and ARST).

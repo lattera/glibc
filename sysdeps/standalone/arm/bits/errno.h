@@ -56,6 +56,7 @@
 # define EIO		28
 # define ENOSPC		29
 # define EEXIST		30
+# define EBUSY		31
 #endif
 
 #define __set_errno(val) errno = (val)

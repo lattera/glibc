@@ -48,7 +48,7 @@
 
 	default:
 	  af = (_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET;
-	  addr_size = (af == AF_INET6 ) ? IN6ADDRSZ : INADDRSZ;
+	  addr_size = af == AF_INET6 ? IN6ADDRSZ : INADDRSZ;
 	  break;
 	}
 

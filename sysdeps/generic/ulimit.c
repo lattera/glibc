@@ -16,8 +16,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sys/resource.h>
 #include <errno.h>
+#include <sys/resource.h>
 
 /* Function depends on CMD:
    1 = Return the limit on the size of a file, in units of 512 bytes.
@@ -28,9 +28,7 @@
        can open.
    Returns -1 on errors.  */
 long int
-__ulimit (cmd, newlimit)
-     int cmd;
-     long int newlimit;
+__ulimit (int cmd, ...)
 {
   __set_errno (ENOSYS);
   return -1;

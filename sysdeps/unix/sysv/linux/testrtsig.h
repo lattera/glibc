@@ -21,10 +21,10 @@
 #include <string.h>
 #include <sys/utsname.h>
 
-int
+static int
 kernel_has_rtsig (void)
 {
   struct utsname name;
 
-  return uname (&name) < 0 || __strverscmp (name.release, "2.1.70") >= 0;
+  return uname (&name) == 0 && __strverscmp (name.release, "2.1.70") >= 0;
 }

@@ -16,10 +16,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
-#include <sys/resource.h>
-#include <unistd.h>
 #include <errno.h>
+#include <stdarg.h>
+#include <sysdep.h>
+#include <unistd.h>
+#include <sys/resource.h>
 
 #ifndef	 HAVE_GNU_LD
 #define	 _etext	etext
@@ -36,51 +37,50 @@ extern int _etext;
        can open.
    Returns -1 on errors.  */
 long int
-ulimit (cmd, newlimit)
-     int cmd;
-     long int newlimit;
+ulimit (int cmd, ...)
 {
-  int status;
+  struct rlimit limit;
+  va_list va;
+  long int result = -1;
+
+  va_start (va, cmd);
 
   switch (cmd)
     {
-    case 1:
-      {
-	/* Get limit on file size.  */
-	struct rlimit fsize;
-
-	status = getrlimit (RLIMIT_FSIZE, &fsize);
-	if (status < 0)
-	  return -1;
-
+    case UL_GETFSIZE:
+      /* Get limit on file size.  */
+      if (getrlimit (RLIMIT_FSIZE, &limit) == 0)
 	/* Convert from bytes to 512 byte units.  */
-	return fsize.rlim_cur / 512;
-      }
-    case 2:
+	result = limit.rlim_cur / 512;
+      break;
+
+    case UL_SETFSIZE:
       /* Set limit on file size.  */
       {
-	struct rlimit fsize;
-	fsize.rlim_cur = newlimit * 512;
-	fsize.rlim_max = newlimit * 512;
+	long int newlimit = va_arg (va, long int);
 
-	return setrlimit (RLIMIT_FSIZE, &fsize);
+	limit.rlim_cur = newlimit * 512;
+	limit.rlim_max = newlimit * 512;
+
+	result = setrlimit (RLIMIT_FSIZE, &limit);
       }
-    case 3:
+      break;
+
+    case __UL_GETMAXBRK:
       /* Get maximum address for `brk'.  */
-      {
-	struct rlimit dsize;
+      if (getrlimit (RLIMIT_DATA, &limit) == 0)
+	result = ((long int) &_etext) + limit.rlim_cur;
+      break;
 
-	status = getrlimit (RLIMIT_DATA, &dsize);
-	if (status < 0)
-	  return -1;
-
-	return ((long int) &_etext) + dsize.rlim_cur;
-      }
-    case 4:
-      return sysconf (_SC_OPEN_MAX);
+    case __UL_GETOPENMAX:
+      result = sysconf (_SC_OPEN_MAX);
+      break;
 
     default:
       __set_errno (EINVAL);
-      return -1;
     }
+
+  va_end (va);
+
+  return result;
 }

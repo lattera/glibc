@@ -25,8 +25,21 @@
 int
 fstatfs64 (int fd, struct statfs64 *buf)
 {
-  __set_errno (ENOSYS);
-  return -1;
+  struct statfs buf32;
+
+  if (fstatfs (fd, &buf32) < 0)
+    return -1;
+
+  buf->f_type = buf32.f_type;
+  buf->f_bsize = buf32.f_bsize;
+  buf->f_blocks = buf32.f_blocks;
+  buf->f_bfree = buf32.f_bfree;
+  buf->f_bavail = buf32.f_bavail;
+  buf->f_files = buf32.f_files;
+  buf->f_ffree = buf32.f_ffree;
+  buf->f_fsid = buf32.f_fsid;
+  buf->f_namelen = buf32.f_namelen;
+  memcpy (buf->f_spare, buf32.f_spare, sizeof (buf32.f_spare));
+
+  return 0;
 }
-stub_warning (fstatfs64)
-#include <stub-tag.h>

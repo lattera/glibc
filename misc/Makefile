@@ -48,7 +48,7 @@ routines := brk sbrk sstk ioctl \
 	    ptrace \
 	    fstab mntent mntent_r \
 	    utimes \
-	    truncate ftruncate \
+	    truncate ftruncate truncate64 ftruncate64 \
 	    chflags fchflags \
 	    insremque getttyent getusershell getpass ttyslot \
 	    syslog syscall daemon \

@@ -114,7 +114,9 @@ include ../Rules
 $(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) $(common-objpfx)libc.a
 	$(+link)
 
-rpcgen-cmd = $(built-program-cmd)
+# Tell rpcgen that it should unset LD_LIBRARY_PATH before executing the
+# preprocessor.
+rpcgen-cmd = $(built-program-cmd) -$$
 
 # The proper file name is longer than 14 chars, so we install it under
 # a shorter name.  But if the filesystem can handle it, we want to

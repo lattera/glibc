@@ -151,7 +151,7 @@ internal_nis_getprotoent_r (struct protoent *proto,
 
       if (next == NULL)
         return NSS_STATUS_NOTFOUND;
-      p = strcpy (buffer, next->val);
+      p = strncpy (buffer, next->val, buflen);
 
       while (isspace (*p))
         ++p;

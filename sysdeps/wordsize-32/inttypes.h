@@ -313,20 +313,29 @@ typedef unsigned long long int uint_fast64_t;
 /* Macros for printing format specifiers.  */
 
 /* Decimal notation.  */
+#define SCNd8		"hhd"
 #define SCNd16		"hd"
 #define SCNd32		"d"
 #define SCNd64		"lld"
 
+#define SCNi8		"hhi"
 #define SCNi16		"hi"
 #define SCNi32		"i"
 #define SCNi64		"lli"
 
+#define SCNu8		"hhu"
+#define SCNu16		"hu"
+#define SCNu32		"u"
+#define SCNu64		"llu"
+
 /* Octal notation.  */
+#define SCNo8		"hho"
 #define SCNo16		"ho"
 #define SCNo32		"o"
 #define SCNo64		"llo"
 
 /* Hexadecimal notation.  */
+#define SCNx8		"hhx"
 #define SCNx16		"hx"
 #define SCNx32		"x"
 #define SCNx64		"llx"

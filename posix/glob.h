@@ -19,13 +19,11 @@
 #define	_GLOB_H	1
 
 #ifdef	__cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #undef	__ptr_t
-#if (defined __cplusplus || (defined __STDC__ && __STDC__) \
-     || defined WINDOWS32)
+#if defined __cplusplus || (defined __STDC__ && __STDC__) || defined WINDOWS32
 # undef	__P
 # define __P(protos)	protos
 # define __ptr_t	void *
@@ -78,6 +76,14 @@ extern "C"
 /* Previous versions of this file defined GLOB_ABEND instead of
    GLOB_ABORTED.  Provide a compatibility definition here.  */
 # define GLOB_ABEND GLOB_ABORTED
+#endif
+
+/* This value is returned if the implementation does not support
+   `glob'.  Since this is not the case here it will never be
+   returned but the conformance test suites still require the symbol
+   to be defined.  */
+#if (_XOPEN_SOURCE - 0) == 500
+# define GLOB_NOSYS	(-1)
 #endif
 
 /* Structure describing a globbing run.  */

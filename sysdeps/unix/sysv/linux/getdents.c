@@ -46,6 +46,10 @@ struct kernel_dirent
     char d_name[256];
   };
 
+#ifdef GETDENTS64
+#define __getdirentries __getdirentries64
+#define dirent dirent64
+#endif
 
 /* The problem here is that we cannot simply read the next NBYTES
    bytes.  We need to take the additional field into account.  We use
@@ -111,4 +115,6 @@ __getdirentries (fd, buf, nbytes, basep)
   return (char *) dp - buf;
 }
 
+#ifndef GETDENTS64
 weak_alias (__getdirentries, getdirentries)
+#endif

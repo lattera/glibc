@@ -32,6 +32,11 @@ __BEGIN_DECLS
    numbers and flag bits for `open', `fcntl', et al.  */
 #include <bits/fcntl.h>
 
+/* For Unix98 all symbols from <sys/stat.h> should also be available.  */
+#ifdef __USE_UNIX98
+# include <sys/stat.h>
+#endif
+
 #ifdef	__USE_MISC
 # ifndef R_OK			/* Verbatim from <unistd.h>.  Ugh.  */
 /* Values for the second argument to access.
@@ -76,7 +81,8 @@ extern int creat __P ((__const char *__file, __mode_t __mode))
 extern int creat64 __P ((__const char *__file, __mode_t __mode));
 #endif
 
-#if !defined F_LOCK && (defined __USE_MISC || defined __USE_XOPEN_EXTENDED)
+#if !defined F_LOCK && (defined __USE_MISC || (defined __USE_XOPEN_EXTENDED \
+					       && !defined __USE_POSIX))
 /* NOTE: These declarations also appear in <unistd.h>; be sure to keep both
    files consistent.  Some systems have them there and some here, and some
    software depends on the macros being defined without including both.  */

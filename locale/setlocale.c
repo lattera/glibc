@@ -312,8 +312,8 @@ setlocale (int category, const char *locale)
 
 	  /* We must not simply free a global locale since we have no
 	     control over the usage.  So we mark it as un-deletable.  */
-	  if (newdata[category]->usage_count != MAX_USAGE_COUNT)
-	    newdata[category]->usage_count = MAX_USAGE_COUNT;
+	  if (newdata[category]->usage_count != UNDELETABLE)
+	    newdata[category]->usage_count = UNDELETABLE;
 	}
 
       /* Create new composite name.  */
@@ -362,8 +362,8 @@ setlocale (int category, const char *locale)
 
 	     Note: do ont remove the `if', it's necessary to copy with
 	     the builtin locale data.  */
-	  if (newdata->usage_count != MAX_USAGE_COUNT)
-	    newdata->usage_count = MAX_USAGE_COUNT;
+	  if (newdata->usage_count != UNDELETABLE)
+	    newdata->usage_count = UNDELETABLE;
 	}
 
       /* Create new composite name.  */

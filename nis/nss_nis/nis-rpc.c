@@ -168,7 +168,7 @@ internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
     {
       if (data->next == NULL)
         return NSS_STATUS_NOTFOUND;
-      p = strcpy (buffer, data->next->val);
+      p = strncpy (buffer, data->next->val, buflen);
       while (isspace (*p))
         ++p;
 

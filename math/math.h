@@ -262,7 +262,7 @@ extern int matherr __P ((struct exception *__exc));
 #endif	/* SVID */
 
 
-#ifdef __USE_BSD
+#if defined __USE_BSD || defined __USE_UNIX98
 
 /* Some useful constants.  */
 # define M_E		_Mldbl(2.7182818284590452354)	/* e */
@@ -292,7 +292,7 @@ extern int matherr __P ((struct exception *__exc));
 
    Please note we define the macro even if the constants are not defined.
    This helps us to use the macros in other places.  */
-#if __STDC__ - 0 || __GNUC__ - 0
+#if (__STDC__ - 0 || __GNUC__ - 0) && defined __USE_GNU
 # define _Mldbl(x) x##L
 #else	/* Traditional C.  */
 # define _Mldbl(x) x

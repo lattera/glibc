@@ -33,6 +33,12 @@ __BEGIN_DECLS
 #include <stddef.h>
 
 
+/* For the Single Unix specification we must define this type here.  */
+#if defined __USE_UNIX98 && !defined gid_t
+typedef __gid_t gid_t;
+# define gid_t gid_t
+#endif
+
 /* The group structure.	 */
 struct group
   {

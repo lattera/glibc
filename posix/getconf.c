@@ -20,9 +20,13 @@
 #include <errno.h>
 #include <error.h>
 #include <libintl.h>
+#include <locale.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#include "../version.h"
+#define PACKAGE _libc_intl_domainname
 
 struct conf
   {
@@ -148,6 +152,9 @@ static const struct conf vars[] =
     { "_T_IOV_MAX", _SC_T_IOV_MAX, SYSCONF },
     { "_XOPEN_CRYPT", _SC_XOPEN_CRYPT, SYSCONF },
     { "_XOPEN_ENH_I18N", _SC_XOPEN_ENH_I18N, SYSCONF },
+    { "_XOPEN_LEGACY", _SC_XOPEN_LEGACY, SYSCONF },
+    { "_XOPEN_REALTIME", _SC_XOPEN_REALTIME, SYSCONF },
+    { "_XOPEN_REALTIME_THREADS", _SC_XOPEN_REALTIME_THREADS, SYSCONF },
     { "_XOPEN_SHM", _SC_XOPEN_SHM, SYSCONF },
     { "_XOPEN_UNIX", _SC_XOPEN_UNIX, SYSCONF },
     { "_XOPEN_VERSION", _SC_XOPEN_VERSION, SYSCONF },
@@ -198,6 +205,31 @@ static const struct conf vars[] =
     { "LFS64_LIBS", _CS_LFS64_LIBS, CONFSTR },
     { "LFS64_LINTFLAGS", _CS_LFS64_LINTFLAGS, CONFSTR },
 
+    /* Programming environments.  */
+    { "XBS5_ILP32_OFF32", _SC_XBS5_ILP32_OFF32, SYSCONF },
+    { "XBS5_ILP32_OFF32_CFLAGS", _CS_XBS5_ILP32_OFF32_CFLAGS, CONFSTR },
+    { "XBS5_ILP32_OFF32_LDFLAGS", _CS_XBS5_ILP32_OFF32_LDFLAGS, CONFSTR },
+    { "XBS5_ILP32_OFF32_LIBS", _CS_XBS5_ILP32_OFF32_LIBS, CONFSTR },
+    { "XBS5_ILP32_OFF32_LINTFLAGS", _CS_XBS5_ILP32_OFF32_LINTFLAGS, CONFSTR },
+
+    { "XBS5_ILP32_OFFBIG", _SC_XBS5_ILP32_OFFBIG, SYSCONF },
+    { "XBS5_ILP32_OFFBIG_CFLAGS", _CS_XBS5_ILP32_OFFBIG_CFLAGS, CONFSTR },
+    { "XBS5_ILP32_OFFBIG_LDFLAGS", _CS_XBS5_ILP32_OFFBIG_LDFLAGS, CONFSTR },
+    { "XBS5_ILP32_OFFBIG_LIBS", _CS_XBS5_ILP32_OFFBIG_LIBS, CONFSTR },
+    { "XBS5_ILP32_OFFBIG_LINTFLAGS", _CS_XBS5_ILP32_OFFBIG_LINTFLAGS, CONFSTR },
+
+    { "XBS5_LP64_OFF64", _SC_XBS5_LP64_OFF64, SYSCONF },
+    { "XBS5_LP64_OFF64_CFLAGS", _CS_XBS5_LP64_OFF64_CFLAGS, CONFSTR },
+    { "XBS5_LP64_OFF64_LDFLAGS", _CS_XBS5_LP64_OFF64_LDFLAGS, CONFSTR },
+    { "XBS5_LP64_OFF64_LIBS", _CS_XBS5_LP64_OFF64_LIBS, CONFSTR },
+    { "XBS5_LP64_OFF64_LINTFLAGS", _CS_XBS5_LP64_OFF64_LINTFLAGS, CONFSTR },
+
+    { "XBS5_LPBIG_OFFBIG", _SC_XBS5_LPBIG_OFFBIG, SYSCONF },
+    { "XBS5_LPBIG_OFFBIG_CFLAGS", _CS_XBS5_LPBIG_OFFBIG_CFLAGS, CONFSTR },
+    { "XBS5_LPBIG_OFFBIG_LDFLAGS", _CS_XBS5_LPBIG_OFFBIG_LDFLAGS, CONFSTR },
+    { "XBS5_LPBIG_OFFBIG_LIBS", _CS_XBS5_LPBIG_OFFBIG_LIBS, CONFSTR },
+    { "XBS5_LPBIG_OFFBIG_LINTFLAGS", _CS_XBS5_LPBIG_OFFBIG_LINTFLAGS, CONFSTR },
+
     { NULL, 0, SYSCONF }
   };
 
@@ -215,6 +247,26 @@ int
 main (int argc, char *argv[])
 {
   register const struct conf *c;
+
+  /* Set locale.  Do not set LC_ALL because the other categories must
+     not be affected (according to POSIX.2).  */
+  setlocale (LC_CTYPE, "");
+  setlocale (LC_MESSAGES, "");
+
+  /* Initialize the message catalog.  */
+  textdomain (PACKAGE);
+
+  if (argc > 1 && strcmp (argv[1], "--version") == 0)
+    {
+      fprintf (stderr, "getconf (GNU %s) %s\n", PACKAGE, VERSION);
+      fprintf (stderr, gettext ("\
+Copyright (C) %s Free Software Foundation, Inc.\n\
+This is free software; see the source for copying conditions.  There is NO\n\
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
+"), "1991, 1992, 1995, 1996, 1997");
+      fprintf (stderr, gettext ("Written by %s.\n"), "Roland McGrath");
+      return 0;
+    }
 
   if (argc < 2 || argc > 3)
     usage ();

@@ -43,7 +43,7 @@ all: # Make this the default target; it will be defined in Rules.
 include ../Makeconfig
 
 ifeq ($(versioning),yes)
-routines += oldiofopen oldiofclose oldiofclose
+routines += oldiofopen oldiofdopen oldiofclose oldiofclose
 endif
 
 CPPFLAGS-.o += -DIO_DEBUG

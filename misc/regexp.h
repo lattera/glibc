@@ -98,7 +98,7 @@ extern char *locs;
    This function cannot be defined in the libc itself since it depends
    on the macros.  */
 char *
-compile (char *__instring, char *__expbuf, __const char *__endbuf, int __eof)
+compile (char *instring, char *expbuf, __const char *endbuf, int eof)
 {
   char *__input_buffer = NULL;
   size_t __input_size = 0;
@@ -118,19 +118,19 @@ compile (char *__instring, char *__expbuf, __const char *__endbuf, int __eof)
      this really proofs to be wrong.  */
   const size_t __req = 8;
 # endif
-  __expbuf += __req;
-  __expbuf -= (__expbuf - ((char *) 0)) % __req;
-  if (__endbuf < __expbuf + sizeof (regex_t))
+  expbuf += __req;
+  expbuf -= (expbuf - ((char *) 0)) % __req;
+  if (endbuf < expbuf + sizeof (regex_t))
     {
       ERROR (50);
     }
-  __expr_ptr = (regex_t *) __expbuf;
+  __expr_ptr = (regex_t *) expbuf;
   /* The remaining space in the buffer can be used for the compiled
      pattern.  */
-  __expr_ptr->buffer = __expbuf + sizeof (regex_t);
-  __expr_ptr->allocated = __endbuf -  (char *) __expr_ptr->buffer;
+  __expr_ptr->buffer = expbuf + sizeof (regex_t);
+  __expr_ptr->allocated = endbuf -  (char *) __expr_ptr->buffer;
 
-  while ((__ch = (GETC ())) != __eof)
+  while ((__ch = (GETC ())) != eof)
     {
       if (__ch == '\0' || __ch == 'n')
 	{

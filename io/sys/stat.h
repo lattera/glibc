@@ -27,24 +27,78 @@
 
 #include <bits/types.h>		/* For __mode_t and __dev_t.  */
 
+#ifdef __USE_UNIX98
+/* The Single Unix specification says that some more types are
+   available here.  */
+# ifndef dev_t
+typedef __dev_t dev_t;
+#  define dev_t dev_t
+# endif
+
+# ifndef gid_t
+typedef __gid_t gid_t;
+#  define gid_t gid_t
+# endif
+
+# ifndef ino_t
+#  ifndef __USE_FILE_OFFSET64
+typedef __ino_t ino_t;
+#  else
+typedef __ino64_t ino_t;
+#  endif
+#  define ino_t ino_t
+# endif
+
+# ifndef mode_t
+typedef __mode_t mode_t;
+#  define mode_t mode_t
+# endif
+
+# ifndef nlink_t
+typedef __nlink_t nlink_t;
+#  define nlink_t nlink_t
+# endif
+
+# ifndef off_t
+#  ifndef __USE_FILE_OFFSET64
+typedef __off_t off_t;
+#  else
+typedef __off64_t off_t;
+#  endif
+#  define off_t off_t
+# endif
+
+# ifndef uid_t
+typedef __uid_t uid_t;
+#  define uid_t uid_t
+# endif
+
+# ifndef pid_t
+typedef __pid_t pid_t;
+#  define pid_t pid_t
+# endif
+#endif	/* Unix98 */
+
 __BEGIN_DECLS
 
 #include <bits/stat.h>
 
-#if defined __USE_BSD || defined __USE_MISC
+#if defined __USE_BSD || defined __USE_MISC || defined __USE_UNIX98
 # define S_IFMT		__S_IFMT
 # define S_IFDIR	__S_IFDIR
 # define S_IFCHR	__S_IFCHR
 # define S_IFBLK	__S_IFBLK
 # define S_IFREG	__S_IFREG
-# ifdef __S_IFLNK
-#  define S_IFLNK	__S_IFLNK
-# endif
-# ifdef __S_IFSOCK
-#  define S_IFSOCK	__S_IFSOCK
-# endif
 # ifdef __S_IFIFO
 #  define S_IFIFO	__S_IFIFO
+# endif
+# ifndef __USE_UNIX98
+#  ifdef __S_IFLNK
+#   define S_IFLNK	__S_IFLNK
+#  endif
+#  ifdef __S_IFSOCK
+#   define S_IFSOCK	__S_IFSOCK
+#  endif
 # endif
 #endif
 
@@ -221,15 +275,25 @@ extern int mkfifo __P ((__const char *__path, __mode_t __mode));
 #endif
 
 /* Wrappers for stat and mknod system calls.  */
+#ifndef __USE_FILE_OFFSET64
 extern int __fxstat __P ((int __ver, int __fildes,
 			  struct stat *__stat_buf));
 extern int __xstat __P ((int __ver, __const char *__filename,
 			 struct stat *__stat_buf));
 extern int __lxstat __P ((int __ver, __const char *__filename,
 			  struct stat *__stat_buf));
-extern int __xmknod __P ((int __ver, __const char *__path,
-			  __mode_t __mode, __dev_t *__dev));
-#if defined __USE_LARGEFILE64 || defined __USE_FILE_OFFSET64
+#else
+extern int __fxstat __P ((int __ver, int __fildes,
+			  struct stat *__stat_buf))
+     __asm__ ("__fxstat64");
+extern int __xstat __P ((int __ver, __const char *__filename,
+			 struct stat *__stat_buf))
+     __asm__ ("__xstat64");
+extern int __lxstat __P ((int __ver, __const char *__filename,
+			  struct stat *__stat_buf))
+     __asm__ ("__lxstat64");
+#endif
+#ifdef __USE_LARGEFILE64
 extern int __fxstat64 __P ((int __ver, int __fildes,
 			    struct stat64 *__stat_buf));
 extern int __xstat64 __P ((int __ver, __const char *__filename,
@@ -237,61 +301,39 @@ extern int __xstat64 __P ((int __ver, __const char *__filename,
 extern int __lxstat64 __P ((int __ver, __const char *__filename,
 			    struct stat64 *__stat_buf));
 #endif
+extern int __xmknod __P ((int __ver, __const char *__path,
+			  __mode_t __mode, __dev_t *__dev));
 
 #if defined __GNUC__ && __GNUC__ >= 2
 /* Inlined versions of the real stat and mknod functions.  */
 
 extern __inline__ int __stat (__const char *__path, struct stat *__statbuf)
 {
-# ifndef __USE_FILE_OFFSET64
   return __xstat (_STAT_VER, __path, __statbuf);
-# else
-  return __xstat64 (_STAT_VER, __path, __statbuf);
-# endif
 }
 extern __inline__ int stat (__const char *__path, struct stat *__statbuf)
 {
-# ifndef __USE_FILE_OFFSET64
   return __xstat (_STAT_VER, __path, __statbuf);
-# else
-  return __xstat64 (_STAT_VER, __path, __statbuf);
-# endif
 }
 
 extern __inline__ int __lstat (__const char *__path, struct stat *__statbuf)
 {
-# ifndef __USE_FILE_OFFSET64
   return __lxstat (_STAT_VER, __path, __statbuf);
-# else
-  return __lxstat64 (_STAT_VER, __path, __statbuf);
-# endif
 }
 # if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 extern __inline__ int lstat (__const char *__path, struct stat *__statbuf)
 {
-#  ifndef __USE_FILE_OFFSET64
   return __lxstat (_STAT_VER, __path, __statbuf);
-#  else
-  return __lxstat64 (_STAT_VER, __path, __statbuf);
-#  endif
 }
 # endif
 
 extern __inline__ int __fstat (int __fd, struct stat *__statbuf)
 {
-# ifndef __USE_FILE_OFFSET64
   return __fxstat (_STAT_VER, __fd, __statbuf);
-# else
-  return __fxstat64 (_STAT_VER, __fd, __statbuf);
-# endif
 }
 extern __inline__ int fstat (int __fd, struct stat *__statbuf)
 {
-# ifndef __USE_FILE_OFFSET64
   return __fxstat (_STAT_VER, __fd, __statbuf);
-# else
-  return __fxstat64 (_STAT_VER, __fd, __statbuf);
-# endif
 }
 
 extern __inline__ int __mknod (__const char *__path, __mode_t __mode,

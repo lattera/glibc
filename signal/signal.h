@@ -32,11 +32,17 @@ __BEGIN_DECLS
 #include <bits/types.h>
 #include <bits/sigset.h>		/* __sigset_t, __sig_atomic_t.  */
 
+#if defined _SIGNAL_H && defined __USE_UNIX98 && !defined pid_t
+typedef __pid_t pid_t;
+# define pid_t pid_t
+#endif	/* Unix98 */
+
 #if !defined __sig_atomic_t_defined \
     && (defined _SIGNAL_H || defined __need_sig_atomic_t)
 /* An integral type that can be modified atomically, without the
    possibility of a signal arriving in the middle of the operation.  */
 typedef __sig_atomic_t sig_atomic_t;
+# define __sig_atomic_t_defined
 #endif /* `sig_atomic_t' undefined and <signal.h> or need `sig_atomic_t'.  */
 #undef __need_sig_atomic_t
 

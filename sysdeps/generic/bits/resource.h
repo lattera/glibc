@@ -66,10 +66,19 @@ enum __rlimit_resource
 
     RLIMIT_NLIMITS,		/* Number of limit flavors.  */
     RLIM_NLIMITS = RLIMIT_NLIMITS, /* Traditional name for same.  */
-
-    RLIM_INFINITY = 0x7fffffff /* Value to indicate that there is no limit.  */
-#define RLIM_INFINITY RLIM_INFINITY
   };
+
+/* Value to indicate that there is no limit.  */
+#ifndef __USE_FILE_OFFSET64
+# define RLIM_INFINITY 0x7fffffff
+#else
+# define RLIM_INFINITY 0x7fffffffffffffffLL
+#endif
+
+#ifdef __USE_LARGEFILE64
+# define RLIM64_INFINITY 0x7fffffffffffffffLL
+#endif
+
 
 /* Type for resource quantity measurement.  */
 #ifndef __USE_FILE_OFFSET64

@@ -657,7 +657,8 @@ show_info (const char *name)
 	  break;
 	case word:
 	  {
-	    unsigned int val = (unsigned int) nl_langinfo (item->item_id);
+	    unsigned int val =
+	      (unsigned int) (unsigned long int) nl_langinfo (item->item_id);
 	    printf ("%d", val);
 	  }
 	  break;

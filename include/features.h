@@ -109,7 +109,6 @@
 #if defined _BSD_SOURCE && \
     !(defined _POSIX_SOURCE || defined _POSIX_C_SOURCE || \
       defined _XOPEN_SOURCE || defined _XOPEN_SOURCE_EXTENDED || \
-      defined _LARGEFILE64_SOURCE || defined _FILE_OFFSET_BITS || \
       defined _GNU_SOURCE || defined _SVID_SOURCE)
 # define __FAVOR_BSD	1
 #endif
@@ -139,7 +138,6 @@
 #if (!defined __STRICT_ANSI__ && !defined _ISOC9X_SOURCE && \
      !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE && \
      !defined _XOPEN_SOURCE && !defined _XOPEN_SOURCE_EXTENDED && \
-     !defined _LARGEFILE64_SOURCE && !defined _FILE_OFFSET_BITS && \
      !defined _BSD_SOURCE && !defined _SVID_SOURCE)
 # define _BSD_SOURCE	1
 # define _SVID_SOURCE	1
@@ -171,13 +169,8 @@
 # define __USE_POSIX2	1
 #endif
 
-#ifdef _POSIX_C_SOURCE
-# if _POSIX_C_SOURCE >= 199309L
-#  define __USE_POSIX199309	1
-# endif
-# ifndef _XOPEN_SOURCE
-#  define _XOPEN_SOURCE	500
-# endif
+#if (_POSIX_C_SOURCE - 0) >= 199309L
+# define __USE_POSIX199309	1
 #endif
 
 #ifdef	_XOPEN_SOURCE
