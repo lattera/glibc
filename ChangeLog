@@ -1,5 +1,9 @@
 1999-08-06  Ulrich Drepper  <drepper@cygnus.com>
 
+	* rt/aio_misc.c (handle_fildes_io): Imitate the behaviour on other
+	systems which allow using the functions also on non-seekable
+	devices.
+
 	* resolv/res_send.c (res_send): Recompute timeout for poll for
 	each jump to `wait'.
 
