@@ -356,7 +356,13 @@ _dl_deallocate_tls (void *tcb, bool dealloc_tcb)
   free (dtv - 1);
 
   if (dealloc_tcb)
-    free (tcb);
+    {
+# if TLS_TCB_AT_TP
+      /* The TCB follows the TLS blocks.  Back up to free the whole block.  */
+      tcb -= GL(dl_tls_static_size) - TLS_TCB_SIZE;
+# endif
+      free (tcb);
+    }
 }
 
 

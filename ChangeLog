@@ -1,3 +1,14 @@
+2002-10-15  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/dl-tls.c (_dl_deallocate_tls) [TLS_TCB_AT_TP]:
+	Adjust TCB pointer before calling free, so we get the whole block.
+
+2002-10-14  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sigaction.c
+	[HAVE_HIDDEN && !HAVE_BROKEN_VISIBILITY_ATTRIBUTE]: Declare restore_rt
+	extern using attribute_hidden instead of static, avoids warning.
+
 2002-10-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/configure.in: Use */lib64 for s390x too.
