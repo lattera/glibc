@@ -15,9 +15,9 @@ extern char *__initstate (unsigned int __seed, char *__statebuf,
 extern char *__setstate (char *__statebuf);
 extern int __random_r (struct random_data *__buf, int32_t *__result);
 extern int __srandom_r (unsigned int __seed, struct random_data *__buf);
-extern int __initstate_r (unsigned int __seed, void *__statebuf,
+extern int __initstate_r (unsigned int __seed, char *__statebuf,
 			  size_t __statelen, struct random_data *__buf);
-extern int __setstate_r (void *__statebuf, struct random_data *__buf);
+extern int __setstate_r (char *__statebuf, struct random_data *__buf);
 extern int __rand_r (unsigned int *__seed);
 extern int __erand48_r (unsigned short int __xsubi[3],
 			struct drand48_data *__buffer, double *__result);
