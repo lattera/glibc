@@ -36,6 +36,8 @@ routines	:=							      \
 	remove rename							      \
 	lockfile
 
+include ../Makeconfig
+
 install-others := $(inst_includedir)/bits/stdio_lim.h
 
 aux	:= errlist siglist

@@ -1,3 +1,8 @@
+1998-09-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* stdio-common/Makefile: Include Makeconfig so that
+	$(inst_includedir) is defined.
+
 1998-09-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* io/pwd.c: Include <mcheck.h>.
