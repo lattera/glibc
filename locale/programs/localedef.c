@@ -76,6 +76,9 @@ static const char *input_file;
 /* Name of the repertoire map file.  */
 const char *repertoire_global;
 
+/* Name of the locale.alias file.  */
+const char *alias_file;
+
 /* List of all locales.  */
 static struct localedef_t *locales;
 
@@ -140,6 +143,8 @@ static const struct argp_option options[] =
   { "delete-from-archive", OPT_DELETE_FROM_ARCHIVE, NULL, 0,
     N_("Remove locales named by parameters from archive") },
   { "list-archive", OPT_LIST_ARCHIVE, NULL, 0, N_("List content of archive") },
+  { "alias-file", 'A', "FILE", 0,
+    N_("locale.alias file to consult when making archive")},
   { NULL, 0, NULL, 0, NULL }
 };
 
@@ -330,6 +335,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case 'f':
       charmap_file = arg;
+      break;
+    case 'A':
+      alias_file = arg;
       break;
     case 'i':
       input_file = arg;

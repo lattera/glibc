@@ -19,7 +19,8 @@
    02111-1307 USA.  */
 
 #ifndef	LONGBITS
-# define LONGBITS (sizeof (long int) * BITSPERBYTE)
+# include <limits.h>
+# define LONGBITS (sizeof (long int) * CHAR_BIT)
 #endif
 
 unsigned long int compute_hashval (const void *key, size_t keylen);

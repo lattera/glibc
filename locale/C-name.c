@@ -30,7 +30,6 @@ const struct locale_data _nl_C_LC_NAME attribute_hidden =
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
   0,
-  NULL,
   7,
   {
     { string: "%p%t%g%t%m%t%f" },

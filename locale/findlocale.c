@@ -42,8 +42,11 @@ extern struct locale_data *const _nl_C[] attribute_hidden;
    which are somehow addressed.  */
 struct loaded_l10nfile *_nl_locale_file_list[__LC_LAST];
 
+const char _nl_default_locale_path[] attribute_hidden = LOCALEDIR;
+
 
 struct locale_data *
+internal_function
 _nl_find_locale (const char *locale_path, size_t locale_path_len,
 		 int category, const char **name)
 {
@@ -82,6 +85,19 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
       return _nl_C[category];
     }
 
+  /* We really have to load some data.  First we try the archive,
+     but only if there was no LOCPATH environment variable specified.  */
+  if (__builtin_expect (locale_path == NULL, 1))
+    {
+      struct locale_data *data = _nl_load_locale_from_archive (category, name);
+      if (__builtin_expect (data != NULL, 1))
+	return data;
+
+      /* Nothing in the archive.  Set the default path to search below.  */
+      locale_path = _nl_default_locale_path;
+      locale_path_len = sizeof _nl_default_locale_path;
+    }
+
   /* We really have to load some data.  First see whether the name is
      an alias.  Please note that this makes it impossible to have "C"
      or "POSIX" as aliases.  */
@@ -99,7 +115,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 
      Beside the first all of them are allowed to be missing.  If the
      full specified locale is not found, the less specific one are
-     looked for.  The various part will be stripped of according to
+     looked for.  The various part will be stripped off according to
      the following order:
 		(1) codeset
 		(2) normalized codeset
@@ -236,6 +252,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 /* Calling this function assumes the lock for handling global locale data
    is acquired.  */
 void
+internal_function
 _nl_remove_locale (int locale, struct locale_data *data)
 {
   if (--data->usage_count == 0)
@@ -258,7 +275,7 @@ _nl_remove_locale (int locale, struct locale_data *data)
 
 #ifdef _POSIX_MAPPED_FILES
       /* Really delete the data.  First delete the real data.  */
-      if (__builtin_expect (data->mmaped, 1))
+      if (__builtin_expect (data->alloc == ld_mapped, 1))
 	{
 	  /* Try to unmap the area.  If this fails we mark the area as
 	     permanent.  */

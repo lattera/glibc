@@ -177,6 +177,7 @@ bad:
 	freeaddrinfo(res0);
 	return (-1);
 }
+libc_hidden_def (rexec_af)
 
 int
 rexec(ahost, rport, name, pass, cmd, fd2p)

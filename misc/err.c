@@ -108,7 +108,7 @@ vwarnx (const char *format, __gnuc_va_list ap)
     }
   funlockfile (stderr);
 }
-libc_hidden_def (warnx)
+libc_hidden_def (vwarnx)
 
 void
 vwarn (const char *format, __gnuc_va_list ap)
@@ -142,7 +142,7 @@ vwarn (const char *format, __gnuc_va_list ap)
     }
   funlockfile (stderr);
 }
-libc_hidden_def (warnx)
+libc_hidden_def (vwarnx)
 
 
 void

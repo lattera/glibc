@@ -27,7 +27,6 @@ const struct locale_data _nl_C_LC_NUMERIC attribute_hidden =
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
   0,
-  NULL,
   6,
   {
     { string: "." },

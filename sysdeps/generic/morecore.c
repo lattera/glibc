@@ -51,3 +51,4 @@ __default_morecore (increment)
     return NULL;
   return result;
 }
+libc_hidden_def (__default_morecore)

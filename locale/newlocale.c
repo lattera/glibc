@@ -80,19 +80,22 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
   /* We perhaps really have to load some data.  So we determine the
      path in which to look for the data now.  The environment variable
      `LOCPATH' must only be used when the binary has no SUID or SGID
-     bit set.  */
+     bit set.  If using the default path, we tell _nl_find_locale
+     by passing null and it can check the canonical locale archive.  */
   locale_path = NULL;
   locale_path_len = 0;
 
   locpath_var = getenv ("LOCPATH");
   if (locpath_var != NULL && locpath_var[0] != '\0')
-    if (__argz_create_sep (locpath_var, ':',
-			   &locale_path, &locale_path_len) != 0)
-      return NULL;
+    {
+      if (__argz_create_sep (locpath_var, ':',
+			     &locale_path, &locale_path_len) != 0)
+	return NULL;
 
-  if (__argz_append (&locale_path, &locale_path_len,
-		     LOCALEDIR, sizeof (LOCALEDIR)) != 0)
-    return NULL;
+      if (__argz_add_sep (&locale_path, &locale_path_len,
+			  _nl_default_locale_path, ':') != 0)
+	return NULL;
+    }
 
   /* Get the names for the locales we are interested in.  We either
      allow a composite name or a single name.  */

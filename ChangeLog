@@ -1,3 +1,91 @@
+2002-08-09  Roland McGrath  <roland@redhat.com>
+
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Parse locale
+	name to find codeset name (if any) and normalize it.  If the
+	normalized name differs, look up only that in the archive.
+	* locale/programs/locarchive.c (add_locale_to_archive): If the name
+	contains a codeset, normalize the codeset store only the normalized
+	name in the archive.  If not, add an alias containing the locale's
+	normalized codeset name.  Apply codeset name normalization when
+	matching entries in the alias file.
+
+	* locale/programs/locarchive.c (delete_locales_from_archive): Don't
+	decrement HEAD->namehash_used here.
+	(add_locale): Only need to insert name string when name_offset != 0.
+
+	* locale/programs/localedef.c (options): Add -A/--alias-file.
+	(alias_file): New variable.
+	(parse_opt): Grok -A, set that.
+	* locale/programs/localedef.h: Declare it.
+
+	* locale/programs/locarchive.c (insert_name): New function, broken out
+	of ...
+	(add_locale_to_archive): ... here.  Call that.
+	(add_alias): New function.
+	(add_locale): New static function, add_locale_to_archive renamed.
+	(add_locale_to_archive): Call that and use add_alias to add an alias
+	for the name with codeset if the given name lacks it.
+	(enlarge_archive): Call add_locale instead of add_locale_to_archive.
+
+	* locale/Makefile (routines): Add loadarchive.
+	* locale/loadarchive.c: New file, started from code by Ulrich Drepper.
+	(_nl_load_locale_from_archive): New function.
+	* locale/localeinfo.h: Declare it.
+	* locale/findlocale.c (_nl_find_locale): If using default locale path,
+	try _nl_load_locale_from_archive first.
+
+	* locale/loadlocale.c (_nl_intern_locale_data): New function,
+	broken out of _nl_load_locale.
+	(_nl_load_locale): Call that.
+	* locale/localeinfo.h: Declare it.
+	(struct locale_data): Replace member `mmaped' with `alloc', an enum.
+	(struct locale_data): Remove unused member `options'.
+	* locale/findlocale.c (_nl_remove_locale): Update uses.
+	* locale/loadlocale.c (_nl_load_locale, _nl_unload_locale): Likewise.
+	* locale/C-collate.c: Update initializer.
+	* locale/C-identification.c: Likewise.
+	* locale/C-measurement.c: Likewise.
+	* locale/C-telephone.c: Likewise.
+	* locale/C-address.c: Likewise.
+	* locale/C-name.c: Likewise.
+	* locale/C-paper.c: Likewise.
+	* locale/C-time.c: Likewise.
+	* locale/C-numeric.c: Likewise.
+	* locale/C-monetary.c: Likewise.
+	* locale/C-messages.c : Likewise.
+	* locale/C-ctype.c: Likewise.
+
+	* locale/hashval.h [! LONGBITS]: Include <limits.h> here and
+	use CHAR_BIT instead of BITSPERBYTE.
+
+	* locale/localeinfo.h (_nl_find_locale, _nl_load_locale,
+	_nl_unload_locale): Add `internal_function attribute_hidden' to decls.
+	* locale/findlocale.c (_nl_find_locale): Add internal_function to defn.
+	(_nl_remove_locale): Likewise.
+	* locale/loadlocale.c (_nl_load_locale, _nl_unload_locale): Likewise.
+
+	* locale/findlocale.c (_nl_default_locale_path): New variable.
+	(_nl_find_locale): If LOCALE_PATH is null, default to that.
+	* locale/localeinfo.h: Declare it.
+	* locale/setlocale.c (setlocale): Use _nl_default_locale_path
+	in place of LOCALEDIR.  If no LOCPATH, pass null to _nl_find_locale.
+	* locale/newlocale.c (__newlocale): Likewise.
+
+	* misc/err.c (vwarnx, vwarn): Fix typos in libc_hidden_def uses.
+	* inet/rexec.c (rexec_af): Add libc_hidden_def.
+	* sysdeps/generic/morecore.c: Likewise.
+	* signal/allocrtsig.c (__libc_current_sigrtmin): Likewise.
+	(__libc_current_sigrtmax): Likewise.
+
+2002-08-08  Roland McGrath  <roland@redhat.com>
+
+	* locale/loadlocale.c (_nl_load_locale): Don't use MAP_INHERIT.
+	* catgets/open_catalog.c (__open_catalog): Likewise.
+
+	* locale/programs/locarchive.c (INITIAL_NUM_NAMES): Renamed
+	from typo INITIAL_NUM_NANES.
+	(create_archive): Update use.
+
 2002-08-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sigwait.c: New file.

@@ -47,14 +47,17 @@ struct locale_data
   const char *name;
   const char *filedata;		/* Region mapping the file data.  */
   off_t filesize;		/* Size of the file (and the region).  */
-  int mmaped;			/* If nonzero the data is mmaped.  */
+  enum				/* Flavor of storage used for those.  */
+  {
+    ld_malloced,		/* Both are malloc'd.  */
+    ld_mapped,			/* name is malloc'd, filedata mmap'd */
+    ld_archive			/* Both point into mmap'd archive regions.  */
+  } alloc;
 
   unsigned int usage_count;	/* Counter for users.  */
 
   int use_translit;		/* Nonzero if the mb*towv*() and wc*tomb()
 				   functions should use transliteration.  */
-  const char *options;		/* Extra options from the locale name,
-				   not used in the path to the locale data.  */
 
   unsigned int nstrings;	/* Number of strings below.  */
   union locale_data_value
@@ -152,6 +155,7 @@ extern const char _nl_C_codeset[] attribute_hidden;
    Each is malloc'd unless it is _nl_C_name.  */
 extern const char *_nl_current_names[] attribute_hidden;
 
+
 #ifndef SHARED
 
 /* For each category declare the variable for the current locale data.  */
@@ -222,22 +226,50 @@ extern struct __locale_struct _nl_global_locale attribute_hidden;
 #endif
 
 
+/* Default search path if no LOCPATH environment variable.  */
+extern const char _nl_default_locale_path[] attribute_hidden;
+
 /* Load the locale data for CATEGORY from the file specified by *NAME.
-   If *NAME is "", use environment variables as specified by POSIX,
-   and fill in *NAME with the actual name used.  The directories
-   listed in LOCALE_PATH are searched for the locale files.  */
+   If *NAME is "", use environment variables as specified by POSIX, and
+   fill in *NAME with the actual name used.  If LOCALE_PATH is not null,
+   those directories are searched for the locale files.  If it's null,
+   the locale archive is checked first and then _nl_default_locale_path
+   is searched for locale files.  */
 extern struct locale_data *_nl_find_locale (const char *locale_path,
 					    size_t locale_path_len,
-					    int category, const char **name);
+					    int category, const char **name)
+     internal_function attribute_hidden;
 
 /* Try to load the file described by FILE.  */
-extern void _nl_load_locale (struct loaded_l10nfile *file, int category);
+extern void _nl_load_locale (struct loaded_l10nfile *file, int category)
+     internal_function attribute_hidden;
 
 /* Free all resource.  */
-extern void _nl_unload_locale (struct locale_data *locale);
+extern void _nl_unload_locale (struct locale_data *locale)
+     internal_function attribute_hidden;
 
 /* Free the locale and give back all memory if the usage count is one.  */
-extern void _nl_remove_locale (int locale, struct locale_data *data);
+extern void _nl_remove_locale (int locale, struct locale_data *data)
+     internal_function attribute_hidden;
+
+/* Find the locale *NAMEP in the locale archive, and return the
+   internalized data structure for its CATEGORY data.  If this locale has
+   already been loaded from the archive, just returns the existing data
+   structure.  If successful, sets *NAMEP to point directly into the mapped
+   archive string table; that way, the next call can short-circuit strcmp.  */
+extern struct locale_data *_nl_load_locale_from_archive (int category,
+							 const char **namep)
+     internal_function attribute_hidden;
+
+/* Validate the contents of a locale file and set up the in-core
+   data structure to point into the data.  This leaves the `alloc'
+   and `name' fields uninitialized, for the caller to fill in.
+   If any bogons are detected in the data, this will refuse to
+   intern it, and return a null pointer instead.  */
+extern struct locale_data *_nl_intern_locale_data (int category,
+						   const void *data,
+						   size_t datasize)
+     internal_function attribute_hidden;
 
 
 /* Return `era' entry which corresponds to TP.  Used in strftime.  */

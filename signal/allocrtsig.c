@@ -1,5 +1,5 @@
 /* Handle real-time signal allocation.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -62,6 +62,7 @@ __libc_current_sigrtmin (void)
 #endif
   return current_rtmin;
 }
+libc_hidden_def (__libc_current_sigrtmin)
 
 /* Return number of available real-time signal with lowest priority.  */
 int
@@ -73,6 +74,7 @@ __libc_current_sigrtmax (void)
 #endif
   return current_rtmax;
 }
+libc_hidden_def (__libc_current_sigrtmax)
 
 /* Allocate real-time signal with highest/lowest available
    priority.  Please note that we don't use a lock since we assume

@@ -31,6 +31,7 @@
 #include <locale.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -59,7 +60,7 @@ static const char *locnames[] =
 
 
 /* Size of the initial archive header.  */
-#define INITIAL_NUM_NANES	450
+#define INITIAL_NUM_NAMES	450
 #define INITIAL_SIZE_STRINGS	3500
 #define INITIAL_NUM_LOCREC	350
 #define INITIAL_NUM_SUMS	2000
@@ -85,7 +86,7 @@ create_archive (const char *archivefname, struct locarhandle *ah)
   head.magic = AR_MAGIC;
   head.namehash_offset = sizeof (struct locarhead);
   head.namehash_used = 0;
-  head.namehash_size = next_prime (INITIAL_NUM_NANES);
+  head.namehash_size = next_prime (INITIAL_NUM_NAMES);
 
   head.string_offset = (head.namehash_offset
 			+ head.namehash_size * sizeof (struct namehashent));
@@ -166,6 +167,9 @@ create_archive (const char *archivefname, struct locarhandle *ah)
   ah->len = total;
 }
 
+/* forward decl for below */
+static uint32_t add_locale (struct locarhandle *ah, const char *name,
+			    locale_data_t data, bool replace);
 
 static void
 enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
@@ -300,10 +304,9 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
 			    old_data[idx].sum);
 	    }
 
-	if (add_locale_to_archive (&new_ah,
-				   ((char *) ah->addr
-				    + oldnamehashtab[cnt].name_offset),
-				   old_data, 0) != 0)
+	if (add_locale (&new_ah,
+			((char *) ah->addr + oldnamehashtab[cnt].name_offset),
+			old_data, 0) == 0)
 	  error (EXIT_FAILURE, 0, _("cannot extend locale archive file"));
       }
 
@@ -446,16 +449,123 @@ close_archive (struct locarhandle *ah)
     }
 }
 
+#include "../../intl/explodename.c"
+#include "../../intl/l10nflist.c"
+
+static struct namehashent *
+insert_name (struct locarhandle *ah,
+	     const char *name, size_t name_len, bool replace)
+{
+  const struct locarhead *const head = ah->addr;
+  struct namehashent *namehashtab
+    = (struct namehashent *) ((char *) ah->addr + head->namehash_offset);
+  unsigned int insert_idx, idx, incr;
+
+  /* Hash value of the locale name.  */
+  uint32_t hval = compute_hashval (name, name_len);
+
+  insert_idx = -1;
+  idx = hval % head->namehash_size;
+  incr = 1 + hval % (head->namehash_size - 2);
+
+  /* If the name_offset field is zero this means this is a
+     deleted entry and therefore no entry can be found.  */
+  while (namehashtab[idx].name_offset != 0)
+    {
+      if (namehashtab[idx].hashval == hval
+	  && strcmp (name,
+		     (char *) ah->addr + namehashtab[idx].name_offset) == 0)
+	{
+	  /* Found the entry.  */
+	  if (namehashtab[idx].locrec_offset != 0 && ! replace)
+	    {
+	      if (! be_quiet)
+		error (0, 0, _("locale '%s' already exists"), name);
+	      return NULL;
+	    }
+
+	  break;
+	}
+
+      /* Remember the first place we can insert the new entry.  */
+      if (namehashtab[idx].locrec_offset == 0 && insert_idx == -1)
+	insert_idx = idx;
+
+      idx += incr;
+      if (idx >= head->namehash_size)
+	idx -= head->namehash_size;
+    }
+
+  /* Add as early as possible.  */
+  if (insert_idx != -1)
+    idx = insert_idx;
+
+  namehashtab[idx].hashval = hval; /* no-op if replacing an old entry.  */
+  return &namehashtab[idx];
+}
+
+static void
+add_alias (struct locarhandle *ah, const char *alias, bool replace,
+	   const char *oldname, uint32_t locrec_offset)
+{
+  struct locarhead *head = ah->addr;
+  const size_t name_len = strlen (alias);
+  struct namehashent *namehashent = insert_name (ah, alias, strlen (alias),
+						 replace);
+  if (namehashent == NULL && ! replace)
+    return;
+
+  if (namehashent->name_offset == 0)
+    {
+      /* We are adding a new hash entry for this alias.
+	 Determine whether we have to resize the file.  */
+      if (head->string_used + name_len + 1 > head->string_size
+	  || 100 * head->namehash_used > 75 * head->namehash_size)
+	{
+	  /* The current archive is not large enough.  */
+	  enlarge_archive (ah, head);
+
+	  /* The locrecent might have moved, so we have to look up
+	     the old name afresh.  */
+	  namehashent = insert_name (ah, oldname, strlen (oldname), true);
+	  assert (namehashent->name_offset != 0);
+	  assert (namehashent->locrec_offset != 0);
+	  locrec_offset = namehashent->locrec_offset;
+
+	  /* Tail call to try the whole thing again.  */
+	  add_alias (ah, alias, replace, oldname, locrec_offset);
+	  return;
+	}
+
+      /* Add the name string.  */
+      memcpy (ah->addr + head->string_offset + head->string_used,
+	      alias, name_len + 1);
+      namehashent->name_offset = head->string_offset + head->string_used;
+      head->string_used += name_len + 1;
+
+      ++head->namehash_used;
+    }
+
+  if (namehashent->locrec_offset != 0)
+    {
+      /* Replacing an existing entry.
+	 Mark that we are no longer using the old locrecent.  */
+      struct locrecent *locrecent
+	= (struct locrecent *) ((char *) ah->addr
+				+ namehashent->locrec_offset);
+      --locrecent->refs;
+    }
+
+  /* Point this entry at the locrecent installed for the main name.  */
+  namehashent->locrec_offset = locrec_offset;
+}
+
 
 /* Check the content of the archive for duplicates.  Add the content
-   of the files if necessary.  Add all the names, possibly overwriting
-   old files.  */
-int
-add_locale_to_archive (ah, name, data, replace)
-     struct locarhandle *ah;
-     const char *name;
-     locale_data_t data;
-     bool replace;
+   of the files if necessary.  Returns the locrec_offset.  */
+static uint32_t
+add_locale (struct locarhandle *ah,
+	    const char *name, locale_data_t data, bool replace)
 {
   /* First look for the name.  If it already exists and we are not
      supposed to replace it don't do anything.  If it does not exist
@@ -467,9 +577,7 @@ add_locale_to_archive (ah, name, data, replace)
   uint32_t hval;
   unsigned int cnt;
   unsigned int idx;
-  unsigned int insert_idx;
   struct locarhead *head;
-  struct namehashent *namehashtab;
   struct namehashent *namehashent;
   unsigned int incr;
   struct locrecent *locrecent;
@@ -477,8 +585,6 @@ add_locale_to_archive (ah, name, data, replace)
   head = ah->addr;
   sumhashtab = (struct sumhashent *) ((char *) ah->addr
 				      + head->sumhash_offset);
-  namehashtab = (struct namehashent *) ((char *) ah->addr
-					+ head->namehash_offset);
 
 
   /* For each locale category data set determine whether the same data
@@ -514,47 +620,10 @@ add_locale_to_archive (ah, name, data, replace)
 	  }
       }
 
-
-  /* Hash value of the locale name.  */
-  hval = compute_hashval (name, name_len);
-
-  insert_idx = -1;
-  idx = hval % head->namehash_size;
-  incr = 1 + hval % (head->namehash_size - 2);
-
-  /* If the name_offset field is zero this means this is no
-     deleted entry and therefore no entry can be found.  */
-  while (namehashtab[idx].name_offset != 0)
-    {
-      if (namehashtab[idx].hashval == hval
-	  && strcmp (name,
-		     (char *) ah->addr + namehashtab[idx].name_offset) == 0)
-	{
-	  /* Found the entry.  */
-	  if (namehashtab[idx].locrec_offset != 0 && ! replace)
-	    {
-	      if (! be_quiet)
-		error (0, 0, _("locale '%s' already exists"), name);
-	      return 1;
-	    }
-
-	  break;
-	}
-
-      /* Remember the first place we can insert the new entry.  */
-      if (namehashtab[idx].locrec_offset == 0 && insert_idx == -1)
-	insert_idx = idx;
-
-      idx += incr;
-      if (idx >= head->namehash_size)
-	idx -= head->namehash_size;
-    }
-
-  /* Add as early as possible.  */
-  if (insert_idx != -1)
-    idx = insert_idx;
-
-  namehashent = &namehashtab[idx];
+  /* Find a slot for the locale name in the hash table.  */
+  namehashent = insert_name (ah, name, name_len, replace);
+  if (namehashent == NULL)	/* Already exists and !REPLACE.  */
+    return 0;
 
   /* Determine whether we have to resize the file.  */
   if (100 * (head->sumhash_used + num_new_offsets) > 75 * head->sumhash_size
@@ -565,7 +634,7 @@ add_locale_to_archive (ah, name, data, replace)
     {
       /* The current archive is not large enough.  */
       enlarge_archive (ah, head);
-      return add_locale_to_archive (ah, name, data, replace);
+      return add_locale (ah, name, data, replace);
     }
 
   /* Add the locale data which is not yet in the archive.  */
@@ -620,29 +689,46 @@ add_locale_to_archive (ah, name, data, replace)
 	++head->sumhash_used;
       }
 
-
-  if (namehashent->locrec_offset == 0)
+  if (namehashent->name_offset == 0)
     {
       /* Add the name string.  */
       memcpy ((char *) ah->addr + head->string_offset + head->string_used,
 	      name, name_len + 1);
       namehashent->name_offset = head->string_offset + head->string_used;
       head->string_used += name_len + 1;
+      ++head->namehash_used;
+    }
 
+  if (namehashent->locrec_offset == 0)
+    {
       /* Allocate a name location record.  */
       namehashent->locrec_offset = (head->locrectab_offset
 				    + (head->locrectab_used++
 				       * sizeof (struct locrecent)));
+      locrecent = (struct locrecent *) ((char *) ah->addr
+					+ namehashent->locrec_offset);
+      locrecent->refs = 1;
+    }
+  else
+    {
+      /* If there are other aliases pointing to this locrecent,
+	 we still need a new one.  If not, reuse the old one.  */
 
-      namehashent->hashval = hval;
-
-      ++head->namehash_used;
+      locrecent = (struct locrecent *) ((char *) ah->addr
+					+ namehashent->locrec_offset);
+      if (locrecent->refs > 1)
+	{
+	  --locrecent->refs;
+	  namehashent->locrec_offset = (head->locrectab_offset
+					+ (head->locrectab_used++
+					   * sizeof (struct locrecent)));
+	  locrecent = (struct locrecent *) ((char *) ah->addr
+					    + namehashent->locrec_offset);
+	  locrecent->refs = 1;
+	}
     }
 
-
   /* Fill in the table with the locations of the locale data.  */
-  locrecent = (struct locrecent *) ((char *) ah->addr
-				    + namehashent->locrec_offset);
   for (cnt = 0; cnt < __LC_LAST; ++cnt)
     if (cnt != LC_ALL)
       {
@@ -650,13 +736,196 @@ add_locale_to_archive (ah, name, data, replace)
 	locrecent->record[cnt].len = data[cnt].size;
       }
 
+  return namehashent->locrec_offset;
+}
 
-  /* Read the locale.alias file to see whether any matching record is
-     found.  If an entry is available check whether it is already in
-     the archive.  If this is the case check whether the new locale's
-     name is more specific than the one currently referred to by the
-     alias.  */
 
+/* Check the content of the archive for duplicates.  Add the content
+   of the files if necessary.  Add all the names, possibly overwriting
+   old files.  */
+int
+add_locale_to_archive (ah, name, data, replace)
+     struct locarhandle *ah;
+     const char *name;
+     locale_data_t data;
+     bool replace;
+{
+  char *normalized_name = NULL;
+  uint32_t locrec_offset;
+
+  /* First analyze the name to decide how to archive it.  */
+  const char *language;
+  const char *modifier;
+  const char *territory;
+  const char *codeset;
+  const char *normalized_codeset;
+  int mask = _nl_explode_name (strdupa (name),
+			       &language, &modifier, &territory,
+			       &codeset, &normalized_codeset);
+
+  if (mask & XPG_NORM_CODESET)
+    /* This name contains a codeset in unnormalized form.
+       We will store it in the archive with a normalized name.  */
+    asprintf (&normalized_name, "%s%s%s.%s%s%s",
+	      language, territory == NULL ? "" : "_", territory ?: "",
+	      (mask & XPG_NORM_CODESET) ? normalized_codeset : codeset,
+	      modifier == NULL ? "" : "@", modifier ?: "");
+
+  /* This call does the main work.  */
+  locrec_offset = add_locale (ah, normalized_name ?: name, data, replace);
+  free (normalized_name);
+  if (locrec_offset == 0)
+    {
+      if (mask & XPG_NORM_CODESET)
+	free ((char *) normalized_codeset);
+      return -1;
+    }
+
+  if ((mask & XPG_CODESET) == 0)
+    {
+      /* This name lacks a codeset, so determine the locale's codeset and
+	 add an alias for its name with normalized codeset appended.  */
+
+      const struct
+      {
+	unsigned int magic;
+	unsigned int nstrings;
+	unsigned int strindex[0];
+      } *filedata = data[LC_CTYPE].addr;
+      codeset = (char *) filedata
+	+ filedata->strindex[_NL_ITEM_INDEX (_NL_CTYPE_CODESET_NAME)];
+
+      normalized_codeset = _nl_normalize_codeset (codeset, strlen (codeset));
+      mask |= XPG_NORM_CODESET;
+
+      asprintf (&normalized_name, "%s%s%s.%s%s%s",
+		language, territory == NULL ? "" : "_", territory ?: "",
+		normalized_codeset,
+		modifier == NULL ? "" : "@", modifier ?: "");
+
+      add_alias (ah, normalized_name, replace, name, locrec_offset);
+      free (normalized_name);
+    }
+
+  /* Now read the locale.alias files looking for lines whose
+     right hand side matches our name after normalization.  */
+  if (alias_file != NULL)
+    {
+      FILE *fp;
+      fp = fopen (alias_file, "r");
+      if (fp == NULL)
+	error (1, errno, _("locale alias file `%s' not found"),
+	       alias_file);
+
+      /* No threads present.  */
+      __fsetlocking (fp, FSETLOCKING_BYCALLER);
+
+      while (! feof_unlocked (fp))
+	{
+	  /* It is a reasonable approach to use a fix buffer here
+	     because
+	     a) we are only interested in the first two fields
+	     b) these fields must be usable as file names and so must
+	     not be that long  */
+	  char buf[BUFSIZ];
+	  char *alias;
+	  char *value;
+	  char *cp;
+
+	  if (fgets_unlocked (buf, BUFSIZ, fp) == NULL)
+	    /* EOF reached.  */
+	    break;
+
+	  cp = buf;
+	  /* Ignore leading white space.  */
+	  while (isspace (cp[0]) && cp[0] != '\n')
+	    ++cp;
+
+	  /* A leading '#' signals a comment line.  */
+	  if (cp[0] != '\0' && cp[0] != '#' && cp[0] != '\n')
+	    {
+	      alias = cp++;
+	      while (cp[0] != '\0' && !isspace (cp[0]))
+		++cp;
+	      /* Terminate alias name.  */
+	      if (cp[0] != '\0')
+		*cp++ = '\0';
+
+	      /* Now look for the beginning of the value.  */
+	      while (isspace (cp[0]))
+		++cp;
+
+	      if (cp[0] != '\0')
+		{
+		  value = cp++;
+		  while (cp[0] != '\0' && !isspace (cp[0]))
+		    ++cp;
+		  /* Terminate value.  */
+		  if (cp[0] == '\n')
+		    {
+		      /* This has to be done to make the following
+			 test for the end of line possible.  We are
+			 looking for the terminating '\n' which do not
+			 overwrite here.  */
+		      *cp++ = '\0';
+		      *cp = '\n';
+		    }
+		  else if (cp[0] != '\0')
+		    *cp++ = '\0';
+
+		  /* Does this alias refer to our locale?  We will
+		     normalize the right hand side and compare the
+		     elements of the normalized form.  */
+		  {
+		    const char *rhs_language;
+		    const char *rhs_modifier;
+		    const char *rhs_territory;
+		    const char *rhs_codeset;
+		    const char *rhs_normalized_codeset;
+		    int rhs_mask = _nl_explode_name (value,
+						     &rhs_language,
+						     &rhs_modifier,
+						     &rhs_territory,
+						     &rhs_codeset,
+						     &rhs_normalized_codeset);
+		    if (!strcmp (language, rhs_language)
+			&& ((rhs_mask & XPG_CODESET)
+			    /* He has a codeset, it must match normalized.  */
+			    ? !strcmp ((mask & XPG_NORM_CODESET)
+				       ? normalized_codeset : codeset,
+				       (rhs_mask & XPG_NORM_CODESET)
+				       ? rhs_normalized_codeset : rhs_codeset)
+			    /* He has no codeset, we must also have none.  */
+			    : (mask & XPG_CODESET) == 0)
+			/* Codeset (or lack thereof) matches.  */
+			&& !strcmp (territory ?: "", rhs_territory ?: "")
+			&& !strcmp (modifier ?: "", rhs_modifier ?: ""))
+		      /* We have a winner.  */
+		      add_alias (ah, alias, replace,
+				 normalized_name ?: name, locrec_offset);
+		    if (rhs_mask & XPG_NORM_CODESET)
+		      free ((char *) rhs_normalized_codeset);
+		  }
+		}
+	    }
+
+	  /* Possibly not the whole line fits into the buffer.
+	     Ignore the rest of the line.  */
+	  while (strchr (cp, '\n') == NULL)
+	    {
+	      cp = buf;
+	      if (fgets_unlocked (buf, BUFSIZ, fp) == NULL)
+		/* Make sure the inner loop will be left.  The outer
+		   loop will exit at the `feof' test.  */
+		*cp = '\n';
+	    }
+	}
+
+      fclose (fp);
+    }
+
+  if (mask & XPG_NORM_CODESET)
+    free ((char *) normalized_codeset);
 
   return 0;
 }
@@ -903,7 +1172,6 @@ delete_locales_from_archive (nlist, list)
 	      /* Found the entry.  Now mark it as removed by zero-ing
 		 the reference to the locale record.  */
 	      namehashtab[idx].locrec_offset = 0;
-	      --head->namehash_used;
 	      break;
 	    }
 

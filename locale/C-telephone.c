@@ -30,7 +30,6 @@ const struct locale_data _nl_C_LC_TELEPHONE attribute_hidden =
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
   0,
-  NULL,
   5,
   {
     { string: "+%c %a %l" },

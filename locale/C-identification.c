@@ -30,7 +30,6 @@ const struct locale_data _nl_C_LC_IDENTIFICATION attribute_hidden =
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
   0,
-  NULL,
   16,
   {
     { string: "ISO/IEC 14652 i18n FDCC-set" },

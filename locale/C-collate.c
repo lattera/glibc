@@ -104,7 +104,6 @@ const struct locale_data _nl_C_LC_COLLATE attribute_hidden =
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
   0,
-  NULL,
   19,
   {
     /* _NL_COLLATE_NRULES */
