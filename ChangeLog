@@ -1,3 +1,8 @@
+2003-03-27  Roland McGrath  <roland@redhat.com>
+
+	* scripts/rpm2dynsym.sh: New file.
+	* Makefile (distribute): Add it.
+
 2003-03-27  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/unix/sysv/linux/ia64/getcontext.S: Restore caller's
