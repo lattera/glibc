@@ -1,5 +1,4 @@
-/* Floating-point maximum.  PowerPC version.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,27 +16,5 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
-
-ENTRY(__fmax)
-/* double [f1] fmax (double [f1] x, double [f2] y); */
-	fcmpu	cr0,f1,f2
-	blt	cr0,0f		/* if x < y, neither x nor y can be NaN... */
-	bnulr+	cr0
-/* x and y are unordered, so one of x or y must be a NaN... */
-	fcmpu	cr1,f2,f2
-	bunlr	cr1
-0:	fmr	f1,f2
-	blr
-END(__fmax)
-
-weak_alias(__fmax,fmax)
-
-/* It turns out that it's safe to use this code even for single-precision.  */
-strong_alias(__fmax,__fmaxf)
-weak_alias(__fmax,fmaxf)
-
-#ifdef NO_LONG_DOUBLE
-weak_alias(__fmax,__fmaxl)
-weak_alias(__fmax,fmaxl)
-#endif
+#include <sysdeps/unix/sysdep.h>
+#include <sysdeps/powerpc/sysdep.h>

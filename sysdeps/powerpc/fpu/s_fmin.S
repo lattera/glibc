@@ -21,13 +21,13 @@
 
 ENTRY(__fmin)
 /* double [f1] fmin (double [f1] x, double [f2] y); */
-	fcmpu	0,1,2
-	bgt	0,0f		/* if x > y, neither x nor y can be NaN... */
-	bnulr+	0
+	fcmpu	cr0,f1,f2
+	bgt	cr0,0f		/* if x > y, neither x nor y can be NaN... */
+	bnulr+	cr0
 /* x and y are unordered, so one of x or y must be a NaN... */
-	fcmpu	1,2,2
-	bunlr	1
-0:	fmr	1,2
+	fcmpu	cr1,f2,f2
+	bunlr	cr1
+0:	fmr	f1,f2
 	blr
 END(__fmin)
 

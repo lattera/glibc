@@ -1,3 +1,17 @@
+1999-10-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/powerpc/sysdep.h: New file.
+	* sysdeps/unix/powerpc/sysdep.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.h: Include
+	sysdeps/unix/powerpc/sysdep.h, not sysdeps/unix/sysdep.h.
+	* sysdeps/powerpc/fpu/s_copysign.S: Use symbolic names for registers
+	instead of bare numbers.
+	* sysdeps/powerpc/fpu/s_fabs.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fmax.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fmin.S: Likewise.
+
+	* sysdeps/hppa/sysdep.h: New file.
+
 1999-10-10  Andreas Jaeger  <aj@suse.de>
 
 	* misc/sgtty.h: Fix typo in last patch.

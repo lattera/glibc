@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdeps/unix/sysdep.h>
+#include <sysdeps/unix/powerpc/sysdep.h>
 
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h

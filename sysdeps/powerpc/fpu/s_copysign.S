@@ -26,15 +26,15 @@ ENTRY(__copysign)
 /* double [f1] copysign (double [f1] x, double [f2] y);
    copysign(x,y) returns a value with the magnitude of x and
    with the sign bit of y.  */
-	stwu	1,-16(1)
-	stfd	2,8(1)
-	lwz	3,8(1)
-	cmpwi   3,0
-	addi    1,1,16
+	stwu	r1,-16(r1)
+	stfd	f2,8(r1)
+	lwz	r3,8(r1)
+	cmpwi   r3,0
+	addi    r1,r1,16
 	blt     0f
-	fabs    1,1
+	fabs    f1,f1
 	blr
-0:	fnabs   1,1
+0:	fnabs   f1,f1
 	blr
 	END (__copysign)
 
