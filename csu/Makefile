@@ -1,6 +1,6 @@
 # Makefile for csu code for GNU C library.
 
-# Copyright (C) 1995,1996,1997,1998,1999,2000 Free Software Foundation, Inc.
+# Copyright (C) 1995,1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -10,7 +10,7 @@
 
 # The GNU C Library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the GNU
 # Library General Public License for more details.
 
 # You should have received a copy of the GNU Library General Public
@@ -20,7 +20,7 @@
 
 # This directory contains the C startup code (that which calls main).  This
 # consists of the startfile, built from start.c and installed as crt0.o
-# (traditionally) or crt1.o (for ELF).  In ELF we also install crti.o and
+# (traditionally) or crt1.o (for ELF).	In ELF we also install crti.o and
 # crtn.o, special "initializer" and "finalizer" files used in the link
 # to make the .init and .fini sections work right; both these files are
 # built (in an arcane manner) from initfini.c.
@@ -94,7 +94,7 @@ $(objpfx)initfini.s: initfini.c
 	$(compile.c) -S $(CFLAGS-initfini.s) -finhibit-size-directive \
 		$(patsubst -f%,-fno-%,$(exceptions)) -o $@
 
-# We only have one kind of startup code files.  Static binaries and
+# We only have one kind of startup code files.	Static binaries and
 # shared libraries are build using the PIC version.
 $(objpfx)crti.S: $(objpfx)initfini.s
 	sed -n -e '1,/@HEADER_ENDS/p' \
@@ -167,7 +167,7 @@ $(addprefix $(objpfx),$(filter-out $(start-installed-name),$(csu-dummies))):
 $(objpfx)abi-tag.h: $(..)abi-tags
 	$(make-target-directory)
 	rm -f $@.new
-	sed -e 's/#.*$$//' -e '/^[ 	]*$$/d' $< | \
+	sed -e 's/#.*$$//' -e '/^[	]*$$/d' $< | \
 	while read conf tag; do \
 	  test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
 		     : "$$conf"` != 0 || continue; \
@@ -199,13 +199,13 @@ $(objpfx)version-info.h: $(common-objpfx)config.make $(all-Banner-files)
 		     os=Linux; \
 		   fi; \
 		   echo "\"Compiled on a $$os $$version system" \
-		        "on `date +%Y-%m-%d`.\\n\"" ;; \
+			"on `date +%Y-%m-%d`.\\n\"" ;; \
 	   *) ;; \
 	 esac; \
 	 files="$(all-Banner-files)";				\
 	 if test -n "$$files"; then				\
-	   echo "\"Available extensions:";			\
-	   sed -e '/^#/d' -e 's/^[[:space:]]*/	/' $$files;	\
-	   echo "\"";						\
+	   echo "\"Available extensions:\\n\"";			\
+	   sed -e '/^#/d' -e 's/^[[:space:]]*/	/'		\
+	       -e 's/\(^.*$$\)/\"\1\\n\"/' $$files;		\
 	 fi) > $@T
 	mv -f $@T $@
