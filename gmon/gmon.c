@@ -41,8 +41,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
-extern int __profile_frequency __P ((void));
+#include <libc-internal.h>
 
 struct __bb *__bb_head;	/*  Head of basic-block list or NULL. */
 

@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sys/time.h>
+#include <libc-internal.h>
 
 /* This implementation uses the TSC register in modern (i586 and up) IA-32
    processors (most modern clones also provide it).  Since we need the
@@ -25,9 +26,6 @@
    at different speeds or process migration to machines with slower or
    faster processors will not work without changes.  */
 
-
-/* Function to determine processor frequency.  */
-extern unsigned long long int __get_clockfreq (void);
 
 /* Clock frequency of the processor.  We make it a 64-bit variable
    because some jokers are already playing with processors with more

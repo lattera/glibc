@@ -1,10 +1,13 @@
 2000-12-31  Andreas Jaeger  <aj@suse.de>
 
+	* include/libc-internal.h: Add prototype for __libc_freeres.
+
 	* sysdeps/unix/sysv/linux/init-first.c: Include <libc-internals.h>
 	for prototypes, remove redundant prototypes.
 	* gmon/gmon.c: Likewise.
 	* sysdeps/unix/i386/i586/clock_getres.c: Likewise.
 	* sysdeps/unix/i386/i586/clock_gettime.c: Likewise.
+	* malloc/mtrace.c: Likewise.
 
 	* sysdeps/generic/enbl-secure.c: Include <libc-internals.h> for
 	prototypes.
@@ -15,6 +18,7 @@
 	* debug/pcprofile.c: Likewise.
 	* sysdeps/unix/sysv/linux/i386/get_clockfreq.c: Likewise.
 	* sysdeps/generic/get_clockfreq.c: Likewise.
+	* malloc/set-freeres.c: Likewise.
 
 	* locale/localeinfo.h: Add internal prototypes.
 

@@ -1,5 +1,5 @@
 /* Low-level statistical profiling support function.  Mach/Hurd version.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,8 @@
 #include <mach/pc_sample.h>
 #include <cthreads.h>
 #include <assert.h>
+#include <libc-internal.h>
+
 
 #define MAX_PC_SAMPLES	512	/* XXX ought to be exported in kernel hdr */
 

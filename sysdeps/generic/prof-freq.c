@@ -31,6 +31,7 @@
 
 #include <sys/types.h>
 #include <sys/time.h>
+#include <libc-internal.h>
 
 int
 __profile_frequency (void)

@@ -21,6 +21,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
+#include <libc-internal.h>
 
 
 unsigned long long int

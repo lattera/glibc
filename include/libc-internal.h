@@ -21,5 +21,7 @@ extern void __cyg_profile_func_exit (void *this_fn, void *call_site);
 /* Get frequency of the system processor.  */
 extern unsigned long long int __get_clockfreq (void);
 
+/* Free all allocated resources.  */
+extern void __libc_freeres (void);
 
 #endif /* _LIBC_INTERNAL  */

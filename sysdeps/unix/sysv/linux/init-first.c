@@ -26,14 +26,13 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include "kernel-features.h"
+#include <libc-internal.h>
 
 #ifndef SHARED
 # include "dl-osinfo.h"
 #endif
 
-extern void __libc_init_secure (void);
 extern void __libc_init (int, char **, char **);
-extern void __libc_global_ctors (void);
 
 /* The function is called from assembly stubs the compiler can't see.  */
 static void init (int, char **, char **) __attribute__ ((unused));

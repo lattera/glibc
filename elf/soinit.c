@@ -3,9 +3,11 @@
    the `.ctors' and `.dtors' sections so the lists are terminated, and
    calling those lists of functions.  */
 
-# ifdef HAVE_DWARF2_UNWIND_INFO_STATIC
+#include <libc-internal.h>
+
+#ifdef HAVE_DWARF2_UNWIND_INFO_STATIC
 # include <gccframe.h>
-# endif
+#endif
 
 static void (*const __CTOR_LIST__[1]) (void)
      __attribute__ ((section (".ctors")))

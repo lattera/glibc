@@ -1,5 +1,5 @@
 /* Define and initialize the `__libc_enable_secure' flag.  Generic version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
    dl-sysdep.c defines and initializes __libc_enable_secure.  */
 
 #include <unistd.h>
-
+#include <libc-internal.h>
 
 /* Safest assumption, if somehow the initializer isn't run.  */
 int __libc_enable_secure = 1;

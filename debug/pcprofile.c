@@ -1,5 +1,5 @@
 /* Profile PC and write result to FIFO.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -23,6 +23,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <libc-internal.h>
 
 /* Nonzero if we are actually doing something.  */
 static int active;

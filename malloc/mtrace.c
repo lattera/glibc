@@ -36,6 +36,10 @@
 
 #include <stdio-common/_itoa.h>
 
+#ifdef _LIBC
+# include <libc-internal.h>
+#endif
+
 #ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>
 # define setvbuf(s, b, f, l) _IO_setvbuf (s, b, f, l)
@@ -223,7 +227,6 @@ tr_reallochook (ptr, size, caller)
 
 
 #ifdef _LIBC
-extern void __libc_freeres (void);
 
 /* This function gets called to make sure all memory the library
    allocates get freed and so does not irritate the user when studying
