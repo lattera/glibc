@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux/SPARC.
-   Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,2000,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,6 +43,7 @@
 #ifdef __USE_GNU
 # define O_DIRECTORY	0x10000 /* must be a directory */
 # define O_NOFOLLOW	0x20000 /* don't follow links */
+# define O_DIRECT	0x100000 /* direct disk access hint */
 #endif
 
 #ifdef __USE_LARGEFILE64
