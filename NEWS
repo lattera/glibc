@@ -22,6 +22,10 @@ Version 2.2
 
 * ldconfig program added by Andreas Jaeger and Jakub Jelinek.
 
+* The resolver code has been updated from bind 8.2.2-5 which supports
+  threads. No changes should be necessary for user programs.  The
+  integration was done by Andreas Jaeger and Adam D. Bradley.
+
 
 Version 2.1.2
 

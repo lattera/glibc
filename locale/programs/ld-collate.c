@@ -106,6 +106,9 @@ struct element_t
 
   /* Next element in multibyte output list.  */
   struct element_t *mbnext;
+
+  /* Next element in wide character output list.  */
+  struct element_t *wcnext;
 };
 
 /* Special element value.  */
@@ -171,6 +174,14 @@ struct locale_collate_t
   /* Arrays with heads of the list for each of the leading bytes in
      the multibyte sequences.  */
   struct element_t *mbheads[256];
+
+  /* Table size of wide character hash table.  */
+  size_t plane_size;
+  size_t plane_cnt;
+
+  /* Arrays with heads of the list for each of the leading bytes in
+     the multibyte sequences.  */
+  struct element_t **wcheads;
 };
 
 
@@ -1381,6 +1392,9 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
   int need_undefined = 0;
   struct section_list *sect;
   int ruleidx;
+  int nr_wide_elems = 0;
+  size_t min_total;
+  size_t act_size;
 
   if (collate == NULL)
     {
@@ -1457,8 +1471,8 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
      be encoded to make it possible to emit the value as a byte
      string.  */
   for (i = 0; i < nrules; ++i)
-    mbact[i] = 3;
-  wcact = 3;
+    mbact[i] = 2;
+  wcact = 2;
   runp = collate->start;
   while (runp != NULL)
     {
@@ -1518,7 +1532,13 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	}
 
       if (runp->wcs != NULL)
-	runp->wcorder = wcact++;
+	{
+	  runp->wcorder = wcact++;
+
+	  /* We take the opportunity to count the elements which have
+	     wide characters.  */
+	  ++nr_wide_elems;
+	}
 
       /* Up to the next entry.  */
       runp = runp->next;
@@ -1532,6 +1552,165 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	need_undefined = 1;
 	collate->mbheads[i] = &collate->undefined;
       }
+
+  /* Now to the wide character case.  Here we have to find first a good
+     mapping function to get the wide range of wide character values
+     (0x00000000 to 0x7fffffff) to a managable table.  This might take
+     some time so we issue a warning.
+
+     We use a very trivial hashing function to store the sparse
+     table.  CH % TABSIZE is used as an index.  To solve multiple hits
+     we have N planes.  This guarantees a fixed search time for a
+     character [N / 2].  In the following code we determine the minimum
+     value for TABSIZE * N, where TABSIZE >= 256.
+
+     Some people complained that this algorithm takes too long.  Well,
+     go on, improve it.  But changing the step size is *not* an
+     option.  Some people changed this to use only sizes of prime
+     numbers.  Think again, do some math.  We are looking for the
+     optimal solution, not something which works in general.  Unless
+     somebody can provide a dynamic programming solution I think this
+     implementation is as good as it can get.  */
+  if (nr_wide_elems > 512 && !be_quiet)
+    fputs (_("\
+Computing table size for collation table might take a while..."),
+	   stderr);
+
+  min_total = UINT_MAX;
+  act_size = 256;
+
+  /* While we want to have a small total size we are willing to use a
+     little bit larger table if this reduces the number of layers.
+     Therefore we add a little penalty to the number of planes.
+     Maybe this constant has to be adjusted a bit.  */
+#define PENALTY 128
+  do
+    {
+      size_t cnt[act_size];
+      struct element_t *elem[act_size];
+      size_t act_planes = 1;
+
+      memset (cnt, '\0', sizeof cnt);
+      memset (elem, '\0', sizeof elem);
+
+      runp = collate->start;
+      while (runp != NULL)
+	{
+	  if (runp->wcs != NULL)
+	    {
+	      size_t nr = runp->wcs[0] % act_size;
+	      struct element_t *elemp = elem[nr];
+
+	      while (elemp != NULL)
+		{
+		  if (elemp->wcs[0] == runp->wcs[0])
+		    break;
+		  elemp = elemp->wcnext;
+		}
+
+	      if (elemp == NULL && ++cnt[nr] > act_planes)
+		{
+		  act_planes = cnt[nr];
+
+		  runp->wcnext = elem[nr];
+		  elem[nr] = runp;
+
+		  if ((act_size + PENALTY) * act_planes >= min_total)
+		    break;
+		}
+	    }
+
+	  /* Up to the next entry.  */
+	  runp = runp->next;
+	}
+
+      if ((act_size + PENALTY) * act_planes < min_total)
+	{
+	  min_total = (act_size + PENALTY) * act_planes;
+	  collate->plane_size = act_size;
+	  collate->plane_cnt = act_planes;
+	}
+
+      ++act_size;
+    }
+  while (act_size < min_total);
+
+  if (nr_wide_elems > 512 && !be_quiet)
+    fputs (_(" done\n"), stderr);
+
+  /* Now that we know how large the table has to be we are able to
+     allocate the array and start adding the characters to the lists
+     in the same way we did it for the multibyte characters.  */
+  collate->wcheads = (struct element_t **)
+    obstack_alloc (&collate->mempool, (collate->plane_size
+				       * collate->plane_cnt
+				       * sizeof (struct element_t *)));
+  memset (collate->wcheads, '\0', (collate->plane_size
+				   * collate->plane_cnt
+				   * sizeof (struct element_t *)));
+
+  /* Start adding.  */
+  runp = collate->start;
+  while (runp != NULL)
+    {
+      if (runp->wcs != NULL)
+	{
+	  struct element_t **eptr;
+	  size_t idx;
+
+	  /* Find a free index.  */
+	  idx = runp->wcs[0] % collate->plane_size;
+	  while (collate->wcheads[idx] != NULL)
+	    {
+	      /* Stop if this is an entry with the same starting character.  */
+	      if (collate->wcheads[idx]->wcs[0] == runp->wcs[0])
+		break;
+
+	      idx += collate->plane_size;
+	    }
+
+	  /* Find the point where to insert in the list.  */
+	  eptr = &collate->wcheads[idx];
+	  while (*eptr != NULL)
+	    {
+	      if ((*eptr)->nwcs < runp->nwcs)
+		break;
+
+	      if ((*eptr)->nwcs == runp->nwcs)
+		{
+		  int c = wmemcmp ((wchar_t *) (*eptr)->wcs,
+				   (wchar_t *) runp->wcs, runp->nwcs);
+
+		  if (c == 0)
+		    {
+		      /* This should not happen.  It means that we have
+			 to symbols with the same byte sequence.  It is
+			 of course an error.  */
+		      error_at_line (0, 0, (*eptr)->file, (*eptr)->line,
+				     _("symbol `%s' has same encoding as"),
+				     (*eptr)->name);
+		      error_at_line (0, 0, runp->file, runp->line,
+				     _("symbol `%s'"), runp->name);
+		      goto dont_insertwc;
+		    }
+		  else if (c < 0)
+		    /* Insert it here.  */
+		    break;
+		}
+
+	      /* To the next entry.  */
+	      eptr = &(*eptr)->wcnext;
+	    }
+
+	  /* Set the pointers.  */
+	  runp->wcnext = *eptr;
+	  *eptr = runp;
+	dont_insertwc:
+	}
+
+      /* Up to the next entry.  */
+      runp = runp->next;
+    }
 
   /* Now determine whether the UNDEFINED entry is needed and if yes,
      whether it was defined.  */
@@ -1620,6 +1799,45 @@ output_weight (struct obstack *pool, struct locale_collate_t *collate,
 }
 
 
+static int32_t
+output_weightwc (struct obstack *pool, struct locale_collate_t *collate,
+		 struct element_t *elem)
+{
+  size_t cnt;
+  int32_t retval;
+
+  /* Optimize the use of UNDEFINED.  */
+  if (elem == &collate->undefined)
+    /* The weights are already inserted.  */
+    return 0;
+
+  /* This byte can start exactly one collation element and this is
+     a single byte.  We can directly give the index to the weights.  */
+  retval = obstack_object_size (pool);
+
+  /* Construct the weight.  */
+  for (cnt = 0; cnt < nrules; ++cnt)
+    {
+      int32_t buf[elem->weights[cnt].cnt];
+      int32_t i;
+
+      for (i = 0; i < elem->weights[cnt].cnt; ++i)
+	if (elem->weights[cnt].w[i] != NULL)
+	  buf[i] = elem->weights[cnt].w[i]->wcorder;
+
+      /* And add the buffer content.  */
+      if (sizeof (int) == sizeof (int32_t))
+	obstack_int_grow (pool, i);
+      else
+	obstack_grow (pool, &i, sizeof (int32_t));
+
+      obstack_grow (pool, buf, i * sizeof (int32_t));
+    }
+
+  return retval | ((elem->section->ruleidx & 0x7f) << 24);
+}
+
+
 void
 collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		const char *output_path)
@@ -1636,6 +1854,9 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   struct obstack extrapool;
   struct obstack indirectpool;
   struct section_list *sect;
+  uint32_t *names;
+  uint32_t *tablewc;
+  size_t table_size;
   int i;
 
   data.magic = LIMAGIC (LC_COLLATE);
@@ -1783,7 +2004,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		int i;
 
 		/* Now add first the initial byte sequence.  */
-		added = ((sizeof (int32_t) + 1 + 1 + 2 * (runp->nmbs - 1)
+		added = ((sizeof (int32_t) + 1 + 2 * (runp->nmbs - 1)
 			  + __alignof__ (int32_t) - 1)
 			 & ~(__alignof__ (int32_t) - 1));
 		obstack_make_room (&extrapool, added);
@@ -1809,7 +2030,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		while (1)
 		  {
 		    if (sizeof (int32_t) == sizeof (int))
-		      obstack_int_grow_fast (&extrapool, weightidx);
+		      obstack_int_grow (&extrapool, weightidx);
 		    else
 		      obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
 
@@ -1833,7 +2054,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 
 		weightidx = output_weight (&weightpool, collate, runp);
 		if (sizeof (int32_t) == sizeof (int))
-		  obstack_int_grow_fast (&extrapool, weightidx);
+		  obstack_int_grow (&extrapool, weightidx);
 		else
 		  obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
 	      }
@@ -1844,7 +2065,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		   tested for).  */
 		int i;
 
-		added = ((sizeof (int32_t) + 1 + 1 + runp->nmbs - 1
+		added = ((sizeof (int32_t) + 1 + runp->nmbs - 1
 			  + __alignof__ (int32_t) - 1)
 			 & ~(__alignof__ (int32_t) - 1));
 		obstack_make_room (&extrapool, added);
@@ -1900,7 +2121,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 	  }
       }
 
-  /* Now add the three tables.  */
+  /* Now add the four tables.  */
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_TABLEMB));
   iov[2 + cnt].iov_base = tablemb;
   iov[2 + cnt].iov_len = sizeof (tablemb);
@@ -1920,6 +2141,211 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   ++cnt;
 
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_INDIRECTMB));
+  iov[2 + cnt].iov_len = obstack_object_size (&indirectpool);
+  iov[2 + cnt].iov_base = obstack_finish (&indirectpool);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
+
+  /* Now the same for the wide character table.  We need to store some
+     more information here.  */
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_HASH_SIZE));
+  iov[2 + cnt].iov_base = &collate->plane_size;
+  iov[2 + cnt].iov_len = sizeof (collate->plane_size);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_HASH_LAYERS));
+  iov[2 + cnt].iov_base = &collate->plane_cnt;
+  iov[2 + cnt].iov_len = sizeof (collate->plane_cnt);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
+  /* Construct a table with the names.  The size of the table is the same
+     as the table with the pointers.  */
+  table_size = collate->plane_size * collate->plane_cnt;
+  names = (uint32_t *) alloca (table_size * sizeof (uint32_t));
+  for (ch = 0; ch < table_size; ++ch)
+    if (collate->wcheads[ch] == NULL)
+      names[ch] = 0;
+    else
+      names[ch] = collate->wcheads[ch]->wcs[0];
+
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_NAMES));
+  iov[2 + cnt].iov_base = names;
+  iov[2 + cnt].iov_len = table_size * sizeof (uint32_t);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
+  /* Generate the table.  Walk through the lists of sequences
+     starting with the same byte and add them one after the other to
+     the table.  In case we have more than one sequence starting with
+     the same byte we have to use extra indirection.  */
+  tablewc = (uint32_t *) alloca (table_size * sizeof (uint32_t));
+  for (ch = 0; ch < table_size; ++ch)
+    if (collate->wcheads[ch] == NULL)
+      {
+	/* Set the entry to zero.  */
+	tablewc[ch] = 0;
+      }
+    else if (collate->wcheads[ch]->wcnext == NULL
+	&& collate->wcheads[ch]->nwcs == 1)
+      {
+	tablewc[ch] = output_weightwc (&weightpool, collate,
+				       collate->wcheads[ch]);
+      }
+    else
+      {
+	/* As for the singlebyte table, we recognize sequences and
+	   compress them.  */
+	struct element_t *runp = collate->wcheads[ch];
+	struct element_t *lastp;
+
+	tablewc[ch] = -obstack_object_size (&extrapool);
+
+	do
+	  {
+	    /* Store the current index in the weight table.  We know that
+	       the current position in the `extrapool' is aligned on a
+	       32-bit address.  */
+	    int32_t weightidx;
+	    int added;
+
+	    /* Output the weight info.  */
+	    weightidx = output_weightwc (&weightpool, collate, runp);
+
+	    /* Find out wether this is a single entry or we have more than
+	       one consecutive entry.  */
+	    if (runp->wcnext != NULL
+		&& runp->nwcs == runp->wcnext->nwcs
+		&& wmemcmp ((wchar_t *) runp->wcs,
+			    (wchar_t *)runp->wcnext->wcs, runp->nwcs - 1) == 0
+		&& (runp->wcs[runp->nwcs - 1] + 1
+		    == runp->wcnext->wcs[runp->nwcs - 1]))
+	      {
+		int i;
+
+		/* Now add first the initial byte sequence.  */
+		added = (1 + 1 + 2 * (runp->nwcs - 1)) * sizeof (int32_t);
+		if (sizeof (int32_t) == sizeof (int))
+		  obstack_make_room (&extrapool, added);
+
+		/* More than one consecutive entry.  We mark this by having
+		   a negative index into the indirect table.  */
+		if (sizeof (int32_t) == sizeof (int))
+		  {
+		    obstack_int_grow_fast (&extrapool,
+					   obstack_object_size (&indirectpool)
+					   / sizeof (int32_t));
+		    obstack_int_grow_fast (&extrapool, runp->nwcs - 1);
+		  }
+		else
+		  {
+		    int32_t i = (obstack_object_size (&indirectpool)
+				 / sizeof (int32_t));
+		    obstack_grow (&extrapool, &i, sizeof (int32_t));
+		    i = runp->nwcs - 1;
+		    obstack_grow (&extrapool, &i, sizeof (int32_t));
+		  }
+		for (i = 1; i < runp->nwcs; ++i)
+		  if (sizeof (int32_t) == sizeof (int))
+		    obstack_int_grow_fast (&extrapool, runp->wcs[i]);
+		  else
+		    obstack_grow (&extrapool, &runp->wcs[i], sizeof (int32_t));
+
+		/* Now find the end of the consecutive sequence and
+                   add all the indeces in the indirect pool.  */
+		while (1)
+		  {
+		    if (sizeof (int32_t) == sizeof (int))
+		      obstack_int_grow (&extrapool, weightidx);
+		    else
+		      obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
+
+		    runp = runp->next;
+		    if (runp->wcnext == NULL
+			|| runp->nwcs != runp->wcnext->nwcs
+			|| wmemcmp ((wchar_t *) runp->wcs,
+				    (wchar_t *) runp->wcnext->wcs,
+				    runp->nwcs - 1) != 0
+			|| (runp->wcs[runp->nwcs - 1] + 1
+			    != runp->wcnext->wcs[runp->nwcs - 1]))
+		      break;
+
+		    /* Insert the weight.  */
+		    weightidx = output_weightwc (&weightpool, collate, runp);
+		  }
+
+		/* And add the end byte sequence.  Without length this
+                   time.  */
+		for (i = 1; i < runp->nwcs; ++i)
+		  if (sizeof (int32_t) == sizeof (int))
+		    obstack_int_grow (&extrapool, runp->wcs[i]);
+		  else
+		    obstack_grow (&extrapool, &runp->wcs[i], sizeof (int32_t));
+
+		weightidx = output_weightwc (&weightpool, collate, runp);
+		if (sizeof (int32_t) == sizeof (int))
+		  obstack_int_grow (&extrapool, weightidx);
+		else
+		  obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
+	      }
+	    else
+	      {
+		/* A single entry.  Simply add the index and the length and
+		   string (except for the first character which is already
+		   tested for).  */
+		int i;
+
+		added = (1 + 1 + runp->nwcs - 1) * sizeof (int32_t);
+		if (sizeof (int) == sizeof (int32_t))
+		  obstack_make_room (&extrapool, added);
+
+		if (sizeof (int32_t) == sizeof (int))
+		  {
+		    obstack_int_grow_fast (&extrapool, weightidx);
+		    obstack_int_grow_fast (&extrapool, runp->nwcs - 1);
+		  }
+		else
+		  {
+		    int32_t l = runp->nwcs - 1;
+		    obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
+		    obstack_grow (&extrapool, &l, sizeof (int32_t));
+		  }
+		for (i = 1; i < runp->nwcs; ++i)
+		  if (sizeof (int32_t) == sizeof (int))
+		    obstack_int_grow_fast (&extrapool, runp->wcs[i]);
+		  else
+		    obstack_grow (&extrapool, &runp->wcs[i], sizeof (int32_t));
+	      }
+
+	    /* Next entry.  */
+	    lastp = runp;
+	    runp = runp->wcnext;
+	  }
+	while (runp != NULL);
+      }
+
+  /* Now add the four tables.  */
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_TABLEWC));
+  iov[2 + cnt].iov_base = tablewc;
+  iov[2 + cnt].iov_len = table_size * sizeof (int32_t);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_WEIGHTWC));
+  iov[2 + cnt].iov_len = obstack_object_size (&weightpool);
+  iov[2 + cnt].iov_base = obstack_finish (&weightpool);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_EXTRAWC));
+  iov[2 + cnt].iov_len = obstack_object_size (&extrapool);
+  iov[2 + cnt].iov_base = obstack_finish (&extrapool);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_INDIRECTWC));
   iov[2 + cnt].iov_len = obstack_object_size (&indirectpool);
   iov[2 + cnt].iov_base = obstack_finish (&indirectpool);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;

@@ -2937,16 +2937,29 @@ allocate_arrays (struct locale_ctype_t *ctype, struct charmap_t *charmap,
      table.  CH % TABSIZE is used as an index.  To solve multiple hits
      we have N planes.  This guarantees a fixed search time for a
      character [N / 2].  In the following code we determine the minimum
-     value for TABSIZE * N, where TABSIZE >= 256.  */
+     value for TABSIZE * N, where TABSIZE >= 256.
+
+     Some people complained that this algorithm takes too long.  Well,
+     go on, improve it.  But changing the step size is *not* an
+     option.  Some people changed this to use only sizes of prime
+     numbers.  Think again, do some math.  We are looking for the
+     optimal solution, not something which works in general.  Unless
+     somebody can provide a dynamic programming solution I think this
+     implementation is as good as it can get.  */
   size_t min_total = UINT_MAX;
   size_t act_size = 256;
 
-  if (!be_quiet)
+  if (!be_quiet && ctype->charnames_act > 512)
     fputs (_("\
 Computing table size for character classes might take a while..."),
 	   stderr);
 
-  while (act_size < min_total)
+  /* While we want to have a small total size we are willing to use a
+     little bit larger table if this reduces the number of layers.
+     Therefore we add a little penalty to the number of planes.
+     Maybe this constant has to be adjusted a bit.  */
+#define PENALTY 128
+  do
     {
       size_t cnt[act_size];
       size_t act_planes = 1;
@@ -2964,22 +2977,23 @@ Computing table size for character classes might take a while..."),
 	    if (++cnt[nr] > act_planes)
 	      {
 		act_planes = cnt[nr];
-		if (act_size * act_planes >= min_total)
+		if ((act_size + PENALTY) * act_planes >= min_total)
 		  break;
 	      }
 	  }
 
-      if (act_size * act_planes < min_total)
+      if ((act_size + PENALTY) * act_planes < min_total)
 	{
-	  min_total = act_size * act_planes;
+	  min_total = (act_size + PENALTY) * act_planes;
 	  ctype->plane_size = act_size;
 	  ctype->plane_cnt = act_planes;
 	}
 
       ++act_size;
     }
+  while (act_size < min_total);
 
-  if (!be_quiet)
+  if (!be_quiet && ctype->charnames_act > 512)
     fputs (_(" done\n"), stderr);
 
 

@@ -1,4 +1,24 @@
+1999-12-13  Andreas Jaeger  <aj@suse.de>
+
+	* resolv/resolv.h: Remove K&R compatibility.
+
+	* resolv/res_libc.c: Move definition of _res after res_init,
+	res_init should use the threaded specific context.
+
+	* resolv/Makefile (+cflags): Remove -Wno-comment since it's not
+	needed anymore.
+
 1999-12-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/langinfo.h: Add constants for wide character collation data.
+	* locale/categories.def: Add appropriate entries for collate entries.
+	* locale/C-collate.c: Add initializers for new entries.
+	* locale/programs/ld-collate.c: Implement output of wide character
+	tables.
+
+	* locale/programs/ld-ctype.c (allocate_arrays): Change algorithm to
+	compute wide character table size a bit: it now gives up a bit of
+	total table size for fewer levels.
 
 	* soft-fp/*: Tons of new files to implement floating-point arithmetic
 	in software.

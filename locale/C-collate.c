@@ -150,8 +150,15 @@ const struct locale_data _nl_C_LC_COLLATE =
   _nl_C_name,
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
-  6,
+  13,
   {
+    { word: 0 },
+    { string: NULL },
+    { string: NULL },
+    { string: NULL },
+    { string: NULL },
+    { string: NULL },
+    { word: 0 },
     { word: 0 },
     { string: NULL },
     { string: NULL },

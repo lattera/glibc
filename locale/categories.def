@@ -48,6 +48,13 @@ DEFINE_CATEGORY
   DEFINE_ELEMENT (_NL_COLLATE_WEIGHTMB,       "collate-weightmb",         std, string)
   DEFINE_ELEMENT (_NL_COLLATE_EXTRAMB,        "collate-extramb",          std, string)
   DEFINE_ELEMENT (_NL_COLLATE_INDIRECTMB,     "collate-indirectmb",       std, string)
+  DEFINE_ELEMENT (_NL_COLLATE_HASH_SIZE,      "collate-hash-size",        std, word)
+  DEFINE_ELEMENT (_NL_COLLATE_HASH_LAYERS,    "collate-hash-layers",      std, word)
+  DEFINE_ELEMENT (_NL_COLLATE_NAMES,          "collate-names",            std, string)
+  DEFINE_ELEMENT (_NL_COLLATE_TABLEWC,        "collate-tablewc",          std, string)
+  DEFINE_ELEMENT (_NL_COLLATE_WEIGHTWC,       "collate-weightwc",         std, string)
+  DEFINE_ELEMENT (_NL_COLLATE_EXTRAWC,        "collate-extrawc",          std, string)
+  DEFINE_ELEMENT (_NL_COLLATE_INDIRECTWC,     "collate-indirectwc",       std, string)
   ), NO_POSTLOAD)
 
 

@@ -136,19 +136,19 @@ struct __res_state; /* forward */
 typedef enum { res_goahead, res_nextns, res_modified, res_done, res_error }
 	res_sendhookact;
 
-typedef res_sendhookact (*res_send_qhook)__P((struct sockaddr_in * const *ns,
-					      const u_char **query,
-					      int *querylen,
-					      u_char *ans,
-					      int anssiz,
-					      int *resplen));
+typedef res_sendhookact (*res_send_qhook) (struct sockaddr_in * const *ns,
+					   const u_char **query,
+					   int *querylen,
+					   u_char *ans,
+					   int anssiz,
+					   int *resplen);
 
-typedef res_sendhookact (*res_send_rhook)__P((const struct sockaddr_in *ns,
-					      const u_char *query,
-					      int querylen,
-					      u_char *ans,
-					      int anssiz,
-					      int *resplen));
+typedef res_sendhookact (*res_send_rhook) (const struct sockaddr_in *ns,
+					   const u_char *query,
+					   int querylen,
+					   u_char *ans,
+					   int anssiz,
+					   int *resplen);
 
 struct res_sym {
 	int	number;		/* Identifying number, like T_MX */
@@ -270,20 +270,20 @@ extern struct __res_state _res;
 #define res_send		__res_send
 
 __BEGIN_DECLS
-void		fp_nquery __P((const u_char *, int, FILE *));
-void		fp_query __P((const u_char *, FILE *));
-const char *	hostalias __P((const char *));
-void		p_query __P((const u_char *));
-void		res_close __P((void));
-int		res_init __P((void));
-int		res_isourserver __P((const struct sockaddr_in *));
-int		res_mkquery __P((int, const char *, int, int, const u_char *,
-				 int, const u_char *, u_char *, int));
-int		res_query __P((const char *, int, int, u_char *, int));
-int		res_querydomain __P((const char *, const char *, int, int,
-				     u_char *, int));
-int		res_search __P((const char *, int, int, u_char *, int));
-int		res_send __P((const u_char *, int, u_char *, int));
+void		fp_nquery (const u_char *, int, FILE *) __THROW;
+void		fp_query (const u_char *, FILE *) __THROW;
+const char *	hostalias (const char *) __THROW;
+void		p_query (const u_char *) __THROW;
+void		res_close (void) __THROW;
+int		res_init (void) __THROW;
+int		res_isourserver (const struct sockaddr_in *) __THROW;
+int		res_mkquery (int, const char *, int, int, const u_char *,
+			     int, const u_char *, u_char *, int) __THROW;
+int		res_query (const char *, int, int, u_char *, int) __THROW;
+int		res_querydomain (const char *, const char *, int, int,
+				 u_char *, int) __THROW;
+int		res_search (const char *, int, int, u_char *, int) __THROW;
+int		res_send (const u_char *, int, u_char *, int) __THROW;
 __END_DECLS
 
 #if !defined(SHARED_LIBBIND) || defined(_LIBC)

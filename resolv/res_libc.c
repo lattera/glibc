@@ -38,9 +38,6 @@ static const char rcsid[] = "$Id$";
 #include <string.h>
 #include <unistd.h>
 
-#undef _res
-
-struct __res_state _res;
 
 /* This is the old res_init function.  It has been moved from
    res_data.c to this file since res_init should go into libc.so but
@@ -89,6 +86,11 @@ res_init(void) {
 
 /* We need a resolver context - in unthreaded apps, this weak function
    provides it.  */
+
+#undef _res
+
+struct __res_state _res;
+
 
 struct __res_state *
 weak_const_function

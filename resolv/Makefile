@@ -57,7 +57,7 @@ CPPFLAGS += -Dgethostbyname=res_gethostbyname \
 	    -Dgetnetbyaddr=res_getnetbyaddr
 
 # The BIND code elicits some harmless warnings.
-+cflags += -Wno-strict-prototypes -Wno-comment -Wno-write-strings
++cflags += -Wno-strict-prototypes -Wno-write-strings
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
