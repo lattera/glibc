@@ -1,5 +1,7 @@
 2001-11-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/ca.po: Update from translation team.
+
 	* elf/dl-load.c (_dl_map_object_from_fd): Remove use of
 	_dl_pf_to_prot.  Use arithmetic operation using PF_TO_PROT macro.
 	* sysdeps/generic/ldsodefs.h (PF_TO_PROT): New macro.
@@ -22,7 +24,6 @@
 2001-11-09  Roland McGrath  <roland@frob.com>
 
 	Hurd/PowerPC port contributed by Peter Bruin <pjbruin@dds.nl>.
-	* NEWS: Mention it.
 	* sysdeps/mach/hurd/powerpc/exc2signal.c: New file.
 	* sysdeps/mach/hurd/powerpc/init-first.c: New file.
 	* sysdeps/mach/hurd/powerpc/intr-msg.h: New file.
