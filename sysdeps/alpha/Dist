@@ -7,3 +7,5 @@ _mcount.S
 stxcpy.S
 stxncpy.S
 fpu/fenv_libc.h
+alphaev6/stxncpy.S
+alphaev6/stxcpy.S
