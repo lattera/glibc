@@ -103,5 +103,5 @@ int main(int argc, char ** argv)
   printf("Thread %lx: \"%s\"\n", pthread_self(), res);
   pthread_join(th1, NULL);
   pthread_join(th2, NULL);
-  pthread_exit(NULL);
+  exit(0);
 }

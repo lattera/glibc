@@ -1,3 +1,7 @@
+1998-06-13 11:04  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Examples/ex4.c (main): Use exit, not pthread_exit.
+
 1998-07-09 13:39  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Versions: Add __pthread_mutexattr_gettype and
