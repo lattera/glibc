@@ -1,3 +1,7 @@
+2004-08-10  Alfred M. Szmidt  <ams@kemisten.nu>
+
+	* sysdeps/generic/bits/in.h (struct ip_mreq): Remove definition.
+
 2004-08-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/bits/stdio.h (fread_unlocked): Cast 0 to (size_t).
