@@ -1270,7 +1270,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 	      if (n == 10)
 		{
-		  /*Have not yet found the digit.  */
+		  /* Have not yet found the digit.  */
 		  while (++from_level <= to_level)
 		    {
 		      /* Search all ten digits of this level.  */
@@ -1491,7 +1491,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		    {
 		      /* This is no valid number.  */
 		      ungetc (c, s);
-		      input_error ();
+		      conv_error ();
 		    }
 #else
 		  /* Match against the decimal point.  At this point
@@ -1524,7 +1524,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			  c = *--cmpp;
 			}
 
-		      input_error ();
+		      conv_error ();
 		    }
 		  if (width > 0)
 		    /* +1 because we substract below.  */

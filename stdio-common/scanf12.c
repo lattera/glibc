@@ -7,7 +7,7 @@ main (void)
   double d;
   int c;
 
-  if (scanf ("%lg", &d) != EOF)
+  if (scanf ("%lg", &d) != 0)
     {
       printf ("scanf didn't failed\n");
       exit (1);

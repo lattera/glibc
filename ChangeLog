@@ -1,5 +1,10 @@
 2000-07-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/vfscanf.c: Handle input -- with format %f correctly
+	(it's no input error).
+	* stdio-common/tstscanf.c: Add test case for format %f with input --.
+	* stdio-common/scanf12.c: Correct expected result for first scanf.
+
 	* stdio-common/vfprintf.c (process_string_arg): Correct handling
 	of multibyte character strings in %s format with precision.
 

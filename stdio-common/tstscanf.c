@@ -277,7 +277,7 @@ main (int argc, char **argv)
     /* From PR libc/1313 reported by Ben Caradoc-Davies <bmcd@physics.otago.ac.nz>.  */
     float value;
     int res;
-    
+
     res = sscanf ("0123", "%2f", &value);
     if (res != 1 || value != 1.0)
       {
@@ -285,6 +285,19 @@ main (int argc, char **argv)
 	result = 1;
       }
   }
-  
+
+  fputs ("Test 10:\n", stdout);
+  {
+    float value;
+    int res;
+
+    res = sscanf ("--", "%f", &value);
+    if (res != 0)
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
+  }
+
   exit (result);
 }
