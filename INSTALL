@@ -20,9 +20,10 @@ change in the future.  Get it from the same place you got the main
 bundle; the file is `glibc-linuxthreads-VERSION.tar.gz'.  Support for
 the `crypt' function is distributed separately because of United States
 export restrictions.  If you are outside the US or Canada, you must get
-`crypt' support from a site outside the US, such as `ftp.ifi.uio.no'.
-(Most non-US mirrors of `ftp.gnu.org' will have it too.)  The file you
-need is `glibc-crypt-VERSION.tar.gz'.
+`crypt' support from a site outside the US, such as `ftp.gwdg.de'.
+`ftp.gwdg.de' has the crypt distribution in `pub/linux/glibc'.  (Most
+non-US mirrors of `ftp.gnu.org' will have it too.)  The file you need
+is `glibc-crypt-VERSION.tar.gz'.
 
    You will need recent versions of several GNU tools: definitely GCC
 and GNU Make, and possibly others.  *Note Tools for Compilation::,
@@ -40,6 +41,10 @@ the glibc sources in `/src/gnu/glibc-2.1.0', create a directory
 at the top level of the source tree.  In the scenario above, you'd type
 
      $ ../glibc-2.1.0/configure ARGS...
+
+   Please note that even if you're building in a separate build
+directory, the compiliation needs to modify a few files in the source
+directory, especially some files in the manual subdirectory.
 
 `configure' takes many options, but you can get away with knowing only
 two: `--prefix' and `--enable-add-ons'.  The `--prefix' option tells
@@ -82,7 +87,7 @@ will be used, and CFLAGS sets optimization options for the compiler.
      given with no list, it enables all the add-on packages it finds.
      If you do not wish to use some add-on package that you have
      present in your source tree, give this option a list of the
-     add-ons that you _do_ want used, like this:
+     add-ons that you *do* want used, like this:
      `--enable-add-ons=crypt,linuxthreads'
 
 `--with-binutils=DIRECTORY'
@@ -97,10 +102,6 @@ will be used, and CFLAGS sets optimization options for the compiler.
 `--without-fp'
      Use this option if your computer lacks hardware floating-point
      support and your operating system does not emulate an FPU.
-
-`--disable-static'
-     Don't build static libraries.  Static libraries aren't that useful
-     these days, but we recommend you build them in case you need them.
 
 `--disable-shared'
      Don't build shared libraries even if we could.  Not all systems
@@ -168,7 +169,11 @@ Instead, edit the generated `Makefile' and uncomment the line
      # PARALLELMFLAGS = -j 4
 
 You can change the `4' to some other number as appropriate for your
-system.
+system.  Instead of changing the `Makefile', you could give this option
+directly to `make' and call it as, e.g.  `make PARALLELMFLAGS=-j4'.  If
+you're building in the source directory, you've got to use the latter
+approach since in this case no new `Makefile' is generated which you
+can change.
 
    To build and run some test programs which exercise some of the
 library facilities, type `make check'.  This should complete
@@ -202,10 +207,10 @@ or you will end up with a mixture of header files from both libraries,
 and you won't be able to compile anything.  You may also need to
 reconfigure GCC to work with the new library.  The easiest way to do
 that is to figure out the compiler switches to make it work again
-(`-Wl,-dynamic-linker=/lib/ld-linux.so.2' should work on Linux systems)
-and use them to recompile gcc.  You can also edit the specs file
-(`/usr/lib/gcc-lib/TARGET/VERSION/specs'), but that is a bit of a black
-art.
+(`-Wl,--dynamic-linker=/lib/ld-linux.so.2' should work on Linux
+systems) and use them to recompile gcc.  You can also edit the specs
+file (`/usr/lib/gcc-lib/TARGET/VERSION/specs'), but that is a bit of a
+black art.
 
    You can install glibc somewhere other than where you configured it
 to go by setting the `install_root' variable on the command line for
@@ -299,14 +304,14 @@ build the GNU C library:
      Perl is not required, but it is used if present to test the
      installation.  We may decide to use it elsewhere in the future.
 
-
 If you change any of the `configure.in' files you will also need
 
    * GNU `autoconf' 2.12 or higher
 
 and if you change any of the message translation files you will need
 
-   * GNU `gettext' 0.10.35 or later
+   * GNU `gettext' 0.10.35 or later (version 0.10.35 is a alpha release
+     and available via ftp from alpha.gnu.org/gnu)
 
 You may also need these packages if you upgrade your source tree using
 patches, although we try to avoid this.
@@ -402,7 +407,7 @@ installed there.
 library on your system against the new library for the sake of new code,
 but keep the old libraries around for old binaries to use.  This is
 complicated and difficult.  Consult the Glibc2 HOWTO at
-<http://www.imaxx.net/~thrytis/glibc> for details.
+`http://www.imaxx.net/~thrytis/glibc' for details.
 
    You cannot use `nscd' with 2.0 kernels, due to bugs in the
 kernel-side thread support.  `nscd' happens to hit these bugs
@@ -416,6 +421,13 @@ Reporting Bugs
 errors and omissions in this manual.  If you report them, they will get
 fixed.  If you don't, no one will ever know about them and they will
 remain unfixed for all eternity, if not longer.
+
+   It is a good idea to check first that the problem was not reported
+before.  Bugs are documented in two places: The file `BUGS' describes a
+number of well known bugs and the bug tracking system has a WWW
+interface at `http://www-gnats.gnu.org:8080/cgi-bin/wwwgnats.pl'.  The
+WWW interface gives you access to open and closed reports.  The closed
+reports normally include a patch or a hint on solving the problem.
 
    To report a bug, first you must find it.  Hopefully, this will be the
 hard part.  Once you've found a bug, make sure it's really a bug.  A
@@ -441,9 +453,9 @@ you haven't installed it, will be in your build directory.  Send your
 test case, the results you got, the results you expected, and what you
 think the problem might be (if you've thought of anything).  `glibcbug'
 will insert the configuration information we need to see, and ship the
-report off to <bug-glibc@gnu.org>.  Don't send a message there
-directly; it is fed to a program that expects mail to be formatted in a
-particular way.  Use the script.
+report off to <bugs@gnu.org>.  Don't send a message there directly; it
+is fed to a program that expects mail to be formatted in a particular
+way.  Use the script.
 
    If you are not sure how a function should behave, and this manual
 doesn't tell you, that's a bug in the manual.  Report that too!  If the

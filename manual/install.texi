@@ -26,7 +26,8 @@ bundle; the file is @file{glibc-linuxthreads-@var{VERSION}.tar.gz}.
 Support for the @code{crypt} function is distributed separately because
 of United States export restrictions.  If you are outside the US or
 Canada, you must get @code{crypt} support from a site outside the US,
-such as @samp{ftp.ifi.uio.no}.
+such as @samp{ftp.gwdg.de}.  @samp{ftp.gwdg.de} has the crypt
+distribution in @code{pub/linux/glibc}.
 @c Check this please someone:
 (Most non-US mirrors of @samp{ftp.gnu.org} will have it too.)  The file
 you need is @file{glibc-crypt-@var{VERSION}.tar.gz}.

@@ -29,7 +29,7 @@ routines := offtime asctime clock ctime ctime_r difftime \
 	    tzfile getitimer setitimer			 \
 	    stime dysize timegm ftime			 \
 	    strptime getdate wcsftime			 \
-	    clock_getres clock_gettime clock_setres	 \
+	    clock_getres clock_gettime clock_settime	 \
 	    timer_create timer_delete timer_getoverr	 \
 	    timer_gettime timer_settime
 

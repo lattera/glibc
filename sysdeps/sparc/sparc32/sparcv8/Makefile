@@ -1,1 +1,1 @@
-sysdep-CFLAGS += -mv8
+sysdep-CFLAGS += -mcpu=v8

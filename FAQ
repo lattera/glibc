@@ -640,8 +640,8 @@ functions together with glibc.
 
 The functions are available, as an add-on (see question 1.11).  People in the US
 may get it from the same place they got GNU libc from.  People outside the
-US should get the code from ftp.funet.fi [128.214.248.6] in the directory
-pub/gnu/funet, or another archive site outside the USA.  The README explains
+US should get the code from ftp.gwdg.de [134.76.11.100] in the directory
+pub/linux/glibc, or another archive site outside the USA.  The README explains
 how to install the sources.
 
 If you already have the crypt code on your system the reason for the failure

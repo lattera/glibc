@@ -57,10 +57,10 @@ for crypt; it is called `glibc-crypt-VERSION.tar.gz'.  You can just
 unpack the crypt distribution along with the rest of the C library and
 build; you can also build the library without getting crypt.  Users
 outside the USA can get the crypt distribution via anonymous FTP from
-ftp.funet.fi [128.214.248.6] in the directory pub/gnu/funet, or
+ftp.gwdg.de [134.76.11.100] in the directory pub/linux/glibc, or
 another archive site outside the USA.  Archive maintainers are
 encouraged to copy this distribution to their archives outside the
-USA.  Please get it from ftp.funet.fi; transferring this distribution
+USA.  Please get it from ftp.gwdg.de; transferring this distribution
 from ftp.gnu.org (or any other site in the USA) to a site outside the
 USA is in violation of US export laws.
 

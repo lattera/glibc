@@ -1,3 +1,17 @@
+1999-07-25  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	* sysdeps/sparc/sparc32/sparcv8/Makefile: -mv8 is deprecated, use
+	-mcpu=v8.
+	* sysdeps/sparc/sparc32/sparcv9/Makefile: Likewise.
+	* sysdeps/sparc/sparc64/Makefile: Make %g7 register available for
+	libc's private use (as assembly routine clobber it anyway).
+
+1999-07-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* README.template (configurations): The crypt add-on has a new
+	ftp site.
+	* manual/install.texi (Installation): Likewise.
+
 1999-07-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/time.h: Add forward for struct sigevent.  Unix98 maybe
