@@ -2,7 +2,7 @@ sysdep-CFLAGS += -mcpu=ultrasparc -Wa,-Av9a
 
 ifeq ($(subdir),csu)
 sysdep_routines += hp-timing
-static-only-routines += hp-timing
+elide-routines.os += hp-timing
 endif
 
 ASFLAGS-.o += -Wa,-Av9a

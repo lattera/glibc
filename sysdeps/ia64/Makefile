@@ -8,7 +8,7 @@ endif
 ifeq ($(subdir), csu)
 CPPFLAGS-start.S = -D__ASSEMBLY__
 sysdep_routines += hp-timing
-static-only-routines += hp-timing
+elide-routines.os += hp-timing
 
 ifeq (yes,$(build-shared))
 # Compatibility

@@ -3,7 +3,7 @@ long-double-fcts = yes
 
 ifeq ($(subdir),csu)
 sysdep_routines += hp-timing
-static-only-routines += hp-timing
+elide-routines.os += hp-timing
 endif
 
 ifeq ($(subdir),gmon)

@@ -1,5 +1,17 @@
 2004-08-15  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/i386/i686/Makefile (elide-routines.os): Append hp-timing to
+	this, not ...
+	(static-only-routines): ... this.
+	* sysdeps/ia64/Makefile: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/Makefile: Likewise.
+	* sysdeps/sparc/sparc64/Makefile: Likewise.
+	* sysdeps/x86_64/Makefile: Likewise.
+	* sysdeps/i386/i686/hp-timing.c: Revert copyright terms change.
+	* sysdeps/ia64/hp-timing.c: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/hp-timing.c: Likewise.
+	* sysdeps/sparc/sparc64/hp-timing.c: Likewise.
+
 	* csu/elf-init.c: Update copyright terms including special exception
 	for these trivial files, which are statically linked into executables
 	that use dynamic linking for the significant library code.
