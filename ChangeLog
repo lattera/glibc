@@ -1,5 +1,14 @@
 2004-10-03  Ulrich Drepper  <drepper@redhat.com>
 
+	Dynamically create new threads if necessary.
+	* nscd/connections.c (fd_ready): If no thread available for processing
+	the request, create a new one unless the limit is reached.
+	(start_threads): Check errors from pthread_create.
+	* nscd/nscd.h: Declare max_nthreads.
+	* nscd/nscd_conf.c: Parse max-nthreads entry.
+	* nscd/nscd.conf: Add max-threads entry.
+	* nscd/nscd_stat.c: Print current and maximum number of threads.
+
 	Implement paranoia mode.
 	* nscd/connections.c (nscd_init): Mark database and socket descriptors
 	as close on exec.

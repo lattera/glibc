@@ -143,8 +143,8 @@ receive_print_stats (void)
   int fd;
   int i;
   uid_t uid = getuid ();
-  const char *yesstr = _("     yes");
-  const char *nostr = _("      no");
+  const char *yesstr = nl_langinfo (YESSTR);
+  const char *nostr = nl_langinfo (NOSTR);
 
   /* Find out whether there is another user but root allowed to
      request statistics.  */
@@ -225,22 +225,22 @@ receive_print_stats (void)
   else
     printf (_("            %2lus  server runtime\n"), diff);
 
-  printf (_("%15lu  number of times clients had to wait\n"
+  printf (_("%15d  current number of threads\n"
+	    "%15d  maximum number of threads\n"
+	    "%15lu  number of times clients had to wait\n"
 	    "%15s  paranoia mode enabled\n"
 	    "%15lu  restart internal\n"),
-	  data.client_queued, paranoia ? yesstr : nostr,
-	  (unsigned long int) restart_interval);
+	  nthreads, max_nthreads, data.client_queued,
+	  paranoia ? yesstr : nostr, (unsigned long int) restart_interval);
 
   for (i = 0; i < lastdb; ++i)
     {
       unsigned long int hit = data.dbs[i].poshit + data.dbs[i].neghit;
       unsigned long int all = hit + data.dbs[i].posmiss + data.dbs[i].negmiss;
-      const char *enabled = nl_langinfo (data.dbs[i].enabled ? YESSTR : NOSTR);
-      const char *check_file = nl_langinfo (data.dbs[i].check_file
-					    ? YESSTR : NOSTR);
-      const char *shared = nl_langinfo (data.dbs[i].shared ? YESSTR : NOSTR);
-      const char *persistent = nl_langinfo (data.dbs[i].persistent
-					    ? YESSTR : NOSTR);
+      const char *enabled = data.dbs[i].enabled ? yesstr : nostr;
+      const char *check_file = data.dbs[i].check_file ? yesstr : nostr;
+      const char *shared = data.dbs[i].shared ? yesstr : nostr;
+      const char *persistent = data.dbs[i].persistent ? yesstr : nostr;
 
       if (enabled[0] == '\0')
 	/* The locale does not provide this information so we have to

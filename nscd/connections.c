@@ -69,6 +69,8 @@ static gid_t *server_groups;
 #endif
 static int server_ngroups;
 
+static pthread_attr_t attr;
+
 static void begin_drop_privileges (void);
 static void finish_drop_privileges (void);
 
@@ -167,8 +169,10 @@ static struct database_dyn *const serv2db[LASTREQ] =
 #define CACHE_PRUNE_INTERVAL	15
 
 
-/* Number of threads to use.  */
+/* Initial number of threads to use.  */
 int nthreads = -1;
+/* Maximum number of threads to use.  */
+int max_nthreads = 32;
 
 /* Socket for incoming connections.  */
 static int sock;
@@ -1206,6 +1210,19 @@ fd_ready (int fd)
     {
       ++client_queued;
       do_signal = false;
+
+      /* Try to start another thread to help out.  */
+      pthread_t th;
+      if (nthreads < max_nthreads
+	  && pthread_create (&th, &attr, nscd_run,
+			     (void *) (long int) nthreads) == 0)
+	{
+	  /* We got another thread.  */
+	  ++nthreads;
+	  /* The new thread might new a kick.  */
+	  do_signal = true;
+	}
+
     }
 
   pthread_mutex_unlock (&readylist_lock);
@@ -1452,21 +1469,29 @@ start_threads (void)
 
   /* Create the attribute for the threads.  They are all created
      detached.  */
-  pthread_attr_t attr;
   pthread_attr_init (&attr);
   pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+  /* Use 1MB stacks, twice as much for 64-bit architectures.  */
+  pthread_attr_setstacksize (&attr, 1024 * 1024 * (sizeof (void *) / 4));
 
   /* We allow less than LASTDB threads only for debugging.  */
   if (debug_level == 0)
     nthreads = MAX (nthreads, lastdb);
 
+  int nfailed = 0;
   for (long int i = 0; i < nthreads; ++i)
     {
       pthread_t th;
-      pthread_create (&th, &attr, nscd_run, (void *) i);
+      if (pthread_create (&th, &attr, nscd_run, (void *) (i - nfailed)) != 0)
+	++nfailed;
     }
-
-  pthread_attr_destroy (&attr);
+  if (nthreads - nfailed < lastdb)
+    {
+      /* We could not start enough threads.  */
+      dbg_log (_("could only start %d threads; terminating"),
+	       nthreads - nfailed);
+      exit (1);
+    }
 
   /* Determine how much room for descriptors we should initially
      allocate.  This might need to change later if we cap the number

@@ -184,6 +184,10 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
 	  if (nthreads == -1)
 	    nthreads = MAX (atol (arg1), lastdb);
 	}
+      else if (strcmp (entry, "max-threads") == 0)
+	{
+	  max_nthreads = MAX (atol (arg1), lastdb);
+	}
       else if (strcmp (entry, "server-user") == 0)
         {
           if (!arg1)
@@ -281,6 +285,10 @@ cannot get current working directory: %s; disabling paranoia mode"),
 	  paranoia = 0;
 	}
     }
+
+  /* Enforce sanity.  */
+  if (max_nthreads < nthreads)
+    max_nthreads = nthreads;
 
   /* Free the buffer.  */
   free (line);

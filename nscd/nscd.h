@@ -102,8 +102,10 @@ extern const struct iovec grp_iov_disabled;
 extern const struct iovec hst_iov_disabled;
 
 
-/* Number of threads to run.  */
+/* Initial number of threads to run.  */
 extern int nthreads;
+/* Maximum number of threads to use.  */
+extern int max_nthreads;
 
 /* Tables for which we cache data with uid.  */
 extern int secure_in_use; /* Is one of the above 1?  */
