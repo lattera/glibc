@@ -1,5 +1,8 @@
 Mon May 27 10:10:00 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Makefile ($(includedir)/stubs.h): Don't touch target if new one is
+	identical.
+
 	* time/Makefile (z.% rule): Generate generic zone%/ rule after
 	zone%/right/ and zone%/posix/ rules so they match first.
 
