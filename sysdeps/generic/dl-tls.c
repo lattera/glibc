@@ -212,11 +212,9 @@ allocate_dtv (void *result)
     {
       /* This is the initial length of the dtv.  */
       dtv[0].counter = dtv_length;
-      /* Fill in the generation number.  */
-      dtv[1].counter = GL(dl_tls_generation) = 0;
-      /* Initialize all of the rest of the dtv with zero to indicate
-	 nothing there.  */
-      memset (dtv + 2, '\0', dtv_length * sizeof (dtv_t));
+      /* Initialize all of the rest of the dtv (including the
+	 generation counter) with zero to indicate nothing there.  */
+      memset (dtv + 1, '\0', (dtv_length + 1) * sizeof (dtv_t));
 
       /* Add the dtv to the thread data structures.  */
       INSTALL_DTV (result, dtv);

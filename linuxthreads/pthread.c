@@ -623,7 +623,8 @@ int __pthread_initialize_manager(void)
 
 #ifdef USE_TLS
   /* Allocate memory for the thread descriptor and the dtv.  */
-  __pthread_handles[1].h_descr = manager_thread = tcb = _dl_allocate_tls ();
+  __pthread_handles[1].h_descr = manager_thread = tcb
+    = _dl_allocate_tls (NULL);
   if (tcb == NULL) {
     free(__pthread_manager_thread_bos);
     __libc_close(manager_pipe[0]);
