@@ -20,6 +20,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* Prototype for our test function.  */
+extern int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+
+/* This defines the `main' function and some more.  */
+#include <test-skeleton.c>
+
 /* Prototypes for the functions in the DSOs.  */
 extern int calllocal1 (void);
 extern int (*getlocal1 (void)) (void);
@@ -54,7 +62,7 @@ extern const char *protvarinmod;
 extern const char *protvaritcpt;
 
 int
-main (void)
+do_test (void)
 {
   int res = 0;
   int val;

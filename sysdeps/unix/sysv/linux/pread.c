@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <endian.h>
 #include <unistd.h>
 
 #include <sysdep.h>
@@ -27,6 +28,7 @@
 
 #if defined __NR_pread || __ASSUME_PREAD_SYSCALL > 0
 
+/* The order of hi, lo depends on endianness.  */
 extern ssize_t __syscall_pread (int fd, void *buf, size_t count,
 				off_t offset_hi, off_t offset_lo);
 
@@ -46,7 +48,12 @@ __libc_pread (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
+# if __BYTE_ORDER == __LITTLE_ENDIAN
+  result = INLINE_SYSCALL (pread, 5, fd, buf, count, offset, 0);
+# elif __BYTE_ORDER == __BIG_ENDIAN
   result = INLINE_SYSCALL (pread, 5, fd, buf, count, 0, offset);
+# endif
+
 # if __ASSUME_PREAD_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use the emulation.  */

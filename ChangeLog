@@ -1,3 +1,22 @@
+2000-05-27  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/pread.c: Removed, we can use the
+	normal version now.
+	* sysdeps/unix/sysv/linux/i386/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/pwrite.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/pread.c (__libc_pread): Check
+	endianness to decide how to pass arguments.
+	* sysdeps/unix/sysv/linux/pwrite.c (__libc_pwrite): Likewise.
+
+	* elf/vismain.c: Use test-skeleton interface.
+	(TEST_FUNCTION): New macro.
+	(do_test): Renamed from main.
+
 2000-05-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): If req->ai_family ==
