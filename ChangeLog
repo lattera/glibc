@@ -1,5 +1,8 @@
 Thu Aug 17 16:18:38 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/mach/hurd/Makefile: Don't elide sunrpc and manual from
+ 	`subdirs' variable.
+
 	* hurd/intr-msg.c: Use INTR_MSG_TRAP macro from machine-dependent
  	"intr-msg.h" for special syscall code, instead of i386-specific asm.
 	* hurd/hurdsig.c: Use INTR_MSG_BACK_OUT macro from
