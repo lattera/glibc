@@ -59,3 +59,12 @@ done
 if test "x$mach_interface_list" = x; then
   AC_MSG_ERROR([what manner of Mach is this?])
 fi
+
+AC_CACHE_CHECK(for host_page_size in mach_host.defs,
+	       libc_cv_mach_host_page_size, [dnl
+AC_EGREP_HEADER(host_page_size, mach/mach_host.defs,
+		libc_cv_mach_host_page_size=yes,
+		libc_cv_mach_host_page_size=no)])
+if test $libc_cv_mach_host_page_size = yes; then
+  AC_DEFINE([HAVE_HOST_PAGE_SIZE])
+fi

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,93,95,97,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,95,97,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,8 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <mach_init.h>
-#include <mach/mach_interface.h>
+#include <mach.h>
 #include <mach/mig_support.h>
 #include <unistd.h>
 
@@ -29,13 +28,20 @@ void
 __mach_init (void)
 {
   kern_return_t err;
-  vm_statistics_data_t stats;
 
   __mach_task_self_ = (__mach_task_self) ();
   __mig_init (0);
 
-  if (err = __vm_statistics (__mach_task_self (), &stats))
+#if HAVE_HOST_PAGE_SIZE
+  if (err = __host_page_size (__mach_host_self (), &__vm_page_size))
     _exit (err);
-  __vm_page_size = stats.pagesize;
+#else
+  {
+    vm_statistics_data_t stats;
+    if (err = __vm_statistics (__mach_task_self (), &stats))
+      _exit (err);
+    __vm_page_size = stats.pagesize;
+  }
+#endif
 }
 weak_alias (__mach_init, mach_init)

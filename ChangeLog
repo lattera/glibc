@@ -1,5 +1,10 @@
 2002-02-16  Roland McGrath  <roland@frob.com>
 
+	* config.h.in: Add #undef HAVE_HOST_PAGE_SIZE.
+	* sysdeps/mach/configure.in: Check for host_page_size RPC to define it.
+	* mach/mach_init.c (__mach_init) [HAVE_HOST_PAGE_SIZE]: Use
+	host_page_size instead of vm_statistics.
+
 	* sysdeps/mach/Makefile (mach-before-compile): Don't include
 	mach_interface.h here, since not all variants use that name.
 
