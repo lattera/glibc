@@ -1,5 +1,31 @@
 2003-07-14  Ulrich Drepper  <drepper@redhat.com>
 
+	More cancellation handling fixups.
+	* sysdeps/unix/sysv/linux/not-cancel.h: Add waitpid_not_cancel.
+	* sysdeps/generic/not-cancel.h: Likewise.
+	* catgets/open_catalog.c: Use not-cancelable syscalls.
+	* time/Makefile (CFLAGS-getdate.c): Add -fexceptions.
+	* sysdeps/unix/sysv/linux/llseek.c: Must not be cancelable.
+	* sysdeps/unix/syscalls.list: Don't mark lseek as cancelable.
+	* dlfcn/dlfcn.h: Mark dlopen with __THROW again.
+	* io/fcntl.h: Don't mark posix_fallocate with __THROW.
+	* libio/fileops.c: Use not-cancelable syscalls for fclose.
+	* libio/iopopen.c: Use no-cancelable syscalls.
+	* libio/stdio.h: Mark popen and pclose with __THROW again.
+	* misc/Makefile (CFLAGS-syslog.c): Add -fexceptions.
+	* misc/syslog.c: Fix locking and cancellation cleanup handling.
+	* posix/unistd.h: Mark ttyname and ttyname_r again with __THROW.
+	* stdio-common/Makefile (CFLAGS-tmpfile.c, CFLAGS-tmpfile64.c,
+	CFLAGS-tempname.c): Add -fexceptions.
+	* stdlib/Makefile (CFLAGS-mkstemp.c): Add -fexceptions.
+	* string/string.h: Mark strerror and strerror_r with _THROW again.
+	* sysdeps/generic/unwind.inc: New file.  Copied from gcc.
+	* sysdeps/generic/unwind-dw2.c: Update from gcc version.  Remove
+	#ifs since we now need all the code compiled.
+	* sysdeps/posix/spawni.c: Use close_not_cancel instead of close.
+	* sysdeps/unix/closedir.c: Use not-cancelable syscalls.
+	* sysdeps/unix/opendir.c: Likewise.
+
 	* iconvdata/Makefile (modules): Add CP932 and EUC-JP-MS.
 	Add rule for EUC-JP-MS dependency.
 	* iconvdata/cp932.c: New file.

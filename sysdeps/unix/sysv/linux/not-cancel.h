@@ -21,33 +21,36 @@
 #include <sysdep.h>
 
 /* Uncancelable open.  */
-#ifdef INLINE_SYSCALL
-# define open_not_cancel(name, flags, mode) \
+#define open_not_cancel(name, flags, mode) \
    INLINE_SYSCALL (open, 3, (const char *) (name), (flags), (mode))
-#endif
+#define open_not_cancel_2(name, flags) \
+   INLINE_SYSCALL (open, 2, (const char *) (name), (flags))
 
 /* Uncancelable close.  */
-#ifdef INLINE_SYSCALL
-# define close_not_cancel_no_status(fd) \
+#define close_not_cancel(fd) \
+  INLINE_SYSCALL (close, 1, fd)
+#define close_not_cancel_no_status(fd) \
   (void) ({ INTERNAL_SYSCALL_DECL (err);				      \
 	    INTERNAL_SYSCALL (close, err, 1, (fd)); })
-#endif
 
 /* Uncancelable read.  */
-#ifdef INLINE_SYSCALL
-# define read_not_cancel(fd, buf, n) \
+#define read_not_cancel(fd, buf, n) \
   INLINE_SYSCALL (read, 3, (fd), (buf), (n))
-#endif
 
 /* Uncancelable write.  */
-#ifdef INLINE_SYSCALL
-# define write_not_cancel(fd, buf, n) \
+#define write_not_cancel(fd, buf, n) \
   INLINE_SYSCALL (write, 3, (fd), (buf), (n))
-#endif
 
 /* Uncancelable writev.  */
-#ifdef INLINE_SYSCALL
-# define writev_not_cancel_no_status(fd, iov, n) \
+#define writev_not_cancel_no_status(fd, iov, n) \
   (void) ({ INTERNAL_SYSCALL_DECL (err);				      \
 	    INTERNAL_SYSCALL (writev, err, 3, (fd), (iov), (n)); })
+
+/* Uncancelable waitpid.  */
+#ifdef __NR_waitpid
+# define waitpid_not_cancel(pid, stat_loc, options) \
+  INLINE_SYSCALL (waitpid, 3, pid, stat_loc, options)
+#else
+# define waitpid_not_cancel(pid, stat_loc, options) \
+  INLINE_SYSCALL (wait4, 4, pid, stat_loc, options, NULL)
 #endif

@@ -72,10 +72,8 @@ struct _Unwind_Context
   _Unwind_Word args_size;
 };
 
-#ifndef _LIBC
 /* Byte size of every register managed by these routines.  */
 static unsigned char dwarf_reg_size_table[DWARF_FRAME_REGISTERS];
-#endif
 
 
 /* The result of interpreting the frame unwind info for a frame.
@@ -184,7 +182,7 @@ _Unwind_GetGR (struct _Unwind_Context *context, int index)
 _Unwind_Word
 _Unwind_GetCFA (struct _Unwind_Context *context)
 {
-  return (_Unwind_Word) context->cfa;
+  return (_Unwind_Ptr) context->cfa;
 }
 
 /* Overwrite the saved value for register REG in CONTEXT with VAL.  */
@@ -323,7 +321,7 @@ extract_cie_info (struct dwarf_cie *cie, struct _Unwind_Context *context,
   return ret ? ret : p;
 }
 
-#ifndef _LIBC
+
 /* Decode a DW_OP stack program.  Return the top of stack.  Push INITIAL
    onto the stack to start.  */
 
@@ -713,7 +711,7 @@ execute_stack_op (const unsigned char *op_ptr, const unsigned char *op_end,
       /* Most things push a result value.  */
       if ((size_t) stack_elt >= sizeof(stack)/sizeof(*stack))
 	abort ();
-      stack[++stack_elt] = result;
+      stack[stack_elt++] = result;
     no_push:;
     }
 
@@ -723,7 +721,7 @@ execute_stack_op (const unsigned char *op_ptr, const unsigned char *op_end,
     abort ();
   return stack[stack_elt];
 }
-#endif
+
 
 /* Decode DWARF 2 call frame information. Takes pointers the
    instruction sequence to decode, current register information and
@@ -863,17 +861,17 @@ execute_cfa_program (const unsigned char *insn_ptr,
 	  break;
 
 	case DW_CFA_def_cfa_expression:
-	  insn_ptr = read_uleb128 (insn_ptr, &utmp);
 	  fs->cfa_exp = insn_ptr;
 	  fs->cfa_how = CFA_EXP;
+	  insn_ptr = read_uleb128 (insn_ptr, &utmp);
 	  insn_ptr += utmp;
 	  break;
 
 	case DW_CFA_expression:
 	  insn_ptr = read_uleb128 (insn_ptr, &reg);
-	  insn_ptr = read_uleb128 (insn_ptr, &utmp);
 	  fs->regs.reg[reg].how = REG_SAVED_EXP;
 	  fs->regs.reg[reg].loc.exp = insn_ptr;
+	  insn_ptr = read_uleb128 (insn_ptr, &utmp);
 	  insn_ptr += utmp;
 	  break;
 
@@ -1061,8 +1059,6 @@ __frame_state_for (void *pc_target, struct frame_state *state_in)
   return state_in;
 }
 
-#ifndef _LIBC
-
 static void
 uw_update_context_1 (struct _Unwind_Context *context, _Unwind_FrameState *fs)
 {
@@ -1070,34 +1066,48 @@ uw_update_context_1 (struct _Unwind_Context *context, _Unwind_FrameState *fs)
   void *cfa;
   long i;
 
+#ifdef EH_RETURN_STACKADJ_RTX
+  /* Special handling here: Many machines do not use a frame pointer,
+     and track the CFA only through offsets from the stack pointer from
+     one frame to the next.  In this case, the stack pointer is never
+     stored, so it has no saved address in the context.  What we do
+     have is the CFA from the previous stack frame.
+
+     In very special situations (such as unwind info for signal return),
+     there may be location expressions that use the stack pointer as well.
+
+     Do this conditionally for one frame.  This allows the unwind info
+     for one frame to save a copy of the stack pointer from the previous
+     frame, and be able to use much easier CFA mechanisms to do it.
+     Always zap the saved stack pointer value for the next frame; carrying
+     the value over from one frame to another doesn't make sense.  */
+
+  _Unwind_Word tmp_sp;
+
+  if (!orig_context.reg[__builtin_dwarf_sp_column ()])
+    {
+      tmp_sp = (_Unwind_Ptr) context->cfa;
+      orig_context.reg[__builtin_dwarf_sp_column ()] = &tmp_sp;
+    }
+  context->reg[__builtin_dwarf_sp_column ()] = NULL;
+#endif
+
   /* Compute this frame's CFA.  */
   switch (fs->cfa_how)
     {
     case CFA_REG_OFFSET:
-      /* Special handling here: Many machines do not use a frame pointer,
-	 and track the CFA only through offsets from the stack pointer from
-	 one frame to the next.  In this case, the stack pointer is never
-	 stored, so it has no saved address in the context.  What we do
-	 have is the CFA from the previous stack frame.  */
-      if (context->reg[fs->cfa_reg] == NULL)
-	cfa = context->cfa;
-      else
-	cfa = (void *) (_Unwind_Ptr) _Unwind_GetGR (context, fs->cfa_reg);
+      cfa = (void *) (_Unwind_Ptr) _Unwind_GetGR (&orig_context, fs->cfa_reg);
       cfa += fs->cfa_offset;
       break;
 
     case CFA_EXP:
-      /* ??? No way of knowing what register number is the stack pointer
-	 to do the same sort of handling as above.  Assume that if the
-	 CFA calculation is so complicated as to require a stack program
-	 that this will not be a problem.  */
       {
 	const unsigned char *exp = fs->cfa_exp;
 	_Unwind_Word len;
 
 	exp = read_uleb128 (exp, &len);
 	cfa = (void *) (_Unwind_Ptr)
-	  execute_stack_op (exp, exp + len, context, 0);
+	  execute_stack_op (exp, exp + len, &orig_context, 0);
 	break;
       }
 
@@ -1112,12 +1122,15 @@ uw_update_context_1 (struct _Unwind_Context *context, _Unwind_FrameState *fs)
       {
       case REG_UNSAVED:
 	break;
+
       case REG_SAVED_OFFSET:
 	context->reg[i] = cfa + fs->regs.reg[i].loc.offset;
 	break;
+
       case REG_SAVED_REG:
 	context->reg[i] = orig_context.reg[fs->regs.reg[i].loc.reg];
 	break;
+
       case REG_SAVED_EXP:
 	{
 	  const unsigned char *exp = fs->regs.reg[i].loc.exp;
@@ -1169,6 +1182,7 @@ uw_init_context_1 (struct _Unwind_Context *context,
 {
   void *ra = __builtin_extract_return_addr (__builtin_return_address (0));
   _Unwind_FrameState fs;
+  _Unwind_Word sp_slot;
 
   memset (context, 0, sizeof (struct _Unwind_Context));
   context->ra = ra;
@@ -1177,9 +1191,10 @@ uw_init_context_1 (struct _Unwind_Context *context,
     abort ();
 
   /* Force the frame state to use the known cfa value.  */
-  context->cfa = outer_cfa;
+  sp_slot = (_Unwind_Ptr) outer_cfa;
+  context->reg[__builtin_dwarf_sp_column ()] = &sp_slot;
   fs.cfa_how = CFA_REG_OFFSET;
-  fs.cfa_reg = 0;
+  fs.cfa_reg = __builtin_dwarf_sp_column ();
   fs.cfa_offset = 0;
 
   uw_update_context_1 (context, &fs);
@@ -1236,11 +1251,26 @@ uw_install_context_1 (struct _Unwind_Context *current,
 	memcpy (c, t, dwarf_reg_size_table[i]);
     }
 
-  /* We adjust SP by the difference between CURRENT and TARGET's CFA.  */
-  if (STACK_GROWS_DOWNWARD)
-    return target->cfa - current->cfa + target->args_size;
-  else
-    return current->cfa - target->cfa - target->args_size;
+#ifdef EH_RETURN_STACKADJ_RTX
+  {
+    void *target_cfa;
+
+    /* If the last frame records a saved stack pointer, use it.  */
+    if (target->reg[__builtin_dwarf_sp_column ()])
+      target_cfa = (void *)(_Unwind_Ptr)
+        _Unwind_GetGR (target, __builtin_dwarf_sp_column ());
+    else
+      target_cfa = target->cfa;
+
+    /* We adjust SP by the difference between CURRENT and TARGET's CFA.  */
+    if (STACK_GROWS_DOWNWARD)
+      return target_cfa - current->cfa + target->args_size;
+    else
+      return current->cfa - target_cfa - target->args_size;
+  }
+#else
+  return 0;
+#endif
 }
 
 static inline _Unwind_Ptr
@@ -1252,5 +1282,4 @@ uw_identify_context (struct _Unwind_Context *context)
 
 #include "unwind.inc"
 
-#endif /* _LIBC */
 #endif /* !USING_SJLJ_EXCEPTIONS */

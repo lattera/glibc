@@ -699,18 +699,12 @@ extern __pid_t vfork (void) __THROW;
 
 
 /* Return the pathname of the terminal FD is open on, or NULL on errors.
-   The returned storage is good only until the next call to this function.
-
-   This function is a possible cancellation points and therefore not
-   marked with __THROW.  */
-extern char *ttyname (int __fd);
+   The returned storage is good only until the next call to this function.  */
+extern char *ttyname (int __fd) __THROW;
 
 /* Store at most BUFLEN characters of the pathname of the terminal FD is
-   open on in BUF.  Return 0 on success, otherwise an error number.
-
-   This function is a possible cancellation points and therefore not
-   marked with __THROW.  */
-extern int ttyname_r (int __fd, char *__buf, size_t __buflen);
+   open on in BUF.  Return 0 on success, otherwise an error number.  */
+extern int ttyname_r (int __fd, char *__buf, size_t __buflen) __THROW;
 
 /* Return 1 if FD is a valid descriptor associated
    with a terminal, zero if not.  */

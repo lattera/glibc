@@ -44,6 +44,7 @@ tz-cflags = -DTZDIR='"$(zonedir)"' \
 
 CFLAGS-tzfile.c = $(tz-cflags)
 CFLAGS-tzset.c = $(tz-cflags)
+CFLAGS-getdate.c = -fexceptions
 
 # Don't warn about Y2k problem in strftime format string.
 CFLAGS-test_time.c = -Wno-format

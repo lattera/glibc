@@ -1,5 +1,5 @@
 /* Guts of POSIX spawn interface.  Generic POSIX.1 version.
-   Copyright (C) 2000,01,02 Free Software Foundation, Inc.
+   Copyright (C) 2000,01,02, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "spawn_int.h"
+#include <not-cancel.h>
 
 
 /* The Unix standard contains a long explanation of the way to signal
@@ -158,7 +159,7 @@ __spawni (pid_t *pid, const char *file,
 	  switch (action->tag)
 	    {
 	    case spawn_do_close:
-	      if (__close (action->action.close_action.fd) != 0)
+	      if (close_not_cancel (action->action.close_action.fd) != 0)
 		/* Signal the error.  */
 		_exit (SPAWN_ERROR);
 	      break;

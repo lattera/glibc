@@ -81,6 +81,10 @@ CFLAGS-scanf4.c = -Wno-format
 CFLAGS-scanf7.c = -Wno-format
 CFLAGS-tst-printfsz.c = -Wno-format
 
+CFLAGS-tmpfile.c = -fexceptions
+CFLAGS-tmpfile64.c = -fexceptions
+CFLAGS-tempname.c = -fexceptions
+
 tst-sscanf-ENV = LOCPATH=$(common-objpfx)localedata
 tst-swprintf-ENV = LOCPATH=$(common-objpfx)localedata
 test-vfprintf-ENV = LOCPATH=$(common-objpfx)localedata

@@ -41,6 +41,7 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 #include <fcntl.h>
 #include <paths.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
@@ -74,9 +75,27 @@ __libc_lock_define_initialized (static, syslog_lock)
 static void openlog_internal(const char *, int, int) internal_function;
 static void closelog_internal(void);
 static void sigpipe_handler (int);
-#ifdef _LIBC_REENTRANT
-static void cancel_handler (void *);
-#endif
+
+
+struct cleanup_arg
+{
+  void *buf;
+  struct sigaction *oldaction;
+};
+
+static void
+cancel_handler (void *ptr)
+{
+  /* Restore the old signal handler.  */
+  struct cleanup_arg *clarg = (struct cleanup_arg *) ptr;
+
+  if (clarg != NULL && clarg->oldaction != NULL)
+    __sigaction (SIGPIPE, clarg->oldaction, NULL);
+
+  /* Free the lock.  */
+  __libc_lock_unlock (syslog_lock);
+}
+
 
 /*
  * syslog, vsyslog --
@@ -118,7 +137,6 @@ vsyslog(pri, fmt, ap)
 	size_t bufsize = 0;
 	size_t prioff, msgoff;
  	struct sigaction action, oldaction;
-	struct sigaction *oldaction_ptr = NULL;
  	int sigpipe;
 	int saved_errno = errno;
 	char failbuf[3 * sizeof (pid_t) + sizeof "out of memory []"];
@@ -165,6 +183,7 @@ vsyslog(pri, fmt, ap)
 	  }
 	else
 	  {
+	    __fsetlocking (f, FSETLOCKING_BYCALLER);
 	    prioff = fprintf (f, "<%d>", pri);
 	    (void) time (&now);
 #ifdef USE_IN_LIBIO
@@ -182,9 +201,12 @@ vsyslog(pri, fmt, ap)
 	    if (LogTag != NULL)
 	      fputs_unlocked (LogTag, f);
 	    if (LogStat & LOG_PID)
-	      fprintf (f, "[%d]", __getpid ());
+	      fprintf (f, "[%d]", (int) __getpid ());
 	    if (LogTag != NULL)
-	      putc_unlocked (':', f), putc_unlocked (' ', f);
+	      {
+		putc_unlocked (':', f);
+		putc_unlocked (' ', f);
+	      }
 
 	    /* Restore errno for %m format.  */
 	    __set_errno (saved_errno);
@@ -212,16 +234,22 @@ vsyslog(pri, fmt, ap)
 		    v->iov_base = (char *) "\n";
 		    v->iov_len = 1;
 		  }
+
+		__libc_cleanup_push (free, buf);
+
+		/* writev is a cancellation point.  */
 		(void)__writev(STDERR_FILENO, iov, v - iov + 1);
+
+		__libc_cleanup_pop (0);
 	}
 
-#ifdef _LIBC_REENTRANT
 	/* Prepare for multiple users.  We have to take care: open and
 	   write are cancellation points.  */
-	__libc_cleanup_region_start (1, (void (*) (void *)) cancel_handler,
-				     &oldaction_ptr);
+	struct cleanup_arg clarg;
+	clarg.buf = buf;
+	clarg.oldaction = NULL;
+	__libc_cleanup_push (cancel_handler, &clarg);
 	__libc_lock_lock (syslog_lock);
-#endif
 
 	/* Prepare for a broken connection.  */
  	memset (&action, 0, sizeof (action));
@@ -229,7 +257,7 @@ vsyslog(pri, fmt, ap)
  	sigemptyset (&action.sa_mask);
  	sigpipe = __sigaction (SIGPIPE, &action, &oldaction);
 	if (sigpipe == 0)
-	  oldaction_ptr = &oldaction;
+	  clarg.oldaction = &oldaction;
 
 	/* Get connected, output the message to the local logger. */
 	if (!connected)
@@ -271,17 +299,16 @@ vsyslog(pri, fmt, ap)
 	if (sigpipe == 0)
 		__sigaction (SIGPIPE, &oldaction, (struct sigaction *) NULL);
 
-#ifdef _LIBC_REENTRANT
 	/* End of critical section.  */
-	__libc_cleanup_region_end (0);
+	__libc_cleanup_pop (0);
 	__libc_lock_unlock (syslog_lock);
-#endif
 
 	free (buf);
 }
 libc_hidden_def (vsyslog)
 
 static struct sockaddr SyslogAddr;	/* AF_UNIX address of local logger */
+
 
 static void
 internal_function
@@ -312,8 +339,9 @@ openlog_internal(const char *ident, int logstat, int logfac)
 			    == -1)
 			{
 				int saved_errno = errno;
-				(void)__close(LogFile);
+				int fd = LogFile;
 				LogFile = -1;
+				(void)__close(fd);
 				if (LogType == SOCK_DGRAM
 				    && saved_errno == EPROTOTYPE)
 				{
@@ -329,28 +357,16 @@ openlog_internal(const char *ident, int logstat, int logfac)
 	}
 }
 
-
-static void
-log_cleanup (void *arg)
-{
-  __libc_lock_unlock (syslog_lock);
-}
-
 void
 openlog (const char *ident, int logstat, int logfac)
 {
-#ifdef _LIBC_REENTRANT
-  /* Protect against multiple users.  */
-  __libc_cleanup_region_start (1, log_cleanup, NULL);
+  /* Protect against multiple users and cancellation.  */
+  __libc_cleanup_push (cancel_handler, NULL);
   __libc_lock_lock (syslog_lock);
-#endif
 
   openlog_internal (ident, logstat, logfac);
 
-#ifdef _LIBC_REENTRANT
-  /* Free the lock.  */
-  __libc_cleanup_region_end (1);
-#endif
+  __libc_cleanup_pop (1);
 }
 
 static void
@@ -373,36 +389,17 @@ closelog_internal()
 void
 closelog ()
 {
-#ifdef _LIBC_REENTRANT
-  /* Protect against multiple users.  */
-  __libc_cleanup_region_start (1, log_cleanup, NULL);
+  /* Protect against multiple users and cancellation.  */
+  __libc_cleanup_push (cancel_handler, NULL);
   __libc_lock_lock (syslog_lock);
-#endif
 
   closelog_internal ();
   LogTag = NULL;
   LogType = SOCK_DGRAM; /* this is the default */
 
-#ifdef _LIBC_REENTRANT
   /* Free the lock.  */
-  __libc_cleanup_region_end (1);
-#endif
+  __libc_cleanup_pop (1);
 }
-
-#ifdef _LIBC_REENTRANT
-static void
-cancel_handler (void *ptr)
-{
-  /* Restore the old signal handler.  */
-  struct sigaction *oldaction = *((struct sigaction **) ptr);
-
-  if (oldaction != (struct sigaction *) NULL)
-    __sigaction (SIGPIPE, oldaction, (struct sigaction *) NULL);
-
-  /* Free the lock.  */
-  __libc_lock_unlock (syslog_lock);
-}
-#endif
 
 /* setlogmask -- set the log mask level */
 int

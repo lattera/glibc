@@ -351,7 +351,7 @@
    it was introduced in 2.6.0-test1 which unfortunately cannot be
    distinguished from 2.6.0.  */
 #if (__LINUX_KERNEL_VERSION >= 132427 && defined __i386__) \
-    || (__LINUX_KERNEL_VERSION >= 132609 && defined __alpha__) \
+    || (__LINUX_KERNEL_VERSION >= 132609 && defined __alpha__)
 # define __ASSUME_TGKILL	1
 #endif
 

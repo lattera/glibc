@@ -239,19 +239,13 @@ extern size_t strnlen (__const char *__string, size_t __maxlen)
 
 
 __BEGIN_NAMESPACE_STD
-/* Return a string describing the meaning of the `errno' code in ERRNUM.
-
-   This function is a possible cancellation points and therefore not
-   marked with __THROW.  */
-extern char *strerror (int __errnum);
+/* Return a string describing the meaning of the `errno' code in ERRNUM.  */
+extern char *strerror (int __errnum) __THROW;
 __END_NAMESPACE_STD
 #if defined __USE_XOPEN2K || defined __USE_MISC
 /* Reentrant version of `strerror'.  If a temporary buffer is required, at
-   most BUFLEN bytes of BUF will be used.
-
-   This function is a possible cancellation points and therefore not
-   marked with __THROW.  */
-extern char *strerror_r (int __errnum, char *__buf, size_t __buflen);
+   most BUFLEN bytes of BUF will be used.  */
+extern char *strerror_r (int __errnum, char *__buf, size_t __buflen) __THROW;
 #endif
 
 /* We define this function always since `bzero' is sometimes needed when

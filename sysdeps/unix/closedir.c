@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1993,1995,1996,1998,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993,1995,1996,1998,2002,2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +23,8 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <dirstream.h>
+#include <not-cancel.h>
+
 
 /* Close the directory stream DIRP.
    Return 0 if successful, -1 if not.  */
@@ -46,6 +49,6 @@ __closedir (DIR *dirp)
 
   free ((void *) dirp);
 
-  return __close (fd);
+  return close_not_cancel (fd);
 }
 weak_alias (__closedir, closedir)

@@ -39,6 +39,7 @@
 #ifdef _LIBC
 # include <unistd.h>
 # include <shlib-compat.h>
+# include <not-cancel.h>
 #endif
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -74,7 +75,7 @@ extern int _IO_dup2 __P ((int fd, int fd2));
 
 #ifndef _IO_waitpid
 #ifdef _LIBC
-#define _IO_waitpid __waitpid
+#define _IO_waitpid waitpid_not_cancel
 #else
 #define _IO_waitpid waitpid
 #endif
@@ -89,7 +90,7 @@ extern int _IO_dup2 __P ((int fd, int fd2));
 
 #ifndef _IO_close
 #ifdef _LIBC
-#define _IO_close __close
+#define _IO_close close_not_cancel
 #else
 #define _IO_close close
 #endif

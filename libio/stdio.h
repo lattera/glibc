@@ -757,17 +757,11 @@ extern int fileno_unlocked (FILE *__stream) __THROW;
 
 #if (defined __USE_POSIX2 || defined __USE_SVID  || defined __USE_BSD || \
      defined __USE_MISC)
-/* Create a new stream connected to a pipe running the given command.
+/* Create a new stream connected to a pipe running the given command.  */
+extern FILE *popen (__const char *__command, __const char *__modes) __THROW;
 
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern FILE *popen (__const char *__command, __const char *__modes);
-
-/* Close a stream opened by popen and return the status of its child.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int pclose (FILE *__stream);
+/* Close a stream opened by popen and return the status of its child.  */
+extern int pclose (FILE *__stream) __THROW;
 #endif
 
 

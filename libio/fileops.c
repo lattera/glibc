@@ -47,6 +47,7 @@
 # include "../iconv/gconv_charset.h"
 # include "../iconv/gconv_int.h"
 # include <shlib-compat.h>
+# include <not-cancel.h>
 #endif
 #ifndef errno
 extern int errno;
@@ -1240,14 +1241,18 @@ _IO_file_close_mmap (fp)
   /* In addition to closing the file descriptor we have to unmap the file.  */
   (void) __munmap (fp->_IO_buf_base, fp->_IO_buf_end - fp->_IO_buf_base);
   fp->_IO_buf_base = fp->_IO_buf_end = NULL;
-  return close (fp->_fileno);
+  /* Cancelling close should be avoided if possible since it leaves an
+     unrecoverable state behind.  */
+  return close_not_cancel (fp->_fileno);
 }
 
 int
 _IO_file_close (fp)
      _IO_FILE *fp;
 {
-  return close (fp->_fileno);
+  /* Cancelling close should be avoided if possible since it leaves an
+     unrecoverable state behind.  */
+  return close_not_cancel (fp->_fileno);
 }
 INTDEF(_IO_file_close)
 

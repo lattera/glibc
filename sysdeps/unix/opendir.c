@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1996,98,2000-2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1996,98,2000-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,8 @@
 #include <stdio.h>
 
 #include <dirstream.h>
+#include <not-cancel.h>
+
 
 /* opendir() must not accidentally open something other than a directory.
    Some OS's have kernel support for that, some don't.  In the worst
@@ -50,11 +52,11 @@ static void
 tryopen_o_directory (void)
 {
   int serrno = errno;
-  int x = __open ("/dev/null", O_RDONLY|O_NDELAY|O_DIRECTORY);
+  int x = open_not_cancel_2 ("/dev/null", O_RDONLY|O_NDELAY|O_DIRECTORY);
 
   if (x >= 0)
     {
-      __close (x);
+      close_not_cancel_no_status (x);
       o_directory_works = -1;
     }
   else if (errno != ENOTDIR)
@@ -110,7 +112,7 @@ __opendir (const char *name)
 	 }
     }
 
-  fd = __open64 (name, O_RDONLY|O_NDELAY|EXTRA_FLAGS);
+  fd = open_not_cancel_2 (name, O_RDONLY|O_NDELAY|EXTRA_FLAGS|O_LARGEFILE);
   if (__builtin_expect (fd, 0) < 0)
     return NULL;
 
@@ -148,7 +150,7 @@ __opendir (const char *name)
   lose:
     {
       save_errno = errno;
-      (void) __close (fd);
+      close_not_cancel_no_status (fd);
       __set_errno (save_errno);
       return NULL;
     }
