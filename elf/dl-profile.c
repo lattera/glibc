@@ -244,7 +244,10 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   *(char **) hist_hdr.high_pc = (char *) mapend;
   *(int32_t *) hist_hdr.hist_size = kcountsize / sizeof (HISTCOUNTER);
   *(int32_t *) hist_hdr.prof_rate = __profile_frequency ();
-  strncpy (hist_hdr.dimen, "seconds", sizeof (hist_hdr.dimen));
+  if (sizeof (hist_hdr.dimen) >= sizeof ("seconds"))
+    memcpy (hist_hdr.dimen, "seconds", sizeof ("seconds"));
+  else
+    strncpy (hist_hdr.dimen, "seconds", sizeof (hist_hdr.dimen));
   hist_hdr.dimen_abbrev = 's';
 
   /* First determine the output name.  We write in the directory

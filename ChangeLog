@@ -1,5 +1,8 @@
 2002-02-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-profile.c (_dl_start_profile): Help the compiler to avoid
+	strncpy if possible.
+
 	* sysdeps/generic/dl-environ.c (unsetenv): Optimize.  Don't use
 	strncmp.
 	* elf/dl-load.c (is_dst): Optimize.  Don't call strncmp twice.
