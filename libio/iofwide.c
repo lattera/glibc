@@ -36,6 +36,7 @@
 # include <locale/localeinfo.h>
 # include <wcsmbs/wcsmbsload.h>
 # include <iconv/gconv_int.h>
+# include <shlib-compat.h>
 #endif
 
 
@@ -96,9 +97,20 @@ _IO_fwide (fp, mode)
   /* Normalize the value.  */
   mode = mode < 0 ? -1 : (mode == 0 ? 0 : 1);
 
-  if (mode == 0 || fp->_mode != 0)
-    /* The caller simply wants to know about the current orientation
-       or the orientation already has been determined.  */
+  if (mode == 0)
+    /* The caller simply wants to know about the current orientation.  */
+    return fp->_mode;
+
+#if defined SHARED && defined _LIBC \
+    && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+  if (__builtin_expect (&_IO_stdin_used == NULL, 0)
+      && (fp == _IO_stdin ||  fp == _IO_stdout || fp == _IO_stderr))
+    /* This is for a stream in the glibc 2.0 format.  */
+    return -1;
+#endif
+
+  if (fp->_mode != 0)
+    /* The orientation already has been determined.  */
     return fp->_mode;
 
   /* Set the orientation appropriately.  */
