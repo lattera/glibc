@@ -1,3 +1,8 @@
+1998-06-16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/backtrace.c (INNER_THAN): New definition, use it
+	to compare stack addresses.
+
 1998-06-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/alpha/glob.c: Include glob.h before

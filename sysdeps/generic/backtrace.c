@@ -44,6 +44,11 @@ extern void *__libc_stack_end;
 # define CURRENT_STACK_FRAME  ({ char __csf; &__csf; })
 #endif
 
+/* By default we assume that the stack grows downward.  */
+#ifndef INNER_THAN
+# define INNER_THAN <
+#endif
+
 struct layout
 {
   struct layout *next;
@@ -67,7 +72,8 @@ __backtrace (array, size)
   current = (struct layout *) top_frame;
   while (cnt < size)
     {
-      if ((void *) current < top_stack || (void *) current > __libc_stack_end)
+      if ((void *) current INNER_THAN top_stack
+	  || !((void *) current INNER_THAN __libc_stack_end))
        /* This means the address is out of range.  Note that for the
 	  toplevel we see a frame pointer with value NULL which clearly is
 	  out of range.  */
