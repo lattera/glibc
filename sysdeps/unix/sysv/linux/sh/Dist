@@ -1,5 +1,4 @@
 clone.S
-ioperm.c
 pipe.S
 setresuid.c
 setresgid.c

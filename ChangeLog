@@ -1,5 +1,8 @@
 2000-06-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sh/Dist: There is no ioperm file.
+	* sysdeps/unix/sysv/linux/sh/oldgetrlimit64.c: Removed.
+
 	* shlib-versions: Earliest backward compatible version for SH is 2.2.
 
 	* misc/sys/cdefs.h: Remove one more __P.
