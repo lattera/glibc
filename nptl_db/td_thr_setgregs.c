@@ -1,5 +1,5 @@
 /* Set a thread's general register set.
-   Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -34,7 +34,7 @@ td_thr_setgregs (const td_thrhandle_t *th, prgregset_t gregs)
     return TD_ERR;
 
   /* Only set the registers if the thread hasn't yet terminated.  */
-  if ((cancelhandling & TERMINATED_BIT) == 0)
+  if ((cancelhandling & TERMINATED_BITMASK) == 0)
     {
       pid_t tid;
 

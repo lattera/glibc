@@ -1,5 +1,5 @@
 /* Iterate over a process's threads.
-   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -90,7 +90,7 @@ iterate_thread_list (const td_thragent_t *ta, td_thr_iter_f *callback,
 	      break;
 	    }
 
-	  if ((cancelhandling & TERMINATED_BIT) == 0)
+	  if ((cancelhandling & TERMINATED_BITMASK) == 0)
 	    {
 	      /* Yep, it matches.  Call the callback function.  */
 	      td_thrhandle_t th;

@@ -1,5 +1,5 @@
 /* Get thread information.
-   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -44,10 +44,10 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
 		   ? 0 : pds.schedparam.sched_priority);
   infop->ti_type = TD_THR_USER;
 
-  if ((pds.cancelhandling & EXITING_BIT) == 0)
+  if ((pds.cancelhandling & EXITING_BITMASK) == 0)
     /* XXX For now there is no way to get more information.  */
     infop->ti_state = TD_THR_ACTIVE;
-  else if ((pds.cancelhandling & TERMINATED_BIT) == 0)
+  else if ((pds.cancelhandling & TERMINATED_BITMASK) == 0)
     infop->ti_state = TD_THR_ZOMBIE;
   else
     infop->ti_state = TD_THR_UNKNOWN;

@@ -1,5 +1,5 @@
 /* Get a thread's floating-point register set.
-   Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -34,7 +34,7 @@ td_thr_getfpregs (const td_thrhandle_t *th, prfpregset_t *regset)
     return TD_ERR;
 
   /* If the thread already terminated we return all zeroes.  */
-  if (cancelhandling & TERMINATED_BIT)
+  if (cancelhandling & TERMINATED_BITMASK)
     memset (regset, '\0', sizeof (*regset));
   /* Otherwise get the register content through the callback.  */
   else
