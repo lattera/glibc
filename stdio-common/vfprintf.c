@@ -711,16 +711,16 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    }								      \
 									      \
 	  if (is_negative)						      \
-	    PUTC (L_('-'), s);						      \
+	    outchar (L_('-'));						      \
 	  else if (showsign)						      \
-	    PUTC (L_('+'), s);						      \
+	    outchar (L_('+'));						      \
 	  else if (space)						      \
-	    PUTC (L_(' '), s);						      \
+	    outchar (L_(' '));						      \
 									      \
 	  if (number.word != 0 && alt && base == 16)			      \
 	    {								      \
-	      PUTC (L_('0'), s);					      \
-	      PUTC (spec, s);						      \
+	      outchar (L_('0'));					      \
+	      outchar (spec);						      \
 	    }								      \
 									      \
 	  width += prec;						      \
@@ -734,24 +734,24 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	{								      \
 	  if (is_negative)						      \
 	    {								      \
-	      PUTC (L_('-'), s);					      \
+	      outchar (L_('-'));					      \
 	      --width;							      \
 	    }								      \
 	  else if (showsign)						      \
 	    {								      \
-	      PUTC (L_('+'), s);					      \
+	      outchar (L_('+'));					      \
 	      --width;							      \
 	    }								      \
 	  else if (space)						      \
 	    {								      \
-	      PUTC (L_(' '), s);					      \
+	      outchar (L_(' '));					      \
 	      --width;							      \
 	    }								      \
 									      \
 	  if (number.word != 0 && alt && base == 16)			      \
 	    {								      \
-	      PUTC (L_('0'), s);					      \
-	      PUTC (spec, s);						      \
+	      outchar (L_('0'));					      \
+	      outchar (spec);						      \
 	      width -= 2;						      \
 	    }								      \
 									      \
