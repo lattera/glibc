@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,1995-1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,1995-2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -115,25 +115,34 @@ __ttyname_r (int fd, char *buf, size_t buflen)
       return ERANGE;
     }
 
+  /* We try using the /proc filesystem.  */
+  *_fitoa_word (fd, __stpcpy (procname, "/proc/self/fd/"), 10, 0) = '\0';
+
+  ret = __readlink (procname, buf, buflen - 1);
+  if (ret == -1 && errno == ENOENT)
+    {
+      __set_errno (EBADF);
+      return EBADF;
+    }
+  if (ret == -1 && errno == EACCES)
+    return EACCES;
+
   if (!__isatty (fd))
     {
       __set_errno (ENOTTY);
       return ENOTTY;
     }
 
-  /* We try using the /proc filesystem.  */
-  *_fitoa_word (fd, __stpcpy (procname, "/proc/self/fd/"), 10, 0) = '\0';
-
-  ret = __readlink (procname, buf, buflen - 1);
-  if (ret != -1 && buf[0] != '[')
-    {
-      buf[ret] = '\0';
-      return 0;
-    }
   if (ret == -1 && errno == ENAMETOOLONG)
     {
       __set_errno (ERANGE);
       return ERANGE;
+    }
+
+  if (ret != -1 && buf[0] != '[')
+    {
+      buf[ret] = '\0';
+      return 0;
     }
 
   if (__fxstat64 (_STAT_VER, fd, &st) < 0)

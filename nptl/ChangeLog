@@ -1,5 +1,8 @@
 2003-02-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-basic7.
+	* tst-basic7.c: New file.
+
 	* pthread_create.c (deallocate_tsd): Mark as internal_function.
 	Add some more __builtin_expect.
 

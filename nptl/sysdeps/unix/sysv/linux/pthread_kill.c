@@ -36,9 +36,10 @@ __pthread_kill (threadid, signo)
 
   /* The kernel returns EINVAL for PIDs <= 0.  This is not nice since
      the user would expect ESRCH.  Correct it here.  */
-  int val = (pd->tid > 0
-	     ? INTERNAL_SYSCALL (tkill, err, 2, pd->tid, signo)
-	     : ESRCH);
+  if (pd->tid <= 0)
+    return ESRCH;
+
+  int val = INTERNAL_SYSCALL (tkill, err, 2, pd->tid, signo);
 
   return (INTERNAL_SYSCALL_ERROR_P (val, err)
 	  ? INTERNAL_SYSCALL_ERRNO (val, err) : 0);

@@ -1,3 +1,8 @@
+2003-02-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r): Recognize
+	invalid file descriptors and missing access permissions.
+
 2003-02-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/getXXbyYY_r.c (REENTRANT_NAME): Return 0 if no entry has
