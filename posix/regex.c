@@ -5072,15 +5072,34 @@ weak_alias (__re_search_2, re_search_2)
 #endif
 
 #ifdef WCHAR
-# define FREE_WCS_BUFFERS()    \
-  do {                         \
-    FREE_VAR (string1);                \
-    FREE_VAR (string2);                \
-    FREE_VAR (mbs_offset1);    \
-    FREE_VAR (mbs_offset2);    \
+# define MAX_ALLOCA_SIZE	2000
+
+# define FREE_WCS_BUFFERS() \
+  do {									      \
+    if (size1 > MAX_ALLOCA_SIZE)					      \
+      {									      \
+	free (wcs_string1);						      \
+	free (mbs_offset1);						      \
+      }									      \
+    else								      \
+      {									      \
+	FREE_VAR (wcs_string1);						      \
+	FREE_VAR (mbs_offset1);						      \
+      }									      \
+    if (size2 > MAX_ALLOCA_SIZE) 					      \
+      {									      \
+	free (wcs_string2);						      \
+	free (mbs_offset2);						      \
+      }									      \
+    else								      \
+      {									      \
+	FREE_VAR (wcs_string2);						      \
+	FREE_VAR (mbs_offset2);						      \
+      }									      \
   } while (0)
 
 #endif
+
 
 static int
 PREFIX(re_search_2) (bufp, string1, size1, string2, size2, startpos, range,
@@ -5156,36 +5175,72 @@ PREFIX(re_search_2) (bufp, string1, size1, string2, size2, startpos, range,
      fill them with converted string.  */
   if (size1 != 0)
     {
-      wcs_string1 = REGEX_TALLOC (size1 + 1, CHAR_T);
-      mbs_offset1 = REGEX_TALLOC (size1 + 1, int);
-      is_binary = REGEX_TALLOC (size1 + 1, char);
+      if (size1 > MAX_ALLOCA_SIZE)
+	{
+	  wcs_string1 = TALLOC (size1 + 1, CHAR_T);
+	  mbs_offset1 = TALLOC (size1 + 1, int);
+	  is_binary = TALLOC (size1 + 1, char);
+	}
+      else
+	{
+	  wcs_string1 = REGEX_TALLOC (size1 + 1, CHAR_T);
+	  mbs_offset1 = REGEX_TALLOC (size1 + 1, int);
+	  is_binary = REGEX_TALLOC (size1 + 1, char);
+	}
       if (!wcs_string1 || !mbs_offset1 || !is_binary)
 	{
-	  FREE_VAR (wcs_string1);
-	  FREE_VAR (mbs_offset1);
-	  FREE_VAR (is_binary);
+	  if (size1 > MAX_ALLOCA_SIZE)
+	    {
+	      free (wcs_string1);
+	      free (mbs_offset1);
+	      free (is_binary);
+	    }
+	  else
+	    {
+	      FREE_VAR (wcs_string1);
+	      FREE_VAR (mbs_offset1);
+	      FREE_VAR (is_binary);
+	    }
 	  return -2;
 	}
       wcs_size1 = convert_mbs_to_wcs(wcs_string1, string1, size1,
 				     mbs_offset1, is_binary);
       wcs_string1[wcs_size1] = L'\0'; /* for a sentinel  */
-      FREE_VAR (is_binary);
+      if (size1 > MAX_ALLOCA_SIZE)
+	free (is_binary);
+      else
+	FREE_VAR (is_binary);
     }
   if (size2 != 0)
     {
-      wcs_string2 = REGEX_TALLOC (size2 + 1, CHAR_T);
-      mbs_offset2 = REGEX_TALLOC (size2 + 1, int);
-      is_binary = REGEX_TALLOC (size2 + 1, char);
+      if (size2 > MAX_ALLOCA_SIZE)
+	{
+	  wcs_string2 = TALLOC (size2 + 1, CHAR_T);
+	  mbs_offset2 = TALLOC (size2 + 1, int);
+	  is_binary = TALLOC (size2 + 1, char);
+	}
+      else
+	{
+	  wcs_string2 = REGEX_TALLOC (size2 + 1, CHAR_T);
+	  mbs_offset2 = REGEX_TALLOC (size2 + 1, int);
+	  is_binary = REGEX_TALLOC (size2 + 1, char);
+	}
       if (!wcs_string2 || !mbs_offset2 || !is_binary)
 	{
 	  FREE_WCS_BUFFERS ();
-	  FREE_VAR (is_binary);
+	  if (size2 > MAX_ALLOCA_SIZE)
+	    free (is_binary);
+	  else
+	    FREE_VAR (is_binary);
 	  return -2;
 	}
       wcs_size2 = convert_mbs_to_wcs(wcs_string2, string2, size2,
 				     mbs_offset2, is_binary);
       wcs_string2[wcs_size2] = L'\0'; /* for a sentinel  */
-      FREE_VAR (is_binary);
+      if (size2 > MAX_ALLOCA_SIZE)
+	free (is_binary);
+      else
+	FREE_VAR (is_binary);
     }
 #endif /* WCHAR */
 

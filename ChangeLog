@@ -1,3 +1,8 @@
+2001-07-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.c: Revamp memory allocation for WCHAR functions to
+	not use too much stack.
+
 2001-07-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/iconvconfig.c (write_output): Update comment explaining
