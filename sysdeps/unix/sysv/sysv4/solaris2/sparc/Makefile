@@ -3,3 +3,9 @@
 # and difftime.o don't work because of this.  The long-term fix is to actually
 # implement what they're doing, but for the short-term, we must do this.
 sysdep-CFLAGS := $(sysdep-CFLAGS) -mhard-quad-float
+
+ifeq ($(subdir),crypt)
+
+crypt := crypt.solar
+
+endif
