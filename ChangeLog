@@ -1,3 +1,18 @@
+2000-08-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/link.h: Undo last patches.  Hurd now had stat64.
+	* elf/Makefile: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-misc.c: Likewise.
+	* elf/dl-profile.c: Likewise.
+	* sysdeps/generic/sysd-link.h: Removed.
+	* sysdeps/unix/sysv/linux/sysd-link.h: Removed.
+
+	* rt/aio_notify.c (notify_func_wrapper): Wrapper function to call
+	thread event callback function.
+	(__aio_notify_only): Use function above.
+	Patch by Kaz Kylheku <kaz@ashi.footprints.net>.
+
 2000-08-16  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/lseek64.c: New file.

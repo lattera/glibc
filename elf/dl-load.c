@@ -730,10 +730,10 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   int type;
   char *readbuf;
   ssize_t readlength;
-  struct elf_stat st;
+  struct stat64 st;
 
   /* Get file information.  */
-  if (elf_fxstat (_STAT_VER, fd, &st) < 0)
+  if (__fxstat64 (_STAT_VER, fd, &st) < 0)
     LOSE (errno, N_("cannot stat shared object"));
 
   /* Look again to see if the real name matched another already loaded.  */
@@ -1260,11 +1260,11 @@ open_path (const char *name, size_t namelen, int preloaded,
 		{
 		  /* We failed to open machine dependent library.  Let's
 		     test whether there is any directory at all.  */
-		  struct elf_stat st;
+		  struct stat64 st;
 
 		  buf[buflen - namelen - 1] = '\0';
 
-		  if (elf_xstat (_STAT_VER, buf, &st) != 0
+		  if (__xstat64 (_STAT_VER, buf, &st) != 0
 		      || ! S_ISDIR (st.st_mode))
 		    /* The directory does not exist or it is no directory.  */
 		    this_dir->status[cnt] = nonexisting;
@@ -1281,9 +1281,9 @@ open_path (const char *name, size_t namelen, int preloaded,
 	      /* This is an extra security effort to make sure nobody can
 		 preload broken shared objects which are in the trusted
 		 directories and so exploit the bugs.  */
-	      struct elf_stat st;
+	      struct stat64 st;
 
-	      if (elf_fxstat (_STAT_VER, fd, &st) != 0
+	      if (__fxstat64 (_STAT_VER, fd, &st) != 0
 		  || (st.st_mode & S_ISUID) == 0)
 		{
 		  /* The shared object cannot be tested for being SUID

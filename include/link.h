@@ -34,9 +34,6 @@
 
 #include <bits/elfclass.h>		/* Defines __ELF_NATIVE_CLASS.  */
 
-/* Get some system specific definitions.  */
-#include <sysd-link.h>
-
 /* Rendezvous structure used by the run-time dynamic linker to communicate
    details of shared object loading to the debugger.  If the executable's
    dynamic section has a DT_DEBUG element, the run-time linker sets that
@@ -205,7 +202,7 @@ struct link_map
     /* This information is kept to check for sure whether a shared
        object is the same as one already loaded.  */
     dev_t l_dev;
-    elf_ino_t l_ino;
+    ino64_t l_ino;
 
     /* Collected information about own RUNPATH directories.  */
     struct r_search_path_elem **l_runpath_dirs;

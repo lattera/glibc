@@ -175,7 +175,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 {
   char *filename;
   int fd;
-  struct elf_stat st;
+  struct stat64 st;
   const ElfW(Phdr) *ph;
   ElfW(Addr) mapstart = ~((ElfW(Addr)) 0);
   ElfW(Addr) mapend = 0;
@@ -267,7 +267,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
       return;
     }
 
-  if (elf_fxstat (_STAT_VER, fd, &st) < 0 || !S_ISREG (st.st_mode))
+  if (__fxstat64 (_STAT_VER, fd, &st) < 0 || !S_ISREG (st.st_mode))
     {
       /* Not stat'able or not a regular file => don't use it.  */
       char buf[400];

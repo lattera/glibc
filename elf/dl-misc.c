@@ -45,11 +45,11 @@ void *
 _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
 {
   void *result;
-  struct elf_stat st;
+  struct stat64 st;
   int fd = __open (file, O_RDONLY);
   if (fd < 0)
     return NULL;
-  if (elf_fxstat (_STAT_VER, fd, &st) < 0
+  if (__fxstat64 (_STAT_VER, fd, &st) < 0
       /* No need to map the file if it is empty.  */
       || st.st_size == 0)
     result = NULL;
