@@ -56,7 +56,7 @@ shm_unlink (const char *name)
 	     name, namelen + 1);
 
 
-  return __unlink (name);
+  return unlink (name);
 }
 
 #endif

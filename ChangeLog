@@ -1,3 +1,13 @@
+2001-08-23  Roland McGrath  <roland@frob.com>
+
+	* hurd/Versions (libc: GLIBC_2.2.5): New set; add _hurd_raise_signal,
+	_hurdsig_interrupt_timeout, _hurdsig_fault_preemptor.
+
+	* sysdeps/posix/shm_unlink.c (shm_unlink): __unlink -> unlink.
+
+	* mach/Versions (libc: GLIBC_2.2.5): New set; add __mach_msg_destroy,
+	__mach_reply_port.
+
 2001-08-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/test-netdb.c (test_hosts): Don't segfault if gethostname

@@ -138,6 +138,11 @@ libc {
   GLIBC_2.2.5 {
     # This always existed as an inline but the real function never exported.
     __hurd_fail;
+
+    # internal symbols used by other libraries (e.g. librt)
+    _hurd_raise_signal;
+    _hurdsig_interrupt_timeout;
+    _hurdsig_fault_preemptor; _hurdsig_fault_env;
   }
 
 %if !SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
