@@ -1,3 +1,7 @@
+2003-11-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/PTESTS: 2nd GA 135 and 1st GA 136 tests are wrong, too.
+
 2003-11-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regexec.c (extend_buffers): Don't allocate
