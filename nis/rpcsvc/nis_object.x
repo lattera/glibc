@@ -13,12 +13,12 @@
 %#define __nis_object_h
 %
 #endif
-/* 
+/*
  * 	This file defines the format for a NIS object in RPC language.
  * It is included by the main .x file and the database access protocol
  * file. It is common because both of them need to deal with the same
  * type of object. Generating the actual code though is a bit messy because
- * the nis.x file and the nis_dba.x file will generate xdr routines to 
+ * the nis.x file and the nis_dba.x file will generate xdr routines to
  * encode/decode objects when only one set is needed. Such is life when
  * one is using rpcgen.
  *
@@ -50,7 +50,7 @@ const NIS_PK_DHEXT     = 4;	/* Extended Diffie-Hellman for RPC-GSS */
 
 /*
  * The fundamental name type of NIS. The name may consist of two parts,
- * the first being the fully qualified name, and the second being an 
+ * the first being the fully qualified name, and the second being an
  * optional set of attribute/value pairs.
  */
 struct nis_attr {
@@ -73,7 +73,7 @@ typedef string nis_name<>;	/* The NIS name itself. */
  */
 
 enum zotypes {
-	
+
 	BOGUS_OBJ  	= 0,	/* Uninitialized object structure 	*/
 	NO_OBJ   	= 1,	/* NULL object (no data)	 	*/
 	DIRECTORY_OBJ 	= 2,	/* Directory object describing domain 	*/
@@ -82,7 +82,7 @@ enum zotypes {
 	ENTRY_OBJ  	= 5,	/* Entry object (a database record) 	*/
 	LINK_OBJ   	= 6, 	/* A name link.				*/
 	PRIVATE_OBJ  	= 7, 	/* Private object (all opaque data) 	*/
-	
+
 	NIS_BOGUS_OBJ  	= 0,	/* Uninitialized object structure 	*/
 	NIS_NO_OBJ   	= 1,	/* NULL object (no data)	 	*/
 	NIS_DIRECTORY_OBJ = 2, /* Directory object describing domain 	*/
@@ -114,18 +114,18 @@ enum nstype {
  * DIRECTORY - The name service object. These objects identify other name
  * servers that are serving some portion of the name space. Each has a
  * type associated with it. The resolver library will note whether or not
- * is has the needed routines to access that type of service. 
- * The oarmask structure defines an access rights mask on a per object 
- * type basis for the name spaces. The only bits currently used are 
+ * is has the needed routines to access that type of service.
+ * The oarmask structure defines an access rights mask on a per object
+ * type basis for the name spaces. The only bits currently used are
  * create and destroy. By enabling or disabling these access rights for
  * a specific object type for a one of the accessor entities (owner,
- * group, world) the administrator can control what types of objects 
- * may be freely added to the name space and which require the 
+ * group, world) the administrator can control what types of objects
+ * may be freely added to the name space and which require the
  * administrator's approval.
  */
 struct oar_mask {
-	u_int	oa_rights;	/* Access rights mask 	*/
-	zotypes	oa_otype;	/* Object type 		*/
+	uint32_t	oa_rights;	/* Access rights mask 	*/
+	zotypes		oa_otype;	/* Object type 		*/
 };
 
 struct endpoint {
@@ -142,7 +142,7 @@ struct endpoint {
 struct nis_server {
 	nis_name	name; 	 	/* Principal name of the server  */
 	endpoint	ep<>;  		/* Universal addr(s) for server  */
-	u_int		key_type;	/* Public key type		 */
+	uint32_t	key_type;	/* Public key type		 */
 	netobj		pkey;		/* server's public key  	 */
 };
 
@@ -154,11 +154,11 @@ struct directory_obj {
 	oar_mask   do_armask<>;  /* Create/Destroy rights by object type */
 };
 
-/* 
- * ENTRY - This is one row of data from an information base. 
- * The type value is used by the client library to convert the entry to 
+/*
+ * ENTRY - This is one row of data from an information base.
+ * The type value is used by the client library to convert the entry to
  * it's internal structure representation. The Table name is a back pointer
- * to the table where the entry is stored. This allows the client library 
+ * to the table where the entry is stored. This allows the client library
  * to determine where to send a request if the client wishes to change this
  * entry but got to it through a LINK rather than directly.
  * If the entry is a "standalone" entry then this field is void.
@@ -170,8 +170,8 @@ const EN_MODIFIED = 8;	/* Indicates entry is modified. 	*/
 const EN_ASN1     = 64;	/* Means contents use ASN.1 encoding    */
 
 struct entry_col {
-	u_int	ec_flags;	/* Flags for this value */
-	opaque	ec_value<>;	/* It's textual value	*/
+	uint32_t	ec_flags;	/* Flags for this value */
+	opaque		ec_value<>;	/* It's textual value	*/
 };
 
 struct entry_obj {
@@ -182,11 +182,11 @@ struct entry_obj {
 /*
  * GROUP - The group object contains a list of NIS principal names. Groups
  * are used to authorize principals. Each object has a set of access rights
- * for members of its group. Principal names in groups are in the form 
+ * for members of its group. Principal names in groups are in the form
  * name.directory and recursive groups are expressed as @groupname.directory
  */
 struct group_obj {
-	u_int		gr_flags;	/* Flags controlling group	*/
+	uint32_t	gr_flags;	/* Flags controlling group	*/
 	nis_name	gr_members<>;  	/* List of names in group 	*/
 };
 
@@ -204,8 +204,8 @@ struct link_obj {
 };
 
 /*
- * TABLE - This is the table object. It implements a simple 
- * data base that applications and use for configuration or 
+ * TABLE - This is the table object. It implements a simple
+ * data base that applications and use for configuration or
  * administration purposes. The role of the table is to group together
  * a set of related entries. Tables are the simple database component
  * of NIS. Like many databases, tables are logically divided into columns
@@ -216,7 +216,7 @@ struct link_obj {
  * Within the definition of each column there is a flags variable, this
  * variable contains flags which determine whether or not the column is
  * searchable, contains binary data, and access rights for the entry objects
- * column value. 
+ * column value.
  */
 
 const TA_BINARY     = 1;	/* Means table data is binary 		*/
@@ -228,9 +228,9 @@ const TA_MODIFIED   = 32;	/* Means this columns attrs are modified*/
 const TA_ASN1       = 64;	/* Means contents use ASN.1 encoding     */
 
 struct table_col {
-	string	tc_name<64>;	/* Column Name 	 	   */
-	u_int	tc_flags;	/* control flags	   */
-	u_int	tc_rights;	/* Access rights mask	   */
+	string		tc_name<64>;	/* Column Name 	 	   */
+	uint32_t	tc_flags;	/* control flags	   */
+	uint32_t	tc_rights;	/* Access rights mask	   */
 };
 
 struct table_obj {
@@ -242,7 +242,7 @@ struct table_obj {
 };
 
 /*
- * This union joins together all of the currently known objects. 
+ * This union joins together all of the currently known objects.
  */
 union objdata switch (zotypes zo_type) {
         case NIS_DIRECTORY_OBJ :
@@ -269,16 +269,16 @@ union objdata switch (zotypes zo_type) {
  * This is the basic NIS object data type. It consists of a generic part
  * which all objects contain, and a specialized part which varies depending
  * on the type of the object. All of the specialized sections have been
- * described above. You might have wondered why they all start with an 
- * integer size, followed by the useful data. The answer is, when the 
- * server doesn't recognize the type returned it treats it as opaque data. 
+ * described above. You might have wondered why they all start with an
+ * integer size, followed by the useful data. The answer is, when the
+ * server doesn't recognize the type returned it treats it as opaque data.
  * And the definition for opaque data is {int size; char *data;}. In this
  * way, servers and utility routines that do not understand a given type
  * may still pass it around. One has to be careful in setting
  * this variable accurately, it must take into account such things as
  * XDR padding of structures etc. The best way to set it is to note one's
  * position in the XDR encoding stream, encode the structure, look at the
- * new position and calculate the size. 
+ * new position and calculate the size.
  */
 struct nis_oid {
 	uint32_t ctime;		/* Time of objects creation 	*/
@@ -286,12 +286,12 @@ struct nis_oid {
 };
 
 struct nis_object {
-	nis_oid	 zo_oid;	/* object identity verifier.		*/ 
+	nis_oid	 zo_oid;	/* object identity verifier.		*/
 	nis_name zo_name;	/* The NIS name for this object		*/
 	nis_name zo_owner;	/* NIS name of object owner.		*/
 	nis_name zo_group;	/* NIS name of access group.		*/
 	nis_name zo_domain;	/* The administrator for the object	*/
-	u_int	 zo_access;	/* Access rights (owner, group, world)	*/
+	uint32_t zo_access;	/* Access rights (owner, group, world)	*/
 	uint32_t zo_ttl;	/* Object's time to live in seconds.	*/
 	objdata	 zo_data;	/* Data structure for this type 	*/
 };

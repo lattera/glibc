@@ -1140,6 +1140,16 @@ taken care in user programs using the firewall structures and therefore
 those programs (ipfw is AFAIK the only one) should deal with this problem
 themselves.
 
+??	I get floods of warnings when I use -Wconversion and include
+	<string.h> or <math.h>.
+
+{ZW} <string.h> and <math.h> intentionally use prototypes to override
+argument promotion.  -Wconversion warns about all these.  You can safely
+ignore the warnings.
+
+-Wconversion isn't really intended for production use, only for shakedown
+compiles after converting an old program to standard C.
+
 
 ? Miscellaneous
 

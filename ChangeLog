@@ -1,3 +1,27 @@
+1998-12-01  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/auth_des.c: Use new XDR int32 functions for integers.
+	* sunrpc/rpc/xdr.h: Add IXDR INT32 functions.
+	* sunrpc/rpc_hout.c: Remove (u_long) casts in defines to avoid
+	conflicts with new solaris version.
+	* sunrpc/rpc_main.c: Fix bug in generating Makefile name (malloc
+	doesn't zero allocated memory).
+	* sunrpc/rpc_svcout.c: Local variables now starts with a _ to avoid
+	conflicts with xdr functions.  Solves PR libc/877.
+	* nis/rpcsvc/nis.x: Use always uint32_t.
+	* nis/rpcsvc/nis.h: Likewise.
+	* nis/rpcsvc/nis_object.x: Likewise.
+
+1998-12-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/libm-test.c: Various cleanups.  Patch by Zack Weinberg.
+
+	* sysdeps/unix/sysv/linux/alpha/setfpucw.c: Use correct type for
+	parameter.  Patch by Christian Gafton.
+
+	* string/envz.h: Add prototype for envz_remove.
+	Reported by Andreas Jaeger.
+
 1998-11-30  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* mach/Versions [libc, GLIBC_2.0]: Add __spin_lock,

@@ -48,7 +48,6 @@ static void pargdef (definition * def);
 static void pstructdef (definition * def);
 static void puniondef (definition * def);
 static void pdefine (const char *name, const char *num);
-static void puldefine (const char *name, const char *num);
 static int define_printed (proc_list * stop, version_list * start);
 static void pprogramdef (definition * def);
 static void parglist (proc_list * proc, const char *addargtype);
@@ -251,12 +250,6 @@ pdefine (const char *name, const char *num)
   f_print (fout, "#define %s %s\n", name, num);
 }
 
-static void
-puldefine (const char *name, const char *num)
-{
-  f_print (fout, "#define %s ((u_long)%s)\n", name, num);
-}
-
 static int
 define_printed (proc_list *stop, version_list *start)
 {
@@ -302,7 +295,7 @@ pprogramdef (definition *def)
 
   pargdef (def);
 
-  puldefine (def->def_name, def->def.pr.prog_num);
+  pdefine (def->def_name, def->def.pr.prog_num);
   for (vers = def->def.pr.versions; vers != NULL; vers = vers->next)
     {
       if (tblflag)
@@ -312,7 +305,7 @@ pprogramdef (definition *def)
 	  f_print (fout, "extern %s_%s_nproc;\n",
 		   locase (def->def_name), vers->vers_num);
 	}
-      puldefine (vers->vers_name, vers->vers_num);
+      pdefine (vers->vers_name, vers->vers_num);
 
       /*
        * Print out 2 definitions, one for ANSI-C, another for
@@ -327,7 +320,7 @@ pprogramdef (definition *def)
 	    {
 	      if (!define_printed(proc, def->def.pr.versions))
 		{
-		  puldefine (proc->proc_name, proc->proc_num);
+		  pdefine (proc->proc_name, proc->proc_num);
 		}
 	      f_print (fout, "%s", ext);
 	      pprocdef (proc, vers, NULL, 0, 2);
@@ -359,7 +352,7 @@ pprogramdef (definition *def)
 		{
 		  if (!define_printed(proc, def->def.pr.versions))
 		    {
-		      puldefine(proc->proc_name, proc->proc_num);
+		      pdefine(proc->proc_name, proc->proc_num);
 		    }
 		  f_print (fout, "%s", ext);
 		  pprocdef (proc, vers, "CLIENT *", 0, i);

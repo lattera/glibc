@@ -1,5 +1,5 @@
 /* Routines for dealing with '\0' separated environment vectors
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
    Written by Miles Bader <miles@gnu.ai.mit.edu>
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,6 +54,10 @@ extern error_t envz_add __P ((char **__envz, size_t *__envz_len,
 extern error_t envz_merge __P ((char **__envz, size_t *__envz_len,
 				__const char *__envz2, size_t __envz2_len,
 				int __override));
+
+/* Remove the entry for NAME from ENVZ & ENVZ_LEN, if any.  */
+extern void envz_remove __P ((char **__envz, size_t *__envz_len,
+			      __const char *__name));
 
 /* Remove null entries.  */
 extern void envz_strip __P ((char **__envz, size_t *__envz_len));

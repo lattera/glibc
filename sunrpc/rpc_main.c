@@ -968,7 +968,6 @@ mkfile_output (struct commandline *cmd)
   char *mkfilename;
   const char *clientname, *clntname, *xdrname, *hdrname;
   const char *servername, *svcname, *servprogname, *clntprogname;
-  char *temp;
 
   svcname = file_name (cmd->infile, "_svc.c");
   clntname = file_name (cmd->infile, "_clnt.c");
@@ -990,12 +989,12 @@ mkfile_output (struct commandline *cmd)
 
   if (allfiles)
     {
-      mkfilename = alloc (strlen ("Makefile.") +
-			  strlen (cmd->infile) + 1);
-      temp = (char *) rindex (cmd->infile, '.');
-      strcat (mkfilename, "Makefile.");
-      strncat (mkfilename, cmd->infile,
-	       (temp - cmd->infile));
+      char *cp, *temp;
+
+      mkfilename = alloc (strlen ("Makefile.") + strlen (cmd->infile) + 1);
+      temp = rindex (cmd->infile, '.');
+      cp = stpcpy (mkfilename, "Makefile.");
+      strncpy (cp, cmd->infile, (temp - cmd->infile));
     }
   else
     mkfilename = (char *) cmd->outfile;

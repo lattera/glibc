@@ -119,8 +119,8 @@ enum nstype {
 typedef enum nstype nstype;
 
 struct oar_mask {
-	u_int oa_rights;
-	zotypes oa_otype;
+        uint32_t oa_rights;
+        zotypes oa_otype;
 };
 typedef struct oar_mask oar_mask;
 
@@ -137,7 +137,7 @@ struct nis_server {
 		u_int ep_len;
 		endpoint *ep_val;
 	} ep;
-	u_int key_type;
+	uint32_t key_type;
 	netobj pkey;
 };
 typedef struct nis_server nis_server;
@@ -164,7 +164,7 @@ typedef struct directory_obj directory_obj;
 #define EN_ASN1 64
 
 struct entry_col {
-	u_int ec_flags;
+	uint32_t ec_flags;
 	struct {
 		u_int ec_value_len;
 		char *ec_value_val;
@@ -182,7 +182,7 @@ struct entry_obj {
 typedef struct entry_obj entry_obj;
 
 struct group_obj {
-	u_int gr_flags;
+	uint32_t gr_flags;
 	struct {
 		u_int gr_members_len;
 		nis_name *gr_members_val;
@@ -210,8 +210,8 @@ typedef struct link_obj link_obj;
 
 struct table_col {
 	char *tc_name;
-	u_int tc_flags;
-	u_int tc_rights;
+	uint32_t tc_flags;
+	uint32_t tc_rights;
 };
 typedef struct table_col table_col;
 
@@ -255,7 +255,7 @@ struct nis_object {
 	nis_name zo_owner;
 	nis_name zo_group;
 	nis_name zo_domain;
-	u_int zo_access;
+	uint32_t zo_access;
 	uint32_t zo_ttl;
 	objdata zo_data;
 };
@@ -344,7 +344,7 @@ struct ib_request {
 		u_int ibr_srch_len;
 		nis_attr *ibr_srch_val;
 	} ibr_srch;
-	u_int ibr_flags;
+	uint32_t ibr_flags;
 	struct {
 		u_int ibr_obj_len;
 		nis_object *ibr_obj_val;
@@ -408,7 +408,7 @@ struct cp_result {
 typedef struct cp_result cp_result;
 
 struct nis_tag {
-	u_int tag_type;
+	uint32_t tag_type;
 	char *tag_val;
 };
 typedef struct nis_tag nis_tag;

@@ -72,10 +72,10 @@ static void
 p_xdrfunc (const char *rname, const char *typename)
 {
   if (Cflag)
-    f_print (fout, "\t\txdr_%s = (xdrproc_t) xdr_%s;\n", rname,
+    f_print (fout, "\t\t_xdr_%s = (xdrproc_t) xdr_%s;\n", rname,
 	     stringfix (typename));
   else
-    f_print (fout, "\t\txdr_%s = xdr_%s;\n", rname, stringfix (typename));
+    f_print (fout, "\t\t_xdr_%s = xdr_%s;\n", rname, stringfix (typename));
 }
 
 void
@@ -503,7 +503,7 @@ write_program (const definition * def, const char *storage)
 
       if (Cflag)
 	{
-	  f_print (fout, "\txdrproc_t xdr_%s, xdr_%s;\n", ARG, RESULT);
+	  f_print (fout, "\txdrproc_t _xdr_%s, _xdr_%s;\n", ARG, RESULT);
 	  if (mtflag)
 	    f_print(fout,
 		    "\tbool_t (*%s)(char *, void *, struct svc_req *);\n",
@@ -619,11 +619,11 @@ write_program (const definition * def, const char *storage)
 		  RETVAL, ROUTINE, ARG, RESULT, RQSTP);
       if (mtflag)
 	f_print(fout,
-		"\tif (%s > 0 && !svc_sendreply(%s, xdr_%s, (char *)&%s)) {\n",
+		"\tif (%s > 0 && !svc_sendreply(%s, _xdr_%s, (char *)&%s)) {\n",
 		RETVAL, TRANSP, RESULT, RESULT);
       else
 	f_print(fout,
-		"\tif (%s != NULL && !svc_sendreply(%s, xdr_%s, %s)) {\n",
+		"\tif (%s != NULL && !svc_sendreply(%s, _xdr_%s, %s)) {\n",
 		RESULT, TRANSP, RESULT, RESULT);
 
       printerr ("systemerr", TRANSP);
@@ -643,7 +643,7 @@ write_program (const definition * def, const char *storage)
 	{
 	  f_print(fout,"\tif (!");
 	  pvname(def->def_name, vp->vers_num);
-	  f_print(fout,"_freeresult (%s, xdr_%s, (caddr_t) &%s))\n",
+	  f_print(fout,"_freeresult (%s, _xdr_%s, (caddr_t) &%s))\n",
 		  TRANSP, RESULT, RESULT);
 	  (void) sprintf(_errbuf, "unable to free results");
 	  print_err_message("\t\t");
@@ -664,7 +664,7 @@ static void
 printif (const char *proc, const char *transp, const char *prefix,
 	 const char *arg)
 {
-  f_print (fout, "\tif (!svc_%s (%s, xdr_%s, %s%s)) {\n",
+  f_print (fout, "\tif (!svc_%s (%s, _xdr_%s, %s%s)) {\n",
 	   proc, transp, arg, prefix, arg);
 }
 
