@@ -1,3 +1,9 @@
+2004-05-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/generic/strtol_l.c (DEF): Use ".gnu.linkonce.r."
+	instead of ".gnu.linkonce.ro." as the prefix for linkonce
+	read-only section name.
+
 2004-06-14  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/div_libc.h (_ITOFS): Use "sp" not "$sp".
