@@ -77,6 +77,17 @@
 
 #define ret_NOERRNO ret
 
+#define	PSEUDO_ERRVAL(name, syscall_name, args) \
+ .text; \
+ ENTRY (name); \
+    DO_CALL (syscall_name, args);
+
+#undef	PSEUDO_END_ERRVAL
+#define	PSEUDO_END_ERRVAL(name) \
+  END (name)
+
+#define ret_ERRVAL ret
+
 #ifndef PIC
 # define SYSCALL_ERROR_HANDLER	\
 	mov.l 0f,r1; \
