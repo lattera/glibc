@@ -1,5 +1,8 @@
 Fri May 24 17:30:50 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Rules (static-only-routines): Restore the rule to make these .so's
+	empty objects.
+
 	* login/pututline_r.c: Use struct assignment instead of memcpy.
 
 	* login/getutline_r.c: Use strncmp instead of comparing two pointers

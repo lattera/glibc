@@ -135,3 +135,16 @@ subdir_dist: dist
 # Convenient target to update all the generated source files.
 .PHONY: generated
 generated: $(addprefix $(objpfx),$(generated))
+
+ifndef libc.so-version
+# Undefine this because it can't work when we libc.so is unversioned.
+static-only-routines =
+endif
+
+ifdef static-only-routines
+# These routines are to be omitted from the shared library object,
+# so we replace the PIC objects for them with the empty object file.
+$(static-only-routines:%=$(objpfx)%.so): %.so: $(objpfx)empty.o
+	rm -f $@
+	ln $< $@
+endif
