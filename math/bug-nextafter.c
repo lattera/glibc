@@ -17,7 +17,7 @@ main (void)
       puts ("nextafterf+ failed");
       ++result;
     }
-  if (fetestexcept (FE_OVERFLOW) != 0)
+  if (fetestexcept (FE_OVERFLOW) == 0)
     {
       puts ("nextafterf+ did not overflow");
       ++result;
@@ -28,7 +28,7 @@ main (void)
       puts ("nextafterf- failed");
       ++result;
     }
-  if (fetestexcept (FE_OVERFLOW) != 0)
+  if (fetestexcept (FE_OVERFLOW) == 0)
     {
       puts ("nextafterf- did not overflow");
       ++result;
@@ -42,7 +42,7 @@ main (void)
       puts ("nextafter+ failed");
       ++result;
     }
-  if (fetestexcept (FE_OVERFLOW) != 0)
+  if (fetestexcept (FE_OVERFLOW) == 0)
     {
       puts ("nextafter+ did not overflow");
       ++result;
@@ -53,7 +53,7 @@ main (void)
       puts ("nextafter failed");
       ++result;
     }
-  if (fetestexcept (FE_OVERFLOW) != 0)
+  if (fetestexcept (FE_OVERFLOW) == 0)
     {
       puts ("nextafter- did not overflow");
       ++result;
