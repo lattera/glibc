@@ -120,9 +120,10 @@ test (testcase tests[], efcvt_func efcvt, const char *name)
 void
 special (void)
 {
-  int decpt, sign;
+  int decpt, sign, res;
   char *p;
-
+  char buf [1024];
+  
   p = ecvt (NAN, 10, &decpt, &sign);
   if (sign != 0 || strcmp (p, "nan") != 0)
     output_error ("ecvt", NAN, 10, "nan", 0, 0, p, decpt, sign);
@@ -135,6 +136,20 @@ special (void)
   (void) ecvt (123.456, 10000, &decpt, &sign);
   (void) fcvt (123.456, 10000, &decpt, &sign);
 
+  /* Some tests for for the reentrant functions.  */
+  /* Use a too small buffer.  */
+  res = ecvt_r (123.456, 10, &decpt, &sign, buf, 1);
+  if (res == 0)
+    {
+      printf ("ecvt_r with a too small buffer was succesful.\n");
+      ++error_count;
+    }
+  res = fcvt_r (123.456, 10, &decpt, &sign, buf, 1);
+  if (res == 0)
+    {
+      printf ("fcvt_r with a too small buffer was succesful.\n");
+      ++error_count;
+    }
 }
 
 

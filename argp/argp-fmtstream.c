@@ -1,5 +1,5 @@
 /* Word-wrapping and line-truncating streams
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -362,6 +362,7 @@ ssize_t
 __argp_fmtstream_printf (struct argp_fmtstream *fs, const char *fmt, ...)
 {
   int out;
+  size_t avail;
   size_t size_guess = PRINTF_SIZE_GUESS; /* How much space to reserve. */
 
   do
@@ -370,13 +371,15 @@ __argp_fmtstream_printf (struct argp_fmtstream *fs, const char *fmt, ...)
 
       if (! __argp_fmtstream_ensure (fs, size_guess))
 	return -1;
-      size_guess += size_guess;
 
       va_start (args, fmt);
-      out = __vsnprintf (fs->p, fs->end - fs->p, fmt, args);
+      avail = fs->end - fs->p;
+      out = __vsnprintf (fs->p, avail, fmt, args);
       va_end (args);
+      if (out >= avail)
+	size_guess = out + 1;
     }
-  while (out == -1);
+  while (out >= avail);
 
   fs->p += out;
 

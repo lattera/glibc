@@ -101,7 +101,8 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
 
   n = __snprintf (buf, len, "%.*" FLOAT_FMT_FLAG "f", MIN (ndigit, NDIGIT_MAX),
 		  value);
-  if (n < 0)
+  /* Check for a too small buffer.  */
+  if (n >= len)
     return -1;
 
   i = 0;

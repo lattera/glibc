@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,7 +70,7 @@ strsignal (int signum)
 #endif
 	len = __snprintf (buffer, BUFFERSIZ - 1, _("Unknown signal %d"),
 			  signum);
-      if (len < 0)
+      if (len >= BUFFERSIZ)
 	buffer = NULL;
       else
 	buffer[len] = '\0';
