@@ -152,16 +152,16 @@ save_grp (struct group *src)
   cp = (char *) (dest->gr_mem + l + 1);
 
   dest->gr_name = cp;
-  cp = mempcpy (cp, src->gr_name, name_len);
+  cp = mempcpy (cp, src->gr_name, name_len) + 1;
   dest->gr_passwd = cp;
-  cp = mempcpy (cp, src->gr_passwd, passwd_len);
+  cp = mempcpy (cp, src->gr_passwd, passwd_len) + 1;
   dest->gr_gid = src->gr_gid;
 
   l = 0;
   while (src->gr_mem[l] != NULL)
     {
       dest->gr_mem[l] = cp;
-      cp = stpcpy (cp, src->gr_mem[l]);
+      cp = stpcpy (cp, src->gr_mem[l]) + 1;
       ++l;
     }
   dest->gr_mem[l] = NULL;

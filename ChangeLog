@@ -1,3 +1,8 @@
+1998-09-15 08:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nscd/pwdcache.c (save_pwd): Correct copying.
+	* nscd/grpcache.c (save_grp): Likewise.
+
 1998-09-14 23:36  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nscd/pwdcache.c (save_pwd): Rewrite to use only one malloc call.
