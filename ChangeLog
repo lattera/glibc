@@ -1,3 +1,29 @@
+1998-11-30  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* mach/Versions [libc, GLIBC_2.0]: Add __spin_lock,
+	__spin_lock_init,  __mutex_lock, __mutex_trylock,
+	__mutex_unlock.
+	Remove get_priviliged_ports.  Moved to hurd/Versions.
+
+	* hurd/Versions [libc, GLIBC_2.0]: Add _end.  This makes the Hurd
+	brk implementation see the end of the data segment of the program
+	instead of the shared library.
+	Add __hurd_errno_location.  This inline function is used in user
+	programs.
+	Add _hurd_critical_section_lock, _hurd_critical_section_unlock,
+	_hurd_fd_get, _hurd_port_free, _hurd_port_get,
+	_hurd_port_locked_get.  These inline functions are used by macros
+	used in mail.local in the Hurd distribution.
+	Add get_privileged_ports.  Moved here from mach/Versions.
+	Remove __hurd_file_name_lookup,	__hurd_file_name_lookup_retry,
+	__hurd_file_name_split, __hurd_file_name_path_lookup.  These are
+	not used outside libc.
+
+1998-11-30  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* hurd/hurdstartup.c: Really include set-hooks.h with <> instead
+	of "".
+
 1998-11-29  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
 	* sunrpc/Makefile: Add xdr_intXX_t to routines.

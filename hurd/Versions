@@ -1,50 +1,18 @@
 libc {
   GLIBC_2.0 {
-    # Hurd-specific variables
+    # necessary for the Hurd brk implementation
+    _end;
+
+    # variables used in macros & inline functions
     __hurd_sigthread_stack_base; __hurd_sigthread_stack_end;
-    __hurd_sigthread_variables; __hurd_threadvar_max;
+    __hurd_sigthread_variables;
+    __hurd_threadvar_max;
     __hurd_threadvar_stack_mask; __hurd_threadvar_stack_offset;
-    _hurd_device_master; _hurd_host_priv;
 
-    # Hurd-specific exported functions from <hurd.h>
-    _hurd_ports; _hurd_ports_use;
-    getcrdir; getcwdir; getauth; getproc; getcttyid;
-    setcrdir; setcwdir; setauth; setproc; setcttyid;
-    file_name_split; file_name_lookup; file_name_lookup_under;
-    file_name_path_lookup;
-    openport; fopenport; task2pid; pid2task; getdport; vpprintf;
-    hurd_thread_self; hurd_thread_cancel; hurd_check_cancel;
-    hurd_safe_memset;
-    _hurd_init; _hurd_proc_init;
-    _hurd_exec;
-    _hurd_canonicalize_directory_name_internal;
-    geteuids; seteuids;
+    # functions used in macros & inline functions
+    __hurd_errno_location;
 
-    # XXX ought to exist on all platforms
-    getumask;
-
-    # <hurd/lookup.h>
-    hurd_file_name_lookup; __hurd_file_name_lookup;
-    hurd_file_name_lookup_retry; __hurd_file_name_lookup_retry;
-    hurd_file_name_split; __hurd_file_name_split;
-    hurd_file_name_path_lookup; __hurd_file_name_path_lookup;
-
-    # <hurd/signal.h>
-    _hurd_thread_sigstate; _hurd_msgport;
-    _hurd_exception2signal;
-    hurd_sig_post;
-
-    # <hurd/sigpreempt.h>
-    hurd_catch_signal;
-    hurd_preempt_signals;
-
-    # <hurd/port.h>
-    _hurd_port_cleanup;
-
-    # <hurd/fd.h>
-    _hurd_dtable; _hurd_dtablesize; _hurd_dtable_lock; _hurd_intern_fd;
-
-    # Internal functions referenced by libmachuser and libhurduser.
+    # functions used in libmachuser and libhurduser
     _S_catch_exception_raise;
     _S_msg_add_auth; _S_msg_del_auth;
     _S_msg_describe_ports;
@@ -59,5 +27,68 @@ libc {
     _S_msg_proc_newids; _S_msg_report_wait;
     _S_msg_sig_post; _S_msg_sig_post_untraced;
     _hurd_intr_rpc_mach_msg; _hurdsig_fault_catch_exception_raise;
+
+    # "quasi-internal" variables
+    _hurd_device_master;
+    _hurd_dtable; _hurd_dtablesize; _hurd_dtable_lock;
+    _hurd_host_priv;
+    _hurd_msgport;
+    _hurd_ports;
+
+    # "quasi-internal" functions
+    _hurd_canonicalize_directory_name_internal;
+    _hurd_critical_section_lock;
+    _hurd_critical_section_unlock;
+    _hurd_exception2signal;
+    _hurd_exec;
+    _hurd_fd_get;
+    _hurd_init;
+    _hurd_intern_fd;
+    _hurd_port_cleanup;
+    _hurd_port_free;
+    _hurd_port_get;
+    _hurd_port_locked_get;
+    _hurd_ports_use;
+    _hurd_proc_init;
+    _hurd_thread_sigstate;
+
+    # functions in normal name space
+
+    # f*
+    file_name_lookup; file_name_lookup_under; file_name_path_lookup;
+    file_name_split;
+    fopenport;
+
+    # g*
+    get_privileged_ports;
+    getauth; getcrdir; getcwdir; getcttyid; getdport; geteuids;
+    getproc; getumask;
+
+    # h*
+    hurd_catch_signal;
+    hurd_check_cancel;
+    hurd_file_name_lookup; hurd_file_name_lookup_retry;
+    hurd_file_name_path_lookup; hurd_file_name_split;
+    hurd_preempt_signals;
+    hurd_safe_copyin; hurd_safe_copyout;
+    hurd_safe_memmove; hurd_safe_memset;
+    hurd_sig_post;
+    hurd_thread_cancel; hurd_thread_self;
+    hurd_unpreemt_signals;
+
+    # o*
+    openport;
+
+    # p*
+    pid2task;
+
+    # s*
+    setauth; setcrdir; setcwdir; seteuids; setproc; setcttyid;
+
+    # t*
+    task2pid;
+
+    # v*
+    vpprintf;
   }
 }

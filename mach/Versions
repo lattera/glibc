@@ -4,12 +4,12 @@ libc {
     __mach_task_self_;
     __vm_page_size;
 
-    # functions used in inline functions
-    __mach_thread_self;
-    __mutex_lock_solid; __mutex_unlock_solid;
-    __spin_lock_solid; __spin_try_lock; __spin_unlock;
-    __mutex_init;
-    __mach_port_deallocate;
+    # functions used in inline functions and macros
+    __mach_port_deallocate; __mach_thread_self;
+    __mutex_init; __mutex_lock; __mutex_lock_solid; __mutex_trylock;
+    __mutex_unlock; __mutex_unlock_solid;
+    __spin_lock; __spin_lock_init; __spin_lock_solid; __spin_try_lock;
+    __spin_unlock;
 
     # functions used by RPC stubs
     __mach_msg;
@@ -23,9 +23,6 @@ libc {
 
     # e*
     evc_wait;
-
-    # g*
-    get_privileged_ports;
 
     # m*
     mach_error; mach_error_string; mach_error_type;
