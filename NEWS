@@ -52,7 +52,9 @@ Version 2.3
 * Startup times are significantly reduced by not using exported functions
   inside the library itself.  Changes by Jakub Jelinek, Roland McGrath,
   and Ulrich Drepper.
-o
+
+* Steven Munroe contributed a port to PowerPC64/Linux.
+
 Version 2.2.6
 
 * The Hurd now uses the GNU libio implementation of stdio rather than the

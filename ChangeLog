@@ -1,3 +1,11 @@
+2002-09-17  Roland McGrath  <roland@redhat.com>
+
+	* malloc/Makefile ($(objpfx)memusagestat.o: sysincludes): Define
+	file-specific variable override so it compiles properly when using
+	--with-headers.
+
+	* NEWS: Added item for powerpc64-linux port.
+
 2002-09-17  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	Ported to PowerPC64 running Linux.
@@ -34,6 +42,43 @@
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/socket.S: New file.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/syscalls.list: New file.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: New file.
+
+	* include/libc-symbols.h [HAVE_ASM_GLOBAL_DOT_NAME]
+	(C_SYMBOL_DOT_NAME): Insure that C_SYMBOL_DOT_NAME works for
+	various gcc versions.  Dot names required for powerpc64.
+	[HAVE_ASM_GLOBAL_DOT_NAME] (_weak_extern): Add .weakext '.'ed symbol.
+	[HAVE_ASM_GLOBAL_DOT_NAME] (strong_alias): Add .global
+	C_SYMBOL_DOT_NAME(alias).
+	[HAVE_ASM_GLOBAL_DOT_NAME] (strong_data_alias): New macro. Same as
+	original strong_alias macro.
+	[HAVE_ASM_GLOBAL_DOT_NAME] (weak_alias): Add .weakext/.weak
+	C_SYMBOL_DOT_NAME(alias).
+	[HAVE_ASM_GLOBAL_DOT_NAME] (_symbol_version): Add .symver '.'ed name.
+	[HAVE_ASM_GLOBAL_DOT_NAME] (_default_symbol_version): Add .symver
+	'.'ed name.
+	Add comments on libc_hidden_data_def and libc_hidden_data_weak usage.
+	[HAVE_ASM_GLOBAL_DOT_NAME] (hidden_dot_def1): New macro.  Generate
+	.global C_SYMBOL_DOT_NAME(alias).  Otherwise an empty macro.
+	(hidden_def): Append hidden_dot_def1 macro to definition.
+	(hidden_ver): Append hidden_dot_def1 macro to definition.
+	(hidden_data_def): New macro.  Same as original hidden_def macro.
+	(hidden_data_ver): New macro.  Same as original hidden_ver macro.
+	[HAVE_ASM_GLOBAL_DOT_NAME] (hidden_dot_weak1): New macro.  Generate
+	.weakext C_SYMBOL_DOT_NAME(alias).  Otherwise an empty macro.
+	(hidden_weak): Append hidden_dot_weak1 macro to definition.
+	(hidden_data_weak): New macro.  Same as original hidden_weak macro.
+	[HAVE_ASM_GLOBAL_DOT_NAME] (HIDDEN_JUMPTARGET): Define as .__GI_name.
+	Otherwise defined as __GI_name.
+	(libc_hidden_data_def): New macro.  Use hidden_data_def.
+	(libc_hidden_data_weak): New macro.  Use hidden_data_weak.
+	(libc_hidden_data_ver): New macro.  Use hidden_data_ver.
+	(rtld_hidden_data_def): New macro.  Use hidden_data_def.
+	(rtld_hidden_data_weak): New macro.  Use hidden_data_weak.
+	(rtld_hidden_data_ver): New macro.  Use hidden_data_ver.
+	(libm_hidden_data_def): New macro.  Use hidden_data_def.
+	(libm_hidden_data_weak): New macro.  Use hidden_data_weak.
+	(libm_hidden_data_ver): New macro.  Use hidden_data_ver.
+	* inet/in6_addr.c: Replace libc_hidden_def with libc_hidden_data_def.
 
 2002-09-17  Ulrich Drepper  <drepper@redhat.com>
 

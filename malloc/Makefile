@@ -81,6 +81,12 @@ ifneq ($(LIBGD),no)
 install-bin = memusagestat memusage
 generated += memusagestat memusage
 extra-objs += memusagestat.o
+
+# The configure.in check for libgd and its headers did not use $SYSINCLUDES.
+# The directory specified by --with-headers usually contains only the basic
+# kernel interface headers, not something like libgd.  So the simplest thing
+# is to presume that the standard system headers will be ok for this file.
+$(objpfx)memusagestat.o: sysincludes = # nothing
 endif
 endif
 
