@@ -279,36 +279,32 @@ _dl_start_user:
 	str	sp, [r1]
 	@ See if we were run as a command with the executable file
 	@ name as an extra leading argument.
-	ldr	r1, .L_SKIP_ARGS
-	ldr	r1, [sl, r1]
-	@ get the original arg count
-	ldr	r0, [sp]
-	@ subtract _dl_skip_args from it
-	sub	r0, r0, r1
-	@ adjust the stack pointer to skip them
-	add	sp, sp, r1, lsl #2
-	@ store the new argc in the new stack location
-	str	r0, [sp]
-
-	@ now we enter a _dl_init_next loop
-	ldr	r4, .L_MAIN_SEARCHLIST
+	ldr	r4, .L_SKIP_ARGS
 	ldr	r4, [sl, r4]
-	ldr	r4, [r4]
-	@ call _dl_init_next to get the address of an initalizer
-0:	mov	r0, r4
-	bl	_dl_init_next(PLT)
-	cmp	r0, #0
-	beq	1f
-	@ call the shared-object initializer
-	@ during this call, the stack may get moved around
-	mov	lr, pc
-	mov	pc, r0
-	@ go back and look for another initializer
-	b	0b
-1:	@ clear the startup flag
+	@ get the original arg count
+	ldr	r1, [sp]
+	@ subtract _dl_skip_args from it
+	sub	r1, r1, r4
+	@ adjust the stack pointer to skip them
+	add	sp, sp, r4, lsl #2
+	@ get the argv address
+	add	r2, sp, #4
+	@ store the new argc in the new stack location
+	str	r1, [sp]
+	@ compute envp
+	add	r3, r2, r1, lsl #2
+	add	r3, r3, #4
+
+	@ now we call _dl_init
+	ldr	r0, .L_LOADED
+	ldr	r0, [sl, r0]
+	ldr	r0, [r0]
+	@ call _dl_init
+	bl	_dl_init(PLT)
+	@ clear the startup flag
 	ldr	r2, .L_STARTUP_FLAG
 	ldr	r1, [sl, r2]
-	@ we know r0==0 at this point
+	mov	r0, #0
 	str	r0, [r1]
 	@ load the finalizer function
 	ldr	r0, .L_FINI_PROC
@@ -325,8 +321,8 @@ _dl_start_user:
 	.word	_dl_fini(GOT)
 .L_STACK_END:
 	.word	__libc_stack_end(GOT)
-.L_MAIN_SEARCHLIST:
-	.word	_dl_main_searchlist(GOT)
+.L_LOADED:
+	.word	_dl_loaded(GOT)
 .previous\n\
 ");
 
@@ -464,7 +460,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	     if (value & 0xfc000003)
 	       _dl_signal_error (0, map->l_name,
 			  "R_ARM_PC24 relocation out of range");
-	       
+
 	     value = value >> 2;
 	     value = (*reloc_addr & 0xff000000) | (value & 0x00ffffff);
 	     *reloc_addr = value;
