@@ -1,3 +1,7 @@
+1997-05-21 17:53  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* argp-help.c (hol_add_cluster): Initialize CL->depth.
+
 1997-05-24 03:51  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/Makefile (routines): Add strtol_l, strtoul_l, strtoll_l,

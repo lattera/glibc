@@ -458,6 +458,7 @@ hol_add_cluster (struct hol *hol, int group, const char *header, int index,
       cl->index = index;
       cl->parent = parent;
       cl->argp = argp;
+      cl->depth = parent ? parent->depth + 1 : 0;
 
       cl->next = hol->clusters;
       hol->clusters = cl;
