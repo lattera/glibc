@@ -1,5 +1,10 @@
 1999-01-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/sysv4/solaris2/configure.in: New file.
+	* sysdeps/unix/sysv/sysv4/solaris2/configure: New file.
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c: New file.
+	Patch by Jeff Bailey <jbailey@phn.ca>.
+
 	* locale/setlocale.c (free_mem): Don't try to free C locale data
 	and use setdata instead of doing it by hand.
 
