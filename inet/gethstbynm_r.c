@@ -31,7 +31,6 @@
 #define ADD_PARAMS	const char *name
 #define ADD_VARIABLES	name
 #define NEED_H_ERRNO	1
-#define NEED__RES	1
 #define NEED__RES_HCONF	1
 #define POSTPROCESS \
   if (status == NSS_STATUS_SUCCESS)					      \
