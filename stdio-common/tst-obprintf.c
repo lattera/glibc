@@ -17,10 +17,12 @@ main (void)
 
   obstack_init (&ob);
 
-  for (n = 0; n < 10000; ++n)
+  for (n = 0; n < 40000; ++n)
     {
       mcheck_check_all ();
       obstack_printf (&ob, "%.*s%05d", 1 + n % 7, "foobarbaz", n);
+      if (n % 777 == 0)
+	obstack_finish (&ob);
     }
 
   /* And a final check.  */
