@@ -42,7 +42,6 @@ extern const char *__progname;
 # include FATAL_PREPARE_INCLUDE
 #endif
 
-#undef __assert_fail
 void
 __assert_fail (const char *assertion, const char *file, unsigned int line,
 	       const char *function)
@@ -69,7 +68,7 @@ __assert_fail (const char *assertion, const char *file, unsigned int line,
 
       (void) fflush (stderr);
 
-      /* We have to free the buffer since the appplication might catch the
+      /* We have to free the buffer since the application might catch the
 	 SIGABRT.  */
       free (buf);
     }
@@ -82,4 +81,4 @@ __assert_fail (const char *assertion, const char *file, unsigned int line,
 
   abort ();
 }
-INTDEF(__assert_fail)
+libc_hidden_def(__assert_fail)
