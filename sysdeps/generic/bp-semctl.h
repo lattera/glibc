@@ -41,7 +41,7 @@ check_semctl (union semun *arg, int semid, int cmd)
     case SETALL:
       {
 	struct semid_ds ds;
-	union semun un = { buf: &ds };
+	union semun un = { .buf = &ds };
 	unsigned int length = ~0;
 
 	/* It's unfortunate that we need to make a recursive

@@ -28,7 +28,7 @@ int
 usleep (useconds)
      useconds_t useconds;
 {
-  struct timespec ts ={tv_sec:0,tv_nsec:(long int)useconds * 1000};
+  struct timespec ts ={.tv_sec = 0, .tv_nsec = (long int)useconds * 1000};
   __libc_nanosleep(&ts,&ts);
   return 0;
 }

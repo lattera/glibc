@@ -56,7 +56,7 @@ __setitimer (which, new, old)
     case -1: exit(-1);
     case  0:
        {
-        struct timespec ts ={tv_sec:(long int)new->it_value.tv_sec,tv_nsec:0};
+        struct timespec ts ={.tv_sec = (long int)new->it_value.tv_sec, .tv_nsec = 0};
         __libc_nanosleep(&ts,&ts);
 	__kill(getppid(), SIGALRM);
 	exit(0);
