@@ -60,7 +60,7 @@ __gconv_load_cache (void)
     return -1;
 
   /* See whether the cache file exists.  */
-  fd = open_not_cancel (GCONV_MODULES_CACHE, O_RDONLY);
+  fd = open_not_cancel (GCONV_MODULES_CACHE, O_RDONLY, 0);
   if (__builtin_expect (fd, 0) == -1)
     /* Not available.  */
     return -1;

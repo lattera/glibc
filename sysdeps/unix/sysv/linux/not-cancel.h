@@ -22,33 +22,32 @@
 
 /* Uncancelable open.  */
 #ifdef INLINE_SYSCALL
-# define open_not_cancel(name, flags, mode...) \
-  ({ int _mode = (0, ##mode);						      \
-     INLINE_SYSCALL (open, 3, (const char *) name, flags, _mode); })
+# define open_not_cancel(name, flags, mode) \
+   INLINE_SYSCALL (open, 3, (const char *) (name), (flags), (mode))
 #endif
 
 /* Uncancelable close.  */
 #ifdef INLINE_SYSCALL
 # define close_not_cancel_no_status(fd) \
   (void) ({ INTERNAL_SYSCALL_DECL (err);				      \
-	    INTERNAL_SYSCALL (close, err, 1, fd); })
+	    INTERNAL_SYSCALL (close, err, 1, (fd)); })
 #endif
 
 /* Uncancelable read.  */
 #ifdef INLINE_SYSCALL
 # define read_not_cancel(fd, buf, n) \
-  INLINE_SYSCALL (read, 3, fd, buf, n)
+  INLINE_SYSCALL (read, 3, (fd), (buf), (n))
 #endif
 
 /* Uncancelable write.  */
 #ifdef INLINE_SYSCALL
 # define write_not_cancel(fd, buf, n) \
-  INLINE_SYSCALL (write, 3, fd, buf, n)
+  INLINE_SYSCALL (write, 3, (fd), (buf), (n))
 #endif
 
 /* Uncancelable writev.  */
 #ifdef INLINE_SYSCALL
 # define writev_not_cancel_no_status(fd, iov, n) \
   (void) ({ INTERNAL_SYSCALL_DECL (err);				      \
-	    INTERNAL_SYSCALL (writev, err, 3, fd, iov, n); })
+	    INTERNAL_SYSCALL (writev, err, 3, (fd), (iov), (n)); })
 #endif

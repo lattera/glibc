@@ -72,9 +72,9 @@ gethostid ()
   int fd;
 
   /* First try to get the ID from a former invocation of sethostid.  */
-  fd = open_not_cancel (HOSTIDFILE, O_RDONLY|O_LARGEFILE);
+  fd = open_not_cancel (HOSTIDFILE, O_RDONLY|O_LARGEFILE, 0);
   if (fd < 0)
-    fd = open_not_cancel (OLD_HOSTIDFILE, O_RDONLY|O_LARGEFILE);
+    fd = open_not_cancel (OLD_HOSTIDFILE, O_RDONLY|O_LARGEFILE, 0);
   if (fd >= 0)
     {
       ssize_t n = read_not_cancel (fd, &id, sizeof (id));
