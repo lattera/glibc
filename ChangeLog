@@ -1,3 +1,7 @@
+2001-02-06  Andreas Jaeger  <aj@suse.de>
+
+	* time/time.h (CLK_TCK): Check for !__STRICT_ANSI.
+
 2001-02-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/locale.c (write_locales): Use scandir to read
