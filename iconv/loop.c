@@ -1,5 +1,5 @@
 /* Conversion loop frame work.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -209,6 +209,21 @@
     ++*irreversible;							      \
     inptr += Incr;							      \
     continue;								      \
+  }
+
+
+/* Handling of Unicode 3.1 TAG characters.  Unicode recommends
+   "If language codes are not relevant to the particular processing
+    operation, then they should be ignored."
+   This macro is usually called right before STANDARD_ERR_HANDLER (Incr).  */
+#define UNICODE_TAG_HANDLER(Character, Incr) \
+  {									      \
+    /* TAG characters are those in the range U+E0000..U+E007F.  */	      \
+    if (((Character) >> 7) == (0xe0000 >> 7))				      \
+      {									      \
+	inptr += Incr;							      \
+	continue;							      \
+      }									      \
   }
 
 
