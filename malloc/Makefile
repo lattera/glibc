@@ -91,11 +91,12 @@ $(objpfx)libmcheck.a: $(objpfx)mcheck-init.o
 
 lib: $(objpfx)libmcheck.a
 
-
+ifeq (yes,$(build-shared))
 .PHONY: do-tst-mtrace
 tests: do-tst-mtrace
 do-tst-mtrace: tst-mtrace.sh $(objpfx)tst-mtrace
 	$(SHELL) -e $< $(common-objpfx)
+endif
 
 # Uncomment this for test releases.  For public releases it is too expensive.
 #CPPFLAGS-malloc.o += -DMALLOC_DEBUG

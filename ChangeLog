@@ -1,5 +1,24 @@
 2000-07-10  Andreas Jaeger  <aj@suse.de>
 
+	* malloc/Makefile: Run tst-mtrace only with shared libs.
+
+	* stdio-common/Makefile: Run unbputc and tst-printf tests only
+	with shared libs.
+
+2000-07-10  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
+
+	* sysdeps/mips/dl-machine.h (elf_machine_runtime_link_map): Verify
+	that gpreg really points to the GOT section of the calling object.
+	Scan all PT_LOAD segments of objects for stub_pc, instead of only
+	checking a start address of first one.
+	Fix typos.
+	* sysdeps/mips/mips64/dl-machine.h (elf_machine_runtime_link_map):
+	Likewise.
+
+	* sysdeps/mips/dl-machine.h (__dl_runtime_resolve): Fix a typo.
+
+2000-07-10  Andreas Jaeger  <aj@suse.de>
+
 	* sysdeps/unix/sysv/linux/sigaction.c: Fix typo
 	(string_alias->strong_alias).
 
