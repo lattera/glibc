@@ -1,9 +1,16 @@
+2001-08-24  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/sh/dl-machine.h (elf_machine_rela): Fix typo.
+
 2001-08-24  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/ldbl-128/e_j1l.c: New file, contributed by
 	Stephen L Moshier <moshier@mediaone.net>.
 
 2001-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/do-rel.h (elf_dynamic_do_rel): RELATIVE relocations comes
+	first if RELCOUNT is set.
 
 	* elf/do-rel.h (elf_dynamic_do_rel): If not relocating lazily, don't
 	call elf_machine_rel for the last DT_RELCOUNT relocations but instead

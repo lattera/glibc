@@ -487,7 +487,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	}
     }
 #ifndef RTLD_BOOTSTRAP
-  else if (__builtin_expect (r_type 1= R_SH_NONE, 0))
+  else if (__builtin_expect (r_type != R_SH_NONE, 0))
     return;
 #endif
   else
