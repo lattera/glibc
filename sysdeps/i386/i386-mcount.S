@@ -1,5 +1,5 @@
 /* i386-specific implemetation of profiling support.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -36,22 +36,12 @@ C_LABEL(_mcount)
 	pushl %ecx
 	pushl %edx
 
-	movl 12(%esp), %eax
-	movl 4(%ebp), %ecx
-	pushl %eax
-	pushl %ecx
+	movl 12(%esp), %edx
+	movl 4(%ebp), %eax
 
-#ifdef PIC
-	call 1f
-1:	popl %ecx
-	addl $_GLOBAL_OFFSET_TABLE_+[.-1b], %ecx
-	movl C_SYMBOL_NAME(__mcount_internal@GOT)(%ecx), %eax
-	call *%eax
-#else
+	/* No need to access the PLT or GOT, __mcount_internal is an
+	   internal function and we can make a relative call.  */
 	call C_SYMBOL_NAME(__mcount_internal)
-#endif
-	popl %ecx
-	popl %eax	/* Pop the parameters.  */
 
 	/* Pop the saved registers.  Please note that `mcount' has no
 	   return value.  */

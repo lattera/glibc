@@ -199,16 +199,17 @@ extern void __gconv_release_step (struct __gconv_step *step)
      internal_function;
 
 /* Read all the configuration data and cache it.  */
-extern void __gconv_read_conf (void);
+extern void __gconv_read_conf (void) attribute_hidden;
 
 /* Try to read module cache file.  */
 extern int __gconv_load_cache (void) internal_function;
 
 /* Determine the directories we are looking in.  */
-extern void __gconv_get_path (void);
+extern void __gconv_get_path (void) internal_function;
 
 /* Comparison function to search alias.  */
-extern int __gconv_alias_compare (const void *p1, const void *p2);
+extern int __gconv_alias_compare (const void *p1, const void *p2)
+     attribute_hidden;
 
 /* Clear reference to transformation step implementations which might
    cause the code to be unloaded.  */
@@ -248,7 +249,7 @@ extern int __gconv_transliterate (struct __gconv_step *step,
 				  __const unsigned char **inbufp,
 				  __const unsigned char *inbufend,
 				  unsigned char **outbufstart,
-				  size_t *irreversible);
+				  size_t *irreversible) attribute_hidden;
 
 
 /* Builtin transformations.  */

@@ -111,7 +111,8 @@ static STAYOPEN_TMP;
 __libc_lock_define_initialized (static, lock)
 
 /* The lookup function for the first entry of this service.  */
-extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp);
+extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp)
+     internal_function;
 
 void
 SETFUNC_NAME (STAYOPEN)

@@ -24,6 +24,12 @@
 #include <unwind-dw2.c>
 #undef __frame_state_for
 
+struct frame_state * fallback_frame_state_for (void *, struct frame_state *)
+#ifdef _LIBC
+     attribute_hidden
+#endif
+     ;
+
 typedef struct frame_state * (*framesf)(void *pc, struct frame_state *);
 struct frame_state *__frame_state_for (void *pc,
 				       struct frame_state *frame_state);

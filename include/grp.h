@@ -3,7 +3,8 @@
 
 /* Now define the internal interfaces.  */
 extern int __getgrent_r (struct group *__resultbuf, char *buffer,
-			 size_t __buflen, struct group **__result);
+			 size_t __buflen, struct group **__result)
+     attribute_hidden;
 extern int __old_getgrent_r (struct group *__resultbuf, char *buffer,
 			     size_t __buflen, struct group **__result);
 extern int __fgetgrent_r (FILE * __stream, struct group *__resultbuf,

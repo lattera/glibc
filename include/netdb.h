@@ -5,7 +5,7 @@
 extern int __gethostent_r (struct hostent *__restrict __result_buf,
 			   char *__restrict __buf, size_t __buflen,
 			   struct hostent **__restrict __result,
-			   int *__restrict __h_errnop);
+			   int *__restrict __h_errnop) attribute_hidden;
 extern int __old_gethostent_r (struct hostent *__restrict __result_buf,
 			       char *__restrict __buf, size_t __buflen,
 			       struct hostent **__restrict __result,
@@ -49,7 +49,7 @@ extern int __old_gethostbyname2_r (__const char *__restrict __name, int __af,
 extern int __getnetent_r (struct netent *__restrict __result_buf,
 			  char *__restrict __buf, size_t __buflen,
 			  struct netent **__restrict __result,
-			  int *__restrict __h_errnop);
+			  int *__restrict __h_errnop) attribute_hidden;
 extern int __old_getnetent_r (struct netent *__restrict __result_buf,
 			      char *__restrict __buf, size_t __buflen,
 			      struct netent **__restrict __result,
@@ -79,7 +79,8 @@ extern int __old_getnetbyname_r (__const char *__restrict __name,
 
 extern int __getservent_r (struct servent *__restrict __result_buf,
 			   char *__restrict __buf, size_t __buflen,
-			   struct servent **__restrict __result);
+			   struct servent **__restrict __result)
+     attribute_hidden;
 extern int __old_getservent_r (struct servent *__restrict __result_buf,
 			       char *__restrict __buf, size_t __buflen,
 			       struct servent **__restrict __result);
@@ -108,7 +109,8 @@ extern int __old_getservbyport_r (int __port,
 
 extern int __getprotoent_r (struct protoent *__restrict __result_buf,
 			    char *__restrict __buf, size_t __buflen,
-			    struct protoent **__restrict __result);
+			    struct protoent **__restrict __result)
+     attribute_hidden;
 extern int __old_getprotoent_r (struct protoent *__restrict __result_buf,
 				char *__restrict __buf, size_t __buflen,
 				struct protoent **__restrict __result);

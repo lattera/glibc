@@ -56,9 +56,10 @@
 service_user *DATABASE_NAME_SYMBOL attribute_hidden;
 
 extern int DB_LOOKUP_FCT (service_user **ni, const char *fct_name,
-			  void **fctp);
+			  void **fctp) internal_function;
 
 int
+internal_function
 DB_LOOKUP_FCT (service_user **ni, const char *fct_name, void **fctp)
 {
   if (DATABASE_NAME_SYMBOL == NULL

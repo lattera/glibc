@@ -38,7 +38,7 @@ extern time_t __mktime_internal (struct tm *__tp,
 						       struct tm *),
 				 time_t *__offset);
 extern struct tm *__localtime_r (__const time_t *__timer,
-				 struct tm *__tp);
+				 struct tm *__tp) attribute_hidden;
 
 extern struct tm *__gmtime_r (__const time_t *__restrict __timer,
 			      struct tm *__restrict __tp);

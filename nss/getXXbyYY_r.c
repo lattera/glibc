@@ -112,7 +112,8 @@ typedef enum nss_status (*lookup_function) (ADD_PARAMS, LOOKUP_TYPE *, char *,
 					    size_t, int * H_ERRNO_PARM);
 
 /* The lookup function for the first entry of this service.  */
-extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp);
+extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp)
+     internal_function;
 
 /* Interval in which we transfer retry to contact the NSCD.  */
 #define NSS_NSCD_RETRY	100

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -131,7 +131,8 @@ int __nss_next (service_user **ni, const char *fct_name, void **fctp,
 void *__nss_lookup_function (service_user *ni, const char *fct_name);
 
 
-typedef int (*db_lookup_function) (service_user **, const char *, void **);
+typedef int (*db_lookup_function) (service_user **, const char *, void **)
+     internal_function;
 typedef enum nss_status (*setent_function) (int);
 typedef enum nss_status (*endent_function) (void);
 typedef enum nss_status (*getent_function) (void *, char *, size_t,

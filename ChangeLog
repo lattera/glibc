@@ -1,3 +1,36 @@
+2002-03-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i386-mcount.S: Just call __mcount_internal, it is an
+	internal function.  Adjust for internal_function calling convention.
+	* sysdeps/i386/machine-gmon.h: Declare and define __mcount_internal
+	as internal_function.
+
+	* sysdeps/generic/framestate.c: Declare fallback_frame_state_for as
+	hidden.
+
+	* nss/XXX-lookup.c (DB_LOOKUP_FCT): Add internal_function to
+	declaration and definition.
+	* nss/getXXbyYY_r.c (DB_LOOKUP_FCT): Add internal_function to
+	declaration.
+	* nss/getXXent_r.c: Likewise.
+	* nss/nsswitch.h (db_lookup_function): Add internal_function to
+	definition.
+
+	* include/time.h: Declare __localtime_r as hidden.
+
+	* include/grp.h: Declare __getgrent_r as hidden.
+	* include/netdb.h: Declare __gethostent_r, __getnetent_r,
+	__getservent_r, and __getprotoent_r as hidden.
+	* include/pwd.h: Declare __getpwent_r as hidden.
+	* include/shadow.h: Declare __getspent_r as hidden.
+	* include/rpc/netdb.h: Declare __getrpcent_r as hidden.
+
+	* iconv/gconv_int.h: Declare __gconv_read_conf, __gconv_alias_compare,
+	and __gconv_transliterate as hidden.
+	Add internal_function to __gconv_get_path declaration.
+	* iconv/gconv_int.h: Add internal_function to __gconv_get_path
+	definition.  Add attribute_hidden to __gconv_read_conf definition.
+
 2002-03-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/rtld.c: Declare _environ as hidden.

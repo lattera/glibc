@@ -1,5 +1,5 @@
 /* Handle configuration data.
-   Copyright (C) 1997,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -416,6 +416,7 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
 
 /* Determine the directories we are looking for data in.  */
 void
+internal_function
 __gconv_get_path (void)
 {
   struct path_elem *result;
@@ -527,6 +528,7 @@ __gconv_get_path (void)
 /* Read all configuration files found in the user-specified and the default
    path.  */
 void
+attribute_hidden
 __gconv_read_conf (void)
 {
   void *modules = NULL;

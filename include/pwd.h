@@ -3,7 +3,8 @@
 
 /* Now define the internal interfaces.  */
 extern int __getpwent_r (struct passwd *__resultbuf, char *__buffer,
-			 size_t __buflen, struct passwd **__result);
+			 size_t __buflen, struct passwd **__result)
+     attribute_hidden;
 extern int __old_getpwent_r (struct passwd *__resultbuf, char *__buffer,
 			     size_t __buflen, struct passwd **__result);
 extern int __getpwuid_r (__uid_t __uid, struct passwd *__resultbuf,

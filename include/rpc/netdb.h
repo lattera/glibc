@@ -17,7 +17,8 @@ extern int __old_getrpcbynumber_r (int __number, struct rpcent *__result_buf,
 				   struct rpcent **__result);
 
 extern int __getrpcent_r (struct rpcent *__result_buf, char *__buffer,
-			  size_t __buflen, struct rpcent **__result);
+			  size_t __buflen, struct rpcent **__result)
+     attribute_hidden;
 extern int __old_getrpcent_r (struct rpcent *__result_buf, char *__buffer,
 			      size_t __buflen, struct rpcent **__result);
 

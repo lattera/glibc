@@ -3,7 +3,8 @@
 
 /* Now define the internal interfaces.  */
 extern int __getspent_r (struct spwd *__result_buf, char *__buffer,
-			 size_t __buflen, struct spwd **__result);
+			 size_t __buflen, struct spwd **__result)
+     attribute_hidden;
 extern int __old_getspent_r (struct spwd *__result_buf, char *__buffer,
 			     size_t __buflen, struct spwd **__result);
 extern int __getspnam_r (__const char *__name, struct spwd *__result_buf,
