@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,98,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab (schwab@issan.informatik.uni-dortmund.de)
 
@@ -58,7 +58,7 @@ thread_start:
 	subl	%fp, %fp	/* terminate the stack frame */
 	jsr	(%a0)
 	movel	%d0, -(%sp)
-	jbsr	JUMPTARGET (_exit)
+	jbsr	HIDDEN_JUMPTARGET (_exit)
 
 PSEUDO_END (__clone)
 
