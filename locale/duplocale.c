@@ -49,12 +49,12 @@ __duplocale (__locale_t dataset)
 	    if (result->__locales[cnt]->usage_count < MAX_USAGE_COUNT)
 	      ++result->__locales[cnt]->usage_count;
 	  }
-    }
 
-  /* Update the special members.  */
-  result->__ctype_b = dataset->__ctype_b;
-  result->__ctype_tolower = dataset->__ctype_tolower;
-  result->__ctype_toupper = dataset->__ctype_toupper;
+      /* Update the special members.  */
+      result->__ctype_b = dataset->__ctype_b;
+      result->__ctype_tolower = dataset->__ctype_tolower;
+      result->__ctype_toupper = dataset->__ctype_toupper;
+    }
 
   /* It's done.  */
   __libc_lock_unlock (__libc_setlocale_lock);
