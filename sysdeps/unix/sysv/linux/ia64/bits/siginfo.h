@@ -93,7 +93,7 @@ typedef struct siginfo
 	  {
 	    void *si_addr;	/* Faulting insn/memory ref.  */
 	    int _si_imm;
-	    int _si_pad0;
+	    unsigned int _si_flags;
 	    unsigned long int _si_isr;
 	  } _sigfault;
 
@@ -124,6 +124,7 @@ typedef struct siginfo
 
 #ifdef __USE_GNU
 #  define si_imm	_sifields._sigfault._si_imm
+#  define si_flags	_sifields._sigfault._si_flags
 #  define si_isr	_sifields._sigfault._si_isr
 #endif
 
