@@ -312,6 +312,7 @@ typedef struct
 #define SHF_EXECINSTR	(1 << 2)	/* Executable */
 #define SHF_MERGE	(1 << 4)	/* Might be merged */
 #define SHF_STRINGS	(1 << 5)	/* Contains nul-terminated strings */
+#define SHF_MASKOS	0x0ff00000	/* OS-specific.  */
 #define SHF_MASKPROC	0xf0000000	/* Processor-specific */
 
 /* Symbol table entry.  */

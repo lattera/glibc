@@ -1,5 +1,7 @@
 1999-09-10  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/elf.h (SHF_MASKOS): Added.
+
 	* sysdeps/unix/sysv/linux/sys/raw.h (RAW_MAJOR): Added.
 
 1999-09-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
