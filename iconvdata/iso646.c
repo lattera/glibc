@@ -406,12 +406,20 @@ gconv_end (struct __gconv_step *data)
        when we reach the default case in the `switch' statement.  */	      \
     if (failure == __GCONV_ILLEGAL_INPUT)				      \
       {									      \
-	/* Exit the loop with an error.  */				      \
-	result = failure;						      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    /* Exit the loop with an error.  */				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++*converted;							      \
       }									      \
-    put32 (outptr, ch);							      \
-    outptr += 4;							      \
+    else								      \
+      {									      \
+	put32 (outptr, ch);						      \
+	outptr += 4;							      \
+      }									      \
     ++inptr;								      \
   }
 #define EXTRA_LOOP_DECLS	, enum variant var
@@ -875,11 +883,17 @@ gconv_end (struct __gconv_step *data)
 									      \
     if (failure == __GCONV_ILLEGAL_INPUT)				      \
       {									      \
-	/* Exit the loop with an error.  */				      \
-	result = failure;						      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    /* Exit the loop with an error.  */				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++*converted;							      \
       }									      \
-    *outptr++ = (unsigned char) ch;					      \
+    else								      \
+      *outptr++ = (unsigned char) ch;					      \
     inptr += 4;								      \
   }
 #define EXTRA_LOOP_DECLS	, enum variant var

@@ -1,6 +1,58 @@
 2000-06-05  Ulrich Drepper  <drepper@redhat.com>
 
-	* iconvdata/ksc5601.h (ksc5601_to_ucs4): Undo *s in all cases of
+	* iconv/gconv.h (__GCONV_IS_LAST, __GCONV_IGNORE_ERRORS): Define.
+	(struct __gconv_step_data): Rename __is_last to __flags.
+	* iconv/gconv_close.c: Change all uses of __is_last.
+	* iconv/skeleton.c: Likewise.
+	* iconvdata/iso-2022-cn.c: Likewise.
+	* iconvdata/iso-2022-jp.c: Likewise.
+	* iconvdata/iso-2022-kr.c: Likewise.
+	* iconv/gconv_open.c: Likewise.  Avoid unneeded initializations.
+	Recognize IGNORE error handling, set flag, and remove from name.
+	* iconv/loop.c (ignore_errors_p): Define.
+	Add flags parameter to both functions.
+	* iconv/skeleton.c: Pass flags to all conversion functions.
+	* iconv/gconv_simple.c: Add flags parameter to all functions.
+	Don't return error for invald error if ignore flag is set.
+	(ucs4_internal_loop_single): Add missing pointer increment.
+	(internal_ucs4le_loop_single): Likewise.
+	* iconv/iconv_prog.c: Implement handling of -c parameter.
+	* iconvdata/8bit-gap.c: Don't return error for invald error if
+	ignore flag is set.
+	* iconvdata/8bit-generic.c: Likewise.
+	* iconvdata/ansi_x3.110.c: Likewise.
+	* iconvdata/big5.c: Likewise.
+	* iconvdata/big5hkscs.c: Likewise.
+	* iconvdata/euc-cn.c: Likewise.
+	* iconvdata/euc-jp.c: Likewise.
+	* iconvdata/euc-kr.c: Likewise.
+	* iconvdata/gbgbk.c: Likewise.
+	* iconvdata/gbk.c: Likewise.
+	* iconvdata/iso-2022-cn.c: Likewise.
+	* iconvdata/iso-2022-jp.c: Likewise.
+	* iconvdata/iso-2022-kr.c: Likewise.
+	* iconvdata/iso646.c: Likewise.
+	* iconvdata/iso8859-1.c: Likewise.
+	* iconvdata/iso_6937-2.c: Likewise.
+	* iconvdata/iso_6937.c: Likewise.
+	* iconvdata/johab.c: Likewise.
+	* iconvdata/sjis.c: Likewise.
+	* iconvdata/t.61.c: Likewise.
+	* iconvdata/uhc.c: Likewise.
+	* iconvdata/unicode.c: Likewise.
+	* iconvdata/utf-16.c: Likewise.
+	* libio/fileops.c: Likewise.
+	* libio/iofwide.c: Likewise.
+	* wcsmbs/btowc.c: Likewise.
+	* wcsmbs/mbrtowc.c: Likewise.
+	* wcsmbs/mbsnrtowcs.c: Likewise.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wcrtomb.c: Likewise.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/wctob.c: Likewise.
+
+	* iconvdata/ksc5601.h (ksc5601_to_ucs4): Undo *s change in all cases of
 	an error.
 
 2000-06-04  Ulrich Drepper  <drepper@redhat.com>

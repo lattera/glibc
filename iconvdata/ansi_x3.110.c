@@ -419,13 +419,20 @@ static const char from_ucs4[][2] =
 	if (ch2 < 0x20 || ch2 >= 0x80)					      \
 	  {								      \
 	    /* This is illegal.  */					      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    ++*converted;						      \
+	    incr = 1;							      \
 	  }								      \
-									      \
-	ch = to_ucs4_comb[ch - 0xc1][ch2 - 0x20];			      \
-									      \
-	incr = 2;							      \
+	else								      \
+	  {								      \
+	    ch = to_ucs4_comb[ch - 0xc1][ch2 - 0x20];			      \
+	    incr = 2;							      \
+	  }								      \
       }									      \
     else								      \
       {									      \
@@ -436,13 +443,19 @@ static const char from_ucs4[][2] =
     if (ch == 0 && *inptr != '\0')					      \
       {									      \
 	/* This is an illegal character.  */				      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+      }									      \
+    else								      \
+      {									      \
+	put32 (outptr, ch);						      \
+	outptr += 4;							      \
       }									      \
 									      \
     inptr += incr;							      \
-    put32 (outptr, ch);							      \
-    outptr += 4;							      \
   }
 #include <iconv/loop.c>
 
@@ -480,8 +493,15 @@ static const char from_ucs4[][2] =
 	    if (tmp[0] == '\0')						      \
 	      {								      \
 		/* Illegal characters.  */				      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
+		++*converted; 						      \
+		inptr += 4;						      \
+		continue;						      \
 	      }								      \
 	    tmp[1] = '\0';						      \
 	    cp = tmp;							      \
@@ -504,13 +524,13 @@ static const char from_ucs4[][2] =
 	  cp = "\xd7";							      \
 	else if (ch == 0x253c)						      \
 	  cp = "\xe5";							      \
-	else if (ch >= 0x2571 && ch <= 0x2572) 				      \
+	else if (ch >= 0x2571 && ch <= 0x2572)				      \
 	  {								      \
 	    tmp[0] = 0xd8 + ch - 0x2571;				      \
 	    tmp[1] = '\0';						      \
 	    cp = tmp;							      \
 	  }								      \
-	else if (ch >= 0x25e2 && ch <= 0x25e3) 				      \
+	else if (ch >= 0x25e2 && ch <= 0x25e3)				      \
 	  {								      \
 	    tmp[0] = 0xda + ch - 0x25e2;				      \
 	    tmp[1] = '\0';						      \
@@ -521,8 +541,15 @@ static const char from_ucs4[][2] =
 	else								      \
 	  {								      \
 	    /* Illegal characters.  */					      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    ++*converted;						      \
+	    inptr += 4;							      \
+	    continue;							      \
 	  }								      \
       }									      \
     else								      \
@@ -531,9 +558,16 @@ static const char from_ucs4[][2] =
 									      \
 	if (cp[0] == '\0' && ch != 0)					      \
 	  {								      \
-	    /* Illegal.  */						      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    /* Illegal characters.  */					      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    ++*converted;						      \
+	    inptr += 4;							      \
+	    continue;							      \
 	  }								      \
       }									      \
 									      \

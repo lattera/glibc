@@ -13124,8 +13124,15 @@ static const char __gbk_from_ucs4_tab12[][2] =
       if (ch <= 0x80 || ch > 0xfe)					      \
 	{								      \
 	  /* This is illegal.  */					      \
-	  result = __GCONV_ILLEGAL_INPUT;				      \
-	  break;							      \
+	  if (! ignore_errors_p ())					      \
+	    {								      \
+	      result = __GCONV_ILLEGAL_INPUT;				      \
+	      break;							      \
+	    }								      \
+									      \
+	  ++inptr;							      \
+	  ++*converted;							      \
+	  continue;							      \
 	}								      \
       else								      \
 	{								      \
@@ -13148,8 +13155,16 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  if (ch2 < 0x40)						      \
 	    {								      \
 	      /* This is an illegal character.  */			      \
-	      result = __GCONV_ILLEGAL_INPUT;				      \
-	      break;							      \
+	      if (! ignore_errors_p ())					      \
+		{							      \
+		  /* This is an illegal character.  */			      \
+		  result = __GCONV_ILLEGAL_INPUT;			      \
+		  break;						      \
+		}							      \
+									      \
+	      ++inptr;							      \
+	      ++*converted;						      \
+	      continue;							      \
 	    }								      \
 									      \
 	  /* This is code set 1: GBK.  */				      \
@@ -13160,8 +13175,16 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  if (ch == 0 && *inptr != '\0')				      \
 	    {								      \
 	      /* This is an illegal character.  */			      \
-	      result = __GCONV_ILLEGAL_INPUT;				      \
-	      break;							      \
+	      if (! ignore_errors_p ())					      \
+		{							      \
+		  /* This is an illegal character.  */			      \
+		  result = __GCONV_ILLEGAL_INPUT;			      \
+		  break;						      \
+		}							      \
+									      \
+	      inptr += 2;						      \
+	      ++*converted;						      \
+	      continue;							      \
 	    }								      \
 									      \
 	  inptr += 2;							      \
@@ -13426,21 +13449,27 @@ static const char __gbk_from_ucs4_tab12[][2] =
       if (cp == NULL || (cp[0] == '\0' && ch != 0))			      \
 	{								      \
 	  /* Illegal character.  */					      \
-	  result = __GCONV_ILLEGAL_INPUT;				      \
-	  break;							      \
-	}								      \
+	  if (! ignore_errors_p ())					      \
+	    {								      \
+	      result = __GCONV_ILLEGAL_INPUT;				      \
+	      break;							      \
+	    }								      \
 									      \
+	  ++*converted;							      \
+	}								      \
       /* See whether there is enough room for the second byte we write.  */   \
-      if (NEED_LENGTH_TEST && cp[1] != '\0' && outptr + 1 >= outend)	      \
+      else if (NEED_LENGTH_TEST && cp[1] != '\0' && outptr + 1 >= outend)     \
 	{								      \
 	  /* We have not enough room.  */				      \
 	  result = __GCONV_FULL_OUTPUT;					      \
 	  break;							      \
 	}								      \
-									      \
-      *outptr++ = cp[0];						      \
-      if (cp[1] != '\0')						      \
-	*outptr++ = cp[1];						      \
+      else								      \
+	{								      \
+	  *outptr++ = cp[0];						      \
+	  if (cp[1] != '\0')						      \
+	    *outptr++ = cp[1];						      \
+	}								      \
     }									      \
 									      \
     inptr += 4;                                                               \

@@ -201,8 +201,16 @@ gconv_end (struct __gconv_step *data)
 	  {								      \
 	    if (c >= 0x110000)						      \
 	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    /* This is an illegal character.  */		      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
+		++*converted;						      \
+		inptr += 4;						      \
+		continue;						      \
 	      }								      \
 									      \
 	    /* Generate a surrogate character.  */			      \
@@ -226,8 +234,16 @@ gconv_end (struct __gconv_step *data)
 	  {								      \
 	    if (c >= 0x110000)						      \
 	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    /* This is an illegal character.  */		      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
+		++*converted;						      \
+		inptr += 4;						      \
+		continue;						      \
 	      }								      \
 									      \
 	    /* Generate a surrogate character.  */			      \
@@ -291,9 +307,15 @@ gconv_end (struct __gconv_step *data)
 	    if (u2 < 0xdc00 || u2 >= 0xdfff)				      \
 	      {								      \
 		/* This is no valid second word for a surrogate.  */	      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		inptr -= 2;						      \
-		break;							      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    inptr -= 2;						      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
+		++*converted;						      \
+		continue;						      \
 	      }								      \
 									      \
 	    put32 (outptr, ((u1 - 0xd7c0) << 10) + (u2 - 0xdc00));	      \
@@ -327,9 +349,15 @@ gconv_end (struct __gconv_step *data)
 	    if (u2 < 0xdc00 || u2 >= 0xdfff)				      \
 	      {								      \
 		/* This is no valid second word for a surrogate.  */	      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		inptr -= 2;						      \
-		break;							      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    inptr -= 2;						      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
+		++*converted;						      \
+		continue;						      \
 	      }								      \
 									      \
 	    put32 (outptr, ((u1 - 0xd7c0) << 10) + (u2 - 0xdc00));	      \

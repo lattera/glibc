@@ -44,11 +44,18 @@
     if (ch <= 0x7f)							      \
       ++inptr;								      \
     else								      \
-      if ((ch <= 0xa0 || ch > 0xfe) && ch != 0x8e && ch != 0x8f)	      \
+      if ((ch <= 0xa0 && ch != 0x8e && ch != 0x8f) || ch > 0xfe)	      \
 	{								      \
 	  /* This is illegal.  */					      \
-	  result = __GCONV_ILLEGAL_INPUT;				      \
-	  break;							      \
+	  if (! ignore_errors_p ())					      \
+	    {								      \
+	      result = __GCONV_ILLEGAL_INPUT;				      \
+	      break;							      \
+	    }								      \
+									      \
+	  ++inptr;							      \
+	  ++*converted;							      \
+	  continue;							      \
 	}								      \
       else								      \
 	{								      \
@@ -69,9 +76,16 @@
 	  /* All second bytes of a multibyte character must be >= 0xa1. */    \
 	  if (ch < 0xa1)						      \
 	    {								      \
-	      /* This is an illegal character.  */			      \
-	      result = __GCONV_ILLEGAL_INPUT;				      \
-	      break;							      \
+	      if (! ignore_errors_p ())					      \
+		{							      \
+		  /* This is an illegal character.  */			      \
+		  result = __GCONV_ILLEGAL_INPUT;			      \
+		  break;						      \
+		}							      \
+									      \
+	      ++inptr;							      \
+	      ++*converted;						      \
+	      continue;							      \
 	    }								      \
 									      \
 	  /* This is code set 1: GB 2312-80.  */			      \
@@ -81,8 +95,16 @@
 	  if (ch == __UNKNOWN_10646_CHAR)				      \
 	    {								      \
 	      /* This is an illegal character.  */			      \
-	      result = __GCONV_ILLEGAL_INPUT;				      \
-	      break;							      \
+	      if (! ignore_errors_p ())					      \
+		{							      \
+		  /* This is an illegal character.  */			      \
+		  result = __GCONV_ILLEGAL_INPUT;			      \
+		  break;						      \
+		}							      \
+									      \
+	      inptr += 2;						      \
+	      ++*converted;						      \
+	      continue;							      \
 	    }								      \
 									      \
 	  inptr += 2;							      \
@@ -118,8 +140,15 @@
 	    if (found == __UNKNOWN_10646_CHAR)				      \
 	      {								      \
 		/* Illegal character.  */				      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
+		inptr += 4;						      \
+		++*converted;						      \
+		continue;						      \
 	      }								      \
 									      \
 	    /* It's a GB 2312 character, adjust it for EUC-CN.  */	      \

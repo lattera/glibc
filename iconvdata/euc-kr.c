@@ -81,8 +81,15 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
     else if (ch <= 0xa0 || ch > 0xfe || ch == 0xc9)			      \
       {									      \
 	/* This is illegal.  */						      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++inptr;							      \
+	++*converted;							      \
+	continue;							      \
       }									      \
     else								      \
       {									      \
@@ -99,8 +106,16 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 	if (ch == __UNKNOWN_10646_CHAR)					      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		/* This is an illegal character.  */			      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    inptr += 2;							      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
       }									      \
 									      \
@@ -127,8 +142,15 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
     if (cp[0] == '\0' && ch != 0)					      \
       {									      \
 	/* Illegal character.  */					      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	inptr += 4;							      \
+	++*converted;							      \
+	continue;							      \
       }									      \
 									      \
     *outptr++ = cp[0];							      \

@@ -95,7 +95,7 @@ enum
 	    {								      \
 	      /* Write out the shift sequence.  */			      \
 	      *outbuf++ = SI;						      \
-	      if (data->__is_last)					      \
+	      if (data->__flags & __GCONV_IS_LAST)			      \
 		*written += 1;						      \
 	      data->__outbuf = outbuf;					      \
 	      data->__statep->__count = ASCII_set;			      \
@@ -125,8 +125,15 @@ enum
     /* This is a 7bit character set, disallow all 8bit characters.  */	      \
     if (ch > 0x7f)							      \
       {									      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++inptr;							      \
+	++*converted;							      \
+	continue;							      \
       }									      \
 									      \
     /* Recognize escape sequences.  */					      \
@@ -187,8 +194,16 @@ enum
 	  }								      \
 	else if (ch == __UNKNOWN_10646_CHAR)				      \
 	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		/* This is an illegal character.  */			      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    ++*converted;						      \
+	    ++inptr;							      \
+	    continue;							      \
 	  }								      \
       }									      \
 									      \
@@ -240,26 +255,34 @@ enum
 	if (written == __UNKNOWN_10646_CHAR)				      \
 	  {								      \
 	    /* Illegal character.  */					      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-	assert (written == 2);						      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
 									      \
-	/* We use KSC 5601.  */						      \
-	if (set != KSC5601_set)						      \
+	    ++*converted;						      \
+	  }								      \
+	else								      \
 	  {								      \
-	    *outptr++ = SO;						      \
-	    set = KSC5601_set;						      \
-	  }								      \
+	    assert (written == 2);					      \
 									      \
-	if (NEED_LENGTH_TEST && outptr + 2 > outend)			      \
-	  {								      \
-	    result = __GCONV_FULL_OUTPUT;				      \
-	    break;							      \
-	  }								      \
+	    /* We use KSC 5601.  */					      \
+	    if (set != KSC5601_set)					      \
+	      {								      \
+		*outptr++ = SO;						      \
+		set = KSC5601_set;					      \
+	      }								      \
 									      \
-	*outptr++ = buf[0];						      \
-	*outptr++ = buf[1];						      \
+	    if (NEED_LENGTH_TEST && outptr + 2 > outend)		      \
+	      {								      \
+		result = __GCONV_FULL_OUTPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    *outptr++ = buf[0];						      \
+	    *outptr++ = buf[1];						      \
+	  }								      \
       }									      \
 									      \
     /* Now that we wrote the output increment the input pointer.  */	      \

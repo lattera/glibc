@@ -3066,8 +3066,16 @@ static const char uhc_hangul_from_ucs[11172][2] =
     else if (ch <= 0x80 || ch >= 0xfe || ch == 0xc9)			      \
       {									      \
 	/* This is illegal.  */						      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    /* This is an illegal character.  */			      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++inptr;							      \
+	++*converted;							      \
+	continue;							      \
       }									      \
     else								      \
       {									      \
@@ -3109,8 +3117,16 @@ static const char uhc_hangul_from_ucs[11172][2] =
 		|| (ch2 > 0x7a && ch2 < 0x81) || (ch == 0xc6 && ch2 > 0x52))  \
 	      {								      \
 		/* This is not legal.  */				      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    /* This is an illegal character.  */		      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
+		++inptr;						      \
+		++*converted;						      \
+		continue;						      \
 	      }								      \
 									      \
 	    ch = uhc_extra_to_ucs[ch2 - 0x41				      \
@@ -3122,8 +3138,16 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	    if (ch == 0)						      \
 	      {								      \
 		/* This is an illegal character.  */			      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    /* This is an illegal character.  */		      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
+		inptr += 2;						      \
+		++*converted;						      \
+		continue;						      \
 	      }								      \
 									      \
 	    inptr += 2;							      \
@@ -3134,8 +3158,16 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	    if (ch == __UNKNOWN_10646_CHAR)				      \
 	      {								      \
 		/* Illegal.  */						      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    /* This is an illegal character.  */		      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
+		inptr += 2;						      \
+		++*converted;						      \
+		continue;						      \
 	      }								      \
 	  }								      \
       }									      \
@@ -3184,8 +3216,16 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	  }								      \
 	if (written == __UNKNOWN_10646_CHAR)				      \
 	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+	        /* This is an illegal character.  */			      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    inptr += 4;							      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
 									      \
 	*outptr++ |= 0x80;						      \
@@ -3208,8 +3248,16 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	  }								      \
 	if (written == __UNKNOWN_10646_CHAR)				      \
 	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+	        /* This is an illegal character.  */			      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    inptr += 4;							      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
 									      \
 	*outptr++ |= 0x80;						      \

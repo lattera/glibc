@@ -299,7 +299,7 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 
 	cc->__cd_in.__cd.__data[0].__invocation_counter = 0;
 	cc->__cd_in.__cd.__data[0].__internal_use = 1;
-	cc->__cd_in.__cd.__data[0].__is_last = 1;
+	cc->__cd_in.__cd.__data[0].__flags = __GCONV_IS_LAST;
 	cc->__cd_in.__cd.__data[0].__statep = &result->_wide_data->_IO_state;
 
 	cc->__cd_out.__cd.__nsteps = 1; /* Only one step allowed.  */
@@ -307,7 +307,7 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 
 	cc->__cd_out.__cd.__data[0].__invocation_counter = 0;
 	cc->__cd_out.__cd.__data[0].__internal_use = 1;
-	cc->__cd_out.__cd.__data[0].__is_last = 1;
+	cc->__cd_out.__cd.__data[0].__flags = __GCONV_IS_LAST;
 	cc->__cd_out.__cd.__data[0].__statep = &result->_wide_data->_IO_state;
 
 	/* Set the mode now.  */

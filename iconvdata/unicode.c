@@ -151,13 +151,21 @@ gconv_end (struct __gconv_step *data)
 									      \
     if (c >= 0x10000)							      \
       {									      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    /* This is an illegal character.  */			      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++*converted;							      \
+      }									      \
+    else								      \
+      {									      \
+	put16 (outptr, c);						      \
+	outptr += 2;							      \
       }									      \
 									      \
-    put16 (outptr, c);							      \
-									      \
-    outptr += 2;							      \
     inptr += 4;								      \
   }
 #define EXTRA_LOOP_DECLS \

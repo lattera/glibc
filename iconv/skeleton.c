@@ -275,8 +275,10 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 {
   struct __gconv_step *next_step = step + 1;
   struct __gconv_step_data *next_data = data + 1;
-  __gconv_fct fct = data->__is_last ? NULL : next_step->__fct;
+  __gconv_fct fct;
   int status;
+
+  fct = (data->__flags & __GCONV_IS_LAST) ? NULL : next_step->__fct;
 
   /* If the function is called with no input this means we have to reset
      to the initial state.  The possibly partly converted input is
@@ -291,7 +293,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 #endif
       /* Call the steps down the chain if there are any but only if we
          successfully emitted the escape sequence.  */
-      if (status == __GCONV_OK && ! data->__is_last)
+      if (status == __GCONV_OK && ! (data->__flags & __GCONV_IS_LAST))
 	status = DL_CALL_FCT (fct, (next_step, next_data, NULL, NULL,
 				    written, 1, consume_incomplete));
     }
@@ -332,16 +334,18 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 # if MAX_NEEDED_FROM > 1
 	  if (MAX_NEEDED_TO == 1 || FROM_DIRECTION)
 	    status = SINGLE(FROM_LOOP) (inptrp, inend, &outbuf, outend,
-					data->__statep, step->__data,
-					&converted EXTRA_LOOP_ARGS);
+					data->__statep, data->__flags,
+					step->__data, &converted
+					EXTRA_LOOP_ARGS);
 # endif
 # if MAX_NEEDED_FROM > 1 && MAX_NEEDED_TO > 1 && !ONE_DIRECTION
 	  else
 # endif
 # if MAX_NEEDED_TO > 1 && !ONE_DIRECTION
 	    status = SINGLE(TO_LOOP) (inptrp, inend, &outbuf, outend,
-				      data->__statep, step->__data,
-				      &converted EXTRA_LOOP_ARGS);
+				      data->__statep, data->__flags,
+				      step->__data, &converted
+				      EXTRA_LOOP_ARGS);
 # endif
 
 	  if (status != __GCONV_OK)
@@ -359,10 +363,10 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	 for all known and supported encodings.  */
       unaligned = ((FROM_DIRECTION
 		    && ((uintptr_t) inptr % MIN_NEEDED_FROM != 0
-			|| (data->__is_last
+			|| ((data->__flags & __GCONV_IS_LAST)
 			    && (uintptr_t) outbuf % MIN_NEEDED_TO != 0)))
 		   || (!FROM_DIRECTION
-		       && ((data->__is_last
+		       && (((data->__flags & __GCONV_IS_LAST)
 			    && (uintptr_t) outbuf % MIN_NEEDED_FROM != 0)
 			   || (uintptr_t) inptr % MIN_NEEDED_TO != 0)));
 #endif
@@ -383,13 +387,13 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	      if (FROM_DIRECTION)
 		/* Run the conversion loop.  */
 		status = FROM_LOOP (inptrp, inend, &outbuf, outend,
-				    data->__statep, step->__data, &converted
-				    EXTRA_LOOP_ARGS);
+				    data->__statep, data->__flags,
+				    step->__data, &converted EXTRA_LOOP_ARGS);
 	      else
 		/* Run the conversion loop.  */
 		status = TO_LOOP (inptrp, inend, &outbuf, outend,
-				  data->__statep, step->__data, &converted
-				  EXTRA_LOOP_ARGS);
+				  data->__statep, data->__flags,
+				  step->__data, &converted EXTRA_LOOP_ARGS);
 	    }
 #if !defined _STRING_ARCH_unaligned \
     && MIN_NEEDED_FROM != 1 && MAX_NEEDED_FROM % MIN_NEEDED_FROM == 0 \
@@ -400,12 +404,14 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 		/* Run the conversion loop.  */
 		status = GEN_unaligned (FROM_LOOP) (inptrp, inend, &outbuf,
 						    outend, data->__statep,
+						    data->__flags,
 						    step->__data, &converted
 						    EXTRA_LOOP_ARGS);
 	      else
 		/* Run the conversion loop.  */
 		status = GEN_unaligned (TO_LOOP) (inptrp, inend, &outbuf,
 						  outend, data->__statep,
+						  data->__flags,
 						  step->__data, &converted
 						  EXTRA_LOOP_ARGS);
 	    }
@@ -416,7 +422,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 
 	  /* If this is the last step leave the loop, there is nothing
              we can do.  */
-	  if (data->__is_last)
+	  if (data->__flags & __GCONV_IS_LAST)
 	    {
 	      /* Store information about how many bytes are available.  */
 	      data->__outbuf = outbuf;
@@ -457,22 +463,25 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 		      SAVE_RESET_STATE (0);
 # endif
 
+		      /* XXX Handle unaligned access here as well.  */
 		      if (FROM_DIRECTION)
 			/* Run the conversion loop.  */
 			nstatus = FROM_LOOP ((const unsigned char **) inptrp,
 					     (const unsigned char *) inend,
 					     (unsigned char **) &outbuf,
 					     (unsigned char *) outerr,
-					     data->__statep, step->__data,
-					     &converted EXTRA_LOOP_ARGS);
+					     data->__statep, data->__flags,
+					     step->__data, &converted
+					     EXTRA_LOOP_ARGS);
 		      else
 			/* Run the conversion loop.  */
 			nstatus = TO_LOOP ((const unsigned char **) inptrp,
 					   (const unsigned char *) inend,
 					   (unsigned char **) &outbuf,
 					   (unsigned char *) outerr,
-					   data->__statep, step->__data,
-					   &converted EXTRA_LOOP_ARGS);
+					   data->__statep, data->__flags,
+					   step->__data, &converted
+					   EXTRA_LOOP_ARGS);
 
 		      /* We must run out of output buffer space in this
 			 rerun.  */

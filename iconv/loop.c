@@ -168,11 +168,16 @@
 #endif
 
 
+/* To make it easier for the writers of the modules, we define a macro
+   to test whether we have to ignore errors.  */
+#define ignore_errors_p() (flags & __GCONV_IGNORE_ERRORS)
+
+
 /* The function returns the status, as defined in gconv.h.  */
 static inline int
 FCTNAME (LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 		   unsigned char **outptrp, unsigned char *outend,
-		   mbstate_t *state, void *data, size_t *converted
+		   mbstate_t *state, int flags, void *data, size_t *converted
 		   EXTRA_LOOP_DECLS)
 {
   int result = __GCONV_OK;
@@ -285,7 +290,7 @@ FCTNAME (LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 static inline int
 SINGLE(LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 		 unsigned char **outptrp, unsigned char *outend,
-		 mbstate_t *state, void *data, size_t *converted
+		 mbstate_t *state, int flags, void *data, size_t *converted
 		 EXTRA_LOOP_DECLS)
 {
   int result = __GCONV_OK;

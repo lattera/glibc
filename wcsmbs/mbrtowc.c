@@ -46,7 +46,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   /* Set information for this step.  */
   data.__invocation_counter = 0;
   data.__internal_use = 1;
-  data.__is_last = 1;
+  data.__flags = __GCONV_IS_LAST;
   data.__statep = ps ?: &state;
 
   /* A first special case is if S is NULL.  This means put PS in the

@@ -93,7 +93,7 @@ enum
 	    {								      \
 	      /* Write out the shift sequence.  */			      \
 	      *outbuf++ = SI;						      \
-	      if (data->__is_last)					      \
+	      if (data->__flags & __GCONV_IS_LAST)			      \
 		*written += 1;						      \
 	      data->__outbuf = outbuf;					      \
 	      data->__statep->__count = ASCII_set;			      \
@@ -123,8 +123,15 @@ enum
     /* This is a 7bit character set, disallow all 8bit characters.  */	      \
     if (ch > 0x7f)							      \
       {									      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++inptr;							      \
+	++*converted;							      \
+	continue;							      \
       }									      \
 									      \
     /* Recognize escape sequences.  */					      \
@@ -187,9 +194,16 @@ enum
 	ch = cns11643l2_to_ucs4 (&inptr, 2, 0);				      \
 	if (ch == __UNKNOWN_10646_CHAR)					      \
 	  {								      \
-	    inptr -= 2;							      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		/* This is an illegal character.  */			      \
+	        inptr -= 2;						      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
       }									      \
     else if (set == ASCII_set)						      \
@@ -217,8 +231,16 @@ enum
 	  }								      \
 	else if (ch == __UNKNOWN_10646_CHAR)				      \
 	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		/* This is an illegal character.  */			      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    ++inptr;							      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
       }									      \
 									      \
@@ -305,8 +327,15 @@ enum
 		else							      \
 		  {							      \
 		    /* Even this does not work.  Error.  */		      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
+		    if (! ignore_errors_p ())				      \
+		      {							      \
+			result = __GCONV_ILLEGAL_INPUT;			      \
+			break;						      \
+		      }							      \
+									      \
+		    inptr += 4;						      \
+		    ++*converted;					      \
+		    continue;						      \
 		  }							      \
 	      }								      \
 	  }								      \

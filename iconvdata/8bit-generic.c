@@ -37,8 +37,13 @@
     if (HAS_HOLES && ch == L'\0' && *inptr != '\0')			      \
       {									      \
 	/* This is an illegal character.  */				      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++*converted; 							      \
       }									      \
 									      \
     put32 (outptr, ch);							      \
@@ -60,11 +65,17 @@
 	|| (ch != 0 && from_ucs4[ch] == '\0'))				      \
       {									      \
 	/* This is an illegal character.  */				      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
-      }									      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
 									      \
-    *outptr++ = from_ucs4[ch];						      \
+	++*converted; 							      \
+      }									      \
+    else								      \
+      *outptr++ = from_ucs4[ch];					      \
+									      \
     inptr += 4;								      \
   }
 #include <iconv/loop.c>

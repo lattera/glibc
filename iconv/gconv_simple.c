@@ -64,7 +64,7 @@ static const unsigned char encoding_byte[] =
 static inline int
 internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 		    unsigned char **outptrp, unsigned char *outend,
-		    mbstate_t *state, void *data, size_t *converted)
+		    mbstate_t *state, int flags, void *data, size_t *converted)
 {
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
@@ -104,7 +104,8 @@ static inline int
 internal_ucs4_loop_unaligned (const unsigned char **inptrp,
 			      const unsigned char *inend,
 			      unsigned char **outptrp, unsigned char *outend,
-			      mbstate_t *state, void *data, size_t *converted)
+			      mbstate_t *state, int flags, void *data,
+			      size_t *converted)
 {
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
@@ -150,7 +151,8 @@ static inline int
 internal_ucs4_loop_single (const unsigned char **inptrp,
 			   const unsigned char *inend,
 			   unsigned char **outptrp, unsigned char *outend,
-			   mbstate_t *state, void *data, size_t *converted)
+			   mbstate_t *state, int flags, void *data,
+			   size_t *converted)
 {
   size_t cnt = state->__count & 7;
 
@@ -171,6 +173,8 @@ internal_ucs4_loop_single (const unsigned char **inptrp,
   (*outptrp)[1] = state->__value.__wchb[2];
   (*outptrp)[2] = state->__value.__wchb[1];
   (*outptrp)[3] = state->__value.__wchb[0];
+
+  *outptrp += 4;
 #elif __BYTE_ORDER == __BIG_ENDIAN
   /* XXX unaligned */
   *(*((uint32_t **) outptrp)++) = state->__value.__wch;
@@ -202,7 +206,7 @@ internal_ucs4_loop_single (const unsigned char **inptrp,
 static inline int
 ucs4_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
 		    unsigned char **outptrp, unsigned char *outend,
-		    mbstate_t *state, void *data, size_t *converted)
+		    mbstate_t *state, int flags, void *data, size_t *converted)
 {
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
@@ -222,6 +226,13 @@ ucs4_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
 
       if (inval > 0x7fffffff)
 	{
+	  if (flags & __GCONV_IGNORE_ERRORS)
+	    {
+	      /* Just ignore this character.  */
+	      ++*converted;
+	      continue;
+	    }
+
 	  *inptrp = inptr;
 	  *outptrp = outptr;
 	  return __GCONV_ILLEGAL_INPUT;
@@ -249,7 +260,8 @@ static inline int
 ucs4_internal_loop_unaligned (const unsigned char **inptrp,
 			      const unsigned char *inend,
 			      unsigned char **outptrp, unsigned char *outend,
-			      mbstate_t *state, void *data, size_t *converted)
+			      mbstate_t *state, int flags, void *data,
+			      size_t *converted)
 {
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
@@ -262,6 +274,13 @@ ucs4_internal_loop_unaligned (const unsigned char **inptrp,
       if (inptr[0] > 0x80)
 	{
 	  /* The value is too large.  */
+	  if (flags & __GCONV_IGNORE_ERRORS)
+	    {
+	      /* Just ignore this character.  */
+	      ++*converted;
+	      continue;
+	    }
+
 	  *inptrp = inptr;
 	  *outptrp = outptr;
  	  return __GCONV_ILLEGAL_INPUT;
@@ -312,7 +331,8 @@ static inline int
 ucs4_internal_loop_single (const unsigned char **inptrp,
 			   const unsigned char *inend,
 			   unsigned char **outptrp, unsigned char *outend,
-			   mbstate_t *state, void *data, size_t *converted)
+			   mbstate_t *state, int flags, void *data,
+			   size_t *converted)
 {
   size_t cnt = state->__count & 7;
 
@@ -329,20 +349,27 @@ ucs4_internal_loop_single (const unsigned char **inptrp,
     }
 
   if (((unsigned char *) state->__value.__wchb)[0] > 0x80)
-    /* The value is too large.  */
-    return __GCONV_ILLEGAL_INPUT;
-
+    {
+      /* The value is too large.  */
+      if (!(flags & __GCONV_IGNORE_ERRORS))
+	return __GCONV_ILLEGAL_INPUT;
+    }
+  else
+    {
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-  (*outptrp)[0] = state->__value.__wchb[3];
-  (*outptrp)[1] = state->__value.__wchb[2];
-  (*outptrp)[2] = state->__value.__wchb[1];
-  (*outptrp)[3] = state->__value.__wchb[0];
+      (*outptrp)[0] = state->__value.__wchb[3];
+      (*outptrp)[1] = state->__value.__wchb[2];
+      (*outptrp)[2] = state->__value.__wchb[1];
+      (*outptrp)[3] = state->__value.__wchb[0];
 #elif __BYTE_ORDER == __BIG_ENDIAN
-  (*outptrp)[0] = state->__value.__wchb[0];
-  (*outptrp)[1] = state->__value.__wchb[1];
-  (*outptrp)[2] = state->__value.__wchb[2];
-  (*outptrp)[3] = state->__value.__wchb[3];
+      (*outptrp)[0] = state->__value.__wchb[0];
+      (*outptrp)[1] = state->__value.__wchb[1];
+      (*outptrp)[2] = state->__value.__wchb[2];
+      (*outptrp)[3] = state->__value.__wchb[3];
 #endif
+
+      *outptrp += 4;
+    }
 
   /* Clear the state buffer.  */
   state->__count &= ~7;
@@ -367,7 +394,8 @@ ucs4_internal_loop_single (const unsigned char **inptrp,
 static inline int
 internal_ucs4le_loop (const unsigned char **inptrp, const unsigned char *inend,
 		      unsigned char **outptrp, unsigned char *outend,
-		      mbstate_t *state, void *data, size_t *converted)
+		      mbstate_t *state, int flags, void *data,
+		      size_t *converted)
 {
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
@@ -407,7 +435,7 @@ static inline int
 internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
 				const unsigned char *inend,
 				unsigned char **outptrp, unsigned char *outend,
-				mbstate_t *state, void *data,
+				mbstate_t *state, int flags, void *data,
 				size_t *converted)
 {
   const unsigned char *inptr = *inptrp;
@@ -454,7 +482,8 @@ static inline int
 internal_ucs4le_loop_single (const unsigned char **inptrp,
 			     const unsigned char *inend,
 			     unsigned char **outptrp, unsigned char *outend,
-			     mbstate_t *state, void *data, size_t *converted)
+			     mbstate_t *state, int flags, void *data,
+			     size_t *converted)
 {
   size_t cnt = state->__count & 7;
 
@@ -475,6 +504,8 @@ internal_ucs4le_loop_single (const unsigned char **inptrp,
   (*outptrp)[1] = state->__value.__wchb[2];
   (*outptrp)[2] = state->__value.__wchb[1];
   (*outptrp)[3] = state->__value.__wchb[0];
+
+  *outptrp += 4;
 #else
   /* XXX unaligned */
   *(*((uint32_t **) outptrp)++) = state->__value.__wch;
@@ -503,7 +534,8 @@ internal_ucs4le_loop_single (const unsigned char **inptrp,
 static inline int
 ucs4le_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
 		      unsigned char **outptrp, unsigned char *outend,
-		      mbstate_t *state, void *data, size_t *converted)
+		      mbstate_t *state, int flags, void *data,
+		      size_t *converted)
 {
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
@@ -522,7 +554,16 @@ ucs4le_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
 #endif
 
       if (inval > 0x7fffffff)
-	return __GCONV_ILLEGAL_INPUT;
+	{
+	  if (flags & __GCONV_IGNORE_ERRORS)
+	    {
+	      /* Just ignore this character.  */
+	      ++*converted;
+	      continue;
+	    }
+
+	  return __GCONV_ILLEGAL_INPUT;
+	}
 
       *((uint32_t *) outptr)++ = bswap_32 (*(uint32_t *) inptr);
     }
@@ -546,7 +587,7 @@ static inline int
 ucs4le_internal_loop_unaligned (const unsigned char **inptrp,
 				const unsigned char *inend,
 				unsigned char **outptrp, unsigned char *outend,
-				mbstate_t *state, void *data,
+				mbstate_t *state, int flags, void *data,
 				size_t *converted)
 {
   const unsigned char *inptr = *inptrp;
@@ -560,11 +601,17 @@ ucs4le_internal_loop_unaligned (const unsigned char **inptrp,
       if (inptr[3] > 0x80)
 	{
 	  /* The value is too large.  */
+	  if (flags & __GCONV_IGNORE_ERRORS)
+	    {
+	      /* Just ignore this character.  */
+	      ++*converted;
+	      continue;
+	    }
+
 	  *inptrp = inptr;
 	  *outptrp = outptr;
  	  return __GCONV_ILLEGAL_INPUT;
 	}
-
 
 # if __BYTE_ORDER == __BIG_ENDIAN
       outptr[3] = inptr[0];
@@ -577,6 +624,8 @@ ucs4le_internal_loop_unaligned (const unsigned char **inptrp,
       outptr[2] = inptr[2];
       outptr[3] = inptr[3];
 # endif
+
+      outptr += 4;
     }
 
   *inptrp = inptr;
@@ -599,7 +648,8 @@ static inline int
 ucs4le_internal_loop_single (const unsigned char **inptrp,
 			     const unsigned char *inend,
 			     unsigned char **outptrp, unsigned char *outend,
-			     mbstate_t *state, void *data, size_t *converted)
+			     mbstate_t *state, int flags, void *data,
+			     size_t *converted)
 {
   size_t cnt = state->__count & 7;
 
@@ -616,20 +666,27 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
     }
 
   if (((unsigned char *) state->__value.__wchb)[3] > 0x80)
-    /* The value is too large.  */
-    return __GCONV_ILLEGAL_INPUT;
-
+    {
+      /* The value is too large.  */
+      if (!(flags & __GCONV_IGNORE_ERRORS))
+	return __GCONV_ILLEGAL_INPUT;
+    }
+  else
+    {
 #if __BYTE_ORDER == __BIG_ENDIAN
-  (*outptrp)[0] = state->__value.__wchb[3];
-  (*outptrp)[1] = state->__value.__wchb[2];
-  (*outptrp)[2] = state->__value.__wchb[1];
-  (*outptrp)[3] = state->__value.__wchb[0];
+      (*outptrp)[0] = state->__value.__wchb[3];
+      (*outptrp)[1] = state->__value.__wchb[2];
+      (*outptrp)[2] = state->__value.__wchb[1];
+      (*outptrp)[3] = state->__value.__wchb[0];
 #elif __BYTE_ORDER == __BIG_ENDIAN
-  (*outptrp)[0] = state->__value.__wchb[0];
-  (*outptrp)[1] = state->__value.__wchb[1];
-  (*outptrp)[2] = state->__value.__wchb[2];
-  (*outptrp)[3] = state->__value.__wchb[3];
+      (*outptrp)[0] = state->__value.__wchb[0];
+      (*outptrp)[1] = state->__value.__wchb[1];
+      (*outptrp)[2] = state->__value.__wchb[2];
+      (*outptrp)[3] = state->__value.__wchb[3];
 #endif
+
+      *outptrp += 4;
+    }
 
   /* Clear the state buffer.  */
   state->__count &= ~7;
@@ -658,14 +715,20 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
   {									      \
     if (*inptr > '\x7f')						      \
       {									      \
-	/* This is no correct ANSI_X3.4-1968 character.  */		      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
-      }									      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    /* This is no correct ANSI_X3.4-1968 character.  */		      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
 									      \
-    /* It's an one byte sequence.  */					      \
-    /* XXX unaligned.  */						      \
-    *((uint32_t *) outptr)++ = *inptr++;				      \
+	++*converted;							      \
+	++inptr; 							      \
+      }									      \
+    else								      \
+      /* It's an one byte sequence.  */					      \
+      /* XXX unaligned.  */						      \
+      *((uint32_t *) outptr)++ = *inptr++;				      \
   }
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
@@ -689,13 +752,20 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
   {									      \
     if (*((uint32_t *) inptr) > 0x7f)					      \
       {									      \
-	/* This is no correct ANSI_X3.4-1968 character.  */		      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
-      }									      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    /* This is no correct ANSI_X3.4-1968 character.  */		      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
 									      \
-    /* It's an one byte sequence.  */					      \
-    *outptr++ = *((uint32_t *) inptr)++;				      \
+	++*converted;							      \
+	inptr += 4; 							      \
+      }									      \
+    else								      \
+      /* It's an one byte sequence.  */					      \
+      /* XXX unaligned.  */						      \
+      *outptr++ = *((uint32_t *) inptr)++;				      \
   }
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
@@ -829,9 +899,26 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	  }								      \
 	else								      \
 	  {								      \
-	    /* This is an illegal encoding.  */				      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    int skipped;						      \
+									      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		/* This is an illegal encoding.  */			      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    /* Search the end of this ill-formed UTF-8 character.  This	      \
+	       is the next byte with (x & 0xc0) != 0x80.  */		      \
+	     skipped = 0;						      \
+	     do								      \
+	       {							      \
+		 ++inptr;						      \
+		 ++skipped;						      \
+	       }							      \
+	     while (inptr < inend && (*inptr & 0xc0) == 0x80 && skipped < 5); \
+									      \
+	     continue;							      \
 	  }								      \
 									      \
 	if (NEED_LENGTH_TEST && inptr + cnt > inend)			      \
@@ -841,8 +928,23 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	    for (i = 1; inptr + i < inend; ++i)				      \
 	      if ((inptr[i] & 0xc0) != 0x80)				      \
 		break;							      \
-	    result = (inptr + i == inend				      \
-		      ? __GCONV_INCOMPLETE_INPUT : __GCONV_ILLEGAL_INPUT);    \
+									      \
+	    if (inptr + i == inend)					      \
+	      {								      \
+		result = __GCONV_INCOMPLETE_INPUT;			      \
+		break;							      \
+	      }								      \
+									      \
+	    /* This is an illegal character.  */			      \
+	    if (ignore_errors_p ())					      \
+	      {								      \
+		/* Ignore it.  */					      \
+		inptr += i;						      \
+		++*converted;						      \
+		continue;						      \
+	      }								      \
+									      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -858,13 +960,20 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	    ch <<= 6;							      \
 	    ch |= byte & 0x3f;						      \
 	  }								      \
- 									      \
+									      \
 	/* If i < cnt, some trail byte was not >= 0x80, < 0xc0.		      \
 	   If cnt > 2 and ch < 2^(5*cnt-4), the wide character ch could	      \
 	   have been represented with fewer than cnt bytes.  */		      \
-	if (i < cnt || (cnt > 2 && (ch >> (5 * cnt - 4)) == 0))	      \
+	if (i < cnt || (cnt > 2 && (ch >> (5 * cnt - 4)) == 0))		      \
 	  {								      \
 	    /* This is an illegal encoding.  */				      \
+	    if (ignore_errors_p ())					      \
+	      {								      \
+		inptr += i;						      \
+		++*converted;						      \
+		continue;						      \
+	      }								      \
+									      \
 	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
@@ -1021,10 +1130,17 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
   {									      \
     if (*((uint32_t *) inptr) >= 0x10000)				      \
       {									      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	inptr += 4;							      \
+	++*converted;							      \
       }									      \
-    *((uint16_t *) outptr)++ = *((uint32_t *) inptr)++;			      \
+    else 								      \
+      *((uint16_t *) outptr)++ = *((uint32_t *) inptr)++;		      \
   }
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
@@ -1070,8 +1186,14 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
     uint32_t val = *((uint32_t *) inptr);				      \
     if (val >= 0x10000)							      \
       {									      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	inptr += 4;							      \
+	++*converted;							      \
       }									      \
     *((uint16_t *) outptr)++ = bswap_16 (val);				      \
     inptr += 4;								      \

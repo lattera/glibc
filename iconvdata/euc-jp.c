@@ -46,11 +46,18 @@
 									      \
     if (ch <= 0x7f)							      \
       ++inptr;								      \
-    else if ((ch <= 0xa0 || ch > 0xfe) && ch != 0x8e && ch != 0x8f)	      \
+    else if ((ch <= 0xa0 && ch != 0x8e && ch != 0x8f) || ch > 0xfe)	      \
       {									      \
 	/* This is illegal.  */						      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++inptr;							      \
+	++*converted;							      \
+	continue;							      \
       }									      \
     else								      \
       {									      \
@@ -72,8 +79,15 @@
 	if (ch2 < 0xa1)							      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    ++inptr;							      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
 									      \
 	if (ch == 0x8e)							      \
@@ -114,8 +128,16 @@
 	    if (ch == __UNKNOWN_10646_CHAR)				      \
 	      {								      \
 		/* Illegal character.  */				      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    /* This is an illegal character.  */		      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
+		inptr += 2;						      \
+		++*converted;						      \
+		continue;						      \
 	      }								      \
 	    inptr = endp;						      \
 	  }								      \
@@ -198,8 +220,15 @@
 		else							      \
 		  {							      \
 		    /* Illegal character.  */				      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
+		    if (! ignore_errors_p ())				      \
+		      {							      \
+			result = __GCONV_ILLEGAL_INPUT;			      \
+			break;						      \
+		      }							      \
+									      \
+		    inptr += 4;						      \
+		    ++*converted;					      \
+		    continue;						      \
 		  }							      \
 	      }								      \
 	  }								      \

@@ -35,6 +35,22 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
   __gconv_t result = NULL;
   size_t cnt = 0;
   int res;
+  int conv_flags = 0;
+  const char *runp;
+
+  /* Find out whether "IGNORE" is part of the options in the `toset'
+     name.  If yes, remove the string and remember this in the flag.  */
+  runp = __strchrnul (__strchrnul (toset, '/'), '/');
+  if (strcmp (runp, "IGNORE") == 0)
+    {
+      /* Found it.  This means we should ignore conversion errors.  */
+      char *newtoset = (char *) alloca (runp - toset + 1);
+
+      newtoset[runp - toset] = '\0';
+      toset = memcpy (newtoset, toset, runp - toset);
+
+      flags = __GCONV_IGNORE_ERRORS;
+    }
 
   res = __gconv_find_transform (toset, fromset, &steps, &nsteps, flags);
   if (res == __GCONV_OK)
@@ -61,15 +77,19 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	    {
 	      size_t size;
 
+	      /* Would have to be done if we would not clear the whole
+                 array above.  */
 	      /* If this is the last step we must not allocate an
 		 output buffer.  */
-	      result->__data[cnt].__is_last = 0;
+	      result->__data[cnt].__flags = conv_flags;
 
+#if 0
 	      /* Reset the counter.  */
 	      result->__data[cnt].__invocation_counter = 0;
 
 	      /* It's a regular use.  */
 	      result->__data[cnt].__internal_use = 0;
+#endif
 
 	      /* We use the `mbstate_t' member in DATA.  */
 	      result->__data[cnt].__statep = &result->__data[cnt].__state;
@@ -88,9 +108,13 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	    }
 
 	  /* Now handle the last entry.  */
-	  result->__data[cnt].__is_last = 1;
+	  result->__data[cnt].__flags = conv_flags | __GCONV_IS_LAST;
+	  /* Would have to be done if we would not clear the whole
+	     array above.  */
+#if 0
 	  result->__data[cnt].__invocation_counter = 0;
 	  result->__data[cnt].__internal_use = 0;
+#endif
 	  result->__data[cnt].__statep = &result->__data[cnt].__state;
 	}
 

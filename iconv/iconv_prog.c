@@ -97,6 +97,9 @@ static int verbose;
 /* Nonzero if list of all coded character sets is wanted.  */
 static int list;
 
+/* If nonzero omit invalid character from output.  */
+static int omit_invalid;
+
 /* Prototypes for the functions doing the actual work.  */
 static int process_block (iconv_t cd, char *addr, size_t len, FILE *output);
 static int process_fd (iconv_t cd, int fd, FILE *output);
@@ -111,6 +114,7 @@ main (int argc, char *argv[])
   int remaining;
   FILE *output;
   iconv_t cd;
+  const char *orig_to_code;
 
   /* Set locale via LC_ALL.  */
   setlocale (LC_ALL, "");
@@ -138,15 +142,48 @@ main (int argc, char *argv[])
   if (to_code == NULL)
     error (EXIT_FAILURE, 0, _("target encoding not specified using `-t'"));
 
+  /* If we have to ignore errors make sure we use the appropriate name for
+     the to-character-set.  */
+  orig_to_code = to_code;
+  if (omit_invalid)
+    {
+      const char *errhand = strchrnul (to_code, '/');
+      int nslash = 2;
+      char *newp;
+      char *cp;
+
+      if (*errhand == '/')
+	{
+	  --nslash;
+	  errhand = strchrnul (errhand, '/');
+
+	  if (*errhand == '/')
+	    {
+	      --nslash;
+	      ++errhand;
+	    }
+	}
+
+      newp = (char *) alloca (errhand - to_code + nslash + 6 + 1);
+      cp = mempcpy (newp, to_code, errhand - to_code);
+      while (nslash > 0)
+	*cp++ = '/';
+      memcpy (cp, "NEEDED", sizeof ("NEEDED"));
+
+      to_code = newp;
+    }
+
   /* Let's see whether we have these coded character sets.  */
   cd = iconv_open (to_code, from_code);
   if (cd == (iconv_t) -1)
     {
       if (errno == EINVAL)
-	error (EXIT_FAILURE, 0, _("conversion from `%s' to `%s' not supported"),
-	       from_code, to_code);
+	error (EXIT_FAILURE, 0,
+	       _("conversion from `%s' to `%s' not supported"),
+	       from_code, orig_to_code);
       else
-	error (EXIT_FAILURE, errno, _("failed to start conversion processing"));
+	error (EXIT_FAILURE, errno,
+	       _("failed to start conversion processing"));
     }
 
   /* Determine output file.  */
@@ -274,9 +311,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	 about missing character or so.  */
       break;
     case 'c':
-      /* Omit invalid characters from output.
-	 XXX This option will become a meaning once we have different
-	 modes of operation for the conversion functions.  */
+      /* Omit invalid characters from output.  */
+      omit_invalid = 1;
       break;
     case OPT_VERBOSE:
       verbose = 1;

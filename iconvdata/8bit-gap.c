@@ -51,12 +51,20 @@ struct gap
     if (HAS_HOLES && ch == L'\0' && *inptr != '\0')			      \
       {									      \
 	/* This is an illegal character.  */				      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++*converted; 							      \
+      }									      \
+    else								      \
+      {									      \
+	put32 (outptr, ch);						      \
+	outptr += 4;							      \
       }									      \
 									      \
-    put32 (outptr, ch);							      \
-    outptr += 4;							      \
     ++inptr;								      \
   }
 #include <iconv/loop.c>
@@ -75,24 +83,45 @@ struct gap
     if (ch >= 0xffff)							      \
       {									      \
 	/* This is an illegal character.  */				      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++*converted; 							      \
+	inptr += 4;							      \
+	continue;							      \
       }									      \
     while (ch > rp->end)						      \
       ++rp;								      \
     if (ch < rp->start)							      \
       {									      \
 	/* This is an illegal character.  */				      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++*converted; 							      \
+	inptr += 4;							      \
+	continue;							      \
       }									      \
 									      \
     res = from_ucs4[ch + rp->idx];					      \
     if (ch != 0 && res == '\0')						      \
       {									      \
 	/* This is an illegal character.  */				      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++*converted; 							      \
+	inptr += 4;							      \
+	continue;							      \
       }									      \
 									      \
     *outptr++ = res;							      \

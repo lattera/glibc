@@ -89,28 +89,28 @@
 	ch = (ch << 8) | inptr[1];					      \
 									      \
 	/* Now determine whether the character is valid.  */		      \
-	if (ch >= 0xa1a1 && ch <= 0xf7fe && inptr[1] >= 0xa1)		      \
+	if (ch < 0xa1a1 || ch > 0xf7fe || inptr[1] < 0xa1		      \
+	    /* Now test the exceptions.  */				      \
+	    || (ch >= 0xa2a1 && ch <= 0xa2aa)				      \
+	    || (ch >= 0xa6e0 && ch <= 0xa6f5)				      \
+	    || (ch >= 0xa8bb && ch <= 0xa8c0))				      \
 	  {								      \
-	    /* So far so good.  Now test the exceptions.  */		      \
-	    if ((ch >= 0xa2a1 && ch <= 0xa2aa)				      \
-		|| (ch >= 0xa6e0 && ch <= 0xa6f5)			      \
-		|| (ch >= 0xa8bb && ch <= 0xa8c0))			      \
+	    /* One of the characters we cannot map.  */			      \
+	    if (! ignore_errors_p ())					      \
 	      {								      \
-		/* One of the exceptions.  */				      \
 		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
+									      \
+	    inptr += 2;							      \
+	    ++*converted;						      \
 	  }								      \
 	else								      \
 	  {								      \
-	    /* One of the characters we cannot map.  */			      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    /* Copy the two bytes.  */					      \
+	    *outptr++ = *inptr++;					      \
+	    *outptr++ = *inptr++;					      \
 	  }								      \
-									      \
-	/* Copy the two bytes.  */					      \
-	*outptr++ = *inptr++;						      \
-	*outptr++ = *inptr++;						      \
       }									      \
   }
 #include <iconv/loop.c>

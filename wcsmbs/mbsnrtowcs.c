@@ -54,7 +54,7 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
   /* Tell where we want the result.  */
   data.__invocation_counter = 0;
   data.__internal_use = 1;
-  data.__is_last = 1;
+  data.__flags = __GCONV_IS_LAST;
   data.__statep = ps ?: &state;
 
   if (nmc == 0)

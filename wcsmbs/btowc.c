@@ -46,7 +46,7 @@ __btowc (c)
   data.__outbufend = data.__outbuf + sizeof (wchar_t);
   data.__invocation_counter = 0;
   data.__internal_use = 1;
-  data.__is_last = 1;
+  data.__flags = __GCONV_IS_LAST;
   data.__statep = &data.__state;
 
   /* Make sure we start in the initial state.  */

@@ -8455,8 +8455,15 @@ static const char from_ucs4_tab13[][2] =
 	else								      \
 	  {								      \
 	    /* This is illegal.  */					      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    ++inptr;							      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
 									      \
 	/* Get the value from the table.  */				      \
@@ -8466,8 +8473,15 @@ static const char from_ucs4_tab13[][2] =
 	if (ch == 0 && *inptr != '\0')					      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    inptr += 2;							      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
 									      \
 	inptr += 2;							      \
@@ -8567,21 +8581,29 @@ static const char from_ucs4_tab13[][2] =
     if (cp[0] == '\0' && ch != 0)					      \
       {									      \
 	/* Illegal character.  */					      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
-      }									      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
 									      \
-    /* See whether there is enough room for the second byte we write.  */     \
-    if (NEED_LENGTH_TEST && cp[1] != '\0' && outptr + 1 >= outend)	      \
+	++*converted;							      \
+      }									      \
+    else								      \
       {									      \
-	/* We have not enough room.  */					      \
-	result = __GCONV_FULL_OUTPUT;					      \
-	break;								      \
+	/* See whether there is enough room for the second byte we write.  */ \
+	if (NEED_LENGTH_TEST && cp[1] != '\0' && outptr + 1 >= outend)	      \
+	  {								      \
+	    /* We have not enough room.  */				      \
+	    result = __GCONV_FULL_OUTPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	*outptr++ = cp[0];						      \
+	if (cp[1] != '\0')						      \
+	  *outptr++ = cp[1];						      \
       }									      \
 									      \
-    *outptr++ = cp[0];							      \
-    if (cp[1] != '\0')							      \
-      *outptr++ = cp[1];						      \
     inptr += 4;								      \
   }
 #include <iconv/loop.c>

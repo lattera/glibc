@@ -183,8 +183,16 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	    || (ch > 0xd3 && ch < 0xd9))				      \
 	  {								      \
 	    /* These are illegal.  */					      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+	        /* This is an illegal character.  */			      \
+	        result = __GCONV_ILLEGAL_INPUT;				      \
+	        break;							      \
+	      }								      \
+									      \
+	    ++inptr;							      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
 	else								      \
 	  {								      \
@@ -215,8 +223,16 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		if (i == -1 || m == -1 || f == -1)			      \
 		  {							      \
 		    /* This is illegal.  */				      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
+		    if (! ignore_errors_p ())				      \
+		      {							      \
+		        /* This is an illegal character.  */		      \
+		        result = __GCONV_ILLEGAL_INPUT;			      \
+		        break;						      \
+		      }							      \
+									      \
+		    ++inptr;						      \
+		    ++*converted;					      \
+		    continue;						      \
 		  }							      \
 		else if (i > 0 && m > 0)				      \
 		  ch = ((i - 1) * 21 + (m - 1)) * 28 + f + 0xac00;	      \
@@ -229,8 +245,16 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		else							      \
 		  {							      \
 		    /* This is illegal.  */				      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
+		    if (! ignore_errors_p ())				      \
+		      {							      \
+		        /* This is an illegal character.  */		      \
+		        result = __GCONV_ILLEGAL_INPUT;			      \
+		        break;						      \
+		      }							      \
+									      \
+		    ++inptr;						      \
+		    ++*converted;					      \
+		    continue;						      \
 		  }							      \
 	      }								      \
 	    else							      \
@@ -238,15 +262,31 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		if (ch2 < 0x31 || (ch2 > 0x7e && ch2 < 0x91) || ch2 == 0xff)  \
 		  {							      \
 		    /* This is illegal.  */				      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
+		    if (! ignore_errors_p ())				      \
+		      {							      \
+		        /* This is an illegal character.  */		      \
+		        result = __GCONV_ILLEGAL_INPUT;			      \
+		        break;						      \
+		      }							      \
+									      \
+		    ++inptr;						      \
+		    ++*converted;					      \
+		    continue;						      \
 		  }							      \
 		else if (ch == 0xda && ch2 > 0xa0 && ch2 < 0xd4)	      \
 		  {							      \
 		    /* This is illegal.  Modern Hangul Jaso is defined	      \
 		       elsewhere in Johab */				      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
+		    if (! ignore_errors_p ())				      \
+		      {							      \
+		        /* This is an illegal character.  */		      \
+		        result = __GCONV_ILLEGAL_INPUT;			      \
+		        break;						      \
+		      }							      \
+									      \
+		    ++inptr;						      \
+		    ++*converted;					      \
+		    continue;						      \
 		  }							      \
 		else							      \
 		  {							      \
@@ -267,8 +307,16 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	if (ch == 0)							      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+	        /* This is an illegal character.  */			      \
+	        result = __GCONV_ILLEGAL_INPUT;				      \
+	        break;							      \
+	      }								      \
+									      \
+	    inptr += 2;							      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
 									      \
 	inptr += 2;							      \
@@ -354,8 +402,16 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	      }								      \
 	    if (written == __UNKNOWN_10646_CHAR)			      \
 	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    /* This is an illegal character.  */		      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
+		inptr += 4;						      \
+		++*converted;						      \
+		continue;						      \
 	      }								      \
 									      \
 	    outptr[0] -= 0x4a;						      \
@@ -383,8 +439,16 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	      }								      \
 	    if (written == __UNKNOWN_10646_CHAR)			      \
 	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    /* This is an illegal character.  */		      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
+		inptr += 4;						      \
+		++*converted;						      \
+		continue;						      \
 	      }								      \
 									      \
 	    outptr[0] -= 0x4a;						      \

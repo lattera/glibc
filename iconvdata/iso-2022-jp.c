@@ -217,7 +217,7 @@ gconv_end (struct __gconv_step *data)
 	      *outbuf++ = ESC;						      \
 	      *outbuf++ = '(';						      \
 	      *outbuf++ = 'B';						      \
-	      if (data->__is_last)					      \
+	      if (data->__flags & __GCONV_IS_LAST)			      \
 	        *written += 3;						      \
 	      data->__outbuf = outbuf;					      \
 	      /* Note that this also clears the G2 designation.  */	      \
@@ -362,21 +362,42 @@ gconv_end (struct __gconv_step *data)
 	    /* We use the table from the ISO 8859-7 module.  */		      \
 	    if (inptr[2] < 0x20 || inptr[2] > 0x80)			      \
 	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
+		++inptr;						      \
+		++*converted;						      \
+		continue;						      \
 	      }								      \
 	    ch = iso88597_to_ucs4[inptr[2] - 0x20];			      \
 	    if (ch == 0)						      \
 	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
+		inptr += 3;						      \
+		++*converted;						      \
+		continue;						      \
 	      }								      \
 	    inptr += 3;							      \
 	  }								      \
 	else								      \
 	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    ++inptr;							      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
       }									      \
     else if (set == ASCII_set || (ch < 0x21 || ch == 0x7f))		      \
@@ -388,8 +409,15 @@ gconv_end (struct __gconv_step *data)
 	ch = jisx0201_to_ucs4 (ch);					      \
 	if (ch == __UNKNOWN_10646_CHAR)					      \
 	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    ++inptr;							      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
 	++inptr;							      \
       }									      \
@@ -399,8 +427,15 @@ gconv_end (struct __gconv_step *data)
 	ch = jisx0201_to_ucs4 (ch + 0x80);				      \
 	if (ch == __UNKNOWN_10646_CHAR)					      \
 	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    ++inptr;							      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
 	++inptr;							      \
       }									      \
@@ -437,8 +472,15 @@ gconv_end (struct __gconv_step *data)
 	  }								      \
 	else if (ch == __UNKNOWN_10646_CHAR)				      \
 	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    ++inptr;							      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
       }									      \
 									      \
@@ -672,8 +714,13 @@ gconv_end (struct __gconv_step *data)
 		else if (var == iso2022jp)				      \
 		  {							      \
 		    /* We have no other choice.  */			      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
+		    if (! ignore_errors_p ())				      \
+		      {							      \
+			result = __GCONV_ILLEGAL_INPUT;			      \
+			break;						      \
+		      }							      \
+									      \
+		    ++*converted;					      \
 		  }							      \
 		else							      \
 		  {							      \
@@ -839,8 +886,13 @@ gconv_end (struct __gconv_step *data)
 				      }					      \
 				    else				      \
 				      {					      \
-					result = __GCONV_ILLEGAL_INPUT;	      \
-					break;				      \
+					if (! ignore_errors_p ())	      \
+					  {				      \
+					     result = __GCONV_ILLEGAL_INPUT;  \
+					     break;			      \
+					  }				      \
+									      \
+					++*converted;			      \
 				      }					      \
 				  }					      \
 			      }						      \

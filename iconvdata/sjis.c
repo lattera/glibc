@@ -4354,11 +4354,19 @@ static const char from_ucs4_extra[0x100][2] =
 	ch = halfkana_to_ucs4[ch - 0xa1];				      \
 	++inptr;							      \
       }									      \
-    else if (ch > 0xea || ch == 0xa0 || ch == 0x7f || ch == 0x80)	      \
+    else if (ch > 0xea || ch == 0xa0 || ch <= 0x80)			      \
       {									      \
 	/* These are illegal.  */					      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    /* This is an illegal character.  */			      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++inptr;							      \
+	++*converted;							      \
+	continue;							      \
       }									      \
     else								      \
       {									      \
@@ -4382,8 +4390,16 @@ static const char from_ucs4_extra[0x100][2] =
 	    || (idx > 0x9ffc && idx < 0xe040) || idx > 0xeaa4)		      \
 	  {								      \
 	    /* This is illegal.  */					      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+	        /* This is an illegal character.  */			      \
+	        result = __GCONV_ILLEGAL_INPUT;				      \
+	        break;							      \
+	      }								      \
+									      \
+	    ++inptr;							      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
 	else								      \
 	  {								      \
@@ -4405,8 +4421,16 @@ static const char from_ucs4_extra[0x100][2] =
 	if (ch == 0)							      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+	        /* This is an illegal character.  */			      \
+	        result = __GCONV_ILLEGAL_INPUT;				      \
+	        break;							      \
+	      }								      \
+									      \
+	    inptr += 2;							      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
       }									      \
 									      \
@@ -4437,8 +4461,16 @@ static const char from_ucs4_extra[0x100][2] =
 	else								      \
 	  {								      \
 	    /* Illegal character.  */					      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+	        /* This is an illegal character.  */			      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    inptr += 4;							      \
+	    ++*converted;						      \
+	    continue;							      \
 	  }								      \
       }									      \
     else								      \
@@ -4447,21 +4479,29 @@ static const char from_ucs4_extra[0x100][2] =
     if (cp[0] == '\0' && ch != 0)					      \
       {									      \
 	/* Illegal character.  */					      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
-      }									      \
-									      \
-    *outptr++ = cp[0];							      \
-    /* Now test for a possible second byte and write this if possible.  */    \
-    if (cp[1] != '\0')							      \
-      {									      \
-	if (NEED_LENGTH_TEST && outptr >= outend)			      \
+	if (! ignore_errors_p ())					      \
 	  {								      \
-	    /* The result does not fit into the buffer.  */		      \
-	    result = __GCONV_FULL_OUTPUT;				      \
+	    /* This is an illegal character.  */			      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
-	*outptr++ = cp[1];						      \
+									      \
+	++*converted;							      \
+      }									      \
+    else								      \
+      {									      \
+	*outptr++ = cp[0];						      \
+	/* Now test for a possible second byte and write this if possible.  */\
+	if (cp[1] != '\0')						      \
+	  {								      \
+	    if (NEED_LENGTH_TEST && outptr >= outend)			      \
+	      {								      \
+		/* The result does not fit into the buffer.  */		      \
+		result = __GCONV_FULL_OUTPUT;				      \
+		break;							      \
+	      }								      \
+	    *outptr++ = cp[1];						      \
+	  }								      \
       }									      \
 									      \
     inptr += 4;								      \

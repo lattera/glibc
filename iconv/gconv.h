@@ -50,6 +50,14 @@ enum
 };
 
 
+/* Flags the `__gconv_open' function can set.  */
+enum
+{
+  __GCONV_IS_LAST = 0x0001,
+  __GCONV_IGNORE_ERRORS = 0x0002
+};
+
+
 /* Forward declarations.  */
 struct __gconv_step;
 struct __gconv_step_data;
@@ -103,7 +111,7 @@ struct __gconv_step_data
 				 buffer.  */
 
   /* Is this the last module in the chain.  */
-  int __is_last;
+  int __flags;
 
   /* Counter for number of invocations of the module function for this
      descriptor.  */

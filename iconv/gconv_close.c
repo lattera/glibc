@@ -1,5 +1,5 @@
 /* Release any resource associated with given conversion descriptor.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -38,10 +38,10 @@ __gconv_close (__gconv_t cd)
   drunp = cd->__data;
   do
     {
-      if (!drunp->__is_last && drunp->__outbuf != NULL)
+      if (!(drunp->__flags & __GCONV_IS_LAST) && drunp->__outbuf != NULL)
 	free (drunp->__outbuf);
     }
-  while (!(drunp++)->__is_last);
+  while (!((drunp++)->__flags & __GCONV_IS_LAST));
 
   /* Free the data allocated for the descriptor.  */
   free (cd);

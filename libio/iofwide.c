@@ -121,7 +121,7 @@ _IO_fwide (fp, mode)
 
 	cc->__cd_in.__cd.__data[0].__invocation_counter = 0;
 	cc->__cd_in.__cd.__data[0].__internal_use = 1;
-	cc->__cd_in.__cd.__data[0].__is_last = 1;
+	cc->__cd_in.__cd.__data[0].__flags = __GCONV_IS_LAST;
 	cc->__cd_in.__cd.__data[0].__statep = &fp->_wide_data->_IO_state;
 
 	cc->__cd_out.__cd.__nsteps = 1; /* Only one step allowed.  */
@@ -129,7 +129,7 @@ _IO_fwide (fp, mode)
 
 	cc->__cd_out.__cd.__data[0].__invocation_counter = 0;
 	cc->__cd_out.__cd.__data[0].__internal_use = 1;
-	cc->__cd_out.__cd.__data[0].__is_last = 1;
+	cc->__cd_out.__cd.__data[0].__flags = __GCONV_IS_LAST;
 	cc->__cd_out.__cd.__data[0].__statep = &fp->_wide_data->_IO_state;
       }
 #else
