@@ -1,3 +1,27 @@
+2000-03-09  Martin Buchholz  <martin@xemacs.org>
+
+	* sysdeps/unix/sysv/linux/alpha/syscall.S: 
+	* manual/message.texi (Using gettextized software): 
+	* manual/message.texi (Message Translation): Doc Fixes.
+	* manual/filesys.texi (File Size): 
+	* manual/charset.texi (glibc iconv Implementation): 
+	* locale/programs/ld-collate.c (collate_output): 
+	* iconv/gconv_db.c (find_derivation):
+	* manual/install.texi:
+	* manual/search.texi (Hash Search Function):
+	* manual/stdio.texi (Output Conversion Syntax): 
+	* FAQ.in:
+	* config.h.in:
+	* sysdeps/generic/dl-sysdep.c:
+	Doc Fixes.  `allows to' is not correct English.
+
+	* elf/rtld.c: Doc fixes.
+	* manual/creature.texi (Feature Test Macros): Doc fixes.
+	* manual/memory.texi (Hooks for Malloc): Doc Fixes.
+
+	* manual/filesys.texi (Working Directory): Check for ERANGE to
+	avoid infloop.
+
 2000-02-23  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* string/argz-stringify.c (__argz_stringify): Fix loop termination
