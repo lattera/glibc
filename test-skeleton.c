@@ -164,11 +164,10 @@ main (int argc, char *argv[])
   /* We don't expect any signal.  */
 # define EXPECTED_SIGNAL 0
 #endif
-  if (WIFSIGNALED (status) != EXPECTED_SIGNAL)
+  if (WTERMSIG (status) != EXPECTED_SIGNAL)
     {
       fprintf (stderr, "Incorrect signal from child: got `%s', need `%s'\n",
-	       strsignal (WIFSIGNALED (status)),
-	       strsignal (EXPECTED_SIGNAL));
+	       strsignal (WTERMSIG (status)), strsignal (EXPECTED_SIGNAL));
       exit (1);
     }
 

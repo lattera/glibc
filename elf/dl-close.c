@@ -95,10 +95,9 @@ _dl_close (struct link_map *map)
 	      do
 		--tail;
 	      while (*tail != imap);
+	      memcpy (tail, tail + 1,
+		      (char *) _dl_global_scope_end - (char *) tail);
 	      --_dl_global_scope_end;
-	      memcpy (tail, tail + 1, _dl_global_scope_end - tail);
-	      _dl_global_scope_end[0] = NULL;
-	      _dl_global_scope_end[1] = NULL;
 	    }
 
 	  /* We can unmap all the maps at once.  We just have to determine

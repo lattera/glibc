@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
@@ -47,6 +47,11 @@
 #ifdef _LIBC
 
 # include <memcopy.h>
+# include <endian.h>
+
+# if __BYTE_ORDER == __BIG_ENDIAN
+#  define WORDS_BIGENDIAN
+# endif
 
 #else	/* Not in the GNU C library.  */
 

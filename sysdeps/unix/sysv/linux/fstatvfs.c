@@ -27,8 +27,8 @@
 #include <sys/statvfs.h>
 
 /* These definitions come from the kernel headers.  But we cannot
-   include the headers here because of type clashes.  If there will
-   become new filesystem types available we have to add the
+   include the headers here because of type clashes.  If new
+   filesystem types will become available we have to add the
    appropriate definitions here.*/
 #define ADFS_SUPER_MAGIC	0xadf5
 #define AFFS_SUPER_MAGIC	0xadff
@@ -61,7 +61,7 @@ fstatvfs (int fd, struct statvfs *buf)
   if (__fstatfs (fd, &fsbuf) < 0)
     return -1;
 
-  /* Now fill in the fields me have information for.  */
+  /* Now fill in the fields we have information for.  */
   buf->f_bsize = fsbuf.f_bsize;
   buf->f_blocks = fsbuf.f_blocks;
   buf->f_bfree = fsbuf.f_bfree;
@@ -108,8 +108,8 @@ fstatvfs (int fd, struct statvfs *buf)
   /* XXX I have no idea how to compute f_favail.  Any idea???  */
   buf->f_favail = buf->f_ffree;
 
-  /* Determining the flags is tricky.  We have to read /proc/mount or
-     the /etc/matb file and search for the entry which matches the given
+  /* Determining the flags is tricky.  We have to read /proc/mounts or
+     the /etc/mtab file and search for the entry which matches the given
      file.  The way we can test for matching filesystem is using the
      device number.  */
   buf->f_flag = 0;

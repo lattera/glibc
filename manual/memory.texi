@@ -625,6 +625,13 @@ immediately.  This can be useful because otherwise a crash may happen
 much later, and the true cause for the problem is then very hard to
 track down.
 
+So, what's the difference between using @code{MALLOC_CHECK_} and linking
+with @samp{-lmcheck}?  @code{MALLOC_CHECK_} is orthognal with respect to
+@samp{-lmcheck}.  @samp{-lmcheck} has been added for backward
+compatibility.  Both @code{MALLOC_CHECK_} and @samp{-lmcheck} should
+uncover the same bugs - but using @code{MALLOC_CHECK_} you don't need to
+recompile your application.
+
 @node Hooks for Malloc
 @subsection Storage Allocation Hooks
 @cindex allocation hooks, for @code{malloc}

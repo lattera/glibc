@@ -67,6 +67,7 @@ GLIBC_2.0 {
     __xstat; __fxstat; __lxstat;  __xmknod;
     __dcgettext; __uflow; __underflow; __overflow; __iswctype; __sigpause;
     __ctype_get_mb_cur_max; __bzero;
+    __strtok_r;
 
     # functions used in other libraries
     __printf_fp; __stpncpy; __stpcpy; __strdup; __mempcpy;

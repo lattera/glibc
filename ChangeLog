@@ -1,11 +1,59 @@
-Mon Mar 23 11:16:14 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-03-23 07:52  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-close.c (_dl_close): Fix byte count while removing
+	the shared object from the global scope list and optimize
+	a little bit.
+
+1998-03-22  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/filesys.texi (Scanning Directory Content): Add missing
+	closing brace.
+	(Scanning Directory Content): Fix text.
+
+1998-03-22  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/memory.texi (Heap Consistency Checking): Add paragraph
+	explaining difference of -lmcheck and MALLOC_CHECK_.
+
+1998-03-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/fstatvfs.c (fstatvfs): Correct some
+	typos in comments.
+
+1998-03-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* test-skeleton.c (main): Fix test for exit signal.
+
+1998-03-22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/strtok_r.c: Undefine __strtok_r.
+
+1998-03-22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/memcmp.c [_LIBC]: Define WORDS_BIGENDIAN as
+	appropriate.
+
+1998-03-23 11:14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libc.map: Export __strtok_r.
+
+1998-03-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/regex.c (re_compile_fastmap): Remove unused variable
+	num_regs and adjust comment.
+	Patch by Jim Meyering <meyering@ascend.com>.
+
+	* math/math.h (M_*l): Extend long double constants to be usable
+	for 128 bit floats.  Patch by Richard Henderson.
+
+1998-03-23 11:16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/m68020/wordcopy.S: New file.
 
 1998-03-22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/wordexp.c: Rewrite parse_param.
-	Patch by Tim Waugh and. Andreas Schwab.
+	Patch by Tim Waugh and Andreas Schwab.
 
 1998-03-21 23:46  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 

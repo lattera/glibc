@@ -485,8 +485,8 @@ The @code{alphasort} function behaves like the @code{strcoll} function
 are not string pointers but instead they are of type
 @code{struct dirent **}.
 
-Return value of is less than, equal to, or greater than zero depending
-on the order of the two entries @var{a} and @var{b}.
+Return value of @code{alphasort} is less than, equal to, or greater than
+zero depending on the order of the two entries @var{a} and @var{b}.
 @end deftypefun
 
 @comment dirent.h
@@ -509,7 +509,7 @@ only that the directory entries it returns are described by elements of
 type @w{@code{struct dirent64}}.  The function pointed to by
 @var{selector} is again used to select the wanted entries only that
 @var{selector} now must point to a function which takes a
-@w{@code{struct dirent64 *} parameter.
+@w{@code{struct dirent64 *}} parameter.
 
 The @var{cmp} now must be a function which expects its two arguments to
 be of type @code{struct dirent64 **}.
@@ -528,8 +528,8 @@ The @code{alphasort64} function behaves like the @code{strcoll} function
 are not string pointers but instead they are of type
 @code{struct dirent64 **}.
 
-Return value of is less than, equal to, or greater than zero depending
-on the order of the two entries @var{a} and @var{b}.
+Return value of @code{alphasort64} is less than, equal to, or greater
+than zero depending on the order of the two entries @var{a} and @var{b}.
 @end deftypefun
 
 @comment dirent.h
