@@ -185,6 +185,23 @@ if test "$linuxthreads_missing"; then
   fi
 fi
 
+if test "$prefix" = "/usr/local" -o "$prefix" = "/usr/local/" -o "$prefix" = "NONE"; then
+  if test $enable_sanity = yes; then
+    echo "\
+*** On GNU/Linux systems the GNU C Library should not be installed into
+*** /usr/local since this might make your system totally unusable.
+*** We strongly advise to use a different prefix.  For details read the FAQ.
+*** If you really mean to do this, run configure again using the extra 
+*** parameter \`--disable-sanity-checks'."
+    exit 1
+  else
+    echo "\
+*** WARNING: Do you really want to install the GNU C Library into /usr/local?
+*** This might make your system totally unusable, for details read the FAQ."
+  fi
+fi
+
+
 # One Linux we use ldconfig.
 use_ldconfig=yes
 

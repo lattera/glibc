@@ -1,3 +1,8 @@
+2002-05-19  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/configure.in: Warn against an
+	installation in /usr/local.
+
 2002-05-16  Bruno Haible  <bruno@clisp.org>
 
 	* sysdeps/unix/sysv/aix/bits/ioctl-types.h: Don't use multiline
