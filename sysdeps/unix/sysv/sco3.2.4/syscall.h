@@ -29,6 +29,7 @@
 #define SYS_getdents	81
 #define SYS_getgid	47
 #define SYS_getgroups	0x2b28
+#define SYS_getitimer	0x3728
 #define SYS_getmsg	85
 #define SYS_getpid	20
 #define SYS_getuid	24
@@ -48,6 +49,7 @@
 #define SYS_open	5
 #define SYS_pathconf	0x2e28
 #define SYS_pause	29
+#define SYS_pgrpsys	39
 #define SYS_pipe	42
 #define SYS_plock	45
 #define SYS_poll	87
@@ -69,6 +71,7 @@
 #define SYS_semsys	53
 #define SYS_setgid	46
 #define SYS_setgroups	0x2c28
+#define SYS_setitimer	0x3828
 #define SYS_setpgrp	39
 #define SYS_setuid	23
 #define SYS_shmsys	52
