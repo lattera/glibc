@@ -32,30 +32,30 @@
 #endif
 /*******************************************************************\
 |* Here we assume several symbols to be defined:		   *|
-|* 								   *|
+|*								   *|
 |* LOOKUP_TYPE   - the return type of the function		   *|
-|* 								   *|
+|*								   *|
 |* FUNCTION_NAME - name of the non-reentrant function		   *|
-|* 								   *|
+|*								   *|
 |* DATABASE_NAME - name of the database the function accesses	   *|
 |*		   (e.g., host, services, ...)			   *|
-|* 								   *|
+|*								   *|
 |* ADD_PARAMS    - additional parameter, can vary in number	   *|
-|* 								   *|
+|*								   *|
 |* ADD_VARIABLES - names of additional parameter		   *|
-|* 								   *|
+|*								   *|
 |* Optionally the following vars can be defined:		   *|
-|* 								   *|
+|*								   *|
 |* NEED_H_ERRNO  - an extra parameter will be passed to point to   *|
 |*		   the global `h_errno' variable.		   *|
-|* 								   *|
+|*								   *|
 |* NEED__RES     - the global _res variable might be used so we	   *|
-|* 		   will have to initialize it if necessary	   *|
-|* 								   *|
+|*		   will have to initialize it if necessary	   *|
+|*								   *|
 |* PREPROCESS    - code run before anything else		   *|
-|* 								   *|
+|*								   *|
 |* POSTPROCESS   - code run after the lookup			   *|
-|* 								   *|
+|*								   *|
 \*******************************************************************/
 
 /* To make the real sources a bit prettier.  */
@@ -130,7 +130,12 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
   static service_user *startp;
   static lookup_function start_fct;
   service_user *nip;
-  lookup_function fct;
+  union
+  {
+    lookup_function l;
+    void *ptr;
+  } fct;
+
   int no_more;
   enum nss_status status = NSS_STATUS_UNAVAIL;
 #ifdef USE_NSCD
@@ -175,13 +180,13 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 
   if (startp == NULL)
     {
-      no_more = DB_LOOKUP_FCT (&nip, REENTRANT_NAME_STRING, (void **) &fct);
+      no_more = DB_LOOKUP_FCT (&nip, REENTRANT_NAME_STRING, &fct.ptr);
       if (no_more)
 	startp = (service_user *) -1l;
       else
 	{
 	  startp = nip;
-	  start_fct = fct;
+	  start_fct = fct.l;
 
 #ifdef NEED__RES
 	  /* The resolver code will really be used so we have to
@@ -201,7 +206,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
     }
   else
     {
-      fct = start_fct;
+      fct.l = start_fct;
       no_more = (nip = startp) == (service_user *) -1l;
     }
 
@@ -211,8 +216,8 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
       any_service = true;
 #endif
 
-      status = DL_CALL_FCT (fct, (ADD_VARIABLES, resbuf, buffer, buflen,
-				   &errno H_ERRNO_VAR));
+      status = DL_CALL_FCT (fct.l, (ADD_VARIABLES, resbuf, buffer, buflen,
+				    &errno H_ERRNO_VAR));
 
       /* The status is NSS_STATUS_TRYAGAIN and errno is ERANGE the
 	 provided buffer is too small.  In this case we should give
@@ -227,7 +232,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 	break;
 
       no_more = __nss_next (&nip, REENTRANT_NAME_STRING,
-			    (void **) &fct, status, 0);
+			    &fct.ptr, status, 0);
     }
 
 #ifdef HANDLE_DIGITS_DOTS
@@ -262,7 +267,7 @@ OLD (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 		      size_t buflen, LOOKUP_TYPE **result H_ERRNO_PARM)
 {
   int ret = INTERNAL (REENTRANT_NAME) (ADD_VARIABLES, resbuf, buffer,
-  				       buflen, result H_ERRNO_VAR);
+				       buflen, result H_ERRNO_VAR);
 
   if (ret != 0)
     ret = -1;

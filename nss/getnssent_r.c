@@ -53,7 +53,11 @@ __nss_setent (const char *func_name, db_lookup_function lookup_fct,
 	      service_user **last_nip, int stayopen, int *stayopen_tmp,
 	      int res)
 {
-  setent_function fct;
+  union
+  {
+    setent_function f;
+    void *ptr;
+  } fct;
   int no_more;
 
   if (res && (_res.options & RES_INIT) == 0
@@ -65,7 +69,7 @@ __nss_setent (const char *func_name, db_lookup_function lookup_fct,
 
   /* Cycle through the services and run their `setXXent' functions until
      we find an available service.  */
-  no_more = setup (func_name, lookup_fct, (void **) &fct, nip,
+  no_more = setup (func_name, lookup_fct, &fct.ptr, nip,
 		   startp, 1);
   while (! no_more)
     {
@@ -73,11 +77,11 @@ __nss_setent (const char *func_name, db_lookup_function lookup_fct,
       enum nss_status status;
 
       if (stayopen_tmp)
-	status = DL_CALL_FCT (fct, (*stayopen_tmp));
+	status = DL_CALL_FCT (fct.f, (*stayopen_tmp));
       else
-	status = DL_CALL_FCT (fct, (0));
+	status = DL_CALL_FCT (fct.f, (0));
 
-      no_more = __nss_next (nip, func_name, (void **) &fct,
+      no_more = __nss_next (nip, func_name, &fct.ptr,
 			    status, 0);
       if (is_last_nip)
 	*last_nip = *nip;
@@ -93,7 +97,11 @@ __nss_endent (const char *func_name, db_lookup_function lookup_fct,
 	      service_user **nip, service_user **startp,
 	      service_user **last_nip, int res)
 {
-  endent_function fct;
+  union
+  {
+    endent_function f;
+    void *ptr;
+  } fct;
   int no_more;
 
   if (res && (_res.options & RES_INIT) == 0
@@ -104,17 +112,17 @@ __nss_endent (const char *func_name, db_lookup_function lookup_fct,
     }
 
   /* Cycle through all the services and run their endXXent functions.  */
-  no_more = setup (func_name, lookup_fct, (void **) &fct, nip, startp, 1);
+  no_more = setup (func_name, lookup_fct, &fct.ptr, nip, startp, 1);
   while (! no_more)
     {
       /* Ignore status, we force check in __NSS_NEXT.  */
-      DL_CALL_FCT (fct, ());
+      DL_CALL_FCT (fct.f, ());
 
       if (*nip == *last_nip)
 	/* We have processed all services which were used.  */
 	break;
 
-      no_more = __nss_next (nip, func_name, (void **) &fct, 0, 1);
+      no_more = __nss_next (nip, func_name, &fct.ptr, 0, 1);
     }
   *last_nip = *nip = NULL;
 }
@@ -129,7 +137,11 @@ __nss_getent_r (const char *getent_func_name,
 		void *resbuf, char *buffer, size_t buflen,
 		void **result, int *h_errnop)
 {
-  getent_function fct;
+  union
+  {
+    getent_function f;
+    void *ptr;
+  } fct;
   int no_more;
   enum nss_status status;
 
@@ -147,14 +159,14 @@ __nss_getent_r (const char *getent_func_name,
   /* Run through available functions, starting with the same function last
      run.  We will repeat each function as long as it succeeds, and then go
      on to the next service action.  */
-  no_more = setup (getent_func_name, lookup_fct, (void **) &fct, nip,
+  no_more = setup (getent_func_name, lookup_fct, &fct.ptr, nip,
 		   startp, 0);
   while (! no_more)
     {
       int is_last_nip = *nip == *last_nip;
 
-      status = DL_CALL_FCT (fct,
-			     (resbuf, buffer, buflen, &errno, &h_errno));
+      status = DL_CALL_FCT (fct.f,
+			    (resbuf, buffer, buflen, &errno, &h_errno));
 
       /* The the status is NSS_STATUS_TRYAGAIN and errno is ERANGE the
 	 provided buffer is too small.  In this case we should give
@@ -168,7 +180,7 @@ __nss_getent_r (const char *getent_func_name,
 
       do
 	{
-	  no_more = __nss_next (nip, getent_func_name, (void **) &fct,
+	  no_more = __nss_next (nip, getent_func_name, &fct.ptr,
 				status, 0);
 
 	  if (is_last_nip)
@@ -177,17 +189,21 @@ __nss_getent_r (const char *getent_func_name,
 	  if (! no_more)
 	    {
 	      /* Call the `setXXent' function.  This wasn't done before.  */
-	      setent_function sfct;
+	      union
+	      {
+		setent_function f;
+		void *ptr;
+	      } sfct;
 
 	      no_more = __nss_lookup (nip, setent_func_name,
-				      (void **) &sfct);
+				      &sfct.ptr);
 
 	      if (! no_more)
 	        {
 		  if (stayopen_tmp)
-		    status = DL_CALL_FCT (sfct, (*stayopen_tmp));
+		    status = DL_CALL_FCT (sfct.f, (*stayopen_tmp));
 		  else
-		    status = DL_CALL_FCT (sfct, (0));
+		    status = DL_CALL_FCT (sfct.f, (0));
 		}
 	      else
 		status = NSS_STATUS_NOTFOUND;

@@ -42,32 +42,36 @@ getpublickey (const char *name, char *key)
   static service_user *startp;
   static public_function start_fct;
   service_user *nip;
-  public_function fct;
+  union
+  {
+    public_function f;
+    void *ptr;
+  } fct;
   enum nss_status status = NSS_STATUS_UNAVAIL;
   int no_more;
 
   if (startp == NULL)
     {
-      no_more = __nss_publickey_lookup (&nip, "getpublickey", (void **) &fct);
+      no_more = __nss_publickey_lookup (&nip, "getpublickey", &fct.ptr);
       if (no_more)
 	startp = (service_user *) -1;
       else
 	{
 	  startp = nip;
-	  start_fct = fct;
+	  start_fct = fct.f;
 	}
     }
   else
     {
-      fct = start_fct;
+      fct.f = start_fct;
       no_more = (nip = startp) == (service_user *) -1;
     }
 
   while (! no_more)
     {
-      status = (*fct) (name, key, &errno);
+      status = (*fct.f) (name, key, &errno);
 
-      no_more = __nss_next (&nip, "getpublickey", (void **) &fct, status, 0);
+      no_more = __nss_next (&nip, "getpublickey", &fct.ptr, status, 0);
     }
 
   return status == NSS_STATUS_SUCCESS;
@@ -81,32 +85,36 @@ getsecretkey (const char *name, char *key, const char *passwd)
   static service_user *startp;
   static secret_function start_fct;
   service_user *nip;
-  secret_function fct;
+  union
+  {
+    secret_function f;
+    void *ptr;
+  } fct;
   enum nss_status status = NSS_STATUS_UNAVAIL;
   int no_more;
 
   if (startp == NULL)
     {
-      no_more = __nss_publickey_lookup (&nip, "getsecretkey", (void **) &fct);
+      no_more = __nss_publickey_lookup (&nip, "getsecretkey", &fct.ptr);
       if (no_more)
 	startp = (service_user *) -1;
       else
 	{
 	  startp = nip;
-	  start_fct = fct;
+	  start_fct = fct.f;
 	}
     }
   else
     {
-      fct = start_fct;
+      fct.f = start_fct;
       no_more = (nip = startp) == (service_user *) -1;
     }
 
   while (! no_more)
     {
-      status = (*fct) (name, key, passwd, &errno);
+      status = (*fct.f) (name, key, passwd, &errno);
 
-      no_more = __nss_next (&nip, "getsecretkey", (void **) &fct, status, 0);
+      no_more = __nss_next (&nip, "getsecretkey", &fct.ptr, status, 0);
     }
 
   return status == NSS_STATUS_SUCCESS;

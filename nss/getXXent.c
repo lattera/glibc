@@ -70,7 +70,11 @@ LOOKUP_TYPE *
 GETFUNC_NAME (void)
 {
   static size_t buffer_size;
-  static LOOKUP_TYPE resbuf;
+  static union
+  {
+    LOOKUP_TYPE l;
+    void *ptr;
+  } resbuf;
   LOOKUP_TYPE *result;
   int save;
 
@@ -79,7 +83,7 @@ GETFUNC_NAME (void)
 
   result = (LOOKUP_TYPE *)
     __nss_getent ((getent_r_function) INTERNAL (REENTRANT_GETNAME),
-		  (void **) &resbuf, &buffer, BUFLEN, &buffer_size,
+		  &resbuf.ptr, &buffer, BUFLEN, &buffer_size,
 		  H_ERRNO_VAR);
 
   save = errno;

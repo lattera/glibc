@@ -39,25 +39,29 @@ ether_hostton (const char *hostname, struct ether_addr *addr)
   static service_user *startp;
   static lookup_function start_fct;
   service_user *nip;
-  lookup_function fct;
+  union
+  {
+    lookup_function f;
+    void *ptr;
+  } fct;
   int no_more;
   enum nss_status status = NSS_STATUS_UNAVAIL;
   struct etherent etherent;
 
   if (startp == NULL)
     {
-      no_more = __nss_ethers_lookup (&nip, "gethostton_r", (void **) &fct);
+      no_more = __nss_ethers_lookup (&nip, "gethostton_r", &fct.ptr);
       if (no_more)
 	startp = (service_user *) -1;
       else
 	{
 	  startp = nip;
-	  start_fct = fct;
+	  start_fct = fct.f;
 	}
     }
   else
     {
-      fct = start_fct;
+      fct.f = start_fct;
       no_more = (nip = startp) == (service_user *) -1;
     }
 
@@ -65,9 +69,9 @@ ether_hostton (const char *hostname, struct ether_addr *addr)
     {
       char buffer[1024];
 
-      status = (*fct) (hostname, &etherent, buffer, sizeof buffer, &errno);
+      status = (*fct.f) (hostname, &etherent, buffer, sizeof buffer, &errno);
 
-      no_more = __nss_next (&nip, "gethostton_r", (void **) &fct, status, 0);
+      no_more = __nss_next (&nip, "gethostton_r", &fct.ptr, status, 0);
     }
 
   if (status == NSS_STATUS_SUCCESS)

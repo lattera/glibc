@@ -147,32 +147,36 @@ netname2user (const char netname[MAXNETNAMELEN + 1], uid_t * uidp, gid_t * gidp,
   static service_user *startp;
   static netname2user_function start_fct;
   service_user *nip;
-  netname2user_function fct;
+  union
+  {
+    netname2user_function f;
+    void *ptr;
+  } fct;
   enum nss_status status = NSS_STATUS_UNAVAIL;
   int no_more;
 
   if (startp == NULL)
     {
-      no_more = __nss_publickey_lookup (&nip, "netname2user", (void **) &fct);
+      no_more = __nss_publickey_lookup (&nip, "netname2user", &fct.ptr);
       if (no_more)
 	startp = (service_user *) - 1;
       else
 	{
 	  startp = nip;
-	  start_fct = fct;
+	  start_fct = fct.f;
 	}
     }
   else
     {
-      fct = start_fct;
+      fct.f = start_fct;
       no_more = (nip = startp) == (service_user *) - 1;
     }
 
   while (!no_more)
     {
-      status = (*fct) (netname, uidp, gidp, gidlenp, gidlist);
+      status = (*fct.f) (netname, uidp, gidp, gidlenp, gidlist);
 
-      no_more = __nss_next (&nip, "netname2user", (void **) &fct, status, 0);
+      no_more = __nss_next (&nip, "netname2user", &fct.ptr, status, 0);
     }
 
   return status == NSS_STATUS_SUCCESS;
