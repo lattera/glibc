@@ -63,6 +63,13 @@ _dl_addr (const void *address, Dl_info *info)
   info->dli_fname = match->l_name;
   info->dli_fbase = (void *) match->l_addr;
 
+  /* If this is the main program the information is incomplete.  */
+  if (__builtin_expect (info->dli_fbase == NULL, 0))
+    {
+      info->dli_fname = _dl_argv[0];
+      info->dli_fbase = (void *) match->l_map_start;
+    }
+
   symtab = (const void *) D_PTR (match, l_info[DT_SYMTAB]);
   strtab = (const void *) D_PTR (match, l_info[DT_STRTAB]);
 
