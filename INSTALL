@@ -215,12 +215,12 @@ Installing the C Library
 ========================
 
    To install the library and its header files, and the Info files of
-the manual, type `make install'.  This will build things if necessary,
-before installing them.  However, you should still compile everything
-first.  If you are installing glibc as your primary C library, we
-recommend that you shut the system down to single-user mode first, and
-reboot afterward.  This minimizes the risk of breaking things when the
-library changes out from underneath.
+the manual, type `env LANGUAGE=C LC_ALL=C make install'.  This will
+build things if necessary, before installing them.  However, you should
+still compile everything first.  If you are installing glibc as your
+primary C library, we recommend that you shut the system down to
+single-user mode first, and reboot afterward.  This minimizes the risk
+of breaking things when the library changes out from underneath.
 
    If you're upgrading from Linux libc5 or some other C library, you
 need to replace the `/usr/include' with a fresh directory before
@@ -299,26 +299,21 @@ build the GNU C library:
      recommend version GNU `make' version 3.79.  All earlier versions
      have severe bugs or lack features.
 
-   * EGCS 1.1.1, 1.1 or 1.0.3, or GCC 2.8.1, 2.95 or newer
+   * GCC 2.95 or newer
 
      The GNU C library can only be compiled with the GNU C compiler
-     family.  As of the 2.1 release, EGCS 1.0.3 or higher is required.
-     GCC 2.8.1 can also be used (but see the FAQ for reasons why you
-     might not want to).  Earlier versions simply are too buggy.  As of
-     this writing, GCC 2.95.2 is the compiler we advise to use.
+     family.  As of the 2.2 release, GCC 2.95.2 or higher is required.
+     As of this writing, GCC 2.95.2 is the compiler we advise to use.
 
      You can use whatever compiler you like to compile programs that
      use GNU libc, but be aware that both GCC 2.7 and 2.8 have bugs in
      their floating-point support that may be triggered by the math
      library.
 
-     On Alpha machines you need at least EGCS 1.1.1.  Earlier versions
-     don't work reliably.
-
-     For PPC you might need some patches even on top of the last EGCS
+     For PPC you might need some patches even on top of the last GCC
      version.  See the FAQ.
 
-   * GNU `binutils' 2.9.1, 2.9.1.0.16, or later 2.9.1.0.x release
+   * GNU `binutils' 2.10.1 or later
 
      You must use GNU binutils (as and ld) if you want to build a shared
      library.  Even if you don't, we recommend you use them anyway.  No
@@ -326,10 +321,8 @@ build the GNU C library:
 
      The quality of binutils releases has varied a bit recently.  The
      bugs are in obscure features, but glibc uses quite a few of those.
-     2.9.1, 2.9.1.0.16, and later 2.9.1.0.x releases are known to
-     work.  Versions after 2.8.1.0.23 may or may not work.  Older
-     versions definitely don't.  2.9.1.0.16 or higher is required on
-     some platforms, like PPC and Arm.
+     2.10.1 and later releases are known to work.  Versions after
+     2.8.1.0.23 may or may not work.  Older versions definitely don't.
 
      For PPC you might need some patches even on top of the last
      binutils version.  See the FAQ.
@@ -360,7 +353,7 @@ build the GNU C library:
      `po2test.sed' in the `intl' subdirectory which is used to generate
      `msgs.h' for the testsuite.  This script works correctly only with
      GNU `sed' 3.02.  If you like to run the testsuite, you should
-     definitly upgrade `sed'.
+     definitely upgrade `sed'.
 
 
 If you change any of the `configure.in' files you will also need
@@ -383,8 +376,7 @@ following patterns:
 
      alpha*-*-linux
      arm-*-linux
-     arm-*-linuxaout
-     arm-*-none
+     hppa-*-linux
      iX86-*-gnu
      iX86-*-linux
      ia64-*-linux
@@ -395,8 +387,14 @@ following patterns:
      sparc-*-linux
      sparc64-*-linux
 
-   Former releases of this library (version 1.09.1 and perhaps earlier
-versions) used to run on the following configurations:
+   Former releases of this library (version 2.1 and/or 2.0) used to run
+on the following configurations:
+
+     arm-*-linuxaout
+     arm-*-none
+
+   Very early releases (version 1.09.1 and perhaps earlier versions)
+used to run on the following configurations:
 
      alpha-dec-osf1
      alpha-*-linuxecoff
