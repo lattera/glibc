@@ -1050,7 +1050,7 @@ __strncat_g (char *__dest, __const char __src[], size_t __n)
 #ifdef __i686__
   __asm__ __volatile__
     ("repne; scasb\n"
-     "movl %%edx, %3\n\t"
+     "movl %4, %3\n\t"
      "decl %1\n\t"
      "1:\n\t"
      "decl	%3\n\t"
@@ -1063,7 +1063,7 @@ __strncat_g (char *__dest, __const char __src[], size_t __n)
      "2:\n\t"
      "movb	$0,(%1)"
      : "=&a" (__dummy), "=&D" (__tmp), "=&S" (__src), "=&c" (__n)
-     : "0" (0), "1" (__tmp), "2" (__src), "3" (0xffffffff), "d" (__n)
+     :  "g" (__n), "0" (0), "1" (__tmp), "2" (__src), "3" (0xffffffff)
      : "memory", "cc");
 #else
   --__tmp;
