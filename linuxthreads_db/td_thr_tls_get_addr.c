@@ -28,13 +28,14 @@
 
 td_err_e
 td_thr_tls_get_addr (const td_thrhandle_t *th __attribute__ ((unused)),
-		     struct link_map *map __attribute__ ((unused)),
+		     void *map_address __attribute__ ((unused)),
 		     size_t offset __attribute__ ((unused)),
 		     void **address __attribute__ ((unused)))
 {
 #if USE_TLS
   struct _pthread_descr_struct pds;
   size_t modid;
+  struct link_map map;
   union dtv pdtv;
 
   LOG ("td_thr_tls_get_addr");
@@ -44,12 +45,14 @@ td_thr_tls_get_addr (const td_thrhandle_t *th __attribute__ ((unused)),
 		 th->th_ta_p->sizeof_descr) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
-  /* The module ID.  */
-  modid = map->l_tls_modid;
+  /* Get the link_map, so we gan get the module ID.  */
+  if (ps_pdread (th->th_ta_p->ph, map_address, &map,
+		 sizeof (struct link_map)) != PS_OK)
+    return TD_ERR;	/* XXX Other error value?  */
 
   /* Get the corresponding entry in the DTV.  */
-  if (ps_pdread (th->th_ta_p->ph, pds.p_header.data.dtvp + modid, &pdtv,
-		 sizeof (union dtv)) != PS_OK)
+  if (ps_pdread (th->th_ta_p->ph, pds.p_header.data.dtvp + map.l_tls_modid,
+		 &pdtv, sizeof (union dtv)) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
   /* It could be that the memory for this module is not allocated for
