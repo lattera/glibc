@@ -1,5 +1,7 @@
 2003-05-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/semtimedop.c: New file.
+
 	* malloc/malloc.c (mSTATs): Call ptmalloc_init if necessary.
 
 2003-04-29  Andreas Schwab  <schwab@suse.de>
