@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2003 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -271,7 +271,7 @@ prune_cache (struct database *table, time_t now)
 
 	      dbg_log ("remove %s entry \"%s\"", serv2str[runp->type], str);
 
-	      runp = runp->next;
+	      runp = runp->dellist;
 	    }
 	}
 
