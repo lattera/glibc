@@ -401,7 +401,7 @@ updwtmpx			NEW: Unix98
 user2netname			NEW: Secure RPC
 utmpxname			NEW: Unix98
 versionsort			NEW: GNU ext.
-versionsort64			NEW: LFS
+versionsort64			NEW: GNU ext.
 waitid				NEW: Unix98
 wcscasecmp			NEW: GNU ext.
 wcsncasecmp			NEW: GNU ext.

@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.95";
+static char	elsieid[] = "@(#)zic.c	7.96";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -381,7 +381,7 @@ int	errnum;
 	extern int	sys_nerr;
 
 	return (errnum > 0 && errnum <= sys_nerr) ?
-		sys_errlist[errnum] : "Unknown system error";
+		sys_errlist[errnum] : _("Unknown system error");
 }
 #endif /* !(HAVE_STRERROR - 0) */
 
@@ -430,7 +430,7 @@ const char * const	string;
 {
 	char *	cp;
 
-	cp = ecpyalloc("warning: ");
+	cp = ecpyalloc(_("warning: "));
 	cp = ecatalloc(cp, string);
 	error(cp);
 	ifree(cp);
