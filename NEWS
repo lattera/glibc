@@ -27,7 +27,7 @@ Version 2.2.5
 * Masahide Washizawa contributed iconv modules for IBM1132, IBM1133, IBM1160,
   IBM1161, and IBM1162 charsets.
 
-* Andreas Jaeger contributed a port to x86_64/Linux.
+* Andreas Jaeger contributed a port to x86-64/Linux.
 
 * Peter Bruin contributed a port to PowerPC/Hurd.
 
