@@ -20,7 +20,7 @@ Boston, MA 02111-1307, USA.  */
 
 
 #define LOOKUP_TYPE	struct rpcent
-#define	GETFUNC_NAME	rpcent
+#define	GETFUNC_NAME	getrpcent
 #define BUFLEN		1024
 
 #include "../nss/getXXent.c"

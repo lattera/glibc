@@ -16,12 +16,15 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-#include <rpc/netdb.h>
+#include <netdb.h>
 
 
-#define DATABASE_NAME	rpc
 #define LOOKUP_TYPE	struct rpcent
-#define	GETFUNC_NAME	rpcent
-#define BUFLEN		1024
+#define SETFUNC_NAME	setrpcent
+#define	GETFUNC_NAME	getrpcent
+#define	ENDFUNC_NAME	endrpcent
+#define DATABASE_NAME	rpc
+#define STAYOPEN	int stayopen
+#define STAYOPEN_VAR	stayopen
 
 #include "../nss/getXXent_r.c"

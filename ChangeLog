@@ -1,3 +1,12 @@
+Tue Jun 25 10:58:23 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* inet/getrpcent.c: Fix macros.
+	* inet/getrpcent_r.c: Fix macros.
+
+	* elf/dlsym.c (dlsym): Search the global scope if HANDLE is null.
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Initialize L.
+
 Tue Jun 25 09:55:47 1996  David Mosberger-Tang  <davidm@AZStarNet.com>
 
 	* catgets/gencat.c (write_out): Use %Zu to print variables of type

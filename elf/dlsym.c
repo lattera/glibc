@@ -26,13 +26,25 @@ Cambridge, MA 02139, USA.  */
 void *
 dlsym (void *handle, const char *name)
 {
-  struct link_map *map = handle;
   ElfW(Addr) loadbase;
   const ElfW(Sym) *ref = NULL;
   void doit (void)
     {
-      struct link_map *scope[2] = { map, NULL };
-      loadbase = _dl_lookup_symbol (name, &ref, scope, map->l_name, 0, 0);
+      struct link_map *map = handle, **scope, *mapscope[2] = { map, NULL };
+      const char *owner;
+
+      if (map)
+	{
+	  /* Search the scope of the given object.  */
+	  scope = mapscope;
+	  owner = map->l_name;
+	}
+      else
+	{
+	  scope = &(_dl_global_scope ?: _dl_default_scope)[2];
+	  owner = NULL;
+	}
+      loadbase = _dl_lookup_symbol (name, &ref, scope, owner, 0, 0);
     }
 
   return _dlerror_run (doit) ? NULL : (void *) (loadbase + ref->st_value);

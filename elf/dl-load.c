@@ -70,7 +70,7 @@ struct link_map *
 _dl_map_object_from_fd (const char *name, int fd, char *realname,
 			struct link_map *loader, int l_type)
 {
-  struct link_map *l;
+  struct link_map *l = NULL;
   void *file_mapping = NULL;
   size_t mapping_size = 0;
 
