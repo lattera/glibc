@@ -65,6 +65,7 @@ __poll (fds, nfds, timeout)
 }
 libc_hidden_def (__poll)
 weak_alias (__poll, poll)
+strong_alias (__poll, __libc_poll)
 
 /* Get the emulation code.  */
 # define __poll(fds, nfds, timeout) \

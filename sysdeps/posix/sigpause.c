@@ -54,6 +54,7 @@ __default_sigpause (int mask)
 }
 #undef sigpause
 weak_alias (__default_sigpause, sigpause)
+strong_alias (__default_sigpause, __libc_sigpause)
 
 
 /* We have to provide a default version of this function since the
@@ -64,3 +65,4 @@ __xpg_sigpause (int sig)
 {
   return __sigpause (sig, 1);
 }
+strong_alias (__xpg_sigpause, __libc___xpg_sigpause)

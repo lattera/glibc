@@ -119,3 +119,4 @@ __waitid (idtype, id, infop, options)
   return 0;
 }
 weak_alias (__waitid, waitid)
+strong_alias (__waitid, __libc_waitid)

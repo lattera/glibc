@@ -63,3 +63,4 @@ __pselect (nfds, readfds, writefds, exceptfds, timeout, sigmask)
   return retval;
 }
 weak_alias (__pselect, pselect)
+strong_alias (__pselect, __libc_pselect)

@@ -189,13 +189,14 @@ libpthread {
     __nanosleep;
   }
 
-  # XXX Adjust number for final release.
   GLIBC_2.3.2 {
-    # Proposed API extensions.
-    pthread_tryjoin_np; pthread_timedjoin_np;
+    # The version for these interfaces is fixed.
+    creat; poll; pselect; readv; select; sigpause; sigsuspend;
+    sigwaitinfo; waitid; writev; __xpg_sigpause;
 
-    creat; poll; pselect; readv; select; sigpause; sigsuspend; sigwait;
-    sigwaitinfo; waitid; writev;  __xpg_sigpause;
+    # Proposed API extensions.
+    # XXX Adjust number for final release.
+    pthread_tryjoin_np; pthread_timedjoin_np;
   }
 
   GLIBC_PRIVATE {

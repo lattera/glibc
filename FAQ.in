@@ -87,7 +87,7 @@ understand all the features of ELF, including weak and versioned symbols.
 The static library can be compiled with less featureful tools, but lacks key
 features such as NSS.
 
-For Linux or Hurd, you want binutils 2.10.1 or higher.  These are the only
+For Linux or Hurd, you want binutils 2.13 or higher.  These are the only
 versions we've tested and found reliable.  Other versions may work but we
 don't recommend them, especially not when C++ is involved.
 

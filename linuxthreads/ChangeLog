@@ -1,3 +1,11 @@
+2002-12-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* wrapsyscall.c: Add wrappers for creat, poll, pselect, readv, select,
+	sigpause, __xpg_sigpause, sigsuspend, sigwaitinfo, waitid, and writev.
+	* Versions: Export creat, poll, pselect, readv, select, sigpause,
+	__xpg_sigpause, sigsuspend, sigwaitinfo, waitid, and writev from
+	libpthread in version GLIBC_2.3.2.
+
 2002-12-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/bits/libc-lock.h: Define __rtld_lock_* macros.

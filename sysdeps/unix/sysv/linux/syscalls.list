@@ -4,7 +4,7 @@ adjtimex	adjtime	adjtimex	i:p	__adjtimex	adjtimex ntp_adjtime __adjtimex_interna
 bdflush		EXTRA	bdflush		i:ii	bdflush
 capget		EXTRA	capget		i:pp	capget
 capset		EXTRA	capset		i:pp	capset
-creat		-	creat		i:si	creat
+creat		-	creat		i:si	__libc_creat creat
 create_module	EXTRA	create_module	3	create_module
 delete_module	EXTRA	delete_module	3	delete_module
 fdatasync	-	fdatasync	i:i	fdatasync
@@ -52,7 +52,7 @@ sched_setaffinity -	sched_setaffinity	i:iip	sched_setaffinity
 sched_setp	-	sched_setparam	i:ip	__sched_setparam	sched_setparam
 sched_sets	-	sched_setscheduler	i:iip	__sched_setscheduler	sched_setscheduler
 sched_yield	-	sched_yield	i:	__sched_yield	sched_yield
-select		-	_newselect	i:iPPPP	__select	select
+select		-	_newselect	i:iPPPP	__select	__libc_select select
 sendfile	-	sendfile	i:iipi	sendfile
 sendfile64	-	sendfile64	i:iipi	sendfile64
 setfsgid	EXTRA	setfsgid	i:i	setfsgid

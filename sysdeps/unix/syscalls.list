@@ -35,7 +35,7 @@ readv		-	readv		i:ipi	__readv		readv
 reboot		-	reboot		i:i	reboot
 rename		-	rename		i:ss	rename
 rmdir		-	rmdir		i:s	__rmdir		rmdir
-select		-	select		i:iPPPP	__select	select
+select		-	select		i:iPPPP	__select	__libc_select select
 setdomain	-	setdomainname	i:si	setdomainname
 setegid		-	setegid		i:i	__setegid	setegid
 seteuid		-	seteuid		i:i	__seteuid	seteuid

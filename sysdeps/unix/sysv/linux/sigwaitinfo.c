@@ -46,3 +46,4 @@ weak_alias (__sigwaitinfo, sigwaitinfo)
 #else
 # include <sysdeps/generic/sigwaitinfo.c>
 #endif
+strong_alias (__sigwaitinfo, __libc_sigwaitinfo)

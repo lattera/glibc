@@ -1,3 +1,28 @@
+2002-12-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add __libc_creat and
+	__libc_select aliases.
+
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c: Define __libc_sigwaitinfo
+	alias.
+
+	* sysdeps/unix/sysv/linux/sigwait.c: Define __libc_sigwait alias.
+
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Define __libc_sigsuspend alias.
+
+	* sysdeps/unix/sysv/linux/poll.c: Define __libc_poll alias.
+
+	* sysdeps/unix/syscalls.list: Define __libc_select alias.
+
+	* sysdeps/posix/waitid.c: Define __libc_waitid alias.
+
+	* sysdeps/posix/sigpause.c: Define __libc_sigpause and
+	__libc___xpg_sigpause aliases.
+
+	* sysdeps/generic/pselect.c: Define __libc_pselect alias.
+
+	* misc/error.c: Remove use of USE_IN_LIBIO.
+
 2002-12-08  Roland McGrath  <roland@redhat.com>
 
 	* elf/Makefile (tests): Uncomment tst-array[123].

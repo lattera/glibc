@@ -87,12 +87,10 @@ extern void __error_at_line (int status, int errnum, const char *file_name,
 # define error __error
 # define error_at_line __error_at_line
 
-# ifdef USE_IN_LIBIO
-#  include <libio/iolibio.h>
-#  define fflush(s) INTUSE(_IO_fflush) (s)
-#  undef putc
-#  define putc(c, fp) INTUSE(_IO_putc) (c, fp)
-# endif
+# include <libio/iolibio.h>
+# define fflush(s) INTUSE(_IO_fflush) (s)
+# undef putc
+# define putc(c, fp) INTUSE(_IO_putc) (c, fp)
 
 #else /* not _LIBC */
 
@@ -157,7 +155,7 @@ print_errno_message (int errnum)
     s = _("Unknown system error");
 #endif
 
-#if _LIBC && USE_IN_LIBIO
+#if _LIBC
   if (_IO_fwide (stderr, 0) > 0)
     {
       __fwprintf (stderr, L": %s", s);
@@ -173,7 +171,7 @@ static void
 error_tail (int status, int errnum, const char *message, va_list args)
 {
 # if HAVE_VPRINTF || _LIBC
-#  if _LIBC && USE_IN_LIBIO
+#  if _LIBC
   if (_IO_fwide (stderr, 0) > 0)
     {
 #   define ALLOCA_LIMIT	2000
@@ -224,7 +222,7 @@ error_tail (int status, int errnum, const char *message, va_list args)
   ++error_message_count;
   if (errnum)
     print_errno_message (errnum);
-# if _LIBC && USE_IN_LIBIO
+# if _LIBC
   if (_IO_fwide (stderr, 0) > 0)
     putwc (L'\n', stderr);
   else
@@ -259,17 +257,13 @@ error (status, errnum, message, va_alist)
 
   fflush (stdout);
 #ifdef _LIBC
-# ifdef USE_IN_LIBIO
   _IO_flockfile (stderr);
-# else
-  __flockfile (stderr);
-# endif
 #endif
   if (error_print_progname)
     (*error_print_progname) ();
   else
     {
-#if _LIBC && USE_IN_LIBIO
+#if _LIBC
       if (_IO_fwide (stderr, 0) > 0)
 	__fwprintf (stderr, L"%s: ", program_name);
       else
@@ -293,11 +287,7 @@ error (status, errnum, message, va_alist)
 #endif
 
 #ifdef _LIBC
-# ifdef USE_IN_LIBIO
   _IO_funlockfile (stderr);
-# else
-  __funlockfile (stderr);
-# endif
 #endif
 }
 
@@ -340,17 +330,13 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
 
   fflush (stdout);
 #ifdef _LIBC
-# ifdef USE_IN_LIBIO
   _IO_flockfile (stderr);
-# else
-  __flockfile (stderr);
-# endif
 #endif
   if (error_print_progname)
     (*error_print_progname) ();
   else
     {
-#if _LIBC && USE_IN_LIBIO
+#if _LIBC
       if (_IO_fwide (stderr, 0) > 0)
 	__fwprintf (stderr, L"%s: ", program_name);
       else
@@ -360,7 +346,7 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
 
   if (file_name != NULL)
     {
-#if _LIBC && USE_IN_LIBIO
+#if _LIBC
       if (_IO_fwide (stderr, 0) > 0)
 	__fwprintf (stderr, L"%s:%d: ", file_name, line_number);
       else
@@ -384,11 +370,7 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
 #endif
 
 #ifdef _LIBC
-# ifdef USE_IN_LIBIO
   _IO_funlockfile (stderr);
-# else
-  __funlockfile (stderr);
-# endif
 #endif
 }
 

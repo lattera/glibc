@@ -69,3 +69,4 @@ weak_alias (__sigwait, sigwait)
 #else
 # include <sysdeps/posix/sigwait.c>
 #endif
+strong_alias (__sigwait, __libc_sigwait)
