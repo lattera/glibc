@@ -23,6 +23,7 @@
 #define ELF_MACHINE_NAME "powerpc"
 
 #include <assert.h>
+#include <dl-tls.h>
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
@@ -275,11 +276,22 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
 /* We never want to use a PLT entry as the destination of a
    reloc, when what is being relocated is a branch. This is
    partly for efficiency, but mostly so we avoid loops.  */
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+#define elf_machine_type_class(type)			\
+  ((((type) == R_PPC_JMP_SLOT				\
+    || (type) == R_PPC_REL24				\
+    || (type) == R_PPC_DTPMOD32				\
+    || (type) == R_PPC_DTPREL32				\
+    || (type) == R_PPC_TPREL32				\
+    || (type) == R_PPC_ADDR24) * ELF_RTYPE_CLASS_PLT)	\
+   | (((type) == R_PPC_COPY) * ELF_RTYPE_CLASS_COPY))
+#else
 #define elf_machine_type_class(type) \
   ((((type) == R_PPC_JMP_SLOT				\
     || (type) == R_PPC_REL24				\
     || (type) == R_PPC_ADDR24) * ELF_RTYPE_CLASS_PLT)	\
    | (((type) == R_PPC_COPY) * ELF_RTYPE_CLASS_COPY))
+#endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_PPC_JMP_SLOT
@@ -341,44 +353,29 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  Elf32_Addr *const reloc_addr)
 {
   const Elf32_Sym *const refsym = sym;
-  Elf32_Word finaladdr;
-  const int rinfo = ELF32_R_TYPE (reloc->r_info);
+  Elf32_Addr value;
+  const int r_type = ELF32_R_TYPE (reloc->r_info);
 
-#ifndef RESOLVE_CONFLICT_FIND_MAP
-  if (__builtin_expect (rinfo == R_PPC_NONE, 0))
+  if (r_type == R_PPC_RELATIVE)
+    {
+      *reloc_addr = map->l_addr + reloc->r_addend;
+      return;
+    }
+
+  if (__builtin_expect (r_type == R_PPC_NONE, 0))
     return;
 
-  /* The condition on the next two lines is a hack around a bug in Solaris
-     tools on Sparc.  It's not clear whether it should really be here at all,
-     but if not the binutils need to be changed.  */
-  if (rinfo == R_PPC_RELATIVE
-      || (sym->st_shndx != SHN_UNDEF
-	  && ELF32_ST_BIND (sym->st_info) == STB_LOCAL))
-    {
-      /* Has already been relocated.  */
-      Elf32_Word loadbase = map->l_addr;
-      finaladdr = loadbase + reloc->r_addend;
-    }
-  else
-    {
-      Elf32_Word loadbase
-	= (Elf32_Word) (char *) (RESOLVE (&sym, version,
-					  ELF32_R_TYPE(reloc->r_info)));
-      if (sym == NULL)
-	{
-	  /* Weak symbol that wasn't actually defined anywhere.  */
-	  assert (loadbase == 0);
-	  finaladdr = reloc->r_addend;
-	}
-      else
-	finaladdr = (loadbase + (Elf32_Word) (char *) sym->st_value
-		     + reloc->r_addend);
-    }
+#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+  struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+  value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
 #else
-  finaladdr = reloc->r_addend;
-  if (rinfo == R_PPC_JMP_SLOT)
-    RESOLVE_CONFLICT_FIND_MAP (map, reloc_addr);
+  value = RESOLVE (&sym, version, r_type);
+# ifndef RTLD_BOOTSTRAP
+  if (sym != NULL)
+# endif
+    value += sym->st_value;
 #endif
+  value += reloc->r_addend;
 
   /* A small amount of code is duplicated here for speed.  In libc,
      more than 90% of the relocs are R_PPC_RELATIVE; in the X11 shared
@@ -386,15 +383,55 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
      R_PPC_ADDR32, and 16% are R_PPC_JMP_SLOT (which this routine
      wouldn't usually handle).  As an bonus, doing this here allows
      the switch statement in __process_machine_rela to work.  */
-  if (rinfo == R_PPC_RELATIVE
-      || rinfo == R_PPC_GLOB_DAT
-      || rinfo == R_PPC_ADDR32)
+  switch (r_type)
     {
-      *reloc_addr = finaladdr;
+    case R_PPC_GLOB_DAT:
+    case R_PPC_ADDR32:
+      *reloc_addr = value;
+      break;
+
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+    case R_PPC_DTPMOD32:
+# ifdef RTLD_BOOTSTRAP
+      /* During startup the dynamic linker is always index 1.  */
+      *reloc_addr = 1;
+# else
+      /* Get the information from the link map returned by the
+	 RESOLVE_MAP function.  */
+      if (sym_map != NULL)
+	*reloc_addr = sym_map->l_tls_modid;
+# endif
+      break;
+    case R_PPC_DTPREL32:
+      /* During relocation all TLS symbols are defined and used.
+	 Therefore the offset is already correct.  */
+# ifndef RTLD_BOOTSTRAP
+      *reloc_addr = TLS_DTPREL_VALUE (sym, reloc);
+# endif
+      break;
+    case R_PPC_TPREL32:
+# ifndef RTLD_BOOTSTRAP
+      if (sym_map)
+	{
+	  CHECK_STATIC_TLS (map, sym_map);
+# endif
+	  *reloc_addr = TLS_TPREL_VALUE (sym_map, sym, reloc);
+# ifndef RTLD_BOOTSTRAP
+	}
+# endif
+      break;
+#endif /* USE_TLS etc. */
+
+#ifdef RESOLVE_CONFLICT_FIND_MAP
+    case R_PPC_JMP_SLOT:
+      RESOLVE_CONFLICT_FIND_MAP (map, reloc_addr);
+      /* FALLTHROUGH */
+#endif
+
+    default:
+      __process_machine_rela (map, reloc, sym, refsym,
+			      reloc_addr, value, r_type);
     }
-  else
-    __process_machine_rela (map, reloc, sym, refsym,
-			    reloc_addr, finaladdr, rinfo);
 }
 
 static inline void

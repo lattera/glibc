@@ -1,4 +1,24 @@
 #include <sysdep.h>
 #include <tls.h>
 
-MULTIPLE_THREADS_OFFSET		offsetof (tcbhead_t, multiple_threads)
+--
+
+-- This could go into powerpc32/ instead and conditionalize #include of it.
+#ifndef __powerpc64__
+
+# ifdef USE_TLS
+
+-- Abuse tls.h macros to derive offsets relative to the thread register.
+#  undef __thread_register
+#  define __thread_register	((void *) 0)
+#  define thread_offsetof(mem)	((void *) &THREAD_SELF->p_##mem - (void *) 0)
+
+# else
+
+#  define thread_offsetof(mem)	offsetof (tcbhead_t, mem)
+
+# endif
+
+MULTIPLE_THREADS_OFFSET		thread_offsetof (multiple_threads)
+
+#endif

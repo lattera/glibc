@@ -23,6 +23,7 @@
 #include <stdint.h>
 #include <sys/types.h>
 #include <hp-timing.h>
+#include <tls.h>
 
 /* Fast thread-specific data internal to libc.  */
 enum __libc_tsd_key_t { _LIBC_TSD_KEY_MALLOC = 0,
@@ -106,11 +107,14 @@ typedef struct _pthread_rwlock_info {
 
 union dtv;
 
-
-struct _pthread_descr_struct {
-  /* XXX Remove this union for IA-64 style TLS module */
-  union {
-    struct {
+struct _pthread_descr_struct
+{
+#if !defined USE_TLS || !TLS_DTV_AT_TP
+  /* This overlaps tcbhead_t (see tls.h), as used for TLS without threads.  */
+  union
+  {
+    struct
+    {
       void *tcb;		/* Pointer to the TCB.  This is not always
 				   the address of this thread descriptor.  */
       union dtv *dtvp;
@@ -122,6 +126,11 @@ struct _pthread_descr_struct {
     } data;
     void *__padding[16];
   } p_header;
+# define p_multiple_threads p_header.data.multiple_threads
+#elif TLS_MULTIPLE_THREADS_IN_TCB
+  int p_multiple_threads;
+#endif
+
   pthread_descr p_nextlive, p_prevlive;
                                 /* Double chaining of active threads */
   pthread_descr p_nextwaiting;  /* Next element in the queue holding the thr */

@@ -1,5 +1,5 @@
 /* Get address of thread local variable.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2002.
 
@@ -18,8 +18,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-
-#include "link.h"
+#include <stddef.h>
+#include <link.h>
 #include "thread_dbP.h"
 
 /* Value used for dtv entries for which the allocation is delayed.  */
@@ -38,10 +38,17 @@ td_thr_tls_get_addr (const td_thrhandle_t *th __attribute__ ((unused)),
 
   LOG ("td_thr_tls_get_addr");
 
+  psaddr_t dtvpp = th->th_unique;
+#if TLS_TCB_AT_TP
+  dtvpp += offsetof (struct _pthread_descr_struct, p_header.data.dtvp);
+#elif TLS_DTV_AT_TP
+  dtvpp += TLS_PRE_TCB_SIZE + offsetof (tcbhead_t, dtv);
+#else
+# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined."
+#endif
+
   /* Get the DTV pointer from the thread descriptor.  */
-  if (ps_pdread (th->th_ta_p->ph,
-		 &((struct _pthread_descr_struct *) th->th_unique)->p_header.data.dtvp,
-		 &dtvp, sizeof dtvp) != PS_OK)
+  if (ps_pdread (th->th_ta_p->ph, dtvpp, &dtvp, sizeof dtvp) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
   /* Read the module ID from the link_map.  */

@@ -32,15 +32,6 @@ typedef union dtv
   void *pointer;
 } dtv_t;
 
-typedef struct
-{
-  void *tcb;		/* Pointer to the TCB.  Not necessary the
-			   thread descriptor used by libpthread.  */
-  dtv_t *dtv;
-  void *self;		/* Pointer to the thread descriptor.  */
-  int multiple_threads;
-} tcbhead_t;
-
 #else /* __ASSEMBLER__ */
 # include <tcb-offsets.h>
 #endif /* __ASSEMBLER__ */
@@ -51,6 +42,14 @@ typedef struct
 # define USE_TLS	1
 
 # ifndef __ASSEMBLER__
+
+/* This layout is actually wholly private and not affected by the ABI.
+   Nor does it overlap the pthread data structure, so we need nothing
+   extra here at all.  */
+typedef struct
+{
+  dtv_t *dtv;
+} tcbhead_t;
 
 /* This is the size of the initial TCB.  */
 #  define TLS_INIT_TCB_SIZE	sizeof (tcbhead_t)
@@ -67,12 +66,12 @@ typedef struct
 /* This is the size we need before TCB.  */
 #  define TLS_PRE_TCB_SIZE	sizeof (struct _pthread_descr_struct)
 
-/* The following assumes that TP (R13) is points to the end of the
+/* The following assumes that TP (R2 or R13) is points to the end of the
    TCB + 0x7000 (per the ABI).  This implies that TCB address is
-   R13-(TLS_TCB_SIZE + 0x7000).  As we define TLS_DTV_AT_TP we can
+   TP-(TLS_TCB_SIZE + 0x7000).  As we define TLS_DTV_AT_TP we can
    assume that the pthread_descr is allocated immediately ahead of the
    TCB.  This implies that the pthread_descr address is
-   R13-(TLS_PRE_TCB_SIZE + TLS_TCB_SIZE + 0x7000).  */
+   TP-(TLS_PRE_TCB_SIZE + TLS_TCB_SIZE + 0x7000).  */
 #  define TLS_TCB_OFFSET	0x7000
 
 /* The DTV is allocated at the TP; the TCB is placed elsewhere.  */
@@ -99,7 +98,7 @@ typedef struct
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(TCBP, SECONDCALL) \
-    (__thread_register = (void *) (TCBP) + TLS_TCB_OFFSET + TLS_TCB_SIZE, 0)
+    (__thread_register = (void *) (TCBP) + TLS_TCB_OFFSET + TLS_TCB_SIZE, NULL)
 
 /* Return the address of the dtv for the current thread.  */
 #  define THREAD_DTV() \
@@ -116,30 +115,36 @@ typedef struct
      (__thread_register = ((void *) (DESCR) \
 		           + TLS_TCB_OFFSET + TLS_TCB_SIZE + TLS_PRE_TCB_SIZE))
 
+/* Make sure we have the p_multiple_threads member in the thread structure.
+   See below.  */
+#  ifndef __powerpc64__
+#   define TLS_MULTIPLE_THREADS_IN_TCB 1
+#  endif
+
 /* Get the thread descriptor definition.  */
 #  include <linuxthreads/descr.h>
 
-/* Generic bits of LinuxThreads may call these macros with
-   DESCR set to NULL.  We are expected to be able to reference
-   the "current" value.  */
-
-#  define THREAD_GETMEM(descr, member) \
-     ((void) sizeof (descr), THREAD_SELF->member)
-#  define THREAD_SETMEM(descr, member, value) \
-     ((void) sizeof (descr), THREAD_SELF->member = (value))
-
-#define THREAD_GETMEM_NC(descr, member) THREAD_GETMEM (descr, member)
-#define THREAD_SETMEM_NC(descr, member, value) \
-  THREAD_SETMEM ((descr), member, (value))
-
 # endif /* __ASSEMBLER__ */
 
-#else /* Not HAVE_TLS_SUPPORT.  */
+#elif !defined __ASSEMBLER__ && !defined __powerpc64__
+
+/* This overlaps the start of the pthread_descr.  On PPC32, system
+   calls and such use this to find the multiple_threads flag and need
+   to use the same offset relative to the thread register in both
+   single-threaded and multi-threaded code.  On PPC64, the global
+   variable is always used, so single-threaded code without TLS
+   never needs to initialize the thread register at all.  */
+typedef struct
+{
+  void *tcb;			/* Never used.  */
+  dtv_t *dtv;			/* Never used.  */
+  void *self;			/* Used only if multithreaded, and rarely.  */
+  int multiple_threads;		/* Only this member is really used.  */
+} tcbhead_t;
 
 #define NONTLS_INIT_TP							\
   do {									\
-    static const tcbhead_t nontls_init_tp				\
-      = { .multiple_threads = 0 };					\
+    static const tcbhead_t nontls_init_tp = { .multiple_threads = 0 };	\
     __thread_self = (__typeof (__thread_self)) &nontls_init_tp;		\
   } while (0)
 

@@ -121,8 +121,7 @@
 # ifndef __ASSEMBLER__
 #  if defined FLOATING_STACKS && USE___THREAD && defined PIC
 #   define SINGLE_THREAD_P \
-  __builtin_expect (THREAD_GETMEM (THREAD_SELF,				      \
-				   p_header.data.multiple_threads) == 0, 1)
+  __builtin_expect (THREAD_GETMEM (THREAD_SELF, p_multiple_threads) == 0, 1)
 #  else
 extern int __local_multiple_threads attribute_hidden;
 #   define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)

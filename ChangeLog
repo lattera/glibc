@@ -1,4 +1,25 @@
-2003-03-01  Roland McGrath  <roland@redhat.com>
+2003-03-02  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_fixup_plt):
+	Don't use weak_extern for dl_rtld_map.  Instead check only if [SHARED].
+	(elf_machine_rela): Clean up.
+
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela): Clean up.
+
+	PowerPC TLS support contributed by Paul Mackerras <paulus@samba.org>.
+	* sysdeps/powerpc/powerpc32/elf/configure.in: New file.
+	* sysdeps/powerpc/powerpc32/elf/configure: New generated file.
+	* elf/tls-macros.h [__powerpc__ && !__powerpc64__]
+	(TLS_LE, TLS_IE, TLS_LD, TLS_GD): Define them.
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela): Support
+	new relocs for TLS.
+
+	* sysdeps/powerpc/dl-tls.h (TLS_TP_OFFSET, TLS_DTV_OFFSET): Move these
+	macros out of [SHARED].
+	(TLS_TPREL_VALUE, TLS_DTPREL_VALUE): New macros.
+
+	* elf/elf.h: Define R_PPC_* relocs for TLS support.
+	Clean up R_PPC64_* macro definition comments.
 
 	* configure.in: In "running configure fragment for" message,
 	omit $srcdir from the name if we prepended it.

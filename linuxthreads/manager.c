@@ -638,13 +638,13 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread_id = sseg + pthread_threads_counter;
   /* Initialize the thread descriptor.  Elements which have to be
      initialized to zero already have this value.  */
-#if defined USE_TLS && TLS_DTV_AT_TP
-  new_thread->p_header.data.tcb = new_thread + 1;
-#else
+#if !defined USE_TLS || !TLS_DTV_AT_TP
   new_thread->p_header.data.tcb = new_thread;
-#endif
   new_thread->p_header.data.self = new_thread;
-  new_thread->p_header.data.multiple_threads = 1;
+#endif
+#if TLS_MULTIPLE_THREADS_IN_TCB || !defined USE_TLS || !TLS_DTV_AT_TP
+  new_thread->p_multiple_threads = 1;
+#endif
   new_thread->p_tid = new_thread_id;
   new_thread->p_lock = &(__pthread_handles[sseg].h_lock);
   new_thread->p_cancelstate = PTHREAD_CANCEL_ENABLE;

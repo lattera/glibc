@@ -98,6 +98,8 @@ typedef struct
 #  define INIT_THREAD_SELF(descr, nr) \
   (__thread_self = (struct _pthread_descr_struct *)(descr) + 1)
 
+# define TLS_MULTIPLE_THREADS_IN_TCB 1
+
 /* Get the thread descriptor definition.  */
 #  include <linuxthreads/descr.h>
 

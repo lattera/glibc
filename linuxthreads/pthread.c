@@ -566,8 +566,10 @@ int __pthread_initialize_manager(void)
 #endif
 
   __pthread_multiple_threads = 1;
-  __pthread_main_thread->p_header.data.multiple_threads = 1;
-  * __libc_multiple_threads_ptr = 1;
+#if TLS_MULTIPLE_THREADS_IN_TCB || !defined USE_TLS || !TLS_DTV_AT_TP
+  __pthread_main_thread->p_multiple_threads = 1;
+#endif
+  *__libc_multiple_threads_ptr = 1;
 
 #ifndef HAVE_Z_NODELETE
   if (__builtin_expect (&__dso_handle != NULL, 1))
@@ -611,9 +613,13 @@ int __pthread_initialize_manager(void)
   __pthread_handles[1].h_descr = manager_thread = mgr;
 
   /* Initialize the descriptor.  */
+#if !defined USE_TLS || !TLS_DTV_AT_TP
   mgr->p_header.data.tcb = tcbp;
   mgr->p_header.data.self = mgr;
   mgr->p_header.data.multiple_threads = 1;
+#elif TLS_MULTIPLE_THREADS_IN_TCB
+  mgr->p_multiple_threads = 1;
+#endif
   mgr->p_lock = &__pthread_handles[1].h_lock;
 # ifndef HAVE___THREAD
   mgr->p_errnop = &mgr->p_errno;

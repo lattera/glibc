@@ -1,4 +1,32 @@
-2003-02-27  Roland McGrath  <roland@redhat.com>
+2003-03-01  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/pt-machine.h
+	(THREAD_GETMEM, THREAD_GETMEM_NC, THREAD_SETMEM, THREAD_SETMEM_NC):
+	New macros.
+	* sysdeps/powerpc/tls.h: Don't define those here.
+
+	* sysdeps/powerpc/tls.h [! USE_TLS && !__powerpc64__]: Define
+	tcbhead_t with multiple_threads member.
+	[USE_TLS] (tcbhead_t): Define minimal one-word version.
+	[USE_TLS && !__powerpc64__] (TLS_MULTIPLE_THREADS_IN_TCB): Define.
+	* sysdeps/powerpc/tcb-offsets.sym [USE_TLS]: Use tls.h macros to
+	derive thread register offset of p_multiple_threads member.
+
+	* descr.h (struct _pthread_descr_struct) [!USE_TLS || !TLS_DTV_AT_TP]:
+	Conditionalize p_header member on this.
+	[TLS_MULTIPLE_THREADS_IN_TCB]: Add p_multiple_threads alternatively.
+	* sysdeps/ia64/tls.h [USE_TLS] (TLS_MULTIPLE_THREADS_IN_TCB): Define.
+	* sysdeps/sh/tls.h: Likewise.
+	* sysdeps/ia64/tcb-offsets.sym [USE_TLS]: Use p_multiple_threads.
+	* sysdeps/sh/tcb-offsets.sym: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h
+	(SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h
+	(SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h
+	(SINGLE_THREAD_P): Likewise.
+	* pthread.c (__pthread_initialize_manager): Likewise.
+	* manager.c (pthread_handle_create): Likewise.
 
 	* sysdeps/powerpc/tls.h [HAVE_TLS_SUPPORT]: Define USE_TLS and all
 	related macros.

@@ -1,3 +1,10 @@
+2003-02-27  Roland McGrath  <roland@redhat.com>
+
+	* td_thr_tls_get_addr.c (td_thr_tls_get_addr): Handle TLS_DTV_AT_TP.
+
+	* td_ta_thr_iter.c (handle_descr) [!defined USE_TLS || !TLS_DTV_AT_TP]:
+	Conditionalize p_header use on this.
+
 2003-01-29  Roland McGrath  <roland@redhat.com>
 
 	* td_ta_new.c (td_ta_new): Cap the `sizeof_descr' value read from the

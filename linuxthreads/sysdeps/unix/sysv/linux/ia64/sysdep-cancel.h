@@ -101,8 +101,7 @@ __syscall_error_##args:							      \
 
 # ifndef __ASSEMBLER__
 #  define SINGLE_THREAD_P \
-  __builtin_expect (THREAD_GETMEM (THREAD_SELF,				      \
-				   p_header.data.multiple_threads) == 0, 1)
+  __builtin_expect (THREAD_GETMEM (THREAD_SELF, p_multiple_threads) == 0, 1)
 # else
 #  define SINGLE_THREAD_P \
   adds r14 = MULTIPLE_THREADS_OFFSET, r13 ;; ld4 r14 = [r14] ;; cmp4.ne p6, p7 = 0, r14

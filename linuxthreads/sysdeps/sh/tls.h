@@ -112,6 +112,8 @@ typedef struct
      __asm __volatile ("ldc %0,gbr" : : "r" (__self + 1));		      \
      0; })
 
+# define TLS_MULTIPLE_THREADS_IN_TCB 1
+
 /* Get the thread descriptor definition.  This must be after the
    the definition of THREAD_SELF for TLS.  */
 #  include <linuxthreads/descr.h>
