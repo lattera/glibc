@@ -36,4 +36,4 @@ _setjmp:
 	ldi	0, %r25
 
 	.procend
-strong_alias (_setjmp, __GI__setjmp)
+libc_hidden_def (_setjmp)

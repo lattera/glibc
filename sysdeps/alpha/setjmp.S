@@ -77,7 +77,7 @@ ENTRY(_setjmp)
 	mov	0, a1
 	br	$sigsetjmp_local
 END(_setjmp)
-strong_alias (_setjmp, __GI__setjmp)
+libc_hidden_def (_setjmp)
 
 ENTRY(setjmp)
 	ldgp	gp, 0(pv)

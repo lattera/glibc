@@ -27,6 +27,6 @@ SYSCALL__ (fork, 0)
 parent:
 	ret
 	.end __fork
-strong_alias (__fork, __GI___fork)
+libc_hidden_def (__fork)
 
 weak_alias (__fork, fork)

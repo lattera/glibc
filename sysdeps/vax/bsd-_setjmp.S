@@ -30,4 +30,4 @@ ENTRY (_setjmp)
 	pushl r1		/* Push back first argument.  */
 	pushl r0		/* Push back return PC.  */
 	jmp C_SYMBOL_NAME (__sigsetjmp)
-strong_alias (_setjmp, __GI__setjmp)
+libc_hidden_def (_setjmp)

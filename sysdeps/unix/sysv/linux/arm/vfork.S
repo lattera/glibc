@@ -46,6 +46,6 @@ ENTRY (__vfork)
     	b	PLTJMP(C_SYMBOL_NAME(__syscall_error))
 
 PSEUDO_END (__vfork)
-strong_alias (__vfork, __GI___vfork)
+libc_hidden_def (__vfork)
 
 weak_alias (__vfork, vfork)

@@ -31,6 +31,6 @@ parent:
 	ret
 	nop
 	.end __vfork
-strong_alias (__vfork, __GI___vfork)
+libc_hidden_def (__vfork)
 
 weak_alias (__vfork, vfork)

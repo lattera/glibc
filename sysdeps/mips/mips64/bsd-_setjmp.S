@@ -34,4 +34,4 @@ ENTRY (_setjmp)
 	nop
 	jr t9
 	dli a1, 0		/* Pass a second argument of zero.  */
-strong_alias (_setjmp, __GI__setjmp)
+libc_hidden_def (_setjmp)
