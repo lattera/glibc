@@ -128,6 +128,7 @@
 
 #define ret			br.ret.sptk.few b0
 #define ret_NOERRNO		ret
+#define ret_ERRVAL		ret
 
 #else /* not __ASSEMBLER__ */
 

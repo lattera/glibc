@@ -12,3 +12,7 @@ endif
 ifeq ($(subdir),resource)
 sysdep_routines += oldgetrlimit64
 endif
+
+ifeq ($(subdir),io)
+sysdep_routines += posix_fadvise64_64
+endif

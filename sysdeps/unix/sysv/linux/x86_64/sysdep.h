@@ -98,18 +98,20 @@
 #define	PSEUDO_END_NOERRNO(name) \
   END (name)
 
+#define ret_NOERRNO ret
+
 #undef	PSEUDO_ERRVAL
 #define	PSEUDO_ERRVAL(name, syscall_name, args) \
   .text;								      \
   ENTRY (name)								      \
     DO_CALL (syscall_name, args);					      \
-    negl %rax
+    negq %rax
 
 #undef	PSEUDO_END_ERRVAL
 #define	PSEUDO_END_ERRVAL(name) \
   END (name)
 
-#define ret_NOERRNO ret
+#define ret_ERRVAL ret
 
 #ifndef PIC
 #define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */

@@ -1,13 +1,10 @@
 2003-08-15  Ulrich Drepper  <drepper@redhat.com>
 
-	* io/Versions [GLIBC_2.3.3]: Add posix_fadvise64.
 	* io/fcntl.h (posix_fadvise64): Change type of third parameter to
 	off_t.
 	* sysdeps/unix/sysv/linux/posix_fadvise.c: Adjust definition.
 	* sysdeps/unix/make-syscalls.sh: Recognize V prefix to the parameter
 	description indicating the error value is returned, not -1.
-	* sysdeps/unix/sysv/linux/Makefile [subdir=io] (subdir_routines): Add
-	posix_fadvise64_64.
 	* sysdeps/unix/sysv/linux/kernel-features.h: Add definition of
 	__ASSUME_FADVISE64_64_SYSCALL.
 	* sysdeps/unix/sysv/linux/syscalls.list: Don't define madvise and
@@ -15,20 +12,20 @@
 	value returned.
 	Define posix_fadvise64_64 entry.  Add version info to posix_fadvise64
 	entry.
-	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Define
-	posix_fadvise64_64 entry.  Add version info to posix_fadvise64 entry.
-	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Likewise.
-	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Likewise.
 	* sysdeps/unix/sysv/linux/i386/posix_fadvise.S: New file.
 	* sysdeps/unix/sysv/linux/i386/sysdep.h: Define PSEUDO_ERRVAL,
 	PSEUDO_END_ERRVAL, and ret_ERRVAL.
 	* sysdeps/unix/sysv/linux/ia64/sysdep.h: Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Versions [GLIBC_2.3.3]: Add
+	posix_fadvise64.
 
 	* posix/Makefile (routines): Add posix_madvise.
 	* sysdeps/generic/madvise.c: Don't define posix_madvise.
 	* sysdeps/generic/posix_madvise.c: New file.
 	* sysdeps/unix/sysv/aix/posix_madvise.c: New file.
+	* sysdeps/unix/sysv/linux/i386/Makefile [subdir=io] (subdir_routines):
+	Add posix_fadvise64_64.
 
 2003-08-15  Jakub Jelinek  <jakub@redhat.com>
 

@@ -116,3 +116,5 @@ L(overflow):
 #endif
 
 PSEUDO_END_NOERRNO (BP_SYM (__posix_fadvise64_l64))
+
+default_symbol_version (__posix_fadvise64_l64, posix_fadvise64, GLIBC_2.3.3)
