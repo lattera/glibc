@@ -1,3 +1,18 @@
+2000-03-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/Makefile (distribute): Add dep1.c, dep2.c, dep3.c, and dep4.c.
+	(tests): Add order.
+	(module-names): Add dep1, dep2, dep3, and dep4.
+	Add dependencies for dep* modules and order.
+	Define rule for order.out which checks the result.
+	* elf/dep1.c: New file.
+	* elf/dep2.c: New file.
+	* elf/dep3.c: New file.
+	* elf/dep4.c: New file.
+	* elf/order.c: New file.
+
+	* elf/dl-init.c: Fix type in comment.
+
 2000-03-31  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/dl-machine.h (RTLD_START): Rewritten to match new

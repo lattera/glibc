@@ -111,7 +111,7 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
 	  init (argc, argv, env);
 	}
 
-      /* Next see whether there is an array with initialiazation functions.  */
+      /* Next see whether there is an array with initialization functions.  */
       if (l->l_info[DT_INIT_ARRAY] != NULL)
 	{
 	  unsigned int j;
