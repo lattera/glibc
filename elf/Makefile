@@ -69,7 +69,9 @@ distribute	:= rtld-Rules \
 		   unwind-dw2.c unwind-dw2-fde.c unwind.h unwind-pe.h \
 		   unwind-dw2-fde.h dwarf2.h dl-procinfo.c tls.h dl-tls.h \
 		   tst-tlsmod1.c tst-tlsmod2.c tst-tlsmod3.c tst-tlsmod4.c \
-		   tst-tlsmod5.c tst-tlsmod6.c \
+		   tst-tlsmod5.c tst-tlsmod6.c tst-tlsmod7.c tst-tlsmod8.c \
+		   tst-tlsmod9.c tst-tlsmod10.c tst-tlsmod11.c \
+		   tst-tlsmod12.c tst-tls10.h \
 		   circlemod1.c circlemod1a.c circlemod2.c circlemod2a.c \
 		   circlemod3.c circlemod3a.c nodlopenmod2.c \
 		   tls-macros.h \
@@ -142,7 +144,8 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 $(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
 	 neededtest3 neededtest4 unload2 lateglobal initfirst global \
 	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
-	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8
+	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
+	 tst-tls10 tst-tls11 tst-tls12
 #	 reldep9
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
@@ -163,7 +166,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 	        reldep6mod0 reldep6mod1 reldep6mod2 reldep6mod3 reldep6mod4 \
 		reldep7mod1 reldep7mod2 \
 		tst-tlsmod1 tst-tlsmod2 tst-tlsmod3 tst-tlsmod4 \
-		tst-tlsmod5 tst-tlsmod6 \
+		tst-tlsmod5 tst-tlsmod6 tst-tlsmod7 tst-tlsmod8 \
+		tst-tlsmod9 tst-tlsmod10 tst-tlsmod11 tst-tlsmod12 \
 		circlemod1 circlemod1a circlemod2 circlemod2a \
 		circlemod3 circlemod3a \
 		reldep8mod1 reldep8mod2 reldep8mod3 \
@@ -376,6 +380,9 @@ $(objpfx)reldep6mod2.so: $(objpfx)reldep6mod1.so
 $(objpfx)reldep6mod3.so: $(objpfx)reldep6mod2.so
 $(objpfx)reldep6mod4.so: $(objpfx)reldep6mod1.so
 $(objpfx)tst-tlsmod3.so: $(objpfx)tst-tlsmod2.so
+$(objpfx)tst-tlsmod8.so: $(objpfx)tst-tlsmod7.so
+$(objpfx)tst-tlsmod10.so: $(objpfx)tst-tlsmod9.so
+$(objpfx)tst-tlsmod12.so: $(objpfx)tst-tlsmod11.so
 # For tst-tls9-static, make sure the modules it dlopens have libc.so in DT_NEEDED
 $(objpfx)tst-tlsmod5.so: $(common-objpfx)libc.so
 $(objpfx)tst-tlsmod6.so: $(common-objpfx)libc.so
@@ -576,6 +583,12 @@ $(objpfx)tst-tls8.out: $(objpfx)tst-tlsmod3.so $(objpfx)tst-tlsmod4.so
 
 $(objpfx)tst-tls9: $(libdl)
 $(objpfx)tst-tls9.out: $(objpfx)tst-tlsmod5.so $(objpfx)tst-tlsmod6.so
+
+$(objpfx)tst-tls10: $(objpfx)tst-tlsmod8.so
+
+$(objpfx)tst-tls11: $(objpfx)tst-tlsmod10.so
+
+$(objpfx)tst-tls12: $(objpfx)tst-tlsmod12.so
 
 ifdef libdl
 $(objpfx)tst-tls9-static: $(common-objpfx)dlfcn/libdl.a

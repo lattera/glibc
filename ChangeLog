@@ -1,4 +1,35 @@
+2003-04-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile (distribute): Add tst-tlsmod{[7-9],1[0-2]}.c and
+	tst-tls10.h.
+	(tests): Add tst-tls1[0-2].
+	(modules-names): Add tst-tlsmod{[7-8],1[0-2]}.
+	($(objpfx)tst-tlsmod8.so): Depend on tst-tlsmod7.so.
+	($(objpfx)tst-tlsmod10.so): Depend on tst-tlsmod9.so.
+	($(objpfx)tst-tlsmod12.so): Depend on tst-tlsmod11.so.
+	($(objpfx)tst-tls10): Depend on tst-tlsmod8.so.
+	($(objpfx)tst-tls11): Depend on tst-tlsmod10.so.
+	($(objpfx)tst-tls12): Depend on tst-tlsmod12.so.
+	* elf/tst-tls10.c: New test.
+	* elf/tst-tls11.c: New test.
+	* elf/tst-tls12.c: New test.
+	* elf/tst-tls10.h: New file.
+	* elf/tst-tlsmod7.c: New file.
+	* elf/tst-tlsmod8.c: New file.
+	* elf/tst-tlsmod9.c: New file.
+	* elf/tst-tlsmod10.c: New file.
+	* elf/tst-tlsmod11.c: New file.
+	* elf/tst-tlsmod12.c: New file.
+
+2003-04-15  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/bits/atomic.h: Moved ppc32/64 specific code to ...
+	* sysdeps/powerpc/powerpc32/bits/atomic.h: New file.
+	* sysdeps/powerpc/powerpc64/bits/atomic.h: New file.
+
 2003-04-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.h: Include <sys/types.h>.
 
 	* signal/sigrelse.c (sigrelse): Use sigdelset and not __sigdelset.
 	The signal number must be checked.
