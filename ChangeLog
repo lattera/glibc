@@ -1,5 +1,15 @@
 1998-03-31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/generic/dl-sysdep.c (_dl_important_hwcaps): Fix typo.
+
+	* iconvdata/gap.pl: Avoid using %#06x.
+
+1998-03-31 19:55  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* Makerules: Use $? instead of S^ when invoking ar.
+
+1998-03-31  Ulrich Drepper  <drepper@cygnus.com>
+
 	* db2/compat.h: Allow EFTYPE being defined.
 	* sysdeps/unix/bsd/bits/signum.h: Add definition for SIG_HOLD.
 	* sysdeps/unix/bsd/ulimit.c: Include <ulimit.h>.

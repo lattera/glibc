@@ -335,7 +335,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
     total = temp[0].len;
   else
     {
-      total = (1 << (cnt - 2)) * (temp[0].len = temp[cnt - 1].len + 2);
+      total = (1 << (cnt - 2)) * (temp[0].len + temp[cnt - 1].len + 2);
       for (n = 1; n + 1 < cnt; ++n)
 	total += (1 << (cnt - 3)) * (temp[n].len + 1);
     }

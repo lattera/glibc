@@ -576,7 +576,7 @@ define do-ar
 topdir=`cd $(..).; pwd`; \
 $(patsubst %/,cd %;,$(objpfx)) \
 $(SHELL) $$topdir/autolock.sh ${O%-lib}.lck $(AR) $(CREATE_ARFLAGS) ${O%-lib} \
-						  $(patsubst $(objpfx)%,%,$^)
+						  $(patsubst $(objpfx)%,%,$?)
 rm -f $@
 touch $@
 endef
