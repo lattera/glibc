@@ -19,7 +19,9 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#ifndef NO_SGIDEFS_H
 #include <sgidefs.h>
+#endif
 #include <unistd.h>
 #include <endian.h>
 
@@ -28,9 +30,6 @@
 #include <bp-checks.h>
 
 #include <kernel-features.h>
-#ifndef NO_SGIDEFS_H
-#include <sgidefs.h>
-#endif
 
 #ifdef __NR_pread64             /* Newer kernels renamed but it's the same.  */
 # ifdef __NR_pread
