@@ -45,7 +45,10 @@ _dl_map_object_deps (struct link_map *map,
     }
 
   /* Terminate the list.  */
-  head[nlist++].next = NULL;
+  head[nlist].next = NULL;
+
+  /* Start here for adding dependencies to the list.  */
+  tailp = &head[nlist++];
 
   /* We use `l_reserved' as a mark bit to detect objects we have already
      put in the search list and avoid adding duplicate elements later in
@@ -56,7 +59,7 @@ _dl_map_object_deps (struct link_map *map,
      dependencies and appending them to the list as we step through it.
      This produces a flat, ordered list that represents a breadth-first
      search of the dependency tree.  */
-  for (scanp = tailp = head; scanp; scanp = scanp->next)
+  for (scanp = head; scanp; scanp = scanp->next)
     {
       struct link_map *l = scanp->map;
 

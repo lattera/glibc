@@ -151,14 +151,20 @@ subdir_%: % ;
 # For targets we don't define, do nothing.
 subdir_%: ;
 
+# These are targets that each glibc subdirectory is expected to understand.
+# ../Rules defines them for code subdirectories; for us, they are no-ops.
+glibc-targets	:= subdir_lib objects objs others tests subdir_lint.out \
+		   subdir_echo-headers subdir_echo-distinfo stubs
+.PHONY: $(glibc-targets)
+$(glibc-targets):
+
 # Create stamp files if they don't exist, so the parent makefile's rules for
 # updating the library archives are happy with us, and never think we have
 # changed the library.
-.PHONY: lib stubs
 lib: $(foreach o,$(object-suffixes),$(objpfx)stamp$o-$(subdir))
 stubs: $(common-objpfx)stub-manual
-$(objpfx)stamp%-$(subdir) $(common-objpfx)stub-manual ../po/manual.pot:
-	cp /dev/null $@
+$(common-objpfx)stub-manual ../po/manual.pot:; cp /dev/null $@
+$(objpfx)stamp%-$(subdir):; cp /dev/null $@
 
 # The top-level glibc Makefile expects subdir_install to update the stubs file.
 subdir_install: stubs

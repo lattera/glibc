@@ -120,7 +120,7 @@ tan (double __x)
   register double __value;
   __asm __volatile__
     ("fptan"
-     : "=u" (__value) : "t" (__x));
+     : "=t" (__value) : "0" (__x));
 
   return __value;
 }
@@ -334,13 +334,13 @@ __MATH_INLINE double
 floor (double __x)
 {
   register double __value;
-  volatile short __cw, __cwtmp;
+  __volatile unsigned short int __cw, __cwtmp;
 
-  __asm volatile ("fnstcw %0" : "=m" (__cw));
+  __asm __volatile ("fnstcw %0" : "=m" (__cw));
   __cwtmp = (__cw & 0xf3ff) | 0x0400; /* rounding down */
-  __asm volatile ("fldcw %0" : : "m" (__cwtmp));
-  __asm volatile ("frndint" : "=t" (__value) : "0" (__x));
-  __asm volatile ("fldcw %0" : : "m" (__cw));
+  __asm __volatile ("fldcw %0" : : "m" (__cwtmp));
+  __asm __volatile ("frndint" : "=t" (__value) : "0" (__x));
+  __asm __volatile ("fldcw %0" : : "m" (__cw));
 
   return __value;
 }
@@ -350,13 +350,13 @@ __MATH_INLINE double
 ceil (double __x)
 {
   register double __value;
-  volatile short __cw, __cwtmp;
+  __volatile unsigned short int __cw, __cwtmp;
 
-  __asm volatile ("fnstcw %0" : "=m" (__cw));
+  __asm __volatile ("fnstcw %0" : "=m" (__cw));
   __cwtmp = (__cw & 0xf3ff) | 0x0800; /* rounding up */
-  __asm volatile ("fldcw %0" : : "m" (__cwtmp));
-  __asm volatile ("frndint" : "=t" (__value) : "0" (__x));
-  __asm volatile ("fldcw %0" : : "m" (__cw));
+  __asm __volatile ("fldcw %0" : : "m" (__cwtmp));
+  __asm __volatile ("frndint" : "=t" (__value) : "0" (__x));
+  __asm __volatile ("fldcw %0" : : "m" (__cw));
 
   return __value;
 }

@@ -52,8 +52,16 @@ _dl_open (const char *file, int mode)
     {
       if (! l->l_relocated)
 	{
-	  _dl_relocate_object (l, _dl_object_relocation_scope (l),
-			       (mode & RTLD_BINDING_MASK) == RTLD_LAZY);
+	  /* We use an indirect call call for _dl_relocate_object because
+	     we must avoid using the PLT in the call.  If our PLT entry for
+	     _dl_relocate_object hasn't been used yet, then the dynamic
+	     linker fixup routine will clobber _dl_global_scope during its
+	     work.  We must be sure that nothing will require a PLT fixup
+	     between when _dl_object_relocation_scope returns and when we
+	     enter the dynamic linker's code (_dl_relocate_object).  */
+	  __typeof (_dl_relocate_object) *reloc = &_dl_relocate_object;
+	  (*reloc) (l, _dl_object_relocation_scope (l),
+		    (mode & RTLD_BINDING_MASK) == RTLD_LAZY);
 	  *_dl_global_scope_end = NULL;
 	}
 

@@ -1,6 +1,20 @@
 Sun Jul 14 01:51:39 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
-	* manual/Makefile (glibc-targets): Variable and targets removed.
+	* elf/dl-deps.c (_dl_map_object_deps): Start TAILP at last preload.
+
+	* elf/dl-open.c (_dl_open): Force an indirect call for
+	_dl_relocate_object so there is no chance a PLT fixup will be done
+	and clobber _dl_global_scope before our call happens.
+
+	* sysdeps/i386/fpu/__math.h (tan): Correct output constraint from =u
+	to =t; must operate on top of fp reg stack, not second from top.
+	Correct input constraint to 0 from t; must be explicit when input and
+	output are the same register.
+	(floor): Use __volatile instead of volatile.
+	(ceil): Likewise.
+
+	* manual/Makefile ($(objpfx)stamp%-$(subdir)): Separate rule from
+	other targets.
 
 Sat Jul 13 23:50:17 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
