@@ -1,3 +1,14 @@
+2004-10-18  Maciej W. Rozycki  <macro@mips.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h (__cmsg_nxthdr): Use
+	__NTH instead of __THROW in the inline definition.
+	* sysdeps/unix/sysv/linux/mips/sys/tas.h (_test_and_set): Likewise.
+
+	* sysdeps/mips/bits/dlfcn.h (RTLD_DEEPBIND): New macro.
+
+	* sysdeps/unix/sysv/linux/mips/bits/mman.h
+	(PROT_GROWSDOWN, PROT_GROWSUP): New macros.
+
 2004-10-06  Alan Modra  <amodra@bigpond.net.au>
 
 	* sysdeps/powerpc/powerpc64/ppc-mcount.S (PROF): Don't undef.
