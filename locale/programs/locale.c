@@ -893,12 +893,12 @@ show_info (const char *name)
 	  break;
 	case word:
 	  {
-	    unsigned int val =
-	      (unsigned int) (unsigned long int) nl_langinfo (item->item_id);
+	    union { unsigned int word; char *string; } val;
+	    val.string = nl_langinfo (item->item_id);
 	    if (show_keyword_name)
 	      printf ("%s=", item->name);
 
-	    printf ("%d\n", val);
+	    printf ("%d\n", val.word);
 	  }
 	  break;
 	case wstring:

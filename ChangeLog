@@ -1,3 +1,13 @@
+2003-10-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/locale.c (show_info): Fix printing word values on
+	64-bit big-endian architectures.
+
+2003-10-19  Bruno Haible  <bruno@clisp.org>
+
+	* intl/hash-string.c (hash_string): Zero-extend each char from the
+	string; the old code did a sign-extend on some platforms.
+
 2003-10-22  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/Makefile (+cflags, asm-CPPFLAGS): Don't
