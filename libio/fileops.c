@@ -62,6 +62,7 @@ extern int errno;
 # define lseek(FD, Offset, Whence) __lseek (FD, Offset, Whence)
 # define read(FD, Buf, NBytes) __read (FD, Buf, NBytes)
 # define write(FD, Buf, NBytes) __write (FD, Buf, NBytes)
+# define _IO_do_write _IO_new_do_write /* For macro uses.  */
 #else
 # define _IO_new_do_write _IO_do_write
 # define _IO_new_file_attach _IO_file_attach
@@ -854,16 +855,16 @@ _IO_new_file_overflow (f, ch)
 	f->_IO_write_end = f->_IO_write_ptr;
     }
   if (ch == EOF)
-    return _IO_new_do_write(f, f->_IO_write_base,
-			    f->_IO_write_ptr - f->_IO_write_base);
+    return INTUSE(_IO_do_write) (f, f->_IO_write_base,
+				 f->_IO_write_ptr - f->_IO_write_base);
   if (f->_IO_write_ptr == f->_IO_buf_end ) /* Buffer is really full */
     if (_IO_do_flush (f) == EOF)
       return EOF;
   *f->_IO_write_ptr++ = ch;
   if ((f->_flags & _IO_UNBUFFERED)
       || ((f->_flags & _IO_LINE_BUF) && ch == '\n'))
-    if (_IO_new_do_write(f, f->_IO_write_base,
-			 f->_IO_write_ptr - f->_IO_write_base) == EOF)
+    if (INTUSE(_IO_do_write) (f, f->_IO_write_base,
+			      f->_IO_write_ptr - f->_IO_write_base) == EOF)
       return EOF;
   return (unsigned char) ch;
 }
@@ -1548,6 +1549,7 @@ _IO_file_xsgetn_maybe_mmap (fp, data, n)
 }
 
 #ifdef _LIBC
+# undef _IO_do_write
 versioned_symbol (libc, _IO_new_do_write, _IO_do_write, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_attach, _IO_file_attach, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_close_it, _IO_file_close_it, GLIBC_2_1);

@@ -1,5 +1,7 @@
 2002-11-10  Roland McGrath  <roland@redhat.com>
 
+	* crypt/md5-crypt.c: Doc fix.
+
 	* sysdeps/unix/make-syscalls.sh: Insert $(make-target-directory) at
 	the beginning of generated target commands.
 
