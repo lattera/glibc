@@ -1,5 +1,14 @@
 2004-08-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/netinet/in.h: Add more const to the setipv4soucefilter,
+	getsourcefilter, and setsourcefilter parameter list.
+	* sysdeps/generic/setipv4sourcefilter.c: Likewise.
+	* sysdeps/generic/getsourcefilter.c: Likewise.
+	* sysdeps/generic/setsourcefilter.c: Likewise.
+	* sysdeps/unix/sysv/linux/setipv4sourcefilter.c: Likewise.
+	* sysdeps/unix/sysv/linux/getsourcefilter.c: Likewise.
+	* sysdeps/unix/sysv/linux/setsourcefilter.c: Likewise.
+
 	* po/tr.po: Update from translation team.
 
 2004-08-06  Ulrich Drepper  <drepper@redhat.com>

@@ -28,7 +28,8 @@
 
 int
 setipv4sourcefilter (int s, struct in_addr interface, struct in_addr group,
-		     uint32_t fmode, uint32_t numsrc, struct in_addr *slist)
+		     uint32_t fmode, uint32_t numsrc,
+		     const struct in_addr *slist)
 {
   /* We have to create an struct ip_msfilter object which we can pass
      to the kernel.  */

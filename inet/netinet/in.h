@@ -487,21 +487,24 @@ extern int getipv4sourcefilter (int __s, struct in_addr __interface,
 /* Set IPv4 source filter.  */
 extern int setipv4sourcefilter (int __s, struct in_addr __interface,
 				struct in_addr __group, uint32_t __fmode,
-				uint32_t __numsrc, struct in_addr *__slist)
+				uint32_t __numsrc,
+				__const struct in_addr *__slist)
      __THROW;
 
 
 /* Get source filter.  */
 extern int getsourcefilter (int __s, uint32_t __interface,
-			    struct sockaddr *__group, socklen_t __grouplen,
-			    uint32_t *__fmode, uint32_t *__numsrc,
+			    __const struct sockaddr *__group,
+			    socklen_t __grouplen, uint32_t *__fmode,
+			    uint32_t *__numsrc,
 			    struct sockaddr_storage *__slist) __THROW;
 
 /* Set source filter.  */
 extern int setsourcefilter (int __s, uint32_t __interface,
-			    struct sockaddr *__group, socklen_t __grouplen,
-			    uint32_t __fmode, uint32_t __numsrc,
-			    struct sockaddr_storage *__slist) __THROW;
+			    __const struct sockaddr *__group,
+			    socklen_t __grouplen, uint32_t __fmode,
+			    uint32_t __numsrc,
+			    __const struct sockaddr_storage *__slist) __THROW;
 #endif	/* use GNU */
 
 __END_DECLS
