@@ -1,5 +1,5 @@
 /* Minimum guaranteed maximum values for system limits.  Hurd version.
-   Copyright (C) 1993, 1994, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1993, 94, 96, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,8 +32,10 @@
 /* The maximum number of symbolic links that are allowed in a single file
    name resolution.  When a further link is encountered, the call returns
    ELOOP.  This name is a GNU extension; POSIX.1 has no such limit, and BSD
-   calls it MAXSYMLINKS in <sys/param.h>.  */
+   calls it MAXSYMLINKS in <sys/param.h>.  (We define the name under
+   _BSD_SOURCE even without _GNU_SOURCE because our <sys/param.h> uses it
+   to define MAXSYMLINKS.)  */
 
-#ifdef __USE_GNU		/* 1003.1a defines this */
+#if defined __USE_GNU || defined __USE_BSD /* 1003.1a defines this */
 #define	SYMLOOP_MAX	8
 #endif
