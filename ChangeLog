@@ -1,5 +1,18 @@
 Sat Jun 22 10:44:09 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* version.h (VERSION): Version 1.92 test release.
+
+	* misc/Makefile (headers): Add ar.h.
+	* misc/ar.h: New file.
+
+	* config.make.in (BUILD_CC): New variable.
+	* configure.in: Check for BUILD_CC if $host != $build.
+
+	* posix/glob.c: Include <alloca.h> only [HAVE_ALLOCA_H], not [sparc].
+
+	* Makerules [! objects] (subdir_lib): Depend on the stamp$o files.
+	(stamp$o files): New targets, create them empty, no deps.
+
 	* rpm/template (Source): New field.
 	(%prep, %build, %install): New sections.
 	(%files): Add %doc FAQ NEWS NOTES README.
@@ -1981,7 +1994,7 @@ Thu May 23 23:09:33 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* FAQ: Add answer for 100% source code compatibility to Linux
 	libc by David Mosberger-Tang.
 
-	Update from bind-4.3.4-T3B.
+	Update from bind-4.9.4-T3B.
 	* inet/arpa/inet.h: Add prototypes for inet_pton, inet_ntop,
 	inet_nsap_addr, and inet_nsap_ntoa.
 	* resolv/gethnamaddr.c: Correct compatibility problems (sprintf),

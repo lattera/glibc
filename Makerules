@@ -375,7 +375,13 @@ libobjs: $(foreach o,$(object-suffixes),\
 lib-noranlib: libobjs
 others: $(addprefix $(objpfx),$(install-lib))
 
-ifdef objects
+ifndef objects
+
+# Create the stamp$o files to keep the parent makefile happy.
+subdir_lib: $(foreach o,$(object-suffixes),$(objpfx)stamp$o-$(subdir))
+$(foreach o,$(object-suffixes),$(objpfx)stamp$o-$(subdir)):
+	rm -f $@; > $@
+else
 
 # Define a pattern rule that will match many targets libc.a(foo.%), for
 # each foo.o in $(objects) (% will just happen always to match `o').  This is

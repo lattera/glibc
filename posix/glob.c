@@ -188,9 +188,9 @@ my_realloc (p, n)
 #undef	alloca
 #define	alloca(n)	__builtin_alloca (n)
 #else	/* Not GCC.  */
-#if	defined (sparc) || defined (HAVE_ALLOCA_H)
+#ifdef HAVE_ALLOCA_H
 #include <alloca.h>
-#else	/* Not sparc or HAVE_ALLOCA_H.  */
+#else	/* Not HAVE_ALLOCA_H.  */
 #ifndef	_AIX
 extern char *alloca ();
 #endif	/* Not _AIX.  */
