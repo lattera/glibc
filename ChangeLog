@@ -1,3 +1,8 @@
+2001-04-20  Andreas Jaeger  <aj@suse.de>
+
+	* intl/Makefile (tests): Reorder conditions, tst-gettext needs
+	msgfmt.
+
 2001-04-20  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/libm-test-ulps: Update.
