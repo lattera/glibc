@@ -293,6 +293,58 @@ struct rtld_global
   EXTERN hp_timing_t _dl_hp_timing_overhead;
 #endif
 
+  /* Name of the shared object to be profiled (if any).  */
+  EXTERN const char *_dl_profile;
+  /* Map of shared object to be profiled.  */
+  EXTERN struct link_map *_dl_profile_map;
+  /* Filename of the output file.  */
+  EXTERN const char *_dl_profile_output;
+  /* Map of shared object to be prelink traced.  */
+  EXTERN struct link_map *_dl_trace_prelink_map;
+  /* Name of the object we want to trace the prelinking.  */
+  EXTERN const char *_dl_trace_prelink;
+
+  /* Expected cache ID.  */
+  EXTERN int _dl_correct_cache_id;
+
+  /* Counters for the number of relocations performed.  */
+  EXTERN unsigned long int _dl_num_relocations;
+  EXTERN unsigned long int _dl_num_cache_relocations;
+
+  /* Mask for hardware capabilities that are available.  */
+  EXTERN unsigned long int _dl_hwcap;
+
+  /* Mask for important hardware capabilities we honour. */
+  EXTERN unsigned long int _dl_hwcap_mask;
+
+  /* Names of shared object for which the RPATH should be ignored.  */
+  EXTERN const char *_dl_inhibit_rpath;
+
+  /* Location of the binary.  */
+  EXTERN const char *_dl_origin_path;
+
+  /* List of search directories.  */
+  EXTERN struct r_search_path_elem *_dl_all_dirs;
+  EXTERN struct r_search_path_elem *_dl_init_all_dirs;
+
+  /* File descriptor to write debug messages to.  */
+  EXTERN int _dl_debug_fd;
+
+#ifdef _LIBC_REENTRANT
+  EXTERN void **(*_dl_error_catch_tsd) (void) __attribute__ ((const));
+#endif
+
+  /* Get architecture specific definitions.  */
+#define PROCINFO_DECL
+#include <dl-procinfo.c>
+
+  /* Structure describing the dynamic linker itself.  */
+  EXTERN struct link_map _dl_rtld_map;
+
+  /* Keep the conditional TLS members at the end so the layout of the
+     structure used by !USE_TLS code matches the prefix of the layout in
+     the USE_TLS rtld.  Note that `struct link_map' is conditionally
+     defined as well, so _dl_rtld_map needs to be last before this.  */
 #ifdef USE_TLS
   /* Highest dtv index currently needed.  */
   EXTERN size_t _dl_tls_max_dtv_idx;
@@ -332,53 +384,6 @@ struct rtld_global
   EXTERN size_t _dl_tls_generation;
 #endif
 
-  /* Name of the shared object to be profiled (if any).  */
-  EXTERN const char *_dl_profile;
-  /* Map of shared object to be profiled.  */
-  EXTERN struct link_map *_dl_profile_map;
-  /* Filename of the output file.  */
-  EXTERN const char *_dl_profile_output;
-  /* Map of shared object to be prelink traced.  */
-  EXTERN struct link_map *_dl_trace_prelink_map;
-  /* Name of the object we want to trace the prelinking.  */
-  EXTERN const char *_dl_trace_prelink;
-
-  /* Expected cache ID.  */
-  EXTERN int _dl_correct_cache_id;
-
-  /* Counters for the number of relocations performed.  */
-  EXTERN unsigned long int _dl_num_relocations;
-  EXTERN unsigned long int _dl_num_cache_relocations;
-
-  /* Mask for hardware capabilities that are available.  */
-  EXTERN unsigned long int _dl_hwcap;
-
-  /* Mask for important hardware capabilities we honour. */
-  EXTERN unsigned long int _dl_hwcap_mask;
-
-  /* Names of shared object for which the RPATH should be ignored.  */
-  EXTERN const char *_dl_inhibit_rpath;
-
-  /* Location of the binary.  */
-  EXTERN const char *_dl_origin_path;
-
-  /* List of search directories.  */
-  EXTERN struct r_search_path_elem *_dl_all_dirs;
-  EXTERN struct r_search_path_elem *_dl_init_all_dirs;
-
-  /* File descriptor to write debug messages to.  */
-  EXTERN int _dl_debug_fd;
-
-  /* Get architecture specific definitions.  */
-#define PROCINFO_DECL
-#include <dl-procinfo.c>
-
-  /* Structure describing the dynamic linker itself.  */
-  EXTERN struct link_map _dl_rtld_map;
-
-#ifdef _LIBC_REENTRANT
-  EXTERN void **(*_dl_error_catch_tsd) (void) __attribute__ ((const));
-#endif
 #ifdef SHARED
 };
 # define __rtld_global_attribute__
@@ -400,6 +405,13 @@ extern struct rtld_global _rtld_local __rtld_local_attribute__;
 extern struct rtld_global _rtld_global __rtld_global_attribute__;
 #endif
 #undef EXTERN
+
+#ifdef IS_IN_rtld
+/* This is the initial value of GL(dl_error_catch_tsd).
+   A non-TLS libpthread will change it.  */
+extern void **_dl_initial_error_catch_tsd (void) __attribute__ ((const))
+     attribute_hidden;
+#endif
 
 /* Parameters passed to the dynamic linker.  */
 extern int _dl_argc attribute_hidden;
@@ -739,10 +751,16 @@ extern void _dl_sysdep_start_cleanup (void)
 
 
 /* Determine next available module ID.  */
-extern size_t _dl_next_tls_modid (void) internal_function;
+extern size_t _dl_next_tls_modid (void) internal_function attribute_hidden;
 
 /* Calculate offset of the TLS blocks in the static TLS block.  */
-extern void _dl_determine_tlsoffset (void) internal_function;
+extern void _dl_determine_tlsoffset (void) internal_function attribute_hidden;
+
+/* Set up the data structures for TLS, when they were not set up at startup.
+   Returns nonzero on malloc failure.
+   This is called from _dl_map_object_from_fd or by libpthread.  */
+extern int _dl_tls_setup (void) internal_function;
+rtld_hidden_proto (_dl_tls_setup)
 
 /* Allocate memory for static TLS block (unless MEM is nonzero) and dtv.  */
 extern void *_dl_allocate_tls (void *mem) internal_function;
@@ -754,9 +772,9 @@ extern void _dl_get_tls_static_info (size_t *sizep, size_t *alignp)
 /* These are internal entry points to the two halves of _dl_allocate_tls,
    only used within rtld.c itself at startup time.  */
 extern void *_dl_allocate_tls_storage (void)
-  internal_function attribute_hidden;
+     internal_function attribute_hidden;
 extern void *_dl_allocate_tls_init (void *) internal_function;
-rtld_hidden_proto (_dl_allocate_tls_init);
+rtld_hidden_proto (_dl_allocate_tls_init)
 
 /* Deallocate memory allocated with _dl_allocate_tls.  */
 extern void _dl_deallocate_tls (void *tcb, bool dealloc_tcb) internal_function;
