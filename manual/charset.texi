@@ -247,6 +247,7 @@ character on its own or whether it has to be combined with some more
 bytes.
 
 @cindex EUC
+@cindex Shift_JIS
 @cindex SJIS
 In most uses of @w{ISO 2022} the defined character sets do not allow
 state changes which cover more than the next character.  This has the
@@ -254,7 +255,7 @@ big advantage that whenever one can identify the beginning of the byte
 sequence of a character one can interpret a text correctly.  Examples of
 character sets using this policy are the various EUC character sets
 (used by Sun's operations systems, EUC-JP, EUC-KR, EUC-TW, and EUC-CN)
-or SJIS (Shift-JIS, a Japanese encoding).
+or Shift_JIS (SJIS, a Japanese encoding).
 
 But there are also character sets using a state which is valid for more
 than one character and has to be changed by another byte sequence.

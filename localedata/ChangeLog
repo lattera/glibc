@@ -1,6 +1,11 @@
+2001-06-09  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/BIG5-HKSCS: Renamed from charmaps/BIG5HKSCS.  Change
+	code_set_name to BIG5-HKSCS. Add BIG5HKSCS alias.
+
 2001-05-26  Bruno Haible  <haible@clisp.cons.org>
 
-	* charmaps/SHIFT_JIS: Renamed from charmaps/SJIS. Change code_set_name
+	* charmaps/SHIFT_JIS: Renamed from charmaps/SJIS.  Change code_set_name
 	to SHIFT_JIS. Add SJIS as alias.
 	* Makefile (CHARMAPS): For SJIS locale, use SHIFT_JIS charmap.
 	* gen-locale.sh: Likewise.

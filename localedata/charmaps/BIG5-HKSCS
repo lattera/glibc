@@ -1,8 +1,11 @@
-<code_set_name> BIG5HKSCS
+<code_set_name> BIG5-HKSCS
 <mb_cur_max>  2
 <mb_cur_min>  1
 <comment_char> %
 <escape_char> /
+
+% alias BIG5HKSCS
+
 %
 % Generated from the big5hkscs.c iconv module.
 %

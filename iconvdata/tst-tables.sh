@@ -185,7 +185,7 @@ cat <<EOF |
   #
   # Multibyte encodings come here
   #
-  SJIS
+  SJIS              SHIFT_JIS
   EUC-KR
   CP949
   JOHAB
