@@ -28,7 +28,7 @@ enum
   {
     IPPROTO_IP = 0,	/* Dummy protocol for TCP.  */
     IPPROTO_ICMP = 1,	/* Internet Control Message Protocol.  */
-    IPPROTO_GGP = 2,	/* Gateway Protocol (deprecated).  */
+    IPPROTO_IGMP = 2,	/* Internet Group Management Protocol. */
     IPPROTO_TCP = 6,	/* Transmission Control Protocol.  */
     IPPROTO_EGP = 8,	/* Exterior Gateway Protocol.  */
     IPPROTO_PUP = 12,	/* PUP protocol.  */
