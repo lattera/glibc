@@ -1,6 +1,7 @@
 1998-06-27 12:58  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/bsd/poll.c: Define __poll, make poll weak alias.
+	* sysdeps/unix/sysv/linux/poll.c: Likewise.
 
 1998-06-27  7:07  Richard Henderson  <rth@cygnus.com>
 

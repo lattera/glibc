@@ -32,7 +32,7 @@ static int __emulate_poll __P ((struct pollfd *fds, unsigned long int nfds,
 
 /* The real implementation.  */
 int
-poll (fds, nfds, timeout)
+__poll (fds, nfds, timeout)
      struct pollfd *fds;
      unsigned long int nfds;
      int timeout;
@@ -58,10 +58,10 @@ poll (fds, nfds, timeout)
 
   return __emulate_poll (fds, nfds, timeout);
 }
-
+weak_alias (__poll, poll)
 
 /* Get the emulation code.  */
-# define poll(fds, nfds, timeout) \
+# define __poll(fds, nfds, timeout) \
   static internal_function __emulate_poll (fds, nfds, timeout)
 #endif
 #include <sysdeps/unix/bsd/poll.c>
