@@ -163,8 +163,7 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
       /* Fill in the PLT. Its initial contents are directed to a
 	 function earlier in the PLT which arranges for the dynamic
 	 linker to be called back.  */
-      Elf32_Word *plt = (Elf32_Word *) ((char *) map->l_addr
-					+ map->l_info[DT_PLTGOT]->d_un.d_val);
+      Elf32_Word *plt = (Elf32_Word *) map->l_info[DT_PLTGOT]->d_un.d_val;
       Elf32_Word num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
 				    / sizeof (Elf32_Rela));
       Elf32_Word rel_offset_words = PLT_DATA_START_WORDS (num_plt_entries);
@@ -231,11 +230,11 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 	OPCODE_ADDIS (11, 11, (((Elf32_Word) (char*) (plt + rel_offset_words)
 				+ 0x8000) >> 16));
       plt[PLT_LONGBRANCH_ENTRY_WORDS+1] =
-	OPCODE_LWZ (11, (Elf32_Word) (char*) (plt+rel_offset_words), 11);
+	OPCODE_LWZ (11, (Elf32_Word) (char*) (plt + rel_offset_words), 11);
 
       /* Call the procedure at that address.  */
-      plt[PLT_LONGBRANCH_ENTRY_WORDS+2] = OPCODE_MTCTR (11);
-      plt[PLT_LONGBRANCH_ENTRY_WORDS+3] = OPCODE_BCTR ();
+      plt[PLT_LONGBRANCH_ENTRY_WORDS + 2] = OPCODE_MTCTR (11);
+      plt[PLT_LONGBRANCH_ENTRY_WORDS + 3] = OPCODE_BCTR ();
 
 
       /* Now, we've modified code (quite a lot of code, possibly).  We
@@ -251,9 +250,9 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 	 PowerPC processors have line sizes of exactly 32 bytes.  */
 
       size_modified = lazy ? rel_offset_words : PLT_INITIAL_ENTRY_WORDS;
-      for (i = 0; i < size_modified; i+=8)
+      for (i = 0; i < size_modified; i+= 8)
 	PPC_DCBST (plt + i);
-      PPC_DCBST (plt + size_modified-1);
+      PPC_DCBST (plt + size_modified - 1);
       PPC_SYNC;
       PPC_ICBI (plt);
       PPC_ICBI (plt + size_modified-1);
@@ -277,8 +276,7 @@ __elf_machine_fixup_plt(struct link_map *map, const Elf32_Rela *reloc,
       Elf32_Word *plt;
       Elf32_Word index;
 
-      plt = (Elf32_Word *)((char *)map->l_addr
-			   + map->l_info[DT_PLTGOT]->d_un.d_val);
+      plt = (Elf32_Word *) map->l_info[DT_PLTGOT]->d_un.d_val;
       index = (reloc_addr - plt - PLT_INITIAL_ENTRY_WORDS)/2;
       if (index >= PLT_DOUBLE_SIZE)
 	{
@@ -351,20 +349,16 @@ __process_machine_rela (struct link_map *map,
 
     case R_PPC_ADDR24:
       if (finaladdr > 0x01fffffc && finaladdr < 0xfe000000)
-	{
-	  _dl_signal_error(0, map->l_name,
-			   "R_PPC_ADDR24 relocation out of range");
-	}
+	_dl_signal_error (0, map->l_name,
+			  "R_PPC_ADDR24 relocation out of range");
       *reloc_addr = (*reloc_addr & 0xfc000003) | (finaladdr & 0x3fffffc);
       break;
 
     case R_PPC_ADDR16:
     case R_PPC_UADDR16:
       if (finaladdr > 0x7fff && finaladdr < 0x8000)
-	{
-	  _dl_signal_error(0, map->l_name,
-			   "R_PPC_ADDR16 relocation out of range");
-	}
+	_dl_signal_error (0, map->l_name,
+			  "R_PPC_ADDR16 relocation out of range");
       *(Elf32_Half*) reloc_addr = finaladdr;
       break;
 
@@ -384,10 +378,8 @@ __process_machine_rela (struct link_map *map,
     case R_PPC_ADDR14_BRTAKEN:
     case R_PPC_ADDR14_BRNTAKEN:
       if (finaladdr > 0x7fff && finaladdr < 0x8000)
-	{
-	  _dl_signal_error(0, map->l_name,
-			   "R_PPC_ADDR14 relocation out of range");
-	}
+	_dl_signal_error (0, map->l_name,
+			  "R_PPC_ADDR14 relocation out of range");
       *reloc_addr = (*reloc_addr & 0xffff0003) | (finaladdr & 0xfffc);
       if (rinfo != R_PPC_ADDR14)
 	*reloc_addr = ((*reloc_addr & 0xffdfffff)
@@ -399,10 +391,8 @@ __process_machine_rela (struct link_map *map,
       {
 	Elf32_Sword delta = finaladdr - (Elf32_Word) (char *) reloc_addr;
 	if (delta << 6 >> 6 != delta)
-	  {
-	    _dl_signal_error(0, map->l_name,
-			     "R_PPC_REL24 relocation out of range");
-	  }
+	  _dl_signal_error (0, map->l_name,
+			    "R_PPC_REL24 relocation out of range");
 	*reloc_addr = (*reloc_addr & 0xfc000003) | (delta & 0x3fffffc);
       }
       break;
@@ -432,7 +422,7 @@ __process_machine_rela (struct link_map *map,
       return;
 
     case R_PPC_JMP_SLOT:
-      elf_machine_fixup_plt(map, reloc, reloc_addr, finaladdr);
+      elf_machine_fixup_plt (map, reloc, reloc_addr, finaladdr);
       return;
 
     default:
