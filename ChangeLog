@@ -1,3 +1,13 @@
+2001-01-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/TESTS: UTF-8 test data for IBM932 and IBM943 are now
+	available.
+	* iconvdata/testdata/IBM932: New file.
+	* iconvdata/testdata/IBM932..UTF8: New file.
+	* iconvdata/testdata/IBM943: New file.
+	* iconvdata/testdata/IBM943..UTF8: New file.
+	Contributed by Masahide Washizawa <washi@jp.ibm.com>.
+
 2001-01-21  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/mmap64.c: Correctly mask offset.
