@@ -1,3 +1,9 @@
+2002-12-28  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/readelflib.c (process_elf_file): Cast value to
+	avoid warning.
+	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Likewise.
+
 2002-12-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* inet/herrno.c (__h_errno_location): Remove.

@@ -100,7 +100,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
       switch (segment->p_type)
 	{
 	case PT_LOAD:
-	  if (loadaddr == -1)
+	  if (loadaddr == (ElfW(Addr)) -1)
 	    loadaddr = segment->p_vaddr - segment->p_offset;
 	  break;
 
@@ -145,7 +145,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	}
 
     }
-  if (loadaddr == -1)
+  if (loadaddr == (ElfW(Addr)) -1)
     {
       /* Very strange. */
       loadaddr = 0;

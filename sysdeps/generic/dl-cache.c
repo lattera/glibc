@@ -219,7 +219,7 @@ _dl_load_cache_lookup (const char *name)
 
       hwcap = &GL(dl_hwcap);
       platform = _dl_string_platform (GL(dl_platform));
-      if (platform != -1)
+      if (platform != (uint64_t) -1)
 	platform = 1ULL << platform;
 
       /* Only accept hwcap if it's for the right platform.  */
