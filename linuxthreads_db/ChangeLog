@@ -1,3 +1,7 @@
+1999-11-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile: Define version correctly.
+
 1999-11-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* td_ta_map_lwp2thr.c: If p_pid field is zero, this is before the

@@ -1,3 +1,8 @@
+1999-11-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/locale.alias: Add Estonian entries.
+	Patch by Marko Kreen <marko@et.ee> [PR libc/1444].
+
 1999-11-02  Andreas Jaeger  <aj@suse.de>
 
 	* Versions.def: Add version GLIBC_2.2 for libm.
