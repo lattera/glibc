@@ -1,3 +1,9 @@
+2000-03-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/oldtmpfile.c: Update for new SHLIB_COMPAT definition.
+	* libio/oldiofopen.c: Likewise.
+	* libio/oldiofclose.c: Likewise.
+
 2000-03-22  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* include/shlib-compat.h (SHLIB_COMPAT): Take a third argument,

@@ -1,5 +1,7 @@
 2000-03-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthread.c: Update for new SHLIB_COMPAT definition.
+
 	* manager.c (__pthread_manager): Unmask debug signal.
 
 	* pthread.c (pthread_initialize): Test for address of __dso_handle
