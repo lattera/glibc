@@ -1,5 +1,13 @@
 2001-01-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Move x86_cap_flags and
+	x86_platforms data into new file after prepending _dl_.  Change
+	users.
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.c: New file.
+	* sysdeps/unix/sysv/linux/i386/Dist: Add dl-procinfo.c.
+	* sysdeps/unix/sysv/linux/i386/Makefile: Add rules to build
+	dl-procinfo.c.
+
 	* setjmp/setjmp.h: Cleanup definition of setjmp macro.
 
 	* sysdeps/i386/elf/bsd-setjmp.S: Real implementation.

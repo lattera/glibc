@@ -1,5 +1,5 @@
 /* Linux/i386 version of processor capability information handling macros.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -23,19 +23,10 @@
 
 /* If anything should be added here check whether the size of each string
    is still ok with the given array size.  */
-static const char x86_cap_flags[][7] =
-  {
-    "fpu", "vme", "de", "pse", "tsc", "msr", "pae", "mce",
-    "cx8", "apic", "10", "sep", "mtrr", "pge", "mca", "cmov",
-    "pat", "pse36", "psn", "19", "20", "21", "22", "mmx",
-    "osfxsr", "xmm", "26", "27", "28", "29", "30", "amd3d"
-  };
+extern const char _dl_x86_cap_flags[][7];
 #define _DL_HWCAP_COUNT 32
 
-static const char x86_platforms[][5] =
-  {
-    "i386", "i486", "i586", "i686"
-  };
+extern const char _dl_x86_platforms[][5];
 #define _DL_PLATFORMS_COUNT 	4
 
 /* Start at 48 to reserve some space.  */
@@ -56,7 +47,7 @@ _dl_procinfo (int word)
 
   for (i = 0; i < _DL_HWCAP_COUNT; ++i)
     if (word & (1 << i))
-      _dl_sysdep_message (" ", x86_cap_flags[i], NULL);
+      _dl_sysdep_message (" ", _dl_x86_cap_flags[i], NULL);
 
   _dl_sysdep_message ("\n", NULL);
 
@@ -67,14 +58,14 @@ static inline const char *
 __attribute__ ((unused))
 _dl_hwcap_string (int idx)
 {
-  return x86_cap_flags[idx];
+  return _dl_x86_cap_flags[idx];
 };
 
 static inline const char *
 __attribute__ ((unused))
 _dl_platform_string (int idx)
 {
-  return x86_platforms [idx - _DL_FIRST_PLATFORM];
+  return _dl_x86_platforms [idx - _DL_FIRST_PLATFORM];
 };
 
 enum
@@ -112,7 +103,7 @@ _dl_string_hwcap (const char *str)
 
   for (i = 0; i < _DL_HWCAP_COUNT; i++)
     {
-      if (strcmp (str, x86_cap_flags[i]) == 0)
+      if (strcmp (str, _dl_x86_cap_flags[i]) == 0)
 	return i;
     }
   return -1;
@@ -128,7 +119,7 @@ _dl_string_platform (const char *str)
   if (str != NULL)
     for (i = 0; i < _DL_PLATFORMS_COUNT; ++i)
       {
-	if (strcmp (str, x86_platforms[i]) == 0)
+	if (strcmp (str, _dl_x86_platforms[i]) == 0)
 	  return _DL_FIRST_PLATFORM + i;
       }
   return -1;

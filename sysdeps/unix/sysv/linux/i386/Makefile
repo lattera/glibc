@@ -6,6 +6,12 @@ endif
 ifeq ($(subdir),elf)
 sysdep-others += lddlibc4
 install-bin += lddlibc4
+
+# extra shared linker files to link into dl-allobjs.so and libc
+sysdep-dl-routines += dl-procinfo
+sysdep_routines += dl-procinfo
+# extra shared linker files to link only into dl-allobjs.so
+sysdep-rtld-routines += dl-procinfo
 endif
 
 ifeq ($(subdir),csu)
