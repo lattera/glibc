@@ -1,3 +1,15 @@
+Tue Sep 12 14:30:07 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* misc/mntent.c: New file.
+	* misc/mntent.h: New file.
+	* misc/Makefile (headers): Added mntent.h.
+	(routines): Added mntent.
+	* misc/fstab.c: Rewritten using mntent functions.
+
+Mon Sep 11 14:00:14 1995  Roland McGrath  <roland@whiz-bang.gnu.ai.mit.edu>
+
+	* posix/glob.c (glob): Comment fix.
+
 Fri Sep  8 16:25:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* libc-symbols.h [HAVE_ELF] (symbol_set_declare): Declare the

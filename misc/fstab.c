@@ -1,205 +1,109 @@
-/*
- * Copyright (c) 1980, 1988, 1993
- *	The Regents of the University of California.  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- */
+/* 
+Copyright (C) 1995 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
 
-#if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)fstab.c	8.1 (Berkeley) 6/4/93";
-#endif /* LIBC_SCCS and not lint */
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
 
-#include <errno.h>
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
+
 #include <fstab.h>
+#include <mntent.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
-#ifndef EFTYPE
-#define EFTYPE EINVAL
-#endif
+static FILE *fstab;
 
-static FILE *_fs_fp;
-static struct fstab _fs_fstab;
-
-static void error __P((int));
-
-static int
-fstabscan __P((void))
+static FILE *
+fstab_stream (void)
 {
-	register char *cp;
-#define	MAXLINELENGTH	1024
-	static char line[MAXLINELENGTH];
-	char subline[MAXLINELENGTH];
-	int typexx;
+  if (! fstab)
+    fstab = setmntent (_PATH_FSTAB, "r");
+  return fstab;
+}
 
-	for (;;) {
-		if (!(cp = fgets(line, sizeof(line), _fs_fp)))
-			return(0);
-/* OLD_STYLE_FSTAB */
-		if (!strpbrk(cp, " \t")) {
-			_fs_fstab.fs_spec = strtok(cp, ":\n");
-			_fs_fstab.fs_file = strtok((char *)NULL, ":\n");
-			_fs_fstab.fs_type = strtok((char *)NULL, ":\n");
-			if (_fs_fstab.fs_type) {
-				if (!strcmp(_fs_fstab.fs_type, FSTAB_XX))
-					continue;
-				_fs_fstab.fs_mntops = _fs_fstab.fs_type;
-				_fs_fstab.fs_vfstype =
-				    strcmp(_fs_fstab.fs_type, FSTAB_SW) ?
-				    "ufs" : "swap";
-				if (cp = strtok((char *)NULL, ":\n")) {
-					_fs_fstab.fs_freq = atoi(cp);
-					if (cp = strtok((char *)NULL, ":\n")) {
-						_fs_fstab.fs_passno = atoi(cp);
-						return(1);
-					}
-				}
-			}
-			goto bad;
-		}
-/* OLD_STYLE_FSTAB */
-		_fs_fstab.fs_spec = strtok(cp, " \t\n");
-		if (!_fs_fstab.fs_spec || *_fs_fstab.fs_spec == '#')
-			continue;
-		_fs_fstab.fs_file = strtok((char *)NULL, " \t\n");
-		_fs_fstab.fs_vfstype = strtok((char *)NULL, " \t\n");
-		_fs_fstab.fs_mntops = strtok((char *)NULL, " \t\n");
-		if (_fs_fstab.fs_mntops == NULL)
-			goto bad;
-		_fs_fstab.fs_freq = 0;
-		_fs_fstab.fs_passno = 0;
-		if ((cp = strtok((char *)NULL, " \t\n")) != NULL) {
-			_fs_fstab.fs_freq = atoi(cp);
-			if ((cp = strtok((char *)NULL, " \t\n")) != NULL)
-				_fs_fstab.fs_passno = atoi(cp);
-		}
-		strcpy(subline, _fs_fstab.fs_mntops);
-		for (typexx = 0, cp = strtok(subline, ","); cp;
-		     cp = strtok((char *)NULL, ",")) {
-			if (strlen(cp) != 2)
-				continue;
-			if (!strcmp(cp, FSTAB_RW)) {
-				_fs_fstab.fs_type = FSTAB_RW;
-				break;
-			}
-			if (!strcmp(cp, FSTAB_RQ)) {
-				_fs_fstab.fs_type = FSTAB_RQ;
-				break;
-			}
-			if (!strcmp(cp, FSTAB_RO)) {
-				_fs_fstab.fs_type = FSTAB_RO;
-				break;
-			}
-			if (!strcmp(cp, FSTAB_SW)) {
-				_fs_fstab.fs_type = FSTAB_SW;
-				break;
-			}
-			if (!strcmp(cp, FSTAB_XX)) {
-				_fs_fstab.fs_type = FSTAB_XX;
-				typexx++;
-				break;
-			}
-		}
-		if (typexx)
-			continue;
-		if (cp != NULL)
-			return(1);
+int
+setfsent (void)
+{
+  if (fstab)
+    {
+      rewind (fstab);
+      return 1;
+    }
+  else
+    fstab = setmntent (_PATH_FSTAB, "r");
+  return fstab ? 0 : 1;
+}
 
-bad:		/* no way to distinguish between EOF and syntax error */
-		error(EFTYPE);
-	}
-	/* NOTREACHED */
+static struct fstab *
+mnt2fs (struct mntent *m)
+{
+  static struct fstab f;
+  f.fs_spec = m->mnt_fsname;
+  f.fs_file = m->mnt_dir;
+  f.fs_vfstype = m->mnt_type;
+  f.fs_mntops = m->mnt_opts;
+  f.fs_type = (hasmntopt (m, FSTAB_RW) ? (char *) FSTAB_RW :
+	       hasmntopt (m, FSTAB_RQ) ? (char *) FSTAB_RQ :
+	       hasmntopt (m, FSTAB_RO) ? (char *) FSTAB_RO :
+	       hasmntopt (m, FSTAB_SW) ? (char *) FSTAB_SW :
+	       hasmntopt (m, FSTAB_XX) ? (char *) FSTAB_XX :
+	       (char *) "??");
+  f.fs_freq = m->mnt_freq;
+  f.fs_passno = m->mnt_passno;
+  return &f;
 }
 
 struct fstab *
-getfsent()
+getfsent (void)
 {
-	if (!_fs_fp && !setfsent() || !fstabscan())
-		return((struct fstab *)NULL);
-	return(&_fs_fstab);
+  FILE *s = fstab_stream ();
+
+  if (! s)
+    return NULL;
+  
+  return mnt2fs (getmntent (s));
 }
 
 struct fstab *
-getfsspec(name)
+getfsspec (name)
+     register const char *name;
+{
+  struct mntent *m;
+  if (setfsent ())
+    while (m = getmntent (fstab))
+      if (!strcmp (m->mnt_fsname, name))
+	return mnt2fs (m);
+  return NULL;
+}
+
+struct fstab *
+getfsfile (name)
 	register const char *name;
 {
-	if (setfsent())
-		while (fstabscan())
-			if (!strcmp(_fs_fstab.fs_spec, name))
-				return(&_fs_fstab);
-	return((struct fstab *)NULL);
-}
-
-struct fstab *
-getfsfile(name)
-	register const char *name;
-{
-	if (setfsent())
-		while (fstabscan())
-			if (!strcmp(_fs_fstab.fs_file, name))
-				return(&_fs_fstab);
-	return((struct fstab *)NULL);
-}
-
-setfsent()
-{
-	if (_fs_fp) {
-		rewind(_fs_fp);
-		return(1);
-	}
-	if (_fs_fp = fopen(_PATH_FSTAB, "r"))
-		return(1);
-	error(errno);
-	return(0);
+  struct mntent *m;
+  if (setfsent ())
+    while (m = getmntent (fstab))
+      if (!strcmp (m->mnt_dir, name))
+	return mnt2fs (m);
+  return NULL;
 }
 
 void
-endfsent()
+endfsent ()
 {
-	if (_fs_fp) {
-		(void)fclose(_fs_fp);
-		_fs_fp = NULL;
-	}
-}
-
-static void
-error(err)
-	int err;
-{
-	char *p;
-
-	(void)write(STDERR_FILENO, "fstab: ", 7);
-	(void)write(STDERR_FILENO, _PATH_FSTAB, sizeof(_PATH_FSTAB) - 1);
-	(void)write(STDERR_FILENO, ": ", 1);
-	p = strerror(err);
-	(void)write(STDERR_FILENO, p, strlen(p));
-	(void)write(STDERR_FILENO, "\n", 1);
+  if (fstab)
+    {
+      (void) endmntent (fstab);
+      fstab = NULL;
+    }
 }
