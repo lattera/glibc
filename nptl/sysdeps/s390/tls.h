@@ -48,7 +48,9 @@ typedef struct
 #endif
 } tcbhead_t;
 
-# define TLS_MULTIPLE_THREADS_IN_TCB 1
+# ifndef __s390x__
+#  define TLS_MULTIPLE_THREADS_IN_TCB 1
+# endif
 
 #else /* __ASSEMBLER__ */
 # include <tcb-offsets.h>

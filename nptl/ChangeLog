@@ -1,3 +1,16 @@
+2003-03-20  Martin Schwidefsky  <sky@mschwid3.boeblingen.de.ibm.com>
+
+	* sysdeps/s390/pthread_spin_lock.c (pthread_spin_lock): Use type
+	int for variable OLDVAL and correct inline assembler contraint.
+	* sysdeps/s390/pthread_spin_trylock.c (pthread_spin_trylock): Use
+	type int for variable OLD.
+
+	* sysdeps/s390/tls.h (TLS_MULTIPLE_THREADS_IN_TCB): Define it
+	only for s390-32.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h
+	(SINGLE_THREAD_P): Use global variable __local_multiple_threads
+	instead of multiple_threads field in the TCB.
+
 2003-03-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/i686/bits/atomic.h: Removed.

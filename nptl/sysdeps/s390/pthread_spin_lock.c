@@ -23,12 +23,12 @@ int
 pthread_spin_lock (lock)
      pthread_spinlock_t *lock;
 {
-  unsigned long int oldval;
+  int oldval;
 
   __asm __volatile ("0: lhi %0,0\n"
 		    "   cs  %0,%2,%1\n"
 		    "   jl  0b"
-		    : "=d" (oldval), "=Q" (*lock)
+		    : "=&d" (oldval), "=Q" (*lock)
 		    : "d" (1), "m" (*lock) : "cc" );
   return 0;
 }

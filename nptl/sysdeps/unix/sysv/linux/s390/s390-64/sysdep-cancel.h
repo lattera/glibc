@@ -79,15 +79,13 @@ L(pseudo_end):
 #define LM_5		lmg %r2,%r5,16+160(%r15);
 
 # ifndef __ASSEMBLER__
+extern int __local_multiple_threads attribute_hidden;
 #  define SINGLE_THREAD_P \
-  __builtin_expect (THREAD_GETMEM (THREAD_SELF,				      \
-				   header.multiple_threads) == 0, 1)
+  __builtin_expect (__local_multiple_threads == 0, 1)
 # else
 #  define SINGLE_THREAD_P \
-	ear	%r1,%a0;						      \
-	sllg	%r1,%r1,32;						      \
-	ear	%r1,%a1;						      \
-	icm	%r1,15,MULTIPLE_THREADS_OFFSET(%r1);
+	larl	%r1,__local_multiple_threads;				      \
+	icm	%r0,15,0(%r1);
 # endif
 
 #elif !defined __ASSEMBLER__

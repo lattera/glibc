@@ -24,7 +24,7 @@ int
 pthread_spin_trylock (lock)
      pthread_spinlock_t *lock;
 {
-  unsigned long int old;
+  int old;
 
   __asm __volatile ("cs %0,%3,%1"
 		    : "=d" (old), "=Q" (*lock)
