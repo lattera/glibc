@@ -20,6 +20,7 @@
 # include <config.h>
 #endif
 
+#include <assert.h>
 #include <ctype.h>
 #include <langinfo.h>
 #include <limits.h>
@@ -732,30 +733,26 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 		      else
 			return NULL;
 		    }
-		  else
+
+		  num_eras = _NL_CURRENT_WORD (LC_TIME,
+					       _NL_TIME_ERA_NUM_ENTRIES);
+		  for (era_cnt = 0; era_cnt < (int) num_eras;
+		       ++era_cnt, rp = rp_backup)
 		    {
-		      num_eras = _NL_CURRENT_WORD (LC_TIME,
-						   _NL_TIME_ERA_NUM_ENTRIES);
-		      for (era_cnt = 0; era_cnt < (int) num_eras;
-			   ++era_cnt, rp = rp_backup)
+		      era = _nl_select_era_entry (era_cnt
+						  HELPER_LOCALE_ARG);
+		      if (era != NULL && match_string (era->era_name, rp))
 			{
-			  era = _nl_select_era_entry (era_cnt
-						      HELPER_LOCALE_ARG);
-			  if (era != NULL && match_string (era->era_name, rp))
-			    {
-			      *decided = loc;
-			      break;
-			    }
+			  *decided = loc;
+			  break;
 			}
-		      if (era_cnt == (int) num_eras)
-			{
-			  era_cnt = -1;
-			  if (*decided == loc)
-			    return NULL;
-			}
-		      else
-			break;
 		    }
+		  if (era_cnt != (int) num_eras)
+		    break;
+
+		  era_cnt = -1;
+		  if (*decided == loc)
+		    return NULL;
 
 		  *decided = raw;
 		}
@@ -763,15 +760,66 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 		 normal representation.  */
 	      goto match_century;
  	    case 'y':
-	      if (*decided == raw)
-		goto match_year_in_century;
+	      if (*decided != raw)
+		{
+		  get_number(0, 9999, 4);
+		  tm->tm_year = val;
+		  want_era = 1;
+		  want_xday = 1;
+		  want_century = 1;
 
-	      get_number(0, 9999, 4);
-	      tm->tm_year = val;
-	      want_era = 1;
-	      want_xday = 1;
-	      want_century = 1;
-	      break;
+		  if (era_cnt >= 0)
+		    {
+		      assert (*decided == loc);
+
+		      era = _nl_select_era_entry (era_cnt HELPER_LOCALE_ARG);
+		      bool match = false;
+		      if (era != NULL)
+			{
+			  int delta = ((tm->tm_year - era->offset)
+				       * era->absolute_direction);
+			  match = (delta >= 0
+				   && delta < (((int64_t) era->stop_date[0]
+						- (int64_t) era->start_date[0])
+					       * era->absolute_direction));
+			}
+		      if (! match)
+			return NULL;
+
+		      break;
+		    }
+
+		  num_eras = _NL_CURRENT_WORD (LC_TIME,
+					       _NL_TIME_ERA_NUM_ENTRIES);
+		  for (era_cnt = 0; era_cnt < (int) num_eras; ++era_cnt)
+		    {
+		      era = _nl_select_era_entry (era_cnt
+						  HELPER_LOCALE_ARG);
+		      if (era != NULL)
+			{
+			  int delta = ((tm->tm_year - era->offset)
+				       * era->absolute_direction);
+			  if (delta >= 0
+			      && delta < (((int64_t) era->stop_date[0]
+					   - (int64_t) era->start_date[0])
+					  * era->absolute_direction))
+			    {
+			      *decided = loc;
+			      break;
+			    }
+			}
+		    }
+		  if (era_cnt != (int) num_eras)
+		    break;
+
+		  era_cnt = -1;
+		  if (*decided == loc)
+		    return NULL;
+
+		  *decided = raw;
+		}
+
+	      goto match_year_in_century;
 	    case 'Y':
 	      if (*decided != raw)
 		{

@@ -1,5 +1,8 @@
 2004-08-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/strptime_l.c (__strptime_internal): Fix handling of %Ey.
+	[BZ #28]
+
 	* po/sv.po: Update from translation team.
 
 2004-08-07  Ulrich Drepper  <drepper@redhat.com>
