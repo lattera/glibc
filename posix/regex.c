@@ -2950,8 +2950,7 @@ regex_compile (pattern, size, syntax, bufp)
               if (!(syntax & RE_INTERVALS)
                      /* If we're at `\{' and it's not the open-interval
                         operator.  */
-                  || ((syntax & RE_INTERVALS) && (syntax & RE_NO_BK_BRACES))
-                  || (p - 2 == pattern  &&  p == pend))
+		  || (syntax & RE_NO_BK_BRACES))
                 goto normal_backslash;
 
             handle_interval:

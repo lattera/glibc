@@ -1,3 +1,8 @@
+2000-03-08  H.J. Lu  <hjl@gnu.org>
+
+	* posix/regex.c (regex_compile): Correctly handle "\{" when
+	the RE_INTERVALS is set and the RE_NO_BK_BRACES bit is not set.
+
 2000-04-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/stdio.texi: Give advise about handling error when using

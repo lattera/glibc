@@ -27,6 +27,7 @@ representing a communications channel to a file, device, or process.
                                  @code{printf} and friends.
 * Formatted Input::             @code{scanf} and related functions.
 * EOF and Errors::              How you can tell if an I/O error happens.
+* Error Recovery::		What you can do about errors.
 * Binary Streams::              Some systems distinguish between text files
                                  and binary files.
 * File Positioning::            About random-access streams.
@@ -3055,16 +3056,6 @@ value may be some other negative number.
 
 @comment stdio.h
 @comment ISO
-@deftypefun void clearerr (FILE *@var{stream})
-This function clears the end-of-file and error indicators for the
-stream @var{stream}.
-
-The file positioning functions (@pxref{File Positioning}) also clear the
-end-of-file indicator for the stream.
-@end deftypefun
-
-@comment stdio.h
-@comment ISO
 @deftypefun int feof (FILE *@var{stream})
 The @code{feof} function returns nonzero if and only if the end-of-file
 indicator for the stream @var{stream} is set.
@@ -3087,6 +3078,45 @@ implemented in terms of @code{write}, and all of the @code{errno} error
 conditions defined for @code{write} are meaningful for these functions.
 For more information about the descriptor-level I/O functions, see
 @ref{Low-Level I/O}.
+
+@node Error Recovery
+@section Recovering from errors
+
+You may explicitly clear the error and EOF flags with the @code{clearerr} 
+function.
+
+@comment stdio.h
+@comment ISO
+@deftypefun void clearerr (FILE *@var{stream})
+This function clears the end-of-file and error indicators for the
+stream @var{stream}.
+
+The file positioning functions (@pxref{File Positioning}) also clear the
+end-of-file indicator for the stream.
+@end deftypefun
+
+Note that it is @emph{not} correct to just clear the error flag and retry
+a failed stream operation.  After a failed write, any number of
+characters since the last buffer flush may have been committed to the
+file, while some buffered data may have been discarded.  Merely retrying
+can thus cause lost or repeated data.
+
+A failed read may leave the file pointer in an inappropriate position for
+a second try.  In both cases, you should seek to a known position before
+retrying.
+
+Most errors that can happen are not recoverable --- a second try will
+always fail again in the same way.  So usually it is best to give up and
+report the error to the user, rather than install complicated recovery
+logic.
+
+One important exception is @code{EINTR} (@pxref{Interrupted Primitives}). 
+Many stream I/O implementations will treat it as an ordinary error, which
+can be quite inconvenient.  You can avoid this hassle by installing all
+signals with the @code{SA_RESTART} flag.
+
+For similar reasons, setting nonblocking I/O on a stream's file
+descriptor is not usually advisable.
 
 @node Binary Streams
 @section Text and Binary Streams
