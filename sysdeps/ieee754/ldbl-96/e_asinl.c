@@ -92,7 +92,7 @@ __ieee754_asinl (x)
   ix = (ix << 16) | (i0 >> 16);
   if (ix >= 0x3fff8000)
     {				/* |x|>= 1 */
-      if (((i0 - 0x80000000) | i1) == 0)
+      if (ix < 0x7fff0000 && ((i0 - 0x80000000) | i1) == 0)
 	/* asin(1)=+-pi/2 with inexact */
 	return x * pio2_hi + x * pio2_lo;
       return (x - x) / (x - x);	/* asin(|x|>1) is NaN */
