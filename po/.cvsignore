@@ -1,9 +1,9 @@
 *.mo
-ttt
 stdio-common.pot
 libc-top.pot
 csu.pot
 assert.pot
+conform.pot
 ctype.pot
 locale.pot
 intl.pot
