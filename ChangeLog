@@ -1,3 +1,45 @@
+1998-09-03  Philip Blundell  <pb@nexus.co.uk> 
+ 
+	* sysdeps/arm/bits/endian.h (__FLOAT_WORD_ORDER): Define to big 
+	endian. 
+	* math/math_private.h: Use __FLOAT_WORD_ORDER rather than 
+	BYTE_ORDER. 
+	* string/endian.h: If __FLOAT_WORD_ORDER wasn't defined by 
+	<bits/endian.h>, make it the same as __BYTE_ORDER. 
+ 
+1998-11-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/math.h: Avoid using long double functions in generic macros
+	if __NO_LONG_DOUBLE_MATH.
+
+	* sysdeps/arm/dl-machine.h: Fix handling of weak undefined symbols
+	during bootstrapping.
+	* scripts/config.sub: Add Netwinder specific matches.
+	Patch by Scott Bambrough <scottb@corelcomputer.com>.
+
+1998-11-26  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
+ 
+	* Makeconfig ($(common-objpfx)sysd-dirs): Use automatic variables 
+	if possible. 
+	($(common-objpfx)sysd-sorted): Likewise. 
+ 
+1998-11-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* sysdeps/libm-ieee754/e_log.c (__ieee754_log): Add declaration of  
+	local variables t1,t2 only if needed. 
+ 
+	* sysdeps/libm-ieee754/e_atan2.c: Added braces to avoid compiler
+	warnings.
+	* sysdeps/libm-ieee754/s_truncf.c (__truncf): Likewise. 
+	* sysdeps/libm-ieee754/s_trunc.c (__trunc): Likewise. 
+ 
+	* sysdeps/mips/mul_1.S (Loop): Add closing comment to avoid 
+	warning. 
+ 
+1998-11-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* math/math.h: Add brace to correct #if expression. 
+ 
 1998-11-26  Philip Blundell  <philb@gnu.org> 
  
 	Undo change of 1998-11-12: 

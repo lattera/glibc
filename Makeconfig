@@ -779,23 +779,22 @@ $(common-objpfx)sysd-dirs: $(common-objpfx)config.make $(all-Subdirs-files)
 		END { printf "sysdep-subdirs =%s\n", subdirs;		\
 		      printf "sysdep-inhibit-subdirs =%s\n", inhibit;	\
 		      print "sysd-dirs-done = t" }'			\
-	       /dev/null $(all-Subdirs-files) > $@-tmp
+	       $(patsubst $<,/dev/null,$^) > $@-tmp
 	mv -f $@-tmp $@
 
 all-Depend-files = $(wildcard $(..)*/Depend)
 $(common-objpfx)sysd-sorted: $(..)scripts/gen-sorted.awk $(all-Depend-files) \
 			     $(common-objpfx)sysd-dirs $(..)Makeconfig
-	(files="$(all-Depend-files)";					\
-	 for f in $$files; do						\
-	   dir=`echo $$f | sed 's@^$(..)\(.*\)/[^/]*$$@\1@'`;		\
+	(dirs='$(patsubst $(..)%/Depend,%,$(filter %/Depend, $^))';	\
+	 for d in $$dirs; do						\
 	   while read on; do						\
-	     echo "depend $$dir $$on";					\
-	   done < $$f;							\
+	     echo "depend $$d $$on";					\
+	   done < $$d/Depend;						\
 	 done;								\
 	 for f in $(all-subdirs); do					\
 	   echo $$f;							\
 	 done								\
-	) | $(AWK) -f $(..)scripts/gen-sorted.awk > $@-tmp
+	) | $(AWK) -f $< > $@-tmp
 	mv -f $@-tmp $@
 
 endif # Makeconfig not yet included

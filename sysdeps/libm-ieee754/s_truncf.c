@@ -1,5 +1,5 @@
 /* Truncate argument to nearest integral value not larger than the argument.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -38,7 +38,7 @@ __truncf (float x)
 	/* The magnitude of the number is < 1 so the result is +-0.  */
 	SET_FLOAT_WORD (x, sx);
       else
-	SET_FLOAT_WORD (x, sx | i0 & ~(0x007fffff >> j0));
+	SET_FLOAT_WORD (x, sx | (i0 & ~(0x007fffff >> j0)));
     }
   else
     {

@@ -103,7 +103,10 @@ static double zero   =  0.0;
 	double x;
 #endif
 {
-	double hfsq,f,s,z,R,w,t1,t2,dk,t11,t12,t21,t22,w2,zw2;
+	double hfsq,f,s,z,R,w,dk,t11,t12,t21,t22,w2,zw2;
+#ifdef DO_NOT_USE_THIS
+	double t1,t2;
+#endif
 	int32_t k,hx,i,j;
 	u_int32_t lx;
 

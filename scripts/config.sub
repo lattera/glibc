@@ -182,7 +182,7 @@ case $basic_machine in
 	      | sparc64-* | mips64-* | mipsel-* \
 	      | mips64el-* | mips64orion-* | mips64orionel-*  \
 	      | mipstx39-* | mipstx39el-* \
-	      | f301-*)
+	      | f301-* | armv*-*)
 		;;
 	# Recognize the various machine names and aliases which stand
 	# for a CPU type and a company and sometimes even an OS.
@@ -411,6 +411,10 @@ case $basic_machine in
 	ncr3000)
 		basic_machine=i486-ncr
 		os=-sysv4
+		;;
+	netwinder) 
+		basic_machine=armv4l-ccc 
+		os=-linux 
 		;;
 	news | news700 | news800 | news900)
 		basic_machine=m68k-sony
@@ -801,6 +805,9 @@ else
 case $basic_machine in
 	*-acorn)
 		os=-riscix1.2
+		;;
+	arm*-ccc) 
+		os=-linux 
 		;;
 	arm*-semi)
 		os=-aout

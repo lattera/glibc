@@ -34,6 +34,12 @@
 /* This file defines `__BYTE_ORDER' for the particular machine.  */
 #include <bits/endian.h>
 
+/* Some machines may need to use a different endianness for floating point
+   values.  */
+#ifndef __FLOAT_WORD_ORDER
+# define __FLOAT_WORD_ORDER __BYTE_ORDER
+#endif
+
 #ifdef	__USE_BSD
 # define LITTLE_ENDIAN	__LITTLE_ENDIAN
 # define BIG_ENDIAN	__BIG_ENDIAN
