@@ -322,17 +322,25 @@ setlocale (int category, const char *locale)
 		break;
 	      }
 
-	    /* We must not simply free a global locale since we have no
-	       control over the usage.  So we mark it as un-deletable.  */
+	    /* We must not simply free a global locale since we have
+	       no control over the usage.  So we mark it as
+	       un-deletable.  And yes, the 'if' is needed, the data
+	       might be in read-only memory.  */
 	    if (newdata[category]->usage_count != UNDELETABLE)
 	      newdata[category]->usage_count = UNDELETABLE;
 
 	    /* Make a copy of locale name.  */
 	    if (newnames[category] != _nl_C_name)
 	      {
-		newnames[category] = __strdup (newnames[category]);
-		if (newnames[category] == NULL)
-		  break;
+		if (strcmp (newnames[category],
+			    _nl_global_locale.__names[category]) == 0)
+		  newnames[category] = _nl_global_locale.__names[category];
+		else
+		  {
+		    newnames[category] = __strdup (newnames[category]);
+		    if (newnames[category] == NULL)
+		      break;
+		  }
 	      }
 	  }
 
@@ -356,7 +364,8 @@ setlocale (int category, const char *locale)
 	}
       else
 	for (++category; category < __LC_LAST; ++category)
-	  if (category != LC_ALL && newnames[category] != _nl_C_name)
+	  if (category != LC_ALL && newnames[category] != _nl_C_name
+	      && newnames[category] != _nl_global_locale.__names[category])
 	    free ((char *) newnames[category]);
 
       /* Critical section left.  */

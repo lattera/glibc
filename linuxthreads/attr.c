@@ -441,6 +441,7 @@ int pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
 
 	  char *line = NULL;
 	  size_t linelen = 0;
+	  uintptr_t last_to = 0;
 
 	  while (! feof_unlocked (fp))
 	    {
@@ -449,8 +450,9 @@ int pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
 
 	      uintptr_t from;
 	      uintptr_t to;
-	      if (sscanf (line, "%" SCNxPTR "-%" SCNxPTR, &from, &to) == 2
-		  && from <= (uintptr_t) __libc_stack_end
+	      if (sscanf (line, "%" SCNxPTR "-%" SCNxPTR, &from, &to) != 2)
+		continue;
+	      if (from <= (uintptr_t) __libc_stack_end
 		  && (uintptr_t) __libc_stack_end < to)
 		{
 		  /* Found the entry.  Now we have the info we need.  */
@@ -461,16 +463,17 @@ int pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
 #else
 		  attr->__stackaddr = (void *) to;
 
-		  /* The limit might be too high.  This is a bogus
-		     situation but try to avoid making it worse.  */
-		  if ((size_t) attr->__stacksize > (size_t) attr->__stackaddr)
-		    attr->__stacksize = (size_t) attr->__stackaddr;
+		  /* The limit might be too high.  */
+		  if ((size_t) attr->__stacksize
+		      > (size_t) attr->__stackaddr - last_to)
+		    attr->__stacksize = (size_t) attr->__stackaddr - last_to;
 #endif
 
 		  /* We succeed and no need to look further.  */
 		  ret = 0;
 		  break;
 		}
+	      last_to = to;
 	    }
 
 	  fclose (fp);
