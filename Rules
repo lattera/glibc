@@ -96,10 +96,10 @@ xtests: tests
 else
 ifeq ($(build-bounded),yes)
 tests-bp.out = $(tests:%=$(objpfx)%-bp.out)
-xtests-bp.out = $(tests:%=$(objpfx)%-bp.out) $(xtests:%=$(objpfx)%-bp.out)
+xtests-bp.out = $(xtests:%=$(objpfx)%-bp.out)
 endif
 tests: $(tests:%=$(objpfx)%.out) $(tests-bp.out)
-xtests: $(tests:%=$(objpfx)%.out) $(xtests:%=$(objpfx)%.out) $(xtests-bp.out)
+xtests: tests $(xtests:%=$(objpfx)%.out) $(xtests-bp.out)
 endif
 
 ifeq ($(build-programs),yes)

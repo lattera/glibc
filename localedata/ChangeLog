@@ -1,3 +1,9 @@
+2004-05-15  Petter Reinholdtsen  <pere@hungry.com>
+
+	* locales/it_IT: Change currency formatting from none to two
+	fraction dicits, as Italy now uses the Euro.  Patch from Marko
+	Djukic. [BZ #111]
+
 2004-05-02  Petter Reinholdtsen  <pere@hungry.com>
 
 	* locales/nn_NO: Use the same sorting order in Norwegian Nynorsk
