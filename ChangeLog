@@ -1,3 +1,15 @@
+2003-03-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/atomic.h: Define atomic_exchange and
+	atomic_decrement_if_positive if not already defined.  Add some
+	__builtin_expect.
+	* sysdeps/i386/i486/bits/atomic.h: Define atomic_exchange.
+	* sysdeps/x86_64/bits/atomic.h: Likewise.
+	* sysdeps/ia64/bits/atomic.h: Pretty printing.  Define atomic_exchange.
+	* sysdeps/powerpc/bits/atomic.h: Pretty printing.  Define
+	atomic_exchange, atomic_exchange_and_add, and
+	atomic_decrement_if_positive
+
 2003-03-20  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips64/n64/ioctl.S: Sign-extend

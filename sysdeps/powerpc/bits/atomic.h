@@ -53,11 +53,11 @@ typedef uintmax_t uatomic_max_t;
   (abort (), 0)
 
 #ifdef UP
-#define __ARCH_ACQ_INSTR	""
-#define __ARCH_REL_INSTR	""
+# define __ARCH_ACQ_INSTR	""
+# define __ARCH_REL_INSTR	""
 #else
-#define __ARCH_ACQ_INSTR	"isync"
-#define __ARCH_REL_INSTR	"sync"
+# define __ARCH_ACQ_INSTR	"isync"
+# define __ARCH_REL_INSTR	"sync"
 #endif
 
 /*
@@ -86,7 +86,7 @@ typedef uintmax_t uatomic_max_t;
 })
 
 #ifdef __powerpc64__
-#define __arch_compare_and_exchange_64_acq(mem, newval, oldval)	\
+# define __arch_compare_and_exchange_64_acq(mem, newval, oldval)\
 ({								\
   unsigned long	__tmp;						\
   __asm __volatile (__ARCH_REL_INSTR "\n"			\
@@ -103,14 +103,64 @@ typedef uintmax_t uatomic_max_t;
 })
 
 #else /* powerpc32 */
-#define __arch_compare_and_exchange_64_acq(mem, newval, oldval) \
+# define __arch_compare_and_exchange_64_acq(mem, newval, oldval) \
   (abort (), 0)
 #endif
 
+
+#define atomic_exchange(mem, value) \
+  ({ if (sizeof (*mem) != 4)						      \
+       abort ();							      \
+     int __val, __tmp;							      \
+      __asm __volatile (__ARCH_REL_INSTR "\n"				      \
+			"1:	lwarx	%0,0,%2\n"			      \
+			"	stwcx.	%3,0,%2\n"			      \
+			"	bne-	1b"				      \
+			: "=&r" (__val), "=m" (*mem)			      \
+			: "r" (mem), "r" (value), "1" (*mem)		      \
+			: "cr0", "memory");				      \
+      __val; })
+
+
+#define atomic_exchange_and_add(mem, value) \
+  ({ if (sizeof (*mem) != 4)						      \
+       abort ();							      \
+     int __val, __tmp;							      \
+     __asm __volatile ("1:	lwarx	%0,0,%3\n"			      \
+		       "	addi	%1,%0,%4\n"			      \
+		       "	stwcx.	%1,0,%3\n"			      \
+		       "	bne-	1b"				      \
+		       : "=&b" (__val), "=&r" (__tmp), "=m" (*mem)	      \
+		       : "r" (mem), "I" (value), "2" (*mem)		      \
+		       : "cr0");					      \
+     __val;								      \
+  })
+
+
+/* Decrement *MEM if it is > 0, and return the old value.  */
+#define atomic_decrement_if_positive(mem) \
+  ({ if (sizeof (*mem) != 4)						      \
+       abort ();							      \
+     int __val, __tmp;							      \
+     __asm __volatile ("1:	lwarx	%0,0,%3\n"			      \
+		       "	cmpwi	0,%0,0\n"			      \
+		       "	addi	%1,%0,-1\n"			      \
+		       "	ble	2f\n"				      \
+		       "	stwcx.	%1,0,%3\n"			      \
+		       "	bne-	1b\n"				      \
+		       "2:	" __ARCH_ACQ_INSTR			      \
+		       : "=&b" (__val), "=&r" (__tmp), "=m" (*mem)	      \
+		       : "r" (mem), "2" (*mem)				      \
+		       : "cr0");					      \
+     __val;								      \
+  })
+
+
+
 #define atomic_full_barrier()	__asm ("sync" ::: "memory")
 #ifdef __powerpc64__
-#define atomic_read_barrier()	__asm ("lwsync" ::: "memory")
+# define atomic_read_barrier()	__asm ("lwsync" ::: "memory")
 #else
-#define atomic_read_barrier()	__asm ("sync" ::: "memory")
+# define atomic_read_barrier()	__asm ("sync" ::: "memory")
 #endif
 #define atomic_write_barrier()	__asm ("eieio" ::: "memory")

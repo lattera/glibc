@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -82,6 +82,28 @@ typedef uintmax_t uatomic_max_t;
 		       : "=a" (ret), "=m" (*mem)			      \
 		       : "r" (newval), "1" (*mem), "0" (oldval));	      \
      ret; })
+
+
+/* Note that we need no lock prefix.  */
+#define atomic_exchange(mem, newvalue) \
+  ({ __typeof (*mem) result;						      \
+     if (sizeof (*mem) == 1)						      \
+       __asm __volatile ("xchgb %b0, %1"				      \
+			 : "=r" (result), "=m" (*mem)			      \
+			 : "0" (newvalue), "1" (*mem));			      \
+     else if (sizeof (*mem) == 2)					      \
+       __asm __volatile ("xchgw %w0, %1"				      \
+			 : "=r" (result), "=m" (*mem)			      \
+			 : "0" (newvalue), "1" (*mem));			      \
+     else if (sizeof (*mem) == 4)					      \
+       __asm __volatile ("xchgl %0, %1"					      \
+			 : "=r" (result), "=m" (*mem)			      \
+			 : "0" (newvalue), "1" (*mem));			      \
+     else								      \
+       __asm __volatile ("xchgq %q0, %1"				      \
+			 : "=r" (result), "=m" (*mem)			      \
+			 : "0" (newvalue), "1" (*mem));			      \
+     result; })
 
 
 #define atomic_exchange_and_add(mem, value) \

@@ -119,6 +119,29 @@ typedef uintmax_t uatomic_max_t;
 #endif
 
 
+/* Note that we need no lock prefix.  */
+#define atomic_exchange(mem, newvalue) \
+  ({ __typeof (*mem) result;						      \
+     if (sizeof (*mem) == 1)						      \
+       __asm __volatile ("xchgb %b0, %1"				      \
+			 : "=r" (result), "=m" (*mem)			      \
+			 : "0" (newvalue), "1" (*mem));			      \
+     else if (sizeof (*mem) == 2)					      \
+       __asm __volatile ("xchgw %w0, %1"				      \
+			 : "=r" (result), "=m" (*mem)			      \
+			 : "0" (newvalue), "1" (*mem));			      \
+     else if (sizeof (*mem) == 4)					      \
+       __asm __volatile ("xchgl %0, %1"					      \
+			 : "=r" (result), "=m" (*mem)			      \
+			 : "0" (newvalue), "1" (*mem));			      \
+     else								      \
+       {								      \
+	 result = 0;							      \
+	 abort ();							      \
+       }								      \
+     result; })
+
+
 #define atomic_exchange_and_add(mem, value) \
   ({ __typeof (*mem) result;						      \
      __typeof (value) addval = (value);					      \
