@@ -667,6 +667,7 @@ _dl_init_paths (const char *llp)
     {
       size_t nllp;
       const char *cp = llp;
+      char *llp_tmp = strdupa (llp);
 
       /* Decompose the LD_LIBRARY_PATH contents.  First determine how many
 	 elements it has.  */
@@ -684,7 +685,7 @@ _dl_init_paths (const char *llp)
 	_dl_signal_error (ENOMEM, NULL,
 			  N_("cannot create cache for search path"));
 
-      (void) fillin_rpath (strdupa (llp), env_path_list.dirs, ":;",
+      (void) fillin_rpath (llp_tmp, env_path_list.dirs, ":;",
 			   __libc_enable_secure, "LD_LIBRARY_PATH", NULL);
 
       if (env_path_list.dirs[0] == NULL)

@@ -1,5 +1,9 @@
 2001-01-23  Andreas Jaeger  <aj@suse.de>
 
+	* elf/dl-load.c (_dl_init_paths): Don't use strdupa in function
+	arguments.  Reported by Jiri Kubicek <kubicek@bitsmart.com>,
+	closes PR libc/2039.
+
 	* manual/install.texi (Tools for Compilation): Change required
 	binutils version.
 

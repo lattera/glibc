@@ -261,10 +261,9 @@ understand all the features of ELF, including weak and versioned symbols.
 The static library can be compiled with less featureful tools, but lacks key
 features such as NSS.
 
-For Linux or Hurd, you want binutils 2.8.1.0.23, 2.9.1, or 2.9.1.0.15 or
-higher.  These are the only versions we've tested and found reliable.  Other
-versions after 2.8.1.0.23 may work but we don't recommend them, especially
-not when C++ is involved.  Earlier versions do not work at all.
+For Linux or Hurd, you want binutils 2.10.1 or higher.  These are the only
+versions we've tested and found reliable.  Other versions may work but we
+don't recommend them, especially not when C++ is involved.
 
 Other operating systems may come with system tools that have all the
 necessary features, but this is moot because glibc hasn't been ported to
@@ -285,7 +284,7 @@ at:
 
 <ftp://ftp.netwinder.org/users/p/philb/egcs-1.1.1pre2-diff-981126>
 
-Binutils 2.9.1.0.16 or later is also required.
+Binutils 2.10.1 or later is also required.
 
 
 1.7.	Do I need some more things to compile the GNU C Library?
