@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -92,7 +92,8 @@ translate_string (char *str, struct charset_t *charset)
 	  return NULL;
 	}
 
-      value = charset_find_value (charset, str + 1, tp - (str + 1));
+      value = charset_find_value (&charset->char_table, str + 1,
+				  tp - (str + 1));
       if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
 	{
 	  free (buf);

@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,8 @@ distribute	= localeinfo.h categories.def iso-4217.def weight.h \
 			      $(lib-modules:=.c) config.h simple-hash.h \
 			      charmap-kw.gperf charmap-kw.h locfile-token.h \
 			      locfile-kw.gperf locfile-kw.h linereader.h \
-			      locales.h locfile.h stringtrans.h charset.h)
+			      locales.h locfile.h stringtrans.h charset.h \
+			      repertoire.h)
 routines	= setlocale findlocale loadlocale localeconv nl_langinfo \
 		  mb_cur_max codeset_name \
 		  newlocale duplocale freelocale
@@ -53,7 +54,7 @@ vpath %.h programs
 vpath %.gperf programs
 
 localedef-modules	:= $(categories:%=ld-%) charmap charset linereader \
-			   locfile stringtrans
+			   locfile stringtrans repertoire
 locale-modules		:= locale-spec
 lib-modules		:= simple-hash xmalloc xstrdup
 
@@ -77,6 +78,7 @@ CPPFLAGS := -DLOCALE_PATH='$(localepath)' \
 	    -DLOCALEDIR='"$(localedir)"' \
 	    -DLOCALE_ALIAS_PATH='"$(localedir):$(i18ndir)"' \
 	    -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
+	    -DREPERTOIREMAP_PATH='"$(i18ndir)/repertoiremaps"' \
 	    -DLOCSRCDIR='"$(i18ndir)/locales"' -DHAVE_CONFIG_H \
 	    -Iprograms $(CPPFLAGS)
 

@@ -81,8 +81,8 @@ static const char *charmap_file;
 /* Name of the locale definition file.  */
 static const char *input_file;
 
-/* Name of the UCS file.  */
-static const char *ucs_csn;
+/* Name of the repertoire map file.  */
+const char *repertoiremap;
 
 
 /* Name and version of program.  */
@@ -99,9 +99,7 @@ static const struct argp_option options[] =
   { "charmap", 'f', "FILE", 0,
     N_("Symbolic character names defined in FILE") },
   { "inputfile", 'i', "FILE", 0, N_("Source definitions are found in FILE") },
-  { "code-set-name", 'u', "NAME", OPTION_HIDDEN,
-    N_("Specify code set for mapping ISO 10646 elements") },
-  { "repertoire-map", 'u', NAME, 0,
+  { "repertoire-map", 'u', "FILE", 0,
     N_("file containing mapping from symbolic names to UCS4 values") },
 
   { NULL, 0, NULL, 0, N_("Output control:") },
@@ -355,7 +353,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       input_file = arg;
       break;
     case 'u':
-      ucs_csn = arg;
+      repertoiremap = arg;
       break;
     case 'v':
       verbose = 1;
@@ -377,10 +375,11 @@ more_help (int key, const char *text, void *input)
     case ARGP_KEY_HELP_EXTRA:
       /* We print some extra information.  */
       asprintf (&cp, gettext ("\
-System's directory for character maps: %s\n\
-                       locale files  : %s\n\
+System's directory for character maps : %s\n\
+                       repertoire maps: %s\n\
+                       locale path    : %s\n\
 %s"),
-		CHARMAP_PATH, LOCALE_PATH, gettext ("\
+		CHARMAP_PATH, REPERTOIREMAP_PATH, LOCALE_PATH, gettext ("\
 Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"));
       return cp;
     default:

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -22,6 +22,7 @@
 
 #include <obstack.h>
 
+#include "repertoire.h"
 #include "simple-hash.h"
 #include "linereader.h"
 
@@ -36,6 +37,9 @@ struct width_rule
 
 struct charset_t
 {
+  const char *repertoiremap;
+  struct repertoire_t *repertoire;
+
   const char *code_set_name;
   int mb_cur_min;
   int mb_cur_max;
@@ -63,14 +67,11 @@ extern int be_quiet;
 struct charset_t *charmap_read (const char *filename);
 
 /* Prototypes for function to insert new character.  */
-void charset_new_char (struct linereader *lr, struct charset_t *cs, int bytes,
+void charset_new_char (struct linereader *lr, hash_table *ht, int bytes,
 		       unsigned int value, const char *from, const char *to);
 
-void charset_new_unicode (struct linereader *lr, struct charset_t *cs,
-			  int bytes, unsigned int value, const char *from,
-			  const char *to);
-
-unsigned int charset_find_value (const struct charset_t *__cs,
-				 const char *__name, size_t __len);
+/* Return the value stored under the given key in the hashing table.  */
+unsigned int charset_find_value (const hash_table *ht,
+				 const char *name, size_t len);
 
 #endif /* charset.h */

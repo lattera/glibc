@@ -1,3 +1,10 @@
+1998-04-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile: Install repertoire maps.
+	* localedata/mnemonic.ds: Moved into repertoiremaps subdir.
+	* localedata/repertoiremaps/charids.894: New file.
+	* localedata/repertoiremaps/mnemonic.ds: New file.
+
 1998-04-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* tst-locale.sh: Add comment for when multi-byte charsets in

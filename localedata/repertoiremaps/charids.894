@@ -1,0 +1,511 @@
+<escape_char> /
+# Charids refering to ISO 10646/Correspondance des caract<e!>res avec ISO 10646
+# Version: 1994-08-25
+#<comment_char> #
+CHARIDS
+<NUL>   <U0000>  # NULL / NUL
+<SOH>   <U0001>  # START OF HEADING / D<E'>BUT D'ENT<E/>>TE
+<STX>   <U0002>  # START OF TEXT / D<E'>BUT DE TEXTE
+<ETX>   <U0003>  # END OF TEXT / FIN DE TEXTE
+<EOT>   <U0004>  # END OF TRANSMISSION / FIN DE TRANSMISSION
+<ENQ>   <U0005>  # ENQUIRY / DEMANDE
+<ACK>   <U0006>  # ACKNOWLEDGE / ACCUS<E'> DE R<E'>CEPTION POSITIF
+<BEL>   <U0007>  # BELL / SONNERIE
+<BS>    <U0008>  # BACKSPACE / ESPACE ARRI<E!>RE
+<HT>    <U0009>  # CHARACTER TABULATION / TABULATION HORIZONTALE
+<LF>    <U000A>  # LINE FEED / INTERLIGNE
+<VT>    <U000B>  # LINE TABULATION / TABULATION VERTICALE
+<FF>    <U000C>  # FORM FEED / PAGE SUIVANTE
+<CR>    <U000D>  # CARRIAGE RETURN / RETOUR DE CHARIOT
+<SO>    <U000E>  # SHIFT OUT / HORS CODE
+<SI>    <U000F>  # SHIFT IN / EN CODE
+<DLE>   <U0010>  # DATA LINK ESCAPE / <E'>CHAPPEMENT TRANSMISSION
+<DC1>   <U0011>  # DEVICE CONTROL ONE / COMMANDE D'APPAREIL UN
+<DC2>   <U0012>  # DEVICE CONTROL TWO / COMMANDE D'APPAREIL DEUX
+<DC3>   <U0013>  # DEVICE CONTROL THREE / COMMANDE D'APPAREIL TROIS
+<DC4>   <U0014>  # DEVICE CONTROL FOUR / COMMANDE D'APPAREIL QUATRE
+<NAK>   <U0015>  # NEGATIVE ACKNOWLEDGE / ACCUS<E'> DE R<E'>CEPTION N<E'>GATIF
+<SYN>   <U0016>  # SYNCHRONOUS IDLE / SYNCHRONISATION
+<ETB>   <U0017>  # END OF TRANSMISSION BLOCK / FIN DE TRANSMISSION DE BLOC
+<CAN>   <U0018>  # CANCEL / ANNULATION
+<EM>    <U0019>  # END OF MEDIUM / FIN DE SUPPORT
+<SUB>   <U001A>  # SUBSTITUTE / CARACT<E!>RE DE SUBSTITUTION
+<ESC>   <U001B>  # ESCAPE / <E'>CHAPPEMENT
+<IS4>   <U001C>  # FILE SEPARATOR / S<E'>PARATEUR DE FICHIER
+<FS>    <U001C>  # INFORMATION SEPARATOR FOUR / S<E'>PARATEUR DE FICHIER
+<IFS>   <U001C>  # INFORMATION SEPARATOR FOUR / S<E'>PARATEUR DE FICHIER
+<IS3>   <U001D>  # GROUP SEPARATOR / S<E'>PARATEUR DE GROUPE
+<GS>    <U001D>  # INFORMATION SEPARATOR THREE / S<E'>PARATEUR DE GROUPE
+<IGS>   <U001D>  # INFORMATION SEPARATOR THREE / S<E'>PARATEUR DE GROUPE
+<IS2>   <U001E>  # RECORD SEPARATOR / S<E'>PARATEUR D'ARTICLE
+<RS>    <U001E>  # INFORMATION SEPARATOR TWO / S<E'>PARATEUR D'ARTICLE
+<IRS>   <U001E>  # INFORMATION SEPARATOR TWO / S<E'>PARATEUR D'ARTICLE
+<IS1>   <U001F>  # UNIT SEPARATOR / S<E'>PARATEUR DE SOUS-ARTICLE
+<US>    <U001F>  # INFORMATION SEPARATOR ONE / S<E'>PARATEUR DE SOUS-ARTICLE
+<SP>    <U0020>  # SPACE / ESPACE
+<!>     <U0021>  # EXCLAMATION MARK / POINT D'EXCLAMATION
+<">     <U0022>  # QUOTATION MARK / GUILLEMET
+<H->    <U0023>  # NUMBER SIGN / CROISILLON
+<!S>    <U0024>  # DOLLAR SIGN / SYMBOLE DOLLAR
+<%>     <U0025>  # PERCENT SIGN / SYMBOLE POURCENT
+<&>     <U0026>  # AMPERSAND / PERLU<E!>TE
+<'>     <U0027>  # APOSTROPHE / APOSTROPHE
+<(>     <U0028>  # LEFT PARENTHESIS / PARENTH<E!>SE GAUCHE
+<)>     <U0029>  # RIGHT PARENTHESIS / PARENTH<E!>SE DROITE
+<*>     <U002A>  # ASTERISK / AST<E'>RISQUE
+<+>     <U002B>  # PLUS SIGN / SIGNE PLUS
+<,>     <U002C>  # COMMA / VIRGULE
+<->     <U002D>  # HYPHEN-MINUS / TRAIT D'UNION-SIGNE MOINS
+<.>     <U002E>  # FULL STOP / POINT
+<//>    <U002F>  # SOLIDUS / BARRE OBLIQUE
+<0>     <U0030>  # DIGIT ZERO / CHIFFRE Z<E'>RO
+<1>     <U0031>  # DIGIT ONE / CHIFFRE UN
+<2>     <U0032>  # DIGIT TWO / CHIFFRE DEUX
+<3>     <U0033>  # DIGIT THREE / CHIFFRE TROIS
+<4>     <U0034>  # DIGIT FOUR / CHIFFRE QUATRE
+<5>     <U0035>  # DIGIT FIVE / CHIFFRE CINQ
+<6>     <U0036>  # DIGIT SIX / CHIFFRE SIX
+<7>     <U0037>  # DIGIT SEVEN / CHIFFRE SEPT
+<8>     <U0038>  # DIGIT EIGHT / CHIFFRE HUIT
+<9>     <U0039>  # DIGIT NINE / CHIFFRE NEUF
+<:>     <U003A>  # COLON / DEUX-POINTS
+<;>     <U003B>  # SEMICOLON / POINT-VIRGULE
+<<>     <U003C>  # LESS-THAN SIGN / SIGNE INF<E'>RIEUR <A!>
+<=>     <U003D>  # EQUALS SIGN / SIGNE <E'>GAL
+</>>    <U003E>  # GREATER-THAN SIGN / SIGNE SUP<E'>RIEUR <A!>
+<?>     <U003F>  # QUESTION MARK / POINT D'INTERROGATION
+<@>     <U0040>  # COMMERCIAL AT / A COMMERCIAL
+<Oa>    <U0040>  # COMMERCIAL AT / A COMMERCIAL
+#
+# In the following, CAP    stands for LATIN CAPITAL LETTER
+#                   CAPLIG stands for LATIN CAPITAL LIGATURE
+#                   IVT    stnads for INVERTED
+#                   LOW    stands for LATIN SMALL LETTER
+#                   LOWLIG stands for LATIN SMALL LIGATURE
+#                   OI     stands for ORDINAL INDICATOR
+#                   PDAQ   stands for POINTING DOUBLE ANGLE QUOTATION
+#                   VF     stands for VULGAR FRACTION
+#
+# Ci-apr<e!>s, FO     se lit FRACTION ORDINAIRE
+#              GAD    se lit GUILLEMET ANGULAIRE DOUBLE
+#              IO     se lit INDICATEUR ORDINAL
+#              INV    se lit INVERS<E'>
+#              LIGMAJ se lit LIGATURE MAJUSCULE LATINE
+#              LIGMIN se lit LIGATURE MINUSCULE LATINE
+#              MAJ    se lit LETTRE MAJUSCULE LATINE
+#              MIN    se lit LETTRE MINUSCULE LATINE
+#
+<A>     <U0041>  # CAP A / MAJ A
+<B>     <U0042>  # CAP B / MAJ B
+<C>     <U0043>  # CAP C / MAJ C
+<D>     <U0044>  # CAP D / MAJ D
+<E>     <U0045>  # CAP E / MAJ E
+<F>     <U0046>  # CAP F / MAJ F
+<G>     <U0047>  # CAP G / MAJ G
+<H>     <U0048>  # CAP H / MAJ H
+<I>     <U0049>  # CAP I / MAJ I
+<J>     <U004A>  # CAP J / MAJ J
+<K>     <U004B>  # CAP K / MAJ K
+<L>     <U004C>  # CAP L / MAJ L
+<M>     <U004D>  # CAP M / MAJ M
+<N>     <U004E>  # CAP N / MAJ N
+<O>     <U004F>  # CAP O / MAJ O
+<P>     <U0050>  # CAP P / MAJ P
+<Q>     <U0051>  # CAP Q / MAJ Q
+<R>     <U0052>  # CAP R / MAJ R
+<S>     <U0053>  # CAP S / MAJ S
+<T>     <U0054>  # CAP T / MAJ T
+<U>     <U0055>  # CAP U / MAJ U
+<V>     <U0056>  # CAP V / MAJ V
+<W>     <U0057>  # CAP W / MAJ W
+<X>     <U0058>  # CAP X / MAJ X
+<Y>     <U0059>  # CAP Y / MAJ Y
+<Z>     <U005A>  # CAP Z / MAJ Z
+<!(>    <U005B>  # LEFT SQUARE BRACKET / CROCHET GAUCHE
+<////>  <U005C>  # REVERSE SOLIDUS / BARRE OBLIQUE INVERS<E'>E
+<)!>    <U005D>  # RIGHT SQUARE BRACKET / CROCHET DROIT
+<'/>>   <U005E>  # CIRCUMFLEX ACCENT / ACCENT CIRCONFLEXE
+<_>     <U005F>  # LOW LINE / TRAIT BAS
+<'!>    <U0060>  # GRAVE ACCENT / ACCENT GRAVE
+<a>     <U0061>  # LOW A / MIN A
+<b>     <U0062>  # LOW B / MIN B
+<c>     <U0063>  # LOW C / MIN C
+<d>     <U0064>  # LOW D / MIN D
+<e>     <U0065>  # LOW E / MIN E
+<f>     <U0066>  # LOW F / MIN F
+<g>     <U0067>  # LOW G / MIN G
+<h>     <U0068>  # LOW H / MIN H
+<i>     <U0069>  # LOW I / MIN I
+<j>     <U006A>  # LOW J / MIN J
+<k>     <U006B>  # LOW K / MIN K
+<l>     <U006C>  # LOW L / MIN L
+<m>     <U006D>  # LOW M / MIN M
+<n>     <U006E>  # LOW N / MIN N
+<o>     <U006F>  # LOW O / MIN O
+<p>     <U0070>  # LOW P / MIN P
+<q>     <U0071>  # LOW Q / MIN Q
+<r>     <U0072>  # LOW R / MIN R
+<s>     <U0073>  # LOW S / MIN S
+<t>     <U0074>  # LOW T / MIN T
+<u>     <U0075>  # LOW U / MIN U
+<v>     <U0076>  # LOW V / MIN V
+<w>     <U0077>  # LOW W / MIN W
+<x>     <U0078>  # LOW X / MIN X
+<y>     <U0079>  # LOW Y / MIN Y
+<z>     <U007A>  # LOW Z / MIN Z
+<<(>    <U007B>  # LEFT CURLY BRACKET / ACCOLADE GAUCHE
+<!!>    <U007C>  # VERTICAL LINE / LIGNE VERTICALE
+<)/>>   <U007D>  # RIGHT CURLY BRACKET / ACCOLADE DROITE
+<'?>    <U007E>  # TILDE
+#
+# Values #x.. : IBM 850 code points / Valeurs #x.. : code IBM 850
+#
+<NS>    <U00A0>  #xff # NO-BREAK SPACE / ESPACE LIANT
+<!I>    <U00A1>  #xad # IVT EXCLAMATION MARK / POINT D'EXCLAMATION INV
+<!C>    <U00A2>  #xbd # CENT SIGN / SYMBOLE CENTIME
+<L->    <U00A3>  #x9c # POUND SIGN / SYMBOLE LIVRE
+<Xo>    <U00A4>  #xcf # CURRENCY SIGN / SYMBOLE MON<E'>TAIRE
+<Y->    <U00A5>  #xbe # YEN SIGN /SYMBOLE YEN
+<!B>    <U00A6>  #xdd # BROKEN BAR / BARRE VERTICALE INTERROMPUE
+<So>    <U00A7>  #xf5 # SECTION SIGN / SYMBOLE PARAGRAPHE
+<':>    <U00A8>  #xf9 # DIAERESIS / TR<E'>MA
+<OC>    <U00A9>  #xb8 # COPYRIGHT SIGN / SYMBOLE COPYRIGHT
+<-a>    <U00AA>  #xa6 # FEMININE OI / IO F<E'>MININ
+<<<>    <U00AB>  #xaf # LEFT PDAQ / GAD VERS LA GAUCHE
+<7!>    <U00AC>  #xaa # NOT SIGN / SIGNE N<E'>GATION
+<-->    <U00AD>  #xf0 # SOFT HYPHEN / TIRET VIRTUEL
+<OR>    <U00AE>  #xa9 # REGISTERED SIGN / SYMBOLE MARQUE D<E'>POS<E'>E
+<'->    <U00AF>  #xee # MACRON
+<DG>    <U00B0>  #xf8 # DEGREE SIGN / SYMBOLE DEGR<E'>
+<+->    <U00B1>  #xf1 # PLUS-MINUS SIGN / SIGNE PLUS OU MOINS
+<2S>    <U00B2>  #xfd # SUPERSCRIPT TWO / EXPOSANT DEUX
+<3S>    <U00B3>  #xfc # SUPERSCRIPT THREE / EXPOSANT TROIS
+<''>    <U00B4>  #xef # ACUTE ACCENT / ACCENT AIGU
+<My>    <U00B5>  #xe6 # MICRO SIGN / SYMBOLE MICRO
+<9I>    <U00B6>  #xf4 # PILCROW SIGN / SYMBOLE ALIN<E'>A
+<.M>    <U00B7>  #xfa # MIDDLE DOT / POINT M<E'>DIAN
+<',>    <U00B8>  #xf7 # CEDILLA / C<E'>DILLE
+<1S>    <U00B9>  #xfb # SUPERSCRIPT ONE / EXPOSANT UN
+<-o>    <U00BA>  #xa7 # MASCULINE OI / IO MASCULIN
+</>/>>  <U00BB>  #xae # RIGHT PDAQ / GAD VERS LA DROITE
+<14>    <U00BC>  #xac # VF ONE QUARTER / FO UN QUART
+<12>    <U00BD>  #xab # VF ONE HALF / FO UN DEMI
+<34>    <U00BE>  #xf3 # VF THREE QUARTERS / FO TROIS QUARTS
+<?I>    <U00BF>  #xa8 # IVT QUESTION MARK /POINT D'INTERROGATION INV
+<A!>    <U00C0>  #xb7 # CAP A WITH GRAVE / MAJ A ACCENT GRAVE
+<A'>    <U00C1>  #xb5 # CAP A WITH ACUTE / MAJ A ACCENT AIGU
+<A/>>   <U00C2>  #xb6 # CAP A WITH CIRCUMFLEX / MAJ A ACCENT CIRCONFLEXE
+<A?>    <U00C3>  #xc7 # CAP A WITH TILDE / MAJ A TILDE
+<A:>    <U00C4>  #x8e # CAP A WITH DIAERESIS / MAJ A TR<E'>MA
+<AA>    <U00C5>  #x8f # CAP A WITH RING ABOVE / MAJ A ROND
+<AE>    <U00C6>  #x92 # CAPLIG / LIGMAJ AE
+<C,>    <U00C7>  #x80 # CAP C WITH CEDILLA / MAJ C C<E'>DILLE
+<E!>    <U00C8>  #xd4 # CAP E WITH GRAVE / MAJ E ACCENT GRAVE
+<E'>    <U00C9>  #x90 # CAP E WITH ACUTE / MAJ E ACCENT AIGU
+<E/>>   <U00CA>  #xd2 # CAP E WITH CIRCUMFLEX / MAJ E ACCENT CIRCONFLEXE
+<E:>    <U00CB>  #xd3 # CAP E WITH DIAERESIS / MAJ E TR<E'>MA
+<I!>    <U00CC>  #xde # CAP I WITH GRAVE / MAJ I ACCENT GRAVE
+<I'>    <U00CD>  #xd6 # CAP I WITH ACUTE / MAJ I ACCENT AIGU
+<I/>>   <U00CE>  #xd7 # CAP I WITH CIRCUMFLEX / MAJ I ACCENT CIRCONFLEXE
+<I:>    <U00CF>  #xd8 # CAP I WITH DIAERESIS / MAJ I TR<E'>MA
+<D->    <U00D0>  #xd1 # CAP ETH (Icelandic) / MAJ ETH (islandaise)
+<N?>    <U00D1>  #xa5 # CAP N WITH TILDE / MAJ N TILDE
+<O!>    <U00D2>  #xe3 # CAP O WITH GRAVE / MAJ O ACCENT GRAVE
+<O'>    <U00D3>  #xe0 # CAP O WITH ACUTE / MAJ O ACCENT AIGU
+<O/>>   <U00D4>  #xe2 # CAP O WITH CIRCUMFLEX / MAJ O ACCENT CIRCONFLEXE
+<O?>    <U00D5>  #xe5 # CAP O WITH TILDE / MAJ O TILDE
+<O:>    <U00D6>  #x99 # CAP O WITH DIAERESIS / MAJ O TR<E'>MA
+<*X>    <U00D7>  #x9e # MULTIPLICATION SIGN / SIGNE MULTIPLICATION
+<O//>   <U00D8>  #x9d # CAP O WITH STROKE / MAJ O BARR<E'>E EN OBLIQUE
+<U!>    <U00D9>  #xeb # CAP U WITH GRAVE / MAJ U ACCENT GRAVE
+<U'>    <U00DA>  #xe9 # CAP U WITH ACUTE / MAJ U ACCENT AIGU
+<U/>>   <U00DB>  #xea # CAP U WITH CIRCUMFLEX / MAJ U ACCENT CIRCONFLEXE
+<U:>    <U00DC>  #x9a # CAP U WITH DIAERESIS / MAJ U TR<E'>MA
+<Y'>    <U00DD>  #xed # CAP Y WITH ACUTE / MAJ Y ACCENT AIGU
+<TH>    <U00DE>  #xe8 # CAP THORN (Icelandic) / MAJ THORN (islandaise)
+<ss>    <U00DF>  #xe1 # LOW SHARP S (German)/ MIN S DUR (allemande)
+<a!>    <U00E0>  #x85 # LOW A WITH GRAVE / MIN A ACCENT GRAVE
+<a'>    <U00E1>  #xa0 # LOW A WITH ACUTE / MIN A ACCENT AIGU
+<a/>>   <U00E2>  #x83 # LOW A WITH CIRCUMFLEX / MIN A ACCENT CIRCONFLEXE
+<a?>    <U00E3>  #xc6 # LOW A WITH TILDE / MIN A TILDE
+<a:>    <U00E4>  #x84 # LOW A WITH DIAERESIS / MIN A TR<E'>MA
+<aa>    <U00E5>  #x86 # LOW A WITH RING ABOVE / MIN A ROND
+<ae>    <U00E6>  #x91 # LOWLIG / LIGMIN AE
+<c,>    <U00E7>  #x87 # LOW C WITH CEDILLA / MIN C C<E'>DILLE
+<e!>    <U00E8>  #x8a # LOW E WITH GRAVE / MIN E ACCENT GRAVE
+<e'>    <U00E9>  #x82 # LOW E WITH ACUTE / MIN E ACCENT AIGU
+<e/>>   <U00EA>  #x88 # LOW E WITH CIRCUMFLEX / MIN E ACCENT CIRCONFLEXE
+<e:>    <U00EB>  #x89 # LOW E WITH DIAERESIS / MIN E TR<E'>MA
+<i!>    <U00EC>  #x8d # LOW I WITH GRAVE / MIN I ACCENT GRAVE
+<i'>    <U00ED>  #xa1 # LOW I WITH ACUTE / MIN I ACCENT AIGU
+<i/>>   <U00EE>  #x8c # LOW I WITH CIRCUMFLEX / MIN I ACCENT CIRCONFLEXE
+<i:>    <U00EF>  #x8b # LOW I WITH DIAERESIS / MIN I TR<E'>MA
+<d->    <U00F0>  #xd0 # LOW ETH (Icelandic) / MIN ETH (islandaise)
+<n?>    <U00F1>  #xa4 # LOW N WITH TILDE / MIN N TILDE
+<o!>    <U00F2>  #x95 # LOW O WITH GRAVE / MIN O ACCENT GRAVE
+<o'>    <U00F3>  #xa2 # LOW O WITH ACUTE / MIN O ACCENT AIGU
+<o/>>   <U00F4>  #x93 # LOW O WITH CIRCUMFLEX / MIN O ACCENT CIRCONFLEXE
+<o?>    <U00F5>  #xe4 # LOW O WITH TILDE / MIN O TILDE
+<o:>    <U00F6>  #x94 # LOW O WITH DIAERESIS / MIN O TR<E'>MA
+<-:>    <U00F7>  #xf6 # DIVISION SIGN / SIGNE DIVISION
+<o//>   <U00F8>  #x9b # LOW O WITH STROKE / MIN O BARR<E'>E EN OBLIQUE
+<u!>    <U00F9>  #x97 # LOW U WITH GRAVE / MIN U ACCENT GRAVE
+<u'>    <U00FA>  #xa3 # LOW U WITH ACUTE / MIN U ACCENT AIGU
+<u/>>   <U00FB>  #x96 # LOW U WITH CIRCUMFLEX / MIN U ACCENT CIRCONFLEXE
+<u:>    <U00FC>  #x81 # LOW U WITH DIAERESIS / MIN U TR<E'>MA
+<y:>    <U00FF>  #x98 # LOW Y WITH DIAERESIS / MIN Y TR<E'>MA
+<th>    <U00FE>  #xe7 # LOW THORN (Icelandic) / MIN THORN (islandaise)
+<y'>    <U00FD>  #xec # LOW Y WITH ACUTE / MIN Y ACCENT AIGU
+#
+# Par prudence les symboles suivants ont <e'>t<e'> d<e'>finis, m<e/>>me
+# s'ils ne sont pas utilis<e'>s dans les LOCALEs canadiens.
+#
+# By prudence the following symbols have been defined, even if they are not
+# refered to in the Canadian LOCALEs.
+#
+<alert>      <U0007> # BELL / SONNERIE
+<backspace>  <U0008> # BACKSPACE / ESPACE ARRI<E!>RE
+<tab>        <U0009> # CHARACTER TABULATION / TABULATION HORIZONTALE
+<newline>    <U000a> # LINE FEED / INTERLIGNE
+<vertical-tab> <U000b> # LINE TABULATION / TABULATION VERTICALE
+<form-feed>  <U000c> # FORM FEED / PAGE SUIVANTE
+<carriage-return> <U000d> # CARRIAGE RETURN / RETOUR DE CHARIOT
+<space>           <U0020> # SPACE / ESPACE
+<exclamation-mark> <U0021> # EXCLAMATION MARK / POINT D'EXCLAMATION
+<quotation-mark>  <U0022> # QUOTATION MARK / GUILLEMET
+<number-sign>     <U0023> # NUMBER SIGN / CROISILLON
+<dollar-sign>     <U0024> # DOLLAR SIGN / SYMBOLE DOLLAR
+<percent-sign>    <U0025> # PERCENT SIGN / SYMBOLE POURCENT
+<ampersand>       <U0026> # AMPERSAND / PERLU<E!>TE
+<apostrophe>      <U0027> # APOSTROPHE / APOSTROPHE
+<left-parenthesis> <U0028> # LEFT PARENTHESIS / PARENTH<E!>SE GAUCHE
+<right-parenthesis> <U0029> # RIGHT PARENTHESIS / PARENTH<E!>SE DROITE
+<asterisk>        <U002a> # ASTERISK / AST<E'>RISQUE
+<plus-sign>       <U002b> # PLUS SIGN / SIGNE PLUS
+<comma>           <U002c> # COMMA / VIRGULE
+<hyphen>          <U002d> # HYPHEN-MINUS / TRAIT D'UNION-SIGNE MOINS
+<hyphen-minus>    <U002d> # HYPHEN-MINUS / TRAIT D'UNION-SIGNE MOINS
+<period>          <U002e> # FULL STOP / POINT
+<full-stop>       <U002e> # FULL STOP / POINT
+<slash>           <U002f> # SOLIDUS / BARRE OBLIQUE
+<solidus>         <U002f> # SOLIDUS / BARRE OBLIQUE
+<zero>            <U0030> # DIGIT ZERO / CHIFFRE Z<E'>RO
+<one>             <U0031> # DIGIT ONE / CHIFFRE UN
+<two>             <U0032> # DIGIT TWO / CHIFFRE DEUX
+<three>           <U0033> # DIGIT THREE / CHIFFRE TROIS
+<four>            <U0034> # DIGIT FOUR / CHIFFRE QUATRE
+<five>            <U0035> # DIGIT FIVE / CHIFFRE CINQ
+<six>             <U0036> # DIGIT SIX / CHIFFRE SIX
+<seven>           <U0037> # DIGIT SEVEN / CHIFFRE SEPT
+<eight>           <U0038> # DIGIT EIGHT / CHIFFRE HUIT
+<nine>            <U0039> # DIGIT NINE / CHIFFRE NEUF
+<colon>           <U003a> # COLON / DEUX-POINTS
+<semicolon>       <U003b> # SEMICOLON / POINT-VIRGULE
+<less-than-sign>  <U003c> # LESS-THAN SIGN / SIGNE INF<E'>RIEUR <A!>
+<equals-sign>     <U003d> # EQUALS SIGN / SIGNE <E'>GAL
+<greater-than-sign> <U003e> # GREATER-THAN SIGN / SIGNE SUP<E'>RIEUR <A!>
+<question-mark>   <U003f> # QUESTION MARK / POINT D'INTERROGATION
+<commercial-at>   <U0040> # COMMERCIAL AT / A COMMERCIAL
+<left-square-bracket> <U005b> # LEFT SQUARE BRACKET / CROCHET GAUCHE
+<backslash>       <U005c> # REVERSE SOLIDUS / BARRE OBLIQUE INVERS<E'>E
+<reverse-solidus> <U005c> # REVERSE SOLIDUS / BARRE OBLIQUE INVERS<E'>E
+<right-square-bracket> <U005d> # RIGHT SQUARE BRACKET / CROCHET DROIT
+<circumflex>      <U005e> # CIRCUMFLEX ACCENT / ACCENT CIRCONFLEXE
+<circumflex-accent> <U005e> # CIRCUMFLEX ACCENT / ACCENT CIRCONFLEXE
+<underscore>      <U005f> # LOW LINE / TRAIT BAS
+<low-line>        <U005f> # LOW LINE / TRAIT BAS
+<grave-accent>    <U0060> # GRAVE ACCENT / ACCENT GRAVE
+<left-brace>      <U007b> # LEFT CURLY BRACKET / ACCOLADE GAUCHE
+<left-curly-bracket> <U007b> # LEFT CURLY BRACKET / ACCOLADE GAUCHE
+<vertical-line>   <U007c> # VERTICAL LINE / LIGNE VERTICALE
+<right-brace>     <U007d> # RIGHT CURLY BRACKET / ACCOLADE DROITE
+<right-curly-bracket> <U007d> # RIGHT CURLY BRACKET / ACCOLADE DROITE
+<tilde>           <U007e> # TILDE
+#
+# Les caract<e!>res suivants constituent une extension de l'alphabet latin no 1
+# qui couvre <a!> la fois le jeu graphique suppl<e'>mentaire <a!> usage
+# g<e'>n<e'>ral de la norme CAN/CSA Z243.4 et les caract<e!>res du NAPLPS,
+# correspondant <a!> peu de choses pr<e!>s <a!> la norme ISO/C<E'>I 6937.
+#
+# The following characters contitute an extension of Latin Alphabet No. 1
+# which covers both the general purpose graphic supplementary set of the
+# CAN/CSA Z243.4 standard and the characters used in NAPLPS, which themselves
+# correspond roughly to those of ISO/IEC 6937 standard.
+#
+<A->     <U0100>
+<a->     <U0101>
+<A(>     <U0102>
+<a(>     <U0103>
+<A;>     <U0104>
+<a;>     <U0105>
+<C'>     <U0106>
+<c'>     <U0107>
+<C/>>    <U0108>
+<c/>>    <U0109>
+<C.>     <U010A>
+<c.>     <U010B>
+<C<>     <U010C>
+<c<>     <U010D>
+<D<>     <U010E>
+<d<>     <U010F>
+<D//>    <U0110>
+<d//>    <U0111>
+<E->     <U0112>
+<e->     <U0113>
+<E.>     <U0116>
+<e.>     <U0117>
+<E;>     <U0118>
+<e;>     <U0119>
+<E<>     <U011A>
+<e<>     <U011B>
+<G/>>    <U011C>
+<g/>>    <U011D>
+<G(>     <U011E>
+<g(>     <U011F>
+<G.>     <U0120>
+<g.>     <U0121>
+<G,>     <U0122>
+<g,>     <U0123>
+<H/>>    <U0124>
+<h/>>    <U0125>
+<H//>    <U0126>
+<h//>    <U0127>
+<I?>     <U0128>
+<i?>     <U0129>
+<I->     <U012A>
+<i->     <U012B>
+<I;>     <U012E>
+<i;>     <U012F>
+<I.>     <U0130>
+<i.>     <U0131>
+<IJ>     <U0132>
+<ij>     <U0133>
+<J/>>    <U0134>
+<j/>>    <U0135>
+<K,>     <U0136>
+<k,>     <U0137>
+<kk>     <U0138>
+<L'>     <U0139>
+<l'>     <U013A>
+<L,>     <U013B>
+<l,>     <U013C>
+<L<>     <U013D>
+<l<>     <U013E>
+<L.>     <U013F>
+<l.>     <U0140>
+<L//>    <U0141>
+<l//>    <U0142>
+<N'>     <U0143>
+<n'>     <U0144>
+<N,>     <U0145>
+<n,>     <U0146>
+<N<>     <U0147>
+<n<>     <U0148>
+<'n>     <U0149>
+<NG>     <U014A>
+<ng>     <U014B>
+<O->     <U014C>
+<o->     <U014D>
+<O">     <U0150>
+<o">     <U0151>
+<OE>     <U0152>
+<oe>     <U0153>
+<R'>     <U0154>
+<r'>     <U0155>
+<R,>     <U0156>
+<r,>     <U0157>
+<R<>     <U0158>
+<r<>     <U0159>
+<S'>     <U015A>
+<s'>     <U015B>
+<S/>>    <U015C>
+<s/>>    <U015D>
+<S,>     <U015E>
+<s,>     <U015F>
+<S<>     <U0160>
+<s<>     <U0161>
+<T,>     <U0162>
+<t,>     <U0163>
+<T<>     <U0164>
+<t<>     <U0165>
+<T//>    <U0166>
+<t//>    <U0167>
+<U?>     <U0168>
+<u?>     <U0169>
+<U->     <U016A>
+<u->     <U016B>
+<U(>     <U016C>
+<u(>     <U016D>
+<U0>     <U016E>
+<u0>     <U016F>
+<U">     <U0170>
+<u">     <U0171>
+<U;>     <U0172>
+<u;>     <U0173>
+<W/>>    <U0174>
+<w/>>    <U0175>
+<Y/>>    <U0176>
+<y/>>    <U0177>
+<Y:>     <U0178>
+<Z'>     <U0179>
+<z'>     <U017A>
+<Z.>     <U017B>
+<z.>     <U017C>
+<Z<>     <U017D>
+<z<>     <U017E>
+<"(>     <U0306>
+<".>     <U0307>
+<"0>     <U030A>
+<"">     <U030B>
+<"<>     <U030C>
+<";>     <U0328>
+<"_>     <U0332>
+<"//>    <U0338>
+<'6>     <U2018>
+<'9>     <U2019>
+<"6>     <U201C>
+<"9>     <U201D>
+<0S>     <U2070>
+<4S>     <U2074>
+<5S>     <U2075>
+<6S>     <U2076>
+<7S>     <U2077>
+<8S>     <U2078>
+<9S>     <U2079>
+<+S>     <U207A>
+<-S>     <U207B>
+<(S>     <U207D>
+<)S>     <U207E>
+<"7>     <U20D1>
+<TM>     <U2122>
+<Om>     <U2126>
+<18>     <U215B>
+<38>     <U215C>
+<58>     <U215D>
+<78>     <U215E>
+<<->     <U2190>
+<-!>     <U2191>
+<-/>>    <U2192>
+<-v>     <U2193>
+<FP>     <U220E>
+<!=>     <U2260>
+<=<>     <U2264>
+</>=>    <U2265>
+<_->     <U2500>
+<_=>     <U2501>
+<_!>     <U2502>
+<_V/>>   <U250C>
+<_V<w>   <U2510>
+<_A/>>   <U2514>
+<_A<>    <U2518>
+<_!/>>   <U251C>
+<_!<>    <U2524>
+<_V->    <U252C>
+<_-A>    <U2534>
+<_!->    <U253C>
+<_/>//>  <U2571>
+<_<\>    <U2572>
+<_./>//> <U25E2>
+<_.<\>   <U25E3>
+<_d!>    <U266A>
+END CHARIDS

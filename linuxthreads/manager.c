@@ -313,6 +313,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 
 static void pthread_free(pthread_descr th)
 {
+  pthread_handle handle;
   pthread_descr t;
 
   /* Check that the thread th is still there -- pthread_reap_children
@@ -324,7 +325,6 @@ static void pthread_free(pthread_descr th)
   } while (t != __pthread_main_thread);
   if (t != th) return;
 
-  pthread_handle handle;
   ASSERT(th->p_exited);
   /* Make the handle invalid */
   handle =  thread_handle(th->p_tid);

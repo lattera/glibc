@@ -1,6 +1,5 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,13 +16,24 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <netinet/ether.h>
+#include <sysdep.h>
 
+	.text
 
-struct ether_addr *
-ether_aton (const char *asc)
-{
-  static struct ether_addr result;
+ENTRY (__mmap)
 
-  return ether_aton_r (asc, &result);
-}
+	/* Because we can only get five args through the syscall interface, and
+	   mmap() takes six, we need to build a parameter block and pass its	
+	   address instead.  The 386 port does a similar trick.  */
+
+	mov	ip, sp
+	stmdb	ip!, {a1-a4}
+	mov	a1, ip
+	swi	SYS_ify (mmap)
+	cmn	r0, $4096
+	bhs	PLTJMP(syscall_error);
+	ret
+
+PSEUDO_END (__mmap)
+
+weak_alias (__mmap, mmap)

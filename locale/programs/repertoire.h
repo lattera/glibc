@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,13 +17,22 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <netinet/ether.h>
+#ifndef _REPERTOIREMAP_H
+#define _REPERTOIREMAP_H	1
 
+#include <obstack.h>
 
-struct ether_addr *
-ether_aton (const char *asc)
+#include "simple-hash.h"
+#include "linereader.h"
+
+struct repertoire_t
 {
-  static struct ether_addr result;
+  struct obstack mem_pool;
+  hash_table char_table;
+};
 
-  return ether_aton_r (asc, &result);
-}
+
+/* Prototypes for repertoire map handling functions.  */
+struct repertoire_t *repertoire_read (const char *filename);
+
+#endif /* repertoiremap.h */

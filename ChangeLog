@@ -1,3 +1,41 @@
+1998-04-30 16:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/ether_aton.c: Including netinet/if_ether.h is not necessary.
+
+	* locale/Makefile (distribute): Add programs/repertoire.h.
+	(localedef-modules): Add repertoire.
+	(CPPFLAGS): Define REPERTOIREMAP_PATH.
+	* locale/programs/repertoire.c: New file.
+	* locale/programs/repertoire.h: New file.
+	* locale/programs/charmap.c: Starting fixing character set handling
+	to handle multi-byte encodings.
+	* locale/programs/charset.c: Likewise.
+	* locale/programs/charset.h: Likewise.
+	* locale/programs/ld-collate.c: Likewise.
+	* locale/programs/ld-ctype.c: Likewise.
+	* locale/programs/linereader.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* locale/programs/locfile-kw.gperf: Likewise.
+	* locale/programs/locfile-kw.h: Likewise.
+	* locale/programs/locfile-token.h: Likewise.
+	* locale/programs/locfile.h: Likewise.
+	* locale/programs/stringtrans.c: Likewise.
+
+1998-04-18  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/arm/memset.S: Fix off by one error.
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (PSEUDO): On error, call
+	__syscall_error rather than syscall_error directly.
+
+1998-04-17  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/unix/sysv/linux/arm/mmap.S: New file; implementation of
+	mmap() syscall for ARM.
+
+	* sysdeps/unix/arm/start.c: New file; startup code for ARM a.out
+	binaries.
+
 1998-04-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/localedef.c: Recognize repertoire-map option.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -23,6 +23,8 @@
 
 #include <alloca.h>
 #include <ctype.h>
+#include <errno.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,49 +33,24 @@
 #include "charset.h"
 
 
-static void
-insert_char (struct linereader *lr, struct charset_t *cs, int bytes,
-	     unsigned int value, const char *from, const char *to);
-
-
-void
-charset_new_char (struct linereader *lr, struct charset_t *cs, int bytes,
-		  unsigned int value, const char *from, const char *to)
-{
-  if (bytes < cs->mb_cur_min)
-    lr_error (lr, _("too few bytes in character encoding"));
-  else if (bytes > cs->mb_cur_max)
-    lr_error (lr, _("too many bytes in character encoding"));
-  else
-    insert_char (lr, cs, bytes, value, from, to);
-}
-
-
-void
-charset_new_unicode (struct linereader *lr, struct charset_t *cs, int bytes,
-		     unsigned int value, const char *from, const char *to)
-{
-  /* For now: perhaps <Uxxxx> support will be removed again... */
-  insert_char (lr, cs, bytes, value, from, to);
-}
-
-
 unsigned int
-charset_find_value (const struct charset_t *cs, const char *name, size_t len)
+charset_find_value (const hash_table *ht, const char *name, size_t len)
 {
   void *result;
 
-  if (find_entry ((hash_table *) &cs->char_table, name, len, &result) < 0)
+  if (find_entry ((hash_table *) ht, name, len, &result) < 0)
     return ILLEGAL_CHAR_VALUE;
 
   return (unsigned int) ((unsigned long int) result);
 }
 
 
-static void
-insert_char (struct linereader *lr, struct charset_t *cs, int bytes,
-	     unsigned int value, const char *from, const char *to)
+void
+charset_new_char (struct linereader *lr, hash_table *ht, int bytes,
+		  unsigned int value, const char *from, const char *to)
 {
+  char *from_end;
+  char *to_end;
   const char *cp;
   char *buf;
   int prefix_len, len1, len2;
@@ -81,7 +58,7 @@ insert_char (struct linereader *lr, struct charset_t *cs, int bytes,
 
   if (to == NULL)
     {
-      if (insert_entry (&cs->char_table, from, strlen (from),
+      if (insert_entry (ht, from, strlen (from),
 			(void *) (unsigned long int) value)
 	  < 0)
 	lr_error (lr, _("duplicate character name `%s'"), from);
@@ -111,8 +88,16 @@ insert_char (struct linereader *lr, struct charset_t *cs, int bytes,
   if (cp == &from[len1 - 1] || strncmp (from, to, prefix_len) != 0)
     goto illegal_range;
 
-  from_nr = strtoul (&from[prefix_len], NULL, 10);
-  to_nr = strtoul (&to[prefix_len], NULL, 10);
+  errno = 0;
+  from_nr = strtoul (&from[prefix_len], &from_end, 10);
+  if (*from_end != '\0' || (from_nr == ULONG_MAX && errno == ERANGE)
+      || ((to_nr = strtoul (&to[prefix_len], &to_end, 10)) == ULONG_MAX
+	  && errno == ERANGE)
+      || *to_end != '\0')
+    {
+      lr_error (lr, _("<%s> and <%s> are illegal names for range"));
+      return;
+    }
 
   if (from_nr > to_nr)
     {
@@ -127,7 +112,7 @@ insert_char (struct linereader *lr, struct charset_t *cs, int bytes,
     {
       sprintf (&buf[prefix_len], "%0*d", len1 - prefix_len, cnt);
 
-      if (insert_entry (&cs->char_table, buf, len1,
+      if (insert_entry (ht, buf, len1,
 			(void *) (unsigned long int) (value + (cnt - from_nr)))
 	  < 0)
 	lr_error (lr, _("duplicate character name `%s'"), buf);

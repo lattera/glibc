@@ -33,6 +33,8 @@
 #include "error.h"
 #include "linereader.h"
 #include "charset.h"
+#include "locfile.h"
+#include "repertoire.h"
 
 
 /* Uncomment following line for production version.  */
@@ -209,6 +211,8 @@ parse_charmap (const char *filename)
   memset (result, '\0', sizeof (struct charset_t));
   /* The default DEFAULT_WIDTH is 1.  */
   result->width_default = 1;
+  /* Let the user overwrite the repertoire map we use.  */
+  result->repertoiremap = repertoiremap;
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
@@ -265,6 +269,17 @@ parse_charmap (const char *filename)
 
 	      lr_ignore_rest (cmfile, 1);
 
+	      /* Read the repertoire map now.  */
+	      if (result->repertoiremap == NULL)
+		/* This is fatal.  */
+		error (4, 0, _("no repertoire map specified: cannot proceed"));
+
+	      result->repertoire = repertoire_read (result->repertoiremap);
+	      if (result->repertoire == NULL)
+		/* This is also fatal.  */
+		error (4, errno, _("cannot read repertoire map `%s'"),
+		       result->repertoiremap);
+
 	      state = 2;
 	      continue;
 	    }
@@ -273,7 +288,7 @@ parse_charmap (const char *filename)
 	      && nowtok != tok_mb_cur_min && nowtok != tok_escape_char
 	      && nowtok != tok_comment_char && nowtok != tok_g0esc
 	      && nowtok != tok_g1esc && nowtok != tok_g2esc
-	      && nowtok != tok_g3esc)
+	      && nowtok != tok_g3esc && nowtok != tok_repertoiremap)
 	    {
 	      lr_error (cmfile, _("syntax error in prolog: %s"),
 			_("illegal definition"));
@@ -301,6 +316,18 @@ parse_charmap (const char *filename)
 	      result->code_set_name = obstack_copy0 (&result->mem_pool,
 						     arg->val.str.start,
 						     arg->val.str.len);
+
+	      lr_ignore_rest (cmfile, 1);
+	      continue;
+
+	    case tok_repertoiremap:
+	      if (arg->tok != tok_ident)
+		goto badarg;
+
+	      if (result->repertoiremap == NULL)
+		result->repertoiremap = obstack_copy0 (&result->mem_pool,
+						       arg->val.str.start,
+						       arg->val.str.len);
 
 	      lr_ignore_rest (cmfile, 1);
 	      continue;
@@ -437,14 +464,14 @@ argument to <%s> must be a single character"),
 	      continue;
 	    }
 
-	  if (nowtok == tok_charcode)
-	    /* Write char value in table.  */
-	    charset_new_char (cmfile, result, now->val.charcode.nbytes,
-			      now->val.charcode.val, from_name, to_name);
+	  if (now->val.charcode.nbytes < result->mb_cur_min)
+	    lr_error (cmfile, _("too few bytes in character encoding"));
+	  else if (now->val.charcode.nbytes > result->mb_cur_max)
+	    lr_error (cmfile, _("too many bytes in character encoding"));
 	  else
-	    /* Determine ISO 10646 value and write into table.  */
-	    charset_new_unicode (cmfile, result, now->val.charcode.nbytes,
-				 now->val.charcode.val, from_name, to_name);
+	    charset_new_char (cmfile, &result->char_table,
+			      now->val.charcode.nbytes,
+			      now->val.charcode.val, from_name, to_name);
 
 	  /* Ignore trailing comment silently.  */
 	  lr_ignore_rest (cmfile, 0);
@@ -466,8 +493,7 @@ argument to <%s> must be a single character"),
 	      continue;
 	    }
 
-	  /* If the previous line was not completely correct free the
-	     used memory.  */
+	  /* Copy the to-name in a safe place.  */
 	  to_name = (char *) obstack_copy0 (&result->mem_pool,
 					    cmfile->token.val.str.start,
 					    cmfile->token.val.str.len);
@@ -694,7 +720,7 @@ new_width (struct linereader *cmfile, struct charset_t *result,
 {
   unsigned int from_val, to_val;
 
-  from_val = charset_find_value (result, from, strlen (from));
+  from_val = charset_find_value (&result->char_table, from, strlen (from));
   if ((wchar_t) from_val == ILLEGAL_CHAR_VALUE)
     {
       lr_error (cmfile, _("unknown character `%s'"), from);
@@ -705,7 +731,7 @@ new_width (struct linereader *cmfile, struct charset_t *result,
     to_val = from_val;
   else
     {
-      to_val = charset_find_value (result, to, strlen (to));
+      to_val = charset_find_value (&result->char_table, to, strlen (to));
       if ((wchar_t) to_val == ILLEGAL_CHAR_VALUE)
 	{
 	  lr_error (cmfile, _("unknown character `%s'"), to);

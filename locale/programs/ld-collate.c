@@ -212,7 +212,7 @@ collate_finish (struct localedef_t *locale, struct charset_t *charset)
       void *ptmp;
       unsigned int value = 0;
 
-      wch = charset_find_value (charset, patch->token, toklen);
+      wch = charset_find_value (&charset->char_table, patch->token, toklen);
       if (wch != ILLEGAL_CHAR_VALUE)
 	{
 	  element_t *runp;
@@ -1054,7 +1054,8 @@ collate_element_to (struct linereader *lr, struct localedef_t *locale,
       collate->combine_token = NULL;
     }
 
-  value = charset_find_value (charset, code->val.str.start, code->val.str.len);
+  value = charset_find_value (&charset->char_table, code->val.str.start,
+			      code->val.str.len);
   if ((wchar_t) value != ILLEGAL_CHAR_VALUE)
     {
       lr_error (lr, _("symbol for multicharacter collating element "
@@ -1181,7 +1182,8 @@ collate_symbol (struct linereader *lr, struct localedef_t *locale,
   wchar_t value;
   void *not_used;
 
-  value = charset_find_value (charset, code->val.str.start, code->val.str.len);
+  value = charset_find_value (&charset->char_table, code->val.str.start,
+			      code->val.str.len);
   if (value != ILLEGAL_CHAR_VALUE)
     {
       lr_error (lr, _("symbol for multicharacter collating element "
@@ -1268,7 +1270,7 @@ collate_order_elem (struct linereader *lr, struct localedef_t *locale,
     {
     case tok_bsymbol:
       /* We have a string to find in one of the three hashing tables.  */
-      value = charset_find_value (charset, code->val.str.start,
+      value = charset_find_value (&charset->char_table, code->val.str.start,
 				  code->val.str.len);
       if (value != ILLEGAL_CHAR_VALUE)
 	{
@@ -1533,7 +1535,8 @@ collate_weight_bsymbol (struct linereader *lr, struct localedef_t *locale,
 
   assert (code->tok == tok_bsymbol);
 
-  value = charset_find_value (charset, code->val.str.start, code->val.str.len);
+  value = charset_find_value (&charset->char_table, code->val.str.start,
+			      code->val.str.len);
   if (value != ILLEGAL_CHAR_VALUE)
     {
       element_t *runp;
@@ -1706,7 +1709,8 @@ collate_simple_weight (struct linereader *lr, struct localedef_t *locale,
 		    return -1;
 		  }
 
-		wch = charset_find_value (charset, startp, putp - startp);
+		wch = charset_find_value (&charset->char_table, startp,
+					  putp - startp);
 		if (wch != ILLEGAL_CHAR_VALUE)
 		  {
 		    element_t *pelem;

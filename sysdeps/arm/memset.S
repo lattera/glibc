@@ -63,6 +63,5 @@ ENTRY(memset)
 	strb	a2, [a4], $1
 	strb	a2, [a4], $1
 	strb	a2, [a4], $1
-	strb	a2, [a4], $1
 	RETINSTR(mov,pc,lr)
 END(memset)

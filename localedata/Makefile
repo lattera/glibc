@@ -30,6 +30,10 @@ charmaps := $(filter-out $(addprefix charmaps/, CVS RCS %~), \
 locales := $(filter-out $(addprefix locales/, CVS RCS %~), \
 				    $(wildcard locales/*))
 
+# List of repertoire maps.
+repertoires := $(filter-out $(addprefix repertoiremaps/, CVS RCS %~), \
+				    $(wildcard repertoiremaps/*))
+
 test-srcs := collate-test xfrm-test tst-fmon tst-rpmatch
 test-input := de_DE.ISO-8859-1 da_DK.ISO-8859-1 fr_CA,2.13.ISO-8859-1
 test-output := $(foreach s, .out .xout, \
@@ -42,7 +46,7 @@ ld-test-srcs := $(addprefix tests/,$(addsuffix .cm,$(ld-test-names)) \
 				   $(addsuffix .def,$(ld-test-names)))
 
 distribute := CHECKSUMS tst-fmon.sh tst-fmon.data ChangeLog sort-test.sh \
-	      README mnemonic.ds fr_CA,2.13.in de_DE.in da_DK.in	 \
+	      README fr_CA,2.13.in de_DE.in da_DK.in $(repertoiremaps)	 \
 	      $(charmaps) $(locales) $(ld-test-srcs) tst-rpmatch.sh	 \
 	      SUPPORTED tst-locale.sh
 
@@ -50,13 +54,15 @@ distribute := CHECKSUMS tst-fmon.sh tst-fmon.data ChangeLog sort-test.sh \
 include ../Makeconfig
 
 # Files to install.
-install-others := $(addprefix $(inst_i18ndir)/, $(charmaps) $(locales))
+install-others := $(addprefix $(inst_i18ndir)/, $(charmaps) $(locales) \
+						$(repertoiremaps))
 
 include ../Rules
 
 # Install the source files in the appropriate directories.
 $(inst_i18ndir)/charmaps/%: charmaps/% $(+force); $(do-install)
 $(inst_i18ndir)/locales/%: locales/% $(+force); $(do-install)
+$(inst_i18ndir)/repertoiremaps/%: repertoiremaps/% $(+force); $(do-install)
 
 
 ifeq (no,$(cross-compiling))

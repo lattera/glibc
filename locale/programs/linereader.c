@@ -524,7 +524,7 @@ get_string (struct linereader *lr, const struct charset_t *charset)
 
 	if (lr->translate_strings)
 	  {
-	    value = charset_find_value (charset, &buf[startidx],
+	    value = charset_find_value (&charset->char_table, &buf[startidx],
 					bufact - startidx);
 	    if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
 	      illegal_string = 1;
