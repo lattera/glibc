@@ -1,5 +1,5 @@
 /* Validate a thread handle.
-   Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -19,10 +19,10 @@
    02111-1307 USA.  */
 
 #include "thread_dbP.h"
-
+#include <stdbool.h>
 
 static td_err_e
-check_thread_list (const td_thrhandle_t *th, psaddr_t head)
+check_thread_list (const td_thrhandle_t *th, psaddr_t head, bool *uninit)
 {
   td_err_e err;
   psaddr_t next, ofs;
@@ -31,7 +31,10 @@ check_thread_list (const td_thrhandle_t *th, psaddr_t head)
   if (err == TD_OK)
     {
       if (next == 0)
-	return TD_NOTHR;
+	{
+	  *uninit = true;
+	  return TD_NOTHR;
+	}
       err = DB_GET_FIELD_ADDRESS (ofs, th->th_ta_p, 0, pthread, list, 0);
     }
 
@@ -59,9 +62,10 @@ td_thr_validate (const td_thrhandle_t *th)
   LOG ("td_thr_validate");
 
   /* First check the list with threads using user allocated stacks.  */
+  bool uninit = false;
   err = DB_GET_SYMBOL (list, th->th_ta_p, __stack_user);
   if (err == TD_OK)
-    err = check_thread_list (th, list);
+    err = check_thread_list (th, list, &uninit);
 
   /* If our thread is not on this list search the list with stack
      using implementation allocated stacks.  */
@@ -69,7 +73,18 @@ td_thr_validate (const td_thrhandle_t *th)
     {
       err = DB_GET_SYMBOL (list, th->th_ta_p, stack_used);
       if (err == TD_OK)
-	err = check_thread_list (th, list);
+	err = check_thread_list (th, list, &uninit);
+
+      if (err == TD_NOTHR && uninit)
+	{
+	  /* __pthread_initialize_minimal has not run yet.
+	     But the main thread still has a valid ID.  */
+	  td_thrhandle_t main_th;
+	  err = td_ta_map_lwp2thr (th->th_ta_p,
+				   ps_getpid (th->th_ta_p->ph), &main_th);
+	  if (err == TD_OK && th->th_unique != main_th.th_unique)
+	    err = TD_NOTHR;
+	}
     }
 
   return err;
