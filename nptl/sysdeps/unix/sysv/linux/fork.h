@@ -17,7 +17,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <list.h>
 #include <lowlevellock.h>
 
 /* The fork generation counter, defined in libpthread.  */
@@ -26,22 +25,23 @@ extern unsigned long int __fork_generation attribute_hidden;
 /* Pointer to the fork generation counter in the thread library.  */
 extern unsigned long int *__fork_generation_pointer attribute_hidden;
 
-/* Lock to protect handling of fork handlers.  */
+/* Lock to protect allocation and deallocation of fork handlers.  */
 extern lll_lock_t __fork_lock attribute_hidden;
-
-/* Lists of registered fork handlers.  */
-extern list_t __fork_prepare_list attribute_hidden;
-extern list_t __fork_parent_list attribute_hidden;
-extern list_t __fork_child_list attribute_hidden;
-
 
 /* Elements of the fork handler lists.  */
 struct fork_handler
 {
-  list_t list;
-  void (*handler) (void);
+  struct fork_handler *next;
+  void (*prepare_handler) (void);
+  void (*parent_handler) (void);
+  void (*child_handler) (void);
   void *dso_handle;
+  unsigned int refcntr;
+  int need_signal;
 };
+
+/* The single linked list of all currently registered for handlers.  */
+extern struct fork_handler *__fork_handlers;
 
 
 /* Function to call to unregister fork handlers.  */
@@ -54,9 +54,3 @@ extern int __register_atfork (void (*__prepare) (void),
 			      void (*__parent) (void),
 			      void (*__child) (void),
 			      void *dso_handle);
-
-extern void __register_atfork_malloc (void (*prepare) (void),
-				      void (*parent) (void),
-				      void (*child) (void),
-				      void *dso_handle) attribute_hidden;
-#define HAVE_register_atfork_malloc

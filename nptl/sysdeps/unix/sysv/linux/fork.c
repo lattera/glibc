@@ -28,15 +28,15 @@
 #include <hp-timing.h>
 #include <ldsodefs.h>
 #include <bits/stdio-lock.h>
+#include <atomic.h>
 
 
 unsigned long int *__fork_generation_pointer;
 
 
-lll_lock_t __fork_lock = LLL_LOCK_INITIALIZER;
-LIST_HEAD (__fork_prepare_list);
-LIST_HEAD (__fork_parent_list);
-LIST_HEAD (__fork_child_list);
+
+/* The single linked list of all currently registered for handlers.  */
+struct fork_handler *__fork_handlers;
 
 
 static void
@@ -53,20 +53,62 @@ pid_t
 __libc_fork (void)
 {
   pid_t pid;
-  list_t *runp;
+  struct used_handler
+  {
+    struct fork_handler *handler;
+    struct used_handler *next;
+  } *allp = NULL;
 
-  /* Get the lock so that the set of registered handlers is not
-     inconsistent or changes beneath us.  */
-  lll_lock (__fork_lock);
-
-  /* Run all the registered preparation handlers.  In reverse order.  */
-  list_for_each_prev (runp, &__fork_prepare_list)
+  /* Run all the registered preparation handlers.  In reverse order.
+     While doing this we build up a list of all the entries.  */
+  struct fork_handler *runp;
+  while ((runp = __fork_handlers) != NULL)
     {
-      struct fork_handler *curp;
+      unsigned int oldval = runp->refcntr;
 
-      curp = list_entry (runp, struct fork_handler, list);
+      if (oldval == 0)
+	/* This means some other thread removed the list just after
+	   the pointer has been loaded.  Try again.  Either the list
+	   is empty or we can retry it.  */
+	continue;
 
-      curp->handler ();
+      /* Bump the reference counter.  */
+      if (atomic_compare_and_exchange_bool_acq (&__fork_handlers->refcntr,
+						oldval + 1, oldval))
+	/* The value changed, try again.  */
+	continue;
+
+      /* We bumped the reference counter for the first entry in the
+	 list.  That means that none of the following entries will
+	 just go away.  The unloading code works in the order of the
+	 list.
+
+         While executing the registered handlers we are building a
+         list of all the entries so that we can go backward later on.  */
+      while (1)
+	{
+	  /* Execute the handler if there is one.  */
+	  if (runp->prepare_handler != NULL)
+	    runp->prepare_handler ();
+
+	  /* Create a new element for the list.  */
+	  struct used_handler *newp
+	    = (struct used_handler *) alloca (sizeof (*newp));
+	  newp->handler = runp;
+	  newp->next = allp;
+	  allp = newp;
+
+	  /* Advance to the next handler.  */
+	  runp = runp->next;
+	  if (runp == NULL)
+	    break;
+
+	  /* Bump the reference counter for the next entry.  */
+	  atomic_increment (&runp->refcntr);
+	}
+
+      /* We are done.  */
+      break;
     }
 
   _IO_list_lock ();
@@ -107,13 +149,22 @@ __libc_fork (void)
       _IO_list_resetlock ();
 
       /* Run the handlers registered for the child.  */
-      list_for_each (runp, &__fork_child_list)
+      while (allp != NULL)
 	{
-	  struct fork_handler *curp;
+	  if (allp->handler->child_handler != NULL)
+	    allp->handler->child_handler ();
 
-	  curp = list_entry (runp, struct fork_handler, list);
+	  /* Note that we do not have to wake any possible waiter.
+	     This is the only thread in the new process.  */
+	  --allp->handler->refcntr;
 
-	  curp->handler ();
+	  /* XXX We could at this point look through the object pool
+	     and mark all objects not on the __fork_handlers list as
+	     unused.  This is necessary in case the fork() happened
+	     while another thread called dlclose() and that call had
+	     to create a new list.  */
+
+	  allp = allp->next;
 	}
 
       /* Initialize the fork lock.  */
@@ -127,17 +178,17 @@ __libc_fork (void)
       _IO_list_unlock ();
 
       /* Run the handlers registered for the parent.  */
-      list_for_each (runp, &__fork_parent_list)
+      while (allp != NULL)
 	{
-	  struct fork_handler *curp;
+	  if (allp->handler->parent_handler != NULL)
+	    allp->handler->parent_handler ();
 
-	  curp = list_entry (runp, struct fork_handler, list);
+	  if (atomic_decrement_and_test (&allp->handler->refcntr)
+	      && allp->handler->need_signal)
+	    lll_futex_wake (allp->handler->refcntr, 1);
 
-	  curp->handler ();
+	  allp = allp->next;
 	}
-
-      /* Release the for lock.  */
-      lll_unlock (__fork_lock);
     }
 
   return pid;

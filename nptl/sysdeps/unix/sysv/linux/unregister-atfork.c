@@ -20,56 +20,92 @@
 #include <errno.h>
 #include <stdlib.h>
 #include "fork.h"
-
-
-/* Defined in libc_pthread_init.c.  */
-extern struct fork_handler __pthread_child_handler attribute_hidden;
-/* Three static memory blocks used when registering malloc.  */
-static struct fork_handler malloc_prepare;
-static struct fork_handler malloc_parent;
-static struct fork_handler malloc_child;
+#include <atomic.h>
 
 
 void
 __unregister_atfork (dso_handle)
      void *dso_handle;
 {
-  /* Get the lock to not conflict with running forks.  */
+  /* Check whether there is any entry in the list which we have to
+     remove.  It is likely that this is not the case so don't bother
+     getting the lock.
+
+     We do not worry about other threads adding entries for this DSO
+     right this moment.  If this happens this is a race and we can do
+     whatever we please.  The program will crash anyway seen.  */
+  struct fork_handler *runp = __fork_handlers;
+  struct fork_handler *lastp = NULL;
+
+  while (runp != NULL)
+    if (runp->dso_handle == dso_handle)
+      break;
+    else
+      {
+	lastp = runp;
+	runp = runp->next;
+      }
+
+  if (runp == NULL)
+    /* Nothing to do.  */
+    return;
+
+  /* Get the lock to not conflict with additions or deletions.  Note
+     that there couldn't have been another thread deleting something.
+     The __unregister_atfork function is only called from the
+     dlclose() code which itself serializes the operations.  */
   lll_lock (__fork_lock);
 
-  list_t *runp;
-  list_t *prevp;
+  /* We have to create a new list with all the entries we don't remove.  */
+  struct deleted_handler
+  {
+    struct fork_handler *handler;
+    struct deleted_handler *next;
+  } *deleted = NULL;
 
-  list_for_each_prev_safe (runp, prevp, &__fork_prepare_list)
-    if (list_entry (runp, struct fork_handler, list)->dso_handle == dso_handle)
-      {
-	list_del (runp);
+  /* Remove the entries for the DSO which is unloaded from the list.
+     It's a single linked list so readers are.  */
+  do
+    {
+      if (runp->dso_handle == dso_handle)
+	{
+	  if (lastp == NULL)
+	    __fork_handlers = runp->next;
+	  else
+	    lastp->next = runp->next;
 
-	struct fork_handler *p = list_entry (runp, struct fork_handler, list);
-	if (p != &malloc_prepare)
-	  free (p);
-      }
+	  /* We cannot overwrite the ->next element now.  Put the deleted
+	     entries in a separate list.  */
+	  struct deleted_handler *newp = alloca (sizeof (*newp));
+	  newp->handler = runp;
+	  newp->next = deleted;
+	  deleted = newp;
+	}
+      else
+	lastp = runp;
 
-  list_for_each_prev_safe (runp, prevp, &__fork_parent_list)
-    if (list_entry (runp, struct fork_handler, list)->dso_handle == dso_handle)
-      {
-	list_del (runp);
-
-	struct fork_handler *p = list_entry (runp, struct fork_handler, list);
-	if (p != &malloc_parent)
-	  free (p);
-      }
-
-  list_for_each_prev_safe (runp, prevp, &__fork_child_list)
-    if (list_entry (runp, struct fork_handler, list)->dso_handle == dso_handle)
-      {
-	list_del (runp);
-
-	struct fork_handler *p = list_entry (runp, struct fork_handler, list);
-	if (p != &__pthread_child_handler && p != &malloc_child)
-	  free (p);
-      }
+      runp = runp->next;
+    }
+  while (runp != NULL);
 
   /* Release the lock.  */
   lll_unlock (__fork_lock);
+
+  /* Walk the list of all entries which have to be deleted.  */
+  while (deleted != NULL)
+    {
+      /* We need to be informed by possible current users.  */
+      deleted->handler->need_signal = 1;
+      /* Make sure this gets written out first.  */
+      atomic_write_barrier ();
+
+      /* Decrement the reference counter.  If it does not reach zero
+	 wait for the last user.  */
+      atomic_decrement (&deleted->handler->refcntr);
+      unsigned int val;
+      while ((val = deleted->handler->refcntr) != 0)
+	lll_futex_wait (deleted->handler->refcntr, val);
+
+      deleted = deleted->next;
+    }
 }

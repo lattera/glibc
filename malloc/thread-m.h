@@ -77,24 +77,13 @@ extern void *__dso_handle __attribute__ ((__weak__));
 
 #include <fork.h>
 
-#ifdef HAVE_register_atfork_malloc
-# ifdef SHARED
-#  define thread_atfork(prepare, parent, child) \
-   __register_atfork_malloc (prepare, parent, child, __dso_handle)
-# else
-#  define thread_atfork(prepare, parent, child) \
-   __register_atfork_malloc (prepare, parent, child,			      \
-			     &__dso_handle == NULL ? NULL : __dso_handle)
-# endif
-#else
-# ifdef SHARED
-#  define thread_atfork(prepare, parent, child) \
+#ifdef SHARED
+# define thread_atfork(prepare, parent, child) \
    __register_atfork (prepare, parent, child, __dso_handle)
-# else
-#  define thread_atfork(prepare, parent, child) \
+#else
+# define thread_atfork(prepare, parent, child) \
    __register_atfork (prepare, parent, child,				      \
 		      &__dso_handle == NULL ? NULL : __dso_handle)
-# endif
 #endif
 
 #elif defined(MUTEX_INITIALIZER)

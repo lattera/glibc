@@ -41,6 +41,31 @@
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
 
 
+#define lll_futex_wait(futex, val) \
+  do {									      \
+    int __ignore;							      \
+    register __typeof (val) _val asm ("edx") = (val);			      \
+    __asm __volatile ("xorq %%r10, %%r10\n\t"				      \
+		      "syscall"						      \
+		      : "=a" (__ignore)					      \
+		      : "0" (SYS_futex), "D" (&futex), "S" (FUTEX_WAIT),      \
+			"d" (_val)					      \
+		      : "memory", "cc", "r10", "r11", "cx");		      \
+  } while (0)
+
+
+#define lll_futex_wake(futex, nr) \
+  do {									      \
+    int __ignore;							      \
+    register __typeof (nr) _nr asm ("edx") = (nr);			      \
+    __asm __volatile ("syscall"						      \
+		      : "=a" (__ignore)					      \
+		      : "0" (SYS_futex), "D" (&futex), "S" (FUTEX_WAKE),      \
+			"d" (_nr)					      \
+		      : "memory", "cc", "r10", "r11", "cx");		      \
+  } while (0)
+
+
 /* Does not preserve %eax and %ecx.  */
 extern int __lll_mutex_lock_wait (int *__futex, int __val) attribute_hidden;
 /* Does not preserver %eax, %ecx, and %edx.  */

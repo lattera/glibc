@@ -1,3 +1,29 @@
+2003-05-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fork.c: Complete rewrite of the atfork
+	handler implementation.  It is now lockless in fork().
+	* sysdeps/unix/sysv/linux/register-atfork.c: Likewise.
+	* sysdeps/unix/sysv/linux/unregister-atfork.c: Likewise.
+	* sysdeps/unix/sysv/linux/fork.h: Don't include <link.h>.  Don't
+	declare the __fork_*_lists.
+	(struct fork_handler): Include pointers to all three functions.
+	Add next, refcntr and need_signal elements.
+	(__fork_handlers): New declaration.
+	(__register_atfork_malloc): Remove declaration.
+	(HAVE_register_atfork_malloc): Remove definition.
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c: Remove
+	__pthread_child_handler variable.
+	(__libc_pthread_init): Use __register_atfork instead of explicitly
+	adding to the list.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Define lll_futex_wait
+	and lll_futex_wake.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
+
+	* unwind.c (unwind_cleanup): Print error message and then abort.  This
+	function must never be reached.
+
+	* cond-perf.c: New file.
+
 2003-05-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/tls.h (TLS_INIT_TP): Include \n in error message.

@@ -27,9 +27,6 @@
 #include <bits/libc-lock.h>
 
 
-struct fork_handler __pthread_child_handler attribute_hidden;
-
-
 #ifdef TLS_MULTIPLE_THREADS_IN_TCB
 void
 #else
@@ -46,10 +43,7 @@ __libc_pthread_init (ptr, reclaim, functions)
   __fork_generation_pointer = ptr;
 
   /* Called by a child after fork.  */
-  __pthread_child_handler.handler = reclaim;
-
-  /* The fork handler needed by libpthread.  */
-  list_add_tail (&__pthread_child_handler.list, &__fork_child_list);
+  __register_atfork (NULL, NULL, reclaim, NULL);
 
 #ifdef SHARED
   /* We copy the content of the variable pointed to by the FUNCTIONS

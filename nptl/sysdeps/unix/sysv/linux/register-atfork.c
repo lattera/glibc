@@ -19,11 +19,62 @@
 
 #include <errno.h>
 #include <stdlib.h>
+#include <string.h>
 #include "fork.h"
 
 
-/* Defined in libc_pthread_init.c.  */
-extern struct fork_handler __pthread_child_handler attribute_hidden;
+/* Lock to protect allocation and deallocation of fork handlers.  */
+lll_lock_t __fork_lock = LLL_LOCK_INITIALIZER;
+
+
+/* Number of pre-allocated handler entries.  */
+#define NHANDLER 48
+
+/* Memory pool for fork handler structures.  */
+static struct fork_handler_pool
+{
+  struct fork_handler_pool *next;
+  struct fork_handler mem[NHANDLER];
+} fork_handler_pool;
+
+
+static struct fork_handler *
+fork_handler_alloc (void)
+{
+  struct fork_handler_pool *runp = &fork_handler_pool;
+  struct fork_handler *result = NULL;
+  unsigned int i;
+
+  do
+    {
+      /* Search for an empty entry.  */
+      for (i = 0; i < NHANDLER; ++i)
+	if (runp->mem[i].refcntr == 0)
+	  goto found;
+    }
+  while ((runp = runp->next) != NULL);
+
+  /* We have to allocate a new entry.  */
+  runp = (struct fork_handler_pool *) calloc (1, sizeof (*runp));
+  if (runp != NULL)
+    {
+      /* Enqueue the new memory pool into the list.  */
+      runp->next = fork_handler_pool.next;
+      fork_handler_pool.next = runp;
+
+      /* We use the last entry on the page.  This means when we start
+	 searching from the front the next time we will find the first
+	 entry unused.  */
+      i = NHANDLER - 1;
+
+    found:
+      result = &runp->mem[i];
+      result->refcntr = 1;
+      result->need_signal = 0;
+    }
+
+  return result;
+}
 
 
 int
@@ -33,100 +84,27 @@ __register_atfork (prepare, parent, child, dso_handle)
      void (*child) (void);
      void *dso_handle;
 {
-  struct fork_handler *new_prepare = NULL;
-  struct fork_handler *new_parent = NULL;
-  struct fork_handler *new_child = NULL;
-
-  if (prepare != NULL)
-    {
-      new_prepare = (struct fork_handler *) malloc (sizeof (*new_prepare));
-      if (new_prepare == NULL)
-	goto out1;
-
-      new_prepare->handler = prepare;
-      new_prepare->dso_handle = dso_handle;
-    }
-
-  if (parent != NULL)
-    {
-      new_parent = (struct fork_handler *) malloc (sizeof (*new_parent));
-      if (new_parent == NULL)
-	goto out2;
-
-      new_parent->handler = parent;
-      new_parent->dso_handle = dso_handle;
-    }
-
-  if (child != NULL)
-    {
-      new_child = (struct fork_handler *) malloc (sizeof (*new_child));
-      if (new_child == NULL)
-	{
-	  free (new_parent);
-	out2:
-	  free (new_prepare);
-	out1:
-	  return errno;
-	}
-
-      new_child->handler = child;
-      new_child->dso_handle = dso_handle;
-    }
-
-  /* Get the lock to not conflict with running forks.  */
+  /* Get the lock to not conflict with other allocations.  */
   lll_lock (__fork_lock);
 
-  /* Now that we have all the handlers allocate enqueue them.  */
-  if (new_prepare != NULL)
-    list_add_tail (&new_prepare->list, &__fork_prepare_list);
-  if (new_parent != NULL)
-    list_add_tail (&new_parent->list, &__fork_parent_list);
-  if (new_child != NULL)
-    list_add_tail (&new_child->list, &__fork_child_list);
+  struct fork_handler *newp = fork_handler_alloc ();
+
+  if (newp != NULL)
+    {
+      /* Initialize the new record.  */
+      newp->prepare_handler = prepare;
+      newp->parent_handler = parent;
+      newp->child_handler = child;
+      newp->dso_handle = dso_handle;
+
+      newp->next = __fork_handlers;
+      __fork_handlers = newp;
+    }
 
   /* Release the lock.  */
   lll_unlock (__fork_lock);
 
-  return 0;
-}
-
-
-/* Three static memory blocks used when registering malloc.  */
-static struct fork_handler malloc_prepare;
-static struct fork_handler malloc_parent;
-static struct fork_handler malloc_child;
-
-
-void
-attribute_hidden
-__register_atfork_malloc (prepare, parent, child, dso_handle)
-     void (*prepare) (void);
-     void (*parent) (void);
-     void (*child) (void);
-     void *dso_handle;
-{
-  /* Pre-fork handler.  */
-  malloc_prepare.handler = prepare;
-  malloc_prepare.dso_handle = dso_handle;
-
-  /* Parent handler.  */
-  malloc_parent.handler = parent;
-  malloc_parent.dso_handle = dso_handle;
-
-  /* Child handler.  */
-  malloc_child.handler = child;
-  malloc_child.dso_handle = dso_handle;
-
-  /* Get the lock to not conflict with running forks.  */
-  lll_lock (__fork_lock);
-
-  /* Now that we have all the handlers allocate enqueue them.  */
-  list_add_tail (&malloc_prepare.list, &__fork_prepare_list);
-  list_add_tail (&malloc_parent.list, &__fork_parent_list);
-  list_add_tail (&malloc_child.list, &__fork_child_list);
-
-  /* Release the lock.  */
-  lll_unlock (__fork_lock);
+  return newp == NULL ? ENOMEM : 0;
 }
 
 
@@ -135,36 +113,22 @@ libc_freeres_fn (free_mem)
   /* Get the lock to not conflict with running forks.  */
   lll_lock (__fork_lock);
 
-  list_t *runp;
-  list_t *prevp;
+  /* No more fork handlers.  */
+  __fork_handlers = NULL;
 
-  list_for_each_prev_safe (runp, prevp, &__fork_prepare_list)
-    {
-      list_del (runp);
+  /* Free eventually alloated memory blocks for the object pool.  */
+  struct fork_handler_pool *runp = fork_handler_pool.next;
 
-      struct fork_handler *p = list_entry (runp, struct fork_handler, list);
-      if (p != &malloc_prepare)
-	free (p);
-    }
-
-  list_for_each_prev_safe (runp, prevp, &__fork_parent_list)
-    {
-      list_del (runp);
-
-      struct fork_handler *p = list_entry (runp, struct fork_handler, list);
-      if (p != &malloc_parent)
-	free (p);
-    }
-
-  list_for_each_prev_safe (runp, prevp, &__fork_child_list)
-    {
-      list_del (runp);
-
-      struct fork_handler *p = list_entry (runp, struct fork_handler, list);
-      if (p != &__pthread_child_handler && p != &malloc_child)
-	free (p);
-    }
+  memset (&fork_handler_pool, '\0', sizeof (fork_handler_pool));
 
   /* Release the lock.  */
   lll_unlock (__fork_lock);
+
+  /* We can free the memory after releasing the lock.  */
+  while (runp != NULL)
+    {
+      struct fork_handler_pool *oldp;
+      runp = runp->next;
+      free (oldp);
+    }
 }
