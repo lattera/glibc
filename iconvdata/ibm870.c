@@ -1,5 +1,5 @@
 /* Conversion from and to IBM870.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -24,6 +24,6 @@
 #include <ibm870.h>
 
 #define CHARSET_NAME	"IBM870//"
-#define HAS_HOLES	1	/* Not all 256 character are defined.  */
+#define HAS_HOLES	0	/* All 256 character are defined.  */
 
 #include <8bit-generic.c>

@@ -1,3 +1,29 @@
+2002-08-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/ibm870.c: All bytes are now used, no holes anymore.
+
+	* localedata/charmaps/IBM870: Add correct mapping for <U017E>,
+	<U017A>, <U017D> and <U0179>. Add missing mappings.
+	Patch by Antonin Kopecky <akopecky@tajmac-zps.cz>.
+
+	* gmon/sys/gmon.h (ARCDENSITY): Bump to 3.
+	Define ARCINDEX.  Bump MAXARCS to 1 << 20.
+	(struct tostruct): Use ACRINDEX as type for link field.
+	(statuc gmonparam): Likewise for froms.
+	* gmon/gmon.c (__monstartup): Use currect cast for assignments to
+	kcount and froms.
+	(write_call_graph): Use correct type for from_index and to_index.
+	* gmon/mcount.c: Use correct types for frompcindex and toindex
+	variables.
+	Patches by Dan Kegel <dank@kegel.com>.
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Fix code to determine
+	canonical name.
+
+	* time/strptime.c (ISSPACE): New #define.  Use isspace or
+	__isspace_l.  Replace calls to isspace.
+	(match_string): Define variant for USE_IN_EXTENDED_LOCALE_MODEL.
+
 2002-08-29  Roland McGrath  <roland@redhat.com>
 
 	* string/tst-strxfrm.c: Remove __ from function names.
