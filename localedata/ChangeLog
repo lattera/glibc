@@ -1,3 +1,8 @@
+2000-08-19  Andreas Jaeger  <aj@suse.de>
+
+	* tst-digits.c: Include stdlib.h and string.h to provide
+	prototypes for exit, strlen and strcmp.
+
 2000-08-18  Andreas Jaeger  <aj@suse.de>
 
 	* tests-mbwc/tst_funcs.h (TMD_ERRET): Don't declare err_flg.

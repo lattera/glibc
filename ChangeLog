@@ -1,5 +1,8 @@
 2000-08-19  Andreas Jaeger  <aj@suse.de>
 
+	* inet/tst-gethnm.c: Include string.h to provide prototype for
+	strcmp.
+
 	* malloc/mtrace.pl (usage): Inform about --help.
 
 2000-08-19  Wolfram Gloger  <wg@malloc.de>
