@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -141,7 +141,7 @@ compile (char *instring, char *expbuf, __const char *endbuf, int eof)
       if (__current_size + 1 >= __input_size)
 	{
 	  size_t __new_size = __input_size ? 2 * __input_size : 128;
-	  char *__new_room = __alloca (__new_size);
+	  char *__new_room = alloca (__new_size);
 	  /* See whether we can use the old buffer.  */
 	  if (__new_room + __new_size == __input_buffer)
 	    {

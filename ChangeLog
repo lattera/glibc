@@ -1,3 +1,9 @@
+1998-09-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/regexp.h (compile): Use alloca instead of __alloca.  It won't
+	pollute the namespace since the compiler will resolve it inline.
+	Reported by Florian La Roche <florian@suse.de>.
+
 1998-09-24 10:29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* timezone/private.h: Update from tzcode1998g.
