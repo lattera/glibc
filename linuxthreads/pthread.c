@@ -654,7 +654,7 @@ int __pthread_initialize_manager(void)
 
 #ifdef USE_TLS
   /* Allocate memory for the thread descriptor and the dtv.  */
-  tcbp  = _dl_allocate_tls (NULL);
+  tcbp = _dl_allocate_tls (NULL);
   if (tcbp == NULL) {
     free(__pthread_manager_thread_bos);
     __libc_close(manager_pipe[0]);
@@ -783,6 +783,9 @@ int __pthread_initialize_manager(void)
 #endif
     }
   if (__builtin_expect (pid, 0) == -1) {
+#ifdef USE_TLS
+    _dl_deallocate_tls (tcbp, true);
+#endif
     free(__pthread_manager_thread_bos);
     __libc_close(manager_pipe[0]);
     __libc_close(manager_pipe[1]);
@@ -1014,8 +1017,16 @@ static void pthread_onexit_process(int retcode, void *arg)
 	waitpid(__pthread_manager_thread.p_pid, NULL, __WCLONE);
 #endif
 	/* Since all threads have been asynchronously terminated
-           (possibly holding locks), free cannot be used any more.  */
-	/*free (__pthread_manager_thread_bos);*/
+           (possibly holding locks), free cannot be used any more.
+           For mtrace, we'd like to print something though.  */
+	/* #ifdef USE_TLS
+	   tcbhead_t *tcbp = (tcbhead_t *) manager_thread;
+	   # if TLS_DTV_AT_TP
+	   tcbp = (tcbhead_t) ((char *) tcbp + TLS_PRE_TCB_SIZE);
+	   # endif
+	   _dl_deallocate_tls (tcbp, true);
+	   #endif
+	   free (__pthread_manager_thread_bos); */
 	__pthread_manager_thread_bos = __pthread_manager_thread_tos = NULL;
       }
   }

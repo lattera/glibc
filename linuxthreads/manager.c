@@ -903,13 +903,14 @@ static void pthread_free(pthread_descr th)
       /* Unmap the stack.  */
       munmap(guardaddr, stacksize + guardsize);
 
+    }
+
 #ifdef USE_TLS
 # if TLS_DTV_AT_TP
-      th = (pthread_descr) ((char *) th + TLS_PRE_TCB_SIZE);
+  th = (pthread_descr) ((char *) th + TLS_PRE_TCB_SIZE);
 # endif
-      _dl_deallocate_tls (th, true);
+  _dl_deallocate_tls (th, true);
 #endif
-    }
 }
 
 /* Handle threads that have exited */

@@ -223,7 +223,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-exec1 tst-exec2 tst-exec3 tst-exec4 \
 	tst-exit1 \
 	tst-stdio1 tst-stdio2 \
-	tst-stack1 tst-stack2 \
+	tst-stack1 tst-stack2 tst-stack3 \
 	tst-unload \
 	tst-dlsym1 \
 	tst-sysconf \
@@ -404,6 +404,12 @@ $(objpfx)tst-atfork2: $(libdl) $(shared-thread-library)
 LDFLAGS-tst-atfork2 = -rdynamic
 tst-atfork2-ENV = MALLOC_TRACE=$(objpfx)tst-atfork2.mtrace
 $(objpfx)tst-atfork2mod.so: $(shared-thread-library)
+
+tests: $(objpfx)tst-stack3-mem
+tst-stack3-ENV = MALLOC_TRACE=$(objpfx)tst-stack3.mtrace
+$(objpfx)tst-stack3-mem: $(objpfx)tst-stack3.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-stack3.mtrace > $@
+generated += tst-stack3-mem tst-stack3.mtrace
 
 $(objpfx)tst-cleanup4: $(objpfx)tst-cleanup4aux.o $(shared-thread-library)
 $(objpfx)tst-cleanupx4: $(objpfx)tst-cleanup4aux.o $(shared-thread-library)

@@ -1,3 +1,35 @@
+2003-12-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/mtrace.c (tr_old_memalign_hook): New variable.
+	(tr_memalignhook): New function.
+	(mtrace): Register tr_memalignhook.
+	(muntrace): Deregister tr_memalignhook.
+	* malloc/malloc.c (__posix_memalign): If __memalign_hook != NULL,
+	call it directly instead of memalign_internal.
+
+2003-12-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/mntent_r.c: Change encoding to match recently change decoder.
+	Patch by Alexander Achenbach <xela@slit.de>.
+
+2003-12-16  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: Correct definition of
+	vrregset_t.
+
+2003-12-16  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h [!__PPC64_ELF_H]: Extent
+	conditional to include typedef elf_vrreg_t.
+
+2002-12-17  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regexec.c (re_search_internal): Limit search to the
+	beginning of the buffer if the initial states are empty for
+	contexts that do not include CONTEXT_BEGBUF or, if
+	!preg->newline_anchor, that do not include any one of
+	CONTEXT_BEGBUF and CONTEXT_NEWLINE.
+
 2003-12-17  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/generic/system.c (__libc_system): Fix typo, reported by

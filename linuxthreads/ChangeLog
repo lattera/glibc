@@ -1,3 +1,16 @@
+2003-12-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* manager.c (pthread_free): Call _dl_deallocate_tls even for
+	p_userstack threads.
+	* pthread.c (__pthread_initialize_manager): Call _dl_deallocate_tls
+	on error.
+	(pthread_onexit_process): Update comment.
+	* Makefile (tests): Add tst-stack1.  Depend on $(objpfx)tst-stack1-mem.
+	(generated): Add tst-stack1.mtrace and tst-stack1-mem.
+	(tst-stack1-ENV): Set.
+	($(objpfx)tst-stack1-mem): New.
+	* tst-stack1.c: New test.
+
 2003-12-16  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/tcb-offsets.sym [!__powerpc64__]: Remove

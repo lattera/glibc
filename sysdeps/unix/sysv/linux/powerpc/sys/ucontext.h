@@ -47,9 +47,9 @@ typedef struct _libc_fpstate
 typedef struct _libc_vrstate
 {
 	unsigned int vrregs[32][4];
-	unsigned int vscr;
 	unsigned int vrsave;
 	unsigned int _pad[2];
+	unsigned int vscr;
 } vrregset_t;
 
 /* Context to describe whole processor state.  */

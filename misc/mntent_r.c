@@ -86,7 +86,7 @@ decode_name (char *buf)
       }
     else if (rp[0] == '\\' && rp[1] == '0' && rp[2] == '1' && rp[3] == '1')
       {
-	/* \012 is a TAB.  */
+	/* \011 is a TAB.  */
 	*wp++ = '\t';
 	rp += 3;
       }
@@ -216,6 +216,13 @@ weak_alias (__getmntent_r, getmntent_r)
 	      *wp++ = '0';						      \
 	    }								      \
 	  else if (*rp == '\t')						      \
+	    {								      \
+	      *wp++ = '\\';						      \
+	      *wp++ = '0';						      \
+	      *wp++ = '1';						      \
+	      *wp++ = '1';						      \
+	    }								      \
+	  else if (*rp == '\n')						      \
 	    {								      \
 	      *wp++ = '\\';						      \
 	      *wp++ = '0';						      \

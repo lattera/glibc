@@ -5389,13 +5389,21 @@ int
 __posix_memalign (void **memptr, size_t alignment, size_t size)
 {
   void *mem;
+  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
+					__const __malloc_ptr_t)) =
+    __memalign_hook;
 
   /* Test whether the SIZE argument is valid.  It must be a power of
      two multiple of sizeof (void *).  */
   if (alignment % sizeof (void *) != 0 || !powerof2 (alignment) != 0)
     return EINVAL;
 
-  mem = __memalign_internal (alignment, size);
+  /* Call the hook here, so that caller is posix_memalign's caller
+     and not posix_memalign itself.  */
+  if (hook != NULL)
+    mem = (*hook)(alignment, size, RETURN_ADDRESS (0));
+  else
+    mem = __memalign_internal (alignment, size);
 
   if (mem != NULL) {
     *memptr = mem;

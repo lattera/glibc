@@ -71,6 +71,9 @@ static __ptr_t (*tr_old_malloc_hook) __P ((__malloc_size_t size,
 static __ptr_t (*tr_old_realloc_hook) __P ((__ptr_t ptr,
 					    __malloc_size_t size,
 					    const __ptr_t));
+static __ptr_t (*tr_old_memalign_hook) __P ((__malloc_size_t __alignment,
+					     __malloc_size_t __size,
+					     __const __ptr_t));
 
 /* This function is called when the block being alloc'd, realloc'd, or
    freed has an address matching the variable "mallwatch".  In a debugger,
@@ -233,6 +236,39 @@ tr_reallochook (ptr, size, caller)
   return hdr;
 }
 
+static __ptr_t tr_memalignhook __P ((__malloc_size_t, __malloc_size_t,
+				     const __ptr_t));
+static __ptr_t
+tr_memalignhook (alignment, size, caller)
+     __malloc_size_t alignment, size;
+     const __ptr_t caller;
+{
+  __ptr_t hdr;
+
+  __libc_lock_lock (lock);
+
+  __memalign_hook = tr_old_memalign_hook;
+  __malloc_hook = tr_old_malloc_hook;
+  if (tr_old_memalign_hook != NULL)
+    hdr = (__ptr_t) (*tr_old_memalign_hook) (alignment, size, caller);
+  else
+    hdr = (__ptr_t) memalign (alignment, size);
+  __memalign_hook = tr_memalignhook;
+  __malloc_hook = tr_mallochook;
+
+  tr_where (caller);
+  /* We could be printing a NULL here; that's OK.  */
+  fprintf (mallstream, "+ %p %#lx\n", hdr, (unsigned long int) size);
+
+  __libc_lock_unlock (lock);
+
+  if (hdr == mallwatch)
+    tr_break ();
+
+  return hdr;
+}
+
+
 
 #ifdef _LIBC
 
@@ -300,6 +336,8 @@ mtrace ()
 	  __malloc_hook = tr_mallochook;
 	  tr_old_realloc_hook = __realloc_hook;
 	  __realloc_hook = tr_reallochook;
+	  tr_old_memalign_hook = __memalign_hook;
+	  __memalign_hook = tr_memalignhook;
 #ifdef _LIBC
 	  if (!added_atexit_handler)
 	    {
@@ -327,4 +365,5 @@ muntrace ()
   __free_hook = tr_old_free_hook;
   __malloc_hook = tr_old_malloc_hook;
   __realloc_hook = tr_old_realloc_hook;
+  __memalign_hook = tr_old_memalign_hook;
 }

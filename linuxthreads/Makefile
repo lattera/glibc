@@ -109,10 +109,13 @@ tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 $(librt-tests) ex12 ex13 joinrace \
 	tststack $(tests-nodelete-$(have-z-nodelete)) ecmutex ex14 ex15 ex16 \
 	ex17 ex18 tst-cancel tst-context bug-sleep \
 	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 tst-cancel5 \
-	tst-cancel6 tst-cancel7 tst-cancel8 tst-popen tst-popen2 tst-attr1
+	tst-cancel6 tst-cancel7 tst-cancel8 tst-popen tst-popen2 tst-attr1 \
+	tst-stack1
 test-srcs = tst-signal
 # These tests are linked with libc before libpthread
 tests-reverse += tst-cancel5
+
+generated += tst-stack1.mtrace tst-stack1-mem
 
 ifeq ($(build-static),yes)
 tests += tststatic tst-static-locale tst-cancel-static
@@ -138,6 +141,15 @@ tst-tls1modc.so-no-z-defs = yes
 tst-tls1modd.so-no-z-defs = yes
 tst-tls1mode.so-no-z-defs = yes
 tst-tls1modf.so-no-z-defs = yes
+
+tests: $(objpfx)tst-stack1-mem
+tst-stack1-ENV = MALLOC_TRACE=$(objpfx)tst-stack1.mtrace
+
+# There are still up to 3 objects unfreed:
+# manager thread's stack, tls block and dtv
+$(objpfx)tst-stack1-mem: $(objpfx)tst-stack1.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-stack1.mtrace > $@ \
+	|| [ `grep ^0 $@ | wc -l` -le 3 ]
 
 $(test-modules): $(objpfx)%.so: $(objpfx)%.os $(common-objpfx)shlib.lds
 	$(build-module)
