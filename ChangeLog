@@ -1,3 +1,35 @@
+2004-03-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Remove hwcap
+	variable and weak_extern for _dl_hwcap.
+	(_DL_HWCAP_TLS_MASK): Define.
+	(HWCAP_CHECK): Fix checking of non-platform hwcap bits.  Use
+	lib->osversion instead of cache_new->libs[middle].osversion.
+
+	* stdio-common/asprintf.c: Remove USE_IN_LIBIO conditionals.
+	* stdio-common/dprintf.c: Likewise.
+	* stdio-common/fprintf.c: Likewise.
+	* stdio-common/getline.c: Likewise.
+	* stdio-common/getw.c: Likewise.
+	* stdio-common/perror.c: Likewise.
+	* stdio-common/printf-prs.c: Likewise.
+	* stdio-common/printf.c: Likewise.
+	* stdio-common/printf_size.c: Likewise.
+	* stdio-common/psignal.c: Likewise.
+	* stdio-common/putw.c: Likewise.
+	* stdio-common/scanf.c: Likewise.
+	* stdio-common/snprintf.c: Likewise.
+	* stdio-common/sprintf.c: Likewise.
+	* stdio-common/sscanf.c: Likewise.
+	* stdio-common/tstgetln.c: Likewise.
+	* stdio-common/vfprintf.c: Likewise.
+
+2004-03-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/getopt.h (__GNUC_PREREQ) [!defined __THROW]: Define
+	if not defined, fixing a typo (it used to be defined if
+	__GNUC__ was not defined).
+
 2004-03-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/sched.h: Change sched_getaffinity and sched_setaffinity

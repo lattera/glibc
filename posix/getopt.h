@@ -36,7 +36,7 @@
 #endif
 
 #ifndef __THROW
-# ifndef __GNUC__
+# ifndef __GNUC_PREREQ
 #  define __GNUC_PREREQ(maj, min) (0)
 # endif
 # if defined __cplusplus && __GNUC_PREREQ (2,8)

@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996, 1997, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,12 +22,10 @@
 
 #undef __getline
 
-#ifdef USE_IN_LIBIO
-# include "../libio/libioP.h"
-# undef ssize_t
-# define ssize_t _IO_ssize_t
-# define __getdelim _IO_getdelim
-#endif
+#include "../libio/libioP.h"
+#undef ssize_t
+#define ssize_t _IO_ssize_t
+#define __getdelim _IO_getdelim
 
 /* Like getdelim, but always looks for a newline.  */
 ssize_t

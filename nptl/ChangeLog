@@ -1,3 +1,26 @@
+2004-03-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/internaltypes.h (struct pthread_attr): Add
+	cpusetsize field, remove next.
+	* sysdeps/pthread/pthread.h (pthread_getaffinity_np): Add new second
+	parameter for size of the CPU set.
+	(pthread_setaffinity_np): Likewise.
+	(pthread_attr_getaffinity_np): Likewise.
+	(pthread_attr_setaffinity_np): Likewise.
+	* sysdeps/unix/sysv/linux/pthread_attr_getaffinity.c: Implement
+	interface change, keep compatibility code.
+	* sysdeps/unix/sysv/linux/pthread_attr_setaffinity.c: Likewise.
+	* sysdeps/unix/sysv/linux/pthread_getaffinity.c: Likewise.
+	* sysdeps/unix/sysv/linux/pthread_setaffinity.c: Likewise.
+	* pthreadP.h: Remove hidden_proto for pthread_getaffinity_np.  Declare
+	__pthread_getaffinity_np.
+	* Versions: Add version for changed interfaces.
+	* tst-attr3.c: Adjust test for interface change.
+	* pthread_getattr_np.c: Query the kernel about the affinity mask with
+	increasing buffer sizes.
+	* pthread_attr_destroy.c: Remove unused list handling.
+	* pthread_attr_init.c: Likewise.
+
 2004-03-17  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/timer_create.c (timer_create): Pass missing

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993,1997,1998,2000-2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1997,1998,2000-2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,9 +21,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <wchar.h>
-#ifdef USE_IN_LIBIO
-# include "libioP.h"
-#endif
+#include "libioP.h"
 
 static void
 perror_internal (FILE *fp, const char *s, int errnum)
@@ -39,11 +37,9 @@ perror_internal (FILE *fp, const char *s, int errnum)
 
   errstring = __strerror_r (errnum, buf, sizeof buf);
 
-#ifdef USE_IN_LIBIO
   if (_IO_fwide (fp, 0) > 0)
     (void) __fwprintf (fp, L"%s%s%s\n", s, colon, errstring);
   else
-#endif
     (void) fprintf (fp, "%s%s%s\n", s, colon, errstring);
 }
 

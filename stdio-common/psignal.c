@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1992,1995-1997,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996, 1997, 2001, 2002, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,9 +21,7 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <libintl.h>
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-#endif
+#include <wchar.h>
 
 
 #ifndef	HAVE_GNU_LD
@@ -49,11 +48,9 @@ psignal (int sig, const char *s)
 
   if (sig >= 0 && sig < NSIG && (desc = INTUSE(_sys_siglist)[sig]) != NULL)
     {
-#ifdef USE_IN_LIBIO
       if (_IO_fwide (stderr, 0) > 0)
 	(void) __fwprintf (stderr, L"%s%s%s\n", s, colon, _(desc));
       else
-#endif
 	(void) fprintf (stderr, "%s%s%s\n", s, colon, _(desc));
     }
   else
@@ -62,11 +59,9 @@ psignal (int sig, const char *s)
 
       (void) __asprintf (&buf, _("%s%sUnknown signal %d\n"), s, colon, sig);
 
-#ifdef USE_IN_LIBIO
       if (_IO_fwide (stderr, 0) > 0)
 	(void) __fwprintf (stderr, L"%s",  buf);
       else
-#endif
 	(void) fputs (buf, stderr);
 
       free (buf);

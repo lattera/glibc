@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,15 +39,13 @@
    implementation as defined in ISO/IEC 9899:1990/Amendment 1:1995.  */
 
 
-#ifdef USE_IN_LIBIO
-/* This code is for use in libio.  */
-# include <libioP.h>
-# define FILE		_IO_FILE
-# undef va_list
-# define va_list	_IO_va_list
-# undef BUFSIZ
-# define BUFSIZ		_IO_BUFSIZ
-# define ARGCHECK(S, Format) \
+#include <libioP.h>
+#define FILE		_IO_FILE
+#undef va_list
+#define va_list	_IO_va_list
+#undef BUFSIZ
+#define BUFSIZ		_IO_BUFSIZ
+#define ARGCHECK(S, Format) \
   do									      \
     {									      \
       /* Check file argument for consistence.  */			      \
@@ -63,95 +61,46 @@
 	  return -1;							      \
 	}								      \
     } while (0)
-# define UNBUFFERED_P(S) ((S)->_IO_file_flags & _IO_UNBUFFERED)
+#define UNBUFFERED_P(S) ((S)->_IO_file_flags & _IO_UNBUFFERED)
 
-# ifndef COMPILE_WPRINTF
-#  define vfprintf	_IO_vfprintf
-#  define CHAR_T	char
-#  define UCHAR_T	unsigned char
-#  define INT_T		int
-#  define L_(Str)	Str
-#  define ISDIGIT(Ch)	((unsigned int) ((Ch) - '0') < 10)
-
-#  define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
-#  define PAD(Padchar) \
-  if (width > 0)							      \
-    done += INTUSE(_IO_padn) (s, (Padchar), width)
-#  define PUTC(C, F)	_IO_putc_unlocked (C, F)
-#  define ORIENT	if (_IO_vtable_offset (s) == 0 && _IO_fwide (s, -1) != -1)\
-			  return -1
-# else
-#  define vfprintf	_IO_vfwprintf
-#  define CHAR_T	wchar_t
-/* This is a hack!!!  There should be a type uwchar_t.  */
-#  define UCHAR_T	unsigned int /* uwchar_t */
-#  define INT_T		wint_t
-#  define L_(Str)	L##Str
-#  define ISDIGIT(Ch)	((unsigned int) ((Ch) - L'0') < 10)
-
-#  include "_itowa.h"
-
-#  define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
-#  define PAD(Padchar) \
-  if (width > 0)							      \
-    done += _IO_wpadn (s, (Padchar), width)
-#  define PUTC(C, F)	_IO_putwc_unlocked (C, F)
-#  define ORIENT	if (_IO_fwide (s, 1) != 1) return -1
-
-#  define _itoa(Val, Buf, Base, Case) _itowa (Val, Buf, Base, Case)
-#  define _itoa_word(Val, Buf, Base, Case) _itowa_word (Val, Buf, Base, Case)
-#  undef EOF
-#  define EOF WEOF
-# endif
-#else /* ! USE_IN_LIBIO */
-/* This code is for use in the GNU C library.  */
-# define ARGCHECK(S, Format) \
-  do									      \
-    {									      \
-      /* Check file argument for consistence.  */			      \
-      if (!__validfp (S) || !S->__mode.__write)				      \
-	{								      \
-	  __set_errno (EBADF);						      \
-	  return -1;							      \
-	}								      \
-      if (Format == NULL)						      \
-	{								      \
-	  __set_errno (EINVAL);						      \
-	  return -1;							      \
-	}								      \
-      if (!S->__seen)							      \
-	{								      \
-	  if (__flshfp (S, EOF) == EOF)					      \
-	    return -1;							      \
-	}								      \
-    }									      \
-   while (0)
-# define UNBUFFERED_P(s) ((s)->__buffer == NULL)
-
-# define CHAR_T         char
-# define UCHAR_T        unsigned char
+#ifndef COMPILE_WPRINTF
+# define vfprintf	_IO_vfprintf
+# define CHAR_T		char
+# define UCHAR_T	unsigned char
 # define INT_T		int
 # define L_(Str)	Str
-# define ISDIGIT(Ch)	isdigit (Ch)
+# define ISDIGIT(Ch)	((unsigned int) ((Ch) - '0') < 10)
 
-# define PUT(F, S, N)	fwrite (S, 1, N, F)
-ssize_t __printf_pad __P ((FILE *, char pad, size_t n));
-# define PAD(Padchar)                                                         \
-  if (width > 0)                                                              \
-    { ssize_t __res = __printf_pad (s, (Padchar), width);                     \
-      if (__res == -1)                                                        \
-        {                                                                     \
-          done = -1;                                                          \
-          goto all_done;                                                      \
-        }                                                                     \
-      done += __res; }
-# define PUTC(C, F)    putc (C, F)
+# define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
+# define PAD(Padchar) \
+  if (width > 0)							      \
+    done += INTUSE(_IO_padn) (s, (Padchar), width)
+# define PUTC(C, F)	_IO_putc_unlocked (C, F)
+# define ORIENT		if (_IO_vtable_offset (s) == 0 && _IO_fwide (s, -1) != -1)\
+			  return -1
+#else
+# define vfprintf	_IO_vfwprintf
+# define CHAR_T		wchar_t
+/* This is a hack!!!  There should be a type uwchar_t.  */
+# define UCHAR_T	unsigned int /* uwchar_t */
+# define INT_T		wint_t
+# define L_(Str)	L##Str
+# define ISDIGIT(Ch)	((unsigned int) ((Ch) - L'0') < 10)
 
-/* XXX These declarations should go as soon as the stdio header files
-   have these prototypes.   */
-extern void __flockfile (FILE *);
-extern void __funlockfile (FILE *);
-#endif /* USE_IN_LIBIO */
+# include "_itowa.h"
+
+# define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
+# define PAD(Padchar) \
+  if (width > 0)							      \
+    done += _IO_wpadn (s, (Padchar), width)
+# define PUTC(C, F)	_IO_putwc_unlocked (C, F)
+# define ORIENT		if (_IO_fwide (s, 1) != 1) return -1
+
+# define _itoa(Val, Buf, Base, Case) _itowa (Val, Buf, Base, Case)
+# define _itoa_word(Val, Buf, Base, Case) _itowa_word (Val, Buf, Base, Case)
+# undef EOF
+# define EOF WEOF
+#endif
 
 #include "_i18n_number.h"
 
@@ -1266,10 +1215,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
 #ifdef ORIENT
   /* Check for correct orientation.  */
-  if (
-# ifdef USE_IN_LIBIO
-      _IO_vtable_offset (s) == 0 &&
-# endif
+  if (_IO_vtable_offset (s) == 0 &&
       _IO_fwide (s, sizeof (CHAR_T) == 1 ? -1 : 1)
       != (sizeof (CHAR_T) == 1 ? -1 : 1))
     /* The stream is already oriented otherwise.  */
@@ -1305,13 +1251,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 #endif
 
   /* Lock stream.  */
-#ifdef USE_IN_LIBIO
   _IO_cleanup_region_start ((void (*) (void *)) &_IO_funlockfile, s);
   _IO_flockfile (s);
-#else
-  __libc_cleanup_region_start (1, (void (*) (void *)) &__funlockfile, s);
-  __flockfile (s);
-#endif
 
   /* Write the literal text before the first format.  */
   outstring ((const UCHAR_T *) format,
@@ -1906,13 +1847,8 @@ all_done:
   if (__builtin_expect (workstart != NULL, 0))
     free (workstart);
   /* Unlock the stream.  */
-#ifdef USE_IN_LIBIO
   _IO_funlockfile (s);
   _IO_cleanup_region_end (0);
-#else
-  __funlockfile (s);
-  __libc_cleanup_region_end (0);
-#endif
 
   return done;
 }
@@ -2041,7 +1977,6 @@ group_number (CHAR_T *w, CHAR_T *rear_ptr, const char *grouping,
   return w;
 }
 
-#ifdef USE_IN_LIBIO
 /* Helper "class" for `fprintf to unbuffered': creates a temporary buffer.  */
 struct helper_file
   {
@@ -2159,7 +2094,7 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
   _IO_JUMPS (&helper._f) = (struct _IO_jump_t *) &_IO_helper_jumps;
 
   /* Now print to helper instead.  */
-#if defined USE_IN_LIBIO && !defined COMPILE_WPRINTF
+#ifndef COMPILE_WPRINTF
   result = INTUSE(_IO_vfprintf) (hp, format, args);
 #else
   result = vfprintf (hp, format, args);
@@ -2193,91 +2128,25 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
   return result;
 }
 
-#else /* !USE_IN_LIBIO */
-
-static int
-internal_function
-buffered_vfprintf (register FILE *s, const CHAR_T *format, va_list args)
-{
-  char buf[BUFSIZ];
-  int result;
-
-  /* Orient the stream.  */
-#ifdef ORIENT
-  ORIENT;
-#endif
-
-  s->__bufp = s->__buffer = buf;
-  s->__bufsize = sizeof buf;
-  s->__put_limit = s->__buffer + s->__bufsize;
-  s->__get_limit = s->__buffer;
-
-  /* Now use buffer to print.  */
-  result = vfprintf (s, format, args);
-
-  if (fflush (s) == EOF)
-    result = -1;
-  s->__buffer = s->__bufp = s->__get_limit = s->__put_limit = NULL;
-  s->__bufsize = 0;
-
-  return result;
-}
-
-/* Pads string with given number of a specified character.
-   This code is taken from iopadn.c of the GNU I/O library.  */
-#define PADSIZE 16
-static const CHAR_T blanks[PADSIZE] =
-{ L_(' '), L_(' '), L_(' '), L_(' '), L_(' '), L_(' '), L_(' '), L_(' '),
-  L_(' '), L_(' '), L_(' '), L_(' '), L_(' '), L_(' '), L_(' '), L_(' ') };
-static const CHAR_T zeroes[PADSIZE] =
-{ L_('0'), L_('0'), L_('0'), L_('0'), L_('0'), L_('0'), L_('0'), L_('0'),
-  L_('0'), L_('0'), L_('0'), L_('0'), L_('0'), L_('0'), L_('0'), L_('0') };
-
-ssize_t
-#ifndef COMPILE_WPRINTF
-__printf_pad (FILE *s, char pad, size_t count)
-#else
-__wprintf_pad (FILE *s, wchar_t pad, size_t count)
-#endif
-{
-  const CHAR_T *padptr;
-  register size_t i;
-
-  padptr = pad == L_(' ') ? blanks : zeroes;
-
-  for (i = count; i >= PADSIZE; i -= PADSIZE)
-    if (PUT (s, padptr, PADSIZE) != PADSIZE)
-      return -1;
-  if (i > 0)
-    if (PUT (s, padptr, i) != i)
-      return -1;
-
-  return count;
-}
-#undef PADSIZE
-#endif /* USE_IN_LIBIO */
-
-#ifdef USE_IN_LIBIO
-# undef vfprintf
-# ifdef strong_alias
+#undef vfprintf
+#ifdef strong_alias
 /* This is for glibc.  */
-#  ifdef COMPILE_WPRINTF
+# ifdef COMPILE_WPRINTF
 strong_alias (_IO_vfwprintf, __vfwprintf);
 weak_alias (_IO_vfwprintf, vfwprintf);
-#  else
+# else
 strong_alias (_IO_vfprintf, vfprintf);
 libc_hidden_def (vfprintf)
 INTDEF(_IO_vfprintf)
-#  endif
-# else
-#  if defined __ELF__ || defined __GNU_LIBRARY__
-#   include <gnu-stabs.h>
-#   ifdef weak_alias
-#    ifdef COMPILE_WPRINTF
+# endif
+#else
+# if defined __ELF__ || defined __GNU_LIBRARY__
+#  include <gnu-stabs.h>
+#  ifdef weak_alias
+#   ifdef COMPILE_WPRINTF
 weak_alias (_IO_vfwprintf, vfwprintf);
-#    else
+#   else
 weak_alias (_IO_vfprintf, vfprintf);
-#    endif
 #   endif
 #  endif
 # endif

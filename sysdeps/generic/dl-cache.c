@@ -243,12 +243,7 @@ _dl_load_cache_lookup (const char *name)
 
   if (cache_new != (void *) -1)
     {
-      /* This file ends in static libraries where we don't have a hwcap.  */
-      unsigned long int *hwcap;
       uint64_t platform;
-#ifndef SHARED
-      weak_extern (_dl_hwcap);
-#endif
 
       /* This is where the strings start.  */
       cache_data = (const char *) cache_new;
@@ -256,22 +251,25 @@ _dl_load_cache_lookup (const char *name)
       /* Now we can compute how large the string table is.  */
       cache_data_size = (const char *) cache + cachesize - cache_data;
 
-      hwcap = &GLRO(dl_hwcap);
       platform = _dl_string_platform (GLRO(dl_platform));
       if (platform != (uint64_t) -1)
 	platform = 1ULL << platform;
 
       /* Only accept hwcap if it's for the right platform.  */
+#ifdef USE_TLS
+# define _DL_HWCAP_TLS_MASK (1LL << 63)
+#else
+# define _DL_HWCAP_TLS_MASK 0
+#endif
 #define HWCAP_CHECK \
-      if (GLRO(dl_osversion)						      \
-	  && cache_new->libs[middle].osversion > GLRO(dl_osversion))	      \
+      if (GLRO(dl_osversion) && lib->osversion > GLRO(dl_osversion))	      \
 	continue;							      \
       if (_DL_PLATFORMS_COUNT && platform != -1				      \
 	  && (lib->hwcap & _DL_HWCAP_PLATFORM) != 0			      \
 	  && (lib->hwcap & _DL_HWCAP_PLATFORM) != platform)		      \
 	continue;							      \
-      if (hwcap								      \
-	  && ((lib->hwcap & *hwcap & ~_DL_HWCAP_PLATFORM) > *hwcap))	      \
+      if (lib->hwcap							      \
+	  & ~(GLRO(dl_hwcap) | _DL_HWCAP_PLATFORM | _DL_HWCAP_TLS_MASK))      \
 	continue
       SEARCH_CACHE (cache_new);
     }

@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,95,96,99,2000,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996, 1999, 2000, 2002, 2003, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,19 +35,10 @@
 # define ISASCII(Ch)	isascii (Ch)
 # define MBRLEN(Cp, L, St) __mbrlen (Cp, L, St)
 
-# ifdef USE_IN_LIBIO
-#  define PUT(F, S, N)	_IO_sputn (F, S, N)
-#  define PAD(Padchar)							      \
-  if (width > 0)							      \
-    done += INTUSE(_IO_padn) (s, Padchar, width)
-# else
-#  define PUTC(C, F)	putc (C, F)
-ssize_t __printf_pad __P ((FILE *, char pad, size_t n));
+# define PUT(F, S, N)	_IO_sputn (F, S, N)
 # define PAD(Padchar)							      \
   if (width > 0)							      \
-    { if (__printf_pad (s, Padchar, width) == -1)			      \
-	return -1; else done += width; }
-# endif
+    done += INTUSE(_IO_padn) (s, Padchar, width)
 #else
 # define vfprintf	vfwprintf
 # define CHAR_T		wchar_t
@@ -55,19 +47,10 @@ ssize_t __printf_pad __P ((FILE *, char pad, size_t n));
 # define L_(Str)	L##Str
 # define ISDIGIT(Ch)	iswdigit (Ch)
 
-# ifdef USE_IN_LIBIO
 # define PUT(F, S, N)	_IO_sputn (F, S, N)
 # define PAD(Padchar)							      \
   if (width > 0)							      \
     done += _IO_wpadn (s, Padchar, width)
-# else
-#  define PUTC(C, F)	wputc (C, F)
-ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
-# define PAD(Padchar)							      \
-  if (width > 0)							      \
-    { if (__wprintf_pad (s, Padchar, width) == -1)			      \
-	return -1; else done += width; }
-# endif
 #endif
 
 #define DONT_NEED_READ_INT

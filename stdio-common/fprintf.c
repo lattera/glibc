@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,97,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,97,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,9 +36,7 @@ fprintf (FILE *stream, const char *format, ...)
 }
 libc_hidden_def (fprintf)
 
-#ifdef USE_IN_LIBIO
 /* We define the function with the real name here.  But deep down in
    libio the original function _IO_fprintf is also needed.  So make
    an alias.  */
 weak_alias (fprintf, _IO_fprintf)
-#endif

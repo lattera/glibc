@@ -1,4 +1,5 @@
-/* Copyright (C) 1992, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996, 1997, 1998, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,11 +18,8 @@
    02111-1307 USA.  */
 
 #include <stdio.h>
-
-#ifdef USE_IN_LIBIO
-# undef ssize_t
-# define ssize_t _IO_ssize_t
-#endif
+#undef ssize_t
+#define ssize_t _IO_ssize_t
 
 int
 main (int argc, char *argv[])
