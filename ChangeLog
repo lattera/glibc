@@ -1,3 +1,9 @@
+2002-11-15  Roland McGrath  <roland@redhat.com>
+
+	* math/Makefile (libm-calls): Remove s_copysign, s_isinf, s_isnan,
+	s_finite, s_modf, s_scalbn, s_frexp, m_ldexp, s_signbit.
+	Instead add $(calls:s_%=m_%) to get m_* versions of them all.
+
 2002-11-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/dl-machine.h (elf_machine_rela): Handle R_386_COPY.
