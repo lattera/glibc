@@ -165,6 +165,7 @@ struct termios
 #define  B3000000 0010015
 #define  B3500000 0010016
 #define  B4000000 0010017
+#define __MAX_BAUD B4000000
 #ifdef __USE_MISC
 # define CIBAUD	  002003600000		/* input baud rate (not used) */
 # define CRTSCTS  020000000000		/* flow control */

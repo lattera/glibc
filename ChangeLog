@@ -1,5 +1,28 @@
 2001-06-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/iolibio.h (_IO_freopen): Correct last parameter to
+	_IO_file_open.
+	(_IO_freopen64): Likewise.
+	Reported by simanek@quantum.karlov.mff.cuni.cz [PR libc/2326].
+
+	* elf/elf.h: Add a few more EM_* constants.
+
+2001-06-12  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/dcigettext.c (DCIGETTEXT): Release the lock before returning.
+
+2001-06-09  Ben Collins  <bcollins@debian.org>
+
+	* sysdeps/unix/sysv/linux/bits/termios.h: Define __MAX_BAUD.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/speed.c: Use __MAX_BAUD instead of
+	hardcoded B400000.
+
+2001-06-13  Ulrich Drepper  <drepper@redhat.com>
+
 	* time/sys/time.h: Don't use enum __itimer_which ever for
 	__itimer_which_t for C++.
 	Reported by Martin Buchholz <martin@xemacs.org>.

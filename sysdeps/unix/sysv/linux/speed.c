@@ -60,7 +60,7 @@ cfsetospeed  (termios_p, speed)
      speed_t speed;
 {
   if ((speed & ~CBAUD) != 0
-      && (speed < B57600 || speed > B4000000))
+      && (speed < B57600 || speed > __MAX_BAUD))
     {
       __set_errno (EINVAL);
       return -1;
@@ -82,7 +82,7 @@ cfsetispeed (termios_p, speed)
      speed_t speed;
 {
   if ((speed & ~CBAUD) != 0
-      && (speed < B57600 || speed > B4000000))
+      && (speed < B57600 || speed > __MAX_BAUD))
     {
       __set_errno (EINVAL);
       return -1;

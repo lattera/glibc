@@ -57,11 +57,11 @@ extern int _IO_obstack_printf __P ((struct obstack *, const char *, ...));
 #define _IO_rewind(FILE) (void)_IO_seekoff(FILE, 0, 0, _IOS_INPUT|_IOS_OUTPUT)
 #define _IO_vprintf(FORMAT, ARGS) _IO_vfprintf(_IO_stdout, FORMAT, ARGS)
 #define _IO_freopen(FILENAME, MODE, FP) \
-  (_IO_file_close_it(FP), _IO_file_fopen(FP, FILENAME, MODE, 0))
+  (_IO_file_close_it(FP), _IO_file_fopen(FP, FILENAME, MODE, 1))
 #define _IO_old_freopen(FILENAME, MODE, FP) \
   (_IO_old_file_close_it (FP), _IO_old_file_fopen(FP, FILENAME, MODE))
 #define _IO_freopen64(FILENAME, MODE, FP) \
-  (_IO_file_close_it(FP), _IO_file_fopen(FP, FILENAME, MODE, 1))
+  (_IO_file_close_it(FP), _IO_file_fopen(FP, FILENAME, MODE, 0))
 #define _IO_fileno(FP) ((FP)->_fileno)
 extern _IO_FILE* _IO_popen __P((const char*, const char*));
 extern _IO_FILE* _IO_new_popen __P((const char*, const char*));

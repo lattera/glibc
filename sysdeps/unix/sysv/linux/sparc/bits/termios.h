@@ -156,6 +156,7 @@ struct termios
 #define B1152000 0x0000100d
 #define B1500000 0x0000100e
 #define B2000000 0x0000100f
+#define __MAX_BAUD B2000000
 
 #define CIBAUD	0x100f0000	/* input baud rate (not used) */
 #define CMSPAR	0x40000000	/* mark or space (stick) parity */
