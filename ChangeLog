@@ -1,7 +1,7 @@
 2003-04-20  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/generic/check_fds.c (check_one_fd): Cast first parameter
-	of open_not_cancel explicitly to const char*.
+	* sysdeps/unix/sysv/linux/not-cancel.h (open_not_cancel): Cast
+	first syscall parameter to cnst char*.
 
 2003-04-19  Ulrich Drepper  <drepper@redhat.com>
 

@@ -24,7 +24,7 @@
 #ifdef INLINE_SYSCALL
 # define open_not_cancel(name, flags, mode...) \
   ({ int _mode = (0, ##mode);						      \
-     INLINE_SYSCALL (open, 3, name, flags, _mode); })
+     INLINE_SYSCALL (open, 3, (const char *) name, flags, _mode); })
 #endif
 
 /* Uncancelable close.  */
