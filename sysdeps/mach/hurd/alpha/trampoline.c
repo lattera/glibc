@@ -193,8 +193,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
      at ($28) points to the sc_regs[0] member of the sigcontext (saved v0
      ($0)).  */
   asm volatile
-    (".set noat; .set noreorder; .set nomacro\n"
-     /* Retry the interrupted mach_msg system call.  */
+    (/* Retry the interrupted mach_msg system call.  */
      "lda $0, -25($31)\n"	/* mach_msg_trap */
      "call_pal %0\n"		/* Magic system call instruction.  */
      /* When the sigcontext was saved, v0 was MACH_RCV_INTERRUPTED.  But
@@ -235,8 +234,6 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
      "jmp $31, %0" : : "i" (&__sigreturn));
 
   /* NOTREACHED */
-  asm volatile (".set reorder; .set at; .set macro");
-
   return NULL;
 }
 

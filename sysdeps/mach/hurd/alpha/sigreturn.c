@@ -196,8 +196,6 @@ __sigreturn (struct sigcontext *scp)
        How?); in user mode, `rei' demands that all other bits be zero.  */
     rei_frame->ps = (usp_align << 56) | (3 << 3); /* XXX low 3 bits??? */
 
-    asm volatile (".set noreorder; .set noat;");
-
     /* Restore the other general registers: everything except $2..$7, which
        are in the `rei' trap frame we set up above, and $30, which is the
        SP which is popped by `rei'.  */
@@ -232,8 +230,6 @@ __sigreturn (struct sigcontext *scp)
 		  : : "r" (rei_frame), "i" (op_rei));
     /* Firewall.  */
     asm volatile ("call_pal %0" : : "i" (op_halt));
-
-    asm volatile (".set reorder; .set at;");
   }
 
   /* NOTREACHED */
