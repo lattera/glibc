@@ -618,44 +618,70 @@ FCT (pattern, string, no_leading_period, flags)
 			uint32_t fcollseq;
 			uint32_t lcollseq;
 			UCHAR cend = *p++;
-# ifdef WIDE_CHAR_VERSION
-			int idx;
-			size_t cnt;
-# endif
 
 # ifdef WIDE_CHAR_VERSION
 			/* Search in the `names' array for the characters.  */
-			idx = fn % size;
-			cnt = 0;
-			while (names[idx] != fn)
+			if (size != 0)
 			  {
-			    if (++cnt == layers)
+			    /* Old locale format.  */
+			    int idx;
+			    size_t cnt;
+
+			    idx = fn % size;
+			    cnt = 0;
+			    while (names[idx] != fn)
+			      {
+				if (++cnt == layers)
+				  /* XXX We don't know anything about
+				     the character we are supposed to
+				     match.  This means we are failing.  */
+				  goto range_not_matched;
+
+				idx += size;
+			      }
+			    fcollseq = collseq[idx];
+			  }
+			else
+			  {
+			    /* New locale format.  */
+			    fcollseq =
+			      collseq_table_lookup ((const char *) collseq, fn);
+			    if (fcollseq == ~((uint32_t) 0))
 			      /* XXX We don't know anything about
 				 the character we are supposed to
 				 match.  This means we are failing.  */
 			      goto range_not_matched;
-
-			    idx += size;
 			  }
-			fcollseq = collseq[idx];
 
 			if (is_seqval)
 			  lcollseq = cold;
 			else
 			  {
-			    idx = cold % size;
-			    cnt = 0;
-			    while (names[idx] != cold)
+			    if (size != 0)
 			      {
-				if (++cnt == layers)
-				  {
-				    idx = -1;
-				    break;
-				  }
-				idx += size;
-			      }
+				/* Old locale format.  */
+				int idx;
+				size_t cnt;
 
-			    lcollseq = idx == -1 ? 0xffffffff : collseq[idx];
+				idx = cold % size;
+				cnt = 0;
+				while (names[idx] != cold)
+				  {
+				    if (++cnt == layers)
+				      {
+					idx = -1;
+					break;
+				      }
+				    idx += size;
+				  }
+
+				lcollseq =
+				  idx == -1 ? 0xffffffff : collseq[idx];
+			      }
+			    else
+			      /* New locale format.  */
+			      lcollseq =
+				collseq_table_lookup ((const char *) collseq, cold);
 			  }
 # else
 			fcollseq = collseq[fn];
@@ -817,22 +843,47 @@ FCT (pattern, string, no_leading_period, flags)
 			    else
 			      {
 # ifdef WIDE_CHAR_VERSION
-				idx = cend % size;
-				cnt = 0;
-				while (names[idx] != cend)
+				if (size != 0)
 				  {
-				    if (++cnt == layers)
+				    /* Old locale format.  */
+				    int idx;
+				    size_t cnt;
+
+				    idx = cend % size;
+				    cnt = 0;
+				    while (names[idx] != cend)
 				      {
-					/* Hum, no information about the upper
-					   bound.  The matching succeeds if the
-					   lower bound is matched exactly.  */
-					if (idx == -1 && lcollseq != fcollseq)
+					if (++cnt == layers)
+					  {
+					    /* Hum, no information about the
+					       upper bound.  The matching
+					       succeeds if the lower bound is
+					       matched exactly.  */
+					    if (lcollseq != fcollseq)
+					      goto range_not_matched;
+
+					    goto matched;
+					  }
+				      }
+				    hcollseq = collseq[idx];
+				  }
+				else
+				  {
+				    /* New locale format.  */
+				    hcollseq =
+				      collseq_table_lookup ((const char *) collseq, cend);
+				    if (hcollseq == ~((uint32_t) 0))
+				      {
+					/* Hum, no information about the
+					   upper bound.  The matching succeeds
+					   if the lower bound is matched
+					   exactly.  */
+					if (lcollseq != fcollseq)
 					  goto range_not_matched;
 
 					goto matched;
 				      }
 				  }
-				hcollseq = collseq[idx];
 # else
 				hcollseq = collseq[cend];
 # endif

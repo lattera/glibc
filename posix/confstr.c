@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,9 +22,9 @@
 #include <string.h>
 #include <confstr.h>
 
-/* If BUF is not NULL, fill in at most LEN characters of BUF
-   with the value corresponding to NAME.  Return the number
-   of characters required to hold NAME's entire value.  */
+/* If BUF is not NULL and LEN > 0, fill in at most LEN - 1 bytes
+   of BUF with the value corresponding to NAME and zero-terminate BUF.
+   Return the number of bytes required to hold NAME's entire value.  */
 size_t
 confstr (name, buf, len)
      int name;
@@ -89,7 +89,15 @@ confstr (name, buf, len)
       return 0;
     }
 
-  if (buf != NULL)
-    (void) strncpy (buf, string, len);
+  if (len > 0 && buf != NULL)
+    {
+      if (string_len <= len)
+	memcpy (buf, string, string_len);
+      else
+	{
+	  memcpy (buf, string, len - 1);
+	  buf[len - 1] = '\0';
+	}
+    }
   return string_len;
 }

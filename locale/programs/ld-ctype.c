@@ -112,6 +112,9 @@ struct locale_ctype_t
   uint32_t *charnames;
   size_t charnames_max;
   size_t charnames_act;
+  /* An index lookup table, to speedup find_idx.  */
+#define MAX_CHARNAMES_IDX 0x10000
+  uint32_t *charnames_idx;
 
   struct repertoire_t *repertoire;
 
@@ -253,6 +256,10 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
 	  for (cnt = 0; cnt < 256; ++cnt)
 	    ctype->charnames[cnt] = cnt;
 	  ctype->charnames_act = 256;
+	  ctype->charnames_idx =
+	    (uint32_t *) xmalloc (MAX_CHARNAMES_IDX * sizeof (uint32_t));
+	  for (cnt = 0; cnt < MAX_CHARNAMES_IDX; ++cnt)
+	    ctype->charnames_idx[cnt] = ~((uint32_t) 0);
 
 	  /* Fill character class information.  */
 	  ctype->last_class_char = ILLEGAL_CHAR_VALUE;
@@ -1299,9 +1306,23 @@ find_idx (struct locale_ctype_t *ctype, uint32_t **table, size_t *max,
   if (idx < 256)
     return table == NULL ? NULL : &(*table)[idx];
 
-  for (cnt = 256; cnt < ctype->charnames_act; ++cnt)
-    if (ctype->charnames[cnt] == idx)
-      break;
+  /* If idx is in the usual range, use the charnames_idx lookup table
+     instead of the slow search loop.  */
+  if (idx < MAX_CHARNAMES_IDX)
+    {
+      if (ctype->charnames_idx[idx] != ~((uint32_t) 0))
+	/* Found.  */
+	cnt = ctype->charnames_idx[idx];
+      else
+	/* Not found.  */
+	cnt = ctype->charnames_act;
+    }
+  else
+    {
+      for (cnt = 256; cnt < ctype->charnames_act; ++cnt)
+	if (ctype->charnames[cnt] == idx)
+	  break;
+    }
 
   /* We have to distinguish two cases: the name is found or not.  */
   if (cnt == ctype->charnames_act)
@@ -1315,6 +1336,8 @@ find_idx (struct locale_ctype_t *ctype, uint32_t **table, size_t *max,
 		      sizeof (uint32_t) * ctype->charnames_max);
 	}
       ctype->charnames[ctype->charnames_act++] = idx;
+      if (idx < MAX_CHARNAMES_IDX)
+	ctype->charnames_idx[idx] = cnt;
     }
 
   if (table == NULL)
@@ -3582,473 +3605,23 @@ wctype_table_finalize (struct wctype_table *t)
     free (t->level3);
 }
 
-struct wcwidth_table
-{
-  /* Parameters.  */
-  unsigned int p;
-  unsigned int q;
-  /* Working representation.  */
-  size_t level1_alloc;
-  size_t level1_size;
-  uint32_t *level1;
-  size_t level2_alloc;
-  size_t level2_size;
-  uint32_t *level2;
-  size_t level3_alloc;
-  size_t level3_size;
-  uint8_t *level3;
-  /* Compressed representation.  */
-  size_t result_size;
-  char *result;
-};
+#define TABLE wcwidth_table
+#define ELEMENT uint8_t
+#define DEFAULT 0xff
+#include "3level.h"
 
-/* Initialize.  Assumes t->p and t->q have already been set.  */
+#define TABLE wctrans_table
+#define ELEMENT int32_t
+#define DEFAULT 0
+#define wctrans_table_add wctrans_table_add_internal
+#include "3level.h"
+#undef wctrans_table_add
+/* The wctrans_table must actually store the difference between the
+   desired result and the argument.  */
 static inline void
-wcwidth_table_init (struct wcwidth_table *t)
-{
-  t->level1_alloc = t->level1_size = 0;
-  t->level2_alloc = t->level2_size = 0;
-  t->level3_alloc = t->level3_size = 0;
-}
-
-/* Retrieve an entry.  */
-static inline uint8_t
-wcwidth_table_get (struct wcwidth_table *t, uint32_t wc)
-{
-  uint32_t index1 = wc >> (t->q + t->p);
-  if (index1 < t->level1_size)
-    {
-      uint32_t lookup1 = t->level1[index1];
-      if (lookup1 != ~((uint32_t) 0))
-	{
-	  uint32_t index2 = ((wc >> t->p) & ((1 << t->q) - 1))
-			    + (lookup1 << t->q);
-	  uint32_t lookup2 = t->level2[index2];
-	  if (lookup2 != ~((uint32_t) 0))
-	    {
-	      uint32_t index3 = (wc & ((1 << t->p) - 1))
-				+ (lookup2 << t->p);
-	      uint8_t lookup3 = t->level3[index3];
-
-	      return lookup3;
-	    }
-	}
-    }
-  return 0xff;
-}
-
-/* Add one entry.  */
-static void
-wcwidth_table_add (struct wcwidth_table *t, uint32_t wc, uint8_t width)
-{
-  uint32_t index1 = wc >> (t->q + t->p);
-  uint32_t index2 = (wc >> t->p) & ((1 << t->q) - 1);
-  uint32_t index3 = wc & ((1 << t->p) - 1);
-  size_t i, i1, i2;
-
-  if (width == wcwidth_table_get (t, wc))
-    return;
-
-  if (index1 >= t->level1_size)
-    {
-      if (index1 >= t->level1_alloc)
-	{
-	  size_t alloc = 2 * t->level1_alloc;
-	  if (alloc <= index1)
-	    alloc = index1 + 1;
-	  t->level1 = (t->level1_alloc > 0
-		       ? (uint32_t *) xrealloc ((char *) t->level1,
-						alloc * sizeof (uint32_t))
-		       : (uint32_t *) xmalloc (alloc * sizeof (uint32_t)));
-	  t->level1_alloc = alloc;
-	}
-      while (index1 >= t->level1_size)
-	t->level1[t->level1_size++] = ~((uint32_t) 0);
-    }
-
-  if (t->level1[index1] == ~((uint32_t) 0))
-    {
-      if (t->level2_size == t->level2_alloc)
-	{
-	  size_t alloc = 2 * t->level2_alloc + 1;
-	  t->level2 = (t->level2_alloc > 0
-		       ? (uint32_t *) xrealloc ((char *) t->level2,
-						(alloc << t->q) * sizeof (uint32_t))
-		       : (uint32_t *) xmalloc ((alloc << t->q) * sizeof (uint32_t)));
-	  t->level2_alloc = alloc;
-	}
-      i1 = t->level2_size << t->q;
-      i2 = (t->level2_size + 1) << t->q;
-      for (i = i1; i < i2; i++)
-	t->level2[i] = ~((uint32_t) 0);
-      t->level1[index1] = t->level2_size++;
-    }
-
-  index2 += t->level1[index1] << t->q;
-
-  if (t->level2[index2] == ~((uint32_t) 0))
-    {
-      if (t->level3_size == t->level3_alloc)
-	{
-	  size_t alloc = 2 * t->level3_alloc + 1;
-	  t->level3 = (t->level3_alloc > 0
-		       ? (uint8_t *) xrealloc ((char *) t->level3,
-					       (alloc << t->p) * sizeof (uint8_t))
-		       : (uint8_t *) xmalloc ((alloc << t->p) * sizeof (uint8_t)));
-	  t->level3_alloc = alloc;
-	}
-      i1 = t->level3_size << t->p;
-      i2 = (t->level3_size + 1) << t->p;
-      for (i = i1; i < i2; i++)
-	t->level3[i] = 0xff;
-      t->level2[index2] = t->level3_size++;
-    }
-
-  index3 += t->level2[index2] << t->p;
-
-  t->level3[index3] = width;
-}
-
-/* Finalize and shrink.  */
-static void
-wcwidth_table_finalize (struct wcwidth_table *t)
-{
-  size_t i, j, k;
-  uint32_t reorder3[t->level3_size];
-  uint32_t reorder2[t->level2_size];
-  uint32_t level1_offset, level2_offset, level3_offset, last_offset;
-
-  /* Uniquify level3 blocks.  */
-  k = 0;
-  for (j = 0; j < t->level3_size; j++)
-    {
-      for (i = 0; i < k; i++)
-	if (memcmp (&t->level3[i << t->p], &t->level3[j << t->p],
-		    (1 << t->p) * sizeof (uint8_t)) == 0)
-	  break;
-      /* Relocate block j to block i.  */
-      reorder3[j] = i;
-      if (i == k)
-	{
-	  if (i != j)
-	    memcpy (&t->level3[i << t->p], &t->level3[j << t->p],
-		    (1 << t->p) * sizeof (uint8_t));
-	  k++;
-	}
-    }
-  t->level3_size = k;
-
-  for (i = 0; i < (t->level2_size << t->q); i++)
-    if (t->level2[i] != ~((uint32_t) 0))
-      t->level2[i] = reorder3[t->level2[i]];
-
-  /* Uniquify level2 blocks.  */
-  k = 0;
-  for (j = 0; j < t->level2_size; j++)
-    {
-      for (i = 0; i < k; i++)
-	if (memcmp (&t->level2[i << t->q], &t->level2[j << t->q],
-		    (1 << t->q) * sizeof (uint32_t)) == 0)
-	  break;
-      /* Relocate block j to block i.  */
-      reorder2[j] = i;
-      if (i == k)
-	{
-	  if (i != j)
-	    memcpy (&t->level2[i << t->q], &t->level2[j << t->q],
-		    (1 << t->q) * sizeof (uint32_t));
-	  k++;
-	}
-    }
-  t->level2_size = k;
-
-  for (i = 0; i < t->level1_size; i++)
-    if (t->level1[i] != ~((uint32_t) 0))
-      t->level1[i] = reorder2[t->level1[i]];
-
-  /* Create and fill the resulting compressed representation.  */
-  last_offset =
-    5 * sizeof (uint32_t)
-    + t->level1_size * sizeof (uint32_t)
-    + (t->level2_size << t->q) * sizeof (uint32_t)
-    + (t->level3_size << t->p) * sizeof (uint8_t);
-  t->result_size = (last_offset + 3) & ~3ul;
-  t->result = (char *) xmalloc (t->result_size);
-
-  level1_offset =
-    5 * sizeof (uint32_t);
-  level2_offset =
-    5 * sizeof (uint32_t)
-    + t->level1_size * sizeof (uint32_t);
-  level3_offset =
-    5 * sizeof (uint32_t)
-    + t->level1_size * sizeof (uint32_t)
-    + (t->level2_size << t->q) * sizeof (uint32_t);
-
-  ((uint32_t *) t->result)[0] = t->q + t->p;
-  ((uint32_t *) t->result)[1] = t->level1_size;
-  ((uint32_t *) t->result)[2] = t->p;
-  ((uint32_t *) t->result)[3] = (1 << t->q) - 1;
-  ((uint32_t *) t->result)[4] = (1 << t->p) - 1;
-
-  for (i = 0; i < t->level1_size; i++)
-    ((uint32_t *) (t->result + level1_offset))[i] =
-      (t->level1[i] == ~((uint32_t) 0)
-       ? 0
-       : (t->level1[i] << t->q) * sizeof (uint32_t) + level2_offset);
-
-  for (i = 0; i < (t->level2_size << t->q); i++)
-    ((uint32_t *) (t->result + level2_offset))[i] =
-      (t->level2[i] == ~((uint32_t) 0)
-       ? 0
-       : (t->level2[i] << t->p) * sizeof (uint8_t) + level3_offset);
-
-  for (i = 0; i < (t->level3_size << t->p); i++)
-    ((uint8_t *) (t->result + level3_offset))[i] = t->level3[i];
-
-  if (last_offset < t->result_size)
-    memset (t->result + last_offset, 0, t->result_size - last_offset);
-
-  if (t->level1_alloc > 0)
-    free (t->level1);
-  if (t->level2_alloc > 0)
-    free (t->level2);
-  if (t->level3_alloc > 0)
-    free (t->level3);
-}
-
-struct wctrans_table
-{
-  /* Parameters.  */
-  unsigned int p;
-  unsigned int q;
-  /* Working representation.  */
-  size_t level1_alloc;
-  size_t level1_size;
-  uint32_t *level1;
-  size_t level2_alloc;
-  size_t level2_size;
-  uint32_t *level2;
-  size_t level3_alloc;
-  size_t level3_size;
-  int32_t *level3;
-  /* Compressed representation.  */
-  size_t result_size;
-  char *result;
-};
-
-/* Initialize.  Assumes t->p and t->q have already been set.  */
-static inline void
-wctrans_table_init (struct wctrans_table *t)
-{
-  t->level1_alloc = t->level1_size = 0;
-  t->level2_alloc = t->level2_size = 0;
-  t->level3_alloc = t->level3_size = 0;
-}
-
-/* Retrieve an entry.  */
-static inline uint32_t
-wctrans_table_get (struct wctrans_table *t, uint32_t wc)
-{
-  uint32_t index1 = wc >> (t->q + t->p);
-  if (index1 < t->level1_size)
-    {
-      uint32_t lookup1 = t->level1[index1];
-      if (lookup1 != ~((uint32_t) 0))
-	{
-	  uint32_t index2 = ((wc >> t->p) & ((1 << t->q) - 1))
-			    + (lookup1 << t->q);
-	  uint32_t lookup2 = t->level2[index2];
-	  if (lookup2 != ~((uint32_t) 0))
-	    {
-	      uint32_t index3 = (wc & ((1 << t->p) - 1))
-				+ (lookup2 << t->p);
-	      int32_t lookup3 = t->level3[index3];
-
-	      return wc + lookup3;
-	    }
-	}
-    }
-  return wc;
-}
-
-/* Add one entry.  */
-static void
 wctrans_table_add (struct wctrans_table *t, uint32_t wc, uint32_t mapped_wc)
 {
-  uint32_t index1 = wc >> (t->q + t->p);
-  uint32_t index2 = (wc >> t->p) & ((1 << t->q) - 1);
-  uint32_t index3 = wc & ((1 << t->p) - 1);
-  int32_t value;
-  size_t i, i1, i2;
-
-  if (mapped_wc == wctrans_table_get (t, wc))
-    return;
-
-  value = (int32_t) mapped_wc - (int32_t) wc;
-
-  if (index1 >= t->level1_size)
-    {
-      if (index1 >= t->level1_alloc)
-	{
-	  size_t alloc = 2 * t->level1_alloc;
-	  if (alloc <= index1)
-	    alloc = index1 + 1;
-	  t->level1 = (t->level1_alloc > 0
-		       ? (uint32_t *) xrealloc ((char *) t->level1,
-						alloc * sizeof (uint32_t))
-		       : (uint32_t *) xmalloc (alloc * sizeof (uint32_t)));
-	  t->level1_alloc = alloc;
-	}
-      while (index1 >= t->level1_size)
-	t->level1[t->level1_size++] = ~((uint32_t) 0);
-    }
-
-  if (t->level1[index1] == ~((uint32_t) 0))
-    {
-      if (t->level2_size == t->level2_alloc)
-	{
-	  size_t alloc = 2 * t->level2_alloc + 1;
-	  t->level2 = (t->level2_alloc > 0
-		       ? (uint32_t *) xrealloc ((char *) t->level2,
-						(alloc << t->q) * sizeof (uint32_t))
-		       : (uint32_t *) xmalloc ((alloc << t->q) * sizeof (uint32_t)));
-	  t->level2_alloc = alloc;
-	}
-      i1 = t->level2_size << t->q;
-      i2 = (t->level2_size + 1) << t->q;
-      for (i = i1; i < i2; i++)
-	t->level2[i] = ~((uint32_t) 0);
-      t->level1[index1] = t->level2_size++;
-    }
-
-  index2 += t->level1[index1] << t->q;
-
-  if (t->level2[index2] == ~((uint32_t) 0))
-    {
-      if (t->level3_size == t->level3_alloc)
-	{
-	  size_t alloc = 2 * t->level3_alloc + 1;
-	  t->level3 = (t->level3_alloc > 0
-		       ? (int32_t *) xrealloc ((char *) t->level3,
-					       (alloc << t->p) * sizeof (int32_t))
-		       : (int32_t *) xmalloc ((alloc << t->p) * sizeof (int32_t)));
-	  t->level3_alloc = alloc;
-	}
-      i1 = t->level3_size << t->p;
-      i2 = (t->level3_size + 1) << t->p;
-      for (i = i1; i < i2; i++)
-	t->level3[i] = 0;
-      t->level2[index2] = t->level3_size++;
-    }
-
-  index3 += t->level2[index2] << t->p;
-
-  t->level3[index3] = value;
-}
-
-/* Finalize and shrink.  */
-static void
-wctrans_table_finalize (struct wctrans_table *t)
-{
-  size_t i, j, k;
-  uint32_t reorder3[t->level3_size];
-  uint32_t reorder2[t->level2_size];
-  uint32_t level1_offset, level2_offset, level3_offset;
-
-  /* Uniquify level3 blocks.  */
-  k = 0;
-  for (j = 0; j < t->level3_size; j++)
-    {
-      for (i = 0; i < k; i++)
-	if (memcmp (&t->level3[i << t->p], &t->level3[j << t->p],
-		    (1 << t->p) * sizeof (int32_t)) == 0)
-	  break;
-      /* Relocate block j to block i.  */
-      reorder3[j] = i;
-      if (i == k)
-	{
-	  if (i != j)
-	    memcpy (&t->level3[i << t->p], &t->level3[j << t->p],
-		    (1 << t->p) * sizeof (int32_t));
-	  k++;
-	}
-    }
-  t->level3_size = k;
-
-  for (i = 0; i < (t->level2_size << t->q); i++)
-    if (t->level2[i] != ~((uint32_t) 0))
-      t->level2[i] = reorder3[t->level2[i]];
-
-  /* Uniquify level2 blocks.  */
-  k = 0;
-  for (j = 0; j < t->level2_size; j++)
-    {
-      for (i = 0; i < k; i++)
-	if (memcmp (&t->level2[i << t->q], &t->level2[j << t->q],
-		    (1 << t->q) * sizeof (uint32_t)) == 0)
-	  break;
-      /* Relocate block j to block i.  */
-      reorder2[j] = i;
-      if (i == k)
-	{
-	  if (i != j)
-	    memcpy (&t->level2[i << t->q], &t->level2[j << t->q],
-		    (1 << t->q) * sizeof (uint32_t));
-	  k++;
-	}
-    }
-  t->level2_size = k;
-
-  for (i = 0; i < t->level1_size; i++)
-    if (t->level1[i] != ~((uint32_t) 0))
-      t->level1[i] = reorder2[t->level1[i]];
-
-  /* Create and fill the resulting compressed representation.  */
-  t->result_size =
-    5 * sizeof (uint32_t)
-    + t->level1_size * sizeof (uint32_t)
-    + (t->level2_size << t->q) * sizeof (uint32_t)
-    + (t->level3_size << t->p) * sizeof (int32_t);
-  t->result = (char *) xmalloc (t->result_size);
-
-  level1_offset =
-    5 * sizeof (uint32_t);
-  level2_offset =
-    5 * sizeof (uint32_t)
-    + t->level1_size * sizeof (uint32_t);
-  level3_offset =
-    5 * sizeof (uint32_t)
-    + t->level1_size * sizeof (uint32_t)
-    + (t->level2_size << t->q) * sizeof (uint32_t);
-
-  ((uint32_t *) t->result)[0] = t->q + t->p;
-  ((uint32_t *) t->result)[1] = t->level1_size;
-  ((uint32_t *) t->result)[2] = t->p;
-  ((uint32_t *) t->result)[3] = (1 << t->q) - 1;
-  ((uint32_t *) t->result)[4] = (1 << t->p) - 1;
-
-  for (i = 0; i < t->level1_size; i++)
-    ((uint32_t *) (t->result + level1_offset))[i] =
-      (t->level1[i] == ~((uint32_t) 0)
-       ? 0
-       : (t->level1[i] << t->q) * sizeof (uint32_t) + level2_offset);
-
-  for (i = 0; i < (t->level2_size << t->q); i++)
-    ((uint32_t *) (t->result + level2_offset))[i] =
-      (t->level2[i] == ~((uint32_t) 0)
-       ? 0
-       : (t->level2[i] << t->p) * sizeof (int32_t) + level3_offset);
-
-  for (i = 0; i < (t->level3_size << t->p); i++)
-    ((int32_t *) (t->result + level3_offset))[i] = t->level3[i];
-
-  if (t->level1_alloc > 0)
-    free (t->level1);
-  if (t->level2_alloc > 0)
-    free (t->level2);
-  if (t->level3_alloc > 0)
-    free (t->level3);
+  wctrans_table_add_internal (t, wc, mapped_wc - wc);
 }
 
 

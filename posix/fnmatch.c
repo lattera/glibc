@@ -54,6 +54,7 @@
 #ifdef _LIBC
 # include "../locale/localeinfo.h"
 # include "../locale/elem-hash.h"
+# include "../locale/coll-lookup.h"
 
 # define CONCAT(a,b) __CONCAT(a,b)
 # define mbsinit __mbsinit

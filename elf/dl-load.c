@@ -1204,13 +1204,16 @@ print_search_path (struct r_search_path_elem **list,
     _dl_debug_message (0, "\t\t(", what, ")\n", NULL);
 }
 
-/* Try to open NAME in one of the directories in DIRS.
+/* Try to open NAME in one of the directories in *DIRSP.
    Return the fd, or -1.  If successful, fill in *REALNAME
-   with the malloc'd full directory name.  */
+   with the malloc'd full directory name.  If it turns out
+   that none of the directories in *DIRSP exists, *DIRSP is
+   replaced with (void *) -1, and the old value is free()d
+   if MAY_FREE_DIRS is true.  */
 
 static int
 open_path (const char *name, size_t namelen, int preloaded,
-	   struct r_search_path_elem ***dirsp,
+	   struct r_search_path_elem ***dirsp, int may_free_dirs,
 	   char **realname)
 {
   struct r_search_path_elem **dirs = *dirsp;
@@ -1325,7 +1328,10 @@ open_path (const char *name, size_t namelen, int preloaded,
   /* Remove the whole path if none of the directories exists.  */
   if (! any)
     {
-      free (*dirsp);
+      /* Paths which were allocated using the minimal malloc() in ld.so
+	 must not be freed using the general free() in libc.  */
+      if (may_free_dirs)
+	free (*dirsp);
       *dirsp = (void *) -1;
     }
 
@@ -1414,12 +1420,12 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
 		      if (l->l_rpath_dirs != (void *) -1)
 			fd = open_path (name, namelen, preloaded,
-					&l->l_rpath_dirs, &realname);
+					&l->l_rpath_dirs, 1, &realname);
 		    }
 		}
 	      else if (l->l_rpath_dirs != (void *) -1)
 		fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
-				&realname);
+				0, &realname);
 	    }
 
 	  /* If dynamically linked, try the DT_RPATH of the executable
@@ -1427,13 +1433,14 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  l = _dl_loaded;
 	  if (fd == -1 && l && l->l_type != lt_loaded && l != loader
 	      && l->l_rpath_dirs != (void *) -1)
-	    fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
+	    fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs, 0,
 			    &realname);
 	}
 
       /* Try the LD_LIBRARY_PATH environment variable.  */
       if (fd == -1 && env_path_list != (void *) -1)
-	fd = open_path (name, namelen, preloaded, &env_path_list, &realname);
+	fd = open_path (name, namelen, preloaded, &env_path_list, 0,
+			&realname);
 
       /* Look at the RUNPATH informaiton for this binary.  */
       if (loader != NULL && loader->l_runpath_dirs != (void *) -1)
@@ -1453,12 +1460,12 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
 		  if (loader->l_runpath_dirs != (void *) -1)
 		    fd = open_path (name, namelen, preloaded,
-				    &loader->l_runpath_dirs, &realname);
+				    &loader->l_runpath_dirs, 1, &realname);
 		}
 	    }
 	  else if (loader->l_runpath_dirs != (void *) -1)
 	    fd = open_path (name, namelen, preloaded,
-			    &loader->l_runpath_dirs, &realname);
+			    &loader->l_runpath_dirs, 0, &realname);
 	}
 
       if (fd == -1)
@@ -1518,8 +1525,9 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       /* Finally, try the default path.  */
       if (fd == -1
 	  && (l == NULL ||
-	      __builtin_expect (!(l->l_flags_1 & DF_1_NODEFLIB), 1)))
-	fd = open_path (name, namelen, preloaded, &rtld_search_dirs,
+	      __builtin_expect (!(l->l_flags_1 & DF_1_NODEFLIB), 1))
+	  && rtld_search_dirs != (void *) -1)
+	fd = open_path (name, namelen, preloaded, &rtld_search_dirs, 0,
 			&realname);
 
       /* Add another newline when we a tracing the library loading.  */

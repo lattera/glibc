@@ -22,6 +22,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/param.h>
 
 #ifndef STRING_TYPE
 # define STRING_TYPE char
@@ -124,7 +125,7 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
   if (nrules == 0)
     {
       if (n != 0)
-	STPNCPY (dest, src, n);
+	STPNCPY (dest, src, MIN (srclen + 1, n));
 
       return srclen;
     }

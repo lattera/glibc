@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <wchar.h>
+#include "../locale/coll-lookup.h"
 
 #define STRING_TYPE wchar_t
 #define USTRING_TYPE wint_t

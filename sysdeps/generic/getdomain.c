@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@
 
 #include <errno.h>
 #include <unistd.h>
+#include <sys/param.h>
 #include <sys/utsname.h>
 #include <string.h>
 
@@ -34,11 +35,13 @@ getdomainname (name, len)
     size_t len;
 {
   struct utsname u;
+  size_t u_len;
 
   if (uname (&u) < 0)
     return -1;
 
-  strncpy (name, u.domainname, len);
+  u_len = strlen (u.domainname);
+  memcpy (name, u.domainname, MIN (u_len + 1, len));
   return 0;
 }
 

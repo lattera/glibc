@@ -1,3 +1,85 @@
+2000-08-27  Bruno Haible  <haible@clisp.cons.org>
+
+	* string/strxfrm.c (strxfrm, wcsxfrm): Include <sys/param.h>.
+	If nrules == 0 and srclen < n, copy only srclen + 1 characters.
+
+	* sysdeps/generic/getdomain.c (getdomainname): Include <sys/param.h>.
+	If the result is fits in the buffer, copy only as many bytes as needed.
+
+	* sysdeps/generic/_strerror.c (__strerror_r): Don't zero-fill the
+	buffer after copying numbuf into it.
+	* sysdeps/mach/_strerror.c (__strerror_r): Likewise.
+
+2000-08-27  Bruno Haible  <haible@clisp.cons.org>
+
+	* posix/confstr.c (confstr): When string_len > len, NUL-terminate
+	the result.  When string_len < len, don't clear the rest of the buffer.
+
+2000-08-27  Bruno Haible  <haible@clisp.cons.org>
+
+	Support for new LC_COLLATE format.
+	* locale/coll-lookup.h: New file.
+	* locale/weightwc.h (findidx): When size == 0, call
+	collidx_table_lookup.
+	* wcsmbs/wcscoll.c: Include coll-lookup.h.
+	* wcsmbs/wcsxfrm.c: Likewise.
+	* posix/fnmatch.c: Likewise.
+	* posix/fnmatch_loop.c (internal_fnwmatch): When size == 0, call
+	collseq_table_lookup.
+	* locale/programs/3level.h: New file.
+	* locale/programs/ld-ctype.c: (wcwidth_table, wctrans_table): Define
+	by including "3level.h".
+	* locale/programs/ld-collate.c (wchead_table, collidx_table,
+	collseq_table): New types, defined by including "3level.h".
+	(locale_collate_t): New wcheads_3level, wcseqorder_3level fields.
+	(encoding_mask, encoding_byte): Remove.
+	(utf8_encode): Use simple shifts instead.
+	(collate_finish): When !oldstyle_tables, set plane_size and plane_cnt
+	to 0, and initialize and fill wcheads_3level and wcseqorder_3level.
+	(collate_output): New local variable tablewc_3level. When
+	!oldstyle_tables, set table_size to 0 and names to NULL and fill
+	tablewc_3level instead of tablewc. Change format of TABLEWC and
+	COLLSEQWC entries written to the file.
+	* locale/C-collate.c (collseqwc): Change format.
+	(_nl_C_LC_COLLATE): Set HASH_SIZE and HASH_LAYERS to 0, change format
+	of COLLSEQWC.
+	* locale/Makefile (distribute): Add coll-lookup.h, programs/3level.h.
+
+2000-08-27  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/programs/ld-ctype.c (MAX_CHARNAMES_IDX): New macro.
+	(locale_ctype_t): New charnames_idx field.
+	(ctype_startup): Initialize charnames_idx field.
+	(find_idx): Speed up dramatically by using charnames_idx inverse table.
+
+2000-08-27  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/C-ctype.c: Switch to new locale format.
+	(_nl_C_LC_CTYPE_names): Remove array.
+	(STRUCT_CTYPE_CLASS): New macro.
+	(_nl_C_LC_CTYPE_class_{upper,lower,alpha,digit,xdigit,space,print,
+	graph,blank,cntrl,punct,alnum}, _nl_C_LC_CTYPE_map_{toupper,tolower}):
+	New three-level tables.
+	(_nl_C_LC_CTYPE_width): Change from array to three-level table.
+	(_nl_C_LC_CTYPE): Fix nstrings value. Set HASH_SIZE and HASH_LAYERS
+	to 0. Change WIDTH format. Set CLASS_OFFSET and MAP_OFFSET. Add
+	12 class tables and 2 map tables at the end.
+	* ctype/ctype-info.c (_nl_C_LC_CTYPE_names): Remove declaration.
+	(_nl_C_LC_CTYPE_class_{upper,lower,alpha,digit,xdigit,space,print,
+	graph,blank,cntrl,punct,alnum}, _nl_C_LC_CTYPE_map_{toupper,tolower}):
+	New declarations.
+	(b): Remove trailing semicolon.
+	(__ctype_names, __ctype_width): Don't initialize.
+	(__ctype32_wctype, __ctype32_wctrans, __ctype32_width): Initialize.
+
+2000-08-27  Bruno Haible  <haible@clisp.cons.org>
+
+	* elf/dl-load.c (open_path): Add a argument telling whether *dirsp
+	is guaranteed to be allocated with the same malloc() and may be
+	passed to free().
+	(_dl_map_object): Update open_path calls. If rtld_search_dirs has
+	been set to empty by an earlier open_path call, don't pass it again.
+
 2000-08-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/libintl.h: Include <locale.h> since libintl.h doesn't if

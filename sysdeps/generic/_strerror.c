@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 93, 95, 96, 97, 98, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ __strerror_r (int errnum, char *buf, size_t buflen)
 	 buffer size.  */
       q = __mempcpy (buf, unk, MIN (unklen, buflen));
       if (unklen < buflen)
-	__stpncpy (q, p, buflen - unklen);
+	memcpy (q, p, MIN (&numbuf[21] - p, buflen - unklen));
 
       /* Terminate the string in any case.  */
       if (buflen > 0)

@@ -58,6 +58,12 @@ static const char collseqmb[] =
 
 static const uint32_t collseqwc[] =
 {
+  8, 1, 8, 0x0, 0xff,
+  /* 1st-level table */
+  6 * sizeof (uint32_t),
+  /* 2nd-level table */
+  7 * sizeof (uint32_t),
+  /* 3rd-level table */
   L'\x00', L'\x01', L'\x02', L'\x03', L'\x04', L'\x05', L'\x06', L'\x07',
   L'\x08', L'\x09', L'\x0a', L'\x0b', L'\x0c', L'\x0d', L'\x0e', L'\x0f',
   L'\x10', L'\x11', L'\x12', L'\x13', L'\x14', L'\x15', L'\x16', L'\x17',
@@ -101,23 +107,41 @@ const struct locale_data _nl_C_LC_COLLATE =
   NULL,
   18,
   {
+    /* _NL_COLLATE_NRULES */
     { word: 0 },
+    /* _NL_COLLATE_RULESETS */
     { string: NULL },
+    /* _NL_COLLATE_TABLEMB */
     { string: NULL },
+    /* _NL_COLLATE_WEIGHTMB */
     { string: NULL },
+    /* _NL_COLLATE_EXTRAMB */
     { string: NULL },
+    /* _NL_COLLATE_INDIRECTMB */
     { string: NULL },
+    /* _NL_COLLATE_HASH_SIZE */
     { word: 0 },
+    /* _NL_COLLATE_HASH_LAYERS */
     { word: 0 },
+    /* _NL_COLLATE_NAMES */
     { string: NULL },
+    /* _NL_COLLATE_TABLEWC */
     { string: NULL },
+    /* _NL_COLLATE_WEIGHTWC */
     { string: NULL },
+    /* _NL_COLLATE_EXTRAWC */
     { string: NULL },
+    /* _NL_COLLATE_INDIRECTWC */
     { string: NULL },
+    /* _NL_COLLATE_SYMB_HASH_SIZEMB */
     { string: NULL },
+    /* _NL_COLLATE_SYMB_TABLEMB */
     { string: NULL },
+    /* _NL_COLLATE_SYMB_EXTRAMB */
     { string: NULL },
+    /* _NL_COLLATE_COLLSEQMB */
     { string: collseqmb },
-    { wstr: collseqwc }
+    /* _NL_COLLATE_COLLSEQWC */
+    { string: (const char *) collseqwc }
   }
 };
