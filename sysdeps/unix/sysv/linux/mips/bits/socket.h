@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Linux version.
-   Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,21 +30,27 @@ typedef unsigned int socklen_t;
 
 /* Supported address families. */
 #define PF_UNSPEC	0
-#define PF_UNIX		1		/* Unix domain sockets 		*/
-#define PF_LOCAL	1		/* POSIX name for AF_UNIX	*/
-#define PF_FILE		PF_LOCAL	/* POSIX name for PF_LOCAL.	*/
-#define PF_INET		2		/* Internet IP Protocol 	*/
-#define PF_AX25		3		/* Amateur Radio AX.25 		*/
-#define PF_IPX		4		/* Novell IPX 			*/
-#define PF_APPLETALK	5		/* Appletalk DDP 		*/
-#define PF_NETROM	6		/* Amateur Radio NET/ROM 	*/
-#define PF_BRIDGE	7		/* Multiprotocol bridge 	*/
-#define PF_AAL5		8		/* Reserved for Werner's ATM 	*/
-#define PF_X25		9		/* Reserved for X.25 project 	*/
-#define PF_INET6	10		/* IP version 6			*/
-#define PF_ROSE		11		/* Amateur Radio X.25 PLP	*/
-#define PF_DECNET	12		/* Reserved for DECnet project	*/
-#define PF_NETBEUI	13		/* Reserved for 802.2LLC project*/
+#define	PF_LOCAL	1	/* Local to host (pipes and file-domain).  */
+#define	PF_UNIX		PF_LOCAL /* Old BSD name for PF_LOCAL.  */
+#define	PF_FILE		PF_LOCAL /* POSIX name for PF_LOCAL.  */
+#define	PF_INET		2	/* IP protocol family.  */
+#define	PF_AX25		3	/* Amateur Radio AX.25.  */
+#define	PF_IPX		4	/* Novell Internet Protocol.  */
+#define	PF_APPLETALK	5	/* Don't use this.  */
+#define	PF_NETROM	6	/* Amateur radio NetROM.  */
+#define	PF_BRIDGE	7	/* Multiprotocol bridge.  */
+#define	PF_AAL5		8	/* Reserved for Werner's ATM.  */
+#define	PF_X25		9	/* Reserved for X.25 project.  */
+#define	PF_INET6	10	/* IP version 6.  */
+#define	PF_ROSE		11	/* Amateur Radio X.25 PLP       */
+#define	PF_DECnet	12	/* Reserved for DECnet project  */
+#define	PF_NETBEUI	13	/* Reserved for 802.2LLC project*/
+#define	PF_SECURITY	14	/* Security callback pseudo AF */
+#define	PF_KEY		15	/* PF_KEY key management API */
+#define	PF_NETLINK	16
+#define	PF_ROUTE	PF_NETLINK /* Alias to emulate 4.4BSD */
+#define	PF_PACKET	17	/* Packet family                */
+#define	PF_ASH		18	/* Ash */
 #define PF_MAX		32		/* For now.. */
 
 /* Protocol families, same as address families. */
@@ -52,7 +58,7 @@ typedef unsigned int socklen_t;
 #define AF_UNIX		PF_UNIX
 #define AF_LOCAL	PF_LOCAL
 #define AF_FILE		PF_FILE
-#define AF_INET		PF_INET
+
 #define AF_AX25		PF_AX25
 #define AF_IPX		PF_IPX
 #define AF_APPLETALK	PF_APPLETALK
@@ -64,7 +70,12 @@ typedef unsigned int socklen_t;
 #define AF_ROSE		PF_ROSE
 #define AF_DECNET	PF_DECNET
 #define AF_NETBEUI	PF_NETBEUI
-
+#define	AF_SECURITY	PF_SECURITY
+#define	pseudo_AF_KEY	PF_KEY
+#define	AF_NETLINK	PF_NETLINK
+#define	AF_ROUTE	PF_ROUTE
+#define	AF_PACKET	PF_PACKET
+#define	AF_ASH		PF_ASH
 #define AF_MAX		PF_MAX
 
 /* Raw IP packet level.  */
