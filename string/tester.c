@@ -409,6 +409,40 @@ test_strchr (void)
 }
 
 void
+test_strchrnul (void)
+{
+  const char *os;
+  it = "strchrnul";
+  cp = strchrnul ((os = "abcd"), 'z');
+  check (*cp == '\0', 1);			/* Not found. */
+  check (cp == os + 4, 2);
+  (void) strcpy (one, "abcd");
+  check (strchrnul (one, 'c') == one+2, 3);	/* Basic test. */
+  check (strchrnul (one, 'd') == one+3, 4);	/* End of string. */
+  check (strchrnul (one, 'a') == one, 5);	/* Beginning. */
+  check (strchrnul (one, '\0') == one+4, 6);	/* Finding NUL. */
+  (void) strcpy (one, "ababa");
+  check (strchrnul (one, 'b') == one+1, 7);	/* Finding first. */
+  (void) strcpy (one, "");
+  check (strchrnul (one, 'b') == one, 8);	/* Empty string. */
+  check (strchrnul (one, '\0') == one, 9);	/* NUL in empty string. */
+  {
+    char buf[4096];
+    int i;
+    char *p;
+    for (i=0; i < 0x100; i++)
+      {
+	p = (char *) ((unsigned long int) (buf + 0xff) & ~0xff) + i;
+	strcpy (p, "OK");
+	strcpy (p+3, "BAD/WRONG");
+	cp = strchrnul (p, '/');
+	check (*cp == '\0', 9+2*i);
+	check (cp == p+2, 10+2*i);
+      }
+   }
+}
+
+void
 test_index (void)
 {
   it = "index";
@@ -906,6 +940,8 @@ test_memccpy (void)
 void
 test_memset (void)
 {
+  int i;
+
   it = "memset";
   (void) strcpy(one, "abcdefgh");
   check(memset(one+1, 'x', 3) == one+1, 1);	/* Return value. */
@@ -921,12 +957,16 @@ test_memset (void)
   (void) memset(one+2, 010045, 1);
   equal(one, "ax\045xe", 6);		/* Unsigned char convert. */
 
+  /* Non-8bit fill character.  */
+  memset (one, 0x101, sizeof (one));
+  for (i = 0; i < sizeof (one); ++i)
+    check (one[i] == '\01', 7);
+
   /* Test for more complex versions of memset, for all alignments and
      lengths up to 256. This test takes a little while, perhaps it should
-     be made weaker? */
+     be made weaker?  */
   {
     char data[512];
-    int i;
     int j;
     int k;
     int c;
@@ -938,7 +978,7 @@ test_memset (void)
       for (j = 0; j < 256; j++)
 	for (i = 0; i < 256; i++)
 	  {
-	    memset(data+i,c,j);
+	    memset (data + i, c, j);
 	    for (k = 0; k < i; k++)
 	      if (data[k] != 'x')
 		goto fail;
@@ -954,7 +994,7 @@ test_memset (void)
 	    continue;
 
 	  fail:
-	    check(0,7+i+j*256+(c != 0)*256*256);
+	    check (0, 8 + i + j * 256 + (c != 0) * 256 * 256);
 	  }
   }
 }
@@ -1055,6 +1095,9 @@ main (void)
 
   /* strchr.  */
   test_strchr ();
+
+  /* strchrnul.  */
+  test_strchrnul ();
 
   /* index - just like strchr.  */
   test_index ();
