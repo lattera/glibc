@@ -72,9 +72,9 @@ load_dso (const char **loading, int undef, int flag)
   printf ("\nThis is what is in memory now:\n");
   errors += check_loaded_objects (loaded);
 
-  printf ("Loading shared object %s: %s\n", loading [0],
+  printf ("Loading shared object %s: %s\n", loading[0],
 	 flag == RTLD_LAZY ? "RTLD_LAZY" : "RTLD_NOW");
-  obj = dlopen (loading [0], flag);
+  obj = dlopen (loading[0], flag);
   if (obj == NULL)
     {
       if (flag == RTLD_LAZY)
@@ -120,15 +120,15 @@ load_dso (const char **loading, int undef, int flag)
 	    }
 	}
 
-      loaded[0] = loading [0];
-      loaded[1] = loading [1];
-      loaded[2] = loading [2];
+      loaded[0] = loading[0];
+      loaded[1] = loading[1];
+      loaded[2] = loading[2];
     }
   errors += check_loaded_objects (loaded);
 
   if (obj)
     {
-      printf ("UnLoading shared object %s\n", loading [0]);
+      printf ("UnLoading shared object %s\n", loading[0]);
       dlclose (obj);
       loaded[0] = NULL;
       loaded[1] = NULL;
@@ -145,15 +145,15 @@ main (void)
   int errors = 0;
   const char *loading[3];
 
-  loading [0] = "circlemod1a.so";
-  loading [1] = "circlemod2a.so";
-  loading [2] = "circlemod3a.so";
+  loading[0] = "circlemod1a.so";
+  loading[1] = "circlemod2a.so";
+  loading[2] = "circlemod3a.so";
   errors += load_dso (loading, 0, RTLD_LAZY);
   errors += load_dso (loading, 0, RTLD_NOW);
 
-  loading [0] = "circlemod1.so";
-  loading [1] = "circlemod2.so";
-  loading [2] = "circlemod3.so";
+  loading[0] = "circlemod1.so";
+  loading[1] = "circlemod2.so";
+  loading[2] = "circlemod3.so";
   errors += load_dso (loading, 1, RTLD_LAZY);
   errors += load_dso (loading, 1, RTLD_NOW);
 
