@@ -1,3 +1,12 @@
+2001-02-18  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
+
+	* sysdeps/mips/bsd-_setjmp.S (_setjmp): Reorder instructions to
+	avoid problems on MIPS I.
+	* sysdeps/mips/bsd-setjmp.S (setjmp): Likewise.
+
+	* sysdeps/mips/dl-machine.h (RTLD_START): Remove duplicate ".set
+	noreorder".
+
 2001-02-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/fnmatch_loop.c: Handle ranges outside glibc correctly.
