@@ -558,12 +558,18 @@ search_dir (const struct dir_entry *entry)
 		 entry->path, direntry->d_name);
 	  continue;
 	}
-      if (lstat (buf, &stat_buf))
-	{
-	  error (0, errno, _("Can't lstat %s"), buf);
-	  continue;
-	}
-      else if (S_ISDIR (stat_buf.st_mode) && is_hwcap (direntry->d_name))
+#ifdef _DIRENT_HAVE_D_TYPE
+      if (direntry->d_type != DT_UNKNOWN)
+	stat_buf.st_mode = DTTOIF (direntry->d_type);
+      else
+#endif
+	if (lstat (buf, &stat_buf))
+	  {
+	    error (0, errno, _("Can't lstat %s"), buf);
+	    continue;
+	  }
+
+      if (S_ISDIR (stat_buf.st_mode) && is_hwcap (direntry->d_name))
 	{
 	  /* Handle subdirectory also, make a recursive call.  */
 	  struct dir_entry new_entry;

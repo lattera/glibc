@@ -1,3 +1,13 @@
+2000-09-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/ldconfig.c (search_dir): Make more use of d_type
+	information.
+
+2000-09-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/printf-parse.h (parse_one_spec): Clear
+	spec->info.i18n.  Patch by Joseph S. Myers <jsm28@cam.ac.uk>.
+
 2000-09-18  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/bits/posix_opt.h (_POSIX_SYNCHRONIZED_IO):
