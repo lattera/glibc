@@ -1,6 +1,6 @@
 /* Support macros for making weak and strong aliases for symbols,
    and for using symbol sets and linker warnings with GNU ld.
-   Copyright (C) 1995,1996,1997,1998,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -226,7 +226,7 @@
    The native aix linker will remove the .stab and .stabstr sections
    The gnu linker will have a fatal error if there is a relocation for
    symbol in the .stab section.  Silently disable this macro.  */
-#   define link_warning(symbol, msg) 
+#   define link_warning(symbol, msg)
 #  else
 #   define link_warning(symbol, msg)		\
      asm (".stabs \"" msg "\",30,0,0,0\n\t"	\
@@ -298,9 +298,9 @@
    The native aix linker will remove the .stab and .stabstr sections
    The gnu linker will have a fatal error if there is a relocation for
    symbol in the .stab section.  Silently disable these macros.  */
-#   define text_set_element(set, symbol) 
-#   define data_set_element(set, symbol) 
-#   define bss_set_element(set, symbol)	 
+#   define text_set_element(set, symbol)
+#   define data_set_element(set, symbol)
+#   define bss_set_element(set, symbol)
 #  else
 #   define text_set_element(set, symbol)	\
     asm (".stabs \"" __SYMBOL_PREFIX #set "\",23,0,0," __SYMBOL_PREFIX #symbol)
@@ -347,6 +347,16 @@
 # define symbol_version(real, name, version)
 # define default_symbol_version(real, name, version) \
   strong_alias(real, name)
+#endif
+
+/* Handling on non-exported internal names.  We have to do this only
+   for shared code.  */
+#ifdef SHARED
+# define INT(name) name##_internal
+# define INTDEF(name) strong_alias (name, name##_internal);
+#else
+# define INT(name) name
+# define INTDEF(name)
 #endif
 
 #endif /* libc-symbols.h */

@@ -1,5 +1,56 @@
 2002-02-02  Ulrich Drepper  <drepper@redhat.com>
 
+	Change ld.so to not use functions which are exported.  One cannot
+	interpose them anyway.  Use INT() to mark uses, INTDEF() to mark
+	definitions.
+	* include/libc-symbols.h: Define INT and INTDEF.
+	* sysdeps/generic/ldsodefs.h: Declare _dl_debug_printf_internal,
+	_dl_signal_error_internal, _dl_map_object_internal,
+	_dl_map_object_deps_internal, _dl_lookup_symbol_internal,
+	_dl_lookup_versioned_symbol_internal,
+	_dl_relocate_object_internal, _dl_debug_state_internal,
+	_dl_start_profile_internal, and _dl_unload_cache_internal.
+	* include/dlfcn.h: Declare _dl_catch_error_internal.
+	* elf/rtld.c: Use INT for calls to any of the *_internal functions
+	above.  Add INTDEF to function definitions.
+	* elf/dl-debug.c: Likewise.
+	* elf/dl-deps.c: Likewise.
+	* elf/dl-dst.h: Likewise.
+	* elf/dl-error.c: Likewise.
+	* elf/dl-fini.c: Likewise.
+	* elf/dl-init.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-misc.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-profile.c: Likewise.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-runtime.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* elf/do-lookup.h: Likewise.
+	* sysdeps/generic/dl-cache.c: Likewise.
+	* sysdeps/generic/dl-sysdep.c: Likewise.
+	* sysdeps/alpha/dl-machine.h (RTLD_START): Call _dl_init_internal
+	instead of _dl_init.
+	* sysdeps/arm/dl-machine.h: Likewise.
+	* sysdeps/cris/dl-machine.h: Likewise.
+	* sysdeps/hppa/dl-machine.h: Likewise.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	* sysdeps/ia64/dl-machine.h: Likewise.
+	* sysdeps/m68k/dl-machine.h: Likewise.
+	* sysdeps/mips/dl-machine.h: Likewise.
+	* sysdeps/mips/mips64/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h: Likewise.
+	* sysdeps/sh/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h: Likewise.
+	* sysdeps/x86_64/dl-machine.h: Likewise.
+	* sysdeps/powerpc/dl-start.S (_dl_start_user): Likewise.
+
+	* elf/Versions: Don't export _dl_check_all_versions, _dl_sysdep_start,
+	and _dl_debug_initialize.
+
 	* elf/dl-object.c (_dl_new_object): Avoid using strrchr.  We have
 	more information.
 	* elf/rtld.c (dl_main): Avoid strrchr.

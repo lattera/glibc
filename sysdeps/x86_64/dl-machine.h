@@ -257,7 +257,7 @@ _dl_start_user:\n\
 	# argv -> rdx\n\
 	leaq 8(%rsp), %rdx\n\
 	# Call the function to run the initializers.\n\
-	call _dl_init@PLT\n\
+	call _dl_init_internal@PLT\n\
 	# Pass our finalizer function to the user in %rdx, as per ELF ABI.\n\
 	movq _dl_fini@GOTPCREL(%rip), %rdx\n\
 	# Jump to the user's entry point.\n\

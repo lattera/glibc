@@ -270,7 +270,7 @@ _dl_start_user:\n\
 	lgr   %r5,%r3\n\
 	sllg  %r5,%r5,3\n\
 	la    %r5,176(%r5,%r15)\n\
-	brasl %r14,_dl_init@PLT\n
+	brasl %r14,_dl_init_internal@PLT\n
 	# Pass our finalizer function to the user in %r14, as per ELF ABI.\n\
 	lghi  %r14,_dl_fini@GOT
 	lg    %r14,0(%r14,%r12)\n\

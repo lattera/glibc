@@ -305,7 +305,7 @@ _dl_start_user:\n\
 .Llit:\n\
 .Ladr0: .long _GLOBAL_OFFSET_TABLE_-.Llit\n\
 .Ladr1: .long _dl_start-.Llit\n\
-.Ladr4: .long _dl_init@PLT-.Llit\n\
+.Ladr4: .long _dl_init_internal@PLT-.Llit\n\
 ");
 
 #ifndef RTLD_START_SPECIAL_INIT

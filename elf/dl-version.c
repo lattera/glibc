@@ -87,10 +87,10 @@ match_symbol (const char *name, ElfW(Word) hash, const char *string,
 
   /* Display information about what we are doing while debugging.  */
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_VERSIONS, 0))
-    _dl_debug_printf ("\
+    INT(_dl_debug_printf) ("\
 checking for version `%s' in file %s required by file %s\n",
-		      string, map->l_name[0]
-		      ? map->l_name : _dl_argv[0], name);
+			   string, map->l_name[0]
+			   ? map->l_name : _dl_argv[0], name);
 
   if (__builtin_expect (map->l_info[VERSYMIDX (DT_VERDEF)] == NULL, 0))
     {
@@ -214,9 +214,9 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 					       &buf[sizeof (buf) - 1], 10, 0),
 				   " of Verneed record\n");
 	call_error:
-	  _dl_signal_error (errval, (*map->l_name
-				     ? map->l_name : _dl_argv[0]),
-			    NULL, errstring);
+	  INT(_dl_signal_error) (errval, (*map->l_name
+					  ? map->l_name : _dl_argv[0]),
+				 NULL, errstring);
 	}
 
       while (1)
@@ -374,6 +374,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 
   return result;
 }
+INTDEF (_dl_check_map_versions)
 
 
 int
@@ -384,7 +385,8 @@ _dl_check_all_versions (struct link_map *map, int verbose, int trace_mode)
   int result = 0;
 
   for (l = map; l != NULL; l = l->l_next)
-    result |= ! l->l_faked && _dl_check_map_versions (l, verbose, trace_mode);
+    result |= (! l->l_faked
+	       && INT(_dl_check_map_versions) (l, verbose, trace_mode));
 
   return result;
 }

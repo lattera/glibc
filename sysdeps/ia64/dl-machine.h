@@ -402,7 +402,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	{ .mmb\n"							      \
 "	  ld8 out0 = [out0]		/* get the linkmap */\n"	      \
 "	  st8 [r2] = r17		/* Load the new _dl_argv. */\n"	      \
-"	  br.call.sptk.many b0 = _dl_init#\n"				      \
+"	  br.call.sptk.many b0 = _dl_init_internal#\n"			      \
 "	  ;;\n"								      \
 "	}\n"								      \
 "	/* Pass our finializer function to the user,\n"			      \

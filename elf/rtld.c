@@ -297,15 +297,14 @@ relocate_doit (void *a)
 {
   struct relocate_args *args = (struct relocate_args *) a;
 
-  _dl_relocate_object (args->l, args->l->l_scope,
-		       args->lazy, 0);
+  INT(_dl_relocate_object) (args->l, args->l->l_scope, args->lazy, 0);
 }
 
 static void
 map_doit (void *a)
 {
   struct map_args *args = (struct map_args *) a;
-  args->main_map = _dl_map_object (NULL, args->str, 0, lt_library, 0, 0);
+  args->main_map = INT(_dl_map_object) (NULL, args->str, 0, lt_library, 0, 0);
 }
 
 static void
@@ -495,7 +494,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  struct map_args args;
 
 	  args.str = _dl_argv[0];
-	  (void) _dl_catch_error (&objname, &err_str, map_doit, &args);
+	  (void) INT(_dl_catch_error) (&objname, &err_str, map_doit, &args);
 	  if (__builtin_expect (err_str != NULL, 0))
 	    {
 	      if (err_str != _dl_out_of_memory)
@@ -506,7 +505,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       else
 	{
 	  HP_TIMING_NOW (start);
-	  _dl_map_object (NULL, _dl_argv[0], 0, lt_library, 0, 0);
+	  INT(_dl_map_object) (NULL, _dl_argv[0], 0, lt_library, 0, 0);
 	  HP_TIMING_NOW (stop);
 
 	  HP_TIMING_DIFF (load_time, start, stop);
@@ -703,8 +702,9 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    && (__builtin_expect (! __libc_enable_secure, 1)
 		|| strchr (p, '/') == NULL))
 	  {
-	    struct link_map *new_map = _dl_map_object (GL(dl_loaded), p, 1,
-						       lt_library, 0, 0);
+	    struct link_map *new_map = INT(_dl_map_object) (GL(dl_loaded), p,
+							    1, lt_library,
+							    0, 0);
 	    if (++new_map->l_opencount == 1)
 	      /* It is no duplicate.  */
 	      ++npreloads;
@@ -771,8 +771,10 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  while ((p = strsep (&runp, ": \t\n")) != NULL)
 	    if (p[0] != '\0')
 	      {
-		struct link_map *new_map = _dl_map_object (GL(dl_loaded), p, 1,
-							   lt_library, 0, 0);
+		struct link_map *new_map = INT(_dl_map_object) (GL(dl_loaded),
+								p, 1,
+								lt_library,
+								0, 0);
 		if (++new_map->l_opencount == 1)
 		  /* It is no duplicate.  */
 		  ++npreloads;
@@ -782,8 +784,8 @@ of this helper program; chances are you did not intend to run this program.\n\
       if (problem != NULL)
 	{
 	  char *p = strndupa (problem, file_size - (problem - file));
-	  struct link_map *new_map = _dl_map_object (GL(dl_loaded), p, 1,
-						     lt_library, 0, 0);
+	  struct link_map *new_map = INT(_dl_map_object) (GL(dl_loaded), p, 1,
+							  lt_library, 0, 0);
 	  if (++new_map->l_opencount == 1)
 	    /* It is no duplicate.  */
 	    ++npreloads;
@@ -816,7 +818,7 @@ of this helper program; chances are you did not intend to run this program.\n\
      specified some libraries to load, these are inserted before the actual
      dependencies in the executable's searchlist for symbol resolution.  */
   HP_TIMING_NOW (start);
-  _dl_map_object_deps (GL(dl_loaded), preloads, npreloads, mode == trace);
+  INT(_dl_map_object_deps) (GL(dl_loaded), preloads, npreloads, mode == trace);
   HP_TIMING_NOW (stop);
   HP_TIMING_DIFF (diff, start, stop);
   HP_TIMING_ACCUM_NT (load_time, diff);
@@ -938,9 +940,9 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    ElfW(Addr) loadbase;
 	    lookup_t result;
 
-	    result = _dl_lookup_symbol (_dl_argv[i], GL(dl_loaded),
-					&ref, GL(dl_loaded)->l_scope,
-					ELF_RTYPE_CLASS_PLT, 1);
+	    result = INT(_dl_lookup_symbol) (_dl_argv[i], GL(dl_loaded),
+					     &ref, GL(dl_loaded)->l_scope,
+					     ELF_RTYPE_CLASS_PLT, 1);
 
 	    loadbase = LOOKUP_VALUE_ADDRESS (result);
 
@@ -976,8 +978,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 
 	      if ((GL(dl_debug_mask) & DL_DEBUG_PRELINK)
 		  && GL(dl_rtld_map).l_opencount > 1)
-		_dl_relocate_object (&GL(dl_rtld_map), GL(dl_loaded)->l_scope,
-				     0, 0);
+		INT(_dl_relocate_object) (&GL(dl_rtld_map),
+					  GL(dl_loaded)->l_scope, 0, 0);
 	    }
 
 #define VERNEEDTAG (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (DT_VERNEED))
@@ -1174,7 +1176,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  }
 
 	if (l != &GL(dl_rtld_map))
-	  _dl_relocate_object (l, l->l_scope, GL(dl_lazy), consider_profiling);
+	  INT(_dl_relocate_object) (l, l->l_scope, GL(dl_lazy),
+				    consider_profiling);
 
 	l = l->l_prev;
       }
@@ -1196,14 +1199,15 @@ of this helper program; chances are you did not intend to run this program.\n\
        needs to have _dl_profile_map set up by the relocator.  */
     if (__builtin_expect (GL(dl_profile_map) != NULL, 0))
       /* We must prepare the profiling.  */
-      _dl_start_profile (GL(dl_profile_map), GL(dl_profile_output));
+      INT(_dl_start_profile) (GL(dl_profile_map), GL(dl_profile_output));
 
     if (GL(dl_rtld_map).l_opencount > 1)
       {
 	/* There was an explicit ref to the dynamic linker as a shared lib.
 	   Re-relocate ourselves with user-controlled symbol definitions.  */
 	HP_TIMING_NOW (start);
-	_dl_relocate_object (&GL(dl_rtld_map), GL(dl_loaded)->l_scope, 0, 0);
+	INT(_dl_relocate_object) (&GL(dl_rtld_map), GL(dl_loaded)->l_scope,
+				  0, 0);
 	HP_TIMING_NOW (stop);
 	HP_TIMING_DIFF (add, start, stop);
 	HP_TIMING_ACCUM_NT (relocate_time, add);
@@ -1248,12 +1252,12 @@ of this helper program; chances are you did not intend to run this program.\n\
 
     /* Notify the debugger that all objects are now mapped in.  */
     r->r_state = RT_ADD;
-    _dl_debug_state ();
+    INT(_dl_debug_state) ();
   }
 
 #ifndef MAP_COPY
   /* We must munmap() the cache file.  */
-  _dl_unload_cache ();
+  INT(_dl_unload_cache) ();
 #endif
 
   /* Once we return, _dl_sysdep_start will invoke
@@ -1593,8 +1597,9 @@ print_statistics (void)
   if (HP_TIMING_AVAIL)
     {
       HP_TIMING_PRINT (buf, sizeof (buf), rtld_total_time);
-      _dl_debug_printf ("\nruntime linker statistics:\n"
-			"  total startup time in dynamic loader: %s\n", buf);
+      INT(_dl_debug_printf) ("\nruntime linker statistics:\n"
+			     "  total startup time in dynamic loader: %s\n",
+			     buf);
     }
 
   /* Print relocation statistics.  */
@@ -1616,14 +1621,15 @@ print_statistics (void)
 	  *wp++ = *cp++;
 	}
       *wp = '\0';
-      _dl_debug_printf ("            time needed for relocation: %s (%s%%)\n",
-			buf, pbuf);
+      INT(_dl_debug_printf) ("\
+            time needed for relocation: %s (%s%%)\n",
+			     buf, pbuf);
     }
 #endif
-  _dl_debug_printf ("                 number of relocations: %lu\n",
-		    GL(dl_num_relocations));
-  _dl_debug_printf ("      number of relocations from cache: %lu\n",
-		    GL(dl_num_cache_relocations));
+  INT(_dl_debug_printf) ("                 number of relocations: %lu\n",
+			 GL(dl_num_relocations));
+  INT(_dl_debug_printf) ("      number of relocations from cache: %lu\n",
+			 GL(dl_num_cache_relocations));
 
 #ifndef HP_TIMING_NONAVAIL
   /* Time spend while loading the object and the dependencies.  */
@@ -1645,8 +1651,9 @@ print_statistics (void)
 	  *wp++ = *cp++;
 	}
       *wp = '\0';
-      _dl_debug_printf ("           time needed to load objects: %s (%s%%)\n",
-			buf, pbuf);
+      INT(_dl_debug_printf) ("\
+           time needed to load objects: %s (%s%%)\n",
+			     buf, pbuf);
     }
 #endif
 }

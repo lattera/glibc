@@ -486,7 +486,7 @@ _dl_start_user:\n\
 	dla $7, 8($29)\n\
 	dsubu $29, 16\n\
 	# Call the function to run the initializers.\n\
-	jal _dl_init
+	jal _dl_init_internal\n\
 	daddiu $29, 16\n\
 	# Pass our finalizer function to the user in ra.\n\
 	dla $31, _dl_fini\n\
@@ -498,7 +498,7 @@ _dl_start_user:\n\
 	la $7, 8($29)\n\
 	subu $29, 16\n\
 	# Call the function to run the initializers.\n\
-	jal _dl_init
+	jal _dl_init_internal\n\
 	addiu $29, 16\n\
 	# Pass our finalizer function to the user in ra.\n\
 	dla $31, _dl_fini\n\

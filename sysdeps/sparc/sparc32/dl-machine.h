@@ -320,7 +320,7 @@ _dl_start_user:
 	add	%o3, 4, %o3
 	mov	%i5, %o1
 	add	%o2, %o3, %o3
-	call	_dl_init
+	call	_dl_init_internal
 	 ld	[%o0], %o0
   /* Pass our finalizer function to the user in %g1.  */
 	sethi	%hi(_dl_fini), %g1

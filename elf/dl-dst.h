@@ -25,12 +25,13 @@
     const char *__sf = strchr (name, '$');				      \
 									      \
     if (__builtin_expect (__sf != NULL, 0))				      \
-      __cnt = _dl_dst_count (__sf, is_path);				      \
+      __cnt = INT(_dl_dst_count) (__sf, is_path);			      \
 									      \
     __cnt; })
 
 /* Prototype for used function.  */
 extern size_t _dl_dst_count (const char *name, int is_path);
+extern size_t _dl_dst_count_internal (const char *name, int is_path);
 
 
 /* Guess from the number of DSTs the length of the result string.  */
@@ -62,11 +63,8 @@ extern size_t _dl_dst_count (const char *name, int is_path);
 /* Find origin of the executable.  */
 extern const char *_dl_get_origin (void);
 
-
-/* Perform the DST substitution.  */
-#define DL_DST_SUBSTITUTE(l, name, res, is_path) \
-  _dl_dst_substitute (l, name, res, is_path)
-
 /* Prototype for used function.  */
 extern char *_dl_dst_substitute (struct link_map *l, const char *name,
 				 char *result, int is_path);
+extern char *_dl_dst_substitute_internal (struct link_map *l, const char *name,
+					  char *result, int is_path);

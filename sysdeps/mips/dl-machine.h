@@ -449,7 +449,7 @@ _dl_start_user:\n\
 	addu $7, $7, 4\n\
 	subu $29, 16\n\
 	# Call the function to run the initializers.\n\
-	jal _dl_init
+	jal _dl_init_internal\n\
 	addiu $29, 16\n\
 	# Pass our finalizer function to the user in $2 as per ELF ABI.\n\
 	la $2, _dl_fini\n\

@@ -40,9 +40,6 @@ extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
 						     ElfW(Addr) *user_entry));
 weak_extern (BP_SYM (_dl_sysdep_start))
 
-/* This function is used to unload the cache file if necessary.  */
-extern void _dl_unload_cache (void);
-
 extern int __libc_multiple_libcs;	/* Defined in init-first.c.  */
 
 extern int __libc_argc;
@@ -200,7 +197,7 @@ dl_open_worker (void *a)
       new_file = (char *) alloca (required + 1);
 
       /* Generate the new file name.  */
-      DL_DST_SUBSTITUTE (call_map, file, new_file, 0);
+      _dl_dst_substitute (call_map, file, new_file, 0);
 
       /* If the substitution failed don't try to load.  */
       if (*new_file == '\0')
@@ -374,10 +371,11 @@ dl_open_worker (void *a)
   if (__builtin_expect (mode & RTLD_NODELETE, 0))
     new->l_flags_1 |= DF_1_NODELETE;
 
-  if (_dl_sysdep_start == NULL)
-    /* We must be the static _dl_open in libc.a.  A static program that
-       has loaded a dynamic object now has competition.  */
-    __libc_multiple_libcs = 1;
+#ifndef SHARED
+  /* We must be the static _dl_open in libc.a.  A static program that
+     has loaded a dynamic object now has competition.  */
+  __libc_multiple_libcs = 1;
+#endif
 
   /* Let the user know about the opencount.  */
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))

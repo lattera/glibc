@@ -302,7 +302,7 @@ _dl_start_user:
 	ldr	r0, [sl, r0]
 	ldr	r0, [r0]
 	@ call _dl_init
-	bl	_dl_init(PLT)
+	bl	_dl_init_internal(PLT)
 	@ clear the startup flag
 	ldr	r2, .L_STARTUP_FLAG
 	ldr	r1, [sl, r2]

@@ -352,6 +352,8 @@ extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
    tag showing the PID.  */
 extern void _dl_debug_printf (const char *fmt, ...)
      __attribute__ ((__format__ (__printf__, 1, 2)));
+extern void _dl_debug_printf_internal (const char *fmt, ...)
+     __attribute__ ((__format__ (__printf__, 1, 2)));
 
 /* Write message on the debug file descriptor.  The parameters are
    interpreted as for a `printf' call.  All the lines buf the first
@@ -395,6 +397,11 @@ extern void _dl_signal_error (int errcode, const char *object,
 			      const char *occurred, const char *errstring)
      internal_function
      __attribute__ ((__noreturn__));
+extern void _dl_signal_error_internal (int errcode, const char *object,
+				       const char *occurred,
+				       const char *errstring)
+     internal_function
+     __attribute__ ((__noreturn__));
 
 /* Like _dl_signal_error, but may return when called in the context of
    _dl_receive_error.  */
@@ -420,6 +427,12 @@ extern struct link_map *_dl_map_object (struct link_map *loader,
 					const char *name, int preloaded,
 					int type, int trace_mode, int mode)
      internal_function;
+extern struct link_map *_dl_map_object_internal (struct link_map *loader,
+						 const char *name,
+						 int preloaded,
+						 int type, int trace_mode,
+						 int mode)
+     internal_function;
 
 /* Call _dl_map_object on the dependencies of MAP, and set up
    MAP->l_searchlist.  PRELOADS points to a vector of NPRELOADS previously
@@ -428,6 +441,11 @@ extern struct link_map *_dl_map_object (struct link_map *loader,
 extern void _dl_map_object_deps (struct link_map *map,
 				 struct link_map **preloads,
 				 unsigned int npreloads, int trace_mode)
+     internal_function;
+extern void _dl_map_object_deps_internal (struct link_map *map,
+					  struct link_map **preloads,
+					  unsigned int npreloads,
+					  int trace_mode)
      internal_function;
 
 /* Cache the locations of MAP's hash table.  */
@@ -449,6 +467,12 @@ extern lookup_t _dl_lookup_symbol (const char *undef,
 				   struct r_scope_elem *symbol_scope[],
 				   int type_class, int explicit)
      internal_function;
+extern lookup_t _dl_lookup_symbol_internal (const char *undef,
+					    struct link_map *undef_map,
+					    const ElfW(Sym) **sym,
+					    struct r_scope_elem *symbol_scope[],
+					    int type_class, int explicit)
+     internal_function;
 
 /* Lookup versioned symbol.  */
 extern lookup_t _dl_lookup_versioned_symbol (const char *undef,
@@ -457,6 +481,14 @@ extern lookup_t _dl_lookup_versioned_symbol (const char *undef,
 					     struct r_scope_elem *symbol_scope[],
 					     const struct r_found_version *version,
 					     int type_class, int explicit)
+     internal_function;
+extern lookup_t _dl_lookup_versioned_symbol_internal (const char *undef,
+						      struct link_map *undef_map,
+						      const ElfW(Sym) **sym,
+						      struct r_scope_elem *symbol_scope[],
+						      const struct r_found_version *version,
+						      int type_class,
+						      int explicit)
      internal_function;
 
 /* For handling RTLD_NEXT we must be able to skip shared objects.  */
@@ -493,6 +525,9 @@ extern struct link_map *_dl_new_object (char *realname, const char *libname,
 extern void _dl_relocate_object (struct link_map *map,
 				 struct r_scope_elem *scope[],
 				 int lazy, int consider_profiling);
+extern void _dl_relocate_object_internal (struct link_map *map,
+					  struct r_scope_elem *scope[],
+					  int lazy, int consider_profiling);
 
 /* Call _dl_signal_error with a message about an unhandled reloc type.
    TYPE is the result of ELFW(R_TYPE) (r_info), i.e. an R_<CPU>_* value.
@@ -532,6 +567,7 @@ extern void _dl_fini (void) internal_function;
    says what change is taking place.  This function's address is
    the value of the `r_brk' member.  */
 extern void _dl_debug_state (void);
+extern void _dl_debug_state_internal (void);
 
 /* Initialize `struct r_debug' if it has not already been done.  The
    argument is the run-time load address of the dynamic linker, to be put
@@ -545,6 +581,9 @@ extern void _dl_init_paths (const char *library_path) internal_function;
 /* Gather the information needed to install the profiling tables and start
    the timers.  */
 extern void _dl_start_profile (struct link_map *map, const char *output_dir)
+     internal_function;
+extern void _dl_start_profile_internal (struct link_map *map,
+					const char *output_dir)
      internal_function;
 
 /* The actual functions used to keep book on the calls.  */
@@ -579,6 +618,7 @@ extern const char *_dl_load_cache_lookup (const char *name)
    Therefore we provide this function to close the file and open it again
    once needed.  */
 extern void _dl_unload_cache (void);
+extern void _dl_unload_cache_internal (void);
 
 /* System-dependent function to read a file's whole contents in the
    most convenient manner available.  *SIZEP gets the size of the

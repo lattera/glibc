@@ -753,7 +753,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	add	%o3, 8, %o3\n"						\
 "	mov	%i5, %o1\n"						\
 "	add	%o2, %o3, %o3\n"					\
-"	call	_dl_init\n"						\
+"	call	_dl_init_internal\n"					\
 "	 ldx	[%o0], %o0\n"						\
 "   /* Pass our finalizer function to the user in %g1.  */\n"		\
 "	sethi	%hi(_dl_fini), %g1\n"					\

@@ -149,7 +149,7 @@ _dl_load_cache_lookup (const char *name)
 
   /* Print a message if the loading of libs is traced.  */
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))
-    _dl_debug_printf (" search cache=%s\n", LD_SO_CACHE);
+    INT(_dl_debug_printf) (" search cache=%s\n", LD_SO_CACHE);
 
   if (cache == NULL)
     {
@@ -251,7 +251,7 @@ _dl_load_cache_lookup (const char *name)
 
   /* Print our result if wanted.  */
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0) && best != NULL)
-    _dl_debug_printf ("  trying file=%s\n", best);
+    INT(_dl_debug_printf) ("  trying file=%s\n", best);
 
   return best;
 }
@@ -270,4 +270,5 @@ _dl_unload_cache (void)
       cache = NULL;
     }
 }
+INTDEF (_dl_unload_cache)
 #endif

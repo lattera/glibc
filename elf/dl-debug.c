@@ -55,3 +55,4 @@ void
 _dl_debug_state (void)
 {
 }
+INTDEF (_dl_debug_state)

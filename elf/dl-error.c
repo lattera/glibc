@@ -110,6 +110,7 @@ _dl_signal_error (int errcode, const char *objname, const char *occation,
 			 : ""));
     }
 }
+INTDEF (_dl_signal_error)
 
 
 void
@@ -125,7 +126,7 @@ _dl_signal_cerror (int errcode, const char *objname, const char *occation,
       (*receiver) (errcode, objname, errstring);
     }
   else
-    _dl_signal_error (errcode, objname, occation, errstring);
+    INT(_dl_signal_error) (errcode, objname, occation, errstring);
 }
 
 
@@ -162,6 +163,8 @@ _dl_catch_error (const char **objname, const char **errstring,
   *errstring = c.errstring;
   return errcode == -1 ? 0 : errcode;
 }
+INTDEF (_dl_catch_error)
+
 
 void
 internal_function

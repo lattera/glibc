@@ -333,7 +333,7 @@ $fixup_stack_ret:						\n\
 	lda	$18, 8($sp)					\n\
 	s8addq	$17, 8, $19					\n\
 	addq	$19, $18, $19					\n\
-	jsr	$26, _dl_init					\n\
+	jsr	$26, _dl_init_internal				\n\
 	/* Pass our finalizer function to the user in $0. */	\n\
 	lda	$0, _dl_fini					\n\
 	/* Jump to the user's entry point.  */			\n\

@@ -87,7 +87,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	      {
 		errstring = N_("cannot make segment writable for relocation");
 	      call_error:
-		_dl_signal_error (errno, l->l_name, NULL, errstring);
+		INT(_dl_signal_error) (errno, l->l_name, NULL, errstring);
 	      }
 
 #if (PF_R | PF_W | PF_X) == 7 && (PROT_READ | PROT_WRITE | PROT_EXEC) == 7
@@ -126,11 +126,12 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	     l->l_lookup_cache.type_class = _tc;			      \
 	     l->l_lookup_cache.sym = (*ref);				      \
 	     _lr = ((version) != NULL && (version)->hash != 0		      \
-		    ? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name,  \
-						   l, (ref), scope,	      \
-						   (version), _tc, 0)	      \
-		    : _dl_lookup_symbol (strtab + (*ref)->st_name, l, (ref),  \
-					 scope, _tc, 0));		      \
+		    ? INT(_dl_lookup_versioned_symbol) (strtab		      \
+							+ (*ref)->st_name,    \
+							l, (ref), scope,      \
+							(version), _tc, 0)    \
+		    : INT(_dl_lookup_symbol) (strtab + (*ref)->st_name, l,    \
+					      (ref), scope, _tc, 0));	      \
 	     l->l_lookup_cache.ret = (*ref);				      \
 	     l->l_lookup_cache.value = _lr; }))				      \
      : l)
@@ -146,11 +147,12 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	     l->l_lookup_cache.type_class = _tc;			      \
 	     l->l_lookup_cache.sym = (*ref);				      \
 	     _lr = ((version) != NULL && (version)->hash != 0		      \
-		    ? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name,  \
-						   l, (ref), scope,	      \
-						   (version), _tc, 0)	      \
-		    : _dl_lookup_symbol (strtab + (*ref)->st_name, l, (ref),  \
-					 scope, _tc, 0));		      \
+		    ? INT(_dl_lookup_versioned_symbol) (strtab		      \
+							+ (*ref)->st_name,    \
+							l, (ref), scope,      \
+							(version), _tc, 0)    \
+		    : INT(_dl_lookup_symbol) (strtab + (*ref)->st_name, l,    \
+					      (ref), scope, _tc, 0));	      \
 	     l->l_lookup_cache.ret = (*ref);				      \
 	     l->l_lookup_cache.value = _lr; }))				      \
      : l->l_addr)
@@ -201,6 +203,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
       textrels = textrels->next;
     }
 }
+INTDEF (_dl_relocate_object)
 
 
 void
@@ -220,5 +223,5 @@ _dl_reloc_bad_type (struct link_map *map, unsigned int type, int plt)
   *cp++ = DIGIT (type >> 4);
   *cp = DIGIT (type);
 
-  _dl_signal_error (0, map->l_name, NULL, msgbuf);
+  INT(_dl_signal_error) (0, map->l_name, NULL, msgbuf);
 }

@@ -243,7 +243,7 @@ _dl_start_user:\n\
 	pushl %eax\n\
 	movl (%esi), %eax\n\
 	# Call the function to run the initializers.\n\
-	call _dl_init@PLT\n\
+	call _dl_init_internal@PLT\n\
 	# Pass our finalizer function to the user in %edx, as per ELF ABI.\n\
 	movl _dl_fini@GOT(%ebx), %edx\n\
 	# Jump to the user's entry point.\n\
