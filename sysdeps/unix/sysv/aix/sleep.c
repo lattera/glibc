@@ -27,7 +27,7 @@ unsigned int
 __sleep (seconds)
      unsigned int seconds;
 {
-  struct timespec ts ={tv_sec:(long int)seconds,tv_nsec:0};
+  struct timespec ts ={.tv_sec = (long int)seconds, .tv_nsec = 0};
   __libc_nanosleep(&ts,&ts);
   return 0;
 }
