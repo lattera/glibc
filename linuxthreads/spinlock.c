@@ -34,7 +34,7 @@
 
    (status & 1) == 1: spinlock is taken and (status & ~1L) is a
                       pointer to the first waiting thread; other
-		      waiting threads are linked via the p_nextlock 
+		      waiting threads are linked via the p_nextlock
 		      field.
    (status & 1) == 0: same as above, but spinlock is not taken.
 
@@ -149,8 +149,8 @@ int __pthread_unlock(struct _pthread_fastlock * lock)
 #endif
 #if !defined HAS_COMPARE_AND_SWAP
   {
-    lock->__spinlock = 0;
     WRITE_MEMORY_BARRIER();
+    lock->__spinlock = 0;
     return 0;
   }
 #endif
@@ -160,7 +160,7 @@ again:
   oldstatus = lock->__status;
 
   while ((oldstatus = lock->__status) == 1) {
-    if (__compare_and_swap_with_release_semantics(&lock->__status, 
+    if (__compare_and_swap_with_release_semantics(&lock->__status,
 	oldstatus, 0))
       return 0;
   }

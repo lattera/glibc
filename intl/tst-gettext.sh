@@ -25,6 +25,8 @@ GCONV_PATH=${common_objpfx}iconvdata
 export GCONV_PATH
 LOCPATH=${common_objpfx}localedata
 export LOCPATH
+LC_ALL=C
+export LC_ALL
 
 # Generate the test data.
 test -d ${objpfx}domaindir || mkdir ${objpfx}domaindir

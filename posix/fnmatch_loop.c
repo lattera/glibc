@@ -176,8 +176,8 @@ FCT (pattern, string, no_leading_period, flags)
 
 	case L('['):
 	  {
-	    /* Nonzero if the sense of the character class is inverted.  */
 	    static int posixly_correct;
+	    /* Nonzero if the sense of the character class is inverted.  */
 	    register int not;
 	    CHAR cold;
 
@@ -273,6 +273,7 @@ FCT (pattern, string, no_leading_period, flags)
 			|| (STREQ (str, L("xdigit")) && ISXDIGIT ((UCHAR) *n)))
 		      goto matched;
 #endif
+		    c = *p++;
 		  }
 		else if (c == L('\0'))
 		  /* [ (unterminated) loses.  */
@@ -415,13 +416,14 @@ FCT (pattern, string, no_leading_period, flags)
 
 	  matched:
 	    /* Skip the rest of the [...] that already matched.  */
-	    while (c != L(']'))
+	    do
 	      {
+		c = *p++;
+
 		if (c == L('\0'))
 		  /* [... (unterminated) loses.  */
 		  return FNM_NOMATCH;
 
-		c = *p++;
 		if (!(flags & FNM_NOESCAPE) && c == L('\\'))
 		  {
 		    if (*p == L('\0'))
@@ -439,6 +441,7 @@ FCT (pattern, string, no_leading_period, flags)
 		    c = *p;
 		  }
 	      }
+	    while (c != L(']'));
 	    if (not)
 	      return FNM_NOMATCH;
 	  }

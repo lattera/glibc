@@ -31,7 +31,7 @@ test_locale ()
       rep="--repertoire-map $rep"
     fi
     I18NPATH=. GCONV_PATH=${common_objpfx}iconvdata \
-    LOCPATH=${common_objpfx}localedata LANGUAGE=C \
+    LOCPATH=${common_objpfx}localedata LC_ALL=C LANGUAGE=C \
     ${common_objpfx}elf/ld.so --library-path $common_objpfx \
     ${common_objpfx}locale/localedef --quiet -c -f $charmap -i $input \
       ${rep} ${common_objpfx}localedata/$out

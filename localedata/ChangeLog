@@ -1,3 +1,8 @@
+2000-07-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-fmon.sh (LC_ALL): Define to C for localedef run.
+	* tst-locale.sh (LC_ALL): Likewise.
+
 2000-07-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-fmon.sh: Set LOCPATH and LANGUAGE for localedef run.
