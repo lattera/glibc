@@ -1,3 +1,8 @@
+1998-04-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv_simple.c (__gconv_transform_ucs4_utf8): Compute
+	number of converted bytes correctly.
+
 1998-04-01  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
 	* sunrpc/clnt_udp.c (clntudp_call): Don't check the xid if

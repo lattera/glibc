@@ -1,5 +1,5 @@
 /* Simple transformations functions.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -130,7 +130,7 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
 
 	  /* Remember how much we converted.  */
 	  do_write += newinbuf - inbuf;
-	  *inlen -= (newinbuf - inbuf) * sizeof (wchar_t);
+	  *inlen -= newinbuf - inbuf;
 
 	  data->outbufavail += actually;
 
