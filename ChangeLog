@@ -1,3 +1,8 @@
+2000-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Add
+	__builtin_expect where desirable.
+
 2000-04-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/Makefile (chapters): Add syslog.

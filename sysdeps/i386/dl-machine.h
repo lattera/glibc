@@ -327,8 +327,9 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	    /* This can happen in trace mode if an object could not be
 	       found.  */
 	    break;
-	  if (sym->st_size > refsym->st_size
-	      || (sym->st_size < refsym->st_size && _dl_verbose))
+	  if (__builtin_expect (sym->st_size > refsym->st_size, 0)
+	      || (__builtin_expect (sym->st_size < refsym->st_size, 0)
+		  && __builtin_expect (_dl_verbose, 0)))
 	    {
 	      const char *strtab;
 
@@ -382,7 +383,8 @@ elf_machine_lazy_rel (struct link_map *map,
 {
   Elf32_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
   /* Check for unexpected PLT reloc type.  */
-  if (ELF32_R_TYPE (reloc->r_info) == R_386_JMP_SLOT)
+  if (__builtin_expect (ELF32_R_TYPE (reloc->r_info), R_386_JMP_SLOT)
+      == R_386_JMP_SLOT)
     *reloc_addr += l_addr;
   else
     _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 1);
