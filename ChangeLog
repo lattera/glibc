@@ -1,3 +1,31 @@
+2002-05-17  David S. Miller  <davem@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/fork.S: Define _internal aliases.
+
+2002-05-16  David S. Miller  <davem@redhat.com>
+
+	* sysdeps/sparc/sparc32/dl-machine.h (LOAD_PIC_REG): Define.
+	(elf_machine_dynamic): Use it to force PIC register to be loaded.
+	(elf_machine_load_address): Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h: Mirror sparc32 changes.
+
+	* sysdeps/sparc/sparc64/strncmp.S: When second argument pointer
+	is unaligned, do not forget to fully initialize %g1 magic value.
+
+	* sysdeps/unix/sysv/linux/sparc/sys/procfs.h: Fix 64-bit elf
+	register definitions and provide 32-bit variants of structures
+	during 64-bit builds.
+
+	* soft-fp/op-1.h (_FP_FRAC_CLEAR_OVERP_1): Define.
+	* soft-fp/op-2.h (_FP_FRAC_CLEAR_OVERP_2): Define.
+	* soft-fp/op-4.h (_FP_FRAC_CLEAR_OVERP_4): Define.
+	* soft-fp/op-common.h (_FP_PACK_CANONICAL): After rounding, if
+	_FP_FRAC_OVERP_X is set, use _FP_FRAC_CLEAR_OVERP_X to clear it.
+	(_FP_FROM_INT): Perform right shifts on unsigned integer type.
+	Do not clear implicit one bit here, it must be done post-rounding.
+	Only pad to the left using left shift if value uses less than the
+	available fractional bits.
+
 2002-05-20  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/powerpc/Makefile (sysdeps_routines): Use libgcc-compat

@@ -39,6 +39,18 @@ elf_machine_matches_host (const Elf64_Ehdr *ehdr)
   return ehdr->e_machine == EM_SPARCV9;
 }
 
+/* We have to do this because elf_machine_{dynamic,load_address} can be
+   invoked from functions that have no GOT references, and thus the compiler
+   has no obligation to load the PIC register.  */
+#define LOAD_PIC_REG(PIC_REG)	\
+do {	Elf64_Addr tmp;		\
+	__asm("sethi %%hi(_GLOBAL_OFFSET_TABLE_-4), %1\n\t" \
+	      "rd %%pc, %0\n\t" \
+	      "add %1, %%lo(_GLOBAL_OFFSET_TABLE_+4), %1\n\t" \
+	      "add %0, %1, %0" \
+	      : "=r" (PIC_REG), "=r" (tmp)); \
+} while (0)
+
 /* Return the link-time address of _DYNAMIC.  Conveniently, this is the
    first element of the GOT.  This must be inlined in a function which
    uses global data.  */
@@ -46,6 +58,8 @@ static inline Elf64_Addr
 elf_machine_dynamic (void)
 {
   register Elf64_Addr *elf_pic_register __asm__("%l7");
+
+  LOAD_PIC_REG (elf_pic_register);
 
   return *elf_pic_register;
 }
@@ -55,6 +69,8 @@ static inline Elf64_Addr
 elf_machine_load_address (void)
 {
   register Elf64_Addr *elf_pic_register __asm__("%l7");
+
+  LOAD_PIC_REG (elf_pic_register);
 
   /* We used to utilize the fact that a local .got entry will
      be partially initialized at startup awaiting its RELATIVE

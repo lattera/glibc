@@ -290,14 +290,15 @@ ENTRY(strncmp)
 	 ldxa		[%o0] ASI_PNF, %g4		/* Load				*/
 11:	sllx		%g3, 3, %g5			/* IEU0		Group		*/
 	mov		64, %g7				/* IEU1				*/
-	sub		%o1, %g3, %o1			/* IEU0		Group		*/
+	or		%g1, %g2, %g1			/* IEU0		Group		*/
+	sub		%o1, %g3, %o1			/* IEU1				*/
 
-	sub		%g7, %g5, %g7			/* IEU1				*/
+	sub		%g7, %g5, %g7			/* IEU0		Group		*/
 	ldxa		[%o1] ASI_PNF, %o4		/* Load				*/
-	sllx		%g1, 7, %g2			/* IEU0		Group		*/
-	add		%o1, 8, %o1			/* IEU1				*/
+	sllx		%g1, 7, %g2			/* IEU1				*/
+	add		%o1, 8, %o1			/* IEU0		Group		*/
 							/* %g1 = 0101010101010101
-							   %g2 = 8080808080800880
+							   %g2 = 8080808080808080
 							   %g3 = %o1 alignment
 							   %g5 = number of bits to shift left
 							   %g7 = number of bits to shift right */

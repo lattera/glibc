@@ -55,6 +55,7 @@
 #define _FP_FRAC_NEGP_1(X)	((_FP_WS_TYPE)X##_f < 0)
 #define _FP_FRAC_ZEROP_1(X)	(X##_f == 0)
 #define _FP_FRAC_OVERP_1(fs,X)	(X##_f & _FP_OVERFLOW_##fs)
+#define _FP_FRAC_CLEAR_OVERP_1(fs,X)	(X##_f &= ~_FP_OVERFLOW_##fs)
 #define _FP_FRAC_EQ_1(X, Y)	(X##_f == Y##_f)
 #define _FP_FRAC_GE_1(X, Y)	(X##_f >= Y##_f)
 #define _FP_FRAC_GT_1(X, Y)	(X##_f > Y##_f)
