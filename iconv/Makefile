@@ -33,7 +33,7 @@ else
 CFLAGS-gconv_db.c = -DSTATIC_GCONV
 endif
 
-distribute	= gconv_builtin.h gconv_int.h
+distribute	= gconv_builtin.h gconv_int.h loop.c skeleton.c
 
 others		= iconv_prog
 

@@ -149,10 +149,10 @@ ifdef	   subdir
 
 foo:=$(shell echo subdir foo >&2)
 
-+tsrcs := Makefile $(+tsrcs)					\
-	  $(addsuffix .c,$(others) $(tests) $(test-srcs))	\
-	  $(wildcard $(addsuffix .input,$(tests) $(test-srcs))	\
-	  $(addsuffix .args,$(tests) $(test-srcs)))
++tsrcs := Makefile $(+tsrcs) \
+	  $(addsuffix .c,$(others) $(tests) $(tests-static) $(test-srcs)) \
+	  $(wildcard $(addsuffix .input,$(tests) (tests-static) $(test-srcs)) \
+	  $(addsuffix .args,$(tests) $(tests-static) $(test-srcs)))
 +tardeps := $(strip $(+tsrcs))
 
 verbose = v

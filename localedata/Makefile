@@ -31,19 +31,19 @@ locales := $(filter-out $(addprefix locales/, CVS RCS %~), \
 				    $(wildcard locales/*))
 
 # List of repertoire maps.
-repertoires := $(filter-out $(addprefix repertoiremaps/, CVS RCS %~), \
-				    $(wildcard repertoiremaps/*))
+repertoiremaps := $(filter-out $(addprefix repertoiremaps/, CVS RCS %~), \
+					   $(wildcard repertoiremaps/*))
 
 test-srcs := collate-test xfrm-test tst-fmon tst-rpmatch
 test-input := de_DE.ISO-8859-1 da_DK.ISO-8859-1 fr_CA,2.13.ISO-8859-1
 test-output := $(foreach s, .out .xout, \
 			 $(addsuffix $s, $(basename $(test-input))))
-generated := $(test-input) $(test-output)
-generated-dirs := $(basename $(test-input)) en_US
-
 ld-test-names := test1 test2 test3 test4 test5
 ld-test-srcs := $(addprefix tests/,$(addsuffix .cm,$(ld-test-names)) \
 				   $(addsuffix .def,$(ld-test-names)))
+
+generated := $(test-input) $(test-output)
+generated-dirs := $(basename $(test-input)) en_US $(ld-test-names)
 
 distribute := CHECKSUMS tst-fmon.sh tst-fmon.data ChangeLog sort-test.sh \
 	      README fr_CA,2.13.in de_DE.in da_DK.in $(repertoiremaps)	 \

@@ -449,7 +449,7 @@ endif
 	     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.os=.o))) \
 	     $(addsuffix .d,$(tests) $(test-srcs) $(tests-static))
 ifeq ($(build-programs),yes)
-+depfiles += $(addsuffix .d,$(others))
++depfiles += $(addsuffix .d,$(others) $(sysdep-others))
 endif
 +depfiles := $(addprefix $(objpfx),\
 			 $(filter-out $(addsuffix .d,$(omit-deps)),\
@@ -885,10 +885,11 @@ mostlyclean: common-mostlyclean
 # Remove the object files.
 common-mostlyclean:
 	-rm -f $(addprefix $(objpfx),$(tests) $(test-srcs) $(others) \
-				     $(tests-static) stubs \
+				     $(sysdep-others) $(tests-static) stubs \
 				     $(addsuffix .o,$(tests) $(test-srcs) \
 						    $(tests-static) \
-						    $(others)) \
+						    $(others) \
+						    $(sysdep-others)) \
 				     $(addsuffix .out,$(tests) $(test-srcs)) \
 				     $(addsuffix .sout,$(tests-static)))
 	-rm -f $(addprefix $(objpfx),$(extra-objs) $(install-lib) \
@@ -957,7 +958,7 @@ echo > $@.new 'subdir := $(subdir)'
 $(foreach var,subdir-dirs sources elided-routines sysdep_routines \
 	      headers sysdep_headers distribute dont_distribute generated \
 	      others tests test-srcs extra-libs $(extra-libs:%=%-routines) \
-	      $(extra-libs:%=%-map) versioned \
+	      tests-static $(extra-libs:%=%-map) versioned \
 	      $(addprefix install-,lib lib.so data bin sbin others),
 echo >> $@.new '$(subdir)-$(var) := $($(var))'
 echo >> $@.new '$(var) = $$($(subdir)-$(var))')

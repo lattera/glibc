@@ -61,6 +61,9 @@ gpl2lgpl := getopt.c getopt1.c getopt.h	regex.c regex.h
 
 before-compile	:= testcases.h
 
+# So they get cleaned up.
+generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10)
+
 include ../Rules
 
 ifeq (no,$(cross-compiling))

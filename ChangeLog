@@ -1,3 +1,30 @@
+1998-05-08 16:36  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* iconvdata/Makefile (generated): Set to *-generated-headers
+	plus gconv-modules.
+	(tests): Set to iconv-test.
+	* localedata/Makefile (generated-dirs): Add ld-test-names to list.
+	* posix/Makefile (generated): Set to wordexp-test-result*.
+	* sunrpc/Makefile (generated): Remove rpcsvc/*.
+	(generated-dirs): Add rpcsvc.
+	* libio/Makefile: Clean up.
+
+1998-05-08 14:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Make-dist (+tsrcs): Also use tests-statc where tests is used.
+	* Makerules: Likewise.
+	(+depfiles): Also add sysdep-others.
+	* Rules: Likewise.
+	* iconv/Makefile (distribute): Add loop.s and skeleton.c.
+	* iconvdata/Makefile (distribute): Add TESTS.
+	* localedata/Makefile (repertoires): Rename to repertoiremaps.
+	* sysdeps/gnu/Dist: Add utmpx.h and bits/utmpx.h.
+	* sysdeps/unix/sysv/linux/Dist: Add ldd-rewrite.sed.
+	* sysdeps/unix/sysv/linux/i386/Makefile [subdir=elf]: Define
+	sysdep-others, not others.
+	* sysdeps/unix/sysv/linux/m68k/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/Dist: Add sys/kernel_termios.h.
+
 1998-05-08 12:26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv_int.h (struct gconv_module): Remove cost field and add

@@ -55,8 +55,7 @@ routines += clearerr_u feof_u ferror_u fputc_u getc_u getchar_u		      \
 CPPFLAGS += -D_IO_MTSAFE_IO
 endif
 
-aux	:=								      \
-	fileops genops stdfiles stdio strops
+aux	:= fileops genops stdfiles stdio strops
 
 ifeq ($(versioning),yes)
 aux	+= oldfileops oldstdfiles

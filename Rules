@@ -83,7 +83,7 @@ common-generated += dummy.o dummy.c empty.c \
 
 .PHONY: others tests
 ifeq ($(build-programs),yes)
-others: $(addprefix $(objpfx),$(others) $(extra-objs))
+others: $(addprefix $(objpfx),$(others) $(sysdep-others) $(extra-objs))
 else
 others: $(addprefix $(objpfx),$(extra-objs))
 endif
@@ -94,7 +94,7 @@ tests: $(tests:%=$(objpfx)%.out) $(tests-static:%=$(objpfx)%.sout)
 endif
 
 ifeq ($(build-programs),yes)
-binaries-all = $(others) $(tests) $(test-srcs)
+binaries-all = $(others) $(sysdep-others) $(tests) $(test-srcs)
 binaries-static = $(others-static) $(tests-static) $(test-srcs-static)
 else
 binaries-all = $(tests) $(test-srcs)

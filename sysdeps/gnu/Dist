@@ -1,1 +1,3 @@
 errlist.awk
+utmpx.h
+bits/utmpx.h

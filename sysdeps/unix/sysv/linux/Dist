@@ -5,6 +5,7 @@ init-first.h
 kernel_sigaction.h
 kernel_stat.h
 kernel_termios.h
+ldd-rewrite.sed
 lddlibc4.c
 llseek.c
 s_pread64.c
