@@ -262,7 +262,7 @@ _dl_show_auxv (void)
       static const struct
       {
 	const char label[20];
-	enum { unused, dec, hex, str } form;
+	enum { unknown = 0, dec, hex, str, ignore } form;
       } auxvars[] =
 	{
 	  [AT_EXECFD - 2] =		{ "AT_EXECFD:       ", dec },
@@ -285,13 +285,17 @@ _dl_show_auxv (void)
 	  [AT_DCACHEBSIZE - 2] =	{ "AT_DCACHEBSIZE:  0x", hex },
 	  [AT_ICACHEBSIZE - 2] =	{ "AT_ICACHEBSIZE:  0x", hex },
 	  [AT_UCACHEBSIZE - 2] =	{ "AT_UCACHEBSIZE:  0x", hex },
+	  [AT_IGNOREPPC - 2] =		{ "AT_IGNOREPPC", ignore },
+	  [AT_SECURE - 2] =		{ "AT_SECURE:       ", dec },
 #ifdef NEED_DL_SYSINFO
 	  [AT_SYSINFO - 2] =		{ "AT_SYSINFO:      0x", hex },
 	  [AT_SYSINFO_EHDR - 2] =	{ "AT_SYSINFO_EHDR: 0x", hex },
 #endif
-	  [AT_SECURE - 2] =		{ "AT_SECURE:       ", dec },
 	};
       unsigned int idx = (unsigned int) (av->a_type - 2);
+
+      if ((unsigned int) av->a_type < 2u || auxvars[idx].form == ignore)
+	continue;
 
       assert (AT_NULL == 0);
       assert (AT_IGNORE == 1);
@@ -304,7 +308,7 @@ _dl_show_auxv (void)
 	}
 
       if (idx < sizeof (auxvars) / sizeof (auxvars[0])
-	  && auxvars[idx].form != unused)
+	  && auxvars[idx].form != unknown)
 	{
 	  const char *val = av->a_un.a_ptr;
 
