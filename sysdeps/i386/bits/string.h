@@ -1,5 +1,5 @@
 /* Optimized, inlined string functions.  i386 version.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -470,7 +470,7 @@ strcmp (__const char *__s1, __const char *__s2)
      "jmp	3f\n"
      "2:\n\t"
      "sbbl	%%eax,%%eax\n\t"
-     "orb	$1,%%eax\n"
+     "orb	$1,%%al\n"
      "3:"
      : "=a" (__res), "=&S" (__d0), "=&D" (__d1)
      : "1" (__s1), "2" (__s2)
