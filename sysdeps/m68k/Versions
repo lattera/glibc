@@ -3,8 +3,4 @@ libc {
     # Functions from libgcc.
     __divdi3; __moddi3; __udivdi3; __umoddi3;
   }
-  GLIBC_2.1 {
-    # global variable
-    _fp_hw;
-  }
 }

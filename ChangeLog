@@ -1,3 +1,9 @@
+1999-01-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/Versions: Exports functions from libgcc sinc ethis
+	is what was done in glibc 2.0.
+	* sysdeps/m68k/Versions: Likewise.  New file.
+
 1999-01-28  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/wordsize-32/stdint.h (INT8_C, INT16_C, INT32_C, INT64_C,
