@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@cygnus.com>, 1998
 
@@ -28,55 +28,92 @@
 
 #ifdef __NR_rt_sigaction
 	.text
+
 ENTRY(__syscall_rt_sigaction)
 	.frame	sp,0,ra,0
-#ifdef PROF
 	ldgp	gp,0(pv)
+#ifdef PROF
 	.set noat
 	lda	AT, _mcount
 	jsr	AT, (AT), _mcount
 	.set at
 #endif
-	/* Indicate non-standard use of our PV.  */
-	.prologue 2
+	.prologue 1
 
 	beq	a1, 0f
-	ldl	t0, 8(a1)				# sa_flags
-	lda	a4, sigreturn-__syscall_rt_sigaction(pv)
-	lda	t1, rt_sigreturn-__syscall_rt_sigaction(pv)
-	and	t0, 0x00000040, t0			# SA_SIGINFO
+	ldl	t0, 8(a1)			# sa_flags
+	ldah	a4, sigreturn(gp)		!gprelhigh
+	ldah	t1, rt_sigreturn(gp)		!gprelhigh
+	lda	a4, sigreturn(a4)		!gprellow
+	lda	t1, rt_sigreturn(a4)		!gprellow
+	and	t0, 0x00000040, t0		# SA_SIGINFO
 	cmovne	t0, t1, a4
-0:	ldi	v0,__NR_rt_sigaction
+0:	ldi	v0, __NR_rt_sigaction
 	callsys
-	bne	a3,1f
+	bne	a3, SYSCALL_ERROR_LABEL
 	ret
 
-1:
-#ifndef PROF
-	br	gp,2f
-2:	ldgp	gp,0(gp)
-#endif
-	SYSCALL_ERROR_HANDLER
+PSEUDO_END(__syscall_rt_sigaction)
 
-END(__syscall_rt_sigaction)
+/* To enable unwinding through the signal frame without special hackery
+   elsewhere, describe the entire struct sigcontext with unwind info.
+   Note that we begin the unwind info one instruction before the start
+   of the function; the unwinder will subtract one from the return address
+   attempting to find the call instruction that led us here, since we
+   didn't get here via a normal call.  */
 
-	.align	5
-	.ent	sigreturn
-sigreturn:
-	.prologue 0
-	mov	sp,a0
-	ldi	v0,__NR_sigreturn
-	callsys
-	.end	sigreturn
+	.macro SIGCONTEXT_REGS_I base, from=0
+	cfi_offset (\from, \base + (4 + \from) * 8)
+	.if	30-\from
+	SIGCONTEXT_REGS_I \base, "(\from+1)"
+	.endif
+	.endm
+
+	.macro SIGCONTEXT_REGS_F base, from=32
+	cfi_offset (\from, \base + (4 + 1 + \from) * 8)
+	.if	62-\from
+	SIGCONTEXT_REGS_F \base, "(\from+1)"
+	.endif
+	.endm
+
+	.macro SIGCONTEXT_REGS base
+	SIGCONTEXT_REGS_I \base
+	SIGCONTEXT_REGS_F \base
+	cfi_offset (63, \base + (4 + 32 + 1 + 32) * 8)
+	cfi_offset (64, \base + 2 * 8)
+	.endm
 
 	.align	4
-	.ent	rt_sigreturn
+	nop
+	nop
+	nop
+
+	cfi_startproc
+	cfi_return_column (64)
+	SIGCONTEXT_REGS -648
+	cfi_def_cfa_offset (648)
+	nop
+sigreturn:
+	mov	sp, a0
+	ldi	v0, __NR_sigreturn
+	callsys
+	cfi_endproc
+	.size	sigreturn, .-sigreturn
+	.type	sigreturn, @function
+
+	cfi_startproc
+	cfi_return_column (64)
+	SIGCONTEXT_REGS -648
+	cfi_def_cfa_offset (176 + 648)
+	nop
 rt_sigreturn:
-	.prologue 0
 	mov	sp,a0
 	ldi	v0,__NR_rt_sigreturn
 	callsys
-	.end	rt_sigreturn
+	cfi_endproc
+	.size	rt_sigreturn, .-rt_sigreturn
+	.type	rt_sigreturn, @function
+
 #else
 ENTRY(__syscall_rt_sigaction)
 	ldgp $29,0($27)

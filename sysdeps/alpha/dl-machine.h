@@ -303,6 +303,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	.globl _start						\n\
 	.ent _start						\n\
 _start:								\n\
+	.frame $31,0,$31,0					\n\
 	br	$gp, 0f						\n\
 0:	ldgp	$gp, 0($gp)					\n\
 	.prologue 0						\n\
@@ -314,7 +315,7 @@ _start:								\n\
 	.globl _dl_start_user					\n\
 	.ent _dl_start_user					\n\
 _dl_start_user:							\n\
-	.frame $30,0,$31,0					\n\
+	.frame $31,0,$31,0					\n\
 	.prologue 0						\n\
 	/* Save the user entry point address in s0.  */		\n\
 	mov	$0, $9						\n\

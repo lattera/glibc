@@ -1,5 +1,6 @@
 /* Startup code for Alpha/ELF.
-   Copyright (C) 1993,1995,1996,1997,1998,2000,2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1995, 1996, 1997, 1998, 2000, 2001, 2002, 2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>
 
@@ -26,8 +27,7 @@
 	.ent _start, 0
 	.type _start,@function
 _start:
-	.frame fp, 0, zero
-	mov	zero, fp
+	.frame	$31, 0, $31
 	br	gp, 1f
 1:	ldgp	gp, 0(gp)
 	subq	sp, 16, sp
@@ -65,6 +65,5 @@ weak_alias(_start, __start)
 	.data
 	.globl __data_start
 __data_start:
-	.long 0
 	.weak data_start
 	data_start = __data_start

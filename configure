@@ -5736,6 +5736,7 @@ else
         .type   func,@function
 func:
         .cfi_startproc
+	.cfi_remember_state
         .cfi_endproc
 EOF
 if { ac_try='${CC-cc} $ASFLAGS -c conftest.s 1>&5'

@@ -49,13 +49,19 @@
 
 /* Makros to generate eh_frame unwind information.  */
 # ifdef HAVE_ASM_CFI_DIRECTIVES
-#  define cfi_startproc	.cfi_startproc
-#  define cfi_endproc	.cfi_endproc
-#  define cfi_def_cfa(reg, off)	.cfi_def_cfa reg, off
+#  define cfi_startproc			.cfi_startproc
+#  define cfi_endproc			.cfi_endproc
+#  define cfi_def_cfa(reg, off)		.cfi_def_cfa reg, off
 #  define cfi_def_cfa_register(reg)	.cfi_def_cfa_register reg
 #  define cfi_def_cfa_offset(off)	.cfi_def_cfa_offset off
 #  define cfi_adjust_cfa_offset(off)	.cfi_adjust_cfa_offset off
-#  define cfi_offset(reg, off)	.cfi_offset reg, off
+#  define cfi_offset(reg, off)		.cfi_offset reg, off
+#  define cfi_register(r1, r2)		.cfi_register r1, r2
+#  define cfi_return_column(reg)	.cfi_return_column reg
+#  define cfi_restore(reg)		.cfi_restore reg
+#  define cfi_undefined(reg)		.cfi_undefined reg
+#  define cfi_remember_state		.cfi_remember_state
+#  define cfi_restore_state		.cfi_restore_state
 # else
 #  define cfi_startproc
 #  define cfi_endproc
@@ -64,6 +70,12 @@
 #  define cfi_def_cfa_offset(off)
 #  define cfi_adjust_cfa_offset(off)
 #  define cfi_offset(reg, off)
+#  define cfi_register(r1, r2)
+#  define cfi_return_column(reg)
+#  define cfi_restore(reg)
+#  define cfi_undefined(reg)
+#  define cfi_remember_state
+#  define cfi_restore_state
 # endif
 
 #else /* ! ASSEMBLER */
@@ -82,6 +94,18 @@
    ".cfi_adjust_cfa_offset " CFI_STRINGIFY(off)
 #  define CFI_OFFSET(reg, off) \
    ".cfi_offset " CFI_STRINGIFY(reg) "," CFI_STRINGIFY(off)
+#  define CFI_REGISTER(r1, r2) \
+   ".cfi_register " CFI_STRINGIFY(r1) "," CFI_STRINGIFY(r2)
+#  define CFI_RETURN_COLUMN(reg) \
+   ".cfi_return_column " CFI_STRINGIFY(reg)
+#  define CFI_RESTORE(reg) \
+   ".cfi_restore " CFI_STRINGIFY(reg)
+#  define CFI_UNDEFINED(reg) \
+   ".cfi_undefined " CFI_STRINGIFY(reg)
+#  define CFI_REMEMBER_STATE \
+   ".cfi_remember_state"
+#  define CFI_RESTORE_STATE \
+   ".cfi_restore_state"
 # else
 #  define CFI_STARTPROC
 #  define CFI_ENDPROC
@@ -90,6 +114,12 @@
 #  define CFI_DEF_CFA_OFFSET(off)
 #  define CFI_ADJUST_CFA_OFFSET(off)
 #  define CFI_OFFSET(reg, off)
+#  define CFI_REGISTER(r1, r2)
+#  define CFI_RETURN_COLUMN(reg)
+#  define CFI_RESTORE(reg)
+#  define CFI_UNDEFINED(reg)
+#  define CFI_REMEMBER_STATE
+#  define CFI_RESTORE_STATE
 # endif
 
 #endif /* __ASSEMBLER__ */
