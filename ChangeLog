@@ -9,6 +9,16 @@
 
 2002-09-30  Andreas Jaeger  <aj@suse.de>
 
+	* stdlib/tst-bsearch.c (main): Fix format strings.
+	* stdio-common/tst-rndseek.c (do_test): Likewise.
+	* libio/tst_swprintf.c (main): Likewise.
+	* catgets/tst-catgets.c (main): Likewise.
+	* libio/tst-fgetws.c (main): Likewise.
+	* posix/tst-mmap.c (main): Likewise.
+	* posix/bug-regex12.c (main): Likewise.
+	* posix/bug-regex11.c (main): Likewise.
+	* io/tst-getcwd.c (do_test): Likewise.
+
 	* iconvdata/tst-e2big.c (test): Use %td in printf for ptrdiff_t.
 
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (SYSCALL_ERROR_HANDLER):
