@@ -55,6 +55,10 @@ _dl_load_cache_lookup (const char *name)
   unsigned int i;
   const char *best;
 
+  /* Print a message if the loading of libs is traced.  */
+  if (_dl_debug_libs)
+    _dl_sysdep_message ("\t search cache=", LD_SO_CACHE, "\n", NULL);
+
   if (cache == NULL)
     {
       /* Read the contents of the file.  */
@@ -99,5 +103,10 @@ _dl_load_cache_lookup (const char *name)
 	      break;
 	  }
       }
+
+  /* Print our result if wanted.  */
+  if (_dl_debug_libs && best != NULL)
+    _dl_sysdep_message ("\t  trying file=", best, "\n", NULL);
+
   return best;
 }

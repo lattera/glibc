@@ -106,6 +106,10 @@ struct r_search_path_elem
     size_t machdirnamelen;
     enum r_dir_status machdirstatus;
 
+    /* Strings saying where the definition came from.  */
+    const char *what;
+    const char *where;
+
     /* This link is only used in the `all_dirs' member of `r_search_path'.  */
     struct r_search_path_elem *next;
   };
@@ -237,6 +241,9 @@ extern int _dl_zerofd;
 extern const char *_dl_profile;
 /* Map of shared object to be profiled.  */
 extern struct link_map *_dl_profile_map;
+
+/* If nonzero the appropriate debug information if printed.  */
+extern int _dl_debug_libs;
 
 /* OS-dependent function to open the zero-fill device.  */
 extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
@@ -460,6 +467,10 @@ extern void _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc);
 
 /* Show the members of the auxiliary array passed up from the kernel.  */
 extern void _dl_show_auxv (void);
+
+/* Return all environment variables starting with `LD_', one after the
+   other.  */
+extern char *_dl_next_ld_env_entry (char ***position);
 
 __END_DECLS
 

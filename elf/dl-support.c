@@ -35,6 +35,7 @@ const char *_dl_rpath = DEFAULT_RPATH;
 /* Name of the architecture.  */
 const char *_dl_platform;
 size_t _dl_platformlen;
+int _dl_debug_libs;
 
 /* If nonzero print warnings about problematic situations.  */
 int _dl_verbose;

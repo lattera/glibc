@@ -142,7 +142,7 @@ $(objpfx)trusted-dirs.h: Makefile
 	   echo "  \"$$dir\",";						      \
 	 done;) > $@T
 	mv -f $@T $@
-$(objpfx)rtldtbl.h: Makefile
+$(objpfx)rtldtbl.h: Makefile genrtldtbl.awk
 	$(make-target-directory)
 	echo "$(default-rpath)" | awk -f genrtldtbl.awk > $@T
 	mv -f $@T $@

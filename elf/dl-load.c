@@ -92,6 +92,9 @@ ELF_PREFERRED_ADDRESS_DATA;
 
 size_t _dl_pagesize;
 
+/* Arguments passed to the dynamic linker.  */
+extern char **_dl_argv;
+
 extern const char *_dl_platform;
 extern size_t _dl_platformlen;
 
@@ -163,7 +166,7 @@ static size_t max_dirnamelen;
 
 static inline struct r_search_path_elem **
 fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
-	      const char **trusted)
+	      const char **trusted, const char *what, const char *where)
 {
   char *cp;
   size_t nelems = 0;
@@ -268,6 +271,9 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 		max_dirnamelen = dirp->dirnamelen;
 	    }
 
+	  dirp->what = what;
+	  dirp->where = where;
+
 	  dirp->next = all_dirs;
 	  all_dirs = dirp;
 
@@ -284,7 +290,8 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 
 
 static struct r_search_path_elem **
-decompose_rpath (const char *rpath, size_t additional_room)
+decompose_rpath (const char *rpath, size_t additional_room,
+		 const char *what, const char *where)
 {
   /* Make a copy we can work with.  */
   char *copy = strdupa (rpath);
@@ -305,7 +312,7 @@ decompose_rpath (const char *rpath, size_t additional_room)
   if (result == NULL)
     _dl_signal_error (ENOMEM, NULL, "cannot create cache for search path");
 
-  return fillin_rpath (copy, result, ":", NULL);
+  return fillin_rpath (copy, result, ":", NULL, what, where);
 }
 
 
@@ -358,7 +365,7 @@ _dl_init_paths (const char *llp)
 	    decompose_rpath ((const char *)
 			     (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr
 			      + l->l_info[DT_RPATH]->d_un.d_val),
-			     nllp);
+			     nllp, "RPATH", l->l_name);
 	}
       else
 	{
@@ -394,7 +401,8 @@ _dl_init_paths (const char *llp)
 	  /* We need to take care that the LD_LIBRARY_PATH environment
 	     variable can contain a semicolon.  */
 	  (void) fillin_rpath (copy, result, ":;",
-			       __libc_enable_secure ? trusted_dirs : NULL);
+			       __libc_enable_secure ? trusted_dirs : NULL,
+			       "LD_LIBRARY_PATH", NULL);
 	}
     }
   else
@@ -415,7 +423,8 @@ _dl_init_paths (const char *llp)
 			      "cannot create cache for search path");
 
 	  (void) fillin_rpath (local_strdup (llp), fake_path_list, ":;",
-			       __libc_enable_secure ? trusted_dirs : NULL);
+			       __libc_enable_secure ? trusted_dirs : NULL,
+			       "LD_LIBRARY_PATH", NULL);
 	}
     }
 
@@ -454,6 +463,9 @@ _dl_init_paths (const char *llp)
 	  if (max_dirnamelen < relem->dirnamelen)
 	    max_dirnamelen = relem->dirnamelen;
 	}
+
+      relem->what = "system search path";
+      relem->where = NULL;
     }
 }
 
@@ -789,6 +801,41 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
   return l;
 }
 
+/* Print search path.  */
+static void
+print_search_path (struct r_search_path_elem **list,
+                   const char *what, const char *name)
+{
+  int first = 1;
+
+  _dl_sysdep_message ("\t search path=", NULL);
+
+  while (*list != NULL && (*list)->what == what) /* Yes, ==.  */
+    {
+      char *buf = strdupa ((*list)->dirname);
+
+      if ((*list)->machdirstatus != nonexisting)
+	{
+	  buf[(*list)->machdirnamelen - 1] = '\0';
+	  _dl_sysdep_message (first ? "" : ":", buf, NULL);
+	  first = 0;
+	}
+      if ((*list)->dirstatus != nonexisting)
+	{
+	  buf[(*list)->dirnamelen - 1] = '\0';
+	  _dl_sysdep_message (first ? "" : ":", buf, NULL);
+	  first = 0;
+	}
+      ++list;
+    }
+
+  if (name != NULL)
+    _dl_sysdep_message ("\t\t(", what, " from file ",
+			name[0] ? name : _dl_argv[0], ")\n", NULL);
+  else
+    _dl_sysdep_message ("\t\t(", what, ")\n", NULL);
+}
+
 /* Try to open NAME in one of the directories in DIRS.
    Return the fd, or -1.  If successful, fill in *REALNAME
    with the malloc'd full directory name.  */
@@ -800,6 +847,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 {
   char *buf;
   int fd = -1;
+  const char *current_what = NULL;
 
   if (dirs == NULL || *dirs == NULL)
     {
@@ -813,6 +861,14 @@ open_path (const char *name, size_t namelen, int preloaded,
       struct r_search_path_elem *this_dir = *dirs;
       size_t buflen = 0;
 
+      /* If we are debugging the search for libraries print the path
+	 now if it hasn't happened now.  */
+      if (_dl_debug_libs && current_what != this_dir->what)
+	{
+	  current_what = this_dir->what;
+	  print_search_path (dirs, current_what, this_dir->where);
+	}
+
       if (this_dir->machdirstatus != nonexisting)
 	{
 	  /* Construct the pathname to try.  */
@@ -820,6 +876,10 @@ open_path (const char *name, size_t namelen, int preloaded,
 						   this_dir->machdirnamelen),
 					name, namelen)
 		    - buf);
+
+          /* Print name we try if this is wanted.  */
+	  if (_dl_debug_libs)
+	    _dl_sysdep_message ("\t  trying file=", buf, "\n", NULL);
 
 	  fd = __open (buf, O_RDONLY);
 	  if (this_dir->machdirstatus == unknown)
@@ -871,6 +931,10 @@ open_path (const char *name, size_t namelen, int preloaded,
 						   this_dir->dirnamelen),
 					name, namelen)
 		    - buf);
+
+	  /* Print name we try if this is wanted.  */
+	  if (_dl_debug_libs)
+	    _dl_sysdep_message ("\t  trying file=", buf, "\n", NULL);
 
 	  fd = __open (buf, O_RDONLY);
 	  if (this_dir->dirstatus == unknown)
@@ -988,6 +1052,9 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       size_t namelen = strlen (name) + 1;
 
+      if (_dl_debug_libs)
+	_dl_sysdep_message ("\tfind library=", name, "; searching\n", NULL);
+
       fd = -1;
 
       /* First try the DT_RPATH of the dependent object that caused NAME
@@ -1002,7 +1069,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 				 + l->l_info[DT_STRTAB]->d_un.d_ptr
 				 + l->l_info[DT_RPATH]->d_un.d_val);
 		l->l_rpath_dirs =
-		  decompose_rpath ((const char *) ptrval, 0);
+		  decompose_rpath ((const char *) ptrval, 0,
+				   "RPATH", l->l_name);
 	      }
 
 	    if (l->l_rpath_dirs != (struct r_search_path_elem **) -1l)
@@ -1046,6 +1114,10 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       /* Finally, try the default path.  */
       if (fd == -1)
 	fd = open_path (name, namelen, preloaded, rtld_search_dirs, &realname);
+
+      /* Add another newline when we a tracing the library loading.  */
+      if (_dl_debug_libs)
+        _dl_sysdep_message ("\n", NULL);
     }
   else
     {

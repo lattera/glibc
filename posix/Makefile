@@ -52,7 +52,7 @@ routines :=								      \
 	pread pwrite pread64 pwrite64
 
 aux		:= init-posix environ
-tests		:= tstgetopt testfnm runtests
+tests		:= tstgetopt testfnm runtests wordexp-test
 test-srcs	:= globtest
 others		:= getconf
 install-bin	:= getconf

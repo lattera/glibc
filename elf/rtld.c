@@ -73,6 +73,7 @@ struct r_search_path *_dl_search_paths;
 const char *_dl_profile;
 const char *_dl_profile_output;
 struct link_map *_dl_profile_map;
+int _dl_debug_libs;
 
 /* Set nonzero during loading and initialization of executable and
    libraries, cleared before the executable's entry point runs.  This
@@ -906,6 +907,45 @@ print_missing_version (int errcode __attribute__ ((unused)),
 		    objname, ": ", errstring, "\n", NULL);
 }
 
+/* Process the string given as the parameter which explains which debugging
+   options are enabled.  */
+static void
+process_dl_debug (char *dl_debug)
+{
+  do
+    {
+#define issep(Ch) ((Ch) == ' ' || (Ch) == ',')
+      /* Skip separating white spaces and commas.  */
+      while (issep (*dl_debug))
+	++dl_debug;
+      if (*dl_debug != '\0')
+	{
+	  if (strncmp (dl_debug, "libs", 4) == 0
+	      && (issep (dl_debug[4]) || dl_debug[4] == '\0'))
+	    {
+	      _dl_debug_libs = 1;
+	      dl_debug += 4;
+	    }
+	  else if (strncmp (dl_debug, "help", 4) == 0
+		   && (issep (dl_debug[4]) || dl_debug[4] == '\0'))
+	    {
+	      _dl_sysdep_message ("\
+Valid options for the DL_DEBUG environment variable are:\n\
+\n\
+  help    display this help message and exit
+  libs    display library search paths\n", NULL);
+	      _exit (0);
+	    }
+	  else
+	    /* Skip everything until next separator.  */
+	    do
+	      ++dl_debug;
+	    while (*dl_debug != '\0' && !issep (*dl_debug));
+	}
+    }
+  while (*dl_debug != '\0');
+}
+
 /* Process all environments variables the dynamic linker must recognize.
    Since all of them start with `LD_' we are a bit smarter while finding
    all the entries.  */
@@ -929,6 +969,16 @@ process_envvars (enum mode *modep, int *lazyp)
       if (result == 0)
 	{
 	  bind_now = 1;
+	  continue;
+	}
+      if (result < 0)
+	continue;
+
+      /* Debugging of the dynamic linker?  */
+      result = strncmp (&envline[3], "DEBUG=", 6);
+      if (result == 0)
+	{
+	  process_dl_debug (&envline[9]);
 	  continue;
 	}
       if (result < 0)
