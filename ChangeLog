@@ -1,5 +1,8 @@
 2003-07-28  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/generic/bits/types.h (__STD_TYPE): New macro.
+	Use that instead of `typedef' when using __*_TYPE macros in rhs.
+
 	* elf/tst-tls14.c [USE_TLS && HAVE___THREAD]: Conditionalize on this.
 	* elf/tst-tlsmod14a.c: Likewise.
 
