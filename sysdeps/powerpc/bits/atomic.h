@@ -143,8 +143,8 @@ typedef uintmax_t uatomic_max_t;
     __typeof (*mem) __val;						      \
     __asm __volatile (__ARCH_REL_INSTR "\n"				      \
 		      "1:	lwarx	%0,0,%2\n"			      \
-		      "	stwcx.	%3,0,%2\n"				      \
-		      "	bne-	1b"					      \
+		      "		stwcx.	%3,0,%2\n"			      \
+		      "		bne-	1b"				      \
 		      : "=&r" (__val), "=m" (*mem)			      \
 		      : "r" (mem), "r" (value), "1" (*mem)		      \
 		      : "cr0");						      \
@@ -155,11 +155,11 @@ typedef uintmax_t uatomic_max_t;
   ({									      \
     __typeof (*mem) __val, __tmp;					      \
     __asm __volatile ("1:	lwarx	%0,0,%3\n"			      \
-		      "	addi	%1,%0,%4\n"				      \
-		      "	stwcx.	%1,0,%3\n"				      \
-		      "	bne-	1b"					      \
+		      "		add	%1,%0,%4\n"			      \
+		      "		stwcx.	%1,0,%3\n"			      \
+		      "		bne-	1b"				      \
 		      : "=&b" (__val), "=&r" (__tmp), "=m" (*mem)	      \
-		      : "r" (mem), "I" (value), "2" (*mem)		      \
+		      : "r" (mem), "r" (value), "2" (*mem)		      \
 		      : "cr0");						      \
     __val;								      \
   })

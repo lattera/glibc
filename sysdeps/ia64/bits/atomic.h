@@ -75,23 +75,26 @@ typedef uintmax_t uatomic_max_t;
 
 /* Atomically store newval and return the old value.  */
 #define atomic_exchange(mem, value) \
-  __sync_lock_test_and_set_si (mem, value)
+  ({ __typeof (*mem) __result;						      \
+     if (sizeof (*mem) == 4)						      \
+       __result = __sync_lock_test_and_set_si ((int *) (mem), (int) (value)); \
+     else if (sizeof (*mem) == 8)					      \
+       __result = __sync_lock_test_and_set_di ((long *) (mem),		      \
+					       (long) (value));		      \
+     else								      \
+       abort ();							      \
+     __result; })
+       
 
 #define atomic_exchange_and_add(mem, value) \
-  ({ __typeof (*mem) __oldval, __val;					      \
-     __typeof (mem) __memp = (mem);					      \
-     __typeof (*mem) __value = (value);					      \
-									      \
-     __val = (*__memp);							      \
-     do									      \
-       {								      \
-	 __oldval = __val;						      \
-	 __val = atomic_compare_and_exchange_val_acq (__memp,		      \
-						      __oldval + __value,     \
-						      __oldval);	      \
-       }								      \
-     while (__builtin_expect (__val != __oldval, 0));			      \
-     __oldval; })
+  ({ __typeof (*mem) __result;						      \
+     if (sizeof (*mem) == 4)						      \
+       __result = __sync_fetch_and_add_si ((int *) (mem), (int) (value));     \
+     else if (sizeof (*mem) == 8)					      \
+       __result = __sync_fetch_and_add_di ((long *) (mem), (long) (value));   \
+     else								      \
+       abort ();							      \
+     __result; })
 
 #define atomic_decrement_if_positive(mem) \
   ({ __typeof (*mem) __oldval, __val;					      \

@@ -48,6 +48,22 @@ do_test (void)
       puts ("atomic_compare_and_exchange_val_acq test 2 failed");
       ret = 1;
     }
+
+  mem = -15;
+  if (atomic_compare_and_exchange_val_acq (&mem, -56, -15) != -15
+      || mem != -56)
+    {
+      puts ("atomic_compare_and_exchange_val_acq test 3 failed");
+      ret = 1;
+    }
+
+  mem = -1;
+  if (atomic_compare_and_exchange_val_acq (&mem, 17, 0) != -1
+      || mem != -1)
+    {
+      puts ("atomic_compare_and_exchange_val_acq test 4 failed");
+      ret = 1;
+    }
 #endif
 
   mem = 24;
@@ -63,6 +79,22 @@ do_test (void)
       || mem != 12)
     {
       puts ("atomic_compare_and_exchange_bool_acq test 2 failed");
+      ret = 1;
+    }
+
+  mem = -15;
+  if (atomic_compare_and_exchange_bool_acq (&mem, -56, -15)
+      || mem != -56)
+    {
+      puts ("atomic_compare_and_exchange_bool_acq test 3 failed");
+      ret = 1;
+    }
+
+  mem = -1;
+  if (! atomic_compare_and_exchange_bool_acq (&mem, 17, 0)
+      || mem != -1)
+    {
+      puts ("atomic_compare_and_exchange_bool_acq test 4 failed");
       ret = 1;
     }
 
@@ -150,7 +182,7 @@ do_test (void)
   if (! atomic_decrement_and_test (&mem)
       || mem != 0)
     {
-      puts ("atomic_decrement_and_test test 1 failed");
+      puts ("atomic_decrement_and_test test 3 failed");
       ret = 1;
     }
 
@@ -202,6 +234,30 @@ do_test (void)
       ret = 1;
     }
 
+  mem = -12;
+  if (atomic_add_negative (&mem, 14)
+      || mem != 2)
+    {
+      puts ("atomic_add_negative test 4 failed");
+      ret = 1;
+    }
+
+  mem = 0;
+  if (! atomic_add_negative (&mem, -1)
+      || mem != -1)
+    {
+      puts ("atomic_add_negative test 5 failed");
+      ret = 1;
+    }
+
+  mem = -31;
+  if (atomic_add_negative (&mem, 31)
+      || mem != 0)
+    {
+      puts ("atomic_add_negative test 6 failed");
+      ret = 1;
+    }
+
   mem = -34;
   if (atomic_add_zero (&mem, 31)
       || mem != -3)
@@ -223,6 +279,30 @@ do_test (void)
       || mem != 100)
     {
       puts ("atomic_add_zero test 3 failed");
+      ret = 1;
+    }
+
+  mem = -18;
+  if (atomic_add_zero (&mem, 20)
+      || mem != 2)
+    {
+      puts ("atomic_add_zero test 4 failed");
+      ret = 1;
+    }
+
+  mem = 10;
+  if (atomic_add_zero (&mem, -20)
+      || mem != -10)
+    {
+      puts ("atomic_add_zero test 5 failed");
+      ret = 1;
+    }
+
+  mem = 10;
+  if (! atomic_add_zero (&mem, -10)
+      || mem != 0)
+    {
+      puts ("atomic_add_zero test 6 failed");
       ret = 1;
     }
 

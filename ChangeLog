@@ -1,3 +1,26 @@
+2003-03-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* csu/tst-atomic.c (do_test): Add some new
+	atomic_compare_and_exchange_val_acq, atomic_add_zero,
+	atomic_compare_and_exchange_bool_acq and atomic_add_negative tests.
+	* include/atomic.h (atomic_add_negative, atomic_add_zero):
+	Prefix local variable so that it doesn't clash with the one
+	in atomic_exchange_and_add.
+	* sysdeps/ia64/bits/atomic.h (atomic_exchange): Fix for long/void *
+	pointers.
+	(atomic_exchange_and_add): Implement using __sync_fetch_and_add_?i.
+	* sysdeps/powerpc/bits/atomic.h (atomic_exchange_and_add): Force
+	value into register.
+	* sysdeps/s390/bits/atomic.h (__arch_compare_and_exchange_val_64_acq):
+	Cast newval to long.
+	* sysdeps/x86_64/bits/atomic.h
+	(__arch_compare_and_exchange_val_64_acq): Cast newval and oldval to
+	long.
+	(atomic_exchange): Cast newvalue to long if sizeof == 8.
+	(atomic_exchange_and_add): Cast value to long if sizeof == 8.
+	(atomic_add, atomic_add_negative, atomic_add_zero): Likewise.
+	(atomic_bit_set): Shift 1L up in all cases to shut up warnings.
+
 2003-03-21  Martin Schwidefsky  <schwidefskyde.ibm.com>
 
 	* sysdeps/s390/s390-32/backtrace.c (__backtrace): Remove high order

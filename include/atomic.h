@@ -188,16 +188,16 @@
 
 
 #ifndef atomic_add_negative
-# define atomic_add_negative(mem, value) \
-  ({ __typeof (value) __value = (value);				      \
-     atomic_exchange_and_add ((mem), __value) < -__value; })
+# define atomic_add_negative(mem, value)				      \
+  ({ __typeof (value) __aan_value = (value);				      \
+     atomic_exchange_and_add ((mem), __aan_value) < -__aan_value; })
 #endif
 
 
 #ifndef atomic_add_zero
-# define atomic_add_zero(mem, value) \
-  ({ __typeof (value) __value = (value);				      \
-     atomic_exchange_and_add ((mem), __value) == -__value; })
+# define atomic_add_zero(mem, value)					      \
+  ({ __typeof (value) __aaz_value = (value);				      \
+     atomic_exchange_and_add ((mem), __aaz_value) == -__aaz_value; })
 #endif
 
 
