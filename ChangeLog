@@ -1,3 +1,7 @@
+2003-05-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/get_clockfreq.c: New file.
+
 2003-05-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/thread-m.h: Remove special handling of thread_atfork if

@@ -393,7 +393,13 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 		      MAP_PRIVATE | MAP_ANONYMOUS | ARCH_MAP_FLAGS, -1, 0);
 
 	  if (__builtin_expect (mem == MAP_FAILED, 0))
-	    return errno;
+	    {
+#ifdef ARCH_RETRY_MMAP
+	      mem = ARCH_RETRY_MMAP (size);
+	      if (__builtin_expect (mem == MAP_FAILED, 0))
+#endif
+		return errno;
+	    }
 
 	  /* SIZE is guaranteed to be greater than zero.
 	     So we can never get a null pointer back from mmap.  */

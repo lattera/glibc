@@ -1,3 +1,12 @@
+2003-05-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (allocate_stack): If ARCH_RETRY_MMAP is defined,
+	use it in case mmap to allocate the stack fails.
+	* sysdeps/unix/sysv/linux/x86_64/Makefile: Don't define
+	ARCH_MAP_FLAGS here.
+	* sysdeps/x86_64/pthreaddef.h: Define ARCH_MAP_FLAGS and
+	ARCH_RETRY_MMAP.
+
 2003-05-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fork.c: Complete rewrite of the atfork
