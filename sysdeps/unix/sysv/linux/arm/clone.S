@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Pat Beirne <patb@corelcomputer.com>
 
@@ -45,20 +45,17 @@ ENTRY(__clone)
 	mov	r0, r2
 	@ new sp is already in r1
 	swi	SYS_ify(clone)
-	cmp	r0, #0
-	blt	PLTJMP(syscall_error)
-	beq	thread_start
-	@ else, thread was launched...
-	mov	pc, lr
+	cmn	a1, $4096
+	bhs	PLTJMP(C_SYMBOL_NAME(__syscall_error))
+	RETINSTR(movne,pc,lr)
 
-thread_start:
 	@ pick the function arg and call address off the stack and execute
 	ldr	r0, [sp, #4]
 	mov	lr, pc
 	ldr 	pc, [sp]
 
 	@ and we are done, passing the return value through r0
-	bl	PLTJMP(_exit)
+	b	PLTJMP(_exit)
 
 PSEUDO_END (__clone)
 
