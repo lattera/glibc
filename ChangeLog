@@ -1,5 +1,6 @@
 2001-12-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/Makefile (tests): Add tst-sprintf.
 	* stdio-common/tst-sprintf.c: New file.
 
 2001-12-13  Andreas Schwab  <schwab@suse.de>
