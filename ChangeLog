@@ -1,5 +1,8 @@
 1999-08-06  Ulrich Drepper  <drepper@cygnus.com>
 
+	* string/string-inlines.c: Undefined __USE_STRING_INLINES before
+	defining it.
+
 	* inet/Makefile (tests): Add tst-ipnode.
 	* inet/tst-ipnode.c: New file.
 

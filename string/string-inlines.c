@@ -20,9 +20,9 @@
     functions.  These functions are declared additionally here if
     inlining is not possible.  */
 
+#undef __USE_STRING_INLINES
 #define __USE_STRING_INLINES
 #define _FORCE_INLINES
 #define __STRING_INLINE /* empty */
 
 #include <string.h>
-
