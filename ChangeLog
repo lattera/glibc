@@ -1,3 +1,9 @@
+Wed Jan 10 10:11:39 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* time/africa, time/antarctica, time/asia, time/australasia,
+ 	time/europe, time/northamerica, time/pacificnew, time/solar87,
+ 	time/solar88, time/solar89, time/southamerica: Updated from ADO 96a.
+
 Tue Jan  9 16:10:26 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): After mapping first
