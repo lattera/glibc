@@ -336,7 +336,8 @@ add_dir (const char *line)
 
   if (stat64 (entry->path, &stat_buf))
     {
-      error (0, errno, _("Can't stat %s"), entry->path);
+      if (opt_verbose)
+	error (0, errno, _("Can't stat %s"), entry->path);
       free (entry->path);
       free (entry);
       return;
@@ -688,7 +689,8 @@ search_dir (const struct dir_entry *entry)
 	     a directory. */
 	  if (stat64 (real_file_name, &stat_buf))
 	    {
-	      error (0, errno, _("Can't stat %s"), file_name);
+	      if (opt_verbose)
+		error (0, errno, _("Can't stat %s"), file_name);
 	      continue;
 	    }
 	  is_dir = S_ISDIR (stat_buf.st_mode);
