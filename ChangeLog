@@ -1,3 +1,23 @@
+Mon Oct  7 14:51:52 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/pipestream.c: New file to avoid use of
+	sysdeps/unix/pipestream.c. 
+
+	* sysdeps/mach/hurd/readdir_r.c: New file, guts copied entirely
+	from sysdeps/mach/hurd/readdir.c.
+
+	* stdio/freopen.c: Complete de-ansideclification.
+	* stdio/fgets.c (fgets): Likewise.
+	* stdio/getdelim.c (__getdelim): Likewise.
+	* sysdeps/posix/pipestream.c (readdecl, writedecl, seekdecl,
+	popen):
+	Likewise. 
+	* sysdeps/unix/bsd/tcflow.c (tcflow): Likewise.
+	* sysdeps/unix/bsd/tcflush.c (tcflush): Likewise.
+
+	* sysdeps/mach/hurd/wait4.c (__wait4): Allow a null value for
+	STAT_LOC without error.
+
 Sun Oct  6 02:05:52 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/getopt.c: Add casts to prevent warnings.
@@ -192,6 +212,15 @@ Thu Oct  3 21:07:58 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 	whether this is a statically linked program.  The latter is now
 	always defined.
 
+Fri Oct  4 17:30:22 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c (signal_allowed): Add SIGWINCH to the list that
+	controlling terminals are allowed to send.
+
+	* hurd/alloc-fd.c (_hurd_alloc_fd): If SIZE is so big that the
+	table is larger than the allowable address size, then return
+	failure. 
+
 Fri Oct  4 02:08:10 1996  Bang Jun-Young  <bangjy@nownuri.nowcom.co.kr>
 
 	* po/ko.po: Update.
@@ -241,6 +270,14 @@ Wed Oct  2 13:33:48 1996  Richard Henderson  <rth@tamu.edu>
 	* sysdeps/alpha/Makefile [$(sudir)==string]: Add stxcpy and
 	stxncpy to sysdep_routines.
 	Minor correction.
+
+Thu Oct  3 13:33:31 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/generic/gnu/types.h: Added __loff_t.
+	Don't declare key_t here.
+
+	* hurd/alloc-fd.c (_hurd_alloc_fd): If realloc fails, bother to
+ 	set errno (to ENOMEM).
 
 Wed Oct  2 13:41:48 1996  Ulrich Drepper  <drepper@cygnus.com>
 
