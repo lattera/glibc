@@ -180,6 +180,7 @@ typedef struct
 #define EM_OLD_ALPHA	41		/* Digital Alpha */
 #define EM_SH		42		/* Hitachi SH */
 #define EM_SPARCV9	43		/* SPARC v9 64-bit */
+#define EM_NUM		44
 
 /* If it is necessary to assign new unofficial EM_* values, please
    pick large random numbers (0x8523, 0xa7f2, etc.) to minimize the
@@ -235,28 +236,30 @@ typedef struct
 
 /* Legal values for sh_type (section type).  */
 
-#define SHT_NULL	0		/* Section header table entry unused */
-#define SHT_PROGBITS	1		/* Program data */
-#define SHT_SYMTAB	2		/* Symbol table */
-#define SHT_STRTAB	3		/* String table */
-#define SHT_RELA	4		/* Relocation entries with addends */
-#define SHT_HASH	5		/* Symbol hash table */
-#define SHT_DYNAMIC	6		/* Dynamic linking information */
-#define SHT_NOTE	7		/* Notes */
-#define SHT_NOBITS	8		/* Program space with no data (bss) */
-#define SHT_REL		9		/* Relocation entries, no addends */
-#define SHT_SHLIB	10		/* Reserved */
-#define SHT_DYNSYM	11		/* Dynamic linker symbol table */
-#define	SHT_NUM		12		/* Number of defined types.  */
-#define SHT_LOSUNW	0x6ffffffd	/* Sun-specific low bound.  */
-#define SHT_GNU_verdef	0x6ffffffd	/* Version definition section.  */
-#define SHT_GNU_verneed	0x6ffffffe	/* Version needs section.  */
-#define SHT_GNU_versym	0x6fffffff	/* Version symbol table.  */
-#define SHT_HISUNW	0x6fffffff	/* Sun-specific high bound.  */
-#define SHT_LOPROC	0x70000000	/* Start of processor-specific */
-#define SHT_HIPROC	0x7fffffff	/* End of processor-specific */
-#define SHT_LOUSER	0x80000000	/* Start of application-specific */
-#define SHT_HIUSER	0x8fffffff	/* End of application-specific */
+#define SHT_NULL	 0		/* Section header table entry unused */
+#define SHT_PROGBITS	 1		/* Program data */
+#define SHT_SYMTAB	 2		/* Symbol table */
+#define SHT_STRTAB	 3		/* String table */
+#define SHT_RELA	 4		/* Relocation entries with addends */
+#define SHT_HASH	 5		/* Symbol hash table */
+#define SHT_DYNAMIC	 6		/* Dynamic linking information */
+#define SHT_NOTE	 7		/* Notes */
+#define SHT_NOBITS	 8		/* Program space with no data (bss) */
+#define SHT_REL		 9		/* Relocation entries, no addends */
+#define SHT_SHLIB	 10		/* Reserved */
+#define SHT_DYNSYM	 11		/* Dynamic linker symbol table */
+#define	SHT_NUM		 12		/* Number of defined types.  */
+#define SHT_LOSUNW	 0x6ffffffb	/* Sun-specific low bound.  */
+#define SHT_SUNW_COMDAT  0x6ffffffb
+#define SHT_SUNW_syminfo 0x6ffffffc
+#define SHT_GNU_verdef	 0x6ffffffd	/* Version definition section.  */
+#define SHT_GNU_verneed	 0x6ffffffe	/* Version needs section.  */
+#define SHT_GNU_versym	 0x6fffffff	/* Version symbol table.  */
+#define SHT_HISUNW	 0x6fffffff	/* Sun-specific high bound.  */
+#define SHT_LOPROC	 0x70000000	/* Start of processor-specific */
+#define SHT_HIPROC	 0x7fffffff	/* End of processor-specific */
+#define SHT_LOUSER	 0x80000000	/* Start of application-specific */
+#define SHT_HIUSER	 0x8fffffff	/* End of application-specific */
 
 /* Legal values for sh_flags (section flags).  */
 
@@ -426,6 +429,16 @@ typedef struct
 #define NT_PRSTATUS	1		/* Contains copy of prstatus struct */
 #define NT_FPREGSET	2		/* Contains copy of fpregset struct */
 #define NT_PRPSINFO	3		/* Contains copy of prpsinfo struct */
+#define NT_PRXREG	4		/* Contains copy of prxregset struct */
+#define NT_PLATFORM	5		/* String from sysinfo(SI_PLATFORM) */
+#define NT_AUXV		6		/* Contains copy of auxv array */
+#define NT_GWINDOWS	7		/* Contains copy of gwindows struct */
+#define NT_PSTATUS	10		/* Contains copy of pstatus struct */
+#define NT_PSINFO	13		/* Contains copy of psinfo struct */
+#define NT_PRCRED	14		/* Contains copy of prcred struct */
+#define NT_UTSNAME	15		/* Contains copy of utsname struct */
+#define NT_LWPSTATUS	16		/* Contains copy of lwpstatus struct */
+#define NT_LWPSINFO	17		/* Contains copy of lwpinfo struct */
 
 /* Legal values for the  note segment descriptor types for object files.  */
 
@@ -865,12 +878,24 @@ typedef struct
 
 /* Legal values for e_flags field of Elf32_Ehdr.  */
 
-#define EF_MIPS_NOREORDER 1		/* A .noreorder directive was used */
-#define EF_MIPS_PIC	  2		/* Contains PIC code */
-#define EF_MIPS_CPIC	  4		/* Uses PIC calling sequence */
-#define EF_MIPS_ARCH	  0xf0000000	/* MIPS architecture level */
+#define EF_MIPS_NOREORDER   1		/* A .noreorder directive was used */
+#define EF_MIPS_PIC	    2		/* Contains PIC code */
+#define EF_MIPS_CPIC	    4		/* Uses PIC calling sequence */
+#define EF_MIPS_XGOT	    8
+#define EF_MIPS_64BIT_WHIRL 16
+#define EF_MIPS_ABI2	    32
+#define EF_MIPS_ABI_ON32    64
+#define EF_MIPS_ARCH	    0xf0000000	/* MIPS architecture level */
 
 /* Legal values for MIPS architecture level.  */
+
+#define EF_MIPS_ARCH_1	    0x00000000	/* -mips1 code.  */
+#define EF_MIPS_ARCH_2	    0x10000000	/* -mips2 code.  */
+#define EF_MIPS_ARCH_3	    0x20000000	/* -mips3 code.  */
+#define EF_MIPS_ARCH_4	    0x30000000	/* -mips4 code.  */
+#define EF_MIPS_ARCH_5	    0x40000000	/* -mips5 code.  */
+
+/* The following are non-official names and should ot be used.  */
 
 #define E_MIPS_ARCH_1	  0x00000000	/* -mips1 code.  */
 #define E_MIPS_ARCH_2	  0x10000000	/* -mips2 code.  */
@@ -888,19 +913,69 @@ typedef struct
 
 /* Legal values for sh_type field of Elf32_Shdr.  */
 
-#define SHT_MIPS_LIBLIST  0x70000000	/* Shared objects used in link */
-#define SHT_MIPS_CONFLICT 0x70000002	/* Conflicting symbols */
-#define SHT_MIPS_GPTAB	  0x70000003	/* Global data area sizes */
-#define SHT_MIPS_UCODE	  0x70000004	/* Reserved for SGI/MIPS compilers */
-#define SHT_MIPS_DEBUG	  0x70000005	/* MIPS ECOFF debugging information */
-#define SHT_MIPS_REGINFO  0x70000006	/* Register usage information */
-#define SHT_MIPS_OPTIONS  0x7000000d	/* Miscellaneous options.  */
-#define SHT_MIPS_DWARF    0x7000001e	/* DWARF debugging information.  */
-#define SHT_MIPS_EVENTS	  0x70000021	/* Event section.  */
+#define SHT_MIPS_LIBLIST       0x70000000 /* Shared objects used in link */
+#define SHT_MIPS_MSYM	       0x70000001
+#define SHT_MIPS_CONFLICT      0x70000002 /* Conflicting symbols */
+#define SHT_MIPS_GPTAB	       0x70000003 /* Global data area sizes */
+#define SHT_MIPS_UCODE	       0x70000004 /* Reserved for SGI/MIPS compilers */
+#define SHT_MIPS_DEBUG	       0x70000005 /* MIPS ECOFF debugging information*/
+#define SHT_MIPS_REGINFO       0x70000006 /* Register usage information */
+#define SHT_MIPS_PACKAGE       0x70000007
+#define SHT_MIPS_PACKSYM       0x70000008
+#define SHT_MIPS_RELD	       0x70000009
+#define SHT_MIPS_IFACE         0x7000000b
+#define SHT_MIPS_CONTENT       0x7000000c
+#define SHT_MIPS_OPTIONS       0x7000000d /* Miscellaneous options.  */
+#define SHT_MIPS_SHDR	       0x70000010
+#define SHT_MIPS_FDESC	       0x70000011
+#define SHT_MIPS_EXTSYM	       0x70000012
+#define SHT_MIPS_DENSE	       0x70000013
+#define SHT_MIPS_PDESC	       0x70000014
+#define SHT_MIPS_LOCSYM	       0x70000015
+#define SHT_MIPS_AUXSYM	       0x70000016
+#define SHT_MIPS_OPTSYM	       0x70000017
+#define SHT_MIPS_LOCSTR	       0x70000018
+#define SHT_MIPS_LINE	       0x70000019
+#define SHT_MIPS_RFDESC	       0x7000001a
+#define SHT_MIPS_DELTASYM      0x7000001b
+#define SHT_MIPS_DELTAINST     0x7000001c
+#define SHT_MIPS_DELTACLASS    0x7000001d
+#define SHT_MIPS_DWARF         0x7000001e /* DWARF debugging information.  */
+#define SHT_MIPS_DELTADECL     0x7000001f
+#define SHT_MIPS_SYMBOL_LIB    0x70000020
+#define SHT_MIPS_EVENTS	       0x70000021 /* Event section.  */
+#define SHT_MIPS_TRANSLATE     0x70000022
+#define SHT_MIPS_PIXIE	       0x70000023
+#define SHT_MIPS_XLATE	       0x70000024
+#define SHT_MIPS_XLATE_DEBUG   0x70000025
+#define SHT_MIPS_WHIRL	       0x70000026
+#define SHT_MIPS_EH_REGION     0x70000027
+#define SHT_MIPS_XLATE_OLD     0x70000028
+#define SHT_MIPS_PDR_EXCEPTION 0x70000029
 
 /* Legal values for sh_flags field of Elf32_Shdr.  */
 
-#define SHF_MIPS_GPREL	0x10000000	/* Must be part of global data area */
+#define SHF_MIPS_GPREL	 0x10000000	/* Must be part of global data area */
+#define SHF_MIPS_MERGE	 0x20000000
+#define SHF_MIPS_ADDR	 0x40000000
+#define SHF_MIPS_STRINGS 0x80000000
+#define SHF_MIPS_NOSTRIP 0x08000000
+#define SHF_MIPS_LOCAL	 0x04000000
+#define SHF_MIPS_NAMES	 0x02000000
+#define SHF_MIPS_NODUPE	 0x01000000
+
+
+/* Symbol tables.  */
+
+/* MIPS specific values for `st_other'.  */
+#define STO_DEFAULT		0x0
+#define STO_INTERNAL		0x1
+#define STO_HIDDEN		0x2
+#define STO_PROTECTED		0x3
+#define STO_SC_ALIGN_UNUSED	0xff
+
+/* MIPS specific values for `st_info'.  */
+#define STB_SPLIT_COMMON	13
 
 /* Entries found in sections of type SHT_MIPS_GPTAB.  */
 
@@ -927,27 +1002,117 @@ typedef struct
   Elf32_Sword	ri_gp_value;		/* $gp register value */
 } Elf32_RegInfo;
 
+/* Entries found in sections of type SHT_MIPS_OPTIONS.  */
+
+typedef struct
+{
+  unsigned char kind;		/* Determines interpretation of the
+				   variable part of descriptor.  */
+  unsigned char size;		/* Size of descriptor, including header.  */
+  Elf32_Section section;	/* Section header index of section affected,
+				   0 for global options.  */
+  Elf32_Word info;		/* Kind-specific information.  */
+} Elf_Options;
+
+/* Values for `kind' field in Elf_Options.  */
+
+#define ODK_NULL	0	/* Undefined.  */
+#define ODK_REGINFO	1	/* Register usage information.  */
+#define ODK_EXCEPTIONS	2	/* Exception processing options.  */
+#define ODK_PAD		3	/* Section padding options.  */
+#define ODK_HWPATCH	4	/* Hardware workarounds performed */
+#define ODK_FILL	5	/* record the fill value used by the linker. */
+#define ODK_TAGS	6	/* reserve space for desktop tools to write. */
+#define ODK_HWAND	7	/* HW workarounds.  'AND' bits when merging. */
+#define ODK_HWOR	8	/* HW workarounds.  'OR' bits when merging.  */
+
+/* Values for `info' in Elf_Options for ODK_EXCEPTIONS entries.  */
+
+#define OEX_FPU_MIN	0x1f	/* FPE's which MUST be enabled.  */
+#define OEX_FPU_MAX	0x1f00	/* FPE's which MAY be enabled.  */
+#define OEX_PAGE0	0x10000	/* page zero must be mapped.  */
+#define OEX_SMM		0x20000	/* Force sequential memory mode?  */
+#define OEX_FPDBUG	0x40000	/* Force floating point debug mode?  */
+#define OEX_PRECISEFP	OEX_FPDBUG
+#define OEX_DISMISS	0x80000	/* Dismiss invalid address faults?  */
+
+#define OEX_FPU_INVAL	0x10
+#define OEX_FPU_DIV0	0x08
+#define OEX_FPU_OFLO	0x04
+#define OEX_FPU_UFLO	0x02
+#define OEX_FPU_INEX	0x01
+
+/* Masks for `info' in Elf_Options for an ODK_HWPATCH entry.  */
+
+#define OHW_R4KEOP	0x1	/* R4000 end-of-page patch.  */
+#define OHW_R8KPFETCH	0x2	/* may need R8000 prefetch patch.  */
+#define OHW_R5KEOP	0x4	/* R5000 end-of-page patch.  */
+#define OHW_R5KCVTL	0x8	/* R5000 cvt.[ds].l bug.  clean=1.  */
+
+#define OPAD_PREFIX	0x1
+#define OPAD_POSTFIX	0x2
+#define OPAD_SYMBOL	0x4
+
+/* Entry found in `.options' section.  */
+
+typedef struct
+{
+  Elf32_Word hwp_flags1;	/* Extra flags.  */
+  Elf32_Word hwp_flags2;	/* Extra flags.  */
+} Elf_Options_Hw;
+
+/* Masks for `info' in ElfOptions for ODK_HWAND and ODK_HWOR entries.  */
+
+#define OHWA0_R4KEOP_CHECKED	0x00000001
+#define OHWA1_R4KEOP_CLEAN	0x00000002
+
 /* MIPS relocs.  */
 
-#define R_MIPS_NONE	0		/* No reloc */
-#define R_MIPS_16	1		/* Direct 16 bit */
-#define R_MIPS_32	2		/* Direct 32 bit */
-#define R_MIPS_REL32	3		/* PC relative 32 bit */
-#define R_MIPS_26	4		/* Direct 26 bit shifted */
-#define R_MIPS_HI16	5		/* High 16 bit */
-#define R_MIPS_LO16	6		/* Low 16 bit */
-#define R_MIPS_GPREL16	7		/* GP relative 16 bit */
-#define R_MIPS_LITERAL	8		/* 16 bit literal entry */
-#define R_MIPS_GOT16	9		/* 16 bit GOT entry */
-#define R_MIPS_PC16	10		/* PC relative 16 bit */
-#define R_MIPS_CALL16	11		/* 16 bit GOT entry for function */
-#define R_MIPS_GPREL32	12		/* GP relative 32 bit */
+#define R_MIPS_NONE		0	/* No reloc */
+#define R_MIPS_16		1	/* Direct 16 bit */
+#define R_MIPS_32		2	/* Direct 32 bit */
+#define R_MIPS_REL32		3	/* PC relative 32 bit */
+#define R_MIPS_26		4	/* Direct 26 bit shifted */
+#define R_MIPS_HI16		5	/* High 16 bit */
+#define R_MIPS_LO16		6	/* Low 16 bit */
+#define R_MIPS_GPREL16		7	/* GP relative 16 bit */
+#define R_MIPS_LITERAL		8	/* 16 bit literal entry */
+#define R_MIPS_GOT16		9	/* 16 bit GOT entry */
+#define R_MIPS_PC16		10	/* PC relative 16 bit */
+#define R_MIPS_CALL16		11	/* 16 bit GOT entry for function */
+#define R_MIPS_GPREL32		12	/* GP relative 32 bit */
+
+#define R_MIPS_SHIFT5		16
+#define R_MIPS_SHIFT6		17
+#define R_MIPS_64		18
+#define R_MIPS_GOT_DISP		19
+#define R_MIPS_GOT_PAGE		20
+#define R_MIPS_GOT_OFST		21
+#define R_MIPS_GOT_HI16		22
+#define R_MIPS_GOT_LO16		23
+#define R_MIPS_SUB		24
+#define R_MIPS_INSERT_A		25
+#define R_MIPS_INSERT_B		26
+#define R_MIPS_DELETE		27
+#define R_MIPS_HIGHER		28
+#define R_MIPS_HIGHEST		29
+#define R_MIPS_CALL_HI16	30
+#define R_MIPS_CALL_LO16	31
+#define R_MIPS_SCN_DISP		32
+#define R_MIPS_REL16		33
+#define R_MIPS_ADD_IMMEDIATE	34
+#define R_MIPS_PJUMP		35
+#define R_MIPS_RELGOT		36
 
 /* Legal values for p_type field of Elf32_Phdr.  */
 
 #define PT_MIPS_REGINFO	0x70000000	/* Register usage information */
 #define PT_MIPS_RTPROC  0x70000001	/* Runtime procedure table. */
 #define PT_MIPS_OPTIONS 0x70000002
+
+/* Special program header types.  */
+
+#define PF_MIPS_LOCAL	0x10000000
 
 /* Legal values for d_tag field of Elf32_Dyn.  */
 
@@ -957,6 +1122,7 @@ typedef struct
 #define DT_MIPS_IVERSION     0x70000004	/* Version string (string tbl index) */
 #define DT_MIPS_FLAGS	     0x70000005	/* Flags */
 #define DT_MIPS_BASE_ADDRESS 0x70000006	/* Base address */
+#define DT_MIPS_MSYM	     0x70000007
 #define DT_MIPS_CONFLICT     0x70000008	/* Address of CONFLICT section */
 #define DT_MIPS_LIBLIST	     0x70000009	/* Address of LIBLIST section */
 #define DT_MIPS_LOCAL_GOTNO  0x7000000a	/* Number of local GOT entries */
@@ -967,7 +1133,42 @@ typedef struct
 #define DT_MIPS_GOTSYM	     0x70000013	/* First GOT entry in DYNSYM */
 #define DT_MIPS_HIPAGENO     0x70000014	/* Number of GOT page table entries */
 #define DT_MIPS_RLD_MAP	     0x70000016	/* Address of run time loader map.  */
-#define DT_MIPS_NUM	     0x17
+#define DT_MIPS_DELTA_CLASS  0x70000017	/* Delta C++ class definition.  */
+#define DT_MIPS_DELTA_CLASS_NO    0x70000018 /* Number of entries in
+						DT_MIPS_DELTA_CLASS.  */
+#define DT_MIPS_DELTA_INSTANCE    0x70000019 /* Delta C++ class instances.  */
+#define DT_MIPS_DELTA_INSTANCE_NO 0x7000001a /* Number of entries in
+						DT_MIPS_DELTA_INSTANCE.  */
+#define DT_MIPS_DELTA_RELOC  0x7000001b /* Delta relocations.  */
+#define DT_MIPS_DELTA_RELOC_NO 0x7000001c /* Number of entries in
+					     DT_MIPS_DELTA_RELOC.  */
+#define DT_MIPS_DELTA_SYM    0x7000001d /* Delta symbols that Delta
+					   relocations refer to.  */
+#define DT_MIPS_DELTA_SYM_NO 0x7000001e /* Number of entries in
+					   DT_MIPS_DELTA_SYM.  */
+#define DT_MIPS_DELTA_CLASSSYM 0x70000020 /* Delta symbols that hold the
+					     class declaration.  */
+#define DT_MIPS_DELTA_CLASSSYM_NO 0x70000021 /* Number of entries in
+						DT_MIPS_DELTA_CLASSSYM.  */
+#define DT_MIPS_CXX_FLAGS    0x70000022 /* Flags indicating for C++ flavor.  */
+#define DT_MIPS_PIXIE_INIT   0x70000023
+#define DT_MIPS_SYMBOL_LIB   0x70000024
+#define DT_MIPS_LOCALPAGE_GOTIDX 0x70000025
+#define DT_MIPS_LOCAL_GOTIDX 0x70000026
+#define DT_MIPS_HIDDEN_GOTIDX 0x70000027
+#define DT_MIPS_PROTECTED_GOTIDX 0x70000028
+#define DT_MIPS_OPTIONS	     0x70000029 /* Address of .options.  */
+#define DT_MIPS_INTERFACE    0x7000002a /* Address of .interface.  */
+#define DT_MIPS_DYNSTR_ALIGN 0x7000002b
+#define DT_MIPS_INTERFACE_SIZE 0x7000002c /* Size of the .interface section. */
+#define DT_MIPS_RLD_TEXT_RESOLVE_ADDR 0x7000002d /* Address of rld_text_rsolve
+						    function stored in GOT.  */
+#define DT_MIPS_PERF_SUFFIX  0x7000002e /* Default suffix of dso to be added
+					   by rld on dlopen() calls.  */
+#define DT_MIPS_COMPACT_SIZE 0x7000002f /* (O32)Size of compact rel section. */
+#define DT_MIPS_GP_VALUE     0x70000030 /* GP value for aux GOTs.  */
+#define DT_MIPS_AUX_DYNAMIC  0x70000031 /* Address of aux .dynamic.  */
+#define DT_MIPS_NUM	     0x32
 
 /* Legal values for DT_MIPS_FLAG Elf32_Dyn entry.  */
 
@@ -975,22 +1176,49 @@ typedef struct
 #define RHF_QUICKSTART		   (1 << 0)	/* Use quickstart */
 #define RHF_NOTPOT		   (1 << 1)	/* Hash size not power of 2 */
 #define RHF_NO_LIBRARY_REPLACEMENT (1 << 2)	/* Ignore LD_LIBRARY_PATH */
+#define RHF_NO_MOVE		   (1 << 3)
+#define RHF_SGI_ONLY		   (1 << 4)
+#define RHF_GUARANTEE_INIT	   (1 << 5)
+#define RHF_DELTA_C_PLUS_PLUS	   (1 << 6)
+#define RHF_GUARANTEE_START_INIT   (1 << 7)
+#define RHF_PIXIE		   (1 << 8)
+#define RHF_DEFAULT_DELAY_LOAD	   (1 << 9)
+#define RHF_REQUICKSTART	   (1 << 10)
+#define RHF_REQUICKSTARTED	   (1 << 11)
+#define RHF_CORD		   (1 << 12)
+#define RHF_NO_UNRES_UNDEF	   (1 << 13)
+#define RHF_RLD_ORDER_SAFE	   (1 << 14)
 
 /* Entries found in sections of type SHT_MIPS_LIBLIST.  */
 
 typedef struct
 {
-  Elf32_Word	l_name;			/* Name (string table index) */
-  Elf32_Word	l_time_stamp;		/* Timestamp */
-  Elf32_Word	l_checksum;		/* Checksum */
-  Elf32_Word	l_version;		/* Interface version */
-  Elf32_Word	l_flags;		/* Flags */
+  Elf32_Word l_name;		/* Name (string table index) */
+  Elf32_Word l_time_stamp;	/* Timestamp */
+  Elf32_Word l_checksum;	/* Checksum */
+  Elf32_Word l_version;		/* Interface version */
+  Elf32_Word l_flags;		/* Flags */
 } Elf32_Lib;
+
+typedef struct
+{
+  Elf64_Word l_name;		/* Name (string table index) */
+  Elf64_Word l_time_stamp;	/* Timestamp */
+  Elf64_Word l_checksum;	/* Checksum */
+  Elf64_Word l_version;		/* Interface version */
+  Elf64_Word l_flags;		/* Flags */
+} Elf64_Lib;
+
 
 /* Legal values for l_flags.  */
 
+#define LL_NONE		  0
 #define LL_EXACT_MATCH	  (1 << 0)	/* Require exact match */
 #define LL_IGNORE_INT_VER (1 << 1)	/* Ignore interface version */
+#define LL_REQUIRE_MINOR  (1 << 2)
+#define LL_EXPORTS	  (1 << 3)
+#define LL_DELAY_LOAD	  (1 << 4)
+#define LL_DELTA	  (1 << 5)
 
 /* Entries found in sections of type SHT_MIPS_CONFLICT.  */
 

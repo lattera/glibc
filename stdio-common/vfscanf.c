@@ -47,8 +47,6 @@
 # define MALLOC		0x100	/* a: malloc strings */
 # define CHAR		0x200	/* hh: char */
 
-# define TYPEMOD	(LONG|LONGDBL|SHORT|CHAR)
-
 
 #ifdef USE_IN_LIBIO
 # include <libioP.h>
@@ -408,84 +406,69 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	width = -1;
 
       /* Check for type modifiers.  */
-      while (*f == 'h' || *f == 'l' || *f == 'L' || *f == 'a' || *f == 'q'
-	     || *f == 'z' || *f == 't' || *f == 'j')
-	switch (*f++)
-	  {
-	  case 'h':
-	    /* int's are short int's.  */
-	    if (flags & (LONG|LONGDBL|CHAR))
-	      /* Signal illegal format element.  */
-	      conv_error ();
-	    if (flags & SHORT)
-	      {
-		flags &= ~SHORT;
-		flags |= CHAR;
-	      }
-	    else
-	      flags |= SHORT;
-	    break;
-	  case 'l':
-	    if (flags & (SHORT|LONGDBL|CHAR))
-	      conv_error ();
-	    else if (flags & LONG)
-	      {
-		/* A double `l' is equivalent to an `L'.  */
-		flags &= ~LONG;
-		flags |= LONGDBL;
-	      }
-	    else
-	      /* int's are long int's.  */
-	      flags |= LONG;
-	    break;
-	  case 'q':
-	  case 'L':
-	    /* double's are long double's, and int's are long long int's.  */
-	    if (flags & TYPEMOD)
-	      /* Signal illegal format element.  */
-	      conv_error ();
+      switch (*f++)
+	{
+	case 'h':
+	  /* ints are short ints or chars.  */
+	  if (*f == 'h')
+	    {
+	      ++f;
+	      flags |= CHAR;
+	    }
+	  else
+	    flags |= SHORT;
+	  break;
+	case 'l':
+	  if (*f == 'l')
+	    {
+	      /* A double `l' is equivalent to an `L'.  */
+	      ++f;
+	      flags |= LONGDBL;
+	    }
+	  else
+	    /* ints are long ints.  */
+	    flags |= LONG;
+	  break;
+	case 'q':
+	case 'L':
+	  /* doubles are long doubles, and ints are long long ints.  */
+	  flags |= LONGDBL;
+	  break;
+	case 'a':
+	  /* The `a' is used as a flag only if followed by `s', `S' or
+	     `['.  */
+	  if (*f != 's' && *f != 'S' && *f != '[')
+	    {
+	      --f;
+	      break;
+	    }
+	  /* String conversions (%s, %[) take a `char **'
+	     arg and fill it in with a malloc'd pointer.  */
+	  flags |= MALLOC;
+	  break;
+	case 'z':
+	  if (sizeof (size_t) > sizeof (unsigned long int))
 	    flags |= LONGDBL;
-	    break;
-	  case 'a':
-	    /* The `a' is used as a flag only if followed by `s', `S' or
-	       `['.  */
-	    if (*f != 's' && *f != 'S' && *f != '[')
-	      {
-		--f;
-		break;
-	      }
-	    if (flags & TYPEMOD)
-	      /* Signal illegal format element.  */
-	      conv_error ();
-	    /* String conversions (%s, %[) take a `char **'
-	       arg and fill it in with a malloc'd pointer.  */
-	    flags |= MALLOC;
-	    break;
-	  case 'z':
-	    if (flags & (SHORT|LONGDBL|CHAR))
-	      conv_error ();
-	    if (sizeof (size_t) > sizeof (unsigned long int))
-	      flags |= LONGDBL;
-	    else if (sizeof (size_t) > sizeof (unsigned int))
-	      flags |= LONG;
-	    break;
-	  case 'j':
-	    if (flags & (SHORT|LONGDBL|CHAR))
-	      conv_error ();
-	    if (sizeof (intmax_t) > sizeof (unsigned long int))
-	      flags |= LONGDBL;
-	    else if (sizeof (intmax_t) > sizeof (unsigned int))
-	      flags |= LONG;
-	    break;
-	  case 't':
-	    if (flags & (SHORT|LONGDBL|CHAR))
-	      conv_error ();
-	    if (sizeof (ptrdiff_t) > sizeof (unsigned long int))
-	      flags |= LONGDBL;
-	    else if (sizeof (ptrdiff_t) > sizeof (unsigned int))
-	      flags |= LONG;
-	    break;
-	  }
+	  else if (sizeof (size_t) > sizeof (unsigned int))
+	    flags |= LONG;
+	  break;
+	case 'j':
+	  if (sizeof (uintmax_t) > sizeof (unsigned long int))
+	    flags |= LONGDBL;
+	  else if (sizeof (uintmax_t) > sizeof (unsigned int))
+	    flags |= LONG;
+	  break;
+	case 't':
+	  if (sizeof (ptrdiff_t) > sizeof (long int))
+	    flags |= LONGDBL;
+	  else if (sizeof (ptrdiff_t) > sizeof (int))
+	    flags |= LONG;
+	  break;
+	default:
+	  /* Not a recognized modifier.  Backup.  */
+	  --f;
+	  break;
+	}
 
       /* End of the format string?  */
       if (*f == '\0')

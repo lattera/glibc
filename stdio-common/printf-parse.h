@@ -271,54 +271,54 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
   spec->info.is_long = 0;
   spec->info.is_char = 0;
 
-  if (*format == L_('h') || *format == L_('l') || *format == L_('L') ||
-      *format == L_('Z') || *format == L_('q') || *format == L_('z') ||
-      *format == L_('t') || *format == L_('j'))
-    switch (*format++)
-      {
-      case L_('h'):
-	/* int's are short int's.  */
-	if (spec->info.is_short == 0)
-	  spec->info.is_short = 1;
-	else
-	  {
-	    spec->info.is_short = 0;
-	    spec->info.is_char = 1;
-	  }
+  switch (*format++)
+    {
+    case L_('h'):
+      /* ints are short ints or chars.  */
+      if (*format != L_('h'))
+	spec->info.is_short = 1;
+      else
+	{
+	  ++format;
+	  spec->info.is_char = 1;
+	}
+      break;
+    case L_('l'):
+      /* ints are long ints.  */
+      spec->info.is_long = 1;
+      if (*format != L_('l'))
 	break;
-      case L_('l'):
-	/* int's are long int's.  */
-	spec->info.is_long = 1;
-	if (*format != L_('l'))
-	  break;
-	++format;
-	/* FALLTHROUGH */
-      case L_('L'):
-	/* double's are long double's, and int's are long long int's.  */
-      case L_('q'):
-	/* 4.4 uses this for long long.  */
-	spec->info.is_long_double = 1;
-	break;
-      case L_('z'):
-      case L_('Z'):
-	/* int's are size_t's.  */
-	assert (sizeof (size_t) <= sizeof (unsigned long long int));
-	spec->info.is_longlong = sizeof (size_t) > sizeof (unsigned long int);
-	spec->info.is_long = sizeof (size_t) > sizeof (unsigned int);
-	break;
-      case L_('t'):
-	assert (sizeof (ptrdiff_t) <= sizeof (unsigned long long int));
-	spec->info.is_longlong = (sizeof (ptrdiff_t)
-				  > sizeof (unsigned long int));
-	spec->info.is_long = sizeof (ptrdiff_t) > sizeof (unsigned int);
-	break;
-      case L_('j'):
-	assert (sizeof (intmax_t) <= sizeof (unsigned long long int));
-	spec->info.is_longlong = (sizeof (intmax_t)
-				  > sizeof (unsigned long int));
-	spec->info.is_long = sizeof (intmax_t) > sizeof (unsigned int);
-	break;
-      }
+      ++format;
+      /* FALLTHROUGH */
+    case L_('L'):
+      /* doubles are long doubles, and ints are long long ints.  */
+    case L_('q'):
+      /* 4.4 uses this for long long.  */
+      spec->info.is_long_double = 1;
+      break;
+    case L_('z'):
+    case L_('Z'):
+      /* ints are size_ts.  */
+      assert (sizeof (size_t) <= sizeof (unsigned long long int));
+      spec->info.is_longlong = sizeof (size_t) > sizeof (unsigned long int);
+      spec->info.is_long = sizeof (size_t) > sizeof (unsigned int);
+      break;
+    case L_('t'):
+      assert (sizeof (ptrdiff_t) <= sizeof (long long int));
+      spec->info.is_longlong = (sizeof (ptrdiff_t) > sizeof (long int));
+      spec->info.is_long = sizeof (ptrdiff_t) > sizeof (int);
+      break;
+    case L_('j'):
+      assert (sizeof (uintmax_t) <= sizeof (unsigned long long int));
+      spec->info.is_longlong = (sizeof (uintmax_t)
+				> sizeof (unsigned long int));
+      spec->info.is_long = sizeof (uintmax_t) > sizeof (unsigned int);
+      break;
+    default:
+      /* Not a recognized modifier.  Backup.  */
+      --format;
+      break;
+    }
 
   /* Get the format specification.  */
   spec->info.spec = (wchar_t) *format++;

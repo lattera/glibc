@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <signal.h>
+#include <stddef.h>
 #include <sys/syscall.h>
 
 

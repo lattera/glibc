@@ -39,53 +39,35 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
 {
   struct cmsghdr *cm;
   int ret;
-  int found_creds = 0;
-
-  /* Must check for space first. */
-  cm = CMSG_FIRSTHDR (message);
-  while (cm)
-    {
-      if (cm->cmsg_type == SCM_CREDS)
-	{
-	  if (cm->cmsg_len < CMSG_SPACE (sizeof (struct cmsgcred)))
-	    {
-	      __set_errno (EINVAL);
-	      return -1;
-	    }
-	  found_creds = 1;
-	}
-      cm = CMSG_NXTHDR (message, cm);
-    }
-
 
   ret = __syscall_recvmsg (fd, message, flags);
 
   if (ret == -1)
     return ret;
 
-  /* Postprocess the message control block for SCM_CREDS. */
+  /* Postprocess the message control block for SCM_CREDS.  */
   cm = CMSG_FIRSTHDR (message);
-  if (found_creds)
-    while (cm)
-      {
-	if (cm->cmsg_type == SCM_CREDS)
-	  {
-	    struct cmsgcred *c = (struct cmsgcred *) CMSG_DATA (cm);
-	    struct __kernel_ucred u;
-	    int i;
-	    memcpy (&u, CMSG_DATA (cm), sizeof (struct __kernel_ucred));
+  while (cm)
+    {
+      if (cm->cmsg_type == SCM_CREDS)
+ 	{
+	  struct cmsgcred *c = (struct cmsgcred *) CMSG_DATA (cm);
+	  struct __kernel_ucred u;
+	  int i;
+	  memcpy (&u, CMSG_DATA (cm), sizeof (struct __kernel_ucred));
 
-	    c->cmcred_pid = u.pid;
-	    c->cmcred_uid = u.uid;
-	    c->cmcred_gid = u.gid;
+	  c->cmcred_pid = u.pid;
+	  c->cmcred_uid = u.uid;
+	  c->cmcred_gid = u.gid;
 
-	    c->cmcred_euid = -1;
-	    c->cmcred_ngroups = 0;
-	    for (i = 0; i < CMGROUP_MAX; i++)
-	      c->cmcred_groups[i] = -1;
-	  }
-	cm = CMSG_NXTHDR (message, cm);
-      }
+	  c->cmcred_euid = -1;
+	  c->cmcred_ngroups = 0;
+	  for (i = 0; i < CMGROUP_MAX; i++)
+	    c->cmcred_groups[i] = -1;
+	}
+      cm = CMSG_NXTHDR (message, cm);
+    }
+
   return ret;
 }
 

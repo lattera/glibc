@@ -245,6 +245,7 @@ extern char *alloca ();
 #endif
 
 #ifdef _LIBC
+# undef strdup
 # define strdup(str) __strdup (str)
 # define sysconf(id) __sysconf (id)
 # define closedir(dir) __closedir (dir)

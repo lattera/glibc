@@ -138,7 +138,7 @@ svcunix_create (int sock, u_int sendsize, u_int recvsize, char *path)
     }
   memset (&addr, '\0', sizeof (addr));
   addr.sun_family = AF_UNIX;
-  len = strlen (addr.sun_path) + 1;
+  len = strlen (path) + 1;
   memcpy (addr.sun_path, path, len);
   len += sizeof (addr.sun_family);
 

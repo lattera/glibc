@@ -143,7 +143,7 @@ passwd2des (char *pw, char *key)
   int i;
 
   memset (key, 0, 8);
-  for (i = 0; *pw; i = (i + 1) % 8)
+  for (i = 0; *pw && i < 8; ++i)
     key[i] ^= *pw++ << 1;
 
   des_setparity (key);

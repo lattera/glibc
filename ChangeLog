@@ -1,3 +1,37 @@
+1998-07-31 11:10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/elf.h: Add lots of new symbols from Irix and Solaris.
+
+	* sysdeps/unix/sysv/linux/sigstack.c: Include stddef.h to get NULL
+	definition.
+
+1998-07-31  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/xcrypt.c: Use only the first 8 characters of the password.
+
+1998-07-30 21:06 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sysdeps/generic/glob.c: Undefine strdup before defining it,
+	because bits/string2.h may have defined it already.
+
+1998-07-29  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdio-common/vfscanf.c: Optimize looking for type modifiers.
+	Fix recognition of 'a' modifier vs. 'a' format.
+	(TYPEMOD): Removed.
+
+	* stdio-common/printf-parse.h (parse_one_spec): Optimize looking
+	for type modifiers.  Fix recognition of 'hh' modifier.
+
+1998-07-31  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/svc_unix.c: Fix typo.
+
+1998-07-31  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sysdeps/unix/sysv/linux/recvmsg.c: Don't check for SCM_CREDS before
+	syscall.
+
 1998-07-30 12:38  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/ffs.c: Add ffsl entry point.
