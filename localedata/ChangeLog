@@ -1,3 +1,7 @@
+2000-10-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-langinfo.sh: Adjust for change in ja_JP.
+
 2000-10-03  GOTO Masanori  <gotom@debian.or.jp>
 
 	* locales/ja_JP: Changed yesexpr/noexpr expression,
