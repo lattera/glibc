@@ -1,5 +1,5 @@
 /* Compare strings while treating digits characters numerically.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jean-François Bignolles <bignolle@ecoledoc.ibp.fr>, 1997.
 
@@ -109,4 +109,5 @@ __strverscmp (s1, s2)
       return state;
   }
 }
+libc_hidden_def (__strverscmp)
 weak_alias (__strverscmp, strverscmp)

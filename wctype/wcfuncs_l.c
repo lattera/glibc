@@ -24,11 +24,6 @@
 #define USE_IN_EXTENDED_LOCALE_MODEL
 #include "wchar-lookup.h"
 
-#undef __iswalpha_l
-#undef __iswdigit_l
-#undef __iswspace_l
-#undef __iswxdigit_l
-
 /* Provide real-function versions of all the wctype macros.  */
 
 #define	func(name, type) \
@@ -38,7 +33,7 @@
     const char *desc = locale->__locales[LC_CTYPE]->values[i].string;	      \
     return wctype_table_lookup (desc, wc);				      \
   }									      \
-  INTDEF(name)
+  libc_hidden_def (name)
 
 func (__iswalnum_l, __ISwalnum)
 func (__iswalpha_l, __ISwalpha)
@@ -60,6 +55,7 @@ wint_t
   const char *desc = locale->__locales[LC_CTYPE]->values[i].string;
   return wctrans_table_lookup (desc, wc);
 }
+libc_hidden_def (__towlower_l)
 
 wint_t
 (__towupper_l) (wint_t wc, __locale_t locale)
@@ -68,3 +64,4 @@ wint_t
   const char *desc = locale->__locales[LC_CTYPE]->values[i].string;
   return wctrans_table_lookup (desc, wc);
 }
+libc_hidden_def (__towupper_l)

@@ -16,16 +16,19 @@ extern int   __libc_dlclose (void *__map);
 /* Locate shared object containing the given address.  */
 extern int _dl_addr (const void *address, Dl_info *info)
      internal_function;
+libc_hidden_proto (_dl_addr)
 
 /* Open the shared object NAME, relocate it, and run its initializer if it
    hasn't already been run.  MODE is as for `dlopen' (see <dlfcn.h>).  If
    the object is already opened, returns its existing map.  */
 extern void *_dl_open (const char *name, int mode, const void *caller)
      internal_function;
+libc_hidden_proto (_dl_open)
 
 /* Close an object previously opened by _dl_open.  */
 extern void _dl_close (void *map)
      internal_function;
+libc_hidden_proto (_dl_close)
 
 /* Look up NAME in shared object HANDLE (which may be RTLD_DEFAULT or
    RTLD_NEXT).  WHO is the calling function, for RTLD_NEXT.  Returns

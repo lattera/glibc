@@ -1,5 +1,5 @@
 /* obstack.c - subroutines used implicitly by object stack macros
-   Copyright (C) 1988-1994,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1988-1994, 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
 
@@ -22,7 +22,11 @@
 # include <config.h>
 #endif
 
+#ifdef _LIBC
+#include <obstack.h>
+#else
 #include "obstack.h"
+#endif
 
 /* NOTE BEFORE MODIFYING THIS FILE: This version number must be
    incremented whenever callers compiled using an old obstack.h can no
@@ -338,6 +342,9 @@ _obstack_newchunk (h, length)
   /* The new chunk certainly contains no empty object yet.  */
   h->maybe_empty_object = 0;
 }
+#ifdef _LIBC
+libc_hidden_def (_obstack_newchunk)
+#endif
 
 /* Return nonzero if object OBJ has been allocated from obstack H.
    This is here for debugging.

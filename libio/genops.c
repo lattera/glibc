@@ -350,6 +350,7 @@ __underflow (fp)
     INTUSE(_IO_free_backup_area) (fp);
   return _IO_UNDERFLOW (fp);
 }
+libc_hidden_def (__underflow)
 
 int
 __uflow (fp)

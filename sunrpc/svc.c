@@ -438,7 +438,7 @@ svc_getreq_common (const int fd)
 	      r.rq_xprt->xp_verf.oa_flavor = _null_auth.oa_flavor;
 	      r.rq_xprt->xp_verf.oa_length = 0;
 	    }
-	  else if ((why = _authenticate (&r, &msg)) != AUTH_OK)
+	  else if ((why = INTUSE(_authenticate) (&r, &msg)) != AUTH_OK)
 	    {
 	      svcerr_auth (xprt, why);
 	      goto call_done;

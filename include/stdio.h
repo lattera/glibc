@@ -16,6 +16,7 @@ extern int __vfscanf (FILE *__restrict __s,
 		      __const char *__restrict __format,
 		      _G_va_list __arg)
      __attribute__ ((__format__ (__scanf__, 2, 0)));
+libc_hidden_proto (__vfscanf)
 extern int __vscanf (__const char *__restrict __format,
 		     _G_va_list __arg)
      __attribute__ ((__format__ (__scanf__, 1, 0)));

@@ -73,6 +73,7 @@ extern int __execve (__const char *__path, char *__const __argv[],
 extern long int __pathconf (__const char *__path, int __name);
 extern long int __fpathconf (int __fd, int __name);
 extern long int __sysconf (int __name);
+libc_hidden_proto (__sysconf)
 extern __pid_t __getpid (void);
 libc_hidden_proto (__getpid)
 extern __pid_t __getppid (void);

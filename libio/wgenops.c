@@ -278,7 +278,7 @@ __wuflow (fp)
     INTUSE(_IO_free_wbackup_area) (fp);
   return _IO_UFLOW (fp);
 }
-
+libc_hidden_def (__wuflow)
 
 wint_t
 __wunderflow (fp)
@@ -309,6 +309,7 @@ __wunderflow (fp)
     INTUSE(_IO_free_wbackup_area) (fp);
   return _IO_UNDERFLOW (fp);
 }
+libc_hidden_def (__wunderflow)
 
 
 _IO_size_t

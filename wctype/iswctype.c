@@ -34,5 +34,5 @@ __iswctype (wint_t wc, wctype_t desc)
 
   return wctype_table_lookup ((const char *) desc, wc);
 }
-INTDEF(__iswctype)
+libc_hidden_def (__iswctype)
 weak_alias (__iswctype, iswctype)

@@ -2441,6 +2441,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 {
   return INTUSE(_IO_vfscanf) (s, format, argptr, NULL);
 }
+libc_hidden_def (__vfscanf)
 # endif
 #endif
 

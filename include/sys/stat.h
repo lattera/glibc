@@ -23,6 +23,7 @@ extern __inline__ int __stat (__const char *__path, struct stat *__statbuf)
 {
   return __xstat (_STAT_VER, __path, __statbuf);
 }
+libc_hidden_proto (__xmknod)
 extern __inline__ int __mknod (__const char *__path, __mode_t __mode,
 			       __dev_t __dev)
 {

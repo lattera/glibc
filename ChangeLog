@@ -1,3 +1,49 @@
+2002-08-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-addr.c (_dl_addr): Add libc_hidden_def.
+	* elf/dl-close.c (_dl_close): Add libc_hidden_def.
+	* elf/dl-open.c (_dl_open): Add libc_hidden_def.
+	* include/dlfcn.h: Add libc_hidden_proto for _dl_addr, _dl_open,
+	_dl_close.
+
+	* include/libio.h: Add libc_hidden_proto for __underflow, __wuflow,
+	__wunderflow.
+	* libio/genops.c (__underflow): Add libc_hidden_def.
+	* libio/wgenops.c (__wuflow): Likewise.
+	(__wunderflow): Likewise.
+
+	* include/obstack.h: Add libc_hidden_proto for _obstack_newchunk.
+	* malloc/obstack.c (_obstack_newchunk): Add libc_hidden_def.
+
+	* include/stdio.h: Add libc_hidden_proto for __vfscanf.
+	* stdio-common/vfscanf.c (__vfscanf): Add libc_hidden_def.
+
+	* include/string.h: Add libc_hidden_proto for __strverscmp.
+	* string/strverscmp.c (__strverscmp): Add libc_hidden_def.
+
+	* include/unistd.h: Add libc_hidden_proto for __sysconf.
+	* sysdeps/generic/sysconf.c (__sysconf): Add libc_hidden_def.
+	* sysdeps/posix/sysconf.c: Likewise.
+	* sysdeps/unix/sysv/irix4/sysconf.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/sysconf.c: Likewise.
+
+	* include/wctype.h: Use libc_hidden_proto for __iswctype, __iswalnum_l,
+	__iswalpha_l, __iswblank_l, __iswcntrl_l, __iswdigit_l, __iswlower_l,
+	__iswgraph_l, __iswprint_l, __iswpunct_l, __iswspace_l, __iswupper_l,
+	__iswxdigit_l, __towlower_l, __towupper_l.
+	* wcsmbs/wcstype.c (__iswctype): Use libc_hidden_def.
+	* wcsmbs/wcfuncs_l.c: Use libc_hidden_def for all functions.
+
+	* include/sys/wait.h: Add libc_hidden_proto for __xmknod.
+	* sysdeps/generic/xmknod.c (__xmknod): Add libc_hidden_def.
+	* sysdeps/mach/hurd/xmknod.c: Likewise.
+	* sysdeps/unix/xmknod.c: Likewise.
+	* sysdeps/unix/sysv/linux/xmknod.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/xmknod.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/xmknod.c: Likewise.
+
+	* sunrpc/svc.c: Add missing INTUSE for _authenticate.
+
 2002-08-03  Roland McGrath  <roland@redhat.com>
 
 	* include/sys/resource.h: Use libc_hidden_proto for getpriority,
