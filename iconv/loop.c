@@ -190,9 +190,9 @@
 	if (result != __GCONV_ILLEGAL_INPUT)				      \
 	  break;							      \
       }									      \
-    /* If any of them recognized the input stop.  */			      \
+    /* If any of them recognized the input continue with the loop.  */	      \
     if (result != __GCONV_ILLEGAL_INPUT)				      \
-      break;								      \
+      continue;								      \
 									      \
     /* Next see whether we have to ignore the error.  If not, stop.  */	      \
     if (! ignore_errors_p ())						      \

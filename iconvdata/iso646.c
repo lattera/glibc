@@ -434,11 +434,11 @@ gconv_end (struct __gconv_step *data)
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
-    unsigned char ch;							      \
+    unsigned int ch;							      \
     int failure = __GCONV_OK;						      \
 									      \
     ch = get32 (inptr);							      \
-    switch (*((uint32_t *) inptr))					      \
+    switch (ch)								      \
       {									      \
       case 0x23:							      \
 	if (var == GB || var == ES || var == IT || var == FR || var == FR1    \
@@ -878,7 +878,7 @@ gconv_end (struct __gconv_step *data)
 	ch = 0x5d;							      \
 	break;								      \
       default:								      \
-	if (*((uint32_t *) inptr) > 0x7f)				      \
+	if (__builtin_expect (ch, 0) > 0x7f)				      \
 	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       }									      \

@@ -1,3 +1,11 @@
+2000-07-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/loop.c (STANDARD_ERR_HANDLER): If one of the
+	transliteration function did its job, continue, don't stop.
+
+	* iconvdata/iso646.c: Little optimizations in body for conversion
+	from UCS4.
+
 2000-07-14  Mark Kettenis  <kettenis@gnu.org>
 
 	* dlfcn/dlerror.c (free_key_mem): Add cast to silence compiler warning.
