@@ -156,7 +156,7 @@
 #define	FD_CLOEXEC	1	/* Close on exec.  */
 
 
-#include <gnu/types.h>
+#include <bits/types.h>
 
 /* The structure describing an advisory lock.  This is the type of the third
    argument to `fcntl' for the F_GETLK, F_SETLK, and F_SETLKW requests.  */

@@ -10,6 +10,9 @@
 
 1997-06-25 15:54  Fila Kolodny  <fila@ibi.com>
 
+	* sysdeps/mach/hurd/bits/fcntl.h: Change include of gnu/types.h to
+	include of bits/types.h.
+
 	* sysdeps/posix/Makefile ($(common-objpfx)bits/stdio_lim.h): Don't
 	conditionalize this on whether we are cross-compiling.
 
