@@ -400,7 +400,8 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 #if COLORING_INCREMENT != 0
 	  /* Atomically increment NCREATED.  */
-	  unsigned int ncreated = atomic_exchange_and_add (&nptl_ncreated, 1);
+	  unsigned int ncreated = (atomic_exchange_and_add (&nptl_ncreated, 1)
+				   + 1);
 
 	  /* We chose the offset for coloring by incrementing it for
 	     every new thread by a fixed amount.  The offset used
