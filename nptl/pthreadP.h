@@ -122,6 +122,13 @@ extern int __pthread_debug attribute_hidden;
 # define LIBC_CANCEL_HANDLED()	/* Nothing.  */
 #endif
 
+/* The signal used for asynchronous cancelation.  */
+#define SIGCANCEL	__SIGRTMIN
+
+
+/* Signal needed for the kernel-supported POSIX timer implementation.  */
+#define SIGTIMER	(__SIGRTMIN + 1)
+
 
 /* This function is responsible for calling all registered cleanup
    handlers and then terminate the thread.  This includes dellocating
@@ -150,16 +157,6 @@ __do_cancel (void)
 
   /* NOTREACHED */
 }
-
-
-/* Test whether stackframe is still active.  */
-#ifdef _STACK_GROWS_DOWN
-# define FRAME_LEFT(frame, other) ((char *) frame >= (char *) other)
-#elif _STACK_GROWS_UP
-# define FRAME_LEFT(frame, other) ((char *) frame <= (char *) other)
-#else
-# error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
-#endif
 
 
 /* Internal prototypes.  */
