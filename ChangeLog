@@ -1,6 +1,34 @@
+Tue Dec  5 14:00:17 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* misc/Makefile (headers): Add error.h, err.h.
+	(routines): Add error, err.
+	(gpl2lgpl): New variable.
+	* misc/err.c: New file.
+	* misc/err.h: New file.
+	* misc/error.c, misc/error.h: New files.
+
+	* sysdeps/mach/hurd/ioctl.c: Fix typo in last change.
+
+	* Makeconfig (+link): Translate libc% from $^, not just libc.a.
+	(link-libc): Append $(libc.so-version) to libc.so.
+	(built-program-cmd): Fix comma usage.
+	* Makerules [libc.so-version] (libc.so$(libc.so-version)): Make a
+	symlink to libc.so in the build directory.
+	* Rules ($(others) $(tests)): Depend on the library that appears
+	in $(link-libc).
+	(%.out): Use $(built-program-cmd) in commands.
+
+	* posix/unistd.h [__USE_MISC]: Declare brk, sbrk.
+
+	* sysdeps/generic/setenv.c: Added canonical portability cruft.
+	(setenv): Use realloc on LAST_ENVIRON instead of always copying.
+	(unsetenv): New function.
+	* stdlib/stdlib.h [__USE_BSD]: Declare unsetenv.
+	* sysdeps/generic/putenv.c: Rewritten using setenv and unsetenv.
+
 Tue Dec  5 02:27:32 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
 
-	* libio/Makefile [routines]: Remove iofscanf, add iopopen, pclose.
+	* libio/Makefile (routines): Remove iofscanf, add iopopen, pclose.
 
 	* libio/iofscanf.c: Remove file.
 
