@@ -243,7 +243,7 @@ may or may not want to run.  @code{nscd} caches name service lookups; it
 can dramatically improve performance with NIS+, and may help with DNS as
 well.  @code{utmpd} allows programs that use the old format for the
 @file{utmp} file to coexist with new programs.  For more information see
-the files @file{nscd/README} and @file{login/README.utmpd}.
+the file @file{login/README.utmpd}.
 
 One auxiliary program, @file{/usr/libexec/pt_chown}, is installed setuid
 @code{root}.  This program is invoked by the @code{grantpt} function; it
