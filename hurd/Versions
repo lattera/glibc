@@ -1,4 +1,4 @@
-%define PIC
+%define SHARED
 %include <shlib-compat.h>
 
 libc {
