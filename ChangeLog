@@ -1,3 +1,10 @@
+2000-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* localedata/Makefile (test-srcs); Add tst-mbswcs3.
+	Add rule to build tst-mbswcs3 before running tst-mbswcs.sh.
+	* localedata/tst-mbswcs.sh: Run tst-mbswcs3.
+	* localedata/tst-mbswcs3.c: New file.
+
 2000-04-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* wcsmbs/mbsnrtowcs.c: Correctly compute number of converted

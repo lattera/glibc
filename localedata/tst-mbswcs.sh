@@ -53,4 +53,9 @@ ${common_objpfx}elf/ld.so --library-path $common_objpfx \
   ${common_objpfx}localedata/tst-mbswcs2 \
   >> ${common_objpfx}localedata/tst-mbswcs.out || status=1
 
+LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
+${common_objpfx}elf/ld.so --library-path $common_objpfx \
+  ${common_objpfx}localedata/tst-mbswcs3 \
+  >> ${common_objpfx}localedata/tst-mbswcs.out || status=1
+
 exit $status
