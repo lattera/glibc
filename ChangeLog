@@ -1,3 +1,8 @@
+1998-05-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/iso-2022-kr.c (PREPARE_LOOP): Use correct variable to
+	point to output buffer.
+
 1998-05-15 21:07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv.h (gconv_step_data): Add new fields invocation_counter

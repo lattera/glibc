@@ -28,7 +28,7 @@
 /* This makes obvious what everybody knows: 0x1b is the Esc character.  */
 #define ESC	0x1b
 
-/* The shift sequences for this charset (we it does not use ESC).  */
+/* The shift sequences for this charset (it does not use ESC).  */
 #define SI	0x0f
 #define SO	0x0e
 
@@ -48,13 +48,13 @@
   if (!FROM_DIRECTION && !data->internal_use && data->invocation_counter == 0)\
     {									      \
       /* Emit the designator sequence.  */				      \
-      if (outptr + 4 > outend)						      \
+      if (outbuf + 4 > outend)						      \
 	return GCONV_FULL_OUTPUT;					      \
 									      \
-      *outptr++ = '\x1b';						      \
-      *outptr++ = '\x24';						      \
-      *outptr++ = '\x29';						      \
-      *outptr++ = '\x43';						      \
+      *outbuf++ = ESC;							      \
+      *outbuf++ = '$';							      \
+      *outbuf++ = ')';							      \
+      *outbuf++ = 'C';							      \
     }
 #define EXTRA_LOOP_ARGS		, set
 
