@@ -88,6 +88,7 @@ char *alloca ();
 #ifdef _LIBC
 # include "../locale/localeinfo.h"
 # include <not-cancel.h>
+# include <bits/libc-lock.h>
 #endif
 
 /* Provide fallback values for macros that ought to be defined in <inttypes.h>.
@@ -899,6 +900,7 @@ _nl_load_domain (domain_file, domainbinding)
      struct loaded_l10nfile *domain_file;
      struct binding *domainbinding;
 {
+  __libc_lock_define_initialized_recursive (static, lock);
   int fd = -1;
   size_t size;
 #ifdef _LIBC
@@ -912,7 +914,7 @@ _nl_load_domain (domain_file, domainbinding)
   int revision;
   const char *nullentry;
 
-  __libc_lock_lock_recursive (domain_file->lock);
+  __libc_lock_lock_recursive (lock);
   if (domain_file->decided != 0)
     {
       /* There are two possibilities:
@@ -925,7 +927,7 @@ _nl_load_domain (domain_file, domainbinding)
            Not necessary anymore since if the lock is available this
 	   is finished.
       */
-      __libc_lock_unlock_recursive (domain_file->lock);
+      __libc_lock_unlock_recursive (lock);
       return;
     }
 
@@ -1400,7 +1402,7 @@ _nl_load_domain (domain_file, domainbinding)
 
   domain_file->decided = 1;
 
-  __libc_lock_unlock_recursive (domain_file->lock);
+  __libc_lock_unlock_recursive (lock);
 }
 
 

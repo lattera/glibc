@@ -20,8 +20,6 @@
 #ifndef _LOADINFO_H
 #define _LOADINFO_H	1
 
-#include <bits/libc-lock.h>
-
 /* Declarations of locale dependent catalog lookup functions.
    Implemented in
 
@@ -63,7 +61,6 @@ struct loaded_l10nfile
 {
   const char *filename;
   int decided;
-  __libc_lock_define_recursive (, lock);
 
   const void *data;
 

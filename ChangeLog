@@ -4,8 +4,6 @@
 	* intl/dcigettext.c (_nl_find_msg): Call _nl_load_domain also if
 	decided < 0.
 	* intl/finddomain.c (_nl_find_domain): Likewise.
-	* intl/l10nflist.c (_nl_make_l10nflist): Initialize lock.
-	* intl/loadinfo.h (struct loaded_l10nfile): Add lock element.
 	* intl/loadmsgcat.c (_nl_load_domain): Set decided to 1 only once we
 	are done.  First set to -1 to signal initialization is ongoing.
 	Protect against concurrent callers with recursive lock.

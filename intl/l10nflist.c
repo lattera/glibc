@@ -280,7 +280,6 @@ _nl_make_l10nflist (l10nfile_list, dirlist, dirlist_len, mask, language,
 		     || ((mask & XPG_CODESET) != 0
 			 && (mask & XPG_NORM_CODESET) != 0));
   retval->data = NULL;
-  __libc_lock_init_recursive (retval->lock);
 
   if (last == NULL)
     {
