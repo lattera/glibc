@@ -1,5 +1,5 @@
 /* Set thread_state for sighandler, and sigcontext to recover.  i386 version.
-   Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1994, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,9 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 			volatile int rpc_wait,
 			struct machine_thread_all_state *state)
 {
-  __label__ trampoline, rpc_wait_trampoline, firewall;
+  void trampoline (void);
+  void rpc_wait_trampoline (void);
+  void firewall (void);
   extern const void _hurd_intr_rpc_msg_in_trap;
   extern const void _hurd_intr_rpc_msg_cx_sp;
   extern const void _hurd_intr_rpc_msg_sp_restored;
@@ -140,7 +142,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
       stackframe->sigcode = detail->code;
       stackframe->scp = stackframe->return_scp = scp = &stackframe->ctx;
       stackframe->sigreturn_addr = &__sigreturn;
-      stackframe->sigreturn_returns_here = &&firewall; /* Crash on return.  */
+      stackframe->sigreturn_returns_here = firewall; /* Crash on return.  */
 
       /* Set up the sigcontext from the current state of the thread.  */
 
@@ -196,7 +198,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 
       _hurdsig_end_catch_fault ();
 
-      state->basic.eip = (int) &&rpc_wait_trampoline;
+      state->basic.eip = (int) rpc_wait_trampoline;
       /* The reply-receiving trampoline code runs initially on the original
 	 user stack.  We pass it the signal stack pointer in %ebx.  */
       state->basic.uesp = state->basic.esp; /* Restore mach_msg syscall SP.  */
@@ -209,26 +211,26 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
     }
   else
     {
-      state->basic.eip = (int) &&trampoline;
+      state->basic.eip = (int) trampoline;
       state->basic.uesp = (int) sigsp;
     }
   /* We pass the handler function to the trampoline code in %edx.  */
   state->basic.edx = (int) handler;
 
   return scp;
+}
 
-  /* The trampoline code follows.  This is not actually executed as part of
-     this function, it is just convenient to write it that way.  */
+/* The trampoline code follows.  This used to be located inside
+   _hurd_setup_sighandler, but was optimized away by gcc 2.95.  */
 
- rpc_wait_trampoline:
+asm ("rpc_wait_trampoline:\n");
   /* This is the entry point when we have an RPC reply message to receive
      before running the handler.  The MACH_MSG_SEND bit has already been
      cleared in the OPTION argument on our stack.  The interrupted user
      stack pointer has not been changed, so the system call can find its
      arguments; the signal stack pointer is in %ebx.  For our convenience,
      %ecx points to the sc_eax member of the sigcontext.  */
-  asm volatile
-    (/* Retry the interrupted mach_msg system call.  */
+asm (/* Retry the interrupted mach_msg system call.  */
      "movl $-25, %eax\n"	/* mach_msg_trap */
      "lcall $7, $0\n"
      /* When the sigcontext was saved, %eax was MACH_RCV_INTERRUPTED.  But
@@ -241,7 +243,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
      /* Switch to the signal stack.  */
      "movl %ebx, %esp\n");
 
- trampoline:
+ asm ("trampoline:\n");
   /* Entry point for running the handler normally.  The arguments to the
      handler function are already on the top of the stack:
 
@@ -249,8 +251,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
        4(%esp)	SIGCODE
        8(%esp)	SCP
      */
-  asm volatile
-    ("call *%edx\n"		/* Call the handler function.  */
+asm ("call *%edx\n"		/* Call the handler function.  */
      "addl $12, %esp\n"		/* Pop its args.  */
      /* The word at the top of stack is &__sigreturn; following are a dummy
 	word to fill the slot for the address for __sigreturn to return to,
@@ -258,9 +259,5 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	__sigreturn (SCP); this call never returns.  */
      "ret");
 
- firewall:
-  asm volatile ("hlt");
-
-  /* NOTREACHED */
-  return NULL;
-}
+asm ("firewall:\n"
+     "hlt");

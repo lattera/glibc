@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  For i386/Hurd.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -157,6 +157,8 @@ init (int *data)
       void *newsp = (*_cthread_init_routine) ();
       struct hurd_startup_data *od;
 
+      void switch_stacks (void);
+
       /* Copy per-thread variables from that temporary
 	 area onto the new cthread stack.  */
       memcpy (__hurd_threadvar_location_from_sp (0, newsp),
@@ -181,7 +183,7 @@ init (int *data)
 	 be the return address for `init1'; we will jump there with NEWSP
 	 as the stack pointer.  */
       *--(int *) newsp = data[-1];
-      ((void **) data)[-1] = &&switch_stacks;
+      ((void **) data)[-1] = switch_stacks;
       /* Force NEWSP into %ecx and &init1 into %eax, which are not restored
 	 by function return.  */
       asm volatile ("# a %0 c %1" : : "a" (newsp), "c" (&init1));
@@ -193,6 +195,8 @@ init (int *data)
       unsigned long int *array;
       unsigned int i;
       int usercode;
+
+      void call_init1 (void);
 
       array = malloc (__hurd_threadvar_max * sizeof (unsigned long int));
       if (array == NULL)
@@ -208,33 +212,39 @@ init (int *data)
       /* The argument data is just above the stack frame we will unwind by
 	 returning.  Mutate our own return address to run the code below.  */
       usercode = data[-1];
-      ((void **) data)[-1] = &&call_init1;
+      ((void **) data)[-1] = call_init1;
       /* Force USERCODE into %eax and &init1 into %ecx, which are not
 	 restored by function return.  */
       asm volatile ("# a %0 c %1" : : "a" (usercode), "c" (&init1));
     }
-
-  return;
-
- switch_stacks:
-  /* Our return address was redirected to here, so at this point our stack
-     is unwound and callers' registers restored.  Only %ecx and %eax are
-     call-clobbered and thus still have the values we set just above.
-     Fetch from there the new stack pointer we will run on, and jmp to the
-     run-time address of `init1'; when it returns, it will run the user
-     code with the argument data at the top of the stack.  */
-  asm volatile ("movl %eax, %esp; jmp *%ecx");
-  /* NOTREACHED */
-
- call_init1:
-  /* As in the stack-switching case, at this point our stack is unwound and
-     callers' registers restored, and only %ecx and %eax communicate values
-     from the lines above.  In this case we have stashed in %eax the user
-     code return address.  Push it on the top of the stack so it acts as
-     init1's return address, and then jump there.  */
-  asm volatile ("pushl %eax; jmp *%ecx");
-  /* NOTREACHED */
 }
+
+/* These bits of inline assembler used to be located inside `init'.
+   However they were optimized away by gcc 2.95.  */
+
+/* The return address of `init' above, was redirected to here, so at
+   this point our stack is unwound and callers' registers restored.
+   Only %ecx and %eax are call-clobbered and thus still have the
+   values we set just above.  Fetch from there the new stack pointer
+   we will run on, and jmp to the run-time address of `init1'; when it
+   returns, it will run the user code with the argument data at the
+   top of the stack.  */
+asm ("
+ switch_stacks:
+  movl %eax, %esp
+  jmp *%ecx
+");
+
+/* As in the stack-switching case, at this point our stack is unwound
+   and callers' registers restored, and only %ecx and %eax communicate
+   values from the lines above.  In this case we have stashed in %eax
+   the user code return address.  Push it on the top of the stack so
+   it acts as init1's return address, and then jump there.  */
+asm ("
+  call_init1:
+  push %eax
+  jmp *%ecx
+");
 
 
 #ifdef PIC
