@@ -1,3 +1,45 @@
+Tue May  9 01:26:52 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/i386/elf/start.S (__data_start): Define this symbol as
+ 	the first thing in .data.
+
+	* sysdeps/mach/_strerror.c (_strerror_internal): Eschew sprintf.
+
+	* hurd/hurdstartup.h: New file.
+
+	* sysdeps/i386/elf/start.S: Give two operands to `testl' when they
+ 	are the same.  Use `jz' instead of `jeq'.
+
+	* Makeconfig (config.make): Depend on config.status, and run it to
+ 	update.
+	(config.status): New target; depend on configure.
+	If target (config.status) exists, run it with --recheck to update;
+ 	if not, give error msg saying to run confiugre by hand.
+	* Makerules [$(sysd-Makefile-sysdirs) != $(sysdirs)]
+ 	(sysd-Makefile-force): Set this variable to FORCE in this case, to
+ 	force a rebuild of sysd-Makefile.
+	(sysd-Makefile): Depend on $(sysd-Makefile-force).
+	Write into the file sysd-Makefile-sysdirs:=$(sysdirs).
+	[$(sysd-rules-sysdirs) != $(sysdirs)] (sysd-rules-force): Set this
+	variable to FORCE in this case, to force a rebuild of sysd-rules.
+	(sysd-rules): Depend on $(sysd-rules-force).
+	Write into the file sysd-rules-sysdirs:=$(sysdirs).
+	
+	* Makerules (LDFLAGS-c.so): Change ld option -interp to
+	-dynamic-linker.	
+
+	* Makerules (do-install-program): New canned sequence.
+	(install-bin, install-sbin): Use it.
+	(install for lib*.so): Use it instead of $(do-install).
+	Fix .so installation rules to handle lib*.so and *.so, deal with
+ 	$(libprefix) right, and install *.so as *.so$($(*.so)-version);
+ 	i.e. "libc.so-version = .1".
+
+Mon May  8 05:10:25 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/do-rel.h: New file, split out of dynamic-link.h.
+	* elf/Makefile (distribute): Add do-rel.h.
+
 Sat May  6 11:06:47 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makeconfig (+gccwarn): Add -Winline.
