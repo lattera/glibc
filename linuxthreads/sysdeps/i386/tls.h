@@ -77,16 +77,51 @@ typedef struct
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 #  define INSTALL_DTV(descr, dtvp) \
-  ((tcbhead_t *) descr)->dtv = dtvp + 1
+  ((tcbhead_t *) (descr))->dtv = (dtvp) + 1
 
 /* Install new dtv for current thread.  */
 #  define INSTALL_NEW_DTV(dtv) \
   ({ struct _pthread_descr_struct *__descr;				      \
-     THREAD_SETMEM (__descr, p_header.data.dtvp, dtv); })
+     THREAD_SETMEM (__descr, p_header.data.dtvp, (dtv)); })
 
 /* Return dtv of given thread descriptor.  */
 #  define GET_DTV(descr) \
-  (((tcbhead_t *) descr)->dtv)
+  (((tcbhead_t *) (descr))->dtv)
+
+#  define TLS_DO_MODIFY_LDT(descr, nr)					      \
+({									      \
+  struct modify_ldt_ldt_s ldt_entry =					      \
+    { nr, (unsigned long int) (descr), sizeof (struct _pthread_descr_struct), \
+      1, 0, 0, 0, 0, 1, 0 };						      \
+  int result;								      \
+  asm ("pushl %%ebx\n\t"						      \
+       "movl $1, %%ebx\n\t"						      \
+       "int $0x80\n\t"							      \
+       "popl %%ebx"							      \
+       : "=a" (result)							      \
+       : "0" (__NR_modify_ldt), "d" (sizeof (ldt_entry)), "c" (&ldt_entry));  \
+  __builtin_expect (result, 0) != 0 ? -1 : nr * 8 + 7;			      \
+})
+
+#  define TLS_DO_SET_THREAD_AREA(descr) \
+ INLINE_SYSCALL (set_thread_area, 2, descr, 1);
+  if (__builtin_expect (__seg, 0) == -1)
+    /* Nothing else we can do.  */
+    asm ("hlt");
+  __seg;
+})
+
+#  ifdef __ASSUME_SET_THREAD_AREA_SYSCALL
+#   define TLS_SETUP_GS_SEGMENT(descr) \
+  INLINE_SYSCALL (set_thread_area, 2, descr, 1)
+#  elif defined __NR_set_thread_area
+#   define TLS_SETUP_GS_SEGMENT(descr) \
+  ({ int __seg = INLINE_SYSCALL (set_thread_area, 2, descr, 1); \
+     __seg == -1 ? TLS_DO_MODIFY_LDT (descr, 0) : __seg; })
+#  else
+#   define TLS_SETUP_GS_SEGMENT(descr) \
+  TLS_DO_MODIFY_LDT (descr, 0)
+#  endif
 
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
@@ -94,27 +129,18 @@ typedef struct
 #  define TLS_INIT_TP(descr) \
   do {									      \
     void *_descr = (descr);						      \
-    struct modify_ldt_ldt_s ldt_entry =					      \
-      { 0, (unsigned long int) _descr, 1048576, 1, 0, 0, 1, 0, 1, 0 };	      \
-    int result;								      \
     tcbhead_t *head = _descr;						      \
+    int __gs;								      \
 									      \
     head->tcb = _descr;							      \
-    /* For now the thread descriptor isat the same address.  */		      \
+    /* For now the thread descriptor is at the same address.  */	      \
     head->self = _descr;						      \
 									      \
-    asm ("pushl %%ebx\n\t"						      \
-	 "movl $1, %%ebx\n\t"						      \
-	 "int $0x80\n\t"						      \
-	 "popl %%ebx"							      \
-	 : "=a" (result)						      \
-	 : "0" (__NR_modify_ldt), "d" (sizeof (ldt_entry)), "c" (&ldt_entry));\
-									      \
-    if (__builtin_expect (result, 0) != 0)				      \
+    __gs = TLS_SETUP_GS_SEGMENT (_descr);				      \
+    if (__builtin_expect (__gs, 7) == -1)				      \
       /* Nothing else we can do.  */					      \
       asm ("hlt");							      \
-									      \
-    asm ("movw %w0, %%gs" : : "q" (7));					      \
+    asm ("movw %w0, %%gs" : : "q" (__gs));				      \
   } while (0)
 
 
