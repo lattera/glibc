@@ -32,12 +32,6 @@
 #define OPCODE_JMP_G1	0x81c06000 /* jmp %g1+?; add lo 10 bits of value */
 #define OPCODE_SAVE_SP	0x9de3bfa8 /* save %sp, -(16+6)*4, %sp */
 
-
-/* To allow static progies to link properly, define these as weak.  */
-weak_extern(_dl_hwcap);
-weak_extern(_dl_hwcap_mask);
-
-
 /* Protect some broken versions of gcc from misinterpreting weak addresses.  */
 #define WEAKADDR(x)	({ __typeof(x) *_px = &x;			\
 			   __asm ("" : "=r" (_px) : "0" (_px));		\
@@ -58,7 +52,11 @@ elf_machine_matches_host (Elf32_Half e_machine)
     return 1;
   else if (e_machine == EM_SPARC32PLUS)
     {
-      unsigned long *hwcap = WEAKADDR(_dl_hwcap);
+      unsigned long *hwcap;
+      weak_extern (_dl_hwcap);
+      weak_extern (_dl_hwcap_mask);
+
+      hwcap = WEAKADDR(_dl_hwcap);
       return hwcap && (*hwcap & _dl_hwcap_mask & HWCAP_SPARC_V9);
     }
   else
@@ -268,8 +266,11 @@ elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
 #ifndef RTLD_BOOTSTRAP
   /* Note that we don't mask the hwcap here, as the flush is essential to
      functionality on those cpu's that implement it.  */
-  unsigned long *hwcap = WEAKADDR(_dl_hwcap);
-  int do_flush = (!hwcap || (*hwcap & HWCAP_SPARC_FLUSH));
+  unsigned long *hwcap;
+  int do_flush;
+  weak_extern (_dl_hwcap);
+  hwcap = WEAKADDR(_dl_hwcap);
+  do_flush = (!hwcap || (*hwcap & HWCAP_SPARC_FLUSH));
 #else
   /* Unfortunately, this is necessary, so that we can ensure
      ld.so will not execute corrupt PLT entry instructions. */
