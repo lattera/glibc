@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
 
 /*
  * Copyright (C) 1982, 1986 Regents of the University of California.
- * All rights reserved. 
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -48,31 +48,30 @@
 #ifndef __NETINET_UDP_H
 #define __NETINET_UDP_H    1
 
-#include <sys/cdefs.h>
+#include <features.h>
 #include <sys/types.h>
 
-__BEGIN_DECLS
 
 /* UDP header as specified by RFC 768, August 1980. */
 #ifdef __FAVOR_BSD
-struct udphdr {
-         u_int16_t uh_sport;           /* source port */
-         u_int16_t uh_dport;           /* destination port */
-         u_int16_t uh_ulen;            /* udp length */
-         u_int16_t uh_sum;             /* udp checksum */
+struct udphdr
+{
+  uint16_t uh_sport;           /* source port */
+  uint16_t uh_dport;           /* destination port */
+  uint16_t uh_ulen;            /* udp length */
+  uint16_t uh_sum;             /* udp checksum */
 };
 #else
 
-struct udphdr {
-  u_int16_t	source;
-  u_int16_t	dest;
-  u_int16_t	len;
-  u_int16_t	check;
+struct udphdr
+{
+  uint16_t source;
+  uint16_t dest;
+  uint16_t len;
+  uint16_t check;
 };
 #endif
 
 #define SOL_UDP            17      /* sockopt level for UDP */
-
-__END_DECLS
 
 #endif /* netinet/udp.h */
