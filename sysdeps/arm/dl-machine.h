@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  ARM version.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
+   Copyright (C) 1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -350,13 +350,14 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
 
 #endif /* !dl_machine_h */
 
-#ifdef RESOLVE
 
 /* ARM never uses Elf32_Rela relocations for the dynamic linker.
    Prelinked libraries may use Elf32_Rela though.  */
-# ifdef RTLD_BOOTSTRAP
-#  define ELF_MACHINE_NO_RELA 1
-# endif
+#ifdef RTLD_BOOTSTRAP
+# define ELF_MACHINE_NO_RELA 1
+#endif
+
+#ifdef RESOLVE
 
 /* Deal with an out-of-range PC24 reloc.  */
 static Elf32_Addr
