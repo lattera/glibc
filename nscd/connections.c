@@ -22,6 +22,7 @@
 #include <atomic.h>
 #include <error.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <grp.h>
 #include <pthread.h>
 #include <pwd.h>
@@ -206,6 +207,12 @@ nscd_init (void)
       dbg_log ("%s: %s", _PATH_NSCDSOCKET, strerror (errno));
       exit (1);
     }
+
+  /* We don't wait for data otherwise races between threads can get
+     them stuck on accept.  */
+  int fl = fcntl (sock, F_GETFL);
+  if (fl != -1)
+    fcntl (sock, F_SETFL, fl | O_NONBLOCK);
 
   /* Set permissions for the socket.  */
   chmod (_PATH_NSCDSOCKET, 0666);
@@ -451,32 +458,37 @@ nscd_run (void *p)
   while (1)
     {
       int nr;
+      time_t now = 0;
 
       /* One more thread available.  */
       atomic_increment (&nready);
 
     no_conn:
-      if (run_prune)
-	do
-	  {
-	    time_t now = time (NULL);
-	    int timeout = now < next_prune ? 1000 * (next_prune - now) : 0;
+      do
+	{
+	  int timeout = -1;
+	  if (run_prune)
+	    {
+	      now = time (NULL);
+	      timeout = now < next_prune ? 1000 * (next_prune - now) : 0;
+	    }
 
-	    nr = poll (&conn, 1, timeout);
+	  nr = poll (&conn, 1, timeout);
 
-	    if (nr == 0)
-	      {
-		/* The `poll' call timed out.  It's time to clean up the
-		   cache.  */
-		atomic_decrement (&nready);
-		assert (my_number < lastdb);
-		prune_cache (&dbs[my_number], time(NULL));
-		now = time (NULL);
-		next_prune = now + CACHE_PRUNE_INTERVAL;
-		goto try_get;
-	      }
-	  }
-	while ((conn.revents & POLLRDNORM) == 0);
+	  if (nr == 0)
+	    {
+	      /* The `poll' call timed out.  It's time to clean up the
+		 cache.  */
+	      atomic_decrement (&nready);
+	      assert (my_number < lastdb);
+	      prune_cache (&dbs[my_number], time(NULL));
+	      now = time (NULL);
+	      next_prune = now + CACHE_PRUNE_INTERVAL;
+	      atomic_increment (&nready);
+	      goto try_get;
+	    }
+	}
+      while ((conn.revents & POLLRDNORM) == 0);
 
     got_data:;
       /* We have a new incoming connection.  Accept the connection.  */
@@ -490,8 +502,9 @@ nscd_run (void *p)
 
       if (__builtin_expect (fd, 0) < 0)
 	{
-	  dbg_log (_("while accepting connection: %s"),
-		   strerror_r (errno, buf, sizeof (buf)));
+	  if (errno != EAGAIN && errno != EWOULDBLOCK)
+	    dbg_log (_("while accepting connection: %s"),
+		     strerror_r (errno, buf, sizeof (buf)));
 	  goto no_conn;
 	}
 

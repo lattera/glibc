@@ -140,7 +140,7 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
       total = (sizeof (struct groupdata)
 	       + gr_mem_cnt * sizeof (uint32_t)
 	       + gr_name_len + gr_passwd_len + gr_mem_len_total);
-      data = (struct groupdata *) malloc (total + n);
+      data = (struct groupdata *) malloc (total + n + req->key_len);
       if (data == NULL)
 	/* There is no reason to go on.  */
 	error (EXIT_FAILURE, errno, _("while allocating cache entry"));
@@ -163,8 +163,11 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
       for (cnt = 0; cnt < gr_mem_cnt; ++cnt)
 	cp = mempcpy (cp, grp->gr_mem[cnt], gr_mem_len[cnt]);
 
-      /* Finally the stringified GID value.  */
+      /* Next the stringified GID value.  */
       memcpy (cp, buf, n);
+
+      /* Copy of the key in case it differs.  */
+      char *key_copy = memcpy (cp + n, key, req->key_len);
 
       /* Write the result.  */
       written = TEMP_FAILURE_RETRY (write (fd, &data->resp, total));
@@ -180,8 +183,8 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
 		 total, data, 0, t, db, owner);
 
       /* If the key is different from the name add a separate entry.  */
-      if (type == GETGRBYNAME && strcmp (key, gr_name) != 0)
-	cache_add (GETGRBYNAME, key, strlen (key) + 1, data,
+      if (type == GETGRBYNAME && strcmp (key_copy, gr_name) != 0)
+	cache_add (GETGRBYNAME, key_copy, req->key_len, data,
 		   total, data, 0, t, db, owner);
 
       cache_add (GETGRBYGID, cp, n, data, total, data, 1, t, db, owner);

@@ -1,3 +1,12 @@
+2004-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c: Make socket nonblocking so that threads
+	don't get stuck on accept.  Fix locking.
+
+	* nscd/grpcache.c (cache_addgr): Use cope of original key in hash
+	entry with alternative key.
+	* nscd/pwdcache.c (cache_addpw): Likewise.
+
 2004-08-25  Richard Sandiford  <rsandifo@redhat.com>
 
 	* sysdeps/mips/dl-machine.h (_dl_start_user): Don't set
