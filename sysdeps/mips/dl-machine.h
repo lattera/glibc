@@ -23,7 +23,7 @@
 
 #define ELF_MACHINE_NAME "MIPS"
 
-#define ELF_MACHINE_NO_PLT 
+#define ELF_MACHINE_NO_PLT
 
 #include <assert.h>
 #include <entry.h>
@@ -577,7 +577,7 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 }
 
 static inline void
-elf_machine_lazy_rel (Elf32_addr l_addr, const ElfW(Rel) *reloc)
+elf_machine_lazy_rel (ElfW(Addr) l_addr, const ElfW(Rel) *reloc)
 {
   /* Do nothing.  */
 }
