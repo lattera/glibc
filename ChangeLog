@@ -1,3 +1,10 @@
+2001-11-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Remove use of
+	_dl_pf_to_prot.  Use arithmetic operation using PF_TO_PROT macro.
+	* sysdeps/generic/ldsodefs.h (PF_TO_PROT): New macro.
+	* elf/dl-reloc.c (_dl_relocate_object): Likewise.
+
 2001-11-10  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/ldbl-128/e_log2l.c: New file.

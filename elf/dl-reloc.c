@@ -167,20 +167,20 @@ cannot make segment writable for relocation"));
 	    caddr_t mapend = ((caddr_t) l->l_addr +
 			      ((ph->p_vaddr + ph->p_memsz + _dl_pagesize - 1)
 			       & ~(_dl_pagesize - 1)));
-	    extern unsigned char _dl_pf_to_prot[8];
 	    int prot;
 
-	    if ((PF_R | PF_W | PF_X) == 7
-		&& (PROT_READ | PROT_WRITE | PROT_EXEC) == 7)
-	      prot = _dl_pf_to_prot[ph->p_flags & (PF_R | PF_X)];
-	    else
-	      {
-		prot = 0;
-		if (ph->p_flags & PF_R)
-		  prot |= PROT_READ;
-		if (ph->p_flags & PF_X)
-		  prot |= PROT_EXEC;
-	      }
+#if (PF_R | PF_W | PF_X) == 7 && (PROT_READ | PROT_WRITE | PROT_EXEC) == 7
+	    prot = (PF_TO_PROT
+		    >> ((ph->p_flags & (PF_R | PF_W | PF_X)) * 4)) & 0xf;
+#else
+	    prot = 0;
+	    if (ph->p_flags & PF_R)
+	      prot |= PROT_READ;
+	    if (ph->p_flags & PF_W)
+	      prot |= PROT_WRITE;
+	    if (ph->p_flags & PF_X)
+	      prot |= PROT_EXEC;
+#endif
 
 	    if (__builtin_expect (__mprotect (mapstart, mapend - mapstart,
 					      prot), 0) < 0)

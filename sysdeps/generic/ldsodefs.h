@@ -95,6 +95,20 @@ typedef ElfW(Addr) lookup_t;
 #define ELF_RTYPE_CLASS_PLT 1
 #define ELF_RTYPE_CLASS_COPY 2
 
+/* ELF uses the PF_x macros to specify the segment permissions, mmap
+   uses PROT_xxx.  In most cases the three macros have the values 1, 2,
+   and 3 but not in a matching order.  The following macros allows
+   converting from the PF_x values to PROT_xxx values.  */
+#define PF_TO_PROT \
+  ((PROT_READ << (PF_R * 4))						      \
+   | (PROT_WRITE << (PF_W * 4))						      \
+   | (PROT_EXEC << (PF_X * 4))						      \
+   | ((PROT_READ | PROT_WRITE) << ((PF_R | PF_W) * 4))			      \
+   | ((PROT_READ | PROT_EXEC) << ((PF_R | PF_X) * 4))			      \
+   | ((PROT_WRITE | PROT_EXEC) << (PF_W | PF_X) * 4)			      \
+   | ((PROT_READ | PROT_WRITE | PROT_EXEC) << ((PF_R | PF_W | PF_X) * 4)))
+
+
 /* For the version handling we need an array with only names and their
    hash values.  */
 struct r_found_version
