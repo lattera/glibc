@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +36,8 @@
 #define SHM_LOCK	11		/* lock segment (root only) */
 #define SHM_UNLOCK	12		/* unlock segment (root only) */
 
+/* Segment low boundary address multiple.  */
+#define SHMLBA 0x00400000		/* address needs to be 4 Mb aligned */
 
 /* Type to count number of attaches.  */
 typedef unsigned long int shmatt_t;
