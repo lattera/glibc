@@ -464,6 +464,7 @@ __pthread_create_2_0 (newthread, attr, start_routine, arg)
       new_attr.guardsize = ps;
       new_attr.stackaddr = NULL;
       new_attr.stacksize = 0;
+      new_attr.cpuset = NULL;
 
       /* We will pass this value on to the real implementation.  */
       attr = (pthread_attr_t *) &new_attr;
