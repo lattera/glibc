@@ -1,3 +1,28 @@
+2003-05-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd.c (main): Parse config file right after parsing
+	parameters.  Then, if get_stats is true, call receive_print_stats.
+	Drop parameter from nscd_init call.
+	(get_stats): New variable.
+	(parse_opt): Set get_stats, don't call receive_print_stats here.
+	* nscd/nscd.h: Declare dbs, stat_user, and stat_uid.  Adjust nscd_init
+	prototype.
+	* nscd/connections.c (stat_user, stat_uid): New variables.
+	(dbs): Make global.
+	(nscd_init): Don't read configuration file here.  Drop parameter.
+	(handle_request): Cleanup handling of non-database lookup requests.
+	* nscd/nscd_conf.c (nscd_parse_file): Recognize stat-user entry.
+	Get UID of the specified user.  Use xstrdup instead of strdup.
+	* nscd/nscd_stat.c (receive_print_stats): Check UID.  If not zero,
+	check stat_user.
+	* nscd/Makefile (nscd-modules): Add xstrdup.
+	* nscd/nscd.conf: Document stat-user entry.
+
+2003-05-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (__NR_semtimedop): Define
+	if not defined.
+
 2003-04-22  Roland McGrath  <roland@redhat.com>
 
 	* elf/elf.h (AT_SYSINFO_EHDR): New macro, replaces AT_SYSINFO_EH_FRAME.

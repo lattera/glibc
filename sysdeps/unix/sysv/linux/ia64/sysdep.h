@@ -45,6 +45,12 @@
 # define __NR_pwrite __NR_pwrite64
 #endif
 
+/* This is to help the old kernel headers where __NR_semtimedop is not
+   available.  */
+#ifndef __NR_semtimedop
+# define __NR_semtimedop 1247
+#endif
+
 #ifdef __ASSEMBLER__
 
 #undef CALL_MCOUNT

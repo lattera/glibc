@@ -89,6 +89,7 @@ struct database
 
 
 /* Global variables.  */
+extern struct database dbs[lastdb];
 extern const char *dbnames[lastdb];
 extern const char *serv2str[LASTREQ];
 
@@ -99,12 +100,16 @@ extern const struct iovec hst_iov_disabled;
 /* Number of threads to run.  */
 extern int nthreads;
 
-/* Tables for which we cache data with uid */
+/* Tables for which we cache data with uid.  */
 extern int secure[lastdb];
-extern int secure_in_use; /* Is one of the above 1 ? */
+extern int secure_in_use; /* Is one of the above 1?  */
 
-/* User name to run server processes as */
+/* User name to run server processes as.  */
 extern const char *server_user;
+
+/* Name and UID of user who is allowed to request statistics.  */
+extern const char *stat_user;
+extern uid_t stat_uid;
 
 /* Time the server was started.  */
 extern time_t start_time;
@@ -119,7 +124,7 @@ extern void termination_handler (int signum) __attribute__ ((__noreturn__));
 extern int nscd_open_socket (void);
 
 /* connections.c */
-extern void nscd_init (const char *conffile);
+extern void nscd_init (void);
 extern void close_sockets (void);
 extern void start_threads (void) __attribute__ ((__noreturn__));
 

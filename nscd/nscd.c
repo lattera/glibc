@@ -30,6 +30,7 @@
 #include <paths.h>
 #include <pthread.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -109,6 +110,9 @@ static struct argp argp =
   options, parse_opt, NULL, doc,
 };
 
+/* True if only statistics are requested.  */
+static bool get_stats;
+
 int
 main (int argc, char **argv)
 {
@@ -128,6 +132,20 @@ main (int argc, char **argv)
       argp_help (&argp, stdout, ARGP_HELP_SEE, program_invocation_short_name);
       exit (EXIT_FAILURE);
     }
+
+  /* Read the configuration file.  */
+  if (nscd_parse_file (conffile, dbs) != 0)
+    {
+      /* We couldn't read the configuration file.  We don't start the
+	 server.  */
+      dbg_log (_("cannot read configuration file; this is fatal"));
+      exit (1);
+    }
+
+  /* Do we only get statistics?  */
+  if (get_stats)
+    /* Does not return.  */
+    receive_print_stats ();
 
   /* Check if we are already running. */
   if (check_pid (_PATH_NSCDPID))
@@ -223,7 +241,7 @@ main (int argc, char **argv)
   __nss_disable_nscd ();
 
   /* Init databases.  */
-  nscd_init (conffile);
+  nscd_init ();
 
   /* Handle incoming requests */
   start_threads ();
@@ -268,10 +286,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
       }
 
     case 'g':
-      if (getuid () != 0)
-	error (EXIT_FAILURE, 0, _("Only root is allowed to use this option!"));
-      receive_print_stats ();
-      /* Does not return.  */
+      get_stats = true;
+      break;
 
     case 'i':
       if (getuid () != 0)

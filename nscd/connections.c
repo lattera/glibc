@@ -48,6 +48,8 @@ extern void *xrealloc (void *o, size_t n);
 const char *server_user;
 static uid_t server_uid;
 static gid_t server_gid;
+const char *stat_user;
+uid_t stat_uid;
 static gid_t *server_groups;
 #ifndef NGROUPS
 # define NGROUPS 32
@@ -88,7 +90,7 @@ const char *serv2str[LASTREQ] =
 };
 
 /* The control data structures for the services.  */
-static struct database dbs[lastdb] =
+struct database dbs[lastdb] =
 {
   [pwddb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
@@ -137,19 +139,10 @@ unsigned long int client_queued;
 
 /* Initialize database information structures.  */
 void
-nscd_init (const char *conffile)
+nscd_init (void)
 {
   struct sockaddr_un sock_addr;
   size_t cnt;
-
-  /* Read the configuration file.  */
-  if (nscd_parse_file (conffile, dbs) != 0)
-    {
-      /* We couldn't read the configuration file.  Disable all services
-	 by shutting down the srever.  */
-      dbg_log (_("cannot read configuration file; this is fatal"));
-      exit (1);
-    }
 
   /* Secure mode and unprivileged mode are incompatible */
   if (server_user != NULL && secure_in_use)
@@ -236,6 +229,7 @@ close_sockets (void)
 {
   close (sock);
 }
+
 
 static void
 invalidate_cache (char *key)
@@ -384,20 +378,9 @@ cannot handle old request version %d; current version is %d"),
     case GETSTAT:
     case SHUTDOWN:
     case INVALIDATE:
-      /* Accept shutdown, getstat and invalidate only from root */
-      if (secure_in_use && uid == 0)
+      if (! secure_in_use)
 	{
-	  if (req->type == GETSTAT)
-	    send_stats (fd, dbs);
-	  else if (req->type == INVALIDATE)
-	    invalidate_cache (key);
-	  else
-	    termination_handler (0);
-	}
-      else
-	{
-	  /* Some systems have no SO_PEERCRED implementation.  They don't
-	     care about security so we don't as well.  */
+	  /* Get the callers credentials.  */
 #ifdef SO_PEERCRED
 	  struct ucred caller;
 	  socklen_t optlen = sizeof (caller);
@@ -408,18 +391,30 @@ cannot handle old request version %d; current version is %d"),
 
 	      dbg_log (_("error getting callers id: %s"),
 		       strerror_r (errno, buf, sizeof (buf)));
+	      break;
 	    }
-	  else
-	    if (caller.uid == 0)
+
+	  uid = caller.uid;
+#else
+	  /* Some systems have no SO_PEERCRED implementation.  They don't
+	     care about security so we don't as well.  */
+	  uid = 0;
 #endif
-	      {
-		if (req->type == GETSTAT)
-		  send_stats (fd, dbs);
-		else if (req->type == INVALIDATE)
-		  invalidate_cache (key);
-		else
-		  termination_handler (0);
-	      }
+	}
+
+      /* Accept shutdown, getstat and invalidate only from root.  For
+	 the stat call also allow the user specified in the config file.  */
+      if (req->type == GETSTAT)
+	{
+	  if (uid == 0 || uid == stat_uid)
+	    send_stats (fd, dbs);
+	}
+      else if (uid == 0)
+	{
+	  if (req->type == INVALIDATE)
+	    invalidate_cache (key);
+	  else
+	    termination_handler (0);
 	}
       break;
 
@@ -480,7 +475,7 @@ nscd_run (void *p)
       int fd = TEMP_FAILURE_RETRY (accept (conn.fd, NULL, NULL));
       request_header req;
       char buf[256];
-      uid_t uid = 0;
+      uid_t uid = -1;
 #ifdef SO_PEERCRED
       pid_t pid = 0;
 #endif
@@ -526,7 +521,7 @@ nscd_run (void *p)
 	      || secure[serv2db[req.type]])
 	    uid = caller.uid;
 
-	      pid = caller.pid;
+	  pid = caller.pid;
 	}
       else if (__builtin_expect (debug_level > 0, 0))
 	{

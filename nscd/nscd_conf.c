@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -19,6 +19,7 @@
 
 #include <ctype.h>
 #include <malloc.h>
+#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,6 +29,10 @@
 
 #include "dbg_log.h"
 #include "nscd.h"
+
+/* Wrapper functions with error checking for standard functions.  */
+extern char *xstrdup (const char *s);
+
 
 /* Names of the databases.  */
 const char *dbnames[lastdb] =
@@ -181,7 +186,20 @@ nscd_parse_file (const char *fname, struct database dbs[lastdb])
           if (!arg1)
             dbg_log (_("Must specify user name for server-user option"));
           else
-            server_user = strdup (arg1);
+            server_user = xstrdup (arg1);
+        }
+      else if (strcmp (entry, "stat-user") == 0)
+        {
+          if (!arg1)
+            dbg_log (_("Must specify user name for stat-user option"));
+          else
+	    {
+	      stat_user = xstrdup (arg1);
+
+	      struct passwd *pw = getpwnam (stat_user);
+	      if (pw != NULL)
+		stat_uid = pw->pw_uid;
+	    }
         }
       else
 	dbg_log (_("Unknown option: %s %s %s"), entry, arg1, arg2);

@@ -114,6 +114,24 @@ receive_print_stats (void)
   ssize_t nbytes;
   int fd;
   int i;
+  uid_t uid = getuid ();
+
+  /* Find out whether there is another user but root allowed to
+     request statistics.  */
+  if (uid != 0)
+    {
+      /* User specified?  */
+      if(stat_user == NULL || stat_uid != uid)
+	{
+	  if (stat_user != NULL)
+	    error (EXIT_FAILURE, 0,
+		   _("Only root or %s is allowed to use this option!"),
+		   stat_user);
+	  else
+	    error (EXIT_FAILURE, 0,
+		   _("Only root is allowed to use this option!"));
+	}
+    }
 
   /* Open a socket to the running nscd.  */
   fd = nscd_open_socket ();
