@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  NPTL version.
-   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -408,7 +408,7 @@ extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer
 
 
 /* Normal cleanup handling, based on C cleanup attribute.  */
-extern inline void
+extern __inline void
 __libc_cleanup_routine (struct __pthread_cleanup_frame *f)
 {
   if (f->__do_it)
