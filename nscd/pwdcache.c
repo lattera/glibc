@@ -135,6 +135,16 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	      /* Copy the key data.  */
 	      char *key_copy = memcpy (dataset->strdata, key, req->key_len);
 
+	      /* If necessary, we also propagate the data to disk.  */
+	      if (db->persistent)
+		{
+		  // XXX async OK?
+		  uintptr_t pval = (uintptr_t) dataset & ~pagesize_m1;
+		  msync ((void *) pval,
+			 ((uintptr_t) dataset & pagesize_m1)
+			 + sizeof (struct dataset) + req->key_len, MS_ASYNC);
+		}
+
 	      /* Now get the lock to safely insert the records.  */
 	      pthread_rwlock_rdlock (&db->lock);
 
@@ -245,7 +255,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	      && memcmp (&dataset->resp, dh->data,
 			 dh->allocsize - offsetof (struct dataset, resp)) == 0)
 	    {
-	      /* The sata has not changed.  We will just bump the
+	      /* The data has not changed.  We will just bump the
 		 timeout value.  Note that the new record has been
 		 allocated on the stack and need not be freed.  */
 	      dh->timeout = dataset->head.timeout;

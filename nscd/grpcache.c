@@ -128,6 +128,16 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	      /* Copy the key data.  */
 	      memcpy (dataset->strdata, key, req->key_len);
 
+	      /* If necessary, we also propagate the data to disk.  */
+	      if (db->persistent)
+		{
+		  // XXX async OK?
+		  uintptr_t pval = (uintptr_t) dataset & ~pagesize_m1;
+		  msync ((void *) pval,
+			 ((uintptr_t) dataset & pagesize_m1)
+			 + sizeof (struct dataset) + req->key_len, MS_ASYNC);
+		}
+
 	      /* Now get the lock to safely insert the records.  */
 	      pthread_rwlock_rdlock (&db->lock);
 
