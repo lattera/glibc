@@ -1,5 +1,8 @@
 1999-10-01  Ulrich Drepper  <drepper@cygnus.com>
 
+	* resolv/inet_net_ntop.c (inet_net_ntop_ipv4): If BITS is zero
+	account for added '0'.
+
 	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr_r): Align
 	handling of IPv6 tunnel address handling with bind 8.2.1.  Allow
 	len argument to be greater than needed address size.

@@ -98,6 +98,7 @@ inet_net_ntop_ipv4(src, bits, dst, size)
 		if (size < sizeof "0")
 			goto emsgsize;
 		*dst++ = '0';
+		--size;
 		*dst = '\0';
 	}
 
