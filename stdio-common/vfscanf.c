@@ -1202,7 +1202,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      int from_level;
 	      int to_level;
 #ifdef COMPILE_WPRINTF
-	      const wchar_t *wcdigits;
+	      const wchar_t *wcdigits[10];
 #else
 	      const char *mbdigits[10];
 #endif
@@ -1221,19 +1221,19 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		 and also perform the first round of comparisons.  */
 	      for (n = 0; n < 10; ++n)
 		{
-		  size_t dlen;
-		  size_t dcnt;
-
 		  /* Get the string for the digits with value N.  */
 #ifdef COMPILE_WPRINTF
-		  wcdigits[n] = _NL_CURRENT (LC_CTYPE,
-					     _NL_CTYPE_INDIGITS0_WC + n);
-		  if (c == *wcdigit[n])
+		  wcdigits[n] = (const wchar_t *)
+		    _NL_CURRENT (LC_CTYPE, _NL_CTYPE_INDIGITS0_WC + n);
+		  if (c == *wcdigits[n])
 		    break;
 
 		  /* Advance the pointer to the next string.  */
 		  ++wcdigits[n];
 #else
+		  size_t dlen;
+		  size_t dcnt;
+
 		  mbdigits[n] = _NL_CURRENT (LC_CTYPE,
 					     _NL_CTYPE_INDIGITS0_MB + n);
 		  dlen = strlen (mbdigits[n]);
@@ -1253,8 +1253,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 		  /* Advance the pointer to the next string.  */
 		  mbdigits[n] += dlen + 1;
-		}
 #endif
+		}
 
 	      if (n == 10)
 		{
@@ -1265,7 +1265,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		      for (n = 0; n < 10; ++n)
 			{
 #ifdef COMPILE_WPRINTF
-			  if (c == *wcdigit[n])
+			  if (c == *wcdigits[n])
 			    break;
 
 			  /* Advance the pointer to the next string.  */

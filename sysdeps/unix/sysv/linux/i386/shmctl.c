@@ -80,24 +80,23 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
     case SHM_STAT:
     case IPC_STAT:
     case IPC_SET:
-#if __WORDSIZE != 32
+# if __WORDSIZE != 32
     case IPC_INFO:
-#endif
+# endif
       break;
     default:
       return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, buf);
   }
 
   {
-    int save_errno = result;
     struct __old_shmid_ds old;
 
-#ifdef __NR_getuid32
+# ifdef __NR_getuid32
     if (__libc_missing_32bit_uids <= 0)
       {
 	if (__libc_missing_32bit_uids < 0)
 	  {
-	    save_errno = errno;
+	    int save_errno = errno;
 
 	    /* Test presence of new IPC by testing for getuid32 syscall.  */
 	    result = INLINE_SYSCALL (getuid32, 0);
@@ -113,7 +112,7 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 	    return result;
 	  }
       }
-#endif
+# endif
 
     if (cmd == IPC_SET)
       {
@@ -146,7 +145,7 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 	buf->shm_cpid = old.shm_cpid;
 	buf->shm_lpid = old.shm_lpid;
       }
-#if __WORDSIZE != 32
+# if __WORDSIZE != 32
     else if (result != -1 && cmd == IPC_INFO)
       {
 	struct __old_shminfo *oldi = (struct __old_shminfo *)&old;
@@ -159,7 +158,7 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 	i->shmseg = oldi->shmseg;
 	i->shmall = oldi->shmall;
       }
-#endif
+# endif
     return result;
   }
 #endif

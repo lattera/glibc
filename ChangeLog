@@ -1,5 +1,7 @@
 2000-02-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/shmctl.c: Fix handling of save_errno.
+
 	* locale/langinfo.h: Make CRNCYSTR a separate entry instead of an
 	alias for CURRENCY_SYMBOL.
 	* locale/programs/ld-monetary.c: Add support to write out CRNCYSTR
