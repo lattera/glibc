@@ -41,7 +41,7 @@ extern struct task_basic_info *i;
 long s = i->creation_time.seconds;
 ], libc_cv_mach_task_creation_time=yes, libc_cv_mach_task_creation_time=no)])
 if test $libc_cv_mach_task_creation_time = no; then
-  DEFINES="$DEFINES -DNO_CREATION_TIME=1"
+  AC_MSG_ERROR([you need Mach headers supporting task_info.creation_time])
 fi
 
 dnl

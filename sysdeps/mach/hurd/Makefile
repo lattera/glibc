@@ -190,7 +190,6 @@ endif
 
 ifeq ($(subdir),csu)
 
-sysdep_routines += set-init
 extra-objs += static-start.o
 
 # We need special startup code for statically linked binaries.

@@ -1,3 +1,13 @@
+2003-06-26  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/configure.in: Barf rather than define NO_CREATION_TIME.
+	* sysdeps/mach/configure: Regenerated.
+	* sysdeps/mach/hurd/times.c (times_init): Function removed.
+	(__times): Assume `creation_time' field is available.
+	* sysdeps/mach/hurd/Makefile [$(subdir) = csu] (sysdep_routines):
+	Don't append set-init.
+	* sysdeps/mach/hurd/set-init.c: File removed.
+
 2003-06-26  Roland McGrath  <roland@redhat.com>
 
 	* elf/elf.h (AT_SECURE): New macro.

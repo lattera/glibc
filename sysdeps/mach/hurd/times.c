@@ -1,5 +1,5 @@
 /* Return CPU and real time used by process and its children.  Hurd version.
-   Copyright (C) 2001,02 Free Software Foundation, Inc.
+   Copyright (C) 2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,17 +32,6 @@ clock_from_time_value (const time_value_t *t)
 {
   return t->seconds * 1000000 + t->microseconds;
 }
-
-#if NO_CREATION_TIME
-static time_value_t startup_time;
-static void times_init (void) __attribute__ ((unused));
-static void
-times_init (void)
-{
-  __gettimeofday ((struct timeval *) &startup_time, NULL);
-}
-text_set_element (__libc_subinit, times_init);
-#endif
 
 /* Store the CPU time used by this process and all its
    dead children (and their dead children) in BUFFER.
@@ -80,12 +69,7 @@ __times (struct tms *tms)
   if (__gettimeofday ((struct timeval *) &now, NULL) < 0)
     return -1;
 
-#if NO_CREATION_TIME
-# define our_creation_time	startup_time
-#else
-# define our_creation_time	bi.creation_time
-#endif
   return (clock_from_time_value (&now)
-	  - clock_from_time_value (&our_creation_time));
+	  - clock_from_time_value (&bi.creation_time));
 }
 weak_alias (__times, times)

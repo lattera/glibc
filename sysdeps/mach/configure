@@ -96,7 +96,11 @@ if test "${ac_cv_header_mach_mach_types_h+set}" = set; then
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <mach/mach_types.h>
 _ACEOF
 if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
@@ -119,7 +123,8 @@ if test -z "$ac_cpp_err"; then
   ac_cv_header_mach_mach_types_h=yes
 else
   echo "$as_me: failed program was:" >&5
-  cat conftest.$ac_ext >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
   ac_cv_header_mach_mach_types_h=no
 fi
 rm -f conftest.err conftest.$ac_ext
@@ -142,7 +147,11 @@ if test "${ac_cv_header_mach_mach_types_defs+set}" = set; then
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <mach/mach_types.defs>
 _ACEOF
 if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
@@ -165,7 +174,8 @@ if test -z "$ac_cpp_err"; then
   ac_cv_header_mach_mach_types_defs=yes
 else
   echo "$as_me: failed program was:" >&5
-  cat conftest.$ac_ext >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
   ac_cv_header_mach_mach_types_defs=no
 fi
 rm -f conftest.err conftest.$ac_ext
@@ -191,7 +201,11 @@ if test "${libc_cv_mach_task_t+set}" = set; then
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <mach/mach_types.h>
 int
 main ()
@@ -216,7 +230,8 @@ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   libc_cv_mach_task_t=task_t
 else
   echo "$as_me: failed program was:" >&5
-cat conftest.$ac_ext >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
 libc_cv_mach_task_t=task_port_t
 fi
 rm -f conftest.$ac_objext conftest.$ac_ext
@@ -233,7 +248,11 @@ if test "${libc_cv_mach_thread_t+set}" = set; then
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <mach/mach_types.h>
 int
 main ()
@@ -258,7 +277,8 @@ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   libc_cv_mach_thread_t=thread_t
 else
   echo "$as_me: failed program was:" >&5
-cat conftest.$ac_ext >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
 libc_cv_mach_thread_t=thread_port_t
 fi
 rm -f conftest.$ac_objext conftest.$ac_ext
@@ -276,7 +296,11 @@ if test "${libc_cv_mach_task_creation_time+set}" = set; then
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <mach/task_info.h>
 int
 main ()
@@ -304,7 +328,8 @@ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   libc_cv_mach_task_creation_time=yes
 else
   echo "$as_me: failed program was:" >&5
-cat conftest.$ac_ext >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
 libc_cv_mach_task_creation_time=no
 fi
 rm -f conftest.$ac_objext conftest.$ac_ext
@@ -312,7 +337,9 @@ fi
 echo "$as_me:$LINENO: result: $libc_cv_mach_task_creation_time" >&5
 echo "${ECHO_T}$libc_cv_mach_task_creation_time" >&6
 if test $libc_cv_mach_task_creation_time = no; then
-  DEFINES="$DEFINES -DNO_CREATION_TIME=1"
+  { { echo "$as_me:$LINENO: error: you need Mach headers supporting task_info.creation_time" >&5
+echo "$as_me: error: you need Mach headers supporting task_info.creation_time" >&2;}
+   { (exit 1); exit 1; }; }
 fi
 
 mach_interface_list=
@@ -330,7 +357,11 @@ if eval "test \"\${$as_ac_Header+set}\" = set"; then
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <mach/${ifc}.defs>
 _ACEOF
 if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
@@ -353,7 +384,8 @@ if test -z "$ac_cpp_err"; then
   eval "$as_ac_Header=yes"
 else
   echo "$as_me: failed program was:" >&5
-  cat conftest.$ac_ext >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
   eval "$as_ac_Header=no"
 fi
 rm -f conftest.err conftest.$ac_ext
@@ -394,7 +426,11 @@ if test "${libc_cv_mach_host_page_size+set}" = set; then
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <mach/mach_host.defs>
 
 _ACEOF
@@ -423,7 +459,11 @@ if test "${ac_cv_header_mach_machine_ndr_def_h+set}" = set; then
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <mach/machine/ndr_def.h>
 _ACEOF
 if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
@@ -446,7 +486,8 @@ if test -z "$ac_cpp_err"; then
   ac_cv_header_mach_machine_ndr_def_h=yes
 else
   echo "$as_me: failed program was:" >&5
-  cat conftest.$ac_ext >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
   ac_cv_header_mach_machine_ndr_def_h=no
 fi
 rm -f conftest.err conftest.$ac_ext
@@ -463,7 +504,11 @@ if test "${ac_cv_header_machine_ndr_def_h+set}" = set; then
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <machine/ndr_def.h>
 _ACEOF
 if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
@@ -486,7 +531,8 @@ if test -z "$ac_cpp_err"; then
   ac_cv_header_machine_ndr_def_h=yes
 else
   echo "$as_me: failed program was:" >&5
-  cat conftest.$ac_ext >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
   ac_cv_header_machine_ndr_def_h=no
 fi
 rm -f conftest.err conftest.$ac_ext
@@ -509,7 +555,11 @@ if test "${libc_cv_mach_i386_ioports+set}" = set; then
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <mach/i386/mach_i386.defs>
 
 _ACEOF
@@ -538,7 +588,11 @@ if test "${libc_cv_mach_i386_gdt+set}" = set; then
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <mach/i386/mach_i386.defs>
 
 _ACEOF
