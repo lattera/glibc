@@ -153,7 +153,7 @@ This macro got introduced in @w{Amendment 1} to @w{ISO C90}.
 @comment wchar.h
 @comment ISO
 @deftypevr Macro wint_t WCHAR_MAX
-The macro @code{WCHAR_MIN} evaluates to the maximum value representable
+The macro @code{WCHAR_MAX} evaluates to the maximum value representable
 by an object of type @code{wint_t}.
 
 This macro got introduced in @w{Amendment 1} to @w{ISO C90}.

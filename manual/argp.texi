@@ -201,6 +201,12 @@ additional argp parsers that should be combined with this one.
 @item char *(*help_filter)(int @var{key}, const char *@var{text}, void *@var{input})
 If non-zero, a pointer to a function to filter the output of help
 messages.  @xref{Argp Help Filtering}.
+
+@item const char *argp_domain
+If non-zero, the strings used in the argp library are translated using
+the domain described by this string.  Otherwise the currently installed
+default domain is used.
+
 @end table
 @end deftp
 
