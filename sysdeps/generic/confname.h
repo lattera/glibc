@@ -1,5 +1,5 @@
 /* `sysconf', `pathconf', and `confstr' NAME values.  Generic version.
-Copyright (C) 1993 Free Software Foundation, Inc.
+Copyright (C) 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,13 +21,21 @@ Cambridge, MA 02139, USA.  */
 enum
   {
     _PC_LINK_MAX,
+#define	_PC_LINK_MAX		_PC_LINK_MAX
     _PC_MAX_CANON,
+#define	_PC_MAX_CANON		_PC_MAX_CANON
     _PC_MAX_INPUT,
+#define	_PC_MAX_INPUT		_PC_MAX_INPUT
     _PC_NAME_MAX,
+#define	_PC_NAME_MAX		_PC_NAME_MAX
     _PC_PATH_MAX,
+#define	_PC_PATH_MAX		_PC_PATH_MAX
     _PC_PIPE_BUF,
+#define	_PC_PIPE_BUF		_PC_PIPE_BUF
     _PC_CHOWN_RESTRICTED,
+#define	_PC_CHOWN_RESTRICTED	_PC_CHOWN_RESTRICTED
     _PC_NO_TRUNC,
+#define	_PC_NO_TRUNC		_PC_NO_TRUNC
     _PC_VDISABLE
   };
 
@@ -35,35 +43,61 @@ enum
 enum
   {
     _SC_ARG_MAX,
+#define	_SC_ARG_MAX		_SC_ARG_MAX
     _SC_CHILD_MAX,
+#define	_SC_CHILD_MAX		_SC_CHILD_MAX
     _SC_CLK_TCK,
+#define	_SC_CLK_TCK		_SC_CLK_TCK
     _SC_NGROUPS_MAX,
+#define	_SC_NGROUPS_MAX		_SC_NGROUPS_MAX
     _SC_OPEN_MAX,
+#define	_SC_OPEN_MAX		_SC_OPEN_MAX
     _SC_STREAM_MAX,
+#define	_SC_STREAM_MAX		_SC_STREAM_MAX
     _SC_TZNAME_MAX,
+#define	_SC_TZNAME_MAX		_SC_TZNAME_MAX
     _SC_JOB_CONTROL,
+#define	_SC_JOB_CONTROL		_SC_JOB_CONTROL
     _SC_SAVED_IDS,
+#define	_SC_SAVED_IDS		_SC_SAVED_IDS
     _SC_VERSION,
+#define	_SC_VERSION		_SC_VERSION
     _SC_PAGESIZE,
+#define	_SC_PAGESIZE		_SC_PAGESIZE
 
     /* Values for the argument to `sysconf'
        corresponding to _POSIX2_* symbols.  */
     _SC_BC_BASE_MAX,
+#define	_SC_BC_BASE_MAX		_SC_BC_BASE_MAX
     _SC_BC_DIM_MAX,
+#define	_SC_BC_DIM_MAX		_SC_BC_DIM_MAX
     _SC_BC_SCALE_MAX,
+#define	_SC_BC_SCALE_MAX	_SC_BC_SCALE_MAX
     _SC_BC_STRING_MAX,
+#define	_SC_BC_STRING_MAX	_SC_BC_STRING_MAX
     _SC_COLL_WEIGHTS_MAX,
+#define	_SC_COLL_WEIGHTS_MAX	_SC_COLL_WEIGHTS_MAX
     _SC_EQUIV_CLASS_MAX,
+#define	_SC_EQUIV_CLASS_MAX	_SC_EQUIV_CLASS_MAX
     _SC_EXPR_NEST_MAX,
+#define	_SC_EXPR_NEST_MAX	_SC_EXPR_NEST_MAX
     _SC_LINE_MAX,
+#define	_SC_LINE_MAX		_SC_LINE_MAX
     _SC_RE_DUP_MAX,
+#define	_SC_RE_DUP_MAX		_SC_RE_DUP_MAX
 
     _SC_2_VERSION,
+#define	_SC_2_VERSION		_SC_2_VERSION
     _SC_2_C_BIND,
+#define	_SC_2_C_BIND		_SC_2_C_BIND
     _SC_2_C_DEV,
+#define	_SC_2_C_DEV		_SC_2_C_DEV
     _SC_2_FORT_DEV,
+#define	_SC_2_FORT_DEV		_SC_2_FORT_DEV
     _SC_2_FORT_RUN,
+#define	_SC_2_FORT_RUN		_SC_2_FORT_RUN
     _SC_2_SW_DEV,
+#define	_SC_2_SW_DEV		_SC_2_SW_DEV
     _SC_2_LOCALEDEF
   };
 

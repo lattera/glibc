@@ -61,7 +61,6 @@ hurd_unpreempt_signals (struct hurd_signal_preempt *preempter, int signo)
 	__mutex_unlock (&_hurd_signal_preempt_lock);
 	return 0;
       }
-  _hurd_signal_preempt[signo] = preempter;
   __mutex_unlock (&_hurd_signal_preempt_lock);
   errno = ENOENT;
   return -1;

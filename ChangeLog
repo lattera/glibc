@@ -1,3 +1,11 @@
+Thu Dec 28 10:21:35 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/generic/confname.h: Define all names as self-referential
+	macros so #ifdef works.
+
+	* hurd/preempt-sig.c (hurd_unpreempt_signals): Remove bogus asgnmt
+	of _hurd_signal_preempters[SIGNO].
+
 Mon Dec 25 20:56:39 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/bind.c: Translate EEXIST from dir_link into
