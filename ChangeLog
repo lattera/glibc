@@ -1,5 +1,11 @@
 2000-01-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-collate.c (output_weightwc): Return index
+	measured in words, not bytes.  Don't write out words for ignored
+	characters.
+	(collate_output): Correct various problems with alignment in the
+	output file.
+
 	* stdlib/strfmon.c: Don't report an error if final NUL is at the
 	end of the buffer.  Set errno correctly if floating-point number
 	would overflow buffer.

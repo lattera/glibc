@@ -1833,25 +1833,26 @@ output_weightwc (struct obstack *pool, struct locale_collate_t *collate,
 
   /* This byte can start exactly one collation element and this is
      a single byte.  We can directly give the index to the weights.  */
-  retval = obstack_object_size (pool);
+  retval = obstack_object_size (pool) / sizeof (int32_t);
 
   /* Construct the weight.  */
   for (cnt = 0; cnt < nrules; ++cnt)
     {
       int32_t buf[elem->weights[cnt].cnt];
-      int32_t i;
+      int i;
+      int32_t j;
 
-      for (i = 0; i < elem->weights[cnt].cnt; ++i)
+      for (i = 0, j = 0; i < elem->weights[cnt].cnt; ++i)
 	if (elem->weights[cnt].w[i] != NULL)
-	  buf[i] = elem->weights[cnt].w[i]->wcorder;
+	  buf[j++] = elem->weights[cnt].w[i]->wcorder;
 
       /* And add the buffer content.  */
       if (sizeof (int) == sizeof (int32_t))
-	obstack_int_grow (pool, i);
+	obstack_int_grow (pool, j);
       else
-	obstack_grow (pool, &i, sizeof (int32_t));
+	obstack_grow (pool, &j, sizeof (int32_t));
 
-      obstack_grow (pool, buf, i * sizeof (int32_t));
+      obstack_grow (pool, buf, j * sizeof (int32_t));
     }
 
   return retval | ((elem->section->ruleidx & 0x7f) << 24);
@@ -2044,6 +2045,8 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		added = ((sizeof (int32_t) + 1 + 2 * (runp->nmbs - 1)
 			  + __alignof__ (int32_t) - 1)
 			 & ~(__alignof__ (int32_t) - 1));
+		assert ((obstack_object_size (&extrapool)
+			 & (__alignof__ (int32_t) - 1)) == 0);
 		obstack_make_room (&extrapool, added);
 
 		/* More than one consecutive entry.  We mark this by having
@@ -2128,11 +2131,9 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 	      }
 
 	    /* Add alignment bytes if necessary.  */
-	    i = added % __alignof__ (int32_t);
-	    if (i > 0)
-	      do
-		obstack_1grow_fast (&extrapool, '\0');
-	      while (++i != __alignof__ (int32_t));
+	    while ((obstack_object_size (&extrapool)
+		    & (__alignof__ (int32_t) - 1)) != 0)
+	      obstack_1grow_fast (&extrapool, '\0');
 
 	    /* Next entry.  */
 	    lastp = runp;
@@ -2161,19 +2162,23 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    obstack_1grow_fast (&extrapool, 0);
 
 	    /* Add alignment bytes if necessary.  */
-	    i = added % __alignof__ (int32_t);
-	    if (i > 0)
-	      do
-		obstack_1grow_fast (&extrapool, '\0');
-	      while (++i != __alignof__ (int32_t));
+	    while ((obstack_object_size (&extrapool)
+		    & (__alignof__ (int32_t) - 1)) != 0)
+	      obstack_1grow_fast (&extrapool, '\0');
 	  }
       }
+
+  /* Add padding to the tables if necessary.  */
+  while ((obstack_object_size (&weightpool) & (__alignof__ (int32_t) - 1))
+	 != 0)
+    obstack_1grow (&weightpool, 0);
 
   /* Now add the four tables.  */
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_TABLEMB));
   iov[2 + cnt].iov_base = tablemb;
   iov[2 + cnt].iov_len = sizeof (tablemb);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  assert ((iov[2 + cnt].iov_len & (__alignof__ (int32_t) - 1)) == 0);
   ++cnt;
 
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_WEIGHTMB));
@@ -2192,6 +2197,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[2 + cnt].iov_len = obstack_object_size (&indirectpool);
   iov[2 + cnt].iov_base = obstack_finish (&indirectpool);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  assert ((iov[2 + cnt].iov_len & (__alignof__ (int32_t) - 1)) == 0);
   ++cnt;
 
 
@@ -2243,10 +2249,11 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   /* Now insert the `UNDEFINED' value if it is used.  Since this value
      will probably be used more than once it is good to store the
      weights only once.  */
-  output_weightwc (&weightpool, collate, &collate->undefined);
+  if (output_weightwc (&weightpool, collate, &collate->undefined) != 0)
+    abort ();
 
-  /* Generate the table.  Walk through the lists of sequences
-     starting with the same byte and add them one after the other to
+  /* Generate the table.  Walk through the lists of sequences starting
+     with the same wide character and add them one after the other to
      the table.  In case we have more than one sequence starting with
      the same byte we have to use extra indirection.  */
   tablewc = (uint32_t *) alloca (table_size * sizeof (uint32_t));
@@ -2257,7 +2264,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 	tablewc[ch] = 0;
       }
     else if (collate->wcheads[ch]->wcnext == NULL
-	&& collate->wcheads[ch]->nwcs == 1)
+	     && collate->wcheads[ch]->nwcs == 1)
       {
 	tablewc[ch] = output_weightwc (&weightpool, collate,
 				       collate->wcheads[ch]);
@@ -2269,7 +2276,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 	struct element_t *runp = collate->wcheads[ch];
 	struct element_t *lastp;
 
-	tablewc[ch] = -obstack_object_size (&extrapool);
+	tablewc[ch] = -(obstack_object_size (&extrapool) / sizeof (uint32_t));
 
 	do
 	  {
@@ -2397,26 +2404,31 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   /* Now add the four tables.  */
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_TABLEWC));
   iov[2 + cnt].iov_base = tablewc;
-  iov[2 + cnt].iov_len = table_size * sizeof (int32_t);
+  iov[2 + cnt].iov_len = table_size * sizeof (uint32_t);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
   ++cnt;
 
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_WEIGHTWC));
   iov[2 + cnt].iov_len = obstack_object_size (&weightpool);
   iov[2 + cnt].iov_base = obstack_finish (&weightpool);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
   ++cnt;
 
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_EXTRAWC));
   iov[2 + cnt].iov_len = obstack_object_size (&extrapool);
   iov[2 + cnt].iov_base = obstack_finish (&extrapool);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
+  assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
   ++cnt;
 
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_INDIRECTWC));
   iov[2 + cnt].iov_len = obstack_object_size (&indirectpool);
   iov[2 + cnt].iov_base = obstack_finish (&indirectpool);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
   ++cnt;
 
 
