@@ -1,5 +1,7 @@
 Sat Sep 21 14:59:22 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
+	* sysdeps/mach/getsysstats.c: New file.
+
 	* shlib-versions (*-*-gnu*): Increment libc to 0.2 for upcoming
 	binary distribution.
 
