@@ -1,8 +1,12 @@
+1999-06-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* scripts/config.guess: Update from latest version.
+	* scripts/config.sub: Likewise.
+
 1999-06-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-	* Makerules: Set LANGUAGE and LC_ALL explicitly to archieve
-	correct sorting of map files.
-	Closes PR libc/1147.
+	* Makerules: Set LC_ALL explicitly to archieve correct sorting of
+	map files.  Closes PR libc/1147.
 
 1999-06-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
