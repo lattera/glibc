@@ -17,7 +17,11 @@ case $# in
   /*) file="$1" ;;
   *) file="./$1" ;;
   esac
-  exec ${RTLD} --list "$file" && exit 1
+  if ${RTLD} --verify "$file"; then
+    LD_TRACE_LOADED_OBJECTS=1 exec "$file" && exit 1
+  else
+    echo '	not a dynamic executable'
+  fi
   exit ;;
 *)
   set -e	# Bail out immediately if ${RTLD} loses on any argument.
@@ -27,7 +31,11 @@ case $# in
     /*) file="$file" ;;
     *) file="./$file" ;;
     esac
-    ${RTLD} --list "$file"
+    if ${RTLD} --verify "$file"; then
+      LD_TRACE_LOADED_OBJECTS=1 "$file"
+    else
+      echo '	not a dynamic executable'
+    fi
   done
 esac
 

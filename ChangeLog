@@ -1,3 +1,51 @@
+Sat Jul 27 02:58:49 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/rtld.c (dl_main): Take new option --verify when run directly.
+	In verify mode, exit with status zero iff the argument object's
+	PT_INTERP matches argv[0].
+	* elf/ldd.sh.in: Use ${RTLD} --verify and only run the program if it
+	exits with zero status.  This makes `ldd' secure again.
+
+Fri Jul 26 22:49:58 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c (dl_main): Implement LD_TRACE_LOADED_OBJECTS
+	environment variable handling.  This makes the dynamic linker
+	only print loaded libraries and quit.
+
+	* elf/ldd.sh.in: Don't use `rtld --list' but instead
+	LD_TRACE_LOADED_OBJECTS environment variable to print needed
+	objects.
+
+Sat Jul 27 02:03:26 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* db/makedb.c (main): Print version on stdout, not stderr.  Don't exit
+	after printing version until after doing usage for --help.
+	(long_options, main, usage): Rename -l/--lowercase option to
+	-f/--fold-case (-f matches sort).
+
+Sat Jul 27 04:32:31 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db/makedb.c: New file.  Implement program to create simple <db.h>
+	database from textual input.  This will be used for nss_db.
+
+Sat Jul 27 01:24:05 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sunrpc/rpc/auth_unix.h: Fix misapplied patches in last changes.
+	* sunrpc/rpc/pmap_clnt.h: Likewise.
+	* sunrpc/rpc/auth.h: Likewise.
+	* sunrpc/rpc/pmap_rmt.h: Likewise.
+	* sunrpc/rpc/rpc_msg.h: Likewise.
+
+Sat Jul 27 04:37:34 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/string.h (strndupa): Change to use return value of
+	`memcpy' for more performance.
+	* string/strndup.c: Likewise.
+
+	* string/string.h (strdupa): Don't call __builtin_alloca in argument.
+	This might lead to problems.
+	(strndupa): Likewise.
+
 Fri Jul 26 15:24:25 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sunrpc/rpc/auth.h: Add protection against multiple inclusion

@@ -127,7 +127,7 @@ dl_main (const ElfW(Phdr) *phdr,
   const ElfW(Phdr) *ph;
   struct link_map *l;
   int lazy;
-  int list_only = 0;
+  enum { normal, list, verify } mode = normal;
   struct link_map **preloads;
   unsigned int npreloads;
 
@@ -150,7 +150,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	 installing it.  */
       if (_dl_argc < 2)
 	_dl_sysdep_fatal ("\
-Usage: ld.so [--list] EXECUTABLE-FILE [ARGS-FOR-PROGRAM...]\n\
+Usage: ld.so [--list|--verify] EXECUTABLE-FILE [ARGS-FOR-PROGRAM...]\n\
 You have invoked `ld.so', the helper program for shared library executables.\n\
 This program usually lives in the file `/lib/ld.so', and special directives\n\
 in executable files using ELF shared libraries tell the system's program\n\
@@ -169,7 +169,15 @@ of this helper program; chances are you did not intend to run this program.\n",
 
       if (! strcmp (_dl_argv[1], "--list"))
 	{
-	  list_only = 1;
+	  mode = list;
+
+	  ++_dl_skip_args;
+	  --_dl_argc;
+	  ++_dl_argv;
+	}
+      else if (! strcmp (_dl_argv[1], "--verify"))
+	{
+	  mode = verify;
 
 	  ++_dl_skip_args;
 	  --_dl_argc;
@@ -234,6 +242,12 @@ of this helper program; chances are you did not intend to run this program.\n",
     _dl_rtld_map.l_libname = _dl_rtld_map.l_name;
   else
     assert (_dl_rtld_map.l_libname); /* How else did we get here?  */
+
+  if (mode == verify)
+    /* We were called just to verify that this is a dynamic executable
+       using us as the program interpreter.  */
+    _exit (strcmp (_dl_rtld_map.l_libname, _dl_rtld_map.l_name)
+	   ? EXIT_FAILURE : EXIT_SUCCESS);
 
   /* Extract the contents of the dynamic section for easy access.  */
   elf_get_dynamic_info (l->l_ld, l->l_info);
@@ -326,7 +340,10 @@ of this helper program; chances are you did not intend to run this program.\n",
 	}
     }
 
-  if (list_only)
+  if (mode == normal && getenv ("LD_TRACE_LOADED_OBJECTS") != NULL)
+    mode = list;
+
+  if (mode != normal)
     {
       /* We were run just to list the shared libraries.  It is
 	 important that we do this before real relocation, because the
