@@ -236,6 +236,13 @@ transcmp (p1, p2)
 }
 #endif
 
+#ifndef INTVARDEF
+# define INTVARDEF
+#endif
+#ifndef INTUSE
+# define INTUSE(name) name
+#endif
+
 /* Name of the default domain used for gettext(3) prior any call to
    textdomain(3).  The default value for this is "messages".  */
 const char _nl_default_default_domain[] attribute_hidden = "messages";
@@ -246,6 +253,7 @@ const char *_nl_current_default_domain attribute_hidden
 
 /* Contains the default location of the message catalogs.  */
 const char _nl_default_dirname[] = LOCALEDIR;
+INTVARDEF (_nl_default_dirname)
 
 /* List with bindings of specific domains created by bindtextdomain()
    calls.  */
@@ -439,7 +447,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
     }
 
   if (binding == NULL)
-    dirname = (char *) _nl_default_dirname;
+    dirname = (char *) INTUSE(_nl_default_dirname);
   else if (binding->dirname[0] == '/')
     dirname = binding->dirname;
   else
@@ -1109,7 +1117,7 @@ free_mem (void)
     {
       struct binding *oldp = _nl_domain_bindings;
       _nl_domain_bindings = _nl_domain_bindings->next;
-      if (oldp->dirname != _nl_default_dirname)
+      if (oldp->dirname != INTUSE(_nl_default_dirname))
 	/* Yes, this is a pointer comparison.  */
 	free (oldp->dirname);
       free (oldp->codeset);

@@ -47,9 +47,6 @@
 #define PACKAGE _libc_intl_domainname
 
 
-/* Defined in gconv_cache.c.  */
-extern void *__gconv_cache;
-
 /* Name and version of program.  */
 static void print_version (FILE *stream, struct argp_state *state);
 void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
@@ -668,10 +665,9 @@ insert_cache (void)
   const struct hash_entry *hashtab;
   size_t cnt;
 
-  header = (const struct gconvcache_header *) __gconv_cache;
-  strtab = (char *) __gconv_cache + header->string_offset;
-  hashtab = (struct hash_entry *) ((char *) __gconv_cache
-				   + header->hash_offset);
+  header = (const struct gconvcache_header *) __gconv_get_cache ();
+  strtab = (char *) header + header->string_offset;
+  hashtab = (struct hash_entry *) ((char *) header + header->hash_offset);
 
   for (cnt = 0; cnt < header->hash_size; ++cnt)
     if (hashtab[cnt].string_offset != 0)
@@ -689,24 +685,29 @@ internal_function
 print_known_names (void)
 {
   iconv_t h;
+  void *cache;
 
   /* We must initialize the internal databases first.  */
   h = iconv_open ("L1", "L1");
   iconv_close (h);
 
   /* See whether we have a cache.  */
-  if (__gconv_cache != NULL)
+  cache = __gconv_get_cache ();
+  if (cache != NULL)
     /* Yep, use only this information.  */
     insert_cache ();
   else
     {
+      struct gconv_module *modules;
+
       /* No, then use the information read from the gconv-modules file.
 	 First add the aliases.  */
-      twalk (__gconv_alias_db, insert_print_list);
+      twalk (__gconv_get_alias_db (), insert_print_list);
 
       /* Add the from- and to-names from the known modules.  */
-      if (__gconv_modules_db != NULL)
-	add_known_names (__gconv_modules_db);
+      modules = __gconv_get_modules_db ();
+      if (modules != NULL)
+	add_known_names (modules);
     }
 
   fputs (_("\

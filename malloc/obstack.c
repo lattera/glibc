@@ -475,9 +475,8 @@ _obstack_memory_used (h)
 #   define _(Str) (Str)
 #  endif
 # endif
-# if defined _LIBC && defined USE_IN_LIBIO
+# ifdef _LIBC
 #  include <libio/iolibio.h>
-#  define fputs(s, f) _IO_fputs (s, f)
 # endif
 
 # ifndef __attribute__

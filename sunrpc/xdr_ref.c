@@ -49,7 +49,6 @@ static char sccsid[] = "@(#)xdr_reference.c 1.11 87/08/11 SMI";
 #ifdef USE_IN_LIBIO
 # include <wchar.h>
 # include <libio/iolibio.h>
-# define fputs(s, f) INTUSE(_IO_fputs) (s, f)
 #endif
 
 #define LASTUNSIGNED	((u_int)0-1)

@@ -50,7 +50,6 @@ static char sccsid[] = "@(#)svc_simple.c 1.18 87/08/11 Copyr 1984 Sun Micro";
 #ifdef USE_IN_LIBIO
 # include <wchar.h>
 # include <libio/iolibio.h>
-# define fputs(s, f) INTUSE(_IO_fputs) (s, f)
 #endif
 
 struct proglst_

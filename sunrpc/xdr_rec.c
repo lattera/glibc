@@ -53,7 +53,6 @@
 #ifdef USE_IN_LIBIO
 # include <wchar.h>
 # include <libio/iolibio.h>
-# define fputs(s, f) INTUSE(_IO_fputs) (s, f)
 #endif
 
 static bool_t xdrrec_getlong (XDR *, long *);

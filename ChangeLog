@@ -1,3 +1,51 @@
+2002-08-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/psignal.c: Declare _sys_siglist_internal.  Use USEINT
+	to access _sys_siglist.
+	* string/strsignal.c: Likewise.
+	* sysdeps/generic/siglist.c: Add _sys_siglist_internal alias.
+	* sysdeps/gnu/siglist.c: Likewise.
+	* sysdeps/unix/siglist.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/siglist.c: Likewise.
+
+	* libio/fileops.c: Add missing INTUSEs for _IO_file_jumps.
+
+	* libio/wfileops.c: Add missing INTUSE for _IO_file_close.
+
+	* intl/dcigettext.c: Define _nl_default_dirname_internal as hidden
+	alias and use it.
+	* intl/bindtextdom.c: Use _nl_default_dirname_internal.
+
+	* include/netinet/in.h: Add declaration of in6addr_loopback_internal.
+	* inet/in6_addr.c: Add INTVARDEF for in6addr_loopback.
+	* sysdeps/posix/getaddrinfo.c: Use INTUSE for in6addr_loopback access.
+
+	* include/time.h: Add libc_hidden_proto for __gmtime_r.
+	* time/gmtime.c (__gmtime_r): Add libc_hidden_def.
+
+	* iconv/Versions: Replace __gconv_alias_db, __gconv_modules_db,
+	and __gconv_cache with __gconv_get_alias_db, __gconv_get_modules_db,
+	and __gconv_get_cache respectively.
+	* iconv/gconv_cache.c (gconv_cache): Renamed for __gconv_cache and
+	defined static.  Change all users.
+	(__gconv_get_cache): New function.
+	* iconv/gconv_db.c (__gconv_get_modules_db): New function.
+	(__gconv_get_alias_db): New function.
+	* iconv/gconv_int.h (__gconv_alias_db): Declare as hidden.
+	(__conv_modules_db): Likewise.
+	Add prototypes for __gconv_get_cache, __gconv_get_modules_db,
+	and __gconv_get_alias_db.
+	* iconv/iconv_prog.c: Use the new functions instead of accessing the
+	variables.
+
+	* include/stdlib.h: Add prototype and libc_hidden_proto for
+	__default_morecore.
+	* sysdeps/generic/morecore.c: Include <stdlib.h>.
+
+	* malloc/obstack.c: Remove fputs macro.
+
+	* malloc/mtrace.c: Remove fopen macro.
+
 2002-08-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* manual/debug.texi: Fix spelling to programmatically.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1995,1996,1997,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995-1997,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,6 +31,7 @@
 
 /* Defined in sys_siglist.c.  */
 extern const char *const _sys_siglist[];
+extern const char *const _sys_siglist_internal[] attribute_hidden;
 
 
 /* Print out on stderr a line consisting of the test in S, a colon, a space,
@@ -46,7 +47,7 @@ psignal (int sig, const char *s)
   else
     colon = ": ";
 
-  if (sig >= 0 && sig < NSIG && (desc = _sys_siglist[sig]) != NULL)
+  if (sig >= 0 && sig < NSIG && (desc = INTUSE(_sys_siglist)[sig]) != NULL)
     {
 #ifdef USE_IN_LIBIO
       if (_IO_fwide (stderr, 0) > 0)

@@ -114,11 +114,11 @@ enum
 /* Global variables.  */
 
 /* Database of alias names.  */
-extern void *__gconv_alias_db;
+extern void *__gconv_alias_db attribute_hidden;
 
 /* Array with available modules.  */
 extern size_t __gconv_nmodules;
-extern struct gconv_module *__gconv_modules_db;
+extern struct gconv_module *__gconv_modules_db attribute_hidden;
 
 /* Value of the GCONV_PATH environment variable.  */
 extern const char *__gconv_path_envvar attribute_hidden;
@@ -203,6 +203,15 @@ extern void __gconv_read_conf (void) attribute_hidden;
 
 /* Try to read module cache file.  */
 extern int __gconv_load_cache (void) internal_function;
+
+/* Retrieve pointer to internal cache.  */
+extern void *__gconv_get_cache (void);
+
+/* Retrieve pointer to internal module database.  */
+extern struct gconv_module *__gconv_get_modules_db (void);
+
+/* Retrieve pointer to internal alias database.  */
+extern void *__gconv_get_alias_db (void);
 
 /* Determine the directories we are looking in.  */
 extern void __gconv_get_path (void) internal_function;

@@ -4,6 +4,7 @@
 #define __Need_M_And_C
 #endif
 
+#include <stddef.h>
 #include <stdlib/stdlib.h>
 
 /* Now define the internal interfaces.  */
@@ -185,6 +186,10 @@ __strtoull_l (__const char * __restrict __nptr, char **__restrict __endptr,
 # endif
 
 #endif
+
+extern void * __default_morecore (ptrdiff_t);
+libc_hidden_proto (__default_morecore)
+
 #undef __Need_M_And_C
 
 #endif  /* include/stdlib.h */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994-2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994-2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,6 +30,7 @@
 
 /* Defined in siglist.c.  */
 extern const char *const _sys_siglist[];
+extern const char *const _sys_siglist_internal[] attribute_hidden;
 static __libc_key_t key;
 
 /* If nonzero the key allocation failed and we should better use a
@@ -58,7 +59,8 @@ strsignal (int signum)
 #ifdef SIGRTMIN
       (signum >= SIGRTMIN && signum <= SIGRTMAX) ||
 #endif
-      signum < 0 || signum >= NSIG || (desc = _sys_siglist[signum]) == NULL)
+      signum < 0 || signum >= NSIG
+      || (desc = INTUSE(_sys_siglist)[signum]) == NULL)
     {
       char *buffer = getbuffer ();
       int len;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,5 +57,6 @@ const char *const _sys_siglist[] =
     N_("User defined signal 2"),
     NULL
   };
+strong_alias (_sys_siglist, _sys_siglist_internal)
 
 weak_alias (_sys_siglist, sys_siglist)

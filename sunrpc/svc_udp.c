@@ -54,7 +54,6 @@ static char sccsid[] = "@(#)svc_udp.c 1.24 87/08/11 Copyr 1984 Sun Micro";
 #ifdef USE_IN_LIBIO
 # include <wchar.h>
 # include <libio/iolibio.h>
-# define fputs(s, f) INTUSE(_IO_fputs) (s, f)
 #endif
 
 #define rpc_buffer(xprt) ((xprt)->xp_p1)

@@ -539,7 +539,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	{
 	  at->family = AF_INET6;
 	  if ((req->ai_flags & AI_PASSIVE) == 0)
-	    memcpy (at->addr, &in6addr_loopback, sizeof (struct in6_addr));
+	    memcpy (at->addr, &INTUSE(in6addr_loopback),
+		    sizeof (struct in6_addr));
 	  atr = at->next;
 	}
 

@@ -50,6 +50,7 @@ extern struct tm *__localtime_r (__const time_t *__timer,
 
 extern struct tm *__gmtime_r (__const time_t *__restrict __timer,
 			      struct tm *__restrict __tp);
+libc_hidden_proto (__gmtime_r)
 
 /* Compute the `struct tm' representation of *T,
    offset OFFSET seconds east of UTC,

@@ -925,7 +925,7 @@ struct _IO_jump_t _IO_wfile_jumps_maybe_mmap =
   JUMP_INIT(read, INTUSE(_IO_file_read)),
   JUMP_INIT(write, _IO_new_file_write),
   JUMP_INIT(seek, INTUSE(_IO_file_seek)),
-  JUMP_INIT(close, _IO_file_close),
+  JUMP_INIT(close, INTUSE(_IO_file_close)),
   JUMP_INIT(stat, INTUSE(_IO_file_stat)),
   JUMP_INIT(showmanyc, _IO_default_showmanyc),
   JUMP_INIT(imbue, _IO_default_imbue)

@@ -59,6 +59,11 @@
 
 /* Contains the default location of the message catalogs.  */
 extern const char _nl_default_dirname[];
+#ifdef _LIBC
+extern const char _nl_default_dirname_internal[] attribute_hidden;
+#else
+# define INTUSE(name) name
+#endif
 
 /* List with bindings of specific domains.  */
 extern struct binding *_nl_domain_bindings;
@@ -147,8 +152,8 @@ set_binding_values (domainname, dirnamep, codesetp)
 	      char *result = binding->dirname;
 	      if (strcmp (dirname, result) != 0)
 		{
-		  if (strcmp (dirname, _nl_default_dirname) == 0)
-		    result = (char *) _nl_default_dirname;
+		  if (strcmp (dirname, INTUSE(_nl_default_dirname)) == 0)
+		    result = (char *) INTUSE(_nl_default_dirname);
 		  else
 		    {
 #if defined _LIBC || defined HAVE_STRDUP
@@ -163,7 +168,7 @@ set_binding_values (domainname, dirnamep, codesetp)
 
 		  if (__builtin_expect (result != NULL, 1))
 		    {
-		      if (binding->dirname != _nl_default_dirname)
+		      if (binding->dirname != INTUSE(_nl_default_dirname))
 			free (binding->dirname);
 
 		      binding->dirname = result;
@@ -217,7 +222,7 @@ set_binding_values (domainname, dirnamep, codesetp)
     {
       /* Simply return the default values.  */
       if (dirnamep)
-	*dirnamep = _nl_default_dirname;
+	*dirnamep = INTUSE(_nl_default_dirname);
       if (codesetp)
 	*codesetp = NULL;
     }
@@ -239,11 +244,11 @@ set_binding_values (domainname, dirnamep, codesetp)
 
 	  if (dirname == NULL)
 	    /* The default value.  */
-	    dirname = _nl_default_dirname;
+	    dirname = INTUSE(_nl_default_dirname);
 	  else
 	    {
-	      if (strcmp (dirname, _nl_default_dirname) == 0)
-		dirname = _nl_default_dirname;
+	      if (strcmp (dirname, INTUSE(_nl_default_dirname)) == 0)
+		dirname = INTUSE(_nl_default_dirname);
 	      else
 		{
 		  char *result;
@@ -266,7 +271,7 @@ set_binding_values (domainname, dirnamep, codesetp)
 	}
       else
 	/* The default value.  */
-	new_binding->dirname = (char *) _nl_default_dirname;
+	new_binding->dirname = (char *) INTUSE(_nl_default_dirname);
 
       new_binding->codeset_cntr = 0;
 
@@ -322,7 +327,7 @@ set_binding_values (domainname, dirnamep, codesetp)
       if (0)
 	{
 	failed_codeset:
-	  if (new_binding->dirname != _nl_default_dirname)
+	  if (new_binding->dirname != INTUSE(_nl_default_dirname))
 	    free (new_binding->dirname);
 	failed_dirname:
 	  free (new_binding);

@@ -36,11 +36,8 @@
 
 #ifdef _LIBC
 # include <libc-internal.h>
-#endif
 
-#ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>
-# define fopen(f, n) _IO_fopen64 (f, n)
 # define setvbuf(s, b, f, l) INTUSE(_IO_setvbuf) (s, b, f, l)
 # define fwrite(buf, size, count, fp) _IO_fwrite (buf, size, count, fp)
 #endif

@@ -1,5 +1,5 @@
 /* Cache handling for iconv modules.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2001.
 
@@ -31,9 +31,16 @@
 
 #include "../intl/hash-string.h"
 
-void *__gconv_cache;
+static void *gconv_cache;
 static size_t cache_size;
 static int cache_malloced;
+
+
+void *
+__gconv_get_cache (void)
+{
+  return gconv_cache;
+}
 
 
 int
@@ -70,25 +77,25 @@ __gconv_load_cache (void)
   /* Make the file content available.  */
   cache_size = st.st_size;
 #ifdef _POSIX_MAPPED_FILES
-  __gconv_cache = __mmap (NULL, cache_size, PROT_READ, MAP_SHARED, fd, 0);
-  if (__builtin_expect (__gconv_cache == MAP_FAILED, 0))
+  gconv_cache = __mmap (NULL, cache_size, PROT_READ, MAP_SHARED, fd, 0);
+  if (__builtin_expect (gconv_cache == MAP_FAILED, 0))
 #endif
     {
       size_t already_read;
 
-      __gconv_cache = malloc (cache_size);
-      if (__gconv_cache == NULL)
+      gconv_cache = malloc (cache_size);
+      if (gconv_cache == NULL)
 	goto close_and_exit;
 
       already_read = 0;
       do
 	{
-	  ssize_t n = __read (fd, (char *) __gconv_cache + already_read,
+	  ssize_t n = __read (fd, (char *) gconv_cache + already_read,
 			      cache_size - already_read);
 	  if (__builtin_expect (n, 0) == -1)
 	    {
-	      free (__gconv_cache);
-	      __gconv_cache = NULL;
+	      free (gconv_cache);
+	      gconv_cache = NULL;
 	      goto close_and_exit;
 	    }
 
@@ -103,7 +110,7 @@ __gconv_load_cache (void)
   __close (fd);
 
   /* Check the consistency.  */
-  header = (struct gconvcache_header *) __gconv_cache;
+  header = (struct gconvcache_header *) gconv_cache;
   if (__builtin_expect (header->magic, GCONVCACHE_MAGIC) != GCONVCACHE_MAGIC
       || __builtin_expect (header->string_offset >= cache_size, 0)
       || __builtin_expect (header->hash_offset >= cache_size, 0)
@@ -116,14 +123,14 @@ __gconv_load_cache (void)
     {
       if (cache_malloced)
 	{
-	  free (__gconv_cache);
+	  free (gconv_cache);
 	  cache_malloced = 0;
 	}
 #ifdef _POSIX_MAPPED_FILES
       else
-	__munmap (__gconv_cache, cache_size);
+	__munmap (gconv_cache, cache_size);
 #endif
-      __gconv_cache = NULL;
+      gconv_cache = NULL;
 
       return -1;
     }
@@ -145,9 +152,9 @@ find_module_idx (const char *str, size_t *idxp)
   const struct hash_entry *hashtab;
   unsigned int limit;
 
-  header = (const struct gconvcache_header *) __gconv_cache;
-  strtab = (char *) __gconv_cache + header->string_offset;
-  hashtab = (struct hash_entry *) ((char *) __gconv_cache
+  header = (const struct gconvcache_header *) gconv_cache;
+  strtab = (char *) gconv_cache + header->string_offset;
+  hashtab = (struct hash_entry *) ((char *) gconv_cache
 				   + header->hash_offset);
 
   hval = hash_string (str);
@@ -211,7 +218,7 @@ __gconv_compare_alias_cache (const char *name1, const char *name2, int *result)
   size_t name1_idx;
   size_t name2_idx;
 
-  if (__gconv_cache == NULL)
+  if (gconv_cache == NULL)
     return -1;
 
   if (find_module_idx (name1, &name1_idx) != 0
@@ -238,13 +245,13 @@ __gconv_lookup_cache (const char *toset, const char *fromset,
   const struct module_entry *to_module;
   struct __gconv_step *result;
 
-  if (__gconv_cache == NULL)
+  if (gconv_cache == NULL)
     /* We have no cache available.  */
     return __GCONV_NODB;
 
-  header = (const struct gconvcache_header *) __gconv_cache;
-  strtab = (char *) __gconv_cache + header->string_offset;
-  modtab = (const struct module_entry *) ((char *) __gconv_cache
+  header = (const struct gconvcache_header *) gconv_cache;
+  strtab = (char *) gconv_cache + header->string_offset;
+  modtab = (const struct module_entry *) ((char *) gconv_cache
 					  + header->module_offset);
 
   if (find_module_idx (fromset, &fromidx) != 0
@@ -273,7 +280,7 @@ __gconv_lookup_cache (const char *toset, const char *fromset,
 
       /* Note the -1.  This is due to the offset added in iconvconfig.
 	 See there for more explanations.  */
-      extra = (const struct extra_entry *) ((char *) __gconv_cache
+      extra = (const struct extra_entry *) ((char *) gconv_cache
 					    + header->otherconv_offset
 					    + from_module->extra_offset - 1);
       while (extra->module_cnt != 0
@@ -430,7 +437,7 @@ void
 internal_function
 __gconv_release_cache (struct __gconv_step *steps, size_t nsteps)
 {
-  if (__gconv_cache != NULL)
+  if (gconv_cache != NULL)
     /* The only thing we have to deallocate is the record with the
        steps.  */
     free (steps);
@@ -442,10 +449,10 @@ static void __attribute__ ((unused))
 free_mem (void)
 {
   if (cache_malloced)
-    free (__gconv_cache);
+    free (gconv_cache);
 #ifdef _POSIX_MAPPED_FILES
   else
-    __munmap (__gconv_cache, cache_size);
+    __munmap (gconv_cache, cache_size);
 #endif
 }
 

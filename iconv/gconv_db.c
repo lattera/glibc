@@ -1,5 +1,5 @@
 /* Provide access to the collection of available transformation modules.
-   Copyright (C) 1997,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -39,6 +39,20 @@ struct gconv_module *__gconv_modules_db;
 
 /* We modify global data.   */
 __libc_lock_define_initialized (static, lock)
+
+
+/* Provide access to module database.  */
+struct gconv_module *
+__gconv_get_modules_db (void)
+{
+  return __gconv_modules_db;
+}
+
+void *
+__gconv_get_alias_db (void)
+{
+  return __gconv_alias_db;
+}
 
 
 /* Function for searching alias.  */
