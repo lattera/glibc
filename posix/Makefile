@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000-2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -79,8 +79,8 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   bug-regex8 bug-regex9 bug-regex10 bug-regex11 bug-regex12 \
 		   bug-regex13 bug-regex14 bug-regex15 bug-regex16 \
 		   bug-regex17 bug-regex18 bug-regex19 bug-regex20 \
-		   bug-regex21 tst-nice tst-nanosleep transbug tst-rxspencer \
-		   tst-pcre tst-boost
+		   bug-regex21 bug-regex22 tst-nice tst-nanosleep \
+		   transbug tst-rxspencer tst-pcre tst-boost
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn
@@ -162,6 +162,7 @@ bug-regex17-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex18-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex19-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex20-ENV = LOCPATH=$(common-objpfx)localedata
+bug-regex22-ENV = LOCPATH=$(common-objpfx)localedata
 tst-rxspencer-ARGS = --utf8 rxspencer/tests
 tst-rxspencer-ENV = LOCPATH=$(common-objpfx)localedata
 tst-pcre-ARGS = PCRE.tests

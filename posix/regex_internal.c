@@ -189,7 +189,7 @@ re_string_construct_common (str, len, pstr, trans, icase, dfa)
   pstr->raw_mbs = (const unsigned char *) str;
   pstr->len = len;
   pstr->raw_len = len;
-  pstr->trans = trans;
+  pstr->trans = (unsigned RE_TRANSLATE_TYPE) trans;
   pstr->icase = icase ? 1 : 0;
   pstr->mbs_allocated = (trans != NULL || icase);
   pstr->mb_cur_max = dfa->mb_cur_max;
@@ -758,7 +758,7 @@ re_string_peek_byte_case (pstr, idx)
   int ch, off;
 
   /* Handle the common (easiest) cases first.  */
-  if (BE (!pstr->icase, 1))
+  if (BE (!pstr->mbs_allocated, 1))
     return re_string_peek_byte (pstr, idx);
 
 #ifdef RE_ENABLE_I18N
@@ -774,8 +774,6 @@ re_string_peek_byte_case (pstr, idx)
 #endif
 
   ch = pstr->raw_mbs[pstr->raw_mbs_idx + off];
-  if (pstr->trans)
-    ch = pstr->trans[ch];
 
 #ifdef RE_ENABLE_I18N
   /* Ensure that e.g. for tr_TR.UTF-8 BACKSLASH DOTLESS SMALL LETTER I
@@ -793,15 +791,13 @@ static unsigned char
 re_string_fetch_byte_case (pstr)
      re_string_t *pstr;
 {
-  int ch;
-
-  if (BE (!pstr->icase, 1))
+  if (BE (!pstr->mbs_allocated, 1))
     return re_string_fetch_byte (pstr);
 
 #ifdef RE_ENABLE_I18N
   if (pstr->offsets_needed)
     {
-      int off;
+      int off, ch;
 
       /* For tr_TR.UTF-8 [[:islower:]] there is
 	 [[: CAPITAL LETTER I WITH DOT lower:]] in mbs.  Skip
@@ -815,8 +811,6 @@ re_string_fetch_byte_case (pstr)
 
       off = pstr->offsets[pstr->cur_idx];
       ch = pstr->raw_mbs[pstr->raw_mbs_idx + off];
-      if (pstr->trans)
-	ch = pstr->trans[ch];
 
       if (! isascii (ch))
 	return re_string_fetch_byte (pstr);
@@ -827,10 +821,7 @@ re_string_fetch_byte_case (pstr)
     }
 #endif
 
-  ch = pstr->raw_mbs[pstr->raw_mbs_idx + pstr->cur_idx++];
-  if (pstr->trans)
-    ch = pstr->trans[ch];
-  return ch;
+  return pstr->raw_mbs[pstr->raw_mbs_idx + pstr->cur_idx++];
 }
 
 static void

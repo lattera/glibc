@@ -1,3 +1,22 @@
+2004-01-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c (regcomp): Fix comment typo.
+	(regfree): Free preg->translate, clear buffer, allocated, fastmap
+	and translate fields.
+
+	* posix/regcomp.c (build_charclass, buld_charclass_op): Change first
+	argument to unsigned RE_TRANSLATE_TYPE.
+	* posix/regex_internal.h (re_string_t): Change trans type to
+	unsigned RE_TRANSLATE_TYPE.
+	* posix/regex_internal.c (re_string_construct_common): Cast
+	trans to unsigned RE_TRANSLATE_TYPE.
+	(re_string_peek_byte_case, re_string_fetch_byte_case): Avoid fast
+	path if pstr->trans.  Never translate the character through
+	pstr->trans.
+	* posix/Makefile (tests): Add bug-regex22.
+	(bug-regex22-ENV): Set.
+	* posix/bug-regex22.c: New test.
+
 2004-01-02  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regex_internal.c (re_node_set_add_intersect,
