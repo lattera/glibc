@@ -1,3 +1,8 @@
+2002-11-25  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/mach/hurd/i386/init-first.c: Include <ldsodefs.h>
+	and <fpu_control.h>.
+
 2002-11-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/elf.h (EM_ST19): Fix typo.
