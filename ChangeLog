@@ -1,3 +1,8 @@
+2002-05-12  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdexec.c (_hurd_exec): Reauthenticate ports/dtable used in
+	file_exec to effect svuid=euid, svgid=egid if that is not a no-op.
+
 2002-05-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/Makefile: Remove extra endif.
