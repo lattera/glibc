@@ -48,13 +48,6 @@ static void start1();
 
 #ifndef	HAVE__start
 
-#if !defined (NO_UNDERSCORES) && defined (__GNUC__)
-/* Declare _start with an explicit assembly symbol name of `start'
-   (note no leading underscore).  This is the name vendor crt0.o's
-   tend to use, and thus the name most linkers expect.  */
-void _start (void) asm ("start");
-#endif
-
 /* N.B.: It is important that this be the first function.
    This file is the first thing in the text section.  */
 void
@@ -63,17 +56,20 @@ DEFUN_VOID(_start)
   start1();
 }
 
-#if !defined (NO_UNDERSCORES) && defined (HAVE_WEAK_SYMBOLS)
-/* Make an alias called `start' (no leading underscore,
-   so it can't conflict with C symbols) for `_start'.  */
-asm (".weak start; start = _start");
+#ifndef NO_UNDERSCORES
+/* Make an alias called `start' (no leading underscore, so it can't
+   conflict with C symbols) for `_start'.  This is the name vendor crt0.o's
+   tend to use, and thus the name most linkers expect.  */
+void _start (void) asm ("start");
+#endif
+asm (".set start, __start");
 #endif
 
 #endif
 
 /* ARGSUSED */
 static void
-start1(ARG_DUMMIES argc, argp)
+start1 (ARG_DUMMIES argc, argp)
      DECL_DUMMIES
      int argc;
      char *argp;
@@ -94,5 +90,5 @@ start1(ARG_DUMMIES argc, argp)
   __libc_init (argc, argv, __environ);
 
   /* Call the user program.  */
-  exit(main(argc, argv, __environ));
+  exit (main (argc, argv, __environ));
 }

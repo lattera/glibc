@@ -48,7 +48,7 @@ routines	:=							      \
 	memstream obstream						      \
 	internals sysd-stdio pipestream stdio_init libc_fatal
 aux	:= errlist siglist defs glue
-distribute := _itoa.h 
+distribute := _itoa.h printf-parse.h
 
 tests := tst-printf tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 temptest tst-fileno test-fwrite \

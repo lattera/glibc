@@ -16,20 +16,23 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include "../locale/localeinfo.h"
 #include <ctype.h>
 #include <errno.h>
 #include <float.h>
 #include <limits.h>
 #include <math.h>
+#include <printf.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 #include <printf.h>
-#include <assert.h>
 #include <stddef.h>
 #include "_itoa.h"
+#include "../locale/localeinfo.h"
+
+/* Include the shared code for parsing the format string.  */
+#include "printf-parse.h"
+
 
 /* This function from the GNU C library is also used in libio.
    To compile for use in libio, compile with -DUSE_IN_LIBIO.  */
@@ -38,20 +41,21 @@ Cambridge, MA 02139, USA.  */
 /* This code is for use in libio.  */
 #include <libioP.h>
 #define PUT(f, s, n)	_IO_sputn (f, s, n)
-#define PAD(padchar)	\
-	(width > 0 ? width += _IO_padn (s, padchar, width) : 0)
-#define PUTC(c, f)	_IO_putc(c, f)
+#define PAD(padchar)							      \
+  if (specs[cnt].info.width > 0)					      \
+    done += _IO_padn (s, padchar, specs[cnt].info.width)
+#define PUTC(c, f)	_IO_putc (c, f)
 #define vfprintf	_IO_vfprintf
 #define size_t		_IO_size_t
 #define FILE		_IO_FILE
 #define va_list		_IO_va_list
 #undef	BUFSIZ
 #define BUFSIZ		_IO_BUFSIZ
-#define ARGCHECK(s, format) \
+#define ARGCHECK(s, format)						      \
   do									      \
     {									      \
       /* Check file argument for consistence.  */			      \
-      CHECK_FILE(s, -1);						      \
+      CHECK_FILE (s, -1);						      \
       if (s->_flags & _IO_NO_WRITES || format == NULL)			      \
 	{								      \
 	  MAYBE_SET_EINVAL;						      \
@@ -64,8 +68,11 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #define PUTC(c, f)	putc (c, f)
 #define PUT(f, s, n)	fwrite (s, 1, n, f)
-ssize_t __printf_pad __P ((FILE *, char pad, int n));
-#define PAD(padchar)	__printf_pad (s, padchar, width)
+ssize_t __printf_pad __P ((FILE *, char pad, size_t n));
+#define PAD(padchar)							      \
+  if (specs[cnt].info.width > 0)					      \
+    { if (__printf_pad (s, padchar, specs[cnt].info.width) == -1)	      \
+	return -1; else done += specs[cnt].info.width; }
 #define ARGCHECK(s, format) \
   do									      \
     {									      \
@@ -88,14 +95,13 @@ ssize_t __printf_pad __P ((FILE *, char pad, int n));
 #define	outchar(x)							      \
   do									      \
     {									      \
-      register CONST int outc = (x);					      \
-      if (putc(outc, s) == EOF)						      \
+      register const int outc = (x);					      \
+      if (putc (outc, s) == EOF)					      \
 	return -1;							      \
       else								      \
 	++done;								      \
     } while (0)
 
-/* Advances STRING after writing LEN chars of it.  */
 #define outstring(string, len)						      \
   do									      \
     {									      \
@@ -104,580 +110,525 @@ ssize_t __printf_pad __P ((FILE *, char pad, int n));
 	  if (PUT (s, string, len) != len)				      \
 	    return -1;							      \
 	  done += len;							      \
-	  string += len;						      \
 	}								      \
       else								      \
-	while (len-- > 0)						      \
-	  outchar (*string++);						      \
+	{								      \
+	  register const char *cp = string;				      \
+	  register int l = len;						      \
+	  while (l-- > 0)						      \
+	    outchar (*cp++);						      \
+	}								      \
     } while (0)
 
 /* Helper function to provide temporary buffering for unbuffered streams.  */
 static int buffered_vfprintf __P ((FILE *stream, const char *fmt, va_list));
 
-/* Cast the next arg, of type ARGTYPE, into CASTTYPE, and put it in VAR.  */
-#define	castarg(var, argtype, casttype) \
-  var = (casttype) va_arg(args, argtype)
-/* Get the next arg, of type TYPE, and put it in VAR.  */
-#define	nextarg(var, type)	castarg(var, type, type)
-
 static printf_function printf_unknown;
 
 extern printf_function **__printf_function_table;
 
-#ifdef	__GNUC__
-#define	HAVE_LONGLONG
-#define	LONGLONG	long long
-#else
-#define	LONGLONG	long
-#endif
-
 static char *group_number __P ((char *, char *, const char *, wchar_t));
 
+
 int
-DEFUN(vfprintf, (s, format, args),
-      register FILE *s AND CONST char *format AND va_list args)
+vfprintf (s, format, ap)
+    register FILE *s;
+    const char *format;
+    va_list ap;
 {
   /* The character used as thousands separator.  */
   wchar_t thousands_sep;
 
   /* The string describing the size of groups of digits.  */
-  const char *grouping; 
+  const char *grouping;
 
-  /* Pointer into the format string.  */
-  register CONST char *f;
+  /* Array with information about the needed arguments.  This has to be
+     dynamically extendable.  */
+  size_t nspecs;
+  size_t nspecs_max;
+  struct printf_spec *specs;
+
+  /* The number of arguments the format string requests.  This will
+     determine the size of the array needed to store the argument
+     attributes.  */
+  size_t nargs;
+  int *args_type;
+  union printf_arg *args_value;
+
+  /* Positional parameters refer to arguments directly.  This could also
+     determine the maximum number of arguments.  Track the maximum number.  */
+  size_t max_ref_arg;
+
+  /* End of leading constant string.  */
+  const char *lead_str_end;
 
   /* Number of characters written.  */
   register size_t done = 0;
+
+  /* Running pointer through format string.  */
+  const char *f;
+
+  /* Just a counter.  */
+  int cnt;
 
   ARGCHECK (s, format);
 
   if (UNBUFFERED_P (s))
     /* Use a helper function which will allocate a local temporary buffer
        for the stream and then call us again.  */
-    return buffered_vfprintf (s, format, args);
+    return buffered_vfprintf (s, format, ap);
 
   /* Reset multibyte characters to their initial state.  */
   (void) mblen ((char *) NULL, 0);
 
-  /* Figure out the thousands seperator character.  */
+  /* Figure out the thousands separator character.  */
   if (mbtowc (&thousands_sep, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
-	      strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
+              strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
     thousands_sep = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
   grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
-  if (*grouping == '\0' || thousands_sep == L'\0')
+  if (*grouping == '\0' || *grouping == CHAR_MAX || thousands_sep == L'\0')
     grouping = NULL;
 
-  f = format;
-  while (*f != '\0')
+  nspecs_max = 32;		/* A more or less arbitrary start value.  */
+  specs = alloca (nspecs_max * sizeof (struct printf_spec));
+  nspecs = 0;
+  nargs = 0;
+  max_ref_arg = 0;
+
+  /* Find the first format specifier.  */
+  lead_str_end = find_spec (format);
+
+  for (f = lead_str_end; *f != '\0'; f = specs[nspecs++].next_fmt)
     {
-      /* Type modifiers.  */
-      char is_short, is_long, is_long_double;
-#ifdef	HAVE_LONGLONG
-      /* We use the `L' modifier for `long long int'.  */
-#define	is_longlong	is_long_double
-#else
-#define	is_longlong	0
-#endif
-      /* Format spec modifiers.  */
-      char space, showsign, left, alt, group;
-
-      /* Padding character: ' ' or '0'.  */
-      char pad;
-      /* Width of a field.  */
-      register int width;
-      /* Precision of a field.  */
-      int prec;
-
-      /* Decimal integer is negative.  */
-      char is_neg;
-
-      /* Current character of the format.  */
-      char fc;
-
-      /* Base of a number to be written.  */
-      int base;
-      /* Integral values to be written.  */
-      unsigned LONGLONG int num;
-      LONGLONG int signed_num;
-
-      /* String to be written.  */
-      CONST char *str;
-      char errorbuf[1024];	/* Buffer sometimes used by %m.  */
-
-      /* Auxiliary function to do output.  */
-      printf_function *function;
-
-      if (!isascii(*f))
+      if (nspecs >= nspecs_max)
 	{
-	  /* Non-ASCII, may be a multibyte.  */
-	  int len = mblen (f, strlen (f));
-	  if (len > 0)
-	    {
-	      outstring (f, len);
-	      continue;
-	    }
-	}
+	  /* Extend the array of format specifiers.  */
+	  struct printf_spec *old = specs;
 
-      if (*f != '%')
-	{
-	  /* This isn't a format spec, so write everything out until the
-	     next one.  To properly handle multibyte characters, we cannot
-	     just search for a '%'.  Since multibyte characters are hairy
-	     (and dealt with above), if we hit any byte above 127 (only
-	     those can start a multibyte character) we just punt back to
-	     that code.  */
-	  do
-	    outchar (*f++);
-	  while (*f != '\0' && *f != '%' && isascii (*f));
-	  continue;
-	}
-
-      ++f;
-
-      /* Check for "%%".  Note that although the ANSI standard lists
-	 '%' as a conversion specifier, it says "The complete format
-	 specification shall be `%%'," so we can avoid all the width
-	 and precision processing.  */
-      if (*f == '%')
-	{
-	  ++f;
-	  outchar('%');
-	  continue;
-	}
-
-      /* Check for spec modifiers.  */
-      space = showsign = left = alt = group = 0;
-      pad = ' ';
-      while (*f == ' ' || *f == '+' || *f == '-' || *f == '#' || *f == '0' ||
-	     *f == '\'')
-	switch (*f++)
-	  {
-	  case ' ':
-	    /* Output a space in place of a sign, when there is no sign.  */
-	    space = 1;
-	    break;
-	  case '+':
-	    /* Always output + or - for numbers.  */
-	    showsign = 1;
-	    break;
-	  case '-':
-	    /* Left-justify things.  */
-	    left = 1;
-	    break;
-	  case '#':
-	    /* Use the "alternate form":
-	       Hex has 0x or 0X, FP always has a decimal point.  */
-	    alt = 1;
-	    break;
-	  case '0':
-	    /* Pad with 0s.  */
-	    pad = '0';
-	    break;
-	  case '\'':
-	    /* Show grouping in numbers if the locale information
-	       indicates any.  */
-	    group = 1;
-	    break;
-	  }
-      if (left)
-	pad = ' ';
-
-      /* Get the field width.  */
-      width = 0;
-      if (*f == '*')
-	{
-	  /* The field width is given in an argument.
-	     A negative field width indicates left justification.  */
-	  nextarg(width, int);
-	  if (width < 0)
-	    {
-	      width = - width;
-	      left = 1;
-	    }
-	  ++f;
-	}
-      else
-	while (isdigit (*f))
-	  {
-	    width *= 10;
-	    width += *f++ - '0';
-	  }
-
-      /* Get the precision.  */
-      /* -1 means none given; 0 means explicit 0.  */
-      prec = -1;
-      if (*f == '.')
-	{
-	  ++f;
-	  if (*f == '*')
-	    {
-	      /* The precision is given in an argument.  */
-	      nextarg(prec, int);
-	      /* Avoid idiocy.  */
-	      if (prec < 0)
-		prec = -1;
-	      ++f;
-	    }
-	  else if (isdigit (*f))
-	    {
-	      prec = *f++ - '0';
-	      while (*f != '\0' && isdigit (*f))
-		{
-		  prec *= 10;
-		  prec += *f++ - '0';
-		}
-	    }
+	  nspecs_max *= 2;
+	  specs = alloca (nspecs_max * sizeof (struct printf_spec));
+	  if (specs == &old[nspecs])
+	    /* Stack grows up, OLD was the last thing allocated; extend it.  */
+	    nspecs_max += nspecs_max / 2;
 	  else
-	    /* "%.?" is treated like "%.0?".  */
-	    prec = 0;
+	    {
+	      /* Copy the old array's elements to the new space.  */
+	      memcpy (specs, old, nspecs * sizeof (struct printf_spec));
+	      if (old == &specs[nspecs])
+		/* Stack grows down, OLD was just below the new SPECS.
+		   We can use that space when the new space runs out.  */
+		nspecs_max += nspecs_max / 2;
+	    }
 	}
 
-      /* If there was a precision specified, ignore the 0 flag and always
-	 pad with spaces.  */
-      if (prec != -1)
-	pad = ' ';
+      /* Parse the format specifier.  */
+      nargs += parse_one_spec (f, nargs, &specs[nspecs], &max_ref_arg);
+    }
 
-      /* Check for type modifiers.  */
-      is_short = is_long = is_long_double = 0;
-      while (*f == 'h' || *f == 'l' || *f == 'L' || *f == 'q' || *f == 'Z')
-	switch (*f++)
-	  {
-	  case 'h':
-	    /* int's are short int's.  */
-	    is_short = 1;
-	    break;
-	  case 'l':
-#ifdef	HAVE_LONGLONG
-	    if (is_long)
-	      /* A double `l' is equivalent to an `L'.  */
-	      is_longlong = 1;
-	    else
-#endif
-	      /* int's are long int's.  */
-	      is_long = 1;
-	    break;
-	  case 'L':
-	    /* double's are long double's, and int's are long long int's.  */
-	    is_long_double = 1;
-	    break;
+  /* Determine the number of arguments the format string consumes.  */
+  nargs = MAX (nargs, max_ref_arg);
 
-	  case 'Z':
-	    /* int's are size_t's.  */
-#ifdef	HAVE_LONGLONG
-	    assert (sizeof(size_t) <= sizeof(unsigned long long int));
-	    is_longlong = sizeof(size_t) > sizeof(unsigned long int);
-#endif
-	    is_long = sizeof(size_t) > sizeof(unsigned int);
-	    break;
+  /* Allocate memory for the argument descriptions.  */
+  args_type = alloca (nargs * sizeof (int));
+  args_value = alloca (nargs * sizeof (union printf_arg));
 
-	  case 'q':
-	    /* 4.4 uses this for long long.  */
-#ifdef	HAVE_LONGLONG
-	    is_longlong = 1;
-#else
-	    is_long = 1;
-#endif
-	    break;
-	  }
+  /* XXX Could do sanity check here:
+     Initialize args_type elts to zero.
+     If any is still zero after this loop, format is invalid.  */
 
-      /* Format specification.  */
-      fc = *f++;
+  /* Fill in the types of all the arguments.  */
+  for (cnt = 0; cnt < nspecs; ++cnt)
+    {
+      /* If the width is determined by an argument this is an int.  */ 
+      if (specs[cnt].width_arg != -1)
+	args_type[specs[cnt].width_arg] = PA_INT;
+
+      /* If the precision is determined by an argument this is an int.  */ 
+      if (specs[cnt].prec_arg != -1)
+	args_type[specs[cnt].prec_arg] = PA_INT;
+
+      switch (specs[cnt].ndata_args)
+	{
+	case 0:			/* No arguments.  */
+	  break;
+	case 1:			/* One argument; we already have the type.  */
+	  args_type[specs[cnt].data_arg] = specs[cnt].data_arg_type;
+	  break;
+	default:
+	  /* We have more than one argument for this format spec.  We must
+	     call the arginfo function again to determine all the types.  */
+	  (void) (*__printf_arginfo_table[specs[cnt].info.spec])
+	    (&specs[cnt].info,
+	     specs[cnt].ndata_args, &args_type[specs[cnt].data_arg]);
+	  break;
+	}
+    }
+
+  /* Now we know all the types and the order.  Fill in the argument values.  */
+  for (cnt = 0; cnt < nargs; ++cnt)
+    switch (args_type[cnt])
+      {
+#define T(tag, mem, type)						      \
+      case tag:								      \
+	args_value[cnt].mem = va_arg (ap, type);			      \
+	break
+
+	T (PA_CHAR, pa_char, int); /* Promoted.  */
+	T (PA_INT|PA_FLAG_SHORT, pa_short_int, int); /* Promoted.  */
+	T (PA_INT, pa_int, int);
+	T (PA_INT|PA_FLAG_LONG, pa_long_int, long int);
+	T (PA_INT|PA_FLAG_LONG_LONG, pa_long_long_int, long long int);
+	T (PA_FLOAT, pa_float, double);	/* Promoted.  */
+	T (PA_DOUBLE, pa_double, double);
+	T (PA_DOUBLE|PA_FLAG_LONG_DOUBLE, pa_long_double, long double);
+	T (PA_STRING, pa_string, const char *);
+	T (PA_POINTER, pa_pointer, void *);
+#undef T
+      default:
+	if ((args_type[cnt] & PA_FLAG_PTR) != 0)
+	  args_value[cnt].pa_pointer = va_arg (ap, void *);
+	break;
+      }
+
+  /* Write the literal text before the first format.  */
+  outstring (format, lead_str_end - format);
+
+  /* Now walk through all format specifiers and process them.  */
+  for (cnt = 0; cnt < nspecs; ++cnt)
+    {
+      printf_function *function; /* Auxiliary function to do output.  */
+      int is_neg;		/* Decimal integer is negative.  */
+      int base;			/* Base of a number to be written.  */
+      unsigned long long int num; /* Integral number to be written.  */
+      const char *str;		/* String to be written.  */
+      char errorbuf[1024];      /* Buffer sometimes used by %m.  */
+
+      if (specs[cnt].width_arg != -1)
+	{
+	  /* Extract the field width from an argument.  */
+	  specs[cnt].info.width = args_value[specs[cnt].width_arg].pa_int;
+
+	  if (specs[cnt].info.width < 0)
+	    /* If the width value is negative left justification is selected
+	       and the value is taken as being positive.  */
+	    {
+	      specs[cnt].info.width = -specs[cnt].info.width;
+	      specs[cnt].info.left = 1;
+	    }
+	}
+
+      if (specs[cnt].prec_arg != -1)
+	{
+	  /* Extract the precision from an argument.  */
+	  specs[cnt].info.prec = args_value[specs[cnt].prec_arg].pa_int;
+
+	  if (specs[cnt].info.prec < 0)
+	    /* If the precision is negative the precision is omitted.  */
+	    specs[cnt].info.prec = -1;
+	}
+
+      /* Check for a user-defined handler for this spec.  */
       function = (__printf_function_table == NULL ? NULL :
-		  __printf_function_table[fc]);
-      if (function == NULL)
-	switch (fc)
-	  {
-	  case 'i':
-	  case 'd':
-	    /* Decimal integer.  */
-	    base = 10;
-	    if (is_longlong)
-	      nextarg(signed_num, LONGLONG int);
-	    else if (is_long)
-	      nextarg(signed_num, long int);
-	    else if (!is_short)
-	      castarg(signed_num, int, long int);
-	    else
-	      castarg(signed_num, int, short int);
+                  __printf_function_table[specs[cnt].info.spec]);
 
-	    is_neg = signed_num < 0;
-	    num = is_neg ? (- signed_num) : signed_num;
-	    goto number;
-
-	  case 'u':
-	    /* Decimal unsigned integer.  */
-	    base = 10;
-	    goto unsigned_number;
-
-	  case 'o':
-	    /* Octal unsigned integer.  */
-	    base = 8;
-	    goto unsigned_number;
-
-	  case 'X':
-	    /* Hexadecimal unsigned integer.  */
-	  case 'x':
-	    /* Hex with lower-case digits.  */
-
-	    base = 16;
-
-	  unsigned_number:
-	    /* Unsigned number of base BASE.  */
-
-	    if (is_longlong)
-	      castarg(num, LONGLONG int, unsigned LONGLONG int);
-	    else if (is_long)
-	      castarg(num, long int, unsigned long int);
-	    else if (!is_short)
-	      castarg(num, int, unsigned int);
-	    else
-	      castarg(num, int, unsigned short int);
-
-	    /* ANSI only specifies the `+' and
-	       ` ' flags for signed conversions.  */
-	    is_neg = showsign = space = 0;
-
-	  number:
-	    /* Number of base BASE.  */
-	    {
-	      char work[BUFSIZ];
-	      char *CONST workend = &work[sizeof(work) - 1];
-	      register char *w;
-
-	      /* Supply a default precision if none was given.  */
-	      if (prec == -1)
-		prec = 1;
-
-	      /* Put the number in WORK.  */
-	      w = _itoa (num, workend + 1, base, fc == 'X') - 1;
-	      if (group && grouping)
-		w = group_number (w, workend, grouping, thousands_sep);
-	      width -= workend - w;
-	      prec -= workend - w;
-
-	      if (alt && base == 8 && prec <= 0)
-		{
-		  *w-- = '0';
-		  --width;
-		}
-
-	      if (prec > 0)
-		{
-		  width -= prec;
-		  while (prec-- > 0)
-		    *w-- = '0';
-		}
-
-	      if (alt && base == 16)
-		width -= 2;
-
-	      if (is_neg || showsign || space)
-		--width;
-
-	      if (!left && pad == ' ')
-		PAD (' ');
-
-	      if (is_neg)
-		outchar('-');
-	      else if (showsign)
-		outchar('+');
-	      else if (space)
-		outchar(' ');
-
-	      if (alt && base == 16)
-		{
-		  outchar ('0');
-		  outchar (fc);
-		}
-
-	      if (!left && pad == '0')
-		PAD ('0');
-
-	      /* Write the number.  */
-	      while (++w <= workend)
-		outchar(*w);
-
-	      if (left)
-		PAD (' ');
-	    }
-	    break;
-
-	  case 'e':
-	  case 'E':
-	  case 'f':
-	  case 'g':
-	  case 'G':
-	    {
-	      /* Floating-point number.  */
-	      extern printf_function __printf_fp;
-	      function = __printf_fp;
-	      goto use_function;
-	    }
-
-	  case 'c':
-	    /* Character.  */
-	    nextarg(num, int);
-	    if (!left)
-	      {
-		--width;
-		PAD (' ');
-	      }
-	    outchar ((unsigned char) num);
-	    if (left)
-	      PAD (' ');
-	    break;
-
-	  case 's':
-	    {
-	      static CONST char null[] = "(null)";
-	      size_t len;
-
-	      nextarg(str, CONST char *);
-
-	    string:
-
-	      if (str == NULL)
-		/* Write "(null)" if there's space.  */
-		if (prec == -1 || prec >= (int) sizeof(null) - 1)
-		  {
-		    str = null;
-		    len = sizeof(null) - 1;
-		  }
-		else
-		  {
-		    str = "";
-		    len = 0;
-		  }
-	      else
-		len = strlen(str);
-
-	      if (prec != -1 && (size_t) prec < len)
-		len = prec;
-	      width -= len;
-
-	      if (!left)
-		PAD (' ');
-	      outstring (str, len);
-	      if (left)
-		PAD (' ');
-	    }
-	    break;
-
-	  case 'p':
-	    /* Generic pointer.  */
-	    {
-	      CONST PTR ptr;
-	      nextarg(ptr, CONST PTR);
-	      if (ptr != NULL)
-		{
-		  /* If the pointer is not NULL, write it as a %#x spec.  */
-		  base = 16;
-		  fc = 'x';
-		  alt = 1;
-		  num = (unsigned LONGLONG int) (unsigned long int) ptr;
-		  is_neg = 0;
-		  group = 0;
-		  goto number;
-		}
-	      else
-		{
-		  /* Write "(nil)" for a nil pointer.  */
-		  static CONST char nil[] = "(nil)";
-		  register CONST char *p;
-
-		  width -= sizeof (nil) - 1;
-		  if (!left)
-		    PAD (' ');
-		  for (p = nil; *p != '\0'; ++p)
-		    outchar (*p);
-		  if (left)
-		    PAD (' ');
-		}
-	    }
-	    break;
-
-	  case 'n':
-	    /* Answer the count of characters written.  */
-	    if (is_longlong)
-	      {
-		LONGLONG int *p;
-		nextarg(p, LONGLONG int *);
-		*p = done;
-	      }
-	    else if (is_long)
-	      {
-		long int *p;
-		nextarg(p, long int *);
-		*p = done;
-	      }
-	    else if (!is_short)
-	      {
-		int *p;
-		nextarg(p, int *);
-		*p = done;
-	      }
-	    else
-	      {
-		short int *p;
-		nextarg(p, short int *);
-		*p = done;
-	      }
-	    break;
-
-	  case 'm':
-	    {
-	      extern char *_strerror_internal __P ((int, char buf[1024]));
-	      str = _strerror_internal (errno, errorbuf);
-	      goto string;
-	    }
-
-	  default:
-	    /* Unrecognized format specifier.  */
-	    function = printf_unknown;
-	    goto use_function;
-	  }
-      else
-      use_function:
+      if (function != NULL)
+      use_function:		/* Built-in formats with helpers use this.  */
 	{
 	  int function_done;
-	  struct printf_info info;
+	  unsigned int i;
+	  const void *ptr[specs[cnt].ndata_args];
 
-	  info.prec = prec;
-	  info.width = width;
-	  info.spec = fc;
-	  info.is_long_double = is_long_double;
-	  info.is_short = is_short;
-	  info.is_long = is_long;
-	  info.alt = alt;
-	  info.space = space;
-	  info.left = left;
-	  info.showsign = showsign;
-	  info.group = group;
-	  info.pad = pad;
+	  /* Fill in an array of pointers to the argument values.  */
+	  for (i = 0; i < specs[cnt].ndata_args; ++i)
+	    ptr[i] = &args_value[specs[cnt].data_arg + i];
 
-	  function_done = (*function) (s, &info, &args);
+	  /* Call the function.  */
+	  function_done = (*function) (s, &specs[cnt].info, ptr);
+
+	  /* If an error occured don't do any further work.  */
 	  if (function_done < 0)
 	    return -1;
 
 	  done += function_done;
 	}
+      else
+	switch (specs[cnt].info.spec)
+	  {
+	  case '%':
+	    /* Write a literal "%".  */
+	    outchar ('%');
+	    break;
+	  case 'i':
+	  case 'd':
+	    {
+	      long long int signed_num;
+
+	      /* Decimal integer.  */
+	      base = 10;
+	      if (specs[cnt].info.is_longlong)
+		signed_num = args_value[specs[cnt].data_arg].pa_long_long_int;
+	      else if (specs[cnt].info.is_long)
+		signed_num = args_value[specs[cnt].data_arg].pa_long_int;
+	      else if (!specs[cnt].info.is_short)
+		signed_num = args_value[specs[cnt].data_arg].pa_int;
+	      else
+		signed_num = args_value[specs[cnt].data_arg].pa_short_int;
+
+	      is_neg = signed_num < 0;
+	      num = is_neg ? (- signed_num) : signed_num;
+	      goto number;
+	    }
+
+	  case 'u':
+	    /* Decimal unsigned integer.  */
+            base = 10;
+            goto unsigned_number;
+
+	  case 'o':
+            /* Octal unsigned integer.  */
+            base = 8;
+            goto unsigned_number;
+
+          case 'X':
+            /* Hexadecimal unsigned integer.  */
+          case 'x':
+            /* Hex with lower-case digits.  */
+            base = 16;
+
+	  unsigned_number:
+            /* Unsigned number of base BASE.  */
+
+            if (specs[cnt].info.is_longlong)
+	      num = args_value[specs[cnt].data_arg].pa_u_long_long_int;
+            else if (specs[cnt].info.is_long)
+	      num = args_value[specs[cnt].data_arg].pa_u_long_int;
+            else if (!specs[cnt].info.is_short)
+	      num = args_value[specs[cnt].data_arg].pa_u_int;
+            else
+	      num = args_value[specs[cnt].data_arg].pa_u_short_int;
+
+            /* ANSI only specifies the `+' and
+               ` ' flags for signed conversions.  */
+            is_neg = 0;
+	    specs[cnt].info.showsign = 0;
+	    specs[cnt].info.space = 0;
+
+	  number:
+	    /* Number of base BASE.  */
+            {
+              char work[BUFSIZ];
+              char *const workend = &work[sizeof(work) - 1];
+              register char *w;
+
+              /* Supply a default precision if none was given.  */
+              if (specs[cnt].info.prec == -1)
+                specs[cnt].info.prec = 1;
+
+              /* Put the number in WORK.  */
+              w = _itoa (num, workend + 1, base, specs[cnt].info.spec == 'X');
+	      w -= 1;
+              if (specs[cnt].info.group && grouping)
+                w = group_number (w, workend, grouping, thousands_sep);
+              specs[cnt].info.width -= workend - w;
+              specs[cnt].info.prec -= workend - w;
+
+              if (num != 0 && specs[cnt].info.alt && base == 8
+		  && specs[cnt].info.prec <= 0)
+                {
+		  /* Add octal marker.  */
+                  *w-- = '0';
+                  --specs[cnt].info.width;
+                }
+
+              if (specs[cnt].info.prec > 0)
+                {
+		  /* Add zeros to the precision.  */
+                  specs[cnt].info.width -= specs[cnt].info.prec;
+                  while (specs[cnt].info.prec-- > 0)
+                    *w-- = '0';
+                }
+
+              if (num != 0 && specs[cnt].info.alt && base == 16)
+		/* Account for 0X hex marker.  */
+                specs[cnt].info.width -= 2;
+
+              if (is_neg || specs[cnt].info.showsign || specs[cnt].info.space)
+                --specs[cnt].info.width;
+
+              if (!specs[cnt].info.left && specs[cnt].info.pad == ' ')
+                PAD (' ');
+
+              if (is_neg)
+                outchar ('-');
+              else if (specs[cnt].info.showsign)
+                outchar ('+');
+              else if (specs[cnt].info.space)
+                outchar (' ');
+
+              if (num != 0 && specs[cnt].info.alt && base == 16)
+                {
+                  outchar ('0');
+                  outchar (specs[cnt].info.spec);
+                }
+
+              if (!specs[cnt].info.left && specs[cnt].info.pad == '0')
+                PAD ('0');
+
+              /* Write the number.  */
+              while (++w <= workend)
+                outchar (*w);
+
+              if (specs[cnt].info.left)
+                PAD (' ');
+            }
+            break;
+
+          case 'e':
+          case 'E':
+          case 'f':
+          case 'g':
+          case 'G':
+            {
+              /* Floating-point number.  This is handled by printf_fp.c.  */
+              extern printf_function __printf_fp;
+              function = __printf_fp;
+              goto use_function;
+            }
+
+          case 'c':
+            /* Character.  */
+            if (!specs[cnt].info.left)
+              {
+                --specs[cnt].info.width;
+                PAD (' ');
+              }
+            outchar ((unsigned char) args_value[specs[cnt].data_arg].pa_char);
+            if (specs[cnt].info.left)
+              PAD (' ');
+            break;
+
+          case 's':
+            {
+              static const char null[] = "(null)";
+              size_t len;
+
+	      str = args_value[specs[cnt].data_arg].pa_string;
+
+	    string:
+
+              if (str == NULL)
+		{
+		  /* Write "(null)" if there's space.  */
+		  if (specs[cnt].info.prec == -1
+		      || specs[cnt].info.prec >= (int) sizeof (null) - 1)
+		    {
+		      str = null;
+		      len = sizeof (null) - 1;
+		    }
+		  else
+		    {
+		      str = "";
+		      len = 0;
+		    }
+		}
+              else
+                len = strlen (str);
+
+              if (specs[cnt].info.prec != -1
+		  && (size_t) specs[cnt].info.prec < len)
+		/* Limit the length to the precision.  */
+                len = specs[cnt].info.prec;
+              specs[cnt].info.width -= len;
+
+              if (!specs[cnt].info.left)
+                PAD (' ');
+              outstring (str, len);
+              if (specs[cnt].info.left)
+                PAD (' ');
+            }
+            break;
+
+          case 'p':
+            /* Generic pointer.  */
+            {
+              const void *ptr;
+              ptr = args_value[specs[cnt].data_arg].pa_pointer;
+              if (ptr != NULL)
+                {
+                  /* If the pointer is not NULL, write it as a %#x spec.  */
+                  base = 16;
+                  num = (unsigned long long int) (unsigned long int) ptr;
+                  is_neg = 0;
+                  specs[cnt].info.alt = 1;
+		  specs[cnt].info.spec = 'x';
+                  specs[cnt].info.group = 0;
+                  goto number;
+                }
+              else
+                {
+                  /* Write "(nil)" for a nil pointer.  */
+                  str = "(nil)";
+		  /* Make sure the full string "(nil)" is printed.  */
+		  if (specs[cnt].info.prec < 5)
+		    specs[cnt].info.prec = 5;
+                  goto string;
+                }
+            }
+            break;
+
+          case 'n':
+            /* Answer the count of characters written.  */
+            if (specs[cnt].info.is_longlong)
+	      *(long long int *) 
+		args_value[specs[cnt].data_arg].pa_pointer = done;
+            else if (specs[cnt].info.is_long)
+	      *(long int *) 
+		args_value[specs[cnt].data_arg].pa_pointer = done;
+            else if (!specs[cnt].info.is_short)
+	      *(int *) 
+		args_value[specs[cnt].data_arg].pa_pointer = done;
+            else
+	      *(short int *) 
+		args_value[specs[cnt].data_arg].pa_pointer = done;
+            break;
+
+          case 'm':
+            {
+              extern char *_strerror_internal __P ((int, char buf[1024]));
+              str = _strerror_internal (errno, errorbuf);
+              goto string;
+            }
+
+          default:
+            /* Unrecognized format specifier.  */
+            function = printf_unknown;
+            goto use_function;
+	  }
+
+      /* Write the following constant string.  */
+      outstring (specs[cnt].end_of_fmt,
+		 specs[cnt].next_fmt - specs[cnt].end_of_fmt);
     }
 
   return done;
 }
 
 
+/* Handle an unknown format specifier.  This prints out a canonicalized
+   representation of the format spec itself.  */
+
 static int
-DEFUN(printf_unknown, (s, info, arg),
-      FILE *s AND CONST struct printf_info *info AND va_list *arg)
+printf_unknown (s, info, args)
+  FILE *s;
+  const struct printf_info *info;
+  const void **const args;
 {
   int done = 0;
   char work[BUFSIZ];
-  char *CONST workend = &work[sizeof(work) - 1];
+  char *const workend = &work[sizeof(work) - 1];
   register char *w;
-  register int prec = info->prec, width = info->width;
 
-  outchar('%');
+  outchar ('%');
 
   if (info->alt)
     outchar ('#');
@@ -692,29 +643,23 @@ DEFUN(printf_unknown, (s, info, arg),
   if (info->pad == '0')
     outchar ('0');
 
-  w = workend;
-  while (width > 0)
+  if (info->width != 0)
     {
-      *w-- = '0' + (width % 10);
-      width /= 10;
+      w = _itoa (info->width, workend + 1, 10, 0);
+      while (++w <= workend)
+	outchar (*w);
     }
-  while (++w <= workend)
-    outchar(*w);
 
   if (info->prec != -1)
     {
-      outchar('.');
-      w = workend;
-      while (prec > 0)
-	{
-	  *w-- = '0' + (prec % 10);
-	  prec /= 10;
-	}
+      outchar ('.');
+      w = _itoa (info->prec, workend + 1, 10, 0);
       while (++w <= workend)
-	outchar(*w);
+	outchar (*w);
     }
 
-  outchar(info->spec);
+  if (info->spec != '\0')
+    outchar (info->spec);
 
   return done;
 }
@@ -768,7 +713,6 @@ group_number (char *w, char *workend, const char *grouping,
 	    }
 	}
     }
-
   return w;
 }
 
@@ -781,7 +725,9 @@ struct helper_file
   };
 
 static int
-DEFUN(_IO_helper_overflow, (s, c), _IO_FILE *s AND int c)
+_IO_helper_overflow (s, c)
+  _IO_FILE *s;
+  int c;
 {
   _IO_FILE *target = ((struct helper_file*) s)->_put_stream;
   int used = s->_IO_write_ptr - s->_IO_write_base;
@@ -815,8 +761,10 @@ static const struct _IO_jump_t _IO_helper_jumps =
   };
 
 static int
-DEFUN(buffered_vfprintf, (s, format, args),
-      register _IO_FILE *s AND char CONST *format AND _IO_va_list args)
+buffered_vfprintf (s, format, args)
+  register _IO_FILE *s;
+  char const *format;
+  _IO_va_list args;
 {
   char buf[_IO_BUFSIZ];
   struct helper_file helper;
@@ -847,8 +795,10 @@ DEFUN(buffered_vfprintf, (s, format, args),
 #else /* !USE_IN_LIBIO */
 
 static int
-DEFUN(buffered_vfprintf, (s, format, args),
-      register FILE *s AND char CONST *format AND va_list args)
+buffered_vfprintf (s, format, args)
+  register FILE *s;
+  char const *format;
+  va_list args;
 {
   char buf[BUFSIZ];
   int result;
@@ -882,27 +832,21 @@ ssize_t
 __printf_pad (s, pad, count)
      FILE *s;
      char pad;
-     int count;
+     size_t count;
 {
-  CONST char *padptr;
-  register int i;
-  size_t written = 0, w;
+  const char *padptr;
+  register size_t i;
 
   padptr = pad == ' ' ? blanks : zeroes;
 
   for (i = count; i >= PADSIZE; i -= PADSIZE)
-    {
-      w = PUT(s, padptr, PADSIZE);
-      written += w;
-      if (w != PADSIZE)
-	return written;
-    }
+    if (PUT (s, padptr, PADSIZE) != PADSIZE)
+      return -1;
   if (i > 0)
-    {
-      w = PUT(s, padptr, i);
-      written += w;
-    }
-  return written;
+    if (PUT (s, padptr, i) != i)
+      return -1;
+
+  return count;
 }
 #undef PADSIZE
 #endif /* USE_IN_LIBIO */

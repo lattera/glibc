@@ -1,3 +1,17 @@
+Fri Mar 24 02:35:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdio/printf-parse.h: New file, mostly written by drepper.
+	* stdio/vfprintf.c: Rewritten, mostly by drepper.
+	* stdio/printf-prs.c: Rewritten.
+	* stdio/Makefile (distribute): Add printf-parse.h.
+
+Thu Mar 23 22:03:44 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/unix/start.c [! NO_UNDERSCORES]: Don't declare _start
+ 	with asm name.  Just do a ".set start, __start".
+
+	* malloc/realloc.c: Call _free_internal instead of free.
+
 Tue Mar 21 00:14:27 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* locale/loadlocale.c (_nl_load_locale): If LOCALE/LC_* is a
@@ -9,6 +23,7 @@ Mon Mar 20 03:19:23 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	stdio/gmp.h, stdio/longlong.h, stdio/mp_clz_tab.c,
 	stdio/gen-mpn-copy: Files moved to stdlib.
 	* stdio/Makefile: All mpn stuff moved to stdlib/Makefile.
+	* stdlib/Makefile: All the mpn stuff moved here from stdio/Makefile.
 	* stdio/printf_fp.c: Use ../stdlib to find fpioconst.h and gmp
  	headers.
 	* stdlib/strtod.c: Don't use ../stdio to find fpioconst.h and gmp
