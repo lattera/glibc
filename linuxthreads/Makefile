@@ -25,7 +25,7 @@ linuxthreads-version := $(shell sed -n 's/^.*$(subdir)-\([0-9.]*\).*$$/\1/p' \
 				    Banner)
 
 headers := pthread.h semaphore.h
-distribute := internals.h queue.h restart.h spinlock.h
+distribute := internals.h queue.h restart.h spinlock.h tst-signal.sh
 
 routines := weaks no-tsd
 
@@ -61,6 +61,7 @@ librt-tests = ex10 ex11
 tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 $(librt-tests) ex12 ex13 joinrace \
 	tststack $(tests-nodelete-$(have-z-nodelete)) ecmutex ex14 ex15 ex16 \
 	ex17 ex18 tst-cancel tst-context
+test-srcs = tst-signal
 
 ifeq (yes,$(build-shared))
 tests-nodelete-yes = unload
@@ -88,11 +89,11 @@ $(objpfx)libpthread.so: $(common-objpfx)libc.so \
 
 # Make sure we link with the thread library.
 ifeq ($(build-shared),yes)
-$(addprefix $(objpfx),$(tests)): $(objpfx)libpthread.so
+$(addprefix $(objpfx),$(tests) $(test-srcs)): $(objpfx)libpthread.so
 $(addprefix $(objpfx),$(librt-tests)): $(common-objpfx)rt/librt.so
 $(objpfx)unload: $(common-objpfx)dlfcn/libdl.so
 else
-$(addprefix $(objpfx),$(tests)): $(objpfx)libpthread.a
+$(addprefix $(objpfx),$(tests) $(test-srcs)): $(objpfx)libpthread.a
 $(addprefix $(objpfx),$(librt-tests)): $(common-objpfx)rt/librt.a
 endif
 ifeq ($(build-bounded),yes)
@@ -127,4 +128,12 @@ endif
 ifeq (yes,$(build-static-nss))
 otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
              $(resolvobjdir)/libresolv.a
+endif
+
+ifeq (no,$(cross-compiling))
+ifeq (yes,$(build-shared))
+tests: $(objpfx)tst-signal.out
+$(objpfx)tst-signal.out: tst-signal.sh $(objpfx)tst-signal
+	$(SHELL) -e $< $(common-objpfx)
+endif
 endif

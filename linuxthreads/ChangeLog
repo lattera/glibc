@@ -1,3 +1,10 @@
+2002-01-12  Andreas Schwab  <schwab@suse.de>
+
+	* Makefile (test-srcs): Add tst-signal.
+	(tests): Run tst-signal.
+	(distribute): Add tst-signal.sh.
+	* tst-signal.c, tst-signal.sh: New files.
+
 2002-01-14  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/pt-machine.h (INIT_THREAD_SELF): Avoid warning.
