@@ -75,7 +75,7 @@ __inline_copysign(copysign, double)
 #undef __MATH_INLINE_copysign
 
 
-#if defined __GNUC__ && (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 8))
+#if __GNUC_PREREQ (2, 8)
 __MATH_INLINE float __fabsf (float __x) { return __builtin_fabsf (__x); }
 __MATH_INLINE float fabsf (float __x) { return __builtin_fabsf (__x); }
 __MATH_INLINE double __fabs (double __x) { return __builtin_fabs (__x); }
