@@ -34,7 +34,7 @@ __pthread_getaffinity_new (pthread_t th, size_t cpusetsize, cpu_set_t *cpuset)
 
   INTERNAL_SYSCALL_DECL (err);
   int res = INTERNAL_SYSCALL (sched_getaffinity, err, 3, pd->tid,
-			      MIN (UINT_MAX, cpusetsize), cpuset);
+			      MIN (INT_MAX, cpusetsize), cpuset);
   if (INTERNAL_SYSCALL_ERROR_P (res, err))
     return INTERNAL_SYSCALL_ERRNO (res, err);
 
