@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,3 +30,4 @@ setgroups (n, groups)
 {
   return __syssgi (SGI_SETGROUPS, n, groups);
 }
+libc_hidden_def (setgroups)
