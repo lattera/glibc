@@ -23,6 +23,7 @@
 #ifndef __ASSEMBLER__
 # include <stddef.h>
 # include <stdint.h>
+# include <stdlib.h>
 
 
 /* Type for the dtv.  */
