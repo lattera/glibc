@@ -640,6 +640,12 @@ extern void (*_IO_cleanup_registration_needed) __PMT ((void));
 	  if ((_B) == NULL)						      \
 	    return (_R);						      \
        } while (0)
+# define ALLOC_WBUF(_B, _S, _R) \
+       do {								      \
+	  (_B) = (wchar_t *)malloc(_S);					      \
+	  if ((_B) == NULL)						      \
+	    return (_R);						      \
+       } while (0)
 
 #endif /* _G_HAVE_MMAP */
 
