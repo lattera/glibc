@@ -1,3 +1,15 @@
+2002-12-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* init.c (__pthread_initialize_minimal_internal): Don't mark as
+	constructor.
+
+2002-12-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile ($(inst_libdir)/libpthread.so): Depend on
+	$(common-objpfx)format.lds, include that into the output script.
+	Fix comment.
+	(extra-B-pthread.so): Change linuxthreads/ into nptl/.
+
 2002-12-28  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/xstatconv.c (xstat_conv): Adjust for
@@ -9,8 +21,7 @@
 	* sysdeps/unix/sysv/linux/bits/stat.h: Add nsec resolution for
 	structs stat and stat64.
 	* time/time.h (__timespec_defined): Define for __USE_MISC.
-	* io/sys/stat.h [__USE_MISC]: Define __need_timespec for struct
-	stat.
+	* io/sys/stat.h [__USE_MISC]: Define __need_timespec for struct stat.
 
 2002-12-30  Jakub Jelinek  <jakub@redhat.com>
 

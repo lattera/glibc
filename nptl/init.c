@@ -136,9 +136,6 @@ sigcancel_handler (int sig __attribute ((unused)))
 
 
 void
-#ifdef SHARED
-__attribute ((constructor))
-#endif
 __pthread_initialize_minimal_internal (void)
 {
 #ifndef SHARED
