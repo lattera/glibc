@@ -1,5 +1,11 @@
 2002-10-19  Roland McGrath  <roland@redhat.com>
 
+	* configure.in: Call AC_CONFIG_SUBDIRS with empty argument
+	and then set $subdirs directly, because the new Autoconf breaks
+	compatibility in every way imaginable and insists on whining
+	about usage that worked since the dawn of time.
+	* configure: Regenerated.
+
 	* configure: Regenerated (using Autoconf 2.54).
 	* sysdeps/alpha/elf/configure: Likewise.
 	* sysdeps/generic/configure: Likewise.

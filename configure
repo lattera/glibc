@@ -271,7 +271,7 @@ PACKAGE_STRING='GNU C Library (see version.h)'
 PACKAGE_BUGREPORT='glibc'
 
 ac_unique_file="include/features.h"
-ac_subdirs_all="$ac_subdirs_all $add_ons"
+ac_subdirs_all="$ac_subdirs_all "
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>
@@ -1536,8 +1536,7 @@ fi
 
 
 
-subdirs="$subdirs $add_ons"
-
+subdirs="$subdirs  "
 add_ons_pfx=
 if test x"$add_ons" != x; then
   for f in $add_ons; do
@@ -1571,6 +1570,7 @@ echo "$as_me: error:
     # Test whether such a subdir really exists.
     if test -d $srcdir/$f; then
       add_ons_pfx="$add_ons_pfx $f/"
+                        subdirs="$subdirs $f"
     else
       { { echo "$as_me:$LINENO: error: add-on directory \"$f\" does not exist" >&5
 echo "$as_me: error: add-on directory \"$f\" does not exist" >&2;}
