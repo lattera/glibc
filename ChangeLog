@@ -1,5 +1,9 @@
 2003-02-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/fpu/s_nextafterl.c: Decrement high word of mantissa
+	of demorm correctly if low word is zero.
+	Reported by Fred J. Tydeman <tydeman@tybor.com>.
+
 	* sysdeps/generic/libc-start.c [HAVE_PTR_NTHREADS]: Decrement thread
 	counter and only call __exit_thread if this is not the last thread.
 
