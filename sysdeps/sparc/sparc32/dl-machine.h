@@ -403,7 +403,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 }
 
 static inline void
-elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
+elf_machine_lazy_rel (Elf32_Addr l_addr, const Elf32_Rela *reloc)
 {
   switch (ELF32_R_TYPE (reloc->r_info))
     {

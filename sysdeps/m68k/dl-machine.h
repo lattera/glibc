@@ -320,13 +320,13 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 }
 
 static inline void
-elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
+elf_machine_lazy_rel (Elf32_Addr l_addr, const Elf32_Rela *reloc)
 {
-  Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
+  Elf32_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
   switch (ELF32_R_TYPE (reloc->r_info))
     {
     case R_68K_JMP_SLOT:
-      *reloc_addr += map->l_addr;
+      *reloc_addr += l_addr;
       break;
     default:
       assert (! "unexpected PLT reloc type");

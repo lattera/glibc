@@ -1,5 +1,5 @@
 /* Do relocations for ELF dynamic linking.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,9 +44,12 @@ elf_dynamic_do_rel (struct link_map *map,
   const ElfW(Rel) *end = (const ElfW(Rel) *)(map->l_addr + reladdr + relsize);
 
   if (lazy)
-    /* Doing lazy PLT relocations; they need very little info.  */
-    for (; r < end; ++r)
-      elf_machine_lazy_rel (map, r);
+    {
+      /* Doing lazy PLT relocations; they need very little info.  */
+      ElfW(Addr) l_addr = map->l_addr;
+      for (; r < end; ++r)
+	elf_machine_lazy_rel (l_addr, r);
+    }
   else
     {
       const ElfW(Sym) *const symtab =

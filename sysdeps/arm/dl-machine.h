@@ -166,7 +166,7 @@ _dl_runtime_resolve:
 	mov	pc, ip
 
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve
-	
+
 	.globl _dl_runtime_profile
 	.type _dl_runtime_profile, #function
 	.align 2
@@ -449,13 +449,13 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 }
 
 static inline void
-elf_machine_lazy_rel (struct link_map *map, const Elf32_Rel *reloc)
+elf_machine_lazy_rel (Elf32_Addr l_addr, const Elf32_Rel *reloc)
 {
-  Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
+  Elf32_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
   switch (ELF32_R_TYPE (reloc->r_info))
     {
     case R_ARM_JUMP_SLOT:
-      *reloc_addr += map->l_addr;
+      *reloc_addr += l_addr;
       break;
     default:
       assert (! "unexpected PLT reloc type");

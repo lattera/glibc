@@ -1,3 +1,18 @@
+1998-08-28 22:49  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/do-rel.h (elf_dynamic_do_rel): Call elf_machine_lazy_rel
+	with load address, not map address.
+	* sysdeps/alpha/dl-machine.h (elf_machine_lazy_rel): Change first
+	parameter and use this value.
+	* sysdeps/arm/dl-machine.h: Likewise.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	* sysdeps/m68k/dl-machine.h: Likewise.
+	* sysdeps/mips/dl-machine.h (elf_machine_lazy_rel): Change first
+	parameter.
+	* sysdeps/powerpc/dl-machine.h: Likewise
+	* sysdeps/sparc/sparc32/dl-machine.h: Likewise
+	* sysdeps/sparc/sparc64/dl-machine.h: Likewise
+
 1998-08-28 09:22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/rtld.c (process_envvars): Fix copy&paste error.
