@@ -1,3 +1,7 @@
+2004-03-07  Andreas Schwab  <schwab@suse.de>
+
+	* elf/dl-sym.c: Include <dl-tls.h> only when USE_TLS.
+
 2004-03-07  Andreas Jaeger  <aj@suse.de>
 
 	* iconvdata/iso-2022-cn-ext.c (BODY): Remove cast used as lvalue.

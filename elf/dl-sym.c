@@ -24,7 +24,9 @@
 #include <dlfcn.h>
 #include <ldsodefs.h>
 #include <dl-hash.h>
-#include <dl-tls.h>
+#ifdef USE_TLS
+# include <dl-tls.h>
+#endif
 
 
 #if defined USE_TLS && defined SHARED
