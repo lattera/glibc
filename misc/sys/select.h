@@ -71,10 +71,6 @@ typedef __fd_set fd_set;
    (if not NULL) for exceptional conditions.  If TIMEOUT is not NULL, time out
    after waiting the interval specified therein.  Returns the number of ready
    descriptors, or -1 for errors.  */
-extern int __select (int __nfds, __fd_set *__restrict __readfds,
-		     __fd_set *__restrict __writefds,
-		     __fd_set *__restrict __exceptfds,
-		     struct timeval *__restrict __timeout) __THROW;
 extern int select (int __nfds, __fd_set *__restrict __readfds,
 		   __fd_set *__restrict __writefds,
 		   __fd_set *__restrict __exceptfds,
