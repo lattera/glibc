@@ -26,14 +26,14 @@ powerpc-.*-.*		libm=6
 mips.*-.*-linux.*	libm=6			GLIBC_2.0 GLIBC_2.2
 mips.*-.*-.*		libm=6
 arm.*-.*-.*		libm=6
-ia64-.*-.*		libm=6			GLIBC_2.2
+ia64-.*-.*		libm=6.1		GLIBC_2.2
 sh.*-.*-.*		libm=6			GLIBC_2.2
 
 # We provide libc.so.6 for Linux kernel versions 2.0 and later.
 alpha.*-.*-linux.*	libc=6.1
 # Working mips versions were never released between 2.0 and 2.2.
 mips.*-.*-linux.*	libc=6			GLIBC_2.0 GLIBC_2.2
-ia64-.*-.*		libc=6			GLIBC_2.2
+ia64-.*-.*		libc=6.1		GLIBC_2.2
 sh.*-.*-.*              libc=6                  GLIBC_2.2
 .*-.*-linux.*		libc=6
 
