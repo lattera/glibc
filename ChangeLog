@@ -1,3 +1,8 @@
+2001-06-15  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/fpu/bits/mathinline.h: Don't define log2 as inline.
+	* sysdeps/m68k/fpu/mathimpl.h: Define __ieee754_log2 as inline.
+
 2001-06-15  Andreas Jaeger  <aj@suse.de>
 
 	* gmon/tst-sprofil.c (fac): Make static to avoid compiler warning.
