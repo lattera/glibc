@@ -77,7 +77,7 @@ contact <bug-glibc@gnu.org>.
 
      It is planned to do a complete rewrite.
 
-***  We have no multibyte character support.  But a rewrite is still
+***  We have now multibyte character support.  But a rewrite is still
      necessary.
 
 
