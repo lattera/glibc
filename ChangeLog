@@ -1,5 +1,7 @@
 2001-02-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* math/Makefile (libm-calls): It's e_exp2 not s_exp2.
+
 	* sysdeps/generic/s_exp2l.c: Renamed to...
 	* sysdeps/generic/s_exp2l.c: ...this.   New file.
 	* sysdeps/i386/fpu/s_exp2.S: Renamed to...
