@@ -46,6 +46,3 @@ $(test-modules): $(objpfx)%.so: $(objpfx)%.os
 $(objpfx)glrefmain: $(objpfx)libdl.so
 $(objpfx)glrefmain.out: $(objpfx)glrefmain \
 			$(objpfx)glreflib1.so $(objpfx)glreflib2.so
-	-$(elf-objpfx)$(rtld-installed-name) \
-	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
-	  $(objpfx)glrefmain > $@
