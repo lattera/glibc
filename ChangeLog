@@ -1,6 +1,6 @@
-2000-09-26  Andreas Jaeger  <aj@suse.de>
+2000-09-26  Ulrich Drepper  <drepper@redhat.com>
 
-	* include/langinfo.h (__nl_langinfo_l): Add prototype.
+	* locale/langinfo.h (__nl_langinfo_l): Add prototype.
 
 2000-09-26  Andreas Jaeger  <aj@suse.de>
 
