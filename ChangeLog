@@ -1,5 +1,18 @@
 2003-03-03  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/ia64/dl-fptr.c (__ia64_make_fptr): Revert last change.
+	* sysdeps/ia64/dl-machine.h: Likewise.
+	* sysdeps/ia64/dl-symaddr.c (_dl_symbol_address): Remove const from
+	argument type.
+	* sysdeps/ia64/dl-lookupcfg.h: Update decl.
+
+	* sysdeps/wordsize-64/strtol_l.c (strtoll_l): Define as weak alias.
+	* sysdeps/wordsize-64/strtoul_l.c (strtoull_l): Define as weak alias.
+	* locale/Versions (libc: GLIBC_2.3): Move those to ...
+	* sysdeps/wordsize-32/Versions (libc: GLIBC_2.3): ... here, new file.
+	* sysdeps/wordsize-64/Versions (libc: GLIBC_2.3.3) Likewise.
+	* Versions.def (libc): Add GLIBC_2.3.3 set.
+
 	* sysdeps/ia64/dl-fptr.c (__ia64_make_fptr): Add const to MAP arg.
 	* sysdeps/ia64/dl-machine.h: Update decl.
 
