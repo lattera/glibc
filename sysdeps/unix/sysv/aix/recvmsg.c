@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,9 +18,9 @@
 
 #include <sys/socket.h>
 
-extern int nrecvmsg (int s, struct msghdr *uap_msg, int flags);
+extern ssize_t nrecvmsg (int s, struct msghdr *uap_msg, int flags);
 
-int
+ssize_t
 recvmsg (int fd, struct msghdr *message, int flags)
 {
   return nrecvmsg (fd, message, flags);
