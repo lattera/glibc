@@ -1,7 +1,7 @@
-extern void circlemod3 (void);
+extern int circlemod3 (void);
 
-void
+int
 circlemod2 (void)
 {
-  circlemod3 ();
+  return circlemod3 ();
 }

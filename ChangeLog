@@ -1,3 +1,14 @@
+2002-07-01  H.J. Lu  <hjl@gnu.org>
+
+	* elf/circleload1.c (load_dso): Call "circlemod1" and check
+	return value.
+
+	* elf/circlemod1.c (circlemod1): Return int.
+	* elf/circlemod2.c (circlemod2): Likewise.
+	* elf/circlemod2a.c (circlemod2): Likewise.
+	* elf/circlemod3.c (circlemod3): Likewise.
+	(circlemod3a): A new function.
+
 2002-07-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* catgets/tst-catgets.c (main): Don't expect results for

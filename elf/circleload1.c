@@ -102,6 +102,24 @@ load_dso (const char **loading, int undef, int flag)
 	  printf ("ERRORS: dlopen shouldn't work for RTLD_NOW\n");
 	}
 
+      if (!undef)
+	{
+	  int (*func) (void);
+
+	  func = dlsym (obj, "circlemod1");
+	  if (func == NULL)
+	    {
+	      ++errors;
+	      printf ("ERRORS: cannot get address of \"circlemod1\": %s\n",
+		      dlerror ());
+	    }
+	  else if (func () != 3)
+	    {
+	      ++errors;
+	      printf ("ERRORS: function \"circlemod1\" returned wrong result\n");
+	    }
+	}
+
       loaded[0] = loading [0];
       loaded[1] = loading [1];
       loaded[2] = loading [2];

@@ -1,9 +1,14 @@
-extern void circlemod1 (void);
-extern void circlemod2 (void);
+extern int circlemod1 (void);
+extern int circlemod2 (void);
 
-void
+int
 circlemod3 (void)
 {
-  circlemod1 ();
-  circlemod2 ();
+  return 3;
+}
+
+int
+circlemod3a (void)
+{
+  return circlemod1 () + circlemod2 ();
 }

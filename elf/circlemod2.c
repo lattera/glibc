@@ -1,9 +1,9 @@
 extern void circlemod2_undefined (void);
-extern void circlemod3 (void);
+extern int circlemod3 (void);
 
-void
+int
 circlemod2 (void)
 {
   circlemod2_undefined ();
-  circlemod3 ();
+  return circlemod3 ();
 }
