@@ -1,5 +1,5 @@
 /* setjmp for ARM.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,11 +27,8 @@ ENTRY (__setjmp)
 	mov	r1, #0
 ENTRY (__sigsetjmp)
 	/* Save registers */
-#if __ARM_USES_FP
-	sfmea	f4, 4, [r0]!
-#endif
 	stmia	r0, {v1-v6, sl, fp, sp, lr}
 
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */
-	B	__sigjmp_save
-END (__sigsetjmp)
+	B	PLTJMP(C_SYMBOL_NAME(__sigjmp_save))
+END (__setjmp)
