@@ -1,4 +1,4 @@
-/* Thread package specific definitions of stream lock type.  Stub version.
+/* Thread package specific definitions of stream lock type.  Generic version.
    Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -25,8 +25,11 @@
 __libc_lock_define_recursive (typedef, _IO_lock_t)
 
 /* We need recursive (counting) mutexes.  */
-#define _IO_lock_initializer ...
-#error libio needs recursive mutexes for _IO_MTSAFE_IO
+#ifdef _LIBC_LOCK_RECURSIVE_INITIALIZER
+# define _IO_lock_initializer _LIBC_LOCK_RECURSIVE_INITIALIZER
+#elif _IO_MTSAFE_IO
+ #error libio needs recursive mutexes for _IO_MTSAFE_IO
+#endif
 
 #define _IO_lock_init(_name)	__libc_lock_init_recursive (_name)
 #define _IO_lock_fini(_name)	__libc_lock_fini_recursive (_name)
@@ -35,11 +38,11 @@ __libc_lock_define_recursive (typedef, _IO_lock_t)
 
 
 #define _IO_cleanup_region_start(_fct, _fp) \
-     __libc_cleanup_region_start (_fct, _fp)
+  __libc_cleanup_region_start (((_fp)->_flags & _IO_USER_LOCK) == 0, _fct, _fp)
 #define _IO_cleanup_region_start_noarg(_fct) \
-     __libc_cleanup_region_start (_fct, NULL)
+  __libc_cleanup_region_start (1, _fct, NULL)
 #define _IO_cleanup_region_end(_doit) \
-     __libc_cleanup_region_end (_doit)
+  __libc_cleanup_region_end (_doit)
 
 
 #endif /* bits/stdio-lock.h */
