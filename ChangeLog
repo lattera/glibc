@@ -1,5 +1,8 @@
 2003-09-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Makefile ($(objpfx)librtld.os): Create link map also for
+	final build to ease quality control.
+
 	* sysdeps/unix/sysv/linux/getcwd.c (__getcwd): If compiled for
 	ld.so, don't include NULL buffer pointer handling.
 
