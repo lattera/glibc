@@ -127,13 +127,14 @@ __lll_mutex_timedlock_wait:
 	extu.b	r3, r3
 	trapa	#0x14
 	SYSCALL_INST_PAD
-	mov	r0, r4
+	mov	r0, r5
 
-8:	
+8:
 	mov	#0, r3
 	mov	#2, r4
 	CMPXCHG (r3, @r8, r4, r2)
-	bf	7f
+	bf/s	7f
+	 mov	#0, r0
 
 6:
 	add	#8, r15
@@ -144,8 +145,14 @@ __lll_mutex_timedlock_wait:
 7:
 	/* Check whether the time expired.  */
 	mov	#-ETIMEDOUT, r1
-	cmp/eq	r4, r1
+	cmp/eq	r5, r1
 	bt	5f
+
+	/* Make sure the current holder knows we are going to sleep.  */
+	XCHG (r2, @r8, r3)
+	tst	r3, r3
+	bt/s	6b
+	 mov	#0, r0
 	bra	1b
 	 nop
 3:
