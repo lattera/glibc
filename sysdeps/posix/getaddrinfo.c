@@ -664,7 +664,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		}
 	      else
 		no_more = __nss_database_lookup ("hosts", NULL,
-						 "dns [!UNAVAIL=return] files", &nip);
+						 "dns [!UNAVAIL=return] files",
+						 &nip);
 
 	      if (__res_maybe_init (&_res, 0) == -1)
 		no_more = 1;
@@ -939,11 +940,14 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		memset (sinp->sin_zero, '\0', sizeof (sinp->sin_zero));
 	      }
 
-	    if (c)
+	    if (namelen != 0)
 	      {
 		(*pai)->ai_canonname = ((void *) (*pai) +
 					sizeof (struct addrinfo) + socklen);
 		strcpy ((*pai)->ai_canonname, c);
+
+		/* We do not need to allocate the canonical name anymore.  */
+		namelen = 0;
 	      }
 	    else
 	      (*pai)->ai_canonname = NULL;
