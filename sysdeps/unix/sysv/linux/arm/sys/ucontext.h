@@ -66,7 +66,7 @@ enum
 #define R13	R13
   R14 = 14,
 #define R14	R14
-  R15 = 15,
+  R15 = 15
 #define R15	R15
 };
 
