@@ -27,7 +27,7 @@
 	* sysdeps/unix/sysv/linux/mips/sys/ptrace.h: Likewise.
 	* sysdeps/unix/sysv/linux/mips/sys/tas.h: Likewise.
 	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h: Likewise.
-	* sysdeps/unix/sysv/linux/mips/sys/user.h: 
+	* sysdeps/unix/sysv/linux/mips/sys/user.h: Likewise.
 	* sysdeps/unix/sysv/linux/mips/Makefile ($(objpfx)syscall-%.h):
 	Likewise.
 	* sysdeps/unix/sysv/linux/mips/configure.in (asm-unistd.h):
