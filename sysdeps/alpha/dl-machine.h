@@ -497,7 +497,7 @@ elf_machine_rela (struct link_map *map,
       if (r_type == R_ALPHA_GLOB_DAT)
 	*reloc_addr = sym_value;
       else if (r_type == R_ALPHA_JMP_SLOT)
-	elf_machine_fixup_plt (map, NULL, reloc, reloc_addr, sym_value);
+	elf_machine_fixup_plt (map, 0, reloc, reloc_addr, sym_value);
       else if (r_type == R_ALPHA_REFQUAD)
 	{
 	  void *reloc_addr_1 = reloc_addr;

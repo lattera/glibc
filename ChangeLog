@@ -1,5 +1,8 @@
 2000-07-18  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Pass 0 instead of
+	NULL to elf_machine_fixup_plt t argument to silence GCC.
+
 	* include/string.h: Add prototype for __memchr.
 
 	* sysdeps/alpha/memchr.S: Fix copy & error in weak_alias.
