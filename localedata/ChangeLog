@@ -1,23 +1,31 @@
 2000-08-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/de_BE@euro: New file.
+	* locales/eu_ES@euro: New file.
+	* locales/ga_IE@euro: New file.
+	* locales/gl_ES@euro: New file.
+	* locales/nl_BE@euro: New file.
+	* locales/sv_FI@euro: New file.
+	* SUPPORTED: Add the new locales.
+
 	* Makefile (install-locales): Handle option in locale name.  Print
 	progress information.
 
 	* SUPPORTED: Add all the @euro locales.
 
 	* locales/ca_ES@euro: Update charset comment.
-	* locales/de_AT@euro: New file.
-	* locales/de_DE@euro: New file.
-	* locales/de_LU@euro: New file.
-	* locales/en_IE@euro: New file.
-	* locales/es_ES@euro: New file.
-	* locales/fi_FI@euro: New file.
-	* locales/fr_BE@euro: New file.
-	* locales/fr_FR@euro: New file.
-	* locales/fr_LU@euro: New file.
-	* locales/it_IT@euro: New file.
-	* locales/nl_NL@euro: New file.
-	* locales/pt_PT@euro: New file.
+	* locales/de_AT@euro: Likewise.
+	* locales/de_DE@euro: Likewise.
+	* locales/de_LU@euro: Likewise.
+	* locales/en_IE@euro: Likewise.
+	* locales/es_ES@euro: Likewise.
+	* locales/fi_FI@euro: Likewise.
+	* locales/fr_BE@euro: Likewise.
+	* locales/fr_FR@euro: Likewise.
+	* locales/fr_LU@euro: Likewise.
+	* locales/it_IT@euro: Likewise.
+	* locales/nl_NL@euro: Likewise.
+	* locales/pt_PT@euro: Likewise.
 
 2000-08-20  Ulrich Drepper  <drepper@redhat.com>
 

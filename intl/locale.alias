@@ -51,6 +51,9 @@ japanese	ja_JP.eucJP
 japanese.euc	ja_JP.eucJP
 ja_JP		ja_JP.eucJP
 japanese.sjis	ja_JP.SJIS
+korean		ko_KR.eucKR
+korean.euc 	ko_KR.eucKR
+ko_KR		ko_KR.eucKR
 lithuanian      lt_LT.ISO-8859-13
 norwegian       no_NO.ISO-8859-1
 polish          pl_PL.ISO-8859-2
