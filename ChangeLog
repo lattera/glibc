@@ -1,5 +1,11 @@
 2003-01-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_simple.c (STORE_REST): Explicitly store the total
+	expected size into state.
+	(UNPACK_BYTES): Do the reverse.
+	* wcsmbs/tst-mbrtowc.c (utf8_test_1): Add test for the bug.
+	Reported by Al Viro <aviro@redhat.com>.
+
 	* stdio-common/Makefile (tests): Add bug14.
 	* stdio-common/bug14.c: New file.
 

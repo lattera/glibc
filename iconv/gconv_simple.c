@@ -1,5 +1,5 @@
 /* Simple transformations functions.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -1031,7 +1031,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
        correct and that it requires a larger number of bytes than there	      \
        are in the input buffer.  */					      \
     wint_t ch = **inptrp;						      \
-    size_t cnt;								      \
+    size_t cnt, r;							      \
 									      \
     state->__count = inend - *inptrp;					      \
 									      \
@@ -1069,16 +1069,19 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
       }									      \
 									      \
     /* The first byte is already consumed.  */				      \
-    --cnt;								      \
+    r = cnt - 1;							      \
     while (++(*inptrp) < inend)						      \
       {									      \
 	ch <<= 6;							      \
 	ch |= **inptrp & 0x3f;						      \
-	--cnt;								      \
+	--r;								      \
       }									      \
 									      \
     /* Shift for the so far missing bytes.  */				      \
-    ch <<= cnt * 6;							      \
+    ch <<= r * 6;							      \
+									      \
+    /* Store the number of bytes expected for the entire sequence.  */	      \
+    ch = ch << 3 | cnt;							      \
 									      \
     /* Store the value.  */						      \
     state->__value.__wch = ch;						      \
@@ -1086,35 +1089,14 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 
 #define UNPACK_BYTES \
   {									      \
+    static const unsigned char inmask[5] = { 0xc0, 0xe0, 0xf0, 0xf8, 0xfc };  \
     wint_t wch = state->__value.__wch;					      \
-    size_t ntotal;							      \
+    size_t ntotal = wch & 7;						      \
+    wch >>= 3;								      \
+									      \
     inlen = state->__count;						      \
 									      \
-    if (state->__value.__wch <= 0x7ff)					      \
-      {									      \
-	bytebuf[0] = 0xc0;						      \
-	ntotal = 2;							      \
-      }									      \
-    else if (__builtin_expect (state->__value.__wch <= 0xffff, 1))	      \
-      {									      \
-	bytebuf[0] = 0xe0;						      \
-	ntotal = 3;							      \
-      }									      \
-    else if (__builtin_expect (state->__value.__wch < 0x1fffff, 1))	      \
-      {									      \
-	bytebuf[0] = 0xf0;						      \
-	ntotal = 4;							      \
-      }									      \
-    else if (__builtin_expect (state->__value.__wch < 0x3ffffff, 1))	      \
-      {									      \
-	bytebuf[0] = 0xf8;						      \
-	ntotal = 5;							      \
-      }									      \
-    else								      \
-      {									      \
-	bytebuf[0] = 0xfc;						      \
-	ntotal = 6;							      \
-      }									      \
+    bytebuf[0] = inmask[ntotal - 2];					      \
 									      \
     do									      \
       {									      \

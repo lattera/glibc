@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -17,6 +17,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+/* We always want assert to be fully defined.  */
+#undef NDEBUG
 #include <assert.h>
 #include <locale.h>
 #include <stdio.h>
@@ -44,6 +46,20 @@ utf8_test_1 (void)
   assert (wc == 0x2260);	/* E2 89 A0 = U+2260 (not equal) decoded correctly */
   assert (mbrtowc (&wc, "", 1, &s) == 0);	/* test final byte processing */
   assert (wc == 0);		/* test final byte decoding */
+
+  /* The following test is by Al Viro <aviro@redhat.com>.  */
+  const char str[] = "\xe0\xa0\x80";
+
+  wc = 42;			/* arbitrary number */
+  memset (&s, 0, sizeof (s));	/* get s into initial state */
+  assert (mbrtowc (&wc, str, 1, &s) == -2);
+  assert (mbrtowc (&wc, str + 1, 2, &s) == 2);
+  assert (wc == 0x800);
+
+  wc = 42;			/* arbitrary number */
+  memset (&s, 0, sizeof (s));	/* get s into initial state */
+  assert (mbrtowc (&wc, str, 3, &s) == 3);
+  assert (wc == 0x800);
 
   return 0;
 }
