@@ -34,7 +34,6 @@
 #if !defined(lint) && !defined(KERNEL) && defined(LIBC_SCCS)
 static char sccsid[] = "@(#)mcount.c	8.1 (Berkeley) 6/4/93";
 #endif
-	int i;
 
 #include <sys/param.h>
 #include <sys/gmon.h>
