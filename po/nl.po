@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 1.94\n"
+"Project-Id-Version: libc 2.0\n"
 "POT-Creation-Date: 1996-09-08  3:45\n"
 "PO-Revision-Date: 1996-09-17 14:30 MET DST\n"
 "Last-Translator: Erick Branderhorst <branderh@debian.org>\n"
@@ -25,23 +25,23 @@ msgstr "       %s [-s udp|tcp]* [-o uitvoerbestand] [invoerbestand]\n"
 
 #: sunrpc/rpcinfo.c:612
 msgid "       rpcinfo -b prognum versnum\n"
-msgstr ""
+msgstr "       rpcinfo -b programanummer versienummer\n"
 
 #: sunrpc/rpcinfo.c:613
 msgid "       rpcinfo -d prognum versnum\n"
-msgstr ""
+msgstr "       rpcinfo -d programanummer versienummer\n"
 
 #: sunrpc/rpcinfo.c:611
 msgid "       rpcinfo -p [ host ]\n"
-msgstr ""
+msgstr "       rpcinfo -p [ host ]\n"
 
 #: sunrpc/rpcinfo.c:610
 msgid "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
-msgstr ""
+msgstr "       rpcinfo [ -n poortnummer ] -t host programanummer [ versienummer ]\n"
 
 #: sunrpc/rpcinfo.c:517
 msgid "   program vers proto   port\n"
-msgstr ""
+msgstr "   program vers proto   port\n"
 
 #: time/zic.c:425
 #, c-format
@@ -967,7 +967,7 @@ msgstr "Numeriek resultaat is buiten domein"
 #. TRANS properly on the GNU system, making this error code impossible.)
 #: stdio-common/../sysdeps/gnu/errlist.c:502
 msgid "Object is remote"
-msgstr ""
+msgstr "Object is niet lokaal"
 
 #: time/zic.c:1940
 msgid "Odd number of quotation marks"
@@ -1306,7 +1306,7 @@ msgstr "Gestopt (tty uitvoer)"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:778
 msgid "Streams pipe error"
-msgstr ""
+msgstr "Stromen pijp fout"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:782
 msgid "Structure needs cleaning"
@@ -1652,7 +1652,7 @@ msgstr "verwacht `from' na eerste argument (??)to `collating-element'"
 #: locale/programs/ld-collate.c:1108
 msgid ""
 "`from' string in collation element declaration contains unknown character"
-msgstr ""
+msgstr "`from' string in vergelijkende element declaratie bevat onbekend karakter"
 
 #: locale/programs/charmap.c:267
 #, c-format
@@ -1734,7 +1734,7 @@ msgstr "kan niet invoegen in resultaat tabel"
 #: locale/programs/ld-collate.c:1165 locale/programs/ld-collate.c:1207
 #, c-format
 msgid "cannot insert new collating symbol definition: %s"
-msgstr ""
+msgstr "kan geen nieuw vergelijking symbool definitie invoegen: %s"
 
 #: db/makedb.c:149
 #, c-format
@@ -1763,7 +1763,7 @@ msgstr "kan uitvoerbestand `%s' niet openen voor categorie `%s'"
 
 #: locale/programs/ld-collate.c:1359
 msgid "cannot process order specification"
-msgstr ""
+msgstr "kan de gespecificeerde volgorde niet afhandelen"
 
 #: locale/programs/locale.c:293
 #, c-format
@@ -2041,7 +2041,7 @@ msgstr "ongeldige codering gegeven"
 
 #: locale/programs/linereader.c:546
 msgid "illegal escape sequence at end of string"
-msgstr ""
+msgstr "ongeldige escape reeks aan het einde van string"
 
 #: locale/programs/charset.c:101
 msgid "illegal names for character range"
@@ -2128,15 +2128,15 @@ msgstr "ongeldige tijd van de dag"
 
 #: time/zic.c:1319
 msgid "invalid weekday name"
-msgstr "ongeldig weekdagnaam"
+msgstr "ongeldig naam voor weekdag"
 
 #: locale/programs/ld-collate.c:1411
 msgid "line after ellipsis must contain character definition"
-msgstr ""
+msgstr "regel na ellipsis moet een karakter definitie bevatten"
 
 #: locale/programs/ld-collate.c:1390
 msgid "line before ellipsis does not contain definition for character constant"
-msgstr ""
+msgstr "regel voor ellipsis bevat geen konstante karakter definitie"
 
 #: time/zic.c:795
 msgid "line too long"
@@ -2157,7 +2157,7 @@ msgstr "geheugen clobbered voordat blok gereserveerd was (FIXME)"
 
 #: malloc/mcheck.c:186
 msgid "memory clobbered past end of allocated block"
-msgstr ""
+msgstr "geheugen `clobbered' na het einde van een gealloceerd blok"
 
 #: locale/programs/ld-collate.c:167 locale/programs/ld-collate.c:173
 #: locale/programs/ld-collate.c:177 locale/programs/ld-collate.c:1438
@@ -2186,7 +2186,7 @@ msgstr "geen array-of-pointer declaraties -- gebruik typedef"
 #: locale/programs/ld-messages.c:95 locale/programs/ld-messages.c:116
 #, c-format
 msgid "no correct regular expression for field `%s' in category `%s': %s"
-msgstr ""
+msgstr "geen correct reguliere expressie voor veld `%s' in category `%s': %s"
 
 #: time/zic.c:2060
 msgid "no day in month matches rule"
@@ -2285,30 +2285,30 @@ msgstr "herhalend schrikkelseconde moment"
 #: sunrpc/rpcinfo.c:659
 #, c-format
 msgid "rpcinfo: %s is unknown host\n"
-msgstr ""
+msgstr "rpcinfo: %s is onbekende host\n"
 
 #: sunrpc/rpcinfo.c:626
 #, c-format
 msgid "rpcinfo: %s is unknown service\n"
-msgstr ""
+msgstr "rpcinfo: %s is onbekende service\n"
 
 #: sunrpc/rpcinfo.c:600
 #, c-format
 msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
-msgstr ""
+msgstr "rpcinfo: Kan geen registratie verwijderen voor programma %s versie %s\n"
 
 #: sunrpc/rpcinfo.c:576
 #, c-format
 msgid "rpcinfo: broadcast failed: %s\n"
-msgstr ""
+msgstr "rpcinfo: uitzending mislukt: %s\n"
 
 #: sunrpc/rpcinfo.c:505
 msgid "rpcinfo: can't contact portmapper"
-msgstr ""
+msgstr "rpcinfo: kan geen kontakt krijgen met portmapper"
 
 #: sunrpc/rpcinfo.c:510
 msgid "rpcinfo: can't contact portmapper: "
-msgstr ""
+msgstr "rpcinfo: kan geen kontakt krijgen met portmapper: "
 
 #: sunrpc/portmap.c:137
 msgid "run_svc returned unexpectedly\n"
@@ -2320,11 +2320,11 @@ msgstr "zelfde regel naam in meerdere bestanden"
 
 #: inet/rcmd.c:158
 msgid "select: protocol failure in circuit setup\n"
-msgstr ""
+msgstr "select: protocol mislukt in opstart circuit\n"
 
 #: inet/rcmd.c:176
 msgid "socket: protocol failure in circuit setup.\n"
-msgstr ""
+msgstr "socket: protocol mislukt in opstart circuit.\n"
 
 #: locale/programs/locfile.c:600
 msgid "sorting order `forward' and `backward' are mutually exclusive"
@@ -2349,15 +2349,15 @@ msgstr "beginjaar is groter dan eindejaar"
 
 #: sunrpc/svc_tcp.c:199 sunrpc/svc_tcp.c:204
 msgid "svc_tcp: makefd_xprt: out of memory\n"
-msgstr ""
+msgstr "svc_tcp: makefd_xprt: geen geheugen meer\n"
 
 #: sunrpc/svc_tcp.c:147
 msgid "svctcp_.c - cannot getsockname or listen"
-msgstr ""
+msgstr "svctcp_.c - `getsockname' of `listen' lukken niet"
 
 #: sunrpc/svc_tcp.c:134
 msgid "svctcp_.c - udp socket creation problem"
-msgstr ""
+msgstr "svctcp_.c - udp socket aanmaak probleem"
 
 #: sunrpc/svc_tcp.c:154 sunrpc/svc_tcp.c:161
 msgid "svctcp_create: out of memory\n"
@@ -2365,11 +2365,11 @@ msgstr "svctcp_create: geen geheugen meer beschikbaar\n"
 
 #: sunrpc/svc_udp.c:119
 msgid "svcudp_create - cannot getsockname"
-msgstr ""
+msgstr "svcudp_create - `getsockname' lukt niet"
 
 #: sunrpc/svc_udp.c:107
 msgid "svcudp_create: socket creation problem"
-msgstr ""
+msgstr "svcudp_create: socket aanmaak probleem"
 
 #: locale/programs/ld-collate.c:1190
 #, c-format
@@ -2377,6 +2377,8 @@ msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates element "
 "definition"
 msgstr ""
+"symbool voor multikarakter vergelijkings element `%.*s' dupliceerd\n"
+"element definitie"
 
 #: locale/programs/ld-collate.c:1063
 #, c-format
@@ -2384,6 +2386,8 @@ msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates other element "
 "definition"
 msgstr ""
+"symbool voor multikarakter vergelijkings element `%.*s' dupliceert\n"
+"andere element definities"
 
 #: locale/programs/ld-collate.c:1199
 #, c-format
@@ -2391,6 +2395,8 @@ msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates other symbol "
 "definition"
 msgstr ""
+"symbool voor multikarakter vergelijkings element `%.*s' dupliceert\n"
+"andere symbool definitie"
 
 #: locale/programs/ld-collate.c:1072
 #, c-format
@@ -2428,7 +2434,7 @@ msgstr "syntactische fout in karakter conversie definitie"
 
 #: locale/programs/locfile.c:662
 msgid "syntax error in collating order definition"
-msgstr ""
+msgstr "syntactische fout in collating volgorde definitie"
 
 #: locale/programs/locfile.c:512
 msgid "syntax error in collation definition"

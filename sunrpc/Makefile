@@ -121,6 +121,7 @@ defines := $(defines) -D_PATH_RPC='"$(sysconfdir)/rpc"'
 # We use a stamp file to avoid unnessary recompilation each time rpcgen is
 # relinked.
 $(objpfx)rpcsvc/%.h: $(objpfx)rpcsvc/%.stmp
+	@:
 $(objpfx)rpcsvc/%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 	$(make-target-directory)
 	-@rm -f ${@:stmp=T} $@
@@ -132,6 +133,7 @@ $(objpfx)rpcsvc/%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 
 # Generate the rpcsvc XDR functions with rpcgen.
 $(objpfx)x%.c: $(objpfx)x%.stmp
+	@:
 $(objpfx)x%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 	-@rm -f ${@:stmp=T} $@
 	$(rpcgen-cmd) -c $< -o ${@:stmp=T}

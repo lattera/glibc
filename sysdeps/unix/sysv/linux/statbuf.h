@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,8 +32,8 @@
 
 struct stat
   {
-    short int st_dev;			/* Device.  */
-    unsigned short __pad1;
+    unsigned short int st_dev;		/* Device.  */
+    unsigned short int __pad1;
     unsigned long int st_ino;		/* File serial number.	*/
     unsigned short int st_mode;		/* File mode.  */
     unsigned short int st_nlink;	/* Link count.  */

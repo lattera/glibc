@@ -820,12 +820,12 @@ do {                                                                          \
 #if __STD_C
 
 Void_t * __default_morecore (ptrdiff_t);
-static Void_t *(*__morecore)(ptrdiff_t) = __default_morecore;
+Void_t *(*__morecore)(ptrdiff_t) = __default_morecore;
 
 #else
 
 Void_t * __default_morecore ();
-static Void_t *(*__morecore)() = __default_morecore;
+Void_t *(*__morecore)() = __default_morecore;
 
 #endif
 
@@ -1615,6 +1615,7 @@ __malloc_ptr_t weak_variable (*__realloc_hook)
  __MALLOC_P ((__malloc_ptr_t __ptr, size_t __size)) = realloc_hook_ini;
 __malloc_ptr_t weak_variable (*__memalign_hook)
  __MALLOC_P ((size_t __size, size_t __alignment)) = memalign_hook_ini;
+void weak_variable (*__after_morecore_hook) __MALLOC_P ((void)) = NULL;
 
 /* Activate a standard set of debugging hooks. */
 void
@@ -2215,6 +2216,10 @@ static void malloc_extend_top(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
         (brk < old_end && old_top != initial_top(&main_arena)))
       return;
 
+    /* Call the `morecore' hook if necessary.  */
+    if (__after_morecore_hook)
+      (*__after_morecore_hook) ();
+
     sbrked_mem += sbrk_size;
 
     if (brk == old_end) { /* can just add bytes to current top */
@@ -2242,6 +2247,10 @@ static void malloc_extend_top(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
       /* Allocate correction */
       new_brk = (char*)(MORECORE (correction));
       if (new_brk == (char*)(MORECORE_FAILURE)) return;
+
+      /* Call the `morecore' hook if necessary.  */
+      if (__after_morecore_hook)
+	(*__after_morecore_hook) ();
 
       sbrked_mem += correction;
 
@@ -2914,8 +2923,10 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
   (void)mutex_lock(&ar_ptr->mutex);
 #endif
 
+#ifndef NO_THREADS
   /* As in malloc(), remember this arena for the next allocation. */
   tsd_setspecific(arena_key, (Void_t *)ar_ptr);
+#endif
 
   newp = chunk_realloc(ar_ptr, oldp, oldsize, nb);
 
@@ -3421,6 +3432,10 @@ main_trim(pad) size_t pad;
 
   new_brk = (char*)(MORECORE (-extra));
 
+  /* Call the `morecore' hook if necessary.  */
+  if (__after_morecore_hook)
+    (*__after_morecore_hook) ();
+
   if (new_brk == (char*)(MORECORE_FAILURE)) { /* sbrk failed? */
     /* Try to figure out what we have */
     current_brk = (char*)(MORECORE (0));
@@ -3703,7 +3718,9 @@ struct mallinfo mALLINFo()
   struct mallinfo mi;
   Void_t *vptr = NULL;
 
+#ifndef NO_THREADS
   tsd_getspecific(arena_key, vptr);
+#endif
   malloc_update_mallinfo((vptr ? (arena*)vptr : &main_arena), &mi);
   return mi;
 }

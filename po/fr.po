@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU libc 1.98\n"
 "POT-Creation-Date: 1996-12-03 13:50+0100\n"
-"PO-Revision-Date: 1996-12-12 22:46 -0500\n"
+"PO-Revision-Date: 1997-01-24 20:13 -0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -881,11 +881,11 @@ msgstr "Connexion par liens par noeuds multiples de relais tentée."
 
 #: nis/ypclnt.c:659
 msgid "NIS client/server version mismatch - can't supply service"
-msgstr "Non concrodance de la version client/serveur NIS - ne peut fournir le service."
+msgstr "Non concordance de la version client/serveur NIS - ne peut fournir le service."
 
 #: nis/ypclnt.c:657
 msgid "NIS map data base is bad"
-msgstr "La table de la base de données NIS est corrumpue."
+msgstr "La table de la base de données NIS est corrompue."
 
 #: stdio-common/../sysdeps/gnu/errlist.c:746
 msgid "Name not unique on network"

@@ -149,15 +149,6 @@ the executable file might be covered by the GNU General Public License. */
 
 struct _IO_jump_t;  struct _IO_FILE;
 
-/* Define the user-visible type, with user-friendly member names.  */
-typedef struct
-{
-  _IO_ssize_t (*read) __P ((struct _IO_FILE *, void *, _IO_ssize_t));
-  _IO_ssize_t (*write) __P ((struct _IO_FILE *, const void *, _IO_ssize_t));
-  _IO_fpos_t (*seek) __P ((struct _IO_FILE *, _IO_off_t, int));
-  int (*close) __P ((struct _IO_FILE *));
-} _IO_cookie_io_functions_t;
-
 /* Handle lock.  */
 #ifdef _IO_MTSAFE_IO
 #include <stdio-lock.h>
@@ -235,6 +226,15 @@ extern struct _IO_FILE_plus _IO_stdin_, _IO_stdout_, _IO_stderr_;
 #define _IO_stdout ((_IO_FILE*)(&_IO_stdout_))
 #define _IO_stderr ((_IO_FILE*)(&_IO_stderr_))
 
+
+/* Define the user-visible type, with user-friendly member names.  */
+typedef struct
+{
+  _IO_ssize_t (*read) __P ((struct _IO_FILE *, void *, _IO_ssize_t));
+  _IO_ssize_t (*write) __P ((struct _IO_FILE *, const void *, _IO_ssize_t));
+  _IO_fpos_t (*seek) __P ((struct _IO_FILE *, _IO_off_t, int));
+  int (*close) __P ((struct _IO_FILE *));
+} _IO_cookie_io_functions_t;
 
 /* Special file type for fopencookie function.  */
 struct _IO_cookie_file {

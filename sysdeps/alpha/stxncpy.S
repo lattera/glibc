@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    Contributed by Richard Henderson (rth@tamu.edu)
 
 This file is part of the GNU C Library.
@@ -321,9 +321,9 @@ $unaligned:
 	mskqh	t2, t5, t2	# e0    : begin src byte validity mask
 	cmpbge	zero, t1, t7	# .. e1 : is there a zero?
 	extql	t2, a1, t2	# e0    :
-	or	t7, t10, t6	# .. e1 : test for end-of-count too
+	or	t7, t10, t5	# .. e1 : test for end-of-count too
 	cmpbge	zero, t2, t3	# e0    :
-	cmoveq	a2, t6, t7	# .. e1 :
+	cmoveq	a2, t5, t7	# .. e1 :
 	andnot	t7, t3, t7	# e0    :
 	beq	t7, $u_head	# .. e1 (zdb)
 

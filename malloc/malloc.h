@@ -181,6 +181,7 @@ extern __malloc_ptr_t (*__realloc_hook) __MALLOC_P ((__malloc_ptr_t __ptr,
 						     size_t __size));
 extern __malloc_ptr_t (*__memalign_hook) __MALLOC_P ((size_t __size,
 						      size_t __alignment));
+extern void (*__after_morecore_hook) __MALLOC_P ((void));
 
 /* Activate a standard set of debugging hooks. */
 extern void __malloc_check_init __MALLOC_P ((void));

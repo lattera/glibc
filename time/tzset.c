@@ -94,6 +94,12 @@ __tzset_internal (always)
 
   /* Examine the TZ environment variable.  */
   tz = getenv ("TZ");
+  if (tz == NULL)
+    /* No user specification; use the site-wide default.  */
+    tz = TZDEFAULT;
+  else if (*tz == '\0')
+    /* User specified the empty string; use UTC explicitly.  */
+    tz = "Universal";
 
   /* A leading colon means "implementation defined syntax".
      We ignore the colon and always use the same algorithm:
@@ -108,10 +114,10 @@ __tzset_internal (always)
 
   /* Free old storage.  */
   if (tz_rules[0].name != NULL && *tz_rules[0].name != '\0')
-    free((void *) tz_rules[0].name);
+    free ((void *) tz_rules[0].name);
   if (tz_rules[1].name != NULL && *tz_rules[1].name != '\0' &&
       tz_rules[1].name != tz_rules[0].name)
-    free((void *) tz_rules[1].name);
+    free ((void *) tz_rules[1].name);
   tz_rules[0].name = NULL;
   tz_rules[1].name = NULL;
 
@@ -163,7 +169,7 @@ __tzset_internal (always)
       return;
     }
 
-  if (sscanf(tz, "%[^0-9,+-]", tz_rules[0].name) != 1 ||
+  if (sscanf (tz, "%[^0-9,+-]", tz_rules[0].name) != 1 ||
       (l = strlen(tz_rules[0].name)) < 3)
     {
       free (tz_rules[0].name);
@@ -180,7 +186,7 @@ __tzset_internal (always)
   tz += l;
 
   /* Figure out the standard offset from UTC.  */
-  if (*tz == '\0' || (*tz != '+' && *tz != '-' && !isdigit(*tz)))
+  if (*tz == '\0' || (*tz != '+' && *tz != '-' && !isdigit (*tz)))
     return;
 
   if (*tz == '-' || *tz == '+')

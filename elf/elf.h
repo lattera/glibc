@@ -232,6 +232,11 @@ typedef struct
 #define SHT_SHLIB	10		/* Reserved */
 #define SHT_DYNSYM	11		/* Dynamic linker symbol table */
 #define	SHT_NUM		12		/* Number of defined types.  */
+#define SHT_LOSUNW	0x6ffffffd	/* Sun-specific low bound.  */
+#define SHT_GNU_verdef	0x6ffffffd	/* Version definition section.  */
+#define SHT_GNU_verneed	0x6ffffffe	/* Version needs section.  */
+#define SHT_GNU_versym	0x6fffffff	/* Version symbol table.  */
+#define SHT_HISUNW	0x6fffffff	/* Sun-specific high bound.  */
 #define SHT_LOPROC	0x70000000	/* Start of processor-specific */
 #define SHT_HIPROC	0x7fffffff	/* End of processor-specific */
 #define SHT_LOUSER	0x80000000	/* Start of application-specific */
@@ -464,12 +469,91 @@ typedef struct
 #define DT_HIPROC	0x7fffffff	/* End of processor-specific */
 #define	DT_PROCNUM	DT_MIPS_NUM	/* Most used by any processor */
 
+/* The versioning entry types.  The next are defined as part of the
+   GNU extension.  */
+#define DT_VERSYM	0x6ffffff0
+
+/* These were chosen by Sun.  */
+#define	DT_VERDEF	0x6ffffffc	/* Address of version definition
+					   table */
+#define	DT_VERDEFNUM	0x6ffffffd	/* Number of version definitions */
+#define	DT_VERNEED	0x6ffffffe	/* Address of table with needed
+					   versions */
+#define	DT_VERNEEDNUM	0x6fffffff	/* Number of needed versions */
+#define DT_VERSIONTAGIDX(tag)	(DT_VERNEEDNUM - (tag))	/* Reverse order! */
+#define DT_VERSIONTAGNUM 16
+
 /* Sun added these machine-independent extensions in the "processor-specific"
    range.  Be compatible.  */
 #define DT_AUXILIARY    0x7ffffffd      /* Shared object to load before self */
 #define DT_FILTER       0x7fffffff      /* Shared object to get values from */
 #define DT_EXTRATAGIDX(tag)	((Elf32_Word)-((Elf32_Sword) (tag) <<1>>1)-1)
 #define DT_EXTRANUM	3
+
+/* Version definition sections.  */
+
+typedef struct
+{
+  Elf32_Half	vd_version;		/* Version revision */
+  Elf32_Half	vd_flags;		/* Version information */
+  Elf32_Half	vd_ndx;			/* Version Index */
+  Elf32_Half	vd_cnt;			/* Number of associated aux entries */
+  Elf32_Word	vd_hash;		/* Version name hash value */
+  Elf32_Word	vd_aux;			/* Offset in bytes to verdaux array */
+  Elf32_Word	vd_next;		/* Offset in bytes to next verdef
+					   entry */
+} Elf32_Verdef;
+
+/* Legal values for vd_version (version revision).  */
+#define VER_DEF_NONE	0		/* No version */
+#define VER_DEF_CURRENT	1		/* Current version */
+#define VER_DEF_NUM	2		/* Given version number */
+
+/* Legal values for vd_flags (version information flags).  */
+#define VER_FLG_BASE	0x1		/* Version definition of file itself */
+#define VER_FLG_WEAK	0x2		/* Weak version identifier */
+
+/* Auxialiary version information.  */
+
+typedef struct
+{
+  Elf32_Addr	vda_name;		/* Version or dependency names */
+  Elf32_Word	vda_next;		/* Offset in bytes to next verdaux
+					   entry */
+} Elf32_Verdaux;
+
+/* Version dependency section.  */
+
+typedef struct
+{
+  Elf32_Half	vn_version;		/* Version of structure */
+  Elf32_Half	vn_cnt;			/* Number of associated aux entries */
+  Elf32_Addr	vn_file;		/* Offset of filename for this
+					   dependency */
+  Elf32_Word	vn_aux;			/* Offset in bytes to vernaux array */
+  Elf32_Word	vn_next;		/* Offset in bytes to next verneed
+					   entry */
+} Elf32_Verneed;
+
+/* Legal values for vn_version (version revision).  */
+#define VER_NEED_NONE	 0		/* No version */
+#define VER_NEED_CURRENT 1		/* Current version */
+#define VER_NEED_NUM	 2		/* Given version number */
+
+/* Auxiliary needed version information.  */
+
+typedef struct
+{
+  Elf32_Word	vna_hash;		/* Hash value of dependency name */
+  Elf32_Half	vna_flags;		/* Dependency specific information */
+  Elf32_Half	vna_other;		/* Unused */
+  Elf32_Addr	vna_name;		/* Dependency name string offset */
+  Elf32_Word	vna_next;		/* Offset in bytes to next vernaux
+					   entry */
+} Elf32_Vernaux;
+
+/* Legal values for vna_flags.  */
+#define VER_FLG_WEAK	0x2		/* Weak verison identifier */
 
 
 /* Auxiliary vector.  */

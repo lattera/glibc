@@ -35,11 +35,7 @@ routines	:= offtime asctime clock ctime ctime_r difftime	\
 		   strptime
 
 others	:= ap zdump zic
-tests	:= test_time clocktest test-tz
-
-# Before the test-tz test can be run we need the data to be installed.
-tests: install-test-data
-
+tests	:= test_time clocktest
 
 tzfiles := africa antarctica asia australasia europe northamerica \
 	   southamerica etcetera factory systemv backward \
@@ -55,6 +51,15 @@ generated-dirs = testdata
 all: # Make this the default target; it will be defined in Rules.
 
 include ../Makeconfig	# Get objpfx defined so we can use it below.
+
+ifeq (no,$(cross-compiling))
+# We can run the test-tz test only if we can install the test data using
+# zic.  This isn't possible when cross-compiling.
+tests += test-tz
+
+# Before the test-tz test can be run we need the data to be installed.
+tests: install-test-data
+endif
 
 # z.* use this variable.
 define nl
@@ -158,6 +163,7 @@ CFLAGS-zic.c = -Wno-strict-prototypes -DNOID $(tz-cflags)
 CFLAGS-ialloc.c = -Wno-strict-prototypes -DNOID
 CFLAGS-scheck.c = -Wno-strict-prototypes -DNOID
 CFLAGS-tzfile.c = $(tz-cflags)
+CFLAGS-tzset.c = $(tz-cflags)
 
 # We have to make sure the data for testing the tz functions is available.
 .PHONY: install-test-data

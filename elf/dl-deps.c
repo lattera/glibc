@@ -32,7 +32,7 @@ _dl_map_object_deps (struct link_map *map,
       struct link_map *map;
       struct list *next;
     };
-  struct list head[2 + npreloads], *tailp, *scanp;
+  struct list *head, *tailp, *scanp;
   struct list duphead, *duptailp;
   unsigned int nduplist;
   unsigned int nlist, naux, i;
@@ -49,36 +49,57 @@ _dl_map_object_deps (struct link_map *map,
 
   naux = nlist = 0;
 
-#define AUXTAG	(DT_NUM + DT_PROCNUM + DT_EXTRATAGIDX (DT_AUXILIARY))
+  /* XXX The AUXILIARY implementation isn't correct in the moment. XXX
+     XXX The problem is that we currently do not handle auxiliary  XXX
+     XXX entries in the loaded objects.				   XXX */
 
+#define AUXTAG	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGNUM \
+		 + DT_EXTRATAGIDX (DT_AUXILIARY))
+
+  /* First determine the number of auxiliary objects we have to load.  */
   if (map->l_info[AUXTAG])
     {
-      /* There is an auxiliary library specified.  We try to load it,
-	 and if we can, use its symbols in preference to our own.
-	 But if we can't load it, we just silently ignore it.
-	 XXX support multiple DT_AUXILIARYs?
-       */
-      struct link_map *aux;
-      void openaux (void)
-	{
-	  const char *strtab
-	    = ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
-	  aux = _dl_map_object (map, strtab + map->l_info[AUXTAG]->d_un.d_val,
-				map->l_type == lt_executable ? lt_library :
-				map->l_type, trace_mode);
-	}
-      char *errstring;
-      const char *objname;
-      if (! _dl_catch_error (&errstring, &objname, &openaux))
-	{
-	  /* The auxiliary object is actually there.  Use it
-	     as the first search element, even before MAP itself.  */
-	  preload (aux);
-	  naux = 1;
-	}
+      ElfW(Dyn) *d;
+      for (d = map->l_ld; d->d_tag != DT_NULL; ++d)
+	if (d->d_tag == DT_AUXILIARY)
+	  ++naux;
     }
 
-  /* Start the search list with one element: MAP itself.  */
+  /* Now we can allocate the array for the linker maps. */
+  head = (struct list *) alloca (sizeof (struct list)
+				 * (naux + npreloads + 2));
+
+  /* Load the auxiliary objects, even before the object itself.  */
+  if (map->l_info[AUXTAG])
+    {
+      /* There is at least one auxiliary library specified.  We try to
+	 load it, and if we can, use its symbols in preference to our
+	 own.  But if we can't load it, we just silently ignore it.  */
+      const char *strtab
+	= ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
+      ElfW(Dyn) *d;
+
+      for (d = map->l_ld; d->d_tag != DT_NULL; ++d)
+	if (d->d_tag == DT_AUXILIARY)
+	  {
+	    struct link_map *aux;
+	    void openaux (void)
+	      {
+		aux = _dl_map_object (map, strtab + d->d_un.d_val,
+				      (map->l_type == lt_executable
+				       ? lt_library : map->l_type),
+				      trace_mode);
+	      }
+	    char *errstring;
+	    const char *objname;
+	    if (! _dl_catch_error (&errstring, &objname, openaux))
+	      /* The auxiliary object is actually there.  Use it as
+		 the first search element, even before MAP itself.  */
+	      preload (aux);
+	  }
+    }
+
+  /* Next load MAP itself.  */
   preload (map);
 
   /* Add the preloaded items after MAP but before any of its dependencies.  */

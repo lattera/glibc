@@ -112,17 +112,19 @@ __tzfile_read (const char *file)
   else if (*file == '\0')
     /* User specified the empty string; use UTC explicitly.  */
     file = "Universal";
-
-  /* We must not allow to read an arbitrary file in a setuid program.
-     So we fail for any file which is not in the directory hierachy
-     starting at TZDIR.  */
-  if (__libc_enable_secure
-      && ((*file == '/'
-	   && memcmp (file, default_tzdir, sizeof (default_tzdir) - 1) != 0)
-	  || strstr (file, "../") != NULL))
-    /* This test a certainly a bit too restrictive but it should catch all
-       critical case.  */
-    return;
+  else
+    {
+      /* We must not allow to read an arbitrary file in a setuid
+	 program.  So we fail for any file which is not in the
+	 directory hierachy starting at TZDIR.  */
+      if (__libc_enable_secure
+	  && ((*file == '/'
+	       && memcmp (file, default_tzdir, sizeof (default_tzdir) - 1))
+	      || strstr (file, "../") != NULL))
+	/* This test a certainly a bit too restrictive but it should
+	   catch all critical case.  */
+	return;
+    }
 
   if (*file != '/')
     {

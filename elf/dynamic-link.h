@@ -26,11 +26,12 @@
 
 static inline void __attribute__ ((unused))
 elf_get_dynamic_info (ElfW(Dyn) *dyn,
-		      ElfW(Dyn) *info[DT_NUM + DT_PROCNUM + DT_EXTRANUM])
+		      ElfW(Dyn) *info[DT_NUM + DT_PROCNUM + DT_VERSIONTAGNUM
+				     + DT_EXTRANUM])
 {
   unsigned int i;
 
-  for (i = 0; i < DT_NUM + DT_PROCNUM + DT_EXTRANUM; ++i)
+  for (i = 0; i < DT_NUM + DT_PROCNUM + DT_VERSIONTAGNUM + DT_EXTRANUM; ++i)
     info[i] = NULL;
 
   if (! dyn)
@@ -43,8 +44,11 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
       else if (dyn->d_tag >= DT_LOPROC &&
 	       dyn->d_tag < DT_LOPROC + DT_PROCNUM)
 	info[dyn->d_tag - DT_LOPROC + DT_NUM] = dyn;
+      else if ((Elf32_Word) DT_VERSIONTAGIDX (dyn->d_tag) < DT_VERSIONTAGNUM)
+	info[DT_VERSIONTAGIDX (dyn->d_tag) + DT_NUM + DT_PROCNUM] = dyn;
       else if ((Elf32_Word) DT_EXTRATAGIDX (dyn->d_tag) < DT_EXTRANUM)
-	info[DT_EXTRATAGIDX (dyn->d_tag) + DT_NUM + DT_PROCNUM] = dyn;
+	info[DT_EXTRATAGIDX (dyn->d_tag) + DT_NUM + DT_PROCNUM
+	     + DT_VERSIONTAGNUM] = dyn;
       else
 	assert (! "bad dynamic tag");
       dyn++;

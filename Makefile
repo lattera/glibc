@@ -119,7 +119,7 @@ ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
 install:
 	test ! -x $(common-objpfx)elf/ldconfig || \
-	  $(common-objpfx)elf/ldconfig -d
+	  $(common-objpfx)elf/ldconfig -d $(inst_slibdir) $(inst_libdir)
 endif
 endif
 

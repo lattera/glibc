@@ -1,3 +1,77 @@
+1997-02-03 02:33  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-deps.c (_dl_map_object_deps): Handle multiple AUXILIARY
+	entries.  This is still no complete implementation since AUXILIARY
+	entries in other shared objects are not yet handled.
+
+	* libio/libio.h (_IO_cookie_io_functions_t): Move to C++ protected
+	place.
+
+	* po/es.po: Update.
+	* po/fr.po: Update.
+	* po/nl.po: Update.
+
+	* time/Makefile: Better cross-compile support.  Avoid test which
+	cannot be run.
+	(CFLAGS-tzset.c): New variable.  Overwrite TZDEFAULT value from
+	tzfile.h file.
+	* time/tzfile.c (__tzfile_read): Allow TZDEFAULT start with '/' even
+	in SUID programs.
+	* time/tzset.c (__tzset_internal): If TZ envvar is not set use same
+	default values as in tzfile.c.
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Recognize versioning
+	tags.
+	* elf/link.h: Likewise.
+	* elf/elf.h: Add tag definitions and data structures for versioning.
+
+1997-02-03 02:17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/rpcsvc/yp.x (struct ypresp_key_val): There is not stupid
+	"Sun bug".  This is the order of elements also used by 4.4BSD.
+	* nis/rpcsvc/yp.h: Likewise.
+	Reported by HJ Lu.
+
+1997-02-02 12:13  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sunrpc/Makefile ($(objpfx)x%.h, $(objpfx)x%.c): Add "@:" as
+	action.
+
+	* Makefile (install): Pass installation directories as arguments
+	to ldconfig.
+
+1997-02-02 23:15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/malloc.c (__after_morecore_hook): New variable.
+	(malloc_extend_top): Call __after_morecore_hook if set.
+	(main_trim): Likewise.
+	* malloc/malloc.h: Add declaration of __after_morecore_hook.
+	Suggested by Marcus Daniels.
+
+1997-02-02 23:00  Marcus G. Daniels  <marcus@tdb.com>
+
+	* malloc/malloc.c (rEALLOc): Protect tsd_setspecific call by
+	#ifndef NO_THREADS.
+	(mallinfo): Likewise.
+
+	* malloc/malloc.c (__morecore): Make external since it is used in
+	programs.
+
+1997-02-02 15:10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/statbuf.h (struct stat): Make st_dev field
+	unsigned.
+
+1997-02-01 23:36  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/alpha/stxncpy.S ($unaligned) [src % 8 > dst % 8]: Don't
+	use t6 as a temporary; it contains bits we still need in $u_head.
+
+1997-01-31 15:05  John Bowman  <bowman@ipp-garching.mpg.de>
+
+	* sysdeps/i386/fpu/__math.h [__USE_MISC]: Don't declare prototypes
+	using __ prefix.  Add prototype for log1p.
+
 1997-02-02 00:39  Ulrich Drepper  <drepper@cygnus.com>
 
 	* dirent/dirent.h: Add description _DIRENT_HAVE_D_TYPE.

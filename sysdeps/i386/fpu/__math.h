@@ -1,5 +1,5 @@
 /* Inline math functions for i387.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by John C. Bowman <bowman@ipp-garching.mpg.de>, 1995.
 
@@ -373,13 +373,14 @@ ceil (double __x)
 /* Optimized versions for some non-standardized functions.  */
 #ifdef __USE_MISC
 
-__MATH_INLINE double __hypot (double __x, double __y);
+__MATH_INLINE double hypot (double __x, double __y);
 __MATH_INLINE double
 hypot (double __x, double __y)
 {
   return sqrt (__x * __x + __y * __y);
 }
 
+__MATH_INLINE double log1p (double __x);
 __MATH_INLINE double
 log1p (double __x)
 {
@@ -397,7 +398,7 @@ log1p (double __x)
   return __value;
 }
 
-__MATH_INLINE double __asinh (double __x);
+__MATH_INLINE double asinh (double __x);
 __MATH_INLINE double
 asinh (double __x)
 {
@@ -407,14 +408,14 @@ asinh (double __x)
 		* __sgn1 (__x));
 }
 
-__MATH_INLINE double __acosh (double __x);
+__MATH_INLINE double acosh (double __x);
 __MATH_INLINE double
 acosh (double __x)
 {
   return log (__x + sqrt (__x - 1.0) * sqrt (__x + 1.0));
 }
 
-__MATH_INLINE double __atanh (double __x);
+__MATH_INLINE double atanh (double __x);
 __MATH_INLINE double
 atanh (double __x)
 {
@@ -423,7 +424,7 @@ atanh (double __x)
   return -0.5 * __log1p (-(__y + __y) / (1.0 + __y)) * __sgn1 (__x);
 }
 
-__MATH_INLINE double __coshm1 (double __x);
+__MATH_INLINE double coshm1 (double __x);
 __MATH_INLINE double
 coshm1 (double __x)
 {
@@ -432,14 +433,14 @@ coshm1 (double __x)
   return 0.5 * (__exm1 / (__exm1 + 1.0)) * __exm1;
 }
 
-__MATH_INLINE double __acosh1p (double __x);
+__MATH_INLINE double acosh1p (double __x);
 __MATH_INLINE double
 acosh1p (double __x)
 {
   return __log1p (__x + sqrt (__x) * sqrt (__x + 2.0));
 }
 
-__MATH_INLINE double __logb (double __x);
+__MATH_INLINE double logb (double __x);
 __MATH_INLINE double
 logb (double __x)
 {
@@ -451,7 +452,7 @@ logb (double __x)
   return __value;
 }
 
-__MATH_INLINE double __drem (double __x, double __y);
+__MATH_INLINE double drem (double __x, double __y);
 __MATH_INLINE double
 drem (double __x, double __y)
 {
@@ -466,7 +467,7 @@ drem (double __x, double __y)
   return __value;
 }
 
-__MATH_INLINE void __sincos (double __x, double *__sinx, double *__cosx);
+__MATH_INLINE void sincos (double __x, double *__sinx, double *__cosx);
 __MATH_INLINE void
 sincos (double __x, double *__sinx, double *__cosx)
 {
@@ -479,14 +480,14 @@ sincos (double __x, double *__sinx, double *__cosx)
   *__cosx = __cosr;
 }
 
-__MATH_INLINE double __sgn (double __x);
+__MATH_INLINE double sgn (double __x);
 __MATH_INLINE double
 sgn (double __x)
 {
   return (__x == 0.0 ? 0.0 : (__x > 0.0 ? 1.0 : -1.0));
 }
 
-__MATH_INLINE double __pow2 (double __x);
+__MATH_INLINE double pow2 (double __x);
 __MATH_INLINE double
 pow2 (double __x)
 {
