@@ -6,6 +6,9 @@
 	* sysdeps/generic/rawmemchr.c: Include <stdlib.h> for abort
 	prototype.
 	* sysdeps/generic/strchrnul.c: Likewise.
+	* sysdeps/generic/strlen.c: Likewise.
+	* sysdeps/generic/strchr.c: Likewise.
+	* sysdeps/generic/memchr.c: Likewise.
 
 2000-07-04  Ulrich Drepper  <drepper@redhat.com>
 
