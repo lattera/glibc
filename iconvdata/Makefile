@@ -38,6 +38,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   IBM437 IBM850 IBM851 IBM852 IBM855 IBM857 IBM860 IBM861	 \
 	   IBM862 IBM863 IBM864 IBM865 IBM868 IBM869 IBM875 IBM880	 \
 	   IBM866 CP1258						 \
+	   IBM856 IBM930 IBM933 IBM935 IBM937 IBM939 IBM1046		 \
 	   IBM918 IBM1004 IBM1026 CP1250 CP1251 CP1252 CP1253 CP1254	 \
 	   CP1255 CP1256 CP1257 ISO-2022-JP MACINTOSH IEC_P27-1		 \
 	   ASMO_449 ANSI_X3.110 CSN_369103 CWI DEC-MCS ECMA-CYRILLIC	 \
@@ -118,6 +119,8 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      ibm861.c ibm862.c ibm863.c ibm864.c ibm865.c ibm866.c	    \
 	      ibm868.c ibm869.c ibm870.c ibm871.c ibm875.c ibm880.c	    \
 	      ibm891.c ibm903.c ibm904.c ibm905.c ibm918.c ibm1004.c	    \
+	      ibm856.c ibm930.c ibm933.c ibm935.c ibm937.c ibm939.c ibm1046.c \
+	      ibm856.h ibm930.h ibm933.h ibm935.h ibm937.h ibm939.h ibm1046.h \
 	      ibm1026.c ibm1047.c iec_p27-1.c inis.c inis-8.c		    \
 	      inis-cyrillic.c iso-2022-jp.c iso-2022-kr.c iso646.c	    \
 	      iso8859-1.c iso8859-2.c iso8859-3.c iso8859-4.c iso8859-5.c   \

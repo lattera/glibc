@@ -1,3 +1,14 @@
+2000-10-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile (modules): Add IBM856, IBM930, IBM933, IBM935,
+	IBM937, IBM939, and IBM1046.
+	(distribute): Add ibm856.c, ibm930.c, ibm933.c, ibm935.c, ibm937.c,
+	ibm939.c, ibm1046.c, ibm856.h, ibm930.h, ibm933.h, ibm935.h, ibm937.h,
+	ibm939.h, and ibm1046.h.
+	* iconvdata/gconv-modules: Add entries for IBM856, IBM930, IBM933,
+	IBM935, IBM937, IBM939, and IBM1046.
+	Patches by Masahide Washizawa <washi@yamato.ibm.co.jp>.
+
 2000-10-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/localeinfo.h (enum value_type): Add wstring, wstringarray,
