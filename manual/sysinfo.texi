@@ -673,12 +673,13 @@ filled with the information from the next entry from the file currently
 read.
 
 The file format used prescribes the use of spaces or tab characters to
-separate the fields.  This makes it harder to use name containing one of
-these characters (e.g., mount points using spaces).  Therefore these
-characters are encoded in the files and the @code{getmntent} function
-takes care of the decoding while reading the entries back in.
-@code{'\040'} is used to encode a space character, @code{'\012'} to
-encode a tab character and @code{'\\'} to encode a backslash.
+separate the fields.  This makes it harder to use name containing one
+of these characters (e.g., mount points using spaces).  Therefore
+these characters are encoded in the files and the @code{getmntent}
+function takes care of the decoding while reading the entries back in.
+@code{'\040'} is used to encode a space character, @code{'\011'} to
+encode a tab character, @code{'\012'} to encode a newline character,
+and @code{'\\'} to encode a backslash.
 
 If there was an error or the end of the file is reached the return value
 is @code{NULL}.

@@ -1,5 +1,10 @@
 2003-11-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/mntent_r.c (decode_name): Fix decoding of tab, add decoding
+	of newline.
+	* manual/sysinfo.texi (mtab): Adjust description accordingly.
+	Reported by Andries.Brouwer@cwi.nl.
+
 	* sysdeps/x86_64/fpu/libm-test-ulps: Add some more minor changes
 	to compensate other setup.
 
