@@ -1,3 +1,7 @@
+2002-03-03  Andreas Jaeger  <aj@suse.de>
+
+	* errno.c: Include resolv.h to avoid warning.
+
 2002-02-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread.c [USE_TLS] (thread_self_stack): Correct check for upper

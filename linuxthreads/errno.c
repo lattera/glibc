@@ -16,6 +16,7 @@
 
 #include <errno.h>
 #include <netdb.h>
+#include <resolv.h>
 #include "pthread.h"
 #include "internals.h"
 
