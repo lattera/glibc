@@ -586,8 +586,9 @@ insert_name (struct locarhandle *ah,
 
 static void
 add_alias (struct locarhandle *ah, const char *alias, bool replace,
-	   const char *oldname, uint32_t locrec_offset)
+	   const char *oldname, uint32_t *locrec_offset_p)
 {
+  uint32_t locrec_offset = *locrec_offset_p;
   struct locarhead *head = ah->addr;
   const size_t name_len = strlen (alias);
   struct namehashent *namehashent = insert_name (ah, alias, strlen (alias),
@@ -610,10 +611,10 @@ add_alias (struct locarhandle *ah, const char *alias, bool replace,
 	  namehashent = insert_name (ah, oldname, strlen (oldname), true);
 	  assert (namehashent->name_offset != 0);
 	  assert (namehashent->locrec_offset != 0);
-	  locrec_offset = namehashent->locrec_offset;
+	  *locrec_offset_p = namehashent->locrec_offset;
 
 	  /* Tail call to try the whole thing again.  */
-	  add_alias (ah, alias, replace, oldname, locrec_offset);
+	  add_alias (ah, alias, replace, oldname, locrec_offset_p);
 	  return;
 	}
 
@@ -935,9 +936,9 @@ add_locale_to_archive (ah, name, data, replace)
 
   /* This call does the main work.  */
   locrec_offset = add_locale (ah, normalized_name ?: name, data, replace);
-  free (normalized_name);
   if (locrec_offset == 0)
     {
+      free (normalized_name);
       if (mask & XPG_NORM_CODESET)
 	free ((char *) normalized_codeset);
       return -1;
@@ -956,17 +957,19 @@ add_locale_to_archive (ah, name, data, replace)
       } *filedata = data[LC_CTYPE].addr;
       codeset = (char *) filedata
 	+ filedata->strindex[_NL_ITEM_INDEX (_NL_CTYPE_CODESET_NAME)];
+      char *normalized_codeset_name = NULL;
 
       normalized_codeset = _nl_normalize_codeset (codeset, strlen (codeset));
       mask |= XPG_NORM_CODESET;
 
-      asprintf (&normalized_name, "%s%s%s.%s%s%s",
+      asprintf (&normalized_codeset_name, "%s%s%s.%s%s%s",
 		language, territory == NULL ? "" : "_", territory ?: "",
 		normalized_codeset,
 		modifier == NULL ? "" : "@", modifier ?: "");
 
-      add_alias (ah, normalized_name, replace, name, locrec_offset);
-      free (normalized_name);
+      add_alias (ah, normalized_codeset_name, replace,
+		 normalized_name ?: name, &locrec_offset);
+      free (normalized_codeset_name);
     }
 
   /* Now read the locale.alias files looking for lines whose
@@ -1064,7 +1067,7 @@ add_locale_to_archive (ah, name, data, replace)
 			&& !strcmp (modifier ?: "", rhs_modifier ?: ""))
 		      /* We have a winner.  */
 		      add_alias (ah, alias, replace,
-				 normalized_name ?: name, locrec_offset);
+				 normalized_name ?: name, &locrec_offset);
 		    if (rhs_mask & XPG_NORM_CODESET)
 		      free ((char *) rhs_normalized_codeset);
 		  }
@@ -1085,6 +1088,8 @@ add_locale_to_archive (ah, name, data, replace)
 
       fclose (fp);
     }
+
+  free (normalized_name);
 
   if (mask & XPG_NORM_CODESET)
     free ((char *) normalized_codeset);

@@ -1,14 +1,21 @@
+2002-10-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/locarchive.c (add_alias): Change locrec_offset arg
+	into pointer to locrec_offset.
+	(add_locale_to_archive): Adjust callers.  Free normalized_name right
+	before returning, not immediately after add_locale, pass it to
+	add_alias if not NULL instead of name.  Rename second normalized_name
+	occurence to nnormalized_codeset_name.
+
+	* locale/programs/locarchive.c (enlarge_archive): Make sure
+	string_size is always a multiple of 4.
+	Reported by Andreas Schwab <schwab@suse.de>.
+
 2002-10-21  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/ia64/syscalls.list (s_execve): Set
 	caller to EXTRA instead of execve, since the latter has a
 	higher-priority implementation in linuxthreads.
-
-2002-10-22  Jakub Jelinek  <jakub@redhat.com>
-
-	* locale/programs/locarchive.c (enlarge_archive): Make sure
-	string_size is always a multiple of 4.
-	Reported by Andreas Schwab <schwab@suse.de>.
 
 2002-10-21  Roland McGrath  <roland@redhat.com>
 

@@ -283,7 +283,7 @@ pthread_start_thread(void *arg)
       __sched_setscheduler(THREAD_GETMEM(self, p_pid),
                            SCHED_OTHER, &default_params);
     }
-#if !(USE_TLS && HAVE___THREAD) && defined SHARED
+#if !(USE_TLS && HAVE___THREAD)
   /* Initialize thread-locale current locale to point to the global one.
      With __thread support, the variable's initializer takes care of this.  */
   __uselocale (LC_GLOBAL_LOCALE);

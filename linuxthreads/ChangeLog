@@ -1,3 +1,8 @@
+2002-10-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* manager.c (pthread_start_thread): Call __uselocale even
+	if [! SHARED].  Patch by Leon Kanter <leon@geon.donetsk.ua>.
+
 2002-10-17  Roland McGrath  <roland@redhat.com>
 
 	* Makefile (unload): Don't link in libpthread.so.
