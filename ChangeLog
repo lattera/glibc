@@ -1,5 +1,11 @@
 Thu Mar  9 22:29:03 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* configure.in: Use AC_CHECK_TOOL for CC, AR, RANLIB.  Accept args
+ 	--enable-shared, --enable-profile, --enable-omitfp; pass settings
+ 	through to config.make.
+	* config.make.in (build-shared, build-profile, build-omitfp): New
+ 	config vars.
+
 	* elf/elf.h (STN_UNDEF): Renamed to SHN_UNDEF (typo).
 	(DT_NUM): New macro.
 

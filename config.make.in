@@ -2,18 +2,26 @@
 # From $Id$.
 # Don't edit this file.  Put configuration parameters in configparms instead.
 
+# Installation prefixes.
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+# System configuration.
 config-machine = @host_cpu@
 config-vendor = @host_vendor@
 config-os = @host_os@
 config-sysdirs = @sysnames@
 
-prefix = @prefix@
-exec_prefix = @exec_prefix@
 config-defines = @DEFS@
+
+# Configureation options.
 gnu-as = @gnu_as@
 gnu-ld = @gnu_ld@
 elf = @elf@
 weak-symbols = @weak@
+build-shared = @shared@
+build-profile = @profile@
+build-omitfp = @omitfp@
 
 CC = @CC@
 AR = @AR@

@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_REVISION([$Id$])
-AC_PREREQ(2.1)dnl		dnl Minimum Autoconf version required.
+AC_REVISION([$CVSid$])
+AC_PREREQ(2.2)dnl		dnl Minimum Autoconf version required.
 AC_INIT(features.h)
 AC_CONFIG_HEADER(config.h)
 
@@ -19,6 +19,7 @@ gmp-srcdir = $withval" ;;
 esac
 ])
 
+dnl Arguments to specify presence of other packages/features.
 AC_ARG_WITH(gnu-binutils, dnl
   --with-gnu-binutils	  if using GNU binutils (as and ld),
 	    gnu_binutils=yes, gnu_binutils=no)
@@ -35,6 +36,18 @@ AC_ARG_WITH(elf, dnl
 AC_ARG_WITH(weak-symbols, dnl
   --with-weak-symbols	  if weak symbols are available in as and ld,
 	    weak=yes, weak=no)
+
+dnl Arguments to enable or disable building the shared, profiled, and
+dnl -fomit-frame-pointer libraries.
+AC_ARG_ENABLE(shared, dnl
+[  --enable-shared         build shared library [default=yes if GNU ld & ELF]],
+	    shared=yes, shared=no, shared=default)
+AC_ARG_ENABLE(profile, dnl
+[  --enable-profile        build profiled library [default=yes]],
+	    profile=yes, profile=no, profile=yes)
+AC_ARG_ENABLE(omitfp, dnl
+[  --enable-omitfp       build undebuggable optimized library [default=no]],
+	    omitfp=yes, omitfp=no, omitfp=no)
 
 AC_CANONICAL_HOST
 # We keep the original values in `$config_*' and never modify them, so we
@@ -243,10 +256,10 @@ if test "$INSTALL" = "${srcdir}/install-sh"; then
   INSTALL='$(..)./install-sh'
 fi
 
-AC_PROG_CC
+AC_CHECK_TOOL(CC, gcc)
+AC_CHECK_TOOL(AR, ar)
+AC_CHECK_TOOL(RANLIB, ranlib, :)
 AC_PROG_CPP
-AC_CHECK_PROG(AR, ar, ar, ar)
-AC_PROG_RANLIB
 
 AC_MSG_CHECKING(signed size_t type)
 AC_CACHE_VAL(libc_cv_signed_size_t, [dnl
@@ -401,6 +414,15 @@ fi
 if test $weak = yes; then
   AC_DEFINE(HAVE_WEAK_SYMBOLS)
 fi
+
+AC_SUBST(shared)
+if test $shared = default; then
+  if test $gnu_ld = yes; then
+    shared=$elf
+  fi
+fi
+AC_SUBST(profile)
+AC_SUBST(omitfp)
 
 
 if test "`(cd $srcdir; pwd)`" = "`pwd`"; then
