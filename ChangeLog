@@ -1,6 +1,9 @@
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
-	* locale/programs/charmap.c: NUL-terminte names of generated
+	* wcsmbs/mbrtowc.c: Don't set errno if byte sequence is only
+	incomplete but correct.
+
+	* locale/programs/charmap.c: NUL-terminate names of generated
 	entries for ellipsis.
 
 2000-01-18  Andreas Jaeger  <aj@suse.de>
