@@ -1,3 +1,8 @@
+2003-03-21  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/mips/mips64/memcpy.S, sysdeps/mips/mips64/memset.S: New.
+	* sysdeps/mips/memcpy.S, sysdeps/mips/memset.S: Update comments.
+
 2003-03-21  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/i386/i486/bits/atomic.h

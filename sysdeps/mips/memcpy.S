@@ -21,12 +21,7 @@
 #include <endian.h>
 
 
-/* void *memcpy(void *s1, const void *s2, size_t n);
-
-   This routine could be optimized further for MIPS64, but this is left
-   as an exercise for the future. When it is done, the file should be kept
-   as a sisterfile to this one, and placed in the sysdeps/mips/mips64 
-   directory.  */
+/* void *memcpy(void *s1, const void *s2, size_t n);  */
 
 #if __BYTE_ORDER == __BIG_ENDIAN
 #  define LWHI	lwl		/* high part is left in big-endian	*/
@@ -38,19 +33,6 @@
 #  define SWHI	swr		/* high part is right in little-endian	*/
 #  define LWLO	lwl		/* low part is left in little-endian	*/
 #  define SWLO	swl		/* low part is left in little-endian	*/
-#endif
-
-#ifndef t0
-# define t0 a4
-#endif
-#ifndef t1
-# define t1 a5
-#endif
-#ifndef t2
-# define t2 a6
-#endif
-#ifndef t3
-# define t3 a7
 #endif
 
 ENTRY (memcpy)
