@@ -35,7 +35,7 @@ __new_sem_trywait (sem_t *sem)
 
   if (*futex > 0)
     {
-      val = __lll_dec_if_positive (futex);
+      val = atomic_decrement_if_positive (futex);
       if (val > 0)
 	return 0;
     }

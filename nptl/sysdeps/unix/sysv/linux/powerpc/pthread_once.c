@@ -88,7 +88,7 @@ __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
 
 
   /* Add one to *once_control to take the bottom 2 bits from 01 to 10.  */
-  __lll_add (once_control, 1);
+  atomic_exchange_and_add (once_control, 1);
 
   /* Wake up all other threads.  */
   lll_futex_wake (once_control, INT_MAX);

@@ -80,7 +80,7 @@ __pthread_once (once_control, init_routine)
 
 
       /* Add one to *once_control.  */
-      __lll_add (once_control, 1);
+      atomic_exchange_and_add (once_control, 1);
 
       /* Wake up all other threads.  */
       lll_futex_wake (once_control, INT_MAX);

@@ -32,7 +32,7 @@ __new_sem_post (sem_t *sem)
   int *futex = (int *) sem;
   int err, nr;
 
-  nr = __lll_add (futex, 1);
+  nr = atomic_exchange_and_add (futex, 1);
   err = lll_futex_wake (futex, nr + 1);
   if (__builtin_expect (err, 0) < 0)
     {

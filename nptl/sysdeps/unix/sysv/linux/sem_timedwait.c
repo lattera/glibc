@@ -36,7 +36,7 @@ sem_timedwait (sem_t *sem, const struct timespec *abstime)
 
   if (*futex > 0)
     {
-      val = __lll_dec_if_positive (futex);
+      val = atomic_decrement_if_positive (futex);
       if (val > 0)
 	return 0;
     }
@@ -75,7 +75,7 @@ sem_timedwait (sem_t *sem, const struct timespec *abstime)
       if (err != 0 && err != -EWOULDBLOCK)
 	goto error_return;
 
-      val = __lll_dec_if_positive (futex);
+      val = atomic_decrement_if_positive (futex);
     }
   while (val <= 0);
 

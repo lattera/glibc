@@ -33,7 +33,7 @@ __new_sem_post (sem_t *sem)
   int err, nr;
 
   __asm __volatile (__lll_rel_instr ::: "memory");
-  nr = __lll_add (futex, 1);
+  nr = atomic_exchange_and_add (futex, 1);
   err = lll_futex_wake (futex, nr);
   if (err == 0)
     return 0;
