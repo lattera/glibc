@@ -1,3 +1,127 @@
+2000-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/libm-test.inc (frexp_test): Add L suffix also to parameters.
+	(hypot_test): Likewise.
+
+	* sysdeps/generic/printf_fphex.c: Compute width of decimal point
+	string correctly.  Handle padding correctly.
+
+	* sysdeps/ia64/fpu/printf_fphex.c: Use sizeof in _itowa parameters
+	correctly.
+	* sysdeps/ieee754/ldbl-128/printf_fphex.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/printf_fphex.c: Likewise.
+
+2000-10-12  Alan Modra  <alan@linuxcare.com.au>
+
+	* FAQ.in: Add --start-group and --end-group.
+
+2000-10-12  Alan Modra  <alan@linuxcare.com.au>
+
+	* malloc/memusage.c: Conditionalize stack usage calculation on
+	stack direction.
+
+2000-10-12  Alan Modra  <alan@linuxcare.com.au>
+
+	* config.h.in: Add ASM_LINE_SEP.
+	* configure.in: Add test for comment and line separators.
+	* include/libc-symbols.h: Define and use ASM_LINE_SEP, and add tabs to
+	placate some hppa assemblers.
+	* sysdeps/hppa/sysdep.h: Likewise.
+	* sysdeps/gnu/siglist.c: Insert \n and \t into inline asm.
+	* sysdeps/unix/sysv/linux/errlist.c: Likewise.
+
+2000-10-12  David Huggins-Daines  <dhd@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/Makefile: Include <bits/initspin> in
+	$(sysdep_headers).
+	* sysdeps/unix/sysv/linux/bits/initspin.h: Dummy version for
+	non-threaded platforms.
+
+2000-10-12  David Huggins-Daines  <dhd@linuxcare.com>
+
+	* configure.in: Add definitions for hppa.
+	* elf/elf.h: Add PLABEL32 relocation for hppa ELF32, comments
+	for IPLT and EPLT relocations.
+	* shlib-versions: Version symbol definitions for hppa-linux.
+	* sysdeps/unix/sysv/linux/configure.in: Define $arch_minimum_kernel
+	for hppa.
+
+2000-10-12  David Huggins-Daines  <dhd@linuxcare.com>
+
+	* sysdeps/hppa/Makefile: New file.
+	* sysdeps/hppa/Versions: New file.
+
+	* sysdeps/hppa/setjmp.S: New file.
+	* sysdeps/hppa/__longjmp.S: New file.
+	* sysdeps/hppa/bits/setjmp.h: New file.
+	* sysdeps/hppa/frame.h: New file.
+
+	* sysdeps/hppa/add_n.s: Don't use %r19 (linkage table pointer).
+	* sysdeps/hppa/sub_n.s: Likewise.
+	* sysdeps/hppa/lshift.s: Likewise.
+	* sysdeps/hppa/rshift.s: Likewise.
+	* sysdeps/hppa/udiv_qrnnd.s: Likewise.
+	* sysdeps/hppa/hppa1.1/addmul_1.s: Likewise.
+	* sysdeps/hppa/hppa1.1/submul_1.s: Likewise.
+	* sysdeps/hppa/hppa1.1/mul_1.s: Likewise.
+	* sysdeps/hppa/hppa1.1/udiv_qrnnd.s: Likewise.
+
+	* sysdeps/hppa/dl-machine.h: New file.
+	* sysdeps/hppa/dl-fptr.c: New file (note that this is almost
+	identical to the IA-64 one).
+	* sysdeps/hppa/dl-lookupcfg.h: Likewise.
+	* sysdeps/hppa/dl-symaddr.c: Likewise.
+
+	* sysdeps/hppa/elf/initfini.c: New file.
+	* sysdeps/hppa/elf/start.S: New file.
+
+	* sysdeps/hppa/fpu/bits/fenv.h: New file.
+	* sysdeps/hppa/fpu/fclrexcpt.c: New file.
+	* sysdeps/hppa/fpu/fedisblxcpt.c: New file.
+	* sysdeps/hppa/fpu/feenablxcpt.c: New file.
+	* sysdeps/hppa/fpu/fegetenv.c: New file.
+	* sysdeps/hppa/fpu/fegetexcept.c: New file.
+	* sysdeps/hppa/fpu/fegetround.c: New file.
+	* sysdeps/hppa/fpu/feholdexcpt.c: New file.
+	* sysdeps/hppa/fpu/fesetenv.c: New file.
+	* sysdeps/hppa/fpu/fesetround.c: New file.
+	* sysdeps/hppa/fpu/feupdateenv.c: New file.
+	* sysdeps/hppa/fpu/fegetexcptflg.c: New file.
+	* sysdeps/hppa/fpu/fraiseexcpt.c: New file.
+	* sysdeps/hppa/fpu/fsetexcptflg.c: New file.
+	* sysdeps/hppa/fpu/ftestexcept.c: New file.
+
+	* sysdeps/unix/sysv/linux/hppa/Makefile: New file.
+	* sysdeps/unix/sysv/linux/hppa/Versions: New file.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list: New file.
+	* sysdeps/unix/sysv/linux/hppa/sysdep.c: New file.
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h: New file.
+
+	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/bits/ioctls.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/bits/mman.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/bits/sigaction.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/bits/signum.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/brk.c: New file.
+	* sysdeps/unix/sysv/linux/hppa/clone.S: New file.
+	* sysdeps/unix/sysv/linux/hppa/socket.S: New file.
+	* sysdeps/unix/sysv/linux/hppa/syscall.S: New file.
+	* sysdeps/unix/sysv/linux/hppa/setrlimit.c: New file.
+	* sysdeps/unix/sysv/linux/hppa/getrlimit.c: New file.
+	* sysdeps/unix/sysv/linux/hppa/getrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/hppa/kernel_sigaction.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/kernel_stat.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/mmap.c: New file.
+	* sysdeps/unix/sysv/linux/hppa/profil-counter.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/procfs.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/ucontext.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/umount.c: New file.
+
+2000-10-12  Alan Modra  <alan@linuxcare.com.au>
+
+	* sysdeps/hppa/hppa1.1/Implies: New file.
+	* sysdeps/hppa/memusage.h: New file.
+
 2000-10-28  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/unix/sysv/linux/ia64/Versions: Export ioperm, iopl, inb,

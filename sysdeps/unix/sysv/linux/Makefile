@@ -86,7 +86,7 @@ inhibit-siglist := yes
 endif
 
 ifeq ($(subdir),posix)
-sysdep_headers += bits/pthreadtypes.h
+sysdep_headers += bits/pthreadtypes.h bits/initspin.h
 endif
 
 ifeq ($(subdir),inet)

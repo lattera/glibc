@@ -117,7 +117,11 @@ update_data (struct header *result, size_t len, size_t old_len)
     peak_heap = current_heap;
 
   /* Compute current stack usage and compare it with the maximum value.  */
+#ifdef STACK_GROWS_UPWARD
+  current_stack = GETSP () - start_sp;
+#else
   current_stack = start_sp - GETSP ();
+#endif
   if (current_stack > peak_stack)
     peak_stack = current_stack;
 

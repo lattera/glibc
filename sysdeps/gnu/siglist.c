@@ -33,7 +33,7 @@
 
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-asm (".data; .globl __old_sys_siglist;  __old_sys_siglist:");
+asm (".data\n\t.globl __old_sys_siglist\n__old_sys_siglist:");
 #endif
 
 const char *const __new_sys_siglist[NSIG] =
@@ -44,10 +44,10 @@ const char *const __new_sys_siglist[NSIG] =
 };
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-asm (".type __old_sys_siglist,@object;.size __old_sys_siglist,"
+asm (".type __old_sys_siglist,@object\n\t.size __old_sys_siglist,"
         OLD_SIGLIST_SIZE_STR "*" PTR_SIZE_STR);
 
-asm (".data; .globl __old_sys_sigabbrev;  __old_sys_sigabbrev:");
+asm (".data\n\t.globl __old_sys_sigabbrev\n__old_sys_sigabbrev:");
 #endif
 
 const char *const __new_sys_sigabbrev[NSIG] =
@@ -58,7 +58,7 @@ const char *const __new_sys_sigabbrev[NSIG] =
 };
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-asm (".type __old_sys_sigabbrev,@object;.size __old_sys_sigabbrev,"
+asm (".type __old_sys_sigabbrev,@object\n\t.size __old_sys_sigabbrev,"
         OLD_SIGLIST_SIZE_STR "*" PTR_SIZE_STR);
 
 extern const char *const *__old_sys_siglist;

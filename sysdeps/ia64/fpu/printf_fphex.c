@@ -34,8 +34,9 @@ do {									      \
 									      \
       numstr = _itoa_word (num, numbuf + sizeof numbuf, 16,		      \
 			   info->spec == 'A');				      \
-      wnumstr = _itowa_word (num, wnumbuf + sizeof wnumbuf, 16,		      \
-			     info->spec == 'A');			      \
+      wnumstr = _itowa_word (num,					      \
+			     wnumbuf + sizeof (wnumbuf) / sizeof (wchar_t),   \
+			     16, info->spec == 'A');			      \
 									      \
       /* Fill with zeroes.  */						      \
       while (numstr > numbuf + (sizeof numbuf - 64 / 4))		      \
@@ -50,7 +51,7 @@ do {									      \
       /* We have 3 bits from the mantissa in the leading nibble.	      \
 	 Therefore we are here using `IEEE854_LONG_DOUBLE_BIAS + 3'.  */      \
       exponent = fpnum.ldbl.ieee.exponent;				      \
-									      \
+									     \
       if (exponent == 0)						      \
 	{								      \
 	  if (zero_mantissa)						      \

@@ -1,53 +1,55 @@
-; HP-PA  __udiv_qrnnd division support, used from longlong.h.
-; This version runs fast on PA 7000 and later.
+;! HP-PA  __udiv_qrnnd division support, used from longlong.h.
+;! This version runs fast on PA 7000 and later.
 
-; Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+;! Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 
-; This file is part of the GNU MP Library.
+;! This file is part of the GNU MP Library.
 
-; The GNU MP Library is free software; you can redistribute it and/or modify
-; it under the terms of the GNU Library General Public License as published by
-; the Free Software Foundation; either version 2 of the License, or (at your
-; option) any later version.
+;! The GNU MP Library is free software; you can redistribute it and/or modify
+;! it under the terms of the GNU Library General Public License as published by
+;! the Free Software Foundation; either version 2 of the License, or (at your
+;! option) any later version.
 
-; The GNU MP Library is distributed in the hope that it will be useful, but
-; WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-; License for more details.
+;! The GNU MP Library is distributed in the hope that it will be useful, but
+;! WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+;! or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+;! License for more details.
 
-; You should have received a copy of the GNU Library General Public License
-; along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-; the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-; MA 02111-1307, USA.
+;! You should have received a copy of the GNU Library General Public License
+;! along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
+;! the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+;! MA 02111-1307, USA.
 
 
-; INPUT PARAMETERS
-; rem_ptr	gr26
-; n1		gr25
-; n0		gr24
-; d		gr23
+;! INPUT PARAMETERS
+;! rem_ptr	gr26
+;! n1		gr25
+;! n0		gr24
+;! d		gr23
 
-	.code
-L$0000	.word		0x43f00000
+	.text
+L$0000:	
+	.word		0x43f00000
 	.word		0x0
 	.export		__udiv_qrnnd
-__udiv_qrnnd
+__udiv_qrnnd:	
 	.proc
 	.callinfo	frame=64,no_calls
 	.entry
 	ldo		64(%r30),%r30
 
-	stws		%r25,-16(0,%r30)	; n_hi
-	stws		%r24,-12(0,%r30)	; n_lo
-	ldil		L'L$0000,%r19
-	ldo		R'L$0000(%r19),%r19
+	stws		%r25,-16(0,%r30)	;! n_hi
+	stws		%r24,-12(0,%r30)	;! n_lo
+	b,l		L$0,%r1
+	ldo		L$0000-L$0(%r1),%r1
+L$0:
 	fldds		-16(0,%r30),%fr5
 	stws		%r23,-12(0,%r30)
 	comib,<=	0,%r25,L$1
 	fcnvxf,dbl,dbl	%fr5,%fr5
-	fldds		0(0,%r19),%fr4
+	fldds		0(0,%r1),%fr4
 	fadd,dbl	%fr4,%fr5,%fr5
-L$1
+L$1:	
 	fcpy,sgl	%fr0,%fr6L
 	fldws		-12(0,%r30),%fr6R
 	fcnvxf,dbl,dbl	%fr6,%fr4
@@ -62,13 +64,14 @@ L$1
 	ldws		-12(0,%r30),%r21
 	ldws		-16(0,%r30),%r20
 	sub		%r24,%r21,%r22
-	subb		%r25,%r20,%r19
-	comib,=		0,%r19,L$2
+	subb		%r25,%r20,%r1
+	comib,=		0,%r1,L$2
 	ldo		-64(%r30),%r30
 
 	add		%r22,%r23,%r22
 	ldo		-1(%r28),%r28
-L$2	bv		0(%r2)
+L$2:	
+	bv		0(%r2)
 	stws		%r22,0(0,%r26)
 
 	.exit

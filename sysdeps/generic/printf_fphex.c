@@ -427,10 +427,14 @@ __printf_fphex (FILE *fp,
   /* Now we have all information to compute the size.  */
   width -= ((negative || info->showsign || info->space)
 	    /* Sign.  */
-	    + 2    + 1 + 1 + precision + 1 + 1
+	    + 2    + 1 + 0 + precision + 1 + 1
 	    /* 0x    h   .   hhh         P   ExpoSign.  */
 	    + ((expbuf + sizeof expbuf) - expstr));
 	    /* Exponent.  */
+
+  /* Count the decimal point.  */
+  if (precision > 0 || info->alt)
+    width -= wide ? 1 : strlen (decimal);
 
   /* A special case when the mantissa or the precision is zero and the `#'
      is not given.  In this case we must not print the decimal point.  */
@@ -463,9 +467,10 @@ __printf_fphex (FILE *fp,
 
   if (precision > 0)
     {
+      ssize_t tofill = precision - (numend - numstr);
       PRINT (numstr, wnumstr, MIN (numend - numstr, precision));
-      if (precision > numend - numstr)
-	PADN ('0', precision - (numend - numstr));
+      if (tofill > 0)
+	PADN ('0', tofill);
     }
 
   if (info->left && info->pad == '0' && width > 0)

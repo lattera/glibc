@@ -48,6 +48,9 @@ case "$machine" in
   ia64*)
     arch_minimum_kernel=2.4.0
     ;;
+  hppa*)
+    arch_minimum_kernel=2.3.99
+    ;;
   *)
     arch_minimum_kernel=2.0.10
     ;;

@@ -61,6 +61,9 @@ case "$machine" in
   ia64*)
     arch_minimum_kernel=2.4.0
     ;;
+  hppa*)
+    arch_minimum_kernel=2.3.99
+    ;;
   *)
     arch_minimum_kernel=2.0.10
     ;;
@@ -82,10 +85,10 @@ fi
 
 if test -n "$minimum_kernel"; then
   echo $ac_n "checking for kernel header at least $minimum_kernel""... $ac_c" 1>&6
-echo "configure:86: checking for kernel header at least $minimum_kernel" >&5
+echo "configure:89: checking for kernel header at least $minimum_kernel" >&5
   decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
   cat > conftest.$ac_ext <<EOF
-#line 89 "configure"
+#line 92 "configure"
 #include "confdefs.h"
 #include <linux/version.h>
 #if LINUX_VERSION_CODE < $decnum
@@ -197,7 +200,7 @@ if test $host = $build; then
     ac_prefix=$ac_default_prefix
   fi
   echo $ac_n "checking for symlinks in ${ac_prefix}/include""... $ac_c" 1>&6
-echo "configure:201: checking for symlinks in ${ac_prefix}/include" >&5
+echo "configure:204: checking for symlinks in ${ac_prefix}/include" >&5
   ac_message=
   if test -L ${ac_prefix}/include/net; then
     ac_message="$ac_message

@@ -76,6 +76,10 @@
 # endif
 #endif
 
+#ifndef ASM_LINE_SEP
+# define ASM_LINE_SEP ;
+#endif
+
 #ifndef __ASSEMBLER__
 /* GCC understands weak symbols and aliases; use its interface where
    possible, instead of embedded assembly language.  */
@@ -117,11 +121,11 @@
 
 # ifdef HAVE_ASM_SET_DIRECTIVE
 #  define strong_alias(original, alias)		\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias);	\
+  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP	\
   .set C_SYMBOL_NAME (alias),C_SYMBOL_NAME (original)
 # else
 #  define strong_alias(original, alias)		\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias);	\
+  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP	\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
 # endif
 
@@ -135,7 +139,7 @@
 #  else /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
 
 #   define weak_alias(original, alias)	\
-  .weak C_SYMBOL_NAME (alias);	\
+  .weak C_SYMBOL_NAME (alias) ASM_LINE_SEP	\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
 
 #   define weak_extern(symbol)	\
@@ -175,14 +179,16 @@
 /* We want the .gnu.warning.SYMBOL section to be unallocated.  */
 #  ifdef HAVE_ASM_PREVIOUS_DIRECTIVE
 #   define __make_section_unallocated(section_string)	\
-  asm(".section " section_string "; .previous");
+  asm (".section " section_string "\n\t.previous");
 #  elif defined HAVE_ASM_POPSECTION_DIRECTIVE
 #   define __make_section_unallocated(section_string)	\
-  asm(".pushsection " section_string "; .popsection");
+  asm (".pushsection " section_string "\n\t.popsection");
 #  else
 #   define __make_section_unallocated(section_string)
 #  endif
 
+/* Tacking on "\n\t#" to the section name makes gcc put it's bogus
+   section attributes on what looks like a comment to the assembler.  */
 #  ifdef HAVE_SECTION_QUOTES
 #   define link_warning(symbol, msg) \
   __make_section_unallocated (".gnu.warning." #symbol) \
@@ -196,8 +202,8 @@
 #  endif
 # else
 #  define link_warning(symbol, msg)		\
-  asm(".stabs \"" msg "\",30,0,0,0\n"	\
-      ".stabs \"" __SYMBOL_PREFIX #symbol "\",1,0,0,0\n");
+  asm (".stabs \"" msg "\",30,0,0,0\n\t"	\
+       ".stabs \"" __SYMBOL_PREFIX #symbol "\",1,0,0,0\n");
 # endif
 #else
 /* We will never be heard; they will all die horribly.  */
@@ -260,9 +266,9 @@
 # else	/* Not ELF: a.out.  */
 
 #  define text_set_element(set, symbol)	\
-  asm(".stabs \"" __SYMBOL_PREFIX #set "\",23,0,0," __SYMBOL_PREFIX #symbol)
+  asm (".stabs \"" __SYMBOL_PREFIX #set "\",23,0,0," __SYMBOL_PREFIX #symbol)
 #  define data_set_element(set, symbol)	\
-  asm(".stabs \"" __SYMBOL_PREFIX #set "\",25,0,0," __SYMBOL_PREFIX #symbol)
+  asm (".stabs \"" __SYMBOL_PREFIX #set "\",25,0,0," __SYMBOL_PREFIX #symbol)
 #  define bss_set_element(set, symbol)	?error Must use initialized data.
 #  define symbol_set_define(set)	void *const (set)[1];
 #  define symbol_set_declare(set)	extern void *const (set)[1];

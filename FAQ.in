@@ -811,8 +811,8 @@ can create a static binary that will use only the services dns and files
 (change /etc/nsswitch.conf for this).  You need to link explicitly against
 all these services. For example:
 
-  gcc -static test-netdb.c -o test-netdb.c \
-    -lc -lnss_files -lnss_dns -lresolv
+  gcc -static test-netdb.c -o test-netdb \
+    -Wl,--start-group -lc -lnss_files -lnss_dns -lresolv -Wl,--end-group
 
 The problem with this approach is that you've got to link every static
 program that uses NSS routines with all those libraries.

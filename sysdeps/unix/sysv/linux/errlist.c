@@ -24,13 +24,13 @@
 #define SYS_NERR __new_sys_nerr
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-asm (".data; .globl __old_sys_errlist;  __old_sys_errlist:");
+asm (".data\n\t.globl __old_sys_errlist\n__old_sys_errlist:");
 #endif
 
 #include <sysdeps/gnu/errlist.c>
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-asm (".type __old_sys_errlist,@object;.size __old_sys_errlist,"
+asm (".type __old_sys_errlist,@object\n\t.size __old_sys_errlist,"
      OLD_ERRLIST_SIZE_STR "*" PTR_SIZE_STR);
 
 extern const char *const *__old_sys_errlist;

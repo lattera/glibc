@@ -48,12 +48,21 @@ typedef pthread_key_t __libc_key_t;
 
 /* Define an initialized lock variable NAME with storage class CLASS.
 
-   For the C library we take a deeper look at the initializer.  For this
-   implementation all fields are initialized to zero.  Therefore we
-   don't initialize the variable which allows putting it into the BSS
-   section.  */
-#define __libc_lock_define_initialized(CLASS,NAME) \
+   For the C library we take a deeper look at the initializer.  For
+   this implementation all fields are initialized to zero.  Therefore
+   we don't initialize the variable which allows putting it into the
+   BSS section.  (Except on PA-RISC and other odd architectures, where
+   initialized locks must be set to one due to the lack of normal
+   atomic operations.) */
+
+#if LT_SPINLOCK_INIT == 0
+#  define __libc_lock_define_initialized(CLASS,NAME) \
   CLASS __libc_lock_t NAME;
+#else
+#  define __libc_lock_define_initialized(CLASS,NAME) \
+  CLASS __libc_lock_t NAME = PTHREAD_MUTEX_INITIALIZER;
+#endif
+
 #define __libc_rwlock_define_initialized(CLASS,NAME) \
   CLASS __libc_rwlock_t NAME = PTHREAD_RWLOCK_INITIALIZER;
 
@@ -143,9 +152,9 @@ typedef pthread_key_t __libc_key_t;
   do {									      \
     if (__pthread_once != NULL)						      \
       __pthread_once (&(ONCE_CONTROL), (INIT_FUNCTION));		      \
-    else if ((ONCE_CONTROL) == 0) {					      \
+    else if ((ONCE_CONTROL) == PTHREAD_ONCE_INIT) {			      \
       INIT_FUNCTION ();							      \
-      (ONCE_CONTROL) = 1;						      \
+      (ONCE_CONTROL) = !PTHREAD_ONCE_INIT;				      \
     }									      \
   } while (0)
 

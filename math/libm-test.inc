@@ -2693,8 +2693,8 @@ frexp_test (void)
   TEST_fI_f1 (frexp, 0.0, 0.0, 0.0);
   TEST_fI_f1 (frexp, minus_zero, minus_zero, 0.0);
 
-  TEST_fI_f1 (frexp, 12.8, 0.8L, 4);
-  TEST_fI_f1 (frexp, -27.34, -0.854375L, 5);
+  TEST_fI_f1 (frexp, 12.8L, 0.8L, 4);
+  TEST_fI_f1 (frexp, -27.34L, -0.854375L, 5);
 
   END (frexp);
 }
@@ -2762,11 +2762,11 @@ hypot_test (void)
   TEST_ff_f (hypot, -12.4, -0.7, 12.41974234837422060118L);
 
   /*  hypot (x,0) == fabs (x)  */
-  TEST_ff_f (hypot, 0.7, 0, 0.7L);
-  TEST_ff_f (hypot, -0.7, 0, 0.7L);
-  TEST_ff_f (hypot, -5.7e7, 0, 5.7e7L);
+  TEST_ff_f (hypot, 0.7L, 0, 0.7L);
+  TEST_ff_f (hypot, -0.7L, 0, 0.7L);
+  TEST_ff_f (hypot, -5.7e7L, 0, 5.7e7L);
 
-  TEST_ff_f (hypot, 0.7, 1.2, 1.3892443989449804508L);
+  TEST_ff_f (hypot, 0.7L, 1.2L, 1.3892443989449804508L);
 
   END (hypot);
 }

@@ -12,6 +12,8 @@
 /* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        */
 /* GNU Library General Public License for more details.                 */
 
+#include <bits/initspin.h>
+
 
 /* There are 2 compare and swap synchronization primitives with
    different semantics:
@@ -97,7 +99,7 @@ extern int __pthread_unlock(struct _pthread_fastlock *lock);
 static inline void __pthread_init_lock(struct _pthread_fastlock * lock)
 {
   lock->__status = 0;
-  lock->__spinlock = 0;
+  lock->__spinlock = LT_SPINLOCK_INIT;
 }
 
 static inline int __pthread_trylock (struct _pthread_fastlock * lock)
@@ -139,7 +141,7 @@ extern void __pthread_alt_unlock(struct _pthread_fastlock *lock);
 static inline void __pthread_alt_init_lock(struct _pthread_fastlock * lock)
 {
   lock->__status = 0;
-  lock->__spinlock = 0;
+  lock->__spinlock = LT_SPINLOCK_INIT;
 }
 
 static inline int __pthread_alt_trylock (struct _pthread_fastlock * lock)
@@ -163,7 +165,7 @@ static inline int __pthread_alt_trylock (struct _pthread_fastlock * lock)
 	    WRITE_MEMORY_BARRIER();
 	    res = 0;
 	  }
-	lock->__spinlock = 0;
+	lock->__spinlock = LT_SPINLOCK_INIT;
       }
     return res;
   }
@@ -177,11 +179,6 @@ static inline int __pthread_alt_trylock (struct _pthread_fastlock * lock)
   return 0;
 #endif
 }
-
-/* Initializers for both lock variants */
-
-#define LOCK_INITIALIZER {0, 0}
-#define ALT_LOCK_INITIALIZER {0, 0}
 
 /* Operations on pthread_atomic, which is defined in internals.h */
 
@@ -207,8 +204,6 @@ static inline long atomic_decrement(struct pthread_atomic *pa)
 
     return oldval;
 }
-
-#define ATOMIC_INITIALIZER { 0, 0 }
 
 
 static inline void

@@ -255,7 +255,8 @@ alpha*)		base_machine=alpha machine=alpha/$machine ;;
 arm*)		base_machine=arm machine=arm/$machine ;;
 c3[012])	base_machine=cx0 machine=cx0/c30 ;;
 c4[04])		base_machine=cx0 machine=cx0/c40 ;;
-hppa*)		base_machine=hppa machine=hppa/$machine ;;
+hppa*64*)	base_machine=hppa machine=hppa/hppa64 ;;
+hppa*)		base_machine=hppa machine=hppa/hppa1.1 ;;
 i[3456]86)	base_machine=i386 machine=i386/$machine ;;
 ia64)		base_machine=ia64 machine=ia64 ;;
 m680?0)		base_machine=m68k machine=m68k/$machine ;;
@@ -1048,6 +1049,30 @@ if test $libc_cv_asm_weak_directive = yes; then
 elif test $libc_cv_asm_weakext_directive = yes; then
   AC_DEFINE(HAVE_ASM_WEAKEXT_DIRECTIVE)
 fi
+
+dnl The standard hppa assembler uses `;' to start comments and `!'
+dnl as a line separator.
+case "${host_cpu}-${host_os}" in
+  hppa*linux*)
+  AC_CACHE_CHECK(for assembler line separator,
+		 libc_cv_asm_line_sep, [dnl
+  cat > conftest.s <<EOF
+ nop ; is_old_puffin
+EOF
+  if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS conftest.s 1>&AC_FD_CC); then
+    libc_cv_asm_line_sep='!'
+  else
+    if test -z "$enable_hacker_mode"; then
+      echo "*** You need a newer assembler to compile glibc"
+      rm -f conftest*
+      exit 1
+    fi
+    libc_cv_asm_line_sep=';'
+  fi
+  rm -f conftest*])
+  AC_DEFINE_UNQUOTED(ASM_LINE_SEP, $libc_cv_asm_line_sep)
+  ;;
+esac
 
 AC_CACHE_CHECK(for ld --no-whole-archive, libc_cv_ld_no_whole_archive, [dnl
 cat > conftest.c <<\EOF

@@ -1520,6 +1520,7 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_PARISC_LTOFF_FPTR21L	58	/* LT-rel. fct ptr, left 21 bits. */
 #define R_PARISC_LTOFF_FPTR14R	62	/* LT-rel. fct ptr, right 14 bits. */
 #define R_PARISC_FPTR64		64	/* 64 bits function address.  */
+#define R_PARISC_PLABEL32	65	/* 32 bits function address.  */
 #define R_PARISC_PCREL64	72	/* 64 bits PC-rel. address.  */
 #define R_PARISC_PCREL22F	74	/* 22 bits PC-rel. address.  */
 #define R_PARISC_PCREL14WR	75	/* PC-rel. address, right 14 bits.  */
@@ -1560,8 +1561,8 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_PARISC_LTOFF_FPTR16DF	127	/* 16 bits LT-rel. function ptr.  */
 #define R_PARISC_LORESERVE	128
 #define R_PARISC_COPY		128	/* Copy relocation.  */
-#define R_PARISC_IPLT		129
-#define R_PARISC_EPLT		130
+#define R_PARISC_IPLT		129	/* Dynamic reloc, imported PLT */
+#define R_PARISC_EPLT		130	/* Dynamic reloc, exported PLT */
 #define R_PARISC_TPREL32	153	/* 32 bits TP-rel. address.  */
 #define R_PARISC_TPREL21L	154	/* TP-rel. address, left 21 bits.  */
 #define R_PARISC_TPREL14R	158	/* TP-rel. address, right 14 bits.  */

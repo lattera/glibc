@@ -1,3 +1,34 @@
+2000-10-12  Alan Modra <alan@linuxcare.com.au>
+
+	* sysdeps/pthread/bits/initspin.h: New file.
+	* spinlock.h: Move LOCK_INITIALIZER definition to <bits/initspin.h>.
+	(__pthread_init_lock): Initialize lock with LT_SPINLOCK_INIT.
+	(__pthread_alt_init_lock): Likewise.
+	(__pthread_alt_trylock): Release lock with LT_SPINLOCK_INIT.
+
+2000-10-12  David Huggins-Daines  <dhd@linuxcare.com>
+
+	* oldsemaphore.c (__old_sem_init): Release lock with
+	LT_SPINLOCK_INIT, not zero.
+	* spinlock.c (__pthread_unlock): Likewise.
+	(__pthread_alt_lock): Likewise.
+	(__pthread_alt_timedlock): Likewise.
+	(__pthread_alt_unlock): Likewise.
+	* sysdeps/pthread/bits/libc-lock.h: Initialize locks with
+	LT_SPINLOCK_INIT if it is non-zero.  Likewise for init-once flags.
+	* sysdeps/pthread/pthread.h: Include bits/initspin.h.  Use
+	LT_SPINLOCK_INIT do initialize spinlocks not 0.
+
+2000-10-12  David Huggins-Daines <dhd@linuxcare.com>
+
+	* shlib-versions: Add version definitions for hppa-linux.
+
+2000-10-12  Alan Modra <alan@linuxcare.com.au>
+
+	* sysdeps/hppa/pspinlock.c: New file.
+	* sysdeps/hppa/pt-machine.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/bits/initspin.h: New file.
+
 2000-10-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* mutex.c (__pthread_mutex_destroy): Correct test of

@@ -18,6 +18,10 @@
 /* Define if weak symbols are available via the `.weakext' directive.  */
 #undef	HAVE_ASM_WEAKEXT_DIRECTIVE
 
+/* Define to the assembler line separator character for multiple
+   assembler instructions per line.  Default is `;'  */
+#undef ASM_LINE_SEP
+
 /* Define if not using ELF, but `.init' and `.fini' sections are available.  */
 #undef	HAVE_INITFINI
 
