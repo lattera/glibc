@@ -1,3 +1,9 @@
+2005-02-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/Makefile (CFLAGS-mcheck-init.c): Add.
+	* sunrpc/Makefile: Add $(PIC-ccflag) to CFLAGS-x* for
+	librpcsvc.a objects.
+
 2005-02-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/ibm930.h: Correct Yen mapping.
