@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU libc 2.2.5\n"
 "POT-Creation-Date: 2001-08-17 13:03-0700\n"
-"PO-Revision-Date: 2002-03-16 21:00-0500\n"
+"PO-Revision-Date: 2002-03-17 20:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -443,17 +443,17 @@ msgstr "%s: « %s » doit être un caractère"
 #: locale/programs/ld-address.c:248 locale/programs/ld-address.c:276 locale/programs/ld-address.c:309 locale/programs/ld-address.c:321
 #, c-format
 msgid "%s: `%s' value does not match `%s' value"
-msgstr "%s: valeur « %s» ne concorde pas avec la valeur «%s »"
+msgstr "%s: valeur « %s » ne concorde pas avec la valeur « %s »"
 
 #: locale/programs/ld-monetary.c:837 locale/programs/ld-numeric.c:318
 #, c-format
 msgid "%s: `-1' must be last entry in `%s' field"
-msgstr "%s: « -1» doit être la dernière entrée du champ «%s »"
+msgstr "%s: « -1 » doit être la dernière entrée du champ « %s »"
 
 #: locale/programs/ld-collate.c:447 locale/programs/ld-collate.c:473
 #, c-format
 msgid "%s: `forward' and `backward' are mutually excluding each other"
-msgstr "%s: « forward» et «backward » sont mutuellement exclusifs"
+msgstr "%s: « forward » et « backward » sont mutuellement exclusifs"
 
 #: locale/programs/ld-collate.c:1528
 #, c-format
@@ -463,7 +463,7 @@ msgstr "%s: « position » doit être utilisé pour un niveau spécifique dans toutes
 #: locale/programs/ld-ctype.c:2637 locale/programs/ld-ctype.c:2777
 #, c-format
 msgid "%s: `translit_start' section does not end with `translit_end'"
-msgstr "%s: la section « transit_start» n'est pas terminée par «translit_end »"
+msgstr "%s: la section « transit_start » n'est pas terminée par « translit_end »"
 
 #: locale/programs/ld-collate.c:1136
 #, c-format
@@ -515,7 +515,7 @@ msgstr "%s: la commande était « %s », le résultat était %d\n"
 msgid "%s: direction flag in string %Zd in `era' field is not '+' nor '-'"
 msgstr ""
 "%s: indicateur de direction dans la chaîne %Zd du champ « era »\n"
-"n'est pas un « +» ni un «- »."
+"n'est pas un « + » ni un « - »."
 
 #: locale/programs/ld-time.c:258
 #, c-format
@@ -614,7 +614,7 @@ msgstr "%s: ligne « END » incomplète"
 #: locale/programs/ld-address.c:166
 #, c-format
 msgid "%s: invalid escape `%%%c' sequence in field `%s'"
-msgstr "%s: séquence d'échappement « %%%c» invalide dans le champ «%s »"
+msgstr "%s: séquence d'échappement « %%%c » invalide dans le champ « %s »"
 
 #: locale/programs/ld-name.c:127 locale/programs/ld-telephone.c:126 locale/programs/ld-telephone.c:150
 #, c-format
@@ -674,7 +674,7 @@ msgstr "%s: ligne %d: ne peut spécifier plus que %d domaines coupés"
 #: resolv/res_hconf.c:319
 #, c-format
 msgid "%s: line %d: expected `on' or `off', found `%s'\n"
-msgstr "%s: ligne %d: attendait « on» ou «off», «%s » trouvé\n"
+msgstr "%s: ligne %d: attendait « on » ou « off », « %s » trouvé\n"
 
 #: resolv/res_hconf.c:147
 #, c-format
@@ -1458,11 +1458,11 @@ msgstr "Ne peut évaluer par stat %s"
 
 #: sunrpc/rpc_main.c:1374
 msgid "Cannot use netid flag with inetd flag!\n"
-msgstr "Ne utiliser le sémaphore « netid» avec le sémaphore «inetd »!\n"
+msgstr "Ne utiliser le sémaphore « netid » avec le sémaphore « inetd »!\n"
 
 #: sunrpc/rpc_main.c:1386
 msgid "Cannot use netid flag without TIRPC!\n"
-msgstr "Ne peut utiliser le sémaphore « netid» sans «TIRPC »!\n"
+msgstr "Ne peut utiliser le sémaphore « netid » sans « TIRPC »!\n"
 
 #: sunrpc/rpc_main.c:1393
 msgid "Cannot use table flags with newstyle!\n"
@@ -3476,7 +3476,7 @@ msgid ""
 msgstr ""
 "La liste suivante contient tous les jeux des codes de caractères connus. Ceci\n"
 "ne signifie pas nécessairement que toutes les combinaisons de ces noms peuvent\n"
-"être utilisées dans les paramètres « FROM» et «TO » des commandes. Un jeu de codes de\n"
+"être utilisées dans les paramètres « FROM » et « TO » des commandes. Un jeu de codes de\n"
 "caractères peut être affiché avec différents noms (aliases).\n"
 "\n"
 " "
@@ -3582,7 +3582,7 @@ msgstr "Noeud final de transport n'est pas connecté"
 #: argp/argp-help.c:1611
 #, c-format
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
-msgstr "Pour en savoir davantage, faites: « %s --help» ou «%s --usage ».\n"
+msgstr "Pour en savoir davantage, faites: « %s --help » ou « %s --usage ».\n"
 
 #: inet/rcmd.c:223
 #, c-format
@@ -3854,17 +3854,17 @@ msgstr "« %.*s » déjà défini dans le répertoire"
 #: locale/programs/charmap.c:604 locale/programs/locfile.h:96 locale/programs/repertoire.c:314
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
-msgstr "« %1$s» la définition ne se termine pas par «END %1$s »"
+msgstr "« %1$s » la définition ne se termine pas par « END %1$s »"
 
 #: locale/programs/ld-collate.c:1281 locale/programs/ld-ctype.c:1455
 #, c-format
 msgid "`%s' and `%.*s' are no valid names for symbolic range"
-msgstr "« %s» et «%.*s » sont des noms invalides pour un intervalle symbolique."
+msgstr "« %s » et « %.*s » sont des noms invalides pour un intervalle symbolique."
 
 #: elf/sprof.c:762
 #, c-format
 msgid "`%s' is no correct profile data file for `%s'"
-msgstr "« %s» est un fichier de profilage incorrect pour «%s »"
+msgstr "« %s » est un fichier de profilage incorrect pour « %s »"
 
 #: locale/programs/ld-ctype.c:699
 msgid "`digit' category has not entries in groups of ten"
@@ -3910,11 +3910,11 @@ msgstr "Mauvais propriétaire"
 
 #: timezone/zic.c:1216
 msgid "blank FROM field on Link line"
-msgstr "Champ « FROM» vide dans la ligne de type «Link »"
+msgstr "Champ « FROM » vide dans la ligne de type « Link »"
 
 #: timezone/zic.c:1220
 msgid "blank TO field on Link line"
-msgstr "Champ « TO» vide dans la ligne de type «Link »"
+msgstr "Champ « TO » vide dans la ligne de type « Link »"
 
 #: malloc/mcheck.c:302
 msgid "block freed twice\n"
@@ -4011,7 +4011,7 @@ msgstr "Ne peut créer les descripteurs internes"
 #: locale/programs/locfile.c:693
 #, c-format
 msgid "cannot create output file `%s' for category `%s'"
-msgstr "Ne peut créer le fichier de sortie « %s» de catégorie «%s »"
+msgstr "Ne peut créer le fichier de sortie « %s » de catégorie « %s »"
 
 #: elf/dl-load.c:590
 msgid "cannot create search path array"
@@ -4107,7 +4107,7 @@ msgstr "Ne peut ouvrir le fichier de sortie « %s »"
 #: locale/programs/locfile.c:571
 #, c-format
 msgid "cannot open output file `%s' for category `%s'"
-msgstr "Ne peut ouvrir le fichier de sortie « %s» de catégorie «%s »"
+msgstr "Ne peut ouvrir le fichier de sortie « %s » de catégorie « %s »"
 
 #: elf/dl-load.c:1737
 msgid "cannot open shared object file"
@@ -4179,12 +4179,12 @@ msgstr "Ne peut écrire les statistiques: « %s »"
 #: locale/programs/ld-ctype.c:517
 #, c-format
 msgid "character '%s' in class `%s' must be in class `%s'"
-msgstr "Caractère « %s» de la classe «%s» doit être dans la classe «%s »"
+msgstr "Caractère « %s » de la classe « %s » doit être dans la classe « %s »"
 
 #: locale/programs/ld-ctype.c:532
 #, c-format
 msgid "character '%s' in class `%s' must not be in class `%s'"
-msgstr "Caractère « %s» de la classe «%s» ne doit pas être dans la classe «%s »"
+msgstr "Caractère « %s » de la classe « %s » ne doit pas être dans la classe « %s »"
 
 #: locale/programs/ld-ctype.c:587
 msgid "character <SP> not defined in character map"
@@ -4193,12 +4193,12 @@ msgstr "Caractère <SP> non défini dans la table des caractères"
 #: locale/programs/ld-ctype.c:461
 #, c-format
 msgid "character L'\\u%0*x' in class `%s' must be in class `%s'"
-msgstr "Le caractère L'\\u%0*x» de la classe « %s» doit être dans la classe «%s »"
+msgstr "Le caractère L'\\u%0*x» de la classe « %s » doit être dans la classe « %s »"
 
 #: locale/programs/ld-ctype.c:475
 #, c-format
 msgid "character L'\\u%0*x' in class `%s' must not be in class `%s'"
-msgstr "Le caractère L'\\u%0*x» de la classe « %s» ne doit pas être dans la classe «%s »"
+msgstr "Le caractère L'\\u%0*x» de la classe « %s » ne doit pas être dans la classe « %s »"
 
 #: locale/programs/ld-ctype.c:3032
 #, c-format
@@ -4265,7 +4265,7 @@ msgstr "Constante ou identificateur attendu"
 #: iconv/iconv_prog.c:231
 #, c-format
 msgid "conversion from `%s' to `%s' not supported"
-msgstr "La conversion de « %s» vers «%s » n'est pas supportée."
+msgstr "La conversion de « %s » vers « %s » n'est pas supportée."
 
 #: catgets/gencat.c:1289
 msgid "conversion modules not available"
@@ -4500,7 +4500,7 @@ msgstr "CORRECTION illégale du champ dans la ligne de type « Leap »"
 
 #: timezone/zic.c:1197
 msgid "illegal Rolling/Stationary field on Leap line"
-msgstr "Champ « Rolling/Stationary» illégal sur la ligne de type «Leap »"
+msgstr "Champ « Rolling/Stationary » illégal sur la ligne de type « Leap »"
 
 #: sunrpc/rpc_scan.c:312
 msgid "illegal character in file: "
@@ -4523,7 +4523,7 @@ msgstr "Séquence d'échappement illégale à la position %ld"
 #: sunrpc/rpc_main.c:463
 #, c-format
 msgid "illegal nettype :`%s'\n"
-msgstr "« nettype» illégal :«%s »\n"
+msgstr "« nettype » illégal :« %s »\n"
 
 #: catgets/gencat.c:403 catgets/gencat.c:480
 msgid "illegal set number"
@@ -4917,7 +4917,7 @@ msgstr "Afficher des informations de progression"
 #: elf/sprof.c:687
 #, c-format
 msgid "profiling data file `%s' does not match shared object `%s'"
-msgstr "Le fichier de données de profilage « %s» ne concorde pas avec l'objet partagé «%s »."
+msgstr "Le fichier de données de profilage « %s » ne concorde pas avec l'objet partagé « %s »."
 
 #: sunrpc/rpcinfo.c:237 sunrpc/rpcinfo.c:383
 #, c-format

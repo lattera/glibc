@@ -617,14 +617,15 @@ The address of a block returned by @code{malloc} or @code{realloc} in
 the GNU system is always a multiple of eight (or sixteen on 64-bit
 systems).  If you need a block whose address is a multiple of a higher
 power of two than that, use @code{memalign}, @code{posix_memalign}, or
-@code{valloc}.  These functions are declared in @file{stdlib.h}.
+@code{valloc}.  @code{memalign} is declared in @file{malloc.h} and
+@code{posix_memalign) is declared in @file{stdlib.h}.
 
 With the GNU library, you can use @code{free} to free the blocks that
 @code{memalign}, @code{posix_memalign}, and @code{valloc} return.  That
 does not work in BSD, however---BSD does not provide any way to free
 such blocks.
 
-@comment malloc.h stdlib.h
+@comment malloc.h
 @comment BSD
 @deftypefun {void *} memalign (size_t @var{boundary}, size_t @var{size})
 The @code{memalign} function allocates a block of @var{size} bytes whose
