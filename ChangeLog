@@ -1,3 +1,17 @@
+2003-10-18  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h: Fix merge error.
+
+2003-10-15  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-iteratephdr.c [! SHARED] (dl_iterate_phdr): New function.
+	Fake an entry for the main executable and then call __dl_iterate_phdr.
+	* elf/Makefile (routines): Remove dl-iteratephdr-static.
+	(elide-routines.os): Likewise.
+	(CFLAGS-dl-iterate-phdr-static.c): Variable removed.
+	* sysdeps/generic/dl-iteratephdr-static.c: File removed.
+	* sysdeps/unix/sysv/linux/ia64/dl-iteratephdr-static.c: File removed.
+
 2003-10-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/rtld.c (print_statistics): Print also number of relative

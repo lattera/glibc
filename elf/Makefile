@@ -22,7 +22,7 @@ subdir		:= elf
 
 headers		= elf.h bits/elfclass.h link.h
 routines	= $(dl-routines) dl-open dl-close dl-support dl-iteratephdr \
-		  dl-iteratephdr-static dl-addr enbl-secure dl-profstub \
+		  dl-addr enbl-secure dl-profstub \
 		  dl-origin dl-libc dl-sym dl-tsd
 
 # The core dynamic linking functions are in libc for the static and
@@ -33,8 +33,7 @@ dl-routines	= $(addprefix dl-,load cache lookup object reloc deps \
 				  execstack)
 all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 # But they are absent from the shared libc, because that code is in ld.so.
-elide-routines.os = $(all-dl-routines) dl-support enbl-secure \
-		    dl-iteratephdr-static dl-origin
+elide-routines.os = $(all-dl-routines) dl-support enbl-secure dl-origin
 
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
@@ -87,7 +86,6 @@ distribute	:= rtld-Rules \
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-iterate-phdr.c = $(uses-callbacks)
-CFLAGS-dl-iterate-phdr-static.c = $(uses-callbacks)
 
 include ../Makeconfig
 

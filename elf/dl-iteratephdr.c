@@ -29,6 +29,7 @@ cancel_handler (void *arg __attribute__((unused)))
   __rtld_lock_unlock_recursive (GL(dl_load_lock));
 }
 
+hidden_proto (__dl_iterate_phdr)
 int
 __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 				    size_t size, void *data), void *data)
@@ -58,7 +59,38 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 
   return ret;
 }
+hidden_def (__dl_iterate_phdr)
 
 #ifdef SHARED
+
 weak_alias (__dl_iterate_phdr, dl_iterate_phdr);
+
+#else
+
+/* dl-support.c defines these and initializes them early on.  */
+extern ElfW(Phdr) *_dl_phdr;
+extern size_t _dl_phnum;
+
+int
+dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
+				  size_t size, void *data), void *data)
+{
+  if (_dl_phnum != 0)
+    {
+      /* This entry describes this statically-linked program itself.  */
+      struct dl_phdr_info info;
+      int ret;
+      info.dlpi_addr = 0;
+      info.dlpi_name = "";
+      info.dlpi_phdr = _dl_phdr;
+      info.dlpi_phnum = _dl_phnum;
+      ret = (*callback) (&info, sizeof (struct dl_phdr_info), data);
+      if (ret)
+	return ret;
+    }
+
+  return __dl_iterate_phdr (callback, data);
+}
+
+
 #endif

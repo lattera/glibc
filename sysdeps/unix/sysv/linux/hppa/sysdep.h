@@ -371,7 +371,6 @@
 			LDW_ASM_PIC				\
 			: "=r" (__res)				\
 			: "i" (SYS_ify(name)) ASM_ARGS_##nr	\
-			 );					\
 			: CALL_CLOB_REGS CLOB_ARGS_##nr		\
 		);						\
 		__sys_res = (long)__res;			\
