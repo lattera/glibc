@@ -1,5 +1,8 @@
 2000-06-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/getsysstats.c: New file.
+	Patch by Dan Pop <Dan.Pop@cern.ch>.
+
 	Rewrite error message handling.
 	* elf/dl-deps.c (_dl_map_object_deps): Pass new parameter to
 	_dl_catch_error.
