@@ -1,5 +1,8 @@
 2002-02-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-lookup.c: Include <tls.h>.
+	* elf/do-lookup.h (FCT): Don't discard STT_TLS symbols.
+
 	* sysdeps/generic/dl-tls.c (_dl_determine_tlsoffset): More changes
 	required by passing pointer to last element of the list.
 

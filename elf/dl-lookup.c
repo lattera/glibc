@@ -26,6 +26,7 @@
 #include "dl-hash.h"
 #include <dl-machine.h>
 #include <bits/libc-lock.h>
+#include <tls.h>
 
 #include <assert.h>
 
