@@ -1,5 +1,9 @@
 2000-01-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/i386/getgroups.c: Fix missing brace
+	error in last change.
+	* sysdeps/unix/sysv/linux/i386/setgroups.c: Likewise.
+
 	* stdlib/longlong.h: Fix typo in last patch.
 
 2000-01-12  Andreas Jaeger  <aj@suse.de>

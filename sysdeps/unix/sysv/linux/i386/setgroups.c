@@ -81,6 +81,6 @@ setgroups (size_t n, const gid_t *groups)
 	}
 
       return INLINE_SYSCALL (setgroups, 2, n, kernel_groups);
-    }
 #endif
+    }
 }

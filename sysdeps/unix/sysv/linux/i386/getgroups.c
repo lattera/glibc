@@ -76,8 +76,8 @@ __getgroups (int n, gid_t *groups)
 	  groups[i] = kernel_groups[i];
 
       return ngids;
-    }
 #endif
+    }
 }
 
 weak_alias (__getgroups, getgroups)
