@@ -115,7 +115,7 @@ software.
 
 @comment unistd.h
 @comment BSD
-@deftypefun {char *} getwd (char *@var{buffer})
+@deftypefn {Deprecated Function} {char *} getwd (char *@var{buffer})
 This is similar to @code{getcwd}, but has no way to specify the size of
 the buffer.  The GNU library provides @code{getwd} only
 for backwards compatibility with BSD.
@@ -125,6 +125,21 @@ The @var{buffer} argument should be a pointer to an array at least
 system there is no limit to the size of a file name, so this is not
 necessarily enough space to contain the directory name.  That is why
 this function is deprecated.
+@end deftypefn
+
+@comment unistd.h
+@comment GNU
+@deftypefun {char *} get_current_dir_name (void)
+@vindex PWD
+This @code{get_current_dir_name} function is bascially equivalent to
+@w{@code{getcwd (NULL, 0)}}.  The only difference is that the value of
+the @code{PWD} variable is returned if this value is correct.  This is a
+subtle difference which is visible if the path described by the
+@code{PWD} value is using one or more symbol links in which case the
+value returned by @code{getcwd} can resolve the symbol links and
+therefore yield a different result.
+
+This function is a GNU extension.
 @end deftypefun
 
 @comment unistd.h
@@ -279,8 +294,8 @@ This returns the @code{st_mode} value corresponding to @var{dtype}.
 
 This structure may contain additional members in the future.  Their
 availability is always announced in the compilation environment by a
-macro names @code{_DIRENT_HAVE_D_xxx} where @code{xxx} is replaced by
-the name of the new member.  For instance, the member @code{d_reclen}
+macro names @code{_DIRENT_HAVE_D_@var{xxx}} where @var{xxx} is replaced
+by the name of the new member.  For instance, the member @code{d_reclen}
 available on some systems is announced through the macro
 @code{_DIRENT_HAVE_D_RECLEN}.
 

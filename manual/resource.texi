@@ -1353,7 +1353,8 @@ information about the physical memory the system has.  The call
   sysconf (_SC_PHYS_PAGES)
 @end smallexample
 
-@noindent returns the total number of page of physical the system has.
+@noindent
+returns the total number of pages of physical the system has.
 This does not mean all this memory is available.  This information can
 be found using
 
@@ -1370,6 +1371,31 @@ increases its memory usage).  The value returned for
 @code{_SC_PHYS_PAGES} is more or less a hard limit for the working set.
 If all applications together constantly use more than that amount of
 memory the system is in trouble.
+
+The GNU C library provides in addition to these already described way to
+get this information two functions.  They are declared in the file
+@file{sys/sysinfo.h}.  Programmers should prefer to use the
+@code{sysconf} method described above.
+
+@comment sys/sysinfo.h
+@comment GNU
+@deftypefun long int get_phys_pages (void)
+The @code{get_phys_pages} function returns the total number of pages of
+physical the system has.  To get the amount of memory this number has to
+be multiplied by the page size.
+
+This function is a GNU extension.
+@end deftypefun
+
+@comment sys/sysinfo.h
+@comment GNU
+@deftypefun long int get_avphys_pages (void)
+The @code{get_phys_pages} function returns the number of available pages of
+physical the system has.  To get the amount of memory this number has to
+be multiplied by the page size.
+
+This function is a GNU extension.
+@end deftypefun
 
 @node Processor Resources
 @section Learn about the processors available
@@ -1401,6 +1427,27 @@ processors and so the call
 @noindent
 returns the number of processors which are currently inline (i.e.,
 available).
+
+For these two pieces of information the GNU C library also provides
+functions to get the information directly.  The functions are declared
+in @file{sys/sysinfo.h}.
+
+@comment sys/sysinfo.h
+@comment GNU
+@deftypefun int get_nprocs_conf (void)
+The @code{get_nprocs_conf} function returns the number of processors the
+operating system configured.
+
+This function is a GNU extension.
+@end deftypefun
+
+@comment sys/sysinfo.h
+@comment GNU
+@deftypefun int get_nprocs (void)
+The @code{get_nprocs} function returns the number of available processors.
+
+This function is a GNU extension.
+@end deftypefun
 
 @cindex load average
 Before starting more threads it should be checked whether the processors
