@@ -22,6 +22,8 @@ Cambridge, MA 02139, USA.  */
 
 #include <sys/types.h>
 
+#include <libc-lock.h>
+
 /* Directory stream type.
 
    The miscellaneous Unix `readdir' implementations read directory data
@@ -37,6 +39,8 @@ struct __dirstream
     size_t offset;		/* Current offset into the block.  */
 
     off_t filepos;		/* Position of next entry to read.  */
+
+    __libc_lock_define (, lock); /* Mutex lock for this structure.  */
   };
 
 #define _DIR_dirfd(dirp)	((dirp)->fd)

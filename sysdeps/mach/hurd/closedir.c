@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -39,14 +39,22 @@ DEFUN(closedir, (dirp), DIR *dirp)
       return -1;
     }
 
-  if (err = __vm_deallocate (__mach_task_self (),
-			     (vm_address_t) dirp->__data, dirp->__allocation))
-    return __hurd_fail (err);
+  __libc_lock_lock (dirp->__lock);
+  err = __vm_deallocate (__mach_task_self (),
+			 (vm_address_t) dirp->__data, dirp->__allocation);
   dirp->__data = NULL;
+  err = _hurd_fd_close (dirp->__fd);
 
-  if (err = _hurd_fd_close (dirp->__fd))
-    return __hurd_fail (err);
+  if (err)
+    {
+      /* Unlock the DIR.  A failing closedir can be repeated (and may fail
+	 again, but shouldn't deadlock).  */
+      __libc_lock_unlock (dirp->__lock);
+      return __hurd_fail (err);
+    }
 
+  /* Clean up the lock and free the structure.  */
+  __libc_lock_fini (dirp->__lock);
   free (dirp);
 
   return 0;

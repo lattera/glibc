@@ -1,4 +1,4 @@
-/* libc-internal interface for mutex locks.  Stub version.
+/* libc-internal interface for mutex locks.  Mach cthreads version.
 Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -20,6 +20,12 @@ Cambridge, MA 02139, USA.  */
 #ifndef _LIBC_LOCK_H
 #define _LIBC_LOCK_H 1
 
+#ifdef _LIBC
+#include <cthreads.h>
+#define __libc_lock_t struct mutex
+#else
+typedef struct __libc_lock_opaque__ __libc_lock_t;
+#endif
 
 /* Define a lock variable NAME with storage class CLASS.  The lock must be
    initialized with __libc_lock_init before it can be used (or define it
@@ -29,24 +35,26 @@ Cambridge, MA 02139, USA.  */
    will not be known outside of libc.  (Or you can use a pointer to the
    lock structure; i.e. NAME begins with a `*'.)  */
 #define __libc_lock_define(CLASS,NAME)
+  CLASS __libc_lock_t NAME;
 
 /* Define an initialized lock variable NAME with storage class CLASS.  */
-#define __libc_lock_define_initialized(CLASS,NAME)
+#define __libc_lock_define_initialized(CLASS,NAME) \
+  CLASS __libc_lock_t NAME = MUTEX_INITIALIZER;
 
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */
-#define __libc_lock_init(NAME)
+#define __libc_lock_init(NAME) __mutex_init (&(NAME))
 
 /* Finalize the named lock variable, which must be locked.  It cannot be
    used again until __libc_lock_init is called again on it.  This must be
    called on a lock variable before the containing storage is reused.  */
-#define __libc_lock_fini(NAME)
+#define __libc_lock_fini(NAME) __mutex_unlock (&(NAME))
 
 /* Lock the named lock variable.  */
-#define __libc_lock_lock(NAME)
+#define __libc_lock_lock(NAME) __mutex_lock (&(NAME))
 
 /* Unlock the named lock variable.  */
-#define __libc_lock_unlock(NAME)
+#define __libc_lock_unlock(NAME) __mutex_unlock (&(NAME))
 
 
 #endif	/* libc-lock.h */

@@ -36,7 +36,7 @@ mbstowcs (wchar_t *pwcs, const char *s, size_t n)
   mbstate_t save_shift = __no_r_state;
   size_t written;
 
-  written = mbsrtowcs (pwcs, s, n, &__no_r_state);
+  written = mbsrtowcs (pwcs, &s, n, &__no_r_state);
 
   /* Restore the old shift state.  */
   __no_r_state = save_shift;

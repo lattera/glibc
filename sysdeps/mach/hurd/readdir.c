@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -41,6 +41,8 @@ DEFUN(readdir, (dirp), DIR *dirp)
       return NULL;
     }
 
+  __libc_lock_lock (dirp->__lock);
+
   do
     {
       if (dirp->__ptr - dirp->__data >= dirp->__size)
@@ -56,7 +58,11 @@ DEFUN(readdir, (dirp), DIR *dirp)
 						     &data, &dirp->__size,
 						     dirp->__entry_ptr,
 						     -1, 0, &nentries)))
-	    return __hurd_fail (err), NULL;
+	    {
+	      __hurd_fail (err);
+	      dp = NULL;
+	      break;
+	    }
 
 	  /* DATA now corresponds to entry index DIRP->__entry_ptr.  */
 	  dirp->__entry_data = dirp->__entry_ptr;
@@ -77,8 +83,11 @@ DEFUN(readdir, (dirp), DIR *dirp)
 	  dirp->__ptr = dirp->__data;
 
 	  if (nentries == 0)
-	    /* End of file.  */
-	    return NULL;
+	    {
+	      /* End of file.  */
+	      dp = NULL;
+	      break;
+	    }
 
 	  /* We trust the filesystem to return correct data and so we
 	     ignore NENTRIES.  */
@@ -90,6 +99,8 @@ DEFUN(readdir, (dirp), DIR *dirp)
 
       /* Loop to ignore deleted files.  */
     } while (dp->d_fileno == 0);
+
+  __libc_lock_unlock (dirp->__lock);
 
   return dp;
 }

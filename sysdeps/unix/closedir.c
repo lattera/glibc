@@ -37,9 +37,13 @@ DEFUN(closedir, (dirp), DIR *dirp)
       return -1;
     }
 
-  fd = dirp->fd;
+  __libc_lock_lock (dirp->lock);
 
+  fd = dirp->fd;
   free ((PTR) dirp->data);
+
+  __libc_lock_fini (dirp->lock);
+
   free ((PTR) dirp);
 
   return __close (fd);

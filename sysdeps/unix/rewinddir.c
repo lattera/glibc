@@ -27,7 +27,9 @@ Cambridge, MA 02139, USA.  */
 void
 DEFUN(rewinddir, (dirp), DIR *dirp)
 {
+  __libc_lock_lock (dirp->lock);
   (void) lseek(dirp->fd, (off_t) 0, SEEK_SET);
   dirp->offset = 0;
   dirp->size = 0;
+  __libc_lock_unlock (dirp->lock);
 }

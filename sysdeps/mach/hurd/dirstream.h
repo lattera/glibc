@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@ Cambridge, MA 02139, USA.  */
 
 #define	_DIRSTREAM_H	1
 
+#include <libc-lock.h>
+
 /* Directory stream type.
 
    The Hurd directory format is the same as `struct dirent', so `readdir'
@@ -34,6 +36,7 @@ struct __dirstream
     int __entry_ptr;		/* Entry number `__ptr' corresponds to.  */
     unsigned long int __allocation; /* Space allocated for the block.  */
     unsigned long int __size;	/* Total valid data in the block.  */
+    __libc_lock_define (, __lock); /* Mutex lock for this structure.  */
   };
 
 #endif	/* dirstream.h */

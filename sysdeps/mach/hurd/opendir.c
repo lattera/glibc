@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -49,7 +49,7 @@ DEFUN(opendir, (name), CONST char *name)
     {
       __close (fd);
       return NULL;
-    }    
+    }
 
   /* Extract the pointer to the descriptor structure.  */
   __mutex_lock (&_hurd_dtable_lock);
@@ -65,6 +65,8 @@ DEFUN(opendir, (name), CONST char *name)
   dirp->__entry_data = dirp->__entry_ptr = 0;
   dirp->__allocation = 0;
   dirp->__size = 0;
+
+  __libc_lock_init (dirp->__lock);
 
   return dirp;
 }

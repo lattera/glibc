@@ -40,6 +40,8 @@ readdir (DIR *dirp)
       return NULL;
     }
 
+  __libc_lock_lock (dirp->lock);
+
   do
     {
       size_t reclen;
@@ -62,7 +64,10 @@ readdir (DIR *dirp)
 	  base = dirp->filepos;
 	  bytes = __getdirentries (dirp->fd, dirp->data, maxread, &base);
 	  if (bytes <= 0)
-	    return NULL;
+	    {
+	      dp = NULL;
+	      break;
+	    }
 	  dirp->size = (size_t) bytes;
 
 	  /* Reset the offset into the buffer.  */
@@ -95,6 +100,8 @@ readdir (DIR *dirp)
 
       /* Skip deleted files.  */
     } while (dp->d_ino == 0);
+
+  __libc_lock_unlock (dirp->lock);
 
   return dp;
 }

@@ -36,6 +36,7 @@ struct record
 #define NBUCKETS 32
 static struct record *records[32];
 static off_t lastpos;
+__libc_lock_define_initialized(static, lock); /* Locks above data.  */
 
 
 /* Return the current position of DIRP.  */
@@ -43,6 +44,9 @@ off_t
 DEFUN(telldir, (dirp), DIR *dirp)
 {
   struct record *new;
+  off_t pos;
+
+  __libc_lock_lock (lock);
 
   new = malloc (sizeof *new);
   if (new == NULL)
@@ -54,7 +58,11 @@ DEFUN(telldir, (dirp), DIR *dirp)
   new->next = records[new->cookie % NBUCKETS];
   records[new->cookie % NBUCKETS] = new;
 
-  return new->cookie;
+  pos = new->cookie;
+
+  __libc_lock_unlock (lock);
+
+  return pos;
 }
 
 
@@ -65,11 +73,14 @@ DEFUN(seekdir, (dirp, pos), DIR *dirp AND __off_t pos)
 {
   struct record *r, **prevr;
 
+  __libc_lock_lock (lock);
+
   for (prevr = &records[pos % NBUCKETS], r = *prevr;
        r != NULL;
        prevr = &r->next, r = r->next)
     if (r->cookie == pos)
       {
+	__libc_lock_lock (dirp->__lock);
 	if (dirp->filepos != r->pos || dirp->offset != r->offset)
 	  {
 	    dirp->size = 0;	/* Must read a fresh buffer.  */
@@ -79,16 +90,25 @@ DEFUN(seekdir, (dirp, pos), DIR *dirp AND __off_t pos)
 	    dirp->offset = 0;
 	    /* Read entries until we reach the saved offset.  */
 	    while (dirp->offset < r->offset)
-	      if (readdir (dirp) == NULL)
-		break;
+	      {
+		struct dirent *scan;
+		__libc_lock_unlock (dirp->__lock);
+		scan = readdir (dirp);
+		__libc_lock_lock (dirp->__lock);
+		if (! scan)
+		  break;
+	      }
 	  }
+	__libc_lock_unlock (dirp->__lock);
 
 	/* To prevent leaking memory, cookies returned from telldir
 	   can only be used once.  So free this one's record now.  */
 	*prevr = r->next;
 	free (r);
-	return;
+	break;
       }
 
-  /* We lost, but have no way to indicate it.  Oh well.  */
+  __libc_lock_unlock (lock);
+
+  /* If we lost there is no way to indicate it.  Oh well.  */
 }

@@ -1,3 +1,67 @@
+Tue Jul  9 09:37:55 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/mach/libc-lock.h: New file.
+	* sysdeps/unix/readdir.c: Do locking.
+	* sysdeps/unix/seekdir.c: Likewise.
+	* sysdeps/unix/rewinddir.c:  Likewise.
+	* sysdeps/unix/closedir.c: Likewise.
+	* sysdeps/unix/bsd/telldir.c: Likewise.
+	* sysdeps/mach/hurd/seekdir.c: Likewise.
+	* sysdeps/mach/hurd/readdir.c: Likewise.
+	* sysdeps/mach/hurd/closedir.c: Likewise.
+	* sysdeps/mach/hurd/opendir.c: Initialize the lock.
+	* sysdeps/unix/opendir.c: Likewise.
+	* sysdeps/mach/hurd/dirstream.h: Include <libc-lock.h>.
+	(struct __dirstream): Add lock member using __libc_lock_define.
+	* sysdeps/unix/dirstream.h: Likewise.
+
+	* sysdeps/stub/libc-lock.h (__libc_lock_fini): New macro.
+
+	* stdlib/mbstowcs.c: Pass address of pointer to mbsrtowcs.
+
+	* stdlib/wcstombs.c: Use wcsrtombs instead of mbsrtowcs.
+
+Thu Jul  4 01:34:04 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/stringtrans.c: Fix typo in copyright.
+
+	* stdio-common/printf-prs.c: Add casts to prevent
+        signed<->unsigned warnings.
+
+	* stdio-common/printf-parse.h: Initialize state variable before
+	calling mbrlen.
+	* stdio-common/printf-prs.c: Don't initialize state variable here.
+	* stdio-common/vfprintf.c: Don't initialize state variable.
+	(vfprintf): While determining length of multibyte string don't
+	try to be clever in determining characters to use for first
+	call.
+
+	Add real implementation of multibyte<->wide char conversion
+	functions.  The functions always convert between the fixed wide
+	char format (ISO 10646 in UCS4) and the UTF8 representation of
+	this character set.  Conversion between the currently used
+	8bit character set and ISO 10646 will not take place.  This is
+	what iconv() is for.
+	* wcsmbs/wchar.h (mbstate_t): Define as structure to replace
+	dummy definition.
+	Add optimized version of `mbrlen' function.
+	* wcsmbs/btowc.c (btowc): Restrict range of legal characters
+	to 0...0x7f.
+	* wcsmbs/wctob.c (wctob): Restrict range of legal characters
+	to 0..0x7f.
+	* wcsmbs/mbrlen.c: Make mbrlen a weak alias of __mbrlen.
+	This is needed in the wchar.h header.
+	* wcsmbs/mbrtowc.c: Replace dummy implementation.  Convert UTF8
+	encoded character to UCS4.
+	* wcsmbs/mbsinit.c: Replace dummy implementation.  Test COUNT
+	element of `mbstate_t' for initial state.
+	* wcsmbs/mbsrtowcs.c: Replace dummy implementation.  Convert UTF8
+	encoded string to UCS4 string.
+	* wcsmbs/wcrtomb.c: Replace dummy implementation.  Convert UCS4
+	character to UTF8 encoded form.
+	* wcsmbs/wcsrtombs.c: Replace dummy implementation.  Convert UCS4
+	encoded string to UTF8 encoded form.
+
 Tue Jul  9 06:19:29 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/configure.in: Use version number in cache
