@@ -55,7 +55,7 @@ listed for each function.  These functions do not change @code{errno}
 when they succeed; thus, the value of @code{errno} after a successful
 call is not necessarily zero, and you should not use @code{errno} to
 determine @emph{whether} a call failed.  The proper way to do that is
-documented for each function.  @emph{If} the call the failed, you can
+documented for each function.  @emph{If} the call failed, you can
 examine @code{errno}.
 
 Many library functions can set @code{errno} to a nonzero value as a
@@ -1303,7 +1303,7 @@ exit if any system call fails.  By convention, the error message from
 such a program should start with the program's name, sans directories.
 You can find that name in the variable
 @code{program_invocation_short_name}; the full file name is stored the
-variable @code{program_invocation_name}:
+variable @code{program_invocation_name}.
 
 @comment errno.h
 @comment GNU

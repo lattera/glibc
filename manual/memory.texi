@@ -446,7 +446,7 @@ more time to minimize the wasted space.
 
 @end ignore
 
-As apposed to other versions, the @code{malloc} in GNU libc does not
+As opposed to other versions, the @code{malloc} in GNU libc does not
 round up block sizes to powers of two, neither for large nor for small
 sizes.  Neighboring chunks can be coalesced on a @code{free} no matter
 what their size is.  This makes the implementation suitable for all
@@ -572,7 +572,7 @@ case.  The function returns @code{-1} if you call it too late, and
 
 The easiest way to arrange to call @code{mcheck} early enough is to use
 the option @samp{-lmcheck} when you link your program; then you don't
-need to modify your program source at all.  Alternately you might use
+need to modify your program source at all.  Alternatively you might use
 a debugger to insert a call to @code{mcheck} whenever the program is
 started, for example these gdb commands will automatically call @code{mcheck}
 whenever the program starts:
@@ -636,7 +636,7 @@ variable @code{MALLOC_CHECK_}.  When @code{MALLOC_CHECK_} is set, a
 special (less efficient) implementation is used which is designed to be
 tolerant against simple errors, such as double calls of @code{free} with
 the same argument, or overruns of a single byte (off-by-one bugs).  Not
-all such errors can be proteced against, however, and memory leaks can
+all such errors can be protected against, however, and memory leaks can
 result.  If @code{MALLOC_CHECK_} is set to @code{0}, any detected heap
 corruption is silently ignored; if set to @code{1}, a diagnostic is
 printed on @code{stderr}; if set to @code{2}, @code{abort} is called
@@ -645,7 +645,7 @@ much later, and the true cause for the problem is then very hard to
 track down.
 
 So, what's the difference between using @code{MALLOC_CHECK_} and linking
-with @samp{-lmcheck}?  @code{MALLOC_CHECK_} is orthognal with respect to
+with @samp{-lmcheck}?  @code{MALLOC_CHECK_} is orthogonal with respect to
 @samp{-lmcheck}.  @samp{-lmcheck} has been added for backward
 compatibility.  Both @code{MALLOC_CHECK_} and @samp{-lmcheck} should
 uncover the same bugs - but using @code{MALLOC_CHECK_} you don't need to
@@ -666,17 +666,17 @@ The hook variables are declared in @file{malloc.h}.
 @comment malloc.h
 @comment GNU
 @defvar __malloc_hook
-The value of this variable is a pointer to function that @code{malloc}
-uses whenever it is called.  You should define this function to look
-like @code{malloc}; that is, like:
+The value of this variable is a pointer to the function that
+@code{malloc} uses whenever it is called.  You should define this
+function to look like @code{malloc}; that is, like:
 
 @smallexample
 void *@var{function} (size_t @var{size}, void *@var{caller})
 @end smallexample
 
 The value of @var{caller} is the return address found on the stack when
-the @code{malloc} function was called.  This value allows to trace the
-memory consumption of the program.
+the @code{malloc} function was called.  This value allows you to trace
+the memory consumption of the program.
 @end defvar
 
 @comment malloc.h
@@ -851,7 +851,7 @@ This is the total size of memory occupied by chunks handed out by
 This is the total size of memory occupied by free (not in use) chunks.
 
 @item int keepcost
-This is the size of the top-most, releaseable chunk that normally
+This is the size of the top-most releaseable chunk that normally
 borders the end of the heap (i.e. the ``brk'' of the process).
 
 @end table
@@ -924,18 +924,17 @@ Return information about the current dynamic memory usage.
 @cindex allocation debugging
 @cindex malloc debugger
 
-An complicated task when programming with languages which do not use
+A complicated task when programming with languages which do not use
 garbage collected dynamic memory allocation is to find memory leaks.
 Long running programs must assure that dynamically allocated objects are
 freed at the end of their lifetime.  If this does not happen the system
 runs out of memory, sooner or later.
 
 The @code{malloc} implementation in the GNU C library provides some
-simple means to detect sich leaks and provide some information to find
+simple means to detect such leaks and obtain some information to find
 the location.  To do this the application must be started in a special
 mode which is enabled by an environment variable.  There are no speed
-penalties if the program is compiled in preparation of the debugging if
-the debug mode is not enabled.
+penalties for the program if the debugging mode is not enabled.
 
 @menu
 * Tracing malloc::               How to install the tracing functionality.
@@ -956,15 +955,15 @@ contain a valid file name.  The user must have write access.  If the
 file already exists it is truncated.  If the environment variable is not
 set or it does not name a valid file which can be opened for writing
 nothing is done.  The behaviour of @code{malloc} etc. is not changed.
-For obvious reasons this also happens if the application is install SUID
-or SGID.
+For obvious reasons this also happens if the application is installed
+with the SUID or SGID bit set.
 
 If the named file is successfully opened @code{mtrace} installs special
 handlers for the functions @code{malloc}, @code{realloc}, and
 @code{free} (@pxref{Hooks for Malloc}).  From now on all uses of these
 functions are traced and protocolled into the file.  There is now of
-course a speed penalty for all calls to the traced functions so that the
-tracing should not be enabled during their normal use.
+course a speed penalty for all calls to the traced functions so tracing
+should not be enabled during their normal use.
 
 This function is a GNU extension and generally not available on other
 systems.  The prototype can be found in @file{mcheck.h}.
@@ -979,22 +978,22 @@ to enable tracing the @code{malloc} calls.  If no (succesful) call of
 
 Otherwise it deinstalls the handlers for @code{malloc}, @code{realloc},
 and @code{free} and then closes the protocol file.  No calls are
-protocolled anymore and the programs runs again with the full speed.
+protocolled anymore and the program runs again at full speed.
 
 This function is a GNU extension and generally not available on other
 systems.  The prototype can be found in @file{mcheck.h}.
 @end deftypefun
 
 @node Using the Memory Debugger
-@subsection Example programs excerpts
+@subsection Example program excerpts
 
 Even though the tracing functionality does not influence the runtime
-behaviour of the program it is no wise idea to call @code{mtrace} in all
-programs.  Just imagine you debug a program using @code{mtrace} and all
-other programs used in the debug sessions also trace their @code{malloc}
-calls.  The output file would be the same for all programs and so is
-unusable.  Therefore one should call @code{mtrace} only if compiled for
-debugging.  A program could therefore start like this:
+behaviour of the program it is not a good idea to call @code{mtrace} in
+all programs.  Just imagine that you debug a program using @code{mtrace}
+and all other programs used in the debugging session also trace their
+@code{malloc} calls.  The output file would be the same for all programs
+and thus is unusable.  Therefore one should call @code{mtrace} only if
+compiled for debugging.  A program could therefore start like this:
 
 @example
 #include <mcheck.h>
@@ -1012,11 +1011,11 @@ main (int argc, char *argv[])
 This is all what is needed if you want to trace the calls during the
 whole runtime of the program.  Alternatively you can stop the tracing at
 any time with a call to @code{muntrace}.  It is even possible to restart
-the tracing again with a new call to @code{mtrace}.  But this can course
-unreliable results since there are possibly calls of the functions which
-are not called.  Please note that not only the application uses the
-traced functions, also libraries (including the C library itself) use
-this function.
+the tracing again with a new call to @code{mtrace}.  But this can cause
+unreliable results since there may be calls of the functions which are
+not called.  Please note that not only the application uses the traced
+functions, also libraries (including the C library itself) use these
+functions.
 
 This last point is also why it is no good idea to call @code{muntrace}
 before the program terminated.  The libraries are informed about the
@@ -1035,10 +1034,10 @@ libraries).
 
 You know the situation.  The program is prepared for debugging and in
 all debugging sessions it runs well.  But once it is started without
-debugging the error shows up.  In our situation here: the memory leaks
-becomes visible only when we just turned off the debugging.  If you
-foresee such situations you can still win.  Simply use something
-equivalent to the following little program:
+debugging the error shows up.  A typical example is a memory leak that
+becomes visible only when we turn off the debugging.  If you foresee
+such situations you can still win.  Simply use something equivalent to
+the following little program:
 
 @example
 #include <mcheck.h>
@@ -1094,14 +1093,14 @@ If you take a look at the output it will look similar to this:
 @end example
 
 What this all means is not really important since the trace file is not
-meant to be read by a human.  Therefore no attention is payed to good
+meant to be read by a human.  Therefore no attention is given to
 readability.  Instead there is a program which comes with the GNU C
-library which interprets the traces and outputs a summary in on
+library which interprets the traces and outputs a summary in an
 user-friendly way.  The program is called @code{mtrace} (it is in fact a
 Perl script) and it takes one or two arguments.  In any case the name of
-the file with the trace output must be specified.  If an optional argument
-precedes the name of the trace file this must be the name of the program
-which generated the trace.
+the file with the trace output must be specified.  If an optional
+argument precedes the name of the trace file this must be the name of
+the program which generated the trace.
 
 @example
 drepper$ mtrace tst-mtrace log
@@ -1136,18 +1135,18 @@ has no chance to find out what is meant with the addresses given in the
 trace.  We can do better:
 
 @example
-drepper$ mtrace tst-mtrace errlog
-- 0x08064cc8 Free 2 was never alloc'd /home/drepper/tst-mtrace.c:39
-- 0x08064ce0 Free 3 was never alloc'd /home/drepper/tst-mtrace.c:39
-- 0x08064cf8 Free 4 was never alloc'd /home/drepper/tst-mtrace.c:39
+drepper$ mtrace tst errlog
+- 0x08064cc8 Free 2 was never alloc'd /home/drepper/tst.c:39
+- 0x08064ce0 Free 3 was never alloc'd /home/drepper/tst.c:39
+- 0x08064cf8 Free 4 was never alloc'd /home/drepper/tst.c:39
 
 Memory not freed:
 -----------------
    Address     Size     Caller
-0x08064c48     0x14  at /home/drepper/tst-mtrace.c:33
-0x08064c60     0x14  at /home/drepper/tst-mtrace.c:33
-0x08064c78     0x14  at /home/drepper/tst-mtrace.c:33
-0x08064c90     0x14  at /home/drepper/tst-mtrace.c:33
+0x08064c48     0x14  at /home/drepper/tst.c:33
+0x08064c60     0x14  at /home/drepper/tst.c:33
+0x08064c78     0x14  at /home/drepper/tst.c:33
+0x08064c90     0x14  at /home/drepper/tst.c:33
 @end example
 
 Suddenly the output makes much more sense and the user can see
@@ -1156,7 +1155,7 @@ immediately where the function calls causing the trouble can be found.
 Interpreting this output is not complicated.  There are at most two
 different situations being detected.  First, @code{free} was called for
 pointers which were never returned by one of the allocation functions.
-This is usually a very bad problem and how this looks like is shown in
+This is usually a very bad problem and what this looks like is shown in
 the first three lines of the output.  Situations like this are quite
 rare and if they appear they show up very drastically: the program
 normally crashes.
@@ -1166,7 +1165,7 @@ you can see in the output the @code{mtrace} function collects all this
 information and so can say that the program calls an allocation function
 from line 33 in the source file @file{/home/drepper/tst-mtrace.c} four
 times without freeing this memory before the program terminates.
-Whether this is a real problem keeps to be investigated.
+Whether this is a real problem remains to be investigated.
 
 @node Obstacks
 @section Obstacks
@@ -1972,9 +1971,9 @@ alloca (4), y)}.
 @node Alloca Example
 @subsection @code{alloca} Example
 
-As an example of use of @code{alloca}, here is a function that opens a file
-name made from concatenating two argument strings, and returns a file
-descriptor or minus one signifying failure:
+As an example of the use of @code{alloca}, here is a function that opens
+a file name made from concatenating two argument strings, and returns a
+file descriptor or minus one signifying failure:
 
 @smallexample
 int
