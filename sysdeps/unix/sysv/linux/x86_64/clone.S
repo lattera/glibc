@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -72,6 +72,10 @@ ENTRY (BP_SYM (__clone))
 	movq	%r9, %r8
 	movq	8(%rsp), %r10
 	movq	$SYS_ify(clone),%rax
+
+	/* End FDE now, because in the child the unwind info will be
+	   wrong.  */
+	cfi_endproc;
 	syscall
 
 	testq	%rax,%rax
@@ -82,6 +86,10 @@ L(pseudo_end):
 	ret
 
 thread_start:
+	/* Clear the frame pointer.  The ABI suggests this be done, to mark
+	   the outermost frame obviously.  */
+	xorq	%rbp, %rbp
+
 	/* Set up arguments for the function call.  */
 	popq	%rax		/* Function to call.  */
 	popq	%rdi		/* Argument.  */
@@ -90,6 +98,7 @@ thread_start:
 	movq	%rax, %rdi
 	call	HIDDEN_JUMPTARGET (_exit)
 
+	cfi_startproc;
 PSEUDO_END (BP_SYM (__clone))
 
 weak_alias (BP_SYM (__clone), BP_SYM (clone))

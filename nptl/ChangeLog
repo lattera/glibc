@@ -1,3 +1,8 @@
+2004-01-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (tests): Add tst-backtrace1.
+	* tst-backtrace1.c: New test.
+
 2003-12-11  Ulrich Weigand  <uweigand@de.ibm.com>
 
 	* sysdeps/alpha/tls.h (DB_THREAD_SELF): Pass bit size of thread

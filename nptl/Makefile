@@ -1,4 +1,4 @@
-# Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -235,6 +235,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-clock1 tst-clock2 \
 	tst-context1 \
 	tst-sched1 \
+	tst-backtrace1 \
 	tst-oddstacklimit
 
 # This sets the stack resource limit to 1023kb, which is not a multiple

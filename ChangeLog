@@ -1,3 +1,9 @@
+2004-01-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/clone.S (__clone): Add cfi_endproc
+	right before syscall and cfi_startproc before PSEUDO_END.
+	Clear %rbp in thread_start.
+
 2004-01-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regcomp.c (regcomp): Fix comment typo.
