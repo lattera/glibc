@@ -312,7 +312,7 @@ with other systems.
 @section Overview about Character Handling Functions
 
 A Unix @w{C library} contains three different sets of functions in two
-families to handling character set conversion.  The one function family
+families to handle character set conversion.  The one function family
 is specified in the @w{ISO C} standard and therefore is portable even
 beyond the Unix world.
 
@@ -353,9 +353,9 @@ Despite these limitations the @w{ISO C} functions can very well be used
 in many contexts.  In graphical user interfaces, for instance, it is not
 uncommon to have functions which require text to be displayed in a wide
 character string if it is not simple ASCII.  The text itself might come
-from a file with translations and of course to user should decide about
-the current locale which determines the translation and therefore also
-the external encoding used.  In such a situation (and many others) the
+from a file with translations and the user should decide about the
+current locale which determines the translation and therefore also the
+external encoding used.  In such a situation (and many others) the
 functions described here are perfect.  If more freedom while performing
 the conversion is necessary take a look at the @code{iconv} functions
 (@pxref{Generic Charset Conversion})
@@ -377,7 +377,7 @@ We already said above that the currently selected locale for the
 by the functions we are about to describe.  Each locale uses its own
 character set (given as an argument to @code{localedef}) and this is the
 one assumed as the external multibyte encoding.  The wide character
-character set always is UCS4.
+character set always is UCS4, at least on GNU systems.
 
 A characteristic of each multibyte character set is the maximum number
 of bytes which can be necessary to represent one character.  This
@@ -408,7 +408,7 @@ fact, in the GNU C library it is not.
 @code{MB_CUR_MAX} is defined in @file{stdlib.h}.
 @end deftypevr
 
-Two different macros are necessary since strictly @w{ISO C89} compiles
+Two different macros are necessary since strictly @w{ISO C89} compilers
 do not allow variable length array definitions but still it is desirable
 to avoid dynamic allocation.  This incomplete piece of code shows the
 problem:
@@ -441,7 +441,7 @@ a problem if @code{MB_CUR_MAX} is not a compile-time constant.
 @cindex stateful
 In the introduction of this chapter it was said that certain character
 sets use a @dfn{stateful} encoding.  I.e., the encoded values depend in
-some way on the previous byte in the text.
+some way on the previous bytes in the text.
 
 Since the conversion functions allow converting a text in more than one
 step we must have a way to pass this information from one call of the
@@ -481,7 +481,7 @@ clearing the whole variable with code such as follows:
 @end smallexample
 
 When using the conversion functions to generate output it is often
-necessary to test whether current state corresponds to the initial
+necessary to test whether the current state corresponds to the initial
 state.  This is necessary, for example, to decide whether or not to emit
 escape sequences to set the state to the initial state at certain
 sequence points.  Communication protocols often require this.
@@ -490,7 +490,7 @@ sequence points.  Communication protocols often require this.
 @comment ISO
 @deftypefun int mbsinit (const mbstate_t *@var{ps})
 This function determines whether the state object pointed to by @var{ps}
-is in the initial state or not.  If @var{ps} is no null pointer or the
+is in the initial state or not.  If @var{ps} is a null pointer or the
 object is in the initial state the return value is nonzero.  Otherwise
 it is zero.
 
@@ -533,9 +533,9 @@ other characters have at least a first byte which is beyond the range
 @comment ISO
 @deftypefun wint_t btowc (int @var{c})
 The @code{btowc} function (``byte to wide character'') converts a valid
-single byte character in the initial shift state into the wide character
-equivalent using the conversion rules from the currently selected locale
-of the @code{LC_CTYPE} category.
+single byte character @var{c} in the initial shift state into the wide
+character equivalent using the conversion rules from the currently
+selected locale of the @code{LC_CTYPE} category.
 
 If @code{(unsigned char) @var{c}} is no valid single byte multibyte
 character or if @var{c} is @code{EOF} the function returns @code{WEOF}.
@@ -554,7 +554,7 @@ Despite the limitation that the single byte value always is interpreted
 in the initial state this function is actually useful most of the time.
 Most characters are either entirely single-byte character sets or they
 are extension to ASCII.  But then it is possible to write code like this
-(not that this specific example is useful):
+(not that this specific example is very useful):
 
 @smallexample
 wchar_t *
@@ -575,10 +575,12 @@ itow (unsigned long int val)
 @end smallexample
 
 Why is it necessary to use such a complicated implementation and not
-simply cast @code{'0' + val %10} to a wide character?  The answer is
+simply cast @code{'0' + val % 10} to a wide character?  The answer is
 that there is no guarantee that one can perform this kind of arithmetic
 on the character of the character set used for @code{wchar_t}
-representation.
+representation.  In other situations the bytes are not constant at
+compile time and so the compiler cannot do the work.  In situations like
+this it is necessary @code{btowc}.
 
 @noindent
 There also is a function for the conversion in the other direction.
@@ -611,10 +613,11 @@ character'') converts the next multibyte character in the string pointed
 to by @var{s} into a wide character and stores it in the wide character
 string pointed to by @var{pwc}.  The conversion is performed according
 to the locale currently selected for the @code{LC_CTYPE} category.  If
-the character set for the locale is stateful the multibyte string is
-interpreted in the state represented by the object pointed to by
-@var{ps}.  If @var{ps} is a null pointer an static, internal state
-variable used only by the @code{mbrtowc} variable is used.
+the conversion for the character set used in the locale requires a state
+the multibyte string is interpreted in the state represented by the
+object pointed to by @var{ps}.  If @var{ps} is a null pointer an static,
+internal state variable used only by the @code{mbrtowc} variable is
+used.
 
 If the next multibyte character corresponds to the NUL wide character
 the return value of the function is @math{0} and the state object is
@@ -633,9 +636,9 @@ no value is stored.  Please note that this can happen even if @var{n}
 has a value greater or equal to @code{MB_CUR_MAX} since the input might
 contain redundant shift sequences.
 
-If the first @code{n} bytes of the multibyte string cannot possibly
-form a valid multibyte character also no value is stored, the global
-variable i set to the value @code{EILSEQ} and the function return
+If the first @code{n} bytes of the multibyte string cannot possibly form
+a valid multibyte character also no value is stored, the global variable
+@code{errno} is set to the value @code{EILSEQ} and the function returns
 @code{(size_t) -1}.  The conversion state is afterwards undefined.
 
 @pindex wchar.h
@@ -647,7 +650,7 @@ Using this function is straight forward.  A function which copies a
 multibyte string into a wide character string while at the same time
 converting all lowercase character into uppercase could look like this
 (this is not the final version, just an example; it has no error
-checking and leaks sometimes memory):
+checking, and leaks sometimes memory):
 
 @smallexample
 wchar_t *
@@ -686,13 +689,14 @@ never be more wide characters in the converted results than there are
 bytes in the multibyte input string.  This method yields to a
 pessimistic guess about the size of the result and if many wide
 character strings have to be constructed this way or the strings are
-long, the extra memory required to store the wide character strings
-might be significant.  It would of course be possible to resize the
-allocated memory block to the correct size before returning it.  A
-better solution might be to allocate just the right amount of space for
-the result right away.  Unfortunately there is no function to compute
-the length of the wide character string directly from the multibyte
-string.  But there is a function which does part of the work.
+long, the extra memory required allocated because the input string
+contains multibzte characters might be significant.  It would be
+possible to resize the allocated memory block to the correct size before
+returning it.  A better solution might be to allocate just the right
+amount of space for the result right away.  Unfortunately there is no
+function to compute the length of the wide character string directly
+from the multibyte string.  But there is a function which does part of
+the work.
 
 @comment wchar.h
 @comment ISO
@@ -757,8 +761,8 @@ in the string and counts the number of function calls.  Please note that
 we here use @code{MB_LEN_MAX} as the size argument in the @code{mbrlen}
 call.  This is OK since a) this value is larger then the length of the
 longest multibyte character sequence and b) because we know that the
-string @var{s} ends with a NIL byte which cannot be part of any other
-multibyte character sequence but the one representing the NIL wide
+string @var{s} ends with a NUL byte which cannot be part of any other
+multibyte character sequence but the one representing the NUL wide
 character.  Therefore the @code{mbrlen} function will never read invalid
 memory.
 
@@ -785,16 +789,17 @@ The @code{wcrtomb} function (``wide character restartable to
 multibyte'') converts a single wide character into a multibyte string
 corresponding to that wide character.
 
-If @var{s} is a null pointer the resets the the state stored in the
-objects pointer to by @var{ps} to the initial state.  This can also be
-achieved by a call like this:
+If @var{s} is a null pointer the function resets the the state stored in
+the objects pointer to by @var{ps} (or the internal @code{mbstate_t}
+object) to the initial state.  This can also be achieved by a call like
+this:
 
 @smallexample
 wcrtombs (temp_buf, L'\0', ps)
 @end smallexample
 
 @noindent
-since when @var{s} is a null pointer @code{wcrtomb} performs as if it
+since if @var{s} is a null pointer @code{wcrtomb} performs as if it
 writes into an internal buffer which is guaranteed to be large enough.
 
 If @var{wc} is the NUL wide character @code{wcrtomb} emits, if
@@ -802,13 +807,12 @@ necessary, a shift sequence to get the state @var{ps} into the initial
 state followed by a single NUL byte is stored in the string @var{s}.
 
 Otherwise a byte sequence (possibly including shift sequences) is
-written into the string @var{s}.  This of course only happens if
-@var{wc} is a valid wide character, i.e., it has a multibyte
-representation in the character set selected by locale of the
-@code{LC_CTYPE} category.  If @var{wc} is no valid wide character
-nothing is stored in the strings @var{s}, @code{errno} is set to
-@code{EILSEQ}, the conversion state in @var{ps} is undefined and the
-return value is @code{(size_t) -1}.
+written into the string @var{s}.  This of only happens if @var{wc} is a
+valid wide character, i.e., it has a multibyte representation in the
+character set selected by locale of the @code{LC_CTYPE} category.  If
+@var{wc} is no valid wide character nothing is stored in the strings
+@var{s}, @code{errno} is set to @code{EILSEQ}, the conversion state in
+@var{ps} is undefined and the return value is @code{(size_t) -1}.
 
 If no error occurred the function returns the number of bytes stored in
 the string @var{s}.  This includes all byte representing shift
@@ -828,14 +832,15 @@ declared in @file{wchar.h}.
 
 Using this function is as easy as using @code{mbrtowc}.  The following
 example appends a wide character string to a multibyte character string.
-Again, the code is not really useful, it is simply here to demonstrate
-the use and some problems.
+Again, the code is not really useful (and correct), it is simply here to
+demonstrate the use and some problems.
 
 @smallexample
 char *
 mbscatwc (char *s, size_t len, const wchar_t *ws)
 @{
   mbstate_t state;
+  /* @r{Find the end of the existing string.}  */
   char *wp = strchr (s, '\0');
   len -= wp - s;
   memset (&state, '\0', sizeof (state));
@@ -900,12 +905,12 @@ Here we do perform the conversion which might overflow the buffer so
 that we are afterwards in the position to make an exact decision about
 the buffer size.  Please note the @code{NULL} argument for the
 destination buffer in the new @code{wcrtomb} call; since we are not
-interested in the result at this point this is a nice way to express
-this.  The most unusual thing about this piece of code certainly is the
-duplication of the conversion state object.  But think about this: if a
-change of the state is necessary to emit the next multibyte character we
-want to have the same shift state change performed in the real
-conversion.  Therefore we have to preserve the initial shift state
+interested in the converted text at this point this is a nice way to
+express this.  The most unusual thing about this piece of code certainly
+is the duplication of the conversion state object.  But think about
+this: if a change of the state is necessary to emit the next multibyte
+character we want to have the same shift state change performed in the
+real conversion.  Therefore we have to preserve the initial shift state
 information.
 
 There are certainly many more and even better solutions to this problem.
@@ -919,7 +924,7 @@ character at a time.  Most operations to be performed in real-world
 programs include strings and therefore the @w{ISO C} standard also
 defines conversions on entire strings.  However, the defined set of
 functions is quite limited, thus the GNU C library contains a few
-extensions which are necessary in some important situations.
+extensions which can help in some important situations.
 
 @comment wchar.h
 @comment ISO
@@ -990,15 +995,16 @@ byte is not really part of the text.  I.e., the conversion state after
 the newline in the original text could be something different than the
 initial shift state and therefore the first character of the next line
 is encoded using this state.  But the state in question is never
-accessible to the user since the conversion stops after the NUL byte.
-Most stateful character sets in use today require that the shift state
-after a newline is the initial state--but this is not a strict
-guarantee.  Therefore simply NUL terminating a piece of a running text
-is not always an adequate solution.
+accessible to the user since the conversion stops after the NUL byte
+(which resets the state).  Most stateful character sets in use today
+require that the shift state after a newline is the initial state--but
+this is not a strict guarantee.  Therefore simply NUL terminating a
+piece of a running text is not always an adequate solution and therefore
+never should be used in generally used code.
 
 The generic conversion interface (see @xref{Generic Charset Conversion})
 does not have this limitation (it simply works on buffers, not
-strings),and the GNU C library contains a set of functions which take
+strings), and the GNU C library contains a set of functions which take
 additional parameters specifying the maximal number of bytes which are
 consumed from the input string.  This way the problem of
 @code{mbsrtowcs}'s example above could be solved by determining the line
@@ -1225,7 +1231,7 @@ cannot first convert single characters and then strings since you cannot
 tell the conversion functions which state to use.
 
 These functions are therefore usable only in a very limited set of
-situations.  One most complete converting the entire string before
+situations.  One must complete converting the entire string before
 starting a new one and each string/text must be converted with the same
 function (there is no problem with the library itself; it is guaranteed
 that no library function changes the state of any of these functions).
@@ -1245,7 +1251,7 @@ functions.}
 
 @comment stdlib.h
 @comment ISO
-@deftypefun int mbtowc (wchar_t *@var{result}, const char *@var{string}, size_t @var{size})
+@deftypefun int mbtowc (wchar_t *restrict @var{result}, const char *restrict @var{string}, size_t @var{size})
 The @code{mbtowc} (``multibyte to wide character'') function when called
 with non-null @var{string} converts the first multibyte character
 beginning at @var{string} to its corresponding wide character code.  It
@@ -1262,11 +1268,11 @@ null character).
 
 For a valid multibyte character, @code{mbtowc} converts it to a wide
 character and stores that in @code{*@var{result}}, and returns the
-number of bytes in that character (always at least @code{1}, and never
+number of bytes in that character (always at least @math{1}, and never
 more than @var{size}).
 
-For an invalid byte sequence, @code{mbtowc} returns @code{-1}.  For an
-empty string, it returns @code{0}, also storing @code{0} in
+For an invalid byte sequence, @code{mbtowc} returns @math{-1}.  For an
+empty string, it returns @math{0}, also storing @code{'\0'} in
 @code{*@var{result}}.
 
 If the multibyte character code uses shift characters, then
@@ -1287,16 +1293,16 @@ character sequence, and stores the result in bytes starting at
 
 @code{wctomb} with non-null @var{string} distinguishes three
 possibilities for @var{wchar}: a valid wide character code (one that can
-be translated to a multibyte character), an invalid code, and @code{0}.
+be translated to a multibyte character), an invalid code, and @code{L'\0'}.
 
 Given a valid code, @code{wctomb} converts it to a multibyte character,
 storing the bytes starting at @var{string}.  Then it returns the number
-of bytes in that character (always at least @code{1}, and never more
+of bytes in that character (always at least @math{1}, and never more
 than @code{MB_CUR_MAX}).
 
 If @var{wchar} is an invalid wide character code, @code{wctomb} returns
-@code{-1}.  If @var{wchar} is @code{0}, it returns @code{0}, also
-storing @code{0} in @code{*@var{string}}.
+@math{-1}.  If @var{wchar} is @code{L'\0'}, it returns @code{0}, also
+storing @code{'\0'} in @code{*@var{string}}.
 
 If the multibyte character code uses shift characters, then
 @code{wctomb} maintains and updates a shift state as it scans.  If you
@@ -1308,7 +1314,7 @@ shift state.  @xref{Shift State}.
 Calling this function with a @var{wchar} argument of zero when
 @var{string} is not null has the side-effect of reinitializing the
 stored shift state @emph{as well as} storing the multibyte character
-@code{0} and returning @code{0}.
+@code{'\0'} and returning @math{0}.
 @end deftypefun
 
 Similar to @code{mbrlen} there is also a non-reentrant function which
@@ -1331,13 +1337,13 @@ character, or @var{string} points to an empty string (a null character).
 For a valid multibyte character, @code{mblen} returns the number of
 bytes in that character (always at least @code{1}, and never more than
 @var{size}).  For an invalid byte sequence, @code{mblen} returns
-@code{-1}.  For an empty string, it returns @code{0}.
+@math{-1}.  For an empty string, it returns @math{0}.
 
 If the multibyte character code uses shift characters, then @code{mblen}
 maintains and updates a shift state as it scans.  If you call
 @code{mblen} with a null pointer for @var{string}, that initializes the
-shift state to its standard initial value.  It also returns nonzero if
-the multibyte character code in use actually has a shift state.
+shift state to its standard initial value.  It also returns a nonzero
+value if the multibyte character code in use actually has a shift state.
 @xref{Shift State}.
 
 @pindex stdlib.h
@@ -1368,7 +1374,7 @@ The conversion of characters from @var{string} begins in the initial
 shift state.
 
 If an invalid multibyte character sequence is found, this function
-returns a value of @code{-1}.  Otherwise, it returns the number of wide
+returns a value of @math{-1}.  Otherwise, it returns the number of wide
 characters stored in the array @var{wstring}.  This number does not
 include the terminating null character, which is present if the number
 is less than @var{size}.
@@ -1408,7 +1414,7 @@ is less than or equal to the number of bytes needed in @var{wstring}, no
 terminating null character is stored.
 
 If a code that does not correspond to a valid multibyte character is
-found, this function returns a value of @code{-1}.  Otherwise, the
+found, this function returns a value of @math{-1}.  Otherwise, the
 return value is the number of bytes stored in the array @var{string}.
 This number does not include the terminating null character, which is
 present if the number is less than @var{size}.
@@ -1521,7 +1527,7 @@ process necessary to convert a text using the functions above.  One
 would have to select the source character set as the multibyte encoding,
 convert the text into a @code{wchar_t} text, select the destination
 character set as the multibyte encoding and convert the wide character
-text to the multibyte (=destination) character set.
+text to the multibyte (@math{=} destination) character set.
 
 Even if this is possible (which is not guaranteed) it is a very tiring
 work.  Plus it suffers from the other two raised points even more due to

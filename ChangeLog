@@ -1,5 +1,8 @@
 1999-01-13  Ulrich Drepper  <drepper@cygnus.com>
 
+	* manual/nss.texi (NSS Module Interface): Document requirement on errno
+	value after unsuccessful call of module function.
+
 	* sysdeps/unix/sysv/linux/syscalls.list: Add __syscall_fork alias.
 	* sysdeps/unix/sysv/linux/vfork.c: Use vfork syscall if available,
 	otherwise use fork.

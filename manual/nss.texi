@@ -433,13 +433,41 @@ If you study the source code you will find there is a fifth value:
 few functions in places where none of the above value can be used.  If
 necessary the source code should be examined to learn about the details.
 
+In case the interface function has to return an error it is important
+that the correct error code is stored in @code{*@var{errnop}}.  Some
+return status value have only one associated error code, others have
+more.
+
+@multitable @columnfractions .3 .2 .50
+@item
+@code{NSS_STATUS_TRYAGAIN} @tab
+        @code{EAGAIN} @tab One functions used ran temporarily out of
+resources or a service is currently not available.
+@item
+@tab
+        @code{ERANGE} @tab The provided buffer is not large enough.
+The function should be called again with a larger buffer.
+@item
+@code{NSS_STATUS_UNAVAIL} @tab
+        @code{ENOENT} @tab A necessary input file cannot be found.
+@item
+@code{NSS_STATUS_NOTFOUND} @tab
+        @code{ENOENT} @tab The requested entry is not available.
+@end multitable
+
+These are proposed values.  There can be other error codes and the
+described error codes can have different meaning.  @strong{With one
+exception:} when returning @code{NSS_STATUS_TRYAGAIN} the error code
+@code{ERANGE} @emph{must} mean that the user provided buffer is too
+small.  Everything is non-critical.
+
 The above function has something special which is missing for almost all
 the other module functions.  There is an argument @var{h_errnop}.  This
 points to a variable which will be filled with the error code in case
 the execution of the function fails for some reason.  The reentrant
 function cannot use the global variable @var{h_errno};
-@code{gethostbyname} calls @code{gethostbyname_r} with the
-last argument set to @code{&h_errno}.
+@code{gethostbyname} calls @code{gethostbyname_r} with the last argument
+set to @code{&h_errno}.
 
 The @code{get@var{XXX}by@var{YYY}} functions are the most important
 functions in the NSS modules.  But there are others which implement
