@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -347,17 +347,15 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
      void *arg;
 {
   STACK_VARIABLES;
-  const struct pthread_attr *iattr;
-  struct pthread *pd;
-  int err;
 
-  iattr = (struct pthread_attr *) attr;
+  const struct pthread_attr *iattr = (struct pthread_attr *) attr;
   if (iattr == NULL)
     /* Is this the best idea?  On NUMA machines this could mean
        accessing far-away memory.  */
     iattr = &default_attr;
 
-  err = ALLOCATE_STACK (iattr, &pd);
+  struct pthread *pd;
+  int err = ALLOCATE_STACK (iattr, &pd);
   if (__builtin_expect (err != 0, 0))
     /* Something went wrong.  Maybe a parameter of the attributes is
        invalid or we could not allocate memory.  */
@@ -406,14 +404,14 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
       && __builtin_expect ((iattr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0, 0)
       && (iattr->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET)) != 0)
     {
-      INTERNAL_SYSCALL_DECL (err);
+      INTERNAL_SYSCALL_DECL (scerr);
 
       /* Use the scheduling parameters the user provided.  */
       if (iattr->flags & ATTR_FLAG_POLICY_SET)
 	pd->schedpolicy = iattr->schedpolicy;
       else if ((pd->flags & ATTR_FLAG_POLICY_SET) == 0)
 	{
-	  pd->schedpolicy = INTERNAL_SYSCALL (sched_getscheduler, err, 1, 0);
+	  pd->schedpolicy = INTERNAL_SYSCALL (sched_getscheduler, scerr, 1, 0);
 	  pd->flags |= ATTR_FLAG_POLICY_SET;
 	}
 
@@ -422,14 +420,14 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
 		sizeof (struct sched_param));
       else if ((pd->flags & ATTR_FLAG_SCHED_SET) == 0)
 	{
-	  INTERNAL_SYSCALL (sched_getparam, err, 2, 0, &pd->schedparam);
+	  INTERNAL_SYSCALL (sched_getparam, scerr, 2, 0, &pd->schedparam);
 	  pd->flags |= ATTR_FLAG_SCHED_SET;
 	}
 
       /* Check for valid priorities.  */
-      int minprio = INTERNAL_SYSCALL (sched_get_priority_min, err, 1,
+      int minprio = INTERNAL_SYSCALL (sched_get_priority_min, scerr, 1,
 				      iattr->schedpolicy);
-      int maxprio = INTERNAL_SYSCALL (sched_get_priority_max, err, 1,
+      int maxprio = INTERNAL_SYSCALL (sched_get_priority_max, scerr, 1,
 				      iattr->schedpolicy);
       if (pd->schedparam.sched_priority < minprio
 	  || pd->schedparam.sched_priority > maxprio)
