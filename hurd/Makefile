@@ -92,9 +92,6 @@ include ../Rules
 # _hurd_intr_rpc_mach_msg.
 user-MIGFLAGS += -imacros intr-rpc.defs
 
-$(foreach if,$(user-interfaces),$($(if)-calls:%=$(objpfx)RPC_%.o))): \
-	hurd/signal.h
-
 $(objpfx)fault%.c $(objpfx)fault%.h: $(mach-srcdir)/mach/%.defs
 	$(MIG) $(MIGFLAGS) -prefix _hurdsig_fault_ \
 	       -server $(@:.h=.c) -sheader $(@:.c=.h) \

@@ -108,6 +108,8 @@ elf_machine_rel (struct link_map *map,
     case R_386_PC32:
       *reloc_addr = sym_value - (Elf32_Addr) reloc_addr;
       break;
+    case R_386_NONE:		/* Alright, Wilbur.  */
+      break;
     default:
       assert (! "unexpected dynamic reloc type");
       break;
