@@ -89,6 +89,7 @@ __inline_mathop(__significand, getman)
 
 __inline_mathop(__log2, log2)
 __inline_mathop(__exp2, twotox)
+__inline_mathop(__trunc, intrz)
 
 #if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 
@@ -111,6 +112,7 @@ __inline_mathop(significand, getman)
 #ifdef __USE_ISOC9X
 __inline_mathop(log2, log2)
 __inline_mathop(exp2, twotox)
+__inline_mathop(trunc, intrz)
 #endif
 
 #endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
@@ -155,108 +157,123 @@ __internal_inline_functions (long double,l)
 
 /* The rest of the functions are available to the user.  */
 
-#define __inline_functions(float_type, s)				     \
-__m81_inline float_type							     \
-__m81_u(__CONCAT(__frexp,s))(float_type __value, int *__expptr)		     \
-{									     \
-  float_type __mantissa, __exponent;					     \
-  int __iexponent;							     \
-  if (__value == 0.0)							     \
-    {									     \
-      *__expptr = 0;							     \
-      return __value;							     \
-    }									     \
-  __asm("fgetexp%.x %1, %0" : "=f" (__exponent) : "f" (__value));	     \
-  __iexponent = (int) __exponent + 1;					     \
-  *__expptr = __iexponent;						     \
-  __asm("fscale%.l %2, %0" : "=f" (__mantissa)				     \
-	: "0" (__value), "dmi" (-__iexponent));				     \
-  return __mantissa;							     \
-}									     \
-									     \
-__m81_defun (float_type, __CONCAT(__floor,s), (float_type __x))		     \
-{									     \
-  float_type __result;							     \
-  unsigned long int __ctrl_reg;						     \
-  __asm __volatile__ ("fmove%.l %!, %0" : "=dm" (__ctrl_reg));		     \
-  /* Set rounding towards negative infinity.  */			     \
-  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */		     \
-		      : "dmi" ((__ctrl_reg & ~0x10) | 0x20));		     \
-  /* Convert X to an integer, using -Inf rounding.  */			     \
-  __asm __volatile__ ("fint%.x %1, %0" : "=f" (__result) : "f" (__x));	     \
-  /* Restore the previous rounding mode.  */				     \
-  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */		     \
-		      : "dmi" (__ctrl_reg));				     \
-  return __result;							     \
-}									     \
-									     \
-__m81_defun (float_type, __CONCAT(__ceil,s), (float_type __x))		     \
-{									     \
-  float_type __result;							     \
-  unsigned long int __ctrl_reg;						     \
-  __asm __volatile__ ("fmove%.l %!, %0" : "=dm" (__ctrl_reg));		     \
-  /* Set rounding towards positive infinity.  */			     \
-  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */		     \
-		      : "dmi" (__ctrl_reg | 0x30));			     \
-  /* Convert X to an integer, using +Inf rounding.  */			     \
-  __asm __volatile__ ("fint%.x %1, %0" : "=f" (__result) : "f" (__x));	     \
-  /* Restore the previous rounding mode.  */				     \
-  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */		     \
-		      : "dmi" (__ctrl_reg));				     \
-  return __result;							     \
-}									     \
-									     \
-__m81_inline float_type							     \
-__m81_u(__CONCAT(__modf,s))(float_type __value, float_type *__iptr)	     \
-{									     \
-  float_type __modf_int;						     \
-  __asm ("fintrz%.x %1, %0" : "=f" (__modf_int) : "f" (__value));	     \
-  *__iptr = __modf_int;							     \
-  return __value - __modf_int;						     \
-}									     \
-									     \
-__m81_defun (int, __CONCAT(__isinf,s), (float_type __value))		     \
-{									     \
-  /* There is no branch-condition for infinity,				     \
-     so we must extract and examine the condition codes manually.  */	     \
-  unsigned long int __fpsr;						     \
-  __asm("ftst%.x %1\n"							     \
-	"fmove%.l %/fpsr, %0" : "=dm" (__fpsr) : "f" (__value));	     \
-  return (__fpsr & (2 << 24)) ? (__fpsr & (8 << 24) ? -1 : 1) : 0;	     \
-}									     \
-									     \
-__m81_defun (int, __CONCAT(__isnan,s), (float_type __value))		     \
-{									     \
-  char __result;							     \
-  __asm("ftst%.x %1\n"							     \
-	"fsun %0" : "=dm" (__result) : "f" (__value));			     \
-  return __result;							     \
-}									     \
-									     \
-__m81_defun (int, __CONCAT(__finite,s), (float_type __value))		     \
-{									     \
-  /* There is no branch-condition for infinity, so we must extract and	     \
-     examine the condition codes manually.  */				     \
-  unsigned long int __fpsr;						     \
-  __asm ("ftst%.x %1\n"							     \
-	 "fmove%.l %/fpsr, %0" : "=dm" (__fpsr) : "f" (__value));	     \
-  return (__fpsr & (3 << 24)) == 0;					     \
-}									     \
-									     \
-__m81_defun (int, __CONCAT(__ilogb,s), (float_type __x))		     \
-{									     \
-  float_type __result;							     \
-  if (__x == 0.0)							     \
-    return 0x80000001;							     \
-  __asm("fgetexp%.x %1, %0" : "=f" (__result) : "f" (__x));		     \
-  return (int) __result;						     \
-}									     \
-									     \
-__m81_defun (float_type, __CONCAT(__scalbn,s), (float_type __x, int __n))    \
-{									     \
-  float_type __result;							     \
-  __asm ("fscale%.l %1, %0" : "=f" (__result) : "dmi" (__n), "0" (__x));     \
-  return __result;							     \
+#define __inline_functions(float_type, s)				  \
+__m81_inline float_type							  \
+__m81_u(__CONCAT(__frexp,s))(float_type __value, int *__expptr)		  \
+{									  \
+  float_type __mantissa, __exponent;					  \
+  int __iexponent;							  \
+  if (__value == 0.0)							  \
+    {									  \
+      *__expptr = 0;							  \
+      return __value;							  \
+    }									  \
+  __asm("fgetexp%.x %1, %0" : "=f" (__exponent) : "f" (__value));	  \
+  __iexponent = (int) __exponent + 1;					  \
+  *__expptr = __iexponent;						  \
+  __asm("fscale%.l %2, %0" : "=f" (__mantissa)				  \
+	: "0" (__value), "dmi" (-__iexponent));				  \
+  return __mantissa;							  \
+}									  \
+									  \
+__m81_defun (float_type, __CONCAT(__floor,s), (float_type __x))		  \
+{									  \
+  float_type __result;							  \
+  unsigned long int __ctrl_reg;						  \
+  __asm __volatile__ ("fmove%.l %!, %0" : "=dm" (__ctrl_reg));		  \
+  /* Set rounding towards negative infinity.  */			  \
+  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */		  \
+		      : "dmi" ((__ctrl_reg & ~0x10) | 0x20));		  \
+  /* Convert X to an integer, using -Inf rounding.  */			  \
+  __asm __volatile__ ("fint%.x %1, %0" : "=f" (__result) : "f" (__x));	  \
+  /* Restore the previous rounding mode.  */				  \
+  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */		  \
+		      : "dmi" (__ctrl_reg));				  \
+  return __result;							  \
+}									  \
+									  \
+__m81_defun (float_type, __CONCAT(__ceil,s), (float_type __x))		  \
+{									  \
+  float_type __result;							  \
+  unsigned long int __ctrl_reg;						  \
+  __asm __volatile__ ("fmove%.l %!, %0" : "=dm" (__ctrl_reg));		  \
+  /* Set rounding towards positive infinity.  */			  \
+  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */		  \
+		      : "dmi" (__ctrl_reg | 0x30));			  \
+  /* Convert X to an integer, using +Inf rounding.  */			  \
+  __asm __volatile__ ("fint%.x %1, %0" : "=f" (__result) : "f" (__x));	  \
+  /* Restore the previous rounding mode.  */				  \
+  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */		  \
+		      : "dmi" (__ctrl_reg));				  \
+  return __result;							  \
+}									  \
+									  \
+__m81_defun (int, __CONCAT(__isinf,s), (float_type __value))		  \
+{									  \
+  /* There is no branch-condition for infinity,				  \
+     so we must extract and examine the condition codes manually.  */	  \
+  unsigned long int __fpsr;						  \
+  __asm("ftst%.x %1\n"							  \
+	"fmove%.l %/fpsr, %0" : "=dm" (__fpsr) : "f" (__value));	  \
+  return (__fpsr & (2 << 24)) ? (__fpsr & (8 << 24) ? -1 : 1) : 0;	  \
+}									  \
+									  \
+__m81_defun (int, __CONCAT(__isnan,s), (float_type __value))		  \
+{									  \
+  char __result;							  \
+  __asm("ftst%.x %1\n"							  \
+	"fsun %0" : "=dm" (__result) : "f" (__value));			  \
+  return __result;							  \
+}									  \
+									  \
+__m81_defun (int, __CONCAT(__finite,s), (float_type __value))		  \
+{									  \
+  /* There is no branch-condition for infinity, so we must extract and	  \
+     examine the condition codes manually.  */				  \
+  unsigned long int __fpsr;						  \
+  __asm ("ftst%.x %1\n"							  \
+	 "fmove%.l %/fpsr, %0" : "=dm" (__fpsr) : "f" (__value));	  \
+  return (__fpsr & (3 << 24)) == 0;					  \
+}									  \
+									  \
+__m81_defun (int, __CONCAT(__signbit,s), (float_type __value))		  \
+{									  \
+  /* There is no branch-condition for the sign bit, so we must extract	  \
+     and examine the condition codes manually.  */			  \
+  unsigned long int __fpsr;						  \
+  __asm ("ftst%.x %1\n"							  \
+	 "fmove%.l %/fpsr, %0" : "=dm" (__fpsr) : "f" (__value));	  \
+  return (__fpsr >> 27) & 1;						  \
+}									  \
+									  \
+__m81_defun (int, __CONCAT(__ilogb,s), (float_type __x))		  \
+{									  \
+  float_type __result;							  \
+  if (__x == 0.0)							  \
+    return 0x80000001;							  \
+  __asm("fgetexp%.x %1, %0" : "=f" (__result) : "f" (__x));		  \
+  return (int) __result;						  \
+}									  \
+									  \
+__m81_defun (float_type, __CONCAT(__scalbn,s), (float_type __x, int __n)) \
+{									  \
+  float_type __result;							  \
+  __asm ("fscale%.l %1, %0" : "=f" (__result) : "dmi" (__n), "0" (__x));  \
+  return __result;							  \
+}									  \
+									  \
+__m81_defun (float_type, __CONCAT(__nearbyint,s), (float_type __x))	  \
+{									  \
+  float_type __result;							  \
+  unsigned long int __ctrl_reg;						  \
+  __asm __volatile__ ("fmove%.l %!, %0" : "=dm" (__ctrl_reg));		  \
+  /* Temporarily disable the inexact exception.  */			  \
+  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */		  \
+		      : "dmi" (__ctrl_reg & ~0x200));			  \
+  __asm __volatile__ ("fint%.x %1, %0" : "=f" (__result) : "f" (__x));	  \
+  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */		  \
+		      : "dmi" (__ctrl_reg));				  \
+  return __result;							  \
 }
 
 /* This defines the three variants of the inline functions.  */
@@ -286,8 +303,6 @@ __inline_forward(double,frexp, (double __value, int *__expptr),
 		 (__value, __expptr))
 __inline_forward_c(double,floor, (double __x), (__x))
 __inline_forward_c(double,ceil, (double __x), (__x))
-__inline_forward(double,modf, (double __value, double *__iptr),
-		 (__value, __iptr))
 #ifdef __USE_MISC
 __inline_forward_c(int,isinf, (double __value), (__value))
 __inline_forward_c(int,finite, (double __value), (__value))
@@ -299,6 +314,9 @@ __inline_forward_c(int,isnan, (double __value), (__value))
 #endif
 __inline_forward_c(int,ilogb, (double __value), (__value))
 #endif
+#ifdef __USE_ISOC9X
+__inline_forward_c(double,nearbyint, (double __value), (__value))
+#endif
 
 #if defined __USE_MISC || defined __USE_ISOC9X
 
@@ -306,8 +324,6 @@ __inline_forward(float,frexpf, (float __value, int *__expptr),
 		 (__value, __expptr))
 __inline_forward_c(float,floorf, (float __x), (__x))
 __inline_forward_c(float,ceilf, (float __x), (__x))
-__inline_forward(float,modff, (float __value, float *__iptr),
-		 (__value, __iptr))
 #ifdef __USE_MISC
 __inline_forward_c(int,isinff, (float __value), (__value))
 __inline_forward_c(int,finitef, (float __value), (__value))
@@ -315,14 +331,14 @@ __inline_forward_c(float,scalbnf, (float __x, int __n), (__x, __n))
 __inline_forward_c(int,isnanf, (float __value), (__value))
 __inline_forward_c(int,ilogbf, (float __value), (__value))
 #endif
+#ifdef __USE_ISOC9X
+__inline_forward_c(float,nearbyintf, (float __value), (__value))
+#endif
 
 __inline_forward(long double,frexpl, (long double __value, int *__expptr),
 		 (__value, __expptr))
 __inline_forward_c(long double,floorl, (long double __x), (__x))
 __inline_forward_c(long double,ceill, (long double __x), (__x))
-__inline_forward(long double,modfl,
-		 (long double __value, long double *__iptr),
-		 (__value, __iptr))
 #ifdef __USE_MISC
 __inline_forward_c(int,isinfl, (long double __value), (__value))
 __inline_forward_c(int,finitel, (long double __value), (__value))
@@ -330,6 +346,9 @@ __inline_forward_c(long double,scalbnl, (long double __x, int __n),
 		   (__x, __n))
 __inline_forward_c(int,isnanl, (long double __value), (__value))
 __inline_forward_c(int,ilogbl, (long double __value), (__value))
+#endif
+#ifdef __USE_ISOC9X
+__inline_forward_c(long double,nearbyintl, (long double __value), (__value))
 #endif
 
 #endif /* Use misc or ISO C9X */
