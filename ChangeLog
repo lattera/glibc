@@ -1,3 +1,26 @@
+2003-11-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c (optimize_utf8): Optimize multi-byte chars as
+	well.
+	* posix/bug-regex20.c (tests): Add new tests.  Multi-byte char
+	followed by dup operator is expected to be optimized.
+
+	* posix/regexec.c (check_node_accept_bytes): Move nrules and j
+	variables to the block where they are only used, initialize
+	nrules only immediately before using it.
+
+2003-11-15  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/fpu/s_scalbnl.S: New file.
+	* sysdeps/x86_64/fpu/s_truncl.S: New file.
+	* sysdeps/x86_64/fpu/s_nearbyintl.S: New file.
+	* sysdeps/x86_64/fpu/s_floorl.S: New file.
+	* sysdeps/x86_64/fpu/s_ilogbl.S: New file.
+	* sysdeps/x86_64/fpu/e_remainderl.S: New file.
+
+	* math/libm-test.inc (floor_test): Test also ±0.25.
+	(ceil_test): Test -0.25.
+
 2003-11-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c: Add support for destination address

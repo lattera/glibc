@@ -965,17 +965,14 @@ static void
 optimize_utf8 (dfa)
      re_dfa_t *dfa;
 {
-  int node, i;
+  int node, i, mb_chars = 0;
 
   for (node = 0; node < dfa->nodes_len; ++node)
     switch (dfa->nodes[node].type)
       {
       case CHARACTER:
-        /* Chars >= 0x80 are optimizable in some cases (e.g. when not
-	   followed by DUP operator, not in bracket etc.).
-	   For now punt on them all.  */
 	if (dfa->nodes[node].opr.c >= 0x80)
-	  return;
+	  mb_chars = 1;
 	break;
       case ANCHOR:
 	switch (dfa->nodes[node].opr.idx)
@@ -1009,6 +1006,12 @@ optimize_utf8 (dfa)
       default:
 	return;
       }
+
+  if (mb_chars)
+    for (node = 0; node < dfa->nodes_len; ++node)
+      if (dfa->nodes[node].type == CHARACTER
+	  && dfa->nodes[node].opr.c >= 0x80)
+	dfa->nodes[node].mb_partial = 0;
 
   /* The search can be in single byte locale.  */
   dfa->mb_cur_max = 1;

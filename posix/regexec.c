@@ -3483,10 +3483,6 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
   int elem_len = re_string_elem_size_at (input, str_idx);
   int char_len = re_string_char_size_at (input, str_idx);
   int i;
-# ifdef _LIBC
-  int j;
-  uint32_t nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
-# endif /* _LIBC */
   if (elem_len <= 1 && char_len <= 1)
     return 0;
   if (node->type == OP_PERIOD)
@@ -3505,6 +3501,8 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
 # ifdef _LIBC
       const unsigned char *pin = ((char *) re_string_get_buffer (input)
 				  + str_idx);
+      int j;
+      uint32_t nrules;
 # endif /* _LIBC */
       int match_len = 0;
       wchar_t wc = ((cset->nranges || cset->nchar_classes || cset->nmbchars)
@@ -3529,6 +3527,7 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
 	}
 
 # ifdef _LIBC
+      nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
       if (nrules != 0)
 	{
 	  unsigned int in_collseq = 0;
