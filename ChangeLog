@@ -1,4 +1,14 @@
+1998-08-06  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	[submitted 1998-08-06]
+	* mach/Machrules: Create target directory and force re-evaluation
+	of Makefile to prevent `make' from optimizing away most of the
+	implicit rules and `vpath' directives.
+
 1998-10-19  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): If _hurd_msgport_thread
+	is null, short-circuit to __mach_msg.
 
 	* sysdeps/mach/hurd/i386/init-first.c (posixland_init): New function,
 	broken out of init1.

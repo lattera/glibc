@@ -1,5 +1,5 @@
 /* Replacement for mach_msg used in interruptible Hurd RPCs.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,11 +34,23 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 			 mach_msg_timeout_t timeout,
 			 mach_port_t notify)
 {
-  struct hurd_sigstate *ss = _hurd_self_sigstate ();
   error_t err;
+  struct hurd_sigstate *ss;
+  int user_timeout;
+
+  if (_hurd_msgport_thread == MACH_PORT_NULL)
+    {
+      /* The signal thread is not set up yet, so we cannot do the
+	 normal signal magic.  Do a simple uninterruptible RPC instead.  */
+      return __mach_msg (msg, option, send_size, rcv_size, rcv_name,
+			 timeout, notify);
+    }
+
+  ss = _hurd_self_sigstate ();
+
   /* Notice now if the user requested a timeout.  OPTION may have the bit
      added by interruption semantics, and we must distinguish.  */
-  int user_timeout = option & MACH_RCV_TIMEOUT;
+  user_timeout = option & MACH_RCV_TIMEOUT;
 
   /* Tell the signal thread that we are doing an interruptible RPC on
      this port.  If we get a signal and should return EINTR, the signal

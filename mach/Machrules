@@ -44,6 +44,15 @@ endif
 
 include ../Makeconfig
 
+# This makefile contains a lot of implicit rules that get optimized
+# away if the target directory does not exist.
+ifndef no_deps
+-include $(objpfx)dummy.mk
+endif
+$(objpfx)dummy.mk:
+	$(make-target-directory)
+	echo '# Empty' > $@
+
 MIGFLAGS = -DMACH_IPC_COMPAT=0 -DSTANDALONE -DTypeCheck=0 \
 	   $(+includes) $(migdefines) -subrprefix __
 
