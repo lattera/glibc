@@ -19,6 +19,7 @@
    02111-1307 USA.  */
 
 #include <assert.h>
+#include <atomic.h>
 #include <error.h>
 #include <errno.h>
 #include <grp.h>
@@ -129,6 +130,9 @@ int nthreads = -1;
 
 /* Socket for incoming connections.  */
 static int sock;
+
+/* Number of times clients had to wait.  */
+unsigned long int client_queued;
 
 
 /* Initialize database information structures.  */
@@ -435,145 +439,163 @@ nscd_run (void *p)
   long int my_number = (long int) p;
   struct pollfd conn;
   int run_prune = my_number < lastdb && dbs[my_number].enabled;
-  time_t now = time (NULL);
-  time_t next_prune = now + CACHE_PRUNE_INTERVAL;
-  int timeout = run_prune ? 1000 * (next_prune - now) : -1;
+  time_t next_prune = run_prune ? time (NULL) + CACHE_PRUNE_INTERVAL : 0;
+  static unsigned long int nready;
 
   conn.fd = sock;
   conn.events = POLLRDNORM;
 
   while (1)
     {
-      int nr = poll (&conn, 1, timeout);
+      int nr;
 
-      if (nr == 0)
+      /* One more thread available.  */
+      atomic_increment (&nready);
+
+    no_conn:
+      if (run_prune)
+	do
+	  {
+	    time_t now = time (NULL);
+	    int timeout = now < next_prune ? 1000 * (next_prune - now) : 0;
+
+	    nr = poll (&conn, 1, timeout);
+
+	    if (nr == 0)
+	      {
+		/* The `poll' call timed out.  It's time to clean up the
+		   cache.  */
+		atomic_decrement (&nready);
+		assert (my_number < lastdb);
+		prune_cache (&dbs[my_number], time(NULL));
+		now = time (NULL);
+		next_prune = now + CACHE_PRUNE_INTERVAL;
+		goto try_get;
+	      }
+	  }
+	while ((conn.revents & POLLRDNORM) == 0);
+
+    got_data:;
+      /* We have a new incoming connection.  Accept the connection.  */
+      int fd = TEMP_FAILURE_RETRY (accept (conn.fd, NULL, NULL));
+      request_header req;
+      char buf[256];
+      uid_t uid = 0;
+#ifdef SO_PEERCRED
+      pid_t pid = 0;
+#endif
+
+      if (__builtin_expect (fd, 0) < 0)
 	{
-	  /* The `poll' call timed out.  It's time to clean up the cache.  */
-	  assert (my_number < lastdb);
-	  now = time (NULL);
-	  prune_cache (&dbs[my_number], now);
-	  next_prune = now + CACHE_PRUNE_INTERVAL;
-	  timeout = 1000 * (next_prune - now);
+	  dbg_log (_("while accepting connection: %s"),
+		   strerror_r (errno, buf, sizeof (buf)));
+	  goto no_conn;
+	}
+
+      /* This thread is busy.  */
+      atomic_decrement (&nready);
+
+      /* Now read the request.  */
+      if (__builtin_expect (TEMP_FAILURE_RETRY (read (fd, &req, sizeof (req)))
+			    != sizeof (req), 0))
+	{
+	  if (debug_level > 0)
+	    dbg_log (_("short read while reading request: %s"),
+		     strerror_r (errno, buf, sizeof (buf)));
+	  close (fd);
 	  continue;
 	}
 
-      /* We have a new incoming connection.  */
-      if (conn.revents & (POLLRDNORM|POLLERR|POLLHUP|POLLNVAL))
-	{
-	  /* Accept the connection.  */
-	  int fd = TEMP_FAILURE_RETRY (accept (conn.fd, NULL, NULL));
-	  request_header req;
-	  char buf[256];
-	  uid_t uid = 0;
+      /* Some systems have no SO_PEERCRED implementation.  They don't
+	 care about security so we don't as well.  */
 #ifdef SO_PEERCRED
-	  pid_t pid = 0;
-#endif
+      if (secure_in_use)
+	{
+	  struct ucred caller;
+	  socklen_t optlen = sizeof (caller);
 
-	  if (__builtin_expect (fd, 0) < 0)
+	  if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED, &caller, &optlen) < 0)
 	    {
-	      dbg_log (_("while accepting connection: %s"),
+	      dbg_log (_("error getting callers id: %s"),
 		       strerror_r (errno, buf, sizeof (buf)));
+	      close (fd);
 	      continue;
 	    }
 
-	  /* Now read the request.  */
-	  if (__builtin_expect (TEMP_FAILURE_RETRY (read (fd, &req,
-							  sizeof (req)))
-				!= sizeof (req), 0))
+	  if (req.type < GETPWBYNAME || req.type > LASTDBREQ
+	      || secure[serv2db[req.type]])
+	    uid = caller.uid;
+
+	      pid = caller.pid;
+	}
+      else if (__builtin_expect (debug_level > 0, 0))
+	{
+	  struct ucred caller;
+	  socklen_t optlen = sizeof (caller);
+
+	  if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED, &caller, &optlen) == 0)
+	    pid = caller.pid;
+	}
+#endif
+
+      /* It should not be possible to crash the nscd with a silly
+	 request (i.e., a terribly large key).  We limit the size to 1kb.  */
+      if (__builtin_expect (req.key_len, 1) < 0
+	  || __builtin_expect (req.key_len, 1) > 1024)
+	{
+	  if (debug_level > 0)
+	    dbg_log (_("key length in request too long: %d"), req.key_len);
+	  close (fd);
+	  continue;
+	}
+      else
+	{
+	  /* Get the key.  */
+	  char keybuf[req.key_len];
+
+	  if (__builtin_expect (TEMP_FAILURE_RETRY (read (fd, keybuf,
+							  req.key_len))
+				!= req.key_len, 0))
 	    {
 	      if (debug_level > 0)
-		dbg_log (_("short read while reading request: %s"),
+		dbg_log (_("short read while reading request key: %s"),
 			 strerror_r (errno, buf, sizeof (buf)));
 	      close (fd);
 	      continue;
 	    }
 
-	  /* Some systems have no SO_PEERCRED implementation.  They don't
-	     care about security so we don't as well.  */
+	  if (__builtin_expect (debug_level, 0) > 0)
+	    {
 #ifdef SO_PEERCRED
-	  if (secure_in_use)
-	    {
-	      struct ucred caller;
-	      socklen_t optlen = sizeof (caller);
-
-	      if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED,
-			      &caller, &optlen) < 0)
-		{
-		  dbg_log (_("error getting callers id: %s"),
-			   strerror_r (errno, buf, sizeof (buf)));
-		  close (fd);
-		  continue;
-		}
-
-	      if (req.type < GETPWBYNAME || req.type > LASTDBREQ
-		  || secure[serv2db[req.type]])
-		uid = caller.uid;
-
-	      pid = caller.pid;
-	    }
-	  else if (__builtin_expect (debug_level > 0, 0))
-	    {
-	      struct ucred caller;
-	      socklen_t optlen = sizeof (caller);
-
-	      if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED,
-			      &caller, &optlen) == 0)
-		pid = caller.pid;
-	    }
-#endif
-
-	  /* It should not be possible to crash the nscd with a silly
-	     request (i.e., a terribly large key).  We limit the size
-	     to 1kb.  */
-	  if (__builtin_expect (req.key_len, 1) < 0
-	      || __builtin_expect (req.key_len, 1) > 1024)
-	    {
-	      if (debug_level > 0)
-		dbg_log (_("key length in request too long: %d"), req.key_len);
-	      close (fd);
-	      continue;
-	    }
-	  else
-	    {
-	      /* Get the key.  */
-	      char keybuf[req.key_len];
-
-	      if (__builtin_expect (TEMP_FAILURE_RETRY (read (fd, keybuf,
-							      req.key_len))
-				    != req.key_len, 0))
-		{
-		  if (debug_level > 0)
-		    dbg_log (_("short read while reading request key: %s"),
-			     strerror_r (errno, buf, sizeof (buf)));
-		  close (fd);
-		  continue;
-		}
-
-	      if (__builtin_expect (debug_level, 0) > 0)
-		{
-#ifdef SO_PEERCRED
-		  if (pid != 0)
-		    dbg_log (_("\
+	      if (pid != 0)
+		dbg_log (_("\
 handle_request: request received (Version = %d) from PID %ld"),
-			     req.version, (long int) pid);
-		  else
+			 req.version, (long int) pid);
+	      else
 #endif
-		    dbg_log (_("\
+		dbg_log (_("\
 handle_request: request received (Version = %d)"), req.version);
-		}
-
-	      /* Phew, we got all the data, now process it.  */
-	      handle_request (fd, &req, keybuf, uid);
-
-	      /* We are done.  */
-	      close (fd);
 	    }
+
+	  /* Phew, we got all the data, now process it.  */
+	  handle_request (fd, &req, keybuf, uid);
+
+	  /* We are done.  */
+	  close (fd);
 	}
 
-      if (run_prune)
+      /* Just determine whether any data is present.  We do this to
+	 measure whether clients are queued up.  */
+    try_get:
+      nr = poll (&conn, 1, 0);
+      if (nr != 0)
 	{
-	  now = time (NULL);
-	  timeout = now < next_prune ? 1000 * (next_prune - now) : 0;
+	  if (nready == 0)
+	    ++client_queued;
+
+	  atomic_increment (&nready);
+
+	  goto got_data;
 	}
     }
 }
