@@ -368,6 +368,11 @@ of this helper program; chances are you did not intend to run this program.\n",
 	 with the run-time address of the r_debug structure  */
       l->l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
 
+    /* Fill in the pointer in the dynamic linker's own dynamic section, in
+       case you run gdb on the dynamic linker directly.  */
+    if (_dl_rtld_map.l_info[DT_DEBUG])
+      _dl_rtld_map.l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
+
     /* Notify the debugger that all objects are now mapped in.  */
     r->r_state = RT_ADD;
     _dl_debug_state ();
