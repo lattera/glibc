@@ -1,13 +1,13 @@
 2003-10-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* timezone/asia: Update from tzdata2003d.
-	* australasia: Likewise.
-	* backward: Likewise.
-	* europe: Likewise.
-	* iso3166.tab: Likewise.
-	* northamerica: Likewise.
-	* southamerica: Likewise.
-	* zone.tab: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
 
 2003-10-05  Jakub Jelinek  <jakub@redhat.com>
 
