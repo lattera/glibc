@@ -1,3 +1,12 @@
+1999-06-02  Jakub Jelinek   <jj@ultra.linux.cz>
+
+	* stdlib/longlong.h: Define UDIV_TIME on sparc64.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigpending.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pause.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigprocmask.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigsuspend.c: New file.
+
 1999-06-02  David S. Miller  <davem@redhat.com>
 
 	* nscd/nscd_gethst_r.c (nscd_gethst_r): Align the h_addr_list

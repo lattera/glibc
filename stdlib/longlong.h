@@ -1237,6 +1237,7 @@ extern USItype __udiv_qrnnd __P ((USItype *, USItype, USItype, USItype));
 	   : "cc");							\
   } while (0)
 #define UMUL_TIME 96
+#define UDIV_TIME 230
 #endif /* __sparc_v9__ */
 
 #if defined (__vax__) && W_TYPE_SIZE == 32
