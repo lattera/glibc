@@ -153,9 +153,17 @@ Cambridge, MA 02139, USA.  */
 
 /* These are all done the same way in ELF.
    There is a new section created for each set.  */
+#ifdef PIC
+/* When building a shared library, make the set section writable,
+   because it will need to be relocated at run time anyway.  */
+#define _elf_set_element(set, symbol) \
+  static const void *__elf_set_##set##_element_##symbol##__ \
+    __attribute__ ((section (#set))) = &(symbol)
+#else
 #define _elf_set_element(set, symbol) \
   static const void *const __elf_set_##set##_element_##symbol##__ \
     __attribute__ ((section (#set))) = &(symbol)
+#endif
 
 /* Define SET as a symbol set.  This may be required (it is in a.out) to
    be able to use the set's contents.  */

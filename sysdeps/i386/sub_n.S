@@ -53,7 +53,14 @@ C_SYMBOL_NAME(__mpn_sub_n:)
 	subl	%eax,%esi		/* ... by a constant when we ... */
 	subl	%eax,%edx		/* ... enter the loop */
 	shrl	$2,%eax			/* restore previous value */
+#ifdef PIC
+	call	here
+here:	leal	(Loop - 3 - here)(%eax,%eax,8),%eax
+	addl	(%esp),%eax
+	addl	$4,%esp
+#else
 	leal	(Loop - 3)(%eax,%eax,8),%eax	/* calc start addr in loop */
+#endif
 	jmp	*%eax			/* jump into loop */
 	ALIGN (3)
 Loop:	movl	(%esi),%eax

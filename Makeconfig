@@ -340,8 +340,8 @@ endif	# gcc
 
 # These are the variables that the implicit compilation rules use.
 CPPFLAGS = $(+includes) $(defines) -include $(..)libc-symbols.h \
-	   $(sysdep-CPPFLAGS) $(CFLAGS-$(suffix $@))
-override CFLAGS	= $(+cflags) $(sysdep-CFLAGS) $(CPPFLAGS-$(suffix $@))
+	   $(sysdep-CPPFLAGS) $(CPPFLAGS-$(suffix $@))
+override CFLAGS	= $(+cflags) $(sysdep-CFLAGS) $(CFLAGS-$(suffix $@))
 
 
 # This is the macro that the implicit linking rules use.

@@ -1,6 +1,6 @@
 # Makefile for the GNU C Library manual.
 
-# Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
+# Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -35,11 +35,11 @@ endif
 include chapters
 chapters: libc.texinfo
 	$(find-includes)
-chapters := $(filter-out summary.texi,$(chapters))
 ifdef chapters
 include chapters-incl
 chapters-incl: $(chapters)
 	$(find-includes)
+chapters-incl := $(filter-out summary.texi,$(chapters-incl))
 endif
 
 define find-includes

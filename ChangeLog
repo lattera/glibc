@@ -1,4 +1,17 @@
+Tue Apr 11 20:38:55 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/i386/add_n.S [PIC]: Use self-call to avoid generating reloc.
+	* sysdeps/i386/sub_n.S [PIC]: Likewise.
+
 Mon Apr 10 14:53:15 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* libc-symbols.h (_elf_set_element) [PIC]: Don't make the element
+ 	word `const'.
+
+	* Makeconfig (CPPFLAGS, CFLAGS): Fix swapped references to
+ 	$(foo-$(suffix $@)).
+
+	* manual/Makefile (chapters-incl): Filter out summary.texi.
 
 	* stdlib/strtod.c (STRTOF): Use extra macro to make STRTOF's #defn
  	a weak symbol instead of literal "STRTOF".
