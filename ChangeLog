@@ -1,3 +1,14 @@
+2001-01-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* conform/conformtest.pl: Handle allow-header in secondary headers
+	correctly.
+
+	* conform/data/fcntl.h-data: Mark symbols introduced in XPG6 with
+	#ifdef.
+
+	* conform/data/netinet/in.h-data: Use correct comment character.
+	* conform/data/sys/stat.h-data: Likewise.
+
 2001-01-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* math/tgmath.h (__TGMATH_BINARY_FIRST_REAL_ONLY,

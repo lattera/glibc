@@ -62,12 +62,14 @@ constant S_ISUID
 constant S_ISGID
 constant S_ISVTX
 
+#ifdef XOPEN2K
 constant POSIX_FADV_NORMAL
 constant POSIX_FADV_SEQUENTIAL
 constant POSIX_FADV_RANDOM
 constant POSIX_FADV_WILLNEED
 constant POSIX_FADV_DONTNEED
 constant POSIX_FADV_NOREUSE
+#endif
 
 type {struct flock}
 
@@ -84,9 +86,11 @@ type pid_t
 function int creat (const char*, mode_t)
 function int fcntl (int, int, ...)
 function int open (const char*, int, ...)
+#ifdef XOPEN2K
 function int posix_fadvise (int, off_t, size_t, int)
 function int posix_fallocate (int, off_t, size_t)
 function int posix_madvise (void*, size_t, int)
+#endif
 
 allow-header sys/stat.h
 allow-header unistd.h

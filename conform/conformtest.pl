@@ -58,7 +58,8 @@ $errors = 0;
 #$dialect = "POSIX";
 #$dialect = "XPG3";
 #$dialect = "XPG4";
-$dialect = "UNIX98";
+#$dialect = "UNIX98";
+$dialect = "XOPEN2K";
 
 
 sub poorfnmatch {
@@ -780,11 +781,11 @@ while ($#headers >= 0) {
 	push @allow, $4;
       } elsif (/^macro *([^	]*)/) {
 	push @allow, $1;
-      } elsif (/^allow *(.*)/) {
-	push @allow, $1;
       } elsif (/^allow-header *(.*)/) {
 	# XXX We should have a test for recursive dependencies here.
 	push @allowheader, $1;
+      } elsif (/^allow *(.*)/) {
+	push @allow, $1;
       }
     }
     close (ALLOW);

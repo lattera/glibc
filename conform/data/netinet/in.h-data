@@ -29,12 +29,12 @@ element {struct sockaddr_in6} uint32_t sin6_scope_id
 
 variable {struct in6_addr} in6addr_any
 
-# constant IN6ADDR_ANY_INIT
+// constant IN6ADDR_ANY_INIT
 macro IN6ADDR_ANY_INIT
 
 variable {struct in6_addr} in6addr_loopback
 
-#constant IN6ADDR_LOOPBACK_INIT
+// constant IN6ADDR_LOOPBACK_INIT
 macro IN6ADDR_LOOPBACK_INIT
 
 type {struct ipv6_mreq}
