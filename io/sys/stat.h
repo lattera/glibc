@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1995-2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995-2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,13 +27,17 @@
 
 #include <bits/types.h>		/* For __mode_t and __dev_t.  */
 
-#ifdef __USE_XOPEN
+#if defined __USE_XOPEN || defined __USE_MISC
+# ifdef __USE_XOPEN
+#  define __need_time_t
+# endif
 # ifdef __USE_MISC
 #  define __need_timespec
 # endif
-# define __need_time_t
-# include <time.h>		/* For time_t.  */
+# include <time.h>		/* For time_t resp. timespec.  */
+#endif
 
+#ifdef __USE_XOPEN
 /* The Single Unix specification says that some more types are
    available here.  */
 # ifndef __dev_t_defined
