@@ -85,8 +85,8 @@ typedef long long int __ssize_t;	/* Type of a byte count, or error.  */
 #else
 typedef int __ssize_t;			/* Type of a byte count, or error.  */
 #endif
-typedef long int __rlim_t;		/* Type of resource counts.  */
-typedef __quad_t __rlim64_t;		/* Type of resource counts (LFS).  */
+typedef __u_long __rlim_t;		/* Type of resource counts.  */
+typedef __u_quad_t __rlim64_t;		/* Type of resource counts (LFS).  */
 typedef __u_int __id_t;			/* General type for IDs.  */
 
 typedef struct

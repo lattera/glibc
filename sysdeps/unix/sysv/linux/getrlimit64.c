@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,48 +16,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#define __need_NULL
-#include <stddef.h>
+#define getrlimit64 __new_getrlimit64
 
-unsigned int
-if_nametoindex (const char *ifname)
-{
-  __set_errno (ENOSYS);
-  return 0;
-}
-stub_warning (if_nametoindex)
+#include <sysdeps/generic/getrlimit64.c>
 
-char *
-if_indextoname (unsigned int ifindex, char *ifname)
-{
-  __set_errno (ENOSYS);
-  return NULL;
-}
-stub_warning (if_indextoname)
-
-struct if_nameindex;		/* inhibit warning */
-void
-if_freenameindex (struct if_nameindex *ifn)
-{
-}
-stub_warning (if_freenameindex)
-
-struct if_nameindex *
-if_nameindex (void)
-{
-  __set_errno (ENOSYS);
-  return NULL;
-}
-stub_warning (if_nameindex)
-#include <stub-tag.h>
-
-
-void
-internal_function
-__protocol_available (int *have_inet, int *have_inet6)
-{
-  /* By default we assume that IPv4 is avaialble, IPv6 not.  */
-  *have_inet = 1;
-  *have_inet6 = 0;
-}
+#undef getrlimit64
+#if defined PIC && defined DO_VERSIONING
+default_symbol_version (__new_getrlimit64, getrlimit64, GLIBC_2.1.3);
+#else
+weak_alias (__new_getrlimit64, getrlimit64);
+#endif

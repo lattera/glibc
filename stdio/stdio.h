@@ -406,7 +406,7 @@ extern int vfprintf (FILE *__restrict __s, __const char *__restrict __format,
 		     __gnuc_va_list __arg) __THROW;
 /* Write formatted output to stdout from argument list ARG.  */
 extern int vprintf (__const char *__restrict __format, __gnuc_va_list __arg)
-     ___THROW;
+     __THROW;
 /* Write formatted output to S from argument list ARG.  */
 extern int vsprintf (char *__restrict __s, __const char *__restrict __format,
 		     __gnuc_va_list __arg) __THROW;

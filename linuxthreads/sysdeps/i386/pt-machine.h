@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    i386 version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -23,6 +23,12 @@
 # define PT_EI extern inline
 #endif
 
+/* Get some notion of the current stack.  Need not be exactly the top
+   of the stack, just something somewhere in the current frame.  */
+#define CURRENT_STACK_FRAME  stack_pointer
+register char * stack_pointer __asm__ ("%esp");
+
+
 /* Spinlock implementation; required.  */
 PT_EI int
 testandset (int *spinlock)
@@ -37,12 +43,6 @@ testandset (int *spinlock)
 
   return ret;
 }
-
-
-/* Get some notion of the current stack.  Need not be exactly the top
-   of the stack, just something somewhere in the current frame.  */
-#define CURRENT_STACK_FRAME  stack_pointer
-register char * stack_pointer __asm__ ("%esp");
 
 
 /* Compare-and-swap for semaphores.

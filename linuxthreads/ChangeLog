@@ -1,3 +1,10 @@
+1999-12-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/pt-machine.h: Move stack_pointer definition to the
+	beginning.
+	* sysdeps/i386/i686/pt-machine.h: Likewise.
+	Patches by Alan Modra <alan@SPRI.Levels.UniSA.Edu.Au>.
+
 1999-11-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manager.c (pthread_start_thread_event): Initialize p_pid already

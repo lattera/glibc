@@ -28,6 +28,7 @@ s_getdents	getdents getdents	3	__syscall_getdents
 s_getpriority	getpriority getpriority	2	__syscall_getpriority
 s_getresgid	getresgid getresgid	3	__syscall_getresgid
 s_getresuid	getresuid getresuid	3	__syscall_getresuid
+s_getrlimit	getrlimit getrlimit	2	__syscall_getrlimit
 s_poll		poll	poll		3	__syscall_poll
 s_pread64	pread64	pread		5	__syscall_pread
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
@@ -38,6 +39,7 @@ s_sigpending	sigpending sigpending	1	__syscall_sigpending
 s_sigprocmask	sigprocmask sigprocmask	3	__syscall_sigprocmask
 s_sigsuspend	sigsuspend sigsuspend	3	__syscall_sigsuspend
 s_sysctl	sysctl	_sysctl		1	__syscall__sysctl
+s_ugetrlimit	getrlimit ugetrlimit	2	__syscall_ugetrlimit
 s_ustat		ustat	ustat		2	__syscall_ustat
 sys_fstat	fxstat	fstat		2	__syscall_fstat
 sys_lstat	lxstat	lstat		2	__syscall_lstat

@@ -1,3 +1,50 @@
+1999-12-01  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/if_index.c (__protocol_available): Add missing
+	int for parameter.
+
+	* stdio/stdio.h: Fix typo.
+	Patches by Marcus G. Daniels <mgd@santafe.edu>.
+
+1999-12-01  Andreas Jaeger  <aj@suse.de>
+
+	* scripts/test-installation.pl (installation_problem): Filter out
+	libpthread_db.
+
+1999-12-01  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Fix signedness of
+	__rlim_t and __rlim64_t.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/types.h: Likewise.
+
+1999-12-01  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add
+	oldgetrlimit64 and oldsetrlimit64 for subdir = resource.
+	* sysdeps/unix/sysv/linux/Versions: Add getrlimit, setrlimit,
+	getrlimit64 and setrlimit64 to version GLIBC_2.1.3.
+	* sysdeps/unix/sysv/linux/setrlimit.c: Correct handling of old and
+	new kernel version.  Add symbol versions.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add oldsetrlimit and
+	oldgetrlimit.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add s_getrlimit
+	and s_ugetrlimit.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/getrlimit.c: New file.
+	* sysdeps/unix/sysv/linux/getrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/oldgetrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/oldsetrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/setrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/oldgetrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/oldsetrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/oldgetrlimit64.c: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/oldsetrlimit64.c: New
+	file.
+
 1999-12-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/usleep.c: Fix typo.

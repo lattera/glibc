@@ -105,8 +105,9 @@ while (<SOVERSIONS>) {
     # - nss_ldap since it's not yet available
     # - libdb1 since it conflicts with libdb
     # - libnss1_* from glibc-compat add-on
+    # - libthread_db since it contains unresolved references
     if ($name ne "nss_ldap" && $name ne "db1"
-	&& !($name =~/^nss1_/)) {
+	&& !($name =~/^nss1_/) && $name ne "thread_db") {
       $link_libs .= " -l$name";
       $versions{$name} = $version;
     }
