@@ -1,3 +1,9 @@
+2000-09-18  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/bits/time.h: (CLOCKS_PER_SEC): Make a long int
+	constant since that is what clock_t is.
+	* sysdeps/mach/hurd/i386/bits/time.h: Likewise.
+
 2000-09-11  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/getloadavg.c (getloadavg): Divide instead of
