@@ -1,5 +1,8 @@
 Sun Jul  7 18:42:06 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* io/Makefile (headers): Add sys/vfs.h.
+	* io/sys/vfs.h: New file.
+
 	* sysdeps/mach/hurd/jmp-unwind.c (_longjmp_unwind): Don't unlock the
 	critical section lock before unlinking dying active resources.
 	The unlock just before return is right (i.e. old code unlocked twice).
