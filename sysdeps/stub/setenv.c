@@ -30,3 +30,22 @@ setenv (name, value, replace)
 }
 
 stub_warning (setenv)
+
+void
+unsetenv (name)
+     const char *name;
+{
+  __set_errno (ENOSYS);
+}
+
+stub_warning (unseenv)
+
+
+int
+clearenv (void)
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
+
+stub_warning (clearenv)

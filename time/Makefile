@@ -121,8 +121,13 @@ target-zone-flavor = $(filter /posix /right, \
 ifdef localtime
 $(installed-localtime-file): $(zonedir)/$(localtime) $(objpfx)zic
 	$(make-target-directory)
-	if test -r $@; then echo Site timezone NOT reset to Factory.; else \
-	ln -s -f $< $@; fi
+	if test -r $@; then \
+	  echo Site timezone NOT reset to Factory.; \
+	else \
+	  rm -f $@T; \
+	  $(SHELL) $(common-objpfx)$(..)rellns-sh $< $@T; \
+	  mv -f $@T $@; \
+	fi
 endif
 ifdef posixrules
 $(installed-posixrules-file): $(zonedir)/$(posixrules) $(objpfx)zic

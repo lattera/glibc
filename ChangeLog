@@ -1,3 +1,41 @@
+Sat Nov  2 01:48:47 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/errnos.h: Move declaration of errno
+	and __errno_location to correct position.
+
+Thu Oct 31 22:51:25 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (distribute): Add rellns-sh.
+	* rellns-sh: New file.
+	* Makerules (make-link): Use rellns-sh.
+	* time/Makefile ($(installed-localtime-file)): Likewise.
+
+Thu Oct 31 11:33:01 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile ($objpfx)ldd) Substitute $(version) for @VERSION@.
+	(distribute): Add ldd.bash.in.
+	* elf/ldd.sh.in: Process --help and --version parameter.
+	Correct comments.
+	* elf/ldd.bash.in: New file.
+
+	* stdlib/stdlib.h: Add prototype for clearenv.
+	* sysdeps/generic/setenv.c: Add implementation of clearenv.
+	(setenv): Handle __environ == NULL correctly.
+	* sysdeps/stub/setenv.c: Add stub definition for unsetenv and
+	clearenv.
+
+	* sysdeps/generic/putenv.c: Correct layout to fit in libit.
+	* sysdeps/generic/setenv.c: Likewise.
+	* stdlib/strtol.h: Likewise.
+
+	* time/sys/time.h: Define __need_timeval and include <timebits.h>.
+	Remove definition of struct timeval.
+	* sysdeps/stub/timebits.h [__need_timeval]: Define struct timeval
+	using `time_t' for members.
+	* sysdeps/unix/sysv/linux/timebits.h [__need_timeval]: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/timebits.h: New file.  Same
+	as old Linux specific version.
+
 Thu Oct 31 00:01:39 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* signal/Makefile (routines): Add sigwait.
@@ -44,7 +82,7 @@ Tue Oct 29 12:37:22 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* string/string.h: Likewise.
 	* time/time.h: Likewise.
 
-	* string/argz.h: Use __const is definitions.
+	* string/argz.h: Use __const in definitions.
 
 	* elf/dlfcn.h: Use __const and __P.  Reformat copyright.
 	* misc/err.h: Likewise.
@@ -83,7 +121,7 @@ Tue Oct 29 12:37:22 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/getlogin_r.c: Return ERANGE when buffer is too small.
 
-	* inet/herrno.c: Don't define __h_errno.  Only h_errno otherwise the
+	* inet/herrno.c: Don't define __h_errno, only h_errno otherwise the
 	ELF aliasing creates strange situations.
 	* sysdeps/unix/sysv/linux/errnos.H: Define __set_errno as inline
 	function.
@@ -282,7 +320,7 @@ Mon Oct 21 15:41:59 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* sysdeps/mach/_strerror.c: Likewise.
 
 	* sysdeps/unix/sysv/i386/time.S: Add PSEUDO_END to get
- 	__syscall_error defined..
+	__syscall_error defined.
 
 Sat Oct 19 12:27:50 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
@@ -321,7 +359,7 @@ Mon Oct 21 01:32:36 1996  Ulrich Drepper  <drepper@cygnus.com>
 	translation while `_dl_starting_up' is nonzero.
 
 	* elf/dl-deps.c (_dl_map_object_deps): Add new parameter
- 	TRACE_MODE.
+	TRACE_MODE.
 	Pass parameter value to _dl_map_object.
 	* elf/dl-load (_dl_map_object): Add new parameter TRACE_MODE.
 	If TRACE_MODE is nonzero don#t signal error when shared lib
@@ -389,7 +427,7 @@ Sun Oct 20 17:17:12 1996  Ulrich Drepper  <drepper@cygnus.com>
 	Add implementation of POSIX.1g function getaddrinfo.
 	* posix/Makefile (routines): Add getaddrinfo.
 	* sysdeps/posix/getaddrinfo.c.: New file.  Add implementation by
- 	Craig Metz.
+	Craig Metz.
 	* sysdeps/stub/getaddrinfo.c: New file.  Stub implementation.
 	* resolv/netdb.h [__USE_POSIX]: Add getaddrinfo prototypes and
 	related constants and structures.
@@ -418,7 +456,7 @@ Sun Oct 20 13:02:34 1996  Ulrich Drepper  <drepper@cygnus.com>
 Sun Oct 19 23:05:32 1996  Jim Meyering  <meyering@asic.sc.ti.com>
 
 	* crypt/md5.c (md5_process_bytes): Used casting for pointer
- 	arithmetic.
+	arithmetic.
 
 Sun Oct 20 03:53:23 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -435,15 +473,15 @@ Fri Oct 17 13:20:35 1996  Thorsten Kukuk  <kukuk@weber.uni-paderborn.de>
 Fri Oct 18 22:56:45 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sunrpc/Makefile (install-sbin): Remove portmap.  This version is
- 	buggy and more competent people work on a usable version which is
- 	distributed separately.
+	buggy and more competent people work on a usable version which is
+	distributed separately.
 	* sunrpc/portmap.c: Removed.
 	Suggested by Thorsten Kukuk.
 
 Fri Oct 18 12:17:09 1996  Enrique Melero  <justine@iprolink.ch>
 
 	* sysdeps/libm-ieee754/s_finitel.c: Change function name to
- 	`finitel'.
+	`finitel'.
 
 Fri Oct 18 00:01:10 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -456,7 +494,7 @@ Thu Oct 17 22:10:19 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* Makerules ($(libdir)/libc.so): Fix typo.
 
 	* elf/ldd.sh.in: Test whether given file really exist and give
- 	better message if it is not available.
+	better message if it is not available.
 
 Thu Oct 17 04:25:38 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -499,12 +537,12 @@ Thu Oct 17 00:26:20 1996  NIIBE Yutaka  <gniibe@mri.co.jp>
 Wed Oct 16 12:26:53 1996  Sven Verdoolaege  <skimo@breughel.ufsia.ac.be>
 
 	* locale/programs/localedef.c (main): Test with -1 to find out
- 	whether read failed.
+	whether read failed.
 
 Wed Oct 16 14:54:59 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/clone.S: Use JUMPTARGET and
- 	PSEUDO_END macro.
+	PSEUDO_END macro.
 
 Tue Oct 15 21:27:42 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
@@ -538,8 +576,8 @@ Tue Oct 15 23:39:48 1996  Ulrich Drepper  <drepper@cygnus.com>
 	Reported by Andreas Jaeger.
 
 	The available nlist implementation is not generally usable.
-  	Especially on the currently supported ELF systems the nlist
- 	function comes with the libelf.
+	Especially on the currently supported ELF systems the nlist
+	function comes with the libelf.
 	* misc/Makefile (headers): Remove nlist.h.
 	(routines): Remove nlist.
 
@@ -692,7 +730,7 @@ Fri Oct 11 23:36:31 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 Fri Oct 11 19:13:34 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/Makefile (CPPFLAGS): Set CHARMAP_PATH to
- 	"$(i18ndir)/charmaps".
+	"$(i18ndir)/charmaps".
 
 Fri Oct 11 22:12:41 1996  NIIBE Yutaka  <gniibe@mri.co.jp>
 
@@ -701,7 +739,7 @@ Fri Oct 11 22:12:41 1996  NIIBE Yutaka  <gniibe@mri.co.jp>
 
 	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=socket] (subdir_headers):
 	Add net/if.h, net/if_ppp.h, net/ppp-comp.h, net/ppp_defs.h,
- 	net/if_arp.h, and net/route.h.
+	net/if_arp.h, and net/route.h.
 	* sysdeps/unix/sysv/linux/net/if_arp.h: New file.
 	* sysdeps/unix/sysv/linux/net/route.h: New file.
 
@@ -763,7 +801,7 @@ Thu Oct 10 15:53:17 1996  Richard Henderson  <rth@tamu.edu>
 	* sysdeps/alpha/stxcpy.S ($unaligned): In single word copy, correct
 	last-byte-written bit for source word misalignment.
 	* sysdeps/alpha/strchr.c: Removed.  There is now an assembler
- 	version.
+	version.
 
 Thu Oct 10 17:17:23 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -901,7 +939,7 @@ Mon Oct  7 13:42:20 1996  Ulrich Drepper  <drepper@cygnus.com>
 	Suggested by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>.
 
 	* nss/nss_files/files-parse.c: Define LOOKUP_NAME even if
- 	EXTERN_PARSER is defined.
+	EXTERN_PARSER is defined.
 
 Sat Oct  5 17:05:36 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
 
@@ -1247,13 +1285,13 @@ Thu Oct  3 13:33:31 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 	Don't declare key_t here.
 
 	* hurd/alloc-fd.c (_hurd_alloc_fd): If realloc fails, bother to
- 	set errno (to ENOMEM).
+	set errno (to ENOMEM).
 
 Wed Oct  2 13:41:48 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/strtok.c: Don't set stored pointer to NULL when
- 	nothing is found.  This guarantees all subsequent calls behave
- 	the same.
+	nothing is found.  This guarantees all subsequent calls behave
+	the same.
 	* sysdeps/generic/strtok_r.c: Likewise.
 
 Mon Sep 30 22:27:36 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
@@ -1270,10 +1308,10 @@ Mon Sep 30 22:38:29 1996  Richard Henderson  <rth@tamu.edu>
 Tue Oct  1 09:12:21 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-time.c: Always write some bytes at the end of
- 	the file even if no `era's are specified.
+	the file even if no `era's are specified.
 
 	* stdio-common/tmpname.c (tmpbuf): Don't define as array of
- 	pointers.
+	pointers.
 
 Tue Oct  1 01:43:11 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -1438,7 +1476,7 @@ Mon Sep 30 00:14:26 1996  Ulrich Drepper  <drepper@cygnus.com>
 Sun Sep 29 12:55:58 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Change function name for
- 	_llseek to _llseek (not llseek).
+	_llseek to _llseek (not llseek).
 	Reported by Matthias Urlichs <smurf@smurf.noris.de>.
 
 Sun Sep 29 05:34:32 1996  Ulrich Drepper  <drepper@cygnus.com>
@@ -1466,7 +1504,7 @@ Sat Sep 28 03:02:49 1996  Ulrich Drepper  <drepper@cygnus.com>
 	to prevent warnings.
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path):
- 	Initialize `result'.
+	Initialize `result'.
 
 Sat Sep 28 01:16:42 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -1569,7 +1607,7 @@ Fri Sep 27 14:12:27 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* sysdeps/posix/mk-stdiolim.c: Count final \0 byte in L_tmpnam value.
 
 	* time/strftime.c: Remove unused variables alt_digits and
- 	end_alt_digits.
+	end_alt_digits.
 
 	* sysdeps/unix/sysv/linux/sys/sysinfo.h: Correct prototype names
 	for get_nprocs and get_nprocs_conf.
@@ -1585,12 +1623,12 @@ Fri Sep 27 03:49:56 1996  Ulrich Drepper  <drepper@cygnus.com>
 	Add support for cancelable system calls.
 
 	* csu/initfini.c: Make in crti.o reference to symbol
- 	__libc_force_cancel_wrapper when compiling reentrant version.
+	__libc_force_cancel_wrapper when compiling reentrant version.
 	* misc/Makefile (routines): Add force-wrapper.
 	* misc/force-wrapper.c: New file.
 
 	* posix/system.c: Rename function to __libc_system and make system
- 	a weak alias.
+	a weak alias.
 	* sysdeps/stub/system.c: Likewise.
 	* posix/wait.c: Rename function to __libc_wait and make __wait a
 	weak alias.  De-ANSI-fy.
@@ -1601,7 +1639,7 @@ Fri Sep 27 03:49:56 1996  Ulrich Drepper  <drepper@cygnus.com>
 	make __write a weak alias.
 	* sysdeps/stub/write.c: Likewise.
 	* sysdeps/stub/tcdrain.c: Rename function to __libc_tcdrain and
- 	make tcdrain a weak alias.
+	make tcdrain a weak alias.
 	* sysdeps/unix/bsd/tcdrain.c: Likewise.
 	* sysdeps/unix/bsd/bsd4.4/tcdrain.c: Likewise.
 	* sysdeps/unix/sysv/tcdrain.c: Likewise.
@@ -1617,8 +1655,8 @@ Fri Sep 27 03:49:56 1996  Ulrich Drepper  <drepper@cygnus.com>
 	and make pause a weak alias.  De-ANSI-fy.
 
 	* sysdeps/unix/syscalls.list: Change name for close, fcntl, fsync,
- 	lseek, open, read, and write to have __libc_ prefix and make old
- 	names a weak alias.
+	lseek, open, read, and write to have __libc_ prefix and make old
+	names a weak alias.
 	* sysdeps/unix/mman/syscalls.list: Likewise for msync.
 	* sysdeps/unix/sysv/linux/syscalls.list: Likewise for nanosleep.
 
@@ -1634,7 +1672,7 @@ Thu Sep 26 19:15:55 1996  Ulrich Drepper  <drepper@cygnus.com>
 Thu Sep 26 14:40:10 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/posix/pathconf.c: Pass descriptor for just opened file
- 	to fpathconf.
+	to fpathconf.
 	Reported by Martin von Loewis <martin@mira.isdn.cs.tu-berlin.de>.
 
 Thu Sep 26 04:02:43 1996  Ulrich Drepper  <drepper@cygnus.com>
@@ -1646,7 +1684,7 @@ Thu Sep 26 04:02:43 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* locale/C-time.c (_nl_C_LC_TIME): Add initializer for new fields.
 	* locale/categories.def: Add postload function for LC_TIME.
 	* locale/setlocale.c: Make lock global and rename to
- 	__libc_setlocale_lock.
+	__libc_setlocale_lock.
 	* locale/localeinfo.h (struct era_entry): New type.  Used in strftime.
 	Add prototypes for _nl_get_era_entry and _nl_get_alt_digit.
 	* locale/lc-time.c (_nl_postload_time): New function.  Initialize
@@ -1665,7 +1703,7 @@ Wed Sep 25 17:31:55 1996  Ulrich Drepper  <drepper@cygnus.com>
 	Reported by Hans Grobler <grobh@nolian.ee.sun.ac.za>.
 
 	* elf/rtld.c (dl_main): Process LD_PRELOAD before loading
- 	ld.so.preload.  Suggested by David Engel <david@elo.ods.com>.
+	ld.so.preload.  Suggested by David Engel <david@elo.ods.com>.
 
 Wed Sep 25 13:10:57 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -1689,7 +1727,7 @@ Wed Sep 25 02:44:41 1996  Ulrich Drepper  <drepper@cygnus.com>
 Tue Sep 24 21:46:02 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* shadow/lckpwdf.c (PWD_LOCKFILE): Change to /etc/lock.pwd to be
- 	on the same device as the password file.
+	on the same device as the password file.
 	* shadow/shadow.h (struct spwd): Change type of numeric fields
 	to `long int' since there value are days, not seconds.
 	* shadow/putspent.c: Change casts from time_t to `long int'.
@@ -1708,7 +1746,7 @@ Mon Sep 23 23:05:24 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* shadow/putspent.c: Don't include <errno.h>.
 
 	* dirent/scandir.c (scandir): Use __set_errno to set errno
- 	variable.
+	variable.
 	* elf/dl-load.c (open_path): Likewise.
 	* inet/rcmd.c (rcmd): Likewise.
 	(rresvport): Likewise.
@@ -2177,7 +2215,7 @@ Sat Sep 21 15:08:25 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 Sat Sep 21 13:50:40 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* libio/genops.c (_IO_init) [_IO_MTSAFE_IO]: Dereference pointer
- 	to lock when passing it to __libc_lock_init macro.
+	to lock when passing it to __libc_lock_init macro.
 	(_IO_default_finish) [_IO_MTSAFE_IO]: Dereference pointer to lock
 	when passing it to __libc_lock_fini macro.
 
@@ -2187,8 +2225,8 @@ Sat Sep 21 14:35:40 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 	[_LIBC_REENTRANT]: Add missing semicolon.
 
 	* sysdeps/unix/sysv/linux/m68k/sysdep.S: Move inclusion of
- 	sysdep.h to the top outside of #ifndef PIC.  Don't include errnos.h.
-  	Use the ENTRY macro.
+	sysdep.h to the top outside of #ifndef PIC.  Don't include errnos.h.
+	Use the ENTRY macro.
 
 Sat Sep 21 14:33:41 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
@@ -2209,11 +2247,11 @@ Mon Sep 23 03:00:10 1996  Ulrich Drepper  <drepper@cygnus.com>
 	Patch by NIIBE Yutaka <gniibe@mri.co.jp>.
 
 	* shadow/sgetspent_r.c (LINE_PARSER): Don't accept any chars after
- 	9th field.
+	9th field.
 
 	* sysdeps/unix/sysv/linux/Makefile [$(subdir)==misc]
 	(sysdep_headers): Add sys/debugreg.h, sys/kd.h, sys/soundcard.h,
- 	and sys/vt.h.
+	and sys/vt.h.
 	* sysdeps/unix/sysv/linux/sys/debugreg.h: New file.
 	* sysdeps/unix/sysv/linux/sys/kd.h: New file.
 	* sysdeps/unix/sysv/linux/sys/soundcard.h: New file.
@@ -2243,11 +2281,11 @@ Mon Sep 23 15:31:04 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 Sun Sep 22 15:18:41 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/init-first.c: Define dummy function
- 	`_dl_start' so that linking fails if this file should ever be used
- 	in ld.so.
+	`_dl_start' so that linking fails if this file should ever be used
+	in ld.so.
 
 	* catgets/gencat.c (main): Change --version message according to
- 	RMS' last standard revision.
+	RMS' last standard revision.
 	* db/makedb.c: Likewise.
 	* locale/programs/locale.c: Likewise.
 	* locale/programs/localedef.c: Likewise.
@@ -2281,7 +2319,7 @@ Sat Sep 21 19:15:24 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* misc/Makefile (headers): Add sys/sysinfo.h.
 	(routines): Add getsysstats.
 	* sysdeps/unix/sysv/linux/Makefile [$(subdir)==misc]
- 	(sysdep_headers): Remove sys/sysinfo.h.
+	(sysdep_headers): Remove sys/sysinfo.h.
 	* sysdeps/generic/sys/sysinfo.h: New file.
 	* sysdeps/unix/sysv/linux/sys/sysinfo.h: Add prototype for get_nprocs,
 	get_phys_pages, and get_avphys_pages.
@@ -2310,8 +2348,8 @@ Sat Sep 21 05:20:36 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* version.h (VERSION): Bump to 1.95.
 
 	* Make-dist (+tsrcs): Don't filter out files in subdirs which
- 	match files in the sysdeps hierachy (welcome back,
- 	sys/syscall.h!).
+	match files in the sysdeps hierachy (welcome back,
+	sys/syscall.h!).
 
 	* resolv/Makefile (libresolv-routines): Remove getnetnamad.
 
@@ -2320,8 +2358,8 @@ Sat Sep 21 03:00:19 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* locale/loadlocale.c (_nl_free_locale): Remove function.
 	* locale/localeinfo.h: Remove prototype for _nl_free_locale.
 	* locale/setlocale.c (setlocale): Don't free locale data of
- 	categories which succeeded to load after a wrong or missing data
- 	file was observed.
+	categories which succeeded to load after a wrong or missing data
+	file was observed.
 
 	* locale/setlocale (setlocale): Initialize NEWNAME correctly so
 	that it works even when the locale data is not used.
@@ -2432,7 +2470,7 @@ Thu Sep 19 18:59:55 1996  Ulrich Drepper  <drepper@cygnus.com>
 	inclusion.
 
 	* libio/iofgets.c: Use __flockfile and __funlockfile instead of
- 	_IO_flockfile and _IO_funlockfile resp.
+	_IO_flockfile and _IO_funlockfile resp.
 
 	* locale/categories.def: Partly support for correct `era' handling
 	in LC_TIME category.
@@ -2452,10 +2490,10 @@ Thu Sep 19 18:59:55 1996  Ulrich Drepper  <drepper@cygnus.com>
 Tue Sep 17 16:14:34 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/fpu/__math.h (__inline_mathop): Changed to generate
- 	all three versions of the math function.
+	all three versions of the math function.
 	(__inline_mathopf, __inline_mathopl): Removed.
 	(__inline_functions): New temporary definition containing all
- 	non-trivial inline functions.
+	non-trivial inline functions.
 
 Wed Sep 18 00:25:41 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -2628,7 +2666,7 @@ Thu Sep 12 20:12:40 1996  Ulrich Drepper  <drepper@cygnus.com>
 Thu Sep 12 14:03:29 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* crypt/Makefile: Include Makeconfig and add crypt object dir to
- 	rpath-link so that running the check finds the new library.
+	rpath-link so that running the check finds the new library.
 	* crypt/cert.c: provide correct prototypes to prevent warnings.
 	Reported by Andreas Jaeger.
 
@@ -2713,7 +2751,7 @@ Thu Sep 12 02:21:44 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* time/time.h (tm_gmtoff, tm_zone): Prefix with `__' unless
 	__USE_BSD; this is required for ANSI C compatibility.
 	* manual/time.texi: Replace GMT by UTC, daylight savings by
- 	daylight saving, timezone by time zone.
+	daylight saving, timezone by time zone.
 	Rewrite description of %V to match ISO 8601.
 	Fix TZ Posix string example for US Eastern time.
 	Explain tzname[1] when DST isn't used.
@@ -2759,7 +2797,7 @@ Tue Sep 10 14:14:33 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 	(__errno_location): New function.
 	[_LIBC_REENTRANT]: Set errno using __errno_location function.
 	* sysdeps/unix/sysv/linux/m68k/sysdep.h [PIC]: Add second
- 	syscall_error handler for reentrant libc.
+	syscall_error handler for reentrant libc.
 
 Tue Sep 10 13:27:49 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
@@ -2768,7 +2806,7 @@ Tue Sep 10 13:27:49 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 Wed Sep 11 04:40:57 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/tzset.c (__tzname_cur_max): Use type `size_t' to avoid
- 	warning.
+	warning.
 	* time/tzfile.c (compute_tzname_max): Likewise.
 
 Wed Sep 11 02:57:31 1996  Ulrich Drepper  <drepper@cygnus.com>
@@ -2815,7 +2853,7 @@ Mon Sep  9 20:31:27 1996  Ulrich Drepper  <drepper@cygnus.com>
 	Reported by Andreas Jaeger.
 
 	* libio/stdio.h [!__USE_REENTRANT]: Don't define getc as
- 	_IO_getc_unlocked.
+	_IO_getc_unlocked.
 	[__USE_REENTRANT]: Don't define
 
 Mon Sep  9 15:59:32 1996  Ulrich Drepper  <drepper@cygnus.com>
@@ -2996,7 +3034,7 @@ Sun Sep  8 02:36:02 1996  Ulrich Drepper  <drepper@cygnus.com>
 	banner.
 	Change bug report address to bug-glibc@prep not @gnu.
 	* locale/programs/locale.c (main): Use `PACKAGE' for package name
- 	in version information banner.
+	in version information banner.
 	Change bug report address to bug-glibc@prep not @gnu.
 	* locale/programs/localedef.c (main): Likewise.
 
@@ -3045,20 +3083,20 @@ Sat Sep  7 03:55:47 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* configure.in: Add AC_SUBST(DEFINES).
 
 	* libio/Makefile (routines): When compiling reentrant libc add
- 	clearerr_u, feof_u, ferror_u, fputc_u, getc_u, getchar_u,
- 	iofflush_u, putc_u, putchar_u, ioflockfile.
+	clearerr_u, feof_u, ferror_u, fputc_u, getc_u, getchar_u,
+	iofflush_u, putc_u, putchar_u, ioflockfile.
 	(CPPFLAGS): Add -D_IO_MTSAFE_IO for reentrant libc.
 
 	* sysdeps/stub/libc-lock.h: Add stubs for __libc_cleanup_region_start
 	and __libc_cleanup_region_end.
 
 	* sysdeps/unix/i386/sysdep.S [_LIBC_REENTRANT]: Set errno
- 	using __errno_location function.
+	using __errno_location function.
 	* sysdeps/unix/sysv/linux/i386/sysdep.S [_LIBC_REENTRANT]: Set errno
 	using __errno_location function.
 	(__errno_location): New function.
 	* sysdeps/unix/sysv/linux/i386/sysdep.h [PIC]: Add second
- 	syscall_error handler for reentrant libc.
+	syscall_error handler for reentrant libc.
 
 	* sysdeps/unix/opendir.c: Remove unneeded `;'.
 
@@ -3125,15 +3163,15 @@ Sat Sep  7 03:55:47 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* libio/putchar.c: Likewise.
 
 	* libio/feof_u.c: Undefine macro with name of function before
- 	definition of function itself.
+	definition of function itself.
 
 	* libio/ioflockfile.c: New file.  Implementation of flockfile and
- 	funlockfile.
+	funlockfile.
 
 	* libio/putchar_u.c: Fix typo.  Use stdout instead of fp.
 
 	* malloc/malloc.h: Don't include <libc-lock.h> and don't declare
- 	_malloc_loc.
+	_malloc_loc.
 
 	* malloc/free.c: Include <libc-lock.h>.
 	* malloc/realloc.c: Likewise.
@@ -3170,7 +3208,7 @@ Fri Sep  6 19:38:49 1996  Ulrich Drepper  <drepper@cygnus.com>
 	Patch by Andres Schwab.
 
 	* sysdeps/posix/sysconf.c: Don't use PTHREAD_DESTRUCTOR_ITERATIONS
- 	but _POSIX_THREAD_DESTRUCTOR_ITERATIONS.
+	but _POSIX_THREAD_DESTRUCTOR_ITERATIONS.
 
 	* sysdeps/unix/sysv/linux/errnos.h: New file.
 	* sysdeps/unix/sysv/linux/schedbits.h: New file.
@@ -3203,9 +3241,9 @@ Thu Sep  5 22:55:49 1996  Richard Henderson  <rth@tamu.edu>
 	version of h_errno variable.  Declare alias __h_errno for h_errno.
 	* resolv/res_query (h_errno): Remove definition.
 	* sysdeps/unix/sysv/linux/errnos.h [!__ASSEMBLER__ && __USE_REENTRANT]:
- 	Add macro `errno' to get thread specific variable.
+	Add macro `errno' to get thread specific variable.
 	* sysdeps/unix/alpha/sysdep.S [_LIBC_REENTRANT]: Set errno using
- 	__errno_location function.
+	__errno_location function.
 	(__errno_location): New function.
 
 Thu Sep  5 21:08:44 1996  Ulrich Drepper  <drepper@cygnus.com>
@@ -3246,7 +3284,7 @@ Thu Sep  5 13:18:25 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 	* mach/Machrules (mig.uh, mig.__h): Don't include $(user-MIGFLAGS)
 	here.
 
- 	* malloc/free.c (free): __lib_malloc_lock -> __libc_malloc_lock.
+	* malloc/free.c (free): __lib_malloc_lock -> __libc_malloc_lock.
 
 	* malloc/free.c: Provide extern decl of __libc_malloc_lock.
 	* malloc/realloc.c: Likewise.
@@ -3386,7 +3424,7 @@ Sat Aug 31 12:34:29 1996  Ulrich Drepper  <drepper@cygnus.com>
 Sat Aug 31 03:07:39 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* intl/l10nflist.c (_nl_normalize_codeset): We convert to lower
- 	case, so don't prepend uppercase `ISO' for only numeric arg.
+	case, so don't prepend uppercase `ISO' for only numeric arg.
 
 Wed Sep  4 16:16:13 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -3396,7 +3434,7 @@ Wed Sep  4 16:16:13 1996  Ulrich Drepper  <drepper@cygnus.com>
 Tue Sep  3 11:16:07 1996  Thomas Bushnell/ n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* shadow/lckpwdf.c (__ulckpwdf): Don't take address of LOCK in
- 	call to __libc_lock_lock.
+	call to __libc_lock_lock.
 
 	* sysdeps/mach/hurd/send.c (__send): Declare BUF const.
 	* sysdeps/mach/hurd/sendto.c (sendto): Likewise.
@@ -3413,7 +3451,7 @@ Fri Aug 30 19:55:27 1996  Ulrich Drepper  <drepper@cygnus.com>
 Fri Aug 30 15:40:04 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/Dist: Add sys/procfs.h and
- 	sys/sysmacros.h.  Reported by Curtiss <1CMC3466@IBM.MTSAC.EDU>.
+	sys/sysmacros.h.  Reported by Curtiss <1CMC3466@IBM.MTSAC.EDU>.
 
 Fri Aug 30 13:53:32 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
 
@@ -3471,10 +3509,10 @@ Thu Aug 29 18:03:06 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* Makerules: Make sure directory exists before generating stamp file.
 	(BUILD_CFLAGS): Always refer to using $(..).
 	* manual/Makefile: Make sure directory exists before generating
- 	stamp file.
+	stamp file.
 	(make-target-directory): Add macro definition.
 	* sysdeps/generic/Makefile: Make sure directory exists before
- 	generating stamp file.
+	generating stamp file.
 
 	* Makefile (distribute): Add autolock.sh.  Reported by Fila Kolodny.
 
@@ -3526,7 +3564,7 @@ Thu Aug 29 17:45:49 1996  Ulrich Drepper  <drepper@cygnus.com>
 Thu Aug 29 15:53:33 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/libm-ieee754/e_acoshl.c: New file. `long double'
- 	implementation.
+	implementation.
 	* sysdeps/libm-ieee754/e_atanhl.c: Likewise.
 	* sysdeps/libm-ieee754/e_remainderl.c: Likewise.
 	* sysdeps/libm-ieee754/e_scalbl.c: Likewise.
@@ -3555,7 +3593,7 @@ Thu Aug 29 12:00:30 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 Thu Aug 29 00:28:08 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/printf_fp.c (__printf_fp): Use default value '.' if
- 	`decimal' char is 0.
+	`decimal' char is 0.
 
 	* C-numeric.c (not_available): New constant.
 	(_nl_C_LC_NUMERIC): Use `not_available' for grouping value.
@@ -3568,18 +3606,18 @@ Thu Aug 29 00:28:08 1996  Ulrich Drepper  <drepper@cygnus.com>
 1996-08-28  Paul Eggert  <eggert@twinsun.com>
 
 	* C-messages.c (_nl_C_LC_MESSAGES): Set yesexpr to "^[yY]" and
- 	noexpr to "^[nN]"; this conforms to POSIX.2.
+	noexpr to "^[nN]"; this conforms to POSIX.2.
 
 	* C-time.c (_nl_C_LC_TIME): Change %d to %e in d_t_format, to
- 	conform to POSIX.2.
+	conform to POSIX.2.
 
 1996-08-28  Paul Eggert  <eggert@twinsun.com>
 
 	* C-monetary.c (not_available): New constant.
 	(_nl_C_LC_MONETARY): Set mon_decimal_point to "", and set
- 	mon_grouping, int_frac_digits, frac_digits, p_cs_precedes,
- 	p_sep_by_space, n_cs_precedes, n_sep_by_space, p_sign_posn, and
- 	n_sign_posn to CHAR_MAX, as required by the POSIX Standard.
+	mon_grouping, int_frac_digits, frac_digits, p_cs_precedes,
+	p_sep_by_space, n_cs_precedes, n_sep_by_space, p_sign_posn, and
+	n_sign_posn to CHAR_MAX, as required by the POSIX Standard.
 
 Wed Aug 28 23:12:28 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -3690,7 +3728,7 @@ Mon Aug 26 16:31:33 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 Mon Aug 26 13:35:16 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/i386/init-first.c (__libc_multiple_libcs): New
- 	variable.
+	variable.
 	* sysdeps/i386/init-first.c: Likewise.
 	* sysdeps/stub/init-first.c: Likewise.
 
@@ -3730,8 +3768,8 @@ Sun Aug 25 01:31:33 1996  Ulrich Drepper  <drepper@cygnus.com>
 Sat Aug 24 03:16:47 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* misc/syslog.c (vsyslog): Don't use `localtime' or `gmtime' since
- 	this changes the global state for `localtime' and `gmtime'.  Use
- 	`__localtime_r'/`__gmtime_r' instead.
+	this changes the global state for `localtime' and `gmtime'.  Use
+	`__localtime_r'/`__gmtime_r' instead.
 	* resolv/res_debug.c (__p_secstodate): Likewise.
 	* sysdeps/generic/ftime.c: Likewise.
 	* sysdeps/posix/gettimeofday.c: Likewise.
@@ -3739,7 +3777,7 @@ Sat Aug 24 03:16:47 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/gmtime.c: De-ANSI-fy.
 	* time/strftime.c: Don't call non-reentrant functions which change
- 	state.
+	state.
 
 Wed Aug 21 10:14:59 1996  Richard Henderson  <rth@tamu.edu>
 
@@ -3763,13 +3801,13 @@ Tue Aug 20 17:42:10 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 Sat Aug 17 12:19:37 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* login/pututline_r.c (__pututline_r): Fix handling of case where
- 	getutid_r() fails with ESRCH.  Reported by Miquel van Smoorenburg.
+	getutid_r() fails with ESRCH.  Reported by Miquel van Smoorenburg.
 
 Wed Aug 14 14:10:54 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c (platform): Change entry
- 	for "Jensen" so _bus_base() returns 0 on that platform.  Use
- 	_bus_base_sparse() to determine base address of sparse memory.
+	for "Jensen" so _bus_base() returns 0 on that platform.  Use
+	_bus_base_sparse() to determine base address of sparse memory.
 
 	* sysdeps/unix/sysv/linux/sys/io.h: Enclose #include <asm/io.h>
 	and declarations in __BEGIN_DECLS/__END_DECLS.
@@ -3892,13 +3930,13 @@ Wed Aug 14 17:57:08 1996  Ulrich Drepper  <drepper@cygnus.com>
 Sun Aug 11 13:45:33 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* MakeTAGS (all-pot): Remove $P/errlist.pot, all error messages
- 	are now in $P/stdio-common.pot.
+	are now in $P/stdio-common.pot.
 	(XGETTEXTFLAGS-errlist.pot): Variable removed.
 
 Mon Aug 12 19:25:03 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* Makerules (do-ar, o-iterator-doit): Compute path to autolock
- 	script at run time, not configure time.
+	script at run time, not configure time.
 	* config.make.in, configure.in: Undo previous change.
 
 Wed Aug 14 13:20:02 1996  Ulrich Drepper  <drepper@cygnus.com>
@@ -3927,18 +3965,18 @@ Tue Aug 13 00:55:03 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 Tue Aug 13 20:51:21 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/canonicalize.c (canonicalize): Add cast to prevent
- 	warning.
+	warning.
 
 	* Makerules (o-iterator-doit): Use autolock.sh when running ranlib.
 
 Tue Aug 13 18:26:45 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/nsswitch.c (__nss_configure_lookup): Use fact that list is
- 	sorted.
+	sorted.
 
 	Update from bind-4.9.5-T1A.
 	* resolv/Makefile (libresolv-routines): Add base64, inet_net_ntop,
- 	inet_net_pton, inet_net.
+	inet_net_pton, inet_net.
 
 	* resolv/gethnamaddr.c: Include <sys/types.h>.
 	* resolv/getnetnamadr.c: Likewise.
@@ -3953,14 +3991,14 @@ Tue Aug 13 18:26:45 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* resolv/res_send.c: Likewise.
 
 	* resolv/gethnamaddr.c [! SPRINTF_CHAR] (SPRINTF): Cast return
- 	value of sprintf.
+	value of sprintf.
 	* resolv/inet_ntop.c: Likewise.
 
 	* resolv/gethnamaddr.c [BSD]: Include <stdlib.h>.
 	Remove prototype of gethostbyname_ipv4.
 
 	* resolv/inet_ntop.c, resolv/inet_pton.c: Use ISO C `mem*'
- 	functions instead of BSD `b*' functions.
+	functions instead of BSD `b*' functions.
 
 	* resolv/nsap_addr.c: Add copyright message.
 
@@ -3998,10 +4036,10 @@ Mon Aug 12 19:03:22 1996  Thomas Bushnell n/BSG  <thomas@psilocin.gnu.ai.mit.edu
 	* sysdeps/generic/gnu/types.h: Declare __fd_mask as `unsigned long'.
 
 	* mach/Makefile (mach/mach_host.uh): Depend on
- 	$(objpfx)/mach-syscalls.mk.
+	$(objpfx)/mach-syscalls.mk.
 	($(objpfx)mach-shortcuts.h): Depend on $(objpfx)mach/mach_host.h.
 	(This fixes a make loop; thanks to Marcus Daniels
- 	<marcus@sysc.pdx.edu> for the patch.)
+	<marcus@sysc.pdx.edu> for the patch.)
 
 Mon Aug 12 16:41:52 1996  Thomas Bushnell n/BSG  <thomas@gnu.ai.mit.edu>
 
@@ -4013,7 +4051,7 @@ Mon Aug 12 16:41:52 1996  Thomas Bushnell n/BSG  <thomas@gnu.ai.mit.edu>
 Mon Aug 12 04:33:09 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/nsswitch.c (__nss_database_lookup): Always release locks
- 	before returning.  Reported by Miles Bader.
+	before returning.  Reported by Miles Bader.
 
 Mon Aug 12 03:31:58 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -4072,8 +4110,8 @@ Sat Aug 10 13:17:27 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 	* shadow.h: New file.
 
 	* sysdeps/unix/sysv/linux/netinet/in.h: Move
- 	__BEGIN_DECLS/__END_DECLS up so ntohl() et al are bracketed as
- 	well.
+	__BEGIN_DECLS/__END_DECLS up so ntohl() et al are bracketed as
+	well.
 
 	* socket/sys/socket.h [__cplusplus]: Use old-style __SOCKADDR_ARG.
 	g++ 2.7.2 (and earlier) has no transparent unions support.
@@ -4094,14 +4132,14 @@ Tue Aug  6 10:23:18 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 	!__isatty(fd) (POSIX.1 says so.)
 
 	* sysdeps/unix/getlogin.c (getlogin): Fix to check fd 0 only.
-  	This is not a gross hack, after all---for compatibility,
- 	getlogin() really should check fd 0 only and not try to base its
- 	operation on the controlling tty.
+	This is not a gross hack, after all---for compatibility,
+	getlogin() really should check fd 0 only and not try to base its
+	operation on the controlling tty.
 
 Wed Jul 17 10:54:20 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* sysdeps/unix/getlogin.c (getlogin): Add static variable NAME,
- 	change utmp_data from static to auto.
+	change utmp_data from static to auto.
 
 Sun Aug 11 02:56:08 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -4128,7 +4166,7 @@ Fri Aug  9 17:38:58 1996  Ulrich Drepper  <drepper@cygnus.com>
 	Reported by Matthias Urlichs.
 
 	* sysdeps/posix/tempname.c [USE_IN_LIBIO]: Don't clear
- 	_IO_file_flags.  It's the same as _flags.
+	_IO_file_flags.  It's the same as _flags.
 	Reported by Miquel van Smoorenburg <miquels@Q.cistron.nl>.
 
 Wed Aug  7 19:38:47 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
@@ -4179,7 +4217,7 @@ Thu Aug  8 16:17:38 1996  Ulrich Drepper  <drepper@cygnus.com>
 Thu Aug  8 13:33:45 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/ftime.c: New file.  Available system
- 	call is only a stub.
+	call is only a stub.
 	Reported by Matthias Urlichs.
 
 	* Makeconfig [!default_cflags]: Change default value from `-g'
@@ -4260,23 +4298,23 @@ Sun Aug  4 00:12:41 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 Sat Aug  3 16:20:02 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c (platform): Add entry for
- 	Mikasa.
+	Mikasa.
 
 	* socket/sys/socket.h (send, __send, sendto): Declare buffer
- 	pointer as __const.
+	pointer as __const.
 
 	* string/tester.c (main): Test stpncpy.
 
 	* sysdeps/generic/stpncpy.c (__stpncpy): Fix so it works without
- 	segfault when called with an N that is not a multiple of four and
- 	src[N-1]=='\0'.
+	segfault when called with an N that is not a multiple of four and
+	src[N-1]=='\0'.
 
 	* misc/syslog.c (LogType): New variable.
 	(openlog): If connect() with SOCK_DGRAM fails with EPROTOTYPE,
- 	try again with SOCK_STREAM (the Linux syslogd uses a socket of the
- 	latter type).
+	try again with SOCK_STREAM (the Linux syslogd uses a socket of the
+	latter type).
 	(vsyslog): When LogType==SOCK_STREAM, also send ASCII NUL
- 	terminator as a record-delimiter.  If __send(LogFile) fails,
+	terminator as a record-delimiter.  If __send(LogFile) fails,
 	call closelog() so logfile gets re-opened next time.
 
 Wed Aug  7 15:15:14 1996  Ulrich Drepper  <drepper@cygnus.com>
@@ -4346,13 +4384,13 @@ Tue Aug  6 01:13:56 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* login/getutid_r.c: Rename defined function to `__getutent_r',
 	make `getutent_r' weak alias.
 	* login/getutline.c (getutline): Call `__getutline_r', not
- 	`getutline_r'.
+	`getutline_r'.
 	* login/getutline_r.c: Rename defined function to `__getutline_r',
 	make `getutline_r' weak alias.
 	* login/pututline_r.c: Rename defined function to `__pututline_r',
 	make `pututline_r' weak alias.
 	* login/setutent.c (setutent): Call `__setutline_r', not
- 	`setutline_r'.
+	`setutline_r'.
 	* login/setutent_r.c: Rename defined function to `__setutline_r',
 	make `setutline_r' weak alias.
 	Rename `utmpname' to `__utmpname' and make former weak alias.
@@ -4386,7 +4424,7 @@ Tue Aug  6 01:13:56 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* libc/stdio/vscanf.c: De-ANSI-fy.
 	Rename function to `__vscanf' and make `vscanf' a weak alias.
 	* stdio-common/scanf.c (scanf): Use _IO_vscanf/__vscanf instead
- 	of `vscanf'.
+	of `vscanf'.
 
 	* stdio-common/reg-printf.c: De-ANSI-fy.
 	Rename function to `__register_printf_function' and make
@@ -4400,7 +4438,7 @@ Tue Aug  6 01:13:56 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* stdlib/wcstombs.c: Call `__wcsrtombs' instead of `wcsrtombs'.
 	* stdlib/wctomb.c: Call `__wcrtomb' instead of `wcrtomb'.
 	* wcsmbs/mbrtowc.c: Prepend function name with __ and make old
- 	name a weak alias.
+	name a weak alias.
 	* wcsmbs/mbsrtowcs.c: Likewise.
 	* wcsmbs/wcrtomb.c: Likewise.
 	* wcsmbs/wcsrtombs.c: Likewise.
@@ -4469,7 +4507,7 @@ Sat Aug  3 18:41:36 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 	* locale/C-ctype.c (_nl_C_LC_CTYPE_toupper): Fix EOF entry.
 	(_nl_C_LC_CTYPE): Fix ordering.
 	* locale/categories.def (LC_CTYPE): Add missing ctype-class32; fix
- 	typo.
+	typo.
 
 Sat Aug  3 12:31:06 1996  Richard Henderson  <rth@tamu.edu>
 
@@ -4481,17 +4519,17 @@ Sat Aug  3 12:31:06 1996  Richard Henderson  <rth@tamu.edu>
 Fri Aug  2 03:12:40 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* initfini.c: (__libc_is_static): New variable.  Will be
- 	initialized in init-first.c.  Some actions in the libc work
- 	different when libc is static or dynamic.
+	initialized in init-first.c.  Some actions in the libc work
+	different when libc is static or dynamic.
 
 	* sysdeps/unix/sysv/linux/init-first.c (init): Use
- 	`__libc_is_static' variable to determine whether call to
- 	`personality' and `setfpucw' is necessary.  When done set variable
- 	to +-1 depending on library type.
+	`__libc_is_static' variable to determine whether call to
+	`personality' and `setfpucw' is necessary.  When done set variable
+	to +-1 depending on library type.
 
 	* locale/setlocale.c (setlocale): Use global variable
- 	`__libc_enable_secure' instead of calling `get{,e}{g,u}id()' to
- 	determine whether it's a SET[UG]ID program.
+	`__libc_enable_secure' instead of calling `get{,e}{g,u}id()' to
+	determine whether it's a SET[UG]ID program.
 
 Fri Aug  2 14:40:22 1996  Roland McGrath  <roland@fast.cs.utah.edu>
 
@@ -4617,7 +4655,7 @@ Tue Jul 30 13:23:13 1996  Ulrich Drepper  <drepper@cygnus.com>
 Tue Jul 30 14:35:17 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/dl-sysdep.c	(__open): Use open_file.
- 	(open_file): New function, contents mostly from __open.
+	(open_file): New function, contents mostly from __open.
 	(_dl_sysdep_read_whole_file): New function.
 
 Sat Jul 27 11:23:59 1996  Miles Bader  <miles@gnu.ai.mit.edu>
@@ -4702,7 +4740,7 @@ Sun Jul 28 22:40:25 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 Sat Jul 27 13:02:09 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/rtld.c (dl_main): Ignore arguments when environment variable
- 	LD_TRACE_LOADED_OBJECTS is set.
+	LD_TRACE_LOADED_OBJECTS is set.
 
 Sun Jul 28 19:42:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
@@ -4951,7 +4989,7 @@ Tue Jul 23 18:13:37 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 Thu Jul 18 21:41:25 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/generic/stpncpy.c: Fix semantics to make `stpncpy (d, s,
- 	n)' equivalent to `strncpy (d, s, n), d += strnlen (d, n)'.
+	n)' equivalent to `strncpy (d, s, n), d += strnlen (d, n)'.
 
 Tue Jul 23 02:49:58 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -5012,8 +5050,8 @@ Sat Jul 20 13:28:52 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 Sat Jul 20 07:15:33 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* crypt/Makefile, crypt/nocrypt.c: Removed.  It is illegal to export
- 	from the USA any software that even makes it easy to drop in an
- 	encryption module of foreign origin.
+	from the USA any software that even makes it easy to drop in an
+	encryption module of foreign origin.
 	* Makerules (cryptobjdir): Variable removed.
 	($(libdir)/libc.so): Remove dep on libcrypt.so$(libcrypt.so-version).
 	* Makefile (subdirs): Remove crypt.
@@ -5026,18 +5064,18 @@ Fri Jul 19 15:45:20 1996  Ulrich Drepper  <drepper@cygnus.com>
 Fri Jul 19 15:10:37 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* sunrpc/xdr_mem.c (xdrmem_putlong): Don't cast LP to int32 (the
- 	old code would have failed on a big-endian 64-bit architecture).
+	old code would have failed on a big-endian 64-bit architecture).
 	* sunrpc/xdr_stdio.c (xdrstdio_putlong): Ditto.
 
 	* sunrpc/xdr.c (xdr_int): Handle XDR_FREE case.
 	(xdr_u_long): Use switch instead of chain of if-statements.
-  	Remove gratitous parentheses around return expressions.
+	Remove gratitous parentheses around return expressions.
 	(xdr_enum): Open code case where INT_MAX<LONG_MAX.
 
 	* sunrpc/svc.c (svc_getreqset): Increment SOCK by 32, not NFDBITS.
 
 	* sunrpc/portmap.c (reg_service): Declare ANS and PORT as long,
- 	not int.
+	not int.
 
 Fri Jul 19 16:56:41 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
@@ -5083,14 +5121,14 @@ Wed Jul 17 10:54:20 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 	* sysdeps/stub/ustat.c: Ditto.
 	* sysdeps/unix/sysv/linux/ustatbits.h: Ditto.
 	* misc/Makefile (headers): Mention ustat.h, sys/ustat.h, and
- 	ustatbits.h.
+	ustatbits.h.
 	(routines): Mention ustat.
 
 	* sysdeps/unix/sysv/linux/alpha/start.S: Move to ...
 	* sysdeps/alpha/elf/start.S: here.
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Mention klogctl in
- 	alphabetically correct place.  Mention ustat.
+	alphabetically correct place.  Mention ustat.
 
 	* sysdeps/unix/alpha/sysdep.S: Make errno a bss symbol, not a
 	common symbol (makes errno accessible from gdb).
@@ -5099,20 +5137,20 @@ Wed Jul 17 10:54:20 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 	test, not ut_type.
 
 	* login/logwtmp.c (logwtmp): Reimplemented.  Must ensure that a
- 	record always gets appended at end of file (wtmp is a log file,
- 	after all).  Set ut_type to DEAD_PROCESS if name is empty.
+	record always gets appended at end of file (wtmp is a log file,
+	after all).  Set ut_type to DEAD_PROCESS if name is empty.
 
 	* login/getutid_r.c (getutid_r): Handle search for UT_TYPE in
 	separate loop from search for UT_ID.  Fix code so it is in
 	sync with Unix man page.
 
 	* login/getutline_r.c (getutline_r): Stop searching only if
- 	ut_line matches and type is either USER_PROCESS or LOGIN_PROCESS.
+	ut_line matches and type is either USER_PROCESS or LOGIN_PROCESS.
 
 Tue Jul 16 15:06:18 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* sysdeps/unix/sysv/linux/netinet/in.h: Base on <linux/in.h> to
- 	avoid duplicate declarations.
+	avoid duplicate declarations.
 
 Sun Jul 14 19:08:55 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
@@ -5177,7 +5215,7 @@ Wed Jul 17 17:08:48 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 Wed Jul 17 11:29:26 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* stdio/linewrap.c (lwupdate): Fix boundary condition where a
- 	word extends right up to rmargin.
+	word extends right up to rmargin.
 
 	* stdio/linewrap.c (lwupdate): When we've done a word wrap and
 	output the wrap margin, set point_col to wmargin.
@@ -5185,7 +5223,7 @@ Wed Jul 17 11:29:26 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 	(line_wrap_point): Return 0 for a negative point_col.
 	(line_wrap_stream): Make wmargin ssize_t.
 	* stdio/linewrap.h (struct line_wrap_data): Make wmargin &
- 	point_col ssize_t.
+	point_col ssize_t.
 	(line_wrap_stream): Make wmargin ssize_t.
 	(line_wrap_point): Return 0 for a negative point_col.
 
@@ -5201,7 +5239,7 @@ Tue Jul 16 01:52:42 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 Tue Jul 16 00:18:19 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* stdio/linewrap.c (__line_wrap_update): Add hackery from flshfp
- 	to fiddle __put_limit in conjunction with __linebuf_active.
+	to fiddle __put_limit in conjunction with __linebuf_active.
 
 Tue Jul 16 00:14:07 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
@@ -5362,22 +5400,22 @@ Sat Jul 13 02:47:53 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 	it that way.
 
 	* grp/initgroups.c (initgroups): Add groups that user is a member
- 	of, not the ones he is _not_ a member of.
+	of, not the ones he is _not_ a member of.
 
 	* nss/nsswitch.c (known_compare): Make known_compare() a static
- 	instead of a local function.  The latter are difficult to debug
- 	and slow to execute on certain platforms.
+	instead of a local function.  The latter are difficult to debug
+	and slow to execute on certain platforms.
 
 	* sysdeps/posix/ttyname_r.c (ttyname_r): Use sizeof (dev) - 1 in
- 	place of sizeof (dev).  The size of a literal string includes the
- 	NUL byte.
+	place of sizeof (dev).  The size of a literal string includes the
+	NUL byte.
 
 	* sysdeps/unix/getlogin.c (getlogin): Initialize ut_fd with -1.
 
 Thu Jul 11 16:59:10 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* misc/mntent.c (addmntent): Seek to end of file before writing
- 	entry.  Return 1 on error, not -1.
+	entry.  Return 1 on error, not -1.
 
 Tue Jul  9 19:08:05 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
@@ -5387,7 +5425,7 @@ Tue Jul  9 19:08:05 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 Fri Jul  5 18:44:55 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c (port_to_cpu_addr): Size
- 	shift amount for Jensen must be 5 not 4.
+	shift amount for Jensen must be 5 not 4.
 
 Sat Jul 13 20:04:28 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
@@ -5497,7 +5535,7 @@ Tue Jul  9 09:37:55 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 	* sysdeps/generic/machine-gmon.h: Declare mcount_internal.
 
 	* sysdeps/unix/inet/syscalls.list: Define __ names with weak aliases
- 	for send and connect syscalls.
+	for send and connect syscalls.
 
 	* socket/sys/socket.h: New file, taken from non-sysdep parts of
 	linux/sys/socket.h; break sysdeps parts out into socketbits.h.
@@ -5536,7 +5574,7 @@ Thu Jul  4 01:34:04 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* locale/programs/stringtrans.c: Fix typo in copyright.
 
 	* stdio-common/printf-prs.c: Add casts to prevent
-        signed<->unsigned warnings.
+	signed<->unsigned warnings.
 
 	* stdio-common/printf-parse.h: Initialize state variable before
 	calling mbrlen.
@@ -5575,8 +5613,8 @@ Thu Jul  4 01:34:04 1996  Ulrich Drepper  <drepper@cygnus.com>
 Tue Jul  9 06:19:29 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/configure.in: Use version number in cache
- 	variable name, so new a libc with new requirements won't fail to
- 	notice an insufficient Linux version.
+	variable name, so new a libc with new requirements won't fail to
+	notice an insufficient Linux version.
 
 	* sysdeps/unix/sysv/linux/direntry.h: New file from David Mosberger.
 
@@ -5599,8 +5637,8 @@ Tue Jul  9 06:19:29 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 Tue Jul  9 00:14:52 1996  Michael I. Bushnell p/BSG  <mib@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/ioctls.h (MDMBUF, ECHO, TOSTOP, FLUSHO,
- 	PENDIN, NOFLSH): Undefine these at start if they are already
- 	defined to avoid collision with termbits.h.
+	PENDIN, NOFLSH): Undefine these at start if they are already
+	defined to avoid collision with termbits.h.
 	* sysdeps/generic/termbits.h (ECHO, TOSTOP, NOFLSH): Likewise.
 	(MDMBUF, FLUSHO, PENDIN) [__USE_BSD]: Likewise.
 
@@ -5620,7 +5658,7 @@ Mon Jul  8 13:37:40 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 Mon Jul  8 13:10:50 1996  Michael I. Bushnell p/BSG  <mib@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/errnos.awk: Skip entries where the
- 	error is 0.  The "placeholder" entries recently added to
+	error is 0.  The "placeholder" entries recently added to
 	errno.texi convert to zero since `???/' is at the front of them.
 	* sysdeps/gnu/errlist.awk (errnoh): Likewise.
 
@@ -5630,7 +5668,7 @@ Mon Jul  8 13:10:50 1996  Michael I. Bushnell p/BSG  <mib@gnu.ai.mit.edu>
 	* stdlib/stdlib.h (random): Declare return type to be int32_t.
 
 	* string/argz-delete.c (argz_delete): Use memmove instead of
- 	memcpy for possibly overlapping strings.
+	memcpy for possibly overlapping strings.
 
 Mon Jul  8 02:14:25 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
@@ -5648,7 +5686,7 @@ Mon Jul  8 00:11:15 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 	* libc-symbols.h (weak_function): New macro.
 	For GCC 2.7+ define as __attribute__ ((weak)).
 	* elf/dl-minimal.c: Use weak_function as keyword in function defns
- 	instead of weak_symbol (NAME) after the defn.
+	instead of weak_symbol (NAME) after the defn.
 	* stdlib/strtol.c: Likewise.
 	* stdlib/strtod.c: Likewise.
 	* sysdeps/mach/hurd/dl-sysdep.c: Likewise.
@@ -5697,7 +5735,7 @@ Sun Jun  2 22:28:43 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* stdio/linewrap.c (lwupdate): Update D->point_offs when done.
 	Use memmove instead of memcpy where overlap is possible (not
- 	necessary using current implementation of memcpy, but...).
+	necessary using current implementation of memcpy, but...).
 	(__line_wrap_update): Don't update D->point_offs (lwupdate does it).
 
 Fri May 31 11:48:46 1996  Miles Bader  <miles@gnu.ai.mit.edu>
@@ -5760,8 +5798,8 @@ Fri Jul  5 12:22:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 	(struct timeval): Add bodiless decl for scope.
 
 	* time/time.h (struct timespec): Rename members from `ts_*' to `tv_*'.
-  	Move struct timespec defn outside [_TIME_H] so it can be got with
- 	#define __need_timespec.
+	Move struct timespec defn outside [_TIME_H] so it can be got with
+	#define __need_timespec.
 
 	* time/sys/time.h (TIMEVAL_TO_TIMESPEC): Use `tv_*' instead of `ts_*'
 	for `struct timespec' member names.
@@ -5789,8 +5827,8 @@ Thu Jul  4 05:21:59 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 	* login/utmp.h: Fix typos.
 
 	* misc/syslog.c (vsyslog): Use __send instead of send and
- 	__connect instead of connect to avoid name-space collisions (e.g.,
- 	with psgetty).
+	__connect instead of connect to avoid name-space collisions (e.g.,
+	with psgetty).
 
 Wed Jul  3 16:29:41 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
@@ -5814,16 +5852,16 @@ Tue Jul  2 23:45:14 1996  Ulrich Drepper  <drepper@cygnus.com>
 	The latest Japanese proposal for POSIX locales renames the
 	CHARMAP keyword in locale definition files to CHARCONV.
 	* locale/programs/ld-ctype.c, locale/programs/locales.h: Rename
-        function ctype_is_charmap to ctype_is_charconv.
+	function ctype_is_charmap to ctype_is_charconv.
 	* locale/programs/locfile-kw.gperf: Replace charmap keyword with
-        charconv.
+	charconv.
 	* locale/programs/locfile-token.h: Add definition of token
-        charconv.
+	charconv.
 	* locale/programs/locfile.c: Recognize charconv keyword.  Rename
-        lables according to this.
+	lables according to this.
 
 	* locale/weight.h (get_weight): Cast constants to prevent
-        warnings.
+	warnings.
 
 	* stdlib/strtod.c, stdlib/strtol.c, string/strcoll.c,
 	string/strxfrm.c: Add some more casts to prevent signed<->unsigned
@@ -6034,7 +6072,7 @@ Sat Jun 29 01:08:35 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 Fri Jun 28 23:25:35 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* login/login.c (login): Initialize DATA so that setutent_r will
- 	actually do something.
+	actually do something.
 
 Fri Jun 28 16:53:01 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
@@ -6044,10 +6082,10 @@ Fri Jun 28 16:53:01 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 	using ElfW() instead of Elf32_*.
 
 	* sysdeps/unix/sysv/linux/alpha/init-first.h,
- 	sysdeps/unix/sysv/linux/m68k/init-first.h,
- 	sysdeps/unix/sysv/linux/i386/init-first.h: New files.
+	sysdeps/unix/sysv/linux/m68k/init-first.h,
+	sysdeps/unix/sysv/linux/i386/init-first.h: New files.
 	* sysdeps/unix/sysv/linux/init-first.c: Use platform-dependent
- 	init-first.h to make abstract machine dependent parts of
+	init-first.h to make abstract machine dependent parts of
 	initialization.
 
 	* sysdeps/unix/alpha/sysdep.h: Undo PIC-optimization of syscall
@@ -6057,7 +6095,7 @@ Fri Jun 28 16:53:01 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 	Fix by Richard Henderson.
 
 	* sysdeps/alpha/dl-machine.h (elf_alpha_fix_plt): Fix
- 	typo/extraneous whitespace.
+	typo/extraneous whitespace.
 
 	* sunrpc/xdr.c (xdr_int, xdr_u_int): Use <limits.h> to test
 	determine what integer sizes we're dealing with.
@@ -6069,8 +6107,8 @@ Fri Jun 28 15:46:02 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
 	parenthesizing correctly.
 
 	* hurd/hurdsig.c (_hurd_internal_post_signal): In
- 	check-for-pending signals code, release _hurd_siglock before
- 	jumping to deliver_pending.
+	check-for-pending signals code, release _hurd_siglock before
+	jumping to deliver_pending.
 
 Thu Jun 27 04:04:27 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
@@ -6261,7 +6299,7 @@ Tue Jun 25 10:58:23 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 Tue Jun 25 09:55:47 1996  David Mosberger-Tang  <davidm@AZStarNet.com>
 
 	* catgets/gencat.c (write_out): Use %Zu to print variables of type
- 	size_t.
+	size_t.
 	* resolv/res_debug.c (__p_rr): Print size_t variable as %lu and
 	cast it to (unsigned long) to make it work both on 32 and 64
 	bit architectures.
@@ -6320,7 +6358,7 @@ Tue Jun 25 02:59:11 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 	PTR is outside the heap.
 
 	* elf/dl-load.c (_dl_map_object): If the requested name matches the
- 	soname of a loaded object, use that object.
+	soname of a loaded object, use that object.
 
 Mon Jun 24 19:57:01 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
@@ -6438,7 +6476,7 @@ Sun Jun 23 19:42:05 1996  Ulrich Drepper  <drepper@cygnus.com>
 	Implementation of libnss_files.so module for file based databases
 	in NSS service.
 	* nss/nss_dns/dns-host.c, nss/nss_dns/dns-network.c: Implementation
-        if libnss_dns.so module for DNS name lookup in NSS service.
+	if libnss_dns.so module for DNS name lookup in NSS service.
 
 	* inet/getproto.c, inet/getprtent.c, inet/getprtname.c,
 	inet/getservent.c, inet/getsrvbynm.c, inet/getsrvbypt.c:
@@ -6513,13 +6551,13 @@ Sat Jun 22 10:44:09 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 Fri Jun 21 00:27:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Fix mapping and l_phdr
- 	guessing to not assume p_vaddr of first load cmd is zero.
+	guessing to not assume p_vaddr of first load cmd is zero.
 
 	* sysdeps/sparc/elf/start.S: New file.
 	* sysdeps/sparc/dl-machine.h: New file.
 
 	* posix/fnmatch.c (fnmatch): Fix \*[*?]+ case to increment name ptr
- 	only for ?s, not for *s.  Fix from Chet Ramey.
+	only for ?s, not for *s.  Fix from Chet Ramey.
 
 	Fixes thanks to Raja R Harinath <harinath@cs.umn.edu>:
 	* sysdeps/unix/sysv/utmpbits.h: Define _HAVE_UT_{TYPE,ID,TV,HOST}.
@@ -6591,7 +6629,7 @@ Wed Jun 19 01:27:57 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 Wed Jun 19 03:24:58 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/codeset_name.c: New file.  Provide function for information
- 	about currently used character set.
+	about currently used character set.
 	* locale/Makefile (routines): Add codeset_name.
 	* locale/langinfo.h (_NL_CTYPE_CODESET_NAME): Add new constant.
 	* locale/localeinfo.h: Change magic number because of incompatible
@@ -6600,7 +6638,7 @@ Wed Jun 19 03:24:58 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* locale/programs/ld-ctype.c: Implement handling of `codeset_name'.
 
 	* locale/programs/locfile.c: Don't depend in pre-2.0 Linux specific
- 	name `MAX_IOVEC'.  Instead use standard name `UIO_MAXIOV'.
+	name `MAX_IOVEC'.  Instead use standard name `UIO_MAXIOV'.
 
 	* locale/setlocale.c (setlocale): Initialize local variables to
 	prevent warnings.
@@ -6612,27 +6650,27 @@ Thu Jun 13 17:25:11 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 	* locale/programs/locale.c: Include string.h.
 
 	* sunrpc/xdr_stdio.c (xdrstdio_getlong), sunrpc/xdr_rec.c
- 	(xdrrec_getlong), sunrpc/xdr_mem.c (xdrmem_getlong): Make sure
- 	appropriate sign-extension is performed on machines with
- 	sizeof(long) > 4.
+	(xdrrec_getlong), sunrpc/xdr_mem.c (xdrmem_getlong): Make sure
+	appropriate sign-extension is performed on machines with
+	sizeof(long) > 4.
 
 	* sunrpc/xdr.c (xdr_int, xdr_u_int): If sizeof(long)==8 and
- 	sizeof(int)<sizeof(long), we need to go through a temporary
- 	variable.
+	sizeof(int)<sizeof(long), we need to go through a temporary
+	variable.
 
 	* locale/programs/ld-numeric.c: Include <alloca.h>
 
 	* libio/stdio.h (__libc_fatal): Add prototype.
 
 	* libio/cleanup.c: Use __P() to declare prototype when __STDC__ is
- 	in efect.
+	in efect.
 
 	* libio/iopopen.c (read_or_write, parent_end, child_end): Declare
- 	volatile to avoid "might get clobbered by longjmp" warning.
+	volatile to avoid "might get clobbered by longjmp" warning.
 
 	* features.h (__KERNEL_STRICT_NAMES): Define __KERNEL_STRICT_NAMES
- 	unless _LOOSE_KERNEL_NAMES is in effect (which, with high
- 	probability is a sure loser).
+	unless _LOOSE_KERNEL_NAMES is in effect (which, with high
+	probability is a sure loser).
 	* sysdeps/unix/sysv/linux/gnu/types.h (__KERNEL_STRICT_NAMES): Remove.
 
 	* sysdeps/unix/bsd/osf/alpha/start.S (errno): Removed.
@@ -6646,52 +6684,52 @@ Mon Jun 10 17:50:31 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 	* sysdeps/unix/sysv/linux/alpha/pipe.S: Use PSEUDO.
 
 	* sysdeps/unix/sysv/linux/alpha/sysdep.S,
- 	sysdeps/unix/sysv/linux/alpha/brk.S,
- 	sysdeps/unix/sysv/linux/alpha/ieee_get_fp_control.S,
- 	sysdeps/unix/sysv/linux/alpha/ieee_set_fp_control.S,
- 	sysdeps/unix/sysv/linux/alpha/llseek.S,
- 	sysdeps/unix/sysv/linux/alpha/sigsuspend.S,
- 	sysdeps/unix/sysv/linux/alpha/syscall.S: Rename syscall_error to
- 	__syscall_error to avoid intruding application name space.
+	sysdeps/unix/sysv/linux/alpha/brk.S,
+	sysdeps/unix/sysv/linux/alpha/ieee_get_fp_control.S,
+	sysdeps/unix/sysv/linux/alpha/ieee_set_fp_control.S,
+	sysdeps/unix/sysv/linux/alpha/llseek.S,
+	sysdeps/unix/sysv/linux/alpha/sigsuspend.S,
+	sysdeps/unix/sysv/linux/alpha/syscall.S: Rename syscall_error to
+	__syscall_error to avoid intruding application name space.
 
 	* sysdeps/unix/sysv/linux/alpha/sysdep.h: Rename __NR_get?id
 	to SYS_get?id so that syscall stubs in sysdeps/unix define
 	these syscalls in terms of getxpid/getxuid/getxgid.
 
 	* sysdeps/unix/_exit.S, sysdeps/unix/getegid.S,
- 	sysdeps/unix/geteuid.S, sysdeps/unix/getppid.S,
- 	sysdeps/unix/execve.S, sysdeps/unix/fork.S,
- 	sysdeps/unix/syscall.S: Terminate syscall with PSEUDO_END.
+	sysdeps/unix/geteuid.S, sysdeps/unix/getppid.S,
+	sysdeps/unix/execve.S, sysdeps/unix/fork.S,
+	sysdeps/unix/syscall.S: Terminate syscall with PSEUDO_END.
 
 	* sysdeps/unix/make-syscalls.sh, sysdeps/unix/sysdep.h
- 	(PSEUDO_END): Rename END() to PSEUDO_END().
+	(PSEUDO_END): Rename END() to PSEUDO_END().
 
 	* sysdeps/unix/alpha/sysdep.h: Move error-handling code in PSEUDO
- 	to PSEUDO_END to improve branch-prediction.  Include .frame
- 	directive to make syscalls debugabble.
+	to PSEUDO_END to improve branch-prediction.  Include .frame
+	directive to make syscalls debugabble.
 	(PSEUDO_END): New macro.
 
 	* sysdeps/unix/alpha/sysdep.h, sysdeps/alpha/bb_init_func.S,
- 	sysdeps/unix/sysv/linux/alpha/brk.S: Use ldiq instead of ldi since
- 	latter is illegal under DEC Unix.
+	sysdeps/unix/sysv/linux/alpha/brk.S: Use ldiq instead of ldi since
+	latter is illegal under DEC Unix.
 
 	* sysdeps/unix/alpha/sysdep.S: Renamed from
 	sysdeps/unix/sysv/linux/alpha/sysdep.S.  This file works for OSF/1
- 	as well.
+	as well.
 	* sysdeps/unix/bsd/osf/alpha/sysdep.S: Remove (note that the
- 	EWOULDBLOCK -> EAGAIN mapping was unnecessary since
- 	EWOULDBLOCK==EAGAIN under DEC Unix and Linux/Alpha).
+	EWOULDBLOCK -> EAGAIN mapping was unnecessary since
+	EWOULDBLOCK==EAGAIN under DEC Unix and Linux/Alpha).
 
 	* sysdeps/alpha/divrem.h: Use retaddr instead of ra as the return
- 	address register in the .frame directive.
+	address register in the .frame directive.
 
 	* sysdeps/alpha/copysign.c: Remove.
 
 	* sunrpc/rpc/types.h: Include <sys/param.h> and <netinet/in.h> to
- 	avoid RPC definitions of INADDR_LOOPBACK and/or MAXHOSTNAMELEN.
+	avoid RPC definitions of INADDR_LOOPBACK and/or MAXHOSTNAMELEN.
 
 	* errno.h: Move __END_DECLS to correct place to make file
- 	compilable under c++.
+	compilable under c++.
 
 	* dirent/dirent.h: Document _DIRENT_HAVE_D_OFF macro.  Define
 	d_ino only if <direntry.h> hasn't defined d_fileno.
@@ -6705,8 +6743,8 @@ Mon Jun 10 17:50:31 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 Thu Jun  6 21:39:38 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* sysdeps/unix/bsd/sun/sunos4/tcsetattr.c (tcsetattr): Declare cmd
- 	as unsigned long, not as int (to avoid incorrect int->long
- 	promotion).
+	as unsigned long, not as int (to avoid incorrect int->long
+	promotion).
 
 
 

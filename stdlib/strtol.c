@@ -1,22 +1,23 @@
-/* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* strtol - Convert string representation of a number into an integer value.
+   Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
@@ -32,7 +33,7 @@ Cambridge, MA 02139, USA.  */
 extern int errno;
 #endif
 #ifndef __set_errno
-# define __set_errno(val) errno = (val)
+# define __set_errno(Val) errno = (Val)
 #endif
 
 #ifdef HAVE_LIMITS_H
@@ -121,27 +122,27 @@ extern int errno;
 #ifdef USE_WIDE_CHAR
 # include <wchar.h>
 # include <wctype.h>
-# define L_(ch) L##ch
+# define L_(Ch) L##Ch
 # define UCHAR_TYPE wint_t
 # define STRING_TYPE wchar_t
-# define ISSPACE(ch) iswspace (ch)
-# define ISALPHA(ch) iswalpha (ch)
-# define TOUPPER(ch) towupper (ch)
+# define ISSPACE(Ch) iswspace (Ch)
+# define ISALPHA(Ch) iswalpha (Ch)
+# define TOUPPER(Ch) towupper (Ch)
 #else
-# define L_(ch) ch
+# define L_(Ch) Ch
 # define UCHAR_TYPE unsigned char
 # define STRING_TYPE char
-# define ISSPACE(ch) isspace (ch)
-# define ISALPHA(ch) isalpha (ch)
-# define TOUPPER(ch) toupper (ch)
+# define ISSPACE(Ch) isspace (Ch)
+# define ISALPHA(Ch) isalpha (Ch)
+# define TOUPPER(Ch) toupper (Ch)
 #endif
 
 #ifdef __STDC__
-# define INTERNAL(x) INTERNAL1(x)
-# define INTERNAL1(x) __##x##_internal
-# define WEAKNAME(x) WEAKNAME1(x)
+# define INTERNAL(X) INTERNAL1(X)
+# define INTERNAL1(X) __##X##_internal
+# define WEAKNAME(X) WEAKNAME1(X)
 #else
-# define INTERNAL(x) __/**/x/**/_internal
+# define INTERNAL(X) __/**/X/**/_internal
 #endif
 
 #ifdef USE_NUMBER_GROUPING
@@ -340,6 +341,20 @@ noconv:
 }
 
 /* External user entry point.  */
+
+#if _LIBC - 0 == 0
+# undef PARAMS
+# if defined (__STDC__) && __STDC__
+#  define PARAMS(Args) Args
+# else
+#  define PARAMS(Args) ()
+# endif
+
+/* Prototype.  */
+INT strtol PARAMS ((const STRING_TYPE *nptr, STRING_TYPE **endptr, int base));
+#endif
+
+
 INT
 #ifdef weak_function
 weak_function

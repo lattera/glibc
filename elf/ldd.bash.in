@@ -1,4 +1,4 @@
-#! /bin/sh
+#! @BASH@
 
 # This is the `ldd' command, which lists what shared libraries are
 # used by given dynamically-linked executables.  It works by invoking the
@@ -6,7 +6,7 @@
 # variable LD_TRACE_LOADED_OBJECTS to a non-empty value.
 
 RTLD=@RTLD@
-usage="\
+usage=$"\
 ldd [OPTION]... FILE...
   --help           print this help and exit
   --version        print version information and exit
@@ -27,7 +27,7 @@ done
 
 case $# in
 0)
-  echo >&2 "\
+  echo >&2 $"\
 ldd: missing file arguments
 Try \`ldd --help' for more information."
   exit 1 ;;
@@ -38,11 +38,11 @@ Try \`ldd --help' for more information."
   *) file="./$1" ;;
   esac
   if test ! -f "$file"; then
-    echo "${file}: no such file"
+    echo "${file}:" $"no such file"
   elif ${RTLD} --verify "$file"; then
     LD_TRACE_LOADED_OBJECTS=1 exec ${RTLD} "$file" && exit 1
   else
-    echo '	not a dynamic executable'
+    echo $"	not a dynamic executable"
   fi
   exit ;;
 *)
@@ -54,11 +54,11 @@ Try \`ldd --help' for more information."
     *) file="./$file" ;;
     esac
     if test ! -f "$file"; then
-      echo "$file: no such file"
+      echo "$file:" $"no such file"
     elif ${RTLD} --verify "$file"; then
       LD_TRACE_LOADED_OBJECTS=1 ${RTLD} "$file"
     else
-      echo '	not a dynamic executable'
+      echo $"	not a dynamic executable"
     fi
   done
 esac

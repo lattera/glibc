@@ -382,6 +382,13 @@ extern int setenv __P ((__const char *__name, __const char *__value,
 extern void unsetenv __P ((__const char *__name));
 #endif
 
+#ifdef	__USE_MISC
+/* The `clearenv' was planned to be added to POSIX.1 but probably
+   never made it.  Nevertheless the POSIX.9 standard (POSIX bindings
+   for Fortran 77) requires this function.  */
+extern int clearenv __P ((void));
+#endif
+
 /* Execute the given line as a shell command.  */
 extern int system __P ((__const char *__command));
 

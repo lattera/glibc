@@ -23,15 +23,11 @@ Cambridge, MA 02139, USA.  */
 
 #include <time.h>
 
-__BEGIN_DECLS
+#define __need_timeval
+#include <timebits.h>
 
-/* A time value that is accurate to the nearest
-   microsecond but also has a range of years.  */
-struct timeval
-  {
-    int tv_sec;			/* Seconds.  */
-    int tv_usec;		/* Microseconds.  */
-  };
+
+__BEGIN_DECLS
 
 /* Macros for converting between `struct timeval' and `struct timespec'.  */
 #define TIMEVAL_TO_TIMESPEC(tv, ts) {                                   \

@@ -1,4 +1,4 @@
-/* System-dependent timing definitions.  Stub version.
+/* System-dependent timing definitions.  Linux/Alpha version.
    Copyright (C) 1996 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -25,8 +25,8 @@
    microsecond but also has a range of years.  */
 struct timeval
   {
-    time_t tv_sec;		/* Seconds.  */
-    time_t tv_usec;		/* Microseconds.  */
+    int tv_sec;			/* Seconds.  */
+    int tv_usec;		/* Microseconds.  */
   };
 # endif	/* struct timeval */
 #endif	/* need timeval */
@@ -35,6 +35,7 @@ struct timeval
 #ifndef _TIMEBITS_H
 #define	_TIMEBITS_H	1
 
-#define CLOCKS_PER_SEC 60
+#include <asm/param.h>
+#define CLOCKS_PER_SEC HZ	/* XXX names not kosher */
 
 #endif	/* timebits.h */

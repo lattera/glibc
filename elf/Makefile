@@ -35,7 +35,7 @@ elide-routines.so = $(dl-routines) dl-support enbl-secure
 # interpreter and operating independent of libc.
 rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-minimal
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
-		  soinit.c sofini.c ldd.sh.in eval.c
+		  soinit.c sofini.c ldd.sh.in ldd.bash.in eval.c
 
 extra-libs	 = libdl
 extra-libs-others = $(extra-libs)
@@ -100,7 +100,8 @@ $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
 $(slibdir)/$(rtld-installed-name): $(objpfx)ld.so; $(do-install-program)
 
 $(objpfx)ldd: ldd.sh.in Makefile
-	sed 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' < $< > $@.new
+	sed -e 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' \
+	    -e 's%@VERSION@%$(version)%g' < $< > $@.new
 	chmod 555 $@.new
 	mv -f $@.new $@
 
