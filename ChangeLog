@@ -1,3 +1,8 @@
+2000-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/dl-machine.h (RTLD_START): Squeeze one more
+	instruction out of the code.
+
 2000-04-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-fini.c (_dl_fini): Increment j counter after swapping in
