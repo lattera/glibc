@@ -1,3 +1,12 @@
+2004-07-15  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #262]
+	* sysdeps/i386/elf/start.S (_start): Use @GOT instead of @GOTOFF
+	for main.
+	* elf/Makefile: Add rules to build and run tst-pie1.
+	* elf/tst-pie1.c: New test.
+	* elf/tst-piemod1.c: New file.
+
 2004-07-14  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #266]

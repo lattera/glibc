@@ -80,7 +80,7 @@ distribute	:= rtld-Rules \
 		   nodel2mod1.c nodel2mod2.c nodel2mod3.c \
 		   reldep9.c reldep9mod1.c reldep9mod2.c reldep9mod3.c \
 		   tst-array1.exp tst-array2.exp tst-array4.exp \
-		   tst-array2dep.c \
+		   tst-array2dep.c tst-piemod1.c \
 		   tst-execstack-mod.c tst-dlmodcount.c \
 		   check-textrel.c dl-sysdep.h
 
@@ -160,6 +160,9 @@ tests-nodelete-yes = nodelete nodelete2
 tests-nodlopen-yes = nodlopen nodlopen2
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
 endif
+ifeq (yesyes,$(have-fpie)$(build-shared))
+tests: $(objpfx)tst-pie1.out
+endif
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 unloadmod \
 		dep1 dep2 dep3 dep4 $(modules-vis-$(have-protected)) \
@@ -184,6 +187,9 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-alignmod $(modules-execstack-$(have-z-execstack))
 ifeq (yes,$(have-initfini-array))
 modules-names += tst-array2dep
+endif
+ifeq (yesyes,$(have-fpie)$(build-shared))
+modules-names += tst-piemod1
 endif
 modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4 \
@@ -704,6 +710,25 @@ $(objpfx)tst-array4.out: $(objpfx)tst-array4 $(objpfx)tst-array2dep.so
 	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
 	  $< > $@
 	cmp $@ tst-array4.exp > /dev/null
+
+ifeq (yesyes,$(have-fpie)$(build-shared))
+CFLAGS-tst-pie1.c += -fpie
+
+$(objpfx)tst-pie1.out: $(objpfx)tst-pie1
+	$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $< > $@
+
+$(objpfx)tst-pie1: $(objpfx)tst-pie1.o $(objpfx)tst-piemod1.so
+	$(LINK.o) -pie -Wl,-O1 \
+	  $(sysdep-LDFLAGS) $(config-LDFLAGS) \
+	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
+	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
+	  $(LDFLAGS) $(LDFLAGS-$(@F)) \
+	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
+	  -o $@ $(objpfx)tst-pie1.o $(objpfx)tst-piemod1.so \
+	  $(common-objpfx)libc_nonshared.a
+endif
 
 check-textrel-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE
 $(objpfx)check-textrel: check-textrel.c
