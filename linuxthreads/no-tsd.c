@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sys/cdefs.h>  /* for __const */
+#include <stdlib.h>
 #include <bits/libc-tsd.h>
 
 #if !(USE_TLS && HAVE___THREAD)
