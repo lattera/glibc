@@ -10,12 +10,17 @@ extra-libs-left := $(filter-out $(lib),$(extra-libs-left))
 
 object-suffixes-$(lib) := $(filter-out $($(lib)-inhibit-o),$(object-suffixes))
 
+# Make sure these are simply-expanded variables before we append to them,
+# since we want the expressions we we append to be expanded right now.
+install-lib := $(install-lib)
+extra-objs := $(extra-objs)
+
 # Add each flavor of library to the lists of things to build and install.
 install-lib += $(foreach o,$(object-suffixes-$(lib)),$(lib:lib%=$(libtype$o)))
 extra-objs += $(foreach o,$(object-suffixes-$(lib)),$($(lib)-routines:=$o))
-alltypes-$(lib) = $(foreach o,$(object-suffixes-$(lib)),\
-			    $(objpfx)$(patsubst %,$(libtype$o),\
-			    $(lib:lib%=%)))
+alltypes-$(lib) := $(foreach o,$(object-suffixes-$(lib)),\
+			     $(objpfx)$(patsubst %,$(libtype$o),\
+			     $(lib:lib%=%)))
 ifneq (,$(filter .so,$(object-suffixes-$(lib))))
 alltypes-$(lib) += $(objpfx)$(lib).so
 endif

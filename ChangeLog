@@ -1,5 +1,8 @@
 Sat Apr  8 00:40:59 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* extra-lib.mk (install-lib, extra-objs, alltypes-$(lib)): Make
+ 	sure these are simply-expanded variables.
+
 	* locale/loadlocale.c (_nl_load_locale): Use MAP_INHERIT flag in
  	mmap call.
 
