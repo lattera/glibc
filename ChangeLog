@@ -1,3 +1,8 @@
+1999-07-11  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/mmap.c (__mmap): Short-circuit to vm_allocate
+	for MAP_ANON, prot==PROT_READ|PROT_WRITE.
+
 1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/vfprintf.c (buffered_vfprintf): Add locking.
