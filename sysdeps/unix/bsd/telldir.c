@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -48,8 +48,8 @@ DEFUN(telldir, (dirp), DIR *dirp)
   if (new == NULL)
     return (off_t) -1;
 
-  new->pos = dirp->__pos;
-  new->offset = dirp->__offset;
+  new->pos = dirp->filepos;
+  new->offset = dirp->offset;
   new->cookie = ++lastpos;
   new->next = records[new->cookie % NBUCKETS];
   records[new->cookie % NBUCKETS] = new;
@@ -70,15 +70,15 @@ DEFUN(seekdir, (dirp, pos), DIR *dirp AND __off_t pos)
        prevr = &r->next, r = r->next)
     if (r->cookie == pos)
       {
-	if (dirp->__pos != r->pos || dirp->__offset != r->offset)
+	if (dirp->filepos != r->pos || dirp->offset != r->offset)
 	  {
-	    dirp->__size = 0;	/* Must read a fresh buffer.  */
+	    dirp->size = 0;	/* Must read a fresh buffer.  */
 	    /* Move to the saved position.  */
-	    __lseek (dirp->__fd, r->pos, SEEK_SET);
-	    dirp->__pos = r->pos;
-	    dirp->__offset = 0;
+	    __lseek (dirp->fd, r->pos, SEEK_SET);
+	    dirp->filepos = r->pos;
+	    dirp->offset = 0;
 	    /* Read entries until we reach the saved offset.  */
-	    while (dirp->__offset < r->offset)
+	    while (dirp->offset < r->offset)
 	      if (readdir (dirp) == NULL)
 		break;
 	  }

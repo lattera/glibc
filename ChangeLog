@@ -1,5 +1,7 @@
 Mon May 13 12:03:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* sysdeps/unix/sysv/linux/i386/profil-counter.h: New file.
+
 	* extra-lib.mk: Skip the hair if $(object-suffixes-$(lib)) is empty.
 
 	* posix/glob.h [_AMIGA]: Remove `struct stat;' forward decl.
