@@ -407,23 +407,31 @@ extern _IO_wint_t __wunderflow (_IO_FILE *) __THROW;
 extern _IO_wint_t __wuflow (_IO_FILE *) __THROW;
 extern _IO_wint_t __woverflow (_IO_FILE *, _IO_wint_t) __THROW;
 
+#if  __GNUC__ >= 3
+# define _IO_BE(expr, res) __builtin_expect (expr, res)
+#else
+# define _IO_BE(expr, res) (expr)
+#endif
+
 #define _IO_getc_unlocked(_fp) \
-       ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end ? __uflow (_fp) \
-	: *(unsigned char *) (_fp)->_IO_read_ptr++)
+       (_IO_BE ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end, 0) \
+	? __uflow (_fp) : *(unsigned char *) (_fp)->_IO_read_ptr++)
 #define _IO_peekc_unlocked(_fp) \
-       ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end \
+       (_IO_BE ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end, 0) \
 	  && __underflow (_fp) == EOF ? EOF \
 	: *(unsigned char *) (_fp)->_IO_read_ptr)
 #define _IO_putc_unlocked(_ch, _fp) \
-   (((_fp)->_IO_write_ptr >= (_fp)->_IO_write_end) \
+   (_IO_BE ((_fp)->_IO_write_ptr >= (_fp)->_IO_write_end, 0) \
     ? __overflow (_fp, (unsigned char) (_ch)) \
     : (unsigned char) (*(_fp)->_IO_write_ptr++ = (_ch)))
 
 #define _IO_getwc_unlocked(_fp) \
-  ((_fp)->_wide_data->_IO_read_ptr >= (_fp)->_wide_data->_IO_read_end \
+  (_IO_BE ((_fp)->_wide_data->_IO_read_ptr >= (_fp)->_wide_data->_IO_read_end,\
+	   0) \
    ? __wuflow (_fp) : (_IO_wint_t) *(_fp)->_wide_data->_IO_read_ptr++)
 #define _IO_putwc_unlocked(_wch, _fp) \
-  ((_fp)->_wide_data->_IO_write_ptr >= (_fp)->_wide_data->_IO_write_end \
+  (_IO_BE ((_fp)->_wide_data->_IO_write_ptr \
+	   >= (_fp)->_wide_data->_IO_write_end, 0) \
    ? __woverflow (_fp, _wch) \
    : (_IO_wint_t) (*(_fp)->_wide_data->_IO_write_ptr++ = (_wch)))
 
