@@ -307,7 +307,7 @@ SINGLE(LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 #endif
 
   /* Are there enough bytes in the input buffer?  */
-  if (inptr + (MAX_NEEDED_INPUT - inlen) > inend)
+  if (__builtin_expect (inptr + (MAX_NEEDED_INPUT - inlen) > inend, 0))
     {
 #ifdef STORE_REST
       *inptrp = inend;

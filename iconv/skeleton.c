@@ -281,7 +281,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
   /* If the function is called with no input this means we have to reset
      to the initial state.  The possibly partly converted input is
      dropped.  */
-  if (do_flush)
+  if (__builtin_expect (do_flush, 0))
     {
       status = __GCONV_OK;
 
@@ -439,7 +439,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 
 	      if (result != __GCONV_EMPTY_INPUT)
 		{
-		  if (outerr != outbuf)
+		  if (__builtin_expect (outerr != outbuf, 0))
 		    {
 #ifdef RESET_INPUT_BUFFER
 		      RESET_INPUT_BUFFER;

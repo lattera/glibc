@@ -1,3 +1,8 @@
+2000-04-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/skeleton.c: Add some more __builtin_expect.
+	* iconv/loop.c: Likewise.
+
 2000-03-08  H.J. Lu  <hjl@gnu.org>
 
 	* posix/regex.c (regex_compile): Correctly handle "\{" when
