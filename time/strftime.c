@@ -75,7 +75,7 @@ Cambridge, MA 02139, USA.  */
 #endif
 #endif
 
-static unsigned int week __P((const struct tm *const, int));
+static unsigned int week __P((const struct tm *const, int, int));
 
 
 #define	add(n, f)							      \
@@ -107,23 +107,37 @@ static unsigned int week __P((const struct tm *const, int));
 inline
 #endif
 static unsigned int
-week (tp, starting_day)
+week (tp, starting_day, max_preceding)
       const struct tm *const tp;
       int starting_day;
+      int max_preceding;
 {
-  int wday, dl;
+  int wday, dl, base;
 
   wday = tp->tm_wday - starting_day;
   if (wday < 0)
     wday += 7;
 
-  /* Set DL to the day in the year of the last day of the week previous to the
-     one containing the day specified in TP.  If DL is negative or zero, the
-     day specified in TP is in the first week of the year.  Otherwise,
-     calculate the number of complete weeks before our week (DL / 7) and
-     add any partial week at the start of the year (DL % 7).  */
+  /* Set DL to the day in the year of the first day of the week
+     containing the day specified in TP.  */
   dl = tp->tm_yday - wday;
-  return dl <= 0 ? 0 : ((dl / 7) + ((dl % 7) == 0 ? 0 : 1));
+
+  /* For the computation following ISO 8601:1988 we set the number of
+     the week containing January 1st to 1 if this week has more than
+     MAX_PRECEDING days in the new year.  For ISO 8601 this number is
+     3, for the other representation it is 7 (i.e., not to be
+     fulfilled).  */
+  base = ((dl + 7) % 7) > max_preceding ? 1 : 0;
+
+  /* If DL is negative we compute the result as 0 unless we have to
+     compute it according ISO 8601.  In this case we have to return 53
+     or 1 if the week containing January 1st has less than 4 days in
+     the new year or not.  If DL is not negative we calculate the
+     number of complete weeks for our week (DL / 7) plus 1 (because
+     only for DL < 0 we are in week 0/53 and plus the number of the
+     first week computed in the last step.  */
+  return dl < 0 ? (dl < -max_preceding ? 53 : base)
+		: base + 1 + dl / 7;
 }
 
 #ifndef _NL_CURRENT
@@ -175,8 +189,9 @@ strftime (s, maxsize, format, tp)
 #endif
   size_t wkday_len = strlen(f_wkday);
   size_t month_len = strlen(f_month);
-  const unsigned int y_week0 = week (tp, 0);
-  const unsigned int y_week1 = week (tp, 1);
+  const unsigned int y_week0 = week (tp, 0, 7);
+  const unsigned int y_week1 = week (tp, 1, 7);
+  const unsigned int y_week2 = week (tp, 1, 3);
   const char *zone;
   size_t zonelen;
   register size_t i = 0;
@@ -340,7 +355,7 @@ strftime (s, maxsize, format, tp)
 #ifdef _LIBC
 	    add (maxdigits, printed = sprintf (p, number_fmt, number_value));
 #else
-	    add (sprintf (p, number_fmt, number_value);
+	    add (maxdigits, sprintf (p, number_fmt, number_value);
 		 printed = strlen (p));
 #endif
 
@@ -404,6 +419,9 @@ strftime (s, maxsize, format, tp)
 
 	case 'U':
 	  DO_NUMBER (2, y_week0);
+
+	case 'V':
+	  DO_NUMBER (2, y_week2);
 
 	case 'W':
 	  DO_NUMBER (2, y_week1);
