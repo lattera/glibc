@@ -200,6 +200,12 @@ Thu Oct 24 17:43:34 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 
 	* MakeTAGS (sysdep-dirs): Fix typo.
 
+Thu Oct 24 17:32:57 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c (write_corefile): If we can't create the core
+	file, still call crash_dump_task with a null FILE arg.  Maybe it
+	won't actually need the file.
+
 Wed Oct 23 03:45:22 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile (headers): Don't mention libc-version.h.
