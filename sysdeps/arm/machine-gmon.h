@@ -32,7 +32,7 @@ void _mcount (void);
 weak_alias (_mcount, mcount)
 #endif
 
-static void mcount_internal (u_long frompc, u_long selfpc);
+static void mcount_internal (u_long frompc, u_long selfpc) __attribute_used__;
 
 #define _MCOUNT_DECL(frompc, selfpc) \
 static void mcount_internal (u_long frompc, u_long selfpc)
