@@ -36,9 +36,6 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 
-#include <asm/page.h>
-#include <asm/system.h>
-
 #define MAX_PORT	0x10000
 
 /*

@@ -1,3 +1,11 @@
+2001-02-06  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/ia64/ioperm.c: Don't include kernel
+	headers.
+
+	* timezone/Makefile: Don't assume that $(inst_zonedir) is a subdir
+	of $(inst_datadir).
+
 2001-02-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/Makefile: Add dependency for bug-iconv2.out.
