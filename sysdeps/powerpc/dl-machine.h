@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  PowerPC version.
-   Copyright (C) 1995-2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -344,7 +344,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  Elf32_Addr *const reloc_addr)
 {
   const Elf32_Sym *const refsym = sym;
-  Elf32_Word loadbase, finaladdr;
+  Elf32_Word finaladdr;
   const int rinfo = ELF32_R_TYPE (reloc->r_info);
 
 #ifndef RESOLVE_CONFLICT_FIND_MAP
@@ -359,17 +359,18 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  && ELF32_ST_BIND (sym->st_info) == STB_LOCAL))
     {
       /* Has already been relocated.  */
-      loadbase = map->l_addr;
+      Elf32_Word loadbase = map->l_addr;
       finaladdr = loadbase + reloc->r_addend;
     }
   else
     {
-      loadbase = (Elf32_Word) (char *) (RESOLVE (&sym, version,
-						 ELF32_R_TYPE(reloc->r_info)));
+      Elf32_Word loadbase
+	= (Elf32_Word) (char *) (RESOLVE (&sym, version,
+					  ELF32_R_TYPE(reloc->r_info)));
       if (sym == NULL)
 	{
 	  /* Weak symbol that wasn't actually defined anywhere.  */
-	  assert(loadbase == 0);
+	  assert (loadbase == 0);
 	  finaladdr = reloc->r_addend;
 	}
       else

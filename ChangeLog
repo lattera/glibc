@@ -1,3 +1,8 @@
+2002-02-17  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/powerpc/dl-machine.h (elf_machine_rela): Move local
+	variable LOADBASE so it's not declared when it's not used.
+
 2002-02-16  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/times.c (__times) [NO_CREATION_TIME]: Don't try
