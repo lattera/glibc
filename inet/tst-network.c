@@ -1,5 +1,5 @@
 /* Test for inet_network.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2000.
 
@@ -51,7 +51,7 @@ int
 main (void)
 {
   int errors = 0;
-  int i;
+  size_t i;
   uint32_t res;
 
   for (i = 0; i < sizeof (tests) / sizeof (tests[0]); ++i)

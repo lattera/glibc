@@ -1035,7 +1035,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    const char *mbs = (const char *) string;			      \
 	    mbstate_t mbstate;						      \
 									      \
-	    len = prec != -1 ? prec : strlen (mbs);			      \
+	    len = prec != -1 ? (size_t) prec : strlen (mbs);		      \
 									      \
 	    /* Allocate dynamically an array which definitely is long	      \
 	       enough for the wide character version.  */		      \

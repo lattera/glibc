@@ -77,14 +77,14 @@ test_file (const void *buf, size_t size, int fd, const char *msg)
       return 1;
     }
 
-  if (st.st_size != size)
+  if (st.st_size != (off_t) size)
     {
       error (0, errno, "%s: wrong size: %lu, should be %lu",
 	     msg, (unsigned long int) st.st_size, (unsigned long int) size);
       return 1;
     }
 
-  if (pread (fd, tmp, size, 0) != size)
+  if (pread (fd, tmp, size, 0) != (ssize_t) size)
     {
       error (0, errno, "%s: failed pread", msg);
       return 1;

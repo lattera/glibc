@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -41,7 +41,7 @@ static struct
 int
 main (void)
 {
-  int i = 0;
+  size_t i = 0;
   int errors = 0;
   char path[1024];
   char *file;

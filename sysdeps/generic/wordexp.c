@@ -445,7 +445,7 @@ parse_glob (char **word, size_t *word_length, size_t *max_length,
   /* We are poised just after a '*', a '[' or a '?'. */
   int error = WRDE_NOSPACE;
   int quoted = 0; /* 1 if singly-quoted, 2 if doubly */
-  int i;
+  size_t i;
   wordexp_t glob_list; /* List of words to glob */
 
   glob_list.we_wordc = 0;

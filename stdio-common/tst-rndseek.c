@@ -67,7 +67,7 @@ do_test (void)
 {
   int fd;
   FILE *fp;
-  int i;
+  size_t i;
   int result;
 
   fd = mkstemp (fname);

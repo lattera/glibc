@@ -89,7 +89,7 @@ main (void)
 	exit (1);
       }
 
-    if  ((size_t) nonr == -1 )
+    if  (nonr == (size_t) -1)
       {
 	printf ("\
 %u: iconv returned with %Zd and errno = %m (inleft: %Zd, outleft: %Zd)\n",

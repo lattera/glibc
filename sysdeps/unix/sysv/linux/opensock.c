@@ -59,7 +59,7 @@ __opensock (void)
   char fname[sizeof "/proc/" + 14];
   int result;
   int has_proc;
-  int cnt;
+  size_t cnt;
 
   /* We already know which family to use from the last call.  Use it
      again.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1998.
 
@@ -114,7 +114,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
   vec[1].iov_base = (void *) key;
   vec[1].iov_len = keylen;
 
-  if (__writev (sock, vec, 2) != sizeof (request_header) + keylen)
+  if ((size_t) __writev (sock, vec, 2) != sizeof (request_header) + keylen)
     {
       __close (sock);
       return -1;
@@ -182,7 +182,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       total_len += gr_resp.gr_name_len + gr_resp.gr_passwd_len;
 
       /* Get this data.  */
-      if (__readv (sock, vec, 2) != total_len)
+      if ((size_t) __readv (sock, vec, 2) != total_len)
 	{
 	  __close (sock);
 	  return -1;

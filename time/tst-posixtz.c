@@ -28,7 +28,7 @@ int
 main (void)
 {
   int result = 0;
-  int cnt;
+  size_t cnt;
 
   for (cnt = 0; cnt < sizeof (tests) / sizeof (tests[0]); ++cnt)
     {

@@ -21,7 +21,7 @@ static const struct
 int
 main (int argc, char *argv[])
 {
-  int n;
+  size_t n;
   int result = 0;
 
   puts ("test 1");

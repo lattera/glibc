@@ -108,7 +108,7 @@ gethostid ()
 
   in.s_addr = 0;
   memcpy (&in, hp->h_addr,
-	  (int) sizeof (in) < hp->h_length ? sizeof (in) : hp->h_length);
+	  (int) sizeof (in) < hp->h_length ? (int) sizeof (in) : hp->h_length);
 
   /* For the return value to be not exactly the IP address we do some
      bit fiddling.  */

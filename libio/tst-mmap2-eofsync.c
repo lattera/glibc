@@ -78,7 +78,7 @@ do_test (void)
     }
 
   c = write (temp_fd, pages + pagesize, pagesize);
-  if (c == pagesize)
+  if (c == (ssize_t) pagesize)
     printf ("wrote more to file\n");
   else
     {

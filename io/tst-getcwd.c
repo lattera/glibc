@@ -1,5 +1,5 @@
 /* Test of getcwd function.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
@@ -36,8 +36,7 @@ do_test (void)
   char *bufs[10];
   size_t lens[10];
   size_t sbs;
-  size_t len;
-  int i;
+  size_t len, i;
 
   if (getcwd (thepath, sizeof thepath) == NULL)
     {

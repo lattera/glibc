@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -54,7 +54,7 @@ comp (const void *p1, const void *p2)
 int
 main (void)
 {
-  int cnt;
+  size_t cnt;
   int result = 0;
   struct entry key;
   struct entry *res;
@@ -101,7 +101,7 @@ main (void)
       puts ("found an entry that's not there");
       result = 1;
     }
-  
+
   /* Now the array contains only one element - no entry should be found.  */
   for (cnt = 0; cnt < narr; ++cnt)
     {

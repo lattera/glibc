@@ -130,7 +130,7 @@ qsort (void *b, size_t n, size_t s, __compar_fn_t cmp)
 	   measured in bytes.  */
 
       /* If the memory requirements are too high don't allocate memory.  */
-      if (size / pagesize > phys_pages)
+      if (size / pagesize > (size_t) phys_pages)
 	_quicksort (b, n, s, cmp);
       else
 	{

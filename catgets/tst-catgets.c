@@ -26,7 +26,7 @@ main (void)
   for (rnd = 0; rnd < ROUNDS; ++rnd)
     {
       nl_catd cd = catopen ("libc", 0);
-      int cnt;
+      size_t cnt;
 
       if (cd == (nl_catd) -1)
 	{

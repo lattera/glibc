@@ -143,7 +143,7 @@ __getcwd (char *buf, size_t size)
     {
       if (path[0] == '/')
 	{
-	  if (n >= alloc_size - 1)
+	  if ((size_t) n >= alloc_size - 1)
 	    {
 	      if (buf == NULL)
 		free (path);

@@ -48,7 +48,7 @@ typedef struct catalog_info
 
 
 /* The magic number to signal we really have a catalog file.  */
-#define CATGETS_MAGIC 0x960408de
+#define CATGETS_MAGIC 0x960408deU
 
 
 /* Prototypes for helper functions.  */

@@ -39,7 +39,7 @@ static struct tests
   { "1.2.256.4", 0, 0 },
   { "1.2.3.0x100", 0, 0 },
   { "323543357756889", 0, 0 },
-  { "10.1.2.3.4", 0, 0},  
+  { "10.1.2.3.4", 0, 0},
 };
 
 
@@ -47,13 +47,13 @@ int
 main (int argc, char *argv[])
 {
   int result = 0;
-  int cnt;
+  size_t cnt;
 
   for (cnt = 0; cnt < sizeof (tests) / sizeof (tests[0]); ++cnt)
     {
       struct in_addr addr;
 
-      if (inet_aton (tests[cnt].input, &addr) != tests[cnt].valid)
+      if ((int) inet_aton (tests[cnt].input, &addr) != tests[cnt].valid)
 	{
 	  if (tests[cnt].valid)
 	    printf ("\"%s\" not seen as valid IP address\n", tests[cnt].input);

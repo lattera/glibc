@@ -415,10 +415,10 @@ __argp_fmtstream_printf (struct argp_fmtstream *fs, const char *fmt, ...)
       avail = fs->end - fs->p;
       out = __vsnprintf (fs->p, avail, fmt, args);
       va_end (args);
-      if (out >= avail)
+      if ((size_t) out >= avail)
 	size_guess = out + 1;
     }
-  while (out >= avail);
+  while ((size_t) out >= avail);
 
   fs->p += out;
 

@@ -1,9 +1,58 @@
+2002-09-23  Roland McGrath  <roland@redhat.com>
+
+	* catgets/open_catalog.c (__open_catalog): Don't use a value type
+	as the __builtin_expect expression, just the Boolean value.
+
+	* sysdeps/generic/wordexp.c (parse_glob): int -> size_t for counter.
+	* sysdeps/unix/sysv/linux/opensock.c (__opensock): Likewise.
+	* resolv/res_hconf.c (arg_service_list, parse_line): Likewise.
+	* iconvdata/tst-loading.c (main): Likewise.
+	* catgets/tst-catgets.c (main): Likewise.
+	* stdlib/tst-xpg-basename.c (main): Likewise.
+	* stdlib/tst-bsearch.c (main): Likewise.
+	* stdio-common/test-vfprintf.c (main): Likewise.
+	* stdio-common/tst-rndseek.c (do_test): Likewise.
+	* libio/tst_swprintf.c (main): Likewise.
+	* libio/tst-fgetws.c (main): Likewise.
+	* wcsmbs/tst-mbrtowc.c (check_ascii): Likewise.
+	* time/tst-posixtz.c (main): Likewise.
+	* time/tst-strptime.c (test_tm): Likewise.
+	* time/tst-strptime.c (main): Likewise.
+	* time/tst-getdate.c (main): Likewise.
+	* posix/tst-mmap.c (main): Likewise.
+	* posix/tst-getaddrinfo.c (do_test): Likewise.
+	* io/tst-getcwd.c (do_test): Likewise.
+	* resolv/tst-aton.c (main): Likewise.
+	* inet/tst-network.c (main): Likewise.
+	* libio/tst-fgetws.c (main): Likewise.
+	* sysdeps/posix/sprofil.c (add_region): int -> unsigned int for I.
+	* sysdeps/unix/sysv/linux/ptsname.c (__ptsname_r): int -> unsigned int
+	for PTYNO.
+
+	* stdlib/msort.c (qsort): Add a cast to silence warning.
+	* stdio-common/vfprintf.c (process_string_arg): Likewise.
+	* libio/oldfileops.c (_IO_old_do_write): Likewise.
+	* sysdeps/unix/sysv/linux/getcwd.c (__getcwd): Likewise.
+	* sysdeps/unix/sysv/linux/ttyname.c (ttyname): Likewise.
+	* sysdeps/unix/sysv/linux/gethostid.c (gethostid): Likewise.
+	* argp/argp-fmtstream.c (__argp_fmtstream_printf): Likewise.
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Likewise.
+	* sysdeps/unix/grantpt.c (grantpt): Likewise.
+	* libio/tst-widetext.c (main): Likewise.
+	* libio/tst-mmap2-eofsync.c (do_test): Likewise.
+	* rt/tst-aio.c (test_file): Likewise.
+	* rt/tst-aio64.c (test_file): Likewise.
+	* resolv/tst-aton.c (main): Likewise.
+
+	* catgets/catgetsinfo.h (CATGETS_MAGIC): Use U suffix on the constant.
+
+	* ctype/ctype.c (__ctype_tolower, __ctype_toupper): Cast to int32_t
+	instead of uint32_t in these macros.
+
 2002-09-22  Bruno Haible  <bruno@clisp.org>
 
 	* iconv/iconv_prog.c (main): Provide an error message that identifies
 	the wrong encoding.
-
-2002-09-22  Bruno Haible  <bruno@clisp.org>
 
 	* iconvdata/tscii.c: New file.
 	* iconvdata/testdata/TSCII: New file.
@@ -18,15 +67,11 @@
 	* iconvdata/tst-tables.sh: Add TSCII.
 	* iconvdata/TESTS: Add TSCII.
 
-2002-09-22  Bruno Haible  <bruno@clisp.org>
-
 	Revert 2002-04-18 patch.
 	* iconvdata/euc-jisx0213.c (EMIT_SHIFT_TO_INIT, BODY for
 	FROM_DIRECTION): Make the FROM direction stateful again.
 	* iconvdata/shift_jisx0213.c (EMIT_SHIFT_TO_INIT, BODY for
 	FROM_DIRECTION): Likewise.
-
-2002-09-22  Bruno Haible  <bruno@clisp.org>
 
 	* iconvdata/tst-e2big.c: New file.
 	* iconvdata/Makefile (tests): Add tst-e2big.

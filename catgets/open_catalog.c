@@ -253,8 +253,7 @@ __open_catalog (const char *cat_name, const char *nlspath, const char *env_var,
   /* Determine whether the file is a catalog file and if yes whether
      it is written using the correct byte order.  Else we have to swap
      the values.  */
-  if (__builtin_expect (catalog->file_ptr->magic, CATGETS_MAGIC)
-      == CATGETS_MAGIC)
+  if (__builtin_expect (catalog->file_ptr->magic == CATGETS_MAGIC, 1))
     swapping = 0;
   else if (catalog->file_ptr->magic == SWAPU32 (CATGETS_MAGIC))
     swapping = 1;

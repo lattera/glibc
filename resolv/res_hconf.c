@@ -112,7 +112,7 @@ arg_service_list (const char *fname, int line_num, const char *args,
   enum Name_Service service;
   const char *start;
   size_t len;
-  int i;
+  size_t i;
   static struct
   {
     const char * name;
@@ -339,7 +339,7 @@ parse_line (const char *fname, int line_num, const char *str)
   const char *start;
   struct cmd *c = 0;
   size_t len;
-  int i;
+  size_t i;
 
   str = skip_ws (str);
 

@@ -130,7 +130,7 @@ grantpt (int fd)
     }
 
   /* Get the group ID of the special `tty' group.  */
-  if (grbuflen == -1)
+  if (grbuflen == (size_t) -1L)
     /* `sysconf' does not support _SC_GETGR_R_SIZE_MAX.
        Try a moderate value.  */
     grbuflen = 1024;

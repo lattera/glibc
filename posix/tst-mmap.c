@@ -11,10 +11,10 @@ main (void)
 {
   int result = 0;
   FILE *fp;
-  int c;
+  size_t c;
   char buf[1000];
   int fd;
-  char *ptr;
+  unsigned char *ptr;
   size_t ps = sysconf (_SC_PAGESIZE);
   void *mem;
 

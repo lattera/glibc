@@ -141,7 +141,7 @@ ttyname (int fd)
       /* This is for Linux 2.0.  */
       && ttyname_buf[0] != '[')
     {
-      if (len >= buflen)
+      if ((size_t) len >= buflen)
 	return NULL;
       /* readlink need not terminate the string.  */
       ttyname_buf[len] = '\0';

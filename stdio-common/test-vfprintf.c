@@ -1,5 +1,5 @@
 /* Tests of *printf for very large strings.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -41,7 +41,7 @@ int
 main (void)
 {
   char buf[20];
-  int i;
+  size_t i;
   int res = 0;
   int fd;
 

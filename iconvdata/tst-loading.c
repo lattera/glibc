@@ -1,5 +1,5 @@
 /* Tests for loading and unloading of iconv modules.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
@@ -118,7 +118,7 @@ static const char inbuf[] =
 int
 main (void)
 {
-  int count = TEST_ROUNDS;
+  size_t count = TEST_ROUNDS;
   int result = 0;
 
   mtrace ();

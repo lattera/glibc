@@ -13,7 +13,7 @@
 int
 main (int argc, char *argv[])
 {
-  int i;
+  size_t i;
   FILE   *fp;
   wchar_t *ret, wcs[WIDE_STR_LEN];
   int result = 0;
@@ -123,7 +123,7 @@ main (int argc, char *argv[])
     }
   else
     {
-      int i;
+      size_t i;
 
       printf ("Return Value: %p\n", ret);
       for (i = 0; i < wcslen (wcs) + 1; i++)

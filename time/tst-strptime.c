@@ -1,5 +1,5 @@
 /* Test for strptime.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -65,7 +65,7 @@ static int
 test_tm (void)
 {
   struct tm tm;
-  int i;
+  size_t i;
   int result = 0;
   char buf[100];
 
@@ -114,7 +114,7 @@ int
 main (int argc, char *argv[])
 {
   struct tm tm;
-  int i;
+  size_t i;
   int result = 0;
 
   for (i = 0; i < sizeof (day_tests) / sizeof (day_tests[0]); ++i)

@@ -239,7 +239,7 @@ add_region (struct prof *p, int prof_uint)
 {
   unsigned long int nsamples;
   size_t start, end;
-  int i;
+  unsigned int i;
 
   if (p->pr_scale < 2)
     return 0;

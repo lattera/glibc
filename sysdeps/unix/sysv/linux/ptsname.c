@@ -75,7 +75,7 @@ __ptsname_r (int fd, char *buf, size_t buflen)
 {
   int save_errno = errno;
   struct stat64 st;
-  int ptyno;
+  unsigned int ptyno;
 
   if (buf == NULL)
     {
@@ -102,7 +102,7 @@ __ptsname_r (int fd, char *buf, size_t buflen)
       numbuf[sizeof (numbuf) - 1] = '\0';
       p = _itoa_word (ptyno, &numbuf[sizeof (numbuf) - 1], 10, 0);
 
-      if (buflen < devptslen + &numbuf[sizeof (numbuf)] - p)
+      if (buflen < devptslen + (&numbuf[sizeof (numbuf)] - p))
 	{
 	  __set_errno (ERANGE);
 	  return ERANGE;

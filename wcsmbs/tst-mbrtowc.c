@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -171,8 +171,7 @@ check_ascii (const char *locname)
       char buf[MB_CUR_MAX];
       wchar_t wc = 0xffffffff;
       mbstate_t s;
-      size_t n;
-      int i;
+      size_t n, i;
 
       for (i = 0; i < MB_CUR_MAX; ++i)
 	buf[i] = c + i;
