@@ -55,6 +55,7 @@ __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
 			"	andi.	%1,%0,2\n"
 			"	bne	2f\n"
 			"	stwcx.	%4,0,%3\n"
+			"	bne	1b\n"
 			"2:	isync"
 			: "=&r" (oldval), "=&r" (tmp), "=m" (*once_control)
 			: "r" (once_control), "r" (newval), "m" (*once_control)

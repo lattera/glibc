@@ -1,3 +1,8 @@
+2003-07-21  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/pthread_once.c (__pthread_once):
+	Retry if the stwcx fails to store once_control.
+
 2003-07-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (libpthread-routines): Add pthread_attr_getaffinity and
