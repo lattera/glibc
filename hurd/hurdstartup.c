@@ -136,11 +136,13 @@ _hurd_startup (void **argptr, void (*main) (int *data))
 			  sizeof (struct hurd_startup_data));
       *argcptr = argc;
       argv = (void *) (argcptr + 1);
-      __argz_extract (args, argslen, argv);
+      __argz_extract (args, argc, argv);
+      argv[argc] = 0;
 
       /* There was some environment.  */
       envp = &argv[argc + 1];
-      __argz_extract (env, envlen, envp);
+      __argz_extract (env, envc, envp);
+      envp[envc] = 0;
     }
 
   if (err || in_bootstrap == MACH_PORT_NULL)
