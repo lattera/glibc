@@ -175,6 +175,10 @@ typedef unsigned long int reg_syntax_t;
    whether ^ should be special.  */
 #define RE_CARET_ANCHORS_HERE (RE_ICASE << 1)
 
+/* If this bit is set, then \{ cannot be first in an bre or
+   immediately after an alternation or begin-group operator.  */
+#define RE_CONTEXT_INVALID_DUP (RE_CARET_ANCHORS_HERE << 1)
+
 /* This global variable defines the particular regexp syntax to use (for
    some interfaces).  When a regexp is compiled, the syntax used is
    stored in the pattern buffer, so changing this does not affect
@@ -229,7 +233,7 @@ extern reg_syntax_t re_syntax_options;
    | RE_INTERVALS  | RE_NO_EMPTY_RANGES)
 
 #define RE_SYNTAX_POSIX_BASIC						\
-  (_RE_SYNTAX_POSIX_COMMON | RE_BK_PLUS_QM)
+  (_RE_SYNTAX_POSIX_COMMON | RE_BK_PLUS_QM | RE_CONTEXT_INVALID_DUP)
 
 /* Differs from ..._POSIX_BASIC only in that RE_BK_PLUS_QM becomes
    RE_LIMITED_OPS, i.e., \? \+ \| are not recognized.  Actually, this
