@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ralf Baechle <ralf@gnu.org>, 1998.
 
@@ -37,7 +37,13 @@
 #if defined __NR_pwrite || __ASSUME_PWRITE_SYSCALL > 0
 
 extern ssize_t __syscall_pwrite (int fd, const void *__unbounded buf, size_t count,
-				 int dummy, off_t offset_hi, off_t offset_lo);
+				 int dummy,
+#if defined _ABI64 && _MIPS_SIM == _ABI64
+				 off_t offset
+#else
+				 off_t offset_hi, off_t offset_lo
+#endif
+				 );
 
 # if __ASSUME_PWRITE_SYSCALL == 0
 static ssize_t __emulate_pwrite64 (int fd, const void *buf, size_t count,
@@ -56,9 +62,14 @@ __libc_pwrite64 (fd, buf, count, offset)
   if (SINGLE_THREAD_P)
     {
      /* First try the syscall.  */
+#if defined _ABI64 && _MIPS_SIM == _ABI64
+      result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
+			       offset);
+#else
      result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
 			      __LONG_LONG_PAIR ((off_t) (offset >> 32),
 			     (off_t) (offset & 0xffffffff)));
+#endif
 # if __ASSUME_PWRITE_SYSCALL == 0
      if (result == -1 && errno == ENOSYS)
      /* No system call available.  Use the emulation.  */
@@ -71,9 +82,14 @@ __libc_pwrite64 (fd, buf, count, offset)
   int oldtype = LIBC_CANCEL_ASYNC ();
 
   /* First try the syscall.  */
+#if defined _ABI64 && _MIPS_SIM == _ABI64
+  result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
+			   offset);
+#else
   result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
 			   __LONG_LONG_PAIR ((off_t) (offset >> 32),
 					     (off_t) (offset & 0xffffffff)));
+#endif
 # if __ASSUME_PWRITE_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use the emulation.  */
