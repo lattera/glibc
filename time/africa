@@ -1,4 +1,4 @@
-# @(#)africa	7.14
+# @(#)africa	7.15
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -229,13 +229,13 @@ Zone	Africa/Djibouti	2:52:36 -	LMT	1911 Jul
 
 # Egypt
 
-# From Bob Devine (January 28, 1988):
+# From Bob Devine (1988-01-28):
 # Egypt: DST from first day of May to first of October (ending may
 # also be on Sept 30th not 31st -- you might want to ask one of the
 # soc.* groups, you might hit someone who could ask an embassy).
 # DST since 1960 except for 1981-82.
 
-# From U. S. Naval Observatory (January 19, 1989):
+# From U. S. Naval Observatory (1989-01-19):
 # EGYPT               2 H  AHEAD OF UTC
 # EGYPT               3 H  AHEAD OF UTC  MAY 17 - SEP 30 (AFTER
 # EGYPT                                  RAMADAN)
@@ -331,7 +331,7 @@ Zone	Africa/Bissau	-1:02:20 -	LMT	1911 May 26
 # uninhabited
 
 # Kenya
-# From Paul Eggert <eggert@twinsun.com> (November 18, 1993):
+# From Paul Eggert <eggert@twinsun.com> (1993-11-18):
 # Shanks says the transition to 2:45 was in 1940, but it must have been 1948.
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Africa/Nairobi	2:27:16	-	LMT	1928 Jul
@@ -348,7 +348,7 @@ Zone	Africa/Maseru	1:50:00 -	LMT	1903 Mar
 			2:00	-	SAT
 
 # Liberia
-# From Paul Eggert <eggert@twinsun.com> (November 18, 1993):
+# From Paul Eggert <eggert@twinsun.com> (1993-11-18):
 # In 1972 Liberia was the last country to switch
 # from a GMT offset that was not a multiple of 15 minutes.
 # Howse reports that it was in honor of their president's birthday.
@@ -370,7 +370,7 @@ Zone	Africa/Monrovia	-0:43:08 -	LMT	1882
 # From Bob Devine (January 28 1988):
 # Libya: Since 1982 April 1st to September 30th (?)
 
-# From U. S. Naval Observatory (January 19, 1989):
+# From U. S. Naval Observatory (1989-01-19):
 # LIBYAN ARAB         1 H  AHEAD OF UTC  JAMAHIRIYA/LIBYA
 # LIBYAN ARAB         2 H  AHEAD OF UTC  APR 1 - SEP 30 JAMAHIRIYA/LIBYA
 
@@ -544,7 +544,7 @@ Zone	Africa/Freetown	-0:53:00 -	LMT	1882
 			 0:00	SL	WA%sT
 
 # Somalia
-# From Paul Eggert <eggert@twinsun.com> (November 18, 1993):
+# From Paul Eggert <eggert@twinsun.com> (1993-11-18):
 # Shanks omits the 1948 transition to 2:45; this is probably a typo.
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Africa/Mogadishu	3:01:28 -	LMT	1893 Nov
@@ -565,7 +565,7 @@ Zone Africa/Johannesburg 1:52:00 -	LMT	1892 Feb 8
 # no information
 
 # Sudan
-# From Michael Ross <mross@antigone.com> (November 15, 1995):
+# From Michael Ross <mross@antigone.com> (1995-11-15):
 # Sudan no longer observes any form of daylight time change.
 # I verified this today by telephone with the Sudan Mission to the
 # United Nations: 212-573-6033

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,15 +17,26 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <stddef.h>
 #include <unistd.h>
+#include <sys/types.h>
 
-/* Return the system page size.  */
+/* Change the owner and group of FILE.  */
 int
-__getpagesize ()
+__lchown (file, owner, group)
+     const char *file;
+     uid_t owner;
+     gid_t group;
 {
-  __set_errno (ENOSYS);
-  return 0;
-}
-stub_warning (getpagesize)
+  if (file == NULL)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
-weak_alias (__getpagesize, getpagesize)
+  __set_errno (ENOSYS);
+  return -1;
+}
+stub_warning (lchown)
+
+weak_alias (__lchown, lchown)

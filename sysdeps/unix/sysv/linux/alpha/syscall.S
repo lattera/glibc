@@ -42,6 +42,15 @@ Cambridge, MA 02139, USA.  */
 
 
 LEAF(__syscall, 0)
+#ifdef PROF
+	ldgp	gp, 0(pv)
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
+	.prologue 1
+#else
+	.prologue 0
+#endif
+
 	mov	a0, v0		/* Syscall number -> v0 */
 	mov	a1, a0		/* arg1-arg5 -> a0-a4 */
 	mov	a2, a1
@@ -53,8 +62,11 @@ LEAF(__syscall, 0)
 	bne	a3, error
 	ret
 
-error:	br	gp, 2f
+error:
+#ifndef PROF
+	br	gp, 2f
 2:	ldgp	gp, 0(gp)
+#endif
 	jmp	zero, __syscall_error
 
 weak_alias(__syscall, syscall)

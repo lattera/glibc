@@ -1,4 +1,4 @@
-# @(#)australasia	7.28
+# @(#)australasia	7.29
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -439,7 +439,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 
 # Australia
 
-# From John Mackin (March 6, 1991):
+# From John Mackin (1991-03-06):
 # We in Australia have _never_ referred to DST as `daylight' time.
 # It is called `summer' time.  Now by a happy coincidence, `summer'
 # and `standard' happen to start with the same letter; hence, the
@@ -473,20 +473,20 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 
 # Northern Territory
 
-# From George Shepherd via Simon Woodhead via Robert Elz (March 6, 1991):
+# From George Shepherd via Simon Woodhead via Robert Elz (1991-03-06):
 # # The NORTHERN TERRITORY..  [ Courtesy N.T. Dept of the Chief Minister ]
 # #					[ Nov 1990 ]
 # #	N.T. have never utilised any DST due to sub-tropical/tropical location.
 # ...
 # Zone        Australia/North         9:30    -       CST
 
-# From Bradley White (March 4, 1991):
+# From Bradley White (1991-03-04):
 # A recent excerpt from an Australian newspaper...
 # the Northern Territory do[es] not have daylight saving.
 
 # Western Australia
 
-# From George Shepherd via Simon Woodhead via Robert Elz (March 6, 1991):
+# From George Shepherd via Simon Woodhead via Robert Elz (1991-03-06):
 # #  The state of WESTERN AUSTRALIA..  [ Courtesy W.A. dept Premier+Cabinet ]
 # #						[ Nov 1990 ]
 # #	W.A. suffers from a great deal of public and political opposition to
@@ -501,23 +501,23 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # Rule	AW	1983	only	-	Oct	lastSun	2:00	1:00	D
 # Rule	AW	1984	only	-	Mar	Sun>=1	3:00	0	W
 
-# From Bradley White (March 4, 1991):
+# From Bradley White (1991-03-04):
 # A recent excerpt from an Australian newspaper...
 # Western Australia...do[es] not have daylight saving.
 
-# From John D. Newman via Bradley White (November 2, 1991):
+# From John D. Newman via Bradley White (1991-11-02):
 # Western Australia is still on "winter time". Some DH in Sydney
 # rang me at home a few days ago at 6.00am. (He had just arrived at
 # work at 9.00am.)
 # W.A. is switching to Summer Time on Nov 17th just to confuse
 # everybody again.
 
-# From Arthur David Olson (March 8, 1992):
+# From Arthur David Olson (1992-03-08):
 # The 1992 ending date used in the rules is a best guess;
 # it matches what was used in the past.
 
 # Queensland
-# From George Shepherd via Simon Woodhead via Robert Elz (March 6, 1991):
+# From George Shepherd via Simon Woodhead via Robert Elz (1991-03-06):
 # #   The state of QUEENSLAND.. [ Courtesy Qld. Dept Premier Econ&Trade Devel ]
 # #						[ Dec 1990 ]
 # ...
@@ -528,21 +528,21 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # Rule	AQ	1989	max	-	Oct	lastSun	2:00	1:00	D
 # Rule	AQ	1990	max	-	Mar	Sun>=1	3:00	0	E
 
-# From Bradley White (December 24, 1989):
+# From Bradley White (1989-12-24):
 # "Australia/Queensland" now observes daylight time (i.e. from
 # October 1989).
 
-# From Bradley White (March 4, 1991):
+# From Bradley White (1991-03-04):
 # A recent excerpt from an Australian newspaper...
 # ...Queensland...[has] agreed to end daylight saving
 # at 3am tomorrow (March 3)...
 
-# From John Mackin (March 6, 1991):
+# From John Mackin (1991-03-06):
 # I can certainly confirm for my part that Daylight Saving in NSW did in fact
 # end on Sunday, 3 March.  I don't know at what hour, though.  (It surprised
 # me.)
 
-# From Bradley White (March 8, 1992):
+# From Bradley White (1992-03-08):
 # ...there was recently a referendum in Queensland which resulted
 # in the experimental daylight saving system being abandoned. So, ...
 # ...
@@ -550,12 +550,12 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # Rule	QLD	1990	1992	-	Mar	Sun>=1	3:00	0	S
 # ...
 
-# From Arthur David Olson (March 8, 1992):
+# From Arthur David Olson (1992-03-08):
 # The chosen rules the union of the 1971/1972 change and the 1989-1992 changes.
 
 # South Australia, Tasmania, Victoria
 
-# From Arthur David Olson (March 8, 1992):
+# From Arthur David Olson (1992-03-08):
 # The rules from version 7.1 follow.
 # There are lots of differences between these rules and
 # the Shepherd et al. rules.  Since the Shepherd et al. rules
@@ -573,7 +573,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 #				10:00	1:00	EST	1986 Mar Sun<=21 3:00
 #				10:00	Oz	EST
 
-# From Robert Elz (March 6, 1991):
+# From Robert Elz (1991-03-06):
 # I believe that the current start date for DST is "lastSun" in Oct...
 # that changed Oct 89.  That is, we're back to the
 # original rule, and that rule currently applies in all the states
@@ -583,12 +583,12 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 
 # South Australia
 
-# From Bradley White (March 4, 1991):
+# From Bradley White (1991-03-04):
 # A recent excerpt from an Australian newspaper...
 # ...South Australia...[has] agreed to end daylight saving
 # at 3am tomorrow (March 3)...
 
-# From George Shepherd via Simon Woodhead via Robert Elz (March 6, 1991):
+# From George Shepherd via Simon Woodhead via Robert Elz (1991-03-06):
 # #   The state of SOUTH AUSTRALIA....[ Courtesy of S.A. Dept of Labour ]
 # #						[ Nov 1990 ]
 # ...
@@ -599,23 +599,23 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # Rule	 AS	1986	1990	-	Mar	Sun<=21	3:00	0	C
 # Rule	 AS	1991	max	-	Mar	Sun>=1	3:00	0	C
 
-# From Bradley White (March 11, 1992):
+# From Bradley White (1992-03-11):
 # Recent correspondence with a friend in Adelaide
 # contained the following exchange:  "Due to the Adelaide Festival,
 # South Australia delays setting back our clocks for a few weeks."
 
-# From Robert Elz (March 13, 1992):
+# From Robert Elz (1992-03-13):
 # I heard that apparently (or at least, it appears that)
 # South Aus will have an extra 3 weeks daylight saving every even
 # numbered year (from 1990).  That's when the Adelaide Festival
 # is on...
 
-# From Robert Elz (March 16, 1992, 00:57:07 +1000):
+# From Robert Elz (1992-03-16, 00:57:07 +1000):
 # DST didn't end in Adelaide today (yesterday)....
 # But whether it's "4th Sunday" or "2nd last Sunday" I have no idea whatever...
 # (it's just as likely to be "the Sunday we pick for this year"...).
 
-# From Bradley White (April 11, 1994):
+# From Bradley White (1994-04-11):
 # If Sun, 15 March, 1992 was at +1030 as kre asserts, but yet Sun, 20 March,
 # 1994 was at +0930 as John Connolly's customer seems to assert, then I can
 # only conclude that the actual rule is more complicated....
@@ -627,11 +627,11 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 
 # Tasmania
 
-# From Bradley White (March 4, 1991):
+# From Bradley White (1991-03-04):
 # A recent excerpt from an Australian newspaper...
 # ...Tasmania will revert to Australian Eastern Standard Time on March 31...
 
-# From George Shepherd via Simon Woodhead via Robert Elz (March 6, 1991):
+# From George Shepherd via Simon Woodhead via Robert Elz (1991-03-06):
 # #  The state of TASMANIA.. [Courtesy Tasmanian Dept of Premier + Cabinet ]
 # #					[ Nov 1990 ]
 # ...
@@ -652,7 +652,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # Rule	AT	1991	max	-	Oct	Sun>=1	2:00	1:00	D
 # Rule	AT	1991	max	-	Mar	lastSun	3:00	0	E
 
-# From Bill Hart via Alexander Dupuy and Guy Harris (October 10, 1991):
+# From Bill Hart via Alexander Dupuy and Guy Harris (1991-10-10):
 # My state Government in there eagerness to get a few more bucks for the
 # tourist industry industry decided to change the daylight savings times
 # yet again (we now have almost 6 months per year)...
@@ -663,18 +663,18 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # Rule  Oz      1987    1990    -       Mar     Sun<=21 3:00    0       -
 # Rule  Oz      1991    max     -       Mar     Sun<=31 3:00    0       -
 
-# From Bill Hart via Guy Harris (October 10, 1991):
+# From Bill Hart via Guy Harris (1991-10-10):
 # Oh yes, the new daylight savings rules are uniquely tasmanian, we have
 # 6 weeks a year now when we are out of sync with the rest of Australia
 # (but nothing new about that).
 
 # Victoria
 
-# From Bradley White (March 4, 1991):
+# From Bradley White (1991-03-04):
 # A recent excerpt from an Australian newspaper...
 # ...Victoria...[has] agreed to end daylight saving at 3am tomorrow (March 3)...
 
-# From George Shepherd via Simon Woodhead via Robert Elz (March 6, 1991):
+# From George Shepherd via Simon Woodhead via Robert Elz (1991-03-06):
 # #   The state of VICTORIA.. [ Courtesy of Vic. Dept of Premier + Cabinet ]
 # #						[ Nov 1990 ]
 # ...
@@ -701,26 +701,26 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 #	legislation.  This is very important to understand.
 #	I have researched New South Wales time only...
 
-# From Dave Davey (March 3, 1990):
+# From Dave Davey (1990-03-03):
 # Rule	NSW	1988	only	-	Mar	Sun>=1	3:00	0	-
 # Rule	NSW	1989	only	-	Mar	Sun<=21	3:00	0	-
 
-# From Bradley White (March 4, 1991):
+# From Bradley White (1991-03-04):
 # A recent excerpt from an Australian newspaper...
 # NSW...[has] agreed to end daylight saving at 3am tomorrow (March 3)...
 
-# From George Shepherd via Simon Woodhead via Robert Elz (March 6, 1991):
+# From George Shepherd via Simon Woodhead via Robert Elz (1991-03-06):
 # # The state of NEW SOUTH WALES.. [confirmed by Attorney General's Dept N.S.W]
 # #					[ Dec 1990 ]
 # ...
 # Rule	 AN	1988	1989	-	Mar	Sun<=21	3:00	0	E
 # ...
 
-# From John Mackin (March 9, 1991)
+# From John Mackin (1991-03-09)
 # I have confirmed the accuracy of the historical data for NSW in the
 # file Robert forwarded
 
-# From Arthur David Olson (March 8, 1992):
+# From Arthur David Olson (1992-03-08):
 # Sources differ on whether DST ended March 6 or March 20 in 1988;
 # March 20 (the "confirmed" date) is in the chosen rules.
 
@@ -730,10 +730,10 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 
 # Yancowinna
 
-# From John Basser (January 4, 1989):
+# From John Basser (1989-01-04):
 # `Broken Hill' means the County of Yancowinna.
 
-# From George Shepherd via Simon Woodhead via Robert Elz (March 6, 1991):
+# From George Shepherd via Simon Woodhead via Robert Elz (1991-03-06):
 # # YANCOWINNA..  [ Confirmation courtesy of Broken Hill Postmaster ]
 # #					[ Dec 1990 ]
 # ...
@@ -751,7 +751,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 
 # Lord Howe Island
 
-# From George Shepherd via Simon Woodhead via Robert Elz (March 6, 1991):
+# From George Shepherd via Simon Woodhead via Robert Elz (1991-03-06):
 # LHI...		[ Courtesy of Pauline Van Winsen.. pauline@Aus ]
 #					[ Dec 1990 ]
 # Lord Howe Island is located off the New South Wales coast, and is half an
@@ -768,13 +768,13 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # New Zealand, from Elz' asia 1.1
 # Elz says "no guarantees"
 
-# From Mark Davies (October 3, 1990):
+# From Mark Davies (1990-10-03):
 # the 1989/90 year was a trial of an extended "daylight saving" period.
 # This trial was deemed successful and the extended period adopted for
 # subsequent years (with the addition of a further week at the start).
 # source -- phone call to Ministry of Internal Affairs Head Office.
 
-# From George Shepherd via Simon Woodhead via Robert Elz (March 6, 1991):
+# From George Shepherd via Simon Woodhead via Robert Elz (1991-03-06):
 # # The Country of New Zealand   (Australia's east island -) Gee they hate that!
 # #				   or is Australia the west island of N.Z.
 # #	[ courtesy of Geoff Tribble.. Geofft@Aus.. Auckland N.Z. ]
@@ -788,7 +788,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # Zone	NZ			12:00	NZ		NZ%sT	# New Zealand
 # Zone	NZ-CHAT			12:45	-		NZ-CHAT # Chatham Island
 
-# From Arthur David Olson (March 8, 1992):
+# From Arthur David Olson (1992-03-08):
 # The chosen rules use the Davies October 8 values for the start of DST in 1989
 # rather than the October 1 value.
 
@@ -825,7 +825,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 
 # In comp.risks 14.87 (26 August 1993), Peter Neumann writes:
 # I wonder what happened in Kwajalein, where there was NO Friday,
-# August 20, 1993.  Thursday night at midnight Kwajalein switched sides with
+# 1993-08-20.  Thursday night at midnight Kwajalein switched sides with
 # respect to the International Date Line, to rejoin its fellow islands,
 # going from 11:59 p.m. Thursday to 12:00 m. Saturday in a blink.
 

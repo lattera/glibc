@@ -153,7 +153,7 @@ extern time_t __mktime_internal __P ((struct tm *__tp,
 extern size_t strftime __P ((char *__s, size_t __maxsize,
 			     __const char *__format, __const struct tm *__tp));
 
-#ifdef __USE_MISC
+#ifdef __USE_XOPEN
 /* Parse S according to FORMAT and store binary time information in TP.
    The return value is a pointer to the first unparsed character in S.  */
 extern char *strptime __P ((__const char *__s, __const char *__fmt,
@@ -232,10 +232,12 @@ extern long int __tzname_max __P ((void));
 extern void tzset __P ((void));
 #endif
 
-#ifdef	__USE_SVID
+#if defined(__USE_SVID) || defined(__USE_XOPEN)
 extern int daylight;
 extern long int timezone;
+#endif
 
+#ifdef __USE_SVID
 /* Set the system time to *WHEN.
    This call is restricted to the superuser.  */
 extern int stime __P ((__const time_t *__when));

@@ -74,14 +74,13 @@ Cambridge, MA 02139, USA.  */
    even if the call succeeded.  E.g., the `lseek' system call might return
    a large offset.  Therefore we must not anymore test for < 0, but test
    for a real error by making sure the value in %d0 is a real error
-   number.  For now (as of 2.1.1) 122 is the largest defined error number.
-   We allow for a bit of room for development and treat -128 to -1 as
-   error values.  */
+   number.  Linus said he will make sure the no syscall returns a value
+   in -1 .. -4095 as a valid result so we can savely test with -4096.  */
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   ENTRY (name)								      \
     DO_CALL (&SYS_ify (syscall_name), args);				      \
-    moveq.l &-128, %d1;							      \
+    moveq.l &-4096, %d1;						      \
     cmp.l %d1, %d0;							      \
     jcc syscall_error
 

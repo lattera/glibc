@@ -53,8 +53,8 @@ __internal_ftrylockfile (FILE *stream)
   return 1;
 }
 #ifdef USE_IN_LIBIO
-weak_alias (__internal_ftrylockfile, __ftrylockfile)
-#else
 weak_alias (__internal_ftrylockfile, _IO_ftrylockfile)
+#else
+weak_alias (__internal_ftrylockfile, __ftrylockfile)
 #endif
 weak_alias (__internal_ftrylockfile, ftrylockfile);

@@ -1,4 +1,4 @@
-# @(#)europe	7.39
+# @(#)europe	7.40
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -34,7 +34,7 @@
 # is Derek Howse, Greenwich time and the discovery of the longitude,
 # Oxford University Press (1980).
 
-# From Peter Ilieve <peter@memex.co.uk> (December 4, 1994),
+# From Peter Ilieve <peter@memex.co.uk> (1994-12-04),
 # The original six [EU members]: Belgium, France, (West) Germany, Italy,
 # Luxembourg, the Netherlands.
 # Plus, from 1 Jan 73: Denmark, Ireland, United Kingdom.
@@ -61,7 +61,7 @@
 # United Kingdom
 # The UK and its colonies adopted the Gregorian calendar on 1752-09-14.
 
-# From Peter Ilieve <peter@memex.co.uk> (July 6, 1994):
+# From Peter Ilieve <peter@memex.co.uk> (1994-07-06):
 #
 # On 17 Jan 1994 the Independent, a UK quality newspaper, had a piece about
 # historical vistas along the Thames in west London. There was a photo
@@ -82,7 +82,7 @@
 #
 # [This yields GMTOFF = -0:01:15 for London LMT in the 18th century.]
 
-# From Paul Eggert <eggert@twinsun.com> (November 18, 1993):
+# From Paul Eggert <eggert@twinsun.com> (1993-11-18):
 #
 # Howse writes that Britain was the first country to use standard time.
 # The railways cared most about the inconsistencies of local mean time,
@@ -123,7 +123,7 @@
 # term appears only in quotes taken from DST's opponents, whereas the
 # proponents (who eventually won the argument) are quoted as using ``Summer''.
 
-# From Arthur David Olson (January 19, 1989):
+# From Arthur David Olson (1989-01-19):
 #
 # A source at the British Information Office in New York avers that it's
 # known as "British" Summer Time in all parts of the United Kingdom.
@@ -134,7 +134,7 @@
 # If you can predict what Parliament will do, you should be in
 # politics making a fortune, not computing.
 
-# From Peter Ilieve <peter@memex.co.uk> (September 3, 1993):
+# From Peter Ilieve <peter@memex.co.uk> (1993-09-03):
 #
 # Our Government...couldn't...make a decision after the 1989 consultation
 # exercise about the UK changing its timezone so it just let things drift
@@ -161,7 +161,7 @@
 # an Order in Council (a Statutary Instrument, the SI thing mentioned above)
 # to specify the EC specified dates.
 
-# From Peter Ilieve <peter@memex.co.uk> (October 18, 1993):
+# From Peter Ilieve <peter@memex.co.uk> (1993-10-18):
 #
 # My contact in the Ministry of Defence Public Relations department
 # accepted the challenge of looking into this and produced the following,
@@ -189,7 +189,7 @@
 # time of sunrise and sunset in The Times, when BDST was in effect, and
 # if you find a zone reference it will say, "All times B.D.S.T."
 
-# From Peter Ilieve <peter@memex.co.uk> (September 3, 1993):
+# From Peter Ilieve <peter@memex.co.uk> (1993-09-03):
 #
 # > # Current rules
 # > Rule GB-Eire 1981	max	-	Mar	lastSun	1:00s	1:00	BST
@@ -213,7 +213,7 @@
 # summer time completely, noon is when the Sun is overhead, and that should
 # be the end of it.
 
-# From Peter Ilieve <peter@memex.co.uk> (October 22, 1993):
+# From Peter Ilieve <peter@memex.co.uk> (1993-10-22):
 #
 # I now have the text of the Summer Time Act 1916, the granddaddy of them all.
 # It is headed: `An Act to provide for the Time in Great Britain and Ireland
@@ -246,7 +246,7 @@
 # It also confirms the fact that Ireland followed Dublin time back then,
 # and 25 minutes behind Greenwich, as Shanks has it, would be correct.
 
-# From Peter Ilieve <peter@memex.co.uk> (October 28, 1993):
+# From Peter Ilieve <peter@memex.co.uk> (1993-10-28):
 #
 # I now have before me, thanks to my learned legal friend Lorna, the text of
 # the Time (Ireland) Act 1916.
@@ -269,7 +269,7 @@
 # of the 1880 date in Shanks.  The little bit of it that is repealed
 # also refers solely to Ireland and Dublin Mean Time.
 
-# From Peter Ilieve <peter@memex.co.uk> (October 29, 1993):
+# From Peter Ilieve <peter@memex.co.uk> (1993-10-29):
 #
 # My case is that, with the sole exception of Ireland in 1916 using Dublin
 # Mean Time, Summer Time has been uniform throughout the United Kingdom
@@ -438,7 +438,7 @@
 # thereby destroying the authority of the Summer Time Order specifying
 # summer time in 1968....
 
-# From Peter Ilieve <peter@memex.co.uk> (November 18, 1993)
+# From Peter Ilieve <peter@memex.co.uk> (1993-11-18)
 #
 # Here is a revised version of my tabrules file for the perl script I sent
 # before. I have personally verified the various Orders back to 1953 and
@@ -603,7 +603,7 @@
 # 1993    28 Mar  24 Oct fixed
 # 1994    27 Mar  23 Oct fixed
 
-# From Peter Ilieve <peter@memex.co.uk> (August 18, 1994):
+# From Peter Ilieve <peter@memex.co.uk> (1994-08-18):
 # I now have the text of the 7th EC directive on summer time arrangements
 # (94/21/EC), which was approved on 30 May....
 # The major changes from existing practice are that 1995 will be the last year
@@ -626,7 +626,7 @@
 # by the Commission by 1 Jan 96. They have not yet appeared (I asked just
 # before Easter).
 
-# From Peter Ilieve <peter@memex.co.uk> (March 28, 1994):
+# From Peter Ilieve <peter@memex.co.uk> (1994-03-28):
 # The [GB-Eire] end date of 22 October [1995] conflicts with your current rule
 # of Oct Sun>=23, and the historical UK formula of Sun after 4th Sat.
 # The last time 4th Sun and Sun after 4th Sat differed was in 1989,
@@ -836,7 +836,7 @@ Rule	Russia	1919	only	-	Jul	 1	 2:00	1:00	S
 Rule	Russia	1919	only	-	Aug	16	 0:00	0	-
 Rule	Russia	1921	only	-	Feb	14	23:00	1:00	S
 # Shanks gives 1921 Mar 21 for the following transition.
-# From Andrew A. Chernov <ache@astral.msk.su> (November 12, 1993):
+# From Andrew A. Chernov <ache@astral.msk.su> (1993-11-12):
 # My sources says, that it is Mar 20, not 21.
 Rule	Russia	1921	only	-	Mar	20	23:00	2:00	DS
 Rule	Russia	1921	only	-	Sep	 1	 0:00	1:00	S
@@ -1284,10 +1284,10 @@ Zone	Europe/Budapest	1:16:20 -	LMT	1890 Oct
 
 # Iceland
 #
-# From Adam David <adam@veda.is> (November 6, 1993):
+# From Adam David <adam@veda.is> (1993-11-06):
 # The name of the timezone in Iceland for system / mail / news purposes is GMT.
 #
-# (December 5, 1993):
+# (1993-12-05):
 # This material is paraphrased from the 1988 edition of the University of
 # Iceland Almanak.
 #
@@ -1301,7 +1301,7 @@ Zone	Europe/Budapest	1:16:20 -	LMT	1890 Oct
 # time the norsemen first settled Iceland.  The first day of winter is always
 # Saturday, but is not dependent on the Julian or Gregorian calendars.
 #
-# (December 10, 1993):
+# (1993-12-10):
 # I have a reference from the Oxford Icelandic-English dictionary for the
 # beginning of winter, which ties it to the ecclesiastical calendar (and thus
 # to the julian/gregorian calendar) over the period in question.
@@ -1311,7 +1311,7 @@ Zone	Europe/Budapest	1:16:20 -	LMT	1890 Oct
 # might be a reference to the Julian calendar as opposed to Gregorian, or it
 # might mean something else (???).
 #
-# From Paul Eggert <eggert@twinsun.com> (December 9, 1993):
+# From Paul Eggert <eggert@twinsun.com> (1993-12-09):
 # The Iceland Almanak, Shanks and Whitman disagree on many points.
 # We go with the Almanak, except for one claim from Shanks, namely that
 # Reykavik was -1:28 from 1837 to 1908, local mean time before that.
@@ -1701,7 +1701,7 @@ Zone	Europe/Lisbon	-0:36:32 -	LMT	1884
 			 0:00	Port	WE%sT	1966 Apr  3 2:00
 			 1:00	-	CET	1976 Sep 26 1:00
 			 0:00	Port	WE%sT	1983 Sep 25 1:00s
-# From Rui Pedro Salgueiro <rps@inescca.inescc.pt> (November 12, 1992):
+# From Rui Pedro Salgueiro <rps@inescca.inescc.pt> (1992-11-12):
 # Portugal has recently (September, 27) changed timezone
 # (from WET to MET or CET) to harmonize with EEC.
 			 0:00	EU	WE%sT	1992 Sep 27 1:00s
@@ -1777,7 +1777,7 @@ Zone Asia/Omsk		 4:53:36 -	LMT	1924 May  2
 			 5:00	1:00	OMSST	1991 Sep 29 2:00s
 			 5:00	-	OMST	1992 Jan 19 2:00s
 			 6:00	Russia	OMS%sT
-# From Stanislaw A. Kuzikowski <S.A.Kuz@iae.nsk.su> (June 29, 1994):
+# From Stanislaw A. Kuzikowski <S.A.Kuz@iae.nsk.su> (1994-06-29):
 # But now it is some months since Novosibirsk is 3 hours ahead of Moscow!
 # I do not know why they have decided to make this change;
 # as far as I remember it was done exactly during winter->summer switching
@@ -2064,7 +2064,7 @@ Zone Europe/Simferopol	2:16:24 -	LMT	1880
 			2:00	-	EET	1930 Jun 21
 			3:00	Russia	MOS%sT	1991 Mar 31 2:00s
 			2:00	1:00	EEST	1991 Sep 29 2:00s
-# From Paul Eggert <eggert@twinsun.com> (May 28, 1994):
+# From Paul Eggert <eggert@twinsun.com> (1994-05-28):
 # Today's _Economist_ (p 45) reports that Crimea switched
 # from Kiev to Moscow time sometime after the January elections.
 # For now, we'll guess that there was a 2-hour leap forward on March 27.
@@ -2148,7 +2148,7 @@ Zone	Europe/Belgrade	1:22:00	-	LMT	1884
 # INTERNET   : dik@cwi.nl
 # BITNET/EARN: dik@mcvax
 
-# From Bob Devine (January 28, 1988):
+# From Bob Devine (1988-01-28):
 # ...
 # Greece: Last Sunday in April to last Sunday in September (iffy on dates).
 # Since 1978.  Change at midnight.

@@ -40,16 +40,15 @@ Cambridge, MA 02139, USA.  */
    negative even if the call succeeded.  E.g., the `lseek' system call
    might return a large offset.  Therefore we must not anymore test
    for < 0, but test for a real error by making sure the value in %eax
-   is a real error number.  For now (as of 2.1.1) 122 is the largest
-   defined error number.  Given a bit room for development, Linus
-   chose in <asm/unistd.h> to use the values -125 to -1 for error
-   values.  We follow him here.  */
+   is a real error number.  Linus said he will make sure the no syscall
+   returns a value in -1 .. -4095 as a valid result so we can savely
+   test with -4095.  */
 #undef	PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   ENTRY (name)								      \
     DO_CALL (args, syscall_name);					      \
-    cmpl $-125, %eax;							      \
+    cmpl $-4095, %eax;							      \
     jae syscall_error;
 
 #undef	PSEUDO_END

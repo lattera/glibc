@@ -1,20 +1,20 @@
 /* Copyright (C) 1991, 1993, 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
 #include <stdio.h>
@@ -87,6 +87,60 @@ __sysconf (name)
 	 allocate a buffer we restrict the value.  */
       return BUFSIZ;
 
+    case _SC_CHAR_BIT:
+      return CHAR_BIT;
+
+    case _SC_CHAR_MAX:
+      return CHAR_MAX;
+
+    case _SC_CHAR_MIN:
+      return CHAR_MIN;
+
+    case _SC_INT_MAX:
+      return INT_MAX;
+
+    case _SC_INT_MIN:
+      return INT_MIN;
+
+    case _SC_LONG_BIT:
+      return sizeof (long int) * CHAR_BIT;
+
+    case _SC_WORD_BIT:
+      return sizeof (int) * CHAR_BIT;
+
+    case _SC_MB_LEN_MAX:
+      return MB_LEN_MAX;
+
+    case _SC_NZERO:
+      return NZERO;
+
+    case _SC_SSIZE_MAX:
+      return _POSIX_SSIZE_MAX;
+
+    case _SC_SCHAR_MAX:
+      return SCHAR_MAX;
+
+    case _SC_SCHAR_MIN:
+      return SCHAR_MIN;
+
+    case _SC_SHRT_MAX:
+      return SHRT_MAX;
+
+    case _SC_SHRT_MIN:
+      return SHRT_MIN;
+
+    case _SC_UCHAR_MAX:
+      return UCHAR_MAX;
+
+    case _SC_UINT_MAX:
+      return UINT_MAX;
+
+    case _SC_ULONG_MAX:
+      return ULONG_MAX;
+
+    case _SC_USHRT_MAX:
+      return USHRT_MAX;
+
     case _SC_ARG_MAX:
     case _SC_CHILD_MAX:
     case _SC_CLK_TCK:
@@ -150,6 +204,9 @@ __sysconf (name)
     case _SC_2_C_DEV:
     case _SC_2_FORT_DEV:
     case _SC_2_SW_DEV:
+    case _SC_2_CHAR_TERM:
+    case _SC_2_C_VERSION:
+    case _SC_2_UPE:
 
     case _SC_THREADS:
     case _SC_THREAD_SAFE_FUNCTIONS:
@@ -169,6 +226,21 @@ __sysconf (name)
     case _SC_THREAD_PROCESS_SHARED:
 
     case _SC_XOPEN_VERSION:
+    case _SC_XOPEN_XCU_VERSION:
+    case _SC_XOPEN_UNIX:
+    case _SC_XOPEN_CRYPT:
+    case _SC_XOPEN_ENH_I18N:
+    case _SC_XOPEN_SHM:
+    case _SC_XOPEN_XPG2:
+    case _SC_XOPEN_XPG3:
+    case _SC_XOPEN_XPG4:
+
+    case _SC_NL_ARGMAX:
+    case _SC_NL_LANGMAX:
+    case _SC_NL_MSGMAX:
+    case _SC_NL_NMAX:
+    case _SC_NL_SETMAX:
+    case _SC_NL_TEXTMAX:
 
       break;
     }

@@ -22,9 +22,17 @@ Cambridge, MA 02139, USA.  */
 
 	.text
 
-LEAF(__ieee_get_fp_control, 8)
-	lda	sp, -8(sp)
+LEAF(__ieee_get_fp_control, 16)
+#ifdef PROF
+	ldgp	gp, 0(pv)
+	lda	sp, -16(sp)
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
 	.prologue 1
+#else
+	lda	sp, -16(sp)
+	.prologue 0
+#endif
 
 	mov	sp, a1
 	ldi	a0, GSI_IEEE_FP_CONTROL
@@ -33,12 +41,14 @@ LEAF(__ieee_get_fp_control, 8)
 	bne	a3, error
 
 	ldq	v0, 0(sp)
-	lda	sp, 8(sp)
+	lda	sp, 16(sp)
 	ret
 
-error:	lda	sp, 8(sp)
+error:	lda	sp, 16(sp)
+#ifndef PROF
 	br	gp, 1f
 1:	ldgp	gp, 0(gp)
+#endif
 	jmp	zero, __syscall_error
 
 	END(__ieee_get_fp_control)

@@ -1,4 +1,4 @@
-# @(#)southamerica	7.13
+# @(#)southamerica	7.14
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -45,14 +45,14 @@
 
 # Argentina
 
-# From Bob Devine (January 28, 1988):
+# From Bob Devine (1988-01-28):
 # Argentina: first Sunday in October to first Sunday in April since 1976.
 # Double Summer time from 1969 to 1974.  Switches at midnight.
 
-# From U. S. Naval Observatory (January 19, 19889):
+# From U. S. Naval Observatory (1988-01-199):
 # ARGENTINA           3 H BEHIND   UTC
 
-# From Hernan G. Otero <hernan@isoft.com.ar> (June 26, 1995):
+# From Hernan G. Otero <hernan@isoft.com.ar> (1995-06-26):
 # I am sending modifications to the Argentinian time zone table...
 # AR was chosen because they are the ISO letters that represent Argentina.
 
@@ -87,7 +87,7 @@ Rule	Arg	1987	only	-	Feb	13	0:00	0	-
 Rule	Arg	1988	only	-	Feb	 7	0:00	0	-
 Rule	Arg	1988	only	-	Dec	 1	0:00	1:00	S
 #
-# From Hernan G. Otero <hernan@isoft.com.ar> (June 26, 1995):
+# From Hernan G. Otero <hernan@isoft.com.ar> (1995-06-26):
 # These corrections were contributed by InterSoft Argentina S.A.,
 # obtaining the data from the:
 # Talleres de Hidrografia Naval Argentina
@@ -97,7 +97,7 @@ Rule	Arg	1988	only	-	Dec	 1	0:00	1:00	S
 Rule	Arg	1989	1993	-	Mar	Sun>=1	0:00	0	-
 Rule	Arg	1989	1992	-	Oct	Sun>=15	0:00	1:00	S
 #
-# From Hernan G. Otero <hernan@isoft.com.ar> (June 26, 1995):
+# From Hernan G. Otero <hernan@isoft.com.ar> (1995-06-26):
 # From this moment on, the law that mandated the daylight saving
 # time corrections was derogated and no more modifications
 # to the time zones (for daylight saving) are now made.
@@ -125,18 +125,18 @@ Zone	America/La_Paz	-4:32:36 -	LMT	1890
 # Brazil
 
 # From Guy Harris:
-# The OAG lists October 25, 1987 and February 12, 1988 as the starting and
+# The OAG lists 1987-10-25 and 1988-02-12 as the starting and
 # ending dates, giving them as "estimated date(s) based on previous year".  We
 # infer a rule here from one example, always a dangerous practice....  Yes,
 # they really do switch on Saturday, according to the OAG.
 # "[America/Porto_Acre]" is for the Territory of Acre;
 # "[America/Noronha]" is for Fernando De Noronha.
 
-# From Bob Devine (January 28, 1988):
+# From Bob Devine (1988-01-28):
 # The only information I found is that there was no DST up to 1985.
 # But there was some before 1952!
 
-# From U. S. Naval Observatory (January 16, 1989):
+# From U. S. Naval Observatory (1989-01-16):
 # BRAZIL     WEST     5 H  BEHIND UTC    TERRITORY OF ACRE
 # BRAZIL     WEST     4 H  BEHIND UTC    ACRE OCT 23, '88-FEB 11,
 # BRAZIL                                 '89 (ESTIMATED)
@@ -155,7 +155,7 @@ Zone	America/La_Paz	-4:32:36 -	LMT	1890
 # BRAZIL                                 (ESTIMATED)
 # BRAZIL              3 H  BEHIND UTC    FOR MOST MAJOR AIRPORTS.
 
-# From Paul Eggert <eggert@twinsun.com> (November 18, 1993):
+# From Paul Eggert <eggert@twinsun.com> (1993-11-18):
 # The mayor of Rio recently attempted to change the time zone rules
 # just in his city, in order to leave more summer time for the tourist trade.
 # The rule change lasted only part of the day;
@@ -290,11 +290,11 @@ Zone	America/Guyana	-3:52:40 -	LMT	1915 Mar	# Georgetown
 
 # Paraguay
 
-# From Bob Devine (January 28, 1988):
+# From Bob Devine (1988-01-28):
 # Paraguay: First day in October to last in March.  Midnight switch??
 # Since 1980.
 
-# From U. S. Naval Observatory (January 19, 1989):
+# From U. S. Naval Observatory (1989-01-19):
 # PARAGUAY            4 H  BEHIND UTC
 # PARAGUAY            3 H  BEHIND UTC    OCT 1, '88-MAR 31, '89
 
@@ -352,7 +352,7 @@ Zone America/Port_of_Spain -4:06:04 -	LMT	1912 Mar 2
 			-4:00	-	AST
 
 # Uruguay
-# From Paul Eggert <eggert@twinsun.com> (November 18, 1993):
+# From Paul Eggert <eggert@twinsun.com> (1993-11-18):
 # Uruguay wins the prize for the strangest peacetime manipulation of the rules.
 # From Shanks (1991):
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S

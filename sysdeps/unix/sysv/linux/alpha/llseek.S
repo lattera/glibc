@@ -24,7 +24,14 @@ Cambridge, MA 02139, USA.  */
 
 	.text
 ENTRY(llseek)
+#ifdef PROF
+	ldgp	gp, 0(pv)
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
 	.prologue 1
+#else
+	.prologue 0
+#endif
 
 	sll	a1, 32, a1	/* build a 64 bit ofs out of 32 bit operands */
 	zap	a2, 0xf0, a2
@@ -40,8 +47,11 @@ ENTRY(llseek)
 	stq	v0, 0(t0)
 	ret
 
-error:	br	gp, 1f
+error:
+#ifndef PROF
+	br	gp, 1f
 1:	ldgp	gp, 0(gp)
+#endif
 	jmp	zero, __syscall_error
 
 	END(llseek)

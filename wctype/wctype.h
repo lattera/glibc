@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO/IEC 9899:1990/Amendment 1:1995 7.15:
+ *	ISO C Standard, Amendment 1, 7.15:
  *	Wide-character classification and mapping utilities  <wctype.h>
  */
 
@@ -25,7 +25,6 @@
 
 #define _WCTYPE_H	1
 #include <features.h>
-
 
 __BEGIN_DECLS
 

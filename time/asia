@@ -1,4 +1,4 @@
-# @(#)asia	7.24
+# @(#)asia	7.25
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -144,8 +144,8 @@ Zone	Asia/Phnom_Penh	6:59:40 -	LMT	1906 Jun  9
 # From Guy Harris:
 # People's Republic of China.  Yes, they really have only one time zone.
 
-# From Bob Devine (January 28, 1988):
-# No they don't.  See TIME mag, February 17, 1986 p.52.  Even though
+# From Bob Devine (1988-01-28):
+# No they don't.  See TIME mag, 1986-02-17 p.52.  Even though
 # China is across 4 physical time zones, before Feb 1, 1986 only the
 # Peking (Bejing) time zone was recognized.  Since that date, China
 # has two of 'em -- Peking's and Urumqi (named after the capital of
@@ -158,7 +158,7 @@ Zone	Asia/Phnom_Penh	6:59:40 -	LMT	1906 Jun  9
 #     1986 May 4 - Sept 14
 #     1987 mid-April - ??
 
-# From U. S. Naval Observatory (January 19, 1989):
+# From U. S. Naval Observatory (1989-01-19):
 # CHINA               8 H  AHEAD OF UTC  ALL OF CHINA, INCL TAIWAN
 # CHINA               9 H  AHEAD OF UTC  APR 17 - SEP 10
 
@@ -366,11 +366,11 @@ Zone	Asia/Baghdad	2:57:40	-	LMT	1890
 
 # Israel
 
-# From U. S. Naval Observatory (January 19, 1989):
+# From U. S. Naval Observatory (1989-01-19):
 # ISRAEL              2 H  AHEAD OF UTC
 # ISRAEL              3 H  AHEAD OF UTC  APR 10 - SEP 3
 
-# From Paul Eggert <eggert@twinsun.com> (November 18, 1993):
+# From Paul Eggert <eggert@twinsun.com> (1993-11-18):
 #
 # Shanks gives the following rules for Jerusalem from 1918 through 1991.
 # After 1989 Shanks often disagrees with Silverberg; we go with Silverberg.
@@ -464,8 +464,8 @@ Rule	Zion	1995	only	-	Sep	 3	0:00	0	S
 #   ftp://ftp.huji.ac.il/pub/misc/timezones/announcements/1996-1998.ps.gz
 #
 # Emptor Caveat: The dates for the years 1996-1998 were originally announced
-# on August 31, 1995, by the previous Minister of Interior.  The new Minister
-# of Interior changed the dates on January 1, 1996, to take into account the
+# on 1995-08-31, by the previous Minister of Interior.  The new Minister
+# of Interior changed the dates on 1996-01-01, to take into account the
 # desires of certain portions of Israeli society (the next election is in the
 # Fall of 1996).  After this (1996) year's Daylight Savings Time is over, the
 # new minister has announced that a study will be conducted as to the wishes of
@@ -512,7 +512,7 @@ Zone	Asia/Ishigaki	8:16:36	-	LMT	1896
 # Other Japanese possessions are probably like Asia/Tokyo.
 
 # Jordan
-# From Paul Eggert <eggert@twinsun.com> (November 18, 1993):
+# From Paul Eggert <eggert@twinsun.com> (1993-11-18):
 # Most likely Shanks is merely guessing dates from 1992 on.
 # From Shanks (1991):
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
@@ -863,7 +863,7 @@ Zone	Asia/Tashkent	4:37:12 -	LMT	1924 May  2
 # from the American Embassy in Tashkent implies that they have just one.
 
 # Vietnam
-# From Paul Eggert <eggert@twinsun.com> (November 18, 1993):
+# From Paul Eggert <eggert@twinsun.com> (1993-11-18):
 # Saigon's official name is Thanh-Pho Ho Chi Minh, but it's too long.
 # We'll stick with the traditional name for now.
 # From Shanks (1991):

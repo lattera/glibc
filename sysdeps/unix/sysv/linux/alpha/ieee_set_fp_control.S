@@ -20,9 +20,17 @@ Cambridge, MA 02139, USA.  */
 
 #define SSI_IEEE_FP_CONTROL	14
 
-LEAF(__ieee_set_fp_control, 8)
-	lda	sp, -8(sp)
+LEAF(__ieee_set_fp_control, 16)
+#ifdef PROF
+	ldgp	gp, 0(sp)
+	lda	sp, -16(sp)
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
 	.prologue 1
+#else
+	lda	sp, -16(sp)
+	.prologue 0
+#endif
 
 	stq	a0, 0(sp)
 	mov	sp, a1
@@ -30,13 +38,16 @@ LEAF(__ieee_set_fp_control, 8)
 	ldi	v0, __NR_osf_setsysinfo
 	call_pal PAL_callsys
 
-	lda	sp, 8(sp)
+	lda	sp, 16(sp)
 
 	bne	a3, error
 	ret
 
-error:	br	gp, 1f
+error:
+#ifndef PROF
+	br	gp, 1f
 1:	ldgp	gp, 0(gp)
+#endif
 	jmp	zero, __syscall_error
 
 	END(__ieee_set_fp_control)
