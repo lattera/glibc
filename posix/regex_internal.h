@@ -182,6 +182,8 @@ typedef enum
   OP_CLOSE_CHAR_CLASS,
   OP_WORD,
   OP_NOTWORD,
+  OP_SPACE,
+  OP_NOTSPACE,
   BACK_SLASH,
 
   /* Tree type, these are used only by tree. */

@@ -1,5 +1,15 @@
 2003-09-20  Paolo Bonzini  <bonzini@gnu.org>
 
+	* posix/regcomp.c (build_word_op): Rename like...
+	(build_charclass_op): ...this.  Accept two extra parameters,
+	CLASS_NAME and EXTRA.  Add EXTRA to the result, not only _.
+	(peek_token): accept \s and \S as OP_SPACE and OP_NOTSPACE.
+	(parse_expression): replace build_word_op with
+	build_charclass_op, add new arguments, accept OP_SPACE
+	and OP_NOTSPACE.
+	* posix/regex_internal.h (re_token_type_t): Add OP_SPACE
+	and OP_NOTSPACE.
+
 	* posix/regcomp.c (peek_token): Don't look back for ( or |
 	to check whether to treat a caret as special.  It fails
 	for the (extended) regex \(^.

@@ -118,8 +118,10 @@ static reg_errcode_t build_charclass (RE_TRANSLATE_TYPE trans,
 				      const unsigned char *class_name,
 				      reg_syntax_t syntax);
 #endif /* not RE_ENABLE_I18N */
-static bin_tree_t *build_word_op (re_dfa_t *dfa, RE_TRANSLATE_TYPE trans,
-				  int not, reg_errcode_t *err);
+static bin_tree_t *build_charclass_op (re_dfa_t *dfa, RE_TRANSLATE_TYPE trans,
+				       const unsigned char *class_name, 
+				       const unsigned char *extra, int not,
+				       reg_errcode_t *err);
 static void free_bin_tree (bin_tree_t *tree);
 static bin_tree_t *create_tree (bin_tree_t *left, bin_tree_t *right,
 				re_token_type_t type, int index);
@@ -1561,6 +1563,14 @@ peek_token (token, input, syntax)
 	  if (!(syntax & RE_NO_GNU_OPS))
 	    token->type = OP_NOTWORD;
 	  break;
+	case 's':
+	  if (!(syntax & RE_NO_GNU_OPS))
+	    token->type = OP_SPACE;
+	  break;
+	case 'S':
+	  if (!(syntax & RE_NO_GNU_OPS))
+	    token->type = OP_NOTSPACE;
+	  break;
 	case '`':
 	  if (!(syntax & RE_NO_GNU_OPS))
 	    {
@@ -2076,12 +2086,22 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	dfa->has_mb_node = 1;
       break;
     case OP_WORD:
-      tree = build_word_op (dfa, regexp->trans, 0, err);
+      tree = build_charclass_op (dfa, regexp->trans, "alnum", "_", 0, err);
       if (BE (*err != REG_NOERROR && tree == NULL, 0))
 	return NULL;
       break;
     case OP_NOTWORD:
-      tree = build_word_op (dfa, regexp->trans, 1, err);
+      tree = build_charclass_op (dfa, regexp->trans, "alnum", "_", 1, err);
+      if (BE (*err != REG_NOERROR && tree == NULL, 0))
+	return NULL;
+      break;
+    case OP_SPACE:
+      tree = build_charclass_op (dfa, regexp->trans, "space", "", 0, err);
+      if (BE (*err != REG_NOERROR && tree == NULL, 0))
+	return NULL;
+      break;
+    case OP_NOTSPACE:
+      tree = build_charclass_op (dfa, regexp->trans, "space", "", 1, err);
       if (BE (*err != REG_NOERROR && tree == NULL, 0))
 	return NULL;
       break;
@@ -3284,9 +3304,11 @@ build_charclass (trans, sbcset, class_name, syntax)
 }
 
 static bin_tree_t *
-build_word_op (dfa, trans, not, err)
+build_charclass_op (dfa, trans, class_name, extra, not, err)
      re_dfa_t *dfa;
      RE_TRANSLATE_TYPE trans;
+     const unsigned char *class_name;
+     const unsigned char *extra;
      int not;
      reg_errcode_t *err;
 {
@@ -3340,7 +3362,7 @@ build_word_op (dfa, trans, not, err)
 #ifdef RE_ENABLE_I18N
 			 mbcset, &alloc,
 #endif /* RE_ENABLE_I18N */
-			 (const unsigned char *) "alnum", 0);
+			 class_name, 0);
 
   if (BE (ret != REG_NOERROR, 0))
     {
@@ -3352,7 +3374,8 @@ build_word_op (dfa, trans, not, err)
       return NULL;
     }
   /* \w match '_' also.  */
-  bitset_set (sbcset, '_');
+  for (; *extra; extra++)
+    bitset_set (sbcset, *extra);
 
   /* If it is non-matching list.  */
 #ifdef RE_ENABLE_I18N
