@@ -32,6 +32,18 @@
 #include <atomic.h>
 
 
+/* Atomic operations on TLS memory.  */
+#ifndef THREAD_ATOMIC_CMPXCHG_VAL
+# define THREAD_ATOMIC_CMPXCHG_VAL(descr, member, new, old) \
+  atomic_compare_and_exchange_val_acq (&(descr)->member, new, old)
+#endif
+
+#ifndef THREAD_ATOMIC_BIT_SET
+# define THREAD_ATOMIC_BIT_SET(descr, member, bit) \
+  atomic_bit_set (&(descr)->member, bit)
+#endif
+
+
 /* Internal variables.  */
 
 
@@ -152,18 +164,6 @@ __do_cancel (void)
 
 /* Signal needed for the kernel-supported POSIX timer implementation.  */
 #define SIGTIMER	(__SIGRTMIN + 1)
-
-
-/* Atomic operations on TLS memory.  */
-#ifndef THREAD_ATOMIC_CMPXCHG_VAL
-# define THREAD_ATOMIC_CMPXCHG_VAL(descr, member, new, old) \
-  atomic_compare_and_exchange_val_acq (&(descr)->member, new, old)
-#endif
-
-#ifndef THREAD_ATOMIC_BIT_SET
-# define THREAD_ATOMIC_BIT_SET(descr, member, bit) \
-  atomic_bit_set (&(descr)->member, bit)
-#endif
 
 
 /* Internal prototypes.  */

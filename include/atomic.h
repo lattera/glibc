@@ -65,14 +65,14 @@
 #if !defined atomic_compare_and_exchange_val_acq \
     && defined __arch_compare_and_exchange_val_32_acq
 # define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
-  __atomic_val_bysize (__arch_compare_and_exchange_val,acq, \
-		       (mem), (newval), (oldval))
+  __atomic_val_bysize (__arch_compare_and_exchange_val,acq,		      \
+		       mem, newval, oldval)
 #endif
 
 
 #ifndef atomic_compare_and_exchange_val_rel
-# define atomic_compare_and_exchange_val_rel(mem, oldval, newval) \
-  atomic_compare_and_exchange_val_acq ((mem), (oldval), (newval))
+# define atomic_compare_and_exchange_val_rel(mem, oldval, newval)	      \
+  atomic_compare_and_exchange_val_acq (mem, oldval, newval)
 #endif
 
 
@@ -80,15 +80,15 @@
    Return zero if *MEM was changed or non-zero if no exchange happened.  */
 #ifndef atomic_compare_and_exchange_bool_acq
 # ifdef __arch_compare_and_exchange_bool_32_acq
-# define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
-  __atomic_bool_bysize (__arch_compare_and_exchange_bool,acq, \
-		        (mem), (newval), (oldval))
-# else
 #  define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
+  __atomic_bool_bysize (__arch_compare_and_exchange_bool,acq,		      \
+		        mem, newval, oldval)
+#  else
+#   define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
   ({ /* Cannot use __oldval here, because macros later in this file might     \
 	call this macro with __oldval argument.	 */			      \
      __typeof (oldval) __old = (oldval);				      \
-     atomic_compare_and_exchange_val_acq ((mem), (newval), __old) != __old;   \
+     atomic_compare_and_exchange_val_acq (mem, newval, __old) != __old;	      \
   })
 # endif
 #endif
@@ -96,7 +96,7 @@
 
 #ifndef atomic_compare_and_exchange_bool_rel
 # define atomic_compare_and_exchange_bool_rel(mem, oldval, newval) \
-  atomic_compare_and_exchange_bool_acq ((mem), (oldval), (newval))
+  atomic_compare_and_exchange_bool_acq (mem, oldval, newval)
 #endif
 
 
@@ -190,20 +190,20 @@
 #ifndef atomic_add_negative
 # define atomic_add_negative(mem, value)				      \
   ({ __typeof (value) __aan_value = (value);				      \
-     atomic_exchange_and_add ((mem), __aan_value) < -__aan_value; })
+     atomic_exchange_and_add (mem, __aan_value) < -__aan_value; })
 #endif
 
 
 #ifndef atomic_add_zero
 # define atomic_add_zero(mem, value)					      \
   ({ __typeof (value) __aaz_value = (value);				      \
-     atomic_exchange_and_add ((mem), __aaz_value) == -__aaz_value; })
+     atomic_exchange_and_add (mem, __aaz_value) == -__aaz_value; })
 #endif
 
 
 #ifndef atomic_bit_set
 # define atomic_bit_set(mem, bit) \
-  (void) atomic_bit_test_set((mem), (bit))
+  (void) atomic_bit_test_set(mem, bit)
 #endif
 
 
@@ -231,12 +231,12 @@
 
 
 #ifndef atomic_read_barrier
-# define atomic_read_barrier() atomic_full_barrier()
+# define atomic_read_barrier() atomic_full_barrier ()
 #endif
 
 
 #ifndef atomic_write_barrier
-# define atomic_write_barrier() atomic_full_barrier()
+# define atomic_write_barrier() atomic_full_barrier ()
 #endif
 
 #endif	/* atomic.h */
