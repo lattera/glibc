@@ -38,7 +38,7 @@ extra-objs := $(utmpd-routines:=.o)
 
 distribute := utmp-private.h programs/xtmp.h programs/utmpd.h README.utmpd \
 	      programs/utmpd-private.h $(utmpd-routines:%=programs/%.c) \
-	      pty-internal.h
+	      pty-private.h
 
 subdir-dirs = programs
 vpath %.c programs

@@ -1,4 +1,7 @@
-1998-09-20 18:07  Ulrich Drepper  <drepper@cygnus.com>
+1998-09-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* login/Makefile (distribute): Remove pty-internal.h, add
+	pty-private.h.
 
 	* stdlib/tst-strtol.c: Add more checks.
 	Patch by Zack Weinberg <zack@rabi.columbia.edu>.
