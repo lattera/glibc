@@ -2384,7 +2384,7 @@ exceed the process' data storage limit.
 
 @comment unistd.h
 @comment BSD
-@deftypefun int sbrk (ptrdiff_t @var{delta})
+@deftypefun void *sbrk (ptrdiff_t @var{delta})
 This function is the same as @code{brk} except that you specify the new
 end of the data segment as an offset @var{delta} from the current end
 and on success the return value is the address of the resulting end of
