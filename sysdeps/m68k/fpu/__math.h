@@ -414,7 +414,7 @@ __inline_forward(void,sincosl,
 #define isgreater(x, y)					\
    __extension__					\
    ({ char __result;					\
-      __asm__ ("fcmp %2,%1; fsogt %0"			\
+      __asm__ ("fcmp%.x %2,%1; fsogt %0"		\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       (int) __result; })
 
@@ -422,7 +422,7 @@ __inline_forward(void,sincosl,
 #define isgreaterequal(x, y)				\
    __extension__					\
    ({ char __result;					\
-      __asm__ ("fcmp %2,%1; fsoge %0"			\
+      __asm__ ("fcmp%.x %2,%1; fsoge %0"		\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       (int) __result; })
 
@@ -430,7 +430,7 @@ __inline_forward(void,sincosl,
 #define isless(x, y)					\
    __extension__					\
    ({ char __result;					\
-      __asm__ ("fcmp %2,%1; fsolt %0"			\
+      __asm__ ("fcmp%.x %2,%1; fsolt %0"		\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       (int) __result; })
 
@@ -438,7 +438,7 @@ __inline_forward(void,sincosl,
 #define islessequal(x, y)				\
    __extension__					\
    ({ char __result;					\
-      __asm__ ("fcmp %2,%1; fsole %0"			\
+      __asm__ ("fcmp%.x %2,%1; fsole %0"		\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       (int) __result; })
 
@@ -446,7 +446,7 @@ __inline_forward(void,sincosl,
 #define islessgreater(x, y)				\
    __extension__					\
    ({ char __result;					\
-      __asm__ ("fcmp %2,%1; fsogl %0"			\
+      __asm__ ("fcmp%.x %2,%1; fsogl %0"		\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       (int) __result; })
 
@@ -454,7 +454,7 @@ __inline_forward(void,sincosl,
 #define isunordered(x, y)				\
    __extension__					\
    ({ char __result;					\
-      __asm__ ("fcmp %2,%1; fsun %0"			\
+      __asm__ ("fcmp%.x %2,%1; fsun %0"			\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       (int) __result; })
 #endif
