@@ -1,3 +1,27 @@
+2002-10-02  Steven Munroe  <sjmunroe@us.ibm.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* login/programs/utmpdump.c (print_entry): Copy up->ut_tv fields
+	to struct timeval temp_tv before printing to be 32-/64-bit agnostic.
+	* sysdeps/powerpc/bits/wordsize.h: Move to...
+	* sysdeps/powerpc/powerpc32/bits/wordsize.h: ...here.
+	(__WORDSIZE_COMPAT32): Define.
+	* sysdeps/powerpc/powerpc64/bits/wordsize.h: Likewise.
+	* sysdeps/sparc/sparc32/bits/wordsize.h (__WORDSIZE_COMPAT32):
+	Define.
+	* sysdeps/sparc/sparc64/bits/wordsize.h (__WORDSIZE_COMPAT32):
+	Define.
+	* sysdeps/s390/bits/wordsize.h: Move to...
+	* sysdeps/s390/s390-32/bits/wordsize.h: ...here.
+	* sysdeps/s390/s390-64/bits/wordsize.h: Likewise.
+	* sysdeps/x86_64/bits/wordsize.h (__WORDSIZE_COMPAT32): Define.
+	* sysdeps/unix/sysv/linux/powerpc/bits/utmp.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/bits/utmpx.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/utmp.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/utmpx.h: New file.
+	* sysdeps/unix/sysv/linux/x86_64/bits/utmp.h: New file.
+	* sysdeps/unix/sysv/linux/x86_64/bits/utmpx.h: New file.
+
 2002-10-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Fix comment typo.

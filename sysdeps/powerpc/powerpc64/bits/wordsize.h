@@ -1,6 +1,6 @@
 /* Determine the wordsize from the preprocessor defines.  */
 
-#if defined __arch64__ || defined __sparcv9
+#if defined __powerpc64__
 # define __WORDSIZE	64
 # define __WORDSIZE_COMPAT32	1
 #else

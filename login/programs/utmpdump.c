@@ -27,6 +27,17 @@
 static void
 print_entry (struct utmp *up)
 {
+  /* Mixed 32-/64-bit systems may have timeval structs of different sixe
+     but need struct utmp to be the same size.  So in 64-bit up->ut_tv may 
+     not be a timeval but a struct of __int32_t's.  This would cause a compile
+     time warning and a formating error when 32-bit int is passed where
+     a 64-bit long is expected. So copy up->up_tv to a temporary timeval.
+     This is 32-/64-bit agnostic and expands the timeval fields to the 
+     expected size as needed. */
+  struct timeval temp_tv;
+  temp_tv.tv_sec = up->ut_tv.tv_sec;
+  temp_tv.tv_usec = up->ut_tv.tv_usec;
+ 
   (printf) (
 	    /* The format string.  */
 #if _HAVE_UT_TYPE
@@ -62,8 +73,8 @@ print_entry (struct utmp *up)
 	    , up->ut_host
 #endif
 #if _HAVE_UT_TV
-	    , 4 + ctime (&up->ut_tv.tv_sec)
-	    , up->ut_tv.tv_usec
+	    , 4 + ctime (&temp_tv.tv_sec)
+	    , temp_tv.tv_usec
 #else
 	    , 4 + ctime (&up->ut_time)
 #endif
