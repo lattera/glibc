@@ -70,6 +70,9 @@ test -n "$calls" || exit 0
 echo "$calls" |
 while read file srcfile caller syscall args strong weak; do
 
+  case x"$syscall" in
+  x-) callnum=_ ;;
+  *)
   # Figure out if $syscall is defined with a number in syscall.h.
   callnum=-
   eval `{ echo "#include <sysdep.h>";
@@ -77,6 +80,8 @@ while read file srcfile caller syscall args strong weak; do
 	  $asm_CPP -D__OPTIMIZE__ - |
 	  sed -n -e "/^callnum=.*$syscall/d" \
 		 -e "/^\(callnum=\)[ 	]*\(.*\)/s//\1'\2'/p"`
+  ;;
+  esac
 
   # Derive the number of arguments from the argument signature
   case $args in
@@ -126,12 +131,22 @@ shared-only-routines += $file
 \$(foreach o,\$(object-suffixes),\$(objpfx)$file\$o): \\"
     ;;
   esac
-  echo "		\$(common-objpfx)s-proto.d
+
+  echo '		$(common-objpfx)s-proto.d'
+  case x"$callnum" in
+  x_)
+  echo "\
+	(echo '/* Dummy module requested by syscalls.list */'; \\"
+  ;;
+  x*)
+  echo "\
 	(echo '#include <sysdep.h>'; \\
 	 echo 'PSEUDO ($strong, $syscall, $nargs)'; \\
 	 echo '	ret'; \\
 	 echo 'PSEUDO_END($strong)'; \\
 	 echo 'libc_hidden_def ($strong)'; \\"
+  ;;
+  esac
 
   # Append any weak aliases or versions defined for this syscall function.
 
@@ -189,7 +204,7 @@ shared-only-routines += $file
  esac
 
   case x"$callnum",$srcfile,$args in
-  x-,-,* | x*,*.[sS],*V*) ;;
+  x[_-],-,* | x*,*.[sS],*V*) ;;
   x*,-,*$ptr* | x*,*.[sS],*$ptr*)
 
     nv_weak=`for name in $weak; do

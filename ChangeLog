@@ -1,5 +1,9 @@
 2002-08-04  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/make-syscalls.sh: If the syscall name field is -
+	then generate a dummy module under the given name, obeying the
+	normal rules for the "caller" field.
+
 	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Make the phdr loop
 	actually iterate over the elements.  Fix typo p_type -> p_vaddr.
 
