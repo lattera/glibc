@@ -1,5 +1,7 @@
 2001-07-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* intl/localealias.c: Remove unnecessary prototype.
+
 	* Makefile: Add html goal.
 	* manual/Makefile: Likewise.
 

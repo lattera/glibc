@@ -55,7 +55,6 @@ char *alloca ();
 #if defined STDC_HEADERS || defined _LIBC
 # include <stdlib.h>
 #else
-char *getenv ();
 # ifdef HAVE_MALLOC_H
 #  include <malloc.h>
 # else
