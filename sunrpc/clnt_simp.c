@@ -128,7 +128,7 @@ callrpc (const char *host, u_long prognum, u_long versnum, u_long procnum,
       crp->oldprognum = prognum;
       crp->oldversnum = versnum;
       (void) strncpy (crp->oldhost, host, 255);
-      crp->oldhost[256] = '\0';
+      crp->oldhost[255] = '\0';
     }
   tottimeout.tv_sec = 25;
   tottimeout.tv_usec = 0;

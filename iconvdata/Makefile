@@ -178,7 +178,8 @@ generated-modules := $(gen-8bit-modules) $(gen-8bit-gap-modules) \
 		     $(gen-special-modules)
 
 generated = $(generated-modules:=.h) $(generated-modules:=.stmp) \
-	    iconv-test.out iconv-rules tst-loading.mtrace mtrace-tst-loading
+	    iconv-test.out iconv-rules tst-loading.mtrace	 \
+	    mtrace-tst-loading tst-tables.out
 ifdef objpfx
 generated += gconv-modules
 endif

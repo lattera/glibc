@@ -384,6 +384,7 @@ following patterns:
      m68k-*-linux
      mips*-*-linux
      powerpc-*-linux
+     s390-*-linux
      sparc-*-linux
      sparc64-*-linux
 

@@ -1,3 +1,14 @@
+2000-09-20  Andreas Jaeger  <aj@suse.de>
+
+	* iconvdata/Makefile (generated): Add tst-tables.out.
+
+	* intl/Makefile	(generated): Add test output.
+
+2000-09-19  Andreas Jaeger  <aj@suse.de>
+
+	* sunrpc/clnt_simp.c (callrpc): Fix write beyond end of buffer.
+	Reported by Jens-Uwe Mager <jum@helios.de>.
+
 2000-09-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Bump to 2.1.94.
