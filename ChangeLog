@@ -1,3 +1,9 @@
+1998-09-24  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/unix/siglist.c: Make sys_siglist a weak alias for
+	_sys_siglist.  [!HAVE_GNU_LD]: Do not define _sys_siglist as
+	sys_siglist.  This is handled correctly by the weak_alias macro.
+
 1998-09-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/posix/getcwd.c: Prevent compiler warning from redefinition

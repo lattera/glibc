@@ -163,7 +163,7 @@ extern int _getopt_internal ();
 }
 #endif
 
-/* Make sure we later can get all the definitions and  declarations.  */
+/* Make sure we later can get all the definitions and declarations.  */
 #undef __need_getopt
 
 #endif /* getopt.h */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,10 +17,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stddef.h>
-
-#ifndef HAVE_GNU_LD
-#define _sys_siglist    sys_siglist
-#endif
 
 /* This is a list of all known signal numbers.  */
 
@@ -60,3 +56,5 @@ const char *const _sys_siglist[] =
     N_("User defined signal 2"),
     NULL
   };
+
+weak_alias (_sys_siglist, sys_siglist)
