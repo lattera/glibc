@@ -1,3 +1,8 @@
+2000-07-24  Andreas Jaeger  <aj@suse.de>
+
+	* string/Makefile ($(objpfx)tst-svc.out): Fix rule to read from
+	input from stdin and setup environment.
+
 2000-07-24  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/mmap.S: Remove mmap64 alias.
