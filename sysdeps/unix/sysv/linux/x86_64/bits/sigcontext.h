@@ -100,7 +100,7 @@ struct sigcontext
 
 struct _fpstate
 {
-  /* Regular FPU environment.  */
+  /* FPU environment matching the 64-bit FXSAVE layout.  */
   __uint16_t		cwd;
   __uint16_t		swd;
   __uint16_t		twd;
@@ -109,7 +109,7 @@ struct _fpstate
   __uint64_t		rdp;
   __uint32_t		mxcsr;
   __uint32_t		mxcr_mask;
-  __uint32_t 		st_space[32];   /* 8*16 bytes for each FP-reg = 128 bytes */
+  __uint32_t		st_space[32];   /* 8*16 bytes for each FP-reg = 128 bytes */
   __uint32_t		xmm_space[64];  /* 16*16 bytes for each XMM-reg = 128 bytes */
   __uint32_t		padding[24];
 };
