@@ -1,5 +1,9 @@
 2001-02-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Makefile: Add rules to build and run initfirst test.
+	* elf/initfirst.c: New file.
+	* elf/firstobj.c: New file.
+
 	* Makerules (build-shlib): Add $(extra-B-$(@F:lib%.so=%).so).
 	* configure.in: Test for -z initfirst linker option.
 	* config.make.in: Add have-z-initfirst.

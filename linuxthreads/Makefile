@@ -38,11 +38,19 @@ libpthread-routines := attr cancel condvar join manager mutex ptfork \
 		       oldsemaphore events getcpuclockid pspinlock barrier
 
 nodelete-yes = -Wl,--enable-new-dtags,-z,nodelete
-LDFLAGS-pthread.so = $(nodelete-$(have-z-nodelete))
+initfirst-yes = -Wl,--enable-new-dtags,-z,initfirst
+LDFLAGS-pthread.so = $(nodelete-$(have-z-nodelete)) \
+		     $(initfirst-$(have-z-initfirst))
 
 vpath %.c Examples
 
 include ../Makeconfig
+
+ifeq ($(build-shared),yes)
+before-compile := $(objpfx)crti.o
+
+CFLAGS-pt-initfini.s = -g0 -fPIC -fno-inline-functions
+endif
 
 librt-tests = ex10 ex11
 tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 $(librt-tests) ex12 ex13 joinrace \
@@ -53,6 +61,8 @@ tests-nodelete-yes = unload
 endif
 
 include ../Rules
+
+extra-B-pthread.so = -B$(common-objpfx)linuxthreads/
 
 znodelete-yes = -DHAVE_Z_NODELETE
 CFLAGS-mutex.c += -D__NO_WEAK_PTHREAD_ALIASES
@@ -79,4 +89,28 @@ endif
 ifeq ($(build-bounded),yes)
 $(tests:%=$(objpfx)%-bp): $(objpfx)libpthread_b.a
 $(librt-tests:%=$(objpfx)%-bp): $(common-objpfx)rt/librt_b.a
+endif
+
+ifeq ($(build-shared),yes)
+vpath pt-initfini.c $(full_config_sysdirs)
+
+$(objpfx)pt-initfini.s: pt-initfini.c
+	$(compile.c) -S $(CFLAGS-pt-initfini.s) -finhibit-size-directive \
+		$(patsubst -f%,-fno-%,$(exceptions)) -o $@
+
+# We only have one kind of startup code files.  Static binaries and
+# shared libraries are build using the PIC version.
+$(objpfx)crti.S: $(objpfx)pt-initfini.s
+	sed -n -e '1,/@HEADER_ENDS/p' \
+	       -e '/@_.*_PROLOG_BEGINS/,/@_.*_PROLOG_ENDS/p' \
+	       -e '/@TRAILER_BEGINS/,$$p' $< > $@
+
+$(objpfx)defs.h: $(objpfx)pt-initfini.s
+	sed -n -e '/@TESTS_BEGIN/,/@TESTS_END/p' $< | \
+		$(AWK) -f ../csu/defs.awk > $@
+
+$(objpfx)crti.o: $(objpfx)crti.S $(objpfx)defs.h
+	$(compile.S) -g0 $(ASFLAGS-.os) -o $@
+
+generated += crti.S defs.h pt-initfini.s
 endif

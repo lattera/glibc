@@ -1,3 +1,12 @@
+2001-02-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Add rules to build crti.o and make it being used in
+	building libpthread.so.
+	* sysdeps/i386/Makefile: New file.
+	* sysdeps/pthread/pt-initfini.c: New file.
+
+	* pthread.c: Cleanups.
+
 2001-01-28  Andreas Jaeger  <aj@suse.de>
 
 	* oldsemaphore.c (__old_sem_init): Adjust for last change.

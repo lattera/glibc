@@ -352,7 +352,7 @@ is_smp_system (void)
 		sizeof (sysctl_args) / sizeof (sysctl_args[0]),
 		buf, &reslen, NULL, 0) < 0)
     {
-      /*This was not successful.  Now try reading the /proc filesystem.  */
+      /* This was not successful.  Now try reading the /proc filesystem.  */
       int fd = __open ("/proc/sys/kernel/version", O_RDONLY);
       if (__builtin_expect (fd, 0) == -1
 	  || (reslen = __read (fd, buf, sizeof (buf))) <= 0)
@@ -375,7 +375,9 @@ is_smp_system (void)
 
 static void pthread_initialize(void) __attribute__((constructor));
 
+#ifndef HAVE_Z_NODELETE
 extern void *__dso_handle __attribute__ ((weak));
+#endif
 
 
 /* Do some minimal initialization which has to be done during the
