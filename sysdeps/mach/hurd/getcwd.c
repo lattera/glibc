@@ -185,14 +185,9 @@ __getcwd (char *buf, size_t size)
 		  if (err)
 		    goto errlose;
 		  if (st.st_dev == thisdev && st.st_ino == thisino)
-		    break;
+		    goto found;
 		}
 	    }
-
-	  if (offset < dirdatasize)
-	    /* We got a match; avoid doing another dir_readdir, which will
-               hose NENTRIES.  */
-	    break;
 	}
 
       if (err)
@@ -206,6 +201,7 @@ __getcwd (char *buf, size_t size)
 	  goto errlose;
 	}
       else
+      found:
 	{
 	  /* Prepend the directory name just discovered.  */
 
