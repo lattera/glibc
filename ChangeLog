@@ -1,3 +1,18 @@
+Thu Sep 12 23:58:25 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/libc-lock.h (__libc_cleanup_region_start): Fix
+	syntax error.
+	
+	* stdio-common/Makefile: Put lockfile in routines
+	unconditionally. 
+		
+	* stdio-common/vfprintf.c (__flockfile, __funlockfile): Declare
+	this always, not just if _LIBC_REENTRANT.
+	(__funlockfile): Don't use weak_extern for this one;
+	__libc_cleanup_region_end might be defined and the use of
+	__funlockfile can't be protected the way the use of __flockfile
+	can be. 
+	
 Fri Sep 13 04:33:08 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sched.h: New file.  helper to access posix/sched.h.
@@ -31,13 +46,13 @@ Thu Sep 12 14:03:29 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 Thu Sep 12 12:33:52 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
+	* sysdeps/mach/hurd/dl-cache.c: Delete second copy of file
+	accidentally added on.
+
+	* sysdeps/stub/intr-msg.h: New file.
+
 	* stdio-common/vfprintf.c: Include <libc-lock.h>.
-	(vfprintf): Only call __libc_cleanup_region_end if USE_IN_LIBIO,
-	thus matching the sense of the tests around
-	__libc_cleanup_region_start at the front of the function.
 	* stdio-common/vfscanf.c: Include <libc-lock.h>.
-	(UNLOCK_STREAM) [! USE_IN_LIBIO]: Call
-	__libc_cleanup_region_end, not __libc_cleanup_region_start.
 
 	* sysdeps/mach/libc-lock.h (__libc_cleanup_region_start): New
 	macro.
