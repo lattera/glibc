@@ -1,3 +1,14 @@
+2004-01-15  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/tls.h (tcbhead_t): Add private.
+	(TLS_INIT_TCB_SIZE, TLS_INIT_TCB_ALIGN, TLS_TCB_SIZE,
+	TLS_PRE_TCB_SIZE, TLS_TCB_ALIGN, INSTALL_DTV, INSTALL_NEW_DTV,
+	GET_DTV, THREAD_DTV, THREAD_SELF, DB_THREAD_SELF): Match ia64.
+	(TLS_TCB_OFFSET, THREAD_ID, NO_TLS_OFFSET): Remove.
+	(THREAD_GETMEM, THREAD_GETMEM_NC): Simplify.
+	(THREAD_SETMEM, THREAD_SETMEM_NC): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/createthread.c (TLS_VALUE): Match ia64.
+
 2004-01-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* init.c (pthread_funtions): Make array const.

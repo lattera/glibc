@@ -17,8 +17,7 @@
    02111-1307 USA.  */
 
 /* Value passed to 'clone' for initialization of the thread register.  */
-#define TLS_VALUE ((void *) (pd) \
-		   + TLS_TCB_OFFSET + TLS_PRE_TCB_SIZE)
+#define TLS_VALUE (pd + 1)
 
 /* Get the real implementation.	 */
 #include <nptl/sysdeps/pthread/createthread.c>
