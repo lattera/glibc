@@ -1,5 +1,9 @@
 2003-10-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* manual/examples/testopt.c: Fix warnings.  Better error message
+	for missing -c argument.
+	Patch mostly by Gitonga Marete <bgmarete@comcast.net>.
+
 	* timezone/asia: Update from tzdata2003d.
 	* timezone/australasia: Likewise.
 	* timezone/backward: Likewise.
