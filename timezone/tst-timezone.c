@@ -40,7 +40,7 @@ static const struct test_times tests[] =
   { "Europe/London", 1, 0, { "GMT", "BST" }},
   { "Universal", 0, 0, {"UTC", "UTC" }},
   { "Australia/Melbourne", 1, -36000, { "EST", "EST" }},
-  { "America/Sao_Paulo", 1, 10800, {"EST", "EDT" }},
+  { "America/Sao_Paulo", 1, 10800, {"BRT", "BRST" }},
   { "America/Chicago", 1, 21600, {"CST", "CDT" }},
   { "America/Indianapolis", 1, 18000, {"EST", "EDT" }},
   { "America/Los_Angeles", 1, 28800, {"PST", "PDT" }},

@@ -1,5 +1,8 @@
 1999-08-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* timezone/tst-timezone.c (tests): Update America/Sao_Paulo test
+	case for new tzdata.
+
 	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Make __useconds_t
 	unsigned.
 	* sysdeps/unix/sysv/linux/bits/types.h: Likewise.
