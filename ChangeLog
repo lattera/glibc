@@ -1,5 +1,8 @@
 2000-07-21  Andreas Jaeger  <aj@suse.de>
 
+	* elf/Makefile ($(test-modules)): Exclude filtmod1.so, it has its
+	own rule.
+
 	* libio/fwide.c: Include <wchar.h> for prototype.
 
 2000-07-21  Greg McGary  <greg@mcgary.org>

@@ -244,7 +244,8 @@ $(objpfx)dep2.so: $(objpfx)dep3.so $(objpfx)dep4.so
 $(objpfx)dep4.so: $(objpfx)dep3.so
 $(objpfx)nodelmod3.so: $(objpfx)nodelmod4.so
 
-$(test-modules): $(objpfx)%.so: $(objpfx)%.os
+# filtmod1.so has a special rule
+$(filter-out $(objpfx)filtmod1.so, $(test-modules)): $(objpfx)%.so: $(objpfx)%.os
 	$(build-module)
 
 $(objpfx)loadtest: $(libdl)
