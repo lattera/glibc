@@ -28,4 +28,19 @@ extern int __vsscanf __P ((__const char *__restrict __s,
 #else
 #include <stdio/stdio.h>
 #endif
+
+# define __need_size_t
+# include <stddef.h>
+/* Generate a unique file name (and possibly open it).  */
+extern int __path_search __P ((char *__tmpl, size_t __tmpl_len,
+			       __const char *__dir,
+			       __const char *__pfx));
+
+extern int __gen_tempname __P ((char *__tmpl, int __openit, int __large_file));
+
+/* Print out MESSAGE on the error output and abort.  */
+extern void __libc_fatal __P ((__const char *__message))
+     __attribute__ ((__noreturn__));
+
+   
 #endif

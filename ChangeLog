@@ -1,3 +1,12 @@
+1998-10-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* include/stdio.h: Included <stddef.h> for size_t.
+
+	* stdio/stdio.h: Move __path_search, __gen_tempname, __libc_fatal
+	to ...
+	* include/stdio.h: ...here.
+	* libio/stdio.h: Removed __path_search, __gen_tempname, __libc_fatal.
+
 1998-10-26 11:09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/Makefile (tests): Add tst-posixtz.

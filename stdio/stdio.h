@@ -156,17 +156,6 @@ extern int __stdio_open __P ((__const char *__file, __io_mode __m,
 /* Put out an error message for when stdio needs to die.  */
 extern void __stdio_errmsg __P ((__const char *__msg, size_t __len));
 
-/* Generate a unique file name (and possibly open it).  */
-extern int __path_search __P ((char *__tmpl, size_t __tmpl_len,
-			       __const char *__dir,
-			       __const char *__pfx));
-
-extern int __gen_tempname __P ((char *__tmpl, int __openit, int __large_file));
-
-
-/* Print out MESSAGE on the error output and abort.  */
-extern void __libc_fatal __P ((__const char *__message))
-     __attribute__ ((__noreturn__));
 
 
 /* For thread safe I/O functions we need a lock in each stream.  We
