@@ -21,6 +21,10 @@
 
 	* string/strings.h: Add pure and const attributes if possible.
 
+	* sysdeps/generic/memmem.c (memmem): Check arguments to avoid
+	possibly searching through the whole memory.
+	Closes PR libc/1730, reported by Greg Hudson <ghudson@mit.edu>.
+
 2000-05-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/dl-cache.h (_DL_CACHE_DEFAULT_ID): Only define if
