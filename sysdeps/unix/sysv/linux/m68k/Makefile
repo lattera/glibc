@@ -7,6 +7,6 @@ sysdep_routines += mremap
 endif
 
 ifeq ($(subdir),elf)
-others      += lddlibc4
+sysdep-others += lddlibc4
 install-bin += lddlibc4
 endif
