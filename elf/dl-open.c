@@ -39,7 +39,7 @@ _dl_open (const char *file, int mode)
     return new;
 
   /* Load that object's dependencies.  */
-  _dl_map_object_deps (new);
+  _dl_map_object_deps (new, NULL, 0);
 
 
   /* Relocate the objects loaded.  We do this in reverse order so that copy

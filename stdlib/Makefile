@@ -42,7 +42,7 @@ routines	:=							      \
 	strtof strtod strtold						      \
 	system canonicalize						      \
 	a64l l64a							      \
-	rpmatch strfmon
+	rpmatch strfmon getsubopt
 
 distribute	:= exit.h grouping.h
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv \

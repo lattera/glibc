@@ -184,15 +184,18 @@ nss_dlerror_run (void (*operate) (void))
 }
 
 
+/* Comparison function for searching NI->known tree.  */
+static int
+known_compare (const void *p1, const void *p2)
+{
+  return p1 == p2 ? 0 : strcmp (*(const char *const *) p1,
+				*(const char *const *) p2);
+}
+
+
 static void *
 nss_lookup_function (service_user *ni, const char *fct_name)
 {
-  /* Comparison function for searching NI->known tree.  */
-  int known_compare (const void *p1, const void *p2)
-    {
-      return p1 == p2 ? 0 : strcmp (*(const char *const *) p1,
-				    *(const char *const *) p2);
-    }
   void **found, *result;
 
   /* We now modify global data.  Protect it.  */

@@ -1,5 +1,5 @@
 /* [efg]cvt -- compatibility functions for floating point formatting,
-   reentrent versions.
+   reentrant versions.
 Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -25,9 +25,24 @@ Boston, MA 02111-1307, USA.  */
 #include <math.h>
 #include <stdlib.h>
 
+#ifndef FLOAT_TYPE
+#define FLOAT_TYPE double
+#define FUNC_PREFIX
+#define FLOAT_FMT_FLAG
+#define FLOAT_NAME_EXT
+#endif
+
+#define APPEND(a, b) APPEND2 (a, b)
+#define APPEND2(a, b) a##b
+
+#define FLOOR APPEND(floor, FLOAT_NAME_EXT)
+#define FABS APPEND(fabs, FLOAT_NAME_EXT)
+#define LOG10 APPEND(log10, FLOAT_NAME_EXT)
+
+
 int
-fcvt_r (value, ndigit, decpt, sign, buf, len)
-     double value;
+APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
+     FLOAT_TYPE value;
      int ndigit, *decpt, *sign;
      char *buf;
      size_t len;
@@ -44,7 +59,7 @@ fcvt_r (value, ndigit, decpt, sign, buf, len)
   if (*sign)
     value = - value;
 
-  n = snprintf (buf, len, "%.*f", ndigit, value);
+  n = snprintf (buf, len, "%.*" FLOAT_FMT_FLAG "f", ndigit, value);
   if (n < 0)
     return -1;
 
@@ -60,33 +75,34 @@ fcvt_r (value, ndigit, decpt, sign, buf, len)
   return 0;
 }
 
-weak_extern (floor) weak_extern (log10) weak_extern (fabs)
+#define weak_extern2(name) weak_extern (name)
+weak_extern2 (FLOOR) weak_extern2 (LOG10) weak_extern2 (FABS)
 
 int
-ecvt_r (value, ndigit, decpt, sign, buf, len)
-     double value;
+APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
+     FLOAT_TYPE value;
      int ndigit, *decpt, *sign;
      char *buf;
      size_t len;
 {
-  double (*log10_function) (double) = &log10;
+  FLOAT_TYPE (*log10_function) (FLOAT_TYPE) = &LOG10;
 
   if (log10_function)
     {
       /* Use the reasonable code if -lm is included.  */
-      ndigit -= (int) floor (log10 (fabs (value)));
+      ndigit -= (int) FLOOR (LOG10 (FABS (value)));
       if (ndigit < 0)
 	ndigit = 0;
     }
   else
     {
       /* Slow code that doesn't require -lm functions.  */
-      double d;
+      FLOAT_TYPE d;
       for (d = value < 0.0 ? - value : value;
 	   ndigit > 0 && d >= 10.0;
 	   d *= 0.1)
 	--ndigit;
     }
 
-  return fcvt_r (value, ndigit, decpt, sign, buf, len);
+  return APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len);
 }

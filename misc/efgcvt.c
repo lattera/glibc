@@ -21,11 +21,20 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 #include <float.h>
 
+#ifndef FLOAT_TYPE
+#define FLOAT_TYPE double
+#define FUNC_PREFIX
+#define FLOAT_FMT_FLAG
 #define MAXDIG (DBL_DIG + DBL_MAX_10_EXP)
+#endif
+
+#define APPEND(a, b) APPEND2 (a, b)
+#define APPEND2(a, b) a##b
+
 
 char *
-fcvt (value, ndigit, decpt, sign)
-     double value;
+APPEND (FUNC_PREFIX, fcvt) (value, ndigit, decpt, sign)
+     FLOAT_TYPE value;
      int ndigit, *decpt, *sign;
 {
   static char buf[MAXDIG];
@@ -36,8 +45,8 @@ fcvt (value, ndigit, decpt, sign)
 }
 
 char *
-ecvt (value, ndigit, decpt, sign)
-     double value;
+APPEND (FUNC_PREFIX, ecvt) (value, ndigit, decpt, sign)
+     FLOAT_TYPE value;
      int ndigit, *decpt, *sign;
 {
   static char buf[MAXDIG];
@@ -48,11 +57,11 @@ ecvt (value, ndigit, decpt, sign)
 }
 
 char *
-gcvt (value, ndigit, buf)
-     double value;
+APPEND (FUNC_PREFIX, gcvt) (value, ndigit, buf)
+     FLOAT_TYPE value;
      int ndigit;
      char *buf;
 {
-  sprintf (buf, "%.*g", ndigit, value);
+  sprintf (buf, "%.*" FLOAT_FMT_FLAG "g", ndigit, value);
   return buf;
 }

@@ -48,7 +48,7 @@ ttyname_r (fd, buf, buflen)
 
   /* Test for the absolute minimal size.  This makes life easier inside
      the loop.  */
-  if (buflen < (int) (sizeof (dev) + 2))
+  if (buflen < (int) (sizeof (dev) + 1))
     {
       errno = EINVAL;
       return -1;
@@ -64,16 +64,16 @@ ttyname_r (fd, buf, buflen)
     return -1;
 
   /* Prepare the result buffer.  */
-  memcpy (buf, dev, sizeof (dev));
-  buf[sizeof (dev)] = '/';
-  buflen -= sizeof (dev) + 1;
+  memcpy (buf, dev, sizeof (dev) - 1);
+  buf[sizeof (dev) - 1] = '/';
+  buflen -= sizeof (dev);
 
   while ((d = readdir (dirstream)) != NULL)
     if (d->d_fileno == myino)
       {
 	char *cp;
 
-	cp = __stpncpy (&buf[sizeof (dev) + 1], d->d_name,
+	cp = __stpncpy (&buf[sizeof (dev)], d->d_name,
 			MIN ((int) (_D_EXACT_NAMLEN (d) + 1), buflen));
 	cp[0] = '\0';
 

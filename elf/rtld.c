@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/mman.h>		/* Check if MAP_ANON is defined.  */
 #include "../stdio-common/_itoa.h"
 
 
@@ -124,6 +125,8 @@ dl_main (const ElfW(Phdr) *phdr,
   struct link_map *l;
   int lazy;
   int list_only = 0;
+  struct link_map **preloads;
+  unsigned int npreloads;
 
   if (*user_entry == (ElfW(Addr)) &_start)
     {
@@ -247,12 +250,52 @@ of this helper program; chances are you did not intend to run this program.\n",
   l->l_next = &_dl_rtld_map;
   _dl_rtld_map.l_prev = l;
 
-  /* Load all the libraries specified by DT_NEEDED entries.  */
-  _dl_map_object_deps (l);
+  preloads = NULL;
+  npreloads = 0;
+  if (! _dl_secure)
+    {
+      const char *preloadlist = getenv ("LD_PRELOAD");
+      if (preloadlist)
+	{
+	  /* The LD_PRELOAD environment variable gives a colon-separated
+	     list of libraries that are loaded before the executable's
+	     dependencies and prepended to the global scope list.  */
+	  char *list = strdupa (preloadlist);
+	  char *p;
+	  while ((p = strsep (&list, ":")) != NULL)
+	    {
+	      (void) _dl_map_object (NULL, p, lt_library);
+	      ++npreloads;
+	    }
 
+	  if (npreloads != 0)
+	    {
+	      /* Set up PRELOADS with a vector of the preloaded libraries.  */
+	      struct link_map *l;
+	      unsigned int i;
+	      preloads = __alloca (npreloads * sizeof preloads[0]);
+	      l = _dl_rtld_map.l_next; /* End of the chain before preloads.  */
+	      i = 0;
+	      do
+		{
+		  preloads[i++] = l;
+		  l = l->l_next;
+		} while (l);
+	      assert (i == npreloads);
+	    }
+	}
+    }
+
+  /* Load all the libraries specified by DT_NEEDED entries.  If LD_PRELOAD
+     specified some libraries to load, these are inserted before the actual
+     dependencies in the executable's searchlist for symbol resolution.  */
+  _dl_map_object_deps (l, preloads, npreloads);
+
+#ifndef MAP_ANON
   /* We are done mapping things, so close the zero-fill descriptor.  */
   __close (_dl_zerofd);
   _dl_zerofd = -1;
+#endif
 
   /* Remove _dl_rtld_map from the chain.  */
   _dl_rtld_map.l_prev->l_next = _dl_rtld_map.l_next;

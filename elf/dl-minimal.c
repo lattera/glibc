@@ -33,13 +33,18 @@ static void *alloc_ptr, *alloc_end, *alloc_last_block;
 void * weak_function
 malloc (size_t n)
 {
+#ifdef MAP_ANON
+#define	_dl_zerofd (-1)
+#else
   extern int _dl_zerofd;
-
-  if (_dl_pagesize == 0)
-    _dl_pagesize = __getpagesize ();
 
   if (_dl_zerofd == -1)
     _dl_zerofd = _dl_sysdep_open_zero_fill ();
+#define MAP_ANON 0
+#endif
+
+  if (_dl_pagesize == 0)
+    _dl_pagesize = __getpagesize ();
 
   if (alloc_end == 0)
     {

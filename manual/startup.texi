@@ -83,12 +83,14 @@ allow this three-argument form, so to be portable it is best to write
 @code{main} to take two arguments, and use the value of @code{environ}.
 
 @menu
-* Argument Syntax::       By convention, options start with a hyphen.
-* Parsing Options::       The @code{getopt} function.
-* Example of Getopt:: 	  An example of parsing options with @code{getopt}.
-* Long Options::	  GNU suggests utilities accept long-named options.
+* Argument Syntax::             By convention, options start with a hyphen.
+* Parsing Options::             The @code{getopt} function.
+* Example of Getopt::           An example of parsing options with @code{getopt}.
+* Long Options::                GNU suggests utilities accept long-named options.
 			   Here is how to do that.
-* Long Option Example::   An example of using @code{getopt_long}.
+* Long Option Example::         An example of using @code{getopt_long}.
+* Suboptions::                  Some programs need more detailed options.
+* Suboptions Example::          This shows how it could be done for @code{mount}.
 @end menu
 
 @node Argument Syntax
@@ -409,6 +411,58 @@ When @code{getopt_long} has no more options to handle, it returns
 @include longopt.c.texi
 @end smallexample
 
+@node Suboptions
+@subsection Parsing of Suboptions
+
+Having a single level of options is sometimes not enough.  There might
+be too many options which have to be available or a set of options is
+closely related.
+
+For this case some programs use suboptions.  One of the most prominent
+programs is certainly @code{mount}(8).  The @code{-o} option take one
+argument which itself is a comma separated list of options.  To ease the
+programming of code like this the function @code{getsubopt} is
+available.
+
+@comment stdlib.h
+@deftypefun int getsubopt (char **@var{optionp}, const char* const *@var{tokens}, char **@var{valuep})
+
+The @var{optionp} parameter must be a pointer to a variable containing
+the address of the string to process.  When the function returns the
+reference is updated to point to the next suboption or to the
+terminating @samp{\0} character if there is no more suboption available.
+
+The @var{tokens} parameter references an array of strings containing the
+known suboptions.  All strings must be @samp{\0} terminated and to mark
+the end a null pointer must be stored.  When @code{getsubopt} finds a
+possible legal suboption it compares it with all strings available in
+the @var{tokens} array and returns the index in the string as the
+indicator.
+
+In case the suboption has an associated value introduced by a @samp{=}
+character, a pointer to the value is returned in @var{valuep}.  The
+string is @samp{\0} terminated.  If no argument is available
+@var{valuep} is set to the null pointer.  By doing this the caller can
+check whether a necessary value is given or whether no unexpected value
+is present.
+
+In case the next suboption in the string is not mentioned in the
+@var{tokens} array the starting address of the suboption including a
+possible value is returned in @var{valuep} and the return value of the
+function is @samp{-1}.
+@end deftypefun
+
+@node Suboptions Example
+@subsection Parsing of Suboptions Example
+
+The code which might appear in the @code{mount}(8) program is a perfect
+example of the use of @code{getsubopt}:
+
+@smallexample
+@include subopt.c.texi
+@end smallexample
+
+
 @node Environment Variables
 @section Environment Variables
 
@@ -448,9 +502,9 @@ character, since this is assumed to terminate the string.
 
 
 @menu
-* Environment Access::    How to get and set the values of
+* Environment Access::          How to get and set the values of
 			   environment variables.
-* Standard Environment::  These environment variables have
+* Standard Environment::        These environment variables have
 			   standard interpretations.
 @end menu
 

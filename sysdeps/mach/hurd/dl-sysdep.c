@@ -210,15 +210,6 @@ _dl_sysdep_start_cleanup (void)
   __mach_port_deallocate (__mach_task_self (), __mach_task_self_);
 }
 
-int
-_dl_sysdep_open_zero_fill (void)
-{
-  /* The minimal mmap below uses the fd as a memory object port.
-     The real mmap used for dlopen ignores the fd for MAP_ANON.  */
-  return (int) MACH_PORT_NULL;
-}
-
-
 void
 _dl_sysdep_fatal (const char *msg, ...)
 {
@@ -523,7 +514,8 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
   err = __vm_map (__mach_task_self (),
 		  &mapaddr, (vm_size_t) len, 0 /*ELF_MACHINE_USER_ADDRESS_MASK*/,
 		  !(flags & MAP_FIXED),
-		  (mach_port_t) fd, (vm_offset_t) offset,
+		  (flags & MAP_ANON) ? MACH_PORT_NULL : (mach_port_t) fd,
+		  (vm_offset_t) offset,
 		  flags & (MAP_COPY|MAP_PRIVATE),
 		  vmprot, VM_PROT_ALL,
 		  (flags & MAP_SHARED) ? VM_INHERIT_SHARE : VM_INHERIT_COPY);

@@ -305,8 +305,8 @@ strftime (s, maxsize, format, tp)
 
 #define DO_NUMBER(digits, value) \
 	  maxdigits = digits; number_value = value; goto do_number
-#define DO_NUMBER_NOPAD(digits, value) \
-	  maxdigits = digits; number_value = value; goto do_number_nopad
+#define DO_NUMBER_SPACEPAD(digits, value) \
+	  maxdigits = digits; number_value = value; goto do_number_spacepad
 
 	case 'C':
 	  DO_NUMBER (2, (1900 + tp->tm_year) / 100);
@@ -325,14 +325,14 @@ strftime (s, maxsize, format, tp)
 	  DO_NUMBER (2, tp->tm_mday);
 
 	case 'e':		/* GNU extension: %d, but blank-padded.  */
-	  DO_NUMBER_NOPAD (2, tp->tm_mday);
+	  DO_NUMBER_SPACEPAD (2, tp->tm_mday);
 
 	  /* All numeric formats set MAXDIGITS and NUMBER_VALUE and then
 	     jump to one of these two labels.  */
 
-	do_number_nopad:
-	  /* Force `-' flag.  */
-	  pad = pad_none;
+	do_number_spacepad:
+	  /* Force `_' flag.  */
+	  pad = pad_space;
 
 	do_number:
 	  {
@@ -373,10 +373,10 @@ strftime (s, maxsize, format, tp)
 	  DO_NUMBER (2, hour12);
 
 	case 'k':		/* GNU extension.  */
-	  DO_NUMBER_NOPAD (2, tp->tm_hour);
+	  DO_NUMBER_SPACEPAD (2, tp->tm_hour);
 
 	case 'l':		/* GNU extension.  */
-	  DO_NUMBER_NOPAD (2, hour12);
+	  DO_NUMBER_SPACEPAD (2, hour12);
 
 	case 'j':
 	  DO_NUMBER (3, 1 + tp->tm_yday);

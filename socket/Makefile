@@ -21,7 +21,7 @@
 #
 subdir	:= socket
 
-headers	:= sys/socket.h sys/un.h sockaddrcom.h
+headers	:= sys/socket.h sys/un.h sockaddrcom.h socketbits.h
 
 routines := accept bind connect getpeername getsockname getsockopt	\
 	    listen recv recvfrom recvmsg send sendmsg sendto		\

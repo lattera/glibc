@@ -33,6 +33,15 @@ __BEGIN_DECLS
    `struct msghdr', and `struct linger' types.  */
 #include <socketbits.h>
 
+#ifdef __USE_BSD
+/* This is the 4.3 BSD `struct sockaddr' format, which is used as wire
+   format in the grotty old 4.3 `talk' protocol.  */
+struct osockaddr
+  {
+    unsigned short int sa_family;
+    unsigned char sa_data[14];
+  };
+#endif
 
 /* This is the type we use for generic socket address arguments.
 

@@ -70,28 +70,27 @@ initgroups (user, group)
 	register char **m;
 
 	for (m = g->gr_mem; *m != NULL; ++m)
-	  if (!strcmp (*m, user))
-	    break;
+	  if (strcmp (*m, user) == 0)
+	    {
+	      /* Matches user.  Insert this group.  */
+	      if (n == ngroups && limit <= 0)
+		{
+		  /* Need a bigger buffer.  */
+		  groups = memcpy (__alloca (ngroups * 2 * sizeof *groups),
+				   groups, ngroups * sizeof *groups);
+		  ngroups *= 2;
+		}
 
-	if (*m == NULL)
-	  {
-	    /* Matched the user.  Insert this group.  */
-	    if (n == ngroups && limit <= 0)
-	      {
-		/* Need a bigger buffer.  */
-		groups = memcpy (__alloca (ngroups * 2 * sizeof *groups),
-				 groups, ngroups * sizeof *groups);
-		ngroups *= 2;
-	      }
+	      groups[n++] = g->gr_gid;
 
-	    groups[n++] = g->gr_gid;
+	      if (n == limit)
+		/* Can't take any more groups; stop searching.  */
+		goto done;
 
-	    if (n == limit)
-	      /* Can't take any more groups; stop searching.  */
 	      break;
-	  }
+	    }
       }
-
+done:
   endgrent ();
 
   return setgroups (n, groups);

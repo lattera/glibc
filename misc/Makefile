@@ -52,7 +52,7 @@ routines := brk sbrk sstk ioctl \
 	    insremque getttyent getusershell getpass ttyslot \
 	    syslog syscall daemon \
 	    mmap munmap mprotect msync madvise \
-	    efgcvt efgcvt_r \
+	    efgcvt efgcvt_r qefgcvt qefgcvt_r \
 	    hsearch hsearch_r tsearch lsearch \
 	    err error
 aux := init-misc

@@ -469,12 +469,27 @@ char *fcvt __P ((double __value, int __ndigit, int *__decpt, int *sign));
    be written to BUF.  */
 char *gcvt __P ((double __value, int __ndigit, char *__buf));
 
+/* Long double versions of above functions.  */
+char *qecvt __P ((__long_double_t __value, int __ndigit, int *__decpt,
+		  int *sign));
+char *qfcvt __P ((__long_double_t __value, int __ndigit, int *__decpt,
+		  int *sign));
+char *qgcvt __P ((__long_double_t __value, int __ndigit, char *__buf));
+
+
+#ifdef __USE_REENTRANT
 /* Reentrant version of the functions above which provide their own
    buffers.  */
 int ecvt_r __P ((double __value, int __ndigit, int *__decpt, int *sign,
 		 char *__buf, size_t __len));
 int fcvt_r __P ((double __value, int __ndigit, int *__decpt, int *sign,
 		 char *__buf, size_t __len));
+
+int qecvt_r __P ((__long_double_t __value, int __ndigit, int *__decpt,
+		  int *sign, char *__buf, size_t __len));
+int qfcvt_r __P ((__long_double_t __value, int __ndigit, int *__decpt,
+		  int *sign, char *__buf, size_t __len));
+#endif
 #endif
 
 
@@ -506,6 +521,18 @@ extern size_t wcstombs __P ((char *__s, __const wchar_t * __pwcs, size_t __n));
    in the program's current locale.  Returns 1 if affirmative, 0 if
    negative, and -1 if not matching.  */
 extern int rpmatch __P ((__const char *__response));
+#endif
+
+
+#ifdef __USE_MISC
+/* Parse comma separated suboption from *OPTIONP and match against
+   strings in TOKENS.  If found return index and set *VALUEP to
+   optional value introduced by an equal sign.  If the suboption is
+   not part of TOKENS return in *VALUEP beginning of unknown
+   suboption.  On exit *OPTIONP is set to the beginning of the next
+   otken or at the terminating NUL character.  */
+extern int getsubopt __P ((char **__optionp, __const char *__const *__tokens,
+			   char **__valuep));
 #endif
 
 

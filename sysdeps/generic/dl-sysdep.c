@@ -109,11 +109,15 @@ _dl_sysdep_start_cleanup (void)
 {
 }
 
+#ifndef MAP_ANON
+/* This is only needed if the system doesn't support MAP_ANON.  */
+
 int
 _dl_sysdep_open_zero_fill (void)
 {
   return __open ("/dev/zero", O_RDONLY);
 }
+#endif
 
 void
 _dl_sysdep_fatal (const char *msg, ...)

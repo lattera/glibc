@@ -34,9 +34,9 @@ setmntent (const char *file, const char *mode)
 int
 endmntent (FILE *stream)
 {
-  if (fclose (stream) != 0) 
-      return 0;
-  return 1;
+  if (stream)		/* SunOS 4.x allows for NULL stream */
+    fclose (stream);
+  return 1;		/* SunOS 4.x says to always return 1 */
 }
 
 
@@ -92,6 +92,9 @@ getmntent (FILE *stream)
 int
 addmntent (FILE *stream, const struct mntent *mnt)
 {
+  if (fseek (stream, 0, SEEK_END))
+    return 1;
+
   return (fprintf (stream, "%s %s %s %s %d %d\n",
 		   mnt->mnt_fsname,
 		   mnt->mnt_dir,
@@ -99,7 +102,7 @@ addmntent (FILE *stream, const struct mntent *mnt)
 		   mnt->mnt_opts,
 		   mnt->mnt_freq,
 		   mnt->mnt_passno)
-	  < 0 ? -1 : 0);
+	  < 0 ? 1 : 0);
 }
 
 /* Search MNT->mnt_opts for an option matching OPT.

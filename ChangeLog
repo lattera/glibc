@@ -1,3 +1,108 @@
+Sun Jul 14 01:51:39 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* manual/Makefile (glibc-targets): Variable and targets removed.
+
+Sat Jul 13 23:50:17 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* manual/Makefile (lib): New phony target.  Depend on stamp files.
+	($(objpfx)stamp%-$(subdir)): New rule to create them when necessary.
+
+1996-07-13  Paul Eggert  <eggert@twinsun.com>
+
+	* time/strftime.c (strftime): Use space padding for %e, %k, %l,
+	to match Emacs format-time-string specification.
+	(DO_NUMBER_SPACEPAD): Renamed from DO_NUMBER_NOPAD.
+
+Sat Jul 13 20:17:38 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/dl-deps.c (_dl_map_object_deps): Take new args PRELOADS and
+	NPRELOADS, vector of `struct link_map *'s; add them to the searchlist
+	between MAP and its deps.
+	* elf/link.h: Fix decl.
+	* elf/rtld.c (dl_main): If not secure, parse LD_PRELOAD for
+	colon-separated list of names, map those and pass vector of ptrs as
+	PRELOADS list to _dl_map_object_deps.
+	* elf/dl-runtime.c (_dl_object_relocation_scope): Pass new args to
+	_dl_map_object_deps with empty preload list.
+	* elf/dl-open.c (_dl_open): Likewise.
+
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_open_zero_fill): Function
+	removed.
+	(__mmap): Pass MACH_PORT_NULL for memobj port when (flags & MAP_ANON).
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_open_zero_fill):
+	Conditionalize defn on [! MAP_ANON].
+	* elf/dl-minimal.c (malloc): Conditionalize use of _dl_zerofd
+	on [! MAP_ANON].
+	* elf/rtld.c (dl_main): Likewise.
+	* elf/dl-load.c (_dl_zerofd): Conditionalize defn on [! MAP_ANON].
+	(_dl_map_object_from_fd): Conditionalize initialization of _dl_zerofd.
+
+	* elf/dl-fini.c (_dl_fini): Skip finalizer for executable itself.
+
+Sat Jul 13 02:47:53 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* stdlib/random.c (__random): Declare as int32_t to be in sync
+	with declaration.
+
+	* socket/Makefile (headers): Add socketbits.h.
+
+	* misc/mntent.c (endmntent): Allow for NULL stream.  SunOS does
+	it that way.
+
+	* grp/initgroups.c (initgroups): Add groups that user is a member
+ 	of, not the ones he is _not_ a member of.
+
+	* nss/nsswitch.c (known_compare): Make known_compare() a static
+ 	instead of a local function.  The latter are difficult to debug
+ 	and slow to execute on certain platforms.
+
+	* sysdeps/posix/ttyname_r.c (ttyname_r): Use sizeof (dev) - 1 in
+ 	place of sizeof (dev).  The size of a literal string includes the
+ 	NUL byte.
+
+	* sysdeps/unix/getlogin.c (getlogin): Initialize ut_fd with -1.
+
+Thu Jul 11 16:59:10 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* misc/mntent.c (addmntent): Seek to end of file before writing
+ 	entry.  Return 1 on error, not -1.
+
+Tue Jul  9 19:08:05 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Mark bdflush as EXTRA
+	syscall.
+
+Fri Jul  5 18:44:55 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (port_to_cpu_addr): Size
+ 	shift amount for Jensen must be 5 not 4.
+
+Sat Jul 13 20:04:28 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* socket/sys/socket.h (struct osockaddr): New type.
+
+Sat Jul 13 03:50:53 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/Makefile (routines): Add qefgcvt and qefgcvt_r.
+	* misc/efgcvt.c, misc/efgcvt_r.c: Change code so that the `double'
+	and `long double' versions can be generated.
+	* misc/qefgcvt.c, misc/qefgcvt_r.c: New files.  Define macros
+	so that included efgcvt{,_r}.c file generate `long double'
+	versions.
+	* stdlib/stdlib.h: Add prototypes for q[efg]cvt() and q[ef]cvt_r()
+	functions.
+
+	* manual/startup.texi: Document new getsubopt function.
+	* manual/examples/subopt.c: New example program for documenting
+	getsubopt function.
+
+Fri Jul 12 23:58:37 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/Makefile (routines): Add getsubopt.
+	* stdlib/stdlib.h: Add prototype for getsubopt.
+	* stdlib/getsubopt.c: New file.  Implement getsubopt function
+	to handle suboption parsing.
+
 Thu Jul 11 20:09:55 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* inet/getnetent_r.c: Define NEED_H_ERRNO.
@@ -711,12 +816,6 @@ Fri Jun 28 02:41:08 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 	* string/strdup.c: Deansideclized.  Define __ name and weak alias.
 
 	* string/string.h: Don't define memccpy as macro for [__OPTIMIZE__].
-
-Thu Jun 27 23:43:22 1996  Richard Henderson  <rth@tamu.edu>
-
-	* sysdeps/alpha/dl-machine.h (elf_machine_rela):  The Alpha's
-	address-of operation and plt format conspire to require all
-	dynamic relocs to be resolved to actual symbols not plt entries.
 
 Thu Jun 27 02:49:28 1996  Ulrich Drepper  <drepper@cygnus.com>
 

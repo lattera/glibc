@@ -23,20 +23,29 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 
 void
-_dl_map_object_deps (struct link_map *map)
+_dl_map_object_deps (struct link_map *map,
+		     struct link_map **preloads, unsigned int npreloads)
 {
   struct list
     {
       struct link_map *map;
       struct list *next;
     };
-  struct list head, *tailp, *scanp;
+  struct list head[1 + npreloads], *tailp, *scanp;
   unsigned int nlist;
 
   /* Start the search list with one element: MAP itself.  */
-  head.map = map;
-  head.next = NULL;
-  nlist = 1;
+  head[0].map = map;
+
+  /* Add the preloaded items after MAP but before any of its dependencies.  */
+  for (nlist = 0; nlist < npreloads; ++nlist)
+    {
+      head[nlist].next = &head[nlist + 1];
+      head[nlist + 1].map = preloads[nlist];
+    }
+
+  /* Terminate the list.  */
+  head[nlist++].next = NULL;
 
   /* We use `l_reserved' as a mark bit to detect objects we have already
      put in the search list and avoid adding duplicate elements later in
@@ -47,7 +56,7 @@ _dl_map_object_deps (struct link_map *map)
      dependencies and appending them to the list as we step through it.
      This produces a flat, ordered list that represents a breadth-first
      search of the dependency tree.  */
-  for (scanp = tailp = &head; scanp; scanp = scanp->next)
+  for (scanp = tailp = head; scanp; scanp = scanp->next)
     {
       struct link_map *l = scanp->map;
 
@@ -91,7 +100,7 @@ _dl_map_object_deps (struct link_map *map)
   map->l_nsearchlist = nlist;
 
   nlist = 0;
-  for (scanp = &head; scanp; scanp = scanp->next)
+  for (scanp = head; scanp; scanp = scanp->next)
     {
       map->l_searchlist[nlist++] = scanp->map;
 

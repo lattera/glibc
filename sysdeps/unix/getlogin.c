@@ -35,7 +35,7 @@ DEFUN_VOID(getlogin)
   char tty_pathname[2 + 2 * NAME_MAX];
   char *real_tty_path = tty_pathname;
   char *result = NULL;
-  static struct utmp_data utmp_data;
+  static struct utmp_data utmp_data = { ut_fd: -1 };
   struct utmp *ut, line;
 
   {
@@ -48,7 +48,7 @@ DEFUN_VOID(getlogin)
       err = errno;
     (void) close (d);
 
-    if (errno != 0)
+    if (err != 0)
       {
 	errno = err;
 	return NULL;

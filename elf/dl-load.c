@@ -59,7 +59,14 @@ Cambridge, MA 02139, USA.  */
 
 #define STRING(x) #x
 
+#ifdef MAP_ANON
+/* The fd is not examined when using MAP_ANON.  */
+#define ANONFD -1
+#else
 int _dl_zerofd = -1;
+#define ANONFD _dl_zerofd
+#endif
+
 size_t _dl_pagesize;
 
 
@@ -176,6 +183,8 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   if (header->e_phentsize != sizeof (ElfW(Phdr)))
     LOSE ("ELF file's phentsize not the expected size");
 
+#ifndef MAP_ANON
+#define MAP_ANON 0
   if (_dl_zerofd == -1)
     {
       _dl_zerofd = _dl_sysdep_open_zero_fill ();
@@ -185,6 +194,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	  _dl_signal_error (errno, NULL, "cannot open zero fill device");
 	}
     }
+#endif
 
   /* Enter the new object in the list of loaded objects.  */
   l = _dl_new_object (realname, name, l_type);
@@ -329,7 +339,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 		caddr_t mapat;
 		mapat = __mmap ((caddr_t) zeropage, zeroend - zeropage,
 				c->prot, MAP_ANON|MAP_PRIVATE|MAP_FIXED,
-				_dl_zerofd, 0);
+				ANONFD, 0);
 		if (mapat == (caddr_t) -1)
 		  lose (errno, "cannot map zero-fill pages");
 	      }
