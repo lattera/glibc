@@ -3708,6 +3708,8 @@ struct mallinfo public_mALLINFo()
 {
   struct mallinfo m;
 
+  if(__malloc_initialized < 0)
+    ptmalloc_init ();
   (void)mutex_lock(&main_arena.mutex);
   m = mALLINFo(&main_arena);
   (void)mutex_unlock(&main_arena.mutex);

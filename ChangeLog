@@ -1,7 +1,10 @@
 2003-06-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c (public_mALLINFo): Initialize malloc if it
+	hasn't happened yet.
+
 	* sysdeps/unix/sysv/linux/x86_64/register-dump.h (register_dump):
-	Fix completely broken impleentation.  The second parameter is of
+	Fix completely broken implementation.  The second parameter is of
 	type struct ucontext*.
 
 	* sysdeps/x86_64/dl-machine.h (elf_machine_runtime_setup): Always
