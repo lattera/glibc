@@ -1,3 +1,8 @@
+2005-03-18  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* configure.in: Use %function instead of @function.
+	* configure: Regenerated.
+
 2005-03-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/link.h (struct link_map): Remove l_opencount.  Add l_removed.
