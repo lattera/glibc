@@ -1,3 +1,8 @@
+2001-05-23  Andreas Jaeger  <aj@suse.de>
+
+	* iconvdata/testdata/WINDOWS-1255..UTF-8: Renamed to...
+	* iconvdata/testdata/WINDOWS-1255..UTF8: this.
+
 2001-05-27  Andreas Jaeger  <aj@suse.de>
 
 	* manual/stdio.texi (String Streams): Fix fmemopen description.
