@@ -1,3 +1,19 @@
+2004-02-24  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* posix/regex_internal.c (build_wcs_upper_buffer): Enclose
+	`offsets_needed' label in `#ifdef _LIBC' to silence `unused label'
+	compiler warning.
+
+2004-02-24  Nelson H.F. Beebe  <beebe@math.utah.edu>
+
+	* posix/regex_internal.c (build_wcs_buffer): Add cast to char* in call
+	to `wcrtomb'.
+	* posix/regex_internal.h (bitset_not, bitset_merge, bitset_not_merge,
+	bitset_mask, re_string_char_size_a, re_string_wchar_at,
+	re_string_elem_size_at): Change to use prototypes.
+	(re_string_char_size_at, re_string_wchar_at,
+	re_string_elem_size_at): Declare as `internal_function'.
+
 2004-02-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf): Handle

@@ -51,7 +51,7 @@ __sysconf (int name)
       {
 	/* Try to read the information from the /proc/sys/kernel/ngroups_max
 	   file.  */
-	int fd = __open ("/proc/sys/kernel/ngroups_max", O_RDONLY);
+	int fd = __open_nocancel ("/proc/sys/kernel/ngroups_max", O_RDONLY);
 	if (fd != -1)
 	  {
 	    /* This is more than enough, the file contains a single
@@ -59,7 +59,7 @@ __sysconf (int name)
 	    char buf[32];
 	    long int res = -1l;
 
-	    ssize_t n = __read (fd, buf, sizeof (buf) - 1);
+	    ssize_t n = __read_nocancel (fd, buf, sizeof (buf) - 1);
 	    if (n > 0)
 	      {
 		/* Terminate the string.  */
@@ -71,7 +71,7 @@ __sysconf (int name)
 		  res = -1l;
 	      }
 
-	    __close (fd);
+	    __close_nocancel (fd);
 
 	    if (res != -1)
 	      return res;

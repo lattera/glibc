@@ -708,8 +708,7 @@ typedef struct
 
 /* Inline functions for bitset operation.  */
 static inline void
-bitset_not (set)
-     bitset set;
+bitset_not (bitset set)
 {
   int bitset_i;
   for (bitset_i = 0; bitset_i < BITSET_UINTS; ++bitset_i)
@@ -717,9 +716,7 @@ bitset_not (set)
 }
 
 static inline void
-bitset_merge (dest, src)
-     bitset dest;
-     const bitset src;
+bitset_merge (bitset dest, const bitset src)
 {
   int bitset_i;
   for (bitset_i = 0; bitset_i < BITSET_UINTS; ++bitset_i)
@@ -727,9 +724,7 @@ bitset_merge (dest, src)
 }
 
 static inline void
-bitset_not_merge (dest, src)
-     bitset dest;
-     const bitset src;
+bitset_not_merge (bitset dest, const bitset src)
 {
   int i;
   for (i = 0; i < BITSET_UINTS; ++i)
@@ -737,9 +732,7 @@ bitset_not_merge (dest, src)
 }
 
 static inline void
-bitset_mask (dest, src)
-     bitset dest;
-     const bitset src;
+bitset_mask (bitset dest, const bitset src)
 {
   int bitset_i;
   for (bitset_i = 0; bitset_i < BITSET_UINTS; ++bitset_i)
@@ -749,9 +742,8 @@ bitset_mask (dest, src)
 #if defined RE_ENABLE_I18N && !defined RE_NO_INTERNAL_PROTOTYPES
 /* Inline functions for re_string.  */
 static inline int
-re_string_char_size_at (pstr, idx)
-     const re_string_t *pstr;
-     int idx;
+internal_function
+re_string_char_size_at (const re_string_t *pstr, int idx)
 {
   int byte_idx;
   if (pstr->mb_cur_max == 1)
@@ -763,9 +755,8 @@ re_string_char_size_at (pstr, idx)
 }
 
 static inline wint_t
-re_string_wchar_at (pstr, idx)
-     const re_string_t *pstr;
-     int idx;
+internal_function
+re_string_wchar_at (const re_string_t *pstr, int idx)
 {
   if (pstr->mb_cur_max == 1)
     return (wint_t) pstr->mbs[idx];
@@ -773,9 +764,8 @@ re_string_wchar_at (pstr, idx)
 }
 
 static int
-re_string_elem_size_at (pstr, idx)
-     const re_string_t *pstr;
-     int idx;
+internal_function
+re_string_elem_size_at (const re_string_t *pstr, int idx)
 {
 #ifdef _LIBC
   const unsigned char *p, *extra;

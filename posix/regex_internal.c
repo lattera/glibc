@@ -373,7 +373,9 @@ build_wcs_upper_buffer (pstr)
       {
 	wchar_t wc;
 	const char *p;
+#ifdef _LIBC
 offsets_needed:
+#endif
 	remain_len = end_idx - byte_idx;
 	prev_st = pstr->cur_state;
 	if (BE (pstr->trans != NULL, 0))
@@ -398,7 +400,7 @@ offsets_needed:
 		int mbcdlen;
 
 		wcu = towupper (wc);
-		mbcdlen = wcrtomb (buf, wcu, &prev_st);
+		mbcdlen = wcrtomb ((char *) buf, wcu, &prev_st);
 		if (BE (mbclen == mbcdlen, 1))
 		  memcpy (pstr->mbs + byte_idx, buf, mbclen);
 		else
