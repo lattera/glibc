@@ -135,7 +135,7 @@ pmap_set (u_long program, u_long version, int protocol, u_short port)
 		 tottimeout) != RPC_SUCCESS)
     {
       clnt_perror (client, _("Cannot register service"));
-      return FALSE;
+      rslt = FALSE;
     }
   CLNT_DESTROY (client);
   /* (void)close(socket); CLNT_DESTROY closes it */

@@ -1763,7 +1763,7 @@ character of the substring, or a null pointer if no match was found.  If
 @comment wchar.h
 @comment XPG
 @deftypefun {wchar_t *} wcswcs (const wchar_t *@var{haystack}, const wchar_t *@var{needle})
-@code{wcsstr} is an depricated alias for @code{wcsstr}.  This is the
+@code{wcswcs} is an deprecated alias for @code{wcsstr}.  This is the
 name originally used in the X/Open Portability Guide before the
 @w{Amendment 1} to @w{ISO C90} was published.
 @end deftypefun

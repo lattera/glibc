@@ -1,3 +1,8 @@
+2003-12-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/pmap_clnt.c (pmap_set): Do CLNT_DESTROY even if CLNT_CALL
+	failed.  Reported by Steve Grubb.
+
 2003-12-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/elf.h: Add a few definitions from Solaris 9.
