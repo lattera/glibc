@@ -1,3 +1,9 @@
+2004-10-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #472] Imported from gnulib.
+	* time/mktime.c (Local Variables): Remove -DHAVE_TIME_R_POSIX;
+	no longer used.
+
 2004-10-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* debug/execinfo.h: Remove __THROW from backtrace prototype.
