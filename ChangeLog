@@ -1,3 +1,10 @@
+2004-09-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getent.c: Don't preconstruct help message.  Do it only when
+	needed.
+
+	* locale/programs/locale.c: Simplify help message printing.
+
 2004-09-12  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/i386/init-first.c (init1) [! SHARED]: Add decls

@@ -57,13 +57,21 @@ static const struct argp_option args_options[] =
     { NULL, 0, NULL, 0, NULL },
   };
 
+/* Short description of program.  */
+static const char doc[] = N_("Get entries from administrative database.\v\
+For bug reporting instructions, please see:\n\
+<http://www.gnu.org/software/libc/bugs.html>.\n");
+
 /* Prototype for option handler.  */
 static error_t parse_option (int key, char *arg, struct argp_state *state);
+
+/* Function to print some extra text in the help message.  */
+static char *more_help (int key, const char *text, void *input);
 
 /* Data structure to communicate with argp functions.  */
 static struct argp argp =
   {
-    args_options, parse_option, args_doc, NULL,
+    args_options, parse_option, args_doc, doc, NULL, more_help
   };
 
 /* Print the version information.  */
@@ -771,51 +779,62 @@ parse_option (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
-/* build doc */
-static void
-build_doc (void)
+
+static char *
+more_help (int key, const char *text, void *input)
 {
-  int i, j, len;
-  char *short_doc, *long_doc, *doc, *p;
+  int len;
+  char *long_doc, *doc, *p;
 
-  short_doc = _("getent - get entries from administrative database.");
-  long_doc = _("Supported databases:");
-  len = strlen (short_doc) + strlen (long_doc) + 3;
-
-  for (i = 0; databases[i].name; ++i)
-    len += strlen (databases[i].name) + 1;
-
-  doc = (char *) malloc (len);
-  if (doc == NULL)
-    doc = short_doc;
-  else
+  switch (key)
     {
-      p = stpcpy (doc, short_doc);
-      *p++ = '\v';
-      p = stpcpy (p, long_doc);
-      *p++ = '\n';
+    case ARGP_KEY_HELP_EXTRA:
+      /* We print some extra information.  */
+#if 0
+      return xstrdup (gettext ("\
+For bug reporting instructions, please see:\n\
+<http://www.gnu.org/software/libc/bugs.html>.\n"));
+#endif
+      long_doc = _("Supported databases:");
+      len = strlen (long_doc) + 2;
 
-      for (i = 0, j = 0; databases[i].name; ++i)
+      for (int i = 0; databases[i].name; ++i)
+	len += strlen (databases[i].name) + 1;
+
+      doc = (char *) malloc (len);
+      if (doc != NULL)
 	{
-	  len = strlen (databases[i].name);
-	  if (i != 0)
+	  p = stpcpy (doc, long_doc);
+	  *p++ = '\n';
+
+	  for (int i = 0, col = 0; databases[i].name; ++i)
 	    {
-	      if (j + len > 72)
+	      len = strlen (databases[i].name);
+	      if (i != 0)
 		{
-		  j = 0;
-		  *p++ = '\n';
+		  if (col + len > 72)
+		    {
+		      col = 0;
+		      *p++ = '\n';
+		    }
+		  else
+		    *p++ = ' ';
 		}
-	      else
-		*p++ = ' ';
+
+	      p = mempcpy (p, databases[i].name, len);
+	      col += len + 1;
 	    }
 
-	  p = mempcpy (p, databases[i].name, len);
-	  j += len + 1;
+	  return doc;
 	}
-    }
+      break;
 
-  argp.doc = doc;
+    default:
+      break;
+    }
+  return (char *) text;
 }
+
 
 /* the main function */
 int
@@ -827,9 +846,6 @@ main (int argc, char *argv[])
   setlocale (LC_ALL, "");
   /* Set the text message domain.  */
   textdomain (PACKAGE);
-
-  /* Build argp.doc.  */
-  build_doc ();
 
   /* Parse and process arguments.  */
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
