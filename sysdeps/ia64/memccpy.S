@@ -1,6 +1,6 @@
 /* Optimized version of the memccpy() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,6 +46,7 @@
 #define tmp		r23
 #define char		r24
 #define charx8		r25
+#define saved_ec	r26
 #define sh2		r28
 #define	sh1		r29
 #define loopcnt		r30
@@ -56,25 +57,27 @@ ENTRY(memccpy)
 	alloc 	r2 = ar.pfs, 4, 40 - 4, 0, 40
 
 #include "softpipe.h"
-	.rotr	r[MEMLAT + 3], tmp1[4], tmp2[4], val[4], tmp3[2], pos0[2]
+	.rotr	r[MEMLAT + 7], tmp1[4], tmp2[4], val[4], tmp3[2], pos0[2]
 	.rotp	p[MEMLAT + 6 + 1]
 
 	mov	ret0 = r0		// return NULL if no match
 	.save pr, saved_pr
 	mov	saved_pr = pr		// save the predicate registers
+	mov 	dest = in0		// dest
 	.save ar.lc, saved_lc
         mov 	saved_lc = ar.lc	// save the loop counter
+        mov 	saved_ec = ar.ec	// save the loop counter
 	.body
-	mov 	dest = in0		// dest
 	mov 	src = in1		// src
 	extr.u	char = in2, 0, 8	// char
 	mov	len = in3		// len
 	sub	tmp = r0, in0		// tmp = -dest
 	cmp.ne	p7, p0 = r0, r0		// clear p7
 	;;
-	and	loopcnt = 7, tmp		// loopcnt = -dest % 8
+	and	loopcnt = 7, tmp	// loopcnt = -dest % 8
 	cmp.ge	p6, p0 = OP_T_THRES, len	// is len <= OP_T_THRES
-(p6)	br.cond.spnt	.cpyfew			// copy byte by byte
+	mov	ar.ec = 0		// ec not guaranteed zero on entry
+(p6)	br.cond.spnt	.cpyfew		// copy byte by byte
 	;;
 	cmp.eq	p6, p0 = loopcnt, r0
 	mux1	charx8 = char, @brcst
@@ -109,26 +112,31 @@ ENTRY(memccpy)
 	cmp.ne	p6, p0 = r0, r0	;;	// clear p6
 	.align	32
 .l2:
-(p[0])		ld8	r[0] = [asrc], 8		// r[0] = w1
+(p[0])		ld8.s	r[0] = [asrc], 8		// r[0] = w1
 (p[MEMLAT])	shr.u	tmp1[0] = r[1 + MEMLAT], sh1	// tmp1 = w0 >> sh1
 (p[MEMLAT])	shl	tmp2[0] = r[0 + MEMLAT], sh2  	// tmp2 = w1 << sh2
 (p[MEMLAT+4])	xor	tmp3[0] = val[1], charx8
 (p[MEMLAT+5])	czx1.r	pos0[0] = tmp3[1]
+(p[MEMLAT+6])	chk.s	r[6 + MEMLAT], .recovery1	// our data isn't
+							// valid - rollback!
 (p[MEMLAT+6])	cmp.ne	p6, p0 = 8, pos0[1]
 (p6)		br.cond.spnt	.gotit
 (p[MEMLAT+6])	st8	[dest] = val[3], 8		// store val to dest
 (p[MEMLAT+3])	or	val[0] = tmp1[3], tmp2[3] 	// val = tmp1 | tmp2
 		br.ctop.sptk    .l2
 		br.cond.sptk .cpyfew
+
 .src_aligned:
 		cmp.ne  p6, p0 = r0, r0			// clear p6
 		mov     ar.ec = MEMLAT + 2 + 1 ;;	// set EC
 .l3:
-(p[0])		ld8	r[0] = [src], 8
+(p[0])		ld8.s	r[0] = [src], 8
 (p[MEMLAT])	xor	tmp3[0] = r[MEMLAT], charx8
 (p[MEMLAT+1])	czx1.r	pos0[0] = tmp3[1]
 (p[MEMLAT+2])	cmp.ne	p7, p0 = 8, pos0[1]
+(p[MEMLAT+2])	chk.s	r[MEMLAT+2], .recovery2
 (p7)		br.cond.spnt	.gotit
+.back2:
 (p[MEMLAT+2])	st8	[dest] = r[MEMLAT+2], 8
 		br.ctop.dptk .l3
 .cpyfew:
@@ -148,6 +156,7 @@ ENTRY(memccpy)
 .restore_and_exit:
 	mov     pr = saved_pr, -1    	// restore the predicate registers
 	mov 	ar.lc = saved_lc	// restore the loop counter
+	mov 	ar.ec = saved_ec ;;	// restore the epilog counter
 	br.ret.sptk.many b0
 .gotit:
 	.pred.rel "mutex" p6, p7
@@ -163,4 +172,33 @@ ENTRY(memccpy)
 	mov	pr = saved_pr, -1
 	mov	ar.lc = saved_lc
 	br.ret.sptk.many b0
+
+.recovery1:
+	adds	src = -(MEMLAT + 6 + 1) * 8, asrc
+	mov	loopcnt = ar.lc
+	mov	tmp = ar.ec ;;
+	sub	sh1 = (MEMLAT + 6 + 1), tmp
+	shr.u	sh2 = sh2, 3
+	;; 
+	shl	loopcnt = loopcnt, 3
+	sub	src = src, sh2
+	shl	sh1 = sh1, 3
+	shl	tmp = tmp, 3
+	;;
+	add	len = len, loopcnt
+	add	src = sh1, src ;;
+	add	len = tmp, len
+.back1:
+	br.cond.sptk .cpyfew
+
+.recovery2:
+	add	tmp = -(MEMLAT + 3) * 8, src
+(p7)	br.cond.spnt .gotit
+	;;
+	ld8	r[MEMLAT+2] = [tmp] ;;
+	xor	pos0[1] = r[MEMLAT+2], charx8 ;;
+	czx1.r	pos0[1] = pos0[1] ;;
+	cmp.ne	p7, p6 = 8, pos0[1]
+(p7)	br.cond.spnt .gotit
+	br.cond.sptk .back2
 END(memccpy)

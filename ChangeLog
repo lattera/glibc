@@ -1,3 +1,20 @@
+2003-09-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/stratcliff.c (main): Check memccpy.
+
+2003-04-11  Jes Sorensen  <jes@wildopensource.com>
+
+	* sysdeps/ia64/memccpy.S: When recovering for src_aligned and the
+	character is found during recovery, use correct register when
+	determining the position of the found character.
+
+2003-04-01  Jes Sorensen  <jes@wildopensource.com>
+
+	* sysdeps/ia64/memccpy.S: Use speculatively loads for readahead to
+	avoid segfaults when reading from unmapped pages. For aligned
+	reload and continue, for misaligned, roll back and use byte copy.
+	Save ar.ec on entry and restore on exit.
+
 2003-09-09  Chris Demetriou  <cgd@broadcom.com>
 
         * sysdeps/unix/mips/sysdep.h (PSEUDO_END): Undef before defining.
