@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -49,8 +49,11 @@ DEFUN(readdir, (dirp), DIR *dirp)
 	  int nentries;
 	  error_t err;
 
-	  if (err = __dir_readdir (dirp->__port, &data, &dirp->__size,
-				   dirp->__entry_ptr, -1, 0, &nentries))
+	  if (err = HURD_FD_PORT_USE (dirp->__fd,
+				      __dir_readdir (dirp->__port,
+						     &data, &dirp->__size,
+						     dirp->__entry_ptr,
+						     -1, 0, &nentries)))
 	    return __hurd_fail (err), NULL;
 
 	  /* DATA now corresponds to entry index DIRP->__entry_ptr.  */

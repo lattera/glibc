@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -36,21 +36,29 @@ DEFUN(opendir, (name), CONST char *name)
 {
   DIR *dirp;
   file_t port;
+  int fd;
 
-  port = __file_name_lookup (name, O_RDONLY, 0);
-  if (port == MACH_PORT_NULL)
+  fd = __open (name, O_RDONLY);
+  if (fd < 0)
     return NULL;
-
-  /* XXX this port should be deallocated on exec */
 
   dirp = (DIR *) malloc (sizeof (DIR));
   if (dirp == NULL)
     {
-      __mach_port_deallocate (__mach_task_self (), port);
+      __close (fd);
       return NULL;
     }    
 
-  dirp->__port = port;
+  /* Extract the pointer to the descriptor structure.  */
+  __mutex_lock (&_hurd_dtable_lock);
+  dirp->__fd = _hurd_dtable[fd];
+  __mutex_unlock (&_hurd_dtable_lock);
+
+  /* Set the descriptor to close on exec. */
+  __spin_lock (&dirp->__fd->port.lock);
+  dirp->__fd->flags |= FD_CLOEXEC;
+  __spin_unlock (&dirp->__fd->port.lock);
+
   dirp->__data = dirp->__ptr = NULL;
   dirp->__entry_data = dirp->__entry_ptr = 0;
   dirp->__allocation = 0;

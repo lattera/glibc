@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
+/* dirfd -- Return the file desciptor used by a DIR stream.  Stub version.
+Copyright (C) 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,37 +17,14 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <errno.h>
-#include <stddef.h>
-#include <stdlib.h>
 #include <dirent.h>
-#include <unistd.h>
-#include <hurd.h>
+#include <dirstream.h>
+#include <errno.h>
 
-/* Close the directory stream DIRP.
-   Return 0 if successful, -1 if not.  */
 int
-DEFUN(closedir, (dirp), DIR *dirp)
+dirfd (dirp)
+     FILE *dirp;
 {
-  error_t err;
-
-  if (dirp == NULL)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  if (err = __vm_deallocate (__mach_task_self (),
-			     (vm_address_t) dirp->__data, dirp->__allocation))
-    return __hurd_fail (err);
-  dirp->__data = NULL;
-
-  if (err = _hurd_fd_close (dirp->__fd))
-    return __hurd_fail (err);
-
-  free (dirp);
-
-  return 0;
+  errno = ENOSYS;
+  return -1;
 }
-

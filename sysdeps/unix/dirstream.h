@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -39,5 +39,7 @@ typedef struct
 
     struct dirent __entry;	/* Returned by `readdir'.  */
   } DIR;
+
+#define _DIR_dirfd(dirp)	((dirp)->__fd)
 
 #endif	/* dirstream.h */

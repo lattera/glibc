@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,16 +28,14 @@ Cambridge, MA 02139, USA.  */
 __BEGIN_DECLS
 
 /* These are the possibilities for the first argument to setlocale.
-   Note that although they are bit masks, they cannot be OR'd together
-   to form a new argument to pass.  They must be used one at a time.  */
-#define	LC_COLLATE	(1 << 0)
-#define	LC_CTYPE	(1 << 1)
-#define	LC_MONETARY	(1 << 2)
-#define	LC_NUMERIC	(1 << 3)
-#define	LC_TIME		(1 << 4)
-#define	LC_RESPONSE	(1 << 5)
-#define	LC_ALL		(LC_COLLATE|LC_CTYPE|LC_MONETARY|LC_NUMERIC|LC_TIME|\
-			 LC_RESPONSE)
+   The code assumes that LC_ALL is the highest value, and zero the lowest.  */
+#define	LC_COLLATE	0
+#define	LC_CTYPE	1
+#define	LC_MONETARY	2
+#define	LC_NUMERIC	3
+#define	LC_TIME		4
+#define	LC_MESSAGES	5
+#define	LC_ALL		6
 
 
 /* Structure giving information about numeric and monetary notation.  */

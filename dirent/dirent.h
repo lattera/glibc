@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -95,6 +95,13 @@ extern struct dirent *readdir __P ((DIR * __dirp));
 extern void rewinddir __P ((DIR * __dirp));
 
 #if defined(__USE_BSD) || defined(__USE_MISC)
+
+/* Return the file descriptor used by DIRP.  */
+extern int dirfd __P ((DIR *__dirp));
+
+#if defined (__OPTIMIZE__) && defined (_DIR_dirfd)
+#define dirfd(dirp)	_DIR_dirfd (dirp)
+#endif
 
 #ifndef	MAXNAMLEN
 /* Get the definitions of the POSIX.1 limits.  */

@@ -24,7 +24,7 @@ subdir		:= dirent
 headers		:= dirent.h dirstream.h
 routines	:= opendir closedir readdir rewinddir \
 		   seekdir telldir scandir alphasort \
-		   getdents
+		   getdents dirfd
 distribute := direct.h
 
 tests	   := list tst-seekdir

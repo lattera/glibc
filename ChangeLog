@@ -1,5 +1,30 @@
 Fri Feb 24 14:40:48 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* io/Makefile (routines): Add euidaccess.
+	* sysdeps/mach/hurd/euidaccess.c: New file.
+	* sysdeps/stub/euidaccess.c: New file.
+	* posix/unistd.h [__USE_GNU] (euidaccess): Declare it.
+
+	* dirent/Makefile (routines): Add dirfd.
+	* sysdeps/stub/dirfd.c: New file.
+	* sysdeps/unix/dirfd.c: New file.
+	* sysdeps/unix/dirstream.h (_DIR_dirfd): New macro.
+	* dirent/dirent.h (dirfd): Declare new function.  Define as macro
+ 	_DIR_dirfd if that is defined.
+	* sysdeps/mach/hurd/dirstream.h (DIR): Replace `__port' member
+ 	with `void *__fd'.
+	* sysdeps/mach/hurd/opendir.c: Use DIRP->__fd instead of DIRP->__port.
+	Open the file with `open'; set FD_CLOEXEC on the fd.
+	* sysdeps/mach/hurd/closedir.c: Likewise.
+	* sysdeps/mach/hurd/readdir.c: Likewise.
+	* sysdeps/mach/hurd/dirfd.c: New file.
+
+	* posix/Makefile (glob/configure): Do cvs commit if there is a CVS
+ 	directory.
+	(glob/ChangeLog): Likewise.
+
+	* locale/locale.h (LC_*): Use small integers instead of bit masks.
+
 	* stdio/bug4.c: Put temporary files in /tmp.
 	* stdio/bug3.c: Likewise.
 	* stdio/bug5.c: Likewise.

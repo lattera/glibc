@@ -31,7 +31,7 @@ routines :=							      \
 	mkfifo							      \
 	stat fstat lstat					      \
 	umask chmod fchmod mkdir				      \
-	open close read write lseek access			      \
+	open close read write lseek access euidaccess		      \
 	fcntl flock lockf					      \
 	dup dup2 pipe						      \
 	creat							      \

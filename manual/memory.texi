@@ -451,7 +451,7 @@ however---BSD does not provide any way to free such blocks.
 
 @comment malloc.h stdlib.h
 @comment BSD
-@deftypefun {void *} memalign (size_t @var{size}, size_t @var{boundary})
+@deftypefun {void *} memalign (size_t @var{boundary}, size_t @var{size})
 The @code{memalign} function allocates a block of @var{size} bytes whose
 address is a multiple of @var{boundary}.  The @var{boundary} must be a
 power of two!  The function @code{memalign} works by calling
@@ -469,7 +469,7 @@ as the value of the second argument.  It is implemented like this:
 void *
 valloc (size_t size)
 @{
-  return memalign (size, getpagesize ());
+  return memalign (getpagesize (), size);
 @}
 @end smallexample
 @c !!! xref getpagesize

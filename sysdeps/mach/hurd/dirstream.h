@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,8 +27,7 @@ Cambridge, MA 02139, USA.  */
 
 typedef struct
   {
-    /* XXX we need a namespace-clean name for mach_port_t! */
-    unsigned int __port;	/* Port to the directory.  */
+    void *__fd;			/* `struct hurd_fd' pointer for descriptor.  */
     char *__data;		/* Directory block.  */
     int __entry_data;		/* Entry number `__data' corresponds to.  */
     char *__ptr;		/* Current pointer into the block.  */

@@ -107,9 +107,15 @@ __BEGIN_DECLS
 #define	X_OK	1		/* Test for execute permission.  */
 #define	F_OK	0		/* Test for existence.  */
 
-/* Test for access to NAME.  */
+/* Test for access to NAME using the real UID and real GID.  */
 extern int __access __P ((__const char *__name, int __type));
 extern int access __P ((__const char *__name, int __type));
+
+#ifdef __USE_GNU
+/* Test for access to NAME using the effective UID and GID
+   (as normal file operations use).  */
+extern int euidaccess __P ((__const char *__name, int __type));
+#endif
 
 
 /* Values for the WHENCE argument to lseek.  */

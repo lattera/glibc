@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
+/* Test for access to FILE using effective UID and GID.  Hurd version.
+Copyright (C) 1991, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,37 +17,42 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
-#include <stdlib.h>
-#include <dirent.h>
 #include <unistd.h>
 #include <hurd.h>
 
-/* Close the directory stream DIRP.
-   Return 0 if successful, -1 if not.  */
 int
-DEFUN(closedir, (dirp), DIR *dirp)
+euidaccess (file, type)
+     const char *file;
+     int type;
 {
-  error_t err;
+  file_t port;
+  int allowed, flags;
 
-  if (dirp == NULL)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  port = __file_name_lookup (file, 0, 0);
+  if (port == MACH_PORT_NULL)
+    return -1;
 
-  if (err = __vm_deallocate (__mach_task_self (),
-			     (vm_address_t) dirp->__data, dirp->__allocation))
-    return __hurd_fail (err);
-  dirp->__data = NULL;
-
-  if (err = _hurd_fd_close (dirp->__fd))
+  /* Find out what types of access we are allowed to this file.  */
+  err = __file_check_access (file, &allowed);
+  __mach_port_deallocate (__mach_task_self (), file);
+  if (err)
     return __hurd_fail (err);
 
-  free (dirp);
+  flags = 0;
+  if (type & R_OK)
+    flags |= O_READ;
+  if (type & W_OK)
+    flags |= O_WRITE;
+  if (type & X_OK)
+    flags |= O_EXEC;
+
+  if (flags & ~allowed)
+    /* We are not allowed all the requested types of access.  */
+    return __hurd_fail (EACCES);
 
   return 0;
 }
 
+weak_alias (__access, access)
