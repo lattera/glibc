@@ -1,3 +1,8 @@
+2002-09-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/stratcliff.c: Some more strncpy tests.
+	Patch by Daniel Jacobowitz <drow@mvista.com>.
+
 2002-09-08  Roland McGrath  <roland@redhat.com>
 
 	* resolv/resolv.h: Include <sys/types.h> for u_long even in
