@@ -258,7 +258,29 @@ again:
 			      - sizeof (struct iovec) - sizeof (struct msghdr);
       rlen = __recvmsg (xprt->xp_sock, mesgp, 0);
       if (rlen >= 0)
-	len = mesgp->msg_namelen;
+	{
+	  struct cmsghdr *cmsg;
+	  len = mesgp->msg_namelen;
+	  cmsg = CMSG_FIRSTHDR (mesgp);
+	  if (cmsg == NULL
+	      || CMSG_NXTHDR (mesgp, cmsg) != NULL
+	      || cmsg->cmsg_level != SOL_IP
+	      || cmsg->cmsg_type != IP_PKTINFO
+	      || cmsg->cmsg_len < (sizeof (struct cmsghdr)
+				   + sizeof (struct in_pktinfo)))
+	    {
+	      /* Not a simple IP_PKTINFO, ignore it.  */
+	      mesgp->msg_control = NULL;
+	      mesgp->msg_controllen = 0;
+	    }
+	  else
+	    {
+	      /* It was a simple IP_PKTIFO as we expected, discard the
+		 interface field.  */
+	      struct in_pktinfo *pkti = CMSG_DATA (cmsg);
+	      pkti->ipi_ifindex = 0;
+	    }
+	}
     }
   else
 #endif

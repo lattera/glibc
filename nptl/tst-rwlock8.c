@@ -33,7 +33,11 @@
 
 #define DELAY   1000000
 
-static pthread_rwlock_t lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP;
+#ifndef INIT
+# define INIT PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP
+#endif
+
+static pthread_rwlock_t lock = INIT;
 
 
 static void *
