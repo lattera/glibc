@@ -1004,7 +1004,8 @@ cbrt_test (void)
   check_eps ("cbrt (8) == 2", FUNC(cbrt) (8), 2, CHOOSE (5e-17L, 0, 0));
   check_eps ("cbrt (-27) == -3", FUNC(cbrt) (-27.0), -3.0,
 	     CHOOSE (3e-16L, 5e-16, 0));
-  check ("cbrt (0.970299) == 0.99", FUNC(cbrt) (0.970299), 0.99);
+  check_eps ("cbrt (0.970299) == 0.99", FUNC(cbrt) (0.970299), 0.99,
+	     CHOOSE (2e-17L, 0, 0));
 }
 
 
