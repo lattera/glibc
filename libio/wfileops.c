@@ -60,7 +60,6 @@ _IO_wdo_write (fp, data, to_do)
      _IO_size_t to_do;
 {
   struct _IO_codecvt *cc = &fp->_wide_data->_codecvt;
-  _IO_size_t count = 0;
 
   if (to_do > 0)
     {
@@ -90,7 +89,6 @@ _IO_wdo_write (fp, data, to_do)
 	    /* Something went wrong.  */
 	    return EOF;
 
-	  count += new_data - data;
 	  to_do -= new_data - data;
 
 	  /* Next see whether we had problems during the conversion.  If yes,
@@ -112,7 +110,7 @@ _IO_wdo_write (fp, data, to_do)
 				   ? fp->_wide_data->_IO_buf_base
 				   : fp->_wide_data->_IO_buf_end);
 
-  return count;
+  return to_do == 0 ? 0 : WEOF;
 }
 
 

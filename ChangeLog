@@ -1,5 +1,7 @@
 2000-07-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/wfileops.c (_IO_wdo_write): Correct return value.
+
 	* libio/wfileops.c (_IO_wdo_write): Allow partial conversions in the
 	loop.
 
