@@ -253,6 +253,11 @@ struct re_string_t
   int cur_idx;
   /* This is length_of_RAW_MBS - RAW_MBS_IDX.  */
   int len;
+  /* End of the buffer may be shorter than its length in the cases such
+     as re_match_2, re_search_2.  Then, we use STOP for end of the buffer
+     instead of LEN.  */
+  int stop;
+
   /* The context of mbs[0].  We store the context independently, since
      the context of mbs[0] may be different from raw_mbs[0], which is
      the beginning of the input string.  */
@@ -308,7 +313,7 @@ static unsigned int re_string_context_at (const re_string_t *input, int idx,
 #define re_string_is_single_byte_char(pstr, idx) \
   ((pstr)->wcs[idx] != WEOF && ((pstr)->len == (idx) \
                                 || (pstr)->wcs[(idx) + 1] != WEOF))
-#define re_string_eoi(pstr) ((pstr)->len == (pstr)->cur_idx)
+#define re_string_eoi(pstr) ((pstr)->stop <= (pstr)->cur_idx)
 #define re_string_cur_idx(pstr) ((pstr)->cur_idx)
 #define re_string_get_buffer(pstr) ((pstr)->mbs)
 #define re_string_length(pstr) ((pstr)->len)

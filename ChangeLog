@@ -1,3 +1,33 @@
+2002-07-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile (CPPFLAGS): Add NOT_IN_libc.
+
+	* iconv/iconv_prog.c (main): Improve error message for the cases
+	where -t and/or -f parameter are missing.
+
+2002-07-10  Stepan Kasal  <kasal@math.cas.cz>
+
+	* posix/regexec.c (re_match): Reorganize to remove duplicate code.
+	(re_search): Likewise.
+	(re_match_2): Likewise.
+	(re_search_2): Likewise.
+	(re_search_stub): New function.
+	(re_search_2_stub): New function.
+	* regcomp.c (re_compile_pattern): Typo in a comment fixed.
+
+2002-07-10  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regex_internal.h: Add new member STOP to struct re_string_t.
+	(re_string_eoi): Use STOP instead of LEN.
+	* posix/regex_internal.c (re_string_allocate): Initialize pstr->len.
+	(re_string_construct): Likewise.
+	(re_string_reconstruct): Adjust pstr->stop like pstr->len.
+	* posix/regexec.c (re_search_internal): Add a new argument STOP
+	so that it can handle the argument STOP of re_search_2 and re_match_2
+	correctly.
+	(regexec): Adapt to new I/F of re_search_internal.
+	(re_search_stub): Likewise.
+
 2002-07-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sunrpc/clnt_gen.c: Don't include <sys/errno.h>.

@@ -93,6 +93,7 @@ re_string_allocate (pstr, str, len, init_len, trans, icase)
   reg_errcode_t ret;
   int init_buf_len = (len + 1 < init_len) ? len + 1: init_len;
   re_string_construct_common (str, len, pstr, trans, icase);
+  pstr->stop = pstr->len;
 
   ret = re_string_realloc_buffers (pstr, init_buf_len);
   if (BE (ret != REG_NOERROR, 0))
@@ -117,6 +118,7 @@ re_string_construct (pstr, str, len, trans, icase)
 {
   reg_errcode_t ret;
   re_string_construct_common (str, len, pstr, trans, icase);
+  pstr->stop = pstr->len;
   /* Set 0 so that this function can initialize whole buffers.  */
   pstr->valid_len = 0;
 
@@ -473,6 +475,7 @@ re_string_reconstruct (pstr, idx, eflags, newline)
     }
   pstr->raw_mbs_idx = idx;
   pstr->len -= offset;
+  pstr->stop -= offset;
 
   /* Then build the buffers.  */
 #ifdef RE_ENABLE_I18N

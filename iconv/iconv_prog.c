@@ -25,6 +25,7 @@
 #include <error.h>
 #include <fcntl.h>
 #include <iconv.h>
+#include <langinfo.h>
 #include <locale.h>
 #include <search.h>
 #include <stdio.h>
@@ -220,7 +221,8 @@ main (int argc, char *argv[])
 	  if (errno == EINVAL)
 	    error (EXIT_FAILURE, 0,
 		   _("conversion from `%s' to `%s' not supported"),
-		   from_code, orig_to_code);
+		   from_code[0] ? from_code : nl_langinfo (CODESET),
+		   orig_to_code[0] ? orig_to_code : nl_langinfo (CODESET));
 	  else
 	    error (EXIT_FAILURE, errno,
 		   _("failed to start conversion processing"));

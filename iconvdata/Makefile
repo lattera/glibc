@@ -63,6 +63,9 @@ tests = bug-iconv1 bug-iconv2 tst-loading
 test-srcs := tst-table-from tst-table-to
 endif
 
+# No code here is in libc.so.
+CPPFLAGS += -DNOT_IN_libc
+
 libJIS-routines := jis0201 jis0208 jis0212
 libKSC-routines := ksc5601
 libGB-routines := gb2312

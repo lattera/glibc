@@ -245,7 +245,7 @@ const size_t __re_error_msgid_idx[] attribute_hidden =
 /* Entry points for GNU code.  */
 
 /* re_compile_pattern is the GNU regular expression compiler: it
-   compiles PATTERN (of length SIZE) and puts the result in BUFP.
+   compiles PATTERN (of length LENGTH) and puts the result in BUFP.
    Returns 0 if the pattern was valid, otherwise an error string.
 
    Assumes the `allocated' (and perhaps `buffer') and `translate' fields

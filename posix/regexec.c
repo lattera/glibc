@@ -45,8 +45,20 @@ static reg_errcode_t match_ctx_add_entry (re_match_context_t *cache, int node,
                                           int from, int to);
 static reg_errcode_t re_search_internal (const regex_t *preg,
                                          const char *string, int length,
-                                         int start, int range, size_t nmatch,
-                                         regmatch_t pmatch[], int eflags);
+                                         int start, int range, int stop,
+                                         size_t nmatch, regmatch_t pmatch[],
+                                         int eflags);
+static int re_search_2_stub (struct re_pattern_buffer *bufp,
+                             const char *string1, int length1,
+                             const char *string2, int length2,
+                             int start, int range, struct re_registers *regs,
+                             int stop, int ret_len);
+static int re_search_stub (struct re_pattern_buffer *bufp,
+                           const char *string, int length, int start,
+                           int range, int stop, struct re_registers *regs,
+                           int ret_len);
+static unsigned re_copy_regs (struct re_registers *regs, regmatch_t *pmatch,
+                              int nregs, int regs_allocated);
 static inline re_dfastate_t *acquire_init_state_context (reg_errcode_t *err,
                                                          const regex_t *preg,
                                                          const re_match_context_t *mctx,
@@ -150,10 +162,10 @@ regexec (preg, string, nmatch, pmatch, eflags)
   reg_errcode_t err;
   int length = strlen (string);
   if (preg->no_sub)
-    err = re_search_internal (preg, string, length, 0, length, 0,
+    err = re_search_internal (preg, string, length, 0, length, length, 0,
                               NULL, eflags);
   else
-    err = re_search_internal (preg, string, length, 0, length, nmatch,
+    err = re_search_internal (preg, string, length, 0, length, length, nmatch,
                               pmatch, eflags);
   return err != REG_NOERROR;
 }
@@ -163,285 +175,279 @@ weak_alias (__regexec, regexec)
 
 /* Entry points for GNU code.  */
 
-/* re_match is like re_match_2 except it takes only a single string.  */
+/* re_match, re_search, re_match_2, re_search_2
+
+   The former two functions operate on STRING with length LENGTH,
+   while the later two operate on concatenation of STRING1 and STRING2
+   with lengths LENGTH1 and LENGTH2, respectively.
+
+   re_match() matches the compiled pattern in BUFP against the string,
+   starting at index START.
+
+   re_search() first tries matching at index START, then it tries to match
+   starting from index START + 1, and so on.  The last start position tried
+   is START + RANGE.  (Thus RANGE = 0 forces re_search to operate the same
+   way as re_match().)
+
+   The parameter STOP of re_{match,search}_2 specifies that no match exceeding
+   the first STOP characters of the concatenation of the strings should be
+   concerned.
+
+   If REGS is not NULL, and BUFP->no_sub is not set, the offsets of the match
+   and all groups is stroed in REGS.  (For the "_2" variants, the offsets are
+   computed relative to the concatenation, not relative to the individual
+   strings.)
+
+   On success, re_match* functions return the length of the match, re_search*
+   return the position of the start of the match.  Return value -1 means no
+   match was found and -2 indicates an internal error.  */
 
 int
-re_match (buffer, string, length, start, regs)
-    struct re_pattern_buffer *buffer;
+re_match (bufp, string, length, start, regs)
+    struct re_pattern_buffer *bufp;
     const char *string;
     int length, start;
     struct re_registers *regs;
 {
-  reg_errcode_t result;
-  int i, tmp_nregs, nregs, rval, eflags = 0;
-  regmatch_t *pmatch;
-
-  eflags |= (buffer->not_bol) ? REG_NOTBOL : 0;
-  eflags |= (buffer->not_eol) ? REG_NOTEOL : 0;
-
-  /* We need at least 1 register.  */
-  tmp_nregs = ((buffer->no_sub || regs == NULL || regs->num_regs < 1) ? 1
-               : regs->num_regs);
-  nregs = ((tmp_nregs < buffer->re_nsub + 1
-            && buffer->regs_allocated == REGS_FIXED) ? tmp_nregs
-           : buffer->re_nsub + 1);
-  pmatch = re_malloc (regmatch_t, nregs);
-  if (BE (pmatch == NULL, 0))
-    return -2;
-  result = re_search_internal (buffer, string, length, start, 0,
-                               nregs, pmatch, eflags);
-
-  /* If caller wants register contents data back, do it.  */
-  if (regs && !buffer->no_sub)
-    {
-      /* Have the register data arrays been allocated?  */
-      if (buffer->regs_allocated == REGS_UNALLOCATED)
-        { /* No.  So allocate them with malloc.  We need one
-             extra element beyond `num_regs' for the `-1' marker
-             GNU code uses.  */
-          regs->num_regs = buffer->re_nsub + 1;
-          regs->start = re_malloc (regoff_t, regs->num_regs);
-          regs->end = re_malloc (regoff_t, regs->num_regs);
-          if (BE (regs->start == NULL || regs->end == NULL, 0))
-            {
-              re_free (pmatch);
-              return -2;
-            }
-          buffer->regs_allocated = REGS_REALLOCATE;
-        }
-      else if (buffer->regs_allocated == REGS_REALLOCATE)
-        { /* Yes.  If we need more elements than were already
-             allocated, reallocate them.  If we need fewer, just
-             leave it alone.  */
-          if (regs->num_regs < buffer->re_nsub + 1)
-            {
-              regs->num_regs = buffer->re_nsub + 1;
-              regs->start = re_realloc (regs->start, regoff_t, regs->num_regs);
-              regs->end = re_realloc (regs->end, regoff_t, regs->num_regs);
-              if (BE (regs->start == NULL || regs->end == NULL, 0))
-                {
-                  re_free (pmatch);
-                  return -2;
-                }
-            }
-        }
-      else
-        {
-          /* These braces fend off a "empty body in an else-statement"
-             warning under GCC when assert expands to nothing.  */
-          assert (buffer->regs_allocated == REGS_FIXED);
-        }
-    }
-
-  /* Restore registers.  */
-  if (regs != NULL)
-    {
-      int max_regs = ((regs->num_regs < buffer->re_nsub + 1) ? regs->num_regs
-                      : buffer->re_nsub + 1);
-      for (i = 0; i < max_regs; ++i)
-        {
-          regs->start[i] = pmatch[i].rm_so;
-          regs->end[i] = pmatch[i].rm_eo;
-        }
-      for ( ; i < regs->num_regs; ++i)
-        {
-          regs->start[i] = -1;
-          regs->end[i] = -1;
-        }
-    }
-  /* Return value is -1 if not match, the length of mathing otherwise.  */
-  rval = (result != REG_NOERROR) ? -1 : pmatch[0].rm_eo - pmatch[0].rm_so;
-  re_free (pmatch);
-  return rval;
+  return re_search_stub (bufp, string, length, start, 0, length, regs, 1);
 }
 #ifdef _LIBC
 weak_alias (__re_match, re_match)
 #endif
 
-/* re_match_2 matches the compiled pattern in BUFP against the
-   the (virtual) concatenation of STRING1 and STRING2 (of length SIZE1
-   and SIZE2, respectively).  We start matching at POS, and stop
-   matching at STOP.
-
-   If REGS is non-null and the `no_sub' field of BUFP is nonzero, we
-   store offsets for the substring each group matched in REGS.  See the
-   documentation for exactly how many groups we fill.
-
-   We return -1 if no match, -2 if an internal error.
-   Otherwise, we return the length of the matched substring.  */
-
 int
-re_match_2 (buffer, string1, length1, string2, length2, start, regs, stop)
-     struct re_pattern_buffer *buffer;
-     const char *string1, *string2;
-     int length1, length2, start, stop;
-     struct re_registers *regs;
+re_search (bufp, string, length, start, range, regs)
+    struct re_pattern_buffer *bufp;
+    const char *string;
+    int length, start, range;
+    struct re_registers *regs;
 {
-  int len, ret;
-  char *str = re_malloc (char, length1 + length2);
-  if (BE (str == NULL, 0))
-    return -2;
-  memcpy (str, string1, length1);
-  memcpy (str + length1, string2, length2);
-  len = (length1 + length2 < stop) ? length1 + length2 : stop;
-  ret = re_match (buffer, str, len, start, regs);
-  re_free (str);
-  return ret;
-}
-#ifdef _LIBC
-weak_alias (__re_match_2, re_match_2)
-#endif
-
-/* Like re_search_2, below, but only one string is specified, and
-   doesn't let you say where to stop matching.  */
-
-int
-re_search (bufp, string, size, startpos, range, regs)
-     struct re_pattern_buffer *bufp;
-     const char *string;
-     int size, startpos, range;
-     struct re_registers *regs;
-{
-  reg_errcode_t result;
-  int i, tmp_nregs, nregs, real_range, rval, eflags = 0;
-  regmatch_t *pmatch;
-
-  eflags |= (bufp->not_bol) ? REG_NOTBOL : 0;
-  eflags |= (bufp->not_eol) ? REG_NOTEOL : 0;
-
-  /* Check for out-of-range.  */
-  if (BE (startpos < 0 || startpos > size, 0))
-    return -1;
-
-  /* We need at least 1 register.  */
-  tmp_nregs = ((bufp->no_sub || regs == NULL || regs->num_regs < 1) ? 1
-               : regs->num_regs);
-  nregs = ((tmp_nregs < bufp->re_nsub + 1
-            && bufp->regs_allocated == REGS_FIXED) ? tmp_nregs
-           : bufp->re_nsub + 1);
-  pmatch = re_malloc (regmatch_t, nregs);
-  if (BE (pmatch == NULL, 0))
-    return -2;
-
-  /* Correct range if we need.  */
-  real_range = ((startpos + range > size) ? size - startpos
-                : ((startpos + range < 0) ? -startpos : range));
-
-  /* Compile fastmap if we haven't yet.  */
-  if (bufp->fastmap != NULL && !bufp->fastmap_accurate)
-    re_compile_fastmap (bufp);
-
-  result = re_search_internal (bufp, string, size, startpos, real_range,
-                               nregs, pmatch, eflags);
-
-  /* If caller wants register contents data back, do it.  */
-  if (regs && !bufp->no_sub)
-    {
-      /* Have the register data arrays been allocated?  */
-      if (bufp->regs_allocated == REGS_UNALLOCATED)
-        { /* No.  So allocate them with malloc.  We need one
-             extra element beyond `num_regs' for the `-1' marker
-             GNU code uses.  */
-          regs->num_regs = bufp->re_nsub + 1;
-          regs->start = re_malloc (regoff_t, regs->num_regs);
-          regs->end = re_malloc (regoff_t, regs->num_regs);
-          if (BE (regs->start == NULL || regs->end == NULL, 0))
-            {
-              re_free (pmatch);
-              return -2;
-            }
-          bufp->regs_allocated = REGS_REALLOCATE;
-        }
-      else if (bufp->regs_allocated == REGS_REALLOCATE)
-        { /* Yes.  If we need more elements than were already
-             allocated, reallocate them.  If we need fewer, just
-             leave it alone.  */
-          if (regs->num_regs < bufp->re_nsub + 1)
-            {
-              regs->num_regs = bufp->re_nsub + 1;
-              regs->start = re_realloc (regs->start, regoff_t, regs->num_regs);
-              regs->end = re_realloc (regs->end, regoff_t, regs->num_regs);
-              if (BE (regs->start == NULL || regs->end == NULL, 0))
-                {
-                  re_free (pmatch);
-                  return -2;
-                }
-            }
-        }
-      else
-        {
-          /* These braces fend off a "empty body in an else-statement"
-             warning under GCC when assert expands to nothing.  */
-          assert (bufp->regs_allocated == REGS_FIXED);
-        }
-    }
-
-  /* Restore registers.  */
-  if (regs != NULL)
-    {
-      int max_regs = ((regs->num_regs < bufp->re_nsub + 1) ? regs->num_regs
-                      : bufp->re_nsub + 1);
-      for (i = 0; i < max_regs; ++i)
-        {
-          regs->start[i] = pmatch[i].rm_so;
-          regs->end[i] = pmatch[i].rm_eo;
-        }
-      for ( ; i < regs->num_regs; ++i)
-        {
-          regs->start[i] = -1;
-          regs->end[i] = -1;
-        }
-    }
-  /* Return value is -1 if not match, the position where the mathing starts
-     otherwise.  */
-  rval = (result != REG_NOERROR) ? -1 : pmatch[0].rm_so;
-  re_free (pmatch);
-  return rval;
+  return re_search_stub (bufp, string, length, start, range, length, regs, 0);
 }
 #ifdef _LIBC
 weak_alias (__re_search, re_search)
 #endif
 
-/* Using the compiled pattern in BUFP, first tries to match the virtual
-   concatenation of STRING1 and STRING2, starting first at index
-   STARTPOS, then at STARTPOS + 1, and so on.
-
-   STRING1 and STRING2 have length SIZE1 and SIZE2, respectively.
-
-   RANGE is how far to scan while trying to match.  RANGE = 0 means try
-   only at STARTPOS; in general, the last start tried is STARTPOS +
-   RANGE.
-
-   In REGS, return the indices of the virtual concatenation of STRING1
-   and STRING2 that matched the entire BUFP->buffer and its contained
-   subexpressions.
-
-   Do not consider matching one past the index STOP in the virtual
-   concatenation of STRING1 and STRING2.
-
-   We return either the position in the strings at which the match was
-   found, -1 if no match, or -2 if error.  */
+int
+re_match_2 (bufp, string1, length1, string2, length2, start, regs, stop)
+    struct re_pattern_buffer *bufp;
+    const char *string1, *string2;
+    int length1, length2, start, stop;
+    struct re_registers *regs;
+{
+  return re_search_2_stub (bufp, string1, length1, string2, length2,
+                           start, 0, regs, stop, 1);
+}
+#ifdef _LIBC
+weak_alias (__re_match_2, re_match_2)
+#endif
 
 int
-re_search_2 (bufp, string1, length1, string2, length2, start, range, regs,
-             stop)
+re_search_2 (bufp, string1, length1, string2, length2, start, range, regs, stop)
     struct re_pattern_buffer *bufp;
     const char *string1, *string2;
     int length1, length2, start, range, stop;
     struct re_registers *regs;
 {
-  int len, ret;
-  char *str = re_malloc (char, length1 + length2);
-  memcpy (str, string1, length1);
-  memcpy (str + length1, string2, length2);
-  len = (length1 + length2 < stop) ? length1 + length2 : stop;
-  ret = re_search (bufp, str, len, start, range, regs);
-  re_free (str);
-  return ret;
+  return re_search_2_stub (bufp, string1, length1, string2, length2,
+                           start, range, regs, stop, 0);
 }
 #ifdef _LIBC
 weak_alias (__re_search_2, re_search_2)
 #endif
+
+static int
+re_search_2_stub (bufp, string1, length1, string2, length2, start, range, regs,
+                  stop, ret_len)
+    struct re_pattern_buffer *bufp;
+    const char *string1, *string2;
+    int length1, length2, start, range, stop, ret_len;
+    struct re_registers *regs;
+{
+  const char *str;
+  int rval;
+  int len = length1 + length2;
+  int free_str = 0;
+
+  if (BE (length1 < 0 || length2 < 0 || stop < 0, 0))
+    return -2;
+
+  /* Concatenate the strings.  */
+  if (length2 > 0)
+    if (length1 > 0)
+      {
+        char *s = re_malloc (char, len);
+
+        if (BE (s == NULL, 0))
+          return -2;
+        memcpy (s, string1, length1);
+        memcpy (s + length1, string2, length2);
+        str = s;
+        free_str = 1;
+      }
+    else
+      str = string2;
+  else
+    str = string1;
+
+  rval = re_search_stub (bufp, str, len, start, range, stop, regs,
+                         ret_len);
+  if (free_str)
+      re_free ((char *) str);
+  return rval;
+}
+
+/* The parameters have the same meaning as those of re_search.
+   Additional parameters:
+   If RET_LEN is nonzero the length of the match is returned (re_match style);
+   otherwise the position of the match is returned.  */
+
+static int
+re_search_stub (bufp, string, length, start, range, stop, regs, ret_len)
+    struct re_pattern_buffer *bufp;
+    const char *string;
+    int length, start, range, stop, ret_len;
+    struct re_registers *regs;
+{
+  reg_errcode_t result;
+  regmatch_t *pmatch;
+  int nregs, rval;
+  int eflags = 0;
+
+  /* Check for out-of-range.  */
+  if (BE (start < 0 || start > length || range < 0, 0))
+    return -1;
+  if (BE (start + range > length, 0))
+    range = length - start;
+
+  eflags |= (bufp->not_bol) ? REG_NOTBOL : 0;
+  eflags |= (bufp->not_eol) ? REG_NOTEOL : 0;
+
+  /* Compile fastmap if we haven't yet.  */
+  if (range > 0 && bufp->fastmap != NULL && !bufp->fastmap_accurate)
+    re_compile_fastmap (bufp);
+
+  if (BE (bufp->no_sub, 0))
+    regs = NULL;
+
+  /* We need at least 1 register.  */
+  if (regs == NULL)
+    nregs = 1;
+  else if (BE (bufp->regs_allocated == REGS_FIXED &&
+               regs->num_regs < bufp->re_nsub + 1, 0))
+    {
+      nregs = regs->num_regs;
+      if (BE (nregs < 1, 0))
+        {
+          /* Nothing can be copied to regs.  */
+          regs = NULL;
+          nregs = 1;
+        }
+    }
+  else
+    nregs = bufp->re_nsub + 1;
+  pmatch = re_malloc (regmatch_t, nregs);
+  if (BE (pmatch == NULL, 0))
+    return -2;
+
+  result = re_search_internal (bufp, string, length, start, range, stop,
+                               nregs, pmatch, eflags);
+
+  rval = 0;
+
+  /* I hope we needn't fill ther regs with -1's when no match was found.  */
+  if (result != REG_NOERROR)
+    rval = -1;
+  else if (regs != NULL)
+    {
+      /* If caller wants register contents data back, copy them.  */
+      bufp->regs_allocated = re_copy_regs (regs, pmatch, nregs,
+                                           bufp->regs_allocated);
+      if (BE (bufp->regs_allocated == REGS_UNALLOCATED, 0))
+        rval = -2;
+    }
+
+  if (BE (rval == 0, 1))
+    {
+      if (ret_len)
+        {
+          assert (pmatch[0].rm_so == 0);
+          rval = pmatch[0].rm_eo;
+        }
+      else
+        rval = pmatch[0].rm_so;
+    }
+  re_free (pmatch);
+  return rval;
+}
+
+static unsigned
+re_copy_regs (regs, pmatch, nregs, regs_allocated)
+    struct re_registers *regs;
+    regmatch_t *pmatch;
+    int nregs, regs_allocated;
+{
+  int rval = REGS_REALLOCATE;
+  int i;
+  int need_regs = nregs + 1;
+  /* We need one extra element beyond `num_regs' for the `-1' marker GNU code
+     uses.  */
+
+  /* Have the register data arrays been allocated?  */
+  if (regs_allocated == REGS_UNALLOCATED)
+    { /* No.  So allocate them with malloc.  */
+      regs->start = re_malloc (regoff_t, need_regs);
+      if (BE (regs->start == NULL, 0))
+        return REGS_UNALLOCATED;
+      regs->end = re_malloc (regoff_t, need_regs);
+      if (BE (regs->end == NULL, 0))
+        {
+          re_free (regs->start);
+          return REGS_UNALLOCATED;
+        }
+      regs->num_regs = need_regs;
+    }
+  else if (regs_allocated == REGS_REALLOCATE)
+    { /* Yes.  If we need more elements than were already
+         allocated, reallocate them.  If we need fewer, just
+         leave it alone.  */
+      if (need_regs > regs->num_regs)
+        {
+          regs->start = re_realloc (regs->start, regoff_t, need_regs);
+          if (BE (regs->start == NULL, 0))
+            {
+              if (regs->end != NULL)
+                re_free (regs->end);
+              return REGS_UNALLOCATED;
+            }
+          regs->end = re_realloc (regs->end, regoff_t, need_regs);
+          if (BE (regs->end == NULL, 0))
+            {
+              re_free (regs->start);
+              return REGS_UNALLOCATED;
+            }
+          regs->num_regs = need_regs;
+        }
+    }
+  else
+    {
+      assert (regs_allocated == REGS_FIXED);
+      /* This function may not be called with REGS_FIXED and nregs too big.  */
+      assert (regs->num_regs >= nregs);
+      rval = REGS_FIXED;
+    }
+
+  /* Copy the regs.  */
+  for (i = 0; i < nregs; ++i)
+    {
+      regs->start[i] = pmatch[i].rm_so;
+      regs->end[i] = pmatch[i].rm_eo;
+    }
+  for ( ; i < regs->num_regs; ++i)
+    regs->start[i] = regs->end[i] = -1;
+
+  return rval;
+}
 
 /* Set REGS to hold NUM_REGS registers, storing them in STARTS and
    ENDS.  Subsequent matches using PATTERN_BUFFER and REGS will use
@@ -510,10 +516,11 @@ static re_node_set empty_set;
    (START + RANGE >= 0 && START + RANGE <= LENGTH)  */
 
 static reg_errcode_t
-re_search_internal (preg, string, length, start, range, nmatch, pmatch, eflags)
+re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
+                    eflags)
     const regex_t *preg;
     const char *string;
-    int length, start, range, eflags;
+    int length, start, range, stop, eflags;
     size_t nmatch;
     regmatch_t pmatch[];
 {
@@ -541,6 +548,7 @@ re_search_internal (preg, string, length, start, range, nmatch, pmatch, eflags)
                             preg->translate, preg->syntax & RE_ICASE);
   if (BE (err != REG_NOERROR, 0))
     return err;
+  input.stop = stop;
 
   err = match_ctx_init (&mctx, eflags, &input, dfa->nbackref * 2);
   if (BE (err != REG_NOERROR, 0))
