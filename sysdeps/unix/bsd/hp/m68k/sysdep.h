@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -34,21 +34,20 @@ Cambridge, MA 02139, USA.  */
   _/**/name/**/:
 #endif
 
-#ifdef	__STDC__
 #define	PSEUDO(name, syscall_name, args)				      \
   .even;								      \
   .globl syscall_error;							      \
   error: jmp syscall_error;						      \
   ENTRY (name)								      \
+  DO_CALL (syscall_name, args)
+
+#ifdef	__STDC__
+#define DO_CALL(syscall_name, args)					      \
   movel POUND(SYS_##syscall_name), d0;					      \
   trap POUND(0);							      \
   bcs error
 #else
-#define	PSEUDO(name, syscall_name, args)				      \
-  .even;								      \
-  .globl syscall_error;							      \
-  error: jmp syscall_error;						      \
-  ENTRY (name)								      \
+#define DO_CALL(syscall_name, args)					      \
   movel POUND(SYS_/**/syscall_name), d0;				      \
   trap POUND(0);							      \
   bcs error
