@@ -114,7 +114,7 @@ tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 
 tst-exec-ARGS = -- $(built-program-cmd)
 tst-spawn-ARGS = -- $(built-program-cmd)
-tst-dir-ARGS = `pwd` "$(objdir)/$(subdir)" "$(common-objdir)" $(objpfx)tst-dir
+tst-dir-ARGS = `pwd` `cd $(common-objdir)/$(subdir); pwd` `cd $(common-objdir); pwd` $(objpfx)tst-dir
 tst-chmod-ARGS = $(objpfx)
 
 tst-fnmatch-ENV = LOCPATH=$(common-objpfx)localedata

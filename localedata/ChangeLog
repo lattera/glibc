@@ -1,3 +1,8 @@
+2000-11-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/ko_KR: Fix currency_symbol.
+	Reported by Jungshik Shin <jshin@pantheon.yale.edu>.
+
 2000-11-08  Bruno Haible  <haible@clisp.cons.org>
 
 	* locales/translit_neutral: Tweak <U2014>, <U2212>, <U2219>.

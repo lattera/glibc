@@ -9664,7 +9664,7 @@ END LC_CTYPE
 LC_MONETARY
 
 int_curr_symbol		"<U004B><U0052><U0057><U0020>"
-currency_symbol		"<UFFEC>"
+currency_symbol		"<UFFE6>"
 mon_decimal_point	"<U002E>"
 mon_thousands_sep	"<U002C>"
 mon_grouping		3;3
