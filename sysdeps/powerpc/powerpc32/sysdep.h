@@ -29,8 +29,8 @@
 /* The mcount code relies on a the return address being on the stack
    to locate our caller and so it can restore it; so store one just
    for its benefit.  */
-#ifdef PIC
-#define CALL_MCOUNT							      \
+# ifdef PIC
+#  define CALL_MCOUNT							      \
   .pushsection;								      \
   .section ".data";    							      \
   .align ALIGNARG(2);							      \
@@ -42,8 +42,8 @@
   mflr  r11;								      \
   lwz   r0,0b@got(r11);							      \
   bl    JUMPTARGET(_mcount);
-#else  /* PIC */
-#define CALL_MCOUNT							      \
+# else  /* PIC */
+#  define CALL_MCOUNT							      \
   .section ".data";							      \
   .align ALIGNARG(2);							      \
 0:.long 0;								      \
@@ -53,9 +53,9 @@
   stw   r0,4(r1);	       						      \
   addi  r0,r11,0b@l;							      \
   bl    JUMPTARGET(_mcount);
-#endif /* PIC */
+# endif /* PIC */
 #else  /* PROF */
-#define CALL_MCOUNT		/* Do nothing.  */
+# define CALL_MCOUNT		/* Do nothing.  */
 #endif /* PROF */
 
 #define	ENTRY(name)							      \
@@ -77,7 +77,7 @@
 /* EALIGN is like ENTRY, but does alignment to 'words'*4 bytes
    past a 2^align boundary.  */
 #ifdef PROF
-#define EALIGN(name, alignt, words)					      \
+# define EALIGN(name, alignt, words)					      \
   ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(name);				      \
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
   .align ALIGNARG(2);							      \
@@ -88,7 +88,7 @@
   EALIGN_W_##words;							      \
   0:
 #else /* PROF */
-#define EALIGN(name, alignt, words)					      \
+# define EALIGN(name, alignt, words)					      \
   ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(name);				      \
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
   .align ALIGNARG(alignt);						      \
@@ -106,9 +106,15 @@
 
 #undef JUMPTARGET
 #ifdef PIC
-#define JUMPTARGET(name) name##@plt
+# define JUMPTARGET(name) name##@plt
 #else
-#define JUMPTARGET(name) name
+# define JUMPTARGET(name) name
+#endif
+
+#if defined SHARED && defined DO_VERSIONING && defined PIC \
+    && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE && !defined NO_HIDDEN
+# undef HIDDEN_JUMPTARGET
+# define HIDDEN_JUMPTARGET(name) __GI_##name##@local
 #endif
 
 #define PSEUDO(name, syscall_name, args)				      \

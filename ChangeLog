@@ -1,3 +1,7 @@
+2003-02-18  Alan Modra  <amodra@bigpond.net.au>
+
+	* sysdeps/powerpc/powerpc32/sysdep.h (HIDDEN_JUMPTARGET): Redefine.
+
 2003-02-20  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/sysdep.h (INLINE_SYSCALL): Add
