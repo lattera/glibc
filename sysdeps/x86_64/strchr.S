@@ -36,14 +36,14 @@ ENTRY (BP_SYM (strchr))
 	      8-byte alignment guarantees that we never access illegal
 	      memory if this would not also be done by the trivial
 	      implementation (this is because all processor inherent
-	      boundaries are multiples of 8.  */
+	      boundaries are multiples of 8).  */
 
-	movq	%rdi, %rcx
-	andl	$7, %ecx	/* Mask alignment bits  */
+	movq	%rdi, %rdx
+	andl	$7, %edx	/* Mask alignment bits  */
 	movq	%rdi, %rax	/* duplicate destination.  */
 	jz	1f		/* aligned => start loop */
-	neg	%ecx
-	addl	$8, %ecx	/* Align to 8 bytes.  */
+	neg	%edx
+	addl	$8, %edx	/* Align to 8 bytes.  */
 
 	/* Search the first bytes directly.  */
 0:	movb	(%rax), %cl	/* load byte  */
@@ -52,7 +52,7 @@ ENTRY (BP_SYM (strchr))
 	testb	%cl,%cl		/* is byte NUL? */
 	je	7f		/* yes => return NULL */
 	incq	%rax		/* increment pointer */
-	decl	%ecx
+	decl	%edx
 	jnz	0b
 
 

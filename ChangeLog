@@ -1,5 +1,8 @@
 2002-11-12  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/x86_64/strchr.S: Don't use one register for two
+	purposes, this fixes a bug noticed by test-strchr.c.
+
 	* sysdeps/x86_64/strcat.S: Fix algorithm to align source pointer
 	correctly.
 
