@@ -548,10 +548,10 @@ strptime_internal (buf, format, tm, decided)
 	case 'y':
 	  /* Match year within century.  */
 	  get_number (0, 99);
-	  /* The "Year 2000 :The Millennium Rollover" paper suggests that
+	  /* The "Year 2000: The Millennium Rollover" paper suggests that
 	     values in the range 69-99 refer to the twentieth century.  */
 	  tm->tm_year = val >= 69 ? val : val + 100;
-	  /* Indicate that we want to use the century, if specified
+	  /* Indicate that we want to use the century, if specified.  */
 	  want_century = 1;
 	  break;
 	case 'Y':
