@@ -1,3 +1,8 @@
+1999-10-05  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* mach/mach/mig_support.h [! __USE_GNU]: Use #error to insist that
+	_GNU_SOURCE be defined.
+
 1999-10-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* ctype/ctype.h: Pretty print.
