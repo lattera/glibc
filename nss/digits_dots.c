@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by H.J. Lu <hjl@gnu.ai.mit.edu>, 1997.
 
@@ -25,10 +25,11 @@
     {
       const char *cp;
       char *hostname;
-      typedef unsigned char host_addr_t [16];
+      typedef unsigned char host_addr_t[16];
       host_addr_t *host_addr;
-      typedef char *host_addr_list_t [2];
+      typedef char *host_addr_list_t[2];
       host_addr_list_t *h_addr_ptrs;
+      char **h_alias_ptr;
       size_t size_needed;
       int addr_size;
 #ifdef HAVE_TYPE
@@ -102,7 +103,8 @@
       host_addr = (host_addr_t *) buffer;
       h_addr_ptrs = (host_addr_list_t *)
 	((char *) host_addr + sizeof (*host_addr));
-      hostname = (char *) h_addr_ptrs + sizeof (*h_addr_ptrs);
+      h_alias_ptr = (char **) ((char *) h_addr_ptrs + sizeof (*h_addr_ptrs));
+      hostname = (char *) h_alias_ptr + sizeof (*h_alias_ptr);
 
       if (isdigit (name[0]))
 	{
@@ -136,7 +138,8 @@
 		    }
 
 		  resbuf.h_name = strcpy (hostname, name);
-		  resbuf.h_aliases = NULL;
+		  h_alias_ptr[0] = NULL;
+		  resbuf.h_aliases = h_alias_ptr;
 		  (*h_addr_ptrs)[0] = (char *)host_addr;
 		  (*h_addr_ptrs)[1] = (char *)0;
 		  resbuf.h_addr_list = *h_addr_ptrs;
@@ -297,7 +300,8 @@
 		    }
 
 		  resbuf.h_name = strcpy (hostname, name);
-		  resbuf.h_aliases = NULL;
+		  h_alias_ptr[0] = NULL;
+		  resbuf.h_aliases = h_alias_ptr;
 		  (*h_addr_ptrs)[0] = (char *) host_addr;
 		  (*h_addr_ptrs)[1] = (char *) 0;
 		  resbuf.h_addr_list = *h_addr_ptrs;

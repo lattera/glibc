@@ -1,5 +1,8 @@
 2000-08-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* nss/digits_dots.c: Don't pass NULL in h_aliases for successful
+	lookup, pass pointer to array with NULL pointer [PR libc/1858].
+
 	* rt/aio_cancel.c: If canceling a specific request which is running
 	*really* do nothing.
 	* rt/aio_misc.h: Add `done' to states of a request.
