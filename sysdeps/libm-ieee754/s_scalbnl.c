@@ -33,16 +33,16 @@ static const long double
 #else
 static long double
 #endif
-two54   =  1.80143985094819840000e+16, /* 0x4035, 0x00000000, 0x00000000 */
-twom54  =  5.55111512312578270212e-17, /* 0x3FC9, 0x00000000, 0x00000000 */
+two63   =  4.50359962737049600000e+15,
+twom63  =  1.08420217248550443400e-19;
 huge   = 1.0e+4900L,
 tiny   = 1.0e-4900L;
 
 #ifdef __STDC__
-	long double __scalbnl (long double x, int n)
+	long double __scalbnl (long double x, long int n)
 #else
 	long double __scalbnl (x,n)
-	long double x; int n;
+	long double x; long int n;
 #endif
 {
 	int32_t k,es,hx,lx;
@@ -50,22 +50,22 @@ tiny   = 1.0e-4900L;
         k = es&0x7fff;				/* extract exponent */
         if (k==0) {				/* 0 or subnormal x */
             if ((lx|(hx&0x7fffffff))==0) return x; /* +-0 */
-	    x *= two54;
-	    GET_HIGH_WORD(hx,x);
-	    k = ((hx&0x7ff00000)>>20) - 54;
-            if (n< -50000) return tiny*x; 	/*underflow*/
+	    x *= two63;
+	    GET_LDOUBLE_EXP(es,x);
+	    k = (hx&0x7fff) - 63;
 	    }
-        if (k==0x7ff) return x+x;		/* NaN or Inf */
+        if (k==0x7fff) return x+x;		/* NaN or Inf */
         k = k+n;
-        if (k >  0x7fe) return huge*__copysign(huge,x); /* overflow  */
+        if (n> 50000 || k > 0x7ffe)
+	  return huge*__copysignl(huge,x); /* overflow  */
+	if (n< -50000)
+	  return tiny*__copysignl(tiny,x);
         if (k > 0) 				/* normal result */
-	    {SET_HIGH_WORD(x,(hx&0x800fffff)|(k<<20)); return x;}
-        if (k <= -54)
-            if (n > 50000) 	/* in case integer overflow in n+k */
-		return huge*__copysign(huge,x);	/*overflow*/
-	    else return tiny*__copysign(tiny,x); 	/*underflow*/
+	    {SET_LDOUBLE_EXP(x,(es&0x8000)|k); return x;}
+        if (k <= -63)
+	    return tiny*__copysignl(tiny,x); 	/*underflow*/
         k += 54;				/* subnormal result */
-	SET_HIGH_WORD(x,(hx&0x800fffff)|(k<<20));
-        return x*twom54;
+	SET_LDOUBLE_EXP(x,(es&0x8000)|k);
+        return x*twom63;
 }
 weak_alias (__scalbnl, scalbnl)

@@ -27,7 +27,7 @@ headers	:= utmp.h utmpbits.h lastlog.h pty.h
 routines := getutent getutent_r getutid getutline getutid_r getutline_r \
 	    utmp_file utmp_daemon utmpname updwtmp
 
-others = utmpd
+others = utmpd utmpdump
 install-sbin = utmpd
 utmpd-routines := connection database error request xtmp
 extra-objs := $(utmpd-routines:=.o)

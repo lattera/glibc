@@ -27,7 +27,7 @@ GAWK = gawk
 .PHONY: all dvi info
 all: dvi info
 dvi: libc.dvi
-info: libc.info
+info: libc.info dir-add.info
 
 # Get glibc's configuration info.
 ifneq (,$(wildcard ../Makeconfig))
@@ -75,7 +75,7 @@ stamp-summary: summary.awk $(chapters) $(chapters-incl)
 # Generate a file which can be added to the `dir' content to provide direct
 # access to the documentation of the function, variables, and other
 # definitions.
-dir-add.texi: xtract-typefun.awk $(chapters)
+dir-add.texi: xtract-typefun.awk $(chapters) $(chapters-incl)
 	(echo "@dircategory GNU C library functions";			\
 	 echo "@direntry";						\
 	 $(GAWK) -f $^ | sort;						\
@@ -101,7 +101,7 @@ distribute = $(minimal-dist)	       					\
 			$(minimal-dist)))				\
 	     libc.info* libc.?? libc.??s texinfo.tex summary.texi	\
 	     stamp-summary chapters chapters-incl1 chapters-incl2	\
-	     xtract-typefun.awk dir-add.texi dir-add.info
+	     xtract-typefun.awk dir-add.texi dir-add.info dir
 export distribute := $(distribute)
 
 tar-it = tar chovf $@ $^
@@ -143,6 +143,7 @@ realclean: distclean
 install-data subdir_install: install
 install: $(inst_infodir)/libc.info dir-add.info
 	@if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
+	  test -f $(inst_infodir)/dir || cp dir $(inst_infodir);\
 	  install-info --info-dir=$(inst_infodir) $(inst_infodir)/libc.info;\
 	  install-info --info-dir=$(inst_infodir) dir-add.info;\
 	else : ; fi

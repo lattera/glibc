@@ -1,7 +1,7 @@
-/* Compute remainder and a congruent to the quotient.  m68k fpu version
+/* Implementation of gamma function according to ISO C.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,32 +18,30 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define __LIBC_M81_MATH_INLINES
 #include <math.h>
+#include <math_private.h>
 
-#ifndef SUFF
-#define SUFF
-#endif
-#ifndef float_type
-#define float_type double
-#endif
 
-#define CONCATX(a,b) __CONCAT(a,b)
-#define s(name) CONCATX(name,SUFF)
-
-float_type
-s(__remquo) (float_type x, float_type y, int *quo)
+double
+__ieee754_gamma_r (double x, int *signgamp)
 {
-  float_type result;
-  int cquo, fpsr;
+  /* We don't have a real gamma implementation now.  We'll use lgamma
+     and the exp function.  But due to the required boundary
+     conditions we must check some values separately.  */
+  int32_t hx;
+  u_int32_t lx;
 
-  __asm ("frem%.x %2,%0\n\tfmove%.l %/fpsr,%1"
-	 : "=f" (result), "=dm" (fpsr) : "f" (y), "0" (x));
-  cquo = (fpsr >> 16) & 0x7f;
-  if (fpsr & (1 << 23))
-    cquo = -cquo;
-  *quo = cquo;
-  return result;
+  EXTRACT_WORDS (hx, lx, x);
+
+  if ((hx & 0x7fffffff | lx) == 0)
+    /* Return value for x == 0 is NaN with invalid exception.  */
+    return x / x;
+  if (hx < 0 && (u_int32_t) hx < 0xfff00000 && __rint (x) == x)
+    {
+      /* Return value for integer x < 0 is NaN with invalid exception.  */
+      return (x - x) / (x - x);
+    }
+
+  /* XXX FIXME.  */
+  return __ieee754_exp (__ieee754_lgamma_r (x, signgamp));
 }
-#define weak_aliasx(a,b) weak_alias(a,b)
-weak_aliasx (s(__remquo), s(remquo))

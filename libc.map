@@ -6,14 +6,14 @@ GLIBC_2.0 {
     _IO_stderr_; _IO_stdin_; _IO_stdout_;
     _nl_msg_cat_cntr; __environ; _environ; _res;
     ___brk_addr; __curbrk; _nl_current_LC_CTYPE; _libc_intl_domainname;
-    _sys_errlist; _sys_siglist;
+    _sys_errlist; _sys_siglist; __progname;
 
     # helper functions
     __errno_location; __libc_init_first; __h_errno_location;
 
     # functions with special/multiple interfaces
     __sigsetjmp; _setjmp; __sigaddset; __sigdelset; __sigismember;
-    __sysv_signal; __bsd_getpgrp;
+    __sysv_signal; __bsd_getpgrp; _longjmp;
 
     # functions which have an additional interface since they are
     # are cancelable.
@@ -52,6 +52,22 @@ GLIBC_2.0 {
     __sched_getparam; __sched_getscheduler; __sched_setscheduler;
     __sched_yield; __on_exit; __gettimeofday; __fork; __clone;
     __nss_configure_lookup; _dl_open; _IO_file_setbuf;
+    _IO_file_init; _IO_file_attach; _IO_do_write; _IO_seekoff;
+    _IO_link_in; _IO_file_open; _IO_file_doallocate; _IO_file_fopen;
+    _IO_file_overflow; _IO_file_underflow; _IO_file_sync; _IO_file_seekoff;
+    _IO_file_close_it; _IO_file_read; _IO_file_seek; _IO_file_write;
+    _IO_file_stat; _IO_file_close; _IO_file_xsputn; _IO_sgetn;
+    _IO_seekpos; _IO_padn; _IO_getline; _IO_vfprintf;
+    _IO_proc_open; _IO_proc_close; _IO_vfscanf; _IO_free_backup_area;
+    _IO_un_link; _IO_switch_to_get_mode; _IO_default_uflow;
+    _IO_default_xsputn; _IO_default_xsgetn; _IO_default_pbackfail;
+    _IO_setb; _IO_default_doallocate; _IO_doallocbuf; _IO_init;
+    _IO_default_finish; _IO_sputbackc; _IO_sungetc; _IO_adjust_column;
+    _IO_flush_all; _IO_flush_all_linebuffered; _IO_init_marker;
+    _IO_remove_marker; _IO_marker_difference; _IO_marker_delta;
+    _IO_seekmark; _IO_unsave_markers; _IO_str_overflow;
+    _IO_str_underflow; _IO_str_init_static; _IO_str_init_readonly;
+    _IO_str_seekoff; _IO_str_pbackfail; _IO_list_all;
 
     # all functions and variables in the normal name space
     a*; b*; c*; d*; e*; f*; g*; h*; i*; j*; k*; l*; m*;

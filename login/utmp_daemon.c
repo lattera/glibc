@@ -227,24 +227,35 @@ updwtmp_daemon (const char *file, const struct utmp *utmp)
 static int
 do_setutent (int sock)
 {
-  setutent_request request;
+  setutent_request *request;
   setutent_reply reply;
+  size_t size;
 
-  request.header.version = UTMPD_VERSION;
-  request.header.size = sizeof (setutent_request);
-  request.header.type = UTMPD_REQ_SETUTENT;
-  strncpy (request.file, __libc_utmp_file_name, sizeof request.file);
+  size = sizeof (setutent_request) + strlen (__libc_utmp_file_name) + 1;
+  
+  request = malloc (size);
+  if (request == NULL)
+    return -1;
+  
+  request->header.version = UTMPD_VERSION;
+  request->header.size = size;
+  request->header.type = UTMPD_REQ_SETUTENT;
+  strcpy (request->file, __libc_utmp_file_name);
 
   reply.header.version = UTMPD_VERSION;
   reply.header.size = sizeof (setutent_reply);
   reply.header.type = UTMPD_REQ_SETUTENT;
 
-  if (send_request (sock, &request.header, &reply.header) < 0)
-    return -1;
+  if (send_request (sock, &request->header, &reply.header) < 0)
+    {
+      free (request);
+      return -1;
+    }
 
   if (reply.result < 0)
     __set_errno (reply.errnum);
 
+  free (request);
   return reply.result;
 }
 
@@ -375,25 +386,36 @@ do_pututline (int sock, const struct utmp *utmp)
 static int
 do_updwtmp (int sock, const char *file, const struct utmp *utmp)
 {
-  updwtmp_request request;
+  updwtmp_request *request;
   updwtmp_reply reply;
+  size_t size;
 
-  request.header.version = UTMPD_VERSION;
-  request.header.size = sizeof (updwtmp_request);
-  request.header.type = UTMPD_REQ_UPDWTMP;
-  strncpy (request.file, file, sizeof request.file);
-  memcpy (&request.utmp, utmp, sizeof (struct utmp));
+  size = sizeof (updwtmp_request) + strlen (file) + 1;
+  
+  request = malloc (size);
+  if (request == NULL)
+    return -1;
+  
+  request->header.version = UTMPD_VERSION;
+  request->header.size = size;
+  request->header.type = UTMPD_REQ_UPDWTMP;
+  memcpy (&request->utmp, utmp, sizeof (struct utmp));
+  strcpy (request->file, file);
 
   reply.header.version = UTMPD_VERSION;
   reply.header.size = sizeof (updwtmp_reply);
   reply.header.type = UTMPD_REQ_UPDWTMP;
 
-  if (send_request (sock, &request.header, &reply.header) < 0)
-    return -1;
+  if (send_request (sock, &request->header, &reply.header) < 0)
+    {
+      free (request);
+      return -1;
+    }
 
   if (reply.result < 0)
     __set_errno (reply.errnum);
 
+  free (request);
   return reply.result;
 }
 

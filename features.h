@@ -188,6 +188,9 @@
 #define __USE_REENTRANT	1
 #endif
 
+/* We do support the IEC 559 math functionality, real and complex.  */
+#define __STDC_IEC_559__		1
+#define __STDC_IEC_559_COMPLEX__	1
 
 /* This macro indicates that the installed library is the GNU C Library.
    For historic reasons the value now is 6 and this will stay from now

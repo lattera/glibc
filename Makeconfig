@@ -381,13 +381,6 @@ link-libc = $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
 endif
 endif
 
-# We have a versioning file for libc.so.  We must define this here since
-# otherwise in the subdirs this definition is not available and a rebuild
-# of libc.so happens without versioning.
-ifndef libc-map
-libc-map = libc.map
-endif
-
 ifndef link-extra-libs
 ifeq (yes,$(build-shared))
 ifneq ($(common-objpfx),$(objpfx))

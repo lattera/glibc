@@ -4,3 +4,4 @@ pipe.S
 fork.S
 kernel_stat.h
 kernel_sigaction.h
+init-first.h

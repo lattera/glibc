@@ -8,7 +8,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -20,8 +20,6 @@ static char rcsid[] = "$NetBSD: w_gammaf.c,v 1.4 1995/11/20 22:06:48 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-extern int signgam;
-
 #ifdef __STDC__
 	float __gammaf(float x)
 #else
@@ -29,12 +27,19 @@ extern int signgam;
 	float x;
 #endif
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_lgammaf_r(x,&signgam);
-#else
+	int signgam;
         float y;
-        y = __ieee754_lgammaf_r(x,&signgam);
-        if(_LIB_VERSION == _IEEE_) return y;
+	if (_LIB_VERSION == _SVID_)
+	  y = __ieee754_lgammaf_r(x,&signgam);
+	else
+	  {
+	    y = __ieee754_gammaf_r(x,&signgam);
+	    if (signgam < 0) y = -y;
+#ifdef _IEEE_LIBM
+	    return y;
+#else
+	    if(_LIB_VERSION == _IEEE_) return y;
+	  }
         if(!__finitef(y)&&__finitef(x)) {
             if(__floorf(x)==x&&x<=(float)0.0)
 	        /* gammaf pole */
@@ -45,5 +50,5 @@ extern int signgam;
         } else
             return y;
 #endif
-}             
+}
 weak_alias (__gammaf, gammaf)

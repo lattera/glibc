@@ -1,7 +1,8 @@
-/* Compute remainder and a congruent to the quotient.  m68k fpu version
+/* Round argument to nearest integral value according to current rounding
+   direction.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,32 +19,15 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define __LIBC_M81_MATH_INLINES
-#include <math.h>
+#include <sysdep.h>
 
-#ifndef SUFF
-#define SUFF
-#endif
-#ifndef float_type
-#define float_type double
-#endif
-
-#define CONCATX(a,b) __CONCAT(a,b)
-#define s(name) CONCATX(name,SUFF)
-
-float_type
-s(__remquo) (float_type x, float_type y, int *quo)
-{
-  float_type result;
-  int cquo, fpsr;
-
-  __asm ("frem%.x %2,%0\n\tfmove%.l %/fpsr,%1"
-	 : "=f" (result), "=dm" (fpsr) : "f" (y), "0" (x));
-  cquo = (fpsr >> 16) & 0x7f;
-  if (fpsr & (1 << 23))
-    cquo = -cquo;
-  *quo = cquo;
-  return result;
-}
-#define weak_aliasx(a,b) weak_alias(a,b)
-weak_aliasx (s(__remquo), s(remquo))
+	.text
+ENTRY(__llrint)
+	fldt	4(%esp)
+	subl	$8, %esp
+	fistpll	(%esp)
+	popl	%eax
+	popl	%edx
+	ret
+END(__llrint)
+weak_alias (__llrint, llrint)

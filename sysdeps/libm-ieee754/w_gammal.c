@@ -19,15 +19,11 @@ static char rcsid[] = "$NetBSD: $";
 #endif
 
 /* long double gammal(double x)
- * Return the logarithm of the Gamma function of x.
- *
- * Method: call gammal_r
+ * Return the Gamma function of x.
  */
 
 #include "math.h"
 #include "math_private.h"
-
-extern int signgam;
 
 #ifdef __STDC__
 	long double __gammal(long double x)
@@ -36,12 +32,19 @@ extern int signgam;
 	long double x;
 #endif
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_lgammal_r(x,&signgam);
-#else
         long double y;
-        y = __ieee754_lgammal_r(x,&signgam);
-        if(_LIB_VERSION == _IEEE_) return y;
+	int signgam;
+	if (_LIB_VERSION == _SVID_)
+	  y = __ieee754_lgammal_r(x,&signgam);
+	else
+	  {
+	    y = __ieee754_gammal_r(x,&signgam);
+	    if (signgam < 0) y = -y;
+#ifdef _IEEE_LIBM
+	    return y;
+#else
+	    if(_LIB_VERSION == _IEEE_) return y;
+	  }
         if(!__finitel(y)&&__finitel(x)) {
             if(__floorl(x)==x&&x<=0.0)
                 return __kernel_standard(x,x,241); /* gamma pole */

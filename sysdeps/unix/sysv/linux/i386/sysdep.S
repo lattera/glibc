@@ -25,15 +25,8 @@
    it somewhere else.
 
    ...and this place is here.  */
-	.bss
-	.globl errno
-	.type errno,@object
-	.size errno,4
-errno:	.zero 4
-	.globl _errno
-	.type _errno,@object
+	.comm errno,4,4
 _errno = errno	/* This name is expected by hj's libc.so.5 startup code.  */
-	.text
 
 /* The following code is only used in the shared library when we
    compile the reentrant version.  Otherwise each system call defines

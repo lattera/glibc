@@ -122,7 +122,7 @@ subdir_echo-headers: echo-headers
 
 .PHONY: subdir_echo-distinfo
 subdir_echo-distinfo:
-	@echo $(addprefix +header+,$(headers)) \
+	@echo $(addprefix +header+,$(headers) $(filter %.h,$(distribute))) \
 	      $(addprefix +nodist+,$(generated) $(common-generated) $(dont_distribute))
 
 # We want to install everything except the library itself, but update all

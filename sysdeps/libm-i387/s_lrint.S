@@ -22,11 +22,11 @@
 #include <sysdep.h>
 
 	.text
-ENTRY(__rinttol)
+ENTRY(__lrint)
 	fldt	4(%esp)
 	subl	$4, %esp
 	fistpl	(%esp)
 	popl	%eax
 	ret
-END(__rinttol)
-weak_alias (__rinttol, rinttol)
+END(__lrint)
+weak_alias (__lrint, lrint)

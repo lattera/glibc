@@ -16,6 +16,9 @@
 # write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+ifneq (yes,$(inhibit-stdio_lim))
+# Disable these rules if we generate stdio_lim.h by other means.
+
 ifeq (yes,$(cross-compiling))
 $(common-objpfx)stdio_lim.h:
 	@echo
@@ -38,3 +41,5 @@ $(common-objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
 
 common-generated := $(common-generated) stdio_lim.h mk-stdiolim
 before-compile := $(before-compile) $(common-objpfx)stdio_lim.h
+
+endif # inhibit-stdio_lim

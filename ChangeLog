@@ -1,3 +1,320 @@
+1997-06-19 19:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* features.h: Define __STDC_IEC_559__ and _STDC_IEC_559_COMPLEX__.
+
+	* elf/dl-minimal.c (__dcgettext): Remove assertion.
+
+	* inet/rcmd.c: Correct a few typos.  Reported by Eric Troan.
+
+	* manual/Makefile (distribute): Add dir.
+	* manual/dir: New file.
+
+	* math/Makefile (libm-support): Rename s_rinttol, s_rinttoll,
+	s_roundtol, and s_roundtoll to s_lrint, s_llrint, s_lround,
+	and s_llround respectively.
+	(libm-calls): Add e_gamma_r.
+	* math/libm-test.c (check_int_exc): New function.
+	(signbit_test): Remove test for sign of NaN.
+	(gamma_test): Clear exception after test of existence.
+	Correct tests and and epsilons.
+	(lgamma_test): Likewise.
+	(ilogb_test): Correct all tests.
+	(scalb_test): Rewrite.
+	(rinttol_test): Rename to lrint_test and correct tests.
+	(rinttoll_test): Likewise.
+	(roundtol_test): Likewise.
+	(roundtoll_test): Likewise.
+	(main): Call lrint/lround functions instead of rinttol/roundtol.
+	* math/math.h: Change prototypes for rinttol/roundtol.
+	* math/mathcalls.h: Rearrange prototypes according to ISO C9X draft.
+	* sysdeps/generic/mathbits.h: Define FP_ILOGB0 and FP_ILOGBNAN.
+	* sysdeps/i386/mathbits.h: Likewise.
+	* sysdeps/libm-i387/e_scalb.S: Handle special cases correctly.
+	* sysdeps/libm-i387/e_scalbf.S: Likewise.
+	* sysdeps/libm-i387/e_scalbl.S: Likewise.
+	* sysdeps/libm-i387/s_asinh.S: Handle -inf correctly.
+	* sysdeps/libm-i387/s_asinhf.S: Likewise.
+	* sysdeps/libm-i387/s_asinhl.S: Likewise.
+	* sysdeps/libm-i387/s_ilogb.S: Optimize.
+	* sysdeps/libm-i387/s_ilogbf.S: Likewise.
+	* sysdeps/libm-i387/s_ilogbl.S: Likewise.
+	* sysdeps/libm-i387/s_rinttol.S: Rename to...
+	* sysdeps/libm-i387/s_lrint.S: ...this.
+	* sysdeps/libm-i387/s_rinttoll.S: Rename to...
+	* sysdeps/libm-i387/s_llrint.S: ...this.
+	* sysdeps/libm-i387/s_remquo.S: Correctly set sign of remainder.
+	* sysdeps/libm-i387/s_remquof.S: Likewise.
+	* sysdeps/libm-i387/s_remquol.S: Likewise.
+	* sysdeps/libm-i387/e_gamma_r.c: New file.  Implementation of gamma
+	function according to ISO C.
+	* sysdeps/libm-i387/e_gammaf_r.c: New file.
+	* sysdeps/libm-i387/e_gammal_r.c: New file.
+	* sysdeps/libm-i387/e_lgamma_r.c: Don't let optimize compile the
+	generation of exceptions away.
+	* sysdeps/libm-i387/e_lgammaf_r.c: Likewise.
+	* sysdeps/libm-i387/k_standard.c: Correct return value for infinity
+	points of gamma function when not SVID mode.
+	* sysdeps/libm-i387/s_rinttoll.c: Renamed to...
+	* sysdeps/libm-i387/s_llrint.c: ...this.
+	* sysdeps/libm-i387/s_rinttol.c: Renamed to...
+	* sysdeps/libm-i387/s_lrint.c: ...this.
+	* sysdeps/libm-i387/s_roundtoll.c: Renamed to...
+	* sysdeps/libm-i387/s_llround.c: ...this.
+	* sysdeps/libm-i387/s_roundtol.c: Renamed to...
+	* sysdeps/libm-i387/s_lround.c: ..this.
+	* sysdeps/libm-i387/s_scalbn.c: Change second parameter according to
+	ISO C.
+	* sysdeps/libm-i387/s_scalbnf.c: Likewise.
+	* sysdeps/libm-i387/s_scalbnl.c: Likewise.
+	* sysdeps/libm-i387/w_gamma.c: Call __ieee754_gamma_r if library
+	mode is not _SVID_.
+	* sysdeps/libm-i387/w_gammaf.c: Likewise.
+	* sysdeps/libm-i387/w_gammal.c: Likewise.
+	* sysdeps/m68k/fpu/__math.h: Rename __rinttol to __lrint and
+	rinttol to lrint.
+	* sysdeps/m68k/fpu/s_rinttol.c: Renamed to...
+	* sysdeps/m68k/fpu/s_lrint.c: ...this.
+	* sysdeps/m68k/fpu/s_rinttoll.c: Renamed to...
+	* sysdeps/m68k/fpu/s_llrint.c: ...this.
+
+	* md5-crypt/Makefile: Link md5test program with md5.o.
+
+	* stdio-common/temptest.c: Don't use __stdio_gen_tempname which
+	is not exported by the libc.so.
+
+	* stdio-common/vfscanf.c: Correct scanning of strings after last
+	change.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.S: Use .comm to define errno.
+
+1997-06-19 07:37  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* time/tzfile.c (__tzfile_read): Store getc () return in int.
+
+1997-06-13  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* argp/argp-parse.c (argp_version_parser): Include `(PROGRAM ERROR)' in
+	the no-version error text to indicate that something's fucked.
+	[!_] (N_): New macro.
+	(argp_default_options, argp_version_options): Wrap doc strings in N_().
+
+1997-06-12  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* argp/argp-parse.c (parser_parse_opt): Detect and report unhandled
+	options here.
+	(parser_parse_arg): Handle ARGP_KEY_ARGS here.
+	Adjust NEXT pointer back if we fail to parse anything.
+	(parser_parse_next): Simplify arg code.  Leave state NEXT frobbing
+	to parser_parse_arg.
+
+1997-06-11  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* argp/argp.h (ARGP_KEY_ARGS, ARGP_KEY_FINI): New macros.
+	* argp/argp-parse.c (parser_finalize): Do another pass over the
+	parsers with ARGP_KEY_FINI.
+
+1997-06-18  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* string/Makefile (routines): Add argz-replace.
+
+1997-06-16 00:16  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* manual/string.texi (Argz Functions): Document argz_replace.
+
+1997-06-12  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* string/argz.h (__argz_replace, argz_replace): New declarations.
+	* string/argz-replace.c: New file.
+
+1997-06-11  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* manual/argp.texi (Argp Special Keys): Document ARGP_KEY_ARGS.
+
+1997-06-16 23:08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makeconfig (libc-map): Remove definition.
+	* Makerules (libc-map): Define it here, using the full name.
+	(load-map-file): Remove case for empty $(..).
+	($(common-objpfx)libc.so): Revert last change.
+
+1997-06-17 22:18  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/programs/utmpd.c (main): Improve signal handling.
+
+	* login/programs/request.c (do_setutent, do_updwtmp):
+	Allow arbitrary length filenames.
+	* login/programs/utmpd.h (setutent_request, updwtmp_request):
+	Get rid of fixed length file field.
+	* login/utmp_daemon.c (do_setutent, do_updwtmp):
+	Allow arbitrary	length filenames.
+
+	* login/programs/request.c (do_pututline):
+	Don't fail if connection->position is -1 on entry.
+
+1997-06-15 16:32  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/utmp_file.c (updwtmp_file): Use the same method for
+	appending an entry as in pututline_file.
+
+1997-06-11 18:59  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/utmp_file.c (getutent_r_file):
+	Use read lock instead of write lock.
+	(getutline_r_file, internal_getut_r): Lock utmp file.
+	(updwtmp_file): Use fcntl to lock file instead of flock.
+
+1997-06-18 00:11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdio-common/vfscanf.c (inchar, ungetc): Don't count EOF as
+	character read in/put back.
+	* stdio-common/tstscanf.c: Add test case for this.
+
+1997-06-17 22:17  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libc.map: Add more symbols.
+
+1997-06-18 12:01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/Makefile (install): Make sure `dir' file exists if we use
+	install-info.
+
+1997-06-17 19:32  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/Makefile (info): Depend on dir-add.info.
+
+1997-06-17 17:19  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/ldd.bash.in: Fix spacing in message.
+
+1997-06-17 14:28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/do-rel.h (elf_dynamic_do_rel): Always use version
+	information if available.
+
+1997-06-17 11:34  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sunrpc/Makefile ($(rpcsvc:%.x=$(objpfx)rpcsvc/%.h)): Make
+	command non-empty to force make to recheck modification time.
+	($(rpcsvc:%.x=$(objpfx)x%.c)): Likewise.
+
+1997-06-17 00:26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/stub/e_acoshl.c: Set errno to ENOSYS.
+	* sysdeps/stub/e_acosl.c: Likewise.
+	* sysdeps/stub/e_asinl.c: Likewise.
+	* sysdeps/stub/e_atan2l.c: Likewise.
+	* sysdeps/stub/e_expl.c: Likewise.
+	* sysdeps/stub/e_fmodl.c: Likewise.
+	* sysdeps/stub/e_j0l.c: Likewise.
+	* sysdeps/stub/e_j1l.c: Likewise.
+	* sysdeps/stub/e_jnl.c: Likewise.
+	* sysdeps/stub/e_lgammal_r.c: Likewise.
+	* sysdeps/stub/e_log10l.c: Likewise.
+	* sysdeps/stub/e_logl.c: Likewise.
+	* sysdeps/stub/e_powl.c: Likewise.
+	* sysdeps/stub/e_rem_pio2l.c: Likewise.
+	* sysdeps/stub/e_sqrtl.c: Likewise.
+	* sysdeps/stub/k_cosl.c: Likewise.
+	* sysdeps/stub/k_rem_pio2l.c: Likewise.
+	* sysdeps/stub/k_sinl.c: Likewise.
+	* sysdeps/stub/k_tanl.c: Likewise.
+	* sysdeps/stub/s_atanl.c: Likewise.
+	* sysdeps/stub/s_erfl.c: Likewise.
+	* sysdeps/stub/s_exp2.c: Likewise.
+	* sysdeps/stub/s_exp2f.c: Likewise.
+	* sysdeps/stub/s_exp2l.c: Likewise.
+	* sysdeps/stub/s_expm1l.c: Likewise.
+	* sysdeps/stub/s_log1pl.c: Likewise.
+	* sysdeps/stub/s_log2l.c: Likewise.
+
+1997-06-18 11:46  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/w_gamma.c: If _LIB_VERSION is _SVID_ compute
+	result as before last change.
+	* sysdeps/libm-ieee754/w_gammaf.c: Likewise.
+	* sysdeps/libm-ieee754/w_gammal.c: Likewise.
+
+1997-06-16 23:37  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/s_remquo.c: Fix off-by-one when computing
+	quotient.
+	* sysdeps/libm-ieee754/s_remquof.c: Likewise.
+	* sysdeps/libm-ieee754/s_remquol.c: Likewise.
+
+	* sysdeps/m68k/fpu/s_remquo.c: Remove FIXME and special case for
+	quotient.
+
+	* sysdeps/libm-ieee754/w_gamma.c: Add missing call to exp
+	function.  Don't use global signgam.
+	* sysdeps/libm-ieee754/w_gammaf.c: Likewise.
+	* sysdeps/libm-ieee754/w_gammal.c: Likewise.
+
+	* math/Makefile (libm-calls): Remove w_gamma_r.
+	* sysdeps/libm-ieee754/w_gamma_r.c: Remove file.
+	* sysdeps/libm-ieee754/w_gammaf_r.c: Remove file.
+	* sysdeps/libm-ieee754/w_gammal_r.c: Remove file.
+
+	* math/libm-test.c (atanh_test): Declare x only if needed.
+	(signbit_test): Fix typo.
+	(gamma_test): Check whether function is implemented.  Add
+	epsilons.
+	(lgamma_test): Likewise.
+	(fmod_test): Add epsilons.
+	(exp2_test): Use right function for existence test.
+
+1997-06-07 09:20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/powerpc/Dist: Add fenv_const.c.
+	* sysdeps/unix/sysv/linux/Dist: Add net/if_slip.h.
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Add init-first.h and
+	syscall.h.
+	* sysdeps/unix/sysv/linux/sparc/Dist: Add init-first.h.
+	* string/Makefile (distribute): Add tst-svc.expect.
+	* nis/Makefile (distribute): Add nis_intern.h and Banner.
+	* elf/Makefile (distribute): Add dl-hash.h.
+	* Rules (subdir_echo-distinfo): Add headers from $(distribute).
+
+	* login/Makefile (others): Add utmpdump.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	net/if_slip.h.
+
+	* manual/Makefile (dir-add.texi): Also look in indirectly included
+	files.
+
+1997-06-16 23:15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/configure.in: Remove commands to
+	generate stdio_lim.h.
+	* sysdeps/unix/sysv/linux/mk-stdiolim.c: Remove.
+	* sysdeps/unix/sysv/linux/Makefile: Add rules to generate
+	stdio_lim.h here.
+	(common-generated): Add generated files.
+	(inhibit-stdio_lim): Define.
+	* sysdeps/posix/Makefile [$(inhibit-stdio_lim)=yes]: Disable rules
+	to generate stdio_lim.h.
+
+	* sysdeps/unix/sysv/linux/Makefile: Suppress inclusion of
+	dependecy files if no_deps is set.
+	($(objpfx)syscall-%.d): Add header file as target to dependency
+	generation.
+
+1997-06-14 19:19  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/arm/Dist: New file.
+
+1997-06-14 17:59  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* extra-lib.mk (others): Depend on versioned shared library, not
+	the unversioned one.
+	* Makerules (build-shlib): Don't make the version link here.
+	($(common-objpfx)libc.so$(libc.so-version)): New rule for libc
+	version link.
+
+1997-06-16 03:07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/k_standard.c: Undo change of Tue Aug 6
+	01:13:56 1996.
+
 1997-06-16 00:54  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libc.map: Add more symbols.
@@ -834,7 +1151,8 @@
 
 1997-05-27 14:16  Miles Bader  <miles@gnu.ai.mit.edu>
 
-	* argp-help.c (argp_args_usage): Supply correct argp to filter_doc.
+	* argp/argp-help.c (argp_args_usage): Supply correct argp to
+	filter_doc.
 
 1997-05-27 17:51  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
@@ -1199,7 +1517,7 @@
 
 1997-05-21 17:53  Miles Bader  <miles@gnu.ai.mit.edu>
 
-	* argp-help.c (hol_add_cluster): Initialize CL->depth.
+	* argp/argp-help.c (hol_add_cluster): Initialize CL->depth.
 
 1997-05-24 03:51  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -1401,10 +1719,10 @@
 
 1997-05-20 14:01  Miles Bader  <miles@gnu.ai.mit.edu>
 
-	* argp-help.c (_help): Supply STATE to argp_args_usage.
+	* argp/argp-help.c (_help): Supply STATE to argp_args_usage.
 	(argp_args_usage): Add filtering of the args doc string.
 	(comma): Print cluster headers for the first entry too.
-	* argp.h (ARGP_KEY_HELP_ARGS_DOC): New macro.
+	* argp/argp.h (ARGP_KEY_HELP_ARGS_DOC): New macro.
 
 1997-05-21 02:49  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -2602,7 +2920,7 @@
 
 	* rellns-sh: Rewrite to work also in presence of symlinks.
 
-	* arpg/argp-fmtstream.c: Add casts to prevent warnings.
+	* argp/argp-fmtstream.c: Add casts to prevent warnings.
 	* argp/argp-fmtstream.h: Likewise.
 	* argp/argp-help.c: Likewise.
 
@@ -5205,8 +5523,8 @@
 
 1997-02-21 10:41  Miles Bader  <miles@gnu.ai.mit.edu>
 
-	* argp.h (OPTION_NO_USAGE): New macro.
-	* argp-help.c (usage_long_opt, usage_argful_short_opt,
+	* argp/argp.h (OPTION_NO_USAGE): New macro.
+	* argp/argp-help.c (usage_long_opt, usage_argful_short_opt,
 	add_argless_short_opt): Implement OPTION_NO_USAGE.
 
 1997-02-20 16:41  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
@@ -5215,10 +5533,10 @@
 
 1997-02-20 15:56  Miles Bader  <miles@gnu.ai.mit.edu>
 
-	* argp-fmtstream.c (__argp_fmtstream_update): Account for case
+	* argp/argp-fmtstream.c (__argp_fmtstream_update): Account for case
 	where NEXTLINE points one past the end of the active buffer.
 
-	* argp-help.c <stddef.h>: New include.
+	* argp/argp-help.c <stddef.h>: New include.
 	(__argp_failure): Only exit if STATE says it's ok.
 	(print_header, hol_entry_help): Use UPARAMS fields rather than
 	constants.
@@ -5241,12 +5559,12 @@
 	(fill_in_uparams): New function.
 	(__argp_failure, __argp_error, __argp_state_help): Make STATE
 	parameter const.
-	* argp.h (argp_state_help, __argp_state_help, argp_usage,
+	* argp/argp.h (argp_state_help, __argp_state_help, argp_usage,
 	__argp_usage, argp_error, __argp_error, argp_failure,
 	__argp_failure): Make STATE parameter const.
 	(ARGP_KEY_HELP_DUP_ARGS_NOTE): New macro.
 
-	* argp.h (argp_program_bug_address): Make const.
+	* argp/argp.h (argp_program_bug_address): Make const.
 
 1997-02-20 19:20  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -5283,12 +5601,12 @@
 
 1997-02-19 18:48  Miles Bader  <miles@gnu.ai.mit.edu>
 
-	* argp-parse.c (argp_default_parser): Set STATE->name for OPT_PROGNAME.
+	* argp/argp-parse.c (argp_default_parser): Set STATE->name for OPT_PROGNAME.
 	(parser_init): Use the basename for PARSER->state.name.
-	* argp-help.c (__argp_error, __argp_failure, __argp_state_help):
+	* argp/argp-help.c (__argp_error, __argp_failure, __argp_state_help):
 	Use PROGRAM_INVOCATION_SHORT_NAME instead of PROGRAM_INVOCATION_NAME.
 
-	* argp-parse.c (parser_init): Set PARSER->state.flags.
+	* argp/argp-parse.c (parser_init): Set PARSER->state.flags.
 	Make check whether PARSER has the prog name in argv[0] at the
 	proper place.
 

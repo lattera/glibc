@@ -8,7 +8,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -21,9 +21,9 @@ static char rcsid[] = "$NetBSD: e_lgammaf_r.c,v 1.3 1995/05/10 20:45:47 jtc Exp 
 #include "math_private.h"
 
 #ifdef __STDC__
-static const float 
+static const float
 #else
-static float 
+static float
 #endif
 two23=  8.3886080000e+06, /* 0x4b000000 */
 half=  5.0000000000e-01, /* 0x3f000000 */
@@ -136,9 +136,9 @@ static float zero=  0.0000000000e+00;
         }
 	switch (n) {
 	    case 0:   y =  __kernel_sinf(pi*y,zero,0); break;
-	    case 1:   
+	    case 1:
 	    case 2:   y =  __kernel_cosf(pi*((float)0.5-y),zero); break;
-	    case 3:  
+	    case 3:
 	    case 4:   y =  __kernel_sinf(pi*(one-y),zero,0); break;
 	    case 5:
 	    case 6:   y = -__kernel_cosf(pi*(y-(float)1.5),zero); break;
@@ -162,9 +162,11 @@ static float zero=  0.0000000000e+00;
 
     /* purge off +-inf, NaN, +-0, and negative arguments */
 	*signgamp = 1;
+	if ((unsigned int)hx==0xff800000)
+	  return x-x;
 	ix = hx&0x7fffffff;
 	if(ix>=0x7f800000) return x*x;
-	if(ix==0) return one/zero;
+	if(ix==0) return one/fabsf(x);
 	if(ix<0x1c800000) {	/* |x|<2**-70, return -log(|x|) */
 	    if(hx<0) {
 	        *signgamp = -1;
@@ -173,9 +175,9 @@ static float zero=  0.0000000000e+00;
 	}
 	if(hx<0) {
 	    if(ix>=0x4b000000) 	/* |x|>=2**23, must be -integer */
-		return one/zero;
+		return x/zero;
 	    t = sin_pif(x);
-	    if(t==zero) return one/zero; /* -integer */
+	    if(t==zero) return one/fabsf(t); /* -integer */
 	    nadj = __ieee754_logf(pi/fabsf(t*x));
 	    if(t<zero) *signgamp = -1;
 	    x = -x;
@@ -211,7 +213,7 @@ static float zero=  0.0000000000e+00;
 		p3 = t2+w*(t5+w*(t8+w*(t11+w*t14)));
 		p  = z*p1-(tt-w*(p2+y*p3));
 		r += (tf + p); break;
-	      case 2:	
+	      case 2:
 		p1 = y*(u0+y*(u1+y*(u2+y*(u3+y*(u4+y*u5)))));
 		p2 = one+y*(v1+y*(v2+y*(v3+y*(v4+y*v5))));
 		r += (-(float)0.5*y + p1/p2);
@@ -240,7 +242,7 @@ static float zero=  0.0000000000e+00;
 	    y = z*z;
 	    w = w0+z*(w1+y*(w2+y*(w3+y*(w4+y*(w5+y*w6)))));
 	    r = (x-half)*(t-one)+w;
-	} else 
+	} else
     /* 2**58 <= x <= inf */
 	    r =  x*(__ieee754_logf(x)-one);
 	if(hx<0) r = nadj - r;

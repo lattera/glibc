@@ -36,13 +36,13 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   swab strfry memfrob memmem				\
 		   $(addprefix argz-,append count create ctsep next	\
 			             delete extract insert stringify	\
-				     addsep)				\
+				     addsep replace)			\
 		   envz basename					\
 		   strcoll_l strxfrm_l
 
 tests		:= tester testcopy test-ffs tst-strlen stratcliff \
 	           tst-svc
-distribute	:= memcopy.h pagecopy.h
+distribute	:= memcopy.h pagecopy.h tst-svc.expect
 
 
 include ../Rules

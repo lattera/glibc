@@ -309,7 +309,7 @@ __inline_functions (float,f)
 __inline_functions (long double,l)
 #undef __inline_functions
 
-__m81_defun (long int, __rinttol, (long double __x))
+__m81_defun (long int, __lrint, (long double __x))
 {
   long int __result;
   __asm ("fmove%.l %1, %0" : "=dm" (__result) : "f" (__x));
@@ -391,7 +391,7 @@ __inline_forward_c(int,ilogbl, (long double __value), (__value))
 #endif
 #ifdef __USE_ISOC9X
 __inline_forward_c(long double,nearbyintl, (long double __value), (__value))
-__inline_forward_c(long int,rinttol, (long double __value), (__value))
+__inline_forward_c(long int,lrint, (long double __value), (__value))
 #endif
 #ifdef __USE_GNU
 __inline_forward(void,sincosl,

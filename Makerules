@@ -345,11 +345,7 @@ no-whole-archive =
 endif
 
 ifeq ($(versioning),yes)
-ifneq ($(..),)
-load-map-file = $(wildcard $($(@F:%.so=%)-map) $($(@F:%.so=%)-map):%=$(..)%)
-else
 load-map-file = $($(@F:%.so=%)-map)
-endif
 else
 load-map-file =
 endif
@@ -371,8 +367,6 @@ $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
 	  -Wl,--whole-archive $(filter-out $(load-map-file),$^) \
 	  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
-	  test -z "$($(@F)-version)" || \
-	    (rm -f $@$($(@F)-version); $(LN_S) $(@F) $@$($(@F)-version))
 endef
 
 # Don't try to use -lc when making libc.so itself.
@@ -383,12 +377,18 @@ LDFLAGS-c.so = -nostdlib -nostartfiles
 LDLIBS-c.so = -lgcc
 # Give libc.so an entry point and make it directly runnable itself.
 LDFLAGS-c.so += -e __libc_main
+# We have a versioning file for libc.so.
+libc-map = $(..)libc.map
 # Use our own special initializer and finalizer files for libc.so.
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.so \
 			 $(common-objpfx)libc_pic.a \
 			 $(elfobjdir)/sofini.so $(elfobjdir)/ld.so \
-			 $(libc-map:%=$(..)%)
+			 $(libc-map)
 	$(build-shlib)
+ifdef libc.so-version
+$(common-objpfx)libc.so$(libc.so-version): $(common-objpfx)libc.so
+	$(make-link)
+endif
 endif
 
 # Some files must not be compiled with the exception handler mechanism

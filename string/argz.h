@@ -103,6 +103,16 @@ extern error_t __argz_insert __P ((char **__argz, size_t *__argz_len,
 				   char *__before, __const char *__entry));
 extern error_t argz_insert __P ((char **__argz, size_t *__argz_len,
 				 char *__before, __const char *__entry));
+
+/* Replace any occurances of the string STR in ARGZ with WITH, reallocating
+   ARGZ as necessary.  If REPLACE_COUNT is non-zero, *REPLACE_COUNT will be
+   incremented by number of replacements performed.  */
+extern error_t __argz_replace (char **__argz, size_t *__argz_len,
+			       __const char *__str, __const char *__with,
+			       unsigned *__replace_count);
+extern error_t argz_replace (char **__argz, size_t *__argz_len,
+			     __const char *__str, __const char *__with,
+			     unsigned *__replace_count);
 
 /* Returns the next entry in ARGZ & ARGZ_LEN after ENTRY, or NULL if there
    are no more.  If entry is NULL, then the first entry is returned.  This

@@ -1,4 +1,0 @@
-#include <linux/limits.h>
-
-DEFAULT_FOPEN_MAX:OPEN_MAX
-DEFAULT_FILENAME_MAX:PATH_MAX

@@ -15,15 +15,12 @@ static char rcsid[] = "$NetBSD: w_gamma.c,v 1.7 1995/11/20 22:06:43 jtc Exp $";
 #endif
 
 /* double gamma(double x)
- * Return the logarithm of the Gamma function of x.
- *
- * Method: call gamma_r
+ * Return  the logarithm of the Gamma function of x or the Gamma function of x,
+ * depending on the library mode.
  */
 
 #include "math.h"
 #include "math_private.h"
-
-extern int signgam;
 
 #ifdef __STDC__
 	double __gamma(double x)
@@ -32,12 +29,19 @@ extern int signgam;
 	double x;
 #endif
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_lgamma_r(x,&signgam);
-#else
+	int signgam;
         double y;
-        y = __ieee754_lgamma_r(x,&signgam);
-        if(_LIB_VERSION == _IEEE_) return y;
+	if (_LIB_VERSION == _SVID_)
+	  y = __ieee754_lgamma_r(x,&signgam);
+	else
+	  {
+	    y = __ieee754_gamma_r(x,&signgam);
+	    if (signgam < 0) y = -y;
+#ifdef _IEEE_LIBM
+	    return y;
+#else
+	    if(_LIB_VERSION == _IEEE_) return y;
+	  }
         if(!__finite(y)&&__finite(x)) {
             if(__floor(x)==x&&x<=0.0)
                 return __kernel_standard(x,x,41); /* gamma pole */

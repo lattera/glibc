@@ -45,6 +45,8 @@ ifeq ($(crypt-in-libc),yes)
 routines += $(libcrypt-routines)
 endif
 
+$(objpfx)md5test: $(objpfx)md5.o
+
 include ../Rules
 
 ifeq ($(build-shared),yes)

@@ -4,3 +4,5 @@ termbits.h
 kernel_stat.h
 kernel_termios.h
 sys/kernel_termios.h
+init-first.h
+syscall.h

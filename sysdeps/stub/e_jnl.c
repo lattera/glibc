@@ -1,10 +1,12 @@
 #include <math.h>
 #include <stdio.h>
+#include <errno.h>
 
 long double
 __ieee754_jnl (int n, long double x)
 {
   fputs ("__ieee754_jnl not implemented\n", stderr);
+  __set_errno (ENOSYS);
   return 0.0;
 }
 
@@ -14,6 +16,7 @@ long double
 __ieee754_ynl (int n, long double x)
 {
   fputs ("__ieee754_ynl not implemented\n", stderr);
+  __set_errno (ENOSYS);
   return 0.0;
 }
 

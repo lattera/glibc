@@ -22,7 +22,7 @@
 subdir	:= nis
 
 headers			:= $(wildcard rpcsvc/*.[hx])
-distribute		:= nss-nis.h nss-nisplus.h
+distribute		:= nss-nis.h nss-nisplus.h nis_intern.h Banner
 
 # These are the databases available for the nis (and perhaps later nisplus)
 # service.  This must be a superset of the services in nss.

@@ -65,7 +65,7 @@ Report bugs using the \`glibcbug' script to <bugs@gnu.ai.mit.edu>."
     verbose=yes
     shift ;;
   --v | --ve | --ver)
-    echo >&2 $"ldd: option \`" $1 $"' is ambiguous"
+    echo >&2 $"ldd: option \`$1' is ambiguous"
     exit 1 ;;
   --)		# Stop option processing.
     shift; break ;;

@@ -35,10 +35,10 @@ huge   = 1.0e+300,
 tiny   = 1.0e-300;
 
 #ifdef __STDC__
-	double __scalbn (double x, int n)
+	double __scalbn (double x, long int n)
 #else
 	double __scalbn (x,n)
-	double x; int n;
+	double x; long int n;
 #endif
 {
 	int32_t k,hx,lx;
@@ -49,17 +49,16 @@ tiny   = 1.0e-300;
 	    x *= two54;
 	    GET_HIGH_WORD(hx,x);
 	    k = ((hx&0x7ff00000)>>20) - 54;
-            if (n< -50000) return tiny*x; 	/*underflow*/
 	    }
         if (k==0x7ff) return x+x;		/* NaN or Inf */
         k = k+n;
-        if (k >  0x7fe) return huge*__copysign(huge,x); /* overflow  */
+        if (n> 50000 || k >  0x7fe)
+	  return huge*__copysign(huge,x); /* overflow  */
+	if (n< -50000) return tiny*__copysign(tiny,x); /*underflow*/
         if (k > 0) 				/* normal result */
 	    {SET_HIGH_WORD(x,(hx&0x800fffff)|(k<<20)); return x;}
         if (k <= -54)
-            if (n > 50000) 	/* in case integer overflow in n+k */
-		return huge*__copysign(huge,x);	/*overflow*/
-	    else return tiny*__copysign(tiny,x); 	/*underflow*/
+	  return tiny*__copysign(tiny,x); 	/*underflow*/
         k += 54;				/* subnormal result */
 	SET_HIGH_WORD(x,(hx&0x800fffff)|(k<<20));
         return x*twom54;

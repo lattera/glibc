@@ -33,7 +33,7 @@ static long double two52[2] =
 
 
 long int
-__rinttol (long double x)
+__lrint (long double x)
 {
   int32_t j0,sx;
   u_int32_t i0,i1,i;
@@ -141,7 +141,7 @@ static long double two63[2] =
 
 
 long int
-__rinttol (long double x)
+__lrint (long double x)
 {
   int32_t se,j0,sx;
   u_int32_t i0,i1,i;
@@ -239,4 +239,4 @@ __rinttol (long double x)
 }
 #endif
 
-weak_alias (__rinttol, rinttol)
+weak_alias (__lrint, lrint)

@@ -244,7 +244,7 @@ __tzfile_read (const char *file)
 
   for (i = 0; i < num_isstd; ++i)
     {
-      char c = getc (f);
+      int c = getc (f);
       if (c == EOF)
 	goto lose;
       types[i].isstd = c != 0;
@@ -254,7 +254,7 @@ __tzfile_read (const char *file)
 
   for (i = 0; i < num_isgmt; ++i)
     {
-      char c = getc (f);
+      int c = getc (f);
       if (c == EOF)
 	goto lose;
       types[i].isgmt = c != 0;

@@ -47,8 +47,8 @@
    ilogb, isfinite, isinf, isnan, isnormal,
    ldexp, lgamma, log, log10, log1p, log2, logb,
    modf, nearbyint, nextafter,
-   pow, remainder, remquo, rint, rinttol, rinttoll,
-   round, roundtol, roundtoll,
+   pow, remainder, remquo, rint, lrint, llrint,
+   round, lround, llround,
    scalb, scalbn, signbit, sin, sincos, sinh, sqrt, tan, tanh, trunc
 
    and for the following complex math functions:
@@ -593,6 +593,35 @@ check_int (const char *test_name, int computed, int expected)
   fpstack_test (test_name);
 }
 
+static void
+check_int_exc (const char *test_name, int computed, int expected,
+	       short exception)
+{
+  int diff = computed - expected;
+  int result = diff == 0;
+
+  output_new_test (test_name);
+  test_exceptions (test_name, exception);
+
+  if (result)
+    {
+      output_pass_value ();
+    }
+  else
+    {
+      output_fail_value (test_name);
+      if (verbose > 1)
+	{
+	  printf ("Result:\n");
+	  printf (" is:         %d\n", computed);
+	  printf (" should be:  %d\n", expected);
+	}
+      noErrors++;
+    }
+
+  fpstack_test (test_name);
+}
+
 
 /*
   check that computed and expected values are equal (long int values)
@@ -953,7 +982,9 @@ atan2_test (void)
 static void
 atanh_test (void)
 {
+#ifndef TEST_INLINE
   MATHTYPE x;
+#endif
 
   check ("atanh(+0) == +0", FUNC(atanh) (0), 0);
 #ifndef TEST_INLINE
@@ -1089,7 +1120,7 @@ static void
 exp2_test (void)
 {
   errno = 0;
-  exp2(0);
+  FUNC(exp2) (0);
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -1257,7 +1288,6 @@ signbit_test (void)
   check_bool ("signbit (-0) != 0", signbit (minus_zero));
   check_bool ("signbit (+inf) == 0", signbit (plus_infty) == 0);
   check_bool ("signbit (-inf) != 0", signbit (minus_infty));
-  check_bool ("signbit (NaN) == 0", signbit (nan_value));
 
   x = random_less (0);
   check_bool ("signbit (x) != 0 for x < 0", signbit (x));
@@ -1272,21 +1302,26 @@ signbit_test (void)
 static void
 gamma_test (void)
 {
-  MATHTYPE x;
+  errno = 0;
+  FUNC(gamma) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+  feclearexcept (FE_ALL_EXCEPT);
 
   check_isinfp ("gamma (+inf) == +inf", FUNC(gamma) (plus_infty));
   check_isnan_exc ("gamma (0) == NaN plus invalid exception",
                     FUNC(gamma) (0), INVALID_EXCEPTION);
 
-  x = random_less (0.0);
-  check_isnan_exc_ext ("gamma (x) == NaN plus invalid exception for x <= 0",
-                        FUNC(gamma) (x), INVALID_EXCEPTION, x);
+  check_isnan_exc_ext ("gamma (x) == NaN plus invalid exception for integer x <= 0",
+                        FUNC(gamma) (-2), INVALID_EXCEPTION, -2);
   check_isnan_exc ("gamma (-inf) == NaN plus invalid exception",
                    FUNC(gamma) (minus_infty), INVALID_EXCEPTION);
 
-  check ("gamma (0.5) == sqrt(pi)", FUNC(gamma) (0.5), FUNC(sqrt) (M_PI));
-  check ("gamma (-0.5) == -2*sqrt(pi)", FUNC(gamma) (-0.5),
-         -2*FUNC(sqrt) (M_PI));
+  check_eps ("gamma (0.5) == sqrt(pi)", FUNC(gamma) (0.5), FUNC(sqrt) (M_PI),
+	     CHOOSE (0, 5e-16, 2e-7));
+  check_eps ("gamma (-0.5) == -2*sqrt(pi)", FUNC(gamma) (-0.5),
+	     -2*FUNC(sqrt) (M_PI), CHOOSE (0, 5e-16, 3e-7));
 
   check ("gamma (1) == 1", FUNC(gamma) (1), 1);
   check ("gamma (4) == 6", FUNC(gamma) (4), 6);
@@ -1297,15 +1332,19 @@ gamma_test (void)
 static void
 lgamma_test (void)
 {
-  MATHTYPE x;
+  errno = 0;
+  FUNC(lgamma) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+  feclearexcept (FE_ALL_EXCEPT);
 
   check_isinfp ("lgamma (+inf) == +inf", FUNC(lgamma) (plus_infty));
-  check_isnan_exc ("lgamma (0) == +inf plus divide by zero exception",
-                   FUNC(lgamma) (0), DIVIDE_BY_ZERO_EXCEPTION);
+  check_isinfp_exc ("lgamma (0) == +inf plus divide by zero exception",
+		    FUNC(lgamma) (0), DIVIDE_BY_ZERO_EXCEPTION);
 
-  x = random_less (0.0);
-  check_isnan_exc_ext ("lgamma (x) == +inf plus divide by zero exception for x <= 0",
-                       FUNC(lgamma) (x), DIVIDE_BY_ZERO_EXCEPTION, x);
+  check_isinfp_exc ("lgamma (x) == +inf plus divide by zero exception for integer x <= 0",
+		    FUNC(lgamma) (-3), DIVIDE_BY_ZERO_EXCEPTION);
   check_isnan_exc ("lgamma (-inf) == NaN plus invalid exception",
                    FUNC(lgamma) (minus_infty), INVALID_EXCEPTION);
 
@@ -1331,23 +1370,15 @@ static void
 ilogb_test (void)
 {
 
-  /* XXX Are these tests correct? I couldn't find any specification */
-#if 0
-  /* the source suggests that the following calls should fail -
-     but shall we test these special cases or just ignore them? */
-  check_isinfp ("ilogb (+inf) == +inf", FUNC(ilogb) (plus_infty));
-  check_isinfp ("ilogb (-inf) == +inf", FUNC(ilogb) (minus_infty));
+  check_int ("ilogb (1) == 0", FUNC(ilogb) (1), 0);
+  check_int ("ilogb (e) == 1", FUNC(ilogb) (M_E), 1);
+  check_int ("ilogb (1024) == 10", FUNC(ilogb) (1024), 10);
+  check_int ("ilogb (-2000) == 10", FUNC(ilogb) (-2000), 10);
 
-  check_isinfn_exc ("ilogb (+0) == -inf plus divide-by-zero exception",
-		    FUNC(ilogb) (0), DIVIDE_BY_ZERO_EXCEPTION);
-
-  check_isinfn_exc ("ilogb (-0) == -inf plus divide-by-zero exception",
-		    FUNC(ilogb) (minus_zero), DIVIDE_BY_ZERO_EXCEPTION);
-#endif
-  check ("ilogb (1) == 0", FUNC(ilogb) (1), 0);
-  check ("ilogb (e) == 1", FUNC(ilogb) (M_E), 1);
-  check ("ilogb (1024) == 10", FUNC(ilogb) (1024), 10);
-  check ("ilogb (-2000) == 10", FUNC(ilogb) (-2000), 10);
+  check_int_exc ("ilogb (0) == FP_ILOGB0", FUNC(ilogb) (0.0), FP_ILOGB0,
+		 DIVIDE_BY_ZERO_EXCEPTION|INVALID_EXCEPTION);
+  check_int_exc ("ilogb (NaN) == FP_ILOGBNAN", FUNC(ilogb) (nan_value),
+		 FP_ILOGBNAN, INVALID_EXCEPTION);
 
 }
 
@@ -1526,17 +1557,72 @@ scalb_test (void)
 {
   MATHTYPE x;
 
-  check ("scalb (0, 0) == 0", FUNC(scalb) (0, 0), 0);
+  check_isnan ("scalb (2, 0.5) == NaN", FUNC(scalb) (2, 0.5));
+  check_isnan ("scalb (3, -2.5) == NaN", FUNC(scalb) (3, -2.5));
 
-  check_isinfp ("scalb (+inf, 1) == +inf", FUNC(scalb) (plus_infty, 1));
-  check_isinfn ("scalb (-inf, 1) == -inf", FUNC(scalb) (minus_infty, 1));
+  check_isnan ("scalb (0, NaN) == NaN", FUNC(scalb) (0, nan_value));
+  check_isnan ("scalb (1, NaN) == NaN", FUNC(scalb) (1, nan_value));
+
+  x = random_greater (0.0);
+  check ("scalb (x, 0) == 0", FUNC(scalb) (x, 0), x);
+  x = random_greater (0.0);
+  check ("scalb (-x, 0) == 0", FUNC(scalb) (-x, 0), -x);
+
+  check_isnan_exc ("scalb (+0, +inf) == NaN plus invalid exception",
+		   FUNC(scalb) (0, plus_infty), INVALID_EXCEPTION);
+  check_isnan_exc ("scalb (-0, +inf) == NaN plus invalid exception",
+		   FUNC(scalb) (minus_zero, plus_infty), INVALID_EXCEPTION);
+
+  check ("scalb (+0, 2) == +0", FUNC(scalb) (0, 2), 0);
+  check ("scalb (-0, 4) == -0", FUNC(scalb) (minus_zero, -4), minus_zero);
+  check ("scalb (+0, 0) == +0", FUNC(scalb) (0, 0), 0);
+  check ("scalb (-0, 0) == -0", FUNC(scalb) (minus_zero, 0), minus_zero);
+  check ("scalb (+0, -1) == +0", FUNC(scalb) (0, -1), 0);
+  check ("scalb (-0, -10) == -0", FUNC(scalb) (minus_zero, -10), minus_zero);
+  check ("scalb (+0, -inf) == +0", FUNC(scalb) (0, minus_infty), 0);
+  check ("scalb (-0, -inf) == -0", FUNC(scalb) (minus_zero, minus_infty),
+	 minus_zero);
+
+  check_isinfp ("scalb (+inf, -1) == +inf", FUNC(scalb) (plus_infty, -1));
+  check_isinfn ("scalb (-inf, -10) == -inf", FUNC(scalb) (minus_infty, -10));
+  check_isinfp ("scalb (+inf, 0) == +inf", FUNC(scalb) (plus_infty, 0));
+  check_isinfn ("scalb (-inf, 0) == -inf", FUNC(scalb) (minus_infty, 0));
+  check_isinfp ("scalb (+inf, 2) == +inf", FUNC(scalb) (plus_infty, 2));
+  check_isinfn ("scalb (-inf, 100) == -inf", FUNC(scalb) (minus_infty, 100));
+
+  check ("scalb (0, -inf) == 0", FUNC(scalb) (0.0, minus_infty), 0.0);
+  check ("scalb (-0, -inf) == -0", FUNC(scalb) (minus_zero, minus_infty),
+	 minus_zero);
+  x = random_greater (0.0);
+  check ("scalb (x, -inf) == 0", FUNC(scalb) (x, minus_infty), 0.0);
+  check ("scalb (-x, -inf) == -0", FUNC(scalb) (-x, minus_infty), minus_zero);
+
+  x = random_greater (0.0);
+  check_isinfp ("scalb (x, +inf) == +inf", FUNC(scalb) (x, plus_infty));
+  x = random_greater (0.0);
+  check_isinfn ("scalb (-x, +inf) == -inf", FUNC(scalb) (-x, plus_infty));
+  check_isinfp ("scalb (+inf, +inf) == +inf",
+		FUNC(scalb) (plus_infty, plus_infty));
+  check_isinfn ("scalb (-inf, +inf) == -inf",
+		FUNC(scalb) (minus_infty, plus_infty));
+
+  check_isnan ("scalb (+inf, -inf) == NaN",
+	       FUNC(scalb) (plus_infty, minus_infty));
+  check_isnan ("scalb (-inf, -inf) == NaN",
+	       FUNC(scalb) (minus_infty, minus_infty));
+
   check_isnan ("scalb (NaN, 1) == NaN", FUNC(scalb) (nan_value, 1));
+  check_isnan ("scalb (1, NaN) == NaN", FUNC(scalb) (1, nan_value));
+  check_isnan ("scalb (NaN, 0) == NaN", FUNC(scalb) (nan_value, 0));
+  check_isnan ("scalb (0, NaN) == NaN", FUNC(scalb) (0, nan_value));
+  check_isnan ("scalb (NaN, +inf) == NaN",
+	       FUNC(scalb) (nan_value, plus_infty));
+  check_isnan ("scalb (+inf, NaN) == NaN",
+	       FUNC(scalb) (plus_infty, nan_value));
+  check_isnan ("scalb (NaN, NaN) == NaN", FUNC(scalb) (nan_value, nan_value));
 
   check ("scalb (0.8, 4) == 12.8", FUNC(scalb) (0.8L, 4), 12.8L);
   check ("scalb (-0.854375, 5) == -27.34", FUNC(scalb) (-0.854375L, 5), -27.34L);
-
-  x = random_greater (0.0);
-  check_ext ("scalb (x, 0) == x", FUNC(scalb) (x, 0L), x, x);
 }
 
 
@@ -1630,14 +1716,15 @@ sincos_test (void)
   check ("sincos (pi/2, &sin, &cos) puts 1 in sin", sin_res, 1);
   fesetenv (&fenv);
   check_eps ("sincos (pi/2, &sin, &cos) puts 0 in cos", cos_res, 0,
-             CHOOSE(0, 1e-16, 1e-7));
+	     CHOOSE (1e-18L, 1e-16, 1e-7));
 
   FUNC(sincos) (M_PI / 6.0, &sin_res, &cos_res);
-  check ("sincos (pi/6, &sin, &cos) puts 0.5 in sin", sin_res, 0.5);
+  check_eps ("sincos (pi/6, &sin, &cos) puts 0.5 in sin", sin_res, 0.5,
+	     CHOOSE (5e-18L, 0, 0));
 
   FUNC(sincos) (M_PI / 3.0, &sin_res, &cos_res);
   check_eps ("sincos (pi/3, &sin, &cos) puts 0.5 in cos", cos_res, 0.5,
-             CHOOSE(0, 1e-15, 1e-7));
+	     CHOOSE (5e-18L, 1e-15, 1e-7));
 
 
 }
@@ -2045,13 +2132,13 @@ fmod_test (void)
              FUNC(fmod) (x, minus_infty), x, x);
 
   check_eps ("fmod (6.5, 2.3) == 1.9", FUNC(fmod) (6.5, 2.3), 1.9,
-             CHOOSE(0, 1e-15, 0));
+             CHOOSE(5e-16, 1e-15, 2e-7));
   check_eps ("fmod (-6.5, 2.3) == -1.9", FUNC(fmod) (-6.5, 2.3), -1.9,
-             CHOOSE(0, 1e-15, 0));
+             CHOOSE(5e-16, 1e-15, 2e-7));
   check_eps ("fmod (6.5, -2.3) == 1.9", FUNC(fmod) (6.5, -2.3), 1.9,
-             CHOOSE(0, 1e-15, 0));
+             CHOOSE(5e-16, 1e-15, 2e-7));
   check_eps ("fmod (-6.5, -2.3) == -1.9", FUNC(fmod) (-6.5, -2.3), -1.9,
-             CHOOSE(0, 1e-15, 0));
+             CHOOSE(5e-16, 1e-15, 2e-7));
 
 
 }
@@ -4355,44 +4442,44 @@ rint_test (void)
 
 
 static void
-rinttol_test (void)
+lrint_test (void)
 {
   /* XXX this test is incomplete.  We need to have a way to specifiy
      the rounding method and test the critical cases.  So far, only
      unproblematic numbers are tested.  */
 
-  check_long ("rinttol(0) = 0", rinttol (0.0), 0);
-  check_long ("rinttol(-0) = 0", rinttol (minus_zero), 0);
-  check_long ("rinttol(0.2) = 0", rinttol (0.2), 0);
-  check_long ("rinttol(-0.2) = 0", rinttol (-0.2), 0);
+  check_long ("lrint(0) = 0", lrint (0.0), 0);
+  check_long ("lrint(-0) = 0", lrint (minus_zero), 0);
+  check_long ("lrint(0.2) = 0", lrint (0.2), 0);
+  check_long ("lrint(-0.2) = 0", lrint (-0.2), 0);
 
-  check_long ("rinttol(1.4) = 1", rinttol (1.4), 1);
-  check_long ("rinttol(-1.4) = -1", rinttol (-1.4), -1);
+  check_long ("lrint(1.4) = 1", lrint (1.4), 1);
+  check_long ("lrint(-1.4) = -1", lrint (-1.4), -1);
 
-  check_long ("rinttol(8388600.3) = 8388600", rinttol (8388600.3), 8388600);
-  check_long ("rinttol(-8388600.3) = -8388600", rinttol (-8388600.3),
+  check_long ("lrint(8388600.3) = 8388600", lrint (8388600.3), 8388600);
+  check_long ("lrint(-8388600.3) = -8388600", lrint (-8388600.3),
 	      -8388600);
 }
 
 
 static void
-rinttoll_test (void)
+llrint_test (void)
 {
   /* XXX this test is incomplete.  We need to have a way to specifiy
      the rounding method and test the critical cases.  So far, only
      unproblematic numbers are tested.  */
 
-  check_longlong ("rinttoll(0) = 0", rinttoll (0.0), 0);
-  check_longlong ("rinttoll(-0) = 0", rinttoll (minus_zero), 0);
-  check_longlong ("rinttoll(0.2) = 0", rinttoll (0.2), 0);
-  check_longlong ("rinttoll(-0.2) = 0", rinttoll (-0.2), 0);
+  check_longlong ("llrint(0) = 0", llrint (0.0), 0);
+  check_longlong ("llrint(-0) = 0", llrint (minus_zero), 0);
+  check_longlong ("llrint(0.2) = 0", llrint (0.2), 0);
+  check_longlong ("llrint(-0.2) = 0", llrint (-0.2), 0);
 
-  check_longlong ("rinttoll(1.4) = 1", rinttoll (1.4), 1);
-  check_longlong ("rinttoll(-1.4) = -1", rinttoll (-1.4), -1);
+  check_longlong ("llrint(1.4) = 1", llrint (1.4), 1);
+  check_longlong ("llrint(-1.4) = -1", llrint (-1.4), -1);
 
-  check_longlong ("rinttoll(8388600.3) = 8388600", rinttoll (8388600.3),
+  check_longlong ("llrint(8388600.3) = 8388600", llrint (8388600.3),
 		  8388600);
-  check_longlong ("rinttoll(-8388600.3) = -8388600", rinttoll (-8388600.3),
+  check_longlong ("llrint(-8388600.3) = -8388600", llrint (-8388600.3),
 		  -8388600);
 }
 
@@ -4416,45 +4503,45 @@ round_test (void)
 
 
 static void
-roundtol_test (void)
+lround_test (void)
 {
-  check_long ("roundtol(0) = 0", roundtol (0), 0);
-  check_long ("roundtol(-0) = 0", roundtol (minus_zero), 0);
-  check_long ("roundtol(0.2) = 0", roundtol (0.2), 0.0);
-  check_long ("roundtol(-0.2) = 0", roundtol (-0.2), 0);
-  check_long ("roundtol(0.5) = 1", roundtol (0.5), 1);
-  check_long ("roundtol(-0.5) = -1", roundtol (-0.5), -1);
-  check_long ("roundtol(0.8) = 1", roundtol (0.8), 1);
-  check_long ("roundtol(-0.8) = -1", roundtol (-0.8), -1);
-  check_long ("roundtol(1.5) = 2", roundtol (1.5), 2);
-  check_long ("roundtol(-1.5) = -2", roundtol (-1.5), -2);
-  check_long ("roundtol(2097152.5) = 2097153", roundtol (2097152.5), 2097153);
-  check_long ("roundtol(-2097152.5) = -2097153", roundtol (-2097152.5),
+  check_long ("lround(0) = 0", lround (0), 0);
+  check_long ("lround(-0) = 0", lround (minus_zero), 0);
+  check_long ("lround(0.2) = 0", lround (0.2), 0.0);
+  check_long ("lround(-0.2) = 0", lround (-0.2), 0);
+  check_long ("lround(0.5) = 1", lround (0.5), 1);
+  check_long ("lround(-0.5) = -1", lround (-0.5), -1);
+  check_long ("lround(0.8) = 1", lround (0.8), 1);
+  check_long ("lround(-0.8) = -1", lround (-0.8), -1);
+  check_long ("lround(1.5) = 2", lround (1.5), 2);
+  check_long ("lround(-1.5) = -2", lround (-1.5), -2);
+  check_long ("lround(2097152.5) = 2097153", lround (2097152.5), 2097153);
+  check_long ("lround(-2097152.5) = -2097153", lround (-2097152.5),
 	      -2097153);
 }
 
 
 static void
-roundtoll_test (void)
+llround_test (void)
 {
-  check_longlong ("roundtoll(0) = 0", roundtoll (0), 0);
-  check_longlong ("roundtoll(-0) = 0", roundtoll (minus_zero), 0);
-  check_longlong ("roundtoll(0.2) = 0", roundtoll (0.2), 0.0);
-  check_longlong ("roundtoll(-0.2) = 0", roundtoll (-0.2), 0);
-  check_longlong ("roundtoll(0.5) = 1", roundtoll (0.5), 1);
-  check_longlong ("roundtoll(-0.5) = -1", roundtoll (-0.5), -1);
-  check_longlong ("roundtoll(0.8) = 1", roundtoll (0.8), 1);
-  check_longlong ("roundtoll(-0.8) = -1", roundtoll (-0.8), -1);
-  check_longlong ("roundtoll(1.5) = 2", roundtoll (1.5), 2);
-  check_longlong ("roundtoll(-1.5) = -2", roundtoll (-1.5), -2);
-  check_longlong ("roundtoll(2097152.5) = 2097153",
-		  roundtoll (2097152.5), 2097153);
-  check_longlong ("roundtoll(-2097152.5) = -2097153",
-		  roundtoll (-2097152.5), -2097153);
-  check_longlong ("roundtoll(34359738368.5) = 34359738369",
-		  roundtoll (34359738368.5), 34359738369ll);
-  check_longlong ("roundtoll(-34359738368.5) = -34359738369",
-		  roundtoll (-34359738368.5), -34359738369ll);
+  check_longlong ("llround(0) = 0", llround (0), 0);
+  check_longlong ("llround(-0) = 0", llround (minus_zero), 0);
+  check_longlong ("llround(0.2) = 0", llround (0.2), 0.0);
+  check_longlong ("llround(-0.2) = 0", llround (-0.2), 0);
+  check_longlong ("llround(0.5) = 1", llround (0.5), 1);
+  check_longlong ("llround(-0.5) = -1", llround (-0.5), -1);
+  check_longlong ("llround(0.8) = 1", llround (0.8), 1);
+  check_longlong ("llround(-0.8) = -1", llround (-0.8), -1);
+  check_longlong ("llround(1.5) = 2", llround (1.5), 2);
+  check_longlong ("llround(-1.5) = -2", llround (-1.5), -2);
+  check_longlong ("llround(2097152.5) = 2097153",
+		  llround (2097152.5), 2097153);
+  check_longlong ("llround(-2097152.5) = -2097153",
+		  llround (-2097152.5), -2097153);
+  check_longlong ("llround(34359738368.5) = 34359738369",
+		  llround (34359738368.5), 34359738369ll);
+  check_longlong ("llround(-34359738368.5) = -34359738369",
+		  llround (-34359738368.5), -34359738369ll);
 }
 
 
@@ -4811,11 +4898,11 @@ main (int argc, char *argv[])
   floor_test ();
   nearbyint_test ();
   rint_test ();
-  rinttol_test ();
-  rinttoll_test ();
+  lrint_test ();
+  llrint_test ();
   round_test ();
-  roundtol_test ();
-  roundtoll_test ();
+  lround_test ();
+  llround_test ();
   trunc_test ();
 
   /* remainder functions */

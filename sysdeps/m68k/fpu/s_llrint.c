@@ -24,7 +24,7 @@
 #include "math_private.h"
 
 long long int
-__rinttoll (long double x)
+__llrint (long double x)
 {
   int32_t se, sx;
   u_int32_t h, l;
@@ -59,4 +59,4 @@ __rinttoll (long double x)
   return result;
 }
 
-weak_alias (__rinttoll, rinttoll)
+weak_alias (__llrint, llrint)

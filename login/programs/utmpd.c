@@ -134,8 +134,9 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
     usage (EXIT_SUCCESS);
 
   signal (SIGINT, termination_handler);
+  signal (SIGQUIT, termination_handler);
   signal (SIGTERM, termination_handler);
-
+  
   /* Check if we are already running.  */
   if (check_pid (_PATH_UTMPDPID))
     error (EXIT_FAILURE, 0, "already running");
@@ -168,8 +169,13 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 
       if (write_pid (_PATH_UTMPDPID) < 0)
 	warning (errno, "%s", _PATH_UTMPDPID);
-    }
 
+      /* Ignore job control signals.  */
+      signal (SIGTTOU, SIG_IGN);
+      signal (SIGTTIN, SIG_IGN);
+      signal (SIGTSTP, SIG_IGN);
+    }
+  
   /* Drop priviliges.  */
   drop_priviliges ();
   

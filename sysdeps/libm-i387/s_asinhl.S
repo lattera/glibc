@@ -56,14 +56,14 @@ ENTRY(__asinhl)
 	movl	$0x7fff, %eax
 	andl	%ecx, %eax
 	andl	$0x8000, %ecx
-	xorl	%ecx, 12(%esp)
-	fldt	4(%esp)			// |x|
 	movl	%eax, %edx
-	cmpl	$0x3fde, %eax
-	jb	2f			// |x| < 2^-34
 	orl	$0xffff8000, %edx
 	incl	%edx
-	jz	4f			// x in ±Inf or NaN
+	jz	7f			// x in ±Inf or NaN
+	xorl	%ecx, 12(%esp)
+	fldt	4(%esp)			// |x|
+	cmpl	$0x3fde, %eax
+	jb	2f			// |x| < 2^-34
 	fldln2				// log(2) : |x|
 	cmpl	$0x4020, %eax
 	fxch				// |x| : log(2)
@@ -93,6 +93,9 @@ ENTRY(__asinhl)
 	jecxz	4f
 	fchs
 4:	ret
+
+7:	fldt	4(%esp)
+	ret
 
 6:	faddl	MO(one)
 	fyl2x

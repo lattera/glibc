@@ -2,7 +2,7 @@
    direction.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+   Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -19,15 +19,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
+#define __LIBC_M81_MATH_INLINES
+#include <math.h>
 
-	.text
-ENTRY(__rinttoll)
-	fldt	4(%esp)
-	subl	$8, %esp
-	fistpll	(%esp)
-	popl	%eax
-	popl	%edx
-	ret
-END(__rinttoll)
-weak_alias (__rinttoll, rinttoll)
+long int
+__lrint (long double x)
+{
+  return __m81_u(__lrint) (x);
+}
+
+weak_alias (__lrint, lrint)

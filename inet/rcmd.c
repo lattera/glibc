@@ -105,7 +105,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 			else
 				(void)fprintf(stderr, "rcmd: socket: %m\n");
 			sigsetmask(oldmask);
-			return (-1);
+			return -1;
 		}
 		fcntl(s, F_SETOWN, pid);
 		sin.sin_family = hp->h_addrtype;
@@ -140,7 +140,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 		}
 		(void)fprintf(stderr, "%s: %m\n", hp->h_name);
 		sigsetmask(oldmask);
-		return (-1);
+		return -1;
 	}
 	lport--;
 	if (fd2p == 0) {
@@ -149,7 +149,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 	} else {
 		char num[8];
 		int s2 = rresvport(&lport), s3;
-		int len = sizeof(from);
+		size_t len = sizeof(from);
 
 		if (s2 < 0)
 			goto bad;
@@ -211,14 +211,14 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 		goto bad2;
 	}
 	sigsetmask(oldmask);
-	return (s);
+	return s;
 bad2:
 	if (lport)
 		(void)close(*fd2p);
 bad:
 	(void)close(s);
 	sigsetmask(oldmask);
-	return (-1);
+	return -1;
 }
 
 int
@@ -232,20 +232,20 @@ rresvport(alport)
 	sin.sin_addr.s_addr = INADDR_ANY;
 	s = socket(AF_INET, SOCK_STREAM, 0);
 	if (s < 0)
-		return (-1);
+		return -1;
 	for (;;) {
 		sin.sin_port = htons((u_short)*alport);
 		if (bind(s, (struct sockaddr *)&sin, sizeof(sin)) >= 0)
-			return (s);
+			return s;
 		if (errno != EADDRINUSE) {
 			(void)close(s);
-			return (-1);
+			return -1;
 		}
 		(*alport)--;
 		if (*alport == IPPORT_RESERVED/2) {
 			(void)close(s);
 			__set_errno (EAGAIN);		/* close */
-			return (-1);
+			return -1;
 		}
 	}
 }
@@ -282,9 +282,9 @@ ruserok(rhost, superuser, ruser, luser)
 	for (ap = hp->h_addr_list; *ap; ++ap) {
 		bcopy(*ap, &addr, sizeof(addr));
 		if (iruserok(addr, superuser, ruser, luser) == 0)
-			return (0);
+			return 0;
 	}
-	return (-1);
+	return -1;
 }
 
 /*
@@ -314,7 +314,7 @@ again:
 	if (hostf) {
 		if (__ivaliduser(hostf, raddr, luser, ruser) == 0) {
 			(void)fclose(hostf);
-			return (0);
+			return 0;
 		}
 		(void)fclose(hostf);
 	}
@@ -349,7 +349,7 @@ again:
 		  }
 
 		if (hostf == NULL)
-			return (-1);
+			return -1;
 		/*
 		 * If not a regular file, or is owned by someone other than
 		 * user or root or if writeable by anyone but the owner, quit.
@@ -369,11 +369,11 @@ again:
 		if (cp) {
 			__rcmd_errstr = cp;
 			(void)fclose(hostf);
-			return (-1);
+			return -1;
 		}
 		goto again;
 	}
-	return (-1);
+	return -1;
 }
 
 /*
@@ -415,11 +415,11 @@ __ivaliduser(hostf, raddr, luser, ruser)
 		if (__icheckhost(raddr, buf) &&
 		    strcmp(ruser, *user ? user : luser) == 0) {
 			free (buf);
-			return (0);
+			return 0;
 		}
 	}
 	free (buf);
-	return (-1);
+	return -1;
 }
 
 /*
@@ -430,7 +430,7 @@ __icheckhost(raddr, lhost)
 	u_int32_t raddr;
 	register char *lhost;
 {
-	register struct hostent hostbuf, *hp;
+	struct hostent hostbuf, *hp;
 	size_t buflen;
 	char *buffer;
 	register u_int32_t laddr;
@@ -439,7 +439,7 @@ __icheckhost(raddr, lhost)
 
 	/* Try for raw ip address first. */
 	if (isdigit(*lhost) && (int32_t)(laddr = inet_addr(lhost)) != -1)
-		return (raddr == laddr);
+		return raddr == laddr;
 
 	/* Better be a hostname. */
 	buflen = 1024;
@@ -452,14 +452,14 @@ __icheckhost(raddr, lhost)
 	    {
 	      /* Enlarge the buffer.  */
 	      buflen *= 2;
-	      buflen = __alloca (buflen);
+	      buffer = __alloca (buflen);
 	    }
 
 	/* Spin through ip addresses. */
 	for (pp = hp->h_addr_list; *pp; ++pp)
 		if (!bcmp(&raddr, *pp, sizeof(u_int32_t)))
-			return (1);
+			return 1;
 
 	/* No match. */
-	return (0);
+	return 0;
 }

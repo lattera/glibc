@@ -98,27 +98,3 @@ fi
 if test -f $srcdir/elf/ldconfig.c; then
   has_ldconfig=yes
 fi
-
-# Generate stdio_lim.h
-default_fopen_max="`${CC-gcc} -E $srcdir/sysdeps/unix/sysv/linux/mk-stdiolim.c | grep DEFAULT_FOPEN_MAX | cut -f2 -d':'`"
-default_filename_max="`${CC-gcc} -E $srcdir/sysdeps/unix/sysv/linux/mk-stdiolim.c | grep DEFAULT_FILENAME_MAX | cut -f2 -d':'`"
-# We double check if "default_fopen_max" and "default_filename_max" are
-# ok or not.
-if test "x$default_fopen_max" != "xOPEN_MAX" \
-	-a "x$default_filename_max" != "xPATH_MAX"
-then
-  sed -e "s/DEFAULT_FOPEN_MAX/$default_fopen_max/" \
-	-e "s/DEFAULT_FILENAME_MAX/$default_filename_max/" \
-	$srcdir/sysdeps/unix/sysv/linux/stdio_lim.h.in > stdio_lim.h.new
-  if test -r stdio_lim.h.new && cmp -s stdio_lim.h.new stdio_lim.h
-  then
-    echo stdio_lim.h unchanged
-    rm -f stdio_lim.h.new
-  else
-    mv -f stdio_lim.h.new stdio_lim.h
-  fi
-else
-  # We remove the old one if we cannot generate the new one during
-  # configure.
-  rm -f stdio_lim.h
-fi

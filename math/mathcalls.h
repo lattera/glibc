@@ -138,9 +138,7 @@ __MATHCALL (sqrt,, (_Mdouble_ __x));
 #if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
 /* Return `sqrt(X*X + Y*Y)'.  */
 __MATHCALL (hypot,, (_Mdouble_ __x, _Mdouble_ __y));
-#endif
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Return the cube root of X.  */
 __MATHCALL (cbrt,, (_Mdouble_ __x));
 #endif
@@ -177,9 +175,6 @@ __MATHDECLX (int,finite,, (_Mdouble_ __value), (__const__));
    and may return an infinity or NaN, or may do something else.  */
 __MATHCALLX (infnan,, (int __error), (__const__));
 
-/* Return X times (2 to the Nth power).  */
-__MATHCALL (scalbn,, (_Mdouble_ __x, int __n));
-
 /* Return the remainder of X/Y.  */
 __MATHCALL (drem,, (_Mdouble_ __x, _Mdouble_ __y));
 
@@ -203,9 +198,6 @@ __MATHCALLX (nan,, (__const char *__tagb), (__const__));
 /* Return nonzero if VALUE is not a number.  */
 __MATHDECLX (int,isnan,, (_Mdouble_ __value), (__const__));
 
-/* Return the binary exponent of X, which must be nonzero.  */
-__MATHDECL (int,ilogb,, (_Mdouble_ __x));
-
 /* Bessel functions.  */
 __MATHCALL (j0,, (_Mdouble_));
 __MATHCALL (j1,, (_Mdouble_));
@@ -222,6 +214,7 @@ __MATHCALL (erf,, (_Mdouble_));
 __MATHCALL (erfc,, (_Mdouble_));
 __MATHCALL (gamma,, (_Mdouble_));
 __MATHCALL (lgamma,, (_Mdouble_));
+#endif
 
 #ifdef __USE_MISC
 /* Reentrant versions of gamma and lgamma.  Those functions use the global
@@ -230,8 +223,6 @@ __MATHCALL (lgamma,, (_Mdouble_));
 __MATHCALL (gamma,_r, (_Mdouble_, int *));
 __MATHCALL (lgamma,_r, (_Mdouble_, int *));
 #endif
-
-#endif /* Use misc or X/Open.  */
 
 
 #if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
@@ -244,11 +235,15 @@ __MATHCALLX (nextafter,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
 /* Return the remainder of integer divison X / Y with infinite precision.  */
 __MATHCALL (remainder,, (_Mdouble_ __x, _Mdouble_ __y));
-#endif
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalb,, (_Mdouble_ __x, _Mdouble_ __n));
+
+/* Return X times (2 to the Nth power).  */
+__MATHCALL (scalbn,, (_Mdouble_ __x, long int __n));
+
+/* Return the binary exponent of X, which must be nonzero.  */
+__MATHDECL (int,ilogb,, (_Mdouble_ __x));
 #endif
 
 #ifdef __USE_ISOC9X

@@ -82,6 +82,7 @@ __remquol (long double x, long double p, int *quo)
       if (x + x > p)
 	{
 	  x -= p;
+	  ++cquo;
 	  if (x + x >= p)
 	    {
 	      x -= p;
@@ -95,6 +96,7 @@ __remquol (long double x, long double p, int *quo)
       if (x > p_half)
 	{
 	  x -= p;
+	  ++cquo;
 	  if (x >= p_half)
 	    {
 	      x -= p;

@@ -19,13 +19,15 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscal
 	echo > $(@:.d=.h).new \
 	     '/* Generated at libc build time from kernel syscall list.  */'
 	SUNPRO_DEPENDENCIES='$(@:.h=.d) $(patsubst $(objpfx)%,$$(objpfx)%,\
-			     $(@:.h=.d))' \
+						   $(@:.d=.h) $(@:.h=.d))' \
 	$(CC) -E -x c $< -D_LIBC -dM | \
 	sed -n >> $(@:.d=.h).new \
 	      's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p'
 	mv -f $(@:.d=.h).new $(@:.d=.h)
+ifndef no_deps
 # Get the generated list of dependencies (probably /usr/include/asm/unistd.h).
 -include $(objpfx)syscall-list.d
+endif
 generated += syscall-list.h syscall-list.d
 endif
 
@@ -35,7 +37,8 @@ endif
 
 ifeq ($(subdir),socket)
 sysdep_headers += sys/socketcall.h net/if.h net/if_ppp.h net/ppp-comp.h \
-		  net/ppp_defs.h net/if_arp.h net/route.h net/ethernet.h
+		  net/ppp_defs.h net/if_arp.h net/route.h net/ethernet.h \
+		  net/if_slip.h
 sysdep_routines += cmsg_nxthdr
 endif
 
@@ -61,3 +64,30 @@ endif
 
 # Don't compile the ctype glue code, since there is no old non-GNU C library.
 inhibit-glue = yes
+
+# Tell sysdeps/posix/Makefile that we create stdio_lim.h differently.
+inhibit-stdio_lim = yes
+
+$(common-objpfx)stdio_%.h $(common-objpfx)stdio_%.d: \
+ $(..)sysdeps/unix/sysv/linux/stdio_%.h.in
+	rm -f $(@:.h=.d) $(@:.d=.h)-t
+	echo '#include <linux/limits.h>' | \
+	SUNPRO_DEPENDENCIES='$(@:.h=.d) \
+			     $(patsubst $(common-objpfx)%,$$(common-objpfx)%,\
+					$(@:.d=.h) $(@:.h=.d))' \
+	$(CC) -E -dM - > $(@:.d=.h)-t
+	fopen_max=`sed -n 's/^#define OPEN_MAX //p' $(@:.d=.h)-t`; \
+	filename_max=`sed -n 's/^#define PATH_MAX //p' $(@:.d=.h)-t`; \
+	if test -n "$$fopen_max" && test -n "$$filename_max"; then \
+		sed -e "s/DEFAULT_FOPEN_MAX/$$fopen_max/" \
+		    -e "s/DEFAULT_FILENAME_MAX/$$filename_max/" $< \
+		    > $(@:.d=.h).new && \
+		mv -f $(@:.d=.h).new $(@:.d=.h); \
+	else exit 1; fi
+# Remove this last so that it can be examined if something went wrong.
+	rm -f $(@:.d=.h)-t
+ifndef no_deps
+# Get the list of dependencies (probably /usr/include/linux/limits.h).
+-include $(common-objpfx)stdio_lim.d
+endif
+common-generated += stdio_lim.h stdio_lim.d

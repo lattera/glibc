@@ -37,7 +37,7 @@ endif
 # The linked shared library is never a dependent of lib-noranlib,
 # because linking it will depend on libc.so already being built.
 ifneq (,$(filter .so,$(object-suffixes-$(lib))))
-others: $(objpfx)$(lib).so
+others: $(objpfx)$(lib).so$($(lib).so-version)
 endif
 
 

@@ -5,7 +5,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -15,12 +15,12 @@ static char rcsid[] = "$NetBSD: e_lgamma_r.c,v 1.7 1995/05/10 20:45:42 jtc Exp $
 #endif
 
 /* __ieee754_lgamma_r(x, signgamp)
- * Reentrant version of the logarithm of the Gamma function 
- * with user provide pointer for the sign of Gamma(x). 
+ * Reentrant version of the logarithm of the Gamma function
+ * with user provide pointer for the sign of Gamma(x).
  *
  * Method:
  *   1. Argument Reduction for 0 < x <= 8
- * 	Since gamma(1+s)=s*gamma(s), for x in [0,8], we may 
+ * 	Since gamma(1+s)=s*gamma(s), for x in [0,8], we may
  * 	reduce x to a number in [1.5,2.5] by
  * 		lgamma(1+s) = log(s) + lgamma(s)
  *	for example,
@@ -58,36 +58,36 @@ static char rcsid[] = "$NetBSD: e_lgamma_r.c,v 1.7 1995/05/10 20:45:42 jtc Exp $
  *	by
  *	  			    3       5             11
  *		w = w0 + w1*z + w2*z  + w3*z  + ... + w6*z
- *	where 
+ *	where
  *		|w - f(z)| < 2**-58.74
- *		
+ *
  *   4. For negative x, since (G is gamma function)
  *		-x*G(-x)*G(x) = pi/sin(pi*x),
  * 	we have
  * 		G(x) = pi/(sin(pi*x)*(-x)*G(-x))
  *	since G(-x) is positive, sign(G(x)) = sign(sin(pi*x)) for x<0
- *	Hence, for x<0, signgam = sign(sin(pi*x)) and 
+ *	Hence, for x<0, signgam = sign(sin(pi*x)) and
  *		lgamma(x) = log(|Gamma(x)|)
  *			  = log(pi/(|x*sin(pi*x)|)) - lgamma(-x);
- *	Note: one should avoid compute pi*(-x) directly in the 
+ *	Note: one should avoid compute pi*(-x) directly in the
  *	      computation of sin(pi*(-x)).
- *		
+ *
  *   5. Special Cases
  *		lgamma(2+s) ~ s*(1-Euler) for tiny s
  *		lgamma(1)=lgamma(2)=0
  *		lgamma(x) ~ -log(x) for tiny x
  *		lgamma(0) = lgamma(inf) = inf
  *	 	lgamma(-integer) = +-inf
- *	
+ *
  */
 
 #include "math.h"
 #include "math_private.h"
 
 #ifdef __STDC__
-static const double 
+static const double
 #else
-static double 
+static double
 #endif
 two52=  4.50359962737049600000e+15, /* 0x43300000, 0x00000000 */
 half=  5.00000000000000000000e-01, /* 0x3FE00000, 0x00000000 */
@@ -200,9 +200,9 @@ static double zero=  0.00000000000000000000e+00;
         }
 	switch (n) {
 	    case 0:   y =  __kernel_sin(pi*y,zero,0); break;
-	    case 1:   
+	    case 1:
 	    case 2:   y =  __kernel_cos(pi*(0.5-y),zero); break;
-	    case 3:  
+	    case 3:
 	    case 4:   y =  __kernel_sin(pi*(one-y),zero,0); break;
 	    case 5:
 	    case 6:   y = -__kernel_cos(pi*(y-1.5),zero); break;
@@ -226,9 +226,11 @@ static double zero=  0.00000000000000000000e+00;
 
     /* purge off +-inf, NaN, +-0, and negative arguments */
 	*signgamp = 1;
+	if ((unsigned int) hx==0xfff00000&&lx==0)
+	  return x-x;
 	ix = hx&0x7fffffff;
 	if(ix>=0x7ff00000) return x*x;
-	if((ix|lx)==0) return one/zero;
+	if((ix|lx)==0) return one/fabs(x);
 	if(ix<0x3b900000) {	/* |x|<2**-70, return -log(|x|) */
 	    if(hx<0) {
 	        *signgamp = -1;
@@ -237,9 +239,9 @@ static double zero=  0.00000000000000000000e+00;
 	}
 	if(hx<0) {
 	    if(ix>=0x43300000) 	/* |x|>=2**52, must be -integer */
-		return one/zero;
+		return x/zero;
 	    t = sin_pi(x);
-	    if(t==zero) return one/zero; /* -integer */
+	    if(t==zero) return one/fabsf(t); /* -integer */
 	    nadj = __ieee754_log(pi/fabs(t*x));
 	    if(t<zero) *signgamp = -1;
 	    x = -x;
@@ -275,7 +277,7 @@ static double zero=  0.00000000000000000000e+00;
 		p3 = t2+w*(t5+w*(t8+w*(t11+w*t14)));
 		p  = z*p1-(tt-w*(p2+y*p3));
 		r += (tf + p); break;
-	      case 2:	
+	      case 2:
 		p1 = y*(u0+y*(u1+y*(u2+y*(u3+y*(u4+y*u5)))));
 		p2 = one+y*(v1+y*(v2+y*(v3+y*(v4+y*v5))));
 		r += (-0.5*y + p1/p2);
@@ -304,7 +306,7 @@ static double zero=  0.00000000000000000000e+00;
 	    y = z*z;
 	    w = w0+z*(w1+y*(w2+y*(w3+y*(w4+y*(w5+y*w6)))));
 	    r = (x-half)*(t-one)+w;
-	} else 
+	} else
     /* 2**58 <= x <= inf */
 	    r =  x*(__ieee754_log(x)-one);
 	if(hx<0) r = nadj - r;

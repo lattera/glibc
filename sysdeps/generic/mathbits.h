@@ -32,4 +32,9 @@ typedef double double_t;	/* `double' expressions are evaluated as
 /* Define `INFINITY' as value of type `float_t'.  */
 #define INFINITY	HUGE_VAL
 
+
+/* The values returned by `ilogb' for 0 and NaN respectively.  */
+#define FP_ILOGB0	0x80000001
+#define FP_ILOGBNAN	0x7fffffff
+
 #endif /* mathbits.h */

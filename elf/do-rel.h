@@ -53,7 +53,7 @@ elf_dynamic_do_rel (struct link_map *map,
       const ElfW(Sym) *const symtab =
 	(const ElfW(Sym) *) (map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
 
-      if (map->l_info[VERSYMIDX (DT_VERNEEDNUM)])
+      if (map->l_info[VERSYMIDX (DT_VERSYM)])
 	{
 	  const ElfW(Half) *const version =
 	    (const ElfW(Half) *) (map->l_addr

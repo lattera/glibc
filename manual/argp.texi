@@ -271,13 +271,13 @@ group); in this usage, it's conventional to end the string with a
 The group this option is in.
 
 In a long help message, options are sorted alphabetically within each
-group, and the groups presented in the order 0, 1, 2, @dots{}, @var{n},
--@var{m}, @dots{}, -2, -1.  Every entry in an options array with this
+group, and the groups presented in the order @math{0, 1, 2, @dots{}, @var{n},
+-@var{m}, @dots{}, -2, -1}.  Every entry in an options array with this
 field 0 will inherit the group number of the previous entry, or zero if
 it's the first one, unless its a group header (@code{name} and
-@code{key} fields both zero), in which case, the previous entry + 1 is
+@code{key} fields both zero), in which case, the previous entry @math{+ 1} is
 the default.  Automagic options such as @samp{--help} are put into group
--1.
+--1.
 
 Note that because of C structure initialization rules, this field
 often need not be specified, because 0 is the right value.
@@ -457,6 +457,35 @@ recorded, and the @code{ARGP_KEY_NO_ARGS} case won't be used.
 decrements the @code{next} field of its @var{state} argument, the option
 won't be considered processed; this is to allow you to actually modify
 the argument (perhaps into an option), and have it processed again.
+
+@comment argp.h
+@comment GNU
+@item ARGP_KEY_ARGS
+If a parser function returns @code{ARGP_ERR_UNKNOWN} for
+@code{ARGP_KEY_ARG}, it is immediately called again with the key
+@code{ARGP_KEY_ARGS}, which has a similar meaning, but is slightly more
+convenient for consuming all remaining arguments.  @var{arg} is 0, and
+the tail of the argument vector may be found at @code{@var{state}->argv
++ @var{state}->next}.  If success is returned for this key, and
+@code{@var{state}->next} is unchanged, then all remaining arguments are
+considered to have been consumed, otherwise, the amount by which
+@code{@var{state}->next} has been adjust indicates how many were used.
+For instance, here's an example that uses both, for different args:
+
+@smallexample
+...
+case ARGP_KEY_ARG:
+  if (@var{state}->arg_num == 0)
+    /* First argument */
+    first_arg = @var{arg};
+  else
+    return ARGP_KEY_UNKNOWN;    /* Let the next case parse it.  */
+  break;
+case ARGP_KEY_ARGS:
+  remaining_args = @var{state}->argv + @var{state}->next;
+  num_remaining_args = @var{state}->argc - @var{state}->next;
+  break;
+@end smallexample
 
 @comment argp.h
 @comment GNU
@@ -797,7 +826,11 @@ Don't exit on errors (they may still result in error messages).
 @comment argp.h
 @comment GNU
 @item ARGP_LONG_ONLY
-Use the gnu getopt `long-only' rules for parsing arguments.
+Use the gnu getopt `long-only' rules for parsing arguments.  This
+allows long-options to be recognized with only a single @samp{-} (for
+instances, @samp{-help}), but results in a generally somewhat less
+useful interface, that conflicts with the way most GNU programs work.
+For this reason, its use is discouraged.
 
 @comment argp.h
 @comment GNU

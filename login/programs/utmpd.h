@@ -22,7 +22,6 @@
 
 /* This is an *internal* header.  */
 
-#include <limits.h>
 #include <stddef.h>
 #include <utmp.h>
 
@@ -68,7 +67,7 @@ typedef struct
 {
   request_header header;
   /* File to use.  */
-  char file[_POSIX_PATH_MAX + 1];
+  char file[0];
 } setutent_request;
 
 typedef struct
@@ -100,10 +99,10 @@ typedef struct
 typedef struct
 {
   request_header header;
-  /* File to use.  */
-  char file[_POSIX_PATH_MAX + 1];
   /* Entry to write.  */
   struct utmp utmp;
+  /* File to use.  */
+  char file[0];
 } updwtmp_request;
 
 

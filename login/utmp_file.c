@@ -24,10 +24,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <utmp.h>
-#include <sys/file.h>
-#include <sys/stat.h>
 
 #include "utmp-private.h"
 
@@ -116,7 +115,7 @@ endutent_file (void)
 static int
 getutent_r_file (struct utmp *buffer, struct utmp **result)
 {
-  int nbytes;
+  ssize_t nbytes;
   struct flock fl;			/* Information struct for locking.  */
 
   /* Open utmp file if not already done.  */
@@ -136,7 +135,7 @@ getutent_r_file (struct utmp *buffer, struct utmp **result)
 
   /* Try to get the lock.  */
   memset (&fl, '\0', sizeof (struct flock));
-  fl.l_type = F_WRLCK;
+  fl.l_type = F_RDLCK;
   fl.l_whence = SEEK_SET;
   fcntl (file_fd, F_SETLKW, &fl);
 
@@ -170,11 +169,19 @@ static int
 getutline_r_file (const struct utmp *line, struct utmp *buffer,
 		  struct utmp **result)
 {
+  struct flock fl;
+  
   if (file_fd < 0 || file_offset == -1l)
     {
       *result = NULL;
       return -1;
     }
+
+  /* Try to get the lock.  */
+  memset (&fl, '\0', sizeof (struct flock));
+  fl.l_type = F_RDLCK;
+  fl.l_whence = SEEK_SET;
+  fcntl (file_fd, F_SETLKW, &fl);
 
   while (1)
     {
@@ -185,7 +192,7 @@ getutline_r_file (const struct utmp *line, struct utmp *buffer,
 	  __set_errno (ESRCH);
 	  file_offset = -1l;
 	  *result = NULL;
-	  return -1;
+	  goto unlock_return;
 	}
       file_offset += sizeof (struct utmp);
 
@@ -203,7 +210,12 @@ getutline_r_file (const struct utmp *line, struct utmp *buffer,
   memcpy (buffer, &last_entry, sizeof (struct utmp));
   *result = buffer;
 
-  return 0;
+unlock_return:
+  /* And unlock the file.  */
+  fl.l_type = F_UNLCK;
+  fcntl (file_fd, F_SETLKW, &fl);
+
+  return ((result == NULL) ? -1 : 0);
 }
 
 
@@ -237,6 +249,15 @@ proc_utmp_eq (const struct utmp *entry, const struct utmp *match)
 static int
 internal_getut_r (const struct utmp *id, struct utmp *buffer)
 {
+  int result = -1;
+  struct flock fl;
+  
+  /* Try to get the lock.  */
+  memset (&fl, '\0', sizeof (struct flock));
+  fl.l_type = F_RDLCK;
+  fl.l_whence = SEEK_SET;
+  fcntl (file_fd, F_SETLKW, &fl);
+
 #if _HAVE_UT_TYPE - 0
   if (id->ut_type == RUN_LVL || id->ut_type == BOOT_TIME
       || id->ut_type == OLD_TIME || id->ut_type == NEW_TIME)
@@ -252,7 +273,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer)
 	    {
 	      __set_errno (ESRCH);
 	      file_offset = -1l;
-	      return -1;
+	      goto unlock_return;
 	    }
 	  file_offset += sizeof (struct utmp);
 
@@ -274,7 +295,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer)
 	    {
 	      __set_errno (ESRCH);
 	      file_offset = -1l;
-	      return -1;
+	      goto unlock_return;
 	    }
 	  file_offset += sizeof (struct utmp);
 
@@ -283,7 +304,14 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer)
 	}
     }
 
-  return 0;
+  result = 0;
+
+unlock_return:
+  /* And unlock the file.  */
+  fl.l_type = F_UNLCK;
+  fcntl (file_fd, F_SETLKW, &fl);
+
+  return result;
 }
 
 
@@ -401,47 +429,50 @@ static int
 updwtmp_file (const char *file, const struct utmp *utmp)
 {
   int result = -1;
-  struct stat st;
-  ssize_t nbytes;
+  struct flock fl;
+  off_t offset;
   int fd;
   
   /* Open WTMP file.  */
-  fd = __open (file, O_WRONLY | O_APPEND);
+  fd = open (file, O_WRONLY);
   if (fd < 0)
     return -1;
 
-  /* Try to lock the file.  */
-  if (__flock (fd, LOCK_EX | LOCK_NB) < 0 && errno != ENOSYS)
-    {
-      /* Oh, oh.  The file is already locked.  Wait a bit and try again.  */
-      sleep (1);
-
-      /*  This time we ignore the error.  */
-      __flock (fd, LOCK_EX | LOCK_NB);
-    }
-
+  /* Try to get the lock.  */
+  memset (&fl, '\0', sizeof (struct flock));
+  fl.l_type = F_WRLCK;
+  fl.l_whence = SEEK_SET;
+  fcntl (fd, F_SETLKW, &fl);
+  
   /* Remember original size of log file.  */
-  if (__fstat (fd, &st) < 0)
-    goto fail;
+  offset = lseek (fd, 0, SEEK_END);
+  if (offset % sizeof (struct utmp) != 0)
+    {
+      offset -= offset % sizeof (struct utmp);
+      ftruncate (fd, offset);
+
+      if (lseek (fd, 0, SEEK_END) < 0)
+	goto unlock_return;
+    }
 
   /* Write the entry.  If we can't write all the bytes, reset the file
      size back to the original size.  That way, no partial entries
      will remain.  */
-  nbytes = __write (fd, utmp, sizeof (struct utmp));
-  if (nbytes != sizeof (struct utmp))
+  if (write (fd, utmp, sizeof (struct utmp)) != sizeof (struct utmp))
     {
-      ftruncate (fd, st.st_size);
-      goto fail;
+      ftruncate (fd, offset);
+      goto unlock_return;
     }
 
   result = 0;
   
-fail:
+unlock_return:
   /* And unlock the file.  */
-  __flock (fd, LOCK_UN);
+  fl.l_type = F_UNLCK;
+  fcntl (fd, F_SETLKW, &fl);
 
   /* Close WTMP file.  */
-  __close (fd);
+  close (fd);
 
   return result;
 }

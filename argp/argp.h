@@ -160,6 +160,12 @@ typedef error_t (*argp_parser_t)(int key, char *arg, struct argp_state *state);
    actually modify the argument (perhaps into an option), and have it
    processed again.  */
 #define ARGP_KEY_ARG		0
+/* There are remaining arguments not parsed by any parser, which may be found
+   starting at (STATE->argv + STATE->next).  If success is returned, but
+   STATE->next left untouched, it's assumed that all arguments were consume,
+   otherwise, the parser should adjust STATE->next to reflect any arguments
+   consumed.  */
+#define ARGP_KEY_ARGS		0x1000006
 /* There are no more command line arguments at all.  */
 #define ARGP_KEY_END		0x1000001
 /* Because it's common to want to do some special processing if there aren't
@@ -172,11 +178,12 @@ typedef error_t (*argp_parser_t)(int key, char *arg, struct argp_state *state);
    element of the CHILD_INPUT field, if any, in the state structure is
    copied to each child's state to be the initial value of the INPUT field.  */
 #define ARGP_KEY_INIT		0x1000003
+/* Use after all other keys, including SUCCESS & END.  */
+#define ARGP_KEY_FINI		0x1000007
 /* Passed in when parsing has successfully been completed (even if there are
    still arguments remaining).  */
 #define ARGP_KEY_SUCCESS	0x1000004
-/* Passed in if an error occurs (in which case a call with ARGP_KEY_SUCCESS is
-   never made, so any cleanup must be done here).  */
+/* Passed in if an error occurs.  */
 #define ARGP_KEY_ERROR		0x1000005
 
 /* An argp structure contains a set of options declarations, a function to

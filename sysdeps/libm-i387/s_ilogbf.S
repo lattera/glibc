@@ -8,18 +8,14 @@
 RCSID("$NetBSD: s_ilogbf.S,v 1.4 1995/10/22 20:32:43 pk Exp $")
 
 ENTRY(__ilogbf)
-	pushl	%ebp
-	movl	%esp,%ebp
-	subl	$4,%esp
-
-	flds	8(%ebp)
+	flds	4(%esp)
 	fxtract
+	pushl	%eax
 	fstpl	%st
 
-	fistpl	-4(%ebp)
-	movl	-4(%ebp),%eax
+	fistpl	(%esp)
+	popl	%eax
 
-	leave
 	ret
 END (__ilogbf)
 weak_alias (__ilogbf, ilogbf)

@@ -182,12 +182,8 @@ do_setutent (client_connection *connection)
   setutent_request *request;
   setutent_reply reply;
 
+  /* The request size varies, so don't check it.  */
   request = (setutent_request *)connection->read_base;
-  if (request->header.size != sizeof (setutent_request))
-    {
-      warning (EINVAL, "invalid request size");
-      return -1;
-    }
 
   /* Initialize reply.  */
   reply.header.version = UTMPD_VERSION;
@@ -195,7 +191,8 @@ do_setutent (client_connection *connection)
   reply.header.type = UTMPD_REQ_SETUTENT;
 
   /* Select database.  */
-  if (!strncmp (request->file, _PATH_UTMP, sizeof request->file))
+  if (!strncmp (request->file, _PATH_UTMP,
+		request->header.size - sizeof (setutent_request)))
     connection->database = utmp_db;
   else
     {
@@ -450,7 +447,7 @@ do_pututline (client_connection *connection)
       goto return_error;
     }
 
-  if (connection->database == NULL || connection->position == -1)
+  if (connection->database == NULL)
     {
       errno = ESRCH;
       goto return_error;
@@ -520,12 +517,8 @@ do_updwtmp (client_connection *connection)
   updwtmp_reply reply;
   utmp_database *database;
 
+  /* The request size varies, so don't check it.  */
   request = (updwtmp_request *)connection->read_base;
-  if (request->header.size != sizeof (updwtmp_request))
-    {
-      warning (EINVAL, "invalid request size");
-      return -1;
-    }
 
   /* Initialize reply.  */
   reply.header.version = UTMPD_VERSION;
@@ -539,7 +532,8 @@ do_updwtmp (client_connection *connection)
     }
 
   /* Select database.  */
-  if (!strncmp (request->file, _PATH_UTMP, sizeof request->file))
+  if (!strncmp (request->file, _PATH_UTMP,
+		request->header.size - sizeof (updwtmp_request)))
     database = utmp_db;
   else
     {

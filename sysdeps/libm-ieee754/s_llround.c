@@ -1,4 +1,4 @@
-/* Round long double value to long int.
+/* Round long double value to long long int.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -26,12 +26,12 @@
 #ifdef NO_LONG_DOUBLE
 /* The `long double' is in fact the IEEE `double' type.  */
 
-long int
-__roundtol (long double x)
+long long int
+__llround (long double x)
 {
   int32_t j0;
   u_int32_t i1, i0;
-  long int result;
+  long long int result;
 
   EXTRACT_WORDS (i0, i1, x);
   j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
@@ -43,23 +43,23 @@ __roundtol (long double x)
 	{
 	  u_int32_t i = 0xfffff >> j0;
 	  if (((i0 & i) | i1) == 0)
-	    result = (long int) ((i0 & 0xfffff) | 0x100000) >> j0;
+	    result = (long long int) ((i0 & 0xfffff) | 0x100000) >> j0;
 	  else
 	    {
 	      /* X is not integral.  */
 	      u_int32_t j = i0 + (0x80000 >> j0);
               if (j < i0)
-		result = (long int) 0x80000 >> (20 - j0);
+		result = (long long int) 0x80000 >> (20 - j0);
 	      else
 		result = (j | 0x100000) >> (20 - j0);
 	    }
 	}
     }
-  else if (j0 >= 8 * sizeof (long int) || j0 > 51)
+  else if (j0 >= 8 * sizeof (long long int) || j0 > 51)
     {
       /* The number is too large.  It is left implementation defined
 	 what happens.  */
-      result = (long int) x;
+      result = (long long int) x;
     }
   else
     {
@@ -73,26 +73,28 @@ __roundtol (long double x)
 	      j = i0 + 1;
 	      if ((j & 0xfffff) == 0)
 		{
-		  if (sizeof (long int) <= 4)
+		  if (sizeof (long long int) <= 4)
 		    /* Overflow.  */
-		    result = (long int) x;
+		    result = (long long int) x;
 		  else
-		    result = 1l << (j0 + 1);
+		    result = 1ll << (j0 + 1);
 		}
 	      else
-		result = (long int) ((i0 & 0xfffff) | 0x100000) << (j0 - 31);
+		result = ((long long int) ((i0 & 0xfffff) | 0x100000)
+			  << (j0 - 31));
 	    }
 	  else
 	    {
-	      result = (long int) ((i0 & 0xfffff) | 0x100000) << (j0 - 31);
-	      if (sizeof (long int) > 4 && j0 > 31)
+	      result = ((long long int) ((i0 & 0xfffff) | 0x100000)
+			<< (j0 - 31));
+	      if (sizeof (long long int) > 4 && j0 > 31)
 		result |= j >> (63 - j0);
 	    }
 	}
       else
 	{
-	  result = (long int) ((i0 & 0xfffff) | 0x100000) << (j0 - 31);
-	  if (sizeof (long int) > 4 && j0 > 31)
+	  result = (long long int) ((i0 & 0xfffff) | 0x100000) << (j0 - 31);
+	  if (sizeof (long long int) > 4 && j0 > 31)
 	    result |= i1 >> (63 - j0);
 	}
     }
@@ -100,12 +102,12 @@ __roundtol (long double x)
   return i0 & 0x80000000 ? -result : result;
 }
 #else
-long int
-__roundtol (long double x)
+long long int
+__llround (long double x)
 {
   int32_t j0;
   u_int32_t se, i1, i0;
-  long int result;
+  long long int result;
 
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   j0 = (se & 0x7fff) - 0x3fff;
@@ -117,7 +119,7 @@ __roundtol (long double x)
 	{
 	  u_int32_t i = 0x7fffffff >> j0;
 	  if (((i0 & i) | i1) == 0)
-	    result = (long int) i0 >> j0;
+	    result = (long long int) i0 >> j0;
 	  else
 	    {
 	      /* X is not integral.  */
@@ -129,11 +131,11 @@ __roundtol (long double x)
 	    }
 	}
     }
-  else if ((unsigned int) j0 >= 8 * sizeof (long int) || j0 > 62)
+  else if ((unsigned int) j0 >= 8 * sizeof (long long int) || j0 > 62)
     {
       /* The number is too large.  It is left implementation defined
 	 what happens.  */
-      result = (long int) x;
+      result = (long long int) x;
     }
   else
     {
@@ -147,26 +149,26 @@ __roundtol (long double x)
 	      j = i0 + 1;
 	      if (j == 0)
 		{
-		  if (sizeof (long int) <= 4)
+		  if (sizeof (long long int) <= 4)
 		    /* Overflow.  */
-		    result = (long int) x;
+		    result = (long long int) x;
 		  else
-		    result = 1l << (j0 + 1);
+		    result = 1ll << (j0 + 1);
 		}
 	      else
-		result = (long int) i0 << (j0 - 31);
+		result = (long long int) i0 << (j0 - 31);
 	    }
 	  else
 	    {
-	      result = (long int) i0 << (j0 - 31);
-	      if (sizeof (long int) > 4 && j0 > 31)
+	      result = (long long int) i0 << (j0 - 31);
+	      if (sizeof (long long int) > 4 && j0 > 31)
 		result |= j >> (63 - j0);
 	    }
 	}
       else
 	{
-	  result = (long int) i0 << (j0 - 31);
-	  if (sizeof (long int) > 4 && j0 > 31)
+	  result = (long long int) i0 << (j0 - 31);
+	  if (sizeof (long long int) > 4 && j0 > 31)
 	    result |= i1 >> (63 - j0);
 	}
     }
@@ -174,4 +176,4 @@ __roundtol (long double x)
   return se & 0x8000 ? -result : result;
 }
 #endif
-weak_alias (__roundtol, roundtol)
+weak_alias (__llround, llround)

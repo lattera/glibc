@@ -186,13 +186,13 @@ enum
 
 /* Round X to nearest integral value according to current rounding
    direction.  */
-extern long int rinttol __P ((long double __x));
-extern long long int rinttoll __P ((long double __x));
+extern long int lrint __P ((long double __x));
+extern long long int llrint __P ((long double __x));
 
 /* Round X to nearest integral value, rounding halfway cases away from
    zero.  */
-extern long int roundtol __P ((long double __x));
-extern long long int roundtoll __P ((long double __x));
+extern long int lround __P ((long double __x));
+extern long long int llround __P ((long double __x));
 
 
 /* Comparison macros.  */

@@ -1,8 +1,7 @@
-/* Round argument to nearest integral value according to current rounding
-   direction.
+/* Implementation of gamma function according to ISO C.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -19,13 +18,29 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define __LIBC_M81_MATH_INLINES
 #include <math.h>
+#include <math_private.h>
 
-long int
-__rinttol (long double x)
+
+long double
+__ieee754_gammal_r (long double x, int *signgamp)
 {
-  return __m81_u(__rinttol) (x);
-}
+  /* We don't have a real gamma implementation now.  We'll use lgamma
+     and the exp function.  But due to the required boundary
+     conditions we must check some values separately.  */
+  u_int32_t es, hx, lx;
 
-weak_alias (__rinttol, rinttol)
+  GET_LDOUBLE_WORDS (es, hx, lx, x);
+
+  if (((es & 0x7fff) | hx | lx) == 0)
+    /* Return value for x == 0 is NaN with invalid exception.  */
+    return x / x;
+  if ((hx & 0x8000) != 0 && (hx & 0x7fff) != 0x7fff && __rintl (x) == x)
+    {
+      /* Return value for integer x < 0 is NaN with invalid exception.  */
+      return (x - x) / (x - x);
+    }
+
+  /* XXX FIXME.  */
+  return __ieee754_expl (__ieee754_lgammal_r (x, signgamp));
+}

@@ -54,8 +54,10 @@
 
 # undef va_list
 # define va_list	_IO_va_list
-# define ungetc(c, s)	(--read_in, _IO_ungetc (c, s))
-# define inchar()	((c = _IO_getc_unlocked (s)), (void) ++read_in, c)
+# define ungetc(c, s)	((void) ((int) c != EOF && --read_in),		      \
+			 _IO_ungetc (c, s))
+# define inchar()	((c = _IO_getc_unlocked (s)), \
+			 (void) (c != EOF && ++read_in), c)
 # define encode_error()	do {						      \
 			  if (errp != NULL) *errp |= 4;			      \
 			  _IO_funlockfile (s);				      \
@@ -98,8 +100,8 @@
   _IO_flockfile (S)
 # define UNLOCK_STREAM __libc_cleanup_region_end (1)
 #else
-# define ungetc(c, s)	(--read_in, ungetc (c, s))
-# define inchar()	((c = getc (s)), (void) ++read_in, c)
+# define ungetc(c, s)	((void) (c != EOF && --read_in), ungetc (c, s))
+# define inchar()	((c = getc (s)), (void) (c != EOF && ++read_in), c)
 # define encode_error()	do {						      \
 			  funlockfile (s);				      \
 			  __set_errno (EILSEQ);				      \
@@ -718,9 +720,6 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		}
 	      STRING_ADD_CHAR (str, c, char);
 	    } while ((width <= 0 || --width > 0) && inchar () != EOF);
-
-	  if (c == EOF)
-	    --read_in;
 
 	  if (!(flags & SUPPRESS))
 	    {

@@ -126,7 +126,6 @@ longjmp (jmp_buf env, int val) { __longjmp (env[0].__jmpbuf, val); }
 char * weak_function
 __dcgettext (const char *domainname, const char *msgid, int category)
 {
-  assert (domainname == _libc_intl_domainname);
   return (char *) msgid;
 }
 weak_alias (__dcgettext, dcgettext)

@@ -81,6 +81,7 @@ __remquof (float x, float y, int *quo)
       if (x + x > y)
 	{
 	  x -= y;
+	  ++cquo;
 	  if (x + x >= y)
 	    {
 	      x -= y;
@@ -94,6 +95,7 @@ __remquof (float x, float y, int *quo)
       if (x > y_half)
 	{
 	  x -= y;
+	  ++cquo;
 	  if (x >= y_half)
 	    {
 	      x -= y;

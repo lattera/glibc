@@ -25,7 +25,12 @@ ENTRY(__remquol)
 	shrl	%cl, %eax
 	andl	$3, %eax
 	movl	28(%esp), %ecx
-	movl	%eax, (%ecx)
+	movl	12(%esp), %edx
+	xorl	24(%esp), %edx
+	testl	$0x8000, %edx
+	jz	1f
+	negl	%eax
+1:	movl	%eax, (%ecx)
 	ret
 END (__remquol)
 weak_alias (__remquol, remquol)

@@ -82,6 +82,7 @@ __remquo (double x, double y, int *quo)
       if (x + x > y)
 	{
 	  x -= y;
+	  ++cquo;
 	  if (x + x >= y)
 	    {
 	      x -= y;
@@ -95,6 +96,7 @@ __remquo (double x, double y, int *quo)
       if (x > y_half)
 	{
 	  x -= y;
+	  ++cquo;
 	  if (x >= y_half)
 	    {
 	      x -= y;

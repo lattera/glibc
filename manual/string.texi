@@ -1443,6 +1443,15 @@ it is empty (rather than a pointer to an empty block of memory); this
 invariant is maintained for argz vectors created by the functions here.
 @end deftypefun
 
+@comment argz.h
+@comment GNU
+@deftypefun error_t argz_replace (@w{char **@var{argz}, size_t *@var{argz_len}}, @w{const char *@var{str}, const char *@var{with}}, @w{unsigned *@var{replace_count}})
+Replace any occurances of the string @var{str} in @var{argz} with
+@var{with}, reallocating @var{argz} as necessary.  If
+@var{replace_count} is non-zero, @code{*@var{replace_count}} will be
+incremented by number of replacements performed.
+@end deftypefun
+
 @node Envz Functions, , Argz Functions, Argz and Envz Vectors
 @subsection Envz Functions
 

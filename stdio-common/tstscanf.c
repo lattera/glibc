@@ -166,6 +166,12 @@ main (int argc, char **argv)
 
     if (res != 1 || a != 0)
       exit (EXIT_FAILURE);
+
+    res = sscanf ("1e3", "%lg%n", &a, &n);
+    printf ("res = %d, a = %g, n = %d\n", res, a, n);
+
+    if (res != 1 || a != 1000 || n != 3)
+      exit (EXIT_FAILURE);
   }
 
   exit(EXIT_SUCCESS);
