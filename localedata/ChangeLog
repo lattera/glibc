@@ -1,3 +1,7 @@
+1999-12-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/af_ZA: New file.
+
 1999-12-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/POSIX: Fix collation order of <SI> and add a few missing
