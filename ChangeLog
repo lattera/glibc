@@ -1,5 +1,8 @@
 2004-09-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c (nscd_run): Call setup_thread only for enabled
+	databases.
+
 	* sysdeps/unix/bsd/bsd4.4/bits/socket.h: Use __NTH for __cmsg_nxthdr.
 
 2004-09-10  Ulrich Drepper  <drepper@redhat.com>

@@ -772,7 +772,7 @@ nscd_run (void *p)
   time_t next_prune = run_prune ? time (NULL) + CACHE_PRUNE_INTERVAL : 0;
   static unsigned long int nready;
 
-  if (my_number < lastdb)
+  if (run_prune)
     setup_thread (&dbs[my_number]);
 
   conn.fd = sock;
