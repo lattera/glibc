@@ -178,7 +178,6 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
       ((struct locale_data *) locale_file->data)->name = __strndup (cp,
 								    endp - cp);
     }
-  *name = (char *) ((struct locale_data *) locale_file->data)->name;
 
   /* Determine whether the user wants transliteration or not.  */
   if ((modifier != NULL && __strcasecmp (modifier, "TRANSLIT") == 0)
