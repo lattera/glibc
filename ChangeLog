@@ -1,3 +1,9 @@
+1999-02-27  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdselect.c (_hurd_select): When bailing for bogus fd, don't
+	try to _hurd_port_free a lower-numbered descriptor that was not in any
+	fd_set.
+
 1999-02-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* wcsmbs/wcstold_l.c [__NO_LONG_DOUBLE_MATH]: Add prototype
