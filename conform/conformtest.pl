@@ -22,8 +22,6 @@ $CFLAGS = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=500";
 	     "dlfcn.h", "dirent.h", "ctype.h", "cpio.h", "assert.h",
 	     "arpa/inet.h", "aio.h");
 
-@headers = ("aio.h");
-
 # These are the ISO C99 keywords.
 @keywords = ('auto', 'break', 'case', 'char', 'const', 'continue', 'default',
 	     'do', 'double', 'else', 'enum', 'extern', 'float', 'for', 'goto',
@@ -214,7 +212,7 @@ sub checknamespace {
   print TESTFILE "#include <$h>\n";
   close (TESTFILE);
 
-  open (CONTENT, "$CC $CFLAGS -E $fnamebase.c -Wp,-dN | sed -e '/^# [1-9]/d' -e '/^[[:space:]]*\$/d' |");
+  open (CONTENT, "$CC $CFLAGS -E $fnamebase.c -P -Wp,-dN | sed -e '/^# [1-9]/d' -e '/^[[:space:]]*\$/d' |");
   loop: while (<CONTENT>) {
     next loop if (/^#undef /);
     chop;
@@ -652,13 +650,13 @@ while ($#headers >= 0) {
 
       compiletest ($fnamebase, "Test availability of macro $macro",
 		   "Macro \"$macro\" is not available.", $missing);
-    } elsif (/^allow *(.*)/) {
-      my($pattern) = $1;
-      push @allow, $pattern;
-      next control;
     } elsif (/^allow-header *(.*)/) {
       my($pattern) = $1;
       push @allowheader, $pattern;
+      next control;
+    } elsif (/^allow *(.*)/) {
+      my($pattern) = $1;
+      push @allow, $pattern;
       next control;
     } else {
       # printf ("line is `%s'\n", $_);
@@ -708,6 +706,7 @@ while ($#headers >= 0) {
       } elsif (/^allow *(.*)/) {
 	push @allow, $1;
       } elsif (/^allow-header *(.*)/) {
+	# XXX We should have a test for recursive dependencies here.
 	push @allowheader, $1;
       }
     }

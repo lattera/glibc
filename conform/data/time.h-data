@@ -68,7 +68,7 @@ function void tzset (void)
 
 variable int daylight
 variable {long int} timezone
-# variable {char*} tzname []
+// variable {char*} tzname []
 
 allow tm_*
 allow clock_*
