@@ -25,6 +25,7 @@
 #include <sys/syscall.h>
 #include "../kernel-features.h"
 
+#undef __libc_fcntl
 #undef __fcntl
 
 extern int __syscall_fcntl (int __fd, int __cmd, ...);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@
 #include <fcntl.h>
 #include <stdarg.h>
 #include <stddef.h>
+
+#undef __open
 
 /* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
    a third argument is the file protection.  */
@@ -49,5 +51,6 @@ __open (file, oflag)
 }
 stub_warning (open)
 
+INTDEF(__open)
 weak_alias (__open, open)
 #include <stub-tag.h>

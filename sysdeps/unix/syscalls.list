@@ -26,7 +26,7 @@ kill		-	kill		i:ii	__kill		kill
 link		-	link		i:ss	__link		link
 lseek		-	lseek		i:iii	__libc_lseek	__lseek lseek
 mkdir		-	mkdir		i:si	__mkdir		mkdir
-open		-	open		i:siv	__libc_open	__open open
+open		-	open		i:siv	__libc_open	__open open __open_internal
 profil		-	profil		i:piii	profil
 ptrace		-	ptrace		i:iiii	ptrace
 read		-	read		i:ibn	__libc_read	__read read

@@ -23,6 +23,7 @@
 #include <stdarg.h>
 #include <sys/file.h>		/* XXX for LOCK_* */
 
+#undef __libc_fcntl
 #undef __fcntl
 
 

@@ -19,6 +19,7 @@
 #include <fcntl.h>
 #include <stdarg.h>
 
+#undef __libc_fcntl
 #undef __fcntl
 
 extern int kfcntl (int fdes, int cmd, unsigned long int arg);

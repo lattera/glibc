@@ -1,5 +1,32 @@
 2002-04-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/sys/socket.h: Declare __libc_sa_len_internal and define
+	SA_LEN macro to use it if not NOT_IN_libc.
+	* sysdeps/unix/sysv/linux/sa_len.c: Use INTDEF for __libc_sa_len.
+
+	* include/fcntl.h: Declare __open_internal and define __open and
+	__libc_open macros if not NOT_IN_libc.
+	* sysdeps/generic/open.c: Use INTDEF for __open.
+	* sysdeps/mach/hurd/open.c: Likewise.
+	* sysdeps/unix/sysv/aix/open.c: Likewise.
+	* sysdeps/unix/syscalls.list: Add __open_internal alias.
+
+	* sysdeps/generic/check_fds.c: Make sure newly opened file descriptor
+	has correct number.
+
+	* include/fcntl.h: Define __libc_fcntl macro if not NOT_IN_libc.
+	* sysdeps/mach/hurd/fcntl.c: Undefine __libc_fcntl as well.
+	* sysdeps/unix/sysv/aix/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c: Likewise.
+
+	* include/wctype.h: Declare __iswalpha_l_internal,
+	__iswdigit_l_internal, __iswspace_l_internal,
+	__iswxdigit_l_internal, and __iswctype_internal.  Define
+	__iswalpha_l, __iswctype, __iswdigit_l, __iswspace_l, and
+	__iswxdigit_l macros if not NOT_IN_libc.
+	* wctype/iswctype.c: Use INTDEF for __iswctype.
+	* wctype/wcfuncs_l.c: Use INTDEF for all __iswXXX_l.
+
 	* include/math.h: Declare __isinf_internal, __isinfl_internal,
 	__isnan_internal, and __isnanl_internal.
 	* stdio-common/printf_fp.c: Use INTUSE for calls to __isinf, __isinfl,

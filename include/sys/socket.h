@@ -34,8 +34,13 @@ extern int __connect_internal (int __fd, __CONST_SOCKADDR_ARG __addr,
 #ifdef _HAVE_SA_LEN
 # define SA_LEN(_x)      (_x)->sa_len
 #else
-# define SA_LEN(_x)      __libc_sa_len((_x)->sa_family)
-extern int __libc_sa_len (sa_family_t __af) __THROW;
+extern int __libc_sa_len (sa_family_t __af);
+extern int __libc_sa_len_internal (sa_family_t __af) attribute_hidden;
+# ifndef NOT_IN_libc
+#  define SA_LEN(_x)      INTUSE(__libc_sa_len)((_x)->sa_family)
+# else
+#  define SA_LEN(_x)      __libc_sa_len((_x)->sa_family)
+# endif
 #endif
 
 

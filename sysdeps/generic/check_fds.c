@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,9 +50,13 @@ check_one_fd (int fd, int mode)
       int nullfd = __libc_open (_PATH_DEVNULL, mode);
       /* We are very paranoid here.  With all means we try to ensure
 	 that we are actually opening the /dev/null device and nothing
-	 else.  */
-      if (__builtin_expect (nullfd, 0) == -1
-	  || __builtin_expect (__fxstat64 (_STAT_VER, nullfd, &st), 0) != 0
+	 else.
+
+	 Note that the following code assumes that STDIN_FILENO,
+	 STDOUT_FILENO, STDERR_FILENO are the three lowest file
+	 decsriptor numbers, in this order.  */
+      if (__builtin_expect (nullfd != fd, 0)
+	  || __builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0) != 0
 	  || __builtin_expect (S_ISCHR (st.st_mode), 1) == 0
 #if defined DEV_NULL_MAJOR && defined DEV_NULL_MINOR
 	  || st.st_rdev != makedev (DEV_NULL_MAJOR, DEV_NULL_MINOR)
@@ -72,7 +76,7 @@ __libc_check_standard_fds (void)
 {
   /* This is really paranoid but some people actually are.  If /dev/null
      should happen to be a symlink to somewhere else and not the device
-     commonly known as "/dev/null" be bail out.  We can detect this with
+     commonly known as "/dev/null" we bail out.  We can detect this with
      the O_NOFOLLOW flag for open() but only on some system.  */
 #ifndef O_NOFOLLOW
 # define O_NOFOLLOW	0

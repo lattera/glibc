@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -22,6 +22,7 @@
 
 #include "wchar-lookup.h"
 
+#undef __iswctype
 
 int
 __iswctype (wint_t wc, wctype_t desc)
@@ -33,4 +34,5 @@ __iswctype (wint_t wc, wctype_t desc)
 
   return wctype_table_lookup ((const char *) desc, wc);
 }
+INTDEF(__iswctype)
 weak_alias (__iswctype, iswctype)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,11 @@
 #define USE_IN_EXTENDED_LOCALE_MODEL
 #include "wchar-lookup.h"
 
+#undef __iswalpha_l
+#undef __iswdigit_l
+#undef __iswspace_l
+#undef __iswxdigit_l
+
 /* Provide real-function versions of all the wctype macros.  */
 
 #define	func(name, type) \
@@ -32,7 +37,8 @@
     size_t i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_CLASS_OFFSET)].word + type; \
     const char *desc = locale->__locales[LC_CTYPE]->values[i].string;	      \
     return wctype_table_lookup (desc, wc);				      \
-  }
+  }									      \
+  INTDEF(name)
 
 func (__iswalnum_l, __ISwalnum)
 func (__iswalpha_l, __ISwalpha)
