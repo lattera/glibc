@@ -1,3 +1,9 @@
+2004-09-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/pwdcache.c (cache_addpw): Use correct key length in
+	cache_add calls.
+	* nscd/grpcache.c (cache_addgr): Likewise.
+
 2004-09-03  Alfred M. Szmidt  <ams@kemisten.nu>
 
 	* sysdeps/mach/hurd/i386/tls.h (THREAD_DTV): Changed type of _DTV

@@ -302,8 +302,8 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	  /* If the request was by UID, add that entry first.  */
 	  if (req->type != GETPWBYNAME)
 	    {
-	      if (cache_add (GETPWBYUID, cp, n, &dataset->head, true, db,
-			     owner) < 0)
+	      if (cache_add (GETPWBYUID, cp, key_offset, &dataset->head, true,
+			     db, owner) < 0)
 		{
 		  /* Could not allocate memory.  Make sure the data gets
 		     discarded.  */
@@ -332,7 +332,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 					   db, owner) == 0, 1))
 	    {
 	      if (req->type == GETPWBYNAME)
-		(void) cache_add (GETPWBYUID, cp, n, &dataset->head,
+		(void) cache_add (GETPWBYUID, cp, key_offset, &dataset->head,
 				  req->type != GETPWBYNAME, db, owner);
 	    }
 	  else if (first)
