@@ -30,6 +30,6 @@ ENTRY (__lstat)
 	popl %eax		/* Pop return address into %eax.  */
 	pushl $_STAT_VER	/* Push extra first arg to syscall.  */
 	pushl %eax		/* Push back the return address.  */
-	DO_CALL (xlstat, 3)	/* Do the syscall.   */
+	DO_CALL (lxstat, 3)	/* Do the syscall.   */
 	jb syscall_error	/* Check for error.  */
 	ret			/* Return success.  */

@@ -30,6 +30,6 @@ ENTRY (__fstat)
 	popl %eax		/* Pop return address into %eax.  */
 	pushl $_STAT_VER	/* Push extra first arg to syscall.  */
 	pushl %eax		/* Push back the return address.  */
-	DO_CALL (xfstat, 3)	/* Do the syscall.   */
+	DO_CALL (fxstat, 3)	/* Do the syscall.   */
 	jb syscall_error	/* Check for error.  */
 	ret			/* Return success.  */
