@@ -1,7 +1,2 @@
 sysconfig.h
-sysconfig.S
-pgrpsys.S
-__waitid.S
 siginfo.h
-__getpgid.c __setpgid.c
-sysinfo.S
