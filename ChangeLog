@@ -1,3 +1,8 @@
+2004-08-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* resolv/inet_pton.c (inet_pton4): Disallow octal numbers.  Reported
+	by A. Guru <a.guru@sympatico.ca>.  [BZ #295]
+
 2004-08-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/nl.po: Update from translation team.

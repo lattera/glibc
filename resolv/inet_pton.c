@@ -69,7 +69,8 @@ libc_hidden_def (inet_pton)
 
 /* int
  * inet_pton4(src, dst)
- *	like inet_aton() but without all the hexadecimal and shorthand.
+ *	like inet_aton() but without all the hexadecimal, octal (with the
+ *	exception of 0) and shorthand.
  * return:
  *	1 if `src' is a valid dotted quad, else 0.
  * notice:
@@ -94,6 +95,8 @@ inet_pton4(src, dst)
 		if (ch >= '0' && ch <= '9') {
 			u_int new = *tp * 10 + (ch - '0');
 
+			if (saw_digit && *tp == 0)
+				return (0);
 			if (new > 255)
 				return (0);
 			*tp = new;
