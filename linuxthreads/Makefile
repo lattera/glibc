@@ -43,7 +43,8 @@ LDFLAGS-pthread.so = $(nodelete-$(have-z-nodelete))
 vpath %.c Examples
 
 librt-tests = ex10 ex11
-tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 $(librt-tests) ex12 joinrace tststack
+tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 $(librt-tests) ex12 ex13 joinrace \
+	tststack
 
 include ../Rules
 
