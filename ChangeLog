@@ -1,3 +1,12 @@
+2002-02-04  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/mips/dl-machine.h (elf_machine_matches_host): Use
+	__attribute_used__.
+	(__dl_runtime_resolve): Likewise.
+
+	* sysdeps/mips/machine-gmon.h (_MCOUNT_DECL): Make it a real
+	declaration.
+
 2001-11-15  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/unix/sysv/linux/mips/sys/procfs.h: Don't include
