@@ -55,6 +55,8 @@ struct hdr
    It is only constructed if the pedantic testing is requested.  */
 static struct hdr *root;
 
+static int mcheck_used;
+
 /* Nonzero if pedentic checking of all blocks is requested.  */
 static int pedantic;
 
@@ -81,6 +83,12 @@ checkhdr (hdr)
      const struct hdr *hdr;
 {
   enum mcheck_status status;
+
+  if (!mcheck_used)
+    /* Maybe the mcheck used is disabled?  This happens when we find
+       an error and report it.  */
+    return MCHECK_OK;
+
   switch (hdr->magic ^ ((uintptr_t) hdr->prev + (uintptr_t) hdr->next))
     {
     default:
@@ -97,7 +105,11 @@ checkhdr (hdr)
       break;
     }
   if (status != MCHECK_OK)
-    (*abortfunc) (status);
+    {
+      mcheck_used = 0;
+      (*abortfunc) (status);
+      mcheck_used = 1;
+    }
   return status;
 }
 
@@ -301,8 +313,6 @@ mabort (status)
   abort ();
 #endif
 }
-
-static int mcheck_used;
 
 int
 mcheck (func)
