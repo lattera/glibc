@@ -1,3 +1,7 @@
+1998-06-27 12:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/bsd/poll.c: Define __poll, make poll weak alias.
+
 1998-06-27  7:07  Richard Henderson  <rth@cygnus.com>
 
 	* math/atest-exp.c (exp_mpn, main): Cast to mp_limb_t appropriately.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
    or -1 for errors.  */
 
 int
-poll (fds, nfds, timeout)
+__poll (fds, nfds, timeout)
      struct pollfd *fds;
      unsigned long int nfds;
      int timeout;
@@ -79,3 +79,6 @@ poll (fds, nfds, timeout)
 
   return ready;
 }
+#ifndef __poll
+weak_alias (__poll, poll)
+#endif
