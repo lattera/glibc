@@ -137,7 +137,8 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 
 		  undef_map->l_reldepsmax += 5;
 		  newp = realloc (undef_map->l_reldeps,
-				  undef_map->l_reldepsmax);
+				  undef_map->l_reldepsmax
+				  * sizeof(struct link_map *));
 
 		  if (__builtin_expect (newp != NULL, 1))
 		    undef_map->l_reldeps = (struct link_map **) newp;
