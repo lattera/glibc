@@ -158,13 +158,12 @@ expand_dynamic_string_token (struct link_map *l, const char *s)
      resulting string is and then we copy it over.  Since this is now
      frequently executed operation we are looking here not for performance
      but rather for code size.  */
-  const char *st, *sf;
+  const char *sf;
   size_t cnt = 0;
   size_t origin_len;
   size_t total;
   char *result, *last_elem, *wp;
 
-  st = s;
   sf = strchr (s, '$');
   while (sf != NULL)
     {
@@ -182,8 +181,7 @@ expand_dynamic_string_token (struct link_map *l, const char *s)
 		      && (len = 11) != 0))))
 	++cnt;
 
-      st = sf + len;
-      sf = strchr (st, '$');
+      sf = strchr (sf + len, '$');
     }
 
   /* If we do not have to replace anything simply copy the string.  */

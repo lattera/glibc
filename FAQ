@@ -147,6 +147,10 @@ please let me know.
 	libc5.  What can be done?
 3.20.	Programs compiled with glibc 2.1 can't read db files made with glibc
 	2.0.  What has changed that programs like rpm break?
+3.21.	Autoconf's AC_CHECK_FUNC macro reports that a function exists, but
+	when I try to use it, it always returns -1 and sets errno to ENOSYS.
+3.22.	My program segfaults when I call fclose() on the FILE* returned
+	from setmntent().  Is this a glibc bug?
 
 4. Miscellaneous
 
@@ -310,10 +314,10 @@ Binutils 2.9.1.0.16 or later is also required.
   as much as 400MB).
 
 * plenty of time.  Compiling just the shared and static libraries for
-  i?86-linux takes approximately 1h on an i586@133, or 2.5h on
-  i486@66, or 4.5h on i486@33.  Multiply this by 1.5 or 2.0 if you
-  build profiling and/or the highly optimized version as well.  For
-  Hurd systems times are much higher.
+  i?86-linux takes approximately 1h on an AMD-K6@225MHz w/ 96MB of RAM,
+  45mins on a Celeron@400MHz w/ 128MB, and 55mins on a Alpha@533MHz w/ 256MB.
+  Multiply this by 1.5 or 2.0 if you build profiling and/or the highly
+  optimized version as well.  For Hurd systems times are much higher.
 
   You should avoid compiling in a NFS mounted filesystem.  This is
   very slow.
@@ -1529,6 +1533,33 @@ db2 supports the old db1 programming interface and also a new programming
 interface.  For compilation with the old API, <db_185.h> has to be included
 (and not <db.h>) and you can link with either `-ldb1' or `-ldb' for either
 of the db formats.
+
+
+3.21.	Autoconf's AC_CHECK_FUNC macro reports that a function exists, but
+	when I try to use it, it always returns -1 and sets errno to ENOSYS.
+
+{ZW} You are using a 2.0 Linux kernel, and the function you are trying to
+use is only implemented in 2.1/2.2.  Libc considers this to be a function
+which exists, because if you upgrade to a 2.2 kernel, it will work.  One
+such function is sigaltstack.
+
+Your program should check at runtime whether the function works, and
+implement a fallback.  Note that Autoconf cannot detect unimplemented
+functions in other systems' C libraries, so you need to do this anyway.
+
+
+3.22.	My program segfaults when I call fclose() on the FILE* returned
+	from setmntent().  Is this a glibc bug?
+
+{GK} No.  Don't do this.  Use endmntent(), that's what it's for.
+
+In general, you should use the correct deallocation routine.  For instance,
+if you open a file using fopen(), you should deallocate the FILE * using
+fclose(), not free(), even though the FILE * is also a pointer.
+
+In the case of setmntent(), it may appear to work in most cases, but it
+won't always work.  Unfortunately, for compatibility reasons, we can't
+change the return type of setmntent() to something other than FILE *.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 

@@ -1326,6 +1326,19 @@ Your program should check at runtime whether the function works, and
 implement a fallback.  Note that Autoconf cannot detect unimplemented
 functions in other systems' C libraries, so you need to do this anyway.
 
+??	My program segfaults when I call fclose() on the FILE* returned
+	from setmntent().  Is this a glibc bug?
+
+{GK} No.  Don't do this.  Use endmntent(), that's what it's for.
+
+In general, you should use the correct deallocation routine.  For instance,
+if you open a file using fopen(), you should deallocate the FILE * using
+fclose(), not free(), even though the FILE * is also a pointer.
+
+In the case of setmntent(), it may appear to work in most cases, but it
+won't always work.  Unfortunately, for compatibility reasons, we can't
+change the return type of setmntent() to something other than FILE *.
+
 
 ? Miscellaneous
 
