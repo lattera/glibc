@@ -119,6 +119,9 @@ libc {
   GLIBC_2.3.3 {
     sched_getaffinity; sched_setaffinity;
   }
+  GLIBC_2.3.4 {
+    regexec;
+  }
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are
     # are cancelable.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1996,1997,1999,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Douglas C. Schmidt (schmidt@ics.uci.edu).
 
@@ -103,7 +103,9 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
       char *lo = base_ptr;
       char *hi = &lo[size * (total_elems - 1)];
       stack_node stack[STACK_SIZE];
-      stack_node *top = stack + 1;
+      stack_node *top = stack;
+
+      PUSH (NULL, NULL);
 
       while (STACK_NOT_EMPTY)
         {

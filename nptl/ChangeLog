@@ -1,15 +1,8 @@
-2004-03-09  Richard Henderson  <rth@redhat.com>
+2004-03-09  Jakub Jelinek  <jakub@redhat.com>
 
-	* math/math.h (isgreater, isgreaterequal, isless, islessequal,
-	islessgreater, isunordered): Use builtins if available.
-	* sysdeps/i386/fpu/bits/mathinline.h: Don't define via builtins.
-	* sysdeps/m68k/fpu/bits/mathinline.h: Likewise.
-	* sysdeps/powerpc/fpu/bits/mathinline.h: Likewise.
-	* sysdeps/sparc/fpu/bits/mathinline.h: Likewise.
-	* sysdeps/x86_64/fpu/bits/mathinline.h: Likewise.
-	* sysdeps/alpha/fpu/bits/mathinline.h (isgreater, isgreaterequal,
-	isless, islessequal, islessgreater): Remove; use default.
-	(isunordered): Convert inputs to double.
+	* tst-cancel20.c (do_one_test): Clear in_sh_body first.
+	* tst-cancel21.c (do_one_test): Likewise.
+	Reported by Gordon Jin <gordon.jin@intel.com>.
 
 2004-02-09  Jakub Jelinek  <jakub@redhat.com>
 

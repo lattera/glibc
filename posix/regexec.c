@@ -216,6 +216,10 @@ regexec (preg, string, nmatch, pmatch, eflags)
 {
   reg_errcode_t err;
   int start, length;
+
+  if (eflags & ~(REG_NOTBOL | REG_NOTEOL | REG_STARTEND))
+    return REG_BADPAT;
+
   if (eflags & REG_STARTEND)
     {
       start = pmatch[0].rm_so;
@@ -234,8 +238,24 @@ regexec (preg, string, nmatch, pmatch, eflags)
 			      length, nmatch, pmatch, eflags);
   return err != REG_NOERROR;
 }
+
 #ifdef _LIBC
-weak_alias (__regexec, regexec)
+# include <shlib-compat.h>
+versioned_symbol (libc, __regexec, regexec, GLIBC_2_3_4);
+
+# if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)
+__typeof__ (__regexec) __compat_regexec;
+
+int
+__compat_regexec (const regex_t *__restrict preg,
+		  const char *__restrict string, size_t nmatch,
+		  regmatch_t pmatch[], int eflags)
+{
+  return regexec (preg, string, nmatch, pmatch,
+		  eflags & (REG_NOTBOL | REG_NOTEOL));
+}
+compat_symbol (libc, __compat_regexec, regexec, GLIBC_2_0);
+# endif
 #endif
 
 /* Entry points for GNU code.  */
