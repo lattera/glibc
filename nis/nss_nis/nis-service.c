@@ -51,6 +51,18 @@ typedef struct intern_t intern_t;
 
 static intern_t intern = { NULL, NULL };
 
+struct search_t
+{
+  const char *name;
+  const char *proto;
+  int port;
+  enum nss_status status;
+  struct servent *serv;
+  char *buffer;
+  size_t buflen;
+  int *errnop;
+};
+
 static int
 saveit (int instatus, char *inkey, int inkeylen, char *inval,
         int invallen, char *indata)
@@ -75,6 +87,68 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
 
       newp->next = NULL;
       *((char *) mempcpy (newp->val, inval, invallen)) = '\0';
+    }
+
+  return 0;
+}
+
+static int
+dosearch (int instatus, char *inkey, int inkeylen, char *inval,
+	  int invallen, char *indata)
+{
+  struct search_t *req = (struct search_t *) indata;
+
+  if (instatus != YP_TRUE)
+    return 1;
+
+  if (inkey && inkeylen > 0 && inval && invallen > 0)
+    {
+      struct parser_data *pdata = (void *) req->buffer;
+      int parse_res;
+      char *p;
+
+      if ((size_t) (invallen + 1) > req->buflen)
+	{
+	  *req->errnop = ERANGE;
+	  req->status = NSS_STATUS_TRYAGAIN;
+	  return 1;
+	}
+
+      p = strncpy (req->buffer, inval, invallen);
+      req->buffer[invallen] = '\0';
+      while (isspace (*p))
+        ++p;
+
+      parse_res = _nss_files_parse_servent (p, req->serv, pdata, req->buflen,
+					    req->errnop);
+      if (parse_res == -1)
+	{
+	  req->status = NSS_STATUS_TRYAGAIN;
+	  return 1;
+	}
+
+      if (!parse_res)
+        return 0;
+
+      if (req->proto != NULL && strcmp (req->serv->s_proto, req->proto) != 0)
+	return 0;
+
+      if (req->port != -1 && req->serv->s_port != req->port)
+	return 0;
+
+      if (req->name != NULL && strcmp (req->serv->s_name, req->name) != 0)
+	{
+	  char **cp;
+	  for (cp = req->serv->s_aliases; *cp; cp++)
+	    if (strcmp (req->name, *cp) == 0)
+	      break;
+
+	  if (*cp == NULL)
+	    return 0;
+	}
+
+      req->status = NSS_STATUS_SUCCESS;
+      return 1;
     }
 
   return 0;
@@ -126,6 +200,7 @@ internal_nis_setservent (intern_t *intern)
 
   return status;
 }
+
 enum nss_status
 _nss_nis_setservent (int stayopen)
 {
@@ -191,9 +266,8 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
 			  struct servent *serv, char *buffer, size_t buflen,
 			  int *errnop)
 {
-  intern_t data = { NULL, NULL };
   enum nss_status status;
-  int found;
+  char *domain;
 
   if (name == NULL)
     {
@@ -201,18 +275,17 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
       return NSS_STATUS_UNAVAIL;
     }
 
+  if (yp_get_default_domain (&domain))
+    return NSS_STATUS_UNAVAIL;
+
   /* If the protocol is given, we could try if our NIS server knows
      about services.byservicename map. If yes, we only need one query */
   if (protocol != NULL)
     {
       char key[strlen (name) + strlen (protocol) + 2];
-      char *cp, *domain, *result;
+      char *cp, *result;
       size_t keylen, len;
       int int_len;
-
-      /* If this fails, the other solution will also fail. */
-      if (yp_get_default_domain (&domain))
-	return NSS_STATUS_UNAVAIL;
 
       /* key is: "name/protocol" */
       cp = stpcpy (key, name);
@@ -257,34 +330,25 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
 	}
     }
 
-  status = internal_nis_setservent (&data);
+  struct ypall_callback ypcb;
+  struct search_t req;
+
+  ypcb.foreach = dosearch;
+  ypcb.data = (char *) &req;
+  req.name = name;
+  req.proto = protocol;
+  req.port = -1;
+  req.serv = serv;
+  req.buffer = buffer;
+  req.buflen = buflen;
+  req.errnop = errnop;
+  req.status = NSS_STATUS_NOTFOUND;
+  status = yperr2nss (yp_all (domain, "services.byservicename", &ypcb));
+
   if (status != NSS_STATUS_SUCCESS)
     return status;
 
-  found = 0;
-  while (!found &&
-         ((status = internal_nis_getservent_r (serv, buffer, buflen, errnop,
-					       &data)) == NSS_STATUS_SUCCESS))
-    {
-      if (protocol == NULL || strcmp (serv->s_proto, protocol) == 0)
-	{
-	  char **cp;
-
-	  if (strcmp (serv->s_name, name) == 0)
-	    found = 1;
-	  else
-	    for (cp = serv->s_aliases; *cp; cp++)
-	      if (strcmp (name, *cp) == 0)
-		found = 1;
-	}
-    }
-
-  internal_nis_endservent (&data);
-
-  if (!found && status == NSS_STATUS_SUCCESS)
-    return NSS_STATUS_NOTFOUND;
-  else
-    return status;
+  return req.status;
 }
 
 enum nss_status
@@ -292,21 +356,19 @@ _nss_nis_getservbyport_r (int port, const char *protocol,
 			  struct servent *serv, char *buffer,
 			  size_t buflen, int *errnop)
 {
-  intern_t data = { NULL, NULL };
   enum nss_status status;
-  int found;
+  char *domain;
+
+  if (yp_get_default_domain (&domain))
+    return NSS_STATUS_UNAVAIL;
 
   /* If the protocol is given, we only need one query */
   if (protocol != NULL)
     {
       char key[100 + strlen (protocol) + 2];
-      char *domain, *result;
+      char *result;
       size_t keylen, len;
       int int_len;
-
-      /* If this fails, the other solution will also fail. */
-      if (yp_get_default_domain (&domain))
-	return NSS_STATUS_UNAVAIL;
 
       /* key is: "port/protocol" */
       keylen = snprintf (key, sizeof (key), "%d/%s", port, protocol);
@@ -348,22 +410,26 @@ _nss_nis_getservbyport_r (int port, const char *protocol,
 	}
     }
 
-  status = internal_nis_setservent (&data);
+  if (port == -1)
+    return NSS_STATUS_NOTFOUND;
+
+  struct ypall_callback ypcb;
+  struct search_t req;
+
+  ypcb.foreach = dosearch;
+  ypcb.data = (char *) &req;
+  req.name = NULL;
+  req.proto = protocol;
+  req.port = port;
+  req.serv = serv;
+  req.buffer = buffer;
+  req.buflen = buflen;
+  req.errnop = errnop;
+  req.status = NSS_STATUS_NOTFOUND;
+  status = yperr2nss (yp_all (domain, "services.byname", &ypcb));
+
   if (status != NSS_STATUS_SUCCESS)
     return status;
 
-  found = 0;
-  while (!found &&
-         ((status = internal_nis_getservent_r (serv, buffer, buflen, errnop,
-					       &data)) == NSS_STATUS_SUCCESS))
-    if (serv->s_port == port &&
-	(protocol == NULL || strcmp (serv->s_proto, protocol) == 0))
-      found = 1;
-
-  internal_nis_endservent (&data);
-
-  if (!found && status == NSS_STATUS_SUCCESS)
-    return NSS_STATUS_NOTFOUND;
-  else
-    return status;
+  return req.status;
 }

@@ -1,3 +1,11 @@
+2004-03-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nss_nis/nis-service.c (struct search_t): New type.
+	(dosearch): New function.
+	(_nss_nis_getservbyname_r): Use it.  Call yp_get_default_domain
+	unconditionally.
+	(_nss_nis_getservbyport_r): Likewise.
+
 2004-03-29  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sched_getaffinity.c: Prepend GLIBC_ to
