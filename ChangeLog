@@ -1,5 +1,8 @@
 1999-01-21  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/i386/vfork.S: Add back the first
+	implementation now that the syscall is back in 2.2.0.
+
 	* elf/Makefile: Change rule to make test module so that they are
 	compiled using -fPIC.
 	* elf/testobj1.c: Add missing prototype.
