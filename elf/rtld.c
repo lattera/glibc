@@ -95,6 +95,8 @@ const char *_dl_origin_path;
 struct link_map *_dl_loaded;
 /* Pointer to the l_searchlist element of the link map of the main object.  */
 struct r_scope_elem *_dl_main_searchlist;
+/* Copy of the content of `_dl_main_searchlist'.  */
+struct r_scope_elem _dl_initial_searchlist;
 /* Array which is used when looking up in the global scope.  */
 struct r_scope_elem *_dl_global_scope[2];
 
@@ -908,6 +910,10 @@ of this helper program; chances are you did not intend to run this program.\n\
   /* Now set up the variable which helps the assembler startup code.  */
   _dl_main_searchlist = &_dl_loaded->l_searchlist;
   _dl_global_scope[0] = &_dl_loaded->l_searchlist;
+
+  /* Safe the information about the original global scope list since
+     we need it in the memory handling later.  */
+  _dl_initial_searchlist = *_dl_main_searchlist;
 
   {
     /* Initialize _r_debug.  */

@@ -331,6 +331,12 @@ extern struct link_map *_dl_loaded;
 extern struct r_scope_elem *_dl_global_scope[2];
 /* Direct pointer to the searchlist of the main object.  */
 extern struct r_scope_elem *_dl_main_searchlist;
+/* Copy of the content of `_dl_main_searchlist'.  */
+extern struct r_scope_elem _dl_initial_searchlist;
+/* This is zero at program start to signal that the global scope map is
+   allocated by rtld.  Later it keeps the size of the map.  It might be
+   reset if in _dl_close if the last global object is removed.  */
+extern size_t _dl_global_scope_alloc;
 
 /* Allocate a `struct link_map' for a new object being loaded,
    and enter it into the _dl_main_map list.  */

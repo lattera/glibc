@@ -97,11 +97,22 @@ tr_where (caller)
       Dl_info info;
       if (_dl_addr (caller, &info))
 	{
-	  fprintf (mallstream, "@ %s%s%s%s%s[%p]",
+	  char *buf = (char *) "";
+	  if (info.dli_sname && info.dli_sname[0])
+	    {
+	      size_t len = strlen (info.dli_sname) + 22;
+	      buf = alloca (len);
+	      if (caller >= (const __ptr_t) info.dli_saddr)
+		snprintf (buf, len, "(%s+0x%x)", info.dli_sname,
+			  caller - (const __ptr_t) info.dli_saddr);
+	      else
+		snprintf (buf, len, "(%s-0x%x)", info.dli_sname,
+			  (const __ptr_t) info.dli_saddr - caller);
+	    }
+
+	  fprintf (mallstream, "@ %s%s%s[%p] ",
 		   info.dli_fname ?: "", info.dli_fname ? ":" : "",
-		   info.dli_sname ? "(" : "",
-		   info.dli_sname ?: "", info.dli_sname ? ") " : " ",
-		   caller);
+		   buf, caller);
 	}
       else
 #endif

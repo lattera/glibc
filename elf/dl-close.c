@@ -115,6 +115,22 @@ _dl_close (struct link_map *map)
 		  ++cnt;
 		}
 	      --_dl_main_searchlist->r_nlist;
+	      if (_dl_main_searchlist->r_nlist
+		  == _dl_initial_searchlist.r_nlist)
+		{
+		  /* All object dynamically loaded by the program are
+		     unloaded.  Free the memory allocated for the global
+		     scope variable.  */
+		  struct link_map **old = _dl_main_searchlist->r_list;
+
+		  /* Put the old map in.  */
+		  _dl_main_searchlist->r_list = _dl_initial_searchlist.r_list;
+		  /* Signal that the old map is used.  */
+		  _dl_global_scope_alloc = 0;
+
+		  /* Now free the old map.  */
+		  free (old);
+		}
 	    }
 
 	  /* We can unmap all the maps at once.  We determined the

@@ -42,7 +42,10 @@ extern char **__libc_argv;
 
 extern char **__environ;
 
-static size_t _dl_global_scope_alloc;
+/* This is zero at program start to signal that the global scope map is
+   allocated by rtld.  Later it keeps the size of the map.  It might be
+   reset if in _dl_close if the last global object is removed.  */
+size_t _dl_global_scope_alloc;
 
 
 /* During the program run we must not modify the global data of
@@ -167,7 +170,9 @@ dl_open_worker (void *a)
 	  /* We have to extend the existing array of link maps in the
 	     main map.  */
 	  new_global = (struct link_map **)
-	    malloc ((_dl_global_scope_alloc + 8) * sizeof (struct link_map *));
+	    realloc (_dl_main_searchlist->r_list,
+		     ((_dl_global_scope_alloc + 8)
+		      * sizeof (struct link_map *)));
 	  if (new_global == NULL)
 	    goto nomem;
 

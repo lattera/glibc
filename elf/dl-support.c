@@ -66,15 +66,15 @@ const char *_dl_origin_path;
 struct link_map *_dl_loaded;
 
 /* Fake scope.  In dynamically linked binaries this is the scope of the
-   main application but here we don't have  something like this.  So
+   main application but here we don't have something like this.  So
    create a fake scope containing nothing.  */
-static struct r_scope_elem fake_scope;
+struct r_scope_elem _dl_initial_searchlist;
 /* Variable which can be used in lookup to process the global scope.  */
-struct r_scope_elem *_dl_global_scope[2] = { &fake_scope, NULL };
+struct r_scope_elem *_dl_global_scope[2] = { &_dl_initial_searchlist, NULL };
 /* This is a global pointer to this structure which is public.  It is
    used by dlopen/dlclose to add and remove objects from what is regarded
    to be the global scope.  */
-struct r_scope_elem *_dl_main_searchlist = &fake_scope;
+struct r_scope_elem *_dl_main_searchlist = &_dl_initial_searchlist;
 
 
 static void non_dynamic_init (void) __attribute__ ((unused));

@@ -1,3 +1,22 @@
+1998-10-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-open.c (_dl_global_scope_alloc): Make global.
+	(dl_open_worker): Use realloc, not malloc to resize array.
+	* elf/rtld.c (_dl_initial_searchlist): New variable.
+	(_dl_main): Copy content of _dl_main_searchlist to
+	_dl_initial_searchlist.
+	* elf/ldsodefs.h: Add declarations for _dl_initial_searchlist and
+	_dl_global_scope_alloc.
+	* elf/Versions [libc, GLIBC_2.1]: Add _dl_initial_searchlist.
+	* elf/dl-close.c (_dl_close): When removing object with global
+	scope remove allocated searchlist if no dynamically loaded object
+	is on it anymore.
+	* elf/dl-support.c (_dl_initial_searchlist): Renamed from fake_scope.
+	(_dl_global_scope, _dl_main_searchlist): Use _dl_initial_searchlist.
+
+	* malloc/mtrace.c (tr_where): Don't print space in location string,
+	print it afterwards.  Print better symbol name information.
+
 1998-10-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* manual/filesys.texi (Setting Permissions): Fix example for
