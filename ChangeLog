@@ -1,5 +1,8 @@
 2000-08-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/arm/Makefile [$(subdir)==resource]
+	(sysdep_routines): Add oldgetrlimit64.
+
 	* elf/Makefile (distribute): Add unloadmod.c, reldepmod1.c,
 	reldepmod2.c, reldepmod3.c, and reldepmod4.c.
 	(tests): Add unload, reldep, reldep2, and reldep3.
