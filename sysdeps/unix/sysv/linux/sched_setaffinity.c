@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <shlib-compat.h>
+#include <alloca.h>
 
 
 #ifdef __NR_sched_setaffinity
@@ -72,10 +73,10 @@ versioned_symbol (libc, __sched_setaffinity_new, sched_setaffinity,
 # if SHLIB_COMPAT(libc, 2_3_3, 2_3_4)
 int
 attribute_compat_text_section
-__sched_setaffinity_old (const pthread_attr_t *attr, const cpu_set_t *cpuset)
+__sched_setaffinity_old (pid_t pid, const cpu_set_t *cpuset)
 {
   /* The old interface by default assumed a 1024 processor bitmap.  */
-  return __sched_setaffinity_new (attr, 128, cpuset);
+  return __sched_setaffinity_new (pid, 128, cpuset);
 }
 compat_symbol (libc, __sched_setaffinity_old, sched_setaffinity, GLIBC_2_3_3);
 # endif

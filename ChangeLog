@@ -1,3 +1,12 @@
+2004-03-20  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/sched_getaffinity.c
+	(__sched_getaffinity_old): Fix interface.
+	* sysdeps/unix/sysv/linux/sched_setaffinity.c
+	(__sched_setaffinity_old): Likewise.
+
+	* sysdeps/unix/sysv/linux/sched_setaffinity.c: Include <alloca.h>.
+
 2004-03-17  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h
