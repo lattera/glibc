@@ -15,7 +15,7 @@ int t() {
 extern char *sys_siglist[]; puts(*sys_siglist);
 ; return 0; }
 EOF
-if { (eval echo configure:19: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; }; then
+if eval $ac_link; then
   rm -rf conftest*
   	    ac_cv_check_symbol_sys_siglist=yes
 else
@@ -47,7 +47,7 @@ int t() {
 extern char *_sys_siglist[]; puts(*_sys_siglist);
 ; return 0; }
 EOF
-if { (eval echo configure:51: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; }; then
+if eval $ac_link; then
   rm -rf conftest*
   	    ac_cv_check_symbol__sys_siglist=yes
 else
@@ -83,7 +83,7 @@ int t() {
 $ctype[13];
 ; return 0; }
 EOF
-if { (eval echo configure:87: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; }; then
+if eval $ac_link; then
   rm -rf conftest*
   libc_cv_ctype_glue="$ctype"; break
 fi
