@@ -99,7 +99,8 @@ void scan_num(token *tokp);
 void peek(token *tokp);
 int peekscan(tok_kind expect, token *tokp);
 void get_token(token *tokp);
-void expected1(tok_kind exp1);
-void expected2(tok_kind exp1, tok_kind exp2);
-void expected3(tok_kind exp1, tok_kind exp2, tok_kind exp3);
+void expected1(tok_kind exp1) __attribute__ ((noreturn));
+void expected2(tok_kind exp1, tok_kind exp2)  __attribute__ ((noreturn));
+void expected3(tok_kind exp1, tok_kind exp2, tok_kind exp3)
+     __attribute__ ((noreturn));
 

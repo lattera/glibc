@@ -68,7 +68,7 @@ static void tcpping (u_short portflag, int argc, char **argv);
 static int pstatus (CLIENT *client, u_long prognum, u_long vers);
 static void pmapdump (int argc, char **argv);
 static bool_t reply_proc (void *res, struct sockaddr_in *who);
-static void brdcst (int argc, char **argv);
+static void brdcst (int argc, char **argv) __attribute__ ((noreturn));
 static void deletereg (int argc, char **argv);
 static void usage (void);
 static u_long getprognum (char *arg);

@@ -342,24 +342,24 @@ struct ypresp_all {
   } ypresp_all_u;
 };
 
-extern bool_t xdr_ypreq_key __P ((XDR *__xdrs, struct ypreq_key * __objp));
-extern bool_t xdr_ypreq_nokey __P ((XDR *__xdrs, struct ypreq_nokey * __objp));
-extern bool_t xdr_ypreq_xfr __P ((XDR *__xdrs, struct ypreq_xfr * __objp));
-extern bool_t xdr_ypresp_val __P ((XDR *__xdrs, struct ypresp_val * __objp));
-extern bool_t xdr_ypresp_key_val __P ((XDR *__xdrs, struct ypresp_key_val * __objp));
-extern bool_t xdr_ypbind_resp __P ((XDR *__xdrs, struct ypbind_resp * __objp));
-extern bool_t xdr_ypbind_setdom __P ((XDR *__xdrs, struct ypbind_setdom * __objp));
-extern bool_t xdr_ypmap_parms __P ((XDR *__xdrs, struct ypmap_parms * __objp));
-extern bool_t xdr_yppushresp_xfr __P ((XDR *__xdrs, struct yppushresp_xfr * __objp));
-extern bool_t xdr_ypresp_order __P ((XDR *__xdrs, struct ypresp_order  * __objp));
-extern bool_t xdr_ypresp_master __P ((XDR *__xdrs, struct ypresp_master * __objp));
-extern bool_t xdr_ypall __P ((XDR *__xdrs, struct ypall_callback * __objp));
-extern bool_t xdr_ypresp_maplist __P ((XDR *__xdrs, struct ypresp_maplist * __objp));
-extern bool_t xdr_ypbind_binding __P ((XDR *__xdrs, struct ypbind_binding * __objp));
-extern bool_t xdr_ypbind_resptype __P ((XDR *__xdrs, enum ypbind_resptype * __objp));
-extern bool_t xdr_ypstat __P ((XDR *__xdrs, enum ypbind_resptype * __objp));
-extern bool_t xdr_ypresp_all __P ((XDR *__xdrs, struct ypresp_all  * __objp));
-extern bool_t xdr_domainname __P ((XDR *__xdrs, char ** __objp));
+extern bool_t xdr_ypreq_key (XDR *__xdrs, struct ypreq_key * __objp);
+extern bool_t xdr_ypreq_nokey (XDR *__xdrs, struct ypreq_nokey * __objp);
+extern bool_t xdr_ypreq_xfr (XDR *__xdrs, struct ypreq_xfr * __objp);
+extern bool_t xdr_ypresp_val (XDR *__xdrs, struct ypresp_val * __objp);
+extern bool_t xdr_ypresp_key_val (XDR *__xdrs, struct ypresp_key_val * __objp);
+extern bool_t xdr_ypbind_resp (XDR *__xdrs, struct ypbind_resp * __objp);
+extern bool_t xdr_ypbind_setdom (XDR *__xdrs, struct ypbind_setdom * __objp);
+extern bool_t xdr_ypmap_parms (XDR *__xdrs, struct ypmap_parms * __objp);
+extern bool_t xdr_yppushresp_xfr (XDR *__xdrs, struct yppushresp_xfr * __objp);
+extern bool_t xdr_ypresp_order (XDR *__xdrs, struct ypresp_order  * __objp);
+extern bool_t xdr_ypresp_master (XDR *__xdrs, struct ypresp_master * __objp);
+extern bool_t xdr_ypall (XDR *__xdrs, struct ypall_callback * __objp);
+extern bool_t xdr_ypresp_maplist (XDR *__xdrs, struct ypresp_maplist * __objp);
+extern bool_t xdr_ypbind_binding (XDR *__xdrs, struct ypbind_binding * __objp);
+extern bool_t xdr_ypbind_resptype (XDR *__xdrs, enum ypbind_resptype * __objp);
+extern bool_t xdr_ypstat (XDR *__xdrs, enum ypbind_resptype * __objp);
+extern bool_t xdr_ypresp_all (XDR *__xdrs, struct ypresp_all  * __objp);
+extern bool_t xdr_domainname (XDR *__xdrs, char ** __objp);
 
 __END_DECLS
 

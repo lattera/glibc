@@ -45,8 +45,8 @@ void write_tables(void);
 /****** rpc_util.c ******/
 void reinitialize(void);
 int streq(const char *a, const char *b);
-void error(const char *msg);
-void crash(void);
+void error(const char *msg) __attribute__ ((noreturn));
+void crash(void) __attribute__ ((noreturn));
 void tabify(FILE *f, int tab);
 char *make_argname(const char *pname, const char *vname);
 void add_type(int len, const char *type);

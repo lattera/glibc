@@ -134,8 +134,8 @@ static void addarg (const char *cp);
 static void putarg (int whereto, const char *cp);
 static void checkfiles (const char *infile, const char *outfile);
 static int parseargs (int argc, const char *argv[], struct commandline *cmd);
-static void usage (void);
-static void options_usage (void);
+static void usage (void) __attribute__ ((noreturn));
+static void options_usage (void) __attribute__ ((noreturn));
 static void c_initialize (void);
 static char *generate_guard (const char *pathname);
 
@@ -180,6 +180,7 @@ xdrfunc *xdrfunc_head = NULL;	/* xdr function list */
 xdrfunc *xdrfunc_tail = NULL;	/* xdr function list */
 
 int
+__attribute__ ((noreturn))
 main (int argc, const char *argv[])
 {
   struct commandline cmd;

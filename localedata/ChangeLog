@@ -1,3 +1,7 @@
+2000-12-31  Andreas Jaeger  <aj@suse.de>
+
+	* tst-fmon.c (main): Use return instead of exit to avoid warning.
+
 2000-12-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* tests/test5.cm: Define code_set_name.

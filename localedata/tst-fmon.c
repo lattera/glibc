@@ -67,5 +67,5 @@ locale: \"%s\", format: \"%s\", expected: \"%s\", got: \"%s\" => %s\n",
       exit (EXIT_FAILURE);
     }
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

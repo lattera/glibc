@@ -36,7 +36,7 @@ main (int argc, char *argv[])
   if (argc != 2)
     {
       fprintf (stderr, "Usage: tst-table-to charset\n");
-      exit (1);
+      return 1;
     }
   charset = argv[1];
 
@@ -44,7 +44,7 @@ main (int argc, char *argv[])
   if (cd == (iconv_t)(-1))
     {
       perror ("iconv_open");
-      exit (1);
+      return 1;
     }
 
   {
@@ -69,7 +69,7 @@ main (int argc, char *argv[])
 		fprintf (stderr, "0x%02X: iconv error: ", i);
 		errno = saved_errno;
 		perror ("");
-		exit (1);
+		return 1;
 	      }
 	  }
 	else if (result == 0) /* ignore conversions with transliteration */
@@ -80,7 +80,7 @@ main (int argc, char *argv[])
 		fprintf (stderr, "0x%02X: inbytes = %ld, outbytes = %ld\n", i,
 			 (long) (sizeof (unsigned short) - inbytesleft),
 			 (long) (sizeof (buf) - outbytesleft));
-		exit (1);
+		return 1;
 	      }
 	    jmax = sizeof (buf) - outbytesleft;
 	    printf ("0x");
@@ -94,14 +94,14 @@ main (int argc, char *argv[])
   if (iconv_close (cd) < 0)
     {
       perror ("iconv_close");
-      exit (1);
+      return 1;
     }
 
   if (ferror (stdin) || fflush (stdout) || ferror (stdout))
     {
       fprintf (stderr, "I/O error\n");
-      exit (1);
+      return 1;
     }
 
-  exit (0);
+  return 0;
 }

@@ -241,96 +241,96 @@ __BEGIN_DECLS
 #define YPVERS 2
 
 #define YPPROC_NULL 0
-extern  void *ypproc_null_2 __P ((void *, CLIENT *));
-extern  void *ypproc_null_2_svc __P ((void *, struct svc_req *));
+extern  void *ypproc_null_2 (void *, CLIENT *);
+extern  void *ypproc_null_2_svc (void *, struct svc_req *);
 #define YPPROC_DOMAIN 1
-extern  bool_t *ypproc_domain_2 __P ((domainname *, CLIENT *));
-extern  bool_t *ypproc_domain_2_svc __P ((domainname *, struct svc_req *));
+extern  bool_t *ypproc_domain_2 (domainname *, CLIENT *);
+extern  bool_t *ypproc_domain_2_svc (domainname *, struct svc_req *);
 #define YPPROC_DOMAIN_NONACK 2
-extern  bool_t *ypproc_domain_nonack_2 __P ((domainname *, CLIENT *));
-extern  bool_t *ypproc_domain_nonack_2_svc __P ((domainname *, struct svc_req *));
+extern  bool_t *ypproc_domain_nonack_2 (domainname *, CLIENT *);
+extern  bool_t *ypproc_domain_nonack_2_svc (domainname *, struct svc_req *);
 #define YPPROC_MATCH 3
-extern  ypresp_val *ypproc_match_2 __P ((ypreq_key *, CLIENT *));
-extern  ypresp_val *ypproc_match_2_svc __P ((ypreq_key *, struct svc_req *));
+extern  ypresp_val *ypproc_match_2 (ypreq_key *, CLIENT *);
+extern  ypresp_val *ypproc_match_2_svc (ypreq_key *, struct svc_req *);
 #define YPPROC_FIRST 4
-extern  ypresp_key_val *ypproc_first_2 __P ((ypreq_key *, CLIENT *));
-extern  ypresp_key_val *ypproc_first_2_svc __P ((ypreq_key *, struct svc_req *));
+extern  ypresp_key_val *ypproc_first_2 (ypreq_key *, CLIENT *);
+extern  ypresp_key_val *ypproc_first_2_svc (ypreq_key *, struct svc_req *);
 #define YPPROC_NEXT 5
-extern  ypresp_key_val *ypproc_next_2 __P ((ypreq_key *, CLIENT *));
-extern  ypresp_key_val *ypproc_next_2_svc __P ((ypreq_key *, struct svc_req *));
+extern  ypresp_key_val *ypproc_next_2 (ypreq_key *, CLIENT *);
+extern  ypresp_key_val *ypproc_next_2_svc (ypreq_key *, struct svc_req *);
 #define YPPROC_XFR 6
-extern  ypresp_xfr *ypproc_xfr_2 __P ((ypreq_xfr *, CLIENT *));
-extern  ypresp_xfr *ypproc_xfr_2_svc __P ((ypreq_xfr *, struct svc_req *));
+extern  ypresp_xfr *ypproc_xfr_2 (ypreq_xfr *, CLIENT *);
+extern  ypresp_xfr *ypproc_xfr_2_svc (ypreq_xfr *, struct svc_req *);
 #define YPPROC_CLEAR 7
-extern  void *ypproc_clear_2 __P ((void *, CLIENT *));
-extern  void *ypproc_clear_2_svc __P ((void *, struct svc_req *));
+extern  void *ypproc_clear_2 (void *, CLIENT *);
+extern  void *ypproc_clear_2_svc (void *, struct svc_req *);
 #define YPPROC_ALL 8
-extern  ypresp_all *ypproc_all_2 __P ((ypreq_nokey *, CLIENT *));
-extern  ypresp_all *ypproc_all_2_svc __P ((ypreq_nokey *, struct svc_req *));
+extern  ypresp_all *ypproc_all_2 (ypreq_nokey *, CLIENT *);
+extern  ypresp_all *ypproc_all_2_svc (ypreq_nokey *, struct svc_req *);
 #define YPPROC_MASTER 9
-extern  ypresp_master *ypproc_master_2 __P ((ypreq_nokey *, CLIENT *));
-extern  ypresp_master *ypproc_master_2_svc __P ((ypreq_nokey *, struct svc_req *));
+extern  ypresp_master *ypproc_master_2 (ypreq_nokey *, CLIENT *);
+extern  ypresp_master *ypproc_master_2_svc (ypreq_nokey *, struct svc_req *);
 #define YPPROC_ORDER 10
-extern  ypresp_order *ypproc_order_2 __P ((ypreq_nokey *, CLIENT *));
-extern  ypresp_order *ypproc_order_2_svc __P ((ypreq_nokey *, struct svc_req *));
+extern  ypresp_order *ypproc_order_2 (ypreq_nokey *, CLIENT *);
+extern  ypresp_order *ypproc_order_2_svc (ypreq_nokey *, struct svc_req *);
 #define YPPROC_MAPLIST 11
-extern  ypresp_maplist *ypproc_maplist_2 __P ((domainname *, CLIENT *));
-extern  ypresp_maplist *ypproc_maplist_2_svc __P ((domainname *, struct svc_req *));
-extern int ypprog_2_freeresult __P ((SVCXPRT *, xdrproc_t, caddr_t));
+extern  ypresp_maplist *ypproc_maplist_2 (domainname *, CLIENT *);
+extern  ypresp_maplist *ypproc_maplist_2_svc (domainname *, struct svc_req *);
+extern int ypprog_2_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 
 #define YPPUSH_XFRRESPPROG (0x40000000)
 #define YPPUSH_XFRRESPVERS 1
 
 #define YPPUSHPROC_NULL 0
-extern  void *yppushproc_null_1 __P ((void *, CLIENT *));
-extern  void *yppushproc_null_1_svc __P ((void *, struct svc_req *));
+extern  void *yppushproc_null_1 (void *, CLIENT *);
+extern  void *yppushproc_null_1_svc (void *, struct svc_req *);
 #define YPPUSHPROC_XFRRESP 1
-extern  void *yppushproc_xfrresp_1 __P ((yppushresp_xfr *, CLIENT *));
-extern  void *yppushproc_xfrresp_1_svc __P ((yppushresp_xfr *, struct svc_req *));
-extern int yppush_xfrrespprog_1_freeresult __P ((SVCXPRT *, xdrproc_t, caddr_t));
+extern  void *yppushproc_xfrresp_1 (yppushresp_xfr *, CLIENT *);
+extern  void *yppushproc_xfrresp_1_svc (yppushresp_xfr *, struct svc_req *);
+extern int yppush_xfrrespprog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 
 #define YPBINDPROG 100007
 #define YPBINDVERS 2
 
 #define YPBINDPROC_NULL 0
-extern  void *ypbindproc_null_2 __P ((void *, CLIENT *));
-extern  void *ypbindproc_null_2_svc __P ((void *, struct svc_req *));
+extern  void *ypbindproc_null_2 (void *, CLIENT *);
+extern  void *ypbindproc_null_2_svc (void *, struct svc_req *);
 #define YPBINDPROC_DOMAIN 1
-extern  ypbind_resp *ypbindproc_domain_2 __P ((domainname *, CLIENT *));
-extern  ypbind_resp *ypbindproc_domain_2_svc __P ((domainname *, struct svc_req *));
+extern  ypbind_resp *ypbindproc_domain_2 (domainname *, CLIENT *);
+extern  ypbind_resp *ypbindproc_domain_2_svc (domainname *, struct svc_req *);
 #define YPBINDPROC_SETDOM 2
-extern  void *ypbindproc_setdom_2 __P ((ypbind_setdom *, CLIENT *));
-extern  void *ypbindproc_setdom_2_svc __P ((ypbind_setdom *, struct svc_req *));
-extern int ypbindprog_2_freeresult __P ((SVCXPRT *, xdrproc_t, caddr_t));
+extern  void *ypbindproc_setdom_2 (ypbind_setdom *, CLIENT *);
+extern  void *ypbindproc_setdom_2_svc (ypbind_setdom *, struct svc_req *);
+extern int ypbindprog_2_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 
-extern  bool_t xdr_ypstat __P ((XDR *, ypstat*));
-extern  bool_t xdr_ypxfrstat __P ((XDR *, ypxfrstat*));
-extern  bool_t xdr_domainname __P ((XDR *, domainname*));
-extern  bool_t xdr_mapname __P ((XDR *, mapname*));
-extern  bool_t xdr_peername __P ((XDR *, peername*));
-extern  bool_t xdr_keydat __P ((XDR *, keydat*));
-extern  bool_t xdr_valdat __P ((XDR *, valdat*));
-extern  bool_t xdr_ypmap_parms __P ((XDR *, ypmap_parms*));
-extern  bool_t xdr_ypreq_key __P ((XDR *, ypreq_key*));
-extern  bool_t xdr_ypreq_nokey __P ((XDR *, ypreq_nokey*));
-extern  bool_t xdr_ypreq_xfr __P ((XDR *, ypreq_xfr*));
-extern  bool_t xdr_ypresp_val __P ((XDR *, ypresp_val*));
-extern  bool_t xdr_ypresp_key_val __P ((XDR *, ypresp_key_val*));
-extern  bool_t xdr_ypresp_master __P ((XDR *, ypresp_master*));
-extern  bool_t xdr_ypresp_order __P ((XDR *, ypresp_order*));
-extern  bool_t xdr_ypresp_all __P ((XDR *, ypresp_all*));
-extern  bool_t xdr_ypresp_xfr __P ((XDR *, ypresp_xfr*));
-extern  bool_t xdr_ypmaplist __P ((XDR *, ypmaplist*));
-extern  bool_t xdr_ypresp_maplist __P ((XDR *, ypresp_maplist*));
-extern  bool_t xdr_yppush_status __P ((XDR *, yppush_status*));
-extern  bool_t xdr_yppushresp_xfr __P ((XDR *, yppushresp_xfr*));
-extern  bool_t xdr_ypbind_resptype __P ((XDR *, ypbind_resptype*));
-extern  bool_t xdr_ypbind_binding __P ((XDR *, ypbind_binding*));
-extern  bool_t xdr_ypbind_resp __P ((XDR *, ypbind_resp*));
-extern  bool_t xdr_ypbind_setdom __P ((XDR *, ypbind_setdom*));
+extern  bool_t xdr_ypstat (XDR *, ypstat*);
+extern  bool_t xdr_ypxfrstat (XDR *, ypxfrstat*);
+extern  bool_t xdr_domainname (XDR *, domainname*);
+extern  bool_t xdr_mapname (XDR *, mapname*);
+extern  bool_t xdr_peername (XDR *, peername*);
+extern  bool_t xdr_keydat (XDR *, keydat*);
+extern  bool_t xdr_valdat (XDR *, valdat*);
+extern  bool_t xdr_ypmap_parms (XDR *, ypmap_parms*);
+extern  bool_t xdr_ypreq_key (XDR *, ypreq_key*);
+extern  bool_t xdr_ypreq_nokey (XDR *, ypreq_nokey*);
+extern  bool_t xdr_ypreq_xfr (XDR *, ypreq_xfr*);
+extern  bool_t xdr_ypresp_val (XDR *, ypresp_val*);
+extern  bool_t xdr_ypresp_key_val (XDR *, ypresp_key_val*);
+extern  bool_t xdr_ypresp_master (XDR *, ypresp_master*);
+extern  bool_t xdr_ypresp_order (XDR *, ypresp_order*);
+extern  bool_t xdr_ypresp_all (XDR *, ypresp_all*);
+extern  bool_t xdr_ypresp_xfr (XDR *, ypresp_xfr*);
+extern  bool_t xdr_ypmaplist (XDR *, ypmaplist*);
+extern  bool_t xdr_ypresp_maplist (XDR *, ypresp_maplist*);
+extern  bool_t xdr_yppush_status (XDR *, yppush_status*);
+extern  bool_t xdr_yppushresp_xfr (XDR *, yppushresp_xfr*);
+extern  bool_t xdr_ypbind_resptype (XDR *, ypbind_resptype*);
+extern  bool_t xdr_ypbind_binding (XDR *, ypbind_binding*);
+extern  bool_t xdr_ypbind_resp (XDR *, ypbind_resp*);
+extern  bool_t xdr_ypbind_setdom (XDR *, ypbind_setdom*);
 
 __END_DECLS
 
