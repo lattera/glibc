@@ -1,3 +1,10 @@
+2004-09-24  Roland McGrath  <roland@redhat.com>
+
+	[BZ #406]
+	* sysdeps/i386/tls.h: Move #include "useldt.h" outside
+	of [__ASSUME_LDT_WORKS > 0] test.
+	Reported by Carlos Velasco <carlos.velasco@newipnet.com>.
+
 2004-09-21  Roland McGrath  <roland@redhat.com>
 
 	* Versions: Add comment about linuxthreads' frozen ABI.
