@@ -1,5 +1,7 @@
 Thu Aug 29 12:00:30 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
+	* hurd/hurdinline.c: Include "hurd.h" for function definitions too. 
+	
 	* stdio/fseek.c (fseek): Don't assume we know the file position;
  	other handles may have changed it.  So set STREAM.__offset to -1
  	before calling __stdio_check_offset to make sure we have a correct
