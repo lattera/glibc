@@ -21,12 +21,14 @@
 #include <sys/gmon.h>
 #include <stdlib.h>
 #include <unistd.h>
+#define __ASSEMBLY__
+#include <entry.h>
 
 /* Beginning and end of our code segment. We cannot declare them
    as the external functions since we want the addresses of those
    labels. Taking the address of a function may have different
    meanings on different platforms. */
-extern void _start, etext;
+extern void ENTRY_POINT, etext;
 
 #ifndef HAVE_INITFINI
 /* This function gets called at startup by the normal constructor
@@ -56,7 +58,7 @@ __gmon_start__ (void)
 #endif
 
   /* Start keeping profiling records.  */
-  __monstartup ((u_long) &_start, (u_long) &etext);
+  __monstartup ((u_long) &ENTRY_POINT, (u_long) &etext);
 
   /* Call _mcleanup before exiting; it will write out gmon.out from the
      collected data.  */
