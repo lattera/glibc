@@ -1,4 +1,4 @@
-# Copyright (C) 1993, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+# Copyright (C) 1993, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ $(common-objpfx)hurd/../mach/RPC_task_get_sampled_pcs.c:
 endif
 
 
-# Generate errnos.h from the section of the manual that lists all the errno
+# Generate bits/errno.h from the section of the manual that lists all the errno
 # codes.
 
 errno.texinfo = $(..)manual/errno.texi
@@ -85,16 +85,16 @@ $(common-objpfx)errnos.d: $(mach-errnos-deps)
 	    -e 's,\.\./,$(..),g' > $@t
 	mv -f $@t $@
 
-$(hurd)/errnos.h: $(common-objpfx)stamp-errnos ;
+$(hurd)/bits/errno.h: $(common-objpfx)stamp-errnos ;
 $(common-objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
 			      $(mach-errnos-deps)
-	$(AWK) -f $^ > $(hurd)/errnos.h-tmp
+	$(AWK) -f $^ > $(hurd)/bits/errno.h-tmp
 # Make it unwritable so noone will edit it by mistake.
-	-chmod a-w $(hurd)/errnos.h-tmp
-	$(move-if-change) $(hurd)/errnos.h-tmp $(hurd)/errnos.h
+	-chmod a-w $(hurd)/bits/errno.h-tmp
+	$(move-if-change) $(hurd)/bits/errno.h-tmp $(hurd)/bits/errno.h
 ifeq ($(with-cvs),yes)
 	test ! -d $(hurd)/CVS || \
-	  (cd $(hurd) && cvs commit -m'Regenerated from $^' errnos.h)
+	  (cd $(hurd) && cvs commit -m'Regenerated from $^' bits/errno.h)
 endif
 	touch $@
 

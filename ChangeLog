@@ -1,3 +1,10 @@
+1999-01-22  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/Makefile: Fix errnos.h -> bits/errno.h in rules.
+
+	* manual/errno.texi (Error Codes): Fix ENOSYS description.
+	Add ENOTSUP.
+
 1999-01-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.111.

@@ -831,9 +831,29 @@ sticky bit on a non-directory file; @pxref{Setting Permissions}.
 @comment POSIX.1: Function not implemented
 @deftypevr Macro int ENOSYS
 @comment errno 78 @c DO NOT REMOVE
-Function not implemented.  Some functions have commands or options defined
-that might not be supported in all implementations, and this is the kind
-of error you get if you request them and they are not supported.
+Function not implemented.  This indicates that the function called is
+not implemented at all, either in the C library itself or in the
+operating system.  When you get this error, you can be sure that this
+particular function will always fail with @code{ENOSYS} unless you
+install a new version of the C library or the operating system.
+@end deftypevr
+
+@comment errno.h
+@comment POSIX.1: Not supported
+@deftypevr Macro int ENOTSUP
+@comment errno 118 @c DO NOT REMOVE
+Not supported.  A function returns this error when certain parameter
+values are valid, but the functionality they request is not available.
+This can mean that the function does not implement a particular command
+or option value or flag bit at all.  For functions that operate on some
+object given in a parameter, such as a file descriptor or a port, it
+might instead mean that only @emph{that specific object} (file
+descriptor, port, etc.) is unable to support the other parameters given;
+different file descriptors might support different ranges of parameter
+values.
+
+If the entire function is not available at all in the implementation,
+it returns @code{ENOSYS} instead.
 @end deftypevr
 
 @comment errno.h
