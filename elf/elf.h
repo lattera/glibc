@@ -1,5 +1,5 @@
 /* This file defines standard ELF types, structures, and macros.
-   Copyright (C) 1995-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1491,8 +1491,21 @@ typedef struct
 #define R_MIPS_PJUMP		35
 #define R_MIPS_RELGOT		36
 #define R_MIPS_JALR		37
+#define R_MIPS_TLS_DTPMOD32	38	/* Module number 32 bit */
+#define R_MIPS_TLS_DTPREL32	39	/* Module-relative offset 32 bit */
+#define R_MIPS_TLS_DTPMOD64	40	/* Module number 64 bit */
+#define R_MIPS_TLS_DTPREL64	41	/* Module-relative offset 64 bit */
+#define R_MIPS_TLS_GD		42	/* 16 bit GOT offset for GD */
+#define R_MIPS_TLS_LDM		43	/* 16 bit GOT offset for LDM */
+#define R_MIPS_TLS_DTPREL_HI16	44	/* Module-relative offset, high 16 bits */
+#define R_MIPS_TLS_DTPREL_LO16	45	/* Module-relative offset, low 16 bits */
+#define R_MIPS_TLS_GOTTPREL	46	/* 16 bit GOT offset for IE */
+#define R_MIPS_TLS_TPREL32	47	/* TP-relative offset, 32 bit */
+#define R_MIPS_TLS_TPREL64	48	/* TP-relative offset, 64 bit */
+#define R_MIPS_TLS_TPREL_HI16	49	/* TP-relative offset, high 16 bits */
+#define R_MIPS_TLS_TPREL_LO16	50	/* TP-relative offset, low 16 bits */
 /* Keep this the last entry.  */
-#define R_MIPS_NUM		38
+#define R_MIPS_NUM		51
 
 /* Legal values for p_type field of Elf32_Phdr.  */
 
