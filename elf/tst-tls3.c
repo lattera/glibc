@@ -2,10 +2,11 @@
 #include <stdio.h>
 
 #include <tls.h>
-#include "tls-macros.h"
-
 
 #ifdef USE_TLS
+# include "tls-macros.h"
+
+
 /* One define int variable, two externs.  */
 COMMON_INT_DECL(foo);
 VAR_INT_DECL(bar);

@@ -2,10 +2,11 @@
 #include <stdio.h>
 
 #include <tls.h>
-#include "tls-macros.h"
-
 
 #ifdef USE_TLS
+# include "tls-macros.h"
+
+
 /* Two 'int' variables in TLS.  */
 VAR_INT_DEF(foo);
 VAR_INT_DEF(bar);

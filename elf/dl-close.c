@@ -333,6 +333,7 @@ _dl_close (void *_map)
 }
 
 
+#ifdef USE_TLS
 static bool
 free_slotinfo (struct dtv_slotinfo_list *elemp)
 {
@@ -355,6 +356,7 @@ free_slotinfo (struct dtv_slotinfo_list *elemp)
 
   return true;
 }
+#endif
 
 
 static void
