@@ -1,3 +1,9 @@
+2001-11-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/nss_files/files-XXX.c (internal_getent): Correct input
+	overflow test for platforms with signed char.
+	Reported by Andrew Haley <aph@cambridge.redhat.com>.
+
 2001-11-28  Bruno Haible  <bruno@clisp.org>
 
 	* locale/programs/simple-hash.c (lookup_2): Remove function.
