@@ -78,7 +78,7 @@ typedef __time_t time_t;
     ((defined _TIME_H && defined __USE_POSIX199309) || defined __need_timespec)
 # define __timespec_defined	1
 
-/* POSIX.4 structure for a time value.  This is like a `struct timeval' but
+/* POSIX.1b structure for a time value.  This is like a `struct timeval' but
    has nanoseconds instead of microseconds.  */
 struct timespec
   {
@@ -112,6 +112,22 @@ struct tm
   __const char *__tm_zone;	/* Timezone abbreviation.  */
 # endif
 };
+
+
+#ifdef __USE_POSIX199309
+/* Clock ID used in clock and timer functions.  */
+typedef __clockid_t clockid_t;
+
+/* Timer ID returned by `timer_create'.  */
+typedef __timer_t timer_t;
+
+/* POSIX.1b structure for timer start values and intervals.  */
+struct itimerspec
+  {
+    struct timespec it_interval;
+    struct timespec it_value;
+  };
+#endif	/* POSIX.1b */
 
 
 /* Time used by the program so far (user time + system time).
@@ -239,6 +255,36 @@ extern int dysize __P ((int __year));
 /* Pause execution for a number of nanoseconds.  */
 extern int nanosleep __P ((__const struct timespec *__requested_time,
 			   struct timespec *__remaining));
+
+
+/* Get resolution of clock CLOCK_ID.  */
+extern int clock_getres __P ((clockid_t __clock_id, struct timespec *__res));
+
+/* Get current value of clock CLOCK_ID and store it in TP.  */
+extern int clock_gettime __P ((clockid_t __clock_id, struct timespec *__tp));
+
+/* Set clock CLOCK_ID to value TP.  */
+extern int clock_settime __P ((clockid_t __clock_id,
+			       __const struct timespec *__tp));
+
+
+/* Create new per-process timer using CLOCK_ID.  */
+extern int timer_create __P ((clockid_t __clock_id, struct sigevent *__evp,
+			      timer_t *__timerid));
+
+/* Delete timer TIMERID.  */
+extern int timer_delete __P ((timer_t __timerid));
+
+/* Set timer TIMERID to VALUE, returning old value in OVLAUE.  */
+extern int timer_settime __P ((timer_t __timerid, int __flags,
+			       __const struct itimerspec *__value,
+			       struct itimerspec *__ovalue));
+
+/* Get current value of timer TIMERID and store it in VLAUE.  */
+extern int timer_gettime __P ((timer_t __timerid, struct itimerspec *__value));
+
+/* Get expiration overrun for timer TIMERID.  */
+extern int timer_getoverrun __P ((timer_t __timerid));
 # endif
 
 

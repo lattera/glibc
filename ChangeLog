@@ -1,3 +1,34 @@
+1999-07-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/clock_getres.c: New file.
+	* sysdeps/generic/clock_gettime.c: New file.
+	* sysdeps/generic/clock_settime.c: New file.
+	* sysdeps/generic/timer_create.c: New file.
+	* sysdeps/generic/timer_delete.c: New file.
+	* sysdeps/generic/timer_getoverr.c: New file.
+	* sysdeps/generic/timer_gettime.c: New file.
+	* sysdeps/generic/timer_settime.c: New file.
+
+	* sysdeps/generic/bits/time.h: Define __clockid_t, __timer_t,
+	CLOCK_REALTIME, and TIMER_ABSTIME.
+	* sysdeps/mach/hurd/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/time.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define _POSIX_TIMERS.
+
+	* sysdeps/unix/sysv/linux/bits/siginfo.h: Define si_timer1 and
+	si_timer2.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add clock and timer syscalls.
+
+	* time/Makefile (routines): Add clock_getres, clock_gettime,
+	clock_setres, timer_create, timer_delete, timer_getoverr,
+	timer_gettime, and timer_settime.
+
+	* time/time.h: Define clockid_t, timer_t, and struct itimerspec for
+	POSIX.1b.  Add prototypes for clock and timer functions.
+
 1999-07-26  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/hurdprio.c (_hurd_priority_which_map): Initialize PIDS.

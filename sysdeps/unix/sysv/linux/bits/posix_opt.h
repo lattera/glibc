@@ -81,4 +81,7 @@
 #define _LFS64_LARGEFILE	1
 #define _LFS64_STDIO		1
 
+/* POSIX timers are available.  */
+#define _POSIX_TIMERS	1
+
 #endif /* bits/posix_opt.h */

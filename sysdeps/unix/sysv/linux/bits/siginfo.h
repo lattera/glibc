@@ -1,5 +1,5 @@
 /* siginfo_t, sigevent and constants.  Linux version.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,6 +97,8 @@ typedef struct siginfo
 /* X/Open requires some more fields with fixed names.  */
 # define si_pid		_sifields._kill.si_pid
 # define si_uid		_sifields._kill.si_uid
+# define si_timer1	_sifields._timer._timer1
+# define si_timer2	_sifields._timer._timer2
 # define si_status	_sifields._sigchld.si_status
 # define si_utime	_sifields._sigchld.si_utime
 # define si_stime	_sifields._sigchld.si_stime
