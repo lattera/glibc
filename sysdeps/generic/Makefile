@@ -1,4 +1,4 @@
-# Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
+# Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ common-generated := $(common-generated) bytesex.h det_endian
 
 endif
 
-ifeq ($(subdir),stdio)
+ifeq ($(subdir),stdio-common)
 
 ifeq	"$(filter $(objpfx)siglist.c,$(before-compile))" ""
 before-compile := $(before-compile) $(objpfx)siglist.c

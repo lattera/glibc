@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,18 +16,26 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stdarg.h>
-#undef	__OPTIMIZE__	/* Avoid inline `vprintf' function.  */
 #include <stdio.h>
 
-#undef	vprintf
+#ifdef USE_IN_LIBIO
+# define vdprintf _IO_vdprintf
+#endif
 
-
-/* Write formatted output to stdout according to the
-   format string FORMAT, using the argument list in ARG.  */
+/* Write formatted output to D, according to the format string FORMAT.  */
+/* VARARGS2 */
 int
-DEFUN(vprintf, (format, arg), CONST char *format AND __gnuc_va_list arg)
+dprintf (d, format)
+     int d;
+     const char *format;
 {
-  return vfprintf (stdout, format, arg);
+  va_list arg;
+  int done;
+
+  va_start (arg, format);
+  done = vdprintf (d, format, arg);
+  va_end (arg);
+
+  return done;
 }

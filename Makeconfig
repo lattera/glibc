@@ -114,6 +114,12 @@ export sysdep_dir := $(sysdep_dir)
 ####
 
 
+# Set this to either `stdio' or `libio', to compile in either GNU stdio
+# or GNU libio.
+ifndef stdio
+stdio = stdio
+endif
+
 # Common prefix for machine-independent installation directories.
 ifeq ($(origin prefix),undefined) # ifndef would override explicit empty value.
 prefix = /usr/local

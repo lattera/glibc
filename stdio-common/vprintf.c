@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,24 +16,22 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stdarg.h>
+#undef	__OPTIMIZE__	/* Avoid inline `vprintf' function.  */
 #include <stdio.h>
 
+#undef	vprintf
 
-/* Write formatted output from FORMAT to a string which is
-   allocated with malloc and stored in *STRING_PTR.  */
-/* VARARGS2 */
+#ifdef USE_IN_LIBIO
+# define vfprintf _IO_vfprintf
+#endif
+
+/* Write formatted output to stdout according to the
+   format string FORMAT, using the argument list in ARG.  */
 int
-DEFUN(asprintf, (string_ptr, format),
-      char **string_ptr AND CONST char *format DOTS)
+vprintf (format, arg)
+     const char *format;
+     __gnuc_va_list arg;
 {
-  va_list arg;
-  int done;
-
-  va_start(arg, format);
-  done = vasprintf(string_ptr, format, arg);
-  va_end(arg);
-
-  return done;
+  return vfprintf (stdout, format, arg);
 }

@@ -24,6 +24,7 @@ gnu-ld = @gnu_ld@
 build-shared = @shared@
 build-profile = @profile@
 build-omitfp = @omitfp@
+stdio = @stdio@
 
 # Build tools.
 CC = @CC@

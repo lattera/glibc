@@ -1,5 +1,80 @@
 Mon Oct 16 03:22:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* Makefile (subdirs): Replace stdio with stdio-common and $(stdio).
+	* configure.in: Grok arg --enable-libio.
+	($stdio = libio): Define USE_IN_LIBIO.
+	* config.h.in (USE_IN_LIBIO): Add #undef.
+	* config.make.in (stdio): New variable, set by configure.
+	* Makeconfig (stdio): New variable.
+	* stdio.h [USE_IN_LIBIO]: Include libio/stdio.h instead of
+	stdio/stdio.h.
+	* stdio-common/Makefile: New file.
+	* stdio/Makefile: Half the contents moved to stdio-common/Makefile.
+	* stdio/_itoa.c: Moved to stdio-common.
+	* stdio/_itoa.h: Moved to stdio-common.
+	* stdio/asprintf.c: Moved to stdio-common.
+	* stdio/bug1.c: Moved to stdio-common.
+	* stdio/bug1.input: Moved to stdio-common.
+	* stdio/bug2.c: Moved to stdio-common.
+	* stdio/bug3.c: Moved to stdio-common.
+	* stdio/bug4.c: Moved to stdio-common.
+	* stdio/bug5.c: Moved to stdio-common.
+	* stdio/bug6.c: Moved to stdio-common.
+	* stdio/bug6.input: Moved to stdio-common.
+	* stdio/bug7.c: Moved to stdio-common.
+	* stdio/dprintf.c: Moved to stdio-common.
+	* stdio/errnobug.c: Moved to stdio-common.
+	* stdio/getline.c: Moved to stdio-common.
+	* stdio/getw.c: Moved to stdio-common.
+	* stdio/perror.c: Moved to stdio-common.
+	* stdio/printf-parse.h: Moved to stdio-common.
+	* stdio/printf-prs.c: Moved to stdio-common.
+	* stdio/printf.c: Moved to stdio-common.
+	* stdio/printf.h: Moved to stdio-common.
+	* stdio/printf_fp.c: Moved to stdio-common.
+	* stdio/psignal.c: Moved to stdio-common.
+	* stdio/putw.c: Moved to stdio-common.
+	* stdio/reg-printf.c: Moved to stdio-common.
+	* stdio/scanf.c: Moved to stdio-common.
+	* stdio/snprintf.c: Moved to stdio-common.
+	* stdio/sprintf.c: Moved to stdio-common.
+	* stdio/sscanf.c: Moved to stdio-common.
+	* stdio/tempnam.c: Moved to stdio-common.
+	* stdio/temptest.c: Moved to stdio-common.
+	* stdio/test-fseek.c: Moved to stdio-common.
+	* stdio/test-fwrite.c: Moved to stdio-common.
+	* stdio/test-popen.c: Moved to stdio-common.
+	* stdio/test_rdwr.c: Moved to stdio-common.
+	* stdio/tmpfile.c: Moved to stdio-common.
+	* stdio/tmpnam.c: Moved to stdio-common.
+	* stdio/tst-fileno.c: Moved to stdio-common.
+	* stdio/tst-printf.c: Moved to stdio-common.
+	* stdio/tstgetln.c: Moved to stdio-common.
+	* stdio/tstgetln.input: Moved to stdio-common.
+	* stdio/tstscanf.c: Moved to stdio-common.
+	* stdio/tstscanf.input: Moved to stdio-common.
+	* stdio/vfprintf.c: Moved to stdio-common.
+	* stdio/vfscanf.c: Moved to stdio-common.
+	* stdio/vprintf.c: Moved to stdio-common.
+	* stdio/xbug.c: Moved to stdio-common.
+	* sysdeps/generic/Makefile (siglist.c rules): Do this in subdir
+	stdio-common instead of stdio.
+	* sysdeps/unix/Makefile (errlist.c rules): Likewise.
+	* stdio-common/asprintf.c [USE_IN_LIBIO]: Call libio primitive
+	function.
+	* stdio-common/dprintf.c: Likewise.
+	* stdio-common/printf.c: Likewise.
+	* stdio-common/scanf.c: Likewise.
+	* stdio-common/snprintf.c: Likewise.
+	* stdio-common/sprintf.c: Likewise.
+	* stdio-common/sscanf.c: Likewise.
+	* stdio-common/vprintf.c: Likewise.
+
+	* Makerules: Include $(+depfiles) directly instead of generating
+	depend-$(subdir).
+	(depend-$(subdir)): Target removed.
+	(common-clean): Don't remove depend-$(subdir).
+
 	* sysdeps/unix/sysv/linux/Makefile (rtld-installed-name): New variable.
 	(config-LDFLAGS): Variable removed.
 

@@ -301,19 +301,10 @@ endif
 			 $(filter-out $(addsuffix .d,$(omit-deps)),\
 				      $(+depfiles)))
 
-$(objpfx)depend-$(subdir): Makefile
 ifdef +depfiles
-	for file in $(+depfiles:$(objpfx)%=%); do \
-	  echo "include \$$(objpfx)$$file";	\
-	done > $@-tmp
-	mv -f $@-tmp $@
-else
-	cp /dev/null $@
-endif
-
 ifneq ($(no_deps),t)
-# Include the generated dependencies of the sources in this directory.
-include $(objpfx)depend-$(subdir)
+include $(+depfiles)
+endif
 endif
 
 # Maximize efficiency by minimizing the number of rules.
@@ -623,8 +614,7 @@ endef
 
 # Also remove the dependencies and generated source files.
 common-clean: common-mostlyclean
-	-rm -f $(objpfx)depend-$(subdir) $(+depfiles)
-	-rm -f $(addprefix $(objpfx),$(generated))
+	-rm -f $(addprefix $(objpfx),$(generated)) $(+depfiles)
 
 # Produce a file `stub-$(subdir)' which contains `#define __stub_FUNCTION'
 # for each function which is a stub.  We grovel over all the .d files

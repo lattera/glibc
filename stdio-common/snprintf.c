@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,22 +16,28 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stdarg.h>
 #include <stdio.h>
 
+#ifdef USE_IN_LIBIO
+# define vsnprintf _IO_vsnprintf
+#endif
 
-/* Read formatted input from S, according to the format string FORMAT.  */
-/* VARARGS2 */
+/* Write formatted output into S, according to the format
+   string FORMAT, writing no more than MAXLEN characters.  */
+/* VARARGS3 */
 int
-DEFUN(sscanf, (s, format), CONST char *s AND CONST char *format DOTS)
+snprintf (s, maxlen, format)
+      char *s;
+      size_t maxlen;
+      const char *format;
 {
   va_list arg;
   int done;
 
-  va_start(arg, format);
-  done = __vsscanf(s, format, arg);
-  va_end(arg);
+  va_start (arg, format);
+  done = vsnprintf (s, maxlen, format, arg);
+  va_end (arg);
 
   return done;
 }
