@@ -42,7 +42,7 @@ include ../Makeconfig
 install-others := $(inst_includedir)/bits/stdio_lim.h
 
 aux	:= errlist siglist
-distribute := _itoa.h printf-parse.h stdio_lim.h.in
+distribute := _itoa.h _itowa.h printf-parse.h stdio_lim.h.in
 
 tests := tst-printf tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 temptest tst-fileno test-fwrite tst-ungetc tst-ferror \

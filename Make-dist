@@ -90,14 +90,17 @@ sources += $(addsuffix .c,$(elided-routines) \
 		  $(filter %.c %.S %.s %.h %.sub,$(distribute))
 foo:=$(shell echo '+maybe-sysdeps=$(+maybe-sysdeps)'>&2)
 # Find all the files that have a generic version.
-try-sysdeps := $(foreach dir,$(..)sysdeps/generic $(..)sysdeps/libm-ieee754,\
+generic-dirs = $(..)sysdeps/generic $(..)sysdeps/ieee754 \
+	       $(..)sysdeps/ieee754/flt-32 $(..)sysdeps/ieee754/dbl-64 \
+	       $(..)sysdeps/ieee754/ldbl-96 $(..)sysdeps/ieee754/ldbl-128
+try-sysdeps := $(foreach dir,$(generic-dirs),\
 			     $(addprefix $(dir)/,$(+maybe-sysdeps)))
 foo:=$(shell echo 'try-sysdeps=$(try-sysdeps)'>&2)
 +sysdeps := $(wildcard $(try-sysdeps))
 foo:=$(shell echo 'generic +sysdeps=$(+sysdeps)'>&2)
-+sysdep-names := $(sort $(patsubst $(..)sysdeps/generic/%,%,\
-				   $(patsubst $(..)sysdeps/libm-ieee754/%,%,\
-					      $(+sysdeps))))
++sysdep-names := $(sort $(foreach dir, $(generic-dirs),\
+				  $(patsubst $(dir)/%,%,\
+					     $(filter $(dir)/%,$(+sysdeps)))))
 foo:=$(shell echo '+sysdep-names=$(+sysdep-names)' >&2)
 
 ifdef subdir-dirs

@@ -3,7 +3,8 @@
 # is initialized first to $(extra-libs) so that with each
 # inclusion, we advance $(lib) to the next library name (e.g. libfoo).
 # The variable $($(lib)-routines) defines the list of modules
-# to be included in that library.
+# to be included in that library.  A sysdep Makefile can add to
+# $(lib)-sysdep_routines to include additional modules.
 
 lib := $(firstword $(extra-libs-left))
 extra-libs-left := $(filter-out $(lib),$(extra-libs-left))
@@ -17,14 +18,17 @@ ifneq (,$(object-suffixes-$(lib)))
 install-lib := $(install-lib)
 extra-objs := $(extra-objs)
 
+# The modules that go in $(lib).
+all-$(lib)-routines := $($(lib)-routines) $($(lib)-sysdep_routines)
+
 # Add each flavor of library to the lists of things to build and install.
 install-lib += $(foreach o,$(object-suffixes-$(lib)),$(lib:lib%=$(libtype$o)))
 extra-objs += $(foreach o,$(object-suffixes-$(lib):.os=),\
 			$(patsubst %,%$o,$(filter-out \
 					   $($(lib)-shared-only-routines),\
-					   $($(lib)-routines))))
+					   $(all-$(lib)-routines))))
 ifneq (,$(filter .os,$(object-suffixes-$(lib))))
-extra-objs += $($(lib)-routines:=.os)
+extra-objs += $(all-$(lib)-routines:%=%.os)
 endif
 alltypes-$(lib) := $(foreach o,$(object-suffixes-$(lib)),\
 			     $(objpfx)$(patsubst %,$(libtype$o),\
@@ -52,7 +56,7 @@ define o-iterator-doit
 $(objpfx)$(patsubst %,$(libtype$o),$(lib:lib%=%)): \
   $(patsubst %,$(objpfx)%$o,\
 	     $(filter-out $($(lib)-shared-only-routines),\
-			  $($(lib)-routines))); \
+			  $(all-$(lib)-routines))); \
 	$$(build-extra-lib)
 endef
 object-suffixes-left = $(object-suffixes-$(lib):.os=)
@@ -61,7 +65,7 @@ endif
 
 ifneq (,$(filter .os,$(object-suffixes-$(lib))))
 $(objpfx)$(patsubst %,$(libtype.os),$(lib:lib%=%)): \
-  $($(lib)-routines:%=$(objpfx)%.os)
+  $(all-$(lib)-routines:%=$(objpfx)%.os)
 	$(build-extra-lib)
 endif
 

@@ -81,8 +81,8 @@ LDFLAGS-libCNS.so = -Wl,-soname,$(@F)
 
 distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      gen-8bit.sh gen-8bit-gap.sh gen-8bit-gap-1.sh		    \
-	      TESTS $(wildcard testdata/*) run-iconv-test.sh		    \
-	      8bit-generic.c 8bit-gap.c					    \
+	      TESTS $(filter-out testdata/CVS%, $(wildcard testdata/*))	    \
+	      run-iconv-test.sh 8bit-generic.c 8bit-gap.c		    \
 	      ansi_x3.110.c asmo_449.c baltic.c big5.c cp737.c cp737.h	    \
 	      cp775.c cp775.h ibm874.c cns11643.c cns11643.h		    \
 	      cns11643l1.c cns11643l1.h cp1250.c cp1251.c cp1252.c cp1253.c \

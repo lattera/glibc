@@ -1,3 +1,32 @@
+1999-07-19  Andreas Schwab  <schwab@suse.de>
+
+	* libio/Makefile (routines): Add fwprintf.
+
+	PowerPC has own version of w_sqrt.c and w_sqrtf.c.
+	* math/w_sqrt.c: Moved to ...
+	* sysdeps/generic/w_sqrt.c: ... here.
+	* math/w_sqrtf.c: Moved to ...
+	* sysdeps/generic/w_sqrtf.c: ... here.
+
+	* Make-dist (generic-dirs): New variable.
+	(try-sysdeps, +sysdep-names): Use it.
+	* extra-lib.mk (all-$(lib)-routines): New variable.  Use it
+	instead of $(lib)-routines.
+	* elf/Makefile (distribute): Add dl-cache.h.
+	* db2/Makefile (distribute): Add all new files.
+	* iconvdata/Makefile (distribute): Don't distribute CVS
+	directory.
+	* math/Makefile (distribute): Remove machine/endian.h, add
+	math_ldbl.h.
+	* stdio-common/Makefile (distribute): Add _itowa.h.
+	* sysdeps/generic/Dist: Remove make_siglist.c, add siglist.h.
+	* sysdeps/gnu/Dist: Add eval.c
+	* sysdeps/gnu/Makefile (libdl-sysdep_routines) [$(subdir) =
+	dlfcn]: Add to this instead of libdl-routines.
+	* sysdeps/ieee754/ldbl-128/Dist: New file.
+	* sysdeps/mach/hurd/Dist: Add siglist.h
+	* sysdeps/unix/sysv/linux/Dist: Add kernel-features.h.
+
 1999-07-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sparc/Dist: Add ldd-rewrite.sed.

@@ -37,8 +37,8 @@ distribute = db_int.h config.h compat.h clib/getlong.c btree/btree.src \
 	     txn/txn.src README LICENSE \
 	     $(addprefix include/,btree.h btree_auto.h btree_ext.h \
 				  clib_ext.h common_ext.h cxx_int.h \
-				  db_am.h db_auto.h \
-				  db_cxx.h db_dispatch.h db_ext.h \
+				  db_185.h.src db_am.h db_auto.h db_cxx.h \
+				  db_dispatch.h db_ext.h db_join.h \
 				  db_page.h db_shash.h db_swap.h \
 				  hash.h hash_auto.h hash_ext.h lock.h \
 				  lock_ext.h log.h log_auto.h log_ext.h \
@@ -46,7 +46,10 @@ distribute = db_int.h config.h compat.h clib/getlong.c btree/btree.src \
 				  shqueue.h txn.h txn_auto.h txn_ext.h \
 				  os.h os_jump.h xa.h xa_ext.h) \
 	     $(addprefix mutex/,x86.gcc uts4_cc.s sparc.gcc parisc.gcc \
-				README 68020.gcc tsl_parisc.s sco.cc)
+				README 68020.gcc tsl_parisc.s sco.cc) \
+	     $(addprefix progs/db_printlog/,README commit.awk count.awk \
+					    pgno.awk range.awk status.awk \
+					    txn.awk)
 
 vpath %.c $(subdir-dirs)
 

@@ -48,5 +48,5 @@ endif
 
 
 ifeq ($(subdir),dlfcn)
-libdl-routines	+= eval
+libdl-sysdep_routines += eval
 endif

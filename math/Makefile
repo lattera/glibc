@@ -26,7 +26,7 @@ headers		:= math.h bits/mathcalls.h bits/mathinline.h bits/huge_val.h \
 		   fenv.h bits/fenv.h bits/mathdef.h tgmath.h
 
 # Internal header files.
-distribute	:= math_private.h machine/asm.h machine/endian.h
+distribute	:= math_ldbl.h math_private.h machine/asm.h
 
 # FPU support code.
 aux		:= setfpucw fpu_control
