@@ -27,7 +27,7 @@ SYSCALL__ (pipe, 1)
 	/* Go out with a clean status.  */
 	move v0, zero
 	j ra
-	.end __pipe
+PSEUDO_END(__pipe)
 
 libc_hidden_def (__pipe)
 weak_alias (__pipe, pipe)

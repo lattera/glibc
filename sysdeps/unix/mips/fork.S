@@ -26,7 +26,7 @@ SYSCALL__ (fork, 0)
 	move v0, zero
 parent:
 	ret
-	.end __fork
-libc_hidden_def (__fork)
+PSEUDO_END(__fork)
 
+libc_hidden_def (__fork)
 weak_alias (__fork, fork)
