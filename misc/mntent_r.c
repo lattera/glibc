@@ -162,14 +162,18 @@ weak_alias (__getmntent_r, getmntent_r)
     while (*rp != '\0')							      \
       if (*rp == ' ' || *rp == '\t' || *rp == '\\')			      \
 	break;								      \
+      else								      \
+	++rp;								      \
 									      \
     if (*rp != '\0')							      \
       {									      \
 	/* In the worst case the length of the string can increase to	      \
 	   founr times the current length.  */				      \
-	char *wp = (char *) alloca (strlen (name) * 4 + 1);		      \
+	char *wp;							      \
 									      \
 	rp = name;							      \
+	name = wp = (char *) alloca (strlen (name) * 4 + 1);		      \
+									      \
 	do								      \
 	  if (*rp == ' ')						      \
 	    {								      \
@@ -193,8 +197,6 @@ weak_alias (__getmntent_r, getmntent_r)
 	  else								      \
 	    *wp++ = *rp;						      \
 	while (*rp++ != '\0');						      \
-									      \
-	name = wp;							      \
       }									      \
   } while (0)
 
