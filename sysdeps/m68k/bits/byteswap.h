@@ -34,16 +34,16 @@
 
 #if defined __GNUC__ && __GNUC__ >= 2
 # define __bswap_32(x) \
-  __extension__						\
-  ({ unsigned int __bswap_32_v;				\
-     if (__builtin_constant_p (x))			\
-       __bswap_32_v = __bswap_constant_32 (x);		\
-     else						\
-       __asm__ __volatile__ ("ror%.w %#8, %0;"		\
-			     "swap %0;"			\
-			     "ror%.w %#8, %0"		\
-			     : "=d" (__bswap_32_v)	\
-			     : "0" (x));		\
+  __extension__							\
+  ({ unsigned int __bswap_32_v;					\
+     if (__builtin_constant_p (x))				\
+       __bswap_32_v = __bswap_constant_32 (x);			\
+     else							\
+       __asm__ __volatile__ ("ror%.w %#8, %0;"			\
+			     "swap %0;"				\
+			     "ror%.w %#8, %0"			\
+			     : "=d" (__bswap_32_v)		\
+			     : "0" ((unsigned int) (x)));	\
      __bswap_32_v; })
 #else
 # define __bswap_32(x) __bswap_constant_32 (x)
