@@ -191,8 +191,8 @@ APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
       *sign = isfinite (value) ? signbit (value) != 0 : 0;
     }
   else
-    if (APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit - 1, decpt, sign,
-				      buf, len))
+    if (APPEND (FUNC_PREFIX, fcvt_r) (value, MIN (ndigit, NDIGIT_MAX) - 1,
+				      decpt, sign, buf, len))
       return -1;
 
   *decpt += exponent;
