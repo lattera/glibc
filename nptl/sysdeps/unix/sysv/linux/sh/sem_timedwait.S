@@ -42,8 +42,10 @@ sem_timedwait:
 	mov	#0xf9, r1
 	and	r1, r0
 	cmp/eq	#8, r0
-	bt	10f
-
+	bf	0f
+	bra	10f
+	 stc	gbr, r0
+0:
 	mov.l	@r4, r0
 2:
 	tst	r0, r0
@@ -115,7 +117,8 @@ sem_timedwait:
 	add	#-1, r2
 5:
 	cmp/pz	r2
-	bf	6f		/* Time is already up.  */
+	bf/s	6f		/* Time is already up.  */
+	 mov	#ETIMEDOUT, r0
 
 	/* Store relative timeout.  */
 	mov.l	r2, @r15
@@ -196,7 +199,6 @@ sem_timedwait:
 
 10:
 	/* Canceled.  */
-	stc	gbr, r0
 	mov.w	.Lresult, r1
 	mov	#-1, r2
 	mov.l	r2, @(r0,r1)
