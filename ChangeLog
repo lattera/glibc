@@ -1,3 +1,9 @@
+2004-03-18  Roland McGrath  <roland@redhat.com>
+
+	* manual/Makefile (stamp-summary): Use -k option to sort,
+	not traditional key selection syntax.
+	Reported by Jim Gifford <giffordj@linkline.com>.
+
 2004-03-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/ldconfig.c: Include stdbool.h.
