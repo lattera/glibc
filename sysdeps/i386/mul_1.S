@@ -18,14 +18,6 @@
    the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
    MA 02111-1307, USA. */
 
-/*
-   INPUT PARAMETERS
-   res_ptr	(sp + 4)
-   s1_ptr	(sp + 8)
-   size		(sp + 12)
-   s2_limb	(sp + 16)
-*/
-
 #include <sysdep.h>
 #include "asm-syntax.h"
 #include "bp-asm.h"
@@ -45,37 +37,37 @@
 ENTRY(__mpn_mul_1)
 	ENTER
 
-	INSN1(push,l	,R(edi))
-	INSN1(push,l	,R(esi))
-	INSN1(push,l	,R(ebx))
-	INSN1(push,l	,R(ebp))
+	pushl	%edi
+	pushl	%esi
+	pushl	%ebx
+	pushl	%ebp
 
-	INSN2(mov,l	,R(res_ptr),MEM_DISP(esp,RES))
-	INSN2(mov,l	,R(s1_ptr),MEM_DISP(esp,S1))
-	INSN2(mov,l	,R(size),MEM_DISP(esp,SIZE))
-	INSN2(mov,l	,R(s2_limb),MEM_DISP(esp,S2LIMB))
+	movl	RES(%esp), %res_ptr
+	movl	S1(%esp), %s1_ptr
+	movl	SIZE(%esp), %size
+	movl	S2LIMB(%esp), %s2_limb
 
-	INSN2(lea,l	,R(res_ptr),MEM_INDEX(res_ptr,size,4))
-	INSN2(lea,l	,R(s1_ptr),MEM_INDEX(s1_ptr,size,4))
-	INSN1(neg,l	,R(size))
-	INSN2(xor,l	,R(ebx),R(ebx))
+	leal	(%res_ptr,%size,4), %res_ptr
+	leal	(%s1_ptr,%size,4), %s1_ptr
+	negl	%size
+	xorl	%ebx, %ebx
 	ALIGN (3)
 L(oop):
-	INSN2(mov,l	,R(eax),MEM_INDEX(s1_ptr,size,4))
-	INSN1(mul,l	,R(s2_limb))
-	INSN2(add,l	,R(eax),R(ebx))
-	INSN2(mov,l	,MEM_INDEX(res_ptr,size,4),R(eax))
-	INSN2(adc,l	,R(edx),$0)
-	INSN2(mov,l	,R(ebx),R(edx))
+	movl	(%s1_ptr,%size,4), %eax
+	mull	%s2_limb
+	addl	%ebx, %eax
+	movl	%eax, (%res_ptr,%size,4)
+	adcl	$0, %edx
+	movl	%edx, %ebx
 
-	INSN1(inc,l	,R(size))
-	INSN1(jnz,	,L(oop))
-	INSN2(mov,l	,R(eax),R(ebx))
+	incl	%size
+	jnz	L(oop)
+	movl	%ebx, %eax
 
-	INSN1(pop,l	,R(ebp))
-	INSN1(pop,l	,R(ebx))
-	INSN1(pop,l	,R(esi))
-	INSN1(pop,l	,R(edi))
+	popl	%ebp
+	popl	%ebx
+	popl	%esi
+	popl	%edi
 
 	LEAVE
 	ret

@@ -1,3 +1,20 @@
+2000-06-26  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/i386/asm-syntax.h (R, MEM, MEM_DISP, MEM_INDEX,
+	INSN1, INSN2, TEXT, GLOBL): Remove macros.
+	(ALIGN): Cleanup surrounding conditionals.
+
+	* sysdeps/i386/addmul_1.S: Replace asm-syntax macros with gas syntax.
+	Call ENTER/LEAVE macros.
+	* sysdeps/i386/mul_1.S: Replace asm-syntax macros with gas syntax.
+	* sysdeps/i386/submul_1.S: Likewise.
+
+	* sysdeps/i386/i586/addmul_1.S: Replace asm-syntax macros with gas
+	syntax.  Define & use symbolic argument stack offsets.  Call
+	ENTER/LEAVE macros.
+	* sysdeps/i386/i586/mul_1.S: Likewise.
+	* sysdeps/i386/i586/submul_1.S: Likewise.
+
 2000-06-25  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/i386/i586/memcpy.S: Redefine memcpy as mempcpy,
