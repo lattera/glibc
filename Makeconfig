@@ -345,7 +345,11 @@ endif
 
 # Default flags to pass the C compiler.
 ifndef default_cflags
+ifeq ($(release),stable)
+default_cflags := -g -O2
+else
 default_cflags := -g -O
+endif
 endif
 
 # Flags to pass the C compiler when assembling preprocessed assembly code

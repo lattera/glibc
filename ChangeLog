@@ -1,3 +1,34 @@
+2000-12-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makeconfig (default_cflags): Make -O2 the default for stable
+	releases.
+
+2000-12-08  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ia64/fpu/s_isinfl.S: Renamed to ...
+	* sysdeps/ia64/fpu/s_isinf.S: This.
+	Add a .pred.rel.mutex note to avoid false report.
+
+	* sysdeps/ia64/fpu/s_isnanl.S: Renamed to ...
+	* sysdeps/ia64/fpu/s_isnan.S: This.
+
+	* sysdeps/ia64/fpu/s_fpclassify.S: New file.
+	* sysdeps/ia64/fpu/s_fpclassifyf.S: New file.
+	* sysdeps/ia64/fpu/s_fpclassifyl.S: New file.
+	* sysdeps/ia64/fpu/s_isinff.S: New file.
+	* sysdeps/ia64/fpu/s_isinfl.S: New file.
+	* sysdeps/ia64/fpu/s_isnanf.S: New file.
+	* sysdeps/ia64/fpu/s_isnanl.S: New file.
+	* sysdeps/ia64/fpu/s_finite.S: New file.
+	* sysdeps/ia64/fpu/s_finitef.S: New file.
+	* sysdeps/ia64/fpu/s_finitel.S: New file.
+	* sysdeps/ia64/fpu/s_signbit.S: New file.
+	* sysdeps/ia64/fpu/s_signbitf.S: New file.
+	* sysdeps/ia64/fpu/s_signbitl.S: New file.
+	* sysdeps/ia64/fpu/s_copysign.S: New file.
+	* sysdeps/ia64/fpu/s_copysignf.S: New file.
+	* sysdeps/ia64/fpu/s_copysignl.S: New file.
+
 2000-12-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/libm-test.inc (main): Fix typos in messages.

@@ -26,7 +26,6 @@ __nss_getent (getent_r_function func, void **resbuf, char **buffer,
 	      size_t buflen, size_t *buffer_size, int *h_errnop)
 {
   void *result;
-  int save;
 
   if (*buffer == NULL)
     {
@@ -35,8 +34,7 @@ __nss_getent (getent_r_function func, void **resbuf, char **buffer,
     }
 
   while (buffer != NULL
-	 && func (resbuf, *buffer, *buffer_size, &result,
-		  h_errnop) == ERANGE
+	 && func (resbuf, *buffer, *buffer_size, &result, h_errnop) == ERANGE
 	 && (h_errnop == NULL || *h_errnop == NETDB_INTERNAL))
     {
       char *new_buf;
@@ -46,7 +44,7 @@ __nss_getent (getent_r_function func, void **resbuf, char **buffer,
 	{
 	  /* We are out of memory.  Free the current buffer so that the
 	     process gets a chance for a normal termination.  */
-	  save = errno;
+	  int save = errno;
 	  free (*buffer);
 	  __set_errno (save);
 	}
@@ -55,10 +53,6 @@ __nss_getent (getent_r_function func, void **resbuf, char **buffer,
 
   if (*buffer == NULL)
     result = NULL;
-
-  /* Release lock.  Preserve error value.  */
-  save = errno;
-  __set_errno (save);
 
   return result;
 }
