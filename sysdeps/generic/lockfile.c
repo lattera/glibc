@@ -1,5 +1,5 @@
-/* lockfile - Handle locking and unlocking of stream.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* lockfile - Handle locking and unlocking of stream.  Singlethreaded version.
+   Copyright (C) 1996,97,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,44 +17,41 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-typedef int FILE;
+#include <stdio.h>
+
+#undef _IO_flockfile
+#undef _IO_funlockfile
+#undef _IO_ftrylockfile
+
+void
+__flockfile (FILE *stream)
+{
+  /* Do nothing.  Using this version does not do any locking.  */
+}
+weak_alias (__flockfile, flockfile);
+#ifdef USE_IN_LIBIO
+weak_alias (__flockfile, _IO_flockfile)
+#endif
 
 
 void
-__internal_flockfile (FILE *stream)
+__funlockfile (FILE *stream)
 {
   /* Do nothing.  Using this version does not do any locking.  */
 }
 #ifdef USE_IN_LIBIO
-weak_alias (__internal_flockfile, _IO_flockfile)
-#else
-weak_alias (__internal_flockfile, __flockfile)
+weak_alias (__funlockfile, _IO_funlockfile)
 #endif
-weak_alias (__internal_flockfile, flockfile);
-
-
-void
-__internal_funlockfile (FILE *stream)
-{
-  /* Do nothing.  Using this version does not do any locking.  */
-}
-#ifdef USE_IN_LIBIO
-weak_alias (__internal_funlockfile, _IO_funlockfile)
-#else
-weak_alias (__internal_funlockfile, __funlockfile)
-#endif
-weak_alias (__internal_funlockfile, funlockfile);
+weak_alias (__funlockfile, funlockfile);
 
 
 int
-__internal_ftrylockfile (FILE *stream)
+__ftrylockfile (FILE *stream)
 {
   /* Do nothing.  Using this version does not do any locking.  */
   return 1;
 }
+weak_alias (__ftrylockfile, ftrylockfile);
 #ifdef USE_IN_LIBIO
-weak_alias (__internal_ftrylockfile, _IO_ftrylockfile)
-#else
-weak_alias (__internal_ftrylockfile, __ftrylockfile)
+weak_alias (__ftrylockfile, _IO_ftrylockfile)
 #endif
-weak_alias (__internal_ftrylockfile, ftrylockfile);
