@@ -709,6 +709,7 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
 	l->l_prev->l_next = l->l_next;
       if (l->l_next)
 	l->l_next->l_prev = l->l_prev;
+      --_dl_nloaded;
       free (l);
     }
   free (realname);
@@ -997,6 +998,13 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
       }
     else
       {
+	/* This object is loaded at a fixed address.  This must never
+           happen for objects loaded with dlopen().  */
+	if (mode & __RTLD_DLOPEN)
+	  {
+	    LOSE (0, N_("cannot dynamically load executable"));
+	  }
+
 	/* Notify ELF_PREFERRED_ADDRESS that we have to load this one
 	   fixed.  */
 	ELF_FIXED_ADDRESS (loader, c->mapstart);

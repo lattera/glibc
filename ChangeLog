@@ -1,5 +1,8 @@
 2000-09-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c (lose): Decrement _nl_loaded.
+	(_dl_map_object_from_fd): Don't try to dlopen executables.
+
 	* iconvdata/tst-tables.sh: Actually return with an error if
 	something goes wrong.
 	* iconvdata/tst-table.sh: Return with an error if any of the cmp fails.
