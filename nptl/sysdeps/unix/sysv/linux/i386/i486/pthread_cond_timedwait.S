@@ -102,10 +102,8 @@ __pthread_cond_timedwait:
 
 	/* Get the current time.  */
 8:	movl	%ebx, %edx
-.LebxmovedUR:
 #ifdef __NR_clock_gettime
-	/* Get the clock number.  Note that the field in the condvar
-	   structure stores the number minus 1.  */
+	/* Get the clock number.  */
 	movl	cond_clock(%ebx), %ebx
 	/* Only clocks 0 and 1 are allowed.  Both are handled in the
 	   kernel.  */
@@ -117,7 +115,6 @@ __pthread_cond_timedwait:
 	je	19f
 # endif
 	movl	%edx, %ebx
-.LebxbackUR:
 
 	/* Compute relative timeout.  */
 	movl	(%ebp), %ecx
@@ -131,7 +128,6 @@ __pthread_cond_timedwait:
 	movl	$SYS_gettimeofday, %eax
 	ENTER_KERNEL
 	movl	%edx, %ebx
-.LebxbackUR:
 
 	/* Compute relative timeout.  */
 	movl	8(%esp), %eax
@@ -359,15 +355,10 @@ versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 		  GLIBC_2_3_2)
 
 
-	.type	__condvar_tw_cleanup3, @function
-__condvar_tw_cleanup3:
-	movl	20+FRAME_SIZE(%esp), %ebx
-.LSbl5:
-	jmp	__condvar_tw_cleanup
-	.size	__condvar_tw_cleanup3, .-__condvar_tw_cleanup3
 	.type	__condvar_tw_cleanup2, @function
 __condvar_tw_cleanup2:
 	subl	$cond_futex, %ebx
+.LSbl5:
 	.size	__condvar_tw_cleanup2, .-__condvar_tw_cleanup2
 	.type	__condvar_tw_cleanup, @function
 __condvar_tw_cleanup:
@@ -446,14 +437,6 @@ __condvar_tw_cleanup:
 .Lcstbegin:
 	.long	.LcleanupSTART-.LSTARTCODE
 	.long	.Ladd_cond_futex-.LcleanupSTART
-	.long	__condvar_tw_cleanup-.LSTARTCODE
-	.uleb128  0
-	.long	.LebxmovedUR-.LSTARTCODE
-	.long	.LebxbackUR-.LebxmovedUR
-	.long	__condvar_tw_cleanup3-.LSTARTCODE
-	.uleb128  0
-	.long	.LebxmovedUR-.LSTARTCODE
-	.long	.Ladd_cond_futex-.LebxmovedUR
 	.long	__condvar_tw_cleanup-.LSTARTCODE
 	.uleb128  0
 	.long	.Ladd_cond_futex-.LSTARTCODE

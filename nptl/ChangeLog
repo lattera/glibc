@@ -1,3 +1,8 @@
+2004-08-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S:
+	Remove unnecessary exception handling data.
+
 2004-07-23  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #284]
