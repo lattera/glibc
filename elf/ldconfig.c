@@ -758,12 +758,8 @@ search_dir (const struct dir_entry *entry)
 			error (0, 0, _("libraries %s and %s in directory %s have same soname but different type."),
 			       dlib_ptr->name, direntry->d_name, entry->path);
 		    }
-		  /* OS version should be the same - sanity check.  */
-		  if (dlib_ptr->osversion != osversion)
-		    error (0, 0, _("libraries %s and %s in directory %s have same\n"
-				   "soname but different minimal supported OS version."),
-			   dlib_ptr->name, direntry->d_name, entry->path);
 		  free (dlib_ptr->name);
+		  dlib_ptr->osversion = osversion;
 		  dlib_ptr->name = xstrdup (direntry->d_name);
 		  dlib_ptr->is_link = is_link;
 		}
