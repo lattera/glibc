@@ -1,5 +1,7 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/stdio.h-data: Account for changes in XPG6.
+
 	* conform/data/spawn.h-data: Correct posix_spawnattr_setflags
 	prototype.
 

@@ -62,7 +62,10 @@ function size_t fwrite (const void*, size_t, size_t, FILE*)
 function int getc (FILE*)
 function int getchar (void)
 function int getc_unlocked (FILE*)
+function int getchar_unlocked ()
+#ifndef XOPEN2K
 function int getopt (int, char *const[], const char *)
+#endif
 function {char*} gets (char*)
 function int getw (FILE*)
 function int pclose (FILE*)
@@ -89,15 +92,26 @@ function {FILE*} tmpfile (void)
 function {char*} tmpnam (char*)
 function int ungetc (int, FILE*)
 function int vfprintf (FILE*, const char*, va_list)
+#ifdef XOPEN2K
+function int vfscanf (FILE*, const char*, va_list)
+#endif
 function int vprintf (const char*, va_list)
+#ifdef XOPEN2K
+function int vscanf (const char*, va_list)
+#endif
 function int vsnprintf (char*, size_t, const char*, va_list)
 function int vsprintf (char*, const char*, va_list)
+#ifdef XOPEN2K
+function int vsscanf (const char*, const char*, va_list)
+#endif
 
 #if !defined ISO && !defined POSIX
+#ifndef XOPEN2K
 variable {char*} optarg
 variable int opterr
 variable int optind
 variable int optopt
+#endif
 
 allow-header stddef.h
 
