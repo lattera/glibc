@@ -119,5 +119,5 @@ __pthread_unwind_next (__pthread_unwind_buf_t *buf)
 {
   struct pthread_unwind_buf *ibuf = (struct pthread_unwind_buf *) buf;
 
-  __pthread_unwind (ibuf->priv.data.prev);
+  __pthread_unwind ((__pthread_unwind_buf_t *) ibuf->priv.data.prev);
 }

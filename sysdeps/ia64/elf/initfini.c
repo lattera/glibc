@@ -1,5 +1,5 @@
 /* Special .init and .fini section support for ia64.
-   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,6 +46,7 @@ __asm__ ("\n\n"
 	--davidm 02/10/29 */
 
 static void
+__attribute__ ((used))
 gmon_initializer (void)
 {
   extern void weak_function __gmon_start__ (void);

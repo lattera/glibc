@@ -55,7 +55,7 @@ __pthread_register_cancel_defer (__pthread_unwind_buf_t *buf)
 				: PTHREAD_CANCEL_DEFERRED);
 
   /* Store the new cleanup handler info.  */
-  THREAD_SETMEM (self, cleanup_jmp_buf, buf);
+  THREAD_SETMEM (self, cleanup_jmp_buf, (struct pthread_unwind_buf *) buf);
 }
 
 

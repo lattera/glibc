@@ -1,3 +1,19 @@
+2003-05-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix-timer.h: Remove old, unused timer_id2ptr and timer_ptr2id
+	definitions.
+
+	* sysdeps/pthread/timer_create.c (timer_create): In case
+	evp==NULL, assign timer ID to sival_ptr.
+
+	* descr.h (struct pthread_unwind_buf): Change type of prev element to
+	struct pthread_unwind_buf *.
+	(struct pthread): Likewise for cleanup_jmp_buf element.
+
+	* cleanup.c (__pthread_register_cancel): Add cast to avoid warning.
+	* cleanup_defer.c (__pthread_register_cancel_defer): Likewise.
+	* unwind.c (__pthread_unwind_next): Likewise.
+
 2003-05-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h

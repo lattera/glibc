@@ -77,7 +77,7 @@ struct pthread_unwind_buf
     struct
     {
       /* Pointer to the previous cleanup buffer.  */
-      __pthread_unwind_buf_t *prev;
+      struct pthread_unwind_buf *prev;
 
       /* Backward compatibility: state of the old-style cleanup
 	 handler at the time of the previous new-style cleanup handler
@@ -124,7 +124,7 @@ struct pthread
   struct _pthread_cleanup_buffer *cleanup;
 
   /* Unwind information.  */
-  __pthread_unwind_buf_t *cleanup_jmp_buf;
+  struct pthread_unwind_buf *cleanup_jmp_buf;
 #define HAVE_CLEANUP_JMP_BUF
 
   /* Flags determining processing of cancellation.  */

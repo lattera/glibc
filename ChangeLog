@@ -1,3 +1,10 @@
+2003-05-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/fileops.c (_IO_file_open): Don't mark as inline.
+
+	* sysdeps/ia64/elf/initfini.c ((gmon_initializer): Mark with
+	attribute used.
+
 2003-05-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* scripts/config.guess: Update from master copy.

@@ -81,7 +81,7 @@ timer_create (clock_id, evp, timerid)
     {
       newtimer->event.sigev_notify = SIGEV_SIGNAL;
       newtimer->event.sigev_signo = SIGALRM;
-      newtimer->event.sigev_value.sival_int = timer_ptr2id (newtimer);
+      newtimer->event.sigev_value.sival_ptr = timer_ptr2id (newtimer);
       newtimer->event.sigev_notify_function = 0;
     }
 

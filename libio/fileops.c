@@ -215,9 +215,6 @@ _IO_new_file_finish (fp, dummy)
 }
 INTDEF2(_IO_new_file_finish, _IO_file_finish)
 
-#if defined __GNUC__ && __GNUC__ >= 2
-__inline__
-#endif
 _IO_FILE *
 _IO_file_open (fp, filename, posix_mode, prot, read_write, is32not64)
      _IO_FILE *fp;

@@ -33,7 +33,7 @@ __pthread_register_cancel (__pthread_unwind_buf_t *buf)
   ibuf->priv.data.cleanup = THREAD_GETMEM (self, cleanup);
 
   /* Store the new cleanup handler info.  */
-  THREAD_SETMEM (self, cleanup_jmp_buf, buf);
+  THREAD_SETMEM (self, cleanup_jmp_buf, (struct pthread_unwind_buf *) buf);
 }
 
 

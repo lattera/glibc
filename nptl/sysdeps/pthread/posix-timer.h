@@ -101,26 +101,8 @@ extern struct thread_node __timer_signal_thread_tclk;
 
 
 /* Return pointer to timer structure corresponding to ID.  */
-#if 0
-static inline struct timer_node *
-timer_id2ptr (timer_t timerid)
-{
-  if (timerid >= 0 && timerid < TIMER_MAX)
-    return &__timer_array[timerid];
-
-  return NULL;
-}
-
-/* Return ID of TIMER.  */
-static inline int
-timer_ptr2id (struct timer_node *timer)
-{
-  return timer - __timer_array;
-}
-#else
-# define timer_id2ptr(timerid) ((struct timer_node *) timerid)
-# define timer_ptr2id(timerid) ((void *) timerid)
-#endif
+#define timer_id2ptr(timerid) ((struct timer_node *) timerid)
+#define timer_ptr2id(timerid) ((void *) timerid)
 
 /* Check whether timer is valid; global mutex must be held. */
 static inline int
