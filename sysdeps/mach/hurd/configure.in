@@ -51,7 +51,7 @@ simpleroutine foobar_reply (
 	reply_port: reply_port_t;
 	err: kern_return_t, RetCode);
 EOF
-if AC_TRY_COMMAND([CC="${CC}" ${MIG-false} -n conftest.defs 1>&AC_FD_CC]); then
+if AC_TRY_COMMAND([CC="${CC}" ${MIG-false} -n conftest.defs 1>&AS_MESSAGE_LOG_FD]); then
   hurd_cv_mig_retcode=yes
 else
   hurd_cv_mig_retcode=no

@@ -1,5 +1,11 @@
 2002-10-18  Jeff Bailey  <jbailey@gnu.org>
 
+        * configure.in: Replace AC_FD_CC with AS_MESSAGE_LOG_FD.
+        * sysdeps/alpha/elf/configure.in: Likewise.
+        * sysdeps/i386/elf/configure.in: Likewise.
+        * sysdeps/mach/hurd/configure.in: Likewise.
+        * sysdeps/x86_64/elf/configure.in: Likewise.
+
 	* configure.in: Use AC_CONFIG_SRCDIR and new AC_INIT syntax.
 
         * sysdeps/alpha/elf/configure.in: Remove unneeded sinclude statement.

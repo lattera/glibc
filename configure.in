@@ -778,7 +778,7 @@ AC_CACHE_CHECK(for old Debian install-info, libc_cv_old_debian_install_info,
   echo 'START-INFO-DIR-ENTRY'
   echo '* Prog: (prog).   Program.'
   echo 'END-INFO-DIR-ENTRY') >conftest.d/prog.info
-  if $INSTALL_INFO --info-dir=conftest.d conftest.d/prog.info >&AC_FD_CC 2>&1
+  if $INSTALL_INFO --info-dir=conftest.d conftest.d/prog.info >&AS_MESSAGE_LOG_FD 2>&1
   then
     if grep -s 'i-d-s works' conftest.d/dir >/dev/null
     then libc_cv_old_debian_install_info=no
@@ -900,7 +900,7 @@ extern int glibc_conftest_frobozz;
 main () { printf ("%d\n", glibc_conftest_frobozz); }
 EOF
 if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
-	    -o conftest conftest.s conftest1.c 1>&AC_FD_CC 2>&AC_FD_CC; then
+	    -o conftest conftest.s conftest1.c 1>&AS_MESSAGE_LOG_FD 2>&AC_FD_CC; then
   libc_cv_asm_set_directive=yes
 else
   libc_cv_asm_set_directive=no
@@ -945,7 +945,7 @@ ${libc_cv_dot_text}
 _sym:
 .symver _sym,sym@VERS
 EOF
-if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&AC_FD_CC 2>&AC_FD_CC; then
+if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD 2>&AC_FD_CC; then
   libc_cv_asm_symver_directive=yes
 else
   libc_cv_asm_symver_directive=no
@@ -967,11 +967,11 @@ VERS_2 {
         global: sym;
 } VERS_1;
 EOF
-  if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&AC_FD_CC 2>&AC_FD_CC; then
+  if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD 2>&AC_FD_CC; then
     if AC_TRY_COMMAND([${CC-cc} $CFLAGS -shared -o conftest.so conftest.o
 					-nostartfiles -nostdlib
 					-Wl,--version-script,conftest.map
-		       1>&AC_FD_CC]);
+		       1>&AS_MESSAGE_LOG_FD]);
     then
       libc_cv_ld_version_script_option=yes
     else
@@ -1009,7 +1009,7 @@ if test $elf = yes; then
 .section foo_section
 .previous
 EOF
-  if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS conftest.s 1>&AC_FD_CC); then
+  if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD); then
     libc_cv_asm_previous_directive=yes
   else
     libc_cv_asm_previous_directive=no
@@ -1024,7 +1024,7 @@ EOF
 .pushsection foo_section
 .popsection
 EOF
-    if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS conftest.s 1>&AC_FD_CC); then
+    if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD); then
       libc_cv_asm_popsection_directive=yes
     else
       libc_cv_asm_popsection_directive=no
@@ -1042,7 +1042,7 @@ foo:
 .hidden bar
 bar:
 EOF
-  if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS conftest.s 1>&AC_FD_CC); then
+  if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD); then
     libc_cv_asm_protected_directive=yes
   else
     libc_cv_asm_protected_directive=no
@@ -1145,7 +1145,7 @@ int foo (void) { return 1; }
 int (*fp) (void) __attribute__ ((section (".init_array"))) = foo;
 EOF
   if AC_TRY_COMMAND([${CC-cc} -o conftest conftest.c
-		     -static -nostartfiles -nostdlib 1>&AC_FD_CC])
+		     -static -nostartfiles -nostdlib 1>&AS_MESSAGE_LOG_FD])
   then
     if readelf -S conftest | fgrep INIT_ARRAY > /dev/null; then
       libc_cv_initfinit_array=yes
@@ -1168,7 +1168,7 @@ int _start (void) { return 42; }
 EOF
   if AC_TRY_COMMAND([${CC-cc} -shared -o conftest.so conftest.c
 		     -nostartfiles -nostdlib
-		     -Wl,--enable-new-dtags,-z,nodelete 1>&AC_FD_CC])
+		     -Wl,--enable-new-dtags,-z,nodelete 1>&AS_MESSAGE_LOG_FD])
   then
     libc_cv_z_nodelete=yes
   else
@@ -1184,7 +1184,7 @@ int _start (void) { return 42; }
 EOF
   if AC_TRY_COMMAND([${CC-cc} -shared -o conftest.so conftest.c
 			-nostartfiles -nostdlib
-			-Wl,--enable-new-dtags,-z,nodlopen 1>&AC_FD_CC])
+			-Wl,--enable-new-dtags,-z,nodlopen 1>&AS_MESSAGE_LOG_FD])
   then
     libc_cv_z_nodlopen=yes
   else
@@ -1200,7 +1200,7 @@ int _start (void) { return 42; }
 EOF
   if AC_TRY_COMMAND([${CC-cc} -shared -o conftest.so conftest.c
 			-nostartfiles -nostdlib
-			-Wl,--enable-new-dtags,-z,initfirst 1>&AC_FD_CC])
+			-Wl,--enable-new-dtags,-z,initfirst 1>&AS_MESSAGE_LOG_FD])
   then
     libc_cv_z_initfirst=yes
   else
@@ -1214,7 +1214,7 @@ EOF
   cat > conftest.c <<EOF
 int _start (void) { return 42; }
 EOF
-  if AC_TRY_COMMAND([${CC-cc} -shared -o conftest.so conftest.c -Wl,-Bgroup -nostdlib 1>&AC_FD_CC])
+  if AC_TRY_COMMAND([${CC-cc} -shared -o conftest.so conftest.c -Wl,-Bgroup -nostdlib 1>&AS_MESSAGE_LOG_FD])
   then
     libc_cv_Bgroup=yes
   else
@@ -1232,7 +1232,7 @@ int foo (void) { return bar (mumble); }
 EOF
   if AC_TRY_COMMAND([${CC-cc} -shared -o conftest.so conftest.c
 			-nostdlib -nostartfiles
-			-Wl,-z,combreloc 1>&AC_FD_CC])
+			-Wl,-z,combreloc 1>&AS_MESSAGE_LOG_FD])
   then
 dnl The following test is a bit weak.  We must use a tool which can test
 dnl cross-platform since the gcc used can be a cross compiler.  Without
@@ -1309,8 +1309,8 @@ if AC_TRY_EVAL(ac_compile); then
     $2])
   fi
 else
-  echo "configure: failed program was:" >&AC_FD_CC
-  cat conftest.$ac_ext >&AC_FD_CC
+  echo "configure: failed program was:" >&AS_MESSAGE_LOG_FD
+  cat conftest.$ac_ext >&AS_MESSAGE_LOG_FD
   ifelse([$2], , , [rm -f conftest*
   $2])
 fi
@@ -1396,7 +1396,7 @@ case "${host_cpu}-${host_os}" in
   cat > conftest.s <<EOF
  nop ; is_old_puffin
 EOF
-  if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS conftest.s 1>&AC_FD_CC); then
+  if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD); then
     libc_cv_asm_line_sep='!'
   else
     if test -z "$enable_hacker_mode"; then
@@ -1420,7 +1420,7 @@ EOF
 dnl No \ in command here because it ends up inside ''.
 if AC_TRY_COMMAND([${CC-cc} $CFLAGS
 			    -nostdlib -nostartfiles -Wl,--no-whole-archive
-			    -o conftest conftest.c 1>&AC_FD_CC]); then
+			    -o conftest conftest.c 1>&AS_MESSAGE_LOG_FD]); then
   libc_cv_ld_no_whole_archive=yes
 else
   libc_cv_ld_no_whole_archive=no
@@ -1440,7 +1440,7 @@ EOF
 dnl No \ in command here because it ends up inside ''.
 if AC_TRY_COMMAND([${CC-cc} $CFLAGS
 			    -nostdlib -nostartfiles -fexceptions
-			    -o conftest conftest.c 1>&AC_FD_CC]); then
+			    -o conftest conftest.c 1>&AS_MESSAGE_LOG_FD]); then
   libc_cv_gcc_exceptions=yes
 else
   libc_cv_gcc_exceptions=no
@@ -1514,14 +1514,14 @@ EOF
 dnl No \ in command here because it ends up inside ''.
 if AC_TRY_COMMAND([${CC-cc} $CFLAGS -DCHECK__register_frame_info
 			    -nostdlib -nostartfiles
-			    -o conftest conftest.c -lgcc >&AC_FD_CC]); then
+			    -o conftest conftest.c -lgcc >&AS_MESSAGE_LOG_FD]); then
   libc_cv_gcc_dwarf2_unwind_info=static
 else
   libc_cv_gcc_dwarf2_unwind_info=no
 fi
 if AC_TRY_COMMAND([${CC-cc} $CFLAGS -DCHECK__register_frame_info
                             -nostdlib -nostartfiles
-                            -o conftest conftest.c -lgcc -lgcc_eh >&AC_FD_CC]); then
+                            -o conftest conftest.c -lgcc -lgcc_eh >&AS_MESSAGE_LOG_FD]); then
   if ${CC-cc} $CFLAGS -DCHECK__register_frame_info -nostdlib -nostartfiles \
      -o conftest conftest.c -lgcc -lgcc_eh -v 2>&1 >/dev/null \
      | grep -q -- --eh-frame-hdr; then
@@ -1535,7 +1535,7 @@ fi
 if test $libc_cv_gcc_dwarf2_unwind_info = no; then
   if AC_TRY_COMMAND([${CC-cc} $CFLAGS -DCHECK__register_frame
 			      -nostdlib -nostartfiles
-			      -o conftest conftest.c -lgcc >&AC_FD_CC]); then
+			      -o conftest conftest.c -lgcc >&AS_MESSAGE_LOG_FD]); then
     libc_cv_gcc_dwarf2_unwind_info=yes
   else
     libc_cv_gcc_dwarf2_unwind_info=no
@@ -1564,7 +1564,7 @@ int foo (int a)
 EOF
 dnl No \ in command here because it ends up inside ''.
 if AC_TRY_COMMAND([${CC-cc} $CFLAGS -nostdlib -nostartfiles
-			    -o conftest conftest.c -lgcc >&AC_FD_CC]); then
+			    -o conftest conftest.c -lgcc >&AS_MESSAGE_LOG_FD]); then
   libc_cv_gcc_builtin_expect=yes
 else
   libc_cv_gcc_builtin_expect=no
@@ -1612,7 +1612,7 @@ changequote([,])dnl
 EOF
 dnl No \ in command here because it ends up inside ''.
 if AC_TRY_COMMAND([${CC-cc} $CFLAGS -nostdlib -nostartfiles
-			    -o conftest conftest.c -lgcc >&AC_FD_CC]); then
+			    -o conftest conftest.c -lgcc >&AS_MESSAGE_LOG_FD]); then
   libc_cv_gcc_subtract_local_labels=yes
 else
   libc_cv_gcc_subtract_local_labels=no
@@ -1628,7 +1628,7 @@ if test "x$use__thread" != xno; then
   [cat > conftest.c <<\EOF
 __thread int a = 42;
 EOF
-  if AC_TRY_COMMAND([${CC-cc} $CFLAGS -c conftest.c >&AC_FD_CC]); then
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS -c conftest.c >&AS_MESSAGE_LOG_FD]); then
     libc_cv_gcc___thread=yes
   else
     libc_cv_gcc___thread=no
@@ -1647,7 +1647,7 @@ if test "$libc_cv_gcc___thread" = yes; then
   cat > conftest.c <<\EOF
 extern __thread int a __attribute__((tls_model ("initial-exec")));
 EOF
-  if AC_TRY_COMMAND([${CC-cc} $CFLAGS -S -Werror conftest.c >&AC_FD_CC]); then
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS -S -Werror conftest.c >&AS_MESSAGE_LOG_FD]); then
     libc_cv_gcc_tls_model_attr=yes
   else
     libc_cv_gcc_tls_model_attr=no
@@ -1844,7 +1844,7 @@ cat > conftest.c <<EOF
 # error PIC is default.
 #endif
 EOF
-if eval "${CC-cc} -S conftest.c 2>&AC_FD_CC 1>&AC_FD_CC"; then
+if eval "${CC-cc} -S conftest.c 2>&AS_MESSAGE_LOG_FD 1>&AC_FD_CC"; then
   pic_default=no
 fi
 rm -f conftest.*])
