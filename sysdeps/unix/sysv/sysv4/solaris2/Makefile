@@ -3,4 +3,4 @@
 # along the way (e.g., glue-ctype) will fail because it'll try to link
 # with the libc.a being *constructed* in $(objdir).  As a work-around,
 # we add this to each native-compile.
-native-CFLAGS := $(native-CFLAGS) -L/lib
+BUILD_CFLAGS := $(BUILD_CFLAGS) -L/lib
