@@ -1,5 +1,26 @@
 2003-05-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-sem6.c: New file.
+	* Makefile (tests): Add tst-sem6.
+
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (___lll_mutex_unlock):
+	Use atomic_exchange_rel instead of atomic_exchange.
+	* sysdeps/unix/sysv/linux/lowlevellock.c (lll_unlock_wake_cb):
+	Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Improve quality of
+	code for lll_futex_wait and lll_futex_wake in static apps.  Use
+	vsyscall is possible.
+
+	* sysdeps/unix/sysv/linux/pthread_getaffinity.c: New file.
+	* sysdeps/unix/sysv/linux/pthread_setaffinity.c: New file.
+	* sysdeps/pthread/pthread.h: Declare pthread_getaffinity_np and
+	pthread_setaffinity_np.
+	* Versions [libpthread] (GLIBC_2.3.3): Add pthread_getaffinity_np
+	and pthread_setaffinity_np.
+	* Makefile (libpthread-routines): Add pthread_getaffinity and
+	pthread_setaffinity.
+
 	* allocatestack.c (allocate_stack): If ARCH_RETRY_MMAP is defined,
 	use it in case mmap to allocate the stack fails.
 	* sysdeps/unix/sysv/linux/x86_64/Makefile: Don't define

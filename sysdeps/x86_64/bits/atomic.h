@@ -86,7 +86,7 @@ typedef uintmax_t uatomic_max_t;
 
 
 /* Note that we need no lock prefix.  */
-#define atomic_exchange(mem, newvalue) \
+#define atomic_exchange_acq(mem, newvalue) \
   ({ __typeof (*mem) result;						      \
      if (sizeof (*mem) == 1)						      \
        __asm __volatile ("xchgb %b0, %1"				      \

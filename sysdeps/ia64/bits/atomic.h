@@ -74,17 +74,12 @@ typedef uintmax_t uatomic_max_t;
 				  (long) (newval))
 
 /* Atomically store newval and return the old value.  */
-#define atomic_exchange(mem, value) \
-  ({ __typeof (*mem) __result;						      \
-     if (sizeof (*mem) == 4)						      \
-       __result = __sync_lock_test_and_set_si ((int *) (mem), (int) (value)); \
-     else if (sizeof (*mem) == 8)					      \
-       __result = __sync_lock_test_and_set_di ((long *) (mem),		      \
-					       (long) (value));		      \
-     else								      \
-       abort ();							      \
-     __result; })
-       
+#define atomic_exchange_acq(mem, value) \
+  __sync_lock_test_and_set (mem, value)
+
+#define atomic_exchange_rel(mem, value) \
+  (__sync_synchronize (), __sync_lock_test_and_set (mem, value))
+
 
 #define atomic_exchange_and_add(mem, value) \
   ({ __typeof (*mem) __result;						      \

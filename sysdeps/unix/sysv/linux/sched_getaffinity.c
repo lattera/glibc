@@ -17,18 +17,29 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include <sys/types.h>
 #include <sched.h>
+#include <string.h>
+#include <sysdep.h>
+#include <sys/types.h>
 
 
-/* Retrieve the CPU affinity mask for a particular process.  */
+#ifdef __NR_sched_getaffinity
 int
-sched_setaffinity (pid, mask)
+sched_getaffinity (pid, cpuset)
      pid_t pid;
-     const cpu_set_t *cpuset;
+     cpu_set_t *cpuset;
 {
-  __set_errno (ENOSYS);
-  return -1;
+  int res = INLINE_SYSCALL (sched_getaffinity, 3, pid, sizeof (cpu_set_t),
+			    cpuset);
+  if (res != -1)
+    {
+      /* Clean the rest of the memory the kernel didn't do.  */
+      memset ((char *) cpuset + res, '\0', sizeof (cpu_set_t) - res);
+
+      res = 0;
+    }
+  return res;
 }
-stub_warning (sched_setaffinity)
-#include <stub-tag.h>
+#else
+# include <sysdeps/generic/sched_getaffinity.c>
+#endif

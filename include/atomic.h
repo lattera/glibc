@@ -101,8 +101,8 @@
 
 
 /* Store NEWVALUE in *MEM and return the old value.  */
-#ifndef atomic_exchange
-# define atomic_exchange(mem, newvalue) \
+#ifndef atomic_exchange_acq
+# define atomic_exchange_acq(mem, newvalue) \
   ({ __typeof (*(mem)) __oldval;					      \
      __typeof (mem) __memp = (mem);					      \
      __typeof (*(mem)) __value = (newvalue);				      \
@@ -115,6 +115,10 @@
 			      0));					      \
 									      \
      __oldval; })
+#endif
+
+#ifndef atomic_exchange_rel
+# define atomic_exchange_rel(mem, newvalue) atomic_exchange_acq (mem, newvalue)
 #endif
 
 

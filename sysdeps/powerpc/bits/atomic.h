@@ -19,11 +19,11 @@
    02111-1307 USA.  */
 
 /*
- * Never include sysdeps/powerpc/bits/atomic.h directly. 
- * Alway use include/atomic.h which will include either 
- * sysdeps/powerpc/powerpc32/bits/atomic.h 
- * or 
- * sysdeps/powerpc/powerpc64/bits/atomic.h 
+ * Never include sysdeps/powerpc/bits/atomic.h directly.
+ * Alway use include/atomic.h which will include either
+ * sysdeps/powerpc/powerpc32/bits/atomic.h
+ * or
+ * sysdeps/powerpc/powerpc64/bits/atomic.h
  * as appropriate and which in turn include this file.
  */
 
@@ -44,8 +44,8 @@ typedef uintptr_t uatomicptr_t;
 typedef intmax_t atomic_max_t;
 typedef uintmax_t uatomic_max_t;
 
-/* 
- * Powerpc does not have byte and halfword forms of load and reserve and 
+/*
+ * Powerpc does not have byte and halfword forms of load and reserve and
  * store conditional. So for powerpc we stub out the 8- and 16-bit forms.
  */
 #define __arch_compare_and_exchange_bool_8_acq(mem, newval, oldval) \
@@ -141,7 +141,7 @@ typedef uintmax_t uatomic_max_t;
     __result;								      \
   })
 
-#define atomic_exchange(mem, value) \
+#define atomic_exchange_acq(mem, value) \
   ({									      \
     __typeof (*(mem)) __result;						      \
     if (sizeof (*mem) == 4)						      \
@@ -177,4 +177,3 @@ typedef uintmax_t uatomic_max_t;
        abort ();							      \
     __result;								      \
   })
-

@@ -64,13 +64,19 @@ extern int sched_rr_get_interval (__pid_t __pid, struct timespec *__t) __THROW;
 
 
 #ifdef __USE_GNU
+/* Access macros for `cpu_set'.  */
+#define CPU_SET(cpu, cpusetp)	__CPU_SET (cpu, cpusetp)
+#define CPU_CLR(cpu, cpusetp)	__CPU_CLR (cpu, cpusetp)
+#define CPU_ISSET(cpu, cpusetp)	__CPU_ISSET (cpu, cpusetp)
+#define CPU_ZERO(cpusetp)	__CPU_ZERO (cpusetp)
+
+
 /* Set the CPU affinity for a task */
-extern int sched_setaffinity (__pid_t __pid, unsigned int __len,
-			      unsigned long int *__mask) __THROW;
+extern int sched_setaffinity (__pid_t __pid, __const cpu_set_t *__mask)
+     __THROW;
 
 /* Get the CPU affinity for a task */
-extern int sched_getaffinity (__pid_t __pid, unsigned int __len,
-			      unsigned long int *__mask) __THROW;
+extern int sched_getaffinity (__pid_t __pid, cpu_set_t *__mask) __THROW;
 #endif
 
 __END_DECLS

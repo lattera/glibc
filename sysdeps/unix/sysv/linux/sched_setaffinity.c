@@ -17,18 +17,21 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include <sys/types.h>
 #include <sched.h>
+#include <string.h>
+#include <sysdep.h>
+#include <sys/types.h>
 
 
-/* Retrieve the CPU affinity mask for a particular process.  */
+#ifdef __NR_sched_setaffinity
 int
-sched_setaffinity (pid, mask)
+sched_setaffinity (pid, cpuset)
      pid_t pid;
      const cpu_set_t *cpuset;
 {
-  __set_errno (ENOSYS);
-  return -1;
+  return INLINE_SYSCALL (sched_setaffinity, 3, pid, sizeof (cpu_set_t),
+			 cpuset);
 }
-stub_warning (sched_setaffinity)
-#include <stub-tag.h>
+#else
+# include <sysdeps/generic/sched_setaffinity.c>
+#endif

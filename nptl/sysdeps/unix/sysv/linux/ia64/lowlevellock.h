@@ -135,7 +135,7 @@ static inline void
 __attribute__ ((always_inline))
 __lll_mutex_unlock (int *futex)
 {
-  int val = atomic_exchange (futex, 0);
+  int val = atomic_exchange_rel (futex, 0);
 
   if (__builtin_expect (val > 1, 0))
     lll_futex_wake (futex, 1);

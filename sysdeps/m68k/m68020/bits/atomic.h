@@ -76,7 +76,7 @@ typedef uintmax_t uatomic_max_t;
 		       : "memory");					      \
      __ret; })
 
-#define atomic_exchange(mem, newvalue) \
+#define atomic_exchange_acq(mem, newvalue) \
   ({ __typeof (*(mem)) __result = *(mem);				      \
      if (sizeof (*(mem)) == 1)						      \
        __asm __volatile ("1: cas%.b %0,%2,%1;"				      \

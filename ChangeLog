@@ -1,5 +1,28 @@
 2003-05-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/sched.h: Change prototypes of sched_getaffinity and
+	sched_setaffinity.  Define CPU_SET, CPU_CLR, CPU_ISSET, and CPU_ZERO.
+	* sysdeps/generic/sched_getaffinity.c: Adjust definition.
+	* sysdeps/generic/sched_setaffinity.c: Likewise.
+	* sysdeps/generic/bits/sched.h: Define __CPU_SETSIZE, __NCPUBITS,
+	__CPUELT, __CPUMASK, cpu_set_t, __cpu_mask, __CPU_ZERO, __CPU_SET,
+	__CPU_CLR, and __CPU_ISSET.
+	* sysdeps/unix/sysv/linux/bits/sched.h: Likewise.
+	* sysdeps/unix/sysv/linux/sched_getaffinity.c: New file.
+	* sysdeps/unix/sysv/linux/sched_setaffinity.c: New file.
+
+	* include/atomic.h (atomic_exchange_acq): Renamed from atomic_exchange.
+	(atomic_exchange_rel): New #define.
+	* sysdeps/ia64/bits/atomic.h: Likewise.
+	* sysdeps/i386/i486/bits/atomic.h (atomic_exchange_acq): Renamed from
+	atomic_exchange.
+	* sysdeps/m68k/m68020/bits/atomic.h: Likewise.
+	* sysdeps/powerpc/bits/atomic.h: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/bits/atomic.h: Likewise.
+	* sysdeps/sparc/sparc64/bits/atomic.h: Likewise.
+	* sysdeps/x86_64/bits/atomic.h: Likewise.
+	* csu/tst-atomic.c: Use atomic_exchange_acq instead of atomic_exchange.
+
 	* sysdeps/unix/sysv/linux/x86_64/get_clockfreq.c: New file.
 
 2003-05-08  Ulrich Drepper  <drepper@redhat.com>

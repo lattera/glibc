@@ -355,6 +355,16 @@ extern int pthread_setconcurrency (int __level) __THROW;
    might be differently implemented in the case of a m-on-n thread
    implementation.  */
 extern int pthread_yield (void) __THROW;
+
+
+/* Limit specified thread TH to run only on the processors represented
+   in CPUSET.  */
+extern int pthread_setaffinity_np (pthread_t __th, const cpu_set_t *__cpuset)
+     __THROW;
+
+/* Get bit set in CPUSET representing the processors TH can run on.  */
+extern int pthread_getaffinity_np (pthread_t __th, cpu_set_t *__cpuset)
+     __THROW;
 #endif
 
 

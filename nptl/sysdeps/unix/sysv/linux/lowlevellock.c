@@ -83,7 +83,7 @@ hidden_proto (__lll_timedlock_wait)
 int
 lll_unlock_wake_cb (int *futex)
 {
-  int val = atomic_exchange (futex, 0);
+  int val = atomic_exchange_rel (futex, 0);
 
   if (__builtin_expect (val > 1, 0))
     lll_futex_wake (futex, 1);

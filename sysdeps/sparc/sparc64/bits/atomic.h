@@ -72,7 +72,7 @@ typedef uintmax_t uatomic_max_t;
 		      "r" (__acev_mem), "0" ((long) (newval)));		      \
   __acev_tmp; })
 
-#define atomic_exchange(mem, newvalue) \
+#define atomic_exchange_acq(mem, newvalue) \
   ({ __typeof (*(mem)) __oldval, __val;					      \
      __typeof (mem) __memp = (mem);					      \
      __typeof (*(mem)) __value = (newvalue);				      \

@@ -66,7 +66,7 @@ typedef uintmax_t uatomic_max_t;
 #define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
   (abort (), (__typeof (*mem)) 0)
 
-#define atomic_exchange(mem, newvalue) \
+#define atomic_exchange_acq(mem, newvalue) \
   ({ __typeof (*(mem)) __oldval;					      \
      __typeof (mem) __memp = (mem);					      \
      __typeof (*(mem)) __value = (newvalue);				      \

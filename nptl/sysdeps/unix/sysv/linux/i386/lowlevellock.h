@@ -41,17 +41,34 @@
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
 
 
-#define LLL_ENTER_KERNEL "int $0x80\n\t"
+#ifdef PIC
+# define LLL_EBX_LOAD	"xchgl %2, %%ebx\n"
+# define LLL_EBX_REG	"D"
+#else
+# define LLL_EBX_LOAD
+# define LLL_EBX_REG	"b"
+#endif
+
+#ifdef I386_USE_SYSENTER
+# ifdef SHARED
+# define LLL_ENTER_KERNEL	"call *%%gs:%P6\n\t"
+# else
+# define LLL_ENTER_KERNEL	"call *_dl_sysinfo\n\t"
+# endif
+#else
+# define LLL_ENTER_KERNEL	"int $0x80\n\t"
+#endif
+
 
 #define lll_futex_wait(futex, val) \
   do {									      \
     int __ignore;							      \
     register __typeof (val) _val asm ("edx") = (val);			      \
-    __asm __volatile ("xchgl %2, %%ebx\n\t"				      \
+    __asm __volatile (LLL_EBX_LOAD					      \
 		      LLL_ENTER_KERNEL					      \
-		      "xchgl %2, %%ebx"					      \
+		      LLL_EBX_LOAD					      \
 		      : "=a" (__ignore)					      \
-		      : "0" (SYS_futex), "D" (&futex), "S" (0),		      \
+		      : "0" (SYS_futex), LLL_EBX_REG (&futex), "S" (0),	      \
 			"c" (FUTEX_WAIT), "d" (_val),			      \
 			"i" (offsetof (tcbhead_t, sysinfo)));		      \
   } while (0)
@@ -61,12 +78,13 @@
   do {									      \
     int __ignore;							      \
     register __typeof (nr) _nr asm ("edx") = (nr);			      \
-    __asm __volatile ("xchgl %2, %%ebx\n\t"				      \
+    __asm __volatile (LLL_EBX_LOAD					      \
 		      LLL_ENTER_KERNEL					      \
-		      "xchgl %2, %%ebx"					      \
+		      LLL_EBX_LOAD					      \
 		      : "=a" (__ignore)					      \
-		      : "0" (SYS_futex), "D" (&futex), "c" (FUTEX_WAKE),      \
-			"d" (_nr), "i" (0),				      \
+		      : "0" (SYS_futex), LLL_EBX_REG (&futex),		      \
+			"c" (FUTEX_WAKE), "d" (_nr),			      \
+			"i" (0) /* phony, to align next arg's number */,      \
 			"i" (offsetof (tcbhead_t, sysinfo)));		      \
   } while (0)
 
@@ -277,37 +295,19 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
    afterwards.
 
    The macro parameter must not have any side effect.  */
-#ifdef PIC
-# define LLL_TID_EBX_LOAD	"xchgl %2, %%ebx\n"
-# define LLL_TID_EBX_REG	"D"
-#else
-# define LLL_TID_EBX_LOAD
-# define LLL_TID_EBX_REG	"b"
-#endif
-
-#ifdef I386_USE_SYSENTER
-# ifdef SHARED
-# define LLL_TID_ENTER_KERNEL	"call *%%gs:%P6\n\t"
-# else
-# define LLL_TID_ENTER_KERNEL	"call *_dl_sysinfo\n\t"
-# endif
-#else
-# define LLL_TID_ENTER_KERNEL	"int $0x80\n\t"
-#endif
-
 #define lll_wait_tid(tid) \
   do {									      \
     int __ignore;							      \
     register __typeof (tid) _tid asm ("edx") = (tid);			      \
     if (_tid != 0)							      \
-      __asm __volatile (LLL_TID_EBX_LOAD				      \
+      __asm __volatile (LLL_EBX_LOAD					      \
 			"1:\tmovl %1, %%eax\n\t"			      \
-			LLL_TID_ENTER_KERNEL				      \
+			LLL_ENTER_KERNEL				      \
 			"cmpl $0, (%%ebx)\n\t"				      \
 			"jne,pn 1b\n\t"					      \
-			LLL_TID_EBX_LOAD				      \
+			LLL_EBX_LOAD					      \
 			: "=&a" (__ignore)				      \
-			: "i" (SYS_futex), LLL_TID_EBX_REG (&tid), "S" (0),   \
+			: "i" (SYS_futex), LLL_EBX_REG (&tid), "S" (0),	      \
 			  "c" (FUTEX_WAIT), "d" (_tid),			      \
 			  "i" (offsetof (tcbhead_t, sysinfo)));		      \
   } while (0)

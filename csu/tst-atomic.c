@@ -99,10 +99,10 @@ do_test (void)
     }
 
   mem = 64;
-  if (atomic_exchange (&mem, 31) != 64
+  if (atomic_exchange_acq (&mem, 31) != 64
       || mem != 31)
     {
-      puts ("atomic_exchange test failed");
+      puts ("atomic_exchange_acq test failed");
       ret = 1;
     }
 
