@@ -1,5 +1,18 @@
 2003-11-12  Jakub Jelinek  <jakub@redhat.com>
 
+	* posix/regcomp.c (optimize_utf8): New function.
+	(re_compile_fastmap_iter): Use dfa->mb_cur_max > 1 instead
+	of !icase.
+	(re_compile_internal): Call optimize_utf8 if not case insensitive
+	and in UTF-8 locale.
+	* posix/regex_internal.h: Ifdef out some prototypes if
+	RE_NO_INTERNAL_PROTOTYPES is defined to shut up warnings.
+	* posix/Makefile (tests): Add bug-regex20.
+	(bug-regex20-ENV): Add LOCPATH.
+	* posix/bug-regex20.c: New test.
+
+2003-11-12  Jakub Jelinek  <jakub@redhat.com>
+
 	* io/ftw.c (NFTW_NEW_NAME, NFTW_OLD_NAME): Add prototypes.
 
 2003-11-12  Jakub Jelinek  <jakub@redhat.com>

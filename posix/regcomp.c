@@ -30,6 +30,9 @@ static void free_charset (re_charset_t *cset);
 #endif /* RE_ENABLE_I18N */
 static void free_workarea_compile (regex_t *preg);
 static reg_errcode_t create_initial_state (re_dfa_t *dfa);
+#ifdef RE_ENABLE_I18N
+static void optimize_utf8 (re_dfa_t *dfa);
+#endif
 static reg_errcode_t analyze (re_dfa_t *dfa);
 static reg_errcode_t analyze_tree (re_dfa_t *dfa, bin_tree_t *node);
 static void calc_first (re_dfa_t *dfa, bin_tree_t *node);
@@ -322,7 +325,7 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
 	{
 	  re_set_fastmap (fastmap, icase, dfa->nodes[node].opr.c);
 #ifdef RE_ENABLE_I18N
-	  if ((bufp->syntax & RE_ICASE) && !icase)
+	  if ((bufp->syntax & RE_ICASE) && dfa->mb_cur_max > 1)
 	    {
 	      unsigned char *buf = alloca (dfa->mb_cur_max), *p;
 	      wchar_t wc;
@@ -389,7 +392,7 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
 	      memset (&state, '\0', sizeof (state));
 	      __wcrtomb (buf, cset->mbchars[i], &state);
 	      re_set_fastmap (fastmap, icase, *(unsigned char *) buf);
-	      if ((bufp->syntax & RE_ICASE) && !icase)
+	      if ((bufp->syntax & RE_ICASE) && dfa->mb_cur_max > 1)
 		{
 		  __wcrtomb (buf, towlower (cset->mbchars[i]), &state);
 		  re_set_fastmap (fastmap, 0, *(unsigned char *) buf);
@@ -760,6 +763,12 @@ re_compile_internal (preg, pattern, length, syntax)
   if (BE (dfa->str_tree == NULL, 0))
     goto re_compile_internal_free_return;
 
+#ifdef RE_ENABLE_I18N
+  /* If possible, do searching in single byte encoding to speed things up.  */
+  if (dfa->is_utf8 && !(syntax & RE_ICASE))
+    optimize_utf8 (dfa);
+#endif
+
   /* Analyze the tree and collect information which is necessary to
      create the dfa.  */
   err = analyze (dfa);
@@ -944,6 +953,61 @@ create_initial_state (dfa)
   re_node_set_free (&init_nodes);
   return REG_NOERROR;
 }
+
+#ifdef RE_ENABLE_I18N
+/* If it is possible to do searching in single byte encoding instead of UTF-8
+   to speed things up, set dfa->mb_cur_max to 1, clear is_utf8 and change
+   DFA nodes where needed.  */
+
+static void
+optimize_utf8 (dfa)
+     re_dfa_t *dfa;
+{
+  int node;
+
+  for (node = 0; node < dfa->nodes_len; ++node)
+    switch (dfa->nodes[node].type)
+      {
+      case CHARACTER:
+        /* Chars >= 0x80 are optimizable in some cases (e.g. when not
+	   followed by DUP operator, not in bracket etc.).
+	   For now punt on them all.  */
+	if (dfa->nodes[node].opr.c >= 0x80)
+	  return;
+	break;
+      case ANCHOR:
+	switch (dfa->nodes[node].opr.idx)
+	  {
+	  case LINE_FIRST:
+	  case LINE_LAST:
+	  case BUF_FIRST:
+	  case BUF_LAST:
+	    break;
+	  default:
+	    /* Word anchors etc. cannot be handled.  */
+	    return;
+	  }
+	break;
+      case OP_BACK_REF:
+      case OP_ALT:
+      case END_OF_RE:
+      case BACK_SLASH:
+      case OP_DUP_ASTERISK:
+      case OP_DUP_QUESTION:
+      case OP_DUP_PLUS:
+      case OP_OPEN_SUBEXP:
+      case OP_CLOSE_SUBEXP:
+	break;
+      default:
+	return;
+      }
+
+  /* The search can be in single byte locale.  */
+  dfa->mb_cur_max = 1;
+  dfa->is_utf8 = 0;
+  dfa->has_mb_node = dfa->nbackref > 0;
+}
+#endif
 
 /* Analyze the structure tree, and calculate "first", "next", "edest",
    "eclosure", and "inveclosure".  */

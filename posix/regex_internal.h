@@ -345,6 +345,7 @@ typedef struct re_string_t re_string_t;
 #define MBS_CASE_ALLOCATED(pstr) (pstr->trans != NULL)
 
 
+#ifndef RE_NO_INTERNAL_PROTOTYPES
 static reg_errcode_t re_string_allocate (re_string_t *pstr, const char *str,
 					 int len, int init_len,
 					 RE_TRANSLATE_TYPE trans, int icase,
@@ -371,6 +372,7 @@ static inline wint_t re_string_wchar_at (const re_string_t *pstr, int idx);
 #endif /* RE_ENABLE_I18N */
 static unsigned int re_string_context_at (const re_string_t *input, int idx,
 					  int eflags, int newline_anchor);
+#endif
 #define re_string_peek_byte(pstr, offset) \
   ((pstr)->mbs[(pstr)->cur_idx + offset])
 #define re_string_peek_byte_case(pstr, offset) \
@@ -612,6 +614,7 @@ struct re_dfa_t
 };
 typedef struct re_dfa_t re_dfa_t;
 
+#ifndef RE_NO_INTERNAL_PROTOTYPES
 static reg_errcode_t re_node_set_alloc (re_node_set *set, int size);
 static reg_errcode_t re_node_set_init_1 (re_node_set *set, int elem);
 static reg_errcode_t re_node_set_init_2 (re_node_set *set, int elem1,
@@ -644,6 +647,7 @@ static re_dfastate_t *re_acquire_state_context (reg_errcode_t *err,
 						const re_node_set *nodes,
 						unsigned int context);
 static void free_state (re_dfastate_t *state);
+#endif
 
 
 typedef enum
@@ -697,7 +701,7 @@ bitset_not_merge (dest, src)
     dest[i] |= ~src[i];
 }
 
-#ifdef RE_ENABLE_I18N
+#if defined RE_ENABLE_I18N && !defined RE_NO_INTERNAL_PROTOTYPES
 /* Inline functions for re_string.  */
 static inline int
 re_string_char_size_at (pstr, idx)
