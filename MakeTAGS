@@ -142,7 +142,7 @@ endif
 define extract
 @rm -f $@.new
 $(XGETTEXT) --keyword=_ --keyword=N_ --add-comments=TRANS  --sort-by-file \
-	    --omit-header -n -d - $(XGETTEXTFLAGS-$(@F)) > $@.new $^
+	    --omit-header -E -n -d - $(XGETTEXTFLAGS-$(@F)) > $@.new $^
 mv -f $@.new $@
 endef
 
@@ -173,7 +173,7 @@ $P/libc.pot: $(all-pot)
 	sed -e 's/VERSION/$(version)/' \
 	    -e "s/DATE/`date +'%Y-%m-%d %H:%M'$$disp`/" \
 	    po/header.pot > $@.new
-	$(XGETTEXT) -d - --omit-header -n $^ >> $@.new
+	$(XGETTEXT) -d - --omit-header -E -n $^ >> $@.new
 	mv -f $@.new $@
 ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs $(CVSOPTS) ci -m'Regenerated from source files' $@
