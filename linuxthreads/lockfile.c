@@ -1,5 +1,5 @@
 /* lockfile - Handle locking and unlocking of stream.
-   Copyright (C) 1996, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -90,7 +90,6 @@ __fresetlockfiles (void)
 #ifdef USE_IN_LIBIO
   _IO_ITER i;
 
-  _IO_FILE *fp;
   pthread_mutexattr_t attr;
 
   __pthread_mutexattr_init (&attr);

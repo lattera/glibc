@@ -1,3 +1,7 @@
+2000-06-10  Andreas Jaeger  <aj@suse.de>
+
+	* lockfile.c (__fresetlockfiles): Remove unused variable fp.
+
 2000-06-10  Kaz Kylheku  <kaz@ashi.footprints.net>
 
 	* sysdeps/pthread/timer_create.c: Thread matching now done on
