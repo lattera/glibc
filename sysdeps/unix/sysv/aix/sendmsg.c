@@ -18,7 +18,7 @@
 
 #include <sys/socket.h>
 
-extern int nsendmsg (int s, void *uap_msg, int flags);
+extern int nsendmsg (int s, const void *uap_msg, int flags);
 
 ssize_t
 sendmsg (int fd, const struct msghdr *message, int flags)
