@@ -51,6 +51,11 @@ L(oop):	movb	(%ecx), %al
 	CHECK_BOUNDS_HIGH (%edx, STR2(%esp), jbe)
 	jmp	L(out)
 
+#ifndef __BOUNDED_POINTERS__
+L(neq):	movl	$1, %eax
+	movl	$-1, %ecx
+	cmovbl	%ecx, %eax
+#else
 L(neq):	movl	$1, %eax
 	ja	L(chk)
 	negl	%eax
@@ -58,6 +63,7 @@ L(neq):	movl	$1, %eax
 	   the unequal characters.  */
 L(chk):	CHECK_BOUNDS_HIGH (%ecx, STR1(%esp), jb)
 	CHECK_BOUNDS_HIGH (%edx, STR2(%esp), jb)
+#endif
 
 L(out):	LEAVE
 	ret
