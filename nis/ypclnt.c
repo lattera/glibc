@@ -21,6 +21,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
+#include <libintl.h>
 #include <rpc/rpc.h>
 #include <rpcsvc/nis.h>
 #include <rpcsvc/yp.h>

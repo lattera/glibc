@@ -42,6 +42,7 @@ const char main_rcsid[] =
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <libintl.h>
 #include <ctype.h>
 #include <sys/types.h>
 #include <sys/param.h>

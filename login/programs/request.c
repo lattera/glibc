@@ -22,6 +22,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <utmp.h>
+#include <libintl.h>
 
 #include "utmpd.h"
 #include "utmpd-private.h"

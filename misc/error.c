@@ -26,6 +26,7 @@
 #endif
 
 #include <stdio.h>
+#include <libintl.h>
 
 #if HAVE_VPRINTF || HAVE_DOPRNT || _LIBC
 # if __STDC__

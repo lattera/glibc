@@ -33,7 +33,7 @@ __BEGIN_DECLS
 /* We might need to add support for more compilers here.  But once ISO
    C 9X is out hopefully all maintained compilers will provide the data
    types `float complex' and `double complex'.  */
-#if (__GNUC__ == 2 && __GNUC_MINOR__ >= 7) || __GNUC__ > 2
+#if __GNUC_PREREQ (2, 7)
 # define _Complex __complex__
 #endif
 

@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
+#include <libintl.h>
 #include <rpcsvc/nis.h>
 
 nis_name

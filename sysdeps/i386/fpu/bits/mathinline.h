@@ -138,7 +138,7 @@ __signbitl (long double __x)
 
 /* The gcc, version 2.7 or below, has problems with all this inlining
    code.  So disable it for this version of the compiler.  */
-#if defined __GNUC__ && (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 7))
+#if __GNUC_PREREQ (2, 8)
 
 #if ((!defined __NO_MATH_INLINES || defined __LIBC_INTERNAL_MATH_INLINES) \
      && defined __OPTIMIZE__)
@@ -426,7 +426,7 @@ __inline_mathcode2 (pow, __x, __y, \
 __inline_mathop (sqrt, "fsqrt")
 __inline_mathop_ (long double, __sqrtl, "fsqrt")
 
-#if defined __GNUC__ && (__GNUC__ > 2 || __GNUC__ == 2 && __GNUC_MINOR__ >= 8)
+#if __GNUC_PREREQ (2, 8)
 __inline_mathcode_ (double, fabs, __x, return __builtin_fabs (__x))
 __inline_mathcode_ (float, fabsf, __x, return __builtin_fabsf (__x))
 __inline_mathcode_ (long double, fabsl, __x, return __builtin_fabsl (__x))

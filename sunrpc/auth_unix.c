@@ -42,6 +42,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <libintl.h>
 #include <sys/param.h>
 
 #include <rpc/types.h>

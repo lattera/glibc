@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <libintl.h>
 #ifdef _POSIX_MAPPED_FILES
 # include <sys/mman.h>
 #endif

@@ -11,6 +11,8 @@ static char	elsieid[] = "@(#)zic.c	7.99";
 #include "sys/stat.h"			/* for umask manifest constants */
 #endif /* defined unix */
 
+#include <libintl.h>
+
 /*
 ** On some ancient hosts, predicates like `isspace(C)' are defined
 ** only if isascii(C) || C == EOF.  Modern hosts obey the C Standard,

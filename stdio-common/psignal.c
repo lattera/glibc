@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <signal.h>
+#include <libintl.h>
 
 
 #ifndef	HAVE_GNU_LD

@@ -31,6 +31,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 #include <sys/stat.h>
+#include <libintl.h>
 
 void weak_function
 abort (void)

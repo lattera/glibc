@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <sys/cdefs.h>  /* for __P */
 #include <bits/libc-tsd.h>
 
 /* This file provides uinitialized (common) definitions for the

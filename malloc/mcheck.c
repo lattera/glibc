@@ -25,6 +25,7 @@
 # include <malloc.h>
 # include <mcheck.h>
 # include <stdio.h>
+# include <libintl.h>
 #endif
 
 /* Old hook values.  */

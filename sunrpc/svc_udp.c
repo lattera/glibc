@@ -45,6 +45,7 @@ static char sccsid[] = "@(#)svc_udp.c 1.24 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/rpc.h>
 #include <sys/socket.h>
 #include <errno.h>
+#include <libintl.h>
 
 #ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>

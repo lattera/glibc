@@ -30,7 +30,7 @@
    systems with potentially hostile include files.  */
 
 #include <stddef.h>
-extern __ptr_t __sbrk __P ((ptrdiff_t increment));
+extern __malloc_ptr_t __sbrk __P ((ptrdiff_t increment));
 #endif
 
 #ifndef NULL
@@ -40,12 +40,12 @@ extern __ptr_t __sbrk __P ((ptrdiff_t increment));
 /* Allocate INCREMENT more bytes of data space,
    and return the start of data space, or NULL on errors.
    If INCREMENT is negative, shrink data space.  */
-__ptr_t
+__malloc_ptr_t
 __default_morecore (increment)
      __malloc_ptrdiff_t increment;
 {
-  __ptr_t result = (__ptr_t) __sbrk (increment);
-  if (result == (__ptr_t) -1)
+  __malloc_ptr_t result = (__malloc_ptr_t) __sbrk (increment);
+  if (result == (__malloc_ptr_t) -1)
     return NULL;
   return result;
 }

@@ -50,6 +50,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <libintl.h>
 #include <rpc/rpc.h>
 #include <sys/uio.h>
 #include <sys/poll.h>

@@ -41,6 +41,7 @@ static char sccsid[] = "@(#)pmap_rmt.c 1.21 87/08/27 Copyr 1984 Sun Micro";
 
 #include <unistd.h>
 #include <string.h>
+#include <libintl.h>
 #include <rpc/rpc.h>
 #include <rpc/pmap_prot.h>
 #include <rpc/pmap_clnt.h>

@@ -16,12 +16,12 @@
 
 /* Includes */
 
-#include <bits/libc-tsd.h> /* for _LIBC_TSD_KEY_N */
 #include <limits.h>
 #include <setjmp.h>
 #include <signal.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <bits/libc-tsd.h> /* for _LIBC_TSD_KEY_N */
 
 #include "pt-machine.h"
 

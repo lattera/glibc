@@ -44,6 +44,7 @@ static char sccsid[] = "@(#)xdr_reference.c 1.11 87/08/11 SMI";
 #include <string.h>
 #include <rpc/types.h>
 #include <rpc/xdr.h>
+#include <libintl.h>
 
 #ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>

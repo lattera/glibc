@@ -25,6 +25,7 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libintl.h>
 
 
 /* Undefine following line in production version.  */

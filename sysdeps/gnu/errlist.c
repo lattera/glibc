@@ -1,6 +1,7 @@
 /* This file is generated from errno.texi by errlist.awk.  */
 
 #include <errno.h>
+#include <libintl.h>
 
 #ifndef SYS_ERRLIST
 # define SYS_ERRLIST _sys_errlist

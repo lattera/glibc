@@ -25,6 +25,7 @@
 #include <endian.h>
 #include <limits.h>
 #include <string.h>
+#include <libintl.h>
 
 #include "locales.h"
 #include "localeinfo.h"

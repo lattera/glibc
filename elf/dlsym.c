@@ -20,6 +20,7 @@
 #include <dlfcn.h>
 #include <setjmp.h>
 #include <stddef.h>
+#include <libintl.h>
 #include <elf/ldsodefs.h>
 
 struct dlsym_args

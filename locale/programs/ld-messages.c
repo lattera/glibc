@@ -24,6 +24,7 @@
 #include <alloca.h>
 #include <langinfo.h>
 #include <string.h>
+#include <libintl.h>
 #include <sys/uio.h>
 
 #ifdef HAVE_REGEX

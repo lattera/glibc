@@ -2,15 +2,9 @@
 /* config.h.in.  Generated automatically from configure.in by autoheader.  */
 
 /* ...but edited by hand to be used in GNU libc.  */
-#include <sys/stat.h>		/* To get _STATBUF_ST_BLKSIZE.  */
 
 /* Define to empty if the keyword does not work.  */
 /* #undef const */
-
-/* Define if your struct stat has st_blksize.  */
-#ifdef _STATBUF_ST_BLKSIZE
-# define HAVE_ST_BLKSIZE 1
-#endif
 
 /* Define to `int' if <sys/types.h> doesn't define.  */
 /* #undef mode_t */

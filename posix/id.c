@@ -22,6 +22,7 @@
 #include <grp.h>
 #include <pwd.h>
 #include <limits.h>
+#include <libintl.h>
 #include <sys/types.h>
 
 

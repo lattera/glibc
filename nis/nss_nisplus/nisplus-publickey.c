@@ -22,6 +22,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <libintl.h>
 #include <syslog.h>
 #include <rpc/rpc.h>
 #include <rpcsvc/nis.h>

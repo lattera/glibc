@@ -48,6 +48,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <rpc/rpc.h>
+#include <libintl.h>
 
 #ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>

@@ -40,6 +40,7 @@ BEGIN {
     print "/* This file is generated from errno.texi by errlist.awk.  */"
     print "";
     print "#include <errno.h>";
+    print "#include <libintl.h>";
     print "";
     print "#ifndef SYS_ERRLIST";
     print "# define SYS_ERRLIST _sys_errlist";

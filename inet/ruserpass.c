@@ -41,6 +41,7 @@ static char sccsid[] = "@(#)ruserpass.c	8.3 (Berkeley) 4/2/94";
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <libintl.h>
 
 /* #include "ftp_var.h" */
 

@@ -28,6 +28,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <libintl.h>
 #include <arpa/inet.h>
 
 #include "nscd.h"

@@ -244,9 +244,23 @@
 #define	__GLIBC__	2
 #define	__GLIBC_MINOR__	2
 
+/* Convenience macros to test the versions of glibc and gcc.
+   Use them like this:
+   #if __GNUC_PREREQ (2,8)
+   ... code requiring gcc 2.8 or later ...
+   #endif
+   Note - they won't work for gcc1 or glibc1, since the _MINOR macros
+   were not defined then.  */
+#define __GNUC_PREREQ(maj,min) (defined __GNUC__ && defined __GNUC_MINOR__ \
+		&& ((__GNUC__ << 16) + __GNUC_MINOR__) >= ((maj<<16) + min))
+#define __GLIBC_PREREQ(maj,min) (defined __GLIBC__ && defined __GLIBC_MINOR__ \
+		&& ((__GLIBC__ << 16) + __GLIBC_MINOR__) >= ((maj<<16) + min))
+
 /* This is here only because every header file already includes this one.  */
 #ifndef __ASSEMBLER__
+#ifndef _SYS_CDEFS_H
 # include <sys/cdefs.h>
+#endif
 
 /* If we don't have __REDIRECT, prototypes will be missing if
    __USE_FILE_OFFSET64 but not __USE_LARGEFILE[64]. */

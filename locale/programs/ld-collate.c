@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
+#include <libintl.h>
 
 #include "localeinfo.h"
 #include "locales.h"

@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <libintl.h>
 
 #include "nscd.h"
 #include "dbg_log.h"

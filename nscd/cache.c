@@ -23,6 +23,7 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libintl.h>
 #include <arpa/inet.h>
 #include <rpcsvc/nis.h>
 #include <sys/param.h>

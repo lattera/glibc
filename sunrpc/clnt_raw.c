@@ -45,6 +45,7 @@ static char sccsid[] = "@(#)clnt_raw.c 1.22 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/rpc.h>
 #include <rpc/svc.h>
 #include <rpc/xdr.h>
+#include <libintl.h>
 
 #define MCALL_MSG_SIZE 24
 

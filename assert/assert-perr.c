@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sysdep.h>
+#include <libintl.h>
 
 
 extern const char *__assert_program_name; /* In assert.c.  */

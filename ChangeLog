@@ -1,3 +1,111 @@
+1999-06-18  Zack Weinberg  <zack@rabi.columbia.edu>
+
+	* include/features.h: Define new macros __GNUC_PREREQ and
+	__GLIBC_PREREQ which can be used to test the version of gcc
+	and glibc respectively.
+
+	* assert/assert.h: Use __GNUC_PREREQ.
+	* intl/libintl.h: Likewise.
+	* math/complex.h: Likewise.
+	* math/tgmath.h: Likewise.
+	* misc/sys/cdefs.h: Likewise.
+	* posix/sys/types.h: Likewise.
+	* socket/sys/socket.h: Likewise.
+	* string/bits/string2.h: Likewise.
+	* sysdeps/alpha/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/i386/fpu/bits/mathinline.h: Likewise.
+
+1999-06-18  Zack Weinberg  <zack@rabi.columbia.edu>
+
+	* include/libintl.h: Declare _libc_intl_domainname here.
+	Define _ and N_ here.
+	* include/libc-symbols.h: Don't include <libintl.h>.  Don't
+	define _ and N_.  Don't declare _libc_intl_domainname.
+	* Makeconfig (CPPFLAGS): Use -imacros to read libc-symbols.h.
+
+	* db2/config.h: Don't include sys/stat.h or define
+	HAVE_ST_BLKSIZE here...
+	* db2/compat.h: ...do it here.
+
+	* linuxthreads/internals.h: Include bits/libc-tsd.h after all
+	other headers.
+	* linuxthreads/no-tsd.c: Include sys/cdefs.h for __P.
+	* iconv/iconv.c: Include stddef.h for NULL.
+	* malloc/malloc.h: Include features.h.
+	* sysdeps/generic/morecore.c: Use __malloc_ptr_t not __ptr_t.
+
+	* sysdeps/unix/make_errlist.c: Write an "#include <libintl.h>"
+	into the generated file.
+	* sysdeps/gnu/errlist.awk: Likewise.
+	* sysdeps/gnu/errlist.c: Rebuilt.
+
+	* assert/assert-perr.c: Include libintl.h.
+	* assert/assert.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dlsym.c: Likewise.
+	* elf/dlvsym.c: Likewise.
+	* iconv/iconv_prog.c: Likewise.
+	* inet/rcmd.c: Likewise.
+	* inet/ruserpass.c: Likewise.
+	* locale/programs/charset.c: Likewise.
+	* locale/programs/ld-collate.c: Likewise.
+	* locale/programs/ld-ctype.c: Likewise.
+	* locale/programs/ld-messages.c: Likewise.
+	* locale/programs/ld-monetary.c: Likewise.
+	* locale/programs/ld-numeric.c: Likewise.
+	* locale/programs/ld-time.c: Likewise.
+	* locale/programs/locfile.c: Likewise.
+	* locale/programs/repertoire.c: Likewise.
+	* login/programs/database.c: Likewise.
+	* login/programs/request.c: Likewise.
+	* malloc/mcheck.c: Likewise.
+	* misc/error.c: Likewise.
+	* nis/nis_call.c: Likewise.
+	* nis/nis_callback.c: Likewise.
+	* nis/nis_error.c: Likewise.
+	* nis/nis_local_names.c: Likewise.
+	* nis/nis_print.c: Likewise.
+	* nis/nis_print_group_entry.c: Likewise.
+	* nis/ypclnt.c: Likewise.
+	* nis/nss_nisplus/nisplus-publickey.c: Likewise.
+	* nscd/cache.c: Likewise.
+	* nscd/connections.c: Likewise.
+	* nscd/grpcache.c: Likewise.
+	* nscd/hstcache.c: Likewise.
+	* nscd/nscd_conf.c: Likewise.
+	* nscd/nscd_stat.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+	* posix/id.c: Likewise.
+	* resolv/herror.c: Likewise.
+	* stdio-common/psignal.c: Likewise.
+	* string/strsignal.c: Likewise.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/clnt_perr.c: Likewise.
+	* sunrpc/clnt_raw.c: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sunrpc/get_myaddr.c: Likewise.
+	* sunrpc/pm_getmaps.c: Likewise.
+	* sunrpc/pmap_clnt.c: Likewise.
+	* sunrpc/pmap_rmt.c: Likewise.
+	* sunrpc/rpc_main.c: Likewise.
+	* sunrpc/rpc_scan.c: Likewise.
+	* sunrpc/svc_run.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/svc_unix.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_ref.c: Likewise.
+	* sysdeps/mach/hurd/mips/dl-machine.c: Likewise.
+	* sysdeps/posix/gai_strerror.c: Likewise.
+	* sysdeps/unix/siglist.c: Likewise.
+	* sysdeps/unix/sysv/linux/siglist.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/siglist.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c: Likewise.
+	* timezone/zic.c: Likewise.
+
 1999-06-18  H.J. Lu  <hjl@gnu.org>
 
 	* localedata/Makefile (charmaps): Exclude SCCS.

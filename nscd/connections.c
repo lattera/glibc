@@ -24,6 +24,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <libintl.h>
 #include <arpa/inet.h>
 #include <sys/param.h>
 #include <sys/poll.h>

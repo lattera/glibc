@@ -33,7 +33,7 @@
 /* GCC can always grok prototypes.  For C++ programs we add throw()
    to help it optimize the function calls.  But this works only with
    gcc 2.8.x and egcs.  */
-# if defined __cplusplus && (__GNUC__ >= 3 || __GNUC_MINOR__ >= 8)
+# if defined __cplusplus && __GNUC_PREREQ (2,8)
 #  define __THROW	throw ()
 # else
 #  define __THROW
@@ -42,6 +42,7 @@
 /* This macro will be used for functions which might take C++ callback
    functions.  */
 # define __PMT(args)	args
+
 # define __DOTS		, ...
 
 #else	/* Not GCC.  */
@@ -131,7 +132,6 @@
 /*
 #elif __SOME_OTHER_COMPILER__
 
-# define __attribute__(xyz)
 # define __REDIRECT(name, proto, alias) name proto; \
 	_Pragma("let " #name " = " #alias)
 */
@@ -150,17 +150,13 @@
    run in pedantic mode if the uses are carefully marked using the
    `__extension__' keyword.  But this is not generally available before
    version 2.8.  */
-#if !defined __GNUC__ || __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8)
-
+#if !__GNUC_PREREQ (2,8)
 # define __extension__		/* Ignore */
-
 #endif
 
 /* __restrict is known in EGCS 1.2 and above. */
-#if !defined __GNUC__ || __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 92)
-
+#if !__GNUC_PREREQ (2,92)
 # define __restrict	/* Ignore */
-
 #endif
 
 #endif	 /* sys/cdefs.h */

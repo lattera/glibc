@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libintl.h>
 
 #include "error.h"
 #include "charset.h"

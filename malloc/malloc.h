@@ -20,6 +20,8 @@
 #ifndef _MALLOC_H
 #define _MALLOC_H 1
 
+#include <features.h>
+
 /*
   `ptmalloc', a malloc implementation for multiple threads without
   lock contention, by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>.

@@ -19,6 +19,7 @@
 #include <stddef.h>
 #include <signal.h>
 #include <sizes.h>
+#include <libintl.h>
 
 #if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
 # define SYS_SIGLIST	__new_sys_siglist

@@ -3,6 +3,12 @@
 #include <sys/types.h>
 #include <errno.h>
 
+#include <sys/stat.h>
+#ifdef _STATBUF_ST_BLKSIZE
+# define HAVE_ST_BLKSIZE
+#endif
+
+
 #ifndef EFTYPE
 # define EFTYPE EINVAL
 #endif

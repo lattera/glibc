@@ -61,8 +61,7 @@ enum
    uses with any of the listed types to be allowed without complaint.
    G++ 2.7 does not support transparent unions so there we want the
    old-style declaration, too.  */
-#if	(!defined __GNUC__ || __GNUC__ < 2 || defined __cplusplus || \
-	 (__GNUC__ == 2 && __GNUC_MINOR__ < 7))
+#if defined __cplusplus || !__GNUC_PREREQ (2, 7)
 # define __SOCKADDR_ARG		struct sockaddr *
 # define __CONST_SOCKADDR_ARG	__const struct sockaddr *
 #else

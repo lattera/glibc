@@ -23,6 +23,7 @@
 
 #include <langinfo.h>
 #include <string.h>
+#include <libintl.h>
 
 /* Undefine following line in production version.  */
 /* #define NDEBUG 1 */

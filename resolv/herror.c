@@ -58,6 +58,7 @@ static char rcsid[] = "$Id$";
 #include <sys/param.h>
 #include <sys/uio.h>
 #include <netdb.h>
+#include <libintl.h>
 #if defined(BSD) && (BSD >= 199103)
 # include <unistd.h>
 # include <string.h>

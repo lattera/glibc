@@ -34,7 +34,7 @@
    do not try this for now and instead concentrate only on GNU CC.  Once
    we have more information support for other compilers might follow.  */
 
-#if defined __GNUC__ && (__GNUC__ > 2 || __GNUC__ == 2 && __GNUC_MINOR__ >= 7)
+#if __GNUC_PREREQ (2, 7)
 
 /* We have two kinds of generic macros: to support functions which are
    only defined on real valued parameters and those which are defined

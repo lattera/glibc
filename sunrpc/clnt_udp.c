@@ -39,6 +39,7 @@ static char sccsid[] = "@(#)clnt_udp.c 1.39 87/08/11 Copyr 1984 Sun Micro";
 
 #include <stdio.h>
 #include <unistd.h>
+#include <libintl.h>
 #include <rpc/rpc.h>
 #include <rpc/xdr.h>
 #include <rpc/clnt.h>

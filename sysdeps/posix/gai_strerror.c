@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <netdb.h>
+#include <libintl.h>
 
 static struct
   {

@@ -26,6 +26,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <utmp.h>
+#include <libintl.h>
 
 
 #include "utmpd-private.h"

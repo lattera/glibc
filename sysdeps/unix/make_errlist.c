@@ -58,6 +58,7 @@ main ()
    Boston, MA 02111-1307, USA.  */\n\n", year);
 
   puts ("#include <stddef.h>\n");
+  puts ("#include <libintl.h>\n");
   puts ("\n/* This is a list of all known `errno' codes.  */\n");
 
   printf ("\nconst int _sys_nerr = %d;\n\n", sys_nerr);

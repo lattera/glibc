@@ -46,6 +46,7 @@
 #include <sys/poll.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <libintl.h>
 
 /*
  * Ops vector for AF_UNIX based rpc service handle

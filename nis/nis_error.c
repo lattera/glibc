@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <syslog.h>
 #include <string.h>
+#include <libintl.h>
 #include <rpcsvc/nis.h>
 
 

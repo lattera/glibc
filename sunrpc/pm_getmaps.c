@@ -46,6 +46,7 @@ static char sccsid[] = "@(#)pmap_getmaps.c 1.10 87/08/11 Copyr 1984 Sun Micro";
 #include <netdb.h>
 #include <stdio.h>
 #include <errno.h>
+#include <libintl.h>
 
 /*
  * Get a copy of the current port maps.
