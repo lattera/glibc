@@ -100,7 +100,7 @@ _dl_start (void *arg)
 
 void _start (void);
 
-static int rtld_command;	/* Nonzero if we were run directly.  */
+unsigned int _dl_skip_args;	/* Nonzero if we were run directly.  */
 
 static void
 dl_main (const Elf32_Phdr *phdr,
@@ -147,7 +147,7 @@ file you run.  This is mostly of use for maintainers to test new versions\n\
 of this helper program; chances are you did not intend to run this program.\n",
 			      NULL);
 
-	  rtld_command = 1;
+	  ++_dl_skip_args;
 	  interpreter_name = _dl_argv[0];
 	  --_dl_argc;
 	  ++_dl_argv;
@@ -165,6 +165,20 @@ of this helper program; chances are you did not intend to run this program.\n",
 	  l->l_phdr = phdr;
 	  l->l_phnum = phent;
 	  interpreter_name = 0;
+	}
+
+      if (l != _dl_loaded)
+	{
+	  /* GDB assumes that the first element on the chain is the
+	     link_map for the executable itself, and always skips it.
+	     Make sure the first one is indeed that one.  */
+	  l->l_prev->l_next = l->l_next;
+	  if (l->l_next)
+	    l->l_next->l_prev = l->l_prev;
+	  l->l_prev = NULL;
+	  l->l_next = _dl_loaded;
+	  _dl_loaded->l_prev = l;
+	  _dl_loaded = l;
 	}
 
       /* Scan the program header table for the dynamic section.  */
@@ -220,7 +234,8 @@ of this helper program; chances are you did not intend to run this program.\n",
 	}
 
       l = _dl_loaded->l_next;
-      assert (l->l_type == lt_interpreter);
+      while (l->l_type != lt_interpreter)
+	l = l->l_next;
       if (l->l_opencount == 0)
 	{
 	  /* No DT_NEEDED entry referred to the interpreter object itself.
