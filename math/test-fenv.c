@@ -350,8 +350,8 @@ feexcp_nomask_test (const char *flag_name, int fe_exc)
   int status;
   pid_t pid;
 
-  printf ("Test: after fedisable (%s) processes will abort\n");
-  printf ("      when feraiseexcept (%s) is called.\n", flag_name, flag_name);
+  printf ("Test: after fedisable (%s) processes will abort\n", flag_name);
+  printf ("      when feraiseexcept (%s) is called.\n", flag_name);
   pid = fork ();
   if (pid == 0)
     {
@@ -402,8 +402,8 @@ feexcp_mask_test (const char *flag_name, int fe_exc)
   int status;
   pid_t pid;
 
-  printf ("Test: after fedisable (%s) processes will not abort\n");
-  printf ("      when feraiseexcept (%s) is called.\n", flag_name, flag_name);
+  printf ("Test: after fedisable (%s) processes will not abort\n", flag_name);
+  printf ("      when feraiseexcept (%s) is called.\n", flag_name);
   pid = fork ();
   if (pid == 0)
     {
@@ -580,7 +580,7 @@ feenable_test (const char *flag_name, int fe_exc)
     }
   feexcp_nomask_test (flag_name, fe_exc);
   feexcp_mask_test (flag_name, fe_exc);
-  
+
 }
 
 
@@ -596,6 +596,9 @@ fe_single_test (const char *flag_name, int fe_exc)
 static void
 feenv_tests (void)
 {
+  /* We might have some exceptions still set.  */
+  feclearexcept (FE_ALL_EXCEPT);
+
 #ifdef FE_DIVBYZERO
   fe_single_test ("FE_DIVBYZERO", FE_DIVBYZERO);
 #endif
