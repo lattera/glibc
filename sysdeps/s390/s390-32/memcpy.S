@@ -49,8 +49,7 @@ ENTRY(memcpy)
 	# data copies > 1MB are faster with mvcle.
 .L4:	ahi     %r4,1               # length + 1
 	lr      %r5,%r4	            # source length
-	lr	%r4,%r2             # source address
-	lr	%r2,%r3             # set destination
+	lr	%r4,%r3             # source address
 	lr	%r3,%r5             # destination length = source length
 .L5:	mvcle	%r2,%r4,0           # thats it, MVCLE is your friend
 	jo	.L5
