@@ -1,7 +1,11 @@
+2001-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_cache.c (__gconv_lookup_cache): Catch one more
+	boundary case and reject it.
+
 2001-07-24  Andreas Jaeger  <aj@suse.de>
 
-	* manual/examples/longopt.c (main): Fix which options take
-	arguments.
+	* manual/examples/longopt.c (main): Fix which options take arguments.
 
 2001-07-24  Ulrich Drepper  <drepper@redhat.com>
 
