@@ -1,5 +1,7 @@
 1999-10-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* ctype/ctype.h: Pretty print.
+
 	* po/cs.po: Fix typos.
 
 	* nis/nss_nisplus/nisplus-parser.c (_nss_nisplus_parse_spent): Fix

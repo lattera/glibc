@@ -1,3 +1,9 @@
+1999-10-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manager.c (__pthread_manager) [REQ_POST]: Use __new_sem_post
+	directly instead of calling sem_post which should not be necessary
+	but is faster and might help in some case to work around problems.
+
 1999-10-08  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/pthread/Subdirs: New file.

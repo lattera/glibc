@@ -141,11 +141,11 @@ __exctype (_tolower);
 # define isupper(c)	__isctype((c), _ISupper)
 # define isxdigit(c)	__isctype((c), _ISxdigit)
 
-#ifdef	__USE_GNU
-# define isblank(c)	__isctype((c), _ISblank)
-#endif
+# ifdef	__USE_GNU
+#  define isblank(c)	__isctype((c), _ISblank)
+# endif
 
-#if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ \
+# if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ \
  && defined __USE_EXTERN_INLINES
 extern __inline int
 tolower (int __c) __THROW
@@ -158,10 +158,10 @@ toupper (int __c) __THROW
 {
   return __c >= -128 && __c < 256 ? __ctype_toupper[__c] : __c;
 }
-#endif
+# endif
 
-#if __GNUC__ >= 2 && defined __OPTIMIZE__ && !defined __cplusplus
-# define __tobody(c, f, a) \
+# if __GNUC__ >= 2 && defined __OPTIMIZE__ && !defined __cplusplus
+#  define __tobody(c, f, a) \
   (__extension__							      \
    ({ int __res;							      \
       if (sizeof (c) > 1)						      \
@@ -178,17 +178,17 @@ toupper (int __c) __THROW
 	__res = a[(int) (c)];						      \
       __res; }))
 
-# define tolower(c) __tobody (c, tolower, __ctype_tolower)
-# define toupper(c) __tobody (c, toupper, __ctype_toupper)
-#endif	/* Optimizing gcc */
+#  define tolower(c) __tobody (c, tolower, __ctype_tolower)
+#  define toupper(c) __tobody (c, toupper, __ctype_toupper)
+# endif	/* Optimizing gcc */
 
-#if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
-# define isascii(c)	__isascii (c)
-# define toascii(c)	__toascii (c)
+# if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
+#  define isascii(c)	__isascii (c)
+#  define toascii(c)	__toascii (c)
 
-# define _tolower(c)	((int) __ctype_tolower[(int) (c)])
-# define _toupper(c)	((int) __ctype_toupper[(int) (c)])
-#endif
+#  define _tolower(c)	((int) __ctype_tolower[(int) (c)])
+#  define _toupper(c)	((int) __ctype_toupper[(int) (c)])
+# endif
 
 #endif /* Not __NO_CTYPE.  */
 

@@ -159,7 +159,7 @@ int __pthread_manager(void *arg)
         }
         break;
       case REQ_POST:
-        sem_post(request.req_args.post);
+        __new_sem_post(request.req_args.post);
         break;
       case REQ_DEBUG:
 	/* Make gdb aware of new thread and gdb will restart the
