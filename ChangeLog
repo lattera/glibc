@@ -1,3 +1,12 @@
+2002-04-13  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/i486/bits/string.h (__strcspn_cg): Use only memory
+	as clobber to reduce register pressure.
+	(__strpbrk_cg): Likewise.
+	(__mempcpy_by4): Likewise.
+	(__strstr_cg): Likewise.
+	Add prototype for __memrchr.
+
 2002-04-13  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/s_finite.c: Add internal alias.
