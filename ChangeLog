@@ -1,3 +1,9 @@
+2004-11-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* debug/tst-chk1.c (ret): New volatile variable.
+	(CHK_FAIL_END): Remove redundant ret setting.
+	(do_test): Remote ret variable.
+
 2004-01-03  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regex_internal.h (__regfree) [!_LIBC]: Define to regfree.

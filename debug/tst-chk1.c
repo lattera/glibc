@@ -50,7 +50,7 @@ do_prepare (void)
     }
 }
 
-volatile int chk_fail_ok;
+volatile int chk_fail_ok, ret;
 jmp_buf chk_fail_buf;
 
 static void
@@ -86,7 +86,6 @@ int num2 = 987654;
 #define CHK_FAIL_END \
       chk_fail_ok = 0;				\
       FAIL ();					\
-      ret = 1;					\
     }
 #if __USE_FORTIFY_LEVEL >= 2
 #define CHK_FAIL2_START CHK_FAIL_START
@@ -99,7 +98,6 @@ int num2 = 987654;
 static int
 do_test (void)
 {
-  int ret = 0;
   struct sigaction sa;
   sa.sa_handler = handler;
   sa.sa_flags = 0;

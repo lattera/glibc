@@ -1,3 +1,7 @@
+2004-11-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/smp.h: Include <errno.h>.
+
 2004-10-29  Kaz  Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/sem_timedwait.S (sem_timedwait):
