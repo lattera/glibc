@@ -8,6 +8,13 @@
 	* sysdeps/alpha/fpu/bits/mathinline.h: Honor
 	__LIBC_INTERNAL_MATH_INLINES.  Implement __signbitf, __signbit.
 
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Use HIDDEN_JUMPTARGET.
+	* sysdeps/unix/sysv/linux/alpha/ieee_get_fp_control.S: Use
+	libc_hidden_def.
+	* sysdeps/unix/sysv/linux/alpha/ieee_set_fp_control.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/setfpucw.c: Use libc_hidden_proto
+	on them.
+
 2003-06-24  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/libm-test-ulps: Update.

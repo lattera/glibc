@@ -97,7 +97,11 @@ thread_start:
 
 	/* Call _exit rather than doing it inline for breakpoint purposes.  */
 	mov	v0,a0
-	jsr	ra,_exit
+#ifdef PIC
+	bsr	ra, HIDDEN_JUMPTARGET(_exit)	!samegp
+#else
+	jsr	ra, HIDDEN_JUMPTARGET(_exit)
+#endif
 
 	/* Die horribly.  */
 	halt

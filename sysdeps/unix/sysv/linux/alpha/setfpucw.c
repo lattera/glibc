@@ -1,5 +1,5 @@
 /* Set FP exception mask and rounding mode.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,9 +20,11 @@
 #include <fpu_control.h>
 #include <asm/fpu.h>
 
-
 extern void		__ieee_set_fp_control (unsigned long);
+libc_hidden_proto(__ieee_set_fp_control)
+
 extern unsigned long	__ieee_get_fp_control (void);
+libc_hidden_proto(__ieee_get_fp_control)
 
 static inline unsigned long
 rdfpcr (void)
