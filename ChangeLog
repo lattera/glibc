@@ -1,5 +1,9 @@
 1999-10-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* configure.in: Don't allow --enable-kernel without parameter.
+
+1999-10-25  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/i386/fpu/libm-test-ulps: Remove entries caused by +-0
 	problems.
 
