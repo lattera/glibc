@@ -220,10 +220,12 @@ internal_nis_do_callback (struct dir_binding *bptr, netobj *cookie,
       switch (i = __poll (my_pollfd, svc_max_pollfd, 25*1000))
         {
 	case -1:
+	  free (my_pollfd);
 	  if (errno == EINTR)
 	    continue;
 	  return NIS_CBERROR;
 	case 0:
+	  free (my_pollfd);
 	  /* See if callback 'thread' in the server is still alive. */
 	  memset ((char *) &cb_is_running, 0, sizeof (cb_is_running));
 	  if (clnt_call (bptr->clnt, NIS_CALLBACK, (xdrproc_t) xdr_netobj,
@@ -239,6 +241,7 @@ internal_nis_do_callback (struct dir_binding *bptr, netobj *cookie,
 	  break;
 	default:
 	  svc_getreq_poll (my_pollfd, i);
+	  free (my_pollfd);
 	  if (data->nomore)
 	    return data->result;
 	}

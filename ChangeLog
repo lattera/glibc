@@ -1,6 +1,10 @@
+1999-08-11  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/nis_callback.c (internal_nis_do_callback): Free my_pollfd.
+
 1999-08-13  Ulrich Drepper  <drepper@cygnus.com>
 
-	* stdio-common/vfscanf.c: Don't recognize hexadecimal floats with
+	* stdio-common/vfscanf.c: Don't recognize hexadecimal floats without
 	exponent.
 
 1999-08-10  Andreas Schwab  <schwab@suse.de>
