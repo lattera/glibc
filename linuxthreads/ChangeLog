@@ -1,3 +1,25 @@
+2002-10-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/allocalim.h: New file.
+	* descr.h (struct _pthread_descr_struct): Add p_alloca_cutoff
+	field.
+	* manager.c (__pthread_allocate_stack): Add out_stacksize argument.
+	Pass stack size to caller.
+	(pthread_handle_create): Set p_alloca_cutoff.
+	* pthread.c (__pthread_initial_thread): Use C99 designated
+	initializers.  Set p_alloca_cutoff.
+	(__pthread_manager_thread): Likewise.
+	(__pthread_initialize_minimal) [USE_TLS]: Set p_alloca_cutoff
+	for initial thread.
+	(__pthread_init_max_stacksize): Possibly decrease p_alloca_cutoff
+	for initial thread.
+	(__pthread_initialize_manager) [USE_TLS]: Set p_alloca_cutoff
+	for manager thread.
+	* specific.c (__libc_alloca_cutoff): New function.
+	* no-tsd.c (__libc_alloca_cutoff): New function.
+	* Versions: Export __libc_alloca_cutoff@@GLIBC_PRIVATE from libc
+	and libpthread.
+
 2002-10-02  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/pt-machine.h: Make C code ifndef'ed with __ASSEMBLER__.

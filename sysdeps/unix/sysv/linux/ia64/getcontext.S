@@ -138,7 +138,7 @@ ENTRY(__getcontext)
 	st8 [r2] = rLC, (SC_BR+0*8-SC_LC)
 	st8 [r3] = rPR, (SC_BR+1*8-SC_PR)
 	mov rB5 = b5
-
+	;;
 	st8 [r2] = rB0, 16
 	st8 [r3] = rB1, 16
 	;;
