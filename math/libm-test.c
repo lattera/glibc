@@ -42,7 +42,7 @@
    It has tests for:
    acos, acosh, asin, asinh, atan, atan2, atanh,
    cbrt, ceil, copysign, cos, cosh, erf, erfc, exp, exp2, expm1,
-   fabs, fdim, floor, fmin, fmax, fmod, fpclassify, 
+   fabs, fdim, floor, fmin, fmax, fmod, fpclassify,
    frexp, gamma, hypot,
    ilogb, isfinite, isinf, isnan, isnormal,
    ldexp, lgamma, log, log10, log1p, log2, logb,
@@ -91,7 +91,7 @@
    NaN values: There exist signalling and quiet NaNs. This implementation
    only uses signalling NaN as parameter but does not differenciate
    between the two kinds of NaNs as result.
-   
+
    Inline functions: Inlining functions should give an improvement in
    speed - but not in precission. The inlined functions return
    reasonable values for a reasonable range of input values. The
@@ -859,7 +859,7 @@ asinh_test (void)
   check_isinfp ("asinh(+inf) == +inf", FUNC(asinh) (plus_infty));
   check_isinfn ("asinh(-inf) == -inf", FUNC(asinh) (minus_infty));
 #endif
-  
+
 }
 
 
@@ -971,7 +971,7 @@ atanh_test (void)
   x = random_less (1.0);
   check_isnan_exc_ext ("atanh (x) == NaN plus invalid exception if |x| > 1",
                        FUNC(atanh) (x), INVALID_EXCEPTION, x);
-  
+
 #endif
 }
 
@@ -1252,7 +1252,7 @@ static void
 signbit_test (void)
 {
   MATHTYPE x;
-  
+
   check_bool ("signbit (+0) == 0", signbit (0) == 0);
   check_bool ("signbit (-0) != 0", signbit (minus_zero));
   check_bool ("signbit (+inf) == 0", signbit (plus_infty) == 0);
@@ -1264,7 +1264,7 @@ signbit_test (void)
 
   x = random_greater (0);
   check_bool ("signbit (x) == 0 for x > 0", signbit (x) == 0);
-  
+
 }
 
 
@@ -1290,7 +1290,7 @@ gamma_test (void)
 
   check ("gamma (1) == 1", FUNC(gamma) (1), 1);
   check ("gamma (4) == 6", FUNC(gamma) (4), 6);
-   
+
 }
 
 
@@ -1298,7 +1298,7 @@ static void
 lgamma_test (void)
 {
   MATHTYPE x;
-  
+
   check_isinfp ("lgamma (+inf) == +inf", FUNC(lgamma) (plus_infty));
   check_isnan_exc ("lgamma (0) == +inf plus divide by zero exception",
                    FUNC(lgamma) (0), DIVIDE_BY_ZERO_EXCEPTION);
@@ -1596,14 +1596,14 @@ sincos_test (void)
 {
   MATHTYPE sin_res, cos_res;
   fenv_t fenv;
-  
+
   FUNC(sincos) (0, &sin_res, &cos_res);
   fegetenv (&fenv);
   check ("sincos (+0, &sin, &cos) puts +0 in sin", sin_res, 0);
   fesetenv (&fenv);
   check ("sincos (+0, &sin, &cos) puts 1 in cos", cos_res, 1);
 
-  FUNC(sincos) (minus_zero, &sin_res, &cos_res); 
+  FUNC(sincos) (minus_zero, &sin_res, &cos_res);
   fegetenv (&fenv);
   check ("sincos (-0, &sin, &cos) puts -0 in sin", sin_res, minus_zero);
   fesetenv (&fenv);
@@ -1711,7 +1711,7 @@ hypot_test (void)
   check_isinfp ("hypot (+inf, NaN) == +inf", FUNC(hypot) (minus_infty, nan_value));
   check_isinfp ("hypot (-inf, NaN) == +inf", FUNC(hypot) (minus_infty, nan_value));
 #endif
-  
+
   check_isnan ("hypot (NaN, NaN) == NaN", FUNC(hypot) (nan_value, nan_value));
 
   a = FUNC(hypot) (12.4L, 0.7L);
@@ -2020,7 +2020,7 @@ static void
 fmod_test (void)
 {
   MATHTYPE x;
-  
+
   x = random_greater (0);
   check_ext ("fmod (+0, y) == +0 for y != 0", FUNC(fmod) (0, x), 0, x);
 
@@ -2046,14 +2046,14 @@ fmod_test (void)
 
   check_eps ("fmod (6.5, 2.3) == 1.9", FUNC(fmod) (6.5, 2.3), 1.9,
              CHOOSE(0, 1e-15, 0));
-  check_eps ("fmod (-6.5, 2.3) == 1.9", FUNC(fmod) (-6.5, 2.3), -1.9,
+  check_eps ("fmod (-6.5, 2.3) == -1.9", FUNC(fmod) (-6.5, 2.3), -1.9,
              CHOOSE(0, 1e-15, 0));
   check_eps ("fmod (6.5, -2.3) == 1.9", FUNC(fmod) (6.5, -2.3), 1.9,
              CHOOSE(0, 1e-15, 0));
-  check_eps ("fmod (-6.5, -2.3) == 1.9", FUNC(fmod) (-6.5, -2.3), -1.9,
+  check_eps ("fmod (-6.5, -2.3) == -1.9", FUNC(fmod) (-6.5, -2.3), -1.9,
              CHOOSE(0, 1e-15, 0));
 
-  
+
 }
 
 
@@ -2181,38 +2181,38 @@ static void
 remainder_test (void)
 {
   MATHTYPE result;
-  
+
   result = FUNC(remainder) (1, 0);
   check_isnan_exc ("remainder(1, +0) == NaN plus invalid exception",
                    result, INVALID_EXCEPTION);
-  
+
   result = FUNC(remainder) (1, minus_zero);
   check_isnan_exc ("remainder(1, -0) == NaN plus invalid exception",
                    result, INVALID_EXCEPTION);
-  
+
   result = FUNC(remainder) (plus_infty, 1);
   check_isnan_exc ("remainder(+inf, 1) == NaN plus invalid exception",
                    result, INVALID_EXCEPTION);
-  
+
   result = FUNC(remainder) (minus_infty, 1);
   check_isnan_exc ("remainder(-inf, 1) == NaN plus invalid exception",
                    result, INVALID_EXCEPTION);
-  
+
   result = FUNC(remainder) (1.625, 1.0);
   check ("remainder(1.625, 1.0) == -0.375", result, -0.375);
-  
+
   result = FUNC(remainder) (-1.625, 1.0);
   check ("remainder(-1.625, 1.0) == 0.375", result, 0.375);
-  
+
   result = FUNC(remainder) (1.625, -1.0);
   check ("remainder(1.625, -1.0) == -0.375", result, -0.375);
-  
+
   result = FUNC(remainder) (-1.625, -1.0);
   check ("remainder(-1.625, -1.0) == 0.375", result, 0.375);
-  
+
   result = FUNC(remainder) (5.0, 2.0);
   check ("remainder(5.0, 2.0) == 1.0", result, 1.0);
-  
+
   result = FUNC(remainder) (3.0, 2.0);
   check ("remainder(3.0, 2.0) == -1.0", result, -1.0);
 }
@@ -2243,15 +2243,15 @@ remquo_test (void)
   result = FUNC(remquo) (1.625, 1.0, &quo);
   check ("remquo(1.625, 1.0, &x) == -0.375", result, -0.375);
   check_long ("remquo(1.625, 1.0, &x) puts 2 in x", quo, 2);
-  
+
   result = FUNC(remquo) (-1.625, 1.0, &quo);
   check ("remquo(-1.625, 1.0, &x) == 0.375", result, 0.375);
   check_long ("remquo(-1.625, 1.0, &x) puts -2 in x", quo, -2);
- 
+
   result = FUNC(remquo) (1.625, -1.0, &quo);
   check ("remquo(1.625, -1.0, &x) == -0.375", result, -0.375);
   check_long ("remquo(1.625, -1.0, &x) puts -2 in x", quo, -2);
- 
+
   result = FUNC(remquo) (-1.625, -1.0, &quo);
   check ("remquo(-1.625, -1.0, &x) == 0.375", result, 0.375);
   check_long ("remquo(-1.625, -1.0, &x) puts 2 in x", quo, 2);
@@ -4758,7 +4758,7 @@ main (int argc, char *argv[])
   isfinite_test ();
   isnormal_test ();
   signbit_test ();
-  
+
   /* trigonometric functions */
   acos_test ();
   asin_test ();

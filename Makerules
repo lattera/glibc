@@ -346,7 +346,7 @@ endif
 
 ifeq ($(versioning),yes)
 ifneq ($(..),)
-load-map-file = $(wildcard $($(@F:%.so=%)-map) $(..)$($(@F:%.so=%)-map))
+load-map-file = $(wildcard $($(@F:%.so=%)-map) $($(@F:%.so=%)-map):%=$(..)%)
 else
 load-map-file = $($(@F:%.so=%)-map)
 endif

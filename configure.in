@@ -703,10 +703,10 @@ for dir in $sysnames; do
   fi
 [
   if test -z "$uname"; then
-    if test -r $sysdep_dir/$dir/uname.c ||
-       test -r $sysdep_dir/$dir/uname.S ||
-       { test -r $sysdep_dir/$dir/syscalls.list &&
-	 grep '^uname[ 	]' $sysdep_dir/$dir/syscalls.list >/dev/null; }; then
+    if test -r $dest/uname.c ||
+       test -r $dest/uname.S ||
+       { test -r $dest/syscalls.list &&
+	 grep '^uname[ 	]' $dest/syscalls.list >/dev/null; }; then
       uname=$dir
     fi
   fi
@@ -717,7 +717,7 @@ AC_LINK_FILES(`echo $libc_link_sources`, `echo $libc_link_dests`)
 
 # If we will use the generic uname implementation, we must figure out what
 # it will say by examining the system, and write the results in config-name.h.
-if test "$uname" = generic; then
+if test "$uname" = "sysdeps/generic"; then
 
 changequote(,)dnl
   uname_sysname=`echo $config_os | sed 's/[0-9.]*$//'`
