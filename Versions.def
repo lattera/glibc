@@ -36,6 +36,7 @@ libdl {
   GLIBC_2.0
   GLIBC_2.1
   GLIBC_2.3.3
+  GLIBC_2.3.4
 }
 libm {
   GLIBC_2.0
@@ -91,6 +92,7 @@ librt {
   GLIBC_2.2
   GLIBC_2.3
   GLIBC_2.3.3
+  GLIBC_2.3.4
 }
 libutil {
   GLIBC_2.0
