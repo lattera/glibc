@@ -147,8 +147,7 @@ extern __malloc_ptr_t  pvalloc __MALLOC_P ((size_t __size))
 
 /* Underlying allocation function; successive calls should return
    contiguous pieces of memory.  */
-extern __malloc_ptr_t (*__morecore) __MALLOC_PMT ((ptrdiff_t __size))
-       __attribute_malloc__;
+extern __malloc_ptr_t (*__morecore) __MALLOC_PMT ((ptrdiff_t __size));
 
 /* Default value of `__morecore'.  */
 extern __malloc_ptr_t __default_morecore __MALLOC_P ((ptrdiff_t __size))

@@ -16,8 +16,8 @@
 	__attribute_malloc__.
 	* stdlib/stdlib.h: Make malloc, calloc, realloc, and valloc with
 	__attribute_malloc__.
-	* malloc/malloc.h: Make malloc, calloc, realloc, valloc, pvallc,
-	__morecore, and __default_morecore with __attribute_malloc__.
+	* malloc/malloc.h: Make malloc, calloc, realloc, valloc, pvalloc,
+	and __default_morecore with __attribute_malloc__.
 	Provide default definition for __attribute_malloc__.
 	* libio/stdio.h: Make tempnam with __attribute_malloc__.
 
