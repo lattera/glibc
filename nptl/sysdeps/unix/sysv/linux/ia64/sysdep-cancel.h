@@ -27,7 +27,7 @@
 
 # undef PSEUDO
 
-# ifdef USE___THREAD
+# if USE___THREAD
 #  ifndef NOT_IN_libc
 #   define SYSDEP_CANCEL_ERRNO __libc_errno
 #  else

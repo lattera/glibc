@@ -34,7 +34,7 @@ ENTRY(__syscall_error)
 	;;
 	st4	[r2]=r8
 	mov	r8=-1
-#elif defined USE___THREAD
+#elif USE___THREAD
 # ifndef NOT_IN_libc
 #  define SYSCALL_ERROR_ERRNO __libc_errno
 # else
