@@ -226,7 +226,13 @@ __pthread_cond_timedwait:
 
 	/* We return the result of the mutex_lock operation if it failed.  */
 	testl	%eax, %eax
+#ifdef HAVE_CMOV
 	cmovel	%esi, %eax
+#else
+	jne	22f
+	movl	%esi, %eax
+22:
+#endif
 
 18:	popl	%ebx
 .Lpop_ebx:
