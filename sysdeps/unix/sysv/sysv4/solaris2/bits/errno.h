@@ -166,5 +166,3 @@
 # define ESTALE		151     /* Stale NFS file handle.  */
 
 #endif
-
-#define __set_errno(val) errno = (val)
