@@ -312,9 +312,19 @@ dl_open_worker (void *a)
 
 	while (*runp != NULL)
 	  {
+	    /* This can happen if imap was just loaded, but during
+	       relocation had l_opencount bumped because of relocation
+	       dependency.  Avoid duplicates in l_scope.  */
+	    if (__builtin_expect (*runp == &new->l_searchlist, 0))
+	      break;
+
 	    ++cnt;
 	    ++runp;
 	  }
+
+	if (*runp != NULL)
+	  /* Avoid duplicates.  */
+	  continue;
 
 	if (__builtin_expect (cnt + 1 >= imap->l_scope_max, 0))
 	  {
@@ -478,11 +488,11 @@ show_scope (struct link_map *new)
 
       for (cnt = 0; cnt < new->l_scope[scope_cnt]->r_nlist; ++cnt)
 	if (*new->l_scope[scope_cnt]->r_list[cnt]->l_name)
-	  _dl_printf (" %s", new->l_scope[scope_cnt]->r_list[cnt]->l_name)
+	  _dl_printf (" %s", new->l_scope[scope_cnt]->r_list[cnt]->l_name);
 	else
-	  _dl_printf (" <main>", NULL);
+	  _dl_printf (" <main>");
 
-      _dl_printf ("\n", NULL);
+      _dl_printf ("\n");
     }
 }
 #endif

@@ -218,8 +218,7 @@ the environment and for the texts to be handled.  There exist a variety
 of different character sets which can be used for this external
 encoding. Information which will not be exhaustively presented
 here--instead, a description of the major groups will suffice.  All of
-the ASCII-based character sets [_bkoz_: do you mean Roman character
-sets? If not, what do you mean here?]  fulfill one requirement: they are
+the ASCII-based character sets fulfill one requirement: they are
 "filesystem safe".  This means that the character @code{'/'} is used in
 the encoding @emph{only} to represent itself.  Things are a bit
 different for character sets like EBCDIC (Extended Binary Coded Decimal
@@ -229,11 +228,12 @@ system calls have to be converted first anyhow.
 
 @itemize @bullet
 @item
-The simplest character sets are single-byte character sets.  There can be
-only up to 256 characters (for @w{8 bit} character sets) which is not
+The simplest character sets are single-byte character sets.  There can
+be only up to 256 characters (for @w{8 bit} character sets) which is not
 sufficient to cover all languages but might be sufficient to handle a
-specific text.  Another reason to choose this is because of constraints
-from interaction with other programs (which might not be 8-bit clean).
+specific text.  Handling of @w{8 bit} character sets is simple.  This is
+not true for the other kinds presented later and therefore the
+application one uses might require the use of @w{8 bit} character sets.
 
 @cindex ISO 2022
 @item

@@ -816,7 +816,7 @@ weak_alias (__erf, erfl)
   if (ix >= 0x7fff0000)
     {				/* erfc(nan)=nan */
       /* erfc(+-inf)=0,2 */
-      return (long double) (((sign & 0xffff) >> 15) << 1) + one / x;
+      return (long double) (((u_int32_t) sign >> 31) << 1) + one / x;
     }
 
   if (ix < 0x3ffd0000) /* |x| <1/4 */

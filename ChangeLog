@@ -1,3 +1,43 @@
+2001-09-29  Jes Sorensen  <jes@trained-monkey.org>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h (struct sigcontext):
+	Add sc_loadrs and sc_rbs_bas to match current kernel.
+
+2001-09-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Update.
+
+	* sysdeps/ieee754/ldbl-128/s_erfl.c (__erfcl): Fix erfc(-inf).
+
+2001-09-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-open.c (dl_open_worker): If l_opencount of freshly loaded
+	object has been bumped because of relocation dependency, avoid
+	duplicates in l_scope.
+	(show_scope): Fix typos.
+	* elf/Makefile: Add rules to build and run reldep6.
+	* elf/reldep6.c: New file.
+	* elf/reldep6mod0.c: New file.
+	* elf/reldep6mod1.c: New file.
+	* elf/reldep6mod2.c: New file.
+	* elf/reldep6mod3.c: New file.
+	* elf/reldep6mod4.c: New file.
+
+2001-09-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_fixup_plt): Call
+	sparc64_fixup_plt.
+	(sparc64_fixup_plt): Moved from elf_machine_fixup_plt. Optimize
+	near jumps and 0xfffff800XXXXXXXX target addresses, no thread safety
+	for non-lazy binding. Fix .plt[32768+] handling.
+	(elf_machine_plt_value): Don't add addend.
+	(elf_machine_rela): Call sparc64_fixup_plt instead of
+	elf_machine_fixup_plt.
+	(elf_machine_runtime_setup, TRAMPOLINE_TEMPLATE): Optimize for
+	dynamic linker at 0xfffff800XXXXXXXX.
+
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Update.
+
 2001-09-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/elf.h: Define SHF_GROUP and SHF_TLS.

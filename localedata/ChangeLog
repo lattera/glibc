@@ -1,3 +1,8 @@
+2001-09-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/SAMI-WS2: Add Euro sign.
+	Patch by Petter Reinholdtsen <pere@hungry.com>.
+
 2001-08-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: Add rules to build and run tst-xlocale2.

@@ -84,41 +84,51 @@ elf_machine_load_address (void)
 
 /* We have 4 cases to handle.  And we code different code sequences
    for each one.  I love V9 code models...  */
-static inline Elf64_Addr
-elf_machine_fixup_plt (struct link_map *map, lookup_t t,
-		       const Elf64_Rela *reloc,
-		       Elf64_Addr *reloc_addr, Elf64_Addr value)
+static inline void
+sparc64_fixup_plt (struct link_map *map, const Elf64_Rela *reloc,
+		   Elf64_Addr *reloc_addr, Elf64_Addr value,
+		   Elf64_Addr high, int t)
 {
   unsigned int *insns = (unsigned int *) reloc_addr;
   Elf64_Addr plt_vaddr = (Elf64_Addr) reloc_addr;
+  Elf64_Sxword disp = value - plt_vaddr;
 
   /* Now move plt_vaddr up to the call instruction.  */
-  plt_vaddr += (2 * 4);
+  plt_vaddr += ((t + 1) * 4);
 
   /* PLT entries .PLT32768 and above look always the same.  */
-  if (__builtin_expect (reloc->r_addend, 0) != 0)
+  if (__builtin_expect (high, 0) != 0)
     {
       *reloc_addr = value - map->l_addr;
     }
+  /* Near destination.  */
+  else if (disp >= -0x800000 && disp < 0x800000)
+    {
+      /* As this is just one instruction, it is thread safe and so
+	 we can avoid the unnecessary sethi FOO, %g1.
+	 b,a target  */
+      insns[0] = 0x30800000 | ((disp >> 2) & 0x3fffff);
+      __asm __volatile ("flush %0" : : "r" (insns));
+    }
   /* 32-bit Sparc style, the target is in the lower 32-bits of
      address space.  */
-  else if ((value >> 32) == 0)
+  else if (insns += t, (value >> 32) == 0)
     {
       /* sethi	%hi(target), %g1
 	 jmpl	%g1 + %lo(target), %g0  */
 
-      insns[2] = 0x81c06000 | (value & 0x3ff);
-      __asm __volatile ("flush %0 + 8" : : "r" (insns));
-
-      insns[1] = 0x03000000 | ((unsigned int)(value >> 10));
+      insns[1] = 0x81c06000 | (value & 0x3ff);
       __asm __volatile ("flush %0 + 4" : : "r" (insns));
+
+      insns[0] = 0x03000000 | ((unsigned int)(value >> 10));
+      __asm __volatile ("flush %0" : : "r" (insns));
     }
   /* We can also get somewhat simple sequences if the distance between
      the target and the PLT entry is within +/- 2GB.  */
   else if ((plt_vaddr > value
-	    && ((plt_vaddr - value) >> 32) == 0)
+	    && ((plt_vaddr - value) >> 31) == 0)
 	   || (value > plt_vaddr
-	       && ((value - plt_vaddr) >> 32) == 0))
+	       && ((value - plt_vaddr) >> 31) == 0))
     {
       unsigned int displacement;
 
@@ -131,14 +141,14 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t t,
 	 call	displacement
 	  mov	%g1, %o7  */
 
-      insns[3] = 0x9e100001;
-      __asm __volatile ("flush %0 + 12" : : "r" (insns));
-
-      insns[2] = 0x40000000 | (displacement >> 2);
+      insns[2] = 0x9e100001;
       __asm __volatile ("flush %0 + 8" : : "r" (insns));
 
-      insns[1] = 0x8210000f;
+      insns[1] = 0x40000000 | (displacement >> 2);
       __asm __volatile ("flush %0 + 4" : : "r" (insns));
+
+      insns[t] = 0x8210000f;
+      __asm __volatile ("flush %0" : : "r" (insns));
     }
   /* Worst case, ho hum...  */
   else
@@ -149,33 +159,62 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t t,
       /* ??? Some tricks can be stolen from the sparc64 egcs backend
 	     constant formation code I wrote.  -DaveM  */
 
-      /* sethi	%hh(value), %g1
-	 sethi	%lm(value), %g5
-	 or	%g1, %hm(value), %g1
-	 or	%g5, %lo(value), %g5
-	 sllx	%g1, 32, %g1
-	 jmpl	%g1 + %g5, %g0
-	  nop  */
+      if (__builtin_expect (high32 & 0x3ff, 0))
+	{
+	  /* sethi	%hh(value), %g1
+	     sethi	%lm(value), %g5
+	     or		%g1, %hm(value), %g1
+	     or		%g5, %lo(value), %g5
+	     sllx	%g1, 32, %g1
+	     jmpl	%g1 + %g5, %g0
+	      nop  */
 
-      insns[6] = 0x81c04005;
-      __asm __volatile ("flush %0 + 24" : : "r" (insns));
+	  insns[5] = 0x81c04005;
+	  __asm __volatile ("flush %0 + 20" : : "r" (insns));
 
-      insns[5] = 0x83287020;
-      __asm __volatile ("flush %0 + 20" : : "r" (insns));
+	  insns[4] = 0x83287020;
+	  __asm __volatile ("flush %0 + 16" : : "r" (insns));
 
-      insns[4] = 0x8a116000 | (low32 & 0x3ff);
-      __asm __volatile ("flush %0 + 16" : : "r" (insns));
+	  insns[3] = 0x8a116000 | (low32 & 0x3ff);
+	  __asm __volatile ("flush %0 + 12" : : "r" (insns));
 
-      insns[3] = 0x82106000 | (high32 & 0x3ff);
-      __asm __volatile ("flush %0 + 12" : : "r" (insns));
+	  insns[2] = 0x82106000 | (high32 & 0x3ff);
+	}
+      else
+	{
+	  /* sethi	%hh(value), %g1
+	     sethi	%lm(value), %g5
+	     sllx	%g1, 32, %g1
+	     or		%g5, %lo(value), %g5
+	     jmpl	%g1 + %g5, %g0
+	      nop  */
 
-      insns[2] = 0x0b000000 | (low32 >> 10);
+	  insns[4] = 0x81c04005;
+	  __asm __volatile ("flush %0 + 16" : : "r" (insns));
+
+	  insns[3] = 0x8a116000 | (low32 & 0x3ff);
+	  __asm __volatile ("flush %0 + 12" : : "r" (insns));
+
+	  insns[2] = 0x83287020;
+	}
+
       __asm __volatile ("flush %0 + 8" : : "r" (insns));
 
-      insns[1] = 0x03000000 | (high32 >> 10);
+      insns[1] = 0x0b000000 | (low32 >> 10);
       __asm __volatile ("flush %0 + 4" : : "r" (insns));
-    }
 
+      insns[0] = 0x03000000 | (high32 >> 10);
+      __asm __volatile ("flush %0" : : "r" (insns));
+    }
+}
+
+static inline Elf64_Addr
+elf_machine_fixup_plt (struct link_map *map, lookup_t t,
+		       const Elf64_Rela *reloc,
+		       Elf64_Addr *reloc_addr, Elf64_Addr value)
+{
+  sparc64_fixup_plt (map, reloc, reloc_addr, value + reloc->r_addend,
+		     reloc->r_addend, 1);
   return value;
 }
 
@@ -184,7 +223,10 @@ static inline Elf64_Addr
 elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
 		       Elf64_Addr value)
 {
-  return value + reloc->r_addend;
+  /* Don't add addend here, but in elf_machine_fixup_plt instead.
+     value + reloc->r_addend is the value which should actually be
+     stored into .plt data slot.  */
+  return value;
 }
 
 #ifdef RESOLVE
@@ -329,7 +371,8 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  break;
 #endif
 	case R_SPARC_JMP_SLOT:
-	  elf_machine_fixup_plt(map, 0, reloc, reloc_addr, value);
+	  sparc64_fixup_plt (map, reloc, reloc_addr, value,
+			     reloc->r_addend, 0);
 	  break;
 #ifndef RTLD_BOOTSTRAP
 	case R_SPARC_UA16:
@@ -425,6 +468,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       extern void _dl_runtime_profile_1 (void);
       Elf64_Addr res0_addr, res1_addr;
       unsigned int *plt = (void *) D_PTR (l, l_info[DT_PLTGOT]);
+      int i = 0;
 
       if (! profile)
 	{
@@ -473,13 +517,21 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
        */
 
       plt[8 + 0] = 0x9de3bf40;
+      if (__builtin_expect (((res1_addr + 4) >> 32) & 0x3ff, 0))
+	i = 1;
+      else
+	res1_addr += 4;
       plt[8 + 1] = 0x21000000 | (res1_addr >> (64 - 22));
       plt[8 + 2] = 0x23000000 | ((res1_addr >> 10) & 0x003fffff);
-      plt[8 + 3] = 0xa0142000 | ((res1_addr >> 32) & 0x3ff);
+      if (__builtin_expect (i, 0))
+	plt[8 + 3] = 0xa0142000 | ((res1_addr >> 32) & 0x3ff);
+      else
+	plt[8 + 3] = 0xa12c3020;
       plt[8 + 4] = 0xa2146000 | (res1_addr & 0x3ff);
-      plt[8 + 5] = 0xa12c3020;
-      plt[8 + 6] = 0xadc40011;
-      plt[8 + 7] = 0x9330700c;
+      if (__builtin_expect (i, 0))
+	plt[8 + 5] = 0xa12c3020;
+      plt[8 + 5 + i] = 0xadc40011;
+      plt[8 + 6 + i] = 0x9330700c;
 
       /* Now put the magic cookie at the beginning of .PLT2
 	 Entry .PLT3 is unused by this implementation.  */
@@ -526,10 +578,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "\n"							\
 "	.globl	" #tramp_name "_1\n"			\
 "	.type	" #tramp_name "_1, @function\n"		\
-"	.align	32\n"					\
+"	! tramp_name_1 + 4 needs to be .align 32\n"	\
 "\t" #tramp_name "_1:\n"				\
+"	sub	%l6, 4, %l6\n"				\
 "	! srlx	%g1, 12, %o1 - Done in .PLT1\n"		\
-"	ldx	[%l6 + 8], %o0\n"			\
+"	ldx	[%l6 + 12], %o0\n"			\
 "	add	%o1, %o1, %o3\n"			\
 "	sub	%o1, 96, %o1	! No thanks to Sun for not obeying their own ABI\n" \
 "	mov	%i7, %o2\n"				\
