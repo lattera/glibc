@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,8 +27,6 @@
 extern int __syscall_execve (const char *__unbounded file,
 			     char *__unbounded const *__unbounded argv,
 			     char *__unbounded const *__unbounded envp);
-extern void __pthread_kill_other_threads_np (void);
-weak_extern (__pthread_kill_other_threads_np)
 
 
 int
@@ -37,9 +35,6 @@ __execve (file, argv, envp)
      char *const argv[];
      char *const envp[];
 {
-  /* If this is a threaded application kill all other threads.  */
-  if (__pthread_kill_other_threads_np)
-    __pthread_kill_other_threads_np ();
 #if __BOUNDED_POINTERS__
   {
     char *const *v;
