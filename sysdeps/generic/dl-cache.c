@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <link.h>
-#include <stddef.h>
+#include <unistd.h>
 #include <sys/mman.h>
 
 /* System-dependent function to read a file's whole contents

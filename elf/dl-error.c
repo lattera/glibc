@@ -1,5 +1,5 @@
 /* Error handling for runtime dynamic linker.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,11 +17,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stddef.h>
 #include <link.h>
 #include <setjmp.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 /* This is the internal function we use to generate the error string.  */
 extern char *_strerror_internal __P ((int, char *, size_t));
@@ -76,7 +76,6 @@ _dl_signal_error (int errcode,
   else
     {
       /* Lossage while resolving the program's own symbols is always fatal.  */
-      extern char **_dl_argv;	/* Set in rtld.c at startup.  */
       char buffer[1024];
       _dl_sysdep_fatal (_dl_argv[0] ?: "<program name unknown>",
 			": error in loading shared libraries: ",

@@ -1,5 +1,5 @@
 /* Return the next shared object initializer function not yet run.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,6 +57,13 @@ _dl_init_next (struct link_map *map)
 	{
 	  /* Run this object's initializer.  */
 	  l->l_init_running = 1;
+
+	  /* Print a debug message if wanted.  */
+	  if (_dl_debug_impcalls)
+	    _dl_debug_message ("\tcalling init: ",
+				l->l_name[0] ? l->l_name : _dl_argv[0],
+				"\n\n", NULL);
+
 	  return l->l_addr + l->l_info[DT_INIT]->d_un.d_ptr;
 	}
 

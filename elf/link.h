@@ -231,6 +231,9 @@ typedef void (*receiver_fct) (int, const char *, const char *);
    user interface to run-time dynamic linking.  */
 
 
+/* Parameters passed to te dynamic linker.  */
+extern char **_dl_argv;
+
 /* Cached value of `getpagesize ()'.  */
 extern size_t _dl_pagesize;
 
@@ -244,26 +247,48 @@ extern struct link_map *_dl_profile_map;
 
 /* If nonzero the appropriate debug information if printed.  */
 extern int _dl_debug_libs;
+extern int _dl_debug_impcalls;
+
+/* File deccriptor to write debug messages to.  */
+extern int _dl_debug_fd;
 
 /* OS-dependent function to open the zero-fill device.  */
 extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
 
+/* OS-dependent function to write a message on the specified
+   descriptor FD.  All arguments are `const char *'; args until a null
+   pointer are concatenated to form the message to print.  */
+extern void _dl_sysdep_output (int fd, const char *string, ...);
+
+/* OS-dependent function to write a debug message on the specified
+   descriptor for this.  All arguments are `const char *'; args until
+   a null pointer are concatenated to form the message to print.  */
+#define _dl_debug_message(string, args...) \
+  _dl_sysdep_output (_dl_debug_fd, string, ##args)
+
 /* OS-dependent function to write a message on the standard output.
    All arguments are `const char *'; args until a null pointer
    are concatenated to form the message to print.  */
-extern void _dl_sysdep_message (const char *string, ...);
+#define _dl_sysdep_message(string, args...) \
+  _dl_sysdep_output (STDOUT_FILENO, string, ##args)
 
 /* OS-dependent function to write a message on the standard error.
    All arguments are `const char *'; args until a null pointer
    are concatenated to form the message to print.  */
-extern void _dl_sysdep_error (const char *string, ...);
+#define _dl_sysdep_error(string, args...) \
+  _dl_sysdep_output (STDERR_FILENO, string, ##args)
 
 /* OS-dependent function to give a fatal error message and exit
    when the dynamic linker fails before the program is fully linked.
    All arguments are `const char *'; args until a null pointer
    are concatenated to form the message to print.  */
-extern void _dl_sysdep_fatal (const char *string, ...)
-     __attribute__ ((__noreturn__));
+#define _dl_sysdep_fatal(string, args...) \
+  do									      \
+    {									      \
+      _dl_sysdep_output (STDERR_FILENO, string, ##args);		      \
+      _exit (127);							      \
+    }									      \
+  while (1)
 
 /* Nonzero if the program should be "secure" (i.e. it's setuid or somesuch).
    This tells the dynamic linker to ignore environment variables.  */

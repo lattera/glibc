@@ -109,7 +109,7 @@ $(rtld-ldscript): $(rtld-ldscript-in) $(rtld-parms)
 	    -e 's#@@rtld-base@@#$(rtld-base)#' $< >$@
 endif
 
-$(objpfx)ld.so: $(objpfx)librtld.os $(addprefix $(objpfx),$(rtld-ldscript))
+$(objpfx)ld.so: $(objpfx)librtld.os $(addprefix $(objpfx),$(rtld-ldscript)) $(load-map-file)
 	$(rtld-link) -Wl,-soname=$(rtld-installed-name)
 
 define rtld-link

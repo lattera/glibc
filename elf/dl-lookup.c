@@ -280,7 +280,6 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
 			     const struct r_found_version *version,
 			     int reloc_type)
 {
-  extern char **_dl_argv;
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { 0, NULL };
   struct link_map **scope;

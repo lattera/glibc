@@ -1,3 +1,31 @@
+1998-03-06 17:04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Add _dl_debug_impcalls, _dl_debug_fd, _dl_sysdep_output,
+	__libc_start_main.
+	* csu/Makefile (routines): Add libc-start.
+	* elf/dl-error.c: Remove declaration of _dl_argv.  Include <unitsd.h>.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	* elf/link.h: Declare _dl_argv, _dl_debug_fd.
+	Declare _dl_sysdep_output.  Make _dl_sysdep_fatal, _dl_sysdep_error and
+	_dl_sysdep_message macros which use _dl_sysdep_output.
+	* elf/dl-fini.c: Write out which destructor is called while debugging.
+	* elf/dl-init.c: Likewise for constructor.
+	* elf/dl-load.c: Use _dl_debug_message instead of _dl_sysdep_message.
+	* elf/dl-misc.c: Remove _dl_sysdep_fatal, _dl_sysdep_error and
+	_dl_sysdep_message.  Add _dl_sysdep_output.
+	* elf/rtld.c: Recognize LD_DEBUG_OUTPUT.  Set _dl_debug_fd if
+	this file can be opened.
+	For LD_DEBUG=libs also set _dl_debug_impcalls.
+	* sysdeps/generic/dl-cache.c: Include unistd.h.
+	* sysdeps/generic/libc-start.c: New file.
+	* sysdeps/i386/elf/start.S: Don't call main directly, call
+	* sysdeps/unix/sysv/linux/libc-start.c: New file.
+	__libc_start_main instead.
+
+	* elf/Makefile ($(objpfx)ld.so): Add $(load-map-file) as dependency.
+
 1998-03-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/nsswitch.c (__nss_nscd_not_available): Removed.

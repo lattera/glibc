@@ -1,5 +1,4 @@
-/* Call the termination functions of loaded shared objects.
-   Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,26 +18,14 @@
 
 #include <link.h>
 
-void
-_dl_fini (void)
+int
+__libc_start_main (int (*main) (int, char **, char **), int argc,
+		   char **argv, char **envp)
 {
-  struct link_map *l;
+#ifdef PIC
+  if (_dl_debug_impcalls)
+    _dl_debug_message ("\ttransferring control: ", argv[0], "\n\n", NULL);
+#endif
 
-  for (l = _dl_loaded; l; l = l->l_next)
-    if (l->l_init_called)
-      {
-	if (l->l_info[DT_FINI] &&
-	    !(l->l_name[0] == '\0' && l->l_type == lt_executable))
-	  {
-	    /* When debugging print a message first.  */
-	    if (_dl_debug_impcalls)
-	      _dl_debug_message ("\n\tcalling fini: ",
-				 l->l_name[0] ? l->l_name : _dl_argv[0],
-				 "\n", NULL);
-
-	    (*(void (*) (void)) (l->l_addr + l->l_info[DT_FINI]->d_un.d_ptr)) ();
-	  }
-	/* Make sure nothing happens if we are called twice.  */
-	l->l_init_called = 0;
-      }
+  return (*main) (argc, argv, envp);
 }

@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <fcntl.h>
 #include <link.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -74,6 +75,7 @@ const char *_dl_profile;
 const char *_dl_profile_output;
 struct link_map *_dl_profile_map;
 int _dl_debug_libs;
+int _dl_debug_impcalls;
 
 /* Set nonzero during loading and initialization of executable and
    libraries, cleared before the executable's entry point runs.  This
@@ -907,6 +909,9 @@ print_missing_version (int errcode __attribute__ ((unused)),
 		    objname, ": ", errstring, "\n", NULL);
 }
 
+/* Nonzero if any of the debugging options is enabled.  */
+static int any_debug;
+
 /* Process the string given as the parameter which explains which debugging
    options are enabled.  */
 static void
@@ -924,6 +929,8 @@ process_dl_debug (char *dl_debug)
 	      && (issep (dl_debug[4]) || dl_debug[4] == '\0'))
 	    {
 	      _dl_debug_libs = 1;
+	      _dl_debug_impcalls = 1;
+	      any_debug = 1;
 	      dl_debug += 4;
 	    }
 	  else if (strncmp (dl_debug, "help", 4) == 0
@@ -956,6 +963,7 @@ process_envvars (enum mode *modep, int *lazyp)
   char *envline;
   enum mode mode = normal;
   int bind_now = 0;
+  char *debug_output = NULL;
 
   /* This is the default place for profiling data file.  */
   _dl_profile_output = "/var/tmp";
@@ -979,6 +987,16 @@ process_envvars (enum mode *modep, int *lazyp)
       if (result == 0)
 	{
 	  process_dl_debug (&envline[9]);
+	  continue;
+	}
+      if (result < 0)
+	continue;
+
+      /* Where to place the profiling data file.  */
+      result = strncmp (&envline[3], "DEBUG_OUTPUT=", 13);
+      if (result == 0)
+	{
+	  debug_output = &envline[16];
 	  continue;
 	}
       if (result < 0)
@@ -1036,6 +1054,18 @@ process_envvars (enum mode *modep, int *lazyp)
 	  _dl_verbose = envline[8] != '\0';
 	  continue;
 	}
+    }
+
+  /* If we have to run the dynamic linker in debugging mode and the
+     LD_DEBUG_OUTPUT environment variable is given, we write the debug
+     messages to this file.  */
+  if (any_debug && debug_output != NULL)
+    {
+      _dl_debug_fd = __open (debug_output, O_WRONLY | O_APPEND | O_CREAT,
+			     0666);
+      if (_dl_debug_fd == -1)
+	/* We use standard output if opening the file failed.  */
+	_dl_debug_fd = STDOUT_FILENO;
     }
 
   /* LAZY is determined by the environment variable LD_WARN and

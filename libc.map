@@ -11,7 +11,7 @@ GLIBC_2.0 {
     __collate_element_strings; __collate_symbol_classes;
     __collate_symbol_hash; __collate_symbol_strings;
     _obstack;
-    __progname_full; __progname;
+    __progname_full; __progname; _dl_debug_impcalls; _dl_debug_fd;
 
     _IO_list_all; _IO_stderr_; _IO_stdin_; _IO_stdout_;
 
@@ -21,7 +21,7 @@ GLIBC_2.0 {
     .div; .mul; .rem; .udiv; .umul; .urem;
 
     # helper functions
-    __errno_location; __libc_init_first; __h_errno_location;
+    __errno_location; __libc_init_first; __h_errno_location; __libc_start_main;
 
     # functions with special/multiple interfaces
     __sigsetjmp; _setjmp; __sigaddset; __sigdelset; __sigismember;
@@ -98,7 +98,7 @@ GLIBC_2.0 {
     __vsscanf; __vfscanf; __vsnprintf;
     _rpc_dtablesize; _null_auth; _seterr_reply;
     __res_randomid;  __getpid;
-    __strcasecmp; __write; _strerror_internal;
+    __strcasecmp; __write; _strerror_internal; _dl_sysdep_output;
 
     # Exception handling support functions from libgcc
     __register_frame; __register_frame_table; __deregister_frame;

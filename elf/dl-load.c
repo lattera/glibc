@@ -92,9 +92,6 @@ ELF_PREFERRED_ADDRESS_DATA;
 
 size_t _dl_pagesize;
 
-/* Arguments passed to the dynamic linker.  */
-extern char **_dl_argv;
-
 extern const char *_dl_platform;
 extern size_t _dl_platformlen;
 
@@ -879,7 +876,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 
           /* Print name we try if this is wanted.  */
 	  if (_dl_debug_libs)
-	    _dl_sysdep_message ("\t  trying file=", buf, "\n", NULL);
+	    _dl_debug_message ("\t  trying file=", buf, "\n", NULL);
 
 	  fd = __open (buf, O_RDONLY);
 	  if (this_dir->machdirstatus == unknown)
@@ -934,7 +931,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 
 	  /* Print name we try if this is wanted.  */
 	  if (_dl_debug_libs)
-	    _dl_sysdep_message ("\t  trying file=", buf, "\n", NULL);
+	    _dl_debug_message ("\t  trying file=", buf, "\n", NULL);
 
 	  fd = __open (buf, O_RDONLY);
 	  if (this_dir->dirstatus == unknown)
@@ -1053,7 +1050,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       size_t namelen = strlen (name) + 1;
 
       if (_dl_debug_libs)
-	_dl_sysdep_message ("\tfind library=", name, "; searching\n", NULL);
+	_dl_debug_message ("\tfind library=", name, "; searching\n", NULL);
 
       fd = -1;
 
@@ -1117,7 +1114,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       /* Add another newline when we a tracing the library loading.  */
       if (_dl_debug_libs)
-        _dl_sysdep_message ("\n", NULL);
+        _dl_debug_message ("\n", NULL);
     }
   else
     {

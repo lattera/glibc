@@ -27,7 +27,7 @@
 
 subdir := csu
 
-routines = init-first
+routines = init-first libc-start
 csu-dummies = $(filter-out $(start-installed-name),crt1.o Mcrt1.o)
 extra-objs = start.o gmon-start.o \
 	     $(start-installed-name) g$(start-installed-name) \

@@ -74,8 +74,12 @@ _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
 }
 
 
+/* Descriptor to write debug messages to.  */
+int _dl_debug_fd;
+
+
 void
-_dl_sysdep_fatal (const char *msg, ...)
+_dl_sysdep_output (int fd, const char *msg, ...)
 {
   va_list ap;
 
@@ -83,41 +87,7 @@ _dl_sysdep_fatal (const char *msg, ...)
   do
     {
       size_t len = strlen (msg);
-      __write (STDERR_FILENO, msg, len);
-      msg = va_arg (ap, const char *);
-    } while (msg);
-  va_end (ap);
-
-  _exit (127);
-}
-
-
-void
-_dl_sysdep_error (const char *msg, ...)
-{
-  va_list ap;
-
-  va_start (ap, msg);
-  do
-    {
-      size_t len = strlen (msg);
-      __write (STDERR_FILENO, msg, len);
-      msg = va_arg (ap, const char *);
-    } while (msg);
-  va_end (ap);
-}
-
-
-void
-_dl_sysdep_message (const char *msg, ...)
-{
-  va_list ap;
-
-  va_start (ap, msg);
-  do
-    {
-      size_t len = strlen (msg);
-      __write (STDOUT_FILENO, msg, len);
+      __write (fd, msg, len);
       msg = va_arg (ap, const char *);
     } while (msg);
   va_end (ap);

@@ -1,5 +1,5 @@
 /* Handle symbol and library versioning.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -27,9 +27,6 @@
 
 #include <stdio-common/_itoa.h>
 
-
-/* Set in rtld.c at startup.  */
-extern char **_dl_argv;
 
 #define VERSTAG(tag)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (tag))
 
