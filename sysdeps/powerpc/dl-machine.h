@@ -226,6 +226,9 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_PPC_JMP_SLOT
 
+/* The PowerPC never uses REL relocations.  */
+#define ELF_MACHINE_NO_REL 1
+
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.
    Also install a small trampoline to be used by entries that have
@@ -336,7 +339,6 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 			    reloc_addr, finaladdr, rinfo);
 }
 
-#define ELF_MACHINE_NO_REL 1
 
 /* The SVR4 ABI specifies that the JMPREL relocs must be inside the
    DT_RELA table.  */
