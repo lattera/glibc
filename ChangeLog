@@ -1,3 +1,8 @@
+2005-02-10  Roland McGrath  <roland@redhat.com>
+
+	* scripts/lib-names.awk: Always print WORDSIZE32 section first when
+	doing two.
+
 2005-02-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/powerpc/powerpc32/bits/link.h: Removed.

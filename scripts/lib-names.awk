@@ -43,24 +43,22 @@ END {
       lines[x[1]] = line;
   }
 
-  default_lines = lines["DEFAULT"];
-  delete lines["DEFAULT"];
   if (multi) {
+    # Print these in a fixed order so the result is identical
+    # on both sides of the coin.
+    if (!("WORDSIZE32" in lines))
+      lines["WORDSIZE32"] = lines["DEFAULT"];
+    if (!("WORDSIZE64" in lines))
+      lines["WORDSIZE64"] = lines["DEFAULT"];
     print "#include <bits/wordsize.h>\n";
-    pfx = "#if";
-    for (kind in lines) {
-      l = lines[kind];
-      sub(/WORDSIZE/, "", kind);
-      print pfx, "__WORDSIZE", "==", kind;
-      cmd = "LC_ALL=C sort"; print l | cmd; close(cmd);
-      pfx = "#elif";
-    }
-    print "#else";
-    cmd = "LC_ALL=C sort"; print default_lines | cmd; close(cmd);
+    print "#if __WORDSIZE == 32";
+    cmd = "LC_ALL=C sort"; print lines["WORDSIZE32"] | cmd; close(cmd);
+    print "#else"
+    cmd = "LC_ALL=C sort"; print lines["WORDSIZE64"] | cmd; close(cmd);
     print "#endif";
   }
   else {
-    cmd = "LC_ALL=C sort"; print default_lines | cmd; close(cmd);
+    cmd = "LC_ALL=C sort"; print lines["DEFAULT"] | cmd; close(cmd);
   }
 
   print "";
