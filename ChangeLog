@@ -1,3 +1,15 @@
+2001-05-14  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/iso-2022-cn-ext.c (BODY for FROM_LOOP): If SO is seen
+	without previous announcement, reject it regularly, don't abort.
+
+2001-05-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/tgmath.h: Fix handling of int parameters to binary and
+	ternary functions.  Reported by mitr@volny.cz.
+
+	* math/test-tgmath.c: Add tests for calls with integer parameters.
+
 2001-05-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sunrpc/rpc_thread.c (rpc_default): Remove.
@@ -13,8 +25,7 @@
 
 2001-05-16  Bruce Mitchener  <bruce@cubik.org>
 
-	* manual/llio.texi:  Many grammar and typo fixes to the section
-	on AIO.
+	* manual/llio.texi: Many grammar and typo fixes to the section on AIO.
 
 2001-05-15  Andreas Jaeger  <aj@suse.de>
 

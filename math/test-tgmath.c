@@ -40,7 +40,8 @@ int count_double;
 int count_float;
 int count_ldouble;
 
-#define NCALLS 115
+#define NCALLS     115
+#define NCALLS_INT 4
 
 int
 main (void)
@@ -59,13 +60,13 @@ main (void)
       puts ("long double function called for double test");
       result = 1;
     }
-  if (count_double < NCALLS)
+  if (count_double < NCALLS + NCALLS_INT)
     {
       printf ("double functions not called often enough (%d)\n",
 	      count_double);
       result = 1;
     }
-  else if (count_double > NCALLS)
+  else if (count_double > NCALLS + NCALLS_INT)
     {
       printf ("double functions called too often (%d)\n",
 	      count_double);
@@ -131,6 +132,7 @@ main (void)
 
 #define F(name) name
 #define TYPE double
+#define TEST_INT 1
 #define x dx
 #define count count_double
 #include "test-tgmath.c"
@@ -217,6 +219,13 @@ F(compile_test) (void)
   b = fmax (fmax (a, x), fmax (c, b));
   a = fmin (fmin (x, a), fmin (c, b));
   b = fma (sin (a), sin (x), sin (c));
+
+#ifdef TEST_INT
+  a = atan2 (i, b);
+  b = remquo (i, a, &i);
+  c = fma (i, b, i);
+  a = pow (i, c);
+#endif
 }
 #undef x
 
@@ -663,4 +672,5 @@ TYPE
 #undef F
 #undef TYPE
 #undef count
+#undef TEST_INT
 #endif

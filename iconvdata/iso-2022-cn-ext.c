@@ -260,21 +260,33 @@ enum
 	   XXX For now I'll default to use GB2312.  If this is not the	      \
 	   best behavior (e.g., we should flag an error) let me know.  */     \
 	++inptr;							      \
-	switch (ann & SO_ann)						      \
+	if ((ann & SO_ann) != 0)					      \
+	  switch (ann & SO_ann)						      \
+	    {								      \
+	    case GB2312_ann:						      \
+	      set = GB2312_set;						      \
+	      break;							      \
+	    case GB12345_ann:						      \
+	      set = GB12345_set;					      \
+	      break;							      \
+	    case CNS11643_1_ann:					      \
+	      set = CNS11643_1_set;					      \
+	      break;							      \
+	    case ISO_IR_165_ann:					      \
+	      set = ISO_IR_165_set;					      \
+	      break;							      \
+	    default:							      \
+	      abort ();							      \
+	    }								      \
+	else								      \
 	  {								      \
-	  case GB2312_ann:						      \
-	    set = GB2312_set;						      \
-	    break;							      \
-	  case GB12345_ann:						      \
-	    set = GB12345_set;						      \
-	    break;							      \
-	  case CNS11643_1_ann:						      \
-	    set = CNS11643_1_set;					      \
-	    break;							      \
-	  default:							      \
-	    assert ((ann & SO_ann) == ISO_IR_165_ann);			      \
-	    set = ISO_IR_165_set;					      \
-	    break;							      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+	    ++inptr;							      \
+	    ++*irreversible;						      \
 	  }								      \
 	continue;							      \
       }									      \
