@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -154,7 +154,7 @@ tf_sleep (void *arg)
       exit (1);
     }
 
-  sleep (10000000);
+  sleep (1000000);
 
   printf ("%s: sleep returns\n", __FUNCTION__);
 
