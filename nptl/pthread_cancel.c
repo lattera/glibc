@@ -27,6 +27,7 @@ pthread_cancel (th)
      pthread_t th;
 {
   volatile struct pthread *pd = (volatile struct pthread *) th;
+  int result = 0;
 
   while (1)
     {
@@ -49,7 +50,7 @@ pthread_cancel (th)
 
 	  /* The cancellation handler will take care of marking the
 	     thread as canceled.  */
-	  __pthread_kill (th, SIGCANCEL);
+	  result = __pthread_kill (th, SIGCANCEL);
 
 	  break;
 	}
@@ -61,5 +62,5 @@ pthread_cancel (th)
 	break;
     }
 
-  return 0;
+  return result;
 }
