@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
 
 #include <assert.h>
 #include <stdlib.h>
-#include <atomicity.h>
+#include <atomic.h>
 #include "exit.h"
 #include <fork.h>
 
@@ -36,7 +36,8 @@ __cxa_finalize (void *d)
       for (f = &funcs->fns[funcs->idx - 1]; f >= &funcs->fns[0]; --f)
 	if ((d == NULL || d == f->func.cxa.dso_handle)
 	    /* We don't want to run this cleanup more than once.  */
-	    && compare_and_swap (&f->flavor, ef_cxa, ef_free))
+	    && (atomic_compare_and_exchange_acq (&f->flavor, ef_free, ef_cxa)
+		== 0))
 	  (*f->func.cxa.fn) (f->func.cxa.arg, 0);
     }
 

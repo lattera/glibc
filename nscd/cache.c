@@ -17,7 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <atomicity.h>
+#include <atomic.h>
 #include <errno.h>
 #include <error.h>
 #include <limits.h>
@@ -101,8 +101,8 @@ cache_add (int type, void *key, size_t len, const void *packet, size_t total,
   /* Put the new entry in the first position.  */
   do
     newp->next = table->array[hash];
-  while (! compare_and_swap ((volatile long int *) &table->array[hash],
-			     (long int) newp->next, (long int) newp));
+  while (atomic_compare_and_exchange_acq (&table->array[hash], newp,
+					  newp->next));
 
   /* Update the statistics.  */
   if (data == (void *) -1)

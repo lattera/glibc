@@ -1,5 +1,5 @@
 /* Profiling of shared libraries.
-   Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
    Based on the BSD mcount implementation.
@@ -34,7 +34,7 @@
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/stat.h>
-#include <atomicity.h>
+#include <atomic.h>
 
 /* The LD_PROFILE feature has to be implemented different to the
    normal profiling using the gmon/ functions.  The problem is that an
@@ -516,24 +516,24 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
 	      size_t newfromidx;
 	      to_index = (data[narcs].self_pc
 			  / (hashfraction * sizeof (*tos)));
-	      newfromidx = exchange_and_add (&fromidx, 1) + 1;
+	      newfromidx = atomic_exchange_and_add (&fromidx, 1) + 1;
 	      froms[newfromidx].here = &data[narcs];
 	      froms[newfromidx].link = tos[to_index];
 	      tos[to_index] = newfromidx;
-	      atomic_add (&narcs, 1);
+	      atomic_increment (&narcs);
 	    }
 
 	  /* If we still have no entry stop searching and insert.  */
 	  if (*topcindex == 0)
 	    {
-	      uint_fast32_t newarc = exchange_and_add (narcsp, 1);
+	      uint_fast32_t newarc = atomic_exchange_and_add (narcsp, 1);
 
 	      /* In rare cases it could happen that all entries in FROMS are
 		 occupied.  So we cannot count this anymore.  */
 	      if (newarc >= fromlimit)
 		goto done;
 
-	      *topcindex = exchange_and_add (&fromidx, 1) + 1;
+	      *topcindex = atomic_exchange_and_add (&fromidx, 1) + 1;
 	      fromp = &froms[*topcindex];
 
 	      fromp->here = &data[newarc];
@@ -541,7 +541,7 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
 	      data[newarc].self_pc = selfpc;
 	      data[newarc].count = 0;
 	      fromp->link = 0;
-	      atomic_add (&narcs, 1);
+	      atomic_increment (&narcs);
 
 	      break;
 	    }
@@ -554,7 +554,7 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
     }
 
   /* Increment the counter.  */
-  atomic_add (&fromp->here->count, 1);
+  atomic_increment (&fromp->here->count);
 
  done:
   ;

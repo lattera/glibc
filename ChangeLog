@@ -1,12 +1,38 @@
+2003-03-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (distribute): Add include/atomic.h and bits/atomic.h.
+	* include/atomic.h: New file.
+	* sysdeps/i386/i486/bits/atomic.h: New file.
+	* sysdeps/x86_64/bits/atomic.h: New file.
+	* sysdeps/s390/bits/atomic.h: New file.
+	* sysdeps/sh/bits/atomic.h: New file.
+	* sysdeps/ia64/bits/atomic.h: New file.
+	* sysdeps/powerpc/bits/atomic.h: New file.
+	* sysdeps/generic/bits/atomic.h: New file.
+	* sysdeps/i386/i486/atomicity.h: Removed.
+	* sysdeps/x86_64/atomicity.h: Removed.
+	* sysdeps/s390/s390-32/atomicity.h: Removed.
+	* sysdeps/s390/s390-64/atomicity.h: Removed.
+	* sysdeps/ia64/atomicity.h: Removed.
+	* sysdeps/powerpc/powerpc32/atomicity.h: Removed.
+	* sysdeps/powerpc/powerpc64/atomicity.h: Removed.
+	* elf/dl-profile.c: Use atomic.h instead of atomicity.h.  Adjust
+	use of macros from atomicity.h to new names and semantics.
+	* gmon_mcount.c: Likewise.
+	* malloc/set-freeres.c: Likewise.
+	* nscd/cache.c: Likewise.
+	* stdlib/cxa_finalize.c: Likewise.
+	* sysdeps/unix/sysv/linux/getsysstats.c: Likewise.
+
 2003-03-19  Alexandre Oliva  <aoliva@redhat.com>
 
-	* sysdeps/mips/ieee754.h: New file, suitable to replace both 
+	* sysdeps/mips/ieee754.h: New file, suitable to replace both
 	../ieee754/ieee754.h and ../ieee754/ldbl-128/ieee754.h, kept
 	mips-specific for now.
 
 2003-03-19  Ulrich Drepper  <drepper@redhat.com>
 
-	* stdlib/strtod.c (INTERNAL): While eating trailing zeros handling
+	* stdlib/strtod.c (INTERNAL): While eating trailing zeros handle
 	hexdigits correctly.  Reported by Fred Tydeman <tydeman@tybor.com>.
 	* stdlib/tst-strtod.c: Add test for the bug.
 

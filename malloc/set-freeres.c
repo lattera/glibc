@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <atomicity.h>
+#include <atomic.h>
 #include <stdlib.h>
 #include <set-hooks.h>
 #include <libc-internal.h>
@@ -36,7 +36,7 @@ __libc_freeres (void)
      protect for multiple executions since these are fatal.  */
   static long int already_called;
 
-  if (compare_and_swap (&already_called, 0, 1))
+  if (! atomic_compare_and_exchange_acq (&already_called, 1, 0))
     {
       void * const *p;
 

@@ -39,7 +39,7 @@ static char sccsid[] = "@(#)mcount.c	8.1 (Berkeley) 6/4/93";
    and MCOUNT macros.  */
 #include "machine-gmon.h"
 
-#include <atomicity.h>
+#include <atomic.h>
 
 /*
  * mcount is called on entry to each function compiled with the profiling
@@ -69,7 +69,8 @@ _MCOUNT_DECL(frompc, selfpc)	/* _mcount; may be static, inline, etc */
 	 * check that we are profiling
 	 * and that we aren't recursively invoked.
 	 */
-	if (! compare_and_swap (&p->state, GMON_PROF_ON, GMON_PROF_BUSY))
+	if (atomic_compare_and_exchange_acq (&p->state, GMON_PROF_BUSY,
+					     GMON_PROF_ON))
 	  return;
 
 	/*

@@ -1,5 +1,5 @@
 /* Determine various system internal values, Linux version.
-   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -31,7 +31,7 @@
 #include <unistd.h>
 #include <sys/sysinfo.h>
 
-#include <atomicity.h>
+#include <atomic.h>
 
 
 /* The default value for the /proc filesystem mount point.  */
@@ -85,8 +85,7 @@ get_proc_path (char *buffer, size_t bufsize)
 
   /* Now store the copied value.  But do it atomically.  */
   assert (sizeof (long int) == sizeof (void *__unbounded));
-  if (compare_and_swap ((long int *) &mount_proc, (long int) 0,
-			(long int) copy_result) == 0)
+  if (atomic_compare_and_exchange_acq (&mount_proc, copy_result, NULL) == 0)
     /* Replacing the value failed.  This means another thread was
        faster and we don't need the copy anymore.  */
     free (copy_result);
