@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -33,11 +33,11 @@ shmat (shmid, shmaddr, shmflg)
      const void *shmaddr;
      int shmflg;
 {
-  int retval;
+  long int retval;
   unsigned long raddr;
 
-  retval = INLINE_SYSCALL (ipc, 5, IPCOP_shmat, shmid, shmflg, (int) &raddr,
-			   (void *) shmaddr);
+  retval = INLINE_SYSCALL (ipc, 5, IPCOP_shmat, shmid, shmflg,
+			   (long int) &raddr, (void *) shmaddr);
   return ((unsigned long int) retval > -(unsigned long int) SHMLBA
 	  ? (void *) retval : (void *) raddr);
 }

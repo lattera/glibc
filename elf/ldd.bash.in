@@ -28,7 +28,7 @@
 TEXTDOMAIN=libc
 TEXTDOMAINDIR=@TEXTDOMAINDIR@
 
-RTLD=@RTLD@
+RTLDLIST=@RTLD@
 warn=
 bind_now=
 verbose=
@@ -125,8 +125,23 @@ for file do
   elif test -r "$file"; then
     test -x "$file" || echo 'ldd:' $"\
 warning: you do not have execution permission for" "\`$file'" >&2
-    verify_out=`${RTLD} --verify "$file"`
-    case $? in
+    RTLD=
+    for rtld in ${RTLDLIST}; do
+      if test -x $rtld; then
+	verify_out=`${rtld} --verify "$file"`
+        ret=$?
+	case $ret in
+	[02]) RTLD=${rtld}; break;;
+	esac
+      fi
+    done
+    if test -z "${RTLD}"; then
+      set ${RTLDLIST}
+      RTLD=$1
+      verify_out=`${RTLD} --verify "$file"`
+      ret=$?
+    fi
+    case $ret in
     0)
       eval $add_env '"$file"' || result=1
       ;;
@@ -141,7 +156,7 @@ warning: you do not have execution permission for" "\`$file'" >&2
       eval $add_env \${RTLD} '"$file"' || result=1
       ;;
     *)
-      echo 'ldd:' ${RTLD} $"exited with unknown exit code" "($?)" >&2
+      echo 'ldd:' ${RTLD} $"exited with unknown exit code" "($ret)" >&2
       exit 1
       ;;
     esac

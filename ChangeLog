@@ -1,3 +1,16 @@
+1999-07-13  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	* elf/ldd.bash.in: Add support for multiple dynamic linkers.
+	* sysdeps/unix/sysv/linux/sparc/ldd-rewrite.sed: On sparc*linux*,
+	try both 32bit and 64bit dynamic linker.
+	* sysdeps/unix/sysv/linux/configure.in: Apply sparc ldd-rewrite
+	script on all sparc targets.
+
+1999-07-13  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	* sysdeps/unix/sysv/linux/shmat.c (shmat): Avoid casting a pointer
+	to int.
+
 1999-07-13  Andreas Schwab  <schwab@suse.de>
 
 	* elf/dl-runtime.c (fixup, profile_fixup): Call alloca to prevent
