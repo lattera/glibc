@@ -21,6 +21,7 @@
 	(finish_drop_privileges): New function.
 	(nscd_init): Call the new functions which also install all groups
 	for the server user.
+	* nscd/Makefile (nscd-modules): Add xmalloc for nscd.
 	Patch by Christopher Allen Wing <wingc@engin.umich.edu>.
 
 2002-01-17  H.J. Lu  <hjl@gnu.org>
