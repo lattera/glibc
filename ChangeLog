@@ -1,3 +1,9 @@
+2000-11-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/getnameinfo.c (getnameinfo): Use correct destination
+	parameter for if_indextoname.
+	Patch by Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>.
+
 2000-11-09  H.J. Lu  <hjl@gnu.org>
 
 	* sunrpc/Versions (GLIBC_2.1): Remove xdr_cryptkeyarg,

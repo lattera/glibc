@@ -312,7 +312,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 			if (IN6_IS_ADDR_LINKLOCAL (&sin6p->sin6_addr)
 			    || IN6_IS_ADDR_MC_LINKLOCAL (&sin6p->sin6_addr))
 			  {
-			    if (if_indextoname (scopeid, scopebuf) == NULL)
+			    if (if_indextoname (scopeid, scopeptr) == NULL)
 			      ++ni_numericscope;
 			    else
 			      scopelen = strlen (scopebuf);
