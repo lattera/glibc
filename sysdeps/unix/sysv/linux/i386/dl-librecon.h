@@ -19,7 +19,8 @@
    02111-1307 USA.  */
 
 #ifndef _DL_LIBRECON_H
-#define _DL_LIBRECON_H	1
+
+#include <sysdeps/unix/sysv/linux/dl-librecon.h>
 
 #define DISTINGUISH_LIB_VERSIONS \
   do									      \
@@ -47,36 +48,12 @@
   while (0)
 
 /* Recognizing extra environment variables.  */
-#define EXTRA_LD_ENVVARS \
-  case 13:								      \
-    if (memcmp (envline, "ASSUME_KERNEL", 13) == 0)			      \
-      {									      \
-	unsigned long int i, j, osversion = 0;				      \
-	char *p = &envline[14], *q;					      \
-									      \
-	for (i = 0; i < 3; i++, p = q + 1)				      \
-	  {								      \
-	    j = __strtoul_internal (p, &q, 0, 0);			      \
-	    if (j >= 255 || p == q || (i < 2 && *q && *q != '.'))	      \
-	      {								      \
-		osversion = 0;						      \
-		break;							      \
-	      }								      \
-	    osversion |= j << (16 - 8 * i);				      \
-	    if (!*q)							      \
-	      break;							      \
-	  }								      \
-	if (osversion)							      \
-	  GL(dl_osversion) = osversion;					      \
-	break;								      \
-      }									      \
-									      \
+#undef EXTRA_LD_ENVVARS
+#define EXTRA_LD_ENVVARS EXTRA_LD_ENVVARS_LINUX \
   case 15:								      \
     if (memcmp (envline, "LIBRARY_VERSION", 15) == 0)			      \
-      {									      \
-	GL(dl_correct_cache_id) = envline[16] == '5' ? 2 : 3;		      \
-	break;								      \
-      }
+      GL(dl_correct_cache_id) = envline[16] == '5' ? 2 : 3;		      \
+    break;								      \
 
 /* Extra unsecure variables.  The names are all stuffed in a single
    string which means they have to be terminated with a '\0' explicitly.  */
