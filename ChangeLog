@@ -12,6 +12,8 @@
 	* misc/regexp.c (__step): Use __regexec instead of regexec.
 	(__advance): Likewise.
 	* nss/digits_dots.c: Use __inet_aton instead of inet_aton.
+	* nscd/gethstbynm2_r.c (__inet_aton): Define as inet_aton since
+	the former is not exported.
 	* misc/daemon.c (daemon): Use __fork instead of fork.
 
 	* stdlib/fmtmsg.c (fmtmsg): Change output format slightly to make
