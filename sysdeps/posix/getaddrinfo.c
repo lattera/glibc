@@ -124,6 +124,9 @@ gaih_local (const char *name, const struct gaih_service *service,
 {
   struct utsname utsname;
 
+  if ((name != NULL) && (req->ai_flags & AI_NUMERICHOST))
+    return GAIH_OKIFUNSPEC | -EAI_NONAME;
+
   if ((name != NULL) || (req->ai_flags & AI_CANONNAME))
     if (uname (&utsname))
       return -EAI_SYSTEM;
