@@ -33,6 +33,14 @@ CFLAGS-setjmp.c := -fno-omit-frame-pointer
 # The 68k `long double' is a distinct type we support.
 long-double-fcts = yes
 
+ifeq ($(subdir),csu)
+ifeq (yes,$(build-shared))
+# Compatibility
+sysdep_routines += divdi3
+shared-only-routines += divdi3
+endif
+endif
+
 ifeq ($(subdir),elf)
 CFLAGS-rtld.c += -Wno-uninitialized -Wno-unused
 endif

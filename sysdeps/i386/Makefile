@@ -9,6 +9,12 @@ ifeq ($(subdir),csu)
 # On i686 we must avoid generating the trampoline functions generated
 # to get the GOT pointer.
 CFLAGS-initfini.s += -march=i386 -mcpu=i386
+
+ifeq (yes,$(build-shared))
+# Compatibility
+sysdep_routines += divdi3
+shared-only-routines += divdi3
+endif
 endif
 
 ifeq ($(subdir),db2)

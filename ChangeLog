@@ -1,3 +1,14 @@
+2002-02-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/Makefile (sysdep_routines): Add
+	divdi3 in csu dir.
+	(shared-only-routines): Likewise.
+	* sysdeps/m68k/Makefile (sysdep_routines): Likewise.
+	(shared-only-routines): Likewise.
+	* sysdeps/s390/s390-32/Makefile (sysdep_routines): Likewise.
+	(shared-only-routines): Likewise.
+	* sysdeps/wordsize-32/divdi3.c: New file.
+
 2002-02-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/iso-4217.def: Remove obsolete currencies for countries
