@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1999, 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -117,8 +117,11 @@ nis_getnames (const_nis_name name)
 {
   nis_name *getnames = NULL;
   char local_domain[NIS_MAXNAMELEN + 1];
-  char *path, *cp;
-  int count, pos, have_point;
+  char *path;
+  char *cp;
+  int count;
+  int pos = 0;
+  int have_point;
   char *saveptr;
 
   strncpy (local_domain, nis_local_directory (), NIS_MAXNAMELEN);
@@ -133,7 +136,13 @@ nis_getnames (const_nis_name name)
   if (name[strlen (name) - 1] == '.')
     {
       if ((getnames[0] = strdup (name)) == NULL)
-	return NULL;
+	{
+	free_null:
+	  while (pos-- > 0)
+	    free (getnames[pos]);
+	  free (getnames);
+	  return NULL;
+	}
 
       getnames[1] = NULL;
 
@@ -149,8 +158,6 @@ nis_getnames (const_nis_name name)
 
   have_point = (strchr (name, '.') != NULL);
 
-  pos = 0;
-
   cp = __strtok_r (path, ":", &saveptr);
   while (cp)
     {
@@ -164,14 +171,16 @@ nis_getnames (const_nis_name name)
 	      if (pos >= count)
 		{
 		  count += 5;
-		  getnames = realloc (getnames, (count + 1) * sizeof (char *));
-		  if (__builtin_expect (getnames == NULL, 0))
-		    return NULL;
+		  nis_name *newp = realloc (getnames,
+					    (count + 1) * sizeof (char *));
+		  if (__builtin_expect (newp == NULL, 0))
+		    goto free_null;
+		  getnames = newp;
 		}
 	      tmp = malloc (strlen (cptr) + strlen (local_domain) +
 			    strlen (name) + 2);
 	      if (__builtin_expect (tmp == NULL, 0))
-		return NULL;
+		goto free_null;
 
 	      getnames[pos] = tmp;
 	      tmp = stpcpy (tmp, name);
@@ -201,7 +210,7 @@ nis_getnames (const_nis_name name)
 
 	      tmp = malloc (cplen + strlen (local_domain) + strlen (name) + 2);
 	      if (__builtin_expect (tmp == NULL, 0))
-		return NULL;
+		goto free_null;
 
 	      p = __stpcpy (tmp, name);
 	      *p++ = '.';
@@ -217,7 +226,7 @@ nis_getnames (const_nis_name name)
 
 	      tmp = malloc (cplen + strlen (name) + 2);
 	      if (__builtin_expect (tmp == NULL, 0))
-		return NULL;
+		goto free_null;
 
 	      p = __stpcpy (tmp, name);
 	      *p++ = '.';
@@ -227,9 +236,11 @@ nis_getnames (const_nis_name name)
 	  if (pos >= count)
 	    {
 	      count += 5;
-	      getnames = realloc (getnames, (count + 1) * sizeof (char *));
-	      if (__builtin_expect (getnames == NULL, 0))
-		return NULL;
+	      nis_name *newp = realloc (getnames,
+					(count + 1) * sizeof (char *));
+	      if (__builtin_expect (newp == NULL, 0))
+		goto free_null;
+	      getnames = newp;
 	    }
 	  getnames[pos] = tmp;
 	  ++pos;

@@ -370,9 +370,13 @@ stringprep (char *in,
 	free (ucs4);
       ucs4 = stringprep_utf8_to_ucs4 (in, -1, &ucs4len);
       maxucs4len = ucs4len + adducs4len;
-      ucs4 = realloc (ucs4, maxucs4len * sizeof (uint32_t));
-      if (!ucs4)
-	return STRINGPREP_MALLOC_ERROR;
+      uint32_t *newp = realloc (ucs4, maxucs4len * sizeof (uint32_t));
+      if (!newp)
+	{
+	  free (ucs4);
+	  return STRINGPREP_MALLOC_ERROR;
+	}
+      ucs4 = newp;
 
       rc = stringprep_4i (ucs4, &ucs4len, maxucs4len, flags, profile);
       adducs4len += 50;

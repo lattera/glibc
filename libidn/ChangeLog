@@ -1,3 +1,8 @@
+2004-05-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* stringprep.c (stringprep): Free memory if allocation failed.
+	* idna.c: Fix memory handling in several places.
+
 2004-04-22  Simon Josefsson  <jas@extundo.com>
 
 	* stringprep.h: Update to latest libidn version.

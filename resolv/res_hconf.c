@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995-2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@azstarnet.com).
 
@@ -29,6 +29,7 @@
 	  a line)
 */
 
+#include <assert.h>
 #include <errno.h>
 #include <ctype.h>
 #include <libintl.h>
@@ -577,6 +578,7 @@ _res_hconf_reorder_addrs (struct hostent *hp)
 	}
       /* Just keep enough memory to hold all the interfaces we want.  */
       ifaddrs = realloc (ifaddrs, num_ifs * sizeof (ifaddrs[0]));
+      assert (ifaddrs != NULL);
 
     cleanup1:
       __if_freereq (ifr, num);

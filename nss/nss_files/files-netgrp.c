@@ -1,5 +1,5 @@
 /* Netgroup file parser in nss_files modules.
-   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -34,12 +34,14 @@
   do									      \
     {									      \
       size_t old_cursor = result->cursor - result->data;		      \
+      void *old_data = result->data;					      \
 									      \
       result->data_size += 512 > 2 * needed ? 512 : 2 * needed;		      \
       result->data = realloc (result->data, result->data_size);		      \
 									      \
       if (result->data == NULL)						      \
 	{								      \
+	  free (old_data);						      \
 	  status = NSS_STATUS_UNAVAIL;					      \
 	  goto the_end;							      \
 	}								      \

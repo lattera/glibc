@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>.
 
@@ -43,11 +43,10 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
   do
     {
       ifc.ifc_len = rq_len *= 2;
-      ifc.ifc_buf = realloc (ifc.ifc_buf, ifc.ifc_len);
-      if (ifc.ifc_buf == NULL || __ioctl (fd, SIOCGIFCONF, &ifc) < 0)
+      void *newp = realloc (ifc.ifc_buf, ifc.ifc_len);
+      if (newp == NULL || __ioctl (fd, SIOCGIFCONF, &ifc) < 0)
 	{
-	  if (ifc.ifc_buf)
-	    free (ifc.ifc_buf);
+	  free (ifc.ifc_buf);
 
 	  if (fd != sockfd)
 	    __close (fd);
@@ -55,6 +54,7 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
 	  *ifreqs = NULL;
 	  return;
 	}
+      ifc.ifc_buf = newp;
     }
   while (rq_len < sizeof (struct ifreq) + ifc.ifc_len);
 

@@ -1,5 +1,19 @@
 2004-05-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ifreq.c (__ifreq): Fix memory handling.
+	* sysdeps/generic/ifreq.c (__ifreq): Fix memory handling.
+
+	* resolv/res_hconf.c (_res_hconf_reorder_addrs): Make clear that
+	realloc cannot fail.
+
+	* nss/nss_files/files-netgrp.c (EXPAND): Free buffer which cannot
+	be expanded.
+
+	* nis/nis_table.c: Clean up memory handling.
+	* nis/nis_subr.c (nis_getnames): Clean up memory handling.
+	* nis/nis_removemember.c (nis_removemember): Add comment
+	explaining use of realloc.
+
 	* math/tgmath.h (fabs): Use __TGMATH_UNARY_REAL_IMAG_RET_REAL.
 	(carg): Likewise.
 	Patch by Lev S Bishop <lev.bishop@yale.edu>.

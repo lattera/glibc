@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999, 2003 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -54,7 +54,7 @@ __create_ib_request (const_nis_name name, unsigned int flags)
       return NULL;
     }
 
-  /* Check if we have an entry of "[key=value,],bar". If, remove the "," */
+  /* Check if we have an entry of "[key=value,],bar".  If, remove the "," */
   if (ibreq->ibr_name[-1] == ',')
     ibreq->ibr_name[-1] = '\0';
   else
@@ -62,7 +62,17 @@ __create_ib_request (const_nis_name name, unsigned int flags)
   ibreq->ibr_name += 2;
   ibreq->ibr_name = strdup (ibreq->ibr_name);
   if (ibreq->ibr_name == NULL)
-    return NULL;
+    {
+    free_null:
+      while (search_len-- > 0)
+	{
+	  free (search_val[search_len].zattr_ndx);
+	  free (search_val[search_len].zattr_val.zattr_val_val);
+	}
+      free (search_val);
+      nis_free_request (ibreq);
+      return NULL;
+    }
 
   ++cptr; /* Remove "[" */
 
@@ -86,16 +96,19 @@ __create_ib_request (const_nis_name name, unsigned int flags)
           size += 1;
           search_val = realloc (search_val, size * sizeof (nis_attr));
 	  if (search_val == NULL)
-	    return NULL;
+	    goto free_null;
 	}
       search_val[search_len].zattr_ndx = strdup (key);
       if ((search_val[search_len].zattr_ndx) == NULL)
-	return NULL;
+	goto free_null;
 
       search_val[search_len].zattr_val.zattr_val_len = strlen (val) + 1;
       search_val[search_len].zattr_val.zattr_val_val = strdup (val);
       if (search_val[search_len].zattr_val.zattr_val_val == NULL)
-	return NULL;
+	{
+	  free (search_val[search_len].zattr_ndx);
+	  goto free_null;
+	}
 
       ++search_len;
     }

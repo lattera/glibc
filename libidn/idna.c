@@ -116,9 +116,13 @@ idna_to_ascii_4i (const uint32_t * in, size_t inlen, char *out, int flags)
     do
       {
 	len = 2 * len + 10;	/* XXX better guess? */
-	p = realloc (p, len);
+	char *newp = realloc (p, len);
 	if (p == NULL)
-	  return IDNA_MALLOC_ERROR;
+	  {
+	    free (p);
+	    return IDNA_MALLOC_ERROR;
+	  }
+	p = newp;
 
 	if (flags & IDNA_ALLOW_UNASSIGNED)
 	  rc = stringprep_nameprep (p, len);
@@ -288,9 +292,13 @@ idna_to_unicode_internal (char *utf8in,
    */
   do
     {
-      utf8in = realloc (utf8in, utf8len + addlen);
-      if (!utf8in)
-	return IDNA_MALLOC_ERROR;
+      char *newp = realloc (utf8in, utf8len + addlen);
+      if (newp == NULL)
+	{
+	  free (utf8in);
+	  return IDNA_MALLOC_ERROR;
+	}
+      utf8in = newp;
       if (flags & IDNA_ALLOW_UNASSIGNED)
 	rc = stringprep_nameprep (utf8in, utf8len + addlen);
       else
@@ -300,7 +308,10 @@ idna_to_unicode_internal (char *utf8in,
   while (rc == STRINGPREP_TOO_SMALL_BUFFER);
 
   if (rc != STRINGPREP_OK)
-    return IDNA_STRINGPREP_ERROR;
+    {
+      free (utf8in);
+      return IDNA_STRINGPREP_ERROR;
+    }
 
   /* 3. Verify that the sequence begins with the ACE prefix, and save a
    * copy of the sequence.
@@ -308,7 +319,10 @@ idna_to_unicode_internal (char *utf8in,
 
 step3:
   if (memcmp (IDNA_ACE_PREFIX, utf8in, strlen (IDNA_ACE_PREFIX)) != 0)
-    return IDNA_NO_ACE_PREFIX;
+    {
+      free (utf8in);
+      return IDNA_NO_ACE_PREFIX;
+    }
 
   /* 4. Remove the ACE prefix.
    */
@@ -325,7 +339,10 @@ step3:
 
   rc = punycode_decode (strlen (utf8in), utf8in, outlen, out, NULL);
   if (rc != PUNYCODE_SUCCESS)
-    return IDNA_PUNYCODE_ERROR;
+    {
+      free (utf8in);
+      return IDNA_PUNYCODE_ERROR;
+    }
 
   out[*outlen] = 0;		/* add zero */
 
@@ -334,18 +351,25 @@ step3:
 
   rc = idna_to_ascii_4i (out, *outlen, tmpout, flags);
   if (rc != IDNA_SUCCESS)
-    return rc;
+    {
+      free (utf8in);
+      return rc;
+    }
 
   /* 7. Verify that the result of step 6 matches the saved copy from
    * step 3, using a case-insensitive ASCII comparison.
    */
 
   if (strcasecmp (utf8in, tmpout + strlen (IDNA_ACE_PREFIX)) != 0)
-    return IDNA_ROUNDTRIP_VERIFY_ERROR;
+    {
+      free (utf8in);
+      return IDNA_ROUNDTRIP_VERIFY_ERROR;
+    }
 
   /* 8. Return the saved copy from step 5.
    */
 
+  free (utf8in);
   return IDNA_SUCCESS;
 }
 
@@ -404,7 +428,7 @@ idna_to_unicode_44i (const uint32_t * in, size_t inlen,
       *outlen = inlen;
     }
 
-  free (p);
+  /* p is freed in idna_to_unicode_internal.  */
 
   return rc;
 }
@@ -479,9 +503,13 @@ idna_to_ascii_4z (const uint32_t * input, char **output, int flags)
 
       if (out)
 	{
-	  out = realloc (out, strlen (out) + 1 + strlen (buf) + 1);
-	  if (!out)
-	    return IDNA_MALLOC_ERROR;
+	  char *newp = realloc (out, strlen (out) + 1 + strlen (buf) + 1);
+	  if (!newp)
+	    {
+	      free (out);
+	      return IDNA_MALLOC_ERROR;
+	    }
+	  out = newp;
 	  strcat (out, ".");
 	  strcat (out, buf);
 	}
@@ -605,9 +633,16 @@ idna_to_unicode_4z4z (const uint32_t * input, uint32_t ** output, int flags)
 
       if (out)
 	{
-	  out = realloc (out, sizeof (out[0]) * (outlen + 1 + buflen + 1));
-	  if (!out)
-	    return IDNA_MALLOC_ERROR;
+	  uint32_t *newp = realloc (out,
+				    sizeof (out[0])
+				    * (outlen + 1 + buflen + 1));
+	  if (!newp)
+	    {
+	      free (buf);
+	      free (out);
+	      return IDNA_MALLOC_ERROR;
+	    }
+	  out = newp;
 	  out[outlen++] = 0x002E;	/* '.' (full stop) */
 	  memcpy (out + outlen, buf, sizeof (buf[0]) * buflen);
 	  outlen += buflen;
