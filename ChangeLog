@@ -1,3 +1,8 @@
+2002-06-04  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/alpha/elf/configure.in: New file.  Check for TLS support.
+	* sysdeps/alpha/elf/configure: New file (generated).
+
 2002-06-02  Roland McGrath  <roland@frob.com>
 
 	* include/link.h: Include <tls.h> to make sure USE_TLS is defined.
