@@ -37,9 +37,9 @@ func (isupper, _ISupper)
 func (isxdigit, _ISxdigit)
 
 #define __ctype_tolower \
-  ((uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOLOWER) + 128)
+  ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOLOWER) + 128)
 #define __ctype_toupper \
-  ((uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOUPPER) + 128)
+  ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOUPPER) + 128)
 
 int
 tolower (int c)
