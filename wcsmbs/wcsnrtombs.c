@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -104,8 +104,8 @@ __wcsnrtombs (dst, src, nwc, len, ps)
 	 of the string.  */
       size_t dummy;
 
-      data.__outbuf = dst;
-      data.__outbufend = dst + len;
+      data.__outbuf = (unsigned char *) dst;
+      data.__outbufend = (unsigned char *) dst + len;
 
       status = DL_CALL_FCT (tomb->__fct,
 			    (tomb, &data, (const unsigned char **) src,

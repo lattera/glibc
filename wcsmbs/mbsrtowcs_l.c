@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 2002.
 
@@ -70,16 +70,16 @@ __mbsrtowcs_l (dst, src, len, ps, l)
       mbstate_t temp_state;
       wchar_t buf[64];		/* Just an arbitrary size.  */
       const unsigned char *inbuf = (const unsigned char *) *src;
-      const unsigned char *srcend = inbuf + strlen (inbuf) + 1;
+      const unsigned char *srcend = inbuf + strlen (*src) + 1;
 
       temp_state = *data.__statep;
       data.__statep = &temp_state;
 
       result = 0;
-      data.__outbufend = (char *) buf + sizeof (buf);
+      data.__outbufend = (unsigned char *) buf + sizeof (buf);
       do
 	{
-	  data.__outbuf = (char *) buf;
+	  data.__outbuf = (unsigned char *) buf;
 
 	  status = DL_CALL_FCT (towc->__fct,
 				(towc, &data, &inbuf, srcend, NULL,
@@ -114,7 +114,7 @@ __mbsrtowcs_l (dst, src, len, ps, l)
 	{
 	  /* Pessimistic guess as to how much input we can use.  In the
 	     worst case we need one input byte for one output wchar_t.  */
-	  srcend = srcp + __strnlen (srcp, len) + 1;
+	  srcend = srcp + __strnlen ((const char *) srcp, len) + 1;
 
 	  status = DL_CALL_FCT (towc->__fct,
 				(towc, &data, &srcp, srcend, NULL,
@@ -131,7 +131,7 @@ __mbsrtowcs_l (dst, src, len, ps, l)
 	}
 
       /* Make the end if the input known to the caller.  */
-      *src = srcp;
+      *src = (const char *) srcp;
 
       result = (wchar_t *) data.__outbuf - dst;
 

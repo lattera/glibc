@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -214,7 +214,8 @@ build_wcs_buffer (pstr)
      re_string_t *pstr;
 {
 #ifdef _LIBC
-  unsigned char buf[pstr->mb_cur_max];
+  unsigned char buf[MB_CUR_MAX];
+  assert (MB_CUR_MAX >= pstr->mb_cur_max);
 #else
   unsigned char buf[64];
 #endif
@@ -282,9 +283,10 @@ build_wcs_upper_buffer (pstr)
   mbstate_t prev_st;
   int src_idx, byte_idx, end_idx, mbclen, remain_len;
 #ifdef _LIBC
-  unsigned char buf[pstr->mb_cur_max];
+  char buf[MB_CUR_MAX];
+  assert (MB_CUR_MAX >= pstr->mb_cur_max);
 #else
-  unsigned char buf[64];
+  char buf[64];
 #endif
 
   byte_idx = pstr->valid_len;
@@ -666,8 +668,9 @@ re_string_reconstruct (pstr, idx, eflags)
 			/* XXX Don't use mbrtowc, we know which conversion
 			   to use (UTF-8 -> UCS4).  */
 			memset (&cur_state, 0, sizeof (cur_state));
-			mlen = mbrtowc (&wc2, p, mlen, &cur_state)
-			       - (raw + offset - p);
+			mlen = (mbrtowc (&wc2, (const char *) p, mlen,
+					 &cur_state)
+				- (raw + offset - p));
 			if (mlen >= 0)
 			  {
 			    memset (&pstr->cur_state, '\0',

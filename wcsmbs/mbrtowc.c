@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000, 2002, 2004
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000, 2002, 2004, 2005
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
@@ -42,7 +42,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   size_t result;
   size_t dummy;
   const unsigned char *inbuf, *endbuf;
-  char *outbuf = (char *) (pwc ?: buf);
+  unsigned char *outbuf = (unsigned char *) (pwc ?: buf);
   const struct gconv_fcts *fcts;
 
   /* Set information for this step.  */
@@ -56,7 +56,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
      initial state.  */
   if (s == NULL)
     {
-      outbuf = (char *) buf;
+      outbuf = (unsigned char *) buf;
       s = "";
       n = 1;
     }

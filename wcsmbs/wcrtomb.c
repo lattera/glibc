@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,2000,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -60,8 +60,8 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
     }
 
   /* Tell where we want to have the result.  */
-  data.__outbuf = s;
-  data.__outbufend = s + MB_CUR_MAX;
+  data.__outbuf = (unsigned char *) s;
+  data.__outbufend = (unsigned char *) s + MB_CUR_MAX;
 
   /* Get the conversion functions.  */
   fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));

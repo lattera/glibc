@@ -1,5 +1,5 @@
 /* Convert a `struct tm' to a time_t value.
-   Copyright (C) 1993-1999, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1993-1999, 2002-2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Eggert (eggert@twinsun.com).
 
@@ -209,7 +209,8 @@ ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
     {
       time_t bad = *t;
       time_t ok = 0;
-      struct tm tm;
+      /* Initialize to make the compiler happy.  */
+      struct tm tm = { 0, };
 
       /* BAD is a known unconvertible time_t, and OK is a known good one.
 	 Use binary search to narrow the range between BAD and OK until

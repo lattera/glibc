@@ -1,5 +1,19 @@
 2005-03-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regexec.c (check_node_accept_bytes): Correct cast to avoid
+	warning.
+	* posix/regex_internal.c (re_string_reconstruct): Add cast to
+	avoid warning.
+	(build_wcs_upper_buffer): Change type of bug to plain char.
+	* locale/weightwc.h (findidx): Add casts to avoid warnings.
+	* time/mktime.c (ranged_convert): Initialize tm to make the
+	compiler happy.
+	* wcsmbs/mbsrtowcs_l.c (__mbsrtowcs_l): Add casts to avoid warnings.
+	* wcsmbs/wcsnrtombs.c (__wcsnrtombs): Add casts to avoid warnings.
+	* wcsmbs/mbsnrtowcs.c: Add casts to avoid warnings.
+	* wcsmbs/wcsrtombs.c (__wcsrtombs): Add casts to avoid warnings.
+	* wcsmbs/wcrtomb.c (__wcrtomb): Add casts to avoid warnings.
+	* wcsmbs/mbrtowc.c (__mbrtowc): Use unsigned char for outbuf.
 	* wcsmbs/wctob.c (wctob): Make buf array of unsigned char.
 	* sysdeps/generic/strchrnul.c: Add cast to avoid warning.
 	* libio/iofwide.c: Add casts to avoid warnings.
@@ -9,6 +23,10 @@
 	Fix a few casts to avoid warnings.
 	* iconv/gconv_simple.c (internal_utf8_loop): Make start unsigned
 	to avoid warning.
+
+	* posix/regex_internal.c [_LIBC] (build_wcs_buffer): Avoid using
+	dynamically sized array.
+	(build_wcs_upper_buffer): Likewise.
 
 2005-03-05  Jakub Jelinek  <jakub@redhat.com>
 
