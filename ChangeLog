@@ -26,6 +26,8 @@
 
 2002-12-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* Versions.def: No new symbols in 2.3.1, but some new ones in 2.3.2.
+
 	* sysdeps/unix/closedir.c (__closedir): Remove __libc_lock_lock
 	call.  It is not allowed to destroy pthread mutexes which are
 	still in use even though it is safe for our implementations.  If
