@@ -1,3 +1,8 @@
+2003-02-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/putwc_u.c: Use _IO_putwc_unlocked, not _IO_putc_unlocked.
+	Patch by Moritz Schulte <moritz@duesseldorf.ccc.de>.
+
 2003-02-05  Jim Meyering  <jim@meyering.net>
 
 	Fix a heap-corrupting bug.
