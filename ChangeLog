@@ -1,3 +1,10 @@
+1999-10-04  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/generic/memrchr.c: New file, adapted from memchr.c.
+	* sysdeps/i386/bits/string.h (__memrchr): New function.
+	* string/string.h: Declare memrchr, __memrchr.
+	* manual/string.texi (Search Functions): Document memrchr.
+
 1999-10-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Accept --with-gd option and set all libgd-LDFLAGS,
