@@ -1,3 +1,12 @@
+2002-03-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/fr.po: Update from translation team.
+
+2002-03-21  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list: Remove
+	getpriority from syscalls list.
+
 2002-03-28  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/swapcontext.S: New.
