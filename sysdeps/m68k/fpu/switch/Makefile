@@ -1,4 +1,4 @@
-# Copyright (C) 1991 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ sysdep_routines := $(sysdep_routines) switch
 +68881-sources := \
   $(notdir $(wildcard $(addprefix $(filter %/68881,$(sysdirs)),$(sources))))
 
-# Sysdep directories other than 68881 and 68881-switch (this one).
+# Sysdep directories other than 68881 and 68881-sw (this one).
 +non68881-dirs := $(filter-out %/68881 %/68881-switch,$(+sysdep_dirs))
 
 # Get a non-68881 version of the target.
@@ -39,7 +39,7 @@ sysdep_routines := $(sysdep_routines) switch
 $(addprefix $(objpfx), \
 	    $(filter-out $(wildcard $(+68881-sources)),$(+68881-sources))):
 	(echo '#include <ansidecl.h>'		;\
-	 echo '#include <68881-switch.h>'	;\
+	 echo '#include <68881-sw.h>'		;\
 	 echo '#define $* __$*_68881'		;\
 	 echo '#include <$(+68881-dir)/$@>'	;\
 	 echo '#undef $*'			;\
