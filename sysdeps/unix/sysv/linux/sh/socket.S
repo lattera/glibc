@@ -81,7 +81,7 @@ ENTRY (__socket)
 
 	mov.l .L2, r1
 #ifdef SHARED
-	mov	r0, r2
+	mov	r0, r4
 	mov.l	r12, @-r15
 	sts.l	pr, @-r15
         mov.l	0f, r12
@@ -90,7 +90,7 @@ ENTRY (__socket)
 	mova	.L2, r0
 	add	r0, r1
 	jsr @r1
-	 mov	r2, r0
+	 nop
 	lds.l	@r15+, pr
 	rts
 	 mov.l	@r15+, r12
@@ -99,7 +99,7 @@ ENTRY (__socket)
 	.long	_GLOBAL_OFFSET_TABLE_
 #else
 	jmp @r1
-	 nop
+	 mov	r0, r4
 #endif
 1:
 	/* Successful; return the syscall's value.  */
