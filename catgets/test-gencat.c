@@ -23,6 +23,8 @@ main (void)
   printf ("%s\n", catgets(catalog, 1, 3, "sample 3"));
   printf ("%s\n", catgets(catalog, 1, 4, "sample 4"));
   printf ("%s\n", catgets(catalog, 1, 5, "sample 5"));
+  printf ("%s\n", catgets(catalog, 1, 6, "sample 6"));
+  printf ("%s\n", catgets(catalog, 1, 7, "sample 7"));
   catclose (catalog);
 
   return 0;

@@ -1,3 +1,17 @@
+2002-06-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* catgets/gencat.c (read_input_file): Handle more than one slash
+	at end of line correctly [PR libc/3926].
+	Based on a patch by Steven Kim <steven.kim@peregrine.com>.
+
+	* catgets/sample.SJIS: Add test case for above bug.
+	* catgets/test-gencat.c: Adjust test code.
+	* catgets/test-gencat.sh: Adjust expected results.
+
+	* elf/do-rel.h (elf_dynamic_do_rel): Avoid overflow in computation
+	to skip relative relocations.
+	Patch by Geoff Keating <geoffk@redhat.com>.
+
 2002-05-26  Bruno Haible  <bruno@clisp.org>
 
 	* iconv/loop.c (STANDARD_FROM_LOOP_ERR_HANDLER): New macro.

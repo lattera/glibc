@@ -1268,7 +1268,9 @@ This format was first standardized by POSIX.2-1992 and by @w{ISO C99}.
 @item %p
 Either @samp{AM} or @samp{PM}, according to the given time value; or the
 corresponding strings for the current locale.  Noon is treated as
-@samp{PM} and midnight as @samp{AM}.
+@samp{PM} and midnight as @samp{AM}.  In most locales
+@samp{AM}/@samp{PM} format is not supported, in such cases @code{"%p"}
+yields an empty string.
 
 @ignore
 We currently have a problem with makeinfo.  Write @samp{AM} and @samp{am}
@@ -1277,7 +1279,9 @@ both results in `am'.  I.e., the difference in case is not visible anymore.
 @item %P
 Either @samp{am} or @samp{pm}, according to the given time value; or the
 corresponding strings for the current locale, printed in lowercase
-characters.  Noon is treated as @samp{pm} and midnight as @samp{am}.
+characters.  Noon is treated as @samp{pm} and midnight as @samp{am}.  In
+most locales @samp{AM}/@samp{PM} format is not supported, in such cases
+@code{"%P"} yields an empty string.
 
 This format is a GNU extension.
 

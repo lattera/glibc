@@ -325,15 +325,29 @@ read_input_file (struct catalog *current, const char *fname)
 	  ++line_number;
 
 	  /* It the line continued?  */
+	  continued = 0;
 	  if (buf[act_len - 1] == '\n')
 	    {
 	      --act_len;
-	      continued = buf[act_len - 1] == '\\';
+
+	      /* There might be more than one backslash at the end of
+		 the line.  Only if there is an odd number of them is
+		 the line continued.  */
+	      if (buf[act_len - 1] == '\\')
+		{
+		  int temp_act_len = act_len;
+
+		  do
+		    {
+		      --temp_act_len;
+		      continued = !continued;
+		    }
+		  while (temp_act_len > 0 && buf[temp_act_len - 1] == '\\');
+		}
+
 	      if (continued)
 		--act_len;
 	    }
-	  else
-	    continued = 0;
 
 	  /* Append to currently selected line.  */
 	  obstack_grow (&current->mem_pool, buf, act_len);
