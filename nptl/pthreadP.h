@@ -67,6 +67,14 @@ extern int __pthread_debug attribute_hidden;
 #define DEBUGGING_P __builtin_expect (__pthread_debug, 0)
 
 
+/* Compatibility type for old conditional variable interfaces.  */
+typedef struct
+{
+  pthread_cond_t *cond;
+  lll_lock_t lock;
+} pthread_cond_2_0_t;
+
+
 /* Data type shared with libc.  The libc uses it to pass on calls to
    the thread functions.  */
 struct pthread_functions
@@ -94,12 +102,12 @@ struct pthread_functions
 				  const pthread_condattr_t *);
   int (*ptr___pthread_cond_signal) (pthread_cond_t *);
   int (*ptr___pthread_cond_wait) (pthread_cond_t *, pthread_mutex_t *);
-  int (*ptr___pthread_cond_broadcast_2_0) (pthread_cond_t *);
-  int (*ptr___pthread_cond_destroy_2_0) (pthread_cond_t *);
-  int (*ptr___pthread_cond_init_2_0) (pthread_cond_t *,
+  int (*ptr___pthread_cond_broadcast_2_0) (pthread_cond_2_0_t *);
+  int (*ptr___pthread_cond_destroy_2_0) (pthread_cond_2_0_t *);
+  int (*ptr___pthread_cond_init_2_0) (pthread_cond_2_0_t *,
 				      const pthread_condattr_t *);
-  int (*ptr___pthread_cond_signal_2_0) (pthread_cond_t *);
-  int (*ptr___pthread_cond_wait_2_0) (pthread_cond_t *, pthread_mutex_t *);
+  int (*ptr___pthread_cond_signal_2_0) (pthread_cond_2_0_t *);
+  int (*ptr___pthread_cond_wait_2_0) (pthread_cond_2_0_t *, pthread_mutex_t *);
   int (*ptr_pthread_equal) (pthread_t, pthread_t);
   void (*ptr___pthread_exit) (void *);
   int (*ptr_pthread_getschedparam) (pthread_t, int *, struct sched_param *);
@@ -322,15 +330,15 @@ extern int __pthread_enable_asynccancel (void) attribute_hidden;
 extern void __pthread_disable_asynccancel (int oldtype)
      internal_function attribute_hidden;
 
-extern int __pthread_cond_broadcast_2_0 (pthread_cond_t *cond);
-extern int __pthread_cond_destroy_2_0 (pthread_cond_t *cond);
-extern int __pthread_cond_init_2_0 (pthread_cond_t *cond,
+extern int __pthread_cond_broadcast_2_0 (pthread_cond_2_0_t *cond);
+extern int __pthread_cond_destroy_2_0 (pthread_cond_2_0_t *cond);
+extern int __pthread_cond_init_2_0 (pthread_cond_2_0_t *cond,
 				    const pthread_condattr_t *cond_attr);
-extern int __pthread_cond_signal_2_0 (pthread_cond_t *cond);
-extern int __old_pthread_cond_timedwait (pthread_cond_t *cond,
+extern int __pthread_cond_signal_2_0 (pthread_cond_2_0_t *cond);
+extern int __pthread_cond_timedwait_2_0 (pthread_cond_2_0_t *cond,
 					 pthread_mutex_t *mutex,
 					 const struct timespec *abstime);
-extern int __pthread_cond_wait_2_0 (pthread_cond_t *cond,
+extern int __pthread_cond_wait_2_0 (pthread_cond_2_0_t *cond,
 				    pthread_mutex_t *mutex);
 
 /* The two functions are in libc.so and not exported.  */

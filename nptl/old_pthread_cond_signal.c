@@ -26,20 +26,25 @@
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
 int
 __pthread_cond_signal_2_0 (cond)
-     pthread_cond_t *cond;
+     pthread_cond_2_0_t *cond;
 {
-  pthread_cond_t **realp = (pthread_cond_t **) cond;
-
-  if (*realp == NULL)
+  if (cond->cond == NULL)
     {
-      *realp = (pthread_cond_t *) malloc (sizeof (pthread_cond_t));
-      if (*realp == NULL)
+      lll_mutex_lock (cond->lock);
+
+      /* Check whether the condvar is still not allocated.  */
+      if (cond->cond == NULL)
+	cond->cond = (pthread_cond_t *) malloc (sizeof (pthread_cond_t));
+
+      lll_mutex_unlock (cond->lock);
+
+      if (cond->cond == NULL)
 	return ENOMEM;
 
-      **realp = (struct pthread_cond_t) PTHREAD_COND_INITIALIZER;
+      *cond->cond = (struct pthread_cond_t) PTHREAD_COND_INITIALIZER;
     }
 
-  return __pthread_cond_signal (*realp);
+  return __pthread_cond_signal (cond->cond);
 }
 compat_symbol (libpthread, __pthread_cond_signal_2_0, pthread_cond_signal,
 	       GLIBC_2_0);

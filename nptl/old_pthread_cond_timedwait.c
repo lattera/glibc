@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -25,24 +25,29 @@
 
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
 int
-__old_pthread_cond_timedwait (cond, mutex, abstime)
-     pthread_cond_t *cond;
+__pthread_cond_timedwait_2_0 (cond, mutex, abstime)
+     pthread_cond_2_0_t *cond;
      pthread_mutex_t *mutex;
      const struct timespec *abstime;
 {
-  pthread_cond_t **realp = (pthread_cond_t **) cond;
-
-  if (*realp == NULL)
+  if (cond->cond == NULL)
     {
-      *realp = (pthread_cond_t *) malloc (sizeof (pthread_cond_t));
-      if (*realp == NULL)
+      lll_mutex_lock (cond->lock);
+
+      /* Check whether the condvar is still not allocated.  */
+      if (cond->cond == NULL)
+	cond->cond = (pthread_cond_t *) malloc (sizeof (pthread_cond_t));
+
+      lll_mutex_unlock (cond->lock);
+
+      if (cond->cond == NULL)
 	return ENOMEM;
 
-      **realp = (struct pthread_cond_t) PTHREAD_COND_INITIALIZER;
+      *cond->cond = (struct pthread_cond_t) PTHREAD_COND_INITIALIZER;
     }
 
-  return __pthread_cond_timedwait (*realp, mutex, abstime);
+  return __pthread_cond_timedwait (cond->cond, mutex, abstime);
 }
-compat_symbol (libpthread, __old_pthread_cond_timedwait,
+compat_symbol (libpthread, __pthread_cond_timedwait_2_0,
 	       pthread_cond_timedwait, GLIBC_2_0);
 #endif

@@ -24,7 +24,7 @@
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
 int
 __pthread_cond_init_2_0 (cond, cond_attr)
-     pthread_cond_t *cond;
+     pthread_cond_2_0_t *cond;
      const pthread_condattr_t *cond_attr;
 {
   /* Note that we don't need the COND-ATTR.  It contains only the
@@ -34,7 +34,7 @@ __pthread_cond_init_2_0 (cond, cond_attr)
   /* The type of the first argument is actually that of the old, too
      small pthread_cond_t.  We use only the first word of it, as a
      pointer.  */
-  *((void **) cond) = NULL;
+  cond->cond = NULL;
 
   return 0;
 }

@@ -1,5 +1,17 @@
 2003-01-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthreadP.h (pthread_cond_2_0_t): New type.
+	(struct pthread_functions): Use new type for 2.0 condvar callbacks.
+	Use new type for the 2.0 condvar function prototypes.
+	* forward.c: Use pthread_cond_2_0_t for 2.0 condvar functions.
+	* old_pthread_cond_init.c: Use pthread_cond_2_0_t for condvar
+	parameter.
+	* old_pthread_cond_destroy.c: Likewise.
+	* old_pthread_cond_broadcast.c: Likewise.  Lock appropriately.
+	* old_pthread_cond_signal.c: Likewise.
+	* old_pthread_cond_timedwait.c: Likewise.
+	* old_pthread_cond_wait.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/i386/i486/lowlevelcond.S
 	(__pthread_cond_wait): Don't save cancellation mode and seq value
 	in same location.
