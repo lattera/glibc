@@ -1,5 +1,5 @@
 /* Header describing internals of libintl library.
-   Copyright (C) 1995-1999, 2000, 2001, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001, 2004-2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -88,6 +88,26 @@ struct sysdep_string_desc
   const char *pointer;
 };
 
+/* Cache of translated strings after charset conversion.
+   Note: The strings are converted to the target encoding only on an as-needed
+   basis.  */
+struct converted_domain
+{
+  /* The target encoding name.  */
+  const char *encoding;
+  /* The descriptor for conversion from the message catalog's encoding to
+     this target encoding.  */
+#ifdef _LIBC
+  __gconv_t conv;
+#else
+# if HAVE_ICONV
+  iconv_t conv;
+# endif
+#endif
+  /* The table of translated strings after charset conversion.  */
+  char **conv_tab;
+};
+
 /* The representation of an opened message catalog.  */
 struct loaded_domain
 {
@@ -123,15 +143,9 @@ struct loaded_domain
   /* 1 if the hash table uses a different endianness than this machine.  */
   int must_swap_hash_tab;
 
-  int codeset_cntr;
-#ifdef _LIBC
-  __gconv_t conv;
-#else
-# if HAVE_ICONV
-  iconv_t conv;
-# endif
-#endif
-  char **conv_tab;
+  /* Cache of charset conversions of the translated strings.  */
+  struct converted_domain *conversions;
+  size_t nconversions;
 
   struct expression *plural;
   unsigned long int nplurals;
@@ -151,7 +165,6 @@ struct binding
 {
   struct binding *next;
   char *dirname;
-  int codeset_cntr;	/* Incremented each time codeset changes.  */
   char *codeset;
   char domainname[ZERO];
 };
@@ -173,16 +186,10 @@ struct loaded_l10nfile *_nl_find_domain PARAMS ((const char *__dirname,
 void _nl_load_domain PARAMS ((struct loaded_l10nfile *__domain,
 			      struct binding *__domainbinding))
      internal_function;
-const char *_nl_init_domain_conv PARAMS ((struct loaded_l10nfile *__domain_file,
-					  struct loaded_domain *__domain,
-					  struct binding *__domainbinding))
-     internal_function;
-void _nl_free_domain_conv PARAMS ((struct loaded_domain *__domain))
-     internal_function;
 
 char *_nl_find_msg PARAMS ((struct loaded_l10nfile *domain_file,
-			    struct binding *domainbinding,
-			    const char *msgid, size_t *lengthp))
+			    struct binding *domainbinding, const char *msgid,
+			    int convert, size_t *lengthp))
      internal_function;
 
 #ifdef _LIBC

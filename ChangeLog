@@ -1,3 +1,37 @@
+2005-03-27  Bruno Haible  <bruno@clisp.org>
+
+	* intl/tst-gettext3.c: New file.
+	* intl/tst-gettext3.sh: New file.
+	* intl/Makefile (distribute): Add tst-gettext3.sh.
+	(test-srcs): Add tst-gettext3.
+	(tests): Depend on tst-gettext3.out.
+	(tst-gettext3.out): New rule.
+	(CFLAGS-tst-gettext3.c): New variable.
+
+	Fix bug exposed by tst-gettext3.
+	* intl/gettextP.h (struct converted_domain): New type.
+	(struct loaded_domain): Remove the conv, conv_tab fields. Add
+	conversions, nconversions fields.
+	(_nl_init_domain_conv): Remove declaration.
+	(_nl_free_domain_conv): Remove declaration.
+	(_nl_find_msg): Add convert argument.
+	* intl/dcigettext.c (DCIGETTEXT): Call _nl_find_msg with convert=1.
+	(_nl_find_msg): Add convert argument. When a conversion to a different
+	charset is needed, create a new converted_domain element, instead of
+	throwing away the old converted translations.
+	(get_output_charset): New function.
+	* intl/loadmsgcat.c (_nl_init_domain_conv): Remove function.
+	(_nl_free_domain_conv): Remove function.
+	(_nl_load_domain): Initialize the conversions array to empty. Use
+	_nl_find_msg instead of _nl_init_domain_conv to retrieve the header
+	entry.
+	(_nl_unload_domain): Free the conversions array and its contents.
+
+	* intl/gettextP.h (struct loaded_domain): Remove codeset_cntr field.
+	(struct binding): Likewise.
+	* intl/bindtextdom.c (set_binding_values): Drop codeset_cntr
+	modifications.
+
 2005-04-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* sunrpc/pmap_rmt.c (xdr_rmtcall_args): Use a dummy arglen instead

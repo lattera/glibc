@@ -326,6 +326,10 @@ static struct transmem_list *transmem_list;
 #else
 typedef unsigned char transmem_block_t;
 #endif
+#if defined _LIBC || HAVE_ICONV
+static const char *get_output_charset PARAMS ((struct binding *domainbinding))
+     internal_function;
+#endif
 
 
 /* Names for the libintl functions are a problem.  They must not clash
@@ -597,7 +601,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
       if (domain != NULL)
 	{
-	  retval = _nl_find_msg (domain, binding, msgid1, &retlen);
+	  retval = _nl_find_msg (domain, binding, msgid1, 1, &retlen);
 
 	  if (retval == NULL)
 	    {
@@ -606,7 +610,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 	      for (cnt = 0; domain->successor[cnt] != NULL; ++cnt)
 		{
 		  retval = _nl_find_msg (domain->successor[cnt], binding,
-					 msgid1, &retlen);
+					 msgid1, 1, &retlen);
 
 		  if (retval != NULL)
 		    {
@@ -683,10 +687,11 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
 char *
 internal_function
-_nl_find_msg (domain_file, domainbinding, msgid, lengthp)
+_nl_find_msg (domain_file, domainbinding, msgid, convert, lengthp)
      struct loaded_l10nfile *domain_file;
      struct binding *domainbinding;
      const char *msgid;
+     int convert;
      size_t *lengthp;
 {
   struct loaded_domain *domain;
@@ -793,192 +798,317 @@ _nl_find_msg (domain_file, domainbinding, msgid, lengthp)
     }
 
 #if defined _LIBC || HAVE_ICONV
-  if (domain->codeset_cntr
-      != (domainbinding != NULL ? domainbinding->codeset_cntr : 0))
+  if (convert)
     {
-      /* The domain's codeset has changed through bind_textdomain_codeset()
-	 since the message catalog was initialized or last accessed.  We
-	 have to reinitialize the converter.  */
-      _nl_free_domain_conv (domain);
-      _nl_init_domain_conv (domain_file, domain, domainbinding);
-    }
+      /* We are supposed to do a conversion.  */
+      const char *encoding = get_output_charset (domainbinding);
 
-  if (
-# ifdef _LIBC
-      domain->conv != (__gconv_t) -1
-# else
-#  if HAVE_ICONV
-      domain->conv != (iconv_t) -1
-#  endif
-# endif
-      )
-    {
-      /* We are supposed to do a conversion.  First allocate an
-	 appropriate table with the same structure as the table
-	 of translations in the file, where we can put the pointers
-	 to the converted strings in.
-	 There is a slight complication with plural entries.  They
-	 are represented by consecutive NUL terminated strings.  We
-	 handle this case by converting RESULTLEN bytes, including
-	 NULs.  */
+      /* Search whether a table with converted translations for this
+	 encoding has already been allocated.  */
+      size_t nconversions = domain->nconversions;
+      struct converted_domain *convd = NULL;
+      size_t i;
 
-      if (domain->conv_tab == NULL
-	  && ((domain->conv_tab =
-		 (char **) calloc (nstrings + domain->n_sysdep_strings,
-				   sizeof (char *)))
-	      == NULL))
-	/* Mark that we didn't succeed allocating a table.  */
-	domain->conv_tab = (char **) -1;
-
-      if (__builtin_expect (domain->conv_tab == (char **) -1, 0))
-	/* Nothing we can do, no more memory.  */
-	goto converted;
-
-      if (domain->conv_tab[act] == NULL)
+      for (i = nconversions; i > 0; )
 	{
-	  /* We haven't used this string so far, so it is not
-	     translated yet.  Do this now.  */
-	  /* We use a bit more efficient memory handling.
-	     We allocate always larger blocks which get used over
-	     time.  This is faster than many small allocations.   */
-	  __libc_lock_define_initialized (static, lock)
-# define INITIAL_BLOCK_SIZE	4080
-	  static unsigned char *freemem;
-	  static size_t freemem_size;
-
-	  const unsigned char *inbuf;
-	  unsigned char *outbuf;
-	  int malloc_count;
-# ifndef _LIBC
-	  transmem_block_t *transmem_list = NULL;
-# endif
-
-	  __libc_lock_lock (lock);
-
-	  inbuf = (const unsigned char *) result;
-	  outbuf = freemem + sizeof (size_t);
-
-	  malloc_count = 0;
-	  while (1)
+	  i--;
+	  if (strcmp (domain->conversions[i].encoding, encoding) == 0)
 	    {
-	      transmem_block_t *newmem;
-# ifdef _LIBC
-	      size_t non_reversible;
-	      int res;
-
-	      if (freemem_size < sizeof (size_t))
-		goto resize_freemem;
-
-	      res = __gconv (domain->conv,
-			     &inbuf, inbuf + resultlen,
-			     &outbuf,
-			     outbuf + freemem_size - sizeof (size_t),
-			     &non_reversible);
-
-	      if (res == __GCONV_OK || res == __GCONV_EMPTY_INPUT)
-		break;
-
-	      if (res != __GCONV_FULL_OUTPUT)
-		{
-		  __libc_lock_unlock (lock);
-		  goto converted;
-		}
-
-	      inbuf = (const unsigned char *) result;
-# else
-#  if HAVE_ICONV
-	      const char *inptr = (const char *) inbuf;
-	      size_t inleft = resultlen;
-	      char *outptr = (char *) outbuf;
-	      size_t outleft;
-
-	      if (freemem_size < sizeof (size_t))
-		goto resize_freemem;
-
-	      outleft = freemem_size - sizeof (size_t);
-	      if (iconv (domain->conv,
-			 (ICONV_CONST char **) &inptr, &inleft,
-			 &outptr, &outleft)
-		  != (size_t) (-1))
-		{
-		  outbuf = (unsigned char *) outptr;
-		  break;
-		}
-	      if (errno != E2BIG)
-		{
-		  __libc_lock_unlock (lock);
-		  goto converted;
-		}
-#  endif
-# endif
-
-	    resize_freemem:
-	      /* We must allocate a new buffer or resize the old one.  */
-	      if (malloc_count > 0)
-		{
-		  ++malloc_count;
-		  freemem_size = malloc_count * INITIAL_BLOCK_SIZE;
-		  newmem = (transmem_block_t *) realloc (transmem_list,
-							 freemem_size);
-# ifdef _LIBC
-		  if (newmem != NULL)
-		    transmem_list = transmem_list->next;
-		  else
-		    {
-		      struct transmem_list *old = transmem_list;
-
-		      transmem_list = transmem_list->next;
-		      free (old);
-		    }
-# endif
-		}
-	      else
-		{
-		  malloc_count = 1;
-		  freemem_size = INITIAL_BLOCK_SIZE;
-		  newmem = (transmem_block_t *) malloc (freemem_size);
-		}
-	      if (__builtin_expect (newmem == NULL, 0))
-		{
-		  freemem = NULL;
-		  freemem_size = 0;
-		  __libc_lock_unlock (lock);
-		  goto converted;
-		}
-
-# ifdef _LIBC
-	      /* Add the block to the list of blocks we have to free
-                 at some point.  */
-	      newmem->next = transmem_list;
-	      transmem_list = newmem;
-
-	      freemem = (unsigned char *) newmem->data;
-	      freemem_size -= offsetof (struct transmem_list, data);
-# else
-	      transmem_list = newmem;
-	      freemem = newmem;
-# endif
-
-	      outbuf = freemem + sizeof (size_t);
+	      convd = &domain->conversions[i];
+	      break;
 	    }
-
-	  /* We have now in our buffer a converted string.  Put this
-	     into the table of conversions.  */
-	  *(size_t *) freemem = outbuf - freemem - sizeof (size_t);
-	  domain->conv_tab[act] = (char *) freemem;
-	  /* Shrink freemem, but keep it aligned.  */
-	  freemem_size -= outbuf - freemem;
-	  freemem = outbuf;
-	  freemem += freemem_size & (alignof (size_t) - 1);
-	  freemem_size = freemem_size & ~ (alignof (size_t) - 1);
-
-	  __libc_lock_unlock (lock);
 	}
 
-      /* Now domain->conv_tab[act] contains the translation of all
-	 the plural variants.  */
-      result = domain->conv_tab[act] + sizeof (size_t);
-      resultlen = *(size_t *) domain->conv_tab[act];
+      if (convd == NULL)
+	{
+	  /* Allocate a table for the converted translations for this
+	     encoding.  */
+	  struct converted_domain *new_conversions =
+	    (struct converted_domain *)
+	    (domain->conversions != NULL
+	     ? realloc (domain->conversions,
+			(nconversions + 1) * sizeof (struct converted_domain))
+	     : malloc ((nconversions + 1) * sizeof (struct converted_domain)));
+
+	  if (__builtin_expect (new_conversions == NULL, 0))
+	    /* Nothing we can do, no more memory.  */
+	    goto converted;
+	  domain->conversions = new_conversions;
+
+	  /* Copy the 'encoding' string to permanent storage.  */
+	  encoding = strdup (encoding);
+	  if (__builtin_expect (encoding == NULL, 0))
+	    /* Nothing we can do, no more memory.  */
+	    goto converted;
+
+	  convd = &new_conversions[nconversions];
+	  convd->encoding = encoding;
+
+	  /* Find out about the character set the file is encoded with.
+	     This can be found (in textual form) in the entry "".  If this
+	     entry does not exist or if this does not contain the 'charset='
+	     information, we will assume the charset matches the one the
+	     current locale and we don't have to perform any conversion.  */
+# ifdef _LIBC
+	  convd->conv = (__gconv_t) -1;
+# else
+#  if HAVE_ICONV
+	  convd->conv = (iconv_t) -1;
+#  endif
+# endif
+	  {
+	    char *nullentry;
+	    size_t nullentrylen;
+
+	    /* Get the header entry.  This is a recursion, but it doesn't
+	       reallocate domain->conversions because we pass convert = 0.  */
+	    nullentry =
+	      _nl_find_msg (domain_file, domainbinding, "", 0, &nullentrylen);
+
+	    if (nullentry != NULL)
+	      {
+		const char *charsetstr;
+
+		charsetstr = strstr (nullentry, "charset=");
+		if (charsetstr != NULL)
+		  {
+		    size_t len;
+		    char *charset;
+		    const char *outcharset;
+
+		    charsetstr += strlen ("charset=");
+		    len = strcspn (charsetstr, " \t\n");
+
+		    charset = (char *) alloca (len + 1);
+# if defined _LIBC || HAVE_MEMPCPY
+		    *((char *) mempcpy (charset, charsetstr, len)) = '\0';
+# else
+		    memcpy (charset, charsetstr, len);
+		    charset[len] = '\0';
+# endif
+
+		    outcharset = encoding;
+
+# ifdef _LIBC
+		    /* We always want to use transliteration.  */
+		    outcharset = norm_add_slashes (outcharset, "TRANSLIT");
+		    charset = norm_add_slashes (charset, "");
+		    if (__gconv_open (outcharset, charset, &convd->conv,
+				      GCONV_AVOID_NOCONV)
+			!= __GCONV_OK)
+		      convd->conv = (__gconv_t) -1;
+# else
+#  if HAVE_ICONV
+		    /* When using GNU libc >= 2.2 or GNU libiconv >= 1.5,
+		       we want to use transliteration.  */
+#   if (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 2) || __GLIBC__ > 2 \
+       || _LIBICONV_VERSION >= 0x0105
+		    if (strchr (outcharset, '/') == NULL)
+		      {
+			char *tmp;
+
+			len = strlen (outcharset);
+			tmp = (char *) alloca (len + 10 + 1);
+			memcpy (tmp, outcharset, len);
+			memcpy (tmp + len, "//TRANSLIT", 10 + 1);
+			outcharset = tmp;
+
+			convd->conv = iconv_open (outcharset, charset);
+
+			freea (outcharset);
+		      }
+		    else
+#   endif
+		      convd->conv = iconv_open (outcharset, charset);
+#  endif
+# endif
+
+		    freea (charset);
+		  }
+	      }
+	  }
+	  convd->conv_tab = NULL;
+	  /* Here domain->conversions is still == new_conversions.  */
+	  domain->nconversions++;
+	}
+
+      if (
+# ifdef _LIBC
+	  convd->conv != (__gconv_t) -1
+# else
+#  if HAVE_ICONV
+	  convd->conv != (iconv_t) -1
+#  endif
+# endif
+	  )
+	{
+	  /* We are supposed to do a conversion.  First allocate an
+	     appropriate table with the same structure as the table
+	     of translations in the file, where we can put the pointers
+	     to the converted strings in.
+	     There is a slight complication with plural entries.  They
+	     are represented by consecutive NUL terminated strings.  We
+	     handle this case by converting RESULTLEN bytes, including
+	     NULs.  */
+
+	  if (convd->conv_tab == NULL
+	      && ((convd->conv_tab =
+		    (char **) calloc (nstrings + domain->n_sysdep_strings,
+				      sizeof (char *)))
+		  == NULL))
+	    /* Mark that we didn't succeed allocating a table.  */
+	    convd->conv_tab = (char **) -1;
+
+	  if (__builtin_expect (convd->conv_tab == (char **) -1, 0))
+	    /* Nothing we can do, no more memory.  */
+	    goto converted;
+
+	  if (convd->conv_tab[act] == NULL)
+	    {
+	      /* We haven't used this string so far, so it is not
+		 translated yet.  Do this now.  */
+	      /* We use a bit more efficient memory handling.
+		 We allocate always larger blocks which get used over
+		 time.  This is faster than many small allocations.   */
+	      __libc_lock_define_initialized (static, lock)
+# define INITIAL_BLOCK_SIZE	4080
+	      static unsigned char *freemem;
+	      static size_t freemem_size;
+
+	      const unsigned char *inbuf;
+	      unsigned char *outbuf;
+	      int malloc_count;
+# ifndef _LIBC
+	      transmem_block_t *transmem_list = NULL;
+# endif
+
+	      __libc_lock_lock (lock);
+
+	      inbuf = (const unsigned char *) result;
+	      outbuf = freemem + sizeof (size_t);
+
+	      malloc_count = 0;
+	      while (1)
+		{
+		  transmem_block_t *newmem;
+# ifdef _LIBC
+		  size_t non_reversible;
+		  int res;
+
+		  if (freemem_size < sizeof (size_t))
+		    goto resize_freemem;
+
+		  res = __gconv (convd->conv,
+				 &inbuf, inbuf + resultlen,
+				 &outbuf,
+				 outbuf + freemem_size - sizeof (size_t),
+				 &non_reversible);
+
+		  if (res == __GCONV_OK || res == __GCONV_EMPTY_INPUT)
+		    break;
+
+		  if (res != __GCONV_FULL_OUTPUT)
+		    {
+		      __libc_lock_unlock (lock);
+		      goto converted;
+		    }
+
+		  inbuf = (const unsigned char *) result;
+# else
+#  if HAVE_ICONV
+		  const char *inptr = (const char *) inbuf;
+		  size_t inleft = resultlen;
+		  char *outptr = (char *) outbuf;
+		  size_t outleft;
+
+		  if (freemem_size < sizeof (size_t))
+		    goto resize_freemem;
+
+		  outleft = freemem_size - sizeof (size_t);
+		  if (iconv (convd->conv,
+			     (ICONV_CONST char **) &inptr, &inleft,
+			     &outptr, &outleft)
+		      != (size_t) (-1))
+		    {
+		      outbuf = (unsigned char *) outptr;
+		      break;
+		    }
+		  if (errno != E2BIG)
+		    {
+		      __libc_lock_unlock (lock);
+		      goto converted;
+		    }
+#  endif
+# endif
+
+		resize_freemem:
+		  /* We must allocate a new buffer or resize the old one.  */
+		  if (malloc_count > 0)
+		    {
+		      ++malloc_count;
+		      freemem_size = malloc_count * INITIAL_BLOCK_SIZE;
+		      newmem = (transmem_block_t *) realloc (transmem_list,
+							     freemem_size);
+# ifdef _LIBC
+		      if (newmem != NULL)
+			transmem_list = transmem_list->next;
+		      else
+			{
+			  struct transmem_list *old = transmem_list;
+
+			  transmem_list = transmem_list->next;
+			  free (old);
+			}
+# endif
+		    }
+		  else
+		    {
+		      malloc_count = 1;
+		      freemem_size = INITIAL_BLOCK_SIZE;
+		      newmem = (transmem_block_t *) malloc (freemem_size);
+		    }
+		  if (__builtin_expect (newmem == NULL, 0))
+		    {
+		      freemem = NULL;
+		      freemem_size = 0;
+		      __libc_lock_unlock (lock);
+		      goto converted;
+		    }
+
+# ifdef _LIBC
+		  /* Add the block to the list of blocks we have to free
+		     at some point.  */
+		  newmem->next = transmem_list;
+		  transmem_list = newmem;
+
+		  freemem = (unsigned char *) newmem->data;
+		  freemem_size -= offsetof (struct transmem_list, data);
+# else
+		  transmem_list = newmem;
+		  freemem = newmem;
+# endif
+
+		  outbuf = freemem + sizeof (size_t);
+		}
+
+	      /* We have now in our buffer a converted string.  Put this
+		 into the table of conversions.  */
+	      *(size_t *) freemem = outbuf - freemem - sizeof (size_t);
+	      convd->conv_tab[act] = (char *) freemem;
+	      /* Shrink freemem, but keep it aligned.  */
+	      freemem_size -= outbuf - freemem;
+	      freemem = outbuf;
+	      freemem += freemem_size & (alignof (size_t) - 1);
+	      freemem_size = freemem_size & ~ (alignof (size_t) - 1);
+
+	      __libc_lock_unlock (lock);
+	    }
+
+	  /* Now convd->conv_tab[act] contains the translation of all
+	     the plural variants.  */
+	  result = convd->conv_tab[act] + sizeof (size_t);
+	  resultlen = *(size_t *) convd->conv_tab[act];
+	}
     }
 
  converted:
@@ -1121,6 +1251,61 @@ guess_category_value (category, categoryname)
 
   return language != NULL && strcmp (retval, "C") != 0 ? language : retval;
 }
+
+#if defined _LIBC || HAVE_ICONV
+/* Returns the output charset.  */
+static const char *
+internal_function
+get_output_charset (domainbinding)
+     struct binding *domainbinding;
+{
+  /* The output charset should normally be determined by the locale.  But
+     sometimes the locale is not used or not correctly set up, so we provide
+     a possibility for the user to override this: the OUTPUT_CHARSET
+     environment variable.  Moreover, the value specified through
+     bind_textdomain_codeset overrides both.  */
+  if (domainbinding != NULL && domainbinding->codeset != NULL)
+    return domainbinding->codeset;
+  else
+    {
+      /* For speed reasons, we look at the value of OUTPUT_CHARSET only
+	 once.  This is a user variable that is not supposed to change
+	 during a program run.  */
+      static char *output_charset_cache;
+      static int output_charset_cached;
+
+      if (!output_charset_cached)
+	{
+	  const char *value = getenv ("OUTPUT_CHARSET");
+
+	  if (value != NULL && value[0] != '\0')
+	    {
+	      size_t len = strlen (value) + 1;
+	      char *value_copy = (char *) malloc (len);
+
+	      if (value_copy != NULL)
+		memcpy (value_copy, value, len);
+	      output_charset_cache = value_copy;
+	    }
+	  output_charset_cached = 1;
+	}
+
+      if (output_charset_cache != NULL)
+	return output_charset_cache;
+      else
+	{
+# ifdef _LIBC
+	  return _NL_CURRENT (LC_CTYPE, CODESET);
+# else
+#  if HAVE_ICONV
+	  extern const char *locale_charset PARAMS ((void);
+	  return locale_charset ();
+#  endif
+# endif
+	}
+    }
+}
+#endif
 
 /* @@ begin of epilog @@ */
 
