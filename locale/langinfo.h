@@ -227,7 +227,11 @@ enum
   _NL_TIME_CAL_DIRECTION,
   _NL_TIME_TIMEZONE,
 
-  _NL_NUM_LC_TIME,		/* Number of indices in LC_TIME category.  */
+  _DATE_FMT,		/* strftime format for date.  */
+#define _DATE_FMT	_DATE_FMT
+  _NL_W_DATE_FMT,
+
+  _NL_NUM_LC_TIME,	/* Number of indices in LC_TIME category.  */
 
   /* LC_COLLATE category: text sorting.
      This information is accessed by the strcoll and strxfrm functions.

@@ -186,6 +186,7 @@ enum token_t
   tok_first_workday,
   tok_cal_direction,
   tok_timezone,
+  tok_date_fmt,
   tok_lc_messages,
   tok_yesexpr,
   tok_noexpr,

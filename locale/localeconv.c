@@ -29,6 +29,8 @@ __localeconv (void)
   result.decimal_point = (char *) _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
   result.thousands_sep = (char *) _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
   result.grouping = (char *) _NL_CURRENT (LC_NUMERIC, GROUPING);
+  if (*result.grouping == CHAR_MAX || *result.grouping == -1)
+    result.grouping = (char *) "";
 
   result.int_curr_symbol = (char *) _NL_CURRENT (LC_MONETARY, INT_CURR_SYMBOL);
   result.currency_symbol = (char *) _NL_CURRENT (LC_MONETARY, CURRENCY_SYMBOL);
@@ -37,6 +39,8 @@ __localeconv (void)
   result.mon_thousands_sep = (char *) _NL_CURRENT (LC_MONETARY,
 						   MON_THOUSANDS_SEP);
   result.mon_grouping = (char *) _NL_CURRENT (LC_MONETARY, MON_GROUPING);
+  if (*result.mon_grouping == CHAR_MAX || *result.mon_grouping == -1)
+    result.mon_grouping = (char *) "";
   result.positive_sign = (char *) _NL_CURRENT (LC_MONETARY, POSITIVE_SIGN);
   result.negative_sign = (char *) _NL_CURRENT (LC_MONETARY, NEGATIVE_SIGN);
   result.int_frac_digits = *(char *) _NL_CURRENT (LC_MONETARY,
@@ -48,12 +52,18 @@ __localeconv (void)
   result.n_sep_by_space = *(char *) _NL_CURRENT (LC_MONETARY, N_SEP_BY_SPACE);
   result.p_sign_posn = *(char *) _NL_CURRENT (LC_MONETARY, P_SIGN_POSN);
   result.n_sign_posn = *(char *) _NL_CURRENT (LC_MONETARY, N_SIGN_POSN);
-  result.p_cs_precedes = *(char *) _NL_CURRENT (LC_MONETARY, INT_P_CS_PRECEDES);
-  result.p_sep_by_space = *(char *) _NL_CURRENT (LC_MONETARY, INT_P_SEP_BY_SPACE);
-  result.n_cs_precedes = *(char *) _NL_CURRENT (LC_MONETARY, INT_N_CS_PRECEDES);
-  result.n_sep_by_space = *(char *) _NL_CURRENT (LC_MONETARY, INT_N_SEP_BY_SPACE);
-  result.p_sign_posn = *(char *) _NL_CURRENT (LC_MONETARY, INT_P_SIGN_POSN);
-  result.n_sign_posn = *(char *) _NL_CURRENT (LC_MONETARY, INT_N_SIGN_POSN);
+  result.int_p_cs_precedes = *(char *) _NL_CURRENT (LC_MONETARY,
+						    INT_P_CS_PRECEDES);
+  result.int_p_sep_by_space = *(char *) _NL_CURRENT (LC_MONETARY,
+						     INT_P_SEP_BY_SPACE);
+  result.int_n_cs_precedes = *(char *) _NL_CURRENT (LC_MONETARY,
+						    INT_N_CS_PRECEDES);
+  result.int_n_sep_by_space = *(char *) _NL_CURRENT (LC_MONETARY,
+						     INT_N_SEP_BY_SPACE);
+  result.int_p_sign_posn = *(char *) _NL_CURRENT (LC_MONETARY,
+						  INT_P_SIGN_POSN);
+  result.int_n_sign_posn = *(char *) _NL_CURRENT (LC_MONETARY,
+						  INT_N_SIGN_POSN);
 
   return &result;
 }

@@ -1,5 +1,51 @@
 2000-10-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/C-monetary.c: Set mon_decimal to empty string.
+	Add missing entry _NL_MONETARY_CRNCYSTR.
+	* stdio-common/printf_fp.c: If MON_DECIAL_POINT is not provided use
+	DECIMAL_POINT information.
+	* locale/C-numeric.c: Set mon_grouping entry to empty string.
+	* locale/C-time.c: Add date_fmt entries.  Remove two wrong entries.
+	Correct value for number of entries.
+	* locale/localeconv.c: Normalize result passed back in .grouping.
+	Fix assignment to .int_* entries.
+
+	* locale/Makefile (tests): Add tst-C-locale.
+	* locale/tst-C-locale.c: New file.
+
+	* locale/setlocale.c: Use LOCALEDIR and not LOCALE_PATH to locate
+	locale files.
+	* locale/newlocale.c: Likewise.
+
+2000-10-26  GOTO Masanori  <gotom@debian.or.jp>
+
+	* locale/langinfo.h: Define _DATE_FMT and _NL_W_DATE_FMT.
+	* locale/categories.def: New support for date_fmt.
+	* locale/programs/ld-time.c: Likewise.
+	* locale/programs/locfile-kw.gperf: Likewise.
+	* locale/programs/locfile-kw.h: Likewise.
+	* locale/programs/locfile-token.h: Likewise.
+
+2000-10-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128/e_hypotl.c: New.
+
+	* math/libm-test.inc (cabs_test, cexp_test, csqrt_test, hypot_test):
+	Increase precision of constants.
+	* sysdeps/alpha/fpu/libm-test-ulps: Update.
+	* sysdeps/arm/libm-test-ulps: Update.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/ia64/fpu/libm-test-ulps: Update.
+	* sysdeps/m68k/fpu/libm-test-ulps: Update.
+	* sysdeps/mips/fpu/libm-test-ulps: Update.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Update.
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Update.
+	* sysdeps/sh/sh4/fpu/libm-test-ulps: Update.
+	* sysdeps/s390/fpu/libm-test-ulps: Update.
+
+2000-10-26  Ulrich Drepper  <drepper@redhat.com>
+
 	* io/Makefile (tests): Add tst-fcntl.
 	* io/tst-fcntl.c: New file.
 

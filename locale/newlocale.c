@@ -98,7 +98,7 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
       return NULL;
 
   if (__argz_append (&locale_path, &locale_path_len,
-		     LOCALE_PATH, sizeof (LOCALE_PATH)) != 0)
+		     LOCALEDIR, sizeof (LOCALEDIR)) != 0)
     return NULL;
 
   /* Get the names for the locales we are interested in.  We either

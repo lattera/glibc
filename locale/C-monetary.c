@@ -39,11 +39,11 @@ const struct locale_data _nl_C_LC_MONETARY =
   {
     { string: "" },
     { string: "" },
-    { string: "." },
     { string: "" },
     { string: "" },
     { string: "" },
     { string: "" },
+    { string: "" },
     { string: not_available },
     { string: not_available },
     { string: not_available },
@@ -52,6 +52,7 @@ const struct locale_data _nl_C_LC_MONETARY =
     { string: not_available },
     { string: not_available },
     { string: not_available },
+    { string: "" },
     { string: not_available },
     { string: not_available },
     { string: not_available },
@@ -79,8 +80,7 @@ const struct locale_data _nl_C_LC_MONETARY =
     { word: 10101 },
     { word: 99991231 },
     { word: 1 },
-    { word: 1 },
-    { word: (unsigned int) L'.' },
+    { word: (unsigned int) L'\0' },
     { word: (unsigned int) L'\0' }
   }
 };

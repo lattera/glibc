@@ -30,7 +30,7 @@ const struct locale_data _nl_C_LC_TIME =
   UNDELETABLE,
   0,
   NULL,
-  62,
+  110,
   {
     { string: "Sun" },
     { string: "Mon" },
@@ -128,7 +128,6 @@ const struct locale_data _nl_C_LC_TIME =
     { wstr: (const uint32_t *) L"%m/%d/%y" },
     { wstr: (const uint32_t *) L"%H:%M:%S" },
     { wstr: (const uint32_t *) L"%I:%M:%S %p" },
-    { wstr: NULL },
     { wstr: (const uint32_t *) L"" },
     { wstr: (const uint32_t *) L"" },
     { wstr: (const uint32_t *) L"" },
@@ -139,8 +138,9 @@ const struct locale_data _nl_C_LC_TIME =
     { word: 19971130 },
     { string: "\7" },
     { string: "\1" },
-    { string: "\7" },
     { string: "\1" },
-    { string: "" }
+    { string: "" },
+    { string: "%a %b %e %H:%M:%S %Z %Y" },
+    { wstr: (const uint32_t *) L"%a %b %e %H:%M:%S %Z %Y" }
   }
 };

@@ -89,6 +89,8 @@ struct locale_time_t
   const uint32_t *wera_d_fmt;
   const char *alt_digits[100];
   const uint32_t *walt_digits[100];
+  const char *date_fmt;
+  const uint32_t *wdate_fmt;
   int alt_digits_defined;
   unsigned char week_ndays;
   uint32_t week_1stday;
@@ -491,6 +493,11 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
      simply useless, stupid $&$!@...  */
   if (time->timezone == NULL)
     time->timezone = "";
+
+  if (time->date_fmt == NULL)
+    time->date_fmt = "%a %b %e %H:%M:%S %Z %Y";
+  if (time->wdate_fmt == NULL)
+    time->wdate_fmt = (const uint32_t *) L"%a %b %e %H:%M:%S %Z %Y";
 }
 
 
@@ -849,6 +856,19 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
 
   iov[2 + cnt].iov_base = (void *) time->timezone;
   iov[2 + cnt].iov_len = strlen (time->timezone) + 1;
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) time->date_fmt;
+  iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) time->wdate_fmt;
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+                          * sizeof (uint32_t));
   ++cnt;
   ++last_idx;
 
@@ -1080,6 +1100,7 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 	  STR_ELEM (era_d_fmt);
 	  STR_ELEM (era_t_fmt);
 	  STR_ELEM (timezone);
+	  STR_ELEM (date_fmt);
 
 #define INT_ELEM(cat) \
 	case tok_##cat:							      \

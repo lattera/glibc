@@ -18,7 +18,7 @@ escape_char  /
 % Charset: UTF-8
 % Distribution and use is free, also
 % for commercial purposes.
- 
+
 LC_IDENTIFICATION
 title      "Persian locale for Iran"
 source     "The Persian Internet Project"
@@ -52,8 +52,8 @@ END LC_CTYPE
 
 LC_COLLATE
 copy "iso14651_t1"
-END LC_COLLATE 
- 
+END LC_COLLATE
+
 LC_MONETARY
 int_curr_symbol   "<U0049><U0052><U0052><U0020>"
 currency_symbol   "<U0631><U06CC><U0627><U0644>"
@@ -81,13 +81,13 @@ int_n_sep_by_space    1
 int_p_sign_posn       1
 int_n_sign_posn       1
 END LC_MONETARY
- 
+
 LC_NUMERIC
 decimal_point     "<U066B>"
 thousands_sep     "<U066C>"
 grouping          3
 END LC_NUMERIC
- 
+
 LC_TIME
 abday   "<U06CC><U002E>";"<U062F><U002E>";"<U0633><U002E>";/
         "<U0686><U002E>";"<U067E><U002E>";"<U062C><U002E>";/
@@ -125,13 +125,16 @@ d_fmt   "<U0025><U0059><U002F><U0025><U006D><U002F><U0025><U0064>"
 t_fmt   "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
 t_fmt_ampm    "<U202B><U0025><U0049><U003A><U0025><U004D><U003A><U0025>/
 <U0053><U0020><U0025><U0070><U202C>"
+date_fmt "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065><U0020>/
+<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025>/
+<U005A><U0020><U0025><U0059>"
 first_weekday 7
 first_workday 7
 cal_direction 3
 %week    7;19971206;4
 %time_zone "???"
 END LC_TIME
- 
+
 LC_MESSAGES
 yesexpr "<U005B><U0079><U0059><U0628><U0066><U005D><U002E><U002A>"
 noexpr  "<U005B><U006E><U004E><U062E><U0646><U006F><U005D><U002E><U002A>"

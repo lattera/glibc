@@ -252,11 +252,17 @@ __printf_fp (FILE *fp,
   else
     {
       decimal = _NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT);
+      if (*decimal == '\0')
+	decimal = _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
       decimalwc = _NL_CURRENT_WORD (LC_MONETARY,
 				    _NL_MONETARY_DECIMAL_POINT_WC);
+      if (decimalwc == L'\0')
+	decimalwc = _NL_CURRENT_WORD (LC_NUMERIC,
+				      _NL_NUMERIC_DECIMAL_POINT_WC);
     }
   /* The decimal point character must not be zero.  */
-  assert (*decimal != L'\0');
+  assert (*decimal != '\0');
+  assert (decimalwc != L'\0');
 
   if (info->group)
     {

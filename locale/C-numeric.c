@@ -21,12 +21,6 @@
 
 /* This table's entries are taken from POSIX.2 Table 2-10
    ``LC_NUMERIC Category Definition in the POSIX Locale''.  */
-#ifdef __CHAR_UNSIGNED__
-static const char not_available[] = "\377";
-#else
-static const char not_available[] = "\177";
-#endif
-
 const struct locale_data _nl_C_LC_NUMERIC =
 {
   _nl_C_name,
@@ -38,7 +32,7 @@ const struct locale_data _nl_C_LC_NUMERIC =
   {
     { string: "." },
     { string: "" },
-    { string: not_available },
+    { string: "" },
     { word: (unsigned int) L'.' },
     { word: (unsigned int) L'\0' }
   }
