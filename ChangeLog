@@ -1,3 +1,8 @@
+1999-07-31  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): Fix msgt_size member
+	initializer in CHECK: a bit size, not the type code repeated!
+
 1999-07-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/tester.c: Add tests with constant arguments for strcpy
