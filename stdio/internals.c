@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -169,8 +169,19 @@ DEFUN(seek_to_target, (fp), FILE *fp)
 	    {
 	      fp->__offset = pos;
 	      if (pos != fp->__target)
-		/* Seek didn't go to the right place!  */
-		fp->__error = 1;
+		{
+		  /* Seek didn't go to the right place!
+		     This should never happen.  */
+#ifdef EGRATUITOUS
+		  /* It happens in the Hurd when the io server doesn't
+		     obey the protocol for io_seek.  */
+		  errno = EGRATUITOUS;
+#else
+		  /* I don't think this can happen in Unix.  */
+		  errno = ESPIPE; /* ??? */
+#endif
+		  fp->__error = 1;
+		}
 	    }
 	}
     }
