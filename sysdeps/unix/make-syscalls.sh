@@ -47,6 +47,13 @@ echo "$calls" | while read file caller syscall nargs strong weak; do
 @@@ SYS_ify ($syscall)
 EOF
 
+  case $weak in
+  *@*)
+    # The versioned symbols are only in the shared library.
+    echo "ifneq (,\$(filter .os,\$(object-suffixes)))"
+    ;;
+  esac
+
   # Make sure only the first syscall rule is used, if multiple dirs
   # define the same syscall.
   echo "ifeq (,\$(filter $file,\$(unix-syscalls)))"
@@ -56,9 +63,24 @@ EOF
   test x$caller = x- || echo "unix-extra-syscalls += $file"
 
   # Emit a compilation rule for this syscall.
-  echo "\
-\$(foreach o,\$(object-suffixes),\$(objpfx)$file\$o): \\
-\$(common-objpfx)s-proto.d
+  case $weak in
+  *@*)
+    # The versioned symbols are only in the shared library.
+    echo "\
+\$(objpfx)${file}.o: \$(common-objpfx)empty.o
+	rm -f \$@
+	ln \$< \$@
+\$(objpfx)${file}.op: \$(common-objpfx)empty.op
+	rm -f \$@
+	ln \$< \$@
+\$(objpfx)${file}.os: \\"
+    ;;
+  *)
+    echo "\
+\$(foreach o,\$(object-suffixes),\$(objpfx)$file\$o): \\"
+    ;;
+  esac
+  echo "\$(common-objpfx)s-proto.d
 	(echo '#include <sysdep.h>'; \\
 	 echo 'PSEUDO ($strong, $syscall, $nargs)'; \\
 	 echo '	ret'; \\
@@ -108,5 +130,12 @@ EOF
   echo '	) | $(COMPILE.S) -x assembler-with-cpp -o $@ -'
 
   echo endif
+
+  case $weak in
+  *@*)
+    # The versioned symbols are only in the shared library.
+    echo endif
+    ;;
+  esac
 
 done

@@ -58,15 +58,16 @@
 #define	FSTAB_SW	"sw"		/* swap device */
 #define	FSTAB_XX	"xx"		/* ignore totally */
 
-struct fstab {
-	char	*fs_spec;		/* block special device name */
-	char	*fs_file;		/* file system path prefix */
-	char	*fs_vfstype;		/* File system type, ufs, nfs */
-	char	*fs_mntops;		/* Mount options ala -o */
-	char	*fs_type;		/* FSTAB_* from fs_mntops */
-	int	fs_freq;		/* dump frequency, in days */
-	int	fs_passno;		/* pass number on parallel dump */
-};
+struct fstab
+  {
+    char *fs_spec;			/* block special device name */
+    char *fs_file;			/* file system path prefix */
+    char *fs_vfstype;			/* File system type, ufs, nfs */
+    char *fs_mntops;			/* Mount options ala -o */
+    const char *fs_type;		/* FSTAB_* from fs_mntops */
+    int	fs_freq;			/* dump frequency, in days */
+    int	fs_passno;			/* pass number on parallel dump */
+  };
 
 
 __BEGIN_DECLS

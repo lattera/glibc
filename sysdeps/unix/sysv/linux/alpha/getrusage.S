@@ -32,7 +32,13 @@
 
 .text
 
-LEAF(__getrusage_tv64, 16)
+#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#define GETRUSAGE	__getrusage_tv64
+#else
+#define GETRUSAGE	getrusage
+#endif
+
+LEAF(GETRUSAGE, 16)
 	ldgp	gp, 0(pv)
 	subq	sp, 16, sp
 #ifdef PROF
@@ -62,7 +68,7 @@ LEAF(__getrusage_tv64, 16)
 	/* If we didn't get ENOSYS, it is a real error.  */
 	.align 3
 $err64:	cmpeq	v0, ENOSYS, t0
-	bne	t0, $error
+	beq	t0, $error
 	stl	t0, __libc_missing_axp_tv64
 
 	/* Recover the saved arguments.  */
@@ -122,6 +128,8 @@ $error:
 	addq	sp, 16, sp
 	jmp	zero, (pv), __syscall_error
 
-END(__getrusage_tv64)
+END(GETRUSAGE)
 
+#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
 default_symbol_version (__getrusage_tv64, getrusage, GLIBC_2.1)
+#endif

@@ -445,6 +445,7 @@ GLIBC_2.1 {
 
     # Linux/Alpha 64-bit timeval functions.
     __select; select;
+    adjtime; adjtimex;
     __gettimeofday;
 
     # New errlist.

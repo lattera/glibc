@@ -1,6 +1,5 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by David Mosberger <davidm@azstarnet.com>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,21 +17,43 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#define _ERRNO_H        1
+#include <bits/errno.h>
 
-ENTRY(__fabs)
+/* The problem here is that initially we made struct timeval compatible with
+   OSF/1, using int32.  But we defined time_t with uint64, and later found
+   that POSIX requires tv_sec to be time_t.
+
+   So now we have to do compatibility stuff.  */
+
+.text
+
+LEAF(__syscall_adjtimex_tv64, 0)
+	ldgp	gp, 0(pv)
 #ifdef PROF
 	.set noat
-	ldgp	gp, 0(pv)
 	lda	AT, _mcount
 	jsr	AT, (AT), _mcount
 	.set at
-	.prologue 1
-#else
-	.prologue 0
 #endif
+	.prologue 1
 
-	cpys	$f31,$f16,$f0
+#ifdef __NR_adjtimex
+	ldi	v0, SYS_ify(adjtimex)
+	callsys
+	bne	a3, $err64
+
+	/* Everything ok.  */
 	ret
 
-	END(__fabs)
-weak_alias (__fabs, fabs)
+	/* If we didn't get ENOSYS, it is a real error.  */
+	.align 3
+$err64:
+#else
+	/* ENOSYS. */
+	ldi	v0, ENOSYS
+#endif
+	lda	pv, __syscall_error
+	jmp	zero, (pv), __syscall_error
+
+END(__syscall_adjtimex_tv64)

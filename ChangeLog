@@ -1,3 +1,57 @@
+1998-02-24 08:10  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/signum.h (_NSIG): Changed
+	to 64.
+
+	* sysdeps/unix/alpha/sysdep.S (_errno): Add in addition to __errno.
+
+	* sysdeps/alpha/s_fabs.S: Added ".set noat"/".set at".
+	* sysdeps/unix/sysv/linux/alpha/wait4.S: Ditto.
+
+	* sysdeps/unix/make-syscalls.sh: Make versioned symbols only
+	for shared library.
+
+	* libc.map (adjtime, __adjtimex, adjtimex): Added for GLIBC_2.1.
+
+	* sysdeps/unix/sysv/linux/alpha/Makefile (sysdep_routines):
+	Added adjtimex and old_adjtimex.
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (old_adjtimex):
+	New.
+	(osf_settimeofday, osf_getitimer, osf_setitimer, osf_utimes,
+	osf_getrusage, osf_wait4): Added __xxxx symbol for GLIBC_2.0.
+
+	* sysdeps/unix/sysv/linux/alpha/getitimer.S: Make versioned
+	symbols only for shared library.
+	* sysdeps/unix/sysv/linux/alpha/getrusage.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/gettimeofday.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/select.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/setitimer.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/settimeofday.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/utimes.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/wait4.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/getitimer.S: Fix ENOSYS branch.
+	* sysdeps/unix/sysv/linux/alpha/getrusage.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/gettimeofday.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/select.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/setitimer.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/settimeofday.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/utimes.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/wait4.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/wait4.S: Check the correct
+	rusage pointer.
+
+	* sysdeps/unix/sysv/linux/adjtime.c (TIMEVAL, TIMEX, ADJTIMEX):
+	New macros.
+	(__adjtime): Use TIMEVAL, TIMEX and ADJTIMEX instead of timeval,
+	timex and __adjtimex, respectively.
+
+	* sysdeps/unix/sysv/linux/alpha/adjtime.c: New.
+
+	* sysdeps/unix/sysv/linux/alpha/adjtimex.S: New.
+
 1998-02-25 08:28  H.J. Lu  <hjl@gnu.org>
 
 	* math/test-fenv.c (print_rounding): Fix a typo in
