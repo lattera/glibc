@@ -1,3 +1,9 @@
+1999-10-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr_r): Align
+	handling of IPv6 tunnel address handling with bind 8.2.1.  Allow
+	len argument to be greater than needed address size.
+
 1999-10-01  Andreas Jaeger  <aj@suse.de>
 
 	* locale/programs/ld-collate.c (insert_value): Add cast to avoid

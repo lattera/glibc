@@ -197,6 +197,7 @@ _nss_dns_gethostbyaddr_r (const char *addr, size_t len, int af,
 {
   static const u_char mapped[] = { 0,0, 0,0, 0,0, 0,0, 0,0, 0xff,0xff };
   static const u_char tunnelled[] = { 0,0, 0,0, 0,0, 0,0, 0,0, 0,0 };
+  static const u_char v6local[] = { 0,0, 0,1 };
   const u_char *uaddr = (const u_char *)addr;
   struct host_data
   {
@@ -210,9 +211,10 @@ _nss_dns_gethostbyaddr_r (const char *addr, size_t len, int af,
   size_t size;
   int n, status;
 
-  if (af == AF_INET6 && len == IN6ADDRSZ &&
-      (memcmp (uaddr, mapped, sizeof mapped) == 0
-       || memcmp (uaddr, tunnelled, sizeof tunnelled) == 0))
+  if (af == AF_INET6 && len == IN6ADDRSZ
+      && (memcmp (uaddr, mapped, sizeof mapped) == 0
+	  || (memcmp (uaddr, tunnelled, sizeof tunnelled) == 0
+	      && memcmp (&uaddr[sizeof tunnelled], v6local, sizeof v6local))))
     {
       /* Unmap. */
       addr += sizeof mapped;
@@ -234,7 +236,7 @@ _nss_dns_gethostbyaddr_r (const char *addr, size_t len, int af,
       *h_errnop = NETDB_INTERNAL;
       return NSS_STATUS_UNAVAIL;
     }
-  if (size != len)
+  if (size > len)
     {
       *errnop = EAFNOSUPPORT;
       *h_errnop = NETDB_INTERNAL;
