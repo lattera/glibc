@@ -1,3 +1,11 @@
+2000-03-28  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/generic/bits/sigthread.h: Clean up conditionals.
+	Declare pthread_sigmask.
+
+	* csu/version.c: Add 2000 to copyright years.
+	Remove Emacs local variables section.
+
 2000-03-23  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconv/gconv_int.h (__gconv_transform_ucs2little_internal,
