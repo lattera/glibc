@@ -1,3 +1,14 @@
+2003-11-13  Andreas Jaeger  <aj@suse.de>
+
+	* math/Makefile (CFLAGS-test-float.c): Add -fno-builtin.
+	(CFLAGS-test-double.c): Likewise.
+	(CFLAGS-test-ldouble.c): Likewise.
+	(CPPFLAGS-test-ifloat.c): Likewise.
+	(CPPFLAGS-test-idouble.c): Likewise.
+	(CPPFLAGS-test-ildoubl.c): Likewise.
+
+	* math/libm-test.inc (ceil_test): Test ceil (0.25).
+
 2003-11-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ifaddrs.c: Make sure it's the kernel who

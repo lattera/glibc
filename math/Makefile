@@ -122,17 +122,17 @@ $(objpfx)test-ldouble.o: $(objpfx)libm-test.stmp
 $(objpfx)test-ildoubl.o: $(objpfx)libm-test.stmp
 endif
 
-CFLAGS-test-float.c = -fno-inline -ffloat-store
-CFLAGS-test-double.c = -fno-inline -ffloat-store
-CFLAGS-test-ldouble.c = -fno-inline -ffloat-store
+CFLAGS-test-float.c = -fno-inline -ffloat-store -fno-builtin
+CFLAGS-test-double.c = -fno-inline -ffloat-store -fno-builtin
+CFLAGS-test-ldouble.c = -fno-inline -ffloat-store -fno-builtin
 CFLAGS-test-tgmath.c = -fno-builtin
 CFLAGS-test-tgmath-ret.c = -fno-builtin
 CPPFLAGS-test-ifloat.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__ \
-			 -DTEST_FAST_MATH
+			 -DTEST_FAST_MATH -fno-builtin
 CPPFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__ \
-			 -DTEST_FAST_MATH
+			 -DTEST_FAST_MATH -fno-builtin
 CPPFLAGS-test-ildoubl.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__ \
-			  -DTEST_FAST_MATH
+			  -DTEST_FAST_MATH -fno-builtin
 
 distribute += libm-test.inc gen-libm-test.pl README.libm-test
 
