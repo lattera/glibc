@@ -9,6 +9,9 @@
  * is preserved.
  * ====================================================
  */
+/* Modified by Naohiko Shimizu/Tokai University, Japan 1997/08/26,
+   for performance improvement on pipelined processors.
+*/
 
 #if defined(LIBM_SCCS) && !defined(lint)
 static char rcsid[] = "$NetBSD: e_j1.c,v 1.8 1995/05/10 20:45:27 jtc Exp $";
@@ -78,15 +81,15 @@ one	= 1.0,
 invsqrtpi=  5.64189583547756279280e-01, /* 0x3FE20DD7, 0x50429B6D */
 tpi      =  6.36619772367581382433e-01, /* 0x3FE45F30, 0x6DC9C883 */
 	/* R0/S0 on [0,2] */
-r00  = -6.25000000000000000000e-02, /* 0xBFB00000, 0x00000000 */
-r01  =  1.40705666955189706048e-03, /* 0x3F570D9F, 0x98472C61 */
-r02  = -1.59955631084035597520e-05, /* 0xBEF0C5C6, 0xBA169668 */
-r03  =  4.96727999609584448412e-08, /* 0x3E6AAAFA, 0x46CA0BD9 */
-s01  =  1.91537599538363460805e-02, /* 0x3F939D0B, 0x12637E53 */
-s02  =  1.85946785588630915560e-04, /* 0x3F285F56, 0xB9CDF664 */
-s03  =  1.17718464042623683263e-06, /* 0x3EB3BFF8, 0x333F8498 */
-s04  =  5.04636257076217042715e-09, /* 0x3E35AC88, 0xC97DFF2C */
-s05  =  1.23542274426137913908e-11; /* 0x3DAB2ACF, 0xCFB97ED8 */
+R[]  = {-6.25000000000000000000e-02, /* 0xBFB00000, 0x00000000 */
+  1.40705666955189706048e-03, /* 0x3F570D9F, 0x98472C61 */
+ -1.59955631084035597520e-05, /* 0xBEF0C5C6, 0xBA169668 */
+  4.96727999609584448412e-08}, /* 0x3E6AAAFA, 0x46CA0BD9 */
+S[]  =  {0.0, 1.91537599538363460805e-02, /* 0x3F939D0B, 0x12637E53 */
+  1.85946785588630915560e-04, /* 0x3F285F56, 0xB9CDF664 */
+  1.17718464042623683263e-06, /* 0x3EB3BFF8, 0x333F8498 */
+  5.04636257076217042715e-09, /* 0x3E35AC88, 0xC97DFF2C */
+  1.23542274426137913908e-11}; /* 0x3DAB2ACF, 0xCFB97ED8 */
 
 #ifdef __STDC__
 static const double zero    = 0.0;
@@ -101,7 +104,7 @@ static double zero    = 0.0;
 	double x;
 #endif
 {
-	double z, s,c,ss,cc,r,u,v,y;
+	double z, s,c,ss,cc,r,u,v,y,r1,r2,s1,s2,s3,z2,z4;
 	int32_t hx,ix;
 
 	GET_HIGH_WORD(hx,x);
@@ -134,9 +137,20 @@ static double zero    = 0.0;
 	    if(huge+x>one) return 0.5*x;/* inexact if x!=0 necessary */
 	}
 	z = x*x;
+#ifdef DO_NOT_USE_THIS
 	r =  z*(r00+z*(r01+z*(r02+z*r03)));
 	s =  one+z*(s01+z*(s02+z*(s03+z*(s04+z*s05))));
 	r *= x;
+#else
+	r1 = z*R[0]; z2=z*z;
+	r2 = R[1]+z*R[2]; z4=z2*z2;
+	r = r1 + z2*r2 + z4*R[3];
+  	r *= x;
+	s1 = one+z*S[1];
+	s2 = S[2]+z*S[3];
+	s3 = S[4]+z*S[5];
+	s = s1 + z2*s2 + z4*s3;
+#endif
 	return(x*0.5+r/s);
 }
 
@@ -170,7 +184,7 @@ static double V0[5] = {
 	double x;
 #endif
 {
-	double z, s,c,ss,cc,u,v;
+	double z, s,c,ss,cc,u,v,u1,u2,v1,v2,v3,z2,z4;
 	int32_t hx,ix,lx;
 
 	EXTRACT_WORDS(hx,lx,x);
@@ -211,8 +225,18 @@ static double V0[5] = {
             return(-tpi/x);
         }
         z = x*x;
+#ifdef DO_NOT_USE_THIS
         u = U0[0]+z*(U0[1]+z*(U0[2]+z*(U0[3]+z*U0[4])));
         v = one+z*(V0[0]+z*(V0[1]+z*(V0[2]+z*(V0[3]+z*V0[4]))));
+#else
+	u1 = U0[0]+z*U0[1];z2=z*z;
+	u2 = U0[2]+z*U0[3];z4=z2*z2;
+	u  = u1 + z2*u2 + z4*U0[4];
+	v1 = one+z*V0[0];
+	v2 = V0[1]+z*V0[2];
+	v3 = V0[3]+z*V0[4];
+	v = v1 + z2*v2 + z4*v3;
+#endif
         return(x*(u/v) + tpi*(__ieee754_j1(x)*__ieee754_log(x)-one/x));
 }
 
@@ -334,7 +358,7 @@ static double ps2[5] = {
 #else
 	double *p,*q;
 #endif
-	double z,r,s;
+	double z,r,s,r1,r2,r3,s1,s2,s3,z2,z4;
         int32_t ix;
 	GET_HIGH_WORD(ix,x);
 	ix &= 0x7fffffff;
@@ -343,8 +367,19 @@ static double ps2[5] = {
         else if(ix>=0x4006DB6D){p = pr3; q= ps3;}
         else if(ix>=0x40000000){p = pr2; q= ps2;}
         z = one/(x*x);
+#ifdef DO_NOT_USE_THIS
         r = p[0]+z*(p[1]+z*(p[2]+z*(p[3]+z*(p[4]+z*p[5]))));
         s = one+z*(q[0]+z*(q[1]+z*(q[2]+z*(q[3]+z*q[4]))));
+#else
+	r1 = p[0]+z*p[1]; z2=z*z;
+	r2 = p[2]+z*p[3]; z4=z2*z2;
+	r3 = p[4]+z*p[5];
+	r = r1 + z2*r2 + z4*r3;
+	s1 = one+z*q[0];
+	s2 = q[1]+z*q[2];
+	s3 = q[3]+z*q[4];
+	s = s1 + z2*s2 + z4*s3;
+#endif
         return one+ r/s;
 }
 
@@ -471,7 +506,7 @@ static double qs2[6] = {
 #else
 	double *p,*q;
 #endif
-	double  s,r,z;
+	double  s,r,z,r1,r2,r3,s1,s2,s3,z2,z4,z6;
 	int32_t ix;
 	GET_HIGH_WORD(ix,x);
 	ix &= 0x7fffffff;
@@ -480,7 +515,18 @@ static double qs2[6] = {
 	else if(ix>=0x4006DB6D){p = qr3; q= qs3;}
 	else if(ix>=0x40000000){p = qr2; q= qs2;}
 	z = one/(x*x);
+#ifdef DO_NOT_USE_THIS
 	r = p[0]+z*(p[1]+z*(p[2]+z*(p[3]+z*(p[4]+z*p[5]))));
 	s = one+z*(q[0]+z*(q[1]+z*(q[2]+z*(q[3]+z*(q[4]+z*q[5])))));
+#else
+	r1 = p[0]+z*p[1]; z2=z*z;
+	r2 = p[2]+z*p[3]; z4=z2*z2;
+	r3 = p[4]+z*p[5]; z6=z4*z2;
+	r = r1 + z2*r2 + z4*r3;
+	s1 = one+z*q[0];
+	s2 = q[1]+z*q[2];
+	s3 = q[3]+z*q[4];
+	s = s1 + z2*s2 + z4*s3 + z6*q[5];
+#endif
 	return (.375 + r/s)/x;
 }

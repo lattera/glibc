@@ -5,10 +5,13 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
+/* Modified by Naohiko Shimizu/Tokai University, Japan 1997/08/25,
+   for performance improvement on pipelined processors.
+*/
 
 #if defined(LIBM_SCCS) && !defined(lint)
 static char rcsid[] = "$NetBSD: k_sin.c,v 1.8 1995/05/10 20:46:31 jtc Exp $";
@@ -18,24 +21,24 @@ static char rcsid[] = "$NetBSD: k_sin.c,v 1.8 1995/05/10 20:46:31 jtc Exp $";
  * kernel sin function on [-pi/4, pi/4], pi/4 ~ 0.7854
  * Input x is assumed to be bounded by ~pi/4 in magnitude.
  * Input y is the tail of x.
- * Input iy indicates whether y is 0. (if iy=0, y assume to be 0). 
+ * Input iy indicates whether y is 0. (if iy=0, y assume to be 0).
  *
  * Algorithm
- *	1. Since sin(-x) = -sin(x), we need only to consider positive x. 
+ *	1. Since sin(-x) = -sin(x), we need only to consider positive x.
  *	2. if x < 2^-27 (hx<0x3e400000 0), return x with inexact if x!=0.
  *	3. sin(x) is approximated by a polynomial of degree 13 on
  *	   [0,pi/4]
  *		  	         3            13
  *	   	sin(x) ~ x + S1*x + ... + S6*x
  *	   where
- *	
+ *
  * 	|sin(x)         2     4     6     8     10     12  |     -58
  * 	|----- - (1+S1*x +S2*x +S3*x +S4*x +S5*x  +S6*x   )| <= 2
- * 	|  x 					           | 
- * 
+ * 	|  x 					           |
+ *
  *	4. sin(x+y) = sin(x) + sin'(x')*y
  *		    ~ sin(x) + (1-x*x/2)*y
- *	   For better accuracy, let 
+ *	   For better accuracy, let
  *		     3      2      2      2      2
  *		r = x *(S2+x *(S3+x *(S4+x *(S5+x *S6))))
  *	   then                   3    2
@@ -46,17 +49,18 @@ static char rcsid[] = "$NetBSD: k_sin.c,v 1.8 1995/05/10 20:46:31 jtc Exp $";
 #include "math_private.h"
 
 #ifdef __STDC__
-static const double 
+static const double
 #else
-static double 
+static double
 #endif
-half =  5.00000000000000000000e-01, /* 0x3FE00000, 0x00000000 */
-S1  = -1.66666666666666324348e-01, /* 0xBFC55555, 0x55555549 */
-S2  =  8.33333333332248946124e-03, /* 0x3F811111, 0x1110F8A6 */
-S3  = -1.98412698298579493134e-04, /* 0xBF2A01A0, 0x19C161D5 */
-S4  =  2.75573137070700676789e-06, /* 0x3EC71DE3, 0x57B1FE7D */
-S5  = -2.50507602534068634195e-08, /* 0xBE5AE5E6, 0x8A2B9CEB */
-S6  =  1.58969099521155010221e-10; /* 0x3DE5D93A, 0x5ACFD57C */
+S[] = {
+  5.00000000000000000000e-01, /* 0x3FE00000, 0x00000000 */
+ -1.66666666666666324348e-01, /* 0xBFC55555, 0x55555549 */
+  8.33333333332248946124e-03, /* 0x3F811111, 0x1110F8A6 */
+ -1.98412698298579493134e-04, /* 0xBF2A01A0, 0x19C161D5 */
+  2.75573137070700676789e-06, /* 0x3EC71DE3, 0x57B1FE7D */
+ -2.50507602534068634195e-08, /* 0xBE5AE5E6, 0x8A2B9CEB */
+  1.58969099521155010221e-10}; /* 0x3DE5D93A, 0x5ACFD57C */
 
 #ifdef __STDC__
 	double __kernel_sin(double x, double y, int iy)
@@ -65,7 +69,7 @@ S6  =  1.58969099521155010221e-10; /* 0x3DE5D93A, 0x5ACFD57C */
 	double x,y; int iy;		/* iy=0 if y is zero */
 #endif
 {
-	double z,r,v;
+	double z,r,v,z1,r1,r2;
 	int32_t ix;
 	GET_HIGH_WORD(ix,x);
 	ix &= 0x7fffffff;			/* high word of x */
@@ -73,7 +77,15 @@ S6  =  1.58969099521155010221e-10; /* 0x3DE5D93A, 0x5ACFD57C */
 	   {if((int)x==0) return x;}		/* generate inexact */
 	z	=  x*x;
 	v	=  z*x;
+#ifdef DO_NOT_USE_THIS
 	r	=  S2+z*(S3+z*(S4+z*(S5+z*S6)));
 	if(iy==0) return x+v*(S1+z*r);
 	else      return x-((z*(half*y-v*r)-y)-v*S1);
+#else
+ 	r1	=  S[5]+z*S[6]; z1 = z*z*z;
+	r2	=  S[3]+z*S[4];
+	r	=  S[2] + z*r2 + z1*r1;
+	if(iy==0) return x+v*(S[1]+z*r);
+ 	else      return x-((z*(S[0]*y-v*r)-y)-v*S[1]);
+#endif
 }

@@ -5,10 +5,13 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
+/* Modified by Naohiko Shimizu/Tokai University, Japan 1997/08/25,
+   for performance improvement on pipelined processors.
+*/
 
 #if defined(LIBM_SCCS) && !defined(lint)
 static char rcsid[] = "$NetBSD: k_tan.c,v 1.8 1995/05/10 20:46:37 jtc Exp $";
@@ -18,25 +21,25 @@ static char rcsid[] = "$NetBSD: k_tan.c,v 1.8 1995/05/10 20:46:37 jtc Exp $";
  * kernel tan function on [-pi/4, pi/4], pi/4 ~ 0.7854
  * Input x is assumed to be bounded by ~pi/4 in magnitude.
  * Input y is the tail of x.
- * Input k indicates whether tan (if k=1) or 
+ * Input k indicates whether tan (if k=1) or
  * -1/tan (if k= -1) is returned.
  *
  * Algorithm
- *	1. Since tan(-x) = -tan(x), we need only to consider positive x. 
+ *	1. Since tan(-x) = -tan(x), we need only to consider positive x.
  *	2. if x < 2^-28 (hx<0x3e300000 0), return x with inexact if x!=0.
  *	3. tan(x) is approximated by a odd polynomial of degree 27 on
  *	   [0,0.67434]
  *		  	         3             27
  *	   	tan(x) ~ x + T1*x + ... + T13*x
  *	   where
- *	
+ *
  * 	        |tan(x)         2     4            26   |     -59.2
  * 	        |----- - (1+T1*x +T2*x +.... +T13*x    )| <= 2
- * 	        |  x 					| 
- * 
+ * 	        |  x 					|
+ *
  *	   Note: tan(x+y) = tan(x) + tan'(x)*y
  *		          ~ tan(x) + (1+x*x)*y
- *	   Therefore, for better accuracy in computing tan(x+y), let 
+ *	   Therefore, for better accuracy in computing tan(x+y), let
  *		     3      2      2       2       2
  *		r = x *(T2+x *(T3+x *(...+x *(T12+x *T13))))
  *	   then
@@ -51,9 +54,9 @@ static char rcsid[] = "$NetBSD: k_tan.c,v 1.8 1995/05/10 20:46:37 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 #ifdef __STDC__
-static const double 
+static const double
 #else
-static double 
+static double
 #endif
 one   =  1.00000000000000000000e+00, /* 0x3FF00000, 0x00000000 */
 pio4  =  7.85398163397448278999e-01, /* 0x3FE921FB, 0x54442D18 */
@@ -81,7 +84,7 @@ T[] =  {
 	double x,y; int iy;
 #endif
 {
-	double z,r,v,w,s;
+	double z,r,v,w,s,r1,r2,r3,v1,v2,v3,w2,w4;
 	int32_t ix,hx;
 	GET_HIGH_WORD(hx,x);
 	ix = hx&0x7fffffff;	/* high word of |x| */
@@ -105,8 +108,19 @@ T[] =  {
      *	  x^5(T[1]+x^4*T[3]+...+x^20*T[11]) +
      *	  x^5(x^2*(T[2]+x^4*T[4]+...+x^22*[T12]))
      */
+#ifdef DO_NOT_USE_THIS
 	r = T[1]+w*(T[3]+w*(T[5]+w*(T[7]+w*(T[9]+w*T[11]))));
 	v = z*(T[2]+w*(T[4]+w*(T[6]+w*(T[8]+w*(T[10]+w*T[12])))));
+#else
+	v1 = T[10]+w*T[12]; w2=w*w;
+	v2 = T[6]+w*T[8]; w4=w2*w2;
+	v3 = T[2]+w*T[4]; v1=z*v1;
+	r1 = T[9]+w*T[11]; v2=z*v2;
+	r2 = T[5]+w*T[7]; v3=z*v3;
+	r3 = T[1]+w*T[3];
+	v  = v3 + w2*v2 + w4*v1;
+	r = r3 + w2*r2 + w4*r1;
+#endif
 	s = z*x;
 	r = y + z*(s*(r+v)+y);
 	r += T[0]*s;
@@ -116,7 +130,7 @@ T[] =  {
 	    return (double)(1-((hx>>30)&2))*(v-2.0*(x-(w*w/(w+v)-r)));
 	}
 	if(iy==1) return w;
-	else {		/* if allow error up to 2 ulp, 
+	else {		/* if allow error up to 2 ulp,
 			   simply return -1.0/(x+r) here */
      /*  compute -1.0/(x+r) accurately */
 	    double a,t;

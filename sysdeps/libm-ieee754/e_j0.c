@@ -9,6 +9,9 @@
  * is preserved.
  * ====================================================
  */
+/* Modified by Naohiko Shimizu/Tokai University, Japan 1997/08/26,
+   for performance improvement on pipelined processors.
+*/
 
 #if defined(LIBM_SCCS) && !defined(lint)
 static char rcsid[] = "$NetBSD: e_j0.c,v 1.8 1995/05/10 20:45:23 jtc Exp $";
@@ -78,14 +81,14 @@ one	= 1.0,
 invsqrtpi=  5.64189583547756279280e-01, /* 0x3FE20DD7, 0x50429B6D */
 tpi      =  6.36619772367581382433e-01, /* 0x3FE45F30, 0x6DC9C883 */
  		/* R0/S0 on [0, 2.00] */
-R02  =  1.56249999999999947958e-02, /* 0x3F8FFFFF, 0xFFFFFFFD */
-R03  = -1.89979294238854721751e-04, /* 0xBF28E6A5, 0xB61AC6E9 */
-R04  =  1.82954049532700665670e-06, /* 0x3EBEB1D1, 0x0C503919 */
-R05  = -4.61832688532103189199e-09, /* 0xBE33D5E7, 0x73D63FCE */
-S01  =  1.56191029464890010492e-02, /* 0x3F8FFCE8, 0x82C8C2A4 */
-S02  =  1.16926784663337450260e-04, /* 0x3F1EA6D2, 0xDD57DBF4 */
-S03  =  5.13546550207318111446e-07, /* 0x3EA13B54, 0xCE84D5A9 */
-S04  =  1.16614003333790000205e-09; /* 0x3E1408BC, 0xF4745D8F */
+R[]  =  {0.0, 0.0, 1.56249999999999947958e-02, /* 0x3F8FFFFF, 0xFFFFFFFD */
+ -1.89979294238854721751e-04, /* 0xBF28E6A5, 0xB61AC6E9 */
+  1.82954049532700665670e-06, /* 0x3EBEB1D1, 0x0C503919 */
+ -4.61832688532103189199e-09}, /* 0xBE33D5E7, 0x73D63FCE */
+S[]  =  {0.0, 1.56191029464890010492e-02, /* 0x3F8FFCE8, 0x82C8C2A4 */
+  1.16926784663337450260e-04, /* 0x3F1EA6D2, 0xDD57DBF4 */
+  5.13546550207318111446e-07, /* 0x3EA13B54, 0xCE84D5A9 */
+  1.16614003333790000205e-09}; /* 0x3E1408BC, 0xF4745D8F */
 
 #ifdef __STDC__
 static const double zero = 0.0;
@@ -100,7 +103,7 @@ static double zero = 0.0;
 	double x;
 #endif
 {
-	double z, s,c,ss,cc,r,u,v;
+	double z, s,c,ss,cc,r,u,v,r1,r2,s1,s2,z2,z4;
 	int32_t hx,ix;
 
 	GET_HIGH_WORD(hx,x);
@@ -135,8 +138,17 @@ static double zero = 0.0;
 	    }
 	}
 	z = x*x;
+#ifdef DO_NOT_USE_THIS
 	r =  z*(R02+z*(R03+z*(R04+z*R05)));
 	s =  one+z*(S01+z*(S02+z*(S03+z*S04)));
+#else
+	r1 = z*R[2]; z2=z*z;
+	r2 = R[3]+z*R[4]; z4=z2*z2;
+	r  = r1 + z2*r2 + z4*R[5];
+	s1 = one+z*S[1];
+	s2 = S[2]+z*S[3];
+	s = s1 + z2*s2 + z4*S[4];
+#endif
 	if(ix < 0x3FF00000) {	/* |x| < 1.00 */
 	    return one + z*(-0.25+(r/s));
 	} else {
@@ -150,17 +162,17 @@ static const double
 #else
 static double
 #endif
-u00  = -7.38042951086872317523e-02, /* 0xBFB2E4D6, 0x99CBD01F */
-u01  =  1.76666452509181115538e-01, /* 0x3FC69D01, 0x9DE9E3FC */
-u02  = -1.38185671945596898896e-02, /* 0xBF8C4CE8, 0xB16CFA97 */
-u03  =  3.47453432093683650238e-04, /* 0x3F36C54D, 0x20B29B6B */
-u04  = -3.81407053724364161125e-06, /* 0xBECFFEA7, 0x73D25CAD */
-u05  =  1.95590137035022920206e-08, /* 0x3E550057, 0x3B4EABD4 */
-u06  = -3.98205194132103398453e-11, /* 0xBDC5E43D, 0x693FB3C8 */
-v01  =  1.27304834834123699328e-02, /* 0x3F8A1270, 0x91C9C71A */
-v02  =  7.60068627350353253702e-05, /* 0x3F13ECBB, 0xF578C6C1 */
-v03  =  2.59150851840457805467e-07, /* 0x3E91642D, 0x7FF202FD */
-v04  =  4.41110311332675467403e-10; /* 0x3DFE5018, 0x3BD6D9EF */
+U[]  = {-7.38042951086872317523e-02, /* 0xBFB2E4D6, 0x99CBD01F */
+  1.76666452509181115538e-01, /* 0x3FC69D01, 0x9DE9E3FC */
+ -1.38185671945596898896e-02, /* 0xBF8C4CE8, 0xB16CFA97 */
+  3.47453432093683650238e-04, /* 0x3F36C54D, 0x20B29B6B */
+ -3.81407053724364161125e-06, /* 0xBECFFEA7, 0x73D25CAD */
+  1.95590137035022920206e-08, /* 0x3E550057, 0x3B4EABD4 */
+ -3.98205194132103398453e-11}, /* 0xBDC5E43D, 0x693FB3C8 */
+V[]  =  {1.27304834834123699328e-02, /* 0x3F8A1270, 0x91C9C71A */
+  7.60068627350353253702e-05, /* 0x3F13ECBB, 0xF578C6C1 */
+  2.59150851840457805467e-07, /* 0x3E91642D, 0x7FF202FD */
+  4.41110311332675467403e-10}; /* 0x3DFE5018, 0x3BD6D9EF */
 
 #ifdef __STDC__
 	double __ieee754_y0(double x)
@@ -169,7 +181,7 @@ v04  =  4.41110311332675467403e-10; /* 0x3DFE5018, 0x3BD6D9EF */
 	double x;
 #endif
 {
-	double z, s,c,ss,cc,u,v;
+	double z, s,c,ss,cc,u,v,z2,z4,z6,u1,u2,u3,v1,v2;
 	int32_t hx,ix,lx;
 
 	EXTRACT_WORDS(hx,lx,x);
@@ -211,11 +223,21 @@ v04  =  4.41110311332675467403e-10; /* 0x3DFE5018, 0x3BD6D9EF */
                 return z;
 	}
 	if(ix<=0x3e400000) {	/* x < 2**-27 */
-	    return(u00 + tpi*__ieee754_log(x));
+	    return(U[0] + tpi*__ieee754_log(x));
 	}
 	z = x*x;
+#ifdef DO_NOT_USE_THIS
 	u = u00+z*(u01+z*(u02+z*(u03+z*(u04+z*(u05+z*u06)))));
 	v = one+z*(v01+z*(v02+z*(v03+z*v04)));
+#else
+	u1 = U[0]+z*U[1]; z2=z*z;
+	u2 = U[2]+z*U[3]; z4=z2*z2;
+	u3 = U[4]+z*U[5]; z6=z4*z2;
+	u = u1 + z2*u2 + z4*u3 + z6*U[6];
+	v1 = one+z*V[1];
+	v2 = V[2]+z*V[3];
+	v = v1 + z2*v2 + z4*V[4];
+#endif
 	return(u/v + tpi*(__ieee754_j0(x)*__ieee754_log(x)));
 }
 
@@ -336,7 +358,7 @@ static double pS2[5] = {
 #else
 	double *p,*q;
 #endif
-	double z,r,s;
+	double z,r,s,z2,z4,r1,r2,r3,s1,s2,s3;
 	int32_t ix;
 	GET_HIGH_WORD(ix,x);
 	ix &= 0x7fffffff;
@@ -345,8 +367,19 @@ static double pS2[5] = {
 	else if(ix>=0x4006DB6D){p = pR3; q= pS3;}
 	else if(ix>=0x40000000){p = pR2; q= pS2;}
 	z = one/(x*x);
+#ifdef DO_NOT_USE_THIS
 	r = p[0]+z*(p[1]+z*(p[2]+z*(p[3]+z*(p[4]+z*p[5]))));
 	s = one+z*(q[0]+z*(q[1]+z*(q[2]+z*(q[3]+z*q[4]))));
+#else
+	r1 = p[0]+z*p[1]; z2=z*z;
+	r2 = p[2]+z*p[3]; z4=z2*z2;
+	r3 = p[4]+z*p[5];
+	r = r1 + z2*r2 + z4*r3;
+	s1 = one+z*q[0];
+	s2 = q[1]+z*q[2];
+	s3 = q[3]+z*q[4];
+	s = s1 + z2*s2 + z4*s3;
+#endif
 	return one+ r/s;
 }
 
@@ -472,7 +505,7 @@ static double qS2[6] = {
 #else
 	double *p,*q;
 #endif
-	double s,r,z;
+	double s,r,z,z2,z4,z6,r1,r2,r3,s1,s2,s3;
 	int32_t ix;
 	GET_HIGH_WORD(ix,x);
 	ix &= 0x7fffffff;
@@ -481,7 +514,18 @@ static double qS2[6] = {
 	else if(ix>=0x4006DB6D){p = qR3; q= qS3;}
 	else if(ix>=0x40000000){p = qR2; q= qS2;}
 	z = one/(x*x);
+#ifdef DO_NOT_USE_THIS
 	r = p[0]+z*(p[1]+z*(p[2]+z*(p[3]+z*(p[4]+z*p[5]))));
 	s = one+z*(q[0]+z*(q[1]+z*(q[2]+z*(q[3]+z*(q[4]+z*q[5])))));
+#else
+	r1 = p[0]+z*p[1]; z2=z*z;
+	r2 = p[2]+z*p[3]; z4=z2*z2;
+	r3 = p[4]+z*p[5]; z6=z4*z2;
+	r= r1 + z2*r2 + z4*r3;
+	s1 = one+z*q[0];
+	s2 = q[1]+z*q[2];
+	s3 = q[3]+z*q[4];
+	s = s1 + z2*s2 + z4*s3 +z6*q[5];
+#endif
 	return (-.125 + r/s)/x;
 }

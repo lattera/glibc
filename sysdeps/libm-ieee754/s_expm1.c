@@ -9,6 +9,9 @@
  * is preserved.
  * ====================================================
  */
+/* Modified by Naohiko Shimizu/Tokai University, Japan 1997/08/25,
+   for performance improvement on pipelined processors.
+*/
 
 #if defined(LIBM_SCCS) && !defined(lint)
 static char rcsid[] = "$NetBSD: s_expm1.c,v 1.8 1995/05/10 20:47:09 jtc Exp $";
@@ -111,7 +114,7 @@ static char rcsid[] = "$NetBSD: s_expm1.c,v 1.8 1995/05/10 20:47:09 jtc Exp $";
 
 #include "math.h"
 #include "math_private.h"
-
+#define one Q[0]
 #ifdef __STDC__
 static const double
 #else
@@ -125,11 +128,11 @@ ln2_hi		= 6.93147180369123816490e-01,/* 0x3fe62e42, 0xfee00000 */
 ln2_lo		= 1.90821492927058770002e-10,/* 0x3dea39ef, 0x35793c76 */
 invln2		= 1.44269504088896338700e+00,/* 0x3ff71547, 0x652b82fe */
 	/* scaled coefficients related to expm1 */
-Q1  =  -3.33333333333331316428e-02, /* BFA11111 111110F4 */
-Q2  =   1.58730158725481460165e-03, /* 3F5A01A0 19FE5585 */
-Q3  =  -7.93650757867487942473e-05, /* BF14CE19 9EAADBB7 */
-Q4  =   4.00821782732936239552e-06, /* 3ED0CFCA 86E65239 */
-Q5  =  -2.01099218183624371326e-07; /* BE8AFDB7 6E09C32D */
+Q[]  =  {1.0, -3.33333333333331316428e-02, /* BFA11111 111110F4 */
+   1.58730158725481460165e-03, /* 3F5A01A0 19FE5585 */
+  -7.93650757867487942473e-05, /* BF14CE19 9EAADBB7 */
+   4.00821782732936239552e-06, /* 3ED0CFCA 86E65239 */
+  -2.01099218183624371326e-07}; /* BE8AFDB7 6E09C32D */
 
 #ifdef __STDC__
 	double __expm1(double x)
@@ -138,7 +141,7 @@ Q5  =  -2.01099218183624371326e-07; /* BE8AFDB7 6E09C32D */
 	double x;
 #endif
 {
-	double y,hi,lo,c,t,e,hxs,hfx,r1;
+	double y,hi,lo,c,t,e,hxs,hfx,r1,h2,h4,R1,R2,R3;
 	int32_t k,xsb;
 	u_int32_t hx;
 
@@ -190,7 +193,14 @@ Q5  =  -2.01099218183624371326e-07; /* BE8AFDB7 6E09C32D */
     /* x is now in primary range */
 	hfx = 0.5*x;
 	hxs = x*hfx;
+#ifdef DO_NOT_USE_THIS
 	r1 = one+hxs*(Q1+hxs*(Q2+hxs*(Q3+hxs*(Q4+hxs*Q5))));
+#else
+	R1 = one+hxs*Q[1]; h2 = hxs*hxs;
+	R2 = Q[2]+hxs*Q[3]; h4 = h2*h2;
+	R3 = Q[4]+hxs*Q[5];
+	r1 = R1 + h2*R2 + h4*R3;
+#endif
 	t  = 3.0-r1*hfx;
 	e  = hxs*((r1-t)/(6.0 - x*t));
 	if(k==0) return x - (x*e-hxs);		/* c is 0 */

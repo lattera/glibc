@@ -9,6 +9,9 @@
  * is preserved.
  * ====================================================
  */
+/* Modified by Naohiko Shimizu/Tokai University, Japan 1997/08/25,
+   for performance improvement on pipelined processors.
+*/
 
 #if defined(LIBM_SCCS) && !defined(lint)
 static char rcsid[] = "$NetBSD: s_atan.c,v 1.8 1995/05/10 20:46:45 jtc Exp $";
@@ -92,7 +95,7 @@ huge   = 1.0e300;
 	double x;
 #endif
 {
-	double w,s1,s2,z;
+	double w,s1,z,s,w2,w4,s11,s12,s13,s21,s22,s23;
 	int32_t ix,hx,id;
 
 	GET_HIGH_WORD(hx,x);
@@ -129,6 +132,7 @@ huge   = 1.0e300;
 	z = x*x;
 	w = z*z;
     /* break sum from i=0 to 10 aT[i]z**(i+1) into odd and even poly */
+#ifdef DO_NOT_USE_THIS
 	s1 = z*(aT[0]+w*(aT[2]+w*(aT[4]+w*(aT[6]+w*(aT[8]+w*aT[10])))));
 	s2 = w*(aT[1]+w*(aT[3]+w*(aT[5]+w*(aT[7]+w*aT[9]))));
 	if (id<0) return x - x*(s1+s2);
@@ -136,6 +140,21 @@ huge   = 1.0e300;
 	    z = atanhi[id] - ((x*(s1+s2) - atanlo[id]) - x);
 	    return (hx<0)? -z:z;
 	}
+#else
+	s11 = aT[8]+w*aT[10]; w2=w*w;
+	s12 = aT[4]+w*aT[6]; w4=w2*w2;
+	s13 = aT[0]+w*aT[2];
+	s21 = aT[7]+w*aT[9];
+	s22 = aT[3]+w*aT[5];
+	s23 = w*aT[1];
+	s1 = s13 + w2*s12 + w4*s11;
+	s = s23 + w2*s22 + w4*s21 + z*s1;
+	if (id<0) return x - x*(s);
+	else {
+	    z = atanhi[id] - ((x*(s) - atanlo[id]) - x);
+	    return (hx<0)? -z:z;
+	}
+#endif
 }
 weak_alias (__atan, atan)
 #ifdef NO_LONG_DOUBLE

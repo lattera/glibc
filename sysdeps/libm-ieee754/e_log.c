@@ -9,6 +9,9 @@
  * is preserved.
  * ====================================================
  */
+/* Modified by Naohiko Shimizu/Tokai University, Japan 1997/08/25,
+   for performance improvement on pipelined processors.
+*/
 
 #if defined(LIBM_SCCS) && !defined(lint)
 static char rcsid[] = "$NetBSD: e_log.c,v 1.8 1995/05/10 20:45:49 jtc Exp $";
@@ -67,7 +70,8 @@ static char rcsid[] = "$NetBSD: e_log.c,v 1.8 1995/05/10 20:45:49 jtc Exp $";
 
 #include "math.h"
 #include "math_private.h"
-
+#define half Lg[8]
+#define two Lg[9]
 #ifdef __STDC__
 static const double
 #else
@@ -76,14 +80,16 @@ static double
 ln2_hi  =  6.93147180369123816490e-01,	/* 3fe62e42 fee00000 */
 ln2_lo  =  1.90821492927058770002e-10,	/* 3dea39ef 35793c76 */
 two54   =  1.80143985094819840000e+16,  /* 43500000 00000000 */
-Lg1 = 6.666666666666735130e-01,  /* 3FE55555 55555593 */
-Lg2 = 3.999999999940941908e-01,  /* 3FD99999 9997FA04 */
-Lg3 = 2.857142874366239149e-01,  /* 3FD24924 94229359 */
-Lg4 = 2.222219843214978396e-01,  /* 3FCC71C5 1D8E78AF */
-Lg5 = 1.818357216161805012e-01,  /* 3FC74664 96CB03DE */
-Lg6 = 1.531383769920937332e-01,  /* 3FC39A09 D078C69F */
-Lg7 = 1.479819860511658591e-01;  /* 3FC2F112 DF3E5244 */
-
+ Lg[] = {0.0,
+ 6.666666666666735130e-01,  /* 3FE55555 55555593 */
+ 3.999999999940941908e-01,  /* 3FD99999 9997FA04 */
+ 2.857142874366239149e-01,  /* 3FD24924 94229359 */
+ 2.222219843214978396e-01,  /* 3FCC71C5 1D8E78AF */
+ 1.818357216161805012e-01,  /* 3FC74664 96CB03DE */
+ 1.531383769920937332e-01,  /* 3FC39A09 D078C69F */
+ 1.479819860511658591e-01,  /* 3FC2F112 DF3E5244 */
+ 0.5,
+ 2.0};
 #ifdef __STDC__
 static const double zero   =  0.0;
 #else
@@ -97,7 +103,7 @@ static double zero   =  0.0;
 	double x;
 #endif
 {
-	double hfsq,f,s,z,R,w,t1,t2,dk;
+	double hfsq,f,s,z,R,w,t1,t2,dk,t11,t12,t21,t22,w2,zw2;
 	int32_t k,hx,i,j;
 	u_int32_t lx;
 
@@ -121,20 +127,28 @@ static double zero   =  0.0;
 	if((0x000fffff&(2+hx))<3) {	/* |f| < 2**-20 */
 	    if(f==zero) if(k==0) return zero;  else {dk=(double)k;
 				 return dk*ln2_hi+dk*ln2_lo;}
-	    R = f*f*(0.5-0.33333333333333333*f);
+	    R = f*f*(half-0.33333333333333333*f);
 	    if(k==0) return f-R; else {dk=(double)k;
 	    	     return dk*ln2_hi-((R-dk*ln2_lo)-f);}
 	}
- 	s = f/(2.0+f);
+ 	s = f/(two+f);
 	dk = (double)k;
 	z = s*s;
 	i = hx-0x6147a;
 	w = z*z;
 	j = 0x6b851-hx;
+#ifdef DO_NOT_USE_THIS
 	t1= w*(Lg2+w*(Lg4+w*Lg6));
 	t2= z*(Lg1+w*(Lg3+w*(Lg5+w*Lg7)));
-	i |= j;
 	R = t2+t1;
+#else
+	t21 = Lg[5]+w*Lg[7]; w2=w*w;
+	t22 = Lg[1]+w*Lg[3]; zw2=z*w2;
+	t11 = Lg[4]+w*Lg[6];
+	t12 = w*Lg[2];
+	R = t12 + w2*t11 + z*t22 + zw2*t21;
+#endif
+	i |= j;
 	if(i>0) {
 	    hfsq=0.5*f*f;
 	    if(k==0) return f-(hfsq-s*(hfsq+R)); else

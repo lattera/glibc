@@ -9,6 +9,9 @@
  * is preserved.
  * ====================================================
  */
+/* Modified by Naohiko Shimizu/Tokai University, Japan 1997/08/25,
+   for performance improvement on pipelined processors.
+*/
 
 #if defined(LIBM_SCCS) && !defined(lint)
 static char rcsid[] = "$NetBSD: e_asin.c,v 1.9 1995/05/12 04:57:22 jtc Exp $";
@@ -47,28 +50,27 @@ static char rcsid[] = "$NetBSD: e_asin.c,v 1.9 1995/05/12 04:57:22 jtc Exp $";
 
 #include "math.h"
 #include "math_private.h"
-
+#define one qS[0]
 #ifdef __STDC__
 static const double
 #else
 static double
 #endif
-one =  1.00000000000000000000e+00, /* 0x3FF00000, 0x00000000 */
 huge =  1.000e+300,
 pio2_hi =  1.57079632679489655800e+00, /* 0x3FF921FB, 0x54442D18 */
 pio2_lo =  6.12323399573676603587e-17, /* 0x3C91A626, 0x33145C07 */
 pio4_hi =  7.85398163397448278999e-01, /* 0x3FE921FB, 0x54442D18 */
 	/* coefficient for R(x^2) */
-pS0 =  1.66666666666666657415e-01, /* 0x3FC55555, 0x55555555 */
-pS1 = -3.25565818622400915405e-01, /* 0xBFD4D612, 0x03EB6F7D */
-pS2 =  2.01212532134862925881e-01, /* 0x3FC9C155, 0x0E884455 */
-pS3 = -4.00555345006794114027e-02, /* 0xBFA48228, 0xB5688F3B */
-pS4 =  7.91534994289814532176e-04, /* 0x3F49EFE0, 0x7501B288 */
-pS5 =  3.47933107596021167570e-05, /* 0x3F023DE1, 0x0DFDF709 */
-qS1 = -2.40339491173441421878e+00, /* 0xC0033A27, 0x1C8A2D4B */
-qS2 =  2.02094576023350569471e+00, /* 0x40002AE5, 0x9C598AC8 */
-qS3 = -6.88283971605453293030e-01, /* 0xBFE6066C, 0x1B8D0159 */
-qS4 =  7.70381505559019352791e-02; /* 0x3FB3B8C5, 0xB12E9282 */
+pS[] =  {1.66666666666666657415e-01, /* 0x3FC55555, 0x55555555 */
+ -3.25565818622400915405e-01, /* 0xBFD4D612, 0x03EB6F7D */
+  2.01212532134862925881e-01, /* 0x3FC9C155, 0x0E884455 */
+ -4.00555345006794114027e-02, /* 0xBFA48228, 0xB5688F3B */
+  7.91534994289814532176e-04, /* 0x3F49EFE0, 0x7501B288 */
+  3.47933107596021167570e-05}, /* 0x3F023DE1, 0x0DFDF709 */
+qS[] = {1.0, -2.40339491173441421878e+00, /* 0xC0033A27, 0x1C8A2D4B */
+  2.02094576023350569471e+00, /* 0x40002AE5, 0x9C598AC8 */
+ -6.88283971605453293030e-01, /* 0xBFE6066C, 0x1B8D0159 */
+  7.70381505559019352791e-02}; /* 0x3FB3B8C5, 0xB12E9282 */
 
 #ifdef __STDC__
 	double __ieee754_asin(double x)
@@ -77,7 +79,7 @@ qS4 =  7.70381505559019352791e-02; /* 0x3FB3B8C5, 0xB12E9282 */
 	double x;
 #endif
 {
-	double t,w,p,q,c,r,s;
+	double t,w,p,q,c,r,s,p1,p2,p3,q1,q2,q3,z2,z4,z6;
 	int32_t hx,ix;
 	GET_HIGH_WORD(hx,x);
 	ix = hx&0x7fffffff;
@@ -93,8 +95,18 @@ qS4 =  7.70381505559019352791e-02; /* 0x3FB3B8C5, 0xB12E9282 */
 		if(huge+x>one) return x;/* return x with inexact if x!=0*/
 	    } else {
 		t = x*x;
+#ifdef DO_NOT_USE_THIS
 		p = t*(pS0+t*(pS1+t*(pS2+t*(pS3+t*(pS4+t*pS5)))));
 		q = one+t*(qS1+t*(qS2+t*(qS3+t*qS4)));
+#else
+		p1 = t*pS[0]; z2=t*t;
+		p2 = pS[1]+t*pS[2]; z4=z2*z2;
+		p3 = pS[3]+t*pS[4]; z6=z4*z2;
+		q1 = one+t*qS[1];
+		q2 = qS[2]+t*qS[3];
+		p = p1 + z2*p2 + z4*p3 + z6*pS[5];
+		q = q1 + z2*q2 + z4*qS[4];
+#endif
 		w = p/q;
 		return x+x*w;
 	    }
@@ -102,8 +114,18 @@ qS4 =  7.70381505559019352791e-02; /* 0x3FB3B8C5, 0xB12E9282 */
 	/* 1> |x|>= 0.5 */
 	w = one-fabs(x);
 	t = w*0.5;
+#ifdef DO_NOT_USE_THIS
 	p = t*(pS0+t*(pS1+t*(pS2+t*(pS3+t*(pS4+t*pS5)))));
 	q = one+t*(qS1+t*(qS2+t*(qS3+t*qS4)));
+#else
+	p1 = t*pS[0]; z2=t*t;
+	p2 = pS[1]+t*pS[2]; z4=z2*z2;
+	p3 = pS[3]+t*pS[4]; z6=z4*z2;
+	q1 = one+t*qS[1];
+	q2 = qS[2]+t*qS[3];
+	p = p1 + z2*p2 + z4*p3 + z6*pS[5];
+	q = q1 + z2*q2 + z4*qS[4];
+#endif
 	s = __ieee754_sqrt(t);
 	if(ix>=0x3FEF3333) { 	/* if |x| > 0.975 */
 	    w = p/q;

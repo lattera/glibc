@@ -1,3 +1,21 @@
+1998-04-03 23:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/e_acos.c: Optimize by splitting large
+	expressions and using array variables.
+	* sysdeps/libm-ieee754/e_asin.c: Likewise.
+	* sysdeps/libm-ieee754/e_j0.c: Likewise.
+	* sysdeps/libm-ieee754/e_j1.c: Likewise.
+	* sysdeps/libm-ieee754/e_log.c: Likewise.
+	* sysdeps/libm-ieee754/e_pow.c: Likewise.
+	* sysdeps/libm-ieee754/k_cos.c: Likewise.
+	* sysdeps/libm-ieee754/k_sin.c: Likewise.
+	* sysdeps/libm-ieee754/k_tan.c: Likewise.
+	* sysdeps/libm-ieee754/s_atan.c: Likewise.
+	* sysdeps/libm-ieee754/s_erf.c: Likewise.
+	* sysdeps/libm-ieee754/s_expm1.c: Likewise.
+	* sysdeps/libm-ieee754/s_log1p.c: Likewise.
+	Patch by Naohiko Shimizu <nshimizu@et.u-tokai.ac.jp>.
+
 1998-04-03 23:17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv.c: Rewrite of the low-level of gconv.

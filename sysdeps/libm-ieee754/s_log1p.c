@@ -9,6 +9,9 @@
  * is preserved.
  * ====================================================
  */
+/* Modified by Naohiko Shimizu/Tokai University, Japan 1997/08/25,
+   for performance improvement on pipelined processors.
+*/
 
 #if defined(LIBM_SCCS) && !defined(lint)
 static char rcsid[] = "$NetBSD: s_log1p.c,v 1.8 1995/05/10 20:47:46 jtc Exp $";
@@ -90,13 +93,13 @@ static double
 ln2_hi  =  6.93147180369123816490e-01,	/* 3fe62e42 fee00000 */
 ln2_lo  =  1.90821492927058770002e-10,	/* 3dea39ef 35793c76 */
 two54   =  1.80143985094819840000e+16,  /* 43500000 00000000 */
-Lp1 = 6.666666666666735130e-01,  /* 3FE55555 55555593 */
-Lp2 = 3.999999999940941908e-01,  /* 3FD99999 9997FA04 */
-Lp3 = 2.857142874366239149e-01,  /* 3FD24924 94229359 */
-Lp4 = 2.222219843214978396e-01,  /* 3FCC71C5 1D8E78AF */
-Lp5 = 1.818357216161805012e-01,  /* 3FC74664 96CB03DE */
-Lp6 = 1.531383769920937332e-01,  /* 3FC39A09 D078C69F */
-Lp7 = 1.479819860511658591e-01;  /* 3FC2F112 DF3E5244 */
+Lp[] = {0.0, 6.666666666666735130e-01,  /* 3FE55555 55555593 */
+ 3.999999999940941908e-01,  /* 3FD99999 9997FA04 */
+ 2.857142874366239149e-01,  /* 3FD24924 94229359 */
+ 2.222219843214978396e-01,  /* 3FCC71C5 1D8E78AF */
+ 1.818357216161805012e-01,  /* 3FC74664 96CB03DE */
+ 1.531383769920937332e-01,  /* 3FC39A09 D078C69F */
+ 1.479819860511658591e-01};  /* 3FC2F112 DF3E5244 */
 
 #ifdef __STDC__
 static const double zero = 0.0;
@@ -111,7 +114,7 @@ static double zero = 0.0;
 	double x;
 #endif
 {
-	double hfsq,f,c,s,z,R,u;
+	double hfsq,f,c,s,z,R,u,z2,z4,z6,R1,R2,R3,R4;
 	int32_t k,hx,hu,ax;
 
 	GET_HIGH_WORD(hx,x);
@@ -167,7 +170,15 @@ static double zero = 0.0;
 	}
  	s = f/(2.0+f);
 	z = s*s;
+#ifdef DO_NOT_USE_THIS
 	R = z*(Lp1+z*(Lp2+z*(Lp3+z*(Lp4+z*(Lp5+z*(Lp6+z*Lp7))))));
+#else
+	R1 = z*Lp[1]; z2=z*z;
+	R2 = Lp[2]+z*Lp[3]; z4=z2*z2;
+	R3 = Lp[4]+z*Lp[5]; z6=z4*z2;
+	R4 = Lp[6]+z*Lp[7];
+	R = R1 + z2*R2 + z4*R3 + z6*R4;
+#endif
 	if(k==0) return f-(hfsq-s*(hfsq+R)); else
 		 return k*ln2_hi-((hfsq-(s*(hfsq+R)+(k*ln2_lo+c)))-f);
 }
