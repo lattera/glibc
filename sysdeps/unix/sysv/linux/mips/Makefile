@@ -15,6 +15,7 @@ no_syscall_list_h = 1
 # We generate not only SYS_<syscall>, pointing at SYS_<abi>_<syscall> if
 # it exists, but also define SYS_<abi>_<syscall> for all ABIs.
 $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/mips/sys/syscall.h
+	$(make-target-directory)
 	{ \
 	 echo '/* Generated at libc build time from kernel syscall list.  */';\
 	 echo ''; \
@@ -48,4 +49,5 @@ ifneq (,$(objpfx))
 	mv -f $(@:.h=.d)-t2 $(@:.h=.d)
 else
 	mv -f $(@:.h=.d)-t $(@:.h=.d)
+endif
 endif
