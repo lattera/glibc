@@ -1,3 +1,7 @@
+2002-07-08  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/mips/sys/shm.h: New.
+
 2002-07-06  Bruno Haible  <bruno@clisp.org>
 
 	* include/sys/socket.h (__libc_sendto, __libc_recvfrom): New
