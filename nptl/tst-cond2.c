@@ -26,7 +26,7 @@
 static pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
-static pthread_mutex_t syncm = PTHREAD_MUTEX_INITIALIZER;
+static pthread_barrier_t bar;
 
 
 static void *
@@ -41,11 +41,14 @@ tf (void *a)
   if (err != 0)
     error (EXIT_FAILURE, err, "locking in child failed");
 
-  printf ("child %d: unlock sync\n", i);
+  printf ("child %d: sync\n", i);
 
-  err = pthread_mutex_unlock (&syncm);
-  if (err != 0)
-    error (EXIT_FAILURE, err, "child %d: unlock[1] failed", i);
+  int e = pthread_barrier_wait (&bar);
+  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      puts ("child: barrier_wait failed");
+      exit (1);
+    }
 
   printf ("child %d: wait\n", i);
 
@@ -77,11 +80,11 @@ do_test (void)
 
   printf ("&cond = %p\n&mut = %p\n", &cond, &mut);
 
-  puts ("first lock");
-
-  err = pthread_mutex_lock (&syncm);
-  if (err != 0)
-    error (EXIT_FAILURE, err, "initial locking failed");
+  if (pthread_barrier_init (&bar, NULL, 2) != 0)
+    {
+      puts ("barrier_init failed");
+      exit (1);
+    }
 
   for (i = 0; i < N; ++i)
     {
@@ -93,12 +96,14 @@ do_test (void)
 
       printf ("wait for child %d\n", i);
 
-      /* Lock and thereby wait for the child to start up and get the
-	 mutex for the conditional variable.  */
-      pthread_mutex_lock (&syncm);
-      /* Unlock right away.  Yes, we can use barriers but then we
-	 would test more functionality here.  */
-      pthread_mutex_unlock (&syncm);
+      /* Wait for the child to start up and get the mutex for the
+	 conditional variable.  */
+      int e = pthread_barrier_wait (&bar);
+      if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  puts ("barrier_wait failed");
+	  exit (1);
+	}
     }
 
   puts ("get lock outselves");

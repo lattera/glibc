@@ -1,5 +1,7 @@
 2003-02-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-cond2.c: Fix sychronization with child.
+
 	* tst-rwlock8.c (reader_thread): Remove unused variable.
 
 	* Makefile: Add rules to build and run tst-tls3.

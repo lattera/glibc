@@ -124,8 +124,6 @@ __ttyname_r (int fd, char *buf, size_t buflen)
       __set_errno (EBADF);
       return EBADF;
     }
-  if (ret == -1 && errno == EACCES)
-    return EACCES;
 
   if (!__isatty (fd))
     {
