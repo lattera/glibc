@@ -24,8 +24,9 @@ LDFLAGS-c_pic.os += -Wl,--unique=.text*
 
 ifeq ($(subdir),elf)
 CFLAGS-rtld.c += -mdisable-fpregs
-dl-routines += dl-symaddr dl-fptr
-rtld-routines += dl-symaddr dl-fptr
+sysdep-dl-routines += dl-symaddr dl-fptr
+sysdep_routines += $(sysdep-dl-routines)
+sysdep-rtld-routines += $(sysdep-dl-routines)
 endif
 
 ifeq ($(subdir),csu)
