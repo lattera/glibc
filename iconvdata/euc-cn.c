@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <gb2312.h>
 #include <stdint.h>
 
@@ -64,7 +65,7 @@
 	     next character is also available.  */			      \
 	  const unsigned char *endp;					      \
 									      \
-	  if (NEED_LENGTH_TEST && __builtin_expect (inptr + 1 >= inend, 0))   \
+	  if (__builtin_expect (inptr + 1 >= inend, 0))			      \
 	    {								      \
 	      /* The second character is not available.  Store		      \
 		 the intermediate result.  */				      \
@@ -114,6 +115,7 @@
     put32 (outptr, ch);							      \
     outptr += 4;							      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 
@@ -133,22 +135,31 @@
       {									      \
 	size_t found;							      \
 									      \
-	found = ucs4_to_gb2312 (ch, outptr,				      \
-				(NEED_LENGTH_TEST			      \
-				 ? outend - outptr : MAX_NEEDED_OUTPUT));     \
-	if (!NEED_LENGTH_TEST || __builtin_expect (found, 1) != 0)	      \
+	found = ucs4_to_gb2312 (ch, outptr, outend - outptr);		      \
+	if (__builtin_expect (found, 1) != 0)				      \
 	  {								      \
 	    if (__builtin_expect (found, 0) == __UNKNOWN_10646_CHAR)	      \
 	      {								      \
 		/* Illegal character.  */				      \
-		if (! ignore_errors_p ())				      \
+		if (step_data->__trans.__trans_fct != NULL)		      \
+		  {							      \
+		    result = DL_CALL_FCT (step_data->__trans.__trans_fct,     \
+					  (step, step_data, *inptrp, &inptr,  \
+					   inend, *outptrp, &outptr, outend,  \
+					   irreversible));		      \
+		    if (result != __GCONV_OK)				      \
+		      break;						      \
+		  }							      \
+		else if (! ignore_errors_p ())				      \
 		  {							      \
 		    result = __GCONV_ILLEGAL_INPUT;			      \
 		    break;						      \
 		  }							      \
-									      \
-		inptr += 4;						      \
-		++*irreversible;					      \
+		else							      \
+		  {							      \
+		    inptr += 4;						      \
+		    ++*irreversible;					      \
+		  }							      \
 		continue;						      \
 	      }								      \
 									      \
@@ -165,6 +176,7 @@
       }									      \
     inptr += 4;								      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 

@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <errno.h>
 #include <gconv.h>
 #include <stdlib.h>
@@ -76,8 +77,9 @@ __mbsrtowcs (dst, src, len, ps)
 	{
 	  data.__outbuf = (char *) buf;
 
-	  status = (*towc->__fct) (__wcsmbs_gconv_fcts.towc, &data, &inbuf,
-				   srcend, &non_reversible, 0, 1);
+	  status = DL_CALL_FCT (towc->__fct,
+				(towc, &data, &inbuf, srcend, data.__outbuf,
+				 &non_reversible, 0, 1));
 
 	  result += (wchar_t *) data.__outbuf - buf;
 	}
@@ -105,9 +107,9 @@ __mbsrtowcs (dst, src, len, ps)
       data.__outbuf = (unsigned char *) dst;
       data.__outbufend = data.__outbuf + len * sizeof (wchar_t);
 
-      status = (*towc->__fct) (__wcsmbs_gconv_fcts.towc, &data,
-			       (const unsigned char **) src, srcend,
-			       &non_reversible, 0, 1);
+      status = DL_CALL_FCT (towc->__fct,
+			    (towc, &data, (const unsigned char **) src, srcend,
+			     data.__outbuf, &non_reversible, 0, 1));
 
       result = (wchar_t *) data.__outbuf - dst;
 

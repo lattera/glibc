@@ -62,16 +62,50 @@ enum
 struct __gconv_step;
 struct __gconv_step_data;
 struct __gconv_loaded_object;
+struct __gconv_trans_data;
 
 
 /* Type of a conversion function.  */
 typedef int (*__gconv_fct) (struct __gconv_step *, struct __gconv_step_data *,
 			    __const unsigned char **, __const unsigned char *,
-			    size_t *, int, int);
+			    unsigned char *, size_t *, int, int);
 
 /* Constructor and destructor for local data for conversion step.  */
 typedef int (*__gconv_init_fct) (struct __gconv_step *);
 typedef void (*__gconv_end_fct) (struct __gconv_step *);
+
+
+/* Type of a transliteration/transscription function.  */
+typedef int (*__gconv_trans_fct) (struct __gconv_step *step,
+				  struct __gconv_step_data *step_data,
+				  __const unsigned char *,
+				  __const unsigned char **,
+				  __const unsigned char *, unsigned char *,
+				  unsigned char **, unsigned char *, size_t *);
+
+/* Function to call to provide transliteration module with context.  */
+typedef int (*__gconv_trans_context_fct) (struct __gconv_trans_data *data,
+					  __const unsigned char *,
+					  __const unsigned char *,
+					  __const unsigned char *,
+					  unsigned char *, unsigned char *,
+					  unsigned char *);
+
+/* Function to query module about supported encoded character sets.  */
+typedef int (*__gconv_trans_query_fct) (__const char **, size_t *);
+
+/* Constructor and destructor for local data for transliteration.  */
+typedef int (*__gconv_trans_init_fct) (void **, const char *);
+typedef void (*__gconv_trans_end_fct) (void *);
+
+struct __gconv_trans_data
+{
+  /* Transliteration/Transscription function.  */
+  __gconv_trans_fct __trans_fct;
+  __gconv_trans_context_fct __trans_context_fct;
+  __gconv_trans_end_fct __trans_end_fct;
+  void *__data;
+};
 
 
 /* Description of a conversion step.  */
@@ -124,6 +158,9 @@ struct __gconv_step_data
   __mbstate_t *__statep;
   __mbstate_t __state;	/* This element must not be used directly by
 			   any module; always use STATEP!  */
+
+  /* Transliteration information.  */
+  struct __gconv_trans_data __trans;
 };
 
 

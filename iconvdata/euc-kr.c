@@ -19,6 +19,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <stdint.h>
 #include <ksc5601.h>
 
@@ -98,9 +99,8 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
       {									      \
 	/* Two-byte character.  First test whether the next character	      \
 	   is also available.  */					      \
-	ch = ksc5601_to_ucs4 (&inptr,					      \
-			      NEED_LENGTH_TEST ? inptr - inend : 2, 0x80);    \
-	if (NEED_LENGTH_TEST && __builtin_expect (ch, 1) == 0)		      \
+	ch = ksc5601_to_ucs4 (&inptr, inptr - inend, 0x80);		      \
+	if (__builtin_expect (ch, 1) == 0)				      \
 	  {								      \
 	    /* The second character is not available.  */		      \
 	    result = __GCONV_INCOMPLETE_INPUT;				      \
@@ -125,6 +125,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
     put32 (outptr, ch);							      \
     outptr += 4;							      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 
@@ -145,14 +146,24 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
     if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)		      \
       {									      \
 	/* Illegal character.  */					      \
-	if (! ignore_errors_p ())					      \
+	if (step_data->__trans.__trans_fct != NULL)			      \
+	  {								      \
+	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
+				  (step, step_data, *inptrp, &inptr, inend,   \
+				   *outptrp, &outptr, outend, irreversible)); \
+	    if (result != __GCONV_OK)					      \
+	      break;							      \
+	  }								      \
+	else if (! ignore_errors_p ())					      \
 	  {								      \
 	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
-									      \
-	inptr += 4;							      \
-	++*irreversible;						      \
+	else								      \
+	  {								      \
+	    inptr += 4;							      \
+	    ++*irreversible;						      \
+	  }								      \
 	continue;							      \
       }									      \
 									      \
@@ -160,7 +171,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
     /* Now test for a possible second byte and write this if possible.  */    \
     if (cp[1] != '\0')							      \
       {									      \
-	if (NEED_LENGTH_TEST && __builtin_expect (outptr >= outend, 0))	      \
+	if (__builtin_expect (outptr >= outend, 0))			      \
 	  {								      \
 	    /* The result does not fit into the buffer.  */		      \
 	    --outptr;							      \
@@ -172,6 +183,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 									      \
     inptr += 4;								      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 

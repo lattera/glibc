@@ -26,7 +26,7 @@ include ../Makeconfig
 headers		= iconv.h gconv.h
 routines	= iconv_open iconv iconv_close \
 		  gconv_open gconv gconv_close gconv_db gconv_conf \
-		  gconv_builtin gconv_simple
+		  gconv_builtin gconv_simple gconv_trans
 ifeq ($(elf),yes)
 routines	+= gconv_dl
 else

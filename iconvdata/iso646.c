@@ -31,6 +31,7 @@
    allows one to easily provide a tuned implementation in case this
    proofs to be necessary.  */
 
+#include <dlfcn.h>
 #include <gconv.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -422,6 +423,7 @@ gconv_end (struct __gconv_step *data)
       }									      \
     ++inptr;								      \
   }
+#define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS	, enum variant var
 #include <iconv/loop.c>
 
@@ -883,19 +885,32 @@ gconv_end (struct __gconv_step *data)
 									      \
     if (__builtin_expect (failure, __GCONV_OK) == __GCONV_ILLEGAL_INPUT)      \
       {									      \
-	if (! ignore_errors_p ())					      \
+	if (step_data->__trans.__trans_fct != NULL)			      \
+	  {								      \
+	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
+				  (step, step_data, *inptrp, &inptr, inend,   \
+				   *outptrp, &outptr, outend, irreversible)); \
+	    if (result != __GCONV_OK)					      \
+	      break;							      \
+	  }								      \
+	else if (! ignore_errors_p ())					      \
 	  {								      \
 	    /* Exit the loop with an error.  */				      \
 	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
-									      \
-	++*irreversible;						      \
+	else								      \
+	  {								      \
+	    ++*irreversible;						      \
+	    inptr += 4;							      \
+	  }								      \
+	continue;							      \
       }									      \
     else								      \
       *outptr++ = (unsigned char) ch;					      \
     inptr += 4;								      \
   }
+#define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS	, enum variant var
 #include <iconv/loop.c>
 

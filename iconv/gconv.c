@@ -46,8 +46,8 @@ __gconv (__gconv_t cd, const unsigned char **inbuf,
   if (inbuf == NULL || *inbuf == NULL)
     /* We just flush.  */
     result = DL_CALL_FCT (cd->__steps->__fct,
-			   (cd->__steps, cd->__data, NULL, NULL,
-			    irreversible, 1, 0));
+			  (cd->__steps, cd->__data, NULL, NULL,
+			   cd->__data[0].__outbuf, irreversible, 1, 0));
   else
     {
       const unsigned char *last_start;
@@ -58,8 +58,8 @@ __gconv (__gconv_t cd, const unsigned char **inbuf,
 	{
 	  last_start = *inbuf;
 	  result = DL_CALL_FCT (cd->__steps->__fct,
-				 (cd->__steps, cd->__data, inbuf, inbufend,
-				  irreversible, 0, 0));
+				(cd->__steps, cd->__data, inbuf, inbufend,
+				 cd->__data[0].__outbuf, irreversible, 0, 0));
 	}
       while (result == __GCONV_EMPTY_INPUT && last_start != *inbuf
 	     && *inbuf + cd->__steps->__min_needed_from <= inbufend);

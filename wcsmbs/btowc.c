@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <gconv.h>
 #include <stdio.h>
 #include <string.h>
@@ -58,9 +59,9 @@ __btowc (c)
   /* Create the input string.  */
   inbuf[0] = c;
 
-  status = (*__wcsmbs_gconv_fcts.towc->__fct) (__wcsmbs_gconv_fcts.towc, &data,
-					       &inptr, inptr + 1, &dummy,
-					       0, 1);
+  status = DL_CALL_FCT (__wcsmbs_gconv_fcts.towc->__fct,
+			(__wcsmbs_gconv_fcts.towc, &data, &inptr, inptr + 1,
+			 data.__outbuf, &dummy, 0, 1));
   /* The conversion failed.  */
   if (status != __GCONV_OK && status != __GCONV_FULL_OUTPUT
       && status != __GCONV_EMPTY_INPUT)

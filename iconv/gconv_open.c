@@ -36,25 +36,65 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
   size_t cnt = 0;
   int res;
   int conv_flags = 0;
-  const char *runp;
+  const char *errhand;
 
-  /* Find out whether "IGNORE" is part of the options in the `toset'
-     name.  If yes, remove the string and remember this in the flag.  */
-  runp = __strchrnul (__strchrnul (toset, '/'), '/');
-  if (strcmp (runp, "IGNORE") == 0)
+  /* Find out whether any error handling method is specified.  */
+  errhand = strchr (toset, '/');
+  if (errhand != NULL)
+    errhand = strchr (errhand + 1, '/');
+  if (__builtin_expect (errhand != NULL, 1))
     {
-      /* Found it.  This means we should ignore conversion errors.  */
-      char *newtoset = (char *) alloca (runp - toset + 1);
+      if (errhand[1] == '\0')
+	errhand = NULL;
+      else
+	{
+	  /* Make copy without the error handling description.  */
+	  char *newtoset = (char *) alloca (errhand - toset + 1);
 
-      newtoset[runp - toset] = '\0';
-      toset = memcpy (newtoset, toset, runp - toset);
+	  newtoset[errhand - toset] = '\0';
+	  toset = memcpy (newtoset, toset, errhand - toset);
 
-      flags = __GCONV_IGNORE_ERRORS;
+	  flags = __GCONV_IGNORE_ERRORS;
+
+	  if (strcasecmp (errhand, "IGNORE") == 0)
+	    {
+	      /* Found it.  This means we should ignore conversion errors.  */
+	      flags = __GCONV_IGNORE_ERRORS;
+	      errhand = NULL;
+	    }
+	}
     }
 
   res = __gconv_find_transform (toset, fromset, &steps, &nsteps, flags);
   if (res == __GCONV_OK)
     {
+      const char **csnames = NULL;
+      size_t ncsnames = 0;
+      __gconv_trans_fct trans_fct = NULL;
+      __gconv_trans_context_fct trans_context_fct = NULL;
+      __gconv_trans_init_fct trans_init_fct = NULL;
+      __gconv_trans_end_fct trans_end_fct = NULL;
+
+      if (errhand != NULL)
+	{
+	  /* Find the appropriate transliteration handling.  */
+	  if (strcasecmp (errhand, "TRANSLIT") == 0)
+	    {
+	      /* It's the builtin transliteration handling.  We only
+                 suport for it working on the internal encoding.  */
+	      static const char *internal_trans_names[1] = { "INTERNAL" };
+
+	      csnames = internal_trans_names;
+	      ncsnames = 1;
+	      trans_fct = gconv_transliterate;
+	      /* No context, init, or end function.  */
+	    }
+	  else if (strcasecmp (errhand, "WORK AROUND A GCC BUG") == 0)
+	    {
+	      trans_init_fct = (__gconv_trans_init_fct) 1;
+	    }
+	}
+
       /* Allocate room for handle.  */
       result = (__gconv_t) malloc (sizeof (struct __gconv_info)
 				   + (nsteps
@@ -63,6 +103,8 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	res = __GCONV_NOMEM;
       else
 	{
+	  size_t n;
+
 	  /* Remember the list of steps.  */
 	  result->__steps = steps;
 	  result->__nsteps = nsteps;
@@ -105,6 +147,26 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 		}
 	      result->__data[cnt].__outbufend =
 		result->__data[cnt].__outbuf + size;
+
+	      /* Now see whether we can use the transliteration module
+		 for this step.  */
+	      for (n = 0; n < ncsnames; ++n)
+		if (strcasecmp (steps[cnt].__from_name, csnames[n]) == 0)
+		  {
+		    /* Match!  Now try the initializer.  */
+		    if (trans_init_fct == NULL
+			|| (trans_init_fct (&result->__data[cnt].__trans.__data,
+					    steps[cnt].__to_name)
+			    == __GCONV_OK))
+		      {
+			result->__data[cnt].__trans.__trans_fct = trans_fct;
+			result->__data[cnt].__trans.__trans_context_fct =
+			  trans_context_fct;
+			result->__data[cnt].__trans.__trans_end_fct =
+			  trans_end_fct;
+		      }
+		    break;
+		  }
 	    }
 
 	  /* Now handle the last entry.  */
@@ -116,6 +178,26 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	  result->__data[cnt].__internal_use = 0;
 #endif
 	  result->__data[cnt].__statep = &result->__data[cnt].__state;
+
+	  /* Now see whether we can use the transliteration module
+	     for this step.  */
+	  for (n = 0; n < ncsnames; ++n)
+	    if (strcasecmp (steps[cnt].__from_name, csnames[n]) == 0)
+	      {
+		/* Match!  Now try the initializer.  */
+		if (trans_init_fct == NULL
+		    || trans_init_fct (&result->__data[cnt].__trans.__data,
+				       steps[cnt].__to_name)
+		    == __GCONV_OK)
+		  {
+		    result->__data[cnt].__trans.__trans_fct = trans_fct;
+		    result->__data[cnt].__trans.__trans_context_fct =
+		      trans_context_fct;
+		    result->__data[cnt].__trans.__trans_end_fct =
+		      trans_end_fct;
+		  }
+		break;
+	      }
 	}
 
       if (res != __GCONV_OK)

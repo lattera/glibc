@@ -19,6 +19,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <gconv.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -12592,7 +12593,7 @@ static const char from_ucs4_tab14[][2] =
 	uint32_t ch2;							      \
 	int idx;							      \
 									      \
-	if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
+	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
 	  {								      \
 	    /* The second character is not available.  */		      \
 	    result = __GCONV_INCOMPLETE_INPUT;				      \
@@ -12647,6 +12648,7 @@ static const char from_ucs4_tab14[][2] =
     put32 (outptr, ch);							      \
     outptr += 4;							      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 
@@ -12740,18 +12742,30 @@ static const char from_ucs4_tab14[][2] =
     if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)		      \
       {									      \
 	/* Illegal character.  */					      \
-	if (! ignore_errors_p ())					      \
+	if (step_data->__trans.__trans_fct != NULL)			      \
+	  {								      \
+	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
+				  (step, step_data, *inptrp, &inptr, inend,   \
+				   *outptrp, &outptr, outend, irreversible)); \
+	    if (result != __GCONV_OK)					      \
+	      break;							      \
+	  }								      \
+	else if (! ignore_errors_p ())					      \
 	  {								      \
 	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
-									      \
-	++*irreversible;						      \
+	else								      \
+	  {								      \
+	    ++*irreversible;						      \
+	    inptr += 4;							      \
+	  }								      \
+	continue;							      \
       }									      \
     else								      \
       {									      \
 	/* See whether there is enough room for the second byte we write.  */ \
-	if (NEED_LENGTH_TEST && __builtin_expect (cp[1], '\1') != '\0'	      \
+	if (__builtin_expect (cp[1], '\1') != '\0'			      \
 	    && __builtin_expect (outptr + 1 >= outend, 0))		      \
 	  {								      \
 	    /* We have not enough room.  */				      \
@@ -12766,6 +12780,7 @@ static const char from_ucs4_tab14[][2] =
 									      \
     inptr += 4;								      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 

@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <byteswap.h>
+#include <dlfcn.h>
 #include <gconv.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -72,7 +73,7 @@
       put16u (outbuf, BOM);						      \
       outbuf += 2;							      \
     }
-#define EXTRA_LOOP_ARGS		, var, data, swap
+#define EXTRA_LOOP_ARGS		, var, swap
 
 
 /* Direction of the transformation.  */
@@ -201,20 +202,31 @@ gconv_end (struct __gconv_step *data)
 	  {								      \
 	    if (__builtin_expect (c, 0) >= 0x110000)			      \
 	      {								      \
-		if (! ignore_errors_p ())				      \
+		if (step_data->__trans.__trans_fct != NULL)		      \
+		  {							      \
+		    result = DL_CALL_FCT (step_data->__trans.__trans_fct,     \
+					  (step, step_data, *inptrp, &inptr,  \
+					   inend, *outptrp, &outptr, outend,  \
+					   irreversible));		      \
+		    if (result != __GCONV_OK)				      \
+		      break;						      \
+		  }							      \
+		else if (! ignore_errors_p ())				      \
 		  {							      \
 		    /* This is an illegal character.  */		      \
 		    result = __GCONV_ILLEGAL_INPUT;			      \
 		    break;						      \
 		  }							      \
-									      \
-		++*irreversible;					      \
-		inptr += 4;						      \
+		else							      \
+		  {							      \
+		    ++*irreversible;					      \
+		    inptr += 4;						      \
+		  }							      \
 		continue;						      \
 	      }								      \
 									      \
 	    /* Generate a surrogate character.  */			      \
-	    if (NEED_LENGTH_TEST && __builtin_expect (outptr + 4 > outend, 0))\
+	    if (__builtin_expect (outptr + 4 > outend, 0))		      \
 	      {								      \
 		/* Overflow in the output buffer.  */			      \
 		result = __GCONV_FULL_OUTPUT;				      \
@@ -234,20 +246,31 @@ gconv_end (struct __gconv_step *data)
 	  {								      \
 	    if (__builtin_expect (c, 0) >= 0x110000)			      \
 	      {								      \
-		if (! ignore_errors_p ())				      \
+		if (step_data->__trans.__trans_fct != NULL)		      \
+		  {							      \
+		    result = DL_CALL_FCT (step_data->__trans.__trans_fct,     \
+					  (step, step_data, *inptrp, &inptr,  \
+					   inend, *outptrp, &outptr, outend,  \
+					   irreversible));		      \
+		    if (result != __GCONV_OK)				      \
+		      break;						      \
+		  }							      \
+		else if (! ignore_errors_p ())				      \
 		  {							      \
 		    /* This is an illegal character.  */		      \
 		    result = __GCONV_ILLEGAL_INPUT;			      \
 		    break;						      \
 		  }							      \
-									      \
-		++*irreversible;					      \
-		inptr += 4;						      \
+		else							      \
+		  {							      \
+		    ++*irreversible;					      \
+		    inptr += 4;						      \
+		  }							      \
 		continue;						      \
 	      }								      \
 									      \
 	    /* Generate a surrogate character.  */			      \
-	    if (NEED_LENGTH_TEST && __builtin_expect (outptr + 4 > outend, 0))\
+	    if (__builtin_expect (outptr + 4 > outend, 0))		      \
 	      {								      \
 		/* Overflow in the output buffer.  */			      \
 		result = __GCONV_FULL_OUTPUT;				      \
@@ -264,8 +287,9 @@ gconv_end (struct __gconv_step *data)
     outptr += 2;							      \
     inptr += 4;								      \
   }
+#define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS \
-	, enum variant var, struct __gconv_step_data *step_data, int swap
+	, enum variant var, int swap
 #include <iconv/loop.c>
 
 
@@ -294,7 +318,7 @@ gconv_end (struct __gconv_step *data)
 									      \
 	    /* It's a surrogate character.  At least the first word says      \
 	       it is.  */						      \
-	    if (NEED_LENGTH_TEST && __builtin_expect (inptr + 4 > inend, 0))  \
+	    if (__builtin_expect (inptr + 4 > inend, 0))		      \
 	      {								      \
 		/* We don't have enough input for another complete input      \
 		   character.  */					      \
@@ -337,7 +361,7 @@ gconv_end (struct __gconv_step *data)
 									      \
 	    /* It's a surrogate character.  At least the first word says      \
 	       it is.  */						      \
-	    if (NEED_LENGTH_TEST && __builtin_expect (inptr + 4 > inend, 0))  \
+	    if (__builtin_expect (inptr + 4 > inend, 0))		      \
 	      {								      \
 		/* We don't have enough input for another complete input      \
 		   character.  */					      \
@@ -368,8 +392,9 @@ gconv_end (struct __gconv_step *data)
       }									      \
     outptr += 4;							      \
   }
+#define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS \
-	, enum variant var, struct __gconv_step_data *step_data, int swap
+	, enum variant var, int swap
 #include <iconv/loop.c>
 
 

@@ -21,6 +21,9 @@
 common_objpfx=$1
 objpfx=$2
 
+GCONV_PATH=${common_objpfx}iconvdata
+export GCONV_PATH
+
 # Generate the test data.
 test -d ${objpfx}domaindir || mkdir ${objpfx}domaindir
 # Create the locale directories.

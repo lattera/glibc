@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <errno.h>
 #include <gconv.h>
 #include <wchar.h>
@@ -79,10 +80,10 @@ __wcsnrtombs (dst, src, nwc, len, ps)
 	{
 	  data.__outbuf = buf;
 
-	  status = (*tomb->__fct) (__wcsmbs_gconv_fcts.tomb, &data,
-				   (const unsigned char **) &inbuf,
-				   (const unsigned char *) srcend, &dummy,
-				   0, 1);
+	  status = DL_CALL_FCT (tomb->__fct,
+				(tomb, &data, (const unsigned char **) &inbuf,
+				 (const unsigned char *) srcend, data.__outbuf,
+				 &dummy, 0, 1));
 
 	  /* Count the number of bytes.  */
 	  result += data.__outbuf - buf;
@@ -104,9 +105,10 @@ __wcsnrtombs (dst, src, nwc, len, ps)
       data.__outbuf = dst;
       data.__outbufend = dst + len;
 
-      status = (*tomb->__fct) (__wcsmbs_gconv_fcts.tomb, &data,
-			       (const unsigned char **) src,
-			       (const unsigned char *) srcend, &dummy, 0, 1);
+      status = DL_CALL_FCT (tomb->__fct,
+			    (tomb, &data, (const unsigned char **) src,
+			     (const unsigned char *) srcend, data.__outbuf,
+			     &dummy, 0, 1));
 
       /* Count the number of bytes.  */
       result = data.__outbuf - (unsigned char *) dst;

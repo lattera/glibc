@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <errno.h>
 #include <gconv.h>
 #include <wchar.h>
@@ -69,9 +70,9 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 
   /* Do a normal conversion.  */
   inbuf = (const unsigned char *) s;
-  status = (*__wcsmbs_gconv_fcts.towc->__fct) (__wcsmbs_gconv_fcts.towc,
-					       &data, &inbuf, inbuf + n,
-					       &dummy, 0, 1);
+  status = DL_CALL_FCT (__wcsmbs_gconv_fcts.towc->__fct,
+			(__wcsmbs_gconv_fcts.towc, &data, &inbuf, inbuf + n,
+			 data.__outbuf, &dummy, 0, 1));
 
   /* There must not be any problems with the conversion but illegal input
      characters.  The output buffer must be large enough, otherwise the

@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <byteswap.h>
+#include <dlfcn.h>
 #include <gconv.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -70,7 +71,7 @@
       outbuf += 2;							      \
     }									      \
   swap = ((struct unicode_data *) step->__data)->swap;
-#define EXTRA_LOOP_ARGS		, data, swap
+#define EXTRA_LOOP_ARGS		, swap
 
 
 /* Direction of the transformation.  */
@@ -151,14 +152,26 @@ gconv_end (struct __gconv_step *data)
 									      \
     if (__builtin_expect (c, 0) >= 0x10000)				      \
       {									      \
-	if (! ignore_errors_p ())					      \
+	if (step_data->__trans.__trans_fct != NULL)			      \
+	  {								      \
+	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
+				  (step, step_data, *inptrp, &inptr, inend,   \
+				   *outptrp, &outptr, outend, irreversible)); \
+	    if (result != __GCONV_OK)					      \
+	      break;							      \
+	  }								      \
+	else if (! ignore_errors_p ())					      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
-									      \
-	++*irreversible;						      \
+	else								      \
+	  {								      \
+	    ++*irreversible;						      \
+	    inptr += 4;							      \
+	  }								      \
+	continue;							      \
       }									      \
     else								      \
       {									      \
@@ -168,8 +181,9 @@ gconv_end (struct __gconv_step *data)
 									      \
     inptr += 4;								      \
   }
+#define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS \
-	, struct __gconv_step_data *step_data, int swap
+	, int swap
 #include <iconv/loop.c>
 
 
@@ -190,7 +204,7 @@ gconv_end (struct __gconv_step *data)
     outptr += 4;							      \
   }
 #define EXTRA_LOOP_DECLS \
-	, struct __gconv_step_data *step_data, int swap
+	, int swap
 #include <iconv/loop.c>
 
 

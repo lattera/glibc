@@ -1,4 +1,4 @@
-# Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -174,7 +174,8 @@ CFLAGS-scheck.c = -Wno-strict-prototypes -DNOID
 # leapseconds.
 testdata = $(objpfx)testdata
 define build-testdata
-$(built-program-cmd) -d $(testdata) -y ./yearistype $<
+GCONV_PATH=${common-objpfx}iconvdata \
+  $(built-program-cmd) -d $(testdata) -y ./yearistype $<
 endef
 
 $(objpfx)test-tz.out: $(addprefix $(testdata)/, America/New_York Etc/UTC UTC)

@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <stdint.h>
 #include <gconv.h>
 #include <jis0201.h>
@@ -66,7 +67,7 @@
 	   character is also available.  */				      \
 	int ch2;							      \
 									      \
-	if (NEED_LENGTH_TEST && __builtin_expect (inptr + 1 >= inend, 0))     \
+	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
 	  {								      \
 	    /* The second character is not available.  Store the	      \
 	       intermediate result.  */					      \
@@ -106,21 +107,17 @@
 		/* This is code set 3: JIS X 0212-1990.  */		      \
 		endp = inptr + 1;					      \
 									      \
-		ch = jisx0212_to_ucs4 (&endp,				      \
-				       NEED_LENGTH_TEST ? inend - endp : 2,   \
-				       0x80);				      \
+		ch = jisx0212_to_ucs4 (&endp, inend - endp, 0x80);	      \
 	      }								      \
 	    else							      \
 	      {								      \
 		/* This is code set 1: JIS X 0208.  */			      \
 		endp = inptr;						      \
 									      \
-		ch = jisx0208_to_ucs4 (&endp,				      \
-				       NEED_LENGTH_TEST ? inend - inptr : 2,  \
-				       0x80);				      \
+		ch = jisx0208_to_ucs4 (&endp, inend - inptr, 0x80);	      \
 	      }								      \
 									      \
-	    if (NEED_LENGTH_TEST && __builtin_expect (ch, 1) == 0)	      \
+	    if (__builtin_expect (ch, 1) == 0)				      \
 	      {								      \
 		/* Not enough input available.  */			      \
 		result = __GCONV_INCOMPLETE_INPUT;			      \
@@ -147,6 +144,7 @@
     put32 (outptr, ch);							      \
     outptr += 4;							      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 
@@ -174,7 +172,7 @@
 	size_t found;							      \
 									      \
 	/* See whether we have room for at least two characters.  */	      \
-	if (NEED_LENGTH_TEST && __builtin_expect (outptr + 1 >= outend, 0))   \
+	if (__builtin_expect (outptr + 1 >= outend, 0))			      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
@@ -202,8 +200,7 @@
 	      {								      \
 		/* No JIS 0208 character.  */				      \
 		found = ucs4_to_jisx0212 (ch, outptr + 1,		      \
-					  (NEED_LENGTH_TEST		      \
-					   ? outend - outptr - 1 : 2));	      \
+					  outend - outptr - 1);		      \
 		  							      \
 		if (__builtin_expect (found, 1) == 0)			      \
 		  {							      \
@@ -221,14 +218,26 @@
 		else							      \
 		  {							      \
 		    /* Illegal character.  */				      \
-		    if (! ignore_errors_p ())				      \
+		    if (step_data->__trans.__trans_fct != NULL)		      \
+		      {							      \
+			result = DL_CALL_FCT (step_data->__trans.__trans_fct, \
+					      (step, step_data, *inptrp,      \
+					       &inptr, inend, *outptrp,	      \
+					       &outptr, outend,		      \
+					       irreversible));		      \
+			if (result != __GCONV_OK)			      \
+			  break;					      \
+		      }							      \
+		    else if (! ignore_errors_p ())			      \
 		      {							      \
 			result = __GCONV_ILLEGAL_INPUT;			      \
 			break;						      \
 		      }							      \
-									      \
-		    inptr += 4;						      \
-		    ++*irreversible;					      \
+		    else						      \
+		      {							      \
+			inptr += 4;					      \
+			++*irreversible;				      \
+		      }							      \
 		    continue;						      \
 		  }							      \
 	      }								      \
@@ -237,6 +246,7 @@
 									      \
     inptr += 4;								      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 

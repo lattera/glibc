@@ -129,8 +129,8 @@ extern struct gconv_module *__gconv_modules_db;
 
 
 /* Return in *HANDLE decriptor for transformation from FROMSET to TOSET.  */
-extern int __gconv_open (const char *__toset, const char *__fromset,
-			 __gconv_t *__handle, int flags)
+extern int __gconv_open (const char *toset, const char *fromset,
+			 __gconv_t *handle, int flags)
      internal_function;
 
 /* Free resources associated with transformation descriptor CD.  */
@@ -141,55 +141,65 @@ extern int __gconv_close (__gconv_t cd)
    according to rules described by CD and place up to *OUTBYTESLEFT
    bytes in buffer starting at *OUTBUF.  Return number of non-identical
    conversions in *IRREVERSIBLE if this pointer is not null.  */
-extern int __gconv (__gconv_t __cd, const unsigned char **__inbuf,
-		    const unsigned char *inbufend, unsigned char **__outbuf,
+extern int __gconv (__gconv_t cd, const unsigned char **inbuf,
+		    const unsigned char *inbufend, unsigned char **outbuf,
 		    unsigned char *outbufend, size_t *irreversible)
      internal_function;
 
 /* Return in *HANDLE a pointer to an array with *NSTEPS elements describing
    the single steps necessary for transformation from FROMSET to TOSET.  */
-extern int __gconv_find_transform (const char *__toset, const char *__fromset,
-				   struct __gconv_step **__handle,
-				   size_t *__nsteps, int flags)
+extern int __gconv_find_transform (const char *toset, const char *fromset,
+				   struct __gconv_step **handle,
+				   size_t *nsteps, int flags)
      internal_function;
 
 /* Read all the configuration data and cache it.  */
 extern void __gconv_read_conf (void);
 
 /* Comparison function to search alias.  */
-extern int __gconv_alias_compare (const void *__p1, const void *__p2);
+extern int __gconv_alias_compare (const void *p1, const void *p2);
 
 /* Clear reference to transformation step implementations which might
    cause the code to be unloaded.  */
-extern int __gconv_close_transform (struct __gconv_step *__steps,
-				    size_t __nsteps)
+extern int __gconv_close_transform (struct __gconv_step *steps,
+				    size_t nsteps)
      internal_function;
 
 /* Load shared object named by NAME.  If already loaded increment reference
    count.  */
-extern struct __gconv_loaded_object *__gconv_find_shlib (const char *__name)
+extern struct __gconv_loaded_object *__gconv_find_shlib (const char *name)
      internal_function;
 
 /* Release shared object.  If no further reference is available unload
    the object.  */
-extern int __gconv_release_shlib (struct __gconv_loaded_object *__handle)
+extern int __gconv_release_shlib (struct __gconv_loaded_object *handle)
      internal_function;
 
 /* Fill STEP with information about builtin module with NAME.  */
-extern void __gconv_get_builtin_trans (const char *__name,
-				       struct __gconv_step *__step)
+extern void __gconv_get_builtin_trans (const char *name,
+				       struct __gconv_step *step)
      internal_function;
 
+/* Transliteration using the locale's data.  */
+extern int gconv_transliterate (struct __gconv_step *step,
+				struct __gconv_step_data *step_data,
+				__const unsigned char *inbufstart,
+				__const unsigned char **inbufp,
+				__const unsigned char *inbufend,
+				unsigned char *outbufstart,
+				unsigned char **outbufp,
+				unsigned char *outbufend,
+				size_t *irreversible);
 
 
 /* Builtin transformations.  */
 #ifdef _LIBC
 # define __BUILTIN_TRANS(Name) \
-  extern int Name (struct __gconv_step *__step,				      \
-		   struct __gconv_step_data *__data,			      \
-		   const unsigned char **__inbuf,			      \
-		   const unsigned char *__inbufend, size_t *__written,	      \
-		   int __do_flush, int __consume_incomplete)
+  extern int Name (struct __gconv_step *step,				      \
+		   struct __gconv_step_data *data,			      \
+		   const unsigned char **inbuf,				      \
+		   const unsigned char *inbufend, unsigned char *outbufstart, \
+		   size_t *irreversible, int do_flush, int consume_incomplete)
 
 __BUILTIN_TRANS (__gconv_transform_ascii_internal);
 __BUILTIN_TRANS (__gconv_transform_internal_ascii);

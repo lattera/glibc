@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <stdint.h>
 
 /* Definitions used in the body of the `gconv' function.  */
@@ -48,18 +49,31 @@
     if (__builtin_expect (ch, 0) > 0xff)				      \
       {									      \
 	/* We have an illegal character.  */				      \
-	if (! ignore_errors_p ())					      \
+	if (step_data->__trans.__trans_fct != NULL)			      \
+	  {								      \
+	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
+				  (step, step_data, *inptrp, &inptr, inend,   \
+				   *outptrp, &outptr, outend, irreversible)); \
+	    if (result != __GCONV_OK)					      \
+	      break;							      \
+	  }								      \
+	else if (! ignore_errors_p ())					      \
 	  {								      \
 	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
-									      \
-	++*irreversible;						      \
+	else								      \
+	  {								      \
+	    inptr += 4;							      \
+	    ++*irreversible;						      \
+	  }								      \
+	continue;							      \
       }									      \
     else								      \
       *outptr++ = (unsigned char) ch;					      \
     inptr += 4;								      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 

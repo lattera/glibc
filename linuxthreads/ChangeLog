@@ -1,5 +1,7 @@
 2000-06-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add joinrace.
+
 	* Examples/ex6.c: Test return value of pthread_join.
 
 2000-06-11  Geoff Keating  <geoffk@cygnus.com>

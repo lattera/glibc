@@ -175,88 +175,57 @@
 
 /* The function returns the status, as defined in gconv.h.  */
 static inline int
-FCTNAME (LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
+FCTNAME (LOOPFCT) (struct __gconv_step *step,
+		   struct __gconv_step_data *step_data,
+		   const unsigned char **inptrp, const unsigned char *inend,
 		   unsigned char **outptrp, unsigned char *outend,
-		   mbstate_t *state, int flags, void *data,
 		   size_t *irreversible EXTRA_LOOP_DECLS)
 {
-  int result = __GCONV_OK;
+#ifdef LOOP_NEED_STATE
+  mbstate_t *state = step_data->__statep;
+#endif
+#ifdef LOOP_NEED_FLAGS
+  int flags = step_data->__flags;
+#endif
+#ifdef LOOP_NEED_DATA
+  void *data = step->__data;
+#endif
+  int result = __GCONV_EMPTY_INPUT;
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
-
-  /* We run one loop where we avoid checks for underflow/overflow of the
-     buffers to speed up the conversion a bit.  */
-  size_t min_in_rounds = (inend - inptr) / MAX_NEEDED_INPUT;
-  size_t min_out_rounds = (outend - outptr) / MAX_NEEDED_OUTPUT;
-  size_t min_rounds = MIN (min_in_rounds, min_out_rounds);
 
 #ifdef INIT_PARAMS
   INIT_PARAMS;
 #endif
 
-#undef NEED_LENGTH_TEST
-#define NEED_LENGTH_TEST	0
-  while (min_rounds-- > 0)
+  while (inptr != inend)
     {
-      /* Here comes the body the user provides.  It can stop with RESULT
-	 set to GCONV_INCOMPLETE_INPUT (if the size of the input characters
-	 vary in size), GCONV_ILLEGAL_INPUT, or GCONV_FULL_OUTPUT (if the
-	 output characters vary in size.  */
-      BODY
-    }
-
-  if (result == __GCONV_OK)
-    {
-#if MIN_NEEDED_INPUT == MAX_NEEDED_INPUT \
-    && MIN_NEEDED_OUTPUT == MAX_NEEDED_OUTPUT
-      /* We don't need to start another loop since we were able to determine
-	 the maximal number of characters to copy in advance.  What remains
-	 to be determined is the status.  */
-      if (inptr == inend)
-	/* No more input.  */
-	result = __GCONV_EMPTY_INPUT;
-      else if ((MIN_NEEDED_OUTPUT != 1 && outptr + MIN_NEEDED_OUTPUT > outend)
-	       || (MIN_NEEDED_OUTPUT == 1 && outptr >= outend))
-	/* Overflow in the output buffer.  */
-	result = __GCONV_FULL_OUTPUT;
-      else
-	/* We have something left in the input buffer.  */
-	result = __GCONV_INCOMPLETE_INPUT;
-#else
-      result = __GCONV_EMPTY_INPUT;
-
-# undef NEED_LENGTH_TEST
-# define NEED_LENGTH_TEST	1
-      while (inptr != inend)
+      /* `if' cases for MIN_NEEDED_OUTPUT ==/!= 1 is made to help the
+	 compiler generating better code.  It will optimized away
+	 since MIN_NEEDED_OUTPUT is always a constant.  */
+      if ((MIN_NEEDED_OUTPUT != 1
+	   && __builtin_expect (outptr + MIN_NEEDED_OUTPUT > outend, 0))
+	  || (MIN_NEEDED_OUTPUT == 1
+	      && __builtin_expect (outptr >= outend, 0)))
 	{
-	  /* `if' cases for MIN_NEEDED_OUTPUT ==/!= 1 is made to help the
-	     compiler generating better code.  It will optimized away
-	     since MIN_NEEDED_OUTPUT is always a constant.  */
-	  if ((MIN_NEEDED_OUTPUT != 1
-	       && __builtin_expect (outptr + MIN_NEEDED_OUTPUT > outend, 0))
-	      || (MIN_NEEDED_OUTPUT == 1
-		  && __builtin_expect (outptr >= outend, 0)))
-	    {
-	      /* Overflow in the output buffer.  */
-	      result = __GCONV_FULL_OUTPUT;
-	      break;
-	    }
-	  if (MIN_NEEDED_INPUT > 1
-	      && __builtin_expect (inptr + MIN_NEEDED_INPUT > inend, 0))
-	    {
-	      /* We don't have enough input for another complete input
-		 character.  */
-	      result = __GCONV_INCOMPLETE_INPUT;
-	      break;
-	    }
-
-	  /* Here comes the body the user provides.  It can stop with
-	     RESULT set to GCONV_INCOMPLETE_INPUT (if the size of the
-	     input characters vary in size), GCONV_ILLEGAL_INPUT, or
-	     GCONV_FULL_OUTPUT (if the output characters vary in size).  */
-	  BODY
+	  /* Overflow in the output buffer.  */
+	  result = __GCONV_FULL_OUTPUT;
+	  break;
 	}
-#endif	/* Input and output charset are not both fixed width.  */
+      if (MIN_NEEDED_INPUT > 1
+	  && __builtin_expect (inptr + MIN_NEEDED_INPUT > inend, 0))
+	{
+	  /* We don't have enough input for another complete input
+	     character.  */
+	  result = __GCONV_INCOMPLETE_INPUT;
+	  break;
+	}
+
+      /* Here comes the body the user provides.  It can stop with
+	 RESULT set to GCONV_INCOMPLETE_INPUT (if the size of the
+	 input characters vary in size), GCONV_ILLEGAL_INPUT, or
+	 GCONV_FULL_OUTPUT (if the output characters vary in size).  */
+      BODY
     }
 
   /* Update the pointers pointed to by the parameters.  */
@@ -291,11 +260,19 @@ FCTNAME (LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 # define SINGLE(fct) SINGLE2 (fct)
 # define SINGLE2(fct) fct##_single
 static inline int
-SINGLE(LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
+SINGLE(LOOPFCT) (struct __gconv_step *step,
+		 struct __gconv_step_data *step_data,
+		 const unsigned char **inptrp, const unsigned char *inend,
 		 unsigned char **outptrp, unsigned char *outend,
-		 mbstate_t *state, int flags, void *data, size_t *irreversible
-		 EXTRA_LOOP_DECLS)
+		 size_t *irreversible EXTRA_LOOP_DECLS)
 {
+  mbstate_t *state = step_data->__statep;
+#ifdef LOOP_NEED_FLAGS
+  int flags = step_data->__flags;
+#endif
+#ifdef LOOP_NEED_DATA
+  void *data = step->__data;
+#endif
   int result = __GCONV_OK;
   unsigned char bytebuf[MAX_NEEDED_INPUT];
   const unsigned char *inptr = *inptrp;
@@ -347,8 +324,7 @@ SINGLE(LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 
   inptr = bytebuf;
   inend = &bytebuf[inlen];
-#undef NEED_LENGTH_TEST
-#define NEED_LENGTH_TEST	1
+
   do
     {
       BODY
@@ -410,9 +386,12 @@ SINGLE(LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 #undef EXTRA_LOOP_DECLS
 #undef INIT_PARAMS
 #undef UPDATE_PARAMS
+#undef UNPACK_BYTES
+#undef LOOP_NEED_STATE
+#undef LOOP_NEED_FLAGS
+#undef LOOP_NEED_DATA
 #undef get16
 #undef get32
 #undef put16
 #undef put32
 #undef unaligned
-#undef UNPACK_BYTES

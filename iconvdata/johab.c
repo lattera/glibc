@@ -19,6 +19,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <stdint.h>
 #include <ksc5601.h>
 
@@ -203,7 +204,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	    uint32_t ch2;						      \
 	    uint_fast32_t idx;						      \
 									      \
-	    if (NEED_LENGTH_TEST && __builtin_expect (inptr + 1 >= inend, 0)) \
+	    if (__builtin_expect (inptr + 1 >= inend, 0))		      \
 	      {								      \
 		/* The second character is not available.  Store the	      \
 		   intermediate result.  */				      \
@@ -319,6 +320,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
     put32 (outptr, ch);							      \
     outptr += 4;							      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 
@@ -350,7 +352,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
       {									      \
 	if (ch >= 0xac00 && ch <= 0xd7a3)				      \
 	  {								      \
-	    if (NEED_LENGTH_TEST && __builtin_expect (outptr + 2 > outend, 0))\
+	    if (__builtin_expect (outptr + 2 > outend, 0))		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -371,7 +373,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	  {								      \
 	    ch = jamo_from_ucs_table[ch - 0x3131];			      \
 									      \
-	    if (NEED_LENGTH_TEST && __builtin_expect (outptr + 2 > outend, 0))\
+	    if (__builtin_expect (outptr + 2 > outend, 0))		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -386,25 +388,34 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	    size_t written;						      \
 	    uint32_t temp;						      \
 									      \
-	    written = ucs4_to_ksc5601_hanja (ch, outptr,		      \
-					     (NEED_LENGTH_TEST		      \
-					      ? outend - outptr : 2));	      \
-	    if (NEED_LENGTH_TEST && __builtin_expect (written, 1) == 0)	      \
+	    written = ucs4_to_ksc5601_hanja (ch, outptr, outend - outptr);    \
+	    if (__builtin_expect (written, 1) == 0)			      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
 	    if (__builtin_expect (written, 0) == __UNKNOWN_10646_CHAR)	      \
 	      {								      \
-		if (! ignore_errors_p ())				      \
+		if (step_data->__trans.__trans_fct != NULL)		      \
+		  {							      \
+		    result = DL_CALL_FCT (step_data->__trans.__trans_fct,     \
+					  (step, step_data, *inptrp, &inptr,  \
+ 					   inend, *outptrp, &outptr, outend,  \
+					   irreversible));		      \
+		    if (result != __GCONV_OK)				      \
+		      break;						      \
+		  }							      \
+		else if (! ignore_errors_p ())				      \
 		  {							      \
 		    /* This is an illegal character.  */		      \
 		    result = __GCONV_ILLEGAL_INPUT;			      \
 		    break;						      \
 		  }							      \
-									      \
-		inptr += 4;						      \
-		++*irreversible;					      \
+		else							      \
+		  {							      \
+		    inptr += 4;						      \
+		    ++*irreversible;					      \
+		  }							      \
 		continue;						      \
 	      }								      \
 									      \
@@ -423,25 +434,34 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	  {								      \
 	    size_t written;						      \
 									      \
-	    written = ucs4_to_ksc5601_sym (ch, outptr,			      \
-					   (NEED_LENGTH_TEST		      \
-					    ? outend - outptr : 2));	      \
-	    if (NEED_LENGTH_TEST && __builtin_expect (written, 1) == 0)	      \
+	    written = ucs4_to_ksc5601_sym (ch, outptr, outend - outptr);      \
+	    if (__builtin_expect (written, 1) == 0)			      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
 	    if (__builtin_expect (written, 1) == __UNKNOWN_10646_CHAR)	      \
 	      {								      \
-		if (! ignore_errors_p ())				      \
+		if (step_data->__trans.__trans_fct != NULL)		      \
+		  {							      \
+		    result = DL_CALL_FCT (step_data->__trans.__trans_fct,     \
+					  (step, step_data, *inptrp, &inptr,  \
+					   inend, *outptrp, &outptr, outend,  \
+					   irreversible));		      \
+		    if (result != __GCONV_OK)				      \
+		      break;						      \
+		  }							      \
+		else if (! ignore_errors_p ())				      \
 		  {							      \
 		    /* This is an illegal character.  */		      \
 		    result = __GCONV_ILLEGAL_INPUT;			      \
 		    break;						      \
 		  }							      \
-									      \
-		inptr += 4;						      \
-		++*irreversible;					      \
+		else							      \
+		  {							      \
+		    inptr += 4;						      \
+		    ++*irreversible;					      \
+		  }							      \
 		continue;						      \
 	      }								      \
 									      \
@@ -460,6 +480,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 									      \
     inptr += 4;								      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 

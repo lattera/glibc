@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <gconv.h>
 #include <stdint.h>
 #include <string.h>
@@ -141,10 +142,9 @@ enum
 	   switching is done using the SI and SO bytes.  But we have to	      \
 	   recognize `Esc $ ) C' since this is a kind of flag for this	      \
 	   encoding.  We simply ignore it.  */				      \
-	if ((NEED_LENGTH_TEST && __builtin_expect (inptr + 1 > inend, 0))     \
+	if (__builtin_expect (inptr + 1 > inend, 0)			      \
 	    || (inptr[1] == '$'						      \
-		&& ((NEED_LENGTH_TEST					      \
-		     && __builtin_expect (inptr + 2 > inend, 0))	      \
+		&& (__builtin_expect (inptr + 2 > inend, 0)		      \
 		    || (inptr[2] == ')'					      \
 			&& __builtin_expect (inptr + 3 > inend, 0)))))	      \
 									      \
@@ -184,10 +184,9 @@ enum
 	assert (set == KSC5601_set);					      \
 									      \
 	/* Use the KSC 5601 table.  */					      \
-	ch = ksc5601_to_ucs4 (&inptr,					      \
-			      NEED_LENGTH_TEST ? inend - inptr : 2, 0);	      \
+	ch = ksc5601_to_ucs4 (&inptr, inend - inptr, 0);		      \
 									      \
-	if (NEED_LENGTH_TEST && __builtin_expect (ch, 1) == 0)		      \
+	if (__builtin_expect (ch, 1) == 0)				      \
 	  {								      \
 	    result = __GCONV_EMPTY_INPUT;				      \
 	    break;							      \
@@ -210,6 +209,7 @@ enum
     put32 (outptr, ch);							      \
     outptr += 4;							      \
   }
+#define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS	, int *setp
 #define INIT_PARAMS		int set = *setp
 #define UPDATE_PARAMS		*setp = set
@@ -236,7 +236,7 @@ enum
 	  {								      \
 	    *outptr++ = SI;						      \
 	    set = ASCII_set;						      \
-	    if (NEED_LENGTH_TEST && outptr == outend)			      \
+	    if (__builtin_expect (outptr == outend, 0))			      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -255,13 +255,26 @@ enum
 	if (__builtin_expect (written, 0) == __UNKNOWN_10646_CHAR)	      \
 	  {								      \
 	    /* Illegal character.  */					      \
-	    if (! ignore_errors_p ())					      \
+	    if (step_data->__trans.__trans_fct != NULL)			      \
+	      {								      \
+		result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
+				      (step, step_data, *inptrp, &inptr,      \
+				       inend, *outptrp, &outptr, outend,      \
+				       irreversible));			      \
+		if (result != __GCONV_OK)				      \
+		  break;						      \
+	      }								      \
+	    else if (! ignore_errors_p ())				      \
 	      {								      \
 		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
-									      \
-	    ++*irreversible;						      \
+	    else							      \
+	      {								      \
+		++*irreversible;					      \
+		inptr += 4;						      \
+	      }								      \
+	    continue;							      \
 	  }								      \
 	else								      \
 	  {								      \
@@ -274,7 +287,7 @@ enum
 		set = KSC5601_set;					      \
 	      }								      \
 									      \
-	    if (NEED_LENGTH_TEST && __builtin_expect (outptr + 2 > outend, 0))\
+	    if (__builtin_expect (outptr + 2 > outend, 0))		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -288,6 +301,7 @@ enum
     /* Now that we wrote the output increment the input pointer.  */	      \
     inptr += 4;								      \
   }
+#define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS	, int *setp
 #define INIT_PARAMS		int set = *setp
 #define UPDATE_PARAMS		*setp = set

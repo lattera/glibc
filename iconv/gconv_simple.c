@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <byteswap.h>
+#include <dlfcn.h>
 #include <endian.h>
 #include <errno.h>
 #include <gconv.h>
@@ -62,9 +63,10 @@ static const unsigned char encoding_byte[] =
 
 
 static inline int
-internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
+internal_ucs4_loop (struct __gconv_step *step,
+		    struct __gconv_step_data *step_data,
+		    const unsigned char **inptrp, const unsigned char *inend,
 		    unsigned char **outptrp, unsigned char *outend,
-		    mbstate_t *state, int flags, void *data,
 		    size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
@@ -102,10 +104,11 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 
 #ifndef _STRING_ARCH_unaligned
 static inline int
-internal_ucs4_loop_unaligned (const unsigned char **inptrp,
+internal_ucs4_loop_unaligned (struct __gconv_step *step,
+			      struct __gconv_step_data *step_data,
+			      const unsigned char **inptrp,
 			      const unsigned char *inend,
 			      unsigned char **outptrp, unsigned char *outend,
-			      mbstate_t *state, int flags, void *data,
 			      size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
@@ -149,12 +152,14 @@ internal_ucs4_loop_unaligned (const unsigned char **inptrp,
 
 
 static inline int
-internal_ucs4_loop_single (const unsigned char **inptrp,
+internal_ucs4_loop_single (struct __gconv_step *step,
+			   struct __gconv_step_data *step_data,
+			   const unsigned char **inptrp,
 			   const unsigned char *inend,
 			   unsigned char **outptrp, unsigned char *outend,
-			   mbstate_t *state, int flags, void *data,
 			   size_t *irreversible)
 {
+  mbstate_t *state = step_data->__statep;
   size_t cnt = state->__count & 7;
 
   while (*inptrp < inend && cnt < 4)
@@ -205,11 +210,13 @@ internal_ucs4_loop_single (const unsigned char **inptrp,
 
 
 static inline int
-ucs4_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
+ucs4_internal_loop (struct __gconv_step *step,
+		    struct __gconv_step_data *step_data,
+		    const unsigned char **inptrp, const unsigned char *inend,
 		    unsigned char **outptrp, unsigned char *outend,
-		    mbstate_t *state, int flags, void *data,
 		    size_t *irreversible)
 {
+  int flags = step_data->__flags;
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
   size_t n_convert = MIN (inend - inptr, outend - outptr) / 4;
@@ -228,6 +235,10 @@ ucs4_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
 
       if (__builtin_expect (inval, 0) > 0x7fffffff)
 	{
+	  /* The value is too large.  We don't try transliteration here since
+	     this is not an error because of the lack of possibilities to
+	     represent the result.  This is a genuine bug in the input since
+	     UCS4 does not allow such values.  */
 	  if (flags & __GCONV_IGNORE_ERRORS)
 	    {
 	      /* Just ignore this character.  */
@@ -259,23 +270,28 @@ ucs4_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
 
 #ifndef _STRING_ARCH_unaligned
 static inline int
-ucs4_internal_loop_unaligned (const unsigned char **inptrp,
+ucs4_internal_loop_unaligned (struct __gconv_step *step,
+			      struct __gconv_step_data *step_data,
+			      const unsigned char **inptrp,
 			      const unsigned char *inend,
 			      unsigned char **outptrp, unsigned char *outend,
-			      mbstate_t *state, int flags, void *data,
 			      size_t *irreversible)
 {
+  int flags = step_data->__flags;
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
   size_t n_convert = MIN (inend - inptr, outend - outptr) / 4;
   int result;
   size_t cnt;
 
-  for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4, outptr += 4)
+  for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4)
     {
       if (__builtin_expect (inptr[0], 0) > 0x80)
 	{
-	  /* The value is too large.  */
+	  /* The value is too large.  We don't try transliteration here since
+	     this is not an error because of the lack of possibilities to
+	     represent the result.  This is a genuine bug in the input since
+	     UCS4 does not allow such values.  */
 	  if (flags & __GCONV_IGNORE_ERRORS)
 	    {
 	      /* Just ignore this character.  */
@@ -299,6 +315,7 @@ ucs4_internal_loop_unaligned (const unsigned char **inptrp,
       outptr[2] = inptr[2];
       outptr[3] = inptr[3];
 # endif
+      outptr += 4;
     }
 
   *inptrp = inptr;
@@ -318,12 +335,15 @@ ucs4_internal_loop_unaligned (const unsigned char **inptrp,
 
 
 static inline int
-ucs4_internal_loop_single (const unsigned char **inptrp,
+ucs4_internal_loop_single (struct __gconv_step *step,
+			   struct __gconv_step_data *step_data,
+			   const unsigned char **inptrp,
 			   const unsigned char *inend,
 			   unsigned char **outptrp, unsigned char *outend,
-			   mbstate_t *state, int flags, void *data,
 			   size_t *irreversible)
 {
+  mbstate_t *state = step_data->__statep;
+  int flags = step_data->__flags;
   size_t cnt = state->__count & 7;
 
   while (*inptrp < inend && cnt < 4)
@@ -341,7 +361,10 @@ ucs4_internal_loop_single (const unsigned char **inptrp,
   if (__builtin_expect (((unsigned char *) state->__value.__wchb)[0], 0)
       > 0x80)
     {
-      /* The value is too large.  */
+      /* The value is too large.  We don't try transliteration here since
+	 this is not an error because of the lack of possibilities to
+	 represent the result.  This is a genuine bug in the input since
+	 UCS4 does not allow such values.  */
       if (!(flags & __GCONV_IGNORE_ERRORS))
 	{
 	  *inptrp -= cnt - (state->__count & 7);
@@ -386,9 +409,10 @@ ucs4_internal_loop_single (const unsigned char **inptrp,
 
 
 static inline int
-internal_ucs4le_loop (const unsigned char **inptrp, const unsigned char *inend,
+internal_ucs4le_loop (struct __gconv_step *step,
+		      struct __gconv_step_data *step_data,
+		      const unsigned char **inptrp, const unsigned char *inend,
 		      unsigned char **outptrp, unsigned char *outend,
-		      mbstate_t *state, int flags, void *data,
 		      size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
@@ -426,10 +450,11 @@ internal_ucs4le_loop (const unsigned char **inptrp, const unsigned char *inend,
 
 #ifndef _STRING_ARCH_unaligned
 static inline int
-internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
+internal_ucs4le_loop_unaligned (struct __gconv_step *step,
+				struct __gconv_step_data *step_data,
+				const unsigned char **inptrp,
 				const unsigned char *inend,
 				unsigned char **outptrp, unsigned char *outend,
-				mbstate_t *state, int flags, void *data,
 				size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
@@ -473,12 +498,14 @@ internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
 
 
 static inline int
-internal_ucs4le_loop_single (const unsigned char **inptrp,
+internal_ucs4le_loop_single (struct __gconv_step *step,
+			     struct __gconv_step_data *step_data,
+			     const unsigned char **inptrp,
 			     const unsigned char *inend,
 			     unsigned char **outptrp, unsigned char *outend,
-			     mbstate_t *state, int flags, void *data,
 			     size_t *irreversible)
 {
+  mbstate_t *state = step_data->__statep;
   size_t cnt = state->__count & 7;
 
   while (*inptrp < inend && cnt < 4)
@@ -526,11 +553,13 @@ internal_ucs4le_loop_single (const unsigned char **inptrp,
 
 
 static inline int
-ucs4le_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
+ucs4le_internal_loop (struct __gconv_step *step,
+		      struct __gconv_step_data *step_data,
+		      const unsigned char **inptrp, const unsigned char *inend,
 		      unsigned char **outptrp, unsigned char *outend,
-		      mbstate_t *state, int flags, void *data,
 		      size_t *irreversible)
 {
+  int flags = step_data->__flags;
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
   size_t n_convert = MIN (inend - inptr, outend - outptr) / 4;
@@ -549,6 +578,10 @@ ucs4le_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
 
       if (__builtin_expect (inval, 0) > 0x7fffffff)
 	{
+	  /* The value is too large.  We don't try transliteration here since
+	     this is not an error because of the lack of possibilities to
+	     represent the result.  This is a genuine bug in the input since
+	     UCS4 does not allow such values.  */
 	  if (flags & __GCONV_IGNORE_ERRORS)
 	    {
 	      /* Just ignore this character.  */
@@ -578,12 +611,14 @@ ucs4le_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
 
 #ifndef _STRING_ARCH_unaligned
 static inline int
-ucs4le_internal_loop_unaligned (const unsigned char **inptrp,
+ucs4le_internal_loop_unaligned (struct __gconv_step *step,
+				struct __gconv_step_data *step_data,
+				const unsigned char **inptrp,
 				const unsigned char *inend,
 				unsigned char **outptrp, unsigned char *outend,
-				mbstate_t *state, int flags, void *data,
 				size_t *irreversible)
 {
+  int flags = step_data->__flags;
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
   size_t n_convert = MIN (inend - inptr, outend - outptr) / 4;
@@ -594,7 +629,10 @@ ucs4le_internal_loop_unaligned (const unsigned char **inptrp,
     {
       if (__builtin_expect (inptr[3], 0) > 0x80)
 	{
-	  /* The value is too large.  */
+	  /* The value is too large.  We don't try transliteration here since
+	     this is not an error because of the lack of possibilities to
+	     represent the result.  This is a genuine bug in the input since
+	     UCS4 does not allow such values.  */
 	  if (flags & __GCONV_IGNORE_ERRORS)
 	    {
 	      /* Just ignore this character.  */
@@ -639,12 +677,15 @@ ucs4le_internal_loop_unaligned (const unsigned char **inptrp,
 
 
 static inline int
-ucs4le_internal_loop_single (const unsigned char **inptrp,
+ucs4le_internal_loop_single (struct __gconv_step *step,
+			     struct __gconv_step_data *step_data,
+			     const unsigned char **inptrp,
 			     const unsigned char *inend,
 			     unsigned char **outptrp, unsigned char *outend,
-			     mbstate_t *state, int flags, void *data,
 			     size_t *irreversible)
 {
+  mbstate_t *state = step_data->__statep;
+  int flags = step_data->__flags;
   size_t cnt = state->__count & 7;
 
   while (*inptrp < inend && cnt < 4)
@@ -662,7 +703,10 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
   if (__builtin_expect (((unsigned char *) state->__value.__wchb)[3], 0)
       > 0x80)
     {
-      /* The value is too large.  */
+      /* The value is too large.  We don't try transliteration here since
+	 this is not an error because of the lack of possibilities to
+	 represent the result.  This is a genuine bug in the input since
+	 UCS4 does not allow such values.  */
       if (!(flags & __GCONV_IGNORE_ERRORS))
 	return __GCONV_ILLEGAL_INPUT;
     }
@@ -710,6 +754,10 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
   {									      \
     if (__builtin_expect (*inptr, 0) > '\x7f')				      \
       {									      \
+	/* The value is too large.  We don't try transliteration here since   \
+	   this is not an error because of the lack of possibilities to	      \
+	   represent the result.  This is a genuine bug in the input since    \
+	   ASCII does not allow such values.  */			      \
 	if (! ignore_errors_p ())					      \
 	  {								      \
 	    /* This is no correct ANSI_X3.4-1968 character.  */		      \
@@ -718,13 +766,14 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	  }								      \
 									      \
 	++*irreversible;						      \
-	++inptr; 							      \
+	++inptr;							      \
       }									      \
     else								      \
       /* It's an one byte sequence.  */					      \
       /* XXX unaligned.  */						      \
       *((uint32_t *) outptr)++ = *inptr++;				      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
 
@@ -740,6 +789,13 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 #define FUNCTION_NAME		__gconv_transform_internal_ascii
 #define ONE_DIRECTION		1
 
+extern int FUNCTION_NAME (struct __gconv_step *step,
+			  struct __gconv_step_data *data,
+			  const unsigned char **inptrp,
+			  const unsigned char *inend,
+			  unsigned char *outbufstart, size_t *irreversible,
+			  int do_flush, int consume_incomplete);
+
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
@@ -748,20 +804,31 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
     /* XXX unaligned.  */						      \
     if (__builtin_expect (*((uint32_t *) inptr), 0) > 0x7f)		      \
       {									      \
-	if (! ignore_errors_p ())					      \
+	if (step_data->__trans.__trans_fct != NULL)			      \
+	  {								      \
+	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
+				  (step, step_data, *inptrp, &inptr, inend,   \
+				   *outptrp, &outptr, outend, irreversible)); \
+	    if (result != __GCONV_OK)					      \
+	      break;							      \
+	  }								      \
+	else if (! ignore_errors_p ())					      \
 	  {								      \
 	    /* This is no correct ANSI_X3.4-1968 character.  */		      \
 	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
-									      \
-	++*irreversible;						      \
-	inptr += 4; 							      \
+	else								      \
+	  {								      \
+	    ++*irreversible;						      \
+	    inptr += 4; 						      \
+	  }								      \
       }									      \
     else								      \
       /* It's an one byte sequence.  */					      \
       *outptr++ = *((uint32_t *) inptr)++;				      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
 
@@ -916,7 +983,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	     continue;							      \
 	  }								      \
 									      \
-	if (NEED_LENGTH_TEST && __builtin_expect (inptr + cnt > inend, 0))    \
+	if (__builtin_expect (inptr + cnt > inend, 0))			    \
 	  {								      \
 	    /* We don't have enough input.  But before we report that check   \
 	       that all the bytes are correct.  */			      \
@@ -979,6 +1046,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
     /* Now adjust the pointers and store the result.  */		      \
     *((uint32_t *) outptr)++ = ch;					      \
   }
+#define LOOP_NEED_FLAGS
 
 #define STORE_REST \
   {									      \
@@ -1125,18 +1193,29 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
   {									      \
     if (__builtin_expect (*((uint32_t *) inptr), 0) >= 0x10000)		      \
       {									      \
-	if (! ignore_errors_p ())					      \
+	if (step_data->__trans.__trans_fct != NULL)			      \
+	  {								      \
+	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
+				  (step, step_data, *inptrp, &inptr, inend,   \
+				   *outptrp, &outptr, outend, irreversible)); \
+	    if (result != __GCONV_OK)					      \
+	      break;							      \
+	  }								      \
+	else if (! ignore_errors_p ())					      \
 	  {								      \
 	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
-									      \
-	inptr += 4;							      \
-	++*irreversible;						      \
+	else								      \
+	  {								      \
+	    inptr += 4;							      \
+	    ++*irreversible;						      \
+	  }								      \
       }									      \
     else 								      \
       *((uint16_t *) outptr)++ = *((uint32_t *) inptr)++;		      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
 
@@ -1181,17 +1260,29 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
     uint32_t val = *((uint32_t *) inptr);				      \
     if (__builtin_expect (val, 0) >= 0x10000)				      \
       {									      \
-	if (! ignore_errors_p ())					      \
+	if (step_data->__trans.__trans_fct != NULL)			      \
+	  {								      \
+	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
+				  (step, step_data, *inptrp, &inptr, inend,   \
+				   *outptrp, &outptr, outend, irreversible)); \
+	    if (result != __GCONV_OK)					      \
+	      break;							      \
+	  }								      \
+	else if (! ignore_errors_p ())					      \
 	  {								      \
 	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
-									      \
-	inptr += 4;							      \
-	++*irreversible;						      \
+	else								      \
+	  {								      \
+	    inptr += 4;							      \
+	    ++*irreversible;						      \
+	  }								      \
+	continue;							      \
       }									      \
     *((uint16_t *) outptr)++ = bswap_16 (val);				      \
     inptr += 4;								      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>

@@ -1,3 +1,68 @@
+2000-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* Rules (%.out): Define GCONV_PATH in the environment.
+	* assert/Depend: New file.
+	* iconvdata/Depend: New file.
+	* intl/Depend: New file.
+	* timezone/Makefile (build-testdata): Add GCONV_PATH to environment.
+	* intl/tst-gettext.sh: Likewise.
+	* iconv/Makefile (routines): Add gconv_trans.
+	* iconv/gconv_trans.c: New file.
+	* iconv/gconv.h (struct __gconv_trans_data): New type.
+	(__gconv_fct): New parameter with starting position in output buffer.
+	(__gconv_trans_fct, __gconv_trans_context_fct, __gconv_trans_query_fct,
+	__gconv_trans_init_fct, __gconv_trans_end_fct): New types.
+	(struct __gconv_step): Add new member __trans.
+	* iconv/gconv_int.h: Pretty print prototypes.
+	(gconv_transliterate): New prototype.
+	(__BUILTIN_TRANS): Update for new conversion function interface.
+	* iconv/gconv.c (__gconv): Pass new parameter to conversion function.
+	* iconv/gconv_open.c (__gconv_open): Recognize error handling suffix
+	in names, find appropriate function, and install in the conversion
+	steps it can be used.
+	* iconv/skeleton.c: Add additional parameter for beginning of output
+	buffer.  Change calls of downstream functions.
+	* iconv/loop.c: Change loop function interface completely.  Pass in
+	step and step_data structure.  Remove optimization for BODY with
+	NEED_LENGTH_TEST == 0.
+	* iconv/gconv_simple.c: Update interfaces of functions.  Insert
+	appropriate error handling code to use transliteration steps.  Remove
+	optimization for BODY with NEED_LENGTH_TEST == 0.
+	* iconvdata/8bit-gap.c: Likewise.
+	* iconvdata/8bit-generic.c: Likewise.
+	* iconvdata/ansi_x3.110.c: Likewise.
+	* iconvdata/big5.c: Likewise.
+	* iconvdata/big5hkscs.c: Likewise.
+	* iconvdata/euc-cn.c: Likewise.
+	* iconvdata/euc-jp.c: Likewise.
+	* iconvdata/euc-kr.c: Likewise.
+	* iconvdata/euc-tw.c: Likewise.
+	* iconvdata/gbgbk.c: Likewise.
+	* iconvdata/gbk.c: Likewise.
+	* iconvdata/iso-2022-cn.c: Likewise.
+	* iconvdata/iso-2022-jp.c: Likewise.
+	* iconvdata/iso-2022-kr.c: Likewise.
+	* iconvdata/iso646.c: Likewise.
+	* iconvdata/iso8859-1.c: Likewise.
+	* iconvdata/iso_6937-2.c: Likewise.
+	* iconvdata/iso_6937.c: Likewise.
+	* iconvdata/johab.c: Likewise.
+	* iconvdata/sjis.c: Likewise.
+	* iconvdata/t.61.c: Likewise.
+	* iconvdata/uhc.c: Likewise.
+	* iconvdata/unicode.c: Likewise.
+	* iconvdata/utf-16.c: Likewise.
+	* libio/iofwide.c: Adjust to new interface of gconv functions.  Use
+	DL_CALL_FCT.
+	* wcsmbs/btowc.c: Likewise.
+	* wcsmbs/mbrtowc.c: Likewise.
+	* wcsmbs/mbsnrtowcs.c: Likewise.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wcrtomb.c: Likewise.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/wctob.c: Likewise.
+
 2000-04-11  Geoff Keating  <geoffk@cygnus.com>
 
 	* sysdeps/powerpc/dl-machine.c: Include dl-machine.h after the

@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <gconv.h>
 #include <stdint.h>
 
@@ -71,7 +72,7 @@
 		UCS4 -> GB2312 -> GBK -> UCS4				      \
 									      \
 	   might not produce identical text.  */			      \
-	if (NEED_LENGTH_TEST && __builtin_expect (inptr + 1 >= inend, 0))     \
+	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
 	  {								      \
 	    /* The second character is not available.  Store		      \
 	       the intermediate result.  */				      \
@@ -79,7 +80,7 @@
 	    break;							      \
 	  }								      \
 									      \
-	if (NEED_LENGTH_TEST && __builtin_expect (outend - outptr < 2, 0))    \
+	if (__builtin_expect (outend - outptr < 2, 0))			      \
 	  {								      \
 	    /* We ran out of space.  */					      \
 	    result = __GCONV_FULL_OUTPUT;				      \
@@ -101,14 +102,25 @@
 		&& __builtin_expect (ch, 0xa1a1) <= 0xa8c0))		      \
 	  {								      \
 	    /* One of the characters we cannot map.  */			      \
-	    if (! ignore_errors_p ())					      \
+	    if (step_data->__trans.__trans_fct != NULL)			      \
+	      {								      \
+		result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
+				      (step, step_data, *inptrp, &inptr,      \
+				       inend, *outptrp, &outptr, outend,      \
+				       irreversible));			      \
+		if (result != __GCONV_OK)				      \
+		  break;						      \
+	      }								      \
+	    else if (! ignore_errors_p ())				      \
 	      {								      \
 		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
-									      \
-	    inptr += 2;							      \
-	    ++*irreversible;						      \
+	    else							      \
+	      {								      \
+		inptr += 2;						      \
+		++*irreversible;					      \
+	      }								      \
 	  }								      \
 	else								      \
 	  {								      \
@@ -118,6 +130,7 @@
 	  }								      \
       }									      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 
@@ -136,7 +149,7 @@
 									      \
     if (ch > 0x7f)							      \
       {									      \
-	if (NEED_LENGTH_TEST && __builtin_expect (inptr + 1 >= inend, 0))     \
+	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
 	  {								      \
 	    /* The second character is not available.  Store		      \
 		 the intermediate result.  */				      \
@@ -144,7 +157,7 @@
 	    break;							      \
 	  }								      \
 									      \
-	if (NEED_LENGTH_TEST && __builtin_expect (outend - outptr < 2, 0))    \
+	if (__builtin_expect (outend - outptr < 2, 0))			      \
 	  {								      \
 	    /* We ran out of space.  */					      \
 	    result = __GCONV_FULL_OUTPUT;				      \

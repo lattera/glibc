@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <gconv.h>
 #include <stdint.h>
 #include <string.h>
@@ -390,7 +391,7 @@ static const char from_ucs4[][2] =
 	   is also available.  */					      \
 	uint32_t ch2;							      \
 									      \
-	if (NEED_LENGTH_TEST && __builtin_expect (inptr + 1 >= inend, 0))     \
+	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
 	  {								      \
 	    /* The second character is not available.  */		      \
 	    result = __GCONV_INCOMPLETE_INPUT;				      \
@@ -441,6 +442,7 @@ static const char from_ucs4[][2] =
       }									      \
     inptr += increment;							      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 
@@ -467,15 +469,26 @@ static const char from_ucs4[][2] =
 		 || __builtin_expect (ch, 0x2d8) == 0x02dc)		      \
 	  {								      \
 	    /* Illegal characters.  */					      \
-	    if (! ignore_errors_p ())					      \
+	    if (step_data->__trans.__trans_fct != NULL)			      \
+	      {								      \
+		result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
+				      (step, step_data, *inptrp, &inptr,      \
+ 				       inend, *outptrp, &outptr, outend,      \
+				       irreversible));			      \
+		if (result != __GCONV_OK)				      \
+		  break;						      \
+	      }								      \
+	    else if (! ignore_errors_p ())				      \
 	      {								      \
 	        /* This is an illegal character.  */			      \
 		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
-									      \
-	    inptr += 4;							      \
-	    ++*irreversible;						      \
+	    else							      \
+	      {								      \
+		inptr += 4;						      \
+		++*irreversible;					      \
+	      }								      \
 	    continue;							      \
 	  }								      \
 	else								      \
@@ -494,15 +507,26 @@ static const char from_ucs4[][2] =
 	if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)		      \
 	  {								      \
 	    /* Illegal.  */						      \
-	    if (! ignore_errors_p ())					      \
+	    if (step_data->__trans.__trans_fct != NULL)			      \
+	      {								      \
+		result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
+				      (step, step_data, *inptrp, &inptr,      \
+				       inend, *outptrp, &outptr, outend,      \
+				       irreversible));			      \
+		if (result != __GCONV_OK)				      \
+		  break;						      \
+	      }								      \
+	    else if (! ignore_errors_p ())				      \
 	      {								      \
 	        /* This is an illegal character.  */			      \
 		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
-									      \
-	    inptr += 4;							      \
-	    ++*irreversible;						      \
+	    else							      \
+	      {								      \
+		inptr += 4;						      \
+		++*irreversible;					      \
+	      }								      \
 	    continue;							      \
 	  }								      \
       }									      \
@@ -511,7 +535,7 @@ static const char from_ucs4[][2] =
     /* Now test for a possible second byte and write this if possible.  */    \
     if (cp[1] != '\0')							      \
       {									      \
-	if (NEED_LENGTH_TEST && __builtin_expect (outptr >= outend, 0))	      \
+	if (__builtin_expect (outptr >= outend, 0))			      \
 	  {								      \
 	    /* The result does not fit into the buffer.  */		      \
 	    --outptr;							      \
@@ -524,6 +548,7 @@ static const char from_ucs4[][2] =
 									      \
     inptr += 4;								      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 

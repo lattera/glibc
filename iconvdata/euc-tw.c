@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <stdint.h>
 #include <cns11643l1.h>
 #include <cns11643.h>
@@ -48,8 +49,15 @@
     else if ((ch <= 0xa0 || ch > 0xfe) && ch != 0x8e)			      \
       {									      \
 	/* This is illegal.  */						      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++inptr;							      \
+	++*irreversible;						      \
+	continue;							      \
       }									      \
     else								      \
       {									      \
@@ -57,7 +65,7 @@
 	   character is also available.  */				      \
 	uint32_t ch2;							      \
 									      \
-	if (NEED_LENGTH_TEST && inptr + (ch == 0x8e ? 3 : 1) >= inend)	      \
+	if (inptr + (ch == 0x8e ? 3 : 1) >= inend)			      \
 	  {								      \
 	    /* The second character is not available.  Store the	      \
 	       intermediate result.  */					      \
@@ -70,9 +78,16 @@
 	/* All second bytes of a multibyte character must be >= 0xa1. */      \
 	if (ch2 < 0xa1 || ch2 == 0xff)					      \
 	  {								      \
-	    /* This is an illegal character.  */			      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    /* This is illegal.  */					      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+	        result = __GCONV_ILLEGAL_INPUT;				      \
+	        break;							      \
+	      }								      \
+									      \
+	    ++inptr;							      \
+	    ++*irreversible;						      \
+	    continue;							      \
 	  }								      \
 									      \
 	if (ch == 0x8e)							      \
@@ -80,16 +95,22 @@
 	    /* This is code set 2: CNS 11643, planes 1 to 16.  */	      \
 	    const char *endp = inptr + 1;				      \
 									      \
-	    ch = cns11643_to_ucs4 (&endp,				      \
-				   NEED_LENGTH_TEST ? inend - inptr - 1 : 3,  \
-				   0x80);				      \
+	    ch = cns11643_to_ucs4 (&endp, inend - inptr - 1, 0x80);	      \
 	    /* Please note that we need not test for the missing input	      \
 	       characters here anymore.  */				      \
 	    if (ch == __UNKNOWN_10646_CHAR)				      \
 	      {								      \
 		/* Illegal input.  */					      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    /* This is an illegal character.  */		      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
+		++inptr;						      \
+		++*irreversible;					      \
+		continue;						      \
 	      }								      \
 									      \
 	    inptr += 4;							      \
@@ -99,16 +120,22 @@
 	    /* This is code set 1: CNS 11643, plane 1.  */		      \
 	    const unsigned char *endp = inptr;				      \
 									      \
-	    ch = cns11643l1_to_ucs4 (&endp,				      \
-				     NEED_LENGTH_TEST ? inend - inptr : 2,    \
-				     0x80);				      \
+	    ch = cns11643l1_to_ucs4 (&endp, inend - inptr, 0x80);	      \
 	    /* Please note that we need not test for the missing input	      \
 	       characters here anymore.  */				      \
 	    if (ch == __UNKNOWN_10646_CHAR)				      \
 	      {								      \
 		/* Illegal input.  */					      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    /* This is an illegal character.  */		      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
+		inptr += 2;						      \
+		++*irreversible;					      \
+		continue;						      \
 	      }								      \
 									      \
 	    inptr += 2;							      \
@@ -118,6 +145,7 @@
     put32 (outptr, ch);							      \
     outptr += 4;							      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 
@@ -138,15 +166,14 @@
 	/* Try the JIS character sets.  */				      \
 	size_t found;							      \
 									      \
-	found = ucs4_to_cns11643l1 (ch, outptr,				      \
-				    NEED_LENGTH_TEST ? outend - outptr : 2);  \
-	if (NEED_LENGTH_TEST && found == 0)				      \
+	found = ucs4_to_cns11643l1 (ch, outptr, outend - outptr);	      \
+	if (__builtin_expect (found, 1) == 0)				      \
 	  {								      \
 	    /* We ran out of space.  */					      \
 	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
-	if (found != __UNKNOWN_10646_CHAR)				      \
+	if (__builtin_expect (found, 1) != __UNKNOWN_10646_CHAR)	      \
 	  {								      \
 	    /* It's a CNS 11643, plane 1 character, adjust it for EUC-TW.  */ \
 	    *outptr++ += 0x80;						      \
@@ -156,20 +183,36 @@
 	  {								      \
 	    /* No CNS 11643, plane 1 character.  */			      \
 									      \
-	    found = ucs4_to_cns11643 (ch, outptr + 1,			      \
-				      (NEED_LENGTH_TEST			      \
-				       ? outend - outptr - 1 : 3));	      \
-	    if (NEED_LENGTH_TEST && found == 0)				      \
+	    found = ucs4_to_cns11643 (ch, outptr + 1, outend - outptr - 1);   \
+	    if (__builtin_expect (found, 1) == 0)			      \
 	      {								      \
 		/* We ran out of space.  */				      \
 		result = __GCONV_INCOMPLETE_INPUT;			      \
 		break;							      \
 	      }								      \
-	    if (found == __UNKNOWN_10646_CHAR)				      \
+	    if (__builtin_expect (found, 0) == __UNKNOWN_10646_CHAR)	      \
 	      {								      \
-		/* No legal input.  */					      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
+		/* Illegal character.  */				      \
+		if (step_data->__trans.__trans_fct != NULL)		      \
+		  {							      \
+		    result = DL_CALL_FCT (step_data->__trans.__trans_fct,     \
+					  (step, step_data, *inptrp, &inptr,  \
+					   inend, *outptrp, &outptr, outend,  \
+					   irreversible));		      \
+		    if (result != __GCONV_OK)				      \
+		      break;						      \
+		  }							      \
+		else if (! ignore_errors_p ())				      \
+		  {							      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+		else							      \
+		  {							      \
+		    inptr += 4;						      \
+		    ++*irreversible;					      \
+		  }							      \
+		continue;						      \
 	      }								      \
 									      \
 	    /* It's a CNS 11643 character, adjust it for EUC-TW.  */	      \
@@ -182,6 +225,7 @@
 									      \
     inptr += 4;								      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
 

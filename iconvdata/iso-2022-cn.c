@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <gconv.h>
 #include <stdint.h>
 #include <string.h>
@@ -140,16 +141,15 @@ enum
 	     line; we can simply ignore them				      \
 	   - the initial byte of the SS2 sequence.			      \
 	*/								      \
-	if (NEED_LENGTH_TEST						      \
-	    && (__builtin_expect (inptr + 1 > inend, 0)			      \
-		|| (inptr[1] == '$'					      \
-		    && (__builtin_expect (inptr + 2 > inend, 0)		      \
-			|| (inptr[2] == ')'				      \
-			    && __builtin_expect (inptr + 3 > inend, 0))	      \
-			|| (inptr[2] == '*'				      \
-			    && __builtin_expect (inptr + 3 > inend, 0))))     \
-		|| (inptr[1] == SS2_1					      \
-		    && __builtin_expect (inptr + 3 > inend, 0))))	      \
+	if (__builtin_expect (inptr + 1 > inend, 0)			      \
+	    || (inptr[1] == '$'						      \
+		&& (__builtin_expect (inptr + 2 > inend, 0)		      \
+		    || (inptr[2] == ')'					      \
+			&& __builtin_expect (inptr + 3 > inend, 0))	      \
+		    || (inptr[2] == '*'					      \
+			&& __builtin_expect (inptr + 3 > inend, 0))))	      \
+	    || (inptr[1] == SS2_1					      \
+		&& __builtin_expect (inptr + 3 > inend, 0)))		      \
 	  {								      \
 	    result = __GCONV_EMPTY_INPUT;				      \
 	    break;							      \
@@ -216,16 +216,14 @@ enum
       {									      \
 	/* That's pretty easy, we have a dedicated functions for this.  */    \
 	if (set == GB2312_set)						      \
-	  ch = gb2312_to_ucs4 (&inptr,					      \
-			       NEED_LENGTH_TEST ? inend - inptr : 2, 0);      \
+	  ch = gb2312_to_ucs4 (&inptr, inend - inptr, 0);		      \
 	else								      \
 	  {								      \
 	    assert (set == CNS11643_1_set);				      \
-	    ch = cns11643l1_to_ucs4 (&inptr,				      \
-				     NEED_LENGTH_TEST ? inend - inptr : 2, 0);\
+	    ch = cns11643l1_to_ucs4 (&inptr, inend - inptr, 0);		      \
 	  }								      \
 									      \
-	if (NEED_LENGTH_TEST && __builtin_expect (ch, 1) == 0)		      \
+	if (__builtin_expect (ch, 1) == 0)				      \
 	  {								      \
 	    result = __GCONV_EMPTY_INPUT;				      \
 	    break;							      \
@@ -248,6 +246,7 @@ enum
     put32 (outptr, ch);							      \
     outptr += 4;							      \
   }
+#define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS	, int *setp
 #define INIT_PARAMS		int set = *setp & CURRENT_SEL_MASK; \
 				int ann = *setp & CURRENT_ANN_MASK
@@ -272,7 +271,7 @@ enum
 	  {								      \
 	    *outptr++ = SI;						      \
 	    set = ASCII_set;						      \
-	    if (NEED_LENGTH_TEST && __builtin_expect (outptr == outend, 0))   \
+	    if (__builtin_expect (outptr == outend, 0))			      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -325,14 +324,26 @@ enum
 		else							      \
 		  {							      \
 		    /* Even this does not work.  Error.  */		      \
-		    if (! ignore_errors_p ())				      \
+		    if (step_data->__trans.__trans_fct != NULL)		      \
+		      {							      \
+			result = DL_CALL_FCT (step_data->__trans.__trans_fct, \
+					      (step, step_data, *inptrp,      \
+					       &inptr, inend, *outptrp,	      \
+					       &outptr, outend,		      \
+					       irreversible));		      \
+			if (result != __GCONV_OK)			      \
+			  break;					      \
+		      }							      \
+		    else if (! ignore_errors_p ())			      \
 		      {							      \
 			result = __GCONV_ILLEGAL_INPUT;			      \
 			break;						      \
 		      }							      \
-									      \
-		    inptr += 4;						      \
-		    ++*irreversible;					      \
+		    else						      \
+		      {							      \
+			inptr += 4;					      \
+			++*irreversible;				      \
+		      }							      \
 		    continue;						      \
 		  }							      \
 	      }								      \
@@ -348,8 +359,7 @@ enum
 	      {								      \
 		const char *escseq;					      \
 									      \
-		if (NEED_LENGTH_TEST					      \
-		    && __builtin_expect (outptr + 4 > outend, 0))	      \
+		if (__builtin_expect (outptr + 4 > outend, 0))		      \
 		  {							      \
 		    result = __GCONV_FULL_OUTPUT;			      \
 		    break;						      \
@@ -404,8 +414,7 @@ enum
 		break;							      \
 	      }								      \
 	  }								      \
-	else if (NEED_LENGTH_TEST					      \
-		 && __builtin_expect (outptr + 2 > outend, 0))		      \
+	else if (__builtin_expect (outptr + 2 > outend, 0))		      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
@@ -418,6 +427,7 @@ enum
     /* Now that we wrote the output increment the input pointer.  */	      \
     inptr += 4;								      \
   }
+#define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS	, int *setp
 #define INIT_PARAMS		int set = *setp & CURRENT_SEL_MASK; \
 				int ann = *setp & CURRENT_ANN_MASK

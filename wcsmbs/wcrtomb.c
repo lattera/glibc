@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <errno.h>
 #include <gconv.h>
 #include <stdlib.h>
@@ -71,9 +72,9 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
      by a NUL byte.  */
   if (wc == L'\0')
     {
-      status = (*__wcsmbs_gconv_fcts.tomb->__fct) (__wcsmbs_gconv_fcts.tomb,
-						   &data, NULL, NULL,
-						   &dummy, 1, 1);
+      status = DL_CALL_FCT (__wcsmbs_gconv_fcts.tomb->__fct,
+			    (__wcsmbs_gconv_fcts.tomb, &data, NULL, NULL,
+			     data.__outbuf, &dummy, 1, 1));
 
       if (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT)
 	*data.__outbuf++ = '\0';
@@ -83,10 +84,10 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
       /* Do a normal conversion.  */
       const unsigned char *inbuf = (const unsigned char *) &wc;
 
-      status = (*__wcsmbs_gconv_fcts.tomb->__fct) (__wcsmbs_gconv_fcts.tomb,
-						   &data, &inbuf,
-						   inbuf + sizeof (wchar_t),
-						   &dummy, 0, 1);
+      status = DL_CALL_FCT (__wcsmbs_gconv_fcts.tomb->__fct,
+			    (__wcsmbs_gconv_fcts.tomb, &data, &inbuf,
+			     inbuf + sizeof (wchar_t), data.__outbuf, &dummy,
+			     0, 1));
     }
 
   /* There must not be any problems with the conversion but illegal input

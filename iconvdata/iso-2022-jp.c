@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
 #include <gconv.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -444,26 +445,22 @@ gconv_end (struct __gconv_step *data)
 	     JIS X 0208.  Therefore I'm using the tables for JIS X	      \
 	     0208-1990.  If somebody has problems with this please	      \
 	     provide the appropriate tables.  */			      \
-	  ch = jisx0208_to_ucs4 (&inptr,				      \
-				 NEED_LENGTH_TEST ? inend - inptr : 2, 0);    \
+	  ch = jisx0208_to_ucs4 (&inptr, inend - inptr, 0);		      \
 	else if (set == JISX0212_set)					      \
 	  /* Use the JIS X 0212 table.  */				      \
-	  ch = jisx0212_to_ucs4 (&inptr,				      \
-				 NEED_LENGTH_TEST ? inend - inptr : 2, 0);    \
+	  ch = jisx0212_to_ucs4 (&inptr, inend - inptr, 0);		      \
 	else if (set == GB2312_set)					      \
 	  /* Use the GB 2312 table.  */					      \
-	  ch = gb2312_to_ucs4 (&inptr,					      \
-			       NEED_LENGTH_TEST ? inend - inptr : 2, 0);      \
+	  ch = gb2312_to_ucs4 (&inptr, inend - inptr, 0);		      \
 	else								      \
 	  {								      \
 	    assert (set == KSC5601_set);				      \
 									      \
 	    /* Use the KSC 5601 table.  */				      \
-	    ch = ksc5601_to_ucs4 (&inptr,				      \
-				  NEED_LENGTH_TEST ? inend - inptr : 2, 0);   \
+	    ch = ksc5601_to_ucs4 (&inptr, inend - inptr, 0);		      \
 	  }								      \
 									      \
-	if (NEED_LENGTH_TEST && __builtin_expect (ch, 1) == 0)		      \
+	if (__builtin_expect (ch, 1) == 0)				      \
 	  {								      \
 	    result = __GCONV_EMPTY_INPUT;				      \
 	    break;							      \
@@ -485,6 +482,7 @@ gconv_end (struct __gconv_step *data)
     put32 (outptr, ch);							      \
     outptr += 4;							      \
   }
+#define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS	, enum variant var, int *setp
 #define INIT_PARAMS		int set = *setp & CURRENT_SEL_MASK;	      \
 				int set2 = *setp & CURRENT_ASSIGN_MASK
@@ -554,26 +552,19 @@ gconv_end (struct __gconv_step *data)
     else								      \
       {									      \
 	if (set == JISX0208_1978_set || set == JISX0208_1983_set)	      \
-	  written = ucs4_to_jisx0208 (ch, outptr,			      \
-				      (NEED_LENGTH_TEST			      \
-				       ? outend - outptr : 2));		      \
+	  written = ucs4_to_jisx0208 (ch, outptr, outend - outptr);	      \
 	else if (set == JISX0212_set)					      \
-	  written = ucs4_to_jisx0212 (ch, outptr,			      \
-				      (NEED_LENGTH_TEST			      \
-				       ? outend - outptr : 2));		      \
+	  written = ucs4_to_jisx0212 (ch, outptr, outend - outptr);	      \
 	else if (set == GB2312_set)					      \
-	  written = ucs4_to_gb2312 (ch, outptr, (NEED_LENGTH_TEST	      \
-						 ? outend - outptr : 2));     \
+	  written = ucs4_to_gb2312 (ch, outptr, outend - outptr);	      \
 	else								      \
 	  {								      \
 	    assert (set == KSC5601_set);				      \
 									      \
-	    written = ucs4_to_ksc5601 (ch, outptr,			      \
-				       (NEED_LENGTH_TEST		      \
-					? outend - outptr : 2));	      \
+	    written = ucs4_to_ksc5601 (ch, outptr, outend - outptr);	      \
 	  }								      \
 									      \
-	if (NEED_LENGTH_TEST && __builtin_expect (written, 1) == 0)	      \
+	if (__builtin_expect (written, 1) == 0)				      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
@@ -631,7 +622,7 @@ gconv_end (struct __gconv_step *data)
 	  {								      \
 	    /* We must encode using ASCII.  First write out the		      \
 	       escape sequence.  */					      \
-	    if (NEED_LENGTH_TEST && __builtin_expect (outptr + 3 > outend, 0))\
+	    if (__builtin_expect (outptr + 3 > outend, 0))		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -642,7 +633,7 @@ gconv_end (struct __gconv_step *data)
 	    *outptr++ = 'B';						      \
 	    set = ASCII_set;						      \
 									      \
-	    if (NEED_LENGTH_TEST && __builtin_expect (outptr + 1 > outend, 0))\
+	    if (__builtin_expect (outptr + 1 > outend, 0))		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -666,8 +657,7 @@ gconv_end (struct __gconv_step *data)
 	    if (written != __UNKNOWN_10646_CHAR && buf[0] < 0x80)	      \
 	      {								      \
 		/* We use JIS X 0201.  */				      \
-		if (NEED_LENGTH_TEST					      \
-		    && __builtin_expect (outptr + 3 > outend, 0))	      \
+		if (__builtin_expect (outptr + 3 > outend, 0))		      \
 		  {							      \
 		    result = __GCONV_FULL_OUTPUT;			      \
 		    break;						      \
@@ -678,8 +668,7 @@ gconv_end (struct __gconv_step *data)
 		*outptr++ = 'J';					      \
 		set = JISX0201_Roman_set;				      \
 									      \
-		if (NEED_LENGTH_TEST					      \
-		    && __builtin_expect (outptr + 1 > outend, 0))	      \
+		if (__builtin_expect (outptr + 1 > outend, 0))		      \
 		  {							      \
 		    result = __GCONV_FULL_OUTPUT;			      \
 		    break;						      \
@@ -692,8 +681,7 @@ gconv_end (struct __gconv_step *data)
 		if (written != __UNKNOWN_10646_CHAR)			      \
 		  {							      \
 		    /* We use JIS X 0208.  */				      \
-		    if (NEED_LENGTH_TEST				      \
-			&& __builtin_expect (outptr + 3 > outend, 0))	      \
+		    if (__builtin_expect (outptr + 3 > outend, 0))	      \
 		      {							      \
 			result = __GCONV_FULL_OUTPUT;			      \
 			break;						      \
@@ -704,8 +692,7 @@ gconv_end (struct __gconv_step *data)
 		    *outptr++ = 'B';					      \
 		    set = JISX0208_1983_set;				      \
 									      \
-		    if (NEED_LENGTH_TEST				      \
-			&& __builtin_expect (outptr + 2 > outend, 0))	      \
+		    if (__builtin_expect (outptr + 2 > outend, 0))	      \
 		      {							      \
 			result = __GCONV_FULL_OUTPUT;			      \
 			break;						      \
@@ -716,13 +703,27 @@ gconv_end (struct __gconv_step *data)
 		else if (__builtin_expect (var, iso2022jp2) == iso2022jp)     \
 		  {							      \
 		    /* We have no other choice.  */			      \
-		    if (! ignore_errors_p ())				      \
+		    if (step_data->__trans.__trans_fct != NULL)		      \
+		      {							      \
+			result = DL_CALL_FCT (step_data->__trans.__trans_fct, \
+					      (step, step_data, *inptrp,      \
+					       &inptr, inend, *outptrp,	      \
+					       &outptr, outend,		      \
+					       irreversible));		      \
+			if (result != __GCONV_OK)			      \
+			  break;					      \
+		      }							      \
+		    else if (! ignore_errors_p ())			      \
 		      {							      \
 			result = __GCONV_ILLEGAL_INPUT;			      \
 			break;						      \
 		      }							      \
-									      \
-		    ++*irreversible;					      \
+		    else						      \
+		      {							      \
+			inptr += 4;					      \
+			++*irreversible;				      \
+		      }							      \
+		    continue;						      \
 		  }							      \
 		else							      \
 		  {							      \
@@ -730,8 +731,7 @@ gconv_end (struct __gconv_step *data)
 		    if (written != __UNKNOWN_10646_CHAR)		      \
 		      {							      \
 			/* We use JIS X 0212.  */			      \
-			if (NEED_LENGTH_TEST				      \
-			    && __builtin_expect (outptr + 4 > outend, 0))     \
+			if (__builtin_expect (outptr + 4 > outend, 0))	      \
 			  {						      \
 			    result = __GCONV_FULL_OUTPUT;		      \
 			    break;					      \
@@ -742,8 +742,7 @@ gconv_end (struct __gconv_step *data)
 			*outptr++ = 'D';				      \
 			set = JISX0212_set;				      \
 									      \
-			if (NEED_LENGTH_TEST				      \
-			    && __builtin_expect (outptr + 2 > outend, 0))     \
+			if (__builtin_expect (outptr + 2 > outend, 0))	      \
 			  {						      \
 			    result = __GCONV_FULL_OUTPUT;		      \
 			    break;					      \
@@ -758,8 +757,7 @@ gconv_end (struct __gconv_step *data)
 			    && buf[0] >= 0x80)				      \
 			  {						      \
 			    /* We use JIS X 0201.  */			      \
-			    if (NEED_LENGTH_TEST			      \
-				&& __builtin_expect (outptr + 3 > outend, 0)) \
+			    if (__builtin_expect (outptr + 3 > outend, 0))    \
 			      {						      \
 			        result = __GCONV_FULL_OUTPUT;		      \
 			        break;					      \
@@ -770,8 +768,7 @@ gconv_end (struct __gconv_step *data)
 			    *outptr++ = 'I';				      \
 			    set = JISX0201_Kana_set;			      \
 									      \
-			    if (NEED_LENGTH_TEST			      \
-				&& __builtin_expect (outptr + 1 > outend, 0)) \
+			    if (__builtin_expect (outptr + 1 > outend, 0))    \
 			      {						      \
 			        result = __GCONV_FULL_OUTPUT;		      \
 			        break;					      \
@@ -781,8 +778,7 @@ gconv_end (struct __gconv_step *data)
 			else if (ch != 0xa5 && ch >= 0x80 && ch <= 0xff)      \
 			  {						      \
 			    /* ISO 8859-1 upper half.   */		      \
-			    if (NEED_LENGTH_TEST			      \
-				&& __builtin_expect (outptr + 3 > outend, 0)) \
+			    if (__builtin_expect (outptr + 3 > outend, 0))    \
 			      {						      \
 				result = __GCONV_FULL_OUTPUT;		      \
 				break;					      \
@@ -793,8 +789,7 @@ gconv_end (struct __gconv_step *data)
 			    *outptr++ = 'A';				      \
 			    set2 = ISO88591_set;			      \
 									      \
-			    if (NEED_LENGTH_TEST			      \
-				&& __builtin_expect (outptr + 3 > outend, 0)) \
+			    if (__builtin_expect (outptr + 3 > outend, 0))    \
 			      {						      \
 				result = __GCONV_FULL_OUTPUT;		      \
 				break;					      \
@@ -809,9 +804,7 @@ gconv_end (struct __gconv_step *data)
 			    if (written != __UNKNOWN_10646_CHAR)	      \
 			      {						      \
 				/* We use GB 2312.  */			      \
-				if (NEED_LENGTH_TEST			      \
-				    && __builtin_expect (outptr + 3 > outend, \
-							 0))		      \
+				if (__builtin_expect (outptr + 3 > outend, 0))\
 				  {					      \
 				    result = __GCONV_FULL_OUTPUT;	      \
 				    break;				      \
@@ -822,9 +815,7 @@ gconv_end (struct __gconv_step *data)
 				*outptr++ = 'A';			      \
 				set = GB2312_set;			      \
 									      \
-				if (NEED_LENGTH_TEST			      \
-				    && __builtin_expect (outptr + 2 > outend, \
-							 0))		      \
+				if (__builtin_expect (outptr + 2 > outend, 0))\
 				  {					      \
 				    result = __GCONV_FULL_OUTPUT;	      \
 				    break;				      \
@@ -838,9 +829,8 @@ gconv_end (struct __gconv_step *data)
 				if (written != __UNKNOWN_10646_CHAR)	      \
 				  {					      \
 				    /* We use KSC 5601.  */		      \
-				    if (NEED_LENGTH_TEST		      \
-					&& __builtin_expect (outptr + 4	      \
-							     > outend, 0))    \
+				    if (__builtin_expect (outptr + 4 > outend,\
+							  0))		      \
 				      {					      \
 					result = __GCONV_FULL_OUTPUT;	      \
 					break;				      \
@@ -851,9 +841,8 @@ gconv_end (struct __gconv_step *data)
 				    *outptr++ = 'C';			      \
 				    set = KSC5601_set;			      \
 									      \
-				    if (NEED_LENGTH_TEST		      \
-					&& __builtin_expect (outptr + 2	      \
-							     > outend, 0))    \
+				    if (__builtin_expect (outptr + 2 > outend,\
+							  0))		      \
 				      {					      \
 					result = __GCONV_FULL_OUTPUT;	      \
 					break;				      \
@@ -877,9 +866,8 @@ gconv_end (struct __gconv_step *data)
 				    if (__builtin_expect (gch, 1) != 0)	      \
 				      {					      \
 					/* We use ISO 8859-7 greek.  */	      \
-					if (NEED_LENGTH_TEST		      \
-					    && __builtin_expect (outptr + 3   \
-								 > outend, 0))\
+					if (__builtin_expect (outptr + 3      \
+							      > outend, 0))   \
 					  {				      \
 					    result = __GCONV_FULL_OUTPUT;     \
 					    break;			      \
@@ -889,9 +877,8 @@ gconv_end (struct __gconv_step *data)
 					*outptr++ = 'F';		      \
 					set2 = ISO88597_set;		      \
 									      \
-					if (NEED_LENGTH_TEST		      \
-					    && __builtin_expect (outptr + 3   \
-								 > outend, 0))\
+					if (__builtin_expect (outptr + 3      \
+							      > outend, 0))   \
 					  {				      \
 					    result = __GCONV_FULL_OUTPUT;     \
 					    break;			      \
@@ -902,13 +889,29 @@ gconv_end (struct __gconv_step *data)
 				      }					      \
 				    else				      \
 				      {					      \
-					if (! ignore_errors_p ())	      \
+					if (step_data->__trans.__trans_fct    \
+					    != NULL)			      \
+					  {				      \
+					    result = DL_CALL_FCT	      \
+  					      (step_data->__trans.__trans_fct,\
+					       (step, step_data, *inptrp,     \
+						&inptr, inend, *outptrp,      \
+						&outptr, outend,	      \
+						irreversible));		      \
+					    if (result != __GCONV_OK)	      \
+					      break;			      \
+					  }				      \
+					else if (! ignore_errors_p ())	      \
 					  {				      \
 					     result = __GCONV_ILLEGAL_INPUT;  \
 					     break;			      \
 					  }				      \
-									      \
-					++*irreversible;		      \
+					else				      \
+					  {				      \
+					    ++*irreversible;		      \
+					    inptr += 4;			      \
+					  }				      \
+					continue;			      \
 				      }					      \
 				  }					      \
 			      }						      \
@@ -922,6 +925,7 @@ gconv_end (struct __gconv_step *data)
     /* Now that we wrote the output increment the input pointer.  */	      \
     inptr += 4;								      \
   }
+#define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS	, enum variant var, int *setp
 #define INIT_PARAMS		int set = *setp & CURRENT_SEL_MASK;	      \
 				int set2 = *setp & CURRENT_ASSIGN_MASK
