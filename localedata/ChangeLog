@@ -1,5 +1,9 @@
 2000-07-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile: Add rules to build, run, and distribute tst-langinfo.
+	* tst-langinfo.c: New file.
+	* tst-langinfo.sh: New file.
+
 	* locales/ja_JP (era_d_t_fmt): Fix typo.
 
 	* Makefile: Add rules to build, run, and distribute tst-wctype.
