@@ -145,7 +145,7 @@ tests = tst-attr1 tst-attr2 \
 	tst-kill1 tst-kill2 tst-kill3 tst-kill4 tst-kill5 tst-kill6 \
 	tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 \
 	tst-eintr1 \
-	tst-tsd1 tst-tsd2 tst-tsd3 \
+	tst-tsd1 tst-tsd2 tst-tsd3 tst-tsd4 \
 	tst-tls1 tst-tls2 \
 	tst-fork1 tst-fork2 tst-fork3 tst-fork4 \
 	tst-atfork1 \
