@@ -1,5 +1,7 @@
 1999-01-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/dl-object.c (_dl_new_object): Micro-optimization.
+
 	* elf/restest1.c: New file.  Symbol resolution test.
 	* elf/testobj1_1.c: New file.  Module used in this test.
 	* elf/Makefile: Add rules for restest1 generation and execution.
