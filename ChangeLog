@@ -1,10 +1,12 @@
 2003-08-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/sys/syslog.h (vsyslog): Remove __THROW.
+
 	* misc/Makefile (CFLAGS-getpass.c): Add -fexceptions.
 	* misc/getpass.c (getpass): Add cleanup handler to ensure the
 	stream is closed even if the thread is canceled.
 	(call_fclose): New function.
-	* posix/unistd.h: Remove __THROW from getpass prorotype.
+	* posix/unistd.h: Remove __THROW from getpass prototype.
 
 	* posix/Makefile (CFLAGS-getopt.c): Add -fexceptions.
 

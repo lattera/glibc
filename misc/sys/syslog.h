@@ -198,7 +198,7 @@ extern void syslog (int __pri, __const char *__fmt, ...)
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
 extern void vsyslog (int __pri, __const char *__fmt, __gnuc_va_list __ap)
-     __THROW __attribute__ ((__format__(__printf__, 2, 0)));
+     __attribute__ ((__format__(__printf__, 2, 0)));
 #endif
 
 __END_DECLS
