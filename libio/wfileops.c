@@ -179,9 +179,6 @@ _IO_wfile_underflow (fp)
     fp->_IO_read_base = fp->_IO_read_ptr = fp->_IO_read_end =
       fp->_IO_buf_base;
 
-  fp->_IO_write_base = fp->_IO_write_ptr = fp->_IO_write_end =
-    fp->_IO_buf_base;
-
   if (fp->_IO_buf_base == NULL)
     {
       /* Maybe we already have a push back pointer.  */
@@ -191,7 +188,13 @@ _IO_wfile_underflow (fp)
 	  fp->_flags &= ~_IO_IN_BACKUP;
 	}
       _IO_doallocbuf (fp);
+
+      fp->_IO_read_base = fp->_IO_read_ptr = fp->_IO_read_end =
+	fp->_IO_buf_base;
     }
+
+  fp->_IO_write_base = fp->_IO_write_ptr = fp->_IO_write_end =
+    fp->_IO_buf_base;
 
   if (fp->_wide_data->_IO_buf_base == NULL)
     {
@@ -210,11 +213,6 @@ _IO_wfile_underflow (fp)
     _IO_flush_all_linebuffered ();
 
   _IO_switch_to_get_mode (fp);
-
-  fp->_IO_read_base = fp->_IO_read_ptr = fp->_IO_buf_base;
-  fp->_IO_read_end = fp->_IO_buf_base;
-  fp->_IO_write_base = fp->_IO_write_ptr = fp->_IO_write_end
-    = fp->_IO_buf_base;
 
   fp->_wide_data->_IO_read_base = fp->_wide_data->_IO_read_ptr =
     fp->_wide_data->_IO_buf_base;
