@@ -2,6 +2,8 @@
 
 	* stdio-common/vfprintf.c: Correct last patch and use outchar
 	instead of PUTC to output single characters.
+	* stdio-common/Makefile (tests): Add bug13.
+	* stdio-common/bug13.c: New file.
 
 	* configure.in: Add additional options --with-gd-include and
 	--with-gd-lib to help people with strange installations.
