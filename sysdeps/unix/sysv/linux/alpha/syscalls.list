@@ -17,6 +17,7 @@ semctl		-	semctl		4	__semctl	semctl
 
 osf_sigprocmask	-	osf_sigprocmask	2	__osf_sigprocmask
 sigstack	-	sigstack	2	sigstack
+vfork		-	vfork		0	__vfork		vfork
 
 getpeername	-	getpeername	3	__getpeername	getpeername
 getpriority	-	getpriority	2	__getpriority	getpriority
