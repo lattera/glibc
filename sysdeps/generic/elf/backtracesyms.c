@@ -53,7 +53,7 @@ __backtrace_symbols (array, size)
 	   "<fct-name>(<sym-name>)[+offset].  */
 	total += (strlen (info[cnt].dli_fname ?: "")
 		  + (info[cnt].dli_sname
-		     ? strlen (info[cnt].dli_sname) + 3
+		     ? strlen (info[cnt].dli_sname) + 3 + WORD_WIDTH + 3
 		     : 1)
 		  + WORD_WIDTH + 6);
       else
@@ -72,12 +72,22 @@ __backtrace_symbols (array, size)
 
 	  if (status[cnt] && info[cnt].dli_fname
 	      && info[cnt].dli_fname[0] != '\0')
-	    last += 1 + sprintf (last, "%s%s%s%s[+%p]",
-				 info[cnt].dli_fname ?: "",
-				 info[cnt].dli_sname ? "(" : "",
-				 info[cnt].dli_sname ?: "",
-				 info[cnt].dli_sname ? ") " : " ",
-				 info[cnt].dli_fbase);
+	    {
+	      char buf[20];
+
+	      if (array[cnt] >= (void *) info[cnt].dli_saddr)
+		sprintf (buf, "+0x%x", array[cnt] - info[cnt].dli_saddr);
+	      else
+		sprintf (buf, "-0x%x", info[cnt].dli_saddr - array[cnt]);
+
+	      last += 1 + sprintf (last, "%s%s%s%s%s[+%p]",
+				   info[cnt].dli_fname ?: "",
+				   info[cnt].dli_sname ? "(" : "",
+				   info[cnt].dli_sname ?: "",
+				   info[cnt].dli_sname ? buf : "",
+				   info[cnt].dli_sname ? ") " : " ",
+				   array[cnt]);
+	    }
 	  else
 	    last += 1 + sprintf (last, "[+%p]", array[cnt]);
 	}

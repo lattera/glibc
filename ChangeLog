@@ -1,3 +1,8 @@
+1998-07-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/elf/backtracesyms.c (__backtrace_symbols):
+	Improve generated strings a bit.
+
 1998-07-06 14:36  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* posix/Makefile (generated): Remove $(objpfx) from the names.
