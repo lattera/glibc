@@ -1,3 +1,8 @@
+2000-11-27  Andreas Jaeger  <aj@suse.de>
+
+	* rt/tst-aio.c: Mark test functions as static to avoid warnings.
+	* rt/tst-aio64.c: Likewise.
+
 2000-11-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* catgets/Makefile (test1.cat): Set LC_ALL, LOCPATH, and GCONV_PATH
