@@ -27,7 +27,7 @@ file is @file{glibc-linuxthreads-@var{VERSION}.tar.gz}.  Both add-on
 bundles should be unpacked into the top level of the libc source tree.
 
 You will need recent versions of several GNU tools: definitely GCC and
-GNU Make, and possibly others.  @xref{Tools for Installation}, below.
+GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
 
 @menu
 * Configuring and compiling::   How to compile and test GNU libc.

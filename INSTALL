@@ -21,7 +21,7 @@ it from the same place you got the main bundle; the file is
 unpacked into the top level of the libc source tree.
 
    You will need recent versions of several GNU tools: definitely GCC
-and GNU Make, and possibly others.  *Note Tools for Installation::,
+and GNU Make, and possibly others.  *Note Tools for Compilation::,
 below.
 
 Configuring and compiling GNU Libc
