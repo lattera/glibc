@@ -143,12 +143,12 @@ __pthread_cond_wait (cond, mutex)
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (cbuffer.oldtype);
 
+      /* We are going to look at shared data again, so get the lock.  */
+      lll_mutex_lock (cond->__data.__lock);
+
       /* If a broadcast happened, we are done.  */
       if (cbuffer.bc_seq != cond->__data.__broadcast_seq)
 	goto bc_out;
-
-      /* We are going to look at shared data again, so get the lock.  */
-      lll_mutex_lock (cond->__data.__lock);
 
       /* Check whether we are eligible for wakeup.  */
       val = cond->__data.__wakeup_seq;

@@ -1,3 +1,9 @@
+2004-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/pthread_cond_wait.c (__pthread_cond_wait): Compare
+	__broadcast_seq with bc_seq after acquiring internal lock instead of
+	before it.
+
 2004-05-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (.NOTPARALLEL): Only serialize make check/xcheck, not

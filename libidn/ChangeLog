@@ -1,3 +1,8 @@
+2004-05-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* idna.c (idna_to_unicode_4z4z): Fix test for failed memory allocation.
+	Patch by Simon Josefsson.
+
 2004-05-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* stringprep.c (stringprep): Free memory if allocation failed.
