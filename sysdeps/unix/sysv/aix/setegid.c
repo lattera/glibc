@@ -18,8 +18,7 @@
 
 #include <unistd.h>
 
-/* is there a reason *NOT* to include <sys/id.h>? If so #define ID_EFFECTIVE */
-#include <sys/id.h>
+#define ID_EFFECTIVE	0x01
 
 
 extern int setgidx (int mask, gid_t gid);
