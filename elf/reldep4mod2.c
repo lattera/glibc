@@ -1,6 +1,7 @@
-extern int foo();
+extern int foo (void);
 
-int bar ()
+int
+bar (void)
 {
-  foo();
+  return foo ();
 }
