@@ -223,18 +223,10 @@ main (int argc, char *argv[])
 
   /* The parameter describes the output path of the constructed files.
      If the described files cannot be written return a NULL pointer.  */
-  if (no_archive)
-    {
-      output_path  = construct_output_path (argv[remaining]);
-      if (output_path == NULL)
-	error (4, errno, _("cannot create directory for output files"));
-      cannot_write_why = errno;
-    }
-  else
-    {
-      output_path = NULL;
-      cannot_write_why = 0;	/* Just to shut the compiler up.  */
-    }
+  output_path  = construct_output_path (argv[remaining]);
+  if (output_path == NULL && ! no_archive)
+    error (4, errno, _("cannot create directory for output files"));
+  cannot_write_why = errno;
 
   /* Now that the parameters are processed we have to reset the local
      ctype locale.  (P1003.2 4.35.5.2)  */

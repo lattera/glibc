@@ -1,5 +1,5 @@
 /* Skeleton for a conversion module.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -193,15 +193,20 @@ static int to_object;
    character set we can define RESET_INPUT_BUFFER in a very fast way.  */
 #if !defined RESET_INPUT_BUFFER && !defined SAVE_RESET_STATE
 # if MIN_NEEDED_FROM == MAX_NEEDED_FROM && MIN_NEEDED_TO == MAX_NEEDED_TO
-/* We have to use these `if's here since the compiler cannot know that
-   (outbuf - outerr) is always divisible by MIN_NEEDED_TO.  */
-#  define RESET_INPUT_BUFFER \
-  if (MIN_NEEDED_FROM % MIN_NEEDED_TO == 0)				      \
-    *inptrp -= (outbuf - outerr) * (MIN_NEEDED_FROM / MIN_NEEDED_TO);	      \
-  else if (MIN_NEEDED_TO % MIN_NEEDED_FROM == 0)			      \
-    *inptrp -= (outbuf - outerr) / (MIN_NEEDED_TO / MIN_NEEDED_FROM);	      \
-  else									      \
-    *inptrp -= ((outbuf - outerr) / MIN_NEEDED_TO) * MIN_NEEDED_FROM
+/* We have to use these `#if's here since the compiler cannot know that
+   (outbuf - outerr) is always divisible by MIN_NEEDED_TO.  We have to
+   use preprocessor arithmetic and no C code because gcc 3.2 complains
+   about division by zero even in obviously dead code.  */
+#  if MIN_NEEDED_FROM % MIN_NEEDED_TO == 0
+#   define RESET_INPUT_BUFFER \
+  *inptrp -= (outbuf - outerr) * (MIN_NEEDED_FROM / MIN_NEEDED_TO)
+#  elif MIN_NEEDED_TO % MIN_NEEDED_FROM == 0
+#   define RESET_INPUT_BUFFER \
+  *inptrp -= (outbuf - outerr) / (MIN_NEEDED_TO / MIN_NEEDED_FROM)
+#  else
+#   define RESET_INPUT_BUFFER \
+  *inptrp -= ((outbuf - outerr) / MIN_NEEDED_TO) * MIN_NEEDED_FROM
+#  endif
 # endif
 #endif
 

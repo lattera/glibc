@@ -1,5 +1,11 @@
 2002-04-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/skeleton.c (RESET_INPUT_BUFFER): Replace ifs with #ifs to
+	avoid compiler warnings.
+
+	* locale/programs/localedef.c (main): Always call
+	construct_output_path.
+
 	* iconv/Makefile (CFLAGS-simple-hash.c): Define to find hashval.h.
 
 	* locale/programs/locfile.c (to_archive): New variable.  To collect
