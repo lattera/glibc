@@ -1,3 +1,8 @@
+2000-08-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* inet/netinet/in.h (struct in6_addr): Don't enforce 64bit alignment
+	on 64bit arches.
+
 2000-08-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/iso-2022-jp.c: In conversion to ISO-2022-JP, add two
