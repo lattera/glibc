@@ -99,8 +99,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 end in this function.  */
       if (profile)
 	{
-	  //got[2] = (Elf32_Addr) &_dl_runtime_profile;
-	  got[2] = (Elf32_Addr) &_dl_runtime_resolve;
+	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
 	  /* Say that we really want profiling and the timers are started.  */
 	  _dl_profile_map = l;
 	}
@@ -283,9 +282,8 @@ _dl_start_user:
 	str	r0, [sp]
 
 	@ now we enter a _dl_init_next loop
-	ldr	r2, .L_DEF_SCOPE
-	ldr	r2, [sl, r2]
-	ldr	r4, [r2, #8]
+	ldr	r4, .L_MAIN_SEARCHLIST
+	ldr	r4, [sl, r4]
 	@ call _dl_init_next to get the address of an initalizer
 0:	mov	r0, r4
 	bl	_dl_init_next(PLT)
@@ -311,14 +309,14 @@ _dl_start_user:
 	.word	_GLOBAL_OFFSET_TABLE_ - .L_GOT_GOT - 4	\n\
 .L_SKIP_ARGS:					\n\
 	.word	_dl_skip_args(GOTOFF)		\n\
-.L_DEF_SCOPE:					\n\
-	.word	_dl_default_scope(GOT)		\n\
 .L_STARTUP_FLAG:
 	.word	_dl_starting_up(GOT)
 .L_FINI_PROC:
 	.word	_dl_fini(GOT)
 .L_STACK_END:
 	.word	__libc_stack_end(GOT)
+.L_MAIN_SEARCHLIST
+	.word	_dl_main_searchlist(GOT)
 .previous\n\
 ");
 
@@ -452,15 +450,9 @@ static inline void
 elf_machine_lazy_rel (Elf32_Addr l_addr, const Elf32_Rel *reloc)
 {
   Elf32_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
-  switch (ELF32_R_TYPE (reloc->r_info))
-    {
-    case R_ARM_JUMP_SLOT:
-      *reloc_addr += l_addr;
-      break;
-    default:
-      assert (! "unexpected PLT reloc type");
-      break;
-    }
+  /* Check for unexpected PLT reloc type.  */
+  assert (ELF32_R_TYPE (reloc->r_info) == R_ARM_JUMP_SLOT);
+  *reloc_addr += l_addr;
 }
 
 #endif /* RESOLVE */

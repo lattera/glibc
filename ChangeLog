@@ -1,3 +1,13 @@
+1998-09-09  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_lazy_rel): Optimise a bit.
+
+1998-09-07  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/arm/dl-machine.h (RTLD_START): Keep in step with
+	recent ld.so changes.
+	(elf_machine_runtime_setup): Correct behaviour when profiling.
+
 1998-09-17 19:34  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/sysv4/bits/utsname.h: Fix typo.
