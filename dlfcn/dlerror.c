@@ -159,7 +159,7 @@ free_key_mem (void *mem)
 
   if (result->errstring != NULL
       && strcmp (result->errstring, "out of memory") != 0)
-    free (result->errstring);
+    free ((char *) result->errstring);
 
   free (mem);
   __libc_setspecific (key, NULL);

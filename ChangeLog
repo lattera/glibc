@@ -1,5 +1,9 @@
 2000-07-14  Mark Kettenis  <kettenis@gnu.org>
 
+	* dlfcn/dlerror.c (free_key_mem): Add cast to silence compiler warning.
+
+2000-07-14  Mark Kettenis  <kettenis@gnu.org>
+
 	* configure.in: Check for pwd binary.
 	* config.make.in: Add PWD_P to be subsituted.
 	* Makerules: Use $(PWD_P) instead of /bin/pwd.
