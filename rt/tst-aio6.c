@@ -1,5 +1,5 @@
 /* Test for timeout handling.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,7 +67,7 @@ do_test (void)
   /* Get the current time.  */
   gettimeofday (&before, NULL);
 
-  /* Wait for input which is unsuccess and therefore the function will
+  /* Wait for input which is unsuccessful and therefore the function will
      time out.  */
   timeout.tv_sec = 3;
   timeout.tv_nsec = 0;

@@ -1,4 +1,4 @@
-# Copyright (C) 1997,98,99,2000,01 Free Software Foundation, Inc.
+# Copyright (C) 1997-2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,8 @@ librt-routines = $(aio-routines) \
 		 $(shm-routines)
 
 tests := tst-shm tst-clock tst-timer \
-	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6
+	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6 \
+	 tst-aio7
 
 extra-libs := librt
 extra-libs-others := $(extra-libs)

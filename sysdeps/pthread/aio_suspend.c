@@ -1,5 +1,5 @@
 /* Suspend until termination of a requests.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -29,7 +29,9 @@
 /* And undo the hack.  */
 #undef aio_suspend64
 
+#include <assert.h>
 #include <errno.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <sys/time.h>
 
@@ -48,7 +50,7 @@ aio_suspend (list, nent, timeout)
   int cnt;
   int result = 0;
   int dummy;
-  int none = 1;
+  bool any = false;
 
   /* Request the mutex.  */
   pthread_mutex_lock (&__aio_requests_mutex);
@@ -56,24 +58,34 @@ aio_suspend (list, nent, timeout)
   /* There is not yet a finished request.  Signal the request that
      we are working for it.  */
   for (cnt = 0; cnt < nent; ++cnt)
-    if (list[cnt] != NULL && list[cnt]->__error_code == EINPROGRESS)
+    if (list[cnt] != NULL)
       {
-	requestlist[cnt] = __aio_find_req ((aiocb_union *) list[cnt]);
-
-	if (requestlist[cnt] != NULL)
+	if (list[cnt]->__error_code == EINPROGRESS)
 	  {
-	    waitlist[cnt].cond = &cond;
-	    waitlist[cnt].next = requestlist[cnt]->waiting;
-	    waitlist[cnt].counterp = &dummy;
-	    waitlist[cnt].sigevp = NULL;
-	    waitlist[cnt].caller_pid = 0;	/* Not needed.  */
-	    requestlist[cnt]->waiting = &waitlist[cnt];
-	    none = 0;
+	    requestlist[cnt] = __aio_find_req ((aiocb_union *) list[cnt]);
+
+	    if (requestlist[cnt] != NULL)
+	      {
+		waitlist[cnt].cond = &cond;
+		waitlist[cnt].next = requestlist[cnt]->waiting;
+		waitlist[cnt].counterp = &dummy;
+		waitlist[cnt].sigevp = NULL;
+		waitlist[cnt].caller_pid = 0;	/* Not needed.  */
+		requestlist[cnt]->waiting = &waitlist[cnt];
+		any = true;
+	      }
+	    else
+	      /* We will never suspend.  */
+	      break;
 	  }
+	else
+	  /* We will never suspend.  */
+	  break;
       }
 
-  /* If there is a not finished request wait for it.  */
-  if (!none)
+  /* If there is no finished request wait for it.  In any case we have
+     to dequeue the requests if we enqueued them.  */
+  if (any)
     {
       int oldstate;
 
@@ -82,39 +94,45 @@ aio_suspend (list, nent, timeout)
 	 which we must remove.  So defer cancelation for now.  */
       pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
 
-      if (timeout == NULL)
-	result = pthread_cond_wait (&cond, &__aio_requests_mutex);
-      else
+      /* Only if none of the entries is NULL or finished to be wait.  */
+      if (cnt == nent)
 	{
-	  /* We have to convert the relative timeout value into an
-	     absolute time value with pthread_cond_timedwait expects.  */
-	  struct timeval now;
-	  struct timespec abstime;
-
-	  __gettimeofday (&now, NULL);
-	  abstime.tv_nsec = timeout->tv_nsec + now.tv_usec * 1000;
-	  abstime.tv_sec = timeout->tv_sec + now.tv_sec;
-	  if (abstime.tv_nsec >= 1000000000)
+	  if (timeout == NULL)
+	    result = pthread_cond_wait (&cond, &__aio_requests_mutex);
+	  else
 	    {
-	      abstime.tv_nsec -= 1000000000;
-	      abstime.tv_sec += 1;
-	    }
+	      /* We have to convert the relative timeout value into an
+		 absolute time value with pthread_cond_timedwait expects.  */
+	      struct timeval now;
+	      struct timespec abstime;
 
-	  result = pthread_cond_timedwait (&cond, &__aio_requests_mutex,
-					   &abstime);
+	      __gettimeofday (&now, NULL);
+	      abstime.tv_nsec = timeout->tv_nsec + now.tv_usec * 1000;
+	      abstime.tv_sec = timeout->tv_sec + now.tv_sec;
+	      if (abstime.tv_nsec >= 1000000000)
+		{
+		  abstime.tv_nsec -= 1000000000;
+		  abstime.tv_sec += 1;
+		}
+
+	      result = pthread_cond_timedwait (&cond, &__aio_requests_mutex,
+					       &abstime);
+	    }
 	}
 
       /* Now remove the entry in the waiting list for all requests
 	 which didn't terminate.  */
-      for (cnt = 0; cnt < nent; ++cnt)
-	if (list[cnt] != NULL && list[cnt]->__error_code == EINPROGRESS
-	    && requestlist[cnt] != NULL)
+      while (cnt-- > 0)
+	if (list[cnt] != NULL && list[cnt]->__error_code == EINPROGRESS)
 	  {
-	    struct waitlist **listp = &requestlist[cnt]->waiting;
+	    struct waitlist **listp;
+
+	    assert (requestlist[cnt] != NULL);
 
 	    /* There is the chance that we cannot find our entry anymore.
 	       This could happen if the request terminated and restarted
 	       again.  */
+	    listp = &requestlist[cnt]->waiting;
 	    while (*listp != NULL && *listp != &waitlist[cnt])
 	      listp = &(*listp)->next;
 
@@ -126,7 +144,7 @@ aio_suspend (list, nent, timeout)
       pthread_setcancelstate (oldstate, NULL);
 
       /* Release the conditional variable.  */
-      if (pthread_cond_destroy (&cond) != 0)
+      if (__builtin_expect (pthread_cond_destroy (&cond) != 0, 0))
 	/* This must never happen.  */
 	abort ();
 

@@ -1,4 +1,21 @@
+2002-06-18  Amos Waterland  <apw@us.ibm.com>
+
+	* sysdeps/pthread/aio_cancel.c (aio_cancel): Add check for invalid
+	file descriptor.
+	* sysdeps/pthread/aio_fsync.c (aio_fsync): Add check for invalid fd;
+	add check for fd not open for writing.
+
+	* sysdeps/pthread/aio_suspend.c (aio_suspend): Add check for
+	completed element(s) and do not suspend thread if so.  Patch
+	heavily modified by drepper.
+
+	* rt/tst-aio7.c: New file.  Regression test for problems which the
+	above three changes fix.
+	* rt/Makefile (tests): Add tst-aio7.
+
 2002-06-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/tst-aio6.c: Fix comment.
 
 	* catgets/gencat.c (read_input_file): Handle more than one slash
 	at end of line correctly [PR libc/3926].

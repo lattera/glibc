@@ -1,5 +1,5 @@
 /* Cancel requests associated with given file descriptor.
-   Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -42,6 +42,13 @@ aio_cancel (fildes, aiocbp)
 {
   struct requestlist *req = NULL;
   int result = AIO_ALLDONE;
+
+  /* If fildes is invalid, error. */
+  if (fcntl (fildes, F_GETFL) < 0)
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
 
   /* Request the mutex.  */
   pthread_mutex_lock (&__aio_requests_mutex);

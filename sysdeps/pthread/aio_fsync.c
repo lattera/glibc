@@ -1,5 +1,5 @@
 /* Synchronize I/O in given file descriptor.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -36,9 +36,19 @@
 int
 aio_fsync (int op, struct aiocb *aiocbp)
 {
-  if (op != O_DSYNC && op != O_SYNC)
+  int flags;
+
+  if (op != O_DSYNC && __builtin_expect (op != O_SYNC, 0))
     {
       __set_errno (EINVAL);
+      return -1;
+    }
+
+  flags = fcntl (aiocbp->aio_fildes, F_GETFL);
+  if (__builtin_expect (flags == -1, 0)
+      || __builtin_expect ((flags & (O_RDWR | O_WRONLY)) == 0, 0))
+    {
+      __set_errno (EBADF);
       return -1;
     }
 
