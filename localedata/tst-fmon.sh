@@ -35,7 +35,8 @@ lang=`sed -e '/^#/d' -e '/^$/d' -e '/^C	/d' -e '/^tstfmon/d' -e 's/^\([^	]*\).*/
 for cns in `cd ./tst-fmon-locales && ls tstfmon_*`; do
     cn=tst-fmon-locales/$cns
     fn=charmaps/ISO-8859-1
-    I18NPATH=. GCONV_PATH=${common_objpfx}/iconvdata \
+    I18NPATH=. GCONV_PATH=${common_objpfx}iconvdata \
+    LOCPATH=${common_objpfx}localedata LANGUAGE=C \
     ${common_objpfx}elf/ld.so --library-path $common_objpfx \
     ${common_objpfx}locale/localedef \
     --quiet -i $cn -f $fn ${common_objpfx}localedata/$cns

@@ -1,3 +1,8 @@
+2000-07-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-fmon.sh: Set LOCPATH and LANGUAGE for localedef run.
+	* tst-locale.sh: Likewise.
+
 2000-07-01  Andreas Jaeger  <aj@suse.de>
 
 	* Makefile (generated-dirs): LOCALES are also generated.
