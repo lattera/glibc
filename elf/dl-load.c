@@ -139,7 +139,7 @@ _dl_map_object (struct link_map *loader, const char *name)
       if (fd == -1 && ! _dl_secure)
 	trypath (getenv ("LD_LIBRARY_PATH"));
       if (fd == -1)
-	trypath ("/lib:/usr/lib");
+	trypath (DEFAULT_RPATH);
     }
   else
     {

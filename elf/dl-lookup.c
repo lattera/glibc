@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <link.h>
 #include <assert.h>
 
-/* Search loaded objects' symbol tables for a definition of 
+/* Search loaded objects' symbol tables for a definition of
    the symbol UNDEF_NAME.  If NOSELF is nonzero, then *REF
    cannot satisfy the reference itself; some different binding
    must be found.  */
@@ -100,7 +100,7 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
 	}
     }
 
-  if (weak_value.s == NULL)
+  if (weak_value.s == NULL && ELF32_ST_BIND ((*ref)->st_info) != STB_WEAK)
     {
       const char msg[] = "undefined symbol: ";
       char buf[sizeof msg + strlen (undef_name)];

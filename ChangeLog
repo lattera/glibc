@@ -1,5 +1,13 @@
 Wed Nov 15 19:22:07 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* elf/dl-lookup.c (_dl_lookup_symbol): Undefined symbol is no
+	error if weak.
+
+	* elf/Makefile (default-rpath): New variable.
+	(CPPFLAGS): Append -DDEFAULT_RPATH=....
+	* elf/dl-load.c (_dl_map_object): Use DEFAULT_RPATH instead of
+	hard-coded "/lib:/usr/lib".
+
 	* sysdeps/mach/hurd/dl-sysdep.c: Include _itoa.h from stdio-common
 	instead of stdio.
 	(_dl_sysdep_start): If passed user entry is zero and
