@@ -1,5 +1,10 @@
 1998-04-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* string/basename.c [!_LIBC]: Define function as gnu_basename.
+
+	* posix/getopt.c [!__GNU_LIBRARY__]: Include string.h or
+	strings.h.
+
 	* stdlib/grouping.h: Accept ungrouped numbers even if locale
 	defines grouping.
 
