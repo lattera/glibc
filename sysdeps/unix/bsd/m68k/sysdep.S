@@ -26,7 +26,7 @@ syscall_error:
 	   EWOULDBLOCK_sys is the original number.  */
 #ifdef __motorola__
 #if defined (EWOULDBLOCK_sys) && EWOULDBLOCK_sys != EAGAIN
-	cmp.l d0, #EWOULDBLOCK_sys
+	cmp.l #EWOULDBLOCK_sys, d0
 	bne store
 	moveq.l #EAGAIN, d0
 #endif
