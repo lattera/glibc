@@ -1,3 +1,9 @@
+Thu May  9 09:17:46 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* posix/glob/SMakefile, posix/glob/SCOPTIONS, posix/glob/Makefile.ami:
+	New files, AmigaDOS support from Aaron Digulla.
+	* posix/Makefile (glob.tar): Add AmigaDOS support files.
+
 Tue Apr  2 21:27:01 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* posix/glob.c (glob_pattern_p): Avoid scanning past eos if
