@@ -527,16 +527,54 @@ character '%s' in class `%s' must not be in class `%s'"),
   if (charmap->width_rules != NULL)
     for (cnt = 0; cnt < charmap->nwidth_rules; ++cnt)
       {
-#if 0
-	size_t inner;
-	for (inner = charmap->width_rules[cnt].from;
-	     inner <= charmap->width_rules[cnt].to; ++inner)
-	  (void) find_idx (ctype, NULL, NULL, NULL, inner);
-#else
-	/* XXX Handle width.  We must convert from the charseq to the
-           repertoire value */
-	abort ();
-#endif
+	unsigned char bytes[charmap->mb_cur_max];
+	int nbytes = charmap->width_rules[cnt].from->nbytes;
+
+	/* We have the range of character for which the width is
+           specified described using byte sequences of the multibyte
+           charset.  We have to convert this to UCS4 now.  And we
+           cannot simply convert the beginning and the end of the
+           sequence, we have to iterate over the byte sequence and
+           convert it for every single character.  */
+	memcpy (bytes, charmap->width_rules[cnt].from->bytes, nbytes);
+
+	while (nbytes < charmap->width_rules[cnt].to->nbytes
+	       || memcmp (bytes, charmap->width_rules[cnt].to->bytes,
+			  nbytes) <= 0)
+	  {
+	    /* Find the UCS value for `bytes'.  */
+	    uint32_t wch = repertoire_find_value (ctype->repertoire, bytes,
+						  nbytes);
+	    int inner;
+
+	    if (wch != ILLEGAL_CHAR_VALUE)
+	      /* We are only interested in the side-effects of the
+		 `find_idx' call.  It will add appropriate entries in
+		 the name array if this is necessary.  */
+	      (void) find_idx (ctype, NULL, NULL, NULL, wch);
+
+	    /* "Increment" the bytes sequence.  */
+	    inner = nbytes - 1;
+	    while (inner >= 0 && bytes[inner] == 0xff)
+	      --inner;
+
+	    if (inner < 0)
+	      {
+		/* We have to extend the byte sequence.  */
+		if (nbytes >= charmap->width_rules[cnt].to->nbytes)
+		  break;
+
+		bytes[0] = 1;
+		memset (&bytes[1], 0, nbytes);
+		++nbytes;
+	      }
+	    else
+	      {
+		++bytes[inner];
+		while (++inner < nbytes)
+		  bytes[inner] = 0;
+	      }
+	  }
       }
 
   /* There must be a multiple of 10 digits.  */
@@ -2973,27 +3011,67 @@ Computing table size for character classes might take a while..."),
 	  ctype->plane_size * ctype->plane_cnt);
   if (charmap->width_rules != NULL)
     {
-#if 0
       size_t cnt;
 
       for (cnt = 0; cnt < charmap->nwidth_rules; ++cnt)
-	if (charmap->width_rules[cnt].width != charmap->width_default)
-	  for (idx = charmap->width_rules[cnt].from;
-	       idx <= charmap->width_rules[cnt].to; ++idx)
+	{
+	  unsigned char bytes[charmap->mb_cur_max];
+	  int nbytes = charmap->width_rules[cnt].from->nbytes;
+
+	  /* We have the range of character for which the width is
+	     specified described using byte sequences of the multibyte
+	     charset.  We have to convert this to UCS4 now.  And we
+	     cannot simply convert the beginning and the end of the
+	     sequence, we have to iterate over the byte sequence and
+	     convert it for every single character.  */
+	  memcpy (bytes, charmap->width_rules[cnt].from->bytes, nbytes);
+
+	  while (nbytes < charmap->width_rules[cnt].to->nbytes
+		 || memcmp (bytes, charmap->width_rules[cnt].to->bytes,
+			    nbytes) <= 0)
 	    {
-	      size_t nr = idx % ctype->plane_size;
-	      size_t depth = 0;
+	      /* Find the UCS value for `bytes'.  */
+	      uint32_t wch = repertoire_find_value (ctype->repertoire, bytes,
+						    nbytes);
+	      int inner;
 
-	      while (ctype->names[nr + depth * ctype->plane_size] != nr)
-		++depth;
-	      assert (depth < ctype->plane_cnt);
+	      if (wch != ILLEGAL_CHAR_VALUE)
+		{
+		  /* Store the value.  */
+		  size_t nr = idx % ctype->plane_size;
+		  size_t depth = 0;
 
-	      ctype->width[nr + depth * ctype->plane_size]
-		= charmap->width_rules[cnt].width;
+		  while (ctype->names[nr + depth * ctype->plane_size] != nr)
+		    ++depth;
+		  assert (depth < ctype->plane_cnt);
+
+		  ctype->width[nr + depth * ctype->plane_size]
+		    = charmap->width_rules[cnt].width;
+		}
+
+	      /* "Increment" the bytes sequence.  */
+	      inner = nbytes - 1;
+	      while (inner >= 0 && bytes[inner] == 0xff)
+		--inner;
+
+	      if (inner < 0)
+		{
+		  /* We have to extend the byte sequence.  */
+		  if (nbytes >= charmap->width_rules[cnt].to->nbytes)
+		    break;
+
+		  bytes[0] = 1;
+		  memset (&bytes[1], 0, nbytes);
+		  ++nbytes;
+		}
+	      else
+		{
+		  ++bytes[inner];
+		  while (++inner < nbytes)
+		    bytes[inner] = 0;
+		}
 	    }
-#else
-      abort ();
-#endif
+	}
     }
 
   /* Set MB_CUR_MAX.  */

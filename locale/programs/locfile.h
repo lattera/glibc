@@ -167,7 +167,7 @@ extern void numeric_read (struct linereader *ldfile,
 			  const char *repertoire_name,
 			  int ignore_content);
 extern void numeric_finish (struct localedef_t *locale,
-			     struct charmap_t *charmap);
+			    struct charmap_t *charmap);
 extern void numeric_output (struct localedef_t *locale,
 			    struct charmap_t *charmap,
 			    const char *output_path);

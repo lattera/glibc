@@ -1,3 +1,8 @@
+1999-11-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-ctype.c: Implement character width information
+	handling.
+
 1999-11-09  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/grantpt.c (grantpt): Add support for devfs.
