@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,1996,1998,1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1998-2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <netdb.h>
+#include <not-cancel.h>
 
 #define HOSTIDFILE "/etc/hostid"
 #define OLD_HOSTIDFILE "/etc/hostid"
@@ -41,13 +42,13 @@ sethostid (id)
     }
 
   /* Open file for writing.  Everybody is allowed to read this file.  */
-  fd = __open64 (HOSTIDFILE, O_CREAT|O_WRONLY|O_TRUNC, 0644);
+  fd = open_not_cancel (HOSTIDFILE, O_CREAT|O_WRONLY|O_TRUNC, 0644);
   if (fd < 0)
     return -1;
 
-  written = __write (fd, &id, sizeof (id));
+  written = write_not_cancel (fd, &id, sizeof (id));
 
-  __close (fd);
+  close_not_cancel_no_status (fd);
 
   return written != sizeof (id) ? -1 : 0;
 }
@@ -71,14 +72,14 @@ gethostid ()
   int fd;
 
   /* First try to get the ID from a former invocation of sethostid.  */
-  fd = __open64 (HOSTIDFILE, O_RDONLY);
+  fd = open_not_cancel (HOSTIDFILE, O_RDONLY|O_LARGEFILE);
   if (fd < 0)
-    fd = __open64 (OLD_HOSTIDFILE, O_RDONLY);
+    fd = open_not_cancel (OLD_HOSTIDFILE, O_RDONLY|O_LARGEFILE);
   if (fd >= 0)
     {
-      ssize_t n = __read (fd, &id, sizeof (id));
+      ssize_t n = read_not_cancel (fd, &id, sizeof (id));
 
-      __close (fd);
+      close_not_cancel_no_status (fd);
 
       if (n == sizeof (id))
 	return id;

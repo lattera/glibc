@@ -482,17 +482,6 @@ ftw_dir (struct ftw_data *data, struct STAT *st)
     {
       if (__fchdir (dirfd (dir.stream)) < 0)
 	{
-	  if (errno == ENOSYS)
-	    {
-	      if (__chdir (data->dirbuf) < 0)
-		result = -1;
-	    }
-	  else
-	    result = -1;
-	}
-
-      if (result != 0)
-	{
 	  int save_err = errno;
 	  __closedir (dir.stream);
 	  __set_errno (save_err);
@@ -501,7 +490,7 @@ ftw_dir (struct ftw_data *data, struct STAT *st)
 	    data->actdir = data->maxdir - 1;
 	  data->dirstreams[data->actdir] = NULL;
 
-	  return result;
+	  return -1;
 	}
     }
 

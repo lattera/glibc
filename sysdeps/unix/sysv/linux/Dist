@@ -3,6 +3,7 @@ cmsg_nxthdr.c
 dl-brk.c
 dl-sbrk.c
 exit-thread.S
+fatal-prepare.h
 getdirentries.c
 getdirentries64.c
 ipc_priv.h

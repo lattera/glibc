@@ -1,5 +1,5 @@
 /* Cache handling for iconv modules.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2001.
 
@@ -19,6 +19,7 @@
    02111-1307 USA.  */
 
 #include <dlfcn.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,6 +29,7 @@
 
 #include <gconv_int.h>
 #include <iconvconfig.h>
+#include <not-cancel.h>
 
 #include "../intl/hash-string.h"
 
@@ -58,7 +60,7 @@ __gconv_load_cache (void)
     return -1;
 
   /* See whether the cache file exists.  */
-  fd = __open (GCONV_MODULES_CACHE, O_RDONLY);
+  fd = open_not_cancel (GCONV_MODULES_CACHE, O_RDONLY);
   if (__builtin_expect (fd, 0) == -1)
     /* Not available.  */
     return -1;
@@ -70,7 +72,7 @@ __gconv_load_cache (void)
       || (size_t) st.st_size < sizeof (struct gconvcache_header))
     {
     close_and_exit:
-      __close (fd);
+      close_not_cancel_no_status (fd);
       return -1;
     }
 
@@ -107,7 +109,7 @@ __gconv_load_cache (void)
     }
 
   /* We don't need the file descriptor anymore.  */
-  __close (fd);
+  close_not_cancel_no_status (fd);
 
   /* Check the consistency.  */
   header = (struct gconvcache_header *) gconv_cache;

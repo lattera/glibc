@@ -298,31 +298,51 @@ extern __off64_t __REDIRECT (lseek,
 extern __off64_t lseek64 (int __fd, __off64_t __offset, int __whence) __THROW;
 #endif
 
-/* Close the file descriptor FD.  */
-extern int close (int __fd) __THROW;
+/* Close the file descriptor FD.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int close (int __fd);
 
 /* Read NBYTES into BUF from FD.  Return the
-   number read, -1 for errors or 0 for EOF.  */
-extern ssize_t read (int __fd, void *__buf, size_t __nbytes) __THROW;
+   number read, -1 for errors or 0 for EOF.
 
-/* Write N bytes of BUF to FD.  Return the number written, or -1.  */
-extern ssize_t write (int __fd, __const void *__buf, size_t __n) __THROW;
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern ssize_t read (int __fd, void *__buf, size_t __nbytes);
+
+/* Write N bytes of BUF to FD.  Return the number written, or -1.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern ssize_t write (int __fd, __const void *__buf, size_t __n);
 
 #ifdef __USE_UNIX98
 # ifndef __USE_FILE_OFFSET64
-extern ssize_t pread (int __fd, void *__buf, size_t __nbytes, __off_t __offset)
-     __THROW;
+/* Read NBYTES into BUF from FD at the given position OFFSET without
+   changing the file pointer.  Return the number read, -1 for errors
+   or 0 for EOF.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern ssize_t pread (int __fd, void *__buf, size_t __nbytes,
+		      __off_t __offset);
+
+/* Write N bytes of BUF to FD at the given position OFFSET without
+   changing the file pointer.  Return the number written, or -1.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
 extern ssize_t pwrite (int __fd, __const void *__buf, size_t __n,
-		       __off_t __offset) __THROW;
+		       __off_t __offset);
 # else
 #  ifdef __REDIRECT
 extern ssize_t __REDIRECT (pread, (int __fd, void *__buf, size_t __nbytes,
-				   __off64_t __offset) __THROW,
+				   __off64_t __offset),
 			   pread64);
 extern ssize_t __REDIRECT (pwrite, (int __fd, __const void *__buf,
-				    size_t __nbytes, __off64_t __offset)
-			   __THROW,
-			pwrite64);
+				    size_t __nbytes, __off64_t __offset),
+			   pwrite64);
 #  else
 #   define pread pread64
 #   define pwrite pwrite64
@@ -334,11 +354,11 @@ extern ssize_t __REDIRECT (pwrite, (int __fd, __const void *__buf,
    changing the file pointer.  Return the number read, -1 for errors
    or 0 for EOF.  */
 extern ssize_t pread64 (int __fd, void *__buf, size_t __nbytes,
-			__off64_t __offset) __THROW;
+			__off64_t __offset);
 /* Write N bytes of BUF to FD at the given position OFFSET without
    changing the file pointer.  Return the number written, or -1.  */
 extern ssize_t pwrite64 (int __fd, __const void *__buf, size_t __n,
-			 __off64_t __offset) __THROW;
+			 __off64_t __offset);
 # endif
 #endif
 
@@ -363,8 +383,11 @@ extern unsigned int alarm (unsigned int __seconds) __THROW;
    If a signal handler does a `longjmp' or modifies the handling of the
    SIGALRM signal while inside `sleep' call, the handling of the SIGALRM
    signal afterwards is undefined.  There is no return value to indicate
-   error, but if `sleep' returns SECONDS, it probably didn't work.  */
-extern unsigned int sleep (unsigned int __seconds) __THROW;
+   error, but if `sleep' returns SECONDS, it probably didn't work.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern unsigned int sleep (unsigned int __seconds);
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Set an alarm to go off (generating a SIGALRM signal) in VALUE
@@ -375,14 +398,20 @@ extern __useconds_t ualarm (__useconds_t __value, __useconds_t __interval)
      __THROW;
 
 /* Sleep USECONDS microseconds, or until a signal arrives that is not blocked
-   or ignored.  */
-extern int usleep (__useconds_t __useconds) __THROW;
+   or ignored.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int usleep (__useconds_t __useconds);
 #endif
 
 
 /* Suspend the process until a signal arrives.
-   This always returns -1 and sets `errno' to EINTR.  */
-extern int pause (void) __THROW;
+   This always returns -1 and sets `errno' to EINTR.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int pause (void);
 
 
 /* Change the owner and group of FILE.  */
@@ -670,12 +699,18 @@ extern __pid_t vfork (void) __THROW;
 
 
 /* Return the pathname of the terminal FD is open on, or NULL on errors.
-   The returned storage is good only until the next call to this function.  */
-extern char *ttyname (int __fd) __THROW;
+   The returned storage is good only until the next call to this function.
+
+   This function is a possible cancellation points and therefore not
+   marked with __THROW.  */
+extern char *ttyname (int __fd);
 
 /* Store at most BUFLEN characters of the pathname of the terminal FD is
-   open on in BUF.  Return 0 on success, otherwise an error number.  */
-extern int ttyname_r (int __fd, char *__buf, size_t __buflen) __THROW;
+   open on in BUF.  Return 0 on success, otherwise an error number.
+
+   This function is a possible cancellation points and therefore not
+   marked with __THROW.  */
+extern int ttyname_r (int __fd, char *__buf, size_t __buflen);
 
 /* Return 1 if FD is a valid descriptor associated
    with a terminal, zero if not.  */
@@ -717,13 +752,19 @@ extern __pid_t tcgetpgrp (int __fd) __THROW;
 extern int tcsetpgrp (int __fd, __pid_t __pgrp_id) __THROW;
 
 
-/* Return the login name of the user.  */
-extern char *getlogin (void) __THROW;
+/* Return the login name of the user.
+
+   This function is a possible cancellation points and therefore not
+   marked with __THROW.  */
+extern char *getlogin (void);
 #if defined __USE_REENTRANT || defined __USE_UNIX98
 /* Return at most NAME_LEN characters of the login name of the user in NAME.
    If it cannot be determined or some other error occurred, return the error
-   code.  Otherwise return 0.  */
-extern int getlogin_r (char *__name, size_t __name_len) __THROW;
+   code.  Otherwise return 0.
+
+   This function is a possible cancellation points and therefore not
+   marked with __THROW.  */
+extern int getlogin_r (char *__name, size_t __name_len);
 #endif
 
 #ifdef	__USE_BSD
@@ -815,8 +856,11 @@ extern char *getpass (__const char *__prompt) __THROW;
 
 
 #if defined __USE_BSD || defined __USE_XOPEN
-/* Make all changes done to FD actually appear on disk.  */
-extern int fsync (int __fd) __THROW;
+/* Make all changes done to FD actually appear on disk.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int fsync (int __fd);
 #endif /* Use BSD || X/Open.  */
 
 
@@ -910,7 +954,10 @@ extern long int syscall (long int __sysno, ...) __THROW;
 
 /* `lockf' is a simpler interface to the locking facilities of `fcntl'.
    LEN is always relative to the current file position.
-   The CMD argument is one of the following.  */
+   The CMD argument is one of the following.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
 
 # define F_ULOCK 0	/* Unlock a previously locked region.  */
 # define F_LOCK  1	/* Lock a region for exclusive use.  */
@@ -918,17 +965,17 @@ extern long int syscall (long int __sysno, ...) __THROW;
 # define F_TEST  3	/* Test a region for other processes locks.  */
 
 # ifndef __USE_FILE_OFFSET64
-extern int lockf (int __fd, int __cmd, __off_t __len) __THROW;
+extern int lockf (int __fd, int __cmd, __off_t __len);
 # else
 #  ifdef __REDIRECT
-extern int __REDIRECT (lockf, (int __fd, int __cmd, __off64_t __len) __THROW,
+extern int __REDIRECT (lockf, (int __fd, int __cmd, __off64_t __len),
 		       lockf64);
 #  else
 #   define lockf lockf64
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
-extern int lockf64 (int __fd, int __cmd, __off64_t __len) __THROW;
+extern int lockf64 (int __fd, int __cmd, __off64_t __len);
 # endif
 #endif /* Use misc and F_LOCK not already defined.  */
 

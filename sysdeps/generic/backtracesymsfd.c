@@ -1,5 +1,5 @@
 /* Write formatted list with names for addresses in backtrace to a file.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -23,11 +23,12 @@
 #include <sys/uio.h>
 
 #include <stdio-common/_itoa.h>
+#include <not-cancel.h>
 
 #if __ELF_NATIVE_CLASS == 32
 # define WORD_WIDTH 8
 #else
-/* We assyme 64bits.  */
+/* We assume 64bits.  */
 # define WORD_WIDTH 16
 #endif
 
@@ -55,7 +56,8 @@ __backtrace_symbols_fd (array, size, fd)
       iov[2].iov_base = (void *) "]\n";
       iov[2].iov_len = 2;
 
-      __writev (fd, iov, 3);
+      /* We prefer to use the non-cancelable interface if it is available.  */
+      writev_not_cancel_no_status (fd, iov, 3);
     }
 }
 weak_alias (__backtrace_symbols_fd, backtrace_symbols_fd)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,7 @@
 #endif
 
 #include <device-nrs.h>
+#include <not-cancel.h>
 
 
 /* Should other OSes (e.g., Hurd) have different versions which can
@@ -39,6 +40,7 @@
 static void
 check_one_fd (int fd, int mode)
 {
+  /* Note that fcntl() with this parameter is not a cancellation point.  */
   if (__builtin_expect (__libc_fcntl (fd, F_GETFD), 0) == -1
       && errno == EBADF)
     {
@@ -47,7 +49,7 @@ check_one_fd (int fd, int mode)
       /* Something is wrong with this descriptor, it's probably not
 	 opened.  Open /dev/null so that the SUID program we are
 	 about to start does not accidently use this descriptor.  */
-      int nullfd = __libc_open (_PATH_DEVNULL, mode);
+      int nullfd = open_not_cancel (_PATH_DEVNULL, mode);
       /* We are very paranoid here.  With all means we try to ensure
 	 that we are actually opening the /dev/null device and nothing
 	 else.

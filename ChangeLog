@@ -1,3 +1,58 @@
+2003-04-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* catgets/nl_types.h: Remove __THROW marker from cancellation points.
+	* dirent/dirent.h: Likewise.
+	* dlfcn/dlfcn.h: Likewise.
+	* grp/grp.h: Likewise.
+	* iconv/iconv.h: Likewise.
+	* io/fcntl.h: Likewise.
+	* io/ftw.h: Likewise.
+	* libio/stdio.h: Likewise.
+	* misc/sys/mman.h: Likewise.
+	* misc/sys/select.h: Likewise.
+	* misc/sys/syslog.h: Likewise.
+	* misc/sys/uio.h: Likewise.
+	* posix/spawn.h: Likewise.
+	* posix/unistd.h: Likewise.
+	* posix/sys/wait.h: Likewise.
+	* pwd/pwd.h: Likewise.
+	* resolv/netdb.h: Likewise.
+	* rt/aio.h: Likewise.
+	* shadow/shadow.h: Likewise.
+	* signal/signal.h: Likewise.
+	* socket/sys/socket.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* streams/stropts.h: Likewise.
+	* string/string.h: Likewise.
+	* sysdeps/gnu/utmpx.h: Likewise.
+	* sysvipc/sys/msg.h: Likewise.
+	* termios/termios.h: Likewise.
+	* time/time.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+	* iconv/gconv_cache.c: Include <not-cancel.h> and use non-cancelable
+	functions.
+	* misc/daemon.c: Likewise.
+	* sysdeps/generic/backtracesymsfd.c: Likewise.
+	* sysdeps/generic/check_fds.c: Likewise.
+	* sysdeps/unix/sysv/linux/gethostid.c: Likewise.
+	* sysdeps/unix/sysv/linux/not-cancel.h: New file.
+	* sysdeps/generic/not-cancel.h: New file.
+	* csu/Makefile (distribute): Add not-cancel.h.
+	* sysdeps/unix/sysv/linux/fatal-prepare.h: New file.
+	* sysdeps/unix/sysv/linux/Makefile: Define FATAL_PREPARE_INCLUDE
+	for assert.c and assert-perr.c to include <fatal-prepare.h>.
+	* sysdeps/unix/sysv/linux/Dist: Add fatal-prepare.h.
+
+	* sysdeps/posix/remove.c (remove): Rewrite.  No need to restore
+	errno and unlink first.
+
+	* io/ftw.c (ftw_dir): In all places assume fchdir is available.
+
+2003-04-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/libc_fatal.c (__libc_fatal): Use
+	INTERNAL_SYSCALL instead of INLINE_SYSCALL.
+
 2003-04-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/Makefile: Remove db2 directory handling.

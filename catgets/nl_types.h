@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,8 +36,11 @@ typedef void *nl_catd;
 /* Type used by `nl_langinfo'.  */
 typedef int nl_item;
 
-/* Open message catalog for later use, returning descriptor.  */
-extern nl_catd catopen (__const char *__cat_name, int __flag) __THROW;
+/* Open message catalog for later use, returning descriptor.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern nl_catd catopen (__const char *__cat_name, int __flag);
 
 /* Return translation with NUMBER in SET of CATALOG; if not found
    return STRING.  */

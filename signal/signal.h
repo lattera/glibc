@@ -142,8 +142,11 @@ extern void psignal (int __sig, __const char *__s) __THROW;
    BSD definition defines the argument as a mask of the signal, while
    the more modern interface in X/Open defines it as the signal
    number.  We go with the BSD version unless the user explicitly
-   selects the X/Open version.  */
-extern int __sigpause (int __sig_or_mask, int __is_sig) __THROW;
+   selects the X/Open version.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int __sigpause (int __sig_or_mask, int __is_sig);
 
 #ifdef __USE_BSD
 /* Set the mask of blocked signals to MASK,
@@ -153,7 +156,7 @@ extern int sigpause (int __mask) __THROW;
 #else
 # ifdef __USE_XOPEN
 #  ifdef __GNUC__
-extern int sigpause (int __sig) __THROW __asm__ ("__xpg_sigpause");
+extern int sigpause (int __sig) __asm__ ("__xpg_sigpause");
 #  endif
 /* Remove a signal from the signal mask and suspend the process.  */
 #  define sigpause(sig) __sigpause ((sig), 1)
@@ -242,8 +245,11 @@ extern int sigprocmask (int __how, __const sigset_t *__restrict __set,
 			sigset_t *__restrict __oset) __THROW;
 
 /* Change the set of blocked signals to SET,
-   wait until a signal arrives, and restore the set of blocked signals.  */
-extern int sigsuspend (__const sigset_t *__set) __THROW;
+   wait until a signal arrives, and restore the set of blocked signals.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int sigsuspend (__const sigset_t *__set);
 
 /* Get and/or set the action for signal SIG.  */
 extern int sigaction (int __sig, __const struct sigaction *__restrict __act,
@@ -253,21 +259,28 @@ extern int sigaction (int __sig, __const struct sigaction *__restrict __act,
 extern int sigpending (sigset_t *__set) __THROW;
 
 
-/* Select any of pending signals from SET or wait for any to arrive.  */
-extern int sigwait (__const sigset_t *__restrict __set, int *__restrict __sig)
-     __THROW;
+/* Select any of pending signals from SET or wait for any to arrive.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int sigwait (__const sigset_t *__restrict __set, int *__restrict __sig);
 
 # ifdef __USE_POSIX199309
-/* Select any of pending signals from SET and place information in INFO.  */
+/* Select any of pending signals from SET and place information in INFO.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
 extern int sigwaitinfo (__const sigset_t *__restrict __set,
-			siginfo_t *__restrict __info) __THROW;
+			siginfo_t *__restrict __info);
 
 /* Select any of pending signals from SET and place information in INFO.
-   Wait the time specified by TIMEOUT if no signal is pending.  */
+   Wait the time specified by TIMEOUT if no signal is pending.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
 extern int sigtimedwait (__const sigset_t *__restrict __set,
 			 siginfo_t *__restrict __info,
-			 __const struct timespec *__restrict __timeout)
-     __THROW;
+			 __const struct timespec *__restrict __timeout);
 
 /* Send signal SIG to the process PID.  Associate data in VAL with the
    signal.  */

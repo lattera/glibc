@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,94,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1994-2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,41 +56,48 @@ __BEGIN_DECLS
 #endif	/* XPG */
 
 /* Do the file control operation described by CMD on FD.
-   The remaining arguments are interpreted depending on CMD.  */
-extern int fcntl (int __fd, int __cmd, ...) __THROW;
+   The remaining arguments are interpreted depending on CMD.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int fcntl (int __fd, int __cmd, ...);
 
 /* Open FILE and return a new file descriptor for it, or -1 on error.
    OFLAG determines the type of access used.  If O_CREAT is on OFLAG,
-   the third argument is taken as a `mode_t', the mode of the created file.  */
+   the third argument is taken as a `mode_t', the mode of the created file.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
 #ifndef __USE_FILE_OFFSET64
-extern int open (__const char *__file, int __oflag, ...) __THROW;
+extern int open (__const char *__file, int __oflag, ...);
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT (open, (__const char *__file, int __oflag, ...) __THROW,
-		       open64);
+extern int __REDIRECT (open, (__const char *__file, int __oflag, ...), open64);
 # else
 #  define open open64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int open64 (__const char *__file, int __oflag, ...) __THROW;
+extern int open64 (__const char *__file, int __oflag, ...);
 #endif
 
-/* Create and open FILE, with mode MODE.
-   This takes an `int' MODE argument because that is
-   what `mode_t' will be widened to.  */
+/* Create and open FILE, with mode MODE.  This takes an `int' MODE
+   argument because that is what `mode_t' will be widened to.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
 #ifndef __USE_FILE_OFFSET64
-extern int creat (__const char *__file, __mode_t __mode) __THROW;
+extern int creat (__const char *__file, __mode_t __mode);
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT (creat, (__const char *__file, __mode_t __mode) __THROW,
+extern int __REDIRECT (creat, (__const char *__file, __mode_t __mode),
 		       creat64);
 # else
 #  define creat creat64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int creat64 (__const char *__file, __mode_t __mode) __THROW;
+extern int creat64 (__const char *__file, __mode_t __mode);
 #endif
 
 #if !defined F_LOCK && (defined __USE_MISC || (defined __USE_XOPEN_EXTENDED \

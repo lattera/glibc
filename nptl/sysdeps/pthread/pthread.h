@@ -362,7 +362,11 @@ extern int pthread_once (pthread_once_t *__once_control,
 			 void (*__init_routine) (void)) __THROW;
 
 
-/* Functions for handling cancellation.  */
+/* Functions for handling cancellation.
+
+   Note that these functions are explicitly not marked to not throw an
+   exception in C++ code.  If cancellation is implemented by unwinding
+   this is necessary to have the compiler generate the unwind information.  */
 
 /* Set cancelability state of current thread to STATE, returning old
    state in *OLDSTATE if OLDSTATE is not NULL.  */
@@ -377,11 +381,7 @@ extern int pthread_cancel (pthread_t __th);
 
 /* Test for pending cancellation for the current thread and terminate
    the thread as per pthread_exit(PTHREAD_CANCELED) if it has been
-   cancelled.
-
-   Note that this function is explicitly not marked to not throw an
-   exception in C++ code.  If cancellation is implemented by unwinding
-   this is necessary to have the compiler generate the unwind information.  */
+   cancelled.  */
 extern void pthread_testcancel (void);
 
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -161,9 +161,12 @@ extern __ssize_t aio_return (struct aiocb *__aiocbp) __THROW;
 extern int aio_cancel (int __fildes, struct aiocb *__aiocbp) __THROW;
 
 /* Suspend calling thread until at least one of the asynchronous I/O
-   operations referenced by LIST has completed.  */
+   operations referenced by LIST has completed.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
 extern int aio_suspend (__const struct aiocb *__const __list[], int __nent,
-			__const struct timespec *__restrict __timeout) __THROW;
+			__const struct timespec *__restrict __timeout);
 
 /* Force all operations associated with file desriptor described by
    `aio_fildes' member of AIOCBP.  */

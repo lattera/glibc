@@ -83,8 +83,11 @@ extern int mprotect (void *__addr, size_t __len, int __prot) __THROW;
 
 /* Synchronize the region starting at ADDR and extending LEN bytes with the
    file it maps.  Filesystem operations on a file being mapped are
-   unpredictable before this is done.  Flags are from the MS_* set.  */
-extern int msync (void *__addr, size_t __len, int __flags) __THROW;
+   unpredictable before this is done.  Flags are from the MS_* set.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int msync (void *__addr, size_t __len, int __flags);
 
 #ifdef __USE_BSD
 /* Advise the system about particular usage patterns the program follows

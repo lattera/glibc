@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,9 +31,11 @@ typedef void *iconv_t;
 
 
 /* Allocate descriptor for code conversion from codeset FROMCODE to
-   codeset TOCODE.  */
-extern iconv_t iconv_open (__const char *__tocode, __const char *__fromcode)
-     __THROW;
+   codeset TOCODE.
+
+   This function is a possible cancellation points and therefore not
+   marked with __THROW.  */
+extern iconv_t iconv_open (__const char *__tocode, __const char *__fromcode);
 
 /* Convert at most *INBYTESLEFT bytes from *INBUF according to the
    code conversion algorithm specified by CD and place up to
@@ -43,8 +45,11 @@ extern size_t iconv (iconv_t __cd, char **__restrict __inbuf,
 		     char **__restrict __outbuf,
 		     size_t *__restrict __outbytesleft);
 
-/* Free resources allocated for descriptor CD for code conversion.  */
-extern int iconv_close (iconv_t __cd) __THROW;
+/* Free resources allocated for descriptor CD for code conversion.
+
+   This function is a possible cancellation points and therefore not
+   marked with __THROW.  */
+extern int iconv_close (iconv_t __cd);
 
 __END_DECLS
 

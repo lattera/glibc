@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1994,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1994,1996-2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -105,8 +105,11 @@ typedef enum
 
 
 /* Wait for a child to die.  When one does, put its status in *STAT_LOC
-   and return its process ID.  For errors, return (pid_t) -1.  */
-extern __pid_t wait (__WAIT_STATUS __stat_loc) __THROW;
+   and return its process ID.  For errors, return (pid_t) -1.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern __pid_t wait (__WAIT_STATUS __stat_loc);
 
 #ifdef	__USE_BSD
 /* Special values for the PID argument to `waitpid' and `wait4'.  */
@@ -125,8 +128,11 @@ extern __pid_t wait (__WAIT_STATUS __stat_loc) __THROW;
    is not already dead, return (pid_t) 0.  If successful,
    return PID and store the dead child's status in STAT_LOC.
    Return (pid_t) -1 for errors.  If the WUNTRACED bit is
-   set in OPTIONS, return status for stopped children; otherwise don't.  */
-extern __pid_t waitpid (__pid_t __pid, int *__stat_loc, int __options) __THROW;
+   set in OPTIONS, return status for stopped children; otherwise don't.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern __pid_t waitpid (__pid_t __pid, int *__stat_loc, int __options);
 
 #if defined __USE_SVID || defined __USE_XOPEN
 # define __need_siginfo_t
@@ -138,9 +144,12 @@ extern __pid_t waitpid (__pid_t __pid, int *__stat_loc, int __options) __THROW;
    If IDTYPE is P_ALL, match any process.
    If the WNOHANG bit is set in OPTIONS, and that child
    is not already dead, clear *INFOP and return 0.  If successful, store
-   exit code and status in *INFOP.  */
+   exit code and status in *INFOP.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
 extern int waitid (idtype_t __idtype, __id_t __id, siginfo_t *__infop,
-		   int __options) __THROW;
+		   int __options);
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED

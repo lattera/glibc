@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,41 +47,79 @@ struct utmp;
 
 __BEGIN_DECLS
 
-/* Open user accounting database.  */
-extern void setutxent (void) __THROW;
+/* Open user accounting database.
 
-/* Close user accounting database.  */
-extern void endutxent (void) __THROW;
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern void setutxent (void);
 
-/* Get the next entry from the user accounting database.  */
-extern struct utmpx *getutxent (void) __THROW;
+/* Close user accounting database.
 
-/* Get the user accounting database entry corresponding to ID.  */
-extern struct utmpx *getutxid (__const struct utmpx *__id) __THROW;
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern void endutxent (void);
 
-/* Get the user accounting database entry corresponding to LINE.  */
-extern struct utmpx *getutxline (__const struct utmpx *__line) __THROW;
+/* Get the next entry from the user accounting database.
 
-/* Write the entry UTMPX into the user accounting database.  */
-extern struct utmpx *pututxline (__const struct utmpx *__utmpx) __THROW;
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern struct utmpx *getutxent (void);
+
+/* Get the user accounting database entry corresponding to ID.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern struct utmpx *getutxid (__const struct utmpx *__id);
+
+/* Get the user accounting database entry corresponding to LINE.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern struct utmpx *getutxline (__const struct utmpx *__line);
+
+/* Write the entry UTMPX into the user accounting database.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern struct utmpx *pututxline (__const struct utmpx *__utmpx);
 
 
 #ifdef __USE_GNU
-/* Change name of the utmpx file to be examined.  */
-extern int utmpxname (__const char *__file) __THROW;
+/* Change name of the utmpx file to be examined.
 
-/* Append entry UTMP to the wtmpx-like file WTMPX_FILE.  */
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern int utmpxname (__const char *__file);
+
+/* Append entry UTMP to the wtmpx-like file WTMPX_FILE.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
 extern void updwtmpx (__const char *__wtmpx_file,
-		      __const struct utmpx *__utmpx) __THROW;
+		      __const struct utmpx *__utmpx);
 
 
-/* Copy the information in UTMPX to UTMP. */
+/* Copy the information in UTMPX to UTMP.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
 extern void getutmp (__const struct utmpx *__utmpx,
-		     struct utmp *__utmp) __THROW;
+		     struct utmp *__utmp);
 
-/* Copy the information in UTMP to UTMPX. */
+/* Copy the information in UTMP to UTMPX.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
 extern void getutmpx (__const struct utmp *__utmp,
-		      struct utmpx *__utmpx) __THROW;
+		      struct utmpx *__utmpx);
 #endif
 
 __END_DECLS

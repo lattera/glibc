@@ -31,12 +31,14 @@
 static char sccsid[] = "@(#)daemon.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 
+#include <errno.h>
 #include <fcntl.h>
 #include <paths.h>
 #include <unistd.h>
 #include <sys/stat.h>
 
 #include <device-nrs.h>
+#include <not-cancel.h>
 
 int
 daemon(nochdir, noclose)
@@ -59,7 +61,8 @@ daemon(nochdir, noclose)
 	if (!nochdir)
 		(void)__chdir("/");
 
-	if (!noclose && (fd = __open(_PATH_DEVNULL, O_RDWR, 0)) != -1) {
+	if (!noclose
+	    && (fd = open_not_cancel(_PATH_DEVNULL, O_RDWR, 0)) != -1) {
 		struct stat64 st;
 
 		if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0) == 0
@@ -74,7 +77,7 @@ daemon(nochdir, noclose)
 			if (fd > 2)
 				(void)__close (fd);
 		} else {
-			(void)__close (fd);
+			close_not_cancel_no_status (fd);
 			return -1;
 		}
 	}

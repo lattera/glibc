@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1994,1995,1997,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993-1995,1997,2000,2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,13 +37,15 @@ __libc_fatal (message)
 
   while (len > 0)
     {
-      ssize_t count = INLINE_SYSCALL (write, 3, STDERR_FILENO, message, len);
-      if (count > 0)
+      INTERNAL_SYSCALL_DECL (err);
+      ssize_t count = INTERNAL_SYSCALL (write, err, 3, STDERR_FILENO,
+					message, len);
+      if (! INTERNAL_SYSCALL_ERROR_P (count, err))
 	{
 	  message += count;
 	  len -= count;
 	}
-      else if (count < 0 && errno != EINTR)
+      else if (INTERNAL_SYSCALL_ERRNO (count, err) != EINTR)
 	break;
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -128,12 +128,18 @@ enum
 typedef struct __dirstream DIR;
 
 /* Open a directory stream on NAME.
-   Return a DIR stream on the directory, or NULL if it could not be opened.  */
-extern DIR *opendir (__const char *__name) __THROW;
+   Return a DIR stream on the directory, or NULL if it could not be opened.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern DIR *opendir (__const char *__name);
 
 /* Close the directory stream DIRP.
-   Return 0 if successful, -1 if not.  */
-extern int closedir (DIR *__dirp) __THROW;
+   Return 0 if successful, -1 if not.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int closedir (DIR *__dirp);
 
 /* Read a directory entry from DIRP.  Return a pointer to a `struct
    dirent' describing the entry, or NULL for EOF or error.  The
@@ -141,34 +147,40 @@ extern int closedir (DIR *__dirp) __THROW;
    same DIR stream.
 
    If the Large File Support API is selected we have to use the
-   appropriate interface.  */
+   appropriate interface.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
 #ifndef __USE_FILE_OFFSET64
-extern struct dirent *readdir (DIR *__dirp) __THROW;
+extern struct dirent *readdir (DIR *__dirp);
 #else
 # ifdef __REDIRECT
-extern struct dirent *__REDIRECT (readdir, (DIR *__dirp) __THROW, readdir64);
+extern struct dirent *__REDIRECT (readdir, (DIR *__dirp), readdir64);
 # else
 #  define readdir readdir64
 # endif
 #endif
 
 #ifdef __USE_LARGEFILE64
-extern struct dirent64 *readdir64 (DIR *__dirp) __THROW;
+extern struct dirent64 *readdir64 (DIR *__dirp);
 #endif
 
 #if defined __USE_POSIX || defined __USE_MISC
 /* Reentrant version of `readdir'.  Return in RESULT a pointer to the
-   next entry.  */
+   next entry.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
 # ifndef __USE_FILE_OFFSET64
 extern int readdir_r (DIR *__restrict __dirp,
 		      struct dirent *__restrict __entry,
-		      struct dirent **__restrict __result) __THROW;
+		      struct dirent **__restrict __result);
 # else
 #  ifdef __REDIRECT
 extern int __REDIRECT (readdir_r,
 		       (DIR *__restrict __dirp,
 			struct dirent *__restrict __entry,
-			struct dirent **__restrict __result) __THROW,
+			struct dirent **__restrict __result),
 		       readdir64_r);
 #  else
 #   define readdir_r readdir64_r
@@ -178,7 +190,7 @@ extern int __REDIRECT (readdir_r,
 # ifdef __USE_LARGEFILE64
 extern int readdir64_r (DIR *__restrict __dirp,
 			struct dirent64 *__restrict __entry,
-			struct dirent64 **__restrict __result) __THROW;
+			struct dirent64 **__restrict __result);
 # endif
 #endif	/* POSIX or misc */
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-99,2000,01,02 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -666,18 +666,21 @@ extern char *mktemp (char *__template) __THROW;
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the filename unique.
    Returns a file descriptor open on the file for reading and writing,
-   or -1 if it cannot create a uniquely-named file.  */
+   or -1 if it cannot create a uniquely-named file.
+
+   This function is a possible cancellation points and therefore not
+   marked with __THROW.  */
 # ifndef __USE_FILE_OFFSET64
-extern int mkstemp (char *__template) __THROW;
+extern int mkstemp (char *__template);
 # else
 #  ifdef __REDIRECT
-extern int __REDIRECT (mkstemp, (char *__template) __THROW, mkstemp64);
+extern int __REDIRECT (mkstemp, (char *__template), mkstemp64);
 #  else
 #   define mkstemp mkstemp64
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
-extern int mkstemp64 (char *__template) __THROW;
+extern int mkstemp64 (char *__template);
 # endif
 #endif
 
@@ -692,8 +695,11 @@ extern char *mkdtemp (char *__template) __THROW;
 
 
 __BEGIN_NAMESPACE_STD
-/* Execute the given line as a shell command.  */
-extern int system (__const char *__command) __THROW;
+/* Execute the given line as a shell command.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int system (__const char *__command);
 __END_NAMESPACE_STD
 
 

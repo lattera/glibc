@@ -168,22 +168,35 @@ CODE facilitynames[] =
 
 __BEGIN_DECLS
 
-/* Close desriptor used to write to system logger.  */
-extern void closelog (void) __THROW;
+/* Close desriptor used to write to system logger.
 
-/* Open connection to system logger.  */
-extern void openlog (__const char *__ident, int __option, int __facility)
-     __THROW;
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern void closelog (void);
+
+/* Open connection to system logger.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern void openlog (__const char *__ident, int __option, int __facility);
 
 /* Set the log mask level.  */
 extern int setlogmask (int __mask) __THROW;
 
-/* Generate a log message using FMT string and option arguments.  */
-extern void syslog (int __pri, __const char *__fmt, ...) __THROW
+/* Generate a log message using FMT string and option arguments.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern void syslog (int __pri, __const char *__fmt, ...)
      __attribute__ ((__format__(__printf__, 2, 3)));
 
 #ifdef __USE_BSD
-/* Generate a log message using FMT and using arguments pointed to by AP.  */
+/* Generate a log message using FMT and using arguments pointed to by AP.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
 extern void vsyslog (int __pri, __const char *__fmt, __gnuc_va_list __ap)
      __THROW __attribute__ ((__format__(__printf__, 2, 0)));
 #endif

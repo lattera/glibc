@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1992,1996,1997,1998,1999,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -103,40 +103,45 @@ typedef int (*__nftw64_func_t) (__const char *__filename,
 # endif
 #endif
 
-/* Call a function on every element in a directory tree.  */
+/* Call a function on every element in a directory tree.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
 #ifndef __USE_FILE_OFFSET64
-extern int ftw (__const char *__dir, __ftw_func_t __func, int __descriptors)
-     __THROW;
+extern int ftw (__const char *__dir, __ftw_func_t __func, int __descriptors);
 #else
 # ifdef __REDIRECT
 extern int __REDIRECT (ftw, (__const char *__dir, __ftw_func_t __func,
-			     int __descriptors) __THROW, ftw64);
+			     int __descriptors), ftw64);
 # else
 #  define ftw ftw64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
 extern int ftw64 (__const char *__dir, __ftw64_func_t __func,
-		  int __descriptors) __THROW;
+		  int __descriptors);
 #endif
 
 #ifdef __USE_XOPEN_EXTENDED
 /* Call a function on every element in a directory tree.  FLAG allows
-   to specify the behaviour more detailed.  */
+   to specify the behaviour more detailed.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
 # ifndef __USE_FILE_OFFSET64
 extern int nftw (__const char *__dir, __nftw_func_t __func, int __descriptors,
-		 int __flag) __THROW;
+		 int __flag);
 # else
 #  ifdef __REDIRECT
 extern int __REDIRECT (nftw, (__const char *__dir, __nftw_func_t __func,
-			      int __descriptors, int __flag) __THROW, nftw64);
+			      int __descriptors, int __flag), nftw64);
 #  else
 #   define nftw nftw64
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
 extern int nftw64 (__const char *__dir, __nftw64_func_t __func,
-		   int __descriptors, int __flag) __THROW;
+		   int __descriptors, int __flag);
 # endif
 #endif
 

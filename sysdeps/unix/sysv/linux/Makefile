@@ -2,6 +2,11 @@ ifeq ($(subdir),csu)
 sysdep_routines += errno-loc
 endif
 
+ifeq ($(subdir),assert)
+CFLAGS-assert.c += -DFATAL_PREPARE_INCLUDE='<fatal-prepare.h>'
+CFLAGS-assert-perr.c += -DFATAL_PREPARE_INCLUDE='<fatal-prepare.h>'
+endif
+
 ifeq ($(subdir),malloc)
 CFLAGS-malloc.c += -DMORECORE_CLEARS=2
 endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,45 +54,89 @@ struct spwd
   };
 
 
-/* Open database for reading.  */
-extern void setspent (void) __THROW;
+/* Open database for reading.
 
-/* Close database.  */
-extern void endspent (void) __THROW;
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern void setspent (void);
 
-/* Get next entry from database, perhaps after opening the file.  */
-extern struct spwd *getspent (void) __THROW;
+/* Close database.
 
-/* Get shadow entry matching NAME.  */
-extern struct spwd *getspnam (__const char *__name) __THROW;
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern void endspent (void);
 
-/* Read shadow entry from STRING.  */
-extern struct spwd *sgetspent (__const char *__string) __THROW;
+/* Get next entry from database, perhaps after opening the file.
 
-/* Read next shadow entry from STREAM.  */
-extern struct spwd *fgetspent (FILE *__stream) __THROW;
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern struct spwd *getspent (void);
 
-/* Write line containing shadow password entry to stream.  */
-extern int putspent (__const struct spwd *__p, FILE *__stream) __THROW;
+/* Get shadow entry matching NAME.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern struct spwd *getspnam (__const char *__name);
+
+/* Read shadow entry from STRING.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern struct spwd *sgetspent (__const char *__string);
+
+/* Read next shadow entry from STREAM.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern struct spwd *fgetspent (FILE *__stream);
+
+/* Write line containing shadow password entry to stream.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern int putspent (__const struct spwd *__p, FILE *__stream);
 
 
 #ifdef __USE_MISC
-/* Reentrant versions of some of the functions above.  */
+/* Reentrant versions of some of the functions above.
+
+   These functions are not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation they are cancellation points and
+   therefore not marked with __THROW.  */
 extern int getspent_r (struct spwd *__result_buf, char *__buffer,
-		       size_t __buflen, struct spwd **__result) __THROW;
+		       size_t __buflen, struct spwd **__result);
 
 extern int getspnam_r (__const char *__name, struct spwd *__result_buf,
 		       char *__buffer, size_t __buflen,
-		       struct spwd **__result)__THROW;
+		       struct spwd **__result);
 
 extern int sgetspent_r (__const char *__string, struct spwd *__result_buf,
 			char *__buffer, size_t __buflen,
-			struct spwd **__result) __THROW;
+			struct spwd **__result);
 
 extern int fgetspent_r (FILE *__stream, struct spwd *__result_buf,
 			char *__buffer, size_t __buflen,
-			struct spwd **__result) __THROW;
+			struct spwd **__result);
 #endif	/* misc */
+
+
+/* The simple locking functionality provided here is not suitable for
+   multi-threaded applications.  */
 
 /* Protect password file against multi writers.  */
 extern int lckpwdf (void) __THROW;

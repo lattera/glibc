@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,95,96,97,98,99,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995-2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -66,30 +66,55 @@ struct passwd
 
 
 #if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN_EXTENDED
-/* Rewind the password-file stream.  */
-extern void setpwent (void) __THROW;
+/* Rewind the password-file stream.
 
-/* Close the password-file stream.  */
-extern void endpwent (void) __THROW;
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern void setpwent (void);
 
-/* Read an entry from the password-file stream, opening it if necessary.  */
-extern struct passwd *getpwent (void) __THROW;
+/* Close the password-file stream.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern void endpwent (void);
+
+/* Read an entry from the password-file stream, opening it if necessary.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern struct passwd *getpwent (void);
 #endif
 
 #ifdef	__USE_SVID
-/* Read an entry from STREAM.  */
-extern struct passwd *fgetpwent (FILE *__stream) __THROW;
+/* Read an entry from STREAM.
 
-/* Write the given entry onto the given stream.  */
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern struct passwd *fgetpwent (FILE *__stream);
+
+/* Write the given entry onto the given stream.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
 extern int putpwent (__const struct passwd *__restrict __p,
-		     FILE *__restrict __f) __THROW;
+		     FILE *__restrict __f);
 #endif
 
-/* Search for an entry with a matching user ID.  */
-extern struct passwd *getpwuid (__uid_t __uid) __THROW;
+/* Search for an entry with a matching user ID.
 
-/* Search for an entry with a matching username.  */
-extern struct passwd *getpwnam (__const char *__name) __THROW;
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern struct passwd *getpwuid (__uid_t __uid);
+
+/* Search for an entry with a matching username.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern struct passwd *getpwnam (__const char *__name);
 
 #if defined __USE_POSIX || defined __USE_MISC
 
@@ -108,29 +133,38 @@ extern struct passwd *getpwnam (__const char *__name) __THROW;
    POSIX people would choose.  */
 
 # if defined __USE_SVID || defined __USE_MISC
+/* This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
 extern int getpwent_r (struct passwd *__restrict __resultbuf,
 		       char *__restrict __buffer, size_t __buflen,
-		       struct passwd **__restrict __result) __THROW;
+		       struct passwd **__restrict __result);
 # endif
 
 extern int getpwuid_r (__uid_t __uid,
 		       struct passwd *__restrict __resultbuf,
 		       char *__restrict __buffer, size_t __buflen,
-		       struct passwd **__restrict __result) __THROW;
+		       struct passwd **__restrict __result);
 
 extern int getpwnam_r (__const char *__restrict __name,
 		       struct passwd *__restrict __resultbuf,
 		       char *__restrict __buffer, size_t __buflen,
-		       struct passwd **__restrict __result) __THROW;
+		       struct passwd **__restrict __result);
 
 
 # ifdef	__USE_SVID
 /* Read an entry from STREAM.  This function is not standardized and
-   probably never will.  */
+   probably never will.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
 extern int fgetpwent_r (FILE *__restrict __stream,
 			struct passwd *__restrict __resultbuf,
 			char *__restrict __buffer, size_t __buflen,
-			struct passwd **__restrict __result) __THROW;
+			struct passwd **__restrict __result);
 # endif
 
 #endif	/* POSIX or reentrant */
@@ -138,8 +172,13 @@ extern int fgetpwent_r (FILE *__restrict __stream,
 #ifdef __USE_GNU
 /* Re-construct the password-file line for the given uid
    in the given buffer.  This knows the format that the caller
-   will expect, but this need not be the format of the password file.  */
-extern int getpw (__uid_t __uid, char *__buffer) __THROW;
+   will expect, but this need not be the format of the password file.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern int getpw (__uid_t __uid, char *__buffer);
 #endif
 
 __END_DECLS
