@@ -182,20 +182,22 @@ fi
 # files.  I.e., when the installation prefix is "/usr" we have to place
 # shared library objects and the configuration files on the root partition
 # in /lib and /etc.
-if test "$prefix" = "/usr" -o "$prefix" = "/usr/"; then
-  # 64bit libraries on sparc go to /lib64 and not /lib
-  if test "$machine" = "sparc/sparc64" -o "$machine" = "x86_64" \
-	  -o "$machine" = "powerpc/powerpc64" \
-	  -o "$machine" = "s390/s390-64"; then
+case "$prefix" in
+/usr | /usr/)
+  # 64-bit libraries on bi-arch platforms go in /lib64 instead of /lib
+  case $machine in
+  sparc/sparc64 | x86_64 | powerpc/powerpc64 | s390/s390-64 )
     libc_cv_slibdir="/lib64"
     if test "$libdir" = '${exec_prefix}/lib'; then
       libdir='${exec_prefix}/lib64';
       # Locale data can be shared between 32bit and 64bit libraries
       libc_cv_localedir='${exec_prefix}/lib/locale'
     fi
-  else
+    ;;
+  *)
     libc_cv_slibdir="/lib"
-  fi
+    ;;
+  esac
   # Allow the user to override the path with --sysconfdir
   if test $sysconfdir = '${prefix}/etc'; then
     libc_cv_sysconfdir=/etc
@@ -203,7 +205,8 @@ if test "$prefix" = "/usr" -o "$prefix" = "/usr/"; then
     libc_cv_sysconfdir=$sysconfdir
    fi
   libc_cv_rootsbindir="/sbin"
-fi
+  ;;
+esac
 
 # Under Linux the LinuxThreads or NPTL add-on should be available.
 case $add_ons in
@@ -297,7 +300,7 @@ if test $host = $build; then
     ac_prefix=$ac_default_prefix
   fi
   echo $ac_n "checking for symlinks in ${ac_prefix}/include""... $ac_c" 1>&6
-echo "configure:300: checking for symlinks in ${ac_prefix}/include" >&5
+echo "configure:304: checking for symlinks in ${ac_prefix}/include" >&5
   ac_message=
   if test -L ${ac_prefix}/include/net; then
     ac_message="$ac_message

@@ -23,6 +23,7 @@
 #define _UTMP_PRIVATE_H	1
 
 #include <utmp.h>
+#include <bits/libc-lock.h>
 
 /* The structure describing the functions in a backend.  */
 struct utfuncs
@@ -45,5 +46,9 @@ extern struct utfuncs *__libc_utmp_jump_table attribute_hidden;
 
 /* Current file name.  */
 extern const char *__libc_utmp_file_name attribute_hidden;
+
+/* Locks access to the global data.  */
+__libc_lock_define (extern, __libc_utmp_lock attribute_hidden)
+
 
 #endif /* utmp-private.h */

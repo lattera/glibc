@@ -24,8 +24,9 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 
 install-others += $(inst_includedir)/bits/syscall.h
 
-ifndef no_syscall_list_h
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
+# For bi-arch platforms, the CPU/Makefile defines 64bit-predefine and
+# we generate a file that uses <bits/wordsize.h>.
 $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscall.h
 	rm -f $(@:.h=.d)-t
 	{ \
@@ -36,8 +37,26 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscal
 	 echo '#endif'; \
 	 echo ''; \
 	 SUNPRO_DEPENDENCIES='$(@:.h=.d)-t $@' \
-	 $(CC) -E -x c $(sysincludes) $< -D_LIBC -dM | \
-	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p'; \
+	 $(CC) -E -x c $(sysincludes) $< $(addprefix -U,$(64bit-predefine)) -D_LIBC -dM | \
+	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' | \
+	 LC_ALL=C sort > $(@:.d=.h).new32; \
+	 SUNPRO_DEPENDENCIES='$(@:.h=.d)-t $@' \
+	 $(CC) -E -x c $(sysincludes) $< $(addprefix -D,$(64bit-predefine)) -D_LIBC -dM | \
+	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' | \
+	 LC_ALL=C sort > $(@:.d=.h).new64; \
+	 if cmp -s $(@:.d=.h).new32 $(@:.d=.h).new64; then \
+	   cat $(@:.d=.h).new32; \
+	 else \
+	   echo '#include <bits/wordsize.h>'; \
+	   echo ''; \
+	   LC_ALL=C comm -12 $(@:.d=.h).new32 $(@:.d=.h).new64; \
+	   echo '#if __WORDSIZE == 64'; \
+	   LC_ALL=C comm -13 $(@:.d=.h).new32 $(@:.d=.h).new64; \
+	   echo '#else'; \
+	   LC_ALL=C comm -23 $(@:.d=.h).new32 $(@:.d=.h).new64; \
+	   echo '#endif'; \
+	 fi; \
+	 rm -f $(@:.d=.h).new32 $(@:.d=.h).new64; \
 	} > $(@:.d=.h).new
 	mv -f $(@:.d=.h).new $(@:.d=.h)
 	sed < $(@:.h=.d)-t > $(@:.h=.d)-t2 \
@@ -45,7 +64,7 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscal
 					      $(@:.d=.h) $(@:.h=.d)),'
 	rm -f $(@:.h=.d)-t
 	mv -f $(@:.h=.d)-t2 $(@:.h=.d)
-endif
+
 
 $(inst_includedir)/bits/syscall.h: $(objpfx)syscall-list.h $(+force)
 	$(make-target-directory)

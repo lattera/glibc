@@ -1,4 +1,31 @@
 2002-10-15  Roland McGrath  <roland@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Makefile
+	($(objpfx)syscall-%.h $(objpfx)syscall-%.d): Take code from
+	sparc/Makefile to produce a bi-arch file as needed.
+	That's now parameterized by the variable $(64bit-predefine).
+	Use LC_ALL=C for `comm' commands in that rule.
+	No longer conditional on [$(no_syscall_list_h)].
+	* sysdeps/unix/sysv/linux/sparc/Makefile: Remove replacement rules.
+	(64bit-predefine): New variable.
+	* sysdeps/unix/sysv/linux/x86_64/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/s390/Makefile: New file.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile
+	(64bit-predefine): New variable.
+
+2002-10-15  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Makefile
+	($(objpfx)syscall-%.h $(objpfx)syscall-%.d)
+
+	* login/utmp-private.h: Declare __libc_utmp_lock.
+	* sysdeps/unix/getlogin_r.c (getlogin_r): Take __libc_utmp_lock once
+	call __libc_utmp_jump_table functions directly, instead of using
+	__setutent et al.
+
+	* sysdeps/unix/sysv/linux/configure.in: Use case instead of if.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
 
 	* sysdeps/gnu/bits/utmp.h: Include <bits/wordsize.h>.
 	(struct lastlog) [__WORDSIZE == 64 && __WORDSIZE_COMPAT32]:

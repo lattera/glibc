@@ -25,6 +25,7 @@
 #include <fcntl.h>
 
 #include <utmp.h>
+#include "../login/utmp-private.h"
 
 /* Return at most NAME_LEN characters of the login name of the user in NAME.
    If it cannot be determined or some other error occurred, return the error
@@ -37,7 +38,7 @@ getlogin_r (name, name_len)
 {
   char tty_pathname[2 + 2 * NAME_MAX];
   char *real_tty_path = tty_pathname;
-  int result = 0;
+  int result;
   struct utmp *ut, line, buffer;
 
   /* Get name of tty connected to fd 0.  Return if not a tty or
@@ -56,10 +57,16 @@ getlogin_r (name, name_len)
     return result;
 
   real_tty_path += 5;		/* Remove "/dev/".  */
-
-  __setutent ();
   strncpy (line.ut_line, real_tty_path, sizeof line.ut_line);
-  if (__getutline_r (&line, &buffer, &ut) < 0)
+
+  /* We don't use the normal entry points __setutent et al, because we
+     want setutent + getutline_r + endutent all to happen with the lock
+     held so that our search is thread-safe.  */
+
+  __libc_lock_lock (__libc_utmp_lock);
+  (*__libc_utmp_jump_table->setutent) ();
+  result = (*__libc_utmp_jump_table->getutline_r) (&line, &buffer, &ut);
+  if (result < 0)
     {
       if (errno == ESRCH)
 	/* The caller expects ENOENT if nothing is found.  */
@@ -67,7 +74,11 @@ getlogin_r (name, name_len)
       else
 	result = errno;
     }
-  else
+  (*__libc_utmp_jump_table->endutent) ();
+  __libc_utmp_jump_table = &__libc_utmp_unknown_functions;
+  __libc_lock_unlock (__libc_utmp_lock);
+
+  if (result == 0)
     {
       size_t needed = strlen (ut->ut_user) + 1;
 
@@ -82,7 +93,6 @@ getlogin_r (name, name_len)
 	  result = 0;
 	}
     }
-  __endutent ();
 
   return result;
 }
