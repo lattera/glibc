@@ -1,5 +1,8 @@
 2001-01-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/pthread.h-data: Make priority protocol related
+	functions optional.  Fix typos.
+
 	* posix/sched.h: Define sched_priority as __sched_priority.
 	* sysdeps/generic/bits/sched.h (struct sched_param): Rename element
 	to __sched_priority.
