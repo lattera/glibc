@@ -1,3 +1,12 @@
+2004-03-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/arena.c (aligned_heap_area): New variable.
+	(new_heap): If aligned_heap_area != NULL, attempt to use that
+	first.  If HEAP_MAX_SIZE << 1 area is already HEAP_MAX_SIZE bytes
+	aligned, remember the second half in aligned_heap_area.
+	(delete_heap): Clear aligned_heap_area if deleting the area right
+	before aligned_heap_area.
+
 2004-10-03  Juerg Billeter  <j@bitron.ch>
 
 	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Return -1 if nscd

@@ -550,6 +550,16 @@ dump_heap(heap) heap_info *heap;
 
 #endif /* MALLOC_DEBUG > 1 */
 
+/* If consecutive mmap (0, HEAP_MAX_SIZE << 1, ...) calls return decreasing
+   addresses as opposed to increasing, new_heap would badly fragment the
+   address space.  In that case remember the second HEAP_MAX_SIZE part
+   aligned to HEAP_MAX_SIZE from last mmap (0, HEAP_MAX_SIZE << 1, ...)
+   call (if it is already aligned) and try to reuse it next time.  We need
+   no locking for it, as kernel ensures the atomicity for us - worst case
+   we'll call mmap (addr, HEAP_MAX_SIZE, ...) for some value of addr in
+   multiple threads, but only one will succeed.  */
+static char *aligned_heap_area;
+
 /* Create a new heap.  size is automatically rounded up to a multiple
    of the page size. */
 
@@ -580,21 +590,38 @@ new_heap(size, top_pad) size_t size, top_pad;
      No swap space needs to be reserved for the following large
      mapping (on Linux, this is the case for all non-writable mappings
      anyway). */
-  p1 = (char *)MMAP(0, HEAP_MAX_SIZE<<1, PROT_NONE, MAP_PRIVATE|MAP_NORESERVE);
-  if(p1 != MAP_FAILED) {
-    p2 = (char *)(((unsigned long)p1 + (HEAP_MAX_SIZE-1)) & ~(HEAP_MAX_SIZE-1));
-    ul = p2 - p1;
-    munmap(p1, ul);
-    munmap(p2 + HEAP_MAX_SIZE, HEAP_MAX_SIZE - ul);
-  } else {
-    /* Try to take the chance that an allocation of only HEAP_MAX_SIZE
-       is already aligned. */
-    p2 = (char *)MMAP(0, HEAP_MAX_SIZE, PROT_NONE, MAP_PRIVATE|MAP_NORESERVE);
-    if(p2 == MAP_FAILED)
-      return 0;
-    if((unsigned long)p2 & (HEAP_MAX_SIZE-1)) {
+  p2 = MAP_FAILED;
+  if(aligned_heap_area) {
+    p2 = (char *)MMAP(aligned_heap_area, HEAP_MAX_SIZE, PROT_NONE,
+		      MAP_PRIVATE|MAP_NORESERVE);
+    aligned_heap_area = NULL;
+    if (p2 != MAP_FAILED && ((unsigned long)p2 & (HEAP_MAX_SIZE-1))) {
       munmap(p2, HEAP_MAX_SIZE);
-      return 0;
+      p2 = MAP_FAILED;
+    }
+  }
+  if(p2 == MAP_FAILED) {
+    p1 = (char *)MMAP(0, HEAP_MAX_SIZE<<1, PROT_NONE,
+		      MAP_PRIVATE|MAP_NORESERVE);
+    if(p1 != MAP_FAILED) {
+      p2 = (char *)(((unsigned long)p1 + (HEAP_MAX_SIZE-1))
+		    & ~(HEAP_MAX_SIZE-1));
+      ul = p2 - p1;
+      if (ul)
+	munmap(p1, ul);
+      else
+	aligned_heap_area = p2 + HEAP_MAX_SIZE;
+      munmap(p2 + HEAP_MAX_SIZE, HEAP_MAX_SIZE - ul);
+    } else {
+      /* Try to take the chance that an allocation of only HEAP_MAX_SIZE
+	 is already aligned. */
+      p2 = (char *)MMAP(0, HEAP_MAX_SIZE, PROT_NONE, MAP_PRIVATE|MAP_NORESERVE);
+      if(p2 == MAP_FAILED)
+	return 0;
+      if((unsigned long)p2 & (HEAP_MAX_SIZE-1)) {
+	munmap(p2, HEAP_MAX_SIZE);
+	return 0;
+      }
     }
   }
   if(mprotect(p2, size, PROT_READ|PROT_WRITE) != 0) {
@@ -644,7 +671,12 @@ grow_heap(h, diff) heap_info *h; long diff;
 
 /* Delete a heap. */
 
-#define delete_heap(heap) munmap((char*)(heap), HEAP_MAX_SIZE)
+#define delete_heap(heap) \
+  do {								\
+    if ((char *)(heap) + HEAP_MAX_SIZE == aligned_heap_area)	\
+      aligned_heap_area = NULL;					\
+    munmap((char*)(heap), HEAP_MAX_SIZE);			\
+  } while (0)
 
 static int
 internal_function
