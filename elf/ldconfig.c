@@ -370,13 +370,13 @@ create_links (const char *real_path, const char *path, const char *libname,
 
   /* Get complete path.  */
   full_libname = alloca (strlen (path) + strlen (libname) + 2);
-  full_soname = alloca (strlen (path) + strlen (libname) + 2);
+  full_soname = alloca (strlen (path) + strlen (soname) + 2);
   sprintf (full_libname, "%s/%s", path, libname);
   sprintf (full_soname, "%s/%s", path, soname);
   if (opt_chroot)
     {
       real_full_libname = alloca (strlen (real_path) + strlen (libname) + 2);
-      real_full_soname = alloca (strlen (real_path) + strlen (libname) + 2);
+      real_full_soname = alloca (strlen (real_path) + strlen (soname) + 2);
       sprintf (real_full_libname, "%s/%s", real_path, libname);
       sprintf (real_full_soname, "%s/%s", real_path, soname);
     }
