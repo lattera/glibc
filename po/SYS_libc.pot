@@ -5,13 +5,14 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: libc \n"
-"PO-Revision-Date: 1996-04-22  0:05\n"
+"Project-Id-Version: libc 1.09.7\n"
+"PO-Revision-Date: 1996-05-29 13:04\n"
 "Last-Translator: GNU libc maintainers <bug-glibc@prep.ai.mit.edu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8-bit\n"
+
 #: sunrpc/rpc_main.c:80
 #, c-format
 msgid "       %s [-c | -h | -l | -m] [-o outfile] [infile]\n"
@@ -20,6 +21,51 @@ msgstr ""
 #: sunrpc/rpc_main.c:83
 #, c-format
 msgid "       %s [-s udp|tcp]* [-o outfile] [infile]\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:612
+msgid "       rpcinfo -b prognum versnum\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:613
+msgid "       rpcinfo -d prognum versnum\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:611
+msgid "       rpcinfo -p [ host ]\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:610
+msgid "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:517
+msgid "   program vers proto   port\n"
+msgstr ""
+
+#: time/zic.c:423
+#, c-format
+msgid " (rule from \"%s\", line %d)"
+msgstr ""
+
+#: time/zic.c:420
+#, c-format
+msgid "\"%s\", line %d: %s"
+msgstr ""
+
+#: time/zic.c:908
+#, c-format
+msgid "\"Zone %s\" line and -l option are mutually exclusive"
+msgstr ""
+
+#: time/zic.c:916
+#, c-format
+msgid "\"Zone %s\" line and -p option are mutually exclusive"
+msgstr ""
+
+#: time/zic.c:721
+#, c-format
+msgid "%s in ruleless zone"
 msgstr ""
 
 #: assert/assert.c:48
@@ -42,37 +88,127 @@ msgstr ""
 msgid "%s, line %d: "
 msgstr ""
 
-#: posix/getopt.c:673
+#: time/zic.c:2035
+#, c-format
+msgid "%s: %d did not sign extend correctly\n"
+msgstr ""
+
+#: time/zic.c:1339
+#, c-format
+msgid "%s: Can't create %s: %s\n"
+msgstr ""
+
+#: time/zic.c:2014
+#, c-format
+msgid "%s: Can't create directory %s: %s\n"
+msgstr ""
+
+#: time/zic.c:600
+#, c-format
+msgid "%s: Can't link from %s to %s: %s\n"
+msgstr ""
+
+#: time/zic.c:746
+#, c-format
+msgid "%s: Can't open %s: %s\n"
+msgstr ""
+
+#: time/zic.c:814
+#, c-format
+msgid "%s: Error closing %s: %s\n"
+msgstr ""
+
+#: time/zic.c:808
+#, c-format
+msgid "%s: Error reading %s\n"
+msgstr ""
+
+#: time/zic.c:1404
+#, c-format
+msgid "%s: Error writing %s\n"
+msgstr ""
+
+#: time/zdump.c:257
+#, c-format
+msgid "%s: Error writing standard output "
+msgstr ""
+
+#: time/zic.c:793
+#, c-format
+msgid "%s: Leap line in non leap seconds file %s\n"
+msgstr ""
+
+#: time/zic.c:360
+#, c-format
+msgid "%s: Memory exhausted: %s\n"
+msgstr ""
+
+#: time/zic.c:515
+#, c-format
+msgid "%s: More than one -L option specified\n"
+msgstr ""
+
+#: time/zic.c:475
+#, c-format
+msgid "%s: More than one -d option specified\n"
+msgstr ""
+
+#: time/zic.c:485
+#, c-format
+msgid "%s: More than one -l option specified\n"
+msgstr ""
+
+#: time/zic.c:495
+#, c-format
+msgid "%s: More than one -p option specified\n"
+msgstr ""
+
+#: time/zic.c:505
+#, c-format
+msgid "%s: More than one -y option specified\n"
+msgstr ""
+
+#: posix/getconf.c:149
+#, c-format
+msgid "%s: Unrecognized variable `%s'\n"
+msgstr ""
+
+#: time/zic.c:1741
+#, c-format
+msgid "%s: command was '%s', result was %d\n"
+msgstr ""
+
+#: posix/getopt.c:686
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr ""
 
-#: posix/getopt.c:676
+#: posix/getopt.c:689
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr ""
 
-#: posix/getopt.c:597
+#: posix/getopt.c:610
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:568
+#: posix/getopt.c:581
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr ""
 
-#: posix/getopt.c:614
+#: posix/getopt.c:627
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr ""
 
-#: posix/getopt.c:592
+#: posix/getopt.c:605
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:712
+#: posix/getopt.c:725
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr ""
@@ -82,24 +218,45 @@ msgstr ""
 msgid "%s: output would overwrite %s\n"
 msgstr ""
 
+#: time/zic.c:800 zic.c:1212 zic.c:1232
+#, c-format
+msgid "%s: panic: Invalid l_value %d\n"
+msgstr ""
+
 #: sunrpc/rpc_main.c:152
 #, c-format
 msgid "%s: unable to open "
 msgstr ""
 
-#: posix/getopt.c:647
+#: posix/getopt.c:660
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr ""
 
-#: posix/getopt.c:643
+#: posix/getopt.c:656
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
+msgstr ""
+
+#: time/zic.c:432
+#, c-format
+msgid ""
+"%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d directory ]\n"
+"\t[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
+msgstr ""
+
+#: time/zdump.c:165
+#, c-format
+msgid "%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
 msgstr ""
 
 #: sunrpc/clnt_perr.c:125
 #, c-format
 msgid "(unknown authentication error - %d)"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:555
+msgid "(unknown)"
 msgstr ""
 
 #: inet/rcmd.c:325
@@ -139,7 +296,6 @@ msgstr ""
 msgid "Address family not supported by protocol family"
 msgstr ""
 
-#: i486-linux/siglist.c:22
 msgid "Alarm clock"
 msgstr ""
 
@@ -171,15 +327,13 @@ msgstr ""
 msgid "Broadcast select problem"
 msgstr ""
 
-#: i486-linux/siglist.c:21 sysdeps/mach/hurd/errlist.c:42
+#: sysdeps/mach/hurd/errlist.c:42
 msgid "Broken pipe"
 msgstr ""
 
-#: i486-linux/siglist.c:15
 msgid "Bus error"
 msgstr ""
 
-#: i486-linux/siglist.c:32
 msgid "CPU time limit exceeded"
 msgstr ""
 
@@ -215,7 +369,6 @@ msgstr ""
 msgid "Cannot set socket option SO_BROADCAST"
 msgstr ""
 
-#: i486-linux/siglist.c:25
 msgid "Child exited"
 msgstr ""
 
@@ -239,7 +392,6 @@ msgstr ""
 msgid "Connection timed out"
 msgstr ""
 
-#: i486-linux/siglist.c:26
 msgid "Continued"
 msgstr ""
 
@@ -288,7 +440,6 @@ msgstr ""
 msgid "File name too long"
 msgstr ""
 
-#: i486-linux/siglist.c:33
 msgid "File size limit exceeded"
 msgstr ""
 
@@ -296,7 +447,6 @@ msgstr ""
 msgid "File too large"
 msgstr ""
 
-#: i486-linux/siglist.c:16
 msgid "Floating point exception"
 msgstr ""
 
@@ -308,7 +458,6 @@ msgstr ""
 msgid "Gratuitous error"
 msgstr ""
 
-#: i486-linux/siglist.c:9
 msgid "Hangup"
 msgstr ""
 
@@ -320,15 +469,12 @@ msgstr ""
 msgid "Host name lookup failure"
 msgstr ""
 
-#: i486-linux/siglist.c:37
 msgid "I/O possible"
 msgstr ""
 
-#: i486-linux/siglist.c:14
 msgid "IOT trap"
 msgstr ""
 
-#: i486-linux/siglist.c:12
 msgid "Illegal Instruction"
 msgstr ""
 
@@ -352,7 +498,6 @@ msgstr ""
 msgid "Input/output error"
 msgstr ""
 
-#: i486-linux/siglist.c:10
 msgid "Interrupt"
 msgstr ""
 
@@ -412,7 +557,6 @@ msgstr ""
 msgid "Is a directory"
 msgstr ""
 
-#: i486-linux/siglist.c:17
 msgid "Killed"
 msgstr ""
 
@@ -464,6 +608,10 @@ msgstr ""
 msgid "No previous regular expression"
 msgstr ""
 
+#: sunrpc/rpcinfo.c:515
+msgid "No remote programs registered.\n"
+msgstr ""
+
 #: sysdeps/mach/hurd/errlist.c:75
 msgid "No route to host"
 msgstr ""
@@ -492,6 +640,10 @@ msgstr ""
 msgid "Numerical result out of range"
 msgstr ""
 
+#: time/zic.c:1835
+msgid "Odd number of quotation marks"
+msgstr ""
+
 #: sysdeps/mach/hurd/errlist.c:47
 msgid "Operation already in progress"
 msgstr ""
@@ -516,7 +668,6 @@ msgstr ""
 msgid "Permission denied"
 msgstr ""
 
-#: i486-linux/siglist.c:38
 msgid "Power failure"
 msgstr ""
 
@@ -524,7 +675,6 @@ msgstr ""
 msgid "Premature end of regular expression"
 msgstr ""
 
-#: i486-linux/siglist.c:35
 msgid "Profiling timer expired"
 msgstr ""
 
@@ -544,7 +694,6 @@ msgstr ""
 msgid "Protocol wrong type for socket"
 msgstr ""
 
-#: i486-linux/siglist.c:11
 msgid "Quit"
 msgstr ""
 
@@ -740,7 +889,6 @@ msgstr ""
 msgid "Resource temporarily unavailable"
 msgstr ""
 
-#: i486-linux/siglist.c:19
 msgid "Segmentation fault"
 msgstr ""
 
@@ -776,19 +924,15 @@ msgstr ""
 msgid "Stale NFS file handle"
 msgstr ""
 
-#: i486-linux/siglist.c:28
 msgid "Stopped"
 msgstr ""
 
-#: i486-linux/siglist.c:27
 msgid "Stopped (signal)"
 msgstr ""
 
-#: i486-linux/siglist.c:29
 msgid "Stopped (tty input)"
 msgstr ""
 
-#: i486-linux/siglist.c:30
 msgid "Stopped (tty output)"
 msgstr ""
 
@@ -796,7 +940,6 @@ msgstr ""
 msgid "Success"
 msgstr ""
 
-#: i486-linux/siglist.c:23
 msgid "Terminated"
 msgstr ""
 
@@ -836,7 +979,6 @@ msgstr ""
 msgid "Too many users"
 msgstr ""
 
-#: i486-linux/siglist.c:13
 msgid "Trace/breakpoint trap"
 msgstr ""
 
@@ -849,6 +991,7 @@ msgid "Translator died"
 msgstr ""
 
 #: inet/rcmd.c:118
+#, c-format
 msgid "Trying %s...\n"
 msgstr ""
 
@@ -893,28 +1036,40 @@ msgstr ""
 msgid "Unmatched \\{"
 msgstr ""
 
-#: i486-linux/siglist.c:31
 msgid "Urgent I/O condition"
 msgstr ""
 
-#: i486-linux/siglist.c:18
+#: posix/getconf.c:81
+#, c-format
+msgid "Usage: %s variable_name [pathname]\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:609
+msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
+msgstr ""
+
 msgid "User defined signal 1"
 msgstr ""
 
-#: i486-linux/siglist.c:20
 msgid "User defined signal 2"
 msgstr ""
 
-#: i486-linux/siglist.c:34
 msgid "Virtual timer expired"
 msgstr ""
 
-#: i486-linux/siglist.c:36
+#: time/zic.c:1740
+msgid "Wild result from command execution"
+msgstr ""
+
 msgid "Window changed"
 msgstr ""
 
 #: sysdeps/mach/hurd/errlist.c:113
 msgid "You really blew it this time"
+msgstr ""
+
+#: time/zic.c:1013
+msgid "Zone continuation line end time is not after end time of previous line"
 msgstr ""
 
 #: sunrpc/rpc_parse.c:326
@@ -927,6 +1082,14 @@ msgstr ""
 
 #: inet/rcmd.c:327
 msgid "bad .rhosts owner"
+msgstr ""
+
+#: time/zic.c:1136
+msgid "blank FROM field on Link line"
+msgstr ""
+
+#: time/zic.c:1140
+msgid "blank TO field on Link line"
 msgstr ""
 
 #: malloc/mcheck.c:174
@@ -959,6 +1122,7 @@ msgid "clnt_raw.c - Fatal header serialization error."
 msgstr ""
 
 #: inet/rcmd.c:112
+#, c-format
 msgid "connect to address %s: "
 msgstr ""
 
@@ -970,6 +1134,14 @@ msgstr ""
 msgid "couldn't create an rpc server\n"
 msgstr ""
 
+#: sunrpc/portmap.c:122
+msgid "couldn't do tcp_create\n"
+msgstr ""
+
+#: sunrpc/portmap.c:100
+msgid "couldn't do udp_create\n"
+msgstr ""
+
 #: sunrpc/svc_simple.c:77
 #, c-format
 msgid "couldn't register prog %d vers %d\n"
@@ -977,6 +1149,11 @@ msgstr ""
 
 #: sunrpc/rpc_parse.c:77
 msgid "definition keyword expected"
+msgstr ""
+
+#: time/zic.c:928
+#, c-format
+msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgstr ""
 
 #: sunrpc/svc_udp.c:344
@@ -1010,6 +1187,10 @@ msgstr ""
 msgid "expected '%s', '%s' or '%s'"
 msgstr ""
 
+#: time/zic.c:819
+msgid "expected continuation line not found"
+msgstr ""
+
 #: sunrpc/rpc_parse.c:384
 msgid "expected type specifier"
 msgstr ""
@@ -1018,12 +1199,68 @@ msgstr ""
 msgid "get_myaddress: ioctl (get interface configuration)"
 msgstr ""
 
+#: time/zic.c:1113
+msgid "illegal CORRECTION field on Leap line"
+msgstr ""
+
+#: time/zic.c:1117
+msgid "illegal Rolling/Stationary field on Leap line"
+msgstr ""
+
 #: sunrpc/rpc_scan.c:281
 msgid "illegal character in file: "
 msgstr ""
 
 #: sunrpc/rpc_parse.c:146
 msgid "illegal result type"
+msgstr ""
+
+#: time/zic.c:777
+msgid "input line of unknown type"
+msgstr ""
+
+#: time/zic.c:984
+msgid "invalid GMT offset"
+msgstr ""
+
+#: time/zic.c:987
+msgid "invalid abbreviation format"
+msgstr ""
+
+#: time/zic.c:1078 zic.c:1277 zic.c:1291
+msgid "invalid day of month"
+msgstr ""
+
+#: time/zic.c:1236
+msgid "invalid ending year"
+msgstr ""
+
+#: time/zic.c:1050
+msgid "invalid leaping year"
+msgstr ""
+
+#: time/zic.c:1065 zic.c:1168
+msgid "invalid month name"
+msgstr ""
+
+#: time/zic.c:883
+msgid "invalid saved time"
+msgstr ""
+
+#: time/zic.c:1216
+msgid "invalid starting year"
+msgstr ""
+
+#: time/zic.c:1094 zic.c:1196
+msgid "invalid time of day"
+msgstr ""
+
+#: time/zic.c:1282
+msgid "invalid weekday name"
+msgstr ""
+
+#: time/zic.c:757
+msgid "line too long"
 msgstr ""
 
 #: malloc/mcheck.c:168
@@ -1038,6 +1275,10 @@ msgstr ""
 msgid "memory is consistent, library is buggy"
 msgstr ""
 
+#: time/zic.c:878
+msgid "nameless rule"
+msgstr ""
+
 #: sunrpc/svc_simple.c:140
 #, c-format
 msgid "never registered prog %d\n"
@@ -1047,11 +1288,44 @@ msgstr ""
 msgid "no array-of-pointer declarations -- use typedef"
 msgstr ""
 
+#: time/zic.c:1955
+msgid "no day in month matches rule"
+msgstr ""
+
+#: sunrpc/portmap.c:452
+msgid "portmap CALLIT: cannot fork.\n"
+msgstr ""
+
+#: portmap.c:117 sunrpc/portmap.c:95
+msgid "portmap cannot bind"
+msgstr ""
+
+#: portmap.c:113 sunrpc/portmap.c:87
+msgid "portmap cannot create socket"
+msgstr ""
+
 #: rpc_scan.c:464 sunrpc/rpc_scan.c:456
 msgid "preprocessor error"
 msgstr ""
 
+#: rpcinfo.c:350 sunrpc/rpcinfo.c:222
+#, c-format
+msgid "program %lu is not available\n"
+msgstr ""
+
+#: rpcinfo.c:282 rpcinfo.c:371 rpcinfo.c:408 rpcinfo.c:429
+#: sunrpc/rpcinfo.c:245 sunrpc/rpcinfo.c:462
+#, c-format
+msgid "program %lu version %lu is not available\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:466
+#, c-format
+msgid "program %lu version %lu ready and waiting\n"
+msgstr ""
+
 #: inet/rcmd.c:154
+#, c-format
 msgid "rcmd: select (setting up stderr): %s\n"
 msgstr ""
 
@@ -1060,11 +1334,48 @@ msgid "rcmd: socket: All ports in use\n"
 msgstr ""
 
 #: inet/rcmd.c:141
+#, c-format
 msgid "rcmd: write (setting up stderr): %s\n"
 msgstr ""
 
 #: sunrpc/svc_simple.c:83
 msgid "registerrpc: out of memory\n"
+msgstr ""
+
+#: time/zic.c:1690
+msgid "repeated leap second moment"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:659
+#, c-format
+msgid "rpcinfo: %s is unknown host\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:626
+#, c-format
+msgid "rpcinfo: %s is unknown service\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:600
+#, c-format
+msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:576
+#, c-format
+msgid "rpcinfo: broadcast failed: %s\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:505
+msgid "rpcinfo: can't contact portmapper"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:510
+msgid "rpcinfo: can't contact portmapper: "
+msgstr ""
+
+#: sunrpc/portmap.c:138
+msgid "run_svc returned unexpectedly\n"
 msgstr ""
 
 #: inet/rcmd.c:158
@@ -1073,6 +1384,18 @@ msgstr ""
 
 #: inet/rcmd.c:176
 msgid "socket: protocol failure in circuit setup.\n"
+msgstr ""
+
+#: time/zic.c:742
+msgid "standard input"
+msgstr ""
+
+#: time/zdump.c:259
+msgid "standard output"
+msgstr ""
+
+#: time/zic.c:1240
+msgid "starting year greater than ending year"
 msgstr ""
 
 #: sunrpc/svc_tcp.c:199 svc_tcp.c:204
@@ -1099,8 +1422,32 @@ msgstr ""
 msgid "svcudp_create: socket creation problem"
 msgstr ""
 
+#: time/zic.c:1083
+msgid "time before zero"
+msgstr ""
+
+#: time/zic.c:1091 zic.c:1855 zic.c:1874
+msgid "time overflow"
+msgstr ""
+
 #: sunrpc/rpc_util.c:285
 msgid "too many files!\n"
+msgstr ""
+
+#: time/zic.c:1684
+msgid "too many leap seconds"
+msgstr ""
+
+#: time/zic.c:1656
+msgid "too many local time types"
+msgstr ""
+
+#: time/zic.c:1622
+msgid "too many transitions?!"
+msgstr ""
+
+#: time/zic.c:1978
+msgid "too many, or too long, time zone abbreviations"
 msgstr ""
 
 #: sunrpc/svc_simple.c:132
@@ -1108,8 +1455,15 @@ msgstr ""
 msgid "trouble replying to prog %d\n"
 msgstr ""
 
-#: i486-linux/siglist.c:8 i486-linux/siglist.c:24 i486-linux/siglist.c:39
+#: time/zic.c:1247
+msgid "typed single year"
+msgstr ""
+
 msgid "unknown signal"
+msgstr ""
+
+#: time/zic.c:714
+msgid "unruly zone"
 msgstr ""
 
 #: sunrpc/rpc_scan.c:319
@@ -1121,10 +1475,38 @@ msgstr ""
 msgid "usage: %s infile\n"
 msgstr ""
 
+#: time/zic.c:1921
+msgid "use of 2/29 in non leap-year"
+msgstr ""
+
 #: sunrpc/rpc_parse.c:330
 msgid "variable-length array declaration expected"
 msgstr ""
 
 #: sunrpc/rpc_parse.c:370
 msgid "voids allowed only inside union and program definitions"
+msgstr ""
+
+#: login/setutent_r.c:47
+msgid "while opening UTMP file"
+msgstr ""
+
+#: time/zic.c:1041
+msgid "wrong number of fields on Leap line"
+msgstr ""
+
+#: time/zic.c:1132
+msgid "wrong number of fields on Link line"
+msgstr ""
+
+#: time/zic.c:874
+msgid "wrong number of fields on Rule line"
+msgstr ""
+
+#: time/zic.c:944
+msgid "wrong number of fields on Zone continuation line"
+msgstr ""
+
+#: time/zic.c:902
+msgid "wrong number of fields on Zone line"
 msgstr ""
