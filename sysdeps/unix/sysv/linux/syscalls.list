@@ -2,6 +2,8 @@
 
 adjtimex	adjtime	adjtimex	1	__adjtimex	adjtimex
 bdflush		EXTRA	bdflush		2	bdflush
+capget		EXTRA	capget		2	capget
+capset		EXTRA	capset		2	capset
 create_module	EXTRA	create_module	3	create_module
 delete_module	EXTRA	delete_module	3	delete_module
 fdatasync	-	fdatasync	1	fdatasync

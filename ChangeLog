@@ -1,3 +1,8 @@
+1998-05-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add capset and capget
+	syscalls.
+
 1998-05-08 16:36  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
 	* iconvdata/Makefile (generated): Set to *-generated-headers

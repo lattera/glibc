@@ -270,9 +270,9 @@ perl-generated-headers := koi8-r.h latin-greek.h latin-greek-1.h	 \
 			  iso8859-7.h iso8859-8.h iso8859-10.h		 \
 			  iso8859-7jp.h
 
-generated = $(sed-generated-headers) $(perl-generated-headers)
+generated = $(sed-generated-headers) $(perl-generated-headers) iconv-test.out
 ifdef objpfx
-generated += gconv-modules
+generated += $(objpfx)gconv-modules
 endif
 
 # The headers must be generated before the compilation.
@@ -480,7 +480,6 @@ endif
 
 include ../Rules
 
-tests = iconv-test
 tests: $(objpfx)iconv-test.out
 
 $(objpfx)iconv-test.out: run-iconv-test.sh $(objpfx)gconv-modules \
