@@ -1,5 +1,9 @@
 2000-02-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h: Define ELF_* constants
+	and elf_* types to interpret values passed up from the kernel.
+	Patch by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
+
 	* locale/nl_langinfo.c: Correct return value in error case.  Don't
 	set errno (PR libc/1582).
 	* manual/locale.texi: Update to reflect change.
