@@ -1,4 +1,4 @@
-# Copyright (C) 1996 Free Software Foundation, Inc.
+# Copyright (C) 1996, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -17,20 +17,35 @@
 # Boston, MA 02111-1307, USA.
 
 #
-#	Sub-makefile for DES crypt portion of the library.
+#	Sub-makefile for crypt() portion of the library.
 #
 subdir	:= crypt
 
-tests = cert
+headers := crypt.h
+
+distribute := md5.h
+
+extra-libs := libcrypt
+extra-libs-others := $(extra-libs)
+
+libcrypt-routines := crypt-entry md5-crypt md5 crypt crypt_util
+
+tests = cert md5test md5c-test
 
 include ../Makeconfig
 
-rpath-dirs += md5-crypt
+ifeq ($(crypt-in-libc),yes)
+routines += $(libcrypt-routines)
+endif
+
+$(objpfx)md5test: $(objpfx)md5.o
 
 include ../Rules
 
-ifeq ($(build-shared),yes)
-$(objpfx)cert: $(common-objpfx)md5-crypt/libcrypt.so$(libcrypt.so-version)
-else
-$(objpfx)cert: $(common-objpfx)md5-crypt/libcrypt.a
-endif
+LDLIBS-cert = crypt/libcrypt
+LDLIBS-md5c-test = crypt/libcrypt
+
+# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
+# This ensures they will load libc.so for needed symbols if loaded by
+# a statically-linked program that hasn't already loaded it.
+$(objpfx)libcrypt.so: $(common-objpfx)libc.so

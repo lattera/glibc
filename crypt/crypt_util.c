@@ -1,7 +1,7 @@
 /*
  * UFC-crypt: ultra fast crypt(3) implementation
  *
- * Copyright (C) 1991, 92, 93, 96, 97, 98 Free Software Foundation, Inc.
+ * Copyright (C) 1991, 92, 93, 96, 97, 98, 2000 Free Software Foundation, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -34,7 +34,6 @@
 #endif
 
 #ifndef DOS
-#include "patchlevel.h"
 #include "ufc-crypt.h"
 #else
 /*
@@ -60,8 +59,6 @@ STATIC void shuffle_sb (long64 *k, ufc_long saltbits);
 #endif
 #endif
 
-
-static const char patchlevel_str[] = PATCHLEVEL;
 
 /*
  * Permutation done once on the 56 bit

@@ -1,3 +1,27 @@
+2000-03-03  Geoff Keating  <geoffk@cygnus.com>
+
+	* Makeconfig (rpath-dirs): Add crypt.
+	(all-subdirs): Remove md5crypt.
+	* crypt/sysdeps/unix/crypt.c: Move to crypt/.
+	* crypt/sysdeps/unix/crypt-entry.c: Move to crypt/.
+	* sysdeps/generic/crypt-entry.c: Delete.
+	* crypt/sysdeps/unix/crypt.h: Move to crypt/.
+	* sysdeps/generic/crypt.h: Delete.
+	* crypt/sysdeps/unix/crypt-private.h: Move to crypt/.
+	* crypt/sysdeps/unix/crypt_util.c: Move to crypt/.
+	* crypt/sysdeps/unix/des_impl.c: Move to sunrpc/.
+	* sysdeps/generic/des_impl.c: Delete.
+	* crypt/sysdeps/unix/ufc-crypt.h: Move to crypt/.
+	* crypt/sysdeps: Delete.
+	* crypt/crypt_util.c: Don't use `patchlevel.h'.
+	* md5-crypt/Versions: Move to crypt/.
+	* md5-crypt/md5-crypt.c: Move to crypt/.
+	* md5-crypt/md5.c: Move to crypt/.
+	* md5-crypt/md5c-test.c: Move to crypt/.
+	* md5-crypt/md5test.c: Move to crypt/.
+	* md5-crypt: Delete.
+	* crypt/Makefile: Adjust for new structure.
+
 2000-03-03  Paul Eggert  <eggert@twinsun.com>
 
 	* posix/regex.c (MB_LEN_MAX): Include <limits.h> to define;

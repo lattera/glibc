@@ -414,7 +414,7 @@ link-libc = -Wl,-rpath-link=$(rpath-link) \
 	    $(common-objpfx)libc.so$(libc.so-version) \
 	    $(common-objpfx)$(patsubst %,$(libtype.oS),c) $(gnulib)
 # This is how to find at build-time things that will be installed there.
-rpath-dirs = math elf dlfcn nss nis rt resolv
+rpath-dirs = math elf dlfcn nss nis rt resolv crypt
 rpath-link = \
 $(common-objdir):$(subst $(empty) ,:,$(patsubst ../$(subdir),.,$(rpath-dirs:%=$(common-objpfx)%)))
 elfobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)elf)
@@ -781,7 +781,7 @@ endif
 all-subdirs = csu assert ctype locale intl catgets math setjmp signal	    \
 	      stdlib stdio-common $(stdio) malloc string wcsmbs time dirent \
 	      grp pwd posix io termios resource misc socket sysvipc gmon    \
-	      gnulib iconv iconvdata wctype manual shadow md5-crypt po argp \
+	      gnulib iconv iconvdata wctype manual shadow po argp	    \
 	      crypt $(add-ons) nss localedata timezone rt debug		    \
 	      $(sysdep-subdirs) $(dlfcn) $(binfmt-subdir)
 all-subdirs := $(filter-out $(sysdep-inhibit-subdirs),$(all-subdirs))
