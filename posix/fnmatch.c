@@ -130,7 +130,9 @@ extern int errno;
 /* Match STRING against the filename pattern PATTERN, returning zero if
    it matches, nonzero if not.  */
 static int
+#ifdef _LIBC
 internal_function
+#endif
 internal_fnmatch (const char *pattern, const char *string,
 		  int no_leading_period, int flags)
 {
@@ -295,6 +297,7 @@ internal_fnmatch (const char *pattern, const char *string,
 # if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
 		    wctype_t wt;
 # endif
+		    char *startp = p;
 
 		    for (;;)
 		      {
@@ -313,7 +316,7 @@ internal_fnmatch (const char *pattern, const char *string,
 			  {
 			    /* This cannot possibly be a character class name.
 			       Match it as a normal range.  */
-			    --p;
+			    p = startp;
 			    c = '[';
 			    goto normal_bracket;
 			  }
