@@ -25,6 +25,7 @@ extern ssize_t __recv_chk (int __fd, void *__buf, size_t __n, size_t __buflen,
 			   int __flags);
 #define recv(fd, buf, n, flags) \
   (__bos0 (buf) != (size_t) -1						      \
+   && (!__builtin_constant_p (n) || (n) > __bos0 (buf))			      \
    ? __recv_chk (fd, buf, n, __bos0 (buf), flags)			      \
    : recv (fd, buf, n, flags))
 
@@ -34,5 +35,6 @@ extern ssize_t __recvfrom_chk (int __fd, void *__restrict __buf, size_t __n,
 			       socklen_t *__restrict __addr_len);
 #define recvfrom(fd, buf, n, flags, addr, addr_len) \
   (__bos0 (buf) != (size_t) -1						      \
+   && (!__builtin_constant_p (n) || (n) > __bos0 (buf))			      \
    ? __recvfrom_chk (fd, buf, n, __bos0 (buf), flags, addr, addr_len)	      \
    : recvfrom (fd, buf, n, flags, addr, addr_len))
