@@ -1,5 +1,7 @@
 1998-04-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysvipc/sys/sem.h: Don't use union semun in semctl prototype.
+
 	* string/basename.c [!_LIBC]: Define function as gnu_basename.
 
 	* posix/getopt.c [!__GNU_LIBRARY__]: Include string.h or
