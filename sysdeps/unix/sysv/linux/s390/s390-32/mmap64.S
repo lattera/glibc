@@ -51,7 +51,7 @@ ENTRY(__mmap64)
 	svc	SYS_ify(mmap2)		/* Do the system call trap.  */
 
 #ifndef __ASSUME_MMAP2_SYSCALL
-	chi	%r0,-ENOSYS
+	chi	%r2,-ENOSYS
 	je	1f
 #endif
 

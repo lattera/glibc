@@ -36,10 +36,10 @@
 
 typedef struct {
     /* We save registers 6-15.  */
-    long int gregs[10];
+    long int __gregs[10];
 
     /* We save fpu registers 4 and 6.  */
-    long fpregs[8];
+    long __fpregs[8];
 } __jmp_buf[1];
 
 #endif

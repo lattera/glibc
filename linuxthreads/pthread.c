@@ -401,6 +401,40 @@ __pthread_initialize_minimal(void)
 }
 
 
+void
+__pthread_init_max_stacksize(void)
+{
+  struct rlimit limit;
+  size_t max_stack;
+
+  getrlimit(RLIMIT_STACK, &limit);
+#ifdef FLOATING_STACKS
+  if (limit.rlim_cur == RLIM_INFINITY)
+    limit.rlim_cur = ARCH_STACK_MAX_SIZE;
+# ifdef NEED_SEPARATE_REGISTER_STACK
+  max_stack = limit.rlim_cur / 2;
+# else
+  max_stack = limit.rlim_cur;
+# endif
+#else
+  /* Play with the stack size limit to make sure that no stack ever grows
+     beyond STACK_SIZE minus one page (to act as a guard page). */
+# ifdef NEED_SEPARATE_REGISTER_STACK
+  /* STACK_SIZE bytes hold both the main stack and register backing
+     store. The rlimit value applies to each individually.  */
+  max_stack = STACK_SIZE/2 - __getpagesize ();
+# else
+  max_stack = STACK_SIZE - __getpagesize();
+# endif
+  if (limit.rlim_cur > max_stack) {
+    limit.rlim_cur = max_stack;
+    setrlimit(RLIMIT_STACK, &limit);
+  }
+#endif
+  __pthread_max_stacksize = max_stack;
+}
+
+
 static void pthread_initialize(void)
 {
   struct sigaction sa;
@@ -412,16 +446,24 @@ static void pthread_initialize(void)
   /* Test if compare-and-swap is available */
   __pthread_has_cas = compare_and_swap_is_available();
 #endif
-#ifdef _STACK_GROWS_UP
+#ifdef FLOATING_STACKS
+  /* We don't need to know the bottom of the stack.  Give the pointer some
+     value to signal that initialization happened.  */
+  __pthread_initial_thread_bos = (void *) -1l;
+#else
+  /* Determine stack size limits .  */
+  __pthread_init_max_stacksize ();
+# ifdef _STACK_GROWS_UP
   /* The initial thread already has all the stack it needs */
   __pthread_initial_thread_bos = (char *)
     ((long)CURRENT_STACK_FRAME &~ (STACK_SIZE - 1));
-#else
+# else
   /* For the initial stack, reserve at least STACK_SIZE bytes of stack
      below the current stack address, and align that on a
      STACK_SIZE boundary. */
   __pthread_initial_thread_bos =
     (char *)(((long)CURRENT_STACK_FRAME - 2 * STACK_SIZE) & ~(STACK_SIZE - 1));
+# endif
 #endif
   /* Update the descriptor for the initial thread. */
   __pthread_initial_thread.p_pid = __getpid();
@@ -468,38 +510,6 @@ static void pthread_initialize(void)
 void __pthread_initialize(void)
 {
   pthread_initialize();
-}
-
-void __pthread_init_max_stacksize(void)
-{
-  struct rlimit limit;
-  size_t max_stack;
-
-  getrlimit(RLIMIT_STACK, &limit);
-#ifdef FLOATING_STACKS
-  if (limit.rlim_cur == RLIM_INFINITY)
-    limit.rlim_cur = ARCH_STACK_MAX_SIZE;
-# ifdef NEED_SEPARATE_REGISTER_STACK
-  max_stack = limit.rlim_cur / 2;
-# else
-  max_stack = limit.rlim_cur;
-# endif
-#else
-  /* Play with the stack size limit to make sure that no stack ever grows
-     beyond STACK_SIZE minus one page (to act as a guard page). */
-# ifdef NEED_SEPARATE_REGISTER_STACK
-  /* STACK_SIZE bytes hold both the main stack and register backing
-     store. The rlimit value applies to each individually.  */
-  max_stack = STACK_SIZE/2 - __getpagesize ();
-# else
-  max_stack = STACK_SIZE - __getpagesize();
-# endif
-  if (limit.rlim_cur > max_stack) {
-    limit.rlim_cur = max_stack;
-    setrlimit(RLIMIT_STACK, &limit);
-  }
-#endif
-  __pthread_max_stacksize = max_stack;
 }
 
 int __pthread_initialize_manager(void)

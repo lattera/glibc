@@ -43,6 +43,9 @@ struct sigaction
     /* Special flags.  */
     unsigned long int sa_flags;
 
+    /* Restore handler.  */
+    void (*sa_restorer) (void);
+
     /* Additional set of signals to be blocked.	 */
     __sigset_t sa_mask;
   };

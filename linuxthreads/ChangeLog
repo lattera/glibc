@@ -1,3 +1,10 @@
+2001-07-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread.c (pthread_initialize): For FLOATING_STACKS do't bother
+	to find the right value for __pthread_initial_thread_bos, it's not
+	used.  If not FLOATING_STACKS first run
+	__pthread_init_max_stacksize.
+
 2001-06-16  H.J. Lu  <hjl@gnu.org>
 
 	* internals.h: Include <stackinfo.h>.

@@ -1,3 +1,32 @@
+2001-07-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/obstack.c: Define __attribute__ for non-gcc compilers.
+	Patch by Jim Meyering <jim@meyering.net>.
+
+2001-07-12  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/sigaction.h: Reorder
+	fields in the sigaction struct to match the definition in the kernel.
+
+2001-07-12  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/mmap64.S: Correct the
+	test for ENOSYS.
+
+2001-07-12  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-32/bits/setjmp.h: Add leading underscores
+	to the entries in the __jmp_buf structure.
+	* sysdeps/s390/s390-64/bits/setjmp.h: Likewise.
+
+2001-07-12  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-32/bcopy.S: Use mvcle for big blocks
+	(> 64K) and a mvc loop for small blocks.
+	* sysdeps/s390/s390-32/memcpy.S: Likewise.
+	* sysdeps/s390/s390-64/bcopy.S: Likewise.
+	* sysdeps/s390/s390-64/memcpy.S: Likewise.
+
 2001-07-15  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/sys/procfs.h: New file.

@@ -36,10 +36,10 @@
 
 typedef struct {
     /* We save registers 6-15.  */
-    long int gregs[10];
+    long int __gregs[10];
 
     /* We save fpu registers 4 and 6.  */
-    long fpregs[4];
+    long __fpregs[4];
 } __jmp_buf[1];
 
 #endif
@@ -47,6 +47,6 @@ typedef struct {
 /* Test if longjmp to JMPBUF would unwind the frame
    containing a local variable at ADDRESS.  */
 #define _JMPBUF_UNWINDS(jmpbuf, address) \
-  ((int) (address) < (jmpbuf)->gregs[__JB_GPR15])
+  ((int) (address) < (jmpbuf)->__gregs[__JB_GPR15])
 
 #endif /* __S390_SETJMP_H__ */
