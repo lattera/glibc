@@ -3,7 +3,8 @@
 	[BZ #337]
 	* SUPPORTED: Update bug reporting comment.
 	* locales/af_ZA: Change contact address from bug-glibc@gnu.org
-	to libc-locales@sources.redhat.com.
+	to bug-glibc-locales@gnu.org (a new alias for the libc-locales mailing
+	list).
 	* locales/an_ES: Likewise.
 	* locales/ar_AE: Likewise.
 	* locales/ar_BH: Likewise.
