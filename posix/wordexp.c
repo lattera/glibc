@@ -44,6 +44,9 @@
 /* #define NDEBUG 1 */
 #include <assert.h>
 
+/* Get some device information.  */
+#include <device-nrs.h>
+
 /*
  * This is a recursive-descent-style word expansion routine.
  */
@@ -840,6 +843,7 @@ exec_comm_child (char *comm, int *fildes, int showerr, int noexec)
   /* Redirect stderr to /dev/null if we have to.  */
   if (showerr == 0)
     {
+      struct stat64 st;
       int fd;
       __close (2);
       fd = __open (_PATH_DEVNULL, O_WRONLY);
@@ -848,6 +852,18 @@ exec_comm_child (char *comm, int *fildes, int showerr, int noexec)
 	  __dup2 (fd, 2);
 	  __close (fd);
 	}
+      /* Be paranoid.  Check that we actually opened the /dev/null
+         device.  */
+      if (__builtin_expect (__fxstat64 (_STAT_VER, 2, &st), 0) != 0
+	  || __builtin_expect (S_ISCHR (st.st_mode), 1) == 0
+#if defined DEV_NULL_MAJOR && defined DEV_NULL_MINOR
+	  || st.st_rdev != makedev (DEV_NULL_MAJOR, DEV_NULL_MINOR)
+#endif
+	  )
+	/* It's not the /dev/null device.  Stop right here.  The
+           problem is: how do we stop?  We use _exit() with an
+           hopefully unusual exit code.  */
+	_exit (90);
     }
 
   /* Make sure the subshell doesn't field-split on our behalf. */

@@ -31,6 +31,8 @@
 # define ABORT_INSTRUCTION
 #endif
 
+#include <device-nrs.h>
+
 
 /* Should other OSes (e.g., Hurd) have different versions which can
    be written in a better way?  */

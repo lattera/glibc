@@ -1,5 +1,13 @@
 2000-09-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/daemon.c (daemon): Fail if !noclose and we cannot open the
+	real /dev/null device.
+
+	* sysdeps/generic/check_fds.c: Include device-nrs.h.
+	* sysdeps/generic/device-nrs.h: New file.
+	* sysdeps/unix/sysv/linux/device-nrs.h: New file.
+	* misc/Makefile (distribute): Add device-nrs.h.
+
 	* sysdeps/unix/sysv/linux/gethostid.c (sethostid): Use O_TRUNC to
 	remove possible garbage at the end of the file.
 
@@ -10,15 +18,17 @@
 	* stdio-common/tempnam.c: Warn about insecure tempnam.
 	* misc/mktemp.c: Warn about insecure mktemp.
 
-	* sysdeps/unix/sysv/linux/check_fds.c: New file.
 	* sysdeps/generic/check_fds.c: Check that file opened is really
 	/dev/null.
+	* posix/wordexp.c (exec_comm_child): Likewise.
 
 	* elf/rtld.c (process_envvars): Open debug output file with O_NOFOLLOW.
 
 	* locale/Makefile (routines): Add nl_langinfo_l.
 	* locale/Versions [libc] (GLIBC_2.2): Add __nl_langinfo_l.
 	* locale/nl_langinfo_l.c: New file.
+	* locale/nl_langinfo.c: Allow use of file for __nl_langinfo_l
+	definition.
 
 2000-09-23  Bruno Haible  <haible@clisp.cons.org>
 

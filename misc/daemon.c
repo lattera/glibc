@@ -34,6 +34,9 @@ static char sccsid[] = "@(#)daemon.c	8.1 (Berkeley) 6/4/93";
 #include <fcntl.h>
 #include <paths.h>
 #include <unistd.h>
+#include <sys/stat.h>
+
+#include <device-nrs.h>
 
 int
 daemon(nochdir, noclose)
@@ -57,11 +60,23 @@ daemon(nochdir, noclose)
 		(void)__chdir("/");
 
 	if (!noclose && (fd = __open(_PATH_DEVNULL, O_RDWR, 0)) != -1) {
-		(void)__dup2(fd, STDIN_FILENO);
-		(void)__dup2(fd, STDOUT_FILENO);
-		(void)__dup2(fd, STDERR_FILENO);
-		if (fd > 2)
+		struct stat64 st;
+
+		if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0) == 0
+		    && __builtin_expect (S_ISCHR (st.st_mode), 1) != 0
+#if defined DEV_NULL_MAJOR && defined DEV_NULL_MINOR
+		    && st.st_rdev == makedev (DEV_NULL_MAJOR, DEV_NULL_MINOR)
+#endif
+		    ) {
+			(void)__dup2(fd, STDIN_FILENO);
+			(void)__dup2(fd, STDOUT_FILENO);
+			(void)__dup2(fd, STDERR_FILENO);
+			if (fd > 2)
+				(void)__close (fd);
+		} else {
 			(void)__close (fd);
+			return -1;
+		}
 	}
 	return (0);
 }

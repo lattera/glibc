@@ -25,9 +25,16 @@
 
 /* Return a string with the data for locale-dependent parameter ITEM.  */
 
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+char *
+__nl_langinfo_l (item, l)
+     nl_item item;
+     __locale_t l;
+#else
 char *
 nl_langinfo (item)
      nl_item item;
+#endif
 {
   int category = _NL_ITEM_CATEGORY (item);
   unsigned int index = _NL_ITEM_INDEX (item);
@@ -37,7 +44,11 @@ nl_langinfo (item)
     /* Bogus category: bogus item.  */
     return (char *) "";
 
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+  data = l->__locales[category];
+#else
   data = *_nl_current[category];
+#endif
 
   if (index >= data->nstrings)
     /* Bogus index for this category: bogus item.  */
