@@ -1559,7 +1559,7 @@ descriptors are checked to see if they are ready for writing; and the
 conditions.  You can pass a null pointer for any of these arguments if
 you are not interested in checking for that kind of condition.
 
-A file descriptor is considered ready for reading if it is at end of
+A file descriptor is considered ready for reading if it is not at end of
 file.  A server socket is considered ready for reading if there is a
 pending connection which can be accepted with @code{accept};
 @pxref{Accepting Connections}.  A client socket is ready for writing when

@@ -1,3 +1,11 @@
+1999-02-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/llio.texi (Waiting for I/O): Correct meaning.  Patch by
+	Jochen Voss <voss@mathematik.uni-kl.de> [PR libc/969].
+
+	* manual/setjmp.texi (Non-Local Exits and Signals): Fix
+	typo.  Patch by Jochen Voss <voss@mathematik.uni-kl.de> [PR libc/970].
+
 1999-02-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/Versions: Add __strverscmp to GLIBC_2.1.1.

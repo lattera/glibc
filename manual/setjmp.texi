@@ -176,7 +176,7 @@ In BSD Unix systems, @code{setjmp} and @code{longjmp} also save and
 restore the set of blocked signals; see @ref{Blocking Signals}.  However,
 the POSIX.1 standard requires @code{setjmp} and @code{longjmp} not to
 change the set of blocked signals, and provides an additional pair of
-functions (@code{sigsetjmp} and @code{sigsetjmp}) to get the BSD
+functions (@code{sigsetjmp} and @code{siglongjmp}) to get the BSD
 behavior.
 
 The behavior of @code{setjmp} and @code{longjmp} in the GNU library is
