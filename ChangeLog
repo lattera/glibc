@@ -1,3 +1,8 @@
+2003-12-18  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* sysdeps/unix/sysv/linux/hppa/clone.S (__clone) [PIC]: Save PIC,
+	reload PIC if we need to call __syscall_error, cleanup asm.
+
 2003-12-17  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* sysdeps/hppa/fpu/fclrexcpt.c (feclearexcept): Right shift
