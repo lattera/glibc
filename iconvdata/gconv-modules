@@ -998,6 +998,10 @@ module	ISO-2022-CN//		INTERNAL		ISO-2022-CN	1
 module	INTERNAL		ISO-2022-CN//		ISO-2022-CN	1
 
 #	from			to			module		cost
+module	ISO-2022-CN-EXT//	INTERNAL		ISO-2022-CN-EXT	1
+module	INTERNAL		ISO-2022-CN-EXT//	ISO-2022-CN-EXT	1
+
+#	from			to			module		cost
 alias	MAC//			MACINTOSH//
 alias	CSMACINTOSH//		MACINTOSH//
 module	MACINTOSH//		INTERNAL		MACINTOSH	1

@@ -40,10 +40,11 @@ extern const uint16_t __isoir165_to_tab[ISOIR165_FROMSIZE];
 /* XXX If we at some point need an offset value to decode the byte
    sequences another parameter can be added.  */
 static inline uint32_t
-ucs4_from_isoir165 (const char **s, size_t avail)
+isoir165_to_ucs4 (const unsigned char **s, size_t avail)
 {
   unsigned char ch = *(*s);
   unsigned char ch2;
+  uint32_t res;
 
   if (ch <= 0x20 || ch >= 0x7f)
     return __UNKNOWN_10646_CHAR;
@@ -55,8 +56,12 @@ ucs4_from_isoir165 (const char **s, size_t avail)
   if (ch2 <= 0x20 || ch2 >= 0x7f)
     return __UNKNOWN_10646_CHAR;
 
-  return (__isoir165_to_tab[(ch - 0x21) * 94 + (ch2 - 0x21)]
-	  ?: __UNKNOWN_10646_CHAR);
+  res = __isoir165_to_tab[(ch - 0x21) * 94 + (ch2 - 0x21)];
+  if (res == 0)
+    return __UNKNOWN_10646_CHAR;
+
+  *s += 2;
+  return res;
 }
 
 
