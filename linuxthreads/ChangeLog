@@ -1,5 +1,8 @@
 2004-02-20  Steven Munroe  <sjmunroe@us.ibm.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/ptlongjmp.c [SHARED]: Code only
+	valid for SHARED case.  Correct spelling of __vmx_longjmp.
+
 	* sysdeps/powerpc/pspinlock.c: Move from here.
 	* sysdeps/powerpc/powerpc32/pspinlock.c: To here.
 	* sysdeps/powerpc/powerpc64/pspinlock.c: New file.

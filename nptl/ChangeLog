@@ -1,3 +1,7 @@
+2004-02-20  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/jmpbuf-unwind.h (_JMPBUF_UNWINDS_ADJ): Fix variable name.
+
 2004-02-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep-cancel.h

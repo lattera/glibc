@@ -19,7 +19,8 @@
 #include <setjmp.h>
 #include <bits/wordsize.h>
 #include <shlib-compat.h>
-#if defined SHARED && SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_3_4)
+#if defined SHARED
+# if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_3_4)
 
 /* These functions are not declared anywhere since they shouldn't be
    used at another place but here.  */
@@ -39,14 +40,14 @@ void __novmx_longjmp (jmp_buf env, int val)
   __novmx__libc_longjmp (env, val);
 }
 
-# if __WORDSIZE == 64
+#  if __WORDSIZE == 64
 symbol_version (__novmx_longjmp,longjmp,GLIBC_2.3);
 symbol_version (__novmx_siglongjmp,siglongjmp,GLIBC_2.3);
-# else
+#  else
 symbol_version (__novmx_longjmp,longjmp,GLIBC_2.0);
 symbol_version (__novmx_siglongjmp,siglongjmp,GLIBC_2.0);
-# endif
-#endif  /* defined SHARED && SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_3_4) ) */
+#  endif
+# endif  /* SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_3_4) ) */
 
 /* These functions are not declared anywhere since they shouldn't be
    used at another place but here.  */
@@ -55,16 +56,15 @@ extern void __vmx__libc_siglongjmp (sigjmp_buf env, int val)
 extern void __vmx__libc_longjmp (sigjmp_buf env, int val)
      __attribute__ ((noreturn));
 
-#ifdef SHARED
 void __vmx_siglongjmp (sigjmp_buf env, int val)
 {
   __vmx__libc_siglongjmp (env, val);
 }
 
-void __vmxlongjmp (jmp_buf env, int val)
+void __vmx_longjmp (jmp_buf env, int val)
 {
   __vmx__libc_longjmp (env, val);
 }
-#endif
 default_symbol_version (__vmx_longjmp,longjmp,GLIBC_2.3.4);
 default_symbol_version (__vmx_siglongjmp,siglongjmp,GLIBC_2.3.4);
+#endif /* SHARED */

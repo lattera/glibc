@@ -25,4 +25,4 @@
   _JMPBUF_UNWINDS_ADJ (_jmpbuf, (void *) _Unwind_GetCFA (_context), _adj)
 
 #define _JMPBUF_UNWINDS_ADJ(jmpbuf, address, adj) \
-  ((uintptr_t) (address) - (adj) < (uintptr_t) (_jmpbuf)[0].__regs[7] - (adj))
+  ((uintptr_t) (address) - (adj) < (uintptr_t) (jmpbuf)[0].__regs[7] - (adj))
