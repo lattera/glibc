@@ -39,11 +39,14 @@ int __libc_missing_rt_sigs;
 
 #define SA_RESTORER	0x04000000
 
+extern void __default_sa_restorer(void);
+extern void __default_rt_sa_restorer(void);
+
 /* When RT signals are in use we need to use a different return stub.  */
 #ifdef __NR_rt_sigreturn
 #define choose_restorer(flags)					\
-  (flags & SA_SIGINFO) ? &&__default_rt_sa_restorer		\
-  : &&__default_sa_restorer
+  (flags & SA_SIGINFO) ? __default_rt_sa_restorer		\
+  : __default_sa_restorer
 #else
 #define choose_restorer(flags)					\
   &&__default_sa_restorer
@@ -142,20 +145,6 @@ __sigaction (sig, act, oact)
 #endif
     }
   return result;
-
-  /* If no SA_RESTORER function was specified by the application we use
-     this one.  This avoids the need for the kernel to synthesise a return
-     instruction on the stack, which would involve expensive cache flushes. */
- __default_sa_restorer:
-  asm volatile ("swi %0" : : "i" (__NR_sigreturn));
-  
-#ifdef __NR_rt_sigreturn
- __default_rt_sa_restorer:
-  asm volatile ("swi %0" : : "i" (__NR_rt_sigreturn));
-#endif
-
-  /* NOTREACHED */
-  return -1;
 }
 
 weak_alias (__sigaction, sigaction)
