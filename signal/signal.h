@@ -23,8 +23,8 @@
 #ifndef	_SIGNAL_H
 
 #if !defined __need_sig_atomic_t && !defined __need_sigset_t
-#define	_SIGNAL_H	1
-#include <features.h>
+# define _SIGNAL_H	1
+# include <features.h>
 #endif
 
 __BEGIN_DECLS
@@ -47,22 +47,26 @@ typedef __sig_atomic_t sig_atomic_t;
 /* Type of a signal handler.  */
 typedef void (*__sighandler_t) __P ((int));
 
-/* Set the handler for the signal SIG to HANDLER, returning the old
-   handler, or SIG_ERR on error.
-   By default `signal' has the BSD semantic.  */
-extern __sighandler_t signal __P ((int __sig, __sighandler_t __handler));
-
 /* The X/Open definition of `signal' specifies the SVID semantic.  Use
    the additional function `sysv_signal' when X/Open compatibility is
    requested.  */
 extern __sighandler_t __sysv_signal __P ((int __sig,
 					  __sighandler_t __handler));
 
-#if defined __USE_XOPEN && !defined __USE_GNU
-extern __sighandler_t sysv_signal __P ((int __sig, __sighandler_t __handler));
-
-/* Make sure the used `signal' implementation is the SVID version.  */
-#define signal(sig, handler) __sysv_signal ((sig), (handler))
+/* Set the handler for the signal SIG to HANDLER, returning the old
+   handler, or SIG_ERR on error.
+   By default `signal' has the BSD semantic.  */
+#if !defined __USE_XOPEN || defined __USE_GNU
+extern __sighandler_t signal __P ((int __sig, __sighandler_t __handler));
+#else
+/* Make sure the used `signal' implementation is the SVID version.
+   When GNU CC is used we have a clean way to write this.  */
+# if defined __GNUC__ && __GNUC__ >= 2
+extern __sighandler_t signal __P ((int __sig, __sighandler_t __handler))
+     __asm__ ("__sysv_signal");
+# else
+#  define signal(sig, handler) __sysv_signal ((sig), (handler))
+# endif
 #endif
 
 #ifdef __USE_XOPEN
@@ -120,17 +124,17 @@ extern int __sigpause __P ((int __sig_or_mask, int __is_sig));
 /* Set the mask of blocked signals to MASK,
    wait for a signal to arrive, and then restore the mask.  */
 extern int sigpause __P ((int __mask));
-#define sigpause(mask) __sigpause ((mask), 0)
+# define sigpause(mask) __sigpause ((mask), 0)
 #else
-#ifdef __USE_XOPEN
+# ifdef __USE_XOPEN
 /* Remove a signal from the signal mask and suspend the process.  */
-#define sigpause(sig) __sigpause ((sig), 1)
-#endif
+#  define sigpause(sig) __sigpause ((sig), 1)
+# endif
 #endif
 
 
 #ifdef __USE_BSD
-#define	sigmask(sig)	__sigmask(sig)
+# define sigmask(sig)	__sigmask(sig)
 
 extern int sigblock __P ((int __mask));
 extern int sigsetmask __P ((int __mask));
@@ -142,7 +146,7 @@ extern int siggetmask __P ((void));
 
 
 #ifdef __USE_MISC
-#define	NSIG	_NSIG
+# define NSIG	_NSIG
 #endif
 
 #ifdef __USE_GNU
@@ -159,14 +163,14 @@ typedef __sighandler_t sig_t;
 
 #ifdef __USE_POSIX
 
-#if !defined __sigset_t_defined \
+# if !defined __sigset_t_defined \
     && (defined _SIGNAL_H  || defined __need_sigset_t)
 typedef __sigset_t sigset_t;
-#define	__sigset_t_defined	1
-#endif /* `sigset_t' not defined and <signal.h> or need `sigset_t'.  */
-#undef __need_sigset_t
+#  define __sigset_t_defined	1
+# endif /* `sigset_t' not defined and <signal.h> or need `sigset_t'.  */
+# undef __need_sigset_t
 
-#ifdef _SIGNAL_H
+# ifdef _SIGNAL_H
 
 /* Clear all signals from SET.  */
 extern int sigemptyset __P ((sigset_t *__set));
@@ -183,7 +187,7 @@ extern int sigdelset __P ((sigset_t *__set, int __signo));
 /* Return 1 if SIGNO is in SET, 0 if not.  */
 extern int sigismember __P ((__const sigset_t *__set, int __signo));
 
-#ifdef __USE_GNU
+#  ifdef __USE_GNU
 /* Return non-empty value is SET is not empty.  */
 extern int sigisemptyset __P ((__const sigset_t *__set));
 
@@ -194,11 +198,11 @@ extern int sigandset __P ((sigset_t *__set, __const sigset_t *__left,
 /* Build new signal set by combining the two inputs set using logical OR.  */
 extern int sigorset __P ((sigset_t *__set, __const sigset_t *__left,
 			  __const sigset_t *__right));
-#endif	/* GNU */
+#  endif /* GNU */
 
 /* Get the system-specific definitions of `struct sigaction'
    and the `SA_*' and `SIG_*'. constants.  */
-#include <bits/sigaction.h>
+#  include <bits/sigaction.h>
 
 /* Get and/or change the set of blocked signals.  */
 extern int __sigprocmask __P ((int __how,
@@ -225,7 +229,7 @@ extern int sigpending __P ((sigset_t *__set));
 extern int __sigwait __P ((__const sigset_t *__set, int *__sig));
 extern int sigwait __P ((__const sigset_t *__set, int *__sig));
 
-#endif /* <signal.h> included.  */
+# endif /* <signal.h> included.  */
 
 #endif /* Use POSIX.  */
 
@@ -243,13 +247,13 @@ struct sigvec
     int sv_mask;		/* Mask of signals to be blocked.  */
 
     int sv_flags;		/* Flags (see below).  */
-#define	sv_onstack	sv_flags /* 4.2 BSD compatibility.  */
+# define sv_onstack	sv_flags /* 4.2 BSD compatibility.  */
   };
 
 /* Bits in `sv_flags'.  */
-#define	SV_ONSTACK	(1 << 0)/* Take the signal on the signal stack.  */
-#define	SV_INTERRUPT	(1 << 1)/* Do not restart system calls.  */
-#define	SV_RESETHAND	(1 << 2)/* Reset handler to SIG_DFL on receipt.  */
+# define SV_ONSTACK	(1 << 0)/* Take the signal on the signal stack.  */
+# define SV_INTERRUPT	(1 << 1)/* Do not restart system calls.  */
+# define SV_RESETHAND	(1 << 2)/* Reset handler to SIG_DFL on receipt.  */
 
 
 /* If VEC is non-NULL, set the handler for SIG to the `sv_handler' member
@@ -264,7 +268,7 @@ extern int sigvec __P ((int __sig, __const struct sigvec *__vec,
 
 
 /* Get machine-dependent `struct sigcontext' and signal subcodes.  */
-#include <bits/sigcontext.h>
+# include <bits/sigcontext.h>
 
 /* Restore the state saved in SCP.  */
 extern int __sigreturn __P ((struct sigcontext *__scp));
@@ -275,8 +279,8 @@ extern int sigreturn __P ((struct sigcontext *__scp));
 
 #if defined _SIGNAL_H && (defined __USE_BSD || defined __USE_XOPEN_EXTENDED)
 
-#define	 __need_size_t
-#include <stddef.h>
+# define __need_size_t
+# include <stddef.h>
 
 /* If INTERRUPT is nonzero, make signal SIG interrupt system calls
    (causing them to fail with EINTR); if INTERRUPT is zero, make system

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -91,6 +91,7 @@ free_memory (struct __netgrent *data)
 }
 
 static int
+internal_function
 __internal_setnetgrent_reuse (const char *group, struct __netgrent *datap)
 {
   enum nss_status (*fct) (const char *, struct __netgrent *);

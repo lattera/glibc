@@ -18,7 +18,6 @@
    Boston, MA 02111-1307, USA. */
 
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 #include "nis_intern.h"
 
 void
@@ -35,7 +34,7 @@ nis_ping (const_nis_name dirname, u_long utime, const nis_object *dirobj)
   if (dirobj == NULL)
     {
       res = nis_lookup (dirname, MASTER_ONLY);
-      if (res->status != NIS_SUCCESS && res->status != NIS_S_SUCCESS)
+      if (res->status != NIS_SUCCESS)
 	return;
       obj = res->objects.objects_val;
     }
@@ -43,7 +42,7 @@ nis_ping (const_nis_name dirname, u_long utime, const nis_object *dirobj)
     obj = (nis_object *) dirobj;
 
   /* Check if obj is really a diryectory object */
-  if (obj->zo_data.zo_type != DIRECTORY_OBJ)
+  if (__type_of (obj) != NIS_DIRECTORY_OBJ)
     {
       if (res != NULL)
 	nis_freeresult (res);

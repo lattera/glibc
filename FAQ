@@ -192,7 +192,8 @@ Library.
 
 * plenty of time (approx 1h for i?86-linux on i586@133 or 2.5h on
   i486@66 or 4.5h on i486@33), both for shared and static only).
-  For Hurd systems times are much higher.
+  Multiply this by 1.5 or 2.0 if you build profiling and/or the highly
+  optimized version as well.  For Hurd systems times are much higher.
 
   For Atari Falcon (Motorola 68030 @ 16 Mhz, 14 Mb memory) James Troup
   <J.J.Troup@comp.brad.ac.uk> reports for a full build (shared, static,
@@ -438,7 +439,7 @@ programs and source code.  Until this law gets abolished we cannot
 ship the cryptographic function together with the libc.
 
 But of course we provide the code and there is an very easy way to use
-this code.  First get the extra package.  People in the US way get it
+this code.  First get the extra package.  People in the US may get it
 from the same place they got the GNU libc from.  People outside the US
 should get the code from ftp://ftp.ifi.uio.no/pub/gnu, or another
 archive site outside the USA.  The README explains how to install the

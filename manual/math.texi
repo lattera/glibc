@@ -1259,6 +1259,31 @@ $$\log(z) = \log(|z|) + i \arg(z)$$
 @end iftex
 @end deftypefun
 
+
+@comment complex.h
+@comment GNU
+@deftypefun {complex double} clog10 (complex double @var{z})
+@deftypefunx {complex float} clog10f (complex float @var{z})
+@deftypefunx {complex long double} clog10l (complex long double @var{z})
+These functions return the base 10 logarithm of the complex value
+@var{z}.  Unlike the real value version @code{log} and its variants,
+@code{clog} has no limit for the range of its argument @var{z}.
+
+@noindent
+Mathematically this corresponds to the value
+
+@ifinfo
+@math{log (z) = log10 (cabs (z)) + I * carg (z)}
+@end ifinfo
+@iftex
+@tex
+$$\log_{10}(z) = \log_{10}(|z|) + i \arg(z)$$
+@end tex
+@end iftex
+
+This function is a GNU extension.
+@end deftypefun
+
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} csqrt (complex double @var{z})
@@ -1274,7 +1299,7 @@ the value of the argument.
 @deftypefun {complex double} cpow (complex double @var{base}, complex double @var{power})
 @deftypefunx {complex float} cpowf (complex float @var{base}, complex float @var{power})
 @deftypefunx {complex long double} cpowl (complex long double @var{base}, complex long double @var{power})
-These functions return the complex value @var{BASE} raised to the power of
+These functions return the complex value @var{base} raised to the power of
 @var{power}.  This is computed as
 
 @ifinfo

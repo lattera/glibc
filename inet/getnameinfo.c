@@ -63,6 +63,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 static char *
+internal_function
 nrl_domainname (void)
 {
   static char *domain = NULL;
@@ -258,13 +259,11 @@ getnameinfo (const struct sockaddr *sa, size_t addrlen, char *host,
 	else
 	  {
 	    const char *c;
-#if INET6
 	    if (sa->sa_family == AF_INET6)
 	      c = inet_ntop (AF_INET6,
 			     (void *) &(((struct sockaddr_in6 *) sa)->sin6_addr),
 			     host, hostlen);
 	    else
-#endif /* INET6 */
 	      c = inet_ntop (AF_INET,
 			     (void *) &(((struct sockaddr_in *) sa)->sin_addr),
 			     host, hostlen);

@@ -4301,6 +4301,160 @@ clog_test (void)
 
 
 static void
+clog10_test (void)
+{
+  __complex__ MATHTYPE result;
+
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_zero, 0));
+  check_isinfn_exc ("real(clog10(-0 + i0)) = -Inf plus divide-by-zero exception",
+		    __real__ result, DIVIDE_BY_ZERO_EXCEPTION);
+  check ("imag(clog10(-0 + i0)) = pi plus divide-by-zero exception",
+	 __imag__ result, M_PI);
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_zero, minus_zero));
+  check_isinfn_exc ("real(clog10(-0 - i0)) = -Inf plus divide-by-zero exception",
+		    __real__ result, DIVIDE_BY_ZERO_EXCEPTION);
+  check ("imag(clog10(-0 - i0)) = -pi plus divide-by-zero exception",
+	 __imag__ result, -M_PI);
+
+  result = FUNC(clog10) (BUILD_COMPLEX (0, 0));
+  check_isinfn_exc ("real(clog10(0 + i0)) = -Inf plus divide-by-zero exception",
+		    __real__ result, DIVIDE_BY_ZERO_EXCEPTION);
+  check ("imag(clog10(0 + i0)) = 0 plus divide-by-zero exception",
+	 __imag__ result, 0);
+  result = FUNC(clog10) (BUILD_COMPLEX (0, minus_zero));
+  check_isinfn_exc ("real(clog10(0 - i0)) = -Inf plus divide-by-zero exception",
+		    __real__ result, DIVIDE_BY_ZERO_EXCEPTION);
+  check ("imag(clog10(0 - i0)) = -0 plus divide-by-zero exception",
+	 __imag__ result, minus_zero);
+
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_infty, plus_infty));
+  check_isinfp ("real(clog10(-Inf + i Inf)) = +Inf", __real__ result);
+  check ("imag(clog10(-Inf + i Inf)) = 3*pi/4", __imag__ result, M_PI - M_PI_4);
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_infty, minus_infty));
+  check_isinfp ("real(clog10(-Inf - i Inf)) = +Inf", __real__ result);
+  check ("imag(clog10(-Inf - i Inf)) = -3*pi/4", __imag__ result, M_PI_4 - M_PI);
+
+  result = FUNC(clog10) (BUILD_COMPLEX (plus_infty, plus_infty));
+  check_isinfp ("real(clog10(+Inf + i Inf)) = +Inf", __real__ result);
+  check ("imag(clog10(+Inf + i Inf)) = pi/4", __imag__ result, M_PI_4);
+  result = FUNC(clog10) (BUILD_COMPLEX (plus_infty, minus_infty));
+  check_isinfp ("real(clog10(+Inf - i Inf)) = +Inf", __real__ result);
+  check ("imag(clog10(+Inf - i Inf)) = -pi/4", __imag__ result, -M_PI_4);
+
+  result = FUNC(clog10) (BUILD_COMPLEX (0, plus_infty));
+  check_isinfp ("real(clog10(0 + i Inf)) = +Inf", __real__ result);
+  check ("imag(clog10(0 + i Inf)) = pi/2", __imag__ result, M_PI_2);
+  result = FUNC(clog10) (BUILD_COMPLEX (3, plus_infty));
+  check_isinfp ("real(clog10(3 + i Inf)) = +Inf", __real__ result);
+  check ("imag(clog10(3 + i Inf)) = pi/2", __imag__ result, M_PI_2);
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_zero, plus_infty));
+  check_isinfp ("real(clog10(-0 + i Inf)) = +Inf", __real__ result);
+  check ("imag(clog10(-0 + i Inf)) = pi/2", __imag__ result, M_PI_2);
+  result = FUNC(clog10) (BUILD_COMPLEX (-3, plus_infty));
+  check_isinfp ("real(clog10(-3 + i Inf)) = +Inf", __real__ result);
+  check ("imag(clog10(-3 + i Inf)) = pi/2", __imag__ result, M_PI_2);
+  result = FUNC(clog10) (BUILD_COMPLEX (0, minus_infty));
+  check_isinfp ("real(clog10(0 - i Inf)) = +Inf", __real__ result);
+  check ("imag(clog10(0 - i Inf)) = -pi/2", __imag__ result, -M_PI_2);
+  result = FUNC(clog10) (BUILD_COMPLEX (3, minus_infty));
+  check_isinfp ("real(clog10(3 - i Inf)) = +Inf", __real__ result);
+  check ("imag(clog10(3 - i Inf)) = -pi/2", __imag__ result, -M_PI_2);
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_zero, minus_infty));
+  check_isinfp ("real(clog10(-0 - i Inf)) = +Inf", __real__ result);
+  check ("imag(clog10(-0 - i Inf)) = -pi/2", __imag__ result, -M_PI_2);
+  result = FUNC(clog10) (BUILD_COMPLEX (-3, minus_infty));
+  check_isinfp ("real(clog10(-3 - i Inf)) = +Inf", __real__ result);
+  check ("imag(clog10(-3 - i Inf)) = -pi/2", __imag__ result, -M_PI_2);
+
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_infty, 0));
+  check_isinfp ("real(clog10(-Inf + i0)) = +Inf", __real__ result);
+  check ("imag(clog10(-Inf + i0)) = pi", __imag__ result, M_PI);
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_infty, 1));
+  check_isinfp ("real(clog10(-Inf + i1)) = +Inf", __real__ result);
+  check ("imag(clog10(-Inf + i1)) = pi", __imag__ result, M_PI);
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_infty, minus_zero));
+  check_isinfp ("real(clog10(-Inf - i0)) = +Inf", __real__ result);
+  check ("imag(clog10(-Inf - i0)) = -pi", __imag__ result, -M_PI);
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_infty, -1));
+  check_isinfp ("real(clog10(-Inf - i1)) = +Inf", __real__ result);
+  check ("imag(clog10(-Inf - i1)) = -pi", __imag__ result, -M_PI);
+
+  result = FUNC(clog10) (BUILD_COMPLEX (plus_infty, 0));
+  check_isinfp ("real(clog10(+Inf + i0)) = +Inf", __real__ result);
+  check ("imag(clog10(+Inf + i0)) = 0", __imag__ result, 0);
+  result = FUNC(clog10) (BUILD_COMPLEX (plus_infty, 1));
+  check_isinfp ("real(clog10(+Inf + i1)) = +Inf", __real__ result);
+  check ("imag(clog10(+Inf + i1)) = 0", __imag__ result, 0);
+  result = FUNC(clog10) (BUILD_COMPLEX (plus_infty, minus_zero));
+  check_isinfp ("real(clog10(+Inf - i0)) = +Inf", __real__ result);
+  check ("imag(clog10(+Inf - i0)) = -0", __imag__ result, minus_zero);
+  result = FUNC(clog10) (BUILD_COMPLEX (plus_infty, -1));
+  check_isinfp ("real(clog10(+Inf - i1)) = +Inf", __real__ result);
+  check ("imag(clog10(+Inf - i1)) = -0", __imag__ result, minus_zero);
+
+  result = FUNC(clog10) (BUILD_COMPLEX (plus_infty, nan_value));
+  check_isinfp ("real(clog10(+Inf + i NaN)) = +Inf", __real__ result);
+  check_isnan ("imag(clog10(+Inf + i NaN)) = NaN", __imag__ result);
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_infty, nan_value));
+  check_isinfp ("real(clog10(-Inf + i NaN)) = +Inf", __real__ result);
+  check_isnan ("imag(clog10(-Inf + i NaN)) = NaN", __imag__ result);
+
+  result = FUNC(clog10) (BUILD_COMPLEX (nan_value, plus_infty));
+  check_isinfp ("real(clog10(NaN + i Inf)) = +Inf", __real__ result);
+  check_isnan ("imag(clog10(NaN + i Inf)) = NaN", __imag__ result);
+  result = FUNC(clog10) (BUILD_COMPLEX (nan_value, minus_infty));
+  check_isinfp ("real(clog10(NaN - i Inf)) = +Inf", __real__ result);
+  check_isnan ("imag(clog10(NaN - i Inf)) = NaN", __imag__ result);
+
+  result = FUNC(clog10) (BUILD_COMPLEX (0, nan_value));
+  check_isnan_maybe_exc ("real(clog10(0 + i NaN)) = NaN plus maybe invalid exception",
+			 __real__ result, INVALID_EXCEPTION);
+  check_isnan ("imag(clog10(0 + i NaN)) = NaN plus maybe invalid exception",
+	       __imag__ result);
+  result = FUNC(clog10) (BUILD_COMPLEX (3, nan_value));
+  check_isnan_maybe_exc ("real(clog10(3 + i NaN)) = NaN plus maybe invalid exception",
+			 __real__ result, INVALID_EXCEPTION);
+  check_isnan ("imag(clog10(3 + i NaN)) = NaN plus maybe invalid exception",
+	       __imag__ result);
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_zero, nan_value));
+  check_isnan_maybe_exc ("real(clog10(-0 + i NaN)) = NaN plus maybe invalid exception",
+			 __real__ result, INVALID_EXCEPTION);
+  check_isnan ("imag(clog10(-0 + i NaN)) = NaN plus maybe invalid exception",
+	       __imag__ result);
+  result = FUNC(clog10) (BUILD_COMPLEX (-3, nan_value));
+  check_isnan_maybe_exc ("real(clog10(-3 + i NaN)) = NaN plus maybe invalid exception",
+			 __real__ result, INVALID_EXCEPTION);
+  check_isnan ("imag(clog10(-3 + i NaN)) = NaN plus maybe invalid exception",
+	       __imag__ result);
+
+  result = FUNC(clog10) (BUILD_COMPLEX (nan_value, 0));
+  check_isnan_maybe_exc ("real(clog10(NaN + i0)) = NaN plus maybe invalid exception",
+			 __real__ result, INVALID_EXCEPTION);
+  check_isnan ("imag(clog10(NaN + i0)) = NaN plus maybe invalid exception",
+	       __imag__ result);
+  result = FUNC(clog10) (BUILD_COMPLEX (nan_value, 5));
+  check_isnan_maybe_exc ("real(clog10(NaN + i5)) = NaN plus maybe invalid exception",
+			 __real__ result, INVALID_EXCEPTION);
+  check_isnan ("imag(clog10(NaN + i5)) = NaN plus maybe invalid exception",
+	       __imag__ result);
+  result = FUNC(clog10) (BUILD_COMPLEX (nan_value, minus_zero));
+  check_isnan_maybe_exc ("real(clog10(NaN - i0)) = NaN plus maybe invalid exception",
+			 __real__ result, INVALID_EXCEPTION);
+  check_isnan ("imag(clog10(NaN - i0)) = NaN plus maybe invalid exception",
+	       __imag__ result);
+  result = FUNC(clog10) (BUILD_COMPLEX (nan_value, -5));
+  check_isnan_maybe_exc ("real(clog10(NaN - i5)) = NaN plus maybe invalid exception",
+			 __real__ result, INVALID_EXCEPTION);
+  check_isnan ("imag(clog10(NaN - i5)) = NaN plus maybe invalid exception",
+	       __imag__ result);
+
+  result = FUNC(clog10) (BUILD_COMPLEX (nan_value, nan_value));
+  check_isnan ("real(clog10(NaN + i NaN)) = NaN", __real__ result);
+  check_isnan ("imag(clog10(NaN + i NaN)) = NaN", __imag__ result);
+}
+
+
+static void
 csqrt_test (void)
 {
   __complex__ MATHTYPE result;
@@ -4539,43 +4693,52 @@ round_test (void)
 static void
 lround_test (void)
 {
-  check_long ("lround(0) = 0", lround (0), 0);
-  check_long ("lround(-0) = 0", lround (minus_zero), 0);
-  check_long ("lround(0.2) = 0", lround (0.2), 0.0);
-  check_long ("lround(-0.2) = 0", lround (-0.2), 0);
-  check_long ("lround(0.5) = 1", lround (0.5), 1);
-  check_long ("lround(-0.5) = -1", lround (-0.5), -1);
-  check_long ("lround(0.8) = 1", lround (0.8), 1);
-  check_long ("lround(-0.8) = -1", lround (-0.8), -1);
-  check_long ("lround(1.5) = 2", lround (1.5), 2);
-  check_long ("lround(-1.5) = -2", lround (-1.5), -2);
-  check_long ("lround(2097152.5) = 2097153", lround (2097152.5), 2097153);
-  check_long ("lround(-2097152.5) = -2097153", lround (-2097152.5),
+  check_long ("lround(0) = 0", FUNC(lround) (0), 0);
+  check_long ("lround(-0) = 0", FUNC(lround) (minus_zero), 0);
+  check_long ("lround(0.2) = 0", FUNC(lround) (0.2), 0.0);
+  check_long ("lround(-0.2) = 0", FUNC(lround) (-0.2), 0);
+  check_long ("lround(0.5) = 1", FUNC(lround) (0.5), 1);
+  check_long ("lround(-0.5) = -1", FUNC(lround) (-0.5), -1);
+  check_long ("lround(0.8) = 1", FUNC(lround) (0.8), 1);
+  check_long ("lround(-0.8) = -1", FUNC(lround) (-0.8), -1);
+  check_long ("lround(1.5) = 2", FUNC(lround) (1.5), 2);
+  check_long ("lround(-1.5) = -2", FUNC(lround) (-1.5), -2);
+  check_long ("lround(22514.5) = 22514", FUNC(lround) (1.5), 2);
+  check_long ("lround(-22514.5) = -22514", FUNC(lround) (-1.5), -2);
+#ifndef TEST_FLOAT
+  check_long ("lround(2097152.5) = 2097153", FUNC(lround) (2097152.5),
+	      2097153);
+  check_long ("lround(-2097152.5) = -2097153", FUNC(lround) (-2097152.5),
 	      -2097153);
+#endif
 }
 
 
 static void
 llround_test (void)
 {
-  check_longlong ("llround(0) = 0", llround (0), 0);
-  check_longlong ("llround(-0) = 0", llround (minus_zero), 0);
-  check_longlong ("llround(0.2) = 0", llround (0.2), 0.0);
-  check_longlong ("llround(-0.2) = 0", llround (-0.2), 0);
-  check_longlong ("llround(0.5) = 1", llround (0.5), 1);
-  check_longlong ("llround(-0.5) = -1", llround (-0.5), -1);
-  check_longlong ("llround(0.8) = 1", llround (0.8), 1);
-  check_longlong ("llround(-0.8) = -1", llround (-0.8), -1);
-  check_longlong ("llround(1.5) = 2", llround (1.5), 2);
-  check_longlong ("llround(-1.5) = -2", llround (-1.5), -2);
+  check_longlong ("llround(0) = 0", FUNC(llround) (0), 0);
+  check_longlong ("llround(-0) = 0", FUNC(llround) (minus_zero), 0);
+  check_longlong ("llround(0.2) = 0", FUNC(llround) (0.2), 0.0);
+  check_longlong ("llround(-0.2) = 0", FUNC(llround) (-0.2), 0);
+  check_longlong ("llround(0.5) = 1", FUNC(llround) (0.5), 1);
+  check_longlong ("llround(-0.5) = -1", FUNC(llround) (-0.5), -1);
+  check_longlong ("llround(0.8) = 1", FUNC(llround) (0.8), 1);
+  check_longlong ("llround(-0.8) = -1", FUNC(llround) (-0.8), -1);
+  check_longlong ("llround(1.5) = 2", FUNC(llround) (1.5), 2);
+  check_longlong ("llround(-1.5) = -2", FUNC(llround) (-1.5), -2);
+  check_longlong ("llround(22514.5) = 22514", FUNC(llround) (1.5), 2);
+  check_longlong ("llround(-22514.5) = -22514", FUNC(llround) (-1.5), -2);
+#ifndef TEST_FLOAT
   check_longlong ("llround(2097152.5) = 2097153",
-		  llround (2097152.5), 2097153);
+		  FUNC(llround) (2097152.5), 2097153);
   check_longlong ("llround(-2097152.5) = -2097153",
-		  llround (-2097152.5), -2097153);
+		  FUNC(llround) (-2097152.5), -2097153);
   check_longlong ("llround(34359738368.5) = 34359738369",
-		  llround (34359738368.5), 34359738369ll);
+		  FUNC(llround) (34359738368.5), 34359738369ll);
   check_longlong ("llround(-34359738368.5) = -34359738369",
-		  llround (-34359738368.5), -34359738369ll);
+		  FUNC(llround) (-34359738368.5), -34359738369ll);
+#endif
 }
 
 
@@ -4962,6 +5125,7 @@ main (int argc, char *argv[])
   ccos_test ();
   ccosh_test ();
   clog_test ();
+  clog10_test ();
   cacos_test ();
   cacosh_test ();
   casin_test ();

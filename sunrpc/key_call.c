@@ -57,7 +57,7 @@ extern int _openchild (char *command, FILE **fto, FILE **ffrom);
 
 
 static int key_call (u_long, xdrproc_t xdr_arg, char *,
-		     xdrproc_t xdr_rslt, char *);
+		     xdrproc_t xdr_rslt, char *) internal_function;
 
 static struct timeval trytimeout = {KEY_TIMEOUT, 0};
 static struct timeval tottimeout = {KEY_TIMEOUT *KEY_NRETRY, 0};
@@ -267,6 +267,7 @@ cryptkeyres *(*__key_decryptsession_pk_LOCAL) (uid_t, char *) = 0;
 des_block *(*__key_gendes_LOCAL) (uid_t, char *) = 0;
 
 static int
+internal_function
 key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
 	  xdrproc_t xdr_rslt, char *rslt)
 {

@@ -63,7 +63,7 @@ strchr (s, c)
   switch (sizeof (longword))
     {
     case 4: magic_bits = 0x7efefeffL; break;
-    case 8: magic_bits = (0x7efefefeL << 32) | 0xfefefeffL; break;
+    case 8: magic_bits = ((0x7efefefeL << 16) << 16) | 0xfefefeffL; break;
     default:
       abort ();
     }
@@ -72,7 +72,8 @@ strchr (s, c)
   charmask = c | (c << 8);
   charmask |= charmask << 16;
   if (sizeof (longword) > 4)
-    charmask |= charmask << 32;
+    /* Do the shift in two steps to avoid a warning if long has 32 bits.  */
+    charmask |= (charmask << 16) << 16;
   if (sizeof (longword) > 8)
     abort ();
 

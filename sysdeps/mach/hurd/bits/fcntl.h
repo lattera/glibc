@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _FCNTL_H
-#error "Never use <bits/fcntl.h> directly; include <fcntl.h> instead."
+# error "Never use <bits/fcntl.h> directly; include <fcntl.h> instead."
 #endif
 
 /* File access modes.  These are understood by io servers; they can be
@@ -29,10 +29,10 @@
 
 /* In GNU, read and write are bits (unlike BSD).  */
 #ifdef __USE_GNU
-#define	O_READ		O_RDONLY /* Open for reading.  */
-#define O_WRITE		O_WRONLY /* Open for writing.  */
-#define	O_EXEC		0x0004	/* Open for execution.  */
-#define O_NORW		0	/* Open without R/W access.  */
+# define O_READ		O_RDONLY /* Open for reading.  */
+# define O_WRITE	O_WRONLY /* Open for writing.  */
+# define O_EXEC		0x0004	/* Open for execution.  */
+# define O_NORW		0	/* Open without R/W access.  */
 #endif
 /* POSIX.1 standard names.  */
 #define	O_RDONLY	0x0001	/* Open read-only.  */
@@ -49,8 +49,8 @@
 #define	O_CREAT		0x0010	/* Create file if it doesn't exist.  */
 #define	O_EXCL		0x0020	/* Fail if file already exists.  */
 #ifdef __USE_GNU
-#define	O_NOLINK	0x0040	/* No name mappings on final component.  */
-#define	O_NOTRANS	0x0080	/* No translator on final component. */
+# define O_NOLINK	0x0040	/* No name mappings on final component.  */
+# define O_NOTRANS	0x0080	/* No translator on final component. */
 #endif
 
 
@@ -62,16 +62,16 @@
 
 #define	O_APPEND	0x0100	/* Writes always append to the file.  */
 #ifdef __USE_BSD
-#define	O_ASYNC		0x0200	/* Send SIGIO to owner when data is ready.  */
-#define	O_FSYNC		0x0400	/* Synchronous writes.  */
-#define	O_SYNC		O_FSYNC
+# define O_ASYNC	0x0200	/* Send SIGIO to owner when data is ready.  */
+# define O_FSYNC	0x0400	/* Synchronous writes.  */
+# define O_SYNC		O_FSYNC
 #endif
 #ifdef __USE_GNU
-#define	O_NOATIME	0x0800	/* Don't set access time on read (owner).  */
+# define O_NOATIME	0x0800	/* Don't set access time on read (owner).  */
 #endif
 #ifdef	__USE_MISC
-#define	O_SHLOCK	0x00020000 /* Open with shared file lock.  */
-#define	O_EXLOCK	0x00040000 /* Open with exclusive file lock.  */
+# define O_SHLOCK	0x00020000 /* Open with shared file lock.  */
+# define O_EXLOCK	0x00040000 /* Open with exclusive file lock.  */
 #endif
 
 
@@ -92,13 +92,13 @@
 
 #define	O_NONBLOCK	0x0008	/* Non-blocking open or non-blocking I/O.  */
 #ifdef __USE_BSD
-#define	O_NDELAY	O_NONBLOCK /* Deprecated.  */
+# define O_NDELAY	O_NONBLOCK /* Deprecated.  */
 #endif
 
 
 #ifdef __USE_GNU
 /* Mask of bits which are understood by io servers.  */
-#define O_HURD		(0xffff | O_EXLOCK | O_SHLOCK)
+# define O_HURD		(0xffff | O_EXLOCK | O_SHLOCK)
 #endif
 
 
@@ -113,7 +113,7 @@
    and are not preserved once the file has been opened.  */
 
 #ifdef __USE_GNU
-#define	O_IGNORE_CTTY	0x00080000 /* Don't do any ctty magic at all.  */
+# define O_IGNORE_CTTY	0x00080000 /* Don't do any ctty magic at all.  */
 #endif
 /* `open' never assigns a controlling terminal in GNU.  */
 #define	O_NOCTTY	0	/* Don't assign a controlling terminal.  */
@@ -121,20 +121,20 @@
 
 #ifdef __USE_BSD
 /* Bits in the file status flags returned by F_GETFL.  */
-#define FREAD		O_RDONLY
-#define	FWRITE		O_WRONLY
+# define FREAD		O_RDONLY
+# define FWRITE		O_WRONLY
 
 /* Traditional BSD names the O_* bits.  */
-#define FASYNC		O_ASYNC
-#define FCREAT		O_CREAT
-#define FEXCL		O_EXCL
-#define FTRUNC		O_TRUNC
-#define FNOCTTY		O_NOCTTY
-#define FFSYNC		O_FSYNC
-#define FSYNC		O_SYNC
-#define FAPPEND		O_APPEND
-#define FNONBLOCK	O_NONBLOCK
-#define FNDELAY		O_NDELAY
+# define FASYNC		O_ASYNC
+# define FCREAT		O_CREAT
+# define FEXCL		O_EXCL
+# define FTRUNC		O_TRUNC
+# define FNOCTTY	O_NOCTTY
+# define FFSYNC		O_FSYNC
+# define FSYNC		O_SYNC
+# define FAPPEND	O_APPEND
+# define FNONBLOCK	O_NONBLOCK
+# define FNDELAY	O_NDELAY
 #endif
 
 
@@ -145,8 +145,8 @@
 #define	F_GETFL		3	/* Get file status flags.  */
 #define	F_SETFL		4	/* Set file status flags.  */
 #ifdef __USE_BSD
-#define	F_GETOWN	5	/* Get owner (receiver of SIGIO).  */
-#define	F_SETOWN	6	/* Set owner (receiver of SIGIO).  */
+# define F_GETOWN	5	/* Get owner (receiver of SIGIO).  */
+# define F_SETOWN	6	/* Set owner (receiver of SIGIO).  */
 #endif
 #define	F_GETLK		7	/* Get record locking info.  */
 #define	F_SETLK		8	/* Set record locking info (non-blocking).  */
@@ -164,10 +164,26 @@ struct flock
   {
     int l_type;		/* Type of lock: F_RDLCK, F_WRLCK, or F_UNLCK.  */
     int l_whence;	/* Where `l_start' is relative to (like `lseek').  */
+#ifndef __USE_FILE_OFFSET64
     __off_t l_start;	/* Offset where the lock begins.  */
     __off_t l_len;	/* Size of the locked area; zero means until EOF.  */
+#else
+    __off64_t l_start;	/* Offset where the lock begins.  */
+    __off64_t l_len;	/* Size of the locked area; zero means until EOF.  */
+#endif
     __pid_t l_pid;	/* Process holding the lock.  */
   };
+
+#ifdef __USE_LARGEFILE64
+struct flock64
+  {
+    int l_type;		/* Type of lock: F_RDLCK, F_WRLCK, or F_UNLCK.  */
+    int l_whence;	/* Where `l_start' is relative to (like `lseek').  */
+    __off64_t l_start;	/* Offset where the lock begins.  */
+    __off64_t l_len;	/* Size of the locked area; zero means until EOF.  */
+    __pid_t l_pid;	/* Process holding the lock.  */
+  };
+#endif
 
 /* Values for the `l_type' field of a `struct flock'.  */
 #define	F_RDLCK	1	/* Read lock.  */

@@ -1,6 +1,8 @@
 #! /bin/sh
 
 common_objpfx=$1; shift
+elf_objpfx=$1; shift
+rtld_installed_name=$1; shift
 
 # Create the arena
 : ${TMPDIR=/tmp}
@@ -22,7 +24,7 @@ echo 1_2 > $testdir/dir1/file1_2
 result=0
 
 LD_LIBRARY_PATH=$common_objpfx \
-${common_objpfx}posix/globtest "$testdir" "*" |
+${elf_objpfx}${rtld_installed_name} ${common_objpfx}posix/globtest "$testdir" "*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 `dir1'
@@ -33,7 +35,7 @@ not NULL
 EOF
 
 LD_LIBRARY_PATH=$common_objpfx \
-${common_objpfx}posix/globtest "$testdir" "*/*" |
+${elf_objpfx}${rtld_installed_name} ${common_objpfx}posix/globtest "$testdir" "*/*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 `dir1/file1_1'
@@ -42,7 +44,7 @@ not NULL
 EOF
 
 LD_LIBRARY_PATH=$common_objpfx \
-${common_objpfx}posix/globtest "$testdir" "*/1" |
+${elf_objpfx}${rtld_installed_name} ${common_objpfx}posix/globtest "$testdir" "*/1" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 GLOB_NOMATCH
@@ -50,7 +52,7 @@ NULL
 EOF
 
 LD_LIBRARY_PATH=$common_objpfx \
-${common_objpfx}posix/globtest "$testdir" "*/*1_1" |
+${elf_objpfx}${rtld_installed_name} ${common_objpfx}posix/globtest "$testdir" "*/*1_1" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 `dir1/file1_1'
@@ -58,7 +60,7 @@ not NULL
 EOF
 
 LD_LIBRARY_PATH=$common_objpfx \
-${common_objpfx}posix/globtest "$testdir" "*/file1_1" |
+${elf_objpfx}${rtld_installed_name} ${common_objpfx}posix/globtest "$testdir" "*/file1_1" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 `dir1/file1_1'
@@ -66,7 +68,7 @@ not NULL
 EOF
 
 LD_LIBRARY_PATH=$common_objpfx \
-${common_objpfx}posix/globtest "$testdir" "*-/*" |
+${elf_objpfx}${rtld_installed_name} ${common_objpfx}posix/globtest "$testdir" "*-/*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 GLOB_NOMATCH
@@ -74,7 +76,7 @@ NULL
 EOF
 
 LD_LIBRARY_PATH=$common_objpfx \
-${common_objpfx}posix/globtest "$testdir" "*-" |
+${elf_objpfx}${rtld_installed_name} ${common_objpfx}posix/globtest "$testdir" "*-" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 GLOB_NOMATCH

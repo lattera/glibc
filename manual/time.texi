@@ -1455,6 +1455,42 @@ On the GNU system, it is safe to use @code{sleep} and @code{SIGALRM} in
 the same program, because @code{sleep} does not work by means of
 @code{SIGALRM}.
 
+@comment time.h
+@comment POSIX.1
+@deftypefun int nanosleep (const struct timespec *@var{requested_time}, struct timespec *@var{remaining})
+If the resolution of seconds is not enough the @code{nanosleep} function
+can be used.  As the name suggests the sleeping period can be specified
+in nanoseconds.  The actual period of waiting time might be longer since
+the requested time in the @var{requested_time} parameter is rounded up
+to the next integer multiple of the actual resolution of the system.
+
+If the function returns because the time has elapsed the return value is
+zero.  If the function return @math{-1} the global variable @var{errno}
+is set to the following values:
+
+@table @code
+@item EINTR
+The call was interrupted because a signal was delivered to the thread.
+If the @var{remaining} parameter is not the null pointer the structure
+pointed to by @var{remaining} is updated to contain the remaining time.
+
+@item EINVAL
+The nanosecond value in the @var{requested_time} parameter contains an
+illegal value.  Either the value is negative or greater than or equal to
+1000 million.
+@end table
+
+This function is a cancelation point in multi-threaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time @code{nanosleep} is
+called.  If the thread gets canceled these resources stay allocated
+until the program ends.  To avoid this calls to @code{nanosleep} should
+be protected using cancelation handlers.
+@c ref pthread_cleanup_push / pthread_cleanup_pop
+
+The @code{nanosleep} function is declared in @file{time.h}.
+@end deftypefun
+
 @node Resource Usage
 @section Resource Usage
 

@@ -19,7 +19,6 @@
 
 #include <string.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 /* internal_nis_ismember ()
    return codes: -1 principal is in -group
@@ -28,105 +27,97 @@
 static int
 internal_ismember (const_nis_name principal, const_nis_name group)
 {
-  if (group != NULL && strlen (group) > 0)
+  char buf[strlen (group) + 50];
+  char leafbuf[strlen (group) + 2];
+  char domainbuf[strlen (group) + 2];
+  nis_result *res;
+  char *cp, *cp2;
+  u_int i;
+
+  cp = stpcpy (buf, nis_leaf_of_r (group, leafbuf, sizeof (leafbuf) - 1));
+  cp = stpcpy (cp, ".groups_dir");
+  cp2 = nis_domain_of_r (group, domainbuf, sizeof (domainbuf) - 1);
+  if (cp2 != NULL && strlen (cp2) > 0)
     {
-      char buf[strlen (group) + 50];
-      char leafbuf[strlen (group) + 2];
-      char domainbuf[strlen (group) + 2];
-      nis_result *res;
-      char *cp, *cp2;
-      u_int i;
+      *cp++ = '.';
+      strcpy (cp, cp2);
+    }
+  res = nis_lookup (buf, EXPAND_NAME|FOLLOW_LINKS);
+  if (NIS_RES_STATUS (res) != NIS_SUCCESS)
+    return 0;
 
-      cp = stpcpy (buf, nis_leaf_of_r (group, leafbuf, sizeof (leafbuf) - 1));
-      cp = stpcpy (cp, ".groups_dir");
-      cp2 = nis_domain_of_r (group, domainbuf, sizeof (domainbuf) - 1);
-      if (cp2 != NULL && strlen (cp2) > 0)
-        {
-	  *cp++ = '.';
-          strcpy (cp, cp2);
-	}
-      res = nis_lookup (buf, EXPAND_NAME|FOLLOW_LINKS);
-      if (res->status != NIS_SUCCESS && res->status != NIS_S_SUCCESS)
-        return 0;
+  if ((NIS_RES_NUMOBJ (res) != 1) ||
+      (__type_of (NIS_RES_OBJECT (res)) != NIS_GROUP_OBJ))
+    return 0;
 
-      if ((res->objects.objects_len != 1) ||
-          (res->objects.objects_val[0].zo_data.zo_type != GROUP_OBJ))
-        return 0;
-
-      /* We search twice in the list, at first, if we have the name
-	 with a "-", then if without. "-member" has priority */
-      for (i = 0;
-           i < res->objects.objects_val[0].GR_data.gr_members.gr_members_len;
-           ++i)
+  /* We search twice in the list, at first, if we have the name
+     with a "-", then if without. "-member" has priority */
+  for (i = 0; i < NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len; ++i)
+    {
+      cp = NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val[i];
+      if (cp[0] == '-')
 	{
-	  cp =res->objects.objects_val[0].GR_data.gr_members.gr_members_val[i];
-	  if (cp[0] == '-')
-	    {
-	      if (strcmp (&cp[1], principal) == 0)
+	  if (strcmp (&cp[1], principal) == 0)
+	    return -1;
+	  if (cp[1] == '@')
+	    switch (internal_ismember (principal, &cp[2]))
+	      {
+	      case -1:
 		return -1;
-	      if (cp[1] == '@')
-		switch (internal_ismember (principal, &cp[2]))
-		  {
-		  case -1:
-		    return -1;
-		  case 1:
-		    return -1;
-		  default:
-		    break;
-		  }
-	      else
-		if (cp[1] == '*')
-		  {
-		    char buf1[strlen (principal) + 2];
-		    char buf2[strlen (cp) + 2];
+	      case 1:
+		return -1;
+	      default:
+		break;
+	      }
+	  else
+	    if (cp[1] == '*')
+	      {
+		char buf1[strlen (principal) + 2];
+		char buf2[strlen (cp) + 2];
 
-		    strcpy (buf1, nis_domain_of (principal));
-		    strcpy (buf2, nis_domain_of (cp));
-		    if (strcmp (buf1, buf2) == 0)
-		      return -1;
-		  }
-	    }
-	}
-      for (i = 0;
-	   i < res->objects.objects_val[0].GR_data.gr_members.gr_members_len;
-           ++i)
-	{
-	  cp =res->objects.objects_val[0].GR_data.gr_members.gr_members_val[i];
-	  if (cp[0] != '-')
-	    {
-	      if (strcmp (cp, principal) == 0)
-		return 1;
-	      if (cp[0] == '@')
-		switch (internal_ismember (principal, &cp[1]))
-		  {
-		  case -1:
-		    return -1;
-		  case 1:
-		    return 1;
-		  default:
-		    break;
-		  }
-	      else
-		if (cp[0] == '*')
-		  {
-		    char buf1[strlen (principal) + 2];
-		    char buf2[strlen (cp) + 2];
-
-		    if (strcmp (nis_domain_of_r (principal, buf1, sizeof buf1),
-				nis_domain_of_r (cp, buf2, sizeof buf2)) == 0)
-		      return 1;
-		  }
-	    }
+		strcpy (buf1, nis_domain_of (principal));
+		strcpy (buf2, nis_domain_of (cp));
+		if (strcmp (buf1, buf2) == 0)
+		  return -1;
+	      }
 	}
     }
+  for (i = 0; i < NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len; ++i)
+    {
+      cp = NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val[i];
+      if (cp[0] != '-')
+	{
+	  if (strcmp (cp, principal) == 0)
+	    return 1;
+	  if (cp[0] == '@')
+	    switch (internal_ismember (principal, &cp[1]))
+	      {
+	      case -1:
+		return -1;
+	      case 1:
+		return 1;
+	      default:
+		break;
+	      }
+	  else
+	    if (cp[0] == '*')
+	      {
+		char buf1[strlen (principal) + 2];
+		char buf2[strlen (cp) + 2];
 
+		if (strcmp (nis_domain_of_r (principal, buf1, sizeof buf1),
+			    nis_domain_of_r (cp, buf2, sizeof buf2)) == 0)
+		  return 1;
+	      }
+	}
+    }
   return 0;
 }
 
 bool_t
 nis_ismember (const_nis_name principal, const_nis_name group)
 {
-  if (group != NULL && strlen (group) > 0)
+  if (group != NULL && strlen (group) > 0 && principal != NULL)
     return internal_ismember (principal, group) == 1 ? TRUE : FALSE;
   else
     return FALSE;

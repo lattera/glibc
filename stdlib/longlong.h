@@ -1139,7 +1139,7 @@ extern USItype __udiv_qrnnd ();
     (q) = __udiv_qrnnd (&__r, (n1), (n0), (d));				\
     (r) = __r;								\
   } while (0)
-extern USItype __udiv_qrnnd ();
+extern USItype __udiv_qrnnd __P ((USItype *, USItype, USItype, USItype));
 #define UDIV_TIME 140
 #endif /* LONGLONG_STANDALONE */
 #endif /* udiv_qrnnd */

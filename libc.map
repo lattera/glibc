@@ -11,8 +11,11 @@ GLIBC_2.0 {
     _nl_current_LC_COLLATE; __collate_element_hash;
     __collate_element_strings; __collate_symbol_classes;
     __collate_symbol_hash; __collate_symbol_strings;
-    _obstack; _libio_using_thunks;
+    _obstack;
     __progname_full; __progname;
+
+    # This is for ix86 only.
+    _fp_hw;
 
     # helper functions
     __errno_location; __libc_init_first; __h_errno_location;
@@ -55,19 +58,19 @@ GLIBC_2.0 {
     _obstack_free; _obstack_memory_used; _obstack_newchunk;
     __assert_fail; __assert_perror_fail;
     _IO_getc; _IO_peekc_unlocked; _IO_putc; _IO_feof; _IO_ferror;
-    __xstat; __fxstat; __lxstat; __xmknod; __dcgettext;
-    __uflow; __underflow; __overflow; __iswctype; __sigpause;
-    __ctype_get_mb_cur_max;
+    __xstat; __fxstat; __lxstat; __xstat64; __fxstat64; __lxstat64; __xmknod;
+    __dcgettext; __uflow; __underflow; __overflow; __iswctype; __sigpause;
+    __ctype_get_mb_cur_max; __bzero;
 
     # functions used in other libraries
-    __printf_fp; __stpncpy; __stpcpy; __strdup;
+    __printf_fp; __stpncpy; __stpcpy; __strdup; __mempcpy;
     _nss_files_parse_grent; _nss_files_parse_pwent; _nss_files_parse_spent;
     __nss_database_lookup; __internal_endnetgrent; __internal_getnetgrent_r;
     __internal_setnetgrent; __gmtime_r; __secure_getenv;
     __select; __sched_get_priority_max; __sched_get_priority_min;
     __sched_getparam; __sched_getscheduler; __sched_setscheduler;
     __sched_yield; __on_exit; __gettimeofday; __fork; __clone;
-    __nss_configure_lookup; _dl_open; _dl_close; _IO_file_setbuf;
+    __nss_configure_lookup; _dl_open; _dl_close; _dl_addr; _IO_file_setbuf;
     _IO_file_init; _IO_file_attach; _IO_do_write; _IO_seekoff;
     _IO_link_in; _IO_file_open; _IO_file_doallocate; _IO_file_fopen;
     _IO_file_overflow; _IO_file_underflow; _IO_file_sync; _IO_file_seekoff;
@@ -149,8 +152,8 @@ GLIBC_2.0 {
     clntraw_create; clnttcp_create; clntudp_bufcreate; clntudp_create;
 
     clock; clone; close; closedir; closelog; confstr; connect; copysign;
-    copysignf; copysignl; creat; create_module; ctermid; ctime; ctime_r;
-    cuserid;
+    copysignf; copysignl; creat; creat64; create_module; ctermid; ctime;
+    ctime_r; cuserid;
 
     # d*
     daemon; dcgettext; delete_module; des_setparity; dgettext;
@@ -173,13 +176,14 @@ GLIBC_2.0 {
     fchdir; fchflags; fchmod; fchown; fclose; fcloseall; fcntl; fcvt;
     fcvt_r; fdatasync; fdopen; feof; feof_unlocked; ferror;
     ferror_unlocked; fexecve; fflush; fflush_unlocked; ffs; fgetc;
-    fgetgrent; fgetgrent_r; fgetpos; fgetpwent; fgetpwent_r; fgets;
+    fgetgrent; fgetgrent_r; fgetpos; fgetpos64; fgetpwent; fgetpwent_r; fgets;
     fgetspent; fgetspent_r; fileno; fileno_unlocked; finite; finitef;
-    finitel; flock; flockfile; fmtmsg; fnmatch; fopen; fopencookie; fork;
-    fpathconf; fprintf; fputc; fputc_unlocked; fputs; fread; free;
-    freeaddrinfo; freopen; frexp; frexpf; frexpl; fscanf; fseek; fseeko;
-    fsetpos; fstatfs; fsync; ftell; ftello; ftime; ftok; ftruncate;
-    ftrylockfile; fts_children; fts_close; fts_open; fts_read; fts_set; ftw;
+    finitel; flock; flockfile; fmtmsg; fnmatch; fopen; fopen64; fopencookie;
+    fork; fpathconf; fprintf; fputc; fputc_unlocked; fputs; fread; free;
+    freeaddrinfo; freopen; freopen64; frexp; frexpf; frexpl; fscanf; fseek;
+    fseeko; fseeko64; fsetpos; fsetpos64; fstatfs; fstatfs64; fsync; ftell;
+    ftello; ftello64; ftime; ftok; ftruncate; ftruncate64; ftrylockfile;
+    fts_children; fts_close; fts_open; fts_read; fts_set; ftw; ftw64;
     funlockfile; fwrite;
 
     # g*
@@ -203,7 +207,7 @@ GLIBC_2.0 {
     getprotobynumber_r; getprotoent; getprotoent_r; getpublickey; getpw;
     getpwent; getpwent_r; getpwnam; getpwnam_r; getpwuid; getpwuid_r;
     getresgid; getresuid;
-    getrlimit; getrpcbyname; getrpcbyname_r; getrpcbynumber;
+    getrlimit; getrlimit64; getrpcbyname; getrpcbyname_r; getrpcbynumber;
     getrpcbynumber_r; getrpcent; getrpcent_r; getrpcport; getrusage; gets;
     getsecretkey; getservbyname; getservbyname_r; getservbyport;
     getservbyport_r; getservent; getservent_r; getsid; getsockname;
@@ -244,8 +248,8 @@ GLIBC_2.0 {
     # l*
     l64a; labs; lchown; lckpwdf; lcong48; lcong48_r; ldexp; ldexpf;
     ldexpl; ldiv; lfind; link; listen; llabs; lldiv; llseek; localeconv;
-    localtime; localtime_r; lockf; longjmp; lrand48; lrand48_r; lsearch;
-    lseek;
+    localtime; localtime_r; lockf; lockf64; longjmp; lrand48; lrand48_r;
+    lsearch; lseek; lseek64;
 
     # m*
     madvise;
@@ -257,27 +261,27 @@ GLIBC_2.0 {
     mbtowc; mcheck; mcount;
 
     memalign; memccpy; memchr; memcmp; memcpy; memfrob; memmem;
-    memmove; memset;
+    memmove; mempcpy; memset;
 
     mkdir; mkfifo; mkstemp; mktemp; mktime; mlock;
-    mlockall; mmap; modf; modff; modfl; moncontrol; monstartup; mount;
+    mlockall; mmap; mmap64; modf; modff; modfl; moncontrol; monstartup; mount;
     mprobe; mprotect; mrand48; mrand48_r; mremap; msgctl; msgget; msgrcv;
     msgsnd; msync; mtrace; munlock; munlockall; munmap; muntrace;
 
     # n*
-    nanosleep; netname2host; netname2user; nftw; nfsservctl; nice; nl_langinfo;
-    nrand48; nrand48_r; ntohl; ntohs;
+    nanosleep; netname2host; netname2user; nftw; nftw64; nfsservctl; nice;
+    nl_langinfo; nrand48; nrand48_r; ntohl; ntohs;
 
     # o*
-    obstack_free; obstack_printf; obstack_vprintf; on_exit; open;
+    obstack_free; obstack_printf; obstack_vprintf; on_exit; open; open64;
     open_memstream; opendir; openlog;
 
     # p*
     parse_printf_format; passwd2des; pathconf; pause; pciconfig_read;
     pciconfig_write; pclose; perror;
     personality; pipe; pmap_getmaps; pmap_getport; pmap_rmtcall; pmap_set;
-    pmap_unset; poll; popen; pread; printf; printf_size; printf_size_info;
-    profil; profil_counter; pwrite; pselect; psignal;
+    pmap_unset; poll; popen; prctl; pread; printf; printf_size;
+    printf_size_info; profil; profil_counter; pwrite; pselect; psignal;
 
     pthread_attr_destroy;
     pthread_attr_getdetachstate; pthread_attr_getinheritsched;
@@ -307,10 +311,10 @@ GLIBC_2.0 {
     re_comp; re_compile_fastmap; re_compile_pattern; re_exec; re_match;
     re_match_2; re_search; re_search_2; re_set_registers; re_set_syntax;
 
-    read; readdir; readdir_r; readlink; readv; realloc; realpath; reboot;
-    recv; recvfrom; recvmsg; regcomp; regerror; regexec; regfree;
-    register_printf_function; registerrpc; remove; remque; rename;
-    res_init; revoke; rewind; rewinddir; rexec; rindex; rmdir; rpmatch;
+    read; readdir; readdir_r; readdir64; readdir64_r; readlink; readv;
+    realloc; realpath; reboot; recv; recvfrom; recvmsg; regcomp; regerror;
+    regexec; regfree; register_printf_function; registerrpc; remove; remque;
+    rename; res_init; revoke; rewind; rewinddir; rexec; rindex; rmdir; rpmatch;
     rresvport; rtime; ruserok; ruserpass;
 
     # s*
@@ -328,8 +332,8 @@ GLIBC_2.0 {
     sethostid; sethostname; setitimer; setjmp; setlinebuf; setlocale;
     setlogin; setlogmask; setmntent; setnetent; setnetgrent; setpgid;
     setpgrp; setpriority; setprotoent; setpwent; setregid; setresgid;
-    setresuid; setreuid;
-    setrlimit; setrpcent; setservent; setsid; setsockopt; setspent;
+    setresuid; setreuid; setrlimit; setrlimit64; setrpcent; setservent;
+    setsid; setsockopt; setspent;
     setstate; setstate_r; settimeofday; setttyent; setuid; setusershell;
     setutent; setutxent; setvbuf; sgetspent; sgetspent_r; shmat; shmctl;
     shmdt; shmget; shutdown;
@@ -341,8 +345,8 @@ GLIBC_2.0 {
     sigwait;
 
     sleep; snprintf; socket; socketpair; sprintf; srand; srand48;
-    srand48_r; srandom; srandom_r; sscanf; ssignal; sstk; statfs; step;
-    stime; stpcpy; stpncpy; strcasecmp; strcat; strchr; strcmp; strcoll;
+    srand48_r; srandom; srandom_r; sscanf; ssignal; sstk; statfs; statfs64;
+    step; stime; stpcpy; stpncpy; strcasecmp; strcat; strchr; strcmp; strcoll;
     strcpy; strcspn; strdup; strerror; strerror_r; strfmon; strfry;
     strftime; strlen; strncasecmp; strncat; strncmp; strncpy; strndup;
     strnlen; strpbrk; strptime; strrchr; strsep; strsignal; strspn;
@@ -362,11 +366,12 @@ GLIBC_2.0 {
     # t*
     tcdrain; tcflow; tcflush; tcgetattr; tcgetpgrp; tcsendbreak;
     tcsetattr; tcsetpgrp; tdelete; tdestroy; telldir; tempnam; textdomain;
-    tfind; time; timegm; timelocal; times; tmpfile; tmpnam; tmpnam_r;
+    tfind; time; timegm; timelocal; times; tmpfile; tmpfile64; tmpnam;
+    tmpnam_r;
 
     toascii; tolower; toupper; towctrans; towlower; towupper;
-    tr_break; truncate; tsearch; ttyname; ttyname_r; ttyslot; twalk;
-    tzset;
+    tr_break; truncate; truncate64; tsearch; ttyname; ttyname_r; ttyslot;
+    twalk; tzset;
 
     # u*
     ualarm; ulckpwdf; ulimit; umask; umount; uname; ungetc; unlink;

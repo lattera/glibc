@@ -54,7 +54,7 @@ _nss_nisplus_parse_netent (nis_result *result, struct netent *network,
     return 0;
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      __type_of (result->objects.objects_val) != ENTRY_OBJ ||
+      __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ ||
       strcmp(result->objects.objects_val[0].EN_data.en_type,
              "networks_tbl") != 0 ||
       result->objects.objects_val[0].EN_data.en_cols.en_cols_len < 3)
@@ -310,7 +310,7 @@ _nss_nisplus_getnetbyname_r (const char *name, struct netent *network,
 	 database is correct, we should find it in the first case, too */
       if ((result->status != NIS_SUCCESS &&
 	   result->status != NIS_S_SUCCESS) ||
-	  __type_of (result->objects.objects_val) != ENTRY_OBJ ||
+	  __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ ||
 	  strcmp(result->objects.objects_val[0].EN_data.en_type,
 		 "networks_tbl") != 0 ||
 	  result->objects.objects_val[0].EN_data.en_cols.en_cols_len < 3)

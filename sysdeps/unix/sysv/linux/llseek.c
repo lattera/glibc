@@ -1,5 +1,5 @@
 /* Long-long seek operation.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ extern int __sys_llseek (int fd, off_t offset_hi, off_t offset_lo,
 
 /* Seek to OFFSET on FD, starting from WHENCE.  */
 loff_t
-llseek (int fd, loff_t offset, int whence)
+__llseek (int fd, loff_t offset, int whence)
 {
   loff_t result;
 
@@ -33,3 +33,5 @@ llseek (int fd, loff_t offset, int whence)
 				 (off_t) (offset & 0xffffffff),
 				 &result, whence) ?: result);
 }
+weak_alias (__llseek, llseek)
+weak_alias (__llseek, lseek64)

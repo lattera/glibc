@@ -92,7 +92,8 @@ static int print;
 
 /* Prototypes for local functions.  */
 static void init (void);
-static int internal_addseverity (int severity, const char *string);
+static int internal_addseverity (int severity, const char *string)
+     internal_function;
 
 
 int
@@ -273,6 +274,7 @@ init (void)
 
 /* Add the new entry to the list.  */
 static int
+internal_function
 internal_addseverity (int severity, const char *string)
 {
   struct severity_info *runp, *lastp;

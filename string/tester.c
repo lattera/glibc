@@ -695,13 +695,12 @@ test_strsep (void)
 
   {
     char text[] = "This,is,a,test";
-    char *list = text;
-    it = "strsep";
-    check (!strcmp ("This", strsep (&list, ",")), 1);
-    check (!strcmp ("is", strsep (&list, ",")), 2);
-    check (!strcmp ("a", strsep (&list, ",")), 3);
-    check (!strcmp ("test", strsep (&list, ",")), 4);
-    check (strsep (&list, ",") == NULL, 5);
+    char *list = strdupa (text);
+    equal (strsep (&list, ","), "This", 47);
+    equal (strsep (&list, ","), "is", 48);
+    equal (strsep (&list, ","), "a", 49);
+    equal (strsep (&list, ","), "test", 50);
+    check (strsep (&list, ",") == NULL, 51);
   }
 }
 

@@ -21,7 +21,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 nis_name
 nis_local_group (void)

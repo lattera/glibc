@@ -63,7 +63,7 @@ _nss_nisplus_parse_etherent (nis_result *result, struct etherent *ether,
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
       result->objects.objects_len != 1 ||
-      __type_of (NIS_RES_OBJECT (result)) != ENTRY_OBJ ||
+      __type_of (NIS_RES_OBJECT (result)) != NIS_ENTRY_OBJ ||
       strcmp(NIS_RES_OBJECT (result)->EN_data.en_type,
              "ethers_tbl") != 0 ||
       NIS_RES_OBJECT(result)->EN_data.en_cols.en_cols_len < 2)

@@ -57,7 +57,8 @@ getttynam(tty)
 	return (t);
 }
 
-static char *skip __P((char *)), *value __P((char *));
+static char *skip __P((char *)) internal_function;
+static char *value __P((char *)) internal_function;
 
 struct ttyent *
 getttyent()
@@ -133,6 +134,7 @@ getttyent()
  * the next field.
  */
 static char *
+internal_function
 skip(p)
 	register char *p;
 {
@@ -167,6 +169,7 @@ skip(p)
 }
 
 static char *
+internal_function
 value(p)
 	register char *p;
 {

@@ -82,9 +82,10 @@ typedef struct
 static tz_rule tz_rules[2];
 
 
-static int compute_change __P ((tz_rule *rule, int year));
-static int tz_compute __P ((time_t timer, const struct tm *tm));
-static void tzset_internal __P ((int always));
+static int compute_change __P ((tz_rule *rule, int year)) internal_function;
+static int tz_compute __P ((time_t timer, const struct tm *tm))
+     internal_function;
+static void tzset_internal __P ((int always)) internal_function;
 
 /* Header for a list of buffers containing time zone strings.  */
 struct tzstring_head
@@ -151,6 +152,7 @@ static char *old_tz = NULL;
 
 /* Interpret the TZ envariable.  */
 static void
+internal_function
 tzset_internal (always)
      int always;
 {
@@ -450,6 +452,7 @@ __tzname_max ()
    put it in RULE->change, saving YEAR in RULE->computed_for.
    Return nonzero if successful, zero on failure.  */
 static int
+internal_function
 compute_change (rule, year)
      tz_rule *rule;
      int year;
@@ -535,6 +538,7 @@ compute_change (rule, year)
    and set `__tzname', `__timezone', and `__daylight' accordingly.
    Return nonzero on success, zero on failure.  */
 static int
+internal_function
 tz_compute (timer, tm)
      time_t timer;
      const struct tm *tm;

@@ -73,8 +73,9 @@ tr_break ()
 {
 }
 
-static void tr_where __P ((const __ptr_t));
+static void tr_where __P ((const __ptr_t)) internal_function;
 static void
+internal_function
 tr_where (caller)
      const __ptr_t caller;
 {

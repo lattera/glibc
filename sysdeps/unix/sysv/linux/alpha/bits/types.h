@@ -27,9 +27,9 @@
 
 /* Convenience types.  */
 typedef unsigned char __u_char;
-typedef unsigned short __u_short;
+typedef unsigned short int __u_short;
 typedef unsigned int __u_int;
-typedef unsigned long __u_long;
+typedef unsigned long int __u_long;
 typedef unsigned long int __u_quad_t;
 typedef long int __quad_t;
 typedef signed char __int8_t;
@@ -52,6 +52,8 @@ typedef long int __off_t;		/* Type of file sizes and offsets.  */
 typedef __quad_t __loff_t;		/* Type of file sizes and offsets.  */
 typedef int __pid_t;			/* Type of process identifications.  */
 typedef long int __ssize_t;		/* Type of a byte count, or error.  */
+typedef long int __rlim_t;		/* Type of resource counts.  */
+typedef long int __rlim64_t;		/* Type of resource counts (LFS).  */
 
 typedef struct
   {
@@ -91,5 +93,20 @@ typedef struct
 
 
 typedef int __key_t;
+
+
+/* Types from the Large File Support interface.  */
+
+/* Type to count number os disk blocks.  */
+typedef int __blkcnt_t;
+typedef __quad_t __blkcnt64_t;
+
+/* Type to count file system blocks.  */
+typedef unsigned int __fsblkcnt_t;
+typedef __u_quad_t __fsblkcnt64_t;
+
+/* Type to count file system inodes.  */
+typedef unsigned long int __fsfilcnt_t;
+typedef __u_quad_t __fsfilcnt64_t;
 
 #endif /* bits/types.h */

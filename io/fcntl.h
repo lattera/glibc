@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,14 +33,14 @@ __BEGIN_DECLS
 #include <bits/fcntl.h>
 
 #ifdef	__USE_MISC
-#ifndef	R_OK			/* Verbatim from <unistd.h>.  Ugh.  */
+# ifndef R_OK			/* Verbatim from <unistd.h>.  Ugh.  */
 /* Values for the second argument to access.
    These may be OR'd together.  */
-#define	R_OK	4		/* Test for read permission.  */
-#define	W_OK	2		/* Test for write permission.  */
-#define	X_OK	1		/* Test for execute permission.  */
-#define	F_OK	0		/* Test for existence.  */
-#endif
+#  define R_OK	4		/* Test for read permission.  */
+#  define W_OK	2		/* Test for write permission.  */
+#  define X_OK	1		/* Test for execute permission.  */
+#  define F_OK	0		/* Test for existence.  */
+# endif
 #endif /* Use misc.  */
 
 /* Do the file control operation described by CMD on FD.
@@ -52,14 +52,31 @@ extern int fcntl __P ((int __fd, int __cmd, ...));
    OFLAG determines the type of access used.  If O_CREAT is on OFLAG,
    the third argument is taken as a `mode_t', the mode of the created file.  */
 extern int __open __P ((__const char *__file, int __oflag, ...));
+extern int __open64 __P ((__const char *__file, int __oflag, ...));
+#ifndef __USE_FILE_OFFSET64
 extern int open __P ((__const char *__file, int __oflag, ...));
+#else
+extern int open __P ((__const char *__file, int __oflag, ...))
+     __asm__ ("open64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern int open64 __P ((__const char *__file, int __oflag, ...));
+#endif
 
 /* Create and open FILE, with mode MODE.
    This takes an `int' MODE argument because that is
    what `mode_t' will be widened to.  */
+#ifndef __USE_FILE_OFFSET64
 extern int creat __P ((__const char *__file, __mode_t __mode));
+#else
+extern int creat __P ((__const char *__file, __mode_t __mode))
+     __asm__ ("creat64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern int creat64 __P ((__const char *__file, __mode_t __mode));
+#endif
 
-#if !defined(F_LOCK) && (defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED))
+#if !defined F_LOCK && (defined __USE_MISC || defined __USE_XOPEN_EXTENDED)
 /* NOTE: These declarations also appear in <unistd.h>; be sure to keep both
    files consistent.  Some systems have them there and some here, and some
    software depends on the macros being defined without including both.  */
@@ -68,12 +85,20 @@ extern int creat __P ((__const char *__file, __mode_t __mode));
    LEN is always relative to the current file position.
    The CMD argument is one of the following.  */
 
-#define F_ULOCK 0       /* Unlock a previously locked region.  */
-#define F_LOCK  1       /* Lock a region for exclusive use.  */
-#define F_TLOCK 2       /* Test and lock a region for exclusive use.  */
-#define F_TEST  3       /* Test a region for other processes locks.  */
+# define F_ULOCK 0	/* Unlock a previously locked region.  */
+# define F_LOCK  1	/* Lock a region for exclusive use.  */
+# define F_TLOCK 2	/* Test and lock a region for exclusive use.  */
+# define F_TEST  3	/* Test a region for other processes locks.  */
 
+# ifndef __USE_FILE_OFFSET64
 extern int lockf __P ((int __fd, int __cmd, __off_t __len));
+# else
+extern int lockf __P ((int __fd, int __cmd, __off_t __len))
+     __asm__ ("lockf64");
+# endif
+# ifdef __USE_LARGEFILE64
+extern int lockf64 __P ((int __fd, int __cmd, __off64_t __len));
+# endif
 #endif
 
 __END_DECLS

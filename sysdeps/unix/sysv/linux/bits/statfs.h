@@ -23,20 +23,44 @@
 #ifndef _BITS_STATFS_H
 #define _BITS_STATFS_H
 
-#include <bits/types.h>  /* for __fsid_t */
+#include <bits/types.h>  /* for __fsid_t and __fsblkcnt_t*/
 
 struct statfs
   {
     int f_type;
     int f_bsize;
-    int f_blocks;
-    int f_bfree;
-    int f_bavail;
-    int f_files;
-    int f_ffree;
+#ifndef __USE_FILE_OFFSET64
+    __fsblkcnt_t f_blocks;
+    __fsblkcnt_t f_bfree;
+    __fsblkcnt_t f_bavail;
+    __fsblkcnt_t f_files;
+    __fsblkcnt_t f_ffree;
+#else
+    __fsblkcnt64_t f_blocks;
+    __fsblkcnt64_t f_bfree;
+    __fsblkcnt64_t f_bavail;
+    __fsblkcnt64_t f_files;
+    __fsblkcnt64_t f_ffree;
+#endif
     __fsid_t f_fsid;
     int f_namelen;
     int f_spare[6];
   };
+
+#ifdef __USE_LARGEFILE64
+struct statfs64
+  {
+    int f_type;
+    int f_bsize;
+    __fsblkcnt64_t f_blocks;
+    __fsblkcnt64_t f_bfree;
+    __fsblkcnt64_t f_bavail;
+    __fsblkcnt64_t f_files;
+    __fsblkcnt64_t f_ffree;
+    __fsid_t f_fsid;
+    int f_namelen;
+    int f_spare[6];
+  };
+#endif
 
 #endif	/* bits/statfs.h */

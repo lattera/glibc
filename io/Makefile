@@ -29,21 +29,21 @@ headers := sys/stat.h bits/stat.h sys/statfs.h bits/statfs.h sys/vfs.h \
 routines :=							      \
 	utime							      \
 	mkfifo							      \
-	stat fstat lstat mknod					      \
-	xstat fxstat lxstat xmknod				      \
-	statfs fstatfs						      \
+	stat fstat lstat mknod stat64 fstat64 lstat64		      \
+	xstat fxstat lxstat xmknod xstat64 fxstat64 lxstat64	      \
+	statfs fstatfs statfs64 fstatfs64			      \
 	umask chmod fchmod mkdir				      \
-	open close read write lseek access euidaccess		      \
+	open open64 close read write lseek lseek64 access euidaccess  \
 	fcntl flock lockf					      \
 	dup dup2 pipe						      \
-	creat							      \
+	creat creat64						      \
 	chdir fchdir						      \
 	getcwd getwd getdirname					      \
 	chown fchown lchown					      \
 	ttyname ttyname_r isatty				      \
 	link symlink readlink					      \
 	unlink rmdir						      \
-	ftw fts poll
+	ftw ftw64 fts poll
 
 # These routines will be omitted from the libc shared object.
 # Instead the static object files will be included in a special archive

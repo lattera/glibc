@@ -67,10 +67,6 @@ extern nis_error __do_niscall __P ((const_nis_name name, u_long prog,
 extern AUTH *authdes_pk_create __P ((const char *, const netobj *, u_int,
 				     struct sockaddr *, des_block *));
 
-/* NIS+ cache */
-extern directory_obj *__cache_search __P ((const_nis_name name));
-extern nis_error __cache_add __P ((fd_result *));
-
 /* NIS+ callback */
 extern nis_error __nis_do_callback __P ((struct dir_binding *bptr,
 					 netobj *cookie, struct nis_cb *cb));

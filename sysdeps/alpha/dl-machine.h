@@ -353,6 +353,14 @@ elf_machine_fixup_plt(struct link_map *l, const Elf64_Rela *reloc,
      hasn't made it into Icache yet, so there's nothing to clean up.  */
 }
 
+/* Return the final value of a plt relocation.  */
+static inline Elf64_Addr
+elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
+		       Elf64_Addr value)
+{
+  return value + reloc->r_addend;
+}
+
 #endif /* !dl_machine_h */
 
 #ifdef RESOLVE

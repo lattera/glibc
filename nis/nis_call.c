@@ -462,13 +462,12 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
 	    xdr_free((xdrproc_t)xdr_fd_result, (caddr_t)fd_res);
 	    return NULL;
 	  }
-	__cache_add (fd_res);
 	obj = calloc(1, sizeof(directory_obj));
 	xdrmem_create(&xdrs, fd_res->dir_data.dir_data_val,
 		      fd_res->dir_data.dir_data_len, XDR_DECODE);
 	xdr_directory_obj(&xdrs, obj);
 	xdr_destroy(&xdrs);
-	xdr_free((xdrproc_t)xdr_fd_result, (caddr_t)fd_res);
+	__free_fdresult (fd_res);
 	if (obj != NULL)
 	  {
 	    /* We have found a NIS+ server serving ndomain, now
@@ -515,13 +514,12 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
 	    xdr_free((xdrproc_t)xdr_fd_result, (caddr_t)fd_res);
 	    return NULL;
 	  }
-	__cache_add (fd_res);
 	obj = calloc(1, sizeof(directory_obj));
 	xdrmem_create(&xdrs, fd_res->dir_data.dir_data_val,
 		      fd_res->dir_data.dir_data_len, XDR_DECODE);
 	xdr_directory_obj(&xdrs, obj);
 	xdr_destroy(&xdrs);
-	xdr_free((xdrproc_t)xdr_fd_result, (caddr_t)fd_res);
+	__free_fdresult (fd_res);
 	if (obj != NULL)
 	  {
 	    /* We have found a NIS+ server serving ndomain, now
@@ -553,9 +551,6 @@ __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
 
   if (name == NULL)
     return NIS_BADNAME;
-
-  if ((flags & NO_CACHE) !=  NO_CACHE)
-    dir = __cache_search (name);
 
   if (dir == NULL)
     {

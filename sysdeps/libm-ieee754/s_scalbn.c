@@ -35,10 +35,10 @@ huge   = 1.0e+300,
 tiny   = 1.0e-300;
 
 #ifdef __STDC__
-	double __scalbn (double x, long int n)
+	double __scalbn (double x, int n)
 #else
 	double __scalbn (x,n)
-	double x; long int n;
+	double x; int n;
 #endif
 {
 	int32_t k,hx,lx;

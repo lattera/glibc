@@ -386,9 +386,10 @@ getanswer(answer, anslen, qname, qtype)
 				continue;
 			}
 			if (hap >= &h_addr_ptrs[MAXADDRS-1]) {
-				if (!toobig++)
+				if (!toobig++) {
 					dprintf("Too many addresses (%d)\n",
 						MAXADDRS);
+				}
 				cp += n;
 				continue;
 			}

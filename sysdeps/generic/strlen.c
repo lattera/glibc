@@ -60,9 +60,10 @@ strlen (str)
   if (sizeof (longword) > 4)
     {
       /* 64-bit version of the magic.  */
-      magic_bits = (0x7efefefeL << 32) | 0xfefefeffL;
-      himagic = (himagic << 32) | himagic;
-      lomagic = (lomagic << 32) | lomagic;
+      /* Do the shift in two steps to avoid a warning if long has 32 bits.  */
+      magic_bits = ((0x7efefefeL << 16) << 16) | 0xfefefeffL;
+      himagic = ((himagic << 16) << 16) | himagic;
+      lomagic = ((lomagic << 16) << 16) | lomagic;
     }
   if (sizeof (longword) > 8)
     abort ();

@@ -414,13 +414,19 @@ This function returns the absolute value of the floating-point number
 @deftypefunx float cabsf (complex float @var{z})
 @deftypefunx {long double} cabsl (complex long double @var{z})
 These functions return the absolute value of the complex number @var{z}.
-The compiler must support complex numbers to use these functions.  (See
-also the function @code{hypot} in @ref{Exponents and Logarithms}.)  The
+The compiler must support complex numbers to use these functions.  The
 value is:
 
 @smallexample
 sqrt (creal (@var{z}) * creal (@var{z}) + cimag (@var{z}) * cimag (@var{z}))
 @end smallexample
+
+This function should always be used instead of the direct formula since
+using the simple straight-forward method can mean to loose accuracy.  If
+one of the squared values is neglectable in size compared to the other
+value the result should be the same as the larger value.  But squaring
+the value and afterwards using the square root function leads to
+unaccuracy.  See @code{hypot} in @xref{Exponents and Logarithms}.
 @end deftypefun
 
 @node Normalization Functions

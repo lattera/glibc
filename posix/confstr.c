@@ -44,6 +44,19 @@ confstr (name, buf, len)
       }
       break;
 
+    case _CS_LFS_CFLAGS:
+    case _CS_LFS_LINTFLAGS:
+    case _CS_LFS_LDFLAGS:
+    case _CS_LFS_LIBS:
+    case _CS_LFS64_CFLAGS:
+    case _CS_LFS64_LINTFLAGS:
+    case _CS_LFS64_LDFLAGS:
+    case _CS_LFS64_LIBS:
+      /* GNU libc does not require special actions to use LFS.  */
+      string = "";
+      string_len = 1;
+      break;
+
     default:
       __set_errno (EINVAL);
       return 0;

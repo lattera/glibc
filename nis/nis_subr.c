@@ -20,7 +20,6 @@
 #include <errno.h>
 #include <string.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 nis_name
 nis_leaf_of (const_nis_name name)

@@ -43,9 +43,9 @@ struct group
   };
 
 
-#if defined(__USE_SVID) || defined(__USE_GNU)
-#define	__need_FILE
-#include <stdio.h>
+#if defined __USE_SVID || defined __USE_GNU
+# define __need_FILE
+# include <stdio.h>
 #endif
 
 #ifdef	__USE_GNU
@@ -66,7 +66,7 @@ extern struct group *__grpscan __P ((__ptr_t *__p,
 #endif
 
 
-#if defined(__USE_SVID) || defined (__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Rewind the group-file stream.  */
 extern void setgrent __P ((void));
 
@@ -90,11 +90,11 @@ extern struct group *getgrnam __P ((__const char *__name));
 
 #if defined __USE_POSIX || defined __USE_MISC
 
-#ifdef __USE_MISC
+# ifdef __USE_MISC
 /* Reasonable value for the buffer sized used in the reentrant
    functions below.  But better use `sysconf'.  */
-#define	NSS_BUFLEN_GROUP	1024
-#endif
+#  define NSS_BUFLEN_GROUP	1024
+# endif
 
 /* Reentrant versions of some of the functions above.
 
@@ -104,12 +104,12 @@ extern struct group *getgrnam __P ((__const char *__name));
    other reentrant functions so the chances are good this is what the
    POSIX people would choose.  */
 
-#if defined(__USE_SVID) || defined (__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+# if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 extern int __getgrent_r __P ((struct group *__resultbuf, char *buffer,
 			      size_t __buflen, struct group **__result));
 extern int getgrent_r __P ((struct group *__resultbuf, char *buffer,
 			    size_t __buflen, struct group **__result));
-#endif
+# endif
 
 /* Search for an entry with a matching group ID.  */
 extern int getgrgid_r __P ((__gid_t __gid, struct group *__resultbuf,
@@ -121,7 +121,7 @@ extern int getgrnam_r __P ((__const char *__name, struct group *__resultbuf,
 			    char *buffer, size_t __buflen,
 			    struct group **__result));
 
-#ifdef	__USE_SVID
+# ifdef	__USE_SVID
 /* Read a group entry from STREAM.  This function is not standardized
    an probably never will.  */
 extern int __fgetgrent_r __P ((FILE * __stream, struct group *__resultbuf,
@@ -130,15 +130,15 @@ extern int __fgetgrent_r __P ((FILE * __stream, struct group *__resultbuf,
 extern int fgetgrent_r __P ((FILE * __stream, struct group *__resultbuf,
 			     char *buffer, size_t __buflen,
 			     struct group **__result));
-#endif
+# endif
 
 #endif	/* POSIX or reentrant */
 
 
 #ifdef	__USE_BSD
 
-#define	__need_size_t
-#include <stddef.h>
+# define __need_size_t
+# include <stddef.h>
 
 /* Set the group set for the current user to GROUPS (N of them).  */
 extern int setgroups __P ((size_t __n, __const __gid_t *__groups));

@@ -167,6 +167,7 @@ xdr_rmtcallres (xdrs, crp)
  */
 
 static int
+internal_function
 getbroadcastnets (struct in_addr *addrs, int sock, char *buf)
   /* int sock:  any valid socket will do */
   /* char *buf:	why allocate more when we can use existing... */

@@ -61,19 +61,19 @@
 /* Define the macros `_' and `N_' for conveniently marking translatable
    strings in the libc source code.  */
 
-#define N_(msgid)	msgid
+# define N_(msgid)	msgid
 
-#include <libintl.h>
+# include <libintl.h>
 extern const char _libc_intl_domainname[];
 
-#ifdef dgettext
+# ifdef dgettext
 /* This is defined as an optimizing macro, so use it.  */
-#define	_(msgid)	dgettext (_libc_intl_domainname, (msgid))
-#else
+#  define _(msgid)	dgettext (_libc_intl_domainname, (msgid))
+# else
 /* Be sure to use only the __ name when `dgettext' is a plain function
    instead of an optimizing macro.  */
-#define	_(msgid)	__dgettext (_libc_intl_domainname, (msgid))
-#endif
+#  define _(msgid)	__dgettext (_libc_intl_domainname, (msgid))
+# endif
 
 #endif
 
@@ -83,50 +83,50 @@ extern const char _libc_intl_domainname[];
 /* The symbols in all the user (non-_) macros are C symbols.
    HAVE_GNU_LD without HAVE_ELF implies a.out.  */
 
-#if defined (HAVE_ASM_WEAK_DIRECTIVE) || defined (HAVE_ASM_WEAKEXT_DIRECTIVE)
-#define HAVE_WEAK_SYMBOLS
+#if defined HAVE_ASM_WEAK_DIRECTIVE || defined HAVE_ASM_WEAKEXT_DIRECTIVE
+# define HAVE_WEAK_SYMBOLS
 #endif
 
 #ifndef __SYMBOL_PREFIX
-#ifdef NO_UNDERSCORES
-#define __SYMBOL_PREFIX
-#else
-#define __SYMBOL_PREFIX "_"
-#endif
+# ifdef NO_UNDERSCORES
+#  define __SYMBOL_PREFIX
+# else
+#  define __SYMBOL_PREFIX "_"
+# endif
 #endif
 
 #ifndef C_SYMBOL_NAME
-#ifdef NO_UNDERSCORES
-#define C_SYMBOL_NAME(name) name
-#else
-#define C_SYMBOL_NAME(name) _##name
-#endif
+# ifdef NO_UNDERSCORES
+#  define C_SYMBOL_NAME(name) name
+# else
+#  define C_SYMBOL_NAME(name) _##name
+# endif
 #endif
 
 
 /* Define ALIAS as a strong alias for ORIGINAL.  */
 #ifdef HAVE_ASM_SET_DIRECTIVE
-#define strong_alias_asm(original, alias)	\
+# define strong_alias_asm(original, alias)	\
   ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias);	\
   .set C_SYMBOL_NAME (alias),C_SYMBOL_NAME (original)
-#ifdef ASSEMBLER
-#define strong_alias(original, alias)	strong_alias_asm (original, alias)
-#else
-#define strong_alias(original, alias)	\
+# ifdef ASSEMBLER
+#  define strong_alias(original, alias)	strong_alias_asm (original, alias)
+# else
+#  define strong_alias(original, alias)	\
   asm (__string_1 (ASM_GLOBAL_DIRECTIVE) " " __SYMBOL_PREFIX #alias "\n" \
        ".set " __SYMBOL_PREFIX #alias "," __SYMBOL_PREFIX #original);
-#endif
+# endif
 #else
-#define strong_alias_asm(original, alias)	\
+# define strong_alias_asm(original, alias)	\
   ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias);	\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
-#ifdef ASSEMBLER
-#define strong_alias(original, alias)	strong_alias_asm (original, alias)
-#else
-#define strong_alias(original, alias)	\
+# ifdef ASSEMBLER
+#  define strong_alias(original, alias)	strong_alias_asm (original, alias)
+# else
+#  define strong_alias(original, alias)	\
   asm (__string_1 (ASM_GLOBAL_DIRECTIVE) " " __SYMBOL_PREFIX #alias "\n" \
        __SYMBOL_PREFIX #alias " = " __SYMBOL_PREFIX #original);
-#endif
+# endif
 #endif
 
 /* Helper macros used above.  */
@@ -136,77 +136,77 @@ extern const char _libc_intl_domainname[];
 
 #ifdef HAVE_WEAK_SYMBOLS
 
-#ifdef ASSEMBLER
+# ifdef ASSEMBLER
 
-#ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
+#  ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
 
 /* Define ALIAS as a weak alias for ORIGINAL.
    If weak aliases are not available, this defines a strong alias.  */
-#define weak_alias(original, alias)	\
+#   define weak_alias(original, alias)	\
   .weakext C_SYMBOL_NAME (alias), C_SYMBOL_NAME (original)
 
 /* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */
-#define weak_extern(symbol)	\
+#   define weak_extern(symbol)	\
   .weakext C_SYMBOL_NAME (symbol)
 
-#else /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
+#  else /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
 
 /* Define ALIAS as a weak alias for ORIGINAL.
    If weak aliases are not available, this defines a strong alias.  */
-#define weak_alias(original, alias)	\
+#   define weak_alias(original, alias)	\
   .weak C_SYMBOL_NAME (alias);	\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
 
 
 /* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */
-#define weak_extern(symbol)	\
+#   define weak_extern(symbol)	\
   .weak C_SYMBOL_NAME (symbol)
 
-#endif /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
+#  endif /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
 
-#else /* ! ASSEMBLER */
+# else /* ! ASSEMBLER */
 
-#ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
-#define weak_extern_asm(symbol)	asm (".weakext " __SYMBOL_PREFIX #symbol);
-#define weak_alias_asm(original, alias) \
+#  ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
+#   define weak_extern_asm(symbol) asm (".weakext " __SYMBOL_PREFIX #symbol);
+#   define weak_alias_asm(original, alias) \
   asm (".weakext " __SYMBOL_PREFIX #alias ", " __SYMBOL_PREFIX #original);
-#else /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
-#define weak_extern_asm(symbol)	asm (".weak " __SYMBOL_PREFIX #symbol);
-#define weak_alias_asm(original, alias) \
+#  else /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
+#   define weak_extern_asm(symbol)	asm (".weak " __SYMBOL_PREFIX #symbol);
+#   define weak_alias_asm(original, alias) \
   asm (".weak " __SYMBOL_PREFIX #alias "\n" \
        __SYMBOL_PREFIX #alias " = " __SYMBOL_PREFIX #original);
-#endif /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
+#  endif /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
 
-#define weak_alias(o, a) weak_alias_asm (o, a)
-#define weak_extern(symbol) weak_extern_asm (symbol)
+#  define weak_alias(o, a) weak_alias_asm (o, a)
+#  define weak_extern(symbol) weak_extern_asm (symbol)
 
-#endif /* ! ASSEMBLER */
+# endif /* ! ASSEMBLER */
 #else
-#define	weak_alias(original, alias) strong_alias(original, alias)
-#define weak_extern(symbol)	/* Do nothing; the ref will be strong.  */
+# define weak_alias(original, alias) strong_alias(original, alias)
+# define weak_extern(symbol)	/* Do nothing; the ref will be strong.  */
 #endif
 
 
-#if (!defined (ASSEMBLER) && \
+#if (!defined ASSEMBLER && \
      (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7)))
 /* GCC 2.7 and later has special syntax for weak symbols and aliases.
    Using that is better when possible, because the compiler and assembler
    are better clued in to what we are doing.  */
-#undef	strong_alias
-#define strong_alias(name, aliasname) \
+# undef	strong_alias
+# define strong_alias(name, aliasname) \
   extern __typeof (name) aliasname __attribute__ ((alias (#name)));
 
-#ifdef HAVE_WEAK_SYMBOLS
-#undef	weak_alias
-#define weak_alias(name, aliasname) \
+# ifdef HAVE_WEAK_SYMBOLS
+#  undef weak_alias
+#  define weak_alias(name, aliasname) \
   extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
 
 /* This comes between the return type and function name in
    a function definition to make that definition weak.  */
-#define weak_function __attribute__ ((weak))
-#define weak_const_function __attribute__ ((weak, __const__))
+#  define weak_function __attribute__ ((weak))
+#  define weak_const_function __attribute__ ((weak, __const__))
 
-#endif	/* HAVE_WEAK_SYMBOLS.  */
+# endif	/* HAVE_WEAK_SYMBOLS.  */
 #endif	/* Not ASSEMBLER, and GCC 2.7 or later.  */
 
 
@@ -215,39 +215,45 @@ extern const char _libc_intl_domainname[];
    can define functions as weak symbols.  The compiler will emit a `.globl'
    directive for the function symbol, and a `.weak' directive in addition
    will produce an error from the assembler.  */
-#define weak_function /* empty */
-#define weak_const_function /* empty */
+# define weak_function		/* empty */
+# define weak_const_function	/* empty */
 #endif
 
+/* On some platforms we can make internal function calls (i.e., calls of
+   functions not exported) a bit faster by using a different calling
+   convention.  */
+#ifndef internal_function
+# define internal_function	/* empty */
+#endif
 
 /* When a reference to SYMBOL is encountered, the linker will emit a
    warning message MSG.  */
 #ifdef HAVE_GNU_LD
-#ifdef HAVE_ELF
+# ifdef HAVE_ELF
 
 /* We want the .gnu.warning.SYMBOL section to be unallocated.  */
-#ifdef HAVE_ASM_PREVIOUS_DIRECTIVE
-#define __make_section_unallocated(section_string)	\
+#  ifdef HAVE_ASM_PREVIOUS_DIRECTIVE
+#   define __make_section_unallocated(section_string)	\
   asm(".section " section_string "; .previous");
-#elif defined (HAVE_ASM_POPSECTION_DIRECTIVE)
-#define __make_section_unallocated(section_string)	\
+#  elif defined (HAVE_ASM_POPSECTION_DIRECTIVE)
+#   define __make_section_unallocated(section_string)	\
   asm(".pushsection " section_string "; .popsection");
-#else
-#define __make_section_unallocated(section_string)
-#endif
+#  else
+#   define __make_section_unallocated(section_string)
+#  endif
 
-#define link_warning(symbol, msg)			\
+#  define link_warning(symbol, msg)			\
   __make_section_unallocated (".gnu.warning." #symbol)	\
   static const char __evoke_link_warning_##symbol[]	\
     __attribute__ ((section (".gnu.warning." #symbol))) = msg;
-#else
-#define link_warning(symbol, msg)		\
+# else
+#  define link_warning(symbol, msg)		\
   asm(".stabs \"" msg "\",30,0,0,0\n"	\
       ".stabs \"" __SYMBOL_PREFIX #symbol "\",1,0,0,0\n");
-#endif
+# endif
 #else
 /* We will never be heard; they will all die horribly.  */
-#define link_warning(symbol, msg)
+# define link_warning(symbol, msg)
 #endif
 
 /* A canned warning for sysdeps/stub functions.  */
@@ -263,60 +269,60 @@ extern const char _libc_intl_domainname[];
 
 /* Symbol set support macros.  */
 
-#ifdef HAVE_ELF
+# ifdef HAVE_ELF
 
 /* Make SYMBOL, which is in the text segment, an element of SET.  */
-#define text_set_element(set, symbol)	_elf_set_element(set, symbol)
+#  define text_set_element(set, symbol)	_elf_set_element(set, symbol)
 /* Make SYMBOL, which is in the data segment, an element of SET.  */
-#define data_set_element(set, symbol)	_elf_set_element(set, symbol)
+#  define data_set_element(set, symbol)	_elf_set_element(set, symbol)
 /* Make SYMBOL, which is in the bss segment, an element of SET.  */
-#define bss_set_element(set, symbol)	_elf_set_element(set, symbol)
+#  define bss_set_element(set, symbol)	_elf_set_element(set, symbol)
 
 /* These are all done the same way in ELF.
    There is a new section created for each set.  */
-#ifdef PIC
+#  ifdef PIC
 /* When building a shared library, make the set section writable,
    because it will need to be relocated at run time anyway.  */
-#define _elf_set_element(set, symbol) \
+#   define _elf_set_element(set, symbol) \
   static const void *__elf_set_##set##_element_##symbol##__ \
     __attribute__ ((unused, section (#set))) = &(symbol)
-#else
-#define _elf_set_element(set, symbol) \
+#  else
+#   define _elf_set_element(set, symbol) \
   static const void *const __elf_set_##set##_element_##symbol##__ \
     __attribute__ ((unused, section (#set))) = &(symbol)
-#endif
+#  endif
 
 /* Define SET as a symbol set.  This may be required (it is in a.out) to
    be able to use the set's contents.  */
-#define symbol_set_define(set)	symbol_set_declare(set)
+#  define symbol_set_define(set)	symbol_set_declare(set)
 
 /* Declare SET for use in this module, if defined in another module.  */
-#define symbol_set_declare(set)	\
+#  define symbol_set_declare(set) \
   extern void *const __start_##set __attribute__ ((__weak__));		\
   extern void *const __stop_##set __attribute__ ((__weak__));		\
   weak_extern (__start_##set) weak_extern (__stop_##set)
 
 /* Return a pointer (void *const *) to the first element of SET.  */
-#define symbol_set_first_element(set)	(&__start_##set)
+#  define symbol_set_first_element(set)	(&__start_##set)
 
 /* Return true iff PTR (a void *const *) has been incremented
    past the last element in SET.  */
-#define symbol_set_end_p(set, ptr)	((ptr) >= &__stop_##set)
+#  define symbol_set_end_p(set, ptr)	((ptr) >= &__stop_##set)
 
-#else	/* Not ELF: a.out.  */
+# else	/* Not ELF: a.out.  */
 
-#define	text_set_element(set, symbol)	\
+#  define text_set_element(set, symbol)	\
   asm(".stabs \"" __SYMBOL_PREFIX #set "\",23,0,0," __SYMBOL_PREFIX #symbol)
-#define	data_set_element(set, symbol)	\
+#  define data_set_element(set, symbol)	\
   asm(".stabs \"" __SYMBOL_PREFIX #set "\",25,0,0," __SYMBOL_PREFIX #symbol)
-#define	bss_set_element(set, symbol)	?error Must use initialized data.
-#define symbol_set_define(set)		void *const (set)[1];
-#define symbol_set_declare(set)		extern void *const (set)[1];
+#  define bss_set_element(set, symbol)	?error Must use initialized data.
+#  define symbol_set_define(set)	void *const (set)[1];
+#  define symbol_set_declare(set)	extern void *const (set)[1];
 
-#define symbol_set_first_element(set)	&(set)[1]
-#define symbol_set_end_p(set, ptr)	(*(ptr) == 0)
+#  define symbol_set_first_element(set)	&(set)[1]
+#  define symbol_set_end_p(set, ptr)	(*(ptr) == 0)
 
-#endif	/* ELF.  */
+# endif	/* ELF.  */
 #endif	/* Have GNU ld.  */
 
 #endif /* libc-symbols.h */

@@ -507,8 +507,9 @@ endif	# $(+cflags) == ""
 # files (including ones given in angle brackets) in the current directory,
 # in the parent library source directory and in the include directory.
 # `+sysdep-includes' will be defined by Makerules.
-+includes = -I. $(patsubst %/,-I%,$(..)) -I$(..)include $($(stdio)-include) \
-	    $(includes) $(+sysdep-includes) $(last-includes)
++includes = -I. $(patsubst %/,-I%,$(objpfx)) $(patsubst %/,-I%,$(..)) \
+	    -I$(..)include $($(stdio)-include) $(includes) \
+	    $(+sysdep-includes) $(last-includes)
 
 # Since libio has several internal header files, we use a -I instead
 # of many little headers in the include directory.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,14 +30,32 @@ __BEGIN_DECLS
    Returns 0 if successful, -1 if not (and sets errno).  */
 extern int __getrlimit __P ((enum __rlimit_resource __resource,
 			     struct rlimit *__rlimits));
+#ifndef __USE_FILE_OFFSET64
 extern int getrlimit __P ((enum __rlimit_resource __resource,
 			   struct rlimit *__rlimits));
+#else
+extern int getrlimit __P ((enum __rlimit_resource __resource,
+			   struct rlimit *__rlimits)) __asm__ ("getrlimit64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern int getrlimit64 __P ((enum __rlimit_resource __resource,
+			     struct rlimit64 *__rlimits));
+#endif
 
 /* Set the soft and hard limits for RESOURCE to *RLIMITS.
    Only the super-user can increase hard limits.
    Return 0 if successful, -1 if not (and sets errno).  */
+#ifndef __USE_FILE_OFFSET64
 extern int setrlimit __P ((enum __rlimit_resource __resource,
 			   struct rlimit *__rlimits));
+#else
+extern int setrlimit __P ((enum __rlimit_resource __resource,
+			   struct rlimit *__rlimits)) __asm__ ("setrlimit64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern int setrlimit64 __P ((enum __rlimit_resource __resource,
+			     struct rlimit64 *__rlimits));
+#endif
 
 /* Return resource usage information on process indicated by WHO
    and put it in *USAGE.  Returns 0 for success, -1 for failure.  */

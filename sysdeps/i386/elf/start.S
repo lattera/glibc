@@ -94,6 +94,13 @@ _start:
 	call exit
 	hlt			/* Crash if somehow `exit' does return.  */
 
+/* To fulfill the System V/i386 ABI we need this symbol.  Yuck, it's so
+   meaningless since we don't support machines < 80386.  */
+	.section .rodata
+	.globl _fp_hw
+	.long 3
+	.size _fp_hw, 4
+
 /* Define a symbol for the first piece of initialized data.  */
 	.data
 	.globl __data_start

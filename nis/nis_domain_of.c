@@ -18,7 +18,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 nis_name
 nis_domain_of (const_nis_name name)

@@ -85,7 +85,7 @@ struct audata
   };
 #define	AUTH_PRIVATE(auth)	((struct audata *)auth->ah_private)
 
-static bool_t marshal_new_auth (AUTH *);
+static bool_t marshal_new_auth (AUTH *) internal_function;
 
 
 /*
@@ -307,6 +307,7 @@ authunix_destroy (AUTH *auth)
  * sets private data, au_marshed and au_mpos
  */
 static bool_t
+internal_function
 marshal_new_auth (AUTH *auth)
 {
   XDR xdr_stream;

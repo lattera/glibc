@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,43 +38,37 @@ __BEGIN_DECLS
 /* Lots of hair to allow traditional BSD use of `union wait'
    as well as POSIX.1 use of `int' for the status word.  */
 
-#ifdef	__GNUC__
-#define	__WAIT_INT(status)						      \
+# ifdef	__GNUC__
+#  define __WAIT_INT(status)						      \
   (__extension__ ({ union { __typeof(status) __in; int __i; } __u;	      \
 		    __u.__in = (status); __u.__i; }))
-#else
-#define	__WAIT_INT(status)	(*(int *) &(status))
-#endif
+# else
+#  define __WAIT_INT(status)	(*(int *) &(status))
+# endif
 
-/* This is the type of the argument to `wait'.
+/* This is the type of the argument to `wait'.  The funky union
+   causes redeclarations with ether `int *' or `union wait *' to be
+   allowed without complaint.  __WAIT_STATUS_DEFN is the type used in
+   the actual function definitions.  */
 
-   NOTE: Since this functionality is volatile, I'm disabling the use of it for
-   now.
-
-With GCC 2.6.1 and later, the funky union causes redeclarations with either
-   `int *' or `union wait *' to be allowed without complaint.
-   __WAIT_STATUS_DEFN is the type used in the actual function
-   definitions. */
-
-#if	(!defined (__GNUC__) || __GNUC__ < 2 || \
-	 /*(__GNUC__ == 2 && __GNUC_MINOR__ < 6)*/ 1)
-#define	__WAIT_STATUS		__ptr_t
-#define	__WAIT_STATUS_DEFN	__ptr_t
-#else
+# if !defined __GNUC__ || __GNUC__ < 2
+#  define __WAIT_STATUS		__ptr_t
+#  define __WAIT_STATUS_DEFN	__ptr_t
+# else
 /* This works in GCC 2.6.1 and later.  */
 typedef union
   {
     union wait *__uptr;
     int *__iptr;
   } __WAIT_STATUS __attribute__ ((transparent_union));
-#define	__WAIT_STATUS_DEFN	int *
+# define __WAIT_STATUS_DEFN	int *
 #endif
 
 #else /* Don't use BSD.  */
 
-#define	__WAIT_INT(status)	(status)
-#define	__WAIT_STATUS		int *
-#define	__WAIT_STATUS_DEFN	int *
+# define __WAIT_INT(status)	(status)
+# define __WAIT_STATUS		int *
+# define __WAIT_STATUS_DEFN	int *
 
 #endif /* Use BSD.  */
 
@@ -89,10 +83,10 @@ typedef union
 #define	WIFSTOPPED(status)	__WIFSTOPPED(__WAIT_INT(status))
 
 #ifdef	__USE_BSD
-#define	WCOREFLAG		__WCOREFLAG
-#define	WCOREDUMP(status)	__WCOREDUMP(__WAIT_INT(status))
-#define	W_EXITCODE(ret, sig)	__W_EXITCODE(ret, sig)
-#define	W_STOPCODE(sig)		__W_STOPCODE(sig)
+# define WCOREFLAG		__WCOREFLAG
+# define WCOREDUMP(status)	__WCOREDUMP(__WAIT_INT(status))
+# define W_EXITCODE(ret, sig)	__W_EXITCODE(ret, sig)
+# define W_STOPCODE(sig)	__W_STOPCODE(sig)
 #endif
 
 
@@ -103,8 +97,8 @@ extern __pid_t wait __P ((__WAIT_STATUS __stat_loc));
 
 #ifdef	__USE_BSD
 /* Special values for the PID argument to `waitpid' and `wait4'.  */
-#define	WAIT_ANY	(-1)	/* Any process.  */
-#define	WAIT_MYPGRP	0	/* Any process in my process group.  */
+# define WAIT_ANY	(-1)	/* Any process.  */
+# define WAIT_MYPGRP	0	/* Any process in my process group.  */
 #endif
 
 /* Wait for a child matching PID to die.
@@ -124,7 +118,7 @@ extern __pid_t __waitpid __P ((__pid_t __pid, int *__stat_loc,
 extern __pid_t waitpid __P ((__pid_t __pid, int *__stat_loc,
 			     int __options));
 
-#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* This being here makes the prototypes valid whether or not
    we have already included <sys/resource.h> to define `struct rusage'.  */
 struct rusage;

@@ -40,10 +40,18 @@ typedef __fsid_t fsid_t;
 #endif
 
 typedef __dev_t dev_t;
-typedef __ino_t ino_t;
 typedef __mode_t mode_t;
 typedef __nlink_t nlink_t;
 typedef __loff_t loff_t;
+
+#ifndef __USE_FILE_OFFSET64
+typedef __ino_t ino_t;
+#else
+typedef __ino64_t ino_t;
+#endif
+#ifdef __USE_LARGEFILE64
+typedef __ino64_t ino64_t;
+#endif
 
 #ifndef gid_t
 typedef __gid_t gid_t;
@@ -56,8 +64,16 @@ typedef __uid_t uid_t;
 #endif
 
 #ifndef off_t
+# ifndef __USE_FILE_OFFSET64
 typedef __off_t off_t;
+# else
+typedef __off64_t off_t;
+# endif
 # define off_t off_t
+#endif
+#if defined __USE_LARGEFILE64 && !defined off64_t
+typedef __off64_t off64_t;
+# define off64_t off64_t
 #endif
 
 #ifndef pid_t
@@ -155,6 +171,23 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
 # include <sys/select.h>
 #endif /* Use BSD.  */
 
+
+/* Types from the Large File Support interface.  */
+#ifndef __USE_FILE_OFFSET64
+typedef __blkcnt_t blkcnt_t;	 /* Type to count number of disk blocks.  */
+typedef __fsblkcnt_t fsblkcnt_t; /* Type to count file system blocks.  */
+typedef __fsfilcnt_t fsfilcnt_t; /* Type to count file system inodes.  */
+#else
+typedef __blkcnt64_t blkcnt_t;	   /* Type to count number of disk blocks.  */
+typedef __fsblkcnt64_t fsblkcnt_t; /* Type to count file system blocks.  */
+typedef __fsfilcnt64_t fsfilcnt_t; /* Type to count file system inodes.  */
+#endif
+
+#ifdef __USE_LARGEFILE64
+typedef __blkcnt64_t blkcnt64_t;     /* Type to count number of disk blocks. */
+typedef __fsblkcnt64_t fsblkcnt64_t; /* Type to count file system blocks.  */
+typedef __fsfilcnt64_t fsfilcnt64_t; /* Type to count file system inodes.  */
+#endif
 
 __END_DECLS
 

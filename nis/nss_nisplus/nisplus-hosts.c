@@ -57,7 +57,7 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
     return 0;
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      __type_of (result->objects.objects_val) != ENTRY_OBJ ||
+      __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ ||
       strcmp(result->objects.objects_val[0].EN_data.en_type,
 	     "hosts_tbl") != 0 ||
       result->objects.objects_val[0].EN_data.en_cols.en_cols_len < 4)
@@ -340,7 +340,7 @@ _nss_nisplus_gethostbyname2_r (const char *name, int af, struct hostent *host,
       /* If we do not find it, try it as original name. But if the
 	 database is correct, we should find it in the first case, too */
       if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-	  __type_of (result->objects.objects_val) != ENTRY_OBJ ||
+	  __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ ||
 	  strcmp(result->objects.objects_val->EN_data.en_type,
 		 "hosts_tbl") != 0 ||
 	  result->objects.objects_val->EN_data.en_cols.en_cols_len < 3)

@@ -247,5 +247,7 @@ struct _IO_jump_t _IO_proc_jumps = {
   JUMP_INIT(write, _IO_file_write),
   JUMP_INIT(seek, _IO_file_seek),
   JUMP_INIT(close, _IO_proc_close),
-  JUMP_INIT(stat, _IO_file_stat)
+  JUMP_INIT(stat, _IO_file_stat),
+  JUMP_INIT(showmanyc, _IO_default_showmanyc),
+  JUMP_INIT(imbue, _IO_default_imbue)
 };

@@ -70,7 +70,7 @@ lib: $(objpfx)libmcheck.a
 #CPPFLAGS-malloc.o += -DMALLOC_DEBUG
 
 $(objpfx)mtrace: mtrace.pl
-	rm -fr %@.new
+	rm -f $@.new
 	sed -e 's|@PERL@|$(PERL)|' -e 's|@XXX@|$(address-width)|' \
 	    -e 's|@VERSION@|$(version)|' $^ > $@.new \
 	&& rm -fr $@ && mv $@.new $@ && chmod +x $@

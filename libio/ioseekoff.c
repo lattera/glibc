@@ -25,14 +25,14 @@
 
 #include <libioP.h>
 
-_IO_pos_t
+_IO_fpos64_t
 _IO_seekoff (fp, offset, dir, mode)
      _IO_FILE *fp;
-     _IO_off_t offset;
+     _IO_off64_t offset;
      int dir;
      int mode;
 {
-  _IO_pos_t retval;
+  _IO_fpos64_t retval;
 
   /* If we have a backup buffer, get rid of it, since the __seekoff
      callback may not know to do the right thing about it.

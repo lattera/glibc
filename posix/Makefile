@@ -49,7 +49,7 @@ routines :=								      \
 	sched_setp sched_getp sched_sets sched_gets sched_yield sched_primax  \
 	sched_primin sched_rr_gi					      \
 	getaddrinfo gai_strerror wordexp				      \
-	pread pwrite
+	pread pwrite pread64 pwrite64
 
 aux		:= init-posix environ
 tests		:= tstgetopt testfnm runtests
@@ -65,7 +65,7 @@ include ../Rules
 
 ifeq (no,$(cross-compiling))
 tests: $(objpfx)globtest
-	$(SHELL) -e globtest.sh $(common-objpfx)
+	$(SHELL) -e globtest.sh $(common-objpfx) $(elf-objpfx) $(rtld-installed-name)
 endif
 
 CFLAGS-regex.c = -Wno-unused -Wno-strict-prototypes

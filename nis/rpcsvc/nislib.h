@@ -224,29 +224,14 @@ extern bool_t nis_write_obj __P ((const char *file, const nis_object *obj));
 */
 extern directory_obj *nis_clone_directory __P ((const directory_obj *src,
 						directory_obj *dest));
-extern group_obj *nis_clone_group __P ((const group_obj *src,
-					group_obj *dest));
-extern table_obj *nis_clone_table __P ((const table_obj *src,
-					table_obj *dest));
-extern entry_obj *nis_clone_entry __P ((const entry_obj *src,
-					entry_obj *dest));
-extern link_obj *nis_clone_link __P ((const link_obj *src, link_obj *dest));
-extern objdata *nis_clone_objdata __P ((const objdata *src, objdata *dest));
 extern nis_result *nis_clone_result __P ((const nis_result *src,
 					  nis_result *dest));
 
 /* nis_free - nis_freeresult */
 extern void nis_freeresult __P ((nis_result *result));
 /* (XXX THE FOLLOWING ARE INTERNAL FUNCTIONS, SHOULD NOT BE USED !!) */
-extern void nis_free_attr __P ((nis_attr *attr));
 extern void nis_free_request __P ((ib_request *req));
-extern void nis_free_endpoints __P ((endpoint *ep, unsigned int count));
-extern void nis_free_servers __P ((nis_server *machine, unsigned int count));
 extern void nis_free_directory __P ((directory_obj *dirobj));
-extern void nis_free_group __P ((group_obj *grpobj));
-extern void nis_free_table __P ((table_obj *tblobj));
-extern void nis_free_entry __P ((entry_obj *enobj));
-extern void nis_free_link __P ((link_obj *lnkobj));
 extern void nis_free_object __P ((nis_object *obj));
 
 /* (XXX INTERNAL FUNCTIONS, SHOULD NOT BE USED !!) */
@@ -255,10 +240,9 @@ extern nis_name __nis_default_group __P ((char *));
 extern u_long __nis_default_ttl __P ((char *));
 extern u_long __nis_default_access __P ((char *, u_long));
 extern fd_result *__nis_finddirectory __P ((directory_obj *, const_nis_name));
+extern void __free_fdresult __P ((fd_result *));
 extern u_long __nis_hash __P ((const void *keyarg, register size_t len));
-extern log_result *__nis_dumplog __P ((nis_server *,nis_name, u_long));
-extern log_result *__nis_dump __P ((nis_server *, nis_name,
-				    int (*)(nis_name, nis_object *, void *)));
+
 /* NIS+ cache locking */
 extern int __nis_lock_cache __P ((void));
 extern int __nis_unlock_cache __P ((void));

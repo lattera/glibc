@@ -16,3 +16,5 @@ ENTRY(__scalbnl)
 	ret
 END (__scalbnl)
 weak_alias (__scalbnl, scalbnl)
+strong_alias (__scalbnl, __scalblnl)
+weak_alias (__scalbnl, scalblnl)

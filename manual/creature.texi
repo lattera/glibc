@@ -71,7 +71,7 @@ included as well as the @w{ISO C}, POSIX.1, POSIX.2, and X/Open material.
 @end defvr
 
 @comment (none)
-@comment XOPEN
+@comment X/Open
 @defvr Macro _XOPEN_SOURCE
 @defvrx Macro _XOPEN_SOURCE_EXTENDED
 If you define this macro, functionality described in the X/Open
@@ -91,11 +91,72 @@ all functionality described so far plus some new definitions from the
 Single Unix specification, @w{version 2}.
 @end defvr
 
+@comment (NONE)
+@comment X/Open
+@defvr Macro _LARGEFILE_SOURCE
+If this macro is defined some extra functions are available which
+rectify a few shortcomings in all previous standards.  More concreten
+the functions @code{fseeko} and @code{ftello} are available.  Without
+these functions the difference between the @w{ISO C} interface
+(@code{fseek}, @code{ftell}) and the low-level POSIX interface
+(@code{lseek}) would lead to problems.
+
+This macro was introduced as part of the Large File Support extension (LFS).
+@end defvr
+
+@comment (NONE)
+@comment X/Open
+@defvar Macro _LARGEFILE64_SOURCE
+If you define this macro an additional set of function gets available
+which enables to use on @w{32 bit} systems to use files of sizes beyond
+the usual limit of 2GB.  This interface is not available if the system
+does not support files that large.  On systems where the natural file
+size limit is greater than 2GB (i.e., on @w{64 bit} systems) the new
+functions are identical to the replaced functions.
+
+The new functionality is made available by a new set of types and
+functions which replace existing.  The names of these new objects
+contain @code{64} to indicate the intention, e.g., @code{off_t}
+vs. @code{off64_t} and @code{fseeko} vs. @code{fseeko64}.
+
+This macro was introduced as part of the Large File Support extension
+(LFS).  It is a transition interface for the time @w{64 bit} offsets are
+not generally used (see @code{_FILE_OFFSET_BITS}.
+@end defvar
+
+@comment (NONE)
+@comment X/Open
+@defvar _FILE_OFFSET_BITS
+This macro lets decide which file system interface shall be used, one
+replacing the other.  While @code{_LARGEFILE64_SOURCE} makes the @w{64
+bit} interface available as an additional interface
+@code{_FILE_OFFSET_BITS} allows to use the @w{64 bit} interface to
+replace the old interface.
+
+If @code{_FILE_OFFSET_BITS} is undefined or if it is defined to the
+value @code{32} nothing changes.  The @w{32 bit} interface is used and
+types like @code{off_t} have a size of @w{32 bits} on @w{32 bit}
+systems.
+
+If the macro is defined to the value @code{64} the large file interface
+replaces the old interface.  I.e., the functions are not made available
+under different names as @code{_LARGEFILE64_SOURCE} does.  Instead the
+old function names now reference the new functions, e.g., a call to
+@code{fseeko} now indeed calls @code{fseeko64}.
+
+This macro should only be selected if the system provides mechanisms for
+handling large files.  On @w{64 bit} systems this macro has no effect
+since the @code{*64} functions are identical to the normal functions.
+
+This macro was introduced as part of the Large File Support extension
+(LFS).
+@end defvar
+
 @comment (none)
 @comment GNU
 @defvr Macro _GNU_SOURCE
 If you define this macro, everything is included: @w{ISO C}, POSIX.1,
-POSIX.2, BSD, SVID, X/Open, and GNU extensions.  In the cases where
+POSIX.2, BSD, SVID, X/Open, LFS, and GNU extensions.  In the cases where
 POSIX.1 conflicts with BSD, the POSIX definitions take precedence.
 
 If you want to get the full effect of @code{_GNU_SOURCE} but make the

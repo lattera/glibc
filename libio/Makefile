@@ -25,14 +25,16 @@ headers	:= stdio.h libio.h _G_config.h
 
 routines	:=							      \
 	filedoalloc iofclose iofdopen iofflush iofgetpos iofgets iofopen      \
-	iofopncook iofprintf iofputs iofread iofsetpos ioftell		      \
+	iofopncook iofputs iofread iofsetpos ioftell			      \
 	iofwrite iogetdelim iogetline iogets iopadn iopopen ioputs	      \
 	ioseekoff ioseekpos iosetbuffer iosetvbuf iosprintf ioungetc	      \
 	iovsprintf iovsscanf						      \
+	iofgetpos64 iofopen64 iofsetpos64				      \
 									      \
 	clearerr feof ferror fgetc fileno fputc freopen fseek getc getchar    \
 	memstream pclose putc putchar rewind setbuf setlinebuf vasprintf      \
 	iovdprintf vscanf vsnprintf obprintf fcloseall fseeko ftello	      \
+	freopen64 fseeko64 ftello64					      \
 									      \
 	libc_fatal
 

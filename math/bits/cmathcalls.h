@@ -90,6 +90,11 @@ __MATHCALL (cexp, (_Mdouble_complex_ __z));
 /* Natural logarithm of Z.  */
 __MATHCALL (clog, (_Mdouble_complex_ __z));
 
+#ifdef __USE_GNU
+/* The base 10 logarithm is not defined by the standard but to implement
+   the standard C++ library it is handy.  */
+__MATHCALL (clog10, (_Mdouble_complex_ __z));
+#endif
 
 /* Power functions.  */
 

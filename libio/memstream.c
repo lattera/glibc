@@ -53,7 +53,9 @@ static const struct _IO_jump_t _IO_mem_jumps =
   JUMP_INIT (write, _IO_default_write),
   JUMP_INIT (seek, _IO_default_seek),
   JUMP_INIT (close, _IO_default_close),
-  JUMP_INIT (stat, _IO_default_stat)
+  JUMP_INIT (stat, _IO_default_stat),
+  JUMP_INIT(showmanyc, _IO_default_showmanyc),
+  JUMP_INIT(imbue, _IO_default_imbue)
 };
 
 /* Open a stream that writes into a malloc'd buffer that is expanded as

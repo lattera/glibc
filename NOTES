@@ -5,7 +5,7 @@ Feature Test Macros
 is controlled by which "feature test macros" you define.
 
    If you compile your programs using `gcc -ansi', you get only the
-ANSI C library features, unless you explicitly request additional
+ISO C library features, unless you explicitly request additional
 features by defining one or more of the feature macros.  *Note GNU CC
 Command Options: (gcc.info)Invoking GCC, for more information about GCC
 options.
@@ -21,7 +21,7 @@ self-contained way.
  - Macro: _POSIX_SOURCE
      If you define this macro, then the functionality from the POSIX.1
      standard (IEEE Standard 1003.1) is available, as well as all of the
-     ANSI C facilities.
+     ISO C facilities.
 
  - Macro: _POSIX_C_SOURCE
      If you define this macro with a value of `1', then the
@@ -29,11 +29,11 @@ self-contained way.
      made available.  If you define this macro with a value of `2',
      then both the functionality from the POSIX.1 standard and the
      functionality from the POSIX.2 standard (IEEE Standard 1003.2) are
-     made available.  This is in addition to the ANSI C facilities.
+     made available.  This is in addition to the ISO C facilities.
 
  - Macro: _BSD_SOURCE
      If you define this macro, functionality derived from 4.3 BSD Unix
-     is included as well as the ANSI C, POSIX.1, and POSIX.2 material.
+     is included as well as the ISO C, POSIX.1, and POSIX.2 material.
 
      Some of the features derived from 4.3 BSD Unix conflict with the
      corresponding features specified by the POSIX.1 standard.  If this
@@ -53,26 +53,86 @@ self-contained way.
 
  - Macro: _SVID_SOURCE
      If you define this macro, functionality derived from SVID is
-     included as well as the ANSI C, POSIX.1, POSIX.2, and X/Open
+     included as well as the ISO C, POSIX.1, POSIX.2, and X/Open
      material.
 
  - Macro: _XOPEN_SOURCE
-     If you define these macro, functionality described in the X/Open
-     Portability Guide is included.  This is an superset of the POSIX.1
+ - Macro: _XOPEN_SOURCE_EXTENDED
+     If you define this macro, functionality described in the X/Open
+     Portability Guide is included.  This is a superset of the POSIX.1
      and POSIX.2 functionality and in fact `_POSIX_SOURCE' and
-     `_POSIX_C_SOURCE' get automatically be defined.
+     `_POSIX_C_SOURCE' are automatically defined.
 
-     But as the great unifaction of all Unices there is also
-     functionality only available in BSD and SVID is included.
+     As the unification of all Unices, functionality only available in
+     BSD and SVID is also included.
 
      If the macro `_XOPEN_SOURCE_EXTENDED' is also defined, even more
      functionality is available.  The extra functions will make all
      functions available which are necessary for the X/Open Unix brand.
 
+     If the macro `_XOPEN_SOURCE' has the value 500 this includes all
+     functionality described so far plus some new definitions from the
+     Single Unix specification, version 2.
+
+ - Macro: _LARGEFILE_SOURCE
+     If this macro is defined some extra functions are available which
+     rectify a few shortcomings in all previous standards.  More
+     concreten the functions `fseeko' and `ftello' are available.
+     Without these functions the difference between the ISO C interface
+     (`fseek', `ftell') and the low-level POSIX interface (`lseek')
+     would lead to problems.
+
+     This macro was introduced as part of the Large File Support
+     extension (LFS).
+
+ - Variable: Macro _LARGEFILE64_SOURCE
+     If you define this macro an additional set of function gets
+     available which enables to use on 32 bit systems to use files of
+     sizes beyond the usual limit of 2GB.  This interface is not
+     available if the system does not support files that large.  On
+     systems where the natural file size limit is greater than 2GB
+     (i.e., on 64 bit systems) the new functions are identical to the
+     replaced functions.
+
+     The new functionality is made available by a new set of types and
+     functions which replace existing.  The names of these new objects
+     contain `64' to indicate the intention, e.g., `off_t' vs.
+     `off64_t' and `fseeko' vs. `fseeko64'.
+
+     This macro was introduced as part of the Large File Support
+     extension (LFS).  It is a transition interface for the time 64 bit
+     offsets are not generally used (see `_FILE_OFFSET_BITS'.
+
+ - Variable: _FILE_OFFSET_BITS
+     This macro lets decide which file system interface shall be used,
+     one replacing the other.  While `_LARGEFILE64_SOURCE' makes the
+     64 bit interface available as an additional interface
+     `_FILE_OFFSET_BITS' allows to use the 64 bit interface to replace
+     the old interface.
+
+     If `_FILE_OFFSET_BITS' is undefined or if it is defined to the
+     value `32' nothing changes.  The 32 bit interface is used and
+     types like `off_t' have a size of 32 bits on 32 bit systems.
+
+     If the macro is defined to the value `64' the large file interface
+     replaces the old interface.  I.e., the functions are not made
+     available under different names as `_LARGEFILE64_SOURCE' does.
+     Instead the old function names now reference the new functions,
+     e.g., a call to `fseeko' now indeed calls `fseeko64'.
+
+     This macro should only be selected if the system provides
+     mechanisms for handling large files.  On 64 bit systems this macro
+     has no effect since the `*64' functions are identical to the
+     normal functions.
+
+     This macro was introduced as part of the Large File Support
+     extension (LFS).
+
  - Macro: _GNU_SOURCE
-     If you define this macro, everything is included: ANSI C, POSIX.1,
-     POSIX.2, BSD, SVID, X/Open, and GNU extensions.  In the cases where
-     POSIX.1 conflicts with BSD, the POSIX definitions take precedence.
+     If you define this macro, everything is included: ISO C, POSIX.1,
+     POSIX.2, BSD, SVID, X/Open, LFS, and GNU extensions.  In the cases
+     where POSIX.1 conflicts with BSD, the POSIX definitions take
+     precedence.
 
      If you want to get the full effect of `_GNU_SOURCE' but make the
      BSD definitions take precedence over the POSIX definitions, use
@@ -87,8 +147,9 @@ self-contained way.
      compiler or linker.  *Note:* If you forget to do this, you may get
      very strange errors at run time.
 
- - Macro: _REENTRANT,_THREAD_SAFE
-     If you define one this macro, reentrant versions of several
+ - Macro: _REENTRANT
+ - Macro: _THREAD_SAFE
+     If you define one of these macros, reentrant versions of several
      functions get declared.  Some of the functions are specified in
      POSIX.1c but many others are only available on a few other systems
      or are unique to GNU libc.  The problem is that the

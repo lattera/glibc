@@ -67,7 +67,7 @@ _nss_nisplus_parse_aliasent (nis_result *result, unsigned long entry,
     return 0;
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      __type_of (&result->objects.objects_val[entry]) != ENTRY_OBJ ||
+      __type_of (&result->objects.objects_val[entry]) != NIS_ENTRY_OBJ ||
       strcmp(result->objects.objects_val[entry].EN_data.en_type,
 	     "mail_aliases") != 0 ||
       result->objects.objects_val[entry].EN_data.en_cols.en_cols_len < 2)

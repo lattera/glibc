@@ -52,7 +52,7 @@ _nss_nisplus_parse_servent (nis_result *result, struct servent *serv,
     return 0;
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      __type_of (result->objects.objects_val) != ENTRY_OBJ ||
+      __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ ||
       strcmp (result->objects.objects_val->EN_data.en_type,
 	      "services_tbl") != 0 ||
       result->objects.objects_val->EN_data.en_cols.en_cols_len < 4)
@@ -294,7 +294,7 @@ _nss_nisplus_getservbyname_r (const char *name, const char *protocol,
          database is correct, we should find it in the first case, too */
       if ((result->status != NIS_SUCCESS &&
 	   result->status != NIS_S_SUCCESS) ||
-	  __type_of (result->objects.objects_val) != ENTRY_OBJ ||
+	  __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ ||
 	  strcmp (result->objects.objects_val->EN_data.en_type,
 		  "services_tbl") != 0 ||
 	  result->objects.objects_val->EN_data.en_cols.en_cols_len < 4)

@@ -22,10 +22,10 @@
 #define _ASM 1
 #include <bits/setjmp.h>
 
-ENTRY(_setjmp)
+ENTRY(__setjmp)
 	b	1f
 	 set	0, %o1
-END(_setjmp)
+END(__setjmp)
 
 ENTRY(setjmp)
 	set	1, %o1
@@ -46,5 +46,5 @@ ENTRY (__sigsetjmp)
 	 mov	%g1, %o7
 END(__sigsetjmp)
 
-weak_extern(_setjmp)
+weak_alias(__setjmp, _setjmp)
 weak_extern(setjmp)

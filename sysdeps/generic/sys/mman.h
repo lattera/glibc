@@ -91,8 +91,18 @@ __BEGIN_DECLS
 
 extern __caddr_t __mmap __P ((__caddr_t __addr, size_t __len, int __prot,
 			      int __flags, int __fd, __off_t __offset));
+#ifndef __USE_FILE_OFFSET64
 extern __caddr_t mmap __P ((__caddr_t __addr, size_t __len, int __prot,
 			    int __flags, int __fd, __off_t __offset));
+#else
+extern __caddr_t mmap __P ((__caddr_t __addr, size_t __len, int __prot,
+			    int __flags, int __fd, __off_t __offset))
+     __asm__ ("mmap64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern __caddr_t mmap64 __P ((__caddr_t __addr, size_t __len, int __prot,
+			      int __flags, int __fd, __off64_t __offset));
+#endif
 
 /* Deallocate any mapping for the region starting at ADDR and extending LEN
    bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */

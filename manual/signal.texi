@@ -2927,6 +2927,14 @@ The function was interrupted by delivery of a signal.
 If the signal causes program termination, @code{pause} doesn't return
 (obviously).
 
+This function is a cancelation point in multi-threaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time @code{pause} is
+called.  If the thread gets canceled these resources stay allocated
+until the program ends.  To avoid this calls to @code{pause} should be
+protected using cancelation handlers.
+@c ref pthread_cleanup_push / pthread_cleanup_pop
+
 The @code{pause} function is declared in  @file{unistd.h}.
 @end deftypefun
 

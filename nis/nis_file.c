@@ -21,8 +21,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
-
 
 static const char cold_start_file[] = "/var/nis/NIS_COLD_START";
 

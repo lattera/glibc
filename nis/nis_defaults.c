@@ -23,7 +23,6 @@
 #include <sys/types.h>
 #include <rpc/rpc.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 #define DEFAULT_TTL 43200
 
@@ -33,8 +32,7 @@
 static nis_name
 searchgroup (char *str)
 {
-  static char default_group[NIS_MAXNAMELEN];
- char *cptr;
+  char *cptr;
   int i;
 
   cptr = strstr (str, "group=");
@@ -48,13 +46,12 @@ searchgroup (char *str)
   if (i == 0)			/* only "group=" ? */
     return (nis_name) "";
 
-  return strncpy (default_group, cptr, i);
+  return strndup (cptr, i);
 }
 
 static nis_name
 searchowner (char *str)
 {
-  static char default_owner[NIS_MAXNAMELEN];
   char *cptr;
   int i;
 
@@ -67,9 +64,9 @@ searchowner (char *str)
   while (cptr[i] != '\0' && cptr[i] != ':')
     i++;
   if (i == 0)			/* only "owner=" ? */
-    return (nis_name)"";
+    return strdup ("");
 
-  return strncpy (default_owner, cptr, i);
+  return strndup (cptr, i);
 }
 
 static u_long
@@ -134,9 +131,9 @@ searchttl (char *str)
 static u_long
 searchaccess (char *str, u_long access)
 {
-  static char buf[NIS_MAXNAMELEN];
+  char buf[NIS_MAXNAMELEN];
   char *cptr;
-  u_long result;
+  u_long result = access;
   int i;
   int n, o, g, w;
 
@@ -153,7 +150,7 @@ searchaccess (char *str, u_long access)
 
   strncpy (buf, cptr, i);
 
-  result = n = o = g = w = 0;
+  n = o = g = w = 0;
   cptr = buf;
   while (*cptr != '\0')
     {
@@ -221,11 +218,11 @@ searchaccess (char *str, u_long access)
 		    result = result & ~(NIS_DESTROY_ACC);
 		  break;
 		default:
-		  fprintf (stderr, "Parse error in \"%s\"\n", buf);
-		  return 0;
+		  return ULONG_MAX;
 		}
 	      cptr++;
 	    }
+	  n = o = g = w = 0;
 	  break;
 	case '+':
 	  cptr++;		/* Remove "=" from beginning */
@@ -274,11 +271,11 @@ searchaccess (char *str, u_long access)
 		    result = result | (NIS_DESTROY_ACC);
 		  break;
 		default:
-		  fprintf (stderr, "Parse error in \"%s\"\n", buf);
-		  return 0;
+		  return ULONG_MAX;
 		}
 	      cptr++;
 	    }
+	  n = o = g = w = 0;
 	  break;
 	case '=':
 	  cptr++;		/* Remove "=" from beginning */
@@ -341,26 +338,25 @@ searchaccess (char *str, u_long access)
 		    result = result | (NIS_DESTROY_ACC);
 		  break;
 		default:
-		  fprintf (stderr, "Parse error in \"%s\"\n", buf);
-		  return 0;
+		  return result = ULONG_MAX;
 		}
 	      cptr++;
 	    }
+	  n = o = g = w = 0;
 	  break;
 	default:
-	  fprintf (stderr, "Parse error in \"%s\"\n", buf);
-	  return 0;
+	  return result = ULONG_MAX;
 	}
       cptr++;
     }
 
-  return 0;
+  return result;
 }
 
 nis_name
 __nis_default_owner (char *defaults)
 {
-  static char default_owner[NIS_MAXNAMELEN];
+  char default_owner[NIS_MAXNAMELEN];
   char *cptr, *dptr;
 
   strcpy (default_owner, nis_local_principal ());
@@ -369,7 +365,11 @@ __nis_default_owner (char *defaults)
     {
       dptr = strstr (defaults, "owner=");
       if (dptr != NULL)
-	strcpy (default_owner, searchowner (defaults));
+	{
+	  char *p = searchowner (defaults);
+	  strcpy (default_owner, p);
+	  free (p);
+	}
     }
   else
     {
@@ -378,17 +378,21 @@ __nis_default_owner (char *defaults)
 	{
 	  dptr = strstr (cptr, "owner=");
 	  if (dptr != NULL)
-	    strcpy (default_owner, searchowner (cptr));
+	    {
+	      char *p = searchowner (cptr);
+	      strcpy (default_owner, p);
+	      free (p);
+	    }
 	}
     }
 
-  return default_owner;
+  return strdup (default_owner);
 }
 
 nis_name
 __nis_default_group (char *defaults)
 {
-  static char default_group[NIS_MAXNAMELEN];
+  char default_group[NIS_MAXNAMELEN];
   char *cptr, *dptr;
 
   strcpy (default_group, nis_local_group ());
@@ -397,7 +401,11 @@ __nis_default_group (char *defaults)
     {
       dptr = strstr (defaults, "group=");
       if (dptr != NULL)
-	strcpy (default_group, searchgroup (defaults));
+	{
+	  char *p = searchgroup (defaults);
+	  strcpy (default_group, p);
+	  free (p);
+	}
     }
   else
     {
@@ -406,11 +414,15 @@ __nis_default_group (char *defaults)
 	{
 	  dptr = strstr (cptr, "group=");
 	  if (dptr != NULL)
-	    strcpy (default_group, searchgroup (cptr));
+	    {
+	      char *p = searchgroup (cptr);
+	      strcpy (default_group, p);
+	      free (p);
+	    }
 	}
     }
 
-  return default_group;
+  return strdup (default_group);
 }
 
 u_long

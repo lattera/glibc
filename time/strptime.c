@@ -180,10 +180,16 @@ static char const ab_month_name[][4] =
 enum locale_status { not, loc, raw };
 
 static char *
+#ifdef _LIBC
+internal_function
+#endif
 strptime_internal __P ((const char *buf, const char *format, struct tm *tm,
 			enum locale_status *decided));
 
 static char *
+#ifdef _LIBC
+internal_function
+#endif
 strptime_internal (buf, format, tm, decided)
      const char *buf;
      const char *format;

@@ -30,7 +30,7 @@ routines	:=							      \
 	vfscanf 							      \
 	fscanf scanf sscanf						      \
 	perror psignal							      \
-	tmpfile tmpnam tmpnam_r tempnam tempname			      \
+	tmpfile tmpfile64 tmpnam tmpnam_r tempnam tempname		      \
 	getline getw putw						      \
 	remove rename							      \
 	lockfile

@@ -23,6 +23,41 @@
 #include <errno.h>
 #include <paths.h>
 
+
+static void
+internal_function
+execute (const char *file, char *const argv[])
+{
+  execv (file, argv);
+
+  if (errno == ENOEXEC)
+    {
+      /* The file is accessible but it is not an executable file.
+	 Invoke the shell to interpret it as a script.  */
+
+      /* Count the arguments.  */
+      int argc = 0;
+      while (argv[argc++])
+	;
+
+      /* Construct an argument list for the shell.  */
+      {
+	char *new_argv[argc + 1];
+	new_argv[0] = (char *) _PATH_BSHELL;
+	new_argv[1] = (char *) file;
+	while (argc > 1)
+	  {
+	    new_argv[argc] = argv[argc - 1];
+	    --argc;
+	  }
+
+	/* Execute the shell.  */
+	execv (new_argv[0], new_argv);
+      }
+	}
+}
+
+
 /* Execute FILE, searching in the `PATH' environment variable if it contains
    no slashes, with arguments ARGV and environment from `environ'.  */
 int
@@ -31,37 +66,6 @@ execvp (file, argv)
      char *const argv[];
 {
   int got_eacces = 0;
-
-  void execute (const char *file, char *const argv[])
-    {
-      execv (file, argv);
-
-      if (errno == ENOEXEC)
-	{
-	  /* The file is accessible but it is not an executable file.
-	     Invoke the shell to interpret it as a script.  */
-
-	  /* Count the arguments.  */
-	  int argc = 0;
-	  while (argv[argc++])
-	    ;
-
-	  /* Construct an argument list for the shell.  */
-	  {
-	    char *new_argv[argc + 1];
-	    new_argv[0] = (char *) _PATH_BSHELL;
-	    new_argv[1] = (char *) file;
-	    while (argc > 1)
-	      {
-		new_argv[argc] = argv[argc - 1];
-		--argc;
-	      }
-
-	    /* Execute the shell.  */
-	    execv (new_argv[0], new_argv);
-	  }
-	}
-    }
 
   if (strchr (file, '/') != NULL)
     /* Don't search when it contains a slash.  */

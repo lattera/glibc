@@ -57,15 +57,15 @@ static char sccsid[] = "@(#)fts.c	8.2 (Berkeley) 1/2/94";
 #endif
 
 
-static FTSENT	*fts_alloc __P((FTS *, const char *, int));
-static FTSENT	*fts_build __P((FTS *, int));
-static void	 fts_lfree __P((FTSENT *));
+static FTSENT	*fts_alloc __P((FTS *, const char *, int)) internal_function;
+static FTSENT	*fts_build __P((FTS *, int)) internal_function;
+static void	 fts_lfree __P((FTSENT *)) internal_function;
 static void	 fts_load __P((FTS *, FTSENT *));
-static size_t	 fts_maxarglen __P((char * const *));
-static void	 fts_padjust __P((FTS *, void *));
-static int	 fts_palloc __P((FTS *, size_t));
-static FTSENT	*fts_sort __P((FTS *, FTSENT *, int));
-static u_short	 fts_stat __P((FTS *, FTSENT *, int));
+static size_t	 fts_maxarglen __P((char * const *)) internal_function;
+static void	 fts_padjust __P((FTS *, void *)) internal_function;
+static int	 fts_palloc __P((FTS *, size_t)) internal_function;
+static FTSENT	*fts_sort __P((FTS *, FTSENT *, int)) internal_function;
+static u_short	 fts_stat __P((FTS *, FTSENT *, int)) internal_function;
 
 #ifndef MAX
 #define MAX(a, b)	({ __typeof__ (a) _a = (a); \
@@ -566,6 +566,7 @@ fts_children(sp, instr)
  * been found, cutting the stat calls by about 2/3.
  */
 static FTSENT *
+internal_function
 fts_build(sp, type)
 	register FTS *sp;
 	int type;
@@ -780,6 +781,7 @@ mem1:				saved_errno = errno;
 }
 
 static u_short
+internal_function
 fts_stat(sp, p, follow)
 	FTS *sp;
 	register FTSENT *p;
@@ -852,6 +854,7 @@ err:		bzero(sbp, sizeof(struct stat));
 }
 
 static FTSENT *
+internal_function
 fts_sort(sp, head, nitems)
 	FTS *sp;
 	FTSENT *head;
@@ -884,6 +887,7 @@ fts_sort(sp, head, nitems)
 }
 
 static FTSENT *
+internal_function
 fts_alloc(sp, name, namelen)
 	FTS *sp;
 	const char *name;
@@ -922,6 +926,7 @@ fts_alloc(sp, name, namelen)
 }
 
 static void
+internal_function
 fts_lfree(head)
 	register FTSENT *head;
 {
@@ -941,6 +946,7 @@ fts_lfree(head)
  * plus 256 bytes so don't realloc the path 2 bytes at a time.
  */
 static int
+internal_function
 fts_palloc(sp, more)
 	FTS *sp;
 	size_t more;
@@ -955,6 +961,7 @@ fts_palloc(sp, more)
  * already returned.
  */
 static void
+internal_function
 fts_padjust(sp, addr)
 	FTS *sp;
 	void *addr;
@@ -978,6 +985,7 @@ fts_padjust(sp, addr)
 }
 
 static size_t
+internal_function
 fts_maxarglen(argv)
 	char * const *argv;
 {

@@ -19,7 +19,6 @@
 
 #include <string.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 nis_error
 nis_addmember (const_nis_name member, const_nis_name group)
@@ -42,28 +41,28 @@ nis_addmember (const_nis_name member, const_nis_name group)
           stpcpy (cp, cp2);
         }
       res = nis_lookup (buf, FOLLOW_LINKS|EXPAND_NAME);
-      if (res->status != NIS_SUCCESS)
+      if (NIS_RES_STATUS (res) != NIS_SUCCESS)
 	{
-	  status = res->status;
+	  status = NIS_RES_STATUS (res);
 	  nis_freeresult (res);
 	  return status;
 	}
-      if ((res->objects.objects_len != 1) ||
-          (res->objects.objects_val[0].zo_data.zo_type != GROUP_OBJ))
+      if ((NIS_RES_NUMOBJ (res)  != 1) ||
+          (__type_of (NIS_RES_OBJECT (res)) != NIS_GROUP_OBJ))
         return NIS_INVALIDOBJ;
 
-      res->objects.objects_val[0].GR_data.gr_members.gr_members_val
-	= realloc (res->objects.objects_val[0].GR_data.gr_members.gr_members_val,
-		   (res->objects.objects_val[0].GR_data.gr_members.gr_members_len + 1)
+      NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val
+	= realloc (NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val,
+		   (NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len + 1)
 		   * sizeof (char *));
-      res->objects.objects_val[0].GR_data.gr_members.gr_members_val[res->objects.objects_val[0].GR_data.gr_members.gr_members_len] = strdup (member);
-      ++res->objects.objects_val[0].GR_data.gr_members.gr_members_len;
+      NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val[NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len] = strdup (member);
+      ++NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len;
 
-      cp = stpcpy (buf, res->objects.objects_val->zo_name);
+      cp = stpcpy (buf, NIS_RES_OBJECT(res)->zo_name);
       *cp++ = '.';
-      strncpy (cp, res->objects.objects_val->zo_domain, NIS_MAXNAMELEN);
-      res2 = nis_modify (buf, res->objects.objects_val);
-      status = res2->status;
+      strncpy (cp, NIS_RES_OBJECT (res)->zo_domain, NIS_MAXNAMELEN);
+      res2 = nis_modify (buf, NIS_RES_OBJECT (res));
+      status = NIS_RES_STATUS (res2);
       nis_freeresult (res);
       nis_freeresult (res2);
 

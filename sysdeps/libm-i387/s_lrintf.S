@@ -1,5 +1,8 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Round argument to nearest integral value according to current rounding
+   direction.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,18 +19,15 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <stdlib.h>
+#include <sysdep.h>
 
-/* Put STRING, which is of the form "NAME=VALUE", in the environment.
-   If there is no `=', remove NAME from the environment.  */
-int
-putenv (string)
-     const char *string;
-{
-  __set_errno (ENOSYS);
-  return -1;
-}
-
-
-stub_warning (putenv)
+	.text
+ENTRY(__lrintf)
+	flds	4(%esp)
+	subl	$4, %esp
+	fistpl	(%esp)
+	fwait
+	popl	%eax
+	ret
+END(__lrintf)
+weak_alias (__lrintf, lrintf)

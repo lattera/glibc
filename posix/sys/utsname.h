@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ __BEGIN_DECLS
 #include <bits/utsname.h>
 
 #ifndef _UTSNAME_NODENAME_LENGTH
-#define _UTSNAME_NODENAME_LENGTH _UTSNAME_LENGTH
+# define _UTSNAME_NODENAME_LENGTH _UTSNAME_LENGTH
 #endif
 
 /* Structure describing the system and machine.  */
@@ -52,16 +52,16 @@ struct utsname
 
 #if _UTSNAME_DOMAIN_LENGTH - 0
     /* Name of the domain of this node on the network.  */
-#ifdef __USE_GNU
+# ifdef __USE_GNU
     char domainname[_UTSNAME_DOMAIN_LENGTH];
-#else
+# else
     char __domainname[_UTSNAME_DOMAIN_LENGTH];
-#endif
+# endif
 #endif
   };
 
 #ifdef __USE_SVID
-#define SYS_NMLN  _UTSNAME_LENGTH
+# define SYS_NMLN  _UTSNAME_LENGTH
 #endif
 
 

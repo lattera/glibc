@@ -110,7 +110,7 @@ static int netinfo_res_init __P((int *haveenv, int *havesearch));
 # include "../conf/options.h"
 #endif
 
-static void res_setoptions __P((char *, char *));
+static void res_setoptions __P((char *, char *)) internal_function;
 
 #ifdef RESOLVSORT
 static const char sort_mask[] = "/&";
@@ -428,6 +428,7 @@ res_init()
 }
 
 static void
+internal_function
 res_setoptions(options, source)
 	char *options, *source;
 {

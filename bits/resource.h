@@ -1,5 +1,5 @@
 /* Bit values & structures for resource limits.  4.4 BSD/generic GNU version.
-   Copyright (C) 1994, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,13 +65,33 @@ enum __rlimit_resource
 #define RLIM_INFINITY RLIM_INFINITY
   };
 
+/* Type for resource quantity measurement.  */
+#ifndef __USE_FILE_OFFSET64
+typedef __rlim_t rlim_t;
+#else
+typedef __rlim64_t rlim_t;
+#endif
+#ifdef __USE_LARGEFILE64
+typedef __rlim64_t rlim64_t;
+#endif
+
 struct rlimit
   {
     /* The current (soft) limit.  */
-    int rlim_cur;
+    rlim_t rlim_cur;
     /* The hard limit.  */
-    int rlim_max;
+    rlim_t rlim_max;
   };
+
+#ifdef __USE_LARGEFILE64
+struct rlimit64
+  {
+    /* The current (soft) limit.  */
+    rlim64_t rlim_cur;
+    /* The hard limit.  */
+    rlim64_t rlim_max;
+ };
+#endif
 
 /* Whose usage statistics do you want?  */
 enum __rusage_who

@@ -142,6 +142,10 @@ static char *stpcpy PARAMS ((char *dest, const char *src));
 # define PATH_MAX _POSIX_PATH_MAX
 #endif
 
+#ifndef internal_function
+# define internal_function
+#endif
+
 /* XPG3 defines the result of `setlocale (category, NULL)' as:
    ``Directs `setlocale()' to query `category' and return the current
      setting of `local'.''
@@ -168,10 +172,11 @@ struct binding *_nl_domain_bindings;
 
 /* Prototypes for local functions.  */
 static char *find_msg PARAMS ((struct loaded_l10nfile *domain_file,
-			       const char *msgid));
-static const char *category_to_name PARAMS ((int category));
+			       const char *msgid)) internal_function;
+static const char *category_to_name PARAMS ((int category)) internal_function;
 static const char *guess_category_value PARAMS ((int category,
-						 const char *categoryname));
+						 const char *categoryname))
+     internal_function;
 
 
 /* For those loosing systems which don't have `alloca' we have to add
@@ -394,6 +399,7 @@ weak_alias (__dcgettext, dcgettext);
 
 
 static char *
+internal_function
 find_msg (domain_file, msgid)
      struct loaded_l10nfile *domain_file;
      const char *msgid;
@@ -482,6 +488,7 @@ find_msg (domain_file, msgid)
 
 /* Return string representation of locale CATEGORY.  */
 static const char *
+internal_function
 category_to_name (category)
      int category;
 {
@@ -541,6 +548,7 @@ category_to_name (category)
 
 /* Guess value of current locale from value of the environment variables.  */
 static const char *
+internal_function
 guess_category_value (category, categoryname)
      int category;
      const char *categoryname;

@@ -18,7 +18,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 #include "nis_intern.h"
 
@@ -48,7 +47,7 @@ nis_remove (const_nis_name name, const nis_object *obj)
 			      (caddr_t) & req, (xdrproc_t) xdr_nis_result,
 			      (caddr_t) res, MASTER_ONLY,
 			      NULL)) != RPC_SUCCESS)
-    res->status = status;
+    NIS_RES_STATUS (res) = status;
 
   nis_destroy_object (req.ns_object.ns_object_val);
 

@@ -19,7 +19,6 @@
 
 #include <string.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 void
 nis_print_group_entry (const_nis_name group)
@@ -29,6 +28,10 @@ nis_print_group_entry (const_nis_name group)
       char buf[strlen (group) + 50];
       char leafbuf[strlen (group) + 3];
       char domainbuf[strlen (group) + 3];
+      unsigned long mem_exp_cnt = 0, mem_imp_cnt = 0, mem_rec_cnt = 0;
+      unsigned long nomem_exp_cnt = 0, nomem_imp_cnt = 0, nomem_rec_cnt = 0;
+      char **mem_exp, **mem_imp, **mem_rec;
+      char **nomem_exp, **nomem_imp, **nomem_rec;
       nis_result *res;
       char *cp, *cp2;
       u_int i;
@@ -41,19 +44,132 @@ nis_print_group_entry (const_nis_name group)
 	  *cp++ = '.';
 	  stpcpy (cp, cp2);
 	}
-      res = nis_lookup (buf, FOLLOW_LINKS|EXPAND_NAME);
+      res = nis_lookup (buf, FOLLOW_LINKS | EXPAND_NAME);
 
-      if (res->status != NIS_SUCCESS && res->status != NIS_S_SUCCESS)
+      if (NIS_RES_STATUS(res) != NIS_SUCCESS)
 	return;
 
-      if ((res->objects.objects_len != 1) ||
-          (res->objects.objects_val[0].zo_data.zo_type != GROUP_OBJ))
+      if ((NIS_RES_NUMOBJ (res) != 1) ||
+	  (__type_of (NIS_RES_OBJECT (res)) != NIS_GROUP_OBJ))
 	return;
+
+      mem_exp = malloc (sizeof (char *) * NIS_RES_NUMOBJ (res));
+      mem_imp = malloc (sizeof (char *) * NIS_RES_NUMOBJ (res));
+      mem_rec = malloc (sizeof (char *) * NIS_RES_NUMOBJ (res));
+      nomem_exp = malloc (sizeof (char *) * NIS_RES_NUMOBJ (res));
+      nomem_imp = malloc (sizeof (char *) * NIS_RES_NUMOBJ (res));
+      nomem_rec = malloc (sizeof (char *) * NIS_RES_NUMOBJ (res));
 
       for (i = 0;
-	   i < res->objects.objects_val[0].GR_data.gr_members.gr_members_len;
-	   ++i)
-	fprintf (stdout, "  %s\n",
-		 res->objects.objects_val[0].GR_data.gr_members.gr_members_val[i]);
+	 i < NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len; ++i)
+	{
+	  char *grmem =
+	  NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val[i];
+	  int neg = grmem[0] == '-';
+
+	  switch (grmem[neg])
+	    {
+	    case '*':
+	      if (neg)
+		{
+		  nomem_imp[nomem_imp_cnt] = grmem;
+		  ++nomem_imp_cnt;
+		}
+	      else
+		{
+		  mem_imp[mem_imp_cnt] = grmem;
+		  ++mem_imp_cnt;
+		}
+	      break;
+	    case '@':
+	      if (neg)
+		{
+		  nomem_rec[nomem_rec_cnt] = grmem;
+		  ++nomem_rec_cnt;
+		}
+	      else
+		{
+		  mem_rec[mem_rec_cnt] = grmem;
+		  ++mem_rec_cnt;
+		}
+	      break;
+	    default:
+	      if (neg)
+		{
+		  nomem_exp[nomem_exp_cnt] = grmem;
+		  ++nomem_exp_cnt;
+		}
+	      else
+		{
+		  mem_exp[mem_exp_cnt] = grmem;
+		  ++mem_exp_cnt;
+		}
+	      break;
+	    }
+	}
+      {
+	char buf[strlen (NIS_RES_OBJECT (res)->zo_domain) + 10];
+	printf (_("Group entry for \"%s.%s\" group:\n"),
+		NIS_RES_OBJECT (res)->zo_name,
+		nis_domain_of_r (NIS_RES_OBJECT (res)->zo_domain,
+				 buf, strlen (NIS_RES_OBJECT (res)->zo_domain)
+				 + 10));
+      }
+      if (mem_exp_cnt)
+	{
+	  fputs (_("    Explicit members:\n"), stdout);
+	  for (i = 0; i < mem_exp_cnt; ++i)
+	    printf ("\t%s\n", mem_exp[i]);
+	}
+      else
+	fputs (_("    No explicit members\n"), stdout);
+      if (mem_imp_cnt)
+	{
+	  fputs (_("    Implicit members:\n"), stdout);
+	  for (i = 0; i < mem_imp_cnt; ++i)
+	    printf ("\t%s\n", &mem_imp[i][2]);
+	}
+      else
+	fputs (_("    No implicit members\n"), stdout);
+      if (mem_rec_cnt)
+	{
+	  fputs (_("    Recursive members:\n"), stdout);
+	  for (i = 0; i < mem_rec_cnt; ++i)
+	    printf ("\t%s\n", &mem_rec[i][1]);
+	}
+      else
+        fputs (_("    No recursive members\n"), stdout);
+      if (nomem_exp_cnt)
+	{
+	  fputs (_("    Explicit nonmembers:\n"), stdout);
+	  for (i = 0; i < nomem_exp_cnt; ++i)
+	    printf ("\t%s\n", &nomem_exp[i][1]);
+	}
+      else
+	fputs (_("    No explicit nonmembers\n"), stdout);
+      if (nomem_imp_cnt)
+	{
+	  fputs (_("    Implicit nonmembers:\n"), stdout);
+	  for (i = 0; i < nomem_imp_cnt; ++i)
+	    printf ("\t%s\n", &mem_imp[i][3]);
+	}
+      else
+	fputs (_("    No implicit nonmembers\n"), stdout);
+      if (nomem_rec_cnt)
+	{
+	  fputs (_("    Explicit nonmembers:\n"), stdout);
+	  for (i = 0; i < nomem_rec_cnt; ++i)
+	    printf ("\t%s=n", &nomem_rec[i][2]);
+	}
+      else
+        fputs (_("    No recursive nonmembers\n"), stdout);
+
+      free (mem_exp);
+      free (mem_imp);
+      free (mem_rec);
+      free (nomem_exp);
+      free (nomem_imp);
+      free (nomem_rec);
+      nis_freeresult (res);
     }
 }

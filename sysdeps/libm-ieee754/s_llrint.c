@@ -23,9 +23,7 @@
 
 #include "math_private.h"
 
-#ifdef NO_LONG_DOUBLE
-/* The `long double' is in fact the IEEE `double' type.  */
-static long double two52[2] =
+static const long double two52[2] =
 {
   4.50359962737049600000e+15, /* 0x43300000, 0x00000000 */
  -4.50359962737049600000e+15, /* 0xC3300000, 0x00000000 */
@@ -33,210 +31,65 @@ static long double two52[2] =
 
 
 long long int
-__llrint (long double x)
+__llrint (double x)
 {
-  int32_t j0,sx;
-  u_int32_t i0, i1, i;
-  long double t, w;
+  int32_t j0;
+  u_int32_t i1, i0;
   long long int result;
+  volatile double w;
+  double t;
+  int sx;
 
   EXTRACT_WORDS (i0, i1, x);
-
-  sx = i0 >> 31;
   j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
+  sx = i0 >> 31;
+  i0 &= 0xfffff;
+  i0 |= 0x100000;
 
   if (j0 < 20)
     {
-      if (j0 < 0)
-	{
-	  if (((i0 & 0x7fffffff) | i1) == 0)
-	    /* The number is 0.  */
-	    result = 0;
-	  else
-	    {
-	      i1 |= i0;
-	      i0 &= 0xfffe0000;
-	      i0 |= ((i1 | -i1) >> 12) & 0x80000;
-	      SET_HIGH_WORD (x, i0);
-	      w = two52[sx] + x;
-	      t = w - two52[sx];
-	      GET_HIGH_WORD (i0, t);
-	      if ((i0 & 0x7fffffff) >= 0x3fff0000)
-		result = sx ? -1 : 1;
-	      else
-		result = 0;
-	    }
-	}
+      if (j0 < -1)
+	return 0;
       else
 	{
-	  u_int32_t i = 0x000fffff >> j0;
-	  if (((i0 & i) | i1) == 0)
-	    {
-	      /* X is not integral.  */
-	      i >>= 1;
-	      if (((i0 & i) | i1) != 0)
-		{
-		  if (j0 == 19)
-		    i1 = 0x40000000;
-		  else
-		    i0 = (i0 & (~i)) | (0x20000 >> j0);
+	  w = two52[sx] + x;
+	  t = w - two52[sx];
+	  EXTRACT_WORDS (i0, i1, t);
+	  i0 = i & 0xfffff;
+	  i0 |= 0x100000;
+	  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
 
-		  INSERT_WORDS (x, i0, i1);
-		  w = two52[sx] + x;
-		  x = w - two52[sx];
-		  EXTRACT_WORDS (i0, i1, x);
-
-		  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
-		}
-	    }
-
-	  result = ((i0 >> (20 - j0)) & 0xfffff) | (0x00100000 >> (20 - j0));
-	  if (sx)
-	    result = -result;
+	  result = i0 >> (20 - j0);
 	}
     }
-  else if ((unsigned int) j0 < sizeof (long long int) * 8 && j0 < 53)
+  else if (j0 < (int32_t) (8 * sizeof (long long int)))
     {
-      i = ((u_int32_t) (0xffffffff)) >> (j0 - 20);
-      if ((i1 & i) != 0)
-	{
-	  /* x is not integral.  */
-	  i >>= 1;
-	  if ((i1 & i) != 0)
-	    i1 = (i1 & (~i)) | (0x40000000 >> (j0 - 20));
-	}
-
-      INSERT_WORDS (x, i0, i1);
-      w = two52[sx] + x;
-      x = w - two52[sx];
-      EXTRACT_WORDS (i0, i1, x);
-
-      j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
-
-      result = i0 | 0x00100000;
-      if (j0 > 20)
-	{
-	  result <<= j0 - 20;
-	  result |= i1 >> (52 - j0);
-	}
-      if (sx)
-	result = -result;
-    }
-  else
-    /* Too large.  The number is either +-inf or NaN or it is too
-       large to be effected by rounding.  The standard leaves it
-       undefined what to return when the number is too large to fit in
-       a `long int'.  */
-    result = (long long int) x;
-
-  return result;
-}
-
-#else
-static long double two63[2] =
-{
-  9.223372036854775808000000e+18, /* 0x403E, 0x00000000, 0x00000000 */
- -9.223372036854775808000000e+18  /* 0xC03E, 0x00000000, 0x00000000 */
-};
-
-
-long long int
-__llrint (long double x)
-{
-  int32_t se,j0,sx;
-  u_int32_t i0, i1, i;
-  long long int result;
-  long double w, t;
-
-  GET_LDOUBLE_WORDS (se, i0, i1, x);
-
-  sx = (se >> 15) & 1;
-  j0 = (se & 0x7fff) - 0x3fff;
-
-  if (j0 < 31)
-    {
-      if (j0 < 0)
-	{
-	  if (((se & 0x7fff) | i0 | i1) == 0)
-	    /* The number is 0.  */
-	    result = 0;
-	  else
-	    {
-	      i1 |= i0;
-	      i0 &= 0xe0000000;
-	      i0 |= (i1 | -i1) & 0x80000000;
-	      SET_LDOUBLE_MSW (x, i0);
-	      w = two63[sx] + x;
-	      t = w - two63[sx];
-	      GET_LDOUBLE_EXP (i0, t);
-	      if ((i0 & 0x7fff) >= 0x3fff)
-		result = sx ? -1 : 1;
-	      else
-		result = 0;
-	    }
-	}
+      if (j0 >= 52)
+	result = ((long long int) i0 << (j0 - 20)) | (i1 << (j0 - 52));
       else
 	{
-	  u_int32_t i = 0x7fffffff >> j0;
-	  if (((i0 & i) | i1) == 0)
-	    {
-	      /* X is not integral.  */
-	      i >>= 1;
-	      if (((i0 & i) | i1) != 0)
-		{
-		  if (j0 == 31)
-		    i1 = 0x40000000;
-		  else
-		    i0 = (i0 & (~i)) | (0x20000000 >> j0);
+	  w = two52[sx] + x;
+	  t = w - two52[sx];
+	  EXTRACT_WORDS (i0, i1, t);
+	  i0 = i & 0xfffff;
+	  i0 |= 0x100000;
+	  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
 
-		  SET_LDOUBLE_WORDS (x, se, i0, i1);
-		  w = two63[sx] + x;
-		  x = w - two63[sx];
-		  GET_LDOUBLE_WORDS (se, i0, i1, x);
-
-		  sx = (se >> 15) & 1;
-		  j0 = (se & 0x7fff) - 0x3fff;
-		}
-	    }
-
-
-	  result = i0 >> (31 - j0);
-	}
-    }
-  else if ((unsigned int) j0 < sizeof (long long int) * 8 && j0 < 64)
-    {
-      i = ((u_int32_t) (0xffffffff)) >> (j0 - 31);
-      if ((i1 & i) != 0)
-	{
-	  /* x is not integral.  */
-	  i >>= 1;
-	  if ((i1 & i) != 0)
-	    i1 = (i1 & (~i)) | (0x40000000 >> (j0 - 31));
-	}
-
-      SET_LDOUBLE_WORDS (x, se, i0, i1);
-      w = two63[sx] + x;
-      x = w - two63[sx];
-      GET_LDOUBLE_WORDS (se, i0, i1, x);
-
-      j0 = (se & 0x7fff) - 0x3fff;
-
-      result = i0;
-      if (j0 > 31)
-	{
-	  result <<= j0 - 31;
-	  result |= i1 >> (63 - j0);
+	  result = ((long long int) i0 << (j0 - 20)) | (j >> (52 - j0));
 	}
     }
   else
-    /* Too large.  The number is either +-inf or NaN or it is too
-       large to be effected by rounding.  The standard leaves it
-       undefined what to return when the number is too large to fit in
-       a `long int'.  */
-    result = (long long int) x;
+    {
+      /* The number is too large.  It is left implementation defined
+	 what happens.  */
+      return (long long int) x;
+    }
 
-  return result;
+  return sx ? -result : result;
 }
-#endif
 
 weak_alias (__llrint, llrint)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__llrint, __llrintl)
+weak_alias (__llrint, llrintl)
+#endif

@@ -1,5 +1,5 @@
-/* err.h -- 4.4BSD utility functions for error messages.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* 4.4BSD utility functions for error messages.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 #define	__need___va_list
 #include <stdarg.h>
 #ifndef	__GNUC_VA_LIST
-#define	__gnuc_va_list	__ptr_t
+# define __gnuc_va_list	__ptr_t
 #endif
 
 __BEGIN_DECLS

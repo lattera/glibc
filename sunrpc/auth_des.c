@@ -71,7 +71,8 @@ static bool_t authdes_marshal (AUTH *, XDR *);
 static bool_t authdes_validate (AUTH *, struct opaque_auth *);
 static bool_t authdes_refresh (AUTH *);
 static void authdes_destroy (AUTH *);
-static bool_t synchronize (struct sockaddr *, struct timeval *);
+static bool_t synchronize (struct sockaddr *, struct timeval *)
+     internal_function;
 
 static struct auth_ops authdes_ops =
 {
@@ -140,6 +141,7 @@ authdes_pk_create (const char *servername, netobj * pkey, u_int window,
    */
   auth = ALLOC (AUTH);
   ad = ALLOC (struct ad_private);
+  memset (ad, 0, sizeof (struct ad_private));
   memcpy (ad->ad_pkey, pkey->n_bytes, pkey->n_len);
   if (!getnetname (namebuf))
     goto failed;
@@ -200,11 +202,11 @@ failed:
     FREE (auth, sizeof (AUTH));
   if (ad != NULL)
     {
-      FREE (ad, sizeof (struct ad_private));
       if (ad->ad_fullname != NULL)
 	FREE (ad->ad_fullname, ad->ad_fullnamelen + 1);
       if (ad->ad_servername != NULL)
 	FREE (ad->ad_servername, ad->ad_servernamelen + 1);
+      FREE (ad, sizeof (struct ad_private));
     }
   return (NULL);
 }
@@ -440,6 +442,7 @@ authdes_destroy (AUTH * auth)
  * adjust timep to reflect the delta between our clocks
  */
 static bool_t
+internal_function
 synchronize (struct sockaddr *syncaddr, struct timeval *timep)
 {
   struct timeval mytime;

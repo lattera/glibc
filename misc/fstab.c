@@ -47,6 +47,7 @@ setfsent (void)
 }
 
 static struct fstab *
+internal_function
 mnt2fs (struct mntent *m)
 {
   static struct fstab f;

@@ -131,6 +131,18 @@ extern int signgam;
 		  else	`float_t' and `double_t' are unspecified
 
      INFINITY	representation of the infinity value of type `float_t'
+
+     FP_FAST_FMA
+     FP_FAST_FMAF
+     FP_FAST_FMAL
+		If defined it indicates that the the `fma' function
+		generally executes about as fast as a multiply and an add.
+		This macro is defined only iff the `fma' function is
+		implemented directly with a hardware multiply-add instructions.
+
+    FP_ILOGB0	Expands to a value returned by `ilogb (0.0)'.
+    FP_ILOGBNAN	Expands to a value returned by `ilogb (NAN)'.
+
 */
 # include <bits/mathdef.h>
 
@@ -180,19 +192,6 @@ enum
         __isnanf (x)							      \
       : sizeof (x) == sizeof (double) ?					      \
         __isnan (x) : __isnanl (x))
-
-
-/* Conversion functions.  */
-
-/* Round X to nearest integral value according to current rounding
-   direction.  */
-extern long int lrint __P ((long double __x));
-extern long long int llrint __P ((long double __x));
-
-/* Round X to nearest integral value, rounding halfway cases away from
-   zero.  */
-extern long int lround __P ((long double __x));
-extern long long int llround __P ((long double __x));
 
 #endif /* Use ISO C 9X.  */
 

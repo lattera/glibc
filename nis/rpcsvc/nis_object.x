@@ -5,7 +5,7 @@
  *	All Rights Reserved.
  */
 
-%#pragma ident	"@(#)nis_object.x	1.7	92/07/14 SMI"
+%#pragma ident	"@(#)nis_object.x	1.9	96/07/09 SMI"
 
 #if RPC_HDR
 %
@@ -65,9 +65,14 @@ typedef string nis_name<>;	/* The NIS name itself. */
  * 		1024 - 2047 are defined to be private to a particular tree.
  *		2048 - 4095 are defined to be user defined.
  *		4096 - ...  are reserved for future use.
+ *
+ * EOL Alert - The non-prefixed names are present for backward
+ * compatability only, and will not exist in future releases. Use
+ * the NIS_* names for future compatability.
  */
 
 enum zotypes {
+	
 	BOGUS_OBJ  	= 0,	/* Uninitialized object structure 	*/
 	NO_OBJ   	= 1,	/* NULL object (no data)	 	*/
 	DIRECTORY_OBJ 	= 2,	/* Directory object describing domain 	*/
@@ -75,7 +80,16 @@ enum zotypes {
 	TABLE_OBJ  	= 4,	/* Table object (a database schema) 	*/
 	ENTRY_OBJ  	= 5,	/* Entry object (a database record) 	*/
 	LINK_OBJ   	= 6, 	/* A name link.				*/
-	PRIVATE_OBJ   	= 7 	/* Private object (all opaque data) 	*/
+	PRIVATE_OBJ  	= 7, 	/* Private object (all opaque data) 	*/
+	
+	NIS_BOGUS_OBJ  	= 0,	/* Uninitialized object structure 	*/
+	NIS_NO_OBJ   	= 1,	/* NULL object (no data)	 	*/
+	NIS_DIRECTORY_OBJ = 2, /* Directory object describing domain 	*/
+	NIS_GROUP_OBJ  	= 3,	/* Group object (a list of names) 	*/
+	NIS_TABLE_OBJ  	= 4,	/* Table object (a database schema) 	*/
+	NIS_ENTRY_OBJ  	= 5,	/* Entry object (a database record) 	*/
+	NIS_LINK_OBJ	= 6, 	/* A name link.				*/
+	NIS_PRIVATE_OBJ  = 7 /* Private object (all opaque data) */
 };
 
 /*
@@ -230,21 +244,21 @@ struct table_obj {
  * This union joins together all of the currently known objects. 
  */
 union objdata switch (zotypes zo_type) {
-        case DIRECTORY_OBJ :
+        case NIS_DIRECTORY_OBJ :
                 struct directory_obj di_data;
-        case GROUP_OBJ :
+        case NIS_GROUP_OBJ :
                 struct group_obj gr_data;
-        case TABLE_OBJ :
+        case NIS_TABLE_OBJ :
                 struct table_obj ta_data;
-        case ENTRY_OBJ:
+        case NIS_ENTRY_OBJ:
                 struct entry_obj en_data;
-        case LINK_OBJ :
+        case NIS_LINK_OBJ :
                 struct link_obj li_data;
-        case PRIVATE_OBJ :
+        case NIS_PRIVATE_OBJ :
                 opaque	po_data<>;
-	case NO_OBJ :
+	case NIS_NO_OBJ :
 		void;
-        case BOGUS_OBJ :
+        case NIS_BOGUS_OBJ :
 		void;
         default :
                 void;

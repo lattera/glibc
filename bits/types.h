@@ -65,6 +65,8 @@ typedef int __pid_t;		/* Type of process identifications.  */
 typedef int __ssize_t;		/* Type of a byte count, or error.  */
 typedef __u_quad_t __fsid_t;	/* Type of file system IDs.  */
 typedef long int __clock_t;	/* Type of CPU usage counts.  */
+typedef long int __rlim_t;	/* Type for resource measurement.  */
+typedef __quad_t __rlim64_t;	/* Type for resource measurement (LFS).  */
 
 /* Everythin' else.  */
 typedef long int __daddr_t;	/* The type of a disk address.  */
@@ -90,5 +92,20 @@ typedef struct
   } __fd_set;
 
 typedef unsigned long int __fd_mask;
+
+
+/* Types from the Large File Support interface.  */
+
+/* Type to count number os disk blocks.  */
+typedef long int __blkcnt_t;
+typedef __quad_t __blkcnt64_t;
+
+/* Type to count file system blocks.  */
+typedef unsigned int __fsblkcnt_t;
+typedef __u_quad_t __fsblkcnt64_t;
+
+/* Type to count file system inodes.  */
+typedef unsigned long int __fsfilcnt_t;
+typedef __u_quad_t __fsfilcnt64_t;
 
 #endif /* bits/types.h */

@@ -24,7 +24,7 @@
 
 extern ssize_t __syscall_writev __P ((int, const struct iovec *, int));
 static ssize_t __atomic_writev_replacement __P ((int, const struct iovec *,
-						 int));
+						 int)) internal_function;
 
 
 /* Not all versions of the kernel support the large number of records.  */
@@ -56,5 +56,5 @@ __writev (fd, vector, count)
 }
 weak_alias (__writev, writev)
 
-#define __writev static __atomic_writev_replacement
+#define __writev static internal_function __atomic_writev_replacement
 #include <sysdeps/posix/writev.c>

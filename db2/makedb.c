@@ -168,7 +168,8 @@ main (argc, argv)
   db_file = dbopen (output_name, O_CREAT | O_RDWR | O_TRUNC, 0666,
 		    DB_BTREE, NULL);
   if (db_file == NULL)
-    error (EXIT_FAILURE, errno, gettext ("cannot open output file `%s'"));
+    error (EXIT_FAILURE, errno, gettext ("cannot open output file `%s'"),
+	   output_name);
 
   /* Start the real work.  */
   status = process_input (input_file, input_name, db_file, to_lowercase,
@@ -328,7 +329,7 @@ process_input (input, inname, output, to_lowercase, be_quiet)
 
   if (ferror (input))
     {
-      error (0, 0, gettext ("problems while reading `%s'"));
+      error (0, 0, gettext ("problems while reading `%s'"), inname);
       status = EXIT_FAILURE;
     }
 

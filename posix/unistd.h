@@ -133,6 +133,11 @@ __BEGIN_DECLS
    _POSIX_SYNC_IO		Synchronous I/O may be performed.
    _POSIX_ASYNC_IO		Asynchronous I/O may be performed.
    _POSIX_PRIO_IO		Prioritized Asynchronous I/O may be performed.
+
+   Support for the Large File Support interface is not generally available.
+   If it is available the following constants are defined to one.
+   _LFS64_LARGEFILE		Low-level I/O supports large files.
+   _LFS64_STDIO			Standard I/O supports large files.
    */
 
 #include <bits/posix_opt.h>
@@ -171,15 +176,23 @@ typedef __uid_t uid_t;
 # endif
 
 # ifndef off_t
+#  ifndef __USE_FILE_OFFSET64
 typedef __off_t off_t;
+#  else
+typedef __off64_t off_t;
+#  endif
 #  define off_t off_t
+# endif
+# if defined __USE_LARGEFILE64 && !defined off64_t
+typedef __off64_t off64_t;
+#  define off64_t off64_t
 # endif
 
 # ifndef pid_t
 typedef __pid_t pid_t;
 #  define pid_t pid_t
 # endif
-#endif
+#endif	/* Unix98 */
 
 /* Values for the second argument to access.
    These may be OR'd together.  */
@@ -221,7 +234,15 @@ extern int euidaccess __P ((__const char *__name, int __type));
    or the end of the file (if WHENCE is SEEK_END).
    Return the new file position.  */
 extern __off_t __lseek __P ((int __fd, __off_t __offset, int __whence));
+#ifndef __USE_FILE_OFFSET64
 extern __off_t lseek __P ((int __fd, __off_t __offset, int __whence));
+#else
+extern __off_t lseek __P ((int __fd, __off_t __offset, int __whence))
+     __asm__ ("lseek64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern __off64_t lseek64 __P ((int __fd, __off64_t __offset, int __whence));
+#endif
 
 /* Close the file descriptor FD.  */
 extern int __close __P ((int __fd));
@@ -240,13 +261,31 @@ extern ssize_t write __P ((int __fd, __const __ptr_t __buf, size_t __n));
 /* Read NBYTES into BUF from FD at the given position OFFSET without
    changing the file pointer.  Return the number read, -1 for errors
    or 0 for EOF.  */
+# ifndef __USE_FILE_OFFSET64
 extern ssize_t pread __P ((int __fd, __ptr_t __buf, size_t __nbytes,
 			   __off_t __offset));
+# else
+extern ssize_t pread __P ((int __fd, __ptr_t __buf, size_t __nbytes,
+			   __off_t __offset)) __asm__ ("pread64");
+# endif
+# ifdef __USE_LARGEFILE64
+extern ssize_t pread64 __P ((int __fd, __ptr_t __buf, size_t __nbytes,
+			     __off64_t __offset));
+# endif
 
 /* Write N bytes of BUF to FD at the given position OFFSET without
    changing the file pointer.  Return the number written, or -1.  */
+# ifndef __USE_FILE_OFFSET64
 extern ssize_t pwrite __P ((int __fd, __const __ptr_t __buf, size_t __n,
 			    __off_t __offset));
+# else
+extern ssize_t pwrite __P ((int __fd, __const __ptr_t __buf, size_t __n,
+			    __off_t __offset)) __asm__ ("pwrite64");
+# endif
+# ifdef __USE_LARGEFILE64
+extern ssize_t pwrite64 __P ((int __fd, __const __ptr_t __buf, size_t __n,
+			      __off64_t __offset));
+# endif
 #endif
 
 
@@ -489,18 +528,18 @@ extern __pid_t getpgid __P ((__pid_t __pid));
    The default in GNU is to provide the System V function.  The BSD
    function is available under -D_BSD_SOURCE with -lbsd-compat.  */
 
-#ifndef	__FAVOR_BSD
+# ifndef __FAVOR_BSD
 
 /* Set the process group ID of the calling process to its own PID.
    This is exactly the same as `setpgid (0, 0)'.  */
 extern int setpgrp __P ((void));
 
-#else
+# else
 
 /* Another name for `setpgid' (above).  */
 extern int setpgrp __P ((__pid_t __pid, __pid_t __pgrp));
 
-#endif	/* Favor BSD.  */
+# endif	/* Favor BSD.  */
 #endif	/* Use SVID or BSD.  */
 
 /* Create a new session with the calling process as its leader.
@@ -792,10 +831,26 @@ extern int getpagesize __P ((void));
 
 
 /* Truncate FILE to LENGTH bytes.  */
+#ifndef __USE_FILE_OFFSET64
 extern int truncate __P ((__const char *__file, __off_t __length));
+#else
+extern int truncate __P ((__const char *__file, __off_t __length))
+     __asm__ ("truncate64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern int truncate64 __P ((__const char *__file, __off64_t __length));
+#endif
 
 /* Truncate the file FD is open on to LENGTH bytes.  */
+#ifndef __USE_FILE_OFFSET64
 extern int ftruncate __P ((int __fd, __off_t __length));
+#else
+extern int ftruncate __P ((int __fd, __off_t __length))
+     __asm__ ("ftruncate64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern int ftruncate64 __P ((int __fd, __off64_t __length));
+#endif
 
 
 /* Return the maximum number of file descriptors
@@ -855,7 +910,15 @@ extern long int syscall __P ((long int __sysno, ...));
 # define F_TLOCK 2	/* Test and lock a region for exclusive use.  */
 # define F_TEST  3	/* Test a region for other processes locks.  */
 
+# ifndef __USE_FILE_OFFSET64
 extern int lockf __P ((int __fd, int __cmd, __off_t __len));
+# else
+extern int lockf __P ((int __fd, int __cmd, __off_t __len))
+     __asm__ ("lockf64");
+# endif
+# ifdef __USE_LARGEFILE64
+extern int lockf64 __P ((int __fd, int __cmd, __off64_t __len));
+# endif
 #endif /* Use misc and F_LOCK not already defined.  */
 
 

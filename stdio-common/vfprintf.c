@@ -176,14 +176,16 @@ static const char null[] = "(null)";
 
 
 /* Helper function to provide temporary buffering for unbuffered streams.  */
-static int buffered_vfprintf __P ((FILE *stream, const CHAR_T *fmt, va_list));
+static int buffered_vfprintf __P ((FILE *stream, const CHAR_T *fmt, va_list))
+     internal_function;
 
 /* Handle unknown format specifier.  */
 static int printf_unknown __P ((FILE *, const struct printf_info *,
 				const void *const *));
 
 /* Group digits of number string.  */
-static char *group_number __P ((CHAR_T *, CHAR_T *, const CHAR_T *, wchar_t));
+static char *group_number __P ((CHAR_T *, CHAR_T *, const CHAR_T *, wchar_t))
+     internal_function;
 
 
 /* The function itself.  */
@@ -1480,6 +1482,7 @@ printf_unknown (FILE *s, const struct printf_info *info,
 /* Group the digits according to the grouping rules of the current locale.
    The interpretation of GROUPING is as in `struct lconv' from <locale.h>.  */
 static char *
+internal_function
 group_number (CHAR_T *w, CHAR_T *rear_ptr, const CHAR_T *grouping,
 	      wchar_t thousands_sep)
 {
@@ -1579,6 +1582,7 @@ static const struct _IO_jump_t _IO_helper_jumps =
 };
 
 static int
+internal_function
 buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
 		   _IO_va_list args)
 {
@@ -1615,6 +1619,7 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
 #else /* !USE_IN_LIBIO */
 
 static int
+internal_function
 buffered_vfprintf (register FILE *s, const CHAR_T *format, va_list args)
 {
   char buf[BUFSIZ];

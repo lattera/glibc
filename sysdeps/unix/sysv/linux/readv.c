@@ -24,7 +24,7 @@
 
 extern ssize_t __syscall_readv __P ((int, __const struct iovec *, int));
 static ssize_t __atomic_readv_replacement __P ((int, __const struct iovec *,
-						int));
+						int)) internal_function;
 
 
 /* Not all versions of the kernel support the large number of records.  */
@@ -56,5 +56,5 @@ __readv (fd, vector, count)
 }
 weak_alias (__readv, readv)
 
-#define __readv static __atomic_readv_replacement
+#define __readv static internal_function __atomic_readv_replacement
 #include <sysdeps/posix/readv.c>

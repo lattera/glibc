@@ -11,11 +11,14 @@ extern int _IO_fclose __P((_IO_FILE*));
 extern _IO_FILE *_IO_fdopen __P((int, const char*));
 extern int _IO_fflush __P((_IO_FILE*));
 extern int _IO_fgetpos __P((_IO_FILE*, _IO_fpos_t*));
+extern int _IO_fgetpos64 __P((_IO_FILE*, _IO_fpos64_t*));
 extern char* _IO_fgets __P((char*, int, _IO_FILE*));
 extern _IO_FILE *_IO_fopen __P((const char*, const char*));
+extern _IO_FILE *_IO_fopen64 __P((const char*, const char*));
 extern int _IO_fprintf __P((_IO_FILE*, const char*, ...));
 extern int _IO_fputs __P((const char*, _IO_FILE*));
 extern int _IO_fsetpos __P((_IO_FILE*, const _IO_fpos_t *));
+extern int _IO_fsetpos64 __P((_IO_FILE*, const _IO_fpos64_t *));
 extern long int _IO_ftell __P((_IO_FILE*));
 extern _IO_size_t _IO_fread __P((void*, _IO_size_t, _IO_size_t, _IO_FILE*));
 extern _IO_size_t _IO_fwrite __P((const void*,
@@ -46,7 +49,9 @@ extern int _IO_obstack_printf __P ((struct obstack *, const char *, ...));
 #define _IO_rewind(FILE) (void)_IO_seekoff(FILE, 0, 0, _IOS_INPUT|_IOS_OUTPUT)
 #define _IO_vprintf(FORMAT, ARGS) _IO_vfprintf(_IO_stdout, FORMAT, ARGS)
 #define _IO_freopen(FILENAME, MODE, FP) \
-  (_IO_file_close_it(FP), _IO_file_fopen(FP, FILENAME, MODE))
+  (_IO_file_close_it(FP), _IO_file_fopen(FP, FILENAME, MODE, 0))
+#define _IO_freopen64(FILENAME, MODE, FP) \
+  (_IO_file_close_it(FP), _IO_file_fopen(FP, FILENAME, MODE, 1))
 #define _IO_fileno(FP) ((FP)->_fileno)
 extern _IO_FILE* _IO_popen __P((const char*, const char*));
 #define _IO_pclose _IO_fclose

@@ -1,3 +1,583 @@
+1997-10-12 05:09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/Makefile (routines): Remove iofprintf.
+	* stdio-common/fprintf.c [USE_IN_LIBIO]: Define _IO_fprintf.
+	* libio/filedoalloc.c: Use _G_stat64 instead of stat.
+	* libio/fileops.c (_IO_file_open): Change to take extra argument
+	indicating whether 32 or 64 bit mode is wanted.
+	* libio/iofopen.c: Call _IO_file_open with extra argument set to 0.
+	* libio/iofopen64.c: Call _IO_file_open with extra argument set to 0.
+	* libio/iolibio.h (_IO_freopen, _IO_freopen64): Likewise.
+	* libio/iofgetpos.c: Pretty print.
+	* libio/iofgetpos64.c: Use _IO_fpos64_t for local variable `pos'.
+
+	* manual/conf.texi: Document all the _SC_ and _CS_ constants.
+	* manual/creature.texi: Document _LARGEFILE_SOURCE, _LARGEFILE64_SOURCE
+	and _FILE_OFFSET_BITS.
+	* manual/llio.texi: Document truncate and ftruncate.
+	* manual/stdio.texi: Document positional parameters for printf.
+
+	* math/Makefile (headers): Add tgmath.h.
+	(libm-support): Remove s_lrint, s_llrint, s_lround, and s_llround and
+	move to ...
+	(libm-calls): ... here.  Add scalbln, s_nextafterx and s_fma.
+	* math/libm-test.c (lround_test, llround_test): Test for all FP formats
+	by using FUNC().
+	* math/libm.map: Add fma, fmaf, fmal, nextafterx, nextafterxf,
+	nextafterxl, scalbln, scalblnf, scalblnl, lrintf, lrintl, llrintf,
+	llrintl, lroundf, lroundl, llroundf, and llroundl.
+	* math/math.h: Document new platform specific macros from mathdef.h.
+	Remove declaration of lrint, llrint, lround, and llround.
+	* math/test-double.c: Define TEST_DOUBLE.
+	* math/test-idouble.c: Likewise.
+	* math/test-float.c: Define TEST_FLOAT.
+	* math/test-ifloat.c: Likewise.
+	* math/tgmath.h: New file.
+	* math/bits/mathcalls.h: Add nextafterx, scalbln, fma, lrint, llrint,
+	lround, and llround.
+	Change second argument of scalbn to `int'.
+	* sysdeps/libm-ieee754/s_fma.S: New file.
+	* sysdeps/libm-ieee754/s_fmaf.S: New file.
+	* sysdeps/libm-ieee754/s_fmal.S: New file.
+	* sysdeps/libm-i387/s_fma.S: New file.
+	* sysdeps/libm-i387/s_fmaf.S: New file.
+	* sysdeps/libm-i387/s_fmal.S: New file.
+	* sysdeps/libm-i387/s_llrint.S: Change to take double argument.
+	* sysdeps/libm-i387/s_lrint.S: Likewise.
+	* sysdeps/libm-i387/s_llrintf.S: New file.
+	* sysdeps/libm-i387/s_llrintl.S: New file.
+	* sysdeps/libm-i387/s_lrintf.S: New file.
+	* sysdeps/libm-i387/s_lrintl.S: New file.
+	* sysdeps/libm-ieee754/s_llrint.c: Remove version which works on
+	80bit double.
+	* sysdeps/libm-ieee754/s_lrint.c: Likewise.
+	* sysdeps/libm-ieee754/s_llrintf.S: New file.
+	* sysdeps/libm-ieee754/s_llrintl.S: New file.
+	* sysdeps/libm-ieee754/s_lrintf.S: New file.
+	* sysdeps/libm-ieee754/s_lrintl.S: New file.
+	* sysdeps/libm-i387/s_scalbln.c: New file.  Empty file.
+	* sysdeps/libm-i387/s_scalblnf.c: New file.  Empty file.
+	* sysdeps/libm-i387/s_scalblnl.c: New file.  Empty file.
+	* sysdeps/libm-i387/s_scalbn.c: Add scalbln as alias.
+	* sysdeps/libm-i387/s_scalbnf.c: Add scalblnf as alias.
+	* sysdeps/libm-i387/s_scalbnl.c: Add scalblnl as alias.
+	* sysdeps/libm-ieee754/s_llround.c: Remove version which works on
+	80bit double.
+	* sysdeps/libm-ieee754/s_lround.c: Likewise.
+	* sysdeps/libm-ieee754/s_llroundf.c: Likewise.
+	* sysdeps/libm-ieee754/s_llroundl.c: Likewise.
+	* sysdeps/libm-ieee754/s_lroundf.c: Likewise.
+	* sysdeps/libm-ieee754/s_lroundl.c: Likewise.
+	* sysdeps/libm-ieee754/s_nextafterl.c: Add alias fo nextafterxl.
+	* sysdeps/libm-ieee754/s_nextafterx.c: New file.
+	* sysdeps/libm-ieee754/s_nextafterxf.c: New file.
+	* sysdeps/libm-ieee754/s_nextafterxl.c: New file.
+	* sysdeps/libm-ieee754/s_scalbln.c: New file.
+	* sysdeps/libm-ieee754/s_scalblnf.c: New file.
+	* sysdeps/libm-ieee754/s_scalblnl.c: New file.
+	* sysdeps/libm-ieee754/s_scalbn.c: Change to take `int' as second arg.
+	* sysdeps/libm-ieee754/s_scalbnf.c: Likewise.
+	* sysdeps/libm-ieee754/s_scalbnl.c: Likewise.
+
+	* stdlib/stdlib.h: Protect declarations of __strto*l_internal functions
+	by #ifdefs since they are duplicated in inttypes.h.
+	* sysdeps/wordsize-32/inttypes.h: Add definition of strtoimax and
+	strtoumax plus needed declarations.
+
+	* sysdeps/generic/confname.h (_SC_AIO_LISTIO_MAX): Fix typo.
+
+1997-10-09  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* locale/programs/locfile.c (locfile_read): Correct while loop.
+
+	* db2/makedb.c (main): Add missing parameter for error output.
+	(process_input): Likewise.
+
+	* resolv/gethnamaddr.c (getanswer): Rewrite a bit to avoid warning.
+
+1997-10-12 05:05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc-map: Add __bzero, __mempcpy.
+
+1997-10-10 18:51  David S. Miller  <davem@tanya.rutgers.edu>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/ioctls.h: Remove dependencies
+	on kernel_termios.h
+
+1997-10-09  10:24  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	Add the changes from the Solaris 2.6 header files, use the new public
+	defines/functions.
+	* nis/nis_addmember.c: Updated.
+	* nis/nis_checkpoint.c: Updated.
+	* nis/nis_creategroup.c: updated.
+	* nis/nis_destroygroup.c: Updated.
+	* nis/nis_getservlist.c: Updated.
+	* nis/nis_ismember.c: Updated.
+	* nis/nis_lookup.c: Updated.
+	* nis/nis_modify.c: Updated.
+	* nis/nis_ping.c: Updated.
+	* nis/nis_print.c: Updated.
+	* nis/nis_print_group_entry.c: Updated.
+	* nis/nis_remove.c: Updated.
+	* nis/nis_removemember.c: Updated.
+	* nis/nis_xdr.c: Updated.
+	* nis/nss_nisplus/nisplus-alias.c: Updated.
+	* nis/nss_nisplus/nisplus-ethers.c: Updated.
+	* nis/nss_nisplus/nisplus-hosts.c: Updated.
+	* nis/nss_nisplus/nisplus-network.c: Updated.
+	* nis/nss_nisplus/nisplus-parser.c: Updated.
+	* nis/nss_nisplus/nisplus-proto.c: Updated.
+	* nis/nss_nisplus/nisplus-rpc.c: Updated.
+	* nis/nss_nisplus/nisplus-service.c: Updated.
+	* nis/rpcsvc/nis.h: Updated.
+	* nis/rpcsvc/nis.x: Updated.
+	* nis/rpcsvc/nis_object.x: Updated.
+	* nis/rpcsvc/nis_tags.h: Updated.
+	* nis/rpcsvc/nislib.h: Updated.
+
+	* nis/lckcache.c: Removed, since Sun has dropped the directory
+	signatures.  The old cache version is now a security risk and not
+	longer supported by Sun.
+	* nis/nis_cache.c: Likewise.
+	* nis/rpcsvc/nis_cache.h: Likewise.
+	* nis/rpcsvc/nis_cache.x: Likewise.
+
+	* nis/nis_call.c: Remove calls to the cache functions.
+
+	* nis/libnsl.map: Remove cache and depending functions.
+	* nis/nis_intern.h: Likewise.
+
+	* nis/nis_add.c: Remove #include <rpcsvc/nislib.h>.
+	* nis/nis_domain_of.c: Likewise.
+	* nis/nis_domain_of_r.c: Likewise.
+	* nis/nis_error.c: Likewise.
+	* nis/nis_file.c: Likewise.
+	* nis/nis_local_names.c: Likewise.
+	* nis/nis_mkdir.c: Likewise.
+	* nis/nis_rmdir.c: Likewise.
+	* nis/nis_subr.c: Likewise.
+	* nis/nis_verifygroup.c: Likewise.
+
+	* nis/nis_clone.c: Removed, replaced by ...
+	* nis/nis_clone_dir.c: New.
+	* nis/nis_clone_obj.c: New.
+	* nis/nis_clone_res.c: New.
+	* nis/nis_table.c: Fixed bugs shown through the new clone functions.
+
+	* nis/nis_defaults.c: Fixed a lot of race conditions.
+
+	* nis/nis_free.c: Rewritten.
+
+	* sunrpc/auth_des.c: Fix use of free'ed pointer.
+
+	* nis/Makefile (libnsl-routines): Remove nis_clone, nis_cache and
+	lckcache.  Add nis_clone_dir, nis_clone_obj, and nis_clone_res.
+
+1997-10-09  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* wctype/test_wctype.c (TEST): Add parens to avoid ambiguity.
+
+1997-10-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* include/features.h: Don't crash if _XOPEN_SOURCE is defined to
+	be empty.
+
+1997-10-09 05:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/digits_dots.c: Place `result' in resbuf and not in `buffer'.
+	* nss/getXXbyYY_r.c: Make sure digits_dots.c sees `resbuf' as
+	struct and not a pointer.  Little optimizations.
+
+1997-10-09 05:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/stub/getenv.c: Remove unused file.
+	* sysdeps/stub/lxstat.c: Likewise.
+	* sysdeps/stub/morecore.c: Likewise.
+	* sysdeps/stub/putenv.c: Likewise.
+	* sysdeps/stub/sbrk.c: Likewise.
+	* sysdeps/stub/setenv.c: Likewise.
+	* sysdeps/stub/sysd-stdio.c: Likewise.
+	* sysdeps/stub/sysdep.h: Likewise.
+	Reported by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+1997-10-09 04:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Add __bzero definition to DWARF2 unwind test.
+	Reported by David S. Miller <davem@caip.rutgers.edu>.
+
+1997-10-07  Paul Eggert  <eggert@twinsun.com>
+
+	* intl/loadmsgcat.c (_nl_load_domain):
+	Fix &&/|| typo when checking file size.
+	Check for overflow when stuffing off_t into size_t.
+
+1997-10-07 18:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/africa: Update from tzdata1997i.
+
+1997-10-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* posix/globtest.sh: Add arguments for name of dynamic linker and
+	call dynamic linker to execute globtest.
+
+	* posix/Makefile (tests): Supply arguments to globtest.sh.
+
+1997-10-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nis/rpcsvc/ypupd.h: Add missing __END_DECLS.
+
+1997-10-03  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libc.map: Add mempcpy, prctl.
+
+1997-09-30  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/memcmp.c: Avoid warnings.
+	* sysdeps/generic/memset.c: Likewise.
+	* sysdeps/generic/strchr.c: Likewise.
+	* sysdeps/generic/strlen.c: Likewise.
+
+1997-09-29  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* malloc/Makefile ($(objpfx)mtrace): Fix typo.
+
+1997-09-29  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Fix last change.
+	The R_68K_GLOB_DAT and R_68K_JMP_SLOT relocations really ignore
+	the addend, Richard.
+	(elf_machine_fixup_plt): Don't add the addend.
+	(elf_machine_plt_value): New function.
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_plt_value): New
+	function.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_plt_value): New
+	function.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_plt_value): New
+	function.
+	* sysdeps/powerpc/dl-machine.h (elf_machine_plt_value): New
+	function.
+	* sysdeps/i386/dl-machine.h (elf_machine_plt_value): New
+	function.
+
+	* elf/dl-runtime.c (fixup, profile_fixup): Don't add in the
+	addend, instead let the machine dependent setup decide.
+
+1997-09-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/m68020/bits/string.h: New file.
+
+1997-10-07 04:27  Richard Henderson  <rth@cygnus.com>
+
+	* Makeconfig (+includes): Add -I$(objpfx).
+
+	* stdlib/longlong.h [__sparc__]: Prototype __udiv_qrnnd.
+
+	* sysdeps/alpha/setjmp.S: __setjmp is the same as _setjmp.  Make
+	the former a strong symbol and the later a weak alias.
+	* sysdeps/sparc/sparc32/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/setjmp.S: Likewise.
+
+1997-10-06 21:01  David S. Miller  <davem@tanya.rutgers.edu>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/types.h: Make ino_t
+	64-bits.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/kernel_stat.h: Make st_ino
+	member 64-bits as well, to match the kernel.
+
+1997-10-06 19:35  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/sparc/sparc64/sub_n.S: Fix typo.
+	Patch by Jakub Jelinek <jj@sunsite.ms.mff.cuni.cz>.
+
+1997-10-06 01:09  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* time/README: Correct list of files from tzcode package.  Add
+	contact information for tzcode/tzdata maintainers.  Correct
+	spelling of author's name.  Compact lists.
+
+1997-10-06 01:48  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/malloc.h: Remove hook definition without caller argument.
+	* malloc/malloc.c: Likewise.
+
+	* string/tester.c: Correct strsep test.
+
+	* string/bits/string2.h: Define __string2_1bptr_p and use it.
+	Patch by David S. Miller <davem@tanya.rutgers.edu>.
+
+	* math/Makefile (routines): Add s_clog10.
+	* math/libm-test.c: Add test for clog10.
+	* math/libm.map: Add clog10{,f,l}.
+	* math/bits/cmathcalls.h [__USE_GNU]: Add clog10.
+	* sysdeps/libm-ieee754/s_clog10.c: New file.
+	* sysdeps/libm-ieee754/s_clog10f.c: New file.
+	* sysdeps/libm-ieee754/s_clog10l.c: New file.
+	* manual/math.texi: Describe clog10.
+
+	* config.h.in: Add USE_REGPARMS and define internal_function based on
+	this.
+	* configure.in: Define USE_REGPARMS for ix86 machines.
+	* gmon/gmon.c: Mark write_hist, write_call_graph and write_bb_counts
+	as internal functions.
+	* inet/getnameinfo.c: Likewise for  nrl_domainname.
+	* inet/getnetgrent_r.c: Likewise for __internal_setnetgrent_reuse.
+	* inet/rcmd.c: Likewise for __icheckhost.
+	* intl/dcgettext.c: Likewise for category_to_name and
+	guess_category_value.
+	* intl/localealias.c: Likewise for read_alias_file.
+	* io/fts.c: Likewise for fts_alloc, fts_build, fts_lfree,
+	fts_maxarglen, fts_padjust, fts_palloc, fts_sort, and fts_stat.
+	* libio/genops.c: Likewise for save_for_backup.
+	* malloc/malloc.c (chunk_free, chunk_alloc, chunk_realloc, chunk_align,
+	main_trim, heap_trim): Likewise.
+	* malloc/mtrace.c (tr_where): Likewise.
+	* misc/fstab.c (mnt2fs): Likewise.
+	* misc/getttyent.c (skip, value): Likewise.
+	* misc/syslog.c (openlog_internal): Likewise.
+	* misc/tsearch.c (trecurse, tdestroy_internal): Likewise.
+	* nss/nsswitch.c (nss_lookup_function, nss_parse_file, nss_getline,
+	nss_parse_service_list, nss_new_service): Likewise.
+	* posix/wordexp.c (parse_dollars, parse_backtick, eval_expr): Likewise.
+	* resolv/inet_ntop.c (inet_ntop4, inet_ntop6): Likewise.
+	* resolv/inet_pton.c (inet_pton4, inet_pton6): Likewise.
+	* resolv/res_init.c (res_setoptions): Likewise.
+	* stdio-common/printf_fp.c (group_number): Likewise.
+	* stdio-common/vfprintf.c (buffered_vfprintf, group_number): Likewise.
+	* stdlib/fmtmsg.c (internal_addseverity): Likewise.
+	* sunrpc/auth_des.c (synchronize): Likewise.
+	* sunrpc/auth_unix.c (marshal_new_auth): Likewise.
+	* sunrpc/clnt_perr.c (auth_errmsg): Likewise.
+	* sunrpc/key_call.c (key_call): Likewise.
+	* sunprc/pmap_rmt.c (getbroadcastnets): Likewise.
+	* sunrpc/svc_tcp.c (makefd_xprt): Likewise.
+	* sunrpc/svcauth_des.c (cache_init, cache_spot, cache_ref, invalidate):
+	Likewise.
+	* sunrpc/xdr_rec.c (fix_buf_size, skip_input_bytes, flush_out,
+	set_input_fragment, get_input_bytes): Likewise.
+	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path,
+	phys_pages_info): Likewise.
+	* sysdeps/unix/sysv/linux/if_index.c (opensock): Likewise.
+	* sysdeps/unix/sysv/linux/poll.c (__emulate_poll): Likewise.
+	* sysdeps/unix/sysv/linux/readv.c (__atomic_readv_replacement):
+	Likewise.
+	* sysdeps/unix/sysv/linux/readv.c (__atomic_writev_replacement):
+	Likewise.
+	* time/strptime.c (strptime_internal): Likewise.
+	* time/tzfile.c (find_transition, compute_tzname_max): Likewise.
+	* time/tzset.c (compute_change, tz_compute, tzset_internal): Likewise.
+
+	* libc.map: Remove _libio_using_thunks, add _fp_hw and _dl_addr.
+
+	* ctype/ctype.h: Pretty print.
+	* grp/grp.h: Likewise.
+	* include/libc-symbols.h: Likewise.
+	* include/limits.h: Likewise.
+	* include/values.h: Likewise.
+	* io/fcntl.h: Likewise.
+	* io/sys/stat.h: Likewise.
+	* libio/stdio.h: Likewise.
+	* malloc/malloc.h: Likewise.
+	* misc/err.h: Likewise.
+	* misc/regexp.h: Likewise.
+	* misc/sys/cdefs.h: Likewise.
+	* misc/sys/file.h: Likewise.
+	* posix/sys/utsname.h: Likewise.
+	* posix/sys/wait.h: Likewise.
+	* pwd/pwd.h: Likewise.
+	* resolv/netdb.h: Likewise.
+	* signal/signal.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* string/endian.h: Likewise.
+	* string/memory.h: Likewise.
+	* sysdeps/mach/hurd/bits/fcntl.h: Likewise.
+	* sysdeps/mach/hurd/sys/param.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/param.h: Likewise.
+	* termios/termios.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+	* wctype/wctype.h: Likewise.
+
+	* sysdeps/unix/bsd/bsd4.4/wait3.c: Use __WAIT_STATUS in definition.
+
+	Implement Large File Support API.
+	* include/features.h: Add suuport for _LARGEFILE_SOURCE,
+	_LARGEFILE64_SOURCE, and _FILE_OFFSET_BITS.
+	* libc.map: Add new functions for LFS.
+	* dirent/Makefile (routines): Add readdir64 and readdir64_r.
+	* dirent/dirent.h: Update readdir prototype for LFS and add new
+	prototypes for above functions.
+	* io/Makefile (routines): Add xstat64, fxstat64, lxstat64,
+	statfs64, fstatfs64, lstat64, open64, lseek64, creat64, and ftw64.
+	* io/creat64.c: New file.
+	* io/fstat64.c: New file.
+	* io/lstat64.c: New file.
+	* io/stat64.c: New file.
+	* io/ftw64.c: New file.
+	* io/ftw.c: Rewrite to allow easy definition of ftw64.
+	* io/ftw.h: Add LFS interface.
+	* io/fcntl.h: Likewise.
+	* io/sys/stat.h: Likewise.
+	* io/sys/statfs.h: Likewise.
+	* libio/Makefile (routines): Add iofgetpos64, iofopen64, iofsetpos64,
+	freopen64, fseeko64, and ftello64.
+	* libcio/fseeko64.c: New file.
+	* libio/ftello64.c: New file.
+	* libio/iofgetpos64.c: New file.
+	* libio/iofopen64.c: New file.
+	* libio/iofsetpos64.c: New file.
+	* libio/fileops.c (_IO_file_fopen): Change to use _IO_off64_t.
+	(_IO_file_attach): Likewise.
+	(_IO_do_write): Likewise.
+	(_IO_file_sync): Likewise.
+	(_IO_file_seek): Likewise.
+	(_IO_file_seekoff): Likewise.  Use _G_stat64.
+	(_IO_file_fopen64): New function.
+	(_IO_file_jumps): Initialize showmanyc and imbue.
+	* libio/genops.c (_IO_default_seekpos): Change to use _IO_fpos64_t.
+	(_IO_default_seekoff): Likewise.
+	(_IO_default_seek): Likewise.
+	(_IO_default_showmanyc, _IO_default_imbue): New functions.
+	* libio/iofopncook.c (_IO_cookie_seek): Change to use _IO_off64_t.
+	* libio/iolibio.h: Add prototypes for LFS functions.
+	* libio/ioseekoff.c: Change to use _IO_fpos64_t.
+	* libio/ioseekpos.c: Likewise.
+	* libio/libio.h: Define _IO_fpos64_t and _IO_off64_t.
+	(_IO_FILE): Move _offset field to end and change type to _IO_off64_t.
+	(_IO_seekoff, _IO_seekpos): Change prototype.
+	* libio/libioP.h (_IO_seekoff_t, _IO_seekpos_t, _IO_seek_t): Change
+	to use _IO_off64_t.
+	Change prototypes for function from the *ops.c files.
+	* libio/stdio.h: Add LFS interface definition.
+	* libio/strops.c (_IO_str_seekoff): Change to use _IO_fpos64_t.
+	* posix/Makefile (routines): Add pread64 and pwrite64.
+	* posix/confstr.c: Handle _CS_LFS* requests.
+	* posix/getconf.c: Handle LFS* requests.
+	* sysdeps/generic/confname.h: Add _CS_LFS* constants.
+	* posix/unistd.h: Document _LFS64_LARGEFILE and _LFS64_STDIO.
+	Define off_t and off64_t appropriately.  Change prototypes of
+	LFS functions.
+	* posix/sys/types.h: Add LFS types.
+	* resources/Makefile (routines): Add getrlimit64 and setlimit64.
+	* resource/sys/resource.h: Change prototypes of LFS functions.
+	* stdio-common/Makefile (routines): Add tmpfile64.
+	* stdio-common/tmpfile64.c: New file.
+	* sysdeps/generic/_G_config.h: Define _G_fpos64_t and _G_off64_t.
+	Define _G_OPEN64, _G_LSEEK64, _G_FSTAT64.
+	* sysdeps/unix/sysv/linux/_G_config.h: Likewise.
+	* sysdeps/generic/bits/resource.h: Add LFS definitions.
+	* sysdeps/unix/bsd/sun/sunos4/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/resource.h: Likewise.
+	* sysdeps/generic/statfs.h: Use __fsblkcnt_t for some of the fields.
+	* sysdeps/unix/sysv/linux/bits/statfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/statfs.h: Likewise.
+	* sysdeps/generic/types.h: Define LFS types.
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/types.h: Likewise.
+	* sysdeps/generic/sys/mman.h: Add LFS definitions.
+	* sysdeps/unix/sysv/linux/sys/mman.h: Likewise.
+	* sysdeps/generic/mach/hurd/bits/fcntl.h: Add flock LFS extensions.
+	* sysdeps/unix/bsd/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Likewise.
+	* sysdeps/generic/mach/hurd/bits/stat.h: Add stat LFS extensions.
+	* sysdeps/unix/bsd/bits/stat.h: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/i386/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/stat.h: Likewise.
+	* sysdeps/posix/open64.c: New file.
+	* sysdeps/stub/fstatfs64.c: New file.
+	* sysdeps/stub/fxstat64.c: New file.
+	* sysdeps/stub/getrlimit64.c: New file.
+	* sysdeps/stub/lseek64.c: New file.
+	* sysdeps/stub/lxstat64.c: New file.
+	* sysdeps/stub/open64.c: New file.
+	* sysdeps/stub/pread64.c: New file.
+	* sysdeps/stub/pwrite64.c: New file.
+	* sysdeps/stub/readdir64.c: New file.
+	* sysdeps/stub/readdir64_r.c: New file.
+	* sysdeps/stub/setrlimit64.c: New file.
+	* sysdeps/stub/statfs64.c: New file.
+	* sysdeps/stub/xstat64.c: New file.
+	* sysdeps/unix/sysv/linux/llseek.c: Define as __llseek and make
+	llseek and lseek64 weak aliases.
+	* sysdeps/unix/sysv/linux/lseek64.c: New file.  Empty.
+	* sysdeps/unix/sysv/linux/alpha/bits/dirent.h: New file.
+	* sysdeps/unix/sysv/linux/bits/dirent.h: Add LFS definitions.
+
+	* sysdeps/posix/tempname.c: Add extra argument to trigger use of
+	open64.
+	* sysdeps/stub/tempname.c: Likewise.
+	* stdio-common/tempnam.c: Call __stdio_gen_tempname with extra
+	argument.
+	* stdio-common/tmpfile.c: Likewise.
+	* stdio-common/tmpnam.c: Likewise.
+	* stdio-common/tmpnam_r.c: Likewise.
+
+	* libio/libioP.h: Add definition ofr showmanyc and imbue callbacks.
+	* libio/fileops.c (_IO_file_jumps): Initialize showmanyc and imbue.
+	* libio/iofopncook.c (_IO_cookie_jumps): Likewise.
+	* libio/iopopen.c (_IO_proc_jumps): Likewise.
+	* libio/memstream.c (_IO_mem_jumps): Likewise.
+	* libio/obprintf.c (_IO_obstack_jumps): Likewise.
+	* libio/vsnprintf.c (_IO_strn_jumps): Likewise.
+	* libio/strops.c (_IO_str_jumps): Likewise.
+
+	* manual/arith.texi: Add a few words why cabs should be used.
+	* manual/llio.texi: Describe sync, fsync, fdatasync.
+	Tell about cleanup handlers & fcntl,lseek,write,read,close,open.
+	* manual/process.texi: Tell about cleanup handlers & system,waitpid,
+	wait.
+	* manual/signal.texi: Likewise for pause.
+	* manual/terminal.texi: Likewise for tcdrain.
+	* manual/time.texi: Document nanosleep.
+
+	* posix/exevp.c: Don't use nested function.
+
+	* stdlib/ucontext.h: New file.
+	* sysdeps/i386/sys/ucontext.h: New file.  SysV/i386 API definitions.
+
+	* sunrpc/xcrypt.c (hexval): Make a macro for efficiency.
+
+	* sysdeps/i386/setjmp.h: Make `here` label local.
+
+	* sysdeps/i386/elf/start.S: Define _fp_hw "variable".
+
+	* sysdeps/stub/fstatfs.c: Correct warning.
+	* sysdeps/stub/fxstat.c: Likewise.
+	* sysdeps/stub/lxstat.c: Likewise.
+
+	* sysdeps/unix/sysv/i386/i686/time.S: New file.
+
+1997-10-03 20:56  Jason Merrill  <jason@yorick.cygnus.com>
+
+	* malloc/obstack.h (obstack_empty_p): New macro.
+
+1997-10-04 17:41  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* inet/getnameinfo.c (getnameinfo): Remove spurious `#if INET6'.
+
+1997-09-30  Zack Weinberg <zack@rabi.phys.columbia.edu>
+
+	* maint.texi: Add copyright terms for libdb (Sleepycat, Harvard).
+	Document new --with-binutils switch; delete reference to
+	--with-gnu-as, --with-gnu-ld, --with-gnu-binutils.
+	Add to description of --without-fp: a kernel FPU emulator
+	is adequate (from FAQ)
+	* INSTALL: Regenerated.
+
+1997-09-30 17:29  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Move
+	_dl_hwcap declaration to ...
+	(elf_machine_fixup_plt): ... here.
+
 1997-09-30 18:03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makerules: Undo last change.

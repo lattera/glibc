@@ -2,7 +2,7 @@
 struct kernel_stat
   {
     unsigned int st_dev;
-    unsigned int st_ino;
+    unsigned long int st_ino;
     unsigned int st_mode;
     short int st_nlink;
     unsigned int st_uid;
@@ -18,5 +18,5 @@ struct kernel_stat
     unsigned long int __unused2;
   };
 
-#define _HAVE___UNUSED1 
-#define _HAVE___UNUSED2 
+#define _HAVE___UNUSED1
+#define _HAVE___UNUSED2

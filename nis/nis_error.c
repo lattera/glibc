@@ -21,7 +21,6 @@
 #include <syslog.h>
 #include <string.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 
 static const char *nis_errlist[] =

@@ -109,7 +109,9 @@ static struct _IO_jump_t _IO_obstack_jumps =
   JUMP_INIT(write, NULL),
   JUMP_INIT(seek, NULL),
   JUMP_INIT(close, NULL),
-  JUMP_INIT(stat, NULL)
+  JUMP_INIT(stat, NULL),
+  JUMP_INIT(showmanyc, NULL),
+  JUMP_INIT(imbue, NULL)
 };
 
 

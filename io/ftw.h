@@ -88,21 +88,45 @@ struct FTW
 /* Convenient types for callback functions.  */
 typedef int (*__ftw_func_t) __P ((__const char *__filename,
 				  __const struct stat *__status, int __flag));
+typedef int (*__ftw64_func_t) __P ((__const char *__filename,
+				    __const struct stat64 *__status,
+				    int __flag));
 #ifdef __USE_XOPEN_EXTENDED
 typedef int (*__nftw_func_t) __P ((__const char *__filename,
 				   __const struct stat *__status, int __flag,
 				   struct FTW *__info));
+typedef int (*__nftw64_func_t) __P ((__const char *__filename,
+				     __const struct stat64 *__status,
+				     int __flag, struct FTW *__info));
 #endif
 
 /* Call a function on every element in a directory tree.  */
+#ifndef __USE_FILE_OFFSET64
 extern int ftw __P ((__const char *__dir, __ftw_func_t __func,
 		     int __descriptors));
+#else
+extern int ftw __P ((__const char *__dir, __ftw64_func_t __func,
+		     int __descriptors)) __asm__ ("ftw64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern int ftw64 __P ((__const char *__dir, __ftw64_func_t __func,
+		       int __descriptors));
+#endif
 
 #ifdef __USE_XOPEN_EXTENDED
 /* Call a function on every element in a directory tree.  FLAG allows
    to specify the behaviour more detailed.  */
+# ifndef __USE_FILE_OFFSET64
 extern int nftw __P ((__const char *__dir, __nftw_func_t __func,
 		      int __descriptors, int __flag));
+# else
+extern int nftw __P ((__const char *__dir, __nftw64_func_t __func,
+		      int __descriptors, int __flag)) __asm__ ("nftw64");
+# endif
+# ifdef __USE_LARGEFILE64
+extern int nftw64 __P ((__const char *__dir, __nftw64_func_t __func,
+			int __descriptors, int __flag));
+# endif
 #endif
 
 __END_DECLS

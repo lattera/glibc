@@ -45,8 +45,8 @@ struct leap
 
 extern char * __tzstring (const char *); /* Defined in tzset.c.  */
 
-static struct ttinfo *find_transition (time_t timer);
-static void compute_tzname_max (size_t);
+static struct ttinfo *find_transition (time_t timer) internal_function;
+static void compute_tzname_max (size_t) internal_function;
 
 static size_t num_transitions;
 static time_t *transitions = NULL;
@@ -382,6 +382,7 @@ __tzfile_default (const char *std, const char *dst,
 }
 
 static struct ttinfo *
+internal_function
 find_transition (time_t timer)
 {
   size_t i;
@@ -460,6 +461,7 @@ __tzfile_compute (time_t timer, int use_localtime,
 }
 
 static void
+internal_function
 compute_tzname_max (size_t chars)
 {
   extern size_t __tzname_cur_max; /* Defined in tzset.c. */

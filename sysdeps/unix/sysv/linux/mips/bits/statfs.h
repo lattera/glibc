@@ -23,22 +23,52 @@
 #ifndef _BITS_STATFS_H
 #define _BITS_STATFS_H
 
+#include <bits/types.h>  /* for __fsid_t and __fsblkcnt_t*/
+
 struct statfs
   {
     long int f_type;
 #define f_fstyp f_type
     long int f_bsize;
     long int f_frsize;	/* Fragment size - unsupported */
-    long int f_blocks;
-    long int f_bfree;
-    long int f_files;
-    long int f_ffree;
+#ifndef __USE_FILE_OFFSET64
+    __fsblkcnt_t f_blocks;
+    __fsblkcnt_t f_bfree;
+    __fsblkcnt_t f_files;
+    __fsblkcnt_t f_ffree;
+    __fsblkcnt_t f_bavail;
+#else
+    __fsblkcnt64_t f_blocks;
+    __fsblkcnt64_t f_bfree;
+    __fsblkcnt64_t f_files;
+    __fsblkcnt64_t f_ffree;
+    __fsblkcnt64_t f_bavail;
+#endif
 
 	/* Linux specials */
-    long int f_bavail;
     __fsid_t f_fsid;
     long int f_namelen;
     long int f_spare[6];
   };
+
+#ifdef __USE_LARGEFILE64
+struct statfs64
+  {
+    long int f_type;
+#define f_fstyp f_type
+    long int f_bsize;
+    long int f_frsize;	/* Fragment size - unsupported */
+    __fsblkcnt64_t f_blocks;
+    __fsblkcnt64_t f_bfree;
+    __fsblkcnt64_t f_files;
+    __fsblkcnt64_t f_ffree;
+    __fsblkcnt64_t f_bavail;
+
+	/* Linux specials */
+    __fsid_t f_fsid;
+    long int f_namelen;
+    long int f_spare[6];
+  };
+#endif
 
 #endif	/* bits/statfs.h */

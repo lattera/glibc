@@ -85,4 +85,6 @@ extern  u_int * ypu_delete_1_svc __P ((ypdelete_args *, struct svc_req *));
 extern  u_int * ypu_store_1 __P ((ypupdate_args *, CLIENT *));
 extern  u_int * ypu_store_1_svc __P ((ypupdate_args *, struct svc_req *));
 
+__END_DECLS
+
 #endif /* !__RPCSVC_YPUPD_H__ */

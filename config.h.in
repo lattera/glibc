@@ -52,6 +52,17 @@
 /* Define if gcc uses DWARF2 unwind information for exception support.  */
 #undef	HAVE_DWARF2_UNWIND_INFO
 
+/* Define is the regparm attribute shall be used for local functions
+   (gcc on ix86 only).  */
+#undef	USE_REGPARMS
+
+
+/* Defined to some form of __attribute__ ((...)) if the compiler supports
+   a different, more efficient calling convention.  */
+#ifdef USE_REGPARMS
+# define internal_function __attribute__ ((regparm (3), stdcall))
+#endif
+
 /*
  */
 

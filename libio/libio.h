@@ -30,9 +30,11 @@
 #include <_G_config.h>
 #define _IO_pos_t _G_fpos_t /* obsolete */
 #define _IO_fpos_t _G_fpos_t
+#define _IO_fpos64_t _G_fpos64_t
 #define _IO_size_t _G_size_t
 #define _IO_ssize_t _G_ssize_t
 #define _IO_off_t _G_off_t
+#define _IO_off64_t _G_off64_t
 #define _IO_pid_t _G_pid_t
 #define _IO_uid_t _G_uid_t
 #define _IO_HAVE_SYS_WAIT _G_HAVE_SYS_WAIT
@@ -205,7 +207,7 @@ struct _IO_FILE {
 
   int _fileno;
   int _blksize;
-  _IO_off_t _offset;
+  _IO_off_t _unused2;	/* This used to be _offset but it's too small.  */
 
 #define __HAVE_COLUMN /* temporary */
   /* 1+column number of pbase(); 0 is unknown. */
@@ -216,6 +218,8 @@ struct _IO_FILE {
   /*  char* _save_gptr;  char* _save_egptr; */
 
   _IO_lock_t *_lock;
+
+  _IO_off64_t _offset;
 };
 
 #ifndef __cplusplus
@@ -303,8 +307,8 @@ extern int _IO_vfprintf __P ((_IO_FILE *, const char *, _IO_va_list));
 extern _IO_ssize_t _IO_padn __P ((_IO_FILE *, int, _IO_ssize_t));
 extern _IO_size_t _IO_sgetn __P ((_IO_FILE *, void *, _IO_size_t));
 
-extern _IO_fpos_t _IO_seekoff __P ((_IO_FILE *, _IO_off_t, int, int));
-extern _IO_fpos_t _IO_seekpos __P ((_IO_FILE *, _IO_fpos_t, int));
+extern _IO_fpos64_t _IO_seekoff __P ((_IO_FILE *, _IO_off64_t, int, int));
+extern _IO_fpos64_t _IO_seekpos __P ((_IO_FILE *, _IO_fpos64_t, int));
 
 extern void _IO_free_backup_area __P ((_IO_FILE *));
 

@@ -240,6 +240,8 @@ static inline void
 elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
 		       Elf32_Addr *reloc_addr, Elf32_Addr value)
 {
+  extern unsigned long _dl_hwcap;
+
   /* For thread safety, write the instructions from the bottom and
      flush before we overwrite the critical "b,a".  This of course
      need not be done during bootstrapping, since there are no threads.
@@ -258,6 +260,14 @@ elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
 #endif
 }
 
+/* Return the final value of a plt relocation.  */
+static inline Elf32_Addr
+elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
+		       Elf32_Addr value)
+{
+  return value + reloc->r_addend;
+}
+
 #ifdef RESOLVE
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
@@ -268,8 +278,6 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
 		  Elf32_Addr *const reloc_addr)
 {
-  extern unsigned long _dl_hwcap;
-
   if (ELF32_R_TYPE (reloc->r_info) == R_SPARC_RELATIVE)
     {
 #ifndef RTLD_BOOTSTRAP

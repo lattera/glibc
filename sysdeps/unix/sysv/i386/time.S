@@ -17,11 +17,13 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#include <asm-syntax.h>
 
 SYSCALL (time, 1)
 	movl 4(%esp), %edx	/* Put passed pointer in %edx.  */
 	testl %edx, %edx	/* Is it non-nil?  */
-	je null
+	je L(null)
 	movl %eax, (%edx)	/* Yes; store the time there.  */
-null:	ret
+L(null):
+	ret
 PSEUDO_END (time)

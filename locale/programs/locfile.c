@@ -612,7 +612,7 @@ from-value of `collating-element' must be a string"));
 		  now = lr_token (ldfile, charset);
 		}
 	      while (now->tok == tok_comma
-		     && (now == lr_token (ldfile, charset) != tok_none));
+		     && ((now = lr_token (ldfile, charset)) != tok_none));
 
 	      /* Check for consistency: forward and backwards are
 		 mutually exclusive.  */

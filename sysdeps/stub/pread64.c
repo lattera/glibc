@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,22 +16,28 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stddef.h>
 #include <errno.h>
+#include <unistd.h>
 
-#define	_MALLOC_INTERNAL
-#include <malloc.h>
-
-/* Allocate INCREMENT more bytes of data space,
-   and return the start of data space, or NULL on errors.
-   If INCREMENT is negative, shrink data space.  */
-__ptr_t
-__default_morecore (increment)
-     ptrdiff_t increment;
+/* Read NBYTES into BUF from FD at the given position OFFSET without
+   changing the file pointer.  Return the number read or -1.  */
+ssize_t
+pread64 (int fd, void *buf, size_t nbytes, off64_t offset)
 {
+  if (nbytes == 0)
+    return 0;
+  if (fd < 0)
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
+  if (buf == NULL || offset < 0)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
   __set_errno (ENOSYS);
-  return NULL;
+  return -1;
 }
-
-
-stub_warning (__default_morecore)
+stub_warning (pread64)

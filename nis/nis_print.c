@@ -21,7 +21,6 @@
 #include <string.h>
 
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 static const char *
 nis_nstype2str (const nstype type)
@@ -49,10 +48,9 @@ nis_nstype2str (const nstype type)
     }
 }
 
-static char *
-nis_ttl2str (const u_long ttl)
+static void
+print_ttl (const u_long ttl)
 {
-  static char buf[64];
   unsigned long int time, s, m, h;
 
   time = ttl;
@@ -62,19 +60,40 @@ nis_ttl2str (const u_long ttl)
   m = time / 60;
   time %= 60;
   s = time;
-  snprintf (buf, 63, "%lu:%02lu:%02lu", h, m, s);
-
-  return buf;
+  printf ("%lu:%lu:%lu\n", h, m, s);
 }
 
-static char *
-nis_flags2str (const u_long flags)
+static void
+print_flags (const u_long flags)
 {
-  static char buf[1024];
+  fputs ("(", stdout);
 
-  snprintf (buf, 1023, "%lu", flags);
+  if (flags & TA_SEARCHABLE)
+    fputs ("SEARCHABLE, ", stdout);
 
-  return buf;
+  if (flags & TA_BINARY)
+    {
+      fputs ("BINARY DATA", stdout);
+      if (flags & TA_XDR)
+	fputs (", XDR ENCODED", stdout);
+      if (flags & TA_ASN1)
+	fputs (", ASN.1 ENCODED", stdout);
+      if (flags & TA_CRYPT)
+	fputs (", ENCRYPTED", stdout);
+    }
+  else
+    {
+      fputs("TEXTUAL DATA", stdout);
+      if (flags & TA_SEARCHABLE)
+	{
+	  if (flags & TA_CASE)
+	    fputs (", CASE INSENSITIVE", stdout);
+	  else
+	    fputs (", CASE SENSITIVE", stdout);
+	}
+    }
+
+  fputs (")\n", stdout);
 }
 
 static void
@@ -82,28 +101,28 @@ nis_print_objtype (enum zotypes type)
 {
   switch (type)
     {
-    case BOGUS_OBJ:
+    case NIS_BOGUS_OBJ:
       fputs (_("BOGUS OBJECT\n"), stdout);
       break;
-    case NO_OBJ:
+    case NIS_NO_OBJ:
       fputs (_("NO OBJECT\n"), stdout);
       break;
-    case DIRECTORY_OBJ:
+    case NIS_DIRECTORY_OBJ:
       fputs (_("DIRECTORY\n"), stdout);
       break;
-    case GROUP_OBJ:
+    case NIS_GROUP_OBJ:
       fputs (_("GROUP\n"), stdout);
       break;
-    case TABLE_OBJ:
+    case NIS_TABLE_OBJ:
       fputs (_("TABLE\n"), stdout);
       break;
-    case ENTRY_OBJ:
+    case NIS_ENTRY_OBJ:
       fputs (_("ENTRY\n"), stdout);
       break;
-    case LINK_OBJ:
+    case NIS_LINK_OBJ:
       fputs (_("LINK\n"), stdout);
       break;
-    case PRIVATE_OBJ:
+    case NIS_PRIVATE_OBJ:
       fputs (_("PRIVATE\n"), stdout);
       break;
     default:
@@ -141,7 +160,7 @@ nis_print_directory (const directory_obj *dir)
   unsigned int i;
 
   printf (_("Name : '%s'\n"), dir->do_name);
-  printf (_("Type : %s\n"), gettext (nis_nstype2str (dir->do_type)));
+  printf (_("Type : %s\n"), nis_nstype2str (dir->do_type));
   sptr = dir->do_servers.do_servers_val;
   for (i = 0; i < dir->do_servers.do_servers_len; i++)
     {
@@ -157,16 +176,20 @@ nis_print_directory (const directory_obj *dir)
 	  fputs (_("None.\n"), stdout);
 	  break;
 	case NIS_PK_DH:
-	  fputs (_("DH.\n"), stdout);
+	  fprintf (stdout, _("Diffie-Hellmann (%d bits)\n"),
+		   (sptr->pkey.n_len - 1) * 4);
+	  /* sptr->pkey.n_len counts the last 0, too */
 	  break;
 	case NIS_PK_RSA:
-	  fputs (_("RSA.\n"), stdout);
+	  fprintf (stdout, _("RSA (%d bits)\n"),
+		   (sptr->pkey.n_len - 1) * 4);
 	  break;
 	case NIS_PK_KERB:
-	  fputs (_("Kerberous.\n"), stdout);
+	  fputs (_("Kerberos.\n"), stdout);
 	  break;
 	default:
-	  fputs (_("Unknown.\n"), stdout);
+	  fprintf (stdout, _("Unknown (type = %d, bits = %d)\n"),
+		   sptr->key_type, (sptr->pkey.n_len - 1) * 4);
 	  break;
 	}
 
@@ -198,7 +221,9 @@ nis_print_directory (const directory_obj *dir)
       sptr++;
     }
 
-  printf (_("Time to live : %s\n"), nis_ttl2str (dir->do_ttl));
+  fputs (_("Time to live : "), stdout);
+  print_ttl (dir->do_ttl);
+  fputs (_("Default Access rights :\n"), stdout);
   if (dir->do_armask.do_armask_len != 0)
     {
       oar_mask *ptr;
@@ -206,9 +231,11 @@ nis_print_directory (const directory_obj *dir)
       ptr = dir->do_armask.do_armask_val;
       for (i = 0; i < dir->do_armask.do_armask_len; i++)
 	{
-	  fputs (_("Default Access rights: "), stdout);
 	  nis_print_rights (ptr->oa_rights);
-	  printf (_("\nDirect Type : %d\n"), ptr->oa_otype);
+	  printf (_("\tType         : %s\n"), nis_nstype2str (ptr->oa_otype));
+	  printf (_("\tAccess rights: "));
+	  nis_print_rights (ptr->oa_rights);
+	  fputs ("\n", stdout);
 	  ptr++;
 	}
     }
@@ -242,8 +269,8 @@ nis_print_table (const table_obj *obj)
     {
       printf (_("\t[%d]\tName          : %s\n"), i,
 	      obj->ta_cols.ta_cols_val[i].tc_name);
-      printf (_("\t\tAttributes    : %s\n"),
-	      nis_flags2str (obj->ta_cols.ta_cols_val[i].tc_flags));
+      fputs (_("\t\tAttributes    : "), stdout);
+      print_flags (obj->ta_cols.ta_cols_val[i].tc_flags);
       fputs (_("\t\tAccess Rights : "), stdout);
       nis_print_rights (obj->ta_cols.ta_cols_val[i].tc_rights);
       fputc ('\n', stdout);
@@ -274,7 +301,8 @@ nis_print_entry (const entry_obj *obj)
       else if ((obj->en_cols.en_cols_val[i].ec_flags & EN_BINARY) == EN_BINARY)
 	fputs (_("Binary data\n"), stdout);
       else
-	printf ("%s\n", obj->en_cols.en_cols_val[i].ec_value.ec_value_val);
+	printf ("%.*s\n", (int)obj->en_cols.en_cols_val[i].ec_value.ec_value_len,
+		obj->en_cols.en_cols_val[i].ec_value.ec_value_val);
     }
 }
 
@@ -287,29 +315,30 @@ nis_print_object (const nis_object * obj)
   printf (_("Group         : %s\n"), obj->zo_group);
   fputs (_("Access Rights : "), stdout);
   nis_print_rights (obj->zo_access);
-  printf (_("\nTime to Live  : %lu (seconds)\n"), obj->zo_ttl);
+  printf (_("\nTime to Live  : "));
+  print_ttl (obj->zo_ttl);
   printf (_("Creation Time : %s"), ctime (&obj->zo_oid.ctime));
   printf (_("Mod. Time     : %s"), ctime (&obj->zo_oid.mtime));
   fputs (_("Object Type   : "), stdout);
   nis_print_objtype (obj->zo_data.zo_type);
   switch (obj->zo_data.zo_type)
     {
-    case DIRECTORY_OBJ:
+    case NIS_DIRECTORY_OBJ:
       nis_print_directory (&obj->zo_data.objdata_u.di_data);
       break;
-    case GROUP_OBJ:
+    case NIS_GROUP_OBJ:
       nis_print_group (&obj->zo_data.objdata_u.gr_data);
       break;
-    case TABLE_OBJ:
+    case NIS_TABLE_OBJ:
       nis_print_table (&obj->zo_data.objdata_u.ta_data);
       break;
-    case ENTRY_OBJ:
+    case NIS_ENTRY_OBJ:
       nis_print_entry (&obj->zo_data.objdata_u.en_data);
       break;
-    case LINK_OBJ:
+    case NIS_LINK_OBJ:
       nis_print_link (&obj->zo_data.objdata_u.li_data);
       break;
-    case PRIVATE_OBJ:
+    case NIS_PRIVATE_OBJ:
       printf (_("    Data Length = %u\n"),
 	      obj->zo_data.objdata_u.po_data.po_data_len);
       break;

@@ -205,15 +205,15 @@ _IO_str_count (fp)
 	  - fp->_IO_read_base);
 }
 
-_IO_pos_t
+_IO_fpos64_t
 _IO_str_seekoff (fp, offset, dir, mode)
      _IO_FILE *fp;
-     _IO_off_t offset;
+     _IO_off64_t offset;
      int dir;
      int mode;
 {
   _IO_ssize_t cur_size = _IO_str_count (fp);
-  _IO_pos_t new_pos = EOF;
+  _IO_fpos64_t new_pos = EOF;
 
   /* Move the get pointer, if requested. */
   if (mode & _IOS_INPUT)
@@ -299,5 +299,7 @@ struct _IO_jump_t _IO_str_jumps =
   JUMP_INIT(write, _IO_default_write),
   JUMP_INIT(seek, _IO_default_seek),
   JUMP_INIT(close, _IO_default_close),
-  JUMP_INIT(stat, _IO_default_stat)
+  JUMP_INIT(stat, _IO_default_stat),
+  JUMP_INIT(showmanyc, _IO_default_showmanyc),
+  JUMP_INIT(imbue, _IO_default_imbue)
 };

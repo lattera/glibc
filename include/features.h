@@ -30,6 +30,9 @@
    _XOPEN_SOURCE	Includes POSIX and XPG things.  Set to 500 if
 			Single Unix conformance is wanted.
    _XOPEN_SOURCE_EXTENDED XPG things and X/Open Unix extensions.
+   _LARGEFILE_SOURCE	Some more functions for correct standard I/O.
+   _LARGEFILE64_SOURCE	Additional functionality from LFS for large files.
+   _FILE_OFFSET_BITS=N	Select default filesystem interface.
    _BSD_SOURCE		ISO C, POSIX, and 4.3BSD things.
    _SVID_SOURCE		ISO C, POSIX, and SVID things.
    _GNU_SOURCE		All of the above, plus GNU extensions.
@@ -52,6 +55,8 @@
    __USE_XOPEN		Define XPG things.
    __USE_XOPEN_EXTENDED	Define X/Open Unix things.
    __USE_UNIX98		Define Single Unix V2 things.
+   __USE_LARGEFILE64	Define LFS things with separate names.
+   __USE_FILE_OFFSET64	Define 64bit interface as default.
    __USE_BSD		Define 4.3BSD things.
    __USE_SVID		Define SVID things.
    __USE_MISC		Define things common to BSD and System V Unix.
@@ -78,6 +83,10 @@
 #undef	__USE_POSIX199309
 #undef	__USE_XOPEN
 #undef	__USE_XOPEN_EXTENDED
+#undef	__USE_UNIX98
+#undef	__USE_LARGEFILE
+#undef	__USE_LARGEFILE64
+#undef	__USE_FILE_OFFSET64
 #undef	__USE_BSD
 #undef	__USE_SVID
 #undef	__USE_MISC
@@ -100,6 +109,7 @@
 #if defined _BSD_SOURCE && \
     !(defined _POSIX_SOURCE || defined _POSIX_C_SOURCE || \
       defined _XOPEN_SOURCE || defined _XOPEN_SOURCE_EXTENDED || \
+      defined _LARGEFILE64_SOURCE || defined _FILE_OFFSET_BITS || \
       defined _GNU_SOURCE || defined _SVID_SOURCE)
 # define __FAVOR_BSD	1
 #endif
@@ -116,6 +126,8 @@
 # define _XOPEN_SOURCE	500
 # undef  _XOPEN_SOURCE_EXTENDED
 # define _XOPEN_SOURCE_EXTENDED	1
+# undef	 _LARGEFILE64_SOURCE
+# define _LARGEFILE64_SOURCE	1
 # undef  _BSD_SOURCE
 # define _BSD_SOURCE	1
 # undef  _SVID_SOURCE
@@ -127,6 +139,7 @@
 #if (!defined __STRICT_ANSI__ && !defined _ISOC9X_SOURCE && \
      !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE && \
      !defined _XOPEN_SOURCE && !defined _XOPEN_SOURCE_EXTENDED && \
+     !defined _LARGEFILE64_SOURCE && !defined _FILE_OFFSET_BITS && \
      !defined _BSD_SOURCE && !defined _SVID_SOURCE)
 # define _BSD_SOURCE	1
 # define _SVID_SOURCE	1
@@ -143,7 +156,7 @@
 #if (!defined __STRICT_ANSI__ && !defined _POSIX_SOURCE && \
      !defined _POSIX_C_SOURCE)
 # define _POSIX_SOURCE	1
-# if defined _XOPEN_SOURCE && _XOPEN_SOURCE != 500
+# if defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) != 500
 #  define _POSIX_C_SOURCE	2
 # else
 #  define _POSIX_C_SOURCE	199309L
@@ -164,14 +177,28 @@
 
 #ifdef	_XOPEN_SOURCE
 # define __USE_XOPEN	1
-# if _XOPEN_SOURCE == 500
+# if (_XOPEN_SOURCE - 0) == 500
 #  define __USE_XOPEN_EXTENDED	1
 #  define __USE_UNIX98	1
+#  undef _LARGEFILE_SOURCE
+#  define _LARGEFILE_SOURCE	1
 # else
 #  ifdef _XOPEN_SOURCE_EXTENDED
 #   define __USE_XOPEN_EXTENDED	1
 #  endif
 # endif
+#endif
+
+#ifdef _LARGEFILE_SOURCE
+# define __USE_LARGEFILE	1
+#endif
+
+#ifdef _LARGEFILE64_SOURCE
+# define __USE_LARGEFILE64	1
+#endif
+
+#if defined _FILE_OFFSET_BITS && _FILE_OFFSET_BITS == 64
+# define __USE_FILE_OFFSET64	1
 #endif
 
 #if defined _BSD_SOURCE || defined _SVID_SOURCE

@@ -25,7 +25,6 @@
     {
       const char *cp;
       char *hostname;
-      struct hostent *host;
       typedef unsigned char host_addr_t [16];
       host_addr_t *host_addr;
       typedef char *host_addr_list_t [2];
@@ -53,7 +52,7 @@
 	  break;
 	}
 
-      size_needed = (sizeof (*host) + sizeof (*host_addr)
+      size_needed = (sizeof (*host_addr)
 		     + sizeof (*host_aliases) + sizeof (*h_addr_ptrs)
 		     + strlen (name) + 1);
 
@@ -86,8 +85,7 @@
 
       memset (buffer, 0, size_needed);
 
-      host = (struct hostent *) buffer;
-      host_addr = (host_addr_t *) ((char *) host + sizeof (*host));
+      host_addr = (host_addr_t *) buffer;
       host_aliases = (host_addr_list_t *)
 	((char *) host_addr + sizeof (*host_addr));
       h_addr_ptrs = (host_addr_list_t *)
@@ -115,13 +113,12 @@
 		      goto done;
 		    }
 
-		  strcpy (hostname, name);
-		  host->h_name = hostname;
-		  host->h_aliases = *host_aliases;
+		  resbuf.h_name = strcpy (hostname, name);
+		  resbuf.h_aliases = *host_aliases;
 		  (*host_aliases)[0] = NULL;
 		  (*h_addr_ptrs)[0] = (char *)host_addr;
 		  (*h_addr_ptrs)[1] = (char *)0;
-		  host->h_addr_list = *h_addr_ptrs;
+		  resbuf.h_addr_list = *h_addr_ptrs;
 		  if (_res.options & RES_USE_INET6 && af == AF_INET)
 		    {
 		      /* We need to change the IP v4 address into the
@@ -138,19 +135,19 @@
 		      *p++ = 0xff;
 		      /* Copy the IP v4 address. */
 		      memcpy (p, tmp, INADDRSZ);
-		      host->h_addrtype = AF_INET6;
-		      host->h_length = IN6ADDRSZ;
+		      resbuf.h_addrtype = AF_INET6;
+		      resbuf.h_length = IN6ADDRSZ;
 		    }
 		  else
 		    {
-		      host->h_addrtype = af;
-		      host->h_length = addr_size;
+		      resbuf.h_addrtype = af;
+		      resbuf.h_length = addr_size;
 		    }
 		  __set_h_errno (NETDB_SUCCESS);
 #ifdef HAVE_LOOKUP_BUFFER
 		  status = NSS_STATUS_SUCCESS;
 #else
-		  result = host;
+		  result = &resbuf;
 #endif
 		  goto done;
 		}
@@ -164,7 +161,6 @@
 	{
 	  const char *cp;
 	  char *hostname;
-	  struct hostent *host;
 	  typedef unsigned char host_addr_t [16];
 	  host_addr_t *host_addr;
 	  typedef char *host_addr_list_t [2];
@@ -192,7 +188,7 @@
 	      break;
 	    }
 
-	  size_needed = (sizeof (*host) + sizeof (*host_addr)
+	  size_needed = (sizeof (*host_addr)
 			 + sizeof (*host_aliases) + sizeof (*h_addr_ptrs)
 			 + strlen (name) + 1);
 
@@ -225,8 +221,7 @@
 
 	  memset (buffer, 0, size_needed);
 
-	  host = (struct hostent *) buffer;
-	  host_addr = (host_addr_t *) ((char *) host + sizeof (*host));
+	  host_addr = (host_addr_t *) buffer;
 	  host_aliases = (host_addr_list_t *)
 	    ((char *) host_addr + sizeof (*host_addr));
 	  h_addr_ptrs = (host_addr_list_t *)
@@ -252,19 +247,19 @@
 		    }
 
 		  strcpy (hostname, name);
-		  host->h_name = hostname;
-		  host->h_aliases = *host_aliases;
+		  resbuf.h_name = hostname;
+		  resbuf.h_aliases = *host_aliases;
 		  (*host_aliases)[0] = NULL;
 		  (*h_addr_ptrs)[0] = (char *) host_addr;
 		  (*h_addr_ptrs)[1] = (char *) 0;
-		  host->h_addr_list = *h_addr_ptrs;
-		  host->h_addrtype = af;
-		  host->h_length = addr_size;
+		  resbuf.h_addr_list = *h_addr_ptrs;
+		  resbuf.h_addrtype = af;
+		  resbuf.h_length = addr_size;
 		  __set_h_errno (NETDB_SUCCESS);
 #ifdef HAVE_LOOKUP_BUFFER
 		  status = NSS_STATUS_SUCCESS;
 #else
-		  result = host;
+		  result = &resbuf;
 #endif
 		  goto done;
 		}

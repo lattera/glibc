@@ -1,5 +1,7 @@
-/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
+/* Compute x * y + z as ternary operation.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,17 +18,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <stdlib.h>
+#include <math.h>
 
-/* Return the value of the environment variable NAME.  */
-char *
-getenv (name)
-     const char *name;
+float
+__fmaf (float x, float y, float z)
 {
-  __set_errno (ENOSYS);
-  return NULL;
+  return (x * y) + z;
 }
-
-
-stub_warning (getenv)
+weak_alias (__fmaf, fmaf)

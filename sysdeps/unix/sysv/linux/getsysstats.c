@@ -1,5 +1,5 @@
-/* getsysstats - Determine various system internal values, Linux version.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+/* Determine various system internal values, Linux version.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -30,6 +30,7 @@
 
 /* Determine the path to the /proc filesystem if available.  */
 static char *
+internal_function
 get_proc_path (char *buffer, size_t bufsize)
 {
   FILE *fp;
@@ -115,6 +116,7 @@ weak_alias (__get_nprocs, get_nprocs_conf)
 /* General function to get information about memory status from proc
    filesystem.  */
 static int
+internal_function
 phys_pages_info (const char *format)
 {
   FILE *fp;

@@ -26,61 +26,61 @@
 
 #ifdef __GNUC__
 
-#define	__P(args)	args	/* GCC can always grok prototypes.  */
-#define	__DOTS		, ...
+# define __P(args)	args	/* GCC can always grok prototypes.  */
+# define __DOTS		, ...
 
 #else	/* Not GCC.  */
 
-#define	__inline		/* No inline functions.  */
+# define __inline		/* No inline functions.  */
 
-#if (defined (__STDC__) && __STDC__) || defined (__cplusplus)
+# if (defined __STDC__ && __STDC__) || defined __cplusplus
 
-#define	__P(args)	args
-#define	__const		const
-#define	__signed	signed
-#define	__volatile	volatile
-#define	__DOTS		, ...
+#  define __P(args)	args
+#  define __const	const
+#  define __signed	signed
+#  define __volatile	volatile
+#  define __DOTS	, ...
 
-#else	/* Not ANSI C or C++.  */
+# else	/* Not ANSI C or C++.  */
 
-#define	__P(args)	()	/* No prototypes.  */
-#define	__const			/* No ANSI C keywords.  */
-#define	__signed
-#define	__volatile
-#define	__DOTS
+#  define __P(args)	()	/* No prototypes.  */
+#  define __const		/* No ANSI C keywords.  */
+#  define __signed
+#  define __volatile
+#  define __DOTS
 
-#endif	/* ANSI C or C++.  */
+# endif	/* ANSI C or C++.  */
 
 #endif	/* GCC.  */
 
 /* For these things, GCC behaves the ANSI way normally,
    and the non-ANSI way under -traditional.  */
 
-#if defined (__STDC__) && __STDC__
+#if defined __STDC__ && __STDC__
 
-#define	__CONCAT(x,y)	x ## y
-#define	__STRING(x)	#x
+# define __CONCAT(x,y)	x ## y
+# define __STRING(x)	#x
 
 /* This is not a typedef so `const __ptr_t' does the right thing.  */
-#define __ptr_t void *
-#define __long_double_t  long double
+# define __ptr_t void *
+# define __long_double_t  long double
 
 #else
 
-#define	__CONCAT(x,y)	x/**/y
-#define	__STRING(x)	"x"
+# define __CONCAT(x,y)	x/**/y
+# define __STRING(x)	"x"
 
-#define __ptr_t char *
-#define __long_double_t  long double
+# define __ptr_t char *
+# define __long_double_t  long double
 
 /* The BSD header files use the ANSI keywords unmodified (this means that
    old programs may lose if they use the new keywords as identifiers), but
    those names are not available under -traditional.  We define them to
    their __ versions, which are taken care of above.  */
 #ifdef	__USE_BSD
-#define	const		__const
-#define	signed		__signed
-#define	volatile	__volatile
+# define const		__const
+# define signed		__signed
+# define volatile	__volatile
 #endif
 
 #endif	/* __STDC__ */
@@ -88,18 +88,18 @@
 
 /* C++ needs to know that types and declarations are C, not C++.  */
 #ifdef	__cplusplus
-#define	__BEGIN_DECLS	extern "C" {
-#define	__END_DECLS	}
+# define __BEGIN_DECLS	extern "C" {
+# define __END_DECLS	}
 #else
-#define	__BEGIN_DECLS
-#define	__END_DECLS
+# define __BEGIN_DECLS
+# define __END_DECLS
 #endif
 
 /* GCC2 has various useful declarations that can be made with the
    `__attribute__' syntax.  All of the ways we use this do fine if
    they are omitted for compilers that don't understand it.  */
-#if !defined (__GNUC__) || __GNUC__ < 2
-#define __attribute__(xyz)	/* Ignore.  */
+#if !defined __GNUC__ || __GNUC__ < 2
+# define __attribute__(xyz)	/* Ignore.  */
 #endif
 
 

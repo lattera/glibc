@@ -1,5 +1,5 @@
 /* `sysconf', `pathconf', and `confstr' NAME values.  Generic version.
-   Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,7 +97,7 @@ enum
     _SC_SHARED_MEMORY_OBJECTS,
 #define	_SC_SHARED_MEMORY_OBJECTS	_SC_SHARED_MEMORY_OBJECTS
     _SC_AIO_LISTIO_MAX,
-#define	_SC_AIO_LIST_MAX		_SC_AIO_LIST_MAX
+#define	_SC_AIO_LISTIO_MAX		_SC_AIO_LISTIO_MAX
     _SC_AIO_MAX,
 #define	_SC_AIO_MAX			_SC_AIO_MAX
     _SC_AIO_PRIO_DELTA_MAX,
@@ -316,10 +316,32 @@ enum
 #define	_SC_NL_TEXTMAX			_SC_NL_TEXTMAX
   };
 
-#ifdef __USE_POSIX2
+#if (defined __USE_POSIX2 || defined __USE_FILE_OFFSET64 \
+     || defined __USE_LARGEFILE64 || defined __USE_LARGEFILE)
 /* Values for the NAME argument to `confstr'.  */
 enum
   {
-    _CS_PATH			/* The default search path.  */
+    _CS_PATH,			/* The default search path.  */
+#define _CS_PATH		_CS_PATH
+
+#if (defined __USE_FILE_OFFSET64 || defined __USE_LARGEFILE64 \
+     || defined __USE_LARGEFILE)
+    _CS_LFS_CFLAGS = 1000,
+# define _CS_LFS_CFLAGS		_CS_LFS_CFLAGS
+    _CS_LFS_LDFLAGS,
+# define _CS_LFS_LDFLAGS	_CS_LFS_LDFLAGS
+    _CS_LFS_LIBS,
+# define _CS_LFS_LIBS		_CS_LFS_LIBS
+    _CS_LFS_LINTFLAGS,
+# define _CS_LFS_LINTFLAGS	_CS_LFS_LINTFLAGS
+    _CS_LFS64_CFLAGS,
+# define _CS_LFS64_CFLAGS	_CS_LFS64_CFLAGS
+    _CS_LFS64_LDFLAGS,
+# define _CS_LFS64_LDFLAGS	_CS_LFS64_LDFLAGS
+    _CS_LFS64_LIBS,
+# define _CS_LFS64_LIBS		_CS_LFS64_LIBS
+    _CS_LFS64_LINTFLAGS
+# define _CS_LFS64_LINTFLAGS	_CS_LFS64_LINTFLAGS
+#endif
   };
 #endif

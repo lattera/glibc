@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,15 +36,15 @@
 #endif
 
 
-#if	__GNUC__ >= 2
+#if __GNUC__ >= 2
 
  /* Get the compiler's limits.h, which defines all the ANSI constants.  */
- #ifndef _LIBC_LIMITS_H_
- #define _LIBC_LIMITS_H_	/* This tells it not to look for another.  */
- #endif
- #ifndef _GCC_LIMITS_H_		/* This is what GCC's file defines.  */
- #include_next <limits.h>
- #endif
+# ifndef _LIBC_LIMITS_H_
+#  define _LIBC_LIMITS_H_	/* This tells it not to look for another.  */
+# endif
+# ifndef _GCC_LIMITS_H_		/* This is what GCC's file defines.  */
+#  include_next <limits.h>
+# endif
 
 #else	/* Not GCC 2.  */
 

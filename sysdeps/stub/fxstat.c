@@ -44,6 +44,6 @@ __fxstat (int vers, int fd, struct stat *buf)
   __set_errno (ENOSYS);
   return -1;
 }
-stub_warning (__fxstat)
+stub_warning (fstat)
 
 weak_alias (__fxstat, _fxstat)

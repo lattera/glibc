@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
 
 #define	NBBY		CHAR_BIT
 #ifndef	NGROUPS
-#define	NGROUPS		NGROUPS_MAX
+# define NGROUPS		NGROUPS_MAX
 #endif
 #define	MAXSYMLINKS	5
 #define	CANBSIZ		MAX_CANON
@@ -47,7 +47,7 @@
 
 /* Macros for counting and rounding.  */
 #ifndef howmany
-#define	howmany(x, y)	(((x)+((y)-1))/(y))
+# define howmany(x, y)	(((x)+((y)-1))/(y))
 #endif
 #define	roundup(x, y)	((((x)+((y)-1))/(y))*(y))
 #define powerof2(x)	((((x)-1)&(x))==0)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,8 @@
    Return the generated filename or NULL if one could not
    be generated, putting the length of the string in *LENPTR.  */
 char *
-__stdio_gen_tempname (buf, bufsize, dir, pfx, dir_search, lenptr, streamptr)
+__stdio_gen_tempname (buf, bufsize, dir, pfx, dir_search, lenptr, streamptr,
+		      large_file)
      char *buf;
      size_t bufsize;
      const char *dir;
@@ -34,11 +35,11 @@ __stdio_gen_tempname (buf, bufsize, dir, pfx, dir_search, lenptr, streamptr)
      int dir_search;
      size_t *lenptr;
      FILE **streamptr;
+     int large_file;
 {
   *lenptr = 0;
   __set_errno (ENOSYS);
   return NULL;
 }
-
 
 stub_warning (__stdio_gen_tempname)

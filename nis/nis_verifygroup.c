@@ -19,7 +19,6 @@
 
 #include <string.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 nis_error
 nis_verifygroup (const_nis_name group)

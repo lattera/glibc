@@ -38,11 +38,11 @@ struct statfs
   {
     unsigned int f_type;
     unsigned int f_bsize;
-    unsigned int f_blocks;
-    unsigned int f_bfree;
-    unsigned int f_bavail;
-    unsigned int f_files;
-    unsigned int f_ffree;
+    __fsblkcnt_t f_blocks;
+    __fsblkcnt_t f_bfree;
+    __fsblkcnt_t f_bavail;
+    __fsblkcnt_t f_files;
+    __fsblkcnt_t f_ffree;
     __fsid_t f_fsid;
     unsigned int f_namelen;
     unsigned int f_spare[6];

@@ -37,7 +37,7 @@ tmpnam (char *s)
      to FILENAME_MAX characters in any case.  */
   result = __stdio_gen_tempname (s ?: tmpbuf, L_tmpnam, (const char *) NULL,
 				 (const char *) NULL, 0,
-				 (size_t *) NULL, (FILE **) NULL);
+				 (size_t *) NULL, (FILE **) NULL, 0);
 
   if (result != NULL && s == NULL)
     {

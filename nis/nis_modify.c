@@ -18,7 +18,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 #include "nis_intern.h"
 
@@ -60,7 +59,7 @@ nis_modify (const_nis_name name, const nis_object *obj)
 			      (caddr_t) & req, (xdrproc_t) xdr_nis_result,
 			      (caddr_t) res, MASTER_ONLY,
 			      NULL)) != RPC_SUCCESS)
-    res->status = status;
+    NIS_RES_STATUS (res) = status;
 
   req.ns_object.ns_object_val[0].zo_name = p1;
   req.ns_object.ns_object_val[0].zo_owner = p2;

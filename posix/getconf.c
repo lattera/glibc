@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ struct conf
     const enum { SYSCONF, CONFSTR, PATHCONF } call;
   };
 
-static struct conf vars[] =
+static const struct conf vars[] =
   {
     { "LINK_MAX", _PC_LINK_MAX, PATHCONF },
     { "_POSIX_LINK_MAX", _PC_LINK_MAX, PATHCONF },
@@ -187,6 +187,16 @@ static struct conf vars[] =
 
     { "PATH", _CS_PATH, CONFSTR },
     { "CS_PATH", _CS_PATH, CONFSTR },
+
+    /* LFS */
+    { "LFS_CFLAGS", _CS_LFS_CFLAGS, CONFSTR },
+    { "LFS_LDFLAGS", _CS_LFS_LDFLAGS, CONFSTR },
+    { "LFS_LIBS", _CS_LFS_LIBS, CONFSTR },
+    { "LFS_LINTFLAGS", _CS_LFS_LINTFLAGS, CONFSTR },
+    { "LFS64_CFLAGS", _CS_LFS64_CFLAGS, CONFSTR },
+    { "LFS64_LDFLAGS", _CS_LFS64_LDFLAGS, CONFSTR },
+    { "LFS64_LIBS", _CS_LFS64_LIBS, CONFSTR },
+    { "LFS64_LINTFLAGS", _CS_LFS64_LINTFLAGS, CONFSTR },
 
     { NULL, 0, SYSCONF }
   };

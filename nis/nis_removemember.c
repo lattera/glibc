@@ -19,7 +19,6 @@
 
 #include <string.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 nis_error
 nis_removemember (const_nis_name member, const_nis_name group)
@@ -50,40 +49,40 @@ nis_removemember (const_nis_name member, const_nis_name group)
           nis_freeresult (res);
           return status;
         }
+
       if ((res->objects.objects_len != 1) ||
-          (res->objects.objects_val[0].zo_data.zo_type != GROUP_OBJ))
+          (__type_of (NIS_RES_OBJECT (res)) != NIS_GROUP_OBJ))
         return NIS_INVALIDOBJ;
 
-
-      newmem = calloc (1, res->objects.objects_val[0].GR_data.gr_members.gr_members_len *
-		       sizeof (char *));
-
-      k = res->objects.objects_val[0].GR_data.gr_members.gr_members_len;
+      newmem =
+	calloc (1, NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len *
+		sizeof (char *));
+      k = NIS_RES_OBJECT (res)[0].GR_data.gr_members.gr_members_len;
       j = 0;
-      for (i = 0; i < res->objects.objects_val[0].GR_data.gr_members.gr_members_len;
+      for (i = 0; i < NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len;
 	   ++i)
 	{
-	  if (strcmp (res->objects.objects_val[0].GR_data.gr_members.gr_members_val[i],
+	  if (strcmp (NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_val[i],
 		      member) != 0)
 	    {
-	      newmem[j] = res->objects.objects_val[0].GR_data.gr_members.gr_members_val[i];
+	      newmem[j] = NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_val[i];
 	      ++j;
 	    }
 	  else
 	    {
-	      free (res->objects.objects_val[0].GR_data.gr_members.gr_members_val[i]);
+	      free (NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_val[i]);
 	      --k;
 	    }
 	}
-      free (res->objects.objects_val[0].GR_data.gr_members.gr_members_val);
+      free (NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val);
       newmem = realloc (newmem, k * sizeof (char*));
-      res->objects.objects_val[0].GR_data.gr_members.gr_members_val = newmem;
-      res->objects.objects_val[0].GR_data.gr_members.gr_members_len = k;
+      NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val = newmem;
+      NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len = k;
 
-      cp = stpcpy (buf, res->objects.objects_val->zo_name);
+      cp = stpcpy (buf, NIS_RES_OBJECT (res)->zo_name);
       *cp++ = '.';
-      strncpy (cp, res->objects.objects_val->zo_domain, NIS_MAXNAMELEN);
-      res2 = nis_modify (buf, res->objects.objects_val);
+      strncpy (cp, NIS_RES_OBJECT (res)->zo_domain, NIS_MAXNAMELEN);
+      res2 = nis_modify (buf, NIS_RES_OBJECT (res));
       status = res2->status;
       nis_freeresult (res);
       nis_freeresult (res2);

@@ -132,6 +132,7 @@ memcmp_common_alignment (srcp1, srcp2, len)
 
   switch (len % 4)
     {
+    default: /* Avoid warning about uninitialized local variables.  */
     case 2:
       a0 = ((op_t *) srcp1)[0];
       b0 = ((op_t *) srcp2)[0];
@@ -233,6 +234,7 @@ memcmp_not_common_alignment (srcp1, srcp2, len)
 
   switch (len % 4)
     {
+    default: /* Avoid warning about uninitialized local variables.  */
     case 2:
       a1 = ((op_t *) srcp1)[0];
       a2 = ((op_t *) srcp1)[1];

@@ -46,11 +46,13 @@
 /* Some forward declarations */
 static int parse_dollars (char **word, size_t *word_length, size_t *max_length,
 			  const char *words, size_t *offset, int flags,
-			  wordexp_t *pwordexp);
+			  wordexp_t *pwordexp)
+     internal_function;
 static int parse_backtick (char **word, size_t *word_length,
 			   size_t *max_length, const char *words,
-			   size_t *offset, int flags, wordexp_t *pwordexp);
-static int eval_expr (char *expr, int *result);
+			   size_t *offset, int flags, wordexp_t *pwordexp)
+     internal_function;
+static int eval_expr (char *expr, int *result) internal_function;
 
 /* The w_*() functions manipulate word lists. */
 
@@ -138,6 +140,7 @@ w_addword (wordexp_t *pwordexp, char *word)
  */
 
 static int
+internal_function
 parse_backslash (char **word, size_t *word_length, size_t *max_length,
 		 const char *words, size_t *offset)
 {
@@ -166,6 +169,7 @@ parse_backslash (char **word, size_t *word_length, size_t *max_length,
 }
 
 static int
+internal_function
 parse_qtd_backslash (char **word, size_t *word_length, size_t *max_length,
 		     const char *words, size_t *offset)
 {
@@ -208,6 +212,7 @@ parse_qtd_backslash (char **word, size_t *word_length, size_t *max_length,
 }
 
 static int
+internal_function
 parse_tilde (char **word, size_t *word_length, size_t *max_length,
 	     const char *words, size_t *offset, size_t wordc)
 {
@@ -303,6 +308,7 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
 }
 
 static int
+internal_function
 parse_glob (char **word, size_t *word_length, size_t *max_length,
 	    const char *words, size_t *offset, int flags,
 	    wordexp_t *pwordexp, char *ifs)
@@ -431,6 +437,7 @@ parse_squote (char **word, size_t *word_length, size_t *max_length,
 
 /* Functions to evaluate an arithmetic expression */
 static int
+internal_function
 eval_expr_val (char **expr, int *result)
 {
   int sgn = +1;
@@ -481,6 +488,7 @@ eval_expr_val (char **expr, int *result)
 }
 
 static int
+internal_function
 eval_expr_multdiv (char **expr, int *result)
 {
   int arg;
@@ -517,6 +525,7 @@ eval_expr_multdiv (char **expr, int *result)
 }
 
 static int
+internal_function
 eval_expr (char *expr, int *result)
 {
   int arg;
@@ -553,6 +562,7 @@ eval_expr (char *expr, int *result)
 }
 
 static int
+internal_function
 parse_arith (char **word, size_t *word_length, size_t *max_length,
 	     const char *words, size_t *offset, int flags, int bracket)
 {
@@ -680,6 +690,7 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 /* Function to execute a command and retrieve the results */
 /* pwordexp contains NULL if field-splitting is forbidden */
 static int
+internal_function
 exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 	   int flags, wordexp_t *pwordexp)
 {
@@ -858,6 +869,7 @@ parse_comm (char **word, size_t *word_length, size_t *max_length,
 }
 
 static int
+internal_function
 parse_param (char **word, size_t *word_length, size_t *max_length,
 	     const char *words, size_t *offset, int flags, wordexp_t *pwordexp)
 {
@@ -1173,6 +1185,7 @@ no_space:
 }
 
 static int
+internal_function
 parse_dollars (char **word, size_t *word_length, size_t *max_length,
 	       const char *words, size_t *offset, int flags,
 	       wordexp_t *pwordexp)
@@ -1281,6 +1294,7 @@ parse_backtick (char **word, size_t *word_length, size_t *max_length,
 }
 
 static int
+internal_function
 parse_dquote (char **word, size_t *word_length, size_t *max_length,
 	      const char *words, size_t *offset, int flags)
 {

@@ -38,7 +38,7 @@ __BEGIN_DECLS
    hold any value corresponding to members of the extended character
    set, as well as at least one value that does not correspond to any
    member of the extended character set.  */
-#define _WINT_T
+# define _WINT_T
 typedef unsigned int wint_t;
 #endif
 
@@ -53,7 +53,7 @@ typedef unsigned long int wctype_t;
 /* Constant expression of type `wint_t' whose value does not correspond
    to any member of the extended character set.  */
 #ifndef WEOF
-#define WEOF (0xffffffffu)
+# define WEOF (0xffffffffu)
 #endif
 
 #ifndef _ISbit
@@ -65,12 +65,12 @@ typedef unsigned long int wctype_t;
    endian).  We define the bit value interpretations here dependent on the
    machine's byte order.  */
 
-#include <endian.h>
-#if __BYTE_ORDER == __BIG_ENDIAN
-#define _ISbit(bit)	(1 << bit)
-#else /* __BYTE_ORDER == __LITTLE_ENDIAN */
-#define _ISbit(bit)	(bit < 8 ? ((1 << bit) << 8) : ((1 << bit) >> 8))
-#endif
+# include <endian.h>
+# if __BYTE_ORDER == __BIG_ENDIAN
+#  define _ISbit(bit)	(1 << bit)
+# else /* __BYTE_ORDER == __LITTLE_ENDIAN */
+#  define _ISbit(bit)	(bit < 8 ? ((1 << bit) << 8) : ((1 << bit) >> 8))
+# endif
 
 enum
 {
@@ -181,28 +181,28 @@ extern wint_t towctrans __P ((wint_t __wc, wctrans_t __desc));
 
 
 #ifndef	__NO_WCTYPE
-#define	iswalnum(wc)	__iswctype ((wc), _ISalnum)
-#define	iswalpha(wc)	__iswctype ((wc), _ISalpha)
-#define	iswcntrl(wc)	__iswctype ((wc), _IScntrl)
-#define	iswdigit(wc)	__iswctype ((wc), _ISdigit)
-#define	iswlower(wc)	__iswctype ((wc), _ISlower)
-#define	iswgraph(wc)	__iswctype ((wc), _ISgraph)
-#define	iswprint(wc)	__iswctype ((wc), _ISprint)
-#define	iswpunct(wc)	__iswctype ((wc), _ISpunct)
-#define	iswspace(wc)	__iswctype ((wc), _ISspace)
-#define	iswupper(wc)	__iswctype ((wc), _ISupper)
-#define	iswxdigit(wc)	__iswctype ((wc), _ISxdigit)
+# define iswalnum(wc)	__iswctype ((wc), _ISalnum)
+# define iswalpha(wc)	__iswctype ((wc), _ISalpha)
+# define iswcntrl(wc)	__iswctype ((wc), _IScntrl)
+# define iswdigit(wc)	__iswctype ((wc), _ISdigit)
+# define iswlower(wc)	__iswctype ((wc), _ISlower)
+# define iswgraph(wc)	__iswctype ((wc), _ISgraph)
+# define iswprint(wc)	__iswctype ((wc), _ISprint)
+# define iswpunct(wc)	__iswctype ((wc), _ISpunct)
+# define iswspace(wc)	__iswctype ((wc), _ISspace)
+# define iswupper(wc)	__iswctype ((wc), _ISupper)
+# define iswxdigit(wc)	__iswctype ((wc), _ISxdigit)
 
-#ifdef	__USE_GNU
-#define	iswblank(wc)	__iswctype ((wc), _ISblank)
-#endif
+# ifdef	__USE_GNU
+#  define iswblank(wc)	__iswctype ((wc), _ISblank)
+# endif
 
 /* Pointer to conversion tables.  */
 extern __const __int32_t *__ctype_tolower; /* Case conversions.  */
 extern __const __int32_t *__ctype_toupper; /* Case conversions.  */
 
-#define	towlower(wc)	towctrans ((wc), __ctype_tolower)
-#define	towupper(wc)	towctrans ((wc), __ctype_toupper)
+# define towlower(wc)	towctrans ((wc), __ctype_tolower)
+# define towupper(wc)	towctrans ((wc), __ctype_toupper)
 
 #endif /* Not __NO_WCTYPE.  */
 
@@ -281,27 +281,27 @@ extern wint_t __towctrans_l __P ((wint_t __wc, wctrans_t __desc,
 				  __locale_t locale));
 
 
-#ifndef	__NO_WCTYPE
-#define	__iswalnum_l(wc, loc)	__iswctype_l ((wc), _ISalnum, (loc))
-#define	__iswalpha_l(wc, loc)	__iswctype_l ((wc), _ISalpha, (loc))
-#define	__iswcntrl_l(wc, loc)	__iswctype_l ((wc), _IScntrl, (loc))
-#define	__iswdigit_l(wc, loc)	__iswctype_l ((wc), _ISdigit, (loc))
-#define	__iswlower_l(wc, loc)	__iswctype_l ((wc), _ISlower, (loc))
-#define	__iswgraph_l(wc, loc)	__iswctype_l ((wc), _ISgraph, (loc))
-#define	__iswprint_l(wc, loc)	__iswctype_l ((wc), _ISprint, (loc))
-#define	__iswpunct_l(wc, loc)	__iswctype_l ((wc), _ISpunct, (loc))
-#define	__iswspace_l(wc, loc)	__iswctype_l ((wc), _ISspace, (loc))
-#define	__iswupper_l(wc, loc)	__iswctype_l ((wc), _ISupper, (loc))
-#define	__iswxdigit_l(wc, loc)	__iswctype_l ((wc), _ISxdigit, (loc))
+# ifndef __NO_WCTYPE
+#  define __iswalnum_l(wc, loc)	 __iswctype_l ((wc), _ISalnum, (loc))
+#  define __iswalpha_l(wc, loc)	 __iswctype_l ((wc), _ISalpha, (loc))
+#  define __iswcntrl_l(wc, loc)	 __iswctype_l ((wc), _IScntrl, (loc))
+#  define __iswdigit_l(wc, loc)	 __iswctype_l ((wc), _ISdigit, (loc))
+#  define __iswlower_l(wc, loc)	 __iswctype_l ((wc), _ISlower, (loc))
+#  define __iswgraph_l(wc, loc)	 __iswctype_l ((wc), _ISgraph, (loc))
+#  define __iswprint_l(wc, loc)	 __iswctype_l ((wc), _ISprint, (loc))
+#  define __iswpunct_l(wc, loc)	 __iswctype_l ((wc), _ISpunct, (loc))
+#  define __iswspace_l(wc, loc)	 __iswctype_l ((wc), _ISspace, (loc))
+#  define __iswupper_l(wc, loc)	 __iswctype_l ((wc), _ISupper, (loc))
+#  define __iswxdigit_l(wc, loc) __iswctype_l ((wc), _ISxdigit, (loc))
 
-#define	__iswblank_l(wc, loc)	__iswctype_l ((wc), _ISblank, (loc))
+#  define __iswblank_l(wc, loc)	 __iswctype_l ((wc), _ISblank, (loc))
 
-#define	__towlower_l(wc, loc)	__towctrans_l ((wc), (loc)->__ctype_tolower, \
-					       (loc))
-#define	__towupper_l(wc, loc)	__towctrans_l ((wc), (loc)->__ctype_toupper, \
-					       (loc))
+#  define __towlower_l(wc, loc)	 __towctrans_l ((wc), (loc)->__ctype_tolower, \
+						(loc))
+#  define __towupper_l(wc, loc)	 __towctrans_l ((wc), (loc)->__ctype_toupper, \
+						(loc))
 
-#endif /* Not __NO_WCTYPE.  */
+# endif /* Not __NO_WCTYPE.  */
 
 #endif /* Use GNU.  */
 

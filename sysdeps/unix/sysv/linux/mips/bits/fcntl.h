@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _FCNTL_H
-#error "Never use <bits/fcntl.h> directly; include <fcntl.h> instead."
+# error "Never use <bits/fcntl.h> directly; include <fcntl.h> instead."
 #endif
 
 #include <sys/types.h>
@@ -26,8 +26,8 @@
 
 /* In GNU, read and write are bits (unlike BSD).  */
 #ifdef __USE_GNU
-#define O_READ		O_RDONLY	/* Open for reading.  */
-#define O_WRITE		O_WRONLY	/* Open for writing.  */
+# define O_READ		O_RDONLY	/* Open for reading.  */
+# define O_WRITE	O_WRONLY	/* Open for writing.  */
 #endif
 /* open/fcntl - O_SYNC is only implemented on blocks devices and on files
    located on an ext2 file system */
@@ -47,25 +47,36 @@
 
 #define O_NDELAY	O_NONBLOCK
 
-#define F_DUPFD		0	/* dup */
-#define F_GETFD		1	/* get f_flags */
-#define F_SETFD		2	/* set f_flags */
-#define F_GETFL		3	/* more flags (cloexec) */
-#define F_SETFL		4
-#define F_GETLK		14
-#define F_SETLK		6
-#define F_SETLKW	7
+/* XXX missing */
+#define O_LARGEFILE	0
 
-#define F_SETOWN	24	/*  for sockets. */
-#define F_GETOWN	23	/*  for sockets. */
+/* Values for the second argument to `fcntl'.  */
+#define F_DUPFD		0	/* Duplicate file descriptor.  */
+#define F_GETFD		1	/* Get file descriptor flags.  */
+#define F_SETFD		2	/* Set file descriptor flags.  */
+#define F_GETFL		3	/* Get file status flags.  */
+#define F_SETFL		4	/* Set file status flags.  */
+#define F_GETLK		14	/* Get record locking info.  */
+#define F_SETLK		6	/* Set record locking info (non-blocking).  */
+#define F_SETLKW	7	/* Set record locking info (blocking).  */
+
+/* XXX missing */
+#define F_GETLK64	14	/* Get record locking info.  */
+#define F_SETLK64	6	/* Set record locking info (non-blocking).  */
+#define F_SETLKW64	7	/* Set record locking info (blocking).  */
+
+#ifdef __USE_BSD
+# define F_SETOWN	5	/* Get owner of socket (receiver of SIGIO).  */
+# define F_GETOWN	6	/* Set owner of socket (receiver of SIGIO).  */
+#endif
 
 /* for F_[GET|SET]FL */
 #define FD_CLOEXEC	1	/* actually anything with low bit set goes */
 
-/* for posix fcntl() and lockf() */
-#define F_RDLCK		0
-#define F_WRLCK		1
-#define F_UNLCK		2
+/* For posix fcntl() and `l_type' field of a `struct flock' for lockf().  */
+#define F_RDLCK		0	/* Read lock.  */
+#define F_WRLCK		1	/* Write lock.  */
+#define F_UNLCK		2	/* Remove lock.  */
 
 /* for old implementation of bsd flock () */
 #define F_EXLCK		4	/* or 3 */
@@ -78,23 +89,42 @@
 				   blocking */
 #define LOCK_UN		8	/* remove lock */
 
-typedef struct flock {
-	short l_type;
-	short l_whence;
-	__off_t l_start;
-	__off_t l_len;
-	long  l_sysid;			/* XXX */
-	__pid_t l_pid;
-	long  pad[4];			/* XXX */
-} flock_t;
+typedef struct flock
+  {
+    short int l_type;	/* Type of lock: F_RDLCK, F_WRLCK, or F_UNLCK.  */
+    short int l_whence;	/* Where `l_start' is relative to (like `lseek').  */
+#ifndef __USE_FILE_OFFSET64
+    __off_t l_start;	/* Offset where the lock begins.  */
+    __off_t l_len;	/* Size of the locked area; zero means until EOF.  */
+#else
+    __off64_t l_start;	/* Offset where the lock begins.  */
+    __off64_t l_len;	/* Size of the locked area; zero means until EOF.  */
+#endif
+    long int l_sysid;	/* XXX */
+    __pid_t l_pid;	/* Process holding the lock.  */
+    long int pad[4];	/* XXX */
+  } flock_t;
+
+#ifdef __USE_LARGEFILE64
+struct flock64
+  {
+    short int l_type;	/* Type of lock: F_RDLCK, F_WRLCK, or F_UNLCK.  */
+    short int l_whence;	/* Where `l_start' is relative to (like `lseek').  */
+    __off64_t l_start;	/* Offset where the lock begins.  */
+    __off64_t l_len;	/* Size of the locked area; zero means until EOF.  */
+    long int l_sysid;	/* XXX */
+    __pid_t l_pid;	/* Process holding the lock.  */
+    long int pad[4];	/* XXX */
+  };
+#endif
 
 
 /* Define some more compatibility macros to be backward compatible with
    BSD systems which did not managed to hide these kernel macros.  */
 #ifdef	__USE_BSD
-#define	FAPPEND		O_APPEND
-#define	FFSYNC		O_FSYNC
-#define FASYNC		O_ASYNC
-#define	FNONBLOCK	O_NONBLOCK
-#define	FNDELAY		O_NDELAY
+# define FAPPEND	O_APPEND
+# define FFSYNC		O_FSYNC
+# define FASYNC		O_ASYNC
+# define FNONBLOCK	O_NONBLOCK
+# define FNDELAY	O_NDELAY
 #endif /* Use BSD.  */

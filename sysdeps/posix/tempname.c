@@ -83,7 +83,7 @@ static const char letters[] =
 char *
 __stdio_gen_tempname (char *buf, size_t bufsize, const char *dir,
 		      const char *pfx, int dir_search, size_t *lenptr,
-		      FILE **streamptr)
+		      FILE **streamptr, int large_file)
 {
   int saverrno = errno;
   static const char tmpdir[] = P_tmpdir;
@@ -186,7 +186,13 @@ __stdio_gen_tempname (char *buf, size_t bufsize, const char *dir,
       if (streamptr != NULL)
 	{
 	  /* Try to create the file atomically.  */
+#ifdef _G_OPEN64
+	  int fd = (large_file
+		    ? __open (buf, O_RDWR|O_CREAT|O_EXCL, 0666)
+		    : _G_OPEN64 (buf, O_RDWR|O_CREAT|O_EXCL, 0666));
+#else
 	  int fd = __open (buf, O_RDWR|O_CREAT|O_EXCL, 0666);
+#endif
 	  if (fd >= 0)
 	    {
 	      /* We got a new file that did not previously exist.

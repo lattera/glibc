@@ -37,7 +37,7 @@ tempnam (const char *dir, const char *pfx)
   size_t len;
   char *s;
   char *t = __stdio_gen_tempname (buf, sizeof (buf), dir, pfx, 1,
-				  &len, (FILE **) NULL);
+				  &len, (FILE **) NULL, 0);
 
   if (t == NULL)
     return NULL;

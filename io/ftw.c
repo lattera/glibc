@@ -31,6 +31,19 @@
 /* #define NDEBUG 1 */
 #include <assert.h>
 
+/* Support for the LFS API version.  */
+#ifndef FTW_NAME
+# define FTW_NAME ftw
+# define NFTW_NAME nftw
+# define INO_T ino_t
+# define STAT stat
+# define DIRENT dirent
+# define READDIR readdir
+# define LXSTAT __lxstat
+# define XSTAT __xstat
+# define FTW_FUNC_T __ftw_func_t
+# define NFTW_FUNC_T __nftw_func_t
+#endif
 
 struct dir_data
 {
@@ -41,7 +54,7 @@ struct dir_data
 struct known_object
 {
   dev_t dev;
-  ino_t ino;
+  INO_T ino;
 };
 
 struct ftw_data
@@ -68,7 +81,7 @@ struct ftw_data
   int *cvt_arr;
 
   /* Callback function.  We always use the `nftw' form.  */
-  __nftw_func_t func;
+  NFTW_FUNC_T func;
 
   /* Device of starting point.  Needed for FTW_MOUNT.  */
   dev_t dev;
@@ -94,7 +107,7 @@ static int ftw_arr[] =
 
 
 /* Forward declarations of local functions.  */
-static int ftw_dir (struct ftw_data *data, struct stat *st);
+static int ftw_dir (struct ftw_data *data, struct STAT *st) internal_function;
 
 
 static int
@@ -113,7 +126,7 @@ object_compare (const void *p1, const void *p2)
 
 
 static inline int
-add_object (struct ftw_data *data, struct stat *st)
+add_object (struct ftw_data *data, struct STAT *st)
 {
   struct known_object *newp = malloc (sizeof (struct known_object));
   if (newp == NULL)
@@ -125,7 +138,7 @@ add_object (struct ftw_data *data, struct stat *st)
 
 
 static inline int
-find_object (struct ftw_data *data, struct stat *st)
+find_object (struct ftw_data *data, struct STAT *st)
 {
   struct known_object obj = { dev: st->st_dev, ino: st->st_ino };
   return __tfind (&obj, &data->known_objects, object_compare) != NULL;
@@ -150,10 +163,10 @@ open_dir_stream (struct ftw_data *data, struct dir_data *dirp)
       else
 	{
 	  DIR *st = data->dirstreams[data->actdir]->stream;
-	  struct dirent *d;
+	  struct DIRENT *d;
 	  size_t actsize = 0;
 
-	  while ((d = readdir (st)) != NULL)
+	  while ((d = READDIR (st)) != NULL)
 	    {
 	      size_t this_len = _D_EXACT_NAMLEN (d);
 	      if (actsize + this_len + 2 >= bufsize)
@@ -225,7 +238,7 @@ static inline int
 process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 	       size_t namlen)
 {
-  struct stat st;
+  struct STAT st;
   int result = 0;
   int flag;
 
@@ -250,13 +263,13 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
   data->dirbuf[data->ftw.base + namlen] = '\0';
 
   if (((data->flags & FTW_PHYS)
-       ? __lxstat (_STAT_VER, data->dirbuf, &st)
-       : __xstat (_STAT_VER, data->dirbuf, &st)) < 0)
+       ? LXSTAT (_STAT_VER, data->dirbuf, &st)
+       : XSTAT (_STAT_VER, data->dirbuf, &st)) < 0)
     {
       if (errno != EACCES && errno != ENOENT)
 	result = -1;
       else if (!(data->flags & FTW_PHYS)
-	       && __lxstat (_STAT_VER, data->dirbuf, &st) == 0
+	       && LXSTAT (_STAT_VER, data->dirbuf, &st) == 0
 	       && S_ISLNK (st.st_mode))
 	flag = FTW_SLN;
       else
@@ -324,10 +337,11 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 
 
 static int
-ftw_dir (struct ftw_data *data, struct stat *st)
+internal_function
+ftw_dir (struct ftw_data *data, struct STAT *st)
 {
   struct dir_data dir;
-  struct dirent *d;
+  struct DIRENT *d;
   int previous_base = data->ftw.base;
   int result;
   char *startp;
@@ -386,7 +400,7 @@ ftw_dir (struct ftw_data *data, struct stat *st)
   *startp++ = '/';
   data->ftw.base = startp - data->dirbuf;
 
-  while (dir.stream != NULL && (d = readdir (dir.stream)) != NULL)
+  while (dir.stream != NULL && (d = READDIR (dir.stream)) != NULL)
     {
       result = process_entry (data, &dir, d->d_name, _D_EXACT_NAMLEN (d));
       if (result != 0)
@@ -445,11 +459,12 @@ ftw_dir (struct ftw_data *data, struct stat *st)
 
 
 static int
+internal_function
 ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 	     int flags)
 {
   struct ftw_data data;
-  struct stat st;
+  struct STAT st;
   int result = 0;
   int save_err;
   char *cwd = NULL;
@@ -497,7 +512,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
      every case the callback using the format of the `nftw' version
      and get the correct result since the stack layout for a function
      call in C allows this.  */
-  data.func = (__nftw_func_t) func;
+  data.func = (NFTW_FUNC_T) func;
 
   /* Since we internally use the complete set of FTW_* values we need
      to reduce the value range before calling a `ftw' callback.  */
@@ -534,14 +549,14 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   /* Get stat info for start directory.  */
   if (result == 0)
     if (((flags & FTW_PHYS)
-	 ? __lxstat (_STAT_VER, data.dirbuf, &st)
-	 : __xstat (_STAT_VER, data.dirbuf, &st)) < 0)
+	 ? LXSTAT (_STAT_VER, data.dirbuf, &st)
+	 : XSTAT (_STAT_VER, data.dirbuf, &st)) < 0)
       {
 	if (errno == EACCES)
 	  result = (*data.func) (data.dirbuf, &st, FTW_NS, &data.ftw);
 	else if (!(flags & FTW_PHYS)
 		 && errno == ENOENT
-		 && __lxstat (_STAT_VER, dir, &st) == 0
+		 && LXSTAT (_STAT_VER, dir, &st) == 0
 		 && S_ISLNK (st.st_mode))
 	  result = (*data.func) (data.dirbuf, &st, data.cvt_arr[FTW_SLN],
 				 &data.ftw);
@@ -597,18 +612,18 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 /* Entry points.  */
 
 int
-ftw (path, func, descriptors)
+FTW_NAME (path, func, descriptors)
      const char *path;
-     __ftw_func_t func;
+     FTW_FUNC_T func;
      int descriptors;
 {
   return ftw_startup (path, 0, func, descriptors, 0);
 }
 
 int
-nftw (path, func, descriptors, flags)
+NFTW_NAME (path, func, descriptors, flags)
      const char *path;
-     __nftw_func_t func;
+     NFTW_FUNC_T func;
      int descriptors;
      int flags;
 {

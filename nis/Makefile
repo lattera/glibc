@@ -44,14 +44,15 @@ vpath %.c $(subdir-dirs)
 
 libnsl-routines = yp_xdr ypclnt ypupdate_xdr \
                   nis_subr nis_local_names nis_free nis_file \
-                  nis_print nis_error nis_call nis_lookup nis_clone\
-                  nis_cache nis_table nis_xdr nis_server nis_ping\
+                  nis_print nis_error nis_call nis_lookup\
+                  nis_table nis_xdr nis_server nis_ping\
 		  nis_checkpoint nis_mkdir nis_rmdir nis_getservlist\
 		  nis_verifygroup nis_ismember nis_addmember nis_util\
 		  nis_removemember nis_creategroup nis_destroygroup\
 		  nis_print_group_entry nis_domain_of nis_domain_of_r\
-		  nis_modify nis_remove nis_add nis_defaults lckcache\
-		  nis_findserv nis_callback
+		  nis_modify nis_remove nis_add nis_defaults\
+		  nis_findserv nis_callback nis_clone_dir nis_clone_obj\
+		  nis_clone_res
 libnsl-map	= libnsl.map
 
 libnss_compat-routines	:= $(addprefix compat-,grp pwd spwd) nisplus-parser

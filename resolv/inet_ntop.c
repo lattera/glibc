@@ -40,8 +40,10 @@ static char rcsid[] = "$Id$";
  * sizeof(int) < 4.  sizeof(int) > 4 is fine; all the world's not a VAX.
  */
 
-static const char *inet_ntop4 __P((const u_char *src, char *dst, size_t size));
-static const char *inet_ntop6 __P((const u_char *src, char *dst, size_t size));
+static const char *inet_ntop4 __P((const u_char *src, char *dst, size_t size))
+     internal_function;
+static const char *inet_ntop6 __P((const u_char *src, char *dst, size_t size))
+     internal_function;
 
 /* char *
  * inet_ntop(af, src, dst, size)
@@ -82,6 +84,7 @@ inet_ntop(af, src, dst, size)
  *	Paul Vixie, 1996.
  */
 static const char *
+internal_function
 inet_ntop4(src, dst, size)
 	const u_char *src;
 	char *dst;
@@ -105,6 +108,7 @@ inet_ntop4(src, dst, size)
  *	Paul Vixie, 1996.
  */
 static const char *
+internal_function
 inet_ntop6(src, dst, size)
 	const u_char *src;
 	char *dst;

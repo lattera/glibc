@@ -55,7 +55,7 @@ static char sccsid[] = "@(#)rcmd.c	8.3 (Berkeley) 3/26/94";
 
 
 int	__ivaliduser __P((FILE *, u_int32_t, const char *, const char *));
-static int __icheckhost __P((u_int32_t, char *));
+static int __icheckhost __P((u_int32_t, char *)) internal_function;
 
 int
 rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
@@ -426,6 +426,7 @@ __ivaliduser(hostf, raddr, luser, ruser)
  * Returns "true" if match, 0 if no match.
  */
 static int
+internal_function
 __icheckhost(raddr, lhost)
 	u_int32_t raddr;
 	register char *lhost;

@@ -64,9 +64,9 @@ static int	s_scale;
 
 void moncontrol __P ((int mode));
 void __moncontrol __P ((int mode));
-static void write_hist __P ((int fd));
-static void write_call_graph __P ((int fd));
-static void write_bb_counts __P ((int fd));
+static void write_hist __P ((int fd)) internal_function;
+static void write_call_graph __P ((int fd)) internal_function;
+static void write_bb_counts __P ((int fd)) internal_function;
 
 /*
  * Control profiling
@@ -169,6 +169,7 @@ weak_alias(__monstartup, monstartup)
 
 
 static void
+internal_function
 write_hist (fd)
      int fd;
 {
@@ -198,6 +199,7 @@ write_hist (fd)
 
 
 static void
+internal_function
 write_call_graph (fd)
      int fd;
 {
@@ -251,6 +253,7 @@ write_call_graph (fd)
 
 
 static void
+internal_function
 write_bb_counts (fd)
      int fd;
 {

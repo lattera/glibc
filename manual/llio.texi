@@ -32,6 +32,7 @@ directly.)
 @menu
 * Opening and Closing Files::           How to open and close file
                                          descriptors.
+* Truncating Files::                    Change the size of a file.
 * I/O Primitives::                      Reading and writing data.
 * File Position Primitive::             Setting a descriptor's file
                                          position.
@@ -41,6 +42,7 @@ directly.)
                                          descriptors and streams.
 * Waiting for I/O::                     How to check for input or output
 					 on multiple file descriptors.
+* Synchronizing I/O::                   Making sure all I/O actions completed.
 * Control Operations::                  Various other operations on file
 					 descriptors.
 * Duplicating Descriptors::             Fcntl commands for duplicating
@@ -136,6 +138,14 @@ or @code{O_CREAT} is set and the file does not already exist.
 
 @c !!! umask
 
+This function is a cancelation point in multi-threaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time @code{open} is
+called.  If the thread gets canceled these resources stay allocated
+until the program ends.  To avoid this calls to @code{open} should be
+protected using cancelation handlers.
+@c ref pthread_cleanup_push / pthread_cleanup_pop
+
 The @code{open} function is the underlying primitive for the @code{fopen}
 and @code{freopen} functions, that create streams.
 @end deftypefun
@@ -175,6 +185,14 @@ When all file descriptors associated with a pipe or FIFO have been closed,
 any unread data is discarded.
 @end itemize
 
+This function is a cancelation point in multi-threaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time @code{close} is
+called.  If the thread gets canceled these resources stay allocated
+until the program ends.  To avoid this calls to @code{close} should be
+protected using cancelation handlers.
+@c ref pthread_cleanup_push / pthread_cleanup_pop
+
 The normal return value from @code{close} is @code{0}; a value of @code{-1}
 is returned in case of failure.  The following @code{errno} error
 conditions are defined for this function:
@@ -205,6 +223,73 @@ To close a stream, call @code{fclose} (@pxref{Closing Streams}) instead
 of trying to close its underlying file descriptor with @code{close}.
 This flushes any buffered output and updates the stream object to
 indicate that it is closed.
+
+
+@node Truncating Files
+@section Change the size of a file
+
+In some situations it is useful to explicitly determine the size of a
+file.  Since the 4.2BSD days there is a function to truncate a file to
+at most a given number of bytes and POSIX defines one additional
+function.  The prototypes for these functions are in @file{unistd.h}.
+
+@comment unistd.h
+@comment X/Open
+@deftypefun int truncate (const char *@var{name}, size_t @var{length})
+The @code{truncation} function truncates the file named by @var{name} to
+at most @var{length} bytes.  I.e., if the file was larger before the
+extra bytes are stripped of.  If the file was small or equal to
+@var{length} in size before nothing is done.  The file must be writable
+by the user to perform this operation.
+
+The return value is zero is everything wnet ok.  Otherwise the return
+value is @math{-1} and the global variable @var{errno} is set to:
+@table @code
+@item EACCES
+The file is not accessible to the user.
+@item EINVAL
+The @var{length} value is illegal.
+@item EISDIR
+The object named by @var{name} is a directory.
+@item ENOENT
+The file named by @var{name} does not exist.
+@item ENOTDIR
+One part of the @var{name} is not a directory.
+@end table
+
+This function was introduced in 4.2BSD but also was available in later
+@w{System V} systems.  It is not added to POSIX since the authors felt
+it is only of marginally additional utility.  See below.
+@end deftypefun
+
+@comment unistd.h
+@comment POSIX
+@deftypefun int ftruncate (int @var{fd}, size_t @var{length})
+The @code{ftruncate} function is similar to the @code{truncate}
+function.  The main difference is that it takes a descriptor for an
+opened file instead of a file name to identify the object.  The file
+must be opened for writing to successfully carry out the operation.
+
+The POSIX standard leaves it implementation defined what happens if the
+specified new @var{length} of the file is bigger than the original size.
+The @code{ftruncate} function might simply leave the file alone and do
+nothing or it can increase the size to the desired size.  In this later
+case the extended area should be zero-filled.  So using @code{ftruncate}
+is no reliable way to increase the file size but if it is possible it is
+probably the fastest way.  The function also operates on POSIX shared
+memory segments if these are implemented by the system.
+
+On success the function returns zero.  Otherwise it returns @math{-1}
+and set @var{errno} to one of these values:
+@table @code
+@item EBADF
+@var{fd} is no valid file descriptor or is not opened for writing.
+@item EINVAL
+The object referred to by @var{fd} does not permit this operation.
+@item EROFS
+The file is on a read-only file system.
+@end table
+@end deftypefun
 
 @node I/O Primitives
 @section Input and Output Primitives
@@ -296,6 +381,14 @@ signal is being blocked or ignored, or because the process group is
 orphaned.  @xref{Job Control}, for more information about job control,
 and @ref{Signal Handling}, for information about signals.
 @end table
+
+This function is a cancelation point in multi-threaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time @code{read} is
+called.  If the thread gets canceled these resources stay allocated
+until the program ends.  To avoid this calls to @code{read} should be
+protected using cancelation handlers.
+@c ref pthread_cleanup_push / pthread_cleanup_pop
 
 The @code{read} function is the underlying primitive for all of the
 functions that read from streams, such as @code{fgetc}.
@@ -419,6 +512,14 @@ macro @code{TEMP_FAILURE_RETRY}, as follows:
 nbytes = TEMP_FAILURE_RETRY (write (desc, buffer, count));
 @end smallexample
 
+This function is a cancelation point in multi-threaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time @code{write} is
+called.  If the thread gets canceled these resources stay allocated
+until the program ends.  To avoid this calls to @code{write} should be
+protected using cancelation handlers.
+@c ref pthread_cleanup_push / pthread_cleanup_pop
+
 The @code{write} function is the underlying primitive for all of the
 functions that write to streams, such as @code{fputc}.
 @end deftypefun
@@ -537,9 +638,18 @@ only for pipes and FIFOs, but in the GNU system, you always get
 @code{ESPIPE} if the object is not seekable.)
 @end table
 
+This function is a cancelation point in multi-threaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time @code{lseek} is
+called.  If the thread gets canceled these resources stay allocated
+until the program ends.  To avoid this calls to @code{lseek} should be
+protected using cancelation handlers.
+@c ref pthread_cleanup_push / pthread_cleanup_pop
+
 The @code{lseek} function is the underlying primitive for the
-@code{fseek}, @code{ftell} and @code{rewind} functions, which operate on
-streams instead of file descriptors.
+@code{fseek}, @code{fseeko}, @code{ftell}, @code{ftello} and
+@code{rewind} functions, which operate on streams instead of file
+descriptors.
 @end deftypefun
 
 You can have multiple descriptors for the same file if you open the file
@@ -1007,6 +1117,100 @@ There is another example showing the use of @code{select} to multiplex
 input from multiple sockets in @ref{Server Example}.
 
 
+@node Synchronizing I/O
+@section Synchronizing I/O operations
+
+@cindex synchronizing
+In most modern operation systems the normal I/O operations are not
+executed synchronously.  I.e., even if a @code{write} system call
+returns this does not mean the data is actually written to the media,
+e.g., the disk.
+
+In situations where synchronization points are necessary the user can
+use special functions which ensure that all operations finished before
+they return.
+
+@comment unistd.h
+@comment X/Open
+@deftypefun int sync (void)
+A call to this function will not return as long as there is data which
+that is not written to the device.  All dirty buffers in the kernel will
+be written and so an overall consistent system can be achieved (if no
+other process in parallel writes data).
+
+A prototype for @code{sync} can be found in @file{unistd.h}.
+
+The return value is zero to indicate no error.
+@end deftypefun
+
+More often it is wanted that not all data in the system is committed.
+Programs want to ensure that data written to a given file are all
+committed and in this situation @code{sync} is overkill.
+
+@comment unistd.h
+@comment POSIX
+@deftypefun int fsync (int @var{fildes})
+The @code{fsync} can be used to make sure all data associated with the
+open file @var{fildes} is written to the device associated with the
+descriptor.  The function call does not return unless all actions have
+finished.
+
+A prototype for @code{fsync} can be found in @file{unistd.h}.
+
+This function is a cancelation point in multi-threaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time @code{fsync} is
+called.  If the thread gets canceled these resources stay allocated
+until the program ends.  To avoid this calls to @code{fsync} should be
+protected using cancelation handlers.
+@c ref pthread_cleanup_push / pthread_cleanup_pop
+
+The return value of the function is zero if no error occured.  Otherwise
+it is @math{-1} and the global variable @var{errno} is set to the
+following values:
+@table @code
+@item EBADF
+The descriptor @var{fildes} is not valid.
+
+@item EINVAL
+No synchronization is possible since the system does not implement this.
+@end table
+@end deftypefun
+
+Sometimes it is not even necessary to write all data associated with a
+file descriptor.  E.g., in database files which do not change in size it
+is enough to write all the file content data to the device.
+Metainformation like the modification time etc. are not that important
+and leaving such information uncommitted does not prevent a successful
+recovering of the file in case of a problem.
+
+@comment unistd.h
+@comment POSIX
+@deftypefun int fdatasync (int @var{fildes})
+When a call to the @code{fdatasync} function returns it is maed sure
+that all of the file data is written to the device.  For all pending I/O
+operations the parts guaranteeing data integrety finished.
+
+Not all systems implement the @code{fdatasync} operation.  On systems
+missing this functionality @code{fdatasync} is emulated by a call to
+@code{fsync} since the performed actions are a superset of those
+required by @code{fdatasyn}.
+
+The prototype for @code{fdatasync} is in @file{unistd.h}.
+
+The return value of the function is zero if no error occured.  Otherwise
+it is @math{-1} and the global variable @var{errno} is set to the
+following values:
+@table @code
+@item EBADF
+The descriptor @var{fildes} is not valid.
+
+@item EINVAL
+No synchronization is possible since the system does not implement this.
+@end table
+@end deftypefun
+
+
 @node Control Operations
 @section Control Operations on Files
 
@@ -1069,6 +1273,14 @@ Get process or process group ID to receive @code{SIGIO} signals.
 Set process or process group ID to receive @code{SIGIO} signals.
 @xref{Interrupt Input}.
 @end table
+
+This function is a cancelation point in multi-threaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time @code{fcntl} is
+called.  If the thread gets canceled these resources stay allocated
+until the program ends.  To avoid this calls to @code{fcntl} should be
+protected using cancelation handlers.
+@c ref pthread_cleanup_push / pthread_cleanup_pop
 @end deftypefun
 
 

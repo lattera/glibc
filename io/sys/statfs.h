@@ -1,5 +1,5 @@
 /* Definitions for getting information about a filesystem.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,12 +29,28 @@ __BEGIN_DECLS
 
 /* Return information about the filesystem on which FILE resides.  */
 extern int __statfs __P ((__const char *__file, struct statfs *__buf));
+#ifndef __USE_FILE_OFFSET64
 extern int statfs __P ((__const char *__file, struct statfs *__buf));
+#else
+extern int statfs __P ((__const char *__file, struct statfs *__buf))
+     __asm__ ("statfs64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern int statfs64 __P ((__const char *__file, struct statfs64 *__buf));
+#endif
 
 /* Return information about the filesystem containing the file FILDES
    refers to.  */
 extern int __fstatfs __P ((int __fildes, struct statfs *__buf));
+#ifndef __USE_FILE_OFFSET64
 extern int fstatfs __P ((int __fildes, struct statfs *__buf));
+#else
+extern int fstatfs __P ((int __fildes, struct statfs *__buf))
+     __asm__ ("fstatfs64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern int fstatfs64 __P ((int __fildes, struct statfs64 *__buf));
+#endif
 
 __END_DECLS
 

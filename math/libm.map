@@ -23,6 +23,7 @@ GLIBC_2.0 {
     fdim; fdimf; fdiml;
     finite; finitef; finitel;
     floor; floorf; floorl;
+    fma; fmaf; fmal;
     fmax; fmaxf; fmaxl;
     fmin; fminf; fminl;
     fmod; fmodf; fmodl;
@@ -47,15 +48,19 @@ GLIBC_2.0 {
     nan; nanf; nanl;
     nearbyint; nearbyintf; nearbyintl;
     nextafter; nextafterf; nextafterl;
+    nextafterx; nextafterxf; nextafterxl;
     pow; powf; powl;
     remainder; remainderf; remainderl;
     remquo; remquof; remquol;
     rint; rintf; rintl;
-    lrint; llrint;
+    lrint; lrintf; lrintl;
+    llrint; llrintf; llrintl;
     round; roundf; roundl;
-    lround; llround;
+    lround; lroundf; lroundl;
+    llround; llroundf; llroundl;
     scalb; scalbf; scalbl;
     scalbn; scalbnf; scalbnl;
+    scalbln; scalblnf; scalblnl;
     significand; significandf; significandl;
     sin; sinf; sinl;
     sincos; sincosf; sincosl;
@@ -82,6 +87,8 @@ GLIBC_2.0 {
     cexp; cexpf; cexpl;
     cimag; cimagf; cimagl;
     clog; clogf; clogl;
+    clog10; clog10f; clog10l;
+    __clog10; __clog10f; __clog10l;
     conj; conjf; conjl;
     cpow; cpowf; cpowl;
     cproj; cprojf; cprojl;

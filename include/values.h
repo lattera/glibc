@@ -63,7 +63,7 @@
 
 #ifdef __USE_MISC
 /* Some systems define this name instead of CHAR_BIT or CHARBITS.  */
-#define BITSPERBYTE	CHAR_BIT
+# define BITSPERBYTE	CHAR_BIT
 #endif
 
 #endif	/* values.h */

@@ -23,16 +23,16 @@
 #ifndef _STDIO_H
 
 #if !defined __need_FILE
-#define _STDIO_H	1
-#include <features.h>
+# define _STDIO_H	1
+# include <features.h>
 
 __BEGIN_DECLS
 
-#define __need_size_t
-#define	__need_NULL
-#include <stddef.h>
+# define __need_size_t
+# define __need_NULL
+# include <stddef.h>
 
-#include <bits/types.h>
+# include <bits/types.h>
 #endif /* Don't need FILE.  */
 #undef	__need_FILE
 
@@ -42,7 +42,7 @@ __BEGIN_DECLS
 /* The opaque type of streams.  */
 typedef struct _IO_FILE FILE;
 
-#define	__FILE_defined	1
+# define __FILE_defined	1
 #endif /* FILE not defined.  */
 
 
@@ -58,8 +58,14 @@ typedef struct _IO_FILE FILE;
 #endif
 
 /* The type of the second argument to `fgetpos' and `fsetpos'.  */
+#ifndef __USE_FILE_OFFSET64
 typedef _G_fpos_t fpos_t;
-
+#else
+typedef _G_fpos64_t fpos_t;
+#endif
+#ifdef __USE_LARGEFILE64
+typedef _G_fpos64_t fpos64_t;
+#endif
 
 /* Generate a unique file name (and possibly open it with mode "w+b").  */
 extern char *__stdio_gen_tempname __P ((char *__buf, size_t __bufsize,
@@ -67,7 +73,8 @@ extern char *__stdio_gen_tempname __P ((char *__buf, size_t __bufsize,
 					__const char *__pfx,
 					int __dir_search,
 					size_t *__lenptr,
-					FILE **__streamptr));
+					FILE **__streamptr,
+					int __large_file));
 
 
 /* Print out MESSAGE on the error output and abort.  */
@@ -83,14 +90,14 @@ extern void __libc_fatal __P ((__const char *__message))
 
 /* Default buffer size.  */
 #ifndef BUFSIZ
-#define BUFSIZ _IO_BUFSIZ
+# define BUFSIZ _IO_BUFSIZ
 #endif
 
 
 /* End of file character.
    Some things throughout the library rely on this being -1.  */
 #ifndef EOF
-#define EOF (-1)
+# define EOF (-1)
 #endif
 
 
@@ -103,7 +110,7 @@ extern void __libc_fatal __P ((__const char *__message))
 
 #ifdef	__USE_SVID
 /* Default path prefix for `tempnam' and `tmpnam'.  */
-#define P_tmpdir      "/tmp"
+# define P_tmpdir	"/tmp"
 #endif
 
 
@@ -134,7 +141,14 @@ extern int rename __P ((__const char *__old, __const char *__new));
 
 
 /* Create a temporary file and open it read/write.  */
+#ifndef __USE_FILE_OFFSET64
 extern FILE *tmpfile __P ((void));
+#else
+extern FILE *tmpfile __P ((void)) __asm__ ("tmpfile64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern FILE *tmpfile64 __P ((void));
+#endif
 /* Generate a temporary filename.  */
 extern char *tmpnam __P ((char *__s));
 
@@ -176,11 +190,30 @@ extern int fcloseall __P ((void));
 
 
 /* Open a file and create a new stream for it.  */
+#ifndef __USE_FILE_OFFSET64
 extern FILE *fopen __P ((__const char *__filename, __const char *__modes));
+#else
+extern FILE *fopen __P ((__const char *__filename, __const char *__modes))
+     __asm__ ("fopen64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern FILE *fopen64 __P ((__const char *__filename, __const char *__modes));
+#endif
 /* Open a file, replacing an existing stream with it. */
+#ifndef __USE_FILE_OFFSET64
 extern FILE *freopen __P ((__const char *__restrict __filename,
 			   __const char *__restrict __modes,
 			   FILE *__restrict __stream));
+#else
+extern FILE *freopen __P ((__const char *__restrict __filename,
+			   __const char *__restrict __modes,
+			   FILE *__restrict __stream)) __asm__ ("freopen64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern FILE *freopen64 __P ((__const char *__restrict __filename,
+			     __const char *__restrict __modes,
+			     FILE *__restrict __stream));
+#endif
 
 #ifdef	__USE_POSIX
 /* Create a new stream that refers to an existing system file descriptor.  */
@@ -242,7 +275,7 @@ extern int vsprintf __P ((char *__restrict __s,
 
 #ifdef	__OPTIMIZE__
 __STDIO_INLINE int
-vprintf (const char *__restrict __fmt, _G_va_list __arg)
+vprintf (__const char *__restrict __fmt, _G_va_list __arg)
 {
   return vfprintf (stdout, __fmt, __arg);
 }
@@ -349,7 +382,7 @@ getchar (void)
 extern int getc_unlocked __P ((FILE *__stream));
 extern int getchar_unlocked __P ((void));
 
-#ifdef __OPTIMIZE__
+# ifdef __OPTIMIZE__
 __STDIO_INLINE int
 getc_unlocked (FILE *__fp)
 {
@@ -361,7 +394,7 @@ getchar_unlocked (void)
 {
   return _IO_getc_unlocked (stdin);
 }
-#endif /* Optimizing.  */
+# endif /* Optimizing.  */
 #endif /* Use POSIX or MISC.  */
 
 
@@ -388,13 +421,13 @@ putchar (int __c)
 /* Faster version when locking is not necessary.  */
 extern int fputc_unlocked __P ((int __c, FILE *__stream));
 
-#ifdef __OPTIMIZE__
+# ifdef __OPTIMIZE__
 __STDIO_INLINE int
 fputc_unlocked (int __c, FILE *__stream)
 {
   return _IO_putc_unlocked (__c, __stream);
 }
-#endif /* Optimizing.  */
+# endif /* Optimizing.  */
 #endif /* Use MISC.  */
 
 #if defined __USE_POSIX || defined __USE_MISC
@@ -402,7 +435,7 @@ fputc_unlocked (int __c, FILE *__stream)
 extern int putc_unlocked __P ((int __c, FILE *__stream));
 extern int putchar_unlocked __P ((int __c));
 
-#ifdef __OPTIMIZE__
+# ifdef __OPTIMIZE__
 __STDIO_INLINE int
 putc_unlocked (int __c, FILE *__stream)
 {
@@ -414,7 +447,7 @@ putchar_unlocked (int __c)
 {
   return _IO_putc_unlocked (__c, stdout);
 }
-#endif /* Optimizing.  */
+# endif /* Optimizing.  */
 #endif /* Use POSIX or MISc.  */
 
 
@@ -451,13 +484,13 @@ _IO_ssize_t getdelim __P ((char **__lineptr, size_t *__n,
 _IO_ssize_t __getline __P ((char **__lineptr, size_t *__n, FILE *__stream));
 _IO_ssize_t getline __P ((char **__lineptr, size_t *__n, FILE *__stream));
 
-#ifdef	__OPTIMIZE__
+# ifdef	__OPTIMIZE__
 __STDIO_INLINE _IO_ssize_t
 getline (char **__lineptr, size_t *__n, FILE *__stream)
 {
   return __getdelim (__lineptr, __n, '\n', __stream);
 }
-#endif /* Optimizing.  */
+# endif /* Optimizing.  */
 #endif
 
 
@@ -496,22 +529,72 @@ extern long int ftell __P ((FILE *__stream));
 /* Rewind to the beginning of STREAM.  */
 extern void rewind __P ((FILE *__stream));
 
-#ifdef __USE_UNIX98
+#if (defined __USE_LARGEFILE || defined __USE_LARGEFILE64 \
+     || defined __USE_FILE_OFFSET64)
 /* The Single Unix Specification, Version 2, specifies an alternative,
    more adequate interface for the two functions above which deal with
-   file offset.  `long int' is not the right type.  */
+   file offset.  `long int' is not the right type.  These definitions
+   are originally defined in the Large File Support API.  */
+
+/* Types needed in these functions.  */
+# ifndef off_t
+#  ifndef __USE_FILE_OFFSET64
+typedef __off_t off_t;
+#  else
+typedef __off64_t off_t;
+#  endif
+#  define off_t off_t
+# endif
+
+# if defined __USE_LARGEFILE64 && !defined off64_t
+typedef __off64_t off64_t;
+#  define off64_t off64_t
+# endif
 
 /* Seek to a certain position on STREAM.  */
+# ifndef __USE_FILE_OFFSET64
 extern int fseeko __P ((FILE *__stream, __off_t __off, int __whence));
+# else
+extern int fseeko __P ((FILE *__stream, __off_t __off, int __whence))
+     __asm__ ("fseeko64");
+# endif
+# ifdef __USE_LARGEFILE64
+extern int fseeko64 __P ((FILE *__stream, __off64_t __off, int __whence));
+# endif
+
 /* Return the current position of STREAM.  */
+# ifndef __USE_FILE_OFFSET64
 extern __off_t ftello __P ((FILE *__stream));
+# else
+extern __off_t ftello __P ((FILE *__stream)) __asm__ ("ftello");
+# endif
+# ifdef __USE_LARGEFILE64
+extern __off64_t ftello64 __P ((FILE *__stream));
+# endif
 #endif
 
 /* Get STREAM's position.  */
+#ifndef __USE_FILE_OFFSET64
 extern int fgetpos __P ((FILE *__restrict __stream,
 			 fpos_t *__restrict __pos));
+#else
+extern int fgetpos __P ((FILE *__restrict __stream,
+			 fpos_t *__restrict __pos)) __asm__ ("fgetpos64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern int fgetpos64 __P ((FILE *__restrict __stream,
+			   fpos64_t *__restrict __pos));
+#endif
 /* Set STREAM's position.  */
+#ifndef __USE_FILE_OFFSET64
 extern int fsetpos __P ((FILE *__stream, __const fpos_t *__pos));
+#else
+extern int fsetpos __P ((FILE *__stream, __const fpos_t *__pos))
+     __asm__ ("fsetpos64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern int fsetpos64 __P ((FILE *__stream, __const fpos64_t *__pos));
+#endif
 
 
 /* Clear the error and EOF indicators for STREAM.  */
@@ -527,7 +610,7 @@ extern void clearerr_unlocked __P ((FILE *__stream));
 extern int feof_unlocked __P ((FILE *__stream));
 extern int ferror_unlocked __P ((FILE *__stream));
 
-#ifdef __OPTIMIZE__
+# ifdef __OPTIMIZE__
 __STDIO_INLINE int
 feof_unlocked (FILE *__stream)
 {
@@ -539,7 +622,7 @@ ferror_unlocked (FILE *__stream)
 {
   return _IO_ferror_unlocked (__stream);
 }
-#endif /* Optimizing.  */
+# endif /* Optimizing.  */
 #endif
 
 

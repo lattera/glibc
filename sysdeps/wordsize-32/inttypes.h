@@ -341,4 +341,33 @@ typedef unsigned long long int uint_fast64_t;
 #define SCNoPTR		"o"
 #define SCNxPTR		"x"
 
+
+/* Macros for string conversion.  */
+
+/* Like `strtol' but convert to `intmax_t'.  */
+#define strtoimax(nptr, endptr, base) \
+    __strtoll_internal (nptr, endptr, base, 0)
+
+#ifndef __strtoll_internal_defined
+extern long long int __strtoll_internal __P ((__const char *__restrict __nptr,
+					      char **__restrict __endptr,
+					      int __base, int __group));
+# define __strtoll_internal_defined	1
+#endif
+
+
+/* Like `strtoul' but convert to `uintmax_t'.  */
+#define strtoumax(nptr, endptr, base) \
+    __strtoull_internal (nptr, endptr, base, 0)
+
+#ifndef __strtoull_internal_defined
+extern unsigned long long int __strtoull_internal __P ((__const char *
+							__restrict __nptr,
+							char **
+							__restrict __endptr,
+							int __base,
+							int __group));
+# define __strtoull_internal_defined	1
+#endif
+
 #endif /* inttypes.h */

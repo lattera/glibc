@@ -232,6 +232,9 @@ __MATHCALL (rint,, (_Mdouble_ __x));
 
 /* Return X + epsilon if X < Y, X - epsilon if X > Y.  */
 __MATHCALLX (nextafter,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+#ifdef __USE_ISOC9X
+__MATHCALLX (nextafterx,, (_Mdouble_ __x, long double __y), (__const__));
+#endif
 
 /* Return the remainder of integer divison X / Y with infinite precision.  */
 __MATHCALL (remainder,, (_Mdouble_ __x, _Mdouble_ __y));
@@ -240,13 +243,16 @@ __MATHCALL (remainder,, (_Mdouble_ __x, _Mdouble_ __y));
 __MATHCALL (scalb,, (_Mdouble_ __x, _Mdouble_ __n));
 
 /* Return X times (2 to the Nth power).  */
-__MATHCALL (scalbn,, (_Mdouble_ __x, long int __n));
+__MATHCALL (scalbn,, (_Mdouble_ __x, int __n));
 
 /* Return the binary exponent of X, which must be nonzero.  */
 __MATHDECL (int,ilogb,, (_Mdouble_ __x));
 #endif
 
 #ifdef __USE_ISOC9X
+/* Return X times (2 to the Nth power).  */
+__MATHCALL (scalbln,, (_Mdouble_ __x, long int __n));
+
 /* Round X to integral valuein floating-point format using current
    rounding direction, but do not raise inexact exception.  */
 __MATHCALL (nearbyint,, (_Mdouble_ __x));
@@ -263,6 +269,19 @@ __MATHCALLX (trunc,, (_Mdouble_ __x), (__const__));
    and magnitude congruent `mod 2^n' to the magnitude of the integral
    quotient x/y, with n >= 3.  */
 __MATHCALL (remquo,, (_Mdouble_ __x, _Mdouble_ __y, int *__quo));
+
+
+/* Conversion functions.  */
+
+/* Round X to nearest integral value according to current rounding
+   direction.  */
+__MATHDECL (long int, lrint,, (_Mdouble_ __x));
+__MATHDECL (long long int, llrint,, (_Mdouble_ __x));
+
+/* Round X to nearest integral value, rounding halfway cases away from
+   zero.  */
+__MATHDECL (long int, lround,, (_Mdouble_ __x));
+__MATHDECL (long long int, llround,, (_Mdouble_ __x));
 
 
 /* Return positive difference between X and Y.  */
@@ -282,4 +301,8 @@ __MATHDECL_1 (int, __fpclassify,, (_Mdouble_ __value))
 /* Test for negative number.  */
 __MATHDECL_1 (int, __signbit,, (_Mdouble_ __value))
      __attribute__ ((__const__));
+
+
+/* Multiply-add function computed as a ternary operation.  */
+__MATHCALL (fma,, (_Mdouble_ __x, _Mdouble_ __y, _Mdouble_ __z));
 #endif /* Use ISO C 9X.  */

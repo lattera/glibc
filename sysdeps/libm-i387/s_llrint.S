@@ -23,7 +23,7 @@
 
 	.text
 ENTRY(__llrint)
-	fldt	4(%esp)
+	fldl	4(%esp)
 	subl	$8, %esp
 	fistpll	(%esp)
 	fwait

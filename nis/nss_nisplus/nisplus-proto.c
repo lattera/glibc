@@ -52,7 +52,7 @@ _nss_nisplus_parse_protoent (nis_result * result, struct protoent *proto,
     return 0;
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      __type_of (NIS_RES_OBJECT (result)) != ENTRY_OBJ ||
+      __type_of (NIS_RES_OBJECT (result)) != NIS_ENTRY_OBJ ||
       strcmp (NIS_RES_OBJECT (result)->EN_data.en_type, "protocols_tbl") != 0
       || NIS_RES_OBJECT (result)->EN_data.en_cols.en_cols_len < 3)
     return 0;
@@ -282,7 +282,7 @@ _nss_nisplus_getprotobyname_r (const char *name, struct protoent *proto,
          database is correct, we should find it in the first case, too */
       if ((result->status != NIS_SUCCESS &&
 	   result->status != NIS_S_SUCCESS) ||
-	  __type_of (result->objects.objects_val) != ENTRY_OBJ ||
+	  __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ ||
 	  strcmp (result->objects.objects_val->EN_data.en_type,
 		  "protocols_tbl") != 0 ||
 	  result->objects.objects_val->EN_data.en_cols.en_cols_len < 3)

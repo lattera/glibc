@@ -80,12 +80,14 @@ struct cache_entry
 static struct cache_entry *authdes_cache /* [AUTHDES_CACHESZ] */ ;
 static short *authdes_lru /* [AUTHDES_CACHESZ] */ ;
 
-static void cache_init (void);	/* initialize the cache */
-static short cache_spot (des_block *, char *, struct timeval *);
-					/* find an entry in the cache */
-static void cache_ref (short sid);	/* note that sid was ref'd */
+static void cache_init (void) internal_function; /* initialize the cache */
+static short cache_spot (des_block *, char *, struct timeval *)
+     internal_function;		/* find an entry in the cache */
+static void cache_ref (short sid) internal_function;
+				/* note that sid was ref'd */
 
-static void invalidate (char *cred);	/* invalidate entry in cache */
+static void invalidate (char *cred) internal_function;
+				/* invalidate entry in cache */
 
 /*
  * cache statistics
@@ -364,6 +366,7 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
  * Initialize the cache
  */
 static void
+internal_function
 cache_init (void)
 {
   register int i;
@@ -397,6 +400,7 @@ cache_victim (void)
  * Note that sid was referenced
  */
 static void
+internal_function
 cache_ref (register short sid)
 {
   register int i;
@@ -420,6 +424,7 @@ cache_ref (register short sid)
  * return the spot in the cache.
  */
 static short
+internal_function
 cache_spot (register des_block * key, char *name, struct timeval *timestamp)
 {
   register struct cache_entry *cp;
@@ -538,6 +543,7 @@ authdes_getucred (const struct authdes_cred *adc, uid_t * uid, gid_t * gid,
 }
 
 static void
+internal_function
 invalidate (char *cred)
 {
   if (cred == NULL)

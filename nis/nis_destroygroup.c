@@ -19,7 +19,6 @@
 
 #include <string.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 nis_error
 nis_destroygroup (const_nis_name group)
@@ -42,7 +41,7 @@ nis_destroygroup (const_nis_name group)
 	  stpcpy (cp, cp2);
 	}
       res = nis_remove (buf, NULL);
-      status = res->status;
+      status = NIS_RES_STATUS (res);
       nis_freeresult (res);
       return status;
     }

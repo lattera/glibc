@@ -39,7 +39,11 @@ struct stat
     __fsid_t st_fsid;		/* File system ID.  */
 #define	st_dev	st_fsid
 
+#ifndef __USE_FILE_OFFSET64
     __ino_t st_ino;		/* File number.  */
+#else
+    __ino64_t st_ino;		/* File number.  */
+#endif
     unsigned int st_gen;	/* To detect reuse of file numbers.  */
     __dev_t st_rdev;		/* Device if special file.  */
     __mode_t st_mode;		/* File mode.  */
@@ -48,7 +52,11 @@ struct stat
     __uid_t st_uid;		/* Owner.  */
     __gid_t st_gid;		/* Owning group.  */
 
+#ifndef __USE_FILE_OFFSET64
     __off_t st_size;		/* Size in bytes.  */
+#else
+    __off64_t st_size;		/* Size in bytes.  */
+#endif
 
     __time_t st_atime;		/* Access time, seconds */
     unsigned long int st_atime_usec; /* and microseconds.  */
@@ -59,9 +67,56 @@ struct stat
 
     unsigned int st_blksize;	/* Optimal size for I/O.  */
 
-#define	_STATBUF_ST_BLKSIZE	/* Tell code we have this member.  */
+#ifndef __USE_FILE_OFFSET64
+    __blkcnt_t st_blocks;	/* Number of 512-byte blocks allocated.
+				   Not related to `st_blksize'.  */
+#else
+    __blkcnt64_t st_blocks;	/* Number of 512-byte blocks allocated.
+				   Not related to `st_blksize'.  */
+#endif
 
-    unsigned int st_blocks;	/* Number of 512-byte blocks allocated.
+    __uid_t st_author;		/* File author.  */
+
+    unsigned int st_flags;	/* User-defined flags.
+				   High 16 bits can be set only by root.  */
+
+#ifndef __USE_FILE_OFFSET64
+# define _SPARE_SIZE	((sizeof (__fsid_t) == sizeof (int)) ? 12 : 11)
+#else
+# define _SPARE_SIZE	((sizeof (__fsid_t) == sizeof (int)) ? 9 : 8)
+#endif
+    int st_spare[_SPARE_SIZE];	/* Room for future expansion.  */
+#undef _SPARE_SIZE
+  };
+
+#ifdef __USE_LARGEFILE64
+struct stat64
+  {
+    int st_fstype;		/* File system type.  */
+    __fsid_t st_fsid;		/* File system ID.  */
+# define st_dev	st_fsid
+
+    __ino64_t st_ino;		/* File number.  */
+    unsigned int st_gen;	/* To detect reuse of file numbers.  */
+    __dev_t st_rdev;		/* Device if special file.  */
+    __mode_t st_mode;		/* File mode.  */
+    __nlink_t st_nlink;		/* Number of links.  */
+
+    __uid_t st_uid;		/* Owner.  */
+    __gid_t st_gid;		/* Owning group.  */
+
+    __off64_t st_size;		/* Size in bytes.  */
+
+    __time_t st_atime;		/* Access time, seconds */
+    unsigned long int st_atime_usec; /* and microseconds.  */
+    __time_t st_mtime;		/* Modification time, seconds */
+    unsigned long int st_mtime_usec; /* and microseconds.  */
+    __time_t st_ctime;		/* Status change time, seconds */
+    unsigned long int st_ctime_usec; /* and microseconds.  */
+
+    unsigned int st_blksize;	/* Optimal size for I/O.  */
+
+    __blkcnt64_t st_blocks;	/* Number of 512-byte blocks allocated.
 				   Not related to `st_blksize'.  */
 
     __uid_t st_author;		/* File author.  */
@@ -69,10 +124,13 @@ struct stat
     unsigned int st_flags;	/* User-defined flags.
 				   High 16 bits can be set only by root.  */
 
-#define _SPARE_SIZE	((sizeof (__fsid_t) == sizeof (int)) ? 12 : 11)
+#define _SPARE_SIZE	((sizeof (__fsid_t) == sizeof (int)) ? 9 : 8)
     int st_spare[_SPARE_SIZE];	/* Room for future expansion.  */
 #undef _SPARE_SIZE
   };
+#endif
+
+#define	_STATBUF_ST_BLKSIZE	/* Tell code we have this member.  */
 
 /* Encoding of the file mode.  */
 

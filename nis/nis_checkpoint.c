@@ -18,7 +18,6 @@
    Boston, MA 02111-1307, USA. */
 
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 #include "nis_intern.h"
 
 nis_result *
@@ -35,26 +34,25 @@ nis_checkpoint(const_nis_name dirname)
       u_int i;
 
       res2 = nis_lookup (dirname, EXPAND_NAME);
-      if (res2->status != NIS_SUCCESS && res2->status != NIS_S_SUCCESS)
+      if (NIS_RES_STATUS (res2) != NIS_SUCCESS)
         return res2;
 
       /* Check if obj is really a diryectory object */
-      if (res2->objects.objects_val[0].zo_data.zo_type != DIRECTORY_OBJ)
+      if (__type_of (NIS_RES_OBJECT (res2)) != NIS_DIRECTORY_OBJ)
 	{
 	  nis_freeresult (res);
-	  res->status = NIS_INVALIDOBJ;
+	  NIS_RES_STATUS (res) = NIS_INVALIDOBJ;
 	  return res;
 	}
 
       for (i = 0;
-	   i < res2->objects.objects_val[0].DI_data.do_servers.do_servers_len;
-	   ++i)
+	   i < NIS_RES_OBJECT (res2)->DI_data.do_servers.do_servers_len; ++i)
 	{
-	  if (__do_niscall2 (&res2->objects.objects_val[0].DI_data.do_servers.do_servers_val[i],
-			    1, NIS_CHECKPOINT, (xdrproc_t) xdr_nis_name,
-			    (caddr_t) &dirname, (xdrproc_t) xdr_cp_result,
-			    (caddr_t) &cpres, 0, NULL) != RPC_SUCCESS)
-	    res->status = NIS_RPCERROR;
+	  if (__do_niscall2 (&NIS_RES_OBJECT(res2)->DI_data.do_servers.do_servers_val[i],
+			     1, NIS_CHECKPOINT, (xdrproc_t) xdr_nis_name,
+			     (caddr_t) &dirname, (xdrproc_t) xdr_cp_result,
+			     (caddr_t) &cpres, 0, NULL) != RPC_SUCCESS)
+	    NIS_RES_STATUS (res) = NIS_RPCERROR;
 	  else
 	    {
 	      res->status += cpres->cp_status;
@@ -65,7 +63,7 @@ nis_checkpoint(const_nis_name dirname)
       nis_freeresult (res2);
     }
   else
-    res->status = NIS_NOSUCHNAME;
+    NIS_RES_STATUS (res) = NIS_NOSUCHNAME;
 
   return res;
 }

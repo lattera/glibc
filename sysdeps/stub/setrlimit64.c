@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,36 +16,19 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stdlib.h>
+#include <sys/resource.h>
 #include <errno.h>
 
+/* Set the soft and hard limits for RESOURCE to *RLIMITS.
+   Only the super-user can increase hard limits.
+   Return 0 if successful, -1 if not (and sets errno).  */
 int
-setenv (name, value, replace)
-     const char *name;
-     const char *value;
-     int replace;
+setrlimit64 (resource, rlimits)
+     enum __rlimit_resource resource;
+     struct rlimit64 *rlimits;
 {
   __set_errno (ENOSYS);
   return -1;
 }
 
-stub_warning (setenv)
-
-void
-unsetenv (name)
-     const char *name;
-{
-  __set_errno (ENOSYS);
-}
-
-stub_warning (unsetenv)
-
-
-int
-clearenv (void)
-{
-  __set_errno (ENOSYS);
-  return -1;
-}
-
-stub_warning (clearenv)
+stub_warning (setrlimit64)

@@ -18,7 +18,6 @@
    Boston, MA 02111-1307, USA. */
 
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 #include "nis_intern.h"
 
 nis_error

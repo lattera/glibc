@@ -45,9 +45,9 @@ struct passwd
 };
 
 
-#if defined(__USE_SVID) || defined(__USE_GNU)
-#define	__need_FILE
-#include <stdio.h>
+#if defined __USE_SVID || defined __USE_GNU
+# define __need_FILE
+# include <stdio.h>
 #endif
 
 #ifdef	__USE_GNU
@@ -69,7 +69,7 @@ extern struct passwd *__pwdscan __P ((__ptr_t *__p,
 #endif
 
 
-#if defined(__USE_SVID) || defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Rewind the password-file stream.  */
 extern void setpwent __P ((void));
 
@@ -96,11 +96,11 @@ extern struct passwd *getpwnam __P ((__const char *__name));
 
 #if defined __USE_POSIX || defined __USE_MISC
 
-#ifdef __USE_MISC
+# ifdef __USE_MISC
 /* Reasonable value for the buffer sized used in the reentrant
    functions below.  But better use `sysconf'.  */
-#define NSS_BUFLEN_PASSWD	1024
-#endif
+#  define NSS_BUFLEN_PASSWD	1024
+# endif
 
 /* Reentrant versions of some of the functions above.
 
@@ -110,12 +110,12 @@ extern struct passwd *getpwnam __P ((__const char *__name));
    other reentrant functions so the chances are good this is what the
    POSIX people would choose.  */
 
-#if defined(__USE_SVID) || defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
+# if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 extern int __getpwent_r __P ((struct passwd *__resultbuf, char *__buffer,
 			      size_t __buflen, struct passwd **__result));
 extern int getpwent_r __P ((struct passwd *__resultbuf, char *__buffer,
 			    size_t __buflen, struct passwd **__result));
-#endif
+# endif
 
 extern int __getpwuid_r __P ((__uid_t __uid, struct passwd *__resultbuf,
 			      char *__buffer, size_t __buflen,
@@ -132,7 +132,7 @@ extern int getpwnam_r __P ((__const char *__name, struct passwd *__resultbuf,
 			    struct passwd **__result));
 
 
-#ifdef	__USE_SVID
+# ifdef	__USE_SVID
 /* Read an entry from STREAM.  This function is not standardized and
    probably never will.  */
 extern int __fgetpwent_r __P ((FILE * __stream, struct passwd *__resultbuf,
@@ -141,7 +141,7 @@ extern int __fgetpwent_r __P ((FILE * __stream, struct passwd *__resultbuf,
 extern int fgetpwent_r __P ((FILE * __stream, struct passwd *__resultbuf,
 			     char *__buffer, size_t __buflen,
 			     struct passwd **__result));
-#endif
+# endif
 
 #endif	/* POSIX or reentrant */
 

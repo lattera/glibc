@@ -15,3 +15,5 @@ ENTRY(__scalbnf)
 	ret
 END (__scalbnf)
 weak_alias (__scalbnf, scalbnf)
+strong_alias (__scalbnf, __scalblnf)
+weak_alias (__scalbnf, scalblnf)

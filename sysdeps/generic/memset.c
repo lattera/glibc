@@ -38,7 +38,8 @@ memset (dstpp, c, len)
       cccc |= cccc << 8;
       cccc |= cccc << 16;
       if (OPSIZ > 4)
-	cccc |= cccc << 32;
+	/* Do the shift in two steps to avoid warning if long has 32 bits.  */
+	cccc |= (cccc << 16) << 16;
 
       /* There are at least some bytes to set.
 	 No need to test for LEN == 0 in this alignment loop.  */

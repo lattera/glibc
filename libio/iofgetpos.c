@@ -28,7 +28,7 @@
 
 int
 _IO_fgetpos (fp, posp)
-     _IO_FILE* fp;
+     _IO_FILE *fp;
      _IO_fpos_t *posp;
 {
   _IO_fpos_t pos;

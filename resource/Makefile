@@ -20,7 +20,7 @@ subdir := resource
 
 headers	  := sys/resource.h bits/resource.h sys/vlimit.h sys/vtimes.h
 
-routines := getrlimit setrlimit getrusage ulimit vlimit vtimes \
-	    getpriority setpriority nice
+routines := getrlimit setrlimit getrlimit64 setrlimit64 getrusage ulimit      \
+	    vlimit vtimes getpriority setpriority nice
 
 include ../Rules

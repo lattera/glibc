@@ -193,6 +193,10 @@ esac
 changequote([,])dnl
 AC_SUBST(base_machine)
 
+if test "$base_machine" = "i386"; then
+  AC_DEFINE(USE_REGPARMS)
+fi
+
 # Compute the list of sysdep directories for this configuration.
 # This can take a while to compute.
 sysdep_dir=$srcdir/sysdeps
@@ -779,6 +783,7 @@ memcpy () {}
 memset () {}
 free () {}
 abort () {}
+__bzero () {}
 EOF
 dnl No \ in command here because it ends up inside ''.
 if AC_TRY_COMMAND([${CC-cc} $CFLAGS

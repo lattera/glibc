@@ -28,6 +28,7 @@
 /* Try to get a socket to talk to the kernel.  */
 #if defined SIOGIFINDEX || defined SIOGIFNAME
 static int
+internal_function
 opensock (void)
 {
   /* Cache the last AF that worked, to avoid many redundant calls to

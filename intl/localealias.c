@@ -90,6 +90,9 @@ void free ();
 __libc_lock_define_initialized (static, lock);
 #endif
 
+#ifndef internal_function
+# define internal_function
+#endif
 
 /* For those loosing systems which don't have `alloca' we have to add
    some additional code emulating it.  */
@@ -143,7 +146,8 @@ static size_t maxmap = 0;
 
 
 /* Prototypes for local functions.  */
-static size_t read_alias_file PARAMS ((const char *fname, int fname_len));
+static size_t read_alias_file PARAMS ((const char *fname, int fname_len))
+     internal_function;
 static void extend_alias_table PARAMS ((void));
 static int alias_compare PARAMS ((const struct alias_map *map1,
 				  const struct alias_map *map2));
@@ -212,6 +216,7 @@ _nl_expand_alias (name)
 
 
 static size_t
+internal_function
 read_alias_file (fname, fname_len)
      const char *fname;
      int fname_len;

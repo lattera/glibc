@@ -27,7 +27,7 @@
    children; otherwise don't.  */
 pid_t
 __wait3 (stat_loc, options, usage)
-     __WAIT_STATUS_DEFN stat_loc;
+     __WAIT_STATUS stat_loc;
      int options;
      struct rusage *usage;
 {

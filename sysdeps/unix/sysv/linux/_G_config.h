@@ -15,16 +15,19 @@
    hold any value corresponding to members of the extended character
    set, as well as at least one value that does not correspond to any
    member of the extended character set.  */
-#define _WINT_T
+# define _WINT_T
 typedef unsigned int wint_t;
 #endif
 #define _G_size_t	size_t
 #define _G_fpos_t	__off_t
+#define _G_fpos64_t	__off64_t
 #define _G_ssize_t	__ssize_t
 #define _G_off_t	__off_t
+#define _G_off64_t	__off64_t
 #define	_G_pid_t	__pid_t
 #define	_G_uid_t	__uid_t
 #define _G_wint_t	wint_t
+#define _G_stat64	stat
 
 typedef int _G_int16_t __attribute__ ((__mode__ (__HI__)));
 typedef int _G_int32_t __attribute__ ((__mode__ (__SI__)));
@@ -45,6 +48,10 @@ typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
 #define _G_HAVE_MMAP 1
 #define _G_HAVE_LONG_DOUBLE_IO 1
 
+#define _G_OPEN64	open64
+#define _G_LSEEK64	lseek64
+#define _G_FSTAT64	fstat64
+
 /* This is defined by <bits/stat.h> if `st_blksize' exists.  */
 #define _G_HAVE_ST_BLKSIZE defined (_STATBUF_ST_BLKSIZE)
 
@@ -53,15 +60,15 @@ typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
 /* These are the vtbl details for ELF.  */
 #define _G_NAMES_HAVE_UNDERSCORE 0
 #define _G_VTABLE_LABEL_HAS_LENGTH 1
-#define _G_USING_THUNKS
+#define _G_USING_THUNKS	1
 #define _G_VTABLE_LABEL_PREFIX "__vt_"
 #define _G_VTABLE_LABEL_PREFIX_ID __vt_
 
 
 #if defined (__cplusplus) || defined (__STDC__)
-#define _G_ARGS(ARGLIST) ARGLIST
+# define _G_ARGS(ARGLIST) ARGLIST
 #else
-#define _G_ARGS(ARGLIST) ()
+# define _G_ARGS(ARGLIST) ()
 #endif
 
 #endif	/* _G_config.h */

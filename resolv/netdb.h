@@ -413,30 +413,30 @@ struct addrinfo
 };
 
 /* Possible values for `ai_flags' field in `addrinfo' structure.  */
-#define	AI_PASSIVE	1	/* Socket address is intended for `bind'.  */
-#define	AI_CANONNAME	2	/* Request for canonical name.  */
+# define AI_PASSIVE	1	/* Socket address is intended for `bind'.  */
+# define AI_CANONNAME	2	/* Request for canonical name.  */
 
 /* Error values for `getaddrinfo' function.  */
-#define	EAI_BADFLAGS	-1	/* Invalid value for `ai_flags' field.  */
-#define	EAI_NONAME	-2	/* NAME or SERVICE is unknown.  */
-#define	EAI_AGAIN	-3	/* Temporary failure in name resolution.  */
-#define	EAI_FAIL	-4	/* Non-recoverable failure in name res.  */
-#define	EAI_NODATA	-5	/* No address associated with NAME.  */
-#define	EAI_FAMILY	-6	/* `ai_family' not supported.  */
-#define	EAI_SOCKTYPE	-7	/* `ai_socktype' not supported.  */
-#define	EAI_SERVICE	-8	/* SERVICE not supported for `ai_socktype'.  */
-#define	EAI_ADDRFAMILY	-9	/* Address family for NAME not supported.  */
-#define	EAI_MEMORY	-10	/* Memory allocation failure.  */
-#define	EAI_SYSTEM	-11	/* System error returned in `errno'.  */
+# define EAI_BADFLAGS	-1	/* Invalid value for `ai_flags' field.  */
+# define EAI_NONAME	-2	/* NAME or SERVICE is unknown.  */
+# define EAI_AGAIN	-3	/* Temporary failure in name resolution.  */
+# define EAI_FAIL	-4	/* Non-recoverable failure in name res.  */
+# define EAI_NODATA	-5	/* No address associated with NAME.  */
+# define EAI_FAMILY	-6	/* `ai_family' not supported.  */
+# define EAI_SOCKTYPE	-7	/* `ai_socktype' not supported.  */
+# define EAI_SERVICE	-8	/* SERVICE not supported for `ai_socktype'.  */
+# define EAI_ADDRFAMILY	-9	/* Address family for NAME not supported.  */
+# define EAI_MEMORY	-10	/* Memory allocation failure.  */
+# define EAI_SYSTEM	-11	/* System error returned in `errno'.  */
 
-#define NI_MAXHOST      1025
-#define NI_MAXSERV      32
+# define NI_MAXHOST      1025
+# define NI_MAXSERV      32
 
-#define NI_NUMERICHOST 1
-#define NI_NUMERICSERV 2
-#define NI_NOFQDN 4
-#define NI_NAMEREQD 8
-#define NI_DGRAM 16
+# define NI_NUMERICHOST 1
+# define NI_NUMERICSERV 2
+# define NI_NOFQDN 4
+# define NI_NAMEREQD 8
+# define NI_DGRAM 16
 
 /* Translate name of a service location and/or a service name to set of
    socket addresses.  */

@@ -895,7 +895,7 @@ The conversion specifications in a @code{printf} template string have
 the general form:
 
 @example
-% @var{flags} @var{width} @r{[} . @var{precision} @r{]} @var{type} @var{conversion}
+% @r{[} @var{param-no} @r{$]} @var{flags} @var{width} @r{[} . @var{precision} @r{]} @var{type} @var{conversion}
 @end example
 
 For example, in the conversion specifier @samp{%-10.8ld}, the @samp{-}
@@ -909,6 +909,33 @@ In more detail, output conversion specifications consist of an
 initial @samp{%} character followed in sequence by:
 
 @itemize @bullet
+@item
+An optional specification of the parameter used for this format.
+Normally the parameters to the @code{printf} function a assigned to the
+formats in the order of appearence in the format string.  But in some
+situations (such as message translation) this is not desirable and this
+extension allows to specify and explicit parameter to be used.
+
+The @var{param-no} part of the format must be an integer in the range of
+1 to the maximum number of arguments present to the function call.  Some
+implementations limit this number to a certainly upper bound.  The exact
+limit can be retrieved by the following constant.
+
+@defvr Macro NL_ARGMAX
+The value of @code{ARGMAX} is the maximum value allowed for the
+specification of an positional parameter in a @code{printf} call.  The
+actual value in effect at runtime can be retrieved by using
+@code{sysconf} using the @code{_SC_NL_ARGMAX} parameter @pxref{Sysconf
+Definition}.
+
+Some system have a quite low limit such as @math{9} for @w{System V}
+systems.  The GNU C library has no real limit.
+@end defvr
+
+If any of the formats has a specification for the parameter position all
+of them in the format string shall have one.  Otherwise the behaviour is
+undefined.
+
 @item
 Zero or more @dfn{flag characters} that modify the normal behavior of
 the conversion specification.

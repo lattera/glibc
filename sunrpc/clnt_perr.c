@@ -43,7 +43,7 @@ static char sccsid[] = "@(#)clnt_perror.c 1.15 87/10/07 Copyr 1984 Sun Micro";
 #include <rpc/auth.h>
 #include <rpc/clnt.h>
 
-static char *auth_errmsg (enum auth_stat stat);
+static char *auth_errmsg (enum auth_stat stat) internal_function;
 
 static char *buf;
 
@@ -288,6 +288,7 @@ static const struct auth_errtab auth_errlist[] =
 };
 
 static char *
+internal_function
 auth_errmsg (enum auth_stat stat)
 {
   size_t i;

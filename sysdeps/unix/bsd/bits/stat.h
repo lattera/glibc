@@ -56,7 +56,7 @@ struct stat
     unsigned long int st_blksize; /* Optimal block size for I/O.  */
 #define	_STATBUF_ST_BLKSIZE	/* Tell code we have this member.  */
 
-    unsigned long int st_blocks; /* Number of 512-byte blocks allocated.  */
+    __blkcnt_t st_blocks;	/* Number of 512-byte blocks allocated.  */
 
     long int st_spare[2];
   };

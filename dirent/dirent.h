@@ -112,20 +112,42 @@ extern DIR *opendir __P ((__const char *__name));
 extern int __closedir __P ((DIR *__dirp));
 extern int closedir __P ((DIR *__dirp));
 
-/* Read a directory entry from DIRP.
-   Return a pointer to a `struct dirent' describing the entry,
-   or NULL for EOF or error.  The storage returned may be overwritten
-   by a later readdir call on the same DIR stream.  */
+/* Read a directory entry from DIRP.  Return a pointer to a `struct
+   dirent' describing the entry, or NULL for EOF or error.  The
+   storage returned may be overwritten by a later readdir call on the
+   same DIR stream.
+
+   If the Large File Support API is selected we have to use the
+   appropriate interface.  */
 extern struct dirent *__readdir __P ((DIR *__dirp));
+#ifndef __USE_FILE_OFFSET64
 extern struct dirent *readdir __P ((DIR *__dirp));
+#else
+extern struct dirent64 *readdir __P ((DIR *__dirp)) __asm__ ("readdir64");
+#endif
+
+#ifdef __USE_LARGEFILE64
+extern struct dirent64 *readdir64 __P ((DIR *__dirp));
+#endif
 
 #if defined __USE_POSIX || defined __USE_MISC
 /* Reentrant version of `readdir'.  Return in RESULT a pointer to the
    next entry.  */
 extern int __readdir_r __P ((DIR *__dirp, struct dirent *__entry,
 			     struct dirent **__result));
+# ifndef __USE_FILE_OFFSET64
 extern int readdir_r __P ((DIR *__dirp, struct dirent *__entry,
 			   struct dirent **__result));
+# else
+extern int readdir_r __P ((DIR *__dirp, struct dirent64 *__entry,
+			   struct dirent64 **__result))
+     __asm__ ("readdir64_r");
+# endif
+
+# ifdef __USE_LARGEFILE64
+extern int readdir64_r __P ((DIR *__dirp, struct dirent64 *__entry,
+			     struct dirent64 **__result));
+# endif
 #endif	/* POSIX or misc */
 
 /* Rewind DIRP to the beginning of the directory.  */

@@ -140,13 +140,8 @@ fixup (
      that defines sym.  Now add in the symbol offset.  */
   value = (sym ? value + sym->st_value : 0);
 
-  /* And now the relocation addend.  */
-#ifndef ELF_MACHINE_NO_RELA
-  if (l->l_info[DT_PLTRELSZ]->d_un.d_val == sizeof (ElfW(Rela)))
-    value += reloc->r_addend;
-#elif ELF_MACHINE_NO_REL
-  value += reloc->r_addend;
-#endif
+  /* And now perhaps the relocation addend.  */
+  value = elf_machine_plt_value (l, reloc, value);
 
   /* Finally, fix up the plt itself.  */
   elf_machine_fixup_plt (l, reloc, rel_addr, value);
@@ -212,13 +207,8 @@ profile_fixup (
      that defines sym.  Now add in the symbol offset.  */
   value = (sym ? value + sym->st_value : 0);
 
-  /* And now the relocation addend.  */
-#ifndef ELF_MACHINE_NO_RELA
-  if (l->l_info[DT_PLTRELSZ]->d_un.d_val == sizeof (ElfW(Rela)))
-    value += reloc->r_addend;
-#elif ELF_MACHINE_NO_REL
-  value += reloc->r_addend;
-#endif
+  /* And now perhaps the relocation addend.  */
+  value = elf_machine_plt_value (l, reloc, value);
 
   *_dl_global_scope_end = NULL;
   (*mcount_fct) (retaddr, value);

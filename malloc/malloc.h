@@ -39,34 +39,34 @@
 */
 
 #if defined(__STDC__) || defined (__cplusplus)
-#include <stddef.h>
-#define __malloc_ptr_t  void *
+# include <stddef.h>
+# define __malloc_ptr_t  void *
 #else
-#undef  size_t
-#define size_t          unsigned int
-#undef  ptrdiff_t
-#define ptrdiff_t       int
-#define __malloc_ptr_t  char *
+# undef  size_t
+# define size_t          unsigned int
+# undef  ptrdiff_t
+# define ptrdiff_t       int
+# define __malloc_ptr_t  char *
 #endif
 
 #ifdef _LIBC
 /* Used by GNU libc internals. */
-#define __malloc_size_t size_t
-#define __malloc_ptrdiff_t ptrdiff_t
+# define __malloc_size_t size_t
+# define __malloc_ptrdiff_t ptrdiff_t
 #endif
 
-#if defined (__STDC__) || defined (__cplusplus) || defined (__GNUC__)
-#define __MALLOC_P(args)        args
+#if defined __STDC__ || defined __cplusplus || defined __GNUC__
+# define __MALLOC_P(args)        args
 #else
-#define __MALLOC_P(args)        ()
+# define __MALLOC_P(args)        ()
 #endif
 
 #ifndef NULL
-#ifdef __cplusplus
-#define NULL    0
-#else
-#define NULL    ((__malloc_ptr_t) 0)
-#endif
+# ifdef __cplusplus
+#  define NULL	0
+# else
+#  define NULL	((__malloc_ptr_t) 0)
+# endif
 #endif
 
 #ifdef __cplusplus
@@ -77,7 +77,7 @@ extern "C" {
 #ifdef _LIBC
 /* In the GNU libc we rename the global variable
    `__malloc_initialized' to `__libc_malloc_initialized'.  */
-#define __malloc_initialized __libc_malloc_initialized
+# define __malloc_initialized __libc_malloc_initialized
 #endif
 extern int __malloc_initialized;
 
@@ -138,16 +138,16 @@ extern struct mallinfo mallinfo __MALLOC_P ((void));
 
 /* SVID2/XPG mallopt options */
 #ifndef M_MXFAST
-#define M_MXFAST  1    /* UNUSED in this malloc */
+# define M_MXFAST  1	/* UNUSED in this malloc */
 #endif
 #ifndef M_NLBLKS
-#define M_NLBLKS  2    /* UNUSED in this malloc */
+# define M_NLBLKS  2	/* UNUSED in this malloc */
 #endif
 #ifndef M_GRAIN
-#define M_GRAIN   3    /* UNUSED in this malloc */
+# define M_GRAIN   3	/* UNUSED in this malloc */
 #endif
 #ifndef M_KEEP
-#define M_KEEP    4    /* UNUSED in this malloc */
+# define M_KEEP    4	/* UNUSED in this malloc */
 #endif
 
 /* mallopt options that actually do something */
@@ -178,7 +178,7 @@ extern __malloc_ptr_t malloc_get_state __MALLOC_P ((void));
    malloc_get_state(). */
 extern int malloc_set_state __MALLOC_P ((__malloc_ptr_t __ptr));
 
-#ifdef __GLIBC__
+#if defined __GLIBC__ || defined MALLOC_HOOKS
 /* Hooks for debugging versions. */
 extern void (*__malloc_initialize_hook) __MALLOC_P ((void));
 extern void (*__free_hook) __MALLOC_P ((__malloc_ptr_t __ptr,
@@ -195,21 +195,6 @@ extern void (*__after_morecore_hook) __MALLOC_P ((void));
 
 /* Activate a standard set of debugging hooks. */
 extern void __malloc_check_init __MALLOC_P ((void));
-#else
-#ifdef MALLOC_HOOKS
-/* Hooks for debugging versions. */
-extern void (*__malloc_initialize_hook) __MALLOC_P ((void));
-extern void (*__free_hook) __MALLOC_P ((__malloc_ptr_t __ptr));
-extern __malloc_ptr_t (*__malloc_hook) __MALLOC_P ((size_t __size));
-extern __malloc_ptr_t (*__realloc_hook) __MALLOC_P ((__malloc_ptr_t __ptr,
-						     size_t __size));
-extern __malloc_ptr_t (*__memalign_hook) __MALLOC_P ((size_t __size,
-						      size_t __alignment));
-extern void (*__after_morecore_hook) __MALLOC_P ((void));
-
-/* Activate a standard set of debugging hooks. */
-extern void __malloc_check_init __MALLOC_P ((void));
-#endif
 #endif
 
 #ifdef __cplusplus

@@ -94,7 +94,9 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
   enum nss_status status = NSS_STATUS_UNAVAIL;
 
 #ifdef HANDLE_DIGITS_DOTS
+# define resbuf (*resbuf)
 # include "digits_dots.c"
+# undef resbuf
 #endif
 
   if (startp == NULL)

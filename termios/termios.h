@@ -34,7 +34,7 @@ __BEGIN_DECLS
 #ifdef __USE_BSD
 /* Compare a character C to a value VAL from the `c_cc' array in a
    `struct termios'.  If VAL is _POSIX_VDISABLE, no character can match it.  */
-#define	CCEQ(val, c)	((c) == (val) && (val) != _POSIX_VDISABLE)
+# define CCEQ(val, c)	((c) == (val) && (val) != _POSIX_VDISABLE)
 #endif
 
 /* Return the output baud rate stored in *TERMIOS_P.  */
@@ -86,7 +86,7 @@ extern int tcflow __P ((int __fd, int __action));
 
 
 #ifdef __USE_BSD
-#include <sys/ttydefaults.h>
+# include <sys/ttydefaults.h>
 #endif
 
 __END_DECLS

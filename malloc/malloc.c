@@ -297,7 +297,7 @@
 
 #if __STD_C
 # include <stddef.h>   /* for size_t */
-# if defined(_LIBC) || defined(MALLOC_HOOKS)
+# if defined _LIBC || defined MALLOC_HOOKS
 #  include <stdlib.h>  /* for getenv(), abort() */
 # endif
 #else
@@ -1168,17 +1168,19 @@ typedef struct _heap_info {
 
 #if __STD_C
 
-static void      chunk_free(arena *ar_ptr, mchunkptr p);
-static mchunkptr chunk_alloc(arena *ar_ptr, INTERNAL_SIZE_T size);
+static void      chunk_free(arena *ar_ptr, mchunkptr p) internal_function;
+static mchunkptr chunk_alloc(arena *ar_ptr, INTERNAL_SIZE_T size)
+     internal_function;
 static mchunkptr chunk_realloc(arena *ar_ptr, mchunkptr oldp,
-                               INTERNAL_SIZE_T oldsize, INTERNAL_SIZE_T nb);
+                               INTERNAL_SIZE_T oldsize, INTERNAL_SIZE_T nb)
+     internal_function;
 static mchunkptr chunk_align(arena *ar_ptr, INTERNAL_SIZE_T nb,
-                             size_t alignment);
-static int       main_trim(size_t pad);
+                             size_t alignment) internal_function;
+static int       main_trim(size_t pad) internal_function;
 #ifndef NO_THREADS
-static int       heap_trim(heap_info *heap, size_t pad);
+static int       heap_trim(heap_info *heap, size_t pad) internal_function;
 #endif
-#ifdef _LIBC
+#if defined _LIBC || defined MALLOC_HOOKS
 static Void_t*   malloc_check(size_t sz, const Void_t *caller);
 static void      free_check(Void_t* mem, const Void_t *caller);
 static Void_t*   realloc_check(Void_t* oldmem, size_t bytes,
@@ -1189,17 +1191,6 @@ static Void_t*   malloc_starter(size_t sz, const Void_t *caller);
 static void      free_starter(Void_t* mem, const Void_t *caller);
 static Void_t*   malloc_atfork(size_t sz, const Void_t *caller);
 static void      free_atfork(Void_t* mem, const Void_t *caller);
-#else
-#ifdef MALLOC_HOOKS
-static Void_t*   malloc_check(size_t sz);
-static void      free_check(Void_t* mem);
-static Void_t*   realloc_check(Void_t* oldmem, size_t bytes);
-static Void_t*   memalign_check(size_t alignment, size_t bytes);
-static Void_t*   malloc_starter(size_t sz);
-static void      free_starter(Void_t* mem);
-static Void_t*   malloc_atfork(size_t sz);
-static void      free_atfork(Void_t* mem);
-#endif
 #endif
 
 #else
@@ -1212,7 +1203,7 @@ static int       main_trim();
 #ifndef NO_THREADS
 static int       heap_trim();
 #endif
-#if defined(_LIBC) || defined(MALLOC_HOOKS)
+#if defined _LIBC || defined MALLOC_HOOKS
 static Void_t*   malloc_check();
 static void      free_check();
 static Void_t*   realloc_check();
@@ -1223,6 +1214,13 @@ static Void_t*   malloc_atfork();
 static void      free_atfork();
 #endif
 
+#endif
+
+/* On some platforms we can compile internal, not exported functions better.
+   Let the environment provide a macro and define it to be empty if it
+   is not available.  */
+#ifndef internal_function
+# define internal_function
 #endif
 
 
@@ -1387,13 +1385,13 @@ static void      free_atfork();
   Indexing into bins
 */
 
-#define bin_index(sz)                                                          \
-(((((unsigned long)(sz)) >> 9) ==    0) ?       (((unsigned long)(sz)) >>  3): \
- ((((unsigned long)(sz)) >> 9) <=    4) ?  56 + (((unsigned long)(sz)) >>  6): \
- ((((unsigned long)(sz)) >> 9) <=   20) ?  91 + (((unsigned long)(sz)) >>  9): \
- ((((unsigned long)(sz)) >> 9) <=   84) ? 110 + (((unsigned long)(sz)) >> 12): \
- ((((unsigned long)(sz)) >> 9) <=  340) ? 119 + (((unsigned long)(sz)) >> 15): \
- ((((unsigned long)(sz)) >> 9) <= 1364) ? 124 + (((unsigned long)(sz)) >> 18): \
+#define bin_index(sz)                                                         \
+(((((unsigned long)(sz)) >> 9) ==    0) ?       (((unsigned long)(sz)) >>  3):\
+ ((((unsigned long)(sz)) >> 9) <=    4) ?  56 + (((unsigned long)(sz)) >>  6):\
+ ((((unsigned long)(sz)) >> 9) <=   20) ?  91 + (((unsigned long)(sz)) >>  9):\
+ ((((unsigned long)(sz)) >> 9) <=   84) ? 110 + (((unsigned long)(sz)) >> 12):\
+ ((((unsigned long)(sz)) >> 9) <=  340) ? 119 + (((unsigned long)(sz)) >> 15):\
+ ((((unsigned long)(sz)) >> 9) <= 1364) ? 124 + (((unsigned long)(sz)) >> 18):\
                                           126)
 /*
   bins for chunks < 512 are all spaced 8 bytes apart, and hold
@@ -1533,18 +1531,12 @@ int __malloc_initialized = 0;
    temporarily, because the `atfork' handler mechanism may use
    malloc/free internally (e.g. in LinuxThreads). */
 
-#ifdef _LIBC
+#if defined _LIBC || defined MALLOC_HOOKS
 static __malloc_ptr_t (*save_malloc_hook) __MALLOC_P ((size_t __size,
 						       const __malloc_ptr_t));
 static void           (*save_free_hook) __MALLOC_P ((__malloc_ptr_t __ptr,
 						     const __malloc_ptr_t));
 static Void_t*        save_arena;
-#else
-#ifdef MALLOC_HOOKS
-static __malloc_ptr_t (*save_malloc_hook) __MALLOC_P ((size_t __size));
-static void           (*save_free_hook) __MALLOC_P ((__malloc_ptr_t __ptr));
-static Void_t*        save_arena;
-#endif
 #endif
 
 static void
@@ -1558,7 +1550,7 @@ ptmalloc_lock_all __MALLOC_P((void))
     ar_ptr = ar_ptr->next;
     if(ar_ptr == &main_arena) break;
   }
-#if defined(_LIBC) || defined(MALLOC_HOOKS)
+#if defined _LIBC || defined MALLOC_HOOKS
   save_malloc_hook = __malloc_hook;
   save_free_hook = __free_hook;
   __malloc_hook = malloc_atfork;
@@ -1574,7 +1566,7 @@ ptmalloc_unlock_all __MALLOC_P((void))
 {
   arena *ar_ptr;
 
-#if defined(_LIBC) || defined(MALLOC_HOOKS)
+#if defined _LIBC || defined MALLOC_HOOKS
   tsd_setspecific(arena_key, save_arena);
   __malloc_hook = save_malloc_hook;
   __free_hook = save_free_hook;
@@ -1600,13 +1592,13 @@ void
 ptmalloc_init __MALLOC_P((void))
 #endif
 {
-#if defined(_LIBC) || defined(MALLOC_HOOKS)
+#if defined _LIBC || defined MALLOC_HOOKS
   const char* s;
 #endif
 
   if(__malloc_initialized) return;
   __malloc_initialized = 1;
-#if defined(_LIBC) || defined(MALLOC_HOOKS)
+#if defined _LIBC || defined MALLOC_HOOKS
   /* With some threads implementations, creating thread-specific data
      or initializing a mutex may call malloc() itself.  Provide a
      simple starter version (realloc() won't work). */
@@ -1615,7 +1607,7 @@ ptmalloc_init __MALLOC_P((void))
   __malloc_hook = malloc_starter;
   __free_hook = free_starter;
 #endif
-#if defined(_LIBC) && !defined (NO_THREADS)
+#if defined _LIBC && !defined NO_THREADS
   /* Initialize the pthreads interface. */
   if (__pthread_initialize != NULL)
     __pthread_initialize();
@@ -1627,7 +1619,7 @@ ptmalloc_init __MALLOC_P((void))
   tsd_setspecific(arena_key, (Void_t *)&main_arena);
   thread_atfork(ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_unlock_all);
 #endif
-#if defined(_LIBC) || defined(MALLOC_HOOKS)
+#if defined _LIBC || defined MALLOC_HOOKS
   if((s = getenv("MALLOC_TRIM_THRESHOLD_")))
     mALLOPt(M_TRIM_THRESHOLD, atoi(s));
   if((s = getenv("MALLOC_TOP_PAD_")))
@@ -1654,7 +1646,7 @@ thread_atfork_static(ptmalloc_lock_all, ptmalloc_unlock_all, \
                      ptmalloc_unlock_all)
 #endif
 
-#if defined(_LIBC) || defined(MALLOC_HOOKS)
+#if defined _LIBC || defined MALLOC_HOOKS
 
 /* Hooks for debugging versions.  The initial hooks just call the
    initialization routine, then do the normal work. */
@@ -1678,14 +1670,11 @@ malloc_hook_ini(sz) size_t sz;
 }
 
 static Void_t*
-#ifdef _LIBC
+#if __STD_C
 realloc_hook_ini(Void_t* ptr, size_t sz, const __malloc_ptr_t caller)
 #else
-#if __STD_C
-realloc_hook_ini(Void_t* ptr, size_t sz)
-#else
-realloc_hook_ini(ptr, sz) Void_t* ptr; size_t sz;
-#endif
+realloc_hook_ini(ptr, sz, caller)
+     Void_t* ptr; size_t sz; const __malloc_ptr_t caller;
 #endif
 {
   __malloc_hook = NULL;
@@ -1696,14 +1685,11 @@ realloc_hook_ini(ptr, sz) Void_t* ptr; size_t sz;
 }
 
 static Void_t*
-#ifdef _LIBC
+#if __STD_C
 memalign_hook_ini(size_t sz, size_t alignment, const __malloc_ptr_t caller)
 #else
-#if __STD_C
-memalign_hook_ini(size_t sz, size_t alignment)
-#else
-memalign_hook_ini(sz, alignment) size_t sz; size_t alignment;
-#endif
+memalign_hook_ini(sz, alignment, caller)
+     size_t sz; size_t alignment; const __malloc_ptr_t caller;
 #endif
 {
   __malloc_hook = NULL;
@@ -1714,7 +1700,6 @@ memalign_hook_ini(sz, alignment) size_t sz; size_t alignment;
 }
 
 void weak_variable (*__malloc_initialize_hook) __MALLOC_P ((void)) = NULL;
-#ifdef _LIBC
 void weak_variable (*__free_hook) __MALLOC_P ((__malloc_ptr_t __ptr,
 					       const __malloc_ptr_t)) = NULL;
 __malloc_ptr_t weak_variable (*__malloc_hook)
@@ -1725,15 +1710,6 @@ __malloc_ptr_t weak_variable (*__realloc_hook)
 __malloc_ptr_t weak_variable (*__memalign_hook)
  __MALLOC_P ((size_t __size, size_t __alignment, const __malloc_ptr_t))
      = memalign_hook_ini;
-#else
-void weak_variable (*__free_hook) __MALLOC_P ((__malloc_ptr_t __ptr)) = NULL;
-__malloc_ptr_t weak_variable (*__malloc_hook)
- __MALLOC_P ((size_t __size)) = malloc_hook_ini;
-__malloc_ptr_t weak_variable (*__realloc_hook)
- __MALLOC_P ((__malloc_ptr_t __ptr, size_t __size)) = realloc_hook_ini;
-__malloc_ptr_t weak_variable (*__memalign_hook)
- __MALLOC_P ((size_t __size, size_t __alignment)) = memalign_hook_ini;
-#endif
 void weak_variable (*__after_morecore_hook) __MALLOC_P ((void)) = NULL;
 
 /* Activate a standard set of debugging hooks. */
@@ -1774,10 +1750,16 @@ static int dev_zero_fd = -1; /* Cached file descriptor for /dev/zero. */
 
 #endif
 
+static mchunkptr
+#if defined __GNUC__ && __GNUC__ >= 2
+/* This function is only called from one place, inline it.  */
+inline
+#endif
+internal_function
 #if __STD_C
-static mchunkptr mmap_chunk(size_t size)
+mmap_chunk(size_t size)
 #else
-static mchunkptr mmap_chunk(size) size_t size;
+mmap_chunk(size) size_t size;
 #endif
 {
   size_t page_mask = malloc_getpagesize - 1;
@@ -1897,6 +1879,7 @@ static mchunkptr mremap_chunk(p, new_size) mchunkptr p; size_t new_size;
    of the page size. */
 
 static heap_info *
+internal_function
 #if __STD_C
 new_heap(size_t size)
 #else
@@ -1986,6 +1969,7 @@ grow_heap(h, diff) heap_info *h; long diff;
 } while(0)
 
 static arena *
+internal_function
 #if __STD_C
 arena_get2(arena *a_tsd, size_t size)
 #else
@@ -2302,10 +2286,16 @@ arena *ar_ptr; mchunkptr p; INTERNAL_SIZE_T s;
   Main interface to sbrk (but see also malloc_trim).
 */
 
+static void
+#if defined __GNUC__ && __GNUC__ >= 2
+/* This function is called only from one place, inline it.  */
+inline
+#endif
+internal_function
 #if __STD_C
-static void malloc_extend_top(arena *ar_ptr, INTERNAL_SIZE_T nb)
+malloc_extend_top(arena *ar_ptr, INTERNAL_SIZE_T nb)
 #else
-static void malloc_extend_top(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
+malloc_extend_top(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
 #endif
 {
   unsigned long pagesz   = malloc_getpagesize;
@@ -2340,7 +2330,7 @@ static void malloc_extend_top(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
         (brk < old_end && old_top != initial_top(&main_arena)))
       return;
 
-#if defined(_LIBC) || defined(MALLOC_HOOKS)
+#if defined _LIBC || defined MALLOC_HOOKS
     /* Call the `morecore' hook if necessary.  */
     if (__after_morecore_hook)
       (*__after_morecore_hook) ();
@@ -2374,7 +2364,7 @@ static void malloc_extend_top(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
       new_brk = (char*)(MORECORE (correction));
       if (new_brk == (char*)(MORECORE_FAILURE)) return;
 
-#if defined(_LIBC) || defined(MALLOC_HOOKS)
+#if defined _LIBC || defined MALLOC_HOOKS
       /* Call the `morecore' hook if necessary.  */
       if (__after_morecore_hook)
         (*__after_morecore_hook) ();
@@ -2531,14 +2521,14 @@ Void_t* mALLOc(bytes) size_t bytes;
   INTERNAL_SIZE_T nb; /* padded request size */
   mchunkptr victim;
 
-#if defined(_LIBC) || defined(MALLOC_HOOKS)
+#if defined _LIBC || defined MALLOC_HOOKS
   if (__malloc_hook != NULL) {
     Void_t* result;
 
-#ifdef _LIBC
+#if defined __GNUC__ && __GNUC__ >= 2
     result = (*__malloc_hook)(bytes, __builtin_return_address (0));
 #else
-    result = (*__malloc_hook)(bytes);
+    result = (*__malloc_hook)(bytes, NULL);
 #endif
     return result;
   }
@@ -2563,6 +2553,7 @@ Void_t* mALLOc(bytes) size_t bytes;
 }
 
 static mchunkptr
+internal_function
 #if __STD_C
 chunk_alloc(arena *ar_ptr, INTERNAL_SIZE_T nb)
 #else
@@ -2828,12 +2819,12 @@ void fREe(mem) Void_t* mem;
   arena *ar_ptr;
   mchunkptr p;                          /* chunk corresponding to mem */
 
-#if defined(_LIBC) || defined(MALLOC_HOOKS)
+#if defined _LIBC || defined MALLOC_HOOKS
   if (__free_hook != NULL) {
-#ifdef _LIBC
+#if defined __GNUC__ && __GNUC__ >= 2
     (*__free_hook)(mem, __builtin_return_address (0));
 #else
-    (*__free_hook)(mem);
+    (*__free_hook)(mem, NULL);
 #endif
     return;
   }
@@ -2868,6 +2859,7 @@ void fREe(mem) Void_t* mem;
 }
 
 static void
+internal_function
 #if __STD_C
 chunk_free(arena *ar_ptr, mchunkptr p)
 #else
@@ -3030,14 +3022,14 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
 
   mchunkptr newp;             /* chunk to return */
 
-#if defined(_LIBC) || defined(MALLOC_HOOKS)
+#if defined _LIBC || defined MALLOC_HOOKS
   if (__realloc_hook != NULL) {
     Void_t* result;
 
-#ifdef _LIBC
+#if defined __GNUC__ && __GNUC__ >= 2
     result = (*__realloc_hook)(oldmem, bytes, __builtin_return_address (0));
 #else
-    result = (*__realloc_hook)(oldmem, bytes);
+    result = (*__realloc_hook)(oldmem, bytes, NULL);
 #endif
     return result;
   }
@@ -3099,6 +3091,7 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
 }
 
 static mchunkptr
+internal_function
 #if __STD_C
 chunk_realloc(arena* ar_ptr, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
               INTERNAL_SIZE_T nb)
@@ -3296,15 +3289,15 @@ Void_t* mEMALIGn(alignment, bytes) size_t alignment; size_t bytes;
   INTERNAL_SIZE_T    nb;      /* padded  request size */
   mchunkptr p;
 
-#if defined(_LIBC) || defined(MALLOC_HOOKS)
+#if defined _LIBC || defined MALLOC_HOOKS
   if (__memalign_hook != NULL) {
     Void_t* result;
 
-#ifdef _LIBC
+#if defined __GNUC__ && __GNUC__ >= 2
     result = (*__memalign_hook)(alignment, bytes,
 				__builtin_return_address (0));
 #else
-    result = (*__memalign_hook)(alignment, bytes);
+    result = (*__memalign_hook)(alignment, bytes, NULL);
 #endif
     return result;
   }
@@ -3337,6 +3330,7 @@ Void_t* mEMALIGn(alignment, bytes) size_t alignment; size_t bytes;
 }
 
 static mchunkptr
+internal_function
 #if __STD_C
 chunk_align(arena* ar_ptr, INTERNAL_SIZE_T nb, size_t alignment)
 #else
@@ -3473,13 +3467,13 @@ Void_t* cALLOc(n, elem_size) size_t n; size_t elem_size;
   INTERNAL_SIZE_T sz, csz, oldtopsize;
   Void_t* mem;
 
-#if defined(_LIBC) || defined(MALLOC_HOOKS)
+#if defined _LIBC || defined MALLOC_HOOKS
   if (__malloc_hook != NULL) {
     sz = n * elem_size;
-#ifdef _LIBC
+#if defined __GNUC__ && __GNUC__ >= 2
     mem = (*__malloc_hook)(sz, __builtin_return_address (0));
 #else
-    mem = (*__malloc_hook)(sz);
+    mem = (*__malloc_hook)(sz, NULL);
 #endif
     if(mem == 0)
       return 0;
@@ -3597,6 +3591,7 @@ int mALLOC_TRIm(pad) size_t pad;
 /* Trim the main arena. */
 
 static int
+internal_function
 #if __STD_C
 main_trim(size_t pad)
 #else
@@ -3625,7 +3620,7 @@ main_trim(pad) size_t pad;
 
   new_brk = (char*)(MORECORE (-extra));
 
-#if defined(_LIBC) || defined(MALLOC_HOOKS)
+#if defined _LIBC || defined MALLOC_HOOKS
   /* Call the `morecore' hook if necessary.  */
   if (__after_morecore_hook)
     (*__after_morecore_hook) ();
@@ -3654,6 +3649,7 @@ main_trim(pad) size_t pad;
 #ifndef NO_THREADS
 
 static int
+internal_function
 #if __STD_C
 heap_trim(heap_info *heap, size_t pad)
 #else
@@ -4114,7 +4110,7 @@ mALLOC_SET_STATe(msptr) Void_t* msptr;
 
 
 
-#if defined(_LIBC) || defined(MALLOC_HOOKS)
+#if defined _LIBC || defined MALLOC_HOOKS
 
 /* A simple, standard set of debugging hooks.  Overhead is `only' one
    byte per chunk; still this will catch most cases of double frees or
@@ -4127,6 +4123,7 @@ mALLOC_SET_STATe(msptr) Void_t* msptr;
    goal here is to avoid crashes, unlike in the MALLOC_DEBUG code. */
 
 static mchunkptr
+internal_function
 #if __STD_C
 mem2chunk_check(Void_t* mem)
 #else
@@ -4173,14 +4170,10 @@ mem2chunk_check(mem) Void_t* mem;
 }
 
 static Void_t*
-#ifdef _LIBC
+#if __STD_C
 malloc_check(size_t sz, const Void_t *caller)
 #else
-#if __STD_C
-malloc_check(size_t sz)
-#else
-malloc_check(sz) size_t sz;
-#endif
+malloc_check(sz, caller) size_t sz; const Void_t *caller;
 #endif
 {
   mchunkptr victim;
@@ -4200,14 +4193,10 @@ malloc_check(sz) size_t sz;
 }
 
 static void
-#ifdef _LIBC
+#if __STD_C
 free_check(Void_t* mem, const Void_t *caller)
 #else
-#if __STD_C
-free_check(Void_t* mem)
-#else
-free_check(mem) Void_t* mem;
-#endif
+free_check(mem, caller) Void_t* mem; const Void_t *caller;
 #endif
 {
   mchunkptr p;
@@ -4241,24 +4230,17 @@ free_check(mem) Void_t* mem;
 }
 
 static Void_t*
-#ifdef _LIBC
+#if __STD_C
 realloc_check(Void_t* oldmem, size_t bytes, const Void_t *caller)
 #else
-#if __STD_C
-realloc_check(Void_t* oldmem, size_t bytes)
-#else
-realloc_check(oldmem, bytes) Void_t* oldmem; size_t bytes;
-#endif
+realloc_check(oldmem, bytes, caller)
+     Void_t* oldmem; size_t bytes; const Void_t *caller;
 #endif
 {
   mchunkptr oldp, newp;
   INTERNAL_SIZE_T nb, oldsize;
 
-#ifdef _LIBC
   if (oldmem == 0) return malloc_check(bytes, NULL);
-#else
-  if (oldmem == 0) return malloc_check(bytes);
-#endif
   (void)mutex_lock(&main_arena.mutex);
   oldp = mem2chunk_check(oldmem);
   if(!oldp) {
@@ -4270,11 +4252,7 @@ realloc_check(oldmem, bytes) Void_t* oldmem; size_t bytes;
     case 2:
       abort();
     }
-#ifdef _LIBC
     return malloc_check(bytes, NULL);
-#else
-    return malloc_check(bytes);
-#endif
   }
   oldsize = chunksize(oldp);
 
@@ -4327,24 +4305,17 @@ realloc_check(oldmem, bytes) Void_t* oldmem; size_t bytes;
 }
 
 static Void_t*
-#ifdef _LIBC
+#if __STD_C
 memalign_check(size_t alignment, size_t bytes, const Void_t *caller)
 #else
-#if __STD_C
-memalign_check(size_t alignment, size_t bytes)
-#else
-memalign_check(alignment, bytes) size_t alignment; size_t bytes;
-#endif
+memalign_check(alignment, bytes, caller)
+     size_t alignment; size_t bytes; const Void_t *caller;
 #endif
 {
   INTERNAL_SIZE_T nb;
   mchunkptr p;
 
-#ifdef _LIBC
   if (alignment <= MALLOC_ALIGNMENT) return malloc_check(bytes, NULL);
-#else
-  if (alignment <= MALLOC_ALIGNMENT) return malloc_check(bytes);
-#endif
   if (alignment <  MINSIZE) alignment = MINSIZE;
 
   nb = request2size(bytes+1);
@@ -4365,14 +4336,10 @@ memalign_check(alignment, bytes) size_t alignment; size_t bytes;
    ptmalloc_init() hasn't completed yet. */
 
 static Void_t*
-#ifdef _LIBC
+#if __STD_C
 malloc_starter(size_t sz, const Void_t *caller)
 #else
-#if __STD_C
-malloc_starter(size_t sz)
-#else
-malloc_starter(sz) size_t sz;
-#endif
+malloc_starter(sz, caller) size_t sz; const Void_t *caller;
 #endif
 {
   mchunkptr victim = chunk_alloc(&main_arena, request2size(sz));
@@ -4381,14 +4348,10 @@ malloc_starter(sz) size_t sz;
 }
 
 static void
-#ifdef _LIBC
+#if __STD_C
 free_starter(Void_t* mem, const Void_t *caller)
 #else
-#if __STD_C
-free_starter(Void_t* mem)
-#else
-free_starter(mem) Void_t* mem;
-#endif
+free_starter(mem, caller) Void_t* mem; const Void_t *caller;
 #endif
 {
   mchunkptr p;
@@ -4408,14 +4371,10 @@ free_starter(mem) Void_t* mem;
    is active. */
 
 static Void_t*
-#ifdef _LIBC
+#if __STD_C
 malloc_atfork (size_t sz, const Void_t *caller)
 #else
-#if __STD_C
-malloc_atfork(size_t sz)
-#else
-malloc_atfork(sz) size_t sz;
-#endif
+malloc_atfork(sz, caller) size_t sz; const Void_t *caller;
 #endif
 {
   Void_t *vptr = NULL;
@@ -4435,14 +4394,10 @@ malloc_atfork(sz) size_t sz;
 }
 
 static void
-#ifdef _LIBC
+#if __STD_C
 free_atfork(Void_t* mem, const Void_t *caller)
 #else
-#if __STD_C
-free_atfork(Void_t* mem)
-#else
-free_atfork(mem) Void_t* mem;
-#endif
+free_atfork(mem, caller) Void_t* mem; const Void_t *caller;
 #endif
 {
   Void_t *vptr = NULL;
@@ -4471,7 +4426,7 @@ free_atfork(mem) Void_t* mem;
     (void)mutex_unlock(&ar_ptr->mutex);
 }
 
-#endif /* defined(_LIBC) || defined(MALLOC_HOOKS) */
+#endif /* defined _LIBC || defined MALLOC_HOOKS */
 
 
 

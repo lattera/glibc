@@ -35,12 +35,14 @@
 #include "nsswitch.h"
 
 /* Prototypes for the local functions.  */
-static void *nss_lookup_function (service_user *ni, const char *fct_name);
-static name_database *nss_parse_file (const char *fname);
-static name_database_entry *nss_getline (char *line);
-static service_user *nss_parse_service_list (const char *line);
+static void *nss_lookup_function (service_user *ni, const char *fct_name)
+     internal_function;
+static name_database *nss_parse_file (const char *fname) internal_function;
+static name_database_entry *nss_getline (char *line) internal_function;
+static service_user *nss_parse_service_list (const char *line)
+     internal_function;
 static service_library *nss_new_service (name_database *database,
-					 const char *name);
+					 const char *name) internal_function;
 
 
 /* Declare external database variables.  */
@@ -310,6 +312,7 @@ known_compare (const void *p1, const void *p2)
 
 
 static void *
+internal_function
 nss_lookup_function (service_user *ni, const char *fct_name)
 {
   void **found, *result;
@@ -476,6 +479,7 @@ nss_lookup_function (service_user *ni, const char *fct_name)
 
 
 static name_database *
+internal_function
 nss_parse_file (const char *fname)
 {
   FILE *fp;
@@ -548,6 +552,7 @@ nss_parse_file (const char *fname)
 	`( <source> ( "[" "!"? (<status> "=" <action> )+ "]" )? )*'
    */
 static service_user *
+internal_function
 nss_parse_service_list (const char *line)
 {
   service_user *result = NULL, **nextp = &result;
@@ -697,6 +702,7 @@ nss_parse_service_list (const char *line)
 }
 
 static name_database_entry *
+internal_function
 nss_getline (char *line)
 {
   const char *name;
@@ -743,6 +749,7 @@ nss_getline (char *line)
 
 
 static service_library *
+internal_function
 nss_new_service (name_database *database, const char *name)
 {
   service_library **currentp = &database->library;

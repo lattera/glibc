@@ -180,9 +180,16 @@ __overflow (f, ch)
   return _IO_OVERFLOW (f, ch);
 }
 
-static int save_for_backup __P ((_IO_FILE *fp));
+static int save_for_backup __P ((_IO_FILE *fp))
+#ifdef _LIBC
+     internal_function
+#endif
+     ;
 
      static int
+#ifdef _LIBC
+     internal_function
+#endif
 save_for_backup (fp)
      _IO_FILE *fp;
 {
@@ -467,10 +474,10 @@ _IO_default_setbuf (fp, p, len)
     return fp;
 }
 
-_IO_pos_t
+_IO_fpos64_t
 _IO_default_seekpos (fp, pos, mode)
      _IO_FILE *fp;
-     _IO_pos_t pos;
+     _IO_fpos64_t pos;
      int mode;
 {
   return _IO_SEEKOFF (fp, _IO_pos_as_off (pos), 0, mode);
@@ -551,10 +558,10 @@ _IO_default_finish (fp, dummy)
   _IO_un_link (fp);
 }
 
-_IO_pos_t
+_IO_fpos64_t
 _IO_default_seekoff (fp, offset, dir, mode)
      _IO_FILE *fp;
-     _IO_off_t offset;
+     _IO_off64_t offset;
      int dir;
      int mode;
 {
@@ -882,10 +889,10 @@ _IO_default_pbackfail (fp, c)
   return (unsigned char) *fp->_IO_read_ptr;
 }
 
-_IO_pos_t
+_IO_fpos64_t
 _IO_default_seek (fp, offset, dir)
      _IO_FILE *fp;
-     _IO_off_t offset;
+     _IO_off64_t offset;
      int dir;
 {
   return _IO_pos_BAD;
@@ -915,6 +922,20 @@ _IO_default_write (fp, data, n)
      _IO_ssize_t n;
 {
   return 0;
+}
+
+int
+_IO_default_showmanyc (fp)
+     _IO_FILE *fp;
+{
+  return -1;
+}
+
+void
+_IO_default_imbue (fp, locale)
+     _IO_FILE *fp;
+     void *locale;
+{
 }
 
 

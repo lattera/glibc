@@ -19,7 +19,6 @@
 
 #include <string.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 #include "nis_intern.h"
 
@@ -72,7 +71,7 @@ nis_lookup (const_nis_name name, const u_long flags)
 	case NIS_PARTIAL:
 	case NIS_SUCCESS:
 	case NIS_S_SUCCESS:
-	  if (__type_of(NIS_RES_OBJECT (res)) == LINK_OBJ &&
+	  if (__type_of(NIS_RES_OBJECT (res)) == NIS_LINK_OBJ &&
 	      flags & FOLLOW_LINKS) /* We are following links */
 	    {
 	      /* if we hit the link limit, bail */
@@ -93,7 +92,7 @@ nis_lookup (const_nis_name name, const u_long flags)
 	    ++done;
 	  break;
 	case NIS_CBRESULTS:
-	  /* XXX Implement CALLBACK here ! */
+	  /* The callback is handled in __do_niscall2 */
 	  ++done;
 	  break;
 	case NIS_UNAVAIL:

@@ -33,5 +33,5 @@ tmpnam_r (char *s)
      to L_tmpnam characters in any case.  */
   return __stdio_gen_tempname (s, L_tmpnam, (const char *) NULL,
 			       (const char *) NULL, 0,
-			       (size_t *) NULL, (FILE **) NULL);
+			       (size_t *) NULL, (FILE **) NULL, 0);
 }

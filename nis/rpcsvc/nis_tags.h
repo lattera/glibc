@@ -12,7 +12,7 @@
 #ifndef	_RPCSVC_NIS_TAGS_H
 #define	_RPCSVC_NIS_TAGS_H
 
-#pragma ident	"@(#)nis_tags.h	1.13	95/02/17 SMI"
+#pragma ident	"@(#)nis_tags.h	1.16	96/10/25 SMI"
 /* from file: zns_tags.h	1.7 Copyright (c) 1990 Sun Microsystems */
 
 #ifdef	__cplusplus
@@ -40,6 +40,9 @@ extern "C" {
 #define	REM_RESERVED	(1<<12)	/* Spare REM semantic			*/
 #define	MOD_EXCLUSIVE	(1<<13)	/* Modify no overwrite on modified keys */
 
+/* Lookup and List function flags (continued) */
+#define	SOFT_LOOKUP	(1<<14)	/* The "old default" return on failure  */
+
 /* Transport specific modifications to the operation */
 #define	USE_DGRAM	(1<<16) /* Use a datagram transport 		*/
 #define	NO_AUTHINFO	(1<<17) /* Don't bother attaching auth info	*/
@@ -63,6 +66,8 @@ extern "C" {
 #define	TAG_TCACHE_ALL	9	/* Flush entire table cache	*/
 #define	TAG_GCACHE_ONE	10	/* Flush one group object	*/
 #define	TAG_DCACHE_ONE_REFRESH 11 /* Flush and refresh one DO	*/
+#define	TAG_READONLY	12	/* Set read only mode		*/
+#define	TAG_READWRITE	14	/* Reset read-write mode	*/
 
 #define	TAG_OPSTATS	2048	/* NIS+ operations statistics   */
 #define	TAG_THREADS	2049	/* Child process/thread status  */

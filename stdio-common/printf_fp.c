@@ -125,7 +125,8 @@ extern unsigned int __guess_grouping (unsigned int intdig_max,
 
 
 static char *group_number (char *buf, char *bufend, unsigned int intdig_no,
-			   const char *grouping, wchar_t thousands_sep);
+			   const char *grouping, wchar_t thousands_sep)
+     internal_function;
 
 
 int
@@ -1016,6 +1017,7 @@ __guess_grouping (unsigned int intdig_max, const char *grouping,
    Return the new end of buffer.  */
 
 static char *
+internal_function
 group_number (char *buf, char *bufend, unsigned int intdig_no,
 	      const char *grouping, wchar_t thousands_sep)
 {

@@ -28,6 +28,7 @@
    included only for compatibility reasons.  Use the POSIX definition
    in <regex.h> for portable applications and a reasonable interface.  */
 
+#include <features.h>
 #include <alloca.h>
 #include <regex.h>
 #include <stdlib.h>
@@ -110,13 +111,13 @@ compile (char *__instring, char *__expbuf, __const char *__endbuf, int __eof)
      of type `regex_t'.  Then check for minimum size of the buffer for
      the compiled regular expression.  */
   regex_t *__expr_ptr;
-#if defined __GNUC__ && __GNUC__ >= 2
+# if defined __GNUC__ && __GNUC__ >= 2
   const size_t __req = __alignof__ (regex_t *);
-#else
+# else
   /* How shall we find out?  We simply guess it and can change it is
      this really proofs to be wrong.  */
   const size_t __req = 8;
-#endif
+# endif
   __expbuf += __req;
   __expbuf -= (__expbuf - ((char *) 0)) % __req;
   if (__endbuf < __expbuf + sizeof (regex_t))

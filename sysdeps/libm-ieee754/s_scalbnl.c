@@ -39,10 +39,10 @@ huge   = 1.0e+4900L,
 tiny   = 1.0e-4900L;
 
 #ifdef __STDC__
-	long double __scalbnl (long double x, long int n)
+	long double __scalbnl (long double x, int n)
 #else
 	long double __scalbnl (x,n)
-	long double x; long int n;
+	long double x; int n;
 #endif
 {
 	int32_t k,es,hx,lx;

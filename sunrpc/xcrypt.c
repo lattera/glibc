@@ -5,23 +5,23 @@
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -41,6 +41,7 @@ static char sccsid[] = "@(#)xcrypt.c 1.3 89/03/24 Copyr 1986 Sun Micro";
  * xcrypt.c: Hex encryption/decryption and utility routines
  */
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,9 +54,19 @@ static char hex[16] =
   '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
 };
 
-static char hexval (char);
-static void hex2bin (int, char *, char *);
-static void bin2hex (int, unsigned char *, char *);
+
+#ifdef _LIBC
+# define hexval(c) \
+  (c >= '0' && c <= '9'							      \
+   ? c - '0'								      \
+   : ({	int upp = toupper (c);						      \
+	upp >= 'a' && upp <= 'z' ? upp - 'a' + 10 : -1; }))
+#else
+static char hexval (char) internal_function;
+#endif
+
+static void hex2bin (int, char *, char *) internal_function;
+static void bin2hex (int, unsigned char *, char *) internal_function;
 void passwd2des (char *pw, char *key);
 
 /*
@@ -140,6 +151,7 @@ passwd2des (char *pw, char *key)
  * Hex to binary conversion
  */
 static void
+internal_function
 hex2bin (int len, char *hexnum, char *binnum)
 {
   int i;
@@ -152,6 +164,7 @@ hex2bin (int len, char *hexnum, char *binnum)
  * Binary to hex conversion
  */
 static void
+internal_function
 bin2hex (int len, unsigned char *binnum, char *hexnum)
 {
   int i;
@@ -166,6 +179,7 @@ bin2hex (int len, unsigned char *binnum, char *hexnum)
   hexnum[len * 2] = 0;
 }
 
+#ifndef _LIBC
 static char
 hexval (char c)
 {
@@ -178,3 +192,4 @@ hexval (char c)
   else
     return -1;
 }
+#endif

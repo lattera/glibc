@@ -29,21 +29,15 @@
 
 /* int _setjmp(jmp_buf) */
 
-.weak _setjmp
-ENTRY(_setjmp)
-
+ENTRY(__setjmp)
 	ba	__sigsetjmp_local
 	 set	0, %o1
-
-END(setjmp)
+END(__setjmp)
 
 /* int setjmp(jmp_buf) */
 
-.weak setjmp
 ENTRY(setjmp)
-
 	set	1, %o1
-
 END(setjmp)
 
 /* int __sigsetjmp(jmp_buf, savemask)  */
@@ -65,3 +59,6 @@ __sigsetjmp_local:
 	 mov	%g1, %o0
 
 END(__sigsetjmp)
+
+weak_alias(__setjmp, _setjmp)
+weak_extern(setjmp)

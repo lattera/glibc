@@ -19,7 +19,6 @@
 
 #include <string.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 #include "nis_intern.h"
 
 nis_server **
@@ -30,19 +29,21 @@ nis_getservlist (const_nis_name dir)
 
   res = nis_lookup (dir, FOLLOW_LINKS);
 
-  if (res->status == NIS_SUCCESS || res->status == NIS_S_SUCCESS)
+  if (NIS_RES_STATUS (res) == NIS_SUCCESS)
     {
       unsigned long i;
       nis_server *server;
 
-      serv = calloc (1, sizeof (nis_server *) *
-		     (res->objects.objects_val->DI_data.do_servers.do_servers_len + 1));
+      serv =
+	calloc (1, sizeof (nis_server *) *
+		(NIS_RES_OBJECT (res)->DI_data.do_servers.do_servers_len + 1));
       if (serv == NULL)
 	return NULL;
-      for (i = 0; i < res->objects.objects_val->DI_data.do_servers.do_servers_len; ++i)
+      for (i = 0; i < NIS_RES_OBJECT (res)->DI_data.do_servers.do_servers_len;
+	   ++i)
 	{
 	  server =
-	    &res->objects.objects_val->DI_data.do_servers.do_servers_val[i];
+	    &NIS_RES_OBJECT (res)->DI_data.do_servers.do_servers_val[i];
 	  serv[i] = calloc (1, sizeof (nis_server));
 	  if (server->name != NULL)
             serv[i]->name = strdup (server->name);
@@ -110,7 +111,7 @@ nis_freeservlist (nis_server **serv)
   i = 0;
   while (serv[i] != NULL)
     {
-      nis_free_servers (serv[i], 1);
+      xdr_free ((xdrproc_t)xdr_nis_server, (char *)serv[i]);
       free (serv[i]);
       ++i;
     }

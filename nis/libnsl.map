@@ -1,20 +1,12 @@
 GLIBC_2.0 {
   global:
-    __nis_default_access; __nis_default_group; __nis_default_owner;
-    __nis_default_ttl;    __nis_finddirectory; __nis_lock_cache;
-    __nis_unlock_cache;   __nis_hash;
 
-    nis_add;
-    nis_add_entry;        nis_addmember;       nis_checkpoint;
-    nis_clone_directory;  nis_clone_entry;     nis_clone_group;
-    nis_clone_link;       nis_clone_nis_attr;  nis_clone_objdata;
-    nis_clone_object;     nis_clone_result;    nis_clone_table;
-    nis_creategroup;      nis_destroy_object;  nis_destroygroup;
-    nis_dir_cmp;          nis_domain_of;       nis_domain_of_r;
-    nis_first_entry;      nis_free_attr;       nis_free_directory;
-    nis_free_endpoints;   nis_free_entry;      nis_free_group;
-    nis_free_link;        nis_free_object;     nis_free_request;
-    nis_free_servers;     nis_free_table;      nis_freenames;
+    nis_add;              nis_add_entry;       nis_addmember;
+    nis_checkpoint;       nis_clone_directory; nis_clone_object;
+    nis_clone_result;     nis_creategroup;     nis_destroy_object;
+    nis_destroygroup;     nis_dir_cmp;         nis_domain_of;
+    nis_domain_of_r;      nis_first_entry;     nis_free_directory;
+    nis_free_object;      nis_free_request;    nis_freenames;
     nis_freeresult;       nis_freeservlist;    nis_freetags;
     nis_getnames;         nis_getservlist;     nis_ismember;
     nis_leaf_of;          nis_leaf_of_r;       nis_lerror;
@@ -31,8 +23,15 @@ GLIBC_2.0 {
     nis_sperror;          nis_sperror_r;       nis_stats;
     nis_verifygroup;      nis_write_obj;
 
-    readColdStartFile;    writeColdStartFile;
+    # This functions are needed by the NIS+ tools and rpc.nisd,
+    # they should never be used in a normal user program !
+    __nis_default_access; __nis_default_group; __nis_default_owner;
+    __nis_default_ttl;    __nis_free_fdresult; __nis_finddirectory;
+    __nis_hash;		  readColdStartFile;   writeColdStartFile;
 
+    # Many programs expect this, but every user program should
+    # have it's own version, since the interface is different on
+    # various platforms.
     xdr_cp_result;        xdr_directory_obj;   xdr_domainname;
     xdr_dump_args;        xdr_endpoint;        xdr_entry_col;
     xdr_entry_obj;        xdr_fd_args;         xdr_fd_result;
@@ -54,7 +53,7 @@ GLIBC_2.0 {
     xdr_ypresp_xfr;       xdr_ypstat;          xdr_ypupdate_args;
     xdr_ypxfrstat;        xdr_zotypes;
 
-    __yp_check;          
+    __yp_check;
     yp_all;               yp_bind;             yp_first;
     yp_get_default_domain; yp_maplist;         yp_master;
     yp_match;             yp_next;             yp_order;

@@ -43,7 +43,7 @@ __BEGIN_DECLS
    hold any value corresponding to members of the extended character
    set, as well as at least one value that does not correspond to any
    member of the extended character set.  */
-#define _WINT_T
+# define _WINT_T
 typedef unsigned int wint_t;
 #endif
 
@@ -212,7 +212,7 @@ extern size_t __mbrlen __P ((__const char *__restrict __s, size_t __n,
 extern size_t mbrlen __P ((__const char *__restrict __s, size_t __n,
 			   mbstate_t *__restrict __ps));
 
-#if defined (__OPTIMIZE__) \
+#if defined __OPTIMIZE__ \
     && (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7))
 /* Define inline function as optimization.  */
 extern __inline size_t mbrlen (__const char *__restrict __s, size_t __n,
@@ -410,7 +410,7 @@ extern unsigned long long int __wcstoull_internal __P ((__const wchar_t *
 #endif /* GCC and use GNU.  */
 
 
-#if defined (__OPTIMIZE__) && __GNUC__ >= 2
+#if defined __OPTIMIZE__ && __GNUC__ >= 2
 /* Define inline functions which call the internal entry points.  */
 
 extern __inline double wcstod (__const wchar_t *__restrict __nptr,
@@ -424,7 +424,7 @@ extern __inline unsigned long int wcstoul (__const wchar_t *__restrict __nptr,
 					   int __base)
 { return __wcstoul_internal (__nptr, __endptr, __base, 0); }
 
-#ifdef __USE_GNU
+# ifdef __USE_GNU
 extern __inline float wcstof (__const wchar_t *__restrict __nptr,
 			      wchar_t **__restrict __endptr)
 { return __wcstof_internal (__nptr, __endptr, 0); }
@@ -442,7 +442,7 @@ extern __inline unsigned long long int wcstouq (__const wchar_t *
 						wchar_t **__restrict __endptr,
 						int __base)
 { return __wcstoull_internal (__nptr, __endptr, __base, 0); }
-#endif /* Use GNU.  */
+# endif /* Use GNU.  */
 #endif /* Optimizing GCC >=2.  */
 
 

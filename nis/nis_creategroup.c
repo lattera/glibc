@@ -19,7 +19,6 @@
 
 #include <string.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 nis_error
 nis_creategroup (const_nis_name group, u_long flags)
@@ -50,7 +49,7 @@ nis_creategroup (const_nis_name group, u_long flags)
       obj->zo_group = strdup (__nis_default_group (NULL));
       obj->zo_access = __nis_default_access (NULL, 0);
       obj->zo_ttl = __nis_default_ttl (0);
-      obj->zo_data.zo_type = GROUP_OBJ;
+      obj->zo_data.zo_type = NIS_GROUP_OBJ;
       obj->zo_data.objdata_u.gr_data.gr_flags = flags;
       obj->zo_data.objdata_u.gr_data.gr_members.gr_members_len = 0;
       obj->zo_data.objdata_u.gr_data.gr_members.gr_members_val = NULL;

@@ -198,34 +198,34 @@ xdr_objdata (XDR *xdrs, objdata *objp)
     return FALSE;
   switch (objp->zo_type)
     {
-    case DIRECTORY_OBJ:
+    case NIS_DIRECTORY_OBJ:
       if (!xdr_directory_obj (xdrs, &objp->objdata_u.di_data))
 	return FALSE;
       break;
-    case GROUP_OBJ:
+    case NIS_GROUP_OBJ:
       if (!xdr_group_obj (xdrs, &objp->objdata_u.gr_data))
 	return FALSE;
       break;
-    case TABLE_OBJ:
+    case NIS_TABLE_OBJ:
       if (!xdr_table_obj (xdrs, &objp->objdata_u.ta_data))
 	return FALSE;
       break;
-    case ENTRY_OBJ:
+    case NIS_ENTRY_OBJ:
       if (!xdr_entry_obj (xdrs, &objp->objdata_u.en_data))
 	return FALSE;
       break;
-    case LINK_OBJ:
+    case NIS_LINK_OBJ:
       if (!xdr_link_obj (xdrs, &objp->objdata_u.li_data))
 	return FALSE;
       break;
-    case PRIVATE_OBJ:
+    case NIS_PRIVATE_OBJ:
       if (!xdr_bytes (xdrs, (char **) &objp->objdata_u.po_data.po_data_val,
 		      (u_int *) & objp->objdata_u.po_data.po_data_len, ~0))
 	return FALSE;
       break;
-    case NO_OBJ:
+    case NIS_NO_OBJ:
       break;
-    case BOGUS_OBJ:
+    case NIS_BOGUS_OBJ:
       break;
     default:
       break;

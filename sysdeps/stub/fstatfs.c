@@ -1,4 +1,4 @@
-/* fstatfs -- Return information about the filesystem on which FD resides.
+/* Return information about the filesystem on which FD resides.
    Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -28,6 +28,6 @@ __fstatfs (int fd, struct statfs *buf)
   __set_errno (ENOSYS);
   return -1;
 }
-stub_warning (statfs)
+stub_warning (fstatfs)
 
 weak_alias (__fstatfs, fstatfs)

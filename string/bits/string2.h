@@ -79,6 +79,10 @@ __STRING2_COPY_TYPE (8);
 # undef __STRING2_COPY_TYPE
 #endif
 
+/* Dereferencing a pointer arg to run sizeof on it fails for the
+   void pointer case, so we use this instead.  */
+#define __string2_1bptr_p(x) (((size_t) ((x) + 1) - (size_t) (x)) == 1)
+
 
 /* Set N bytes of S to C.  */
 #ifndef _HAVE_STRING_ARCH_memset
@@ -93,7 +97,7 @@ __STRING2_COPY_TYPE (8);
 #ifndef _HAVE_STRING_ARCH_strcpy
 # define strcpy(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
-		  ? (sizeof ((src)[0]) == 1 && strlen (src) + 1 <= 8	      \
+		  ? (__string2_1bptr_p (src) && strlen (src) + 1 <= 8	      \
 		     ? __strcpy_small (dest, src, strlen (src) + 1)	      \
 		     : (char *) memcpy (dest, src, strlen (src) + 1))	      \
 		  : strcpy (dest, src)))
@@ -204,7 +208,7 @@ __STRING2_COPY_TYPE (8);
 # ifndef _HAVE_STRING_ARCH_stpcpy
 #  define __stpcpy(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
-		  ? (sizeof ((src)[0]) == 1 && strlen (src) + 1 <= 8	      \
+		  ? (__string2_1bptr_p (src) && strlen (src) + 1 <= 8	      \
 		     ? __stpcpy_small (dest, src, strlen (src) + 1)	      \
 		     : ((char *) __mempcpy (dest, src, strlen (src) + 1) - 1))\
 		  : __stpcpy (dest, src)))
@@ -369,17 +373,17 @@ __STRING2_COPY_TYPE (8);
 #ifndef _HAVE_STRING_ARCH_strcmp
 # define strcmp(s1, s2) \
   (__extension__ (__builtin_constant_p (s1) && __builtin_constant_p (s2)      \
-		  && (sizeof ((s1)[0]) != 1 || strlen (s1) >= 4)	      \
-		  && (sizeof ((s2)[0]) != 1 || strlen (s2) >= 4)	      \
+		  && (!__string2_1bptr_p (s1) || strlen (s1) >= 4)	      \
+		  && (!__string2_1bptr_p (s2) || strlen (s2) >= 4)	      \
 		  ? memcmp (s1, s2, (strlen (s1) < strlen (s2)		      \
 				     ? strlen (s1) : strlen (s2)) + 1)	      \
-		  : (__builtin_constant_p (s1) && sizeof ((s1)[0]) == 1	      \
-		     && sizeof ((s2)[0]) == 1 && strlen (s1) < 4	      \
+		  : (__builtin_constant_p (s1) && __string2_1bptr_p (s1)      \
+		     && __string2_1bptr_p (s2) && strlen (s1) < 4	      \
 		     ? (__builtin_constant_p (s2)			      \
 			? __strcmp_cc (s1, s2, strlen (s1))		      \
 			: __strcmp_cg (s1, s2, strlen (s1)))		      \
-		     : (__builtin_constant_p (s2) && sizeof ((s1)[0]) == 1    \
-			&& sizeof ((s2)[0]) == 1 && strlen (s2) < 4	      \
+		     : (__builtin_constant_p (s2) && __string2_1bptr_p (s1)   \
+			&& __string2_1bptr_p (s2) && strlen (s2) < 4	      \
 			? (__builtin_constant_p (s1)			      \
 			   ? __strcmp_cc (s1, s2, strlen (s2))		      \
 			   : __strcmp_gc (s1, s2, strlen (s2)))		      \
@@ -450,7 +454,7 @@ __STRING2_COPY_TYPE (8);
    consists entirely of characters not in REJECT.  */
 #ifndef _HAVE_STRING_ARCH_strcspn
 # define strcspn(s, reject) \
-  (__extension__ (__builtin_constant_p (reject) && sizeof ((reject)[0]) == 1  \
+  (__extension__ (__builtin_constant_p (reject) && __string2_1bptr_p (reject) \
 		  ? ((reject)[0] == '\0'				      \
 		     ? strlen (s)					      \
 		     : ((reject)[1] == '\0'				      \
@@ -474,7 +478,7 @@ __strcspn_c1 (__const char *__s, char __reject)
    consists entirely of characters in ACCEPT.  */
 #ifndef _HAVE_STRING_ARCH_strspn
 # define strspn(s, accept) \
-  (__extension__ (__builtin_constant_p (accept) && sizeof ((accept)[0]) == 1  \
+  (__extension__ (__builtin_constant_p (accept) && __string2_1bptr_p (accept) \
 		  ? ((accept)[0] == '\0'				      \
 		     ? 0						      \
 		     : ((accept)[1] == '\0'				      \
@@ -498,7 +502,7 @@ __strspn_c1 (__const char *__s, char __accept)
 /* Find the first occurrence in S of any character in ACCEPT.  */
 #ifndef _HAVE_STRING_ARCH_strpbrk
 # define strpbrk(s, accept) \
-  (__extension__ (__builtin_constant_p (accept) && sizeof ((accept)[0]) == 1  \
+  (__extension__ (__builtin_constant_p (accept) && __string2_1bptr_p (accept) \
 		  ? ((accept)[0] == '\0'				      \
 		     ? NULL						      \
 		     : ((accept)[1] == '\0'				      \
@@ -511,7 +515,7 @@ __strspn_c1 (__const char *__s, char __accept)
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
 #ifndef _HAVE_STRING_ARCH_strstr
 # define strstr(haystack, needle) \
-  (__extension__ (__builtin_constant_p (needle) && sizeof ((needle)[0]) == 1  \
+  (__extension__ (__builtin_constant_p (needle) && __string2_1bptr_p (needle) \
 		  ? ((needle)[0] == '\0'				      \
 		     ? haystack						      \
 		     : ((needle)[1] == '\0'				      \
@@ -538,7 +542,7 @@ strnlen (__const char *__string, size_t __maxlen)
 # ifndef _HAVE_STRING_ARCH_strsep
 
 #  define strsep(s, reject) \
-  (__extension__ (__builtin_constant_p (reject) && sizeof ((reject)[0]) == 1  \
+  (__extension__ (__builtin_constant_p (reject) && __string2_1bptr_p (reject) \
 		  ? ((reject)[0] != '\0' && (reject)[1] == '\0'		      \
 		     ? __strsep_1c (s, (reject)[0])			      \
 		     : __strsep_g (s, reject))				      \

@@ -52,7 +52,7 @@ _IO_fopen (filename, mode)
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;
 #endif
-  if (_IO_file_fopen (&new_f->fp.file, filename, mode) != NULL)
+  if (_IO_file_fopen (&new_f->fp.file, filename, mode, 0) != NULL)
         return (_IO_FILE *) &new_f->fp;
   _IO_un_link (&new_f->fp.file);
   free (new_f);

@@ -188,23 +188,35 @@ extern __long_double_t __strtold_internal __P ((__const char *
 						__restrict __nptr,
 						char **__restrict __endptr,
 						int __group));
+#ifndef __strtol_internal_defined
 extern long int __strtol_internal __P ((__const char *__restrict __nptr,
 					char **__restrict __endptr,
 					int __base, int __group));
+# define __strtol_internal_defined	1
+#endif
+#ifndef __strtoul_internal_defined
 extern unsigned long int __strtoul_internal __P ((__const char *
 						  __restrict __nptr,
 						  char **__restrict __endptr,
 						  int __base, int __group));
-#ifdef __GNUC__
+# define __strtoul_internal_defined	1
+#endif
+#if defined __GNUC__ || defined __USE_ISOC9X
+# ifndef __strtoll_internal_defined
 extern long long int __strtoll_internal __P ((__const char *__restrict __nptr,
 					      char **__restrict __endptr,
 					      int __base, int __group));
+#  define __strtoll_internal_defined	1
+# endif
+# ifndef __strtoull_internal_defined
 extern unsigned long long int __strtoull_internal __P ((__const char *
 							__restrict __nptr,
 							char **
 							__restrict __endptr,
 							int __base,
 							int __group));
+#  define __strtoull_internal_defined	1
+# endif
 #endif /* GCC */
 
 #if defined __OPTIMIZE__ && __GNUC__ >= 2
@@ -307,7 +319,7 @@ extern char *l64a __P ((long int __n));
 extern long int a64l __P ((__const char *__s));
 
 
-#include <sys/types.h>	/* we need int32_t... */
+# include <sys/types.h>	/* we need int32_t... */
 
 /* These are the functions that actually do things.  The `random', `srandom',
    `initstate' and `setstate' functions are those from BSD Unices.
@@ -411,7 +423,7 @@ struct drand48_data
     int init;			/* Flag for initializing.  */
   };
 
-#ifdef __USE_MISC
+# ifdef __USE_MISC
 /* Return non-negative, double-precision floating-point value in [0.0,1.0).  */
 extern int drand48_r __P ((struct drand48_data *__buffer, double *__result));
 extern int __erand48_r __P ((unsigned short int __xsubi[3],
@@ -449,7 +461,7 @@ extern int __lcong48_r __P ((unsigned short int __param[7],
 			     struct drand48_data *__buffer));
 extern int lcong48_r __P ((unsigned short int __param[7],
 			   struct drand48_data *__buffer));
-#endif	/* Use misc.  */
+# endif	/* Use misc.  */
 
 /* Internal function to compute next state of the generator.  */
 extern int __drand48_iterate __P ((unsigned short int __xsubi[3],
@@ -647,7 +659,7 @@ extern char *qfcvt __P ((__long_double_t __value, int __ndigit, int *__decpt,
 extern char *qgcvt __P ((__long_double_t __value, int __ndigit, char *__buf));
 
 
-#ifdef __USE_MISC
+# ifdef __USE_MISC
 /* Reentrant version of the functions above which provide their own
    buffers.  */
 extern int ecvt_r __P ((double __value, int __ndigit, int *__decpt,
@@ -659,7 +671,7 @@ extern int qecvt_r __P ((__long_double_t __value, int __ndigit, int *__decpt,
 			 int *__sign, char *__buf, size_t __len));
 extern int qfcvt_r __P ((__long_double_t __value, int __ndigit, int *__decpt,
 			 int *__sign, char *__buf, size_t __len));
-#endif	/* misc */
+# endif	/* misc */
 #endif	/* use MISC || use X/Open Unix */
 
 
