@@ -39,6 +39,9 @@
 
 2002-10-17  Roland McGrath  <roland@redhat.com>
 
+	* configure.in: Grok --without-__thread and disable HAVE___THREAD.
+	* configure: Regenerated.
+
 	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Do CHECK_STATIC_TLS
 	before performing the reloc, not after.
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Likewise.
