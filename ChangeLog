@@ -1,3 +1,16 @@
+Wed Nov  8 16:31:25 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* termios/Makefile (headers): Add sys/ttychars.h.
+	* termios/sys/ttychars.h: New file, incorporated from 4.4BSD-Lite
+	for compatibility.
+
+	* signal/signal.h [__USE_BSD] (sig_t): New typedef.
+
+Wed Nov  8 15:12:47 1995  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/ptrace.c (ptrace) [PTRACE_TRACEME]: Notify the
+	proc server that we are now traced.
+
 Tue Nov  7 12:29:46 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* elf/Makefile (ldd): Make it executable.
