@@ -1,4 +1,4 @@
-/* Copyright (C) 1989,91,93,1996-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1989,91,93,1996-2003, 2004  Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -249,12 +249,11 @@ initgroups (const char *user, gid_t group)
   long int limit = __sysconf (_SC_NGROUPS_MAX);
 
   if (limit > 0)
-    size = limit;
+    /* We limit the size of the intially allocated array.  */
+    size = MIN (limit, 64);
   else
-    {
-      /* No fixed limit on groups.  Pick a starting buffer size.  */
-      size = 16;
-    }
+    /* No fixed limit on groups.  Pick a starting buffer size.  */
+    size = 16;
 
   groups = (gid_t *) malloc (size * sizeof (gid_t));
   if (__builtin_expect (groups == NULL, 0))

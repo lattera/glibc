@@ -1,3 +1,11 @@
+2004-03-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss_nis/nis-initgroups.c: Implement getting the information
+	from the netid.byname map if the system administrator allows this.
+
+	* grp/initgroups.c (initgroups): Limit the initial allocation to 64
+	entries to not allocate too much on systems with really high limits.
+
 2004-03-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* nis/nss_nis/nis-service.c (struct search_t): New type.

@@ -22,6 +22,9 @@
 #include <errno.h>
 #include <grp.h>
 #include <nss.h>
+#include <pwd.h>
+#include <stdio.h>
+#include <stdio_ext.h>
 #include <string.h>
 #include <unistd.h>
 #include <rpcsvc/yp.h>
@@ -79,14 +82,10 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
 }
 
 static enum nss_status
-internal_setgrent (intern_t *intern)
+internal_setgrent (char *domainname, intern_t *intern)
 {
-  char *domainname;
   struct ypall_callback ypcb;
   enum nss_status status;
-
-  if (yp_get_default_domain (&domainname))
-    return NSS_STATUS_UNAVAIL;
 
   intern->start = NULL;
 
@@ -107,7 +106,7 @@ internal_getgrent_r (struct group *grp, char *buffer, size_t buflen,
   char *p;
 
   if (intern->start == NULL)
-    internal_setgrent (intern);
+    return NSS_STATUS_NOTFOUND;
 
   /* Get the next entry until we found a correct one. */
   do
@@ -129,11 +128,209 @@ internal_getgrent_r (struct group *grp, char *buffer, size_t buflen,
   return NSS_STATUS_SUCCESS;
 }
 
+
+static int init;
+static int use_netid;
+
+
+static const char default_nss[] = "/etc/default/nss";
+
+static void
+check_default_nss (void)
+{
+  FILE *fp = fopen (default_nss, "rc");
+  if (fp != NULL)
+    {
+      char *line = NULL;
+      size_t linelen = 0;
+
+      __fsetlocking (fp, FSETLOCKING_BYCALLER);
+
+      while (!feof_unlocked (fp))
+	{
+	  ssize_t n = getline (&line, &linelen, fp);
+	  if (n <= 0)
+	    break;
+
+	  /* There currently is only one variable we expect, so
+	     simplify the parsing.  Recognize only
+
+	       NETID_AUTHORITATIVE = TRUE
+
+	     with arbitrary white spaces.  */
+	  char *cp = line;
+	  while (isspace (*cp))
+	    ++cp;
+
+	  static const char netid_authoritative[] = "NETID_AUTHORITATIVE";
+	  if (strncmp (cp, netid_authoritative,
+		       sizeof (netid_authoritative) - 1) != 0)
+	    continue;
+
+	  cp += sizeof (netid_authoritative) - 1;
+	  while (isspace (*cp))
+	    ++cp;
+	  if (*cp++ != '=')
+	    continue;
+	  while (isspace (*cp))
+	    ++cp;
+
+	  if (strncmp (cp, "TRUE", 4) != 0)
+	    continue;
+	  cp +=4;
+
+	  while (isspace (*cp))
+	    ++cp;
+
+	  if (*cp == '\0')
+	    use_netid = 1;
+
+	  /* For now, just drop out of the loop.  */
+	  break;
+	}
+
+      free (line);
+
+      fclose (fp);
+    }
+  init = 1;
+}
+
+
+static int
+get_uid (const char *user, uid_t *uidp)
+{
+  size_t buflen = sysconf (_SC_GETPW_R_SIZE_MAX);
+  char *buf = (char *) alloca (buflen);
+
+  while (1)
+    {
+      struct passwd result;
+      struct passwd *resp;
+
+      int r = getpwnam_r (user, &result, buf, buflen, &resp);
+      if (r == 0 && resp != NULL)
+	{
+	  *uidp = resp->pw_uid;
+	  return 0;
+	}
+
+      if (r != ERANGE)
+	break;
+
+      extend_alloca (buf, buflen, 2 * buflen);
+    }
+
+  return 1;
+}
+
+
+static enum nss_status
+initgroups_netid (uid_t uid, gid_t group, long int *start, long int *size,
+		  gid_t **groupsp, long int limit, int *errnop,
+		  const char *domainname)
+{
+  /* Prepare the key.  The form is "unix.UID@DOMAIN" with the UID and
+     DOMAIN field filled in appropriately.  */
+  char key[sizeof ("unix.@") + sizeof (uid_t) * 3 + strlen (domainname)];
+  ssize_t keylen = snprintf (key, sizeof (key), "unix.%lu@%s",
+			     (unsigned long int) uid, domainname);
+
+  enum nss_status retval;
+  char *result;
+  int reslen;
+  retval = yperr2nss (yp_match (domainname, "netid.byname", key, keylen,
+				&result, &reslen));
+  if (retval != NSS_STATUS_SUCCESS)
+    return retval;
+
+  /* Parse the result: following the colon is a comma separated list of
+     group IDs.  */
+  char *cp = strchr (result, ':');
+  if (cp == NULL)
+    {
+    errout:
+      free (result);
+      return NSS_STATUS_NOTFOUND;
+    }
+  /* Skip the colon.  */
+  ++cp;
+
+  gid_t *groups = *groupsp;
+  while (*cp != '\0')
+    {
+      char *endp;
+      unsigned long int gid = strtoul (cp, &endp, 0);
+      if (cp == endp)
+	goto errout;
+      if (*endp == ',')
+	++endp;
+      else if (*endp != '\0')
+	goto errout;
+      cp = endp;
+
+      if (gid == group)
+	/* We do not need this group again.  */
+	continue;
+
+      /* Insert this group.  */
+      if (*start == *size)
+	{
+	  /* Need a bigger buffer.  */
+	  gid_t *newgroups;
+	  long int newsize;
+
+	  if (limit > 0 && *size == limit)
+	    /* We reached the maximum.  */
+	    break;
+
+	  if (limit <= 0)
+	    newsize = 2 * *size;
+	  else
+	    newsize = MIN (limit, 2 * *size);
+
+	  newgroups = realloc (groups, newsize * sizeof (*groups));
+	  if (newgroups == NULL)
+	    goto errout;
+	  *groupsp = groups = newgroups;
+	  *size = newsize;
+	}
+
+      groups[*start] = gid;
+      *start += 1;
+    }
+
+  free (result);
+
+  return NSS_STATUS_SUCCESS;
+}
+
+
 enum nss_status
 _nss_nis_initgroups_dyn (const char *user, gid_t group, long int *start,
 			 long int *size, gid_t **groupsp, long int limit,
 			 int *errnop)
 {
+  /* We always need the domain name.  */
+  char *domainname;
+  if (yp_get_default_domain (&domainname))
+    return NSS_STATUS_UNAVAIL;
+
+  /* Check whether we are supposed to use the netid.byname map.  */
+  if (!init)
+    check_default_nss ();
+
+  if (use_netid)
+    {
+      /* We need the user ID.  */
+      uid_t uid;
+
+      if (get_uid (user, &uid) == 0
+	  && initgroups_netid (uid, group, start, size, groupsp, limit,
+			       errnop, domainname) == NSS_STATUS_SUCCESS)
+	return NSS_STATUS_SUCCESS;
+    }
+
   struct group grpbuf, *g;
   size_t buflen = sysconf (_SC_GETPW_R_SIZE_MAX);
   char *tmpbuf;
@@ -141,7 +338,7 @@ _nss_nis_initgroups_dyn (const char *user, gid_t group, long int *start,
   intern_t intern = { NULL, NULL };
   gid_t *groups = *groupsp;
 
-  status = internal_setgrent (&intern);
+  status = internal_setgrent (domainname, &intern);
   if (status != NSS_STATUS_SUCCESS)
     return status;
 
