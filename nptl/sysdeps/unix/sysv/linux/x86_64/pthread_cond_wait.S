@@ -198,8 +198,8 @@ __pthread_cond_wait:
 
 	movq	wakeup_seq(%rdi), %r12
 
-	cmpq	24(%rsp), %rax
-	jb	8b
+	cmpq	24(%rsp), %r12
+	jbe	8b
 
 	cmpq	%rax, %r12
 	jna	8b

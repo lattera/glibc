@@ -71,12 +71,12 @@ __pthread_rwlock_wrlock:
 #endif
 	jne	10f
 
-11:	addq	$WRITERS_WAKEUP-MUTEX, %rdi
+11:	addq	$WRITERS_WAKEUP, %rdi
 	movq	%r10, %rsi	/* movq $FUTEX_WAIT, %rsi */
 	movq	$SYS_futex, %rax
 	syscall
 
-	subq	$WRITERS_WAKEUP-MUTEX, %rdi
+	subq	$WRITERS_WAKEUP, %rdi
 
 	/* Reget the lock.  */
 	movl	$1, %esi
@@ -99,7 +99,7 @@ __pthread_rwlock_wrlock:
 #if MUTEX == 0
 	decl	(%rdi)
 #else
-	decl	$MUTEX(%rdi)
+	decl	MUTEX(%rdi)
 #endif
 	jne	6f
 7:

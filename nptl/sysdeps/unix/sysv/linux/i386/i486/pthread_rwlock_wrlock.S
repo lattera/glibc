@@ -75,12 +75,12 @@ __pthread_rwlock_wrlock:
 #endif
 	jne	10f
 
-11:	addl	$WRITERS_WAKEUP-MUTEX, %ebx
+11:	addl	$WRITERS_WAKEUP, %ebx
 	movl	%esi, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
-	subl	$WRITERS_WAKEUP-MUTEX, %ebx
+	subl	$WRITERS_WAKEUP, %ebx
 
 	/* Reget the lock.  */
 	movl	$1, %eax

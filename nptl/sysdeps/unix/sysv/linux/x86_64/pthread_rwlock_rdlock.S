@@ -67,18 +67,18 @@ __pthread_rwlock_rdlock:
 
 	LOCK
 #if MUTEX == 0
-	incl	(%rdi)
+	decl	(%rdi)
 #else
-	incl	MUTEX(%rdi)
+	decl	MUTEX(%rdi)
 #endif
 	jne	10f
 
-11:	addq	$READERS_WAKEUP-MUTEX, %rdi
+11:	addq	$READERS_WAKEUP, %rdi
 	movq	%r10, %rsi	/* movq $FUTEX_WAIT, %rsi */
 	movq	$SYS_futex, %rax
 	syscall
 
-	subq	$READERS_WAKEUP-MUTEX, %rdi
+	subq	$READERS_WAKEUP, %rdi
 
 	/* Reget the lock.  */
 	movl	$1, %esi

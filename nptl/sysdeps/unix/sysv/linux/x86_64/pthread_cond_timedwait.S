@@ -171,8 +171,8 @@ __pthread_cond_timedwait:
 
 	movq	wakeup_seq(%rdi), %r12
 
-	cmpq	40(%rsp), %rax
-	jb	15f
+	cmpq	40(%rsp), %r12
+	jbe	15f
 
 	cmpq	%rax, %r12
 	ja	9f
@@ -181,10 +181,10 @@ __pthread_cond_timedwait:
 	jne	8b
 
 13:	incq	wakeup_seq(%rdi)
-	movq	$ETIMEDOUT, %rsi
+	movq	$ETIMEDOUT, %r14
 	jmp	14f
 
-9:	xorq	%rsi, %rsi
+9:	xorq	%r14, %r14
 14:	incq	woken_seq(%rdi)
 
 	LOCK
@@ -203,7 +203,7 @@ __pthread_cond_timedwait:
 	callq	__pthread_mutex_lock_internal
 
 	testq	%rax, %rax
-	cmoveq	%rsi, %rax
+	cmoveq	%r14, %rax
 
 18:	addq	$80, %rsp
 	popq	%r14

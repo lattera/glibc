@@ -117,7 +117,7 @@ __pthread_cond_wait (cond, mutex)
 # error "No valid byte order"
 #endif
 
-  while (1)
+  do
     {
       /* Prepare to wait.  Release the condvar futex.  */
       lll_mutex_unlock (cond->__data.__lock);
@@ -137,10 +137,8 @@ __pthread_cond_wait (cond, mutex)
 
       /* Check whether we are eligible for wakeup.  */
       val = cond->__data.__wakeup_seq;
-      if (cond->__data.__woken_seq >= seq
-	  && cond->__data.__woken_seq < val)
-	break;
     }
+  while (! (val > seq && cond->__data.__woken_seq < val));
 
   /* Another thread woken up.  */
   ++cond->__data.__woken_seq;

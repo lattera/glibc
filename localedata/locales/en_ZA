@@ -2,44 +2,54 @@ escape_char  /
 comment_char  %
 
 % English language locale for South Africa
-% Source: RAP
-% Email: nic@sig.co.za
-% Tel: +27 83 7659503
-% Fax: +27 12 3478098
+% Source: Zuza Software Foundation
+% Email: dwayne@translate.org.za
+% Tel: +27 21 4487827
+% Fax: +27 21 4489574
 % Language: en
 % Territory: ZA
-% Revision: 1.0
-% Date: 1999-03-28
+% Revision: 1.1
+% Date: 2003-03-14
 % Users: general
 % Repertoiremap: mnemonic,ds
 % Charset: ISO-8859-1
 % Distribution and use is free, also
 % for commercial purposes.
+%
+% Changelog
+% 1.1 (2003-03-14):
+%   - Updated maintainer to Zuza Sofware Foundation
+%   - Changed %x for LC_TIME to use dd/mm/ccyy
+%   - Added ^ to LC_MESSAGES regex "^[yY].*"
+%   - Confirmed LC_PAPER and LC_MEASUREMENT settings
+%   - Added country and language names to LC_ADDRESS
+%   - Added missing info for LC_TELEPHONE
 
 LC_IDENTIFICATION
 title      "English locale for South Africa"
-source     "RAP"
-address    ""
-contact    ""
-email      "bug-glibc@gnu.org"
-tel        ""
-fax        ""
+source     "Zuza Software Foundation"
+address    "Box 13412, Mowbray, 7701, South Africa"
+contact    "Dwayne Bailey"
+email      "dwayne@translate.org.za"
+tel        "+27 21 448 7827"
+fax        "+27 21 448 9574"
 language   "English"
 territory  "South Africa"
-revision   "1.0"
-date       "2000-06-29"
+revision   "1.1"
+date       "2003-03-14"
 %
-category  "en_ZA:2000";LC_IDENTIFICATION
+category  "en_ZA:2003";LC_IDENTIFICATION
 category  "en_ZA:2000";LC_CTYPE
 category  "en_ZA:2000";LC_COLLATE
-category  "en_ZA:2000";LC_TIME
+category  "en_ZA:2003";LC_TIME
 category  "en_ZA:2000";LC_NUMERIC
 category  "en_ZA:2000";LC_MONETARY
-category  "en_ZA:2000";LC_MESSAGES
+category  "en_ZA:2003";LC_MESSAGES
 category  "en_ZA:2000";LC_PAPER
+category  "en_ZA:2000";LC_MEASUREMENT
 category  "en_ZA:2000";LC_NAME
-category  "en_ZA:2000";LC_ADDRESS
-category  "en_ZA:2000";LC_TELEPHONE
+category  "en_ZA:2003";LC_ADDRESS
+category  "en_ZA:2003";LC_TELEPHONE
 
 END LC_IDENTIFICATION
 
@@ -106,7 +116,7 @@ mon         "<U004A><U0061><U006E><U0075><U0061><U0072><U0079>";/
             "<U004E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
             "<U0044><U0065><U0063><U0065><U006D><U0062><U0065><U0072>"
 d_t_fmt     "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt       "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
+d_fmt       "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
 t_fmt       "<U0025><U0054>"
 am_pm       "";""
 t_fmt_ampm  ""
@@ -116,25 +126,25 @@ date_fmt	"<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
 END LC_TIME
 
 LC_MESSAGES
-yesexpr     "<U005B><U0079><U0059><U005D><U002E><U002A>"
-noexpr      "<U005B><U006E><U004E><U005D><U002E><U002A>"
+yesexpr     "<U005E><U005B><U0079><U0059><U005D><U002E><U002A>"
+noexpr      "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_PAPER
-% FIXME
 height   297
-% FIXME
 width    210
 END LC_PAPER
 
 LC_TELEPHONE
 tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
 <U006C>"
+tel_dom_fmt    "<U0028><U0025><U0041><U0029><U0020><U0025><U006C>"
+int_select     "<U0030><U0039>"
 int_prefix     "<U0032><U0037>"
+
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
 measurement    1
 END LC_MEASUREMENT
 
@@ -149,4 +159,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
+country_name  "<U0053><U006F><U0075><U0074><U0068><U0020>/
+<U0041><U0066><U0072><U0069><U0063><U0061>"
+lang_name     "<U0045><U006E><U0067><U006C><U0069><U0073><U0068>"
 END LC_ADDRESS

@@ -21,7 +21,7 @@
 #include <lowlevelrwlock.h>
 
 
-#define SYS_futex		240
+#define SYS_futex		202
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
 
@@ -57,7 +57,7 @@ __pthread_rwlock_unlock:
 5:	movq	$0, WRITER(%rdi)
 
 	movq	$1, %rsi
-	leaq	WRITERS_WAKEUP(%rdi), %r11
+	leaq	WRITERS_WAKEUP(%rdi), %r10
 	movq	%rsi, %rdx
 	cmpl	$0, WRITERS_QUEUED(%rdi)
 	jne	0f
@@ -66,10 +66,10 @@ __pthread_rwlock_unlock:
 	cmpl	$0, READERS_QUEUED(%rdi)
 	je	6f
 
-	movq	$0x7fffffff, %rdx
-	leaq	READERS_WAKEUP(%rdi), %r11
+	movl	$0x7fffffff, %edx
+	leaq	READERS_WAKEUP(%rdi), %r10
 
-0:	incl	(%r11)
+0:	incl	(%r10)
 	LOCK
 #if MUTEX == 0
 	decl	(%rdi)
@@ -79,7 +79,7 @@ __pthread_rwlock_unlock:
 	jne	7f
 
 8:	movq	$SYS_futex, %rax
-	movq	%r11, %rdi
+	movq	%r10, %rdi
 	syscall
 
 	xorq	%rax, %rax
@@ -112,9 +112,6 @@ __pthread_rwlock_unlock:
 	addq	$MUTEX, %rdi
 #endif
 	callq	__lll_mutex_unlock_wake
-#if MUTEX != 0
-	subq	$MUTEX, %rdi
-#endif
 	jmp	4b
 
 7:
@@ -122,9 +119,6 @@ __pthread_rwlock_unlock:
 	addq	$MUTEX, %rdi
 #endif
 	callq	__lll_mutex_unlock_wake
-#if MUTEX != 0
-	subq	$MUTEX, %rdi
-#endif
 	jmp	8b
 
 	.size	__pthread_rwlock_unlock,.-__pthread_rwlock_unlock

@@ -66,7 +66,7 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 			      "testl %0, %0\n\t"			      \
 			      "jne 1f\n\t"				      \
 			      ".subsection 1\n"				      \
-			      "1:\tleaq %2, %%rsi\n\t"			      \
+			      "1:\tleaq %2, %%rdi\n\t"			      \
 			      "subq $128, %%rsp\n\t"			      \
 			      "callq __lll_mutex_lock_wait\n\t"		      \
 			      "addq $128, %%rsp\n\t"			      \
@@ -75,8 +75,7 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 			      "2:"					      \
 			      : "=S" (ignore1), "=&D" (ignore2), "=m" (futex) \
 			      : "0" (1), "2" (futex)			      \
-			      : "memory"); })
-
+			      : "cx", "r11", "cc", "memory"); })
 
 #define lll_mutex_timedlock(futex, timeout) \
   ({ int result, ignore1, ignore2, ignore3;				      \
@@ -95,7 +94,7 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 		       : "=a" (result), "=&D" (ignore1), "=&S" (ignore2),     \
 			 "=&d" (ignore3), "=m" (futex)			      \
 		       : "0" (1), "4" (futex), "m" (timeout)		      \
-		       : "memory", "cx", "cc", "r10");			      \
+		       : "memory", "cx", "cc", "r10", "r11");		      \
      result; })
 
 
@@ -113,7 +112,7 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 			      "2:"					      \
 			      : "=m" (futex), "=&D" (ignore)		      \
 			      : "0" (futex)				      \
-			      : "memory"); })
+			      : "cx", "r11", "cc", "memory"); })
 
 
 #define lll_mutex_islocked(futex) \
@@ -166,7 +165,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      "2:"					      \
 			      : "=S" (ignore1), "=&D" (ignore2), "=m" (futex) \
 			      : "0" (-1), "2" (futex)			      \
-			      : "memory"); })
+			      : "cx", "r11", "cc", "memory"); })
 
 
 # define lll_unlock(futex) \
@@ -183,7 +182,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      "2:"					      \
 			      : "=m" (futex), "=&D" (ignore)		      \
 			      : "0" (futex)				      \
-			      : "memory"); })
+			      : "cx", "r11", "cc", "memory"); })
 #else
 /* Special versions of the macros for use in libc itself.  They avoid
    the lock prefix when the thread library is not used.
@@ -219,7 +218,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      "2:"					      \
 			      : "=S" (ignore1), "=&D" (ignore2), "=m" (futex) \
 			      : "0" (-1), "2" (futex)			      \
-			      : "memory"); })
+			      : "cx", "r11", "cc", "memory"); })
 
 
 # define lll_unlock(futex) \
@@ -239,7 +238,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      "2:"					      \
 			      : "=m" (futex), "=&D" (ignore)		      \
 			      : "0" (futex)				      \
-			      : "memory"); })
+			      : "cx", "r11", "cc", "memory"); })
 #endif
 
 
@@ -259,7 +258,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
     register __typeof (tid) _tid asm ("edx") = (tid);			      \
     if (_tid != 0)							      \
       __asm __volatile ("xorq %%r10, %%r10\n\t"				      \
-			"1:\tmovq %3, %%rax\n\t"			      \
+			"1:\tmovq %2, %%rax\n\t"			      \
 			"syscall\n\t"					      \
 			"cmpl $0, (%%rdi)\n\t"				      \
 			"jne 1b"					      \

@@ -77,12 +77,12 @@ __pthread_rwlock_rdlock:
 #endif
 	jne	10f
 
-11:	addl	$READERS_WAKEUP-MUTEX, %ebx
+11:	addl	$READERS_WAKEUP, %ebx
 	movl	%esi, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
-	subl	$READERS_WAKEUP-MUTEX, %ebx
+	subl	$READERS_WAKEUP, %ebx
 
 	/* Reget the lock.  */
 	movl	$1, %eax

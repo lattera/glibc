@@ -195,11 +195,11 @@ __pthread_cond_wait:
 	movl	wakeup_seq(%ebx), %edi
 	movl	wakeup_seq+4(%ebx), %edx
 
-	cmpl	16(%esp), %ecx
+	cmpl	16(%esp), %edx
 	ja	7f
 	jb	8b
-	cmpl	12(%esp), %eax
-	jb	8b
+	cmpl	12(%esp), %edi
+	jbe	8b
 
 7:	cmpl	%ecx, %edx
 	ja	9f

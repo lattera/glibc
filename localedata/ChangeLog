@@ -1,3 +1,12 @@
+2003-03-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* localedata/en_ZA: hanged %x for LC_TIME to use dd/mm/ccyy.
+	Added ^ to LC_MESSAGES regex "^[yY].*".
+	Confirmed LC_PAPER adn LC_MEASUREMENT settings.
+	Added country and language names to LC_ADDRESS.
+	Added missing info for LC_TELEPHONE.
+	Patch by Dwayne Bailey <dwayne@obsidian.co.za>.
+
 2003-03-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* localedata/mn_MN: New file.
