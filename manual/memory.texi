@@ -841,7 +841,7 @@ The value of this variable is a pointer to the function that
 function to look like @code{malloc}; that is, like:
 
 @smallexample
-void *@var{function} (size_t @var{size}, void *@var{caller})
+void *@var{function} (size_t @var{size}, const void *@var{caller})
 @end smallexample
 
 The value of @var{caller} is the return address found on the stack when
@@ -857,7 +857,7 @@ uses whenever it is called.  You should define this function to look
 like @code{realloc}; that is, like:
 
 @smallexample
-void *@var{function} (void *@var{ptr}, size_t @var{size}, void *@var{caller})
+void *@var{function} (void *@var{ptr}, size_t @var{size}, const void *@var{caller})
 @end smallexample
 
 The value of @var{caller} is the return address found on the stack when
@@ -873,7 +873,7 @@ uses whenever it is called.  You should define this function to look
 like @code{free}; that is, like:
 
 @smallexample
-void @var{function} (void *@var{ptr}, void *@var{caller})
+void @var{function} (void *@var{ptr}, const void *@var{caller})
 @end smallexample
 
 The value of @var{caller} is the return address found on the stack when
@@ -889,8 +889,12 @@ uses whenever it is called.  You should define this function to look
 like @code{memalign}; that is, like:
 
 @smallexample
-void *@var{function} (size_t @var{size}, size_t @var{alignment})
+void *@var{function} (size_t @var{size}, size_t @var{alignment}, const void *@var{caller})
 @end smallexample
+
+The value of @var{caller} is the return address found on the stack when
+the @code{memalign} function was called.  This value allows you to trace the
+memory consumption of the program.
 @end defvar
 
 You must make sure that the function you install as a hook for one of
@@ -936,14 +940,13 @@ assume here that @code{realloc} and @code{memalign} are not used in our
 program.
 
 @smallexample
-/* Global variables used to hold underlaying hook values.  */
-static void *(*old_malloc_hook) (size_t);
-static void (*old_free_hook) (void*);
+/* Prototypes for __malloc_hook, __free_hook */
+#include <malloc.h>
 
 /* Prototypes for our hooks.  */
 static void *my_init_hook (void);
-static void *my_malloc_hook (size_t);
-static void my_free_hook (void*);
+static void *my_malloc_hook (size_t, const void *);
+static void my_free_hook (void*, const void *);
 
 /* Override initializing hook from the C library. */
 void (*__malloc_initialize_hook) (void) = my_init_hook;
@@ -958,7 +961,7 @@ my_init_hook (void)
 @}
 
 static void *
-my_malloc_hook (size_t size)
+my_malloc_hook (size_t size, const void *caller)
 @{
   void *result;
   /* Restore all old hooks */
@@ -978,7 +981,7 @@ my_malloc_hook (size_t size)
 @}
 
 static void *
-my_free_hook (void *ptr)
+my_free_hook (void *ptr, const void *caller)
 @{
   /* Restore all old hooks */
   __malloc_hook = old_malloc_hook;
@@ -1109,16 +1112,16 @@ Tell @code{malloc} to perform occasional consistency checks on
 dynamically allocated memory, and to call @var{abortfn} when an
 inconsistency is found.  @xref{Heap Consistency Checking}.
 
-@item void *(*__malloc_hook) (size_t @var{size}, void *@var{caller})
+@item void *(*__malloc_hook) (size_t @var{size}, const void *@var{caller})
 A pointer to a function that @code{malloc} uses whenever it is called.
 
-@item void *(*__realloc_hook) (void *@var{ptr}, size_t @var{size}, void *@var{caller})
+@item void *(*__realloc_hook) (void *@var{ptr}, size_t @var{size}, const void *@var{caller})
 A pointer to a function that @code{realloc} uses whenever it is called.
 
-@item void (*__free_hook) (void *@var{ptr}, void *@var{caller})
+@item void (*__free_hook) (void *@var{ptr}, const void *@var{caller})
 A pointer to a function that @code{free} uses whenever it is called.
 
-@item void (*__memalign_hook) (size_t @var{size}, size_t @var{alignment})
+@item void (*__memalign_hook) (size_t @var{size}, size_t @var{alignment}, const void *@var{caller})
 A pointer to a function that @code{memalign} uses whenever it is called.
 
 @item struct mallinfo mallinfo (void)

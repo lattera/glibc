@@ -1,5 +1,30 @@
 2000-11-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/TESTS: Add entries for IBM856, IBM930, IBM933, IBM935,
+	IBM937, IBM939, and IBM1046.
+	* iconvdata/testdata/IBM1046: New file.
+	* iconvdata/testdata/IBM930..UTF8: New file.
+	* iconvdata/testdata/IBM1046..UTF8: New file.
+	* iconvdata/testdata/IBM933: New file.
+	* iconvdata/testdata/IBM935: New file.
+	* iconvdata/testdata/IBM937: New file.
+	* iconvdata/testdata/IBM856..UTF8: New file.
+	* iconvdata/testdata/IBM939: New file.
+	* iconvdata/testdata/IBM933..UTF8: New file.
+	* iconvdata/testdata/IBM935..UTF8: New file.
+	* iconvdata/testdata/IBM930: New file.
+	* iconvdata/testdata/IBM856: New file.
+	* iconvdata/testdata/IBM937..UTF8: New file.
+	* iconvdata/testdata/IBM939..UTF8: New file.
+	Contributed by Masahide Washizawa <washi@yamato.ibm.co.jp>.
+
+2000-11-01  Martin Buchholz  <martin@xemacs.org>
+
+	* manual/memory.texi (Hooks for Malloc): Fix `caller' arg docs to
+	agree with implementation.
+
+2000-11-01  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/unix/sysv/linux/bits/time.h (CLK_TCK): Cast sysconf result
 	to __clock_t.
 	* sysdeps/unix/sysv/linux/alpha/bits/time.h: Likewise.

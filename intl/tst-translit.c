@@ -39,11 +39,11 @@ main (void)
   puts (s);								      \
   result |= strcmp (s, exp) != 0;
 
-  TEST ("test", "aeoeueAEUEOEss");
-  TEST ("test", "aeoeueAEUEOEss");
-  TEST ("onemore", "AEssdf");
-  TEST ("onemore", "AEssdf");
-  TEST ("test", "aeoeueAEUEOEss");
+  TEST ("test", "<<(C) AEss>>");
+  TEST ("test", "<<(C) AEss>>");
+  TEST ("onemore", "1/2*1/2=1/4");
+  TEST ("onemore", "1/2*1/2=1/4");
+  TEST ("test", "<<(C) AEss>>");
 
   return result;
 }

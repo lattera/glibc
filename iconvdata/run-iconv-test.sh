@@ -84,8 +84,8 @@ while read from to subset targets; do
     rm -f $temp1 $temp2
 
     # Now test some bigger text, entirely in ASCII.  If ASCII is no subset
-    # of the coded character set we test we convert the test to this
-    # coded character set.  Otherwise we convert to all the TARGETS.
+    # of the coded character set we convert the text to this coded character
+    # set.  Otherwise we convert to all the TARGETS.
     if test $subset = Y; then
       echo $ac_n "   suntzu: $from -> $t -> $to $ac_c"
       $PROG -f $from -t $t testdata/suntzus |

@@ -134,7 +134,7 @@ for ($cnt = 0; $cnt <= $#tos; ++$cnt) {
     printf(" ");
     ++$col;
   }
-  printf("L\"$tos[$cnt]\\0\"");
+  printf("%s", "L\"$tos[$cnt]\\0\"");
   $col += length($tos[$cnt]) + 5;
 }
 printf(";\n");
