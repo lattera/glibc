@@ -573,7 +573,27 @@ case.  The function returns @code{-1} if you call it too late, and
 
 The easiest way to arrange to call @code{mcheck} early enough is to use
 the option @samp{-lmcheck} when you link your program; then you don't
-need to modify your program source at all.
+need to modify your program source at all.  Alternately you might use
+a debugger to insert a call to @code{mcheck} whenever the program is
+started, for example these gdb commands will automatically call @code{mcheck}
+whenever the program starts:
+
+@smallexample
+(gdb) break main
+Breakpoint 1, main (argc=2, argv=0xbffff964) at whatever.c:10
+(gdb) command 1
+Type commands for when breakpoint 1 is hit, one per line.
+End with a line saying just "end".
+>call mcheck(0)
+>continue
+>end
+(gdb) ...
+@end smallexample
+
+This will however only work if no initialization function of any object
+involved calls any of the @code{malloc} functions since @code{mcheck}
+must be called before the first such function.
+
 @end deftypefun
 
 @deftypefun {enum mcheck_status} mprobe (void *@var{pointer})
@@ -692,34 +712,86 @@ the @code{free} function was called.  This value allows to trace the
 memory consumption of the program.
 @end defvar
 
+@comment malloc.h
+@comment GNU
+@defvar __memalign_hook
+The value of this variable is a pointer to function that @code{memalign}
+uses whenever it is called.  You should define this function to look
+like @code{memalign}; that is, like:
+
+@smallexample
+void *@var{function} (size_t @var{size}, size_t @var{alignment})
+@end smallexample
+@end defvar
+
 You must make sure that the function you install as a hook for one of
 these functions does not call that function recursively without restoring
 the old value of the hook first!  Otherwise, your program will get stuck
-in an infinite recursion.
+in an infinite recursion.  Before calling the function recursively, one
+should make sure to restore all the hooks to their previous value.  When
+coming back from the recursive call, all the hooks should be resaved
+since a hook might modify itself.
 
-Here is an example showing how to use @code{__malloc_hook} properly.  It
-installs a function that prints out information every time @code{malloc}
-is called.
+Here is an example showing how to use @code{__malloc_hook} and
+@code{__free_hook} properly.  It installs a function that prints out
+information every time @code{malloc} or @code{free} is called.  We just
+assume here that @code{realloc} and @code{memalign} are not used in our
+program.
 
 @smallexample
+/* Global variables used to hold underlaying hook values.  */
 static void *(*old_malloc_hook) (size_t);
+static void (*old_free_hook) (void*);
+
+/* Prototypes for our hooks.  */
+static void *my_malloc_hook (size_t);
+static void my_free_hook(void*);
+
 static void *
 my_malloc_hook (size_t size)
 @{
   void *result;
+  /* Restore all old hooks */
   __malloc_hook = old_malloc_hook;
+  __free_hook = old_free_hook;
+  /* Call recursively */
   result = malloc (size);
+  /* Save underlaying hooks */
+  old_malloc_hook = __malloc_hook;
+  old_free_hook = __free_hook;
   /* @r{@code{printf} might call @code{malloc}, so protect it too.} */
   printf ("malloc (%u) returns %p\n", (unsigned int) size, result);
+  /* Restore our own hooks */
   __malloc_hook = my_malloc_hook;
+  __free_hook = my_free_hook;
   return result;
+@}
+
+static void *
+my_free_hook (void *ptr)
+@{
+  /* Restore all old hooks */
+  __malloc_hook = old_malloc_hook;
+  __free_hook = old_free_hook;
+  /* Call recursively */
+  free (ptr);
+  /* Save underlaying hooks */
+  old_malloc_hook = __malloc_hook;
+  old_free_hook = __free_hook;
+  /* @r{@code{printf} might call @code{free}, so protect it too.} */
+  printf ("freed pointer %p\n", ptr);
+  /* Restore our own hooks */
+  __malloc_hook = my_malloc_hook;
+  __free_hook = my_free_hook;
 @}
 
 main ()
 @{
   ...
   old_malloc_hook = __malloc_hook;
+  old_free_hook = __free_hook;
   __malloc_hook = my_malloc_hook;
+  __free_hook = my_free_hook;
   ...
 @}
 @end smallexample
@@ -839,6 +911,9 @@ A pointer to a function that @code{realloc} uses whenever it is called.
 
 @item void (*__free_hook) (void *@var{ptr}, void *@var{caller})
 A pointer to a function that @code{free} uses whenever it is called.
+
+@item void (*__memalign_hook) (size_t @var{size}, size_t @var{alignment})
+A pointer to a function that @code{memalign} uses whenever it is called.
 
 @item struct mallinfo mallinfo (void)
 Return information about the current dynamic memory usage.
@@ -1211,13 +1286,11 @@ as an obstack, it must initialize the obstack by calling
 @comment GNU
 @deftypefun int obstack_init (struct obstack *@var{obstack-ptr})
 Initialize obstack @var{obstack-ptr} for allocation of objects.  This
-function calls the obstack's @code{obstack_chunk_alloc} function.  It
-returns 0 if @code{obstack_chunk_alloc} returns a null pointer, meaning
-that it is out of memory.  Otherwise, it returns 1.  If you supply an
-@code{obstack_chunk_alloc} function that calls @code{exit}
-(@pxref{Program Termination}) or @code{longjmp} (@pxref{Non-Local
-Exits}) when out of memory, you can safely ignore the value that
-@code{obstack_init} returns.
+function calls the obstack's @code{obstack_chunk_alloc} function.  If
+allocation of memory fails, the function pointed to by
+@code{obstack_alloc_failed_handler} is called.  The @code{obstack_init}
+function always returns 1 (Compatibility notice: Former versions of
+obstack returned 0 if allocation failed).
 @end deftypefun
 
 Here are two examples of how to allocate the space for an obstack and
@@ -1239,6 +1312,24 @@ struct obstack *myobstack_ptr
 obstack_init (myobstack_ptr);
 @end smallexample
 
+@comment obstack.h
+@comment GNU
+@defvar obstack_alloc_failed_handler
+The value of this variable is a pointer to a function that
+@code{obstack} uses when @code{obstack_chunk_alloc} fails to allocate
+memory.  The default action is to print a message and abort.
+You should supply a function that either calls @code{exit}
+(@pxref{Program Termination}) or @code{longjmp} (@pxref{Non-Local
+Exits}) and doesn't return.
+
+@smallexample
+void my_obstack_alloc_failed (void)
+@dots{}
+obstack_alloc_failed_handler = &my_obstack_alloc_failed;
+@end smallexample
+
+@end defvar
+
 @node Allocation in an Obstack
 @subsection Allocation in an Obstack
 @cindex allocation (obstacks)
@@ -1256,13 +1347,9 @@ object which represents the obstack.  Each obstack function or macro
 requires you to specify an @var{obstack-ptr} as the first argument.
 
 This function calls the obstack's @code{obstack_chunk_alloc} function if
-it needs to allocate a new chunk of memory; it returns a null pointer if
-@code{obstack_chunk_alloc} returns one.  In that case, it has not
-changed the amount of memory allocated in the obstack.  If you supply an
-@code{obstack_chunk_alloc} function that calls @code{exit}
-(@pxref{Program Termination}) or @code{longjmp} (@pxref{Non-Local
-Exits}) when out of memory, then @code{obstack_alloc} will never return
-a null pointer.
+it needs to allocate a new chunk of memory; it calls
+@code{obstack_alloc_failed_handler} if allocation of memory by
+@code{obstack_chunk_alloc} failed.
 @end deftypefun
 
 For example, here is a function that allocates a copy of a string @var{str}
@@ -1288,8 +1375,9 @@ To allocate a block with specified contents, use the function
 @comment GNU
 @deftypefun {void *} obstack_copy (struct obstack *@var{obstack-ptr}, void *@var{address}, int @var{size})
 This allocates a block and initializes it by copying @var{size}
-bytes of data starting at @var{address}.  It can return a null pointer
-under the same conditions as @code{obstack_alloc}.
+bytes of data starting at @var{address}.  It calls
+@code{obstack_alloc_failed_handler} if allocation of memory by
+@code{obstack_chunk_alloc} failed.
 @end deftypefun
 
 @comment obstack.h

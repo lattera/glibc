@@ -1,3 +1,8 @@
+1998-10-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/in.h: Remove ipv6_mreq which is in
+	netinet/in.h.
+
 1998-10-05  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/bits/in.h: Add various new structures

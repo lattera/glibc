@@ -84,13 +84,6 @@ struct ip_mreqn
     int	imr_ifindex;			/* Interface index */
   };
 
-/* As above but for IPv6.  */
-struct ipv6_mreq 
-  {
-    struct in6_addr ipv6mr_multiaddr;   /* IPv6 multicast address of group */
-    int	ipv6mr_ifindex;			/* local IPv6 address of interface */
-  };
-
 /* Options for use with `getsockopt' and `setsockopt' at the IPv6 level.
    The first word in the comment at the right is the data type used;
    "bool" means a boolean value stored in an `int'.  */
