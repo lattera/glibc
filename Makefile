@@ -195,7 +195,7 @@ parent-clean: parent-mostlyclean common-clean
 
 postclean = $(addprefix $(common-objpfx),$(postclean-generated)) \
 	    $(addprefix $(objpfx),sysd-Makefile sysd-dirs sysd-rules) \
-	    $(objpfx)soversions.mk
+	    $(addprefix $(objpfx),sysd-sorted soversions.mk)
 
 clean: parent-clean
 # This is done this way rather than having `subdir_clean' be a

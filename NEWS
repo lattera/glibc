@@ -91,20 +91,26 @@ Version 2.1
 
 * rcmd can now handle netgroups (Dick Streefland).
 
+* A port to the ARM was contributed by Phil Blundell, Pat Beirne and Scott
+  Bambrough.
+
+* Support for the IPv6 protocol has been added to the socket API, as per the
+  latest draft standards.
+
 * Interface changes relative to the latest 2.0.x release:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-addseverity			NEW: fmtmsg
+addseverity			NEW: Unix98
 alphasort64			NEW: LFS
-argp_err_exit_status		NEW: argp
-argp_error			NEW: argp
-argp_failure			NEW: argp
-argp_help			NEW: argp
-argp_parse			NEW: argp
-argp_program_bug_address	NEW: argp
-argp_program_version		NEW: argp
-argp_program_version_hook	NEW: argp
-argp_state_help			NEW: argp
-argp_usage			NEW: argp
+argp_err_exit_status		NEW: argp, GNU ext
+argp_error			NEW: argp, GNU ext
+argp_failure			NEW: argp, GNU ext
+argp_help			NEW: argp, GNU ext
+argp_parse			NEW: argp, GNU ext
+argp_program_bug_address	NEW: argp, GNU ext
+argp_program_version		NEW: argp, GNU ext
+argp_program_version_hook	NEW: argp, GNU ext
+argp_state_help			NEW: argp, GNU ext
+argp_usage			NEW: argp, GNU ext
 authdes_create			NEW: Secure RPC
 authdes_getucred		NEW: Secure RPC
 authdes_pk_create		NEW: Secure RPC
@@ -185,7 +191,7 @@ ctanhl				NEW: ISO C 9x
 ctanl				NEW: ISO C 9x
 des_setparity			NEW: Secure RPC
 ecb_crypt			NEW: Secure RPC
-endutxent			NEW: utmpx
+endutxent			NEW: Unix98
 exp10				NEW: ISO C 9x
 exp10f				NEW: ISO C 9x
 exp10l				NEW: ISO C 9x
@@ -225,7 +231,7 @@ fmaxl				NEW: ISO C 9x
 fmin				NEW: ISO C 9x
 fminf				NEW: ISO C 9x
 fminl				NEW: ISO C 9x
-fmtmsg				NEW: fmtmsg
+fmtmsg				NEW: Unix98
 fopen64				NEW: LFS
 fputc_locked			REMOVED
 fputs_unlocked			NEW: GNU ext.
@@ -255,9 +261,9 @@ getnetname			NEW: Secure RPC
 getpmsg				NEW: STREAMS
 getpt				NEW: Unix98 PTY
 getrlimit64			NEW: LFS
-getutxent			NEW: utmpx
-getutxid			NEW: utmpx
-getutxline			NEW: utmpx
+getutxent			NEW: Unix98
+getutxid			NEW: Unix98
+getutxline			NEW: Unix98
 glob64				NEW: GNU ext.
 globfree64			NEW: GNU ext.
 gnu_get_libc_release		NEW: GNU ext.
@@ -337,7 +343,7 @@ putchar_locked			REMOVED
 putgrent			NEW: GNU ext.
 putmsg				NEW: STREAMS
 putpmsg				NEW: STREAMS
-pututxline			NEW: utmpx
+pututxline			NEW: Unix98
 pwrite				NEW: Unix98
 pwrite64			NEW: LFS
 readdir64			NEW: LFS
@@ -356,7 +362,7 @@ scandir64			NEW: LFS
 sendfile			NEW: kernel
 setcontext			NEW: Unix98
 setrlimit64			NEW: LFS
-setutxent			NEW: utmpx
+setutxent			NEW: Unix98
 sighold				NEW: Unix98
 sigignore			NEW: Unix98
 sigqueue			NEW: POSIX.1b
@@ -391,9 +397,9 @@ truncf				NEW: ISO C 9x
 truncl				NEW: ISO C 9x
 umount2				NEW: kernel
 unlockpt			NEW: Unix98 PTY
-updwtmpx			NEW: utmpx
+updwtmpx			NEW: Unix98
 user2netname			NEW: Secure RPC
-utmpxname			NEW: utmpx
+utmpxname			NEW: Unix98
 versionsort			NEW: GNU ext.
 versionsort64			NEW: LFS
 waitid				NEW: Unix98

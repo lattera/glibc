@@ -1,3 +1,7 @@
+1998-12-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* SUPPORTED: Update greek entry.
+
 1998-11-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/el_GR (abmon): Remove spaces at end of strings.

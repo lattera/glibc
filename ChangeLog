@@ -1,3 +1,7 @@
+1998-12-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (postclean): Add sysd-sorted.
+
 1998-12-01  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
 	* sunrpc/auth_des.c: Use new XDR int32 functions for integers.

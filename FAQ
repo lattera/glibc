@@ -319,9 +319,8 @@ headers to use, give configure the --with-headers switch
 (e.g. --with-headers=/usr/src/linux-2.1.107/include).
 
 Note that you must configure the 2.1 kernel if you do this, otherwise libc
-will be unable to find <linux/version.h>.  Just copy .config from your 2.0
-kernel sources to the 2.1 tree, do `make oldconfig', and say no to all the
-new options.
+will be unable to find <linux/version.h>.  Just change the current directory
+to the root of the 2.1 tree and do `make include/linux/version.h'.
 
 
 1.9.	The compiler hangs while building iconvdata modules.  What's
