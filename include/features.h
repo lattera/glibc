@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993, 1995-2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1995-2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -258,7 +258,7 @@
 /* Major and minor version number of the GNU C library package.  Use
    these macros to test for features in specific releases.  */
 #define	__GLIBC__	2
-#define	__GLIBC_MINOR__	2
+#define	__GLIBC_MINOR__	3
 
 /* Convenience macros to test the versions of glibc and gcc.
    Use them like this:
