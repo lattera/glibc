@@ -36,11 +36,11 @@ extern void ENTRY_POINT;
 extern void etext;
 
 #ifndef TEXT_START
-#ifdef ENTRY_POINT_DECL
-#define TEXT_START ENTRY_POINT
-#else
-#define TEXT_START &ENTRY_POINT
-#endif
+# ifdef ENTRY_POINT_DECL
+#  define TEXT_START ENTRY_POINT
+# else
+#  define TEXT_START &ENTRY_POINT
+# endif
 #endif
 
 #ifndef HAVE_INITFINI
