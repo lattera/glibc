@@ -49,7 +49,7 @@
 #undef	PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
-  .type syscall_error,%function						      \
+  .type syscall_error,%function	;					      \
   ENTRY (name)								      \
     DO_CALL (args, syscall_name);					      \
     cmn r0, $4096;							      \
