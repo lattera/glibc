@@ -1,3 +1,8 @@
+2003-02-22  Roland McGrath  <roland@redhat.com>
+
+	* MakeTAGS (sub-make-vars): New variable, includes generating=t.
+	Use that in $(MAKE) calls.
+
 2003-02-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/iconv_prog.c (main): Unify messages.
