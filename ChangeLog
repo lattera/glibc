@@ -1,3 +1,7 @@
+1999-05-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/stdio.texi: Fix some typos.
+
 1999-05-27  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* malloc/malloc.h: Properly handle future GCC versions.

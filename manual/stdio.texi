@@ -1620,7 +1620,7 @@ In practice, it is often easier just to use @code{asprintf}, below.
 @strong{Attention:} In the GNU C library version 2.0 the return value
 is the number of characters stored, not including the terminating null.
 If this value equals @code{@var{size} - 1}, then there was not enough
-space in @var{s} for all the output.  This change was neccessary with
+space in @var{s} for all the output.  This change was necessary with
 the adoption of snprintf by ISO C9x.
 @end deftypefun
 
@@ -2211,7 +2211,7 @@ width.  The value is @code{'0'} if the @samp{0} flag was specified, and
 Now let's look at how to define the handler and arginfo functions
 which are passed as arguments to @code{register_printf_function}.
 
-@strong{Compatibility Note:} The interface change in the GNU libc
+@strong{Compatibility Note:} The interface changed in the GNU libc
 version 2.0.  Previously the third argument was of type
 @code{va_list *}.
 
@@ -4353,7 +4353,7 @@ form.  The string must contain two fields, separated by a colon
 produced no output since the class with the numeric value @code{6} is
 not defined.  Although a class with numeric value @code{5} is also not
 defined by default, the call the @code{addseverity} introduces it and
-the second call to @code{fmtmsg} produces the above outout.
+the second call to @code{fmtmsg} produces the above output.
 
 When we change the environment of the program to contain
 @code{SEV_LEVEL=XXX,6,NOTE} when running it we get a different result:

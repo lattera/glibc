@@ -20,22 +20,20 @@ else
 #line 21 "configure"
 #include "confdefs.h"
 #include <linux/version.h>
-int main() {
-#if LINUX_VERSION_CODE <  (2 *65536+ 0 *256+ 10) /* 2.0.10 */
+#if !defined LINUX_VERSION_CODE || LINUX_VERSION_CODE <  (2 *65536+ 0 *256+ 10) /* 2.0.10 */
 eat flaming death
 #endif
-; return 0; }
 EOF
-if { (eval echo configure:30: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
-  rm -rf conftest*
-  libc_cv_linux2010='2.0.10 or later'
-else
-  echo "configure: failed program was:" >&5
-  cat conftest.$ac_ext >&5
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  egrep "eat flaming death" >/dev/null 2>&1; then
   rm -rf conftest*
   libc_cv_linux2010='TOO OLD!'
+else
+  rm -rf conftest*
+  libc_cv_linux2010='2.0.10 or later'
 fi
 rm -f conftest*
+
 fi
 
 echo "$ac_t""$libc_cv_linux2010" 1>&6
@@ -54,28 +52,36 @@ fi
 # kernel headers are young enough.
 if test -n "$minimum_kernel"; then
   echo $ac_n "checking for kernel header at least $minimum_kernel""... $ac_c" 1>&6
-echo "configure:58: checking for kernel header at least $minimum_kernel" >&5
-  decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\(\([0-9]*\)\|\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
+echo "configure:56: checking for kernel header at least $minimum_kernel" >&5
+  decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
   cat > conftest.$ac_ext <<EOF
+#line 59 "configure"
+#include "confdefs.h"
 #include <linux/version.h>
-int main() {
 #if LINUX_VERSION_CODE < $decnum
 eat flaming death
 #endif
-; return 0; }
 EOF
-  if { (eval echo configure:30: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  egrep "eat flaming death" >/dev/null 2>&1; then
+  rm -rf conftest*
+  libc_minimum_kernel='too old!'
+else
+  rm -rf conftest*
+  libc_minimum_kernel=ok
+fi
+rm -f conftest*
+
+  echo "$ac_t""$libc_minimum_kernel" 1>&6
+  if test "$libc_minimum_kernel" = ok; then
     cat >> confdefs.h <<EOF
 #define __LINUX_KERNEL_VERSION $decnum
 EOF
 
-    echo "$ac_t""ok" 1>&6
   else
-    echo "$ac_t""too old!" 1>&6
-    { echo "configure: error: *** The available kernel headers are not at least as old as the requested
+    { echo "configure: error: *** The available kernel headers are older than the requested
 *** compatible kernel version" 1>&2; exit 1; }
   fi
-  rm -f conftest*
 fi
 
 if test -n "$sysheaders"; then
@@ -164,7 +170,7 @@ if test $host = $build; then
     ac_prefix=$ac_default_prefix
   fi
   echo $ac_n "checking for symlinks in ${ac_prefix}/include""... $ac_c" 1>&6
-echo "configure:168: checking for symlinks in ${ac_prefix}/include" >&5
+echo "configure:174: checking for symlinks in ${ac_prefix}/include" >&5
   ac_message=
   if test -L ${ac_prefix}/include/net; then
     ac_message="$ac_message
