@@ -121,11 +121,11 @@ _nl_init_era_entries (void)
 
 		  /* Set and skip wide era name.  */
 		  eras[cnt].era_wname = (wchar_t *) ptr;
-		  ptr = (char *) (wcschr ((wchar_t *) ptr, '\0') + 1);
+		  ptr = (char *) (wcschr ((wchar_t *) ptr, L'\0') + 1);
 
 		  /* Set and skip wide era format.  */
 		  eras[cnt].era_wformat = (wchar_t *) ptr;
-		  ptr = (char *) (wcschr ((wchar_t *) ptr, '\0') + 1);
+		  ptr = (char *) (wcschr ((wchar_t *) ptr, L'\0') + 1);
 		}
 	    }
 	}

@@ -1,3 +1,8 @@
+2000-12-02  H.J. Lu  <hjl@gnu.org>
+
+	* locale/lc-time.c (_nl_init_era_entries): Pass L'\0' instead of
+	'\0' to wcschr.
+
 2000-12-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/fpu/s_frexp.S: Add missing fwait.
