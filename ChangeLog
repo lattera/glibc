@@ -1,3 +1,14 @@
+1998-11-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig: Add comment to all-subdirs definition.
+	Add rule to generate sysd-sorted.  Include this file and and set
+	subdirs value to $(sorted-subdirs).
+	* scripts/gen-sorted.awk: New file.
+	* Make-dist (+tsrcs): Add Depend.
+	* nscd/Depend: New file.
+	* nss/Depend: New file.
+	* rt/Depend: New file.
+
 1998-11-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/bsd/poll.c (__poll): Add code to extend sets if any
@@ -14,6 +25,9 @@
 	Patch by Paul Eggert <eggert@twinsun.com>.
 
 	* io/Makefile (CFLAGS-ftw.c): Removed.
+
+	* manual/errno.texi> Change the short text for ENODEV to
+	"No such device".
 
 1998-11-18  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 

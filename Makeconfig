@@ -750,7 +750,10 @@ sysdep-subdirs := $(subst $(\n), ,$(sysdep-subdirs))
 sysdep-inhibit-subdirs := $(subst $(\n), ,$(sysdep-inhibit-subdirs))
 endif
 
-# These are the subdirectories containing the library source.
+# These are the subdirectories containing the library source.  The order
+# is more or less arbitrary.  The sorting step will take care of the
+# dependencies.  Only the $(binfmt-subdir) should always be kept at the
+# end of the list.
 all-subdirs = csu assert ctype db db2 locale intl catgets math setjmp signal\
 	      stdlib stdio-common $(stdio) malloc string wcsmbs time dirent \
 	      grp pwd posix io termios resource misc socket sysvipc gmon    \
@@ -758,7 +761,9 @@ all-subdirs = csu assert ctype db db2 locale intl catgets math setjmp signal\
 	      $(add-ons) nss localedata timezone rt debug $(sysdep-subdirs) \
 	      $(binfmt-subdir)
 all-subdirs := $(filter-out $(sysdep-inhibit-subdirs),$(all-subdirs))
-subdirs = $(all-subdirs)
+
+-include $(common-objpfx)sysd-sorted
+subdirs = $(sorted-subdirs)
 
 # The mach and hurd subdirectories have many generated header files which
 # much of the rest of the library depends on, so it is best to build them
@@ -775,10 +780,27 @@ $(common-objpfx)sysd-dirs: $(common-objpfx)config.make $(all-Subdirs-files)
 	 sed 's/[#-].*$$//' $(all-Subdirs-files) /dev/null;		\
 	 echo endef;							\
 	 echo define sysdep-inhibit-subdirs;				\
-	 sed '/-.*$$/!d;s/^-//' $(all-Subdirs-files) /dev/null;	\
+	 sed '/-.*$$/!d;s/^-//' $(all-Subdirs-files) /dev/null;		\
 	 echo endef;							\
 	 echo 'sysd-dirs-done = t';					\
 	) > $@-tmp
+	mv -f $@-tmp $@
+
+all-Depend-files = $(wildcard $(..)*/Depend)
+$(common-objpfx)sysd-sorted: $(..)scripts/gen-sorted.awk $(all-Depend-files) \
+			     $(common-objpfx)sysd-dirs $(..)Makeconfig
+	(if test "$(all-Depend-files)"; then				\
+	   for f in $(all-Depend-files); do				\
+	     dir=$${f%%/*};						\
+	     while read on; do						\
+	       echo "depend $$dir $$on";				\
+	     done < $$f;						\
+	   done;							\
+	 fi;								\
+	 for f in $(all-subdirs); do					\
+	   echo $$f;							\
+	 done								\
+	) | $(AWK) -f $(..)scripts/gen-sorted.awk > $@-tmp
 	mv -f $@-tmp $@
 
 endif # Makeconfig not yet included
