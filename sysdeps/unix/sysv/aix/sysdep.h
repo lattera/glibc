@@ -85,4 +85,4 @@ C_TEXT (name):
 
 
 /* Jumping to another function.  We are jumping to the TOC entry.  */
-#define JUMPTARGET(name) name
+#define JUMPTARGET(name) C_TEXT (name)
