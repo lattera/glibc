@@ -34,6 +34,8 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <glob.h>
+#include <libgen.h>
 
 #include "ldconfig.h"
 #include "dl-cache.h"
@@ -934,16 +936,20 @@ search_dirs (void)
 }
 
 
+static void parse_conf_include (const char *config_file, unsigned int lineno,
+				bool do_chroot, const char *pattern);
+
 /* Parse configuration file.  */
 static void
-parse_conf (const char *filename)
+parse_conf (const char *filename, bool do_chroot)
 {
   FILE *file = NULL;
   char *line = NULL;
   const char *canon;
   size_t len = 0;
+  unsigned int lineno;
 
-  if (opt_chroot)
+  if (do_chroot && opt_chroot)
     {
       canon = chroot_canon (opt_chroot, filename);
       if (canon)
@@ -971,12 +977,14 @@ parse_conf (const char *filename)
   if (canon != filename)
     free ((char *) canon);
 
+  lineno = 0;
   do
     {
       ssize_t n = getline (&line, &len, file);
       if (n < 0)
 	break;
 
+      ++lineno;
       if (line[n - 1] == '\n')
 	line[n - 1] = '\0';
 
@@ -994,13 +1002,78 @@ parse_conf (const char *filename)
       if (cp[0] == '\0')
 	continue;
 
-      add_dir (cp);
+      if (!strncmp (cp, "include", 7) && isblank (cp[7]))
+	{
+	  char *dir;
+	  cp += 8;
+	  while ((dir = strsep (&cp, " \t")) != NULL)
+	    if (dir[0] != '\0')
+	      parse_conf_include (filename, lineno, do_chroot, dir);
+	}
+      else
+	add_dir (cp);
     }
   while (!feof_unlocked (file));
 
   /* Free buffer and close file.  */
   free (line);
   fclose (file);
+}
+
+/* Handle one word in an `include' line, a glob pattern of additional
+   config files to read.  */
+static void
+parse_conf_include (const char *config_file, unsigned int lineno,
+		    bool do_chroot, const char *pattern)
+{
+  if (opt_chroot && pattern[0] != '/')
+    error (EXIT_FAILURE, 0,
+	   _("need absolute file name for configuration file when using -r"));
+
+  char *copy = NULL;
+  if (pattern[0] != '/' && strchr (config_file, '/') != NULL)
+    {
+      asprintf (&copy, "%s/%s", dirname (strdupa (config_file)), pattern);
+      pattern = copy;
+    }
+
+  glob64_t gl;
+  int result;
+  if (do_chroot && opt_chroot)
+    {
+      char *canon = chroot_canon (opt_chroot, pattern);
+      result = glob64 (canon ?: pattern, 0, NULL, &gl);
+      free (canon);
+    }
+  else
+    result = glob64 (pattern, 0, NULL, &gl);
+
+  switch (result)
+    {
+    case 0:
+      for (size_t i = 0; i < gl.gl_pathc; ++i)
+	parse_conf (gl.gl_pathv[i], false);
+      globfree64 (&gl);
+      break;
+
+    case GLOB_NOMATCH:
+      break;
+
+    case GLOB_NOSPACE:
+      errno = ENOMEM;
+    case GLOB_ABORTED:
+      if (opt_verbose)
+	error (0, errno, _("%s:%u: cannot read directory %s"),
+	       config_file, lineno, pattern);
+      break;
+
+    default:
+      abort ();
+      break;
+    }
+
+  if (copy)
+    free (copy);
 }
 
 /* Honour LD_HWCAP_MASK.  */
@@ -1127,7 +1200,7 @@ main (int argc, char **argv)
 
   if (!opt_only_cline)
     {
-      parse_conf (config_file);
+      parse_conf (config_file, true);
 
       /* Always add the standard search paths.  */
       add_system_dir (SLIBDIR);

@@ -1,3 +1,11 @@
+2004-03-18  Roland McGrath  <roland@redhat.com>
+
+	* elf/ldconfig.c (parse_conf_include): New function.
+	(parse_conf): Call it to parse lines starting with "include".
+	Remaining words are glob patterns for more config files to read.
+	Take additional bool argument to disable opt_chroot processing.
+	(main): Update caller.
+
 2004-03-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/ioperm.c (_iopl): Match EPERM error

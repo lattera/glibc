@@ -1,3 +1,8 @@
+2004-03-17  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/timer_create.c (timer_create): Pass missing
+	first argument to clock_getres so we ever enable kernel timers.
+
 2004-03-15  Ulrich Weigand  <uweigand@de.ibm.com>
 
 	* init.c (nptl_version): Add __attribute_used__ to nptl_version.
