@@ -436,49 +436,50 @@ ptmalloc_init __MALLOC_P((void))
 #ifdef _LIBC
   secure = __libc_enable_secure;
   s = NULL;
-  {
-    char **runp = _environ;
-    char *envline;
+  if (__builtin_expect (_environ != NULL, 1))
+    {
+      char **runp = _environ;
+      char *envline;
 
-    while (__builtin_expect ((envline = next_env_entry (&runp)) != NULL,
-			     0))
-      {
-	size_t len = strcspn (envline, "=");
+      while (__builtin_expect ((envline = next_env_entry (&runp)) != NULL,
+			       0))
+	{
+	  size_t len = strcspn (envline, "=");
 
-	if (envline[len] != '=')
-	  /* This is a "MALLOC_" variable at the end of the string
-	     without a '=' character.  Ignore it since otherwise we
-	     will access invalid memory below.  */
-	  continue;
+	  if (envline[len] != '=')
+	    /* This is a "MALLOC_" variable at the end of the string
+	       without a '=' character.  Ignore it since otherwise we
+	       will access invalid memory below.  */
+	    continue;
 
-	switch (len)
-	  {
-	  case 6:
-	    if (memcmp (envline, "CHECK_", 6) == 0)
-	      s = &envline[7];
-	    break;
-	  case 8:
-	    if (! secure && memcmp (envline, "TOP_PAD_", 8) == 0)
-	      mALLOPt(M_TOP_PAD, atoi(&envline[9]));
-	    break;
-	  case 9:
-	    if (! secure && memcmp (envline, "MMAP_MAX_", 9) == 0)
-	      mALLOPt(M_MMAP_MAX, atoi(&envline[10]));
-	    break;
-	  case 15:
-	    if (! secure)
-	      {
-		if (memcmp (envline, "TRIM_THRESHOLD_", 15) == 0)
-		  mALLOPt(M_TRIM_THRESHOLD, atoi(&envline[16]));
-		else if (memcmp (envline, "MMAP_THRESHOLD_", 15) == 0)
-		  mALLOPt(M_MMAP_THRESHOLD, atoi(&envline[16]));
-	      }
-	    break;
-	  default:
-	    break;
-	  }
-      }
-  }
+	  switch (len)
+	    {
+	    case 6:
+	      if (memcmp (envline, "CHECK_", 6) == 0)
+		s = &envline[7];
+	      break;
+	    case 8:
+	      if (! secure && memcmp (envline, "TOP_PAD_", 8) == 0)
+		mALLOPt(M_TOP_PAD, atoi(&envline[9]));
+	      break;
+	    case 9:
+	      if (! secure && memcmp (envline, "MMAP_MAX_", 9) == 0)
+		mALLOPt(M_MMAP_MAX, atoi(&envline[10]));
+	      break;
+	    case 15:
+	      if (! secure)
+		{
+		  if (memcmp (envline, "TRIM_THRESHOLD_", 15) == 0)
+		    mALLOPt(M_TRIM_THRESHOLD, atoi(&envline[16]));
+		  else if (memcmp (envline, "MMAP_THRESHOLD_", 15) == 0)
+		    mALLOPt(M_MMAP_THRESHOLD, atoi(&envline[16]));
+		}
+	      break;
+	    default:
+	      break;
+	    }
+	}
+    }
 #else
   if (! secure)
     {
