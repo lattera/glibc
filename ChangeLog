@@ -1,5 +1,8 @@
 2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
 
+	* sysdeps/mips/fpu/bits/mathdef.h: New.
+	(__NO_LONG_DOUBLE_MATH): Define for o32.
+
 	* sysdeps/mips/sys/asm.h: Formatting changes.
 	(PTR, PTRSIZE, PTRLOG): Adjust for all 3 ABIs.
 	(CPADD): Define for all of them.
