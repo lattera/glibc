@@ -1,1 +1,3 @@
-include $(+sysdep_dir)/unix/bsd/hp9k3bsd/Makefile
+ifeq ($(subdir),signal)
+sysdep_routines := $(sysdep_routines) sigtramp
+endif

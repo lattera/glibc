@@ -73,29 +73,12 @@ static void
 DEFUN(trampoline, (sig, code, context, addr),
       int sig AND int code AND struct sigcontext *context AND PTR addr)
 {
-  register int a0 asm("%a0");
-  register int a1 asm("%a1");
-  register int d0 asm("%d0");
-  register int d1 asm("%d1");
-
-  int savea[2], saved[2];
-
-  double fpsave[16];
-  int fsr;
-  int savefpu;
+  int save[4];
 
   /* Save the call-clobbered registers.  */
-  savea[0] = a0;
-  savea[1] = a1;
-  saved[0] = d0;
-  saved[1] = d1;
+  asm volatile ("movem%.l d0-d1/a0-a1, %0" : : "m" (save[0]));
 
-#if 0
-  /* Save the FPU regs if the FPU enable bit is set in the PSR,
-     and the signal isn't an FP exception.  */
-  savefpu = (context->sc_psr & 0x1000) && sig != SIGFPE;
-  if (savefpu)
-#endif
+  /* XXX should save/restore FP regs */
 
   /* Call the user's handler.  */
   (*((void EXFUN((*), (int sig, int code, struct sigcontext *context,
@@ -103,15 +86,10 @@ DEFUN(trampoline, (sig, code, context, addr),
     (sig, code, context, addr);
 
   /* Restore the call-clobbered registers.  */
-  a0 = savea[0];
-  a1 = savea[1];
-  d0 = saved[0];
-  d1 = saved[1];
+  asm volatile ("movem%.l %0, d0-d1/a0-a1" : : "g" (save[0]) :
+		"d0", "d1", "a0", "a1");
 
-#if 0
-  if (savefpu)
-    ;
-#endif
+  __sigreturn (context);
 }
 
 #endif
