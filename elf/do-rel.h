@@ -30,6 +30,12 @@
 # define RELCOUNT_IDX			VERSYMIDX (DT_RELCOUNT)
 #endif
 
+#ifndef DO_ELF_MACHINE_REL_RELATIVE
+# define DO_ELF_MACHINE_REL_RELATIVE(map, l_addr, relative) \
+  elf_machine_rel_relative (l_addr, relative,				      \
+			    (void *) (l_addr + relative->r_offset))
+#endif
+
 #ifndef VERSYMIDX
 # define VERSYMIDX(sym)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (sym))
 #endif
@@ -96,8 +102,7 @@ elf_dynamic_do_rel (struct link_map *map,
 # endif
 #endif
 	  for (; relative < r; ++relative)
-	    elf_machine_rel_relative (l_addr, relative,
-				      (void *) (l_addr + relative->r_offset));
+	    DO_ELF_MACHINE_REL_RELATIVE (map, l_addr, relative);
 
 #ifdef RTLD_BOOTSTRAP
       /* The dynamic linker always uses versioning.  */
@@ -130,4 +135,5 @@ elf_dynamic_do_rel (struct link_map *map,
 #undef Rel
 #undef elf_machine_rel
 #undef elf_machine_rel_relative
+#undef DO_ELF_MACHINE_REL_RELATIVE
 #undef RELCOUNT_IDX
