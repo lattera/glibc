@@ -70,7 +70,7 @@ pthread_getattr_np (thread_id, attr)
     {
       /* No stack information available.  This must be for the initial
 	 thread.  Get the info in some magical way.  */
-      assert (thread->pid == thread->tid);
+      assert (abs (thread->pid) == thread->tid);
 
       /* Defined in ld.so.  */
       extern void *__libc_stack_end;

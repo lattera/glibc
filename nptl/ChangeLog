@@ -2,6 +2,15 @@
 
 	* sysdeps/unix/sysv/linux/Makefile (CFLAGS-getpid.c): Define.
 	* sysdeps/unix/sysv/linux/getpid.c: New file.
+	* pthread_cancel.c: Add comment explaining use of PID field.
+	* sysdeps/unix/sysv/linux/pthread_kill.c: Likewise.
+	* pthread_getattr_np.c: Use abs() when comparing PID and TID fields.
+	* sysdeps/unix/sysv/linux/fork.c: Negate PID field of parent
+	temporarily to signal the field must not be relied on and updated
+	by getpid().
+	* sysdeps/unix/sysv/linux/pt-raise.c: Handle case where PID is
+	temporarily negative.
+	* sysdeps/unix/sysv/linux/raise.c: Likewise.
 
 2003-12-19  Ulrich Drepper  <drepper@redhat.com>
 

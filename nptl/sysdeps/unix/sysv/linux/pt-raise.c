@@ -28,13 +28,22 @@ int
 raise (sig)
      int sig;
 {
+#if __ASSUME_TGKILL || defined __NR_tgkill
+  /* raise is an async-safe function.  It could be called while the
+     fork function temporarily invalidated the PID field.  Adjust for
+     that.  */
+  pid_t pid = THREAD_GETMEM (THREAD_SELF, pid);
+  if (__builtin_expect (pid < 0, 0))
+    pid = -pid;
+#endif
+
 #if __ASSUME_TGKILL
-  return INLINE_SYSCALL (tgkill, 3, THREAD_GETMEM (THREAD_SELF, pid),
-			 THREAD_GETMEM (THREAD_SELF, tid), sig);
+  return INLINE_SYSCALL (tgkill, 3, pid, THREAD_GETMEM (THREAD_SELF, tid),
+			 sig);
 #else
 # ifdef __NR_tgkill
-  int res = INLINE_SYSCALL (tgkill, 3, THREAD_GETMEM (THREAD_SELF, pid),
-			    THREAD_GETMEM (THREAD_SELF, tid), sig);
+  int res = INLINE_SYSCALL (tgkill, 3, pid, THREAD_GETMEM (THREAD_SELF, tid),
+			    sig);
   if (res != -1 || errno != ENOSYS)
     return res;
 # endif

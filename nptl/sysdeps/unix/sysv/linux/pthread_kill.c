@@ -44,6 +44,11 @@ __pthread_kill (threadid, signo)
   /* We have a special syscall to do the work.  */
   INTERNAL_SYSCALL_DECL (err);
 
+  /* One comment: The PID field in the TCB can temporarily be changed
+     (in fork).  But this must not affect this code here.  Since this
+     function would have to be called while the thread is executing
+     fork, it would have to happen in a signal handler.  But this is
+     no allowed, pthread_kill is not guaranteed to be async-safe.  */
   int val;
 #if __ASSUME_TGKILL
   val = INTERNAL_SYSCALL (tgkill, err, 3, THREAD_GETMEM (THREAD_SELF, pid),

@@ -1,3 +1,7 @@
+2003-12-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (dl_main): Optimize order or subexpressions in if().
+
 2003-12-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/printf_fp.c: Add support to use alternative decimal

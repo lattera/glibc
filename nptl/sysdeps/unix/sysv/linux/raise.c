@@ -29,6 +29,9 @@ raise (sig)
      int sig;
 {
   struct pthread *pd = THREAD_SELF;
+#if __ASSUME_TGKILL || defined __NR_tgkill
+  pid_t pid = THREAD_GETMEM (pd, pid);
+#endif
   pid_t selftid = THREAD_GETMEM (pd, tid);
   if (selftid == 0)
     {
@@ -41,15 +44,24 @@ raise (sig)
 #endif
       THREAD_SETMEM (pd, tid, selftid);
 
-      /* In this case the TID and PID are the same.  */
-      THREAD_SETMEM (pd, pid, selftid);
+      /* We do not set the PID field in the TID here since we might be
+	 called from a signal handler while the thread executes fork.  */
+      pid = selftid;
     }
+#if __ASSUME_TGKILL || defined __NR_tgkill
+  else
+    /* raise is an async-safe function.  It could be called while the
+       fork function temporarily invalidated the PID field.  Adjust for
+       that.  */
+    if (__builtin_expect (pid < 0, 0))
+      pid = -pid;
+#endif
 
 #if __ASSUME_TGKILL
-  return INLINE_SYSCALL (tgkill, 3, THREAD_GETMEM (pd, pid), selftid, sig);
+  return INLINE_SYSCALL (tgkill, 3, pid, selftid, sig);
 #else
 # ifdef __NR_tgkill
-  int res = INLINE_SYSCALL (tgkill, 3, THREAD_GETMEM (pd, pid), selftid, sig);
+  int res = INLINE_SYSCALL (tgkill, 3, pid, selftid, sig);
   if (res != -1 || errno != ENOSYS)
     return res;
 # endif

@@ -22,21 +22,31 @@
 #include <sysdep.h>
 
 
+#ifndef NOT_IN_libc
+static pid_t really_getpid (pid_t oldval);
+#endif
+
+
 pid_t
 __getpid (void)
 {
-  pid_t result;
 #ifndef NOT_IN_libc
-  result = THREAD_GETMEM (THREAD_SELF, pid);
-  if (__builtin_expect (result == 0, 0))
+  pid_t result = THREAD_GETMEM (THREAD_SELF, pid);
+  if (__builtin_expect (result <= 0, 0))
+    result = really_getpid (result);
+  return result;
+}
+
+static pid_t
+really_getpid (pid_t oldval)
+{
 #endif
-    {
-      INTERNAL_SYSCALL_DECL (err);
-      result = INTERNAL_SYSCALL (getpid, err, 0);
+  INTERNAL_SYSCALL_DECL (err);
+  pid_t result = INTERNAL_SYSCALL (getpid, err, 0);
 #ifndef NOT_IN_libc
-      THREAD_SETMEM (THREAD_SELF, pid, result);
+  if (oldval == 0)
+    THREAD_SETMEM (THREAD_SELF, pid, result);
 #endif
-    }
   return result;
 }
 libc_hidden_def (__getpid)

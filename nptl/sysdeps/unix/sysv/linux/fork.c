@@ -117,6 +117,12 @@ __libc_fork (void)
   pid_t ppid = THREAD_GETMEM (THREAD_SELF, tid);
 #endif
 
+  /* We need to prevent the getpid() code to update the PID field so
+     that, if a signal arrives in the child very early and the signal
+     handler uses getpid(), the value returned is correct.  */
+  pid_t parentpid = THREAD_GETMEM (THREAD_SELF, pid);
+  THREAD_SETMEM (THREAD_SELF, pid, -parentpid);
+
 #ifdef ARCH_FORK
   pid = ARCH_FORK ();
 #else
@@ -135,7 +141,7 @@ __libc_fork (void)
 	*__fork_generation_pointer += 4;
 
       /* Adjust the PID field for the new process.  */
-      self->pid = self->tid;
+      THREAD_SETMEM (self, pid, THREAD_GETMEM (self, tid));
 
 #if HP_TIMING_AVAIL
       /* The CPU clock of the thread and process have to be set to zero.  */
@@ -179,6 +185,9 @@ __libc_fork (void)
   else
     {
       assert (THREAD_GETMEM (THREAD_SELF, tid) == ppid);
+
+      /* Restore the PID value.  */
+      THREAD_SETMEM (THREAD_SELF, pid, parentpid);
 
       /* We execute this even if the 'fork' call failed.  */
       _IO_list_unlock ();
