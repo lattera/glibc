@@ -1,5 +1,12 @@
 2000-02-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/wordexp.c: Use we_offs everywhere if WRDE_DOOFS.  Expand ~
+	correctly.  Detect syntax errors in command substitutions.  Delete
+	trailing newlines correctly.  Don't split fields in command
+	substitution situations.  Restore old structure in case of an
+	error.  Handle WRDE_APPEND correctly.
+	Patch by Geoff Clare <gwc@unisoft.com>.
+
 	* locale/programs/ld-ctype.c (allocate_arrays): Make sure the end
 	of width table is 4-byte aligned.
 	(ctype_output): Write out the entire width array.

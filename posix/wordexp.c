@@ -174,8 +174,8 @@ w_addword (wordexp_t *pwordexp, char *word)
   if (new_wordv != NULL)
     {
       pwordexp->we_wordv = new_wordv;
-      pwordexp->we_wordv[pwordexp->we_wordc++] = word;
-      pwordexp->we_wordv[pwordexp->we_wordc] = NULL;
+      pwordexp->we_wordv[pwordexp->we_offs + pwordexp->we_wordc++] = word;
+      pwordexp->we_wordv[pwordexp->we_offs + pwordexp->we_wordc] = NULL;
       return 0;
     }
 
@@ -299,35 +299,51 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
       uid_t uid;
       struct passwd pwd, *tpwd;
       int buflen = 1000;
-      char* buffer = __alloca (buflen);
+      char* home;
+      char* buffer;
       int result;
 
-      uid = __getuid ();
+      /* POSIX.2 says ~ expands to $HOME and if HOME is unset the
+	 results are unspecified.  We do a lookup on the uid if
+	 HOME is unset. */
 
-      while ((result = __getpwuid_r (uid, &pwd, buffer, buflen, &tpwd)) != 0
-	     && errno == ERANGE)
+      home = getenv ("HOME");
+      if (home != NULL)
 	{
-	  buflen += 1000;
-	  buffer = __alloca (buflen);
-	}
-
-      if (result == 0 && tpwd != NULL && pwd.pw_dir != NULL)
-	{
-	  *word = w_addstr (*word, word_length, max_length, pwd.pw_dir);
+	  *word = w_addstr (*word, word_length, max_length, home);
 	  if (*word == NULL)
 	    return WRDE_NOSPACE;
 	}
       else
 	{
-	  *word = w_addchar (*word, word_length, max_length, '~');
-	  if (*word == NULL)
-	    return WRDE_NOSPACE;
+	  uid = __getuid ();
+	  buffer = __alloca (buflen);
+
+	  while ((result = __getpwuid_r (uid, &pwd, buffer, buflen, &tpwd)) != 0
+		 && errno == ERANGE)
+	    {
+	      buflen += 1000;
+	      buffer = __alloca (buflen);
+	    }
+
+	  if (result == 0 && tpwd != NULL && pwd.pw_dir != NULL)
+	    {
+	      *word = w_addstr (*word, word_length, max_length, pwd.pw_dir);
+	      if (*word == NULL)
+		return WRDE_NOSPACE;
+	    }
+	  else
+	    {
+	      *word = w_addchar (*word, word_length, max_length, '~');
+	      if (*word == NULL)
+		return WRDE_NOSPACE;
+	    }
 	}
     }
   else
     {
       /* Look up user name in database to get home directory */
-      char *user = __strndup (&words[1 + *offset], i - *offset);
+      char *user = __strndup (&words[1 + *offset], i - (1 + *offset));
       struct passwd pwd, *tpwd;
       int buflen = 1000;
       char* buffer = __alloca (buflen);
@@ -806,6 +822,44 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
   return WRDE_SYNTAX;
 }
 
+/* Function called by child process in exec_comm() */
+static void
+internal_function
+exec_comm_child (char *comm, int *fildes, int showerr, int noexec)
+{
+  const char *args[4] = { _PATH_BSHELL, "-c", comm, NULL };
+
+  /* Execute the command, or just check syntax? */
+  if (noexec)
+    args[1] = "-nc";
+
+  /* Redirect output.  */
+  __dup2 (fildes[1], 1);
+  __close (fildes[1]);
+
+  /* Redirect stderr to /dev/null if we have to.  */
+  if (showerr == 0)
+    {
+      int fd;
+      __close (2);
+      fd = __open (_PATH_DEVNULL, O_WRONLY);
+      if (fd >= 0 && fd != 2)
+	{
+	  __dup2 (fd, 2);
+	  __close (fd);
+	}
+    }
+
+  /* Make sure the subshell doesn't field-split on our behalf. */
+  unsetenv ("IFS");
+
+  __close (fildes[0]);
+  __execve (_PATH_BSHELL, (char *const *) args, __environ);
+
+  /* Bad.  What now?  */
+  abort ();
+}
+
 /* Function to execute a command and retrieve the results */
 /* pwordexp contains NULL if field-splitting is forbidden */
 static int
@@ -818,6 +872,8 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
   int bufsize = 128;
   int buflen;
   int i;
+  int status = 0;
+  size_t maxnewlines = 0;
   char *buffer;
   pid_t pid;
 
@@ -838,36 +894,7 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
     }
 
   if (pid == 0)
-    {
-      /* Child */
-      const char *args[4] = { _PATH_BSHELL, "-c", comm, NULL };
-
-      /* Redirect output.  */
-      __dup2 (fildes[1], 1);
-      __close (fildes[1]);
-
-      /* Redirect stderr to /dev/null if we have to.  */
-      if ((flags & WRDE_SHOWERR) == 0)
-	{
-	  int fd;
-	  __close (2);
-	  fd = __open (_PATH_DEVNULL, O_WRONLY);
-	  if (fd >= 0 && fd != 2)
-	    {
-	      __dup2 (fd, 2);
-	      __close (fd);
-	    }
-	}
-
-      /* Make sure the subshell doesn't field-split on our behalf. */
-      unsetenv ("IFS");
-
-      __close (fildes[0]);
-      __execve (_PATH_BSHELL, (char *const *) args, __environ);
-
-      /* Bad.  What now?  */
-      abort ();
-    }
+    exec_comm_child(comm, fildes, (flags & WRDE_SHOWERR), 0);
 
   /* Parent */
 
@@ -875,17 +902,19 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
   buffer = __alloca (bufsize);
 
   if (!pwordexp)
-    { /* Quoted - no field splitting */
-
+    /* Quoted - no field splitting */
+    {
       while (1)
 	{
 	  if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
 	    {
-	      if (__waitpid (pid, NULL, WNOHANG) == 0)
+	      if (__waitpid (pid, &status, WNOHANG) == 0)
 		continue;
 	      if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
 		break;
 	    }
+
+	  maxnewlines += buflen;
 
 	  *word = w_addmem (*word, word_length, max_length, buffer, buflen);
 	  if (*word == NULL)
@@ -900,15 +929,16 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
        *  0 when searching for first character in a field not IFS white space
        *  1 when copying the text of a field
        *  2 when searching for possible non-whitespace IFS
+       *  3 when searching for non-newline after copying field
        */
 
       while (1)
 	{
 	  if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
 	    {
-	      if (__waitpid (pid, NULL, WNOHANG) == 0)
+	      if (__waitpid (pid, &status, WNOHANG) == 0)
 		continue;
-	      if ((__read (fildes[0], buffer, bufsize)) < 1)
+	      if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
 		break;
 	    }
 
@@ -938,28 +968,63 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 		    }
 		  else
 		    {
-		      /* Current character is IFS white space */
+		      if (buffer[i] == '\n')
+			{
+			  /* Current character is (IFS) newline */
 
-		      /* If not copying a field, ignore it */
-		      if (copying != 1)
-			continue;
+			  /* If copying a field, this is the end of it,
+			     but maybe all that's left is trailing newlines.
+			     So start searching for a non-newline. */
+			  if (copying == 1)
+			    copying = 3;
 
-		      /* End of field (search for non-ws IFS afterwards) */
-		      copying = 2;
+			  continue;
+			}
+		      else
+			{
+			  /* Current character is IFS white space, but
+			     not a newline */
+
+			  /* If not either copying a field or searching
+			     for non-newline after a field, ignore it */
+			  if (copying != 1 && copying != 3)
+			    continue;
+
+			  /* End of field (search for non-ws IFS afterwards) */
+			  copying = 2;
+			}
 		    }
 
-		  /* First IFS white space, or IFS non-whitespace.
+		  /* First IFS white space (non-newline), or IFS non-whitespace.
 		   * Delimit the field.  Nulls are converted by w_addword. */
 		  if (w_addword (pwordexp, *word) == WRDE_NOSPACE)
 		    goto no_space;
 
 		  *word = w_newword (word_length, max_length);
+
+		  maxnewlines = 0;
 		  /* fall back round the loop.. */
 		}
 	      else
 		{
 		  /* Not IFS character */
+
+		  if (copying == 3)
+		    {
+		      /* Nothing but (IFS) newlines since the last field,
+		         so delimit it here before starting new word */
+		      if (w_addword (pwordexp, *word) == WRDE_NOSPACE)
+			goto no_space;
+
+		      *word = w_newword (word_length, max_length);
+		    }
+
 		  copying = 1;
+
+		  if (buffer[i] == '\n') /* happens if newline not in IFS */
+		    maxnewlines++;
+		  else
+		    maxnewlines = 0;
 
 		  *word = w_addchar (*word, word_length, max_length,
 				     buffer[i]);
@@ -970,8 +1035,11 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 	}
     }
 
-  /* Bash chops off trailing newlines, which seems sensible.  */
-  while (*word_length > 0 && (*word)[*word_length - 1] == '\n')
+  /* Chop off trailing newlines (required by POSIX.2)  */
+  /* Ensure we don't go back further than the beginning of the
+     substitution (i.e. remove maxnewlines bytes at most) */
+  while (maxnewlines-- != 0 &&
+         *word_length > 0 && (*word)[*word_length - 1] == '\n')
     {
       (*word)[--*word_length] = '\0';
 
@@ -986,6 +1054,26 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
     }
 
   __close (fildes[0]);
+
+  /* Check for syntax error (re-execute but with "-n" flag) */
+  if (buflen < 1 && status != 0)
+    {
+      if ((pid = __fork ()) < 0)
+	{
+	  /* Bad */
+	  return WRDE_NOSPACE;
+	}
+
+      if (pid == 0)
+	{
+          fildes[0] = fildes[1] = -1;
+	  exec_comm_child(comm, fildes, 0, 1);
+	}
+      
+      if (__waitpid (pid, &status, 0) == pid && status != 0)
+	return WRDE_SYNTAX;
+    }
+
   return 0;
 
 no_space:
@@ -2109,7 +2197,6 @@ wordfree (wordexp_t *pwordexp)
 int
 wordexp (const char *words, wordexp_t *pwordexp, int flags)
 {
-  size_t wordv_offset;
   size_t words_offset;
   size_t word_length;
   size_t max_length;
@@ -2117,41 +2204,40 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
   int error;
   char *ifs;
   char ifs_white[4];
-  char **old_wordv = pwordexp->we_wordv;
-  size_t old_wordc = (flags & WRDE_REUSE) ? pwordexp->we_wordc : 0;
+  wordexp_t old_word = *pwordexp;
 
   if (flags & WRDE_REUSE)
     {
       /* Minimal implementation of WRDE_REUSE for now */
       wordfree (pwordexp);
-      old_wordv = NULL;
-    }
-
-  if (flags & WRDE_DOOFFS)
-    {
-      pwordexp->we_wordv = calloc (1 + pwordexp->we_offs, sizeof (char *));
-      if (pwordexp->we_wordv == NULL)
-	{
-	  error = WRDE_NOSPACE;
-	  goto do_error;
-	}
-    }
-  else
-    {
-      pwordexp->we_wordv = calloc (1, sizeof (char *));
-      if (pwordexp->we_wordv == NULL)
-	{
-	  error = WRDE_NOSPACE;
-	  goto do_error;
-	}
-
-      pwordexp->we_offs = 0;
+      old_word.we_wordv = NULL;
     }
 
   if ((flags & WRDE_APPEND) == 0)
-    pwordexp->we_wordc = 0;
+    {
+      pwordexp->we_wordc = 0;
 
-  wordv_offset = pwordexp->we_offs + pwordexp->we_wordc;
+      if (flags & WRDE_DOOFFS)
+	{
+	  pwordexp->we_wordv = calloc (1 + pwordexp->we_offs, sizeof (char *));
+	  if (pwordexp->we_wordv == NULL)
+	    {
+	      error = WRDE_NOSPACE;
+	      goto do_error;
+	    }
+	}
+      else
+	{
+	  pwordexp->we_wordv = calloc (1, sizeof (char *));
+	  if (pwordexp->we_wordv == NULL)
+	    {
+	      error = WRDE_NOSPACE;
+	      goto do_error;
+	    }
+
+	  pwordexp->we_offs = 0;
+	}
+    }
 
   /* Find out what the field separators are.
    * There are two types: whitespace and non-whitespace.
@@ -2333,7 +2419,7 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 do_error:
   /* Error:
    *	free memory used (unless error is WRDE_NOSPACE), and
-   *	set we_wordc and wd_wordv back to what they were.
+   *	set pwordexp members back to what they were.
    */
 
   if (word != NULL)
@@ -2342,8 +2428,9 @@ do_error:
   if (error == WRDE_NOSPACE)
     return WRDE_NOSPACE;
 
-  wordfree (pwordexp);
-  pwordexp->we_wordv = old_wordv;
-  pwordexp->we_wordc = old_wordc;
+  if ((flags & WRDE_APPEND) == 0)
+    wordfree (pwordexp);
+
+  *pwordexp = old_word;
   return error;
 }
