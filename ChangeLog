@@ -1,3 +1,8 @@
+2003-11-25  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h (sqrt): Don't inline
+	sqrt for gcc 3.3 and above.
+
 2003-11-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/runptests.c (main): Make errors fatal.

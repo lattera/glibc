@@ -438,8 +438,10 @@ __inline_mathcodeNP2 (fmod, __x, __y, \
 
 
 #ifdef __FAST_MATH__
+# if !__GNUC_PREREQ (3,3)
 __inline_mathopNP (sqrt, "fsqrt")
 __inline_mathopNP_ (long double, __sqrtl, "fsqrt")
+# endif
 #endif
 
 #if __GNUC_PREREQ (2, 8)
