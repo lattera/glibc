@@ -17,6 +17,9 @@ libc {
     # a*
     alphasort64;
 
+    # g*
+    glob64;
+
     # New rlimit interface
     getrlimit; setrlimit; getrlimit64;
 
