@@ -791,6 +791,10 @@ libc_freeres_fn (free_mem)
      as ctype cleanup functions dereference steps arrays which we free below.  */
   _nl_locale_subfreeres ();
 
+  /* finddomain.c has similar problem.  */
+  extern void _nl_finddomain_subfreeres (void) attribute_hidden;
+  _nl_finddomain_subfreeres ();
+
   if (__gconv_alias_db != NULL)
     __tdestroy (__gconv_alias_db, free);
 

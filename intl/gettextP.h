@@ -1,5 +1,5 @@
 /* Header describing internals of libintl library.
-   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -173,8 +173,6 @@ struct loaded_l10nfile *_nl_find_domain PARAMS ((const char *__dirname,
 void _nl_load_domain PARAMS ((struct loaded_l10nfile *__domain,
 			      struct binding *__domainbinding))
      internal_function;
-void _nl_unload_domain PARAMS ((struct loaded_domain *__domain))
-     internal_function;
 const char *_nl_init_domain_conv PARAMS ((struct loaded_l10nfile *__domain_file,
 					  struct loaded_domain *__domain,
 					  struct binding *__domainbinding))
@@ -210,6 +208,9 @@ extern char *__bindtextdomain PARAMS ((const char *__domainname,
 				       const char *__dirname));
 extern char *__bind_textdomain_codeset PARAMS ((const char *__domainname,
 						const char *__codeset));
+extern void _nl_finddomain_subfreeres PARAMS ((void)) attribute_hidden;
+extern void _nl_unload_domain PARAMS ((struct loaded_domain *__domain))
+     internal_function attribute_hidden;
 #else
 extern char *libintl_gettext PARAMS ((const char *__msgid));
 extern char *libintl_dgettext PARAMS ((const char *__domainname,

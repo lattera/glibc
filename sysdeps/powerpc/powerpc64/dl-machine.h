@@ -384,7 +384,7 @@ DL_STARTING_UP_DEF							\
 
 /* Set up the loaded object described by MAP so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
-static inline int
+static inline int __attribute__ ((always_inline))
 elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 {
   if (map->l_info[DT_JMPREL])
@@ -481,7 +481,7 @@ elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 
 /* Change the PLT entry whose reloc is 'reloc' to call the actual
    routine.  */
-static inline Elf64_Addr
+static inline Elf64_Addr __attribute__ ((always_inline))
 elf_machine_fixup_plt (struct link_map *map, lookup_t sym_map,
 		       const Elf64_Rela *reloc,
 		       Elf64_Addr *reloc_addr, Elf64_Addr finaladdr)
@@ -523,7 +523,7 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t sym_map,
   return finaladdr;
 }
 
-static inline void
+static inline void __attribute__ ((always_inline))
 elf_machine_plt_conflict (Elf64_Addr *reloc_addr, Elf64_Addr finaladdr)
 {
   Elf64_FuncDesc *plt = (Elf64_FuncDesc *) reloc_addr;

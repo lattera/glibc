@@ -90,7 +90,7 @@ jisx0213_added_in_2004_p (uint16_t val)
     case 0x2f:
       return val == 0x2f7e;
     case 0x4f:
-      return val == 0x4f54 || 0x4f7e;
+      return val == 0x4f54 || val == 0x4f7e;
     case 0x74:
       return val == 0x7427;
     case 0x7e:

@@ -1,3 +1,30 @@
+2004-08-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/jisx0213.h (jisx0213_added_in_2004_p): Fix typo.
+	Reported by Paolo Bonzini.
+
+2004-08-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/dl-machine.h (elf_machine_fixup_plt): Add
+	always_inline.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_runtime_setup,
+	elf_machine_fixup_plt, elf_machine_plt_conflict): Likewise.
+
+	* sysdeps/unix/sysv/linux/netatalk/at.h: Include bits/sockaddr.h
+	before including linux/atalk.h.
+
+	* resolv/res_libc.c: Include atomic.h.
+
+	* intl/finddomain.c (free_mem): Rename to...
+	(_nl_finddomain_subfreeres): ... this.  Add
+	__libc_freeres_fn_section.
+	* intl/loadmsgcat.c (_nl_unload_domain): Add
+	__libc_freeres_fn_section.
+	* intl/gettextP.h (_nl_unload_domain): Move into #ifdef _LIBC.
+	Add attribute_hidden.
+	(_nl_findomain_subfreeres): New prototype.
+	* iconv/gconv_db.c (free_mem): Call _nl_findomain_subfreeres.
+
 2004-07-30  Guido Guenther  <agx@sigxcpu.org>
 
 	* nss/getent.c (passwd_keys): Use strtoul instead of isdigit to

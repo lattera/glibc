@@ -15,6 +15,7 @@
  * SOFTWARE.
  */
 
+#include <atomic.h>
 #include <limits.h>
 #include <sys/types.h>
 #include <netinet/in.h>

@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1995, 1996, 1997, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +21,7 @@
 #define _NETATALK_AT_H 1
 
 #include <asm/types.h>
+#include <bits/sockaddr.h>
 #include <linux/atalk.h>
 #include <sys/socket.h>
 

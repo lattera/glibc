@@ -460,7 +460,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 #define elf_machine_profile_plt(reloc_addr) ((Elf64_Addr) (reloc_addr))
 
 /* Fixup a PLT entry to bounce directly to the function at VALUE.  */
-static inline Elf64_Addr
+static inline Elf64_Addr __attribute__ ((always_inline))
 elf_machine_fixup_plt (struct link_map *l, lookup_t t,
 		       const Elf64_Rela *reloc,
 		       Elf64_Addr *reloc_addr, Elf64_Addr value)

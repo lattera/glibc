@@ -1,5 +1,6 @@
 /* Handle list of needed message catalogs
-   Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001, 2002, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -168,7 +169,10 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
 
 
 #ifdef _LIBC
-libc_freeres_fn (free_mem)
+/* This is called from iconv/gconv_db.c's free_mem, as locales must
+   be freed before freeing gconv steps arrays.  */
+void __libc_freeres_fn_section
+_nl_finddomain_subfreeres ()
 {
   struct loaded_l10nfile *runp = _nl_loaded_domains;
 

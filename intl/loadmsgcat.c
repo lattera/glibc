@@ -1387,7 +1387,7 @@ _nl_load_domain (domain_file, domainbinding)
 
 #ifdef _LIBC
 void
-internal_function
+internal_function __libc_freeres_fn_section
 _nl_unload_domain (domain)
      struct loaded_domain *domain;
 {
