@@ -1,5 +1,8 @@
 divrem.h
-divl.S divq.S reml.S remq.S
+divl.S
+divq.S
+reml.S
+remq.S
 _mcount.S
 stxcpy.S
 stxncpy.S
