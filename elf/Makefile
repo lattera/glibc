@@ -70,9 +70,7 @@ $(objpfx)dl-allobjs.so: $(rtld-routines:%=$(objpfx)%.so)
 # Link together the dynamic linker into a single relocatable object.
 # We use this to produce both the ABI-compliant and Linux-compatible
 # dynamic linker shared objects below.
-$(objpfx)librtld.so: $(objpfx)dl-allobjs.so \
-		     $(patsubst %,$(common-objpfx)lib%_pic.a,\
-				c $(LDLIBS-c.so:-l%=%))
+$(objpfx)librtld.so: $(objpfx)dl-allobjs.so $(common-objpfx)libc_pic.a
 	$(reloc-link) '-Wl,-(' $^ -lgcc '-Wl,-)'
 
 $(objpfx)ld.so: $(objpfx)librtld.so

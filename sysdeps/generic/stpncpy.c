@@ -24,14 +24,12 @@ Cambridge, MA 02139, USA.  */
 
 
 /* Copy no more than N characters of SRC to DEST, returning the address of
-   the last character written into DEST.  */
+   the terminating '\0' in DEST, if any, or else DEST + N.  */
 char *
 DEFUN(__stpncpy, (dest, src, n), char *dest AND CONST char *src AND size_t n)
 {
   reg_char c;
   char *s = dest;
-
-  --dest;
 
   if (n >= 4)
     {
@@ -40,27 +38,27 @@ DEFUN(__stpncpy, (dest, src, n), char *dest AND CONST char *src AND size_t n)
       for (;;)
 	{
 	  c = *src++;
-	  *++dest = c;
+	  *dest++ = c;
 	  if (c == '\0')
 	    break;
 	  c = *src++;
-	  *++dest = c;
+	  *dest++ = c;
 	  if (c == '\0')
 	    break;
 	  c = *src++;
-	  *++dest = c;
+	  *dest++ = c;
 	  if (c == '\0')
 	    break;
 	  c = *src++;
-	  *++dest = c;
+	  *dest++ = c;
 	  if (c == '\0')
 	    break;
 	  if (--n4 == 0)
 	    goto last_chars;
 	}
-      n = n - (dest - s) - 1;
+      n -= dest - s;
       if (n == 0)
-	return dest;
+	return dest - 1;
       goto zero_fill;
     }
 
@@ -69,20 +67,22 @@ DEFUN(__stpncpy, (dest, src, n), char *dest AND CONST char *src AND size_t n)
   if (n == 0)
     return dest;
 
-  do
+  for (;;)
     {
       c = *src++;
-      *++dest = c;
+      *dest++ = c;
+      if (c == '\0')
+	break;
       if (--n == 0)
 	return dest;
     }
-  while (c != '\0');
+  --n;
 
  zero_fill:
-  while (n-- > 0)
+  while (--n > 0)
     dest[n] = '\0';
 
-  return dest;
+  return dest - 1;
 }
 
 weak_alias (__stpncpy, stpncpy)

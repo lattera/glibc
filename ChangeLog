@@ -1,3 +1,17 @@
+Tue Jul 23 18:13:37 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/Makefile (rpcuserlibs): New variable.
+	($(common-objpfx)libc.so): Move deps into that, use it.
+	[$(subdir) = elf] ($(objpfx)librtld.so): Depend on
+	$(rpcuserlibs:.so=_pic.a).
+	* elf/Makefile ($(objpfx)librtld.so): Just depend on libc_pic.a; don't
+	use $(LDLIBS-c.so).
+
+Thu Jul 18 21:41:25 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/stpncpy.c: Fix semantics to make `stpncpy (d, s,
+ 	n)' equivalent to `strncpy (d, s, n), d += strnlen (d, n)'.
+
 Tue Jul 23 02:49:58 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/iso-4217.def: Add India to comment for symbol "INR ".

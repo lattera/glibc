@@ -104,10 +104,18 @@ endif
 
 # For the shared library, we don't need to do the linker script machination.
 # Instead, we specify the required libraries when building the shared object.
-$(common-objpfx)libc.so: $(firstword $(objdir) $(..)mach)/libmachuser.so \
-			 $(firstword $(objdir) $(..)hurd)/libhurduser.so
+rpcuserlibs := $(firstword $(objdir) $(..)mach)/libmachuser.so \
+	       $(firstword $(objdir) $(..)hurd)/libhurduser.so
+$(common-objpfx)libc.so: $(rpcuserlibs)
 ifndef objpfx
 rpath-link += $(..)mach:$(..)hurd
+endif
+
+# The RPC stubs from these libraries are needed in building the dynamic
+# linker, too.  It must be self-contained, so we link the needed PIC
+# objects directly into the shared object.
+ifeq (elf,$(subdir))
+$(objpfx)librtld.so: $(rpcuserlibs:.so=_pic.a)
 endif
 
 
