@@ -1,5 +1,5 @@
 /* Internal defenitions and declarations for pseudo terminal functions.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -29,6 +29,9 @@
 
 /* Path to the helper program that implements `grantpt' in user space.  */
 #define _PATH_PT_CHOWN LIBEXECDIR "/pt_chown"
+
+/* Test whether given TTY is really a Unix98 pseudo terminal.  */
+/* #define unix98_pseudo_p(Dev) ... */
 
 /* Exit codes for the helper program.  */
 enum  /* failure modes */

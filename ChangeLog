@@ -1,5 +1,12 @@
 1999-08-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* login/pty-private.h: Move to...
+	* sysdeps/generic/pty-private.h: ...here.
+	* sysdeps/unix/sysv/linux/pty-private.h: New file.  Linux specific
+	version.
+	* login/programs/pt_chown.c (do_pt_chown): Use unix98_pseudo_p is
+	available.
+
 	* libio/fileops.c (_IO_new_file_xsputn): Use _IO_OVERFLOW instead
 	of __overflow.
 
