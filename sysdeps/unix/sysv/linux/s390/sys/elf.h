@@ -19,10 +19,8 @@
 #ifndef _SYS_ELF_H
 #define _SYS_ELF_H	1
 
-/*
- * ELF register definitions..
- */
+#warning "This header is obsolete; use <sys/procfs.h> instead."
 
-#include <asm/elf.h>
+#include <sys/procfs.h>
 
 #endif	/* _SYS_ELF_H */
