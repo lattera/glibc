@@ -1,3 +1,7 @@
+2000-04-14  Andreas Jaeger  <aj@suse.de>
+
+	* weaks.c: Fix typo.
+
 2000-04-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/getcpuclockid.c

@@ -32,7 +32,7 @@ versioned_symbol (libpthread, __libc_pthread_attr_init_2_1, pthread_attr_init,
 		  GLIBC_2_1);
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
 weak_alias (__pthread_return_0, __libc_pthread_attr_init_2_0)
-compat_symbol (libpthread, __libc_pthread_attr_init_2_, pthread_attr_init,
+compat_symbol (libpthread, __libc_pthread_attr_init_2_0, pthread_attr_init,
 	       GLIBC_2_0);
 #endif
 weak_alias (__pthread_return_0, pthread_attr_destroy)

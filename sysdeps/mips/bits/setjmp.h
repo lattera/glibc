@@ -1,5 +1,5 @@
 /* Define the machine-dependent type `jmp_buf'.  MIPS version.
-   Copyright (C) 1992, 1993, 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1992,93,95,97,2000 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -23,19 +23,19 @@
 typedef struct
   {
     /* Program counter.  */
-    __ptr_t __pc;
+    void * __pc;
 
     /* Stack pointer.  */
-    __ptr_t __sp;
+    void * __sp;
 
     /* Callee-saved registers s0 through s7.  */
     int __regs[8];
 
     /* The frame pointer.  */
-    __ptr_t __fp;
+    void * __fp;
 
     /* The global pointer.  */
-    __ptr_t __gp;
+    void * __gp;
 
     /* Floating point status register.  */
     int __fpc_csr;
@@ -53,4 +53,4 @@ typedef struct
 /* Test if longjmp to JMPBUF would unwind the frame
    containing a local variable at ADDRESS.  */
 #define _JMPBUF_UNWINDS(jmpbuf, address) \
-  ((__ptr_t) (address) < (jmpbuf)[0].__sp)
+  ((void *) (address) < (jmpbuf)[0].__sp)

@@ -29,6 +29,6 @@ posix_madvise (__ptr_t addr, size_t len, int advice)
   __set_errno (ENOSYS);
   return -1;
 }
-weak_alias (posix_madvice, madvice)
+weak_alias (posix_madvise, madvise)
 stub_warning (madvise)
 #include <stub-tag.h>
