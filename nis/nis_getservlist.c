@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -37,7 +37,7 @@ nis_getservlist (const_nis_name dir)
       nis_server *server;
 
       serv =
-	calloc (1, sizeof (nis_server *) *
+	malloc (sizeof (nis_server *) *
 		(NIS_RES_OBJECT (res)->DI_data.do_servers.do_servers_len + 1));
       if (serv == NULL)
 	return NULL;
@@ -53,10 +53,13 @@ nis_getservlist (const_nis_name dir)
           serv[i]->ep.ep_len = server->ep.ep_len;
           if (serv[i]->ep.ep_len > 0)
             {
-              unsigned long j;
+              unsigned long int j;
 
               serv[i]->ep.ep_val =
 		malloc (server->ep.ep_len * sizeof (endpoint));
+	      if (serv[i]->ep.ep_val == NULL)
+		return NULL;
+
               for (j = 0; j < serv[i]->ep.ep_len; ++j)
                 {
                   if (server->ep.ep_val[j].uaddr)
@@ -92,6 +95,9 @@ nis_getservlist (const_nis_name dir)
           else
             serv[i]->pkey.n_bytes = NULL;
         }
+      serv[i] = NULL;
+
+      nis_freeresult (res);
     }
   else
     {

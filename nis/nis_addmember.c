@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -50,13 +50,25 @@ nis_addmember (const_nis_name member, const_nis_name group)
 	}
       if ((NIS_RES_NUMOBJ (res)  != 1) ||
           (__type_of (NIS_RES_OBJECT (res)) != NIS_GROUP_OBJ))
-        return NIS_INVALIDOBJ;
+	{
+	  nis_freeresult (res);
+	  return NIS_INVALIDOBJ;
+	}
 
       NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val
 	= realloc (NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val,
 		   (NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len + 1)
 		   * sizeof (char *));
+      if (NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val == NULL)
+	goto nomem_out;
       NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val[NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len] = strdup (member);
+      if (NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val[NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len] == NULL)
+	{
+	  free (NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val);
+	nomem_out:
+	  nis_freeresult (res);
+	  return NIS_NOMEMORY;
+	}
       ++NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len;
 
       cp = stpcpy (buf, NIS_RES_OBJECT(res)->zo_name);

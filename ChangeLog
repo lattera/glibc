@@ -1,3 +1,12 @@
+1999-05-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nis_getservlist.c (nis_getservlist): Use malloc instead of
+	calloc.
+
+	* nis/nis_checkpoint.c (nis_checkpoint): Fix memory leaks.
+	* nis/nis_addmember.c (nis_addmember): Fix memory leak.  Test
+	memory allocation results.
+
 1999-05-14  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/generic/getutmp.c: Include <string.h>
