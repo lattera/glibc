@@ -51,9 +51,8 @@ $error:
 	br	gp, 1f
 1:	ldgp	gp, 0(gp)
 #endif
-	lda	pv, __syscall_error
 	lda	sp, 16(sp)
-	jmp	zero, (pv), __syscall_error
+	jmp	zero, __syscall_error
 
 	END(__ieee_set_fp_control)
 
