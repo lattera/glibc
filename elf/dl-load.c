@@ -107,6 +107,10 @@ static size_t ncapstr;
 static size_t max_capstrlen;
 
 
+/* This function has no public prototype.  */
+extern ssize_t __libc_read (int, void *, size_t);
+
+
 /* Local version of `strdup' function.  */
 static inline char *
 local_strdup (const char *s)
@@ -497,15 +501,11 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 			struct link_map *loader, int l_type)
 {
   struct link_map *l = NULL;
-  void *file_mapping = NULL;
-  size_t mapping_size = 0;
 
 #define LOSE(s) lose (0, (s))
   void lose (int code, const char *msg)
     {
       (void) __close (fd);
-      if (file_mapping)
-	__munmap (file_mapping, mapping_size);
       if (l)
 	{
 	  /* Remove the stillborn object from the list and free it.  */
@@ -532,30 +532,13 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
       return mapat;
     }
 
-  /* Make sure LOCATION is mapped in.  */
-  void *map (off_t location, size_t size)
-    {
-      if ((off_t) mapping_size <= location + (off_t) size)
-	{
-	  void *result;
-	  if (file_mapping)
-	    __munmap (file_mapping, mapping_size);
-	  mapping_size = (location + size + 1 + _dl_pagesize - 1);
-	  mapping_size &= ~(_dl_pagesize - 1);
-	  result = __mmap (file_mapping, mapping_size, PROT_READ,
-			   MAP_COPY|MAP_FILE, fd, 0);
-	  if (result == MAP_FAILED)
-	    lose (errno, "cannot map file data");
-	  file_mapping = result;
-	}
-      return file_mapping + location;
-    }
-
   const ElfW(Ehdr) *header;
   const ElfW(Phdr) *phdr;
   const ElfW(Phdr) *ph;
   size_t maplength;
   int type;
+  char *readbuf;
+  ssize_t readlength;
 
   /* Look again to see if the real name matched another already loaded.  */
   for (l = _dl_loaded; l; l = l->l_next)
@@ -577,8 +560,12 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
   if (_dl_debug_files)
     _dl_debug_message (1, "file=", name, ";  generating link map\n", NULL);
 
-  /* Map in the first page to read the header.  */
-  header = map (0, sizeof *header);
+  /* Read the header directly.  */
+  readbuf = alloca (_dl_pagesize);
+  readlength = __libc_read (fd, readbuf, _dl_pagesize);
+  if (readlength < sizeof(*header))
+    lose (errno, "cannot read file data");
+  header = (void *) readbuf;
 
   /* Check the header for basic validity.  */
   if (*(Elf32_Word *) &header->e_ident !=
@@ -631,11 +618,21 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
   l->l_loader = loader;
 
   /* Extract the remaining details we need from the ELF header
-     and then map in the program header table.  */
+     and then read in the program header table.  */
   l->l_entry = header->e_entry;
   type = header->e_type;
   l->l_phnum = header->e_phnum;
-  phdr = map (header->e_phoff, l->l_phnum * sizeof (ElfW(Phdr)));
+
+  maplength = header->e_phnum * sizeof (ElfW(Phdr));
+  if (header->e_phoff + maplength <= readlength)
+    phdr = (void *) (readbuf + header->e_phoff);
+  else
+    {
+      phdr = alloca (maplength);
+      __lseek (fd, SEEK_SET, header->e_phoff);
+      if (__libc_read (fd, (void *) phdr, maplength) != maplength)
+        lose (errno, "cannot read file data");
+    }
 
   {
     /* Scan the program header table, collecting its load commands.  */
@@ -688,9 +685,6 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 	    break;
 	  }
 	}
-
-    /* We are done reading the file's headers now.  Unmap them.  */
-    __munmap (file_mapping, mapping_size);
 
     /* Now process the load commands and map segments into memory.  */
     c = loadcmds;
