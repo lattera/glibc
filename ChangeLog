@@ -1,3 +1,7 @@
+2002-08-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/fpu/libm-test-ulps: Regenerate.
+
 2002-08-18  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/mkdir.c (__mkdir): Use __directory_name_split
