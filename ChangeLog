@@ -1,3 +1,8 @@
+2002-09-19  Roland McGrath  <roland@redhat.com>
+
+	* include/libc-symbols.h [HAVE_ASM_SET_DIRECTIVE]
+	[! HAVE_ASM_GLOBAL_DOT_NAME] (__hidden_dot_def1): Fix typo'd name.
+
 2002-09-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Bump to 2.2.94.
