@@ -1,3 +1,7 @@
+2001-11-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.h: Define __restrict_arr correctly.
+
 2001-11-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/ibm1163.c: New file.
