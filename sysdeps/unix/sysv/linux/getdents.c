@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 95, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,7 +67,7 @@ ssize_t
 internal_function
 __getdents (int fd, char *buf, size_t nbytes)
 {
-  off_t last_offset = 0;
+  off_t last_offset = __lseek (fd, 0, SEEK_CUR);
   size_t red_nbytes;
   struct kernel_dirent *skdp, *kdp;
   struct dirent *dp;
@@ -96,13 +96,17 @@ __getdents (int fd, char *buf, size_t nbytes)
       if ((char *) dp + new_reclen > buf + nbytes)
 	{
 	  /* Our heuristic failed.  We read too many entries.  Reset
-	     the stream.  `last_offset' contains the last known
-	     position.  If it is zero this is the first record we are
-	     reading.  In this case do a relative search.  */
-	  if (last_offset == 0)
-	    __lseek (fd, -retval, SEEK_CUR);
-	  else
-	    __lseek (fd, last_offset, SEEK_SET);
+	     the stream.  */
+	  __lseek (fd, last_offset, SEEK_SET);
+
+	  if ((char *) dp == buf)
+	    {
+	      /* The buffer the user passed in is too small to hold even
+		 one entry.  */
+	      __set_errno (EINVAL);
+	      return -1;
+	    }
+
 	  break;
 	}
 

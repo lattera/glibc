@@ -1,5 +1,12 @@
 2000-04-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/getdents.c (__getdents): The Linux
+	kernel does not allow relative seeks on descriptors associated
+	with directories.  Go back to get the position in the directory
+	every time we enter the function.  Return -1 and set errno if one
+	entry could be read from the kernel but does not fit into the
+	buffer passed in by the user.
+
 	* locale/programs/charmap.c (charmap_new_char): Add parameter step.
 	Support ..(2).. ellipsis.
 	(parse_charmap): Recognize ..(2).. etc and pass step down.
