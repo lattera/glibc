@@ -1,3 +1,8 @@
+1999-03-18  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/getgroups.c: New file.  Use the i386 
+	implementation.
+
 1999-03-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* timezone/africa: Update from tzdata1999b.
