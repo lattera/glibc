@@ -133,9 +133,9 @@ enum
 	   switching is done using the SI and SO bytes.  But we have to	      \
 	   recognize `Esc $ ) C' since this is a kind of flag for this	      \
 	   encoding.  We simply ignore it.  */				      \
-	if (inptr + 1 > inend						      \
+	if ((NEED_LENGTH_TEST && inptr + 1 > inend)			      \
 	    || (inptr[1] == '$'						      \
-		&& (inptr + 2 > inend					      \
+		&& ((NEED_LENGTH_TEST && inptr + 2 > inend)		      \
 		    || (inptr[2] == ')' && inptr + 3 > inend))))	      \
 									      \
 	  {								      \
