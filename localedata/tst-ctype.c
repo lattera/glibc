@@ -118,8 +118,8 @@ punct = %04x  alnum = %04x\n",
     FAIL ("isgraph ('\\0') is true");
   if (isblank ('\0'))
     FAIL ("isblank ('\\0') is true");
-  if (iscntrl ('\0'))
-    FAIL ("iscntrl ('\\0') is true");
+  if (! iscntrl ('\0'))
+    FAIL ("iscntrl ('\\0') not true");
   if (ispunct ('\0'))
     FAIL ("ispunct ('\\0') is true");
   if (isalnum ('\0'))

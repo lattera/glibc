@@ -133,7 +133,7 @@ TST_ISWCTYPE tst_iswctype_loc [] = {
       {	 { 0x00F7, "punct"  }, { 0,0,0,0 }  },	   /* division */
       {	 { 0x00FF, "punct"  }, { 0,0,1,0 }  },	   /* y dia    */
       {	 { 0x009F, "space"  }, { 0,0,1,0 }  },	   /* CTRL     */
-      {	 { 0x00A0, "space"  }, { 0,0,0,0 }  },	   /* NB SPACE */
+      {	 { 0x00A0, "space"  }, { 0,0,1,0 }  },	   /* NB SPACE */
       {	 { 0x00A1, "space"  }, { 0,0,1,0 }  },	   /* UD !     */
       {	 { 0x00B1, "space"  }, { 0,0,1,0 }  },	   /* +- sign  */
       {	 { 0x00F8, "space"  }, { 0,0,1,0 }  },	   /* o stroke */
@@ -210,12 +210,7 @@ TST_ISWCTYPE tst_iswctype_loc [] = {
       {	 { 0x0009, "blank"  }, { 0,0,0,0 }  },
       {	 { 0x000B, "blank"  }, { 0,0,1,0 }  },
       {	 { 0x0020, "blank"  }, { 0,0,0,0 }  },
-#ifdef SHOJI_IS_RIGHT
       {	 { 0x0000, "cntrl"  }, { 0,0,0,0 }  },
-#else
-      /* XXX U0000 has no properties at all.  */
-      {	 { 0x0000, "cntrl"  }, { 0,0,1,0 }  },
-#endif
       {	 { 0x001F, "cntrl"  }, { 0,0,0,0 }  },
       {	 { 0x0020, "cntrl"  }, { 0,0,1,0 }  },
       {	 { 0x0021, "cntrl"  }, { 0,0,1,0 }  },
