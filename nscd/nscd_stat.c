@@ -61,6 +61,7 @@ struct statdata
   char version[sizeof (compilation)];
   int debug_level;
   time_t runtime;
+  unsigned long int client_queued;
   int ndbs;
   struct dbstat dbs[lastdb];
 };
@@ -75,6 +76,7 @@ send_stats (int fd, struct database dbs[lastdb])
   memcpy (data.version, compilation, sizeof (compilation));
   data.debug_level = debug_level;
   data.runtime = time (NULL) - start_time;
+  data.client_queued = client_queued;
   data.ndbs = lastdb;
 
   for (cnt = 0; cnt < lastdb; ++cnt)
@@ -174,6 +176,9 @@ receive_print_stats (void)
     printf (_("        %2um %2lus  server runtime\n"), nmins, diff);
   else
     printf (_("            %2lus  server runtime\n"), diff);
+
+  printf (_("%15lu  number of times clients had to wait\n"),
+	  data.client_queued);
 
   for (i = 0; i < lastdb; ++i)
     {

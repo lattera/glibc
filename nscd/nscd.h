@@ -109,6 +109,9 @@ extern const char *server_user;
 /* Time the server was started.  */
 extern time_t start_time;
 
+/* Number of times clients had to wait.  */
+extern unsigned long int client_queued;
+
 /* Prototypes for global functions.  */
 
 /* nscd.c */
