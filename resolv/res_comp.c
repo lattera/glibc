@@ -526,6 +526,26 @@ putlong(l, msgp)
 	__putlong(l, msgp);
 }
 
+#undef dn_comp
+int
+dn_comp(exp_dn, comp_dn, length, dnptrs, lastdnptr)
+	const char *exp_dn;
+	u_char *comp_dn, **dnptrs, **lastdnptr;
+	int length;
+{
+	return (__dn_comp(exp_dn, comp_dn, length, dnptrs, lastdnptr));
+}
+
+#undef dn_expand
+int
+dn_expand(msg, eomorig, comp_dn, exp_dn, length)
+	const u_char *msg, *eomorig, *comp_dn;
+	char *exp_dn;
+	int length;
+{
+	return (__dn_expand(msg, eomorig, comp_dn, exp_dn, length));
+}
+
 #undef dn_skipname
 dn_skipname(comp_dn, eom)
 	const u_char *comp_dn, *eom;

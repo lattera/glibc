@@ -55,6 +55,9 @@ __BEGIN_DECLS
    creation of locales with the localedef utility.  */
 #define _POSIX2_LOCALEDEF       1
 
+/* Library is conformant to X/Open version 4.  */
+#define _XOPEN_VERSION	4
+
 
 /* Get values of POSIX options:
 

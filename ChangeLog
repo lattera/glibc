@@ -56,6 +56,91 @@ Thu Sep 12 23:58:25 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 	__funlockfile can't be protected the way the use of __flockfile
 	can be. 
 	
+Sun Sep 22 03:40:52 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/resolv.h: Update to bind-4.9.5-T4B.
+	* resolv/base64.c: Likewise.
+	* resolv/res_debug.c: Likewise.
+	* resolv/res_query.c: Likewise.
+	* resolv/gethnamaddr.c: Likewise.
+	* nss/nss_dns/dns-host.c: Likewise.
+	* resolv/res_comp.c: Likewise.
+	* resolv/res_send.c: Likewise.
+	* resolv/arpa/nameser.h: Likewise.  Attention: MAXDNAME is much
+	higher now.
+
+	* resolv/Banner: New file.
+	* resolv/Makefile (distribute): Add Banner.
+
+Sat Sep 21 19:15:24 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/stub/getsysstats.c: New file.
+	* sysdeps/unix/sysv/linux/getsysstats.c: New file.
+
+	* misc/Makefile (headers): Add sys/sysinfo.h.
+	(routines): Add getsysstats.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)==misc]
+ 	(sysdep_headers): Remove sys/sysinfo.h.
+	* sysdeps/generic/sys/sysinfo.h: New file.
+	* sysdeps/unix/sysv/linux/sys/sysinfo.h: Add prototype for get_nprocs,
+	get_phys_pages, and get_avphys_pages.
+
+	* misc/Makefile (routines): Add mntent_r.
+	* misc/mntent_r.c: New file.
+	* misc/mntent.c: Remove all functions but getmntent and use
+	__getmntent_r.
+	* misc/mntent.h: Add prototype for __getmntent_r.
+	* misc/fstab.c: Use __getmntent_r function instead of getmntent.
+	This will not clobber the state in getmntent.
+
+	* sysdeps/generic/confname.h: Add _SC_PROCESSORS_CONF,
+	_SC_NPROCESSORS_ONLN, _SC_PHYS_PAGES, _SC_AVPHYS_PAGES,
+	_SC_ATEXIT_MAX, and _SC_PASS_MAX.
+	* sysdeps/stub/sysconf.c: Add handling _SC_PROCESSORS_CONF and
+	_SC_NPROCESSORS_ONLN by calling __get_nprocs, _SC_PHYS_PAGES by
+	calling __get_phys_pages, _SY_AVPHYS_PAGES by calling
+	__get_avphys_pages, _SC_ATEXIT_MAX and _SC_PASS_MAX.
+	* sysdeps/posix/sysconf.c: Likewise.
+	* posix/getconf.c (vars): Add _NPROCESSORS_CONF, _NPROCESSORS_ONLN,
+	_PHYS_PAGES, _AVPHYS_PAGES, ATEXIT_MAX, and PASS_MAX entries.
+
+Sat Sep 21 05:20:36 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (VERSION): Bump to 1.95.
+
+	* Make-dist (+tsrcs): Don't filter out files in subdirs which
+ 	match files in the sysdeps hierachy (welcome back,
+ 	sys/syscall.h!).
+
+	* resolv/Makefile (libresolv-routines): Remove getnetnamad.
+
+Sat Sep 21 03:00:19 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/loadlocale.c (_nl_free_locale): Remove function.
+	* locale/localeinfo.h: Remove prototype for _nl_free_locale.
+	* locale/setlocale.c (setlocale): Don't free locale data of
+ 	categories which succeeded to load after a wrong or missing data
+ 	file was observed.
+
+	* locale/setlocale (setlocale): Initialize NEWNAME correctly so
+	that it works even when the locale data is not used.
+
+	* stdlib/random_r.c: Fix typo in comment.
+	* stdlib/drand48-iter.c: Likewise.
+	* stdlib/drand48.c: Likewise.
+	* stdlib/erand48.c: Likewise.
+	* stdlib/jrand48.c: Likewise.
+	* stdlib/lcong48.c: Likewise.
+	* stdlib/lrand48.c: Likewise.
+	* stdlib/mrand48.c: Likewise.
+	* stdlib/nrand48.c: Likewise.
+	* stdlib/random.c: Likewise.
+	* stdlib/seed48.c: Likewise.
+	* stdlib/srand48.c: Likewise.
+	* misc/search.h: Likewise.
+	* misc/hsearch.c: Likewise.
+	* misc/hsearch_r.c: Likewise.
+
 Thu Sep 19 21:50:55 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/posix/gettimeofday.c (__gettimeofday): Use localtime_r
@@ -68,7 +153,7 @@ Thu Sep 19 21:50:55 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep.S (__errno_location):
 	Define even if !_LIBC_REENTRANT.
-	* sysdeps/unix/sysv/linux/i386/sysdep.S (__errno_location):
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S (__errno_location):
 	Likewise.
 
 	* sysdeps/posix/cuserid.h: Remove prototype for geteuid().
@@ -255,6 +340,11 @@ Thu Sep 12 19:59:24 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 Thu Sep 12 19:56:07 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* inet/herrno.c (__h_errno_location): Fix return type.
+
+Thu Sep 19 23:36:19 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* hurd/hurdinit.c (__libc_argv): Provide common decl.
+	(_hurd_setproc): Don't declare __libc_argv here.
 
 Fri Sep 13 04:33:08 1996  Ulrich Drepper  <drepper@cygnus.com>
 

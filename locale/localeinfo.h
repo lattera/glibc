@@ -113,9 +113,6 @@ extern const struct locale_data *_nl_find_locale (const char *locale_path,
 /* Try to load the file described by FILE.  */
 extern void _nl_load_locale (struct loaded_l10nfile *file, int category);
 
-/* Free the locale data read in by a `_nl_load_locale' call.  */
-extern void _nl_free_locale (const struct locale_data *);
-
 
 /* Global variables for LC_COLLATE category data.  */
 extern const u_int32_t *__collate_table;

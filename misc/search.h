@@ -70,7 +70,7 @@ ENTRY;
 /* Opaque type for internal use.  */
 struct _ENTRY;
 
-/* Data type for reentrent functions.  */
+/* Data type for reentrant functions.  */
 struct hsearch_data
   {
     struct _ENTRY *table;
@@ -79,7 +79,7 @@ struct hsearch_data
   };
 
 /* Family of hash table handling functions.  The functions also have
-   reentrent counterparts ending with _r.  */
+   reentrant counterparts ending with _r.  */
 extern ENTRY *hsearch __P ((ENTRY __item, ACTION __action));
 extern int hcreate __P ((unsigned int __nel));
 extern void hdestroy __P ((void));

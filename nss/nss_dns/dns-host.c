@@ -206,6 +206,41 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
 	if (!isdigit (*cp) && *cp != '.')
 	  break;
       }
+  if (isxdigit (name[0]) || name[0] == ':')
+    for (cp = name;; ++cp)
+      {
+	if (*cp == '\0')
+	  {
+	    char *bp;
+
+	    if (*--cp == '.')
+	      break;
+	    /*
+	     * All-IPv6-legal, no dot at the end.  Fake up a hostent
+	     * as if we'd actually done a lookup.
+	     */
+	    if (inet_pton (af, name, host_data->host_addr) <= 0)
+	      {
+		*h_errnop = HOST_NOT_FOUND;
+		return NSS_STATUS_NOTFOUND;
+	      }
+
+	    bp = __stpncpy (host_data->linebuffer, name, linebuflen);
+	    host_data->linebuffer[linebuflen - 1] = '\0';
+	    linebuflen -= bp - host_data->linebuffer;
+
+	    result->h_name = host_data->linebuffer;
+	    result->h_aliases = host_data->aliases;
+	    host_data->aliases[0] = NULL;
+	    host_data->h_addr_ptrs[0] = (char *) host_data->host_addr;
+	    host_data->h_addr_ptrs[1] = NULL;
+	    result->h_addr_list = host_data->h_addr_ptrs;
+	    *h_errnop = NETDB_SUCCESS;
+	    return NSS_STATUS_SUCCESS;
+	  }
+	if (!isxdigit (*cp) && *cp != ':' && *cp != '.')
+	  break;
+      }
 
   n = res_search (name, C_IN, type, host_buffer.buf, sizeof (host_buffer));
   if (n < 0)
@@ -354,7 +389,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   int n, ancount, qdcount;
   int haveanswer, had_error;
   char *bp, **ap, **hap;
-  char tbuf[MAXDNAME+1];
+  char tbuf[MAXDNAME];
   const char *tname;
   int (*name_ok) __P ((const char *));
 

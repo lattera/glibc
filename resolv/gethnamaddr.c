@@ -167,7 +167,7 @@ getanswer(answer, anslen, qname, qtype)
 	int type, class, buflen, ancount, qdcount;
 	int haveanswer, had_error;
 	int toobig = 0;
-	char tbuf[MAXDNAME+1];
+	char tbuf[MAXDNAME];
 	const char *tname;
 	int (*name_ok) __P((const char *));
 
@@ -417,6 +417,10 @@ gethostbyname(name)
 {
 	struct hostent *hp;
 
+	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
+		h_errno = NETDB_INTERNAL;
+		return (NULL);
+       }
 	if (_res.options & RES_USE_INET6) {
 		hp = gethostbyname2(name, AF_INET6);
 		if (hp)
@@ -501,6 +505,36 @@ gethostbyname2(name, af)
 				return (&host);
 			}
 			if (!isdigit(*cp) && *cp != '.')
+				break;
+               }
+	if (isxdigit(name[0]) || name[0] == ':')
+		for (cp = name;; ++cp) {
+			if (!*cp) {
+				if (*--cp == '.')
+					break;
+				/*
+				 * All-IPv6-legal, no dot at the end.
+				 * Fake up a hostent as if we'd actually
+				 * done a lookup.
+				 */
+				if (inet_pton(af, name, host_addr) <= 0) {
+					h_errno = HOST_NOT_FOUND;
+					return (NULL);
+				}
+				strncpy(hostbuf, name, MAXDNAME);
+				hostbuf[MAXDNAME] = '\0';
+				bp = hostbuf + MAXDNAME;
+				len = sizeof hostbuf - MAXDNAME;
+				host.h_name = hostbuf;
+				host.h_aliases = host_aliases;
+				host_aliases[0] = NULL;
+				h_addr_ptrs[0] = (char *)host_addr;
+				h_addr_ptrs[1] = NULL;
+				host.h_addr_list = h_addr_ptrs;
+				h_errno = NETDB_SUCCESS;
+				return (&host);
+			}
+			if (!isxdigit(*cp) && *cp != ':' && *cp != '.')
 				break;
 		}
 

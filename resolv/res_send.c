@@ -781,3 +781,20 @@ _res_close()
 		vc = 0;
 	}
 }
+
+#ifdef ultrix
+/* ultrix 4.0 had some icky packaging in its libc.a.  alias for it here.
+ * there is more gunk of this kind over in res_debug.c.
+ */
+
+#undef res_send
+int
+res_send(buf, buflen, ans, anssiz)
+	const u_char *buf;
+	int buflen;
+	u_char *ans;
+	int anssiz;
+{
+	return (__res_send(buf, buflen, ans, anssiz));
+}
+#endif /* Ultrix 4.0 hackery */

@@ -2,21 +2,28 @@ This directory contains the version VERSION test release of the GNU C Library.
 Many bugs have been fixed since the last release.
 Some bugs surely remain.
 
-As of this release, the GNU C library has been ported to the following
+As of this release, the GNU C library is known to run on the following
 configurations:
 
+		*-*-gnu			GNU Hurd
+		i[3456]86-*-linux	Linux-2.0 on Intel
+		m68k-*-linux		Linux-2.0 on Motorola 680x0
+		alpha-*-linux		Linux-2.0 on DEC Alpha
+
+
+Former releases of this library (version 1.09.1 and perhaps earlier
+versions) used to run on the following configurations:
+
 		alpha-dec-osf1
-		i[345]86-*-bsd4.3
-		i[345]86-*-gnu
-		i[345]86-*-isc2.2
-		i[345]86-*-isc3
-		i[345]86-*-linux
-		i[345]86-*-sco3.2
-		i[345]86-*-sco3.2v4
-		i[345]86-*-sysv
-		i[345]86-*-sysv4
-		i[345]86-force_cpu386-none
-		i[345]86-sequent-bsd
+		i[3456]86-*-bsd4.3
+		i[3456]86-*-isc2.2
+		i[3456]86-*-isc3
+		i[3456]86-*-sco3.2
+		i[3456]86-*-sco3.2v4
+		i[3456]86-*-sysv
+		i[3456]86-*-sysv4
+		i[3456]86-force_cpu386-none
+		i[3456]86-sequent-bsd
 		i960-nindy960-none
 		m68k-hp-bsd4.3
 		m68k-mvme135-none
@@ -29,8 +36,9 @@ configurations:
 		sparc-sun-solaris2
 		sparc-sun-sunos4
 
-Porting the library is not hard.  If you are interested in doing a port,
-please get on the mailing list by sending electronic mail to
+Whether this is still true for this release is unknown.  Porting the
+library is not hard.  If you are interested in doing a port, please
+get on the mailing list by sending electronic mail to
 bug-glibc-request@prep.ai.mit.edu.
 
 The GNU C library now includes Michael Glad's Ultra Fast Crypt, which

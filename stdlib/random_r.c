@@ -19,7 +19,7 @@
  * This is derived from the Berkeley source:
  *	@(#)random.c	5.5 (Berkeley) 7/6/88
  * It was reworked for the GNU C Library by Roland McGrath.
- * Rewritten to be reentrent by Ulrich Drepper, 1995
+ * Rewritten to be reentrant by Ulrich Drepper, 1995
  */
 
 #include <errno.h>

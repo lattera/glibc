@@ -113,8 +113,7 @@ sources := $(filter-out $(addsuffix .c,$(basename $(.S.s))),$(sources)) $(.S.s)
 	$(addsuffix .c,$(sysdep_routines)) \
 	$(+subdir-nodist)
 #foo:=$(shell echo '+out=$(+out)' >&2; echo foofoo >&2)
-+tsrcs	:= $(filter-out $(+out) $(addprefix %/,$(+out)), \
-			$(sources) $(all-headers) $(distribute)) \
++tsrcs	:= $(filter-out $(+out), $(sources) $(all-headers) $(distribute)) \
 	   $(+sysdeps)
 foo:=$(shell echo 'made +tsrcs=$(+tsrcs)'>&2)
 foo:=$(shell echo generated='$(generated)' >&2)

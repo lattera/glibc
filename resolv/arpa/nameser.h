@@ -111,7 +111,7 @@
  * Define constants based on rfc883
  */
 #define PACKETSZ	512		/* maximum packet size */
-#define MAXDNAME	256		/* maximum domain name */
+#define MAXDNAME	1025		/* maximum domain name */
 #define MAXCDNAME	255		/* maximum compressed domain name */
 #define MAXLABEL	63		/* maximum length of domain label */
 #define HFIXEDSZ	12		/* #/bytes of fixed data in header */

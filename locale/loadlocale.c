@@ -217,21 +217,3 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   __close (fd);
   file->data = newdata;
 }
-
-void
-_nl_free_locale (const struct locale_data *data)
-{
-  int save = errno;
-  if (data == NULL)
-    /* Ignore a null pointer, like free does.  */
-    return;
-  if (data->name != NULL)
-    free ((void *) data->name);
-  if (__munmap ((caddr_t) data->filedata, data->filesize) < 0)
-    {
-      if (errno == ENOSYS)
-	free ((void *) data->filedata);
-      errno = save;
-    }
-  free ((void *) data);
-}

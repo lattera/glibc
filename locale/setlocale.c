@@ -326,40 +326,22 @@ setlocale (int category, const char *locale)
 						 &newnames[category]);
 
 	    if (newdata[category] == NULL)
-	      goto abort_composite;
+	      break;
 	  }
 	else
 	  {
 	    /* The data is never used; just change the name.  */
 	    newnames[category] = clever_copy (newnames[category]);
 	    if (newnames[category] == NULL)
-	      goto abort_composite;
+	      break;
 	  }
 
       /* Create new composite name.  */
-      composite = new_composite_name (LC_ALL, newnames);
-      if (composite == NULL)
-	{
-	  /* Loading this part of the locale failed.  Abort the
-	     composite load.  */
-	  int save_errno;
-
-	  category = -1;
-	abort_composite:
-	  save_errno = errno;
-
-	  while (++category < LC_ALL)
-	    if (_nl_current[category] != NULL
-		&& newdata[category] != _nl_C[category])
-	      _nl_free_locale (newdata[category]);
-	    else
-	      if (_nl_current[category] == NULL
-		  && newnames[category] != _nl_C_name)
-		free (newnames[category]);
-
-	  errno = save_errno;
-	  composite = NULL;
-	}
+      if (category >= 0
+	  || (composite = new_composite_name (LC_ALL, newnames)) == NULL)
+	/* Loading this part of the locale failed.  Abort the
+	   composite load.  */
+	composite = NULL;
       else
 	{
 	  /* Now we have loaded all the new data.  Put it in place.  */
@@ -379,7 +361,7 @@ setlocale (int category, const char *locale)
   else
     {
       const struct locale_data *newdata = NULL;
-      char *newname = NULL;
+      char *newname = (char *) locale;
 
       /* Protect global data.  */
       __libc_lock_lock (lock);
@@ -387,7 +369,6 @@ setlocale (int category, const char *locale)
       if (_nl_current[category] != NULL)
 	{
 	  /* Only actually load the data if anything will use it.  */
-	  newname = (char *) locale;
 	  newdata = _nl_find_locale (locale_path, locale_path_len, category,
 				     (char **) &newname);
 	  if (newdata == NULL)
@@ -398,14 +379,7 @@ setlocale (int category, const char *locale)
       composite = new_composite_name (category, &newname);
       if (composite == NULL)
 	{
-	  /* If anything went wrong free what we managed to allocate
-	     so far.  */
-	  int save_errno = errno;
-
-	  if (_nl_current[category] != NULL)
-	    _nl_free_locale (newdata);
-
-	  errno = save_errno;
+	  /* Say that we don't have any data loaded.  */
 	abort_single:
 	  newname = NULL;
 	}

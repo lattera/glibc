@@ -22,7 +22,7 @@ Boston, MA 02111-1307, USA.  */
 #include <limits.h>
 #include <sys/types.h>
 
-/* Global state for non-reentrent functions.  */
+/* Global state for non-reentrant functions.  */
 struct drand48_data __libc_drand48_data;
 
 

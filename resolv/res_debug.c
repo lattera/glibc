@@ -238,6 +238,7 @@ __p_query(msg)
 }
 
 #ifdef ultrix
+#undef p_query
 /* ultrix 4.0's packaging has some icky packaging.  alias for it here.
  * there is more junk of this kind over in res_comp.c.
  */
@@ -1041,8 +1042,8 @@ __p_option(option)
 /*
  * Return a mnemonic for a time to live
  */
-char *
-__p_time(value)
+const char *
+p_time(value)
 	u_int32_t value;
 {
 	static char nbuf[40];
@@ -1369,7 +1370,7 @@ loc_aton(ascii, binary)
 }
 
 /* takes an on-the-wire LOC RR and formats it in a human readable format. */
-char *
+const char *
 loc_ntoa(binary, ascii)
 	const u_char *binary;
 	char *ascii;

@@ -1,5 +1,5 @@
 /* <mntent.h> -- Utilities for reading/writing fstab, mtab, etc.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -50,6 +50,8 @@ struct mntent
 
 /* Prepare to begin reading and/or writing mount table entries from the
    beginning of FILE.  MODE is as for `fopen'.  */
+extern FILE *__setmntent __P ((__const char *__file,
+			       __const char *__mode));
 extern FILE *setmntent __P ((__const char *__file,
 			     __const char *__mode));
 
@@ -58,16 +60,31 @@ extern FILE *setmntent __P ((__const char *__file,
    check).  */
 extern struct mntent *getmntent __P ((FILE *__stream));
 
+#ifdef __USE_REENTRANT
+/* Reentrant version of the above function.  */
+extern struct mntent *__getmntent_r __P ((FILE *__stream,
+					  struct mntent *__result,
+					  char *__buffer, int __bufsize));
+extern struct mntent *getmntent_r __P ((FILE *__stream,
+					struct mntent *__result,
+					char *__buffer, int __bufsize));
+#endif
+
 /* Write the mount table entry described by MNT to STREAM.
    Return zero on success, nonzero on failure.  */
+extern int __addmntent __P ((FILE *__stream,
+			     __const struct mntent *__mnt));
 extern int addmntent __P ((FILE *__stream,
 			   __const struct mntent *__mnt));
 
 /* Close a stream opened with `setmntent'.  */
+extern int __endmntent __P ((FILE *__stream));
 extern int endmntent __P ((FILE *__stream));
 
 /* Search MNT->mnt_opts for an option matching OPT.
    Returns the address of the substring, or null if none found.  */
+extern char *__hasmntopt __P ((__const struct mntent *__mnt,
+			       __const char *__opt));
 extern char *hasmntopt __P ((__const struct mntent *__mnt,
 			     __const char *__opt));
 

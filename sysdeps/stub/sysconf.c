@@ -17,9 +17,11 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <errno.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <time.h>
 #include <limits.h>
+#include <sys/sysinfo.h>
 
 
 /* Get the value of the system variable NAME.  */
@@ -63,6 +65,27 @@ __sysconf (name)
 #else
       return -1;
 #endif
+
+    case _SC_NPROCESSORS_CONF:
+      return __get_nprocs_conf ();
+
+    case _SC_NPROCESSORS_ONLN:
+      return __get_nprocs ();
+
+    case _SC_PHYS_PAGES:
+      return __get_phys_pages ();
+
+    case _SC_AVPHYS_PAGES:
+      return __get_avphys_pages ();
+
+    case _SC_ATEXIT_MAX:
+      /* We have no limit since we use lists.  */
+      return INT_MAX;
+
+    case _SC_PASS_MAX:
+      /* We have no limit but since the return value might be used to
+	 allocate a buffer we restrict the value.  */
+      return BUFSIZ;
 
     case _SC_ARG_MAX:
     case _SC_CHILD_MAX:
@@ -144,6 +167,8 @@ __sysconf (name)
     case _SC_THREAD_PRIO_INHERIT:
     case _SC_THREAD_PRIO_PROTECT:
     case _SC_THREAD_PROCESS_SHARED:
+
+    case _SC_XOPEN_VERSION:
 
       break;
     }

@@ -1,5 +1,5 @@
-/* 
-Copyright (C) 1995 Free Software Foundation, Inc.
+/*
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,9 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 
 static FILE *fstab;
+static struct mntent mntres;
+static char buffer[8192];
+
 
 static FILE *
 fstab_stream (void)
@@ -48,6 +51,10 @@ static struct fstab *
 mnt2fs (struct mntent *m)
 {
   static struct fstab f;
+
+  if (m == NULL)
+    return NULL;
+
   f.fs_spec = m->mnt_fsname;
   f.fs_file = m->mnt_dir;
   f.fs_vfstype = m->mnt_type;
@@ -70,8 +77,8 @@ getfsent (void)
 
   if (! s)
     return NULL;
-  
-  return mnt2fs (getmntent (s));
+
+  return mnt2fs (__getmntent_r (s, &mntres, buffer, sizeof buffer));
 }
 
 struct fstab *
@@ -80,7 +87,7 @@ getfsspec (name)
 {
   struct mntent *m;
   if (setfsent ())
-    while (m = getmntent (fstab))
+    while (m = __getmntent_r (fstab, &mntres, buffer, sizeof buffer))
       if (!strcmp (m->mnt_fsname, name))
 	return mnt2fs (m);
   return NULL;
@@ -88,11 +95,11 @@ getfsspec (name)
 
 struct fstab *
 getfsfile (name)
-	register const char *name;
+     register const char *name;
 {
   struct mntent *m;
   if (setfsent ())
-    while (m = getmntent (fstab))
+    while (m = __getmntent_r (fstab, &mntres, buffer, sizeof buffer))
       if (!strcmp (m->mnt_dir, name))
 	return mnt2fs (m);
   return NULL;

@@ -127,7 +127,7 @@ static const char Pad64 = '=';
 	   characters followed by one "=" padding character.
    */
 
-ssize_t
+int
 b64_ntop(src, srclength, target, targsize)
 	u_char const *src;
 	size_t srclength;
@@ -198,7 +198,7 @@ b64_ntop(src, srclength, target, targsize)
    it returns the number of data bytes stored at the target, or -1 on error.
  */
 
-ssize_t
+int
 b64_pton(src, target, targsize)
 	char const *src;
 	u_char *target;

@@ -104,7 +104,7 @@ Version 2.0
 * The new header file <fts.h> and suite of functions simplify programs that
   operate on directory trees.  This code comes from 4.4 BSD.
 
-* The resolver code has been updated from the BIND 4.9.5-T3A release.
+* The resolver code has been updated from the BIND 4.9.5-T4B release.
 
 * The new function `malloc_find_object_address' finds the starting address
   of a malloc'd block, given any address within the block;

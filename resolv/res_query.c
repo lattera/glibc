@@ -86,7 +86,7 @@ static char rcsid[] = "$Id$";
 #define MAXPACKET	1024
 #endif
 
-char *__hostalias __P((const char *));
+const char *hostalias __P((const char *));
 
 
 /*
@@ -321,7 +321,7 @@ res_querydomain(name, domain, class, type, answer, anslen)
 	u_char *answer;		/* buffer to put answer */
 	int anslen;		/* size of answer */
 {
-	char nbuf[2*MAXDNAME+2];
+	char nbuf[MAXDNAME];
 	const char *longname = nbuf;
 	int n;
 
@@ -351,8 +351,8 @@ res_querydomain(name, domain, class, type, answer, anslen)
 	return (res_query(longname, class, type, answer, anslen));
 }
 
-char *
-__hostalias(name)
+const char *
+hostalias(name)
 	register const char *name;
 {
 	register char *cp1, *cp2;

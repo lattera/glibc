@@ -157,7 +157,7 @@ build the GNU C library:
      recommend you port GNU `make' instead.  *Really.* We recommend
      version GNU `make' version 3.75 or later.
 
-   * GCC 2.7.2
+   * GCC 2.7.2.1
 
      On most platforms, the GNU C library can only be compiled with the
      GNU C compiler.  We recommend GCC version 2.7.2 or later; earlier
@@ -177,14 +177,19 @@ Supported Configurations
    The GNU C Library currently supports configurations that match the
 following patterns:
 
-     alpha-dec-osf1
      alpha-ANYTHING-linux
      alpha-ANYTHING-linuxecoff
-     iX86-ANYTHING-bsd4.3
      iX86-ANYTHING-gnu
+     iX86-ANYTHING-linux
+     m68k-ANYTHING-linux
+
+   Former versions of this library used to support the following
+configurations but the current status is unknown:
+
+     alpha-dec-osf1
+     iX86-ANYTHING-bsd4.3
      iX86-ANYTHING-isc2.2
      iX86-ANYTHING-isc3.N
-     iX86-ANYTHING-linux
      iX86-ANYTHING-sco3.2
      iX86-ANYTHING-sco3.2v4
      iX86-ANYTHING-sysv
@@ -911,4 +916,3 @@ parts of the library were contributed or worked on by other people.
           or `Software.Distribution@CS.CMU.EDU' any improvements or
           extensions that they make and grant Carnegie Mellon the
           rights to redistribute these changes.
-

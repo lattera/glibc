@@ -24,6 +24,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/sysinfo.h>
 
 extern int __getdtablesize __P ((void));
 extern size_t __getpagesize __P ((void));
@@ -595,6 +596,30 @@ __sysconf (name)
 #else
       return -1;
 #endif
+
+    case _SC_NPROCESSORS_CONF:
+      return __get_nprocs_conf ();
+
+    case _SC_NPROCESSORS_ONLN:
+      return __get_nprocs ();
+
+    case _SC_PHYS_PAGES:
+      return __get_phys_pages ();
+
+    case _SC_AVPHYS_PAGES:
+      return __get_avphys_pages ();
+
+    case _SC_ATEXIT_MAX:
+      /* We have no limit since we use lists.  */
+      return INT_MAX;
+
+    case _SC_PASS_MAX:
+      /* We have no limit but since the return value might be used to
+	 allocate a buffer we restrict the value.  */
+      return BUFSIZ;
+
+    case _SC_XOPEN_VERSION:
+      return _XOPEN_VERSION;
     }
 }
 

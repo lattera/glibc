@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
 This file is part of the GNU C Library.
 
@@ -19,11 +19,11 @@ Boston, MA 02111-1307, USA.  */
 
 #include <search.h>
 
-/* The non-reenttrent version use a global space for storing the table.  */
+/* The non-reentrant version use a global space for storing the table.  */
 static struct hsearch_data htab;
 
 
-/* Define the non-reentrent function using the reentrent counterparts.  */
+/* Define the non-reentrant function using the reentrant counterparts.  */
 ENTRY *
 hsearch (item, action)
      ENTRY item;

@@ -27,7 +27,7 @@ Boston, MA 02111-1307, USA.  */
    [Knuth]            The Art of Computer Programming, part 3 (6.4)  */
 
 
-/* The reentrent version has no static variables to maintain the state.
+/* The reentrant version has no static variables to maintain the state.
    Instead the interface of all functions is extended to take an argument
    which describes the current status.  */
 typedef struct _ENTRY

@@ -21,13 +21,6 @@ Boston, MA 02111-1307, USA.  */
 #define _SYS_SYSINFO_H	1
 #include <features.h>
 
-/* Get sysinfo structure from kernel header.  */
-#include <linux/kernel.h>
-
-/* Returns information on overall system statistics.  */
-extern int sysinfo __P ((struct sysinfo *__info));
-
-
 /* Return number of configured processors.  */
 extern int __get_nproc_conf __P ((void));
 extern int get_nproc_conf __P ((void));

@@ -28,7 +28,7 @@ headers	:= sys/uio.h iovec.h sys/ioctl.h ioctls.h ioctl-types.h \
 	   ttyent.h syslog.h sys/syslog.h paths.h sys/reboot.h \
 	   sys/mman.h sys/param.h fstab.h mntent.h search.h err.h error.h\
 	   sys/queue.h sysexits.h syscall.h sys/syscall.h sys/swap.h \
-	   sys/select.h ustat.h sys/ustat.h ustatbits.h
+	   sys/select.h ustat.h sys/ustat.h ustatbits.h sys/sysinfo.h
 
 routines := brk sbrk sstk ioctl \
 	    readv writev \
@@ -45,7 +45,7 @@ routines := brk sbrk sstk ioctl \
 	    ualarm usleep \
 	    gtty stty \
 	    ptrace nlist \
-	    fstab mntent \
+	    fstab mntent mntent_r \
 	    utimes \
 	    truncate ftruncate \
 	    chflags fchflags \
@@ -54,7 +54,8 @@ routines := brk sbrk sstk ioctl \
 	    mmap munmap mprotect msync madvise \
 	    efgcvt efgcvt_r qefgcvt qefgcvt_r \
 	    hsearch hsearch_r tsearch lsearch \
-	    err error ustat
+	    err error ustat \
+	    getsysstats
 aux := init-misc
 distribute := bsd-compat.c
 extra-objs := bsd-compat.o

@@ -49,6 +49,12 @@ please let me know.
 
 [Q13]	``How do I configure GNU libc so that the essential libraries
 	  like libc.so go into /lib and the other into /usr/lib?''
+
+[Q14]	``When linking with the new libc I get unresolved symbols
+	  `crypt' and `setkey'.  Why aren't these functions in the
+	  libc anymore?''
+
+[Q15]	``What are these `add-ons'?''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -366,6 +372,56 @@ sysconfdir=/etc
 The first line specifies the directory for the essential libraries,
 the second line the directory for file which are by tradition placed
 in a directory named /etc.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q14]	``When linking with the new libc I get unresolved symbols
+	  `crypt' and `setkey'.  Why aren't these functions in the
+	  libc anymore?''
+
+[A14] {UD} Remember the US restrictions of exporting cryptographic
+programs and source code.  Until this law gets abolished we cannot
+ship the cryptographic function together with the libc.
+
+But of course we provide the code and there is an very easy way to use
+this code.  First get the extra package.  People in the US way get it
+from the same place they got the GNU libc from.  People outside the US
+should get the code from ftp.uni-c.dk [129.142.6.74], or another
+archive site outside the USA.  The README explains how to install the
+sources.
+
+If you already have the crypt code on your system the reason for the
+failure is probably that you failed to link with -lcrypt.  The crypto
+functions are in a separate library to make it possible to export GNU
+libc binaries from the US.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q15]	``What are these `add-ons'?''
+
+[A15] {UD} To avoid complications with external or external source
+code some optional parts of the libc are distributed as separate
+packages (e.g., the crypt package, see Q14).
+
+To ease the use as part of GNU libc the installer just has to unpack
+the package and tell the configuration script about these additional
+subdirectories using the --enable-add-ons option.  When you add the
+crypt add-on you just have to use
+
+	configure --enable-add-ons=crypt,XXX ...
+
+where XXX are possible other add-ons and ... means the rest of the
+normal option list.
+
+You can use add-ons also to overwrite some files in glibc.  The add-on
+system dependent subdirs are search first.  It is also possible to add
+banner files (use a file named `Banner') or create shared libraries.
+
+Using add-ons has the big advantage that the makefiles of the GNU libc
+can be used.  Only some few stub rules must be written to get
+everything running.  Even handling of architecture dependent
+compilation is provided.  The GNU libc's sysdeps/ directory shows how
+to use this feature.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
