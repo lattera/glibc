@@ -39,7 +39,7 @@
  i3: XXXXXXXXXXXXXXXX  i4: XXXXXXXXXXXXXXXX  i5: XXXXXXXXXXXXXXXX
  fp: XXXXXXXXXXXXXXXX  i7: XXXXXXXXXXXXXXXX
 
- Old mask: XXXXXXXX XFSR: XXXXXXXXXXXXXXXX GSR: XX FPRS: X
+ Mask: XXXXXXXXXXXXXXXX XFSR: XXXXXXXXXXXXXXXX GSR: XX FPRS: X
   f0: XXXXXXXXXXXXXXXX   f2: XXXXXXXXXXXXXXXX   f4: XXXXXXXXXXXXXXXX
   f6: XXXXXXXXXXXXXXXX   f8: XXXXXXXXXXXXXXXX  f10: XXXXXXXXXXXXXXXX
  f12: XXXXXXXXXXXXXXXX  f14: XXXXXXXXXXXXXXXX  f16: XXXXXXXXXXXXXXXX
@@ -79,7 +79,7 @@ register_dump (int fd, SIGCONTEXT ctx)
   size_t nr = 0;
   int i;
   struct reg_window *r = (struct reg_window *)
-    ctx->si_regs.u_regs[14];
+    ctx->sf_regs.u_regs[14];
   struct __siginfo_sparc64_fpu *f;
 
 #define ADD_STRING(str) \
@@ -92,15 +92,15 @@ register_dump (int fd, SIGCONTEXT ctx)
   ++nr
 
   /* Generate strings of register contents.  */
-  hexvalue (ctx->si_regs.tstate,	regs[0], 16);
-  hexvalue (ctx->si_regs.tpc,		regs[1], 16);
-  hexvalue (ctx->si_regs.tnpc,		regs[2], 16);
-  hexvalue (ctx->si_regs.y,		regs[3], 8);
+  hexvalue (ctx->sf_regs.tstate,	regs[0], 16);
+  hexvalue (ctx->sf_regs.tpc,		regs[1], 16);
+  hexvalue (ctx->sf_regs.tnpc,		regs[2], 16);
+  hexvalue (ctx->sf_regs.y,		regs[3], 8);
   for (i = 1; i <= 15; i++)
-    hexvalue (ctx->si_regs.u_regs[i], 	regs[3+i], 16);
+    hexvalue (ctx->sf_regs.u_regs[i], 	regs[3+i], 16);
   for (i = 0; i <= 15; i++)
     hexvalue (r->locals[i],		regs[19+i], 16);
-  hexvalue (ctx->si_mask,		regs[35], 8);
+  hexvalue (ctx->sf_mask,		regs[35], 16);
 
   /* Generate the output.  */
   ADD_STRING ("Register dump:\n\n TSTATE: ");
@@ -173,8 +173,8 @@ register_dump (int fd, SIGCONTEXT ctx)
   ADD_MEM (regs[33], 16);
   ADD_STRING ("  i7: ");
   ADD_MEM (regs[34], 16);
-  ADD_STRING ("\n\n Old mask: ");
-  ADD_MEM (regs[35], 8);
+  ADD_STRING ("\n\n Mask: ");
+  ADD_MEM (regs[35], 16);
 
   f = *(struct __siginfo_sparc64_fpu **)(ctx + 1);
   if (f != NULL)

@@ -32,24 +32,18 @@ extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *,
 				   size_t);
 
 static void __rt_sigreturn_stub (void);
-static void __sigreturn_stub (void);
 
 int
 __sigaction (int sig, __const struct sigaction *act, struct sigaction *oact)
 {
   int ret;
   struct kernel_sigaction kact, koact;
-  unsigned long stub = 0;
+  unsigned long stub = ((unsigned long) &__rt_sigreturn_stub) - 8;
 
   if (act)
     {
       kact.k_sa_handler = act->sa_handler;
       memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
-      if (((kact.sa_flags = act->sa_flags) & SA_SIGINFO) != 0)
-	stub = (unsigned long) &__rt_sigreturn_stub;
-      else
-	stub = (unsigned long) &__sigreturn_stub;
-      stub -= 8;
       kact.sa_restorer = NULL;
     }
 
@@ -78,13 +72,4 @@ __rt_sigreturn_stub (void)
 	   "ta	0x6d\n\t"
 	   : /* no outputs */
 	   : "i" (__NR_rt_sigreturn));
-}
-
-static void
-__sigreturn_stub (void)
-{
-  __asm__ ("mov %0, %%g1\n\t"
-	   "ta	0x6d\n\t"
-	   : /* no outputs */
-	   : "i" (__NR_sigreturn));
 }

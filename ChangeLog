@@ -1,3 +1,15 @@
+1999-08-02  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c (__sigaction):
+	Only allow rt signal frames. No SA_SIGINFO signals will have the
+	siginfo_t just not filled out with SI_NOINFO code.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/register-dump.h
+	(register_dump): Take the above change into account.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigcontextinfo.h
+	(rt_signal_frame): Likewise.
+
+	* sysdeps/unix/sysv/linux/sparc/getsysstats.c: New file.
+
 1999-08-02  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nis/nis_callback.c (internal_nis_do_callback) use poll()
