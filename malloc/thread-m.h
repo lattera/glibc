@@ -28,7 +28,7 @@
 
 #if defined(_LIBC) /* The GNU C library, a special case of Posix threads */
 
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 
 #ifdef PTHREAD_MUTEX_INITIALIZER
 

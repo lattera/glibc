@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <wctype.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 
 #ifdef	__GNUC__
 #define	HAVE_LONGLONG

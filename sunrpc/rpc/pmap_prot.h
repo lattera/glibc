@@ -36,8 +36,8 @@
  */
 
 #ifndef _RPC_PMAP_PROT_H
-
 #define _RPC_PMAP_PROT_H	1
+
 #include <features.h>
 
 #include <rpc/xdr.h>

@@ -22,9 +22,10 @@
  */
 
 #ifndef _WCTYPE_H
-
 #define _WCTYPE_H	1
+
 #include <features.h>
+#include <gnu/types.h>
 
 __BEGIN_DECLS
 
@@ -197,8 +198,8 @@ extern wint_t towctrans __P ((wint_t __wc, wctrans_t __desc));
 #endif
 
 /* Pointer to conversion tables.  */
-extern __const int *__ctype_tolower; /* Case conversions.  */
-extern __const int *__ctype_toupper; /* Case conversions.  */
+extern __const __int32_t *__ctype_tolower; /* Case conversions.  */
+extern __const __int32_t *__ctype_toupper; /* Case conversions.  */
 
 #define	towlower(wc)	towctrans ((wc), __ctype_tolower)
 #define	towupper(wc)	towctrans ((wc), __ctype_toupper)

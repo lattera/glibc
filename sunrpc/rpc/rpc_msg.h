@@ -31,6 +31,7 @@
 
 #ifndef _RPC_MSG_H
 #define _RPC_MSG_H 1
+
 #include <sys/cdefs.h>
 
 #include <rpc/xdr.h>

@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <fmtmsg.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -41,7 +41,7 @@ $(objpfx)siglist.c: $(objpfx)make_siglist
 	mv $@-tmp $@
 
 make_siglist-CFLAGS = -DSIGNUM_H=\"$(shell pwd)/$(firstword $(wildcard \
-				   $(+sysdep_dirs:%=%/signum.h)))\"
+				   $(+sysdep_dirs:%=%/bits/signum.h)))\"
 $(objpfx)make_siglist: $(sysdep_dir)/generic/make_siglist.c
 	$(native-compile)
 

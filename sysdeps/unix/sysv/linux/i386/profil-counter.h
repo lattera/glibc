@@ -17,7 +17,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sigcontext.h>
+#include <signal.h>
 
 void
 profil_counter (int signo, struct sigcontext sc)

@@ -19,46 +19,47 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _ELF_H
-
 #define	_ELF_H 1
+
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
-/* Standard ELF types.  Using __attribute__ mode ensures that GCC
-   will choose the right number of bits for these types.  */
+/* Standard ELF types.  */
+
+#include <inttypes.h>
 
 /* Type for a 16-bit quantity.  */
-typedef unsigned int Elf32_Half    __attribute__ ((mode (HI)));
-typedef unsigned int Elf64_Half    __attribute__ ((mode (HI)));
+typedef uint16_t Elf32_Half;
+typedef uint16_t Elf64_Half;
 
 /* Types for signed and unsigned 32-bit quantities.  */
-typedef unsigned int Elf32_Word    __attribute__ ((mode (SI)));
-typedef		 int Elf32_Sword   __attribute__ ((mode (SI)));
-typedef unsigned int Elf64_Word    __attribute__ ((mode (SI)));
-typedef		 int Elf64_Sword   __attribute__ ((mode (SI)));
+typedef uint32_t Elf32_Word;
+typedef	int32_t  Elf32_Sword;
+typedef uint32_t Elf64_Word;
+typedef	int32_t  Elf64_Sword;
 
 /* Types for signed and unsigned 64-bit quantities.  */
-typedef unsigned int Elf32_Xword   __attribute__ ((mode (DI)));
-typedef		 int Elf32_Sxword  __attribute__ ((mode (DI)));
-typedef unsigned int Elf64_Xword   __attribute__ ((mode (DI)));
-typedef		 int Elf64_Sxword  __attribute__ ((mode (DI)));
+typedef uint64_t Elf32_Xword;
+typedef	int64_t  Elf32_Sxword;
+typedef uint64_t Elf64_Xword;
+typedef	int64_t  Elf64_Sxword;
 
 /* Type of addresses.  */
-typedef unsigned int Elf32_Addr    __attribute__ ((mode (SI)));
-typedef unsigned int Elf64_Addr    __attribute__ ((mode (DI)));
+typedef uint32_t Elf32_Addr;
+typedef uint64_t Elf64_Addr;
 
 /* Type of file offsets.  */
-typedef unsigned int Elf32_Off     __attribute__ ((mode (SI)));
-typedef unsigned int Elf64_Off     __attribute__ ((mode (DI)));
+typedef uint32_t Elf32_Off;
+typedef uint64_t Elf64_Off;
 
 /* Type for section indices, which are 16-bit quantities.  */
-typedef unsigned int Elf32_Section __attribute__ ((mode (HI)));
-typedef unsigned int Elf64_Section __attribute__ ((mode (HI)));
+typedef uint16_t Elf32_Section;
+typedef uint16_t Elf64_Section;
 
 /* Type of symbol indices.  */
-typedef unsigned int Elf32_Symndx  __attribute__ ((mode (SI)));
-typedef unsigned int Elf64_Symndx  __attribute__ ((mode (DI)));
+typedef uint32_t Elf32_Symndx;
+typedef uint64_t Elf64_Symndx;
 
 
 /* The ELF file header.  This appears at the start of every ELF file.  */

@@ -18,8 +18,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_SEM_H
-
 #define _SYS_SEM_H	1
+
 #include <features.h>
 
 #include <sys/types.h>
@@ -28,7 +28,7 @@
 #include <sys/ipc.h>
 
 /* Get system dependent definition of `struct semid_ds' and more.  */
-#include <sys/sem_buf.h>
+#include <bits/sem.h>
 
 __BEGIN_DECLS
 
@@ -57,4 +57,4 @@ extern int semop __P ((int __semid, struct sembuf *__sops,
 
 __END_DECLS
 
-#endif /* _SYS_SEM_H */
+#endif /* sys/sem.h */

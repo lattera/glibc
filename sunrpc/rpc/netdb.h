@@ -34,8 +34,8 @@
    In GNU this file is #include'd by <netdb.h>.  */
 
 #ifndef _RPC_NETDB_H
-
 #define _RPC_NETDB_H	1
+
 #include <features.h>
 
 #define __need_size_t

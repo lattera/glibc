@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
-#include "../locale/localeinfo.h"
+#include <locale/localeinfo.h>
 
 /* Defined in locale/C-ctype.c.  */
 extern const char _nl_C_LC_CTYPE_class[];
@@ -30,8 +30,8 @@ extern const char _nl_C_LC_CTYPE_width[];
 #define b(t,x,o) (((const t *) _nl_C_LC_CTYPE_##x) + o);
 
 const unsigned short int *__ctype_b = b (unsigned short int, class, 128);
-const unsigned int *__ctype32_b = b (unsigned int, class32, 0);
-const int *__ctype_tolower = b (int, tolower, 128);
-const int *__ctype_toupper = b (int, toupper, 128);
-const unsigned int *__ctype_names = b (unsigned int, names, 0);
+const __uint32_t *__ctype32_b = b (__uint32_t, class32, 0);
+const __int32_t *__ctype_tolower = b (__int32_t, tolower, 128);
+const __int32_t *__ctype_toupper = b (__int32_t, toupper, 128);
+const __uint32_t *__ctype_names = b (__uint32_t, names, 0);
 const unsigned char *__ctype_width = b (unsigned char, width, 0);

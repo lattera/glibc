@@ -42,4 +42,4 @@ struct ipv6hdr
   struct in6_addr ipv6_dst;
 };
 
-#endif /* _NETINET_IP6_H */
+#endif /* netinet/ip6.h */

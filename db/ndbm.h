@@ -36,8 +36,8 @@
  *	@(#)ndbm.h	8.1 (Berkeley) 6/2/93
  */
 
-#ifndef _NDBM_H_
-#define	_NDBM_H_
+#ifndef _NDBM_H
+#define	_NDBM_H 1
 
 #include <db.h>
 
@@ -76,4 +76,4 @@ int	 dbm_error __P((DBM *));
 int	 dbm_clearerr __P((DBM *));
 __END_DECLS
 
-#endif /* !_NDBM_H_ */
+#endif /* ndbm.h */

@@ -21,8 +21,8 @@
  */
 
 #ifndef	_UNISTD_H
-
 #define	_UNISTD_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
@@ -135,7 +135,7 @@ __BEGIN_DECLS
    _POSIX_PRIO_IO		Prioritized Asynchronous I/O may be performed.
    */
 
-#include <posix_opt.h>
+#include <bits/posix_opt.h>
 
 
 /* Standard file descriptors.  */
@@ -146,7 +146,7 @@ __BEGIN_DECLS
 
 /* All functions that are not declared anywhere else.  */
 
-#include <gnu/types.h>
+#include <bits/types.h>
 
 #ifndef	ssize_t
 typedef __ssize_t ssize_t;
@@ -392,7 +392,7 @@ extern void _exit __P ((int __status)) __attribute__ ((__noreturn__));
 /* Get the `_PC_*' symbols for the NAME argument to `pathconf' and `fpathconf';
    the `_SC_*' symbols for the NAME argument to `sysconf';
    and the `_CS_*' symbols for the NAME argument to `confstr'.  */
-#include <confname.h>
+#include <bits/confname.h>
 
 /* Get file-specific configuration information about PATH.  */
 extern long int __pathconf __P ((__const char *__path, int __name));

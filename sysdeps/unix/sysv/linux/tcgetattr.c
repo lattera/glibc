@@ -23,7 +23,7 @@
 /* The difference here is that the termios structure used in the
    kernel is not the same as we use in the libc.  Therefore we must
    translate it here.  */
-#include <sys/kernel_termios.h>
+#include <kernel_termios.h>
 
 /* Put the state of FD into *TERMIOS_P.  */
 int

@@ -20,7 +20,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <rpc/rpc.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>

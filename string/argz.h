@@ -17,9 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef __ARGZ_H__
+#ifndef _ARGZ_H
+#define _ARGZ_H	1
 
-#define __ARGZ_H__	1
 #include <features.h>
 
 #define __need_error_t

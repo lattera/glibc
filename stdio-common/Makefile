@@ -21,7 +21,7 @@
 #
 subdir	:= stdio-common
 
-headers	:= stdio_lim.h printf.h
+headers	:= bits/stdio_lim.h printf.h
 
 routines	:=							      \
 	ctermid cuserid							      \

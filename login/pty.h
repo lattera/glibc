@@ -18,11 +18,11 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _PTY_H
-
 #define _PTY_H	1
+
 #include <features.h>
 
-#include <ioctl-types.h>
+#include <bits/ioctl-types.h>
 #include <termios.h>
 
 

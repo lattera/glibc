@@ -21,13 +21,13 @@
  */
 
 #ifndef	_DIRENT_H
-
 #define	_DIRENT_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
 
-#include <gnu/types.h>
+#include <bits/types.h>
 
 /* This file defines `struct dirent'.
 
@@ -44,7 +44,7 @@ __BEGIN_DECLS
    member that gives the type of the file.
  */
 
-#include <direntry.h>
+#include <bits/dirent.h>
 
 #if (defined __USE_BSD || defined __USE_MISC) && !defined d_fileno
 # define d_ino	d_fileno		 /* Backward compatibility.  */
@@ -142,7 +142,7 @@ extern int dirfd __P ((DIR *__dirp));
 
 # ifndef MAXNAMLEN
 /* Get the definitions of the POSIX.1 limits.  */
-#  include <posix1_lim.h>
+#  include <bits/posix1_lim.h>
 
 /* `MAXNAMLEN' is the BSD name for what POSIX calls `NAME_MAX'.  */
 #  ifdef NAME_MAX
@@ -152,7 +152,7 @@ extern int dirfd __P ((DIR *__dirp));
 #  endif
 # endif
 
-# include <gnu/types.h>
+# include <bits/types.h>
 # define __need_size_t
 # include <stddef.h>
 

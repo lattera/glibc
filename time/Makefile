@@ -21,7 +21,7 @@
 #
 subdir	:= time
 
-headers	:= time.h sys/time.h sys/timeb.h timebits.h
+headers	:= time.h sys/time.h sys/timeb.h bits/time.h
 distribute := tzfile.h private.h scheck.c ialloc.c yearistype	\
 	      iso3166.tab zone.tab tzselect.ksh checktab.awk	\
 	      README

@@ -21,13 +21,14 @@
  */
 
 #ifndef	_SYS_UTSNAME_H
-
 #define	_SYS_UTSNAME_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
 
-#include <utsnamelen.h>
+#include <bits/utsname.h>
+
 #ifndef _UTSNAME_NODENAME_LENGTH
 #define _UTSNAME_NODENAME_LENGTH _UTSNAME_LENGTH
 #endif

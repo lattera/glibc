@@ -17,8 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _ARPA_INET_H
-
 #define	_ARPA_INET_H	1
+
 #include <features.h>
 
 #include <sys/types.h>

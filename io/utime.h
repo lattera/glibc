@@ -21,13 +21,13 @@
  */
 
 #ifndef	_UTIME_H
-
 #define	_UTIME_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
 
-#include <gnu/types.h>
+#include <bits/types.h>
 
 /* Structure describing file times.  */
 struct utimbuf

@@ -185,4 +185,4 @@ struct nd6_opt_mtu 		/* MTU option */
     u_int32_t		opt_mtu;
   };
 
-#endif /* _NETINET6_ICMPV6_H */
+#endif /* netinet/icmpv6.h */

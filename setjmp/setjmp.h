@@ -21,15 +21,14 @@
  */
 
 #ifndef	_SETJMP_H
-
 #define	_SETJMP_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
 
-/* Get the machine-dependent definition of `__jmp_buf'.  */
-#include <jmp_buf.h>
-#include <sigset.h>		/* Get `__sigset_t'.  */
+#include <bits/setjmp.h>		/* Get `__jmp_buf'.  */
+#include <bits/sigset.h>		/* Get `__sigset_t'.  */
 
 /* Calling environment, plus possibly a saved signal mask.  */
 typedef struct __jmp_buf_tag	/* C++ doesn't like tagless structs.  */

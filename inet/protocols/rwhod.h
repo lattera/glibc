@@ -33,8 +33,8 @@
  *	@(#)rwhod.h	8.1 (Berkeley) 6/2/93
  */
 
-#ifndef _RWHOD_H_
-#define	_RWHOD_H_
+#ifndef _PROTOCOLS_RWHOD_H
+#define	_PROTOCOLS_RWHOD_H 1
 
 #include <sys/types.h>
 
@@ -67,4 +67,4 @@ struct	whod {
 
 #define	_PATH_RWHODIR	"/var/rwho"
 
-#endif /* !_RWHOD_H_ */
+#endif /* protocols/rwhod.h */

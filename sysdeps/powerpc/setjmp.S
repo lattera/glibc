@@ -19,7 +19,7 @@
 
 #include <sysdep.h>
 #define _ASM
-#include <jmp_buf.h>
+#include <bits/setjmp.h>
 
 ENTRY (__sigsetjmp)
 	stw  %r1,(JB_GPR1*4)(3)

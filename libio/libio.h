@@ -153,7 +153,7 @@ struct _IO_jump_t;  struct _IO_FILE;
 
 /* Handle lock.  */
 #ifdef _IO_MTSAFE_IO
-#include <stdio-lock.h>
+#include <bits/stdio-lock.h>
 #else
 typedef void _IO_lock_t;
 #endif

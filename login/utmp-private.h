@@ -49,6 +49,3 @@ extern struct utfuncs *__libc_utmp_jump_table;
 extern const char *__libc_utmp_file_name;
 
 #endif /* utmp-private.h */
-
-
-

@@ -21,15 +21,15 @@
  */
 
 #ifndef	_TERMIOS_H
-
 #define	_TERMIOS_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
 
 /* Get the system-dependent definitions of `struct termios', `tcflag_t',
    `cc_t', `speed_t', and all the macros specifying the flag bits.  */
-#include <termbits.h>
+#include <bits/termios.h>
 
 #ifdef __USE_BSD
 /* Compare a character C to a value VAL from the `c_cc' array in a
@@ -60,7 +60,7 @@ extern int __tcgetattr __P ((int __fd, struct termios *__termios_p));
 extern int tcgetattr __P ((int __fd, struct termios *__termios_p));
 
 /* Set the state of FD to *TERMIOS_P.
-   Values for OPTIONAL_ACTIONS (TCSA*) are in <termbits.h>.  */
+   Values for OPTIONAL_ACTIONS (TCSA*) are in <bits/termios.h>.  */
 extern int tcsetattr __P ((int __fd, int __optional_actions,
 			   __const struct termios *__termios_p));
 
@@ -77,11 +77,11 @@ extern int tcsendbreak __P ((int __fd, int __duration));
 extern int tcdrain __P ((int __fd));
 
 /* Flush pending data on FD.
-   Values for QUEUE_SELECTOR (TC{I,O,IO}FLUSH) are in <termbits.h>.  */
+   Values for QUEUE_SELECTOR (TC{I,O,IO}FLUSH) are in <bits/termios.h>.  */
 extern int tcflush __P ((int __fd, int __queue_selector));
 
 /* Suspend or restart transmission on FD.
-   Values for ACTION (TC[IO]{OFF,ON}) are in <termbits.h>.  */
+   Values for ACTION (TC[IO]{OFF,ON}) are in <bits/termios.h>.  */
 extern int tcflow __P ((int __fd, int __action));
 
 

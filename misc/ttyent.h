@@ -33,9 +33,9 @@
  *	@(#)ttyent.h	8.1 (Berkeley) 6/2/93
  */
 
-#ifndef	_TTYENT_H_
+#ifndef	_TTYENT_H
+#define	_TTYENT_H	1
 
-#define	_TTYENT_H_	1
 #include <features.h>
 
 #define	_PATH_TTYS	"/etc/ttys"
@@ -66,4 +66,4 @@ extern int endttyent __P ((void));
 
 __END_DECLS
 
-#endif /* !_TTYENT_H_ */
+#endif /* ttyent.h */

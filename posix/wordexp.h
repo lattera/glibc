@@ -17,8 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_WORDEXP_H
-
 #define	_WORDEXP_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS

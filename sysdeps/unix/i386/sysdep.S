@@ -18,7 +18,7 @@
 
 #include <sysdep.h>
 #define _ERRNO_H
-#include <errnos.h>
+#include <bits/errno.h>
 
 .globl C_SYMBOL_NAME(errno)
 .globl syscall_error

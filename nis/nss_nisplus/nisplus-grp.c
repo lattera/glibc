@@ -22,7 +22,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <string.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <rpcsvc/nis.h>
 #include <rpcsvc/nislib.h>
 
@@ -47,10 +47,10 @@ _nss_nisplus_parse_grent (nis_result * result, struct group *gr,
   size_t room_left = buflen;
   char *line;
   int count;
-  
+
   if (result == NULL)
     return 0;
-  
+
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
       result->objects.objects_len != 1 ||
       result->objects.objects_val[0].zo_data.zo_type != ENTRY_OBJ ||
@@ -66,7 +66,7 @@ _nss_nisplus_parse_grent (nis_result * result, struct group *gr,
       __set_errno (ERANGE);
       return 0;
     }
-  
+
   strncpy (first_unused, NISENTRYVAL (0, 0, result),
 	   NISENTRYLEN (0, 0, result));
   first_unused[NISENTRYLEN (0, 0, result)] = '\0';

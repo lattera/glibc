@@ -20,15 +20,15 @@
 /*	POSIX 1003.1g: 6.2 Select from File Descriptor Sets <sys/select.h>  */
 
 #ifndef _SYS_SELECT_H
-
 #define _SYS_SELECT_H	1
+
 #include <features.h>
 
 /* Get definition of needed basic types.  */
-#include <gnu/types.h>
+#include <bits/types.h>
 
 /* Get __FD_* definitions.  */
-#include <selectbits.h>
+#include <bits/select.h>
 
 /* Get definition of timer specification structures.  */
 #define __need_timespec

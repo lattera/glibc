@@ -19,7 +19,7 @@
 
 #include <sysdep.h>
 #define _ASM
-#include <jmp_buf.h>
+#include <bits/setjmp.h>
 
 ENTRY (__longjmp)
 	movl 4(%esp), %ecx	/* User's jmp_buf in %ecx.  */

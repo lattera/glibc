@@ -24,7 +24,8 @@ subdir	:= nss
 headers			:= nss.h
 distribute		:= nsswitch.h XXX-lookup.c getXXbyYY.c getXXbyYY_r.c \
 			   getXXent.c getXXent_r.c databases.def \
-			   nsswitch.conf db-Makefile digits_dots.c
+			   nsswitch.conf db-Makefile digits_dots.c \
+			   function.def
 
 # This is the trivial part which goes into libc itself.
 routines		= nsswitch $(addsuffix -lookup,$(databases))
@@ -59,8 +60,11 @@ generated		+= $(filter-out db-alias.c db-netgrp.c, \
 					$(addsuffix .c,$(libnss_db-routines)))
 distribute		+= db-XXX.c
 
+
+ifneq ($(build-static-nss),yes)
 libnss_files-inhibit-o	= $(filter-out .so,$(object-suffixes))
 libnss_db-inhibit-o	= $(filter-out .so,$(object-suffixes))
+endif
 
 
 include ../Rules

@@ -19,7 +19,7 @@
 #include <stddef.h>
 #include <termios.h>
 
-/* These are defined both in termbits.h and in ioctls.h.
+/* These are defined both in <bits/termios.h> and in <bits/ioctls.h>.
    They should have the same values, but perhaps not written the same way.  */
 #undef ECHO
 #undef MDMBUF

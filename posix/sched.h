@@ -23,11 +23,11 @@
 #include <features.h>
 
 /* Get type definitions.  */
-#include <gnu/types.h>
+#include <bits/types.h>
 #include <sys/time.h>		/* for struct timespec */
 
 /* Get system specific constant and data structure definitions.  */
-#include <schedbits.h>
+#include <bits/sched.h>
 
 __BEGIN_DECLS
 

@@ -21,8 +21,8 @@
  */
 
 #ifndef	_SYS_TIMES_H
-
 #define	_SYS_TIMES_H	1
+
 #include <features.h>
 
 #define	__need_clock_t

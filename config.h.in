@@ -46,6 +46,9 @@
 /* Define if versioning of the library is wanted.  */
 #undef	DO_VERSIONING
 
+/* Define if static NSS modules are wanted.  */
+#undef	DO_STATIC_NSS
+
 /*
  */
 

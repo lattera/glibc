@@ -17,8 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_UIO_H
-
 #define _SYS_UIO_H	1
+
 #include <features.h>
 
 #include <sys/types.h>
@@ -26,7 +26,7 @@
 __BEGIN_DECLS
 
 /* This file defines `struct iovec'.  */
-#include <iovec.h>
+#include <bits/uio.h>
 
 
 /* Read data from file descriptor FD, and put the result in the

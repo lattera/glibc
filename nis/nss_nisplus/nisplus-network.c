@@ -23,7 +23,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <arpa/inet.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <rpcsvc/nis.h>
 #include <rpcsvc/nislib.h>
 

@@ -26,8 +26,8 @@
    identifying the type of records, followed by records specific data. */
 
 #ifndef _SYS_GMON_OUT_H
-
 #define _SYS_GMON_OUT_H	1
+
 #include <features.h>
 
 #define	GMON_MAGIC	"gmon"	/* magic cookie */
@@ -74,4 +74,4 @@ struct gmon_cg_arc_record
 
 __END_DECLS
 
-#endif /* _SYS_GMON_OUT_H */
+#endif /* sys/gmon_out.h */

@@ -21,9 +21,10 @@
  */
 
 #ifndef	_CTYPE_H
-
 #define	_CTYPE_H	1
+
 #include <features.h>
+#include <gnu/types.h>
 
 __BEGIN_DECLS
 
@@ -72,8 +73,8 @@ enum
    doesn't fit into an `unsigned char'.  But today more important is that
    the arrays are also used for multi-byte character sets.  */
 extern __const unsigned short int *__ctype_b;	/* Characteristics.  */
-extern __const int *__ctype_tolower; /* Case conversions.  */
-extern __const int *__ctype_toupper; /* Case conversions.  */
+extern __const __int32_t *__ctype_tolower; /* Case conversions.  */
+extern __const __int32_t *__ctype_toupper; /* Case conversions.  */
 
 #define	__isctype(c, type) \
   (__ctype_b[(int) (c)] & (unsigned short int) type)

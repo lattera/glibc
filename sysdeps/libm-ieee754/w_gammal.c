@@ -33,13 +33,13 @@ static char rcsid[] = "$NetBSD: $";
 #endif
 {
         long double y;
-	int signgam;
 	if (_LIB_VERSION == _SVID_)
 	  y = __ieee754_lgammal_r(x,&signgam);
 	else
 	  {
-	    y = __ieee754_gammal_r(x,&signgam);
-	    if (signgam < 0) y = -y;
+	    int local_signgam;
+	    y = __ieee754_gammal_r(x,&local_signgam);
+	    if (local_signgam < 0) y = -y;
 #ifdef _IEEE_LIBM
 	    return y;
 #else

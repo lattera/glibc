@@ -17,8 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SYS_FILE_H
-
 #define	_SYS_FILE_H	1
+
 #include <features.h>
 
 #ifndef	_FCNTL_H

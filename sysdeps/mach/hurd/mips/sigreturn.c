@@ -1,30 +1,32 @@
-/* Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <hurd.h>
 #include <hurd/signal.h>
 #include <hurd/threadvar.h>
 #include <stdlib.h>
+#include <mach/mips/mips_instruction.h>
 
 int
 __sigreturn (struct sigcontext *scp)
 {
   struct hurd_sigstate *ss;
+  struct hurd_userlink *link = (void *) &scp[1];
   mach_port_t *reply_port;
 
   if (scp == NULL || (scp->sc_mask & _SIG_CANT_MASK))
@@ -35,6 +37,11 @@ __sigreturn (struct sigcontext *scp)
 
   ss = _hurd_self_sigstate ();
   __spin_lock (&ss->lock);
+
+  /* Remove the link on the `active resources' chain added by
+     _hurd_setup_sighandler.  Its purpose was to make sure
+     that we got called; now we have, it is done.  */
+  _hurd_userlink_unlink (link);
 
   /* Restore the set of blocked signals, and the intr_port slot.  */
   ss->blocked = scp->sc_mask;
@@ -48,15 +55,11 @@ __sigreturn (struct sigcontext *scp)
 	 the signal thread will notice it if it runs another handler, and
 	 arrange to have us called over again in the new reality.  */
       ss->context = scp;
-      /* Clear the intr_port slot, since we are not in fact doing
-	 an interruptible RPC right now.  If SS->intr_port is not null,
-	 the SCP context is doing an interruptible RPC, but the signal
-	 thread will examine us while we are blocked in the sig_post RPC.  */
-      ss->intr_port = MACH_PORT_NULL;
       __spin_unlock (&ss->lock);
-      __msg_sig_post (_hurd_msgport, 0, __mach_task_self ());
+      __msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
       /* If a pending signal was handled, sig_post never returned.  */
       __spin_lock (&ss->lock);
+      ss->context = NULL;
     }
 
   if (scp->sc_onstack)
@@ -73,7 +76,17 @@ __sigreturn (struct sigcontext *scp)
   reply_port =
     (mach_port_t *) __hurd_threadvar_location (_HURD_THREADVAR_MIG_REPLY);
   if (*reply_port)
-    __mach_port_destroy (__mach_task_self (), *reply_port);
+    {
+      mach_port_t port = *reply_port;
+
+      /* Assigning MACH_PORT_DEAD here tells libc's mig_get_reply_port not to
+	 get another reply port, but avoids mig_dealloc_reply_port trying to
+	 deallocate it after the receive fails (which it will, because the
+	 reply port will be bogus, whether we do this or not).  */
+      *reply_port = MACH_PORT_DEAD;
+
+      __mach_port_destroy (__mach_task_self (), port);
+    }
   *reply_port = scp->sc_reply_port;
 
   if (scp->sc_coproc_used & SC_COPROC_USE_FPU)
@@ -83,6 +96,40 @@ __sigreturn (struct sigcontext *scp)
   asm volatile ("l.d $f" #n ",%0" : : "m" (scp->sc_fpr[n]))
 
       /* Restore floating-point registers. */
+#ifdef __mips64
+      restore_fpr (0);
+      restore_fpr (1);
+      restore_fpr (2);
+      restore_fpr (3);
+      restore_fpr (4);
+      restore_fpr (5);
+      restore_fpr (6);
+      restore_fpr (7);
+      restore_fpr (8);
+      restore_fpr (9);
+      restore_fpr (10);
+      restore_fpr (11);
+      restore_fpr (12);
+      restore_fpr (13);
+      restore_fpr (14);
+      restore_fpr (15);
+      restore_fpr (16);
+      restore_fpr (17);
+      restore_fpr (18);
+      restore_fpr (19);
+      restore_fpr (20);
+      restore_fpr (21);
+      restore_fpr (22);
+      restore_fpr (23);
+      restore_fpr (24);
+      restore_fpr (25);
+      restore_fpr (26);
+      restore_fpr (27);
+      restore_fpr (28);
+      restore_fpr (29);
+      restore_fpr (30);
+      restore_fpr (31);
+#else
       restore_fpr (0);
       restore_fpr (2);
       restore_fpr (4);
@@ -99,14 +146,20 @@ __sigreturn (struct sigcontext *scp)
       restore_fpr (26);
       restore_fpr (28);
       restore_fpr (30);
+#endif
 
       /* Restore the floating-point control/status register ($f31).  */
       asm volatile ("ctc1 %0,$f31" : : "r" (scp->sc_fpcsr));
     }
 
   /* Load all the registers from the sigcontext.  */
+#ifdef __mips64
+#define restore_gpr(n) \
+  asm volatile ("ld $" #n ",%0" : : "m" (scpreg->sc_gpr[n - 1]))
+#else
 #define restore_gpr(n) \
   asm volatile ("lw $" #n ",%0" : : "m" (scpreg->sc_gpr[n - 1]))
+#endif
 
   {
     register const struct sigcontext *const scpreg asm ("$1") = scp;
@@ -157,9 +210,10 @@ __sigreturn (struct sigcontext *scp)
     at = &scpreg->sc_pc;
     /* This is an emulated instruction that will find at the address in $1
        two words: the PC value to restore, and the $1 value to restore.  */
-    asm volatile (".word op_sigreturn");
-
+    asm volatile (".word %0" : : "i" (op_sigreturn));
     asm volatile (".set reorder; .set at;");
+    /* NOTREACHED */
+    return at;		/* To prevent optimization.  */
   }
 
   /* NOTREACHED */

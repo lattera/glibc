@@ -8,7 +8,7 @@
 
 enum __stab_debug_code
 {
-#include "stab.def"
+#include <bits/stab.def>
 LAST_UNUSED_STAB_CODE
 };
 

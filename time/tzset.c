@@ -508,7 +508,7 @@ __tz_compute (timer, tm)
   return 1;
 }
 
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 
 /* This locks all the state variables in tzfile.c and this file.  */
 __libc_lock_define (, __tzset_lock)

@@ -21,15 +21,17 @@
 subdir		:= math
 
 # Installed header files.
-headers		:= math.h mathcalls.h __math.h huge_val.h nan.h		\
-		   fpu_control.h complex.h cmathcalls.h fenv.h		\
-		   fenvbits.h mathbits.h
+headers		:= math.h bits/mathcalls.h bits/mathinline.h bits/huge_val.h \
+		   bits/nan.h fpu_control.h complex.h bits/cmathcalls.h \
+		   fenv.h bits/fenv.h bits/mathdef.h
 
 # Internal header files.
 distribute	:= math_private.h machine/asm.h machine/endian.h
 
 # FPU support code.
-aux		:= fpu_control setfpucw
+aux		:= fpu_control setfpucw s_matherr
+
+static-only-routines := s_matherr
 
 # Build the -lm library.
 
@@ -38,7 +40,7 @@ extra-libs-others = $(extra-libs)
 
 libm-map	:= libm.map
 
-libm-support = k_standard s_lib_version s_matherr s_signgam		\
+libm-support = k_standard s_lib_version s_signgam			\
 	       s_lrint s_llrint s_lround s_llround			\
 	       fclrexcpt fgetexcptflg fraiseexcpt fsetexcptflg		\
 	       ftestexcept fegetround fesetround fegetenv feholdexcpt	\

@@ -17,8 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_NETINET_IN_H
-
 #define	_NETINET_IN_H	1
+
 #include <features.h>
 
 #include <sys/socket.h>
@@ -90,7 +90,7 @@ enum
 /* Internet address.  */
 struct in_addr
   {
-    unsigned int s_addr;
+    u_int32_t s_addr;
   };
 
 
@@ -164,7 +164,7 @@ extern const struct in6_addr in6addr_loopback;   /* ::1 */
 #define INET6_ADDRSTRLEN 46
 
 /* Get the definition of the macro to define the common sockaddr members.  */
-#include <sockaddrcom.h>
+#include <bits/sockaddr.h>
 
 
 /* Structure describing an Internet socket address.  */

@@ -36,7 +36,7 @@ sysdep_headers += sys/timex.h
 endif
 
 ifeq ($(subdir),socket)
-sysdep_headers += sys/socketcall.h net/if.h net/if_ppp.h net/ppp-comp.h \
+sysdep_headers += net/if.h net/if_ppp.h net/ppp-comp.h \
 		  net/ppp_defs.h net/if_arp.h net/route.h net/ethernet.h \
 		  net/if_slip.h
 sysdep_routines += cmsg_nxthdr
@@ -47,7 +47,7 @@ sysdep_headers += nfs/nfs.h
 endif
 
 ifeq ($(subdir),termios)
-sysdep_headers += termio.h sys/kernel_termios.h
+sysdep_headers += termio.h
 endif
 
 ifeq ($(subdir),stdio-common)

@@ -18,12 +18,12 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_IPC_H
-
 #define _SYS_IPC_H	1
+
 #include <sys/cdefs.h>
 
 /* Get system dependent definition of `struct ipc_perm' and more.  */
-#include <sys/ipc_buf.h>
+#include <bits/ipc.h>
 
 #if !defined __USE_SVID && !defined __USE_XOPEN && __GNUC__ >= 2
 # warning "Files using this header must be compiled with _SVID_SOURCE or _XOPEN_SOURCE"

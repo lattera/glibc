@@ -16,10 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef	_UTMP_H
+#define	_UTMP_H	1
 
-#ifndef	_UTMP_H_
-
-#define	_UTMP_H_	1
 #include <features.h>
 
 #include <sys/types.h>
@@ -28,7 +27,7 @@
 __BEGIN_DECLS
 
 /* Get system dependent values and data structures.  */
-#include <utmpbits.h>
+#include <bits/utmp.h>
 
 /* Compatibility names for the strings of the canonical file names.  */
 #define UTMP_FILE	_PATH_UTMP

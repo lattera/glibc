@@ -21,7 +21,7 @@
 #include <errno.h>
 #include <ctype.h>
 #include <string.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <netdb.h>
 #include <netinet/ether.h>
 #include <rpcsvc/nis.h>

@@ -18,8 +18,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_DLFCN_H
-
 #define	_DLFCN_H 1
+
 #include <features.h>
 
 /* The MODE argument to `dlopen' contains one of the following: */

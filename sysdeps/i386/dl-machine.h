@@ -263,6 +263,10 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
       switch (ELF32_R_TYPE (reloc->r_info))
 	{
 	case R_386_COPY:
+	  if (sym == NULL)
+	    /* This can happen in trace mode if an object could not be
+	       found.  */
+	    break;
 	  if (sym->st_size > refsym->st_size
 	      || (_dl_verbose && sym->st_size < refsym->st_size))
 	    {

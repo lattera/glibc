@@ -59,7 +59,7 @@ logout (const char *line)
       ut->ut_type = DEAD_PROCESS;
 #endif
 
-      if (pututline (ut) >= 0)
+      if (pututline (ut) != NULL)
 	result = 1;
     }
 

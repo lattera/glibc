@@ -21,7 +21,7 @@
 #include <errno.h>
 #include <shadow.h>
 #include <string.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <rpcsvc/nis.h>
 #include <rpcsvc/nislib.h>
 
@@ -84,7 +84,7 @@ _nss_nisplus_parse_spent (nis_result *result, struct spwd *sp,
   sp->sp_lstchg = sp->sp_min = sp->sp_max = sp->sp_warn = sp->sp_inact =
     sp->sp_expire = sp->sp_flag = -1;
 
-  if (NISENTRYVAL (0, 7, result) > 0)
+  if (NISENTRYVAL (0, 7, result) != NULL)
     {
       char *line, *cp;
 

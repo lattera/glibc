@@ -33,8 +33,8 @@
  *	@(#)routed.h	8.1 (Berkeley) 6/2/93
  */
 
-#ifndef _ROUTED_H_
-#define	_ROUTED_H_
+#ifndef _PROTOCOLS_ROUTED_H
+#define	_PROTOCOLS_ROUTED_H 1
 
 /*
  * Routing Information Protocol
@@ -101,4 +101,4 @@ char *ripcmds[RIPCMD_MAX] =
 #define	EXPIRE_TIME		180	/* time to mark entry invalid */
 #define	GARBAGE_TIME		240	/* time to garbage collect */
 
-#endif /* !_ROUTED_H_ */
+#endif /* protocols/routed.h */

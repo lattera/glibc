@@ -18,8 +18,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SYS_SOCKET_H
-
 #define	_SYS_SOCKET_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
@@ -31,7 +31,7 @@ __BEGIN_DECLS
 /* This operating system-specific header file defines the SOCK_*, PF_*,
    AF_*, MSG_*, SOL_*, and SO_* constants, and the `struct sockaddr',
    `struct msghdr', and `struct linger' types.  */
-#include <socketbits.h>
+#include <bits/socket.h>
 
 #ifdef __USE_BSD
 /* This is the 4.3 BSD `struct sockaddr' format, which is used as wire

@@ -21,15 +21,15 @@
  */
 
 #ifndef	_SYS_STAT_H
-
 #define	_SYS_STAT_H	1
+
 #include <features.h>
 
-#include <gnu/types.h>		/* For __mode_t and __dev_t.  */
+#include <bits/types.h>		/* For __mode_t and __dev_t.  */
 
 __BEGIN_DECLS
 
-#include <statbuf.h>
+#include <bits/stat.h>
 
 #if defined(__USE_BSD) || defined(__USE_MISC)
 #define	S_IFMT		__S_IFMT
@@ -173,19 +173,20 @@ extern int mknod __P ((__const char *__path,
 /* Create a new FIFO named PATH, with permission bits MODE.  */
 extern int mkfifo __P ((__const char *__path, __mode_t __mode));
 
-/* To allow the `struct stat' structure and the file type `mode_t' bits to
-   vary without changing shared library major version number, the `stat'
-   family of functions and `mknod' are in fact inline wrappers around calls
-   to `xstat', `fxstat', `lxstat', and `xmknod', which all take a leading
-   version-number argument designating the data structure and bits used.
-   <statbuf.h> defines _STAT_VER with the version number corresponding to
-   `struct stat' as defined in that file; and _MKNOD_VER with the version
-   number corresponding to the S_IF* macros defined therein.  It is
-   arranged that when not inlined these function are always statically
-   linked; that way a dynamically-linked executable always encodes the
-   version number corresponding to the data structures it uses, so the `x'
-   functions in the shared library can adapt without needing to recompile
-   all callers.  */
+/* To allow the `struct stat' structure and the file type `mode_t'
+   bits to vary without changing shared library major version number,
+   the `stat' family of functions and `mknod' are in fact inline
+   wrappers around calls to `xstat', `fxstat', `lxstat', and `xmknod',
+   which all take a leading version-number argument designating the
+   data structure and bits used.  <bits/stat.h> defines _STAT_VER with
+   the version number corresponding to `struct stat' as defined in
+   that file; and _MKNOD_VER with the version number corresponding to
+   the S_IF* macros defined therein.  It is arranged that when not
+   inlined these function are always statically linked; that way a
+   dynamically-linked executable always encodes the version number
+   corresponding to the data structures it uses, so the `x' functions
+   in the shared library can adapt without needing to recompile all
+   callers.  */
 
 #ifndef _STAT_VER
 #define _STAT_VER	0

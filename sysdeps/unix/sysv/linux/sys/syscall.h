@@ -27,9 +27,9 @@
 #ifndef _LIBC
 /* The Linux kernel header file defines macros `__NR_<name>', but some
    programs expect the traditional form `SYS_<name>'.  So in building libc
-   we scan the kernel's list and produce <syscall-list.h> with macros for
+   we scan the kernel's list and produce <bits/syscall.h> with macros for
    all the `SYS_' names.  */
-#include <syscall-list.h>
+#include <bits/syscall.h>
 #endif
 
 #endif

@@ -17,8 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_VLIMIT_H
-
 #define _SYS_VLIMIT_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
@@ -65,4 +65,4 @@ extern int vlimit __P ((enum __vlimit_resource __resource, int __value));
 
 __END_DECLS
 
-#endif /* vlimit.h  */
+#endif /* sys/vlimit.h  */

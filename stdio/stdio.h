@@ -38,7 +38,7 @@ __BEGIN_DECLS
 #define	__gnuc_va_list	__ptr_t
 #endif
 
-#include <gnu/types.h>
+#include <bits/types.h>
 #endif /* Don't need FILE.  */
 #undef	__need_FILE
 
@@ -272,7 +272,7 @@ extern int __stdio_check_offset __P ((FILE *__stream));
    L_cuserid	How long an array to pass to `cuserid'.
    FOPEN_MAX	Minimum number of files that can be open at once.
    FILENAME_MAX	Maximum length of a filename.  */
-#include <stdio_lim.h>
+#include <bits/stdio_lim.h>
 
 
 /* All the known streams are in a linked list

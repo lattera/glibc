@@ -33,8 +33,8 @@
  *	@(#)talkd.h	8.1 (Berkeley) 6/2/93
  */
 
-#ifndef _TALKD_H_
-#define	_TALKD_H_
+#ifndef _PROTOCOLS_TALKD_H
+#define	_PROTOCOLS_TALKD_H 1
 
 /*
  * This describes the protocol used by the talk server and clients.
@@ -113,4 +113,4 @@ typedef struct {
 /* RING_WAIT should be 10's of seconds less than MAX_LIFE */
 #define RING_WAIT	30	/* time to wait before resending invitation */
 
-#endif /* !_TALKD_H_ */
+#endif /* protocols/talkd.h */

@@ -27,7 +27,7 @@ Cambridge, MA 02139, USA.  */
 #ifndef __FILEDESC_h
 #define __FILEDESC_h
 
-#include <stdio_lim.h>
+#include <bits/stdio_lim.h>
 
 #ifndef __DECLARE_FILE_DESCRIPTORS__
 #define FILEDESC_EXTERN extern

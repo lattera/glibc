@@ -21,16 +21,16 @@
  */
 
 #ifndef	_FCNTL_H
-
 #define	_FCNTL_H	1
+
 #include <features.h>
 
-/* This must be early so <fcntlbits.h> can define types winningly.  */
+/* This must be early so <bits/fcntl.h> can define types winningly.  */
 __BEGIN_DECLS
 
 /* Get the definitions of O_*, F_*, FD_*: all the
    numbers and flag bits for `open', `fcntl', et al.  */
-#include <fcntlbits.h>
+#include <bits/fcntl.h>
 
 #ifdef	__USE_MISC
 #ifndef	R_OK			/* Verbatim from <unistd.h>.  Ugh.  */

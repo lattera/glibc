@@ -17,15 +17,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* This interface is obsolete.  Use <sys/statfs.h> instead.  */
+/*
+ * This interface is obsolete.  Use <sys/statfs.h> instead.
+ */
 
 #ifndef _SYS_USTAT_H
-
 #define	_SYS_USTAT_H	1
+
 #include <features.h>
 
 #include <sys/types.h>
-#include <ustatbits.h>
+#include <bits/ustat.h>
 
 __BEGIN_DECLS
 
@@ -34,4 +36,4 @@ extern int ustat __P ((__dev_t __dev, struct ustat *__ubuf));
 
 __END_DECLS
 
-#endif /* _SYS_USTAT_H */
+#endif /* sys/ustat.h */

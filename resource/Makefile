@@ -18,7 +18,7 @@
 
 subdir := resource
 
-headers	  := sys/resource.h resourcebits.h sys/vlimit.h sys/vtimes.h
+headers	  := sys/resource.h bits/resource.h sys/vlimit.h sys/vtimes.h
 
 routines := getrlimit setrlimit getrusage ulimit vlimit vtimes \
 	    getpriority setpriority nice

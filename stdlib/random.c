@@ -22,7 +22,7 @@
  * Rewritten to use reentrant functions by Ulrich Drepper, 1995.
  */
 
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <limits.h>
 #include <stddef.h>
 #include <stdlib.h>

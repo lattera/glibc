@@ -19,7 +19,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_TAR_H
-
 #define	_TAR_H	1
 
 /* A tar archive consists of 512-byte blocks.

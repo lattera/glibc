@@ -39,7 +39,9 @@ vpath %.c nss_dns
 
 libnss_dns-routines	:= dns-host dns-network
 libnss_dns-map		:= libnss_dns.map
+ifneq ($(build-static-nss),yes)
 libnss_dns-inhibit-o	= $(filter-out .so,$(object-suffixes))
+endif
 
 include ../Rules
 

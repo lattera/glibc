@@ -199,4 +199,4 @@ extern void __malloc_check_init __MALLOC_P ((void));
 }; /* end of extern "C" */
 #endif
 
-#endif /* !defined(_MALLOC_H) */
+#endif /* malloc.h */

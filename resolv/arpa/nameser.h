@@ -80,8 +80,8 @@
  *	$Id$
  */
 
-#ifndef _NAMESER_H_
-#define	_NAMESER_H_
+#ifndef _ARPA_NAMESER_H
+#define	_ARPA_NAMESER_H 1
 
 #include <sys/param.h>
 #if (!defined(BSD)) || (BSD < 199306)
@@ -389,4 +389,4 @@ extern	u_int32_t	_getlong __P((const u_char *));
 	(cp) += INT32SZ; \
 }
 
-#endif /* !_NAMESER_H_ */
+#endif /* arpa/nameser.h */

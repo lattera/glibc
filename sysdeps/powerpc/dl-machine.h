@@ -591,6 +591,10 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     }
   else if (rinfo == R_PPC_COPY)
     {
+      if (sym == NULL)
+	/* This can happen in trace mode when an object could not be
+	   found.  */
+	return;
       if (sym->st_size > refsym->st_size
 	  || (_dl_verbose && sym->st_size < refsym->st_size))
 	{

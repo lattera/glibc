@@ -29,7 +29,9 @@ Cambridge, MA 02139, USA.  */
 /* The first piece of initialized data.  */
 int __data_start = 0;
 
+#ifndef _HURD_THREADVAR_H
 volatile int errno;
+#endif
 
 extern void __mach_init (void);
 extern void __libc_init (int argc, char **argv, char **envp);
@@ -62,6 +64,7 @@ start1 (void)
 
 #ifndef START_ARGS
 #define START_ARGS void
+#endif
 #ifdef START_MACHDEP
 START_MACHDEP
 #define _start _start0

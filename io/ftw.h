@@ -21,12 +21,12 @@
  */
 
 #ifndef _FTW_H
-
 #define	_FTW_H	1
+
 #include <features.h>
 
 #include <sys/types.h>
-#include <statbuf.h>
+#include <bits/stat.h>
 
 
 __BEGIN_DECLS

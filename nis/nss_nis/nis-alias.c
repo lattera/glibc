@@ -22,7 +22,7 @@
 #include <errno.h>
 #include <string.h>
 #include <aliases.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
 

@@ -35,9 +35,9 @@
  * Copyright (C) 1984, Sun Microsystems, Inc.
  */
 
-#ifndef __XDR_HEADER__
+#ifndef _RPC_XDR_H
+#define _RPC_XDR_H 1
 
-#define __XDR_HEADER__
 #include <features.h>
 #include <sys/types.h>
 #include <rpc/types.h>
@@ -335,4 +335,4 @@ extern void xdr_free __P ((xdrproc_t __proc, char *__objp));
 
 __END_DECLS
 
-#endif /* !__XDR_HEADER__ */
+#endif /* rpc/xdr.h */

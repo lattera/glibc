@@ -33,8 +33,8 @@
  *	@(#)db.h	8.7 (Berkeley) 6/16/94
  */
 
-#ifndef _DB_H_
-#define	_DB_H_
+#ifndef _DB_H
+#define	_DB_H 1
 
 #include <sys/types.h>
 #include <sys/cdefs.h>
@@ -234,4 +234,5 @@ DB	*__rec_open __P((const char *, int, int, const RECNOINFO *, int));
 void	 __dbpanic __P((DB *dbp));
 #endif
 __END_DECLS
-#endif /* !_DB_H_ */
+
+#endif /* db.h */

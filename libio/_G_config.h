@@ -6,7 +6,7 @@
 
 /* Define types for libio in terms of the standard internal type names.  */
 
-#include <gnu/types.h>
+#include <bits/types.h>
 #define __need_size_t
 #define __need_wint_t
 #include <stddef.h>
@@ -45,7 +45,7 @@ typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
 #define _G_HAVE_MMAP 1
 #define _G_HAVE_LONG_DOUBLE_IO 1
 
-/* This is defined by <statbuf.h> if `st_blksize' exists.  */
+/* This is defined by <bits/stat.h> if `st_blksize' exists.  */
 #define _G_HAVE_ST_BLKSIZE defined (_STATBUF_ST_BLKSIZE)
 
 #define _G_BUFSIZ 8192

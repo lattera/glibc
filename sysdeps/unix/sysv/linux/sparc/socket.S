@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
-#include <sys/socketcall.h>
+#include <socketcall.h>
 
 #define P(a, b) P2(a, b)
 #define P2(a, b) a##b

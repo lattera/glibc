@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 
 /* The interface of this function is completely stupid, it requires a
    static buffer.  We relax this a bit in that we allow at least one

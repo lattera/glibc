@@ -18,8 +18,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef __FMTMSG_H
-
 #define __FMTMSG_H	1
+
 #include <features.h>
 
 #define __need_NULL

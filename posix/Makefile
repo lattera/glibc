@@ -22,10 +22,11 @@
 subdir	:= posix
 
 headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
-	   glob.h regex.h wordexp.h fnmatch.h gnu/types.h getopt.h	      \
-	   posix1_lim.h posix2_lim.h posix_opt.h local_lim.h tar.h	      \
-	   utsnamelen.h confname.h waitflags.h waitstatus.h sys/unistd.h      \
-	   sched.h schedbits.h re_comp.h wait.h
+	   glob.h regex.h wordexp.h fnmatch.h bits/types.h getopt.h	      \
+	   bits/posix1_lim.h bits/posix2_lim.h bits/posix_opt.h 	      \
+	   bits/local_lim.h tar.h bits/utsname.h bits/confname.h	      \
+	   bits/waitflags.h bits/waitstatus.h sys/unistd.h sched.h	      \
+	   bits/sched.h re_comp.h wait.h
 
 distribute := confstr.h TESTS TESTS2C.sed testcases.h
 
@@ -59,7 +60,7 @@ before-compile	:= testcases.h
 
 include ../Rules
 
-CFLAGS-regex.c = -Wno-unused -Wno-strict-prototypes
+CFLAGS-regex.c = -Wno-unused -Wno-strict-prototypes -DDEBUG
 CFLAGS-getaddrinfo.c = -DRESOLVER
 
 $(objpfx)libposix.a: $(dep-dummy-lib); $(make-dummy-lib)

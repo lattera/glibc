@@ -21,7 +21,7 @@
 #
 subdir	:= setjmp
 
-headers	:= setjmp.h jmp_buf.h
+headers	:= setjmp.h bits/setjmp.h
 
 routines	:= setjmp sigjmp bsd-setjmp bsd-_setjmp \
 		   longjmp __longjmp jmp-unwind

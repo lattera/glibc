@@ -20,7 +20,7 @@
 
 subdir		:= elf
 
-headers		= elf.h elfclass.h link.h dlfcn.h
+headers		= elf.h bits/elfclass.h link.h dlfcn.h
 routines	= $(dl-routines) dl-open dl-close dl-symbol dl-support \
 		  dl-version enbl-secure
 

@@ -26,7 +26,7 @@
 #define	_SYS_MMAN_H	1
 #include <features.h>
 
-#include <gnu/types.h>
+#include <bits/types.h>
 #define __need_size_t
 #include <stddef.h>
 

@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <wchar.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <sys/param.h>
 #include "_itoa.h"
 #include "../locale/localeinfo.h"

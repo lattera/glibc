@@ -33,8 +33,8 @@
  *	@(#)ftp.h	8.1 (Berkeley) 6/2/93
  */
 
-#ifndef _FTP_H_
-#define	_FTP_H_
+#ifndef _ARPA_FTP_H
+#define	_ARPA_FTP_H 1
 
 /* Definitions for FTP; see RFC-765. */
 
@@ -106,4 +106,4 @@ char *modenames[] =  {"0", "Stream", "Block", "Compressed" };
 
 #define	BLK_BYTECOUNT	2	/* Bytes in this block */
 
-#endif /* !_FTP_H_ */
+#endif /* arpa/ftp.h */

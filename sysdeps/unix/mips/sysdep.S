@@ -18,7 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 #define _ERRNO_H
-#include <errnos.h>
+#include <bits/errno.h>
 
 /* .globl errno */
 .set noreorder

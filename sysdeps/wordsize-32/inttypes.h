@@ -28,10 +28,15 @@
 /* Exact integral types.  */
 
 /* Signed.  */
+
+/* There is some amount of overlap with <sys/types.h> as known by inet code */
+#ifndef __int8_t_defined
+#define __int8_t_defined
 typedef signed char    int8_t;
 typedef short int     int16_t;
 typedef int           int32_t;
 typedef long long int int64_t;
+#endif
 
 /* Unsigned.  */
 typedef unsigned char           uint8_t;

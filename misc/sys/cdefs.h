@@ -17,8 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SYS_CDEFS_H
-
 #define	_SYS_CDEFS_H	1
+
 #include <features.h>
 
 /* Some user header file might have defined this before.  */

@@ -39,7 +39,7 @@ __ioctl (int fd, unsigned long int request, ...)
   /* Map individual type fields to Mach IPC types.  */
   static const int mach_types[] =
     { MACH_MSG_TYPE_CHAR, MACH_MSG_TYPE_INTEGER_16, MACH_MSG_TYPE_INTEGER_32,
-      -1 };
+      MACH_MSG_TYPE_INTEGER_64 };
 #define io2mach_type(count, type) \
   ((mach_msg_type_t) { mach_types[type], typesize (type) * 8, count, 1, 0, 0 })
 
@@ -47,12 +47,14 @@ __ioctl (int fd, unsigned long int request, ...)
   unsigned int type = _IOC_TYPE (request);
 
   /* Message buffer.  */
+#define msg_align(x) \
+  (((x) + sizeof (mach_msg_type_t) - 1) & ~(sizeof (mach_msg_type_t) - 1))
   struct
     {
       mig_reply_header_t header;
       char data[3 * sizeof (mach_msg_type_t) +
-		_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (type)) +
-		_IOT_COUNT1 (type) * typesize (_IOT_TYPE1 (type)) +
+		msg_align (_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (type))) +
+		msg_align (_IOT_COUNT1 (type) * typesize (_IOT_TYPE1 (type))) +
 		_IOT_COUNT2 (type) * typesize (_IOT_TYPE2 (type))];
     } msg;
   mach_msg_header_t *const m = &msg.header.Head;

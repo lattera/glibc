@@ -23,8 +23,8 @@
    that.  This header file is only used internally while compiling argp, and
    shouldn't be installed.  */
 
-#ifndef __ARGP_FMTSTREAM_H__
-#define __ARGP_FMTSTREAM_H__
+#ifndef _ARGP_FMTSTREAM_H
+#define _ARGP_FMTSTREAM_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -294,4 +294,4 @@ __argp_fmtstream_point (argp_fmtstream_t __fs)
 
 #endif /* ARGP_FMTSTREAM_USE_LINEWRAP */
 
-#endif /* __ARGP_FMTSTREAM_H__ */
+#endif /* argp-fmtstream.h */

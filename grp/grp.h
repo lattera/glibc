@@ -21,13 +21,13 @@
  */
 
 #ifndef	_GRP_H
-
 #define	_GRP_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
 
-#include <gnu/types.h>
+#include <bits/types.h>
 
 #define __need_size_t
 #include <stddef.h>

@@ -18,12 +18,12 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SYS_STATFS_H
-
 #define	_SYS_STATFS_H	1
+
 #include <features.h>
 
 /* Get the system-specific definition of `struct statfs'.  */
-#include <statfsbuf.h>
+#include <bits/statfs.h>
 
 __BEGIN_DECLS
 

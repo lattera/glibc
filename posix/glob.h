@@ -19,7 +19,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_GLOB_H
-
 #define	_GLOB_H	1
 
 #ifdef	__cplusplus

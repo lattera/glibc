@@ -17,8 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_VTIMES_H
-
 #define _SYS_VTIMES_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS

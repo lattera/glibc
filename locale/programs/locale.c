@@ -1,4 +1,4 @@
-/* Implementation of the locale program according to POSIX 1003.2.
+/* Implementation of the locale program according to POSIX 9945-2.
    Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.

@@ -27,7 +27,7 @@
 #include <sys/ipc.h>
 
 /* Get system dependent definition of `struct msqid_ds' and more.  */
-#include <sys/msq_buf.h>
+#include <bits/msq.h>
 
 __BEGIN_DECLS
 

@@ -17,8 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_TIMEB_H
-
 #define _SYS_TIMEB_H	1
+
 #include <features.h>
 
 #define __need_time_t

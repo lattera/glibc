@@ -19,7 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <assert.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -52,7 +52,7 @@ struct utfuncs *__libc_utmp_jump_table = &__libc_utmp_unknown_functions;
 /* We need to protect the opening of the file.  */
 __libc_lock_define_initialized (, __libc_utmp_lock)
 
-     
+
 void
 __setutent (void)
 {
@@ -90,7 +90,7 @@ setutent_unknown (int reset)
       (*__libc_utmp_file_functions.setutent) (reset);
       __libc_utmp_jump_table = &__libc_utmp_file_functions;
     }
-  
+
   return 0;
 }
 

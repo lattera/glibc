@@ -25,7 +25,7 @@
 
 
 #ifndef _JMPBUF_UNWINDS
- #error "sysdeps/MACHINE/jmp_buf.h fails to define _JMPBUF_UNWINDS"
+#error "<bits/setjmp.h> fails to define _JMPBUF_UNWINDS"
 #endif
 
 /* This function is called by `longjmp' (with its arguments) to restore

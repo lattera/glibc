@@ -49,7 +49,7 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 #include <time.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <signal.h>
 
 #if __STDC__

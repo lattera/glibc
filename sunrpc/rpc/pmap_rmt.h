@@ -36,8 +36,8 @@
  */
 
 #ifndef _RPC_PMAP_RMT_H
-
 #define _RPC_PMAP_RMT_H	1
+
 #include <features.h>
 #include <sys/types.h>
 #include <rpc/types.h>

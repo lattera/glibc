@@ -26,7 +26,7 @@ the executable file might be covered by the GNU General Public License. */
 #ifndef errno
 extern int errno;
 #endif
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 
 #include "iolibio.h"
 

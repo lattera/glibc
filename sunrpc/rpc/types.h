@@ -32,8 +32,8 @@
 /*
  * Rpc additions to <sys/types.h>
  */
-#ifndef __TYPES_RPC_HEADER__
-#define __TYPES_RPC_HEADER__
+#ifndef _RPC_TYPES_H
+#define _RPC_TYPES_H 1
 
 typedef int bool_t;
 typedef int enum_t;
@@ -71,4 +71,4 @@ typedef int enum_t;
 #define        MAXHOSTNAMELEN  64
 #endif
 
-#endif /* ndef __TYPES_RPC_HEADER__ */
+#endif /* rpc/types.h */

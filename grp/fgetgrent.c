@@ -18,7 +18,7 @@
 
 #include <errno.h>
 #include <grp.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <stdlib.h>
 
 

@@ -1,10 +1,808 @@
+1997-06-21 02:48  Ulrich Drepper  <drepper@cygnus.com>
+
+	* config.h.in: Add DO_STATIC_NSS.
+	* config.make.in: Add build-static-nss.
+
+	* elf/eval.c: Use __getdelim instead of __getline.
+
+	* locale/programs/locale.c: Correct comment.
+
+	* manual/libc.texinfo: Update copyright and date.
+	Remove A4 option.
+
+	* sysdeps/libm-ieee754/k_standard.c: Always return HUGE_VAL
+	for gamma overflow.
+	* sysdeps/libm-ieee754/w_gamma.c: Handle SVID and ISO C behaviour.
+	* sysdeps/libm-ieee754/w_gammaf.c: Likewise.
+	* sysdeps/libm-ieee754/w_gammalp.c: Likewise.
+
+	* po/ko.po: Update.
+
+1997-06-13 10:06  Richard Henderson  <rth@tamu.edu>
+
+	The Great Bit File Move:
+	* configure.in (AC_INIT): Look in include/ for features.h.
+	(sysnames): Add include as the final search directory.
+	(AC_OUTPUT): Create a bits directory in the build directory.
+	* Makeconfig (CPPFLAGS): Look in include/ for libc-symbols.h.
+	* Makefile: Make sure the target directory exists when installing
+	<gnu/stubs.h> and <gnu/lib-names.h>.
+	* csu/Makefile: Use $(compile.S) and $(compile.c) instead of
+	invoking $(CC) directly, as the former have the full include path.
+
+	* ansidecl.h: Removed.
+
+	* aliases.h: Moved to include/.
+	* alloca.h: Likewise.
+	* argp.h: Likewise.
+	* argz.h: Likewise.
+	* arpa/ftp.h: Likewise.
+	* arpa/inet.h: Likewise.
+	* arpa/nameser.h: Likewise.
+	* arpa/telnet.h: Likewise.
+	* arpa/tftp.h: Likewise.
+	* assert.h: Likewise.
+	* ctype.h: Likewise.
+	* db.h: Likewise.
+	* dirent.h: Likewise.
+	* dlfcn.h: Likewise.
+	* elf.h: Likewise.
+	* endian.h: Likewise.
+	* envz.h: Likewise.
+	* err.h: Likewise.
+	* errno.h: Likewise.
+	* error.h: Likewise.
+	* fcntl.h: Likewise.
+	* features.h: Likewise.
+	* fnmatch.h: Likewise.
+	* ftw.h: Likewise.
+	* getopt.h: Likewise.
+	* glob.h: Likewise.
+	* gnu-versions.h: Likewise.
+	* grp.h: Likewise.
+	* langinfo.h: Likewise.
+	* libc-symbols.h: Likewise.
+	* libgen.h: Likewise.
+	* libintl.h: Likewise.
+	* limits.h: Likewise.
+	* linewrap.h: Likewise.
+	* link.h: Likewise.
+	* locale.h: Likewise.
+	* malloc.h: Likewise.
+	* math.h: Likewise.
+	* mathcalls.h: Likewise.
+	* mcheck.h: Likewise.
+	* memory.h: Likewise.
+	* netdb.h: Likewise.
+	* netgroup.h: Likewise.
+	* netinet/ether.h: Likewise.
+	* netinet/in.h: Likewise.
+	* nlist.h: Likewise.
+	* nss.h: Likewise.
+	* nsswitch.h: Likewise.
+	* obstack.h: Likewise.
+	* poll.h: Likewise.
+	* posix1_lim.h: Likewise.
+	* posix2_lim.h: Likewise.
+	* printf.h: Likewise.
+	* protocols/routed.h: Likewise.
+	* protocols/rwhod.h: Likewise.
+	* protocols/talkd.h: Likewise.
+	* protocols/timed.h: Likewise.
+	* pwd.h: Likewise.
+	* regex.h: Likewise.
+	* resolv.h: Likewise.
+	* rpc/auth_unix.h: Likewise.
+	* rpc/clnt.h: Likewise.
+	* rpc/netdb.h: Likewise.
+	* rpc/pmap_clnt.h: Likewise.
+	* rpc/pmap_prot.h: Likewise.
+	* rpc/pmap_rmt.h: Likewise.
+	* rpc/rpc.h: Likewise.
+	* rpc/rpc_msg.h: Likewise.
+	* rpc/svc.h: Likewise.
+	* rpc/svc_auth.h: Likewise.
+	* rpc/types.h: Likewise.
+	* rpc/xdr.h: Likewise.
+	* sched.h: Likewise.
+	* search.h: Likewise.
+	* set-hooks.h: Likewise.
+	* setjmp.h: Likewise.
+	* sgtty.h: Likewise.
+	* shadow.h: Likewise.
+	* signal.h: Likewise.
+	* stab.def: Likewise.
+	* stab.h: Likewise.
+	* stdio.h: Likewise.
+	* stdlib.h: Likewise.
+	* string.h: Likewise.
+	* strings.h: Likewise.
+	* sys/bitypes.h: Likewise.
+	* sys/cdefs.h: Likewise.
+	* sys/dir.h: Likewise.
+	* sys/errno.h: Likewise.
+	* sys/fcntl.h: Likewise.
+	* sys/file.h: Likewise.
+	* sys/gmon.h: Likewise.
+	* sys/ioctl.h: Likewise.
+	* sys/ipc.h: Likewise.
+	* sys/msg.h: Likewise.
+	* sys/poll.h: Likewise.
+	* sys/queue.h: Likewise.
+	* sys/resource.h: Likewise.
+	* sys/select.h: Likewise.
+	* sys/sem.h: Likewise.
+	* sys/shm.h: Likewise.
+	* sys/signal.h: Likewise.
+	* sys/socket.h: Likewise.
+	* sys/stat.h: Likewise.
+	* sys/statfs.h: Likewise.
+	* sys/syslog.h: Likewise.
+	* sys/termios.h: Likewise.
+	* sys/time.h: Likewise.
+	* sys/timeb.h: Likewise.
+	* sys/times.h: Likewise.
+	* sys/types.h: Likewise.
+	* sys/uio.h: Likewise.
+	* sys/un.h: Likewise.
+	* sys/unistd.h: Likewise.
+	* sys/utsname.h: Likewise.
+	* sys/vlimit.h: Likewise.
+	* sys/vtimes.h: Likewise.
+	* sys/wait.h: Likewise.
+	* syscall.h: Likewise.
+	* syslog.h: Likewise.
+	* tar.h: Likewise.
+	* termios.h: Likewise.
+	* time.h: Likewise.
+	* ttyent.h: Likewise.
+	* unistd.h: Likewise.
+	* utime.h: Likewise.
+	* utmp.h: Likewise.
+	* values.h: Likewise.
+	* wchar.h: Likewise.
+	* wctype.h: Likewise.
+	* wordexp.h: Likewise.
+	* xlocale.h: Likewise.
+	* xopen_lim.h: Likewise.
+
+	* linuxthreads/sysdeps/alpha/semaphorebits.h: -> .../bits/semaphore.h.
+	* linuxthreads/sysdeps/powerpc/semaphorebits.h: Likewise.
+	* linuxthreads/sysdeps/pthread/cmpxchg/semaphorebits.h: Likewise.
+	* linuxthreads/sysdeps/pthread/no-cmpxchg/semaphorebits.h: Likewise.
+	* linuxthreads/sysdeps/pthread/libc-lock.h: -> bits/
+	* sysdeps/mach/libc-lock.h: Likewise.
+	* sysdeps/stub/libc-lock.h: Likewise.
+	* linuxthreads/sysdeps/pthread/stdio-lock.h: Likewise.
+	* linuxthreads/sysdeps/unix/sysv/linux/local_lim.h: Likewise.
+	* sysdeps/mach/hurd/local_lim.h: Likewise.
+	* sysdeps/stub/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/linux/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/sco3.2/local_lim.h: Likewise.
+	* linuxthreads/sysdeps/unix/sysv/linux/posix_opt.h: Likewise.
+	* sysdeps/mach/hurd/posix_opt.h: Likewise.
+	* sysdeps/stub/posix_opt.h: Likewise.
+	* sysdeps/unix/bsd/posix_opt.h: Likewise.
+	* sysdeps/unix/bsd/ultrix4/posix_opt.h: Likewise.
+	* sysdeps/unix/sysv/linux/posix_opt.h: Likewise.
+	* math/cmathcalls.h: -> bits/
+	* math/mathcalls.h: Likewise.
+	* misc/stab.def: -> bits/
+	* posix/posix1_lim.h: -> bits/
+	* posix/posix2_lim.h: Likewise.
+	* sysdeps/alpha/__math.h: -> .../fpu/bits/mathinline.h
+	* sysdeps/i386/fpu/__math.h: Likewise.
+	* sysdeps/m68k/fpu/__math.h: Likewise.
+	* sysdeps/m68k/fpu/switch/__math.h: Likewise.
+	* sysdeps/powerpc/__math.h: Likewise.
+	* sysdeps/stub/__math.h: Likewise.
+	* sysdeps/alpha/bytesex.h: -> .../bits/endian.h
+	* sysdeps/arm/bytesex.h: Likewise.
+	* sysdeps/i386/bytesex.h: Likewise.
+	* sysdeps/m68k/bytesex.h: Likewise.
+	* sysdeps/mips/bytesex.h: Likewise.
+	* sysdeps/mips/dec/bytesex.h: Likewise.
+	* sysdeps/mips/mipsel/bytesex.h: Likewise.
+	* sysdeps/mips/p40/bytesex.h: Likewise.
+	* sysdeps/sparc/bytesex.h: Likewise.
+	* sysdeps/stub/bytesex.h: Likewise.
+	* sysdeps/alpha/fpu/fenvbits.h: -> .../bits/fenv.h
+	* sysdeps/i386/fpu/fenvbits.h: Likewise.
+	* sysdeps/m68k/fpu/fenvbits.h: Likewise.
+	* sysdeps/powerpc/fenvbits.h: Likewise.
+	* sysdeps/stub/fenvbits.h: Likewise.
+	* sysdeps/alpha/jmp_buf.h: -> .../bits/setenv.h
+	* sysdeps/arm/jmp_buf.h: Likewise.
+	* sysdeps/i386/jmp_buf.h: Likewise.
+	* sysdeps/m68k/jmp_buf.h: Likewise.
+	* sysdeps/mips/jmp_buf.h: Likewise.
+	* sysdeps/sparc/jmp_buf.h: Likewise.
+	* sysdeps/powerpc/jmp_buf.h: Likewise.
+	* sysdeps/stub/jmp_buf.h: Likewise.
+	* sysdeps/vax/jmp_buf.h: Likewise.
+	* sysdeps/generic/confname.h: -> bits/
+	* sysdeps/unix/sysv/irix4/confname.h: Likewise.
+	* sysdeps/unix/sysv/sco3.2.4/confname.h: Likewise.
+	* sysdeps/generic/gnu/types.h: -> ../bits/types.h
+	* sysdeps/unix/sysv/linux/alpha/gnu/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/gnu/types.h: Likewise.
+	* sysdeps/generic/ioctl-types.h: -> bits/
+	* sysdeps/unix/sysv/linux/ioctl-types.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/ioctl-types.h: Likewise.
+	* sysdeps/generic/iovec.h: -> .../bits/uio.h
+	* sysdeps/unix/sysv/linux/iovec.h: Likewise.
+	* sysdeps/generic/mathbits.h: -> .../bits/mathdef.h
+	* sysdeps/i386/fpu/mathbits.h: Likewise.
+	* sysdeps/m68k/fpu/mathbits.h: Likewise.
+	* sysdeps/powerpc/mathbits.h: Likewise.
+	* sysdeps/generic/resourcebits.h: -> .../bits/resource.h
+	* sysdeps/unix/bsd/sun/sunos4/resourcebits.h: Likewise.
+	* sysdeps/unix/sysv/linux/resourcebits.h: Likewise.
+	* sysdeps/generic/schedbits.h: -> .../bits/sched.h
+	* sysdeps/unix/sysv/linux/schedbits.h: Likewise.
+	* sysdeps/generic/selectbits.h: -> .../bits/select.h
+	* sysdeps/i386/selectbits.h: Likewise.
+	* sysdeps/generic/sigaction.h: -> bits/
+	* sysdeps/unix/bsd/osf/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/minix/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/sco3.2.4/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/sigaction.h: Likewise.
+	* sysdeps/generic/sigset.h: -> bits/
+	* sysdeps/unix/sysv/linux/sigset.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/sigset.h: Likewise.
+	* sysdeps/generic/sockaddrcom.h: -> .../bits/sockaddr.h
+	* sysdeps/unix/bsd/bsd4.4/sockaddrcom.h: Likewise.
+	* sysdeps/generic/socketbits.h: -> .../bits/socket.h
+	* sysdeps/unix/sysv/linux/socketbits.h: Likewise.
+	* sysdeps/generic/statfsbuf.h: -> .../bits/statfs.h
+	* sysdeps/unix/sysv/linux/statfsbuf.h: Likewise.
+	* sysdeps/generic/termbits.h: -> .../bits/termios.h
+	* sysdeps/unix/bsd/sun/sunos4/termbits.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/termbits.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/termbits.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/termbits.h: Likewise.
+	* sysdeps/unix/sysv/linux/termbits.h: Likewise.
+	* sysdeps/generic/ustatbits.h: -> .../bits/ustat.h
+	* sysdeps/unix/sysv/linux/ustatbits.h: Likewise.
+	* sysdeps/generic/utmpbits.h: -> .../bits/utmp.h
+	* sysdeps/gnu/utmpbits.h: Likewise.
+	* sysdeps/unix/sysv/utmpbits.h: Likewise.
+	* sysdeps/generic/utsnamelen.h: -> .../bits/utsname.h
+	* sysdeps/unix/bsd/sun/sunos4/utsnamelen.h: Likewise.
+	* sysdeps/unix/bsd/ultrix4/utsnamelen.h: Likewise.
+	* sysdeps/unix/sysv/linux/utsnamelen.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/utsnamelen.h: Likewise.
+	* sysdeps/unix/sysv/utsnamelen.h: Likewise.
+	* sysdeps/generic/waitstatus.h: -> bits/
+	* sysdeps/i386/huge_val.h: -> bits/
+	* sysdeps/ieee754/huge_val.h: Likewise.
+	* sysdeps/m68k/huge_val.h: Likewise.
+	* sysdeps/stub/huge_val.h: Likewise.
+	* sysdeps/vax/huge_val.h: Likewise.
+	* sysdeps/ieee754/nan.h: Likewise.
+	* sysdeps/stub/nan.h: Likewise.
+	* sysdeps/mach/hurd/alpha/sigcontext.h: -> bits/
+	* sysdeps/mach/hurd/hppa/sigcontext.h: Likewise.
+	* sysdeps/mach/hurd/i386/sigcontext.h: Likewise.
+	* sysdeps/mach/hurd/mips/sigcontext.h: Likewise.
+	* sysdeps/stub/sigcontext.h: Likewise.
+	* sysdeps/unix/bsd/sun/m68k/sigcontext.h: Likewise.
+	* sysdeps/unix/bsd/sun/sparc/sigcontext.h: Likewise.
+	* sysdeps/unix/bsd/ultrix4/mips/sigcontext.h: Likewise.
+	* sysdeps/unix/sysv/linux/sigcontext.h: Likewise.
+	* sysdeps/mach/hurd/errnos.h: -> .../bits/errno.h
+	* sysdeps/standalone/arm/errnos.h: Likewise.
+	* sysdeps/stub/errnos.h: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/errnos.h: Likewise.
+	* sysdeps/unix/sysv/linux/errnos.h: Likewise.
+	* sysdeps/mach/hurd/fcntlbits.h: -> .../bits/fcntl.h
+	* sysdeps/stub/fcntlbits.h: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/fcntlbits.h: Likewise.
+	* sysdeps/unix/bsd/fcntlbits.h: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/fcntlbits.h: Likewise.
+	* sysdeps/unix/bsd/ultrix4/fcntlbits.h: Likewise.
+	* sysdeps/unix/common/fcntlbits.h: Likewise.
+	* sysdeps/unix/sysv/fcntlbits.h: Likewise.
+	* sysdeps/unix/sysv/irix4/fcntlbits.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/fcntlbits.h: Likewise.
+	* sysdeps/unix/sysv/linux/fcntlbits.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/fcntlbits.h: Likewise.
+	* sysdeps/mach/hurd/ioctls.h: -> bits/
+	* sysdeps/stub/ioctls.h: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/ioctls.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/ioctls.h: Likewise.
+	* sysdeps/unix/sysv/linux/ioctls.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/ioctls.h: Likewise.
+	* sysdeps/mach/hurd/statbuf.h: -> .../bits/stat.h
+	* sysdeps/stub/statbuf.h: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/statbuf.h: Likewise.
+	* sysdeps/unix/bsd/statbuf.h: Likewise.
+	* sysdeps/unix/sysv/irix4/statbuf.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/statbuf.h: Likewise.
+	* sysdeps/unix/sysv/linux/statbuf.h: Likewise.
+	* sysdeps/unix/sysv/statbuf.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/i386/statbuf.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/statbuf.h: Likewise.
+	* sysdeps/standalone/stdio_lim.h: -> bits/
+	* sysdeps/stub/stdio_lim.h: Likewise.
+	* sysdeps/stub/direntry.h: -> ../bits/dirent.h
+	* sysdeps/unix/bsd/bsd4.4/direntry.h: Likewise.
+	* sysdeps/unix/bsd/direntry.h: Likewise.
+	* sysdeps/unix/common/direntry.h: Likewise.
+	* sysdeps/unix/sysv/direntry.h: Likewise.
+	* sysdeps/unix/sysv/linux/direntry.h: Likewise.
+	* sysdeps/stub/elfclass.h: -> bits/
+	* sysdeps/wordsize-32/elfclass.h: Likewise.
+	* sysdeps/wordsize-64/elfclass.h: Likewise.
+	* sysdeps/stub/signum.h: -> bits/
+	* sysdeps/unix/bsd/signum.h: Likewise.
+	* sysdeps/unix/bsd/sun/signum.h: Likewise.
+	* sysdeps/unix/sysv/irix4/signum.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/signum.h: Likewise.
+	* sysdeps/unix/sysv/linux/signum.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/signum.h: Likewise.
+	* sysdeps/unix/sysv/signum.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/signum.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/signum.h: Likewise.
+	* sysdeps/stub/sys/ipc_buf.h: -> .../bits/ipc.h
+	* sysdeps/unix/sysv/linux/alpha/sys/ipc_buf.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/ipc_buf.h: Likewise.
+	* sysdeps/stub/sys/msq_buf.h: -> .../bits/msq.h
+	* sysdeps/unix/sysv/linux/sys/msq_buf.h: Likewise.
+	* sysdeps/stub/sys/sem_buf.h: -> .../bits/sem.h
+	* sysdeps/unix/sysv/linux/sys/sem_buf.h: Likewise.
+	* sysdeps/stub/sys/shm_buf.h: -> .../bits/shm.h
+	* sysdeps/unix/sysv/linux/sys/shm_buf.h: Likewise.
+	* sysdeps/stub/timebits.h: -> .../bits/time.h
+	* sysdeps/unix/sysv/linux/alpha/timebits.h: Likewise.
+	* sysdeps/unix/sysv/linux/timebits.h: Likewise.
+	* sysdeps/stub/waitflags.h: -> bits/
+	* sysdeps/unix/bsd/waitflags.h: Likewise.
+	* sysdeps/unix/sysv/linux/waitflags.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/waitflags.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sys/kernel_termios.h: -> ../
+	* sysdeps/unix/sysv/linux/powerpc/sys/kernel_termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/kernel_termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/socketcall.h: -> ../
+
+	* argp/argp-fmtstream.h: Standardize the multiple-include protect.
+	* argp/argp.h: Likewise.
+	* catgets/nl_types.h: Likewise.
+	* crypt/sysdeps/unix/crypt.h: Likewise.
+	* ctype/ctype.h: Likewise.
+	* db/db.h: Likewise.
+	* db/mpool.h: Likewise.
+	* db/ndbm.h: Likewise.
+	* dirent/dirent.h: Likewise.
+	* elf/dlfcn.h: Likewise.
+	* elf/elf.h: Likewise.
+	* elf/link.h: Likewise.
+	* gmon/sys/gmon.h: Likewise.
+	* gmon/sys/gmon_out.h: Likewise.
+	* grp/grp.h: Likewise.
+	* inet/aliases.h: Likewise.
+	* inet/arpa/ftp.h: Likewise.
+	* inet/arpa/inet.h: Likewise.
+	* inet/arpa/telnet.h: Likewise.
+	* inet/arpa/tftp.h: Likewise.
+	* inet/netinet/ether.h: Likewise.
+	* inet/netinet/icmp6.h: Likewise.
+	* inet/netinet/in.h: Likewise.
+	* inet/netinet/ip6.h: Likewise.
+	* inet/protocols/routed.h: Likewise.
+	* inet/protocols/rwhod.h: Likewise.
+	* inet/protocols/talkd.h: Likewise.
+	* inet/protocols/timed.h: Likewise.
+	* intl/libintl.h: Likewise.
+	* io/fcntl.h: Likewise.
+	* io/fts.h: Likewise.
+	* io/ftw.h: Likewise.
+	* io/sys/poll.h: Likewise.
+	* io/sys/stat.h: Likewise.
+	* io/sys/statfs.h: Likewise.
+	* io/utime.h: Likewise.
+	* linuxthreads/semaphore.h: Likewise.
+	* linuxthreads/sysdeps/pthread/pthread.h: Likewise.
+	* locale/locale.h: Likewise.
+	* login/pty.h: Likewise.
+	* login/utmp.h: Likewise.
+	* malloc/malloc.h: Likewise.
+	* malloc/obstack.h: Likewise.
+	* math/complex.h: Likewise.
+	* math/fenv.h: Likewise.
+	* math/math.h: Likewise.
+	* md5-crypt/md5.h: Likewise.
+	* misc/ar.h: Likewise.
+	* misc/err.h: Likewise.
+	* misc/error.h: Likewise.
+	* misc/fstab.h: Likewise.
+	* misc/libgen.h: Likewise.
+	* misc/nlist.h: Likewise.
+	* misc/sys/cdefs.h: Likewise.
+	* misc/sys/file.h: Likewise.
+	* misc/sys/ioctl.h: Likewise.
+	* misc/sys/queue.h: Likewise.
+	* misc/sys/select.h: Likewise.
+	* misc/sys/syslog.h: Likewise.
+	* misc/sys/uio.h: Likewise.
+	* misc/sysexits.h: Likewise.
+	* misc/ttyent.h: Likewise.
+	* nss/nss.h: Likewise.
+	* posix/fnmatch.h: Likewise.
+	* posix/getopt.h: Likewise.
+	* posix/glob.h: Likewise.
+	* posix/regex.h: Likewise.
+	* posix/sys/times.h: Likewise.
+	* posix/sys/types.h: Likewise.
+	* posix/sys/utsname.h: Likewise.
+	* posix/sys/wait.h: Likewise.
+	* posix/tar.h: Likewise.
+	* posix/unistd.h: Likewise.
+	* posix/wordexp.h: Likewise.
+	* pwd/pwd.h: Likewise.
+	* resolv/arpa/nameser.h: Likewise.
+	* resolv/netdb.h: Likewise.
+	* resolv/resolv.h: Likewise.
+	* resource/sys/resource.h: Likewise.
+	* resource/sys/vlimit.h: Likewise.
+	* resource/sys/vtimes.h: Likewise.
+	* setjmp/setjmp.h: Likewise.
+	* shadow/shadow.h: Likewise.
+	* socket/sys/socket.h: Likewise.
+	* socket/sys/un.h: Likewise.
+	* stdlib/exit.h: Likewise.
+	* stdlib/fmtmsg.h: Likewise.
+	* stdlib/monetary.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* string/argz.h: Likewise.
+	* string/envz.h: Likewise.
+	* string/memory.h: Likewise.
+	* string/string.h: Likewise.
+	* string/strings.h: Likewise.
+	* sunrpc/rpc/rpc.h: Likewise.
+	* sunrpc/rpc/svc.h: Likewise.
+	* sunrpc/rpc/types.h: Likewise.
+	* sunrpc/rpc/xdr.h: Likewise.
+	* termios/sys/ttychars.h: Likewise.
+	* termios/termios.h: Likewise.
+
+	* argp/argp-parse.c: <foo.h> -> <bits/foo.h>.
+	* crypt/sysdeps/unix/crypt_util.c: Likewise.
+	* dirent/dirent.h: Likewise.
+	* elf/link.h: Likewise.
+	* grp/fgetgrent.c: Likewise.
+	* grp/grp.h: Likewise.
+	* hurd/hurd/ioctl.h: Likewise.
+	* inet/getnameinfo.c: Likewise.
+	* inet/getnetgrent_r.c: Likewise.
+	* inet/inet_ntoa.c: Likewise.
+	* inet/netinet/in.h: Likewise.
+	* io/fcntl.h: Likewise.
+	* io/ftw.h: Likewise.
+	* io/sys/stat.h: Likewise.
+	* io/sys/statfs.h: Likewise.
+	* io/utime.h: Likewise.
+	* libio/_G_config.h: Likewise.
+	* libio/libio.h: Likewise.
+	* libio/libioP.h: Likewise.
+	* libio/stdio.h: Likewise.
+	* linuxthreads/lockfile.c: Likewise.
+	* linuxthreads/semaphore.h: Likewise.
+	* locale/duplocale.c: Likewise.
+	* locale/freelocale.c: Likewise.
+	* locale/lc-time.c: Likewise.
+	* locale/setlocale.c: Likewise.
+	* login/getutent_r.c: Likewise.
+	* login/getutid_r.c: Likewise.
+	* login/getutline_r.c: Likewise.
+	* login/lastlog.h: Likewise.
+	* login/pty.h: Likewise.
+	* login/utmp.h: Likewise.
+	* login/utmpname.c: Likewise.
+	* malloc/mtrace.c: Likewise.
+	* malloc/thread-m.h: Likewise.
+	* math/complex.h: Likewise.
+	* math/fenv.h: Likewise.
+	* math/libm-test.c: Likewise.
+	* math/math.h: Likewise.
+	* misc/sgtty.h: Likewise.
+	* misc/stab.h: Likewise.
+	* misc/sys/ioctl.h: Likewise.
+	* misc/sys/select.h: Likewise.
+	* misc/sys/uio.h: Likewise.
+	* misc/sys/ustat.h: Likewise.
+	* misc/syslog.c: Likewise.
+	* nis/nss_compat/compat-grp.c: Likewise.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+	* nis/nss_nis/nis-alias.c: Likewise.
+	* nis/nss_nis/nis-ethers.c: Likewise.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nis/nis-hosts.c: Likewise.
+	* nis/nss_nis/nis-netgrp.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-publickey.c: Likewise.
+	* nis/nss_nis/nis-pwd.c: Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+	* nis/nss_nis/nis-service.c: Likewise.
+	* nis/nss_nis/nis-spwd.c: Likewise.
+	* nss_nisplus/nisplus-alias.c: Likewise.
+	* nis/nss_nisplus/nisplus-ethers.c: Likewise.
+	* nis/nss_nisplus/nisplus-grp.c: Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c: Likewise.
+	* nis/nss_nisplus/nisplus-netgrp.c: Likewise.
+	* nis/nss_nisplus/nisplus-netgrp.c: Likewise.
+	* nis/nss_nisplus/nisplus-proto.c: Likewise.
+	* nis/nss_nisplus/nisplus-pwd.c: Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c: Likewise.
+	* nis/nss_nisplus/nisplus-service.c: Likewise.
+	* nis/nss_nisplus/nisplus-spwd.c: Likewise.
+	* nis/ypclnt.c: Likewise.
+	* nss/getXXbyYY.c: Likewise.
+	* nss/getXXent.c: Likewise.
+	* nss/getXXent_r.c: Likewise.
+	* nss/nss_db/db-XXX.c: Likewise.
+	* nss/nss_db/db-alias.c: Likewise.
+	* nss/nss_db/db-netgrp.c: Likewise.
+	* nss/nss_files/files-XXX.c: Likewise.
+	* nss/nss_files/files-alias.c: Likewise.
+	* nss/nsswitch.c: Likewise.
+	* posix/sched.h: Likewise.
+	* posix/sys/types.h: Likewise.
+	* posix/sys/utsname.h: Likewise.
+	* posix/sys/wait.h: Likewise.
+	* posix/unistd.h: Likewise.
+	* pwd/fgetpwent.c: Likewise.
+	* pwd/pwd.h: Likewise.
+	* resource/sys/resource.h: Likewise.
+	* setjmp/setjmp.h: Likewise.
+	* shadow/fgetspent.c: Likewise.
+	* shadow/lckpwdf.c: Likewise.
+	* shadow/sgetspent.c: Likewise.
+	* signal/signal.h: Likewise.
+	* signal/sigsetops.c: Likewise.
+	* socket/sys/socket.h: Likewise.
+	* socket/sys/un.h: Likewise.
+	* stdio/stdio.h: Likewise.
+	* stdio-common/vfprintf.c: Likewise.
+	* stdio-common/vfscanf.c: Likewise.
+	* stdlib/atexit.c: Likewise.
+	* stdlib/fmtmsg.c: Likewise.
+	* stdlib/random.c: Likewise.
+	* string/endian.h: Likewise.
+	* sysdeps/alpha/w_sqrt.S: Likewise.
+	* sysdeps/arm/__longjmp.S: Likewise.
+	* sysdeps/arm/setjmp.S: Likewise.
+	* sysdeps/generic/abort.c: Likewise.
+	* sysdeps/generic/netinet/ip.h: Likewise.
+	* sysdeps/generic/setenv.c: Likewise.
+	* generic/sys/mman.h: Likewise.
+	* sysdeps/i386/__longjmp.S: Likewise.
+	* sysdeps/i386/setjmp.S: Likewise.
+	* sysdeps/mach/hurd/dirstream.h: Likewise.
+	* sysdeps/mach/hurd/jmp-unwind.c: Likewise.
+	* sysdeps/posix/mk-stdiolim.c: Likewise.
+	* sysdeps/powerpc/__longjmp.S: Likewise.
+	* sysdeps/powerpc/setjmp.S: Likewise.
+	* sysdeps/sparc/__longjmp.S: Likewise.
+	* sysdeps/sparc/setjmp.S: Likewise.
+	* sysdeps/standalone/close.c: Likewise.
+	* sysdeps/standalone/filedesc.h: Likewise.
+	* sysdeps/standalone/open.c: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/tcsetattr.c: Likewise.
+	* sysdeps/unix/bsd/m68k/sysdep.S: Likewise.
+	* sysdeps/unix/bsd/osf/sys/mman.h: Likewise.
+	* sysdeps/unix/bsd/sun/m68k/sethostid.S: Likewise.
+	* sysdeps/unix/bsd/sun/sparc/sethostid.S: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/sys/mman.h: Likewise.
+	* sysdeps/unix/bsd/ultrix4/sys/mman.h: Likewise.
+	* sysdeps/unix/bsd/vax/sysdep.S: Likewise.
+	* sysdeps/unix/dirstream.h: Likewise.
+	* sysdeps/unix/i386/sysdep.S: Likewise.
+	* sysdeps/unix/mips/sysdep.S: Likewise.
+	* sysdeps/unix/mk-local_lim.c: Likewise.
+	* sysdeps/unix/sparc/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/irix4/sys/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/brk.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/netinet/ip.h: Likewise.
+	* sysdeps/unix/sysv/linux/netinet/tcp.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sys/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/syscall.h: Likewise.
+	* sysdeps/unix/sysv/linux/tcgetattr.c: Likewise.
+	* sysdeps/unix/sysv/sco3.2.4/sysconf.S: Likewise.
+	* sysdeps/unix/sysv/sysv4/i386/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/sysdep.S: Likewise.
+	* sysvipc/sys/ipc.h: Likewise.
+	* sysvipc/sys/msg.h: Likewise.
+	* sysvipc/sys/sem.h: Likewise.
+	* sysvipc/sys/shm.h: Likewise.
+	* termios/termios.h: Likewise.
+	* time/localtime.c: Likewise.
+	* time/sys/time.h: Likewise.
+	* time/time.h: Likewise.
+	* time/tzset.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/arm/socket.S: socketcall.h change.
+	* sysdeps/unix/sysv/linux/i386/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/socket.S: Likewise.
+
+	* Makefile (headers): foo.h -> bits/foo.h.
+	* dirent/Makefile: Likewise.
+	* elf/Makefile: Likewise.
+	* io/Makefile: Likewise.
+	* linuxthreads/Makefile: Likewise.
+	* linuxthreads/sysdeps/pthread/Makefile: Likewise.
+	* login/Makefile: Likewise.
+	* math/Makefile: Likewise.
+	* misc/Makefile: Likewise.
+	* posix/Makefile: Likewise.
+	* resource/Makefile: Likewise.
+	* setjmp/Makefile: Likewise.
+	* signal/Makefile: Likewise.
+	* socket/Makefile: Likewise.
+	* stdio-common/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile: Likewise.
+	* sysvipc/Makefile: Likewise.
+	* termios/Makefile: Likewise.
+	* time/Makefile: Likewise.
+	* sysdeps/generic/Makefile (make_siglist-CFLAGS): Likewise.
+	* sysdeps/posix/Makefile: stdio_lim.h -> bits/stdio_lim.h
+	* sysdeps/unix/Makefile: Likewise with local_lim.h, errnos.h,
+	ioctls.h, termbits.h.
+
+	* sysdeps/unix/sysv/linux/Dist: sys/kernel_termios.h
+	-> kernel_termios.h, sys/socketcall.h -> socketcall.h
+
+	* elf/elf.h: Use <inttypes.h> definitions instead of __attribute__
+	for getting the proper length on the ELF types to be friendly to
+	non-gcc compilers.
+	* posix/sys/types.h: Notice when int8_t and friends are defined
+	and don't redefine them.
+	* sysdeps/wordsize-32/inttypes.h: Likewise.
+	* sysdeps/wordsize-64/inttypes.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/arm/profil-counter.h: Get sigcontext
+	via <signal.h> instead.
+	* sysdeps/unix/sysv/linux/i386/profil-counter.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/profil-counter.h: Likewise.
+
+1997-06-20 17:59  Kazumoto Kojima  <kkojima@kk.info.kanagawa-u.ac.jp>
+
+	* hurd/intr-msg.c: More 64bit changes.
+	* mach/msg-destroy.c: Likewise.
+	* sysdeps/mach/hurd/ioctl.c: Likewise.
+	* sysdeps/mach/hurd/ioctls.h: Likewise.
+	* sysdeps/mach/hurd/select.c: Likewise.
+	* sysdeps/mach/hurd/statbuf.h: Likewise.
+
+	* sysdeps/mach/hurd/mips/dl-machine.c: Hurd/MIPS64 patches.
+	* sysdeps/mach/hurd/mips/exc2signal.c: Likewise.
+	* sysdeps/mach/hurd/mips/init-fault.c: Likewise.
+	* sysdeps/mach/hurd/mips/init-first.c: Likewise.
+	* sysdeps/mach/hurd/mips/intr-msg.h: Likewise.
+	* sysdeps/mach/hurd/mips/longjmp-ctx.c: Likewise.
+	* sysdeps/mach/hurd/mips/longjmp-ts.c: Likewise.
+	* sysdeps/mach/hurd/mips/sigcontext.h: Likewise.
+	* sysdeps/mach/hurd/mips/sigreturn.c: Likewise.
+	* sysdeps/mach/hurd/mips/trampoline.c: Likewise.
+	* sysdeps/mach/mips/cacheflush.c: Likewise.
+	* sysdeps/mach/mips/machine-lock.h: Likewise.
+	* sysdeps/mach/mips/machine-sp.h: Likewise.
+	* sysdeps/mach/mips/syscall.S: Likewise.
+	* sysdeps/mach/mips/sysdep.h: Likewise.
+	* sysdeps/mach/mips/thread_state.h: Likewise.
+	* sysdeps/mach/start.c: Likewise.
+
+	* sysdeps/mips/dl-machine.h: MIPS changes.
+	* sysdeps/mips/elf/start.S: Likewise.
+	* sysdeps/mips/init-first.c: Likewise.
+	* sysdeps/mips/fpu_control.h: Likewise.
+	* sysdeps/mips/machine-gmon.h: Likewise.
+	* sysdeps/mips/jmp_buf.h: Likewise.
+	* sysdeps/mips/__longjmp.c: Likewise.
+	* sysdeps/mips/bsd-_setjmp.S: Likewise.
+	* sysdeps/mips/bsd-setjmp.S: Likewise.
+	* sysdeps/mips/setjmp.S: Likewise.
+	* sysdeps/mips/setjmp_aux.c: Likewise.
+	* sysdeps/mips/mips64/gmp-mparam.h: Likewise.
+	* sysdeps/mips/add_n.S: New file.
+	* sysdeps/mips/addmul_1.S: Likewise.
+	* sysdeps/mips/lshift.S: Likewise.
+	* sysdeps/mips/mul_1.S: Likewise.
+	* sysdeps/mips/rshift.S: Likewise.
+	* sysdeps/mips/sub_n.S: Likewise.
+	* sysdeps/mips/submul_1.S: Likewise.
+	* sysdeps/mips/mips64/Implies: Likewise.
+	* sysdeps/mips/mips64/add_n.S: Likewise.
+	* sysdeps/mips/mips64/addmul_1.S: Likewise.
+	* sysdeps/mips/mips64/lshift.S: Likewise.
+	* sysdeps/mips/mips64/mul_1.S: Likewise.
+	* sysdeps/mips/mips64/rshift.S: Likewise.
+	* sysdeps/mips/mips64/sub_n.S: Likewise.
+	* sysdeps/mips/mips64/submul_1.S: Likewise.
+	* sysdeps/mips/add_n.S: Removed.
+	* sysdeps/mips/addmul_1.S: Likewise.
+	* sysdeps/mips/lshift.S: Likewise.
+	* sysdeps/mips/mul_1.S: Likewise.
+	* sysdeps/mips/rshift.S: Likewise.
+	* sysdeps/mips/sub_n.S: Likewise.
+	* sysdeps/mips/submul_1.S: Likewise.
+
+	* nss/Makefile: Prepare for static NSS.
+	* resolv/Makefile: Likewise.
+	* nss/nsswitch.c: Add code for static NSS.
+	* nss/function.def: Define functions for static NSS.
+
+1997-06-19 11:10  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libc.map: Add yet more symbols.
+
+1997-06-19 20:33  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-lookup.c (_dl_lookup_versioned_symbol): Don't pass NULL
+	as object name to _dl_signal_error.
+	(do_lookup): Skip objects that could not be opened.
+
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Check that the
+	symbol was found.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Likewise.
+	* sysdeps/powerpc/dl-machine.h (elf_machine_rela): Likewise.
+
+1997-06-20 03:13  Kazumoto Kojima  <kkojima@kk.info.kanagawa-u.ac.jp>
+
+	* ctype/ctype-info.c: Use int32_t where `int' with 4 bytes is
+	assumed.
+	* ctype/ctype.h: Likewise.
+	* math/math_private.h: Likewise.
+	* inet/netinet/in.h: Likewise.
+	* wctype/wctype.h: Likewise.
+
+	* nss/Makefile: Only inhibit nss_files and nss_db modules if static
+	NSS modules are not enabled.
+	* resolv/Makefile: Likewise for nss_dns.
+	* nss/function.def: New file.  List all available lookup functions
+	for static NSS.
+	* nss/nsswitch.c: Add code for static NSS.
+
+1997-06-15 21:15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c (gamma_test): Test for _SVID_ and for normal
+	behaviour.
+
+1997-06-15 20:32  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm.map: Add all necessary functions, correct existing entries.
+
+1997-06-20 02:35  a sun  <asun@zoology.washington.edu>
+
+	* sysdeps/unix/sysv/linux/netipx/ipx.h: Don't use kernel header.
+
+1997-06-19 18:43  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nis/nss_nisplus/nisplus-spwd.c (_nss_nisplus_parse_spent):
+	Compare pointer with NULL.
+
+	* login/logout.c (logout): Compare pututline result with NULL.
+
 1997-06-19 19:38  Ulrich Drepper  <drepper@cygnus.com>
 
 	* features.h: Define __STDC_IEC_559__ and _STDC_IEC_559_COMPLEX__.
 
 	* elf/dl-minimal.c (__dcgettext): Remove assertion.
 
-	* inet/rcmd.c: Correct a few typos.  Reported by Eric Troan.
+	* inet/rcmd.c: Correct a few typos.  Reported by Erik Troan.
 
 	* manual/Makefile (distribute): Add dir.
 	* manual/dir: New file.

@@ -17,8 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SYS_DIR_H
-
 #define	_SYS_DIR_H	1
+
 #include <features.h>
 
 #include <dirent.h>

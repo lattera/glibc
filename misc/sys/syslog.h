@@ -33,6 +33,9 @@
  *	@(#)syslog.h	8.1 (Berkeley) 6/2/93
  */
 
+#ifndef _SYS_SYSLOG_H
+#define _SYS_SYSLOG_H 1
+
 #define	_PATH_LOG	"/dev/log"
 
 /*
@@ -208,3 +211,5 @@ extern void vsyslog __P ((int __pri, __const char *__fmt, _BSD_VA_LIST_ __ap));
 __END_DECLS
 
 #endif /* !KERNEL */
+
+#endif /* sys/syslog.h */

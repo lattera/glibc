@@ -20,8 +20,8 @@
    and for implementors of new services.  */
 
 #ifndef _NSS_H
-
 #define _NSS_H	1
+
 #include <features.h>
 
 

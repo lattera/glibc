@@ -24,7 +24,7 @@
 #include <db.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <paths.h>
 #include <string.h>
 

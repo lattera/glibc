@@ -21,7 +21,7 @@
 #
 subdir		:= dirent
 
-headers		:= dirent.h direntry.h
+headers		:= dirent.h bits/dirent.h
 routines	:= opendir closedir readdir readdir_r rewinddir \
 		   seekdir telldir scandir alphasort versionsort \
 		   getdents dirfd

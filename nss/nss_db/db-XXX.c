@@ -19,7 +19,7 @@
 
 #include <db.h>
 #include <fcntl.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include "nsswitch.h"
 
 /* These symbols are defined by the including source file:

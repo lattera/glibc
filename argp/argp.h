@@ -18,8 +18,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef __ARGP_H__
-#define __ARGP_H__
+#ifndef _ARGP_H
+#define _ARGP_H
 
 #include <stdio.h>
 #include <ctype.h>
@@ -551,7 +551,7 @@ __option_is_end (__const struct argp_option *__opt)
 # undef __option_is_short
 # undef __option_is_end
 #endif
-
+#endif /* argp.h */
 #endif /* __OPTIMIZE__ */
 
 #ifdef  __cplusplus

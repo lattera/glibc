@@ -19,7 +19,7 @@
 
 #include <errno.h>
 #include <time.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 
 /* The C Standard says that localtime and gmtime return the same pointer.  */
 struct tm _tmbuf;

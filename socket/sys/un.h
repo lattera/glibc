@@ -17,14 +17,14 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SYS_UN_H
-
 #define	_SYS_UN_H	1
+
 #include <sys/cdefs.h>
 
 #include <string.h>		/* For prototype of `strlen'.  */
 
 /* Get the definition of the macro to define the common sockaddr members.  */
-#include <sockaddrcom.h>
+#include <bits/sockaddr.h>
 
 __BEGIN_DECLS
 

@@ -20,13 +20,13 @@ ifneq (yes,$(inhibit-stdio_lim))
 # Disable these rules if we generate stdio_lim.h by other means.
 
 ifeq (yes,$(cross-compiling))
-$(common-objpfx)stdio_lim.h:
+$(common-objpfx)bits/stdio_lim.h:
 	@echo
-	@echo "You must build stdio_lim.h by hand.  Stop."
+	@echo "You must build <bits/stdio_lim.h> by hand.  Stop."
 	@echo
 	@exit 1
 else
-$(common-objpfx)stdio_lim.h: $(common-objpfx)mk-stdiolim
+$(common-objpfx)bits/stdio_lim.h: $(common-objpfx)mk-stdiolim
 	$(dir $<)$(notdir $<) > $@-t
 	mv $@-t $@
 endif
@@ -36,10 +36,10 @@ mk-stdiolim-CFLAGS = $(patsubst -I$(shell pwd)//%,-I/%,\
 				$(patsubst -I%,-I$(shell pwd)/%,$(+includes)))
 # $(ALL_BUILD_CFLAGS) needs to come last because it contains unwanted -Is.
 $(common-objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
-			     $(..)posix/posix1_lim.h local_lim.h
+			     $(..)posix/bits/posix1_lim.h bits/local_lim.h
 	$(common-objdir-compile)
 
-common-generated := $(common-generated) stdio_lim.h mk-stdiolim
-before-compile := $(before-compile) $(common-objpfx)stdio_lim.h
+common-generated := $(common-generated) bits/stdio_lim.h mk-stdiolim
+before-compile := $(before-compile) $(common-objpfx)bits/stdio_lim.h
 
 endif # inhibit-stdio_lim

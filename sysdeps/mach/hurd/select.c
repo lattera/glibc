@@ -223,7 +223,7 @@ __select (nfds, readfds, writefds, exceptfds, timeout)
 	  /* We got a message.  Decode it.  */
 #define IO_SELECT_REPLY_MSGID (21012 + 100) /* XXX */
 	  const mach_msg_type_t inttype =
-	    { MACH_MSG_TYPE_INTEGER_32, 32, 1, 1, 0, 0 };
+	    { MACH_MSG_TYPE_INTEGER_T, MACH_MSG_SIZE_INTEGER_T, 1, 1, 0, 0 };
 	  if (msg.head.msgh_id == IO_SELECT_REPLY_MSGID &&
 	      msg.head.msgh_size >= sizeof msg.error &&
 	      !(msg.head.msgh_bits & MACH_MSGH_BITS_COMPLEX) &&

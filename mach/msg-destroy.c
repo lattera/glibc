@@ -1,31 +1,34 @@
-/* 
+/*
  * Mach Operating System
  * Copyright (c) 1991,1990 Carnegie Mellon University
  * All Rights Reserved.
- * 
+ *
  * Permission to use, copy, modify and distribute this software and its
  * documentation is hereby granted, provided that both the copyright
  * notice and this permission notice appear in all copies of the
  * software, derivative works or modified versions, and any portions
  * thereof, and that both notices appear in supporting documentation.
- * 
+ *
  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"
  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR
  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.
- * 
+ *
  * Carnegie Mellon requests users of this software to return to
- * 
+ *
  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU
  *  School of Computer Science
  *  Carnegie Mellon University
  *  Pittsburgh PA 15213-3890
- * 
+ *
  * any improvements or extensions that they make and grant Carnegie Mellon
  * the rights to redistribute these changes.
  */
 /*
  * HISTORY
  * $Log$
+ * Revision 1.5  1997/06/21 01:40:07  drepper
+ * More 64bit changes.
+ *
  * Revision 1.4  1996/11/15 19:44:43  thomas
  * Tue Nov 12 16:58:41 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
  *
@@ -45,14 +48,14 @@
  *
  * Revision 2.4  91/05/14  17:53:15  mrt
  * 	Correcting copyright
- * 
+ *
  * Revision 2.3  91/02/14  14:17:43  mrt
  * 	Added new Mach copyright
  * 	[91/02/13  12:44:15  mrt]
- * 
+ *
  * Revision 2.2  90/08/06  17:24:22  rpd
  * 	Created.
- * 
+ *
  */
 
 #if 1
@@ -118,7 +121,8 @@ __mach_msg_destroy(msg)
 	    }
 
 	    /* calculate length of data in bytes, rounding up */
-	    length = ((((number * size) + 7) >> 3) + 3) &~ 3;
+	    length = (((((number * size) + 7) >> 3) + sizeof (int) - 1)
+		      &~ (sizeof (int) - 1));
 
 	    addr = is_inline ? saddr : * (vm_offset_t *) saddr;
 

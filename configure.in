@@ -1,7 +1,7 @@
 Dnl Process this file with autoconf to produce a configure script.
 AC_REVISION([$CVSid$])
 AC_PREREQ(2.11)dnl		dnl Minimum Autoconf version required.
-AC_INIT(features.h)
+AC_INIT(include/features.h)
 AC_CONFIG_HEADER(config.h)
 
 # This will get text that should go into config.make.
@@ -90,6 +90,15 @@ if test x"$add_ons" != x; then
   for f in $add_ons; do
     add_ons_pfx="$add_ons_pfx $f/"
   done
+fi
+
+dnl On some platforms we cannot use dynamic loading.  We must provide
+dnl static NSS modules.
+AC_ARG_ENABLE(static-nss, dnl
+[  --enable-static-nss     build static NSS modules [default=no]],
+	      static_nss=$enableval, static_nss=no)
+if test x"$static_nss" = xyes; then
+  AC_DEFINE(DO_STATIC_NSS)
 fi
 
 AC_CANONICAL_HOST
@@ -345,10 +354,10 @@ changequote([,])dnl
 done
 
 # Add the default directories.
-sysnames="$names sysdeps/generic sysdeps/stub"
+sysnames="$names sysdeps/generic sysdeps/stub include"
 AC_SUBST(sysnames)
 # The other names were emitted during the scan.
-AC_MSG_RESULT(sysdeps/generic sysdeps/stub)
+AC_MSG_RESULT(sysdeps/generic sysdeps/stub include)
 
 
 ### Locate tools.
@@ -811,6 +820,7 @@ fi
 AC_SUBST(profile)
 AC_SUBST(omitfp)
 AC_SUBST(bounded)
+AC_SUBST(static_nss)
 
 AC_SUBST(DEFINES)
 
@@ -823,5 +833,5 @@ fi
 VERSION=`sed -e 's/^#define VERSION "\([^"]*\)"/\1/p' -e d < $srcdir/version.h`
 AC_SUBST(VERSION)
 
-AC_OUTPUT(config.make glibcbug ${config_makefile} ${config_uname}, ,
+          [echo '$config_vars' >> config.make; test -d bits || mkdir bits])
           [echo '$config_vars' >> config.make])

@@ -31,7 +31,8 @@ Cambridge, MA 02139, USA.  */
 #include <sys/limits.h>
 #endif
 
-/* Generate local_lim.h from the values defined in the system's headers.  */
+/* Generate bits/local_lim.h from the values defined in the system's
+   headers.  */
 
 struct param
   {

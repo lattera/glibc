@@ -21,7 +21,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include <errno.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include "nsswitch.h"
 
 /* These symbols are defined by the including source file:

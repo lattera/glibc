@@ -37,7 +37,7 @@ struct timestamp
     u_int8_t overflow:4;
     u_int8_t flags:4;
 #else
-#error	"Please fix <bytesex.h>"
+#error	"Please fix <bits/endian.h>"
 #endif
     u_int32_t data[9];
   };
@@ -72,7 +72,7 @@ struct iphdr
     u_int8_t	version:4;
     u_int8_t ihl:4;
 #else
-#error	"Please fix <bytesex.h>"
+#error	"Please fix <bits/endian.h>"
 #endif
     u_int8_t tos;
     u_int16_t tot_len;

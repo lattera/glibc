@@ -56,7 +56,7 @@
    ccos, ccosh, cexp, clog, cpow, csin, csinh, csqrt, ctanh.
 
    At the moment the following functions aren't tested:
-   cabs, carg, conj, cproj, cimag, creal, drem,
+   cabs, carg, conj, cproj, cimag, creal, ctan, drem,
    j0, j1, jn, y0, y1, yn,
    significand,
    nan, comparison macros (isless,isgreater,...).
@@ -814,6 +814,14 @@ check_isinfn_exc (const char *test_name, MATHTYPE computed,
 }
 
 
+/* This is to prevent messages from the SVID libm emulation.  */
+int
+matherr (struct exception *x __attribute__ ((unused)))
+{
+  return 1;
+}
+
+
 /****************************************************************************
   Test for single functions of libm
 ****************************************************************************/
@@ -1298,16 +1306,55 @@ signbit_test (void)
 }
 
 
-
+/*
+   gamma has different semantics depending on _LIB_VERSION:
+   if _LIB_VERSION is _SVID, gamma is just an alias for lgamma,
+   otherwise gamma is the real gamma function as definied in ISO C 9X.
+*/
 static void
 gamma_test (void)
 {
+  int save_lib_version = _LIB_VERSION;
   errno = 0;
   FUNC(gamma) (0);
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
   feclearexcept (FE_ALL_EXCEPT);
+
+
+  _LIB_VERSION = _SVID_;
+
+  check_isinfp ("gamma (+inf) == +inf", FUNC(gamma) (plus_infty));
+  check_isinfp_exc ("gamma (0) == +inf plus divide by zero exception",
+		    FUNC(gamma) (0), DIVIDE_BY_ZERO_EXCEPTION);
+
+  check_isinfp_exc ("gamma (x) == +inf plus divide by zero exception for integer x <= 0",
+		    FUNC(gamma) (-3), DIVIDE_BY_ZERO_EXCEPTION);
+  check_isnan_exc ("gamma (-inf) == NaN plus invalid exception",
+                   FUNC(gamma) (minus_infty), INVALID_EXCEPTION);
+
+  signgam = 0;
+  check ("gamma (1) == 0", FUNC(gamma) (1), 0);
+  check_int ("gamma (0) sets signgam to 1", signgam, 1);
+
+  signgam = 0;
+  check ("gamma (3) == M_LN2", FUNC(gamma) (3), M_LN2);
+  check_int ("gamma (3) sets signgam to 1", signgam, 1);
+
+  signgam = 0;
+  check_eps ("gamma (0.5) == log(sqrt(pi))", FUNC(gamma) (0.5),
+             FUNC(log) (FUNC(sqrt) (M_PI)), CHOOSE (0, 1e-15, 1e-7));
+  check_int ("gamma (0.5) sets signgam to 1", signgam, 1);
+
+  signgam = 0;
+  check_eps ("gamma (-0.5) == log(2*sqrt(pi))", FUNC(gamma) (-0.5),
+             FUNC(log) (2*FUNC(sqrt) (M_PI)), CHOOSE (0, 1e-15, 0));
+
+  check_int ("gamma (-0.5) sets signgam to -1", signgam, -1);
+
+
+  _LIB_VERSION = _IEEE_;
 
   check_isinfp ("gamma (+inf) == +inf", FUNC(gamma) (plus_infty));
   check_isnan_exc ("gamma (0) == NaN plus invalid exception",
@@ -1326,6 +1373,7 @@ gamma_test (void)
   check ("gamma (1) == 1", FUNC(gamma) (1), 1);
   check ("gamma (4) == 6", FUNC(gamma) (4), 6);
 
+  _LIB_VERSION = save_lib_version;
 }
 
 
@@ -1348,16 +1396,20 @@ lgamma_test (void)
   check_isnan_exc ("lgamma (-inf) == NaN plus invalid exception",
                    FUNC(lgamma) (minus_infty), INVALID_EXCEPTION);
 
+  signgam = 0;
   check ("lgamma (1) == 0", FUNC(lgamma) (1), 0);
   check_int ("lgamma (0) sets signgam to 1", signgam, 1);
 
+  signgam = 0;
   check ("lgamma (3) == M_LN2", FUNC(lgamma) (3), M_LN2);
   check_int ("lgamma (3) sets signgam to 1", signgam, 1);
 
+  signgam = 0;
   check_eps ("lgamma (0.5) == log(sqrt(pi))", FUNC(lgamma) (0.5),
              FUNC(log) (FUNC(sqrt) (M_PI)), CHOOSE (0, 1e-15, 1e-7));
   check_int ("lgamma (0.5) sets signgam to 1", signgam, 1);
 
+  signgam = 0;
   check_eps ("lgamma (-0.5) == log(2*sqrt(pi))", FUNC(lgamma) (-0.5),
              FUNC(log) (2*FUNC(sqrt) (M_PI)), CHOOSE (0, 1e-15, 0));
 
@@ -4725,7 +4777,7 @@ basic_tests (void)
   check_bool ("NaN != NaN", NaN_var != NaN_var);
 
   /*
-     the same tests but this time with NAN from <nan.h>
+     the same tests but this time with NAN from <bits/nan.h>
      NAN is a double const
    */
   check_bool ("isnan (NAN)", isnan (NAN));

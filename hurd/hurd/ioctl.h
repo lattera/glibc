@@ -22,7 +22,7 @@
 
 #define	__need___va_list
 #include <stdarg.h>
-#include <ioctls.h>
+#include <bits/ioctls.h>
 
 
 /* Type of handler function, called like ioctl to do its entire job.  */

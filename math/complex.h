@@ -21,8 +21,8 @@
  */
 
 #ifndef _COMPLEX_H
-
 #define _COMPLEX_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
@@ -52,9 +52,9 @@ __BEGIN_DECLS
 #define CX_LIMITED_RANGE_DEFAULT
 
 
-/* The file <cmathcalls.h> contains the prototypes for all the actual
-   math functions.  These macros are used for those prototypes, so
-   we can easily declare each function as both `name' and `__name',
+/* The file <bits/cmathcalls.h> contains the prototypes for all the
+   actual math functions.  These macros are used for those prototypes,
+   so we can easily declare each function as both `name' and `__name',
    and can declare the float versions `namef' and `__namef'.  */
 
 #define __MATHCALL(function, args)	\
@@ -67,7 +67,7 @@ __BEGIN_DECLS
 
 #define _Mdouble_ 		double
 #define __MATH_PRECNAME(name)	name
-#include <cmathcalls.h>
+#include <bits/cmathcalls.h>
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
 
@@ -81,7 +81,7 @@ __BEGIN_DECLS
 #else
 #define __MATH_PRECNAME(name)	name/**/f
 #endif
-#include <cmathcalls.h>
+#include <bits/cmathcalls.h>
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
 
@@ -96,7 +96,7 @@ __BEGIN_DECLS
 #else
 #define __MATH_PRECNAME(name)	name/**/l
 #endif
-#include <cmathcalls.h>
+#include <bits/cmathcalls.h>
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
 #undef	__MATHDECL_1

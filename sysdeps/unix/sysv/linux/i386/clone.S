@@ -22,7 +22,7 @@
 
 #include <sysdep.h>
 #define _ERRNO_H	1
-#include <errnos.h>
+#include <bits/errno.h>
 
 /* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg); */
 

@@ -21,8 +21,8 @@
    system calls).  */
 
 #ifndef	_NETDB_H
-
 #define	_NETDB_H	1
+
 #include <features.h>
 
 /* This is necessary to make this include file properly replace the

@@ -34,8 +34,8 @@
  * Copyright (C) 1984, Sun Microsystems, Inc.
  */
 
-#ifndef __SVC_HEADER__
-#define __SVC_HEADER__
+#ifndef _RPC_SVC_H
+#define _RPC_SVC_H 1
 
 #include <features.h>
 #include <rpc/rpc_msg.h>
@@ -307,4 +307,4 @@ extern SVCXPRT *svctcp_create __P ((int __sock, u_int __sendsize,
 
 __END_DECLS
 
-#endif /* !__SVC_HEADER__ */
+#endif /* rpc/svc.h */

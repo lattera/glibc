@@ -32,7 +32,7 @@ __BEGIN_DECLS
 #define	__need_NULL
 #include <stddef.h>
 
-#include <gnu/types.h>
+#include <bits/types.h>
 #endif /* Don't need FILE.  */
 #undef	__need_FILE
 
@@ -110,7 +110,7 @@ extern void __libc_fatal __P ((__const char *__message))
    L_cuserid	How long an array to pass to `cuserid'.
    FOPEN_MAX	Minimum number of files that can be open at once.
    FILENAME_MAX	Maximum length of a filename.  */
-#include <stdio_lim.h>
+#include <bits/stdio_lim.h>
 
 
 /* Standard streams.  */

@@ -99,7 +99,7 @@ struct tcphdr {
 		syn:1,
 		fin:1;
 #else
-#error	"Adjust your <bytesex.h> defines"
+#error	"Adjust your <bits/endian.h> defines"
 #endif	
 	u_int16_t	window;
 	u_int16_t	check;

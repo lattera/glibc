@@ -29,14 +29,14 @@ static char rcsid[] = "$NetBSD: w_gamma.c,v 1.7 1995/11/20 22:06:43 jtc Exp $";
 	double x;
 #endif
 {
-	int signgam;
         double y;
 	if (_LIB_VERSION == _SVID_)
 	  y = __ieee754_lgamma_r(x,&signgam);
 	else
 	  {
-	    y = __ieee754_gamma_r(x,&signgam);
-	    if (signgam < 0) y = -y;
+	    int local_signgam;
+	    y = __ieee754_gamma_r(x,&local_signgam);
+	    if (local_signgam < 0) y = -y;
 #ifdef _IEEE_LIBM
 	    return y;
 #else

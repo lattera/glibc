@@ -18,11 +18,12 @@
 
 #ifndef	_SGTTY_H
 #define	_SGTYY_H	1
+
 #include <features.h>
 
 #include <sys/ioctl.h>
 
-/* On some systems this type is not defined by <ioctl-types.h>;
+/* On some systems this type is not defined by <bits/ioctl-types.h>;
    in that case, the functions are just stubs that return ENOSYS.  */
 struct sgttyb;
 

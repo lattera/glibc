@@ -18,6 +18,7 @@
 
 #ifndef	_ENDIAN_H
 #define	_ENDIAN_H	1
+
 #include <features.h>
 
 /* Definitions for byte order, according to significance of bytes, from low
@@ -31,7 +32,7 @@
 #define	__PDP_ENDIAN	3412
 
 /* This file defines `__BYTE_ORDER' for the particular machine.  */
-#include <bytesex.h>
+#include <bits/endian.h>
 
 #ifdef	__USE_BSD
 #define	LITTLE_ENDIAN	__LITTLE_ENDIAN

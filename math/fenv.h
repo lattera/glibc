@@ -21,8 +21,8 @@
  */
 
 #ifndef _FENV_H
-
 #define _FENV_H	1
+
 #include <features.h>
 
 /* Get the architecture dependend definitions.  The following definitions
@@ -55,7 +55,7 @@
    FE_DOWNWARD		round toward -Inf
    FE_TOWARDZERO	round toward 0
 */
-#include <fenvbits.h>
+#include <bits/fenv.h>
 
 __BEGIN_DECLS
 

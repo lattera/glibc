@@ -18,8 +18,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SYS_POLL_H
-
 #define	_SYS_POLL_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
@@ -64,4 +64,4 @@ extern int poll __P ((struct pollfd *__fds, unsigned long int __nfds,
 
 __END_DECLS
 
-#endif	/* _SYS_POLL_H */
+#endif	/* sys/poll.h */

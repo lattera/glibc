@@ -19,8 +19,8 @@
 /* Compatibility with BSD string(3).  */
 
 #ifndef	_STRINGS_H
-
 #define	_STRINGS_H	1
+
 #include <features.h>
 
 

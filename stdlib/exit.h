@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_EXIT_H
+#define _EXIT_H 1
 
 struct exit_function
   {

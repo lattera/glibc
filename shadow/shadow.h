@@ -19,8 +19,8 @@
 /* Declaration of types and functions for shadow password suite.  */
 
 #ifndef _SHADOW_H
-
 #define _SHADOW_H	1
+
 #include <features.h>
 
 #include <paths.h>

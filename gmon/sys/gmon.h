@@ -33,9 +33,9 @@
  *	@(#)gmon.h	8.2 (Berkeley) 1/4/94
  */
 
-#ifndef	_SYS_GMON_H_
+#ifndef	_SYS_GMON_H
+#define	_SYS_GMON_H	1
 
-#define	_SYS_GMON_H_	1
 #include <features.h>
 
 #include <sys/types.h>
@@ -176,4 +176,4 @@ void _mcleanup __P ((void));
 
 __END_DECLS
 
-#endif /* !_SYS_GMON_H_ */
+#endif /* sys/gmon.h */

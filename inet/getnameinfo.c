@@ -61,7 +61,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <unistd.h>
 #include <alloca.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <arpa/inet.h>
 
 #ifndef AF_LOCAL

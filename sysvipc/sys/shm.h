@@ -18,8 +18,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_SHM_H
-
 #define _SYS_SHM_H	1
+
 #include <features.h>
 
 #include <unistd.h>		/* for `getpagesize' declaration */
@@ -29,7 +29,7 @@
 #include <sys/ipc.h>
 
 /* Get system dependent definition of `struct shmid_ds' and more.  */
-#include <sys/shm_buf.h>
+#include <bits/shm.h>
 
 
 /* Segment low boundary address multiple.  */
@@ -54,4 +54,4 @@ extern int shmdt __P ((__const void *__shmaddr));
 
 __END_DECLS
 
-#endif /* _SYS_SHM_H */
+#endif /* sys/shm.h */

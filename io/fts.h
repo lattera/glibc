@@ -33,8 +33,8 @@
  *	@(#)fts.h	8.1 (Berkeley) 6/2/93
  */
 
-#ifndef	_FTS_H_
-#define	_FTS_H_
+#ifndef	_FTS_H
+#define	_FTS_H 1
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
@@ -123,4 +123,4 @@ FTSENT	*fts_read __P((FTS *));
 int	 fts_set __P((FTS *, FTSENT *, int));
 __END_DECLS
 
-#endif /* !_FTS_H_ */
+#endif /* fts.h */

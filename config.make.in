@@ -40,6 +40,7 @@ build-shared = @shared@
 build-profile = @profile@
 build-omitfp = @omitfp@
 build-bounded = @bounded@
+build-static-nss = @static_nss@
 stdio = @stdio@
 add-ons = @subdirs@
 cross-compiling = @cross_compiling@

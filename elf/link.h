@@ -18,8 +18,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_LINK_H
-
 #define	_LINK_H	1
+
 #include <features.h>
 
 #define __need_size_t
@@ -36,7 +36,8 @@ __BEGIN_DECLS
 #define ELFW(type)	_ElfW (ELF, __ELF_NATIVE_CLASS, type)
 #define _ElfW(e,w,t)	_ElfW_1 (e, w, _##t)
 #define _ElfW_1(e,w,t)	e##w##t
-#include <elfclass.h>		/* Defines __ELF_NATIVE_CLASS.  */
+
+#include <bits/elfclass.h>		/* Defines __ELF_NATIVE_CLASS.  */
 
 /* Rendezvous structure used by the run-time dynamic linker to communicate
    details of shared object loading to the debugger.  If the executable's

@@ -17,14 +17,14 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SYS_RESOURCE_H
-
 #define	_SYS_RESOURCE_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
 
 /* Get the system-dependent definitions of structures and bit values.  */
-#include <resourcebits.h>
+#include <bits/resource.h>
 
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
@@ -68,4 +68,4 @@ extern int setpriority __P ((enum __priority_which __which, int __who,
 
 __END_DECLS
 
-#endif	/* resource.h  */
+#endif	/* sys/resource.h  */

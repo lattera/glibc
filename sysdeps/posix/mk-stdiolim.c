@@ -16,7 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <posix1_lim.h>
+#include <bits/posix1_lim.h>
 
 int
 main()
@@ -32,9 +32,9 @@ main()
   puts  ("#endif");
 
   /* POSIX does not require that OPEN_MAX and PATH_MAX be defined, so
-     <local_lim.h> will not define them if they are run-time variant (which
-     is the case in the Hurd).  ANSI still requires that FOPEN_MAX and
-     FILENAME_MAX be defined, however.  */
+     <bits/local_lim.h> will not define them if they are run-time
+     variant (which is the case in the Hurd).  ANSI still requires
+     that FOPEN_MAX and FILENAME_MAX be defined, however.  */
 
   printf("#define FOPEN_MAX %u\n",
 #ifdef	OPEN_MAX

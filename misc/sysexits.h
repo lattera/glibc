@@ -33,8 +33,8 @@
  *	@(#)sysexits.h	8.1 (Berkeley) 6/2/93
  */
 
-#ifndef	_SYSEXITS_H_
-#define	_SYSEXITS_H_
+#ifndef	_SYSEXITS_H
+#define	_SYSEXITS_H 1
 
 /*
  *  SYSEXITS.H -- Exit status codes for system programs.
@@ -115,4 +115,4 @@
 
 #define EX__MAX	78	/* maximum listed value */
 
-#endif /* !_SYSEXITS_H_ */
+#endif /* sysexits.h */

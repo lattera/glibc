@@ -17,15 +17,15 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_TIME_H
-
 #define _SYS_TIME_H	1
+
 #include <features.h>
 
 #include <time.h>
 #include <sys/select.h>
 
 #define __need_timeval
-#include <timebits.h>
+#include <bits/time.h>
 
 
 __BEGIN_DECLS

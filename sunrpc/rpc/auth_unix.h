@@ -43,8 +43,8 @@
  */
 
 #ifndef _RPC_AUTH_UNIX_H
-
 #define _RPC_AUTH_UNIX_H	1
+
 #include <features.h>
 #include <sys/types.h>
 #include <rpc/types.h>

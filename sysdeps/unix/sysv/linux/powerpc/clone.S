@@ -19,7 +19,7 @@
 
 #include <sysdep.h>
 #define _ERRNO_H	1
-#include <errnos.h>
+#include <bits/errno.h>
 
 /* This is the only really unusual system call in PPC linux, but not
    because of any weirdness in the system call itself; because of

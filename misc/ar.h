@@ -18,8 +18,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _AR_H
-
 #define _AR_H 1
+
 #include <sys/cdefs.h>
 
 /* Archive files start with the ARMAG identifying string.  Then follows a

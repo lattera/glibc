@@ -21,8 +21,8 @@
 #
 subdir	:= io
 
-headers := sys/stat.h statbuf.h sys/statfs.h statfsbuf.h sys/vfs.h \
-	   fcntl.h sys/fcntl.h fcntlbits.h \
+headers := sys/stat.h bits/stat.h sys/statfs.h bits/statfs.h sys/vfs.h \
+	   fcntl.h sys/fcntl.h bits/fcntl.h \
 	   poll.h sys/poll.h \
 	   utime.h ftw.h fts.h
 

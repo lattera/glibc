@@ -19,7 +19,7 @@
 
 #include <sysdep.h>
 #define _ASM
-#include <jmp_buf.h>
+#include <bits/setjmp.h>
 
 	/* Binary compatibility entry point.  */
 ENTRY (__setjmp)

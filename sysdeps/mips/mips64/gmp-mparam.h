@@ -20,7 +20,7 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
 #define BITS_PER_MP_LIMB 64
 #define BYTES_PER_MP_LIMB 8
-#define BITS_PER_LONGINT 32
-#define BITS_PER_INT 32
+#define BITS_PER_LONGINT 64
+#define BITS_PER_INT 64
 #define BITS_PER_SHORTINT 16
 #define BITS_PER_CHAR 8

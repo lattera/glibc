@@ -33,9 +33,9 @@
  *	@(#)fstab.h	8.1 (Berkeley) 6/2/93
  */
 
-#ifndef _FSTAB_H_
+#ifndef _FSTAB_H
+#define _FSTAB_H	1
 
-#define _FSTAB_H_	1
 #include <features.h>
 
 /*
@@ -79,4 +79,4 @@ extern void endfsent __P ((void));
 
 __END_DECLS
 
-#endif /* !_FSTAB_H_ */
+#endif /* fstab.h */

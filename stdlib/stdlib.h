@@ -21,8 +21,8 @@
  */
 
 #ifndef	_STDLIB_H
-
 #define	_STDLIB_H	1
+
 #include <features.h>
 
 /* Get size_t, wchar_t and NULL from <stddef.h>.  */

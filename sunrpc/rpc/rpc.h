@@ -34,8 +34,9 @@
  *
  * Copyright (C) 1984, Sun Microsystems, Inc.
  */
-#ifndef __RPC_HEADER__
-#define __RPC_HEADER__
+
+#ifndef _RPC_RPC_H
+#define _RPC_RPC_H 1
 
 #include <rpc/types.h>		/* some typedefs */
 #include <netinet/in.h>
@@ -66,4 +67,4 @@
 /* routines for parsing /etc/rpc */
 #include <rpc/netdb.h>		/* structures and routines to parse /etc/rpc */
 
-#endif /* ndef __RPC_HEADER__ */
+#endif /* rpc/rpc.h */

@@ -17,9 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef __ENVZ_H__
+#ifndef _ENVZ_H
+#define _ENVZ_H	1
 
-#define __ENVZ_H__	1
 #include <features.h>
 
 #include <errno.h>
@@ -60,4 +60,4 @@ extern void envz_strip __P ((char **__envz, size_t *__envz_len));
 
 __END_DECLS
 
-#endif /* __ENVZ_H__ */
+#endif /* envz.h */

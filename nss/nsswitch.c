@@ -21,13 +21,16 @@
 #include <dlfcn.h>
 #include <errno.h>
 #include <netdb.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <link.h>	/* We need some help from ld.so.  */
 #include <search.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <gnu/lib-names.h>
+
+#if !defined DO_STATIC_NSS || defined PIC
+# include <gnu/lib-names.h>
+#endif
 
 #include "nsswitch.h"
 
@@ -64,8 +67,10 @@ static struct
 __libc_lock_define_initialized (static, lock)
 
 
+#if !defined DO_STATIC_NSS || defined PIC
 /* String with revision number of the shared object files.  */
 static const char *const __nss_shlib_revision = LIBNSS_FILES_SO + 15;
+#endif
 
 /* The root of the whole data base.  */
 static name_database *service_table;
@@ -240,6 +245,7 @@ __nss_configure_lookup (const char *dbname, const char *service_line)
 }
 
 
+#if !defined DO_STATIC_NSS || defined PIC
 static int
 nss_dlerror_run (void (*operate) (void *), void *args)
 {
@@ -292,6 +298,7 @@ get_sym (void *a)
   args->loadbase = _dl_lookup_symbol (args->name, &args->ref,
 				      scope, args->map->l_name, 0);
 }
+#endif
 
 /* Comparison function for searching NI->known tree.  */
 static int
@@ -363,6 +370,7 @@ nss_lookup_function (service_user *ni, const char *fct_name)
 		}
 	    }
 
+#if !defined DO_STATIC_NSS || defined PIC
 	  if (ni->library->lib_handle == NULL)
 	    {
 	      /* Load the shared library.  */
@@ -407,6 +415,52 @@ nss_lookup_function (service_user *ni, const char *fct_name)
 	      result = (nss_dlerror_run (get_sym, &args) ? NULL
 			: (void *) (args.loadbase + args.ref->st_value));
 	    }
+#else
+	  /* We can't get function address dynamically in static linking. */
+	  {
+# define DEFINE_ENT(h,nm)						      \
+	    extern void _nss_##h##_get##nm##ent_r (void);		      \
+	    extern void _nss_##h##_end##nm##ent (void);			      \
+	    extern void _nss_##h##_set##nm##ent (void);
+# define DEFINE_GET(h,nm)						      \
+	    extern void _nss_##h##_get##nm##_r (void);
+# define DEFINE_GETBY(h,nm,ky)						      \
+	    extern void _nss_##h##_get##nm##by##ky##_r (void);
+# include "functions.def"
+# undef DEFINE_ENT
+# undef DEFINE_GET
+# undef DEFINE_GETBY
+# define DEFINE_ENT(h,nm)						      \
+	    { #h"_get"#nm"ent_r", _nss_##h##_get##nm##ent_r },	      \
+	    { #h"_end"#nm"ent", _nss_##h##_end##nm##ent },	      \
+	    { #h"_set"#nm"ent", _nss_##h##_set##nm##ent },
+# define DEFINE_GET(h,nm)						      \
+	    { #h"_get"#nm"_r", _nss_##h##_get##nm##_r },
+# define DEFINE_GETBY(h,nm,ky)						      \
+	    { #h"_get"#nm"by"#ky"_r", _nss_##h##_get##nm##by##ky##_r },
+	    static struct fct_tbl { const char *fname; void *fp; } *tp, tbl[] =
+	      {
+# include "functions.def"
+		{ NULL, NULL }
+	      };
+	    size_t namlen = (5 + strlen (ni->library->name) + 1
+			     + strlen (fct_name) + 1);
+	    char name[namlen];
+
+	    /* Construct the function name.  */
+	    __stpcpy (__stpcpy (__stpcpy (name, ni->library->name),
+				"_"),
+		      fct_name);
+
+	    result = NULL;
+	    for (tp = &tbl[0]; tp->fname; tp++)
+	      if (strcmp (tp->fname, name) == 0)
+		{
+		  result = tp->fp;
+		  break;
+		}
+	  }
+#endif
 
 	  /* Remember function pointer for later calls.  Even if null, we
 	     record it so a second try needn't search the library again.  */

@@ -17,7 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sigcontext.h>
+#include <signal.h>
 
 void
 profil_counter (int signo, struct sigcontext sc)

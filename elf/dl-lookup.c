@@ -83,6 +83,11 @@ do_lookup (const char *undef_name, unsigned long int hash,
       if (skip != NULL && map == skip)
 	continue;
 
+      /* Skip objects that could not be opened, which can occur in trace
+	 mode.  */
+      if (map->l_opencount == 0)
+	continue;
+
       /* Don't search the executable when resolving a copy reloc.  */
       if (elf_machine_lookup_noexec_p (reloc_type) &&
 	  map->l_type == lt_executable)
@@ -285,7 +290,7 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
       if (res < 0)
 	/* Oh, oh.  The file named in the relocation entry does not
 	   contain the needed symbol.  */
-	_dl_signal_error (0, *reference_name ? reference_name : NULL,
+	_dl_signal_error (0, reference_name,
 			  make_string ("symbol ", undef_name, ", version ",
 				       version->name,
 				       " not defined in file ",

@@ -21,13 +21,13 @@
  */
 
 #ifndef	_SYS_TYPES_H
-
 #define	_SYS_TYPES_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
 
-#include <gnu/types.h>
+#include <bits/types.h>
 
 #ifdef	__USE_BSD
 typedef __u_char u_char;
@@ -80,16 +80,25 @@ typedef unsigned int uint;
 
 #if !defined (__GNUC__) || __GNUC__ < 2 || __GNUC_MINOR__ < 7
 
+/* These types are defined by the ISO C 9x header <inttypes.h>. */
+#ifndef __int8_t_defined
+#define __int8_t_defined
 typedef	char int8_t;
-typedef	unsigned char u_int8_t;
 typedef	short int int16_t;
-typedef	unsigned short int u_int16_t;
 typedef	int int32_t;
-typedef	unsigned int u_int32_t;
 #ifdef __GNUC__
 typedef long long int int64_t;
+#endif
+#endif
+
+/* But these were defined by ISO C without the first `_'.  */
+typedef	unsigned char u_int8_t;
+typedef	unsigned short int u_int16_t;
+typedef	unsigned int u_int32_t;
+#ifdef __GNUC__
 typedef unsigned long long int u_int64_t;
 #endif
+
 typedef int register_t;
 
 #else
@@ -100,13 +109,17 @@ typedef int register_t;
 #define __u_intN_t(N, MODE) \
   typedef unsigned int u_int##N##_t __attribute__ ((__mode__ (MODE)))
 
+#ifndef __int8_t_defined
+#define __int8_t_defined
 __intN_t (8, __QI__);
-__u_intN_t (8, __QI__);
 __intN_t (16, __HI__);
-__u_intN_t (16, __HI__);
 __intN_t (32, __SI__);
-__u_intN_t (32, __SI__);
 __intN_t (64, __DI__);
+#endif
+
+__u_intN_t (8, __QI__);
+__u_intN_t (16, __HI__);
+__u_intN_t (32, __SI__);
 __u_intN_t (64, __DI__);
 
 typedef int register_t __attribute__ ((__mode__ (__word__)));

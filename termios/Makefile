@@ -21,7 +21,9 @@
 #
 subdir	:= termios
 
-headers	:= termios.h termbits.h sys/ttydefaults.h sys/termios.h sys/ttychars.h
+headers	:= termios.h bits/termios.h sys/ttydefaults.h sys/termios.h \
+	   sys/ttychars.h
+
 routines	:= speed cfsetspeed tcsetattr tcgetattr tcgetpgrp tcsetpgrp \
 		   tcdrain tcflow tcflush tcsendbrk cfmakeraw
 

@@ -22,7 +22,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <paths.h>
 #include "nsswitch.h"
 #include "netgroup.h"

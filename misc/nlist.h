@@ -17,8 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_NLIST_H
-
 #define	_NLIST_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS

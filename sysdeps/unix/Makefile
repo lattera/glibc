@@ -20,7 +20,7 @@
 config-generated := $(config-generated) $(unix-generated)
 
 ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
-	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/local_lim.h))))))
+	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/bits/local_lim.h))))))
 
 ifneq (,$(wildcard $(sysincludedir)/sys/param.h))
 mk-local_lim-CFLAGS += -DHAVE_SYS_PARAM_H
@@ -32,13 +32,13 @@ ifneq (,$(wildcard $(sysincludedir)/limits.h))
 mk-local_lim-CFLAGS += -DHAVE_LIMITS_H
 endif
 
-$(common-objpfx)local_lim.h: $(common-objpfx)mk-local_lim
+$(common-objpfx)bits/local_lim.h: $(common-objpfx)mk-local_lim
 	$(dir $<)$(notdir $<) > $@-t
 	mv -f $@-t $@
 $(common-objpfx)mk-local_lim: $(sysdep_dir)/unix/mk-local_lim.c
 	$(common-objdir-compile)
 
-before-compile := $(before-compile) $(common-objpfx)local_lim.h
+before-compile := $(before-compile) $(common-objpfx)bits/local_lim.h
 common-generated := $(common-generated) local_lim.h mk-local_lim
 
 endif
@@ -51,8 +51,8 @@ before-compile := $(before-compile) $(common-objpfx)sys/param.h
 
 $(common-objpfx)sys/param.h: $(sysincludedir)/sys/param.h
 	$(make-target-directory)
-	(echo '#ifndef _GNU_SYS_PARAM_H';	\
-	 echo '#define _GNU_SYS_PARAM_H 1';	\
+	(echo '#ifndef _SYS_PARAM_H';	\
+	 echo '#define _SYS_PARAM_H 1';	\
 	 echo '#include <endian.h>';		\
 	 awk < $<			\
 	   '/^#define[ 	]*NULL/ { print "#ifndef NULL";	\
@@ -127,13 +127,13 @@ endif # misc
 endif # No sysdep sys/param.h.
 
 ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
-	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/errnos.h))))))
+	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/bits/errno.h))))))
 
 # These need to exist before any compiling is done,
 # so cpp doesn't instead find the stub versions.
-before-compile := $(before-compile) $(common-objpfx)errnos.h
+before-compile := $(before-compile) $(common-objpfx)bits/errno.h
 
-$(common-objpfx)errnos.h: $(common-objpfx)make-errnos
+$(common-objpfx)bits/errno.h: $(common-objpfx)make-errnos
 	$(dir $<)$(notdir $<) > $@-tmp
 	mv $@-tmp $@
 
@@ -156,11 +156,11 @@ common-generated := $(common-generated) \
 endif
 
 ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
-	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/ioctls.h))))))
+	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/bits/ioctls.h))))))
 
-before-compile := $(before-compile) $(common-objpfx)ioctls.h
+before-compile := $(before-compile) $(common-objpfx)bits/ioctls.h
 
-$(common-objpfx)ioctls.h: $(common-objpfx)make-ioctls
+$(common-objpfx)bits/ioctls.h: $(common-objpfx)make-ioctls
 	$(dir $<)$(notdir $<) > $@-tmp
 	mv $@-tmp $@
 
@@ -180,25 +180,26 @@ $(common-objpfx)make-ioctls.c: $(sysdep_dir)/unix/ioctls-tmpl.c \
 	mv $@T $@
 
 
-termbits.h := $(firstword $(wildcard $(+sysdep_dirs:%=%/termbits.h)))
-ifeq ($(termbits.h),$(sysdep_dir)/generic/termbits.h)
-termbits.h := # Ignore the generic version.
+bits_termios.h := $(firstword $(wildcard $(+sysdep_dirs:%=%/bits/termios.h)))
+ifeq ($(bits_termios.h),$(sysdep_dir)/generic/bits/termios.h)
+bits_termios.h := # Ignore the generic version.
 endif
 
-# If there is a system-specific <termbits.h> file, we want to omit all the
-# symbols it defines from ioctls.  Otherwise, both ioctls.h and termbits.h
-# would define them.  The system-specific <termbits.h> file presumably
-# defines them with the same values as we find from the system's headers.
-# We also want to omit from ioctls the symbols defined in our own
+# If there is a system-specific <bits/termios.h> file, we want to omit
+# all the symbols it defines from ioctls.  Otherwise, both
+# <bits/ioctls.h> and <bits/termios.h> would define them.  The
+# system-specific <bits/termios.h> file presumably defines them with
+# the same values as we find from the system's headers.  We also want
+# to omit from ioctls the symbols defined in our own
 # <sys/ttydefaults.h>, to avoid multiple definition conflicts.  We use
-# snarf-ioctls on these files to find what symbols we want to omit.  fgrep
-# -xv gives all lines which do not match in their entirety; without -x,
-# CSTOP's presence elided TIOCSTOP.
+# snarf-ioctls on these files to find what symbols we want to omit.
+# fgrep -xv gives all lines which do not match in their entirety;
+# without -x, CSTOP's presence elided TIOCSTOP.
 
 $(common-objpfx)ioctls: $(sysdep_dir)/unix/snarf-ioctls \
 			$(sysincludedir)/sys/ioctl.h $(ioctl-includes)
 	$(dir $<)$(notdir $<) $(filter-out $<,$^) \
-	| fgrep -xv "`($(dir $<)$(notdir $<) $(termbits.h) \
+	| fgrep -xv "`($(dir $<)$(notdir $<) $(bits_termios.h) \
 					     $(..)sysdeps/generic/sys/ttydefaults.h; \
 		      echo NULL) \
 		     | sort | uniq`" \
@@ -206,7 +207,7 @@ $(common-objpfx)ioctls: $(sysdep_dir)/unix/snarf-ioctls \
 	mv $@-tmp $@
 
 common-generated := $(common-generated) \
-		    ioctls.h ioctls make-ioctls make-ioctls.c
+		    bits/ioctls.h ioctls make-ioctls make-ioctls.c
 endif
 
 ifeq ($(subdir),stdio-common)

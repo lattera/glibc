@@ -59,11 +59,11 @@ omit-deps += $(crtstuff)
 
 # Special rules for the building of crti.o and crtn.o
 $(objpfx)crt%.o: $(objpfx)crt%.S $(objpfx)defs.h
-	$(CC) -c -fPIC -g0 -I$(..) -I$(common-objpfx) -DASSEMBLER $< -o $@
+	$(compile.S) -fPIC -g0 -o $@
 
 $(objpfx)initfini.s: initfini.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -g0 -S -fPIC -finhibit-size-directive \
-              $(no-exceptions) $< -o $@
+	$(compile.c) -g0 -S -fPIC -finhibit-size-directive \
+		$(no-exceptions) -o $@
 
 $(objpfx)crti.S: $(objpfx)initfini.s
 	sed -n -e '1,/@HEADER_ENDS/p' \

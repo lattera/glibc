@@ -29,8 +29,8 @@
 
 __BEGIN_DECLS
 
-#include <gnu/types.h>
-#include <sigset.h>		/* __sigset_t, __sig_atomic_t.  */
+#include <bits/types.h>
+#include <bits/sigset.h>		/* __sigset_t, __sig_atomic_t.  */
 
 #if !defined __sig_atomic_t_defined \
     && (defined _SIGNAL_H || defined __need_sig_atomic_t)
@@ -42,7 +42,7 @@ typedef __sig_atomic_t sig_atomic_t;
 
 #ifdef _SIGNAL_H
 
-#include <signum.h>
+#include <bits/signum.h>
 
 /* Type of a signal handler.  */
 typedef void (*__sighandler_t) __P ((int));
@@ -198,7 +198,7 @@ extern int sigorset __P ((sigset_t *__set, __const sigset_t *__left,
 
 /* Get the system-specific definitions of `struct sigaction'
    and the `SA_*' and `SIG_*'. constants.  */
-#include <sigaction.h>
+#include <bits/sigaction.h>
 
 /* Get and/or change the set of blocked signals.  */
 extern int __sigprocmask __P ((int __how,
@@ -264,7 +264,7 @@ extern int sigvec __P ((int __sig, __const struct sigvec *__vec,
 
 
 /* Get machine-dependent `struct sigcontext' and signal subcodes.  */
-#include <sigcontext.h>
+#include <bits/sigcontext.h>
 
 /* Restore the state saved in SCP.  */
 extern int __sigreturn __P ((struct sigcontext *__scp));

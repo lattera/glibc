@@ -44,7 +44,7 @@ __BEGIN_DECLS
 
 /* This defines CLOCKS_PER_SEC, which is the number of processor clock
    ticks per second.  */
-#include <timebits.h>
+#include <bits/time.h>
 
 /* This is the obsolete POSIX.1-1988 name for the same constant.  */
 #ifdef	__USE_POSIX
@@ -59,7 +59,7 @@ __BEGIN_DECLS
 #if !defined __clock_t_defined && (defined _TIME_H || defined __need_clock_t)
 #define	__clock_t_defined	1
 
-#include <gnu/types.h>
+#include <bits/types.h>
 
 /* Returned by `clock'.  */
 typedef __clock_t clock_t;
@@ -70,7 +70,7 @@ typedef __clock_t clock_t;
 #if !defined __time_t_defined && (defined _TIME_H || defined __need_time_t)
 #define	__time_t_defined	1
 
-#include <gnu/types.h>
+#include <bits/types.h>
 
 /* Returned by `time'.  */
 typedef __time_t time_t;

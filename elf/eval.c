@@ -1,5 +1,5 @@
 /* You don't really want to know what this hack is for.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -128,7 +128,7 @@ _start (void)
   char *buf = NULL;
   size_t bufsz = 0;
 
-  while (__getline (&buf, &bufsz, stdin) > 0)
+  while (__getdelim (&buf, &bufsz, '\n', stdin) > 0)
     {
       char *p = buf;
       eval (&p);

@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 
 #define	_DIRSTREAM_H	1
 
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 
 /* Directory stream type.
 

@@ -2,8 +2,10 @@ cmsg_nxthdr.c
 init-first.h
 kernel_sigaction.h
 kernel_stat.h
+kernel_termios.h
 llseek.c
 siglist.h
+socketcall.h
 sysctl.c
 termio.h
 net/ethernet.h
@@ -30,14 +32,12 @@ sys/debugreg.h
 sys/io.h
 sys/kd.h
 sys/kdaemon.h
-sys/kernel_termios.h
 sys/klog.h
 sys/module.h
 sys/mount.h
 sys/mtio.h
 sys/procfs.h
 sys/quota.h
-sys/socketcall.h
 sys/socketvar.h
 sys/soundcard.h
 sys/sysctl.h

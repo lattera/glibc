@@ -36,8 +36,8 @@
  */
 
 #ifndef _RPC_SVC_AUTH_H
-
 #define _RPC_SVC_AUTH_H	1
+
 #include <features.h>
 #include <rpc/svc.h>
 

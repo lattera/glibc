@@ -22,8 +22,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _LIBINTL_H
-
 #define _LIBINTL_H	1
+
 #include <features.h>
 
 /* We define an additional symbol to signal that we use the GNU

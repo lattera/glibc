@@ -18,6 +18,7 @@
 
 #ifndef _NL_TYPES_H
 #define _NL_TYPES_H 1
+
 #include <features.h>
 
 /* The default message set used by the gencat program.  */

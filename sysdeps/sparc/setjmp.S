@@ -19,7 +19,7 @@
 #include <sysdep.h>
 
 #define _ASM 1
-#include <jmp_buf.h>
+#include <bits/setjmp.h>
 
 ENTRY (__sigsetjmp)
 	/* Save our SP and FP; in the delay slot of the jump, save our

@@ -19,7 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <fcntl.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <shadow.h>
 #include <signal.h>
 #include <string.h>

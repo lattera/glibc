@@ -19,7 +19,7 @@
 #include <alloca.h>
 #include <argz.h>
 #include <errno.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>

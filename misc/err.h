@@ -17,8 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef	_ERR_H_
-#define	_ERR_H_	1
+#ifndef	_ERR_H
+#define	_ERR_H	1
+
 #include <features.h>
 
 #define	__need___va_list

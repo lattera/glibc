@@ -20,8 +20,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef __REGEXP_LIBRARY_H__
-#define __REGEXP_LIBRARY_H__
+#ifndef _REGEX_H
+#define _REGEX_H 1
 
 /* Allow the use in C++ code.  */
 #ifdef __cplusplus
@@ -524,7 +524,7 @@ extern void regfree _RE_ARGS ((regex_t *preg));
 }
 #endif	/* C++ */
 
-#endif /* not __REGEXP_LIBRARY_H__ */
+#endif /* regex.h */
 
 /*
 Local variables:

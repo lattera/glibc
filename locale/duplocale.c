@@ -19,7 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <locale.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <stdlib.h>
 
 #include <localeinfo.h>

@@ -17,7 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #define _ERRNO_H
-#include <errnos.h>
+#include <bits/errno.h>
 
 .globl _errno
 .globl syscall_error

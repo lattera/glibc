@@ -19,7 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <string.h>
 #include <unistd.h>
 #include <utmp.h>

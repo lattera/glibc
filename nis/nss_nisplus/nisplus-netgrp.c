@@ -23,7 +23,7 @@
 #include <netdb.h>
 #include <string.h>
 #include <netgroup.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #include <rpcsvc/nis.h>
 #include <rpcsvc/nislib.h>
 
@@ -42,7 +42,7 @@ static unsigned long position = 0;
         ((res)->objects.objects_val[(idx)].zo_data.objdata_u.en_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
 
 static enum nss_status
-_nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer, 
+_nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
 			     size_t buflen)
 {
   enum nss_status status;
@@ -51,14 +51,14 @@ _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
   if (data == NULL || data_size == 0)
     /* User bug.  setnetgrent() wasn't called before.  */
     abort ();
-  
+
   if (position == data_size)
     return result->first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
-  
+
   if (NISENTRYLEN (position, 1, data) > 0)
     {
       /* We have a list of other netgroups.  */
-      
+
       result->type = group_val;
       if (NISENTRYLEN (position, 1, data) >= buflen)
 	{
@@ -71,13 +71,13 @@ _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
       result->val.group = buffer;
       ++position;
       result->first = 0;
-      
+
       return NSS_STATUS_SUCCESS;
     }
 
-  /* Before we can copy the entry to the private buffer we have to make 
+  /* Before we can copy the entry to the private buffer we have to make
      sure it is big enough.  */
-  if (NISENTRYLEN (position, 2, data) + NISENTRYLEN (position, 3, data) + 
+  if (NISENTRYLEN (position, 2, data) + NISENTRYLEN (position, 3, data) +
       NISENTRYLEN (position, 4, data) + 6 > buflen)
     {
       __set_errno (ERANGE);
@@ -86,9 +86,9 @@ _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
   else
     {
       char *cp = buffer;
-      
+
       result->type = triple_val;
-      
+
       if (NISENTRYLEN (position, 2, data) == 0)
 	result->val.triple.host = NULL;
       else
@@ -166,9 +166,9 @@ _nss_nisplus_setnetgrent (char *group)
     }
   else
     data_size = data->objects.objects_len;
-  
+
   __libc_lock_unlock (lock);
-  
+
   return status;
 }
 

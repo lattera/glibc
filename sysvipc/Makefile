@@ -22,7 +22,7 @@
 subdir	:= sysvipc
 
 headers	:= sys/ipc.h sys/msg.h sys/sem.h sys/shm.h \
-	   sys/ipc_buf.h sys/msq_buf.h sys/sem_buf.h sys/shm_buf.h
+	   bits/ipc.h bits/msq.h bits/sem.h bits/shm.h
 
 routines := ftok \
 	    msgsnd msgrcv msgget msgctl \

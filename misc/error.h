@@ -19,8 +19,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _error_h_
-#define _error_h_
+#ifndef _ERROR_H
+#define _ERROR_H 1
 
 #ifndef __attribute__
 /* This feature is available in gcc versions 2.5 and later.  */
@@ -74,4 +74,4 @@ extern int error_one_per_line;
 }
 #endif
 
-#endif /* _error_h_ */
+#endif /* error.h */

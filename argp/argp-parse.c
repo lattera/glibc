@@ -42,7 +42,7 @@
 #endif
 
 #if _LIBC - 0
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #else
 #ifdef HAVE_CTHREADS_H
 #include <cthreads.h>

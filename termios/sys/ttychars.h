@@ -38,8 +38,8 @@
  *
  * User visible structures and constants related to terminal handling.
  */
-#ifndef _SYS_TTYCHARS_H_
-#define	_SYS_TTYCHARS_H_
+#ifndef _SYS_TTYCHARS_H
+#define	_SYS_TTYCHARS_H 1
 
 struct ttychars {
 	char	tc_erase;	/* erase last character */
@@ -57,7 +57,9 @@ struct ttychars {
 	char	tc_werasc;	/* word erase */
 	char	tc_lnextc;	/* literal next character */
 };
-#ifdef USE_OLD_TTY
+
+#ifdef __USE_OLD_TTY
 #include <sys/ttydefaults.h>	/* to pick up character defaults */
 #endif
-#endif /* !_SYS_TTYCHARS_H_ */
+
+#endif /* sys/ttychars.h */

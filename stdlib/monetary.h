@@ -18,8 +18,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_MONETARY_H
-
 #define	_MONETARY_H	1
+
 #include <features.h>
 
 /* Get needed types.  */

@@ -132,8 +132,8 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	      int i;
 	    } check =
 	      { t: {
-		MACH_MSG_TYPE_INTEGER_32,
-		32,
+		MACH_MSG_TYPE_INTEGER_T,
+		MACH_MSG_TYPE_INTEGER_T,
 		1,
 		TRUE,
 		FALSE,

@@ -58,8 +58,8 @@
  *	$Id$
  */
 
-#ifndef _RESOLV_H_
-#define	_RESOLV_H_
+#ifndef _RESOLV_H
+#define	_RESOLV_H 1
 
 #include <sys/param.h>
 #if (!defined(BSD)) || (BSD < 199306)
@@ -293,4 +293,4 @@ int		res_queriesmatch __P((const u_char *, const u_char *,
 void		res_close __P((void));
 __END_DECLS
 
-#endif /* !_RESOLV_H_ */
+#endif /* resolv.h */

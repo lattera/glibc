@@ -25,7 +25,7 @@
 #define	_MALLOC_INTERNAL
 #include <malloc.h>
 #include <mcheck.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 #endif
 
 #include <stdio.h>

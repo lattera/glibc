@@ -1,16 +1,111 @@
 GLIBC_2.0 {
   global:
-    # all functions and variables in the normal name space
-    a*; b*; c*; d*; e*; f*; g*; h*; i*; j*; k*; l*; m*;
-    n*; o*; p*; q*; r*; s*; t*; u*; v*; w*; x*; y*; z*;
+    # mathematical functions
+    acos; acosf; acosl;
+    acosh; acoshf; acoshl;
+    asin; asinf; asinl;
+    asinh; asinhf; asinhl;
+    atan2; atan2f; atan2l;
+    atan; atanf; atanl;
+    atanh; atanhf; atanhl;
+    cbrt; cbrtf; cbrtl;
+    ceil; ceilf; ceill;
+    copysign; copysignf; copysignl;
+    cos; cosf; cosl;
+    coshf; cosh; coshl;
+    drem; dremf; dreml;
+    erf; erff; erfl;
+    erfc; erfcf; erfcl;
+    exp2; exp2f; exp2l;
+    exp; expf; expl;
+    expm1; expm1f; expm1l;
+    fabs; fabsf; fabsl;
+    fdim; fdimf; fdiml;
+    finite; finitef; finitel;
+    floor; floorf; floorl;
+    fmax; fmaxf; fmaxl;
+    fmin; fminf; fminl;
+    fmod; fmodf; fmodl;
+    frexp; frexpf; frexpl;
+    gamma; gammaf; gammal;
+    gamma_r; gammaf_r; gammal_r;
+    hypot; hypotf; hypotl;
+    ilogb; ilogbf; ilogbl;
+    j0; j0f; j0l;
+    j1; j1f; j1l;
+    jn; jnf; jnl;
+    ldexp; ldexpf; ldexpl;
+    lgamma; lgammaf; lgammal;
+    lgamma_r; lgammaf_r; lgammal_r;
+    log10; log10f; log10l;
+    log1p; log1pf; log1pl;
+    log2; log2f; log2l;
+    log; logf; logl;
+    logb; logbf; logbl;
+    matherr;
+    modf; modff; modfl;
+    nan; nanf; nanl;
+    nearbyint; nearbyintf; nearbyintl;
+    nextafter; nextafterf; nextafterl;
+    pow; powf; powl;
+    remainder; remainderf; remainderl;
+    remquo; remquof; remquol;
+    rint; rintf; rintl;
+    lrint; llrint;
+    round; roundf; roundl;
+    lround; llround;
+    scalb; scalbf; scalbl;
+    scalbn; scalbnf; scalbnl;
+    significand; significandf; significandl;
+    sin; sinf; sinl;
+    sincos; sincosf; sincosl;
+    sinh; sinhf; sinhl;
+    sqrt; sqrtf; sqrtl;
+    tan; tanf; tanl;
+    tanh; tanhf; tanhl;
+    trunc; truncf; truncl;
+    y0; y0f; y0l;
+    y1; y1f; y1l;
+    yn; ynf; ynl;
+
+    # complex functions
+    cabs; cabsf; cabsl;
+    cacos; cacosf; cacosl;
+    cacosh; cacoshf; cacoshl;
+    carg; cargf; cargl;
+    casin; casinf; casinl;
+    casinh; casinhf; casinhl;
+    catan; catanf; catanl;
+    catanh; catanhf; catanhl;
+    ccos; ccosf; ccosl;
+    ccosh; ccoshf; ccoshl;
+    cexp; cexpf; cexpl;
+    cimag; cimagf; cimagl;
+    clog; clogf; clogl;
+    conj; conjf; conjl;
+    cpow; cpowf; cpowl;
+    cproj; cprojf; cprojl;
+    creal; crealf; creall;
+    csin; csinf; csinl;
+    csinh; csinhf; csinhl;
+    csqrt; csqrtf; csqrtl;
+    ctan; ctanf; ctanl;
+    ctanh; ctanhf; ctanhl;
+
+    # fp environment functions
+    feclearexcept; fegetenv; fegetexceptflag;
+    fegetround; feholdexcept; feraiseexcept;
+    fesetenv; fesetexceptflag; fesetround;
+    fetestexcept; feupdateenv;
+
 
     # global variables
-    _LIB_VERSION;
+    _LIB_VERSION; signgam;
 
     # functions used in inline functions or macros
     __fpclassify; __fpclassifyf; __fpclassifyl;
     __signbit; __signbitf; __signbitl;
-    __finite; __finitef; __fintitel;
+    __finite; __finitef; __finitel;
 
     __log1p;
 

@@ -36,7 +36,7 @@
 #ifndef _NETINET_IP_H
 #define _NETINET_IP_H
 
-#include <gnu/types.h>
+#include <bits/types.h>
 #include <endian.h>
 #include <netinet/in.h>
 

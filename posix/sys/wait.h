@@ -21,17 +21,17 @@
  */
 
 #ifndef	_SYS_WAIT_H
-
 #define	_SYS_WAIT_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
 
-#include <gnu/types.h>
+#include <bits/types.h>
 
 /* This will define the `W*' macros for the flag
    bits to `waitpid', `wait3', and `wait4'.  */
-#include <waitflags.h>
+#include <bits/waitflags.h>
 
 #ifdef	__USE_BSD
 
@@ -79,7 +79,7 @@ typedef union
 #endif /* Use BSD.  */
 
 /* This will define all the `__W*' macros.  */
-#include <waitstatus.h>
+#include <bits/waitstatus.h>
 
 #define	WEXITSTATUS(status)	__WEXITSTATUS(__WAIT_INT(status))
 #define	WTERMSIG(status)	__WTERMSIG(__WAIT_INT(status))

@@ -17,23 +17,23 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SYS_IOCTL_H
-
 #define	_SYS_IOCTL_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
 
 /* Get the list of `ioctl' requests and related constants.  */
-#include <ioctls.h>
+#include <bits/ioctls.h>
 
 /* Define some types used by `ioctl' requests.  */
-#include <ioctl-types.h>
+#include <bits/ioctl-types.h>
 
-/* On a Unix system, the system <sys/ioctl.h> probably defines some of the
-   symbols we define in <sys/ttydefaults.h> (usually with the same values).
-   The code to generate <ioctls.h> has omitted these symbols to avoid the
-   conflict, but a Unix program expects <sys/ioctl.h> to define them, so we
-   must include <sys/ttydefaults.h> here.  */
+/* On a Unix system, the system <sys/ioctl.h> probably defines some of
+   the symbols we define in <sys/ttydefaults.h> (usually with the same
+   values).  The code to generate <bits/ioctls.h> has omitted these
+   symbols to avoid the conflict, but a Unix program expects <sys/ioctl.h>
+   to define them, so we must include <sys/ttydefaults.h> here.  */
 #include <sys/ttydefaults.h>
 
 /* Perform the I/O control operation specified by REQUEST on FD.

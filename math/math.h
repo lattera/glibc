@@ -22,25 +22,25 @@
  */
 
 #ifndef	_MATH_H
-
 #define	_MATH_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
 
 /* Get machine-dependent HUGE_VAL value (returned on overflow).
    On all IEEE754 machines, this is +Infinity.  */
-#include <huge_val.h>
+#include <bits/huge_val.h>
 
 /* Get machine-dependent NAN value (returned for some domain errors).  */
 #ifdef	 __USE_GNU
-#include <nan.h>
+#include <bits/nan.h>
 #endif
 
 
-/* The file <mathcalls.h> contains the prototypes for all the actual
-   math functions.  These macros are used for those prototypes, so
-   we can easily declare each function as both `name' and `__name',
+/* The file <bits/mathcalls.h> contains the prototypes for all the
+   actual math functions.  These macros are used for those prototypes,
+   so we can easily declare each function as both `name' and `__name',
    and can declare the float versions `namef' and `__namef'.  */
 
 #define __MATHCALL(function,suffix, args)	\
@@ -58,7 +58,7 @@ __BEGIN_DECLS
 
 #define _Mdouble_ 		double
 #define __MATH_PRECNAME(name,r)	__CONCAT(name,r)
-#include <mathcalls.h>
+#include <bits/mathcalls.h>
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
 
@@ -77,7 +77,7 @@ __BEGIN_DECLS
 #else
 #define __MATH_PRECNAME(name,r) name/**/f/**/r
 #endif
-#include <mathcalls.h>
+#include <bits/mathcalls.h>
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
 
@@ -94,7 +94,7 @@ __BEGIN_DECLS
 #else
 #define __MATH_PRECNAME(name,r) name/**/l/**/r
 #endif
-#include <mathcalls.h>
+#include <bits/mathcalls.h>
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
 
@@ -132,7 +132,7 @@ extern int signgam;
 
      INFINITY	representation of the infinity value of type `float_t'
 */
-#include <mathbits.h>
+#include <bits/mathdef.h>
 
 /* All floating-point numbers can be put in one of these categories.  */
 enum
@@ -318,7 +318,7 @@ extern int matherr __P ((struct exception *));
 /* Get machine-dependent inline versions (if there are any).  */
 #if (!defined __NO_MATH_INLINES && defined __OPTIMIZE__) \
     || defined __LIBC_M81_MATH_INLINES
-#include <__math.h>
+#include <bits/mathinline.h>
 #endif
 
 
