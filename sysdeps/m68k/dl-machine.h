@@ -73,7 +73,7 @@ elf_machine_load_address (void)
 
 static inline void
 elf_machine_rela (struct link_map *map,
-		  const Elf32_Rel *reloc, const Elf32_Sym *sym,
+		  const Elf32_Rela *reloc, const Elf32_Sym *sym,
 		  Elf32_Addr (*resolve) (const Elf32_Sym **ref,
 					 Elf32_Addr reloc_addr,
 					 int noplt))
@@ -110,7 +110,9 @@ elf_machine_rela (struct link_map *map,
 			       + reloc->r_addend);
       break;
     case R_68K_32:
-      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = (resolve ? (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0) :
+		  /* RESOLVE is null during bootstrap relocation.  */
+		  map->l_addr);
       *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 		     + reloc->r_addend);
       break;
@@ -250,7 +252,7 @@ _dl_start_user:
 	lea (%sp, %d0*4), %sp
 	| Push back the modified argument count.
 	move.l %d1, -(%sp)
-	| Push _dl_loaded as argument in _dl_init_next call below.
+0:	| Push _dl_loaded as argument in _dl_init_next call below.
 	move.l ([_dl_loaded@GOT, %a5]), %d2
 0:	move.l %d2, -(%sp)
 	| Call _dl_init_next to return the address of an initializer
