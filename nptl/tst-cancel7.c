@@ -102,7 +102,9 @@ do_test (void)
       return 1;
     }
 
-  sleep (1);
+  do
+    sleep (1);
+  while (access (pidfilename, R_OK) != 0);
 
   if (pthread_cancel (th) != 0)
     {

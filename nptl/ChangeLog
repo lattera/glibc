@@ -1,5 +1,8 @@
 2003-02-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-cancel7.c (do_test): Make sure the pid file exists before
+	canceling the thread.
+
 	* tst-rwlock6.c: More pthread_rwlock_timedwrlock and
 	pthread_rwlock_timedrdlock tests.
 	* tst-rwlock7.c: More pthread_rwlock_timedwrlock tests.
@@ -13,7 +16,7 @@
 
 	* tst-attr1.c (do_test): Add test for pthread_mutexattr_setpshared.
 
-	* libc-cancellation.c (__libc_enable_asynccancel): Rwrite to avoid
+	* libc-cancellation.c (__libc_enable_asynccancel): Rewrite to avoid
 	going into an endless loop.
 	* Makefile (tests): Add tst-cancel9.
 	* tst-cancel9.c: New file.
