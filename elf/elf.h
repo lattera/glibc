@@ -777,6 +777,10 @@ typedef struct
 #define AT_HWCAP	16		/* Machine dependent hints about
 					   processor capabilities.  */
 
+/* This entry gives some information about the FPU initialization
+   performed by the kernel.  */
+#define AT_FPUCW	17		/* Used FPU control word.  */
+
 
 /* Note section contents.  Each entry in the note section begins with
    a header of a fixed form.  */

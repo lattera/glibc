@@ -29,7 +29,7 @@ headers		:= math.h bits/mathcalls.h bits/mathinline.h bits/huge_val.h \
 distribute	:= math_private.h machine/asm.h machine/endian.h
 
 # FPU support code.
-aux		:= fpu_control setfpucw
+aux		:= setfpucw
 
 # Build the -lm library.
 

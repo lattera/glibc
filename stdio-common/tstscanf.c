@@ -219,5 +219,21 @@ main (int argc, char **argv)
       }
   }
 
+  fputs ("Test 6:\n", stdout);
+  {
+    char *p = (char *) -1;
+    int res;
+
+    sprintf (buf, "%p", NULL);
+    res = sscanf (buf, "%p", &p);
+    printf ("sscanf (\"%s\", \"%%p\", &p) = %d, p == %p\n", buf, res, p);
+
+    if (res != 1 || p != NULL)
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
+  }
+
   exit (result);
 }

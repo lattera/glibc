@@ -1,3 +1,18 @@
+1998-09-20 09:37  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Versions [GLIBC_2.1] (libc): Add __fpu_control.
+	* elf/elf.h: Add AT_FPUCW.
+	* elf/Makefile (dl-routines): Add fpu_control.
+	(elide-routines.os): Add fpu_control.
+	(rtld-routines): Add fpu_control.
+	* math/Makefile (aux): Remove fpu_control.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Handle AT_FPUCW.
+	(_dl_show_auxv): Likewise.
+	* sysdeps/unix/sysv/linux/init-first.c (init): Use __setfpucw only
+	if different from OS default.
+
+	* stdio-common/tstscanf.c: Add test case for (nil).
+
 1998-09-18 17:41  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/fileops.c (_IO_new_file_underflow): Before allocating

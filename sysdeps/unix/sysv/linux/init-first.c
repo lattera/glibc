@@ -60,8 +60,10 @@ init (int argc, char **argv, char **envp)
 	 the executable format.  */
       __personality (PER_LINUX);
 
-      /* Set the FPU control word to the proper default value.  */
-      __setfpucw (__fpu_control);
+      /* Set the FPU control word to the proper default value if the
+	 kernel would use a different value.  */
+      if (__fpu_control != _FPU_DEFAULT)
+	__setfpucw (__fpu_control);
     }
 
   /* Save the command-line arguments.  */

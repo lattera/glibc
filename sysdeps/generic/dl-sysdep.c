@@ -28,6 +28,7 @@
 #include <sys/mman.h>
 #include <elf/ldsodefs.h>
 #include <stdio-common/_itoa.h>
+#include <fpu_control.h>
 
 #include <entry.h>
 #include <dl-machine.h>
@@ -125,6 +126,9 @@ _dl_sysdep_start (void **start_argptr,
 	break;
       case AT_HWCAP:
 	_dl_hwcap = av->a_un.a_val;
+	break;
+      case AT_FPUCW:
+	__fpu_control = av->a_un.a_val;
 	break;
       }
 
@@ -248,6 +252,12 @@ _dl_show_auxv (void)
 			      _itoa_word (_dl_hwcap, buf + sizeof buf - 1,
 					  16, 0),
 			      "\n", NULL);
+	break;
+      case AT_FPUCW:
+	_dl_sysdep_message ("AT_FPUCW:     ",
+			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
+					10, 0),
+			    "\n", NULL);
 	break;
       }
 }
