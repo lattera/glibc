@@ -1,5 +1,5 @@
 /* Inline functions for dynamic linking.
-   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -158,31 +158,35 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
   if (info[DT_REL] != NULL)
     assert (info[DT_RELENT]->d_un.d_val == sizeof (ElfW(Rel)));
 #endif
+#ifdef RTLD_BOOTSTRAP
+  /* Flags must not be set for ld.so.  */
+  assert (info[DT_FLAGS] == NULL);
+  assert (info[VERSYMIDX (DT_FLAGS_1)] == NULL);
+  /* The dynamic linker should have none of these set.  */
+  assert (info[DT_RUNPATH] == NULL);
+  assert (info[DT_RPATH] == NULL);
+#else
   if (info[DT_FLAGS] != NULL)
     {
       /* Flags are used.  Translate to the old form where available.
 	 Since these l_info entries are only tested for NULL pointers it
 	 is ok if they point to the DT_FLAGS entry.  */
       l->l_flags = info[DT_FLAGS]->d_un.d_val;
-#ifdef RTLD_BOOTSTRAP
-      /* These three flags must not be set for ld.so.  */
-      assert ((l->l_flags & (DF_SYMBOLIC | DF_TEXTREL | DF_BIND_NOW)) == 0);
-#else
+
       if (l->l_flags & DF_SYMBOLIC)
 	info[DT_SYMBOLIC] = info[DT_FLAGS];
       if (l->l_flags & DF_TEXTREL)
 	info[DT_TEXTREL] = info[DT_FLAGS];
       if (l->l_flags & DF_BIND_NOW)
 	info[DT_BIND_NOW] = info[DT_FLAGS];
-#endif
     }
   if (info[VERSYMIDX (DT_FLAGS_1)] != NULL)
-    l->l_flags_1 = info[VERSYMIDX (DT_FLAGS_1)]->d_un.d_val;
-#ifdef RTLD_BOOTSTRAP
-  /* The dynamic linker should have none of these set.  */
-  assert (info[DT_RUNPATH] == NULL);
-  assert (info[DT_RPATH] == NULL);
-#else
+    {
+      l->l_flags_1 = info[VERSYMIDX (DT_FLAGS_1)]->d_un.d_val;
+
+      if (l->l_flags_1 & DF_1_NOW)
+	info[DT_BIND_NOW] = info[VERSYMIDX (DT_FLAGS_1)];
+    }
   if (info[DT_RUNPATH] != NULL)
     /* If both RUNPATH and RPATH are given, the latter is ignored.  */
     info[DT_RPATH] = NULL;
