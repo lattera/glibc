@@ -82,7 +82,7 @@
 #if RTLD_PRIVATE_ERRNO
 # define SYSCALL_ERROR_LABEL	$syscall_error
 # define SYSCALL_ERROR_HANDLER			\
-	stl	v0, errno(gp)	!gprel;		\
+	stl	v0, rtld_errno(gp)	!gprel;	\
 	lda	v0, -1;				\
 	ret
 #elif defined(PIC)
