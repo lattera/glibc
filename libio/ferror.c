@@ -36,8 +36,3 @@ _IO_ferror (fp)
   return result;
 }
 weak_alias (_IO_ferror, ferror)
-
-#ifdef _IO_MTSAFE_IO
-
-weak_alias (ferror, ferror_locked)
-#endif

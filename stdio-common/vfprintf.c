@@ -238,7 +238,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     /* '4' */  8, /* '5' */  8, /* '6' */  8, /* '7' */  8,
     /* '8' */  8, /* '9' */  8,            0,            0,
 	       0,            0,            0,            0,
-	       0,            0,            0, /* 'C' */ 25,
+	       0, /* 'A' */ 26,            0, /* 'C' */ 25,
 	       0, /* 'E' */ 19,            0, /* 'G' */ 19,
 	       0,            0,            0,            0,
     /* 'L' */ 12,            0,            0,            0,
@@ -246,7 +246,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	       0,            0,            0,            0,
     /* 'X' */ 18,            0, /* 'Z' */ 13,            0,
 	       0,            0,            0,            0,
-	       0,            0,            0, /* 'c' */ 20,
+	       0, /* 'a' */ 26,            0, /* 'c' */ 20,
     /* 'd' */ 15, /* 'e' */ 19, /* 'f' */ 19, /* 'g' */ 19,
     /* 'h' */ 10, /* 'i' */ 15,            0,            0,
     /* 'l' */ 11, /* 'm' */ 24, /* 'n' */ 23, /* 'o' */ 17,
@@ -270,7 +270,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
 #define STEP0_3_TABLE							      \
     /* Step 0: at the beginning.  */					      \
-    static const void *step0_jumps[26] =				      \
+    static const void *step0_jumps[27] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (flag_space),		/* for ' ' */				      \
@@ -297,10 +297,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_pointer),	/* for 'p' */				      \
       REF (form_number),	/* for 'n' */				      \
       REF (form_strerror),	/* for 'm' */				      \
-      REF (form_wcharacter)	/* for 'C' */				      \
+      REF (form_wcharacter),	/* for 'C' */				      \
+      REF (form_floathex)	/* for 'A', 'a' */			      \
     };									      \
     /* Step 1: after processing width.  */				      \
-    static const void *step1_jumps[26] =				      \
+    static const void *step1_jumps[27] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -327,10 +328,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_pointer),	/* for 'p' */				      \
       REF (form_number),	/* for 'n' */				      \
       REF (form_strerror),	/* for 'm' */				      \
-      REF (form_wcharacter)	/* for 'C' */				      \
+      REF (form_wcharacter),	/* for 'C' */				      \
+      REF (form_floathex)	/* for 'A', 'a' */			      \
     };									      \
     /* Step 2: after processing precision.  */				      \
-    static const void *step2_jumps[26] =				      \
+    static const void *step2_jumps[27] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -357,10 +359,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_pointer),	/* for 'p' */				      \
       REF (form_number),	/* for 'n' */				      \
       REF (form_strerror),	/* for 'm' */				      \
-      REF (form_wcharacter)	/* for 'C' */				      \
+      REF (form_wcharacter),	/* for 'C' */				      \
+      REF (form_floathex)	/* for 'A', 'a' */			      \
     };									      \
     /* Step 3: after processing first 'l' modifier.  */			      \
-    static const void *step3_jumps[26] =				      \
+    static const void *step3_jumps[27] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -387,12 +390,13 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_pointer),	/* for 'p' */				      \
       REF (form_number),	/* for 'n' */				      \
       REF (form_strerror),	/* for 'm' */				      \
-      REF (form_wcharacter)	/* for 'C' */				      \
+      REF (form_wcharacter),	/* for 'C' */				      \
+      REF (form_floathex)	/* for 'A', 'a' */			      \
     }
 
 #define STEP4_TABLE							      \
     /* Step 4: processing format specifier.  */				      \
-    static const void *step4_jumps[26] =				      \
+    static const void *step4_jumps[27] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -419,7 +423,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_pointer),	/* for 'p' */				      \
       REF (form_number),	/* for 'n' */				      \
       REF (form_strerror),	/* for 'm' */				      \
-      REF (form_wcharacter)	/* for 'C' */				      \
+      REF (form_wcharacter),	/* for 'C' */				      \
+      REF (form_floathex)	/* for 'A', 'a' */			      \
     }
 
 
@@ -702,6 +707,53 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       }									      \
       break;								      \
 									      \
+    LABEL (form_floathex):						      \
+      {									      \
+        /* FLoating point number printed as hexadecimal number.  */	      \
+	extern int __printf_fphex __P ((FILE *, const struct printf_info *,   \
+					const void **const));		      \
+	const void *ptr;						      \
+	int function_done;						      \
+									      \
+	if (fspec == NULL)						      \
+	  {								      \
+	    struct printf_info info = { prec: prec,			      \
+					width: width,			      \
+					spec: spec,			      \
+					is_long_double: is_long_double,	      \
+					is_short: is_short,		      \
+					is_long: is_long,		      \
+					alt: alt,			      \
+					space: space,			      \
+					left: left,			      \
+					showsign: showsign,		      \
+					group: group,			      \
+					pad: pad,			      \
+					extra: 0 };			      \
+									      \
+	    if (is_long_double)						      \
+	      the_arg.pa_long_double = va_arg (ap, long double);	      \
+	    else							      \
+	      the_arg.pa_double = va_arg (ap, double);			      \
+	    ptr = (const void *) &the_arg;				      \
+									      \
+	    function_done = __printf_fphex (s, &info, &ptr);		      \
+	  }								      \
+	else								      \
+	  {								      \
+	    ptr = (const void *) &args_value[fspec->data_arg];		      \
+									      \
+	    function_done = __printf_fphex (s, &fspec->info, &ptr);	      \
+	  }								      \
+									      \
+	if (function_done < 0)						      \
+	  /* Error in print handler.  */				      \
+	  return -1;							      \
+									      \
+	done += function_done;						      \
+      }									      \
+      break;								      \
+									      \
     LABEL (form_character):						      \
       /* Character.  */							      \
       if (is_long)							      \
@@ -881,7 +933,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   done = 0;
   grouping = (const char *) -1;
 #ifdef __va_copy
-  /* This macro will be available soon in gcc's <stdarg.h>.  Me need it
+  /* This macro will be available soon in gcc's <stdarg.h>.  We need it
      since on some systems `va_list' is not an integral type.  */
   __va_copy (ap_save, ap);
 #else
@@ -1405,16 +1457,16 @@ printf_unknown (FILE *s, const struct printf_info *info,
   if (info->width != 0)
     {
       w = _itoa_word (info->width, workend + 1, 10, 0);
-      while (++w <= workend)
-	outchar (*w);
+      while (w <= workend)
+	outchar (*w++);
     }
 
   if (info->prec != -1)
     {
       outchar ('.');
       w = _itoa_word (info->prec, workend + 1, 10, 0);
-      while (++w <= workend)
-	outchar (*w);
+      while (w <= workend)
+	outchar (*w++);
     }
 
   if (info->spec != '\0')

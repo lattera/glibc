@@ -43,7 +43,7 @@ values[] =
 char *
 gai_strerror (int code)
 {
-  int i;
+  size_t i;
   for (i = 0; i < sizeof (values) / sizeof (values[0]); ++i)
     if (values[i].code == code)
       return (char *) values[i].msg;

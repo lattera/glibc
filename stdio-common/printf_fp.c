@@ -1,5 +1,5 @@
 /* Floating point output for `printf'.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -291,12 +291,12 @@ __printf_fp (FILE *fp,
       /* Check for special values: not a number or infinity.  */
       if (__isnanl (fpnum.ldbl))
 	{
-	  special = "NaN";
+	  special = isupper (info->spec) ? "NAN" : "nan";
 	  is_neg = 0;
 	}
       else if (__isinfl (fpnum.ldbl))
 	{
-	  special = "Inf";
+	  special = isupper (info->spec) ? "INF" : "inf";
 	  is_neg = fpnum.ldbl < 0;
 	}
       else
@@ -316,12 +316,12 @@ __printf_fp (FILE *fp,
       /* Check for special values: not a number or infinity.  */
       if (__isnan (fpnum.dbl))
 	{
-	  special = "NaN";
+	  special = isupper (info->spec) ? "NAN" : "nan";
 	  is_neg = 0;
 	}
       else if (__isinf (fpnum.dbl))
 	{
-	  special = "Inf";
+	  special = isupper (info->spec) ? "INF" : "inf";
 	  is_neg = fpnum.dbl < 0;
 	}
       else

@@ -36,11 +36,3 @@ _IO_feof (fp)
   return result;
 }
 weak_alias (_IO_feof, feof)
-
-#ifdef _IO_MTSAFE_IO
-/* The feof implementation for libio does not require locking because
-   it only accesses once a single variable and this is already atomic
-   (at least at thread level).  */
-
-weak_alias (_IO_feof, feof_locked)
-#endif

@@ -152,6 +152,7 @@ int
 main (int argc, char *argv[])
 {
   struct catalog *result;
+  int remaining;
 
   /* Set program name for messages.  */
   error_print_progname = error_print;
@@ -166,18 +167,18 @@ main (int argc, char *argv[])
   result = NULL;
 
   /* Parse and process arguments.  */
-  argp_parse (&argp, argc, argv, 0, 0, NULL);
+  argp_parse (&argp, argc, argv, 0, &remaining, NULL);
 
   /* Determine output file.  */
   if (output_name == NULL)
-    output_name = optind < argc ? argv[optind++] : "-";
+    output_name = remaining < argc ? argv[remaining++] : "-";
 
   /* Process all input files.  */
   setlocale (LC_CTYPE, "C");
-  if (optind < argc)
+  if (remaining < argc)
     do
-      result = read_input_file (result, argv[optind]);
-    while (++optind < argc);
+      result = read_input_file (result, argv[remaining]);
+    while (++remaining < argc);
   else
     result = read_input_file (NULL, "-");
 

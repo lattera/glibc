@@ -1,6 +1,6 @@
 /* Basic platform-independent macro definitions for mutexes and
    thread-specific data.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>, 1996.
 
@@ -66,19 +66,37 @@ static Void_t *malloc_key_data;
    (__pthread_mutex_unlock != NULL ? __pthread_mutex_unlock (m) : 0)
 
 #elif defined(MUTEX_INITIALIZER)
+/* Assume hurd, with cthreads */
 
-typedef thread_t thread_id;
+/* Cthreads `mutex_t' is a pointer to a mutex, and malloc wants just the
+   mutex itself.  */
+#undef mutex_t
+#define mutex_t struct mutex
 
-/* mutex */
-typedef mutex_t	mutex_t;
+#undef mutex_lock
+#define mutex_lock(m) (__mutex_lock(m), 0)
+
+#undef mutex_unlock
+#define mutex_unlock(m) (__mutex_unlock(m), 0)
+
+#define mutex_trylock(m) (!__mutex_trylock(m))
+
+#include <hurd/threadvar.h>
 
 /* thread specific data */
-typedef pthread_key_t tsd_key_t;
+typedef int tsd_key_t;
 
-#define mutex_init(m)		__mutex_init (m)
-#define mutex_lock(m)		__mutex_lock (m)
-#define mutex_trylock(m)	__mutex_trylock (m)
-#define mutex_unlock(m)		__mutex_unlock (m)
+static int tsd_keys_alloced = 0;
+
+#define tsd_key_create(key, destr) \
+  (assert (tsd_keys_alloced == 0), tsd_keys_alloced++)
+#define tsd_setspecific(key, data) \
+  (*__hurd_threadvar_location (_HURD_THREADVAR_MALLOC) = (unsigned long)(data))
+#define tsd_getspecific(key, vptr) \
+  ((vptr) = (void *)*__hurd_threadvar_location (_HURD_THREADVAR_MALLOC))
+
+/* No we're *not* using pthreads.  */
+#define __pthread_initialize ((void (*)(void))0)
 
 #else
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -101,5 +101,10 @@
 #if !defined (__GNUC__) || __GNUC__ < 2
 #define __attribute__(xyz)	/* Ignore.  */
 #endif
+
+
+/* For now no version of gcc knows the `restrict' keyword.  Define it
+   for now unconditionally to the empty string.  */
+#define __restrict
 
 #endif	 /* sys/cdefs.h */

@@ -1,4 +1,4 @@
-/* strtol - Convert string representation of a number into an integer value.
+/* Convert string representation of a number into an integer value.
    Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -54,7 +54,7 @@ extern int errno;
 # include "../locale/localeinfo.h"
 #endif
 
-/* Nonzero if we are defining `strtoul' or `strtouq', operating on
+/* Nonzero if we are defining `strtoul' or `strtoull', operating on
    unsigned integers.  */
 #ifndef UNSIGNED
 # define UNSIGNED 0
@@ -67,13 +67,13 @@ extern int errno;
 #if UNSIGNED
 # ifdef USE_WIDE_CHAR
 #  ifdef QUAD
-#   define strtol wcstouq
+#   define strtol wcstoull
 #  else
 #   define strtol wcstoul
 #  endif
 # else
 #  ifdef QUAD
-#   define strtol strtouq
+#   define strtol strtoull
 #  else
 #   define strtol strtoul
 #  endif
@@ -81,18 +81,18 @@ extern int errno;
 #else
 # ifdef USE_WIDE_CHAR
 #  ifdef QUAD
-#   define strtol wcstoq
+#   define strtol wcstoll
 #  else
 #   define strtol wcstol
 #  endif
 # else
 #  ifdef QUAD
-#   define strtol strtoq
+#   define strtol strtoll
 #  endif
 # endif
 #endif
 
-/* If QUAD is defined, we are defining `strtoq' or `strtouq',
+/* If QUAD is defined, we are defining `strtoll' or `strtoull',
    operating on `long long int's.  */
 #ifdef QUAD
 # define LONG long long
@@ -312,8 +312,6 @@ INTERNAL (strtol) (nptr, endptr, base, group)
 	      ? -((unsigned LONG int) (LONG_MIN + 1)) + 1
 	      : (unsigned LONG int) LONG_MAX))
     overflow = 1;
-#else
-  overflow |= negative;
 #endif
 
   if (overflow)

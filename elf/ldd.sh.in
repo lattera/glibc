@@ -66,6 +66,7 @@ Try \`ldd --help' for more information."
   esac
 done
 
+add_env="LD_TRACE_LOADED_OBJECTS=1 LD_WARN=$warn LD_BIND_NOW=$bind_now"
 case $# in
 0)
   echo >&2 "\
@@ -85,13 +86,23 @@ Try \`ldd --help' for more information."
     if test -r "$file"; then
       test -x "$file" ||
 	echo "ldd: warning: you do not have execution permission for \`$file'"
-      if ${RTLD} --verify "$file"; then
-	LD_TRACE_LOADED_OBJECTS=1 LD_WARN=$warn LD_BIND_NOW=$bind_now \
-	 exec ${RTLD} "$file" || exit 1
-      else
+      ${RTLD} --verify "$file"
+      case $? in
+      0)
+	eval $add_env exec '"$file"' || exit 1
+	;;
+      1)
 	echo '	not a dynamic executable'
 	exit 1
-      fi
+	;;
+      2)
+	eval $add_env exec \${RTLD} '"$file"' || exit 1
+	;;
+      *)
+	echo "ldd: ${RTLD} exited with unknown exit code ($?)" >&2
+	exit 1
+	;;
+      esac
     else
       echo "ldd: error: you do not have read permission for \`$file'"
       exit 1
@@ -114,13 +125,23 @@ Try \`ldd --help' for more information."
       if test -r "$file"; then
 	test -x "$file" || echo "\
 ldd: warning: you do not have execution permission for \`$file'"
-	if ${RTLD} --verify "$file"; then
-	  LD_TRACE_LOADED_OBJECTS=1 LD_WARN=$warn LD_BIND_NOW=$bind_now \
-	   ${RTLD} "$file" || result=1
-	else
+	${RTLD} --verify "$file"
+	case $? in
+	0)
+	  eval $add_env '"$file"' || result=1
+	  ;;
+	1)
 	  echo '	not a dynamic executable'
 	  result=1
-	fi
+	  ;;
+	2)
+	  eval $add_env ${RTLD} '"$file"' || result=1
+	  ;;
+	*)
+	  echo "ldd: ${RTLD} exited with unknown exit code ($?)" >&2
+	  exit 1
+	  ;;
+	esac
       else
 	echo "ldd: error: you do not have read permission for \`$file'"
 	result=1

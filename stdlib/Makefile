@@ -38,7 +38,7 @@ routines	:=							      \
 	drand48_r erand48_r lrand48_r nrand48_r mrand48_r jrand48_r	      \
 	srand48_r seed48_r lcong48_r					      \
 	drand48-iter							      \
-	strtol strtoul strtoq strtouq					      \
+	strtol strtoul strtoll strtoull					      \
 	strtof strtod strtold						      \
 	system canonicalize						      \
 	a64l l64a							      \

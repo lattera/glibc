@@ -19,7 +19,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* V2.6.4-pt2 Sat Dec 14 1996
+/* V2.6.4-pt3 Thu Feb 20 1997
 
   This work is mainly derived from malloc-2.6.4 by Doug Lea
   <dl@cs.oswego.edu>, which is available from:
@@ -874,6 +874,8 @@ extern Void_t*     sbrk();
 #define mALLOC_STATs    __malloc_stats
 #define mALLOC_USABLE_SIZe __malloc_usable_size
 #define mALLOC_TRIm     __malloc_trim
+#define mALLOC_GET_STATe __malloc_get_state
+#define mALLOC_SET_STATe __malloc_set_state
 
 #else
 
@@ -889,6 +891,8 @@ extern Void_t*     sbrk();
 #define mALLOC_STATs    malloc_stats
 #define mALLOC_USABLE_SIZe malloc_usable_size
 #define mALLOC_TRIm     malloc_trim
+#define mALLOC_GET_STATe malloc_get_state
+#define mALLOC_SET_STATe malloc_set_state
 
 #endif
 
@@ -912,7 +916,11 @@ size_t  mALLOC_USABLE_SIZe(Void_t*);
 void    mALLOC_STATs(void);
 int     mALLOPt(int, int);
 struct mallinfo mALLINFo(void);
-#else
+Void_t* mALLOC_GET_STATe(void);
+int     mALLOC_SET_STATe(Void_t*);
+
+#else /* !__STD_C */
+
 #ifndef _LIBC
 void    ptmalloc_init();
 #endif
@@ -929,7 +937,10 @@ size_t  mALLOC_USABLE_SIZe();
 void    mALLOC_STATs();
 int     mALLOPt();
 struct mallinfo mALLINFo();
-#endif
+Void_t* mALLOC_GET_STATe();
+int     mALLOC_SET_STATe();
+
+#endif /* __STD_C */
 
 
 #ifdef __cplusplus
@@ -3775,6 +3786,144 @@ int mALLOPt(param_number, value) int param_number; int value;
 
 
 
+/* Get/set state: malloc_get_state() records the current state of all
+   malloc variables (_except_ for the actual heap contents and `hook'
+   function pointers) in a system dependent, opaque data structure.
+   This data structure is dynamically allocated and can be free()d
+   after use.  malloc_set_state() restores the state of all malloc
+   variables to the previously obtained state.  This is especially
+   useful when using this malloc as part of a shared library, and when
+   the heap contents are saved/restored via some other method.  The
+   primary example for this is GNU Emacs with its `dumping' procedure.
+   `Hook' function pointers are never saved or restored by these
+   functions. */
+
+#define MALLOC_STATE_MAGIC   0x444c4541l
+#define MALLOC_STATE_VERSION (0*0x100l + 0l) /* major*0x100 + minor */
+
+struct malloc_state {
+  long          magic;
+  long          version;
+  mbinptr       av[NAV * 2 + 2];
+  char*         sbrk_base;
+  int           sbrked_mem_bytes;
+  unsigned long trim_threshold;
+  unsigned long top_pad;
+  unsigned int  n_mmaps_max;
+  unsigned long mmap_threshold;
+  int           check_action;
+  unsigned long max_sbrked_mem;
+  unsigned long max_total_mem;
+  unsigned int  n_mmaps;
+  unsigned int  max_n_mmaps;
+  unsigned long mmapped_mem;
+  unsigned long max_mmapped_mem;
+};
+
+Void_t*
+mALLOC_GET_STATe()
+{
+  mchunkptr victim;
+  struct malloc_state* ms;
+  int i;
+  mbinptr b;
+
+  ptmalloc_init();
+  (void)mutex_lock(&main_arena.mutex);
+  victim = chunk_alloc(&main_arena, request2size(sizeof(*ms)));
+  if(!victim) {
+    (void)mutex_unlock(&main_arena.mutex);
+    return 0;
+  }
+  ms = (struct malloc_state*)chunk2mem(victim);
+  ms->magic = MALLOC_STATE_MAGIC;
+  ms->version = MALLOC_STATE_VERSION;
+  ms->av[0] = main_arena.av[0];
+  ms->av[1] = main_arena.av[1];
+  for(i=0; i<NAV; i++) {
+    b = bin_at(&main_arena, i);
+    if(first(b) == b)
+      ms->av[2*i+2] = ms->av[2*i+3] = 0; /* empty bin (or initial top) */
+    else {
+      ms->av[2*i+2] = first(b);
+      ms->av[2*i+3] = last(b);
+    }
+  }
+  ms->sbrk_base = sbrk_base;
+  ms->sbrked_mem_bytes = sbrked_mem;
+  ms->trim_threshold = trim_threshold;
+  ms->top_pad = top_pad;
+  ms->n_mmaps_max = n_mmaps_max;
+  ms->mmap_threshold = mmap_threshold;
+  ms->check_action = check_action;
+  ms->max_sbrked_mem = max_sbrked_mem;
+#ifdef NO_THREADS
+  ms->max_total_mem = max_total_mem;
+#else
+  ms->max_total_mem = 0;
+#endif
+  ms->n_mmaps = n_mmaps;
+  ms->max_n_mmaps = max_n_mmaps;
+  ms->mmapped_mem = mmapped_mem;
+  ms->max_mmapped_mem = max_mmapped_mem;
+  (void)mutex_unlock(&main_arena.mutex);
+  return (Void_t*)ms;
+}
+
+int
+#if __STD_C
+mALLOC_SET_STATe(Void_t* msptr)
+#else
+mALLOC_SET_STATe(msptr) Void_t* msptr;
+#endif
+{
+  struct malloc_state* ms = (struct malloc_state*)msptr;
+  int i;
+  mbinptr b;
+
+  ptmalloc_init();
+  if(ms->magic != MALLOC_STATE_MAGIC) return -1;
+  /* Must fail if the major version is too high. */
+  if((ms->version & ~0xffl) > (MALLOC_STATE_VERSION & ~0xffl)) return -2;
+  (void)mutex_lock(&main_arena.mutex);
+  main_arena.av[0] = ms->av[0];
+  main_arena.av[1] = ms->av[1];
+  for(i=0; i<NAV; i++) {
+    b = bin_at(&main_arena, i);
+    if(ms->av[2*i+2] == 0)
+      first(b) = last(b) = b;
+    else {
+      first(b) = ms->av[2*i+2];
+      last(b) = ms->av[2*i+3];
+      if(i > 0) {
+        /* Make sure the links to the `av'-bins in the heap are correct. */
+        first(b)->bk = b;
+        last(b)->fd = b;
+      }
+    }
+  }
+  sbrk_base = ms->sbrk_base;
+  sbrked_mem = ms->sbrked_mem_bytes;
+  trim_threshold = ms->trim_threshold;
+  top_pad = ms->top_pad;
+  n_mmaps_max = ms->n_mmaps_max;
+  mmap_threshold = ms->mmap_threshold;
+  check_action = ms->check_action;
+  max_sbrked_mem = ms->max_sbrked_mem;
+#ifdef NO_THREADS
+  max_total_mem = ms->max_total_mem;
+#endif
+  n_mmaps = ms->n_mmaps;
+  max_n_mmaps = ms->max_n_mmaps;
+  mmapped_mem = ms->mmapped_mem;
+  max_mmapped_mem = ms->max_mmapped_mem;
+  /* add version-dependent code here */
+  (void)mutex_unlock(&main_arena.mutex);
+  return 0;
+}
+
+
+
 #if defined(_LIBC) || defined(MALLOC_HOOKS)
 
 /* A simple, standard set of debugging hooks.  Overhead is `only' one
@@ -4048,11 +4197,18 @@ weak_alias (__libc_mallopt, __mallopt) weak_alias (__libc_mallopt, mallopt)
 weak_alias (__malloc_stats, malloc_stats)
 weak_alias (__malloc_usable_size, malloc_usable_size)
 weak_alias (__malloc_trim, malloc_trim)
+weak_alias (__malloc_get_state, malloc_get_state)
+weak_alias (__malloc_set_state, malloc_set_state)
 #endif
 
 /*
 
 History:
+
+    V2.6.4-pt3 Thu Feb 20 1997 Wolfram Gloger (wmglo@dent.med.uni-muenchen.de)
+      * Added malloc_get/set_state() (mainly for use in GNU emacs),
+        using interface from Marcus Daniels
+      * All parameters are now adjustable via environment variables
 
     V2.6.4-pt2 Sat Dec 14 1996 Wolfram Gloger (wmglo@dent.med.uni-muenchen.de)
       * Added debugging hooks

@@ -1,4 +1,5 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Function to parse a `long long int' from text.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,15 +17,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include "libioP.h"
-#include "stdio.h"
+#define	QUAD	1
 
-void
-clearerr (fp)
-     FILE *fp;
-{
-  CHECK_FILE (fp, /*nothing*/);
-  _IO_flockfile (fp);
-  _IO_clearerr (fp);
-  _IO_funlockfile (fp);
-}
+#include <strtol.c>
+
+weak_alias (strtoll, strtoq)

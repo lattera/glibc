@@ -24,6 +24,7 @@
    to specify the desired environment:
 
    __STRICT_ANSI__	ISO Standard C.
+   _ISOC9X_SOURCE	Extensions to ISO C 89 from ISO C 9x.
    _POSIX_SOURCE	IEEE Std 1003.1.
    _POSIX_C_SOURCE	If ==1, like _POSIX_SOURCE; if >=2 add IEEE Std 1003.2;
 			if >=199309L, add IEEE Std 1003.1b-1993
@@ -44,6 +45,7 @@
    These are defined by this file and are used by the
    header files to decide what to declare or define:
 
+   __USE_ISOC9X		Define ISO C 9X things.
    __USE_POSIX		Define IEEE Std 1003.1 things.
    __USE_POSIX2		Define IEEE Std 1003.2 things.
    __USE_POSIX199309	Define IEEE Std 1003.1b things.
@@ -69,6 +71,7 @@
 
 
 /* Undefine everything, so we get a clean slate.  */
+#undef	__USE_ISOC9X
 #undef	__USE_POSIX
 #undef	__USE_POSIX2
 #undef	__USE_POSIX199309
@@ -102,6 +105,8 @@
 
 /* If _GNU_SOURCE was defined by the user, turn on all the other features.  */
 #ifdef _GNU_SOURCE
+#undef	_ISOC9X_SOURCE
+#define	_ISOC9X_SOURCE	1
 #undef	_POSIX_SOURCE
 #define	_POSIX_SOURCE	1
 #undef	_POSIX_C_SOURCE
@@ -118,12 +123,18 @@
 
 /* If nothing (other than _GNU_SOURCE) is defined,
    define _BSD_SOURCE and _SVID_SOURCE.  */
-#if (!defined __STRICT_ANSI__ && !defined _POSIX_SOURCE && \
-     !defined _POSIX_C_SOURCE && !defined _XOPEN_SOURCE && \
-     !defined _XOPEN_SOURCE_EXTENDED && !defined _BSD_SOURCE && \
-     !defined _SVID_SOURCE)
+#if (!defined __STRICT_ANSI__ && !defined _ISOC9X_SOURCE && \
+     !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE && \
+     !defined _XOPEN_SOURCE && !defined _XOPEN_SOURCE_EXTENDED && \
+     !defined _BSD_SOURCE && !defined _SVID_SOURCE)
 #define	_BSD_SOURCE	1
 #define	_SVID_SOURCE	1
+#endif
+
+/* This is to enable the ISO C 9x extension.  It will go away as soon
+   as this standard is officially released.  */
+#ifdef _ISOC9X_SOURCE
+#define __USE_ISOC9X	1
 #endif
 
 /* If none of the ANSI/POSIX macros are defined, use POSIX.1 and POSIX.2

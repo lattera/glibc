@@ -21,3 +21,5 @@
 #define	QUAD	1
 
 #include "wcstol.c"
+
+weak_alias (wcstoll, wcstoq)

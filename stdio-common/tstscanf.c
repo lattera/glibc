@@ -140,5 +140,15 @@ main (int argc, char **argv)
   if (out != stdout)
     pclose (out);
 
+  fputs ("Test 3:\n", out);
+  {
+    int res, val, n;
+
+    res = sscanf ("-242", "%3o%n", &val, &n);
+    printf ("res = %d, val = %d, n = %d\n", res, val, n);
+    if (res != 1 || val != -20 || n != 3)
+      return 1;
+  }
+
   exit(EXIT_SUCCESS);
 }

@@ -1,4 +1,168 @@
-Fri Feb 21 00:22:28 1997  Miles Bader  <miles@gnu.ai.mit.edu>
+1997-02-24 23:05  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/malloc.c (malloc_get_state): New function.
+	Saves global malloc state to an opaque data structure which
+	is dynamically allocated in the heap.
+	* malloc/malloc.c (malloc_set_state): New function.
+	Restore previously obtained state.
+	* malloc/malloc.h: Add declaration of malloc_get_state()
+	and malloc_set_state().
+
+1997-02-24 23:27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/s_cbrtl.c: Shift B1_EXP value to right
+	position.
+
+1997-02-24 17:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/error.c: Make error and error_at_line weak aliases of
+	__error and __error_at_line respectively.
+	Suggested by David Mosberger-Tang <davidm@AZStarNet.COM>.
+
+	* sysdeps/unix/sysv/linux/i386/socket.S: Update copyright.
+
+1997-02-22 11:30  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/ldd.bash.in: Run the program directly, not as argument
+	to the dynamic linker, if it contains an interpreter segment.
+	* elf/ldd.sh.in: Likewise.
+
+	* elf/rtld.c (dl_main): In verify mode check whether the dynamic
+	object contains an interpreter segment and exit with 2 if not.
+
+1997-02-23 01:23  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (distribute): Remove nsswitch.h, netgroup.h, mcheck.h
+	and xlocale.h.  Make-dist adds them automagically.
+
+1997-02-22 12:25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locale/C-time.c (_nl_C_LC_TIME): Add missing entry for
+	time-era-num-entries.
+
+1997-02-06 13:49  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* rellns-sh: No need to check for existance of first parameter.
+
+1997-02-24 15:20  Jonathan T. Agnew  <jtagnew@amherst.edu>
+
+	* glibcbug.in: Don't mention destination on MAIL_AGENT command line
+	to avoid duplicate mail.
+
+1997-02-24 03:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (distribute): Add isomac.c.
+	(tests): Run isomac test.
+
+	* features.h (__USE_ISOC9X): New macro.
+
+	* catgets/catgets.c: Don't use global variable `optind'.  Instead
+	use result computed by argp_parse.
+	* db/makedb: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+
+	* libio/stdio.h: Rewrite.  Make it more readable and add comments.
+
+	* libio/clearerr.c: Remove clearerr_locked alias.
+	* libio/feof.c: Remove feof_locked alias.
+	* libio/ferror.c: Remove feof_locked alias.
+	* libio/fileno.c: Remove fileno_locked alias.
+	* libio/fputc.c: Remove fputc_locked alias.
+	* libio/getc.c: Remove getc_locked alias.
+	* libio/getchar.c: Remove getchar_locked alias.
+	* libio/iofflush.c: Remove fflush_locked alias.
+	* libio/putc.c: Remove putc_locked alias.
+	* libio/putc.c: Remove putchar_locked alias.
+
+	* stdio-common/printf_fp.c: When number is inifinity print INF
+	or inf depending on case of specifier.  Same for NaN where NAN
+	or nan is printed.  Specified in ISO C 9X.
+
+	* misc/sys/cdefs.h (__restrict): Define to empty string for now.
+	* stdio/stdio.h: Add __restrict to prototypes where necessary.
+	* libio/stdio.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* string/string.h: Likewise.
+	* time/time.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+
+	* stdlib/strtod.c: Change to recognize INF, INFINITY, NAN, and
+	NAN(...).
+
+	* sysdeps/ieee754/huge_val.h: Define HUGE_VALF and HUGE_VALL instead
+	of HUGE_VALf and HUGE_VALL.
+	* stdlib/strtof.c (FLOAT_HUGE_VAL): Use standard name HUGE_VALF
+	instead of HUGE_VALf.
+	* wcsmbs/wcstof.c: Likewise.
+	* stdlib/strtold.c (FLOAT_HUGE_VAL): Use standard name HUGE_VALL
+	instead of HUGE_VALl.
+	* wcsmbs/wcstold.c: Likewise.
+
+	* sysdeps/posix/gai_strerror.c: Use size_t for counter variable to
+	avoid warning.
+
+	* wcsmbs/Makefile (routines): Add wcscasecmp and wcsncase.
+	* wcsmbs/wchar.h: Add prototypes for wcscasecmp and wcsncase.
+	* wcsmbs/wcscasecmp.c: New file.
+	* wcsmbs/wcsncase.c: New file.
+
+	* stdlib/strtol.c: Define wide character quad word functions as
+	wcstoll and wcstoull and normal versions as strtoll and strtoull.
+	* wcsmbs/wchar.h: Add prototypes for wcstoll and wcstoull.
+	* wcsmbs/wcstoq: Renamed to wcstoll.c.
+	* wcsmbs/wcstouq: Renamed to wcstoull.c.
+	* wcsmbs/wcstoll.c: Renamed from wcstoq.c.  Make wcstoq a weak
+	alias of wcstoll.
+	* wcsmbs/wcstoull.c: Renamed from wcstouq.c.  Make wcstouq a weak
+	alias of wcstoull.
+	* wcsmbs/Makefile (routines): Replace wcstoq and wcstouq by
+	wcstoll and wcstoull respectively.
+	* stdlib/strtoq.c: Rename to strtoll.c.
+	* stdlib/strtouq.c: Rename to strtoull.c.
+	* stdlib/strtoll.c: Renamed from strtoq.c.  Make strtoq a weak
+	alias of strtoll.
+	* stdlib/strtoll.c: Renamed from strtouq.c.  Make strtouq a weak
+	alias of strtoull.
+	* stdlib/Makefile (routines): Replace strtoq and strtouq by
+	strtoll and strtoull respectively.
+	* stdio-common/vfscanf.c: Don't use __strtoq_internal and
+	__strtouq_internal but instead __strtoll_internal and
+	__strtoull_internal respectively.
+	* stdlib/stdlib.h (strtoq): Use __internal_strtoll in inline version.
+	(strtouq): Similar with __internal_strtoull.
+	* wcsmbs/wchar.h (wcstoq): Use __internal_wcstoll in inline version.
+	(wcstouq): Similar with __internal_wcstoull.
+
+1997-02-23 04:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/strtol.c (STRTOL): It is not illegal to parse a minus
+	sign in the strtouXX functions.  The results gets simply negated.
+	* stdio-common/tstscanf.c: Add testcase for above case.
+	* stdlib/tst-strtol.c: Correct tests.
+
+	* manual/stdio-fp.c: New file.  Generate output for example program
+	in stdio.texi.
+
+	* stdio-common/Makefile (routines): Add printf_fphex.
+	* stdio-common/vfprintf.c: Add handling of %a and %A specifier.
+	* stdio-common/printf_fphex.c: New file.  Implement %a and %A
+	specifier.
+
+1997-02-22 03:01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/timebits.h (CLK_TCK): Don't defined if
+	__STRICT_ANSI__.
+
+	* math/math.h: Prevent definition of struct exception when using
+	C++.
+
+1997-02-22 01:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/syscalls.list: Dup takes only one argument.
+	Reported by Greg McGary.
+
+1997-02-21 00:22  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/readlink.c (__readlink): Use io_read rather
 	than file_get_translator.
@@ -6,12 +170,12 @@ Fri Feb 21 00:22:28 1997  Miles Bader  <miles@gnu.ai.mit.edu>
 	* sysdeps/mach/hurd/defs.c, sysdeps/stub/defs.c, sysdeps/posix/defs.c
 	(_cleanup): Use __fcloseall instead of fclose with a NULL stream.
 
-Thu Feb 20 01:28:39 1997  Miles Bader  <miles@gnu.ai.mit.edu>
+1997-02-20 01:28  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* hurd/fchroot.c (fchroot): Reparent DIR to make it a real root.
 	* sysdeps/mach/hurd/chroot.c (chroot): Likewise.
 
-Wed Feb 19 13:56:04 1997  Miles Bader  <miles@gnu.ai.mit.edu>
+1997-02-19 13:56  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/accept.c (accept): Don't segv if ADDR_LEN == 0
 	but ADDR also == 0.
@@ -20,7 +184,7 @@ Wed Feb 19 13:56:04 1997  Miles Bader  <miles@gnu.ai.mit.edu>
 	now instead of a weak extern, as some old programs expect it to be
 	defined by ld.so.
 
-Tue Feb 18 15:39:08 1997  Miles Bader  <miles@gnu.ai.mit.edu>
+1997-02-18 15:39  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* hurd/hurdfault.c (_hurdsig_fault_preempter): New weak alias.
 
@@ -30,7 +194,7 @@ Tue Feb 18 15:39:08 1997  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* malloc/thread-m.h (mutex_trylock): Invert sense of return value.
 
-Mon Feb 17 10:58:14 1997  Miles Bader  <miles@gnu.ai.mit.edu>
+1997-02-17 10:58  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* malloc/thread-m.h (mutex_trylock): Define to be __mutex_trylock,
 	not __mutex_try_lock.
@@ -40,24 +204,26 @@ Mon Feb 17 10:58:14 1997  Miles Bader  <miles@gnu.ai.mit.edu>
 	* hurd/hurdinit.c (__libc_argv): Remove extern.
 	(__libc_argc): New variable.
 
-Sat Feb 15 10:23:32 1997  Miles Bader  <miles@gnu.ai.mit.edu>
+1997-02-15 10:23  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* hurd/hurd/threadvar.h (enum __hurd_threadvar_index): Add
 	_HURD_THREADVAR_MALLOC.
 	* malloc/thread-m.h
 	[_LIBC && !PTHREAD_MUTEX_INITIALIZER && MUTEX_INITIALIZER]
-	(__x_mutex_lock, __x_mutex_unlock): Functions removed.
-	(mutex_lock, mutex_unlock): Defined in terms of __mutex_*.
-	(tsd_key_create, tsd_setspecific, tsd_setspecific): Change to
-	hurd-specific definitions, using __hurd_threadvar_location.
+	(mutex_lock, mutex_unlock, mutex_trylock): Defined in terms of
+	__mutex_*.
+	(mutex_t): Type removed & replaced by new macro.
+	(tsd_key_t): Typedef to int instead of pthread_key_t.
+	(tsd_key_create, tsd_setspecific, tsd_getspecific): New macros.
+	(__pthread_initialize): New macro, work around assumption of pthreads.
 	(tsd_keys_alloced): New static variable.
 	<hurd/threadvar.h>: New include.
-	
+
 	* hurd/report-wait.c (_hurd_itimer_thread): Make a weak extern.
 	(_S_msg_report_wait): Check to see if _hurd_itimer_thread is
 	defined before using it.
 
-	* sysdeps/mach/hurd/i386/init-first.c (__libc_argv, __libc_argc): 
+	* sysdeps/mach/hurd/i386/init-first.c (__libc_argv, __libc_argc):
 	Make extern.
 	* hurd/hurdinit.c (__libc_argv): Make extern.
 
@@ -76,13 +242,13 @@ Sat Feb 15 10:23:32 1997  Miles Bader  <miles@gnu.ai.mit.edu>
 	(__hurd_threadvar_max, __hurd_threadvar_stack_offset,
 	__hurd_threadvar_stack_mask): Variables removed.
 	* sysdeps/mach/hurd/dl-sysdep.c (__hurd_sigthread_stack_base,
- 	__hurd_sigthread_stack_end, __hurd_sigthread_stack_variables,
- 	__hurd_threadvar_max, __hurd_threadvar_stack_offset,
- 	__hurd_threadvar_stack_mask): Variables removed.
+	__hurd_sigthread_stack_end, __hurd_sigthread_stack_variables,
+	__hurd_threadvar_max, __hurd_threadvar_stack_offset,
+	__hurd_threadvar_stack_mask): Variables removed.
 
-Fri Feb 14 14:07:19 1997  Miles Bader  <miles@gnu.ai.mit.edu>
+1997-02-14 14:07  Miles Bader  <miles@gnu.ai.mit.edu>
 
-	* hurd/hurd.h (_hurd_pids_changed_stamp, _hurd_pids_changed_sync): 
+	* hurd/hurd.h (_hurd_pids_changed_stamp, _hurd_pids_changed_sync):
 	Declare extern.
 
 	* malloc/thread-m.h
@@ -102,6 +268,26 @@ Fri Feb 14 14:07:19 1997  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* locale/weight.h (collate_rules): It's an u_int32_t array.
 	(get_weight): Compute initial SLOT value correctly.
+
+1997-02-24 17:06  Geoffrey Keating  <geoffk@discus.anu.edu.au>
+
+	* sysdeps/unix/sysv/linux/accept.S (NARGS): Describe number of
+	arguments taken, for sysdeps/unix/sysv/linux/powerpc/socket.S.
+	* sysdeps/unix/sysv/linux/bind.S: Likewise.
+	* sysdeps/unix/sysv/linux/connect.S: Likewise.
+	* sysdeps/unix/sysv/linux/getpeername.S: Likewise.
+	* sysdeps/unix/sysv/linux/getsockname.S: Likewise.
+	* sysdeps/unix/sysv/linux/getsockopt.S: Likewise.
+	* sysdeps/unix/sysv/linux/listen.S: Likewise.
+	* sysdeps/unix/sysv/linux/recv.S: Likewise.
+	* sysdeps/unix/sysv/linux/recvfrom.S: Likewise.
+	* sysdeps/unix/sysv/linux/recvmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/send.S: Likewise.
+	* sysdeps/unix/sysv/linux/sendmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/sendto.S: Likewise.
+	* sysdeps/unix/sysv/linux/setsockopt.S: Likewise.
+	* sysdeps/unix/sysv/linux/shutdown.S: Likewise.
+	* sysdeps/unix/sysv/linux/socketpair.S: Likewise.
 
 1997-02-22 00:17  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -436,7 +622,7 @@ Fri Feb 14 14:07:19 1997  Miles Bader  <miles@gnu.ai.mit.edu>
 	trying to resolv name as numeric IPv6 address.
 	* nss/digits_dots.c: Likewise.
 
-Sat Feb 15 04:51:08 1997  Ulrich Drepper  <drepper@cygnus.com>
+1997-02-15 04:51  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/setlocale.c (setlocale): Don't try to be clever about
 	unused locales.  When the existence of the locale files isn't

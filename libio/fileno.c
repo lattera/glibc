@@ -43,5 +43,4 @@ fileno (fp)
    (at least at thread level).  */
 
 weak_alias (fileno, fileno_unlocked)
-weak_alias (fileno, fileno_locked)
 #endif

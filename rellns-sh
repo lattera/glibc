@@ -1,6 +1,6 @@
 #! /bin/sh
 # rellns-sh - Simplified ln program to generate relative symbolic link.
-# Copyright (C) 1996 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997 Free Software Foundation, Inc.
 # Written by Ulrich Drepper <drepper@cygnus.com>, October 1996
 #
 # This program is free software; you can redistribute it and/or modify
@@ -19,12 +19,6 @@
 
 if test $# -ne 2; then
   echo "Usage: rellns SOURCE DEST" >&2
-  exit 1
-fi
-
-# We only handle the case where SOURCE is the name of an existing file
-if test ! -f $1; then
-  echo "rellns: $1 must name an existing file" >&2
   exit 1
 fi
 

@@ -1,6 +1,6 @@
-/* `HUGE_VAL' constant for IEEE 754 machines (where it is infinity).
+/* `HUGE_VAL' constants for IEEE 754 machines (where it is infinity).
    Used by <stdlib.h> and <math.h> functions for overflow.
-   Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,43 +44,49 @@ static __huge_val_t __huge_val = { __HUGE_VAL_bytes };
 #endif	/* GCC.  */
 
 
-/* GNU extensions: (float) HUGE_VALf and (long double) HUGE_VALl.  */
+/* ISO C 9X extensions: (float) HUGE_VALF and (long double) HUGE_VALL.  */
 
-#ifdef	__USE_GNU
+#ifdef __USE_ISOC9X
 
 #if __BYTE_ORDER == __BIG_ENDIAN
-#define	__HUGE_VALf_bytes	{ 0x7f, 0x80, 0, 0 }
+#define	__HUGE_VALF_bytes	{ 0x7f, 0x80, 0, 0 }
 #endif
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-#define	__HUGE_VALf_bytes	{ 0, 0, 0x80, 0x7f }
+#define	__HUGE_VALF_bytes	{ 0, 0, 0x80, 0x7f }
 #endif
 
 #define __huge_valf_t	union { unsigned char __c[4]; float __f; }
 #ifdef	__GNUC__
-#define	HUGE_VALf	(__extension__ \
-			 ((__huge_valf_t) { __c: __HUGE_VALf_bytes }).__f)
+#define	HUGE_VALF	(__extension__ \
+			 ((__huge_valf_t) { __c: __HUGE_VALF_bytes }).__f)
 #else	/* Not GCC.  */
-static __huge_valf_t __huge_valf = { __HUGE_VALf_bytes };
-#define	HUGE_VALf	(__huge_valf.__f)
+static __huge_valf_t __huge_valf = { __HUGE_VALF_bytes };
+#define	HUGE_VALF	(__huge_valf.__f)
 #endif	/* GCC.  */
 
+
 #if __BYTE_ORDER == __BIG_ENDIAN
-#define	__HUGE_VALl_bytes	{ 0x7f, 0xff, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+#define	__HUGE_VALL_bytes	{ 0x7f, 0xff, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 #endif
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-#define	__HUGE_VALl_bytes	{ 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0x7f, 0, 0 }
+#define	__HUGE_VALL_bytes	{ 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0x7f, 0, 0 }
 #endif
 
 #define __huge_vall_t	union { unsigned char __c[12]; long double __ld; }
 #ifdef	__GNUC__
-#define	HUGE_VALl	(__extension__ \
-			 ((__huge_vall_t) { __c: __HUGE_VALl_bytes }).__ld)
+#define	HUGE_VALL	(__extension__ \
+			 ((__huge_vall_t) { __c: __HUGE_VALL_bytes }).__ld)
 #else	/* Not GCC.  */
-static __huge_vall_t __huge_vall = { __HUGE_VALl_bytes };
-#define	HUGE_VALl	(__huge_vall.__ld)
+static __huge_vall_t __huge_vall = { __HUGE_VALL_bytes };
+#define	HUGE_VALL	(__huge_vall.__ld)
 #endif	/* GCC.  */
 
-#endif	/* __USE_GNU.  */
+
+/* Expression representing positive infinity.  Here it is the same as
+   HUGE_VALF.  */
+#define INFINITY	HUGE_VALF
+
+#endif	/* __USE_ISOC9X.  */
 
 
 #endif	   /* huge_val.h */

@@ -90,7 +90,7 @@ G =  3.57142857142857150787e-01L; /* 5/14 */
 	  {
 	    u_int64_t xxl = ((u_int64_t) se) << 32 | x0;
 	    xxl /= 3;
-	    xxl += B1_EXP << 16 | B1_MANT;
+	    xxl += ((u_int64_t) B1_EXP) << 32 | B1_MANT;
 	    SET_LDOUBLE_MSW(t,xxl&0xffffffffu);
 	    xxl >>= 32;
 	    SET_LDOUBLE_EXP(t,xxl);

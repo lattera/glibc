@@ -148,6 +148,7 @@ main (int argc, char *argv[])
   struct charset_t *charset;
   struct localedef_t *localedef;
   struct copy_def_list_t *act_add_locdef;
+  int remaining;
 
   /* Set initial values for global variables.  */
   copy_list = NULL;
@@ -163,7 +164,7 @@ main (int argc, char *argv[])
   textdomain (_libc_intl_domainname);
 
   /* Parse and process arguments.  */
-  argp_parse (&argp, argc, argv, 0, 0, NULL);
+  argp_parse (&argp, argc, argv, 0, &remaining, NULL);
 
   /* XXX POSIX is violated since for unknown option a exit value > 3
      must be used.  */
@@ -172,7 +173,7 @@ main (int argc, char *argv[])
      character map.  */
   verbose |= posix_conformance;
 
-  if (argc - optind != 1)
+  if (argc - remaining != 1)
     {
       /* We need exactly one non-option parameter.  */
       argp_help (&argp, stdout, ARGP_HELP_SEE,
@@ -185,7 +186,7 @@ main (int argc, char *argv[])
 
   /* The parameter describes the output path of the constructed files.
      If the described files cannot be written return a NULL pointer.  */
-  output_path  = construct_output_path (argv[optind]);
+  output_path  = construct_output_path (argv[remaining]);
   cannot_write_why = errno;
 
   /* Now that the parameters are processed we have to reset the local

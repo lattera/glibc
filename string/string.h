@@ -34,8 +34,8 @@ __BEGIN_DECLS
 
 
 /* Copy N bytes of SRC to DEST.  */
-extern __ptr_t memcpy __P ((__ptr_t __dest, __const __ptr_t __src,
-			    size_t __n));
+extern __ptr_t memcpy __P ((__ptr_t __restrict __dest,
+			    __const __ptr_t __restrict __src, size_t __n));
 /* Copy N bytes of SRC to DEST, guaranteeing
    correct behavior for overlapping strings.  */
 extern __ptr_t memmove __P ((__ptr_t __dest, __const __ptr_t __src,
@@ -64,14 +64,18 @@ extern __ptr_t memchr __P ((__const __ptr_t __s, int __c, size_t __n));
 
 
 /* Copy SRC to DEST.  */
-extern char *strcpy __P ((char *__dest, __const char *__src));
+extern char *strcpy __P ((char *__restrict __dest,
+			  __const char *__restrict __src));
 /* Copy no more than N characters of SRC to DEST.  */
-extern char *strncpy __P ((char *__dest, __const char *__src, size_t __n));
+extern char *strncpy __P ((char *__restrict __dest,
+			   __const char *__restrict __src, size_t __n));
 
 /* Append SRC onto DEST.  */
-extern char *strcat __P ((char *__dest, __const char *__src));
+extern char *strcat __P ((char *__restrict __dest,
+			  __const char *__restrict __src));
 /* Append no more than N characters from SRC onto DEST.  */
-extern char *strncat __P ((char *__dest, __const char *__src, size_t __n));
+extern char *strncat __P ((char *__restrict __dest,
+			   __const char *__restrict __src, size_t __n));
 
 /* Compare S1 and S2.  */
 extern int strcmp __P ((__const char *__s1, __const char *__s2));
@@ -81,7 +85,8 @@ extern int strncmp __P ((__const char *__s1, __const char *__s2, size_t __n));
 /* Compare the collated forms of S1 and S2.  */
 extern int strcoll __P ((__const char *__s1, __const char *__s2));
 /* Put a transformation of SRC into no more than N bytes of DEST.  */
-extern size_t strxfrm __P ((char *__dest, __const char *__src, size_t __n));
+extern size_t strxfrm __P ((char *__restrict __dest,
+			    __const char *__restrict __src, size_t __n));
 
 #ifdef __USE_GNU
 /* The following functions are equivalent to the both above but they
@@ -150,7 +155,8 @@ extern char *strpbrk __P ((__const char *__s, __const char *__accept));
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
 extern char *strstr __P ((__const char *__haystack, __const char *__needle));
 /* Divide S into tokens separated by characters in DELIM.  */
-extern char *strtok __P ((char *__s, __const char *__delim));
+extern char *strtok __P ((char *__restrict __s,
+			  __const char *__restrict __delim));
 
 #if defined __USE_POSIX || defined __USE_MISC
 /* Divide S into tokens separated by characters in DELIM.  Information

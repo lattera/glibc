@@ -41,18 +41,21 @@
 # define L_(Ch) L##Ch
 # define ISSPACE(Ch) iswspace (Ch)
 # define TOLOWER(Ch) towlower (Ch)
+# define STRNCASECMP(S1, S2, N) __wcsncasecmp ((S1), (S2), (N))
 #else
 # define STRING_TYPE char
 # define CHAR_TYPE char
 # define L_(Ch) Ch
 # define ISSPACE(Ch) isspace (Ch)
 # define TOLOWER(Ch) tolower (Ch)
+# define STRNCASECMP(S1, S2, N) __strncasecmp ((S1), (S2), (N))
 #endif
 /* End of configuration part.  */
 
 #include <ctype.h>
 #include <errno.h>
 #include <float.h>
+#include <ieee754.h>
 #include "../locale/localeinfo.h"
 #include <math.h>
 #include <stdlib.h>
@@ -433,7 +436,54 @@ INTERNAL (STRTOF) (nptr, endptr, group)
      No character is used even if a sign was found.  */
   if ((c < L_('0') || c > L_('9'))
       && ((wint_t) c != decimal || cp[1] < L_('0') || cp[1] > L_('9')))
-    RETURN (0.0, nptr);
+    {
+      int matched = 0;
+      /* Check for `INF' or `INFINITY'.  */
+      if (TOLOWER (c) == L_('i') && ((STRNCASECMP (cp, L_("nf"), 2) == 0
+				      && (matched = 2))
+				     || (STRNCASECMP (cp, L_("nfinity"), 7)
+					 == 0
+					 && (matched = 7))))
+	{
+	  /* Return +/- inifity.  */
+	  if (endptr != NULL)
+	    *endptr = (STRING_TYPE *) (cp + matched);
+
+	  return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
+	}
+
+      if (TOLOWER (c) == L_('n') && STRNCASECMP (cp, L_("an"), 2) == 0)
+	{
+	  /* Return NaN.  */
+	  if (endptr != NULL)
+	    {
+	      cp += 2;
+
+	      /* Match `(n-char-sequence-digit)'.  */
+	      if (*cp == L_('('))
+		{
+		  const STRING_TYPE *startp = cp;
+		  do
+		    ++cp;
+		  while ((*cp >= '0' && *cp <= '9')
+			 || (TOLOWER (*cp) >= 'a' && TOLOWER (*cp) <= 'z')
+		     || *cp == L_('_'));
+
+		  if (*cp != L_(')'))
+		    /* The closing brace is missing.  Only match the NAN
+		       part.  */
+		    cp = startp;
+		}
+
+	      *endptr = (STRING_TYPE *) cp;
+	    }
+
+	  return NAN;
+	}
+
+      /* It is really a text we do not recognize.  */
+      RETURN (0.0, nptr);
+    }
 
   /* Record the start of the digits, in case we will check their grouping.  */
   start_of_digits = startp = cp;

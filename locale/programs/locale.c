@@ -166,6 +166,8 @@ static void show_info (const char *name);
 int
 main (int argc, char *argv[])
 {
+  int remaining;
+
   /* Set initial values for global variables.  */
   show_category_name = 0;
   show_keyword_name = 0;
@@ -179,7 +181,7 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 
   /* Parse and process arguments.  */
-  argp_parse (&argp, argc, argv, 0, 0, NULL);
+  argp_parse (&argp, argc, argv, 0, &remaining, NULL);
 
   /* `-a' requests the names of all available locales.  */
   if (do_all != 0)
@@ -203,15 +205,15 @@ main (int argc, char *argv[])
 
   /* If no real argument is given we have to print the contents of the
      current locale definition variables.  These are LANG and the LC_*.  */
-  if (optind == argc && show_keyword_name == 0 && show_category_name == 0)
+  if (remaining == argc && show_keyword_name == 0 && show_category_name == 0)
     {
       show_locale_vars ();
       exit (EXIT_SUCCESS);
     }
 
   /* Process all given names.  */
-  while (optind <  argc)
-    show_info (argv[optind++]);
+  while (remaining <  argc)
+    show_info (argv[remaining++]);
 
   exit (EXIT_SUCCESS);
 }

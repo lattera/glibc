@@ -25,7 +25,7 @@
 #define	FLT		LDBL
 #define	STRTOF		wcstof
 #define	MPN2FLOAT	__mpn_construct_float
-#define	FLOAT_HUGE_VAL	HUGE_VALf
+#define	FLOAT_HUGE_VAL	HUGE_VALF
 #define	USE_WIDE_CHAR	1
 
 #include "../stdlib/strtod.c"

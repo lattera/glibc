@@ -7,7 +7,7 @@ chmod		-	chmod		2	__chmod		chmod
 chown		-	chown		3	__chown		chown
 chroot		-	chroot		1	chroot
 close		-	close		1	__libc_close	__close close
-dup		-	dup		2	__dup		dup
+dup		-	dup		1	__dup		dup
 dup2		-	dup2		2	__dup2		dup2
 fchdir		-	fchdir		1	fchdir
 fcntl		-	fcntl		3	__libc_fcntl	__fcntl fcntl

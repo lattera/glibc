@@ -79,108 +79,129 @@ extern int atoi __P ((__const char *__nptr));
 /* Convert a string to a long integer.  */
 extern long int atol __P ((__const char *__nptr));
 
-#if defined (__GNUC__) && defined (__USE_MISC)
+#if defined __USE_ISOC9X || (defined __GNUC__ && defined __USE_MISC)
 /* These functions will part of the standard C library in ISO C 9X.  */
 extern long long int atoll __P ((__const char *__nptr));
 #endif
 
 /* Convert a string to a floating-point number.  */
-extern double strtod __P ((__const char *__nptr, char **__endptr));
+extern double strtod __P ((__const char *__restrict __nptr,
+			   char **__restrict __endptr));
 
 #ifdef	__USE_GNU
 /* Likewise for `float' and `long double' sizes of floating-point numbers.  */
-extern float strtof __P ((__const char *__nptr, char **__endptr));
-extern __long_double_t strtold __P ((__const char *__nptr, char **__endptr));
+extern float strtof __P ((__const char *__restrict __nptr,
+			  char **__restrict __endptr));
+
+extern __long_double_t strtold __P ((__const char *__restrict __nptr,
+				     char **__restrict __endptr));
 #endif
 
 /* Convert a string to a long integer.  */
-extern long int strtol __P ((__const char *__nptr, char **__endptr,
-			     int __base));
+extern long int strtol __P ((__const char *__restrict __nptr,
+			     char **__restrict __endptr, int __base));
 /* Convert a string to an unsigned long integer.  */
-extern unsigned long int strtoul __P ((__const char *__nptr,
-				       char **__endptr, int __base));
+extern unsigned long int strtoul __P ((__const char *__restrict __nptr,
+				       char **__restrict __endptr,
+				       int __base));
 
-#if defined (__GNUC__) && defined (__USE_BSD)
+#if defined __GNUC__ && defined __USE_BSD
 /* Convert a string to a quadword integer.  */
-extern long long int strtoq __P ((__const char *__nptr, char **__endptr,
-				  int __base));
+extern long long int strtoq __P ((__const char *__restrict __nptr,
+				  char **__restrict __endptr, int __base));
 /* Convert a string to an unsigned quadword integer.  */
-extern unsigned long long int strtouq __P ((__const char *__nptr,
-					    char **__endptr, int __base));
+extern unsigned long long int strtouq __P ((__const char *__restrict __nptr,
+					    char **__restrict __endptr,
+					    int __base));
 #endif /* GCC and use BSD.  */
 
-#if defined (__GNUC__) && defined (__USE_MISC)
+#if defined __USE_ISOC9X || (defined __GNUC__ && defined __USE_MISC)
 /* These functions will part of the standard C library in ISO C 9X.  */
 
 /* Convert a string to a quadword integer.  */
-extern long long int strtoll __P ((__const char *__nptr, char **__endptr,
-				   int __base));
+extern long long int strtoll __P ((__const char *__restrict __nptr,
+				   char **__restrict __endptr, int __base));
 /* Convert a string to an unsigned quadword integer.  */
-extern unsigned long long int strtoull __P ((__const char *__nptr,
-					     char **__endptr, int __base));
-#endif /* GCC and use MISC.  */
+extern unsigned long long int strtoull __P ((__const char *__restrict __nptr,
+					     char **__restrict __endptr,
+					     int __base));
+#endif /* ISO C 9X or GCC and use MISC.  */
 
 
 
 /* The internal entry points for `strtoX' take an extra flag argument
    saying whether or not to parse locale-dependent number grouping.  */
 
-extern double __strtod_internal __P ((__const char *__nptr,
-				      char **__endptr, int __group));
-extern float __strtof_internal __P ((__const char *__nptr, char **__endptr,
-				     int __group));
-extern __long_double_t __strtold_internal __P ((__const char *__nptr,
-						char **__endptr, int __group));
-extern long int __strtol_internal __P ((__const char *__nptr, char **__endptr,
+extern double __strtod_internal __P ((__const char *__restrict __nptr,
+				      char **__restrict __endptr,
+				      int __group));
+extern float __strtof_internal __P ((__const char *__restrict __nptr,
+				     char **__restrict __endptr, int __group));
+extern __long_double_t __strtold_internal __P ((__const char *
+						__restrict __nptr,
+						char **__restrict __endptr,
+						int __group));
+extern long int __strtol_internal __P ((__const char *__restrict __nptr,
+					char **__restrict __endptr,
 					int __base, int __group));
-extern unsigned long int __strtoul_internal __P ((__const char *__nptr,
-						  char **__endptr, int __base,
-						  int __group));
+extern unsigned long int __strtoul_internal __P ((__const char *
+						  __restrict __nptr,
+						  char **__restrict __endptr,
+						  int __base, int __group));
 #ifdef __GNUC__
-extern long long int __strtoq_internal __P ((__const char *__nptr,
-					     char **__endptr, int __base,
-					     int __group));
-extern unsigned long long int __strtouq_internal __P ((__const char *__nptr,
-						       char **__endptr,
-						       int __base,
-						       int __group));
+extern long long int __strtoll_internal __P ((__const char *__restrict __nptr,
+					      char **__restrict __endptr,
+					      int __base, int __group));
+extern unsigned long long int __strtoull_internal __P ((__const char *
+							__restrict __nptr,
+							char **
+							__restrict __endptr,
+							int __base,
+							int __group));
 #endif /* GCC */
 
 #if defined (__OPTIMIZE__) && __GNUC__ >= 2
 /* Define inline functions which call the internal entry points.  */
 
-extern __inline double strtod (__const char *__nptr, char **__endptr)
+extern __inline double strtod (__const char *__restrict __nptr,
+			       char **__restrict __endptr)
 { return __strtod_internal (__nptr, __endptr, 0); }
-extern __inline long int strtol (__const char *__nptr,
-				 char **__endptr, int __base)
+extern __inline long int strtol (__const char *__restrict __nptr,
+				 char **__restrict __endptr, int __base)
 { return __strtol_internal (__nptr, __endptr, __base, 0); }
-extern __inline unsigned long int strtoul (__const char *__nptr,
-					   char **__endptr, int __base)
+extern __inline unsigned long int strtoul (__const char *__restrict __nptr,
+					   char **__restrict __endptr,
+					   int __base)
 { return __strtoul_internal (__nptr, __endptr, __base, 0); }
 
 #ifdef __USE_GNU
-extern __inline float strtof (__const char *__nptr, char **__endptr)
+extern __inline float strtof (__const char *__restrict __nptr,
+			      char **__restrict __endptr)
 { return __strtof_internal (__nptr, __endptr, 0); }
-extern __inline __long_double_t strtold (__const char *__nptr, char **__endptr)
+extern __inline __long_double_t strtold (__const char *__restrict __nptr,
+					 char **__restrict __endptr)
 { return __strtold_internal (__nptr, __endptr, 0); }
 #endif
 
 #ifdef __USE_BSD
-extern __inline long long int strtoq (__const char *__nptr, char **__endptr,
-				      int __base)
-{ return __strtoq_internal (__nptr, __endptr, __base, 0); }
-extern __inline unsigned long long int strtouq (__const char *__nptr,
-						char **__endptr, int __base)
-{ return __strtouq_internal (__nptr, __endptr, __base, 0); }
+extern __inline long long int strtoq (__const char *__restrict __nptr,
+				      char **__restrict __endptr, int __base)
+{ return __strtoll_internal (__nptr, __endptr, __base, 0); }
+extern __inline unsigned long long int strtouq (__const char *__restrict __nptr,
+						char **__restrict __endptr,
+						int __base)
+{ return __strtoull_internal (__nptr, __endptr, __base, 0); }
 #endif
 
-#ifdef __USE_MISC
-extern __inline long long int strtoll (__const char *__nptr, char **__endptr,
-				       int __base)
-{ return __strtoq_internal (__nptr, __endptr, __base, 0); }
-extern __inline unsigned long long int strtoull (__const char *__nptr,
-						 char **__endptr, int __base)
-{ return __strtouq_internal (__nptr, __endptr, __base, 0); }
+#if defined __USE_MISC || defined __USE_ISOC9X
+extern __inline long long int strtoll (__const char *__restrict __nptr,
+				       char **__restrict __endptr, int __base)
+{ return __strtoll_internal (__nptr, __endptr, __base, 0); }
+extern __inline unsigned long long int strtoull (__const char *
+						 __restrict __nptr,
+						 char **__restrict __endptr,
+						 int __base)
+{ return __strtoull_internal (__nptr, __endptr, __base, 0); }
 #endif
 
 extern __inline double atof (__const char *__nptr)
@@ -483,8 +504,9 @@ extern void qsort __P ((__ptr_t __base, size_t __nmemb, size_t __size,
 /* Return the absolute value of X.  */
 extern int abs __P ((int __x)) __attribute__ ((__const__));
 extern long int labs __P ((long int __x)) __attribute__ ((__const__));
-#ifdef __USE_GNU
-extern long long int llabs __P ((long long int __x)) __attribute__ ((__const__));
+#if defined __USE_ISOC9X
+extern long long int llabs __P ((long long int __x))
+     __attribute__ ((__const__));
 #endif
 
 
@@ -492,9 +514,11 @@ extern long long int llabs __P ((long long int __x)) __attribute__ ((__const__))
    of the value of NUMER over DENOM. */
 /* GCC may have built-ins for these someday.  */
 extern div_t div __P ((int __numer, int __denom)) __attribute__ ((__const__));
-extern ldiv_t ldiv __P ((long int __numer, long int __denom)) __attribute__ ((__const__));
-#ifdef __USE_GNU
-extern lldiv_t lldiv __P ((long long int __numer, long long int __denom)) __attribute__ ((__const__));
+extern ldiv_t ldiv __P ((long int __numer, long int __denom))
+     __attribute__ ((__const__));
+#ifdef __USE_ISOC9X
+extern lldiv_t lldiv __P ((long long int __numer, long long int __denom))
+     __attribute__ ((__const__));
 #endif
 
 
@@ -548,7 +572,8 @@ extern int qfcvt_r __P ((__long_double_t __value, int __ndigit, int *__decpt,
 extern int mblen __P ((__const char *__s, size_t __n));
 /* Return the length of the given multibyte character,
    putting its `wchar_t' representation in *PWC.  */
-extern int mbtowc __P ((wchar_t *__pwc, __const char *__s, size_t __n));
+extern int mbtowc __P ((wchar_t *__restrict __pwc,
+			__const char *__restrict __s, size_t __n));
 /* Put the multibyte character represented
    by WCHAR in S, returning its length.  */
 extern int wctomb __P ((char *__s, wchar_t __wchar));
@@ -560,9 +585,11 @@ extern __inline int mblen (__const char *__s, size_t __n)
 
 
 /* Convert a multibyte string to a wide char string.  */
-extern size_t mbstowcs __P ((wchar_t *__pwcs, __const char *__s, size_t __n));
+extern size_t mbstowcs __P ((wchar_t *__restrict  __pwcs,
+			     __const char *__restrict __s, size_t __n));
 /* Convert a wide char string to multibyte string.  */
-extern size_t wcstombs __P ((char *__s, __const wchar_t *__pwcs, size_t __n));
+extern size_t wcstombs __P ((char *__restrict __s,
+			     __const wchar_t *__restrict __pwcs, size_t __n));
 
 
 #ifdef __USE_SVID

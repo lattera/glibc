@@ -1,5 +1,5 @@
 /* Declarations for math functions.
-   Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -99,9 +99,12 @@ extern _LIB_VERSION_TYPE _LIB_VERSION;
 #endif
 
 
-#ifdef __USE_SVID
+#if defined __USE_SVID && !defined __cplusplus
 /* In SVID error handling, `matherr' is called with this description
-   of the exceptional condition.  */
+   of the exceptional condition.
+
+   We have a problem when using C++ since `exception' is reserved in
+   C++.  */
 struct exception
   {
     int type;
@@ -128,7 +131,7 @@ extern int matherr __P ((struct exception *));
 #define HUGE		FLT_MAX
 #include <float.h>		/* Defines FLT_MAX.  */
 
-#endif
+#endif	/* SVID && !C++ */
 
 
 #ifdef __USE_BSD

@@ -99,6 +99,7 @@ main (argc, argv)
   FILE *input_file;
   DB *db_file;
   int status;
+  int remaining;
 
   /* Set locale via LC_ALL.  */
   setlocale (LC_ALL, "");
@@ -110,27 +111,27 @@ main (argc, argv)
   input_name = NULL;
 
   /* Parse and process arguments.  */
-  argp_parse (&argp, argc, argv, 0, 0, NULL);
+  argp_parse (&argp, argc, argv, 0, &remaining, NULL);
 
   /* Determine file names.  */
   if (do_undo || output_name != NULL)
     {
-      if (optind + 1 != argc)
+      if (remaining + 1 != argc)
 	{
 	wrong_arguments:
 	  error (0, 0, gettext ("wrong number of arguments"));
 	  argp_help (&argp, stdout, ARGP_HELP_SEE,
 		     program_invocation_short_name);
 	}
-      input_name = argv[optind];
+      input_name = argv[remaining];
     }
   else
     {
-      if (optind + 2 != argc)
+      if (remaining + 2 != argc)
 	goto wrong_arguments;
 
-      input_name = argv[optind++];
-      output_name = argv[optind];
+      input_name = argv[remaining++];
+      output_name = argv[remaining];
     }
 
   /* Special handling if we are asked to print the database.  */

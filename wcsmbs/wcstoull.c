@@ -1,6 +1,7 @@
 /* Function to parse an `unsigned long long int' from text.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -19,6 +20,6 @@
 
 #define	QUAD	1
 
-#include <strtoul.c>
+#include "wcstoul.c"
 
-weak_alias (strtouq, strtoull)
+weak_alias (wcstoull, wcstouq)

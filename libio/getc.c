@@ -41,9 +41,3 @@ _IO_getc (fp)
 }
 #undef getc
 weak_alias (_IO_getc, getc)
-
-#ifdef _IO_MTSAFE_IO
-# undef getc_locked
-
-weak_alias (getc, getc_locked)
-#endif

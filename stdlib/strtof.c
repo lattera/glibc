@@ -5,6 +5,6 @@
 #define	FLT		FLT
 #define	STRTOF		strtof
 #define	MPN2FLOAT	__mpn_construct_float
-#define	FLOAT_HUGE_VAL	HUGE_VALf
+#define	FLOAT_HUGE_VAL	HUGE_VALF
 
 #include "strtod.c"

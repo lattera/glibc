@@ -155,6 +155,7 @@ dl_main (const ElfW(Phdr) *phdr,
   const char *preloadlist;
   size_t file_size;
   char *file;
+  int has_interp = 0;
 
   mode = getenv ("LD_TRACE_LOADED_OBJECTS") != NULL ? trace : normal;
 
@@ -299,6 +300,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	_dl_rtld_libname.name = (const char *) l->l_addr + ph->p_vaddr;
 	_dl_rtld_libname.next = NULL;
 	_dl_rtld_map.l_libname = &_dl_rtld_libname;
+	has_interp = 1;
 	break;
       }
   if (! _dl_rtld_map.l_libname && _dl_rtld_map.l_name)
@@ -315,7 +317,7 @@ of this helper program; chances are you did not intend to run this program.\n",
   if (mode == verify)
     /* We were called just to verify that this is a dynamic executable
        using us as the program interpreter.  */
-    _exit (l->l_ld == NULL ? EXIT_FAILURE : EXIT_SUCCESS);
+    _exit (l->l_ld == NULL ? 1 : has_interp ? 0 : 2);
 
   /* Extract the contents of the dynamic section for easy access.  */
   elf_get_dynamic_info (l->l_ld, l->l_info);

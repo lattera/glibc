@@ -44,7 +44,3 @@ _IO_fflush (fp)
 }
 
 weak_alias (_IO_fflush, fflush)
-
-#ifdef _IO_MTSAFE_IO
-weak_alias (_IO_fflush, fflush_locked)
-#endif

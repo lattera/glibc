@@ -1,7 +1,5 @@
-/* Function to parse an `unsigned long long int' from text.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,6 +16,41 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define	QUAD	1
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
-#include "wcstoul.c"
+#include <wctype.h>
+#include <wchar.h>
+
+#ifndef weak_alias
+# define __wcscasecmp wcscasecmp
+#endif
+
+/* Compare S1 and S2, ignoring case, returning less than, equal to or
+   greater than zero if S1 is lexicographically less than,
+   equal to or greater than S2.  */
+int
+__wcscasecmp (s1, s2)
+     const wchar_t *s1;
+     const wchar_t *s2;
+{
+  wint_t c1, c2;
+
+  if (s1 == s2)
+    return 0;
+
+  do
+    {
+      c1 = towlower (*s1++);
+      c2 = towlower (*s2++);
+      if (c1 == '\0')
+	break;
+    }
+  while (c1 == c2);
+
+  return c1 - c2;
+}
+#ifdef weak_alias
+weak_alias (__wcscasecmp, wcscasecmp)
+#endif

@@ -232,7 +232,7 @@ sed  -e "
 /^>Fix:/,/^>[A-Za-z-]*:/s;$FIX_C;;
 " $TEMP > $TEMP.x
 
-if $MAIL_AGENT $BUGGLIBC < $TEMP.x; then
+if $MAIL_AGENT < $TEMP.x; then
   echo "$COMMAND: problem report sent"
   xs=0; exit
 else

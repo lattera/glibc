@@ -37,9 +37,3 @@ getchar ()
   _IO_cleanup_region_end (1);
   return result;
 }
-
-#ifdef _IO_MTSAFE_IO
-# undef getchar_locked
-
-weak_alias (getchar, getchar_locked)
-#endif

@@ -841,9 +841,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  if (flags & LONGDBL)
 	    {
 	      if (number_signed)
-		num.q = __strtoq_internal (wp, &tw, base, flags & GROUP);
+		num.q = __strtoll_internal (wp, &tw, base, flags & GROUP);
 	      else
-		num.uq = __strtouq_internal (wp, &tw, base, flags & GROUP);
+		num.uq = __strtoull_internal (wp, &tw, base, flags & GROUP);
 	    }
 	  else
 	    {

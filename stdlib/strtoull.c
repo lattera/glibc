@@ -1,4 +1,4 @@
-/* Function to parse a `long long int' from text.
+/* Function to parse an `unsigned long long int' from text.
    Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -19,6 +19,6 @@
 
 #define	QUAD	1
 
-#include <strtol.c>
+#include <strtoul.c>
 
-weak_alias (strtoq, strtoll)
+weak_alias (strtoull, strtouq)

@@ -71,6 +71,11 @@ unsigned int error_message_count;
 #define program_name program_invocation_name
 #include <errno.h>
 
+/* In GNU libc we want do not want to use the common name `error' directly.
+   Instead make it a weak alias.  */
+#define error __error
+#define error_at_line __error_at_line
+
 #else
 
 /* The calling program should define program_name and set it to the
@@ -230,3 +235,11 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
   if (status)
     exit (status);
 }
+
+#ifdef _LIBC
+/* Make the weak alias.  */
+#undef error
+#undef error_at_line
+weak_alias (__error, error)
+weak_alias (__error_at_line, error_at_line)
+#endif

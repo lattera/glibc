@@ -171,6 +171,13 @@ extern size_t malloc_usable_size __MALLOC_P ((__malloc_ptr_t __ptr));
 /* Prints brief summary statistics on stderr. */
 extern void malloc_stats __MALLOC_P ((void));
 
+/* Record the state of all malloc variables in an opaque data structure. */
+extern __malloc_ptr_t malloc_get_state __MALLOC_P ((void));
+
+/* Restore the state of all malloc variables from data obtained with
+   malloc_get_state(). */
+extern int malloc_set_state __MALLOC_P ((__malloc_ptr_t __ptr));
+
 #if defined(__GLIBC__) || defined(MALLOC_HOOKS)
 
 /* Hooks for debugging versions. */

@@ -277,19 +277,25 @@ parent_echo-distinfo:
 	      $(addprefix +nodist+,$(generated))
 
 
+# Run a test on the header files we use.
+tests: $(objpfx)isomac
+	$(objpfx)isomac $(CC) '$(+sysdep-includes)' >$(common-objpfx)isomac.out
+
+$(objpfx)isomac: isomac.c
+	$(native-compile)
+
 # Make the distribution tarfile.
 
 distribute  := README INSTALL FAQ NOTES NEWS PROJECTS			\
 	       COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]		\
 	       Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
-	       extra-lib.mk o-iterator.mk				\
+	       extra-lib.mk o-iterator.mk isomac.c			\
 	       ansidecl.h mkinstalldirs move-if-change install-sh	\
 	       configure configure.in aclocal.m4 config.sub config.guess\
 	       config.h.in config.make.in config-name.in Makefile.in	\
 	       autolock.sh rellns-sh munch-tmpl.c munch.awk interp.c	\
 	       sysdep.h set-hooks.h libc-symbols.h version.h shlib-versions \
-	       rpm/Makefile rpm/template rpm/rpmrc nsswitch.h netgroup.h \
-	       mcheck.h glibcbug.in xlocale.h
+	       rpm/Makefile rpm/template rpm/rpmrc glibcbug.in
 
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h version-info.h

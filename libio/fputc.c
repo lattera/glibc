@@ -38,5 +38,3 @@ fputc (c, fp)
   _IO_cleanup_region_end (1);
   return result;
 }
-
-weak_alias (fputc, fputc_locked)
