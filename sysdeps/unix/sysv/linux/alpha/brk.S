@@ -38,6 +38,10 @@ __curbrk: .skip 8
 	.text
 LEAF(__brk, 0)
 	ldgp	gp, 0(t12)
+#ifdef PROF
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
+#endif
 	.prologue 1
 
 	ldiq	v0, __NR_brk

@@ -24,7 +24,14 @@ Cambridge, MA 02139, USA.  */
 	.text
 
 LEAF(sigsuspend, 0)
+#ifdef PROF
+	ldgp	gp, 0(pv)
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
 	.prologue 1
+#else
+	.prologue 0
+#endif
 
 	ldq	a0, 0(a0)
 	ldi	v0, __NR_sigsuspend
@@ -32,8 +39,11 @@ LEAF(sigsuspend, 0)
 	bne	a3, error
 	ret
 
-error:	br	gp, 1f
+error:
+#ifndef PROF
+	br	gp, 1f
 1:	ldgp	gp, 0(gp)
+#endif
 	jmp	zero, __syscall_error
 
 	END(sigsuspend)

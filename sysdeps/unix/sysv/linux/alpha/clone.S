@@ -32,6 +32,10 @@ ENTRY(__clone)
 	/* Save rest of argument registers for varargs-type work.  */
 	stq	a4,0(sp)
 	stq	a5,8(sp)
+#ifdef PROF
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
+#endif
 	.prologue 1
 
 	/* Sanity check arguments.  */
