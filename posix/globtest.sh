@@ -146,6 +146,32 @@ if test $failed -ne 0; then
   result=1
 fi
 
+failed=0
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -b "$testdir" "{file{1,2},-file3}" |
+sort > $testout
+cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+`-file3'
+`file1'
+`file2'
+EOF
+if test $failed -ne 0; then
+  echo "Braces test 2 failed" >> $logfile
+  result=1
+fi
+
+failed=0
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -b "$testdir" "{" |
+sort > $testout
+cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+GLOB_NOMATCH
+EOF
+if test $failed -ne 0; then
+  echo "Braces test 3 failed" >> $logfile
+  result=1
+fi
+
 # Test NOCHECK
 failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \

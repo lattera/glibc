@@ -1,3 +1,10 @@
+2001-11-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/glob.c (next_brace_sub): Return NULL if braces
+	don't match, fix {{a,b},c} globbing, clean up.
+	Patch by Flavio Veloso <flaviovs@magnux.com>.
+	* posix/globtest.sh: Add new tests.
+
 2001-11-29  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/Versions: Add arch_prctl.
