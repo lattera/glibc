@@ -39,7 +39,7 @@
     long int __ret;							      \
     __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
 			      (futexp), FUTEX_WAIT, (val), 0);		      \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret: 0;			      \
+    INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret : __ret;		      \
   })
 
 #define lll_futex_timed_wait(futexp, val, timespec) \
@@ -48,7 +48,7 @@
     long int __ret;							      \
     __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
 			      (futexp), FUTEX_WAIT, (val), (timespec));	      \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret: 0;			      \
+    INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret : __ret;		      \
   })
 
 #define lll_futex_wake(futexp, nr) \
@@ -57,18 +57,17 @@
     long int __ret;							      \
     __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
 			      (futexp), FUTEX_WAKE, (nr), 0);		      \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret: 0;			      \
+    INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret : __ret;		      \
   })
 
 #define lll_futex_requeue(futexp, nr_wake, nr_move, mutex) \
   ({									      \
     INTERNAL_SYSCALL_DECL (__err);					      \
     long int __ret;							      \
-									      \
     __ret = INTERNAL_SYSCALL (futex, __err, 5,				      \
 			      (futexp), FUTEX_REQUEUE, (nr_wake), (nr_move),  \
 			      (mutex));					      \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret: 0;			      \
+    INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret : __ret;		      \
   })
 
 /* Set *futex to 1 if it is 0, atomically.  Returns the old value */

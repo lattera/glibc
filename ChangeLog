@@ -1,3 +1,11 @@
+2003-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Version
+	__ASSUME_CORRECT_SI_PID and __ASSUME_TGKILL if possible.
+
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Adjust for
+	compilation with HAVE_AUX_SECURE defined.
+
 2003-07-05  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/elf/initfini.c: Avoid .ent/.end.

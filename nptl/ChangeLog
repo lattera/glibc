@@ -1,3 +1,10 @@
+2003-07-05  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/elf/pt-initfini.c: Avoid .ent/.end.
+	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h (lll_futex_wait,
+        lll_futex_timed_wait, lll_futex_wake, lll_futex_requeue): On success
+        return actual return value from the syscall, not 0.
+
 2003-07-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* descr.h (struct pthread): Add pid field.
