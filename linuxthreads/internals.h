@@ -208,7 +208,7 @@ struct pthread_request {
   pthread_descr req_thread;     /* Thread doing the request */
   enum {                        /* Request kind */
     REQ_CREATE, REQ_FREE, REQ_PROCESS_EXIT, REQ_MAIN_THREAD_EXIT,
-    REQ_POST, REQ_DEBUG, REQ_KICK
+    REQ_POST, REQ_DEBUG, REQ_KICK, REQ_FOR_EACH_THREAD
   } req_kind;
   union {                       /* Arguments for request */
     struct {                    /* For REQ_CREATE: */
@@ -224,6 +224,10 @@ struct pthread_request {
       int code;                 /*   exit status */
     } exit;
     void * post;                /* For REQ_POST: the semaphore */
+    struct {			/* For REQ_FOR_EACH_THREAD: callback */
+      void (*fn)(void *, pthread_descr);
+      void *arg;
+    } for_each;
   } req_args;
 };
 

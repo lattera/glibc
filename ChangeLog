@@ -1,5 +1,36 @@
 2001-11-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/ibm1163.c: New file.
+	* iconvdata/ibm1163.h: New file.
+	* iconvdata/ibm1164.c: New file.
+	* iconvdata/ibm1164.h: New file.
+	* iconvdata/TESTS: Add entries for IBM1163 and IBM1164.
+	* iconvdata/Makefile: Likewise.
+	* iconvdata/testdata/IBM1163: New file.
+	* iconvdata/testdata/IBM1163..UTF8: New file.
+	* iconvdata/testdata/IBM1164: New file.
+	* iconvdata/testdata/IBM1164..UTF8: New file.
+	Patch by Masahide Washizawa <WASHI@jp.ibm.com>.
+
+	* iconvdata/ibm1046.h: Optimize.  Remove duplicate mappings.
+	* iconvdata/ibm1124.h: Likewise.
+	* iconvdata/ibm1132.h: Likewise.
+	* iconvdata/ibm1133.h: Likewise.
+	* iconvdata/ibm1160.h: Likewise.
+	* iconvdata/ibm1161.h: Likewise.
+	* iconvdata/ibm1162.h: Likewise.
+	* iconvdata/ibm856.h: Likewise.
+	* iconvdata/ibm922.h: Likewise.
+	* iconvdata/ibm930.h: Likewise.
+	* iconvdata/ibm932.h: Likewise.
+	* iconvdata/ibm933.h: Likewise.
+	* iconvdata/ibm935.h: Likewise.
+	* iconvdata/ibm937.h: Likewise.
+	* iconvdata/ibm939.h: Likewise.
+	* iconvdata/ibm943.h: Likewise.
+	* iconvdata/ibm930.c: Pretty printing.
+	* iconvdata/ibm937.c: Avoid access accross array boundary.
+
 	* iconv/gconv_open.c (__gconv_open): Empty codeset name now means using
 	the current locale's codeset.
 	* iconv/iconv_open.c (iconv_open): Don't strip out everything for

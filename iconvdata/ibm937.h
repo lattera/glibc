@@ -1,5 +1,5 @@
 /* Tables for conversion to and from IBM937.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@yamato.ibm.co.jp>, 2000.
 
@@ -5144,7 +5144,7 @@ static const char __ucs4_to_ibm937sb[][1] =
   [0x0000] = "\x00", [0x0001] = "\x01", [0x0002] = "\x02", [0x0003] = "\x03",
   [0x0004] = "\x37", [0x0005] = "\x2d", [0x0006] = "\x2e", [0x0007] = "\x2f",
   [0x0008] = "\x16", [0x0009] = "\x05", [0x000a] = "\x25", [0x000b] = "\x0b",
-  [0x000c] = "\x0c", [0x000d] = "\x0d", [0x000e] = "\x3f", [0x000f] = "\x3f",
+  [0x000c] = "\x0c", [0x000d] = "\x0d",
   [0x0010] = "\x10", [0x0011] = "\x11", [0x0012] = "\x12", [0x0013] = "\x13",
   [0x0014] = "\x3c", [0x0015] = "\x3d", [0x0016] = "\x32", [0x0017] = "\x26",
   [0x0018] = "\x18", [0x0019] = "\x19", [0x001a] = "\x3f", [0x001b] = "\x27",
@@ -5181,28 +5181,7 @@ static const char __ucs4_to_ibm937sb[][1] =
   [0x0094] = "\x34", [0x0095] = "\x35", [0x0096] = "\x36", [0x0097] = "\x08",
   [0x0098] = "\x38", [0x0099] = "\x39", [0x009a] = "\x3a", [0x009b] = "\x3b",
   [0x009c] = "\x04", [0x009d] = "\x14", [0x009e] = "\x3e", [0x009f] = "\xff",
-  [0x00a0] = "\x3f", [0x00a1] = "\x3f", [0x00a2] = "\x4a", [0x00a3] = "\x3f",
-  [0x00a4] = "\x3f", [0x00a5] = "\x3f", [0x00a6] = "\x6a", [0x00a9] = "\x3f",
-  [0x00aa] = "\x3f", [0x00ab] = "\x3f", [0x00ac] = "\x5f", [0x00ad] = "\x3f",
-  [0x00ae] = "\x3f", [0x00b2] = "\x3f", [0x00b3] = "\x3f", [0x00b5] = "\x3f",
-  [0x00b8] = "\x3f", [0x00b9] = "\x3f", [0x00ba] = "\x3f", [0x00bb] = "\x3f",
-  [0x00bc] = "\x3f", [0x00bd] = "\x3f", [0x00be] = "\x3f", [0x00bf] = "\x3f",
-  [0x00c0] = "\x3f", [0x00c1] = "\x3f", [0x00c2] = "\x3f", [0x00c3] = "\x3f",
-  [0x00c4] = "\x3f", [0x00c5] = "\x3f", [0x00c6] = "\x3f", [0x00c7] = "\x3f",
-  [0x00c8] = "\x3f", [0x00c9] = "\x3f", [0x00ca] = "\x3f", [0x00cb] = "\x3f",
-  [0x00cc] = "\x3f", [0x00cd] = "\x3f", [0x00ce] = "\x3f", [0x00cf] = "\x3f",
-  [0x00d0] = "\x3f", [0x00d1] = "\x3f", [0x00d2] = "\x3f", [0x00d3] = "\x3f",
-  [0x00d4] = "\x3f", [0x00d5] = "\x3f", [0x00d6] = "\x3f", [0x00d8] = "\x3f",
-  [0x00d9] = "\x3f", [0x00da] = "\x3f", [0x00db] = "\x3f", [0x00dc] = "\x3f",
-  [0x00dd] = "\x3f", [0x00de] = "\x3f", [0x00df] = "\x3f", [0x00e0] = "\x3f",
-  [0x00e1] = "\x3f", [0x00e2] = "\x3f", [0x00e3] = "\x3f", [0x00e4] = "\x3f",
-  [0x00e5] = "\x3f", [0x00e6] = "\x3f", [0x00e7] = "\x3f", [0x00e8] = "\x3f",
-  [0x00e9] = "\x3f", [0x00ea] = "\x3f", [0x00eb] = "\x3f", [0x00ec] = "\x3f",
-  [0x00ed] = "\x3f", [0x00ee] = "\x3f", [0x00ef] = "\x3f", [0x00f0] = "\x3f",
-  [0x00f1] = "\x3f", [0x00f2] = "\x3f", [0x00f3] = "\x3f", [0x00f4] = "\x3f",
-  [0x00f5] = "\x3f", [0x00f6] = "\x3f", [0x00f8] = "\x3f", [0x00f9] = "\x3f",
-  [0x00fa] = "\x3f", [0x00fb] = "\x3f", [0x00fc] = "\x3f", [0x00fd] = "\x3f",
-  [0x00fe] = "\x3f", [0x00ff] = "\x3f"
+  [0x00a2] = "\x4a", [0x00a6] = "\x6a", [0x00ac] = "\x5f"
 };
 
 static const char __ucs4_to_ibm937db[][2] =

@@ -184,10 +184,10 @@ enum
     const char *cp;							      \
 									      \
     /* Use the UCS4 table for single byte.  */				      \
-    cp = __ucs4_to_ibm937sb[ch];					      \
     if (__builtin_expect (ch >= (sizeof (__ucs4_to_ibm937sb)		      \
 				 / sizeof (__ucs4_to_ibm937sb[0])), 0)	      \
-	|| (__builtin_expect (cp[0], '\1') == '\0' && ch != 0))		      \
+	|| (cp = __ucs4_to_ibm937sb[ch],				      \
+	    __builtin_expect (cp[0], '\1') == '\0' && ch != 0))		      \
       {									      \
 	/* Use the UCS4 table for double byte.  */			      \
 	cp = __ucs4_to_ibm937db[ch];					      \

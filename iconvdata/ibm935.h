@@ -4955,7 +4955,7 @@ static const struct gap __ucs4_to_ibm935db_idx[] =
   { start: 0xffff, end: 0xffff, idx:      0 }
 };
 
-static const char *__ucs4_to_ibm935db[] =
+static const char __ucs4_to_ibm935db[][2] =
 {
   "\x45\x88", "\x44\x6a", "\x44\x60", "\x44\xed", "\x44\x4b", "\x44\x50",
   "\x43\x45", "\x44\x7a", "\x46\x44", "\x46\x42", "\x46\x48", "\x46\x46",

@@ -20,6 +20,7 @@
 #include "pthread.h"
 #include "internals.h"
 #include "spinlock.h"
+#include "restart.h"
 #include <bits/libc-lock.h>
 
 
@@ -58,13 +59,38 @@ int __pthread_key_create(pthread_key_t * key, destr_function destr)
 }
 strong_alias (__pthread_key_create, pthread_key_create)
 
-/* Delete a key */
+/* Reset deleted key's value to NULL in each live thread.
+ * NOTE: this executes in the context of the thread manager! */
 
+struct pthread_key_delete_helper_args {
+  /* Damn, we need lexical closures in C! ;) */
+  unsigned int idx1st, idx2nd;
+  pthread_descr self;
+};
+
+static void pthread_key_delete_helper(void *arg, pthread_descr th)
+{
+  struct pthread_key_delete_helper_args *args = arg;
+  unsigned int idx1st = args->idx1st;
+  unsigned int idx2nd = args->idx2nd;
+  pthread_descr self = args->self;
+
+  if (self == 0)
+    self = args->self = thread_self();
+
+  if (!th->p_terminated) {
+    /* pthread_exit() may try to free th->p_specific[idx1st] concurrently. */
+    __pthread_lock(THREAD_GETMEM(th, p_lock), self);
+    if (th->p_specific[idx1st] != NULL)
+      th->p_specific[idx1st][idx2nd] = NULL;
+    __pthread_unlock(THREAD_GETMEM(th, p_lock));
+  }
+}
+
+/* Delete a key */
 int pthread_key_delete(pthread_key_t key)
 {
   pthread_descr self = thread_self();
-  pthread_descr th;
-  unsigned int idx1st, idx2nd;
 
   pthread_mutex_lock(&pthread_keys_mutex);
   if (key >= PTHREAD_KEYS_MAX || !pthread_keys[key].in_use) {
@@ -73,23 +99,29 @@ int pthread_key_delete(pthread_key_t key)
   }
   pthread_keys[key].in_use = 0;
   pthread_keys[key].destr = NULL;
+
   /* Set the value of the key to NULL in all running threads, so
      that if the key is reallocated later by pthread_key_create, its
      associated values will be NULL in all threads. */
-  idx1st = key / PTHREAD_KEY_2NDLEVEL_SIZE;
-  idx2nd = key % PTHREAD_KEY_2NDLEVEL_SIZE;
-  th = self;
-  do {
-    /* If the thread already is terminated don't modify the memory.  */
-    if (!th->p_terminated) {
-      /* pthread_exit() may try to free th->p_specific[idx1st] concurrently. */
-      __pthread_lock(THREAD_GETMEM(th, p_lock), self);
-      if (th->p_specific[idx1st] != NULL)
-	th->p_specific[idx1st][idx2nd] = NULL;
-      __pthread_unlock(THREAD_GETMEM(th, p_lock));
-    }
-    th = th->p_nextlive;
-  } while (th != self);
+
+  {
+    struct pthread_key_delete_helper_args args;
+    struct pthread_request request;
+
+    args.idx1st = key / PTHREAD_KEY_2NDLEVEL_SIZE;
+    args.idx2nd = key % PTHREAD_KEY_2NDLEVEL_SIZE;
+    args.self = 0;
+
+    request.req_thread = self;
+    request.req_kind = REQ_FOR_EACH_THREAD;
+    request.req_args.for_each.arg = &args;
+    request.req_args.for_each.fn = pthread_key_delete_helper;
+
+    TEMP_FAILURE_RETRY(__libc_write(__pthread_manager_request,
+				    (char *) &request, sizeof(request)));
+    suspend(self);
+  }
+
   pthread_mutex_unlock(&pthread_keys_mutex);
   return 0;
 }

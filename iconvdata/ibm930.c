@@ -229,7 +229,7 @@ enum
 									      \
 	if (__builtin_expect (ch < rp2->start, 0)			      \
 	    || (cp = __ucs4_to_ibm930db[ch + rp2->idx],			      \
-		__builtin_expect (cp[0], L'\1')==L'\0' && ch != '\0'))	      \
+		__builtin_expect (cp[0], L'\1')== L'\0' && ch != '\0'))	      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    if (! ignore_errors_p ())					      \

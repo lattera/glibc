@@ -1,3 +1,21 @@
+2001-11-28  Kaz Kylheku  <kaz@ashi.footprints.net>
+
+	Bugfix to pthread_key_delete. It was iterating over the thread
+	manager's linked list of threads, behind the thread manager's
+	back causing a race. The fix is to have the manager iterate over
+	the threads instead, using a new request type for doing so.
+	* internals.h (struct pthread_request): New manager request type
+	REQ_FOR_EACH_THREAD.
+	* manager.c (pthread_for_each_thread): New function.
+	(__pthread_manager): Handle new REQ_FOR_EACH_THREAD request.
+	* specific.c (struct pthread_key_delete_helper_args): New type.
+	(pthread_key_delete_helper): New static function.
+	(pthread_key_delete): Use the new thread manager
+	REQ_FOR_EACH_THREAD function to iterate over the threads and set
+	the delete key slot to a null value in each thread.
+	* Examples/ex18.c: New test.
+	* Makefile (tests): Add ex18.
+
 2001-11-22  Wolfram Gloger  <wg@malloc.de>
 
 	* pthread.c (pthread_onexit_process): Don't call free

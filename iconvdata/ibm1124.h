@@ -1,5 +1,5 @@
 /* Conversion from and to IBM1124.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@jp.ibm.com>, 2000.
 
@@ -93,7 +93,6 @@ static const struct gap from_idx[] =
   { start: 0x0401, end: 0x045f, idx:  -857 },
   { start: 0x0490, end: 0x0491, idx:  -905 },
   { start: 0x2116, end: 0x2116, idx: -8205 },
-  { start: 0xff01, end: 0xff5e, idx: -65015 },
   { start: 0xffff, end: 0xffff, idx:     0 }
 };
 
@@ -132,16 +131,5 @@ static const char from_ucs4[] =
   '\xe9', '\xea', '\xeb', '\xec', '\xed', '\xee', '\xef', '\x00',
   '\xf1', '\xf2', '\x00', '\xf4', '\xf5', '\xf6', '\xf7', '\xf8',
   '\xf9', '\xfa', '\xfb', '\xfc', '\x00', '\xfe', '\xff', '\xa3',
-  '\xf3', '\xf0', '\x21', '\x22', '\x23', '\x24', '\x25', '\x26',
-  '\x27', '\x28', '\x29', '\x2a', '\x2b', '\x2c', '\x2d', '\x2e',
-  '\x2f', '\x30', '\x31', '\x32', '\x33', '\x34', '\x35', '\x36',
-  '\x37', '\x38', '\x39', '\x3a', '\x3b', '\x3c', '\x3d', '\x3e',
-  '\x3f', '\x40', '\x41', '\x42', '\x43', '\x44', '\x45', '\x46',
-  '\x47', '\x48', '\x49', '\x4a', '\x4b', '\x4c', '\x4d', '\x4e',
-  '\x4f', '\x50', '\x51', '\x52', '\x53', '\x54', '\x55', '\x56',
-  '\x57', '\x58', '\x59', '\x5a', '\x5b', '\x5c', '\x5d', '\x5e',
-  '\x5f', '\x60', '\x61', '\x62', '\x63', '\x64', '\x65', '\x66',
-  '\x67', '\x68', '\x69', '\x6a', '\x6b', '\x6c', '\x6d', '\x6e',
-  '\x6f', '\x70', '\x71', '\x72', '\x73', '\x74', '\x75', '\x76',
-  '\x77', '\x78', '\x79', '\x7a', '\x7b', '\x7c', '\x7d', '\x7e',
+  '\xf3', '\xf0'
 };

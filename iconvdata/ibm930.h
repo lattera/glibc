@@ -5785,7 +5785,7 @@ static const struct gap __ucs4_to_ibm930db_idx[] =
   { start: 0xffff, end: 0xffff, idx:      0 }
 };
 
-static const char * __ucs4_to_ibm930db[] =
+static const char __ucs4_to_ibm930db[][2] =
 {
   "\x42\x6a", "\x44\x6a", "\x44\x60", "\x44\xed", "\x44\x4b", "\x44\x50",
   "\x43\x79", "\x44\x7a", "\x44\x7b", "\x41\x61", "\x41\x62", "\x41\x63",
@@ -7733,7 +7733,7 @@ static const char * __ucs4_to_ibm930db[] =
   "\x42\x96", "\x42\x97", "\x42\x98", "\x42\x99", "\x42\xa2", "\x42\xa3",
   "\x42\xa4", "\x42\xa5", "\x42\xa6", "\x42\xa7", "\x42\xa8", "\x42\xa9",
   "\x42\xc0", "\x42\x4f", "\x42\xd0", "\x43\xa1", "\x43\x4a", "\x42\x4a",
-  "\x42\x5f", "\x42\xa1", "\x42\x6a", "\x42\x5b",
+  "\x42\x5f", "\x42\xa1", "\x00\x00", "\x42\x5b"
 };
 
 #endif /* ibm930.h */

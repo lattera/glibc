@@ -1,5 +1,5 @@
 /* Tables for conversion from and to IBM943.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@jp.ibm.com>, 2000.
 
@@ -1412,7 +1412,7 @@ static const char __ucs4_to_ibm943sb[] =
   '\xd8', '\xd9', '\xda', '\xdb', '\xdc', '\xdd', '\xde', '\xdf'
 };
 
-static unsigned short __ucs4_to_ibm943db[][2] =
+static const unsigned short int __ucs4_to_ibm943db[][2] =
 {
     {0x00a6, 0xfa55}, {0x00a7, 0x8198}, {0x00a8, 0x814e}, {0x00b0, 0x818b},
     {0x00b1, 0x817d}, {0x00b4, 0x814c}, {0x00b6, 0x81f7}, {0x00d7, 0x817e},

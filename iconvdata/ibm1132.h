@@ -85,7 +85,6 @@ static const struct gap from_idx[] =
   { start: 0x0000, end: 0x00ac, idx:     0 },
   { start: 0x0e81, end: 0x0e8d, idx: -3540 },
   { start: 0x0e94, end: 0x0edd, idx: -3546 },
-  { start: 0xff01, end: 0xff5e, idx: -65021 },
   { start: 0xffff, end: 0xffff, idx:     0 }
 };
 
@@ -123,17 +122,5 @@ static const char from_ucs4[] =
   '\xbd', '\xbe', '\xbf', '\x00', '\xdb', '\x00', '\xcb', '\xcc',
   '\xcd', '\xce', '\xcf', '\xda', '\x00', '\x00', '\xb0', '\xb1',
   '\xb2', '\xb3', '\xb4', '\xb5', '\xb6', '\xb7', '\xb8', '\xb9',
-  '\x00', '\x00', '\xdd', '\xde', '\x5a', '\x7f', '\x7b', '\x5b',
-  '\x6c', '\x50', '\x7d', '\x4d', '\x5d', '\x5c', '\x4e', '\x6b',
-  '\x60', '\x4b', '\x61', '\xf0', '\xf1', '\xf2', '\xf3', '\xf4',
-  '\xf5', '\xf6', '\xf7', '\xf8', '\xf9', '\x7a', '\x5e', '\x4c',
-  '\x7e', '\x6e', '\x6f', '\x7c', '\xc1', '\xc2', '\xc3', '\xc4',
-  '\xc5', '\xc6', '\xc7', '\xc8', '\xc9', '\xd1', '\xd2', '\xd3',
-  '\xd4', '\xd5', '\xd6', '\xd7', '\xd8', '\xd9', '\xe2', '\xe3',
-  '\xe4', '\xe5', '\xe6', '\xe7', '\xe8', '\xe9', '\x49', '\xe0',
-  '\x59', '\x69', '\x6d', '\x79', '\x81', '\x82', '\x83', '\x84',
-  '\x85', '\x86', '\x87', '\x88', '\x89', '\x91', '\x92', '\x93',
-  '\x94', '\x95', '\x96', '\x97', '\x98', '\x99', '\xa2', '\xa3',
-  '\xa4', '\xa5', '\xa6', '\xa7', '\xa8', '\xa9', '\xc0', '\x4f',
-  '\xd0', '\xa1'
+  '\x00', '\x00', '\xdd', '\xde'
 };
