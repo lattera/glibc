@@ -1,3 +1,8 @@
+2000-04-10  Andreas Schwab  <schwab@suse.de>
+
+	* posix/globtest.sh: Skip tests that depend on unreadable
+	directories if run as root.
+
 2000-04-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/clock_settime.c (clock_settime): Test tv_nsec value

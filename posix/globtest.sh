@@ -306,13 +306,20 @@ cat <<"EOF" | cmp - $testout || result=1
 GLOB_NOMATCH
 EOF
 
-# ... with GLOB_ERR
-${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
-${common_objpfx}posix/globtest -E "$testdir" "noread/*" |
-sort > $testout
-cat <<"EOF" | cmp - $testout || result=1
+# The following tests will fail if run as root.
+user=`id -un 2> /dev/null`
+if test -z "$user"; then
+    uid="$USER"
+fi
+if test "$user" != root; then
+    # ... with GLOB_ERR
+    ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+    ${common_objpfx}posix/globtest -E "$testdir" "noread/*" |
+    sort > $testout
+    cat <<"EOF" | cmp - $testout || result=1
 GLOB_ABORTED
 EOF
+fi # not run as root
 
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -E "$testdir" "noread*/*" |
