@@ -1,3 +1,9 @@
+1998-11-29  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sunrpc/svc_unix.c (__msgread): Move ON local var inside block
+	within #ifdef SO_PASSCRED.  Avoids unused var when no SO_PASSCRED.
+	* sunrpc/clnt_unix.c (__msgread): Likewise.
+
 1998-11-28  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/setuids.c: Renamed to ...
