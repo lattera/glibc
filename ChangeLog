@@ -1,3 +1,8 @@
+2000-07-10  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/sigaction.c: Fix typo
+	(string_alias->strong_alias).
+
 2000-07-08  Mark Kettenis  <kettenis@gnu.org>
 
 	* hurd/hurd/fd.h: Include <cthreads.h> instead of <lock-intern.h>.
