@@ -15,10 +15,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: $";
-#endif
-
 /*
  * rintl(x)
  * Return x rounded to integral value according to the prevailing
@@ -44,9 +40,9 @@ TWO63[2]={
 };
 
 #ifdef __STDC__
-	long double __rintl(long double x)
+	long double __nearbyintl(long double x)
 #else
-	long double __rintl(x)
+	long double __nearbyintl(x)
 	long double x;
 #endif
 {
@@ -101,4 +97,4 @@ TWO63[2]={
 	fesetenv (&env);
 	return t;
 }
-weak_alias (__rintl, rintl)
+weak_alias (__nearbyintl, nearbyintl)

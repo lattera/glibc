@@ -100,7 +100,7 @@ __MATHCALL (cpow, (_Mdouble_complex_ __x, _Mdouble_complex_ __y));
 __MATHCALL (csqrt, (_Mdouble_complex_ __z));
 
 
-/* Absolute value, projections, conjugates, and projection.  */
+/* Absolute value, conjugates, and projection.  */
 
 /* Absolute value of Z.  */
 __MATHDECL (_Mdouble_,cabs, (_Mdouble_complex_ __z));

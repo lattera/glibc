@@ -310,15 +310,15 @@ extern double drand48 __P ((void));
 extern double erand48 __P ((unsigned short int __xsubi[3]));
 
 /* Return non-negative, long integer in [0,2^31).  */
-extern long lrand48 __P ((void));
-extern long nrand48 __P ((unsigned short int __xsubi[3]));
+extern long int lrand48 __P ((void));
+extern long int nrand48 __P ((unsigned short int __xsubi[3]));
 
 /* Return signed, long integers in [-2^31,2^31).  */
-extern long mrand48 __P ((void));
-extern long jrand48 __P ((unsigned short int __xsubi[3]));
+extern long int mrand48 __P ((void));
+extern long int jrand48 __P ((unsigned short int __xsubi[3]));
 
 /* Seed random number generator.  */
-extern void srand48 __P ((long __seedval));
+extern void srand48 __P ((long int __seedval));
 extern unsigned short int *seed48 __P ((unsigned short int __seed16v[3]));
 extern void lcong48 __P ((unsigned short int __param[7]));
 
@@ -339,17 +339,17 @@ extern int erand48_r __P ((unsigned short int __xsubi[3],
 			   struct drand48_data *__buffer, double *__result));
 
 /* Return non-negative, long integer in [0,2^31).  */
-extern int lrand48_r __P ((struct drand48_data *__buffer, long *__result));
+extern int lrand48_r __P ((struct drand48_data *__buffer, long int *__result));
 extern int nrand48_r __P ((unsigned short int __xsubi[3],
-			   struct drand48_data *__buffer, long *__result));
+			   struct drand48_data *__buffer, long int *__result));
 
 /* Return signed, long integers in [-2^31,2^31).  */
-extern int mrand48_r __P ((struct drand48_data *__buffer, long *__result));
+extern int mrand48_r __P ((struct drand48_data *__buffer, long int *__result));
 extern int jrand48_r __P ((unsigned short int __xsubi[3],
-			   struct drand48_data *__buffer, long *__result));
+			   struct drand48_data *__buffer, long int *__result));
 
 /* Seed random number generator.  */
-extern int srand48_r __P ((long __seedval, struct drand48_data *__buffer));
+extern int srand48_r __P ((long int __seedval, struct drand48_data *__buffer));
 extern int seed48_r __P ((unsigned short int __seed16v[3],
 			  struct drand48_data *__buffer));
 extern int lcong48_r __P ((unsigned short int __param[7],

@@ -29,7 +29,7 @@ __ctanhf (__complex__ float x)
 {
   __complex__ float res;
 
-  if (!finite (__real__ x) || !finite (__imag__ x))
+  if (!isfinite (__real__ x) || !isfinite (__imag__ x))
     {
       if (__isinff (__real__ x))
 	{

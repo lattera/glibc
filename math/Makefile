@@ -23,7 +23,7 @@ subdir		:= math
 # Installed header files.
 headers		:= math.h mathcalls.h __math.h huge_val.h nan.h		\
 		   fpu_control.h complex.h cmathcalls.h fenv.h		\
-		   fenvbits.h
+		   fenvbits.h mathbits.h
 
 # Internal header files.
 distribute	:= math_private.h machine/asm.h machine/endian.h

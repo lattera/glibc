@@ -49,6 +49,10 @@ extern void login __P ((__const struct utmp *__entry));
 /* Write the utmp entry to say the user on UT_LINE has logged out.  */
 extern int logout __P ((__const char *__ut_line));
 
+/* Append the given entry to a wtmp file.  */
+extern void updwtmp __P ((__const char *__wtmp_file,
+			  __const struct utmp *__entry));
+
 /* Append to wtmp an entry for the current time and the given info.  */
 extern void logwtmp __P ((__const char *__ut_line, __const char *__ut_name,
 			  __const char *__ut_host));

@@ -29,7 +29,25 @@ seed48_r (seed16v, buffer)
   memcpy (buffer->old_X, buffer->X, sizeof (buffer->X));
 
   /* Install new state.  */
-  memcpy (buffer->X, seed16v, sizeof (buffer->X));
+#if USHRT_MAX == 0xffffU
+  buffer->X[2] = seed16v[2];
+  buffer->X[1] = seed16v[1];
+  buffer->X[0] = seed16v[0];
+
+  buffer->a[2] = 0x5;
+  buffer->a[1] = 0xdeec;
+  buffer->a[0] = 0xe66d;
+#else
+  buffer->X[2] = (seed16v[2] << 16) | seed16v[1];
+  buffer->X[1] = seed16v[0] << 16;
+  buffer->X[0] = 0;
+
+  buffer->a[2] = 0x5deecUL;
+  buffer->a[1] = 0xe66d0000UL;
+  buffer->a[0] = 0;
+#endif
+  buffer->c = 0xb;
+  buffer->init = 1;
 
   return 0;
 }

@@ -32,9 +32,10 @@ too.
 * Search Functions::            Searching for a specific element or substring.
 * Finding Tokens in a String::  Splitting a string into tokens by looking
 				 for delimiters.
+* Encode Binary Data::          Encoding and Decoding of Binary Data.
 @end menu
 
-@node Representation of Strings, String/Array Conventions,  , String and Array Utilities
+@node Representation of Strings
 @section Representation of Strings
 @cindex string, representation of
 
@@ -99,7 +100,7 @@ checks for overflowing the array.  Many of the library functions
 an extra byte to hold the null character that marks the end of the
 string.
 
-@node String/Array Conventions, String Length, Representation of Strings, String and Array Utilities
+@node String/Array Conventions
 @section String and Array Conventions
 
 This chapter describes both functions that work on arbitrary arrays or
@@ -132,7 +133,7 @@ other hand, when you are manipulating null-terminated strings it is
 usually more convenient to use the @samp{str} functions, unless you
 already know the length of the string in advance.
 
-@node String Length, Copying and Concatenation, String/Array Conventions, String and Array Utilities
+@node String Length
 @section String Length
 
 You can get the length of a string using the @code{strlen} function.
@@ -166,7 +167,7 @@ strlen (string)
 @end smallexample
 @end deftypefun
 
-@node Copying and Concatenation, String/Array Comparison, String Length, String and Array Utilities
+@node Copying and Concatenation
 @section Copying and Concatenation
 
 You can use the functions described in this section to copy the contents
@@ -470,7 +471,7 @@ BSD.  Note that it is not as general as @code{memset}, because the only
 value it can store is zero.
 @end deftypefun
 
-@node String/Array Comparison, Collation Functions, Copying and Concatenation, String and Array Utilities
+@node String/Array Comparison
 @section String/Array Comparison
 @cindex comparing strings and arrays
 @cindex string comparison functions
@@ -613,7 +614,7 @@ strncmp ("hello, world", "hello, stupid world!!!", 5)
 This is an obsolete alias for @code{memcmp}, derived from BSD.
 @end deftypefun
 
-@node Collation Functions, Search Functions, String/Array Comparison, String and Array Utilities
+@node Collation Functions
 @section Collation Functions
 
 @cindex collating strings
@@ -792,9 +793,9 @@ sort_strings_fast (char **array, int nstrings)
 @end smallexample
 
 @strong{Compatibility Note:}  The string collation functions are a new
-feature of @w{ISO C}.  Older C dialects have no equivalent feature.
+feature of @w{ISO C 89}.  Older C dialects have no equivalent feature.
 
-@node Search Functions, Finding Tokens in a String, Collation Functions, String and Array Utilities
+@node Search Functions
 @section Search Functions
 
 This section describes library functions which perform various kinds
@@ -940,7 +941,7 @@ strpbrk ("hello, world", " \t\n,.;!?")
 @c @end group
 @end deftypefun
 
-@node Finding Tokens in a String,  , Search Functions, String and Array Utilities
+@node Finding Tokens in a String
 @section Finding Tokens in a String
 
 @cindex tokenizing strings
@@ -1087,3 +1088,65 @@ token = strsep (&running, delimiters);    /* token => "and" */
 token = strsep (&running, delimiters);    /* token => "punctuation" */
 token = strsep (&running, delimiters);    /* token => NULL */
 @end smallexample
+
+@node Encode Binary Data
+@section Encode Binary Data
+
+To store or transfer binary data in environments which only support text
+one has to encode the binary data by mapping the input bytes to
+characters in the range allowed for storing or transfering.  SVID
+systems (and nowadays XPG compliant systems) have such a function in the
+C library.
+
+@comment stdlib.h
+@comment XPG
+@deftypefun {char *} l64a (long int @var{n})
+This function encodes an input value with 32 bits using characters from
+the basic character set.  Groups of 6 bits are encoded using the
+following table:
+
+@multitable {xxxxx} {xxx} {xxx} {xxx} {xxx} {xxx} {xxx} {xxx} {xxx}
+@item              @tab 0 @tab 1 @tab 2 @tab 3 @tab 4 @tab 5 @tab 6 @tab 7
+@item       0      @tab @code{.} @tab @code{/} @tab @code{0} @tab @code{1}
+                   @tab @code{2} @tab @code{3} @tab @code{4} @tab @code{5}
+@item       8      @tab @code{6} @tab @code{7} @tab @code{8} @tab @code{9}
+                   @tab @code{A} @tab @code{B} @tab @code{C} @tab @code{D}
+@item       16     @tab @code{E} @tab @code{F} @tab @code{G} @tab @code{H}
+                   @tab @code{I} @tab @code{J} @tab @code{K} @tab @code{L}
+@item       24     @tab @code{M} @tab @code{N} @tab @code{O} @tab @code{P}
+                   @tab @code{Q} @tab @code{R} @tab @code{S} @tab @code{T}
+@item       32     @tab @code{U} @tab @code{V} @tab @code{W} @tab @code{X}
+                   @tab @code{Y} @tab @code{Z} @tab @code{a} @tab @code{b}
+@item       40     @tab @code{c} @tab @code{d} @tab @code{e} @tab @code{f}
+                   @tab @code{g} @tab @code{h} @tab @code{i} @tab @code{j}
+@item       48     @tab @code{k} @tab @code{l} @tab @code{m} @tab @code{n}
+                   @tab @code{o} @tab @code{p} @tab @code{q} @tab @code{r}
+@item       56     @tab @code{s} @tab @code{t} @tab @code{u} @tab @code{v}
+                   @tab @code{w} @tab @code{x} @tab @code{y} @tab @code{z}
+@end multitable
+
+The function returns a pointer to a static buffer which contains the
+string representing of the encoding of @var{n}.  To encoded a series of
+bytes the use should append the new string to the destination buffer.
+@emph{Warning:} Since a static buffer is used this function should not
+be used in multi-threaded programs.  There is no thread-safe alternatice
+to this function in the C library.
+@end deftypefun
+
+To decode data produced with @code{l64a} the following function should be
+used.
+
+@deftypefun {long int} a64l (const char *@var{string})
+The parameter @var{string} should contain a string which was produced by
+a call to @code{l64a}.  The function processes the next 6 characters and
+decodes the characters it finds according to the table above.
+Characters not in the conversion table are simply ignored.  This is
+useful for breaking the information in lines in which case the end of
+line characters are simply ignored.
+
+The decoded number is returned at the end as a @code{long int} value.
+Consecutive calls to this function are possible but the caller must make
+sure the buffer pointer is update after each call to @code{a64l} since
+this function does not modify the buffer pointer.  Every call consumes 6
+characters.
+@end deftypefun

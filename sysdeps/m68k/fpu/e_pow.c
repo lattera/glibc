@@ -80,51 +80,36 @@ s(__ieee754_pow) (float_type x, float_type y)
 	z = 1 / z;
       if (m81(__signbit) (x))
 	{
-	  float_type temp = m81(__rint) (y);
-	  if (y != temp)
+	  if (y != m81(__rint) (y))
 	    {
 	      if (x == -1)
 		z = 0.0/0.0;
 	    }
 	  else
-	    {
-	      if (sizeof (float_type) == sizeof (float))
-		{
-		  long i = (long) y;
-		  if (i & 1)
-		    z = -z;
-		}
-	      else
-		{
-		  long long i = (long long) y;
-		  if ((float_type) i == y && i & 1)
-		    z = -z;
-		}
-	    }
+	    goto maybe_negate;
 	}
       return z;
     }
 
   if (x < 0.0)
     {
-      float_type temp = m81(__rint) (y);
-      if (y == temp)
+      if (y == m81(__rint) (y))
 	{
-	  long long i = (long long) y;
 	  z = m81(__ieee754_exp) (y * m81(__ieee754_log) (-x));
-	  if (sizeof (float_type) == sizeof (float))
-	    {
-	      long i = (long) y;
-	      if (i & 1)
-		z = -z;
-	    }
-	  else
-	    {
-	      /* If the conversion to long long was inexact assume that y
-		 is an even integer.  */
-	      if ((float_type) i == y && i & 1)
-		z = -z;
-	    }
+	maybe_negate:
+	  /* We always use the long double format, since y is already in
+	     this format and rounding won't change the result.  */
+	  {
+	    int32_t exponent;
+	    u_int32_t i0, i1;
+	    GET_LDOUBLE_WORDS (exponent, i0, i1, y);
+	    exponent = (exponent & 0x7fff) - 0x3fff;
+	    if (exponent <= 31
+		? i0 & (1 << (31 - exponent))
+		: (exponent <= 63
+		   && i1 & (1 << (63 - exponent))))
+	      z = -z;
+	  }
 	}
       else
 	z = 0.0/0.0;

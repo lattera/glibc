@@ -76,12 +76,12 @@ _init (void)
   if (__gmon_start__)
     __gmon_start__ ();
 
+  asm ("ALIGN");
   asm("END_INIT");
   /* Now the epilog. */
   asm ("\n/*@_init_PROLOG_ENDS*/");
   asm ("\n/*@_init_EPILOG_BEGINS*/");
   SECTION(".init");
-  asm ("ALIGN");
 }
 asm ("END_INIT");
 
@@ -95,6 +95,7 @@ _fini (void)
 {
 
   /* End of the _fini prolog. */
+  asm ("ALIGN");
   asm ("END_FINI");
   asm ("\n/*@_fini_PROLOG_ENDS*/");
 
@@ -109,7 +110,6 @@ _fini (void)
   /* Beginning of the _fini epilog. */
   asm ("\n/*@_fini_EPILOG_BEGINS*/");
   SECTION (".fini");
-  asm ("ALIGN");
 }
 asm ("END_FINI");
 
@@ -117,6 +117,5 @@ asm ("END_FINI");
    is shared between both crt files. */
 asm ("\n/*@_fini_EPILOG_ENDS*/");
 asm ("\n/*@TRAILER_BEGINS*/");
-asm ("ALIGN");
 
 /* End of file. */

@@ -470,7 +470,7 @@ __finite (double __x)
 
 /* ISO C 9X defines some macros to perform unordered comparisons.  The
    ix87 FPU supports this with special opcodes and we should use them.
-   This must not be inline functions since we  have to be able to handle
+   These must not be inline functions since we have to be able to handle
    all floating-point types.  */
 #undef isgreater
 #define isgreater(x, y) \

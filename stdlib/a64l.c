@@ -19,12 +19,12 @@
 
 #include <stdlib.h>
 
-long
+long int
 a64l (string)
      const char *string;
 {
-  int cnt;
-  long result = 0l;
+  size_t cnt;
+  long int result = 0l;
 
   for (cnt = 0; cnt < 6; ++cnt)
     {

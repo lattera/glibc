@@ -1,6 +1,5 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,37 +16,24 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stdlib.h>
-#include <limits.h>
+#define __LIBC_M81_MATH_INLINES
+#include <math.h>
 
-int
-srand48_r (seedval, buffer)
-     long int seedval;
-     struct drand48_data *buffer;
-{
-  /* The standards say we only have 32 bits.  */
-  if (sizeof (long int) > 4)
-    seedval &= 0xffffffffl;
-
-#if USHRT_MAX == 0xffffU
-  buffer->X[2] = seedval >> 16;
-  buffer->X[1] = seedval & 0xffffl;
-  buffer->X[0] = 0x330e;
-
-  buffer->a[2] = 0x5;
-  buffer->a[1] = 0xdeec;
-  buffer->a[0] = 0xe66d;
-#else
-  buffer->X[2] = seedval;
-  buffer->X[1] = 0x330e0000UL;
-  buffer->X[0] = 0;
-
-  buffer->a[2] = 0x5deecUL;
-  buffer->a[1] = 0xe66d0000UL;
-  buffer->a[0] = 0;
+#ifndef FUNC
+#define FUNC sincos
 #endif
-  buffer->c = 0xb;
-  buffer->init = 1;
+#ifndef float_type
+#define float_type double
+#endif
 
-  return 0;
+#define CONCATX(a,b) __CONCAT(a,b)
+
+void
+CONCATX(__,FUNC) (x, sinx, cosx)
+     float_type x, *sinx, *cosx;
+{
+  __m81_u(CONCATX(__,FUNC))(x, sinx, cosx);
 }
+
+#define weak_aliasx(a,b) weak_alias(a,b)
+weak_aliasx (CONCATX(__,FUNC), FUNC)

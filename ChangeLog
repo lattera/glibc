@@ -1,3 +1,107 @@
+1997-04-21 13:25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/arith.texi: Add description for INFINITY, _Imaginary_I,
+	fpclassify & friends, and complex number operations.
+	Update various other math functions for ISO C 9X.
+	* manual/math.texi: Update various entries for ISO C 9X.
+	Add description for complex number functions.
+	Add description of rand48 function family.
+	* manual/string.h: Add description of a64l and l64a.
+
+	* math/cmathcalls.h: Fix typo.
+
+	* stdlib/a64l.c: Pretty printing.
+
+	* stdlib/seed48_r.c: Also reset `a' and `c' to default values.
+	* stdlib/srand48_r.c: Likewise.
+	* stdlib/stdlib.h: Pretty printing.
+
+	* sysdeps/i386/fpu/__math.h: Fix typo.
+
+	* sysdeps/libm-ieee754/s_nearbyintf.c: Correctly name function.
+	* sysdeps/libm-ieee754/s_nearbyintl.c: Likewise.
+
+1997-04-19 22:16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/e_pow.c: Rewrite handling of integral exponent.
+
+1997-04-18 19:34  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/__math.h: Define optimized versions of
+	isgreater, isgreaterequal, isless, islessequal, islessgreater, and
+	isunordered.
+
+1997-04-20 01:28  Richard Henderson  <rth@tamu.edu>
+
+	* rellns-sh: Handle files in the same directory correctly.
+
+1997-04-20 11:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* csu/initfini.c: Place ALIGN instruction at correct positions.
+	Patch by Richard Henderson <richard@twiddle.rth.home>.
+
+1997-04-19 17:12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Make-dist: Don't automatically ignore .c files if the .S or .s file
+	is ignored.
+
+	* csu/Makefile (distribute): Add defs.awk.
+
+1997-04-19 15:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/stub/shmat.c: Update to XPG4.2 interface.
+	* sysdeps/stub/shmdt.c: Likewise.
+	Reported by Thomas Bushnell, n/BSG.
+
+1997-04-19 13:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/stdio.texi: Add description of printf_size and
+	printf_size_info.  Partly based on the documentation by Larry McVoy.
+
+1997-04-19 02:21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/printf_size.c (printf_size): Correct values for
+	`units'.
+	Report by Larry McVoy <lm@neteng.engr.sgi.com>.
+	* stdio-common/tst-printfsz.c: New file.
+	* stdio-common/Makefile (tests): Add tst-printfsz.c.
+	(CFLAGS-tst-printfsz.c): Define to prevent warnings about format
+	strings.
+
+1997-04-18 15:48  Ulrich Drepper  <drepper@cygnus.com>
+
+	* login/utmp.h: Add prototype for updwtmp.
+	* login/logwtmp.c: Add new function updwtmp which allows to write
+	a complete record to the wtmp file.
+	Patch by Miquel van Smoorenburg <miquels@cistron.nl>.
+
+1997-04-17 17:57  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/Makefile (headers): Add mathbits.h.
+
+1997-04-16 21:20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/__math.h: Add inlined sincos{,l,f}.
+	* sysdeps/m68k/fpu/s_sincos.c: New file.
+	* sysdeps/m68k/fpu/s_sincosf.c: New file.
+	* sysdeps/m68k/fpu/s_sincosl.c: New file.
+
+	* sysdeps/libm-ieee754/e_scalb.c: Use internal names of the
+	functions.
+	* sysdeps/libm-ieee754/e_scalbl.c: Likewise.
+
+	* sysdeps/libm-ieee754/s_ctanh.c: Use isfinite instead of finite.
+	* sysdeps/libm-ieee754/s_ctanhf.c: Likewise.
+	* sysdeps/libm-ieee754/s_ctanhl.c: Likewise.
+	* sysdeps/libm-ieee754/s_ctan.c: Likewise.
+	* sysdeps/libm-ieee754/s_ctanf.c: Likewise.
+	* sysdeps/libm-ieee754/s_ctanl.c: Likewise.  Fix type of `res'.
+
+1997-04-18 11:21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* shadow/fgetspent_r.c: Set *RESULT to NULL before returning error.
+	Patch by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>.
+
 1997-04-18 02:18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* csu/initfini.c: Rewrite by Zack Weinberg

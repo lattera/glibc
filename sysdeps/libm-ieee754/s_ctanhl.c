@@ -29,7 +29,7 @@ __ctanhl (__complex__ long double x)
 {
   __complex__ long double res;
 
-  if (!finite (__real__ x) || !finite (__imag__ x))
+  if (!isfinite (__real__ x) || !isfinite (__imag__ x))
     {
       if (__isinfl (__real__ x))
 	{

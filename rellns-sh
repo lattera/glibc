@@ -27,7 +27,11 @@ if test -d $1; then
   to=`cd $1 && /bin/pwd`
 else
   temp=`echo $1 | sed 's%/*[^/]*$%%'`
-  to=`cd $temp && /bin/pwd`
+  if test -z "$temp"; then
+    to=`/bin/pwd`
+  else
+    to=`cd $temp && /bin/pwd`
+  fi
   to="$to/`echo $1 | sed 's%.*/\([^/][^/]*\)$%\1%'`"
 fi
 to=`echo $to | sed 's%^/%%'`

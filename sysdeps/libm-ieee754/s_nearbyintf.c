@@ -14,9 +14,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_rintf.c,v 1.4 1995/05/10 20:48:06 jtc Exp $";
-#endif
 
 #include <fenv.h>
 #include "math.h"
@@ -33,9 +30,9 @@ TWO23[2]={
 };
 
 #ifdef __STDC__
-	float __rintf(float x)
+	float __nearbyintf(float x)
 #else
-	float __rintf(x)
+	float __nearbyintf(x)
 	float x;
 #endif
 {
@@ -77,4 +74,4 @@ TWO23[2]={
 	fesetenv (&env);
 	return t;
 }
-weak_alias (__rintf, rintf)
+weak_alias (__nearbyintf, nearbyintf)

@@ -42,7 +42,10 @@ __fgetspent_r (FILE *stream, struct spwd *resbuf, char *buffer, size_t buflen,
     {
       p = fgets (buffer, buflen, stream);
       if (p == NULL)
-	return errno;
+	{
+	  *result = NULL;
+	  return errno;
+	}
 
       /* Skip leading blanks.  */
       while (isspace (*p))

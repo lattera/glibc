@@ -3,12 +3,17 @@
 
 This chapter contains information about functions for doing basic
 arithmetic operations, such as splitting a float into its integer and
-fractional parts.  These functions are declared in the header file
-@file{math.h}.
+fractional parts or retrieving the imaginary part of a complex value.
+These functions are declared in the header files @file{math.h} and
+@file{complex.h}.
 
 @menu
+* Infinity::                    What is Infinity and how to test for it.
 * Not a Number::                Making NaNs and testing for NaNs.
+* Imaginary Unit::              Constructing complex Numbers.
 * Predicates on Floats::        Testing for infinity and for NaNs.
+* Floating-Point Classes::      Classifiy floating-point numbers.
+* Operations on Complex::       Projections, Conjugates, and Decomposing.
 * Absolute Value::              Absolute value functions.
 * Normalization Functions::     Hacks for radix-2 representations.
 * Rounding and Remainders::     Determining the integer and
@@ -18,6 +23,44 @@ fractional parts.  These functions are declared in the header file
 * Parsing of Numbers::          Functions for ``reading'' numbers
 			         from strings.
 @end menu
+
+@node Infinity
+@section Infinity Values
+@cindex Infinity
+@cindex IEEE floating point
+
+Mathematical operations easily can produce as the result values which
+are not representable by the floating-point format.  The functions in
+the mathematics library also have this problem.  The situation is
+generally solved by raising an overflow exception and by returning a
+huge value.
+
+The @w{IEEE 754} floating-point defines a special value to be used in
+these situations.  There is a special value for infinity.
+
+@comment math.h
+@comment ISO
+@deftypevr Macro float_t INFINITY
+A expression representing the inifite value.  @code{INFINITY} values are
+produce by mathematical operations like @code{1.0 / 0.0}.  It is
+possible to continue the computations with this value since the basic
+operations as well as the mathematical library functions are prepared to
+handle values like this.
+
+Beside @code{INFINITY} also the value @code{-INIFITY} is representable
+and it is handled differently if needed.  It is possible to test a
+variables for infinite value using a simple comparison but the
+recommended way is to use the the @code{isinf} function.
+
+This macro was introduced in the @w{ISO C 9X} standard.
+@end deftypevr
+
+@vindex HUGE_VAL
+The macros @code{HUGE_VAL}, @code{HUGE_VALF} and @code{HUGE_VALL} are
+defined in a similar way but they are not required to represent the
+infinite value, only a very large value (@pxref{Domain and Range Errors}).
+If actually infinity is wanted, @code{INFINITY} should be used.
+
 
 @node Not a Number
 @section ``Not a Number'' Values
@@ -54,6 +97,46 @@ such as by defining @code{_GNU_SOURCE}, and then you must include
 @file{math.h}.)
 @end deftypevr
 
+@node Imaginary Unit
+@section Constructing complex Numbers
+
+@pindex complex.h
+To construct complex numbers it is necessary have a way to express the
+imaginary part of the numbers.  In mathematics one uses the symbol ``i''
+to mark a number as imaginary.  For convenienve the @file{complex.h}
+header defines two macros which allow to use a similar easy notation.
+
+@deftypevr Macro float_t _Imaginary_I
+This macro is a (compiler specific) representation of the value ``1i''.
+I.e., it is the value for which
+
+@smallexample
+_Imaginary_I * _Imaginary_I = -1
+@end smallexample
+
+@noindent
+One can use it to easily construct complex number like in
+
+@smallexample
+3.0 - _Imaginary_I * 4.0
+@end smallexample
+
+@noindent
+which results in the complex number with a real part of 3.0 and a
+imaginary part -4.0.
+@end deftypevr
+
+@noindent
+A more intuitive approach is to use the following macro.
+
+@deftypevr Macro float_t I
+This macro has exactly the same value as @code{_Imaginary_I}.  The
+problem is that the name @code{I} very easily can clash with macros or
+variables in programs and so it might be a good idea to avoid this name
+and stay at the safe side by using @code{_Imaginary_I}.
+@end deftypevr
+
+
 @node Predicates on Floats
 @section Predicates on Floats
 
@@ -66,6 +149,10 @@ functions, and thus are available if you define @code{_BSD_SOURCE} or
 @comment math.h
 @comment BSD
 @deftypefun int isinf (double @var{x})
+@end deftypefun
+@deftypefun int isinff (float @var{x})
+@end deftypefun
+@deftypefun int isinfl (long double @var{x})
 This function returns @code{-1} if @var{x} represents negative infinity,
 @code{1} if @var{x} represents positive infinity, and @code{0} otherwise.
 @end deftypefun
@@ -73,6 +160,10 @@ This function returns @code{-1} if @var{x} represents negative infinity,
 @comment math.h
 @comment BSD
 @deftypefun int isnan (double @var{x})
+@end deftypefun
+@deftypefun int isnanf (float @var{x})
+@end deftypefun
+@deftypefun int isnanl (long double @var{x})
 This function returns a nonzero value if @var{x} is a ``not a number''
 value, and zero otherwise.  (You can just as well use @code{@var{x} !=
 @var{x}} to get the same result).
@@ -81,6 +172,10 @@ value, and zero otherwise.  (You can just as well use @code{@var{x} !=
 @comment math.h
 @comment BSD
 @deftypefun int finite (double @var{x})
+@end deftypefun
+@deftypefun int finitef (float @var{x})
+@end deftypefun
+@deftypefun int finitel (long double @var{x})
 This function returns a nonzero value if @var{x} is finite or a ``not a
 number'' value, and zero otherwise.
 @end deftypefun
@@ -103,6 +198,189 @@ does not fit the @w{ISO C} specification.
 @strong{Portability Note:} The functions listed in this section are BSD
 extensions.
 
+@node Floating-Point Classes
+@section Floating-Point Number Classification Functions
+
+Instead of using the BSD specific functions from the last section it is
+better to use those in this section will are introduced in the @w{ISO C
+9X} standard and are therefore widely available.
+
+@comment math.h
+@comment ISO
+@deftypefun int fpclassify (@emph{float-type} @var{x})
+This is a generic macro which works on all floating-point types and
+which returns a value of type @code{int}.  The possible values are:
+
+@vtable @code
+@item FP_NAN
+  The floating-point number @var{x} is ``Not a Number'' (@pxref{Not a Number})
+@item FP_INFINITE
+  The value of @var{x} is either plus or minus infinity (@pxref{Infinity})
+@item FP_ZERO
+  The value of @var{x} is zero.  In floating-point formats like @w{IEEE
+  754} where the zero value can be signed this value is also returned if
+  @var{x} is minus zero.
+@item FP_SUBNORMAL
+  Some floating-point formats (such as @w{IEEE 754}) allow floating-point
+  numbers to be represented in a denormalized format.  This happens if the
+  absolute value of the number is too small to be represented in the
+  normal format.  @code{FP_SUBNORMAL} is returned for such values of @var{x}.
+@item FP_NORMAL
+  This value is returned for all other cases which means the number is a
+  plain floating-point number without special meaning.
+@end vtable
+
+This macro is useful if more than property of a number must be
+tested.  If one only has to test for, e.g., a NaN value, there are
+function which are faster.
+@end deftypefun
+
+The remainder of this section introduces some more specific functions.
+They might be implemented faster than the call to @code{fpclassify} and
+if the actual need in the program is covered be these functions they
+should be used (and not @code{fpclassify}).
+
+@comment math.h
+@comment ISO
+@deftypefun int isfinite (@emph{float-type} @var{x})
+The value returned by this macro is nonzero if the value of @var{x} is
+not plus or minus infinity and not NaN.  I.e., it could be implemented as
+
+@smallexample
+(fpclassify (x) != FP_NAN && fpclassify (x) != FP_INFINITE)
+@end smallexample
+
+@code{isfinite} is also implemented as a macro which can handle all
+floating-point types.  Programs should use this function instead of
+@var{finite} (@pxref{Predicates on Floats}).
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun int isnormal (@emph{float-type} @var{x})
+If @code{isnormal} returns a nonzero value the value or @var{x} is
+neither a NaN, infinity, zero, nor a denormalized number.  I.e., it
+could be implemented as
+
+@smallexample
+(fpclassify (x) == FP_NORMAL)
+@end smallexample
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun int isnan (@emph{float-type} @var{x})
+The situation with this macro is a bit complicated.  Here @code{isnan}
+is a macro which can handle all kinds of floating-point types.  It
+returns a nonzero value is @var{x} does not represent a NaN value and
+could be written like this
+
+@smallexample
+(fpclassify (x) == FP_NAN)
+@end smallexample
+
+The complication is that there is a function of the same name and the
+same semantic defined for compatibility with BSD (@pxref{Predicates on
+Floats}).  Fortunately this should not yield to problems in most cases
+since the macro and the function have the same semantic.  Should in a
+situation the function be absolutely necessary one can use
+
+@smallexample
+(isnan) (x)
+@end smallexample
+
+@noindent
+to avoid the macro expansion.  Using the macro has two big adavantages:
+it is more portable and one does not have to choose the right function
+among @code{isnan}, @code{isnanf}, and @code{isnanl}.
+@end deftypefun
+
+
+@node Operations on Complex
+@section Projections, Conjugates, and Decomposing of Complex Numbers
+@cindex project complex numbers
+@cindex conjugate complex numbers
+@cindex decompose complex numbers
+
+This section lists functions performing some of the simple mathematical
+operations on complex numbers.  Using any of the function requries that
+the C compiler understands the @code{complex} keyword, introduced to the
+C language in the @w{ISO C 9X} standard.
+
+@pindex complex.h
+The prototypes for all functions in this section can be found in
+@file{complex.h}.  All functions are available in three variants, one
+for each of the three floating-point types.
+
+The easiest operation on complex numbers is the decomposition in the
+real part and the imaginary part.  This is done by the next two
+functions.
+
+@comment complex.h
+@comment ISO
+@deftypefun double creal (complex double @var{z})
+@end deftypefun
+@deftypefun float crealf (complex float @var{z})
+@end deftypefun
+@deftypefun {long double} creall (complex long double @var{z})
+These functions return the real part of the complex number @var{z}.
+@end deftypefun
+
+@comment complex.h
+@comment ISO
+@deftypefun double cimag (complex double @var{z})
+@end deftypefun
+@deftypefun float cimagf (complex float @var{z})
+@end deftypefun
+@deftypefun {long double} cimagl (complex long double @var{z})
+These functions return the imaginary part of the complex number @var{z}.
+@end deftypefun
+
+
+The conjugate complex value of a given complex number has the same value
+for the real part but the complex part is negated.
+
+@comment complex.h
+@comment ISO
+@deftypefun {complex double} conj (complex double @var{z})
+@end deftypefun
+@deftypefun {complex float} conjf (complex float @var{z})
+@end deftypefun
+@deftypefun {complex long double} conjl (complex long double @var{z})
+These functions return the conjugate complex value of the complex number
+@var{z}.
+@end deftypefun
+
+@comment complex.h
+@comment ISO
+@deftypefun double carg (complex double @var{z})
+@end deftypefun
+@deftypefun float cargf (complex float @var{z})
+@end deftypefun
+@deftypefun {long double} cargl (complex long double @var{z})
+These functions return argument of the complex number @var{z}.
+
+Mathematically, the argument is the phase angle of @var{z} with a branch
+cut along the negative real axis.
+@end deftypefun
+
+@comment complex.h
+@comment ISO
+@deftypefun {complex double} cproj (complex double @var{z})
+@end deftypefun
+@deftypefun {complex float} cprojf (complex float @var{z})
+@end deftypefun
+@deftypefun {complex long double} cprojl (complex long double @var{z})
+Return the projection of the complex value @var{z} on the Riemann
+sphere.  Values with a infinite complex part (even if the real part
+is NaN) are projected to positive infinte on the real axis.  If the real part is infinite, the result is equivalent to
+
+@smallexample
+INFINITY + I * copysign (0.0, cimag (z))
+@end smallexample
+@end deftypefun
+
+
 @node Absolute Value
 @section Absolute Value
 @cindex absolute value functions
@@ -117,7 +395,8 @@ whose imaginary part is @var{y}, the absolute value is @w{@code{sqrt
 @pindex math.h
 @pindex stdlib.h
 Prototypes for @code{abs} and @code{labs} are in @file{stdlib.h};
-@code{fabs} and @code{cabs} are declared in @file{math.h}.
+@code{fabs}, @code{fabsf} and @code{fabsl} are declared in @file{math.h};
+@code{cabs}, @code{cabsf} and @code{cabsl} are declared in @file{complex.h}.
 
 @comment stdlib.h
 @comment ISO
@@ -139,20 +418,28 @@ are of type @code{long int} rather than @code{int}.
 @comment math.h
 @comment ISO
 @deftypefun double fabs (double @var{number})
+@end deftypefun
+@deftypefun float fabsf (float @var{number})
+@end deftypefun
+@deftypefun {long double} fabsl (long double @var{number})
 This function returns the absolute value of the floating-point number
 @var{number}.
 @end deftypefun
 
-@comment math.h
-@comment BSD
-@deftypefun double cabs (struct @{ double real, imag; @} @var{z})
-The @code{cabs} function returns the absolute value of the complex
-number @var{z}, whose real part is @code{@var{z}.real} and whose
-imaginary part is @code{@var{z}.imag}.  (See also the function
-@code{hypot} in @ref{Exponents and Logarithms}.)  The value is:
+@comment complex.h
+@comment ISO
+@deftypefun double cabs (complex double @var{z})
+@end deftypefun
+@deftypefun float cabsf (complex float @var{z})
+@end deftypefun
+@deftypefun {long double} cabsl (complex long double @var{z})
+These functions return the absolute value of the complex number @var{z}.
+The compiler must support complex numbers to use these functions.  (See
+also the function @code{hypot} in @ref{Exponents and Logarithms}.)  The
+value is:
 
 @smallexample
-sqrt (@var{z}.real*@var{z}.real + @var{z}.imag*@var{z}.imag)
+sqrt (creal (@var{z}) * creal (@var{z}) + cimag (@var{z}) * cimag (@var{z}))
 @end smallexample
 @end deftypefun
 
@@ -174,7 +461,11 @@ All these functions are declared in @file{math.h}.
 @comment math.h
 @comment ISO
 @deftypefun double frexp (double @var{value}, int *@var{exponent})
-The @code{frexp} function is used to split the number @var{value}
+@end deftypefun
+@deftypefun float frexpf (float @var{value}, int *@var{exponent})
+@end deftypefun
+@deftypefun {long double} frexpl (long double @var{value}, int *@var{exponent})
+These functions are used to split the number @var{value}
 into a normalized fraction and an exponent.
 
 If the argument @var{value} is not zero, the return value is @var{value}
@@ -193,7 +484,11 @@ zero is stored in @code{*@var{exponent}}.
 @comment math.h
 @comment ISO
 @deftypefun double ldexp (double @var{value}, int @var{exponent})
-This function returns the result of multiplying the floating-point
+@end deftypefun
+@deftypefun float ldexpf (float @var{value}, int @var{exponent})
+@end deftypefun
+@deftypefun {long double} ldexpl (long double @var{value}, int @var{exponent})
+These functions return the result of multiplying the floating-point
 number @var{value} by 2 raised to the power @var{exponent}.  (It can
 be used to reassemble floating-point numbers that were taken apart
 by @code{frexp}.)
@@ -207,13 +502,21 @@ equivalent to those of @code{ldexp} and @code{frexp}:
 @comment math.h
 @comment BSD
 @deftypefun double scalb (double @var{value}, int @var{exponent})
+@end deftypefun
+@deftypefun float scalbf (float @var{value}, int @var{exponent})
+@end deftypefun
+@deftypefun {long double} scalbl (long double @var{value}, int @var{exponent})
 The @code{scalb} function is the BSD name for @code{ldexp}.
 @end deftypefun
 
 @comment math.h
 @comment BSD
 @deftypefun double logb (double @var{x})
-This BSD function returns the integer part of the base-2 logarithm of
+@end deftypefun
+@deftypefun float logbf (float @var{x})
+@end deftypefun
+@deftypefun {long double} logbl (long double @var{x})
+These BSD functions return the integer part of the base-2 logarithm of
 @var{x}, an integer value represented in type @code{double}.  This is
 the highest integer power of @code{2} contained in @var{x}.  The sign of
 @var{x} is ignored.  For example, @code{logb (3.5)} is @code{1.0} and
@@ -231,11 +534,28 @@ The value returned by @code{logb} is one less than the value that
 @end deftypefun
 
 @comment math.h
-@comment BSD
+@comment ISO
 @deftypefun double copysign (double @var{value}, double @var{sign})
-The @code{copysign} function returns a value whose absolute value is the
+@end deftypefun
+@deftypefun float copysignf (float @var{value}, float @var{sign})
+@end deftypefun
+@deftypefun {long double} copysignl (long double @var{value}, long double @var{sign})
+These functions return a value whose absolute value is the
 same as that of @var{value}, and whose sign matches that of @var{sign}.
-This is a BSD function.
+This function appears in BSD and was standardized in @w{ISO C 9X}.
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun int signbit (@emph{float-type} @var{x})
+@code{signbit} is a generic macro which can work on all floating-point
+types.  It returns a nonzero value if the value of @var{x} has its sign
+bit set.
+
+This is not the same as @code{x < 0.0} since in some floating-point
+formats (e.g., @w{IEEE 754}) the zero value is optionally signed.  The
+comparison @code{-0.0 < 0.0} will not be true while @code{signbit
+(-0.0)} will return a nonzeri value.
 @end deftypefun
 
 @node Rounding and Remainders
@@ -260,7 +580,11 @@ result as a @code{double} instead to get around this problem.
 @comment math.h
 @comment ISO
 @deftypefun double ceil (double @var{x})
-The @code{ceil} function rounds @var{x} upwards to the nearest integer,
+@end deftypefun
+@deftypefun float ceilf (float @var{x})
+@end deftypefun
+@deftypefun {long double} ceill (long double @var{x})
+These functions round @var{x} upwards to the nearest integer,
 returning that value as a @code{double}.  Thus, @code{ceil (1.5)}
 is @code{2.0}.
 @end deftypefun
@@ -268,15 +592,23 @@ is @code{2.0}.
 @comment math.h
 @comment ISO
 @deftypefun double floor (double @var{x})
-The @code{ceil} function rounds @var{x} downwards to the nearest
+@end deftypefun
+@deftypefun float floorf (float @var{x})
+@end deftypefun
+@deftypefun {long double} floorl (long double @var{x})
+These functions round @var{x} downwards to the nearest
 integer, returning that value as a @code{double}.  Thus, @code{floor
 (1.5)} is @code{1.0} and @code{floor (-1.5)} is @code{-2.0}.
 @end deftypefun
 
 @comment math.h
-@comment BSD
+@comment ISO
 @deftypefun double rint (double @var{x})
-This function rounds @var{x} to an integer value according to the
+@end deftypefun
+@deftypefun float rintf (float @var{x})
+@end deftypefun
+@deftypefun {long double} rintl (long double @var{x})
+These functions round @var{x} to an integer value according to the
 current rounding mode.  @xref{Floating Point Parameters}, for
 information about the various rounding modes.  The default
 rounding mode is to round to the nearest integer; some machines
@@ -286,8 +618,24 @@ you explicit select another.
 
 @comment math.h
 @comment ISO
+@deftypefun double nearbyint (double @var{x})
+@end deftypefun
+@deftypefun float nearbyintf (float @var{x})
+@end deftypefun
+@deftypefun {long double} nearbyintl (long double @var{x})
+These functions return the same value as the @code{rint} functions but
+even some rounding actually takes place @code{nearbyint} does @emph{not}
+raise the inexact exception.
+@end deftypefun
+
+@comment math.h
+@comment ISO
 @deftypefun double modf (double @var{value}, double *@var{integer-part})
-This function breaks the argument @var{value} into an integer part and a
+@end deftypefun
+@deftypefun float modff (flaot @var{value}, float *@var{integer-part})
+@end deftypefun
+@deftypefun {long double} modfl (long double @var{value}, long double *@var{integer-part})
+These functions break the argument @var{value} into an integer part and a
 fractional part (between @code{-1} and @code{1}, exclusive).  Their sum
 equals @var{value}.  Each of the parts has the same sign as @var{value},
 so the rounding of the integer part is towards zero.
@@ -300,7 +648,11 @@ returns @code{0.5} and stores @code{2.0} into @code{intpart}.
 @comment math.h
 @comment ISO
 @deftypefun double fmod (double @var{numerator}, double @var{denominator})
-This function computes the remainder from the division of
+@end deftypefun
+@deftypefun float fmodf (float @var{numerator}, float @var{denominator})
+@end deftypefun
+@deftypefun {long double} fmodl (long double @var{numerator}, long double @var{denominator})
+These functions compute the remainder from the division of
 @var{numerator} by @var{denominator}.  Specifically, the return value is
 @code{@var{numerator} - @w{@var{n} * @var{denominator}}}, where @var{n}
 is the quotient of @var{numerator} divided by @var{denominator}, rounded
@@ -317,7 +669,11 @@ If @var{denominator} is zero, @code{fmod} fails and sets @code{errno} to
 @comment math.h
 @comment BSD
 @deftypefun double drem (double @var{numerator}, double @var{denominator})
-The function @code{drem} is like @code{fmod} except that it rounds the
+@end deftypefun
+@deftypefun float dremf (float @var{numerator}, float @var{denominator})
+@end deftypefun
+@deftypefun {long double} dreml (long double @var{numerator}, long double @var{denominator})
+These functions are like @code{fmod} etc except that it rounds the
 internal quotient @var{n} to the nearest integer instead of towards zero
 to an integer.  For example, @code{drem (6.5, 2.3)} returns @code{-0.4},
 which is @code{6.5} minus @code{6.9}.

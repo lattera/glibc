@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -25,17 +25,50 @@
 #include <sys/stat.h>
 
 void
-logwtmp (const char *line, const char *name, const char *host)
+updwtmp (const char *wtmp_file, const struct utmp *ut)
 {
-  struct utmp ut;
   struct stat st;
   size_t written;
   int fd;
 
   /* Open WTMP file.  */
-  fd = __open (_PATH_WTMP, O_WRONLY | O_APPEND);
+  fd = __open (wtmp_file, O_WRONLY | O_APPEND);
   if (fd < 0)
       return;
+
+  /* Try to lock the file.  */
+  if (__flock (fd, LOCK_EX | LOCK_NB) < 0 && errno != ENOSYS)
+    {
+      /* Oh, oh.  The file is already locked.  Wait a bit and try again.  */
+      sleep (1);
+
+      /* This time we ignore the error.  */
+      __flock (fd, LOCK_EX | LOCK_NB);
+    }
+
+  /* Remember original size of log file: */
+  if (__fstat (fd, &st) < 0)
+    goto done;
+
+  /* Write the entry.  If we can't write all the bytes, reset the file
+     size back to the original size.  That way, no partial entries
+     will remain.  */
+  written = __write (fd, ut, sizeof (struct utmp));
+  if (written > 0 && written != sizeof (struct utmp))
+    ftruncate (fd, st.st_size);
+
+done:
+  /* And unlock the file.  */
+  __flock (fd, LOCK_UN);
+
+  /* Close WTMP file.  */
+  __close (fd);
+}
+
+void
+logwtmp (const char *line, const char *name, const char *host)
+{
+  struct utmp ut;
 
   /* Set information in new entry.  */
   memset (&ut, 0, sizeof (ut));
@@ -57,31 +90,5 @@ logwtmp (const char *line, const char *name, const char *host)
   time (&ut.ut_time);
 #endif
 
-  /* Try to lock the file.  */
-  if (__flock (fd, LOCK_EX | LOCK_NB) < 0 && errno != ENOSYS)
-    {
-      /* Oh, oh.  The file is already locked.  Wait a bit and try again.  */
-      sleep (1);
-
-      /* This time we ignore the error.  */
-      __flock (fd, LOCK_EX | LOCK_NB);
-    }
-
-  /* Remember original size of log file: */
-  if (__fstat (fd, &st) < 0)
-    goto done;
-
-  /* Write the entry.  If we can't write all the bytes, reset the file
-     size back to the original size.  That way, no partial entries
-     will remain.  */
-  written = __write (fd, &ut, sizeof (ut));
-  if (written > 0 && written != sizeof (ut))
-    ftruncate (fd, st.st_size);
-
-done:
-  /* And unlock the file.  */
-  __flock (fd, LOCK_UN);
-
-  /* Close WTMP file.  */
-  __close (fd);
+  updwtmp(_PATH_WTMP, &ut);
 }
