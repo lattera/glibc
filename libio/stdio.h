@@ -156,7 +156,8 @@ extern char *tmpnam_r (char *__s) __THROW;
    If not and if DIR is not NULL, that value is checked.  If that fails,
    P_tmpdir is tried and finally "/tmp".  The storage for the filename
    is allocated by `malloc'.  */
-extern char *tempnam (__const char *__dir, __const char *__pfx) __THROW;
+extern char *tempnam (__const char *__dir, __const char *__pfx)
+     __THROW __attribute_malloc__;
 #endif
 
 

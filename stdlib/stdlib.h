@@ -469,15 +469,16 @@ extern int lcong48_r (unsigned short int __param[7],
 #ifndef __malloc_and_calloc_defined
 #define __malloc_and_calloc_defined
 /* Allocate SIZE bytes of memory.  */
-extern void *malloc (size_t __size) __THROW;
+extern void *malloc (size_t __size) __THROW __attribute_malloc__;
 /* Allocate NMEMB elements of SIZE bytes each, all initialized to 0.  */
-extern void *calloc (size_t __nmemb, size_t __size) __THROW;
+extern void *calloc (size_t __nmemb, size_t __size)
+     __THROW __attribute_malloc__;
 #endif
 
 #ifndef __need_malloc_and_calloc
 /* Re-allocate the previously allocated block
    in PTR, making the new block SIZE bytes long.  */
-extern void *realloc (void *__ptr, size_t __size) __THROW;
+extern void *realloc (void *__ptr, size_t __size) __THROW __attribute_malloc__;
 /* Free a block allocated by `malloc', `realloc' or `calloc'.  */
 extern void free (void *__ptr) __THROW;
 
@@ -492,7 +493,7 @@ extern void cfree (void *__ptr) __THROW;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Allocate SIZE bytes on a page boundary.  The storage cannot be freed.  */
-extern void *valloc (size_t __size) __THROW;
+extern void *valloc (size_t __size) __THROW __attribute_malloc__;
 #endif
 
 

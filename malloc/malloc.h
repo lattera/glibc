@@ -55,6 +55,8 @@
 /* Used by GNU libc internals. */
 # define __malloc_size_t size_t
 # define __malloc_ptrdiff_t ptrdiff_t
+#else
+# define __attribute_malloc__
 #endif
 
 #ifdef __GNUC__
@@ -114,14 +116,17 @@ extern void ptmalloc_init __MALLOC_P ((void));
 #endif
 
 /* Allocate SIZE bytes of memory.  */
-extern __malloc_ptr_t malloc __MALLOC_P ((size_t __size));
+extern __malloc_ptr_t malloc __MALLOC_P ((size_t __size)) __attribute_malloc__;
 
 /* Allocate NMEMB elements of SIZE bytes each, all initialized to 0.  */
-extern __malloc_ptr_t calloc __MALLOC_P ((size_t __nmemb, size_t __size));
+extern __malloc_ptr_t calloc __MALLOC_P ((size_t __nmemb, size_t __size))
+       __attribute_malloc__;
 
 /* Re-allocate the previously allocated block in __ptr, making the new
    block SIZE bytes long.  */
-extern __malloc_ptr_t realloc __MALLOC_P ((__malloc_ptr_t __ptr, size_t __size));
+extern __malloc_ptr_t realloc __MALLOC_P ((__malloc_ptr_t __ptr,
+					   size_t __size))
+       __attribute_malloc__;
 
 /* Free a block allocated by `malloc', `realloc' or `calloc'.  */
 extern void free __MALLOC_P ((__malloc_ptr_t __ptr));
@@ -133,18 +138,21 @@ extern void cfree __MALLOC_P ((__malloc_ptr_t __ptr));
 extern __malloc_ptr_t memalign __MALLOC_P ((size_t __alignment, size_t __size));
 
 /* Allocate SIZE bytes on a page boundary.  */
-extern __malloc_ptr_t valloc __MALLOC_P ((size_t __size));
+extern __malloc_ptr_t valloc __MALLOC_P ((size_t __size)) __attribute_malloc__;
 
 /* Equivalent to valloc(minimum-page-that-holds(n)), that is, round up
    __size to nearest pagesize. */
-extern __malloc_ptr_t  pvalloc __MALLOC_P ((size_t __size));
+extern __malloc_ptr_t  pvalloc __MALLOC_P ((size_t __size))
+       __attribute_malloc__;
 
 /* Underlying allocation function; successive calls should return
    contiguous pieces of memory.  */
-extern __malloc_ptr_t (*__morecore) __MALLOC_PMT ((ptrdiff_t __size));
+extern __malloc_ptr_t (*__morecore) __MALLOC_PMT ((ptrdiff_t __size))
+       __attribute_malloc__;
 
 /* Default value of `__morecore'.  */
-extern __malloc_ptr_t __default_morecore __MALLOC_P ((ptrdiff_t __size));
+extern __malloc_ptr_t __default_morecore __MALLOC_P ((ptrdiff_t __size))
+       __attribute_malloc__;
 
 /* SVID2/XPG mallinfo structure */
 struct mallinfo {

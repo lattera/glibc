@@ -112,15 +112,16 @@ extern size_t __strxfrm_l (char *__dest, __const char *__src, size_t __n,
 
 #if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Duplicate S, returning an identical malloc'd string.  */
-extern char *__strdup (__const char *__s) __THROW;
-extern char *strdup (__const char *__s) __THROW;
+extern char *__strdup (__const char *__s) __THROW __attribute_malloc__;
+extern char *strdup (__const char *__s) __THROW __attribute_malloc__;
 #endif
 
 /* Return a malloc'd copy of at most N bytes of STRING.  The
    resultant string is terminated even if no null terminator
    appears before STRING[N].  */
 #if defined __USE_GNU
-extern char *strndup (__const char *__string, size_t __n) __THROW;
+extern char *strndup (__const char *__string, size_t __n)
+     __THROW __attribute_malloc__;
 #endif
 
 #if defined __USE_GNU && defined __GNUC__

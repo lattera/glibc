@@ -1,5 +1,16 @@
 1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* misc/sys/cdefs.h: Define __attribute_malloc__ according to
+	available gcc version.
+	* string/string.h: Mark strdup, __strdup, and strndup with
+	__attribute_malloc__.
+	* stdlib/stdlib.h: Make malloc, calloc, realloc, and valloc with
+	__attribute_malloc__.
+	* malloc/malloc.h: Make malloc, calloc, realloc, valloc, pvallc,
+	__morecore, and __default_morecore with __attribute_malloc__.
+	Provide default definition for __attribute_malloc__.
+	* libio/stdio.h: Make tempnam with __attribute_malloc__.
+
 	* include/unistd.h: Declare __libc_open64, __libc_lseek64,
 	__libc_pread, __libc_pread64, __libc_pwrite, and __libc_pwrite64.
 	* io/Versions: Export __libc_open64 and __libc_lseek64.
