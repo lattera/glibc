@@ -1,5 +1,40 @@
 2003-01-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (libpthread-routines): Remove lowlevelcond and
+	lowlevelsem.  Add sem_wait, sem_trywait, sem_timedwait, sem_post,
+	pthread_cond_wait, pthread_cond_timedwait, pthread_cond_signal,
+	and pthread_cond_broadcast.
+	* sysdeps/unix/sysv/linux/i486/lowlevelsem.S: Removed
+	* sysdeps/unix/sysv/linux/i486/lowlevelcond.S: Removed
+	* sysdeps/unix/sysv/linux/i586/lowlevelsem.S: Removed
+	* sysdeps/unix/sysv/linux/i586/lowlevelcond.S: Removed
+	* sysdeps/unix/sysv/linux/i686/lowlevelsem.S: Removed
+	* sysdeps/unix/sysv/linux/i686/lowlevelcond.S: Removed
+	* sysdeps/unix/sysv/linux/i486/sem_wait.S: New file.
+	* sysdeps/unix/sysv/linux/i486/sem_trywait.S: New file.
+	* sysdeps/unix/sysv/linux/i486/sem_timedwait.S: New file.
+	* sysdeps/unix/sysv/linux/i486/sem_post.S: New file.
+	* sysdeps/unix/sysv/linux/i486/pthread_cond_wait.S: New file.
+	* sysdeps/unix/sysv/linux/i486/pthread_cond_timedwait.S: New file.
+	* sysdeps/unix/sysv/linux/i486/pthread_cond_signal.S: New file.
+	* sysdeps/unix/sysv/linux/i486/pthread_cond_broadcast.S: New file.
+	* sysdeps/unix/sysv/linux/i586/sem_wait.S: New file.
+	* sysdeps/unix/sysv/linux/i586/sem_trywait.S: New file.
+	* sysdeps/unix/sysv/linux/i586/sem_timedwait.S: New file.
+	* sysdeps/unix/sysv/linux/i586/sem_post.S: New file.
+	* sysdeps/unix/sysv/linux/i586/pthread_cond_wait.S: New file.
+	* sysdeps/unix/sysv/linux/i586/pthread_cond_timedwait.S: New file.
+	* sysdeps/unix/sysv/linux/i586/pthread_cond_signal.S: New file.
+	* sysdeps/unix/sysv/linux/i586/pthread_cond_broadcast.S: New file.
+	* sysdeps/unix/sysv/linux/i686/sem_wait.S: New file.
+	* sysdeps/unix/sysv/linux/i686/sem_trywait.S: New file.
+	* sysdeps/unix/sysv/linux/i686/sem_timedwait.S: New file.
+	* sysdeps/unix/sysv/linux/i686/sem_post.S: New file.
+	* sysdeps/unix/sysv/linux/i686/pthread_cond_wait.S: New file.
+	* sysdeps/unix/sysv/linux/i686/pthread_cond_timedwait.S: New file.
+	* sysdeps/unix/sysv/linux/i686/pthread_cond_signal.S: New file.
+	* sysdeps/unix/sysv/linux/i686/pthread_cond_broadcast.S: New file.
+
 	* sysdeps/unix/sysv/linux/i386/createthread.c: Define
 	PREPARE_CREATE and TLS_VALUE with x86-specific bits.  All the rest
 	of the code is moved to ...

@@ -65,6 +65,8 @@ libpthread-routines = init events version \
 		      pthread_rwlockattr_getkind_np \
 		      pthread_rwlockattr_setkind_np \
 		      pthread_cond_init pthread_cond_destroy \
+		      pthread_cond_wait pthread_cond_timedwait \
+		      pthread_cond_signal pthread_cond_broadcast \
 		      old_pthread_cond_init old_pthread_cond_destroy \
 		      old_pthread_cond_wait old_pthread_cond_timedwait \
 		      old_pthread_cond_signal old_pthread_cond_broadcast \
@@ -90,11 +92,11 @@ libpthread-routines = init events version \
 		      sem_init sem_destroy \
 		      sem_open sem_close sem_unlink \
 		      sem_getvalue \
+		      sem_wait sem_trywait sem_timedwait sem_post \
 		      cleanup cleanup_defer \
 		      pt-longjmp \
 		      cancellation \
-		      lowlevellock lowlevelmutex lowlevelcond lowlevelrwlock \
-		      lowlevelsem \
+		      lowlevellock lowlevelmutex lowlevelrwlock \
 		      pt-vfork \
 		      ptw-write ptw-read ptw-close ptw-fcntl ptw-accept \
 		      ptw-connect ptw-recv ptw-recvfrom ptw-recvmsg ptw-send \
