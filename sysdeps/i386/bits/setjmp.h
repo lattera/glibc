@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,28 +32,7 @@
 # define JB_SIZE 24
 #endif
 
-#ifdef	_ASM
-/* We internally convert all setjmp (buf) calls to sigsetjmp (buf, mask),
-   so we must shift with the call frame to insert the mask argument.  */
-# if __BOUNDED_POINTERS__
-#  define PUSH_SIGNAL_MASK(MASK)				\
-	popl %eax;		/* return address */		\
-	popl %ecx;		/* jmp_buf value */		\
-	popl %edx;		/* jmp_buf low bound */		\
-	pushl 0(%esp);		/* jmp_buf high bound */	\
-	movl $MASK, 4(%esp);					\
-	pushl %edx;						\
-	pushl %ecx;						\
-	pushl %eax
-# else
-#  define PUSH_SIGNAL_MASK(MASK)			\
-	popl %eax;		/* return address */	\
-	popl %ecx;		/* jmp_buf */		\
-	pushl $MASK;					\
-	pushl %ecx;					\
-	pushl %eax
-# endif
-#else
+#ifndef	_ASM
 typedef int __jmp_buf[6];
 #endif
 

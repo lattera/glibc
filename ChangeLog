@@ -1,8 +1,14 @@
 2001-01-16  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/i386/elf/setjmp.S (setjmp): Don't use __sigsetjmp code,
-	do it here.
+	* sysdeps/i386/elf/bsd-setjmp.S: Real implementation.
+	* sysdeps/i386/elf/bsd-_setjmp.S: Removed.
+	* sysdeps/i386/elf/setjmp.S (setjmp): Removed here.
 	(_setjmp): Likewise.
+	* sysdeps/i386/bsd-_setjmp.S: Real implementation.
+	* sysdeps/i386/bsd-setjmp.S: Real implementation.
+	* sysdeps/i386/bits/setjmp.h: Remove PUSH_SIGNAL_MASK definition.
+	* sysdeps/i386/setjmp.S: Remove PIC support.  This is the non-ELF
+	version.
 
 2001-01-16  Andreas Jaeger  <aj@suse.de>
 
@@ -21,8 +27,7 @@
 
 	* sysdeps/unix/sysv/linux/sys/sendfile.h: Fix typo.
 
-	* stdio-common/tstscanf.c (main): Add two testcases for '*'
-	modifier.
+	* stdio-common/tstscanf.c (main): Add two testcases for '*' modifier.
 
 2001-01-14  Jakub Jelinek  <jakub@redhat.com>
 
