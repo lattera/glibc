@@ -19,7 +19,8 @@ License for more details.
 
 You should have received a copy of the GNU Library General Public License
 along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+MA 02111-1307, USA. */
 
 #include "gmp.h"
 #include "gmp-impl.h"
@@ -36,19 +37,19 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 /* FIXME: We should be using invert_limb (or invert_normalized_limb)
    here (not udiv_qrnnd).  */
 
-mp_limb
+mp_limb_t
 #if __STDC__
 mpn_mod_1 (mp_srcptr dividend_ptr, mp_size_t dividend_size,
-	   mp_limb divisor_limb)
+	   mp_limb_t divisor_limb)
 #else
 mpn_mod_1 (dividend_ptr, dividend_size, divisor_limb)
      mp_srcptr dividend_ptr;
      mp_size_t dividend_size;
-     mp_limb divisor_limb;
+     mp_limb_t divisor_limb;
 #endif
 {
   mp_size_t i;
-  mp_limb n1, n0, r;
+  mp_limb_t n1, n0, r;
   int dummy;
 
   /* Botch: Should this be handled at all?  Rely on callers?  */
@@ -70,7 +71,7 @@ mpn_mod_1 (dividend_ptr, dividend_size, divisor_limb)
       count_leading_zeros (normalization_steps, divisor_limb);
       if (normalization_steps != 0)
 	{
-	  mp_limb divisor_limb_inverted;
+	  mp_limb_t divisor_limb_inverted;
 
 	  divisor_limb <<= normalization_steps;
 
@@ -80,7 +81,7 @@ mpn_mod_1 (dividend_ptr, dividend_size, divisor_limb)
 
 	  /* Special case for DIVISOR_LIMB == 100...000.  */
 	  if (divisor_limb << 1 == 0)
-	    divisor_limb_inverted = ~(mp_limb) 0;
+	    divisor_limb_inverted = ~(mp_limb_t) 0;
 	  else
 	    udiv_qrnnd (divisor_limb_inverted, dummy,
 			-divisor_limb, 0, divisor_limb);
@@ -110,7 +111,7 @@ mpn_mod_1 (dividend_ptr, dividend_size, divisor_limb)
 	}
       else
 	{
-	  mp_limb divisor_limb_inverted;
+	  mp_limb_t divisor_limb_inverted;
 
 	  /* Compute (2**2N - 2**N * DIVISOR_LIMB) / DIVISOR_LIMB.  The
 	     result is a (N+1)-bit approximation to 1/DIVISOR_LIMB, with the
@@ -118,7 +119,7 @@ mpn_mod_1 (dividend_ptr, dividend_size, divisor_limb)
 
 	  /* Special case for DIVISOR_LIMB == 100...000.  */
 	  if (divisor_limb << 1 == 0)
-	    divisor_limb_inverted = ~(mp_limb) 0;
+	    divisor_limb_inverted = ~(mp_limb_t) 0;
 	  else
 	    udiv_qrnnd (divisor_limb_inverted, dummy,
 			-divisor_limb, 0, divisor_limb);

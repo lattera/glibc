@@ -16,7 +16,8 @@ License for more details.
 
 You should have received a copy of the GNU Library General Public License
 along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+MA 02111-1307, USA. */
 
 /* When using gcc, make sure to use its builtin alloca.  */
 #if ! defined (alloca) && defined (__GNUC__)
@@ -67,6 +68,14 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 #define ABS(x) (x >= 0 ? x : -x)
 #define MIN(l,o) ((l) < (o) ? (l) : (o))
 #define MAX(h,i) ((h) > (i) ? (h) : (i))
+
+/* Field access macros.  */
+#define SIZ(x) ((x)->_mp_size)
+#define ABSIZ(x) ABS (SIZ (x))
+#define PTR(x) ((x)->_mp_d)
+#define EXP(x) ((x)->_mp_exp)
+#define PREC(x) ((x)->_mp_prec)
+#define ALLOC(x) ((x)->_mp_alloc)
 
 #include "gmp-mparam.h"
 /* #include "longlong.h" */
@@ -175,9 +184,9 @@ void _mp_default_free ();
    strings in base 2..36.  */
 struct bases
 {
-  /* Number of digits in the conversion base that always fits in an mp_limb.
-     For example, for base 10 on a machine where a mp_limb has 32 bits this
-     is 9, since 10**9 is the largest number that fits into a mp_limb.  */
+  /* Number of digits in the conversion base that always fits in an mp_limb_t.
+     For example, for base 10 on a machine where a mp_limb_t has 32 bits this
+     is 9, since 10**9 is the largest number that fits into a mp_limb_t.  */
   int chars_per_limb;
 
   /* log(2)/log(conversion_base) */
@@ -186,20 +195,13 @@ struct bases
   /* base**chars_per_limb, i.e. the biggest number that fits a word, built by
      factors of base.  Exception: For 2, 4, 8, etc, big_base is log2(base),
      i.e. the number of bits used to represent each digit in the base.  */
-  mp_limb big_base;
+  mp_limb_t big_base;
 
   /* A BITS_PER_MP_LIMB bit approximation to 1/big_base, represented as a
      fixed-point number.  Instead of dividing by big_base an application can
      choose to multiply by big_base_inverted.  */
-  mp_limb big_base_inverted;
+  mp_limb_t big_base_inverted;
 };
-
-/* Access macros for structure fields for user-visible structures with
-   hidden fields.  */
-#define size(X) (X)._mp_size
-#define alloc(X) (X)._mp_alloc
-#define prec(X) (X)._mp_prec
-#define limbs(X) (X)._mp_d
 
 extern const struct bases __mp_bases[];
 extern mp_size_t __gmp_default_fp_limb_precision;
@@ -211,8 +213,8 @@ extern mp_size_t __gmp_default_fp_limb_precision;
    has to be set.  Put the quotient in Q and the remainder in R.  */
 #define udiv_qrnnd_preinv(q, r, nh, nl, d, di) \
   do {									\
-    mp_limb _q, _ql, _r;						\
-    mp_limb _xh, _xl;							\
+    mp_limb_t _q, _ql, _r;						\
+    mp_limb_t _xh, _xl;							\
     umul_ppmm (_q, _ql, (nh), (di));					\
     _q += (nh);			/* DI is 2**BITS_PER_MP_LIMB too small */\
     umul_ppmm (_xh, _xl, _q, (d));					\
@@ -239,11 +241,11 @@ extern mp_size_t __gmp_default_fp_limb_precision;
    so that its most significant bit is set.  LGUP is ceil(log2(D)).  */
 #define udiv_qrnnd_preinv2gen(q, r, nh, nl, d, di, dnorm, lgup) \
   do {									\
-    mp_limb n2, n10, n1, nadj, q1;					\
-    mp_limb _xh, _xl;							\
+    mp_limb_t n2, n10, n1, nadj, q1;					\
+    mp_limb_t _xh, _xl;							\
     n2 = ((nh) << (BITS_PER_MP_LIMB - (lgup))) + ((nl) >> 1 >> (l - 1));\
     n10 = (nl) << (BITS_PER_MP_LIMB - (lgup));				\
-    n1 = ((mp_limb_signed) n10 >> (BITS_PER_MP_LIMB - 1));		\
+    n1 = ((mp_limb_signed_t) n10 >> (BITS_PER_MP_LIMB - 1));		\
     nadj = n10 + (n1 & (dnorm));					\
     umul_ppmm (_xh, _xl, di, n2 - n1);					\
     add_ssaaaa (_xh, _xl, _xh, _xl, 0, nadj);				\
@@ -258,11 +260,11 @@ extern mp_size_t __gmp_default_fp_limb_precision;
    version to use.  */
 #define udiv_qrnnd_preinv2norm(q, r, nh, nl, d, di) \
   do {									\
-    mp_limb n2, n10, n1, nadj, q1;					\
-    mp_limb _xh, _xl;							\
+    mp_limb_t n2, n10, n1, nadj, q1;					\
+    mp_limb_t _xh, _xl;							\
     n2 = (nh);								\
     n10 = (nl);								\
-    n1 = ((mp_limb_signed) n10 >> (BITS_PER_MP_LIMB - 1));		\
+    n1 = ((mp_limb_signed_t) n10 >> (BITS_PER_MP_LIMB - 1));		\
     nadj = n10 + (n1 & (d));						\
     umul_ppmm (_xh, _xl, di, n2 - n1);					\
     add_ssaaaa (_xh, _xl, _xh, _xl, 0, nadj);				\
@@ -287,7 +289,7 @@ typedef 	 long SItype;
 typedef unsigned long USItype;
 #endif
 
-typedef mp_limb UWtype;
+typedef mp_limb_t UWtype;
 typedef unsigned int UHWtype;
 #define W_TYPE_SIZE BITS_PER_MP_LIMB
 

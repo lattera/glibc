@@ -16,12 +16,13 @@ License for more details.
 
 You should have received a copy of the GNU Library General Public License
 along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+MA 02111-1307, USA. */
 
 #include "gmp.h"
 #include "gmp-impl.h"
 
-mp_limb
+mp_limb_t
 #if __STDC__
 mpn_sub_n (mp_ptr res_ptr, mp_srcptr s1_ptr, mp_srcptr s2_ptr, mp_size_t size)
 #else
@@ -32,7 +33,7 @@ mpn_sub_n (res_ptr, s1_ptr, s2_ptr, size)
      mp_size_t size;
 #endif
 {
-  register mp_limb x, y, cy;
+  register mp_limb_t x, y, cy;
   register mp_size_t j;
 
   /* The loop counter and index J goes from -SIZE to -1.  This way

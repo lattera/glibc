@@ -16,7 +16,8 @@ License for more details.
 
 You should have received a copy of the GNU Library General Public License
 along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+MA 02111-1307, USA. */
 
 #include "gmp.h"
 #include "gmp-impl.h"
@@ -37,7 +38,7 @@ mpn_cmp (op1_ptr, op2_ptr, size)
 #endif
 {
   mp_size_t i;
-  mp_limb op1_word, op2_word;
+  mp_limb_t op1_word, op2_word;
 
   for (i = size - 1; i >= 0; i--)
     {

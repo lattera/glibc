@@ -1,7 +1,6 @@
-# IBM POWER __mpn_sub_n -- Subtract two limb vectors of the same length > 0 and
-# store difference in a third limb vector.
+# IBM POWER __mpn_sub_n -- Subtract two limb vectors of equal, non-zero length.
 
-# Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1992, 1994, 1995, 1996 Free Software Foundation, Inc.
 
 # This file is part of the GNU MP Library.
 
@@ -17,7 +16,8 @@
 
 # You should have received a copy of the GNU Library General Public License
 # along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-# the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
 
 
 # INPUT PARAMETERS
@@ -38,18 +38,45 @@ __mpn_sub_n:
 	.long .__mpn_sub_n, TOC[tc0], 0
 	.csect [PR]
 .__mpn_sub_n:
-	mtctr	6		# copy size into CTR
+	andil.	10,6,1		# odd or even number of limbs?
 	l	8,0(4)		# load least significant s1 limb
 	l	0,0(5)		# load least significant s2 limb
-	cal	3,-4(3)		# offset res_ptr, it's updated before used
-	sf	7,0,8		# add least significant limbs, set cy
+	cal	3,-4(3)		# offset res_ptr, it's updated before it's used
+	sri	10,6,1		# count for unrolled loop
+	sf	7,0,8		# subtract least significant limbs, set cy
+	mtctr	10		# copy count into CTR
+	beq	0,Leven		# branch if even # of limbs (# of limbs >= 2)
+
+# We have an odd # of limbs.  Add the first limbs separately.
+	cmpi	1,10,0		# is count for unrolled loop zero?
+	bne	1,L1		# branch if not
+	st	7,4(3)
+	sfe	3,0,0		# load !cy into ...
+	sfi	3,3,0		# ... return value register
+	br			# return
+
+# We added least significant limbs.  Now reload the next limbs to enter loop.
+L1:	lu	8,4(4)		# load s1 limb and update s1_ptr
+	lu	0,4(5)		# load s2 limb and update s2_ptr
+	stu	7,4(3)
+	sfe	7,0,8		# subtract limbs, set cy
+Leven:	lu	9,4(4)		# load s1 limb and update s1_ptr
+	lu	10,4(5)		# load s2 limb and update s2_ptr
 	bdz	Lend		# If done, skip loop
+
 Loop:	lu	8,4(4)		# load s1 limb and update s1_ptr
 	lu	0,4(5)		# load s2 limb and update s2_ptr
-	stu	7,4(3)		# store previous limb in load latency slot
-	sfe	7,0,8		# add new limbs with cy, set cy
+	sfe	11,10,9		# subtract previous limbs with cy, set cy
+	stu	7,4(3)		# 
+	lu	9,4(4)		# load s1 limb and update s1_ptr
+	lu	10,4(5)		# load s2 limb and update s2_ptr
+	sfe	7,0,8		# subtract previous limbs with cy, set cy
+	stu	11,4(3)		# 
 	bdn	Loop		# decrement CTR and loop back
-Lend:	st	7,4(3)		# store ultimate result limb
+
+Lend:	sfe	11,10,9		# subtract limbs with cy, set cy
+	st	7,4(3)		# 
+	st	11,8(3)		# 
 	sfe	3,0,0		# load !cy into ...
 	sfi	3,3,0		# ... return value register
 	br

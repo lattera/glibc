@@ -16,7 +16,8 @@ License for more details.
 
 You should have received a copy of the GNU Library General Public License
 along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+MA 02111-1307, USA. */
 
 #include "gmp.h"
 #include "gmp-impl.h"
@@ -60,8 +61,8 @@ impn_mul_n_basecase (prodp, up, vp, size)
 #endif
 {
   mp_size_t i;
-  mp_limb cy_limb;
-  mp_limb v_limb;
+  mp_limb_t cy_limb;
+  mp_limb_t v_limb;
 
   /* Multiply by the first limb in V separately, as the result can be
      stored (not added) to PROD.  We also avoid a loop for zeroing.  */
@@ -125,7 +126,7 @@ impn_mul_n (prodp, up, vp, size, tspace)
 	 stack grow a lot less.  */
 
       mp_size_t esize = size - 1;	/* even size */
-      mp_limb cy_limb;
+      mp_limb_t cy_limb;
 
       MPN_MUL_N_RECURSE (prodp, up, vp, esize, tspace);
       cy_limb = mpn_addmul_1 (prodp + esize, up, esize, vp[esize]);
@@ -152,7 +153,7 @@ impn_mul_n (prodp, up, vp, size, tspace)
 	 Where B = 2**BITS_PER_MP_LIMB.  */
 
       mp_size_t hsize = size >> 1;
-      mp_limb cy;
+      mp_limb_t cy;
       int negflg;
 
       /*** Product H.	 ________________  ________________
@@ -229,8 +230,8 @@ impn_sqr_n_basecase (prodp, up, size)
 #endif
 {
   mp_size_t i;
-  mp_limb cy_limb;
-  mp_limb v_limb;
+  mp_limb_t cy_limb;
+  mp_limb_t v_limb;
 
   /* Multiply by the first limb in V separately, as the result can be
      stored (not added) to PROD.  We also avoid a loop for zeroing.  */
@@ -293,7 +294,7 @@ impn_sqr_n (prodp, up, size, tspace)
 	 stack grow a lot less.  */
 
       mp_size_t esize = size - 1;	/* even size */
-      mp_limb cy_limb;
+      mp_limb_t cy_limb;
 
       MPN_SQR_N_RECURSE (prodp, up, esize, tspace);
       cy_limb = mpn_addmul_1 (prodp + esize, up, esize, up[esize]);
@@ -305,7 +306,7 @@ impn_sqr_n (prodp, up, size, tspace)
   else
     {
       mp_size_t hsize = size >> 1;
-      mp_limb cy;
+      mp_limb_t cy;
 
       /*** Product H.	 ________________  ________________
 			|_____U1 x U1____||____U0 x U0_____|  */

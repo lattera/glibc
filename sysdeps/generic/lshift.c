@@ -16,7 +16,8 @@ License for more details.
 
 You should have received a copy of the GNU Library General Public License
 along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+MA 02111-1307, USA. */
 
 #include "gmp.h"
 #include "gmp-impl.h"
@@ -30,7 +31,7 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
    2. If the result is to be written over the input, WP must be >= UP.
 */
 
-mp_limb
+mp_limb_t
 #if __STDC__
 mpn_lshift (register mp_ptr wp,
 	    register mp_srcptr up, mp_size_t usize,
@@ -43,10 +44,10 @@ mpn_lshift (wp, up, usize, cnt)
      register unsigned int cnt;
 #endif
 {
-  register mp_limb high_limb, low_limb;
+  register mp_limb_t high_limb, low_limb;
   register unsigned sh_1, sh_2;
   register mp_size_t i;
-  mp_limb retval;
+  mp_limb_t retval;
 
 #ifdef DEBUG
   if (usize == 0 || cnt == 0)

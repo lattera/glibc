@@ -17,7 +17,8 @@ License for more details.
 
 You should have received a copy of the GNU Library General Public License
 along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+MA 02111-1307, USA. */
 
 #include "gmp.h"
 #include "gmp-impl.h"
@@ -39,7 +40,7 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
       remainder in NUM.
    3. NSIZE >= DSIZE, even if QEXTRA_LIMBS is non-zero.  */
 
-mp_limb
+mp_limb_t
 #if __STDC__
 mpn_divrem (mp_ptr qp, mp_size_t qextra_limbs,
 	    mp_ptr np, mp_size_t nsize,
@@ -54,7 +55,7 @@ mpn_divrem (qp, qextra_limbs, np, nsize, dp, dsize)
      mp_size_t dsize;
 #endif
 {
-  mp_limb most_significant_q_limb = 0;
+  mp_limb_t most_significant_q_limb = 0;
 
   switch (dsize)
     {
@@ -66,8 +67,8 @@ mpn_divrem (qp, qextra_limbs, np, nsize, dp, dsize)
     case 1:
       {
 	mp_size_t i;
-	mp_limb n1;
-	mp_limb d;
+	mp_limb_t n1;
+	mp_limb_t d;
 
 	d = dp[0];
 	n1 = np[nsize - 1];
@@ -93,8 +94,8 @@ mpn_divrem (qp, qextra_limbs, np, nsize, dp, dsize)
     case 2:
       {
 	mp_size_t i;
-	mp_limb n1, n0, n2;
-	mp_limb d1, d0;
+	mp_limb_t n1, n0, n2;
+	mp_limb_t d1, d0;
 
 	np += nsize - 2;
 	d1 = dp[1];
@@ -110,8 +111,8 @@ mpn_divrem (qp, qextra_limbs, np, nsize, dp, dsize)
 
 	for (i = qextra_limbs + nsize - 2 - 1; i >= 0; i--)
 	  {
-	    mp_limb q;
-	    mp_limb r;
+	    mp_limb_t q;
+	    mp_limb_t r;
 
 	    if (i >= qextra_limbs)
 	      np--;
@@ -123,7 +124,7 @@ mpn_divrem (qp, qextra_limbs, np, nsize, dp, dsize)
 		/* Q should be either 111..111 or 111..110.  Need special
 		   treatment of this rare case as normal division would
 		   give overflow.  */
-		q = ~(mp_limb) 0;
+		q = ~(mp_limb_t) 0;
 
 		r = n0 + d1;
 		if (r < d1)	/* Carry in the addition? */
@@ -165,7 +166,7 @@ mpn_divrem (qp, qextra_limbs, np, nsize, dp, dsize)
     default:
       {
 	mp_size_t i;
-	mp_limb dX, d1, n0;
+	mp_limb_t dX, d1, n0;
 
 	np += nsize - dsize;
 	dX = dp[dsize - 1];
@@ -184,9 +185,9 @@ mpn_divrem (qp, qextra_limbs, np, nsize, dp, dsize)
 
 	for (i = qextra_limbs + nsize - dsize - 1; i >= 0; i--)
 	  {
-	    mp_limb q;
-	    mp_limb n1, n2;
-	    mp_limb cy_limb;
+	    mp_limb_t q;
+	    mp_limb_t n1, n2;
+	    mp_limb_t cy_limb;
 
 	    if (i >= qextra_limbs)
 	      {
@@ -203,10 +204,10 @@ mpn_divrem (qp, qextra_limbs, np, nsize, dp, dsize)
 	    if (n0 == dX)
 	      /* This might over-estimate q, but it's probably not worth
 		 the extra code here to find out.  */
-	      q = ~(mp_limb) 0;
+	      q = ~(mp_limb_t) 0;
 	    else
 	      {
-		mp_limb r;
+		mp_limb_t r;
 
 		udiv_qrnnd (q, r, n0, np[dsize - 1], dX);
 		umul_ppmm (n1, n0, d1, q);

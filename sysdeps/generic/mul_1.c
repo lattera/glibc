@@ -17,22 +17,23 @@ License for more details.
 
 You should have received a copy of the GNU Library General Public License
 along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+MA 02111-1307, USA. */
 
 #include "gmp.h"
 #include "gmp-impl.h"
 #include "longlong.h"
 
-mp_limb
+mp_limb_t
 mpn_mul_1 (res_ptr, s1_ptr, s1_size, s2_limb)
      register mp_ptr res_ptr;
      register mp_srcptr s1_ptr;
      mp_size_t s1_size;
-     register mp_limb s2_limb;
+     register mp_limb_t s2_limb;
 {
-  register mp_limb cy_limb;
+  register mp_limb_t cy_limb;
   register mp_size_t j;
-  register mp_limb prod_high, prod_low;
+  register mp_limb_t prod_high, prod_low;
 
   /* The loop counter and index J goes from -S1_SIZE to -1.  This way
      the loop becomes faster.  */

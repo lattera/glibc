@@ -1,6 +1,6 @@
 /* longlong.h -- definitions for mixed size 32/64 bit arithmetic.
 
-Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1993, 1994, 1996 Free Software Foundation, Inc.
 
 This file is free software; you can redistribute it and/or modify
 it under the terms of the GNU Library General Public License as published by
@@ -14,7 +14,8 @@ License for more details.
 
 You should have received a copy of the GNU Library General Public License
 along with this file; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+MA 02111-1307, USA. */
 
 /* You have to define the following before including this file:
 
@@ -34,6 +35,12 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 #define __ll_B ((UWtype) 1 << (W_TYPE_SIZE / 2))
 #define __ll_lowpart(t) ((UWtype) (t) & (__ll_B - 1))
 #define __ll_highpart(t) ((UWtype) (t) >> (W_TYPE_SIZE / 2))
+
+/* This is used to make sure no undesirable sharing between different libraries
+   that use this file takes place.  */
+#ifndef __MPN
+#define __MPN(x) __##x
+#endif
 
 /* Define auxiliary asm macros.
 
@@ -142,7 +149,7 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 #define COUNT_LEADING_ZEROS_0 32
 #endif /* __a29k__ */
 
-#if defined (__alpha__) && W_TYPE_SIZE == 64
+#if defined (__alpha) && W_TYPE_SIZE == 64
 #define umul_ppmm(ph, pl, m0, m1) \
   do {									\
     UDItype __m0 = (m0), __m1 = (m1);					\
@@ -162,7 +169,7 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 extern UDItype __udiv_qrnnd ();
 #define UDIV_TIME 220
 #endif /* LONGLONG_STANDALONE */
-#endif /* __alpha__ */
+#endif /* __alpha */
 
 #if defined (__arm__) && W_TYPE_SIZE == 32
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
@@ -1070,6 +1077,9 @@ extern USItype __udiv_qrnnd ();
   __asm__ ("scan %1,0,%0"						\
 	   : "=r" ((USItype)(x))					\
 	   : "r" ((USItype)(count)))
+/* Early sparclites return 63 for an argument of 0, but they warn that future
+   implementations might change this.  Therefore, leave COUNT_LEADING_ZEROS_0
+   undefined.  */
 #endif /* __sparclite__ */
 #endif /* __sparc_v8__ */
 /* Default to sparc v7 versions of umul_ppmm and udiv_qrnnd.  */
@@ -1336,7 +1346,7 @@ extern USItype __udiv_qrnnd ();
 #define udiv_qrnnd(q, r, nh, nl, d) \
   do {									\
     UWtype __r;								\
-    (q) = __udiv_w_sdiv (&__r, nh, nl, d);				\
+    (q) = __MPN(udiv_w_sdiv) (&__r, nh, nl, d);				\
     (r) = __r;								\
   } while (0)
 #endif

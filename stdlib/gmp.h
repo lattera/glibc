@@ -16,7 +16,8 @@ License for more details.
 
 You should have received a copy of the GNU Library General Public License
 along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+MA 02111-1307, USA. */
 
 #ifndef __GMP_H__
 
@@ -47,20 +48,20 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 #endif
 
 #ifdef _SHORT_LIMB
-typedef unsigned int		mp_limb;
-typedef int			mp_limb_signed;
+typedef unsigned int		mp_limb_t;
+typedef int			mp_limb_signed_t;
 #else
 #ifdef _LONG_LONG_LIMB
-typedef unsigned long long int	mp_limb;
-typedef long long int		mp_limb_signed;
+typedef unsigned long long int	mp_limb_t;
+typedef long long int		mp_limb_signed_t;
 #else
-typedef unsigned long int	mp_limb;
-typedef long int		mp_limb_signed;
+typedef unsigned long int	mp_limb_t;
+typedef long int		mp_limb_signed_t;
 #endif
 #endif
 
-typedef mp_limb *		mp_ptr;
-typedef __gmp_const mp_limb *	mp_srcptr;
+typedef mp_limb_t *		mp_ptr;
+typedef __gmp_const mp_limb_t *	mp_srcptr;
 typedef long int		mp_size_t;
 typedef long int		mp_exp_t;
 
@@ -73,7 +74,7 @@ typedef struct
 				   the last field points to.  If SIZE
 				   is negative this is a negative
 				   number.  */
-  mp_limb *_mp_d;		/* Pointer to the limbs.  */
+  mp_limb_t *_mp_d;		/* Pointer to the limbs.  */
 } __mpz_struct;
 #else
 typedef struct
@@ -84,7 +85,7 @@ typedef struct
 				   the last field points to.  If SIZE
 				   is negative this is a negative
 				   number.  */
-  mp_limb *_mp_d;		/* Pointer to the limbs.  */
+  mp_limb_t *_mp_d;		/* Pointer to the limbs.  */
 } __mpz_struct;
 #endif
 #endif /* __GNU_MP__ */
@@ -120,7 +121,7 @@ typedef __mpq_struct mpq_t[1];
 
 typedef struct
 {
-  int _mp_prec;			/* Max precision, in number of `mp_limb's.
+  int _mp_prec;			/* Max precision, in number of `mp_limb_t's.
 				   Set by mpf_init and modified by
 				   mpf_set_prec.  The area pointed to
 				   by the `d' field contains `prec' + 1
@@ -129,8 +130,8 @@ typedef struct
 				   the last field points to.  If SIZE
 				   is negative this is a negative
 				   number.  */
-  mp_exp_t _mp_exp;		/* Exponent, in the base of `mp_limb'.  */
-  mp_limb *_mp_d;		/* Pointer to the limbs.  */
+  mp_exp_t _mp_exp;		/* Exponent, in the base of `mp_limb_t'.  */
+  mp_limb_t *_mp_d;		/* Pointer to the limbs.  */
 } __mpf_struct;
 
 /* typedef __mpf_struct MP_FLOAT; */
@@ -154,7 +155,11 @@ typedef __mpq_struct *mpq_ptr;
 #endif
 
 #ifndef __MPN
+#if defined (__STDC__) || defined (__cplusplus)
 #define __MPN(x) __mpn_##x
+#else
+#define __MPN(x) __mpn_/**/x
+#endif
 #endif
 
 #if defined (FILE) || defined (_STDIO_H_) || defined (__STDIO_H__) || defined (H_STDIO)
@@ -164,6 +169,7 @@ typedef __mpq_struct *mpq_ptr;
 void mp_set_memory_functions _PROTO ((void *(*) (size_t),
 				      void *(*) (void *, size_t, size_t),
 				      void (*) (void *, size_t)));
+extern const int mp_bits_per_limb;
 
 /**************** Integer (i.e. Z) routines.  ****************/
 
@@ -207,8 +213,8 @@ void mpz_gcdext _PROTO ((mpz_ptr, mpz_ptr, mpz_ptr, mpz_srcptr, mpz_srcptr));
 /* signed */ long int mpz_get_si _PROTO ((mpz_srcptr));
 char *mpz_get_str _PROTO ((char *, int, mpz_srcptr));
 unsigned long int mpz_get_ui _PROTO ((mpz_srcptr));
-mp_limb mpz_getlimbn _PROTO ((mpz_srcptr, mp_size_t));
-mp_size_t mpz_hamdist _PROTO ((mpz_srcptr, mpz_srcptr));
+mp_limb_t mpz_getlimbn _PROTO ((mpz_srcptr, mp_size_t));
+unsigned long int mpz_hamdist _PROTO ((mpz_srcptr, mpz_srcptr));
 void mpz_init _PROTO ((mpz_ptr));
 #ifdef _GMP_H_HAVE_FILE
 size_t mpz_inp_binary _PROTO ((mpz_ptr, FILE *));
@@ -216,6 +222,7 @@ size_t mpz_inp_raw _PROTO ((mpz_ptr, FILE *));
 size_t mpz_inp_str _PROTO ((mpz_ptr, FILE *, int));
 #endif
 void mpz_init_set _PROTO ((mpz_ptr, mpz_srcptr));
+void mpz_init_set_d _PROTO ((mpz_ptr, double));
 void mpz_init_set_si _PROTO ((mpz_ptr, signed long int));
 int mpz_init_set_str _PROTO ((mpz_ptr, const char *, int));
 void mpz_init_set_ui _PROTO ((mpz_ptr, unsigned long int));
@@ -234,15 +241,15 @@ size_t mpz_out_raw _PROTO ((FILE *, mpz_srcptr));
 size_t mpz_out_str _PROTO ((FILE *, int, mpz_srcptr));
 #endif
 int mpz_perfect_square_p _PROTO ((mpz_srcptr));
-mp_size_t mpz_popcount _PROTO ((mpz_srcptr));
+unsigned long int mpz_popcount _PROTO ((mpz_srcptr));
 void mpz_pow_ui _PROTO ((mpz_ptr, mpz_srcptr, unsigned long int));
 void mpz_powm _PROTO ((mpz_ptr, mpz_srcptr, mpz_srcptr, mpz_srcptr));
 void mpz_powm_ui _PROTO ((mpz_ptr, mpz_srcptr, unsigned long int, mpz_srcptr));
 int mpz_probab_prime_p _PROTO ((mpz_srcptr, int));
 void mpz_random _PROTO ((mpz_ptr, mp_size_t));
 void mpz_random2 _PROTO ((mpz_ptr, mp_size_t));
-mp_size_t mpz_scan0 _PROTO ((mpz_srcptr, mp_size_t));
-mp_size_t mpz_scan1 _PROTO ((mpz_srcptr, mp_size_t));
+unsigned long int mpz_scan0 _PROTO ((mpz_srcptr, unsigned long int));
+unsigned long int mpz_scan1 _PROTO ((mpz_srcptr, unsigned long int));
 void mpz_set _PROTO ((mpz_ptr, mpz_srcptr));
 void mpz_set_d _PROTO ((mpz_ptr, double));
 void mpz_set_si _PROTO ((mpz_ptr, signed long int));
@@ -296,14 +303,15 @@ void mpf_clear _PROTO ((mpf_ptr));
 int mpf_cmp _PROTO ((mpf_srcptr, mpf_srcptr));
 int mpf_cmp_si _PROTO ((mpf_srcptr, signed long int));
 int mpf_cmp_ui _PROTO ((mpf_srcptr, unsigned long int));
-int mpf_diff _PROTO ((mpf_srcptr, mpf_srcptr, unsigned long int));
 void mpf_div _PROTO ((mpf_ptr, mpf_srcptr, mpf_srcptr));
 void mpf_div_2exp _PROTO ((mpf_ptr, mpf_srcptr, unsigned long int));
 void mpf_div_ui _PROTO ((mpf_ptr, mpf_srcptr, unsigned long int));
 void mpf_dump _PROTO ((mpf_srcptr));
+int mpf_eq _PROTO ((mpf_srcptr, mpf_srcptr, unsigned long int));
+unsigned long int mpf_get_prec _PROTO ((mpf_srcptr));
 char *mpf_get_str _PROTO ((char *, mp_exp_t *, int, size_t, mpf_srcptr));
 void mpf_init _PROTO ((mpf_ptr));
-void mpf_init2 _PROTO ((mpf_ptr, mp_size_t));
+void mpf_init2 _PROTO ((mpf_ptr, unsigned long int));
 #ifdef _GMP_H_HAVE_FILE
 size_t mpf_inp_str _PROTO ((mpf_ptr, FILE *, int));
 #endif
@@ -319,11 +327,13 @@ void mpf_neg _PROTO ((mpf_ptr, mpf_srcptr));
 #ifdef _GMP_H_HAVE_FILE
 size_t mpf_out_str _PROTO ((FILE *, int, size_t, mpf_srcptr));
 #endif
-void mpf_random2 _PROTO ((mpf_ptr, mp_size_t, mp_size_t));
+void mpf_random2 _PROTO ((mpf_ptr, mp_size_t, mp_exp_t));
+void mpf_reldiff _PROTO ((mpf_ptr, mpf_srcptr, mpf_srcptr));
 void mpf_set _PROTO ((mpf_ptr, mpf_srcptr));
 void mpf_set_d _PROTO ((mpf_ptr, double));
-mp_size_t mpf_set_default_prec _PROTO ((mp_size_t));
-void mpf_set_prec _PROTO ((mpf_ptr, mp_size_t));
+void mpf_set_default_prec _PROTO ((unsigned long int));
+void mpf_set_prec _PROTO ((mpf_ptr, unsigned long int));
+void mpf_set_prec_raw _PROTO ((mpf_ptr, unsigned long int));
 void mpf_set_si _PROTO ((mpf_ptr, signed long int));
 int mpf_set_str _PROTO ((mpf_ptr, const char *, int));
 void mpf_set_ui _PROTO ((mpf_ptr, unsigned long int));
@@ -378,55 +388,59 @@ void mpf_ui_sub _PROTO ((mpf_ptr, unsigned long int, mpf_srcptr));
 #if defined (__cplusplus)
 extern "C" {
 #endif
-mp_limb mpn_add_n _PROTO ((mp_ptr, mp_srcptr, mp_srcptr, mp_size_t));
-mp_limb mpn_addmul_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb));
-mp_limb mpn_bdivmod _PROTO ((mp_ptr, mp_ptr, mp_size_t, mp_srcptr, mp_size_t, unsigned long int));
+mp_limb_t mpn_add _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_srcptr,mp_size_t));
+mp_limb_t mpn_add_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t));
+mp_limb_t mpn_add_n _PROTO ((mp_ptr, mp_srcptr, mp_srcptr, mp_size_t));
+mp_limb_t mpn_addmul_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t));
+mp_limb_t mpn_bdivmod _PROTO ((mp_ptr, mp_ptr, mp_size_t, mp_srcptr, mp_size_t, unsigned long int));
 int mpn_cmp _PROTO ((mp_srcptr, mp_srcptr, mp_size_t));
-mp_limb mpn_divmod_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb));
-mp_limb mpn_divrem _PROTO ((mp_ptr, mp_size_t, mp_ptr, mp_size_t, mp_srcptr, mp_size_t));
-mp_limb mpn_divrem_1 _PROTO ((mp_ptr, mp_size_t, mp_srcptr, mp_size_t, mp_limb));
+mp_limb_t mpn_divmod_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t));
+mp_limb_t mpn_divrem _PROTO ((mp_ptr, mp_size_t, mp_ptr, mp_size_t, mp_srcptr, mp_size_t));
+mp_limb_t mpn_divrem_1 _PROTO ((mp_ptr, mp_size_t, mp_srcptr, mp_size_t, mp_limb_t));
 void mpn_dump _PROTO ((mp_srcptr, mp_size_t));
 mp_size_t mpn_gcd _PROTO ((mp_ptr, mp_ptr, mp_size_t, mp_ptr, mp_size_t));
-mp_limb mpn_gcd_1 _PROTO ((mp_srcptr, mp_size_t, mp_limb));
+mp_limb_t mpn_gcd_1 _PROTO ((mp_srcptr, mp_size_t, mp_limb_t));
 mp_size_t mpn_gcdext _PROTO ((mp_ptr, mp_ptr, mp_ptr, mp_size_t, mp_ptr, mp_size_t));
 size_t mpn_get_str _PROTO ((unsigned char *, int, mp_ptr, mp_size_t));
-mp_size_t mpn_hamdist _PROTO ((mp_srcptr, mp_srcptr, mp_size_t));
-mp_limb mpn_lshift _PROTO ((mp_ptr, mp_srcptr, mp_size_t, unsigned int));
-mp_limb mpn_mod_1 _PROTO ((mp_srcptr, mp_size_t, mp_limb));
-mp_limb mpn_mul _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_srcptr, mp_size_t));
-mp_limb mpn_mul_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb));
+unsigned long int mpn_hamdist _PROTO ((mp_srcptr, mp_srcptr, mp_size_t));
+mp_limb_t mpn_lshift _PROTO ((mp_ptr, mp_srcptr, mp_size_t, unsigned int));
+mp_limb_t mpn_mod_1 _PROTO ((mp_srcptr, mp_size_t, mp_limb_t));
+mp_limb_t mpn_mul _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_srcptr, mp_size_t));
+mp_limb_t mpn_mul_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t));
 void mpn_mul_n _PROTO ((mp_ptr, mp_srcptr, mp_srcptr, mp_size_t));
 int mpn_perfect_square_p _PROTO ((mp_srcptr, mp_size_t));
-mp_size_t mpn_popcount _PROTO ((mp_srcptr, mp_size_t));
-mp_limb mpn_preinv_mod_1 _PROTO ((mp_srcptr, mp_size_t, mp_limb, mp_limb));
+unsigned long int mpn_popcount _PROTO ((mp_srcptr, mp_size_t));
+mp_limb_t mpn_preinv_mod_1 _PROTO ((mp_srcptr, mp_size_t, mp_limb_t, mp_limb_t));
 void mpn_random2 _PROTO ((mp_ptr, mp_size_t));
-mp_limb mpn_rshift _PROTO ((mp_ptr, mp_srcptr, mp_size_t, unsigned int));
-mp_size_t mpn_scan0 _PROTO ((mp_srcptr, mp_size_t));
-mp_size_t mpn_scan1 _PROTO ((mp_srcptr, mp_size_t));
+mp_limb_t mpn_rshift _PROTO ((mp_ptr, mp_srcptr, mp_size_t, unsigned int));
+unsigned long int mpn_scan0 _PROTO ((mp_srcptr, unsigned long int));
+unsigned long int mpn_scan1 _PROTO ((mp_srcptr, unsigned long int));
 mp_size_t mpn_set_str _PROTO ((mp_ptr, const unsigned char *, size_t, int));
 mp_size_t mpn_sqrtrem _PROTO ((mp_ptr, mp_ptr, mp_srcptr, mp_size_t));
-mp_limb mpn_sub_n _PROTO ((mp_ptr, mp_srcptr, mp_srcptr, mp_size_t));
-mp_limb mpn_submul_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb));
+mp_limb_t mpn_sub _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_srcptr,mp_size_t));
+mp_limb_t mpn_sub_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t));
+mp_limb_t mpn_sub_n _PROTO ((mp_ptr, mp_srcptr, mp_srcptr, mp_size_t));
+mp_limb_t mpn_submul_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t));
 #if defined (__cplusplus)
 }
 #endif
 
 #if defined (__GNUC__) || defined (_FORCE_INLINES)
-_EXTERN_INLINE mp_limb
+_EXTERN_INLINE mp_limb_t
 #if defined (__STDC__) || defined (__cplusplus)
 mpn_add_1 (register mp_ptr res_ptr,
 	   register mp_srcptr s1_ptr,
 	   register mp_size_t s1_size,
-	   register mp_limb s2_limb)
+	   register mp_limb_t s2_limb)
 #else
 mpn_add_1 (res_ptr, s1_ptr, s1_size, s2_limb)
      register mp_ptr res_ptr;
      register mp_srcptr s1_ptr;
      register mp_size_t s1_size;
-     register mp_limb s2_limb;
+     register mp_limb_t s2_limb;
 #endif
 {
-  register mp_limb x;
+  register mp_limb_t x;
 
   x = *s1_ptr++;
   s2_limb = x + s2_limb;
@@ -454,7 +468,7 @@ mpn_add_1 (res_ptr, s1_ptr, s1_size, s2_limb)
   return 0;
 }
 
-_EXTERN_INLINE mp_limb
+_EXTERN_INLINE mp_limb_t
 #if defined (__STDC__) || defined (__cplusplus)
 mpn_add (register mp_ptr res_ptr,
 	 register mp_srcptr s1_ptr,
@@ -470,7 +484,7 @@ mpn_add (res_ptr, s1_ptr, s1_size, s2_ptr, s2_size)
      register mp_size_t s2_size;
 #endif
 {
-  mp_limb cy_limb = 0;
+  mp_limb_t cy_limb = 0;
 
   if (s2_size != 0)
     cy_limb = mpn_add_n (res_ptr, s1_ptr, s2_ptr, s2_size);
@@ -483,21 +497,21 @@ mpn_add (res_ptr, s1_ptr, s1_size, s2_ptr, s2_size)
   return cy_limb;
 }
 
-_EXTERN_INLINE mp_limb
+_EXTERN_INLINE mp_limb_t
 #if defined (__STDC__) || defined (__cplusplus)
 mpn_sub_1 (register mp_ptr res_ptr,
 	   register mp_srcptr s1_ptr,
 	   register mp_size_t s1_size,
-	   register mp_limb s2_limb)
+	   register mp_limb_t s2_limb)
 #else
 mpn_sub_1 (res_ptr, s1_ptr, s1_size, s2_limb)
      register mp_ptr res_ptr;
      register mp_srcptr s1_ptr;
      register mp_size_t s1_size;
-     register mp_limb s2_limb;
+     register mp_limb_t s2_limb;
 #endif
 {
-  register mp_limb x;
+  register mp_limb_t x;
 
   x = *s1_ptr++;
   s2_limb = x - s2_limb;
@@ -525,7 +539,7 @@ mpn_sub_1 (res_ptr, s1_ptr, s1_size, s2_limb)
   return 0;
 }
 
-_EXTERN_INLINE mp_limb
+_EXTERN_INLINE mp_limb_t
 #if defined (__STDC__) || defined (__cplusplus)
 mpn_sub (register mp_ptr res_ptr,
 	 register mp_srcptr s1_ptr,
@@ -541,7 +555,7 @@ mpn_sub (res_ptr, s1_ptr, s1_size, s2_ptr, s2_size)
      register mp_size_t s2_size;
 #endif
 {
-  mp_limb cy_limb = 0;
+  mp_limb_t cy_limb = 0;
 
   if (s2_size != 0)
     cy_limb = mpn_sub_n (res_ptr, s1_ptr, s2_ptr, s2_size);
@@ -556,9 +570,9 @@ mpn_sub (res_ptr, s1_ptr, s1_size, s2_ptr, s2_size)
 #endif /* __GNUC__ */
 
 /* Allow faster testing for negative, zero, and positive.  */
-#define mpz_sign(Z) ((Z)->_mp_size)
-#define mpf_sign(F) ((F)->_mp_size)
-#define mpq_sign(Q) ((Q)->_mp_num._mp_size)
+#define mpz_sgn(Z) ((Z)->_mp_size < 0 ? -1 : (Z)->_mp_size > 0)
+#define mpf_sgn(F) ((F)->_mp_size < 0 ? -1 : (F)->_mp_size > 0)
+#define mpq_sgn(Q) ((Q)->_mp_num._mp_size < 0 ? -1 : (Q)->_mp_num._mp_size > 0)
 
 /* Allow direct user access to numerator and denominator of a mpq_t object.  */
 #define mpq_numref(Q) (&((Q)->_mp_num))
@@ -568,14 +582,14 @@ mpn_sub (res_ptr, s1_ptr, s1_size, s2_ptr, s2_size)
 #if defined (__GNUC__)
 #define mpz_cmp_ui(Z,UI) \
   (__builtin_constant_p (UI) && (UI) == 0				\
-   ? mpz_sign (Z) : mpz_cmp_ui (Z,UI))
+   ? mpz_sgn (Z) : mpz_cmp_ui (Z,UI))
 #define mpz_cmp_si(Z,UI) \
-  (__builtin_constant_p (UI) && (UI) == 0 ? mpz_sign (Z)		\
+  (__builtin_constant_p (UI) && (UI) == 0 ? mpz_sgn (Z)			\
    : __builtin_constant_p (UI) && (UI) > 0 ? mpz_cmp_ui (Z,UI)		\
    : mpz_cmp_si (Z,UI))
 #define mpq_cmp_ui(Q,NUI,DUI) \
   (__builtin_constant_p (NUI) && (NUI) == 0				\
-   ? mpq_sign (Q) : mpq_cmp_ui (Q,NUI,DUI))
+   ? mpq_sgn (Q) : mpq_cmp_ui (Q,NUI,DUI))
 #endif
 
 #define mpn_divmod(qp,np,nsize,dp,dsize) mpn_divrem (qp,0,np,nsize,dp,dsize)
@@ -603,6 +617,6 @@ mpn_sub (res_ptr, s1_ptr, s1_size, s2_ptr, s2_size)
 #define mpz_mod_2exp	mpz_fdiv_r_2exp
 
 #define __GNU_MP_VERSION 2
-#define __GNU_MP_VERSION_MINOR -927 /* ??? */
+#define __GNU_MP_VERSION_MINOR 0
 #define __GMP_H__
 #endif /* __GMP_H__ */

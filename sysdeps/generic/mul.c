@@ -16,7 +16,8 @@ License for more details.
 
 You should have received a copy of the GNU Library General Public License
 along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+MA 02111-1307, USA. */
 
 #include "gmp.h"
 #include "gmp-impl.h"
@@ -41,7 +42,7 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 #define KARATSUBA_THRESHOLD 32
 #endif
 
-mp_limb
+mp_limb_t
 #if __STDC__
 mpn_mul (mp_ptr prodp,
 	 mp_srcptr up, mp_size_t usize,
@@ -56,7 +57,7 @@ mpn_mul (prodp, up, usize, vp, vsize)
 #endif
 {
   mp_ptr prod_endp = prodp + usize + vsize - 1;
-  mp_limb cy;
+  mp_limb_t cy;
   mp_ptr tspace;
   TMP_DECL (marker);
 
@@ -69,8 +70,8 @@ mpn_mul (prodp, up, usize, vp, vsize)
 	 here immediately.  Huge ones arrive here as this is the base case
 	 for Karatsuba's recursive algorithm below.  */
       mp_size_t i;
-      mp_limb cy_limb;
-      mp_limb v_limb;
+      mp_limb_t cy_limb;
+      mp_limb_t v_limb;
 
       if (vsize == 0)
 	return 0;
