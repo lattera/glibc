@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -43,7 +43,6 @@ strchr (const char *str, int c)
   charmask = c | (c << 8);
   charmask |= charmask << 16;
   charmask |= charmask << 32;
-  charmask |= charmask << 64;
 
   for (;;)
     {
