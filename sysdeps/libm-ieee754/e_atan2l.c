@@ -73,10 +73,10 @@ pi_lo   = -5.01655761266833202345176e-20L;/* 0xBFBE, 0xECE675D1, 0xFC8F8CBB */
 
 	EXTRACT_LDOUBLE_WORDS(sx,hx,lx,x);
 	ix = sx&0x7fff;
-	lx |= hx ^ 0x80000000;
+	lx |= hx & 0x7fffffff;
 	EXTRACT_LDOUBLE_WORDS(sy,hy,ly,y);
 	iy = sy&0x7fff;
-	ly |= hy ^ 0x80000000;
+	ly |= hy & 0x7fffffff;
 	if(((2*ix|((lx|-lx)>>31))>0xfffe)||
 	   ((2*iy|((ly|-ly)>>31))>0xfffe))	/* x or y is NaN */
 	   return x+y;
@@ -114,7 +114,7 @@ pi_lo   = -5.01655761266833202345176e-20L;/* 0xBFBE, 0xECE675D1, 0xFC8F8CBB */
 	    }
 	}
     /* when y is INF */
-	if(iy==0x7fff) return (hy>=0x8000)? -pi_o_2-tiny: pi_o_2+tiny;
+	if(iy==0x7fff) return (sy>=0x8000)? -pi_o_2-tiny: pi_o_2+tiny;
 
     /* compute y/x */
 	k = sy-sx;

@@ -32,18 +32,18 @@
 
 #define ELF_NOTE_BEGIN(sectname, sectflags, type, name)			      \
 	.section sectname, sectflags;					      \
-	.align ALIGNARG(2);	/* Notes are 4-byte aligned.  */	      \
+	.align 4;		/* Notes are 4-byte aligned.  */	      \
 	.long 1f - 0f;		/* 32-bit word: length of name field */	      \
 	.long 3f - 2f;		/* 32-bit word: length of desc field */	      \
 	.long (type);		/* 32-bit word: vendor-defined type field */  \
 0:	.asciz name;		/* null-terminated string, any length: name */\
-1:	.align ALIGNARG(2);	/* Name data padded to 4-byte alignment.  */  \
+1:	.align 4;		/* Name data padded to 4-byte alignment.  */  \
 2:	/* Here follows the "note descriptor" data, whose format	      \
 	   is not specified by ELF.  The vendor name and type field	      \
 	   indicate what sort of data is found here.  */
 
 #define ELF_NOTE_END							      \
-3:	.align ALIGNARG(2)	/* Pad to 4-byte align the next note.  */
+3:	.align 4		/* Pad to 4-byte align the next note.  */
 
 
 /* The linker (GNU ld 2.8 and later) recognize an allocated section whose

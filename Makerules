@@ -477,8 +477,8 @@ others: $(addprefix $(objpfx),$(install-lib))
 ifndef objects
 
 # Create the stamp$o files to keep the parent makefile happy.
-subdir_lib: $(foreach o,$(object-suffixes),$(objpfx)stamp$o-$(subdir))
-$(foreach o,$(object-suffixes),$(objpfx)stamp$o-$(subdir)):
+subdir_lib: $(foreach o,$(object-suffixes),$(objpfx)stamp$o)
+$(foreach o,$(object-suffixes),$(objpfx)stamp$o):
 	$(make-target-directory)
 	rm -f $@; > $@
 else
@@ -490,19 +490,19 @@ else
 define o-iterator-doit
 $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
 $(addsuffix .%,$(filter-out $(elide-routines$o),$(notdir $(objects:.o=))))): \
-  $(objpfx)stamp.%-$(subdir) ;
+  $(objpfx)stamp.% ;
 endef
 object-suffixes-left := $(object-suffixes)
 include $(o-iterator)
 
-# The pattern rule tells Make to remake $(objpfx)stamp.%-$(subdir) as
+# The pattern rule tells Make to remake $(objpfx)stamp.% as
 # the way to update all the foo.% object files in $(objects).  Now we
-# define explicit rules to update each $(objpfx)stamp.SUFFIX-$(subdir)
+# define explicit rules to update each $(objpfx)stamp.SUFFIX
 # timestamp file; these rules (one explicit rule is generated for each
 # object suffix) will update the parent archive with ar.  Use a static
 # pattern rule so $* is set to the object type during the commands.
 define o-iterator-doit
-$(objpfx)stamp$o-$(subdir): $(objpfx)stamp%-$(subdir): $(o-objects); $$(do-ar)
+$(objpfx)stamp$o: $(objpfx)stamp%: $(o-objects); $$(do-ar)
 endef
 object-suffixes-left := $(object-suffixes)
 include $(o-iterator)
@@ -529,7 +529,7 @@ $(common-objpfx)$(patsubst %,$(libtype$o),c)($(ar-symtab-name)): \
 	  $$(RANLIB) $$(common-objpfx)$$(patsubst %,$$(libtype$o),c)
 endef
 ifndef subdir
-subdirs-stamps := $(foreach d,$(subdirs),$(common-objpfx)$d/stamp%-$d)
+subdirs-stamps := $(foreach d,$(subdirs),$(common-objpfx)$d/stamp%)
 subdirs-stamp-o = $(subst %,$o,$(subdirs-stamps))
 $(subdirs-stamps): subdir_lib;
 endif
@@ -866,7 +866,7 @@ common-mostlyclean:
 	$(rmobjs)
 define rmobjs
 $(foreach o,$(object-suffixes),
--rm -f $(addprefix $(objpfx),stamp$o-$(subdir)) $(o-objects))
+-rm -f $(objpfx)stamp$o $(o-objects))
 endef
 
 # Also remove the dependencies and generated source files.

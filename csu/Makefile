@@ -81,6 +81,10 @@ $(objpfx)defs.h: $(objpfx)initfini.s
 
 endif
 
+ifeq (yes,$(elf))
+extra-objs += abi-note.o
+endif
+
 include ../Rules
 
 define link-relocatable

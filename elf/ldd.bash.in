@@ -35,8 +35,8 @@ bind_now=
 while test $# -gt 0; do
   case "$1" in
   --v | --ve | --ver | --vers | --versi | --versio | --version)
-    echo $"ldd (GNU libc) @VERSION@
-Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+    echo '"ldd (GNU libc) @VERSION@'
+    echo $"Copyright (C) 1996, 1997 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
     exit 0 ;;
@@ -61,7 +61,7 @@ Report bugs using the \`glibcbug' script to <bugs@gnu.ai.mit.edu>."
   --)		# Stop option processing.
     shift; break ;;
   -*)
-    echo >&2 $"ldd: unrecognized option" "\`$1'"
+    echo >&2 'ldd:' $"unrecognized option" "\`$1'"
     echo >&2 $"Try \`ldd --help' for more information."
     exit 1 ;;
   *)
@@ -72,7 +72,7 @@ done
 add_env="LD_TRACE_LOADED_OBJECTS=1 LD_WARN=$warn LD_BIND_NOW=$bind_now"
 case $# in
 0)
-  echo >&2 $"ldd: missing file arguments"
+  echo >&2 'ldd:' $"missing file arguments"
   echo >&2 $"Try \`ldd --help' for more information."
   exit 1 ;;
 1)
@@ -86,7 +86,7 @@ case $# in
     exit 1
   elif test -r "$file"; then
     test -x "$file" ||
-    echo $"ldd: warning: you do not have execution permission for" "\`$file'"
+    echo 'ldd:' $"warning: you do not have execution permission for" "\`$file'"
     ${RTLD} --verify "$file"
     case $? in
     0)
@@ -100,12 +100,12 @@ case $# in
       eval $add_env exec \${RTLD} '"$file"' || exit 1
       ;;
     *)
-      echo $"ldd: ${RTLD} exited with unknown exit code ($?)" >&2
+      echo 'ldd:' ${RTLD} $"exited with unknown exit code" "($?)" >&2
       exit 1
       ;;
     esac
   else
-    echo $"ldd: error: you do not have read permission for" "\`$file'"
+    echo 'ldd:' $"error: you do not have read permission for" "\`$file'"
     exit 1
   fi
   exit ;;
@@ -121,8 +121,8 @@ case $# in
       echo "ldd: ${file}:" $"no such file"
       result=1
     elif test -r "$file"; then
-      test -x "$file" || echo $"\
-ldd: warning: you do not have execution permission for" "\`$file'"
+      test -x "$file" || echo 'ldd:' $"\
+warning: you do not have execution permission for" "\`$file'"
       ${RTLD} --verify "$file"
       case $? in
       0)
@@ -136,12 +136,12 @@ ldd: warning: you do not have execution permission for" "\`$file'"
         eval $add_env ${RTLD} '"$file"' || result=1
 	;;
       *)
-	echo $"ldd: ${RTLD} exited with unknown exit code ($?)" >&2
+	echo 'ldd:' ${RTLD} $"exited with unknown exit code" "($?)" >&2
 	exit 1
 	;;
       esac
     else
-      echo $"ldd: error: you do not have read permission for" "\`$file'"
+      echo 'ldd:' $"error: you do not have read permission for" "\`$file'"
       result=1
     fi
   done

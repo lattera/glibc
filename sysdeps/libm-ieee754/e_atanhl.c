@@ -75,5 +75,5 @@ static double long zero = 0.0;
 	    t = 0.5*__log1pl(t+t*x/(one-x));
 	} else
 	    t = 0.5*__log1pl((x+x)/(one-x));
-	if(se>0x7fff) return t; else return -t;
+	if(se<=0x7fff) return t; else return -t;
 }

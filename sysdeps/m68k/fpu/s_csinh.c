@@ -25,9 +25,6 @@
 #ifndef SUFF
 #define SUFF
 #endif
-#ifndef huge_val
-#define huge_val HUGE_VAL
-#endif
 #ifndef float_type
 #define float_type double
 #endif
@@ -40,87 +37,33 @@ __complex__ float_type
 s(__csinh) (__complex__ float_type x)
 {
   __complex__ float_type retval;
-  int negate = m81(__signbit) (__real__ x);
+  unsigned long ix_cond;
 
-  __real__ x = s(fabs) (__real__ x);
+  ix_cond = __m81_test (__imag__ x);
 
-  if (m81(__finite) (__real__ x))
+  if ((ix_cond & (__M81_COND_INF|__M81_COND_NAN)) == 0)
     {
-      if (m81(__finite) (__imag__ x))
-	{
-	  float_type sinh_val;
-	  float_type sin_ix, cos_ix;
+      /* Imaginary part is finite.  */
+      float_type sin_ix, cos_ix;
 
-	  __asm ("fsincos%.x %2,%1:%0" : "=f" (sin_ix), "=f" (cos_ix)
-		 : "f" (__imag__ x));
-	  sinh_val = m81(__ieee754_sinh) (__real__ x);
-	  __real__ retval = cos_ix * sinh_val;
-	  __imag__ retval = sin_ix * sinh_val;
-
-	  if (negate)
-	    __real__ retval = -__real__ retval;
-	}
-      else if (__real__ x == 0)
-	{
-	  __real__ retval = 0.0;
-	  __imag__ retval = 0.0/0.0;
-
-	  if (negate)
-	    __real__ retval = -__real__ retval;
-	}
+      __asm ("fsincos%.x %2,%1:%0" : "=f" (sin_ix), "=f" (cos_ix)
+	     : "f" (__imag__ x));
+      __real__ retval = cos_ix * m81(__ieee754_sinh) (__real__ x);
+      if (ix_cond & __M81_COND_ZERO)
+	__imag__ retval = __imag__ x;
       else
-	__real__ retval = __imag__ retval = 0.0/0.0;
-    }
-  else if (m81(__isinf) (__real__ x))
-    {
-      if (__imag__ x == 0.0)
-	{
-	  __real__ retval = negate ? -huge_val : huge_val;
-	  __imag__ retval = __imag__ x;
-	}
-      else if (m81(__finite) (__imag__ x))
-	{
-	  float_type remainder, pi_2;
-	  int quadrant;
-	  __real__ retval = __imag__ retval = huge_val;
-
-	  __asm ("fmovecr %#0,%0\n\tfscale%.w %#-1,%0" : "=f" (pi_2));
-	  __asm ("fmod%.x %2,%0\n\tfmove%.l %/fpsr,%1"
-		 : "=f" (remainder), "=dm" (quadrant)
-		 : "f" (pi_2), "0" (__imag__ x));
-	  quadrant = (quadrant >> 16) & 0x83;
-	  if (quadrant & 0x80)
-	    quadrant ^= 0x83;
-	  if (negate)
-	    quadrant ^= 1;
-	  switch (quadrant)
-	    {
-	    default:
-	      break;
-	    case 1:
-	      __real__ retval = -__real__ retval;
-	      break;
-	    case 2:
-	      __real__ retval = -__real__ retval;
-	    case 3:
-	      __imag__ retval = -__imag__ retval;
-	      break;
-	    }
-	}
-      else
-	{
-	  /* The subtraction raises the invalid exception.  */
-	  __real__ retval = huge_val;
-	  __imag__ retval = huge_val - huge_val;
-	}
-    }
-  else if (__imag__ x == 0.0)
-    {
-      __real__ retval = 0.0/0.0;
-      __imag__ retval = __imag__ x;
+	__imag__ retval = sin_ix * m81(__ieee754_cosh) (__real__ x);
     }
   else
-    __real__ retval = __imag__ retval = 0.0/0.0;
+    {
+      unsigned long rx_cond = __m81_test (__real__ x);
+
+      __imag__ retval = __imag__ x - __imag__ x;
+      if (rx_cond & (__M81_COND_ZERO|__M81_COND_INF|__M81_COND_NAN))
+	__real__ retval = __real__ x;
+      else
+	__real__ retval = __imag__ retval;
+    }
 
   return retval;
 }

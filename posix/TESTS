@@ -157,3 +157,11 @@
 0:M[ou]'?am+[ae]r .*([AEae]l[- ])?[GKQ]h?[aeu]+([dtz][dhz]?)+af[iy]:Moammar Qudhafi
 0:M[ou]'?am+[ae]r .*([AEae]l[- ])?[GKQ]h?[aeu]+([dtz][dhz]?)+af[iy]:Mu'ammar al-Qaddafi
 0:M[ou]'?am+[ae]r .*([AEae]l[- ])?[GKQ]h?[aeu]+([dtz][dhz]?)+af[iy]:Mulazim Awwal Mu'ammar Muhammad Abu Minyar al-Qadhafi
+0:[[:digit:]]+:01234
+1:[[:alpha:]]+:01234
+0:^[[:digit:]]*$:01234
+1:^[[:digit:]]*$:01234a
+0:^[[:alnum:]]*$:01234a
+0:^[[:xdigit:]]*$:01234a
+1:^[[:xdigit:]]*$:01234g
+0:^[[:alnum:][:space:]]*$:Hello world

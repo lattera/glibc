@@ -84,11 +84,11 @@ DEFINE_CATEGORY
   DEFINE_ELEMENT (_NL_CTYPE_NAMES_EL,	  "ctype-names-el",     std, string)
   DEFINE_ELEMENT (_NL_CTYPE_HASH_SIZE,	  "ctype-hash-size",    std, word)
   DEFINE_ELEMENT (_NL_CTYPE_HASH_LAYERS,  "ctype-hash-layers",  std, word)
-  DEFINE_ELEMENT (_NL_CTYPE_CLASS_NAMES,  "ctype-class-names",  std, string)
-  DEFINE_ELEMENT (_NL_CTYPE_MAP_NAMES,	  "ctype-map-names",    std, string)
+  DEFINE_ELEMENT (_NL_CTYPE_CLASS_NAMES,  "ctype-class-names",  std, stringlist)
+  DEFINE_ELEMENT (_NL_CTYPE_MAP_NAMES,	  "ctype-map-names",    std, stringlist)
   DEFINE_ELEMENT (_NL_CTYPE_WIDTH,	  "ctype-width",        std, bytearray)
   DEFINE_ELEMENT (_NL_CTYPE_MB_CUR_MAX,	  "ctype-mb-cur-max",   std, word)
-  DEFINE_ELEMENT (_NL_CTYPE_CODESET_NAME, "ctype-codeset-name", std, string)
+  DEFINE_ELEMENT (_NL_CTYPE_CODESET_NAME, "charmap",		std, string)
   ), _nl_postload_ctype, ctype_input, ctype_check, ctype_output)
 
 

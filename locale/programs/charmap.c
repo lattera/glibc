@@ -22,6 +22,7 @@
 #endif
 
 #include <ctype.h>
+#include <dirent.h>
 #include <errno.h>
 #include <libintl.h>
 #include <obstack.h>
@@ -74,6 +75,73 @@ charmap_read (const char *filename)
 
       if (result == NULL && !be_quiet)
 	error (0, errno, _("character map file `%s' not found"), filename);
+    }
+
+  if (result == NULL)
+    {
+      /* OK, one more try.  We also accept the names given to the
+	 character sets in the files.  Sometimes they differ from the
+	 file name.  */
+      DIR *dir;
+      struct dirent *dirent;
+
+      dir = opendir (CHARMAP_PATH);
+      if (dir == NULL)
+	{
+	  while ((dirent = readdir (dir)) != NULL)
+	    if (strcmp (dirent->d_name, ".") != 0
+		&& strcmp (dirent->d_name, "..") != 0)
+	      {
+		char buf[sizeof (CHARMAP_PATH)
+			+ strlen (dirent->d_name) + 1];
+		FILE *fp;
+#ifdef _DIRENT_HAVE_D_TYPE
+		if (dirent->d_type != DT_UNKNOWN && dirent->d_type != DT_REG)
+		  continue;
+#endif
+		stpcpy (stpcpy (stpcpy (buf, CHARMAP_PATH), "/"),
+			dirent->d_name);
+
+		fp = fopen (buf, "r");
+		if (fp != NULL)
+		  {
+		    char *name = NULL;
+
+		    while (!feof (fp))
+		      {
+			char junk[BUFSIZ];
+
+			if (fscanf (fp, " <code_set_name> %as", &name) == 1)
+			  break;
+
+			do
+			  fgets (junk, sizeof junk, fp);
+			while (strchr (junk, '\n') == NULL);
+		      }
+
+		    fclose (fp);
+
+		    if (name != NULL)
+		      {
+			if (strcmp (name, filename) == 0)
+			  {
+			    result = parse_charmap (buf);
+
+			    free (buf);
+
+			    if (result)
+			      return result;
+
+			    break;
+			  }
+
+			free (name);
+		      }
+		  }
+	      }
+
+	  closedir (dir);
+	}
     }
 
   if (result == NULL)

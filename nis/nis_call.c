@@ -134,7 +134,7 @@ __nis_dobind (const nis_server *server, u_long flags)
       if ((flags & NO_AUTHINFO) != NO_AUTHINFO)
 	{
 #if defined(HAVE_SECURE_RPC)
-	  if (server->key_type == NIS_PK_DH)
+	  if (server->key_type == NIS_PK_DH && getenv ("NO_SECURE_RPC") == NULL)
 	    {
 	      char netname[MAXNETNAMELEN+1];
 	      char *p;
@@ -173,11 +173,8 @@ __do_niscall (const nis_server *serv, int serv_len, u_long prog,
   if (serv == NULL || serv_len == 0)
     {
       dir = readColdStartFile ();
-      if (dir == NULL)
-	{
-	  fputs (_("Error: could not find a NIS_COLD_START file\n"), stderr);
-	  return NIS_UNAVAIL;
-	}
+      if (dir == NULL) /* No /var/nis/NIS_COLD_START -> no NIS+ installed */
+	return NIS_UNAVAIL;
       server = dir->do_servers.do_servers_val;
       server_len = dir->do_servers.do_servers_len;
     }

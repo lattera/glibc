@@ -10,7 +10,9 @@
 #define ABI_LINUX_MINOR	0
 #define ABI_LINUX_PATCH	0
 
-#define ABI_TAG ((ABI_LINUX_TAG << 24) |				      \
-		 (ABI_LINUX_MAJOR << 16) |				      \
-		 (ABI_LINUX_MINOR << 8) |				      \
+/* Don't use `|' in this expression, it is a comment character in the
+   assembler.  */
+#define ABI_TAG ((ABI_LINUX_TAG << 24) +				      \
+		 (ABI_LINUX_MAJOR << 16) +				      \
+		 (ABI_LINUX_MINOR << 8) +				      \
 		 (ABI_LINUX_PATCH << 0))

@@ -456,7 +456,9 @@ write_charmaps (void)
     if (strcmp (dirent->d_name, ".") != 0
 	&& strcmp (dirent->d_name, "..") != 0)
       {
+	char *buf = NULL;
 	mode_t mode;
+
 #ifdef _DIRENT_HAVE_D_TYPE
 	if (dirent->d_type != DT_UNKNOWN)
 	  mode = DTTOIF (dirent->d_type);
@@ -464,7 +466,8 @@ write_charmaps (void)
 #endif
 	  {
 	    struct stat st;
-	    char buf[sizeof (CHARMAP_PATH) + strlen (dirent->d_name) + 1];
+
+	    buf = alloca (sizeof (CHARMAP_PATH) + strlen (dirent->d_name) + 1);
 
 	    stpcpy (stpcpy (stpcpy (buf, CHARMAP_PATH), "/"), dirent->d_name);
 
@@ -474,7 +477,44 @@ write_charmaps (void)
 	  }
 
 	if (S_ISREG (mode))
-	  PUT (strdup (dirent->d_name));
+	  {
+	    FILE *fp;
+
+	    PUT (strdup (dirent->d_name));
+
+	    /* Read the file and learn about the code set name.  */
+	    if (buf == NULL)
+	      {
+		buf = alloca (sizeof (CHARMAP_PATH)
+			      + strlen (dirent->d_name) + 1);
+
+		stpcpy (stpcpy (stpcpy (buf, CHARMAP_PATH), "/"),
+			dirent->d_name);
+	      }
+
+	    fp = fopen (buf, "r");
+	    if (fp != NULL)
+	      {
+		char *name = NULL;
+
+		while (!feof (fp))
+		  {
+		    char junk[BUFSIZ];
+
+		    if (fscanf (fp, " <code_set_name> %as", &name) == 1)
+		      break;
+
+		    do
+		      fgets (junk, sizeof junk, fp);
+		    while (strchr (junk, '\n') == NULL);
+		  }
+
+		fclose (fp);
+
+		if (name != NULL)
+		  PUT (name);
+	      }
+	  }
       }
 
   closedir (dir);
@@ -496,8 +536,8 @@ show_locale_vars (void)
     {
       char *val = getenv (name);
 
-      if (lcall != NULL || val == NULL)
-	printf ("%s=\"%s\"\n", name, lcall ? : lang);
+      if ((lcall ?: "")[0] != '\0' || val == NULL)
+	printf ("%s=\"%s\"\n", name, (lcall ?: "")[0] ? lcall : lang);
       else
 	printf ("%s=%s\n", name, val);
     }
@@ -551,6 +591,21 @@ show_info (const char *name)
 
 	    if (show_keyword_name)
 	      putchar ('"');
+	  }
+	  break;
+	case stringlist:
+	  {
+	    int first = 1;
+	    const char *val = nl_langinfo (item->item_id) ? : "";
+
+	    while (*val != '\0')
+	      {
+		printf ("%s%s%s%s", first ? "" : ";",
+			show_keyword_name ? "\"" : "", val,
+			show_keyword_name ? "\"" : "");
+		val = strchr (val, '\0') + 1;
+		first = 0;
+	      }
 	  }
 	  break;
 	case byte:

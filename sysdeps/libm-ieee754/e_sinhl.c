@@ -63,7 +63,7 @@ static long double one = 1.0, shuge = 1.0e4931L;
 	if(ix==0x7fff) return x+x;
 
 	h = 0.5;
-	if (jx<0) h = -h;
+	if (jx & 0x8000) h = -h;
     /* |x| in [0,25], return sign(x)*0.5*(E+E/(E+1))) */
 	if (ix < 0x4003 || (ix == 0x4003 && i0 <= 0xc8000000)) { /* |x|<25 */
 	    if (ix<0x3fe3) 		/* |x|<2**-28 */

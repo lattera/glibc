@@ -153,6 +153,21 @@ __internal_inline_functions (float,f)
 __internal_inline_functions (long double,l)
 #undef __internal_inline_functions
 
+/* Get the m68881 condition codes, to quickly check multiple conditions.  */
+static __inline__ unsigned long
+__m81_test (long double __val)
+{
+  unsigned long __fpsr;
+  __asm ("ftst%.x %1; fmove%.l %/fpsr,%0" : "=dm" (__fpsr) : "f" (__val));
+  return __fpsr;
+}
+
+/* Bit values returned by __m81_test.  */
+#define __M81_COND_NAN (1 << 24)
+#define __M81_COND_INF (2 << 24)
+#define __M81_COND_ZERO (4 << 24)
+#define __M81_COND_NEG (8 << 24)
+
 #endif /* __LIBC_M81_MATH_INLINES */
 
 /* The rest of the functions are available to the user.  */
@@ -163,8 +178,12 @@ __m81_u(__CONCAT(__frexp,s))(float_type __value, int *__expptr)		  \
 {									  \
   float_type __mantissa, __exponent;					  \
   int __iexponent;							  \
-  if (__value == 0.0)							  \
+  unsigned long __fpsr;							  \
+  __asm("ftst%.x %1\n"							  \
+	"fmove%.l %/fpsr, %0" : "=dm" (__fpsr) : "f" (__value));	  \
+  if (__fpsr & (7 << 24))						  \
     {									  \
+      /* Not finite or zero.  */					  \
       *__expptr = 0;							  \
       return __value;							  \
     }									  \

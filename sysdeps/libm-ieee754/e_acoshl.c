@@ -53,7 +53,7 @@ ln2	= 6.931471805599453094287e-01L; /* 0x3FFE, 0xB17217F7, 0xD1CF79AC */
 	long double t;
 	u_int32_t se,i0,i1;
 	GET_LDOUBLE_WORDS(se,i0,i1,x);
-	if(se<0x3fff) {			/* x < 1 */
+	if(se<0x3fff || se & 0x8000) {	/* x < 1 */
 	    return (x-x)/(x-x);
 	} else if(se >=0x401b) {	/* x > 2**28 */
 	    if(se >=0x7fff) {		/* x is inf of NaN */

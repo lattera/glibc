@@ -46,8 +46,16 @@ nis_leaf_of_r (const_nis_name name, char *buffer, size_t buflen)
       return NULL;
     }
 
-  if (i > 1)
-    strncpy (buffer, name, i - 1);
+  if (i > 0)
+    {
+      if ((size_t)i >= buflen)
+	{
+	  errno = ERANGE;
+	  return NULL;
+	}
+      strncpy (buffer, name, i);
+      buffer[i] = 0;
+    }
 
   return buffer;
 }
@@ -85,38 +93,6 @@ nis_name_of_r (const_nis_name name, char *buffer, size_t buflen)
 
   if (diff - 1 == 0)
     return NULL;
-
-  return buffer;
-}
-
-nis_name
-nis_domain_of (const_nis_name name)
-{
-  static char result[NIS_MAXNAMELEN + 1];
-
-  return nis_domain_of_r (name, result, NIS_MAXNAMELEN);
-}
-
-nis_name
-nis_domain_of_r (const_nis_name name, char *buffer, size_t buflen)
-{
-  char *cptr;
-  size_t cptr_len;
-
-  cptr = strchr (name, '.');	/* XXX What happens if the NIS name
-				   does not contain a `.'?  */
-  ++cptr;
-  cptr_len = strlen (cptr);
-
-  if (cptr_len == 0)
-    strcpy (buffer, ".");
-  else if (cptr_len >= buflen)
-    {
-      errno = ERANGE;
-      return NULL;
-    }
-  else
-    memcpy (buffer, cptr, cptr_len + 1);
 
   return buffer;
 }

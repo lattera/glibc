@@ -81,7 +81,8 @@ enum value_type
   stringarray,
   byte,
   bytearray,
-  word
+  word,
+  stringlist
 };
 
 

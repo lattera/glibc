@@ -143,27 +143,3 @@ __nis_expandname (const char *name)
 
   return getnames;
 }
-
-fd_result *
-__nis_finddirectoy (const_nis_name name)
-{
-  fd_args args;
-  nis_error status;
-  fd_result *res;
-
-  args.dir_name = (char *) name;
-  args.requester = nis_local_principal ();
-
-  res = calloc (1, sizeof (fd_result));
-  if (res == NULL)
-    return NULL;
-
-  if ((status = __do_niscall (NULL, 0, NIS_FINDDIRECTORY,
-			      (xdrproc_t) xdr_fd_args,
-			      (caddr_t) &args,
-			      (xdrproc_t) xdr_fd_result,
-			      (caddr_t) res, 0)) != RPC_SUCCESS)
-    res->status = status;
-
-  return res;
-}

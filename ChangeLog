@@ -1,5 +1,33 @@
 1997-05-07 16:31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/categories.def: Change type of _NL_CTYPE_CLASS_NAMES and
+	_NL_CTYPE_MAP_NAMES field to stringlist.
+	Change name of _NL_CTYPE_CODESET_NAME to "charmap".
+	* locale/localeinfo.h (enum value_type): Add stringlist.
+	* locale/programs/locale.c (show_info): Handle stringlist.
+
+	* locale/programs/charmap.c (charmap_read): If charmap file is not
+	using the given name try to find it by looking through all available
+	charmap files and compare the code set name.
+	* locale/programs/locale.c (write_charmaps): Also print names of
+	charset in <code_set_name> fields in the files.
+
+	* elf/ldd.bash.in: Correct translatable strings.
+
+	* posix/TESTS: Add some more tests for character class matching.
+	* posix/regex.c: Merge with GNU awk version.
+	(regex_compile): Use ISO C/amend 1 functions for character class
+	handling.
+	* posix/regex.h: Merge with GNU awk version.
+
+	* posix/getopt.c: Declare as master copies.
+	* posix/getopt1.c: Likewise.
+	* posix/getopt.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/sys/mount.h: Add definitions for option
+	value to mount functions.
+	Patch by a sun <asun@zoology.washington.edu>.
+
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Check for mismatch
 	in size for copy relocation.
 	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Likewise.
@@ -9,13 +37,13 @@
 
 1997-05-06 13:25  H.J. Lu  <hjl@gnu.ai.mit.edu>
 
-	* stdio-common/bug4.c (main): Use /tmp/bug4.test for concurrency
-	with other tests.
 	* stdio-common/bug3.c (main): Use /tmp/bug3.test for concurrency
 	with other tests.
+	* stdio-common/bug4.c (main): Use /tmp/bug4.test for concurrency
+	with other tests.
 
-	* sunrpc/svc_run.c: svc_exit): New, defined.  (svc_run): Test for
-	svc_stop variable.
+	* sunrpc/svc_run.c (svc_exit): New, defined.
+	(svc_run): Test for svc_stop variable.
 	* sunrpc/rpc/svc.h (svc_exit): New, declared.
 
 1997-05-03 08:47  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
@@ -40,10 +68,13 @@
 
 	* sysdeps/m68k/s_ccosh.c: Rewritten.
 	* sysdeps/m68k/s_csinh.c: Rewritten.
+	* sysdeps/m68k/s_cexp.c: Rewritten.
 	* sysdeps/m68k/s_ccoshf.c: Don't define huge_val.
 	* sysdeps/m68k/s_ccoshl.c: Likewise.
 	* sysdeps/m68k/s_csinhf.c: Likewise.
 	* sysdeps/m68k/s_csinhl.c: Likewise.
+	* sysdeps/m68k/s_cexpf.c: Likewise.
+	* sysdeps/m68k/s_cexpl.c: Likewise.
 
 	* sysdeps/m68k/s_ccos.c: New file.
 	* sysdeps/m68k/s_ccosf.c: New file.

@@ -42,9 +42,12 @@ ENTRY(__clone)
 	beq	a0,$error		/* no NULL function pointers */
 	beq	a1,$error		/* no NULL stack pointers */
 
+	/* Save the fn ptr and arg on the new stack.  */
+	subq	a1,16,a1
+	stq	a0,0(a1)
+	stq	a3,8(a1)
+
 	/* Do the system call */
-	mov	a0,pv			/* get fn ptr out of the way */
-	mov	a3,t0			/* get fn arg out of the way */
 	mov	a2,a0
 	ldiq	v0,__NR_clone
 	call_pal PAL_callsys
@@ -73,8 +76,12 @@ thread_start:
 	mov	zero,fp
 	.prologue 0
 
+	/* Load up the arguments.  */
+	ldq	pv,0(sp)
+	ldq	a0,8(sp)
+	addq	sp,16,sp
+
 	/* Call the user's function */
-	mov	t0,a0
 	jsr	ra,(pv)
 	ldgp	gp,0(ra)
 

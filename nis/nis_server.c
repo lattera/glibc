@@ -17,93 +17,104 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA. */
 
+#include <string.h>
 #include <rpcsvc/nis.h>
 #include <rpcsvc/nislib.h>
 #include "nis_intern.h"
 
 nis_error
-nis_mkdir (const_nis_name dir, const nis_server *server)
-{
-  nis_error res;
-
-  if (server == NULL)
-    {
-      int result;
-      if ((result = __do_niscall (NULL, 0, NIS_MKDIR, (xdrproc_t) xdr_nis_name,
-				  (caddr_t) &dir, (xdrproc_t) xdr_nis_error,
-				  (caddr_t) &res, 0)) != RPC_SUCCESS)
-	{
-	  fprintf (stderr, _("__do_niscall: Error #%d\n"), result);
-	  return NIS_RPCERROR;
-	}
-    }
-  else
-    {
-      int result;
-      if ((result = __do_niscall (server, 1, NIS_MKDIR,
-				  (xdrproc_t) xdr_nis_name,
-				  (caddr_t) &dir, (xdrproc_t) xdr_nis_error,
-				  (caddr_t) &res, 0)) != RPC_SUCCESS)
-	{
-	  fprintf (stderr, _("__do_niscall: Error #%d\n"), result);
-	  return NIS_RPCERROR;
-	}
-    }
-
-  return res;
-}
-
-nis_error
-nis_rmdir (const_nis_name dir, const nis_server *server)
-{
-  nis_error res;
-
-  if (server == NULL)
-    {
-      int result;
-      if ((result = __do_niscall (NULL, 0, NIS_RMDIR, (xdrproc_t) xdr_nis_name,
-				  (caddr_t) &dir, (xdrproc_t) xdr_nis_error,
-				  (caddr_t) &res, 0)) != RPC_SUCCESS)
-	{
-	  fprintf (stderr, _("__do_niscall: Error #%d\n"), result);
-	  return NIS_RPCERROR;
-	}
-    }
-  else
-    {
-      int result;
-      if ((result = __do_niscall (server, 1, NIS_RMDIR,
-				  (xdrproc_t) xdr_nis_name,
-				  (caddr_t) &dir, (xdrproc_t) xdr_nis_error,
-				  (caddr_t) &res, 0)) != RPC_SUCCESS)
-	{
-	  fprintf (stderr, _("__do_niscall: Error #%d\n"), result);
-	  return NIS_RPCERROR;
-	}
-    }
-
-  return res;
-}
-
-nis_error
 nis_servstate (const nis_server *serv, const nis_tag *tags,
 	       const int numtags, nis_tag **result)
 {
+  nis_taglist taglist;
+  nis_taglist tagres;
+
+  tagres.tags.tags_len = 0;
+  tagres.tags.tags_val = NULL;
   *result = NULL;
-  return NIS_FAIL;
+  taglist.tags.tags_len = numtags;
+  taglist.tags.tags_val = (nis_tag *)tags;
+
+  if (serv == NULL)
+    {
+      if (__do_niscall (NULL, 0, NIS_SERVSTATE, (xdrproc_t) xdr_nis_taglist,
+			(caddr_t) &taglist, (xdrproc_t) xdr_nis_taglist,
+			(caddr_t) &tagres, 0) != RPC_SUCCESS)
+	return NIS_RPCERROR;
+    }
+  else
+    {
+      if (__do_niscall (serv, 1, NIS_SERVSTATE, (xdrproc_t) xdr_nis_taglist,
+			(caddr_t) &taglist, (xdrproc_t) xdr_nis_taglist,
+			(caddr_t) &tagres, 0) != RPC_SUCCESS)
+	return NIS_RPCERROR;
+    }
+  if (tagres.tags.tags_len > 0)
+    {
+      u_long i;
+
+      result = malloc (sizeof (nis_tag *) * tagres.tags.tags_len);
+      if (result == NULL)
+	return NIS_NOMEMORY;
+      for (i = 0; i < tagres.tags.tags_len; ++i)
+	{
+	  result[i] = malloc (sizeof (nis_tag));
+	  if (result[i] == NULL)
+	    return NIS_NOMEMORY;
+	  result[i]->tag_val = strdup (tagres.tags.tags_val[i].tag_val);
+	  result[i]->tag_type = tagres.tags.tags_val[i].tag_type;
+	}
+    }
+
+  return NIS_SUCCESS;
 }
-stub_warning (nis_servstate)
 
 nis_error
 nis_stats (const nis_server *serv, const nis_tag *tags,
 	   const int numtags, nis_tag **result)
 {
-  result = malloc (sizeof (nis_tag *));
-  if (result != NULL)
-    result[0] = NULL;
-  return NIS_FAIL;
+  nis_taglist taglist;
+  nis_taglist tagres;
+
+  tagres.tags.tags_len = 0;
+  tagres.tags.tags_val = NULL;
+  *result = NULL;
+  taglist.tags.tags_len = numtags;
+  taglist.tags.tags_val = (nis_tag *)tags;
+
+  if (serv == NULL)
+    {
+      if (__do_niscall (NULL, 0, NIS_STATUS, (xdrproc_t) xdr_nis_taglist,
+			(caddr_t) &taglist, (xdrproc_t) xdr_nis_taglist,
+			(caddr_t) &tagres, 0) != RPC_SUCCESS)
+	return NIS_RPCERROR;
+    }
+  else
+    {
+      if (__do_niscall (serv, 1, NIS_STATUS, (xdrproc_t) xdr_nis_taglist,
+			(caddr_t) &taglist, (xdrproc_t) xdr_nis_taglist,
+			(caddr_t) &tagres, 0) != RPC_SUCCESS)
+	return NIS_RPCERROR;
+    }
+  if (tagres.tags.tags_len > 0)
+    {
+      u_long i;
+
+      result = malloc (sizeof (nis_tag *) * tagres.tags.tags_len);
+      if (result == NULL)
+	return NIS_NOMEMORY;
+      for (i = 0; i < tagres.tags.tags_len; ++i)
+	{
+	  result[i] = malloc (sizeof (nis_tag));
+	  if (result[i] == NULL)
+	    return NIS_NOMEMORY;
+	  result[i]->tag_val = strdup (tagres.tags.tags_val[i].tag_val);
+	  result[i]->tag_type = tagres.tags.tags_val[i].tag_type;
+	}
+    }
+
+  return NIS_SUCCESS;
 }
-stub_warning (nis_stats);
 
 void
 nis_freetags (nis_tag *tags, const int numtags)
@@ -113,31 +124,4 @@ nis_freetags (nis_tag *tags, const int numtags)
   for (i = 0; i < numtags; ++i)
     free (tags->tag_val);
   free (tags);
-}
-
-nis_server **
-nis_getservlist (const_nis_name dir)
-{
-  nis_server **serv;
-
-  serv = malloc (sizeof (nis_server *));
-  if (serv != NULL)
-    serv[0] = NULL;
-
-  return serv;
-}
-stub_warning (nis_getservlist);
-
-void
-nis_freeservlist (nis_server **serv)
-{
-  int i;
-
-  if (serv == NULL)
-    return;
-
-  i = 0;
-  while (serv[i] != NULL)
-    nis_free_servers (serv[i], 1);
-  free (serv);
 }
