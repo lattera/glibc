@@ -1,5 +1,5 @@
 /* Handle configuration data.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -56,6 +56,20 @@ static struct gconv_module builtin_modules[] =
     cost: Cost,								      \
     module_name: Name							      \
   },
+#define BUILTIN_ALIAS(From, To)
+
+#include "gconv_builtin.h"
+};
+
+#undef BUILTIN_TRANSFORMATION
+#undef BUILTIN_ALIAS
+
+static const char *
+builtin_aliases[] =
+{
+#define BUILTIN_TRANSFORMATION(From, ConstPfx, ConstLen, To, Cost, Name, \
+			       Fct, Init, End)
+#define BUILTIN_ALIAS(From, To) From " " To,
 
 #include "gconv_builtin.h"
 };
@@ -362,6 +376,7 @@ __gconv_read_conf (void)
   void *modules = NULL;
   size_t nmodules = 0;
   int save_errno = errno;
+  size_t cnt;
 
   if (user_path == NULL)
     /* No user-defined path.  Make a modifiable copy of the default path.  */
@@ -426,6 +441,14 @@ __gconv_read_conf (void)
 			       / sizeof (struct gconv_module)); ++cnt)
 	    __gconv_modules_db[__gconv_nmodules++] = &builtin_modules[cnt];
 	}
+    }
+
+  /* Add aliases for builtin conversions.  */
+  cnt = sizeof (builtin_aliases) / sizeof (builtin_aliases[0]);
+  while (cnt > 0)
+    {
+      char *copy = strdupa (builtin_aliases[--cnt]);
+      add_alias (copy);
     }
 
   /* Restore the error number.  */

@@ -1,5 +1,5 @@
 /* Builtin transformations.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,13 +18,16 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+BUILTIN_ALIAS ("UTF8//", "ISO-10646/UTF8/")
+BUILTIN_ALIAS ("UTF-8//", "ISO-10646/UTF8/")
+
 BUILTIN_TRANSFORMATION ("([^/]+)/UCS4/([^/]*)", NULL, 0,
 			"\\1/UTF8/\\2", 1, "=ucs4->utf8",
 			__gconv_transform_ucs4_utf8,
 			__gconv_transform_init_rstate,
 			__gconv_transform_end_rstate)
 
-BUILTIN_TRANSFORMATION ("([^/]+)/UTF8/([^/]*)", NULL, 0,
+BUILTIN_TRANSFORMATION ("([^/]+)/UTF-?8/([^/]*)", NULL, 0,
 			"\\1/UCS4/\\2", 1, "=utf8->ucs4",
 			__gconv_transform_utf8_ucs4,
 			__gconv_transform_init_rstate,
