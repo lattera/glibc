@@ -1,5 +1,10 @@
+2002-03-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c: Compatibility changes to allow using the code
+	outside glibc.
+
 2002-02-28  Hartvig Ekner <hartvige@mips.com>
- 
+
 	* sysdeps/mips/elf/start.S: Added initialization of GP (to _gp) if
 	compiled non-PIC.
 
