@@ -1,3 +1,47 @@
+2001-06-15  Roland McGrath  <roland@frob.com>
+
+	* rt/Makefile (aio-routines, clock-routines, timer-routines): New
+	variables, broken out of librt-routines.
+	(librt-routines): Set using those.
+	(extra-libs, extra-libc-others, tests): Set these unconditionally.
+	(distribute): No need for $(librt-map) or $(librt-routines:=.c) here.
+	* sysdeps/generic/aio_fsync.c: New file.
+	* sysdeps/generic/aio_misc.c: New file.
+	* sysdeps/generic/aio_write.c: New file.
+	* sysdeps/generic/aio_write64.c: New file.
+	* sysdeps/generic/aio_read64.c: New file.
+	* sysdeps/generic/aio_read.c: New file.
+	* sysdeps/generic/aio_notify.c: New file.
+	* sysdeps/generic/lio_listio64.c: New file.
+	* sysdeps/generic/lio_listio.c: New file.
+	* sysdeps/generic/aio_cancel.c: New file.
+	* sysdeps/generic/aio_misc.h: New file.
+	* sysdeps/generic/aio_suspend.c: New file.
+	* rt/aio_cancel.c: Moved to ...
+	* sysdeps/pthread/aio_cancel.c: ... here.
+	* rt/aio_fsync.c: Moved to ...
+	* sysdeps/pthread/aio_fsync.c: ... here.
+	* rt/aio_misc.c: Moved to ...
+	* sysdeps/pthread/aio_misc.c: ... here.
+	* rt/aio_misc.h: Moved to ...
+	* sysdeps/pthread/aio_misc.h: ... here.
+	* rt/aio_notify.c: Moved to ...
+	* sysdeps/pthread/aio_notify.c: ... here.
+	* rt/aio_read.c: Moved to ...
+	* sysdeps/pthread/aio_read.c: ... here.
+	* rt/aio_read64.c: Moved to ...
+	* sysdeps/pthread/aio_read64.c: ... here.
+	* rt/aio_suspend.c: Moved to ...
+	* sysdeps/pthread/aio_suspend.c: ... here.
+	* rt/aio_write.c: Moved to ...
+	* sysdeps/pthread/aio_write.c: ... here.
+	* rt/aio_write64.c: Moved to ...
+	* sysdeps/pthread/aio_write64.c: ... here.
+	* rt/lio_listio.c: Moved to ...
+	* sysdeps/pthread/lio_listio.c: ... here.
+	* rt/lio_listio64.c: Moved to ...
+	* sysdeps/pthread/lio_listio64.c: ... here.
+
 2001-06-14  Roland McGrath  <roland@frob.com>
 
 	* configure.in: Let sysdeps Implies files in add-ons bring in
