@@ -134,9 +134,9 @@ __ttyname_r (fd, buf, buflen)
   *_fitoa_word (fd, __stpcpy (procname, "/proc/self/fd/"), 10, 0) = '\0';
 
   ret = __readlink (procname, buf, buflen - 1);
-  if (ret != -1)
+  if (ret != -1 && buf[0] != '[')
     return 0;
-  if (errno == ENAMETOOLONG)
+  if (ret == -1 && errno == ENAMETOOLONG)
     {
       __set_errno (ERANGE);
       return ERANGE;

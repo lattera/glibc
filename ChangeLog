@@ -1,5 +1,9 @@
 1998-10-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/ttyname.c (ttyname): Keep Linux 2.0
+	kernels in mind when reading /proc/self/fd/FD.
+	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r): Likewise.
+
 	* nscd/nscd.c (doc): It's "Name Service" not "Name Switch".
 
 	* malloc/mtrace.c (tr_where): Replace snprintf call by mempcpy and

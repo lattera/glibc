@@ -131,7 +131,9 @@ ttyname (fd)
 	}
     }
 
-  if (__readlink (procname, buf, buflen) != -1)
+  if (__readlink (procname, buf, buflen) != -1
+      /* This is for Linux 2.0.  */
+      && buf[0] != '[')
     return buf;
 
   if (fstat (fd, &st) < 0)
