@@ -1,5 +1,5 @@
 /* Stack executability handling for GNU dynamic linker.  Linux version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,8 +30,13 @@ extern void *__libc_stack_end;
 
 int
 internal_function
-_dl_make_stack_executable (void)
+_dl_make_stack_executable (void **stack_endp)
 {
+  /* Challenge the caller.  */
+  if (*stack_endp != __libc_stack_end)
+    return EPERM;
+  *stack_endp = NULL;
+
 #if _STACK_GROWS_DOWN
   /* This gives us the highest page that needs to be changed.  */
   uintptr_t page = (uintptr_t) __libc_stack_end & -(intptr_t) GL(dl_pagesize);
