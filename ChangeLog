@@ -1,3 +1,9 @@
+2000-10-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/shm_open.c: Correct default mount point
+	in comments.
+	(freeit): Remove unnecessary test.
+
 2000-10-18  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/dl-machine.h (ELF_MIPS_GNU_GOT1_OK): New.
