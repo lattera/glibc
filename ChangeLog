@@ -1,3 +1,16 @@
+2004-10-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/libc-symbols.h: Define hidden attribute macros for
+	libnss_files.
+	* include/netdb.h: Use libnss_files_hidden_proto for the parsers
+	defined in libnss_files, not libc_hidden_proto.
+	* include/netinet/ether.h: Likewise.
+	* include/rpc/netdb.h: Likewise.
+	* nss/nss_files/files-parse.c: Use hidden_def in parser definitions
+	instead of libc_hidden_def.
+	* nss/nss_files/files-netgrp.c: Add libnss_files_hidden_def to
+	_nss_netgroup_parseline definition.
+
 2004-10-23  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/i386/tls.h (_hurd_tls_init): Don't return early

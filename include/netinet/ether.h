@@ -17,7 +17,7 @@ struct parser_data;
 extern int _nss_files_parse_etherent (char *line, struct etherent *result,
 				      struct parser_data *data,
 				      size_t datalen, int *errnop);
-libc_hidden_proto (_nss_files_parse_etherent)
+libnss_files_hidden_proto (_nss_files_parse_etherent)
 
 #define DECLARE_NSS_PROTOTYPES(service)					      \
 extern enum nss_status _nss_ ## service ## _setetherent (int __stayopen);     \

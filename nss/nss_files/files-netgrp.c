@@ -274,6 +274,7 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
 
   return status;
 }
+libnss_files_hidden_def (_nss_netgroup_parseline)
 
 
 enum nss_status
