@@ -1,3 +1,7 @@
+2001-07-23  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Add some deltas.
+
 2001-07-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_cache.c (__gconv_lookup_cache): Select correct
