@@ -85,7 +85,7 @@ __BEGIN_DECLS
    deallocates any previous mapping for the affected region.  */
 
 __caddr_t mmap __P ((__caddr_t __addr, size_t __len,
-		     int __prot, int __flags, int __fd, off_t __offset));
+		     int __prot, int __flags, int __fd, __off_t __offset));
 
 /* Deallocate any mapping for the region starting at ADDR and extending LEN
    bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
