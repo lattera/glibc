@@ -1,5 +1,5 @@
 /* Machine-specific calling sequence for `mcount' profiling function.  MIPS
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 
 /* Call __mcount with our the return PC for our caller,
    and the return PC our caller will return to.  */
-#ifdef PIC
+#ifdef __PIC__
 #define CPLOAD ".cpload $25;"
 #else
 #define CPLOAD
