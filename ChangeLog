@@ -1,5 +1,10 @@
 2000-03-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Makefile (dl-routines): Remove preinit.
+	* elf/Versions: Remove _dl_preinit.
+	* elf/dl-preinit.c: Removed.  Move content into...
+	* elf/dl-init.c: ...here.
+
 	* sysdeps/generic/bits/shm.h (struct shmid_ds): Correct names of
 	with size of dynamic sectionelements.
 

@@ -29,8 +29,27 @@ void
 internal_function
 _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
 {
+  ElfW(Dyn) *preinit_array = main_map->l_info[DT_PREINIT_ARRAYSZ];
   struct r_debug *r;
   unsigned int i;
+
+  /* Don't do anything if there is no preinit array.  */
+  if (preinit_array != NULL
+      && (i = preinit_array->d_un.d_val / sizeof (ElfW(Addr))) > 0)
+    {
+      ElfW(Addr) *addrs;
+      unsigned int cnt;
+
+      if (_dl_debug_impcalls)
+	_dl_debug_message (1, "\ncalling preinit: ",
+			   main_map->l_name[0]
+			   ? main_map->l_name : _dl_argv[0], "\n\n", NULL);
+
+      addrs = (ElfW(Addr) *) (main_map->l_info[DT_PREINIT_ARRAY]->d_un.d_ptr
+			      + main_map->l_addr);
+      for (cnt = 0; cnt < i; ++cnt)
+	((init_t) addrs[cnt]) (argc, argv, env);
+    }
 
   /* Notify the debugger we have added some objects.  We need to call
      _dl_debug_initialize in a static program in case dynamic linking has

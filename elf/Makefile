@@ -28,7 +28,7 @@ routines	= $(dl-routines) dl-open dl-close dl-symbol dl-support \
 # profiled libraries.
 dl-routines	= $(addprefix dl-,load cache lookup object reloc deps \
 			          runtime error init fini debug misc \
-				  version profile preinit)
+				  version profile)
 # But they are absent from the shared libc, because that code is in ld.so.
 elide-routines.os = $(dl-routines) dl-support enbl-secure
 

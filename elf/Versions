@@ -49,6 +49,6 @@ ld.so {
     _dl_dst_count; _dl_dst_substitute;
   }
   GLIBC_2.2 {
-    _dl_preinit_next; _dl_init;
+    _dl_init;
   }
 }
