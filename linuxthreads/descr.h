@@ -239,9 +239,9 @@ extern int __pthread_nonstandard_stacks;
 
 /* Recover thread descriptor for the current thread */
 
-extern pthread_descr __pthread_find_self (void) __attribute__ ((const));
+extern pthread_descr __pthread_find_self (void) __attribute__ ((pure));
 
-static inline pthread_descr thread_self (void) __attribute__ ((const));
+static inline pthread_descr thread_self (void) __attribute__ ((pure));
 static inline pthread_descr thread_self (void)
 {
 #ifdef THREAD_SELF
