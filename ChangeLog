@@ -1,3 +1,8 @@
+1999-12-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h: Include	sys/ucontext.h
+	and remove definitions for NREGS, greg_t, gregset_t, and fpregset_t.
+
 1999-12-21  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/putpmsg.c: Add missing #.
