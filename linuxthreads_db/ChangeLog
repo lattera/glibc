@@ -1,3 +1,11 @@
+2002-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* thread_dbP.h: Define LINUXTHREADS_VERSION.
+	* td_symbol_list.c (symbol_list_arr): Add LINUXTHREADS_VERSION string.
+	* td_ta_new.c (td_ta_new): After verifying the thread library is
+	there check version.
+	* thread_db.h: Add new error TD_VERSION.
+
 2002-08-21  Roland McGrath  <roland@redhat.com>
 
 	* td_thr_tls_get_addr.c (td_thr_tls_get_addr): __attribute_used__ ->

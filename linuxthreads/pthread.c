@@ -33,6 +33,7 @@
 #include <ldsodefs.h>
 #include <tls.h>
 #include <locale.h>		/* for __uselocale */
+#include <version.h>
 
 /* Sanity check.  */
 #if __ASSUME_REALTIME_SIGNALS && !defined __SIGRTMIN
@@ -237,6 +238,8 @@ const int __linuxthreads_pthread_sizeof_descr
   = sizeof(struct _pthread_descr_struct);
 
 const int __linuxthreads_initial_report_events;
+
+const char __linuxthreads_version[] = VERSION;
 
 /* Forward declarations */
 

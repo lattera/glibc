@@ -1,5 +1,5 @@
 /* Attach to target process.
-   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -20,6 +20,8 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
+#include <version.h>
 
 #include "thread_dbP.h"
 
@@ -33,6 +35,8 @@ td_err_e
 td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
 {
   psaddr_t addr;
+  psaddr_t versaddr;
+  char versbuf[sizeof (VERSION)];
   struct agent_list *elemp;
 
   LOG ("td_ta_new");
@@ -42,6 +46,17 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
      not available we cannot debug.  */
   if (td_lookup (ps, PTHREAD_THREADS_EVENTS, &addr) != PS_OK)
     return TD_NOLIBTHREAD;
+
+  /* Check whether the versions match.  */
+  if (td_lookup (ps, LINUXTHREADS_VERSION, &versaddr) != PS_OK)
+    return TD_VERSION;
+  if (ps_pdread (ps, versaddr, versbuf, sizeof (versbuf)) != PS_OK)
+    return TD_ERR;
+
+  versbuf[sizeof (versbuf) - 1] = '\0';
+  if (strcmp (versbuf, VERSION) != 0)
+    /* Not the right version.  */
+    return TD_VERSION;
 
   /* Fill in the appropriate information.  */
   *ta = (td_thragent_t *) malloc (sizeof (td_thragent_t));

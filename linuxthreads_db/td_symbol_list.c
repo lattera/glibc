@@ -37,6 +37,7 @@ static const char *symbol_list_arr[] =
   [LINUXTHREADS_DEATH_EVENT] = "__linuxthreads_death_event",
   [LINUXTHREADS_REAP_EVENT] = "__linuxthreads_reap_event",
   [LINUXTHREADS_INITIAL_REPORT_EVENTS] = "__linuxthreads_initial_report_events",
+  [LINUXTHREADS_VERSION] = "__linuxthreads_version",
   [NUM_MESSAGES] = NULL
 };
 

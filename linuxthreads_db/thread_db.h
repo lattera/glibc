@@ -52,7 +52,8 @@ typedef enum
   TD_MALLOC,	  /* Out of memory.  */
   TD_PARTIALREG,  /* Not entire register set was read or written.  */
   TD_NOXREGS,	  /* X register set not available for given thread.  */
-  TD_NOTALLOC	  /* TLS memory not yet allocated.  */
+  TD_NOTALLOC,	  /* TLS memory not yet allocated.  */
+  TD_VERSION	  /* Version if libpthread and libthread_db do not match.  */
 } td_err_e;
 
 
