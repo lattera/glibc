@@ -1,3 +1,13 @@
+1998-05-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/open_catalog.c (__open_catalog): Use byteswap.h
+	functions.  Optimize filename creation a bit.
+
+1998-05-22 09:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/random_r.c: Help gcc to optimize the code.
+	Patch by Joe Keane <jgk@jgk.org>.
+
 1998-05-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/iconv_prog.c (print_known_names): Use strverscmp in all

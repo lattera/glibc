@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <byteswap.h>
 #include <endian.h>
 #include <fcntl.h>
 #include <string.h>
@@ -28,8 +29,7 @@
 #include "catgetsinfo.h"
 
 
-#define SWAPU32(w) \
-  (((w) << 24) | (((w) & 0xff00) << 8) | (((w) >> 8) & 0xff00) | ((w) >> 24))
+#define SWAPU32(w) bswap_32 (w)
 
 
 void
@@ -68,6 +68,7 @@ __open_catalog (__nl_catd catalog)
       char *buf;
       size_t bufact;
       size_t bufmax;
+      size_t len;
 
       buf = NULL;
       bufmax = 0;
@@ -86,13 +87,17 @@ __open_catalog (__nl_catd catalog)
 		  {
 		  case 'N':
 		    /* Use the catalog name.  */
-		    ENOUGH (strlen (catalog->cat_name));
-		    bufact = __stpcpy (&buf[bufact], catalog->cat_name) - buf;
+		    len = strlen (catalog->cat_name);
+		    ENOUGH (len);
+		    memcpy (&buf[bufact], catalog->cat_name, len);
+		    bufact += len;
 		    break;
 		  case 'L':
 		    /* Use the current locale category value.  */
-		    ENOUGH (strlen (catalog->env_var));
-		    bufact = __stpcpy (&buf[bufact], catalog->env_var) - buf;
+		    len = strlen (catalog->env_var);
+		    ENOUGH (len);
+		    memcpy (&buf[bufact], catalog->env_var, len);
+		    bufact += len;
 		    break;
 		  case 'l':
 		    /* Use language element of locale category value.  */
@@ -178,15 +183,15 @@ __open_catalog (__nl_catd catalog)
 
 #ifndef MAP_COPY
     /* Linux seems to lack read-only copy-on-write.  */
-#define MAP_COPY MAP_PRIVATE
+# define MAP_COPY MAP_PRIVATE
 #endif
 #ifndef MAP_FILE
     /* Some systems do not have this flag; it is superfluous.  */
-#define MAP_FILE 0
+# define MAP_FILE 0
 #endif
 #ifndef MAP_INHERIT
     /* Some systems might lack this; they lose.  */
-#define MAP_INHERIT 0
+# define MAP_INHERIT 0
 #endif
   catalog->file_size = st.st_size;
   catalog->file_ptr =
@@ -237,7 +242,7 @@ __open_catalog (__nl_catd catalog)
     swapping = 1;
   else
     {
-      /* Illegal file.  Free the resources and mark catalog as not
+      /* Invalid file.  Free the resources and mark catalog as not
 	 usable.  */
       if (catalog->status == mmapped)
 	__munmap ((void *) catalog->file_ptr, catalog->file_size);
