@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,95,97,98,99,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,97,98,99,2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -128,6 +128,15 @@ _IO_old_file_init (fp)
   fp->file._vtable_offset = ((int) sizeof (struct _IO_FILE)
 			     - (int) sizeof (struct _IO_FILE_complete));
   fp->file._fileno = -1;
+
+#if defined SHARED && defined _LIBC \
+    && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+  if (__builtin_expect (&_IO_stdin_used != NULL, 0)
+      || (fp != _IO_stdin && fp != _IO_stdout && fp != _IO_stderr))
+    /* The object is dynamically allocated and large enough.  Initialize
+       the _mode element as well.  */
+    fp->_mode = -1;
+#endif
 }
 
 int

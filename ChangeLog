@@ -1,3 +1,8 @@
+2003-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/oldfileops.c (_IO_old_file_init): Initialize _mode field
+	if the object size is large enough.
+
 2003-08-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/ldconfig.c (search_dir): Treat symlink as regular file
