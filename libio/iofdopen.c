@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1997-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -24,10 +24,14 @@
    General Public License.  */
 
 #ifdef __STDC__
-#include <stdlib.h>
+# include <stdlib.h>
 #endif
 #include "libioP.h"
 #include <fcntl.h>
+
+#ifdef _LIBC
+# include <shlib-compat.h>
+#endif
 
 #ifndef _IO_fcntl
 #ifdef _LIBC
@@ -79,7 +83,7 @@ _IO_new_fdopen (fd, mode)
 #endif
   if (fd_flags == -1)
     return NULL;
-  
+
   if (((fd_flags & O_ACCMODE) == O_RDONLY && !(read_write & _IO_NO_WRITES))
       || ((fd_flags & O_ACCMODE) == O_WRONLY && !(read_write & _IO_NO_READS)))
     {
@@ -139,13 +143,6 @@ _IO_new_fdopen (fd, mode)
   return &new_f->fp.file;
 }
 
-#if defined PIC && DO_VERSIONING
 strong_alias (_IO_new_fdopen, __new_fdopen)
-default_symbol_version (_IO_new_fdopen, _IO_fdopen, GLIBC_2.1);
-default_symbol_version (__new_fdopen, fdopen, GLIBC_2.1);
-#else
-# ifdef weak_alias
-weak_alias (_IO_new_fdopen, _IO_fdopen)
-weak_alias (_IO_new_fdopen, fdopen)
-# endif
-#endif
+versioned_symbol (libc, _IO_new_fdopen, _IO_fdopen, GLIBC_2_1);
+versioned_symbol (libc, __new_fdopen, fdopen, GLIBC_2_1);

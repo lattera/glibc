@@ -1,5 +1,19 @@
 2000-03-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/oldtmpfile.c: Use new macros from shlib-compat.h to define
+	versions.
+	* libio/iofdopen.c: Likewise.
+	* libio/iofgetpos.c: Likewise.
+	* libio/iofgetpos64.c: Likewise.
+	* libio/iofopen.c: Likewise.
+	* libio/iofsetpos.c: Likewise.
+	* libio/iofsetpos64.c: Likewise.
+	* libio/iopopen.c: Likewise.
+	* libio/oldiofopen.c: Likewise.
+	* libio/pclose.c: Likewise.
+	* sysdeps/gnu/siglist.c: Likewise.
+	* sysdeps/unix/sysv/linux/errlist.c: Likewise.
+
 	* include/shlib-compat.h (versioned_symbol): Give preprocessor the
 	chance to expand VERSION_##lib##_##version.
 

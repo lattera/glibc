@@ -1,5 +1,5 @@
 /* Define list of all signal numbers and their names.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #include <stddef.h>
 #include <signal.h>
 #include <libintl.h>
+#include <shlib-compat.h>
 
 #include <bits/wordsize.h>
 #if	__WORDSIZE == 32
@@ -31,40 +32,32 @@
 #endif
 
 
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
-# define SYS_SIGLIST	__new_sys_siglist
-# define SYS_SIGABBREV	__new_sys_sigabbrev
-#else
-# define SYS_SIGLIST	_sys_siglist
-# define SYS_SIGABBREV	_sys_sigabbrev
-#endif
-
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#if SHLIB_COMPAT (libc, GLIBC_2_0)
 asm (".data; .globl __old_sys_siglist;  __old_sys_siglist:");
 #endif
 
-const char *const SYS_SIGLIST[NSIG] =
+const char *const __new_sys_siglist[NSIG] =
 {
 #define init_sig(sig, abbrev, desc)   [sig] desc,
 #include <siglist.h>
 #undef init_sig
 };
 
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#if SHLIB_COMPAT (libc, GLIBC_2_0)
 asm (".type __old_sys_siglist,@object;.size __old_sys_siglist,"
         OLD_SIGLIST_SIZE_STR "*" PTR_SIZE_STR);
 
 asm (".data; .globl __old_sys_sigabbrev;  __old_sys_sigabbrev:");
 #endif
 
-const char *const SYS_SIGABBREV[NSIG] =
+const char *const __new_sys_sigabbrev[NSIG] =
 {
 #define init_sig(sig, abbrev, desc)   [sig] abbrev,
 #include <siglist.h>
 #undef init_sig
 };
 
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#if SHLIB_COMPAT (libc, GLIBC_2_0)
 asm (".type __old_sys_sigabbrev,@object;.size __old_sys_sigabbrev,"
         OLD_SIGLIST_SIZE_STR "*" PTR_SIZE_STR);
 
@@ -75,12 +68,9 @@ strong_alias (__old_sys_siglist, _old_sys_siglist)
 symbol_version (__old_sys_siglist, _sys_siglist, GLIBC_2.0);
 symbol_version (_old_sys_siglist, sys_siglist, GLIBC_2.0);
 symbol_version (__old_sys_sigabbrev, sys_sigabbrev, GLIBC_2.0);
+#endif
 
 strong_alias (__new_sys_siglist, _new_sys_siglist)
-default_symbol_version (__new_sys_siglist, _sys_siglist, GLIBC_2.1);
-default_symbol_version (_new_sys_siglist, sys_siglist, GLIBC_2.1);
-default_symbol_version (__new_sys_sigabbrev, sys_sigabbrev, GLIBC_2.1);
-#else
-weak_alias (_sys_siglist, sys_siglist)
-weak_alias (_sys_sigabbrev, sys_sigabbrev)
-#endif
+versioned_symbol (libc, __new_sys_siglist, _sys_siglist, GLIBC_2_1);
+versioned_symbol (libc, _new_sys_siglist, sys_siglist, GLIBC_2_1);
+versioned_symbol (libc, __new_sys_sigabbrev, sys_sigabbrev, GLIBC_2_1);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@
 #ifdef __STDC__
 #include <stdlib.h>
 #endif
+#include <shlib-compat.h>
 
 _IO_FILE *
 _IO_new_fopen (filename, mode)
@@ -60,13 +61,6 @@ _IO_new_fopen (filename, mode)
   return NULL;
 }
 
-#if defined PIC && DO_VERSIONING
 strong_alias (_IO_new_fopen, __new_fopen)
-default_symbol_version (_IO_new_fopen, _IO_fopen, GLIBC_2.1);
-default_symbol_version (__new_fopen, fopen, GLIBC_2.1);
-#else
-# ifdef weak_alias
-weak_alias (_IO_new_fopen, _IO_fopen)
-weak_alias (_IO_new_fopen, fopen)
-# endif
-#endif
+versioned_symbol (libc, _IO_new_fopen, _IO_fopen, GLIBC_2_1);
+versioned_symbol (libc, __new_fopen, fopen, GLIBC_2_1);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 
 #include "libioP.h"
 #include <errno.h>
+#include <shlib-compat.h>
 
 int
 _IO_new_fgetpos (fp, posp)
@@ -58,8 +59,6 @@ _IO_new_fgetpos (fp, posp)
   return 0;
 }
 
-#ifdef weak_alias
 strong_alias (_IO_new_fgetpos, __new_fgetpos)
-default_symbol_version (_IO_new_fgetpos, _IO_fgetpos, GLIBC_2.2);
-default_symbol_version (__new_fgetpos, fgetpos, GLIBC_2.2);
-#endif
+versioned_symbol (libc, _IO_new_fgetpos, _IO_fgetpos, GLIBC_2_2);
+versioned_symbol (libc, __new_fgetpos, fgetpos, GLIBC_2_2);

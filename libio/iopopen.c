@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -36,6 +36,7 @@
 #endif
 #ifdef _LIBC
 # include <unistd.h>
+# include <shlib-compat.h>
 #endif
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -299,19 +300,8 @@ static struct _IO_jump_t _IO_wproc_jumps = {
   JUMP_INIT(imbue, _IO_default_imbue)
 };
 
-#if defined PIC && DO_VERSIONING
 strong_alias (_IO_new_popen, __new_popen)
-default_symbol_version (_IO_new_popen, _IO_popen, GLIBC_2.1);
-default_symbol_version (__new_popen, popen, GLIBC_2.1);
-default_symbol_version (_IO_new_proc_open, _IO_proc_open, GLIBC_2.1);
-default_symbol_version (_IO_new_proc_close, _IO_proc_close, GLIBC_2.1);
-#else
-# ifdef strong_alias
-strong_alias (_IO_new_popen, popen)
-# endif
-# ifdef weak_alias
-weak_alias (_IO_new_popen, _IO_popen)
-weak_alias (_IO_new_proc_open, _IO_proc_open)
-weak_alias (_IO_new_proc_close, _IO_proc_close)
-# endif
-#endif
+versioned_symbol (libc, _IO_new_popen, _IO_popen, GLIBC_2_1);
+versioned_symbol (libc, __new_popen, popen, GLIBC_2_1);
+versioned_symbol (libc, _IO_new_proc_open, _IO_proc_open, GLIBC_2_1);
+versioned_symbol (libc, _IO_new_proc_close, _IO_proc_close, GLIBC_2_1);

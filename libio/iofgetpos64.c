@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 95, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -25,6 +25,8 @@
 
 #include "libioP.h"
 #include <errno.h>
+#include <shlib-compat.h>
+
 
 int
 _IO_new_fgetpos64 (fp, posp)
@@ -34,7 +36,7 @@ _IO_new_fgetpos64 (fp, posp)
 #ifdef _G_LSEEK64
   _IO_off64_t pos;
   CHECK_FILE (fp, EOF);
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
+  _IO_cleanup_region_start ((void (*) (void *)) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   pos = _IO_seekoff (fp, 0, _IO_seek_cur, 0);
   if (_IO_in_backup (fp))
@@ -63,8 +65,6 @@ _IO_new_fgetpos64 (fp, posp)
 #endif
 }
 
-#ifdef weak_alias
-default_symbol_version (_IO_new_fgetpos64, _IO_fgetpos64, GLIBC_2.2);
 strong_alias (_IO_new_fgetpos64, __new_fgetpos64)
-default_symbol_version (__new_fgetpos64, fgetpos64, GLIBC_2.2);
-#endif
+versioned_symbol (libc, _IO_new_fgetpos64, _IO_fgetpos64, GLIBC_2_2);
+versioned_symbol (libc, __new_fgetpos64, fgetpos64, GLIBC_2_2);

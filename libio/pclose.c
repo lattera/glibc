@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996-1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@
 #include "libioP.h"
 #include "stdio.h"
 #include <errno.h>
+#include <shlib-compat.h>
 
 int
 __new_pclose (fp)
@@ -40,10 +41,4 @@ __new_pclose (fp)
   return _IO_new_fclose (fp);
 }
 
-#if defined PIC && DO_VERSIONING
-default_symbol_version (__new_pclose, pclose, GLIBC_2.1);
-#else
-# ifdef weak_alias
-weak_alias (__new_pclose, pclose)
-# endif
-#endif
+versioned_symbol (libc, __new_pclose, pclose, GLIBC_2_1);

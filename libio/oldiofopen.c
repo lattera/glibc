@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -22,6 +22,9 @@
    Public License.  This exception does not however invalidate any
    other reasons why the executable file might be covered by the GNU
    General Public License.  */
+
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libc, GLIBC_2_0)
 
 #define _IO_USE_OLD_IO_FILE
 #include "libioP.h"
@@ -64,3 +67,4 @@ _IO_old_fopen (filename, mode)
 strong_alias (_IO_old_fopen, __old_fopen)
 symbol_version (_IO_old_fopen, _IO_fopen, GLIBC_2.0);
 symbol_version (__old_fopen, fopen, GLIBC_2.0);
+#endif
