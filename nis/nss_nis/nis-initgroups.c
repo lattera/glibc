@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
 
@@ -174,7 +174,7 @@ _nss_nis_initgroups (const char *user, gid_t group, long int *start,
                 if (*start == *size && limit <= 0)
                   {
                     /* Need a bigger buffer.  */
-		    groups = realloc (groups, *size * sizeof (*groups));
+		    groups = realloc (groups, 2 * *size * sizeof (*groups));
 		    if (groups == NULL)
 		      goto done;
                     *size *= 2;

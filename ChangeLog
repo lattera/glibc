@@ -1,3 +1,11 @@
+1999-07-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_nis/nis-initgroups.c (_nss_nis_initgroups): Correct size
+	argument in realloc call.
+	* nis/nss_compat/compat-initgroups.c (_nss_compat_initgroups):
+	Likewise.
+	Reported by Danny Braniss <danny@cs.huji.ac.il>.
+
 1999-07-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* misc/efgcvt.c: Use IEEE 854 formula to compute the number of digits
