@@ -36,11 +36,13 @@ _IO_new_fclose (fp)
 
   CHECK_FILE(fp, EOF);
 
+#if defined PIC && DO_VERSIONING
   /* We desperately try to help programs which are using streams in a
      strange way and mix old and new functions.  Detect old streams
      here.  */
   if (fp->_vtable_offset != 0)
     return _IO_old_fclose (fp);
+#endif
 
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
