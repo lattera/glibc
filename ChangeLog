@@ -2,6 +2,14 @@
 
 	* nis/nislib/nislib.h: Removed.
 
+	* lib/mktime.c (__mktime_internal): Work around bug in Irix4.0.5's
+	C compiler.  From Kaveh Ghazi.
+	(TYPE_MINIMUM): Define.
+	(TYPE_MAXIMUM): Define.
+	(TIME_T_MIN): Use TYPE_MINIMUM.
+	(TIME_T_MAX): Use TYPE_MAXIMUM.
+	Patch by Jim Meyering <meyering@ascend.com>.
+
 1998-01-22 00:55  Ulrich Drepper  <drepper@happy.cygnus.com>
 
 	* libc.map: Add __libc_uid, __libc_pid, __syscall_rt_sigqueueinfo,
