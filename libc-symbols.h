@@ -46,7 +46,26 @@ Cambridge, MA 02139, USA.  */
    tests this symbol to see if it is being compiled as part
    of the C library.  */
 #define _LIBC	1
+/*
+
 
+  Define the macro `_' for conveniently marking translatable strings
+  in the libc source code.  */
+
+#include <libintl.h>
+extern const char _libc_intl_domainname[];
+#ifdef dgettext
+/* This is defined as an optimizing macro, so use it.  */
+#define	_(msgid)	dgettext (_libc_intl_domainname, (msgid))
+#else
+/* Be sure to use only the __ name when `dgettext' is a plain function
+   instead of an optimizing macro.  */
+#define	_(msgid)	__dgettext (_libc_intl_domainname, (msgid))
+#endif
+
+/*
+
+*/
 /* The symbols in all the user (non-_) macros are C symbols.  Predefined
    should be HAVE_WEAK_SYMBOLS and/or HAVE_ELF and/or HAVE_GNU_LD.
    HAVE_WEAK_SYMBOLS is implied by the other two.  HAVE_GNU_LD without

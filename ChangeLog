@@ -1,5 +1,12 @@
 Mon Oct 16 03:22:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* locale/Makefile (aux): Add SYS_libc.
+	* locale/SYS_libc.c: New file.
+	* libc-symbols.h (_): New macro.
+
+	* configure.in (libc_cv_asm_set_directive): Link program into
+	conftest instead of letting it default to a.out.
+
 	* elf/Makefile (install-others): Add missing slash.
 
 	* elf/ldd.sh.in: Prepend `./' to relative file names so ld.so

@@ -28,7 +28,7 @@ distribute	= localeinfo.h categories.def \
 		  keyword.gperf keyword.h localedef.h token.h error.h
 routines	= setlocale loadlocale localeconv nl_langinfo
 categories	= ctype messages monetary numeric time collate
-aux		= $(categories:%=lc-%) $(categories:%=C-%)
+aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc
 others		= localedef locale
 install-bin	= localedef locale
 extra-objs	= $(localedef-modules:=.o) $(locale-modules:=.o) \
