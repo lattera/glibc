@@ -533,10 +533,13 @@ extern int putenv __P ((__const char *__string));
 #ifdef	__USE_BSD
 /* Set NAME to VALUE in the environment.
    If REPLACE is nonzero, overwrite an existing value.  */
+extern int __setenv __P ((__const char *__name, __const char *__value,
+			  int __replace));
 extern int setenv __P ((__const char *__name, __const char *__value,
 			int __replace));
 
 /* Remove the variable NAME from the environment.  */
+extern void __unsetenv __P ((__const char *__name));
 extern void unsetenv __P ((__const char *__name));
 #endif
 

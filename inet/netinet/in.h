@@ -143,6 +143,12 @@ struct in_addr
 # define INADDR_LOOPBACK	((uint32_t) 0x7f000001)	/* Inet 127.0.0.1.  */
 #endif
 
+/* Defines for Multicast INADDR.  */
+#define INADDR_UNSPEC_GROUP	((uint32_t) 0xe0000000)      /* 224.0.0.0 */
+#define INADDR_ALLHOSTS_GROUP	((uint32_t) 0xe0000001)      /* 224.0.0.1 */
+#define INADDR_ALLRTRS_GROUP    ((uint32_t) 0xe0000002)      /* 224.0.0.2 */
+#define INADDR_MAX_LOCAL_GROUP  ((uint32_t) 0xe00000ff)      /* 224.0.0.255 */
+
 
 /* IPv6 address */
 struct in6_addr

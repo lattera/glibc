@@ -1,4 +1,4 @@
-# @(#)australasia	7.40
+# @(#)australasia	7.41
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -804,7 +804,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # # YANCOWINNA..  [ Confirmation courtesy of Broken Hill Postmaster ]
 # #					[ Dec 1990 ]
 # ...
-# # Yancowinna uses Central Standard Time, despite it's location on the
+# # Yancowinna uses Central Standard Time, despite [its] location on the
 # # New South Wales side of the S.A. border. Most business and social dealings
 # # are with CST zones, therefore CST is legislated by local government
 # # although the switch to Summer Time occurs in line with N.S.W. There have

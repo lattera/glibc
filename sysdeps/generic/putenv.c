@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#if defined (_AIX) && !defined (__GNUC__)
+#if defined _AIX && !defined __GNUC__
  #pragma alloca
 #endif
 
@@ -45,6 +45,9 @@
 extern char *alloca ();
 #  endif /* __GNUC__ */
 # endif /* HAVE_ALLOCA_H */
+
+# define setenv __setenv
+# define unsetenv __unsetenv
 #endif /* _LIBC */
 
 
@@ -57,10 +60,10 @@ putenv (string)
 
   if (name_end != NULL)
     {
-      char *name = alloca (name_end - string + 1);
 #ifdef _LIBC
-      *((char *) __mempcpy (name, string, name_end - string)) = '\0';
+      char *name = strndupa (string, name_end - string);
 #else
+      char *name = alloca (name_end - string + 1);
       memcpy (name, string, name_end - string);
       name[name_end - string] = '\0';
 #endif

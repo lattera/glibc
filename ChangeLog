@@ -1,3 +1,26 @@
+1998-05-14 13:25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/netinet/in.h: Add defines for multicast.
+	Reported by Jeremy Hall <jhall@UU.NET>.
+
+	* stdlib/stdlib.h: Add prototypes for __setenv and __unsetenv.
+	* sysdeps/generic/putenv.c: Use __setenv and __unsetenv, not setenv
+	and unsetenv.  Optimize _LIBC case.
+	* sysdeps/generic/setenv.c: Prevent unnecessary memory leaks.
+	Define functions with leading __.
+
+	* time/tzfile.c: Correct handling of global variables daylight,
+	timezone, and tzname.
+	* time/tzset.c: Likewise.
+	* timezone/Makefile (tests): Add tst-timezone.
+	* timezone/tst-timezone.c: New file.
+
+1998-05-14 10:35  Ulrich Drepper  <drepper@cygnus.com>
+
+	* timezone/asia: Update from tzdata1998d.
+	* timezone/australasia: Likewise.
+	* timezone/europe: Likewise.
+
 1998-05-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/string.h: Don't use the optimized versions for the string

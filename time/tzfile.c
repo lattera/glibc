@@ -54,6 +54,8 @@ static unsigned char *type_idxs = NULL;
 static size_t num_types;
 static struct ttinfo *types = NULL;
 static char *zone_names = NULL;
+static long int rule_stdoff;
+static long int rule_dstoff;
 static size_t num_leaps;
 static struct leap *leaps = NULL;
 
@@ -266,14 +268,31 @@ __tzfile_read (const char *file)
 
   fclose (f);
 
-  info = find_transition (0);
+  /* Find the standard and daylight time offsets used by the rule file.
+     We choose the offsets in the types of each flavor that are
+     transitioned to earliest in time.  */
+  __tzname[1] = NULL;
   for (i = 0; i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
        ++i)
     __tzname[types[i].isdst] = __tzstring (&zone_names[types[i].idx]);
-  if (info->isdst < sizeof (__tzname) / sizeof (__tzname[0]))
-    __tzname[info->isdst] = __tzstring (&zone_names[info->idx]);
+  if (__tzname[1] == NULL)
+    __tzname[1] = __tzname[0];
 
   compute_tzname_max (chars);
+
+  rule_stdoff = rule_dstoff = 0;
+  for (i = 0; i < num_transitions; ++i)
+    {
+      if (!rule_stdoff && !types[type_idxs[i]].isdst)
+	rule_stdoff = types[type_idxs[i]].offset;
+      if (!rule_dstoff && types[type_idxs[i]].isdst)
+	rule_dstoff = types[type_idxs[i]].offset;
+      if (rule_stdoff && rule_dstoff)
+	break;
+    }
+
+  __daylight = rule_stdoff != rule_dstoff;
+  __timezone = -rule_stdoff;
 
   __use_tzfile = 1;
   return;
@@ -291,7 +310,6 @@ __tzfile_default (const char *std, const char *dst,
 		  long int stdoff, long int dstoff)
 {
   size_t stdlen, dstlen, i;
-  long int rule_offset, rule_stdoff, rule_dstoff;
   int isdst;
 
   __tzfile_read (TZDEFRULES);
@@ -318,24 +336,9 @@ __tzfile_default (const char *std, const char *dst,
     }
   __mempcpy (__mempcpy (zone_names, std, stdlen), dst, dstlen);
 
-  /* Find the standard and daylight time offsets used by the rule file.
-     We choose the offsets in the types of each flavor that are
-     transitioned to earliest in time.  */
-  rule_stdoff = rule_dstoff = 0;
-  for (i = 0; i < num_transitions; ++i)
-    {
-      if (!rule_stdoff && !types[type_idxs[i]].isdst)
-	rule_stdoff = types[type_idxs[i]].offset;
-      if (!rule_dstoff && types[type_idxs[i]].isdst)
-	rule_dstoff = types[type_idxs[i]].offset;
-      if (rule_stdoff && rule_dstoff)
-	break;
-    }
-
   /* Now correct the transition times for the user-specified standard and
      daylight offsets from GMT.  */
   isdst = 0;
-  rule_offset = rule_offset;
   for (i = 0; i < num_transitions; ++i)
     {
       struct ttinfo *trans_type = &types[type_idxs[i]];
@@ -419,14 +422,16 @@ __tzfile_compute (time_t timer, int use_localtime,
   if (use_localtime)
     {
       struct ttinfo *info = find_transition (timer);
-      __daylight = info->isdst;
-      __timezone = -info->offset;
+      __daylight = rule_stdoff != rule_dstoff;
+      __timezone = -rule_stdoff;
+      __tzname[1] = NULL;
       for (i = 0;
 	   i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
 	   ++i)
 	__tzname[types[i].isdst] = &zone_names[types[i].idx];
-      if (info->isdst < sizeof (__tzname) / sizeof (__tzname[0]))
-	__tzname[info->isdst] = &zone_names[info->idx];
+      if (__tzname[1] == NULL)
+	/* There is no daylight saving time.  */
+	__tzname[1] = __tzname[0];
     }
 
   *leap_correct = 0L;

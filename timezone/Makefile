@@ -28,7 +28,7 @@ distribute := tzfile.h private.h scheck.c ialloc.c yearistype	\
 extra-objs := scheck.o ialloc.o
 
 others	:= zdump zic
-tests	:= test-tz
+tests	:= test-tz tst-timezone
 
 tzbases := africa antarctica asia australasia europe northamerica \
 	   southamerica etcetera factory systemv \

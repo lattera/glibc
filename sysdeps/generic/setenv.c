@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 
 #include <errno.h>
 #if !_LIBC
-# if !defined(errno) && !defined(HAVE_ERRNO_DECL)
+# if !defined errno && !defined HAVE_ERRNO_DECL
 extern int errno;
 # endif
 # define __set_errno(ev) ((errno) = (ev))
@@ -58,7 +58,32 @@ __libc_lock_define_initialized (static, envlock)
 
 /* In the GNU C library we must keep the namespace clean.  */
 #ifdef _LIBC
+# define setenv __setenv
+# define unsetenv __unsetenv
 # define clearenv __clearenv
+#endif
+
+/* In the GNU C library implementation we try to be more clever and
+   allow arbitrary many changes of the environment given that the used
+   values are from a small set.  Outside glibc this will eat up all
+   memory after a while.  */
+#if defined _LIBC || (defined HAVE_SEARCH_H && defined HAVE_TSEARCH)
+# define USE_TSEARCH	1
+# include <search.h>
+
+/* This is a pointer to the root of the search tree with the known
+   values.  */
+static void *known_values;
+
+# define KNOWN_VALUE(Str) tfind (Str, &known_values, (__compar_fn_t) strcmp)
+# define STORE_VALUE(Str) tsearch (Str, &known_values, (__compar_fn_t) strcmp)
+
+#else
+# undef USE_TSEARCH
+
+# define KNOWN_VALUE(Str) NULL
+# define STORE_VALUE(Str) do { } while (0)
+
 #endif
 
 
@@ -91,44 +116,55 @@ setenv (name, value, replace)
   if (__environ == NULL || *ep == NULL)
     {
       char **new_environ;
+#ifdef USE_TSEARCH
+      char *new_value;
+#endif
 
-      if (__environ == last_environ && __environ != NULL)
-	/* We allocated this space; we can extend it.  */
-	new_environ = (char **) realloc (last_environ,
-					 (size + 2) * sizeof (char *));
-      else
-	new_environ = (char **) malloc ((size + 2) * sizeof (char *));
-
+      /* We allocated this space; we can extend it.  */
+      new_environ = (char **) realloc (last_environ,
+				       (size + 2) * sizeof (char *));
       if (new_environ == NULL)
 	{
 	  UNLOCK;
 	  return -1;
 	}
 
-      new_environ[size] = malloc (namelen + 1 + vallen);
+      /* See whether the value is already known.  */
+#ifdef USE_TSEARCH
+      new_value = alloca (namelen + 1 + vallen);
+# ifdef _LIBC
+      __mempcpy (__mempcpy (__mempcpy (new_value, name, namelen), "=", 1),
+		 value, vallen);
+# else
+      memcpy (new_value, name, namelen);
+      new_value[namelen] = '=';
+      memcpy (&new_value[namelen + 1], value, vallen);
+# endif
+
+      new_environ[size] = KNOWN_VALUE (new_value);
       if (new_environ[size] == NULL)
+#endif
 	{
-	  free ((char *) new_environ);
-	  __set_errno (ENOMEM);
-	  UNLOCK;
-	  return -1;
+	  new_environ[size] = malloc (namelen + 1 + vallen);
+	  if (new_environ[size] == NULL)
+	    {
+	      __set_errno (ENOMEM);
+	      UNLOCK;
+	      return -1;
+	    }
+
+#ifdef USE_TSEARCH
+	  memcpy (new_environ[size], new_value, namelen + 1 + vallen);
+#else
+	  memcpy (new_environ[size], name, namelen);
+	  new_environ[size][namelen] = '=';
+	  memcpy (&new_environ[size][namelen + 1], value, vallen);
+#endif
 	}
 
       if (__environ != last_environ)
 	memcpy ((char *) new_environ, (char *) __environ,
 		size * sizeof (char *));
-
-#ifdef _LIBC
-      {
-	char *tmp = __mempcpy (new_environ[size], name, namelen);
-	*tmp++ = '=';
-	__mempcpy (tmp, value, vallen);
-      }
-#else
-      memcpy (new_environ[size], name, namelen);
-      new_environ[size][namelen] = '=';
-      memcpy (&new_environ[size][namelen + 1], value, vallen);
-#endif
 
       new_environ[size + 1] = NULL;
 
@@ -139,22 +175,48 @@ setenv (name, value, replace)
       size_t len = strlen (*ep);
       if (len + 1 < namelen + 1 + vallen)
 	{
+	  char *new_value;
+	  char *np;
+
 	  /* The existing string is too short; malloc a new one.  */
-	  char *new = malloc (namelen + 1 + vallen);
-	  if (new == NULL)
-	    {
-	      UNLOCK;
-	      return -1;
-	    }
-	  *ep = new;
-#ifdef _LIBC
-	  *((char *) __mempcpy (*ep, name, namelen)) = '=';
-#else
-	  memcpy (*ep, name, namelen);
-	  (*ep)[namelen] = '=';
+#ifdef USE_TSEARCH
+	  new_value = alloca (namelen + 1 + vallen);
+# ifdef _LIBC
+	  __mempcpy (__mempcpy (__mempcpy (new_value, name, namelen), "=", 1),
+		     value, vallen);
+# else
+	  memcpy (new_value, name, namelen);
+	  new_value[namelen] = '=';
+	  memcpy (&new_value[namelen + 1], value, vallen);
+# endif
+
+	  np = KNOWN_VALUE (new_value);
+	  if (np == NULL)
 #endif
+	    {
+	      np = malloc (namelen + 1 + vallen);
+	      if (np == NULL)
+		{
+		  UNLOCK;
+		  return -1;
+		}
+
+#ifdef USE_TSEARCH
+	      memcpy (np, new_value, namelen + 1 + vallen);
+#else
+	      memcpy (np, name, namelen);
+	      np[namelen] = '=';
+	      memcpy (&np[namelen + 1], value, vallen);
+#endif
+	    }
+
+	  /* Keep the old value around.  */
+	  STORE_VALUE (*ep);
+	  *ep = np;
 	}
-      memcpy (&(*ep)[namelen + 1], value, vallen);
+      else
+	/* Overwrite the value part of the old value.  */
+	memcpy (&(*ep)[namelen + 1], value, vallen);
     }
 
   UNLOCK;
@@ -171,11 +233,15 @@ unsetenv (name)
 
   LOCK;
 
-  for (ep = __environ; *ep; ++ep)
+  for (ep = __environ; *ep != NULL; ++ep)
     if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
       {
 	/* Found it.  Remove this pointer by moving later ones back.  */
 	char **dp = ep;
+
+	/* Store the value so that we can reuse it later.  */
+	STORE_VALUE (ep);
+
 	do
 	  dp[0] = dp[1];
 	while (*dp++);
@@ -195,7 +261,12 @@ clearenv ()
 
   if (__environ == last_environ && __environ != NULL)
     {
-      /* We allocated this environment so we can free it.  */
+      /* We allocated this environment so we can free it.  Store all the
+         strings.  */
+      char **ep = __environ;
+      while (*ep != NULL)
+	STORE_VALUE (*ep++);
+
       free (__environ);
       last_environ = NULL;
     }
@@ -208,6 +279,10 @@ clearenv ()
   return 0;
 }
 #ifdef _LIBC
+# undef setenv
+# undef unsetenv
 # undef clearenv
+weak_alias (__setenv, setenv)
+weak_alias (__unsetenv, unsetenv)
 weak_alias (__clearenv, clearenv)
 #endif

@@ -333,6 +333,7 @@ tzset_internal (always)
     {
       /* There is no DST.  */
       tz_rules[1].name = tz_rules[0].name;
+      tz_rules[1].offset = tz_rules[0].offset;
       free (tzbuf);
       return;
     }
@@ -547,8 +548,8 @@ tz_compute (timer, tm)
       ! compute_change (&tz_rules[1], 1900 + tm->tm_year))
     return 0;
 
-  __daylight = timer >= tz_rules[0].change && timer < tz_rules[1].change;
-  __timezone = -tz_rules[__daylight].offset;
+  __daylight = tz_rules[0].offset != tz_rules[1].offset;
+  __timezone = -tz_rules[0].offset;
   __tzname[0] = (char *) tz_rules[0].name;
   __tzname[1] = (char *) tz_rules[1].name;
 
@@ -626,9 +627,10 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
     {
       if (use_localtime)
 	{
-	  tp->tm_isdst = __daylight;
-	  tp->tm_zone = __tzname[__daylight];
-	  tp->tm_gmtoff = -__timezone;
+	  tp->tm_isdst = (*timer >= tz_rules[0].change
+			  && *timer < tz_rules[1].change);
+	  tp->tm_zone = __tzname[tp->tm_isdst];
+	  tp->tm_gmtoff = tz_rules[tp->tm_isdst].offset;
 	}
       else
 	{
