@@ -1,3 +1,8 @@
+2000-08-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getXXbyYY_r.c: Define result to *result before including
+	digits_dots.c.
+
 2000-08-30  Andreas Jaeger  <aj@suse.de>
 
 	* math/gen-libm-test.pl (parse_ulps): Remove extra \.
