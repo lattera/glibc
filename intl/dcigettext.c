@@ -751,7 +751,7 @@ _nl_find_msg (domain_file, msgid, index)
 	 appropriate table with the same structure as the table
 	 of translations in the file, where we can put the pointers
 	 to the converted strings in.
-	 The is a slight complication with the INDEX: We don't know
+	 There is a slight complication with the INDEX: We don't know
 	 a priori which entries are plural entries. Therefore at any
 	 moment we can only translate the variants 0 .. INDEX.  */
 
