@@ -1,3 +1,7 @@
+2004-12-17  GOTO Masanori  <gotom@debian.or.jp>
+
+	* locales/te_IN: Fix language name spelling.
+
 2004-12-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/en_ZA: Update by Dwayne Bailey.

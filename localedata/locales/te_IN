@@ -1,18 +1,18 @@
 comment_char    %
 escape_char     /
-% Telgu language locale for India.
+% Telugu language locale for India.
 % Contributed by Kentaroh Noji <knoji@jp.ibm.com> and
 % Tetsuji Orita <orita@jp.ibm.com>.
 
 LC_IDENTIFICATION
-title      "Telgu language locale for India"
+title      "Telugu language locale for India"
 source     "IBM Globalization Center of Competency, Yamato Software Laboratory"
 address    "1623-14, Shimotsuruma, Yamato-shi, Kanagawa-ken, 242-8502, Japan"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel         ""
 fax         ""
-language    "Telgu"
+language    "Telugu"
 territory   "India"
 revision    "0.92b"
 date        "2000,October 12"

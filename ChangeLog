@@ -1,3 +1,7 @@
+2004-12-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/ja.po: Update from translation team.
+
 2004-12-17  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/clone.S (__clone): Add support
