@@ -23,11 +23,23 @@
 #if defined __USE_ISOC99 && defined _MATH_H && !defined _MATH_H_MATHDEF
 # define _MATH_H_MATHDEF	1
 
+# include <bits/wordsize.h>
+
+# if __WORDSIZE == 64 || (defined __FLT_EVAL_METHOD__ && __FLT_EVAL_METHOD__ == 0)
 /* The x86-64 architecture computes values with the precission of the
-   used type.  */
+   used type.  Similarly for -m32 -mfpmath=sse.  */
 typedef float float_t;		/* `float' expressions are evaluated as `float'.  */
 typedef double double_t;	/* `double' expressions are evaluated
 				   as `double'.  */
+# else
+/* The ix87 FPUs evaluate all values in the 80 bit floating-point format
+   which is also available for the user as `long double'.  Therefore we
+   define:  */
+typedef long double float_t;	/* `float' expressions are evaluated as
+				   `long double'.  */
+typedef long double double_t;	/* `double' expressions are evaluated as
+				   `long double'.  */
+# endif
 
 /* The values returned by `ilogb' for 0 and NaN respectively.  */
 # define FP_ILOGB0	(-2147483647 - 1)

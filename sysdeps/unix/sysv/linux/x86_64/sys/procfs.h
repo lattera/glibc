@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,10 +45,20 @@ typedef unsigned long elf_greg_t;
 #define ELF_NGREG (sizeof (struct user_regs_struct) / sizeof(elf_greg_t))
 typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 
+#if __WORDSIZE == 32
+/* Register set for the floating-point registers.  */
+typedef struct user_fpregs_struct elf_fpregset_t;
+
+/* Register set for the extended floating-point registers.  Includes
+   the Pentium III SSE registers in addition to the classic
+   floating-point stuff.  */
+typedef struct user_fpxregs_struct elf_fpxregset_t;
+#else
 /* Register set for the extended floating-point registers.  Includes
    the Pentium III SSE registers in addition to the classic
    floating-point stuff.  */
 typedef struct user_fpregs_struct elf_fpregset_t;
+#endif
 
 /* Signal info.  */
 struct elf_siginfo
@@ -94,8 +104,13 @@ struct elf_prpsinfo
     char pr_zomb;			/* Zombie.  */
     char pr_nice;			/* Nice val.  */
     unsigned long int pr_flag;		/* Flags.  */
+#if __WORDSIZE == 32
+    unsigned short int pr_uid;
+    unsigned short int pr_gid;
+#else
     unsigned int pr_uid;
     unsigned int pr_gid;
+#endif
     int pr_pid, pr_ppid, pr_pgrp, pr_sid;
     /* Lots missing */
     char pr_fname[16];			/* Filename of executable.  */

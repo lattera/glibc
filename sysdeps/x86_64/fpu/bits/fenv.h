@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,1999,2000,2001,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@
 #ifndef _FENV_H
 # error "Never use <bits/fenv.h> directly; include <fenv.h> instead."
 #endif
+
+#include <bits/wordsize.h>
 
 
 /* Define bits representing the exception.  We use the bit positions
@@ -80,7 +82,9 @@ typedef struct
     unsigned int __data_offset;
     unsigned short int __data_selector;
     unsigned short int __unused5;
+#if __WORDSIZE == 64
     unsigned int __mxcsr;
+#endif
   }
 fenv_t;
 

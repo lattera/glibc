@@ -1,3 +1,19 @@
+2004-11-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/procfs.h [__WORDSIZE == 32]
+	(elf_fpxregset_t): New type.
+	(struct elf_prpsinfo): If __WORDSIZE == 32, change pr_[ug]id type
+	to unsigned short int.
+	* sysdeps/unix/sysv/linux/x86_64/sys/user.h
+	(struct user_fpregs_struct): Fix comment.
+	* sysdeps/i386/fpu/bits/mathdef.h (float_t, double_t): If
+	__FLOAT_EVAL_METHOD__ is defined and 0, typedef to float resp. double.
+	* sysdeps/x86_64/fpu/bits/mathdef.h: Include bits/wordsize.h.
+	(float_t, double_t): If -m32 and not -mfpmath=sse, typedef to
+	long double.
+	* sysdeps/x86_64/fpu/bits/fenv.h: Include bits/wordsize.h.
+	(fenv_t): Remove __mxcsr field for -m32.
+
 2004-11-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/ftello.c (ftello): Don't subtract save_end - save_base

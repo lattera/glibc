@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ struct user_fpregs_struct
   __uint32_t		mxcsr;
   __uint32_t		mxcr_mask;
   __uint32_t		st_space[32];   /* 8*16 bytes for each FP-reg = 128 bytes */
-  __uint32_t		xmm_space[64];  /* 16*16 bytes for each XMM-reg = 128 bytes */
+  __uint32_t		xmm_space[64];  /* 16*16 bytes for each XMM-reg = 256 bytes */
   __uint32_t		padding[24];
 };
 
