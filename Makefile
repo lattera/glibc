@@ -283,7 +283,9 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 			    gen-sorted.awk abi-versions.awk abilist.awk	\
 			    firstversions.awk documented.sh cpp		\
 			    output-format.sed gen-as-const.awk		\
-			    merge-abilist.awk extract-abilist.awk)	\
+			    merge-abilist.awk extract-abilist.awk	\
+			    rpm2dynsym.sh				\
+			    )
 		$(wildcard abilist/*.abilist)
 
 distribute := $(strip $(distribute))
