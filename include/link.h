@@ -1,6 +1,6 @@
 /* Data structure for communication from the run-time dynamic linker for
    loaded ELF shared objects.
-   Copyright (C) 1995-1999,2000,01,02 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -268,6 +268,8 @@ struct link_map
     size_t l_tls_blocksize;
     /* Alignment requirement of the TLS block.  */
     size_t l_tls_align;
+    /* Offset of first byte module alignment.  */
+    size_t l_tls_firstbyte_offset;
 # ifndef NO_TLS_OFFSET
 #  define NO_TLS_OFFSET	0
 # endif

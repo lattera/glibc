@@ -797,7 +797,7 @@ rtld_hidden_proto (_dl_allocate_tls)
 extern void _dl_get_tls_static_info (size_t *sizep, size_t *alignp)
      internal_function;
 
-extern void _dl_allocate_static_tls (struct link_map *map)
+extern int _dl_allocate_static_tls (struct link_map *map)
      internal_function attribute_hidden;
 
 /* These are internal entry points to the two halves of _dl_allocate_tls,

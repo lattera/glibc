@@ -117,9 +117,10 @@ internal_function
 _dl_determine_tlsoffset (void)
 {
   struct dtv_slotinfo *slotinfo;
-  size_t max_align = __alignof__ (void *);
+  size_t max_align;
   size_t offset;
   size_t cnt;
+  size_t freebytes;
 
   /* The first element of the dtv slot info list is allocated.  */
   assert (GL(dl_tls_dtv_slotinfo_list) != NULL);
@@ -127,24 +128,78 @@ _dl_determine_tlsoffset (void)
      dl_tls_dtv_slotinfo_list list.  */
   assert (GL(dl_tls_dtv_slotinfo_list)->next == NULL);
 
+  /* Determining the offset of the various parts of the static TLS
+     block has several dependencies.  In addition we have to work
+     around bugs in some toolchains.
+
+     Each TLS block from the objects available at link time has a size
+     and an alignment requirement.  The GNU ld computes the alignment
+     requirements for the data at the positions *in the file*, though.
+     I.e, it is not simply possible to allocate a block with the size
+     of the TLS program header entry.  The data is layed out assuming
+     that the first byte of the TLS block fulfills
+
+       p_vaddr mod p_align == &TLS_BLOCK mod p_align
+
+     This means we have to add artificial padding at the beginning of
+     the TLS block.  These bytes are never used for the TLS data in
+     this module but the first byte allocated must be aligned
+     according to mod p_align == 0 so that the first byte of the TLS
+     block is aligned according to p_vaddr mod p_align.  This is ugly
+     and the linker can help by computing the offsets in the TLS block
+     assuming the first byte of the TLS block is aligned according to
+     p_align.
+
+     We can handle this wrong behavior because of another bug in GNU
+     ld.  The p_vaddr field of the TLS segment must be zero (according
+     to the spec) since the linker does not know the address or offset
+     where it will end up at.  Once a linker is available which
+     handles the alignment correctly it should set p_addr to zero and
+     all will automatically fall into place.
+
+     The extra space which might be allocated before the first byte of
+     the TLS block need not go unused.  The code below tries to use
+     that memory for the next TLS block.  This can work if the total
+     memory requirement for the next TLS block is smaller than the
+     gap.  */
+
 # if TLS_TCB_AT_TP
   /* We simply start with zero.  */
+  max_align = __alignof (void *);
   offset = 0;
+  freebytes = 0;
 
   slotinfo = GL(dl_tls_dtv_slotinfo_list)->slotinfo;
   for (cnt = 1; slotinfo[cnt].map != NULL; ++cnt)
     {
       assert (cnt < GL(dl_tls_dtv_slotinfo_list)->len);
 
-      max_align = MAX (max_align, slotinfo[cnt].map->l_tls_align);
+      size_t blsize = (slotinfo[cnt].map->l_tls_blocksize
+		       + slotinfo[cnt].map->l_tls_firstbyte_offset);
 
-      /* Compute the offset of the next TLS block.  */
-      offset = roundup (offset + slotinfo[cnt].map->l_tls_blocksize,
-			slotinfo[cnt].map->l_tls_align);
+      if (blsize <= freebytes)
+	{
+	  /* When we come here the amount of memory we was "wasted"
+             for the correct alignment of the previous block is larger
+             than what we need for this module.  So use it.  */
+	  size_t n = (freebytes - blsize) / slotinfo[cnt].map->l_tls_align;
+	  freebytes = (n * slotinfo[cnt].map->l_tls_align
+		       + slotinfo[cnt].map->l_tls_firstbyte_offset);
+	}
+      else
+	{
+	  /* There is either no gap from the bottom of the static TLS
+             block to the first used byte or the gap is too small.
+             Extend the static TLS block.  */
+	  offset += roundup (blsize, max_align);
+	  freebytes = slotinfo[cnt].map->l_tls_firstbyte_offset;
+	}
+
+      max_align = MAX (max_align, slotinfo[cnt].map->l_tls_align);
 
       /* XXX For some architectures we perhaps should store the
 	 negative offset.  */
-      slotinfo[cnt].map->l_tls_offset = offset;
+      slotinfo[cnt].map->l_tls_offset = offset - freebytes;
     }
 
   /* The thread descriptor (pointed to by the thread pointer) has its
@@ -156,11 +211,12 @@ _dl_determine_tlsoffset (void)
   // XXX model.
 
   GL(dl_tls_static_used) = offset;
-  GL(dl_tls_static_size) = roundup (offset + TLS_STATIC_SURPLUS + TLS_TCB_SIZE,
-				    TLS_TCB_ALIGN);
+  GL(dl_tls_static_size) = (offset + roundup (TLS_STATIC_SURPLUS, max_align)
+			    + TLS_TCB_SIZE);
 # elif TLS_DTV_AT_TP
   /* The TLS blocks start right after the TCB.  */
   offset = TLS_TCB_SIZE;
+  max_align = __alignof (void *);
 
   /* The first block starts right after the TCB.  */
   slotinfo = GL(dl_tls_dtv_slotinfo_list)->slotinfo;
@@ -201,7 +257,7 @@ _dl_determine_tlsoffset (void)
 # endif
 
   /* The alignment requirement for the static TLS block.  */
-  GL(dl_tls_static_align) = MAX (TLS_TCB_ALIGN, max_align);
+  GL(dl_tls_static_align) = max_align;
 }
 
 

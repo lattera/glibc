@@ -227,6 +227,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   assert (info->l.l_tls_modid != 0);
   GL(dl_rtld_map).l_tls_blocksize = info->l.l_tls_blocksize;
   GL(dl_rtld_map).l_tls_align = info->l.l_tls_align;
+  GL(dl_rtld_map).l_tls_firstbyte_offset = info->l.l_tls_firstbyte_offset;
   GL(dl_rtld_map).l_tls_initimage_size = info->l.l_tls_initimage_size;
   GL(dl_rtld_map).l_tls_initimage = info->l.l_tls_initimage;
   GL(dl_rtld_map).l_tls_offset = info->l.l_tls_offset;
@@ -347,6 +348,11 @@ _dl_start (void *arg)
 
 	bootstrap_map.l_tls_blocksize = phdr[cnt].p_memsz;
 	bootstrap_map.l_tls_align = phdr[cnt].p_align;
+	if (phdr[cnt].p_align == 0)
+	  bootstrap_map.l_tls_firstbyte_offset = 0;
+	else
+	  bootstrap_map.l_tls_firstbyte_offset = (phdr[cnt].p_vaddr
+						  & (phdr[cnt].p_align - 1));
 	assert (bootstrap_map.l_tls_blocksize != 0);
 	bootstrap_map.l_tls_initimage_size = phdr[cnt].p_filesz;
 	bootstrap_map.l_tls_initimage = (void *) (bootstrap_map.l_addr
@@ -860,6 +866,11 @@ of this helper program; chances are you did not intend to run this program.\n\
 	       check for this special but unimportant case.  */
 	    GL(dl_loaded)->l_tls_blocksize = ph->p_memsz;
 	    GL(dl_loaded)->l_tls_align = ph->p_align;
+	    if (ph->p_align == 0)
+	      GL(dl_loaded)->l_tls_firstbyte_offset = 0;
+	    else
+	      GL(dl_loaded)->l_tls_firstbyte_offset = (ph->p_vaddr
+						       & (ph->p_align - 1));
 	    GL(dl_loaded)->l_tls_initimage_size = ph->p_filesz;
 	    GL(dl_loaded)->l_tls_initimage = (void *) ph->p_vaddr;
 

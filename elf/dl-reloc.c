@@ -41,27 +41,39 @@
    the static TLS area already allocated for each running thread.  If this
    object's TLS segment is too big to fit, we fail.  If it fits,
    we set MAP->l_tls_offset and return.  */
-void
+int
 internal_function __attribute_noinline__
 _dl_allocate_static_tls (struct link_map *map)
 {
   size_t offset;
   size_t used;
   size_t check;
+  size_t freebytes;
+  size_t n;
+  size_t blsize;
+
+  /* If the alignment requirements are too high fail.  */
+  if (map->l_tls_align > GL(dl_tls_static_align))
+    return 1;
 
 # if TLS_TCB_AT_TP
-  offset = roundup (GL(dl_tls_static_used) + map->l_tls_blocksize,
-		    map->l_tls_align);
-  used = offset;
-  check = offset + TLS_TCB_SIZE;
+  freebytes = GL(dl_tls_static_size) - GL(dl_tls_static_used) - TLS_TCB_SIZE;
+
+  blsize = map->l_tls_blocksize + map->l_tls_firstbyte_offset;
+  if (freebytes < blsize)
+    return 1;
+
+  n = (freebytes - blsize) / map->l_tls_align;
+
+  offset = GL(dl_tls_static_used) + (freebytes - n * map->l_tls_align
+				     - map->l_tls_firstbyte_offset);
+
+  map->l_tls_offset = GL(dl_tls_static_used) = offset;
 # elif TLS_DTV_AT_TP
   offset = roundup (GL(dl_tls_static_used), map->l_tls_align);
   used = offset + map->l_tls_blocksize;
   check = used;
   /* dl_tls_static_used includes the TCB at the beginning.  */
-# else
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
 
   if (check > GL(dl_tls_static_size))
     {
@@ -72,6 +84,11 @@ shared object cannot be dlopen()ed: static TLS memory too small");
 
   map->l_tls_offset = offset;
   GL(dl_tls_static_used) = used;
+# else
+#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+# endif
+
+  return 0;
 }
 #endif
 
@@ -212,7 +229,9 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 #define CHECK_STATIC_TLS(map, sym_map)					      \
     do {								      \
       if (__builtin_expect ((sym_map)->l_tls_offset == NO_TLS_OFFSET, 0))     \
-	_dl_allocate_static_tls (sym_map);				      \
+	if (_dl_allocate_static_tls (sym_map) != 0)			      \
+ 	  INTUSE(_dl_signal_error) (0, sym_map->l_name, NULL, N_("\
+cannot allocate memory in static TLS block"));				      \
     } while (0)
 
 #include "dynamic-link.h"

@@ -987,6 +987,10 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
 	  l->l_tls_blocksize = ph->p_memsz;
 	  l->l_tls_align = ph->p_align;
+	  if (ph->p_align == 0)
+	    l->l_tls_firstbyte_offset = 0;
+	  else
+	    l->l_tls_firstbyte_offset = ph->p_vaddr & (ph->p_align - 1);
 	  l->l_tls_initimage_size = ph->p_filesz;
 	  /* Since we don't know the load address yet only store the
 	     offset.  We will adjust it later.  */
