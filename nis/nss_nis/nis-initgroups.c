@@ -23,8 +23,6 @@
 #include <grp.h>
 #include <nss.h>
 #include <pwd.h>
-#include <stdio.h>
-#include <stdio_ext.h>
 #include <string.h>
 #include <unistd.h>
 #include <rpcsvc/yp.h>
@@ -126,78 +124,6 @@ internal_getgrent_r (struct group *grp, char *buffer, size_t buflen,
   while (!parse_res);
 
   return NSS_STATUS_SUCCESS;
-}
-
-
-static int init;
-static int use_netid;
-
-
-static const char default_nss[] = "/etc/default/nss";
-
-static void
-check_default_nss (void)
-{
-  FILE *fp = fopen (default_nss, "rc");
-  if (fp != NULL)
-    {
-      char *line = NULL;
-      size_t linelen = 0;
-
-      __fsetlocking (fp, FSETLOCKING_BYCALLER);
-
-      while (!feof_unlocked (fp))
-	{
-	  ssize_t n = getline (&line, &linelen, fp);
-	  if (n <= 0)
-	    break;
-
-	  /* There currently is only one variable we expect, so
-	     simplify the parsing.  Recognize only
-
-	       NETID_AUTHORITATIVE = TRUE
-
-	     with arbitrary white spaces.  */
-	  char *cp = line;
-	  while (isspace (*cp))
-	    ++cp;
-
-	  /* Recognize comment lines.  */
-	  if (*cp == '#')
-	    continue;
-
-	  static const char netid_authoritative[] = "NETID_AUTHORITATIVE";
-	  if (strncmp (cp, netid_authoritative,
-		       sizeof (netid_authoritative) - 1) != 0)
-	    continue;
-
-	  cp += sizeof (netid_authoritative) - 1;
-	  while (isspace (*cp))
-	    ++cp;
-	  if (*cp++ != '=')
-	    continue;
-	  while (isspace (*cp))
-	    ++cp;
-
-	  if (strncmp (cp, "TRUE", 4) != 0)
-	    continue;
-	  cp +=4;
-
-	  while (isspace (*cp))
-	    ++cp;
-
-	  if (*cp == '\0')
-	    use_netid = 1;
-
-	  /* For now, just drop out of the loop.  */
-	  break;
-	}
-
-      free (line);
-
-      fclose (fp);
-    }
-  init = 1;
 }
 
 
@@ -321,10 +247,7 @@ _nss_nis_initgroups_dyn (const char *user, gid_t group, long int *start,
     return NSS_STATUS_UNAVAIL;
 
   /* Check whether we are supposed to use the netid.byname map.  */
-  if (!init)
-    check_default_nss ();
-
-  if (use_netid)
+  if (_nis_default_nss () & NSS_FLAG_NETID_AUTHORITATIVE)
     {
       /* We need the user ID.  */
       uid_t uid;

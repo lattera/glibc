@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +34,18 @@ yperr2nss (int errval)
   if ((unsigned int) errval >= __yperr2nss_count)
     return NSS_STATUS_UNAVAIL;
   return __yperr2nss_tab[(unsigned int) errval];
+}
+
+#define NSS_FLAG_SET			1
+#define NSS_FLAG_NETID_AUTHORITATIVE	2
+#define NSS_FLAG_SERVICES_AUTHORITATIVE	4
+extern int _nis_default_nss_flags attribute_hidden;
+extern int _nis_check_default_nss (void) attribute_hidden;
+
+extern inline __attribute__((always_inline)) int
+_nis_default_nss (void)
+{
+  return _nis_default_nss_flags ?: _nis_check_default_nss ();
 }
 
 #endif /* nis/nss-nis.h */

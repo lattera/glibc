@@ -330,6 +330,10 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
 	return NSS_STATUS_SUCCESS;
     }
 
+  /* Check if it is safe to rely on services.byservicename.  */
+  if (_nis_default_nss () & NSS_FLAG_SERVICES_AUTHORITATIVE)
+    return status;
+
   struct ypall_callback ypcb;
   struct search_t req;
 

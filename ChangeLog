@@ -1,3 +1,22 @@
+2004-04-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nss: Add SERVICES_AUTHORITATIVE.
+	* nis/nss-nis.h (NSS_FLAG_SET, NSS_FLAG_NETID_AUTHORITATIVE,
+	NSS_FLAG_SERVICES_AUTHORITATIVE): Define.
+	(_nis_default_nss_flags, _nis_check_default_nss): New decls.
+	(_nis_default_nss): New inline.
+	* nis/nss-nis.c: Include ctype.h, stdio.h and stdio_ext.h.
+	(_nis_default_nss_flags, default_nss): New variables.
+	(_nis_check_default_nss): New function.
+	* nis/nss_nis/nis-initgroups.c: Don't include stdio.h and
+	stdio_ext.h.
+	(check_default_nss, default_nss): Move to nss-nis.c.
+	(init): Removed.
+	(_nss_nis_initgroups_dyn): Use _nis_default_nss ().
+	* nis/nss_nis/nis-services.c (_nss_nis_getservbyname_r): If
+	NSS_FLAG_SERVICES_AUTHORITATIVE and services.byservicename lookup
+	fails, return immediately.
+
 2004-04-01  Roland McGrath  <roland@redhat.com>
 
 	* elf/tst-execstack.c (do_test): Make F static.
