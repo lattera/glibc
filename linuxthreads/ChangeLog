@@ -1,3 +1,10 @@
+2000-09-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* mutex.c (__pthread_mutex_unlock): Correct test for already unlocked
+	mutex.  Patch by dtc@cmucl.cons.org.
+
+	* ecmutex.c: New file.
+
 2000-09-04  H.J. Lu  <hjl@gnu.org>
 
 	* attr.c (__pthread_attr_setguardsize): Use page_roundup
