@@ -1,7 +1,7 @@
 2004-11-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ifaddrs.c: Determine sin6_scope_id field
-	value correctly.
+	value correctly.  Patch by Mitsuru Kanda <mk@karaba.org>.
 
 2004-11-04  Jakub Jelinek  <jakub@redhat.com>
 
