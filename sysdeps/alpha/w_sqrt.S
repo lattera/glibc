@@ -25,7 +25,7 @@
 #ifndef _IEEE_FP
 
 #define _ERRNO_H
-#include <errnos.h>
+#include <bits/errno.h>
 #include <sysdep.h>
 
 	.set noreorder

@@ -23,7 +23,7 @@
 
 #include <sysdep.h>
 #define _ERRNO_H
-#include <errnos.h>
+#include <bits/errno.h>
 
 #ifdef PIC
 .section .bss

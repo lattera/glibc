@@ -18,7 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 #define _ERRNO_H
-#include <errnos.h>
+#include <bits/errno.h>
 
 ENTRY(syscall_error)
 	/* If it was a syscall that got interrupted, but can

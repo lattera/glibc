@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 
 #include <stdio.h>
-#include <stdio_lim.h>
+#include <bits/stdio_lim.h>
 #include <unistd.h>
 
 #define __DECLARE_FILE_DESCRIPTORS__

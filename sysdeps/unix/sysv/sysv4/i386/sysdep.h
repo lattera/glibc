@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 #ifndef _ERRNO_H
 #define _ERRNO_H
 #endif
-#include <errnos.h>
+#include <bits/errno.h>
 
 #undef	PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \

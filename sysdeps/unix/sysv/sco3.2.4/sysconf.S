@@ -17,7 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
-#include <confname.h>
+#include <bits/confname.h>
 
 .globl	__tzname_max
 ENTRY (__sysconf)

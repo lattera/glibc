@@ -19,7 +19,7 @@
 
 #include <sysdep.h>
 #define _ASM
-#include <jmp_buf.h>
+#include <bits/setjmp.h>
 
 /* __longjmp(jmpbuf, val) */
 

@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <unistd.h>
 
-#include <stdio_lim.h>
+#include <bits/stdio_lim.h>
 #include "filedesc.h"
 
 /* Close the file descriptor FD.  */
