@@ -1,3 +1,32 @@
+2001-04-12  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/TESTS2: New file.
+	* iconvdata/run-iconv-test.sh: Also run tests from TESTS2.
+	* iconvdata/testdata/alfabeta..UTF-8: New file.
+	* iconvdata/testdata/alfabeta..UTF-16.BE: New file.
+	* iconvdata/testdata/alfabeta..UTF-16.LE: New file.
+	* iconvdata/testdata/alfabeta..UTF-32.BE: New file.
+	* iconvdata/testdata/alfabeta..UTF-32.LE: New file.
+
+2001-04-11  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/utf-32.c: New file.
+	* iconvdata/gconv-modules: Add entries for UTF-32, UTF-32LE, UTF-32BE.
+	* iconvdata/Makefile (modules): Add UTF-32.
+	(distribute): Add utf-32.c.
+
+2001-04-11  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/utf-16.c (PREPARE_LOOP): Initialize 'swap' after possibly
+	changing it in the state. After incrementing 'inptr', store it back.
+	* iconvdata/unicode.c (PREPARE_LOOP): After incrementing 'inptr',
+	store it back.
+
+2001-04-11  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/utf-16.c (gconv_init): Use MAX_NEEDED_FROM, not
+	MIN_NEEDED_FROM.
+
 2001-04-11  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/ia64/htonl.S: Drop superfluous "alloc".

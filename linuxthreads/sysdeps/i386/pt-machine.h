@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    i386 version.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -25,8 +25,7 @@
 
 /* Get some notion of the current stack.  Need not be exactly the top
    of the stack, just something somewhere in the current frame.  */
-#define CURRENT_STACK_FRAME  stack_pointer
-register char * stack_pointer __asm__ ("%esp");
+#define CURRENT_STACK_FRAME  __builtin_frame_address (0)
 
 
 /* Spinlock implementation; required.  */

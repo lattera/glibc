@@ -127,7 +127,7 @@ while read from to subset targets; do
   fi
 
   if test "$subset" != Y; then
-    echo $ac_n "   suntzu: ASCII -> $to -> ASCII $ac_c"
+    echo $ac_n "      suntzu: ASCII -> $to -> ASCII $ac_c"
     $PROG -f ASCII -t $to testdata/suntzus |
     $PROG -f $to -t ASCII > $temp1 ||
       { if test $? -gt 128; then exit 1; fi
@@ -138,6 +138,49 @@ while read from to subset targets; do
     echo "/OK"
   fi
 done < TESTS
+
+# We read the file named TESTS2.  All non-empty lines not starting with
+# `#' are interpreted as commands.
+while read utf8 from filename; do
+  # Ignore empty and comment lines.
+  if test -z "$filename" || test "$utf8" = '#'; then continue; fi
+
+  # Expand the variables now.
+  PROG=`eval echo $ICONV`
+
+  # Test conversion to the endianness dependent encoding.
+  echo $ac_n "test encoder: $utf8 -> $from $ac_c"
+  $PROG -f $utf8 -t $from < testdata/${filename}..${utf8} > $temp1
+  cmp $temp1 testdata/${filename}..${from}.BE > /dev/null 2>&1 ||
+  cmp $temp1 testdata/${filename}..${from}.LE > /dev/null 2>&1 ||
+    { echo "/FAILED"; failed=1; continue; }
+  echo "OK"
+
+  # Test conversion from the endianness dependent encoding.
+  echo $ac_n "test decoder: $from -> $utf8 $ac_c"
+  $PROG -f $from -t $utf8 < testdata/${filename}..${from}.BE > $temp1
+  cmp $temp1 testdata/${filename}..${utf8} > /dev/null 2>&1 ||
+    { echo "/FAILED"; failed=1; continue; }
+  $PROG -f $from -t $utf8 < testdata/${filename}..${from}.LE > $temp1
+  cmp $temp1 testdata/${filename}..${utf8} > /dev/null 2>&1 ||
+    { echo "/FAILED"; failed=1; continue; }
+  echo "OK"
+
+  # Test byte swapping behaviour.
+  echo $ac_n "test non-BOM: ${from}BE -> ${from}LE $ac_c"
+  $PROG -f ${from}BE -t ${from}LE < testdata/${filename}..${from}.BE > $temp1
+  cmp $temp1 testdata/${filename}..${from}.LE > /dev/null 2>&1 ||
+    { echo "/FAILED"; failed=1; continue; }
+  echo "OK"
+
+  # Test byte swapping behaviour.
+  echo $ac_n "test non-BOM: ${from}LE -> ${from}BE $ac_c"
+  $PROG -f ${from}LE -t ${from}BE < testdata/${filename}..${from}.LE > $temp1
+  cmp $temp1 testdata/${filename}..${from}.BE > /dev/null 2>&1 ||
+    { echo "/FAILED"; failed=1; continue; }
+  echo "OK"
+
+done < TESTS2
 
 exit $failed
 # Local Variables:

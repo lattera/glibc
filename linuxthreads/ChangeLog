@@ -1,3 +1,9 @@
+2001-04-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/pt-machine.h (CURRENT_STACK_FRAME): Define using
+	__builtin_frame_address.
+	* sysdeps/i386/i686/pt-machine.h: Likewise.
+
 2001-04-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Comment out tst-cancel for now.

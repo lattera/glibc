@@ -1,5 +1,5 @@
 /* Conversion module for UTF-16.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -44,7 +44,7 @@
 #define PREPARE_LOOP \
   enum direction dir = ((struct utf16_data *) step->__data)->dir;	      \
   enum variant var = ((struct utf16_data *) step->__data)->var;		      \
-  int swap = ((struct utf16_data *) step->__data)->swap;		      \
+  int swap;								      \
   if (FROM_DIRECTION && var == UTF_16)					      \
     {									      \
       if (data->__invocation_counter == 0)				      \
@@ -55,11 +55,11 @@
 									      \
 	  if (get16u (inptr) == BOM)					      \
 	    /* Simply ignore the BOM character.  */			      \
-	    inptr += 2;							      \
+	    *inptrp = inptr += 2;					      \
 	  else if (get16u (inptr) == BOM_OE)				      \
 	    {								      \
 	      ((struct utf16_data *) step->__data)->swap = 1;		      \
-	      inptr += 2;						      \
+	      *inptrp = inptr += 2;					      \
 	    }								      \
 	}								      \
     }									      \
@@ -72,7 +72,8 @@
 									      \
       put16u (outbuf, BOM);						      \
       outbuf += 2;							      \
-    }
+    }									      \
+  swap = ((struct utf16_data *) step->__data)->swap;
 #define EXTRA_LOOP_ARGS		, var, swap
 
 
@@ -159,7 +160,7 @@ gconv_init (struct __gconv_step *step)
 	  if (dir == from_utf16)
 	    {
 	      step->__min_needed_from = MIN_NEEDED_FROM;
-	      step->__max_needed_from = MIN_NEEDED_FROM;
+	      step->__max_needed_from = MAX_NEEDED_FROM;
 	      step->__min_needed_to = MIN_NEEDED_TO;
 	      step->__max_needed_to = MIN_NEEDED_TO;
 	    }
@@ -168,7 +169,7 @@ gconv_init (struct __gconv_step *step)
 	      step->__min_needed_from = MIN_NEEDED_TO;
 	      step->__max_needed_from = MIN_NEEDED_TO;
 	      step->__min_needed_to = MIN_NEEDED_FROM;
-	      step->__max_needed_to = MIN_NEEDED_FROM;
+	      step->__max_needed_to = MAX_NEEDED_FROM;
 	    }
 
 	  step->__stateful = 0;

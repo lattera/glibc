@@ -53,11 +53,11 @@
 									      \
 	  if (get16u (inptr) == BOM)					      \
 	    /* Simply ignore the BOM character.  */			      \
-	    inptr += 2;							      \
+	    *inptrp = inptr += 2;					      \
 	  else if (get16u (inptr) == BOM_OE)				      \
 	    {								      \
 	      ((struct unicode_data *) step->__data)->swap = 1;		      \
-	      inptr += 2;						      \
+	      *inptrp = inptr += 2;					      \
 	    }								      \
 	}								      \
     }									      \

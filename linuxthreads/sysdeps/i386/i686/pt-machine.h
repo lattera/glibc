@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    i686 version.
-   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -26,8 +26,7 @@
 
 /* Get some notion of the current stack.  Need not be exactly the top
    of the stack, just something somewhere in the current frame.  */
-#define CURRENT_STACK_FRAME  stack_pointer
-register char * stack_pointer __asm__ ("%esp");
+#define CURRENT_STACK_FRAME  __builtin_frame_address (0)
 
 
 /* Spinlock implementation; required.  */
@@ -38,8 +37,8 @@ testandset (int *spinlock)
 
   __asm__ __volatile__ (
 	"xchgl %0, %1"
-	: "=r"(ret), "=m"(*spinlock)
-	: "0"(1), "m"(*spinlock)
+	: "=r" (ret), "=m" (*spinlock)
+	: "0" (1), "m" (*spinlock)
 	: "memory");
 
   return ret;

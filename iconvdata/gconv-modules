@@ -1319,6 +1319,18 @@ module	UNICODE//		INTERNAL		UNICODE		1
 module	INTERNAL		UNICODE//		UNICODE		1
 
 #	from			to			module		cost
+module	UTF-32//		INTERNAL		UTF-32		1
+module	INTERNAL		UTF-32//		UTF-32		1
+
+#	from			to			module		cost
+module	UTF-32LE//		INTERNAL		UTF-32		1
+module	INTERNAL		UTF-32LE//		UTF-32		1
+
+#	from			to			module		cost
+module	UTF-32BE//		INTERNAL		UTF-32		1
+module	INTERNAL		UTF-32BE//		UTF-32		1
+
+#	from			to			module		cost
 module	UTF-7//			INTERNAL		UTF-7		1
 module	INTERNAL		UTF-7//			UTF-7		1
 
