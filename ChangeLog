@@ -1,3 +1,8 @@
+2004-12-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (public_rEALLOc): Add parameter checks.
+	(_int_free): Provide better error message for invalid pointers.
+
 2004-12-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/tst-regex.c: Use defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0

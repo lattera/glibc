@@ -3434,6 +3434,17 @@ public_rEALLOc(Void_t* oldmem, size_t bytes)
   oldp    = mem2chunk(oldmem);
   oldsize = chunksize(oldp);
 
+  /* Little security check which won't hurt performance: the
+     allocator never wrapps around at the end of the address space.
+     Therefore we can exclude some size values which might appear
+     here by accident or by "design" from some intruder.  */
+  if (__builtin_expect ((uintptr_t) oldp > (uintptr_t) -oldsize, 0)
+      || __builtin_expect ((uintptr_t) oldp & MALLOC_ALIGN_MASK, 0))
+    {
+      malloc_printerr (check_action, "realloc(): invalid pointer", oldmem);
+      return NULL;
+    }
+
   checked_request2size(bytes, nb);
 
 #if HAVE_MMAP
@@ -4205,7 +4216,6 @@ _int_free(mstate av, Void_t* mem)
   mchunkptr       bck;         /* misc temp for linking */
   mchunkptr       fwd;         /* misc temp for linking */
 
-
   const char *errstr = NULL;
 
   p = mem2chunk(mem);
@@ -4215,7 +4225,8 @@ _int_free(mstate av, Void_t* mem)
      allocator never wrapps around at the end of the address space.
      Therefore we can exclude some size values which might appear
      here by accident or by "design" from some intruder.  */
-  if (__builtin_expect ((uintptr_t) p > (uintptr_t) -size, 0))
+  if (__builtin_expect ((uintptr_t) p > (uintptr_t) -size, 0)
+      || __builtin_expect ((uintptr_t) p & MALLOC_ALIGN_MASK, 0))
     {
       errstr = "free(): invalid pointer";
     errout:
