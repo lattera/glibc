@@ -239,7 +239,7 @@ tiny = 1e-4931L,
 long double
 __erfl (long double x)
 #else
-double
+long double
 __erfl (x)
      long double x;
 #endif
@@ -333,8 +333,7 @@ weak_alias (__erf, erfl)
 #else
      long double
      __erfcl (x)
-     long double
-       x;
+     long double x;
 #endif
 {
   int32_t hx, ix;
