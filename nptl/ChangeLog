@@ -11,7 +11,7 @@
 	* allocatestack.c: Improve comment throughout the file.
 
 	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S
-	(__lll_lock_wait): Add branch predicition.
+	(__lll_lock_wait): Add branch prediction.
 	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S
 	(__lll_lock_wait): Likewise.
 	(lll_unlock_wake_cb): Removed.
