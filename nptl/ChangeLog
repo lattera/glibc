@@ -1,5 +1,8 @@
 2003-03-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-cond11.
+	* tst-cond11.c: New file.
+
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Reorder
 	struct passed to cleanup handler to eliminate one more
 	instruction.
