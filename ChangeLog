@@ -1,8 +1,7 @@
-2002-12-30  Ulrich Drepper  <drepper@redhat.com>
-
-	* math/Makefile (generated): Remove definition.  Needs to be fixed.
-
 2002-12-30  Roland McGrath  <roland@redhat.com>
+
+	* Rules (generated): Target removed.
+	* mach/Makefile (generated): Define it here instead.
 
 	* math/Makefile (generated): Add m_*l and m_*f variants too.
 
