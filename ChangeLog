@@ -3,7 +3,7 @@
 	* hurd/hurdselect.c (_hurd_select) [MACH_MSG_TRAILER_MINIMUM_SIZE]:
 	Use untyped Mach IPC message format.
 
-	* sysdeps/mach/hurd/ioctl.c (__ioctl) [! MACH_MSG_TYPE_BIT]: Handle
+	* sysdeps/mach/hurd/ioctl.c (__ioctl) [! MACH_MSG_TYPE_BIT]:
 	Handle untyped Mach IPC message formats.
 
 	* hurd/catch-exc.c (_S_catch_exception_raise) [EXC_MASK_ALL]:
