@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -478,5 +478,7 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
   if (use_malloc)
     free (idxarr);
 
-  return needed;
+  /* Return the number of bytes/words we need, but don't count the NUL
+     byte/word at the end.  */
+  return needed - 1;
 }

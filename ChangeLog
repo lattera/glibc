@@ -1,3 +1,7 @@
+2000-01-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/strxfrm.c: Don't count in the terminating NUL byte/word.
+
 2000-01-24  Paul Eggert  <eggert@twinsun.com>
 
 	* posix/fnmatch_loop.c (FCT): Use locale's collating sequence when
