@@ -35,6 +35,7 @@
 2000-08-24  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/syscalls.list: Use __setrlimit as strong name.
+	* sysdeps/unix/sysv/syscalls.list: Likewise.
 
 	* posix/unistd.h: Move internal prototypes from here ...
 	* include/unistd.h: ... to here.

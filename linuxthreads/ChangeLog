@@ -1,3 +1,10 @@
+2000-08-24  Andreas Jaeger  <aj@suse.de>
+
+	* Examples/ex13.c: Include <string.h> for for strerror prototype.
+	(pthr_cond_signal_mutex): Rewrite to silence GCC.
+	(thread_start): Remove unused variable err.
+	(main): Silence GCC warnings.
+
 2000-08-22  Andreas Jaeger  <aj@suse.de>
 
 	* Examples/ex13.c: New test by Kurt Garloff <garloff@suse.de>.
