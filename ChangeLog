@@ -1,3 +1,17 @@
+2004-09-20  Roland McGrath  <roland@frob.com>
+
+	* elf/dl-load.c (__stack_prot): Only use PROT_GROWSUP/PROT_GROWSDOWN
+	in initializer #if defined.
+
+2004-09-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #391]
+	* stdlib/getsubopt.c: Merge fixes from gnulib.
+	(__strchrnul) [!_LIBC]: Define and include "strchrnul.c".
+	(getsubopt): Use prototypes, not K&R style.
+	Fix bug: memcmp(A,B,N) was being invoked on a memory block B
+	whose size might be smaller than N.  Use strncmp to avoid the bug.
+
 2004-09-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c: Define __stack_prot.
