@@ -554,6 +554,8 @@ of this helper program; chances are you did not intend to run this program.\n\
   _dl_loaded->l_map_end = 0;
   /* Perhaps the executable has no PT_LOAD header entries at all.  */
   _dl_loaded->l_map_start = ~0;
+  /* We opened the file, account for it.  */
+  ++_dl_loaded->l_opencount;
 
   /* Scan the program header table for the dynamic section.  */
   for (ph = phdr; ph < &phdr[phnum]; ++ph)
