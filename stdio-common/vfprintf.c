@@ -1296,10 +1296,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
   /* Lock stream.  */
 #ifdef USE_IN_LIBIO
-  __libc_cleanup_region_start ((void (*) (void *)) &_IO_funlockfile, s);
+  __libc_cleanup_region_start (1, (void (*) (void *)) &_IO_funlockfile, s);
   _IO_flockfile (s);
 #else
-  __libc_cleanup_region_start ((void (*) (void *)) &__funlockfile, s);
+  __libc_cleanup_region_start (1, (void (*) (void *)) &__funlockfile, s);
   __flockfile (s);
 #endif
 
@@ -2086,7 +2086,7 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
   result = vfprintf (hp, format, args);
 
   /* Lock stream.  */
-  __libc_cleanup_region_start ((void (*) (void *)) &_IO_funlockfile, s);
+  __libc_cleanup_region_start (1, (void (*) (void *)) &_IO_funlockfile, s);
   _IO_flockfile (s);
 
   /* Now flush anything from the helper to the S. */

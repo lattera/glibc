@@ -216,7 +216,7 @@ vsyslog(pri, fmt, ap)
 
 	/* Prepare for multiple users.  We have to take care: open and
 	   write are cancellation points.  */
-	__libc_cleanup_region_start ((void (*) (void *)) cancel_handler,
+	__libc_cleanup_region_start (1, (void (*) (void *)) cancel_handler,
 				     &oldaction_ptr);
 	__libc_lock_lock (syslog_lock);
 
@@ -315,7 +315,8 @@ void
 openlog (const char *ident, int logstat, int logfac)
 {
   /* Protect against multiple users.  */
-  __libc_cleanup_region_start ((void (*) __P ((void *))) __libc_mutex_unlock,
+  __libc_cleanup_region_start (1,
+			       (void (*) __P ((void *))) __libc_mutex_unlock,
 			       &syslog_lock);
   __libc_lock_lock (syslog_lock);
 
@@ -346,7 +347,8 @@ void
 closelog ()
 {
   /* Protect against multiple users.  */
-  __libc_cleanup_region_start ((void (*) __P ((void *))) __libc_mutex_unlock,
+  __libc_cleanup_region_start (1,
+			       (void (*) __P ((void *))) __libc_mutex_unlock,
 			       &syslog_lock);
   __libc_lock_lock (syslog_lock);
 

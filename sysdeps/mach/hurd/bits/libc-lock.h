@@ -1,4 +1,4 @@
-/* libc-internal interface for mutex locks.  Mach cthreads version.
+/* libc-internal interface for mutex locks.  Hurd version using Mach cthreads.
    Copyright (C) 1996,97,98,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -20,15 +20,24 @@
 #ifndef _BITS_LIBC_LOCK_H
 #define _BITS_LIBC_LOCK_H 1
 
-#ifdef _LIBC
+#if (_LIBC - 0) || (_CTHREADS_ - 0)
 #include <cthreads.h>
-#define __libc_lock_t struct mutex
+#include <hurd/threadvar.h>
+
+typedef struct mutex __libc_lock_t;
+typedef struct
+{
+  struct mutex mutex;
+  void *owner;
+  int count;
+} __libc_lock_recursive_t;
+
+#define __libc_lock_owner_self() ((void *) __hurd_threadvar_location (0))
+
 #else
 typedef struct __libc_lock_opaque__ __libc_lock_t;
+typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;
 #endif
-
-/* Type for key of thread specific data.  */
-typedef cthread_key_t __libc_key_t;
 
 /* Define a lock variable NAME with storage class CLASS.  The lock must be
    initialized with __libc_lock_init before it can be used (or define it
@@ -52,6 +61,8 @@ typedef cthread_key_t __libc_key_t;
    used again until __libc_lock_init is called again on it.  This must be
    called on a lock variable before the containing storage is reused.  */
 #define __libc_lock_fini(NAME) __mutex_unlock (&(NAME))
+#define __libc_lock_fini_recursive(NAME) __mutex_unlock (&(NAME).mutex)
+
 
 /* Lock the named lock variable.  */
 #define __libc_lock_lock(NAME) __mutex_lock (&(NAME))
@@ -61,6 +72,43 @@ typedef cthread_key_t __libc_key_t;
 
 /* Unlock the named lock variable.  */
 #define __libc_lock_unlock(NAME) __mutex_unlock (&(NAME))
+
+
+#define __libc_lock_define_recursive(CLASS,NAME) \
+  CLASS __libc_lock_recursive_t NAME;
+#define _LIBC_LOCK_RECURSIVE_INITIALIZER { MUTEX_INITIALIZER, 0, 0 }
+#define __libc_lock_define_initialized_recursive(CLASS,NAME) \
+  CLASS __libc_lock_recursive_t NAME = _LIBC_LOCK_RECURSIVE_INITIALIZER;
+
+#define __libc_lock_init_recursive(NAME) \
+  ({ __libc_lock_recursive_t *const __lock = &(NAME); \
+     __lock->owner = 0; mutex_init (&__lock->mutex); })
+
+#define __libc_lock_trylock_recursive(NAME)				      \
+  ({ __libc_lock_recursive_t *const __lock = &(NAME);			      \
+     void *__self = __libc_lock_owner_self ();				      \
+     __mutex_trylock (&__lock->mutex)					      \
+     ? (__lock->owner = __self, __lock->count = 1, 0)			      \
+     : __lock->owner == __self ? (++__lock->count, 0) : 1; })
+
+#define __libc_lock_lock_recursive(NAME)				      \
+  ({ __libc_lock_recursive_t *const __lock = &(NAME);			      \
+     void *__self = __libc_lock_owner_self ();				      \
+     if (__mutex_trylock (&__lock->mutex)				      \
+	 || (__lock->owner != __self					      \
+	     && (__mutex_lock (&__lock->mutex), 1)))			      \
+       __lock->owner = __self, __lock->count = 1;			      \
+     else								      \
+       ++__lock->count;							      \
+  })
+#define __libc_lock_unlock_recursive(NAME)				      \
+  ({ __libc_lock_recursive_t *const __lock = &(NAME);			      \
+     if (--__lock->count == 0)						      \
+       {								      \
+	 __lock->owner = 0;						      \
+	 __mutex_unlock (&__lock->mutex);				      \
+       }								      \
+  })
 
 
 /* XXX for now */
@@ -94,6 +142,8 @@ typedef cthread_key_t __libc_key_t;
     (*__save_FCT)(__save_ARG);						    \
 
 
+#if (_CTHREADS_ - 0)
+
 /* Use mutexes as once control variables. */
 
 struct __libc_once
@@ -104,7 +154,6 @@ struct __libc_once
 
 #define __libc_once_define(CLASS,NAME) \
   CLASS struct __libc_once NAME = { MUTEX_INITIALIZER, 0 }
-
 
 /* Call handler iff the first call.  */
 #define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
@@ -122,16 +171,13 @@ struct __libc_once
 #define __libc_mutex_unlock __mutex_unlock
 #endif
 
+/* Type for key of thread specific data.  */
+typedef cthread_key_t __libc_key_t;
+
 #define __libc_key_create(KEY,DEST) cthread_keycreate (KEY)
 #define __libc_setspecific(KEY,VAL) cthread_setspecific (KEY, VAL)
 void *__libc_getspecific (__libc_key_t key);
 
-/* XXX until cthreads supports recursive locks */
-#define __libc_lock_define_initialized_recursive __libc_lock_define_initialized
-#define __libc_lock_init_recursive __libc_lock_init
-#define __libc_lock_fini_recursive __libc_lock_fini
-#define __libc_lock_trylock_recursive __libc_lock_trylock
-#define __libc_lock_unlock_recursive __libc_lock_unlock
-#define __libc_lock_lock_recursive __libc_lock_lock
+#endif /* _CTHREADS_ */
 
 #endif	/* bits/libc-lock.h */

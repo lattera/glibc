@@ -1,3 +1,29 @@
+2001-08-23  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/bits/libc-lock.h: New file, initially copied from
+	sysdeps/mach version.  Implement counting ("recursive") mutexes
+	on top of cthreads mutexes.
+	* sysdeps/mach/hurd/bits/stdio-lock.h: File removed; generic now works.
+
+	* sysdeps/generic/bits/stdio-lock.h (_IO_lock_initializer): Define to
+	_LIBC_LOCK_RECURSIVE_INITIALIZER if defined, else do an #error.
+	(__libc_cleanup_region_start, __libc_cleanup_region_end,
+	__libc_clean_end): Define these to call the cleanup function after
+	normal exit when they're supposed to.
+
+	* sysdeps/mach/bits/libc-lock.h (__libc_cleanup_region_start):
+	Take new first arg DOIT, a boolean saying whether to really install
+	any cleanup handler.
+	(__libc_cleanup_region_end): Do nothing if start's DOIT arg was zero.
+	(__libc_cleanup_end): Likewise.
+	* stdio-common/vfscanf.c (LOCK_STREAM): Pass new arg.
+	* stdio-common/vfprintf.c (buffered_vfprintf, vfprintf): Likewise.
+	* sysdeps/mach/hurd/bits/stdio-lock.h (_IO_cleanup_region_start):
+	Likewise.
+	* misc/syslog.c (vsyslog, openlog, closelog): Likewise.
+	* sysdeps/generic/bits/stdio-lock.h
+	(_IO_cleanup_region_start, _IO_cleanup_region_start_noarg): Likewise.
+
 2001-08-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/ldconfig.c (search_dir): Remove stale symlinks.
