@@ -78,6 +78,5 @@ typedef long int __jmp_buf[17];
 /* Test if longjmp to JMPBUF would unwind the frame containing a local
    variable at ADDRESS.  */
 #define _JMPBUF_UNWINDS(_jmpbuf, _address)				\
-  ({ register void *_sp __asm__("$30"); void *_addr = (_address);	\
-     _sp <= _addr && _addr < (void *)((_jmpbuf)[JB_SP]); })
+     ((void *)(_address) < (void *)((_jmpbuf)[JB_SP]))
 #endif
