@@ -39,10 +39,6 @@ typedef float float_t;		/* `float' expressions are evaluated as
 typedef double double_t;	/* `double' expressions are evaluated as
 				   `double'.  */
 
-/* Signal that types stay as they were declared.  */
-#   undef FLT_EVAL_METHOD
-#   define FLT_EVAL_METHOD	0
-
 /* Define `INFINITY' as value of type `float'.  */
 #   define INFINITY	HUGE_VALF
 
