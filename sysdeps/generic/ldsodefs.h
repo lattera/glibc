@@ -271,7 +271,7 @@ extern void _dl_receive_error (receiver_fct fct, void (*operate) (void *),
    value to allow additional security checks.  */
 extern struct link_map *_dl_map_object (struct link_map *loader,
 					const char *name, int preloaded,
-					int type, int trace_mode)
+					int type, int trace_mode, int noload)
      internal_function;
 
 /* Call _dl_map_object on the dependencies of MAP, and set up

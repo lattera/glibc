@@ -622,7 +622,7 @@ typedef struct
 #define DT_PLTPADSZ	0x6ffffdf9
 #define DT_MOVEENT	0x6ffffdfa
 #define DT_MOVESZ	0x6ffffdfb
-#define DT_FEATURE_1	0x6ffffdfc
+#define DT_FEATURE_1	0x6ffffdfc	/* Feature selection (DTF_*).  */
 #define DT_POSFLAG_1	0x6ffffdfd	/* Flags for DT_* entries, effecting
 					   the following DT_* entry.  */
 #define DT_SYMINSZ	0x6ffffdfe	/* Size of syminfo table (in bytes) */
@@ -678,6 +678,23 @@ typedef struct
 #define DF_1_LOADFLTR	0x00000010	/* Trigger filtee loading at runtime.*/
 #define DF_1_INITFIRST	0x00000020	/* Set RTLD_INITFIRST for this object*/
 #define DF_1_NOOPEN	0x00000040	/* Set RTLD_NOOPEN for this object.  */
+#define DF_1_ORIGIN	0x00000080	/* $ORIGIN must be handled.  */
+#define DF_1_DIRECT	0x00000100	/* Direct binding enabled.  */
+#define DF_1_TRANS	0x00000200
+#define DF_1_INTERPOSE	0x00000400	/* Object is used to interpose.  */
+#define DF_1_NODEFLIB	0x00000800	/* Ignore default lib search path.  */
+#define DF_1_NODUMP	0x00001000
+#define DF_1_CONFALT	0x00002000
+#define DF_1_ENDFILTEE	0x00004000
+
+/* Flags for the feature selection in DT_FEATURE_1.  */
+#define DTF_1_PARINIT	0x00000001
+#define DTF_1_CONFEXP	0x00000002
+
+/* Flags in the DT_POSFLAG_1 entry effecting only the next DT_* entry.  */
+#define DF_P1_LAZYLOAD	0x00000001	/* Lazyload following object.  */
+#define DF_P1_GROUPPERM	0x00000002	/* Symbols from next object are not
+					   generally available.  */
 
 /* Version definition sections.  */
 

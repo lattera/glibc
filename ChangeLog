@@ -1,5 +1,26 @@
 2000-07-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/elf.h: Add various DF_1_*, DTF_1_*, and DF_P1_* entries.
+	* elf/dl-close.c (_dl_close): Don't close an object if it is marked
+	with nodelete.
+	* elf/dl-open.c (dl_open_worker): Pass RTLD_NOLOAD as new parameter
+	to _dl_map_object.  Return immediately if no object loaded.
+	Set DF_1_NODELETE bit in l_flags_1 if RTLD_NODELETE was passed.
+	* elf/dynamic-link.h (elf_get_dynamic_info): Copy DT_FLAGS_1 entry
+	if it exists into l_flags_1 word.
+	* elf/dl-load.c (_dl_map_object_from_fd): Take no parameter and use
+	it to determine whether loading is wanted or not.
+	(_dl_map_object): Likewise.
+	Call _dl_map_object_from_fd with new parameter.
+	* sysdeps/generic/ldsodefs.h: Update prototype.
+	* elf/dl-deps.c: Add new parameter to _dl_map_object calls.
+	* elf/rtld.c: Likewise.
+	* elf/Makefile (tests): Add noload.  Add rules to generate noload.
+	* elf/noload.c: New file.
+	* include/link.h (struct link_map): Add l_feature_1 and l_flags_1.
+	* sysdeps/generic/bits/dlfcn.h: Define RTLD_NOLOAD and RTLD_NODELETE.
+	* sysdeps/mips/bits/dlfcn.h: Likewise.
+
 	* libio/Makefile (tests): Add tst_wprintf2.
 	(tst_wprintf2-ARGS): Define.
 	* libio/tst_wprintf2.c: New file.

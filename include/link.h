@@ -214,6 +214,10 @@ struct link_map
     unsigned int l_reldepsmax;
     unsigned int l_reldepsact;
     struct link_map **l_reldeps;
+
+    /* Various flag words.  */
+    ElfW(Word) l_feature_1;
+    ElfW(Word) l_flags_1;
   };
 
 #endif /* link.h */

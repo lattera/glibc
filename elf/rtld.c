@@ -313,7 +313,7 @@ static void
 map_doit (void *a)
 {
   struct map_args *args = (struct map_args *) a;
-  args->main_map = _dl_map_object (NULL, args->str, 0, lt_library, 0);
+  args->main_map = _dl_map_object (NULL, args->str, 0, lt_library, 0, 0);
 }
 
 static void
@@ -514,7 +514,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       else
 	{
 	  HP_TIMING_NOW (start);
-	  _dl_map_object (NULL, _dl_argv[0], 0, lt_library, 0);
+	  _dl_map_object (NULL, _dl_argv[0], 0, lt_library, 0, 0);
 	  HP_TIMING_NOW (stop);
 
 	  HP_TIMING_DIFF (load_time, start, stop);
@@ -694,7 +694,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 		|| strchr (p, '/') == NULL))
 	  {
 	    struct link_map *new_map = _dl_map_object (_dl_loaded, p, 1,
-						       lt_library, 0);
+						       lt_library, 0, 0);
 	    if (new_map->l_opencount == 1)
 	      /* It is no duplicate.  */
 	      ++npreloads;
@@ -762,7 +762,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    if (p[0] != '\0')
 	      {
 		struct link_map *new_map = _dl_map_object (_dl_loaded, p, 1,
-							   lt_library, 0);
+							   lt_library, 0, 0);
 		if (new_map->l_opencount == 1)
 		  /* It is no duplicate.  */
 		  ++npreloads;
@@ -773,7 +773,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	{
 	  char *p = strndupa (problem, file_size - (problem - file));
 	  struct link_map *new_map = _dl_map_object (_dl_loaded, p, 1,
-						     lt_library, 0);
+						     lt_library, 0, 0);
 	  if (new_map->l_opencount == 1)
 	    /* It is no duplicate.  */
 	    ++npreloads;

@@ -144,7 +144,17 @@ dl_open_worker (void *a)
     }
 
   /* Load the named object.  */
-  args->map = new = _dl_map_object (NULL, file, 0, lt_loaded, 0);
+  args->map = new = _dl_map_object (NULL, file, 0, lt_loaded, 0,
+				    mode & RTLD_NOLOAD);
+
+  /* If the pointer returned is NULL this means the RTLD_NOLOAD flag is
+     set and the object is not already loaded.  */
+  if (new == NULL)
+    {
+      assert (mode & RTLD_NOLOAD);
+      return;
+    }
+
   if (new->l_searchlist.r_list)
     /* It was already open.  */
     return;
@@ -278,6 +288,11 @@ dl_open_worker (void *a)
 
       /* XXX Do we have to add something to r_dupsearchlist???  --drepper */
     }
+
+  /* Mark the object as not deletable if the RTLD_NODELETE flags was
+     passed.  */
+  if (__builtin_expect (mode & RTLD_NODELETE, 0))
+    new->l_flags_1 |= DF_1_NODELETE;
 
   if (_dl_sysdep_start == NULL)
     /* We must be the static _dl_open in libc.a.  A static program that

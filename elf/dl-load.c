@@ -688,7 +688,7 @@ static
 #endif
 struct link_map *
 _dl_map_object_from_fd (const char *name, int fd, char *realname,
-			struct link_map *loader, int l_type)
+			struct link_map *loader, int l_type, int noload)
 {
   /* This is the expected ELF header.  */
 #define ELF32_CLASS ELFCLASS32
@@ -751,6 +751,11 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	++l->l_opencount;
 	return l;
       }
+
+  if (noload)
+    /* We are not supposed to load the object unless it is already
+       loaded.  So return now.  */
+    return NULL;
 
   /* Print debugging message.  */
   if (__builtin_expect (_dl_debug_files, 0))
@@ -1301,7 +1306,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 struct link_map *
 internal_function
 _dl_map_object (struct link_map *loader, const char *name, int preloaded,
-		int type, int trace_mode)
+		int type, int trace_mode, int noload)
 {
   int fd;
   char *realname;
@@ -1501,5 +1506,5 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	_dl_signal_error (errno, name, N_("cannot open shared object file"));
     }
 
-  return _dl_map_object_from_fd (name, fd, realname, loader, type);
+  return _dl_map_object_from_fd (name, fd, realname, loader, type, noload);
 }

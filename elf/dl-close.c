@@ -48,6 +48,11 @@ _dl_close (void *_map)
   unsigned int nrellist;
   unsigned int i;
 
+  /* First see whether we can remove the object at all.  */
+  if (map->l_flags_1 & DF_1_NODELETE)
+    /* Nope.  Do nothing.  */
+    return;
+
   if (map->l_opencount == 0)
     _dl_signal_error (0, map->l_name, N_("shared object not open"));
 
@@ -112,7 +117,8 @@ _dl_close (void *_map)
      points to, the 0th elt being MAP itself.  Decrement the reference
      counts on all the objects MAP depends on.  */
   for (i = 0; i < nsearchlist; ++i)
-    --list[i]->l_opencount;
+    if (! (list[i]->l_flags_1 & DF_1_NODELETE))
+      --list[i]->l_opencount;
 
   /* Check each element of the search list to see if all references to
      it are gone.  */

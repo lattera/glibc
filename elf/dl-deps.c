@@ -67,7 +67,7 @@ openaux (void *a)
   args->aux = _dl_map_object (args->map, args->name, 0,
 			      (args->map->l_type == lt_executable
 			       ? lt_library : args->map->l_type),
-			      args->trace_mode);
+			      args->trace_mode, 0);
 }
 
 
@@ -232,7 +232,7 @@ _dl_map_object_deps (struct link_map *map,
 
 		dep = _dl_map_object (l, name, 0,
 				      l->l_type == lt_executable ? lt_library :
-				      l->l_type, trace_mode);
+				      l->l_type, trace_mode, 0);
 
 		/* Add it in any case to the duplicate list.  */
 		newp = alloca (sizeof (struct list));
@@ -316,7 +316,7 @@ _dl_map_object_deps (struct link_map *map,
 		    args.aux = _dl_map_object (l, name, 0,
 					       (l->l_type == lt_executable
 						? lt_library : l->l_type),
-					       trace_mode);
+					       trace_mode, 0);
 		  }
 
 		/* The auxiliary object is actually available.
