@@ -58,7 +58,8 @@ ld-test-srcs := $(addprefix tests/,$(addsuffix .cm,$(ld-test-names)) \
 fmon-tests = n01y12 n02n40 n10y31 n11y41 n12y11 n20n32 n30y20 n41n00 \
 	     y01y10 y02n22 y22n42 y30y21 y32n31 y40y00 y42n21
 
-generated := $(test-input) $(test-output)
+generated := $(test-input) $(test-output) sort-test.out tst-locale.out \
+	     tst-mbswcs.out
 generated-dirs := $(ld-test-names) tt_TT de_DE.437			\
 		  $(addprefix tstfmon_,$(fmon-tests))			\
 
@@ -67,7 +68,7 @@ distribute := CHECKSUMS README SUPPORTED ChangeLog			\
 	      tst-rpmatch.sh tst-locale.sh tst-fmon.sh sort-test.sh	\
 	      tst-fmon.data $(test-input-data) $(ld-test-srcs)		\
 	      th_TH.in cs_CZ.in tst-mbswcs.sh tst-trans.sh tst-ctype.sh \
-	      tst-ctype-de_DE.ISO-8859-1.in 				\
+	      tst-ctype-de_DE.ISO-8859-1.in				\
 	      $(wildcard tests-mbwc/*.[ch])				\
 	      $(addprefix tst-fmon-locales/tstfmon_,$(fmon-tests))	\
 	      gen-locale.sh show-ucs-data.c tst-langinfo.sh		\
