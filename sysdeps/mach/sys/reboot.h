@@ -26,8 +26,8 @@
 /*
  * HISTORY
  * $Log$
- * Revision 1.1  1993/08/03 22:25:15  roland
- * entered into RCS
+ * Revision 1.2  1998/05/29 10:19:59  drepper
+ * Use __ASSEMBLER__ test macro not ASSEMBLER.
  *
  * Revision 1.1  1993/08/03 22:25:15  roland
  * entered into RCS
@@ -43,7 +43,7 @@
  * Revision 2.6  91/06/19  11:59:44  rvb
  * 	Second byte of boothowto is flags for "startup" program.
  * 	[91/06/18            rvb]
- * 	Add ifndef ASSEMBLER so that vax_init.s can include it.
+ * 	Add ifndef __ASSEMBLER__ so that vax_init.s can include it.
  * 	[91/06/11            rvb]
  * 
  * Revision 2.5  91/05/14  17:40:11  mrt
@@ -145,9 +145,9 @@
 
 
 #ifdef	KERNEL
-#ifndef	ASSEMBLER
+#ifndef	__ASSEMBLER__
 extern int boothowto;
-#endif	ASSEMBLER
+#endif	/* __ASSEMBLER__ */
 #endif
 
 #endif	/* _SYS_REBOOT_H_ */

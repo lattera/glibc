@@ -29,7 +29,7 @@
 # define SYS_ify(syscall_name)	__NR_/**/syscall_name
 #endif
 
-#ifdef ASSEMBLER
+#ifdef __ASSEMBLER__
 
 /* This seems to always be the case on PPC.  */
 #define ALIGNARG(log2) log2
@@ -141,4 +141,4 @@
 #undef L
 #define L(x) .L##x
 
-#endif	/* ASSEMBLER */
+#endif	/* __ASSEMBLER__ */

@@ -19,7 +19,7 @@
 
 #include <sysdeps/generic/sysdep.h>
 
-#ifdef	ASSEMBLER
+#ifdef	__ASSEMBLER__
 
 /* Syntactic details of assembler.  */
 
@@ -125,4 +125,4 @@ lose: SYSCALL_PIC_SETUP							      \
 #define L(name)		name
 #endif
 
-#endif	/* ASSEMBLER */
+#endif	/* __ASSEMBLER__ */

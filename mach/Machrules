@@ -114,7 +114,7 @@ $(patsubst %,$(objpfx)%.ustamp,$(user-interfaces)): $(objpfx)%.ustamp:
 	       -server /dev/null -user /dev/null -header /dev/null
 	for call in $($*-calls); do \
 	  $(transform-user-stub) \
-	  ../move-if-change $(objpfx)$(transform-user-stub-output)_$${call}.c \
+	  $(move-if-change) $(objpfx)$(transform-user-stub-output)_$${call}.c \
 			    $(objpfx)RPC_$${call}.c; \
 	done
 	touch $@
@@ -211,8 +211,9 @@ extra-libs += $(interface-library)
 # Avoid -lmachuser requiring -lc, which may not be built yet.  If the
 # shared object is absent, ld may choose a static library someplace and
 # produce a bogus libmachuser.so.
-+preinit = 
-+postinit = 
++preinit =
++postinit =
++interp =
 interface.so = $(interface-library:lib%=%.so)
 LDFLAGS-$(interface.so) = -nostdlib -nostartfiles
 

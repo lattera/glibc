@@ -34,7 +34,7 @@
 #undef L
 #define L(name)	.L##name
 
-#ifdef ASSEMBLER
+#ifdef __ASSEMBLER__
 
 /* Linux uses a negative return value to indicate syscall errors,
    unlike most Unices, which use the condition codes' carry flag.
@@ -195,6 +195,6 @@ syscall_error:								      \
 #define _DOARGS_5(n)	movl n(%esp), %edi; _DOARGS_4 (n-4)
 #define _POPARGS_5	_POPARGS_4; popl %edi
 
-#endif	/* ASSEMBLER */
+#endif	/* __ASSEMBLER__ */
 
 #endif /* linux/i386/sysdep.h */

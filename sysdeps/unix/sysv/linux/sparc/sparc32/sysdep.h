@@ -25,7 +25,7 @@
 #undef SYS_ify
 #define SYS_ify(syscall_name) __NR_##syscall_name
 
-#ifdef ASSEMBLER
+#ifdef __ASSEMBLER__
 
 #ifdef DONT_LOAD_G1
 # define LOADSYSCALL(x)
@@ -82,6 +82,6 @@
 	SYSCALL_ERROR_HANDLER;					\
 9000:;
 
-#endif	/* ASSEMBLER */
+#endif	/* __ASSEMBLER__ */
 
 #endif /* linux/sparc/sysdep.h */

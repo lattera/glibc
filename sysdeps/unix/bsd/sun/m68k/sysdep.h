@@ -18,7 +18,7 @@
 
 #include <sysdeps/unix/sysdep.h>
 
-#ifdef	ASSEMBLER
+#ifdef	__ASSEMBLER__
 
 #define	POUND	#
 
@@ -59,4 +59,4 @@
 #define	r1	d1
 #define	MOVE(x,y)	movel x , y
 
-#endif	/* ASSEMBLER */
+#endif	/* __ASSEMBLER__ */

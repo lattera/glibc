@@ -457,6 +457,7 @@ ifeq ($(elf),yes)
 +postinit = $(addprefix $(csu-objpfx),crtn.o)
 +prector = `$(CC) --print-file-name=crtbegin.o`
 +postctor = `$(CC) --print-file-name=crtend.o`
++interp = $(addprefix $(elf-objpfx),interp.os)
 endif
 csu-objpfx = $(common-objpfx)csu/
 elf-objpfx = $(common-objpfx)elf/

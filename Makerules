@@ -335,14 +335,8 @@ endif
 # build shared libraries in place from the installed *_pic.a files.
 # $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
 # on other shared objects.
-lib%.so: lib%_pic.a $(+preinit) $(+postinit)
+lib%.so: lib%_pic.a $(+preinit) $(+postinit) $(+interp)
 	$(build-shlib)
-
-ifeq ($(elf),yes)
-interp-obj = $(common-objpfx)elf/interp.os
-$(common-objpfx)libc.so: $(interp-obj)
-$(patsubst %,$(objpfx)%.so,$(extra-libs)): $(interp-obj)
-endif
 
 define build-shlib
 $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
@@ -390,7 +384,8 @@ $(common-objpfx)libc_pic.os: $(common-objpfx)libc_pic.a
 # Use our own special initializer and finalizer files for libc.so.
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.os \
 			 $(common-objpfx)libc_pic.os \
-			 $(elfobjdir)/sofini.os $(elfobjdir)/ld.so \
+			 $(elfobjdir)/sofini.os \
+			 $(elfobjdir)/interp.os $(elfobjdir)/ld.so \
 			 $(..)libc.map
 	$(build-shlib)
 common-generated += libc.so libc_pic.os

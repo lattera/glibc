@@ -18,7 +18,7 @@
 
 #include <sysdeps/unix/sysdep.h>
 
-#ifdef	ASSEMBLER
+#ifdef	__ASSEMBLER__
 
 #ifdef	__STDC__
 #define	ENTRY(name)							      \
@@ -52,4 +52,4 @@
 
 #define MOVE(x,y)	movl x , y
 
-#endif	/* ASSEMBLER */
+#endif	/* __ASSEMBLER__ */

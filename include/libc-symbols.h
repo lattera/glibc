@@ -56,7 +56,7 @@
 
 */
 
-#ifndef	ASSEMBLER
+#ifndef	__ASSEMBLER__
 
 /* Define the macros `_' and `N_' for conveniently marking translatable
    strings in the libc source code.  */
@@ -109,7 +109,7 @@ extern const char _libc_intl_domainname[];
 # define strong_alias_asm(original, alias)	\
   ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias);	\
   .set C_SYMBOL_NAME (alias),C_SYMBOL_NAME (original)
-# ifdef ASSEMBLER
+# ifdef __ASSEMBLER__
 #  define strong_alias(original, alias)	strong_alias_asm (original, alias)
 # else
 #  define strong_alias(original, alias)	\
@@ -120,7 +120,7 @@ extern const char _libc_intl_domainname[];
 # define strong_alias_asm(original, alias)	\
   ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias);	\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
-# ifdef ASSEMBLER
+# ifdef __ASSEMBLER__
 #  define strong_alias(original, alias)	strong_alias_asm (original, alias)
 # else
 #  define strong_alias(original, alias)	\
@@ -136,7 +136,7 @@ extern const char _libc_intl_domainname[];
 
 #ifdef HAVE_WEAK_SYMBOLS
 
-# ifdef ASSEMBLER
+# ifdef __ASSEMBLER__
 
 #  ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
 
@@ -164,7 +164,7 @@ extern const char _libc_intl_domainname[];
 
 #  endif /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
 
-# else /* ! ASSEMBLER */
+# else /* ! __ASSEMBLER__ */
 
 #  ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
 #   define weak_extern_asm(symbol) asm (".weakext " __SYMBOL_PREFIX #symbol);
@@ -180,14 +180,14 @@ extern const char _libc_intl_domainname[];
 #  define weak_alias(o, a) weak_alias_asm (o, a)
 #  define weak_extern(symbol) weak_extern_asm (symbol)
 
-# endif /* ! ASSEMBLER */
+# endif /* ! __ASSEMBLER__ */
 #else
 # define weak_alias(original, alias) strong_alias(original, alias)
 # define weak_extern(symbol)	/* Do nothing; the ref will be strong.  */
 #endif
 
 
-#if (!defined ASSEMBLER && \
+#if (!defined __ASSEMBLER__ && \
      (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7)))
 /* GCC 2.7 and later has special syntax for weak symbols and aliases.
    Using that is better when possible, because the compiler and assembler
@@ -207,7 +207,7 @@ extern const char _libc_intl_domainname[];
 #  define weak_const_function __attribute__ ((weak, __const__))
 
 # endif	/* HAVE_WEAK_SYMBOLS.  */
-#endif	/* Not ASSEMBLER, and GCC 2.7 or later.  */
+#endif	/* Not __ASSEMBLER__, and GCC 2.7 or later.  */
 
 
 #ifndef weak_function
@@ -326,7 +326,7 @@ extern const char _libc_intl_domainname[];
 #endif	/* Have GNU ld.  */
 
 #if DO_VERSIONING
-# ifdef ASSEMBLER
+# ifdef __ASSEMBLER__
 #  define symbol_version(real, name, version) \
      .symver real, name##@##version
 #  define default_symbol_version(real, name, version) \

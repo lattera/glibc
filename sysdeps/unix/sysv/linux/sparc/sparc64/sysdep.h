@@ -25,7 +25,7 @@
 #undef SYS_ify
 #define SYS_ify(syscall_name) __NR_##syscall_name
 
-#ifdef ASSEMBLER
+#ifdef __ASSEMBLER__
 
 #ifdef DONT_LOAD_G1
 # define LOADSYSCALL(x)
@@ -116,7 +116,7 @@
 #define r1              %o1
 #define MOVE(x,y)       mov x, y
 
-#endif	/* ASSEMBLER */
+#endif	/* __ASSEMBLER__ */
 
 /* This is the offset from the %sp to the backing store above the 
    register windows.  So if you poke stack memory directly you add this.  */

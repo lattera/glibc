@@ -33,7 +33,7 @@
 #define SYS_ify(syscall_name)	(__NR_##syscall_name)
 
 
-#ifdef ASSEMBLER
+#ifdef __ASSEMBLER__
 
 /* Linux uses a negative return value to indicate syscall errors,
    unlike most Unices, which use the condition codes' carry flag.
@@ -104,6 +104,6 @@
 #define UNDOARGS_4 /* nothing */
 #define UNDOARGS_5 ldr r4, [sp];
 
-#endif	/* ASSEMBLER */
+#endif	/* __ASSEMBLER__ */
 
 #endif /* linux/arm/sysdep.h */

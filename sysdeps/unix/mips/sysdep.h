@@ -19,7 +19,7 @@
 
 #include <sysdeps/unix/sysdep.h>
 
-#ifdef ASSEMBLER
+#ifdef __ASSEMBLER__
 
 #include <regdef.h>
 

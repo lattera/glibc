@@ -16,7 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifdef ASSEMBLER
+#ifdef __ASSEMBLER__
 
 /* Get the Mach definitions of ENTRY and kernel_trap.  */
 #include <mach/machine/syscall_sw.h>
@@ -45,7 +45,7 @@
    try to do anything else.  Just to be safe, deallocate the reply port so
    bogons arriving on it don't foul up future RPCs.  */
 
-#ifndef ASSEMBLER
+#ifndef __ASSEMBLER__
 #define FATAL_PREPARE_INCLUDE <mach/mig_support.h>
 #define FATAL_PREPARE __mig_dealloc_reply_port (MACH_PORT_NULL)
 #endif

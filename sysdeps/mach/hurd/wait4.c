@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,11 +23,8 @@
 #include <hurd/port.h>
 
 pid_t
-__wait4 (pid, stat_loc, options, usage)
-     pid_t pid;
-     __WAIT_STATUS_DEFN stat_loc;
-     int options;
-     struct rusage *usage;
+__wait4 (pid_t pid, __WAIT_STATUS_DEFN stat_loc, int options,
+	 struct rusage *usage)
 {
   pid_t dead;
   error_t err;

@@ -19,7 +19,7 @@
 #include <sysdeps/unix/sysdep.h>
 #include <sysdeps/i386/sysdep.h>
 
-#ifdef	ASSEMBLER
+#ifdef	__ASSEMBLER__
 
 /* This is defined as a separate macro so that other sysdep.h files
    can include this one and then redefine DO_CALL.  */
@@ -33,4 +33,4 @@
 #define scratch 	%ecx	/* Call-clobbered register for random use.  */
 #define MOVE(x,y)	movl x, y
 
-#endif	/* ASSEMBLER */
+#endif	/* __ASSEMBLER__ */

@@ -19,7 +19,7 @@
 
 #include <sysdeps/unix/i386/sysdep.h>
 
-#ifdef	ASSEMBLER
+#ifdef	__ASSEMBLER__
 
 /* Get the symbols for system call interrupts.  */
 #include <machine/trap.h>
@@ -79,4 +79,4 @@
 #undef	scratch
 #define scratch 	%edx	/* Call-clobbered register for random use.  */
 
-#endif	/* ASSEMBLER */
+#endif	/* __ASSEMBLER__ */

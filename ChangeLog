@@ -1,3 +1,61 @@
+1998-05-28 00:53  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* glibcbug.in: Send to bugs@gnu or libc-alpha@cygnus depending
+	on whether this is a stable release or not (keeps snapshot bug
+	reports out of the database).
+
+	* include/libc-symbols.h: Use __ASSEMBLER__ test macro not ASSEMBLER.
+	* sysdeps/arm/sysdep.h: Likewise.
+	* sysdeps/i386/sysdep.h: Likewise.
+	* sysdeps/m68k/sysdep.h: Likewise.
+	* sysdeps/mach/mips/sysdep.h: Likewise.
+	* sysdeps/mach/sys/reboot.h: Likewise.
+	* sysdeps/mach/sysdep.h: Likewise.
+	* sysdeps/unix/alpha/sysdep.h: Likewise.
+	* sysdeps/unix/bsd/hp/m68k/sysdep.h: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/sysdep.h: Likewise.
+	* sysdeps/unix/bsd/sequent/i386/sysdep.h: Likewise.
+	* sysdeps/unix/bsd/sony/newsos/m68k/sysdep.h: Likewise.
+	* sysdeps/unix/bsd/sun/m68k/sysdep.h: Likewise.
+	* sysdeps/unix/bsd/vax/sysdep.h: Likewise.
+	* sysdeps/unix/i386/sysdep.h: Likewise.
+	* sysdeps/unix/mips/sysdep.h: Likewise.
+	* sysdeps/unix/sparc/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/sysdep.h: Likewise.
+
+1998-05-27  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* mach/Machrules: Use $(move-if-change).
+
+1998-05-27  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* Makeconfig [elf=yes] (+interp): New variable, set to interp.os.
+	* Makerules (lib%.so): Depend on $(+interp).
+	(libc.so): Add interp.os to list of dependencies.
+	(interp-obj): Remove variable.
+	* mach/Machrules (+interp): Define to empty since libhurduser and
+	libmachuser don't need to have the interpreter set.
+
+1998-05-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* resolv/res_send.c: Security fixes from bind 4.9.7-REL.
+
+	* resolv/gethnamaddr.c: Likewise.
+
+	* resolv/res_comp.c: Likewise.
+
+1998-05-28  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/mach/hurd/wait4.c (__wait4): Use ANSI-style definition
+	so that transparent union works.
+
 1998-05-29 08:58  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/texinfo.tex: Update to last available version.

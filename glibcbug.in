@@ -6,7 +6,7 @@
 #       these variables are filled in by configure
 #
 VERSION="@VERSION@"
-BUGGLIBC="bugs@gnu.org"
+RELEASE="@RELEASE@"
 ADDONS="@subdirs@"
 HOST="@host@"
 CC='@CC@'
@@ -33,6 +33,12 @@ if test $? -ne 0; then
   TEMPx=/tmp/glibcbug.$$.x
   echo > $TEMPx
   chmod 600 $TEMPx
+fi
+
+if test "$RELEASE" = "stable"; then
+  BUGGLIBC="bugs@gnu.org"
+else
+  BUGGLIBC="libc-alpha@cygnus.com"
 fi
 
 BUGADDR=${1-$BUGGLIBC}

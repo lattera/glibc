@@ -18,7 +18,7 @@
 
 #include <sysdeps/unix/sysdep.h>
 
-#ifdef	ASSEMBLER
+#ifdef	__ASSEMBLER__
 
 #ifdef	NO_UNDERSCORES
 /* Since C identifiers are not normally prefixed with an underscore
@@ -57,4 +57,4 @@
 #define	r1		%o1
 #define	MOVE(x,y)	mov x, y
 
-#endif	/* ASSEMBLER */
+#endif	/* __ASSEMBLER__ */
