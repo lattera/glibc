@@ -906,7 +906,7 @@ send_dg(res_state statp,
 				goto wait;
 			}
 		}
-		Perror(statp, stderr, "select", errno);
+		Perror(statp, stderr, "poll", errno);
 		res_nclose(statp);
 		return (0);
 	}
@@ -922,9 +922,7 @@ send_dg(res_state statp,
 		pfd[0].events = POLLIN;
 		++nwritten;
 		goto wait;
-	} else {
-		assert(pfd[0].revents & POLLIN);
-
+	} else if (pfd[0].revents & POLLIN) {
 		fromlen = sizeof(struct sockaddr_in6);
 		if (anssiz < MAXPACKET
 		    && anscp
@@ -1030,6 +1028,10 @@ send_dg(res_state statp,
 		 * next nameserver ought not be tried.
 		 */
 		return (resplen);
+	} else if (pfd[0].revents & (POLLERR | POLLHUP | POLLNVAL)) {
+		/* Something went wrong.  We can stop trying.  */
+		res_nclose(statp);
+		return (0);
 	}
 }
 

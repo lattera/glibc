@@ -1,5 +1,7 @@
 2004-10-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_send.c (send_dg): Cope with failures.
+
 	* include/libc-symbols.h: Define hidden attribute macros for
 	libnss_files.
 	* include/netdb.h: Use libnss_files_hidden_proto for the parsers
