@@ -25,6 +25,8 @@
 
 	* time/strftime.c [_LIBC] (ampm): Use tp->tm_hour not hour12.
 
+	* stdio-common/vfscanf.c: Fix reading (nil) for %p.
+
 1998-09-18  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* login/programs/pt_chown.c (more_help): Correct message that

@@ -216,6 +216,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
      possibly be matched even if in the input stream no character is
      available anymore.  */
   int skip_space = 0;
+  /* Nonzero if we are reading a pointer.  */
+  int read_pointer;
   /* Workspace.  */
   char *tw;			/* Temporary pointer.  */
   char *wp = NULL;		/* Workspace.  */
@@ -353,6 +355,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
       /* This is the start of the conversion string. */
       flags = 0;
+
+      /* Not yet decided whether we read a pointer or not.  */
+      read_pointer = 0;
 
       /* Initialize state of modifiers.  */
       argpos = 0;
@@ -871,13 +876,32 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      c = inchar ();
 	    }
 
-	  /* The just read character is not part of the number anymore.  */
-	  ungetc (c, s);
-
 	  if (wpsize == 0 ||
 	      (wpsize == 1 && (wp[0] == '+' || wp[0] == '-')))
-	    /* There was no number.  */
-	    conv_error ();
+	    {
+	      /* There was no number.  If we are supposed to read a pointer
+		 we must recognize "(nil)" as well.  */
+	      if (wpsize == 0 && read_pointer && (width < 0 || width >= 0)
+		  && c == '('
+		  && tolower (inchar ()) == 'n'
+		  && tolower (inchar ()) == 'i'
+		  && tolower (inchar ()) == 'l'
+		  && inchar () == ')')
+		/* We must produce the value of a NULL pointer.  A single
+		   '0' digit is enough.  */
+		ADDW ('0');
+	      else
+		{
+		  /* The last read character is not part of the number
+		     anymore.  */
+		  ungetc (c, s);
+
+		  conv_error ();
+		}
+	    }
+	  else
+	    /* The just read character is not part of the number anymore.  */
+	    ungetc (c, s);
 
 	  /* Convert the number.  */
 	  ADDW ('\0');
@@ -1221,6 +1245,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  flags &= ~(SHORT|LONGDBL);
 	  flags |= LONG;
 	  number_signed = 0;
+	  read_pointer = 1;
 	  goto number;
 	}
     }
