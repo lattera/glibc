@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <pthread.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "aio_misc.h"
 
 

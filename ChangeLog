@@ -1,5 +1,7 @@
 2001-06-13  Roland McGrath  <roland@frob.com>
 
+	* rt/aio_notify.c: Include <unistd.h> for _POSIX_REALTIME_SIGNALS.
+
 	* sysdeps/mach/hurd/fork.c (LOSE): Put `goto lose' in dead code
 	so the label is not considered unused.
 
