@@ -91,6 +91,7 @@ worker (void *arg)
 
 
 #define TEST_FUNCTION do_test ()
+#define TIMEOUT 60
 int
 do_test (void)
 {
