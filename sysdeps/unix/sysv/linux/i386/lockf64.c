@@ -85,6 +85,7 @@ lockf64 (int fd, int cmd, off64_t len64)
       /* Test the lock: return 0 if FD is unlocked or locked by this process;
 	 return -1, set errno to EACCES, if another process holds the lock.  */
 #if __ASSUME_FCNTL64 > 0
+      fl64.l_type = F_RDLCK;
       if (INLINE_SYSCALL (fcntl64, 3, fd, F_GETLK64, &fl64) < 0)
         return -1;
       if (fl64.l_type == F_UNLCK || fl64.l_pid == __getpid ())
@@ -95,8 +96,10 @@ lockf64 (int fd, int cmd, off64_t len64)
 # ifdef __NR_fcntl64
       if (!__have_no_fcntl64)
 	{
-	  int res = INLINE_SYSCALL (fcntl64, 3, fd, F_GETLK64, &fl64);
+	  int res;
 
+	  fl64.l_type = F_RDLCK;
+	  res = INLINE_SYSCALL (fcntl64, 3, fd, F_GETLK64, &fl64);
 	  /* If errno == ENOSYS try the 32bit interface if len64 can
              be represented with 32 bits.  */
 
@@ -120,6 +123,7 @@ lockf64 (int fd, int cmd, off64_t len64)
 	    }
 	}
 # endif
+      fl.l_type = F_RDLCK;
       if (__fcntl (fd, F_GETLK, &fl) < 0)
 	return -1;
       if (fl.l_type == F_UNLCK || fl.l_pid == __getpid ())

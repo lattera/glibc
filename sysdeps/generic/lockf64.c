@@ -49,6 +49,7 @@ lockf64 (int fd, int cmd, off64_t len64)
     case F_TEST:
       /* Test the lock: return 0 if FD is unlocked or locked by this process;
 	 return -1, set errno to EACCES, if another process holds the lock.  */
+      fl.l_type = F_RDLCK;
       if (__fcntl (fd, F_GETLK, &fl) < 0)
 	return -1;
       if (fl.l_type == F_UNLCK || fl.l_pid == __getpid ())
