@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <setxid.h>
+#include <linux/posix_types.h>
 #include "kernel-features.h"
 
 

@@ -1,3 +1,12 @@
+2004-11-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/setuid.c: Include linux/posix_types.h.
+	* sysdeps/unix/sysv/linux/i386/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresgid.c: Likewise.
+
 2004-11-12  Andreas Schwab  <schwab@suse.de>
 
 	* nis/ypclnt.c (ypprot_err): Fix "minor optimizations".
