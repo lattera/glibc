@@ -1,3 +1,8 @@
+2000-04-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/init-first.c (init): Add code from
+	former init-first.h.  Initialize __libc_multiple_libcs.
+
 2000-03-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/skeleton.c: Define access macros with u suffix.  Adjust

@@ -58,6 +58,12 @@ static void
 init (int argc, char **argv, char **envp)
 {
   extern void __getopt_clean_environment (char **);
+  /* The next variable is only here to work around a bug in gcc <= 2.7.2.2.
+     If the address would be taken inside the expression the optimizer
+     would try to be too smart and throws it away.  Grrr.  */
+  int *dummy_addr = &_dl_starting_up;
+
+  __libc_multiple_libcs = dummy_addr && !_dl_starting_up;
 
   /* Make sure we don't initialize twice.  */
   if (!__libc_multiple_libcs)
