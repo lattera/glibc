@@ -55,14 +55,13 @@
 #define JENSEN_IO_BASE		(0xfffffc0300000000UL)
 #define JENSEN_SPARSE_MEM	(0xfffffc0200000000UL)
 
-/*
- * With respect to the I/O architecture, APECS and LCA are identical,
- * so the following defines apply to LCA as well.
- */
+/* With respect to the I/O architecture, APECS and LCA are identical,
+   so the following defines apply to LCA as well.  */
 #define APECS_IO_BASE		(0xfffffc01c0000000UL)
 #define APECS_SPARSE_MEM	(0xfffffc0200000000UL)
 #define APECS_DENSE_MEM		(0xfffffc0300000000UL)
 
+/* The same holds for CIA and PYXIS.  */
 #define CIA_IO_BASE		(0xfffffc8580000000UL)
 #define CIA_SPARSE_MEM		(0xfffffc8000000000UL)
 #define CIA_DENSE_MEM		(0xfffffc8600000000UL)
@@ -104,6 +103,7 @@ static struct platform {
   {"Mustang",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
   {"Noname",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
   {"Sable",	IOSYS_T2,	5, T2_DENSE_MEM,	T2_SPARSE_MEM},
+  {"Miata",	IOSYS_CIA,	5, CIA_DENSE_MEM,	CIA_SPARSE_MEM},
 };
 
 
