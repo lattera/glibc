@@ -342,13 +342,15 @@ add_dir (const char *line)
       entry->flag = FLAG_ANY;
     }
 
-  /* Canonify path: for now only remove trailing slashes.  */
+  /* Canonify path: for now only remove leading and trailing
+     whitespace and the trailing slashes slashes.  */
   i = strlen (entry->path) - 1;
+
+  while (isspace (entry->path[i]) && i > 0)
+    entry->path[i--] = '\0';
+
   while (entry->path[i] == '/' && i > 0)
-    {
-      entry->path[i] = '\0';
-      --i;
-    }
+    entry->path[i--] = '\0';
 
   if (stat64 (entry->path, &stat_buf))
     {
@@ -963,12 +965,18 @@ parse_conf (const char *filename)
 	 make it terminating the line.  */
       *strchrnul (line, '#') = '\0';
 
+      /* Remove leading whitespace.  NUL is no whitespace character.  */
+      char *cp = line;
+      while (isspace (*cp))
+	++cp;
+
       /* If the line is blank it is ignored.  */
-      if (line[0] == '\0')
+      if (cp[0] == '\0')
 	continue;
 
-      add_dir (line);
-    } while (!feof (file));
+      add_dir (cp);
+    }
+  while (!feof_unlocked (file));
 
   /* Free buffer and close file.  */
   free (line);
