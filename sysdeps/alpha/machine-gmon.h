@@ -1,5 +1,5 @@
 /* Machine-specific calling sequence for `mcount' profiling function.  alpha
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,8 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#define _MCOUNT_DECL void __mcount
+#define _MCOUNT_DECL(from, self) \
+ void __mcount (u_long from, u_long self)
 
 /* Call __mcount with our the return PC for our caller, and the return
    PC our caller will return to.  Empty since we use an assembly stub
