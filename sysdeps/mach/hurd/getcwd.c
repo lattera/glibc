@@ -131,8 +131,6 @@ _hurd_canonicalize_directory_name_internal (file_t thisdir,
       /* Get this directory's identity and figure out if it's a mount point. */
       if (err = __io_identity (parent, &dotid, &dotdevid, &dotino))
 	goto errlose;
-      __mach_port_deallocate (__mach_task_self (), dotid);
-      __mach_port_deallocate (__mach_task_self (), dotdevid);
       mount_point = dotdevid != thisdevid;
 
       /* Search for the last directory.  */
@@ -186,7 +184,7 @@ _hurd_canonicalize_directory_name_internal (file_t thisdir,
 		  err = __io_identity (try, &id, &devid, &fileno);
 		  __mach_port_deallocate (__mach_task_self (), try);
 		  if (err)
-		    goto errlose;
+		    goto inner_errlose;
 		  __mach_port_deallocate (__mach_task_self (), id);
 		  __mach_port_deallocate (__mach_task_self (), devid);
 		  if (id == thisid)
@@ -196,14 +194,19 @@ _hurd_canonicalize_directory_name_internal (file_t thisdir,
 	}
 
       if (err)
-	goto errlose;
+	{
+	inner_errlose:		/* Goto ERRLOSE: after cleaning up.  */
+	  __mach_port_deallocate (__mach_task_self (), dotid);
+	  __mach_port_deallocate (__mach_task_self (), dotdevid);
+	  goto errlose;
+	}
       else if (nentries == 0)
 	{
 	  /* We got to the end of the directory without finding anything!
 	     We are in a directory that has been unlinked, or something is
 	     broken.  */
 	  err = ENOENT;
-	  goto errlose;
+	  goto inner_errlose;
 	}
       else
       found:
