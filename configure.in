@@ -606,7 +606,7 @@ AC_CHECK_PROG_VER(MAKEINFO, makeinfo, --version,
   [GNU texinfo.* \([0-9][0-9.]*\)],
   [4.*],
   MAKEINFO=: aux_missing="$aux_missing makeinfo")
-AC_CHECK_PROG_VER(SED, gsed sed, --version,
+AC_CHECK_PROG_VER(SED, sed, --version,
   [GNU sed version \([0-9]*\.[0-9.]*\)],
   [3.0[2-9]*|3.[1-9]*|[4-9]*],
   SED=: aux_missing="$aux_missing sed")

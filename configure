@@ -1658,7 +1658,7 @@ if test $ac_verc_fail = yes; then
   MAKEINFO=: aux_missing="$aux_missing makeinfo"
 fi
 
-for ac_prog in gsed sed
+for ac_prog in sed
 do
 # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
