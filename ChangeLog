@@ -1,3 +1,11 @@
+2002-09-10  Alan Modra <amodra@bigpond.net.au>
+
+	* csu/gmon-start.c [!TEXT_START]: Define TEXT_START if not already
+	defined in entry.h.
+	(__gmon_start__) [!ENTRY_POINT_DECL]: Use TEXT_START macro to obtain
+	lowest address for profiling in  __monstartup call.
+	* sysdeps/powerpc/powerpc64/elf/entry.h: New file.
+
 2002-09-14  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/pread.c: __NR_pread64 may be defined

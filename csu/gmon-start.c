@@ -35,6 +35,14 @@ extern void ENTRY_POINT;
 #endif
 extern void etext;
 
+#ifndef TEXT_START
+#ifdef ENTRY_POINT_DECL
+#define TEXT_START ENTRY_POINT
+#else
+#define TEXT_START &ENTRY_POINT
+#endif
+#endif
+
 #ifndef HAVE_INITFINI
 /* This function gets called at startup by the normal constructor
    mechanism.  We link this file together with start.o to produce gcrt1.o,
@@ -66,7 +74,7 @@ __gmon_start__ (void)
 #ifdef ENTRY_POINT_DECL
   __monstartup ((u_long) ENTRY_POINT, (u_long) &etext);
 #else
-  __monstartup ((u_long) &ENTRY_POINT, (u_long) &etext);
+  __monstartup ((u_long) TEXT_START, (u_long) &etext);
 #endif
 
   /* Call _mcleanup before exiting; it will write out gmon.out from the
