@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-99,2000,02 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,7 +49,7 @@ __libc_lock_define_initialized (static, lock);
 # define DO_LOCK()
 # define DO_UNLOCK()
 # define INIT_LOCK()
-# define ADD_REF() (void) 0
+# define ADD_REF() 0
 # define SUB_REF() 0
 #endif
 
@@ -84,6 +84,7 @@ do_system (const char *line)
       if (__sigaction (SIGQUIT, &sa, &quit) < 0)
 	{
 	  save = errno;
+	  SUB_REF ();
 	  goto out_restore_sigint;
 	}
     }
@@ -103,7 +104,7 @@ do_system (const char *line)
 	  if (SUB_REF () == 0)
 	    {
 	      (void) __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL);
-	out_restore_sigint:
+	    out_restore_sigint:
 	      (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
 	    }
 	  DO_UNLOCK ();

@@ -1,3 +1,8 @@
+2003-01-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/system.c (do_system): Correct reference counter in
+	case SIGQUIT handler installation failed.
+
 2003-01-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/libc-symbols.h [HAVE_WEAK_SYMBOLS] (_weak_extern):
