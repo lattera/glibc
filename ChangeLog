@@ -1,3 +1,7 @@
+1998-07-22 23:19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/siginfo.h: Fix typo.
+
 1998-07-22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile (headers2_0): Add sigstack.h.
