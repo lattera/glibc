@@ -1,3 +1,10 @@
+2001-02-06  Andreas Jaeger  <aj@suse.de>
+
+	* elf/firstobj.c: Add prototype.
+
+	* posix/regex.c (convert_mbs_to_wcs): Make static, add prototype
+	(truncate_wchar): Likewise.
+
 2001-02-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/locale.c: Implement --verbose option for -a

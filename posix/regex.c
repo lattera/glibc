@@ -1158,7 +1158,11 @@ printchar (c)
    This assume invalid multibyte sequences as binary data.
    We assume offset_buffer and is_binary is already allocated
    enough space.  */
-size_t
+
+static size_t convert_mbs_to_wcs (CHAR_TYPE *dest, const unsigned char* src,
+				  size_t len, int *offset_buffer,
+				  int *is_binary);
+static size_t
 convert_mbs_to_wcs (dest, src, len, offset_buffer, is_binary)
      CHAR_TYPE *dest;
      const unsigned char* src;
@@ -4525,8 +4529,10 @@ compile_range (range_start_char, p_ptr, pend, translate, syntax, b)
 #ifdef MBS_SUPPORT
 /* local function for re_compile_fastmap.
    truncate wchar_t character to char.  */
-unsigned char
-truncate_wchar(c)
+static unsigned char truncate_wchar (CHAR_TYPE c);
+
+static unsigned char
+truncate_wchar (c)
      CHAR_TYPE c;
 {
   unsigned char buf[MB_LEN_MAX];
