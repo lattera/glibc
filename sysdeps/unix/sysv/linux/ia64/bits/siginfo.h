@@ -25,7 +25,7 @@
 
 #if (!defined __have_sigval_t \
      && (defined _SIGNAL_H || defined __need_siginfo_t \
-	 || defined __need_sigval_t))
+	 || defined __need_sigevent_t))
 # define __have_sigval_t	1
 
 /* Type for data associated with a signal.  */
