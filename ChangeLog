@@ -1,5 +1,7 @@
 1999-06-25  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* sysdeps/generic/glob64.c: Include <stddef.h> for NULL.
+
 	* mach/Versions (libc: GLIBC_2.0): Add __mig_strncpy.
 
 1999-06-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
