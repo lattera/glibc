@@ -43,9 +43,10 @@ struct _xmmreg
   __uint32_t	element[4];
 };
 
-/* This is FXSAVE layout without 64bit prefix thus 32bit
-   compatible. This means that the IP and DPs are only 32bit and are
-   not useful in 64bit space.  */
+
+
+#if __WORDSIZE == 32
+
 struct _fpstate
 {
   /* Regular FPU environment.  */
@@ -65,12 +66,9 @@ struct _fpstate
   __uint32_t		mxcsr;
   __uint32_t		reserved;
   struct _fpxreg _fxsr_st[8];
-  struct _xmmreg _xmm[8];	/* It's actually 16 for x86-64.	 */
+  struct _xmmreg _xmm[8];
   __uint32_t		padding[56];
 };
-
-
-#if __WORDSIZE == 32
 
 struct sigcontext
 {
@@ -99,6 +97,22 @@ struct sigcontext
 };
 
 #else
+
+struct _fpstate
+{
+  /* Regular FPU environment.  */
+  __uint16_t		cwd;
+  __uint16_t		swd;
+  __uint16_t		twd;
+  __uint16_t		fop;
+  __uint64_t		rip;
+  __uint64_t		rdp;
+  __uint32_t		mxcsr;
+  __uint32_t		mxcr_mask;
+  __uint32_t 		st_space[32];   /* 8*16 bytes for each FP-reg = 128 bytes */
+  __uint32_t		xmm_space[64];  /* 16*16 bytes for each XMM-reg = 128 bytes */
+  __uint32_t		padding[24];
+};
 
 struct sigcontext
 {
