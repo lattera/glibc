@@ -81,7 +81,7 @@
 	 __v; }))
 # endif
 #else
-# define __bswap_16(x) \
+# define __bswap_32(x) \
      (__extension__							      \
       ({ register unsigned int __x = (x); __bswap_constant_32 (__x); }))
 #endif
