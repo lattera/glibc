@@ -1,5 +1,9 @@
 2000-08-23  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Use __setrlimit as
+	strong name.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+
 	* sysdeps/unix/sysv/linux/dl-osinfo.h: Include "kernel-features.h",
 	otherwise __LINUX_KERNEL_VERSION might not be defined.
 	(MIN): Define if not already defined.
