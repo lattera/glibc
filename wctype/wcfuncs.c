@@ -22,6 +22,10 @@
 
 #include "cname-lookup.h"
 
+/* If the program is compiled without optimization the following declaration
+   is not visible in the header.   */
+extern unsigned int *__ctype32_b;
+
 /* Provide real-function versions of all the wctype macros.  */
 
 #define	func(name, type) \
