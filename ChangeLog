@@ -1,3 +1,8 @@
+2003-03-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/tst-nice.c (do_test): Remove invalid of return value.
+	Don't run test if initial level != 0.
+
 2003-03-19  Amos Waterland  <apw@us.ibm.com>
 
 	* posix/tst-nice.c: New file.
