@@ -162,18 +162,20 @@
 /* When did O_DIRECTORY became available?  Early in 2.3 but when?
    Be safe, use 2.3.99.  */
 #if __LINUX_KERNEL_VERSION >= 131939
-# define __ASSUME_O_DIRECTORY	1
+# define __ASSUME_O_DIRECTORY		1
 #endif
 
 /* Starting with one of the 2.4.0 pre-releases the Linux kernel passes
    up the page size information.  */
 #if __LINUX_KERNEL_VERSION >= 132097
-# define __ASSUME_AT_PAGESIZE	1
+# define __ASSUME_AT_PAGESIZE		1
 #endif
 
-/* Starting with 2.4.? kernels PPC passes the AUXV in the standard way.  */
-#if __LINUX_KERNEL_VERSION >= (132096+99) && defined __powerpc__
-# define __ASSUME_STD_AUXV	1
+/* Starting with 2.4.5 kernels PPC passes the AUXV in the standard way
+   and the mmap2 syscall made it into the official kernel.  */
+#if __LINUX_KERNEL_VERSION >= (132096+5) && defined __powerpc__
+# define __ASSUME_STD_AUXV		1
+# define __ASSUME_MMAP2_SYSCALL		1
 #endif
 
 /* There are an infinite number of PA-RISC kernel versions numbered
