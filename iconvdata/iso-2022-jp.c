@@ -95,7 +95,14 @@ enum
   JISX0201_Kana_set,
   GB2312_set,
   KSC5601_set,
-  JISX0212_set,
+  JISX0212_set
+};
+
+/* The second value stored is the designation of the G2 set.  The following
+   values are possible:  */
+enum
+{
+  UNSPECIFIED_set = 0,
   ISO88591_set,
   ISO88597_set
 };
@@ -187,12 +194,13 @@ gconv_end (struct gconv_step *data)
 									      \
       if (dir == from_iso2022jp)					      \
 	/* It's easy, we don't have to emit anything, we just reset the	      \
-	   state for the input.  */					      \
+	   state for the input.  Note that this also clears the G2	      \
+	   designation.  */						      \
 	data->statep->count = ASCII_set;				      \
       else								      \
 	{								      \
 	  char *outbuf = data->outbuf;					      \
-	  								      \
+									      \
 	  /* We are not in the initial state.  To switch back we have	      \
 	     to emit the sequence `Esc ( B'.  */			      \
 	  if (outbuf + 3 > data->outbufend)				      \
@@ -205,6 +213,7 @@ gconv_end (struct gconv_step *data)
 	      *outbuf++ = '(';						      \
 	      *outbuf++ = 'B';						      \
 	      data->outbuf = outbuf;					      \
+	      /* Note that this also clears the G2 designation.  */	      \
 	      data->statep->count = ASCII_set;				      \
 	    }								      \
 	}								      \
@@ -319,23 +328,50 @@ gconv_end (struct gconv_step *data)
 	    if (inptr[2] == 'A')					      \
 	      {								      \
 		/* ISO 8859-1-GR selected.  */				      \
-		set = ISO88591_set;					      \
+		set2 = ISO88591_set;					      \
 		inptr += 3;						      \
 		continue;						      \
 	      }								      \
 	    else if (inptr[2] == 'F')					      \
 	      {								      \
 		/* ISO 8859-7-GR selected.  */				      \
-		set = ISO88597_set;					      \
+		set2 = ISO88597_set;					      \
 		inptr += 3;						      \
 		continue;						      \
 	      }								      \
 	  }								      \
       }									      \
 									      \
-    if (set == ASCII_set						      \
-	|| (var < ISO88591_set && (ch < 0x21 || ch == 0x7f))		      \
-	|| (var >= ISO88591_set && ch < 0x20))				      \
+    if (ch == ESC && var == iso2022jp2 && inptr[1] == 'N')		      \
+      {									      \
+	if (set2 == ISO88591_set)					      \
+	  {								      \
+	    ch = inptr[2] | 0x80;					      \
+	    inptr += 3;							      \
+	  }								      \
+	else if (set2 == ISO88597_set)					      \
+	  {								      \
+	    /* We use the table from the ISO 8859-7 module.  */		      \
+	    if (inptr[2] < 0x20 || inptr[2] > 0x80)			      \
+	      {								      \
+		result = GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+	    ch = iso88597_to_ucs4[inptr[2] - 0x20];			      \
+	    if (ch == 0)						      \
+	      {								      \
+		result = GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+	    inptr += 3;							      \
+	  }								      \
+	else								      \
+	  {								      \
+	    result = GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+      }									      \
+    else if (set == ASCII_set || (ch < 0x21 || ch == 0x7f))		      \
       /* Almost done, just advance the input pointer.  */		      \
       ++inptr;								      \
     else if (set == JISX0201_Roman_set)					      \
@@ -354,24 +390,6 @@ gconv_end (struct gconv_step *data)
 	/* Use the JIS X 0201 table.  */				      \
 	ch = jisx0201_to_ucs4 (ch + 0x80);				      \
 	if (ch == UNKNOWN_10646_CHAR)					      \
-	  {								      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-	++inptr;							      \
-      }									      \
-    else if (set == ISO88591_set)					      \
-      {									      \
-	/* This is quite easy.  All characters are defined and the	      \
-	   ISO 10646 value is computed by adding 0x80.  */		      \
-	ch |= 0x80;							      \
-	++inptr;							      \
-      }									      \
-    else if (set == ISO88597_set)					      \
-      {									      \
-	/* We use the table from the ISO 8859-7 module.  */		      \
-	ch = iso88597_to_ucs4[(ch & 0x7f) - 0x20];			      \
-	if (ch == 0)							      \
 	  {								      \
 	    result = GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
@@ -419,8 +437,8 @@ gconv_end (struct gconv_step *data)
     *((uint32_t *) outptr)++ = ch;					      \
   }
 #define EXTRA_LOOP_DECLS	, enum variant var, int *setp
-#define INIT_PARAMS		int set = *setp
-#define UPDATE_PARAMS		*setp = set
+#define INIT_PARAMS		int set = *setp % 0x100, set2 = *setp / 0x100
+#define UPDATE_PARAMS		*setp = (set2 << 8) + set
 #include <iconv/loop.c>
 
 
@@ -448,6 +466,9 @@ gconv_end (struct gconv_step *data)
 	    *outptr++ = ch;						      \
 	    written = 1;						      \
 	  }								      \
+	/* At the beginning of a line, G2 designation is cleared.  */	      \
+	if (var == iso2022jp2 && ch == 0x0a)				      \
+	  set2 = UNSPECIFIED_set;					      \
       }									      \
     else if (set == JISX0201_Roman_set)					      \
       {									      \
@@ -472,30 +493,6 @@ gconv_end (struct gconv_step *data)
 	  }								      \
 	else								      \
 	  written = UNKNOWN_10646_CHAR;					      \
-      }									      \
-    else if (set == ISO88591_set)					      \
-      {									      \
-	if (ch >= 0x80 && ch <= 0xff)					      \
-	  {								      \
-	    *outptr++ = ch;						      \
-	    written = 1;						      \
-	  }								      \
-      }									      \
-    else if (set == ISO88597_set)					      \
-      {									      \
-	const struct gap *rp = from_idx;				      \
-									      \
-	while (ch > rp->end)						      \
-	  ++rp;								      \
-	if (ch >= rp->start)						      \
-	  {								      \
-	    unsigned char res = iso88597_from_ucs4[ch + rp->idx];	      \
-	    if (res != '\0')						      \
-	      {								      \
-		*outptr++ = res | 0x80;					      \
-		written = 1;						      \
-	      }								      \
-	  }								      \
       }									      \
     else								      \
       {									      \
@@ -530,6 +527,38 @@ gconv_end (struct gconv_step *data)
 									      \
     if (written == UNKNOWN_10646_CHAR || written == 0)			      \
       {									      \
+	if (set2 == ISO88591_set)					      \
+	  {								      \
+	    if (ch >= 0x80 && ch <= 0xff) 				      \
+	      {								      \
+		*outptr++ = ESC;					      \
+		*outptr++ = 'N';					      \
+		*outptr++ = ch & 0x7f;					      \
+		written = 3;						      \
+	      }								      \
+	  }								      \
+	else if (set2 == ISO88597_set)					      \
+	  {								      \
+	    const struct gap *rp = from_idx;				      \
+									      \
+	    while (ch > rp->end)					      \
+	      ++rp;							      \
+	    if (ch >= rp->start)					      \
+	      {								      \
+		unsigned char res = iso88597_from_ucs4[ch - 0xa0 + rp->idx];  \
+		if (res != '\0')					      \
+		  {							      \
+		    *outptr++ = ESC;					      \
+		    *outptr++ = 'N';					      \
+		    *outptr++ = res;					      \
+		    written = 3;					      \
+		  }							      \
+	      }								      \
+	  }								      \
+      }									      \
+									      \
+    if (written == UNKNOWN_10646_CHAR || written == 0)			      \
+      {									      \
 	/* Either this is an unknown character or we have to switch	      \
 	   the currently selected character set.  The character sets	      \
 	   do not code entirely separate parts of ISO 10646 and		      \
@@ -541,31 +570,25 @@ gconv_end (struct gconv_step *data)
 	   later and now simply use a fixed order in which we test for	      \
 	   availability  */						      \
 									      \
-	/* First test whether we have at least three more bytes for	      \
-	   the escape sequence.  The two charsets which require four	      \
-	   bytes will be handled later.  */				      \
-	if (NEED_LENGTH_TEST && outptr + 3 > outend)			      \
-	  {								      \
-	    result = GCONV_FULL_OUTPUT;					      \
-	    break;							      \
-	  }								      \
-									      \
 	if (ch <= 0x7f)							      \
 	  {								      \
 	    /* We must encode using ASCII.  First write out the		      \
 	       escape sequence.  */					      \
-	    *outptr++ = ESC;						      \
-	    *outptr++ = '(';						      \
-	    *outptr++ = 'B';						      \
-	    set = ASCII_set;						      \
-									      \
-	    if (NEED_LENGTH_TEST && outptr == outend)			      \
+	    if (NEED_LENGTH_TEST && outptr + 4 > outend)		      \
 	      {								      \
 		result = GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
 									      \
+	    *outptr++ = ESC;						      \
+	    *outptr++ = '(';						      \
+	    *outptr++ = 'B';						      \
+	    set = ASCII_set;						      \
 	    *outptr++ = ch;						      \
+									      \
+	    /* At the beginning of a line, G2 designation is cleared.  */     \
+	    if (var == iso2022jp2 && ch == 0x0a)			      \
+	      set2 = UNSPECIFIED_set; 					      \
 	  }								      \
 	else								      \
 	  {								      \
@@ -580,17 +603,16 @@ gconv_end (struct gconv_step *data)
 	    if (written != UNKNOWN_10646_CHAR && buf[0] < 0x80)		      \
 	      {								      \
 		/* We use JIS X 0201.  */				      \
-		*outptr++ = ESC;					      \
-		*outptr++ = '(';					      \
-		*outptr++ = 'J';					      \
-		set = JISX0201_Roman_set;				      \
-									      \
-		if (NEED_LENGTH_TEST && outptr == outend)		      \
+		if (NEED_LENGTH_TEST && outptr + 4 > outend)		      \
 		  {							      \
 		    result = GCONV_FULL_OUTPUT;				      \
 		    break;						      \
 		  }							      \
 									      \
+		*outptr++ = ESC;					      \
+		*outptr++ = '(';					      \
+		*outptr++ = 'J';					      \
+		set = JISX0201_Roman_set;				      \
 		*outptr++ = buf[0];					      \
 	      }								      \
 	    else							      \
@@ -599,17 +621,16 @@ gconv_end (struct gconv_step *data)
 		if (written != UNKNOWN_10646_CHAR)			      \
 		  {							      \
 		    /* We use JIS X 0208.  */				      \
-		    *outptr++ = ESC;					      \
-		    *outptr++ = '$';					      \
-		    *outptr++ = 'B';					      \
-		    set = JISX0208_1983_set;				      \
-									      \
-		    if (NEED_LENGTH_TEST && outptr + 2 > outend)	      \
+		    if (NEED_LENGTH_TEST && outptr + 5 > outend)	      \
 		      {							      \
 			result = GCONV_FULL_OUTPUT;			      \
 			break;						      \
 		      }							      \
 									      \
+		    *outptr++ = ESC;					      \
+		    *outptr++ = '$';					      \
+		    *outptr++ = 'B';					      \
+		    set = JISX0208_1983_set;				      \
 		    *outptr++ = buf[0];					      \
 		    *outptr++ = buf[1];					      \
 		  }							      \
@@ -625,7 +646,7 @@ gconv_end (struct gconv_step *data)
 		    if (written != UNKNOWN_10646_CHAR)			      \
 		      {							      \
 			/* We use JIS X 0212.  */			      \
-			if (NEED_LENGTH_TEST && outptr + 4 > outend)	      \
+			if (NEED_LENGTH_TEST && outptr + 6 > outend)	      \
 			  {						      \
 			    result = GCONV_FULL_OUTPUT;			      \
 			    break;					      \
@@ -635,13 +656,6 @@ gconv_end (struct gconv_step *data)
 			*outptr++ = '(';				      \
 			*outptr++ = 'D';				      \
 			set = JISX0212_set;				      \
-									      \
-			if (NEED_LENGTH_TEST && outptr + 2 > outend)	      \
-			  {						      \
-			    result = GCONV_FULL_OUTPUT;			      \
-			    break;					      \
-			  }						      \
-									      \
 			*outptr++ = buf[0];				      \
 			*outptr++ = buf[1];				      \
 		      }							      \
@@ -651,33 +665,33 @@ gconv_end (struct gconv_step *data)
 			if (written != UNKNOWN_10646_CHAR && buf[0] >= 0x80)  \
 			  {						      \
 			    /* We use JIS X 0201.  */			      \
-			    *outptr++ = ESC;				      \
-			    *outptr++ = '(';				      \
-			    *outptr++ = 'I';				      \
-			    set = JISX0201_Kana_set;			      \
-									      \
-			    if (NEED_LENGTH_TEST && outptr == outend)	      \
+			    if (NEED_LENGTH_TEST && outptr + 4 > outend)      \
 			      {						      \
 			        result = GCONV_FULL_OUTPUT;		      \
 			        break;					      \
 			      }						      \
 									      \
+			    *outptr++ = ESC;				      \
+			    *outptr++ = '(';				      \
+			    *outptr++ = 'I';				      \
+			    set = JISX0201_Kana_set;			      \
 			    *outptr++ = buf[0] - 0x80;			      \
 			  }						      \
 			else if (ch != 0xa5 && ch >= 0x80 && ch <= 0xff)      \
 			  {						      \
 			    /* ISO 8859-1 upper half.   */		      \
-			    *outptr++ = ESC;				      \
-			    *outptr++ = '.';				      \
-			    *outptr++ = 'A';				      \
-			    set = ISO88591_set;				      \
-									      \
-			    if (NEED_LENGTH_TEST && outptr == outend)	      \
+			    if (NEED_LENGTH_TEST && outptr + 6 > outend)      \
 			      {						      \
 				result = GCONV_FULL_OUTPUT;		      \
 				break;					      \
 			      }						      \
 									      \
+			    *outptr++ = ESC;				      \
+			    *outptr++ = '.';				      \
+			    *outptr++ = 'A';				      \
+			    set2 = ISO88591_set;			      \
+			    *outptr++ = ESC;				      \
+			    *outptr++ = 'N';				      \
 			    *outptr++ = ch;				      \
 			  }						      \
 			else						      \
@@ -686,28 +700,27 @@ gconv_end (struct gconv_step *data)
 			    if (written != UNKNOWN_10646_CHAR)		      \
 			      {						      \
 				/* We use GB 2312.  */			      \
-				*outptr++ = ESC;			      \
-				*outptr++ = '$';			      \
-				*outptr++ = 'A';			      \
-				set = GB2312_set;			      \
-									      \
-				if (NEED_LENGTH_TEST && outptr + 2 > outend)  \
+				if (NEED_LENGTH_TEST && outptr + 5 > outend)  \
 				  {					      \
 				    result = GCONV_FULL_OUTPUT;		      \
 				    break;				      \
 				  }					      \
 									      \
+				*outptr++ = ESC;			      \
+				*outptr++ = '$';			      \
+				*outptr++ = 'A';			      \
+				set = GB2312_set;			      \
 				*outptr++ = buf[0];			      \
 				*outptr++ = buf[1];			      \
 			      }						      \
 			    else					      \
 			      {						      \
-				written = ucs4_to_ksc5601 (ch, buf, 2);       \
+				written = ucs4_to_ksc5601 (ch, buf, 2);	      \
 				if (written != UNKNOWN_10646_CHAR)	      \
 				  {					      \
 				    /* We use KSC 5601.  */		      \
-				    if (NEED_LENGTH_TEST 		      \
-					&& outptr + 4 > outend)		      \
+				    if (NEED_LENGTH_TEST		      \
+					&& outptr + 6 > outend)		      \
 				      {					      \
 					result = GCONV_FULL_OUTPUT;	      \
 					break;				      \
@@ -717,21 +730,44 @@ gconv_end (struct gconv_step *data)
 				    *outptr++ = '(';			      \
 				    *outptr++ = 'C';			      \
 				    set = KSC5601_set;			      \
-									      \
-				    if (NEED_LENGTH_TEST		      \
-					&& outptr + 2 > outend)		      \
-				      {					      \
-					result = GCONV_FULL_OUTPUT;	      \
-					break;				      \
-				      }					      \
-									      \
 				    *outptr++ = buf[0];			      \
 				    *outptr++ = buf[1];			      \
 				  }					      \
 				else					      \
 				  {					      \
-				    result = GCONV_ILLEGAL_INPUT;	      \
-				    break;				      \
+				    const struct gap *rp = from_idx;	      \
+				    unsigned char gch = 0;		      \
+									      \
+				    while (ch > rp->end)		      \
+				      ++rp;				      \
+				    if (ch >= rp->start)		      \
+				      {					      \
+					ch = ch - 0xa0 + rp->idx;	      \
+					gch = iso88597_from_ucs4[ch];	      \
+				      }					      \
+									      \
+				    if (gch != 0)			      \
+				      {					      \
+					/* We use ISO 8859-7 greek.  */	      \
+					if (NEED_LENGTH_TEST		      \
+					    && outptr + 6 > outend)	      \
+					  {				      \
+					    result = GCONV_FULL_OUTPUT;	      \
+					    break;			      \
+					  }				      \
+					*outptr++ = ESC;		      \
+					*outptr++ = '.';		      \
+					*outptr++ = 'F';		      \
+					set2 = ISO88597_set;		      \
+					*outptr++ = ESC;		      \
+					*outptr++ = 'N';		      \
+					*outptr++ = gch;		      \
+				      }					      \
+				    else				      \
+				      {					      \
+					result = GCONV_ILLEGAL_INPUT;	      \
+					break;				      \
+				      }					      \
 				  }					      \
 			      }						      \
 			  }						      \
@@ -745,8 +781,8 @@ gconv_end (struct gconv_step *data)
     inptr += 4;								      \
   }
 #define EXTRA_LOOP_DECLS	, enum variant var, int *setp
-#define INIT_PARAMS		int set = *setp
-#define UPDATE_PARAMS		*setp = set
+#define INIT_PARAMS		int set = *setp % 0x100, set2 = *setp / 0x100
+#define UPDATE_PARAMS		*setp = (set2 << 8) + set
 #include <iconv/loop.c>
 
 

@@ -1,5 +1,8 @@
 1999-01-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/iso-2022-jp.c: Correct handling of G2 set.
+	Patch by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
+
 	* elf/Makefile (tests): Add loadtest.
 	Add rules to generate test modules.
 	* Makeconfig (+link): Add $(LDFLAGS-$(@F)) to command line.
