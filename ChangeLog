@@ -1,3 +1,9 @@
+1999-08-03  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/posix/sigset.c: Unblock the signal after setting its
+	disposition.  Use SIG_BLOCK/SIG_UNBLOCK instead of SIG_SETMASK to
+	avoid two calls to sigprocmask.
+
 1999-08-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/s_nexttowardf.c: Fix typo.

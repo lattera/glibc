@@ -29,23 +29,22 @@ sigset (sig, disp)
      __sighandler_t disp;
 {
   struct sigaction act, oact;
+  sigset_t set;
 
 #ifdef SIG_HOLD
   /* Handle SIG_HOLD first.  */
   if (disp == SIG_HOLD)
     {
-      sigset_t set;
-
-      /* Retrieve current signal set.  */
-      if (__sigprocmask (SIG_SETMASK, NULL, &set) < 0)
+      /* Create an empty signal set.  */
+      if (__sigemptyset (&set) < 0)
 	return SIG_ERR;
 
       /* Add the specified signal.  */
       if (sigaddset (&set, sig) < 0)
 	return SIG_ERR;
 
-      /* Set the new mask.  */
-      if (__sigprocmask (SIG_SETMASK, &set, NULL) < 0)
+      /* Add the signal set to the current signal mask.  */
+      if (__sigprocmask (SIG_BLOCK, &set, NULL) < 0)
 	return SIG_ERR;
 
       return SIG_HOLD;
@@ -64,6 +63,18 @@ sigset (sig, disp)
     return SIG_ERR;
   act.sa_flags = 0;
   if (__sigaction (sig, &act, &oact) < 0)
+    return SIG_ERR;
+
+  /* Create an empty signal set.  */
+  if (__sigemptyset (&set) < 0)
+    return SIG_ERR;
+
+  /* Add the specified signal.  */
+  if (sigaddset (&set, sig) < 0)
+    return SIG_ERR;
+
+  /* Remove the signal set from the current signal mask.  */
+  if (__sigprocmask (SIG_UNBLOCK, &set, NULL) < 0)
     return SIG_ERR;
 
   return oact.sa_handler;
