@@ -16,32 +16,17 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sysdep.h>
+#include <sys/stat.h>
 
 /* In Linux the `stat' call is actually done by emulating a `xstat' system
    call, which takes an additional first argument giving a version number
    for `struct stat'.  Likewise for `fstat' and `lstat' there are `fxstat'
-   and `lxstat' emulations.  This macro gives the Linux version number that
-   corresponds to the definition of `struct stat' in <statbuf.h>.  */
-#define	_STAT_VER	1
+   and `lxstat' emulations.  */
 
-ENTRY (__stat)
-	movl 8(%esp), %eax
-	movl 4(%esp), %ecx
-#ifdef	PIC
-	pushl %ebx
-	call 0f
-0:	popl %ebx
-	addl $_GLOBAL_OFFSET_TABLE_+[.-0b], %ebx
-#endif
-	pushl %eax
-	pushl %ecx
-	pushl $_STAT_VER	/* Push extra first arg to syscall.  */
-	call JUMPTARGET(__xstat)/* Jump to xstat implementation.  */
-	addl $12, %esp
-#ifdef	PIC
-	popl %ebx
-#endif
-	ret
+int
+__lstat (const char *file, struct stat *buf)
+{
+  return __lxstat (_STAT_VER, file, buf);
+}
 
-weak_alias (__stat, stat)
+weak_alias (__lstat, lstat)

@@ -1,3 +1,12 @@
+Wed Oct 25 14:23:35 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/stat.c: New file.
+	* sysdeps/unix/sysv/linux/fstat.c: New file.
+	* sysdeps/unix/sysv/linux/lstat.c: New file.
+	* sysdeps/unix/sysv/linux/i386/stat.S: File removed.
+	* sysdeps/unix/sysv/linux/i386/fstat.S: File removed.
+	* sysdeps/unix/sysv/linux/i386/lstat.S: File removed.
+
 Tue Oct 24 15:22:58 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep.h (SYSCALL_ERROR_HANDLER):
