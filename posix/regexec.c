@@ -64,9 +64,11 @@ static int proceed_next_node (const regex_t *preg,
 static reg_errcode_t set_regs (const regex_t *preg,
                                const re_match_context_t *mctx,
                                size_t nmatch, regmatch_t *pmatch, int last);
+#ifdef RE_ENABLE_I18N
 static int sift_states_iter_mb (const regex_t *preg,
                                 const re_match_context_t *mctx,
                                 int node_idx, int str_idx, int max_str_idx);
+#endif /* RE_ENABLE_I18N */
 static int sift_states_iter_bkref (const re_dfa_t *dfa,
                                    re_dfastate_t **state_log,
                                    struct re_backref_cache_entry *mctx_entry,
@@ -88,9 +90,11 @@ static re_dfastate_t *transit_state_sb (reg_errcode_t *err, const regex_t *preg,
                                         re_dfastate_t *pstate,
                                         int fl_search,
                                         re_match_context_t *mctx);
+#ifdef RE_ENABLE_I18N
 static reg_errcode_t transit_state_mb (const regex_t *preg,
                                        re_dfastate_t *pstate,
                                        re_match_context_t *mctx);
+#endif /* RE_ENABLE_I18N */
 static reg_errcode_t transit_state_bkref (const regex_t *preg,
                                           re_dfastate_t *pstate,
                                           re_match_context_t *mctx);
@@ -101,10 +105,14 @@ static reg_errcode_t transit_state_bkref_loop (const regex_t *preg,
 static re_dfastate_t **build_trtable (const regex_t *dfa,
                                       const re_dfastate_t *state,
                                       int fl_search);
+#ifdef RE_ENABLE_I18N
 static int check_node_accept_bytes (const regex_t *preg, int node_idx,
                                     const re_string_t *input, int idx);
+# ifdef _LIBC
 static unsigned int find_collation_sequence_value (const unsigned char *mbs,
                                                    size_t name_len);
+# endif /* _LIBC */
+#endif /* RE_ENABLE_I18N */
 static int group_nodes_into_DFAstates (const regex_t *dfa,
                                        const re_dfastate_t *state,
                                        re_node_set *states_node,
@@ -912,9 +920,12 @@ proceed_next_node (preg, mctx, pidx, node, eps_via_nodes)
           type = dfa->nodes[entity].type;
         }
 
+#ifdef RE_ENABLE_I18N
       if (ACCEPT_MB_NODE (type))
         naccepted = check_node_accept_bytes (preg, entity, mctx->input, *pidx);
-      else if (type == OP_BACK_REF)
+      else
+#endif /* RE_ENABLE_I18N */
+      if (type == OP_BACK_REF)
         {
           for (i = 0; i < mctx->nbkref_ents; ++i)
             {
@@ -1121,13 +1132,16 @@ sift_states_backward (preg, mctx, last_node)
               type = dfa->nodes[entity].type;
             }
 
+#ifdef RE_ENABLE_I18N
           /* If the node may accept `multi byte'.  */
           if (ACCEPT_MB_NODE (type))
             naccepted = sift_states_iter_mb (preg, mctx, entity, str_idx,
                                              mctx->match_last);
 
           /* If the node is a back reference.  */
-          else if (type == OP_BACK_REF)
+          else
+#endif /* RE_ENABLE_I18N */
+          if (type == OP_BACK_REF)
             for (j = 0; j < mctx->nbkref_ents; ++j)
               {
                 naccepted = sift_states_iter_bkref (dfa, mctx->state_log,
@@ -1201,6 +1215,7 @@ clean_state_log_if_need (mctx, next_state_log_idx)
   return REG_NOERROR;
 }
 
+#ifdef RE_ENABLE_I18N
 static int
 sift_states_iter_mb (preg, mctx, node_idx, str_idx, max_str_idx)
     const regex_t *preg;
@@ -1222,6 +1237,7 @@ sift_states_iter_mb (preg, mctx, node_idx, str_idx, max_str_idx)
      `naccepted' bytes input.  */
   return naccepted;
 }
+#endif /* RE_ENABLE_I18N */
 
 static int
 sift_states_iter_bkref (dfa, state_log, mctx_entry, node_idx, idx, match_last)
@@ -1317,6 +1333,7 @@ transit_state (err, preg, mctx, state, fl_search)
     }
   else
     {
+#ifdef RE_ENABLE_I18N
       /* If the current state can accept multibyte.  */
       if (state->accept_mb)
         {
@@ -1324,6 +1341,7 @@ transit_state (err, preg, mctx, state, fl_search)
           if (BE (*err != REG_NOERROR, 0))
             return NULL;
         }
+#endif /* RE_ENABLE_I18N */
 
       /* Then decide the next state with the single byte.  */
       if (1)
@@ -1474,6 +1492,7 @@ transit_state_sb (err, preg, state, fl_search, mctx)
   return next_state;
 }
 
+#ifdef RE_ENABLE_I18N
 static reg_errcode_t
 transit_state_mb (preg, pstate, mctx)
     const regex_t *preg;
@@ -1543,6 +1562,7 @@ transit_state_mb (preg, pstate, mctx)
     }
   return REG_NOERROR;
 }
+#endif /* RE_ENABLE_I18N */
 
 static reg_errcode_t
 transit_state_bkref (preg, pstate, mctx)
@@ -1991,7 +2011,14 @@ group_nodes_into_DFAstates (preg, state, dests_node, dests_ch)
   return ndests;
 }
 
-/* Check how many bytes the node `dfa->nodes[node_idx]' accepts.  */
+#ifdef RE_ENABLE_I18N
+/* Check how many bytes the node `dfa->nodes[node_idx]' accepts.
+   Return the number of the bytes the node accepts.
+   STR_IDX is the current index of the input string.
+
+   This function handles the nodes which can accept one character, or
+   one collating element like '.', '[a-z]', opposite to the other nodes
+   can only accept one byte.  */
 
 static int
 check_node_accept_bytes (preg, node_idx, input, str_idx)
@@ -2003,14 +2030,16 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
   const re_token_t *node = dfa->nodes + node_idx;
   int elem_len = re_string_elem_size_at (input, str_idx);
   int char_len = re_string_char_size_at (input, str_idx);
-  int i, j;
-#ifdef _LIBC
+  int i;
+# ifdef _LIBC
+  int j;
   uint32_t nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
-#endif /* _LIBC */
+# endif /* _LIBC */
   if (elem_len <= 1 && char_len <= 1)
     return 0;
   if (node->type == OP_PERIOD)
     {
+      /* '.' accepts any one character except the following two cases.  */
       if ((!(preg->syntax & RE_DOT_NEWLINE) &&
            re_string_byte_at (input, str_idx) == '\n') ||
           ((preg->syntax & RE_DOT_NOT_NULL) &&
@@ -2021,18 +2050,40 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
   else if (node->type == COMPLEX_BRACKET)
     {
       const re_charset_t *cset = node->opr.mbcset;
+# ifdef _LIBC
       const unsigned char *pin = re_string_get_buffer (input) + str_idx;
-#ifdef _LIBC
+# endif /* _LIBC */
+      int match_len = 0;
+      wchar_t wc = ((cset->nranges || cset->nchar_classes || cset->nmbchars)
+                    ? re_string_wchar_at (input, str_idx) : 0);
+
+      /* match with multibyte character?  */
+      for (i = 0; i < cset->nmbchars; ++i)
+        if (wc == cset->mbchars[i])
+          {
+            match_len = char_len;
+            goto check_node_accept_bytes_match;
+          }
+      /* match with character_class?  */
+      for (i = 0; i < cset->nchar_classes; ++i)
+        {
+          wctype_t wt = cset->char_classes[i];
+          if (__iswctype (wc, wt))
+            {
+              match_len = char_len;
+              goto check_node_accept_bytes_match;
+            }
+        }
+
+# ifdef _LIBC
       if (nrules != 0)
         {
-          int match_len = 0;
           unsigned int in_collseq = 0;
           const int32_t *table, *indirect;
           const unsigned char *weights, *extra, *collseqwc;
           int32_t idx;
-          wchar_t wc = 0;
           /* This #include defines a local function!  */
-# include <locale/weight.h>
+#  include <locale/weight.h>
 
           /* match with collating_symbol?  */
           if (cset->ncoll_syms)
@@ -2056,9 +2107,6 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
                   goto check_node_accept_bytes_match;
                 }
             }
-
-          if (cset->nranges || cset->nchar_classes || cset->nmbchars)
-            wc = re_string_wchar_at (input, str_idx);
 
           if (cset->nranges)
             {
@@ -2112,43 +2160,39 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
                       }
                   }
             }
-
-          /* match with multibyte character?  */
-          for (i = 0; i < cset->nmbchars; ++i)
-            if (wc == cset->mbchars[i])
-              {
-                match_len = char_len;
-                goto check_node_accept_bytes_match;
-              }
-
-          /* match with character_class?  */
-          for (i = 0; i < cset->nchar_classes; ++i)
+        }
+      else
+# endif /* _LIBC */
+        {
+          /* match with range expression?  */
+          wchar_t cmp_buf[6] = {L'\0', L'\0', wc, L'\0', L'\0', L'\0'};
+          for (i = 0; i < cset->nranges; ++i)
             {
-              wctype_t wt = cset->char_classes[i];
-              if (__iswctype (wc, wt))
+              cmp_buf[0] = cset->range_starts[i];
+              cmp_buf[4] = cset->range_ends[i];
+              if (wcscoll (cmp_buf, cmp_buf + 2) <= 0
+                  && wcscoll (cmp_buf + 2, cmp_buf + 4) <= 0)
                 {
                   match_len = char_len;
                   goto check_node_accept_bytes_match;
                 }
             }
-
-        check_node_accept_bytes_match:
-          if (!cset->non_match)
-            return match_len;
-          else
-            {
-              if (match_len > 0)
-                return 0;
-              else
-                return re_string_elem_size_at (input, str_idx);
-            }
         }
-#endif
+    check_node_accept_bytes_match:
+      if (!cset->non_match)
+        return match_len;
+      else
+        {
+          if (match_len > 0)
+            return 0;
+          else
+            return (elem_len > char_len) ? elem_len : char_len;
+        }
     }
   return 0;
 }
 
-#ifdef _LIBC
+# ifdef _LIBC
 static unsigned int
 find_collation_sequence_value (mbs, mbs_len)
     const unsigned char *mbs;
@@ -2204,7 +2248,8 @@ find_collation_sequence_value (mbs, mbs_len)
         }
     }
 }
-#endif
+# endif /* _LIBC */
+#endif /* RE_ENABLE_I18N */
 
 /* Check whether the node accepts the byte which is IDX-th
    byte of the INPUT.  */

@@ -114,6 +114,16 @@ static reg_errcode_t parse_bracket_element (bracket_elem_t *elem,
 static reg_errcode_t parse_bracket_symbol (bracket_elem_t *elem,
                                           re_string_t *regexp,
                                           re_token_t *token);
+#ifndef _LIBC
+static reg_errcode_t build_range_exp (re_charset_t *mbcset,
+                                      re_bitset_ptr_t sbcset, int *range_alloc,
+                                      bracket_elem_t *start_elem,
+                                      bracket_elem_t *end_elem);
+static reg_errcode_t build_collating_symbol (re_charset_t *mbcset,
+                                             re_bitset_ptr_t sbcset,
+                                             int *coll_sym_alloc,
+                                             unsigned char *name);
+#endif /* not _LIBC */
 static reg_errcode_t build_equiv_class (re_charset_t *mbcset,
                                         re_bitset_ptr_t sbcset,
                                         int *equiv_class_alloc,
@@ -354,7 +364,14 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
                       if (table[ch] < 0)
                         fastmap[ch] = 1;
                 }
-#endif
+#else
+# ifdef RE_ENABLE_I18N
+              if (MB_CUR_MAX > 1)
+                for (i = 0; i < SBC_MAX; ++i)
+                  if (__btowc (i) == WEOF)
+                    fastmap[i] = 1;
+# endif /* RE_ENABLE_I18N */
+#endif /* not _LIBC */
             }
           for (i = 0; i < cset->nmbchars; ++i)
             {
@@ -2207,6 +2224,136 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
    I'm not sure, but maybe enough.  */
 #define BRACKET_NAME_BUF_SIZE 32
 
+#ifndef _LIBC
+  /* Local function for parse_bracket_exp only used in case of NOT _LIBC.
+     Build the range expression which starts from START_ELEM, and ends
+     at END_ELEM.  The result are written to MBCSET and SBCSET.
+     RANGE_ALLOC is the allocated size of mbcset->range_starts, and
+     mbcset->range_ends, is a pointer argument sinse we may
+     update it.  */
+
+static reg_errcode_t
+build_range_exp (mbcset, sbcset, range_alloc, start_elem, end_elem)
+     re_charset_t *mbcset;
+     re_bitset_ptr_t sbcset;
+     int *range_alloc;
+     bracket_elem_t *start_elem, *end_elem;
+{
+  unsigned int start_ch, end_ch;
+  /* Equivalence Classes and Character Classes can't be a range start/end.  */
+  if (BE (start_elem->type == EQUIV_CLASS || start_elem->type == CHAR_CLASS
+          || end_elem->type == EQUIV_CLASS || end_elem->type == CHAR_CLASS,
+          0))
+    return REG_ERANGE;
+
+  /* We can handle no multi character collating elements without libc
+     support.  */
+  if (BE ((start_elem->type == COLL_SYM && strlen (start_elem->opr.name) > 1)
+          || (end_elem->type == COLL_SYM && strlen (end_elem->opr.name) > 1),
+          0))
+    return REG_ECOLLATE;
+
+# ifdef RE_ENABLE_I18N
+  {
+    wchar_t wc, start_wc, end_wc;
+    wchar_t cmp_buf[6] = {L'\0', L'\0', L'\0', L'\0', L'\0', L'\0'};
+
+    start_ch = ((start_elem->type == SB_CHAR) ? start_elem->opr.ch
+                : ((start_elem->type == COLL_SYM) ? start_elem->opr.name[0]
+                   : 0));
+    end_ch = ((end_elem->type == SB_CHAR) ? end_elem->opr.ch
+              : ((end_elem->type == COLL_SYM) ? end_elem->opr.name[0]
+                 : 0));
+    start_wc = ((start_elem->type == SB_CHAR || start_elem->type == COLL_SYM)
+                ? __btowc (start_ch) : start_elem->opr.wch);
+    end_wc = ((end_elem->type == SB_CHAR || end_elem->type == COLL_SYM)
+              ? __btowc (end_ch) : end_elem->opr.wch);
+    cmp_buf[0] = start_wc;
+    cmp_buf[4] = end_wc;
+    if (wcscoll (cmp_buf, cmp_buf + 4) > 0)
+      return REG_ERANGE;
+
+    /* Check the space of the arrays.  */
+    if (*range_alloc == mbcset->nranges)
+      {
+        /* There are not enough space, need realloc.  */
+        wchar_t *new_array_start, *new_array_end;
+        int new_nranges;
+
+        /* +1 in case of mbcset->nranges is 0.  */
+        new_nranges = 2 * mbcset->nranges + 1;
+        /* Use realloc since mbcset->range_starts and mbcset->range_ends
+           are NULL if *range_alloc == 0.  */
+        new_array_start = re_realloc (mbcset->range_starts, wchar_t,
+                                      new_nranges);
+        new_array_end = re_realloc (mbcset->range_ends, wchar_t,
+                                    new_nranges);
+
+        if (BE (new_array_start == NULL || new_array_end == NULL, 0))
+          return REG_ESPACE;
+
+        mbcset->range_starts = new_array_start;
+        mbcset->range_ends = new_array_end;
+        *range_alloc = new_nranges;
+      }
+
+    mbcset->range_starts[mbcset->nranges] = start_wc;
+    mbcset->range_ends[mbcset->nranges++] = end_wc;
+
+    /* Build the table for single byte characters.  */
+    for (wc = 0; wc <= SBC_MAX; ++wc)
+      {
+        cmp_buf[2] = wc;
+        if (wcscoll (cmp_buf, cmp_buf + 2) <= 0
+            && wcscoll (cmp_buf + 2, cmp_buf + 4) <= 0)
+          bitset_set (sbcset, wc);
+      }
+  }
+# else /* not RE_ENABLE_I18N */
+  {
+    unsigned int ch;
+    start_ch = ((start_elem->type == SB_CHAR ) ? start_elem->opr.ch
+                : ((start_elem->type == COLL_SYM) ? start_elem->opr.name[0]
+                   : 0));
+    end_ch = ((end_elem->type == SB_CHAR ) ? end_elem->opr.ch
+              : ((end_elem->type == COLL_SYM) ? end_elem->opr.name[0]
+                 : 0));
+    if (start_ch > end_ch)
+      return REG_ERANGE;
+    /* Build the table for single byte characters.  */
+    for (ch = 0; ch <= SBC_MAX; ++ch)
+      if (start_ch <= ch  && ch <= end_ch)
+        bitset_set (sbcset, ch);
+  }
+# endif /* not RE_ENABLE_I18N */
+  return REG_NOERROR;
+}
+#endif /* not _LIBC */
+
+#ifndef _LIBC
+/* Helper function for parse_bracket_exp only used in case of NOT _LIBC..
+   Build the collating element which is represented by NAME.
+   The result are written to MBCSET and SBCSET.
+   COLL_SYM_ALLOC is the allocated size of mbcset->coll_sym, is a
+   pointer argument since we may update it.  */
+
+static reg_errcode_t
+build_collating_symbol (mbcset, sbcset, coll_sym_alloc, name)
+     re_charset_t *mbcset;
+     re_bitset_ptr_t sbcset;
+     int *coll_sym_alloc;
+     unsigned char *name;
+{
+  if (BE (strlen (name) != 1, 0))
+    return REG_ECOLLATE;
+  else
+    {
+      bitset_set (sbcset, name[0]);
+      return REG_NOERROR;
+    }
+}
+#endif /* not _LIBC */
+
 /* This function parse bracket expression like "[abc]", "[a-c]",
    "[[.a-a.]]" etc.  */
 
@@ -2225,7 +2372,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
   const int32_t *symb_table;
   const unsigned char *extra;
 
-  /* Local function for parse_bracket_exp.
+  /* Local function for parse_bracket_exp used in _LIBC environement.
      Seek the collating symbol entry correspondings to NAME.
      Return the index of the symbol in the SYMB_TABLE.  */
 
@@ -2257,7 +2404,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
       return elem;
     }
 
-  /* Local function for parse_bracket_exp.
+  /* Local function for parse_bracket_exp used in _LIBC environement.
      Look up the collation sequence value of BR_ELEM.
      Return the value if succeeded, UINT_MAX otherwise.  */
 
@@ -2321,7 +2468,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
       return UINT_MAX;
     }
 
-  /* Local function for parse_bracket_exp.
+  /* Local function for parse_bracket_exp used in _LIBC environement.
      Build the range expression which starts from START_ELEM, and ends
      at END_ELEM.  The result are written to MBCSET and SBCSET.
      RANGE_ALLOC is the allocated size of mbcset->range_starts, and
@@ -2364,6 +2511,8 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 	  *range_alloc = new_nranges;
         }
 
+      /* Equivalence Classes and Character Classes can't be a range
+         start/end.  */
       if (BE (start_elem->type == EQUIV_CLASS || start_elem->type == CHAR_CLASS
               || end_elem->type == EQUIV_CLASS || end_elem->type == CHAR_CLASS,
               0))
@@ -2397,9 +2546,8 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
         }
       return REG_NOERROR;
     }
-#endif
 
-  /* Local function for parse_bracket_exp.
+  /* Local function for parse_bracket_exp used in _LIBC environement.
      Build the collating element which is represented by NAME.
      The result are written to MBCSET and SBCSET.
      COLL_SYM_ALLOC is the allocated size of mbcset->coll_sym, is a
@@ -2412,7 +2560,6 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
          int *coll_sym_alloc;
          unsigned char *name;
     {
-#ifdef _LIBC
       int32_t elem, idx;
       if (nrules != 0)
         {
@@ -2452,7 +2599,6 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
           return REG_NOERROR;
         }
       else
-#endif
         {
           if (BE (strlen (name) != 1, 0))
             return REG_ECOLLATE;
@@ -2463,6 +2609,8 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
             }
         }
     }
+#endif
+
   re_token_t br_token;
   re_bitset_ptr_t sbcset;
   re_charset_t *mbcset;
@@ -2497,10 +2645,8 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
   token_len = peek_token_bracket (token, regexp, syntax);
   if (BE (token->type == END_OF_RE, 0))
     {
-      re_free (sbcset);
-      free_charset (mbcset);
       *err = REG_BADPAT;
-      return NULL;
+      goto parse_bracket_exp_free_return;
     }
   if (token->type == OP_NON_MATCH_LIST)
     {
@@ -2512,10 +2658,8 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
       token_len = peek_token_bracket (token, regexp, syntax);
       if (BE (token->type == END_OF_RE, 0))
         {
-          re_free (sbcset);
-          free_charset (mbcset);
           *err = REG_BADPAT;
-          return NULL;
+          goto parse_bracket_exp_free_return;
         }
       if (MB_CUR_MAX > 1)
         for (i = 0; i < SBC_MAX; ++i)
@@ -2541,19 +2685,15 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
                                    syntax);
       if (BE (ret != REG_NOERROR, 0))
         {
-          re_free (sbcset);
-          free_charset (mbcset);
           *err = ret;
-          return NULL;
+          goto parse_bracket_exp_free_return;
         }
 
       token_len = peek_token_bracket (token, regexp, syntax);
       if (BE (token->type == END_OF_RE, 0))
         {
-          re_free (sbcset);
-          free_charset (mbcset);
           *err = REG_BADPAT;
-          return NULL;
+          goto parse_bracket_exp_free_return;
         }
       if (token->type == OP_CHARSET_RANGE)
         {
@@ -2561,10 +2701,8 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
           token_len2 = peek_token_bracket (&token2, regexp, syntax);
           if (BE (token->type == END_OF_RE, 0))
             {
-              re_free (sbcset);
-              free_charset (mbcset);
               *err = REG_BADPAT;
-              return NULL;
+              goto parse_bracket_exp_free_return;
             }
           if (token2.type == OP_CLOSE_BRACKET)
             {
@@ -2583,28 +2721,20 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
                                        dfa, syntax);
           if (BE (ret != REG_NOERROR, 0))
             {
-              re_free (sbcset);
-              free_charset (mbcset);
               *err = ret;
-              return NULL;
+              goto parse_bracket_exp_free_return;
             }
 
           token_len = peek_token_bracket (token, regexp, syntax);
           if (BE (token->type == END_OF_RE, 0))
             {
-              re_free (sbcset);
-              free_charset (mbcset);
               *err = REG_BADPAT;
-              return NULL;
+              goto parse_bracket_exp_free_return;
             }
           *err = build_range_exp (mbcset, sbcset, &range_alloc, &start_elem,
 				  &end_elem);
           if (BE (*err != REG_NOERROR, 0))
-            {
-              re_free (sbcset);
-              free_charset (mbcset);
-              return NULL;
-            }
+            goto parse_bracket_exp_free_return;
         }
       else
         {
@@ -2632,21 +2762,13 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
               *err = build_equiv_class (mbcset, sbcset, &equiv_class_alloc,
 					start_elem.opr.name);
               if (BE (*err != REG_NOERROR, 0))
-                {
-                  re_free (sbcset);
-                  free_charset (mbcset);
-                  return NULL;
-                }
+                goto parse_bracket_exp_free_return;
               break;
             case COLL_SYM:
               *err = build_collating_symbol (mbcset, sbcset, &coll_sym_alloc,
 					     start_elem.opr.name);
               if (BE (*err != REG_NOERROR, 0))
-                {
-                  re_free (sbcset);
-                  free_charset (mbcset);
-                  return NULL;
-                }
+                goto parse_bracket_exp_free_return;
               break;
             case CHAR_CLASS:
               ret = build_charclass (mbcset, sbcset, &char_class_alloc,
@@ -2678,7 +2800,8 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
     goto parse_bracket_exp_espace;
 
   if (mbcset->nmbchars || mbcset->ncoll_syms || mbcset->nequiv_classes
-      || mbcset->nranges || (mbcset->nchar_classes && MB_CUR_MAX > 1))
+      || mbcset->nranges || (MB_CUR_MAX > 1 && (mbcset->nchar_classes
+                                                || mbcset->non_match)))
     {
       re_token_t alt_token;
       bin_tree_t *mbc_tree;
@@ -2704,10 +2827,14 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
     }
 
  parse_bracket_exp_espace:
-  free_charset (mbcset);
   *err = REG_ESPACE;
+ parse_bracket_exp_free_return:
+  re_free (sbcset);
+  free_charset (mbcset);
   return NULL;
 }
+
+/* Parse an element in the bracket expression.  */
 
 static reg_errcode_t
 parse_bracket_element (elem, regexp, token, token_len, dfa, syntax)
@@ -2737,6 +2864,10 @@ parse_bracket_element (elem, regexp, token, token_len, dfa, syntax)
   elem->opr.ch = token->opr.c;
   return REG_NOERROR;
 }
+
+/* Parse a bracket symbol in the bracket expression.  Bracket symbols are
+   such as [:<character_class>:], [.<collating_element>.], and
+   [=<equivalent_class>=].  */
 
 static reg_errcode_t
 parse_bracket_symbol (elem, regexp, token)
@@ -2968,10 +3099,12 @@ build_word_op (dfa, not, err)
       if (syntax & RE_HAT_LISTS_NOT_NEWLINE)
         bitset_set(cset->sbcset, '\0');
       */
+#ifdef RE_ENABLE_I18N
       if (MB_CUR_MAX > 1)
         for (i = 0; i < SBC_MAX; ++i)
           if (__btowc (i) == WEOF)
             bitset_set (sbcset, i);
+#endif /* RE_ENABLE_I18N */
     }
 
   /* We don't care the syntax in this case.  */
@@ -2983,6 +3116,8 @@ build_word_op (dfa, not, err)
       *err = REG_ESPACE;
       return NULL;
     }
+  /* \w match '_' also.  */
+  bitset_set (sbcset, '_');
 
   /* If it is non-matching list.  */
   if (mbcset->non_match)

@@ -37,7 +37,8 @@
 # define __iswctype iswctype
 # define __btowc btowc
 # define __mempcpy memcpy
-#endif
+# define attribute_hidden
+#endif /* not _LIBC */
 
 extern const char __re_error_msgid[] attribute_hidden;
 extern const size_t __re_error_msgid_idx[] attribute_hidden;
@@ -161,7 +162,10 @@ typedef struct
 #ifdef _LIBC
   uint32_t *range_starts;
   uint32_t *range_ends;
-#endif
+#else /* not _LIBC */
+  wchar_t *range_starts;
+  wchar_t *range_ends;
+#endif /* not _LIBC */
   int nranges;
 
   /* Character classes. */

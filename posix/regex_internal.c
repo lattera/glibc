@@ -60,7 +60,9 @@
 static void re_string_construct_common (const unsigned char *str,
                                         int len, re_string_t *pstr,
                                         RE_TRANSLATE_TYPE trans, int icase);
+#ifdef RE_ENABLE_I18N
 static int re_string_skip_chars (re_string_t *pstr, int new_raw_idx);
+#endif /* RE_ENABLE_I18N */
 static re_dfastate_t *create_newstate_common (re_dfa_t *dfa,
                                               const re_node_set *nodes,
                                               unsigned int hash);
@@ -134,8 +136,8 @@ re_string_construct (pstr, str, len, trans, icase)
       if (MB_CUR_MAX > 1)
         build_wcs_upper_buffer (pstr);
       else
-        build_upper_buffer (pstr);
 #endif /* RE_ENABLE_I18N  */
+        build_upper_buffer (pstr);
     }
   else
     {
@@ -409,7 +411,10 @@ re_string_reconstruct (pstr, idx, eflags, newline)
   if (offset < 0)
     {
       /* Reset buffer.  */
-      memset (&pstr->cur_state, '\0', sizeof (mbstate_t));
+#ifdef RE_ENABLE_I18N
+      if (MB_CUR_MAX > 1)
+        memset (&pstr->cur_state, '\0', sizeof (mbstate_t));
+#endif /* RE_ENABLE_I18N */
       pstr->valid_len = pstr->raw_mbs_idx = 0;
       pstr->tip_context = ((eflags & REG_NOTBOL) ? CONTEXT_BEGBUF
                            : CONTEXT_NEWLINE | CONTEXT_BEGBUF);

@@ -1,3 +1,33 @@
+2002-04-26  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regcomp.c (re_compile_fastmap_iter): Fix fastmap in case of
+	not _LIBC and RE_ENABLE_I18N.
+	(build_range_exp): Implement for not _LIBC.
+	(build_collating_symbol): Likewise.
+	(parse_bracket_exp): Unify redundant error handlings.
+	Don't erase mbcset for non matching list in multibyte envs.
+	(build_word_op): Add '_' to matching list for \w operator.
+	* posix/regex_internal.c (re_string_construct): Invoke
+	build_upper_buffer in case of not RE_ENABLE_I18N.
+	(re_string_reconstruct): Don't touch cur_state in case of not
+	RE_ENABLE_I18N.
+	* posix/regex_internal.h (attribute_hidden): New macro in case of
+	not _LIBC.
+	(re_charset_t): Define range_starts/ends in case of not _LIBC.
+	* posix/regexec.c (sift_states_iter_mb): Hide in case of not
+	RE_ENABLE_I18N.
+	(transit_state_mb): Likewise.
+	(check_node_accept_bytes): Implement the code evaluating range
+	expression in case of not _LIBC.
+	(find_collation_sequence_value): Hide in case of not _LIBC.
+
+2002-04-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/semctl.c: Copied from
+	i386/semctl.c.
+	(__old_semctl, __new_semctl): Only use va_arg if the argument will
+	be used.
+
 2002-04-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/fpu/s_isinf.S: Fix definition of _internal names.
