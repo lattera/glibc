@@ -152,4 +152,8 @@ libpthread {
     # Extensions.
     pthread_yield;
   }
+  GLIBC_2.2.3 {
+    # Extensions.
+    pthread_getattr_np;
+  }
 }

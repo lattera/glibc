@@ -1,6 +1,14 @@
+2001-03-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions [libpthread] (GLIBC_2.2.3): Add pthread_getattr_np.
+	* attr.c: Implement pthread_getattr_np.
+	* sysdeps/pthread/pthread.h: Add prototype for pthread_getattr_np.
+	* internals.h (struct _pthread_descr_struct): Add p_inheritsched.
+	* manager.c (pthread_handle_create): Initialize p_inheritsched.
+
 2001-03-09  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
-        * sysdeps/unix/sysv/linux/s390/pt-initfini.c: Use 0x07 padding for
+	* sysdeps/unix/sysv/linux/s390/pt-initfini.c: Use 0x07 padding for
 	code alignment.
 
 2001-02-20  Hans Boehm  <hans_boehm@hp.com>

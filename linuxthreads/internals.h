@@ -178,6 +178,7 @@ struct _pthread_descr_struct {
   int p_untracked_readlock_count;	/* Readlocks not tracked by list */
   struct __res_state *p_resp;	/* Pointer to resolver state */
   struct __res_state p_res;	/* per-thread resolver state */
+  int p_inheritsched;           /* copied from the thread attribute */
   /* New elements must be added at the end.  */
 } __attribute__ ((aligned(32))); /* We need to align the structure so that
 				    doubles are aligned properly.  This is 8

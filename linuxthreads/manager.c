@@ -512,6 +512,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_guardsize = guardsize;
   new_thread->p_header.data.self = new_thread;
   new_thread->p_nr = sseg;
+  new_thread->p_inheritsched = attr ? attr->__inheritsched : 0;
   /* Initialize the thread handle */
   __pthread_init_lock(&__pthread_handles[sseg].h_lock);
   __pthread_handles[sseg].h_descr = new_thread;

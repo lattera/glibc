@@ -289,6 +289,11 @@ extern int pthread_attr_getstacksize (__const pthread_attr_t *__restrict
 				      __attr, size_t *__restrict __stacksize)
      __THROW;
 
+#ifdef __USE_GNU
+/* Get thread attributes corresponding to the already running thread TH.  */
+extern int pthread_getattr_np (pthread_t __th, pthread_attr_t *__attr) __THROW;
+#endif
+
 /* Functions for scheduling control.  */
 
 /* Set the scheduling parameters for TARGET_THREAD according to POLICY
