@@ -81,8 +81,11 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
       sock = __nscd_open_socket (user, userlen, INITGROUPS, &initgr_resp_mem,
 				 sizeof (initgr_resp_mem));
       if (sock == -1)
-	/* nscd not running or wrong version or hosts caching disabled.  */
-	__nss_not_use_nscd_group = 1;
+	{
+	  /* nscd not running or wrong version or hosts caching disabled.  */
+	  __nss_not_use_nscd_group = 1;
+	  goto out;
+	}
 
       initgr_resp = &initgr_resp_mem;
     }

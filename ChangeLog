@@ -1,3 +1,8 @@
+2004-10-03  Juerg Billeter  <j@bitron.ch>
+
+	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Return -1 if nscd
+	can't be used.
+
 2004-10-03  Ulrich Drepper  <drepper@redhat.com>
 
 	Dynamically create new threads if necessary.
