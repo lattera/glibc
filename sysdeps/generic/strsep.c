@@ -66,3 +66,4 @@ __strsep (char **stringp, const char *delim)
   return begin;
 }
 weak_alias (__strsep, strsep)
+strong_alias (__strsep, __strsep_g)

@@ -73,7 +73,4 @@ libc {
     # m*
     memrchr;
   }
-  GLIBC_2.2.5 {
-    __strsep;
-  }
 }

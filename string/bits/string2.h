@@ -1087,6 +1087,8 @@ __strtok_r_1c (char *__s, char __sep, char **__nextp)
 
 #if !defined _HAVE_STRING_ARCH_strsep || defined _FORCE_INLINES
 # ifndef _HAVE_STRING_ARCH_strsep
+
+extern char *__strsep_g (char **__stringp, __const char *__delim);
 #  define __strsep(s, reject) \
   __extension__								      \
   ({ char __r0, __r1, __r2;						      \
@@ -1100,8 +1102,8 @@ __strtok_r_1c (char *__s, char __sep, char **__nextp)
 	    ? __strsep_2c (s, __r0, __r1)				      \
 	    : (((__const char *) (reject))[3] == '\0'			      \
 	       ? __strsep_3c (s, __r0, __r1, __r2)			      \
-	       : __strsep (s, reject))))				      \
-      : __strsep (s, reject)); })
+	       : __strsep_g (s, reject))))				      \
+      : __strsep_g (s, reject)); })
 # endif
 
 __STRING_INLINE char *__strsep_1c (char **__s, char __reject);

@@ -211,7 +211,7 @@ const int __pthread_offsetof_descr = offsetof(struct pthread_handle_struct,
                                               h_descr);
 const int __pthread_offsetof_pid = offsetof(struct _pthread_descr_struct,
                                             p_pid);
-const int __linuxthread_pthread_sizeof_descr
+const int __linuxthreads_pthread_sizeof_descr
   = sizeof(struct _pthread_descr_struct);
 
 /* Forward declarations */

@@ -1153,7 +1153,8 @@ These functions are declared in @file{sys/mman.h}.
 
 The @code{mmap} function creates a new mapping, connected to bytes
 (@var{offset}) to (@var{offset} + @var{length} - 1) in the file open on
-@var{filedes}.
+@var{filedes}.  A new reference for the file specified by @var{filedes}
+is created, which is not removed by closing the file.
 
 @var{address} gives a preferred starting address for the mapping.
 @code{NULL} expresses no preference. Any previous mapping at that

@@ -34,7 +34,7 @@
 # elif defined __WCHAR_TYPE__
 typedef __WCHAR_TYPE__ __gwchar_t;
 # else
-#  defined __need_wchar_t
+#  define __need_wchar_t
 #  include <stddef.h>
 typedef wchar_t __gwchar_t;
 # endif

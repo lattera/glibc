@@ -1,3 +1,20 @@
+2001-10-04  Ben Collins  <bcollins@debian.org>
+
+	* sysdeps/generic/inttypes.h: Fix typo (define, not defined) in
+	decleration of __need_wchar_t.
+
+2001-10-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/bits/string2.h (__strsep_g): Add prototype.
+	(__strsep): Use it.
+	* string/Versions (__strsep): Remove.
+	* sysdeps/generic/strsep.c (__strsep_g): Add alias to __strsep.
+
+2001-10-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* manua/llio.texi: Clarify file references added by mmap.
+	Patch by Marcus Brinkmann <Marcus.Brinkmann@ruhr-uni-bochum.de>.
+
 2001-09-29  Jes Sorensen  <jes@trained-monkey.org>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h (struct sigcontext):
