@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@suse.de>, 2002.
 
@@ -77,11 +77,21 @@
 # define UNDOCARGS_5	UNDOCARGS_4; move.l (%sp)+, %d5;
 
 # ifdef IS_IN_libpthread
-#  define CENABLE	jbsr __pthread_enable_asynccancel
-#  define CDISABLE	jbsr __pthread_disable_asynccancel
+#  ifdef PIC
+#   define CENABLE	jbsr __pthread_enable_asynccancel@PLTPC
+#   define CDISABLE	jbsr __pthread_disable_asynccancel@PLTPC
+#  else
+#   define CENABLE	jbsr __pthread_enable_asynccancel
+#   define CDISABLE	jbsr __pthread_disable_asynccancel
+#  endif
 # else
-#  define CENABLE	jbsr __libc_enable_asynccancel
-#  define CDISABLE	jbsr __libc_disable_asynccancel
+#  ifdef PIC
+#   define CENABLE	jbsr __libc_enable_asynccancel@PLTPC
+#   define CDISABLE	jbsr __libc_disable_asynccancel@PLTPC
+#  else
+#   define CENABLE	jbsr __libc_enable_asynccancel
+#   define CDISABLE	jbsr __libc_disable_asynccancel
+#  endif
 # endif
 
 # if !defined NOT_IN_libc
@@ -97,13 +107,7 @@ extern int __local_multiple_threads attribute_hidden;
 #  if !defined PIC
 #   define SINGLE_THREAD_P tst.l __local_multiple_threads
 #  else
-#   if !defined HAVE_HIDDEN || !USE___THREAD
-#    define SINGLE_THREAD_P \
-  tst.l (__local_multiple_threads@GOTPC, %pc)
-#   else
-#    define SINGLE_THREAD_P \
-  tst.l  (__local_multiple_threads@GOTPC, %pc)
-#   endif
+#   define SINGLE_THREAD_P tst.l (__local_multiple_threads, %pc)
 #  endif
 # endif
 
