@@ -250,35 +250,22 @@ static int first_nonopt;
 static int last_nonopt;
 
 #ifdef _LIBC
+/* Stored original parameters.
+   XXX This is no good solution.  We should rather copy the args so
+   that we can compare them later.  But we must not use malloc(3).  */
+extern int __libc_argc;
+extern char **__libc_argv;
+
 /* Bash 2.0 gives us an environment variable containing flags
    indicating ARGV elements that should not be considered arguments.  */
 
-#ifdef USE_NONOPTION_FLAGS
+# ifdef USE_NONOPTION_FLAGS
 /* Defined in getopt_init.c  */
 extern char *__getopt_nonoption_flags;
 
 static int nonoption_flags_max_len;
 static int nonoption_flags_len;
-#endif
-
-static int original_argc;
-static char *const *original_argv;
-
-/* Make sure the environment variable bash 2.0 puts in the environment
-   is valid for the getopt call we must make sure that the ARGV passed
-   to getopt is that one passed to the process.  */
-static void
-__attribute__ ((unused))
-store_args_and_env (int argc, char *const *argv)
-{
-  /* XXX This is no good solution.  We should rather copy the args so
-     that we can compare them later.  But we must not use malloc(3).  */
-  original_argc = argc;
-  original_argv = argv;
-}
-# ifdef text_set_element
-text_set_element (__libc_subinit, store_args_and_env);
-# endif /* text_set_element */
+# endif
 
 # ifdef USE_NONOPTION_FLAGS
 #  define SWAP_FLAGS(ch1, ch2) \
@@ -428,7 +415,7 @@ _getopt_initialize (argc, argv, optstring)
 
 #if defined _LIBC && defined USE_NONOPTION_FLAGS
   if (posixly_correct == NULL
-      && argc == original_argc && argv == original_argv)
+      && argc == __libc_argc && argv == __libc_argv)
     {
       if (nonoption_flags_max_len == 0)
 	{
