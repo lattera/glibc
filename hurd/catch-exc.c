@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994,95,96,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,9 +25,14 @@ kern_return_t
 _S_catch_exception_raise (mach_port_t port,
 			  thread_t thread,
 			  task_t task,
-			  int exception,
-			  int code,
-			  int subcode)
+#ifdef EXC_MASK_ALL		/* New interface flavor.  */
+			  exception_type_t exception,
+			  exception_data_t code,
+			  mach_msg_type_number_t codeCnt
+#else				/* Vanilla Mach 3.0 interface.  */
+			  int exception, int code, int subcode
+#endif
+			  )
 {
   struct hurd_sigstate *ss;
   int signo;
@@ -38,8 +43,14 @@ _S_catch_exception_raise (mach_port_t port,
     return EPERM;
 
   d.exc = exception;
+#ifdef EXC_MASK_ALL
+  assert (codeCnt >= 2);
+  d.exc_code = code[0];
+  d.exc_subcode = code[1];
+#else
   d.exc_code = code;
   d.exc_subcode = subcode;
+#endif
 
   /* Call the machine-dependent function to translate the Mach exception
      codes into a signal number and subcode.  */
@@ -79,3 +90,41 @@ _S_catch_exception_raise (mach_port_t port,
 
   return KERN_SUCCESS;
 }
+
+#ifdef EXC_MASK_ALL
+/* XXX New interface flavor has additional RPCs that we could be using
+   instead.  These RPCs roll a thread_get_state/thread_set_state into
+   the message, so the signal thread ought to use these to save some calls.
+ */
+kern_return_t
+_S_catch_exception_raise_state (mach_port_t port,
+				exception_type_t exception,
+				exception_data_t code,
+				mach_msg_type_number_t codeCnt,
+				int *flavor,
+				thread_state_t old_state,
+				mach_msg_type_number_t old_stateCnt,
+				thread_state_t new_state,
+				mach_msg_type_number_t *new_stateCnt)
+{
+  abort ();
+  return KERN_FAILURE;
+}
+
+kern_return_t
+_S_catch_exception_raise_state_identity (mach_port_t exception_port,
+					 thread_t thread,
+					 task_t task,
+					 exception_type_t exception,
+					 exception_data_t code,
+					 mach_msg_type_number_t codeCnt,
+					 int *flavor,
+					 thread_state_t old_state,
+					 mach_msg_type_number_t old_stateCnt,
+					 thread_state_t new_state,
+					 mach_msg_type_number_t *new_stateCnt)
+{
+  abort ();
+  return KERN_FAILURE;
+}
+#endif

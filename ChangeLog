@@ -1,5 +1,28 @@
 2002-02-17  Roland McGrath  <roland@frob.com>
 
+	* hurd/hurdselect.c (_hurd_select) [MACH_MSG_TRAILER_MINIMUM_SIZE]:
+	Use untyped Mach IPC message format.
+
+	* sysdeps/mach/hurd/ioctl.c (__ioctl) [! MACH_MSG_TYPE_BIT]: Handle
+	Handle untyped Mach IPC message formats.
+
+	* hurd/catch-exc.c (_S_catch_exception_raise) [EXC_MASK_ALL]:
+	Expect different argument conventions when this is defined.
+	[EXC_MASK_ALL] (_S_catch_exception_raise_state): New stub function.
+	[EXC_MASK_ALL] (_S_catch_exception_raise_state_identity): Likewise.
+	* hurd/hurdfault.c: Likewise for _hurdsig_fault_catch_exception_*.
+	[NDR_CHAR_ASCII] (mig_reply_header_t): #define as mig_reply_error_t
+	for OSF Mach variant.
+	(faulted): Use mig_reply_error_t for REPLY.
+	(_hurdsig_fault_init) [EXC_MASK_ALL]: Use EXCEPTION_STATE_IDENTITY
+	in __thread_set_exception_ports call.
+	(_hurdsig_fault_init) [MACH_PORT_RECEIVE_STATUS]: Use
+	__mach_port_set_attributes in place of __mach_port_set_qlimit.
+
+	* sysdeps/mach/powerpc/sysdep.h (_MACH_MACHINE_ASM_H): Define this
+	before include <sysdeps/mach/sysdep.h>, to inhibit <mach/machine/asm.h>
+	on Darwin, which includes bogons.
+
 	* sysdeps/powerpc/dl-machine.h (elf_machine_rela): Move local
 	variable LOADBASE so it's not declared when it's not used.
 

@@ -1,5 +1,5 @@
 /* system call details for Mach on PowerPC
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,6 +42,7 @@
 		   : : "r" (sp), "r" (pc), "r" (retval))
 
 /* Get the machine-independent Mach definitions.  */
+#define _MACH_MACHINE_ASM_H 1	/* Kludge to avoid bad Darwin header file.  */
 #include <sysdeps/mach/sysdep.h>
 
 #undef ENTRY

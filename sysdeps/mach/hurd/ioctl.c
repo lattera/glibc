@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,93,94,95,96,97,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,99,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,12 +39,14 @@
 int
 __ioctl (int fd, unsigned long int request, ...)
 {
+#ifdef MACH_MSG_TYPE_CHAR
   /* Map individual type fields to Mach IPC types.  */
   static const int mach_types[] =
     { MACH_MSG_TYPE_CHAR, MACH_MSG_TYPE_INTEGER_16, MACH_MSG_TYPE_INTEGER_32,
       MACH_MSG_TYPE_INTEGER_64 };
 #define io2mach_type(count, type) \
   ((mach_msg_type_t) { mach_types[type], typesize (type) * 8, count, 1, 0, 0 })
+#endif
 
   /* Extract the type information encoded in the request.  */
   unsigned int type = _IOC_TYPE (request);
@@ -53,17 +55,29 @@ __ioctl (int fd, unsigned long int request, ...)
 #define msg_align(x) \
   (((x) + sizeof (mach_msg_type_t) - 1) & ~(sizeof (mach_msg_type_t) - 1))
   struct
-    {
-      mig_reply_header_t header;
-      char data[3 * sizeof (mach_msg_type_t) +
-		msg_align (_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (type))) +
-		msg_align (_IOT_COUNT1 (type) * typesize (_IOT_TYPE1 (type))) +
-		_IOT_COUNT2 (type) * typesize (_IOT_TYPE2 (type))];
-    } msg;
+  {
+#ifdef MACH_MSG_TYPE_BIT
+    mig_reply_header_t header;
+    char data[3 * sizeof (mach_msg_type_t) +
+	     msg_align (_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (type))) +
+	     msg_align (_IOT_COUNT1 (type) * typesize (_IOT_TYPE1 (type))) +
+	     _IOT_COUNT2 (type) * typesize (_IOT_TYPE2 (type))];
+#else  /* Untyped Mach IPC format.  */
+    mig_reply_error_t header;
+    char data[_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (type)) +
+	     _IOT_COUNT1 (type) * typesize (_IOT_TYPE1 (type)) +
+	     _IOT_COUNT2 (type) * typesize (_IOT_TYPE2 (type))];
+    mach_msg_trailer_t trailer;
+#endif
+  } msg;
   mach_msg_header_t *const m = &msg.header.Head;
-  mach_msg_type_t *t;
   mach_msg_id_t msgid;
   unsigned int reply_size;
+#ifdef MACH_MSG_TYPE_BIT
+  mach_msg_type_t *t;
+#else
+  void *p;
+#endif
 
   void *arg;
 
@@ -74,7 +88,11 @@ __ioctl (int fd, unsigned long int request, ...)
   error_t send_rpc (io_t ioport)
     {
       error_t err;
+#ifdef MACH_MSG_TYPE_BIT
       mach_msg_type_t *t = &msg.header.RetCodeType;
+#else
+      void *p = &msg.header.RetCode;
+#endif
 
       /* Marshal the request arguments into the message buffer.
 	 We must redo this work each time we retry the RPC after a SIGTTOU,
@@ -92,14 +110,18 @@ __ioctl (int fd, unsigned long int request, ...)
 	    {
 	      if (count > 0)
 		{
-		  void *p = &t[1];
 		  const size_t len = count * typesize ((unsigned int) type);
+#ifdef MACH_MSG_TYPE_BIT
+		  void *p = &t[1];
 		  *t = io2mach_type (count, type);
 		  p = __mempcpy (p, argptr, len);
-		  argptr += len;
 		  p = (void *) (((uintptr_t) p + sizeof (*t) - 1)
 				& ~(sizeof (*t) - 1));
 		  t = p;
+#else
+		  p = __mempcpy (p, argptr, len);
+#endif
+		  argptr += len;
 		}
 	    }
 
@@ -112,14 +134,24 @@ __ioctl (int fd, unsigned long int request, ...)
 	{
 	  /* The RPC takes a single integer_t argument.
 	     Rather than pointing to the value, ARG is the value itself.  */
+#ifdef MACH_MSG_TYPE_BIT
 	  *t++ = io2mach_type (1, _IOTS (int));
 	  *((int *) t)++ = (int) arg;
+#else
+	  *((int *) p)++ = (int) arg;
+#endif
 	}
 
-      m->msgh_size = (char *) t - (char *) &msg;
+      memset (m, 0, sizeof *m);	/* Clear unused fields.  */
+      m->msgh_size = (
+#ifdef MACH_MSG_TYPE_BIT
+		      (char *) t
+#else
+		      (char *) p
+#endif
+		      - (char *) &msg);
       m->msgh_remote_port = ioport;
       m->msgh_local_port = __mig_get_reply_port ();
-      m->msgh_seqno = 0;
       m->msgh_id = msgid;
       m->msgh_bits = MACH_MSGH_BITS (MACH_MSG_TYPE_COPY_SEND,
 				     MACH_MSG_TYPE_MAKE_SEND_ONCE);
@@ -153,13 +185,15 @@ __ioctl (int fd, unsigned long int request, ...)
 		MIG_SERVER_DIED : MIG_REPLY_MISMATCH);
 
       if (m->msgh_size != reply_size &&
-	  m->msgh_size != sizeof (mig_reply_header_t))
+	  m->msgh_size != sizeof msg.header)
 	return MIG_TYPE_ERROR;
 
+#ifdef MACH_MSG_TYPE_BIT
       if (*(int *) &msg.header.RetCodeType !=
 	  ((union { mach_msg_type_t t; int i; })
 	   { t: io2mach_type (1, _IOTS (sizeof msg.header.RetCode)) }).i)
 	return MIG_TYPE_ERROR;
+#endif
       return msg.header.RetCode;
     }
 
@@ -193,7 +227,7 @@ __ioctl (int fd, unsigned long int request, ...)
   /* Compute the expected size of the reply.  There is a standard header
      consisting of the message header and the reply code.  Then, for out
      and in/out ioctls, there come the data with their type headers.  */
-  reply_size = sizeof (mig_reply_header_t);
+  reply_size = sizeof msg.header;
 
   if (_IOC_INOUT (request) & IOC_OUT)
     {
@@ -201,11 +235,15 @@ __ioctl (int fd, unsigned long int request, ...)
 	{
 	  if (count > 0)
 	    {
+#ifdef MACH_MSG_TYPE_BIT
 	      /* Add the size of the type and data.  */
 	      reply_size += sizeof (mach_msg_type_t) + typesize (type) * count;
 	      /* Align it to word size.  */
 	      reply_size += sizeof (mach_msg_type_t) - 1;
 	      reply_size &= ~(sizeof (mach_msg_type_t) - 1);
+#else
+	      reply_size += typesize (type) * count;
+#endif
 	    }
 	}
       figure_reply (_IOT_COUNT0 (type), _IOT_TYPE0 (type));
@@ -218,7 +256,11 @@ __ioctl (int fd, unsigned long int request, ...)
      into either SIGTTOU or EIO.  */
   err = HURD_DPORT_USE (fd, _hurd_ctty_output (port, ctty, send_rpc));
 
+#ifdef MACH_MSG_TYPE_BIT
   t = (mach_msg_type_t *) msg.data;
+#else
+  p = (void *) msg.data;
+#endif
   switch (err)
     {
       /* Unpack the message buffer into the argument location.  */
@@ -228,6 +270,7 @@ __ioctl (int fd, unsigned long int request, ...)
 	  if (count > 0)
 	    {
 	      const size_t len = count * typesize (type);
+#ifdef MACH_MSG_TYPE_BIT
 	      union { mach_msg_type_t t; int i; } ipctype;
 	      ipctype.t = io2mach_type (count, type);
 	      if (*(int *) t != ipctype.i)
@@ -238,6 +281,12 @@ __ioctl (int fd, unsigned long int request, ...)
 		*update += len;
 	      t = (void *) (((uintptr_t) t + len + sizeof (*t) - 1)
 			    & ~(sizeof (*t) - 1));
+#else
+	      memcpy (store, p, len);
+	      p += len;
+	      if (update != NULL)
+		*update += len;
+#endif
 	    }
 	  return 0;
 	}

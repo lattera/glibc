@@ -279,6 +279,22 @@ _hurd_select (int nfds,
       union
 	{
 	  mach_msg_header_t head;
+#ifdef MACH_MSG_TRAILER_MINIMUM_SIZE
+	  struct
+	    {
+	      mach_msg_header_t head;
+	      NDR_record_t ndr;
+	      error_t err;
+	    } error;
+	  struct
+	    {
+	      mach_msg_header_t head;
+	      NDR_record_t ndr;
+	      error_t err;
+	      int result;
+	      mach_msg_trailer_t trailer;
+	    } success;
+#else
 	  struct
 	    {
 	      mach_msg_header_t head;
@@ -293,6 +309,7 @@ _hurd_select (int nfds,
 	      mach_msg_type_t result_type;
 	      int result;
 	    } success;
+#endif
 	} msg;
       mach_msg_option_t options = (timeout == NULL ? 0 : MACH_RCV_TIMEOUT);
       error_t msgerr;
@@ -303,13 +320,18 @@ _hurd_select (int nfds,
 	{
 	  /* We got a message.  Decode it.  */
 #define IO_SELECT_REPLY_MSGID (21012 + 100) /* XXX */
+#ifdef MACH_MSG_TYPE_BIT
 	  const mach_msg_type_t inttype =
 	    { MACH_MSG_TYPE_INTEGER_T, sizeof (MACH_MSG_TYPE_INTEGER_T) * 8,
 	      1, 1, 0, 0 };
-	  if (msg.head.msgh_id == IO_SELECT_REPLY_MSGID &&
-	      msg.head.msgh_size >= sizeof msg.error &&
-	      !(msg.head.msgh_bits & MACH_MSGH_BITS_COMPLEX) &&
-	      *(int *) &msg.error.err_type == *(int *) &inttype)
+#endif
+	  if (msg.head.msgh_id == IO_SELECT_REPLY_MSGID
+	      && msg.head.msgh_size >= sizeof msg.error
+	      && !(msg.head.msgh_bits & MACH_MSGH_BITS_COMPLEX)
+#ifdef MACH_MSG_TYPE_BIT
+	      && *(int *) &msg.error.err_type == *(int *) &inttype
+#endif
+	      )
 	    {
 	      /* This is a properly formatted message so far.
 		 See if it is a success or a failure.  */
@@ -323,7 +345,9 @@ _hurd_select (int nfds,
 		}
 	      if (msg.error.err ||
 		  msg.head.msgh_size != sizeof msg.success ||
+#ifdef MACH_MSG_TYPE_BIT
 		  *(int *) &msg.success.result_type != *(int *) &inttype ||
+#endif
 		  (msg.success.result & SELECT_ALL) == 0)
 		{
 		  /* Error or bogus reply.  Simulate readiness.  */

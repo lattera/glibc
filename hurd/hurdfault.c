@@ -40,9 +40,14 @@ kern_return_t
 _hurdsig_fault_catch_exception_raise (mach_port_t port,
 				      thread_t thread,
 				      task_t task,
-				      int exception,
-				      int code,
-				      int subcode)
+#ifdef EXC_MASK_ALL		/* New interface flavor.  */
+				      exception_type_t exception,
+				      exception_data_t code,
+				      mach_msg_type_number_t codeCnt
+#else				/* Vanilla Mach 3.0 interface.  */
+				      int exception, int code, int subcode
+#endif
+				      )
 {
   int signo;
   struct hurd_signal_detail d;
@@ -52,8 +57,14 @@ _hurdsig_fault_catch_exception_raise (mach_port_t port,
     return EPERM;		/* Strange bogosity.  */
 
   d.exc = exception;
+#ifdef EXC_MASK_ALL
+  assert (codeCnt >= 2);
+  d.exc_code = code[0];
+  d.exc_subcode = code[1];
+#else
   d.exc_code = code;
   d.exc_subcode = subcode;
+#endif
 
   /* Call the machine-dependent function to translate the Mach exception
      codes into a signal number and subcode.  */
@@ -63,6 +74,51 @@ _hurdsig_fault_catch_exception_raise (mach_port_t port,
     ? 0 : EGREGIOUS;
 }
 
+#ifdef EXC_MASK_ALL
+/* XXX New interface flavor has additional RPCs that we could be using
+   instead.  These RPCs roll a thread_get_state/thread_set_state into
+   the message, so the signal thread ought to use these to save some calls.
+ */
+kern_return_t
+_hurdsig_fault_catch_exception_raise_state
+(mach_port_t port,
+ exception_type_t exception,
+ exception_data_t code,
+ mach_msg_type_number_t codeCnt,
+ int *flavor,
+ thread_state_t old_state,
+ mach_msg_type_number_t old_stateCnt,
+ thread_state_t new_state,
+ mach_msg_type_number_t *new_stateCnt)
+{
+  abort ();
+  return KERN_FAILURE;
+}
+
+kern_return_t
+_hurdsig_fault_catch_exception_raise_state_identity
+(mach_port_t exception_port,
+ thread_t thread,
+ task_t task,
+ exception_type_t exception,
+ exception_data_t code,
+ mach_msg_type_number_t codeCnt,
+ int *flavor,
+ thread_state_t old_state,
+ mach_msg_type_number_t old_stateCnt,
+ thread_state_t new_state,
+ mach_msg_type_number_t *new_stateCnt)
+{
+  abort ();
+  return KERN_FAILURE;
+}
+#endif
+
+
+#ifdef NDR_CHAR_ASCII		/* OSF Mach flavors have different names.  */
+# define mig_reply_header_t	mig_reply_error_t
+#endif
+
 static void
 faulted (void)
 {
@@ -71,12 +127,7 @@ faulted (void)
       mach_msg_header_t head;
       char buf[64];
     } request;
-  struct
-    {
-      mach_msg_header_t head;
-      mach_msg_type_t type;
-      int result;
-    } reply;
+  mig_reply_header_t reply;
   extern int _hurdsig_fault_exc_server (mach_msg_header_t *,
 					mach_msg_header_t *);
 
@@ -90,14 +141,14 @@ faulted (void)
 
   /* Run the exc demuxer which should call the server function above.
      That function returns 0 if the exception was expected.  */
-  _hurdsig_fault_exc_server (&request.head, &reply.head);
-  if (reply.head.msgh_remote_port != MACH_PORT_NULL)
-    __mach_msg (&reply.head, MACH_SEND_MSG, reply.head.msgh_size,
+  _hurdsig_fault_exc_server (&request.head, &reply.Head);
+  if (reply.Head.msgh_remote_port != MACH_PORT_NULL)
+    __mach_msg (&reply.Head, MACH_SEND_MSG, reply.Head.msgh_size,
 		0, MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
-  if (reply.result == MIG_BAD_ID)
+  if (reply.RetCode == MIG_BAD_ID)
     __mach_msg_destroy (&request.head);
 
-  if (reply.result)
+  if (reply.RetCode)
     __libc_fatal ("BUG: unexpected fault in signal thread\n");
 
   _hurdsig_fault_preemptor.signals = 0;
@@ -136,7 +187,17 @@ _hurdsig_fault_init (void)
   /* Set the queue limit for this port to just one.  The proc server will
      notice if we ever get a second exception while one remains queued and
      unreceived, and decide we are hopelessly buggy.  */
+#ifdef MACH_PORT_RECEIVE_STATUS_COUNT
+  {
+    const mach_port_limits_t lim = { mpl_qlimit: 1 };
+    assert (MACH_PORT_RECEIVE_STATUS_COUNT == sizeof lim / sizeof (natural_t));
+    err = __mach_port_set_attributes (__mach_task_self (), forward_sigexc,
+				      MACH_PORT_RECEIVE_STATUS,
+				      &lim, MACH_PORT_RECEIVE_STATUS_COUNT);
+  }
+#else
   err = __mach_port_set_qlimit (__mach_task_self (), forward_sigexc, 1);
+#endif
   assert_perror (err);
 
   /* This state will be restored when we fault.
@@ -165,7 +226,8 @@ _hurdsig_fault_init (void)
 						 | EXC_MASK_MACH_SYSCALL
 						 | EXC_MASK_RPC_ALERT),
 				sigexc,
-				EXCEPTION_DEFAULT, MACHINE_THREAD_STATE);
+				EXCEPTION_STATE_IDENTITY,
+				MACHINE_THREAD_STATE);
 #else
 # error thread_set_exception_ports?
 #endif
