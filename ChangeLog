@@ -1,5 +1,11 @@
 1999-07-30  Ulrich Drepper  <drepper@cygnus.com>
 
+	* configure.in: Add test for local label subtraction.
+	* config.h.in: Ad HAVE_SUBTRACT_LOCAL_LABELS.
+	* stdio-common/vfprintf.c (vfprintf): Use subtraction of local
+	labels to reduce number of runtime relocations and move jump
+	tables in read-only seciton.
+
 	* malloc/malloc.c (ptmalloc_init): Correct last patch.  The
 	assignment cannot be moved.
 

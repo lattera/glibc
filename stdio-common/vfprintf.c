@@ -271,7 +271,24 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
 #define NOT_IN_JUMP_RANGE(Ch) ((Ch) < L_(' ') || (Ch) > L_('z'))
 #define CHAR_CLASS(Ch) (jump_table[(INT_T) (Ch) - L_(' ')])
-#define JUMP(ChExpr, table)						      \
+#if defined HAVE_SUBTRACT_LOCAL_LABELS && defined PIC
+  /* 'int' is enough and it saves some space on 64 bit systems.  */
+# define JUMP_TABLE_TYPE const int
+# define JUMP(ChExpr, table)						      \
+      do								      \
+	{								      \
+	  int offset;							      \
+	  void *ptr;							      \
+	  spec = (ChExpr);						      \
+	  offset = NOT_IN_JUMP_RANGE (spec) ? REF (form_unknown)	      \
+	    : table[CHAR_CLASS (spec)];					      \
+	  ptr = &&do_form_unknown + offset;				      \
+	  goto *ptr;							      \
+	}								      \
+      while (0)
+#else
+# define JUMP_TABLE_TYPE const void *const
+# define JUMP(ChExpr, table)						      \
       do								      \
 	{								      \
 	  const void *ptr;						      \
@@ -281,10 +298,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  goto *ptr;							      \
 	}								      \
       while (0)
+#endif
 
 #define STEP0_3_TABLE							      \
     /* Step 0: at the beginning.  */					      \
-    static const void *step0_jumps[29] =				      \
+    static JUMP_TABLE_TYPE step0_jumps[29] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (flag_space),		/* for ' ' */				      \
@@ -317,7 +335,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (mod_intmax_t),       /* for 'j' */				      \
     };									      \
     /* Step 1: after processing width.  */				      \
-    static const void *step1_jumps[29] =				      \
+    static JUMP_TABLE_TYPE step1_jumps[29] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -350,7 +368,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (mod_intmax_t)        /* for 'j' */				      \
     };									      \
     /* Step 2: after processing precision.  */				      \
-    static const void *step2_jumps[29] =				      \
+    static JUMP_TABLE_TYPE step2_jumps[29] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -383,7 +401,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (mod_intmax_t)        /* for 'j' */				      \
     };									      \
     /* Step 3a: after processing first 'h' modifier.  */		      \
-    static const void *step3a_jumps[29] =				      \
+    static JUMP_TABLE_TYPE step3a_jumps[29] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -416,7 +434,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_unknown)        /* for 'j' */				      \
     };									      \
     /* Step 3b: after processing first 'l' modifier.  */		      \
-    static const void *step3b_jumps[29] =				      \
+    static JUMP_TABLE_TYPE step3b_jumps[29] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -451,7 +469,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
 #define STEP4_TABLE							      \
     /* Step 4: processing format specifier.  */				      \
-    static const void *step4_jumps[29] =				      \
+    static JUMP_TABLE_TYPE step4_jumps[29] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -1179,7 +1197,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   /* Process whole format string.  */
   do
     {
-#define REF(Name) &&do_##Name
+#if defined HAVE_SUBTRACT_LOCAL_LABELS && defined PIC
+# define REF(Name) &&do_##Name - &&do_form_unknown
+#else
+# define REF(Name) &&do_##Name
+#endif
 #define LABEL(Name) do_##Name
       STEP0_3_TABLE;
       STEP4_TABLE;
@@ -1560,7 +1582,11 @@ do_positional:
     for (; (size_t) nspecs_done < nspecs; ++nspecs_done)
       {
 #undef REF
-#define REF(Name) &&do2_##Name
+#if defined HAVE_SUBTRACT_LOCAL_LABELS && defined PIC
+# define REF(Name) &&do2_##Name - &&do_form_unknown
+#else
+# define REF(Name) &&do2_##Name
+#endif
 #undef LABEL
 #define LABEL(Name) do2_##Name
 	STEP4_TABLE;
