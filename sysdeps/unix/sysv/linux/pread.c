@@ -56,7 +56,7 @@ __libc_pread (fd, buf, count, offset)
   return result;
 }
 
-strong_alias (__libc_pread, pread)
+strong_alias (__libc_pread, __pread)
 weak_alias (__libc_pread, pread)
 
 # define __libc_pread(fd, buf, count, offset) \

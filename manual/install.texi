@@ -260,7 +260,8 @@ You can install glibc somewhere other than where you configured it to go
 by setting the @code{install_root} variable on the command line for
 @samp{make install}.  The value of this variable is prepended to all the
 paths for installation.  This is useful when setting up a chroot
-environment or preparing a binary distribution.
+environment or preparing a binary distribution.  The directory should be
+specified with an absolute file name.
 
 Glibc 2.1 includes two daemons, @code{nscd} and @code{utmpd}, which you
 may or may not want to run.  @code{nscd} caches name service lookups; it

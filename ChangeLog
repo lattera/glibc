@@ -1,5 +1,7 @@
 1999-12-21  Andreas Schwab  <schwab@suse.de>
 
+	* sysdeps/unix/sysv/linux/pread.c: Fix typo.
+
 	* include/unistd.h: Declare __libc_lseek.
 
 1999-12-21  Andreas Jaeger  <aj@suse.de>
