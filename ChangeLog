@@ -1,6 +1,6 @@
 1999-10-29  Andreas Jaeger  <aj@suse.de>
 
-	* math/gen-libm-test.pl: New file to generate a table of
+	* math/libm-err-test.pl: New file to generate a table of
 	libm-test-ulps values.
 
 1999-10-29  Ulrich Drepper  <drepper@cygnus.com>
@@ -44,7 +44,7 @@
 
 	* stdlib/qsort.c: Make code and comments 64 bit clean; clarify
 	some comments.
-	Reported by Bernd Löchner <loechner@informatik.uni-kl.de>.
+	Reported by Bernd Loechner <loechner@informatik.uni-kl.de>.
 	Remove K&R compatibility.
 	Move prototype declaration to include/stdlib.h.
 	Include <alloca.h> for prototype; include <limits.h> for CHAR_BIT.
