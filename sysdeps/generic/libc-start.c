@@ -44,22 +44,51 @@ extern void __pthread_initialize_minimal (void)
 #endif
 
 
-extern int BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
-				       int argc,
-				       char *__unbounded *__unbounded ubp_av,
-				       void (*init) (void),
-				       void (*fini) (void),
-				       void (*rtld_fini) (void),
-				       void *__unbounded stack_end)
+#ifdef LIBC_START_MAIN
+# define STATIC static inline
+#else
+# define STATIC
+# define LIBC_START_MAIN BP_SYM (__libc_start_main)
+#endif
+
+STATIC int LIBC_START_MAIN (int (*main) (int, char **, char **
+#ifdef MAIN_AUXVEC_ARG
+					 , void *
+#endif
+
+					 ),
+			    int argc,
+			    char *__unbounded *__unbounded ubp_av,
+#ifdef LIBC_START_MAIN_AUXVEC_ARG
+			    ElfW(auxv_t) *__unbounded auxvec,
+#endif
+#ifdef INIT_MAIN_ARGS
+			    __typeof (main) init,
+#else
+			    void (*init) (void),
+#endif
+			    void (*fini) (void),
+			    void (*rtld_fini) (void),
+			    void *__unbounded stack_end)
      __attribute__ ((noreturn));
 
-int
-/* GKM FIXME: GCC: this should get __BP_ prefix by virtue of the
-   BPs in the arglist of startup_info.main and startup_info.init. */
-BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
-		   int argc, char *__unbounded *__unbounded ubp_av,
-		   void (*init) (void), void (*fini) (void),
-		   void (*rtld_fini) (void), void *__unbounded stack_end)
+STATIC int
+LIBC_START_MAIN (int (*main) (int, char **, char **
+#ifdef MAIN_AUXVEC_ARG
+			      , void *
+#endif
+			      ),
+		 int argc, char *__unbounded *__unbounded ubp_av,
+#ifdef LIBC_START_MAIN_AUXVEC_ARG
+		 ElfW(auxv_t) *__unbounded auxvec,
+#endif
+#ifdef INIT_MAIN_ARGS
+		 __typeof (main) init,
+#else
+		 void (*init) (void),
+#endif
+		 void (*fini) (void),
+		 void (*rtld_fini) (void), void *__unbounded stack_end)
 {
   char *__unbounded *__unbounded ubp_ev = &ubp_av[argc + 1];
 #if __BOUNDED_POINTERS__
@@ -80,13 +109,18 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
 
 #ifndef SHARED
 # ifdef HAVE_AUX_VECTOR
-  void *__unbounded *__unbounded auxvec;
   /* First process the auxiliary vector since we need to find the
      program header to locate an eventually present PT_TLS entry.  */
-  for (auxvec = (void *__unbounded *__unbounded) ubp_ev;
-       *auxvec != NULL; ++auxvec);
-  ++auxvec;
-  _dl_aux_init ((ElfW(auxv_t) *) auxvec);
+#  ifndef LIBC_START_MAIN_AUXVEC_ARG
+  ElfW(auxv_t) *__unbounded auxvec;
+  {
+    char *__unbounded *__unbounded evp = uvp_ev;
+    while (*evp != NULL)
+      ++evp;
+    auxvec = (ElfW(auxv_t) *__unbounded) evp;
+  }
+#  endif
+  _dl_aux_init (auxvec);
 # endif
 # ifdef DL_SYSDEP_OSCHECK
   if (!__libc_multiple_libcs)
@@ -136,7 +170,14 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
     _dl_debug_printf ("\ninitialize program: %s\n\n", argv[0]);
 #endif
   if (init)
-    (*init) ();
+    (*init) (
+#ifdef INIT_MAIN_ARGS
+	     argc, argv, __environ
+# ifdef MAIN_AUXVEC_ARG
+	     , auxvec
+# endif
+#endif
+	     );
 
 #ifdef SHARED
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
@@ -149,7 +190,12 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
     {
       /* XXX This is where the try/finally handling must be used.  */
 
-      result = main (argc, argv, __environ);
+      result = main (argc, argv, __environ
+#ifdef MAIN_AUXVEC_ARG
+		     , auxvec
+#endif
+
+		     );
     }
 #ifdef HAVE_CANCELBUF
   else
