@@ -364,7 +364,7 @@ endif # $(versioning) = yes
 endif # sysd-sorted-done
 
 # Generate .dT files as we compile.
-compile-mkdep-flags = -MD -MP -MF $@.dt
+compile-mkdep-flags = -MD -MP -MF $@.dt -MT $@
 compile-command.S = $(compile.S) $(OUTPUT_OPTION) $(compile-mkdep-flags)
 compile-command.s = $(COMPILE.s) $< $(OUTPUT_OPTION) $(compile-mkdep-flags)
 compile-command.c = $(compile.c) $(OUTPUT_OPTION) $(compile-mkdep-flags)
@@ -1399,27 +1399,13 @@ else
 	> $@
 endif
 
-# Make the distribution tar file.
-
-.PHONY: dist
-dist: $(objpfx)distinfo $(..)Make-dist
-	$(MAKE) -f $< -f $(word 2,$^) $(Make-dist-args)
-
-# Avoid depending on source files found in sysdeps dirs,
-# because the references affect implicit rule selection.
-dist: $(filter-out %.c %.S %.s,$(distribute))
-
-# We used to simply export all these variables, but that frequently made the
-# environment get too large.  Instead, we write all the information into
-# a generated makefile fragment `distinfo', and then include it with -f in
-# the sub-make that makes the distribution (above).
+# This information is not used for making distributions any more.
+# But it's used by MakeTAGS for making TAGS files and the .pot files.
 $(objpfx)distinfo: Makefile $(..)Makerules \
 		   $(wildcard $(foreach dir,$(sysdirs),$(dir)/Makefile))
 	$(make-target-directory)
 	$(distinfo-vars)
 	mv -f $@.new $@
-.PHONY: subdir_distinfo
-subdir_distinfo: $(objpfx)distinfo
 
 define distinfo-vars
 rm -f $@.new
