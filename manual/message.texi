@@ -1313,7 +1313,23 @@ Languages with this property include:
 
 @table @asis
 @item Slavic family
-Czech, Russian, Slovak
+Czech, Russian
+@end table
+
+@item Three forms, special cases for 1 and 2, 3, 4
+The header entry would look like this:
+
+@smallexample
+Plural-Forms: nplurals=3; \
+    plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;
+@end smallexample
+
+@noindent
+Languages with this property include:
+
+@table @asis
+@item Slavic family
+Slovak
 @end table
 
 @item Three forms, special case for one and some numbers ending in 2, 3, or 4
@@ -1389,7 +1405,7 @@ If the @var{codeset} parameter is the null pointer,
 for the domain with the name @var{domainname}. It returns @code{NULL} if
 no codeset has yet been selected.
 
-The @code{bind_textdomain_codeset} function can be used several times. 
+The @code{bind_textdomain_codeset} function can be used several times.
 If used multiple times with the same @var{domainname} argument, the
 later call overrides the settings made by the earlier one.
 

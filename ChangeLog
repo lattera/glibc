@@ -1,5 +1,19 @@
 2001-08-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* manual/message.texi (Advanced gettext functions): Change
+	description of plural forms for Slovak.
+	Reported by Marcel Telka <marcel@telka.sk>.
+
+	* manuaL/time.texi (Low-Level Time String Parsing): Fix description of
+	%z.  Reported by C. Scott Ananian <cananian@lesser-magoo.lcs.mit.edu>.
+
+2001-08-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_lazy_rel): Fix a
+	typo.  Patch by Florian La Roche <laroche@redhat.com>.
+
+2001-08-26  Ulrich Drepper  <drepper@redhat.com>
+
 	* include/link.h (struct link_map): Add l_lookup_cache element.
 	* elf/dl-reloc.c (RESOLVE): Add symbol caching here.
 	(RESOLVE_MAP): Likewise.

@@ -1743,8 +1743,7 @@ The year as a decimal number, using the Gregorian calendar.
 The full alternative year representation.
 
 @item %z
-Equivalent to the use of @code{%a, %d %b %Y %H:%M:%S %z} in this place.
-This is the full @w{ISO 8601} date and time format.
+The offset from GMT in @w{ISO 8601}/RFC822 format.
 
 @item %Z
 The timezone name.

@@ -453,7 +453,7 @@ elf_machine_lazy_rel (struct link_map *map,
   Elf32_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
   /* Check for unexpected PLT reloc type.  */
-  if (__builtin_expect (r_type == R_390_JMP_SLOT, 1)))
+  if (__builtin_expect (r_type == R_390_JMP_SLOT, 1))
     *reloc_addr += l_addr;
   else
     _dl_reloc_bad_type (map, r_type, 1);
