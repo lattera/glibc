@@ -85,6 +85,9 @@ FUNCTION_NAME (ADD_PARAMS)
   int save;
 #ifdef NEED_H_ERRNO
   int h_errno_tmp = 0;
+# ifdef HANDLE_DIGITS_DOTS
+  int *const h_errnop = &h_errno_tmp;;
+# endif
 #endif
 
   /* Get lock.  */

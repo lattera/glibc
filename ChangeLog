@@ -1,5 +1,10 @@
 1999-07-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* posix/sched.h: Remove internal interfaces.
+	* include/sched.h: Add internal interfaces.
+
+	* nss/getXXbyYY.c: Provide variable h_errnop to help shared code.
+
 	* nss/digits_dots.c: Set h_errnop if memory allcoation failed.
 
 	* inet/gethstbyad_r.c (PREPROCESS): Test for unspecified IPv6 address
