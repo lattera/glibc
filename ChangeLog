@@ -1,5 +1,7 @@
 2000-04-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-runtime.c (ElfW): Fxi typo in comment.
+
 	* resolv/netdb.h (getnameinfo): All lenght parameters are of type
 	socklen_t.
 	* inet/getnameinfo.c: Likewise.
