@@ -1,6 +1,6 @@
 Open jobs for finishing GNU libc:
 ---------------------------------
-Status: August 1997
+Status: January 1998
 
 If you have time and talent to take over any of the jobs below please
 contact <bug-glibc@prep.ai.mit.edu>
@@ -75,7 +75,7 @@ contact <bug-glibc@prep.ai.mit.edu>
 [10] Extend regex and/or rx to work with wide characters and complete
      implementation of character class and collation class handling.
 
-     It is planed to do a complete rewrite.
+     It is planned to do a complete rewrite.
 
 
 [11] Write access function for netmasks, bootparams, and automount
@@ -84,19 +84,12 @@ contact <bug-glibc@prep.ai.mit.edu>
      hard and not all services must be supported at once.
 
 
-[13] Several more or less small functions have to be written:
-
-     + grantpt(), ptsname(), unlockpt()		from XPG4.2
-
-     More information is available on request.
-
-
 [14] We need to write a library for on-the-fly transformation of streams
      of text.  In fact, this would be a recode-library (you know, GNU recode).
      This is needed in several places in the GNU libc and I already have
      rather concrete plans but so far no possibility to start this.
 
-***  The library is available, no it remains to be used in the streams.
+***  The library is available, now it remains to be used in the streams.
 
 
 [15] Cleaning up the header files.  Ideally, each header style should

@@ -1,3 +1,14 @@
+1998-01-31 00:21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/regex.c: Add some more cleanups by Akim Demaille.
+
+1998-01-30 23:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* signal/signal.h: Revert last change.
+	* string/strsignal.c: Regard signal number NSGI as illegal.
+	* sysdeps/unix/sysv/linux/siglist.c: Define array only with NSIG
+	members.
+
 1998-01-30 23:37  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile.in: Add comment about CVSOPTS Makefile variable.
