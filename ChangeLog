@@ -1,5 +1,11 @@
 2003-03-04  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/powerpc/powerpc64/dl-machine.h: Include <dl-tls.h>.
+	(elf_machine_rela): Always use RESOLVE_MAP, needed for
+	R_PPC64_JMP_SLOT as well as TLS cases.
+	(BIT_INSERT): Move parenthesis where it ought to have been.
+	Reported by Steven Munroe <sjmunroe@us.ibm.com>.
+
 	* posix/confstr.c (confstr): Correct STRING_LEN values for
 	_CS_GNU_LIBC_VERSION and _CS_GNU_LIBPTHREAD_VERSION, add missing
 	break.  Reported by Alexandre Julliard <julliard@winehq.com>.

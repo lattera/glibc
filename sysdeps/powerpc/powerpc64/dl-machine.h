@@ -26,6 +26,7 @@
 
 #include <assert.h>
 #include <sys/param.h>
+#include <dl-tls.h>
 
 /* Translate a processor specific dynamic tag to the index
    in l_info array.  */
@@ -526,7 +527,7 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
 #define PPC_HIGHEST(v) (((v) >> 48) & 0xffff)
 #define PPC_HIGHESTA(v) PPC_HIGHEST ((v) + 0x8000)
 #define BIT_INSERT(var, val, mask) \
-  ((var) = ((var) & ~(Elf64_Addr) (mask) | ((val) & (mask))))
+  ((var) = ((var) & ~(Elf64_Addr) (mask)) | ((val) & (mask)))
 
 #define dont_expect(X) __builtin_expect ((X), 0)
 
@@ -554,8 +555,6 @@ elf_machine_rela (struct link_map *map,
 		  Elf64_Addr *const reloc_addr)
 {
   const int r_type = ELF64_R_TYPE (reloc->r_info);
-  struct link_map *sym_map;
-  Elf64_Addr value;
 #ifndef RTLD_BOOTSTRAP
   const Elf64_Sym *const refsym = sym;
 #endif
@@ -569,17 +568,10 @@ elf_machine_rela (struct link_map *map,
   if (__builtin_expect (r_type == R_PPC64_NONE, 0))
     return;
 
-#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+  /* We need SYM_MAP even in the absence of TLS, for elf_machine_fixup_plt.  */
   struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
-  value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
-#else
-  value = RESOLVE (&sym, version, r_type);
-# ifndef RTLD_BOOTSTRAP
-  if (sym != NULL)
-# endif
-    value += sym->st_value;
-#endif
-  value += reloc->r_addend;
+  Elf64_Addr value = ((sym == NULL ? 0 : sym_map->l_addr + sym->st_value)
+		      + reloc->r_addend);
 
   /* For relocs that don't edit code, return.
      For relocs that might edit instructions, break from the switch.  */
