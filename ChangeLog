@@ -1,3 +1,9 @@
+Mon Apr  8 18:27:17 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/gettimeofday.c (__gettimeofday): Don't fail if the
+	user passes in TZ, just zero it (emacs passes in a dummy variable,
+	and rms says the hurd should be the one to change).
+
 Sun Apr  7 10:37:30 1996  Roland McGrath  <roland@whiz-bang.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/fork.c: Don't leak send rights to the child's proc
