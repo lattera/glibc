@@ -273,17 +273,30 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
     {
       /* It is very tricky.  We need to figure out what value to
          return for the protected symbol.  */
-      struct sym_val protected_value = { NULL, NULL };
-
-      for (scope = symbol_scope; *scope; ++scope)
-	if (_dl_do_lookup (undef_name, hash, *ref, &protected_value, *scope,
-			   0, flags, NULL, ELF_RTYPE_CLASS_PLT))
-	  break;
-
-      if (protected_value.s != NULL && protected_value.m != undef_map)
+      if (type_class == ELF_RTYPE_CLASS_PLT)
 	{
-	  current_value.s = *ref;
-	  current_value.m = undef_map;
+	  if (current_value.s != NULL && current_value.m != undef_map)
+	    {
+	      current_value.s = *ref;
+	      current_value.m = undef_map;
+	    }
+	}
+      else
+	{
+	  struct sym_val protected_value = { NULL, NULL };
+
+	  for (scope = symbol_scope; *scope; ++scope)
+	    if (_dl_do_lookup (undef_name, hash, *ref,
+			       &protected_value, *scope, 0, flags,
+			       NULL, ELF_RTYPE_CLASS_PLT))
+	      break;
+
+	  if (protected_value.s != NULL
+	      && protected_value.m != undef_map)
+	    {
+	      current_value.s = *ref;
+	      current_value.m = undef_map;
+	    }
 	}
     }
 
@@ -465,18 +478,31 @@ _dl_lookup_versioned_symbol (const char *undef_name,
     {
       /* It is very tricky.  We need to figure out what value to
          return for the protected symbol.  */
-      struct sym_val protected_value = { NULL, NULL };
-
-      for (scope = symbol_scope; *scope; ++scope)
-	if (_dl_do_lookup_versioned (undef_name, hash, *ref, &protected_value,
-				     *scope, 0, version, NULL,
-				     ELF_RTYPE_CLASS_PLT))
-	  break;
-
-      if (protected_value.s != NULL && protected_value.m != undef_map)
+      if (type_class == ELF_RTYPE_CLASS_PLT)
 	{
-	  current_value.s = *ref;
-	  current_value.m = undef_map;
+	  if (current_value.s != NULL && current_value.m != undef_map)
+	    {
+	      current_value.s = *ref;
+	      current_value.m = undef_map;
+	    }
+	}
+      else
+	{
+	  struct sym_val protected_value = { NULL, NULL };
+
+	  for (scope = symbol_scope; *scope; ++scope)
+	    if (_dl_do_lookup_versioned (undef_name, hash, *ref,
+					 &protected_value,
+					 *scope, 0, version, NULL,
+					 ELF_RTYPE_CLASS_PLT))
+	      break;
+
+	  if (protected_value.s != NULL
+	      && protected_value.m != undef_map)
+	    {
+	      current_value.s = *ref;
+	      current_value.m = undef_map;
+	    }
 	}
     }
 

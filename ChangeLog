@@ -1,3 +1,9 @@
+2003-03-25  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): Avoid looking up protected
+	symbols twice.
+	(_dl_lookup_versioned_symbol): Likewise.
+
 2003-03-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* csu/tst-atomic.c (do_test): Add some new
