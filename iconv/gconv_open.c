@@ -1,5 +1,5 @@
 /* Find matching transformation algorithms and initialize steps.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -38,7 +38,8 @@ __gconv_open (const char *toset, const char *fromset, gconv_t *handle)
   if (res == GCONV_OK)
     {
       /* Allocate room for handle.  */
-      result = (gconv_t) malloc (sizeof (struct gconv_info));
+      result = (gconv_t) malloc (sizeof (struct gconv_info)
+				 + nsteps * sizeof (struct gconv_step_data));
       if (result == NULL)
 	res = GCONV_NOMEM;
       else
@@ -47,47 +48,41 @@ __gconv_open (const char *toset, const char *fromset, gconv_t *handle)
 	  result->steps = steps;
 	  result->nsteps = nsteps;
 
-	  /* Allocate array for the step data.  */
-	  result->data = (struct gconv_step_data *)
-	    calloc (nsteps, sizeof (struct gconv_step_data));
+	  /* Clear the array for the step data.  */
+	  memset (result->data, '\0',
+		  nsteps * sizeof (struct gconv_step_data));
 
-	  if (result->data == NULL)
-	    res = GCONV_NOMEM;
-	  else
+	  /* Call all initialization functions for the transformation
+	     step implemenations.  */
+	  for (cnt = 0; cnt < nsteps; ++cnt)
 	    {
-	      /* Call all initialization functions for the transformation
-		 step implemenations.  */
-	      struct gconv_step_data *data = result->data;
+	      /* If this is the last step we must not allocate an
+		 output buffer.  */
+	      result->data[cnt].is_last = cnt == nsteps - 1;
 
-	      for (cnt = 0; cnt < nsteps; ++cnt)
+	      /* Reset the counter.  */
+	      result->data[cnt].invocation_counter = 0;
+
+	      /* It's a regular use.  */
+	      result->data[cnt].internal_use = 0;
+
+	      /* We use the `mbstate_t' member in DATA.  */
+	      result->data[cnt].statep = &result->data[cnt].__state;
+
+	      /* Allocate the buffer.  */
+	      if (!result->data[cnt].is_last)
 		{
-		  /* If this is the last step we must not allocate an output
-		     buffer.  */
-		  data[cnt].is_last = cnt == nsteps - 1;
+		  size_t size = (GCONV_NCHAR_GOAL
+				 * steps[cnt].max_needed_to);
 
-		  /* Reset the counter.  */
-		  data[cnt].invocation_counter = 0;
-
-		  /* It's a regular use.  */
-		  data[cnt].internal_use = 0;
-
-		  /* We use the `mbstate_t' member in DATA.  */
-		  data[cnt].statep = &data[cnt].__state;
-
-		  /* Allocate the buffer.  */
-		  if (!data[cnt].is_last)
+		  result->data[cnt].outbuf = (char *) malloc (size);
+		  if (result->data[cnt].outbuf == NULL)
 		    {
-		      size_t size = (GCONV_NCHAR_GOAL
-				     * steps[cnt].max_needed_to);
-
-		      data[cnt].outbuf = (char *) malloc (size);
-		      if (data[cnt].outbuf == NULL)
-			{
-			  res = GCONV_NOMEM;
-			  break;
-			}
-		      data[cnt].outbufend = data[cnt].outbuf + size;
+		      res = GCONV_NOMEM;
+		      break;
 		    }
+		  result->data[cnt].outbufend = (result->data[cnt].outbuf
+						 + size);
 		}
 	    }
 	}
@@ -100,13 +95,8 @@ __gconv_open (const char *toset, const char *fromset, gconv_t *handle)
 
       if (result != NULL)
 	{
-	  if (result->data != NULL)
-	    {
-	      while (cnt-- > 0)
-		free (result->data[cnt].outbuf);
-
-	      free (result->data);
-	    }
+	  while (cnt-- > 0)
+	    free (result->data[cnt].outbuf);
 
 	  free (result);
 	  result = NULL;

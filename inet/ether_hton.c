@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -44,7 +44,7 @@ extern int __nss_ethers_lookup (service_user **nip, const char *name,
 int
 ether_hostton (const char *hostname, struct ether_addr *addr)
 {
-  static service_user *startp = NULL;
+  static service_user *startp;
   static lookup_function start_fct;
   service_user *nip;
   lookup_function fct;

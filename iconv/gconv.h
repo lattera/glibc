@@ -123,7 +123,7 @@ typedef struct gconv_info
 {
   size_t nsteps;
   struct gconv_step *steps;
-  struct gconv_step_data *data;
+  struct gconv_step_data data[0];
 } *gconv_t;
 
 #endif /* gconv.h */

@@ -52,7 +52,7 @@ static enum nss_status
 compat_call (service_user *nip, const char *user, gid_t group, long int *start,
 	     long int *size, gid_t *groups, long int limit, int *errnop)
 {
-  struct group grpbuf, *g;
+  struct group grpbuf;
   size_t buflen = __sysconf (_SC_GETPW_R_SIZE_MAX);
   char *tmpbuf;
   enum nss_status status;
@@ -90,25 +90,24 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
       if (status != NSS_STATUS_SUCCESS)
         goto done;
 
-      g = &grpbuf;
-      if (g->gr_gid != group)
+      if (grpbuf.gr_gid != group)
         {
           char **m;
 
-          for (m = g->gr_mem; *m != NULL; ++m)
+          for (m = grpbuf.gr_mem; *m != NULL; ++m)
             if (strcmp (*m, user) == 0)
               {
                 /* Matches user.  Insert this group.  */
                 if (*start == *size && limit <= 0)
                   {
                     /* Need a bigger buffer.  */
-                    groups = realloc (groups, *size * sizeof (*groups));
+                    groups = realloc (groups, 2 * *size * sizeof (*groups));
                     if (groups == NULL)
                       goto done;
                     *size *= 2;
                   }
 
-                groups[*start] = g->gr_gid;
+                groups[*start] = grpbuf.gr_gid;
                 *start += 1;
 
                 if (*start == limit)
@@ -196,7 +195,7 @@ initgroups (user, group)
 
       /* This is really only for debugging.  */
       if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_RETURN)
-	 __libc_fatal ("illegal status in " __FUNCTION__);
+	__libc_fatal ("illegal status in " __FUNCTION__);
 
       if (status != NSS_STATUS_SUCCESS
 	  && nss_next_action (nip, status) == NSS_ACTION_RETURN)

@@ -31,7 +31,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef lint
+#if defined(LIBC_SCCS) && !defined(lint)
 static char sccsid[] = "@(#)ruserpass.c	8.3 (Berkeley) 4/2/94";
 #endif /* not lint */
 
@@ -61,18 +61,35 @@ static	FILE *cfile;
 
 static char tokval[100];
 
-static struct toktab {
-	const char *tokstr;
+static const char tokstr[] =
+{
+#define TOK_DEFAULT_IDX	0
+  "default\0"
+#define TOK_LOGIN_IDX	(TOK_DEFAULT_IDX + sizeof "default")
+  "login\0"
+#define TOK_PASSWORD_IDX (TOK_LOGIN_IDX + sizeof "login")
+  "password\0"
+#define TOK_PASSWD_IDX	(TOK_PASSWORD_IDX + sizeof "password")
+  "passwd\0"
+#define TOK_ACCOUNT_IDX	(TOK_PASSWD_IDX + sizeof "passwd")
+  "account\0"
+#define TOK_MACHINE_IDX	(TOK_ACCOUNT_IDX + sizeof "account")
+  "machine\0"
+#define TOK_MACDEF_IDX	(TOK_MACHINE_IDX + sizeof "machine")
+  "macdef"
+};
+
+static const struct toktab {
+	int tokstr_off;
 	int tval;
 } toktab[]= {
-	{ "default",	DEFAULT },
-	{ "login",	LOGIN },
-	{ "password",	PASSWD },
-	{ "passwd",	PASSWD },
-	{ "account",	ACCOUNT },
-	{ "machine",	MACHINE },
-	{ "macdef",	MACDEF },
-	{ NULL,		0 }
+	{ TOK_DEFAULT_IDX,	DEFAULT },
+	{ TOK_LOGIN_IDX,	LOGIN },
+	{ TOK_PASSWORD_IDX,	PASSWD },
+	{ TOK_PASSWD_IDX,	PASSWD },
+	{ TOK_ACCOUNT_IDX,	ACCOUNT },
+	{ TOK_MACHINE_IDX,	MACHINE },
+	{ TOK_MACDEF_IDX,	MACDEF }
 };
 
 
@@ -106,8 +123,7 @@ ruserpass(host, aname, apass)
 	}
 	if (__gethostname(myname, sizeof(myname)) < 0)
 		myname[0] = '\0';
-	if ((mydomain = strchr(myname, '.')) == NULL)
-		mydomain = "";
+	mydomain = __strchrnul(myname, '.');
 next:
 	while ((t = token())) switch(t) {
 
@@ -262,7 +278,7 @@ token()
 {
 	char *cp;
 	int c;
-	struct toktab *t;
+	int i;
 
 	if (feof_unlocked(cfile) || ferror_unlocked(cfile))
 		return (0);
@@ -290,8 +306,8 @@ token()
 	*cp = 0;
 	if (tokval[0] == 0)
 		return (0);
-	for (t = toktab; t->tokstr; t++)
-		if (!strcmp(t->tokstr, tokval))
-			return (t->tval);
+	for (i = 0; i < sizeof (toktab) / sizeof (toktab[0]); ++i)
+		if (!strcmp(&tokstr[toktab[i].tokstr_off], tokval))
+			return toktab[i].tval;
 	return (ID);
 }

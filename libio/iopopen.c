@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -101,7 +101,7 @@ struct _IO_proc_file
 };
 typedef struct _IO_proc_file _IO_proc_file;
 
-static struct _IO_proc_file *proc_file_chain = NULL;
+static struct _IO_proc_file *proc_file_chain;
 
 _IO_FILE *
 _IO_new_proc_open (fp, command, mode)

@@ -18,4 +18,6 @@ extern char *__strndup __P ((__const char *__string, size_t __n));
 
 extern __ptr_t __rawmemchr __P ((__const __ptr_t __s, int __c));
 
+extern char *__strchrnul __P ((__const char *__s, int __c));
+
 #endif

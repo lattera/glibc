@@ -66,15 +66,15 @@ static char *
 internal_function
 nrl_domainname (void)
 {
-  static char *domain = NULL;
-  static int first = 1;
+  static char *domain;
+  static int not_first;
 
-  if (first)
+  if (not_first)
     {
       __libc_lock_define_initialized (static, lock);
       __libc_lock_lock (lock);
 
-      if (first)
+      if (not_first)
 	{
 	  char *c;
 	  struct hostent *h, th;
@@ -82,7 +82,7 @@ nrl_domainname (void)
 	  char *tmpbuf = alloca (tmpbuflen);
 	  int herror;
 
-	  first = 0;
+	  not_first = 1;
 
 	  while (__gethostbyname_r ("localhost", &th, tmpbuf, tmpbuflen, &h,
 				    &herror))

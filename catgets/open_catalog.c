@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+   Contributed by Ulrich Drepper, <drepper@gnu.org>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -182,10 +182,13 @@ __open_catalog (__nl_catd catalog)
     }
 
   /* Avoid dealing with directories and block devices */
-  if (fd < 0 || __fstat (fd, &st) < 0)
+  if (fd < 0)
+    goto unlock_return;
+
+  if (__fxstat (_STAT_VER, fd, &st) < 0)
     {
       catalog->status = nonexisting;
-      goto unlock_return;
+      goto close_unlock_return;
     }
   if (!S_ISREG (st.st_mode) || st.st_size < sizeof (struct catalog_obj))
     {
@@ -193,7 +196,7 @@ __open_catalog (__nl_catd catalog)
 	 Use an reasonable error value.  */
       __set_errno (EINVAL);
       catalog->status = nonexisting;
-      goto unlock_return;
+      goto close_unlock_return;
     }
 
   catalog->file_size = st.st_size;
@@ -226,7 +229,7 @@ __open_catalog (__nl_catd catalog)
       if (catalog->file_ptr == NULL)
 	{
 	  catalog->status = nonexisting;
-	  goto unlock_return;
+	  goto close_unlock_return;
 	}
       todo = st.st_size;
       /* Save read, handle partial reads.  */
@@ -238,17 +241,13 @@ __open_catalog (__nl_catd catalog)
 	    {
 	      free ((void *) catalog->file_ptr);
 	      catalog->status = nonexisting;
-	      goto unlock_return;
+	      goto close_unlock_return;
 	    }
 	  todo -= now;
 	}
       while (todo > 0);
       catalog->status = malloced;
     }
-
-  /* We don't need the file anymore.  */
-  __close (fd);
-  fd = -1;
 
   /* Determine whether the file is a catalog file and if yes whether
      it is written using the correct byte order.  Else we have to swap
@@ -269,7 +268,7 @@ __open_catalog (__nl_catd catalog)
 #endif	/* _POSIX_MAPPED_FILES */
 	free (catalog->file_ptr);
       catalog->status = nonexisting;
-      goto unlock_return;
+      goto close_unlock_return;
     }
 
 #define SWAP(x) (swapping ? SWAPU32 (x) : (x))
@@ -320,8 +319,8 @@ __open_catalog (__nl_catd catalog)
     }
 
   /* Release the lock again.  */
+ close_unlock_return:
+  __close (fd);
  unlock_return:
-  if (fd != -1)
-    __close (fd);
   __libc_lock_unlock (catalog->lock);
 }

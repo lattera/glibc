@@ -1,5 +1,5 @@
 /* Load needed message catalogs.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.
@@ -63,7 +63,7 @@
 /* We need a sign, whether a new catalog was loaded, which can be associated
    with all translations.  This is important if the translations are
    cached by one of GCC's features.  */
-int _nl_msg_cat_cntr = 0;
+int _nl_msg_cat_cntr;
 
 
 /* Load the message catalogs specified by FILENAME.  If it is no valid

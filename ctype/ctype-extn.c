@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,20 +22,21 @@
 /* Real function versions of the non-ANSI ctype functions.  */
 
 int
-isblank (int c)
+__isblank (int c)
 {
   return __isctype (c, _ISblank);
 }
+weak_alias (__isblank, isblank)
 
 int
 _tolower (int c)
 {
-  return c < -128 || c > 255 ? c : __ctype_tolower[c];
+  return __ctype_tolower[c];
 }
 int
 _toupper (int c)
 {
-  return c < -128 || c > 255 ? c : __ctype_toupper[c];
+  return __ctype_toupper[c];
 }
 
 int
@@ -43,26 +44,18 @@ toascii (int c)
 {
   return __toascii (c);
 }
+weak_alias (toascii, __toascii_l)
+
 int
 isascii (int c)
 {
   return __isascii (c);
 }
+weak_alias (isascii, __isascii_l)
 
 
 int
 __isblank_l (int c, __locale_t l)
 {
   return __isctype_l (c, _ISblank, l);
-}
-
-int
-__toascii_l (int c, __locale_t l)
-{
-  return __toascii (c);
-}
-int
-__isascii_l (int c, __locale_t l)
-{
-  return __isascii (c);
 }

@@ -67,8 +67,7 @@ static struct gconv_module builtin_modules[] =
 #undef BUILTIN_TRANSFORMATION
 #undef BUILTIN_ALIAS
 
-static const char *
-builtin_aliases[] =
+static const char *builtin_aliases[] =
 {
 #define BUILTIN_TRANSFORMATION(From, ConstPfx, ConstLen, To, Cost, Name, \
 			       Fct, Init, End, MinF, MaxF, MinT, MaxT)
@@ -201,14 +200,16 @@ add_alias (char *rp, void *modules)
     malloc (sizeof (struct gconv_alias) + (wp - from));
   if (new_alias != NULL)
     {
+      void **inserted;
+
       new_alias->fromname = memcpy ((char *) new_alias
 				    + sizeof (struct gconv_alias),
 				    from, wp - from);
       new_alias->toname = new_alias->fromname + (to - from);
 
-      if (__tfind (new_alias, &__gconv_alias_db, __gconv_alias_compare) != NULL
-	  || (__tsearch (new_alias, &__gconv_alias_db, __gconv_alias_compare)
-	      == NULL))
+      inserted = (void **) __tsearch (new_alias, &__gconv_alias_db,
+				      __gconv_alias_compare);
+      if (inserted == NULL || *inserted != (void **) new_alias)
 	/* Something went wrong, free this entry.  */
 	free (new_alias);
     }

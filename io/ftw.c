@@ -78,7 +78,7 @@ struct ftw_data
   /* Conversion array for flag values.  It is the identity mapping for
      `nftw' calls, otherwise it maps the values to those know by
      `ftw'.  */
-  int *cvt_arr;
+  const int *cvt_arr;
 
   /* Callback function.  We always use the `nftw' form.  */
   NFTW_FUNC_T func;
@@ -95,12 +95,12 @@ struct ftw_data
 /* Internally we use the FTW_* constants used for `nftw'.  When the
    process called `ftw' we must reduce the flag to the known flags
    for `ftw'.  */
-static int nftw_arr[] =
+static const int nftw_arr[] =
 {
   FTW_F, FTW_D, FTW_DNR, FTW_NS, FTW_SL, FTW_DP, FTW_SLN
 };
 
-static int ftw_arr[] =
+static const int ftw_arr[] =
 {
   FTW_F, FTW_D, FTW_DNR, FTW_NS, FTW_F, FTW_D, FTW_NS
 };

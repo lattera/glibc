@@ -47,11 +47,6 @@ void free ();
 #  define memcpy(Dst, Src, Num) bcopy (Src, Dst, Num)
 # endif
 #endif
-#if !HAVE_STRCHR && !defined _LIBC
-# ifndef strchr
-#  define strchr index
-# endif
-#endif
 
 #if defined HAVE_UNISTD_H || defined _LIBC
 # include <unistd.h>

@@ -22,7 +22,9 @@ extern size_t __tzname_cur_max;
 
 extern int __use_tzfile;
 
-extern void __tzfile_read __P ((const char *file));extern int __tzfile_compute __P ((time_t timer, int use_localtime,
+extern void __tzfile_read __P ((const char *file, size_t extra,
+				char **extrap));
+extern int __tzfile_compute __P ((time_t timer, int use_localtime,
 				  long int *leap_correct, int *leap_hit,
 				  struct tm *tp));
 extern void __tzfile_default __P ((const char *std, const char *dst,

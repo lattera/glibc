@@ -33,23 +33,12 @@ nl_catd
 catopen (const char *cat_name, int flag)
 {
   __nl_catd result;
-  const char *env_var;
-  const char *nlspath;
-
-  result = (__nl_catd) malloc (sizeof (*result));
-  if (result == NULL)
-    /* We cannot get enough memory.  */
-    return (nl_catd) -1;
-
-  result->status = closed;
-
-  result->cat_name = __strdup (cat_name);
-  if (result->cat_name == NULL)
-    {
-      free (result);
-      __set_errno (ENOMEM);
-      return (nl_catd) -1;
-    }
+  const char *env_var = NULL;
+  const char *nlspath = NULL;
+  size_t cat_name_len = strlen (cat_name) + 1;
+  size_t env_var_len = 0;
+  size_t nlspath_len = 0;
+  char *endp;
 
   if (strchr (cat_name, '/') == NULL)
     {
@@ -57,31 +46,18 @@ catopen (const char *cat_name, int flag)
 	{
 	  env_var = getenv ("LC_ALL");
 	  if (env_var == NULL)
-	    {
-	      env_var = getenv ("LC_MESSAGES");
-	      if (env_var == NULL)
-		{
-		  env_var = getenv ("LANG");
-		  if (env_var == NULL)
-		    env_var = "C";
-		}
-	    }
-	}
-      else
-	{
-	  env_var = getenv ("LANG");
-	  if (env_var == NULL)
-	    env_var = "C";
+	    env_var = getenv ("LC_MESSAGES");
+
+	  if (env_var != NULL)
+	    goto have_env_var;
 	}
 
-      result->env_var = __strdup (env_var);
-      if (result->env_var == NULL)
-	{
-	  free ((void *) result->cat_name);
-	  free ((void *) result);
-	  __set_errno (ENOMEM);
-	  return (nl_catd) -1;
-	}
+      env_var = getenv ("LANG");
+      if (env_var == NULL)
+	env_var = "C";
+
+    have_env_var:
+      env_var_len = strlen (env_var) + 1;
 
       nlspath = __secure_getenv ("NLSPATH");
       if (nlspath != NULL && *nlspath != '\0')
@@ -92,25 +68,32 @@ catopen (const char *cat_name, int flag)
 
 	  __stpcpy (__stpcpy (__stpcpy (tmp, nlspath), ":"), NLSPATH);
 	  nlspath = tmp;
+
+	  nlspath_len = len;
 	}
       else
-	nlspath = NLSPATH;
-
-      result->nlspath = __strdup (nlspath);
-      if (result->nlspath == NULL)
 	{
-	  free ((void *) result->cat_name);
-	  free ((void *) result->env_var);
-	  free ((void *) result);
-	  __set_errno (ENOMEM);
-	  return (nl_catd) -1;
+	  nlspath = NLSPATH;
+
+	  nlspath_len = sizeof NLSPATH;
 	}
     }
-  else
-    {
-      result->env_var = NULL;
-      result->nlspath = NULL;
-    }
+
+  result = (__nl_catd) malloc (sizeof (*result) + cat_name_len
+			       + env_var_len + nlspath_len);
+  if (result == NULL)
+    /* We cannot get enough memory.  */
+    return (nl_catd) -1;
+
+  result->status = closed;
+  result->cat_name = endp = (char *) (result + 1);
+  endp = __mempcpy (endp, cat_name, cat_name_len);
+
+  result->env_var = cat_name_len != 0 ? endp : NULL;
+  endp = __mempcpy (endp, env_var, env_var_len);
+
+  result->nlspath = nlspath_len != 0 ? endp : NULL;
+  memcpy (endp, nlspath, nlspath_len);
 
   __libc_lock_init (result->lock);
 
@@ -179,10 +162,6 @@ catclose (nl_catd catalog_desc)
 	return -1;
       }
 
-  if (catalog->nlspath)
-    free ((void *) catalog->nlspath);
-  if (catalog->env_var)
-    free ((void *) catalog->env_var);
   free ((void *) catalog);
 
   return 0;

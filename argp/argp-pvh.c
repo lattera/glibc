@@ -1,5 +1,5 @@
 /* Default definition for ARGP_PROGRAM_VERSION_HOOK.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -29,4 +29,4 @@
    this function with a stream to print the version to and a pointer to the
    current parsing state, and then exits (unless the ARGP_NO_EXIT flag is
    used).  This variable takes precedent over ARGP_PROGRAM_VERSION.  */
-void (*argp_program_version_hook) (FILE *stream, struct argp_state *state) = 0;
+void (*argp_program_version_hook) (FILE *stream, struct argp_state *state);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,7 +48,7 @@ static enum nss_status
 setup (void **fctp, const char *func_name, int all)
 {
   /* Remember the first service_entry, it's always the same.  */
-  static service_user *startp = NULL;
+  static service_user *startp;
   int no_more;
 
   if (startp == NULL)

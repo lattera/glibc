@@ -1,5 +1,5 @@
 /* Handle aliases for locale names.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.
@@ -150,12 +150,12 @@ struct alias_map
 };
 
 
-static char *string_space = NULL;
-static size_t string_space_act = 0;
-static size_t string_space_max = 0;
+static char *string_space;
+static size_t string_space_act;
+static size_t string_space_max;
 static struct alias_map *map;
-static size_t nmap = 0;
-static size_t maxmap = 0;
+static size_t nmap;
+static size_t maxmap;
 
 
 /* Prototypes for local functions.  */

@@ -1,5 +1,5 @@
 /* Default definition for ARGP_PROGRAM_VERSION.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -22,4 +22,4 @@
    --version is added (unless the ARGP_NO_HELP flag is used), which will
    print this this string followed by a newline and exit (unless the
    ARGP_NO_EXIT flag is used).  Overridden by ARGP_PROGRAM_VERSION_HOOK.  */
-const char *argp_program_version = 0;
+const char *argp_program_version;

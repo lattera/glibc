@@ -274,6 +274,8 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
             }
         }
     }
+  /* Clear the thread data structure.  */
+  memset (new_thread, '\0', sizeof (*new_thread));
   *out_new_thread = new_thread;
   *out_new_thread_bottom = new_thread_bottom;
   *out_guardaddr = guardaddr;
@@ -316,34 +318,16 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   /* Allocate new thread identifier */
   pthread_threads_counter += PTHREAD_THREADS_MAX;
   new_thread_id = sseg + pthread_threads_counter;
-  /* Initialize the thread descriptor */
-  new_thread->p_nextwaiting = NULL;
+  /* Initialize the thread descriptor.  Elements which have to be
+     initialized to zero already have this value.  */
   new_thread->p_tid = new_thread_id;
-  new_thread->p_priority = 0;
   new_thread->p_lock = &(__pthread_handles[sseg].h_lock);
-  new_thread->p_signal = 0;
-  new_thread->p_signal_jmp = NULL;
-  new_thread->p_cancel_jmp = NULL;
-  new_thread->p_terminated = 0;
-  new_thread->p_detached = attr == NULL ? 0 : attr->__detachstate;
-  new_thread->p_exited = 0;
-  new_thread->p_retval = NULL;
-  new_thread->p_joining = NULL;
-  new_thread->p_cleanup = NULL;
   new_thread->p_cancelstate = PTHREAD_CANCEL_ENABLE;
   new_thread->p_canceltype = PTHREAD_CANCEL_DEFERRED;
-  new_thread->p_canceled = 0;
   new_thread->p_errnop = &new_thread->p_errno;
-  new_thread->p_errno = 0;
   new_thread->p_h_errnop = &new_thread->p_h_errno;
-  new_thread->p_h_errno = 0;
-  new_thread->p_in_sighandler = NULL;
-  new_thread->p_sigwaiting = 0;
   new_thread->p_guardaddr = guardaddr;
   new_thread->p_guardsize = guardsize;
-  new_thread->p_userstack = attr != NULL && attr->__stackaddr_set;
-  memset (new_thread->p_specific, '\0',
-	  PTHREAD_KEY_1STLEVEL_SIZE * sizeof (new_thread->p_specific[0]));
   new_thread->p_self = new_thread;
   new_thread->p_nr = sseg;
   /* Initialize the thread handle */
@@ -353,6 +337,9 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   /* Determine scheduling parameters for the thread */
   new_thread->p_start_args.schedpolicy = -1;
   if (attr != NULL) {
+    new_thread->p_detached = attr->__detachstate;
+    new_thread->p_userstack = attr->__stackaddr_set;
+
     switch(attr->__inheritsched) {
     case PTHREAD_EXPLICIT_SCHED:
       new_thread->p_start_args.schedpolicy = attr->__schedpolicy;

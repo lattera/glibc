@@ -139,14 +139,17 @@ add_derivation (const char *fromset, const char *toset,
     malloc (sizeof (struct known_derivation) + fromset_len + toset_len);
   if (new_deriv != NULL)
     {
-      new_deriv->from = memcpy (new_deriv + 1, fromset, fromset_len);
-      new_deriv->to = memcpy ((char *) new_deriv->from + fromset_len,
+      new_deriv->from = (char *) (new_deriv + 1);
+      new_deriv->to = memcpy (__mempcpy (new_deriv + 1, fromset, fromset_len),
 			      toset, toset_len);
 
       new_deriv->steps = handle;
       new_deriv->nsteps = nsteps;
 
-      __tsearch (new_deriv, &known_derivations, derivation_compare);
+      if (__tsearch (new_deriv, &known_derivations, derivation_compare)
+	  == NULL)
+	/* There is some kind of memory allocation problem.  */
+	free (new_deriv);
     }
   /* Please note that we don't complain if the allocation failed.  This
      is not tragically but in case we use the memory debugging facilities

@@ -1,5 +1,5 @@
 /* Hierarchial argument parsing, layered over getopt
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -76,7 +76,7 @@
    for one second intervals, decrementing _ARGP_HANG until it's zero.  Thus
    you can force the program to continue by attaching a debugger and setting
    it to 0 yourself.  */
-volatile int _argp_hang = 0;
+volatile int _argp_hang;
 
 #define OPT_PROGNAME	-2
 #define OPT_USAGE	-3

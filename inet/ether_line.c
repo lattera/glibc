@@ -62,9 +62,7 @@ ether_line (const char *line, struct ether_addr *addr, char *hostname)
     }
 
   /* Remove trailing white space.  */
-  cp = strchr (line, '#');
-  if (cp == NULL)
-    cp = strchr (line, '\0');
+  cp = __strchrnul (line, '#');
   while (cp > line && isspace (cp[-1]))
     --cp;
   *cp = '\0';
