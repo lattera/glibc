@@ -1,3 +1,10 @@
+2000-08-12  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/pt-machine.h (testandset): Add .set mips2 for
+	assembler.
+	(__compare_and_swap): Likewise.
+	* sysdeps/mips/pspinlock.c (__pthread_spin_lock): Likewise.
+
 2000-08-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread.c (__pthread_initial_thread): Initialize p_errnop and

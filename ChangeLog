@@ -5,6 +5,9 @@
 
 2000-08-12  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h (F_GETLK64,
+	F_SETLK64, F_SETLKW64): Define with F_GETLK etc.
+
 	* sysdeps/unix/sysv/linux/mips/sys/tas.h (_test_and_set): Add .set
 	mips2 for assembler.
 

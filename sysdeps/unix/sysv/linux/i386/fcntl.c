@@ -27,7 +27,7 @@
 
 #if __ASSUME_FCNTL64 == 0
 /* This variable is shared with all files that check for fcntl64.  */
-static int __have_no_fcntl64;
+int __have_no_fcntl64;
 #endif
 
 int
