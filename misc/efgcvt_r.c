@@ -1,5 +1,5 @@
 /* Compatibility functions for floating point formatting, reentrant versions.
-   Copyright (C) 1995,96,97,98,99,2000,01,02 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,01,02,04 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,6 +31,7 @@
 # define FUNC_PREFIX
 # define FLOAT_FMT_FLAG
 # define FLOAT_NAME_EXT
+# define FLOAT_MIN_10_EXP DBL_MIN_10_EXP
 # if DBL_MANT_DIG == 53
 #  define NDIGIT_MAX 17
 # elif DBL_MANT_DIG == 24
@@ -42,6 +43,17 @@
    compile time constant here, so we cannot use it.  */
 #  error "NDIGIT_MAX must be precomputed"
 #  define NDIGIT_MAX (lrint (ceil (M_LN2 / M_LN10 * DBL_MANT_DIG + 1.0)))
+# endif
+# if DBL_MIN_10_EXP == -37
+#  define FLOAT_MIN_10_NORM	1.0e-37
+# elif DBL_MIN_10_EXP == -307
+#  define FLOAT_MIN_10_NORM	1.0e-307
+# elif DBL_MIN_10_EXP == -4931
+#  define FLOAT_MIN_10_NORM	1.0e-4931
+# else
+/* libc can't depend on libm.  */
+#  error "FLOAT_MIN_10_NORM must be precomputed"
+#  define FLOAT_MIN_10_NORM	exp10 (DBL_MIN_10_EXP)
 # endif
 #endif
 
@@ -171,6 +183,17 @@ APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
 	d = -value;
       else
 	d = value;
+      /* For denormalized numbers the d < 1.0 case below won't work,
+	 as f can overflow to +Inf.  */
+      if (d < FLOAT_MIN_10_NORM)
+	{
+	  value /= FLOAT_MIN_10_NORM;
+	  if (value < 0.0)
+	    d = -value;
+	  else
+	    d = value;
+	  exponent += FLOAT_MIN_10_EXP;
+	}
       if (d < 1.0)
 	{
 	  do
