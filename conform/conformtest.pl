@@ -22,6 +22,7 @@ $CFLAGS = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=500";
 	     "dlfcn.h", "dirent.h", "ctype.h", "cpio.h", "assert.h",
 	     "arpa/inet.h", "aio.h");
 
+@headers = ("aio.h");
 
 # These are the ISO C99 keywords.
 @keywords = ('auto', 'break', 'case', 'char', 'const', 'continue', 'default',
@@ -214,7 +215,8 @@ sub checknamespace {
   close (TESTFILE);
 
   open (CONTENT, "$CC $CFLAGS -E $fnamebase.c -Wp,-dN | sed -e '/^# [1-9]/d' -e '/^[[:space:]]*\$/d' |");
-  while (<CONTENT>) {
+  loop: while (<CONTENT>) {
+    next loop if (/^#undef /);
     chop;
     if (/^#define (.*)/) {
       $nerrors = newtoken ($1, $nerrors, @allow);

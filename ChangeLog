@@ -1,5 +1,7 @@
 2001-01-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/conformtest.pl (checknamespace): Ignore #undef lines.
+
 	* configure.in: Comment out binutils version test.
 
 	* stdlib/strtod.c (str_to_mpn): Correct parsing of thousands
