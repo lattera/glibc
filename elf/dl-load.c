@@ -750,6 +750,9 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 {
   struct link_map *l = NULL;
 
+  auto inline caddr_t map_segment (ElfW(Addr) mapstart, size_t len,
+				   int prot, int fixed, off_t offset);
+
   inline caddr_t map_segment (ElfW(Addr) mapstart, size_t len,
 			      int prot, int fixed, off_t offset)
     {

@@ -142,6 +142,8 @@ _dl_map_object_deps (struct link_map *map,
   struct list *runp, *utail, *dtail;
   unsigned int nlist, nduplist, i;
 
+  auto inline void preload (struct link_map *map);
+
   inline void preload (struct link_map *map)
     {
       known[nlist].done = 0;

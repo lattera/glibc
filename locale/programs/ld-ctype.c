@@ -2876,6 +2876,8 @@ set_class_defaults (struct locale_ctype_t *ctype, struct charmap_t *charmap,
      It may seem that the order of these if-blocks is arbitrary but it is NOT.
      Don't move them unless you know what you do!  */
 
+  auto void set_default (int bitpos, int from, int to);
+
   void set_default (int bitpos, int from, int to)
     {
       char tmp[2];

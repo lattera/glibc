@@ -501,6 +501,8 @@ show_locale_vars (void)
   const char *lcall = getenv ("LC_ALL");
   const char *lang = getenv ("LANG") ? : "POSIX";
 
+  auto void get_source (const char *name);
+
   void get_source (const char *name)
     {
       char *val = getenv (name);
@@ -529,6 +531,8 @@ static void
 show_info (const char *name)
 {
   size_t cat_no;
+
+  auto void print_item (struct cat_item *item);
 
   void print_item (struct cat_item *item)
     {
@@ -634,7 +638,7 @@ show_info (const char *name)
 	     information is available in a multibyte string.  */
 	default:
 	  break;
-	  
+
 	}
     }
 

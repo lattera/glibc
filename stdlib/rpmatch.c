@@ -29,6 +29,9 @@ rpmatch (response)
 {
   /* Match against one of the response patterns, compiling the pattern
      first if necessary.  */
+  auto inline int try (const int tag, const int match, const int nomatch,
+		       const char **lastp, regex_t *re);
+
   inline int try (const int tag, const int match, const int nomatch,
 		  const char **lastp, regex_t *re)
     {

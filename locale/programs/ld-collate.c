@@ -2240,6 +2240,8 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
      the table.  In case we have more than one sequence starting with
      the same byte we have to use extra indirection.  */
   {
+    auto void add_to_tablewc (uint32_t ch, struct element_t *runp);
+
     void add_to_tablewc (uint32_t ch, struct element_t *runp)
       {
 	if (runp->wcnext == NULL && runp->nwcs == 1)

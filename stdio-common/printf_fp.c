@@ -200,6 +200,8 @@ __printf_fp (FILE *fp,
   /* Nonzero if this is output on a wide character stream.  */
   int wide = info->wide;
 
+  auto wchar_t hack_digit (void);
+
   wchar_t hack_digit (void)
     {
       mp_limb_t hi;
