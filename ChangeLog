@@ -1,3 +1,8 @@
+2003-04-11  Roland McGrath  <roland@redhat.com>
+
+	* csu/tst-empty.c: New file.
+	* csu/Makefile (tests, tests-static): Add it.
+
 2003-04-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* string/test-strcmp.c (do_random_tests): Test whether return value

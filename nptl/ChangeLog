@@ -1,3 +1,11 @@
+2003-04-11  Roland McGrath  <roland@redhat.com>
+
+	* Makefile ($(objpfx)multidir.mk): New target, generated makefile that
+	sets variable `multidir'; include that.
+	(generated): Add it.
+	($(objpfx)$(multidir)/crti.o): New target.
+	[$(multidir) != .] (generated-dirs, extra-objs, omit-deps): Add it.
+
 2003-04-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-attr2.c (do_test): Add cast to avoid warning.

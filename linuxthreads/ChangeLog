@@ -1,3 +1,22 @@
+2003-04-11  Roland McGrath  <roland@redhat.com>
+
+	* Makefile (multidir): Don't set the variable here with $(shell ...).
+	($(objpfx)multidir.mk): New target, generated makefile; include that.
+	(generated): Append it.
+
+2003-04-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (multidir, crti-objs, crtn-objs): New variables.
+	(generated-dirs): Add pathname component of multidir.
+	(omit-deps, extra-objs): Include $(multidir)/crt? as well.
+	($(objpfx)libpthread.so): Depend on $(multidir)/crt?.o as well.
+	($(objpfx)$(multidir), $(objpfx)$(multidir)/crti.o,
+	$(objpfx)$(multidir)/crtn.o): New.
+	* sysdeps/unix/sysv/linux/sparc/Makefile: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/Makefile (LDFLAGS-pthread.so,
+	before-compile, generated): Don't generate and use specs.
+	($(objpfx)specs): Remove.
+
 2003-04-11  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/pspinlock.c (__pthread_spin_unlock): Fix asm contraints.
