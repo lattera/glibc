@@ -1,3 +1,9 @@
+1999-11-01  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/sys/reboot.h: Remove K&R compatibility.
+
+	* inet/gethstbynm2_r.c: Reorder addresses.
+
 1999-09-11  Paul Eggert  <eggert@twinsun.com>
 
 	* posix/glob.h (glob): If #defining to glob64, do this before

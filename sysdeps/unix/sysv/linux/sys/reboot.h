@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@
 __BEGIN_DECLS
 
 /* Reboot or halt the system.  */
-extern int reboot __P ((int __howto));
+extern int reboot (int __howto) __THROW;
 
 __END_DECLS
 
