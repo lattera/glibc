@@ -1,3 +1,7 @@
+2000-04-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/arm/memprof.h: New file.
+
 2000-04-12  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/i386/i586/clock_gettime.c: Fix typo.
