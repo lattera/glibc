@@ -52,11 +52,11 @@ typedef uintmax_t uatomic_max_t;
   (abort (), 0)
 
 #define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval) \
-  (!__sync_bool_compare_and_swap_si ((int *) (mem), (int) (long) (oldval), \
+  (!__sync_bool_compare_and_swap_si ((void *) (mem), (int) (long) (oldval), \
 				     (int) (long) (newval)))
 
 #define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
-  (!__sync_bool_compare_and_swap_di ((long *) (mem), (long) (oldval), \
+  (!__sync_bool_compare_and_swap_di ((void *) (mem), (long) (oldval), \
 				     (long) (newval)))
 
 #define __arch_compare_and_exchange_val_8_acq(mem, newval, oldval) \
@@ -66,11 +66,11 @@ typedef uintmax_t uatomic_max_t;
   (abort (), (__typeof (*mem)) 0)
 
 #define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
-  __sync_val_compare_and_swap_si ((int *) (mem), (int) (long) (oldval), \
+  __sync_val_compare_and_swap_si ((void *) (mem), (int) (long) (oldval), \
 				  (int) (long) (newval))
 
 #define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
-  __sync_val_compare_and_swap_di ((long *) (mem), (long) (oldval), \
+  __sync_val_compare_and_swap_di ((void *) (mem), (long) (oldval), \
 				  (long) (newval))
 
 /* Atomically store newval and return the old value.  */
@@ -84,9 +84,9 @@ typedef uintmax_t uatomic_max_t;
 #define atomic_exchange_and_add(mem, value) \
   ({ __typeof (*mem) __result;						      \
      if (sizeof (*mem) == 4)						      \
-       __result = __sync_fetch_and_add_si ((int *) (mem), (int) (value));     \
+       __result = __sync_fetch_and_add_si ((void *) (mem), (int) (value));    \
      else if (sizeof (*mem) == 8)					      \
-       __result = __sync_fetch_and_add_di ((long *) (mem), (long) (value));   \
+       __result = __sync_fetch_and_add_di ((void *) (mem), (long) (value));   \
      else								      \
        abort ();							      \
      __result; })

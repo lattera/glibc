@@ -1,3 +1,8 @@
+2004-04-16  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/ia64/bits/atomic.h: Cast first argument of
+	__sync_bool_compare_and_swap_si correct to void*.
+
 2004-07-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/iconv_prog.c (print_known_names): Make machine-readable
