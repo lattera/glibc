@@ -57,8 +57,8 @@
 /* These two macros are not usde in glibc anymore.  They are kept here
    only because some other projects expect the macros to be
    defined.  */
-# define __P(args)	BROKEN BROKEN args
-# define __PMT(args)	BROKEN BROKEN args
+# define __P(args)	args
+# define __PMT(args)	args
 
 #else	/* Not GCC.  */
 

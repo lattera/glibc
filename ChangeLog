@@ -1,3 +1,7 @@
+2004-09-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/sys/cdefs.h: Remove debugging text from __P and __PMT.
+
 2004-09-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/sys/cdefs.h: Restore old definition of __P.
