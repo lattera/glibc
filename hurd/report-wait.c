@@ -1,5 +1,5 @@
 /* Report on what a thread in our task is waiting for.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,99,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -105,7 +105,7 @@ weak_alias (default_hurd_itimer_thread, _hurd_itimer_thread)
 
 kern_return_t
 _S_msg_report_wait (mach_port_t msgport, thread_t thread,
-		    string_t description, int *msgid)
+		    string_t description, mach_msg_id_t *msgid)
 {
   *msgid = 0;
 
