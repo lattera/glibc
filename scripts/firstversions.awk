@@ -21,16 +21,19 @@ $1 == "}" {
   next;
 }
 
-{
-  v = firstversion[thislib, idx[thislib]];
+/GLIBC_PRIVATE/ { print; next }
 
-  if (! v)
-    print;
-  else if ($1 == v) {
-    print;
-    firstversion[thislib, idx[thislib]] = 0;
-    idx[thislib]++;
+{
+  if ((thislib, idx[thislib]) in firstversion) {
+    v = firstversion[thislib, idx[thislib]];
+    if ($1 == v) {
+      print;
+      firstversion[thislib, idx[thislib]] = 0;
+      idx[thislib]++;
+    }
+    else
+      print $1, "=", v;
   }
   else
-    print $1, "=", v;
+    print;
 }
