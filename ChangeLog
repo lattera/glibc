@@ -1,6 +1,9 @@
 2001-01-25  Ulrich Drepper  <drepper@redhat.com>
 
-	* posix/unistd.h: Make functions removed in XPG6 not available if
+	* conform/data/unistd.h-data: Mark functions removed in XPG6
+	correctly.
+
+	* posix/unistd.h: Don't make functions removed in XPG6 available if
 	__USE_XOPEN2K.
 
 	* conform/conformtest.pl: Implement optional-constant.

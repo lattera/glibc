@@ -1,3 +1,4 @@
+#ifndef ISO
 optional-constant _POSIX_VERSION
 optional-constant _POSIX2_C_VERSION
 optional-constant _XOPEN_VERSION
@@ -277,14 +278,17 @@ function int access (const char*, int)
 function {unsigned int} alarm (unsigned int)
 function int brk (void*)
 function int chdir (const char*)
+#if defined XPG3 || defined XPG4 || defined UNIX98
 function int chroot (const char*)
+#endif
 function int chown (const char*, uid_t, gid_t)
 function int close (int)
 function size_t confstr (int, char*, size_t)
 function {char*} crypt (const char*, const char*)
 function {char*} ctermid (char*)
-// cuserid got removed in XPG6
-allow cuserid
+#if defined XPG3 || defined XPG4 || defined UNIX98
+function {char*} cuserid (char*)
+#endif
 function int dup (int)
 function int dup2 (int, int)
 function void encrypt (char[64], int)
@@ -313,7 +317,9 @@ function {char*} getlogin (void)
 function int getlogin_r (char*, size_t)
 function int getopt (int, char*const[], const char*)
 function int getpagesize (void)
+#if defined XPG3 || defined XPG4 || defined UNIX98
 function {char*} getpass (const char*)
+#endif
 function pid_t getpgid (pid_t)
 function pid_t getpgrp (void)
 function pid_t getpid (void)
@@ -368,3 +374,4 @@ variable int opterr
 variable int optopt
 
 allow *_t
+#endif
