@@ -1136,17 +1136,6 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
   if (__builtin_expect (l->l_flags_1 & DF_1_NOOPEN, 0)
       && (mode & __RTLD_DLOPEN))
     {
-      /* Remove from the module list.  */
-      assert (l->l_next == NULL);
-#ifndef SHARED
-      if (l->l_prev == NULL)
-	/* No other module loaded.  */
-	_dl_loaded = NULL;
-      else
-#endif
-	l->l_prev->l_next = NULL;
-      --_dl_nloaded;
-
       /* We are not supposed to load this object.  Free all resources.  */
       __munmap ((void *) l->l_map_start, l->l_map_end - l->l_map_start);
 
@@ -1155,8 +1144,6 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
       if (l->l_phdr_allocated)
 	free ((void *) l->l_phdr);
-
-      free (l);
 
       errstring = N_("shared object cannot be dlopen()ed");
       goto call_lose;
