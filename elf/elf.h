@@ -56,6 +56,10 @@ typedef uint64_t Elf64_Off;
 typedef uint16_t Elf32_Section;
 typedef uint16_t Elf64_Section;
 
+/* Type for version symbol information.  */
+typedef Elf32_Half Elf32_Versym;
+typedef Elf64_Half Elf64_Versym;
+
 
 /* The ELF file header.  This appears at the start of every ELF file.  */
 

@@ -177,7 +177,7 @@ struct link_map
     ElfW(Addr) *l_reloc_result;
 
     /* Pointer to the version information if available.  */
-    ElfW(Half) *l_versyms;
+    ElfW(Versym) *l_versyms;
 
     /* String specifying the path where this object was found.  */
     const char *l_origin;

@@ -1115,9 +1115,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    assert (__mbsinit (&mbstate));				      \
 	    s2 = (const wchar_t *) string;				      \
 	    string = alloca (len + 1);					      \
-	    (void) __wcsrtombs (string, &s2, len + 1, &mbstate);	      \
 	    if (prec > 0 && prec < len)					      \
-	      len = prec;						      \
+	      len = __wcsrtombs (string, &s2, prec, &mbstate);		      \
+	    else							      \
+	      (void) __wcsrtombs (string, &s2, len + 1, &mbstate);	      \
 	  }								      \
 									      \
 	if ((width -= len) < 0)						      \

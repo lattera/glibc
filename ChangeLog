@@ -1,3 +1,39 @@
+1999-08-10  H.J. Lu  <hjl@gnu.org>
+
+	* resolv/nss_dns/dns-host.c (getanswer_r): Cleanup out-of-
+	buffer handling.
+
+1999-08-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/elf.h: Define ElfXX_Versym.
+	* elf/link.h (struct link_map): Use ElfXX_Versym for l_versyms
+	definition.
+
+	* stdio-common/vfprintf.c (process_string_arg): Handle precisions
+	for string output correctly in the wide character case.
+	Patch by Akira YOSHIYAMA <yosshy@tkf.att.ne.jp>.
+
+	* intl/locale.alias: Add catalan.
+
+1999-08-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/install.texi (Configuring and compiling): Mention
+	CFLAGS.
+
+1999-08-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* po/pt_BR.po: New file.
+
+1999-08-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c (yn_test): Adjust deltas for i386.
+	(ccosh_test): Likewise.
+	(jn_test): Likewise.
+
+1999-08-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/_G_config.h: Get definition of mbstate_t.
+
 1999-08-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/tstscanf.c: Add test for hexadecimal float parsing
