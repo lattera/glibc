@@ -92,6 +92,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 index into the .got section, load ip with &_GLOBAL_OFFSET_TABLE_[3],
 	 and then jump to _GLOBAL_OFFSET_TABLE[2].  */
       got = (Elf32_Addr *) D_PTR (l, l_info[DT_PLTGOT]);
+      /* If a library is prelinked but we have to relocate anyway,
+	 we have to be able to undo the prelinking of .got.plt.
+	 The prelinker saved us here address of .plt.  */
+      if (got[1])
+	l->l_mach.plt = got[1] + l->l_addr;
       got[1] = (Elf32_Addr) l;	/* Identify this shared object.  */
 
       /* The got[2] entry contains the address of a function which gets
@@ -334,8 +339,9 @@ _dl_start_user:
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_ARM_JUMP_SLOT
 
-/* The ARM never uses Elf32_Rela relocations.  */
-#define ELF_MACHINE_NO_RELA 1
+/* ARM never uses Elf32_Rela relocations for the dynamic linker.
+   Prelinked libraries may use Elf32_Rela though.  */
+#define ELF_MACHINE_PLT_REL 1
 
 /* We define an initialization functions.  This is called very early in
    _dl_sysdep_start.  */
@@ -370,6 +376,12 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
 #endif /* !dl_machine_h */
 
 #ifdef RESOLVE
+
+/* ARM never uses Elf32_Rela relocations for the dynamic linker.
+   Prelinked libraries may use Elf32_Rela though.  */
+#ifdef RTLD_BOOTSTRAP
+#define ELF_MACHINE_NO_RELA 1
+#endif
 
 extern char **_dl_argv;
 
@@ -517,12 +529,79 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
     }
 }
 
+#ifndef RTLD_BOOTSTRAP
+static inline void
+elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
+		  const Elf32_Sym *sym, const struct r_found_version *version,
+		  Elf32_Addr *const reloc_addr)
+{
+  const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
+
+  if (__builtin_expect (r_type == R_ARM_RELATIVE, 0))
+    *reloc_addr = map->l_addr + reloc->r_addend;
+#ifndef RTLD_BOOTSTRAP
+  else if (__builtin_expect (r_type == R_ARM_NONE, 0))
+    return;
+#endif
+  else
+    {
+      const Elf32_Sym *const refsym = sym;
+      Elf32_Addr value = RESOLVE (&sym, version, r_type);
+      if (sym)
+	value += sym->st_value;
+
+      switch (r_type)
+	{
+	case R_ARM_GLOB_DAT:
+	case R_ARM_JUMP_SLOT:
+	case R_ARM_ABS32:
+	  *reloc_addr = value + reloc->r_addend;
+	  break;
+	case R_ARM_PC24:
+	  {
+	     Elf32_Addr newvalue, topbits;
+
+	     newvalue = value + reloc->r_addend - (Elf32_Addr)reloc_addr;
+	     topbits = newvalue & 0xfe000000;
+	     if (topbits != 0xfe000000 && topbits != 0x00000000)
+	       {
+		 newvalue = fix_bad_pc24(reloc_addr, value)
+		   - (Elf32_Addr)reloc_addr + (addend << 2);
+		 topbits = newvalue & 0xfe000000;
+		 if (topbits != 0xfe000000 && topbits != 0x00000000)
+		   {
+		     _dl_signal_error (0, map->l_name, NULL,
+				       "R_ARM_PC24 relocation out of range");
+		   }
+	       }
+	     newvalue >>= 2;
+	     value = (*reloc_addr & 0xff000000) | (newvalue & 0x00ffffff);
+	     *reloc_addr = value;
+	  }
+	  break;
+	default:
+	  _dl_reloc_bad_type (map, r_type, 0);
+	  break;
+	}
+    }
+}
+#endif
+
 static inline void
 elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
 			  Elf32_Addr *const reloc_addr)
 {
   *reloc_addr += l_addr;
 }
+
+#ifndef RTLD_BOOTSTRAP
+static inline void
+elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
+			   Elf32_Addr *const reloc_addr)
+{
+  *reloc_addr = l_addr + reloc->r_addend;
+}
+#endif
 
 static inline void
 elf_machine_lazy_rel (struct link_map *map,
@@ -532,7 +611,12 @@ elf_machine_lazy_rel (struct link_map *map,
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
   /* Check for unexpected PLT reloc type.  */
   if (__builtin_expect (r_type == R_ARM_JUMP_SLOT, 1))
-    *reloc_addr += l_addr;
+    {
+      if (__builtin_expect (map->l_mach.plt, 0) == 0)
+	*reloc_addr += l_addr;
+      else
+	*reloc_addr = map->l_mach.plt;
+    }
   else
     _dl_reloc_bad_type (map, r_type, 1);
 }
