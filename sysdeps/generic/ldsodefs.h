@@ -313,6 +313,8 @@ struct rtld_global
   EXTERN size_t _dl_tls_static_nelem;
   /* Size of the static TLS block.  */
   EXTERN size_t _dl_tls_static_size;
+  /* Size actually allocated in the static TLS block.  */
+  EXTERN size_t _dl_tls_static_used;
   /* Alignment requirement of the static TLS block.  */
   EXTERN size_t _dl_tls_static_align;
 
@@ -323,6 +325,9 @@ struct rtld_global
 
 /* Number of additional slots in the dtv allocated.  */
 # define DTV_SURPLUS	(14)
+
+/* The value of _dl_tls_static_size is kept a multiple of this.  */
+# define TLS_STATIC_MIN	(1024)
 
   /* Initial dtv of the main thread, not allocated with normal malloc.  */
   EXTERN void *_dl_initial_dtv;
@@ -416,11 +421,10 @@ extern const char _dl_out_of_memory[];
 extern const char _dl_out_of_memory_internal[] attribute_hidden;
 #endif
 
-#ifndef SHARED
 /* Flag set at startup and cleared when the last initializer has run.  */
 extern int _dl_starting_up;
 weak_extern (_dl_starting_up)
-#elif defined IS_IN_rtld
+#ifdef IS_IN_rtld
 extern int _dl_starting_up_internal attribute_hidden;
 #endif
 

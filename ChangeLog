@@ -1,3 +1,8 @@
+2002-10-25  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h: Remove [! SHARED] conditional from
+	_dl_starting_up decl.
+
 2002-10-20  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/unix/sysv/linux/configure.in: Don't check
