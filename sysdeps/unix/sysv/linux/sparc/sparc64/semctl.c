@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <stdarg.h>
 #include <sys/sem.h>
+#include <ipc_priv.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>

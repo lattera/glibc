@@ -17,15 +17,32 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define __LIBC_IPC_INTERNAL
 #include <errno.h>
 #include <sys/msg.h>
+#include <ipc_priv.h>
 
 #include <sysdep.h>
 #include <string.h>
 #include <sys/syscall.h>
 
 #include "kernel-features.h"
+
+struct __old_msqid_ds
+{
+  struct __old_ipc_perm msg_perm;	/* structure describing operation permission */
+  struct msg *__msg_first;		/* pointer to first message on queue */
+  struct msg *__msg_last;		/* pointer to last message on queue */
+  __time_t msg_stime;			/* time of last msgsnd command */
+  __time_t msg_rtime;			/* time of last msgrcv command */
+  __time_t msg_ctime;			/* time of last change */
+  struct wait_queue *__wwait;		/* ??? */
+  struct wait_queue *__rwait;		/* ??? */
+  unsigned short int __msg_cbytes;	/* current number of bytes on queue */
+  unsigned short int msg_qnum;		/* number of messages currently on queue */
+  unsigned short int msg_qbytes;	/* max number of bytes allowed on queue */
+  __ipc_pid_t msg_lspid;		/* pid of last msgsnd() */
+  __ipc_pid_t msg_lrpid;		/* pid of last msgrcv() */
+};
 
 /* Allows to control internal state and destruction of message queue
    objects.  */

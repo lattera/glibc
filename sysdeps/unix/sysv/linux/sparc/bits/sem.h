@@ -53,20 +53,6 @@ struct semid_ds
   unsigned long int __unused2;
 };
 
-#ifdef __LIBC_IPC_INTERNAL
-struct __old_semid_ds
-{
-  struct __old_ipc_perm sem_perm;	/* operation permission struct */
-  __time_t sem_otime;			/* last semop() time */
-  __time_t sem_ctime;			/* last time changed by semctl() */
-  struct sem *__sembase;		/* ptr to first semaphore in array */
-  struct sem_queue *__sem_pending;	/* pending operations */
-  struct sem_queue *__sem_pending_last; /* last pending operation */
-  struct sem_undo *__undo;		/* ondo requests on this array */
-  unsigned short int sem_nsems;		/* number of semaphores in set */
-};
-#endif
-
 /* The user should define a union like the following to use it for arguments
    for `semctl'.
 

@@ -37,8 +37,6 @@
 /* Special key values.  */
 #define IPC_PRIVATE	((__key_t) 0)	/* Private key.  */
 
-#define __IPC_64	0x100
-
 
 /* Data structure used to pass permission information to IPC operations.  */
 struct ipc_perm
@@ -60,39 +58,3 @@ struct ipc_perm
     unsigned long long int __unused1;
     unsigned long long int __unused2;
   };
-
-#ifdef __LIBC_IPC_INTERNAL
-struct __old_ipc_perm
-  {
-    __key_t __key;			/* Key.  */
-    unsigned short int uid;		/* Owner's user ID.  */
-    unsigned short int gid;		/* Owner's group ID.  */
-    unsigned short int cuid;		/* Creator's user ID.  */
-    unsigned short int cgid;		/* Creator's group ID.  */
-    unsigned short int mode;		/* Read/write permission.  */
-    unsigned short int __seq;		/* Sequence number.  */
-  };
-
-__BEGIN_DECLS
-
-/* The actual system call: all functions are multiplexed by this.  */
-extern int __syscall_ipc (int __call, int __first, int __second,
-			  int __third, void *__ptr);
-
-__END_DECLS
-
-
-/* The codes for the functions to use the multiplexer `__syscall_ipc'.  */
-#define IPCOP_semop	 1
-#define IPCOP_semget	 2
-#define IPCOP_semctl	 3
-#define IPCOP_msgsnd	11
-#define IPCOP_msgrcv	12
-#define IPCOP_msgget	13
-#define IPCOP_msgctl	14
-#define IPCOP_shmat	21
-#define IPCOP_shmdt	22
-#define IPCOP_shmget	23
-#define IPCOP_shmctl	24
-
-#endif /* __LIBC_IPC_INTERNAL */

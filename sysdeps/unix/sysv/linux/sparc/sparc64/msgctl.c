@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include <sys/msg.h>
+#include <ipc_priv.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>

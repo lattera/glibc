@@ -17,16 +17,28 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define __LIBC_IPC_INTERNAL
 #include <errno.h>
 #include <stdarg.h>
 #include <sys/sem.h>
+#include <ipc_priv.h>
 
 #include <sysdep.h>
 #include <string.h>
 #include <sys/syscall.h>
 
 #include "kernel-features.h"
+
+struct __old_semid_ds
+{
+  struct __old_ipc_perm sem_perm;	/* operation permission struct */
+  __time_t sem_otime;			/* last semop() time */
+  __time_t sem_ctime;			/* last time changed by semctl() */
+  struct sem *__sembase;		/* ptr to first semaphore in array */
+  struct sem_queue *__sem_pending;	/* pending operations */
+  struct sem_queue *__sem_pending_last; /* last pending operation */
+  struct sem_undo *__undo;		/* ondo requests on this array */
+  unsigned short int sem_nsems;		/* number of semaphores in set */
+};
 
 /* Define a `union semun' suitable for Linux here.  */
 union semun

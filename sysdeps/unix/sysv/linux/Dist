@@ -4,6 +4,7 @@ errlist.h
 getdirentries.c
 getdirentries64.c
 init-first.h
+ipc_priv.h
 kernel-features.h
 kernel_sigaction.h
 kernel_stat.h

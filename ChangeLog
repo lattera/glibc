@@ -1,3 +1,39 @@
+2000-01-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Dist: Add ipc_priv.h.
+	* sysdeps/unix/sysv/linux/alpha/Dist: Likewise.
+
+2000-01-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/ipc.h: Move private decls...
+	* sysdeps/unix/sysv/linux/ipc_priv.h: ...here.
+	* sysdeps/unix/sysv/linux/bits/msq.h: Move private decls...
+	* sysdeps/unix/sysv/linux/msgctl.c: ...here.  Include ipc_priv.h.
+	* sysdeps/unix/sysv/linux/bits/sem.h: Move private decls...
+	* sysdeps/unix/sysv/linux/semctl.c: ...here.  Include ipc_priv.h.
+	* sysdeps/unix/sysv/linux/bits/shm.h: Move private decls...
+	* sysdeps/unix/sysv/linux/shmctl.c: ...here.  Include ipc_priv.h.
+	* sysdeps/unix/sysv/linux/alpha/bits/ipc.h: Move private decls...
+	* sysdeps/unix/sysv/linux/alpha/ipc_priv.h: ...here.
+	* sysdeps/unix/sysv/linux/alpha/bits/msq.h: Remove private decls.
+	* sysdeps/unix/sysv/linux/alpha/bits/sem.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/msq.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/sem.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/msgctl.c: Include ipc_priv.h.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/msgget.c: Likewise.
+	* sysdeps/unix/sysv/linux/msgrcv.c: Likewise.
+	* sysdeps/unix/sysv/linux/msgsnd.c: Likewise.
+	* sysdeps/unix/sysv/linux/semget.c: Likewise.
+	* sysdeps/unix/sysv/linux/semop.c: Likewise.
+	* sysdeps/unix/sysv/linux/shmat.c: Likewise.
+	* sysdeps/unix/sysv/linux/shmdt.c: Likewise.
+	* sysdeps/unix/sysv/linux/shmget.c: Likewise.
+
 2000-01-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/resource.h: New file.

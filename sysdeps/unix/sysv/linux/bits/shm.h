@@ -54,23 +54,6 @@ struct shmid_ds
     unsigned long int __unused5;
   };
 
-#ifdef __LIBC_IPC_INTERNAL
-struct __old_shmid_ds
-  {
-    struct __old_ipc_perm shm_perm;	/* operation permission struct */
-    int shm_segsz;			/* size of segment in bytes */
-    __time_t shm_atime;			/* time of last shmat() */
-    __time_t shm_dtime;			/* time of last shmdt() */
-    __time_t shm_ctime;			/* time of last change by shmctl() */
-    __ipc_pid_t shm_cpid;		/* pid of creator */
-    __ipc_pid_t shm_lpid;		/* pid of last shmop */
-    unsigned short int shm_nattch;	/* number of current attaches */
-    unsigned short int __shm_npages;	/* size of segment (pages) */
-    unsigned long int *__shm_pages;	/* array of ptrs to frames -> SHMMAX */
-    struct vm_area_struct *__attaches;	/* descriptors for attaches */
-  };
-#endif
-
 #ifdef __USE_MISC
 
 /* ipcs ctl commands */
@@ -92,15 +75,6 @@ struct	shminfo
     unsigned long int __unused2;
     unsigned long int __unused3;
     unsigned long int __unused4;
-  };
-
-struct	__old_shminfo
-  {
-    int shmmax;
-    int shmmin;
-    int shmmni;
-    int shmseg;
-    int shmall;
   };
 
 struct shm_info
