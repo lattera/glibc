@@ -1,3 +1,7 @@
+2000-07-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-digits.c: Add ctype and wctype tests.
+
 2000-07-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (ld-test-names): Add test7.

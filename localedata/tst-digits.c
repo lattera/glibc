@@ -1,5 +1,26 @@
+/* Copyright (C) 2000 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.org>, 2000.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#include <ctype.h>
 #include <locale.h>
 #include <stdio.h>
+#include <wctype.h>
 #include <sys/types.h>
 
 
@@ -48,7 +69,8 @@ int
 main (void)
 {
   int cnt;
-  int printf_failures = 0;
+  int failures = 0;
+  int status;
 
   if (setlocale (LC_ALL, "test7") == NULL)
     {
@@ -71,11 +93,76 @@ main (void)
 	{
 	  printf ("%3d: got \"%s\", expected \"%s\"\n",
 		  cnt, buf, printf_int_tests[cnt].expected);
-	  ++printf_failures;
+	  ++failures;
 	}
     }
 
-  printf ("\n%d failures in printf tests\n", printf_failures);
+  printf ("\n%d failures in printf tests\n", failures);
+  status = failures != 0;
 
-  return printf_failures != 0;
+  /* ctype tests.  This makes sure that the multibyte chracter digit
+     representations are not handle in this table.  */
+  for (cnt = 0; cnt < 256; ++cnt)
+    if (cnt >= '0' && cnt <= '9')
+      {
+	if (! isdigit (cnt))
+	  {
+	    printf ("isdigit ('%c') == 0\n", cnt);
+	    ++failures;
+	  }
+      }
+    else
+      {
+	if (isdigit (cnt))
+	  {
+	    printf ("isdigit (%d) != 0\n", cnt);
+	    ++failures;
+	  }
+      }
+
+  printf ("\n%d failures in ctype tests\n", failures);
+  status = failures != 0;
+
+  /* wctype tests.  This makes sure the second set of digits is also
+     recorded.  */
+  for (cnt = 0; cnt < 256; ++cnt)
+    if (cnt >= '0' && cnt <= '9')
+      {
+	if (! iswdigit (cnt))
+	  {
+	    printf ("iswdigit (L'%c') == 0\n", cnt);
+	    ++failures;
+	  }
+      }
+    else
+      {
+	if (iswdigit (cnt))
+	  {
+	    printf ("iswdigit (%d) != 0\n", cnt);
+	    ++failures;
+	  }
+      }
+
+  for (cnt = 0x2070; cnt < 0x2090; ++cnt)
+    if (cnt >= 0x2080 && cnt <= 0x2089)
+      {
+	if (! iswdigit (cnt))
+	  {
+	    printf ("iswdigit (U%04X) == 0\n", cnt);
+	    ++failures;
+	  }
+      }
+    else
+      {
+	if (iswdigit (cnt))
+	  {
+	    printf ("iswdigit (U%04X) != 0\n", cnt);
+	    ++failures;
+	  }
+      }
+
+  printf ("\n%d failures in wctype tests\n", failures);
+  status = failures != 0;
+
+  return status;
 }

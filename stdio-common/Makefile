@@ -25,10 +25,10 @@ headers	:= printf.h
 
 routines	:=							      \
 	ctermid cuserid							      \
-	_itoa _itowa _i18n_itoa _i18n_itowa itoa-digits itowa-digits	      \
+	_itoa _itowa itoa-digits itowa-digits				      \
 	vfprintf vprintf printf_fp reg-printf printf-prs printf_fphex	      \
 	printf_size fprintf printf snprintf sprintf asprintf dprintf	      \
-	vfscanf							      \
+	vfscanf								      \
 	fscanf scanf sscanf						      \
 	perror psignal							      \
 	tmpfile tmpfile64 tmpnam tmpnam_r tempnam tempname		      \

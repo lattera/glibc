@@ -10,6 +10,8 @@
 	* stdio-common/vfprintf.c: Rewrite buffer handling for integer
 	printing.  Change printing of numbers with locale specific digits to
 	use new code in _i18n_number.h.
+	* stdio-common/Makefile (routines): Remove _i18n_itoa and
+	_i18n_itowa.
 
 	* stdio-common/bug13.c: Improve messages.
 
