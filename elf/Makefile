@@ -45,7 +45,7 @@ include ../Rules
 $(objpfx)ld.so: $(rtld-routines:%=$(objpfx)%.so) \
 		$(patsubst %,$(common-objpfx)lib%_pic.a,\
 			   elf c $(LDLIBS-c.so:-l%=%))
-	$(LINK.o) -nostdlib -shared -o $@ \
+	$(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
 		  '-Wl,-(' $^ -lgcc '-Wl,-)'
 
 $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
