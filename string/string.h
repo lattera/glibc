@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -167,9 +167,11 @@ extern char *strcasestr __P ((__const char *__haystack,
 extern char *strtok __P ((char *__restrict __s,
 			  __const char *__restrict __delim));
 
-#if defined __USE_POSIX || defined __USE_MISC
 /* Divide S into tokens separated by characters in DELIM.  Information
    passed between calls are stored in SAVE_PTR.  */
+extern char *__strtok_r __P ((char *__s, __const char *__delim,
+			      char **__save_ptr));
+#if defined __USE_POSIX || defined __USE_MISC
 extern char *strtok_r __P ((char *__s, __const char *__delim,
 			    char **__save_ptr));
 #endif

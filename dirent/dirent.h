@@ -135,6 +135,7 @@ extern struct dirent *readdir __P ((DIR *__dirp)) __asm__ ("readdir64");
 #endif
 
 #ifdef __USE_LARGEFILE64
+extern struct dirent64 *__readdir64 __P ((DIR *__dirp));
 extern struct dirent64 *readdir64 __P ((DIR *__dirp));
 #endif
 
@@ -199,18 +200,49 @@ extern int dirfd __P ((DIR *__dirp));
    Entries for which SELECT returns nonzero are individually malloc'd,
    sorted using qsort with CMP, and collected in a malloc'd array in
    *NAMELIST.  Returns the number of entries selected, or -1 on error.  */
-extern int scandir __P ((__const char *__dir,
-			 struct dirent ***__namelist,
-			 int (*__selector) __P ((__const struct dirent *)),
-			 int (*__cmp) __P ((__const __ptr_t,
-					    __const __ptr_t))));
+# ifndef __USE_FILE_OFFSET64
+extern int scandir __P ((__const char *__dir, struct dirent ***__namelist,
+			 int (*__selector) (__const struct dirent *),
+			 int (*__cmp) (__const __ptr_t, __const __ptr_t)));
+# else
+extern int scandir __P ((__const char *__dir, struct dirent ***__namelist,
+			 int (*__selector) (__const struct dirent *),
+			 int (*__cmp) (__const __ptr_t, __const __ptr_t)))
+     __asm__ ("scandir64");
+# endif
+
+# if defined __USE_GNU && defined __USE_LARGEFILE64
+/* This function is like `scandir' but it uses the 64bit dirent structure.
+   Please note that the CMP function must now work with struct dirent64 **.  */
+extern int scandir64 __P ((__const char *__dir, struct dirent64 ***__namelist,
+			 int (*__selector) (__const struct dirent64 *),
+			 int (*__cmp) (__const __ptr_t, __const __ptr_t)));
+# endif
 
 /* Function to compare two `struct dirent's alphabetically.  */
-extern int alphasort __P ((__const __ptr_t, __const __ptr_t));
+# ifndef __USE_FILE_OFFSET64
+extern int alphasort __P ((__const __ptr_t __e1, __const __ptr_t __e2));
+# else
+extern int alphasort __P ((__const __ptr_t __e1, __const __ptr_t __e2))
+     __asm__ ("alphasort64");
+# endif
+
+# if defined __USE_GNU && defined __USE_LARGEFILE64
+extern int alphasort64 __P ((__const __ptr_t __e1, __const __ptr_t __e2));
+# endif
 
 # ifdef __USE_GNU
 /* Function to compare two `struct dirent's by name & version.  */
-extern int versionsort __P ((__const __ptr_t, __const __ptr_t));
+#  ifndef __USE_FILE_OFFSET64
+extern int versionsort __P ((__const __ptr_t __e1, __const __ptr_t __e2));
+#  else
+extern int versionsort __P ((__const __ptr_t __e1, __const __ptr_t __e2))
+     __asm__ ("versionsort64");
+#  endif
+
+#  ifdef __USE_LARGEFILE64
+extern int versionsort64 __P ((__const __ptr_t __e1, __const __ptr_t __e2));
+#  endif
 # endif
 
 /* Read directory entries from FD into BUF, reading at most NBYTES.

@@ -1,3 +1,26 @@
+1998-03-20 11:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* dirent/Makefile (routines): Add scandir64, alphasort64, and
+	versionsort64.
+	* dirent/alphasort64.c: New file.
+	* dirent/scandir64.c: New file.
+	* dirent/versionsort64.c: New file.
+	* dirent/dirent.h: Add LFS support for scandir, alphasort, and
+	versionsort.
+	* sysdeps/generic/readdir64.c: Rename to __readdir64 and make
+	old name weak alias.
+	* sysdeps/unix/sysv/linux/readdir64.c: Likewise.
+
+	* dirent/alphasort.c: Use strcoll instead of strcmp.
+
+	* dirent/scandir.c: Optimize a bit.
+
+	* dirent/versionsort.c: Pretty print.
+
+1998-03-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/string.h: Add prototype for __strtok_r.
+
 1998-03-20 12:14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* posix/Makefile: Fix typo in last change.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ extern ssize_t __getdirentries64 (int, char *, size_t, off_t *);
 
 /* Read a directory entry from DIRP.  */
 struct dirent64 *
-readdir64 (DIR *dirp)
+__readdir64 (DIR *dirp)
 {
   struct dirent64 *dp;
 
@@ -101,3 +101,4 @@ readdir64 (DIR *dirp)
 
   return dp;
 }
+weak_alias (__readdir64, readdir64)

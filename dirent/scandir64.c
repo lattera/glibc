@@ -22,16 +22,16 @@
 #include <errno.h>
 
 int
-scandir (dir, namelist, select, cmp)
+scandir64 (dir, namelist, select, cmp)
      const char *dir;
-     struct dirent ***namelist;
-     int (*select) __P ((const struct dirent *));
+     struct dirent64 ***namelist;
+     int (*select) __P ((const struct dirent64 *));
      int (*cmp) __P ((const void *, const void *));
 {
   DIR *dp = opendir (dir);
-  struct dirent **v = NULL;
+  struct dirent64 **v = NULL;
   size_t vsize = 0, i;
-  struct dirent *d;
+  struct dirent64 *d;
   int save;
 
   if (dp == NULL)
@@ -41,10 +41,10 @@ scandir (dir, namelist, select, cmp)
   __set_errno (0);
 
   i = 0;
-  while ((d = __readdir (dp)) != NULL)
+  while ((d = __readdir64 (dp)) != NULL)
     if (select == NULL || (*select) (d))
       {
-	struct dirent *vnew;
+	struct dirent64 *vnew;
 	size_t dsize;
 
 	/* Ignore errors from select or readdir */
@@ -52,23 +52,23 @@ scandir (dir, namelist, select, cmp)
 
 	if (i == vsize)
 	  {
-	    struct dirent **new;
+	    struct dirent64 **new;
 	    if (vsize == 0)
 	      vsize = 10;
 	    else
 	      vsize *= 2;
-	    new = (struct dirent **) realloc (v, vsize * sizeof (*v));
+	    new = (struct dirent64 **) realloc (v, vsize * sizeof (*v));
 	    if (new == NULL)
 	      break;
 	    v = new;
 	  }
 
 	dsize = &d->d_name[_D_ALLOC_NAMLEN (d)] - (char *) d;
-	vnew = (struct dirent *) malloc (dsize);
+	vnew = (struct dirent64 *) malloc (dsize);
 	if (vnew == NULL)
 	  break;
 
-	v[i++] = (struct dirent *) memcpy (vnew, d, dsize);
+	v[i++] = (struct dirent64 *) memcpy (vnew, d, dsize);
       }
 
   if (errno != 0)

@@ -20,8 +20,8 @@
 #include <string.h>
 
 int
-versionsort (const void *a, const void *b)
+versionsort64 (const void *a, const void *b)
 {
-  return strverscmp ((*(const struct dirent **) a)->d_name,
-		     (*(const struct dirent **) b)->d_name);
+  return strverscmp ((*(const struct dirent64 **) a)->d_name,
+		     (*(const struct dirent64 **) b)->d_name);
 }

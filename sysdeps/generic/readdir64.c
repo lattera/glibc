@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,10 +22,11 @@
 
 /* Read a directory entry from DIRP.  */
 struct dirent64 *
-readdir64 (DIR *dirp)
+__readdir64 (DIR *dirp)
 {
   __set_errno (ENOSYS);
   return NULL;
 }
+weak_alias (__readdir64, readdir64)
 stub_warning (readdir64)
 #include <stub-tag.h>
