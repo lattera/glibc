@@ -283,6 +283,7 @@ weak_alias (__get_avphys_pages, get_avphys_pages)
 static void
 free_mem (void)
 {
-  free (mount_proc);
+  if (mount_proc != NULL)
+    free (mount_proc);
 }
 text_set_element (__libc_subfreeres, free_mem);
