@@ -114,13 +114,16 @@ extern int __lll_mutex_unlock_wait (int *__futex)
   (void) ({ int ignore1, ignore2;					      \
 	    __asm __volatile (LOCK_INSTR "xaddl %0, %2\n\t"		      \
 			      "testl %0, %0\n\t"			      \
-			      "jne 1f\n\t"				      \
-			      ".subsection 1\n"				      \
-			      "1:\tleal %2, %%ecx\n\t"			      \
+			      "jne _L_mutex_lock_%=\n\t"		      \
+			      ".subsection 1\n\t"			      \
+			      ".type _L_mutex_lock_%=,@function\n"	      \
+			      "_L_mutex_lock_%=:\n\t"			      \
+			      "leal %2, %%ecx\n\t"			      \
 			      "call __lll_mutex_lock_wait\n\t"		      \
-			      "jmp 2f\n\t"				      \
+			      "jmp 1f\n\t"				      \
+			      ".size _L_mutex_lock_%=,.-_L_mutex_lock_%=\n"   \
 			      ".previous\n"				      \
-			      "2:"					      \
+			      "1:"					      \
 			      : "=a" (ignore1), "=&c" (ignore2), "=m" (futex) \
 			      : "0" (1), "2" (futex)			      \
 			      : "memory"); })
@@ -132,13 +135,16 @@ extern int __lll_mutex_unlock_wait (int *__futex)
   (void) ({ int ignore1, ignore2;					      \
 	    __asm __volatile (LOCK_INSTR "xaddl %0, %2\n\t"		      \
 			      "testl %0, %0\n\t"			      \
-			      "jne 1f\n\t"				      \
-			      ".subsection 1\n"				      \
-			      "1:\tleal %2, %%ecx\n\t"			      \
+			      "jne _L_mutex_cond_lock_%=\n\t"		      \
+			      ".subsection 1\n\t"			      \
+			      ".type _L_mutex_cond_lock_%=,@function\n"	      \
+			      "_L_mutex_cond_lock_%=:\n\t"		      \
+			      "leal %2, %%ecx\n\t"			      \
 			      "call __lll_mutex_lock_wait\n\t"		      \
-			      "jmp 2f\n\t"				      \
+			      "jmp 1f\n\t"				      \
+			      ".size _L_mutex_cond_lock_%=,.-_L_mutex_cond_lock_%=\n"   \
 			      ".previous\n"				      \
-			      "2:"					      \
+			      "1:"					      \
 			      : "=a" (ignore1), "=&c" (ignore2), "=m" (futex) \
 			      : "0" (2), "2" (futex)			      \
 			      : "memory"); })
@@ -148,14 +154,17 @@ extern int __lll_mutex_unlock_wait (int *__futex)
   ({ int result, ignore1, ignore2;					      \
      __asm __volatile (LOCK_INSTR "xaddl %0, %3\n\t"			      \
 		       "testl %0, %0\n\t"				      \
-		       "jne 1f\n\t"					      \
-		       ".subsection 1\n"				      \
-		       "1:\tleal %3, %%ecx\n\t"				      \
+		       "jne _L_mutex_timedlock_%=\n\t"			      \
+		       ".subsection 1\n\t"				      \
+		       ".type _L_mutex_timedlock_%=,@function\n"	      \
+		       "_L_mutex_timedlock_%=:\n\t"			      \
+		       "leal %3, %%ecx\n\t"				      \
 		       "movl %6, %%edx\n\t"				      \
 		       "call __lll_mutex_timedlock_wait\n\t"		      \
-		       "jmp 2f\n\t"					      \
+		       "jmp 1f\n\t"					      \
+		       ".size _L_mutex_timedlock_%=,.-_L_mutex_timedlock_%=\n"\
 		       ".previous\n"					      \
-		       "2:"						      \
+		       "1:"						      \
 		       : "=a" (result), "=&c" (ignore1), "=&d" (ignore2),     \
 			 "=m" (futex)					      \
 		       : "0" (1), "3" (futex), "m" (timeout)		      \
@@ -166,13 +175,16 @@ extern int __lll_mutex_unlock_wait (int *__futex)
 #define lll_mutex_unlock(futex) \
   (void) ({ int ignore;							      \
             __asm __volatile (LOCK_INSTR "subl $1,%0\n\t"		      \
-			      "jne 1f\n\t"				      \
-			      ".subsection 1\n"				      \
-			      "1:\tleal %0, %%eax\n\t"			      \
+			      "jne _L_mutex_unlock_%=\n\t"		      \
+			      ".subsection 1\n\t"			      \
+			      ".type _L_mutex_unlock_%=,@function\n"	      \
+			      "_L_mutex_unlock_%=:\n\t"			      \
+			      "leal %0, %%eax\n\t"			      \
 			      "call __lll_mutex_unlock_wake\n\t"	      \
-			      "jmp 2f\n\t"				      \
+			      "jmp 1f\n\t"				      \
+			      ".size _L_mutex_unlock_%=,.-_L_mutex_unlock_%=\n" \
 			      ".previous\n"				      \
-			      "2:"					      \
+			      "1:"					      \
 			      : "=m" (futex), "=&a" (ignore)		      \
 			      : "0" (futex)				      \
 			      : "memory"); })
@@ -219,13 +231,16 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 # define lll_lock(futex) \
   (void) ({ int ignore1, ignore2;					      \
 	    __asm __volatile (LOCK_INSTR "xaddl %0, %2\n\t"		      \
-			      "jne 1f\n\t"				      \
-			      ".subsection 1\n"				      \
-			      "1:\tleal %2, %%ecx\n\t"			      \
+			      "jne _L_lock_%=\n\t"			      \
+			      ".subsection 1\n\t"			      \
+			      ".type _L_lock_%=,@function\n"		      \
+			      "_L_lock_%=:\n\t"				      \
+			      "leal %2, %%ecx\n\t"			      \
 			      "call __lll_lock_wait\n\t"		      \
-			      "jmp 2f\n\t"				      \
+			      "jmp 1f\n\t"				      \
+			      ".size _L_lock_%=,.-_L_lock_%=\n"		      \
 			      ".previous\n"				      \
-			      "2:"					      \
+			      "1:"					      \
 			      : "=a" (ignore1), "=&c" (ignore2), "=m" (futex) \
 			      : "0" (-1), "2" (futex)			      \
 			      : "memory"); })
@@ -234,13 +249,16 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 # define lll_unlock(futex) \
   (void) ({ int ignore;							      \
             __asm __volatile (LOCK_INSTR "addl $1,%0\n\t"		      \
-			      "jng 1f\n\t"				      \
-			      ".subsection 1\n"				      \
-			      "1:\tleal %0, %%eax\n\t"			      \
+			      "jng _L_unlock_%=\n\t"			      \
+			      ".subsection 1\n\t"			      \
+			      ".type _L_unlock_%=,@function\n"		      \
+			      "_L_unlock_%=:\n\t"			      \
+			      "leal %0, %%eax\n\t"			      \
 			      "call __lll_unlock_wake\n\t"		      \
-			      "jmp 2f\n\t"				      \
+			      "jmp 1f\n\t"				      \
+			      ".size _L_unlock_%=,.-_L_unlock_%=\n"	      \
 			      ".previous\n"				      \
-			      "2:"					      \
+			      "1:"					      \
 			      : "=m" (futex), "=&a" (ignore)		      \
 			      : "0" (futex)				      \
 			      : "memory"); })
@@ -270,11 +288,14 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      "je,pt 0f\n\t"				      \
 			      "lock\n"					      \
 			      "0:\txaddl %0, %2\n\t"			      \
-			      "jne 1f\n\t"				      \
-			      ".subsection 1\n"				      \
-			      "1:\tleal %2, %%ecx\n\t"			      \
+			      "jne _L_lock_%=\n\t"			      \
+			      ".subsection 1\n\t"			      \
+			      ".type _L_lock_%=,@function\n"		      \
+			      "_L_lock_%=:\n\t"				      \
+			      "leal %2, %%ecx\n\t"			      \
 			      "call __lll_lock_wait\n\t"		      \
 			      "jmp 2f\n\t"				      \
+			      ".size _L_lock_%=,.-_L_lock_%=\n"	      \
 			      ".previous\n"				      \
 			      "2:"					      \
 			      : "=a" (ignore1), "=&c" (ignore2), "=m" (futex) \
@@ -289,11 +310,14 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      "je,pt 0f\n\t"				      \
 			      "lock\n"					      \
 			      "0:\taddl $1,%0\n\t"			      \
-			      "jng 1f\n\t"				      \
-			      ".subsection 1\n"				      \
-			      "1:\tleal %0, %%eax\n\t"			      \
+			      "jng _L_unlock_%=\n\t"			      \
+			      ".subsection 1\n\t"			      \
+			      ".type _L_unlock_%=,@function\n"		      \
+			      "_L_unlock_%=:\n\t"			      \
+			      "leal %0, %%eax\n\t"			      \
 			      "call __lll_unlock_wake\n\t"		      \
 			      "jmp 2f\n\t"				      \
+			      ".size _L_unlock_%=,.-_L_unlock_%=\n"	      \
 			      ".previous\n"				      \
 			      "2:"					      \
 			      : "=m" (futex), "=&a" (ignore)		      \

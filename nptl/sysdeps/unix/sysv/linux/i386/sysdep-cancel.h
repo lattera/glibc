@@ -32,10 +32,14 @@
   L(name##START):							      \
     cmpl $0, %gs:MULTIPLE_THREADS_OFFSET;				      \
     jne L(pseudo_cancel);						      \
+  .type __##syscall_name##_nocancel,@function;				      \
+  .globl __##syscall_name##_nocancel;					      \
+  __##syscall_name##_nocancel:						      \
     DO_CALL (syscall_name, args);					      \
     cmpl $-4095, %eax;							      \
     jae SYSCALL_ERROR_LABEL;						      \
     ret;								      \
+  .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	      \
   L(pseudo_cancel):							      \
     CENABLE								      \
     SAVE_OLDTYPE_##args							      \

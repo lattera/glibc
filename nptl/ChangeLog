@@ -1,3 +1,15 @@
+2003-09-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/not-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/x86-64/not-cancel.h: New file.
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Make sure the code
+	in subsections has a symbol associated with it.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h (PSEUDO): Also
+	defined symbol for entry point to avoid cancellation.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h (PSEUDO): Likewise.
+
 2003-09-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (tests): Add tst-tls5.

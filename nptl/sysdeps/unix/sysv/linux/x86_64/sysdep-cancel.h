@@ -31,10 +31,14 @@
   ENTRY (name)								      \
     SINGLE_THREAD_P;							      \
     jne L(pseudo_cancel);						      \
+  .type __##syscall_name##_nocancel,@function;				      \
+  .globl __##syscall_name##_nocancel;					      \
+  __##syscall_name##_nocancel:						      \
     DO_CALL (syscall_name, args);					      \
     cmpq $-4095, %rax;							      \
     jae SYSCALL_ERROR_LABEL;						      \
     ret;								      \
+  .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	      \
   L(pseudo_cancel):							      \
     /* Save registers that might get destroyed.  */			      \
     SAVESTK_##args							      \
