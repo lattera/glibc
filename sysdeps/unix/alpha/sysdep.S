@@ -45,7 +45,7 @@
 	.ent __syscall_error
 __syscall_error:
 
-#if defined(_LIBC_REENTRANT) && defined(USE___THREAD)
+#if defined(_LIBC_REENTRANT) && USE___THREAD
 
 	LOADGP
 	PROLOGUE

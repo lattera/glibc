@@ -1,3 +1,10 @@
+2002-11-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/alpha/sysdep.S: Change defined(USE___THREAD) to
+	USE___THREAD.
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h (inline_syscall*): Avoid
+	"=v" constraints.
+
 2002-11-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/vfork.S: Don't trash the CPU's
