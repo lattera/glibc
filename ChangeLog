@@ -1,5 +1,11 @@
 2000-08-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Add oldgetrlimit64.c.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile [$(subdir)=resource]
+	(sysdep_routines): Add oldgetrlimit64.
+	* sysdeps/unix/sysv/linux/powerpc/oldgetrlimit64.c: New file.
+	Patch by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
+
 	* include/link.h: Undo last patches.  Hurd now had stat64.
 	* elf/Makefile: Likewise.
 	* elf/dl-load.c: Likewise.
