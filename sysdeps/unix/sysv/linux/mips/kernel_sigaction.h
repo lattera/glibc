@@ -23,7 +23,7 @@ struct old_kernel_sigaction {
 
 
 #define _KERNEL_NSIG	       128
-#define _KERNEL_NSIG_BPW       32
+#define _KERNEL_NSIG_BPW       _MIPS_SZLONG
 #define _KERNEL_NSIG_WORDS     (_KERNEL_NSIG / _KERNEL_NSIG_BPW)
 
 typedef struct {

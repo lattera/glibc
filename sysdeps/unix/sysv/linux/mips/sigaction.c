@@ -41,6 +41,15 @@ extern int __syscall_sigaction (int, const struct old_kernel_sigaction *__unboun
 extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *__unbounded,
 				   struct kernel_sigaction *__unbounded, size_t);
 
+#if _MIPS_SIM != _MIPS_SIM_ABI32
+
+# ifdef __NR_rt_sigreturn
+static void restore_rt (void) asm ("__restore_rt");
+# endif
+# ifdef __NR_sigreturn
+static void restore (void) asm ("__restore");
+# endif
+#endif
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
    If OACT is not NULL, put the old action for SIG in *OACT.  */
@@ -74,7 +83,11 @@ __libc_sigaction (sig, act, oact)
 	  memcpy (&kact.sa_mask, &act->sa_mask, sizeof (kernel_sigset_t));
 	  kact.sa_flags = act->sa_flags;
 # ifdef HAVE_SA_RESTORER
+#  if _MIPS_SIM == _MIPS_SIM_ABI32
 	  kact.sa_restorer = act->sa_restorer;
+#  else
+	  kact.sa_restorer = &restore_rt;
+#  endif
 # endif
 	}
 
@@ -128,7 +141,11 @@ __libc_sigaction (sig, act, oact)
       oact->sa_mask.__val[0] = k_osigact.sa_mask;
       oact->sa_flags = k_osigact.sa_flags;
 # ifdef HAVE_SA_RESTORER
+#  if _MIPS_SIM == _MIPS_SIM_ABI32
       oact->sa_restorer = k_osigact.sa_restorer;
+#  else
+      oact->sa_restorer = &restore;
+#  endif
 # endif
     }
   return result;
@@ -140,4 +157,32 @@ libc_hidden_def (__libc_sigaction)
 weak_alias (__libc_sigaction, __sigaction)
 libc_hidden_weak (__sigaction)
 weak_alias (__libc_sigaction, sigaction)
+#endif
+
+/* NOTE: Please think twice before making any changes to the bits of
+   code below.  GDB needs some intimate knowledge about it to
+   recognize them as signal trampolines, and make backtraces through
+   signal handlers work right.  Important are both the names
+   (__restore_rt) and the exact instruction sequence.
+   If you ever feel the need to make any changes, please notify the
+   appropriate GDB maintainer.  */
+
+#define RESTORE(name, syscall) RESTORE2 (name, syscall)
+#define RESTORE2(name, syscall) \
+asm						\
+  (						\
+   ".align 4\n"					\
+   "__" #name ":\n"				\
+   "	li $2, " #syscall "\n"			\
+   "	syscall\n"				\
+   );
+
+/* The return code for realtime-signals.  */
+#if _MIPS_SIM != _MIPS_SIM_ABI32
+# ifdef __NR_rt_sigreturn
+RESTORE (restore_rt, __NR_rt_sigreturn)
+# endif
+# ifdef __NR_sigreturn
+RESTORE (restore, __NR_sigreturn)
+# endif
 #endif

@@ -1,5 +1,10 @@
 2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
 
+	* sysdeps/unix/sysv/linux/mips/kernel_sigaction.h
+	(_KERNEL_NSIG_BPW): Define in terms of _MIPS_SZLONG.
+	* sysdeps/unix/sysv/linux/mips/sigaction.c: Define restore and
+	restore_rt functions.  Use them.
+
 	* sysdeps/unix/sysv/linux/mips/sys/tas.h (_test_and_set): Don't
 	.set mips2 on new abis.
 
