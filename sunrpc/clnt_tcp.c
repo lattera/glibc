@@ -253,8 +253,8 @@ clnttcp_call (h, proc, xdr_args, args_ptr, xdr_results, results_ptr, timeout)
     }
 
   shipnow =
-    (xdr_results == (xdrproc_t) 0 && timeout.tv_sec == 0
-     && timeout.tv_usec == 0) ? FALSE : TRUE;
+    (xdr_results == (xdrproc_t) 0 && ct->ct_wait.tv_sec == 0
+     && ct->ct_wait.tv_usec == 0) ? FALSE : TRUE;
 
 call_again:
   xdrs->x_op = XDR_ENCODE;
@@ -277,7 +277,7 @@ call_again:
   /*
    * Hack to provide rpc-based message passing
    */
-  if (timeout.tv_sec == 0 && timeout.tv_usec == 0)
+  if (ct->ct_wait.tv_sec == 0 && ct->ct_wait.tv_usec == 0)
     {
       return ct->ct_error.re_status = RPC_TIMEDOUT;
     }

@@ -23,6 +23,9 @@
 	clnt_control for any protocol.  This would make it impossible for
 	the user to provide one in clnt_call().
 	Reported by Hitoshi Guutara Maruyama <maruyama@sh.rim.or.jp>.
+	* sunrpc/clnt_tcp.c (clnt_call): Don't use timeout in tests with zero,
+	use ct->ct_wait.
+	* sunrpc/clnt_unix.c (clnt_call): Likewise.
 
 2000-10-31  Jes Sorensen  <jes@linuxcare.com>
 
