@@ -1,3 +1,8 @@
+Tue Jul 25 09:14:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdio/vfprintf.c (vfprintf): For %s with precision spec, use
+ 	memchr instead of strlen to limit search for NUL by precision.
+
 Mon Jul 24 03:13:16 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/posix/pathconf.c: New file.

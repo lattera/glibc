@@ -531,13 +531,24 @@ vfprintf (s, format, ap)
 		      len = 0;
 		    }
 		}
-              else
-                len = strlen (str);
+              else if (specs[cnt].info.prec != -1)
+		{
+		  const char *end = memchr (str, '\0', specs[cnt].info.prec);
+		  if (end)
+		    len = end - str;
+		  else
+		    len = strlen (str);
+		}
+	      else
+		{
+		  len = strlen (str);
 
-              if (specs[cnt].info.prec != -1
-		  && (size_t) specs[cnt].info.prec < len)
-		/* Limit the length to the precision.  */
-                len = specs[cnt].info.prec;
+		  if (specs[cnt].info.prec != -1
+		      && (size_t) specs[cnt].info.prec < len)
+		    /* Limit the length to the precision.  */
+		    len = specs[cnt].info.prec;
+		}
+
               specs[cnt].info.width -= len;
 
               if (!specs[cnt].info.left)
