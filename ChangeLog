@@ -1,5 +1,7 @@
 1999-06-03  Ulrich Drepper  <drepper@cygnus.com>
 
+	* configure.in: Few changes for HPUX.
+
 	* scripts/config.guess: Update from latest version.
 	* scripts/config.sub: Likewise.
 
