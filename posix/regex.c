@@ -2210,10 +2210,13 @@ regex_compile (pattern, size, syntax, bufp)
                     for (;;)
                       {
                         PATFETCH (c);
-                        if ((c == ':' && *p == ']') || p == pend
-                            || c1 == CHAR_CLASS_MAX_LENGTH)
+                        if ((c == ':' && *p == ']') || p == pend)
                           break;
-                        str[c1++] = c;
+			if (c1 < CHAR_CLASS_MAX_LENGTH)
+			  str[c1++] = c;
+			else
+			  /* This is in any case an invalid class name.  */
+			  str[0] = '\0';
                       }
                     str[c1] = '\0';
 
