@@ -1,5 +1,8 @@
 2004-01-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/dl-sysdep.c: Move __libc_enable_secure into
+	.data.rel.ro.
+
 	* sysdeps/x86_64/dl-machine.h: Include <tls.h>.
 
 	* elf/rtld.c (_dl_start_final): Initialze __libc_stack_end here.

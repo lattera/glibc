@@ -48,7 +48,7 @@ extern void __libc_check_standard_fds (void);
 #ifdef NEED_DL_BASE_ADDR
 ElfW(Addr) _dl_base_addr;
 #endif
-int __libc_enable_secure = 0;
+int __libc_enable_secure __attribute__ ((section (".data.rel.ro"))) = 0;
 INTVARDEF(__libc_enable_secure)
 int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 				   of init-first.  */
