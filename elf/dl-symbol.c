@@ -23,6 +23,7 @@
 /* Look up symbol NAME in MAP's scope and return its run-time address.  */
 
 ElfW(Addr)
+internal_function
 _dl_symbol_value (struct link_map *map, const char *name)
 {
   ElfW(Addr) loadbase;

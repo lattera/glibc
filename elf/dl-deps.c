@@ -80,6 +80,7 @@ struct list
 
 
 void
+internal_function
 _dl_map_object_deps (struct link_map *map,
 		     struct link_map **preloads, unsigned int npreloads,
 		     int trace_mode)

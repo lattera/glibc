@@ -20,6 +20,7 @@
 #include <elf/ldsodefs.h>
 
 void
+internal_function
 _dl_fini (void)
 {
   struct link_map *l;

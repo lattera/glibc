@@ -224,11 +224,10 @@ _dl_start_user:\n\
 	# Push _dl_default_scope[2] as argument in _dl_init_next call below.\n\
 	movl _dl_default_scope@GOT(%ebx), %eax\n\
 	movl 8(%eax), %esi\n\
-0:	pushl %esi\n\
+0:	movl %esi,%eax\n\
 	# Call _dl_init_next to return the address of an initializer\n\
 	# function to run.\n\
 	call _dl_init_next@PLT\n\
-	addl $4, %esp # Pop argument.\n\
 	# Check for zero return, when out of initializers.\n\
 	testl %eax, %eax\n\
 	jz 1f\n\

@@ -1,5 +1,5 @@
 /* Load needed message catalogs.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.
@@ -64,6 +64,7 @@ int _nl_msg_cat_cntr = 0;
 /* Load the message catalogs specified by FILENAME.  If it is no valid
    message catalog do nothing.  */
 void
+internal_function
 _nl_load_domain (domain_file)
      struct loaded_l10nfile *domain_file;
 {
@@ -208,6 +209,7 @@ _nl_load_domain (domain_file)
 
 #ifdef _LIBC
 void
+internal_function
 _nl_unload_domain (domain)
      struct loaded_domain *domain;
 {

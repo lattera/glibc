@@ -34,6 +34,7 @@ __libc_lock_define (extern, _dl_load_lock)
 #define LOSE(s) _dl_signal_error (0, map->l_name, s)
 
 void
+internal_function
 _dl_close (struct link_map *map)
 {
   struct link_map **list;

@@ -303,6 +303,7 @@ decompose_rpath (const char *rpath, size_t additional_room,
 
 
 void
+internal_function
 _dl_init_paths (const char *llp)
 {
   static const char *system_dirs[] =
@@ -979,6 +980,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 /* Map in the shared object file NAME.  */
 
 struct link_map *
+internal_function
 _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 		int type, int trace_mode)
 {

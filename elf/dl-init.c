@@ -25,6 +25,7 @@
    order (that is, leaf nodes first).  */
 
 ElfW(Addr)
+internal_function
 _dl_init_next (struct link_map *map)
 {
   unsigned int i;

@@ -171,6 +171,7 @@ _dl_sysdep_start_cleanup (void)
 }
 
 void
+internal_function
 _dl_show_auxv (void)
 {
   char buf[64];
@@ -252,6 +253,7 @@ _dl_show_auxv (void)
 /* Walk through the environment of the process and return all entries
    starting with `LD_'.  */
 char *
+internal_function
 _dl_next_ld_env_entry (char ***position)
 {
   char **current = *position;
@@ -277,6 +279,7 @@ _dl_next_ld_env_entry (char ***position)
 
 /* Return an array of useful/necessary hardware capability names.  */
 const struct r_strlenpair *
+internal_function
 _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 		      size_t *max_capstrlen)
 {

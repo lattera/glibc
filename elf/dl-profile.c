@@ -187,6 +187,7 @@ static int s_scale;
 /* Set up profiling data to profile object desribed by MAP.  The output
    file is found (or created) in OUTPUT_DIR.  */
 void
+internal_function
 _dl_start_profile (struct link_map *map, const char *output_dir)
 {
   char *filename;
@@ -437,6 +438,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 
 
 void
+internal_function
 _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
 {
   uint16_t *topcindex;

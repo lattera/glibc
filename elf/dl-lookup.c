@@ -210,6 +210,7 @@ do_lookup (const char *undef_name, unsigned long int hash,
    UNDEF_NAME.  */
 
 ElfW(Addr)
+internal_function
 _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
 		   struct link_map *symbol_scope[],
 		   const char *reference_name,
@@ -257,6 +258,7 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
    object.  If there are more search lists the object described by
    SKIP_MAP is only skipped.  */
 ElfW(Addr)
+internal_function
 _dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
 			struct link_map *symbol_scope[],
 			const char *reference_name,
@@ -305,6 +307,7 @@ _dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
 
    XXX We'll see whether we need this separate function.  */
 ElfW(Addr)
+internal_function
 _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
 			     struct link_map *symbol_scope[],
 			     const char *reference_name,
@@ -369,6 +372,7 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
 /* Similar to _dl_lookup_symbol_skip but takes an additional argument
    with the version we are looking for.  */
 ElfW(Addr)
+internal_function
 _dl_lookup_versioned_symbol_skip (const char *undef_name,
 				  const ElfW(Sym) **ref,
 				  struct link_map *symbol_scope[],
@@ -429,6 +433,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 /* Cache the location of MAP's hash table.  */
 
 void
+internal_function
 _dl_setup_hash (struct link_map *map)
 {
   ElfW(Symndx) *hash;

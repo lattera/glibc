@@ -23,6 +23,7 @@
 
 
 int
+internal_function
 _dl_addr (const void *address, Dl_info *info)
 {
   const ElfW(Addr) addr = (ElfW(Addr)) address;

@@ -71,6 +71,7 @@ find_needed (const char *name, struct link_map *map)
 
 
 static int
+internal_function
 match_symbol (const char *name, ElfW(Word) hash, const char *string,
 	      struct link_map *map, int verbose, int weak)
 {
@@ -156,6 +157,7 @@ no version information available (required by ",
 
 
 int
+internal_function
 _dl_check_map_versions (struct link_map *map, int verbose)
 {
   int result = 0;
@@ -351,6 +353,7 @@ _dl_check_map_versions (struct link_map *map, int verbose)
 
 
 int
+internal_function
 _dl_check_all_versions (struct link_map *map, int verbose)
 {
   struct link_map *l;

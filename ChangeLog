@@ -25,6 +25,9 @@
 	* elf/dlerror.c: Likewise.
 	* sysdeps/generic/dl-sysdep.c: Likewise.
 	* sysdeps/i386/dl-machine.h: Likewise.
+	* intl/finddomain.c: Likewise.
+	* intl/gettextP.h: Likewise.
+	* intl/loadmsgcat.c: Likewise.
 
 1998-04-01 17:38  Ulrich Drepper  <drepper@cygnus.com>
 

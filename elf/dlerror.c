@@ -87,6 +87,7 @@ dlerror (void)
 }
 
 int
+internal_function
 _dlerror_run (void (*operate) (void *), void *args)
 {
   __libc_once_define (static, once);

@@ -31,6 +31,7 @@ struct link_map **_dl_global_scope_end = &_dl_default_scope[3];
    _dl_global_scope that should be passed to _dl_lookup_symbol for symbol
    references made in the object L's relocations.  */
 inline struct link_map **
+internal_function
 _dl_object_relocation_scope (struct link_map *l)
 {
   if (l->l_info[DT_SYMBOLIC])

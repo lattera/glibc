@@ -27,6 +27,7 @@
 
 
 void
+internal_function
 _dl_relocate_object (struct link_map *l, struct link_map *scope[], int lazy)
 {
   if (l->l_relocated)

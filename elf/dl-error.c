@@ -46,6 +46,7 @@ static receiver_fct receiver;
 
 
 void
+internal_function
 _dl_signal_error (int errcode,
 		  const char *objname,
 		  const char *errstring)
@@ -94,6 +95,7 @@ _dl_signal_error (int errcode,
 }
 
 int
+internal_function
 _dl_catch_error (char **errstring,
 		 void (*operate) (void *),
 		 void *args)
@@ -125,6 +127,7 @@ _dl_catch_error (char **errstring,
 }
 
 void
+internal_function
 _dl_receive_error (receiver_fct fct, void (*operate) (void *), void *args)
 {
   struct catch *old_catch;

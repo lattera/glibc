@@ -1,5 +1,5 @@
 /* Header describing internals of gettext library
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,6 +30,10 @@
 # else
 #  define PARAMS(args) ()
 # endif
+#endif
+
+#ifndef internal_function
+# define internal_function
 #endif
 
 #ifndef W
@@ -69,9 +73,12 @@ struct binding
 
 struct loaded_l10nfile *_nl_find_domain PARAMS ((const char *__dirname,
 						 char *__locale,
-						 const char *__domainname));
-void _nl_load_domain PARAMS ((struct loaded_l10nfile *__domain));
-void _nl_unload_domain PARAMS ((struct loaded_domain *__domain));
+						 const char *__domainname))
+     internal_function;
+void _nl_load_domain PARAMS ((struct loaded_l10nfile *__domain))
+     internal_function;
+void _nl_unload_domain PARAMS ((struct loaded_domain *__domain))
+     internal_function;
 
 /* @@ begin of epilog @@ */
 

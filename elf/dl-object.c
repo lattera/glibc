@@ -31,6 +31,7 @@ struct link_map *_dl_default_scope[5];
    and enter it into the _dl_loaded list.  */
 
 struct link_map *
+internal_function
 _dl_new_object (char *realname, const char *libname, int type)
 {
   struct link_map *new = malloc (sizeof *new);

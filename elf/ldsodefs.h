@@ -196,7 +196,8 @@ extern int _dl_secure;
    problem.  */
 extern void _dl_signal_error (int errcode,
 			      const char *object,
-			      const char *errstring);
+			      const char *errstring)
+     internal_function;
 
 /* Call OPERATE, catching errors from `dl_signal_error'.  If there is no
    error, *ERRSTRING is set to null.  If there is an error, *ERRSTRING is
@@ -206,21 +207,24 @@ extern void _dl_signal_error (int errcode,
    ARGS is passed as argument to OPERATE.  */
 extern int _dl_catch_error (char **errstring,
 			    void (*operate) (void *),
-			    void *args);
+			    void *args)
+     internal_function;
 
 /* Call OPERATE, receiving errors from `dl_signal_error'.  Unlike
    `_dl_catch_error' the operation is resumed after the OPERATE
    function returns.
    ARGS is passed as argument to OPERATE.  */
 extern void _dl_receive_error (receiver_fct fct, void (*operate) (void *),
-			       void *args);
+			       void *args)
+     internal_function;
 
 
 /* Helper function for <dlfcn.h> functions.  Runs the OPERATE function via
    _dl_catch_error.  Returns zero for success, nonzero for failure; and
    arranges for `dlerror' to return the error details.
    ARGS is passed as argument to OPERATE.  */
-extern int _dlerror_run (void (*operate) (void *), void *args);
+extern int _dlerror_run (void (*operate) (void *), void *args)
+     internal_function;
 
 
 /* Open the shared object NAME and map in its segments.
@@ -230,7 +234,8 @@ extern int _dlerror_run (void (*operate) (void *), void *args);
    value to allow additional security checks.  */
 extern struct link_map *_dl_map_object (struct link_map *loader,
 					const char *name, int preloaded,
-					int type, int trace_mode);
+					int type, int trace_mode)
+     internal_function;
 
 /* Call _dl_map_object on the dependencies of MAP, and set up
    MAP->l_searchlist.  PRELOADS points to a vector of NPRELOADS previously
@@ -238,19 +243,22 @@ extern struct link_map *_dl_map_object (struct link_map *loader,
    but before its dependencies.  */
 extern void _dl_map_object_deps (struct link_map *map,
 				 struct link_map **preloads,
-				 unsigned int npreloads, int trace_mode);
+				 unsigned int npreloads, int trace_mode)
+     internal_function;
 
 /* Cache the locations of MAP's hash table.  */
-extern void _dl_setup_hash (struct link_map *map);
+extern void _dl_setup_hash (struct link_map *map) internal_function;
 
 
 /* Open the shared object NAME, relocate it, and run its initializer if it
    hasn't already been run.  MODE is as for `dlopen' (see <dlfcn.h>).  If
    the object is already opened, returns its existing map.  */
-extern struct link_map *_dl_open (const char *name, int mode);
+extern struct link_map *_dl_open (const char *name, int mode)
+     internal_function;
 
 /* Close an object previously opened by _dl_open.  */
-extern void _dl_close (struct link_map *map);
+extern void _dl_close (struct link_map *map)
+     internal_function;
 
 
 /* Search loaded objects' symbol tables for a definition of the symbol
@@ -268,7 +276,8 @@ extern ElfW(Addr) _dl_lookup_symbol (const char *undef,
 				     const ElfW(Sym) **sym,
 				     struct link_map *symbol_scope[],
 				     const char *reference_name,
-				     int reloc_type);
+				     int reloc_type)
+     internal_function;
 
 /* Lookup versioned symbol.  */
 extern ElfW(Addr) _dl_lookup_versioned_symbol (const char *undef,
@@ -276,14 +285,16 @@ extern ElfW(Addr) _dl_lookup_versioned_symbol (const char *undef,
 					       struct link_map *symbol_scope[],
 					       const char *reference_name,
 					       const struct r_found_version *version,
-					       int reloc_type);
+					       int reloc_type)
+     internal_function;
 
 /* For handling RTLD_NEXT we must be able to skip shared objects.  */
 extern ElfW(Addr) _dl_lookup_symbol_skip (const char *undef,
 					  const ElfW(Sym) **sym,
 					  struct link_map *symbol_scope[],
 					  const char *reference_name,
-					  struct link_map *skip_this);
+					  struct link_map *skip_this)
+     internal_function;
 
 /* For handling RTLD_NEXT with versioned symbols we must be able to
    skip shared objects.  */
@@ -292,13 +303,16 @@ extern ElfW(Addr) _dl_lookup_versioned_symbol_skip (const char *undef,
 						    struct link_map *symbol_scope[],
 						    const char *reference_name,
 						    const struct r_found_version *version,
-						    struct link_map *skip_this);
+						    struct link_map *skip_this)
+     internal_function;
 
 /* Locate shared object containing the given address.  */
-extern int _dl_addr (const void *address, Dl_info *info);
+extern int _dl_addr (const void *address, Dl_info *info)
+     internal_function;
 
 /* Look up symbol NAME in MAP's scope and return its run-time address.  */
-extern ElfW(Addr) _dl_symbol_value (struct link_map *map, const char *name);
+extern ElfW(Addr) _dl_symbol_value (struct link_map *map, const char *name)
+     internal_function;
 
 
 /* Structure describing the dynamic linker itself.  */
@@ -329,38 +343,41 @@ extern size_t _dl_global_scope_alloc; /* Number of slots malloc'd.  */
 /* Hack _dl_global_scope[0] and [1] as necessary, and return a pointer into
    _dl_global_scope that should be passed to _dl_lookup_symbol for symbol
    references made in the object MAP's relocations.  */
-extern struct link_map **_dl_object_relocation_scope (struct link_map *map);
+extern struct link_map **_dl_object_relocation_scope (struct link_map *map)
+     internal_function;
 
 
 /* Allocate a `struct link_map' for a new object being loaded,
    and enter it into the _dl_loaded list.  */
 extern struct link_map *_dl_new_object (char *realname, const char *libname,
-					int type);
+					int type) internal_function;
 
 /* Relocate the given object (if it hasn't already been).
    SCOPE is passed to _dl_lookup_symbol in symbol lookups.
    If LAZY is nonzero, don't relocate its PLT.  */
 extern void _dl_relocate_object (struct link_map *map,
 				 struct link_map *scope[],
-				 int lazy);
+				 int lazy) internal_function;
 
 /* Check the version dependencies of all objects available through
    MAP.  If VERBOSE print some more diagnostics.  */
-extern int _dl_check_all_versions (struct link_map *map, int verbose);
+extern int _dl_check_all_versions (struct link_map *map, int verbose)
+     internal_function;
 
 /* Check the version dependencies for MAP.  If VERBOSE print some more
    diagnostics.  */
-extern int _dl_check_map_versions (struct link_map *map, int verbose);
+extern int _dl_check_map_versions (struct link_map *map, int verbose)
+     internal_function;
 
 /* Return the address of the next initializer function for MAP or one of
    its dependencies that has not yet been run.  When there are no more
    initializers to be run, this returns zero.  The functions are returned
    in the order they should be called.  */
-extern ElfW(Addr) _dl_init_next (struct link_map *map);
+extern ElfW(Addr) _dl_init_next (struct link_map *map) internal_function;
 
 /* Call the finalizer functions of all shared objects whose
    initializer functions have completed.  */
-extern void _dl_fini (void);
+extern void _dl_fini (void) internal_function;
 
 /* The dynamic linker calls this function before and having changing
    any shared object mappings.  The `r_state' member of `struct r_debug'
@@ -371,31 +388,35 @@ extern void _dl_debug_state (void);
 /* Initialize `struct r_debug' if it has not already been done.  The
    argument is the run-time load address of the dynamic linker, to be put
    in the `r_ldbase' member.  Returns the address of the structure.  */
-extern struct r_debug *_dl_debug_initialize (ElfW(Addr) ldbase);
+extern struct r_debug *_dl_debug_initialize (ElfW(Addr) ldbase)
+     internal_function;
 
 /* Initialize the basic data structure for the search paths.  */
-extern void _dl_init_paths (const char *library_path);
+extern void _dl_init_paths (const char *library_path) internal_function;
 
 /* Gather the information needed to install the profiling tables and start
    the timers.  */
-extern void _dl_start_profile (struct link_map *map, const char *output_dir);
+extern void _dl_start_profile (struct link_map *map, const char *output_dir)
+     internal_function;
 
 /* The actual functions used to keep book on the calls.  */
-extern void _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc);
+extern void _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
+     internal_function;
 
 
 /* Show the members of the auxiliary array passed up from the kernel.  */
-extern void _dl_show_auxv (void);
+extern void _dl_show_auxv (void) internal_function;
 
 /* Return all environment variables starting with `LD_', one after the
    other.  */
-extern char *_dl_next_ld_env_entry (char ***position);
+extern char *_dl_next_ld_env_entry (char ***position) internal_function;
 
 /* Return an array with the names of the important hardware capabilities.  */
 extern const struct r_strlenpair *_dl_important_hwcaps (const char *platform,
 							size_t paltform_len,
 							size_t *sz,
-							size_t *max_capstrlen);
+							size_t *max_capstrlen)
+     internal_function;
 
 __END_DECLS
 

@@ -51,6 +51,7 @@ __libc_lock_define_initialized_recursive (, _dl_load_lock)
 
 
 struct link_map *
+internal_function
 _dl_open (const char *file, int mode)
 {
   struct link_map *new, *l;
