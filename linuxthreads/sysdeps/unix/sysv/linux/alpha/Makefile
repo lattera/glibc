@@ -1,3 +1,3 @@
 ifeq ($(subdir),linuxthreads)
-libpthread-routines += ptw-sysdep ptw-sigblock ptw-sigprocmask ptw-osf_sigprocmask
+libpthread-routines += ptw-sysdep ptw-sigblock ptw-sigprocmask
 endif
