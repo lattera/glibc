@@ -934,7 +934,10 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
                      dropped right away.  */
 		      || ss->actions[signo].sa_handler == SIG_IGN
 		      || ss->actions[signo].sa_handler == SIG_DFL))
-		goto deliver_pending;
+		{
+		  mutex_unlock (&_hurd_siglock);
+		  goto deliver_pending;
+		}
 	    __spin_unlock (&ss->lock);
 	  }
 	__mutex_unlock (&_hurd_siglock);
