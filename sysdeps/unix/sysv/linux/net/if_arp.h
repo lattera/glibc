@@ -93,6 +93,7 @@ struct arphdr
 #define ARPHRD_ADAPT	264
 #define ARPHRD_ROSE	270
 #define ARPHRD_X25	271		/* CCITT X.25.  */
+#define ARPHDR_HWX25	272		/* Boards with X.25 in firmware.  */
 #define ARPHRD_PPP	512
 #define ARPHRD_HDLC	513		/* (Cisco) HDLC.  */
 #define ARPHRD_LAPB	516		/* LAPB.  */

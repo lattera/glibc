@@ -1,5 +1,7 @@
 1999-11-01  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/net/if_arp.h: Add ARPHDR_HWX25.
+
 	* sysdeps/unix/sysv/linux/i386/getrlimit.c: New file.
 
 	* manual/texinfo.tex: Updated.
