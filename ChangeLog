@@ -1,5 +1,13 @@
 Thu Jun  6 16:12:39 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* malloc/Makefile (distribute): Change malloc/gmalloc-head.c to
+	gmalloc-head.c.
+	(malloc/gmalloc.c): Depend on malloc/gmalloc-head.c.
+	(malloc/Makefile): Do $(make-target-directory) first.
+	* malloc/gmalloc-head.c: New file.
+
+	* po/Makefile (linguas.mo): Don't commit .mo files to cvs.
+
 	* hurd/hurdsig.c (_hurd_internal_post_signal): For SIGNO==0 pending
 	check, deliver a pending blocked signal if its action might be to
 	ignore.
