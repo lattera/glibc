@@ -1,5 +1,9 @@
 2000-06-22  Jes Sorensen  <jes@linuxcare.com>
 
+	* sysdeps/unix/sysv/linux/ia64/bits/statfs.h: New file.
+
+2000-06-22  Jes Sorensen  <jes@linuxcare.com>
+
 	* shlib-versions: Bump so versions to 6.1 for libc and libm on the
 	ia64 to allow 2.2+ libraries to coexist with 2.1 ones.
 
