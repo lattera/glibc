@@ -1,9 +1,13 @@
+2001-04-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_32BITUIDS):
+	HPPA always had them.  Patch by Matthew Wilcox <matthew@wil.cx>.
+
 2001-04-19  Andreas Jaeger  <aj@suse.de>
 
 	* configure.in: Require gettext 0.10.36 or newer.
 
-	* manual/install.texi (Tools for Compilation): Mention gettext
-	0.10.36.
+	* manual/install.texi (Tools for Compilation): Mention gettext 0.10.36.
 
 	* po/zh_TW.po: Remove extraneous backslashes.
 
