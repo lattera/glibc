@@ -43,7 +43,7 @@
 # define PSEUDO(name, syscall_name, args)				\
   .section ".text";							\
     PSEUDO_PROLOGUE;							\
-  ENTRY (name)								\
+  ENTRY (name);								\
     SINGLE_THREAD_P_INT;						\
     bne .Lpseudo_cancel;						\
     DO_CALL (syscall_name, args);					\
