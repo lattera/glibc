@@ -1,5 +1,9 @@
 2002-12-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/i686/libc-lowlevellock.S: Use i486
+	version.
+	* sysdeps/unix/sysv/linux/i386/i586/libc-lowlevellock.S: Likewise.
+
 	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: Correct
 	access to __libc_locking_needed for PIC.
 

@@ -1,1 +1,1 @@
-#include "lowlevellock.S"
+#include "../i486/libc-lowlevellock.S"
