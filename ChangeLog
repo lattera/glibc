@@ -1,5 +1,7 @@
 2003-11-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/bug-regex20.c: Correct invalid UTF-8 sequences.
+
 	* posix/regex_internal.c (build_wcs_upper_buffer): If mbrtowc
 	fails, just use the byte, do no fancy conversions.
 
