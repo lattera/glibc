@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -448,7 +448,6 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
   error_t err;
   struct machine_thread_all_state thread_state;
   enum { stop, ignore, core, term, handle } act;
-  struct hurd_signal_preemptor *pe;
   sighandler_t handler;
   sigset_t pending;
   int ss_suspended;
@@ -549,20 +548,38 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
   /* Check for a preempted signal.  Preempted signals can arrive during
      critical sections.  */
+  {
+    inline sighandler_t try_preemptor (struct hurd_signal_preemptor *pe)
+      {				/* PE cannot be null.  */
+	do
+	  {
+	    if (HURD_PREEMPT_SIGNAL_P (pe, signo, detail->code))
+	      {
+		if (pe->preemptor)
+		  {
+		    sighandler_t handler = (*pe->preemptor) (pe, ss,
+							     &signo, detail);
+		    if (handler != SIG_ERR)
+		      return handler;
+		  }
+		else
+		  return pe->handler;
+	      }
+	    pe = pe->next;
+	  } while (pe != 0);
+	return SIG_ERR;
+      }
 
-  handler = SIG_ERR;
-  for (pe = ss->preemptors; pe && handler == SIG_ERR; pe = pe->next)
-    if (HURD_PREEMPT_SIGNAL_P (pe, signo, detail->code))
-      handler = (*pe->preemptor) (pe, ss, &signo, detail);
+    handler = ss->preemptors ? try_preemptor (ss->preemptors) : SIG_ERR;
 
-  if (handler == SIG_ERR && (__sigmask (signo) & _hurdsig_preempted_set))
-    {
-      __mutex_lock (&_hurd_siglock);
-      for (pe = _hurdsig_preemptors; pe && handler == SIG_ERR; pe = pe->next)
-	if (HURD_PREEMPT_SIGNAL_P (pe, signo, detail->code))
-	  handler = (*pe->preemptor) (pe, ss, &signo, detail);
-      __mutex_unlock (&_hurd_siglock);
-    }
+    /* If no thread-specific preemptor, check for a global one.  */
+    if (handler == SIG_ERR && (__sigmask (signo) & _hurdsig_preempted_set))
+      {
+	__mutex_lock (&_hurd_siglock);
+	handler = try_preemptor (_hurdsig_preemptors);
+	__mutex_unlock (&_hurd_siglock);
+      }
+  }
 
   ss_suspended = 0;
 

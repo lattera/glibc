@@ -1,3 +1,14 @@
+1999-07-20  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/_strerror.c: Include <libintl.h>.
+
+1999-07-19  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdsig.c (_hurd_internal_post_signal): If a
+	hurd_signal_preemptor matches but its `preemptor' field is null, use
+	its `handler' field directly.  This is to comply with behavior
+	documented in <hurd/sigpreempt.h>.
+
 1999-07-21  Andreas Schwab  <schwab@suse.de>
 
 	* libio/fileops.c (_IO_new_file_underflow): Set error indicator
