@@ -1,3 +1,7 @@
+2001-06-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/nl.po: Update from translation team.
+
 2001-06-09  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconvdata/gconv-modules (BIG5HKSCS): New alias BIG5-HKSCS.
