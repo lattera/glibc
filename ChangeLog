@@ -1,3 +1,8 @@
+2001-01-17  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/bits/byteswap.h (__bswap_32): Add cast to avoid
+	invalid asm.
+
 2001-01-17  Andreas Jaeger  <aj@suse.de>
 
 	* nscd/connections.c (nscd_run): Use proper format specifier.
