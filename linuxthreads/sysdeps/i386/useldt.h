@@ -169,3 +169,9 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 					     member)));			      \
     }									      \
 })
+
+/* We want the OS to assign stack addresses.  */
+#define FLOATING_STACKS	1
+
+/* Maximum size o fthe stack if the rlimit is unlimited.  */
+#define ARCH_STACK_MAX_SIZE	8*1024*1024

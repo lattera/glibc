@@ -18,6 +18,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/param.h>
+#include <sys/resource.h>
 #include "pthread.h"
 #include "internals.h"
 #include <shlib-compat.h>
@@ -184,6 +185,30 @@ weak_alias (__pthread_attr_getstackaddr, pthread_attr_getstackaddr)
 
 int __pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize)
 {
+#ifdef FLOATING_STACKS
+  /* We have to check against the maximum allowed stack size.  This is no
+     problem if the manager is already started and we determined it.  If
+     this hasn't happened, we have to find the limit outself.  */
+  if (__pthread_max_stacksize == 0)
+    {
+      struct rlimit limit;
+
+      getrlimit(RLIMIT_STACK, &limit);
+# ifdef NEED_SEPARATE_REGISTER_STACK
+      __pthread_max_stacksize = limit.rlim_max / 2;
+# else
+      __pthread_max_stacksize = limit.rlim_max;
+# endif
+    }
+
+  if (stacksize > __pthread_max_stacksize)
+    return EINVAL;
+#else
+  /* We have a fixed size limit.  */
+  if (stacksize > STACK_SIZE)
+    return EINVAL;
+#endif
+
   /* We don't accept value smaller than PTHREAD_STACK_MIN.  */
   if (stacksize < PTHREAD_STACK_MIN)
     return EINVAL;

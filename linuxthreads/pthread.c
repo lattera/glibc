@@ -182,6 +182,9 @@ char *__pthread_manager_thread_tos;
 int __pthread_exit_requested;
 int __pthread_exit_code;
 
+/* Maximum stack size.  */
+size_t __pthread_max_stacksize;
+
 /* Nozero if the machine has more than one processor.  */
 int __pthread_smp_kernel;
 
@@ -455,20 +458,32 @@ int __pthread_initialize_manager(void)
   struct rlimit limit;
   int max_stack;
 
+  getrlimit(RLIMIT_STACK, &limit);
+#ifdef FLOATING_STACKS
+  if (limit.rlim_cur == RLIM_INFINITY)
+    limit.rlim_cur = ARCH_STACK_MAX_SIZE;
+# ifdef NEED_SEPARATE_REGISTER_STACK
+  max_stack = limit.rlim_cur / 2;
+# else
+  max_stack = limit.rlim_cur;
+#endif
+
+  __pthread_max_stacksize = max_stack;
+#else
   /* Play with the stack size limit to make sure that no stack ever grows
      beyond STACK_SIZE minus one page (to act as a guard page). */
-  getrlimit(RLIMIT_STACK, &limit);
-#ifdef NEED_SEPARATE_REGISTER_STACK
+# ifdef NEED_SEPARATE_REGISTER_STACK
   /* STACK_SIZE bytes hold both the main stack and register backing
      store. The rlimit value applies to each individually.  */
-  max_stack = STACK_SIZE/2 - __getpagesize();
-#else
+  max_stack = STACK_SIZE/2 - __getpagesize ();
+# else
   max_stack = STACK_SIZE - __getpagesize();
-#endif
+# endif
   if (limit.rlim_cur > max_stack) {
     limit.rlim_cur = max_stack;
     setrlimit(RLIMIT_STACK, &limit);
   }
+#endif
   /* If basic initialization not done yet (e.g. we're called from a
      constructor run before our constructor), do it now */
   if (__pthread_initial_thread_bos == NULL) pthread_initialize();

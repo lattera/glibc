@@ -272,6 +272,11 @@ extern int __pthread_manager_reader;
 extern char *__pthread_manager_thread_bos;
 extern char *__pthread_manager_thread_tos;
 
+#ifdef FLOATING_STACKS
+/* Maximum stack size.  */
+extern size_t __pthread_max_stacksize;
+#endif
+
 /* Pending request for a process-wide exit */
 
 extern int __pthread_exit_requested, __pthread_exit_code;

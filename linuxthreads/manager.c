@@ -64,25 +64,29 @@ volatile pthread_descr __pthread_last_event;
 /* Stack segment numbers are also indices into the __pthread_handles array. */
 /* Stack segment number 0 is reserved for the initial thread. */
 
+#if FLOATING_STACKS
+# define thread_segment(seq) NULL
+#else
 static inline pthread_descr thread_segment(int seg)
 {
   return (pthread_descr)(THREAD_STACK_START_ADDRESS - (seg - 1) * STACK_SIZE)
          - 1;
 }
+#endif
 
 /* Flag set in signal handler to record child termination */
 
-static volatile int terminated_children = 0;
+static volatile int terminated_children;
 
 /* Flag set when the initial thread is blocked on pthread_exit waiting
    for all other threads to terminate */
 
-static int main_thread_exiting = 0;
+static int main_thread_exiting;
 
 /* Counter used to generate unique thread identifier.
    Thread identifier is pthread_threads_counter + segment. */
 
-static pthread_t pthread_threads_counter = 0;
+static pthread_t pthread_threads_counter;
 
 #ifdef NEED_SEPARATE_REGISTER_STACK
 /* Signal masks for the manager.  These have to be global only when clone2
@@ -338,6 +342,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       void *map_addr;
 
       /* Allocate space for stack and thread descriptor at default address */
+#ifdef NEED_SEPARATE_REGISTER_STACK
       if (attr != NULL)
 	{
 	  guardsize = page_roundup (attr->__guardsize, granularity);
@@ -350,7 +355,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 	  guardsize = granularity;
 	  stacksize = STACK_SIZE - granularity;
 	}
-#ifdef NEED_SEPARATE_REGISTER_STACK
+
       new_thread = default_new_thread;
       new_thread_bottom = (char *) (new_thread + 1) - stacksize - guardsize;
       /* Includes guard area, unlike the normal case.  Use the bottom
@@ -360,6 +365,8 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
        avoids the risk of intermittent failures due to other mappings
        in the same region.  The cost is that we might be able to map
        slightly fewer stacks.  */
+
+      /* XXX Fix for floating stacks with variable sizes.  */
 
       /* First the main stack: */
       if (mmap((caddr_t)((char *)(new_thread + 1) - stacksize / 2),
@@ -382,37 +389,63 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       guardaddr = new_thread_bottom + stacksize/2;
       /* We leave the guard area in the middle unmapped.	*/
 #else  /* !NEED_SEPARATE_REGISTER_STACK */
+# if FLOATING_STACKS
+      if (attr != NULL)
+	{
+	  guardsize = page_roundup (attr->__guardsize, granularity);
+	  stacksize = __pthread_max_stacksize - guardsize;
+	  stacksize = MIN (stacksize,
+			   page_roundup (attr->__stacksize, granularity));
+	}
+      else
+	{
+	  guardsize = granularity;
+	  stacksize = __pthread_max_stacksize - guardsize;
+	}
+
+      map_addr = mmap(NULL, stacksize + guardsize,
+		      PROT_READ | PROT_WRITE | PROT_EXEC,
+		      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+      if (map_addr == MAP_FAILED)
+        /* No more memory available.  */
+        return -1;
+
+      guardaddr = map_addr;
+      if (guardsize > 0)
+	mprotect (guardaddr, guardsize, PROT_NONE);
+
+      new_thread_bottom = (char *) map_addr + guardsize;
+      new_thread = ((pthread_descr) (new_thread_bottom + stacksize)) - 1;
+# else
+      if (attr != NULL)
+	{
+	  guardsize = page_roundup (attr->__guardsize, granularity);
+	  stacksize = STACK_SIZE - guardsize;
+	  stacksize = MIN (stacksize,
+			   page_roundup (attr->__stacksize, granularity));
+	}
+      else
+	{
+	  guardsize = granularity;
+	  stacksize = STACK_SIZE - granularity;
+	}
+
       new_thread = default_new_thread;
       new_thread_bottom = (char *) (new_thread + 1) - stacksize;
-      map_addr = mmap((caddr_t)((char *)(new_thread + 1) - stacksize),
-		      stacksize, PROT_READ | PROT_WRITE | PROT_EXEC,
+      map_addr = mmap((caddr_t)((char *)(new_thread + 1) - stacksize - guardsize),
+		      stacksize + guardsize,
+		      PROT_READ | PROT_WRITE | PROT_EXEC,
 		      MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
       if (map_addr == MAP_FAILED)
         /* Bad luck, this segment is already mapped. */
         return -1;
-      /* We manage to get a stack.  Now see whether we need a guard
-	 and allocate it if necessary.  Notice that the default
-	 attributes (stack_size = STACK_SIZE - pagesize and guardsize
-	 = pagesize) do not need a guard page, since the RLIMIT_STACK
-	 soft limit prevents stacks from running into one another. */
-      if (stacksize == STACK_SIZE - pagesize)
-        {
-          /* We don't need a guard page. */
-          guardaddr = new_thread_bottom;
-          guardsize = 0;
-        }
-      else
-        {
-          /* Put a bad page at the bottom of the stack */
-	  guardaddr = (void *)new_thread_bottom - guardsize;
-          if (mmap ((caddr_t) guardaddr, guardsize, 0, MAP_FIXED, -1, 0)
-              == MAP_FAILED)
-            {
-              /* We don't make this an error.  */
-              guardaddr = new_thread_bottom;
-              guardsize = 0;
-            }
-        }
+
+      /* We manage to get a stack.  Protect the guard area pages if
+	 necessary.  */
+      guardaddr = map_addr;
+      if (guardsize > 0)
+	mprotect (guardaddr, guardsize, PROT_NONE);
+# endif
 #endif /* !NEED_SEPARATE_REGISTER_STACK */
     }
   /* Clear the thread data structure.  */
