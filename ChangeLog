@@ -1,3 +1,8 @@
+1999-12-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/regex.c (SYNTAX): Make more portable.
+	Patch by Aharon Robbins <arnold@skeeve.com>.
+
 1999-11-18  Roland McGrath  <roland@baalperazim.frob.com>
 
         * hurd/hurdsig.c (_hurdsig_init): If __hurd_threadvar_stack_mask is
