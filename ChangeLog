@@ -1,3 +1,8 @@
+2001-03-27  kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/sys/ucontext.h (NFREG): Rename to NFPREG.
+	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h (NFREG): Likewise.
+
 2001-03-27  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/ldconfig.h: Fix typo.
