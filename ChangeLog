@@ -1,5 +1,14 @@
 2000-08-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i370/Implies: Removed.
+	* sysdeps/mvs/Implies: Removed.
+
+	* catgets/catgets.c (catopen): Filter out env_var values with / if
+	necessary.
+
+	* locale/findlocale.c (_nl_find_locale): Move test for unusable
+	locale name after all getenvs.
+
 	* configure.in: Allow sed versions like 3.02.8.
 	Patch by Rodrigo Barbosa <rodrigob@conectiva.com.br>.
 

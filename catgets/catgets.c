@@ -50,7 +50,8 @@ catopen (const char *cat_name, int flag)
 	/* Use the LANG environment variable.  */
 	env_var = getenv ("LANG");
 
-      if (env_var == NULL)
+      if (env_var == NULL || *env_var == '\0'
+	  || (__libc_enable_secure && strchr (env_var, '/') != NULL))
 	env_var = "C";
 
       env_var_len = strlen (env_var) + 1;

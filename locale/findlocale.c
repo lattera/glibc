@@ -54,11 +54,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
   const char *revision;
   struct loaded_l10nfile *locale_file;
 
-  if ((*name)[0] == '\0'
-      /* In SUID binaries we must not allow people to access files
-	 outside the dedicated locale directories.  */
-      || (__builtin_expect (__libc_enable_secure, 0)
-	  && memchr (*name, '/', _nl_find_language (*name) - *name) != NULL))
+  if ((*name)[0] == '\0')
     {
       /* The user decides which locale to use by setting environment
 	 variables.  */
@@ -67,9 +63,12 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 	*name = getenv (_nl_category_names[category]);
       if (*name == NULL || (*name)[0] == '\0')
 	*name = getenv ("LANG");
-      if (*name == NULL || (*name)[0] == '\0')
-	*name = (char *) _nl_C_name;
     }
+
+  if (*name == NULL || (*name)[0] == '\0'
+      || (__builtin_expect (__libc_enable_secure, 0)
+	  && memchr (*name, '/', _nl_find_language (*name) - *name) != NULL))
+    *name = (char *) _nl_C_name;
 
   if (__builtin_expect (strcmp (*name, _nl_C_name), 1) == 0
       || __builtin_expect (strcmp (*name, _nl_POSIX_name), 1) == 0)
