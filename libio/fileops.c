@@ -398,10 +398,6 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 
 	  /* Set the mode now.  */
 	  result->_mode = 1;
-
-	  /* We don't need the step data structure anymore.  */
-	  __gconv_release_cache (fcts.towc, fcts.towc_nsteps);
-	  __gconv_release_cache (fcts.tomb, fcts.tomb_nsteps);
 	}
     }
 #endif	/* GNU libc */
