@@ -1,5 +1,8 @@
 2000-07-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/vfprintf.c (process_string_arg): For wide character
+	version, handle precision also correctly.
+
 	* nss/nss_files/files-hosts.c: Correct problem with three or more
 	entries with the same name.
 

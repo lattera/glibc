@@ -1037,7 +1037,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    string = (CHAR_T *) alloca (len * sizeof (wchar_t));	      \
 									      \
 	    memset (&mbstate, '\0', sizeof (mbstate_t));		      \
-	    len = __mbsrtowcs (string, &mbs, len, &mbstate);		      \
+	    len = __mbsnrtowcs (string, &mbs, len, len, &mbstate);	      \
 	    if (len == (size_t) -1)					      \
 	      {								      \
 		/* Illegal multibyte character.  */			      \
