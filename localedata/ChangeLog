@@ -1,3 +1,8 @@
+2000-08-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (install-locales): Use --prefix option of localedef to
+	avoid providing complete path for output file.
+
 2000-08-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/zh_TW: Updated.

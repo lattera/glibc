@@ -188,7 +188,7 @@ install-locales:
 	   case $$locale in \#*) continue;; esac; \
 	   $(LOCALEDEF) -i locales/`echo $$locale | sed 's/\([^.]*\).*/\1/'` \
 			-c -f charmaps/$$charset \
-			$(inst_localedir)/$$locale; \
+			$(addprefix --prefix=,$(install_root)) $$locale; \
 	done < SUPPORTED
 
 # The mbwc-tests need some environment setup to find the locale data files

@@ -61,6 +61,9 @@ int oldstyle_tables;
 /* If not zero force output even if warning were issued.  */
 static int force_output;
 
+/* Prefix for output files.  */
+const char *output_prefix;
+
 /* Name of the character map file.  */
 static const char *charmap_file;
 
@@ -81,6 +84,7 @@ void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 #define OPT_POSIX 1
 #define OPT_QUIET 2
 #define OPT_OLDSTYLE 3
+#define OPT_PREFIX 4
 
 /* Definitions of arguments for argp functions.  */
 static const struct argp_option options[] =
@@ -96,6 +100,7 @@ static const struct argp_option options[] =
   { "force", 'c', NULL, 0,
     N_("Create output even if warning messages were issued") },
   { "old-style", OPT_OLDSTYLE, NULL, 0, N_("Create old-style tables") },
+  { "prefix", OPT_PREFIX, "PATH", 0, N_("Optional output file prefix") },
   { "posix", OPT_POSIX, NULL, 0, N_("Be strictly POSIX conform") },
   { "quiet", OPT_QUIET, NULL, 0,
     N_("Suppress warnings and information messages") },
@@ -250,6 +255,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case OPT_OLDSTYLE:
       oldstyle_tables = 1;
       break;
+    case OPT_PREFIX:
+      output_prefix = arg;
+      break;
     case 'c':
       force_output = 1;
       break;
@@ -359,9 +367,11 @@ construct_output_path (char *path)
 	 the end of the function we need another byte for the trailing
 	 '/'.  */
       if (normal == NULL)
-	n = asprintf (&result, "%s/%s%c", LOCALEDIR, path, '\0');
+	n = asprintf (&result, "%s%s/%s%c",
+		      output_prefix ?: "", LOCALEDIR, path, '\0');
       else
-	n = asprintf (&result, "%s/%.*s%s%s%c", LOCALEDIR,
+	n = asprintf (&result, "%s%s/%.*s%s%s%c",
+		      output_prefix ?: "", LOCALEDIR,
 		      (int) (startp - path), path, normal, endp, '\0');
 
       endp = result + n;
