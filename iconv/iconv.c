@@ -37,7 +37,7 @@ iconv (iconv_t cd, const char **inbuf, size_t *inbytesleft, char **outbuf,
   size_t converted;
   int result;
 
-  if (__gconv_builtin (inbuf == NULL || *inbuf == NULL), 0)
+  if (__builtin_expect (inbuf == NULL || *inbuf == NULL, 0))
     {
       if (outbuf == NULL || *outbuf == NULL)
 	result = __gconv (gcd, NULL, NULL, NULL, NULL, &converted);
