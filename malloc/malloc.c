@@ -1,4 +1,4 @@
-  /* Malloc implementation for multiple threads without lock contention.
+/* Malloc implementation for multiple threads without lock contention.
    Copyright (C) 1996-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>
@@ -3691,14 +3691,14 @@ public_cALLOc(size_t n, size_t elem_size)
 
   /* Two optional cases in which clearing not necessary */
 #if HAVE_MMAP
-  if (chunk_is_mmapped(p))
+  if (perturb_byte == 0 && chunk_is_mmapped(p))
     return mem;
 #endif
 
   csz = chunksize(p);
 
 #if MORECORE_CLEARS
-  if (p == oldtop && csz > oldtopsize) {
+  if (perturb_byte == 0 && (p == oldtop && csz > oldtopsize)) {
     /* clear only the bytes from non-freshly-sbrked memory */
     csz = oldtopsize;
   }

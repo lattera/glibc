@@ -1,3 +1,8 @@
+2005-03-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (public_cALLOc): We cannot skip the memory
+	clearing if perturb_byte != 0.
+
 2005-03-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/bits/unistd.h (pread) [__USE_FILE_OFFSET64]: Use __off64_t
