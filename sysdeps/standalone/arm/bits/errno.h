@@ -19,35 +19,36 @@
 /* This file defines the `errno' constants for standalone ARM machines.
    These constants are essentially arbitrary.  */
 
-#if !defined(__Emath_defined) && (defined(_ERRNO_H) || defined(__need_Emath))
-#undef	__need_Emath
-#define	__Emath_defined	1
+#if !defined __Emath_defined && (defined _ERRNO_H || defined __need_Emath)
+# undef	__need_Emath
+# define __Emath_defined	1
 
-#define	EDOM		1
-#define	ERANGE		2
+# define EDOM		1
+# define ERANGE		2
 #endif
 
 #ifdef	_ERRNO_H
-#define	ENOSYS		3
-#define	EINVAL		4
-#define	ESPIPE		5
-#define	EBADF		6
-#define	ENOMEM		7
-#define	EACCES		8
-#define ENFILE		9
-#define EMFILE		10
-#define	ENAMETOOLONG	11	/* File name too long */
-#define	ELOOP		12	/* Too many symbolic links encountered */
-#define ENOMSG          13      /* No message of desired type */
-#define	E2BIG		14	/* Arg list too long */
-#define EINTR		15
-#define EILSEQ		16
-#define ENOEXEC		17
-#define ENOENT		18
-#define EPROTOTYPE	19
-#define ESRCH		20
-#define EPERM		21
-#define ENOTDIR         22
+# define ENOSYS		3
+# define EINVAL		4
+# define ESPIPE		5
+# define EBADF		6
+# define ENOMEM		7
+# define EACCES		8
+# define ENFILE		9
+# define EMFILE		10
+# define ENAMETOOLONG	11	/* File name too long */
+# define ELOOP		12	/* Too many symbolic links encountered */
+# define ENOMSG          13      /* No message of desired type */
+# define E2BIG		14	/* Arg list too long */
+# define EINTR		15
+# define EILSEQ		16
+# define ENOEXEC		17
+# define ENOENT		18
+# define EPROTOTYPE	19
+# define ESRCH		20
+# define EPERM		21
+# define ENOTDIR         22
+# define ESTALE          23
 #endif
 
 #define __set_errno(val) errno = (val)
