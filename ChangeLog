@@ -1,3 +1,8 @@
+1998-04-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/tst-svc.expect: Adapt for change in .input.
+	* string/tst-svc.input: More tests.
+
 1998-04-24 17:15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/Makefile: Add rules for new modules.
