@@ -1,3 +1,7 @@
+2002-12-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/Makefile (generated): Remove definition.  Needs to be fixed.
+
 2002-12-30  Roland McGrath  <roland@redhat.com>
 
 	* math/Makefile (generated): Add m_*l and m_*f variants too.
@@ -7,7 +11,7 @@
 	* elf/dl-close.c (_dl_close): Handle relocation dependencies among
 	the to-be-deleted objects right away instead of later separately.
 	The latter fails because the scope data structures of the DSO
-	might already have gone.
+	might already be gone.
 
 	* elf/Makefile: Add rules to build and run reldep8 test.
 	* elf/reldep8.c: New file.
