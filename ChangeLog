@@ -1,5 +1,7 @@
 2002-12-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-misc.c (_dl_debug_vdprintf): Don't depend on 5-digit PIDs.
+
 	* misc/syslog.c (log_cleanup): Don't use parameter in
 	__libc_lock_unlock call, use syslog_lock directly.  Adjust callers to
 	pass NULL instead of a pointer to syslog_lock.

@@ -92,7 +92,7 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
   struct iovec iov[niovmax];
   int niov = 0;
   pid_t pid = 0;
-  char pidbuf[7];
+  char pidbuf[12];
 
   while (*fmt != '\0')
     {
@@ -106,17 +106,17 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 	    {
 	      char *p;
 	      pid = __getpid ();
-	      assert (pid >= 0 && pid < 100000);
-	      p = _itoa (pid, &pidbuf[5], 10, 0);
+	      assert (pid >= 0 && sizeof (pid_t) <= 4);
+	      p = _itoa (pid, &pidbuf[10], 10, 0);
 	      while (p > pidbuf)
-		*--p = '0';
-	      pidbuf[5] = ':';
-	      pidbuf[6] = '\t';
+		*--p = ' ';
+	      pidbuf[10] = ':';
+	      pidbuf[11] = '\t';
 	    }
 
 	  /* Append to the output.  */
 	  assert (niov < niovmax);
-	  iov[niov].iov_len = 7;
+	  iov[niov].iov_len = 12;
 	  iov[niov++].iov_base = pidbuf;
 
 	  /* No more tags until we see the next newline.  */
