@@ -104,7 +104,7 @@ do_test (void)
       result = 1;
     }
 
-  ts.tv_nsec = 2000000000;
+  ts.tv_nsec = 1000000000;
 
   e = pthread_rwlock_timedrdlock (&r, &ts);
   if (e == 0)
@@ -127,6 +127,34 @@ do_test (void)
   else if (e != EINVAL)
     {
       puts ("second rwlock_timedrdlock did not return EINVAL");
+      result = 1;
+    }
+
+  ts.tv_nsec = 0x100001000LL;
+  if (ts.tv_nsec != 0x100001000LL)
+    ts.tv_nsec = 2000000000;
+
+  e = pthread_rwlock_timedrdlock (&r, &ts);
+  if (e == 0)
+    {
+      puts ("third rwlock_timedrdlock did not fail");
+      result = 1;
+    }
+  else if (e != EINVAL)
+    {
+      puts ("third rwlock_timedrdlock did not return EINVAL");
+      result = 1;
+    }
+
+  e = pthread_rwlock_timedrdlock (&r, &ts);
+  if (e == 0)
+    {
+      puts ("third rwlock_timedrdlock did not fail");
+      result = 1;
+    }
+  else if (e != EINVAL)
+    {
+      puts ("third rwlock_timedrdlock did not return EINVAL");
       result = 1;
     }
 

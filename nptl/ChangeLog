@@ -1,3 +1,12 @@
+2004-07-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S
+	(pthread_rwlock_timedrdlock): Use cmpq instead of cmpl to check
+	for valid tv_nsec.
+	* tst-rwlock14.c (do_test): Test for invalid tv_nsec equal to
+	1 billion and 64-bit tv_nsec which is valid when truncated to 32
+	bits.
+
 2004-06-29  Roland McGrath  <roland@redhat.com>
 
 	* Banner: NPTL no longer has its own version number.

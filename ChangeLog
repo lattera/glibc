@@ -1,3 +1,8 @@
+2004-07-04  Matthew Reppert  <arashi@kai.vm.bytemark.co.uk>
+
+	* sysdeps/unix/sysv/linux/i386/glob64.c (glob64): Use libc_hidden_ver
+	instead of libc_hidden_def.
+
 2004-07-01  Roland McGrath  <roland@redhat.com>
 
 	* aclocal.m4: Add provide for AC_CONFIG_AUX_DIR_DEFAULT.
