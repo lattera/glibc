@@ -33,4 +33,242 @@
 # define SYS_ify(syscall_name)	__NR_/**/syscall_name
 #endif
 
+#ifndef __ASSEMBLER__
+
+/* Define a macro which expands into the inline wrapper code for a system
+   call.  */
+#undef INLINE_SYSCALL
+#define INLINE_SYSCALL(name, nr, args...)                               \
+  ({ INTERNAL_SYSCALL_DECL(err);					\
+     long result_var = INTERNAL_SYSCALL (name, err, nr, args);      	\
+     if ( INTERNAL_SYSCALL_ERROR_P (result_var, err) )  		\
+       {                                                                \
+         __set_errno (INTERNAL_SYSCALL_ERRNO (result_var, err));      	\
+         result_var = -1L;                               		\
+       }                                                                \
+     result_var; })
+
+#undef INTERNAL_SYSCALL_DECL
+#define INTERNAL_SYSCALL_DECL(err) long err
+
+#undef INTERNAL_SYSCALL_ERROR_P
+#define INTERNAL_SYSCALL_ERROR_P(val, err)   ((long) (err))
+
+#undef INTERNAL_SYSCALL_ERRNO
+#define INTERNAL_SYSCALL_ERRNO(val, err)     (val)
+
+#undef INTERNAL_SYSCALL
+#define INTERNAL_SYSCALL(name, err, nr, args...) internal_syscall##nr(name, err, args)
+
+#define internal_syscall0(name, err, dummy...) 				\
+({ 									\
+	long _sys_result;						\
+									\
+	{								\
+	register long __v0 asm("$2"); 					\
+	register long __a3 asm("$7"); 					\
+	__asm__ volatile ( 						\
+	".set\tnoreorder\n\t" 						\
+	"li\t$2, %2\t\t\t# " #name "\n\t"				\
+	"syscall\n\t" 							\
+	".set reorder" 							\
+	: "=r" (__v0), "=r" (__a3) 					\
+	: "i" (SYS_ify(name))						\
+	: __SYSCALL_CLOBBERS); 						\
+	err = __a3;							\
+	_sys_result = __v0;						\
+	}								\
+	_sys_result;							\
+})
+
+#define internal_syscall1(name, err, arg1) 				\
+({ 									\
+	long _sys_result;						\
+									\
+	{								\
+	register long __v0 asm("$2"); 					\
+	register long __a0 asm("$4") = (long) arg1; 			\
+	register long __a3 asm("$7"); 					\
+	__asm__ volatile ( 						\
+	".set\tnoreorder\n\t" 						\
+	"li\t$2, %3\t\t\t# " #name "\n\t"				\
+	"syscall\n\t" 							\
+	".set reorder" 							\
+	: "=r" (__v0), "=r" (__a3) 					\
+	: "r" (__a0), "i" (SYS_ify(name)) 				\
+	: __SYSCALL_CLOBBERS); 						\
+	err = __a3;							\
+	_sys_result = __v0;						\
+	}								\
+	_sys_result;							\
+})
+
+#define internal_syscall2(name, err, arg1, arg2) 			\
+({ 									\
+	long _sys_result;						\
+									\
+	{								\
+	register long __v0 asm("$2"); 					\
+	register long __a0 asm("$4") = (long) arg1; 			\
+	register long __a1 asm("$5") = (long) arg2; 			\
+	register long __a3 asm("$7"); 					\
+	__asm__ volatile ( 						\
+	".set\tnoreorder\n\t" 						\
+	"li\t$2, %4\t\t\t# " #name "\n\t" 				\
+	"syscall\n\t" 							\
+	".set\treorder" 						\
+	: "=r" (__v0), "=r" (__a3) 					\
+	: "r" (__a0), "r" (__a1), "i" (SYS_ify(name))			\
+	: __SYSCALL_CLOBBERS); 						\
+	err = __a3;							\
+	_sys_result = __v0;						\
+	}								\
+	_sys_result;							\
+})
+
+#define internal_syscall3(name, err, arg1, arg2, arg3) 			\
+({ 									\
+	long _sys_result;						\
+									\
+	{								\
+	register long __v0 asm("$2"); 					\
+	register long __a0 asm("$4") = (long) arg1; 			\
+	register long __a1 asm("$5") = (long) arg2; 			\
+	register long __a2 asm("$6") = (long) arg3; 			\
+	register long __a3 asm("$7"); 					\
+	__asm__ volatile ( 						\
+	".set\tnoreorder\n\t" 						\
+	"li\t$2, %5\t\t\t# " #name "\n\t" 				\
+	"syscall\n\t" 							\
+	".set\treorder" 						\
+	: "=r" (__v0), "=r" (__a3) 					\
+	: "r" (__a0), "r" (__a1), "r" (__a2), "i" (SYS_ify(name)) 	\
+	: __SYSCALL_CLOBBERS); 						\
+	err = __a3;							\
+	_sys_result = __v0;						\
+	}								\
+	_sys_result;							\
+})
+
+#define internal_syscall4(name, err, arg1, arg2, arg3, arg4) 		\
+({ 									\
+	long _sys_result;						\
+									\
+	{								\
+	register long __v0 asm("$2"); 					\
+	register long __a0 asm("$4") = (long) arg1; 			\
+	register long __a1 asm("$5") = (long) arg2; 			\
+	register long __a2 asm("$6") = (long) arg3; 			\
+	register long __a3 asm("$7") = (long) arg4; 			\
+	__asm__ volatile ( 						\
+	".set\tnoreorder\n\t" 						\
+	"li\t$2, %5\t\t\t# " #name "\n\t" 				\
+	"syscall\n\t" 							\
+	".set\treorder" 						\
+	: "=r" (__v0), "+r" (__a3) 					\
+	: "r" (__a0), "r" (__a1), "r" (__a2), "i" (SYS_ify(name)) 	\
+	: __SYSCALL_CLOBBERS); 						\
+	err = __a3;							\
+	_sys_result = __v0;						\
+	}								\
+	_sys_result;							\
+})
+
+#define internal_syscall5(name, err, arg1, arg2, arg3, arg4, arg5) 	\
+({ 									\
+	long _sys_result;						\
+									\
+	{								\
+	register long __v0 asm("$2"); 					\
+	register long __a0 asm("$4") = (long) arg1; 			\
+	register long __a1 asm("$5") = (long) arg2; 			\
+	register long __a2 asm("$6") = (long) arg3; 			\
+	register long __a3 asm("$7") = (long) arg4; 			\
+	__asm__ volatile ( 						\
+	".set\tnoreorder\n\t" 						\
+	"lw\t$2, %6\n\t" 						\
+	"subu\t$29, 32\n\t" 						\
+	"sw\t$2, 16($29)\n\t" 						\
+	"li\t$2, %5\t\t\t# " #name "\n\t" 				\
+	"syscall\n\t" 							\
+	"addiu\t$29, 32\n\t" 						\
+	".set\treorder" 						\
+	: "=r" (__v0), "+r" (__a3) 					\
+	: "r" (__a0), "r" (__a1), "r" (__a2), "i" (SYS_ify(name)), 	\
+	  "m" ((long)arg5) 						\
+	: __SYSCALL_CLOBBERS); 						\
+	err = __a3;							\
+	_sys_result = __v0;						\
+	}								\
+	_sys_result;							\
+})
+
+#define internal_syscall6(name, err, arg1, arg2, arg3, arg4, arg5, arg6)\
+({ 									\
+	long _sys_result;						\
+									\
+	{								\
+	register long __v0 asm("$2"); 					\
+	register long __a0 asm("$4") = (long) arg1; 			\
+	register long __a1 asm("$5") = (long) arg2; 			\
+	register long __a2 asm("$6") = (long) arg3; 			\
+	register long __a3 asm("$7") = (long) arg4; 			\
+	__asm__ volatile ( 						\
+	".set\tnoreorder\n\t" 						\
+	"lw\t$2, %6\n\t" 						\
+	"lw\t$8, %7\n\t" 						\
+	"subu\t$29, 32\n\t" 						\
+	"sw\t$2, 16($29)\n\t" 						\
+	"sw\t$8, 20($29)\n\t" 						\
+	"li\t$2, %5\t\t\t# " #name "\n\t" 				\
+	"syscall\n\t" 							\
+	"addiu\t$29, 32\n\t" 						\
+	".set\treorder" 						\
+	: "=r" (__v0), "+r" (__a3) 					\
+	: "r" (__a0), "r" (__a1), "r" (__a2), "i" (SYS_ify(name)), 	\
+	  "m" ((long)arg5), "m" ((long)arg6)				\
+	: __SYSCALL_CLOBBERS); 						\
+	err = __a3;							\
+	_sys_result = __v0;						\
+	}								\
+	_sys_result;							\
+})
+
+#define internal_syscall7(name, err, arg1, arg2, arg3, arg4, arg5, arg6, arg7)\
+({ 									\
+	long _sys_result;						\
+									\
+	{								\
+	register long __v0 asm("$2"); 					\
+	register long __a0 asm("$4") = (long) arg1; 			\
+	register long __a1 asm("$5") = (long) arg2; 			\
+	register long __a2 asm("$6") = (long) arg3; 			\
+	register long __a3 asm("$7") = (long) arg4; 			\
+	__asm__ volatile ( 						\
+	".set\tnoreorder\n\t" 						\
+	"lw\t$2, %6\n\t" 						\
+	"lw\t$8, %7\n\t" 						\
+	"lw\t$9, %8\n\t" 						\
+	"subu\t$29, 32\n\t" 						\
+	"sw\t$2, 16($29)\n\t" 						\
+	"sw\t$8, 20($29)\n\t" 						\
+	"sw\t$9, 24($29)\n\t" 						\
+	"li\t$2, %5\t\t\t# " #name "\n\t" 				\
+	"syscall\n\t" 							\
+	"addiu\t$29, 32\n\t" 						\
+	".set\treorder" 						\
+	: "=r" (__v0), "+r" (__a3) 					\
+	: "r" (__a0), "r" (__a1), "r" (__a2), "i" (SYS_ify(name)), 	\
+	  "m" ((long)arg5), "m" ((long)arg6), "m" ((long)arg7)		\
+	: __SYSCALL_CLOBBERS); 						\
+	err = __a3;							\
+	_sys_result = __v0;						\
+	}								\
+	_sys_result;							\
+})
+
+#define __SYSCALL_CLOBBERS "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13", "$14", "$15", "$24", "$25"
+
+#endif /* __ASSEMBLER__ */
+
 #endif /* linux/mips/sysdep.h */
