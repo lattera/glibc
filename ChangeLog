@@ -1,3 +1,8 @@
+2004-09-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/string.h: Add __nonnull annotations.
+	* stdlib/stdlib.h: Likewise.
+
 2004-09-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sysdep.h (DO_INLINE_SYSCALL):
