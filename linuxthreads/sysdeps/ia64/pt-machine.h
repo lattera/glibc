@@ -65,6 +65,10 @@ register struct _pthread_descr_struct *__thread_self __asm__("r13");
 #define THREAD_SETMEM_NC(descr, member, value) __thread_self->member = (value)
 
 
+/* Memory barrier */
+#define MEMORY_BARRIER() __asm__ __volatile__("mf" : : : "memory")
+
+
 #define HAS_COMPARE_AND_SWAP_WITH_RELEASE_SEMANTICS
 
 PT_EI int
