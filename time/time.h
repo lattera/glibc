@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C Standard: 4.12 DATE and TIME	<time.h>
+ *	ISO C99 Standard: 7.23 Date and time	<time.h>
  */
 
 #ifndef	_TIME_H

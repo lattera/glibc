@@ -1,5 +1,5 @@
 #ifndef _STDIO_H
-# ifdef __need_FILE
+# if defined __need_FILE || defined __need___FILE
 #  ifdef USE_IN_LIBIO
 #   include <libio/stdio.h>
 #  else
@@ -55,7 +55,7 @@ extern void __flockfile (FILE *__stream);
 
 /* Relinquish the ownership granted for STREAM.  */
 extern void __funlockfile (FILE *__stream);
-    
+
 # endif
 
 #endif

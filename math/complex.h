@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C99:  7.8 Complex arithmetic	<complex.h>
+ *	ISO C99:  7.3 Complex arithmetic	<complex.h>
  */
 
 #ifndef _COMPLEX_H

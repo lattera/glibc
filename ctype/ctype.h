@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C Standard 4.3: CHARACTER HANDLING	<ctype.h>
+ *	ISO C99 Standard 7.4: Character handling	<ctype.h>
  */
 
 #ifndef	_CTYPE_H

@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C Standard: 4.1.3 Errors	<errno.h>
+ *	ISO C99 Standard: 7.5 Errors	<errno.h>
  */
 
 #ifndef	_ERRNO_H

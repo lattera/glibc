@@ -43,7 +43,7 @@ extern wchar_t *__wmemmove (wchar_t *__s1, __const wchar_t *__s2,
 extern wchar_t *__wcschrnul (__const wchar_t *__s, wchar_t __wc)
      __attribute_pure__;
 
-extern int __vfwscanf (FILE *__restrict __s,
+extern int __vfwscanf (__FILE *__restrict __s,
 		       __const wchar_t *__restrict __format,
 		       __gnuc_va_list __arg)
      /* __attribute__ ((__format__ (__wscanf__, 2, 0)) */;

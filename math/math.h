@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C Standard: 4.5 MATHEMATICS	<math.h>
+ *	ISO C99 Standard: 7.12 Mathematics	<math.h>
  */
 
 #ifndef	_MATH_H

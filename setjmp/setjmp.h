@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C Standard: 4.6 NON-LOCAL JUMPS	<setjmp.h>
+ *	ISO C99 Standard: 7.13 Nonlocal jumps	<setjmp.h>
  */
 
 #ifndef	_SETJMP_H

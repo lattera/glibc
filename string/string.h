@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C Standard: 4.11 STRING HANDLING	<string.h>
+ *	ISO C99 Standard: 7.21 String handling	<string.h>
  */
 
 #ifndef	_STRING_H

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 95, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
    General Public License.  */
 
 #include "libioP.h"
+#include <stdio.h>
 #include <wchar.h>
 
 #undef _IO_getwc

@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C Standard: 4.14/2.2.4.2 Limits of integral types	<limits.h>
+ *	ISO C99 Standard: 7.10/5.2.4.2.1 Sizes of integer types	<limits.h>
  */
 
 #ifndef _LIBC_LIMITS_H_

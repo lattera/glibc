@@ -1,5 +1,46 @@
 2000-09-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/stdio.h: Define __FILE if __need___FILE is defined.
+	* stdio/stdio.h: Likewise.
+	* wcsmbs/wchar.h: Get definition of __FILE. Use __FILE instead of FILE.
+	* include/stdio.h: Handle __need___FILE like __need_FILE.
+	* include/wchar.h: Use __FILE instead of FILE.
+	* libio/fwprintf.c: Include <stdio.h> for FILE definition.
+	* libio/fwscanf.c: Likewise.
+	* libio/getwc.c: Likewise.
+
+	* sysdeps/generic/stdint.h (WINT_MAX): Define to 4294967295u.
+	* sysdeps/generic/bits/wchar.h (WCHAR_MIN): Define to -2147483647 - 1.
+	* sysdeps/unix/sysv/linux/i386/bits/wchar.h: Likewise.
+
+	* assert/assert.h: Update comment header about ISO C section.
+	* math/complex.h: Likewise.
+	* ctype/ctype.h: Likewise.
+	* include/errno.h: Likewise.
+	* include/limits.h: Likewise.
+	* locale/locale.h: Likewise.
+	* math/math.h: Likewise.
+	* setjmp/setjmp.h: Likewise.
+	* signal/signal.h: Likewise.
+	* stdio/stdio.h: Likewise.
+	* libio/stdio.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* string/string.h: Likewise.
+	* time/time.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+	* wctype/wctype.h: Likewise.
+	Patches by Joseph S. Myers <jsm28@cam.ac.uk>.
+
+2000-09-13  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (__cmsg_nxthdr): Fix test
+	for no more entries.
+	* sysdeps/unix/sysv/aix/bits/socket.h (__cmsg_nxthdr): Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h (__cmsg_nxthdr): Likewise.
+	Reported by Eric S. Johnson <esj@cs.fiu.edu>, closes PR libc/1887.
+
+2000-09-13  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/unix/sysv/linux/bits/time.h (CLOCKS_PER_SEC): Make a long int
 	constant since this is what clock_t is.
 	* sysdeps/unix/sysv/linux/alpha/bits/time.h: Likewise.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,12 +17,12 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C Standard: 4.9 INPUT/OUTPUT	<stdio.h>
+ *	ISO C99 Standard: 7.19 Input/output	<stdio.h>
  */
 
 #ifndef	_STDIO_H
 
-#if	!defined(__need_FILE)
+#if !defined(__need_FILE) && !defined(__need___FILE)
 #define	_STDIO_H	1
 #include <features.h>
 
@@ -39,17 +39,29 @@ __BEGIN_DECLS
 #endif
 
 #include <bits/types.h>
+#define __need_FILE
+#define __need___FILE
 #endif /* Don't need FILE.  */
-#undef	__need_FILE
 
 
-#ifndef	__FILE_defined
+#if !defined __FILE_defined && defined __need_FILE
 
 /* The opaque type of streams.  */
 typedef struct __stdio_file FILE;
 
 #define	__FILE_defined	1
 #endif /* FILE not defined.  */
+#undef	__need_FILE
+
+
+#if !defined ____FILE_defined && defined __need___FILE
+
+/* The opaque type of streams.  */
+typedef struct __stdio_file __FILE;
+
+#define	____FILE_defined	1
+#endif /* __FILE not defined.  */
+#undef	__need___FILE
 
 
 #ifdef	_STDIO_H

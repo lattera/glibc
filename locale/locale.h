@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C Standard: 4.4 LOCALIZATION	<locale.h>
+ *	ISO C99 Standard: 7.11 Localization	<locale.h>
  */
 
 #ifndef	_LOCALE_H

@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C Standard: 4.10 GENERAL UTILITIES	<stdlib.h>
+ *	ISO C99 Standard: 7.20 General utilities	<stdlib.h>
  */
 
 #ifndef	_STDLIB_H

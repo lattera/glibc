@@ -17,8 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C Standard, Amendment 1, 7.15:
- *	Wide-character classification and mapping utilities  <wctype.h>
+ *	ISO C99 Standard: 7.25
+ *	Wide character classification and mapping utilities  <wctype.h>
  */
 
 #ifndef _WCTYPE_H
