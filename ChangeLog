@@ -1,3 +1,9 @@
+1999-04-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/ttyname.c (ttyname): Terminate the
+	string.
+	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r): Likewise.
+
 1999-04-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/TESTS: Add ISO-8859-14 and ISO-8859-15.

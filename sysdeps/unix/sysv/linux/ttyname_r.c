@@ -134,7 +134,10 @@ __ttyname_r (fd, buf, buflen)
 
   ret = __readlink (procname, buf, buflen - 1);
   if (ret != -1 && buf[0] != '[')
-    return 0;
+    {
+      buf[ret] = '\0';
+      return 0;
+    }
   if (ret == -1 && errno == ENAMETOOLONG)
     {
       __set_errno (ERANGE);

@@ -112,6 +112,7 @@ ttyname (fd)
   int dostat = 0;
   char *name;
   int save = errno;
+  int len;
 
   if (!__isatty (fd))
     return NULL;
@@ -130,10 +131,17 @@ ttyname (fd)
 	}
     }
 
-  if (__readlink (procname, buf, buflen) != -1
+  len = __readlink (procname, buf, buflen);
+  if (len != -1
       /* This is for Linux 2.0.  */
       && buf[0] != '[')
-    return buf;
+    {
+      if (len >= buflen)
+	return NULL;
+      /* readlink need not terminate the string.  */
+      buf[len] = '\0';
+      return buf;
+    }
 
   if (__fxstat (_STAT_VER, fd, &st) < 0)
     return NULL;
