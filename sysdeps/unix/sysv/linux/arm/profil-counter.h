@@ -1,5 +1,5 @@
 /* Low-level statistical profiling support function.  Linux/ARM version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,4 +29,9 @@ profil_counter (int signo, int _a2, int _a3, int _a4, union k_sigcontext sc)
   else
     pc = (void *) sc.v21.arm_pc;
   profil_count (pc);
+
+  /* This is a hack to prevent the compiler from implementing the
+     above function call as a sibcall.  The sibcall would overwrite
+     the signal context.  */
+  asm volatile ("");
 }
