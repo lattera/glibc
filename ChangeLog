@@ -1,5 +1,11 @@
 2004-09-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/spawn.h [__USE_GNU]: Define POSIX_SPAWN_USEVFORK.
+	* posix/spawnattr_setflags.c: Check whether any unknown bit is set
+	in FLAGS parameter and fail if this is the case.
+	* sysdeps/posix/spawni.c: Use vfork if POSIX_SPAWN_USEVFORK flag is
+	set.
+
 	* nscd/pwdcache.c (cache_addpw): Sync also negative results to disk.
 	* nscd/grpcache.c (cache_addgr): Likewise.
 	* nscd/hstcache.c (cache_addhst): Likewise.

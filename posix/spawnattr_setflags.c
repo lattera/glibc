@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,26 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <spawn.h>
 #include <string.h>
+
+#define ALL_FLAGS (POSIX_SPAWN_RESETIDS					      \
+		   | POSIX_SPAWN_SETPGROUP				      \
+		   | POSIX_SPAWN_SETSIGDEF				      \
+		   | POSIX_SPAWN_SETSIGMASK				      \
+		   | POSIX_SPAWN_SETSCHEDPARAM				      \
+		   | POSIX_SPAWN_SETSCHEDULER				      \
+		   | POSIX_SPAWN_USEVFORK)
 
 /* Store flags in the attribute structure.  */
 int
 posix_spawnattr_setflags (posix_spawnattr_t *attr, short int flags)
 {
+  /* Check no invalid bits are set.  */
+  if (flags & ~ALL_FLAGS)
+    return EINVAL;
+
   /* Store the flag word.  */
   attr->__flags = flags;
 

@@ -1,5 +1,5 @@
 /* Definitions for POSIX spawn interface.
-   Copyright (C) 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,6 +57,9 @@ typedef struct
 #define POSIX_SPAWN_SETSIGMASK		0x08
 #define POSIX_SPAWN_SETSCHEDPARAM	0x10
 #define POSIX_SPAWN_SETSCHEDULER	0x20
+#ifdef __USE_GNU
+# define POSIX_SPAWN_USEVFORK		0x40
+#endif
 
 
 __BEGIN_DECLS
