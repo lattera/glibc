@@ -1,3 +1,14 @@
+Tue Jan 16 17:37:39 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* csu/Makefile [have-initfini=yes] (CPPFLAGS): Append -DHAVE_INITFINI.
+	(initfini): Compile initfini.c with -fPIC.
+
+Sun Jan 14 17:51:09 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdio-common/vfscanf.c (inchar, conv_error, input_error,
+	memory_error): Add cast to void to avoid gcc warning.
+	(vfscanf): Rewrite character class parsing to make it more efficient.
+
 Sun Jan 14 01:01:10 1996  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
 
 	* stdlib/strtol.c: Return correct pointer for strings

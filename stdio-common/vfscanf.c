@@ -50,13 +50,13 @@ Cambridge, MA 02139, USA.  */
 
 # define va_list	_IO_va_list
 # define ungetc(c, s)	_IO_ungetc (c, s)
-# define inchar()	((c = _IO_getc (s)), ++read_in, c)
-# define conv_error()	return ((errp != NULL && (*errp |= 2)), \
-				(c == EOF || _IO_ungetc (c, s)), done)
+# define inchar()	((c = _IO_getc (s)), (void) ++read_in, c)
+# define conv_error()	return ((void) (errp != NULL && (*errp |= 2)), \
+				(void) (c == EOF || _IO_ungetc (c, s)), done)
 
-# define input_error()	return ((errp != NULL && (*errp |= 1)), \
+# define input_error()	return ((void) (errp != NULL && (*errp |= 1)), \
 				done == 0 ? EOF : done)
-# define memory_error()	return ((errno = ENOMEM), EOF)
+# define memory_error()	return ((void) (errno = ENOMEM), EOF)
 # define ARGCHECK(s, format)						     \
   do									     \
     {									     \
@@ -69,10 +69,10 @@ Cambridge, MA 02139, USA.  */
        }								     \
     } while (0)
 #else
-# define inchar()	((c = getc (s)), ++read_in, c)
-# define conv_error()	return (ungetc (c, s), done)
+# define inchar()	((c = getc (s)), (void) ++read_in, c)
+# define conv_error()	return ((void) ungetc (c, s), done)
 # define input_error()	return (done == 0 ? EOF : done)
-# define memory_error()	return ((errno = ENOMEM), EOF)
+# define memory_error()	return ((void) (errno = ENOMEM), EOF)
 # define ARGCHECK(s, format)						     \
   do									     \
     {									     \
@@ -104,7 +104,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   va_list arg = (va_list) argptr;
 
   register const char *f = format;
-  register char fc;		/* Current character of the format.  */
+  register unsigned char fc;	/* Current character of the format.  */
   register size_t done = 0;	/* Assignments done.  */
   register size_t read_in = 0;	/* Chars read in.  */
   register int c;		/* Last char read.  */
@@ -158,7 +158,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
       if (wpsize == wpmax)						    \
 	{								    \
 	  char *old = wp;						    \
-	  wpmax = 200 > 2 * wpmax ? 200 : 2 * wpmax;			    \
+	  wpmax = UCHAR_MAX > 2 * wpmax ? UCHAR_MAX : 2 * wpmax;	    \
 	  wp = (char *) alloca (wpmax);					    \
 	  if (old != NULL)						    \
 	    memcpy (wp, old, wpsize);					    \
@@ -703,31 +703,46 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  else
 	    not_in = 0;
 
-	  if (*f == ']')
-	    /* If ] appears before any char in the set, it is not
-	       the terminator, but the first char in the set.  */
-	    ADDW (*f++);
+	  /* Fill WP with byte flags indexed by character.
+	     We will use this flag map for matching input characters.  */
+	  if (wpmax < UCHAR_MAX)
+	    {
+	      wpmax = UCHAR_MAX;
+	      wp = (char *) alloca (wpmax);
+	    }
+	  memset (wp, 0, UCHAR_MAX);
+
+	  fc = *f;
+	  if (fc == ']' || fc == '-')
+	    {
+	      /* If ] or - appears before any char in the set, it is not
+		 the terminator or separator, but the first char in the
+		 set.  */
+	      wp[fc] = 1;
+	      ++f;
+	    }
 
 	  while ((fc = *f++) != '\0' && fc != ']')
 	    {
-	      if (fc == '-' && *f != '\0' && *f != ']' &&
-		  wpsize > 0 && wp[wpsize - 1] <= *f)
-		/* Add all characters from the one before the '-'
-		   up to (but not including) the next format char.  */
-		for (fc = wp[wpsize - 1] + 1; fc < *f; ++fc)
-		  ADDW (fc);
+	      if (*f == '-' && f[1] != '\0' && f[1] != ']' && fc <= f[1])
+		{
+		  /* Add all characters from the one before the '-'
+		     up to (but not including) the next format char.  */
+		  f++;
+		  while (fc < *f)
+		    wp[fc++] = 1;
+		}
 	      else
-		/* Add the character to the list.  */
-		ADDW (fc);
+		/* Add the character to the flag map.  */
+		wp[fc] = 1;
 	    }
 	  if (fc == '\0')
 	    conv_error();
 
-	  ADDW ('\0');
 	  num.ul = read_in;
 	  do
 	    {
-	      if ((strchr (wp, c) == NULL) != not_in)
+	      if (wp[c] == not_in)
 		break;
 	      STRING_ADD_CHAR (c);
 	      if (width > 0)
@@ -758,7 +773,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
     while (isspace (c))
       (void) inchar ();
 
-  return ((c == EOF || ungetc (c, s)), done);
+  return ((void) (c == EOF || ungetc (c, s)), done);
 }
 
 #ifdef USE_IN_LIBIO
