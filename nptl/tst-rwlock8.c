@@ -75,7 +75,6 @@ writer_thread (void *nr)
 static void *
 reader_thread (void *nr)
 {
-  struct timespec ts;
   struct timespec delay;
   int n;
 
