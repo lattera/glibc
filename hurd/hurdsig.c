@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99,2000,01
+   	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -125,6 +126,7 @@ _hurd_thread_sigstate (thread_t thread)
 
 #include <hurd/fd.h>
 #include <hurd/crash.h>
+#include <hurd/resource.h>
 #include <hurd/paths.h>
 #include <setjmp.h>
 #include <fcntl.h>
@@ -136,7 +138,6 @@ _hurd_thread_sigstate (thread_t thread)
 #include <assert.h>
 #include <unistd.h>
 
-int _hurd_core_limit;	/* XXX */
 
 /* Call the crash dump server to mummify us before we die.
    Returns nonzero if a core file was written.  */
@@ -147,6 +148,15 @@ write_corefile (int signo, const struct hurd_signal_detail *detail)
   mach_port_t coreserver;
   file_t file, coredir;
   const char *name;
+
+  /* Don't bother locking since we just read the one word.  */
+  rlim_t corelimit = _hurd_rlimits[RLIMIT_CORE].rlim_cur;
+
+  if (corelimit == 0)
+    /* No core dumping, thank you very much.  Note that this makes
+       `ulimit -c 0' prevent crash-suspension too, which is probably
+       what the user wanted.  */
+    return 0;
 
   /* XXX RLIMIT_CORE:
      When we have a protocol to make the server return an error
