@@ -547,12 +547,11 @@ insert_name (struct locarhandle *ah,
 	  break;
 	}
 
-      if (namehashtab[idx].hashval == hval)
+      if (namehashtab[idx].hashval == hval && ! be_quiet)
 	{
 	  error (0, 0, "hash collision (%u) %s, %s",
 		 hval, name, (char *) ah->addr + namehashtab[idx].name_offset);
 	}
-
 
       /* Remember the first place we can insert the new entry.  */
       if (namehashtab[idx].locrec_offset == 0 && insert_idx == -1)

@@ -1,4 +1,13 @@
+2002-08-28  Jakub Jelinek  <jakub@redhat.com>
+
+        * locale/programs/locarchive.c (insert_name): Suppress warnings about
+  	hash collisions if be_quiet.
+
 2002-08-27  Roland McGrath  <roland@redhat.com>
+
+	* locale/locale.h (__newlocale, __duplocale, __freelocale,
+	__uselocale): Don't declare these any more.
+	* include/locale.h (__uselocale): Declare here instead, using __typeof.
 
 	* sysdeps/unix/readdir.c: If getdents fails with ENOENT, restore errno
 	and treat it as an EOF return.
