@@ -35,10 +35,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <sys/stat.h>
 
 #include "localeinfo.h"
+#include "charmap-dir.h"
+
+extern char *xstrdup (const char *__str);
 
 
 /* If set print the name of the category.  */
@@ -251,7 +253,7 @@ more_help (int key, const char *text, void *input)
     {
     case ARGP_KEY_HELP_EXTRA:
       /* We print some extra information.  */
-      return strdup (gettext ("\
+      return xstrdup (gettext ("\
 Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"));
     default:
       break;
@@ -320,7 +322,7 @@ write_locales (void)
       {
 	mode_t mode;
 #ifdef _DIRENT_HAVE_D_TYPE
-	if (dirent->d_type != DT_UNKNOWN)
+	if (dirent->d_type != DT_UNKNOWN && dirent->d_type != DT_LNK)
 	  mode = DTTOIF (dirent->d_type);
 	else
 #endif
@@ -348,7 +350,7 @@ write_locales (void)
 		    "/LC_CTYPE");
 
 	    if (stat (buf, &st) == 0 && S_ISREG (st.st_mode))
-	      PUT (strdup (dirent->d_name));
+	      PUT (xstrdup (dirent->d_name));
 	  }
       }
 
@@ -425,7 +427,7 @@ write_locales (void)
 		    *cp++ = '\0';
 
 		  /* Add the alias.  */
-		  PUT (strdup (alias));
+		  PUT (xstrdup (alias));
 		}
 	    }
 
@@ -453,84 +455,38 @@ static void
 write_charmaps (void)
 {
   void *all_data = NULL;
-  DIR *dir;
-  struct dirent *dirent;
+  CHARMAP_DIR *dir;
+  const char *dirent;
 
-  dir = opendir (CHARMAP_PATH);
+  /* Look for all files in the charmap directory.  */
+  dir = charmap_opendir (CHARMAP_PATH);
   if (dir == NULL)
+    return;
+
+  while ((dirent = charmap_readdir (dir)) != NULL)
     {
-      error (1, errno, gettext ("cannot read character map directory `%s'"),
-	     CHARMAP_PATH);
-      return;
+      char **aliases;
+      char **p;
+
+      PUT (xstrdup (dirent));
+
+      aliases = charmap_aliases (CHARMAP_PATH, dirent);
+
+#if 0
+      /* Add the code_set_name and the aliases.  */
+      for (p = aliases; *p; p++)
+	PUT (xstrdup (*p));
+#else
+      /* Add the code_set_name only.  Most aliases are obsolete.  */
+      p = aliases;
+      if (*p)
+	PUT (xstrdup (*p));
+#endif
+
+      charmap_free_aliases (aliases);
     }
 
-  /* Now we can look for all files in the directory.  */
-  while ((dirent = readdir (dir)) != NULL)
-    if (strcmp (dirent->d_name, ".") != 0
-	&& strcmp (dirent->d_name, "..") != 0)
-      {
-	char *buf = NULL;
-	mode_t mode;
-
-#ifdef _DIRENT_HAVE_D_TYPE
-	if (dirent->d_type != DT_UNKNOWN)
-	  mode = DTTOIF (dirent->d_type);
-	else
-#endif
-	  {
-	    struct stat st;
-
-	    buf = alloca (sizeof (CHARMAP_PATH) + strlen (dirent->d_name) + 1);
-
-	    stpcpy (stpcpy (stpcpy (buf, CHARMAP_PATH), "/"), dirent->d_name);
-
-	    if (stat (buf, &st) < 0)
-	      continue;
-	    mode = st.st_mode;
-	  }
-
-	if (S_ISREG (mode))
-	  {
-	    FILE *fp;
-
-	    PUT (strdup (dirent->d_name));
-
-	    /* Read the file and learn about the code set name.  */
-	    if (buf == NULL)
-	      {
-		buf = alloca (sizeof (CHARMAP_PATH)
-			      + strlen (dirent->d_name) + 1);
-
-		stpcpy (stpcpy (stpcpy (buf, CHARMAP_PATH), "/"),
-			dirent->d_name);
-	      }
-
-	    fp = fopen (buf, "r");
-	    if (fp != NULL)
-	      {
-		char *name = NULL;
-
-		while (!feof (fp))
-		  {
-		    char junk[BUFSIZ];
-
-		    if (fscanf (fp, " <code_set_name> %as", &name) == 1)
-		      break;
-
-		    while (fgets (junk, sizeof junk, fp) != NULL
-			   && strchr (junk, '\n') == NULL)
-		      continue;
-		  }
-
-		fclose (fp);
-
-		if (name != NULL)
-		  PUT (name);
-	      }
-	  }
-      }
-
-  closedir (dir);
+  charmap_closedir (dir);
 
   twalk (all_data, print_names);
 }

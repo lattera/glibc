@@ -47,23 +47,29 @@ struct linereader *
 lr_open (const char *fname, kw_hash_fct_t hf)
 {
   FILE *fp;
-  struct linereader *result;
-  int n;
 
   if (fname == NULL || strcmp (fname, "-") == 0
       || strcmp (fname, "/dev/stdin") == 0)
-    fp = stdin;
+    return lr_create (stdin, "<stdin>", hf);
   else
     {
       fp = fopen (fname, "r");
       if (fp == NULL)
 	return NULL;
+      return lr_create (fp, fname, hf);
     }
+}
+
+struct linereader *
+lr_create (FILE *fp, const char *fname, kw_hash_fct_t hf)
+{
+  struct linereader *result;
+  int n;
 
   result = (struct linereader *) xmalloc (sizeof (*result));
 
   result->fp = fp;
-  result->fname = xstrdup (fname ? : "<stdin>");
+  result->fname = xstrdup (fname);
   result->buf = NULL;
   result->bufsize = 0;
   result->lineno = 1;

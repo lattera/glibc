@@ -22,18 +22,17 @@
 #endif
 
 #include <ctype.h>
-#include <dirent.h>
 #include <errno.h>
 #include <libintl.h>
 #include <limits.h>
 #include <obstack.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "error.h"
 #include "linereader.h"
 #include "charmap.h"
+#include "charmap-dir.h"
 #include "locfile.h"
 #include "repertoire.h"
 
@@ -55,6 +54,31 @@ static void charmap_new_char (struct linereader *lr, struct charmap_t *cm,
 			      int nbytes, char *bytes, const char *from,
 			      const char *to, int decimal_ellipsis, int step);
 
+static struct linereader *
+cmlr_open (const char *directory, const char *name, kw_hash_fct_t hf)
+{
+  FILE *fp;
+
+  fp = charmap_open (directory, name);
+  if (fp == NULL)
+    return NULL;
+  else
+    {
+      size_t dlen = strlen (directory);
+      int add_slash = (dlen == 0 || directory[dlen - 1] != '/');
+      size_t nlen = strlen (name);
+      char *pathname;
+      char *p;
+
+      pathname = alloca (dlen + add_slash + nlen + 1);
+      p = stpcpy (pathname, directory);
+      if (add_slash)
+	*p++ = '/';
+      stpcpy (p, name);
+
+      return lr_create (fp, pathname, hf);
+    }
+}
 
 struct charmap_t *
 charmap_read (const char *filename)
@@ -76,26 +100,20 @@ charmap_read (const char *filename)
 	      char *i18npath = getenv ("I18NPATH");
 	      if (i18npath != NULL && *i18npath != '\0')
 		{
-		  char path[strlen (filename) + 1 + strlen (i18npath)
-			   + sizeof ("/charmaps/") - 1];
+		  char path[strlen (i18npath) + sizeof ("/charmaps")];
 		  char *next;
 		  i18npath = strdupa (i18npath);
-
 
 		  while (cmfile == NULL
 			 && (next = strsep (&i18npath, ":")) != NULL)
 		    {
-		      stpcpy (stpcpy (stpcpy (path, next), "/charmaps/"),
-			      filename);
-
-		      cmfile = lr_open (path, charmap_hash);
+		      stpcpy (stpcpy (path, next), "/charmaps");
+		      cmfile = cmlr_open (path, filename, charmap_hash);
 
 		      if (cmfile == NULL)
 			{
 			  /* Try without the "/charmaps" part.  */
-			  stpcpy (stpcpy (path, next), filename);
-
-			  cmfile = lr_open (path, charmap_hash);
+			  cmfile = cmlr_open (next, filename, charmap_hash);
 			}
 		    }
 		}
@@ -103,10 +121,7 @@ charmap_read (const char *filename)
 	      if (cmfile == NULL)
 		{
 		  /* Try the default directory.  */
-		  char path[sizeof (CHARMAP_PATH) + strlen (filename) + 1];
-
-		  stpcpy (stpcpy (stpcpy (path, CHARMAP_PATH), "/"), filename);
-		  cmfile = lr_open (path, charmap_hash);
+		  cmfile = cmlr_open (CHARMAP_PATH, filename, charmap_hash);
 		}
 	    }
 	}
@@ -125,73 +140,42 @@ charmap_read (const char *filename)
       /* OK, one more try.  We also accept the names given to the
 	 character sets in the files.  Sometimes they differ from the
 	 file name.  */
-      DIR *dir;
-      struct dirent *dirent;
+      CHARMAP_DIR *dir;
 
-      dir = opendir (CHARMAP_PATH);
+      dir = charmap_opendir (CHARMAP_PATH);
       if (dir != NULL)
 	{
-	  while ((dirent = readdir (dir)) != NULL)
-	    if (strcmp (dirent->d_name, ".") != 0
-		&& strcmp (dirent->d_name, "..") != 0)
-	      {
-		char buf[sizeof (CHARMAP_PATH)
-			+ strlen (dirent->d_name) + 1];
-		FILE *fp;
-#ifdef _DIRENT_HAVE_D_TYPE
-		if (dirent->d_type != DT_UNKNOWN && dirent->d_type != DT_REG)
-		  continue;
-#endif
-		stpcpy (stpcpy (stpcpy (buf, CHARMAP_PATH), "/"),
-			dirent->d_name);
+	  const char *dirent;
 
-		fp = fopen (buf, "r");
-		if (fp != NULL)
+	  while ((dirent = charmap_readdir (dir)) != NULL)
+	    {
+	      char **aliases;
+	      char **p;
+	      int found;
+
+	      aliases = charmap_aliases (CHARMAP_PATH, dirent);
+	      found = 0;
+	      for (p = aliases; *p; p++)
+		if (strcasecmp (*p, filename) == 0)
 		  {
-		    char *name = NULL;
-
-		    while (!feof (fp))
-		      {
-			char junk[BUFSIZ];
-
-			if (fscanf (fp, " <code_set_name> %as", &name) == 1
-			    || fscanf (fp, "%% alias %as", &name) == 1)
-			  {
-			    if (strcasecmp (name, filename) == 0)
-			      break;
-
-			    free (name);
-			    name = NULL;
-			  }
-
-			if (fgets (junk, sizeof junk, fp) != NULL)
-			  {
-			    if (strstr (junk, "CHARMAP") != NULL)
-			      /* We cannot expect more aliases from now on.  */
-			      break;
-
-			    while (strchr (junk, '\n') == NULL
-				   && fgets (junk, sizeof junk, fp) != NULL)
-			      continue;
-			  }
-		      }
-
-		    fclose (fp);
-
-		    if (name != NULL)
-		      {
-			struct linereader *cmfile;
-
-			cmfile = lr_open (buf, charmap_hash);
-			result = (cmfile == NULL
-				  ? NULL : parse_charmap (cmfile));
-
-			break;
-		      }
+		    found = 1;
+		    break;
 		  }
-	      }
+	      charmap_free_aliases (aliases);
 
-	  closedir (dir);
+	      if (found)
+		{
+		  struct linereader *cmfile;
+
+		  cmfile = cmlr_open (CHARMAP_PATH, dirent, charmap_hash);
+		  if (cmfile != NULL)
+		    result = parse_charmap (cmfile);
+
+		  break;
+		}
+	    }
+
+	  charmap_closedir (dir);
 	}
     }
 
@@ -199,9 +183,9 @@ charmap_read (const char *filename)
     {
       struct linereader *cmfile;
 
-      cmfile = lr_open (CHARMAP_PATH "/" DEFAULT_CHARMAP, charmap_hash);
-
-      result = cmfile == NULL ? NULL : parse_charmap (cmfile);
+      cmfile = cmlr_open (CHARMAP_PATH, DEFAULT_CHARMAP, charmap_hash);
+      if (cmfile != NULL)
+	result = parse_charmap (cmfile);
 
       if (result == NULL)
 	error (4, errno, _("default character map file `%s' not found"),

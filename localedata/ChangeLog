@@ -1,3 +1,11 @@
+2000-10-01  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/BIG5: Add a width table.
+	* charmaps/GB18030: Likewise.
+	* charmaps/ISO-8859-6: Likewise.
+	* charmaps/ISO-8859-8: Likewise.
+	* charmaps/TIS-620: Likewise.
+
 2000-09-30  Bruno Haible  <haible@clisp.cons.org>
 
 	* Makefile (repertoiremaps): Remove variable.

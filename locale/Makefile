@@ -33,7 +33,7 @@ distribute	= localeinfo.h categories.def iso-639.def iso-3166.def \
 			      charmap-kw.gperf charmap-kw.h locfile-token.h \
 			      locfile-kw.gperf locfile-kw.h linereader.h \
 			      locfile.h charmap.h repertoire.h localedef.h \
-			      3level.h)
+			      3level.h charmap-dir.h)
 routines	= setlocale findlocale loadlocale localeconv nl_langinfo \
 		  nl_langinfo_l mb_cur_max codeset_name \
 		  newlocale duplocale freelocale
@@ -59,7 +59,7 @@ vpath %.gperf programs
 localedef-modules	:= $(categories:%=ld-%) charmap linereader locfile \
 			   repertoire
 locale-modules		:= locale-spec
-lib-modules		:= simple-hash xmalloc xstrdup
+lib-modules		:= charmap-dir simple-hash xmalloc xstrdup
 
 
 GPERF = gperf
@@ -94,6 +94,7 @@ locale-CPPFLAGS := -DLOCALE_PATH='$(localepath)' \
 
 CFLAGS-charmap.c = -Wno-write-strings -Wno-char-subscripts
 CFLAGS-locfile.c = -Wno-write-strings -Wno-char-subscripts
+CFLAGS-charmap-dir.c = -Wno-write-strings
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
