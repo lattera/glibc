@@ -29,3 +29,4 @@ __getpid ()
 }
 libc_hidden_def (__getpid)
 weak_alias (__getpid, getpid)
+libc_hidden_weak (getpid)

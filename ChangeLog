@@ -1,5 +1,34 @@
 2002-08-03  Roland McGrath  <roland@redhat.com>
 
+	* include/unistd.h: Use libc_hidden_proto for _exit, alarm, confstr,
+	execl, execle, execlp, execvp, getpid, getsid.
+	* sysdeps/generic/alarm.c: Add libc_hidden_def.
+	* sysdeps/unix/alarm.c: Likewise.
+	* posix/confstr.c: Likewise.
+	* posix/execvp.c: Likewise.
+	* posix/execlp.c: Likewise.
+	* posix/execle.c: Likewise.
+	* posix/execl.c: Likewise.
+	* sysdeps/generic/getsid.c: Likewise.
+	* sysdeps/mach/hurd/getsid.c: Likewise.
+	* sysdeps/generic/getpid.c: Add libc_hidden_weak.
+	* sysdeps/mach/hurd/getpid.c: Likewise.
+
+	* include/stdlib.h: Use libc_hidden_proto for ecvt_r, fcvt_r,
+	qecvt_r, qfcvt_r, lrand48_r.
+	* misc/efgcvt_r.c: Add libc_hidden_def.
+
+	* include/wordexp.h: Use libc_hidden_proto for wordfree.
+	* sysdeps/generic/wordexp.c: Add libc_hidden_def.
+
+	* include/langinfo.h: Use libc_hidden_proto for nl_langinfo.
+	* locale/nl_langinfo.c: Add libc_hidden_def.
+
+	* include/glob.h: Use libc_hidden_proto for glob, globfree, globfree64.
+	* sysdeps/generic/glob.c: Add libc_hidden_def.
+	* sysdeps/generic/glob64.c: Likewise.
+	* sysdeps/wordsize-64/glob.c (globfree64): Add libc_hidden_weak.
+
 	* locale/nl_langinfo.c: Use _NL_CURRENT_DATA.
 
 	* elf/Makefile (CFLAGS-vismod2.c): New variable.

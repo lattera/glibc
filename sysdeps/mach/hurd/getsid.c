@@ -1,5 +1,5 @@
 /* getsid -- Return session ID of a process.  Hurd version.
-   Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,3 +33,4 @@ getsid (pid_t pid)
     return (pid_t) __hurd_fail (err);
   return sid;
 }
+libc_hidden_def (getsid)

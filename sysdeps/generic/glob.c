@@ -1064,6 +1064,9 @@ glob (pattern, flags, errfunc, pglob)
 
   return 0;
 }
+#ifdef _LIBC
+libc_hidden_def (glob)
+#endif
 
 
 #if !defined _LIBC || !defined GLOB_ONLY_P
@@ -1082,6 +1085,9 @@ globfree (pglob)
       free ((__ptr_t) pglob->gl_pathv);
     }
 }
+#ifdef _LIBC
+libc_hidden_def (globfree)
+#endif
 
 
 /* Do a collated comparison of A and B.  */

@@ -58,3 +58,6 @@ nl_langinfo (item)
   /* Return the string for the specified item.  */
   return (char *) data->values[index].string;
 }
+#ifndef USE_IN_EXTENDED_LOCALE_MODEL
+libc_hidden_def (nl_langinfo)
+#endif

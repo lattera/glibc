@@ -2216,6 +2216,7 @@ wordfree (wordexp_t *pwordexp)
       pwordexp->we_wordv = NULL;
     }
 }
+libc_hidden_def (wordfree)
 
 /*
  * wordexp()

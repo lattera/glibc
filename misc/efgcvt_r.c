@@ -1,5 +1,5 @@
 /* Compatibility functions for floating point formatting, reentrant versions.
-   Copyright (C) 1995,1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -151,6 +151,7 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
 
   return 0;
 }
+libc_hidden_def (APPEND (FUNC_PREFIX, fcvt_r))
 
 int
 APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
@@ -212,3 +213,4 @@ APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
   *decpt += exponent;
   return 0;
 }
+libc_hidden_def (APPEND (FUNC_PREFIX, ecvt_r))

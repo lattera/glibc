@@ -1,6 +1,17 @@
 #ifndef _UNISTD_H
 # include <posix/unistd.h>
 
+libc_hidden_proto (_exit)
+libc_hidden_proto (alarm)
+libc_hidden_proto (confstr)
+libc_hidden_proto (execl)
+libc_hidden_proto (execle)
+libc_hidden_proto (execlp)
+libc_hidden_proto (execvp)
+libc_hidden_proto (getpid)
+libc_hidden_proto (getsid)
+
+
 /* Now define the internal interfaces.  */
 extern int __access (__const char *__name, int __type);
 extern int __euidaccess (__const char *__name, int __type);
