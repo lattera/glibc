@@ -85,7 +85,7 @@ get_proc_path (char *buffer, size_t bufsize)
 
   /* Now store the copied value.  But do it atomically.  */
   assert (sizeof (long int) == sizeof (void *__unbounded));
-  if (! atomic_compare_and_exchange_bool_acq (&mount_proc, copy_result, NULL))
+  if (atomic_compare_and_exchange_bool_acq (&mount_proc, copy_result, NULL))
     /* Replacing the value failed.  This means another thread was
        faster and we don't need the copy anymore.  */
     free (copy_result);

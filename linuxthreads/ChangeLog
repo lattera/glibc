@@ -1,3 +1,8 @@
+2003-04-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthread.c (pthread_initialize): Unblock __pthread_sig_cancel
+	in case the parent blocked it.
+
 2003-04-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (libpthread-routines): Add pthread_atfork.

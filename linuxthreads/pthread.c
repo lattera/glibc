@@ -529,6 +529,10 @@ static void pthread_initialize(void)
   sigemptyset(&mask);
   sigaddset(&mask, __pthread_sig_restart);
   sigprocmask(SIG_BLOCK, &mask, NULL);
+  /* And unblock __pthread_sig_cancel if it has been blocked. */
+  sigdelset(&mask, __pthread_sig_restart);
+  sigaddset(&mask, __pthread_sig_cancel);
+  sigprocmask(SIG_UNBLOCK, &mask, NULL);
   /* Register an exit function to kill all other threads. */
   /* Do it early so that user-registered atexit functions are called
      before pthread_*exit_process. */
