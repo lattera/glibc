@@ -106,8 +106,13 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       else
 	{
 	  *(Elf64_Addr *)(plt + 16) = (Elf64_Addr) &_dl_runtime_profile;
-	  /* Say that we really want profiling and the timers are started.  */
-	  _dl_profile_map = l;
+
+	  if (_dl_name_match_p (_dl_profile, l))
+	    {
+	      /* This is the object we are looking for.  Say that we really
+		 want profiling and the timers are started.  */
+	      _dl_profile_map = l;
+	    }
 	}
 
       /* Identify this shared object */
@@ -131,7 +136,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 " #tramp_name ":
 	lda	$sp, -168($sp)
 	.frame	$sp, 168, $26
-	/* Preserve all registers that C normally doesn't.  */
+	/* Preserve all integer registers that C normally doesn't.  */
 	stq	$26, 0($sp)
 	stq	$0, 8($sp)
 	stq	$1, 16($sp)
@@ -157,7 +162,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	/* Set up our $gp */
 	br	$gp, .+4
 	ldgp	$gp, 0($gp)
-	.prologue 1
+	.prologue 0
 	/* Set up the arguments for fixup: */
 	/* $16 = link_map out of plt0 */
 	/* $17 = offset of reloc entry = ($28 - $27 - 20) /12 * 24 */
@@ -216,11 +221,13 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
 #define RTLD_START asm ("\
 .text
+	.set at
 	.globl _start
 	.ent _start
 _start:
 	br	$gp, 0f
 0:	ldgp	$gp, 0($gp)
+	.prologue 0
 	/* Pass pointer to argument block to _dl_start.  */
 	mov	$sp, $16
 	bsr	$26, "ASM_ALPHA_NG_SYMBOL_PREFIX"_dl_start..ng
@@ -229,8 +236,12 @@ _start:
 	.globl _dl_start_user
 	.ent _dl_start_user
 _dl_start_user:
+	.frame $30,0,$31,0
+	.prologue 0
 	/* Save the user entry point address in s0.  */
 	mov	$0, $9
+	/* Store the highest stack address.  */
+	stq	$30, __libc_stack_end
 	/* See if we were run as a command with the executable file
 	   name as an extra leading argument.  If so, adjust the stack
 	   pointer to skip _dl_skip_args words.  */
@@ -253,15 +264,14 @@ _dl_start_user:
 	ldgp	$gp, 0($26)
 	br	1b
 2:	/* Clear the startup flag.  */
-	.set at
 	stl	$31, _dl_starting_up
-	.set noat
 	/* Pass our finalizer function to the user in $0. */
 	lda	$0, _dl_fini
 	/* Jump to the user's entry point.  */
 	mov	$9, $27
 	jmp	($9)
 	.end _dl_start_user
+	.set noat
 .previous");
 
 /* Nonzero iff TYPE describes relocation of a PLT entry, so
