@@ -1,5 +1,5 @@
 /* Prototype declarations for math functions; helper file for <math.h>.
-   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -307,7 +307,7 @@ __MATHCALL (nearbyint,, (_Mdouble_ __x));
 
 /* Round X to nearest integral value, rounding halfway cases away from
    zero.  */
-__MATHCALL (round,, (_Mdouble_ __x));
+__MATHCALLX (round,, (_Mdouble_ __x), (__const__));
 
 /* Round X to the integral value in floating-point format nearest but
    not larger in magnitude.  */
