@@ -56,6 +56,10 @@ extern void __flockfile (FILE *__stream);
 /* Relinquish the ownership granted for STREAM.  */
 extern void __funlockfile (FILE *__stream);
 
+/* Try to acquire ownership of STREAM but do not block if it is not
+   possible.  */
+extern int __ftrylockfile (FILE *__stream);
+
 # endif
 
 #endif
