@@ -1,5 +1,8 @@
 1999-04-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* SUPPORTED: Don't generate ru_SU.
+	* locales/ru_SU: Removed.
+
 	* locales/zh_CN: Update.
 	* charmaps/GB2312: New file.
 	Contributed by hashao@china.com.
