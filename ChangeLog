@@ -1,3 +1,62 @@
+Mon Dec  2 15:32:15 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-lookup.c (_dl_lookup_symbol_skip): Remove unused variable
+	`found_entry'.
+
+	* misc/ttyslot.c: Use ttyname_r instead of ttyname.
+
+	* assert/assert-perr.c: Use __strerror_r instead of strerror.
+	* assert/assert.c: De-ANSIdecl-fy.  Update copyright.
+	* string/string.h: Declare __strerror_r.
+	* string/strerror_r.c: Make strerror_r a weak alias of __strerror_r.
+	* stdio-common/vfprintf.c: Save current errno value on entry so
+	that %m format finds the correct value.
+	* io/getwd.c: Use __strerror_r instead of strerror.
+	* misc/err.c (vwarn): Use %m printf format instead of explicitly
+	calling strerror.
+	* inet/rcmd.c: Likewise.
+	* misc/error.c (error, error_at_line): Use __strerror_r instead
+	of strerror when this function is available.
+
+	* stdlib/rand.c: Update copyright and de-ANSI-declfy.
+	* stdlib/random_r.c: Don't make srand_r weak alais of __srandom_r.
+	* stdlib/stdlib.h: Define prototype for rand_r.
+
+	* string/strfry.c: Update copyright.  Use reentrant random functions.
+
+	* dirent/scandir.c: Use __readdir_r instead of readdir.
+	* posix/glob.c: Likewise.
+	* sysdeps/posix/ttyname.c: Likewise.
+	* sysdeps/posix/ttyname_r.c: Likewise.
+	* io/ftw.c: Likewise.
+	* io/fts.c: Likewise.
+	* sysdeps/posix/getcwd.c: Likewise.
+	* dirent/dirent.h: Add prototype for __readdir_r.
+	* sysdeps/unix/readdir_r: Update copyright.
+
+	* time/ctime.c: Use __localtime_r and __asctime_r instead of
+	non reentrant versions.
+	* time/ctime_r.c: Update copyright.
+
+	* intl/l10nflist.c (_nl_make_l10nflist): Pretty print.
+
+	* locale/Makefile (localepath): Correct value.
+
+	* nss/nss_files/files-XXX.c: Include <netdb.h> to define
+	NETDB_INTERNAL.
+	Fix typo in using H_ERRNO_SET macro.
+
+Fri Nov 29 23:22:14 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (elfobjdir): Definition removed.
+	* Makeconfig (elfobjdir): Define it here instead, so that
+	expanding $(rpath-link) gets the right value.
+
+	* misc/a.out.h: Moved to...
+	* sysdeps/generic/a.out.h: ...here.
+	* sysdeps/unix/sysv/linux/a.out.h: New file.  Wrapper around
+	kernel header.
+
 Mon Dec  2 03:59:38 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* grp/initgroups.c: Update and reformat copyright.
