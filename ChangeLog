@@ -1,5 +1,7 @@
 2000-08-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* version.h (VERSION): Bump to 2.1.93.
+
 	* intl/Makefile (tests): Depend in mtrace-tst-gettext.
 	Make this a new rule depending on tst-gettext.out and run mtrace.
 	* intl/tst-gettext.c: Call mtrace.
@@ -15,7 +17,7 @@
 	* sysdeps/generic/setenv.c (free_mem): New function.  Free all
 	allocated memory.
 
-	* intl/locale.alias: Add aliases for bomal and nynorsk.
+	* intl/locale.alias: Add aliases for bokmal and nynorsk.
 
 	* locale/iso-639.def: Fix 639-1 code for Bokmal.
 
