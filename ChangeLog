@@ -1,3 +1,11 @@
+Fri Apr  5 17:43:41 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/i386/sigreturn.c (__sigreturn): Store
+	MACH_PORT_DEAD in the thread reply-port variable before destroying
+	the signal handler's reply port to avoid infinite recursion.
+	* sysdeps/mach/hurd/mig-reply.c (__mig_dealloc_reply_port): Only
+	attempt to destroy PORT if it's a valid port name.
+
 Wed Apr  3 17:10:44 1996  Roland McGrath  <roland@whiz-bang.gnu.ai.mit.edu>
 
 	* extra-lib.mk: Put libs in $(common-objpfx) instead of $(objpfx).

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -80,7 +80,17 @@ __sigreturn (struct sigcontext *scp)
   reply_port =
     (mach_port_t *) __hurd_threadvar_location (_HURD_THREADVAR_MIG_REPLY);
   if (*reply_port)
-    __mach_port_destroy (__mach_task_self (), *reply_port);
+    {
+      mach_port_t port = *reply_port;
+
+      /* Assigning MACH_PORT_DEAD here tells libc's mig_get_reply_port not to
+	 get another reply port, but avoids mig_dealloc_reply_port trying to
+	 deallocate it after the receive fails (which it will, because the
+	 reply port will be bogus, whether we do this or not).  */
+      *reply_port = MACH_PORT_DEAD;
+
+      __mach_port_destroy (__mach_task_self (), port);
+    }
   *reply_port = scp->sc_reply_port;
 
   if (scp->sc_fpused)
