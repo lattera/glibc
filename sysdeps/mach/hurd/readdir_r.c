@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 94, 95, 96, 1997, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,11 +33,12 @@ int
 __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 {
   struct dirent *dp;
+  error_t err = 0;
 
   if (dirp == NULL)
     {
       errno = EINVAL;
-      return -1;
+      return errno;
     }
 
   __libc_lock_lock (dirp->__lock);
@@ -50,7 +51,6 @@ __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 
 	  char *data = dirp->__data;
 	  int nentries;
-	  error_t err;
 
 	  if (err = HURD_FD_PORT_USE (dirp->__fd,
 				      __dir_readdir (port,
@@ -102,11 +102,15 @@ __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
   if (dp)
     {
       *entry = *dp;
+      memcpy (entry->d_name, dp->d_name, dp->d_namlen + 1);
       *result = entry;
     }
+  else
+    *result = NULL;
 
   __libc_lock_unlock (dirp->__lock);
 
-  return dp ? 0 : -1;
+  return dp ? 0 : err ? errno : 0;
 }
+
 weak_alias (__readdir_r, readdir_r)

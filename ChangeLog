@@ -1,5 +1,12 @@
 2001-01-06  Mark Kettenis  <kettenis@gnu.org>
 
+	* sysdeps/mach/hurd/readdir_r.c (__readdir_r): Return error number
+	instead of -1 on failure.  Don't forget to copy file name into
+	*ENTRY if successful.  Set *RESULT to NULL upon reaching the end
+	of the directory.
+
+2001-01-06  Mark Kettenis  <kettenis@gnu.org>
+
 	* sysdeps/mach/hurd/xstatconv.c (xstat64_conv): Don't forget to
 	copy st_atime member.
 
