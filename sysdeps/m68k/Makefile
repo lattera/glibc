@@ -28,3 +28,5 @@ crypt := crypt.sun3	# Use crypt/crypt.sun3.S.
 ifndef m68k-syntax-flag
 m68k-syntax-flag = -DMIT_SYNTAX
 endif
+
+asm-CPPFLAGS := $(asm-CPPFLAGS) $(m68k-syntax-flag)
