@@ -324,7 +324,7 @@ __underflow (fp)
      _IO_FILE *fp;
 {
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
-  if (fp->_vtable_offset == 0 && _IO_fwide (fp, -1) != -1)
+  if (_IO_vtable_offset (fp) == 0 && _IO_fwide (fp, -1) != -1)
     return EOF;
 #endif
 
@@ -357,7 +357,7 @@ __uflow (fp)
      _IO_FILE *fp;
 {
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
-  if (fp->_vtable_offset == 0 && _IO_fwide (fp, -1) != -1)
+  if (_IO_vtable_offset (fp) == 0 && _IO_fwide (fp, -1) != -1)
     return EOF;
 #endif
 
@@ -834,7 +834,7 @@ _IO_flush_all_lockp (int do_lock)
 
       if (((fp->_mode <= 0 && fp->_IO_write_ptr > fp->_IO_write_base)
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
-	   || (fp->_vtable_offset == 0
+	   || (_IO_vtable_offset (fp) == 0
 	       && fp->_mode > 0 && (fp->_wide_data->_IO_write_ptr
 				    > fp->_wide_data->_IO_write_base))
 #endif

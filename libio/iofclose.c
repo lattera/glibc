@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1995,1997-2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1997-2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,7 +49,7 @@ _IO_new_fclose (fp)
   /* We desperately try to help programs which are using streams in a
      strange way and mix old and new functions.  Detect old streams
      here.  */
-  if (fp->_vtable_offset != 0)
+  if (_IO_vtable_offset (fp) != 0)
     return _IO_old_fclose (fp);
 #endif
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995-2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995-2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ _IO_ftell (fp)
   pos = _IO_seekoff_unlocked (fp, 0, _IO_seek_cur, 0);
   if (_IO_in_backup (fp))
     {
-      if (fp->_vtable_offset != 0 || fp->_mode <= 0)
+      if (_IO_vtable_offset (fp) != 0 || fp->_mode <= 0)
 	pos -= fp->_IO_save_end - fp->_IO_save_base;
     }
   _IO_funlockfile (fp);

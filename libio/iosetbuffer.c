@@ -1,4 +1,5 @@
-/* Copyright (C) 1993,95,96,97,98,99,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997, 1998, 1999, 2000, 2002, 2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,7 +41,7 @@ _IO_setbuffer (fp, buf, size)
   if (!buf)
     size = 0;
   (void) _IO_SETBUF (fp, buf, size);
-  if (fp->_vtable_offset == 0 && fp->_mode == 0 && _IO_CHECK_WIDE (fp))
+  if (_IO_vtable_offset (fp) == 0 && fp->_mode == 0 && _IO_CHECK_WIDE (fp))
     /* We also have to set the buffer using the wide char function.  */
     (void) _IO_WSETBUF (fp, buf, size);
   _IO_funlockfile (fp);

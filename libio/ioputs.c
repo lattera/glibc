@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1996,1997,1998,1999,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,8 @@ _IO_puts (str)
 			    _IO_stdout);
   _IO_flockfile (_IO_stdout);
 
-  if ((_IO_stdout->_vtable_offset != 0 || _IO_fwide (_IO_stdout, -1) == -1)
+  if ((_IO_vtable_offset (_IO_stdout) != 0
+       || _IO_fwide (_IO_stdout, -1) == -1)
       && _IO_sputn (_IO_stdout, str, len) == len
       && _IO_putc_unlocked ('\n', _IO_stdout) != EOF)
     result = len + 1;

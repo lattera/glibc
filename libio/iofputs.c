@@ -1,4 +1,5 @@
-/* Copyright (C) 1993,1996,1997,1998,1999,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1997, 1998, 1999, 2002, 2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +39,7 @@ _IO_fputs (str, fp)
   CHECK_FILE (fp, EOF);
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
-  if ((fp->_vtable_offset != 0 || _IO_fwide (fp, -1) == -1)
+  if ((_IO_vtable_offset (fp) != 0 || _IO_fwide (fp, -1) == -1)
       && _IO_sputn (fp, str, len) == len)
     result = 1;
   _IO_funlockfile (fp);

@@ -1,3 +1,20 @@
+2003-08-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/libioP.h (_IO_vtable_offset): Define.
+	* libio/freopen.c (freopen): Use it.
+	* libio/ioputs.c (_IO_puts): Likewise.
+	* libio/freopen64.c (freopen64): Likewise.
+	* libio/genops.c (__underflow, __uflow, _IO_flush_all_lockp):
+	Likewise.
+	* libio/iofclose.c (_IO_new_fclose): Likewise.
+	* libio/iofputs.c (_IO_fputs): Likewise.
+	* libio/ioftell.c (_IO_ftell): Likewise.
+	* libio/iofwrite.c (_IO_fwrite): Likewise.
+	* libio/ioseekoff.c (_IO_seekoff_unlocked): Likewise.
+	* libio/iosetbuffer.c (_IO_setbuffer): Likewise.
+	* stdio-common/vfprintf.c (ORIENT, vfprintf): Likewise.
+	* stdio-common/vfscanf.c (ORIENT): Likewise.
+
 2003-08-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* assert/assert.h: Use __builtin_expect in assert and

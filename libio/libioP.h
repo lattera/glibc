@@ -110,8 +110,10 @@ extern "C" {
 # define _IO_JUMPS_FUNC(THIS) \
  (*(struct _IO_jump_t **) ((void *) &_IO_JUMPS ((struct _IO_FILE_plus *) (THIS)) \
 			   + (THIS)->_vtable_offset))
+# define _IO_vtable_offset(THIS) (THIS)->_vtable_offset
 #else
 # define _IO_JUMPS_FUNC(THIS) _IO_JUMPS ((struct _IO_FILE_plus *) (THIS))
+# define _IO_vtable_offset(THIS) 0
 #endif
 #define _IO_WIDE_JUMPS_FUNC(THIS) _IO_WIDE_JUMPS(THIS)
 #ifdef _G_USING_THUNKS
