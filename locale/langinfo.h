@@ -231,12 +231,11 @@ enum
      This information is accessed by the strcoll and strxfrm functions.
      These `nl_langinfo' names are used only internally.  */
   _NL_COLLATE_NRULES = _NL_ITEM (LC_COLLATE, 0),
-  _NL_COLLATE_RULES,
+#if 0
+  _NL_COLLATE_TABLEMB,
   _NL_COLLATE_HASH_SIZE,
   _NL_COLLATE_HASH_LAYERS,
-  _NL_COLLATE_TABLEMB,
   _NL_COLLATE_TABLEWC,
-  _NL_COLLATE_UNDEFINED_MB,
   _NL_COLLATE_UNDEFINED_WC,
   _NL_COLLATE_EXTRAMB,
   _NL_COLLATE_EXTRAWC,
@@ -251,6 +250,7 @@ enum
   _NL_COLLATE_SYMB_STR_POOL,
   _NL_COLLATE_SYMB_CLASSMB,
   _NL_COLLATE_SYMB_CLASSWC,
+#endif
   _NL_NUM_LC_COLLATE,
 
   /* LC_CTYPE category: character classification.

@@ -43,20 +43,6 @@ DEFINE_CATEGORY
  LC_COLLATE, "LC_COLLATE",
  (
   DEFINE_ELEMENT (_NL_COLLATE_NRULES,         "collate-nrules",           std, word)
-  DEFINE_ELEMENT (_NL_COLLATE_RULES,          "collate-rules",            std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_HASH_SIZE,      "collate-hash-size",        std, word)
-  DEFINE_ELEMENT (_NL_COLLATE_HASH_LAYERS,    "collate-hash-layers",      std, word)
-  DEFINE_ELEMENT (_NL_COLLATE_TABLEWC,        "collate-tablewc",          std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_UNDEFINED_WC,   "collate-undefined-wc",     std, word)
-  DEFINE_ELEMENT (_NL_COLLATE_EXTRAWC,        "collate-extrawc",          std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_ELEM_HASH_SIZE, "collate-elem-hash-size",   std, word)
-  DEFINE_ELEMENT (_NL_COLLATE_ELEM_HASH,      "collate-elem-hash",        std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_ELEM_STR_POOL,  "collate-elem-str-pool",    std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_ELEM_VAL,       "collate-elem-val",         std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_SYMB_HASH_SIZE, "collate-symb-hash-size",   std, word)
-  DEFINE_ELEMENT (_NL_COLLATE_SYMB_HASH,      "collate-symb-hash",        std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_SYMB_STR_POOL,  "collate-symb-str-pool",    std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_SYMB_CLASSWC,   "collate-symb-classwc",     std, string)
   ), _nl_postload_collate)
 
 

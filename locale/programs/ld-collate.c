@@ -73,8 +73,16 @@ struct element_t
 
   const char *mbs;
   const uint32_t *wcs;
-  int mborder;
+  int *mborder;
   int wcorder;
+
+  /* The following is a bit mask which bits are set if this element is
+     used in the appropriate level.  Interesting for the singlebyte
+     weight computation.
+
+     XXX The type here restricts the number of levels to 32.  It could
+     we changed if necessary but I doubt this is necessary.  */
+  unsigned int used_in_level;
 
   struct element_list_t *weights;
 
@@ -191,8 +199,8 @@ new_element (struct locale_collate_t *collate, const char *mbs, size_t mbslen,
 
   newp = (struct element_t *) obstack_alloc (&collate->mempool,
 					     sizeof (*newp));
-  newp->name = name == NULL ? NULL : obstack_copy (&collate->mempool,
-						   name, namelen);
+  newp->name = name == NULL ? NULL : obstack_copy0 (&collate->mempool,
+						    name, namelen);
   if (mbs != NULL)
     newp->mbs = obstack_copy0 (&collate->mempool, mbs, mbslen);
   else
@@ -207,8 +215,9 @@ new_element (struct locale_collate_t *collate, const char *mbs, size_t mbslen,
     }
   else
     newp->wcs = NULL;
-  newp->mborder = 0;
+  newp->mborder = NULL;
   newp->wcorder = 0;
+  newp->used_in_level = 0;
 
   /* Will be allocated later.  */
   newp->weights = NULL;
@@ -477,7 +486,7 @@ find_element (struct linereader *ldfile, struct locale_collate_t *collate,
       else if (find_entry (&collate->elem_table, str, len,
 			   (void **) &result) != 0)
 	{
-	  /* It's also no collation element.  So it is an character
+	  /* It's also no collation element.  So it is a character
 	     element defined later.  */
 	  result = new_element (collate, NULL, 0, NULL, str, len);
 	  if (result != NULL)
@@ -493,11 +502,20 @@ find_element (struct linereader *ldfile, struct locale_collate_t *collate,
 static void
 unlink_element (struct locale_collate_t *collate)
 {
-  if (collate->cursor->next != NULL)
-    collate->cursor->next->last = collate->cursor->last;
-  if (collate->cursor->last != NULL)
-    collate->cursor->last->next = collate->cursor->next;
-  collate->cursor = collate->cursor->last;
+  if (collate->cursor == collate->start)
+    {
+      assert (collate->cursor->next == NULL);
+      assert (collate->cursor->last == NULL);
+      collate->cursor = NULL;
+    }
+  else
+    {
+      if (collate->cursor->next != NULL)
+	collate->cursor->next->last = collate->cursor->last;
+      if (collate->cursor->last != NULL)
+	collate->cursor->last->next = collate->cursor->next;
+      collate->cursor = collate->cursor->last;
+    }
 }
 
 
@@ -516,6 +534,11 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
   elem->next = collate->cursor ? collate->cursor->next : NULL;
   if (collate->cursor != NULL)
     collate->cursor->next = elem;
+  if (collate->start == NULL)
+    {
+      assert (collate->cursor == NULL);
+      collate->start = elem;
+    }
   elem->weights = (struct element_list_t *)
     obstack_alloc (&collate->mempool, nrules * sizeof (struct element_list_t));
   memset (elem->weights, '\0', nrules * sizeof (struct element_list_t));
@@ -566,7 +589,8 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
 	  const char *cp = arg->val.str.startmb;
 	  int cnt = 0;
 	  struct element_t *charelem;
-	  void *base = obstack_base (&collate->mempool);
+	  struct element_t **weights = NULL;
+	  int max = 0;
 
 	  if (*cp == '\0')
 	    {
@@ -581,18 +605,17 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
 	      if (*cp == '<')
 		{
 		  /* Ahh, it's a bsymbol.  That's what we want.  */
-		  const char *startp = cp;
+		  const char *startp = ++cp;
 
-		  while (*++cp != '>')
+		  while (*cp != '>')
 		    {
 		      if (*cp == ldfile->escape_char)
 			++cp;
 		      if (*cp == '\0')
-			{
-			  /* It's a syntax error.  */
-			  obstack_free (&collate->mempool, base);
-			  goto syntax;
-			}
+			/* It's a syntax error.  */
+			goto syntax;
+
+		      ++cp;
 		    }
 
 		    charelem = find_element (ldfile, collate, startp,
@@ -606,7 +629,7 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
 		     what this means.  We interpret all characters in the
 		     string as if that would be bsymbols.  Otherwise we
 		     would have to match back to bsymbols somehow and this
-		     is also not what people normally expect.  */
+		     is normally not what people normally expect.  */
 		  charelem = find_element (ldfile, collate, cp++, 1, NULL);
 		}
 
@@ -618,14 +641,25 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
 		}
 
 	      /* Add the pointer.  */
-	      obstack_ptr_grow (&collate->mempool, charelem);
-	      ++cnt;
+	      if (cnt >= max)
+		{
+		  struct element_t **newp;
+		  max += 10;
+		  newp = (struct element_t **)
+		    alloca (max * sizeof (struct element_t *));
+		  memcpy (newp, weights, cnt * sizeof (struct element_t *));
+		  weights = newp;
+		}
+	      weights[cnt++] = charelem;
 	    }
 	  while (*cp != '\0');
 
 	  /* Now store the information.  */
 	  elem->weights[weight_cnt].w = (struct element_t **)
-	    obstack_finish (&collate->mempool);
+	    obstack_alloc (&collate->mempool,
+			   cnt * sizeof (struct element_t *));
+	  memcpy (elem->weights[weight_cnt].w, weights,
+		  cnt * sizeof (struct element_t *));
 	  elem->weights[weight_cnt].cnt = cnt;
 
 	  /* We don't need the string anymore.  */
@@ -946,10 +980,20 @@ order for `%.*s' already defined at %s:%zu"),
 
 		  /* Enqueue the new element.  */
 		  elem->last = collate->cursor;
-		  elem->next = collate->cursor->next;
-		  elem->last->next = elem;
-		  if (elem->next != NULL)
-		    elem->next->last = elem;
+		  if (collate->cursor != NULL)
+		    elem->next = NULL;
+		  else
+		    {
+		      elem->next = collate->cursor->next;
+		      elem->last->next = elem;
+		      if (elem->next != NULL)
+			elem->next->last = elem;
+		    }
+		  if (collate->start == NULL)
+		    {
+		      assert (collate->cursor == NULL);
+		      collate->start = elem;
+		    }
 		  collate->cursor = elem;
 
 		 /* Add the weight value.  We take them from the
@@ -1232,10 +1276,69 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
      The multibyte case is easy.  We simply sort into an array with
      256 elements.  */
   struct locale_collate_t *collate = locale->categories[LC_COLLATE].collate;
-  int mbact = 2;
-  int wcact = 2;
-  struct element_t *runp = collate->start;
+  int mbact[nrules];
+  int wcact;
+  struct element_t *runp;
+  int i;
+  int need_undefined = 0;
 
+  /* If this assertion is hit change the type in `element_t'.  */
+  assert (nrules <= sizeof (runp->used_in_level) * 8);
+
+  /* Find out which elements are used at which level.  At the same
+     time we find out whether we have any undefined symbols.  */
+  runp = collate->start;
+  while (runp != NULL)
+    {
+      if (runp->mbs != NULL)
+	{
+	  for (i = 0; i < nrules; ++i)
+	    {
+	      int j;
+
+	      for (j = 0; j < runp->weights[i].cnt; ++j)
+		/* A NULL pointer as the weight means IGNORE.  */
+		if (runp->weights[i].w[j] != NULL)
+		  {
+		    if (runp->weights[i].w[j]->weights == NULL)
+		      {
+			error_at_line (0, 0, runp->file, runp->line,
+				       _("symbol `%s' not defined"),
+				       runp->weights[i].w[j]->name);
+
+			need_undefined = 1;
+			runp->weights[i].w[j] = &collate->undefined;
+		      }
+		    else
+		      /* Set the bit for the level.  */
+		      runp->weights[i].w[j]->used_in_level |= 1 << i;
+		  }
+	    }
+	}
+
+      /* Up to the next entry.  */
+      runp = runp->next;
+    }
+
+  /* Walk through the list of defined sequences and assign weights.  Also
+     create the data structure which will allow generating the single byte
+     character based tables.
+
+     Since at each time only the weights for each of the rules are
+     only compared to other weights for this rule it is possible to
+     assign more compact weight values than simply counting all
+     weights in sequence.  We can assign weights from 2 one for each
+     rule individually and only for those elements, which are actually
+     used for this rule.
+
+     Why is this important?  It is not for the wide char table.  But
+     it is for the singlebyte output since here larger numbers have to
+     be encoded to make it possible to emit the value as a byte
+     string.  */
+  for (i = 0; i < nrules; ++i)
+    mbact[i] = 2;
+  wcact = 2;
+  runp = collate->start;
   while (runp != NULL)
     {
       if (runp->mbs != NULL)
@@ -1243,10 +1346,20 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	  struct element_t **eptr;
 
 	  /* Determine the order.  */
-	  runp->mborder = mbact++;
+	  if (runp->used_in_level != 0)
+	    {
+	      runp->mborder = (int *) obstack_alloc (&collate->mempool,
+						     nrules * sizeof (int));
+
+	      for (i = 0; i < nrules; ++i)
+		if ((runp->used_in_level & (1 << i)) != 0)
+		  runp->mborder[i] = mbact[i]++;
+		else
+		  runp->mborder[i] = 0;
+	    }
 
 	  /* Find the point where to insert in the list.  */
-	  eptr = &collate->mbheads[(unsigned int) runp->mbs[0]];
+	  eptr = &collate->mbheads[((unsigned char *) runp->mbs)[0]];
 	  while (*eptr != NULL)
 	    {
 	      /* Check which string is larger, the one we want to insert
@@ -1269,6 +1382,31 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
       /* Up to the next entry.  */
       runp = runp->next;
     }
+
+  /* Find out whether any of the `mbheads' entries is unset.  In this
+     case we use the UNDEFINED entry.  */
+  for (i = 1; i < 256; ++i)
+    if (collate->mbheads[i] == NULL)
+      {
+	need_undefined = 1;
+	collate->mbheads[i] = &collate->undefined;
+      }
+
+  /* Now determine whether the UNDEFINED entry is needed and if yes,
+     whether it was defined.  */
+  if (need_undefined && collate->undefined.file == NULL)
+    {
+      error (0, 0, _("no definition of `UNDEFINED'"));
+
+      /* Add UNDEFINED at the end.  */
+      collate->undefined.mborder =
+	(int *) obstack_alloc (&collate->mempool, nrules * sizeof (int));
+
+      for (i = 0; i < nrules; ++i)
+	collate->undefined.mborder[i] = mbact[i]++;
+
+      collate->undefined.wcorder = wcact++;
+    }
 }
 
 
@@ -1276,6 +1414,33 @@ void
 collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		const char *output_path)
 {
+  struct locale_collate_t *collate = locale->categories[LC_COLLATE].collate;
+  const size_t nelems = _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE);
+  struct iovec iov[2 + nelems];
+  struct locale_file data;
+  uint32_t idx[nelems];
+  size_t cnt;
+
+  data.magic = LIMAGIC (LC_COLLATE);
+  data.n = nelems;
+  iov[0].iov_base = (void *) &data;
+  iov[0].iov_len = sizeof (data);
+
+  iov[1].iov_base = (void *) idx;
+  iov[1].iov_len = sizeof (idx);
+
+  idx[0] = iov[0].iov_len + iov[1].iov_len;
+  cnt = 0;
+
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_NRULES));
+  iov[2 + cnt].iov_base = &collate->nrules;
+  iov[2 + cnt].iov_len = sizeof (uint32_t);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
+  assert (cnt == _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE));
+
+  write_locale_data (output_path, "LC_COLLATE", 2 + cnt, iov);
 }
 
 

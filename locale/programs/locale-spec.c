@@ -36,6 +36,7 @@ void
 locale_special (const char *name, int show_category_name,
 		int show_keyword_name)
 {
+#if 0
   /* "collate-elements": print collation elements of locale.  */
   if (strcmp (name, "collate-elements") == 0)
     {
@@ -59,7 +60,6 @@ locale_special (const char *name, int show_category_name,
 		printf ("%s<%s>", first ? "" : ";",
 			&__collate_element_strings[idx]);
 
-#if 0
 		/* We don't print the string.  This is only confusing
 		   because only the programs have to know the
 		   encoding.  The code is left in place because it
@@ -85,7 +85,6 @@ locale_special (const char *name, int show_category_name,
 
 		  putchar ('"');
 		}
-#endif
 		first = 0;
 	      }
 	}
@@ -125,4 +124,5 @@ locale_special (const char *name, int show_category_name,
       putchar ('\n');
       return;
     }
+#endif
 }

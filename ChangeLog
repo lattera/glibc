@@ -1,3 +1,16 @@
+1999-12-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/categories.def: Remove most of the collate definitions.
+	* locale/langinfo.h: Comment out corresponding definitions.
+	* locale/programs/locale-spec.c (locale_special): Don't recognize the
+	collate names yet.
+	* locale/programs/ld-collate.c: Correct and optimize computation of
+	weights.  Set up list of all definitions correctly.  Start writing
+	function to generate output file.
+
+	* locale/programs/ld-ctype.c (allocate_arrays): Increment counter in
+	loop to compute default mapping.
+
 1999-12-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/pread.c: Define __libc_* variant for

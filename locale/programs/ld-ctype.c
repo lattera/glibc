@@ -3071,11 +3071,14 @@ Computing table size for character classes might take a while..."),
 	  ctype->map32[idx][idx2] = ctype->map_collection[idx][idx2];
 
       while (idx2 < ctype->map_collection_act[idx])
-	if (ctype->map_collection[idx][idx2] != 0)
-	  *find_idx (ctype, &ctype->map32[idx],
-		     &ctype->map_collection_max[idx],
-		     &ctype->map_collection_act[idx],
-		     ctype->names[idx2]) = ctype->map_collection[idx][idx2];
+	{
+	  if (ctype->map_collection[idx][idx2] != 0)
+	    *find_idx (ctype, &ctype->map32[idx],
+		       &ctype->map_collection_max[idx],
+		       &ctype->map_collection_act[idx],
+		       ctype->names[idx2]) = ctype->map_collection[idx][idx2];
+	  ++idx2;
+	}
     }
 
   /* Extra array for class and map names.  */
