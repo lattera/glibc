@@ -1,10 +1,13 @@
 2003-03-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/pthread_barrier_wait.S: New file
+
 	* sysdeps/unix/sysv/linux/Makefile (gen-as-const-headers): Add
 	lowlevelbarrier.sym.
 	* sysdeps/unix/sysv/linux/lowlevelbarrier.sym: New file.
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_barrier_wait.S:
 	Include lowlevelbarrier.h and don't define offsets locally.
+	* sysdeps/unix/sysv/linux/sh/pthread_barrier_wait.S: Likewise.
 
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h
 	(__lll_mutex_lock_wait): Reverse order of first two parameters.

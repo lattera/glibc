@@ -20,7 +20,7 @@
 #include <sysdep.h>
 #include <lowlevelbarrier.h>
 
-#define SYS_futex	240
+#define SYS_futex	202
 #define FUTEX_WAIT	0
 #define FUTEX_WAKE	1
 
@@ -37,96 +37,90 @@
 	.type	pthread_barrier_wait,@function
 	.align	16
 pthread_barrier_wait:
-	pushl	%ebx
-
-	movl	8(%esp), %ebx
-
 	/* Get the mutex.  */
-	orl	$-1, %eax
+	orl	$-1, %esi
 	LOCK
-	xaddl	%eax, MUTEX(%ebx)
+	xaddl	%esi, MUTEX(%rdi)
 	jne	1f
 
 	/* One less waiter.  If this was the last one needed wake
 	   everybody.  */
-2:	subl	$1, LEFT(%ebx)
+2:	decl	LEFT(%rdi)
 	je	3f
 
 	/* There are more threads to come.  */
-	pushl	%esi
-
 #if CURR_EVENT == 0
-	movl	(%ebx), %edx
+	movl	(%rdi), %edx
 #else
-	movl	CURR_EVENT(%ebx), %edx
+	movl	CURR_EVENT(%rdi), %edx
 #endif
 
 	/* Release the mutex.  */
 	LOCK
-	addl	$1, MUTEX(%ebx)
+	addl	$1, MUTEX(%rdi)
 	jng	6f
 
 	/* Wait for the remaining threads.  The call will return immediately
 	   if the CURR_EVENT memory has meanwhile been changed.  */
-7:	xorl	%ecx, %ecx		/* movl $FUTEX_WAIT, %ecx */
-	xorl	%esi, %esi
-8:	movl	$SYS_futex, %eax
-	ENTER_KERNEL
+7:	xorq	%rsi, %rsi		/* movl $FUTEX_WAIT, %ecx */
+	xorq	%r10, %r10
+8:	movq	$SYS_futex, %rax
+	syscall
 
 	/* Don't return on spurious wakeups.  The syscall does not change
 	   any register except %eax so there is no need to reload any of
 	   them.  */
 #if CURR_EVENT == 0
-	cmpl	%edx, (%ebx)
+	cmpl	%edx, (%rdi)
 #else
-	cmpl	%edx, CURR_EVENT(%ebx)
+	cmpl	%edx, CURR_EVENT(%rdi)
 #endif
-	je,pn	8b
+	je	8b
 
 	/* Note: %esi is still zero.  */
 	movl	%esi, %eax		/* != PTHREAD_BARRIER_SERIAL_THREAD */
 
-	popl	%esi
-	popl	%ebx
-	ret
+	retq
 
 	/* The necessary number of threads arrived.  */
-3:	movl	INIT_COUNT(%ebx), %eax
-	movl	%eax, LEFT(%ebx)
+3:	movl	INIT_COUNT(%rdi), %eax
+	movl	%eax, LEFT(%rdi)
 #if CURR_EVENT == 0
-	addl	$1, (%ebx)
+	incl	(%rdi)
 #else
-	addl	$1, CURR_EVENT(%ebx)
+	incl	CURR_EVENT(%rdi)
 #endif
 
 	/* Wake up all waiters.  The count is a signed number in the kernel
 	   so 0x7fffffff is the highest value.  */
 	movl	$0x7fffffff, %edx
-	movl	$FUTEX_WAKE, %ecx
-	movl	$SYS_futex, %eax
-	ENTER_KERNEL
+	movq	$FUTEX_WAKE, %rsi
+	movq	$SYS_futex, %rax
+	syscall
 
 	/* Release the mutex.  We cannot release the lock before
 	   waking the waiting threads since otherwise a new thread might
 	   arrive and gets waken up, too.  */
 	LOCK
-	addl	$1, MUTEX(%ebx)
+	addl	$1, MUTEX(%rdi)
 	jng	4f
 
 5:	orl	$-1, %eax		/* == PTHREAD_BARRIER_SERIAL_THREAD */
 
-	popl	%ebx
-	ret
+	retq
 
-1:	leal	MUTEX(%ebx), %ecx
+1:	addq	$MUTEX, %rdi
 	call	__lll_lock_wait
+	subq	$MUTEX, %rdi
 	jmp	2b
 
-4:	leal	MUTEX(%ebx), %eax
+4:	addq	$MUTEX, %rdi
 	call	__lll_unlock_wake
+	subq	$MUTEX, %rdi
 	jmp	5b
 
-6:	leal	MUTEX(%ebx), %eax
+6:	addq	$MUTEX, %rdi
 	call	__lll_unlock_wake
+	subq	$MUTEX, %rdi
 	jmp	7b
 	.size	pthread_barrier_wait,.-pthread_barrier_wait

@@ -17,16 +17,12 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <lowlevelbarrier.h>
 #include "lowlevel-atomic.h"
 
 #define SYS_futex	240
 #define FUTEX_WAIT	0
 #define FUTEX_WAKE	1
-
-#define CURR_EVENT	0
-#define MUTEX		4
-#define LEFT		8
-#define	INIT_COUNT	12
 
 
 	.text
@@ -90,7 +86,7 @@ pthread_barrier_wait:
 	rts
 	 mov.l	@r15+, r9
 
-3:	
+3:
 	/* The necessary number of threads arrived.  */
 	mov.l	@(INIT_COUNT,r8), r0
 	mov.l	r0, @(LEFT,r8)
@@ -160,5 +156,5 @@ pthread_barrier_wait:
 .Lwake0:
 	.long	__lll_unlock_wake-.Lwake0b
 .Lwake1:
-	.long	__lll_unlock_wake-.Lwake1b	
+	.long	__lll_unlock_wake-.Lwake1b
 	.size	pthread_barrier_wait,.-pthread_barrier_wait
