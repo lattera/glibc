@@ -29,7 +29,7 @@
 
 typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
 
-#define _IO_lock_initializer { LLL_MUTEX_LOCK_INITIALIZER, 0, NULL }
+#define _IO_lock_initializer { LLL_LOCK_INITIALIZER, 0, NULL }
 
 #define _IO_lock_init(_name) \
   ((_name) = (_IO_lock_t) _IO_lock_initializer , 0)
@@ -42,7 +42,7 @@ typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
     void *__self = THREAD_SELF;						      \
     if ((_name).owner != __self)					      \
       {									      \
-        lll_mutex_lock ((_name).lock);					      \
+        lll_lock ((_name).lock);					      \
         (_name).owner = __self;						      \
       }									      \
     ++(_name).cnt;							      \
@@ -54,7 +54,7 @@ typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
     void *__self = THREAD_SELF;						      \
     if ((_name).owner != __self)					      \
       {									      \
-        if (lll_mutex_trylock ((_name).lock) == 0)			      \
+        if (lll_trylock ((_name).lock) == 0)				      \
           {								      \
             (_name).owner = __self;					      \
             (_name).cnt = 1;						      \
@@ -72,7 +72,7 @@ typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
     if (--(_name).cnt == 0)						      \
       {									      \
         (_name).owner = NULL;						      \
-        lll_mutex_unlock ((_name).lock);				      \
+        lll_unlock ((_name).lock);					      \
       }									      \
   } while (0)
 
