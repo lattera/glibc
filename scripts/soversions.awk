@@ -8,7 +8,7 @@ BEGIN {
 { thiscf = $1 }
 
 $2 ~ /WORDSIZE[3264]/ {
-  if (config ~ thiscf) {
+  if ((config ~ thiscf) && !othercf) {
     othercf = $3;
     sub(/@CPU@/, cpu, othercf);
     sub(/@VENDOR@/, vendor, othercf);

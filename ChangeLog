@@ -1,3 +1,8 @@
+2005-02-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* scripts/soversions.awk: Only record first WORDSIZE{32,64}
+	matching line.
+
 2005-02-14  Alan Modra  <amodra@bigpond.net.au>
 
 	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela): Define
