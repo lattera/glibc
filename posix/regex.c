@@ -2690,7 +2690,7 @@ regex_compile (pattern, size, syntax, bufp)
 			    PATFETCH (c);
 
 			    /* Now add the multibyte character(s) we found
-			       to the acceptabed list.
+			       to the accept list.
 
 			       XXX Note that this is not entirely correct.
 			       we would have to match multibyte sequences

@@ -2611,6 +2611,17 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 			      (sizeof (int32_t)
 			       - ((1 + namelen + 1 + runp->nmbs)
 				  % sizeof (int32_t))));
+
+	      /* Now some 32-bit values: multibyte collation sequence,
+		 wide char string (including length), and wide char
+		 collation sequence.  */
+	      obstack_int_grow (&extrapool, runp->mbseqorder);
+
+	      obstack_int_grow (&extrapool, runp->nwcs);
+	      obstack_grow (&extrapool, runp->wcs,
+			    runp->nwcs * sizeof (uint32_t));
+
+	      obstack_int_grow (&extrapool, runp->wcseqorder);
 	    }
 	}
 

@@ -70,23 +70,34 @@ C		 "]"		        "[!a]"		       0
 C		 "]]"		        "[!a]]"		       0
 
 # B.6 012(C)
-# *** implement [. .]
+C		 "a"			"[[.a.]]"	       0
+C		 "-"			"[[.-.]]"	       0
+C		 "-"			"[[.-.][.].]]"	       0
+C		 "-"			"[[.].][.-.]]"	       0
+C		 "-"			"[[.-.][=u=]]"	       0
+C		 "-"			"[[.-.][:alpha:]]"     0
+C		 "a"			"[![.a.]]"	       NOMATCH
 
 # B.6 013(C)
-# *** implement [. .]
+C		 "a"			"[[.b.]]"	       NOMATCH
+C		 "a"			"[[.b.][.c.]]"	       NOMATCH
+C		 "a"			"[[.b.][=b=]]"	       NOMATCH
 
-# B.6 014(C)
-# *** implement [. .]
 
 # B.6 015(C)
 C		 "a"			"[[=a=]]"	       0
 C		 "b"			"[[=a=]b]"	       0
 C		 "b"			"[[=a=][=b=]]"	       0
+C		 "a"			"[[=a=][=b=]]"	       0
+C		 "a"			"[[=a=][.b.]]"	       0
+C		 "a"			"[[=a=][:digit:]]"     0
 
 # B.6 016(C)
 C		 "="			"[[=a=]b]"	       NOMATCH
 C		 "]"			"[[=a=]b]"	       NOMATCH
-C		 "a"			"[[=b=]]"	       NOMATCH
+C		 "a"			"[[=b=][=c=]]"	       NOMATCH
+C		 "a"			"[[=b=][.].]]"	       NOMATCH
+C		 "a"			"[[=b=][:digit:]]"     NOMATCH
 
 # B.6 017(C)
 C		 "a"			"[[:alnum:]]"	       0
@@ -225,6 +236,10 @@ C		 "a"			"[[alpha]]"	       NOMATCH
 C		 "a"			"[[alpha:]]"	       NOMATCH
 C		 "a]"			"[[alpha]]"	       0
 C		 "a]"			"[[alpha:]]"	       0
+C		 "a"			"[[:alpha:][.b.]]"     0
+C		 "a"			"[[:alpha:][=b=]]"     0
+C		 "a"			"[[:alpha:][:digit:]]" 0
+C		 "a"			"[[:digit:][:alpha:]]" 0
 
 # B.6 018(C)
 C		 "a"			"[a-c]"		       0
@@ -236,9 +251,28 @@ C		 "B"			"[a-c]"		       NOMATCH
 C		 "b"			"[A-C]"		       NOMATCH
 C		 ""			"[a-c]"		       NOMATCH
 C		 "as"			"[a-ca-z]"	       NOMATCH
+C		 "a"			"[[.a.]-c]"	       0
+C		 "a"			"[a-[.c.]]"	       0
+C		 "a"			"[[.a.]-[.c.]]"	       0
+C		 "b"			"[[.a.]-c]"	       0
+C		 "b"			"[a-[.c.]]"	       0
+C		 "b"			"[[.a.]-[.c.]]"	       0
+C		 "c"			"[[.a.]-c]"	       0
+C		 "c"			"[a-[.c.]]"	       0
+C		 "c"			"[[.a.]-[.c.]]"	       0
+C		 "d"			"[[.a.]-c]"	       NOMATCH
+C		 "d"			"[a-[.c.]]"	       NOMATCH
+C		 "d"			"[[.a.]-[.c.]]"	       NOMATCH
 
 # B.6 019(C)
-C		 "b"			"[c-a]"		       NOMATCH
+C		 "a"			"[c-a]"		       NOMATCH
+C		 "a"			"[[.c.]-a]"	       NOMATCH
+C		 "a"			"[c-[.a.]]"	       NOMATCH
+C		 "a"			"[[.c.]-[.a.]]"	       NOMATCH
+C		 "c"			"[c-a]"		       NOMATCH
+C		 "c"			"[[.c.]-a]"	       NOMATCH
+C		 "c"			"[c-[.a.]]"	       NOMATCH
+C		 "c"			"[[.c.]-[.a.]]"	       NOMATCH
 
 # B.6 020(C)
 C		 "a"			"[a-c0-9]"	       0
@@ -394,23 +428,34 @@ de_DE.ISO-8859-1 "a"			"[[=a=]b]"	       0
 de_DE.ISO-8859-1 "â"			"[[=a=]b]"	       0
 de_DE.ISO-8859-1 "à"			"[[=a=]b]"	       0
 de_DE.ISO-8859-1 "á"			"[[=a=]b]"	       0
+de_DE.ISO-8859-1 "ä"			"[[=a=]b]"	       0
 de_DE.ISO-8859-1 "b"			"[[=a=]b]"	       0
 de_DE.ISO-8859-1 "c"			"[[=a=]b]"	       NOMATCH
 de_DE.ISO-8859-1 "a"			"[[=â=]b]"	       0
 de_DE.ISO-8859-1 "â"			"[[=â=]b]"	       0
 de_DE.ISO-8859-1 "à"			"[[=â=]b]"	       0
 de_DE.ISO-8859-1 "á"			"[[=â=]b]"	       0
+de_DE.ISO-8859-1 "ä"			"[[=â=]b]"	       0
 de_DE.ISO-8859-1 "b"			"[[=â=]b]"	       0
 de_DE.ISO-8859-1 "c"			"[[=â=]b]"	       NOMATCH
 de_DE.ISO-8859-1 "a"			"[[=à=]b]"	       0
 de_DE.ISO-8859-1 "â"			"[[=à=]b]"	       0
 de_DE.ISO-8859-1 "à"			"[[=à=]b]"	       0
 de_DE.ISO-8859-1 "á"			"[[=à=]b]"	       0
+de_DE.ISO-8859-1 "ä"			"[[=à=]b]"	       0
 de_DE.ISO-8859-1 "b"			"[[=à=]b]"	       0
 de_DE.ISO-8859-1 "c"			"[[=à=]b]"	       NOMATCH
 de_DE.ISO-8859-1 "a"			"[[=á=]b]"	       0
 de_DE.ISO-8859-1 "â"			"[[=á=]b]"	       0
 de_DE.ISO-8859-1 "à"			"[[=á=]b]"	       0
 de_DE.ISO-8859-1 "á"			"[[=á=]b]"	       0
+de_DE.ISO-8859-1 "ä"			"[[=á=]b]"	       0
 de_DE.ISO-8859-1 "b"			"[[=á=]b]"	       0
 de_DE.ISO-8859-1 "c"			"[[=á=]b]"	       NOMATCH
+de_DE.ISO-8859-1 "a"			"[[=ä=]b]"	       0
+de_DE.ISO-8859-1 "â"			"[[=ä=]b]"	       0
+de_DE.ISO-8859-1 "à"			"[[=ä=]b]"	       0
+de_DE.ISO-8859-1 "á"			"[[=ä=]b]"	       0
+de_DE.ISO-8859-1 "ä"			"[[=ä=]b]"	       0
+de_DE.ISO-8859-1 "b"			"[[=ä=]b]"	       0
+de_DE.ISO-8859-1 "c"			"[[=ä=]b]"	       NOMATCH

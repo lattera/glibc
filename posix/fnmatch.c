@@ -53,6 +53,7 @@
    we support a correct implementation only in glibc.  */
 #ifdef _LIBC
 # include "../locale/localeinfo.h"
+# include "../locale/elem-hash.h"
 
 # define CONCAT(a,b) __CONCAT(a,b)
 #endif

@@ -387,7 +387,10 @@ FCT (pattern, string, no_leading_period, flags)
 			    const UCHAR *np = (const UCHAR *) n;
 
 			    idx2 = findidx (&np);
-# if !WIDE_CHAR_VERSION
+# if WIDE_CHAR_VERSION
+			    if (idx2 != 0 && weights[idx] == weights[idx2])
+			      goto matched;
+# else
 			    if (idx2 != 0 && len == weights[idx2])
 			      {
 				int cnt = 0;
@@ -400,9 +403,6 @@ FCT (pattern, string, no_leading_period, flags)
 				if (cnt == len)
 				  goto matched;
 			      }
-# else
-			    if (idx2 != 0 && weights[idx] == weights[idx2])
-			      goto matched;
 # endif
 			  }
 		      }
@@ -415,13 +415,187 @@ FCT (pattern, string, no_leading_period, flags)
 		  return FNM_NOMATCH;
 		else
 		  {
-		    c = FOLD (c);
-		  normal_bracket:
-		    if (c == fn)
-		      goto matched;
+		    int is_seqval = 0;
+		    int is_range = 0;
 
-		    cold = c;
-		    c = *p++;
+#ifdef _LIBC
+		    if (c == L('[') && *p == L('.'))
+		      {
+			uint32_t nrules =
+			  _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
+			const CHAR *startp = p;
+			size_t c1 = 0;
+
+			while (1)
+			  {
+			    c = *++p;
+			    if (c == L('.') && p[1] == L(']'))
+			      {
+				p += 2;
+				break;
+			      }
+			    if (c == '\0')
+			      return FNM_NOMATCH;
+			    ++c1;
+			  }
+
+			/* We have to handling the symbols differently in
+			   ranges since then the collation sequence is
+			   important.  */
+			is_range = *p == L('-') && p[1] != L('\0');
+
+			if (nrules == 0)
+			  {
+			    /* There are no names defined in the collation
+			       data.  Therefore we only accept the trivial
+			       names consisting of the character itself.  */
+			    if (c1 != 1)
+			      return FNM_NOMATCH;
+
+			    if (!is_range && *n == startp[1])
+			      goto matched;
+
+			    cold = startp[1];
+			    c = *p++;
+			  }
+			else
+			  {
+			    int32_t table_size;
+			    const int32_t *symb_table;
+# ifdef WIDE_CHAR_VERSION
+			    char str[c1];
+			    int strcnt;
+# else
+#  define str (startp + 1)
+# endif
+			    const unsigned char *extra;
+			    int32_t idx;
+			    int32_t elem;
+			    int32_t second;
+			    int32_t hash;
+
+# ifdef WIDE_CHAR_VERSION
+			    /* We have to convert the name to a single-byte
+			       string.  This is possible since the names
+			       consist of ASCII characters and the internal
+			       representation is UCS4.  */
+			    for (strcnt = 0; strcnt < c1; ++strcnt)
+			      str[strcnt] = startp[1 + strcnt];
+#endif
+
+			    table_size =
+			      _NL_CURRENT_WORD (LC_COLLATE,
+						_NL_COLLATE_SYMB_HASH_SIZEMB);
+			    symb_table = (const int32_t *)
+			      _NL_CURRENT (LC_COLLATE,
+					   _NL_COLLATE_SYMB_TABLEMB);
+			    extra = (const unsigned char *)
+			      _NL_CURRENT (LC_COLLATE,
+					   _NL_COLLATE_SYMB_EXTRAMB);
+
+			    /* Locate the character in the hashing table.  */
+			    hash = elem_hash (str, c1);
+
+			    idx = 0;
+			    elem = hash % table_size;
+			    second = hash % (table_size - 2);
+			    while (symb_table[2 * elem] != 0)
+			      {
+				/* First compare the hashing value.  */
+				if (symb_table[2 * elem] == hash
+				    && c1 == extra[symb_table[2 * elem + 1]]
+				    && memcmp (str,
+					       &extra[symb_table[2 * elem + 1]
+						     + 1], c1) == 0)
+				  {
+				    /* Yep, this is the entry.  */
+				    idx = symb_table[2 * elem + 1];
+				    idx += 1 + extra[idx];
+				    break;
+				  }
+
+				/* Next entry.  */
+				elem += second;
+			      }
+
+			    if (symb_table[2 * elem] != 0)
+			      {
+				/* Compare the byte sequence but only if
+				   this is not part of a range.  */
+# ifdef WIDE_CHAR_VERSION
+				int32_t *wextra;
+
+				idx += 1 + extra[idx];
+				/* Adjust for the alignment.  */
+				idx = (idx + 3) & ~4;
+
+				wextra = (int32_t *) &extra[idx + 4];
+# endif
+
+				if (! is_range)
+				  {
+# ifdef WIDE_CHAR_VERSION
+				    for (c1 = 0; c1 < wextra[idx]; ++c1)
+				      if (n[c1] != wextra[1 + c1])
+					break;
+
+				    if (c1 == wextra[idx])
+				      goto matched;
+# else
+				    for (c1 = 0; c1 < extra[idx]; ++c1)
+				      if (n[c1] != extra[1 + c1])
+					break;
+
+				    if (c1 == extra[idx])
+				      goto matched;
+# endif
+				  }
+
+				/* Get the collation sequence value.  */
+				is_seqval = 1;
+# ifdef WIDE_CHAR_VERSION
+				cold = wextra[1 + wextra[idx]];
+# else
+				/* Adjust for the alignment.  */
+				idx += 1 + extra[idx];
+				idx = (idx + 3) & ~4;
+				cold = *((int32_t *) &extra[idx]);
+# endif
+
+				c = *p++;
+			      }
+			    else if (symb_table[2 * elem] != 0 && c1 == 1)
+			      {
+				/* No valid character.  Match it as a
+				   single byte.  */
+				if (!is_range && *n == str[0])
+				  goto matched;
+
+				cold = str[0];
+				c = *p++;
+			      }
+			    else
+			      return FNM_NOMATCH;
+			  }
+		      }
+		    else
+# undef str
+#endif
+		      {
+			c = FOLD (c);
+		      normal_bracket:
+
+			/* We have to handling the symbols differently in
+			   ranges since then the collation sequence is
+			   important.  */
+			is_range = *p == L('-') && p[1] != L('\0');
+
+			if (!is_range && c == fn)
+			  goto matched;
+
+			cold = c;
+			c = *p++;
+		      }
 
 		    if (c == L('-') && *p != L(']'))
 		      {
@@ -434,23 +608,19 @@ FCT (pattern, string, no_leading_period, flags)
 			   various characters appear in the source
 			   file.  A strange concept, nowhere
 			   documented.  */
-			int32_t fseqidx;
-			int32_t lseqidx;
+			uint32_t fcollseq;
+			uint32_t lcollseq;
 			UCHAR cend = *p++;
 # ifdef WIDE_CHAR_VERSION
+			int idx;
 			size_t cnt;
 # endif
 
-			if (!(flags & FNM_NOESCAPE) && cend == L('\\'))
-			  cend = *p++;
-			if (cend == L('\0'))
-			  return FNM_NOMATCH;
-
 # ifdef WIDE_CHAR_VERSION
 			/* Search in the `names' array for the characters.  */
-			fseqidx = fn % size;
+			idx = fn % size;
 			cnt = 0;
-			while (names[fseqidx] != fn)
+			while (names[idx] != fn)
 			  {
 			    if (++cnt == layers)
 			      /* XXX We don't know anything about
@@ -458,63 +628,210 @@ FCT (pattern, string, no_leading_period, flags)
 				 match.  This means we are failing.  */
 			      goto range_not_matched;
 
-			    fseqidx += size;
+			    idx += size;
 			  }
-			lseqidx = cold % size;
-			cnt = 0;
-			while (names[lseqidx] != cold)
+			fcollseq = collseq[idx];
+
+			if (is_seqval)
+			  lcollseq = cold;
+			else
 			  {
-			    if (++cnt == layers)
+			    idx = cold % size;
+			    cnt = 0;
+			    while (names[idx] != cold)
 			      {
-				lseqidx = -1;
-				break;
+				if (++cnt == layers)
+				  {
+				    idx = -1;
+				    break;
+				  }
+				idx += size;
 			      }
-			    lseqidx += size;
+
+			    lcollseq = idx == -1 ? 0xffffffff : collseq[idx];
 			  }
 # else
-			fseqidx = fn;
-			lseqidx = cold;
+			fcollseq = collseq[fn];
+			lcollseq = is_seqval ? cold : collseq[(UCHAR) cold];
 # endif
+
+			is_seqval = 0;
+			if (cend == L('[') && *p == L('.'))
+			  {
+			    uint32_t nrules =
+			      _NL_CURRENT_WORD (LC_COLLATE,
+						_NL_COLLATE_NRULES);
+			    const CHAR *startp = p;
+			    size_t c1 = 0;
+
+			    while (1)
+			      {
+				c = *++p;
+				if (c == L('.') && p[1] == L(']'))
+				  {
+				    p += 2;
+				    break;
+				  }
+				if (c == '\0')
+				  return FNM_NOMATCH;
+				++c1;
+			      }
+
+			    if (nrules == 0)
+			      {
+				/* There are no names defined in the
+				   collation data.  Therefore we only
+				   accept the trivial names consisting
+				   of the character itself.  */
+				if (c1 != 1)
+				  return FNM_NOMATCH;
+
+				cend = startp[1];
+			      }
+			    else
+			      {
+				int32_t table_size;
+				const int32_t *symb_table;
+# ifdef WIDE_CHAR_VERSION
+				char str[c1];
+				int strcnt;
+# else
+#  define str (startp + 1)
+# endif
+				const unsigned char *extra;
+				int32_t idx;
+				int32_t elem;
+				int32_t second;
+				int32_t hash;
+
+# ifdef WIDE_CHAR_VERSION
+				/* We have to convert the name to a single-byte
+				   string.  This is possible since the names
+				   consist of ASCII characters and the internal
+				   representation is UCS4.  */
+				for (strcnt = 0; strcnt < c1; ++strcnt)
+				  str[strcnt] = startp[1 + strcnt];
+#endif
+
+				table_size =
+				  _NL_CURRENT_WORD (LC_COLLATE,
+						    _NL_COLLATE_SYMB_HASH_SIZEMB);
+				symb_table = (const int32_t *)
+				  _NL_CURRENT (LC_COLLATE,
+					       _NL_COLLATE_SYMB_TABLEMB);
+				extra = (const unsigned char *)
+				  _NL_CURRENT (LC_COLLATE,
+					       _NL_COLLATE_SYMB_EXTRAMB);
+
+				/* Locate the character in the hashing
+                                   table.  */
+				hash = elem_hash (str, c1);
+
+				idx = 0;
+				elem = hash % table_size;
+				second = hash % (table_size - 2);
+				while (symb_table[2 * elem] != 0)
+				  {
+				/* First compare the hashing value.  */
+				    if (symb_table[2 * elem] == hash
+					&& (c1
+					    == extra[symb_table[2 * elem + 1]])
+					&& memcmp (str,
+						   &extra[symb_table[2 * elem + 1]
+							 + 1], c1) == 0)
+				      {
+					/* Yep, this is the entry.  */
+					idx = symb_table[2 * elem + 1];
+					idx += 1 + extra[idx];
+					break;
+				      }
+
+				    /* Next entry.  */
+				    elem += second;
+				  }
+
+				if (symb_table[2 * elem] != 0)
+				  {
+				    /* Compare the byte sequence but only if
+				       this is not part of a range.  */
+# ifdef WIDE_CHAR_VERSION
+				    int32_t *wextra;
+
+				    idx += 1 + extra[idx];
+				    /* Adjust for the alignment.  */
+				    idx = (idx + 3) & ~4;
+
+				    wextra = (int32_t *) &extra[idx + 4];
+# endif
+				    /* Get the collation sequence value.  */
+				    is_seqval = 1;
+# ifdef WIDE_CHAR_VERSION
+				    cend = wextra[1 + wextra[idx]];
+# else
+				    /* Adjust for the alignment.  */
+				    idx += 1 + extra[idx];
+				    idx = (idx + 3) & ~4;
+				    cend = *((int32_t *) &extra[idx]);
+# endif
+				  }
+				else if (symb_table[2 * elem] != 0 && c1 == 1)
+				  {
+				    cend = str[0];
+				    c = *p++;
+				  }
+				else
+				  return FNM_NOMATCH;
+			      }
+# undef str
+			  }
+			else
+			  {
+			    if (!(flags & FNM_NOESCAPE) && cend == L('\\'))
+			      cend = *p++;
+			    if (cend == L('\0'))
+			      return FNM_NOMATCH;
+			    cend = FOLD (cend);
+			  }
 
 			/* XXX It is not entirely clear to me how to handle
 			   characters which are not mentioned in the
 			   collation specification.  */
 			if (
 # ifdef WIDE_CHAR_VERSION
-			    lseqidx == -1 ||
+			    lcollseq == 0xffffffff ||
 # endif
-			    collseq[lseqidx] <= collseq[fseqidx])
+			    lcollseq <= fcollseq)
 			  {
 			    /* We have to look at the upper bound.  */
-			    int32_t hseqidx;
+			    uint32_t hcollseq;
 
-			    cend = FOLD (cend);
-# ifdef WIDE_CHAR_VERSION
-			    hseqidx = cend % size;
-			    cnt = 0;
-			    while (names[hseqidx] != cend)
+			    if (is_seqval)
+			      hcollseq = cend;
+			    else
 			      {
-				if (++cnt == layers)
-				  {
-				    /* Hum, no information about the upper
-				       bound.  The matching succeeds if the
-				       lower bound is matched exactly.  */
-				    if (lseqidx == -1 || cold != fn)
-				      goto range_not_matched;
-
-				    goto matched;
-				  }
-			      }
-# else
-			    hseqidx = cend;
-# endif
-
-			    if (
 # ifdef WIDE_CHAR_VERSION
-				(lseqidx == -1
-				 && collseq[fseqidx] == collseq[hseqidx]) ||
+				idx = cend % size;
+				cnt = 0;
+				while (names[idx] != cend)
+				  {
+				    if (++cnt == layers)
+				      {
+					/* Hum, no information about the upper
+					   bound.  The matching succeeds if the
+					   lower bound is matched exactly.  */
+					if (idx == -1 && lcollseq != fcollseq)
+					  goto range_not_matched;
+
+					goto matched;
+				      }
+				  }
+				hcollseq = collseq[idx];
+# else
+				hcollseq = collseq[cend];
 # endif
-				collseq[fseqidx] <= collseq[hseqidx])
+			      }
+
+			    if (lcollseq <= hcollseq && fcollseq <= hcollseq)
 			      goto matched;
 			  }
 # ifdef WIDE_CHAR_VERSION
@@ -553,6 +870,7 @@ FCT (pattern, string, no_leading_period, flags)
 	    /* Skip the rest of the [...] that already matched.  */
 	    do
 	      {
+	      ignore_next:
 		c = *p++;
 
 		if (c == L('\0'))
@@ -568,12 +886,52 @@ FCT (pattern, string, no_leading_period, flags)
 		  }
 		else if (c == L('[') && *p == L(':'))
 		  {
-		    do
-		      if (*++p == L('\0'))
-			return FNM_NOMATCH;
-		    while (*p != L(':') || p[1] == L(']'));
+		    int c1 = 0;
+		    const CHAR *startp = p;
+
+		    while (1)
+		      {
+			c = *++p;
+			if (++c1 == CHAR_CLASS_MAX_LENGTH)
+			  return FNM_NOMATCH;
+
+			if (*p == L(':') && p[1] == L(']'))
+			  break;
+
+			if (c < L('a') || c >= L('z'))
+			  {
+			    p = startp;
+			    goto ignore_next;
+			  }
+		      }
 		    p += 2;
-		    c = *p;
+		    c = *p++;
+		  }
+		else if (c == L('[') && *p == L('='))
+		  {
+		    c = *++p;
+		    if (c == L('\0'))
+		      return FNM_NOMATCH;
+		    c = *++p;
+		    if (c != L('=') || p[1] != L(']'))
+		      return FNM_NOMATCH;
+		    p += 2;
+		    c = *p++;
+		  }
+		else if (c == L('[') && *p == L('.'))
+		  {
+		    ++p;
+		    while (1)
+		      {
+			c = *++p;
+			if (c == '\0')
+			  return FNM_NOMATCH;
+
+			if (*p == L('.') && p[1] == L(']'))
+			  break;
+		      }
+		    p += 2;
+		    c = *p++;
 		  }
 	      }
 	    while (c != L(']'));
