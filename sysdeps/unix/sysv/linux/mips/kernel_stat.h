@@ -1,17 +1,20 @@
-/* Definition of `struct stat' used in the kernel..  */
-#if defined _ABI64 && _MIPS_SIM == _ABI64
+/* As tempting as it is to define XSTAT_IS_XSTAT64 for n64, the
+   userland data structures are not identical, because of different
+   padding.  */
+/* Definition of `struct stat' used in the kernel.  */
+#if _MIPS_SIM != _MIPS_SIM_ABI32
 struct kernel_stat
   {
     unsigned int st_dev;
     unsigned int __pad1[3];
-    unsigned long st_ino;
+    unsigned long long st_ino;
     unsigned int st_mode;
     unsigned int st_nlink;
     int st_uid;
     int st_gid;
     unsigned int st_rdev;
     unsigned int __pad2[3];
-    long st_size;
+    long long st_size;
     unsigned int st_atime;
     unsigned int __unused1;
     unsigned int st_mtime;
@@ -20,7 +23,7 @@ struct kernel_stat
     unsigned int __unused3;
     unsigned int st_blksize;
     unsigned int __pad3;
-    unsigned long st_blocks;
+    unsigned long long st_blocks;
   };
 #else
 struct kernel_stat

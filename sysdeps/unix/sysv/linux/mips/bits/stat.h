@@ -1,4 +1,5 @@
-/* Copyright (C) 1992,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +34,7 @@
 #define _MKNOD_VER		_MKNOD_VER_LINUX /* The bits defined below.  */
 
 
+#if _MIPS_SIM == _MIPS_SIM_ABI32
 /* Structure describing file characteristics.  */
 struct stat
   {
@@ -105,6 +107,71 @@ struct stat64
     __blkcnt64_t st_blocks;	/* Number of 512-byte blocks allocated.  */
     long int st_pad4[14];
   };
+#endif
+#else
+struct stat
+  {
+    __dev_t st_dev;
+    int	st_pad1[3];		/* Reserved for st_dev expansion  */
+#ifndef __USE_FILE_OFFSET64
+    __ino_t st_ino;
+#else
+    __ino64_t st_ino;
+#endif
+    __mode_t st_mode;
+    __nlink_t st_nlink;
+    __uid_t st_uid;
+    __gid_t st_gid;
+    __dev_t st_rdev;
+#if !defined __USE_FILE_OFFSET64
+    unsigned int st_pad2[2];	/* Reserved for st_rdev expansion  */
+    __off_t st_size;
+    int st_pad3;
+#else
+    unsigned int st_pad2[3];	/* Reserved for st_rdev expansion  */
+    __off64_t st_size;
+#endif
+    __time_t st_atime;
+    int __reserved0;
+    __time_t st_mtime;
+    int __reserved1;
+    __time_t st_ctime;
+    int __reserved2;
+    __blksize_t st_blksize;
+    unsigned int st_pad4;
+#ifndef __USE_FILE_OFFSET64
+    __blkcnt_t st_blocks;
+#else
+    __blkcnt64_t st_blocks;
+#endif
+    int st_pad5[14];
+  };
+
+#ifdef __USE_LARGEFILE64
+struct stat64
+  {
+    __dev_t st_dev;
+    unsigned int st_pad1[3];	/* Reserved for st_dev expansion  */
+    __ino64_t st_ino;
+    __mode_t st_mode;
+    __nlink_t st_nlink;
+    __uid_t st_uid;
+    __gid_t st_gid;
+    __dev_t st_rdev;
+    unsigned int st_pad2[3];	/* Reserved for st_rdev expansion  */
+    __off64_t st_size;
+    __time_t st_atime;
+    int __reserved0;
+    __time_t st_mtime;
+    int __reserved1;
+    __time_t st_ctime;
+    int __reserved2;
+    __blksize_t st_blksize;
+    unsigned int st_pad3;
+    __blkcnt64_t st_blocks;
+    int st_pad4[14];
+};
+#endif
 #endif
 
 /* Tell code we have these members.  */
