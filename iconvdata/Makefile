@@ -37,7 +37,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   IBM437 IBM850 IBM851 IBM852 IBM855 IBM857 IBM860 IBM861	 \
 	   IBM862 IBM863 IBM864 IBM865 IBM868 IBM869 IBM875 IBM880	 \
 	   IBM918 IBM1004 IBM1026 CP1250 CP1251 CP1252 CP1253 CP1254	 \
-	   CP1255 CP1256 CP1257 ISO-2022-JP
+	   CP1255 CP1256 CP1257 ISO-2022-JP MACINTOSH
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -142,6 +142,7 @@ EUC-CN-routines := euccn
 EUC-TW-routines := euctw
 ISO-2022-JP-routines := iso-2022-jp
 ISO-2022-KR-routines := iso-2022-kr
+MACINTOSH-routines := macintosh
 libJIS-routines := jis0201 jis0208 jis0212
 libKSC-routines := ksc5601
 libGB-routines := gb2312
@@ -194,7 +195,7 @@ distribute := 8bit-generic.c 8bit-gap.c gap.awk gaptab.awk gconv-modules    \
 	      ibm1004.c ibm1026.c ibm1047.c cp1250.c cp1251.c cp1252.c	    \
 	      cp1253.c cp1254.c cp1255.c cp1256.c cp1257.c cp874.c cp874.h  \
 	      cp737.c cp737.h cp775.c cp775.h iso-2022-jp.c iso-2022-kr.c   \
-	      gen-8bit.sh gen-8bit-gap.sh gen-8bit-gap-1.sh
+	      gen-8bit.sh gen-8bit-gap.sh gen-8bit-gap-1.sh macintosh.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -260,7 +261,7 @@ awk-generated-headers  := koi8-r.h latin-greek.h latin-greek-1.h	 \
 			  ibm1026.h cp1250.h cp1251.h cp1252.h cp1253.h	 \
 			  cp1254.h cp1255.h cp1256.h cp1257.h		 \
 			  iso8859-5.h iso8859-7.h iso8859-8.h		 \
-			  iso8859-10.h iso8859-7jp.h
+			  iso8859-10.h iso8859-7jp.h macintosh.h
 
 generated = $(sed-generated-headers) $(sed-generated-headers:%.h=%.stmp) \
 	    $(awk-generated-headers) $(awk-generated-headers:%.h=%.stmp) \
@@ -456,6 +457,9 @@ $(objpfx)cp1255.stmp: ../localedata/charmaps/CP1255 gen-8bit-gap.sh
 $(objpfx)cp1256.stmp: ../localedata/charmaps/CP1256 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
 $(objpfx)cp1257.stmp: ../localedata/charmaps/CP1257 gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+
+$(objpfx)macintosh.stmp: ../localedata/charmaps/MACINTOSH gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
 
 headers: $(addprefix $(objpfx),\

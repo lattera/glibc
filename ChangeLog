@@ -1,3 +1,13 @@
+1998-06-18 10:26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/Makefile (modules): Add MACINTOSH.
+	(MACINTOSH-routines): New variable.
+	(distribute): Add macintosh.c.
+	(awk-generated-headers): Add macintosh.h.
+	Add rule for macintosh.h generation.
+	* iconvdata/gconv-modules: Add definitions for MACINTOSH.
+	* iconvdata/macintosh.c: New file.
+
 1998-06-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/tst-strtod.c (long_dbl): Add test for loooong numbers.

@@ -1,5 +1,5 @@
 % texinfo.tex -- TeX macros to handle Texinfo files.
-% $Id: texinfo.tex,v 2.215 1998/05/29 09:03:23 drepper Exp $
+% $Id: texinfo.tex,v 2.216 1998/06/18 09:42:37 drepper Exp $
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98
 % Free Software Foundation, Inc.
@@ -25,20 +25,18 @@
 %
 % Please try the latest version of texinfo.tex before submitting bug
 % reports; you can get the latest version from:
-% /home/gd/gnu/doc/texinfo.tex on the GNU machines.
-% ftp://ftp.gnu.org/pub/gnu/texinfo.tex
-% (and all GNU mirrors, see ftp://ftp.gnu.org/pub/gnu/README.mirrors)
-% ftp://tug.org/tex/texinfo.tex
-% ftp://ctan.org/macros/texinfo/texinfo.tex
-% (and all CTAN mirrors, finger ctan@tug.org for a list).
+%   ftp://ftp.gnu.org/pub/gnu/texinfo.tex
+%   /home/gd/gnu/doc/texinfo.tex on the GNU machines.
+%   (and all GNU mirrors, see ftp://ftp.gnu.org/pub/gnu/README.mirrors)
+%   ftp://tug.org/tex/texinfo.tex
+%   ftp://ctan.org/macros/texinfo/texinfo.tex
+%   (and all CTAN mirrors, finger ctan@tug.org for a list).
+% The texinfo.tex in the texinfo distribution itself could well be out
+% of date, so if that's what you're using, please check.
 % 
 % Send bug reports to bug-texinfo@gnu.org.
 % Please include a precise test case in each bug report,
 % including a complete document with which we can reproduce the problem.
-% 
-% Texinfo macros (with @macro) are *not* supported by texinfo.tex.  You
-% have to run makeinfo -E to expand macros first; the texi2dvi script
-% does this.
 % 
 % To process a Texinfo manual with TeX, it's most reliable to use the
 % texi2dvi shell script that comes with the distribution.  For simple
@@ -60,7 +58,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 2.215 $
+\deftexinfoversion$Revision: 2.216 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % If in a .fmt file, print the version number
@@ -147,15 +145,10 @@
 % Dimensions to add cropmarks at corners.
 % Added by P. A. MacKay, 12 Nov. 1986
 %
-\newdimen\cornerlong \newdimen\cornerthick
-\newdimen\topandbottommargin
-\newdimen\outerhsize \newdimen\outervsize
-\cornerlong=1pc\cornerthick=.3pt        % These set size of cropmarks
-\outerhsize=7in
-%\outervsize=9.5in
-% Alternative @smallbook page size is 9.25in
-\outervsize=9.25in
-\topandbottommargin=.75in
+\newdimen\outerhsize \newdimen\outervsize % set by the paper size routines
+\newdimen\cornerlong  \cornerlong=1pc
+\newdimen\cornerthick \cornerthick=.3pt
+\newdimen\topandbottommargin \topandbottommargin=.75in
 
 % Main output routine.
 \chardef\PAGE = 255
@@ -791,13 +784,6 @@ where each line of input produces a line of output.}
 \def\menu{\doignore{menu}}
 \def\direntry{\doignore{direntry}}
 
-% Also ignore @macro ... @end macro.  The user must run texi2dvi,
-% which runs makeinfo to do macro expansion.  Ignore @unmacro, too.
-\def\macro{\doignore{macro}}
-\def\macrocsname{macro}
-\let\unmacro = \comment
-
-
 % @dircategory CATEGORY  -- specify a category of the dir file
 % which this file should belong to.  Ignore this in TeX.
 \let\dircategory = \comment
@@ -828,13 +814,7 @@ where each line of input produces a line of output.}
   %   @c @end ifinfo
   % and the @end ifinfo will be properly ignored.
   % (We've just changed @ to catcode 12.)
-  % 
-  % But we can't do this if #1 is `macro', since that actually contains a c.
-  % Happily, none of the other conditionals have the letter `c' in their names!
-  \def\temp{#1}%
-  \ifx\temp\macrocsname \else
-    \catcode`\c = 14
-  \fi
+  \catcode`\c = 14
   %
   % And now expand that command.
   \doignoretext
@@ -1120,30 +1100,25 @@ where each line of input produces a line of output.}
    \comment % Ignore the actual filename.
 }
 
+% Called from \setfilename.
+% 
+\def\openindices{%
+  \newindex{cp}%
+  \newcodeindex{fn}%
+  \newcodeindex{vr}%
+  \newcodeindex{tp}%
+  \newcodeindex{ky}%
+  \newcodeindex{pg}%
+}
+
 % @bye.
 \outer\def\bye{\pagealignmacro\tracingstats=1\ptexend}
 
-% \def\macro#1{\begingroup\ignoresections\catcode`\#=6\def\macrotemp{#1}\parsearg\macroxxx}
-% \def\macroxxx#1#2 \end macro{%
-% \expandafter\gdef\macrotemp#1{#2}%
-% \endgroup}
-
-%\def\linemacro#1{\begingroup\ignoresections\catcode`\#=6\def\macrotemp{#1}\parsearg\linemacroxxx}
-%\def\linemacroxxx#1#2 \end linemacro{%
-%\let\parsearg=\relax
-%\edef\macrotempx{\csname M\butfirst\expandafter\string\macrotemp\endcsname}%
-%\expandafter\xdef\macrotemp{\parsearg\macrotempx}%
-%\expandafter\gdef\macrotempx#1{#2}%
-%\endgroup}
-
-%\def\butfirst#1{}
-
 
 \message{fonts,}
-
 % Font-change commands.
 
-% Texinfo supports the sans serif font style, which plain TeX does not.
+% Texinfo sort of supports the sans serif font style, which plain TeX does not.
 % So we set up a \sf analogous to plain's \rm, etc.
 \newfam\sffam
 \def\sf{\fam=\sffam \tensf}
@@ -1215,11 +1190,12 @@ where each line of input produces a line of output.}
 % Do not make many font distinctions in general in the index, since they
 % aren't very useful.
 \setfont\ninett\ttshape{9}{1000}
+\setfont\ninettsl\ttslshape{9}{1000}
 \setfont\indrm\rmshape{9}{1000}
 \setfont\indit\slshape{9}{1000}
 \let\indsl=\indit
 \let\indtt=\ninett
-\let\indttsl=\ninett
+\let\indttsl=\ninettsl
 \let\indsf=\indrm
 \let\indbf=\indrm
 \setfont\indsc\scshape{10}{900}
@@ -3772,49 +3748,52 @@ width0pt\relax} \fi
   \fi
 }
 
-% To ending an @example-like environment, we first end the paragraph
-% (via \afterenvbreak's vertical glue), and then the group.  That way we
-% keep the zero \parskip that the environments set -- \parskip glue
-% will be inserted at the beginning of the next paragraph in the
-% document, after the environment.
+% Define the \E... control sequence only if we are inside the particular
+% environment, so the error checking in \end will work.
+% 
+% To end an @example-like environment, we first end the paragraph (via
+% \afterenvbreak's vertical glue), and then the group.  That way we keep
+% the zero \parskip that the environments set -- \parskip glue will be
+% inserted at the beginning of the next paragraph in the document, after
+% the environment.
 %
-\def\nonfillfinish{\afterenvbreak\endgroup}%
+\def\nonfillfinish{\afterenvbreak\endgroup}
 
+% @lisp: indented, narrowed, typewriter font.
 \def\lisp{\begingroup
   \nonfillstart
   \let\Elisp = \nonfillfinish
   \tt
-  % Make @kbd do something special, if requested.
-  \let\kbdfont\kbdexamplefont
-  \rawbackslash % have \ input char produce \ char from current font
-  \gobble
+  \let\kbdfont = \kbdexamplefont % Allow @kbd to do something special.
+  \gobble       % eat return
 }
 
-% Define the \E... control sequence only if we are inside the
-% environment, so the error checking in \end will work.
-%
-% We must call \lisp last in the definition, since it reads the
-% return following the @example (or whatever) command.
-%
+% @example: Same as @lisp.
 \def\example{\begingroup \def\Eexample{\nonfillfinish\endgroup}\lisp}
-\def\smallexample{\begingroup \def\Esmallexample{\nonfillfinish\endgroup}\lisp}
-\def\smalllisp{\begingroup \def\Esmalllisp{\nonfillfinish\endgroup}\lisp}
 
-% @smallexample and @smalllisp.  This is not used unless the @smallbook
-% command is given.  Originally contributed by Pavel@xerox.
+% @small... is usually equivalent to the non-small (@smallbook
+% redefines).  We must call \example (or whatever) last in the
+% definition, since it reads the return following the @example (or
+% whatever) command.
+% 
+% This actually allows (for example) @end display inside an
+% @smalldisplay.  Too bad, but makeinfo will catch the error anyway.
 %
+\def\smalldisplay{\begingroup\def\Esmalldisplay{\nonfillfinish\endgroup}\display}
+\def\smallexample{\begingroup\def\Esmallexample{\nonfillfinish\endgroup}\lisp}
+\def\smallformat{\begingroup\def\Esmallformat{\nonfillfinish\endgroup}\format}
+\def\smalllisp{\begingroup\def\Esmalllisp{\nonfillfinish\endgroup}\lisp}
+
+% Real @smallexample and @smalllisp (when @smallbook): use smaller fonts.
+% Originally contributed by Pavel@xerox.
 \def\smalllispx{\begingroup
-  \nonfillstart
-  \let\Esmalllisp = \nonfillfinish
-  \let\Esmallexample = \nonfillfinish
-  %
-  % Smaller fonts for small examples.
-  \indexfonts \tt
-  \rawbackslash % make \ output the \ character from the current font (tt)
-  \gobble
+  \def\Esmalllisp{\nonfillfinish\endgroup}%
+  \def\Esmallexample{\nonfillfinish\endgroup}%
+  \indexfonts
+  \lisp
 }
 
-% This is @display; same as @lisp except use roman font.
+% @display: same as @lisp except keep current font.
 %
 \def\display{\begingroup
   \nonfillstart
@@ -3822,7 +3801,15 @@ width0pt\relax} \fi
   \gobble
 }
 
-% This is @format; same as @display except don't narrow margins.
+% @smalldisplay (when @smallbook): @display plus smaller fonts.
+%
+\def\smalldisplayx{\begingroup
+  \def\Esmalldisplay{\nonfillfinish\endgroup}%
+  \indexfonts \rm
+  \display
+}
+
+% @format: same as @display except don't narrow margins.
 %
 \def\format{\begingroup
   \let\nonarrowing = t
@@ -3831,20 +3818,27 @@ width0pt\relax} \fi
   \gobble
 }
 
-% @flushleft (same as @format) and @flushright.
+% @smallformat (when @smallbook): @format plus smaller fonts.
 %
-\def\flushleft{\begingroup
-  \let\nonarrowing = t
-  \nonfillstart
-  \let\Eflushleft = \nonfillfinish
-  \gobble
+\def\smallformatx{\begingroup
+  \def\Esmallformat{\nonfillfinish\endgroup}%
+  \indexfonts \rm
+  \format
 }
+
+% @flushleft (same as @format).
+%
+\def\flushleft{\begingroup \def\Eflushleft{\nonfillfinish\endgroup}\format}
+
+% @flushright.
+% 
 \def\flushright{\begingroup
   \let\nonarrowing = t
   \nonfillstart
   \let\Eflushright = \nonfillfinish
   \advance\leftskip by 0pt plus 1fill
-  \gobble}
+  \gobble
+}
 
 % @quotation does normal linebreaking (hence we can't use \nonfillstart)
 % and narrows the margins.
@@ -3866,6 +3860,7 @@ width0pt\relax} \fi
     \let\nonarrowing = \relax
   \fi
 }
+
 
 \message{defuns,}
 % Define formatter for defuns
@@ -4227,7 +4222,7 @@ width0pt\relax} \fi
 \def\defspecx #1 {\errmessage{@defspecx in invalid context}}
 \def\deftypefnx #1 {\errmessage{@deftypefnx in invalid context}}
 \def\deftypemethodx #1 {\errmessage{@deftypemethodx in invalid context}}
-\def\deftypefunx #1 {\errmessage{@deftypeunx in invalid context}}
+\def\deftypefunx #1 {\errmessage{@deftypefunx in invalid context}}
 
 % @defmethod, and so on
 
@@ -4385,91 +4380,193 @@ width0pt\relax} \fi
 
 \message{macros,}
 % @macro.
-% The basic scheme is as follows:
-% We read the first line and split it up into macro name and parameter
-% list.  We then walk the parameter list defining control sequences
-% named \MAC@<macro name><parameter name>.  Each expands to another
-% control sequence named \MAC@<macro name>.<parameter number>.  Those
-% control sequences will be defined at macro runtime to be the
-% parameter expansion text.
-%
-% The body is then read in as a single argument in a context where \
-% is an active character, and the cs \MACb.<macro name> is defined as
-% the macro body.  The active character \ takes one argument delimited
-% by another \, and uses it to index the table of macro arguments
-% described above.
-%
-% Finally, we define a control sequence \<macro name> which calls one
-% of the six (!) macro execution commands.  These six commands
-% correspond to recursive and nonrecursive macros with no, one, and
-% many arguments.  They all take one argument, <macro name>, set up
-% the environment appropriately, and call the real macro.
-%
-% \macsave@<macro name> holds the old definition of \<macro name>.  
 
-\newcount\paramno
-\newtoks\macname
+% To do this right we need a feature of e-TeX, \scantokens, 
+% which we arrange to emulate with a temporary file in ordinary TeX.
+\ifx\eTeXversion\undefined
+ \newwrite\macscribble
+ \def\scantokens#1{%
+%   \toks0={#1}%
+   \immediate\openout\macscribble=\jobname.tmp
+   \immediate\write\macscribble{#1}%\the\toks0}%
+   \immediate\closeout\macscribble
+   \input \jobname.tmp
+}
+\fi
 
-% This does \let #1 = #2, except with \csnames.
+\newcount\paramno   % Count of parameters
+\newtoks\macname    % Macro name
+\newif\ifrecursive  % Is it recursive?
+
+% Utility: does \let #1 = #2, except with \csnames.
 \def\cslet#1#2{%
-\expandafter\expandafter\expandafter
-\let
+\expandafter\expandafter
+\expandafter\let
 \expandafter\expandafter
 \csname#1\endcsname
 \csname#2\endcsname}
 
-% We have to play lots of games with the catcodes.  Initially { and }
-% are made `other' so that \splitarg (below) can use them as argument
-% delimiters.  Then - is made a letter so that \iimacro can recognize
-% @allow-recursion.
-\def\macro{\bgroup\catcode`\{=\other\catcode`\}=\other\parsearg\imacro}
-\def\imacro#1{\egroup  % started in \macro
-  \splitarg{#1}%         now \macname is the macname and \toks0 the arglist
-  \paramno=0%
-  \edef\tmp{\the\toks0}%
-  \ifx\tmp\empty       % no arguments
+% Macro bodies are absorbed as an argument in a context where
+% all characters are catcode 10, 11 or 12, except \ which is active
+% (as in normal texinfo). It is necessary to change the definition of \.
+
+\def\macrobodyctxt{%
+  \catcode`\~=12
+  \catcode`\^=12
+  \catcode`\_=12
+  \catcode`\|=12
+  \catcode`\<=12
+  \catcode`\>=12
+  \catcode`\+=12
+  \catcode`\{=12
+  \catcode`\}=12
+  \catcode`\@=12
+  \catcode`\^^M=10
+  \usembodybackslash}
+
+% \mbodybackslash is the definition of \ in @macro bodies.
+% It maps \foo\ => \csname macarg.foo\endcsname => #N 
+% where N is the macro parameter number.
+% We define \csname macarg.\endcsname to be \realbackslash, so
+% \\ in macro replacement text gets you a backslash.
+
+{\catcode`@=0 \catcode`\\=\active
+ @gdef@usembodybackslash{@let\=@mbodybackslash}
+ @gdef@mbodybackslash#1\{@csname macarg.#1@endcsname}
+}
+\expandafter\def\csname macarg.\endcsname{\realbackslash}
+
+% The catcode games are necessary because @macro may or may not
+% have a brace-surrounded list of arguments, and we need to do
+% different stuff in each case.  Making {, } \other is the only 
+% way to prevent their being deleted by the tokenizer.
+\def\macro{\recursivefalse
+  \bgroup\catcode`\{=\other\catcode`\}=\other\parsearg\macroxxx}
+\def\rmacro{\recursivetrue
+  \bgroup\catcode`\{=\other\catcode`\}=\other\parsearg\macroxxx}
+
+\def\macroxxx#1{\egroup   % started in \macro
+  \getargs{#1}%           now \macname is the macname and \toks0 the arglist
+  \edef\temp{\the\toks0}%
+  \ifx\temp\empty       % no arguments
+     \paramno=0%
   \else
      \expandafter\parsemargdef \the\toks0;% 
   \fi
-  \bgroup\catcode`\-=11\global\futurelet\nxt\iimacro}
-
-% \imacro has noted whether the macro takes one, two, or many
-% arguments (in \paramno). \iimacro figures out whether it's
-% recursive, and then uses the argument count and the recursivity to
-% select one of the six macro execution sequences.  Then we save the
-% original definition of @foo in \macsave@foo, and define @foo to call
-% the selected execution sequence.  \edef conveniently just expands
-% the token registers, not the deep structure.
-\def\iimacro{%
-  \egroup % started in \imacro
-  \ifx\nxt\allowrecur
-    \let\next\parserbody
-    \toks0=\expandafter{\csname dormacro\ifcase\paramno na\or oa\fi\endcsname}%
+  \expandafter\ifx \csname macsave.\the\macname\endcsname \relax
+     \cslet{macsave.\the\macname}{\the\macname}%
   \else
-    \let\next\parsebody
-    \toks0=\expandafter{\csname domacro\ifcase\paramno na\or oa\fi\endcsname}%
+     \message{Warning: redefining \the\macname}%
   \fi
-  \expandafter\ifx \csname macsave@\the\macname\endcsname \relax
-    \cslet{macsave@\the\macname}{\the\macname}%
+  \begingroup \macrobodyctxt
+  \ifrecursive \expandafter\parsermacbody
+  \else \expandafter\parsemacbody 
+  \fi}
+
+\def\unmacro{\parsearg\unmacroxxx}
+\def\unmacroxxx#1{
+  \expandafter\ifx \csname macsave.\the\macname\endcsname \relax
+    \errmessage{Macro \the\macname\ not defined.}%
   \else
-    \errmessage{warning: redefining macro \the\macname}%
+    \cslet{#1}{macsave.#1}%
+    \expandafter\let \csname macsave.\the\macname\endcsname \undefined
   \fi
-  \expandafter\edef\csname\the\macname\endcsname{\the\toks0{\the\macname}}%
-\next}
+}
 
-% @allow-recursion is noticed and handled by \iimacro.  It should
-% never actually be executed.  It has two names so we don't need
-% strange catcodes while defining \iimacro.
-\def\allowrecur{\errmessage{Internal error: \noexpand\allowrecur executed}}
-{\catcode`\-=11\global\let\allow-recursion\allowrecur}
+% Parse the optional {params} list.  Set up \paramno and \paramlist
+% so \defmacro knows what to do.  Define \macarg.blah for each blah
+% in the params list, to be ##N where N is the position in that list.
+% That gets used by \mbodybackslash (above).
 
-% unmacro just restores the old meaning; the MAC@<macname> macros
-% remain defined.  (Memory leak!)  \norecurse is defined below, near
-% the execution commands.
-\def\unmacro{\parsearg\iunmacro}
-\def\iunmacro#1{\macname={#1} \norecurse}
+% This code has to take great care with `macro parameter char #'.  The
+% eight hashes in a row on the macarg.#1 line collapse to four in the
+% definition of \macarg.blah, to two when \parsemacbody expands the
+% macro replacement text, and to one when \defmacro writes the macro
+% definiton.  The games with \twohash are to postpone expansion till
+% the very end, when \parsemargdefyyy crunches \paramlist into
+% something that can be splatted into a \expandafter\def\blah line (in
+% \defmacro).
+\def\parsemargdef#1;{\paramno=0\def\paramlist{}\parsemargdefxxx#1,;,}
+\def\parsemargdefxxx#1,{%
+  \let\twohash\relax
+  \if#1;\let\next=\parsemargdefyyy
+  \else \let\next=\parsemargdefxxx
+    \advance\paramno by 1%
+    \expandafter\edef\csname macarg.#1\endcsname{########\the\paramno}%
+    \edef\paramlist{\paramlist\twohash\twohash\the\paramno,}%
+  \fi\next}
+\def\parsemargdefyyy{\let\twohash##\relax \edef\paramlist{\paramlist}}
 
-% We need {} to be ordinary inside these commands. [] are temporary
+% These two commands read recursive and nonrecursive macro bodies.
+% (They're different since rec and nonrec macros end differently.)
+
+\long\def\parsemacbody#1@end macro%
+{\xdef\temp{#1} \endgroup\defmacro}%
+\long\def\parsermacbody#1@end macro%
+{\xdef\temp{#1} \endgroup\defmacro}%
+
+
+% This defines the macro itself. There are six cases: recursive and
+% nonrecursive macros of zero, one, and many arguments.
+% Much magic with \expandafter here.
+\def\defmacro{%
+  \ifrecursive
+    \ifcase\paramno
+    % 0
+      \expandafter\edef\csname\the\macname\endcsname{%
+        \noexpand\scantokens{\temp}}%
+    \or % 1
+      \expandafter\edef\csname\the\macname\endcsname{%
+         \noexpand\braceorline\csname\the\macname xxx\endcsname}%
+      \expandafter\edef\csname\the\macname xxx\endcsname##1{%
+         \noexpand\scantokens{\temp}}%
+    \else % many
+      \expandafter\edef\csname\the\macname\endcsname##1{%
+          \csname\the\macname xxx\endcsname ##1,}%
+      \expandafter\expandafter
+      \expandafter\edef
+      \expandafter\expandafter
+        \csname\the\macname xxx\endcsname 
+          \paramlist{\noexpand\scantokens{\temp}}%
+    \fi
+  \else
+    \ifcase\paramno
+    % 0
+      \expandafter\edef\csname\the\macname\endcsname{%
+        \noexpand\norecurse{\the\macname}%
+        \noexpand\scantokens{\temp}\egroup}%
+    \or % 1
+      \expandafter\edef\csname\the\macname\endcsname{%
+         \noexpand\braceorline\csname\the\macname xxx\endcsname}%
+      \expandafter\edef\csname\the\macname xxx\endcsname##1{%
+        \noexpand\norecurse{\the\macname}
+        \noexpand\scantokens{\temp}\egroup}%
+    \else % many
+      \expandafter\edef\csname\the\macname\endcsname##1{%
+          \csname\the\macname xxx\endcsname ##1,}%
+      \expandafter\expandafter
+      \expandafter\edef
+      \expandafter\expandafter
+      \csname\the\macname xxx\endcsname
+      \paramlist{%
+          \noexpand\norecurse{\the\macname}
+          \noexpand\scantokens{\temp}\egroup}%
+    \fi
+  \fi}
+
+\def\norecurse#1{\bgroup\cslet{#1}{macsave.#1}}
+
+% \braceorline decides whether the next nonwhitespace character is a
+% {.  If so it reads up to the closing }, if not, it reads the whole
+% line.  Whatever was read is then fed to the next control sequence
+% as an argument (by \parsebrace or \parsearg)
+\def\braceorline#1{\let\next=#1\futurelet\nchar\braceorlinexxx}
+\def\braceorlinexxx{%
+  \ifx\nchar\bgroup\else
+    \expandafter\parsearg 
+  \fi \next}
+
+% We need {} to be \other inside these commands. [] are temporary
 % grouping symbols.
 \begingroup
 \catcode`\{=\other \catcode`\}=\other
@@ -4477,108 +4574,21 @@ width0pt\relax} \fi
 
 % @macro can be called with or without a brace-surrounded macro
 % argument list.  These three sequences extract the macro name and arg
-% list in hopefully all cases.  *Note, anything on the line after the
-% first pair of braces will be thrown out.
-\gdef\splitarg#1[\isplitarg|#1 {}|]
-\gdef\isplitarg|#1 {#2}#3|[%
+% list in hopefully all cases.  Note that anything on the line after the
+% first pair of braces will be thrown out (Makeinfo puts it into the
+% macro body).
+\gdef\getargs#1[\getargsxxx|#1 {}|]
+\gdef\getargsxxx|#1 {#2}#3|[%
   \toks0=[#2]%
   \edef\tmp[\the\toks0]%
   \ifx\tmp\empty
-     \isplitargnospaces|#1{}|%
+     \getargsnospaces|#1{}|%
   \else
      \macname=[#1]%
   \fi]
-\gdef\isplitargnospaces|#1{#2}#3|[\macname=[#1] \toks0=[#2]]
-
-% \parsebrace gets around the situation produced by \braceorline
-% (below) where the { has the wrong catcode because of \futurelet.
-% The \egroup matches a \bgroup in \braceorline.
-\gdef\parsebrace#1{#2}[\egroup\let\next=#1\next[#2]]
-
-\global\let\brace={ % used by \braceorline, below
+\gdef\getargsnospaces|#1{#2}#3|[\macname=[#1]\toks0=[#2]]
 
 \endgroup
-
-
-% Argument parsing.
-% These routines iterate over a comma-separated list defining
-% tokens that map macro formal to actual parameters.
-% \parsemargdef sets the formal -> positional correspondence at macro
-% definition time; \parsemarg sets positional -> actual at runtime.
-%
-% The definitions are not symmetric because the callers have the
-% argument list in different places (token register and #arg)
-\def\parsemargdef#1;{\paramno=0\iparsemargdef#1,;,}
-\def\iparsemargdef#1,{%
-  \if#1;\let\next=\relax
-  \else \let\next=\iparsemargdef
-    \advance\paramno by 1%
-    \expandafter\edef\csname MAC@\the\macname#1\endcsname
-      {\csname MAC@\the\macname.\the\paramno\endcsname}%
-  \fi\next}
-
-\def\parsemarg#1{\paramno=1\iparsemarg#1,;,}
-\def\iparsemarg#1,{%
-  \if#1;\let\next=\relax
-  \else \let\next=\iparsemarg
-    \expandafter\def\csname MAC@\the\macname.\the\paramno\endcsname{#1}%
-    \advance\paramno by 1%
-  \fi\next}
-
-% Argument substitution.
-% \ is active when the body is read and tokenized; it converts its
-% argument to a macro-argument name and expands it.  We use | as a
-% temporary escape character.
-{
-\catcode`\|=0 |catcode`|\=|active
-|gdef\#1\{|csname MAC@|the|macname#1|endcsname}
-}
-
-% These sequences read and save the macro body.  \parserbody absorbs
-% the @allow-recursion in its argument, and then falls through to
-% \parsebody.
-\def\parsebody{\begingroup\catcode`\\=\active\iparsebody}
-\def\parserbody#1{\parsebody}
-
-% \iparsebody reads the entire macro in as an argument.  \ was made
-% active by \parsebody while the reading occurs.
-\long\def\iparsebody#1 \end macro% The space eats the final CR.
-{\endgroup % started in \parsebody
-\expandafter\def\csname MACb.\the\macname \endcsname{#1}}
-
-% These six sequences execute recursive and nonrecursive macros of no,
-% one, and many arguments.  We need to distinguish one arg from many
-% args because a one-argument macro invoked with no arguments gets the
-% rest of the line as its argument.
-%
-% Please note that all macros are executed inside a group, so any
-% changes made by a macro (@set, etc.) won't stick.
-\def\dormacrona#1{\begingroup\macname={#1}\idomacro{}}
-\def\dormacrooa#1{\begingroup\macname={#1}\braceorline}
-\def\dormacro#1{\begingroup\macname={#1}\idomacro}
-
-\def\domacrona#1{\begingroup\macname={#1}\norecurse\idomacro{}}
-\def\domacrooa#1{\begingroup\macname={#1}\norecurse\braceorline}
-\def\domacro#1{\begingroup\macname={#1}\norecurse\idomacro}
-
-% some helpers:
-\def\norecurse{\cslet{\the\macname}{macsave@\the\macname}}
-\def\idomacro#1{\parsemarg{#1}\csname MACb.\the\macname\endcsname\endgroup}
-
-% \braceorline decides whether the next nonwhitespace character is a
-% {.  If so it reads up to the closing }, if not, it reads the whole
-% line.  Whatever was read is then fed to \idomacro.  \parsebrace is
-% defined above, near \splitarg, in a strange catcode environment;
-% this is necessary because \futurelet freezes the catcode of the
-% peeked-at character.
-\def\braceorline{\bgroup
-\catcode`\{=\other\catcode`\}=\other \futurelet\nxt\ibraceorline}
-\def\ibraceorline{%
-\ifx\nxt\brace
-    \expandafter\parsebrace 
-  \else
-    \egroup \expandafter\parsearg 
-  \fi \idomacro}
 
 
 \message{cross references,}
@@ -5020,36 +5030,18 @@ width0pt\relax} \fi
   \fi
 }
 
-% End of control word definitions.
 
+\message{paper sizes,}
+% And other related parameters.
 
-\message{and turning on texinfo input format.}
-
-\def\openindices{%
-   \newindex{cp}%
-   \newcodeindex{fn}%
-   \newcodeindex{vr}%
-   \newcodeindex{tp}%
-   \newcodeindex{ky}%
-   \newcodeindex{pg}%
-}
-
-% Set some numeric style parameters, for 8.5 x 11 format.
-
-\hsize = 6in
-\hoffset = .25in
 \newdimen\defaultparindent \defaultparindent = 15pt
-\parindent = \defaultparindent
-\parskip 3pt plus 2pt minus 1pt
-\setleading{13.2pt}
-\advance\topskip by 1.2cm
 
 \chapheadingskip = 15pt plus 4pt minus 2pt
 \secheadingskip = 12pt plus 3pt minus 2pt
 \subsecheadingskip = 9pt plus 2pt minus 2pt
 
 % Prevent underfull vbox error messages.
-\vbadness=10000
+\vbadness = 10000
 
 % Following George Bush, just get rid of widows and orphans.
 \widowpenalty=10000
@@ -5058,101 +5050,126 @@ width0pt\relax} \fi
 % Use TeX 3.0's \emergencystretch to help line breaking, but if we're
 % using an old version of TeX, don't do anything.  We want the amount of
 % stretch added to depend on the line length, hence the dependence on
-% \hsize.  This makes it come to about 9pt for the 8.5x11 format.
+% \hsize.  This makes it come to about 9pt for the 8.5x11 format.  We
+% call this whenever the paper size is set.
 %
-\ifx\emergencystretch\thisisundefined
-  % Allow us to assign to \emergencystretch anyway.
-  \def\emergencystretch{\dimen0}%
-\else
-  \emergencystretch = \hsize
-  \divide\emergencystretch by 45
-\fi
-
-% Use @smallbook to reset parameters for 7x9.5 format  (or else 7x9.25)
-\def\smallbook{
-  \global\chapheadingskip = 15pt plus 4pt minus 2pt
-  \global\secheadingskip = 12pt plus 3pt minus 2pt
-  \global\subsecheadingskip = 9pt plus 2pt minus 2pt
-  %
-  \global\lispnarrowing = 0.3in
-  \setleading{12pt}
-  \advance\topskip by -1cm
-  \global\parskip 2pt plus 1pt
-  \global\hsize = 5in
-  \global\vsize=7.5in
-  \global\tolerance=700
-  \global\hfuzz=1pt
-  \global\contentsrightmargin=0pt
-  \global\deftypemargin=0pt
-  \global\defbodyindent=.5cm
-  %
-  \global\pagewidth=\hsize
-  \global\pageheight=\vsize
-  %
-  \global\let\smalllisp=\smalllispx
-  \global\let\smallexample=\smalllispx
-  \global\def\Esmallexample{\Esmalllisp}
+\def\setemergencystretch{%
+  \ifx\emergencystretch\thisisundefined
+    % Allow us to assign to \emergencystretch anyway.
+    \def\emergencystretch{\dimen0}%
+  \else
+    \emergencystretch = \hsize
+    \divide\emergencystretch by 45
+  \fi
 }
+
+% Parameters in order: 1) textheight; 2) textwidth; 3) voffset;
+% 4) hoffset; 5) binding offset; 6) topskip.  Then whoever calls us can
+% set \parskip and call \setleading for \baselineskip.
+%
+\def\internalpagesizes#1#2#3#4#5#6{%
+  \voffset = #3\relax
+  \topskip = #6\relax
+  \splittopskip = \topskip
+  %
+  \vsize = #1\relax
+  \advance\vsize by \topskip
+  \outervsize = \vsize
+  \advance\outervsize by 0.6in
+  \pageheight = \vsize
+  %
+  \hsize = #2\relax
+  \outerhsize = \hsize
+  \advance\outerhsize by 0.5in
+  \pagewidth = \hsize
+  %
+  \normaloffset = #4\relax
+  \bindingoffset = #5\relax
+  %
+  \parindent = \defaultparindent
+  \setemergencystretch
+}
+
+% @letterpaper (the default).
+\def\letterpaper{{\globaldefs = 1
+  \parskip = 3pt plus 2pt minus 1pt
+  \setleading{13.2pt}%
+  %
+  % If page is nothing but text, make it come out even.
+  \internalpagesizes{46\baselineskip}{6in}{\voffset}{.25in}{\bindingoffset}{36pt}%
+}}
+
+% Use @smallbook to reset parameters for 7x9.5 (or so) format.
+\def\smallbook{{\globaldefs = 1
+  \parskip = 2pt plus 1pt
+  \setleading{12pt}%
+  %
+  \internalpagesizes{7.5in}{5.in}{\voffset}{.25in}{\bindingoffset}{16pt}%
+  %
+  \lispnarrowing = 0.3in
+  \tolerance = 700
+  \hfuzz = 1pt
+  \contentsrightmargin = 0pt
+  \deftypemargin = 0pt
+  \defbodyindent = .5cm
+  %
+  \let\smalldisplay = \smalldisplayx
+  \let\smallexample = \smalllispx
+  \let\smallformat = \smallformatx
+  \let\smalllisp = \smalllispx
+}}
 
 % Use @afourpaper to print on European A4 paper.
-\def\afourpaper{
-\global\tolerance=700
-\global\hfuzz=1pt
-\setleading{12pt}
-\global\parskip 15pt plus 1pt
-
-\global\vsize= 53\baselineskip
-\advance\vsize by \topskip
-%\global\hsize=   5.85in     % A4 wide 10pt
-\global\hsize=  6.5in
-\global\outerhsize=\hsize
-\global\advance\outerhsize by 0.5in
-\global\outervsize=\vsize
-\global\advance\outervsize by 0.6in
-
-\global\pagewidth=\hsize
-\global\pageheight=\vsize
-}
-
-\bindingoffset=0pt
-\normaloffset=\hoffset
-\pagewidth=\hsize
-\pageheight=\vsize
-
-% Allow control of the text dimensions.  Parameters in order: textheight;
-% textwidth; voffset; hoffset; binding offset; topskip.
-% All require a dimension;
-% header is additional; added length extends the bottom of the page.
-
-\def\changepagesizes#1#2#3#4#5#6{
- \global\vsize= #1
- \global\topskip= #6
- \advance\vsize by \topskip
- \global\voffset= #3
- \global\hsize= #2
- \global\outerhsize=\hsize
- \global\advance\outerhsize by 0.5in
- \global\outervsize=\vsize
- \global\advance\outervsize by 0.6in
- \global\pagewidth=\hsize
- \global\pageheight=\vsize
- \global\normaloffset= #4
- \global\bindingoffset= #5}
+\def\afourpaper{{\globaldefs = 1
+  \setleading{12pt}%
+  \parskip = 3pt plus 2pt minus 1pt
+  %
+  \internalpagesizes{53\baselineskip}{6.5in}{\voffset}{.25in}{\bindingoffset}{44pt}%
+  %
+  \tolerance = 700
+  \hfuzz = 1pt
+}}
 
 % A specific text layout, 24x15cm overall, intended for A4 paper.  Top margin
 % 29mm, hence bottom margin 28mm, nominal side margin 3cm.
-\def\afourlatex
-        {\global\tolerance=700
-        \global\hfuzz=1pt
-        \setleading{12pt}
-        \global\parskip 15pt plus 1pt
-        \advance\baselineskip by 1.6pt
-        \changepagesizes{237mm}{150mm}{3.6mm}{3.6mm}{3mm}{7mm}
-        }
+\def\afourlatex{{\globaldefs = 1
+  \setleading{13.6pt}%
+  %
+  \afourpaper
+  \internalpagesizes{237mm}{150mm}{3.6mm}{3.6mm}{3mm}{7mm}%
+  %
+  \globaldefs = 0
+}}
 
 % Use @afourwide to print on European A4 paper in wide format.
-\def\afourwide{\afourpaper
-\changepagesizes{9.5in}{6.5in}{\hoffset}{\normaloffset}{\bindingoffset}{7mm}}
+\def\afourwide{%
+  \afourpaper
+  \internalpagesizes{9.5in}{6.5in}{\hoffset}{\normaloffset}{\bindingoffset}{7mm}%
+  %
+  \globaldefs = 0
+}
+
+% @pagesizes TEXTHEIGHT[,TEXTWIDTH]
+% Perhaps we should allow setting the margins, \topskip, \parskip,
+% and/or leading, also. Or perhaps we should compute them somehow.
+% 
+\def\pagesizes{\parsearg\pagesizesxxx}
+\def\pagesizesxxx#1{\pagesizesyyy #1,,\finish}
+\def\pagesizesyyy#1,#2,#3\finish{{%
+  \setbox0 = \hbox{\ignorespaces #2}\ifdim\wd0 > 0pt \hsize=#2\relax \fi
+  \globaldefs = 1
+  %
+  \parskip = 3pt plus 2pt minus 1pt
+  \setleading{13.2pt}%
+  %
+  \internalpagesizes{#1}{\hsize}{\voffset}{\normaloffset}{\bindingoffset}{44pt}%
+}}
+
+% Set default to letter.
+% 
+\letterpaper
+
+\message{and turning on texinfo input format.}
 
 % Define macros to output various characters with catcode for normal text.
 \catcode`\"=\other

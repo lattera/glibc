@@ -812,3 +812,8 @@ module	INTERNAL		ISO-2022-JP-2//		ISO-2022-JP	1
 #	from			  to			module		cost
 module	ISO-2022-KR//		INTERNAL		ISO-2022-KR	1
 module	INTERNAL		ISO-2022-KR//		ISO-2022-KR	1
+
+#	from			  to			module		cost
+alias	MAC//			MACINTOSH//
+module	MACINTOSH//		INTERNAL		MACINTOSH	1
+module	INTERNAL		MACINTOSH//		MACINTOSH	1
