@@ -1,3 +1,29 @@
+1998-04-24  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* streams/Makefile (headers): Add sys/stropts.h.
+	* streams/sys/stropts.h: New file.
+
+1998-04-25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/ttyname.c,
+	sysdeps/unix/sysv/linux/ttyname_r.c: New files, like
+	sysdeps/posix/ttyname*.c, but look in /dev/pts first.
+
+1998-04-25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/ptsname.c: Fix off-by-one bug in second
+	argument of _itoa_word.
+
+1998-04-24  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/syscalls.list (s_getcwd, s_getdents,
+	s_pread64, s_pwrite64, s_reboot, s_sigpending, s_sigprocmask): Set
+	caller to getcwd, getdents, pread64, pwrite64, reboot, sigpending,
+	sigprocmask, resp., instead of EXTRA.
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Remove
+	s_pread64 and s_pwrite64.
+
 1998-04-26 18:44  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/Makefile: Correct rules to generate gap table.

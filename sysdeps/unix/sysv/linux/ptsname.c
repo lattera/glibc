@@ -101,7 +101,7 @@ __ptsname_r (fd, buf, buflen)
 
   idbuf[5] = '\0';
   __stpcpy (__stpcpy (nbuf, "/dev/pts/"),
-	    _itoa_word (ptyno, &idbuf[4], 10, 0));
+	    _itoa_word (ptyno, &idbuf[5], 10, 0));
   if (__xstat (_STAT_VER, nbuf, &st) < 0)
     {
       if (errno != ENOENT)
