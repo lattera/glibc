@@ -1,3 +1,15 @@
+2003-04-29  Roland McGrath  <roland@redhat.com>
+
+	* configure.in: Search for AUTOCONF unconditionally.
+	Just don't complain about missing it under --without-cvs.
+	* configure: Regenerated.
+
+	* include/libc-symbols.h (__symbol_set_attribute): New macro,
+	give hidden for [SHARED] and weak for [! SHARED].
+	(symbol_set_declare): Use that.  Never need weak_extern these days.
+	* Makerules ($(common-objpfx)shlib.lds): Go back to using PROVIDE.
+	Depend on $(..)Makerules.
+
 2003-04-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ifaddrs.c (getifaddrs): Use __ protected

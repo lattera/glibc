@@ -345,11 +345,18 @@
    be able to use the set's contents.  */
 #  define symbol_set_define(set)	symbol_set_declare(set)
 
-/* Declare SET for use in this module, if defined in another module.  */
+/* Declare SET for use in this module, if defined in another module.
+   In a shared library, this is always local to that shared object.
+   For static linking, the set might be wholly absent and so we use
+   weak references.  */
 #  define symbol_set_declare(set) \
-  extern void *const __start_##set __attribute__ ((__weak__));		\
-  extern void *const __stop_##set __attribute__ ((__weak__));		\
-  weak_extern (__start_##set) weak_extern (__stop_##set)
+  extern void *const __start_##set __symbol_set_attribute; \
+  extern void *const __stop_##set __symbol_set_attribute;
+#  ifdef SHARED
+#   define __symbol_set_attribute attribute_hidden
+#  else
+#   define __symbol_set_attribute __attribute__ ((weak))
+#  endif
 
 /* Return a pointer (void *const *) to the first element of SET.  */
 #  define symbol_set_first_element(set)	(&__start_##set)
