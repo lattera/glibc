@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1996, 1997, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1994,96,97,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ __send (fd, buf, n, flags)
      int flags;
 {
   error_t err;
-  int wrote;
+  size_t wrote;
 
   err = HURD_DPORT_USE (fd, __socket_send (port, MACH_PORT_NULL,
 					   flags, buf, n,

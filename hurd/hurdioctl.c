@@ -1,5 +1,5 @@
 /* ioctl commands which must be done in the C library.
-   Copyright (C) 1994,95,96,97,99,2001 Free Software Foundation, Inc.
+   Copyright (C) 1994,95,96,97,99,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -311,7 +311,7 @@ static int
 siocgifconf (int fd, int request, struct ifconf *ifc)
 {
   error_t err;
-  int data_len = ifc->ifc_len;
+  size_t data_len = ifc->ifc_len;
   char *data = ifc->ifc_buf;
 
   if (data_len <= 0)

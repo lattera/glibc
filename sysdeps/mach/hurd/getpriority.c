@@ -31,7 +31,7 @@ getpriority (enum __priority_which which, id_t who)
   int maxpri = INT_MIN;
   struct procinfo *pip;		/* Just for sizeof.  */
   int pibuf[sizeof *pip + 2 * sizeof (pip->threadinfos[0])], *pi = pibuf;
-  unsigned int pisize = sizeof pibuf / sizeof pibuf[0];
+  size_t pisize = sizeof pibuf / sizeof pibuf[0];
 
   error_t getonepriority (pid_t pid, struct procinfo *pip)
     {
@@ -40,7 +40,7 @@ getpriority (enum __priority_which which, id_t who)
       else
 	{
 	  int *oldpi = pi;
-	  unsigned int oldpisize = pisize;
+	  size_t oldpisize = pisize;
 	  char *tw = 0;
 	  size_t twsz = 0;
 	  int flags = PI_FETCH_TASKINFO;
