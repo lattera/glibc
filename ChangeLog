@@ -1,3 +1,7 @@
+2001-01-26  Andreas Jaeger  <aj@suse.de>
+
+	* include/bits/locale.h: New file.
+
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/langinfo.h: Correct logic in #ifs when defining YESSTR
