@@ -1,5 +1,5 @@
 /* Optimized, inlined string functions.	 s390 version.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -31,10 +31,12 @@
 #if !defined __NO_STRING_INLINES && defined __USE_STRING_INLINES \
     && defined __GNUC__ && __GNUC__ >= 2
 
-#ifdef __cplusplus
-# define __STRING_INLINE inline
-#else
-# define __STRING_INLINE extern __inline
+#ifndef __STRING_INLINE
+# ifdef __cplusplus
+#  define __STRING_INLINE inline
+# else
+#  define __STRING_INLINE extern __inline
+# endif
 #endif
 
 #define _HAVE_STRING_ARCH_strlen 1
