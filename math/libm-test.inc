@@ -250,9 +250,10 @@ print_ulps (const char *test_name, FLOAT ulp)
   if (output_ulps)
     {
       fprintf (ulps_file, "Test \"%s\":\n", test_name);
-      fprintf (ulps_file, "%s: % .4" PRINTF_NEXPR "\n",
+      fprintf (ulps_file, "%s: %.0" PRINTF_NEXPR "\n",
 	       CHOOSE("ldouble", "double", "float",
-		      "ildouble", "idouble", "ifloat"), ulp);
+		      "ildouble", "idouble", "ifloat"),
+	       FUNC(ceil) (ulp));
     }
 }
 
@@ -262,9 +263,10 @@ print_function_ulps (const char *function_name, FLOAT ulp)
   if (output_ulps)
     {
       fprintf (ulps_file, "Function: \"%s\":\n", function_name);
-      fprintf (ulps_file, "%s: % .4" PRINTF_NEXPR "\n",
+      fprintf (ulps_file, "%s: %.0" PRINTF_NEXPR "\n",
 	       CHOOSE("ldouble", "double", "float",
-		      "ildouble", "idouble", "ifloat"), ulp);
+		      "ildouble", "idouble", "ifloat"),
+	       FUNC(ceil) (ulp));
     }
 }
 
@@ -278,16 +280,18 @@ print_complex_function_ulps (const char *function_name, FLOAT real_ulp,
       if (real_ulp != 0.0)
 	{
 	  fprintf (ulps_file, "Function: Real part of \"%s\":\n", function_name);
-	  fprintf (ulps_file, "%s: % .4" PRINTF_NEXPR "\n",
+	  fprintf (ulps_file, "%s: %.0" PRINTF_NEXPR "\n",
 		   CHOOSE("ldouble", "double", "float",
-			  "ildouble", "idouble", "ifloat"), real_ulp);
+			  "ildouble", "idouble", "ifloat"),
+		   FUNC(ceil) (real_ulp));
 	}
       if (imag_ulp != 0.0)
 	{
 	  fprintf (ulps_file, "Function: Imaginary part of \"%s\":\n", function_name);
-	  fprintf (ulps_file, "%s: % .4" PRINTF_NEXPR "\n",
+	  fprintf (ulps_file, "%s: %.0" PRINTF_NEXPR "\n",
 		   CHOOSE("ldouble", "double", "float",
-			  "ildouble", "idouble", "ifloat"), imag_ulp);
+			  "ildouble", "idouble", "ifloat"),
+		   FUNC(ceil) (imag_ulp));
 	}
 
 
@@ -336,8 +340,8 @@ print_max_error (const char *func_name, FLOAT allowed, int xfail)
   if (print_screen_max_error (ok, xfail))
     {
       printf ("Maximal error of `%s'\n", func_name);
-      printf (" is      : % .4" PRINTF_NEXPR " ulp\n", max_error);
-      printf (" accepted: % .4" PRINTF_NEXPR " ulp\n", allowed);
+      printf (" is      : %.0" PRINTF_NEXPR " ulp\n", FUNC(ceil) (max_error));
+      printf (" accepted: %.0" PRINTF_NEXPR " ulp\n", FUNC(ceil) (allowed));
     }
 
   update_stats (ok, xfail);
@@ -350,8 +354,10 @@ print_complex_max_error (const char *func_name, __complex__ FLOAT allowed,
 {
   int ok = 0;
 
-  if ((real_max_error <= __real__ allowed)
-      && (imag_max_error <= __imag__ allowed))
+  if ((real_max_error == 0 && imag_max_error == 0)
+      || (real_max_error <= __real__ allowed
+	  && imag_max_error <= __imag__ allowed
+	  && !ignore_max_ulp))
     {
       ok = 1;
     }
@@ -363,11 +369,15 @@ print_complex_max_error (const char *func_name, __complex__ FLOAT allowed,
   if (print_screen_max_error (ok, xfail))
     {
       printf ("Maximal error of real part of: %s\n", func_name);
-      printf (" is      : % .4" PRINTF_NEXPR " ulp\n", real_max_error);
-      printf (" accepted: % .4" PRINTF_NEXPR " ulp\n", __real__ allowed);
+      printf (" is      : %.0" PRINTF_NEXPR " ulp\n",
+	      FUNC(ceil) (real_max_error));
+      printf (" accepted: %.0" PRINTF_NEXPR " ulp\n",
+	      FUNC(ceil) (__real__ allowed));
       printf ("Maximal error of imaginary part of: %s\n", func_name);
-      printf (" is      : % .4" PRINTF_NEXPR " ulp\n", imag_max_error);
-      printf (" accepted: % .4" PRINTF_NEXPR " ulp\n", __imag__ allowed);
+      printf (" is      : %.0" PRINTF_NEXPR " ulp\n",
+	      FUNC(ceil) (imag_max_error));
+      printf (" accepted: %.0" PRINTF_NEXPR " ulp\n",
+	      FUNC(ceil) (__imag__ allowed));
     }
 
   update_stats (ok, xfail);

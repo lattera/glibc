@@ -1,3 +1,12 @@
+2001-10-18  Andreas Schwab  <schwab@suse.de>
+
+	* math/libm-test.inc (print_ulps): Print ulp values rounded to
+	next whole number.
+	(print_function_ulps): Likewise.
+	(print_complex_function_ulps): Likewise.
+	(print_max_error): Likewise.
+	(print_complex_max_error): Likewise.  Handle ignore_max_ulp.
+
 2001-10-16  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/libm-test-ulps: Updated for fixed cbrtl
