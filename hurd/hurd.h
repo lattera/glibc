@@ -61,13 +61,16 @@ __hurd_fail (error_t err)
     case KERN_NO_SPACE:
       err = ENOMEM;
       break;
+
     case KERN_INVALID_ARGUMENT:
       err = EINVAL;
       break;
 
     case 0:
       return 0;
+
     default:
+      break;
     }
 
   errno = err;
