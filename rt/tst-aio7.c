@@ -180,6 +180,14 @@ do_test (void)
 	puts ("aio_suspend([done,blocked],2,3) suspended thread");
 	++result;
       }
+
+    /* Cancel i/o on cb1. */
+    r = aio_cancel (piped[0], &cb1);
+    if (r != AIO_CANCELED)
+      {
+	puts ("aio_cancel did not return AIO_CANCELED");
+	++result;
+      }
   }
 
   return result;
