@@ -128,13 +128,6 @@ init (int argc, char **argv, char **envp)
 	    __libc_fatal ("FATAL: kernel too old\n");
 	}
 
-      /* The `personality' system call takes one argument that chooses
-	 the "personality", i.e. the set of system calls and such.  We
-	 must make this call first thing to disable emulation of some
-	 other system that might have been enabled by default based on
-	 the executable format.  */
-      __personality (PER_LINUX);
-
       /* Set the FPU control word to the proper default value if the
 	 kernel would use a different value.  (In a static program we
 	 don't have this information.)  */

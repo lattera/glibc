@@ -1,5 +1,8 @@
 1999-08-20  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/init-first.c (init): Remove personality
+	call.  It should not be necessary andis harmful for Alpha.
+
 	* sysdeps/posix/getcwd.c: Correct comment saying < 0 is ok for size
 	type.  [PR libc/1269]
 

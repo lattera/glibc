@@ -3901,7 +3901,8 @@ make_message_string (const char *a, int b)
 
 This section describes how you can make a stream that gets input from an
 arbitrary data source or writes output to an arbitrary data sink
-programmed by you.  We call these @dfn{custom streams}.
+programmed by you.  We call these @dfn{custom streams}.  The functions
+and types described here are all GNU extensions.
 
 @c !!! this does not talk at all about the higher-level hooks
 
