@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,97,98,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,97,98,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,12 +38,9 @@ __setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
 
   lim = *rlimits;
 
-  if (lim.rlim_max != RLIM_INFINITY)
-    {
-      /* We have no enforceable resource limits.  */
-      errno = ENOSYS;
-      return -1;
-    }
+  /* Even though most limits do nothing, there is no inheritance, and hard
+     limits are not really hard, we just let any old call succeed to make
+     life easier for programs that expect normal behavior.  */
 
   if (lim.rlim_cur > lim.rlim_max)
     lim.rlim_cur = lim.rlim_max;
