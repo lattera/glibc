@@ -52,6 +52,7 @@ tolower,                tok_tolower,                0
 map,                    tok_map,                    0
 translit_start,         tok_translit_start,         0
 translit_end,           tok_translit_end,           0
+translit_ignore,        tok_translit_ignore,        0
 default_missing,        tok_default_missing,        0
 LC_COLLATE,             tok_lc_collate,             0
 coll_weight_max,        tok_coll_weight_max,        0

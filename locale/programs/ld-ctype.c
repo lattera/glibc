@@ -85,9 +85,23 @@ struct translit_t
 {
   uint32_t *from;
 
+  const char *fname;
+  size_t lineno;
+
   struct translit_to_t *to;
 
   struct translit_t *next;
+};
+
+struct translit_ignore_t
+{
+  uint32_t from;
+  uint32_t to;
+
+  const char *fname;
+  size_t lineno;
+
+  struct translit_ignore_t *next;
 };
 
 
@@ -138,6 +152,11 @@ struct locale_ctype_t
   const char *translit_copy_locale;
   const char *translit_copy_repertoire;
   struct translit_t *translit;
+  struct translit_ignore_t *translit_ignore;
+
+  uint32_t *default_missing;
+  const char *default_missing_file;
+  size_t default_missing_lineno;
 
   /* The arrays for the binary representation.  */
   uint32_t plane_size;
@@ -162,7 +181,7 @@ struct locale_ctype_t
   size_t translit_from_tbl_size;
   size_t translit_to_tbl_size;
 
-  struct obstack mem_pool;
+  struct obstack mempool;
 };
 
 
@@ -282,7 +301,7 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
 	  ctype->map256_collection[1][cnt] = cnt;
 	}
 
-      obstack_init (&ctype->mem_pool);
+      obstack_init (&ctype->mempool);
     }
 }
 
@@ -1537,7 +1556,7 @@ read_widestring (struct linereader *ldfile, struct token *now,
   else if (now->tok == tok_bsymbol)
     {
       /* Get the value from the repertoire.  */
-      wstr = xmalloc (2 * sizeof (uint32_t));
+      wstr = (uint32_t *) xmalloc (2 * sizeof (uint32_t));
       wstr[0] = repertoire_find_value (repertoire, now->val.str.startmb,
 				       now->val.str.lenmb);
       if (wstr[0] == ILLEGAL_CHAR_VALUE)
@@ -1548,7 +1567,7 @@ read_widestring (struct linereader *ldfile, struct token *now,
     }
   else if (now->tok == tok_ucs4)
     {
-      wstr = xmalloc (2 * sizeof (uint32_t));
+      wstr = (uint32_t *) xmalloc (2 * sizeof (uint32_t));
       wstr[0] = now->val.ucs4;
       wstr[1] = 0;
     }
@@ -1570,14 +1589,14 @@ read_widestring (struct linereader *ldfile, struct token *now,
 	/* We cannot proceed, we don't know the UCS4 value.  */
 	return NULL;
 
-      wstr = xmalloc (2 * sizeof (uint32_t));
+      wstr = (uint32_t *) xmalloc (2 * sizeof (uint32_t));
       wstr[0] = seq->ucs4;
       wstr[1] = 0;
     }
   else if (now->tok == tok_string)
     {
       wstr = now->val.str.startwc;
-      if (wstr[0] == 0)
+      if (wstr == NULL || wstr[0] == 0)
 	return NULL;
     }
   else
@@ -1600,7 +1619,7 @@ read_translit_entry (struct linereader *ldfile, struct locale_ctype_t *ctype,
   uint32_t *from_wstr = read_widestring (ldfile, now, charmap, repertoire);
   struct translit_t *result;
   struct translit_to_t **top;
-  struct obstack *ob = &ctype->mem_pool;
+  struct obstack *ob = &ctype->mempool;
   int first;
   int ignore;
 
@@ -1611,6 +1630,8 @@ read_translit_entry (struct linereader *ldfile, struct locale_ctype_t *ctype,
   result = (struct translit_t *) obstack_alloc (ob,
 						sizeof (struct translit_t));
   result->from = from_wstr;
+  result->fname = ldfile->fname;
+  result->lineno = ldfile->lineno;
   result->next = NULL;
   result->to = NULL;
   top = &result->to;
@@ -1669,6 +1690,129 @@ read_translit_entry (struct linereader *ldfile, struct locale_ctype_t *ctype,
 
 	  first = 0;
 	}
+    }
+}
+
+
+static void
+read_translit_ignore_entry (struct linereader *ldfile,
+			    struct locale_ctype_t *ctype,
+			    struct charmap_t *charmap,
+			    struct repertoire_t *repertoire)
+{
+  /* We expect a semicolon-separated list of characters we ignore.  We are
+     only interested in the wide character definitions.  These must be
+     single characters, possibly defining a range when an ellipsis is used.  */
+  while (1)
+    {
+      struct token *now = lr_token (ldfile, charmap, repertoire);
+      struct translit_ignore_t *newp;
+      uint32_t from;
+
+      if (now->tok == tok_eol || now->tok == tok_eof)
+	{
+	  lr_error (ldfile,
+		    _("premature end of `translit_ignore' definition"));
+	  return;
+	}
+
+      if (now->tok != tok_bsymbol && now->tok != tok_ucs4)
+	{
+	  lr_error (ldfile, _("syntax error"));
+	  lr_ignore_rest (ldfile, 0);
+	  return;
+	}
+
+      if (now->tok == tok_ucs4)
+	from = now->val.ucs4;
+      else
+	{
+	  /* Try to get the value.  */
+	  from = repertoire_find_value (repertoire, now->val.str.startmb,
+					now->val.str.lenmb);
+	}
+
+      if (from == ILLEGAL_CHAR_VALUE)
+	{
+	  lr_error (ldfile, "invalid character name");
+	  newp = NULL;
+	}
+      else
+	{
+	  newp = (struct translit_ignore_t *)
+	    obstack_alloc (&ctype->mempool, sizeof (struct translit_ignore_t));
+	  newp->from = from;
+	  newp->to = from;
+
+	  newp->next = ctype->translit_ignore;
+	  ctype->translit_ignore = newp;
+	}
+
+      /* Now we expect either a semicolon, an ellipsis, or the end of the
+	 line.  */
+      now = lr_token (ldfile, charmap, repertoire);
+
+      if (now->tok == tok_ellipsis2)
+	{
+	  /* XXX Should we bother implementing `....'?  `...' certainly
+	     will not be implemented.  */
+	  uint32_t to;
+
+	  now = lr_token (ldfile, charmap, repertoire);
+
+	  if (now->tok == tok_eol || now->tok == tok_eof)
+	    {
+	      lr_error (ldfile,
+			_("premature end of `translit_ignore' definition"));
+	      return;
+	    }
+
+	  if (now->tok != tok_bsymbol && now->tok != tok_ucs4)
+	    {
+	      lr_error (ldfile, _("syntax error"));
+	      lr_ignore_rest (ldfile, 0);
+	      return;
+	    }
+
+	  if (now->tok == tok_ucs4)
+	    to = now->val.ucs4;
+	  else
+	    {
+	      /* Try to get the value.  */
+	      to = repertoire_find_value (repertoire, now->val.str.startmb,
+					  now->val.str.lenmb);
+	    }
+
+	  if (to == ILLEGAL_CHAR_VALUE)
+	    lr_error (ldfile, "invalid character name");
+	  else
+	    {
+	      /* Make sure the `to'-value is larger.  */
+	      if (to >= from)
+		newp->to = to;
+	      else
+		lr_error (ldfile, _("\
+to-value <U%0*X> of range is smaller than from-value <U%0*X>"),
+			  (to | from) < 65536 ? 4 : 8, to,
+			  (to | from) < 65536 ? 4 : 8, from);
+	    }
+
+	  /* And the next token.  */
+	  now = lr_token (ldfile, charmap, repertoire);
+	}
+
+      if (now->tok == tok_eol || now->tok == tok_eof)
+	/* We are done.  */
+	return;
+
+      if (now->tok == tok_semicolon)
+	/* Next round.  */
+	continue;
+
+      /* If we come here something is wrong.  */
+      lr_error (ldfile, _("syntax error"));
+      lr_ignore_rest (ldfile, 0);
+      return;
     }
 }
 
@@ -2257,6 +2401,45 @@ with character code range values one must use the absolute ellipsis `...'"));
 
 		  /* The rest of the line must be empty.  */
 		  lr_ignore_rest (ldfile, 1);
+
+		  /* Make sure the locale is read.  */
+		  add_to_readlist (LC_CTYPE, ctype->translit_copy_locale,
+				   repertoire_name, 1);
+		  continue;
+		}
+	      else if (now->tok == tok_default_missing)
+		{
+		  uint32_t *wstr;
+
+		  /* We expect a single character or string as the
+		     argument.  */
+		  now = lr_token (ldfile, charmap, NULL);
+		  wstr = read_widestring (ldfile, now, charmap, repertoire);
+
+		  if (wstr != NULL)
+		    {
+		      if (ctype->default_missing != NULL)
+			{
+			  lr_error (ldfile, _("\
+%s: duplicate `default_missing' definition"), "LC_CTYPE");
+			  error_at_line (0, 0, ctype->default_missing_file,
+					 ctype->default_missing_lineno,
+					 _("previous definition was here"));
+			}
+		      else
+			{
+			  ctype->default_missing = wstr;
+			  ctype->default_missing_file = ldfile->fname;
+			  ctype->default_missing_lineno = ldfile->lineno;
+			}
+		    }
+		  lr_ignore_rest (ldfile, 1);
+		  continue;
+		}
+	      else if (now->tok == tok_translit_ignore)
+		{
+		  read_translit_ignore_entry (ldfile, ctype, charmap,
+					      repertoire);
 		  continue;
 		}
 

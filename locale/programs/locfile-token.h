@@ -88,6 +88,7 @@ enum token_t
   tok_map,
   tok_translit_start,
   tok_translit_end,
+  tok_translit_ignore,
   tok_default_missing,
   tok_lc_collate,
   tok_coll_weight_max,

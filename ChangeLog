@@ -1,3 +1,10 @@
+2000-01-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-ctype.c: Implement rest of transliteration
+	definition parsing.
+	* locale/programs/locfile-kw.gperf: New keyword translit_ignore.
+	* locale/programs/locfile-token.h: Add tok_translit_ignore.
+
 1999-12-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-collate.c (collate_output): Emit correct
