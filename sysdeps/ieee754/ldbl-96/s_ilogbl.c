@@ -56,7 +56,7 @@ static char rcsid[] = "$NetBSD: $";
 	else if (FP_ILOGBNAN != INT_MAX)
 	{
 	    GET_LDOUBLE_WORDS(es,hx,lx,x);
-	    if ((hx & 0x7fffffff|lx) == 0)
+	    if (((hx & 0x7fffffff)|lx) == 0)
 	      /* ISO C99 requires ilogbl(+-Inf) == INT_MAX.  */
 	      return INT_MAX;
 	}
