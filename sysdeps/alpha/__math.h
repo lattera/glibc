@@ -46,7 +46,7 @@ extern __inline double
 cabs (struct __cabs_complex __z)
 {
   extern double __hypot (double, double);
-  return __hypot(__z.__x, __z.__y);
+  return __hypot(__z.x, __z.y);
 }
 #endif
 
