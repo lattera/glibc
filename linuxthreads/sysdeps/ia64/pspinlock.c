@@ -1,5 +1,5 @@
 /* POSIX spinlock implementation.  ia64 version.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jes Sorensen <jes@linuxcare.com>
 
@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <pthread.h>
 #include "internals.h"
+#include <ia64intrin.h>
 
 /* This implementation is inspired by the implementation used in the
    Linux kernel. */
@@ -28,21 +29,15 @@
 int
 __pthread_spin_lock (pthread_spinlock_t *lock)
 {
-  asm volatile
-    ("mov ar.ccv = r0\n\t"
-     "mov r3 = 1\n\t"
-     ";;\n"
-     "1:\n\t"
-     "ld4 r2 = %0\n\t"
-     ";;\n\t"
-     "cmp4.eq p0, p7 = r0, r2\n\t"
-     "(p7) br.cond.spnt.few 1b \n\t"
-     "cmpxchg4.acq r2 = %0, r3, ar.ccv\n\t"
-     ";;\n\t"
-     "cmp4.eq p0, p7 = r0, r2\n\t"
-     "(p7) br.cond.spnt.few 1b\n\t"
-     ";;\n"
-     :: "m" (lock) : "r2", "r3", "p7", "memory");
+  int *p = (int *) lock;
+  
+  while (__builtin_expect (__sync_val_compare_and_swap_si (p, 0, 1), 0))
+    {
+      /* Spin without using the atomic instruction.  */
+      do
+        __asm __volatile ("" : : : "memory");
+      while (*p);
+    }
   return 0;
 }
 weak_alias (__pthread_spin_lock, pthread_spin_lock)
@@ -51,16 +46,7 @@ weak_alias (__pthread_spin_lock, pthread_spin_lock)
 int
 __pthread_spin_trylock (pthread_spinlock_t *lock)
 {
-  int oldval;
-
-  asm volatile
-    ("mov ar.ccv = r0\n\t"
-     "mov r2 = 1\n\t"
-     ";;\n\t"
-     "cmpxchg4.acq %0 = %1, r2, ar.ccv\n\t"
-     ";;\n"
-     : "=r" (oldval) : "m" (lock) : "r2", "memory");
-  return oldval > 0 ? 0 : EBUSY;
+  return __sync_val_compare_and_swap_si ((int *) lock, 0, 1) == 0 ? 0 : EBUSY;
 }
 weak_alias (__pthread_spin_trylock, pthread_spin_trylock)
 

@@ -119,7 +119,7 @@ do_test (void)
   {
     const int BYTES = 8, ELEMS = 2;
     int i, r, fd;
-    char buff[BYTES];
+    static char buff[BYTES];
     char name[] = "/tmp/aio7.XXXXXX";
     struct timespec timeout;
     static struct aiocb cb0, cb1;

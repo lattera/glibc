@@ -1,3 +1,8 @@
+2003-03-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/pspinlock.c (__pthread_spin_lock,
+	__pthread_spin_trylock): Rewritten.
+
 2003-03-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-cancel4.c (tf_sleep): Lower sleep time a bit to not upset
