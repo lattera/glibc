@@ -212,10 +212,8 @@ toupper (int __c) __THROW
 
 /* These definitions are similar to the ones above but all functions
    take as an argument a handle for the locale which shall be used.  */
-# ifdef __OPTIMIZE__
 #  define __isctype_l(c, type, locale) \
   ((locale)->__ctype_b[(int) (c)] & (unsigned short int) type)
-# endif
 
 # define __exctype_l(name)	extern int name (int, __locale_t) __THROW
 

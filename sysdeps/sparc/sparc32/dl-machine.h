@@ -234,12 +234,11 @@ _dl_start_user:
 	ld	[%i0], %i0
 	tst	%i0
 	beq	3f
-	 nop
+	 ld	[%sp+22*4], %i5		/* load argc */
 	/* Find out how far to shift.  */
-	ld	[%sp+22*4], %i1		/* load argc */
-	sub	%i1, %i0, %i1
+	sub	%i5, %i0, %i5
 	sll	%i0, 2, %i2
-	st	%i1, [%sp+22*4]
+	st	%i5, [%sp+22*4]
 	add	%sp, 23*4, %i1
 	add	%i1, %i2, %i2
 	/* Copy down argv */
@@ -265,24 +264,17 @@ _dl_start_user:
 	st	%i4, [%i1+4]
 	bne	23b
 	 add	%i1, 8, %i1
-  /* Load searchlist of the main object to pass to _dl_init_next.  */
-3:	sethi	%hi(_dl_main_searchlist), %g1
-	or	%g1, %lo(_dl_main_searchlist), %g1
-	ld	[%l7+%g1], %l1
-	ld	[%l1], %l1
-  /* Call _dl_init_next to return the address of an initializer to run.  */
-4:	call	_dl_init_next
-	 mov	%l1, %o0
-	tst	%o0
-	beq	5f
-	 nop
-	jmpl	%o0, %o7
-	 sub	%o7, 28, %o7
-  /* Clear the startup flag.  */
-5:	sethi	%hi(_dl_starting_up), %g1
-	or	%g1, %lo(_dl_starting_up), %g1
-	ld	[%l7+%g1], %g1
-	st	%g0, [%g1]
+  /* %o0 = _dl_loaded, %o1 = argc, %o2 = argv, %o3 = envp.  */
+3:	sethi	%hi(_dl_loaded), %o0
+	add	%sp, 23*4, %o2
+	orcc	%o0, %lo(_dl_loaded), %o0
+	sll	%i5, 2, %o3
+	ld	[%l7+%o0], %o0
+	add	%o3, 4, %o3
+	mov	%i5, %o1
+	add	%o2, %o3, %o3
+	call	_dl_init
+	 ld	[%o0], %o0
   /* Pass our finalizer function to the user in %g1.  */
 	sethi	%hi(_dl_fini), %g1
 	or	%g1, %lo(_dl_fini), %g1

@@ -1,4 +1,28 @@
+2000-04-05  Cristian Gafton  <gafton@redhat.com>
+
+	* ctype/ctype.h (__isctype_l): Define even if not __OPTIMIZE__
+	because it is used in generic code.
+	* wctype/wctrans.c: Define __ctype32_toupper and __ctype32_tolower.
+	* wcsmbs/wcwidth.h: Declare __ctype32_b.
+	* intl/gettext.c: Include <locale.h>.
+	* intl/ngettext.c: Likewise.
+
+2000-04-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* resolv/inet_ntop.c (inet_ntop4, inet_ntop6, inet_ntop): Use
+	socklen_t type for size.
+	* sysdeps/sparc/sparc32/dl-machine.h (RTLD_START): Rewrite for new
+	init function interface.
+	* sysdeps/sparc/sparc64/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/setjmp.h: Don't include
+	sys/ucontext.h.
+	(__jmp_buf): Declare the whole type structure here, don't use
+	ucontext.
+
 2000-04-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/skeleton.c (put16u): Fix typo.
+	Reported by Bruno Haible <haible@ilog.fr>.
 
 	* sysdeps/unix/sysv/linux/alpha/init-first.h: Not needed anymore.
 	* sysdeps/unix/sysv/linux/arm/init-first.h: Likewise.

@@ -43,6 +43,8 @@
 # include "libgettext.h"
 #endif
 
+#include <locale.h>
+
 /* @@ end of prolog @@ */
 
 /* Names for the libintl functions are a problem.  They must not clash

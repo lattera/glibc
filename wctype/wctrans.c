@@ -23,6 +23,10 @@
 #include <wctype.h>
 #include "../locale/localeinfo.h"
 
+/* These are not exported.  */
+extern const uint32_t *__ctype32_toupper;
+extern const uint32_t *__ctype32_tolower;
+
 wctrans_t
 wctrans (const char *property)
 {

@@ -25,6 +25,10 @@
 /* Array containing width information.  */
 extern unsigned char *__ctype_width;
 
+/* If the program is compiled without optimization the following declaration
+   is not visible in the header.   */
+extern unsigned int *__ctype32_b;
+
 static __inline int
 internal_wcwidth (wint_t ch)
 {

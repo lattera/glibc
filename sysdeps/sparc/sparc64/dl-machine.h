@@ -540,12 +540,11 @@ _dl_start_user:
 	ldx	[%l7+%g5], %i0
 	ld	[%i0], %i0
 	brz,pt	%i0, 2f
-	 nop
+	 ldx	[%sp+" __S(STACK_BIAS) "+22*8], %i5
 	/* Find out how far to shift.  */
-	ldx	[%sp+" __S(STACK_BIAS) "+22*8], %i1
-	sub	%i1, %i0, %i1
+	sub	%i5, %i0, %i5
 	sllx	%i0, 3, %i2
-	stx	%i1, [%sp+" __S(STACK_BIAS) "+22*8]
+	stx	%i5, [%sp+" __S(STACK_BIAS) "+22*8]
 	add	%sp, " __S(STACK_BIAS) "+23*8, %i1
 	add	%i1, %i2, %i2
 	/* Copy down argv.  */
@@ -568,23 +567,17 @@ _dl_start_user:
 	stx	%i4, [%i1+8]
 	brnz,pt	%i3, 13b
 	 add	%i1, 16, %i1
-  /* Load searchlist of the main object to pass to _dl_init_next.  */
-2:	sethi	%hi(_dl_main_searchlist), %g5
-	or	%g5, %lo(_dl_main_searchlist), %g5
-	ldx	[%l7+%g5], %g5
-	ldx	[%g5], %l1
-   /* Call _dl_init_next to return the address of an initializer to run.  */
-3:	call	_dl_init_next
-	 mov	%l1, %o0
-	brz,pn	%o0, 4f
-	 nop
-	jmpl	%o0, %o7
-	 sub	%o7, 24, %o7
-   /* Clear the startup flag.  */
-4:	sethi	%hi(_dl_starting_up), %g5
-	or	%g5, %lo(_dl_starting_up), %g5
-	ldx	[%l7+%g5], %g5
-	st	%g0, [%g5]
+  /* %o0 = _dl_loaded, %o1 = argc, %o2 = argv, %o3 = envp.  */
+2:	sethi	%hi(_dl_loaded), %o0
+	add	%sp, " __S(STACK_BIAS) "+23*8, %o2
+	orcc	%o0, %lo(_dl_loaded), %o0
+	sllx	%i5, 3, %o3
+	ldx	[%l7+%o0], %o0
+	add	%o3, 8, %o3
+	mov	%i5, %o1
+	add	%o2, %o3, %o3
+	call	_dl_init
+	 ldx	[%o0], %o0
    /* Pass our finalizer function to the user in %g1.  */
 	sethi	%hi(_dl_fini), %g1
 	or	%g1, %lo(_dl_fini), %g1
