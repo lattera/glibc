@@ -17,10 +17,22 @@
    Boston, MA 02111-1307, USA.  */
 
 #define __LIBC_M81_MATH_INLINES
+#define scalbln __no_scalbln_decl
+#define scalblnf __no_scalblnf_decl
+#define scalblnl __no_scalblnl_decl
+#define __scalbln __no__scalbln_decl
+#define __scalblnf __no__scalblnf_decl
+#define __scalblnl __no__scalblnl_decl
 #include <math.h>
+#undef scalbln
+#undef scalblnf
+#undef scalblnl
+#undef __scalbln
+#undef __scalblnf
+#undef __scalblnl
 
-#ifndef FUNC
-#define FUNC scalbn
+#ifndef suffix
+#define suffix /*empty*/
 #endif
 #ifndef float_type
 #define float_type double
@@ -29,12 +41,15 @@
 #define __CONCATX(a,b) __CONCAT(a,b)
 
 float_type
-__CONCATX(__,FUNC) (x, exp)
+__CONCATX(__scalbn,suffix) (x, exp)
      float_type x;
-     long int exp;
+     int exp;
 {
-  return __m81_u(__CONCATX(__,FUNC))(x, exp);
+  return __m81_u(__CONCATX(__scalbn,suffix))(x, exp);
 }
 
 #define weak_aliasx(a,b) weak_alias(a,b)
-weak_aliasx (__CONCATX(__,FUNC), FUNC)
+#define strong_aliasx(a,b) strong_alias(a,b)
+weak_aliasx (__CONCATX(__scalbn,suffix), __CONCATX(scalbn,suffix))
+strong_aliasx (__CONCATX(__scalbn,suffix), __CONCATX(__scalbln,suffix))
+weak_aliasx (__CONCATX(__scalbn,suffix), __CONCATX(scalbln,suffix))
