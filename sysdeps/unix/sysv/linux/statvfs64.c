@@ -1,5 +1,5 @@
 /* Return information about the filesystem on which FILE resides.
-   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 
 /* Return information about the filesystem on which FILE resides.  */
 int
-statvfs64 (const char *file, struct statvfs64 *buf)
+__statvfs64 (const char *file, struct statvfs64 *buf)
 {
   struct statvfs buf32;
 
@@ -46,3 +46,4 @@ statvfs64 (const char *file, struct statvfs64 *buf)
 
   return 0;
 }
+weak_alias (__statvfs64, statvfs64)

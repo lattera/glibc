@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,11 +21,12 @@
 
 /* Return information about the filesystem on which FILE resides.  */
 int
-statvfs64 (const char *file, struct statvfs64 *buf)
+__statvfs64 (const char *file, struct statvfs64 *buf)
 {
   __set_errno (ENOSYS);
   return -1;
 }
+weak_alias (__statvfs64, statvfs64)
 
 stub_warning (statvfs64)
 #include <stub-tag.h>
