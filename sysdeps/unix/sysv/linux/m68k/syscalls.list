@@ -4,6 +4,8 @@ cacheflush	EXTRA	cacheflush	4	__cacheflush	cacheflush
 
 s_getgroups	getgroups getgroups	2	__syscall_getgroups
 s_llseek	llseek	_llseek		5	__sys_llseek
+s_setfsgid	setfsgid setfsgid	1	__syscall_setfsgid
+s_setfsuid	setfsuid setfsuid	1	__syscall_setfsuid
 s_setgid	setgid	setgid		1	__syscall_setgid
 s_setgroups	setgroups setgroups	2	__syscall_setgroups
 s_setresgid	setresgid setresgid	3	__syscall_setresgid
