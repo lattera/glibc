@@ -274,6 +274,6 @@ L7:	testb %cl, %cl		/* is first byte C? */
 L6:	popl %edi		/* restore saved register content */
 
 	ret
-PSEUDO_END (strchr)
+END (strchr)
 
 weak_alias (strchr, index)

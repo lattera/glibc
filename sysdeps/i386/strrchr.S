@@ -321,6 +321,6 @@ L2:	popl %esi		/* restore saved register content */
 	popl %edi
 
 	ret
-PSEUDO_END (strrchr)
+END (strrchr)
 
 weak_alias (strrchr, rindex)

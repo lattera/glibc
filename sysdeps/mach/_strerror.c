@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,15 @@ Cambridge, MA 02139, USA.  */
 #include <mach/error.h>
 #include <errorlib.h>
 #include "../stdio-common/_itoa.h"
+
+/* It is critical here that we always use the `dcgettext' function for
+   the message translation.  Since <libintl.h> only defines the macro
+   `dgettext' to use `dcgettext' for optimizing programs this is not
+   always guaranteed.  */
+#ifndef dgettext
+# include <locale.h>		/* We need LC_MESSAGES.  */
+# define dgettext(domainname, msgid) dcgettext (domainname, msgid, LC_MESSAGES)
+#endif
 
 /* Return a string describing the errno code in ERRNUM.  */
 char *

@@ -26,19 +26,22 @@ Cambridge, MA 02139, USA.  */
 #define _sys_nerr sys_nerr
 #endif
 
-/* Set if startup process finished.  */
-extern int _dl_starting_up;
+/* It is critical here that we always use the `dcgettext' function for
+   the message translation.  Since <libintl.h> only defines the macro
+   `dgettext' to use `dcgettext' for optimizing programs this is not
+   always guaranteed.  */
+#ifndef dgettext
+# include <locale.h>		/* We need LC_MESSAGES.  */
+# define dgettext(domainname, msgid) dcgettext (domainname, msgid, LC_MESSAGES)
+#endif
 
 /* Return a string describing the errno code in ERRNUM.  */
 char *
-_strerror_internal (int errnum,
-		    char *buf,
-		    size_t buflen)
+_strerror_internal (int errnum, char *buf, size_t buflen)
 {
   if (errnum < 0 || errnum >= _sys_nerr)
     {
-      static const char unk_orig[] = N_("Unknown error ");
-      const char *unk = _dl_starting_up ? unk_orig : _(unk_orig);
+      const char *unk = _("Unknown error ");
       const size_t unklen = strlen (unk);
       char *p = buf + buflen;
       *--p = '\0';
@@ -46,6 +49,5 @@ _strerror_internal (int errnum,
       return memcpy (p - unklen, unk, unklen);
     }
 
-  return (char *) (_dl_starting_up ? _sys_errlist[errnum]
-		   : _(_sys_errlist[errnum]));
+  return (char *) _(_sys_errlist[errnum]);
 }

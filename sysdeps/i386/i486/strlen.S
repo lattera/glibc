@@ -130,4 +130,4 @@ L3:	testb %cl, %cl		/* is first byte NUL? */
 L2:	subl 4(%esp), %eax	/* compute difference to string start */
 
 	ret
-PSEUDO_END (strlen)
+END (strlen)

@@ -52,6 +52,10 @@ Cambridge, MA 02139, USA.  */
   C_LABEL(name)								      \
   CALL_MCOUNT
 
+#undef	END
+#define END(name)							      \
+  ASM_SIZE_DIRECTIVE(name)
+
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef	PROF
 /* The mcount code relies on a normal frame pointer being on the stack
@@ -80,7 +84,7 @@ lose: SYSCALL_PIC_SETUP							      \
 
 #undef	PSEUDO_END
 #define	PSEUDO_END(name)						      \
-  ASM_SIZE_DIRECTIVE(name)
+  END (name)
 
 #ifdef PIC
 #define JUMPTARGET(name)	name##@PLT

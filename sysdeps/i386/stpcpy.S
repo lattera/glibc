@@ -83,6 +83,6 @@ L4:	incl %eax
 L3:	incl %eax
 L2:
 	ret
-PSEUDO_END (__stpcpy)
+END (__stpcpy)
 
 weak_alias (__stpcpy, stpcpy)

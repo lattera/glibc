@@ -32,12 +32,14 @@ struct grent_data {};
 
 DB_LOOKUP (grnam, 1 + strlen (name), (".%s", name),
 	   {
-	     if (! strcmp (name, result->gr_name))
+	     if (name[0] != '-' && name[0] != '+'
+		 && ! strcmp (name, result->gr_name))
 	       break;
 	   }, const char *name)
 
 DB_LOOKUP (grgid, 20, ("=%lu", (unsigned long int) gid),
 	   {
-	     if (result->gr_gid == gid)
+	     if (result->gr_gid == gid && result->gr_name[0] != '+'
+		 && result->gr_name[0] != '-')
 	       break;
 	   }, gid_t gid)

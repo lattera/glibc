@@ -139,6 +139,6 @@ L3:	decl %ecx		/* all bytes written? */
 L9:	popl %esi		/* restore saved register content */
 
 	ret
-PSEUDO_END (__stpncpy)
+END (__stpncpy)
 
 weak_alias (__stpncpy, stpncpy)

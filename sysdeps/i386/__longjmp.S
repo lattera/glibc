@@ -33,4 +33,4 @@ ENTRY (__longjmp)
 	/* Jump to saved PC.  */
      	movl (JB_PC*4)(%ecx), %ecx
      	jmp *%ecx
-PSEUDO_END (__longjmp)
+END (__longjmp)

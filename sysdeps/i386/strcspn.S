@@ -174,4 +174,4 @@ L4:	subl %edx, %eax		/* we have to return the number of valid
 	addl $256, %esp		/* remove stopset */
 
 	ret
-PSEUDO_END (strcspn)
+END (strcspn)

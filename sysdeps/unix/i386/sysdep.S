@@ -68,8 +68,5 @@ notb:
 	movl $-1, %eax
 	ret
 
-#ifdef	__ELF__
 #undef	__syscall_error
-.Lfe2:
-	.size	__syscall_error, .Lfe2-__syscall_error
-#endif
+END (__syscall_error)

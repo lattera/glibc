@@ -28,11 +28,7 @@ Cambridge, MA 02139, USA.  */
    of the kernel.  But these symbols do not follow the SYS_* syntax
    so we have to redefine the `SYS_ify' macro here.  */
 #undef SYS_ify
-#ifdef __STDC__
-# define SYS_ify(syscall_name)	__NR_##syscall_name
-#else
-# define SYS_ify(syscall_name)	__NR_/**/syscall_name
-#endif
+#define SYS_ify(syscall_name)	__NR_##syscall_name
 
 
 #ifdef ASSEMBLER
@@ -51,11 +47,15 @@ Cambridge, MA 02139, USA.  */
 #undef	PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
-  SYSCALL_ERROR_HANDLER							      \
   ENTRY (name)								      \
     DO_CALL (args, syscall_name);					      \
     cmpl $-125, %eax;							      \
     jae syscall_error;
+
+#undef	PSEUDO_END
+#define	PSEUDO_END(name)						      \
+  SYSCALL_ERROR_HANDLER							      \
+  END (name)
 
 #ifndef PIC
 #define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
@@ -63,7 +63,6 @@ Cambridge, MA 02139, USA.  */
 /* Store (- %eax) into errno through the GOT.  */
 #ifdef _LIBC_REENTRANT
 #define SYSCALL_ERROR_HANDLER						      \
-  .type syscall_error,@function;					      \
 syscall_error:								      \
   pushl %ebx;								      \
   call 0f;								      \
@@ -79,13 +78,11 @@ syscall_error:								      \
   popl %ebx;								      \
   movl %ecx, (%eax);							      \
   movl $-1, %eax;							      \
-  ret;									      \
-  .size syscall_error,.-syscall-error;
+  ret;
 /* A quick note: it is assumed that the call to `__errno_location' does
    not modify the stack!  */
 #else
 #define SYSCALL_ERROR_HANDLER						      \
-  .type syscall_error,@function;					      \
 syscall_error:								      \
   call 0f;								      \
 0:popl %ecx;								      \
@@ -95,8 +92,7 @@ syscall_error:								      \
   movl errno@GOT(%ecx), %ecx;						      \
   movl %edx, (%ecx);							      \
   movl $-1, %eax;							      \
-  ret;									      \
-  .size syscall_error,.-syscall-error;
+  ret;
 #endif	/* _LIBC_REENTRANT */
 #endif	/* PIC */
 
@@ -121,7 +117,7 @@ syscall_error:								      \
    (Of course a function with say 3 arguments does not have entries for
    arguments 4 and 5.)
 
-   The following code tries hard to be optimal.  A general assuption
+   The following code tries hard to be optimal.  A general assumption
    (which is true according to the data books I have) is that
 
 	2 * xchg	is more expensive than	pushl + movl + popl
@@ -136,7 +132,7 @@ syscall_error:								      \
    (2 * movl is less expensive than pushl + popl).
 
    Second unlike for the other registers we don't save the content of
-   %ecx and %edx when we have than 1 and 2 registers resp.
+   %ecx and %edx when we have more than 1 and 2 registers resp.
 
    The code below might look a bit long but we have to take care for
    the pipelined processors (i586 and up).  Here the `pushl' and `popl'

@@ -22,10 +22,7 @@ Cambridge, MA 02139, USA.  */
    more information about the value -128 used below.*/
 
 	.text
-	SYSCALL_ERROR_HANDLER
 ENTRY (syscall)
-	CALL_MCOUNT
-
 	move.l 4(%sp), %d0	/* Load syscall number.  */
 	_DOARGS_5 (24)		/* Frob arguments.  */
 	trap &0			/* Do the system call.  */

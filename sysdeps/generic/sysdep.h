@@ -35,3 +35,7 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 #endif
+
+/* Mark the end of function named SYM.  This is used on some platforms
+   to generate correct debugging information.  */
+#define END(sym)

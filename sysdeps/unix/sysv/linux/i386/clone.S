@@ -66,9 +66,6 @@ ENTRY(__clone)
 	jz	thread_start
 
 	ret
-PSEUDO_END (__clone)
-
-	SYSCALL_ERROR_HANDLER
 
 thread_start:
 	subl	%ebp,%ebp	/* terminate the stack frame */
@@ -76,4 +73,6 @@ thread_start:
 	pushl	%eax
 	call	JUMPTARGET (_exit)
 
-weak_alias(__clone, clone)
+PSEUDO_END (__clone)
+
+weak_alias (__clone, clone)

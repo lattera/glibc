@@ -1,3 +1,105 @@
+Tue Oct 22 21:38:21 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h: Bump version number to 1.97.
+
+	* features.h: Undo change of Sun Oct 20 22:19:58 1996.
+	Include libc-version.h.
+	* features.h.in: Removed.
+	* Makefile: Change rules to generate libc-version.h instead of
+	features.h.
+
+	* malloc/free.c: Add cast to prevent warning.
+	* malloc/malloc-walk.c: Likewise.
+	* malloc/ralloc.c: Likewise.
+	* malloc/realloc.c: Likewise.
+
+	* grp/fgetgrent_r.c: Accept empty numeric field if name start with +
+	or -.
+	* pwd/fgetpwent_r.c: Likewise.
+	* nss/nss_files/files-grp.c: Don't accept entries with names starting
+	with + or - in lookup functions.
+	* nss/nss_files/files-pwd.c: Likewise.
+
+	* Makerules: Call autolock.sh using $(SHELL).
+
+Mon Oct 21 22:52:16 1996  NIIBE Yutaka  <gniibe@mri.co.jp>
+
+	* elf/dl-minimal.c: Don't define `dgettext' replacement but
+	`dcgettext'.  When optimizing the macros in <libintl.h> define
+	`dgettext' as a macro and so this function will never be called.
+
+Mon Oct 21 15:41:59 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/sysdep.h: Define END to use .size when available.
+	(PSEUDO_END): Use END.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Define PSEUDO_END to
+	define SYSCALL_ERROR_HANDLER before using END.
+	(SYSCALL_ERROR_HANDLER): Don't use .size directive.
+	* sysdeps/unix/sysv/linux/clone.S: Don't use SYSCALL_ERROR_HANDLER
+	and .size directive but PSEUDO_END.
+	* sysdeps/unix/sysv/linux/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/sysdep.S (__errno_location): Use END.
+	* sysdeps/unix/i386/sysdep.S (__syscall_error): Likewise.
+	* sysdeps/i386/__longjmp.S: Use END instead of PSEUDO_END.
+	* sysdeps/i386/bsd-_setjmp.S: Likewise.
+	* sysdeps/i386/bsd-setjmp.S: Likewise.
+	* sysdeps/i386/memchr.S: Likewise.
+	* sysdeps/i386/memcmp.S: Likewise.
+	* sysdeps/i386/setjmp.S: Likewise.
+	* sysdeps/i386/stpcpy.S: Likewise.
+	* sysdeps/i386/stpncpy.S: Likewise.
+	* sysdeps/i386/strchr.S: Likewise.
+	* sysdeps/i386/strcspn.S: Likewise.
+	* sysdeps/i386/strpbrk.S: Likewise.
+	* sysdeps/i386/strrchr.S: Likewise.
+	* sysdeps/i386/strspn.S: Likewise.
+	* sysdeps/i386/strtok.S: Likewise.
+	* sysdeps/i386/i486/strcat.S: Likewise.
+	* sysdeps/i386/i486/strlen.S: Likewise.
+	* sysdeps/i386/i586/memset.S: Likewise.
+	* sysdeps/i386/i586/strchr.S: Likewise.
+	* sysdeps/i386/i586/strlen.S: Likewise.
+
+	* sysdeps/i386/strlen.c: De-ANSI-fy.
+
+	* sysdeps/generic/_strerror.c: Undo change of Mon Oct 21 01:32:36 1996.
+	Define dgettext if not defined to use dcgettext.
+	* sysdeps/mach/_strerror.c: Likewise.
+
+	* sysdeps/unix/sysv/i386/time.S: Add PSEUDO_END to get
+ 	__syscall_error defined..
+
+Sat Oct 19 12:27:50 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/mmap.S: Fix braino: CALL_MCOUNT is
+	already included in the ENTRY macro.  Remove SYSCALL_ERROR_HANDLER
+	now provided by PSEUDO_END.
+	* sysdeps/unix/sysv/linux/m68k/sigreturn.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/clone.S: Likewise.  Use JUMPTARGET.
+
+	* sysdeps/generic/sysdep.h (END): Provide default empty
+	definition.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h (END): Redefine to use
+	size directive.
+	(PSEUDO): Don't include SYSCALL_ERROR_HANDLER.
+	(PSEUDO_END): Include it here instead.
+	(SYSCALL_ERROR_HANDLER): Remove type directive.
+	* sysdeps/m68k/bsd-_setjmp.S: Use END, not PSEUDO_END.
+	* sysdeps/m68k/bsd-setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sigreturn.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S: Likewise.
+	(__syscall_error): Can't use ENTRY macro.
+
+Sat Oct 19 12:13:24 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/syscalls.list (getresuid, setresuid):
+	Set caller to EXTRA.
+
 Mon Oct 21 01:32:36 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/rtld.c (dl_main): Move initialization of `_dl_starting_up'
@@ -257,6 +359,11 @@ Tue Oct 15 02:13:21 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* stdio-common/vfprintf.c: Don't declare __flockfile as weak.
 
 	* crypt/md5-crypt.c (md5_crypt_r): Add cast to prevent warning.
+
+Tue Oct 15 14:37:40 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/fcntlbits.h (O_HURD): Add O_EXLOCK and
+	O_SHLOCK.
 
 Tue Oct 15 14:37:40 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 

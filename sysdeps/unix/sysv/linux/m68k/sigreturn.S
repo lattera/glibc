@@ -20,12 +20,10 @@ Cambridge, MA 02139, USA.  */
 
 .text
 ENTRY (__sigreturn)
-	CALL_MCOUNT
-
 	addq.l #4, %sp		/* Pop the return PC.  */
 	DO_CALL (#SYS_ify (sigreturn), 0)
 				/* Do the system call; it never returns.  */
 	/* NOTREACHED */
-PSEUDO_END (__sigreturn)
+END (__sigreturn)
 
 weak_alias (__sigreturn, sigreturn)

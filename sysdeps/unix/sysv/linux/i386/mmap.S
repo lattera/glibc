@@ -19,7 +19,6 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 	.text
-	SYSCALL_ERROR_HANDLER
 
 ENTRY (__mmap)
 
@@ -42,6 +41,7 @@ ENTRY (__mmap)
 
 	/* Successful; return the syscall's value.  */
 	ret
-	.size __mmap,.-__mmap
+
+PSEUDO_END (__mmap)
 
 weak_alias (__mmap, mmap)

@@ -50,7 +50,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <netinet6/in6.h>
 #endif /* INET6 */
 #include <netdb.h>
-
+#include <arpa/inet.h>
+#include <string.h>
 
 #define GAIH_OKIFUNSPEC 0x0100
 #define GAIH_EAI        ~(GAIH_OKIFUNSPEC)
@@ -90,7 +91,7 @@ static struct gaih_addrtuple nulladdr;
 struct gaih_typeproto {
   int socktype;
   int protocol;
-  char *name;
+  const char *name;
 };
 
 static struct gaih_typeproto gaih_inet_typeproto[] = {
@@ -121,7 +122,6 @@ static int gaih_inet_serv(char *servicename, struct gaih_typeproto *tp, struct g
 static int gaih_inet(const char *name, const struct gaih_service *service,
 		     const struct addrinfo *req, struct addrinfo **pai)
 {
-  struct hostent *h = NULL;
   struct gaih_typeproto *tp = gaih_inet_typeproto;
   struct gaih_servtuple *st = &nullserv;
   struct gaih_addrtuple *at = &nulladdr;
@@ -412,7 +412,8 @@ static struct gaih gaih[] = {
 int getaddrinfo(const char *name, const char *service,
 		const struct addrinfo *req, struct addrinfo **pai)
 {
-  int i, j = 0;
+  int i = 0;
+  int j = 0;
   struct addrinfo *p = NULL, **end = &p;
   struct gaih *g = gaih, *pg = NULL;
   struct gaih_service gaih_service, *pservice;
@@ -446,7 +447,7 @@ int getaddrinfo(const char *name, const char *service,
       j++;
       if (!((pg && (pg->gaih == g->gaih)))) {
 	pg = g;
-	if (i = g->gaih(name, pservice, req, end)) {
+	if ((i = g->gaih(name, pservice, req, end))) {
 	  if (!req->ai_family && (i & GAIH_OKIFUNSPEC))
 	    continue;
 	  goto gaih_err;

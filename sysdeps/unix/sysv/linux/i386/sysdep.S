@@ -67,4 +67,4 @@ ENTRY (__errno_location)
 	movl $errno, %eax
 #endif
 	ret
-	.size	__errno_location, .-__errno_location
+END (__errno_location)

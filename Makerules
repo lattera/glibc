@@ -492,8 +492,8 @@ include $(o-iterator)
 define do-ar
 topdir=`cd $(..).; pwd`; \
 $(patsubst %/,cd %;,$(objpfx)) \
-$$topdir/autolock.sh ${O%-lib}.lck $(AR) cru$(verbose) ${O%-lib} \
-					 $(patsubst $(objpfx)%,%,$^)
+$(SHELL) $$topdir/autolock.sh ${O%-lib}.lck $(AR) cru$(verbose) ${O%-lib} \
+						  $(patsubst $(objpfx)%,%,$^)
 rm -f $@
 touch $@
 endef
@@ -507,7 +507,7 @@ define o-iterator-doit
 $(common-objpfx)$(patsubst %,$(libtype$o),c)($(ar-symtab-name)): \
 	  $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
 	    $(patsubst $(objpfx)%,%,$(o-objects))) $(subdirs-stamp-o); \
-	$$(..)./autolock.sh \
+	$(SHELL) $$(..)./autolock.sh \
 	  $$(common-objpfx)$$(patsubst %,$$(libtype$o),c).lck \
 	  $$(RANLIB) $$(common-objpfx)$$(patsubst %,$$(libtype$o),c)
 endef

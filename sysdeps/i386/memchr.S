@@ -313,4 +313,4 @@ L9:	popl %edi		/* pop saved registers */
 	popl %esi
 
 	ret
-PSEUDO_END (memchr)
+END (memchr)

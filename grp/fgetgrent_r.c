@@ -34,7 +34,10 @@ LINE_PARSER
 (,
  STRING_FIELD (result->gr_name, ISCOLON, 0);
  STRING_FIELD (result->gr_passwd, ISCOLON, 0);
- INT_FIELD (result->gr_gid, ISCOLON, 0, 10,);
+ if (result->gr_name[0] == '+' || result->gr_name[0] == '-')
+   INT_FIELD_MAYBE_NULL (result->gr_gid, ISCOLON, 0, 10, , 0)
+ else
+   INT_FIELD (result->gr_gid, ISCOLON, 0, 10,)
  )
 
 

@@ -32,12 +32,14 @@ struct pwent_data {};
 
 DB_LOOKUP (pwnam, 1 + strlen (name), (".%s", name),
 	   {
-	     if (! strcmp (name, result->pw_name))
+	     if (name[0] != '+' && name[0] != '-'
+		 && ! strcmp (name, result->pw_name))
 	       break;
 	   }, const char *name)
 
 DB_LOOKUP (pwuid, 20, ("=%lu", (unsigned long int) uid),
 	   {
-	     if (result->pw_uid == uid)
+	     if (result->pw_uid == uid && result->pw_name[0] != '+'
+		 && result->pw_name[0] != '-')
 	       break;
 	   }, uid_t uid)

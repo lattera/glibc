@@ -23,8 +23,6 @@ Cambridge, MA 02139, USA.  */
 #define P2(a, b) a##b
 
 	.text
-	SYSCALL_ERROR_HANDLER
-
 /* The socket-oriented system calls are handled unusally in Linux.
    They are all gated through the single `socketcall' system call number.
    `socketcall' takes two arguments: the first is the subcode, specifying
@@ -35,7 +33,6 @@ Cambridge, MA 02139, USA.  */
 
 .globl P(__,socket)
 ENTRY (P(__,socket))
-	CALL_MCOUNT
 
 	/* Save registers.  */
 	move.l %d2, %a0

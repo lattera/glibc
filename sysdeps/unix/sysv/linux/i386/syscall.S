@@ -22,8 +22,8 @@ Cambridge, MA 02139, USA.  */
    more information about the value -125 used below.*/
 
 	.text
-	SYSCALL_ERROR_HANDLER	/* Define error handler for PIC.  */
 ENTRY (syscall)
+
 	PUSHARGS_5		/* Save register contents.  */
 	_DOARGS_5(36)		/* Load arguments.  */
 	movl 16(%esp), %eax	/* Load syscall number into %eax.  */
@@ -32,4 +32,5 @@ ENTRY (syscall)
 	cmpl $-125, %eax	/* Check %eax for error.  */
 	jae syscall_error	/* Jump to error handler if error.  */
 	ret			/* Return to caller.  */
-	.size syscall,.-syscall
+
+PSEUDO_END (syscall)

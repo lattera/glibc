@@ -23,8 +23,6 @@ Cambridge, MA 02139, USA.  */
 #define P2(a, b) a##b
 
 	.text
-	SYSCALL_ERROR_HANDLER
-
 /* The socket-oriented system calls are handled unusally in Linux.
    They are all gated through the single `socketcall' system call number.
    `socketcall' takes two arguments: the first is the subcode, specifying
@@ -52,11 +50,12 @@ ENTRY (P(__,socket))
 	movl %edx, %ebx
 
 	/* %eax is < 0 if there was an error.  */
-	testl %eax, %eax
-	jl syscall_error
+	cmpl $-125, %eax
+	jae syscall_error
 
 	/* Successful; return the syscall's value.  */
 	ret
-	.size P(__,socket),.-P(__,socket)
+
+PSEUDO_END (P(__,socket))
 
 weak_alias (P(__,socket), socket)

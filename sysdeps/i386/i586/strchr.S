@@ -326,7 +326,7 @@ L3:	xorl %eax, %eax		/* set return value = NULL */
 	popl %edi
 
 	ret
-PSEUDO_END (strchr)
+END (strchr)
 
 #undef index
 weak_alias (strchr, index)

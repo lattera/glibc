@@ -82,9 +82,9 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 		   $(addprefix install-, no-libc.a bin lib data headers others)
 
 headers := errno.h sys/errno.h errnos.h limits.h values.h	\
-	   features.h gnu-versions.h libc-lock.h
+	   features.h gnu-versions.h libc-lock.h libc-version.h
 aux	 = sysdep $(libc-init) version
-before-compile = $(objpfx)version-info.h $(objpfx)features.h
+before-compile = $(objpfx)version-info.h $(objpfx)libc-version.h
 
 echo-headers: subdir_echo-headers
 
@@ -145,28 +145,42 @@ $(objpfx)version-info.h: $(+sysdir_pfx)config.make $(all-Banner-files)
 	   echo "\"Available extensions:";			\
 	   sed -e '/^#/d' -e 's/^[[:space:]]*/	/' $$files;	\
 	   echo "\"";						\
-	 fi) > $@-tmp
-	mv -f $@-tmp $@
+	 fi) > $@T
+	mv -f $@T $@
+generated += version-info.h
 
 version.c-objects := $(addprefix $(objpfx)version,$(object-suffixes))
 $(version.c-objects): $(objpfx)version-info.h
 
-$(objpfx)features.h: features.h.in Makefile $(common-objpfx)soversions.mk
+$(objpfx)libc-version.h: Makefile $(common-objpfx)soversions.mk \
+			 $(common-objpfx)version.mk
 	nr="$(libc.so-version)"; \
+	lnr=`echo $(version) | sed 's/[.].*//'`; \
+	lmnr=`echo $(version) | sed 's/[^.]*[.]//'`; \
 	if test -n $$nr; then \
-	  nr=`echo $$nr | sed 's/^[.]//'`; \
-	  tmpfile=$${TMPDIR:-/tmp}/sedtmp.$$$$; \
-	  rm -f $$tmpfile; \
-	  (echo '/^INTERFACENUMBER/ { i\'; \
-	   echo '/* Interface number of the shared library.  */\'; \
-	   echo "#define	__GNU_LIBRARY_INTERFACE__	$$nr"; \
-	   echo '  s/^INTERFACENUMBER//'; \
-	   echo '}') > $$tmpfile; \
-	  sed -f $$tmpfile < $< > $@; \
-	  rm -f $$tmpfile; \
+	  nr=`echo $$nr | sed 's/^[.]\([0-9]*\).*/\1/'`; \
 	else \
-	  sed -e '/^INTERFACENUMBER/d' < $< > $@; \
-	fi
+	  nr="$$lnr"; \
+	fi; \
+	rm -f $@T; \
+	(echo '#ifndef __LIBC_VERSION_H'; \
+	 echo '#define __LIBC_VERSION_H 1'; \
+	 echo; \
+	 if test -n "$(libc.so-version)"; then \
+	   echo '/* Show that this is the GNU C Library.  The value is the'; \
+	   echo '   interface number of the shared library.  */'; \
+	 else \
+	   echo '/* Show that this is the GNU C Library.  */'; \
+	 fi; \
+	 echo "#define	__GNU_LIBRARY__	$$nr"; \
+	 echo; \
+	 echo '/* Version numbers for GNU libc release.  */'; \
+	 echo "#define	__GLIBC__	$$lnr"; \
+	 echo "#define	__GLIBC_MINOR__	$$lmnr"; \
+	 echo; \
+	 echo '#endif	/* libc-version.h */') > $@T
+	mv -f $@T $@
+generated += libc-version.h
 
 # Makerules creates a file `stub-$(subdir)' for each subdirectory, which
 # contains `#define __stub_FUNCTION' for each function which is a stub.

@@ -113,12 +113,12 @@ longjmp (jmp_buf env, int val) { __longjmp (env[0].__jmpbuf, val); }
    English-only in the dynamic linker keeps it smaller.  */
 
 char * weak_function
-__dgettext (const char *domainname, const char *msgid)
+__dcgettext (const char *domainname, const char *msgid, int category)
 {
   assert (domainname == _libc_intl_domainname);
   return (char *) msgid;
 }
-weak_alias (__dgettext, dgettext)
+weak_alias (__dcgettext, dcgettext)
 
 #ifndef NDEBUG
 

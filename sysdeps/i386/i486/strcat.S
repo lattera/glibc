@@ -258,4 +258,4 @@ L8:	movl 8(%esp), %eax	/* start address of destination is result */
 	popl %edi		/* restore saved register */
 
 	ret
-PSEUDO_END (strcat)
+END (strcat)

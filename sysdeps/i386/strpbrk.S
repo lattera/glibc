@@ -175,4 +175,4 @@ L4:	addl $256, %esp		/* remove stopset */
 	xorl %eax, %eax		/* return NULL */
 
 L7:	ret
-PSEUDO_END (strpbrk)
+END (strpbrk)
