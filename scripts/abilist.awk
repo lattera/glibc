@@ -10,8 +10,7 @@ BEGIN {
 
 # Per-file header.
 /[^ :]+\.so\.[0-9]+:[ 	]+.file format .*$/ {
-  if (parse_names && soname != "")
-    emit(1);
+  emit(0);
 
   sofullname = $1;
   sub(/:$/, "", sofullname);
@@ -19,8 +18,13 @@ BEGIN {
   sub(/^.*\//, "", soname);
   sub(/\.so\.[0-9]+$/, "", soname);
 
+  suppress = ((filename_regexp != "" && sofullname !~ filename_regexp) \
+	      || (libname_regexp != "" && soname !~ libname_regexp));
+
   next
 }
+
+suppress { next }
 
 # Normalize columns.
 /^[0-9a-fA-F]+      / { sub(/      /, "  -   ") }
@@ -74,6 +78,9 @@ $2 == "g" || $2 == "w" && NF == 7 {
   if (desc == "")
     desc = " " symbol " " type size;
 
+  if (combine)
+    version = soname " " version (combine_fullname ? " " sofullname : "");
+
   if (version in versions) {
     versions[version] = versions[version] "\n" desc;
   }
@@ -90,7 +97,13 @@ NF == 0 || /DYNAMIC SYMBOL TABLE/ || /file format/ { next }
   print "Don't grok this line:", $0
 }
 
-function emit(tofile) {
+function emit(end) {
+  if (! parse_names || soname == "")
+    return;
+  if (combine && !end)
+    return;
+  tofile = !combine;
+
   nverslist = 0;
   for (version in versions) {
     if (nverslist == 0) {
@@ -119,9 +132,6 @@ function emit(tofile) {
     ++nverslist;
   }
 
-  if (combine)
-    tofile = 0;
-
   if (tofile) {
     out = prefix soname ".symlist";
     if (soname in outfiles)
@@ -141,12 +151,9 @@ function emit(tofile) {
       outpipe = "sort >> " out;
     }
     else {
-      if (combine_fullname)
-	print prefix soname, version, sofullname;
-      else if (combine)
-	print prefix soname, version;
-      else
-	print version;
+      if (combine)
+	print "";
+      print prefix version;
       outpipe = "sort";
     }
     print versions[version] | outpipe;
@@ -162,9 +169,5 @@ function emit(tofile) {
 }
 
 END {
-  if (! parse_names)
-    emit(0);
-  else if (soname != "") {
-    emit(1);
-  }
+  emit(1);
 }

@@ -1,5 +1,11 @@
 2003-03-28  Roland McGrath  <roland@redhat.com>
 
+	* scripts/abilist.awk: If given -v filename_regexp and/or -v
+	libname_regexp when parsing names, then produce output only
+	for those matching the given regexps.  In combine mode, save all
+	stanzas for a final sorting by stanza header at the end.
+	Emit a blank line between stanzas.
+
 	* scripts/abilist.awk: When given -v combine=1, do parse_names and
 	emit a single output stream with lib name in stanza header lines.
 
