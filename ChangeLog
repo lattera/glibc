@@ -1,3 +1,16 @@
+2000-03-09  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* configure.in (PERL, INSTALL_INFO): Don't AC_SUBST these,
+	since AC_PATH_PROG already does it for us.
+	(PERL): Rewrite check added in 2000-02-29 change for syntactic
+	correctness and sh portability.  I replaced the broken check
+	with a more sensible implementation of the apparently intended
+	semantics, which might still be questionable.  Using expr causes
+	a non-numeric value for `perl -V:apiversion` to be accepted,
+	refusing to use only a perl that reports a number less than 5;
+	on my system, perl (5.004_04) -V:apiversion produces UNKNOWN.
+	* configure: Regenerated.
+
 2000-03-08  Andreas Jaeger  <aj@suse.de>
 
 	* manual/crypt.texi: Fix paths.
