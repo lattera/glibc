@@ -1695,7 +1695,7 @@ sift_states_bkref (preg, mctx, sctx, str_idx, dest_nodes)
         continue;
       if (type == OP_BACK_REF)
         {
-          int enabled_idx, ret;
+          int enabled_idx;
           for (enabled_idx = 0; enabled_idx < mctx->nbkref_ents; ++enabled_idx)
             {
               int disabled_idx, subexp_len, to_idx;
@@ -1769,7 +1769,7 @@ sift_states_bkref (preg, mctx, sctx, str_idx, dest_nodes)
                     }
                   local_sctx.last_node = node;
                   local_sctx.last_str_idx = str_idx;
-                  ret = re_node_set_insert (&local_sctx.limits, enabled_idx);
+                  err = re_node_set_insert (&local_sctx.limits, enabled_idx);
                   if (BE (err < 0, 0))
                     return REG_ESPACE;
                   err = sift_states_backward (preg, mctx, &local_sctx);
