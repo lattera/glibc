@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,10 @@
 
 #define	__NO_WCTYPE
 #include <wctype.h>
+#include <stdint.h>
+
+#define USE_IN_EXTENDED_LOCALE_MODEL
+#include "cname-lookup.h"
 
 /* Provide real-function versions of all the wctype macros.  */
 
@@ -40,11 +44,31 @@ func (__iswxdigit_l, _ISwxdigit)
 wint_t
 (__towlower_l) (wint_t wc, __locale_t locale)
 {
-  return __towctrans_l (wc, locale->__ctype_tolower, locale);
+  const int32_t *class32_tolower;
+  size_t idx;
+
+  idx = cname_lookup (wc, locale);
+  if (idx == ~((size_t) 0))
+    return 0;
+
+  class32_tolower = (const int32_t *)
+    locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_TOLOWER32)].string;
+
+  return class32_tolower[idx];
 }
 
 wint_t
 (__towupper_l) (wint_t wc, __locale_t locale)
 {
-  return __towctrans_l (wc, locale->__ctype_toupper, locale);
+  const int32_t *class32_toupper;
+  size_t idx;
+
+  idx = cname_lookup (wc, locale);
+  if (idx == ~((size_t) 0))
+    return 0;
+
+  class32_toupper = (const int32_t *)
+    locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_TOUPPER32)].string;
+
+  return class32_toupper[idx];
 }

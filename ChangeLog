@@ -1,3 +1,12 @@
+2000-02-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/nl_langinfo.h: Add casts to prevent warnings.
+
+	* wctype/iswctype_l.c: Use correct types for mapped data.
+	* wctype/wcfuncs.c: Add one more comment for clarification.
+	* wctype/wcfuncs_l.c: Use __ctype32_tolower and __ctype32_toupper.
+	* wctype/wctrans.c: Likewise.
+
 2000-02-12  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/dl-machine.h (__start): Rewritten for 2.2 startup

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -27,14 +27,14 @@
 int
 __iswctype_l (wint_t wc, wctype_t desc, __locale_t locale)
 {
-  const unsigned int *class32_b;
+  const uint32_t *class32_b;
   size_t idx;
 
   idx = cname_lookup (wc, locale);
   if (idx == ~((size_t) 0))
     return 0;
 
-  class32_b = (u_int32_t *)
+  class32_b = (uint32_t *)
     locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_CLASS32)].string;
 
   return class32_b[idx] & desc;

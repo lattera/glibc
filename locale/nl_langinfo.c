@@ -35,13 +35,13 @@ nl_langinfo (item)
 
   if (category < 0 || category >= LC_ALL)
     /* Bogus category: bogus item.  */
-    return "";
+    return (char *) "";
 
   data = *_nl_current[category];
 
   if (index >= data->nstrings)
     /* Bogus index for this category: bogus item.  */
-    return "";
+    return (char *) "";
 
   /* Return the string for the specified item.  */
   return (char *) data->values[index].string;

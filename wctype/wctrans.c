@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -45,9 +45,9 @@ wctrans (const char *property)
     return 0;
 
   if (cnt == 0)
-    return (wctrans_t) __ctype_toupper;
+    return (wctrans_t) __ctype32_toupper;
   else if (cnt == 1)
-    return (wctrans_t) __ctype_tolower;
+    return (wctrans_t) __ctype32_tolower;
 
   /* We have to search the table.  */
   result = (int32_t *) _NL_CURRENT (LC_CTYPE, _NL_NUM_LC_CTYPE + cnt - 2);
