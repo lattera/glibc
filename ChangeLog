@@ -1,26 +1,107 @@
-Fri Jan 17 14:16:28 1997  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+Mon Jan 20 03:02:50 1997  Ulrich Drepper  <drepper@cygnus.com>
 
-	* stdio/vdprintf.c: Moved file to ...
-	* sysdeps/posix/vdprintf.c: Here.  De-ansideclificate.
-	* sysdeps/stub/vdprintf.c: New file.
-	* sysdeps/mach/hurd/vdprintf.c: New file.
+	* Make-dist: Update and reformat copyright.
+	* Makeconfig: Likewise.
+	* assert/Makefile: Likewise.
+	* bare/Makefile: Likewise.
+	* ctype/Makefile: Likewise.
+	* dirent/Makefile: Likewise.
+	* gmon/Makefile: Likewise.
+	* gnulib/Makefile: Likewise.
+	* grp/Makefile: Likewise.
+	* hurd/Makefile: Likewise.
+	* intl/Makefile: Likewise.
+	* mach/Makefile: Likewise.
+	* malloc/Makefile: Likewise.
+	* manual/Makefile: Likewise.
+	* math/Makefile: Likewise.
+	* po/Makefile: Likewise.
+	* pwd/Makefile: Likewise.
+	* resource/Makefile: Likewise.
+	* setjmp/Makefile: Likewise.
+	* socket/Makefile: Likewise.
+	* string/Makefile: Likewise.
+	* sunrpc/Makefile: Likewise.
+	* sysdeps/alpha/Makefile: Likewise.
+	* sysdeps/gnu/Makefile: Likewise.
+	* sysdeps/m68k/fpu/switch/Makefile: Likewise.
+	* sysdeps/m68k/fpu/switch/68881-sw.h: Likewise.
+	* sysdeps/m68k/fpu/switch/switch.c: Likewise.
+	* sysdeps/mach/Makefile: Likewise.
+	* sysdeps/hurd/Makefile: Likewise.
+	* sysdeps/sparc/Makefile: Likewise.
+	* sysdeps/standalone/i960/nindy960/Makefile: Likewise.
+	* sysdeps/standalone/m68k/m68020/mvme136/Makefile: Likewise.
+	* sysdeps/unix/common/Makefile: Likewise.
+	* sysdeps/unix/sysv/Makefile: Likewise.
+	* sysdeps/unix/sysv/irix4/Makefile: Likewise.
+	* sysdeps/unix/sysv/sco3.2/Makefile: Likewise.
+	* sysdeps/unix/sysv/sysv4/Makefile: Likewise.
+	* sysdeps/vax/Makefile: Likewise.
+	* sysvipc/Makefile: Likewise.
+	* wcsmbs/Makefile: Likewise.
+	* wctype/Makefile: Likewise.
 
-Thu Jan  9 15:59:35 1997  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+	* elf/rtld.c (dl_main): Objects in LD_PRELOAD environment variable
+	are separated according to Sun docs by white space not colon.
 
-	* sysdeps/mach/hurd/posix_opt.h: New file.
+	* locale/C-time.c (_nl_C_LC_TIME): Use empty string to initialize
+	fields which are not defined for the C locale.
 
-	* sysdeps/mach/hurd/sigwait.c (sigwait): Don't affect signal mask.
+	* sysdeps/m68k/fpu/switch/Makefile: Don't use ansidecl.h in constructed
+	files.
+	* sysdeps/m68k/fpu/switch/68881-sw.h: Likewise.
+	* sysdeps/m68k/fpu/switch/switch.c: Likewise.
 
-	* sysdeps/unix/bsd/tcsendbrk.c (tcsendbreak): Finish
-	deansideclification. 
+Sun Jan 19 19:43:31 1997  Andreas Jaeger  <aj@arthur.pfalz.de>
 
-	* sysdeps/mach/libc-lock.h: Add kludges to pretend to implement
-	recursive locks.
+	* time/strptime.c: Provide prototype for strptime_internal.
 
-Tue Jan  7 09:48:15 1997  Andreas Jaeger  <aj@arthur.pfalz.de>
+Sun Jan 19 23:46:27 1997  Ulrich Drepper  <drepper@cygnus.com>
 
-	* signal/sigempty.c (sigemptyset): Correct typo: Empty set should
-	have all bits zero.
+	* glibcbug.in: We don't guarantee confidential handling.  Set
+	field to always contain `no'.
+
+Sun Jan 19 21:28:01 1997  Philippe De Muyter  <phdm@info.ucl.ac.be>
+
+	* intl/explodename.c: Include sys/types.h.
+	* intl/l10nflist.c: Likewise.
+
+Sat Jan 18 22:15:26 1997  Richard Henderson  <rth@tamu.edu>
+
+	* config.make.in (install_root): New variable to make it easy to
+	install glibc somewhere other than /.
+
+	* shlib-versions: alpha-*-linux-* libc=6.1.
+
+	Since sigset_t no longer fits in a register, we can't pass in the
+	thread's initial mask so easily.  Take this opportunity to simplify
+	the clone implementation by only accepting a single void* argument.
+
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Only take one argument.
+	* sysdeps/unix/sysv/linux/i386/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/schedbits.h: Update clone prototypes.
+
+	* sysdeps/unix/sysv/linux/alpha/ioctl-types.h: Remove.
+	Default Linux version should be sufficient.
+
+	* sysdeps/unix/sysv/linux/alpha/sigprocmask.c: The osf_sigprocmask
+	system call wants the sigset dereferenced.
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add entries for
+	__syscall_ustat and __syscall_xmknod.
+	* sysdeps/unix/sysv/linux/alpha/xmknod.c: Include sys/sysmacros.h.
+
+	* sysdeps/unix/sysv/linux/sigset.h: Use longs instead of ints.
+
+	* sysdeps/unix/sysv/linux/tcsetattr.c: Fix pointer dereferences.
+
+	* sysdeps/unix/sysv/linux/alpha/sigsuspend.c: Add comment about
+	dependency to kernel type.
+
+	* sysdeps/unix/sysv/linux/alpha/termbits.h: Correct comment.
 
 Sun Jan 19 04:38:20 1997  Ulrich Drepper  <drepper@cygnus.com>
 

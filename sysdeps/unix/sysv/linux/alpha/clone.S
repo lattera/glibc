@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>, 1996.
 
@@ -24,15 +24,11 @@
 #define _ERRNO_H	1
 #include <errnos.h>
 
-/* int clone(int (*fn)(), void *child_stack, int flags, int nargs, ...) */
+/* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg) */
 
         .text
 ENTRY(__clone)
-	lda	sp,-16(sp)
-	.frame	sp,16,$26,0
-	/* Save rest of argument registers for varargs-type work.  */
-	stq	a4,0(sp)
-	stq	a5,8(sp)
+	.frame	sp,0,ra,0
 #ifdef PROF
 	.set noat
 	lda	AT, _mcount
@@ -42,24 +38,13 @@ ENTRY(__clone)
 	.prologue 1
 
 	/* Sanity check arguments.  */
-	sextl	a3,a3
 	ldiq	v0,EINVAL
 	beq	a0,$error		/* no NULL function pointers */
 	beq	a1,$error		/* no NULL stack pointers */
-	blt	a3,$error		/* no negative argument counts */
-
-	/* Allocate space on the new stack and copy args over */
-	mov	a3,t0			/* save nargs for thread_start */
-	s8addq	a3,sp,t1
-1:	ldq	t2,-8(t1)
-	subq	t1,8,t1
-	stq	t2,-8(a1)
-	subq	a3,1,a3
-	subq	a1,8,a1
-	bne	a3,1b
 
 	/* Do the system call */
 	mov	a0,pv			/* get fn ptr out of the way */
+	mov	a3,a4			/* get fn arg out of the way */
 	mov	a2,a0
 	ldiq	v0,__NR_clone
 	call_pal PAL_callsys
@@ -68,23 +53,19 @@ ENTRY(__clone)
 	beq	v0,thread_start
 
 	/* Successful return from the parent */
-	lda	sp,16(sp)
 	ret
 
 	/* Something bad happened -- no child created */
 $error:
 	br	gp,1f
 1:	ldgp	gp,0(gp)
-	lda	sp,16(sp)
 	jmp	zero,__syscall_error
 
 	END(__clone)
 
 /* Load up the arguments to the function.  Put this block of code in
    its own function so that we can terminate the stack trace with our
-   debug info.
-
-   At this point we have $t0=nargs, $pv=fn, $sp=&arg[0].  */
+   debug info.  */
 
 	.ent thread_start
 thread_start:
@@ -92,34 +73,17 @@ thread_start:
 	mov	zero,fp
 	.prologue 0
 
-	/* Calculate address of jump into argument loading code */
-	cmple	t0,6,t2		/* no more than 6 args in registers */
-	cmoveq	t2,6,t0
-	br	v0,1f		/* find address of arg0 */
-1:	lda	v0,$arg0-1b(v0)
-	s4addq	t0,zero,t1
-	subq	v0,t1,v0
-	jmp	(v0)
-
-	/* Load the integer register arguments */
-	ldq	a5,40(sp)
-	ldq	a4,32(sp)
-	ldq	a3,24(sp)
-	ldq	a2,16(sp)
-	ldq	a1,8(sp)
-	ldq	a0,0(sp)
-$arg0:
-
-	/* Adjust stack to remove the arguments we just loaded */
-	s8addq	t0,sp,sp
-
 	/* Call the user's function */
+	mov	a4,a0
 	jsr	ra,(pv)
 	ldgp	gp,0(ra)
 
 	/* Call _exit rather than doing it inline for breakpoint purposes */
 	mov	v0,a0
 	jsr	ra,_exit
+
+	/* Die horribly.  */
+	halt
 
 	.end thread_start
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
@@ -42,6 +42,7 @@
 # include <argz.h>
 #endif
 #include <ctype.h>
+#include <sys/types.h>
 
 #if defined STDC_HEADERS || defined _LIBC
 # include <stdlib.h>

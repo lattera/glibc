@@ -60,10 +60,10 @@ tcsetattr (fd, optional_actions, termios_p)
   k_termios.c_lflag = termios_p->c_lflag;
   k_termios.c_line = termios_p->c_line;
 #ifdef _HAVE_C_ISPEED
-  k_termios.c_ispeed = termios_p.c_ispeed;
+  k_termios.c_ispeed = termios_p->c_ispeed;
 #endif
 #ifdef _HAVE_C_OSPEED
-  k_termios.c_ospeed = termios_p.c_ospeed;
+  k_termios.c_ospeed = termios_p->c_ospeed;
 #endif
   for (cnt = 0; cnt < KERNEL_NCCS; ++cnt)
     k_termios.c_cc[cnt] = termios_p->c_cc[cnt];

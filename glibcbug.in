@@ -86,7 +86,6 @@ ARCH=`[ -f /bin/arch ] && /bin/arch`
 MACHINE=`[ -f /bin/machine ] && /bin/machine`
 
 ORGANIZATION_C='<organization of PR author (multiple lines)>'
-CONFIDENTIAL_C='<[ yes | no ] (one line)>'
 SYNOPSIS_C='<synopsis of the problem (one line)>'
 SEVERITY_C='<[ non-critical | serious | critical ] (one line)>'
 PRIORITY_C='<[ low | medium | high ] (one line)>'
@@ -111,7 +110,7 @@ Subject: [50 character or so descriptive subject here (for reference)]
 >Originator:	${ORIGINATOR}
 >Organization:
 ${ORGANIZATION- $ORGANIZATION_C}
->Confidential:	$CONFIDENTIAL_C
+>Confidential:	no		(the GNU PR database is public)
 >Synopsis:	$SYNOPSIS_C
 >Severity:	$SEVERITY_C
 >Priority:	$PRIORITY_C
@@ -119,7 +118,7 @@ ${ORGANIZATION- $ORGANIZATION_C}
 >Class:		$CLASS_C
 >Release:	libc-${VERSION}
 >Environment:
-	<machine, os, target, libraries (multiple lines)>
+	$ENVIRONMENT_C
 `[ -n "$SYSTEM" ] && echo System: $SYSTEM`
 `[ -n "$ARCH" ] && echo Architecture: $ARCH`
 `[ -n "$MACHINE" ] && echo Machine: $MACHINE`
@@ -163,16 +162,8 @@ q
 while :; do
   CNT=0
 
-  # 1) Confidential
   #
-  PATTERN=">Confidential:"
-  CONFIDENTIAL=`eval sed -n -e "\"$SED_CMD\"" $TEMP`
-  case "$CONFIDENTIAL" in
-    ""|yes|no) CNT=`expr $CNT + 1` ;;
-    *) echo "$COMMAND: \`$CONFIDENTIAL' is not a valid value for \`Confidential'." ;;
-  esac
-  #
-  # 2) Severity
+  # 1) Severity
   #
   PATTERN=">Severity:"
   SEVERITY=`eval sed -n -e "\"$SED_CMD\"" $TEMP`
@@ -181,7 +172,7 @@ while :; do
     *)  echo "$COMMAND: \`$SEVERITY' is not a valid value for \`Severity'."
   esac
   #
-  # 3) Priority
+  # 2) Priority
   #
   PATTERN=">Priority:"
   PRIORITY=`eval sed -n -e "\"$SED_CMD\"" $TEMP`
@@ -190,7 +181,7 @@ while :; do
     *)  echo "$COMMAND: \`$PRIORITY' is not a valid value for \`Priority'."
   esac
   #
-  # 4) Class
+  # 3) Class
   #
   PATTERN=">Class:"
   CLASS=`eval sed -n -e "\"$SED_CMD\"" $TEMP`
@@ -199,7 +190,7 @@ while :; do
     *)  echo "$COMMAND: \`$CLASS' is not a valid value for \`Class'."
   esac
 
-  [ $CNT -lt 4 ] &&
+  [ $CNT -lt 3 ] &&
     echo "Errors were found with the problem report."
 
   while :; do

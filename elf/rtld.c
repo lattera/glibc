@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -316,12 +316,13 @@ of this helper program; chances are you did not intend to run this program.\n",
       const char *preloadlist = getenv ("LD_PRELOAD");
       if (preloadlist)
 	{
-	  /* The LD_PRELOAD environment variable gives a colon-separated
-	     list of libraries that are loaded before the executable's
-	     dependencies and prepended to the global scope list.  */
+	  /* The LD_PRELOAD environment variable gives a white space
+	     separated list of libraries that are loaded before the
+	     executable's dependencies and prepended to the global
+	     scope list.  */
 	  char *list = strdupa (preloadlist);
 	  char *p;
-	  while ((p = strsep (&list, ":")) != NULL)
+	  while ((p = strsep (&list, " ")) != NULL)
 	    {
 	      (void) _dl_map_object (NULL, p, lt_library, 0);
 	      ++npreloads;

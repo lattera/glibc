@@ -179,6 +179,9 @@ static char const ab_month_name[][4] =
 /* Status of lookup: do we use the locale data or the raw data?  */
 enum locale_status { not, loc, raw };
 
+static char *
+strptime_internal __P ((const char *buf, const char *format, struct tm *tm,
+			enum locale_status *decided));
 
 static char *
 strptime_internal (buf, format, tm, decided)

@@ -1,6 +1,6 @@
 /* Definitions of constants and data structure for POSIX 1003.1b-1993
    scheduling interface.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,9 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SCHEDBITS_H
+
 #define	_SCHEDBITS_H	1
+#include <features.h>
 
 /* Scheduling algorithms.  */
 #define SCHED_OTHER	0
@@ -28,9 +30,9 @@
 
 /* Data structure to describe a process' schedulability.  */
 struct sched_param
-{
-  int sched_priority;
-};
+  {
+    int sched_priority;
+  };
 
 /* Cloning flags.  */
 #define	CSIGNAL	      0x000000ff  /* Signal mask to be sent at exit.  */
@@ -41,13 +43,13 @@ struct sched_param
 #define CLONE_PID     0x00001000  /* Set if pid shared.  */
 
 
-/* Clone current process.  The parameter list of FN is not for true.  Only
-   dots is not allowed by ISO C and without argument the compiler would
-   complain about a missing parameter list.  */
-extern int __clone __P ((int (*__fn) (void *, ...), void *__child_stack,
-			 int __flags, int __nargs, ...));
-extern int clone __P ((int (*__fn) (void *, ...), void *__child_stack,
-		       int __flags, int __nargs, ...));
+/* Clone current process.  */
+extern int __clone __P ((int (*__fn) (void *__arg), void *__child_stack,
+			 int __flags, void *__arg));
+#ifdef __USE_MISC
+extern int clone __P ((int (*__fn) (void *__arg), void *__child_stack,
+		       int __flags, void *__arg));
+#endif
 
 
 #endif /* schedbits.h */

@@ -16,7 +16,7 @@ alpha-.*-.*		libm=6
 # We provide libc.so.6 for Linux kernel versions 2.0 and later.
 i.86-.*-linux.*		libc=6
 m68k-.*-linux.*		libc=6
-alpha-.*-linux.*	libc=6
+alpha-.*-linux.*	libc=6.1
 
 # libmachuser.so.1 corresponds to mach/*.defs as of Utah's UK22 release.
 .*-.*-gnu-gnu.*		libmachuser=1

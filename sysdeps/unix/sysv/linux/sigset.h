@@ -22,13 +22,13 @@
 
 typedef int __sig_atomic_t;
 
-/* A `sigset_t' has a bit for each signal.  Having 32 * 4 * 8 bits gives
-   us up to 1024 signals.  */
-#define _SIGSET_NWORDS	32
+/* A `sigset_t' has a bit for each signal.  */
+
+#define _SIGSET_NWORDS	(1024 / (8 * sizeof (unsigned long int)))
 typedef struct
-{
-  unsigned int __val[_SIGSET_NWORDS];
-} __sigset_t;
+  {
+    unsigned long int __val[_SIGSET_NWORDS];
+  } __sigset_t;
 
 #endif
 
@@ -47,20 +47,23 @@ typedef struct
 #endif
 
 /* Return a mask that includes the bit for SIG only.  */
-#define	__sigmask(sig)	(((unsigned int) 1) << (((sig) - 1) \
-						% (8 * sizeof (unsigned int))))
+#define __sigmask(sig) \
+  (((unsigned long) 1) << (((sig) - 1) % (8 * sizeof (unsigned long int))))
+
 /* Return the word index for SIG.  */
-#define __sigword(sig)	(((sig) - 1) / (8 * sizeof (unsigned int)))
+#define __sigword(sig)	(((sig) - 1) / (8 * sizeof (unsigned long int)))
 
 #if defined __GNUC__ && __GNUC__ >= 2
 #define __sigemptyset(set) \
-  (__extension__ ({ unsigned int __cnt;					      \
-		    for (__cnt = 0; __cnt < _SIGSET_NWORDS; ++__cnt)	      \
-		      (set)->__val[__cnt] = 0; 0; }))
+  (__extension__ ({ int __cnt = _SIGSET_NWORDS;				      \
+		    sigset_t *__set = (set);				      \
+		    while (--__cnt >= 0) __set->__val[__cnt] = 0;	      \
+		    0; }))
 #define __sigfillset(set) \
-  (__extension__ ({ unsigned int __cnt;					      \
-		    for (__cnt = 0; __cnt < _SIGSET_NWORDS; ++__cnt)	      \
-		      (set)->__val[__cnt] = ~0; 0; }))
+  (__extension__ ({ int __cnt = _SIGSET_NWORDS;				      \
+		    sigset_t *__set = (set);				      \
+		    while (--__cnt >= 0) __set->__val[__cnt] = ~0UL;	      \
+		    0; }))
 #endif
 
 /* These functions needn't check for a bogus signal number -- error
@@ -74,8 +77,8 @@ extern int __sigdelset (__sigset_t *, int);
   _EXTERN_INLINE int							      \
   NAME (CONST __sigset_t *__set, int __sig)				      \
   {									      \
-    unsigned int __mask = __sigmask (__sig);				      \
-    unsigned int __word = __sigword (__sig);				      \
+    unsigned long int __mask = __sigmask (__sig);			      \
+    unsigned long int __word = __sigword (__sig);			      \
     return BODY;							      \
   }
 

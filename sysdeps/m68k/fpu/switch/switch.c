@@ -1,22 +1,21 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <signal.h>
 #include <68881-sw.h>
 
@@ -33,7 +32,8 @@ static int have_fpu = -1;
 
 /* Signal handler for the trap that happens if we don't have a 68881.  */
 static void
-DEFUN(trap, (sig), int sig)
+trap (sig)
+     int sig;
 {
   have_fpu = 0;
 }
@@ -44,10 +44,11 @@ DEFUN(trap, (sig), int sig)
    to be a static jump to either the 68881 version or the soft version.
    It then returns into the function it has chosen to do the work.  */
 void
-DEFUN(__68881_switch, (dummy), int dummy)
+__68881_switch (dummy)
+     int dummy;
 {
-  PTR *return_address_location = &((PTR *) &dummy)[-1];
-  struct switch_caller *CONST caller
+  void **return_address_location = &((void **) &dummy)[-1];
+  struct switch_caller *const caller
     = (struct switch_caller *) (((short int *) *return_address_location) - 1);
 
   if (have_fpu < 0)
