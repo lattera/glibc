@@ -42,6 +42,11 @@ ENTRY(__clone)
 	stwm    %arg0,64(%arg1)
 	stw	%arg3,-60(%arg1)
 
+	/* Save the PIC register. */
+#ifdef PIC
+	stw	%r19,-32(%sr0, %sp)	/* parent */
+#endif
+
 	/* Do the system call */
 	copy	%arg2,%arg0
 	ble     0x100(%sr2,%r0)
@@ -53,19 +58,31 @@ ENTRY(__clone)
 
 	comib,=,n 0,%ret0,thread_start
 
-	/* Successful return from the parent */
+	/* Successful return from the parent
+	   No need to restore the PIC register, 
+	   since we return immediately. */
+
 	bv	%r0(%rp)
 	nop
 
 	/* Something bad happened -- no child created */
 .Lerror:
+
+	/* Restore the PIC register on error */
+#ifdef PIC
+	ldw	-32(%sr0, %sp), %r19	/* parent */
+#endif
+
 	b	__syscall_error
 	sub     %r0,%ret0,%arg0
 
 thread_start:
+
 	/* Load up the arguments.  */
-	ldw	-60(%sp),%arg0
-	ldw     -64(%sp),%r22
+	ldw	-60(%sr0, %sp),%arg0
+	ldw     -64(%sr0, %sp),%r22
+
+	/* $$dyncall fixes childs PIC register */
 
 	/* Call the user's function */
 	bl	$$dyncall,%r31
