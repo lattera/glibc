@@ -1,3 +1,7 @@
+2001-08-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/strnlen.c: Fix the implementation.  We cannot use memchr.
+
 2001-08-18  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/i386/init-first.c (init): Initialize __environ
