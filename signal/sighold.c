@@ -1,5 +1,5 @@
 /* Add SIG to the calling process' signal mask.
-   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -33,7 +33,7 @@ sighold (sig)
     return -1;
 
   /* Add the specified signal.  */
-  if (__sigaddset (&set, sig) < 0)
+  if (sigaddset (&set, sig) < 0)
     return -1;
 
   /* Set the new mask.  */

@@ -1,5 +1,8 @@
 2003-04-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* signal/sighold.c (sighold): Use sigaddset and not __sigaddset.
+	The signal number must be checked [PR libc/5004].
+
 	* sysdeps/unix/sysv/linux/system.c: If compiled without threads
 	don't do anything fancy.
 
