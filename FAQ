@@ -1417,16 +1417,10 @@ completely.
 	the Perl db modules the testsuite is not passed.  This did not
 	happen with db-1, gdbm, or ndbm.
 
-{UD} You are using an outdated copy of the DB_File Perl module.  In fact db-2
-finally removed the handling of zero-sized keys which was one of the features
-tested by the old Perl testsuite and therefore you see an error.  But this
-never was documented and guaranteed, only broken programs used this feature.
-
-Consequently db-2 does not need to support this feature and instead signals
-an error which leads to easier debugging.  The DB_File module maintainer
-Paul Marquess <pmarquess@bfsec.bt.co.uk> acknowledged this change and fixed
-the testsuite so that if you use DB_File v1.60 or later you should not have
-any more problems with db-2.
+{MK} Db-2 does not support zero-sized keys.  The Perl testsuite
+tests the support for zero-sized keys and therefore fails when db-2 is
+used.  The Perl folks are looking for a solution, but thus far have
+not found a satisfactory one.
 
 
 3.14.	The pow() inline function I get when including <math.h> is broken.

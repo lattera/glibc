@@ -1,5 +1,5 @@
 /* Support for reading /etc/ld.so.cache files written by Linux ldconfig.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,13 +52,56 @@ static size_t cachesize;
    binaries.  */
 int _dl_correct_cache_id = 3;
 
+/* Helper function which must match the one in ldconfig, so that
+   we rely on the same sort order.  */
+static int
+_dl_cache_libcmp (const char *p1, const char *p2)
+{
+  while (*p1 != '\0')
+    {
+      if (*p1 >= '0' && *p1 <= '9')
+        {
+          if (*p2 >= '0' && *p2 <= '9')
+            {
+	      /* Must compare this numerically.  */
+	      int val1;
+	      int val2;
+
+	      val1 = *p1++ - '0';
+	      val2 = *p2++ - '0';
+	      while (*p1 >= '0' && *p1 <= '9')
+	        val1 = val1 * 10 + *p1++ - '0';
+	      while (*p2 >= '0' && *p2 <= '9')
+	        val2 = val2 * 10 + *p2++ - '0';
+	      if (val1 != val2)
+		return val1 - val2;
+	    }
+	  else
+            return 1;
+        }
+      else if (*p2 >= '0' && *p2 <= '9')
+        return -1;
+      else if (*p1 != *p2)
+        return *p1 - *p2;
+      else
+	{
+	  ++p1;
+	  ++p2;
+	}
+    }
+  return *p1 - *p2;
+}
+
+
 /* Look up NAME in ld.so.cache and return the file name stored there,
    or null if none is found.  */
 
 const char *
 _dl_load_cache_lookup (const char *name)
 {
-  unsigned int i;
+  int left, right, middle;
+  int cmpres;
+  const char *cache_data;
   const char *best;
 
   /* Print a message if the loading of libs is traced.  */
@@ -87,28 +130,89 @@ _dl_load_cache_lookup (const char *name)
     /* Previously looked for the cache file and didn't find it.  */
     return NULL;
 
-  best = NULL;
-  for (i = 0; i < cache->nlibs; ++i)
-    if ((cache->libs[i].flags == 1 ||
-	 cache->libs[i].flags == 3) && /* ELF library entry.  */
-	/* Make sure string table indices are not bogus before using them.  */
-	cache->libs[i].key < cachesize - sizeof *cache &&
-	cache->libs[i].value < cachesize - sizeof *cache &&
-	/* Does the name match?  */
-	! strcmp (name, ((const char *) &cache->libs[cache->nlibs] +
-			 cache->libs[i].key)))
-      {
-	if ((best == NULL) || (cache->libs[i].flags == _dl_correct_cache_id))
-	  {
-	    best = ((const char *) &cache->libs[cache->nlibs]
-		    + cache->libs[i].value);
+  /* This is where the strings start.  */
+  cache_data = (const char *) &cache->libs[cache->nlibs];
 
-	    if (cache->libs[i].flags == _dl_correct_cache_id)
-	      /* We've found an exact match for the shared object and no
-		 general `ELF' release.  Stop searching.  */
-	      break;
-	  }
-      }
+  best = NULL;
+
+  /* We use binary search since the table is sorted in the cache file.
+     It is important to use the same algorithm as used while generating
+     the cache file.  */
+  left = 0;
+  right = cache->nlibs - 1;
+  middle = (left + right) / 2;
+  cmpres = 1;
+
+  while (left <= right)
+    {
+      /* Make sure string table indices are not bogus before using them.  */
+      if (cache->libs[middle].key >= cachesize - sizeof *cache)
+	{
+	  cmpres = 1;
+	  break;
+	}
+
+      /* Actually compare the entry with the key.  */
+      cmpres = _dl_cache_libcmp (name, cache_data + cache->libs[middle].key);
+      if (cmpres == 0)
+	/* Found it.  */
+	break;
+
+      if (cmpres < 0)
+	left = middle + 1;
+      else
+	right = middle - 1;
+
+      middle = (left + right) / 2;
+    }
+
+  if (cmpres == 0)
+    {
+      /* LEFT now marks the last entry for which we know the name is
+	 correct.  */
+      left = middle;
+
+      /* There might be entries with this name before the one we
+         found.  So we have to find the beginning.  */
+      while (middle > 0
+	     /* Make sure string table indices are not bogus before
+                using them.  */
+	     && cache->libs[middle - 1].key < cachesize - sizeof *cache
+	     /* Actually compare the entry.  */
+	     && strcmp (name, cache_data + cache->libs[middle - 1].key) == 0)
+	--middle;
+
+      do
+	{
+	  int flags;
+
+	  /* Only perform the name test if necessary.  */
+	  if (middle > left
+	      /* We haven't seen this string so far.  Test whether the
+		 index is ok and whether the name matches.  Otherwise
+		 we are done.  */
+	      && (cache->libs[middle].key >= cachesize - sizeof *cache
+		  || strcmp (name, cache_data + cache->libs[middle].key) != 0))
+	    break;
+
+	  flags = cache->libs[middle].flags;
+	  if ((flags == 1 || flags == 3)
+	      && cache->libs[middle].value < cachesize - sizeof *cache)
+	    {
+	      if (best == NULL || flags == _dl_correct_cache_id)
+		{
+		  best = cache_data + cache->libs[middle].value;
+
+		  if (flags == _dl_correct_cache_id)
+		    /* We've found an exact match for the shared
+		       object and no general `ELF' release.  Stop
+		       searching.  */
+		    break;
+		}
+	    }
+	}
+      while (++middle <= right);
+    }
 
   /* Print our result if wanted.  */
   if (_dl_debug_libs && best != NULL)
