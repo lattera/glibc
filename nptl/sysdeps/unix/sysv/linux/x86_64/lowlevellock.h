@@ -42,10 +42,10 @@
 
 
 /* Does not preserve %eax and %ecx.  */
-extern int __lll_mutex_lock_wait (int val, int *__futex) attribute_hidden;
+extern int __lll_mutex_lock_wait (int *__futex, int __val) attribute_hidden;
 /* Does not preserver %eax, %ecx, and %edx.  */
-extern int __lll_mutex_timedlock_wait (int val, int *__futex,
-				       const struct timespec *abstime)
+extern int __lll_mutex_timedlock_wait (int *__futex, int __val,
+				       const struct timespec *__abstime)
      attribute_hidden;
 /* Preserves all registers but %eax.  */
 extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
@@ -71,7 +71,7 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 			      "jmp 2f\n\t"				      \
 			      ".previous\n"				      \
 			      "2:"					      \
-			      : "=D" (ignore1), "=&S" (ignore2), "=m" (futex) \
+			      : "=S" (ignore1), "=&D" (ignore2), "=m" (futex) \
 			      : "0" (1), "2" (futex)			      \
 			      : "memory"); })
 
@@ -82,8 +82,8 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 		       "testl %0, %0\n\t"				      \
 		       "jne 1f\n\t"					      \
 		       ".subsection 1\n"				      \
-		       "1:\tmovl %0, %%edi\n\t"				      \
-		       "leaq %4, %%rsi\n\t"				      \
+		       "1:\tmovl %0, %%esi\n\t"				      \
+		       "leaq %4, %%rdi\n\t"				      \
 		       "movq %7, %%rdx\n\t"				      \
 		       "call __lll_mutex_timedlock_wait\n\t"		      \
 		       "jmp 2f\n\t"					      \
@@ -92,7 +92,7 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 		       : "=a" (result), "=&D" (ignore1), "=&S" (ignore2),     \
 			 "=&d" (ignore2), "=m" (futex)			      \
 		       : "0" (1), "4" (futex), "m" (timeout)		      \
-		       : "memory");					      \
+		       : "memory", "cx", "cc", "r10");			      \
      result; })
 
 
@@ -157,7 +157,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      "jmp 2f\n\t"				      \
 			      ".previous\n"				      \
 			      "2:"					      \
-			      : "=D" (ignore1), "=&S" (ignore2), "=m" (futex) \
+			      : "=S" (ignore1), "=&D" (ignore2), "=m" (futex) \
 			      : "0" (-1), "2" (futex)			      \
 			      : "memory"); })
 

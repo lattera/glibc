@@ -34,92 +34,61 @@
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
 
-#define ETIMEDOUT               110
+#define EWOULDBLOCK		11
+#define EINVAL			22
+#define ETIMEDOUT		110
 
 
-	/* Modified: %rax, %rsi.  */
-	.globl	__lll_lock_wait
-	.type	__lll_lock_wait,@function
-	.hidden	__lll_lock_wait
+	.globl	__lll_mutex_lock_wait
+	.type	__lll_mutex_lock_wait,@function
+	.hidden	__lll_mutex_lock_wait
 	.align	16
-__lll_lock_wait:
+__lll_mutex_lock_wait:
 	pushq	%r10
 	pushq	%rdx
 
 	xorq	%r10, %r10	/* No timeout.  */
 
 1:
-	leal	-1(%esi), %edx	/* account for the preceeded xadd.  */
+	leal	1(%esi), %edx	/* account for the preceeded xadd.  */
 	movq	%r10, %rsi	/* movl $FUTEX_WAIT, %ecx */
 	movq	$SYS_futex, %rax
 	syscall
 
-	orl	$-1, %esi	/* Load -1.  */
+	movl	$1, %esi
 	LOCK
 	xaddl	%esi, (%rdi)
-	jne,pn	1b
+	testl	%esi, %esi
+	jne	1b
 
-	movl	$-1, (%rdi)
+	movl	$2, (%rdi)
 
 	popq	%rdx
 	popq	%r10
 	retq
-	.size	__lll_lock_wait,.-__lll_lock_wait
+	.size	__lll_mutex_lock_wait,.-__lll_mutex_lock_wait
 
 
 #ifdef NOT_IN_libc
-	.globl	lll_unlock_wake_cb
-	.type	lll_unlock_wake_cb,@function
-	.hidden	lll_unlock_wake_cb
+	.globl	__lll_mutex_timedlock_wait
+	.type	__lll_mutex_timedlock_wait,@function
+	.hidden	__lll_mutex_timedlock_wait
 	.align	16
-lll_unlock_wake_cb:
-	pushq	%rsi
-	pushq	%rdx
+__lll_mutex_timedlock_wait:
+	/* Check for a valid timeout value.  */
+	cmpq	$1000000000, 4(%rdx)
+	jae	3f
 
-	LOCK
-	addl	$1, (%rdi)
-	jng	1f
-
-	popq	%rdx
-	popq	%rsi
-	retq
-	.size	lll_unlock_wake_cb,.-lll_unlock_wake_cb
-#endif
-
-
-	.globl	__lll_unlock_wake
-	.type	__lll_unlock_wake,@function
-	.hidden	__lll_unlock_wake
-	.align	16
-__lll_unlock_wake:
-	pushq	%rsi
-	pushq	%rdx
-
-1:	movq	$FUTEX_WAKE, %rsi
-	movl	$1, %edx	/* Wake one thread.  */
-	movq	$SYS_futex, %rax
-	movl	%edx, (%rdi)	/* Stores '$1'.  */
-	syscall
-
-	popq	%rdx
-	popq	%rsi
-	retq
-	.size	__lll_unlock_wake,.-__lll_unlock_wake
-
-
-#ifdef NOT_IN_libc
-	.globl	__lll_timedwait_tid
-	.type	__lll_timedwait_tid,@function
-	.hidden	__lll_timedwait_tid
-	.align	16
-__lll_timedwait_tid:
-	movl	%rdi, %r8
-	movl	%rsi, %r9
-
+	/* Stack frame for the timespec and timeval structs.  */
 	subq	$16, %rsp
 
+	movq	%rdi, %r8
+	movq	%rdx, %r9
+	leal	1(%eax), %edx
+
 	/* Get current time.  */
-2:	movq	%rsp, %rdi
+1:
+	movq	%rsp, %rdi
 	xorq	%rsi, %rsi
 	movq	$SYS_gettimeofday, %rax
 	syscall
@@ -132,37 +101,64 @@ __lll_timedwait_tid:
 	movq	8(%r9), %rsi
 	subq	(%rsp), %rdi
 	subq	%rax, %rsi
-	jns	5f
+	jns	4f
 	addq	$1000000000, %rsi
 	decq	%rdi
-5:	testq	%rdi, %rdi
-	js	6f		/* Time is already up.  */
+4:	testq	%rdi, %rdi
+	js	5f		/* Time is already up.  */
 
+	/* Futex call.  */
 	movq	%rdi, (%rsp)	/* Store relative timeout.  */
-	movq	%rsi, 8(%rsp)
-
-	movl	(%r8), %edx
-	testl	%edx, %edx
-	jz	4f
+	movq	%rsi, 4(%rsp)
 
 	movq	%rsp, %r10
-	xorq	%rsi, %rsi	/* movl $FUTEX_WAIT, %ecx */
+	xorq	%rsi, %rsi	/* movq $FUTEX_WAIT, %rsi */
 	movq	%r8, %rdi
 	movq	$SYS_futex, %rax
 	syscall
 
-	cmpl	$0, (%rdi)
-	jne	1f
-4:	xorl	%eax, %eax
+	movl	$1, %edx
+	LOCK
+	xaddl	%edx, (%rdi)
+	testl	%edx, %edx
+	jne	7f
+
+	movl	$2, (%rdi)
+	xorl	%eax, %eax
 
 	addq	$16, %rsp
 	retq
 
-1:	cmpq	$-ETIMEDOUT, %rax
-	jne	2b
+	/* Check whether the time expired.  */
+7:	cmpq	$-ETIMEDOUT, %rax
+	je	5f
+	jmp	1b
 
-6:	movl	$ETIMEDOUT, %eax
+3:	movl	$EINVAL, %eax
+	retq
+
+5:	movl	$ETIMEDOUT, %eax
 	addq	$16, %rsp
 	retq
-	.size	__lll_timedwait_tid,.-__lll_timedwait_tid
+	.size	__lll_mutex_timedlock_wait,.-__lll_mutex_timedlock_wait
 #endif
+
+
+	.globl	__lll_mutex_unlock_wake
+	.type	__lll_mutex_unlock_wake,@function
+	.hidden	__lll_mutex_unlock_wake
+	.align	16
+__lll_mutex_unlock_wake:
+	pushq	%rsi
+	pushq	%rdx
+
+	movl	$0, (%rdi)
+	movq	$FUTEX_WAKE, %rsi
+	movl	$1, %edx	/* Wake one thread.  */
+	movq	$SYS_futex, %rax
+	syscall
+
+	popq	%rdx
+	popq	%rsi
+	retq
+	.size	__lll_mutex_unlock_wake,.-__lll_mutex_unlock_wake

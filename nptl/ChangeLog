@@ -1,5 +1,14 @@
 2003-03-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h
+	(__lll_mutex_lock_wait): Reverse order of first two parameters.
+	(__lll_mutex_timedlock_wait): Likewise.
+	(lll_mutex_lock): Adjust asm for that.
+	(lll_mutex_timedlock): Likewise.  Mark cx, cc, r10 as clobbered.
+	(lll_lock): Adjust asm for operand order change.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevelmutex.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/libc-lowlevelmutex.S: New file.
+
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (__lll_lock_wait):
 	Reverse order of parameters.
 	(__lll_timedwait_tid): Remove regparms attribute.
