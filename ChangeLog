@@ -1,3 +1,12 @@
+2001-05-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/rpc_thread.c (rpc_default): Remove.
+	(__rpc_thread_destroy): Use __libc_tsd_RPC_VARS_mem instead of
+	rpc_default.
+	(rpc_thread_multi, __rpc_thread_svc_fdset, __rpc_thread_createerr,
+	__rpc_thread_svc_pollfd, __rpc_thread_svc_max_pollfd): Likewise.
+	* sunrpc/auth_none.c (authnone_private): Fix a typo.
+
 2001-05-16  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S: Fix stack allocation.

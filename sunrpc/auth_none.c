@@ -62,7 +62,7 @@ struct authnone_private_s {
   u_int mcnt;
 };
 #ifdef _RPC_THREAD_SAFE_
-#define authnone_private ((struct authnone_private_ *)RPC_THREAD_VARIABLE(authnone_private_s))
+#define authnone_private ((struct authnone_private_s *)RPC_THREAD_VARIABLE(authnone_private_s))
 #else
 static struct authnone_private_s *authnone_private;
 #endif
