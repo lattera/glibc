@@ -603,60 +603,60 @@ extern int vswscanf (__const wchar_t *__restrict __s,
 
 
 /* Read a character from STREAM.  */
-extern wint_t fgetwc (__FILE *__stream);
-extern wint_t getwc (__FILE *__stream);
+extern wint_t fgetwc (__FILE *__stream) __THROW;
+extern wint_t getwc (__FILE *__stream) __THROW;
 
 /* Read a character from stdin.  */
-extern wint_t getwchar (void);
+extern wint_t getwchar (void) __THROW;
 
 
 /* Write a character to STREAM.  */
-extern wint_t fputwc (wchar_t __wc, __FILE *__stream);
-extern wint_t putwc (wchar_t __wc, __FILE *__stream);
+extern wint_t fputwc (wchar_t __wc, __FILE *__stream) __THROW;
+extern wint_t putwc (wchar_t __wc, __FILE *__stream) __THROW;
 
 /* Write a character to stdout.  */
-extern wint_t putwchar (wchar_t __wc);
+extern wint_t putwchar (wchar_t __wc) __THROW;
 
 
 /* Get a newline-terminated wide character string of finite length
    from STREAM.  */
 extern wchar_t *fgetws (wchar_t *__restrict __ws, int __n,
-			__FILE *__restrict __stream);
+			__FILE *__restrict __stream) __THROW;
 
 /* Write a string to STREAM.  */
 extern int fputws (__const wchar_t *__restrict __ws,
-		   __FILE *__restrict __stream);
+		   __FILE *__restrict __stream) __THROW;
 
 
 /* Push a character back onto the input buffer of STREAM.  */
-extern wint_t ungetwc (wint_t __wc, __FILE *__stream);
+extern wint_t ungetwc (wint_t __wc, __FILE *__stream) __THROW;
 
 
 #ifdef __USE_GNU
 /* These are defined to be equivalent to the `char' functions defined
    in POSIX.1:1996.  */
-extern wint_t getwc_unlocked (__FILE *__stream);
-extern wint_t getwchar_unlocked (void);
+extern wint_t getwc_unlocked (__FILE *__stream) __THROW;
+extern wint_t getwchar_unlocked (void) __THROW;
 
 /* This is the wide character version of a GNU extension.  */
-extern wint_t fgetwc_unlocked (__FILE *__stream);
+extern wint_t fgetwc_unlocked (__FILE *__stream) __THROW;
 
 /* Faster version when locking is not necessary.  */
-extern wint_t fputwc_unlocked (wchar_t __wc, __FILE *__stream);
+extern wint_t fputwc_unlocked (wchar_t __wc, __FILE *__stream) __THROW;
 
 /* These are defined to be equivalent to the `char' functions defined
    in POSIX.1:1996.  */
-extern wint_t putwc_unlocked (wchar_t __wc, __FILE *__stream);
-extern wint_t putwchar_unlocked (wchar_t __wc);
+extern wint_t putwc_unlocked (wchar_t __wc, __FILE *__stream) __THROW;
+extern wint_t putwchar_unlocked (wchar_t __wc) __THROW;
 
 
 /* This function does the same as `fgetws' but does not lock the stream.  */
 extern wchar_t *fgetws_unlocked (wchar_t *__restrict __ws, int __n,
-				 __FILE *__restrict __stream);
+				 __FILE *__restrict __stream) __THROW;
 
 /* This function does the same as `fputws' but does not lock the stream.  */
 extern int fputws_unlocked (__const wchar_t *__restrict __ws,
-			    __FILE *__restrict __stream);
+			    __FILE *__restrict __stream) __THROW;
 #endif
 
 
@@ -665,7 +665,7 @@ extern int fputws_unlocked (__const wchar_t *__restrict __ws,
    of wide characters written, or 0 if it would exceed MAXSIZE.  */
 extern size_t wcsftime (wchar_t *__restrict __s, size_t __maxsize,
 			__const wchar_t *__restrict __format,
-			__const struct tm *__restrict __tp);
+			__const struct tm *__restrict __tp) __THROW;
 
 /* The X/Open standard demands that most of the functions defined in
    the <wctype.h> header must also appear here.  This is probably
