@@ -151,27 +151,27 @@ typedef uintmax_t uatomic_max_t;
 	: "memory");							\
 })
 
-/* For all "bool" routines, we return true if exchange succesful.  */
+/* For all "bool" routines, we return FALSE if exchange succesful.  */
 
 #define __arch_compare_and_exchange_bool_8_int(mem, new, old, mb1, mb2)	\
 ({ unsigned long __prev; int __cmp;					\
    __arch_compare_and_exchange_xxx_8_int(mem, new, old, mb1, mb2);	\
-   __cmp; })
+   !__cmp; })
 
 #define __arch_compare_and_exchange_bool_16_int(mem, new, old, mb1, mb2) \
 ({ unsigned long __prev; int __cmp;					\
    __arch_compare_and_exchange_xxx_16_int(mem, new, old, mb1, mb2);	\
-   __cmp; })
+   !__cmp; })
 
 #define __arch_compare_and_exchange_bool_32_int(mem, new, old, mb1, mb2) \
 ({ unsigned long __prev; int __cmp;					\
    __arch_compare_and_exchange_xxx_32_int(mem, new, old, mb1, mb2);	\
-   __cmp; })
+   !__cmp; })
 
 #define __arch_compare_and_exchange_bool_64_int(mem, new, old, mb1, mb2) \
 ({ unsigned long __prev; int __cmp;					\
    __arch_compare_and_exchange_xxx_64_int(mem, new, old, mb1, mb2);	\
-   __cmp; })
+   !__cmp; })
 
 /* For all "val" routines, return the old value whether exchange
    successful or not.  */
@@ -247,7 +247,7 @@ typedef uintmax_t uatomic_max_t;
   unsigned long __ret, __tmp, __addr64, __sval;				\
   __asm__ __volatile__ (						\
 		mb1							\
-	"	andnot	%[__addr8],7,%[__addr64]\n"			\
+	"	andnot	%[__addr16],7,%[__addr64]\n"			\
 	"	inswl	%[__value],%[__addr16],%[__sval]\n"		\
 	"1:	ldq_l	%[__tmp],0(%[__addr64])\n"			\
 	"	extwl	%[__tmp],%[__addr16],%[__ret]\n"		\
@@ -271,13 +271,14 @@ typedef uintmax_t uatomic_max_t;
   __asm__ __volatile__ (						\
 		mb1							\
 	"1:	ldl_l	%[__ret],%[__mem]\n"				\
-	"	mov	%[__ret],%[__tmp]\n"				\
+	"	mov	%[__val],%[__tmp]\n"				\
 	"	stl_c	%[__tmp],%[__mem]\n"				\
 	"	beq	%[__tmp],1b\n"					\
 		mb2							\
 	: [__ret] "=&r" (__ret),					\
 	  [__tmp] "=&r" (__tmp)						\
-	: [__mem] "m" (*(mem))						\
+	: [__mem] "m" (*(mem)),						\
+	  [__val] "Ir" (value)						\
 	: "memory");							\
   __ret; })
 
@@ -287,13 +288,14 @@ typedef uintmax_t uatomic_max_t;
   __asm__ __volatile__ (						\
 		mb1							\
 	"1:	ldq_l	%[__ret],%[__mem]\n"				\
-	"	mov	%[__ret],%[__tmp]\n"				\
+	"	mov	%[__val],%[__tmp]\n"				\
 	"	stq_c	%[__tmp],%[__mem]\n"				\
 	"	beq	%[__tmp],1b\n"					\
 		mb2							\
 	: [__ret] "=&r" (__ret),					\
 	  [__tmp] "=&r" (__tmp)						\
-	: [__mem] "m" (*(mem))						\
+	: [__mem] "m" (*(mem)),						\
+	  [__val] "Ir" (value)						\
 	: "memory");							\
   __ret; })
 

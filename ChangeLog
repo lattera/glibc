@@ -1,5 +1,14 @@
 2003-06-30  Richard Henderson  <rth@redhat.com>
 
+	* sysdeps/alpha/bits/atomic.h (__arch_compare_and_exchange_bool_*_int):
+	Invert the sense of the return value.
+	(__arch_exchange_16_int): Fix paste-o.
+	(__arch_exchange_{32,64}_int): Fix think-o.
+
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Load child_tid properly.
+
+2003-06-30  Richard Henderson  <rth@redhat.com>
+
 	* include/sys/resource.h (__getrusage): Mark hidden.
 	* include/sys/time.h (__settimeofday, __setitimer, __utimes): Likewise.
 	* include/sys/wait.h (__wait4): Likewise.
