@@ -3,7 +3,7 @@ sysdep_routines += oldglob
 endif
 
 ifeq ($(subdir),misc)
-sysdep_headers += alpha/ptrace.h alpha/regdef.h
+sysdep_headers += alpha/ptrace.h alpha/regdef.h sys/io.h
 
 sysdep_routines += ieee_get_fp_control ieee_set_fp_control \
 		   sethae ioperm osf_sigprocmask llseek adjtimex
