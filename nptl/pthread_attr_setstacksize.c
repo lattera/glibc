@@ -52,9 +52,7 @@ versioned_symbol (libpthread, __pthread_attr_setstacksize,
 # if SHLIB_COMPAT(libpthread, GLIBC_2_1, GLIBC_2_3_3)
 
 int
-__old_pthread_attr_setstacksize (attr, stacksize)
-     pthread_attr_t *attr;
-     size_t stacksize;
+__old_pthread_attr_setstacksize (pthread_attr_t *attr, size_t stacksize)
 {
   struct pthread_attr *iattr;
 

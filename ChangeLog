@@ -1,3 +1,22 @@
+2004-01-12  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regcomp.c [_LIBC && !RE_ENABLE_I18N]:
+	Drop code to support this, it is never true.
+	(build_range_exp) [!_LIBC]: Do not create a range
+	in MBCSET for a single-byte character set.
+	(build_range_exp) [_LIBC]: Do not create a range
+	in MBCSET for a single-byte character set without
+	collation elements.
+	(init_dfa): Do not conditionalize on _LIBC, it
+	just makes the code less clear.
+	(parse_bracket_exp): Use NON_MATCH variable in
+	addition to "mbcset->non_match", not as an
+	alternative.
+	(build_charclass_op): rename NOT parameter to
+	NON_MATCH, use it instead of declaring a variable.
+	(parse_bracket_exp) [!_LIBC]: Pass NULL for MBCSET
+	if the character set is single-byte.
+
 2004-01-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regcomp.c (peek_token_bracket): Check remaining

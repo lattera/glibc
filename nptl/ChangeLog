@@ -6,6 +6,11 @@
 
 2004-01-13  Richard Henderson  <rth@redhat.com>
 
+	* pthread_attr_setstack.c (__old_pthread_attr_setstack): Use
+	prototype form.
+	* pthread_attr_setstacksize.c (__old_pthread_attr_setstacksize):
+	Likewise.
+
 	* sysdeps/alpha/Makefile: New file.
 	* sysdeps/alpha/tcb-offsets.sym: New file.
 	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h (SINGLE_THREAD_P):

@@ -1,3 +1,7 @@
+2003-12-31  Bruno Haible  <bruno@clisp.org>
+
+	* charmaps/IBM866NAV: Fix the character values.
+
 2004-01-01  Petter Reinholdtsen  <pere@hungry.com>
 
 	* sort-test.sh: Print the status for both the sorting tests, xfrm

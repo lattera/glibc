@@ -126,8 +126,8 @@ static reg_errcode_t build_charclass (unsigned RE_TRANSLATE_TYPE trans,
 static bin_tree_t *build_charclass_op (re_dfa_t *dfa,
 				       unsigned RE_TRANSLATE_TYPE trans,
 				       const unsigned char *class_name,
-				       const unsigned char *extra, int not,
-				       reg_errcode_t *err);
+				       const unsigned char *extra,
+				       int non_match, reg_errcode_t *err);
 static bin_tree_t *create_tree (re_dfa_t *dfa,
 				bin_tree_t *left, bin_tree_t *right,
 				re_token_type_t type, int index);
@@ -862,11 +862,9 @@ init_dfa (dfa, pat_len)
       dfa->sb_char = (re_bitset_ptr_t) calloc (sizeof (bitset), 1);
       if (BE (dfa->sb_char == NULL, 0))
 	return REG_ESPACE;
-#ifdef _LIBC
       if (dfa->is_utf8)
 	memset (dfa->sb_char, 255, sizeof (unsigned int) * BITSET_UINTS / 2);
       else
-#endif
 	for (i = 0, ch = 0; i < BITSET_UINTS; ++i)
 	  for (j = 0; j < UINT_BITS; ++j, ++ch)
 	    if (btowc (ch) != WEOF)
@@ -2567,32 +2565,40 @@ build_range_exp (sbcset, start_elem, end_elem)
     if (wcscoll (cmp_buf, cmp_buf + 4) > 0)
       return REG_ERANGE;
 
-    /* Check the space of the arrays.  */
-    if (BE (*range_alloc == mbcset->nranges, 0))
+    /* Got valid collation sequence values, add them as a new entry.
+       However, for !_LIBC we have no collation elements: if the
+       character set is single byte, the single byte character set
+       that we build below suffices.  parse_bracket_exp passes
+       no MBCSET if dfa->mb_cur_max == 1.  */
+    if (mbcset)
       {
-	/* There are not enough space, need realloc.  */
-	wchar_t *new_array_start, *new_array_end;
-	int new_nranges;
+        /* Check the space of the arrays.  */
+        if (BE (*range_alloc == mbcset->nranges, 0))
+          {
+	    /* There is not enough space, need realloc.  */
+	    wchar_t *new_array_start, *new_array_end;
+	    int new_nranges;
 
-	/* +1 in case of mbcset->nranges is 0.  */
-	new_nranges = 2 * mbcset->nranges + 1;
-	/* Use realloc since mbcset->range_starts and mbcset->range_ends
-	   are NULL if *range_alloc == 0.  */
-	new_array_start = re_realloc (mbcset->range_starts, wchar_t,
-				      new_nranges);
-	new_array_end = re_realloc (mbcset->range_ends, wchar_t,
-				    new_nranges);
+	    /* +1 in case of mbcset->nranges is 0.  */
+	    new_nranges = 2 * mbcset->nranges + 1;
+	    /* Use realloc since mbcset->range_starts and mbcset->range_ends
+	       are NULL if *range_alloc == 0.  */
+	    new_array_start = re_realloc (mbcset->range_starts, wchar_t,
+				          new_nranges);
+	    new_array_end = re_realloc (mbcset->range_ends, wchar_t,
+				        new_nranges);
 
-	if (BE (new_array_start == NULL || new_array_end == NULL, 0))
-	  return REG_ESPACE;
+	    if (BE (new_array_start == NULL || new_array_end == NULL, 0))
+	      return REG_ESPACE;
 
-	mbcset->range_starts = new_array_start;
-	mbcset->range_ends = new_array_end;
-	*range_alloc = new_nranges;
+	    mbcset->range_starts = new_array_start;
+	    mbcset->range_ends = new_array_end;
+	    *range_alloc = new_nranges;
+          }
+
+        mbcset->range_starts[mbcset->nranges] = start_wc;
+        mbcset->range_ends[mbcset->nranges++] = end_wc;
       }
-
-    mbcset->range_starts[mbcset->nranges] = start_wc;
-    mbcset->range_ends[mbcset->nranges++] = end_wc;
 
     /* Build the table for single byte characters.  */
     for (wc = 0; wc <= SBC_MAX; ++wc)
@@ -2779,46 +2785,15 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 
   static inline reg_errcode_t
   __attribute ((always_inline))
-# ifdef RE_ENABLE_I18N
   build_range_exp (sbcset, mbcset, range_alloc, start_elem, end_elem)
 	 re_charset_t *mbcset;
 	 int *range_alloc;
-# else /* not RE_ENABLE_I18N */
-  build_range_exp (sbcset, start_elem, end_elem)
-# endif /* not RE_ENABLE_I18N */
 	 re_bitset_ptr_t sbcset;
 	 bracket_elem_t *start_elem, *end_elem;
     {
       unsigned int ch;
       uint32_t start_collseq;
       uint32_t end_collseq;
-
-# ifdef RE_ENABLE_I18N
-      /* Check the space of the arrays.  */
-      if (BE (*range_alloc == mbcset->nranges, 0))
-	{
-	  /* There are not enough space, need realloc.  */
-	  uint32_t *new_array_start;
-	  uint32_t *new_array_end;
-	  int new_nranges;
-
-	  /* +1 in case of mbcset->nranges is 0.  */
-	  new_nranges = 2 * mbcset->nranges + 1;
-	  /* Use realloc since mbcset->range_starts and mbcset->range_ends
-	     are NULL if *range_alloc == 0.  */
-	  new_array_start = re_realloc (mbcset->range_starts, uint32_t,
-					new_nranges);
-	  new_array_end = re_realloc (mbcset->range_ends, uint32_t,
-				      new_nranges);
-
-	  if (BE (new_array_start == NULL || new_array_end == NULL, 0))
-	    return REG_ESPACE;
-
-	  mbcset->range_starts = new_array_start;
-	  mbcset->range_ends = new_array_end;
-	  *range_alloc = new_nranges;
-	}
-# endif /* RE_ENABLE_I18N */
 
       /* Equivalence Classes and Character Classes can't be a range
 	 start/end.  */
@@ -2835,11 +2810,38 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
       if (BE ((syntax & RE_NO_EMPTY_RANGES) && start_collseq > end_collseq, 0))
 	return REG_ERANGE;
 
-# ifdef RE_ENABLE_I18N
-      /* Got valid collation sequence values, add them as a new entry.  */
-      mbcset->range_starts[mbcset->nranges] = start_collseq;
-      mbcset->range_ends[mbcset->nranges++] = end_collseq;
-# endif /* RE_ENABLE_I18N */
+      /* Got valid collation sequence values, add them as a new entry.
+	 However, if we have no collation elements, and the character set
+	 is single byte, the single byte character set that we
+	 build below suffices. */
+      if (nrules > 0 || dfa->mb_cur_max > 1)
+	{
+          /* Check the space of the arrays.  */
+          if (BE (*range_alloc == mbcset->nranges, 0))
+	    {
+	      /* There is not enough space, need realloc.  */
+	      uint32_t *new_array_start;
+	      uint32_t *new_array_end;
+	      int new_nranges;
+
+	      /* +1 in case of mbcset->nranges is 0.  */
+	      new_nranges = 2 * mbcset->nranges + 1;
+	      new_array_start = re_realloc (mbcset->range_starts, uint32_t,
+					    new_nranges);
+	      new_array_end = re_realloc (mbcset->range_ends, uint32_t,
+				          new_nranges);
+
+	      if (BE (new_array_start == NULL || new_array_end == NULL, 0))
+	        return REG_ESPACE;
+
+	      mbcset->range_starts = new_array_start;
+	      mbcset->range_ends = new_array_end;
+	      *range_alloc = new_nranges;
+	    }
+
+          mbcset->range_starts[mbcset->nranges] = start_collseq;
+          mbcset->range_ends[mbcset->nranges++] = end_collseq;
+	}
 
       /* Build the table for single byte characters.  */
       for (ch = 0; ch <= SBC_MAX; ch++)
@@ -2866,13 +2868,9 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 
   static inline reg_errcode_t
   __attribute ((always_inline))
-# ifdef RE_ENABLE_I18N
   build_collating_symbol (sbcset, mbcset, coll_sym_alloc, name)
 	 re_charset_t *mbcset;
 	 int *coll_sym_alloc;
-# else /* not RE_ENABLE_I18N */
-  build_collating_symbol (sbcset, name)
-# endif /* not RE_ENABLE_I18N */
 	 re_bitset_ptr_t sbcset;
 	 const unsigned char *name;
     {
@@ -2898,7 +2896,6 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 	  else
 	    return REG_ECOLLATE;
 
-# ifdef RE_ENABLE_I18N
 	  /* Got valid collation sequence, add it as a new entry.  */
 	  /* Check the space of the arrays.  */
 	  if (BE (*coll_sym_alloc == mbcset->ncoll_syms, 0))
@@ -2916,7 +2913,6 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 	      *coll_sym_alloc = new_coll_sym_alloc;
 	    }
 	  mbcset->coll_syms[mbcset->ncoll_syms++] = idx;
-# endif /* RE_ENABLE_I18N */
 	  return REG_NOERROR;
 	}
       else
@@ -2938,9 +2934,8 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
   re_charset_t *mbcset;
   int coll_sym_alloc = 0, range_alloc = 0, mbchar_alloc = 0;
   int equiv_class_alloc = 0, char_class_alloc = 0;
-#else /* not RE_ENABLE_I18N */
-  int non_match = 0;
 #endif /* not RE_ENABLE_I18N */
+  int non_match = 0;
   bin_tree_t *work_tree;
   int token_len;
   int first_round = 1;
@@ -2985,9 +2980,8 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
     {
 #ifdef RE_ENABLE_I18N
       mbcset->non_match = 1;
-#else /* not RE_ENABLE_I18N */
-      non_match = 1;
 #endif /* not RE_ENABLE_I18N */
+      non_match = 1;
       if (syntax & RE_HAT_LISTS_NOT_NEWLINE)
 	bitset_set (sbcset, '\0');
       re_string_skip_bytes (regexp, token_len); /* Skip a token.  */
@@ -3066,11 +3060,18 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 
 	  token_len = peek_token_bracket (token, regexp, syntax);
 
-	  *err = build_range_exp (sbcset,
-#ifdef RE_ENABLE_I18N
-				  mbcset, &range_alloc,
-#endif /* RE_ENABLE_I18N */
+#ifdef _LIBC
+	  *err = build_range_exp (sbcset, mbcset, &range_alloc,
 				  &start_elem, &end_elem);
+#else
+# ifdef RE_ENABLE_I18N
+	  *err = build_range_exp (sbcset,
+				  dfa->mb_cur_max > 1 ? mbcset : NULL,
+				  &range_alloc, &start_elem, &end_elem);
+# else
+	  *err = build_range_exp (sbcset, &start_elem, &end_elem);
+# endif
+#endif /* RE_ENABLE_I18N */
 	  if (BE (*err != REG_NOERROR, 0))
 	    goto parse_bracket_exp_free_return;
 	}
@@ -3144,12 +3145,9 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
   re_string_skip_bytes (regexp, token_len); /* Skip a token.  */
 
   /* If it is non-matching list.  */
-#ifdef RE_ENABLE_I18N
-  if (mbcset->non_match)
-#else /* not RE_ENABLE_I18N */
   if (non_match)
-#endif /* not RE_ENABLE_I18N */
     bitset_not (sbcset);
+
 #ifdef RE_ENABLE_I18N
   /* Ensure only single byte characters are set.  */
   if (dfa->mb_cur_max > 1)
@@ -3324,7 +3322,7 @@ build_equiv_class (sbcset, name)
      re_bitset_ptr_t sbcset;
      const unsigned char *name;
 {
-#if defined _LIBC && defined RE_ENABLE_I18N
+#if defined _LIBC
   uint32_t nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
   if (nrules != 0)
     {
@@ -3393,7 +3391,7 @@ build_equiv_class (sbcset, name)
       mbcset->equiv_classes[mbcset->nequiv_classes++] = idx1;
     }
   else
-#endif /* _LIBC && RE_ENABLE_I18N */
+#endif /* _LIBC */
     {
       if (BE (strlen ((const char *) name) != 1, 0))
 	return REG_ECOLLATE;
@@ -3489,20 +3487,18 @@ build_charclass (trans, sbcset, class_name, syntax)
 }
 
 static bin_tree_t *
-build_charclass_op (dfa, trans, class_name, extra, not, err)
+build_charclass_op (dfa, trans, class_name, extra, non_match, err)
      re_dfa_t *dfa;
      unsigned RE_TRANSLATE_TYPE trans;
      const unsigned char *class_name;
      const unsigned char *extra;
-     int not;
+     int non_match;
      reg_errcode_t *err;
 {
   re_bitset_ptr_t sbcset;
 #ifdef RE_ENABLE_I18N
   re_charset_t *mbcset;
   int alloc = 0;
-#else /* not RE_ENABLE_I18N */
-  int non_match = 0;
 #endif /* not RE_ENABLE_I18N */
   reg_errcode_t ret;
   re_token_t br_token;
@@ -3523,7 +3519,7 @@ build_charclass_op (dfa, trans, class_name, extra, not, err)
       return NULL;
     }
 
-  if (not)
+  if (non_match)
     {
 #ifdef RE_ENABLE_I18N
       /*
@@ -3531,8 +3527,6 @@ build_charclass_op (dfa, trans, class_name, extra, not, err)
 	bitset_set(cset->sbcset, '\0');
       */
       mbcset->non_match = 1;
-#else /* not RE_ENABLE_I18N */
-      non_match = 1;
 #endif /* not RE_ENABLE_I18N */
     }
 
@@ -3557,11 +3551,7 @@ build_charclass_op (dfa, trans, class_name, extra, not, err)
     bitset_set (sbcset, *extra);
 
   /* If it is non-matching list.  */
-#ifdef RE_ENABLE_I18N
-  if (mbcset->non_match)
-#else /* not RE_ENABLE_I18N */
   if (non_match)
-#endif /* not RE_ENABLE_I18N */
     bitset_not (sbcset);
 
 #ifdef RE_ENABLE_I18N
