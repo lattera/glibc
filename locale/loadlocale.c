@@ -106,8 +106,13 @@ _nl_load_locale (int category, char **name)
     /* Some systems do not have this flag; it is superfluous.  */
 #define	MAP_FILE 0
 #endif
+#ifndef MAP_INHERIT
+    /* Some systems might lack this; they lose.  */
+#define MAP_INHERIT 0
+#endif
     filedata = (void *) __mmap ((caddr_t) 0, st.st_size,
-				PROT_READ, MAP_FILE|MAP_COPY, fd, 0);
+				PROT_READ, MAP_FILE|MAP_COPY|MAP_INHERIT,
+				fd, 0);
     if (filedata == (void *) -1)
       {
 	if (errno == ENOSYS)

@@ -1,5 +1,19 @@
 Sat Apr  8 00:40:59 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* locale/loadlocale.c (_nl_load_locale): Use MAP_INHERIT flag in
+ 	mmap call.
+
+	* configure.in (os=freebsd*|bsdi*): Set base_os=unix/bsd/bsd4.4
+ 	for these too.
+
+	* sysdeps/unix/sysv/tcsetattr.c: Use |= instead of = to properly
+ 	set c_oflag value.
+
+	* Makeconfig [! objpfx] (csu-objpfx): Add trailing slash.
+
+	* locale/Makefile (categories): Uncomment collate.
+	* locale/lc-collate.c: New file.
+
 	* malloc/free.c (__malloc_safe_bcopy, memmove): Don't define
  	#ifdef emacs.
 	* malloc/realloc.c: Likewise.

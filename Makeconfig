@@ -260,7 +260,7 @@ endif
 ifdef objpfx
 csu-objpfx = $(objpfx)
 else
-csu-objpfx = $(..)csu
+csu-objpfx = $(..)csu/
 endif
 
 ifndef LD

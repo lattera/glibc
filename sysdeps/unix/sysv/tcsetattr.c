@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -123,9 +123,9 @@ DEFUN(tcsetattr, (fd, optional_actions, termios_p),
 
   buf.c_oflag = 0;
   if (termios_p->c_oflag & OPOST)
-    buf.c_oflag = _SYSV_OPOST;
+    buf.c_oflag |= _SYSV_OPOST;
   if (termios_p->c_oflag & ONLCR)
-    buf.c_oflag = _SYSV_ONLCR;
+    buf.c_oflag |= _SYSV_ONLCR;
 
   /* So far, buf.c_cflag contains the speed in CBAUD.  */
   if (termios_p->c_cflag & CSTOPB)

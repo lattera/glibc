@@ -24,7 +24,7 @@ subdir	:= locale
 headers		:= locale.h
 distribute	:= localeinfo.h categories.def
 routines	:= setlocale loadlocale localeconv
-categories	:= ctype messages monetary numeric time # collate
+categories	:= ctype messages monetary numeric time collate
 aux		= $(categories:%=lc-%) $(categories:%=C-%)
 
 include ../Rules

@@ -91,7 +91,7 @@ os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
 case "$os" in
 gnu*)
   base_os=mach/hurd ;;
-netbsd* | 386bsd*)
+netbsd* | 386bsd* | freebsd* | bsdi*)
   base_os=unix/bsd/bsd4.4 ;;
 osf* | sunos* | ultrix* | newsos* | dynix* | *bsd*)
   base_os=unix/bsd ;;
