@@ -19,6 +19,7 @@
 
 #include <fcntl.h>
 #include <hurd.h>
+#include <hurd/lookup.h>
 #include "hurdhost.h"
 
 ssize_t
