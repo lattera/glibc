@@ -1,5 +1,7 @@
 2003-02-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-exit1.c (do_test): Don't start more than one thread in parallel.
+
 	* tst-rwlock9.c (writer_thread): Correct adding TIMEOUT.
 	(reader_thread): Likewise.
 

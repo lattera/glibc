@@ -1,3 +1,8 @@
+2003-02-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Increase ULPs for yn due to
+	code generation changes in recent gcc.
+
 2003-02-26  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/fpu/fpu_control.h (_FPU_GETCW, _FPU_SETCW):
