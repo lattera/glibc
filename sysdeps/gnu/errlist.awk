@@ -25,9 +25,17 @@
 # @end deftypevr
 
 BEGIN {
-    alias["EWOULDBLOCK"] = "EAGAIN";
-    alias["EDEADLOCK"] = "EDEADLK";
-    alias["ENOTSUP"] = "EOPNOTSUPP";
+
+    # Here we list the E* names that might be duplicate names for the
+    # same integer value on some systems.  This causes the code below
+    # to generate ``#if defined (ALIAS) && ALIAS != ORIGINAL'' in the code,
+    # so the output does not presume that these are in fact aliases.
+    # We list here all the known potential cases on any system,
+    # so that the C source we produce will do the right thing based
+    # on the actual #define'd values it's compiled with.
+    alias["EWOULDBLOCK"]= "EAGAIN";
+    alias["EDEADLOCK"]	= "EDEADLK";
+    alias["ENOTSUP"]	= "EOPNOTSUPP";
 
     print "/* This file is generated from errno.texi by errlist.awk.  */"
     print "";
