@@ -21,8 +21,11 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <string.h>
 
-char *program_invocation_name;
-char *program_invocation_short_name;
+/* These must be initialized data definitions.  Common definitions satisfy
+   references to these variables, but do not cause the whole file to be
+   linked in, and so omit the set-up function.  */
+char *program_invocation_name = NULL;
+char *program_invocation_short_name = NULL;
 
 static void
 DEFUN(set_progname, (argc, argv, envp),

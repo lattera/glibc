@@ -326,6 +326,8 @@ fork_itimer (void)
   it.it_value = it.it_interval;
 
   setitimer_locked (&it, NULL, NULL);
+
+  (void) &fork_itimer;		/* Avoid gcc optimizing out the function.  */
 }
 text_set_element (_hurd_fork_child_hook, fork_itimer);
 

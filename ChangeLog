@@ -1,3 +1,12 @@
+Tue Apr  4 00:48:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* misc/progname.c (program_invocation_name,
+ 	program_invocation_short_name): Make these initialized data
+ 	definitions.
+
+	* sysdeps/mach/hurd/setitimer.c (fork_itimer): Add self reference
+ 	so gcc doesn't optimize out the function entirely.
+
 Sun Apr  2 13:13:52 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/execvp.c: Don't use stat to search path; just try execv
