@@ -1,11 +1,30 @@
+Thu Oct 26 23:11:11 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
+
+	* sysdeps/unix/sysv/linux/poll.c: Don't define as stub.  Use
+	simulation of system call using select.
+
+	* sysdeps/unix/sysv/linux/signal.c: Use POSIX implementation.
+
+	* sysdeps/unix/sysv/linux/statbuf.h: Define _STAT_VER.
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Correct parameter
+	name usage (new->act, old->oact).
+	Correct asm statement because of gcc strangeness.
+	
+	* sysdeps/i386/i586/strchr.S: Correct typos: cmp -> cmpb.
+
+	* sunrpc/clnt_perr.c: Remove declaration of sys_errlist.  They
+	conflict with the ones in stdio.h.
+
+	* string/tester.c: %Z is no complete format.  Change to %Zd.
+
 Thu Oct 26 18:13:33 1995  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/bind.c (bind): Swap args to dir_link.
 	* sysdeps/mach/hurd/link.c (__link): Ditto.
+	* sysdeps/mach/hurd/symlink.c (__symlink): Ditto.
 	* sysdeps/mach/hurd/mknod.c (__mknod): Ditto.
 	Include "stdio-common/_itoa.h" instead of "stdio/_itoa.h".
-
-	* sysdeps/mach/hurd/symlink.c (__symlink): Ditto.
 
 Thu Oct 26 00:11:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 

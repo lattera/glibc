@@ -74,7 +74,7 @@ ENTRY (strchr)
 
 	je L2			/* aligned => return pointer */
 
-	cmp $0, %cl		/* is byte NUL? */
+	cmpb $0, %cl		/* is byte NUL? */
 	je L3			/* yes => return NULL */
 
 	incl %eax		/* increment pointer */
@@ -87,7 +87,7 @@ ENTRY (strchr)
 
 	je L2			/* aligned => return pointer */
 
-	cmp $0, %cl		/* is byte NUL? */
+	cmpb $0, %cl		/* is byte NUL? */
 	je L3			/* yes => return NULL */
 
 	incl %eax		/* increment pointer */
@@ -100,7 +100,7 @@ ENTRY (strchr)
 
 	je L2			/* aligned => return pointer */
 
-	cmp $0, %cl		/* is byte NUL? */
+	cmpb $0, %cl		/* is byte NUL? */
 	je L3			/* yes => return NULL */
 
 	incl %eax		/* increment pointer */

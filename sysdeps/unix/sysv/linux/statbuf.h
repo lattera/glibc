@@ -19,6 +19,10 @@ Cambridge, MA 02139, USA.  */
 #ifndef	_STATBUF_H
 #define	_STATBUF_H
 
+/* Current version of stat system call.  */
+#define _STAT_VER 1
+
+
 struct stat
   {
     short int st_dev;			/* Device.  */

@@ -31,20 +31,20 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
   struct sigaction newact;
   int result;
 
-  if (new)
+  if (act)
     {
-      newact = *new;
-      new = &newact;
-      new->sa_restorer = ((new->sa_flags & SA_NOMASK)
-			  ? &&restore_nomask : &&restore);
+      newact = *act;
+      newact.sa_restorer = ((act->sa_flags & SA_NOMASK)
+			    ? &&restore_nomask : &&restore);
+      act = &newact;
     }
 
   asm volatile ("pushl %%ebx\n"
-		"movl %1, %%ebx\n"
+		"movl %2, %%ebx\n"
 		"int $0x80\n"
 		"popl %%ebx"
 		: "=a" (result)
-		: "0" (SYS_ify (sigaction)), "g" (sig), "c" (new), "d" (old));
+		: "0" (SYS_ify (sigaction)), "g" (sig), "c" (act), "d" (oact));
 
   if (result < 0)
     {
@@ -56,31 +56,34 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
  restore:
   asm (
 #ifdef	PIC
-       "	pushl %ebx\n"
+       "	pushl %%ebx\n"
        "	call 0f\n"
-       "0:	popl %ebx\n"
-       "	addl $_GLOBAL_OFFSET_TABLE_+[.-0b],%ebx\n"
+       "0:	popl %%ebx\n"
+       "	addl $_GLOBAL_OFFSET_TABLE_+[.-0b], %%ebx\n"
        "	addl $8, %%esp\n"
        "	call __sigsetmask@PLT\n"
        "	addl $8, %%esp\n"
-       "	popl %ebx\n"
+       "	popl %%ebx\n"
 #else
        "	addl $4, %%esp\n"
        "	call __sigsetmask\n"
        "	addl $4, %%esp\n"
 #endif
-       "popl %eax\n"
-       "popl %ecx\n"
-       "popl %edx\n"
-       "popf\n"
-       "ret");
+       "	popl %%eax\n"
+       "	popl %%ecx\n"
+       "	popl %%edx\n"
+       "	popf\n"
+       "	ret"
+       : : );
  restore_nomask:
-  asm ("addl $4, %esp\n"
-       "popl %eax\n"
-       "popl %ecx\n"
-       "popl %edx\n"
-       "popf\n"
-       "ret");
+  asm ("	addl $4, %%esp\n"
+       "	popl %%eax\n"
+       "	popl %%ecx\n"
+       "	popl %%edx\n"
+       "	popf\n"
+       "	ret"
+       : : );
+  /* NOTREACHED */
 }
 
 weak_alias (__sigaction, sigaction)

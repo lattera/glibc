@@ -43,7 +43,7 @@ static char sccsid[] = "@(#)clnt_perror.c 1.15 87/10/07 Copyr 1984 Sun Micro";
 #include <rpc/auth.h>
 #include <rpc/clnt.h>
 
-extern char *sys_errlist[];
+/* extern char *sys_errlist[]; --drepper@gnu */
 /* extern char *sprintf(); --roland@gnu */
 static char *auth_errmsg();
 
@@ -230,7 +230,7 @@ clnt_spcreateerror(s)
 	char *s;
 {
 	extern int sys_nerr;
-	extern char *sys_errlist[];
+	/* extern char *sys_errlist[]; --drepper@gnu */
 	char *str = _buf();
 
 	if (str == 0)

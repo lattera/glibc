@@ -177,11 +177,11 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 
   (void) strcpy(one, "abc");
   (void) strncpy(one, "xyz", 0);		/* Zero-length copy. */
-  equal(one, "abc", 10);	
+  equal(one, "abc", 10);
 
   (void) strncpy(one, "", 2);		/* Zero-length source. */
   equal(one, "", 11);
-  equal(one+1, "", 12);	
+  equal(one+1, "", 12);
   equal(one+2, "c", 13);
 
   (void) strcpy(one, "hi there");
@@ -563,7 +563,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
     else
       {
 	status = EXIT_FAILURE;
-	printf("%Z errors.\n", errors);
+	printf("%Zd errors.\n", errors);
       }
     exit(status);
   }
