@@ -27,7 +27,7 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 void
-DEFUN(__longjmp, (env, val_arg), CONST __jmp_buf env AND int val_arg)
+DEFUN(__longjmp, (env, val_arg), __jmp_buf env AND int val_arg)
 {
   /* gcc 1.39.19 miscompiled the longjmp routine (as it did setjmp before
      the hack around it); force it to use $a1 for the longjmp value.

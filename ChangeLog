@@ -1,3 +1,7 @@
+Thu Mar 30 20:43:02 1995  Brendan Kehoe  <brendan@zen.org>
+
+	* sysdeps/mips/__longjmp.c (__longjmp): Take out CONST.
+
 Thu Mar 30 01:38:00 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* elf/elf.h (STN_UNDEF): New macro (distinct from SHN_UNDEF, though
