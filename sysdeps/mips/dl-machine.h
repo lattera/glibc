@@ -198,9 +198,6 @@ elf_machine_runtime_link_map (ElfW(Addr) gpreg, ElfW(Addr) stub_pc)
   return NULL;
 }
 
-/* Mips has no PLT but define elf_machine_relplt to be elf_machine_rel. */
-#define elf_machine_relplt elf_machine_rel
-
 /* Define mips specific runtime resolver. The function __dl_runtime_resolve
    is called from assembler function _dl_runtime_resolve which converts
    special argument registers t7 ($15) and t8 ($24):
@@ -292,9 +289,8 @@ asm ("\n								      \
 	.ent	_dl_runtime_resolve\n					      \
 _dl_runtime_resolve:\n							      \
 	.set noreorder\n						      \
-	# Save slot call pc.\n						      \
-	# XXX: Is this ok? \
-	move	$3, $31\n						      \
+	# Save GP.\n						      \
+	move	$3, $28\n						      \
 	# Modify t9 ($25) so as to point .cpload instruction.\n		      \
 	addu	$25,8\n							      \
 	# Compute GP.\n							      \
