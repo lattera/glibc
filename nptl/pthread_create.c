@@ -447,13 +447,19 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   /* Pass the descriptor to the caller.  */
   *newthread = (pthread_t) pd;
 
+  /* Remember whether the thread is detached or not.  In case of an
+     error we have to free the stacks of non-detached stillborn
+     threads.  */
+  bool is_detached = IS_DETACHED (pd);
+
   /* Start the thread.  */
   err = create_thread (pd, iattr, STACK_VARIABLES_ARGS);
   if (err != 0)
     {
     errout:
       /* Something went wrong.  Free the resources.  */
-      __deallocate_stack (pd);
+      if (!is_detached)
+	__deallocate_stack (pd);
       return err;
     }
 
