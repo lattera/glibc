@@ -1,3 +1,7 @@
+2000-11-13  Roland McGrath  <roland@frob.com>
+
+	* hurd/get-host.c (_hurd_get_host_config): Fix last change.
+
 2000-11-13  Marcus Brinkmann <marcus@gnu.org>
 
 	* hurd/get-host.c (_hurd_get_host_config): Fix possible buffer
