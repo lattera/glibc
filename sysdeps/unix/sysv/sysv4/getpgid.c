@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,9 @@ extern int __pgrpsys __P ((int type, ...));
 
 /* Get the process group ID of process PID.  */
 int
-DEFUN(__getpgrp, (pid), pid_t pid)
+DEFUN(__getpgid, (pid), pid_t pid)
 {
   return __pgrpsys (0, pid);
 }
+
+weak_alias (__getpgid, getpgid)
