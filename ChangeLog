@@ -1,5 +1,11 @@
 2002-08-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/isomac.c (get_null_defines): Treat NOT_IN_libc special.
+	It is known to be defined.
+
+	* include/string.h: Define index and rindex only if _ISOMAC is not
+	defined.
+
 	* elf/rtld.c: Include <errno.h>.
 	* sysdeps/generic/libc-tls.c: Likewise.
 

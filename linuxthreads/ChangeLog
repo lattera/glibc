@@ -1,3 +1,10 @@
+2002-08-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread.c (__linuxthreads_initial_report_events): New variable.
+	(__pthread_initialize_manager): Use it to initialize p_report_events
+	of initial thread.
+	[TLS]: Store pointer to descriptor of manager in __pthread_handles.
+
 2002-08-07  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/i386/tls.h (TLS_DO_MODIFY_LDT): Add an extra argument with
