@@ -56,11 +56,11 @@ sem_timedwait:
 	pushq	%r13
 	subq	$16, %rsp
 
-	movq	%rdi, %r8
-	movq	%rsi, %r9
+	movq	%rdi, %r12
+	movq	%rsi, %r13
 
 	/* Check for invalid nanosecond field.  */
-	cmpq	$1000000000, 8(%r9)
+	cmpq	$1000000000, 8(%r13)
 	movl	$EINVAL, %eax
 	jae	6f
 
@@ -73,8 +73,8 @@ sem_timedwait:
 	movq	8(%rsp), %rax
 	movq	$1000, %rdi
 	mul	%rdi		/* Milli seconds to nano seconds.  */
-	movq	(%r9), %rdi
-	movq	8(%r9), %rdi
+	movq	(%r13), %rdi
+	movq	8(%r13), %rdi
 	subq	(%rsp), %rdi
 	subq	%rax, %rdi
 	jns	5f
@@ -88,7 +88,7 @@ sem_timedwait:
 	movq	%rsi, 8(%rsp)
 
 	movq	%rsp, %r10
-	movq	%r8, %rdi
+	movq	%r12, %rdi
 	xorq	%rsi, %rsi
 	movq	$SYS_futex, %rax
 	xorl	%edx, %edx
