@@ -1084,7 +1084,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	    }
 
 # ifdef SHARED
-	  if (l->l_prev == NULL || (mode && __RTLD_AUDIT) != 0)
+	  if (l->l_prev == NULL || (mode & __RTLD_AUDIT) != 0)
 	    /* We are loading the executable itself when the dynamic linker
 	       was executed directly.  The setup will happen later.  */
 	    break;
