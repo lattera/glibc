@@ -111,7 +111,7 @@ static unsigned int nptl_ncreated;
 
 
 /* Check whether the stack is still used or not.  */
-#define FREE_P(descr) ((descr)->tid == 0)
+#define FREE_P(descr) ((descr)->tid <= 0)
 
 
 /* We create a double linked list of all cache entries.  Double linked

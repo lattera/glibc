@@ -93,6 +93,9 @@ pthread_join (threadid, thread_return)
   pthread_cleanup_pop (0);
 
 
+  /* We mark the thread as terminated and as joined.  */
+  pd->tid = -1;
+
   /* Store the return value if the caller is interested.  */
   if (thread_return != NULL)
     *thread_return = pd->result;

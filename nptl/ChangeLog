@@ -1,5 +1,12 @@
 2003-05-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthread_join.c (pthread_join): Set tid field of the joined
+	thread to -1.  This isn't necessary but helps to recognize some
+	error conditions with almost no cost.
+
+	* allocatestack.c (FREE_P): Also negative values indicate an
+	unused stack.
+
 	* unwind.c: Include <unistd.h>.
 
 2003-05-14  Ulrich Drepper  <drepper@redhat.com>
