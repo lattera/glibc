@@ -880,13 +880,13 @@ concat (const char *str, @dots{})
   va_list ap;
   size_t allocated = 100;
   char *result = (char *) malloc (allocated);
-  char *wp;
 
-  if (allocated != NULL)
+  if (result != NULL)
     @{
       char *newp;
+      char *wp;
 
-      va_start (ap, atr);
+      va_start (ap, str);
 
       wp = result;
       for (s = str; s != NULL; s = va_arg (ap, const char *))

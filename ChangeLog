@@ -1,3 +1,9 @@
+2004-05-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/string.texi (Copying and Concatenation): Fixed second
+	concat example.
+	Reported by Fabian Pietsch <fabian@zzznowman.dyndns.org>.
+
 2004-05-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/obstack.c: Don't allow linking with _obstack.
