@@ -22,10 +22,6 @@
 # CFLAGS-.os += -ffunction-sections
 LDFLAGS-c_pic.os += -Wl,--unique=.text*
 
-ifeq ($(subdir),malloc)
-CFLAGS-malloc.c += -DMALLOC_ALIGNMENT=16
-endif
-
 ifeq ($(subdir),elf)
 CFLAGS-rtld.c += -mdisable-fpregs
 dl-routines += dl-symaddr dl-fptr
