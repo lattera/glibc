@@ -1,3 +1,8 @@
+2004-09-06  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (__writev): Does use assert on FD
+	validity, since __assert_fail gets to here anyway.  Just fail.
+
 2004-09-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Fix problem with
