@@ -83,6 +83,9 @@ struct arphdr
 #define	ARPHRD_DLCI	15		/* Frame Relay DLCI.  */
 #define	ARPHRD_ATM	19		/* ATM.  */
 #define	ARPHRD_METRICOM	23		/* Metricom STRIP (new IANA id).  */
+#define ARPHRD_IEEE1394	24		/* IEEE 1394 IPv4 - RFC 2734.  */
+#define ARPHRD_EUI64		27		/* EUI-64.  */
+#define ARPHRD_INFINIBAND	32		/* InfiniBand.  */
 
 /* Dummy types for non ARP hardware */
 #define ARPHRD_SLIP	256
@@ -120,7 +123,7 @@ struct arphdr
 #define ARPHRD_FCPP	784		/* Point to point fibrechanel.  */
 #define ARPHRD_FCAL	785		/* Fibrechanel arbitrated loop.  */
 #define ARPHRD_FCPL	786		/* Fibrechanel public loop.  */
-#define ARPHRD_FCPFABRIC 787		/* Fibrechanel fabric.  */
+#define ARPHRD_FCFABRIC 787		/* Fibrechanel fabric.  */
 #define ARPHRD_IEEE802_TR 800		/* Magic type ident for TR.  */
 #define ARPHRD_IEEE80211 801		/* IEEE 802.11.  */
 
