@@ -26,7 +26,7 @@
 #include <unistd.h>
 #include <utmp.h>
 
-void
+static void
 print_entry (struct utmp *up)
 {
 #if _HAVE_UT_TV - 0

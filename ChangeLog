@@ -1,3 +1,9 @@
+2000-11-27  Andreas Jaeger  <aj@suse.de>
+
+	* login/programs/pt_chown.c (do_pt_chown): Mark function as static
+	to avoid warning.
+	* login/programs/utmpdump.c (print_entry): Likewise.
+
 2000-11-25  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
 
 	* sysdeps/mips/__longjmp.c (__longjmp): Restore SP and FP last and

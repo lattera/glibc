@@ -94,7 +94,7 @@ Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"));
   return (char *) text;
 }
 
-int
+static int
 do_pt_chown (void)
 {
   char *pty;
