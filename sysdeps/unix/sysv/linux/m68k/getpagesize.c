@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@suse.de>.
 
@@ -33,8 +33,8 @@ __getpagesize ()
   int result;
 #endif
 
-  if (GL(dl_pagesize) != 0)
-    return GL(dl_pagesize);
+  if (GLRO(dl_pagesize) != 0)
+    return GLRO(dl_pagesize);
 
 #ifdef __NR_getpagesize
   INTERNAL_SYSCALL_DECL (err);
