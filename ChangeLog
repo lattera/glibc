@@ -1,3 +1,26 @@
+2000-12-21  Andreas Jaeger  <aj@suse.de>
+
+	* nis/nss_nisplus/nisplus-ethers.c (struct etherent): Removed.
+	* inet/ether_hton.c: Likewise
+	* inet/ether_ntoh.c: Likewise.
+
+	* nis/nss_nis/nis-ethers.c (_nss_nis_getntohost_r): Fix
+	declaration to match prototype.
+
+	* include/netinet/ether.h (struct etherent): Declare here so that
+	all implementations use the same struct.
+
+	* nis/nss_nis/nis-ethers.c: Include netinet/ether.h to get
+	prototypes.
+	(struct ether): Removed.
+	Use struct etherent instead of ether everywhere.
+
+	* include/rpc/auth.h (DECLARE_NSS_PROTOTYPES): New.
+
+	* include/rpc/auth_des.h (DECLARE_NSS_PROTOTYPES): New.
+
+	* sunrpc/publickey.c: Include auth_des.h for prototypes.
+
 2000-12-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/test-misc.c: Add more tests for nextafter functions.
@@ -41,7 +64,7 @@
 
 2000-12-18  Andreas Jaeger  <aj@suse.de>
 
-	* test-skeleton.c: Use temp_name_list instead of temp_name_list to
+	* test-skeleton.c: Use temp_name_list instead of name_list to
 	avoid collision with name_list from inet/netgroup.h.
 
 	* nss/nss_files/files-network.c (NEED_H_ERRNO): Define.
