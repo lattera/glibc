@@ -1,3 +1,8 @@
+2002-09-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/bug-regex11.c: New test.
+	* posix/Makefile (tests): Add bug-regex11.
+
 2002-09-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* locale/tst-C_locale.c (run_test): Pass LC_ALL_MASK not LC_ALL to
