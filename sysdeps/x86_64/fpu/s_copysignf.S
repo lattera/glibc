@@ -20,17 +20,29 @@
 
 #include <machine/asm.h>
 
+#ifdef __ELF__
+	.section .rodata
+#else
+	.text
+#endif
+
+	.align ALIGNARG(4)
+	ASM_TYPE_DIRECTIVE(mask,@object)
+mask:
+	.byte 0xff, 0xff, 0xff, 0x7f
+	ASM_SIZE_DIRECTIVE(mask)
+
+#ifdef PIC
+#define MO(op) op##(%rip)
+#else
+#define MO(op) op
+#endif
+	
 ENTRY(__copysignf)
-	movss  %xmm0,-4(%rsp)
-	mov    -4(%rsp,1),%edx
-	movss  %xmm1,-4(%rsp)
-	mov    -4(%rsp),%eax
-	and    $0x7fffffff,%edx
-	and    $0x80000000,%eax
-	or     %eax,%edx
-	mov    %edx,-4(%rsp)
-	movss  -4(%rsp),%xmm1
-	movaps %xmm1,%xmm0
+	movlps	MO(mask),%xmm3
+	andps	%xmm3,%xmm0
+	andnps	%xmm1,%xmm3
+	orps	%xmm3,%xmm0
 	retq
 END (__copysignf)
 
