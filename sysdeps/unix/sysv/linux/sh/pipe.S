@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,37 +26,16 @@ ENTRY (__libc_pipe)
 	shad	r2, r3
 	not	r3, r3			// r1=0 means r0 = -1 to -4095
 	tst	r3, r3			// i.e. error in linux
-	bf	1f
-	mov.l	.L2, r1
-#ifdef SHARED
-	mov	r0, r4
-	mov.l	r12, @-r15
-	sts.l	pr, @-r15
-        mov.l	0f, r12
-	mova	0f, r0
-	add	r0, r12
-	mova	.L2, r0
-	add	r0, r1
-	jsr	@r1
-	 nop
-	lds.l	@r15+, pr
-	rts
-	 mov.l	@r15+, r12
-	.align 2
-0:
-	.long	_GLOBAL_OFFSET_TABLE_
-#else
-	jmp	@r1
-	 mov	r0, r4
-#endif
-1:
+	bt	1f
 	mov.l	r0, @r4
 	mov.l	r1, @(4, r4)
 	rts
 	 mov	#0, r0
-	.align	2
-.L2:
-	.long	PLTJMP(C_SYMBOL_NAME(__syscall_error))
+1:
+	SYSCALL_ERROR_HANDLER
+.Lpseudo_end:
+	rts
+	 nop
 PSEUDO_END (__libc_pipe)
 
 weak_alias (__libc_pipe, __pipe)

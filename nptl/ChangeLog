@@ -1,7 +1,50 @@
+2003-01-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/jmp-unwind.c: Include <pthread-functions.h>.
+	Use __libc_pthread_functions array if SHARED.
+
+	* pthreadP.h: Move pthread_cond_2_0_t definition to...
+	* sysdeps/unix/sysv/linux/internaltypes.h: ...here.
+
+	* sysdeps/pthread/bits/libc-lock.h (__libc_ptf_call): New #define.
+	(__libc_rwlock_rdlock, __libc_rwlock_wrlock, __libc_rwlock_unlock,
+	__libc_key_create, __libc_getspecific, __libc_setspecific): Use
+	__libc_ptf_call instead of __libc_maybe_call.
+	(PTF): New #define.
+	(__libc_cleanup_region_start): Wrap function name with PTF call.
+	(__libc_cleanup_region_end): Likewise.
+	(__libc_cleanup_end): Likewise.
+
+	* pthread_getspecific.c: Add __pthread_getspecific_internal alias.
+	* pthread_setspecific.c: Add __pthread_setspecific_internal alias.
+	* pthread_key_create.c: Add __pthread_key_create_internal alias.
+	* pthreadP.h: Add prototypes.
+
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelrwlock.S: Add
+	__pthread_rwlock_rdlock, __pthread_rwlock_wrlock, and
+	__pthread_rwlock_unlock aliases.
+	* pthreadP.h: Add prototypes for new aliases.
+
+	* pthreadP.h (struct pthead_functions): Moved to...
+	* sysdeps/pthread/pthread-functions.h: ...here.  New file.
+	* init.c (pthread_functions): Add initializers for new elements.
+
+	* cleanup_defer.c: Add __pthread_cleanup_push_defer and
+	__pthread_cleanup_pop_restore aliases.
+	* pthreadP.h: Add prototypes.
+
+	* cleanup.c: Rename _GI_pthread_cleanup_push to __pthread_cleanup_push
+	and _GI_pthread_cleanup_pop to __pthread_cleanup_pop.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelcond.S: Adjust caller.
+	* sysdeps/unix/sysv/linux/i386/pthread_once.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S: Likewise.
+	* pthreadP.h: Adjust prototypes and callers.
+
 2003-01-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add tst-cancel7.
 	(tst-cancel7-ARGS): New variable.
+	* tst-cancel7.c: New file.
 
 	* old_pthread_cond_broadcast.c: Optimize initialization a bit to work
 	around gcc defficiencies.

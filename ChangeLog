@@ -1,3 +1,17 @@
+2003-01-05  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/clone.S (__clone): Use
+	SYSCALL_ERROR_HANDLER.
+	* sysdeps/unix/sysv/linux/sh/pipe.S (__libc_pipe): Likewise.
+	* sysdeps/unix/sysv/linux/sh/socket.S (__socket): Likewise.
+	Add support for cancellation handling.
+	* sysdeps/unix/sysv/linux/sh/syscall.S (__syscall): Use
+	SYSCALL_ERROR_HANDLER.
+	* sysdeps/unix/sysv/linux/sh/vfork.S (__vfork): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep.h (PSEUDO): Likewise.
+	Add support for cancellation handling.
+	(SYSCALL_ERROR_HANDLER): Define PIC variants.
+
 2003-01-04  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Mark

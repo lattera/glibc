@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,93,95-99,2000,02 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1995, 1996, 1997, 1998, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
    Changed by Kaz Kojima, <kkojima@rr.iij4u.or.jp>.
@@ -45,9 +45,9 @@
    returns a value in -1 .. -4095 as a valid result so we can savely
    test with -4095.  */
 
+#define _IMM1 #-1
 #define _IMM12 #-12
 #undef	PSEUDO
-#ifdef SHARED
 #define	PSEUDO(name, syscall_name, args) \
  .text; \
  ENTRY (name); \
@@ -57,50 +57,99 @@
     shad r2,r1; \
     not r1,r1; \
     tst r1,r1; \
-    bf 1f; \
-    mov r0,r4; \
-    mov.l r12,@-r15; \
-    sts.l pr,@-r15; \
-    mov.l 0f,r12; \
-    mova 0f,r0; \
-    add r0,r12; \
-    mov.l 2f,r1; \
-    mova 2f,r0; \
-    add r0,r1; \
-    jsr @r1; \
-     nop; \
-    lds.l @r15+,pr; \
-    rts; \
-     mov.l @r15+,r12; \
-    .align 2; \
- 2: .long PLTJMP(C_SYMBOL_NAME(__syscall_error)); \
- 0: .long _GLOBAL_OFFSET_TABLE_; \
- 1:
-#else
-#define	PSEUDO(name, syscall_name, args) \
- .text; \
- ENTRY (name); \
-    DO_CALL (syscall_name, args); \
-    mov r0,r1; \
-    mov _IMM12,r2; \
-    shad r2,r1; \
-    not r1,r1; \
-    tst r1,r1; \
-    bf 1f; \
-    mov.l 2f,r1; \
-    jmp @r1; \
-     mov r0, r4; \
-    .align 2; \
- 2: .long PLTJMP(C_SYMBOL_NAME(__syscall_error)); \
- 1:
-#endif
+    bf .Lpseudo_end; \
+    SYSCALL_ERROR_HANDLER; \
+ .Lpseudo_end:
 
 #undef	PSEUDO_END
 #define	PSEUDO_END(name) \
-  SYSCALL_ERROR_HANDLER \
   END (name)
 
-#define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
+#ifndef PIC
+# define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
+#else
+# if RTLD_PRIVATE_ERRNO
+#  define SYSCALL_ERROR_HANDLER	\
+	neg r0,r1; \
+	mov.l 0f,r12; \
+	mova 0f,r0; \
+	add r0,r12; \
+	mov.l 1f,r0; \
+	mov.l r1,@(r0,r12)
+	bra .Lpseudo_end; \
+	 mov _IMM1,r0; \
+	.align 2; \
+     0: .long _GLOBAL_OFFSET_TABLE_; \
+     1: .long errno@GOTOFF
+
+# elif defined _LIBC_REENTRANT
+
+#  if USE___THREAD
+#   ifndef NOT_IN_libc
+#    define SYSCALL_ERROR_ERRNO __libc_errno
+#   else
+#    define SYSCALL_ERROR_ERRNO errno
+#   endif
+#   define SYSCALL_ERROR_HANDLER \
+	neg r0,r1; \
+	mov r12,r2; \
+	mov.l 0f,r12; \
+	mova 0f,r0; \
+	add r0,r12; \
+	mov.l 1f,r0; \
+	stc gbr, r4; \
+	mov.l @(r0,r12),r0; \
+	mov r2,r12; \
+	add r4,r0; \
+	mov.l r1,@r0; \
+	bra .Lpseudo_end; \
+	 mov _IMM1,r0; \
+	.align 2; \
+     0: .long _GLOBAL_OFFSET_TABLE_; \
+     1: .long SYSCALL_ERROR_ERRNO@GOTTPOFF
+#  else
+#   define SYSCALL_ERROR_HANDLER \
+	neg r0,r1; \
+	mov.l r12,@-r15; \
+	mov.l r1,@-r15; \
+	mov.l 0f,r12; \
+	mova 0f,r0; \
+	add r0,r12; \
+	sts.l pr,@-r15; \
+	mov.l 1f,r1; \
+	bsrf r1; \
+         nop; \
+     2: lds.l @r15+,pr; \
+	mov.l @r15+,r1; \
+	mov.l r1,@r0; \
+	mov.l @r15+,r12; \
+	bra .Lpseudo_end; \
+	 mov _IMM1,r0; \
+	.align 2; \
+     0: .long _GLOBAL_OFFSET_TABLE_; \
+     1: .long PLTJMP(C_SYMBOL_NAME(__errno_location))-(2b+2-.)
+/* A quick note: it is assumed that the call to `__errno_location' does
+   not modify the stack!  */
+#  endif
+# else
+/* Store (-r0) into errno through the GOT.  */
+#  define SYSCALL_ERROR_HANDLER						      \
+	neg r0,r1; \
+	mov r12,r2; \
+	mov.l 0f,r12; \
+	mova 0f,r0; \
+	add r0,r12; \
+	mov.l 1f,r0; \
+	mov.l @(r0,r12),r0; \
+	mov r2,r12; \
+	mov.l r1,@r0; \
+	bra .Lpseudo_end; \
+	 mov _IMM1,r0; \
+	.align 2; \
+     0: .long _GLOBAL_OFFSET_TABLE_; \
+     1: .long errno@GOT
+# endif	/* _LIBC_REENTRANT */
+#endif	/* PIC */
 
 #define SYSCALL_INST0	trapa #0x10
 #define SYSCALL_INST1	trapa #0x11

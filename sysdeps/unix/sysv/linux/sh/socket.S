@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,8 +16,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <socketcall.h>
+#include <tls.h>
 
 #define P(a, b) P2(a, b)
 #define P2(a, b) a##b
@@ -63,7 +64,12 @@ ENTRY (__socket)
 	/* Push args onto the stack.  */
 	P(PUSHARGS_,NARGS)
 
-        /* Do the system call trap.  */
+#if defined NEED_CANCELLATION && defined CENABLE
+	SINGLE_THREAD_P
+	bf .Lsocket_cancel	
+#endif
+
+	/* Do the system call trap.  */
 	mov #+P(SOCKOP_,socket), r4
 	mov r15, r5
 	mov.l .L1,r3
@@ -77,39 +83,44 @@ ENTRY (__socket)
 	shad	r2, r1
 	not	r1, r1			// r1=0 means r0 = -1 to -4095
 	tst	r1, r1			// i.e. error in linux
-	bf	1f
-
-	mov.l .L2, r1
-#ifdef SHARED
-	mov	r0, r4
-	mov.l	r12, @-r15
-	sts.l	pr, @-r15
-        mov.l	0f, r12
-	mova	0f, r0
-	add	r0, r12
-	mova	.L2, r0
-	add	r0, r1
-	jsr @r1
-	 nop
-	lds.l	@r15+, pr
-	rts
-	 mov.l	@r15+, r12
-	.align 2
-0:
-	.long	_GLOBAL_OFFSET_TABLE_
-#else
-	jmp @r1
-	 mov	r0, r4
-#endif
-1:
+	bf	.Lpseudo_end
+.Lsyscall_error:
+	SYSCALL_ERROR_HANDLER
+.Lpseudo_end:
 	/* Successful; return the syscall's value.  */
 	rts
 	 nop
+
+#if defined NEED_CANCELLATION && defined CENABLE
+.Lsocket_cancel:
+	/* Enable asynchronous cancellation.  */
+	CENABLE
+
+	/* Do the system call trap.  */
+	mov #+P(SOCKOP_,socket), r4
+	mov r15, r5
+	mov.l .L1,r3
+	trapa #0x12
+
+	mov.l r0,@-r15
+	CDISABLE
+	mov.l @r15+,r0
+
+	/* Pop args off the stack */
+	P(POPARGS_,NARGS)
+
+	mov     r0, r1
+	mov	#-12, r2
+	shad	r2, r1
+	not	r1, r1			// r1=0 means r0 = -1 to -4095
+	tst	r1, r1			// i.e. error in linux
+	bf	.Lpseudo_end
+	bra	.Lsyscall_error
+	 nop
+#endif
 	.align 2
 .L1:
 	.long	SYS_ify(socketcall)
-.L2:
-	.long	PLTJMP(C_SYMBOL_NAME(__syscall_error))
 
 PSEUDO_END (__socket)
 

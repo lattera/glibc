@@ -171,6 +171,9 @@ $(objpfx)libc_pic_lite.os: $(objpfx)libc_pic_lite.a $(objpfx)libc-tsd.os
 	$(LINK.o) -nostdlib -nostartfiles -r -o $@ \
 		  $(LDFLAGS-c_pic.os) -Wl,-d -Wl,--whole-archive $^
 
+# This trick leaves errno and h_errno undefined.
+libc.so-no-z-defs = yes
+
 $(objpfx)libc.so: $(elfobjdir)/soinit.os \
 		  $(objpfx)libc_pic_lite.os \
 		  $(elfobjdir)/sofini.os \
