@@ -30,7 +30,7 @@ struct sgttyb;
 __BEGIN_DECLS
 
 /* Fill in *PARAMS with terminal parameters associated with FD.  */
-extern int gtty patch(int __fd, struct sgttyb *__params) __THROW;
+extern int gtty (int __fd, struct sgttyb *__params) __THROW;
 
 /* Set the terminal parameters associated with FD to *PARAMS.  */
 extern int stty (int __fd, __const struct sgttyb *__params) __THROW;
