@@ -1,3 +1,12 @@
+2002-04-08  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/fpu/s_llrint.S: New.
+	* sysdeps/x86_64/fpu/s_llrintf.S: New.
+	* sysdeps/x86_64/fpu/s_llrintl.S: New.
+	* sysdeps/x86_64/fpu/s_lrint.S: New.
+	* sysdeps/x86_64/fpu/s_lrintf.S: New
+	* sysdeps/x86_64/fpu/s_lrintl.S: New.
+
 2002-04-08  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (__mmap): Use MAP_FAILED instead of
