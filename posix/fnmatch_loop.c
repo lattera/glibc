@@ -415,10 +415,11 @@ FCT (pattern, string, no_leading_period, flags)
 		  return FNM_NOMATCH;
 		else
 		  {
-		    int is_seqval = 0;
 		    int is_range = 0;
 
 #ifdef _LIBC
+		    int is_seqval = 0;
+
 		    if (c == L('[') && *p == L('.'))
 		      {
 			uint32_t nrules =
@@ -850,7 +851,7 @@ FCT (pattern, string, no_leading_period, flags)
 			  return FNM_NOMATCH;
 
 			/* It is a range.  */
-			if (cold <= fc && fc <= c)
+			if (cold <= fn && fn <= c)
 			  goto matched;
 #endif
 
