@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
+   Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -68,7 +68,7 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
       wchar_t buf[64];		/* Just an arbitrary size.  */
       const unsigned char *inbuf = *src;
 
-      data.outbufend = data.outbuf + sizeof (buf);
+      data.outbufend = (char *) buf + sizeof (buf);
       do
 	{
 	  data.outbuf = (char *) buf;

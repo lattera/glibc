@@ -1,3 +1,8 @@
+1999-04-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* wcsmbs/mbsnrtowcs.c (__mbsnrtowcs): Correctly initialize
+	outbufend for dst==NULL.
+
 1999-04-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* wcsmbs/mbsrtowcs.c (__mbsrtowcs): Correctly initialize outbufend
