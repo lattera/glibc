@@ -1,3 +1,7 @@
+1999-04-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/Makefile (CPPFLAGS-.o): Don't define IO_DEBUG.
+
 1999-04-10  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/Dist: Add clk_tck.c.
