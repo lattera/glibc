@@ -1,5 +1,8 @@
 1999-10-11  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: Add gregset_t
+	and fpregset_t definitions.
+
 	* malloc/memprof.c (GETSP): Define for PowerPC.
 	(GETTIME): Fix generic version.
 
