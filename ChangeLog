@@ -1,5 +1,7 @@
 2000-04-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/ftw.h-data: Add allow-header sys/stat.h.
+
 	* sysdeps/unix/sysv/linux/getdents.c (__getdents): Avoid initial
 	lseek call be passing in a buffer which never allow a successful
 	first getdents syscall if not at leas the initial entry can be
