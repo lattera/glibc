@@ -1,3 +1,8 @@
+1999-01-24  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/ioctl.c: Include <hurd/ioctls.defs>.
+	(__ioctl): Use IOC_MSGID macro.
+
 1999-01-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/iofopen.c (_IO_fopen): Pass correct value as fourth
