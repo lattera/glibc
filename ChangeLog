@@ -1,3 +1,8 @@
+2000-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/getnameinfo.c (nrl_domainname): Use symbolic constant
+	INADDR_LOOPBACK instead of numeric value.
+
 2000-09-28  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/ia64/dl-machine.h (RTLD_START): Adjust _dl_argv by

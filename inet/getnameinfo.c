@@ -134,7 +134,7 @@ nrl_domainname (void)
 		    {
 		      struct in_addr in_addr;
 
-		      in_addr.s_addr = htonl (0x7f000001);
+		      in_addr.s_addr = htonl (INADDR_LOOPBACK);
 
 		      while (__gethostbyaddr_r ((const char *) &in_addr,
 						sizeof (struct in_addr),
