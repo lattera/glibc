@@ -45,14 +45,14 @@ setfsuid (uid_t uid)
   INTERNAL_SYSCALL_DECL (err);
 # if  __ASSUME_32BITUIDS > 0
   /* No error checking. */
-  return INTERNAL_SYSCALL (setfsgid32, err, 1, gid);
+  return INTERNAL_SYSCALL (setfsuid32, err, 1, uid);
 # else
 #  ifdef __NR_setfsuid32
   if (__libc_missing_32bit_uids <= 0)
     {
       int result;
 
-      result = INTERNAL_SYSCALL (setfsgid32, err, 1, gid);
+      result = INTERNAL_SYSCALL (setfsuid32, err, 1, uid);
       if (! INTERNAL_SYSCALL_ERROR_P (result, err)
 	  || INTERNAL_SYSCALL_ERRNO (result, err) != ENOSYS)
 	return result;
@@ -68,7 +68,7 @@ setfsuid (uid_t uid)
     }
 
   /* No error checking. */
-  return INTERNAL_SYSCALL (setfsgid, err, 1, gid);
+  return INTERNAL_SYSCALL (setfsuid, err, 1, uid);
 # endif
 }
 #endif

@@ -851,7 +851,8 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --disable-sanity-checks really do not use threads (should not be used except
                           in special situations) [default=yes]
-  --disable-check-abi     omit "make check-abi" from "make check"
+  --enable-check-abi      do "make check-abi" in "make check" (no/warn/yes)
+                          [default=no]
   --enable-shared         build shared library [default=yes if GNU ld &
                           ELF]
   --enable-profile        build profiled library [default=yes]
@@ -1486,7 +1487,7 @@ if test "${enable_check_abi+set}" = set; then
   enableval="$enable_check_abi"
   enable_check_abi=$enableval
 else
-  enable_check_abi=yes
+  enable_check_abi=no
 fi;
 
 static=yes
@@ -5169,7 +5170,7 @@ if test "${libc_cv_asm_underscores+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 5172 "configure"
+#line 5173 "configure"
 #include "confdefs.h"
 void underscore_test(void) {
 return; }
@@ -5495,7 +5496,7 @@ if test "${libc_cv_gcc_dwarf2_unwind_info+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5498 "configure"
+#line 5499 "configure"
 static char *__EH_FRAME_BEGIN__;
 _start ()
 {
@@ -5595,7 +5596,7 @@ if test "${libc_cv_gcc_builtin_expect+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5598 "configure"
+#line 5599 "configure"
 int foo (int a)
 {
   a = __builtin_expect (a, 10);
@@ -5663,7 +5664,7 @@ if test "${libc_cv_gcc_subtract_local_labels+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5666 "configure"
+#line 5667 "configure"
 int foo (int a)
 {
   static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };

@@ -1190,15 +1190,23 @@ define check-abi
 	LC_ALL=C \
 	$(AWK) -f $< -v 'config=$(check-abi-config)' \
 	       $(filter %.abilist,$^) \
-	| diff -pu0 - $(filter %.symlist,$^)
+	| { diff -pu0 - $(filter %.symlist,$^) $(check-abi-warn) ; }
 endef
+ifeq ($(enable-check-abi),warn)
+check-abi-warn = || echo '*** WARNING: $*.so failed ABI check'
+endif
 
 ifeq ($(firstword $(sysd-sorted-done) f)$(firstword $(generating) f),tf)
 -include $(common-objpfx)tls.make
-config-tls-yes := tls
-config-tls-no := notls
+config-tls := notls
+ifeq ($(use-tls),yes)
+config-tls := tls
+endif
+ifeq ($(use-thread),yes)
+config-tls := thread
+endif
 check-abi-config := \
-  $(config-machine)-$(config-vendor)-$(config-os)/$(config-tls-$(use-thread))
+  $(config-machine)-$(config-vendor)-$(config-os)/$(config-tls)
 endif
 
 update-abi-%: $(..)scripts/merge-abilist.awk $(..)abilist/%.abilist \
@@ -1213,7 +1221,7 @@ define update-abi
 endef
 else
 define update-abi
-LC_ALL=C $(AWK) -v config=$(update-abi-config) -f $^ \
+LC_ALL=C $(AWK) -v config='$(update-abi-config)' -f $^ \
 	 > $(..)abilist/$*.abilist.new
 @if cmp -s $(..)abilist/$*.abilist.new $(..)abilist/$*.abilist 2> /dev/null; \
  then rm -f $(..)abilist/$*.abilist.new; \
@@ -1241,9 +1249,11 @@ update-abi: update-abi-libc
 common-generated += libc.symlist
 endif
 
-ifeq ($(build-shared)$(enable-check-abi),yesyes)
+ifeq ($(build-shared),yes)
+ifneq ($(enable-check-abi),no)
 ifdef subdir
 tests: check-abi
+endif
 endif
 endif
 
@@ -1375,14 +1385,16 @@ ifdef objpfx
 .PHONY: stubs # The parent Makefile calls this target.
 stubs: $(objpfx)stubs
 endif
-s = $(sysdep_dir)/generic
 $(objpfx)stubs: $(+depfiles)
 # Use /dev/null since `...` might expand to empty.
-	(s=`cd $s && $(PWD_P)`; \
+	(s=`cd $(sysdep_dir) && $(PWD_P)`; \
 	 $(patsubst %/,cd % &&,$(objpfx)) \
 	 sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
-	  `sed -n -e '\@ $s/[^ ]*\.c@{; s@^.* $s/\([^ ]*\.c\).*$$@'"$$s"'/\1@; h; }' \
-		-e '/stub-tag\.h/{; g; p; }' \
+	  `sed -n -e 's@$(sysdep_dir)/@'"$$s"'/@g' \
+		  -e 's@\$$(common-objpfx)@$(..)@g' -e 's@\$$(objpfx)@@g' \
+		  -e '/:  *[^ ]/{s@^.*: *\([^ ]*\) .*$$@\1@; h; }' \
+		  -e '/:$$/d' \
+		  -e '/stub-tag\.h/{; g; p; }' \
 		  $(patsubst $(objpfx)%,%,$^) /dev/null` \
 	     /dev/null) > $@T
 	mv -f $@T $@

@@ -77,15 +77,15 @@ wait4		-	wait4		i:iWiP	__wait4		wait4
 chown		-	chown		i:sii	__libc_chown	__chown chown
 fcntl		-	fcntl		Ci:iiF	__libc_fcntl	__fcntl fcntl
 
-setxattr	EXTRA	setxattr	i:sspii	setxattr
-lsetxattr	EXTRA	lsetxattr	i:sspii	lsetxattr
-fsetxattr	EXTRA	fsetxattr	i:ispii	fsetxattr
-getxattr	EXTRA	getxattr	i:sspi	getxattr
-lgetxattr	EXTRA	lgetxattr	i:sspi	lgetxattr
-fgetxattr	EXTRA	fgetxattr	i:ispi	fgetxattr
-listxattr	EXTRA	listxattr	i:ssi	listxattr
-llistxattr	EXTRA	llistxattr	i:ssi	llistxattr
-flistxattr	EXTRA	flistxattr	i:isi	flistxattr
-removexattr	EXTRA	removexattr	i:ss	removexattr
-lremovexattr	EXTRA	lremovexattr	i:ss	lremovexattr
-fremovexattr	EXTRA	fremovexattr	i:is	fremovexattr
+setxattr	-	setxattr	i:sspii	setxattr
+lsetxattr	-	lsetxattr	i:sspii	lsetxattr
+fsetxattr	-	fsetxattr	i:ispii	fsetxattr
+getxattr	-	getxattr	i:sspi	getxattr
+lgetxattr	-	lgetxattr	i:sspi	lgetxattr
+fgetxattr	-	fgetxattr	i:ispi	fgetxattr
+listxattr	-	listxattr	i:ssi	listxattr
+llistxattr	-	llistxattr	i:ssi	llistxattr
+flistxattr	-	flistxattr	i:isi	flistxattr
+removexattr	-	removexattr	i:ss	removexattr
+lremovexattr	-	lremovexattr	i:ss	lremovexattr
+fremovexattr	-	fremovexattr	i:is	fremovexattr

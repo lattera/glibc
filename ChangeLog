@@ -1,3 +1,31 @@
+2003-03-27  Roland McGrath  <roland@redhat.com>
+
+	* Makerules (check-abi) [$(enable-check-abi) = warn]:
+	Ignore exit status from diff.
+	* configure.in (enable_check_abi): Document possible value "warn".
+	Change default to no for now.
+	* configure: Regenerated.
+
+	* sysdeps/unix/Makefile ($(objpfx)stub-syscalls.c): Emit stub_warning
+	macro calls and a #include <stub-tag.h> at the end.
+	* Makerules ($(objpfx)stubs): Tweak sed commands.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Use - rather than EXTRA in
+	caller column for *xattr syscalls, since they are in sysdeps/generic.
+
+	* sysdeps/unix/sysv/linux/i386/setfsuid.c: setfsgid -> setfsuid
+	* sysdeps/unix/sysv/linux/i386/setfsgid.c: setfsuid -> setfsgid
+
+2003-03-26  Roland McGrath  <roland@redhat.com>
+
+	* Makerules (check-abi-config): Use /thread instead of /tls when
+	use-thread and not just use-tls is set.
+
+	* Makerules (update-abi): Put quotes around $(update-abi-config).
+
+	* elf/Makefile (check-abi): Depend on check-abi-ld.
+	(update-abi): Depend on update-abi-ld.
+
 2003-03-26  GOTO Masanori  <gotom@debian.or.jp>
 
 	* sysdeps/unix/sysv/linux/i386/setfsuid.c: Use INTERNAL_SYSCALL and

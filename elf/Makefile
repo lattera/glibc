@@ -181,6 +181,9 @@ test-extras += $(modules-names)
 
 include ../Rules
 
+check-abi: check-abi-ld
+update-abi: update-abi-ld
+
 ifeq (yes,$(build-shared))
 # Make sure these things are built in the `make lib' pass so they can be used
 # to run programs during the `make others' pass.

@@ -45,14 +45,14 @@ setfsgid (gid_t gid)
   INTERNAL_SYSCALL_DECL (err);
 # if __ASSUME_32BITUIDS > 0
   /* No error checking. */
-  return INTERNAL_SYSCALL (setfsuid32, err, 1, uid);
+  return INTERNAL_SYSCALL (setfsgid32, err, 1, gid);
 # else
 #  ifdef __NR_setfsgid32
   if (__libc_missing_32bit_uids <= 0)
     {
       int result;
 
-      result = INTERNAL_SYSCALL (setfsuid32, err, 1, uid);
+      result = INTERNAL_SYSCALL (setfsgid32, err, 1, gid);
       if (! INTERNAL_SYSCALL_ERROR_P (result, err)
 	  || INTERNAL_SYSCALL_ERRNO (result, err) != ENOSYS)
 	return result;
@@ -67,7 +67,7 @@ setfsgid (gid_t gid)
     }
 
   /* No error checking. */
-  return INTERNAL_SYSCALL (setfsuid, err, 1, uid);
+  return INTERNAL_SYSCALL (setfsgid, err, 1, gid);
 # endif
 }
 #endif
