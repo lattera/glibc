@@ -1,4 +1,8 @@
-Thu Dec 17 08:53:40 1998  H.J. Lu  <hjl@gnu.org>
+1998-12-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/iso646.c: Recognize NF_Z_62-010_1973 as charset name.
+
+1998-12-17  H.J. Lu  <hjl@gnu.org>
 
 	* sunrpc/rpc/xdr.h (XDR_DESTROY): Add ';'.
 	(xdr_destroy): Likewise.

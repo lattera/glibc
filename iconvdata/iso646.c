@@ -106,7 +106,8 @@ static const char *names[] =
   [HU] = "MSZ_7795.3//",
   [CU] = "NC_NC00-10//",
   [FR] = "NF_Z_62-010//",
-  [FR1] = "NF_Z_62-010_(1973)//",
+  [FR1] = "NF_Z_62-010_1973//",	/* Note the we don't have the parenthesis
+				   in the name.  */
   [NO] = "NS_4551-1//",
   [NO2] = "NS_4551-2//",
   [PT] = "PT//",
