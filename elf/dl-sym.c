@@ -35,20 +35,23 @@ _dl_sym (void *handle, const char *name, void *who)
   struct link_map *match;
   struct link_map *l;
 
+  /* If the address is not recognized the call comes from the main
+     program (we hope).  */
+  match = _dl_loaded;
+
   /* Find the highest-addressed object that CALLER is not below.  */
-  match = NULL;
-  for (l = _dl_loaded; l; l = l->l_next)
-    if (caller >= l->l_addr && (!match || match->l_addr < l->l_addr))
-      match = l;
+  for (l = _dl_loaded; l != NULL; l = l->l_next)
+    if (l->l_addr != 0 && caller >= l->l_map_start && caller < l->l_map_end)
+      {
+	/* There must be exactly one DSO for the range of the virtual
+	   memory.  Otherwise something is really broken.  */
+	match = l;
+	break;
+      }
 
   if (handle == RTLD_DEFAULT)
-    {
-      /* Search the global scope as seen in the caller object.  */
-      if (match != NULL)
-	result = _dl_lookup_symbol (name, match, &ref, match->l_scope, 0, 0);
-      else
-	result = _dl_lookup_symbol (name, match, &ref, _dl_global_scope, 0, 0);
-    }
+    /* Search the global scope as seen in the caller object.  */
+    result = _dl_lookup_symbol (name, match, &ref, match->l_scope, 0, 0);
   else
     {
       if (handle != RTLD_NEXT)
@@ -56,22 +59,17 @@ _dl_sym (void *handle, const char *name, void *who)
 	  /* Search the scope of the given object.  */
 	  struct link_map *map = handle;
 
-	  if (match == NULL)
-	    /* If the address is not recognized the call comes from the
-	       main program (we hope).  */
-	    match = _dl_loaded;
-
 	  result = _dl_lookup_symbol (name, match, &ref, map->l_local_scope,
 				      0, 1);
 	}
       else
 	{
-	  if (! match)
+	  if (__builtin_expect (match == _dl_loaded, 0))
 	    _dl_signal_error (0, NULL, N_("\
 RTLD_NEXT used in code not dynamically loaded"));
 
 	  l = match;
-	  while (l->l_loader)
+	  while (l->l_loader != NULL)
 	    l = l->l_loader;
 
 	  result = _dl_lookup_symbol_skip (name, l, &ref, l->l_local_scope,
@@ -79,7 +77,7 @@ RTLD_NEXT used in code not dynamically loaded"));
 	}
     }
 
-  if (ref)
+  if (ref != NULL)
     return DL_SYMBOL_ADDRESS (result, ref);
 
   return NULL;
@@ -103,24 +101,32 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
   /* We don't have a specific file where the symbol can be found.  */
   vers.filename = NULL;
 
+  /* If the address is not recognized the call comes from the main
+     program (we hope).  */
+  match = _dl_loaded;
+
   /* Find the highest-addressed object that CALLER is not below.  */
-  match = NULL;
-  for (l = _dl_loaded; l; l = l->l_next)
-    if (caller >= l->l_addr && (!match || match->l_addr < l->l_addr))
-      match = l;
+  for (l = _dl_loaded; l != NULL; l = l->l_next)
+    if (l->l_addr != 0 && caller >= l->l_map_start && caller < l->l_map_end)
+      {
+	/* There must be exactly one DSO for the range of the virtual
+	   memory.  Otherwise something is really broken.  */
+	match = l;
+	break;
+      }
 
   if (handle == RTLD_DEFAULT)
     /* Search the global scope.  */
-    result = _dl_lookup_versioned_symbol (name, match, &ref, _dl_global_scope,
+    result = _dl_lookup_versioned_symbol (name, match, &ref, match->l_scope,
 					  &vers, 0, 0);
   else if (handle == RTLD_NEXT)
     {
-      if (! match)
+      if (match == _dl_loaded)
 	_dl_signal_error (0, NULL, N_("\
 RTLD_NEXT used in code not dynamically loaded"));
 
       l = match;
-      while (l->l_loader)
+      while (l->l_loader != NULL)
 	l = l->l_loader;
 
       result = _dl_lookup_versioned_symbol_skip (name, l, &ref,
@@ -135,7 +141,7 @@ RTLD_NEXT used in code not dynamically loaded"));
 					    map->l_local_scope, &vers, 0, 1);
     }
 
-  if (ref)
+  if (ref != NULL)
     return DL_SYMBOL_ADDRESS (result, ref);
 
   return NULL;
