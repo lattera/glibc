@@ -145,7 +145,8 @@ typedef struct
   ({ int __seg = TLS_DO_SET_THREAD_AREA (descr, secondcall); \
      __seg == -1 ? TLS_DO_MODIFY_LDT (descr, 0) : __seg; })
 #  else
-#   define TLS_SETUP_GS_SEGMENT(descr) TLS_DO_MODIFY_LDT ((descr), 0)
+#   define TLS_SETUP_GS_SEGMENT(descr, secondcall) \
+  TLS_DO_MODIFY_LDT ((descr), 0)
 #  endif
 
 /* Code to initially initialize the thread pointer.  This might need
