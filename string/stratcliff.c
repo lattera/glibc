@@ -1,5 +1,5 @@
 /* Test for string function add boundaries of usable memory.
-   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -186,6 +186,33 @@ main (int argc, char *argv[])
 		  printf ("strcpy flunked for outer = %d, inner = %d\n",
 			  outer, inner);
 		  result = 1;
+		}
+
+	      adr[inner] = 'T';
+	    }
+        }
+
+      /* strncpy test */
+      for (outer = size - 1; outer >= MAX (0, size - 128); --outer)
+        {
+          for (inner = MAX (outer, size - 64); inner < size; ++inner)
+	    {
+	      size_t len;
+
+	      adr[inner] = '\0';
+
+	      for (len = 0; len < size - outer + 64; ++len)
+		{
+		  if (strncpy (dest, &adr[outer], len) != dest
+		      || memcmp (dest, &adr[outer],
+				 MIN (inner - outer, len)) != 0
+		      || (inner - outer < len
+			  && strlen (dest) != (inner - outer)))
+		    {
+		      printf ("strncpy flunked for outer = %d, inner = %d, len = %Zd\n",
+			      outer, inner, len);
+		      result = 1;
+		    }
 		}
 
 	      adr[inner] = 'T';
