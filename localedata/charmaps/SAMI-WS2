@@ -9,6 +9,7 @@
 % This charmap is based on MS CP1252, not ISO 8859/1.
 
 % alias WS2
+% alias WINDOWS-SAMI2
 CHARMAP
 <NU>                   /x00   <U0000> NULL (NUL)
 <SH>                   /x01   <U0001> START OF HEADING (SOH)

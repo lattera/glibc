@@ -1,3 +1,7 @@
+1999-04-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* charmaps/SAMI-WS2: Add one more alias.
+
 1999-04-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* charmaps/IBM874: New file.
