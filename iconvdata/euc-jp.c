@@ -105,6 +105,7 @@
 		    result = __GCONV_ILLEGAL_INPUT;			      \
 		    break;						      \
 		  }							      \
+	      }								      \
 									      \
 	    inptr += 2;							      \
 	  }								      \
