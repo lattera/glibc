@@ -1,3 +1,15 @@
+Fri May 26 13:00:08 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c (_hurd_internal_post_signal): Don't loop to check
+ 	pending signals if the thread is in a critical section.  It will
+ 	send us a msg when it finishes.
+
+	* sysdeps/mach/hurd/pathconf.c: New file.
+	* sysdeps/mach/hurd/fpathconf.c: New file.
+
+	* sysdeps/mach/hurd/sigaction.c: Only notify the proc server for
+ 	SIGCHLD when the SA_NOCLDSTOP bit actually changes.
+
 Sun May 21 05:05:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* elf/Makefile (ld.so): Use -nostartfiles in addition to

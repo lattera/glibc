@@ -847,64 +847,78 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
   /* We get here unless the signal was fatal.  We still hold SS->lock.
      Check for pending signals, and loop to post them.  */
-#define PENDING	(!_hurd_stopped && (pending = ss->pending & ~ss->blocked))
-  if (PENDING)
-    {
-    pending:
-      for (signo = 1; signo < NSIG; ++signo)
-	if (__sigismember (&pending, signo))
-	  {
-	    __sigdelset (&ss->pending, signo);
-	    sigcode = ss->pending_data[signo].code;
-	    sigerror = ss->pending_data[signo].error;
-	    __spin_unlock (&ss->lock);
-	    goto post_signal;
-	  }
-    }
+  {
+    /* Return nonzero if SS has any signals pending we should worry about.
+       We don't worry about any pending signals if we are stopped, nor if
+       SS is in a critical section.  We are guaranteed to get a sig_post
+       message before any of them become deliverable: either the SIGCONT
+       signal, or a sig_post with SIGNO==0 as an explicit poll when the
+       thread finishes its critical section.  */
+    inline int signals_pending (void)
+      {
+	if (_hurd_stopped || ss->critical_section)
+	  return 0;
+	return pending = ss->pending & ~ss->blocked;
+      }
 
-  /* No pending signals left undelivered for this thread.
-     If we were sent signal 0, we need to check for pending
-     signals for all threads.  */
-  if (signo == 0)
-    {
-      __spin_unlock (&ss->lock);
-      __mutex_lock (&_hurd_siglock);
-      for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
-	{
-	  __spin_lock (&ss->lock);
-	  if (PENDING)
-	    goto pending;
-	  __spin_unlock (&ss->lock);
-	}
-      __mutex_unlock (&_hurd_siglock);
-    }
-  else
-    {
-      /* No more signals pending; SS->lock is still locked.
-	 Wake up any sigsuspend call that is blocking SS->thread.  */
-      if (ss->suspended != MACH_PORT_NULL)
-	{
-	  /* There is a sigsuspend waiting.  Tell it to wake up.  */
-	  error_t err;
-	  mach_msg_header_t msg;
-	  err = __mach_port_insert_right (__mach_task_self (),
-					  ss->suspended, ss->suspended,
-					  MACH_MSG_TYPE_MAKE_SEND);
-	  assert_perror (err);
-	  msg.msgh_bits = MACH_MSGH_BITS (MACH_MSG_TYPE_MOVE_SEND, 0);
-	  msg.msgh_remote_port = ss->suspended;
-	  msg.msgh_local_port = MACH_PORT_NULL;
-	  /* These values do not matter.  */
-	  msg.msgh_id = 8675309; /* Jenny, Jenny.  */
-	  msg.msgh_seqno = 17;	/* Random.  */
-	  ss->suspended = MACH_PORT_NULL;
-	  err = __mach_msg (&msg, MACH_SEND_MSG, sizeof msg, 0,
-			    MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE,
-			    MACH_PORT_NULL);
-	  assert_perror (err);
-	}
-      __spin_unlock (&ss->lock);
-    }
+    if (signals_pending ())
+      {
+      pending:
+	for (signo = 1; signo < NSIG; ++signo)
+	  if (__sigismember (&pending, signo))
+	    {
+	      __sigdelset (&ss->pending, signo);
+	      sigcode = ss->pending_data[signo].code;
+	      sigerror = ss->pending_data[signo].error;
+	      __spin_unlock (&ss->lock);
+	      goto post_signal;
+	    }
+      }
+
+    /* No pending signals left undelivered for this thread.
+       If we were sent signal 0, we need to check for pending
+       signals for all threads.  */
+    if (signo == 0)
+      {
+	__spin_unlock (&ss->lock);
+	__mutex_lock (&_hurd_siglock);
+	for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
+	  {
+	    __spin_lock (&ss->lock);
+	    if (signals_pending ())
+	      goto pending;
+	    __spin_unlock (&ss->lock);
+	  }
+	__mutex_unlock (&_hurd_siglock);
+      }
+    else
+      {
+	/* No more signals pending; SS->lock is still locked.
+	   Wake up any sigsuspend call that is blocking SS->thread.  */
+	if (ss->suspended != MACH_PORT_NULL)
+	  {
+	    /* There is a sigsuspend waiting.  Tell it to wake up.  */
+	    error_t err;
+	    mach_msg_header_t msg;
+	    err = __mach_port_insert_right (__mach_task_self (),
+					    ss->suspended, ss->suspended,
+					    MACH_MSG_TYPE_MAKE_SEND);
+	    assert_perror (err);
+	    msg.msgh_bits = MACH_MSGH_BITS (MACH_MSG_TYPE_MOVE_SEND, 0);
+	    msg.msgh_remote_port = ss->suspended;
+	    msg.msgh_local_port = MACH_PORT_NULL;
+	    /* These values do not matter.  */
+	    msg.msgh_id = 8675309; /* Jenny, Jenny.  */
+	    msg.msgh_seqno = 17; /* Random.  */
+	    ss->suspended = MACH_PORT_NULL;
+	    err = __mach_msg (&msg, MACH_SEND_MSG, sizeof msg, 0,
+			      MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE,
+			      MACH_PORT_NULL);
+	    assert_perror (err);
+	  }
+	__spin_unlock (&ss->lock);
+      }
+  }
 
   /* All pending signals delivered to all threads.
      Now we can send the reply message even for signal 0.  */

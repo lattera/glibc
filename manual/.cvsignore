@@ -3,7 +3,7 @@
 TODO COPYING* AUTHORS copyr-* copying.*
 glibc-*
 
-*.dvi* *.info* *.c.texi
+*.dvi* *.info* *.c.texi *.ps
 *.toc *.aux *.log
 *.cp *.cps *.fn *.fns *.vr *.vrs *.tp *.tps *.ky *.kys *.pg *.pgs
 
