@@ -1,5 +1,5 @@
 /* Transliteration for the C locale.  -*-C-*-
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -385,6 +385,104 @@
 "\x253c"	"+"	/* <U253C> BOX DRAWINGS LIGHT VERTICAL AND HORIZONTAL */
 "\x25e6"	"o"	/* <U25E6> WHITE BULLET */
 "\x3000"	" "	/* <U3000> IDEOGRAPHIC SPACE */
+"\x3371"	"hPa"	/* <U3371> SQUARE HPA */
+"\x3372"	"da"	/* <U3372> SQUARE DA */
+"\x3373"	"AU"	/* <U3373> SQUARE AU */
+"\x3374"	"bar"	/* <U3374> SQUARE BAR */
+"\x3375"	"oV"	/* <U3375> SQUARE OV */
+"\x3376"	"pc"	/* <U3376> SQUARE PC */
+"\x3380"	"pA"	/* <U3380> SQUARE PA AMPS */
+"\x3381"	"nA"	/* <U3381> SQUARE NA */
+"\x3382"	"uA"	/* <U3382> SQUARE MU A */
+"\x3383"	"mA"	/* <U3383> SQUARE MA */
+"\x3384"	"kA"	/* <U3384> SQUARE KA */
+"\x3385"	"KB"	/* <U3385> SQUARE KB */
+"\x3386"	"MB"	/* <U3386> SQUARE MB */
+"\x3387"	"GB"	/* <U3387> SQUARE GB */
+"\x3388"	"cal"	/* <U3388> SQUARE CAL */
+"\x3389"	"kcal"	/* <U3389> SQUARE KCAL */
+"\x338a"	"pF"	/* <U338A> SQUARE PF */
+"\x338b"	"nF"	/* <U338B> SQUARE NF */
+"\x338c"	"uF"	/* <U338C> SQUARE MU F */
+"\x338d"	"ug"	/* <U338D> SQUARE MU G */
+"\x338e"	"mg"	/* <U338E> SQUARE MG */
+"\x338f"	"kg"	/* <U338F> SQUARE KG */
+"\x3390"	"Hz"	/* <U3390> SQUARE HZ */
+"\x3391"	"kHz"	/* <U3391> SQUARE KHZ */
+"\x3392"	"MHz"	/* <U3392> SQUARE MHZ */
+"\x3393"	"GHz"	/* <U3393> SQUARE GHZ */
+"\x3394"	"THz"	/* <U3394> SQUARE THZ */
+"\x3395"	"ul"	/* <U3395> SQUARE MU L */
+"\x3396"	"ml"	/* <U3396> SQUARE ML */
+"\x3397"	"dl"	/* <U3397> SQUARE DL */
+"\x3398"	"kl"	/* <U3398> SQUARE KL */
+"\x3399"	"fm"	/* <U3399> SQUARE FM */
+"\x339a"	"nm"	/* <U339A> SQUARE NM */
+"\x339b"	"um"	/* <U339B> SQUARE MU M */
+"\x339c"	"mm"	/* <U339C> SQUARE MM */
+"\x339d"	"cm"	/* <U339D> SQUARE CM */
+"\x339e"	"km"	/* <U339E> SQUARE KM */
+"\x339f"	"mm^2"	/* <U339F> SQUARE MM SQUARED */
+"\x33a0"	"cm^2"	/* <U33A0> SQUARE CM SQUARED */
+"\x33a1"	"m^2"	/* <U33A1> SQUARE M SQUARED */
+"\x33a2"	"km^2"	/* <U33A2> SQUARE KM SQUARED */
+"\x33a3"	"mm^3"	/* <U33A3> SQUARE MM CUBED */
+"\x33a4"	"cm^3"	/* <U33A4> SQUARE CM CUBED */
+"\x33a5"	"m^3"	/* <U33A5> SQUARE M CUBED */
+"\x33a6"	"km^3"	/* <U33A6> SQUARE KM CUBED */
+"\x33a7"	"m/s"	/* <U33A7> SQUARE M OVER S */
+"\x33a8"	"m/s^2"	/* <U33A8> SQUARE M OVER S SQUARED */
+"\x33a9"	"Pa"	/* <U33A9> SQUARE PA */
+"\x33aa"	"kPa"	/* <U33AA> SQUARE KPA */
+"\x33ab"	"MPa"	/* <U33AB> SQUARE MPA */
+"\x33ac"	"GPa"	/* <U33AC> SQUARE GPA */
+"\x33ad"	"rad"	/* <U33AD> SQUARE RAD */
+"\x33ae"	"rad/s"	/* <U33AE> SQUARE RAD OVER S */
+"\x33af"	"rad/s^2"	/* <U33AF> SQUARE RAD OVER S SQUARED */
+"\x33b0"	"ps"	/* <U33B0> SQUARE PS */
+"\x33b1"	"ns"	/* <U33B1> SQUARE NS */
+"\x33b2"	"us"	/* <U33B2> SQUARE MU S */
+"\x33b3"	"ms"	/* <U33B3> SQUARE MS */
+"\x33b4"	"pV"	/* <U33B4> SQUARE PV */
+"\x33b5"	"nV"	/* <U33B5> SQUARE NV */
+"\x33b6"	"uV"	/* <U33B6> SQUARE MU V */
+"\x33b7"	"mV"	/* <U33B7> SQUARE MV */
+"\x33b8"	"kV"	/* <U33B8> SQUARE KV */
+"\x33b9"	"MV"	/* <U33B9> SQUARE MV MEGA */
+"\x33ba"	"pW"	/* <U33BA> SQUARE PW */
+"\x33bb"	"nW"	/* <U33BB> SQUARE NW */
+"\x33bc"	"uW"	/* <U33BC> SQUARE MU W */
+"\x33bd"	"mW"	/* <U33BD> SQUARE MW */
+"\x33be"	"kW"	/* <U33BE> SQUARE KW */
+"\x33bf"	"MW"	/* <U33BF> SQUARE MW MEGA */
+"\x33c2"	"a.m."	/* <U33C2> SQUARE AM */
+"\x33c3"	"Bq"	/* <U33C3> SQUARE BQ */
+"\x33c4"	"cc"	/* <U33C4> SQUARE CC */
+"\x33c5"	"cd"	/* <U33C5> SQUARE CD */
+"\x33c6"	"C/kg"	/* <U33C6> SQUARE C OVER KG */
+"\x33c7"	"Co."	/* <U33C7> SQUARE CO */
+"\x33c8"	"dB"	/* <U33C8> SQUARE DB */
+"\x33c9"	"Gy"	/* <U33C9> SQUARE GY */
+"\x33ca"	"ha"	/* <U33CA> SQUARE HA */
+"\x33cb"	"HP"	/* <U33CB> SQUARE HP */
+"\x33cc"	"in"	/* <U33CC> SQUARE IN */
+"\x33cd"	"KK"	/* <U33CD> SQUARE KK */
+"\x33ce"	"KM"	/* <U33CE> SQUARE KM CAPITAL */
+"\x33cf"	"kt"	/* <U33CF> SQUARE KT */
+"\x33d0"	"lm"	/* <U33D0> SQUARE LM */
+"\x33d1"	"ln"	/* <U33D1> SQUARE LN */
+"\x33d2"	"log"	/* <U33D2> SQUARE LOG */
+"\x33d3"	"lx"	/* <U33D3> SQUARE LX */
+"\x33d4"	"mb"	/* <U33D4> SQUARE MB SMALL */
+"\x33d5"	"mil"	/* <U33D5> SQUARE MIL */
+"\x33d6"	"mol"	/* <U33D6> SQUARE MOL */
+"\x33d7"	"PH"	/* <U33D7> SQUARE PH */
+"\x33d8"	"p.m."	/* <U33D8> SQUARE PM */
+"\x33d9"	"PPM"	/* <U33D9> SQUARE PPM */
+"\x33da"	"PR"	/* <U33DA> SQUARE PR */
+"\x33db"	"sr"	/* <U33DB> SQUARE SR */
+"\x33dc"	"Sv"	/* <U33DC> SQUARE SV */
+"\x33dd"	"Wb"	/* <U33DD> SQUARE WB */
 "\xfb00"	"ff"	/* <UFB00> LATIN SMALL LIGATURE FF */
 "\xfb01"	"fi"	/* <UFB01> LATIN SMALL LIGATURE FI */
 "\xfb02"	"fl"	/* <UFB02> LATIN SMALL LIGATURE FL */

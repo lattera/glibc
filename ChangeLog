@@ -1,3 +1,8 @@
+2001-02-04  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/C-translit.h.in: Add transliterations for CJK units of
+	measurement.
+
 2001-02-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/cache.c (print_entry): Use PRIx64 instead of Lx in printf
