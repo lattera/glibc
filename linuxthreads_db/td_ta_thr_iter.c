@@ -21,14 +21,69 @@
 #include "thread_dbP.h"
 
 
+static int
+handle_descr (const td_thragent_t *ta, td_thr_iter_f *callback,
+	      void *cbdata_p, td_thr_state_e state, int ti_pri,
+	      size_t cnt, pthread_descr descr)
+{
+  struct _pthread_descr_struct pds;
+  size_t sizeof_descr = ta->sizeof_descr;
+  td_thrhandle_t th;
+
+#ifdef ALL_THREADS_STOPPED
+  /* First count this active thread.  */
+  --num;
+#endif
+
+  if (ps_pdread (ta->ph, descr, &pds, sizeof_descr) != PS_OK)
+    return TD_ERR;	/* XXX Other error value?  */
+
+  /* The manager thread must be handled special.  The descriptor
+     exists but the thread only gets created when the first
+     `pthread_create' call is issued.  A clear indication that this
+     happened is when the p_pid field is non-zero.  */
+  if (cnt == 1 && pds.p_pid == 0)
+    return TD_OK;
+
+  /* Now test whether this thread matches the specified
+     conditions.  */
+
+  /* Only if the priority level is as high or higher.  */
+  if (pds.p_priority < ti_pri)
+    return TD_OK;
+
+  /* Test the state.
+     XXX This is incomplete.  */
+  if (state != TD_THR_ANY_STATE)
+    return TD_OK;
+
+  /* XXX For now we ignore threads which are not running anymore.
+     The reason is that gdb tries to get the registers and fails.
+     In future we should have a special mode of the thread library
+     in which we keep the process around until the actual join
+     operation happened.  */
+  if (pds.p_exited != 0)
+    return TD_OK;
+
+  /* Yep, it matches.  Call the callback function.  */
+  th.th_ta_p = (td_thragent_t *) ta;
+  th.th_unique = descr;
+  if (callback (&th, cbdata_p) != 0)
+    return TD_DBERR;
+
+  /* All done successfully.  */
+  return TD_OK;
+}
+
+
 td_err_e
 td_ta_thr_iter (const td_thragent_t *ta, td_thr_iter_f *callback,
 		void *cbdata_p, td_thr_state_e state, int ti_pri,
 		sigset_t *ti_sigmask_p, unsigned int ti_user_flags)
 {
   int pthread_threads_max;
-  size_t sizeof_descr;
   struct pthread_handle_struct *phc;
+  td_err_e result = TD_OK;
   int cnt;
 #ifdef ALL_THREADS_STOPPED
   int num;
@@ -43,14 +98,28 @@ td_ta_thr_iter (const td_thragent_t *ta, td_thr_iter_f *callback,
     return TD_BADTA;
 
   pthread_threads_max = ta->pthread_threads_max;
-  sizeof_descr = ta->sizeof_descr;
   phc = (struct pthread_handle_struct *) alloca (sizeof (phc[0])
 						 * pthread_threads_max);
 
-  /* Read all the descriptors.  */
+  /* First read only the main thread and manager thread information.  */
   if (ps_pdread (ta->ph, ta->handles, phc,
-		 sizeof (struct pthread_handle_struct) * pthread_threads_max)
-      != PS_OK)
+		 sizeof (struct pthread_handle_struct) * 2) != PS_OK)
+    return TD_ERR;	/* XXX Other error value?  */
+
+  /* Now handle these descriptors.  */
+  result = handle_descr (ta, callback, cbdata_p, state, ti_pri, 0,
+			 phc[0].h_descr);
+  if (result != TD_OK)
+    return result;
+  result = handle_descr (ta, callback, cbdata_p, state, ti_pri, 1,
+			 phc[1].h_descr);
+  if (result != TD_OK)
+    return result;
+
+  /* Read all the descriptors.  */
+  if (ps_pdread (ta->ph, ta->handles, &phc[2],
+		 (sizeof (struct pthread_handle_struct)
+		  * (pthread_threads_max - 2))) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
 #ifdef ALL_THREADS_STOPPED
@@ -63,51 +132,11 @@ td_ta_thr_iter (const td_thragent_t *ta, td_thr_iter_f *callback,
   for (cnt = 0; cnt < pthread_threads_max && num > 0; ++cnt)
     if (phc[cnt].h_descr != NULL)
       {
-	struct _pthread_descr_struct pds;
-	td_thrhandle_t th;
-
-#ifdef ALL_THREADS_STOPPED
-	/* First count this active thread.  */
-	--num;
-#endif
-
-	if (ps_pdread (ta->ph, phc[cnt].h_descr, &pds, sizeof_descr)
-	    != PS_OK)
-	  return TD_ERR;	/* XXX Other error value?  */
-
-	/* The manager thread must be handled special.  The descriptor
-	   exists but the thread only gets created when the first
-	   `pthread_create' call is issued.  A clear indication that
-	   this happened is when the p_pid field is non-zero.  */
-	if (cnt == 1 && pds.p_pid == 0)
-	  continue;
-
-	/* Now test whether this thread matches the specified
-	   conditions.  */
-
-	/* Only if the priority level is as high or higher.  */
-	if (pds.p_priority < ti_pri)
-	  continue;
-
-	/* Test the state.
-	   XXX This is incomplete.  */
-	if (state != TD_THR_ANY_STATE)
-	  continue;
-
-	/* XXX For now we ignore threads which are not running anymore.
-	   The reason is that gdb tries to get the registers and fails.
-	   In future we should have a special mode of the thread library
-	   in which we keep the process around until the actual join
-	   operation happened.  */
-	if (pds.p_exited != 0)
-	  continue;
-
-	/* Yep, it matches.  Call the callback function.  */
-	th.th_ta_p = (td_thragent_t *) ta;
-	th.th_unique = phc[cnt].h_descr;
-	if (callback (&th, cbdata_p) != 0)
-	  return TD_DBERR;
+	result = handle_descr (ta, callback, cbdata_p, state, ti_pri, cnt,
+			       phc[cnt].h_descr);
+	if (result != TD_OK)
+	  break;
       }
 
-  return TD_OK;
+  return result;
 }

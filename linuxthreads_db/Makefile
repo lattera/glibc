@@ -20,7 +20,7 @@
 
 subdir		:= linuxthreads_db
 
-libthread_db-version = 1
+linuxthreads_db-version = 1.0
 
 extra-libs = libthread_db
 extra-libs-others := $(extra-libs)

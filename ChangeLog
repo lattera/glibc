@@ -1,3 +1,14 @@
+1999-11-12  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/nss_nisplus/nisplus-publickey.c: Check for snprintf return value.
+
+	* sysdeps/unix/sysv/linux/alpha/sys/procfs.h: Follow changes from
+	i386 version.
+	* sysdeps/unix/sysv/linux/arm/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/procfs.h: Likewise.
+
 1999-11-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* intl/locale.alias: Add Estonian entries.
@@ -33,7 +44,7 @@
 	* sysdeps/unix/getlogin_r.c (getlogin_r): Sync with getlogin
 	implementation for ttyname_r call; fix inverted condition; return
 	ut_user.
-        Closes PR libc/1438.
+	Closes PR libc/1438.
 
 1999-11-10  Ulrich Drepper  <drepper@cygnus.com>
 

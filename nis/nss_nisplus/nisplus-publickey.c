@@ -1,6 +1,6 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -58,6 +58,12 @@ _nss_nisplus_getpublickey (const char *netname, char *pkey, int *errnop)
   slen = snprintf (buf, NIS_MAXNAMELEN,
 		   "[auth_name=%s,auth_type=DES],cred.org_dir.%s",
 		   netname, domain);
+
+  if (slen >= NIS_MAXNAMELEN)
+    {
+      *errnop = EINVAL;
+      return NSS_STATUS_UNAVAIL;
+    }
 
   if (buf[slen - 1] != '.')
     {
@@ -130,6 +136,12 @@ _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd,
   slen = snprintf (buf, NIS_MAXNAMELEN,
 		   "[auth_name=%s,auth_type=DES],cred.org_dir.%s",
 		   netname, domain);
+
+  if (slen >= NIS_MAXNAMELEN)
+    {
+      *errnop = EINVAL;
+      return NSS_STATUS_UNAVAIL;
+    }
 
   if (buf[slen - 1] != '.')
     {
@@ -216,7 +228,7 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
 {
   char *domain;
   nis_result *res;
-  char sname[NIS_MAXNAMELEN+1]; /*  search criteria + table name */
+  char sname[NIS_MAXNAMELEN+2]; /*  search criteria + table name */
   size_t slen;
   char principal[NIS_MAXNAMELEN+1];
   int len;
@@ -236,6 +248,12 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
   slen = snprintf (sname, NIS_MAXNAMELEN,
 		   "[auth_name=%s,auth_type=DES],cred.org_dir.%s",
 		   netname, domain);
+
+  if (slen >= NIS_MAXNAMELEN)
+    {
+      *errnop = EINVAL;
+      return NSS_STATUS_UNAVAIL;
+    }
 
   if (sname[slen - 1] != '.')
     {
