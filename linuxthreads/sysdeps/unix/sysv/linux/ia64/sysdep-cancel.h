@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -105,7 +105,7 @@ __syscall_error_##args:							      \
 				   p_header.data.multiple_threads) == 0, 1)
 # else
 #  define SINGLE_THREAD_P \
-  adds r14 = MULTIPLE_THREADS_OFFSET, r13 ;; ld4 r14 = [r14] ;; cmp4.ne p6, p7 = 0, r14 ;;
+  adds r14 = MULTIPLE_THREADS_OFFSET, r13 ;; ld4 r14 = [r14] ;; cmp4.ne p6, p7 = 0, r14
 # endif
 
 #elif !defined __ASSEMBLER__

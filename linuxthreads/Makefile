@@ -88,7 +88,7 @@ tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 $(librt-tests) ex12 ex13 joinrace \
 	tststack $(tests-nodelete-$(have-z-nodelete)) ecmutex ex14 ex15 ex16 \
 	ex17 ex18 tst-cancel tst-context bug-sleep \
 	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 tst-cancel5 \
-	tst-cancel6
+	tst-cancel6 tst-popen
 test-srcs = tst-signal
 # These tests are linked with libc before libpthread
 tests-reverse += tst-cancel5

@@ -1,5 +1,5 @@
 /* Assembly macros for 64-bit PowerPC.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -207,6 +207,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
     sc
 
 /* ppc64 is always PIC */
+#undef JUMPTARGET
 #define JUMPTARGET(name) DOT_LABEL(name)
 
 #define PSEUDO(name, syscall_name, args) \

@@ -1,5 +1,4 @@
-/* Generic asm macros used on many machines.
-   Copyright (C) 1991,92,93,96,98,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,33 +16,23 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef C_LABEL
 
-/* Define a macro we can use to construct the asm name for a C symbol.  */
-#ifdef	NO_UNDERSCORES
-#ifdef	__STDC__
-#define C_LABEL(name)		name##:
-#else
-#define C_LABEL(name)		name/**/:
-#endif
-#else
-#ifdef	__STDC__
-#define C_LABEL(name)		_##name##:
-#else
-#define C_LABEL(name)		_/**/name/**/:
-#endif
-#endif
+#include <sysdep-cancel.h>
 
-#endif
+	.globl __vfork
+        .align 4
+        .ent __vfork,0
+__LABEL(__vfork)
+	ldgp	gp, 0(pv)
+	.prologue 1
+	PSEUDO_PROF
+	SINGLE_THREAD_P(t0)
+	bne	t0, HIDDEN_JUMPTARGET (__fork) !samegp
+	lda	v0, SYS_ify(vfork)
+	call_pal PAL_callsys
+	bne	a3, __syscall_error !samegp
+	ret
+PSEUDO_END(__vfork)
+libc_hidden_def (__vfork)
 
-#ifdef __ASSEMBLER__
-/* Mark the end of function named SYM.  This is used on some platforms
-   to generate correct debugging information.  */
-#ifndef END
-#define END(sym)
-#endif
-
-#ifndef JUMPTARGET
-#define JUMPTARGET(sym)		sym
-#endif
-#endif /* __ASSEMBLER__ */
+weak_alias (__vfork, vfork)

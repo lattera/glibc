@@ -1,5 +1,5 @@
 /* Assembler macros for i386.
-   Copyright (C) 1991,92,93,95,96,98,2002 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,95,96,98,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -108,6 +108,7 @@ lose: SYSCALL_PIC_SETUP							      \
 #define	PSEUDO_END(name)						      \
   END (name)
 
+#undef JUMPTARGET
 #ifdef PIC
 #define JUMPTARGET(name)	name##@PLT
 #define SYSCALL_PIC_SETUP \

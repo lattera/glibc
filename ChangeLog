@@ -1,3 +1,15 @@
+2003-01-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/test-vfork.c (noop): Add __attribute_noinline__.
+	* sysdeps/generic/sysdep.h (JUMPTARGET): Define if not defined.
+	* sysdeps/i386/sysdep.h (JUMPTARGET): Undefine JUMPTARGET before
+	defining it.
+	* sysdeps/powerpc/powerpc32/sysdep.h (JUMPTARGET): Likewise.
+	* sysdeps/powerpc/powerpc64/sysdep.h (JUMPTARGET): Likewise.
+	* sysdeps/s390/s390-32/sysdep.h (JUMPTARGET): Likewise.
+	* sysdeps/s390/s390-64/sysdep.h (JUMPTARGET): Likewise.
+	* sysdeps/x86_64/sysdep.h (JUMPTARGET): Likewise.
+
 2003-01-09  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/libm-test-ulps: Regenerated.

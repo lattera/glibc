@@ -1,6 +1,6 @@
-/* Generic asm macros used on many machines.
-   Copyright (C) 1991,92,93,96,98,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,33 +17,21 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef C_LABEL
+#include <sysdep-cancel.h>
 
-/* Define a macro we can use to construct the asm name for a C symbol.  */
-#ifdef	NO_UNDERSCORES
-#ifdef	__STDC__
-#define C_LABEL(name)		name##:
-#else
-#define C_LABEL(name)		name/**/:
-#endif
-#else
-#ifdef	__STDC__
-#define C_LABEL(name)		_##name##:
-#else
-#define C_LABEL(name)		_/**/name/**/:
-#endif
-#endif
-
-#endif
-
-#ifdef __ASSEMBLER__
-/* Mark the end of function named SYM.  This is used on some platforms
-   to generate correct debugging information.  */
-#ifndef END
-#define END(sym)
-#endif
-
-#ifndef JUMPTARGET
-#define JUMPTARGET(sym)		sym
-#endif
-#endif /* __ASSEMBLER__ */
+	.text
+ENTRY(__vfork)
+	ld	[%g6 + MULTIPLE_THREADS_OFFSET], %o0
+	cmp	%o0, 0
+	bne	HIDDEN_JUMPTARGET(__fork)
+	 mov	__NR_vfork, %g1
+	ta 0x10;
+	bcs	__syscall_error_handler
+	 nop
+	sub	%o1, 1, %o1
+	retl
+	 and	%o0, %o1, %o0
+	SYSCALL_ERROR_HANDLER
+PSEUDO_END (__vfork)
+libc_hidden_def (__vfork)
+weak_alias (__vfork, vfork)
