@@ -605,8 +605,7 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
   fl_longest_match = (nmatch != 0 || dfa->nbackref);
 
   err = re_string_allocate (&input, string, length, dfa->nodes_len + 1,
-			    preg->translate, preg->syntax & RE_ICASE,
-			    dfa->mb_cur_max, dfa->is_utf8);
+			    preg->translate, preg->syntax & RE_ICASE, dfa);
   if (BE (err != REG_NOERROR, 0))
     goto free_return;
   input.stop = stop;
@@ -1760,7 +1759,7 @@ check_dst_limits_calc_pos (dfa, mctx, limit, eclosures, subexp_idx, from_node,
 		{
 		  struct re_backref_cache_entry *ent = mctx->bkref_ents + bi;
 		int dst, cpos;
-		
+
 		/* If this backreference goes beyond the point we're
 		   examining, don't go any further.  */
 		  if (ent->str_idx > str_idx)
@@ -1797,12 +1796,12 @@ check_dst_limits_calc_pos (dfa, mctx, limit, eclosures, subexp_idx, from_node,
 	    }
 	      break;
 	    }
-	  
+
 	case OP_OPEN_SUBEXP:
 	  if (str_idx == lim->subexp_from && subexp_idx == dfa->nodes[node].opr.idx)
 	    return -1;
 	  break;
-	  
+
 	case OP_CLOSE_SUBEXP:
 	  if (str_idx == lim->subexp_to && subexp_idx == dfa->nodes[node].opr.idx)
 	    return 0;

@@ -1,5 +1,5 @@
 /* Access to locale-dependent parameters.
-   Copyright (C) 1995-99,2000,01,02 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -334,6 +334,7 @@ enum
   _NL_CTYPE_TRANSLIT_DEFAULT_MISSING,
   _NL_CTYPE_TRANSLIT_IGNORE_LEN,
   _NL_CTYPE_TRANSLIT_IGNORE,
+  _NL_CTYPE_MAP_TO_NONASCII,
   _NL_CTYPE_EXTRA_MAP_1,
   _NL_CTYPE_EXTRA_MAP_2,
   _NL_CTYPE_EXTRA_MAP_3,

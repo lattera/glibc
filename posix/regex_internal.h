@@ -335,6 +335,7 @@ struct re_string_t
   /* 1 if REG_ICASE.  */
   unsigned int icase : 1;
   unsigned int is_utf8 : 1;
+  unsigned int map_notascii : 1;
   int mb_cur_max;
 };
 typedef struct re_string_t re_string_t;
@@ -345,31 +346,32 @@ typedef struct re_string_t re_string_t;
 #define MBS_CASE_ALLOCATED(pstr) (pstr->trans != NULL)
 
 
+struct re_dfa_t;
+typedef struct re_dfa_t re_dfa_t;
 #ifndef RE_NO_INTERNAL_PROTOTYPES
 static reg_errcode_t re_string_allocate (re_string_t *pstr, const char *str,
 					 int len, int init_len,
 					 RE_TRANSLATE_TYPE trans, int icase,
-					 int mb_cur_max, int is_utf8);
+					 const re_dfa_t *dfa);
 static reg_errcode_t re_string_construct (re_string_t *pstr, const char *str,
 					  int len, RE_TRANSLATE_TYPE trans,
-					  int icase, int mb_cur_max,
-					  int is_utf8);
+					  int icase, const re_dfa_t *dfa);
 static reg_errcode_t re_string_reconstruct (re_string_t *pstr, int idx,
 					    int eflags, int newline);
 static reg_errcode_t re_string_realloc_buffers (re_string_t *pstr,
 						int new_buf_len);
-#ifdef RE_ENABLE_I18N
+# ifdef RE_ENABLE_I18N
 static void build_wcs_buffer (re_string_t *pstr);
 static void build_wcs_upper_buffer (re_string_t *pstr);
-#endif /* RE_ENABLE_I18N */
+# endif /* RE_ENABLE_I18N */
 static void build_upper_buffer (re_string_t *pstr);
 static void re_string_translate_buffer (re_string_t *pstr);
 static void re_string_destruct (re_string_t *pstr);
-#ifdef RE_ENABLE_I18N
+# ifdef RE_ENABLE_I18N
 static int re_string_elem_size_at (const re_string_t *pstr, int idx);
 static inline int re_string_char_size_at (const re_string_t *pstr, int idx);
 static inline wint_t re_string_wchar_at (const re_string_t *pstr, int idx);
-#endif /* RE_ENABLE_I18N */
+# endif /* RE_ENABLE_I18N */
 static unsigned int re_string_context_at (const re_string_t *input, int idx,
 					  int eflags, int newline_anchor);
 #endif
@@ -610,9 +612,9 @@ struct re_dfa_t
      collating element.  */
   unsigned int has_mb_node : 1;
   unsigned int is_utf8 : 1;
+  unsigned int map_notascii : 1;
   int mb_cur_max;
 };
-typedef struct re_dfa_t re_dfa_t;
 
 #ifndef RE_NO_INTERNAL_PROTOTYPES
 static reg_errcode_t re_node_set_alloc (re_node_set *set, int size);

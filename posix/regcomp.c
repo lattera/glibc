@@ -748,8 +748,7 @@ re_compile_internal (preg, pattern, length, syntax)
 #endif
 
   err = re_string_construct (&regexp, pattern, length, preg->translate,
-			     syntax & RE_ICASE, dfa->mb_cur_max,
-			     dfa->is_utf8);
+			     syntax & RE_ICASE, dfa);
   if (BE (err != REG_NOERROR, 0))
     {
       re_free (dfa);
@@ -828,6 +827,8 @@ init_dfa (dfa, pat_len)
   if (dfa->mb_cur_max > 1
       && strcmp (_NL_CURRENT (LC_CTYPE, _NL_CTYPE_CODESET_NAME), "UTF-8") == 0)
     dfa->is_utf8 = 1;
+  dfa->map_notascii = (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_TO_NONASCII)
+		       != 0);
 #endif
 
   if (BE (dfa->nodes == NULL || dfa->state_table == NULL

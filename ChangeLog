@@ -1,5 +1,28 @@
 2003-11-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regex_internal.h: Add forward declaration of re_dfa_t.
+	Replace last two parameters of re_string_allocate and
+	re_string_construct with pointer to DFA.
+	(re_dfa_t): Add map_notascii field.
+	* posix/regcomp.c (re_compile_internal): Add call of
+	re_string_construct.
+	(init_dfa): Initialize mpa_notascii.
+	* posix/regex_internal.c: Adjust definitions of re_string_allocate
+	and re_string_construct.
+	Pass DFA to re_string_construct.  Adjust definition.  Initialize
+	map_notascii field.
+	(build_wcs_upper_buffer): If map_notascii is zero use simplfied
+	method to map ASCII values to upper case.
+	* posix/regex.c: Include localeinfo.h.
+	* posix/regexec.c: Adjust call of re_string_allocate.
+
+	* locale/langinfo.h: Add _NL_CTYPE_MAP_TO_NONASCII.
+	* locale/localeinfo.h (LIMAGIC): Change value.
+	* locale/categories.def. Add entry for _NL_CTYPE_MAP_TO_NONASCII.
+	* locale/C-ctype.h: Likewise.
+	* locale/programs/ld-ctype.c: Compute whether any mapping maps from
+	ASCII to non-ASCII value.  Write out that value.
+
 	* wcsmbs/mbsinit.c: Undef mbsinit and __mbsinit.
 	* include/wchar.h: Provide inline versions of mbsinit and __mbsinit.
 

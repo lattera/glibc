@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -180,6 +180,8 @@ struct locale_ctype_t
   uint32_t *default_missing;
   const char *default_missing_file;
   size_t default_missing_lineno;
+
+  uint32_t to_nonascii;
 
   /* The arrays for the binary representation.  */
   char_class_t *ctype_b;
@@ -1034,6 +1036,10 @@ ctype_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	    iov[2 + elem + offset].iov_len = total;
 	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	    break;
+
+
+	  CTYPE_DATA (_NL_CTYPE_MAP_TO_NONASCII,
+		      &ctype->to_nonascii, sizeof (uint32_t));
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_MB_LEN):
 	    iov[2 + elem + offset].iov_base = alloca (sizeof (uint32_t));
@@ -2706,6 +2712,14 @@ with character code range values one must use the absolute ellipsis `...'"));
 
 	      if (!ignore_content)
 		{
+		  /* Check whether the mapping converts from an ASCII value
+		     to a non-ASCII value.  */
+		  if (from_seq != NULL && from_seq->nbytes == 1
+		      && isascii (from_seq->bytes[0])
+		      && to_seq != NULL && (to_seq->nbytes != 1
+					    || !isascii (to_seq->bytes[0])))
+		    ctype->to_nonascii = 1;
+
 		  if (mapidx < 2 && from_seq != NULL && to_seq != NULL
 		      && from_seq->nbytes == 1 && to_seq->nbytes == 1)
 		    /* We can use this value.  */

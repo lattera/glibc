@@ -21,7 +21,7 @@
 static void re_string_construct_common (const char *str, int len,
 					re_string_t *pstr,
 					RE_TRANSLATE_TYPE trans, int icase,
-					int mb_cur_max, int is_utf8);
+					const re_dfa_t *dfa);
 #ifdef RE_ENABLE_I18N
 static int re_string_skip_chars (re_string_t *pstr, int new_raw_idx,
 				 wint_t *last_wc);
@@ -47,17 +47,16 @@ static unsigned int inline calc_state_hash (const re_node_set *nodes,
    re_string_reconstruct before using the object.  */
 
 static reg_errcode_t
-re_string_allocate (pstr, str, len, init_len, trans, icase,
-		    mb_cur_max, is_utf8)
+re_string_allocate (pstr, str, len, init_len, trans, icase, dfa)
      re_string_t *pstr;
      const char *str;
-     int len, init_len, icase, mb_cur_max, is_utf8;
+     int len, init_len, icase;
      RE_TRANSLATE_TYPE trans;
+     const re_dfa_t *dfa;
 {
   reg_errcode_t ret;
   int init_buf_len = (len + 1 < init_len) ? len + 1: init_len;
-  re_string_construct_common (str, len, pstr, trans, icase,
-			      mb_cur_max, is_utf8);
+  re_string_construct_common (str, len, pstr, trans, icase, dfa);
   pstr->stop = pstr->len;
 
   ret = re_string_realloc_buffers (pstr, init_buf_len);
@@ -68,22 +67,22 @@ re_string_allocate (pstr, str, len, init_len, trans, icase,
 		    : (unsigned char *) str);
   pstr->mbs = MBS_ALLOCATED (pstr) ? pstr->mbs : pstr->mbs_case;
   pstr->valid_len = (MBS_CASE_ALLOCATED (pstr) || MBS_ALLOCATED (pstr)
-		     || mb_cur_max > 1) ? pstr->valid_len : len;
+		     || dfa->mb_cur_max > 1) ? pstr->valid_len : len;
   return REG_NOERROR;
 }
 
 /* This function allocate the buffers, and initialize them.  */
 
 static reg_errcode_t
-re_string_construct (pstr, str, len, trans, icase, mb_cur_max, is_utf8)
+re_string_construct (pstr, str, len, trans, icase, dfa)
      re_string_t *pstr;
      const char *str;
-     int len, icase, mb_cur_max, is_utf8;
+     int len, icase;
      RE_TRANSLATE_TYPE trans;
+     const re_dfa_t *dfa;
 {
   reg_errcode_t ret;
-  re_string_construct_common (str, len, pstr, trans, icase,
-			      mb_cur_max, is_utf8);
+  re_string_construct_common (str, len, pstr, trans, icase, dfa);
   pstr->stop = pstr->len;
   /* Set 0 so that this function can initialize whole buffers.  */
   pstr->valid_len = 0;
@@ -101,7 +100,7 @@ re_string_construct (pstr, str, len, trans, icase, mb_cur_max, is_utf8)
   if (icase)
     {
 #ifdef RE_ENABLE_I18N
-      if (mb_cur_max > 1)
+      if (dfa->mb_cur_max > 1)
 	build_wcs_upper_buffer (pstr);
       else
 #endif /* RE_ENABLE_I18N  */
@@ -110,7 +109,7 @@ re_string_construct (pstr, str, len, trans, icase, mb_cur_max, is_utf8)
   else
     {
 #ifdef RE_ENABLE_I18N
-      if (mb_cur_max > 1)
+      if (dfa->mb_cur_max > 1)
 	build_wcs_buffer (pstr);
       else
 #endif /* RE_ENABLE_I18N  */
@@ -167,20 +166,22 @@ re_string_realloc_buffers (pstr, new_buf_len)
 
 
 static void
-re_string_construct_common (str, len, pstr, trans, icase, mb_cur_max, is_utf8)
+re_string_construct_common (str, len, pstr, trans, icase, dfa)
      const char *str;
      int len;
      re_string_t *pstr;
      RE_TRANSLATE_TYPE trans;
-     int icase, mb_cur_max, is_utf8;
+     int icase;
+     const re_dfa_t *dfa;
 {
   memset (pstr, '\0', sizeof (re_string_t));
   pstr->raw_mbs = (const unsigned char *) str;
   pstr->len = len;
   pstr->trans = trans;
   pstr->icase = icase ? 1 : 0;
-  pstr->mb_cur_max = mb_cur_max;
-  pstr->is_utf8 = is_utf8;
+  pstr->mb_cur_max = dfa->mb_cur_max;
+  pstr->is_utf8 = dfa->is_utf8;
+  pstr->map_notascii = dfa->map_notascii;
 }
 
 #ifdef RE_ENABLE_I18N
@@ -253,47 +254,110 @@ build_wcs_upper_buffer (pstr)
   /* Build the buffers from pstr->valid_len to either pstr->len or
      pstr->bufs_len.  */
   end_idx = (pstr->bufs_len > pstr->len)? pstr->len : pstr->bufs_len;
-  for (byte_idx = pstr->valid_len; byte_idx < end_idx;)
-    {
-      wchar_t wc;
-      remain_len = end_idx - byte_idx;
-      prev_st = pstr->cur_state;
-      mbclen = mbrtowc (&wc, ((const char *) pstr->raw_mbs + pstr->raw_mbs_idx
-			      + byte_idx), remain_len, &pstr->cur_state);
-      if (BE (mbclen == (size_t) -2, 0))
-	{
-	  /* The buffer doesn't have enough space, finish to build.  */
-	  pstr->cur_state = prev_st;
-	  break;
-	}
-      else if (mbclen == 1 || mbclen == (size_t) -1 || mbclen == 0)
+
+#ifdef _LIBC
+  /* The following optimization assumes that the wchar_t encoding is
+     always ISO 10646.  */
+  if (! pstr->map_notascii && pstr->trans == NULL)
+    for (byte_idx = pstr->valid_len; byte_idx < end_idx;)
+      if (isascii (pstr->raw_mbs[pstr->raw_mbs_idx + byte_idx])
+	  && mbsinit (&pstr->cur_state))
 	{
 	  /* In case of a singlebyte character.  */
-	  int ch = pstr->raw_mbs[pstr->raw_mbs_idx + byte_idx];
-	  /* Apply the translation if we need.  */
-	  if (pstr->trans != NULL && mbclen == 1)
-	    {
-	      ch = pstr->trans[ch];
-	      pstr->mbs_case[byte_idx] = ch;
-	    }
-	  pstr->wcs[byte_idx] = iswlower (wc) ? towupper (wc) : wc;
-	  pstr->mbs[byte_idx++] = islower (ch) ? toupper (ch) : ch;
-	  if (BE (mbclen == (size_t) -1, 0))
-	    pstr->cur_state = prev_st;
+	  pstr->mbs[byte_idx]
+	    = toupper (pstr->raw_mbs[pstr->raw_mbs_idx + byte_idx]);
+	  /* The next step uses the assumption that wchar_t is encoded
+	     with ISO 10646: all ASCII values can be converted like this.  */
+	  pstr->wcs[byte_idx] = (wchar_t) pstr->mbs[byte_idx];
+	  ++byte_idx;
 	}
-      else /* mbclen > 1 */
+      else
 	{
-	  if (iswlower (wc))
-	    wcrtomb ((char *) pstr->mbs + byte_idx, towupper (wc), &prev_st);
+	  wchar_t wc;
+	  remain_len = end_idx - byte_idx;
+	  prev_st = pstr->cur_state;
+	  mbclen = mbrtowc (&wc,
+			    ((const char *) pstr->raw_mbs + pstr->raw_mbs_idx
+			     + byte_idx), remain_len, &pstr->cur_state);
+	  if (BE (mbclen > 1, 1))
+	    {
+	      if (iswlower (wc))
+		wcrtomb ((char *) pstr->mbs + byte_idx, towupper (wc),
+			 &prev_st);
+	      else
+		memcpy (pstr->mbs + byte_idx,
+			pstr->raw_mbs + pstr->raw_mbs_idx + byte_idx, mbclen);
+	      pstr->wcs[byte_idx++] = towupper (wc);
+	      /* Write paddings.  */
+	      for (remain_len = byte_idx + mbclen - 1; byte_idx < remain_len ;)
+		pstr->wcs[byte_idx++] = WEOF;
+	    }
+	  else if (mbclen == (size_t) -1 || mbclen == 0)
+	    {
+	      /* In case of a singlebyte character.  */
+	      int ch = pstr->raw_mbs[pstr->raw_mbs_idx + byte_idx];
+	      /* Apply the translation if we need.  */
+	      if (BE (pstr->trans != NULL, 0) && mbclen == 1)
+		{
+		  ch = pstr->trans[ch];
+		  pstr->mbs_case[byte_idx] = ch;
+		}
+	      pstr->wcs[byte_idx] = towupper (wc);
+	      pstr->mbs[byte_idx++] = toupper (ch);
+	      if (BE (mbclen == (size_t) -1, 0))
+		pstr->cur_state = prev_st;
+	    }
 	  else
-	    memcpy (pstr->mbs + byte_idx,
-		    pstr->raw_mbs + pstr->raw_mbs_idx + byte_idx, mbclen);
-	  pstr->wcs[byte_idx++] = iswlower (wc) ? towupper (wc) : wc;
-	  /* Write paddings.  */
-	  for (remain_len = byte_idx + mbclen - 1; byte_idx < remain_len ;)
-	    pstr->wcs[byte_idx++] = WEOF;
+	    {
+	      /* The buffer doesn't have enough space, finish to build.  */
+	      pstr->cur_state = prev_st;
+	      break;
+	    }
 	}
-    }
+  else
+#endif
+    for (byte_idx = pstr->valid_len; byte_idx < end_idx;)
+      {
+	wchar_t wc;
+	remain_len = end_idx - byte_idx;
+	prev_st = pstr->cur_state;
+	mbclen = mbrtowc (&wc,
+			  ((const char *) pstr->raw_mbs + pstr->raw_mbs_idx
+			   + byte_idx), remain_len, &pstr->cur_state);
+	if (mbclen == 1 || mbclen == (size_t) -1 || mbclen == 0)
+	  {
+	    /* In case of a singlebyte character.  */
+	    int ch = pstr->raw_mbs[pstr->raw_mbs_idx + byte_idx];
+	    /* Apply the translation if we need.  */
+	    if (BE (pstr->trans != NULL, 0) && mbclen == 1)
+	      {
+		ch = pstr->trans[ch];
+		pstr->mbs_case[byte_idx] = ch;
+	      }
+	    pstr->wcs[byte_idx] = towupper (wc);
+	    pstr->mbs[byte_idx++] = toupper (ch);
+	    if (BE (mbclen == (size_t) -1, 0))
+	      pstr->cur_state = prev_st;
+	  }
+	else if (BE (mbclen != (size_t) -2, 1))
+	  {
+	    if (iswlower (wc))
+	      wcrtomb ((char *) pstr->mbs + byte_idx, towupper (wc), &prev_st);
+	    else
+	      memcpy (pstr->mbs + byte_idx,
+		      pstr->raw_mbs + pstr->raw_mbs_idx + byte_idx, mbclen);
+	    pstr->wcs[byte_idx++] = towupper (wc);
+	    /* Write paddings.  */
+	    for (remain_len = byte_idx + mbclen - 1; byte_idx < remain_len ;)
+	      pstr->wcs[byte_idx++] = WEOF;
+	  }
+	else
+	  {
+	    /* The buffer doesn't have enough space, finish to build.  */
+	    pstr->cur_state = prev_st;
+	    break;
+	  }
+      }
   pstr->valid_len = byte_idx;
 }
 

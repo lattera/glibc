@@ -1,5 +1,5 @@
 /* Definition of all available locale categories and their items.  -*- C -*-
-   Copyright (C) 1995-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -133,6 +133,7 @@ DEFINE_CATEGORY
   DEFINE_ELEMENT (_NL_CTYPE_TRANSLIT_DEFAULT_MISSING, "ctype-translit-default-missing", std, wstring)
   DEFINE_ELEMENT (_NL_CTYPE_TRANSLIT_IGNORE_LEN, "ctype-translit-ignore-len", std, word)
   DEFINE_ELEMENT (_NL_CTYPE_TRANSLIT_IGNORE, "ctype-translit-ignore", std, string)
+  DEFINE_ELEMENT (_NL_CTYPE_MAP_TO_NONASCII, "map-to-nonascii", std, word)
   ), _nl_postload_ctype)
 
 

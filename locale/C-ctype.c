@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -528,7 +528,7 @@ _nl_C_LC_CTYPE_width attribute_hidden =
 };
 
 /* Number of fields with fixed meanings, starting at 0.  */
-#define NR_FIXED 70
+#define NR_FIXED 71
 /* Number of class fields, starting at CLASS_OFFSET.  */
 #define NR_CLASSES 12
 /* Number of map fields, starting at MAP_OFFSET.  */
@@ -665,6 +665,8 @@ const struct locale_data _nl_C_LC_CTYPE attribute_hidden =
     { .word = 0 },
     /* _NL_CTYPE_TRANSLIT_IGNORE */
     { .wstr = NULL },
+    /* _NL_CTYPE_MAP_TO_NONASCII */
+    { .word = 0 },
     /* NR_CLASSES wctype_tables */
     { .string = (const char *) _nl_C_LC_CTYPE_class_upper.header },
     { .string = (const char *) _nl_C_LC_CTYPE_class_lower.header },
