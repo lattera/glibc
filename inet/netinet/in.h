@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or modify
@@ -115,11 +115,11 @@ struct in_addr
 #define	IN_CLASSC_NSHIFT	8
 #define	IN_CLASSC_HOST		(0xffffffff & ~IN_CLASSC_NET)
 
-#define	IN_CLASSD(a)		((((long int) (a)) & 0xf0000000) = 0xe0000000)
+#define	IN_CLASSD(a)		((((long int) (a)) & 0xf0000000) == 0xe0000000)
 #define	IN_MULTICAST(a)		IN_CLASSD(a)
 
-#define	IN_EXPERIMENTAL(a)	((((long int) (a)) & 0xe0000000) = 0xe0000000)
-#define	IN_BADCLASS(a)		((((long int) (a)) & 0xf0000000) = 0xf0000000)
+#define	IN_EXPERIMENTAL(a)	((((long int) (a)) & 0xe0000000) == 0xe0000000)
+#define	IN_BADCLASS(a)		((((long int) (a)) & 0xf0000000) == 0xf0000000)
 
 /* Address to accept any incoming messages.  */
 #define	INADDR_ANY		((unsigned long int) 0x00000000)
