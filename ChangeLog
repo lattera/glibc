@@ -1,5 +1,7 @@
 2003-04-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* signal/sigrelse.c (sigrelse): Use sigdelset and not __sigdelset.
+	The signal number must be checked.
 	* signal/sighold.c (sighold): Use sigaddset and not __sigaddset.
 	The signal number must be checked [PR libc/5004].
 
