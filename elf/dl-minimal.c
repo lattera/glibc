@@ -291,3 +291,45 @@ _itoa (value, buflim, base, upper_case)
   return bp;
 }
 #endif
+
+
+/* The following is not a complete strsep implementation.  It cannot
+   handle empty delimiter strings.  But this isn't necessary for the
+   execution of ld.so.  */
+#undef strsep
+#undef __strsep
+char *
+__strsep (char **stringp, const char *delim)
+{
+  char *begin;
+
+  begin = *stringp;
+  if (begin != NULL)
+    {
+      char *end = begin;
+
+      while (*end != '\0' || (end = NULL))
+	{
+	  const char *dp = delim;
+
+	  do
+	    if (*dp == *end)
+	      break;
+	  while (*++dp != '\0');
+
+	  if (*dp != '\0')
+	    {
+	      *end++ = '\0';
+	      break;
+	    }
+
+	  ++end;
+	}
+
+      *stringp = end;
+    }
+
+  return begin;
+}
+weak_alias (__strsep, strsep)
+strong_alias (__strsep, __strsep_g)

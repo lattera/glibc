@@ -513,7 +513,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	       found.  */
 	    break;
 	  if (sym->st_size > refsym->st_size
-	      || (sym->st_size < erefsym->st_size && GL(dl_verbose)))
+	      || (sym->st_size < refsym->st_size && GL(dl_verbose)))
 	    {
 	      const char *strtab;
 

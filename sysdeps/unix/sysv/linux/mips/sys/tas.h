@@ -42,16 +42,19 @@ _test_and_set (int *p, int v) __THROW
   int r, t;
 
   __asm__ __volatile__
-    ("1:\n\t"
-     "ll	%0,%3\n\t"
+    ("/* Inline test and set */\n\t"
+     "ll	%0,%3\n"
+     "1:\n\t"
      ".set	push\n\t"
      ".set	noreorder\n\t"
      "beq	%0,%4,2f\n\t"
      " move	%1,%4\n\t"
-     ".set	pop\n\t"
      "sc	%1,%2\n\t"
-     "beqz	%1,1b\n"
-     "2:\n"
+     "beqzl	%1,1b\n\t"
+     " ll	%0,%3\n\t"
+     ".set	pop\n"
+     "2:\n\t"
+     "/* End test and set */"
      : "=&r" (r), "=&r" (t), "=m" (*p)
      : "m" (*p), "r" (v)
      : "memory");

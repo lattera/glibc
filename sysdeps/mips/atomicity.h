@@ -33,11 +33,15 @@ exchange_and_add (volatile uint32_t *mem, int val)
 
   __asm__ __volatile__
     ("/* Inline exchange & add */\n\t"
+     "ll	%0,%3\n"
      "1:\n\t"
-     "ll	%0,%3\n\t"
      "addu	%1,%4,%0\n\t"
      "sc	%1,%2\n\t"
-     "beqz	%1,1b\n\t"
+     ".set	push\n\t"
+     ".set	noreorder\n\t"
+     "beqzl	%1,1b\n\t"
+     " ll	%0,%3\n\t"
+     ".set	pop\n\t"
      "/* End exchange & add */"
      : "=&r"(result), "=&r"(tmp), "=m"(*mem)
      : "m" (*mem), "r"(val)
@@ -54,11 +58,15 @@ atomic_add (volatile uint32_t *mem, int val)
 
   __asm__ __volatile__
     ("/* Inline atomic add */\n\t"
+     "ll	%0,%2\n"
      "1:\n\t"
-     "ll	%0,%2\n\t"
      "addu	%0,%3,%0\n\t"
      "sc	%0,%1\n\t"
-     "beqz	%0,1b\n\t"
+     ".set	push\n\t"
+     ".set	noreorder\n\t"
+     "beqzl	%0,1b\n\t"
+     " ll	%0,%2\n\t"
+     ".set	pop\n\t"
      "/* End atomic add */"
      : "=&r"(result), "=m"(*mem)
      : "m" (*mem), "r"(val)
@@ -69,22 +77,24 @@ static inline int
 __attribute__ ((unused))
 compare_and_swap (volatile long int *p, long int oldval, long int newval)
 {
-  long int ret;
+  long int ret, temp;
 
   __asm__ __volatile__
     ("/* Inline compare & swap */\n\t"
+     "ll	%1,%5\n"
      "1:\n\t"
-     "ll	%0,%4\n\t"
-     ".set	push\n"
+     ".set	push\n\t"
      ".set	noreorder\n\t"
-     "bne	%0,%2,2f\n\t"
-     "move	%0,%3\n\t"
-     ".set	pop\n\t"
-     "sc	%0,%1\n\t"
-     "beqz	%0,1b\n"
+     "bne	%1,%3,2f\n\t"
+     " move	%0,$0\n\t"
+     "move	%0,%4\n\t"
+     "sc	%0,%2\n\t"
+     "beqzl	%0,1b\n\t"
+     " ll	%1,%5\n\t"
+     ".set	pop\n"
      "2:\n\t"
      "/* End compare & swap */"
-     : "=&r" (ret), "=m" (*p)
+     : "=&r" (ret), "=&r" (temp), "=m" (*p)
      : "r" (oldval), "r" (newval), "m" (*p)
      : "memory");
 

@@ -1,3 +1,22 @@
+2002-02-01  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/mips/atomicity.h (exchange_and_add): Use branch
+	likely.
+	(atomic_add): Likewise.
+	(compare_and_swap): Return 0 only when failed to compare. Use
+	branch likely.
+
+	* sysdeps/unix/sysv/linux/mips/sys/tas.h (_test_and_set): Use
+	branch likely.
+
+2002-02-03  kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/dl-machine.h (elf_machine_rela): Fix a typo.
+
+2002-02-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-minimal.c (__strsep): New minimal implementation.
+
 2002-02-02  Paul Eggert  <eggert@twinsun.com>
 
 	* src/mktime.c [defined DEBUG && STDC_HEADERS]: Include <string.h>.

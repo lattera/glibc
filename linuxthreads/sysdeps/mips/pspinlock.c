@@ -29,20 +29,21 @@
 int
 __pthread_spin_lock (pthread_spinlock_t *lock)
 {
-  unsigned int tmp;
+  unsigned int tmp1, tmp2;
 
   asm volatile
     ("\t\t\t# spin_lock\n\t"
+     "ll	%1,%3\n"
      "1:\n\t"
-     "ll	%1,%2\n\t"
      ".set	push\n\t"
      ".set	noreorder\n\t"
      "bnez	%1,1b\n\t"
-     " li	%1,1\n\t"
-     ".set	pop\n\t"
-     "sc	%1,%0\n\t"
-     "beqz	%1,1b"
-     : "=m" (*lock), "=&r" (tmp)
+     " li	%2,1\n\t"
+     "sc	%2,%0\n\t"
+     "beqzl	%2,1b\n\t"
+     " ll	%1,%3\n\t"
+     ".set	pop"
+     : "=m" (*lock), "=&r" (tmp1), "=&r" (tmp2)
      : "m" (*lock)
      : "memory");
 
