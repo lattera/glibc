@@ -1,3 +1,8 @@
+2003-03-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (allocate_stack): Store the exact stack size of
+	user allocated stacks.
+
 2003-03-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h
