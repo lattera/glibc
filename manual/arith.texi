@@ -2191,13 +2191,13 @@ All these functions are defined in @file{stdlib.h}.
 @comment SVID, Unix98
 @deftypefun {char *} ecvt (double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{neg})
 The function @code{ecvt} converts the floating-point number @var{value}
-to a string with at most @var{ndigit} decimal digits.
-The returned string contains no decimal point or sign. The first
-digit of the string is non-zero (unless @var{value} is actually zero)
-and the last digit is rounded to nearest.  @var{decpt} is set to the
+to a string with at most @var{ndigit} decimal digits.  The
+returned string contains no decimal point or sign. The first digit of
+the string is non-zero (unless @var{value} is actually zero) and the
+last digit is rounded to nearest.  @code{*@var{decpt}} is set to the
 index in the string of the first digit after the decimal point.
-@var{neg} is set to a nonzero value if @var{value} is negative, zero
-otherwise.
+@code{*@var{neg}} is set to a nonzero value if @var{value} is negative,
+zero otherwise.
 
 If @var{ndigit} decimal digits would exceed the precision of a
 @code{double} it is reduced to a system-specific value.
@@ -2205,16 +2205,16 @@ If @var{ndigit} decimal digits would exceed the precision of a
 The returned string is statically allocated and overwritten by each call
 to @code{ecvt}.
 
-If @var{value} is zero, it's implementation defined whether @var{decpt} is
-@code{0} or @code{1}.
+If @var{value} is zero, it is implementation defined whether
+@code{*@var{decpt}} is @code{0} or @code{1}.
 
-For example: @code{ecvt (12.3, 5, &decpt, &neg)} returns @code{"12300"}
-and sets @var{decpt} to @code{2} and @var{neg} to @code{0}.
+For example: @code{ecvt (12.3, 5, &d, &n)} returns @code{"12300"}
+and sets @var{d} to @code{2} and @var{n} to @code{0}.
 @end deftypefun
 
 @comment stdlib.h
 @comment SVID, Unix98
-@deftypefun {char *} fcvt (double @var{value}, int @var{ndigit}, int @var{decpt}, int *@var{neg})
+@deftypefun {char *} fcvt (double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{neg})
 The function @code{fcvt} is like @code{ecvt}, but @var{ndigit} specifies
 the number of digits after the decimal point.  If @var{ndigit} is less
 than zero, @var{value} is rounded to the @math{@var{ndigit}+1}'th place to the
@@ -2254,7 +2254,7 @@ restricted by the precision of a @code{long double}.
 
 @comment stdlib.h
 @comment GNU
-@deftypefun {char *} qfcvt (long double @var{value}, int @var{ndigit}, int @var{decpt}, int *@var{neg})
+@deftypefun {char *} qfcvt (long double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{neg})
 This function is equivalent to @code{fcvt} except that it
 takes a @code{long double} for the first parameter and that @var{ndigit} is
 restricted by the precision of a @code{long double}.
@@ -2292,7 +2292,7 @@ This function is a GNU extension.
 
 @comment stdlib.h
 @comment SVID, Unix98
-@deftypefun {char *} fcvt_r (double @var{value}, int @var{ndigit}, int @var{decpt}, int *@var{neg}, char *@var{buf}, size_t @var{len})
+@deftypefun {char *} fcvt_r (double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{neg}, char *@var{buf}, size_t @var{len})
 The @code{fcvt_r} function is the same as @code{fcvt}, except
 that it places its result into the user-specified buffer pointed to by
 @var{buf}, with length @var{len}.
@@ -2312,7 +2312,7 @@ This function is a GNU extension.
 
 @comment stdlib.h
 @comment GNU
-@deftypefun {char *} qfcvt_r (long double @var{value}, int @var{ndigit}, int @var{decpt}, int *@var{neg}, char *@var{buf}, size_t @var{len})
+@deftypefun {char *} qfcvt_r (long double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{neg}, char *@var{buf}, size_t @var{len})
 The @code{qfcvt_r} function is the same as @code{qfcvt}, except
 that it places its result into the user-specified buffer pointed to by
 @var{buf}, with length @var{len}.

@@ -1,3 +1,27 @@
+1999-06-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* inet/rcmd.c (__icheckhost): Test for gethostbyname_r result
+	correctly.
+
+1999-06-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/arith.texi (System V Number Conversion): Fix the
+	description which confused pointer and value to pointer.
+	Reported by Andries.Brouwer@cwi.nl.
+
+1999-06-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* pwd/getpw.c (__getpw): Check for NULL result pointer.
+
+1999-06-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/users.texi (Lookup User): Document POSIX return
+	semantics for getpwuid_r and getgrgid_r.
+
+	* manual/socket.texi (Host Names): Document that the result
+	pointer is null in case of error or host not found and fix a
+	typo.  Give a small example.
+
 1999-06-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* pwd/getpw.c: Add warning since no buffer size is given and

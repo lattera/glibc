@@ -1479,12 +1479,14 @@ the information instead of using a static buffer.  The first
 are used to contain additional information, normally strings which are
 pointed to by the elements of the result structure.
 
-If the return value is @code{0} the pointer returned in @var{result}
-points to the record which contains the wanted data (i.e., @var{result}
-contains the value @var{result_buf}).  If it is nonzero, there is no
-user in the data base with user ID @var{uid}, or the buffer @var{buffer}
-is too small to contain all the needed information.  In the latter case,
-@var{errno} is set to @code{ERANGE}.
+If a user with ID @var{uid} is found, the pointer returned in
+@var{result} points to the record which contains the wanted data (i.e.,
+@var{result} contains the value @var{result_buf}).  If no user is found
+or if an error occured, the pointer returned in @var{result} is a null
+pointer.  The function returns zero or an error code.  If the buffer
+@var{buffer} is too small to contain all the needed information, the
+error code @code{ERANGE} is returned and @var{errno} is set to
+@code{ERANGE}.
 @end deftypefun
 
 
@@ -1690,12 +1692,14 @@ the information instead of using a static buffer.  The first
 are used to contain additional information, normally strings which are
 pointed to by the elements of the result structure.
 
-If the return value is @code{0} the pointer returned in @var{result}
-points to the requested data (i.e., @var{result} contains the value
-@var{result_buf}).  If it is nonzero, there is no group in the data base
-with group ID @var{gid}, or the buffer @var{buffer} is too small to
-contain all the needed information.  In the latter case, @var{errno} is
-set to @code{ERANGE}.
+If a group with ID @var{gid} is found, the pointer returned in
+@var{result} points to the record which contains the wanted data (i.e.,
+@var{result} contains the value @var{result_buf}).  If no group is found
+or if an error occured, the pointer returned in @var{result} is a null
+pointer.  The function returns zero or an error code.  If the buffer
+@var{buffer} is too small to contain all the needed information, the
+error code @code{ERANGE} is returned and @var{errno} is set to
+@code{ERANGE}.
 @end deftypefun
 
 @comment grp.h

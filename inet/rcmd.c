@@ -270,7 +270,7 @@ ruserok(rhost, superuser, ruser, luser)
 	buffer = __alloca (buflen);
 
 	while (__gethostbyname_r (rhost, &hostbuf, buffer, buflen, &hp, &herr)
-	       < 0)
+	       != 0)
 	  if (herr != NETDB_INTERNAL || errno != ERANGE)
 	    return -1;
 	  else
