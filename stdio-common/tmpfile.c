@@ -36,7 +36,7 @@ tmpfile (void)
   int fd;
   FILE *f;
 
-  if (__path_search (buf, FILENAME_MAX, NULL, "tmpf"))
+  if (__path_search (buf, FILENAME_MAX, NULL, "tmpf", 0))
     return NULL;
   fd = __gen_tempname (buf, 1, 0);
   if (fd < 0)

@@ -1,5 +1,17 @@
 1998-12-14  Ulrich Drepper  <drepper@cygnus.com>
 
+	* include/stdio.h: Add new parameter to __path_search.
+	* libio/oldtmpfile.c: Add 0 as new parameter to __path_search.
+	* stdio-common/tmpfile.c: Likewise.
+	* stdio-common/tmpfile64.c: Likewise.
+	* stdio-common/tmpnam.c: Likewise.
+	* stdio-common/tmpnam_r.c: Likewise.
+	* stdio-common/tempnam.c: Add 1 as new parameter to __path_search.
+	* sysdeps/posix/tempname.c: Add new parameter.  If value is nonzero
+	consider TMPDIR environment variable and dir parameter.  Otherwise not.
+	* stdio-common/Makefile (tests): Add tst-tmpnam.
+	* stdio-common/tst-tmpnam.c: New file.
+
 	* po/es.po: Update from translation team.
 
 1998-12-12  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>

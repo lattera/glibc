@@ -43,7 +43,8 @@ direxists (const char *dir)
    doesn't exist, none of the searched dirs exists, or there's not
    enough space in TMPL. */
 int
-__path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx)
+__path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx,
+	       int try_tmpdir)
 {
   const char *d;
   size_t dlen, plen;
@@ -60,14 +61,17 @@ __path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx)
 	plen = 5;
     }
 
-  d = __secure_getenv ("TMPDIR");
-  if (d != NULL && direxists (d))
-    dir = d;
-  else if (dir != NULL && direxists (dir))
-    /* nothing */ ;
-  else if (direxists (P_tmpdir))
+  if (try_tmpdir)
+    {
+      d = __secure_getenv ("TMPDIR");
+      if (d != NULL && direxists (d))
+	dir = d;
+      else if (dir != NULL && direxists (dir))
+	/* nothing */ ;
+    }
+  if (direxists (P_tmpdir))
     dir = P_tmpdir;
-  else if (direxists ("/tmp"))
+  else if (strcmp (P_tmpdir, "/tmp") != 0 && direxists ("/tmp"))
     dir = "/tmp";
   else
     {

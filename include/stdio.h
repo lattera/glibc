@@ -33,8 +33,8 @@ extern int __vsscanf __P ((__const char *__restrict __s,
 # include <stddef.h>
 /* Generate a unique file name (and possibly open it).  */
 extern int __path_search __P ((char *__tmpl, size_t __tmpl_len,
-			       __const char *__dir,
-			       __const char *__pfx));
+			       __const char *__dir, __const char *__pfx,
+			       int __try_tempdir));
 
 extern int __gen_tempname __P ((char *__tmpl, int __openit, int __large_file));
 
@@ -42,5 +42,5 @@ extern int __gen_tempname __P ((char *__tmpl, int __openit, int __large_file));
 extern void __libc_fatal __P ((__const char *__message))
      __attribute__ ((__noreturn__));
 
-   
+
 #endif

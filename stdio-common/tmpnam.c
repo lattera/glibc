@@ -34,7 +34,7 @@ tmpnam (char *s)
   /* In the following call we use the buffer pointed to by S if
      non-NULL although we don't know the size.  But we limit the size
      to L_tmpnam characters in any case.  */
-  if (__path_search (s ? : tmpbuf, L_tmpnam, NULL, NULL))
+  if (__path_search (s ? : tmpbuf, L_tmpnam, NULL, NULL, 0))
     return NULL;
 
   if (__gen_tempname (s ? : tmpbuf, 0, 0))

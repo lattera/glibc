@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,19 +17,35 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-/* Generate a unique filename in P_tmpdir.  If S is NULL return NULL.
-   This makes this function thread safe.  */
-char *
-tmpnam_r (char *s)
+int
+main (int argc, char *argv[])
 {
-  if (s == NULL)
-    return NULL;
+  const char *name;
+  int retval = 0;
 
-  if (__path_search (s, L_tmpnam, NULL, NULL, 0))
-    return NULL;
-  if (__gen_tempname (s, 0, 0))
-    return NULL;
+  /* Set TMPDIR to a value other than the traditional /tmp.  */
+  setenv ("TMPDIR", "/usr", 1);
 
-  return s;
+  name = tmpnam (NULL);
+
+  printf ("name = %s\n", name);
+
+  /* Make sure the name is based on the value in TMPDIR.  */
+  if (strncmp (name, "/usr", 4) == 0)
+    {
+      puts ("error: `tmpnam' used TMPDIR value");
+      retval = 1;
+    }
+
+  /* Test that it is in the directory denoted by P_tmpdir.  */
+  if (strncmp (name, P_tmpdir, sizeof (P_tmpdir) - 1) != 0)
+    {
+      puts ("error: `tmpnam' return value not in P_tmpdir directory");
+      retval = 1;
+    }
+
+  return retval;
 }
