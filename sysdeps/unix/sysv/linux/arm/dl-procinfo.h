@@ -23,7 +23,7 @@
 
 #include <ldsodefs.h>
 
-#define _DL_HWCAP_COUNT 32
+#define _DL_HWCAP_COUNT 8
 
 /* The kernel provides platform data but it is not interesting.  */
 #define _DL_HWCAP_PLATFORM 	0

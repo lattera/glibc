@@ -27,7 +27,8 @@ $1 == "}" {
   if ((thislib, idx[thislib]) in firstversion) {
     # XXX relative string comparison loses if we ever have multiple digits
     # between dots in GLIBC_x.y[.z] names.
-    v = firstversion[thislib, idx[thislib]];
+    f = firstversion[thislib, idx[thislib]];
+    v = f;
     while ($1 >= v) {
       firstversion[thislib, idx[thislib]] = 0;
       idx[thislib]++;
@@ -36,7 +37,7 @@ $1 == "}" {
       else
         break;
     }
-    if ($1 >= v)
+    if ($1 >= v || $1 == f)
       print;
     else
       print $1, "=", v;

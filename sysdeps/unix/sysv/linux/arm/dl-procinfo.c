@@ -46,7 +46,7 @@ EXTERN
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_arm_cap_flags
 #else
-const char _dl_arm_cap_flags[][10]
+const char _dl_arm_cap_flags[8][10]
 #endif
 #ifndef PROCINFO_DECL
 = {

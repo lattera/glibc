@@ -1,5 +1,18 @@
 2002-04-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.c: Completely specify
+	size of _dl_arm_cap_flags.
+	Patch by enrico.scholz@informatik.tu-chemnitz.de [PR libc/3155].
+
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.h (_DL_HWCAP_COUNT):
+	Define as 8.
+
+2002-03-22  H.J. Lu  <hjl@gnu.org>
+
+	* scripts/firstversions.awk: Check the first version.
+
+2002-04-02  Ulrich Drepper  <drepper@redhat.com>
+
 	* elf/dl-deps.c (_dl_map_object_deps): The sorting of the
 	dependencies must be stable to work correctly.
 	Reported by martin.lubich@datacon.at.
