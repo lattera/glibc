@@ -27,7 +27,7 @@ routines = bindtextdom dcgettext dgettext gettext	\
 distribute = gettext.h gettextP.h hash-string.h loadinfo.h locale.alias \
 	     plural.y po2test.sed tst-gettext.sh
 
-test-srcs := tst-gettext
+test-srcs := tst-gettext tst-translit
 
 before-compile = $(objpfx)msgs.h
 
@@ -48,9 +48,13 @@ include ../Rules
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
 ifneq ($(strip $(MSGFMT)),:)
-.PHONY: do-gettext-test
-tests: do-gettext-test
-do-gettext-test: tst-gettext.sh $(objpfx)tst-gettext
+.PHONY: do-gettext-test do-translit-test
+tests: do-gettext-test do-translit-test
+do-gettext-test: $(objpfx)tst-gettext.out
+$(objpfx)tst-gettext.out: tst-gettext.sh $(objpfx)tst-gettext
+	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
+ do-translit-test: $(objpfx)tst-translit.out
+$(objpfx)tst-translit.out: tst-translit.sh $(objpfx)tst-translit
 	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
 endif
 endif
@@ -61,6 +65,7 @@ $(objpfx)msgs.h: po2test.sed ../po/de.po
 	sed -f $^ > $@
 
 CFLAGS-tst-gettext.c = -DTESTSTRS_H=\"$(objpfx)msgs.h\"
+CFLAGS-tst-translit.c = -DOBJPFX=\"$(objpfx)\"
 
 CPPFLAGS += -D'GNULOCALEDIR="$(msgcatdir)"' \
 	    -D'LOCALE_ALIAS_PATH="$(msgcatdir):$(i18ndir)"'

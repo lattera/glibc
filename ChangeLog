@@ -1,3 +1,11 @@
+2000-07-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/Makefile (test-srcs): Add tst-translit.
+	(tests): Likewise.
+	Add rules to build and run tst-translit.
+	* intl/tst-translit.c: New file.
+	* intl/tst-translit.sh: New file.
+
 2000-07-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/loop.c (STANDARD_ERR_HANDLER): If one of the
