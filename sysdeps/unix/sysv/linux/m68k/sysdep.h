@@ -170,7 +170,8 @@ SYSCALL_ERROR_LABEL:							      \
        register int _d0 asm ("%d0") = __NR_##name;	\
        asm volatile ("trap #0"				\
 		     : "=d" (_d0)			\
-		     : "0" (_d0) ASM_ARGS_##nr);	\
+		     : "0" (_d0) ASM_ARGS_##nr		\
+		     : "d0");				\
        _sys_result = _d0;				\
      }							\
      if (_sys_result >= (unsigned int) -4095)		\
