@@ -87,9 +87,12 @@ struct database_dyn
 
 
 /* Paths of the file for the persistent storage.  */
-#define _PATH_NSCD_PASSWD_DB	"/var/run/nscd/passwd"
-#define _PATH_NSCD_GROUP_DB	"/var/run/nscd/group"
-#define _PATH_NSCD_HOSTS_DB	"/var/run/nscd/hosts"
+#define _PATH_NSCD_PASSWD_DB	"/var/db/nscd/passwd"
+#define _PATH_NSCD_GROUP_DB	"/var/db/nscd/group"
+#define _PATH_NSCD_HOSTS_DB	"/var/db/nscd/hosts"
+
+/* Path used when not using persistent storage.  */
+#define _PATH_NSCD_XYZ_DB_TMP	"/var/run/nscd/dbXXXXXX"
 
 
 /* Global variables.  */

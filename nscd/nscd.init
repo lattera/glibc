@@ -38,6 +38,7 @@ prog=nscd
 
 start () {
     [ -d /var/run/nscd ] || mkdir /var/run/nscd
+    [ -d /var/db/nscd ] || mkdir /var/db/nscd
     secure=""
 #   for table in passwd group hosts
 #   do

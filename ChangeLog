@@ -1,3 +1,13 @@
+2004-10-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd.h (_PATH_NSCD_PASSWD_DB): Move to /var/db.
+	(_PATH_NSCD_GROUP_DB): Likewise.
+	(_PATH_NSCD_HOSTS_DB): Likewise.
+	(_PATH_NSCD_XYZ_DB_TMP): New #define, point to /var/run.
+	* nscd/connections.c (nscd_init): Non-persistent database files
+	are created with the _PATH_NSCD_XYZ_DB_TMP path.
+	* nscd/nscd.init: Create /var/db/nscd if necessary.
+
 2004-10-15  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/register-dump.h: New file.
