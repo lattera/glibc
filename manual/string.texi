@@ -2137,7 +2137,7 @@ token = strsep (&running, delimiters);    /* token => NULL */
 @comment GNU
 @deftypefun {char *} basename (const char *@var{filename})
 The GNU version of the @code{basename} function returns the last
-component of the path in @var{filename}.  This function is the prefered
+component of the path in @var{filename}.  This function is the preferred
 usage, since it does not modify the argument, @var{filename}, and
 respects trailing slashes.  The prototype for @code{basename} can be
 found in @file{string.h}.  Note, this function is overriden by the XPG

@@ -15,7 +15,7 @@
    but not in this small program).  There are also two global
    variables that argp knows about defined here,
    ARGP_PROGRAM_VERSION and ARGP_PROGRAM_BUG_ADDRESS (they are
-   global variables becuase they will almost always be constant
+   global variables because they will almost always be constant
    for a given program, even if it uses different argument
    parsers for various tasks).  */
 
