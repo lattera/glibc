@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,29 @@ __opendir (const char *name)
   int fd;
   struct hurd_fd *d;
 
-  fd = __open (name, O_RDONLY);
+  if (name[0] == '\0')
+    {
+      /* POSIX.1-1990 says an empty name gets ENOENT;
+	 but `open' might like it fine.  */
+      __set_errno (ENOENT);
+      return NULL;
+    }
+
+  {
+    /* Append trailing slash to directory name to force ENOTDIR
+       if it's not a directory.  */
+    size_t len = strlen (name);
+    if (name[len - 1] == '/')
+      fd = __open (name, O_RDONLY);
+    else
+      {
+	char n[len + 2];
+	memcpy (n, name, len);
+	n[len] = '/';
+	n[len + 1] = '\0';
+	fd = __open (n, O_RDONLY);
+      }
+  }
   if (fd < 0)
     return NULL;
 
