@@ -1,3 +1,8 @@
+Mon Apr 15 16:49:04 1996  Roland McGrath  <roland@whiz-bang.gnu.ai.mit.edu>
+
+	* malloc/memalign.c, malloc/malloc.h [__DJGPP__ == 1]: Elide memalign
+	function and its declaration.
+
 Wed Apr 10 14:13:45 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* hurd/sigunwind.c (_hurdsig_longjmp_from_handler): Store
