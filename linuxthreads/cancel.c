@@ -20,7 +20,6 @@
 #include "internals.h"
 #include "spinlock.h"
 #include "restart.h"
-#include <stackinfo.h>
 
 #ifdef _STACK_GROWS_DOWN
 # define FRAME_LEFT(frame, other) ((char *) frame >= (char *) other)

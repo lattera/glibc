@@ -18,7 +18,6 @@
 #include <setjmp.h>
 #include "pthread.h"
 #include "internals.h"
-#include <stackinfo.h>
 
 /* These functions are not declared anywhere since they shouldn't be
    used at another place but here.  */

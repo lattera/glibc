@@ -22,7 +22,6 @@
 #include "pthread.h"
 #include "internals.h"
 #include <shlib-compat.h>
-#include <stackinfo.h>
 
 int __pthread_attr_init_2_1(pthread_attr_t *attr)
 {

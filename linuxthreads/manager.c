@@ -32,7 +32,6 @@
 #include "spinlock.h"
 #include "restart.h"
 #include "semaphore.h"
-#include <stackinfo.h>
 
 /* Array of active threads. Entry 0 is reserved for the initial thread. */
 struct pthread_handle_struct __pthread_handles[PTHREAD_THREADS_MAX] =

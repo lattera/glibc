@@ -24,6 +24,7 @@
 #include <setjmp.h>
 #include <signal.h>
 #include <unistd.h>
+#include <stackinfo.h>
 #include <sys/types.h>
 #include <bits/libc-tsd.h> /* for _LIBC_TSD_KEY_N */
 

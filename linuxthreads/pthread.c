@@ -30,7 +30,6 @@
 #include "internals.h"
 #include "spinlock.h"
 #include "restart.h"
-#include <stackinfo.h>
 
 /* We need the global/static resolver state here.  */
 #include <resolv.h>
