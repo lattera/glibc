@@ -1,3 +1,7 @@
+2003-04-26  Roland McGrath  <roland@redhat.com>
+
+	* Makefile ($(test-modules)): Depend on $(common-objpfx)shlib.lds.
+
 2003-04-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* allocatestack.c (TLS_TPADJ): Add TLS_PRE_TCB_SIZE instead of
