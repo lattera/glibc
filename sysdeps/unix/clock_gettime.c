@@ -29,7 +29,7 @@ int
 clock_gettime (clockid_t clock_id, struct timespec *tp)
 {
   struct timeval tv;
-  int retval;
+  int retval = -1;
 
   switch (clock_id)
     {
@@ -44,7 +44,6 @@ clock_gettime (clockid_t clock_id, struct timespec *tp)
 
     default:
       __set_errno (EINVAL);
-      retval = -1;
       break;
     }
 

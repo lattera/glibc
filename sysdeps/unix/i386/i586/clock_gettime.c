@@ -27,7 +27,7 @@
 
 
 /* Function to determine processor frequency.  */
-extern unsigned long long int __get_glockfreq (void);
+extern unsigned long long int __get_clockfreq (void);
 
 /* Clock frequency of the processor.  We make it a 64-bit variable
    because some jokers are already playing with processors with more

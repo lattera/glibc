@@ -29,7 +29,7 @@
 int
 clock_getres (clockid_t clock_id, struct timespec *res)
 {
-  int retval;
+  int retval = -1;
 
   switch (clock_id)
     {
@@ -37,7 +37,6 @@ clock_getres (clockid_t clock_id, struct timespec *res)
       {
 	long int clk_tck = sysconf (_SC_CLK_TCK);
 
-	retval = -1;
 	if (__builtin_expect (clk_tck != -1, 1))
 	  {
 	    /* This implementation assumes that the realtime clock has a
@@ -55,7 +54,6 @@ clock_getres (clockid_t clock_id, struct timespec *res)
 
     default:
       __set_errno (EINVAL);
-      retval = -1;
       break;
     }
 
