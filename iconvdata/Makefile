@@ -482,7 +482,7 @@ tests: $(objpfx)iconv-test.out
 
 $(objpfx)iconv-test.out: run-iconv-test.sh $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so)) \
-			 $(common-objdir)/iconv/iconv_prog
+			 $(common-objdir)/iconv/iconv_prog TESTS
 	$(SHELL) -e $< $(common-objdir) > $@
 
 ifdef objpfx

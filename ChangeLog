@@ -1,3 +1,11 @@
+1998-05-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/TESTS: New tests for EUC-KR.
+
+	* iconvdata/Makefile ($(objpfx)iconv-test.out): Also depend on
+	TESTS.
+	* iconvdata/testdata/EUC-KR: New file.
+
 1998-05-20 07:26  H.J. Lu  <hjl@gnu.org>
 
 	* math/libm-test.c (hypot_test): Fix a tyypo.
