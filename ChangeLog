@@ -1,3 +1,10 @@
+Wed Jul 31 14:21:36 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* termios/termios.h [__OPTIMIZE__]: Remove "optimization" for
+	tcgetattr.  We have weak aliases now.
+	* stdlib/stdlib.h [__OPTIMIZE__ && __GNUC__ >= 2]: Remove
+	"optimizations" for random functions.
+
 Mon Jul 29 20:33:42 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/netinet/in.h (ntohl, ntohs, htonl,

@@ -59,10 +59,6 @@ extern void cfsetspeed __P ((struct termios *__termios_p, speed_t __speed));
 extern int __tcgetattr __P ((int __fd, struct termios *__termios_p));
 extern int tcgetattr __P ((int __fd, struct termios *__termios_p));
 
-#ifdef	__OPTIMIZE__
-#define	tcgetattr(fd, termios_p)	__tcgetattr((fd), (termios_p))
-#endif /* Optimizing.  */
-
 /* Set the state of FD to *TERMIOS_P.
    Values for OPTIONAL_ACTIONS (TCSA*) are in <termbits.h>.  */
 extern int tcsetattr __P ((int __fd, int __optional_actions,

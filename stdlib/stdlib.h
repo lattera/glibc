@@ -214,8 +214,11 @@ extern void srand __P ((unsigned int __seed));
    We provide both interfaces to the same random number generator.  */
 /* Return a random long integer between 0 and RAND_MAX inclusive.  */
 extern int32_t __random __P ((void));
+extern int32_t random __P ((void));
+
 /* Seed the random number generator with the given number.  */
 extern void __srandom __P ((unsigned int __seed));
+extern void srandom __P ((unsigned int __seed));
 
 /* Initialize the random number generator to use state buffer STATEBUF,
    of length STATELEN, and seed it with SEED.  Optimal lengths are 8, 16,
@@ -223,27 +226,14 @@ extern void __srandom __P ((unsigned int __seed));
    cause an error and values greater than 256 will be rounded down.  */
 extern __ptr_t __initstate __P ((unsigned int __seed, __ptr_t __statebuf,
 				 size_t __statelen));
+extern __ptr_t initstate __P ((unsigned int __seed, __ptr_t __statebuf,
+			       size_t __statelen));
+
 /* Switch the random number generator to state buffer STATEBUF,
    which should have been previously initialized by `initstate'.  */
 extern __ptr_t __setstate __P ((__ptr_t __statebuf));
-
-extern int32_t random __P ((void));
-extern void srandom __P ((unsigned int __seed));
-extern __ptr_t initstate __P ((unsigned int __seed, __ptr_t __statebuf,
-			       size_t __statelen));
 extern __ptr_t setstate __P ((__ptr_t __statebuf));
 
-#if defined (__OPTIMIZE__) && __GNUC__ >= 2
-extern __inline int32_t random (void)
-{ return __random(); }
-extern __inline void srandom (unsigned int __seed)
-{ __srandom(__seed); }
-extern __inline __ptr_t initstate (unsigned int __seed,
-				   __ptr_t __statebuf, size_t __statelen)
-{ return __initstate (__seed, __statebuf, __statelen); }
-extern __inline __ptr_t setstate (__ptr_t __statebuf)
-{ return __setstate (__statebuf); }
-#endif /* Optimizing GCC >=2.  */
 
 #ifdef __USE_REENTRANT
 /* Reentrant versions of the `random' family of functions.
