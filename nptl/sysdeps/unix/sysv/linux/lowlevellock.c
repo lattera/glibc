@@ -37,7 +37,6 @@ __lll_lock_wait (int *futex, int val)
     }
   while (val != 0);
 }
-hidden_proto (__lll_lock_wait)
 
 
 int
@@ -77,7 +76,6 @@ __lll_timedlock_wait (int *futex, int val, const struct timespec *abstime)
   *futex = 2;
   return 0;
 }
-hidden_proto (__lll_timedlock_wait)
 
 
 /* These don't get included in libc.so  */
@@ -92,7 +90,6 @@ lll_unlock_wake_cb (int *futex)
 
   return 0;
 }
-hidden_proto (lll_unlock_wake_cb)
 
 
 int
@@ -133,5 +130,4 @@ __lll_timedwait_tid (int *tidp, const struct timespec *abstime)
   return 0;
 }
 
-hidden_proto (__lll_timedwait_tid)
 #endif

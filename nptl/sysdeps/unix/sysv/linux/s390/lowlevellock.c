@@ -39,7 +39,6 @@ ___lll_lock (futex, newval)
 
   *futex = -1;
 }
-hidden_proto (___lll_lock)
 
 
 int
@@ -54,7 +53,6 @@ lll_unlock_wake_cb (futex)
     lll_futex_wake (futex, 1);
   return 0;
 }
-hidden_proto (lll_unlock_wake_cb)
 
 
 int
@@ -99,4 +97,3 @@ ___lll_timedwait_tid (ptid, abstime)
   return 0;
 }
 
-hidden_proto (___lll_timedwait_tid)

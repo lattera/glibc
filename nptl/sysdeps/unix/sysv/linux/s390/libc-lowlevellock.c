@@ -39,4 +39,3 @@ ___lll_lock (futex, newval)
 
   *futex = -1;
 }
-hidden_proto (___lll_lock)

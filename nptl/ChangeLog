@@ -1,3 +1,15 @@
+2003-06-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/lowlevellock.c (__lll_lock_wait,
+	__lll_timedlock_wait, lll_unlock_wake_cb, __lll_timedwait_tid):
+	Remove bogus hidden_proto.
+	* sysdeps/unix/sysv/linux/s390/libc-lowlevellock.c (___lll_lock):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.c (___lll_lock,
+	lll_unlock_wake_cb, ___lll_timedwait_tid): Likewise.
+	* sysdeps/unix/sysv/linux/s390/lowlevelmutex.c (___lll_mutex_lock,
+	___lll_mutex_timedlock): Likewise.
+
 2003-06-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S

@@ -38,7 +38,6 @@ ___lll_mutex_lock (futex, newval)
 
   *futex = 2;
 }
-hidden_proto (___lll_mutex_lock)
 
 
 int
@@ -87,4 +86,3 @@ ___lll_mutex_timedlock (futex, abstime, newval)
 
   return 0;
 }
-hidden_proto (___lll_mutex_timedlock)
