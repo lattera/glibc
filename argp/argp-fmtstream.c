@@ -385,10 +385,11 @@ __argp_fmtstream_ensure (struct argp_fmtstream *fs, size_t amount)
       if ((size_t) (fs->end - fs->buf) < amount)
 	/* Gotta grow the buffer.  */
 	{
-	  size_t new_size = fs->end - fs->buf + amount;
-	  char *new_buf = realloc (fs->buf, new_size);
+	  size_t old_size = fs->end - fs->buf;
+	  size_t new_size = old_size + amount;
+	  char *new_buf;
 
-	  if (! new_buf)
+	  if (new_size < old_size || ! (new_buf = realloc (fs->buf, new_size)))
 	    {
 	      __set_errno (ENOMEM);
 	      return 0;
