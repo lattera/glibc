@@ -1,3 +1,8 @@
+2004-07-21  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list: Add
+	semtimedop.
+
 2004-07-20  Roland McGrath  <roland@redhat.com>
 
 	* configure.in (add_ons): Substitute this.  Move $add_ons handling
