@@ -1940,7 +1940,7 @@ conversion gives results like:
 |    0|0    |   +0|+0   |    0|00000|     |   00|0|
 |    1|1    |   +1|+1   |    1|00001|    1|   01|1|
 |   -1|-1   |   -1|-1   |   -1|-0001|   -1|  -01|-1|
-|100000|100000|+100000| 100000|100000|100000|100000|100000|
+|100000|100000|+100000|+100000| 100000|100000|100000|100000|100000|
 @end smallexample
 
 In particular, notice what happens in the last case where the number
@@ -1954,7 +1954,7 @@ various format options, using the template string:
 @end smallexample
 
 @smallexample
-|    0|    0|    0|    0|    0|  0x0|  0X0|0x00000000|
+|    0|    0|    0|    0|    0|    0|    0|  00000000|
 |    1|    1|    1|    1|   01|  0x1|  0X1|0x00000001|
 |100000|303240|186a0|186A0|0303240|0x186a0|0X186A0|0x000186a0|
 @end smallexample
@@ -1983,10 +1983,10 @@ the precision.  The exponent always contains at least two digits.  The
 
 The @samp{%g} and @samp{%G} conversions print the argument in the style
 of @samp{%e} or @samp{%E} (respectively) if the exponent would be less
-than -4 or greater than or equal to the precision; otherwise they use the
-@samp{%f} style.  Trailing zeros are removed from the fractional portion
-of the result and a decimal-point character appears only if it is
-followed by a digit.
+than -4 or greater than or equal to the precision; otherwise they use
+the @samp{%f} style.  A precision of @code{0}, is taken as 1. is
+Trailing zeros are removed from the fractional portion of the result and
+a decimal-point character appears only if it is followed by a digit.
 
 The @samp{%a} and @samp{%A} conversions are meant for representing
 floating-point numbers exactly in textual form so that they can be
