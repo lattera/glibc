@@ -41,3 +41,5 @@
    of weak definitions in ld.so.  See rtld.c.  */
 
 #define RTLD_CORRECT_DYNAMIC_WEAK	1
+
+#endif	/* dl-sysdep.h */
