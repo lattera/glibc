@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger <davidm@azstarnet.com>, 1995.
 
@@ -23,7 +23,7 @@
 
 LEAF(__ieee_set_fp_control, 16)
 #ifdef PROF
-	ldgp	gp, 0(sp)
+	ldgp	gp, 0(pv)
 	lda	sp, -16(sp)
 	.set noat
 	lda	AT, _mcount
