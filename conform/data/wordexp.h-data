@@ -5,7 +5,7 @@ element wordexp_t {char**} we_wordv
 element wordexp_t size_t we_offs
 
 constant WRDE_APPEND
-constant WRDE_DOOFS
+constant WRDE_DOOFFS
 constant WRDE_NOCMD
 constant WRDE_REUSE
 constant WRDE_SHOWERR
