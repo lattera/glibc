@@ -63,8 +63,8 @@
 #undef FCTNAME2
 #if defined _STRING_ARCH_unaligned || !defined DEFINE_UNALIGNED
 /* We can handle unaligned memory access.  */
-# define get16(addr) *((uint16_t *) (addr))
-# define get32(addr) *((uint32_t *) (addr))
+# define get16(addr) *((__const uint16_t *) (addr))
+# define get32(addr) *((__const uint32_t *) (addr))
 
 /* We need no special support for writing values either.  */
 # define put16(addr, val) *((uint16_t *) (addr)) = (val)
