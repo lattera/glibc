@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -539,11 +539,13 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	    }
 #endif
 	  if (!match_string (HERE_AM_STR, rp))
-	    if (match_string (HERE_PM_STR, rp))
-	      is_pm = 1;
-	    else
-	      return NULL;
-	  break;
+	    {
+	      if (match_string (HERE_PM_STR, rp))
+		is_pm = 1;
+	      else
+		return NULL;
+	      break;
+	    }
 	case 'r':
 #ifdef _NL_CURRENT
 	  if (*decided != raw)

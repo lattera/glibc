@@ -1,5 +1,28 @@
 2005-01-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-runtime.c: Inlcude <sys/param.h>.
+
+	* elf/Makefile (headers): Add bits/link.h.
+
+2005-01-09  Andreas Schwab  <schwab@suse.de>
+
+	* elf/rtld.c (dl_main): Create main_map with __RTLD_OPENEXEC.
+
+2005-01-09  Andreas Jaeger  <aj@suse.de>
+
+	* time/strptime_l.c (__strptime_internal): Add braces to avoid
+	warning.
+
+	* sysdeps/x86_64/bits/link.h: Use vector_size for GCC 4.0.
+
+	* elf/rtld.c (dl_main): Call _dl_add_to_slotinfo only if USE_TLS.
+
+2005-01-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile (generated): Add tst-pie1{,.out,.o}.
+
+2005-01-09  Ulrich Drepper  <drepper@redhat.com>
+
 	* elf/dl-fini.c (_dl_fini): Call destructors of audit DSOs after
 	those of all the regular objects.
 

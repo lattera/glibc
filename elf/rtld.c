@@ -995,8 +995,8 @@ of this helper program; chances are you did not intend to run this program.\n\
     {
       /* Create a link_map for the executable itself.
 	 This will be what dlopen on "" returns.  */
-      main_map
-	= _dl_new_object ((char *) "", "", lt_executable, NULL, 0, LM_ID_BASE);
+      main_map = _dl_new_object ((char *) "", "", lt_executable, NULL,
+				 __RTLD_OPENEXEC, LM_ID_BASE);
       assert (main_map != NULL);
       assert (main_map == GL(dl_ns)[LM_ID_BASE]._ns_loaded);
       main_map->l_phdr = phdr;
@@ -2117,9 +2117,11 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	  if (l->l_relro_size)
 	    _dl_protect_relro (l);
 
+#ifdef USE_TLS
 	  /* Add object to slot information data if necessasy.  */
 	  if (l->l_tls_blocksize != 0 && tls_init_tp_called)
 	    _dl_add_to_slotinfo (l);
+#endif
 	}
 
       _dl_sysdep_start_cleanup ();
@@ -2167,9 +2169,11 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	    _dl_relocate_object (l, l->l_scope, GLRO(dl_lazy),
 				 consider_profiling);
 
+#ifdef USE_TLS
 	  /* Add object to slot information data if necessasy.  */
 	  if (l->l_tls_blocksize != 0 && tls_init_tp_called)
 	    _dl_add_to_slotinfo (l);
+#endif
 
 	  l = l->l_prev;
 	}
