@@ -1,5 +1,7 @@
 2004-12-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/es.po: Update from translation team.
+
 	* sysdeps/generic/dl-tls.c (__tls_get_addr): Fix typo.
 
 2004-12-27  Ulrich Drepper  <drepper@redhat.com>
