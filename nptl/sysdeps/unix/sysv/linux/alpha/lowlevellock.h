@@ -23,6 +23,7 @@
 #include <sys/param.h>
 #include <bits/pthreadtypes.h>
 #include <atomic.h>
+#include <sysdep.h>
 
 
 #define __NR_futex		394
@@ -70,79 +71,68 @@
     INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret : __ret;		      \
   })
 
-/* Set *futex to 1 if it is 0, atomically.  Returns the old value */
-#define __lll_trylock(futex) \
-  ({ int __oldval, __temp;						\
-     __asm __volatile (							\
-	"1:	ldl_l	%[__oldval], %[__mem]\n"			\
-	"	lda	%[__temp], 1\n"					\
-	"	bne	%[__oldval], 2f\n"				\
-	"	stl_c	%[__temp], %[__mem]\n"				\
-	"	beq	%[__temp], 1b\n"				\
-		__MB							\
-	"2:"								\
-	: [__oldval] "=&r" (__oldval),					\
-	  [__temp] "=&r" (__temp)					\
-	: [__mem] "m" (*(futex))					\
-	: "memory");				     			\
-     __oldval;								\
-  })
 
-#define lll_mutex_trylock(lock)	__lll_trylock (&(lock))
+static inline int __attribute__((always_inline))
+__lll_mutex_trylock(int *futex)
+{
+  return atomic_compare_and_exchange_val_acq (futex, 1, 0) != 0;
+}
+#define lll_mutex_trylock(lock)	__lll_mutex_trylock (&(lock))
 
 
-extern void __lll_lock_wait (int *futex, int val) attribute_hidden;
+extern void __lll_lock_wait (int *futex) attribute_hidden;
 
-#define lll_mutex_lock(lock) \
-  (void) ({								\
-    int *__futex = &(lock);						\
-    int __val = atomic_exchange_and_add (__futex, 1);			\
-    atomic_full_barrier();						\
-    if (__builtin_expect (__val != 0, 0))				\
-      __lll_lock_wait (__futex, __val);					\
-  })
+static inline void __attribute__((always_inline))
+__lll_mutex_lock(int *futex)
+{
+  if (atomic_compare_and_exchange_bool_acq (futex, 1, 0) != 0)
+    __lll_lock_wait (futex);
+}
+#define lll_mutex_lock(futex) __lll_mutex_lock (&(futex))
 
-#define lll_mutex_cond_lock(lock) \
-  (void) ({								\
-    int *__futex = &(lock);						\
-    int __val = atomic_exchange_and_add (__futex, 2);			\
-    atomic_full_barrier();						\
-    if (__builtin_expect (__val != 0, 0))				\
-      /* Note, the val + 1 is kind of ugly here.  __lll_lock_wait will	\
-	 add 1 again.  But we added 2 to the futex value so this is the	\
-	 right value which will be passed to the kernel.  */		\
-      __lll_lock_wait (__futex, __val + 1);				\
-  })
 
-extern int __lll_timedlock_wait
-	(int *futex, int val, const struct timespec *) attribute_hidden;
+static inline void __attribute__ ((always_inline))
+__lll_mutex_cond_lock (int *futex)
+{
+  if (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0)
+    __lll_lock_wait (futex);
+}
+#define lll_mutex_cond_lock(futex) __lll_mutex_cond_lock (&(futex))
 
-#define lll_mutex_timedlock(lock, abstime) \
-  ({ int *__futex = &(lock);						\
-     int __val = atomic_exchange_and_add (__futex, 1);			\
-     atomic_full_barrier();						\
-     if (__builtin_expect (__val != 0, 0))				\
-       __val = __lll_timedlock_wait (__futex, __val, (abstime));	\
-     __val;								\
-  })
 
-#define lll_mutex_unlock(lock) \
-  ((void) ({								\
-    int *__futex = &(lock), __val;					\
-    atomic_write_barrier();						\
-    __val = atomic_exchange_rel (__futex, 0);				\
-    if (__builtin_expect (__val > 1, 0))				\
-      lll_futex_wake (__futex, 1);					\
-  }))
+extern int __lll_timedlock_wait (int *futex, const struct timespec *)
+	attribute_hidden;
 
-#define lll_mutex_unlock_force(lock) \
-  ((void) ({								\
-    int *__futex = &(lock);						\
-    atomic_write_barrier();						\
-    *__futex = 0;							\
-    atomic_full_barrier();						\
-    lll_futex_wake (__futex, 1);					\
-  }))
+static inline int __attribute__ ((always_inline))
+__lll_mutex_timedlock (int *futex, const struct timespec *abstime)
+{
+  int result = 0;
+  if (atomic_compare_and_exchange_bool_acq (futex, 1, 0) != 0)
+    result = __lll_timedlock_wait (futex, abstime);
+  return result;
+}
+#define lll_mutex_timedlock(futex, abstime) \
+  __lll_mutex_timedlock (&(futex), abstime)
+
+
+static inline void __attribute__ ((always_inline))
+__lll_mutex_unlock (int *futex)
+{
+  int val = atomic_exchange_rel (futex, 0);
+  if (__builtin_expect (val > 1, 0))
+    lll_futex_wake (futex, 1);
+}
+#define lll_mutex_unlock(futex) __lll_mutex_unlock(&(futex))
+
+
+static inline void __attribute__ ((always_inline))
+__lll_mutex_unlock_force (int *futex)
+{
+  (void) atomic_exchange_rel (futex, 0);
+  lll_futex_wake (futex, 1);
+}
+#define lll_mutex_unlock_force(futex) __lll_mutex_unlock_force(&(futex))
+
 
 #define lll_mutex_islocked(futex) \
   (futex != 0)
@@ -175,21 +165,21 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
    thread ID while the clone is running and is reset to zero
    afterwards.	*/
 #define lll_wait_tid(tid) \
-  do {									      \
-    __typeof (tid) __tid;						      \
-    while ((__tid = (tid)) != 0)					      \
-      lll_futex_wait (&(tid), __tid);					      \
+  do {					\
+    __typeof (tid) __tid;		\
+    while ((__tid = (tid)) != 0)	\
+      lll_futex_wait (&(tid), __tid);	\
   } while (0)
 
 extern int __lll_timedwait_tid (int *, const struct timespec *)
      attribute_hidden;
 
 #define lll_timedwait_tid(tid, abstime) \
-  ({									      \
-    int __res = 0;							      \
-    if ((tid) != 0)							      \
-      __res = __lll_timedwait_tid (&(tid), (abstime));			      \
-    __res;								      \
+  ({							\
+    int __res = 0;					\
+    if ((tid) != 0)					\
+      __res = __lll_timedwait_tid (&(tid), (abstime));	\
+    __res;						\
   })
 
 
