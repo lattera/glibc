@@ -1,4 +1,4 @@
-@node Users and Groups, System Information, Job Control, Top
+@node Users and Groups, System Information, Name Service Switch, Top
 @chapter Users and Groups
 
 Every user who can log in on the system is identified by a unique number
@@ -87,7 +87,7 @@ for purposes of access control.  These IDs are also called the
 @dfn{effective user ID} and @dfn{effective group ID} of the process.
 
 Your login shell starts out with a persona which consists of your user
-ID and your default group ID.  
+ID and your default group ID.
 @c !!! also supplementary group IDs.
 In normal circumstances, all your other processes inherit these values.
 
@@ -367,7 +367,7 @@ The return values and error conditions for @code{setregid} are the same
 as those for @code{setreuid}.
 @end deftypefun
 
-The GNU system also lets privileged processes change their supplementary 
+The GNU system also lets privileged processes change their supplementary
 group IDs.  To use @code{setgroups} or @code{initgroups}, your programs
 should include the header file @file{grp.h}.
 @pindex grp.h
@@ -417,14 +417,14 @@ user_user_id = getuid ();
 game_user_id = geteuid ();
 @end smallexample
 
-Then it can turn off game file access with 
+Then it can turn off game file access with
 
 @smallexample
 setuid (user_user_id);
 @end smallexample
 
 @noindent
-and turn it on with 
+and turn it on with
 
 @smallexample
 setuid (game_user_id);
@@ -478,7 +478,7 @@ file will be installed with the set-user-ID bit set and owned by the
 same user as the @file{scores} file.  Typically, a system
 administrator will set up an account like @code{games} for this purpose.
 
-The executable file is given mode @code{4755}, so that doing an 
+The executable file is given mode @code{4755}, so that doing an
 @samp{ls -l} on it produces output like:
 
 @smallexample
@@ -608,7 +608,7 @@ record_score (int score)
 @node Tips for Setuid
 @section Tips for Writing Setuid Programs
 
-It is easy for setuid programs to give the user access that isn't 
+It is easy for setuid programs to give the user access that isn't
 intended---in fact, if you want to avoid this, you need to be careful.
 Here are some guidelines for preventing unintended access and
 minimizing its consequences when it does occur:
@@ -731,7 +731,7 @@ are declared in the header file @file{pwd.h}.
 @comment pwd.h
 @comment POSIX.1
 @deftp {Data Type} {struct passwd}
-The @code{passwd} data structure is used to hold information about 
+The @code{passwd} data structure is used to hold information about
 entries in the system user data base.  It has at least the following members:
 
 @table @code
@@ -887,7 +887,7 @@ database are declared in the header file @file{grp.h}.
 
 @comment grp.h
 @comment POSIX.1
-@deftp {Data Type} {struct group} 
+@deftp {Data Type} {struct group}
 The @code{group} structure is used to hold information about an entry in
 the system group database.  It has at least the following members:
 

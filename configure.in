@@ -308,8 +308,6 @@ fi
 AC_PROG_CPP
 AC_CHECK_TOOL(AR, ar)
 AC_CHECK_TOOL(RANLIB, ranlib, :)
-AUTOLOCK="`(cd $srcdir; pwd)`/autolock.sh"
-AC_SUBST(AUTOLOCK)
 
 AC_CACHE_CHECK(for signed size_t type, libc_cv_signed_size_t, [dnl
 echo '#include <stddef.h>

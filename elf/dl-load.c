@@ -70,11 +70,25 @@ int _dl_zerofd = -1;
 size_t _dl_pagesize;
 
 
+/* Local version of `strdup' function.  */
+static inline char *
+local_strdup (const char *s)
+{
+  size_t len = strlen (s) + 1;
+  void *new = malloc (len);
+
+  if (new == NULL)
+    return NULL;
+
+  return (char *) memcpy (new, s, len);
+}
+
+
 /* Map in the shared object NAME, actually located in REALNAME, and already
    opened on FD.  */
 
 struct link_map *
-_dl_map_object_from_fd (const char *name, int fd, char *realname,
+_dl_map_object_from_fd (char *name, int fd, char *realname,
 			struct link_map *loader, int l_type)
 {
   struct link_map *l = NULL;
@@ -96,6 +110,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	    l->l_next->l_prev = l->l_prev;
 	  free (l);
 	}
+      free (name);
       free (realname);
       _dl_signal_error (code, name, msg);
     }
@@ -142,6 +157,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	/* The object is already loaded.
 	   Just bump its reference count and return it.  */
 	__close (fd);
+	free (name);
 	free (realname);
 	++l->l_opencount;
 	return l;
@@ -524,11 +540,8 @@ _dl_map_object (struct link_map *loader, const char *name, int type)
 	      fd = __open (cached, O_RDONLY);
 	      if (fd != -1)
 		{
-		  size_t cl = strlen (cached) + 1;
-		  realname = malloc (cl);
-		  if (realname)
-		    memcpy (realname, cached, cl);
-		  else
+		  realname = local_strdup (cached);
+		  if (realname == NULL)
 		    {
 		      __close (fd);
 		      fd = -1;
@@ -548,15 +561,22 @@ _dl_map_object (struct link_map *loader, const char *name, int type)
       fd = __open (name, O_RDONLY);
       if (fd != -1)
 	{
-	  size_t len = strlen (name) + 1;
-	  realname = malloc (len);
-	  if (realname)
-	    memcpy (realname, name, len);
-	  else
+	  realname = local_strdup (name);
+	  if (realname == NULL)
 	    {
 	      __close (fd);
 	      fd = -1;
 	    }
+	}
+    }
+
+  if (fd != -1)
+    {
+      name = local_strdup (name);
+      if (name == NULL)
+	{
+	  __close (fd);
+	  fd = -1;
 	}
     }
 

@@ -132,8 +132,8 @@ endif
 
 define extract
 @rm -f $@.new
-$(XGETTEXT) --keyword=_ --keyword=N_ --add-comments=TRANS --sort-output -d - \
-	    $(XGETTEXTFLAGS-$(@F)) > $@.new $^
+$(XGETTEXT) --keyword=_ --keyword=N_ --add-comments=TRANS  --sort-output \
+	    --omit-header -n -d - $(XGETTEXTFLAGS-$(@F)) > $@.new $^
 mv -f $@.new $@
 endef
 
@@ -146,15 +146,12 @@ else
 endif
 
 $P/siglist.pot: $(common-objpfx)siglist.c; $(extract)
-$P/errlist.pot: $(..)sysdeps/gnu/errlist.c; $(extract)
 
-# Extract all strings from these files; their strings are not marked.
+# Extract all strings from this file; its strings are not marked.
 # Their surroundings are also not interesting.
 XGETTEXTFLAGS-siglist.pot = -a --no-location
-XGETTEXTFLAGS-errlist.pot = -a --no-location
 
-all-pot = $P/libc-top.pot $P/subdirs.pot \
-	  $P/siglist.pot $P/errlist.pot
+all-pot = $P/libc-top.pot $P/subdirs.pot $P/siglist.pot
 
 ifndef subdir
 # Collect all the subdir messages, massaging the file names in comments
@@ -173,7 +170,7 @@ $P/SYS_libc.pot: $(all-pot)
 	@rm -f $@.new
 	sed -e 's/VERSION/$(version)/' -e "s/DATE/`date +'%Y-%m-%d %k:%M'`/" \
 	    po/header.pot > $@.new
-	$(XGETTEXT) -d - -n -s --omit-header $^ >> $@.new
+	$(XGETTEXT) -d - --omit-header -n -s $^ >> $@.new
 	mv -f $@.new $@
 	test ! -d CVS || cvs ci -m'Regenerated from source files' $@
 

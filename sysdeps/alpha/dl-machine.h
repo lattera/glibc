@@ -341,8 +341,8 @@ elf_machine_rela (struct link_map *map,
     {
       Elf64_Addr loadbase, sym_value;
 
-      loadbase = RESOLVE (&sym, (Elf64_Addr)reloc_addr,
-			  r_info == R_ALPHA_JMP_SLOT);
+      loadbase = RESOLVE (&sym,
+			  r_info == R_ALPHA_JMP_SLOT ? DL_LOOKUP_NOPLT : 0);
       sym_value = sym ? loadbase + sym->st_value : 0;
 
       if (r_info == R_ALPHA_GLOB_DAT)

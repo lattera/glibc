@@ -1,0 +1,586 @@
+@c each section should have index entries corresponding to the section title
+
+@node Name Service Switch
+@chapter System Databases and Name Service Switch
+
+Various functions in the C Library need to be configured to work
+correctly in the local environment.  Traditionally, this was done by
+using files (e.g., @file{/etc/passwd}), but other nameservices (line the
+Network Information Service (NIS) and the Domain Name Service (DNS))
+became popular, and were hacked into the C library, usually with a fixed
+search order @pxref{frobnicate, frobnicate, ,jargon}.
+
+The GNU C Library contains a cleaner solution of this problem.  It is
+designed after a method used by Sun Microsystems in the C library of
+@w{Solaris 2}.  GNU C Library follows their name and calls this
+scheme @dfn{Name Service Switch} (NSS).
+
+Though the interface might be similar to Sun's version there is no
+common code.  We never saw any source code of Sun's implementation and
+so the internal interface are incompatible.  This is also manifest in the
+file names we use as we will see later.
+
+
+@menu
+* NSS Basics::                  What is this NSS good for.
+* NSS Configuration File::      Configuring NSS.
+* NSS Module Internals::        How does it work internally.
+* Extending NSS::               What to do to add services or databases.
+@end menu
+
+@node NSS Basics, NSS Configuration File, Name Service Switch, Name Service Switch
+@section NSS Basics
+
+The basic idea is to put the implementation of the different services
+offered to access the databases in separate modules.  This has some
+advantages:
+
+@enumerate
+@item
+Contributors can add new services without adding them to GNU C Library.
+@item
+The modules can be updated separately.
+@item
+The C library image is smaller.
+@end enumerate
+
+To fulfill the first goal above the ABI of the modules will be described
+below.  For getting the implementation of a new service right it is
+important to understand how the functions in the modules get called.
+They are in no way designed to be used by the programmer directly.
+Instead the programmer should only use the documented and standardized
+functions to access the databases.
+
+@noindent
+The databases available in the NSS are
+
+@cindex ethers
+@cindex group
+@cindex hosts
+@cindex network
+@cindex protocols
+@cindex passwd
+@cindex rpc
+@cindex services
+@cindex shadow
+@vtable @code
+@item ethers
+Ethernet numbers,
+@comment @pxref{Ethernet Numbers}.
+@item group
+Groups of users, @pxref{Group Database}.
+@item hosts
+Host names and numbers, @pxref{Host Names}.
+@item network
+Network names and numbers, @pxref{Networks Database}.
+@item protocols
+Network protocols, @pxref{Protocols Database}.
+@item passwd
+User passwords, @pxref{User Database}.
+@item rpc
+Remote procedure call names and numbers,
+@comment @pxref{RPC Database}.
+@item services
+Network services, @pxref{Services Database}.
+@item shadow
+Shadow user passwords,
+@comment @pxref{Shadow Password Database}.
+@end vtable
+
+@noindent
+There will be some more added later (@code{aliases}, @code{automount},
+@code{bootparams}, @code{netgroup}, @code{netmasks}, and
+@code{publickey}).
+
+@node NSS Configuration File, NSS Module Internals, NSS Basics, Name Service Switch
+@section The NSS Configuration File
+
+@cindex @file{/etc/nsswitch.conf}
+@cindex @file{nsswitch.conf}
+Somehow the NSS code must be told about the wishes of the user.  For
+this reason there is the file @file{/etc/nsswitch.conf}.  For each
+database this file contain a specification how the lookup process should
+work.  The file could look like this:
+
+@example
+@include nsswitch.texi
+@end example
+
+The first column is the database as you can guess from the table above.
+The rest of the line specifies how the lookup process works.  Please
+note that you specify the way it works for each database individually.
+This cannot be done with the old way of a monolithic implementation.
+
+The configuration specification for each database can contain two
+different items:
+
+@itemize @bullet
+@item
+the service specification like @code{files}, @code{db}, or @code{nis}.
+@item
+the reaction on lookup result line @code{[NOTFOUND=return]}.
+@end itemize
+
+@menu
+* Services in the NSS configuration::  Service names in the NSS configuratin.
+* Actions in the NSS configuration::  React approprite on the lookup result.
+* Notes on NSS Configuration File::  Things to take care about while
+                                     configuring NSS.
+@end menu
+
+@node Services in the NSS configuration, Actions in the NSS configuration, NSS Configuration File, NSS Configuration File
+@subsection Services in the NSS configuration File
+
+The above example file mentions four different services: @code{files},
+@code{db}, @code{nis}, and @code{nisplus}.  This does not mean these
+services are available on all sites and it does also not mean these are
+all the services which will ever be available.
+
+In fact, these names are simply strings which the NSS code uses to find
+the implicitly addressed functions.  The internal interface will be
+described later.  Visible to the user are the modules which implement an
+individual service.
+
+Assume the service @var{name} shall be used for a lookup.  The code for
+this service is implemented in a module called @file{libnss_@var{name}}.
+On a system supporting shared libraries this is in fact a shared library
+with the name (for example) @file{libnss_@var{name}.so.1}.  The number
+at the end is the currently used version of the interface which will not
+change frequently.  Normally the user should not have to be cognizant of
+these files since they should be placed in a directory where they are
+found automatically.  Only the names of all available services are
+important.
+
+@node Actions in the NSS configuration, Notes on NSS Configuration File, Services in the NSS configuration, NSS Configuration File
+@subsection Actions in the NSS configuration
+
+The second item in the specification gives the user much finer control
+on the lookup process.  Action items are placed between two service
+names and are written within brackets.  The general form is
+
+@smallexample
+[ @r{(}!@r{?} @var{status} = @var{action}@r{)+} ]
+@end smallexample
+
+@noindent
+where
+
+@smallexample
+@var{status} @result{} success | notfound | unavail | tryagain
+@var{action} @result{} return | continue
+@end smallexample
+
+The case of the keywords is insignificant.  The @var{status}
+values are the results of a call to a lookup function of a specific
+service.  They mean
+
+@ftable @samp
+@item success
+No error occured an the wanted entry is returned.  The default action
+for this is @code{return}.
+
+@item notfound
+The lookup process works ok but the needed value was not found.  The
+default action is @code{continue}.
+
+@item unavail
+@cindex DNS server unavailable
+The service is permanently unavailable.  This can either mean the needed
+file is not available, or, for DNS, the server is not available or does
+not allow queries.  The default action is @code{continue}.
+
+@item tryagain
+The service is temporarily unavailable.  This could mean a file is
+locked or a server currently cannot accept more connections.  The
+default action is @code{continue}.
+@end ftable
+
+@noindent
+If we have a line like
+
+@smallexample
+ethers: nisplus [NOTFOUND=return] db files
+@end smallexample
+
+@noindent
+this is equivalent to
+
+@smallexample
+ethers: nisplus [SUCCESS=return NOTFOUND=return UNAVAIL=continue
+                 TRYAGAIN=continue]
+        db      [SUCCESS=return NOTFOUND=continue UNAVAIL=continue
+                 TRYAGAIN=continue]
+        files
+@end smallexample
+
+@noindent
+(except that it would have to be written on one line).  The default
+value for the actions are normally what you want, and only need to be
+changed in exceptional cases.
+
+If the optional @code{!} is placed before the @var{status} this means
+the following action is used for all statii but @var{status} itself.
+I.e., @code{!} is negation as in the C language (and others).
+
+Before we explain the exception which makes this action item necessary
+one more remark: obviously it makes no sense to add another action
+item after the @code{files} service.  Since there is no other service
+following the action @emph{always} is @code{return}.
+
+@cindex nisplus, and completeness
+Now, why is this @code{[NOTFOUND=return]} action useful?  To understand
+this we should know that the @code{nisplus} service is often
+complete; i.e., if an entry is not available in the NIS+ tables it is
+not available anywhere else.  This is what is expressed by this action
+item: it is useless to examine further services since they will not give
+us a result.
+
+@cindex nisplus, and booting
+@cindex bootstrapping, and services
+The situation would be different if the NIS+ service is not available
+because the machine is booting.  In this case the return value of the
+lookup function is not @code{notfound} but instead @code{unavail}.  And
+as you can see in the complete form above: in this situation the
+@code{db} and @code{files} services are used.  Neat, isn't it?  The
+system administrator need not pay special care for the time the system
+is not completely ready to work (while booting or shutdown or
+network problems).
+
+
+@node Notes on NSS Configuration File,  , Actions in the NSS configuration, NSS Configuration File
+@subsection Notes on the NSS Configuration File
+
+Finally a few more hints.  The NSS implementation is not completely
+helpless if @file{/etc/nsswitch.conf} does not exist.  For
+all supported databases there is a default value so it should normally
+be possible to get the system running even if the file is corrupted or
+missing.
+
+A second point is that the user should try to optimize the lookup
+process.  The different service have different response times.  A simple
+file look up on a local file could be fast, but if the file is long and the
+needed entry is near the end of the file this may take quite some time.
+In this case it might be better to use the @code{db} service which
+allows fast local access to large data sets.
+
+Often the situation is that some global information like NIS must be
+used.  So it is unavoidable to use service entries like @code{nis} etc.
+But one should avoid slow services like this if possible.
+
+
+@node NSS Module Internals, Extending NSS, NSS Configuration File, Name Service Switch
+@section NSS Module Internals
+
+Now it is time to described how the modules look like.  The functions
+contained in a module are identified by their names.  I.e., there is no
+jump table or the like.  How this is done is of no interest here; those
+interested in this topic should read about Dynamic Linking.
+@comment @ref{Dynamic Linking}.
+
+
+@menu
+* NSS Module Names::            Construction of the interface function of
+                                the NSS modules.
+* NSS Modules Interface::       Programming interface in the NSS module
+                                functions.
+@end menu
+
+@node NSS Module Names, NSS Modules Interface, NSS Module Internals, NSS Module Internals
+@subsection The Naming Scheme of the NSS Modules
+
+@noindent
+The name of each function consist of various parts:
+
+@quotation
+       _nss_@var{service}_@var{function}
+@end quotation
+
+@var{service} of course corresponds to the name of the module this
+function is found in.@footnote{Now you might ask why to duplicate this
+information.  The answer is that we want to keep the possibility to link
+directly with these shared objects.}  The @var{function} part is derived
+from the interface function in the C library itself.  If the user calls
+the function @code{gethostbyname} and the service used is @code{files}
+the function
+
+@smallexample
+       _nss_files_gethostbyname_r
+@end smallexample
+
+@noindent
+in the module
+
+@smallexample
+       libnss_files.so.1
+@end smallexample
+
+@noindent
+@cindex reentrant NSS functions
+is used.  You see, what is explained above in not the whole truth.  In
+fact the NSS modules only contain reentrant versions of the lookup
+functions.  I.e., if the user would call the @code{gethostbyname_r}
+function this also would end in the above function.  For all user
+interface functions the C library maps this call to a call to the
+reentrant function.  For reentrant functions this is trivial since the
+interface is (nearly) the same.  For the non-reentrant version pointers
+to static buffers are used to replace the user supplied buffers.
+
+I.e., the reentrant functions @emph{can} have counterparts.  No service
+module is forced to have functions for all databases and all kinds to
+access them.  If a function is not available it is simply treated as if
+the function would return @code{unavail}
+(@pxref{Actions in the NSS configuration}).
+
+
+@node NSS Modules Interface,  , NSS Module Names, NSS Module Internals
+@subsection The Interface of the Function in NSS Modules
+
+Now we know about the functions contained in the modules.  It is now
+time to describe the types.  When we mentioned the reentrant versions of
+the functions above, this means there are some additional arguments
+(compared with the standard, non-reentrant version).  The prototypes for
+the non-reentrant and reentrant versions of our function above are:
+
+@smallexample
+struct hostent *gethostbyname (const char *name)
+
+struct hostent *gethostbyname_r (const char *name,
+                                 struct hostent *result_buf, char *buf,
+                                 int buflen, int *h_errnop)
+@end smallexample
+
+@noindent
+The actual prototype of the function is the NSS modules in this case is
+
+@smallexample
+int _nss_files_gethostbyname_r (const char *name,
+                                struct hostent *result_buf, char *buf,
+                                int buflen, int *h_errnop)
+@end smallexample
+
+I.e., the interface function is in fact the reentrant function with
+the change of the return value.  While the user-level function returns a
+pointer to the result the reentrant function return an @code{int} value:
+
+@cindex NSS_STATUS_TRYAGAIN
+@cindex NSS_STATUS_UNAVAIL
+@cindex NSS_STATUS_NOTFOUND
+@cindex NSS_STATUS_SUCCESS
+@ftable @code
+@item NSS_STATUS_TRYAGAIN
+numeric value @code{-2}
+
+@item NSS_STATUS_UNAVAIL
+numeric value @code{-1}
+
+@item NSS_STATUS_NOTFOUND
+numeric value @code{0}
+
+@item NSS_STATUS_SUCCESS
+numeric value @code{1}
+@end ftable
+
+@noindent
+Now you see where the action items of the @file{/etc/nsswitch.conf} file
+are used.
+
+The above function has somthing special which is missing for almost all
+the other module functions.  There is an argument @var{h_errnop}.  This
+points to a variable which will be filled with the error code in case
+the execution of the function fails for some reason.  The reentrant
+function cannot use the global variable @var{h_errno};
+@code{gethostbyname} calls @code{gethostbyname_r} with the
+last argument set to @code{&h_errno}.
+
+The @code{get@var{XXX}by@var{YYY}} functions are the most important
+functions in the NSS modules.  But there are others which implement
+the other ways to access system databases (say for the
+password database, there are @code{setpwent}, @code{getpwent}, and
+@code{endpwent}).  These will be described in more detail later.
+Here we give a general way to determine the
+signature of the module function:
+
+@itemize @bullet
+@item
+the return value is @code{int};
+@item
+the name is as explain in @pxref{NSS Module Names};
+@item
+the first arguments are identical to the arguments of the non-reentrant
+function;
+@item
+the next three arguments are:
+
+@table @code
+@item STRUCT_TYPE result_buf
+pointer to buffer where the result is stored.  @code{STRUCT_TYPE} is
+normally a struct which corresponds to the database.
+@item char *buffer
+pointer to a buffer where the function can store additional adata for
+the result etc.
+@item int buflen
+length of the buffer pointed to by @var{buffer}.
+@end table
+
+@item
+possibly a last argument @var{h_errnop}, for the host name and network
+name lookup functions.
+@end itemize
+
+@noindent
+This table is correct for all functions but the @code{set@dots{}ent}
+and @code{end@dots{}ent} functions.
+
+
+@node Extending NSS,  , NSS Module Internals, Name Service Switch
+@section Extending NSS
+
+One of the advantages of NSS mentioned above is that it can be extended
+quite easily.  There are two ways in which the extension can happen:
+adding another database or adding another service.  The former is
+normally done only by the C library developers.  It is
+here only important to remember that adding another database is
+independent from adding another service because a service need not
+support all databases or lookup functions.
+
+A designer/implementor of a new service is therefore free to choose the
+databases s/he is interested in and leave the rest for later (or
+completely aside).
+
+@menu
+* Adding another Service to NSS::  What is to do to add a new service.
+* NSS Module Function Internals::  Guidelines for writing new NSS
+                                        service functions.
+@end menu
+
+@node Adding another Service to NSS, NSS Module Function Internals, Extending NSS, Extending NSS
+@subsection Adding another Service to NSS
+
+The sources for a new service need not (and should not) be part of the
+GNU C Library itself.  The developer retains complete control over the
+sources and its development.  The links between the C library and the
+new service module consists solely of the interface functions.
+
+Each module is designed following a specific interface specification.
+For now the version is 1 and this manifests in the version number of the
+shared library object of the NSS modules: they have the extension
+@code{.1}.  If the interface ever changes in an incompatible way,
+this number will be increased---hopefully this will never be necessary.
+Modules using the old interface will still be usable.
+
+Developers of a new service will have to make sure that their module is
+created using the correct interface number.  This means the file itself
+must have the correct name and on ElF systems the @dfn{soname} (Shared
+Object Name) must also have this number.  Building a module from a bunch
+of object files on an ELF system using GNU CC could be done like this:
+
+@smallexample
+gcc -shared -o libnss_NAME.so.1 -Wl,-soname,libnss_NAME.so.1 OBJECTS
+@end smallexample
+
+@noindent
+@ref{Link Options, Options for Linking, , gcc, GNU CC}, to learn
+more about this command line.
+
+To use the new module the library must be able to find it.  This can be
+achieved by using options for the dynamic linker so that it will search
+directory where the binary is placed.  For an ELF system this could be
+done by adding the wanted directory to the value of
+@code{LD_LIBRARY_PATH}.
+
+But this is not always possible since some program (those which run
+under IDs which do not belong to the user) ignore this variable.
+Therefore the stable version of the module should be placed into a
+directory which is searched by the dynamic linker.  Normally this should
+be the directory @file{$prefix/lib}, where @file{$prefix} corresponds to
+the value given to configure using the @code{--prefix} option.  But be
+careful: this should only be done if it is clear the module does not
+cause any harm.  System administrators should be careful.
+
+
+@node NSS Module Function Internals,  , Adding another Service to NSS, Extending NSS
+@subsection Internals of the NSS Module Functions
+
+Until now we only provided the syntactic interface for the functions in
+the NSS module.  In fact there is not more much we can tell since the
+implementation obviously is different for each function.  But a few
+general rules must be followed by all functions.
+
+In fact there are four kinds of different functions which may appear in
+the interface.  All derive from the traditional ones for system databases.
+@var{db} in the following table is normally an abbreviation for the
+database (e.g., it is @code{pw} for the password database).
+
+@table @code
+@item int _nss_@var{database}_set@var{db}ent (void)
+This function prepares the service for following operations.  For a
+simple file based lookup this means files could be opened, for other
+services this function simply is a noop.
+
+One special case for this function is that it takes an additional
+argument for some @var{database}s (i.e., the interface is
+@code{int set@var{db}ent (int)}).  @ref{Host Names}, which describes the
+@code{sethostent} function.
+
+The return value should be @var{NSS_STATUS_SUCCESS} or according to the
+table above in case of an error (@pxref{NSS Modules Interface}).
+
+@item int _nss_@var{database}_end@var{db}ent (void)
+This function simply closes all files which are still open or removes
+buffer caches.  If there are no files or buffers to remove this is again
+a simple noop.
+
+There normally is no return value different to @var{NSS_STATUS_SUCCESS}.
+
+@item int _nss_@var{database}_get@var{db}ent_r (@var{STRUCTURE} *result, char *buffer, int buflen)
+Since this function will be called several times in a row to retrieve
+one entry after the other it must keep some kind of state.  But this
+also means the functions are not really reentrant.  They are reentrant
+only in that simultaneous calls to this function will not try to
+write the retrieved data in the same place (as it would be the case for
+the non-reentrant functions); instead, it writes to the structure
+pointed to by the @var{result} parameter.  But the calls share a common
+state and in the case of a file access this means they return neighboring
+entries in the file.
+
+The buffer of length @var{buflen} pointed to by @var{buffer} can be used
+for storing some additional data for the result.  It is @emph{not}
+guaranteed that the same buffer will be passed for the next call of this
+function.  Therefore one must not misuse this buffer to save some state
+information from one call to another.
+
+As explained above this function could also have an additional last
+argument.  This depends on the database used; it happens only for
+@code{host} and @code{network}.
+
+The function shall return @code{NSS_STATUS_SUCCESS} as long as their are
+more entries.  When the last entry was read it should return
+@code{NSS_STATUS_NOTFOUND}.  When the buffer given as an argument is too
+small for the data to be returned @code{NSS_STATUS_TRYAGAIN} should be
+returned.  When the service was not formerly initialized by a call to
+@code{_nss_@var{DATABASE}_set@var{db}ent} all return value allowed for
+this function can also be returned here.
+
+@item int _nss_@var{DATABASE}_get@var{db}by@var{XX}_r (@var{PARAMS}, @var{STRUCTURE} *result, char *buffer, int buflen)
+This function shall return the entry from the database which is
+addressed by the @var{PARAMS}.  The type and number of these arguments
+vary.  It must be individually determined by looking to the user-level
+interface functions.  All arguments given to the non-reentrant version
+are here described by @var{PARAMS}.
+
+The result must be stored in the structure pointed to by @var{result}.
+If there is additional data to return (say strings, where the
+@var{result} structure only contains pointers) the function must use the
+@var{buffer} or length @var{buflen}.  There must not be any references
+to non-constant global data.
+
+The implementation of this function should honour the @var{stayopen}
+flag set by the @code{set@var{DB}ent} function whenever this makes sense.
+
+Again, this function takes an additional last argument for the
+@code{host} and @code{network} database.
+
+The return value should as always follow the rules given above
+(@pxref{NSS Modules Interface}).
+
+@end table

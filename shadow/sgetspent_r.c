@@ -66,7 +66,7 @@ struct spwd *
 __sgetspent_r (const char *string, struct spwd *result, char *buffer,
 	       int buflen)
 {
-  return parse_line (strncpy (string, buffer, buflen), result, NULL, 0)
+  return parse_line (strncpy (buffer, string, buflen), result, NULL, 0)
     ? result : NULL;
 }
 weak_alias (__sgetspent_r, sgetspent_r)

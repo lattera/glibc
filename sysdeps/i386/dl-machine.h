@@ -193,15 +193,15 @@ elf_machine_rel (struct link_map *map,
   switch (ELF32_R_TYPE (reloc->r_info))
     {
     case R_386_COPY:
-      loadbase = RESOLVE (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = RESOLVE (&sym, DL_LOOKUP_NOEXEC);
       memcpy (reloc_addr, (void *) (loadbase + sym->st_value), sym->st_size);
       break;
     case R_386_GLOB_DAT:
-      loadbase = RESOLVE (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = RESOLVE (&sym, 0);
       *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
       break;
     case R_386_JMP_SLOT:
-      loadbase = RESOLVE (&sym, (Elf32_Addr) reloc_addr, 1);
+      loadbase = RESOLVE (&sym, DL_LOOKUP_NOPLT);
       *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
       break;
     case R_386_32:
@@ -222,7 +222,7 @@ elf_machine_rel (struct link_map *map,
 	     built-in definitions used while loading those libraries.  */
 	  undo = map->l_addr + sym->st_value;
 #endif
-	loadbase = RESOLVE (&sym, (Elf32_Addr) reloc_addr, 0);
+	loadbase = RESOLVE (&sym, 0);
 	*reloc_addr += (sym ? (loadbase + sym->st_value) : 0) - undo;
 	break;
       }
@@ -233,7 +233,7 @@ elf_machine_rel (struct link_map *map,
 	*reloc_addr += map->l_addr;
       break;
     case R_386_PC32:
-      loadbase = RESOLVE (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = RESOLVE (&sym, 0);
       *reloc_addr += ((sym ? (loadbase + sym->st_value) : 0) -
 		      (Elf32_Addr) reloc_addr);
       break;

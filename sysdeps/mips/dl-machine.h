@@ -453,7 +453,7 @@ elf_machine_rel (struct link_map *map,
 	  else
 #endif
 	    undo = 0;
-	  loadbase = RESOLVE (&sym, (ElfW(Addr)) reloc_addr, 0);
+	  loadbase = RESOLVE (&sym, 0);
 	  *reloc_addr += (sym ? (loadbase + sym->st_value) : 0) - undo;
 	}
       break;

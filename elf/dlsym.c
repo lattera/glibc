@@ -44,7 +44,7 @@ dlsym (void *handle, const char *name)
 	  scope = &(_dl_global_scope ?: _dl_default_scope)[2];
 	  owner = NULL;
 	}
-      loadbase = _dl_lookup_symbol (name, &ref, scope, owner, 0, 0);
+      loadbase = _dl_lookup_symbol (name, &ref, scope, owner, 0);
     }
 
   return _dlerror_run (doit) ? NULL : (void *) (loadbase + ref->st_value);

@@ -45,16 +45,16 @@ _dl_elf_hash (const char *name)
 }
 
 /* Search loaded objects' symbol tables for a definition of the symbol
-   UNDEF_NAME.  The chosen value can't be RELOC_ADDR.  If NOPLT is nonzero,
-   then a PLT entry cannot satisfy the reference; some different binding
-   must be found.  */
+   UNDEF_NAME.  FLAGS is a set of flags.  If DL_LOOKUP_NOEXEC is set,
+   then don't search the executable for a definition; this used for
+   copy relocs.  If DL_LOOKUP_NOPLT is set, then a PLT entry cannot
+   satisfy the reference; some different binding must be found.  */
 
 ElfW(Addr)
 _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
 		   struct link_map *symbol_scope[],
 		   const char *reference_name,
-		   ElfW(Addr) reloc_addr,
-		   int noplt)
+		   int flags)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct
@@ -75,6 +75,10 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
 
 	map = (*scope)->l_searchlist[i];
 
+	/* Don't search the executable when resolving a copy reloc.  */
+	if (flags & DL_LOOKUP_NOEXEC && map->l_type == lt_executable)
+	  continue;
+
 	symtab = ((void *) map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
 	strtab = ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
 
@@ -87,9 +91,8 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
 	    const ElfW(Sym) *sym = &symtab[symidx];
 
 	    if (sym->st_value == 0 || /* No value.  */
-		/* Cannot resolve to the location being filled in.  */
-		reloc_addr == map->l_addr + sym->st_value ||
-		(noplt && sym->st_shndx == SHN_UNDEF)) /* Reject PLT.  */
+		((flags & DL_LOOKUP_NOPLT) != 0 /* Reject PLT entry.  */
+		 && sym->st_shndx == SHN_UNDEF))
 	      continue;
 
 	    switch (ELFW(ST_TYPE) (sym->st_info))

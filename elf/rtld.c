@@ -62,7 +62,7 @@ _dl_start (void *arg)
   /* This #define produces dynamic linking inline functions for
      bootstrap relocation instead of general-purpose relocation.  */
 #define RTLD_BOOTSTRAP
-#define RESOLVE(sym, reloc_addr, noplt) bootstrap_map.l_addr
+#define RESOLVE(sym, flags) bootstrap_map.l_addr
 #include "dynamic-link.h"
 
   /* Figure out the run-time load address of the dynamic linker itself.  */
@@ -369,7 +369,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	    const ElfW(Sym) *ref = NULL;
 	    ElfW(Addr) loadbase = _dl_lookup_symbol (_dl_argv[i], &ref,
 						     &_dl_default_scope[2],
-						     "argument", 0, 0);
+						     "argument", 0);
 	    char buf[20], *bp;
 	    buf[sizeof buf - 1] = '\0';
 	    bp = _itoa (ref->st_value, &buf[sizeof buf - 1], 16, 0);

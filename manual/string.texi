@@ -294,6 +294,21 @@ returns a pointer to the new string.
 @end deftypefun
 
 @comment string.h
+@comment GNU
+@deftypefun {char *} strndup (const char *@var{s}, size_t @var{size})
+This function is similar to @code{strdup} but always copies at most
+@var{size} characters into the newly allocated string.
+
+If the length of @var{s} is more than @var{size}, then @code{strndup}
+copies just the first @var{size} characters and adds a closing null
+terminator.  Otherwise all characters are copied and the string is
+terminated.
+
+This function is different to @code{strncpy} in that it always
+terminates the destination string.
+@end deftypefun
+
+@comment string.h
 @comment Unknown origin
 @deftypefun {char *} stpcpy (char *@var{to}, const char *@var{from})
 This function is like @code{strcpy}, except that it returns a pointer to
@@ -312,6 +327,68 @@ customary on Unix systems, but we did not invent it either.  Perhaps it
 comes from MS-DOG.
 
 Its behavior is undefined if the strings overlap.
+@end deftypefun
+
+@comment string.h
+@comment GNU
+@deftypefun {char *} stpncpy (char *@var{to}, const char *@var{from}, size_t @var{size})
+This function is similar to @code{stpcpy} but copies always exactly
+@var{size} characters into @var{to}.
+
+If the length of @var{from} is more then @var{size}, then @code{stpncpy}
+copies just the first @var{size} characters and returns a pointer to the
+character directly following the one which was copied last.  Note that in
+this case there is no null terminator written into @var{to}.
+
+If the length of @var{from} is less than @var{size}, then @code{stpncpy}
+copies all of @var{from}, followed by enough null characters to add up
+to @var{size} characters in all.  This behaviour is rarely useful, but it
+is implemented to be useful in contexts where this behaviour of the
+@code{strncpy} is used.  @code{stpncpy} returns a pointer to the
+@emph{first} written null character.
+
+This function is not part of ANSI or POSIX but was found useful while
+developing GNU C Library itself.
+
+Its behaviour is undefined if the strings overlap.
+@end deftypefun
+
+@comment string.h
+@comment GNU
+@deftypefun {char *} strdupa (const char *@var{s})
+This function is similar to @code{strdup} but allocates the new string
+using @code{alloca} instead of @code{malloc}
+@pxref{Variable Size Automatic}.  This means of course the returned
+string has the same limitations as any block of memory allocated using
+@code{alloca}.
+
+For obvious reasons @code{strdupa} is implemented only as a macro.  I.e.,
+you cannot get the address of this function.  Despite this limitations
+it is a useful function.  The following code shows a situation where
+using @code{malloc} would be a lot more expensive.
+
+@smallexample
+@include strdupa.c.texi
+@end smallexample
+
+Please note that calling @code{strtok} using @var{path} directly is
+illegal.
+
+This function is only available if GNU CC is used.
+@end deftypefun
+
+@comment string.h
+@comment GNU
+@deftypefun {char *} strndupa (const char *@var{s}, size_t @var{size})
+This function is similar to @code{strndup} but like @code{strdupa} it
+allocates the new string using @code{alloca}
+@pxref{Variable Size Automatic}.  The same advantages and limitations
+of @code{strdupa} are valid for @code{strndupa}, too.
+
+This function is implemented only as a macro which means one cannot
+get the address of it.
+
+@code{strndupa} is only available if GNU CC is used.
 @end deftypefun
 
 @comment string.h

@@ -137,6 +137,7 @@ of the GNU C Library.
 * Process Startup::             Writing the beginning and end of your program.
 * Processes::                   How to create processes and run other programs.
 * Job Control::                 All about process groups and sessions.
+* Name Service Switch::         Accessing the various system databases.
 * Users and Groups::            How users are identified and classified.
 * System Information::          Getting information about the
                                  hardware and software configuration
@@ -806,6 +807,13 @@ Functions for Job Control
 * Process Group Functions::     Functions for manipulating process groups.
 * Terminal Access Functions::   Functions for controlling terminal access.
 
+Name Service Switch
+
+* NSS Basics::                  What is this NSS good for.
+* NSS Configuration File::      Configuring NSS.
+* NSS Module Internals::        How does it work internally.
+* Extending NSS::               What to do to add services or databases.
+
 Users and Groups
 
 * User and Group IDs::          Each user and group has a unique numeric ID.
@@ -961,6 +969,7 @@ Porting the GNU C Library
 @include startup.texi
 @include process.texi
 @include job.texi
+@include nss.texi
 @include users.texi
 @include sysinfo.texi
 @include conf.texi

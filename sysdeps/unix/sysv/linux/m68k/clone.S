@@ -1,5 +1,5 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
-   Contributed by Richard Henderson (rth@tamu.edu)
+   Contributed by Andreas Schwab (schwab@issan.informatik.uni-dortmund.de)
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -16,66 +16,60 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* clone() is even more special than fork() as it mucks with stacks
+/* clone is even more special than fork as it mucks with stacks
    and invokes a function in the right context after its all over.  */
 
 #include <sysdep.h>
 #include <errnos.h>
 
-/* int clone(int (*fn)(), void *child_stack, int flags, int nargs, ...) */
+/* int clone (int (*fn) (), void *child_stack, int flags, int nargs, ...) */
 
         .text
-ENTRY(__clone)
+ENTRY (__clone)
 	/* Sanity check arguments.  */
-	movl	$-EINVAL,%eax
-	movl	4(%esp),%ecx		/* no NULL function pointers */
-	testl	%ecx,%ecx
-	jz	syscall_error
-	movl	8(%esp),%ecx		/* no NULL stack pointers */
-	testl	%ecx,%ecx
-	jz	syscall_error
-	movl	16(%esp),%edx		/* no negative argument counts */
-	testl	%edx,%edx
-	js	syscall_error
+	movel	#-EINVAL, %d0
+	movel	4(%sp), %a0		/* no NULL function pointers */
+	tstl	%a0
+	jeq	syscall_error
+	movel	8(%sp), %a1		/* no NULL stack pointers */
+	tstl	%a1
+	jeq	syscall_error
+	movel	16(%sp), %d1		/* no negative argument counts */
+	jmi	syscall_error
 
 	/* Allocate space on the new stack and copy args over */
-	movl	%edx,%eax
-	negl	%eax
-	lea	-4(%ecx,%eax,4),%ecx
-	jz	2f
-1:	movl	16(%esp,%edx,4),%eax
-	movl	%eax,0(%ecx,%edx,4)
-	dec	%edx
-	jnz	1b
+	movel	%d1, %d0
+	negl	%d0
+	lea	(%a1,%d0.l*4), %a1
+	jeq	2f
+1:	movel	16(%sp,%d1.l*4), -4(%a1,%d1.l*4)
+	subql	#1, %d1
+	jne	1b
 2:
-	/* Save the function pointer as the zeroth argument.
-	   It will be popped off in the child in the ebx frobbing below.  */
-	movl	4(%esp),%eax
-	movl	%eax,0(%ecx)
 
 	/* Do the system call */
-	pushl	%ebx
-	movl	16(%esp),%ebx
-	movl	$SYS_ify(clone),%eax
-	int	$0x80
-	popl	%ebx
+	exg	%d2, %a1		/* save %d2 and get stack pointer */
+	movel	12(%sp), %d1		/* get flags */
+	movel	#SYS_ify (clone), %d0
+	trap	#0
+	exg	%d2, %a1		/* restore %d2 */
 
-	test	%eax,%eax
-	jl	syscall_error
-	jz	thread_start
+	tstl	%d0
+	jmi	syscall_error
+	jeq	thread_start
 
-	ret
+	rts
 
 	SYSCALL_ERROR_HANDLER
 
 thread_start:
-	subl	%ebp,%ebp	/* terminate the stack frame */
-	call	*%ebx
-	pushl	%eax
+	subl	%fp, %fp	/* terminate the stack frame */
+	jsr	(%a0)
+	movel	%d0, -(%sp)
 #ifdef PIC
-	call	_exit@PLT
+	bsrl	_exit@PLTPC
 #else
-	call	_exit
+	jbsr	_exit
 #endif
 
-weak_alias(__clone, clone)
+weak_alias (__clone, clone)

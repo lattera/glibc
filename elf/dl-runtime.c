@@ -122,9 +122,9 @@ fixup (
 
   {
     /* This macro is used as a callback from the elf_machine_relplt code.  */
-#define RESOLVE(ref, reloc_addr, noplt) \
+#define RESOLVE(ref, flags) \
   (_dl_lookup_symbol (strtab + (*ref)->st_name, ref, scope, \
-		      l->l_name, reloc_addr, noplt))
+		      l->l_name, flags))
 #include "dynamic-link.h"
 
     /* Perform the specified relocation.  */

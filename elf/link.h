@@ -224,16 +224,18 @@ extern void _dl_close (struct link_map *map);
    null-terminated list of object scopes to search; each object's
    l_searchlist (i.e. the segment of the dependency tree starting at that
    object) is searched in turn.  REFERENCE_NAME should name the object
-   containing the reference; it is used in error messages.  RELOC_ADDR is
-   the address being fixed up and the chosen symbol cannot be one with this
-   value.  If NOPLT is nonzero, then the reference must not be resolved to
-   a PLT entry.  */
+   containing the reference; it is used in error messages.  FLAGS is a
+   set of flags:  */
+#define DL_LOOKUP_NOEXEC 1	/* Don't search the executable for a
+				   definition; this is used for copy
+				   relocs. */
+#define DL_LOOKUP_NOPLT 2	/* The reference must not be resolved
+				   to a PLT entry.  */
 extern ElfW(Addr) _dl_lookup_symbol (const char *undef,
 				     const ElfW(Sym) **sym,
 				     struct link_map *symbol_scope[],
 				     const char *reference_name,
-				     ElfW(Addr) reloc_addr,
-				     int noplt);
+				     int flags);
 
 /* Look up symbol NAME in MAP's scope and return its run-time address.  */
 extern ElfW(Addr) _dl_symbol_value (struct link_map *map, const char *name);

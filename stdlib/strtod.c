@@ -378,7 +378,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
      in the format described in <locale.h>.  */
   const char *grouping;
 
-  assert (sizeof (wchar_t) <= sizeof (wint_t));
+  assert (sizeof (wchar_t) == sizeof (wint_t));
 
   if (group)
     {

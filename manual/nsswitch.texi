@@ -1,0 +1,16 @@
+# /etc/nsswitch.conf
+#
+# Name Service Switch configuration file.
+#
+
+passwd:     db files nis
+shadow:     files
+group:      db files nis
+
+hosts:      files nisplus nis dns
+networks:   nisplus [NOTFOUND=return] files
+
+ethers:     nisplus [NOTFOUND=return] db files
+protocols:  nisplus [NOTFOUND=return] db files
+rpc:        nisplus [NOTFOUND=return] db files
+services:   nisplus [NOTFOUND=return] db files

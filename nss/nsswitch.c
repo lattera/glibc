@@ -353,7 +353,7 @@ nss_lookup_function (service_user *ni, const char *fct_name)
 		{
 		  struct link_map *scope[2] = { map, NULL };
 		  loadbase = _dl_lookup_symbol (name, &ref,
-						scope, map->l_name, 0, 0);
+						scope, map->l_name, 0);
 		}
 
 	      /* Construct the function name.  */

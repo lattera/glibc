@@ -31,8 +31,6 @@ __strdup (const char *s)
   if (new == NULL)
     return NULL;
 
-  memcpy (new, s, len);
-
-  return (char *) new;
+  return (char *) memcpy (new, s, len);
 }
 weak_alias (__strdup, strdup)

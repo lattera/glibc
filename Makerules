@@ -454,9 +454,10 @@ endef
 object-suffixes-left := $(object-suffixes)
 include $(o-iterator)
 define do-ar
+topdir=`cd $(..).; pwd`; \
 $(patsubst %,cd %;,$(objdir)) \
-$(AUTOLOCK) ${O%-lib}.lck $(AR) cru$(verbose) ${O%-lib} \
-				$(patsubst $(objpfx)%,%,$^)
+$$topdir/autolock.sh ${O%-lib}.lck $(AR) cru$(verbose) ${O%-lib} \
+					 $(patsubst $(objpfx)%,%,$^)
 rm -f $@
 touch $@
 endef
@@ -474,7 +475,9 @@ define o-iterator-doit
 $(common-objpfx)$(patsubst %,$(libtype$o),c)($(ar-symtab-name)): \
 	  $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
 	    $(patsubst $(objpfx)%,%,$(o-objects))) $(subdirs-stamp-o); \
-	$(AUTOLOCK) $$(common-objpfx)$$(patsubst %,$$(libtype$o),c).lck \
+	topdir=`cd $(..).; pwd`; \
+	$$$$topdir/autolock.sh \
+	  $$(common-objpfx)$$(patsubst %,$$(libtype$o),c).lck \
 	  $$(RANLIB) $$(common-objpfx)$$(patsubst %,$$(libtype$o),c)
 endef
 ifndef subdir
