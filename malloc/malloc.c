@@ -3738,7 +3738,7 @@ Void_t* cALLOc(n, elem_size) size_t n; size_t elem_size;
   }
 #endif
 
-  MALLOC_ZERO(mem, sz);
+  MALLOC_ZERO(mem, csz - SIZE_SZ);
   return mem;
 }
 
