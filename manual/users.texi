@@ -1071,7 +1071,7 @@ the user accounting database.
 
 All the @code{get*} functions mentioned before store the information
 they return in a static buffer.  This can be a problem in multi-threaded
-programs since the data return for the request is overwritten be the
+programs since the data returned for the request is overwritten by the
 return value data in another thread.  Therefore the GNU C Library
 provides as extensions three more functions which return the data in a
 user-provided buffer.
@@ -1853,16 +1853,16 @@ group of users with a certain machine.  On the other hand grouping of
 host names is not supported so far.
 
 In Sun Microsystems SunOS appeared a new kind of database, the netgroup
-database.  It allows to group hosts, users, and domain freely, giving
-them individual names.  More concrete: a netgroup is a list of triples
-consisting of a host name, a user name, and a domain name, where any of
-the entries can be a wildcard entry, matching all inputs.  A last
+database.  It allows grouping hosts, users, and domains freely, giving
+them individual names.  To be more concrete, a netgroup is a list of triples
+consisting of a host name, a user name, and a domain name where any of
+the entries can be a wildcard entry matching all inputs.  A last
 possibility is that names of other netgroups can also be given in the
 list specifying a netgroup.  So one can construct arbitrary hierarchies
 without loops.
 
 Sun's implementation allows netgroups only for the @code{nis} or
-@code{nisplus} service @pxref{Services in the NSS configuration}.  The
+@code{nisplus} service, @pxref{Services in the NSS configuration}.  The
 implementation in the GNU C library has no such restriction.  An entry
 in either of the input services must have the following form:
 
@@ -1873,7 +1873,7 @@ in either of the input services must have the following form:
 Any of the fields in the triple can be empty which means anything
 matches.  While describing the functions we will see that the opposite
 case is useful as well.  I.e., there may be entries which will not
-match any input.  For entries like a name consisting of the single
+match any input.  For entries like this, a name consisting of the single
 character @code{-} shall be used.
 
 @node Lookup Netgroup
@@ -1889,10 +1889,10 @@ These functions are declared in @file{netdb.h}.
 @comment BSD
 @deftypefun int setnetgrent (const char *@var{netgroup})
 A call to this function initializes the internal state of the library to
-allow following calls of the @code{getnetgrent} iterate over all entries
+allow following calls of the @code{getnetgrent} to iterate over all entries
 in the netgroup with name @var{netgroup}.
 
-When the call is successful (i.e., when a netgroup with this name exist)
+When the call is successful (i.e., when a netgroup with this name exists)
 the return value is @code{1}.  When the return value is @code{0} no
 netgroup of this name is known or some other error occurred.
 @end deftypefun
@@ -1914,11 +1914,11 @@ the @code{innetgr} function and parts of the implementation of the
 @comment BSD
 @deftypefun int getnetgrent (char **@var{hostp}, char **@var{userp}, char **@var{domainp})
 This function returns the next unprocessed entry of the currently
-selected netgroup.  The string pointers, which addresses are passed in
+selected netgroup.  The string pointers, in which addresses are passed in
 the arguments @var{hostp}, @var{userp}, and @var{domainp}, will contain
 after a successful call pointers to appropriate strings.  If the string
 in the next entry is empty the pointer has the value @code{NULL}.
-The returned string pointers are only valid unless no of the netgroup
+The returned string pointers are only valid if none of the netgroup
 related functions are called.
 
 The return value is @code{1} if the next entry was successfully read.  A
@@ -1946,7 +1946,7 @@ SunOS libc does not provide this function.
 @comment netdb.h
 @comment BSD
 @deftypefun void endnetgrent (void)
-This function free all buffers which were allocated to process the last
+This function frees all buffers which were allocated to process the last
 selected netgroup.  As a result all string pointers returned by calls
 to @code{getnetgrent} are invalid afterwards.
 @end deftypefun
@@ -1975,7 +1975,7 @@ to the other @code{set}/@code{get}/@code{endnetgrent} functions.
 @end enumerate
 
 Any of the pointers @var{hostp}, @var{userp}, and @var{domainp} can be
-@code{NULL} which means any value is excepted in this position.  This is
+@code{NULL} which means any value is accepted in this position.  This is
 also true for the name @code{-} which should not match any other string
 otherwise.
 

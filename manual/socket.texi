@@ -8,18 +8,17 @@ communication using sockets.
 @cindex socket
 @cindex interprocess communication, with sockets
 A @dfn{socket} is a generalized interprocess communication channel.
-Like a pipe, a socket is represented as a file descriptor.  But,
-unlike pipes, sockets support communication between unrelated
-processes, and even between processes running on different machines
-that communicate over a network.  Sockets are the primary means of
-communicating with other machines; @code{telnet}, @code{rlogin},
-@code{ftp}, @code{talk}, and the other familiar network programs use
-sockets.
+Like a pipe, a socket is represented as a file descriptor.  Unlike pipes
+sockets support communication between unrelated processes, and even
+between processes running on different machines that communicate over a
+network.  Sockets are the primary means of communicating with other
+machines; @code{telnet}, @code{rlogin}, @code{ftp}, @code{talk} and the
+other familiar network programs use sockets.
 
 Not all operating systems support sockets.  In the GNU library, the
 header file @file{sys/socket.h} exists regardless of the operating
 system, and the socket functions always exist, but if the system does
-not really support sockets, these functions always fail.
+not really support sockets these functions always fail.
 
 @strong{Incomplete:} We do not currently document the facilities for
 broadcast messages or for configuring Internet interfaces.  The
@@ -28,7 +27,7 @@ aren't documented either so far.
 
 @menu
 * Socket Concepts::	Basic concepts you need to know about.
-* Communication Styles::Stream communication, datagrams, and other styles.
+* Communication Styles::Stream communication, datagrams and other styles.
 * Socket Addresses::	How socket names (``addresses'') work.
 * Interface Naming::	Identifying specific network interfaces.
 * Local Namespace::	Details about the local namespace.
@@ -61,7 +60,7 @@ communication style specifies the answers to questions such as these:
 @cindex byte stream
 @cindex stream (sockets)
 @strong{What are the units of data transmission?}  Some communication
-styles regard the data as a sequence of bytes, with no larger
+styles regard the data as a sequence of bytes with no larger
 structure; others group the bytes into records (which are known in
 this context as @dfn{packets}).
 
@@ -81,7 +80,7 @@ to retransmit data as needed.
 @item
 @strong{Is communication entirely with one partner?}  Some
 communication styles are like a telephone call---you make a
-@dfn{connection} with one remote socket, and then exchange data
+@dfn{connection} with one remote socket and then exchange data
 freely.  Other styles are like mailing letters---you specify a
 destination address for each message you send.
 @end itemize
@@ -112,7 +111,7 @@ start with @samp{PF_}.
 
 The rules of a protocol apply to the data passing between two programs,
 perhaps on different computers; most of these rules are handled by the
-operating system, and you need not know about them.  What you do need to
+operating system and you need not know about them.  What you do need to
 know about protocols is this:
 
 @itemize @bullet
@@ -127,30 +126,30 @@ example, the TCP protocol fits only the byte stream style of
 communication and the Internet namespace.
 
 @item
-For each combination of style and namespace, there is a @dfn{default
-protocol} which you can request by specifying 0 as the protocol
+For each combination of style and namespace there is a @dfn{default
+protocol}, which you can request by specifying 0 as the protocol
 number.  And that's what you should normally do---use the default.
 @end itemize
 
 Throughout the following description at various places
 variables/parameters to denote sizes are required.  And here the trouble
 starts.  In the first implementations the type of these variables was
-simply @code{int}.  This type was on almost all machines of this time 32
-bits wide and so a de-factor standard required 32 bit variables.  This
-is important since references to variables of this type are passed to
-the kernel.
+simply @code{int}.  On most machines at that time an @code{int} was 32
+bits wide, which created a @emph{de facto} standard requiring 32-bit
+variables.  This is important since references to variables of this type
+are passed to the kernel.
 
-But then the POSIX people came and unified the interface with the words
-"all size values are of type @code{size_t}".  But on 64 bit machines
-@code{size_t} is 64 bits wide, and so variable references are not anymore
+Then the POSIX people came and unified the interface with the words "all
+size values are of type @code{size_t}".  On 64-bit machines
+@code{size_t} is 64 bits wide, so pointers to variables were no longer
 possible.
 
 The Unix98 specification provides a solution by introducing a type
 @code{socklen_t}.  This type is used in all of the cases that POSIX
 changed to use @code{size_t}.  The only requirement of this type is that
 it be an unsigned type of at least 32 bits.  Therefore, implementations
-which require that references to 32 bit variables be passed can be as
-happy as implementations which use 64 bit values.
+which require that references to 32-bit variables be passed can be as
+happy as implementations which use 64-bit values.
 
 
 @node Communication Styles
@@ -165,8 +164,8 @@ defined in @file{sys/socket.h}.
 @comment sys/socket.h
 @comment BSD
 @deftypevr Macro int SOCK_STREAM
-The @code{SOCK_STREAM} style is like a pipe (@pxref{Pipes and FIFOs});
-it operates over a connection with a particular remote socket, and
+The @code{SOCK_STREAM} style is like a pipe (@pxref{Pipes and FIFOs}).
+It operates over a connection with a particular remote socket and
 transmits data reliably as a stream of bytes.
 
 Use of this style is covered in detail in @ref{Connections}.
@@ -176,7 +175,7 @@ Use of this style is covered in detail in @ref{Connections}.
 @comment BSD
 @deftypevr Macro int SOCK_DGRAM
 The @code{SOCK_DGRAM} style is used for sending
-individually-addressed packets, unreliably.
+individually-addressed packets unreliably.
 It is the diametrical opposite of @code{SOCK_STREAM}.
 
 Each time you write data to a socket of this kind, that data becomes
@@ -190,7 +189,7 @@ fourth and fifth packets; the seventh packet may arrive before the
 sixth, and may arrive a second time after the sixth.
 
 The typical use for @code{SOCK_DGRAM} is in situations where it is
-acceptable to simply resend a packet if no response is seen in a
+acceptable to simply re-send a packet if no response is seen in a
 reasonable amount of time.
 
 @xref{Datagrams}, for detailed information about how to use datagram
@@ -203,7 +202,7 @@ sockets.
 @comment sys/socket.h
 @comment BSD
 @deftypevr Macro int SOCK_SEQPACKET
-This style is like @code{SOCK_STREAM} except that the data is
+This style is like @code{SOCK_STREAM} except that the data are
 structured into packets.
 
 A program that receives data over a @code{SOCK_SEQPACKET} socket
@@ -262,7 +261,7 @@ you send data from a socket, or use it to initiate a connection, the
 system assigns an address automatically if you have not specified one.
 
 Occasionally a client needs to specify an address because the server
-discriminates based on addresses; for example, the rsh and rlogin
+discriminates based on address; for example, the rsh and rlogin
 protocols look at the client's socket address and only bypass password
 checking if it is less than @code{IPPORT_RESERVED} (@pxref{Ports}).
 
@@ -293,12 +292,12 @@ address.  You can't use this data type effectively to interpret an
 address or construct one; for that, you must use the proper data type
 for the socket's namespace.
 
-Thus, the usual practice is to construct an address in the proper
+Thus, the usual practice is to construct an address of the proper
 namespace-specific type, then cast a pointer to @code{struct sockaddr *}
 when you call @code{bind} or @code{getsockname}.
 
 The one piece of information that you can get from the @code{struct
-sockaddr} data type is the @dfn{address format} designator which tells
+sockaddr} data type is the @dfn{address format designator}.  This tells
 you which data type to use to understand the address fully.
 
 @pindex sys/socket.h
@@ -376,8 +375,8 @@ for completeness, but there is no reason to use it in a program.
 @end table
 
 @file{sys/socket.h} defines symbols starting with @samp{AF_} for many
-different kinds of networks, all or most of which are not actually
-implemented.  We will document those that really work, as we receive
+different kinds of networks, most or all of which are not actually
+implemented.  We will document those that really work as we receive
 information about how to use them.
 
 @node Setting Address
@@ -395,7 +394,7 @@ The @code{bind} function assigns an address to the socket
 @var{socket}.  The @var{addr} and @var{length} arguments specify the
 address; the detailed format of the address depends on the namespace.
 The first part of the address is always the format designator, which
-specifies a namespace, and says that the address is in the format for
+specifies a namespace, and says that the address is in the format of
 that namespace.
 
 The return value is @code{0} on success and @code{-1} on failure.  The
@@ -566,15 +565,15 @@ as file names.
 @node Local Namespace Concepts
 @subsection Local Namespace Concepts
 
-In the local namespace, socket addresses are file names.  You can specify
+In the local namespace socket addresses are file names.  You can specify
 any file name you want as the address of the socket, but you must have
 write permission on the directory containing it.  In order to connect to
-a socket, you must have read permission for it.  It's common to put
+a socket you must have read permission for it.  It's common to put
 these files in the @file{/tmp} directory.
 
-One peculiarity of the local namespace is that the name is only used when
-opening the connection; once that is over with, the address is not
-meaningful and may not exist.
+One peculiarity of the local namespace is that the name is only used
+when opening the connection; once open the address is not meaningful and
+may not exist.
 
 Another peculiarity is that you cannot connect to such a socket from
 another machine--not even if the other machine shares the file system
@@ -582,7 +581,7 @@ which contains the name of the socket.  You can see the socket in a
 directory listing, but connecting to it never succeeds.  Some programs
 take advantage of this, such as by asking the client to send its own
 process ID, and using the process IDs to distinguish between clients.
-However, we recommend you not to use this method in protocols you design,
+However, we recommend you not use this method in protocols you design,
 as we might someday permit connections from other machines that mount
 the same file systems.  Instead, send each new client an identifying
 number if you want it to have one.
@@ -642,7 +641,7 @@ namespace.  @xref{Socket Addresses}.
 This is the file name to use.
 
 @strong{Incomplete:}  Why is 108 a magic number?  RMS suggests making
-this a zero-length array and tweaking the example following to use
+this a zero-length array and tweaking the following example to use
 @code{alloca} to allocate an appropriate amount of storage based on
 the length of the filename.
 @end table
@@ -676,15 +675,15 @@ namespace.
 This section describes the details of the protocols and socket naming
 conventions used in the Internet namespace.
 
-Originaly the Internet namespace used only IP version 4 (IPv4).  With
+Originally the Internet namespace used only IP version 4 (IPv4).  With
 the growing number of hosts on the Internet, a new protocol with a
-larger address space was neccessary: IP version 6 (IPv6).  IPv6
-introduces besides 128bit addresses (IPv4 has 32bit addresses) also
-other features and will eventually replace IPv4.
+larger address space was necessary: IP version 6 (IPv6).  IPv6
+introduces 128-bit addresses (IPv4 has 32-bit addresses) and other
+features, and will eventually replace IPv4.
 
 To create a socket in the IPv4 Internet namespace, use the symbolic name
 @code{PF_INET} of this namespace as the @var{namespace} argument to
-@code{socket} or @code{socketpair}.  For IPv6 addresses, you need the
+@code{socket} or @code{socketpair}.  For IPv6 addresses you need the
 macro @code{PF_INET6}. These macros are defined in @file{sys/socket.h}.
 @pindex sys/socket.h
 
@@ -695,7 +694,9 @@ This designates the IPv4 Internet namespace and associated family of
 protocols.
 @end deftypevr
 
-@deftypevr Macro int AF_INET6
+@comment sys/socket.h
+@comment X/Open
+@deftypevr Macro int PF_INET6
 This designates the IPv6 Internet namespace and associated family of
 protocols.
 @end deftypevr
@@ -706,7 +707,7 @@ A socket address for the Internet namespace includes the following components:
 @item
 The address of the machine you want to connect to.  Internet addresses
 can be specified in several ways; these are discussed in @ref{Internet
-Address Formats}, @ref{Host Addresses}, and @ref{Host Names}.
+Address Formats}, @ref{Host Addresses} and @ref{Host Names}.
 
 @item
 A port number for that machine.  @xref{Ports}.
@@ -719,7 +720,7 @@ for information about this.
 @menu
 * Internet Address Formats::    How socket addresses are specified in the
                                  Internet namespace.
-* Host Addresses::	        All about host addresses of internet host.
+* Host Addresses::	        All about host addresses of Internet host.
 * Protocols Database::		Referring to protocols by name.
 * Ports::			Internet port numbers.
 * Services Database::           Ports may have symbolic names.
@@ -751,7 +752,7 @@ Internet namespace.  It has the following members:
 @table @code
 @item sa_family_t sin_family
 This identifies the address family or format of the socket address.
-You should store the value of @code{AF_INET} in this member.
+You should store the value @code{AF_INET} in this member.
 @xref{Socket Addresses}.
 
 @item struct in_addr sin_addr
@@ -806,9 +807,9 @@ Each computer also has one or more @dfn{host names}, which are strings
 of words separated by periods, as in @samp{mescaline.gnu.org}.
 
 Programs that let the user specify a host typically accept both numeric
-addresses and host names.  But the program needs a numeric address to
-open a connection; to use a host name, you must convert it to the
-numeric address it stands for.
+addresses and host names.  To open a connection a program needs a
+numeric address, and so must convert a host name to the numeric address
+it stands for.
 
 @menu
 * Abstract Host Addresses::	What a host number consists of.
@@ -832,17 +833,17 @@ numbers which identify that computer among all those on the Internet.
 An IPv4 Internet host address is a number containing four bytes of data.
 Historically these are divided into two parts, a @dfn{network number} and a
 @dfn{local network address number} within that network.  In the
-mid-1990s classless address were introduced which changed the
+mid-1990s classless addresses were introduced which changed this
 behaviour.  Since some functions implicitly expect the old definitions,
-we first describe the class based network and will then describe
-classless addresses.  IPv6 uses only classless adresses and therefore
+we first describe the class-based network and will then describe
+classless addresses.  IPv6 uses only classless addresses and therefore
 the following paragraphs don't apply.
 
-The class based IPv4 network number consists of the first one, two or
+The class-based IPv4 network number consists of the first one, two or
 three bytes; the rest of the bytes are the local address.
 
 IPv4 network numbers are registered with the Network Information Center
-(NIC), and are divided into three classes---A, B, and C.  The local
+(NIC), and are divided into three classes---A, B and C.  The local
 network address numbers of individual machines are registered with the
 administrator of the particular network.
 
@@ -852,12 +853,12 @@ very large number of hosts.  Medium-sized Class B networks have two-byte
 network numbers, with the first byte in the range 128 to 191.  Class C
 networks are the smallest; they have three-byte network numbers, with
 the first byte in the range 192-255.  Thus, the first 1, 2, or 3 bytes
-of an Internet address specifies a network.  The remaining bytes of the
+of an Internet address specify a network.  The remaining bytes of the
 Internet address specify the address within that network.
 
 The Class A network 0 is reserved for broadcast to all networks.  In
 addition, the host number 0 within each network is reserved for broadcast
-to all hosts in that network.  These uses are obsolete now but out of
+to all hosts in that network.  These uses are obsolete now but for
 compatibility reasons you shouldn't use network 0 and host number 0.
 
 The Class A network 127 is reserved for loopback; you can always use
@@ -902,15 +903,15 @@ radix is assumed.
 
 @subsubheading Classless Addresses
 
-IPv4 addresses (and IPv6 addresses also) are now considered as
-classless.  The distinction between classes A, B, and C can be ignored.
-Instead a IPv4 host adddress consists of a 32-bit address and a 32-bit
-mask.  The mask contains bits of 1 for the network part and bits of 0
-for the host part.  The 1-bits are contigous from the leftmost bit, the
-0-bits are contigous from the rightmost bit so that the netmask can also
-be written as a prefix length of bits of 1.  Classes A, B and C are just
-special cases of this general rule.  For example, class A addresses have
-a netmask of @samp{255.0.0.0} or a prefix length of 8.
+IPv4 addresses (and IPv6 addresses also) are now considered classless;
+the distinction between classes A, B and C can be ignored.  Instead an
+IPv4 host address consists of a 32-bit address and a 32-bit mask.  The
+mask contains set bits for the network part and cleared bits for the
+host part.  The network part is contiguous from the left, with the
+remaining bits representing the host.  As a consequence, the netmask can
+simply be specified as the number of set bits.  Classes A, B and C are
+just special cases of this general rule.  For example, class A addresses
+have a netmask of @samp{255.0.0.0} or a prefix length of 8.
 
 Classless IPv4 network addresses are written in numbers-and-dots
 notation with the prefix length appended and a slash as separator.  For
@@ -921,8 +922,8 @@ example the class A network 10 is written as @samp{10.0.0.0/8}.
 IPv6 addresses contain 128 bits (IPv4 has 32 bits) of data.  A host
 address is usually written as eight 16-bit hexadecimal numbers that are
 separated by colons.  Two colons are used to abbreviate strings of
-consecutive zeros.  For example the IPv6 loopback address which is
-@samp{0:0:0:0:0:0:0:1} can be just written as @samp{::1}.
+consecutive zeros.  For example, the IPv6 loopback address
+@samp{0:0:0:0:0:0:0:1} can just be written as @samp{::1}.
 
 @node Host Address Data Type
 @subsubsection Host Address Data Type
@@ -935,8 +936,8 @@ the integer from the structure or put the integer into a structure.
 
 You will find older code that uses @code{unsigned long int} for
 IPv4 Internet host addresses instead of @code{uint32_t} or @code{struct
-in_addr}.  Historically @code{unsigned long int} was a 32 bit number but
-with 64 bit machines this has changed.  Using @code{unsigned long int}
+in_addr}.  Historically @code{unsigned long int} was a 32-bit number but
+with 64-bit machines this has changed.  Using @code{unsigned long int}
 might break the code if it is used on machines where this type doesn't
 have 32 bits.  @code{uint32_t} is specified by Unix98 and guaranteed to have
 32 bits.
@@ -971,7 +972,7 @@ talking to itself.
 @comment netinet/in.h
 @comment BSD
 @deftypevr Macro {uint32_t} INADDR_ANY
-You can use this constant to stand for ``any incoming address,'' when
+You can use this constant to stand for ``any incoming address'' when
 binding to an address.  @xref{Setting Address}.  This is the usual
 address to give in the @code{sin_addr} member of @w{@code{struct
 sockaddr_in}} when you want to accept Internet connections.
@@ -1002,7 +1003,7 @@ data, which can be accessed (via a union) in a variety of ways.
 @deftypevr Constant {struct in6_addr} in6addr_loopback
 This constant is the IPv6 address @samp{::1}, the loopback address.  See
 above for a description of what this means.  The macro
-@code{IN6ADDR_LOOPBACK_INIT} is provided to allow you to initialise your
+@code{IN6ADDR_LOOPBACK_INIT} is provided to allow you to initialize your
 own variables to this value.
 @end deftypevr
 
@@ -1011,7 +1012,7 @@ own variables to this value.
 @deftypevr Constant {struct in6_addr} in6addr_any
 This constant is the IPv6 address @samp{::}, the unspecified address.  See
 above for a description of what this means.  The macro
-@code{IN6ADDR_ANY_INIT} is provided to allow you to initialise your
+@code{IN6ADDR_ANY_INIT} is provided to allow you to initialize your
 own variables to this value.
 @end deftypevr
 
@@ -1022,7 +1023,7 @@ own variables to this value.
 @noindent
 These additional functions for manipulating Internet addresses are
 declared in the header file @file{arpa/inet.h}.  They represent Internet
-addresses in network byte order; they represent network numbers and
+addresses in network byte order, and network numbers and
 local-address-within-network numbers in host byte order.  @xref{Byte
 Order}, for an explanation of network and host byte order.
 
@@ -1041,7 +1042,7 @@ it in the @code{struct in_addr} that @var{addr} points to.
 This function converts the IPv4 Internet host address @var{name} from the
 standard numbers-and-dots notation into binary data.  If the input is
 not valid, @code{inet_addr} returns @code{INADDR_NONE}.  This is an
-obsolete interface to @code{inet_aton}, described immediately above; it
+obsolete interface to @code{inet_aton}, described immediately above. It
 is obsolete because @code{INADDR_NONE} is a valid address
 (255.255.255.255), and @code{inet_aton} provides a cleaner way to
 indicate error return.
@@ -1170,7 +1171,7 @@ vector of strings.
 This is the host address type; in practice, its value is always either
 @code{AF_INET} or @code{AF_INET6}, with the latter being used for IPv6
 hosts.  In principle other kinds of addresses could be represented in
-the data base as well as Internet addresses; if this were done, you
+the database as well as Internet addresses; if this were done, you
 might find a value in this field other than @code{AF_INET} or
 @code{AF_INET6}.  @xref{Socket Addresses}.
 
@@ -1214,7 +1215,7 @@ named @var{name}.  If the lookup fails, it returns a null pointer.
 @deftypefun {struct hostent *} gethostbyname2 (const char *@var{name}, int @var{af})
 The @code{gethostbyname2} function is like @code{gethostbyname}, but
 allows the caller to specify the desired address family (e.g.@:
-@code{AF_INET} or @code{AF_INET6}) for the result.
+@code{AF_INET} or @code{AF_INET6}) of the result.
 @end deftypefun
 
 @comment netdb.h
@@ -1245,7 +1246,7 @@ Here are the error codes that you may find in @code{h_errno}:
 @comment BSD
 @item HOST_NOT_FOUND
 @vindex HOST_NOT_FOUND
-No such host is known in the data base.
+No such host is known in the database.
 
 @comment netdb.h
 @comment BSD
@@ -1349,8 +1350,8 @@ too small.
 @end deftypefun
 
 You can also scan the entire hosts database one entry at a time using
-@code{sethostent}, @code{gethostent}, and @code{endhostent}.  Be careful
-in using these functions, because they are not reentrant.
+@code{sethostent}, @code{gethostent} and @code{endhostent}.  Be careful
+when using these functions because they are not reentrant.
 
 @comment netdb.h
 @comment BSD
@@ -1494,8 +1495,8 @@ find such a service, it returns a null pointer.
 
 @noindent
 You can also scan the services database using @code{setservent},
-@code{getservent}, and @code{endservent}.  Be careful in using these
-functions, because they are not reentrant.
+@code{getservent} and @code{endservent}.  Be careful when using these
+functions because they are not reentrant.
 
 @comment netdb.h
 @comment BSD
@@ -1538,11 +1539,11 @@ order), and others put it last (``little-endian'' order).
 So that machines with different byte order conventions can
 communicate, the Internet protocols specify a canonical byte order
 convention for data transmitted over the network.  This is known
-as the @dfn{network byte order}.
+as @dfn{network byte order}.
 
 When establishing an Internet socket connection, you must make sure that
 the data in the @code{sin_port} and @code{sin_addr} members of the
-@code{sockaddr_in} structure are represented in the network byte order.
+@code{sockaddr_in} structure are represented in network byte order.
 If you are encoding integer data in the messages sent through the
 socket, you should convert this to network byte order too.  If you don't
 do this, your program may fail when running on or talking to other kinds
@@ -1550,7 +1551,7 @@ of machines.
 
 If you use @code{getservbyname} and @code{gethostbyname} or
 @code{inet_addr} to get the port number and host address, the values are
-already in the network byte order, and you can copy them directly into
+already in network byte order, and you can copy them directly into
 the @code{sockaddr_in} structure.
 
 Otherwise, you have to convert the values explicitly.  Use @code{htons}
@@ -1581,7 +1582,7 @@ network byte order to host byte order.
 This function converts the @code{uint32_t} integer @var{hostlong} from
 host byte order to network byte order.
 
-This is used for IPv4 internet addresses.
+This is used for IPv4 Internet addresses.
 @end deftypefun
 
 @comment netinet/in.h
@@ -1590,7 +1591,7 @@ This is used for IPv4 internet addresses.
 This function converts the @code{uint32_t} integer @var{netlong} from
 network byte order to host byte order.
 
-This is used for IPv4 internet addresses.
+This is used for IPv4 Internet addresses.
 @end deftypefun
 
 @node Protocols Database
@@ -1598,7 +1599,7 @@ This is used for IPv4 internet addresses.
 @cindex protocols database
 
 The communications protocol used with a socket controls low-level
-details of how data is exchanged.  For example, the protocol implements
+details of how data are exchanged.  For example, the protocol implements
 things like checksums to detect errors in transmissions, and routing
 instructions for messages.  Normal user programs have little reason to
 mess with these details directly.
@@ -1665,8 +1666,8 @@ protocol, it returns a null pointer.
 @end deftypefun
 
 You can also scan the whole protocols database one protocol at a time by
-using @code{setprotoent}, @code{getprotoent}, and @code{endprotoent}.
-Be careful in using these functions, because they are not reentrant.
+using @code{setprotoent}, @code{getprotoent} and @code{endprotoent}.
+Be careful when using these functions because they are not reentrant.
 
 @comment netdb.h
 @comment BSD
@@ -1729,7 +1730,7 @@ CCITT.  @file{socket.h} defines these symbols and others naming protocols
 not actually implemented.
 
 @code{PF_IMPLINK} is used for communicating between hosts and Internet
-Message Processors.  For information on this, and on @code{PF_ROUTE}, an
+Message Processors.  For information on this and @code{PF_ROUTE}, an
 occasionally-used local area routing protocol, see the GNU Hurd Manual
 (to appear in the future).
 
@@ -1783,7 +1784,7 @@ The process already has too many file descriptors open.
 The system already has too many file descriptors open.
 
 @item EACCESS
-The process does not have privilege to create a socket of the specified
+The process does not have the privilege to create a socket of the specified
 @var{style} or @var{protocol}.
 
 @item ENOBUFS
@@ -1791,7 +1792,7 @@ The system ran out of internal buffer space.
 @end table
 
 The file descriptor returned by the @code{socket} function supports both
-read and write operations.  But, like pipes, sockets do not support file
+read and write operations.  However, like pipes, sockets do not support file
 positioning operations.
 @end deftypefun
 
@@ -1806,7 +1807,7 @@ see @ref{Local Socket Example}, or @ref{Inet Example}.
 @cindex shutting down a socket
 @cindex socket shutdown
 
-When you are finished using a socket, you can simply close its
+When you have finished using a socket, you can simply close its
 file descriptor with @code{close}; see @ref{Opening and Closing Files}.
 If there is still data waiting to be transmitted over the connection,
 normally @code{close} tries to complete this transmission.  You
@@ -1814,7 +1815,7 @@ can control this behavior using the @code{SO_LINGER} socket option to
 specify a timeout period; see @ref{Socket Options}.
 
 @pindex sys/socket.h
-You can also shut down only reception or only transmission on a
+You can also shut down only reception or transmission on a
 connection by calling @code{shutdown}, which is declared in
 @file{sys/socket.h}.
 
@@ -1877,7 +1878,7 @@ This function creates a socket pair, returning the file descriptors in
 is a full-duplex communications channel, so that both reading and writing
 may be performed at either end.
 
-The @var{namespace}, @var{style}, and @var{protocol} arguments are
+The @var{namespace}, @var{style} and @var{protocol} arguments are
 interpreted as for the @code{socket} function.  @var{style} should be
 one of the communication styles listed in @ref{Communication Styles}.
 The @var{namespace} argument specifies the namespace, which must be
@@ -1927,12 +1928,12 @@ over and over.  Making a connection is asymmetric; one side (the
 initiate a connection with a server.
 
 @item
-@ref{Listening}, and @ref{Accepting Connections}, describe what the
+@ref{Listening} and @ref{Accepting Connections} describe what the
 server program must do to wait for and act upon connection requests
 from clients.
 
 @item
-@ref{Transferring Data}, describes how data is transferred through the
+@ref{Transferring Data}, describes how data are transferred through the
 connected socket.
 @end itemize
 @end iftex
@@ -1959,7 +1960,7 @@ connected socket.
 
 In making a connection, the client makes a connection while the server
 waits for and accepts the connection.  Here we discuss what the client
-program must do, using the @code{connect} function, which is declared in
+program must do with the @code{connect} function, which is declared in
 @file{sys/socket.h}.
 
 @comment sys/socket.h
@@ -2024,10 +2025,10 @@ The socket @var{socket} is non-blocking and already has a pending
 connection in progress (see @code{EINPROGRESS} above).
 @end table
 
-This function is defined as a cancelation point in multi-threaded
-programs.  So one has to be prepared for this and make sure that
-possibly allocated resources (like memory, files descriptors,
-semaphores or whatever) are freed even if the thread is canceled.
+This function is defined as a cancellation point in multi-threaded
+programs, so one has to be prepared for this and make sure that
+allocated resources (like memory, files descriptors, semaphores or
+whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
@@ -2052,7 +2053,7 @@ You can write a network server that does not even start running until a
 connection to it is requested.  @xref{Inetd Servers}.
 
 In the Internet namespace, there are no special protection mechanisms
-for controlling access to connect to a port; any process on any machine
+for controlling access to a port; any process on any machine
 can make a connection to your server.  If you want to restrict access to
 your server, make it examine the addresses associated with connection
 requests or implement some other handshaking or identification
@@ -2099,7 +2100,7 @@ to do this.
 
 A socket that has been established as a server can accept connection
 requests from multiple clients.  The server's original socket
-@emph{does not become part} of the connection; instead, @code{accept}
+@emph{does not become part of the connection}; instead, @code{accept}
 makes a new socket which participates in the connection.
 @code{accept} returns the descriptor for this socket.  The server's
 original socket remains available for listening for further connection
@@ -2108,7 +2109,7 @@ requests.
 The number of pending connection requests on a server socket is finite.
 If connection requests arrive from clients faster than the server can
 act upon them, the queue can fill up and additional requests are refused
-with a @code{ECONNREFUSED} error.  You can specify the maximum length of
+with an @code{ECONNREFUSED} error.  You can specify the maximum length of
 this queue as an argument to the @code{listen} function, although the
 system may also impose its own internal limit on the length of this
 queue.
@@ -2158,10 +2159,10 @@ The descriptor @var{socket} does not support this operation.
 connections immediately available.
 @end table
 
-This function is defined as a cancelation point in multi-threaded
-programs.  So one has to be prepared for this and make sure that
-possibly allocated resources (like memory, files descriptors,
-semaphores or whatever) are freed even if the thread is canceled.
+This function is defined as a cancellation point in multi-threaded
+programs, so one has to be prepared for this and make sure that
+allocated resources (like memory, files descriptors, semaphores or
+whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
@@ -2217,7 +2218,7 @@ In order to specify these modes, you must use the @code{recv} and
 @code{send} functions instead of the more generic @code{read} and
 @code{write} functions.  The @code{recv} and @code{send} functions take
 an additional argument which you can use to specify various flags to
-control the special I/O modes.  For example, you can specify the
+control special I/O modes.  For example, you can specify the
 @code{MSG_OOB} flag to read or write out-of-band data, the
 @code{MSG_PEEK} flag to peek at input, or the @code{MSG_DONTROUTE} flag
 to control inclusion of routing information on output.
@@ -2290,10 +2291,10 @@ signal is ignored or blocked, or if its handler returns, then
 @code{send} fails with @code{EPIPE}.
 @end table
 
-This function is defined as a cancelation point in multi-threaded
-programs.  So one has to be prepared for this and make sure that
-possibly allocated resources (like memory, files descriptors,
-semaphores or whatever) are freed even if the thread is canceled.
+This function is defined as a cancellation point in multi-threaded
+programs, so one has to be prepared for this and make sure that
+allocated resources (like memory, files descriptors, semaphores or
+whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
@@ -2313,7 +2314,7 @@ The @code{recv} function is like @code{read}, but with the additional
 flags @var{flags}.  The possible values of @var{flags} are described
 in @ref{Socket Data Options}.
 
-If nonblocking mode is set for @var{socket}, and no data is available to
+If nonblocking mode is set for @var{socket}, and no data are available to
 be read, @code{recv} fails immediately rather than waiting.  @xref{File
 Status Flags}, for information about nonblocking mode.
 
@@ -2340,10 +2341,10 @@ The operation was interrupted by a signal before any data was read.
 You never connected this socket.
 @end table
 
-This function is defined as a cancelation point in multi-threaded
-programs.  So one has to be prepared for this and make sure that
-possibly allocated resources (like memory, files descriptors,
-semaphores or whatever) are freed even if the thread is canceled.
+This function is defined as a cancellation point in multi-threaded
+programs, so one has to be prepared for this and make sure that
+allocated resources (like memory, files descriptors, semaphores or
+whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
@@ -2424,18 +2425,18 @@ This program uses @code{make_socket} to set up the socket address; see
 Streams with connections permit @dfn{out-of-band} data that is
 delivered with higher priority than ordinary data.  Typically the
 reason for sending out-of-band data is to send notice of an
-exceptional condition.  The way to send out-of-band data is using
+exceptional condition.  To send out-of-band data use
 @code{send}, specifying the flag @code{MSG_OOB} (@pxref{Sending
 Data}).
 
-Out-of-band data is received with higher priority because the
+Out-of-band data are received with higher priority because the
 receiving process need not read it in sequence; to read the next
 available out-of-band data, use @code{recv} with the @code{MSG_OOB}
 flag (@pxref{Receiving Data}).  Ordinary read operations do not read
-out-of-band data; they read only the ordinary data.
+out-of-band data; they read only ordinary data.
 
 @cindex urgent socket condition
-When a socket finds that out-of-band data is on its way, it sends a
+When a socket finds that out-of-band data are on their way, it sends a
 @code{SIGURG} signal to the owner process or process group of the
 socket.  You can specify the owner using the @code{F_SETOWN} command
 to the @code{fcntl} function; see @ref{Interrupt Input}.  You must
@@ -2449,7 +2450,7 @@ can wait for an exceptional condition on the socket.  @xref{Waiting
 for I/O}, for more information about @code{select}.
 
 Notification of out-of-band data (whether with @code{SIGURG} or with
-@code{select}) indicates that out-of-band data is on the way; the data
+@code{select}) indicates that out-of-band data are on the way; the data
 may not actually arrive until later.  If you try to read the
 out-of-band data before it arrives, @code{recv} fails with an
 @code{EWOULDBLOCK} error.
@@ -2522,7 +2523,7 @@ struct buffer
 
    @r{It may be necessary to read some ordinary data}
    @r{in order to make room for the out-of-band data.}
-   @r{If so, the ordinary data is saved as a chain of buffers}
+   @r{If so, the ordinary data are saved as a chain of buffers}
    @r{found in the `next' field of the value.}  */
 
 struct buffer *
@@ -2599,7 +2600,7 @@ these styles, you group data into packets and each packet is an
 independent communication.  You specify the destination for each
 packet individually.
 
-Datagram packets are like letters: you send each one independently,
+Datagram packets are like letters: you send each one independently
 with its own destination address, and they may arrive in the wrong
 order or not at all.
 
@@ -2626,7 +2627,7 @@ The normal way of sending data on a datagram socket is by using the
 
 You can call @code{connect} on a datagram socket, but this only
 specifies a default destination for further data transmission on the
-socket.  When a socket has a default destination, then you can use
+socket.  When a socket has a default destination you can use
 @code{send} (@pxref{Sending Data}) or even @code{write} (@pxref{I/O
 Primitives}) to send a packet there.  You can cancel the default
 destination by calling @code{connect} using an address format of
@@ -2647,16 +2648,16 @@ The @var{flags} are interpreted the same way as for @code{send}; see
 The return value and error conditions are also the same as for
 @code{send}, but you cannot rely on the system to detect errors and
 report them; the most common error is that the packet is lost or there
-is no one at the specified address to receive it, and the operating
+is no-one at the specified address to receive it, and the operating
 system on your machine usually does not know this.
 
 It is also possible for one call to @code{sendto} to report an error
-due to a problem related to a previous call.
+owing to a problem related to a previous call.
 
-This function is defined as a cancelation point in multi-threaded
-programs.  So one has to be prepared for this and make sure that
-possibly allocated resources (like memory, files descriptors,
-semaphores or whatever) are freed even if the thread is canceled.
+This function is defined as a cancellation point in multi-threaded
+programs, so one has to be prepared for this and make sure that
+allocated resources (like memory, files descriptors, semaphores or
+whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
@@ -2676,13 +2677,13 @@ The @code{recvfrom} function reads one packet from the socket
 specifies the maximum number of bytes to be read.
 
 If the packet is longer than @var{size} bytes, then you get the first
-@var{size} bytes of the packet, and the rest of the packet is lost.
+@var{size} bytes of the packet and the rest of the packet is lost.
 There's no way to read the rest of the packet.  Thus, when you use a
 packet protocol, you must always know how long a packet to expect.
 
 The @var{addr} and @var{length-ptr} arguments are used to return the
 address where the packet came from.  @xref{Socket Addresses}.  For a
-socket in the local domain, the address information won't be meaningful,
+socket in the local domain the address information won't be meaningful,
 since you can't read the address of such a socket (@pxref{Local
 Namespace}).  You can specify a null pointer as the @var{addr} argument
 if you are not interested in this information.
@@ -2691,15 +2692,15 @@ The @var{flags} are interpreted the same way as for @code{recv}
 (@pxref{Socket Data Options}).  The return value and error conditions
 are also the same as for @code{recv}.
 
-This function is defined as a cancelation point in multi-threaded
-programs.  So one has to be prepared for this and make sure that
-possibly allocated resources (like memory, files descriptors,
-semaphores or whatever) are freed even if the thread is canceled.
+This function is defined as a cancellation point in multi-threaded
+programs, so one has to be prepared for this and make sure that
+allocated resources (like memory, files descriptors, semaphores or
+whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
 You can use plain @code{recv} (@pxref{Receiving Data}) instead of
-@code{recvfrom} if you know don't need to find out who sent the packet
+@code{recvfrom} if you don't need to find out who sent the packet
 (either because you know where it should come from or because you
 treat all possible senders alike).  Even @code{read} can be used if
 you don't want to specify @var{flags} (@pxref{I/O Primitives}).
@@ -2719,10 +2720,10 @@ you don't want to specify @var{flags} (@pxref{I/O Primitives}).
 @comment BSD
 @deftypefun int sendmsg (int @var{socket}, const struct msghdr *@var{message}, int @var{flags})
 
-This function is defined as a cancelation point in multi-threaded
-programs.  So one has to be prepared for this and make sure that
-possibly allocated resources (like memory, files descriptors,
-semaphores or whatever) are freed even if the thread is cancel.
+This function is defined as a cancellation point in multi-threaded
+programs, so one has to be prepared for this and make sure that
+allocated resources (like memory, files descriptors, semaphores or
+whatever) are freed even if the thread is cancel.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
@@ -2730,10 +2731,10 @@ semaphores or whatever) are freed even if the thread is cancel.
 @comment BSD
 @deftypefun int recvmsg (int @var{socket}, struct msghdr *@var{message}, int @var{flags})
 
-This function is defined as a cancelation point in multi-threaded
-programs.  So one has to be prepared for this and make sure that
-possibly allocated resources (like memory, files descriptors,
-semaphores or whatever) are freed even if the thread is canceled.
+This function is defined as a cancellation point in multi-threaded
+programs, so one has to be prepared for this and make sure that
+allocated resources (like memory, files descriptors, semaphores or
+whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 @end ignore
@@ -2748,7 +2749,7 @@ Socket Example}, to create and name their sockets.
 
 First, here is the server program.  It sits in a loop waiting for
 messages to arrive, bouncing each message back to the sender.
-Obviously, this isn't a particularly useful program, but it does show
+Obviously this isn't a particularly useful program, but it does show
 the general ideas involved.
 
 @smallexample
@@ -2774,10 +2775,10 @@ referencing the name of the client.
 Keep in mind that datagram socket communications are unreliable.  In
 this example, the client program waits indefinitely if the message
 never reaches the server or if the server's response never comes
-back.  It's up to the user running the program to kill it and restart
-it, if desired.  A more automatic solution could be to use
+back.  It's up to the user running the program to kill and restart
+it if desired.  A more automatic solution could be to use
 @code{select} (@pxref{Waiting for I/O}) to establish a timeout period
-for the reply, and in case of timeout either resend the message or
+for the reply, and in case of timeout either re-send the message or
 shut down the socket and exit.
 
 @node Inetd
@@ -2787,7 +2788,7 @@ We've explained above how to write a server program that does its own
 listening.  Such a server must already be running in order for anyone
 to connect to it.
 
-Another way to provide service for an Internet port is to let the daemon
+Another way to provide a service on an Internet port is to let the daemon
 program @code{inetd} do the listening.  @code{inetd} is a program that
 runs all the time and waits (using @code{select}) for messages on a
 specified set of ports.  When it receives a message, it accepts the
@@ -2808,19 +2809,19 @@ someone requests a connection to the appropriate port, a new server
 process starts.  The connection already exists at this time; the
 socket is available as the standard input descriptor and as the
 standard output descriptor (descriptors 0 and 1) in the server
-process.  So the server program can begin reading and writing data
+process.  Thus the server program can begin reading and writing data
 right away.  Often the program needs only the ordinary I/O facilities;
 in fact, a general-purpose filter program that knows nothing about
 sockets can work as a byte stream server run by @code{inetd}.
 
 You can also use @code{inetd} for servers that use connectionless
 communication styles.  For these servers, @code{inetd} does not try to accept
-a connection, since no connection is possible.  It just starts the
+a connection since no connection is possible.  It just starts the
 server program, which can read the incoming datagram packet from
 descriptor 0.  The server program can handle one request and then
 exit, or you can choose to write it to keep reading more requests
 until no more arrive, and then exit.  You must specify which of these
-two techniques the server uses, when you configure @code{inetd}.
+two techniques the server uses when you configure @code{inetd}.
 
 @node Configuring Inetd
 @subsection Configuring @code{inetd}
@@ -2859,7 +2860,7 @@ byte stream connections and @samp{udp} for unreliable datagrams.
 
 The @var{wait} field should be either @samp{wait} or @samp{nowait}.
 Use @samp{wait} if @var{style} is a connectionless style and the
-server, once started, handles multiple requests, as many as come in.
+server, once started, handles multiple requests as they come in.
 Use @samp{nowait} if @code{inetd} should start a new process for each message
 or request that comes in.  If @var{style} uses connections, then
 @var{wait} @strong{must} be @samp{nowait}.
@@ -2882,7 +2883,7 @@ program name itself (sans directories).
 If you edit @file{/etc/inetd.conf}, you can tell @code{inetd} to reread the
 file and obey its new contents by sending the @code{inetd} process the
 @code{SIGHUP} signal.  You'll have to use @code{ps} to determine the
-process ID of the @code{inetd} process, as it is not fixed.
+process ID of the @code{inetd} process as it is not fixed.
 
 @c !!! could document /etc/inetd.sec
 
@@ -2948,7 +2949,7 @@ The @var{optname} doesn't make sense for the given @var{level}.
 @deftypefun int setsockopt (int @var{socket}, int @var{level}, int @var{optname}, void *@var{optval}, socklen_t @var{optlen})
 This function is used to set the socket option @var{optname} at level
 @var{level} for socket @var{socket}.  The value of the option is passed
-in the buffer @var{optval}, which has size @var{optlen}.
+in the buffer @var{optval} of size @var{optlen}.
 
 @c Argh. -zw
 @iftex
@@ -2989,7 +2990,7 @@ This option toggles recording of debugging information in the underlying
 protocol modules.  The value has type @code{int}; a nonzero value means
 ``yes''.
 @c !!! should say how this is used
-@c Ok, anyone who knows, please explain.
+@c OK, anyone who knows, please explain.
 
 @comment sys/socket.h
 @comment BSD
@@ -3037,7 +3038,7 @@ This structure type has the following members:
 @table @code
 @item int l_onoff
 This field is interpreted as a boolean.  If nonzero, @code{close}
-blocks until the data is transmitted or the timeout period has expired.
+blocks until the data are transmitted or the timeout period has expired.
 
 @item int l_linger
 This specifies the timeout period, in seconds.
@@ -3107,7 +3108,7 @@ to the system developer.  This is usually kept either in the file
 @file{/etc/networks} or in an equivalent from a name server.  This data
 base is useful for routing programs such as @code{route}, but it is not
 useful for programs that simply communicate over the network.  We
-provide functions to access this data base, which are declared in
+provide functions to access this database, which are declared in
 @file{netdb.h}.
 
 @comment netdb.h
@@ -3159,8 +3160,8 @@ network.
 @end deftypefun
 
 You can also scan the networks database using @code{setnetent},
-@code{getnetent}, and @code{endnetent}.  Be careful in using these
-functions, because they are not reentrant.
+@code{getnetent} and @code{endnetent}.  Be careful when using these
+functions because they are not reentrant.
 
 @comment netdb.h
 @comment BSD

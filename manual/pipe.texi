@@ -95,7 +95,7 @@ read by the child process.
 @cindex filtering i/o through subprocess
 
 A common use of pipes is to send data to or receive data from a program
-being run as subprocess.  One way of doing this is by using a combination of
+being run as a subprocess.  One way of doing this is by using a combination of
 @code{pipe} (to create the pipe), @code{fork} (to create the subprocess),
 @code{dup2} (to force the subprocess to use the pipe as its standard input
 or output channel), and @code{exec} (to execute the new program).  Or,
@@ -123,7 +123,7 @@ write to the stream to send data to the standard input channel of the
 subprocess.  The subprocess inherits its standard output channel from
 the parent process.
 
-In the event of an error, @code{popen} returns a null pointer.  This
+In the event of an error @code{popen} returns a null pointer.  This
 might happen if the pipe or stream cannot be created, if the subprocess
 cannot be forked, or if the program cannot be executed.
 @end deftypefun
@@ -198,7 +198,7 @@ is not greater than @code{PIPE_BUF}.  This means that the data transfer
 seems to be an instantaneous unit, in that nothing else in the system
 can observe a state in which it is partially complete.  Atomic I/O may
 not begin right away (it may need to wait for buffer space or for data),
-but once it does begin, it finishes immediately.
+but once it does begin it finishes immediately.
 
 Reading or writing a larger amount of data may not be atomic; for
 example, output data from other processes sharing the descriptor may be

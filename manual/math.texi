@@ -49,7 +49,7 @@ Which of the three versions of a function should be used depends on the
 situation.  For most calculations, the @code{float} functions are the
 fastest.  On the other hand, the @code{long double} functions have the
 highest precision.  @code{double} is somewhere in between.  It is
-usually wise to pick the narrowest type that can accomodate your data.
+usually wise to pick the narrowest type that can accommodate your data.
 Not all machines have a distinct @code{long double} type; it may be the
 same as @code{double}.
 
@@ -87,7 +87,7 @@ The natural logarithm of @code{2}.
 @item M_LN10
 The natural logarithm of @code{10}.
 @item M_PI
-Pi, the ratio of a circle's circumrefence to its diameter.
+Pi, the ratio of a circle's circumference to its diameter.
 @item M_PI_2
 Pi divided by two.
 @item M_PI_4
@@ -105,7 +105,7 @@ The reciprocal of the square root of two (also the square root of 1/2).
 @end vtable
 
 These constants come from the Unix98 standard and were also available in
-4.4BSD; therefore, they are only defined if @code{_BSD_SOURCE} or
+4.4BSD; therefore they are only defined if @code{_BSD_SOURCE} or
 @code{_XOPEN_SOURCE=500}, or a more general feature select macro, is
 defined.  The default set of features includes these constants.
 @xref{Feature Test Macros}.
@@ -294,7 +294,7 @@ pole.
 @cindex inverse trigonometric functions
 
 These are the usual arc sine, arc cosine and arc tangent functions,
-which are the inverses of the sine, cosine and tangent functions,
+which are the inverses of the sine, cosine and tangent functions
 respectively.
 
 @comment math.h
@@ -544,7 +544,7 @@ These functions extract the exponent of @var{x} and return it as a
 floating-point value.  If @code{FLT_RADIX} is two, @code{logb} is equal
 to @code{floor (log2 (x))}, except it's probably faster.
 
-If @var{x} is denormalized, @code{logb} returns the exponent @var{x}
+If @var{x} is de-normalized, @code{logb} returns the exponent @var{x}
 would have if it were normalized.  If @var{x} is infinity (positive or
 negative), @code{logb} returns @math{@infinity{}}.  If @var{x} is zero,
 @code{logb} returns @math{@infinity{}}.  It does not signal.
@@ -685,7 +685,7 @@ much smaller.  See also the function @code{cabs} in @ref{Absolute Value}.
 @deftypefunx {long double} expm1l (long double @var{x})
 These functions return a value equivalent to @code{exp (@var{x}) - 1}.
 They are computed in a way that is accurate even if @var{x} is
-near zero---a case where @code{exp (@var{x}) - 1} would be inaccurate due
+near zero---a case where @code{exp (@var{x}) - 1} would be inaccurate owing
 to subtraction of two numbers that are nearly equal.
 @end deftypefun
 
@@ -720,7 +720,7 @@ logarithm functions.
 @deftypefunx {complex long double} cexpl (complex long double @var{z})
 These functions return @code{e} (the base of natural
 logarithms) raised to the power of @var{z}.
-Mathematically this corresponds to the value
+Mathematically, this corresponds to the value
 
 @ifinfo
 @math{exp (z) = exp (creal (z)) * (cos (cimag (z)) + I * sin (cimag (z)))}
@@ -740,7 +740,7 @@ $$\exp(z) = e^z = e^{{\rm Re}\,z} (\cos ({\rm Im}\,z) + i \sin ({\rm Im}\,z))$$
 @comment ISO
 @deftypefunx {complex long double} clogl (complex long double @var{z})
 These functions return the natural logarithm of @var{z}.
-Mathematically this corresponds to the value
+Mathematically, this corresponds to the value
 
 @ifinfo
 @math{log (z) = log (cabs (z)) + I * carg (z)}
@@ -766,7 +766,7 @@ or is very close to 0.  It is well-defined for all other values of
 @comment GNU
 @deftypefunx {complex long double} clog10l (complex long double @var{z})
 These functions return the base 10 logarithm of the complex value
-@var{z}. Mathematically this corresponds to the value
+@var{z}. Mathematically, this corresponds to the value
 
 @ifinfo
 @math{log (z) = log10 (cabs (z)) + I * carg (z)}
@@ -992,7 +992,7 @@ the real-valued functions, there are no restrictions on the value of
 @cindex Bessel functions
 @cindex gamma function
 
-These are some more exotic mathematical functions, which are sometimes
+These are some more exotic mathematical functions which are sometimes
 useful.  Currently they only have real-valued versions.
 
 @comment math.h
@@ -1052,7 +1052,7 @@ gamma (x) = integral from 0 to @infinity{} of t^(x-1) e^-t dt
 @vindex signgam
 The sign of the gamma function is stored in the global variable
 @var{signgam}, which is declared in @file{math.h}.  It is @code{1} if
-the intermediate result was positive or zero, and, @code{-1} if it was
+the intermediate result was positive or zero, or @code{-1} if it was
 negative.
 
 To compute the real gamma function you can use the @code{tgamma}
@@ -1062,7 +1062,7 @@ lgam = lgamma(x);
 gam  = signgam*exp(lgam);
 @end smallexample
 
-The gamma function has singularities at the nonpositive integers.
+The gamma function has singularities at the non-positive integers.
 @code{lgamma} will raise the zero divide exception if evaluated at a
 singularity.
 @end deftypefun
@@ -1078,7 +1078,7 @@ singularity.
 @deftypefunx {long double} lgammal_r (long double @var{x}, int *@var{signp})
 @code{lgamma_r} is just like @code{lgamma}, but it stores the sign of
 the intermediate result in the variable pointed to by @var{signp}
-instead of in the @var{signgam} global.
+instead of in the @var{signgam} global.  This means it is reentrant.
 @end deftypefun
 
 @comment math.h
@@ -1092,7 +1092,7 @@ instead of in the @var{signgam} global.
 @deftypefunx {long double} gammal (long double @var{x})
 These functions exist for compatibility reasons.  They are equivalent to
 @code{lgamma} etc.  It is better to use @code{lgamma} since for one the
-name reflects better the actual computation and @code{lgamma} is also
+name reflects better the actual computation, moreover @code{lgamma} is
 standardized in @w{ISO C 9x} while @code{gamma} is not.
 @end deftypefun
 
@@ -1225,7 +1225,7 @@ pseudo-random series each time your program runs, you must specify a
 different seed each time.  For ordinary purposes, basing the seed on the
 current time works well.
 
-You can get repeatable sequences of numbers on a particular machine type
+You can obtain repeatable sequences of numbers on a particular machine type
 by specifying the same initial seed value for the random number
 generator.  There is no standard meaning for a particular seed value;
 the same seed, used in different C libraries or on different CPU types,
@@ -1322,10 +1322,10 @@ The prototypes for these functions are in @file{stdlib.h}.
 This function returns the next pseudo-random number in the sequence.
 The value returned ranges from @code{0} to @code{RAND_MAX}.
 
-@strong{Note:} Historically this function returned a @code{long
-int} value.  On 64bit systems @code{long int} would have been larger
-than programs expected, so @code{random} is now defined to return
-exactly 32 bits.
+@strong{Note:} Historically this function returned a @code{long int}
+value.  On 64-bit systems @code{long int} would have been larger than
+programs expected, so @code{random} is now defined to return exactly 32
+bits.
 @end deftypefun
 
 @comment stdlib.h
@@ -1374,10 +1374,10 @@ generator functions.  They use a state of 48 bits of data.  The user can
 choose among a collection of functions which return the random bits
 in different forms.
 
-Generally there are two kinds of functions: those which use a state of
+Generally there are two kinds of function.  The first uses a state of
 the random number generator which is shared among several functions and
-by all threads of the process.  The second group of functions require
-the user to handle the state.
+by all threads of the process.  The second requires the user to handle
+the state.
 
 All functions have in common that they use the same congruential
 formula with the same constants.  The formula is
@@ -1389,7 +1389,7 @@ Y = (a * X + c) mod m
 @noindent
 where @var{X} is the state of the generator at the beginning and
 @var{Y} the state at the end.  @code{a} and @code{c} are constants
-determining the way the generator work.  By default they are
+determining the way the generator works.  By default they are
 
 @smallexample
 a = 0x5DEECE66D = 25214903917
@@ -1398,7 +1398,7 @@ c = 0xb = 11
 
 @noindent
 but they can also be changed by the user.  @code{m} is of course 2^48
-since the state consists of a 48 bit array.
+since the state consists of a 48-bit array.
 
 
 @comment stdlib.h
@@ -1408,7 +1408,7 @@ This function returns a @code{double} value in the range of @code{0.0}
 to @code{1.0} (exclusive).  The random bits are determined by the global
 state of the random number generator in the C library.
 
-Since the @code{double} type according to @w{IEEE 754} has a 52 bit
+Since the @code{double} type according to @w{IEEE 754} has a 52-bit
 mantissa this means 4 bits are not initialized by the random number
 generator.  These are (of course) chosen to be the least significant
 bits and they are initialized to @code{0}.
@@ -1418,20 +1418,20 @@ bits and they are initialized to @code{0}.
 @comment SVID
 @deftypefun double erand48 (unsigned short int @var{xsubi}[3])
 This function returns a @code{double} value in the range of @code{0.0}
-to @code{1.0} (exclusive), similar to @code{drand48}.  The argument is
+to @code{1.0} (exclusive), similarly to @code{drand48}.  The argument is
 an array describing the state of the random number generator.
 
 This function can be called subsequently since it updates the array to
 guarantee random numbers.  The array should have been initialized before
-using to get reproducible results.
+initial use to obtain reproducible results.
 @end deftypefun
 
 @comment stdlib.h
 @comment SVID
 @deftypefun {long int} lrand48 (void)
-The @code{lrand48} functions return an integer value in the range of
+The @code{lrand48} function returns an integer value in the range of
 @code{0} to @code{2^31} (exclusive).  Even if the size of the @code{long
-int} type can take more than 32 bits no higher numbers are returned.
+int} type can take more than 32 bits, no higher numbers are returned.
 The random bits are determined by the global state of the random number
 generator in the C library.
 @end deftypefun
@@ -1444,10 +1444,10 @@ returns a number in the range of @code{0} to @code{2^31} (exclusive) but
 the state of the random number generator used to produce the random bits
 is determined by the array provided as the parameter to the function.
 
-The numbers in the array are afterwards updated so that subsequent calls
-to this function yield to different results (as it is expected by a
-random number generator).  The array should have been initialized before
-the first call to get reproducible results.
+The numbers in the array are updated afterwards so that subsequent calls
+to this function yield different results (as is expected of a random
+number generator).  The array should have been initialized before the
+first call to obtain reproducible results.
 @end deftypefun
 
 @comment stdlib.h
@@ -1468,33 +1468,33 @@ requirements are necessary.
 @end deftypefun
 
 The internal state of the random number generator can be initialized in
-several ways.  The functions differ in the completeness of the
+several ways.  The methods differ in the completeness of the
 information provided.
 
 @comment stdlib.h
 @comment SVID
-@deftypefun void srand48 (long int @var{seedval}))
+@deftypefun void srand48 (long int @var{seedval})
 The @code{srand48} function sets the most significant 32 bits of the
-state internal state of the random number generator to the least
+internal state of the random number generator to the least
 significant 32 bits of the @var{seedval} parameter.  The lower 16 bits
 are initialized to the value @code{0x330E}.  Even if the @code{long
-int} type contains more the 32 bits only the lower 32 bits are used.
+int} type contains more than 32 bits only the lower 32 bits are used.
 
-Due to this limitation the initialization of the state using this
-function of not very useful.  But it makes it easy to use a construct
+Owing to this limitation, initialization of the state of this
+function is not very useful.  But it makes it easy to use a construct
 like @code{srand48 (time (0))}.
 
 A side-effect of this function is that the values @code{a} and @code{c}
 from the internal state, which are used in the congruential formula,
 are reset to the default values given above.  This is of importance once
-the user called the @code{lcong48} function (see below).
+the user has called the @code{lcong48} function (see below).
 @end deftypefun
 
 @comment stdlib.h
 @comment SVID
 @deftypefun {unsigned short int *} seed48 (unsigned short int @var{seed16v}[3])
 The @code{seed48} function initializes all 48 bits of the state of the
-internal random number generator from the content of the parameter
+internal random number generator from the contents of the parameter
 @var{seed16v}.  Here the lower 16 bits of the first element of
 @var{see16v} initialize the least significant 16 bits of the internal
 state, the lower 16 bits of @code{@var{seed16v}[1]} initialize the mid-order
@@ -1507,15 +1507,15 @@ of the state.
 The value returned by @code{seed48} is a pointer to an array containing
 the values of the internal state before the change.  This might be
 useful to restart the random number generator at a certain state.
-Otherwise, the value can simply be ignored.
+Otherwise the value can simply be ignored.
 
 As for @code{srand48}, the values @code{a} and @code{c} from the
 congruential formula are reset to the default values.
 @end deftypefun
 
 There is one more function to initialize the random number generator
-which allows to specify even more information by allowing to change the
-parameters in the congruential formula.
+which enables you to specify even more information by allowing you to
+change the parameters in the congruential formula.
 
 @comment stdlib.h
 @comment SVID
@@ -1527,9 +1527,9 @@ congruential formula.
 
 From the seven elements in the array @var{param} the least significant
 16 bits of the entries @code{@var{param}[0]} to @code{@var{param}[2]}
-determine the initial state, the least 16 bits of
+determine the initial state, the least significant 16 bits of
 @code{@var{param}[3]} to @code{@var{param}[5]} determine the 48 bit
-constant @code{a} and @code{@var{param}[6]} determines the 16 bit value
+constant @code{a} and @code{@var{param}[6]} determines the 16-bit value
 @code{c}.
 @end deftypefun
 
@@ -1544,22 +1544,21 @@ Please note that it is no problem if several threads use the global
 state if all threads use the functions which take a pointer to an array
 containing the state.  The random numbers are computed following the
 same loop but if the state in the array is different all threads will
-get an individual random number generator.
+obtain an individual random number generator.
 
-The user supplied buffer must be of type @code{struct drand48_data}.
-This type should be regarded as opaque and no member should be used
-directly.
+The user-supplied buffer must be of type @code{struct drand48_data}.
+This type should be regarded as opaque and not manipulated directly.
 
 @comment stdlib.h
 @comment GNU
 @deftypefun int drand48_r (struct drand48_data *@var{buffer}, double *@var{result})
 This function is equivalent to the @code{drand48} function with the
-difference it does not modify the global random number generator
-parameters but instead the parameters is the buffer supplied by the
-buffer through the pointer @var{buffer}.  The random number is return in
-the variable pointed to by @var{result}.
+difference that it does not modify the global random number generator
+parameters but instead the parameters in the buffer supplied through the
+pointer @var{buffer}.  The random number is returned in the variable
+pointed to by @var{result}.
 
-The return value of the function indicate whether the call succeeded.
+The return value of the function indicates whether the call succeeded.
 If the value is less than @code{0} an error occurred and @var{errno} is
 set to indicate the problem.
 
@@ -1570,14 +1569,14 @@ programs.
 @comment stdlib.h
 @comment GNU
 @deftypefun int erand48_r (unsigned short int @var{xsubi}[3], struct drand48_data *@var{buffer}, double *@var{result})
-The @code{erand48_r} function works like the @code{erand48} and it takes
-an argument @var{buffer} which describes the random number generator.
-The state of the random number generator is taken from the @code{xsubi}
-array, the parameters for the congruential formula from the global
-random number generator data.  The random number is return in the
-variable pointed to by @var{result}.
+The @code{erand48_r} function works like @code{erand48}, but in addition
+it takes an argument @var{buffer} which describes the random number
+generator.  The state of the random number generator is taken from the
+@code{xsubi} array, the parameters for the congruential formula from the
+global random number generator data.  The random number is returned in
+the variable pointed to by @var{result}.
 
-The return value is non-negative is the call succeeded.
+The return value is non-negative if the call succeeded.
 
 This function is a GNU extension and should not be used in portable
 programs.
@@ -1586,9 +1585,9 @@ programs.
 @comment stdlib.h
 @comment GNU
 @deftypefun int lrand48_r (struct drand48_data *@var{buffer}, double *@var{result})
-This function is similar to @code{lrand48} and it takes a pointer to a
-buffer describing the state of the random number generator as a
-parameter just like @code{drand48}.
+This function is similar to @code{lrand48}, but in addition it takes a
+pointer to a buffer describing the state of the random number generator
+just like @code{drand48}.
 
 If the return value of the function is non-negative the variable pointed
 to by @var{result} contains the result.  Otherwise an error occurred.
@@ -1601,7 +1600,7 @@ programs.
 @comment GNU
 @deftypefun int nrand48_r (unsigned short int @var{xsubi}[3], struct drand48_data *@var{buffer}, long int *@var{result})
 The @code{nrand48_r} function works like @code{nrand48} in that it
-produces a random number in range @code{0} to @code{2^31}.  But instead
+produces a random number in the range @code{0} to @code{2^31}.  But instead
 of using the global parameters for the congruential formula it uses the
 information from the buffer pointed to by @var{buffer}.  The state is
 described by the values in @var{xsubi}.
@@ -1616,8 +1615,8 @@ programs.
 @comment stdlib.h
 @comment GNU
 @deftypefun int mrand48_r (struct drand48_data *@var{buffer}, double *@var{result})
-This function is similar to @code{mrand48} but as the other reentrant
-function it uses the random number generator described by the value in
+This function is similar to @code{mrand48} but like the other reentrant
+functions it uses the random number generator described by the value in
 the buffer pointed to by @var{buffer}.
 
 If the return value is non-negative the variable pointed to by
@@ -1630,7 +1629,7 @@ programs.
 @comment stdlib.h
 @comment GNU
 @deftypefun int jrand48_r (unsigned short int @var{xsubi}[3], struct drand48_data *@var{buffer}, long int *@var{result})
-The @code{jrand48_r} function is similar to @code{jrand48}.  But as the
+The @code{jrand48_r} function is similar to @code{jrand48}.  Like the
 other reentrant functions of this function family it uses the
 congruential formula parameters from the buffer pointed to by
 @var{buffer}.
@@ -1642,9 +1641,9 @@ This function is a GNU extension and should not be used in portable
 programs.
 @end deftypefun
 
-Before any of the above functions should be used the buffer of type
-@code{struct drand48_data} should initialized.  The easiest way is to
-fill the whole buffer with null bytes, e.g., using
+Before any of the above functions are used the buffer of type
+@code{struct drand48_data} should be initialized.  The easiest way to do
+this is to fill the whole buffer with null bytes, e.g. by
 
 @smallexample
 memset (buffer, '\0', sizeof (struct drand48_data));
@@ -1655,9 +1654,9 @@ Using any of the reentrant functions of this family now will
 automatically initialize the random number generator to the default
 values for the state and the parameters of the congruential formula.
 
-The other possibility is too use any of the functions which explicitely
+The other possibility is to use any of the functions which explicitly
 initialize the buffer.  Though it might be obvious how to initialize the
-buffer from the data given as parameter from the function it is highly
+buffer from looking at the parameter to the function, it is highly
 recommended to use these functions since the result might not always be
 what you expect.
 
@@ -1665,10 +1664,10 @@ what you expect.
 @comment GNU
 @deftypefun int srand48_r (long int @var{seedval}, struct drand48_data *@var{buffer})
 The description of the random number generator represented by the
-information in @var{buffer} is initialized similar to what the function
+information in @var{buffer} is initialized similarly to what the function
 @code{srand48} does.  The state is initialized from the parameter
 @var{seedval} and the parameters for the congruential formula are
-initialized to the default values.
+initialized to their default values.
 
 If the return value is non-negative the function call succeeded.
 
@@ -1684,8 +1683,8 @@ initializes all 48 bits of the state from the parameter @var{seed16v}.
 
 If the return value is non-negative the function call succeeded.  It
 does not return a pointer to the previous state of the random number
-generator like the @code{seed48} function does.  if the user wants to
-preserve the state for a later rerun s/he can copy the whole buffer
+generator like the @code{seed48} function does.  If the user wants to
+preserve the state for a later re-run s/he can copy the whole buffer
 pointed to by @var{buffer}.
 
 This function is a GNU extension and should not be used in portable
@@ -1696,11 +1695,11 @@ programs.
 @comment GNU
 @deftypefun int lcong48_r (unsigned short int @var{param}[7], struct drand48_data *@var{buffer})
 This function initializes all aspects of the random number generator
-described in @var{buffer} by the data in @var{param}.  Here it is
-especially true the function does more than just copying the contents of
-@var{param} of @var{buffer}.  Some more actions are required and
-therefore it is important to use this function and not initialized the
-random number generator directly.
+described in @var{buffer} with the data in @var{param}.  Here it is
+especially true that the function does more than just copying the
+contents of @var{param} and @var{buffer}.  More work is required and
+therefore it is important to use this function rather than initializing
+the random number generator directly.
 
 If the return value is non-negative the function call succeeded.
 
@@ -1712,23 +1711,22 @@ programs.
 @section Is Fast Code or Small Code preferred?
 @cindex Optimization
 
-If an application uses many floating point function it is often the case
-that the costs for the function calls itselfs are not neglectable.
-Modern processor implementation often can execute the operation itself
-very fast but the call means a disturbance of the control flow.
+If an application uses many floating point functions it is often the case
+that the cost of the function calls themselves is not negligible.
+Modern processors can often execute the operations themselves
+very fast, but the function call disrupts the instruction pipeline.
 
 For this reason the GNU C Library provides optimizations for many of the
-frequently used math functions.  When the GNU CC is used and the user
-activates the optimizer several new inline functions and macros get
+frequently-used math functions.  When GNU CC is used and the user
+activates the optimizer, several new inline functions and macros are
 defined.  These new functions and macros have the same names as the
-library function and so get used instead of the later.  In case of
+library functions and so are used instead of the latter.  In the case of
 inline functions the compiler will decide whether it is reasonable to
-use the inline function and this decision is usually correct.
+use them, and this decision is usually correct.
 
-For the generated code this means that no calls to the library functions
-are necessary.  This increases the speed significantly.  But the
-drawback is that the code size increases and this increase is not always
-neglectable.
+This means that no calls to the library functions may be necessary, and
+can increase the speed of generated code significantly.  The drawback is
+that code size will increase, and the increase is not always negligible.
 
 The speed increase has one drawback: the inline functions might not set
 @code{errno} and might not have the same precission as the library
@@ -1736,12 +1734,12 @@ functions.
 
 In cases where the inline functions and macros are not wanted the symbol
 @code{__NO_MATH_INLINES} should be defined before any system header is
-included.  This will make sure only library functions are used.  Of
-course it can be determined for each single file in the project whether
-giving this option is preferred or not.
+included.  This will ensure that only library functions are used.  Of
+course, it can be determined for each file in the project whether
+giving this option is preferable or not.
 
-Not all hardware implements the entire @w{IEEE 754} standard, or if it
-does, there may be a substantial performance penalty for using some of
-its features.  For example, enabling traps on some processors forces
-the FPU to run unpipelined, which more than doubles calculation time.
+Not all hardware implements the entire @w{IEEE 754} standard, and even
+if it does there may be a substantial performance penalty for using some
+of its features.  For example, enabling traps on some processors forces
+the FPU to run un-pipelined, which can more than double calculation time.
 @c ***Add explanation of -lieee, -mieee.

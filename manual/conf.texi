@@ -446,7 +446,7 @@ Inquire about the parameter corresponding to @code{_POSIX_SEMAPHORES}.
 @comment unistd.h
 @comment POSIX.1
 @item _SC_SHARED_MEMORY_OBJECTS
-Inquire about the parameter corresponding to
+Inquire about the parameter corresponding to@*
 @code{_POSIX_SHARED_MEMORY_OBJECTS}.
 
 @comment unistd.h
@@ -580,7 +580,7 @@ Inquire about the parameter corresponding to @code{_POSIX_THREADS}.
 @comment unistd.h
 @comment POSIX.1
 @item _SC_THREAD_SAFE_FUNCTIONS
-Inquire about the parameter corresponding to
+Inquire about the parameter corresponding to@*
 @code{_POSIX_THREAD_SAFE_FUNCTIONS}.
 
 @comment unistd.h
@@ -627,13 +627,13 @@ Inquire about the parameter corresponding to @code{_POSIX_THREAD_THREADS_MAX}.
 @comment unistd.h
 @comment POSIX.1
 @item _SC_THREAD_ATTR_STACKADDR
-Inquire about the parameter corresponding to
+Inquire about the parameter corresponding to@*a
 @code{_POSIX_THREAD_ATTR_STACKADDR}.
 
 @comment unistd.h
 @comment POSIX.1
 @item _SC_THREAD_ATTR_STACKSIZE
-Inquire about the parameter corresponding to
+Inquire about the parameter corresponding to@*
 @code{_POSIX_THREAD_ATTR_STACKSIZE}.
 
 @comment unistd.h
@@ -760,27 +760,27 @@ Inquire about the virtual memory page size of the machine.
 @comment unistd.h
 @comment GNU
 @item _SC_NPROCESSORS_CONF
-Inquire about number of configured processors.
+Inquire about the number of configured processors.
 
 @comment unistd.h
 @comment GNU
 @item _SC_NPROCESSORS_ONLN
-Inquire about number of processors online.
+Inquire about the number of processors online.
 
 @comment unistd.h
 @comment GNU
 @item _SC_PHYS_PAGES
-Inquire about number of physical pages in the system.
+Inquire about the number of physical pages in the system.
 
 @comment unistd.h
 @comment GNU
 @item _SC_AVPHYS_PAGES
-Inquire about number of available physical pages in the system.
+Inquire about the number of available physical pages in the system.
 
 @comment unistd.h
 @comment GNU
 @item _SC_ATEXIT_MAX
-Inquire about number of functions which can be registered as termination
+Inquire about the number of functions which can be registered as termination
 functions for @code{atexit}; @pxref{Cleanups on Exit}.
 
 @comment unistd.h
@@ -831,41 +831,41 @@ Inquire about the parameter corresponding to @code{_XOPEN_XPG4}.
 @comment unistd.h
 @comment X/Open
 @item _SC_CHAR_BIT
-Inquire about number of bits in a variable of type @code{char}.
+Inquire about the number of bits in a variable of type @code{char}.
 
 @comment unistd.h
 @comment X/Open
 @item _SC_CHAR_MAX
-Inquire about maximum value which can be stored in a variable of type
+Inquire about the maximum value which can be stored in a variable of type
 @code{char}.
 
 @comment unistd.h
 @comment X/Open
 @item _SC_CHAR_MIN
-Inquire about minimum value which can be stored in a variable of type
+Inquire about the minimum value which can be stored in a variable of type
 @code{char}.
 
 @comment unistd.h
 @comment X/Open
 @item _SC_INT_MAX
-Inquire about maximum value which can be stored in a variable of type
+Inquire about the maximum value which can be stored in a variable of type
 @code{int}.
 
 @comment unistd.h
 @comment X/Open
 @item _SC_INT_MIN
-Inquire about minimum value which can be stored in a variable of type
+Inquire about the minimum value which can be stored in a variable of type
 @code{int}.
 
 @comment unistd.h
 @comment X/Open
 @item _SC_LONG_BIT
-Inquire about number of bits in a variable of type @code{long int}.
+Inquire about the number of bits in a variable of type @code{long int}.
 
 @comment unistd.h
 @comment X/Open
 @item _SC_WORD_BIT
-Inquire about number of bits in a variable of a register word.
+Inquire about the number of bits in a variable of a register word.
 
 @comment unistd.h
 @comment X/Open
@@ -876,61 +876,61 @@ character value.
 @comment unistd.h
 @comment X/Open
 @item _SC_NZERO
-Inquire value used to internally represent the zero priority level for
+Inquire about the value used to internally represent the zero priority level for
 the process execution.
 
 @comment unistd.h
 @comment X/Open
 @item SC_SSIZE_MAX
-Inquire about maximum value which can be stored in a variable of type
+Inquire about the maximum value which can be stored in a variable of type
 @code{ssize_t}.
 
 @comment unistd.h
 @comment X/Open
 @item _SC_SCHAR_MAX
-Inquire about maximum value which can be stored in a variable of type
+Inquire about the maximum value which can be stored in a variable of type
 @code{signed char}.
 
 @comment unistd.h
 @comment X/Open
 @item _SC_SCHAR_MIN
-Inquire about minimum value which can be stored in a variable of type
+Inquire about the minimum value which can be stored in a variable of type
 @code{signed char}.
 
 @comment unistd.h
 @comment X/Open
 @item _SC_SHRT_MAX
-Inquire about maximum value which can be stored in a variable of type
+Inquire about the maximum value which can be stored in a variable of type
 @code{short int}.
 
 @comment unistd.h
 @comment X/Open
 @item _SC_SHRT_MIN
-Inquire about minimum value which can be stored in a variable of type
+Inquire about the minimum value which can be stored in a variable of type
 @code{short int}.
 
 @comment unistd.h
 @comment X/Open
 @item _SC_UCHAR_MAX
-Inquire about maximum value which can be stored in a variable of type
+Inquire about the maximum value which can be stored in a variable of type
 @code{unsigned char}.
 
 @comment unistd.h
 @comment X/Open
 @item _SC_UINT_MAX
-Inquire about maximum value which can be stored in a variable of type
+Inquire about the maximum value which can be stored in a variable of type
 @code{unsigned int}.
 
 @comment unistd.h
 @comment X/Open
 @item _SC_ULONG_MAX
-Inquire about maximum value which can be stored in a variable of type
+Inquire about the maximum value which can be stored in a variable of type
 @code{unsigned long int}.
 
 @comment unistd.h
 @comment X/Open
 @item _SC_USHRT_MAX
-Inquire about maximum value which can be stored in a variable of type
+Inquire about the maximum value which can be stored in a variable of type
 @code{unsigned short int}.
 
 @comment unistd.h
@@ -956,12 +956,12 @@ Inquire about  the parameter corresponding to @code{NL_NMAX}.
 @comment unistd.h
 @comment X/Open
 @item _SC_NL_SETMAX
-Inquire about  the parameter corresponding to @code{NL_SETMAX}.
+Inquire about the parameter corresponding to @code{NL_SETMAX}.
 
 @comment unistd.h
 @comment X/Open
 @item _SC_NL_TEXTMAX
-Inquire about  the parameter corresponding to @code{NL_TEXTMAX}.
+Inquire about the parameter corresponding to @code{NL_TEXTMAX}.
 @end table
 
 @node Examples of Sysconf
@@ -1023,7 +1023,7 @@ system you are using can go that far.
 The most restrictive limit permitted by POSIX for the maximum number of
 I/O operations that can be specified in a list I/O call.  The value of
 this constant is @code{2}; thus you can add up to two new entries
-of the list of outstandard operations.
+of the list of outstanding operations.
 
 @comment limits.h
 @comment POSIX.1
@@ -1191,7 +1191,7 @@ that big!  Use dynamic allocation (@pxref{Memory Allocation}) instead.
 POSIX defines certain system-specific options in the system calls for
 operating on files.  Some systems support these options and others do
 not.  Since these options are provided in the kernel, not in the
-library, simply using the GNU C library does not guarantee any of these
+library, simply using the GNU C library does not guarantee that any of these
 features is supported; it depends on the system you are using.  They can
 also vary between file systems on a single machine.
 

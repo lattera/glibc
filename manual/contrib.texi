@@ -8,7 +8,7 @@ contributed or worked on by other people.
 
 @itemize @bullet
 @item
-The @code{getopt} function and related code were written by
+The @code{getopt} function and related code was written by
 Richard Stallman, @w{David J.} MacKenzie, and @w{Roland McGrath}.
 
 @item

@@ -51,8 +51,8 @@ without indicating anything might be wrong.
 @comment assert.h
 @comment ISO
 @deftypefn Macro void assert (int @var{expression})
-Verify the programmer's belief that @var{expression} should be nonzero
-at this point in the program.
+Verify the programmer's belief that @var{expression} is nonzero at
+this point in the program.
 
 If @code{NDEBUG} is not defined, @code{assert} tests the value of
 @var{expression}.  If it is false (zero), @code{assert} aborts the
@@ -67,7 +67,7 @@ form:
 on the standard error stream @code{stderr} (@pxref{Standard Streams}).
 The filename and line number are taken from the C preprocessor macros
 @code{__FILE__} and @code{__LINE__} and specify where the call to
-@code{assert} was written.  When using the GNU C compiler, the name of
+@code{assert} was made.  When using the GNU C compiler, the name of
 the function which calls @code{assert} is taken from the built-in
 variable @code{__PRETTY_FUNCTION__}; with older compilers, the function
 name and following colon are omitted.
@@ -95,7 +95,7 @@ Similar to @code{assert}, but verifies that @var{errnum} is zero.
 
 If @code{NDEBUG} is defined, @code{assert_perror} tests the value of
 @var{errnum}.  If it is nonzero, @code{assert_perror} aborts the program
-after a printing a message of the form:
+after printing a message of the form:
 
 @smallexample
 @file{@var{file}}:@var{linenum}: @var{function}: @var{error text}
@@ -109,7 +109,7 @@ name are as for @code{assert}.  The error text is the result of
 Like @code{assert}, if @code{NDEBUG} is defined before @file{assert.h}
 is included, the @code{assert_perror} macro does absolutely nothing.  It
 does not evaluate the argument, so @var{errnum} should not have any side
-effects.  It is best for @var{errnum} to be a just simple variable
+effects.  It is best for @var{errnum} to be just a simple variable
 reference; often it will be @code{errno}.
 
 This macro is a GNU extension.
@@ -117,20 +117,17 @@ This macro is a GNU extension.
 
 @strong{Usage note:} The @code{assert} facility is designed for
 detecting @emph{internal inconsistency}; it is not suitable for
-reporting invalid input or improper usage by @emph{the user} of the
+reporting invalid input or improper usage by the @emph{user} of the
 program.
 
 The information in the diagnostic messages printed by the @code{assert}
-macro is intended to help you, the programmer, track down the cause of a
-bug, but is not really useful for telling a user of your program why his
-or her input was invalid or why a command could not be carried out.  So
-you can't use @code{assert} or @code{assert_perror} to print the error
-messages for these eventualities.
-
-What's more, your program should not abort when given invalid input, as
-@code{assert} would do---it should exit with nonzero status (@pxref{Exit
-Status}) after printing its error messages, or perhaps read another
-command or move on to the next input file.
+and @code{assert_perror} macro is intended to help you, the programmer, 
+track down the cause of a bug, but is not really useful for telling a user 
+of your program why his or her input was invalid or why a command could not 
+be carried out.  What's more, your program should not abort when given 
+invalid input, as @code{assert} would do---it should exit with nonzero 
+status (@pxref{Exit Status}) after printing its error messages, or perhaps 
+read another command or move on to the next input file.
 
 @xref{Error Messages}, for information on printing error messages for
 problems that @emph{do not} represent bugs in the program.
@@ -256,10 +253,9 @@ func (const char *a, int b, @dots{})
 @end smallexample
 
 @noindent
-outlines a definition of a function @code{func} which returns an
-@code{int} and takes two required arguments, a @code{const char *} and
-an @code{int}.  These are followed by any number of anonymous
-arguments.
+defines a function @code{func} which returns an @code{int} and takes two 
+required arguments, a @code{const char *} and an @code{int}.  These are 
+followed by any number of anonymous arguments.
 
 @strong{Portability note:} For some C compilers, the last required
 argument must not be declared @code{register} in the function
@@ -303,10 +299,10 @@ values if you try to access too many arguments.
 You indicate that you are finished with the argument pointer variable by
 calling @code{va_end}.
 
-(In practice, with most C compilers, calling @code{va_end} does nothing
-and you do not really need to call it.  This is always true in the GNU C
-compiler.  But you might as well call @code{va_end} just in case your
-program is someday compiled with a peculiar compiler.)
+(In practice, with most C compilers, calling @code{va_end} does nothing.  
+This is always true in the GNU C compiler.  But you might as well call 
+@code{va_end} just in case your program is someday compiled with a peculiar 
+compiler.)
 @end enumerate
 
 @xref{Argument Macros}, for the full definitions of @code{va_start},
@@ -317,7 +313,7 @@ optional arguments.  However, you can pass the @code{va_list} variable
 as an argument to another function and perform all or part of step 2
 there.
 
-You can perform the entire sequence of the three steps multiple times
+You can perform the entire sequence of three steps multiple times
 within a single function invocation.  If you want to ignore the optional
 arguments, you can do these steps zero times.
 
@@ -342,10 +338,9 @@ regardless.
 
 There is no general way for a function to determine the number and type
 of the optional arguments it was called with.  So whoever designs the
-function typically designs a convention for the caller to tell it how
-many arguments it has, and what kind.  It is up to you to define an
-appropriate calling convention for each variadic function, and write all
-calls accordingly.
+function typically designs a convention for the caller to specify the number 
+and type of arguments.  It is up to you to define an appropriate calling 
+convention for each variadic function, and write all calls accordingly.
 
 One kind of calling convention is to pass the number of optional
 arguments as one of the fixed arguments.  This convention works provided
@@ -375,11 +370,10 @@ in just this way; see @ref{Executing a File}.
 @cindex calling variadic functions
 @cindex declaring variadic functions
 
-You don't have to write anything special when you call a variadic function.
-Just write the arguments (required arguments, followed by optional ones)
-inside parentheses, separated by commas, as usual.  But you should prepare
-by declaring the function with a prototype, and you must know how the
-argument values are converted.
+You don't have to do anything special to call a variadic function.
+Just put the arguments (required arguments, followed by optional ones)
+inside parentheses, separated by commas, as usual.  But you must declare
+the function with a prototype and know how the argument values are converted.
 
 In principle, functions that are @emph{defined} to be variadic must also
 be @emph{declared} to be variadic using a function prototype whenever
@@ -406,7 +400,7 @@ type @code{char} or @w{@code{short int}} (whether signed or not) are
 promoted to either @code{int} or @w{@code{unsigned int}}, as
 appropriate; and that objects of type @code{float} are promoted to type
 @code{double}.  So, if the caller passes a @code{char} as an optional
-argument, it is promoted to an @code{int}, and the function should get
+argument, it is promoted to an @code{int}, and the function can access
 it with @code{va_arg (@var{ap}, int)}.
 
 Conversion of the required arguments is controlled by the function
@@ -467,16 +461,16 @@ use it except for reasons of portability.
 
 Sometimes it is necessary to parse the list of parameters more than once
 or one wants to remember a certain position in the parameter list.  To
-do this one will have to make a copy of the current value of the
-argument.  But @code{va_list} is an opaque type and it is not guaranteed
-that one can simply assign the value of a variable to another one of
-type @code{va_list}
+do this, one will have to make a copy of the current value of the
+argument.  But @code{va_list} is an opaque type and one cannot necessarily
+assign the value of one variable of type @code{va_list} to another variable 
+of the same type.
 
 @comment stdarg.h
 @comment GNU
 @deftypefn {Macro} void __va_copy (va_list @var{dest}, va_list @var{src})
 The @code{__va_copy} macro allows copying of objects of type
-@code{va_list} even if this is no integral type.  The argument pointer
+@code{va_list} even if this is not an integral type.  The argument pointer
 in @var{dest} is initialized to point to the same argument as the
 pointer in @var{src}.
 
@@ -484,10 +478,10 @@ This macro is a GNU extension but it will hopefully also be available in
 the next update of the ISO C standard.
 @end deftypefn
 
-If you want to use @code{__va_copy} you should always be prepared that
-this macro is not available.  On architectures where a simple assignment
-is invalid it hopefully is and so one should always write something like
-this:
+If you want to use @code{__va_copy} you should always be prepared for the
+possibility that this macro will not be available.  On architectures where a 
+simple assignment is invalid, hopefully @code{__va_copy} @emph{will} be available,
+so one should always write something like this:
 
 @smallexample
 @{
@@ -540,7 +534,7 @@ build (va_alist)
 @{
 @end smallexample
 
-Secondly, you must give @code{va_start} just one argument, like this:
+Secondly, you must give @code{va_start} only one argument, like this:
 
 @smallexample
   va_list p;
@@ -643,7 +637,7 @@ arguments or variables that hold the size of an object.
 
 In the GNU system @code{size_t} is equivalent to either
 @w{@code{unsigned int}} or @w{@code{unsigned long int}}.  These types
-have identical properties on the GNU system, and for most purposes, you
+have identical properties on the GNU system and, for most purposes, you
 can use them interchangeably.  However, they are distinct as data types,
 which makes a difference in certain contexts.
 
@@ -938,7 +932,7 @@ follows.
 @item
 @cindex mantissa (of floating point number)
 @cindex significand (of floating point number)
-The @dfn{mantissa} or @dfn{significand}, an unsigned integer which is a
+The @dfn{mantissa} or @dfn{significand} is an unsigned integer which is a
 part of each floating point number.
 
 @item
@@ -957,12 +951,12 @@ Again, the GNU library provides no facilities for dealing with such
 low-level aspects of the representation.
 @end itemize
 
-The mantissa of a floating point number actually represents an implicit
-fraction whose denominator is the base raised to the power of the
-precision.  Since the largest representable mantissa is one less than
-this denominator, the value of the fraction is always strictly less than
-@code{1}.  The mathematical value of a floating point number is then the
-product of this fraction, the sign, and the base raised to the exponent.
+The mantissa of a floating point number represents an implicit fraction
+whose denominator is the base raised to the power of the precision.  Since 
+the largest representable mantissa is one less than this denominator, the 
+value of the fraction is always strictly less than @code{1}.  The 
+mathematical value of a floating point number is then the product of this 
+fraction, the sign, and the base raised to the exponent.
 
 @cindex normalized floating point number
 We say that the floating point number is @dfn{normalized} if the
@@ -1054,7 +1048,7 @@ the IEEE single-precision standard.
 @comment float.h
 @comment ISO
 @item FLT_RADIX
-This is the value of the base, or radix, of exponent representation.
+This is the value of the base, or radix, of the exponent representation.
 This is guaranteed to be a constant expression, unlike the other macros
 described in this section.  The value is 2 on all machines we know of
 except the IBM 360 and derivatives.
@@ -1208,7 +1202,7 @@ macro's value is the same as the type it describes.
 @comment ISO
 @item FLT_EPSILON
 
-This is the minimum positive floating point number of type @code{float}
+This is the maximum positive floating point number of type @code{float}
 such that @code{1.0 + FLT_EPSILON != 1.0} is true.  It's supposed to
 be no greater than @code{1E-5}.
 

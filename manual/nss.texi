@@ -267,7 +267,7 @@ missing.
 For the @code{hosts} and @code{networks} databases the default value is
 @code{dns [!UNAVAIL=return] files}.  I.e., the system is prepared for
 the DNS service not to be available but if it is available the answer it
-returns is ultimative.
+returns is definitive.
 
 The @code{passwd}, @code{group}, and @code{shadow} databases are
 traditionally handled in a special way.  The appropriate files in the
@@ -297,7 +297,7 @@ But one should avoid slow services like this if possible.
 @node NSS Module Internals, Extending NSS, NSS Configuration File, Name Service Switch
 @section NSS Module Internals
 
-Now it is time to described how the modules look like.  The functions
+Now it is time to describe what the modules look like.  The functions
 contained in a module are identified by their names.  I.e., there is no
 jump table or the like.  How this is done is of no interest here; those
 interested in this topic should read about Dynamic Linking.
@@ -322,8 +322,8 @@ The name of each function consist of various parts:
 @end quotation
 
 @var{service} of course corresponds to the name of the module this
-function is found in.@footnote{Now you might ask why to duplicate this
-information.  The answer is that we want to keep the possibility to link
+function is found in.@footnote{Now you might ask why this information is
+duplicated.  The answer is that we want to make it possible to link
 directly with these shared objects.}  The @var{function} part is derived
 from the interface function in the C library itself.  If the user calls
 the function @code{gethostbyname} and the service used is @code{files}
@@ -364,14 +364,12 @@ Sun's NSS modules are usable as modules which get indirectly loaded
 only.
 
 The NSS modules in the GNU C Library are prepared to be used as normal
-libraries itself.
-@comment Fix me if necessary.
-This is @emph{not} true in the moment, though.  But the different
-organization of the name space in the modules does not make it
+libraries themselves.  This is @emph{not} true at the moment, though.  
+However,  the organization of the name space in the modules does not make it
 impossible like it is for Solaris.  Now you can see why the modules are
 still libraries.@footnote{There is a second explanation: we were too
 lazy to change the Makefiles to allow the generation of shared objects
-not starting with @file{lib} but do not tell this anybody.}
+not starting with @file{lib} but don't tell this to anybody.}
 
 
 @node NSS Modules Interface,  , NSS Module Names, NSS Module Internals
@@ -441,7 +439,7 @@ more.
 @multitable @columnfractions .3 .2 .50
 @item
 @code{NSS_STATUS_TRYAGAIN} @tab
-        @code{EAGAIN} @tab One functions used ran temporarily out of
+        @code{EAGAIN} @tab One of the functions used ran temporarily out of
 resources or a service is currently not available.
 @item
 @tab
@@ -481,7 +479,7 @@ signature of the module function:
 @item
 the return value is @code{int};
 @item
-the name is as explain in @pxref{NSS Module Names};
+the name is as explained in @pxref{NSS Module Names};
 @item
 the first arguments are identical to the arguments of the non-reentrant
 function;
@@ -561,11 +559,11 @@ more about this command line.
 
 To use the new module the library must be able to find it.  This can be
 achieved by using options for the dynamic linker so that it will search
-directory where the binary is placed.  For an ELF system this could be
+the directory where the binary is placed.  For an ELF system this could be
 done by adding the wanted directory to the value of
 @code{LD_LIBRARY_PATH}.
 
-But this is not always possible since some program (those which run
+But this is not always possible since some programs (those which run
 under IDs which do not belong to the user) ignore this variable.
 Therefore the stable version of the module should be placed into a
 directory which is searched by the dynamic linker.  Normally this should
@@ -579,7 +577,7 @@ cause any harm.  System administrators should be careful.
 @subsection Internals of the NSS Module Functions
 
 Until now we only provided the syntactic interface for the functions in
-the NSS module.  In fact there is not more much we can tell since the
+the NSS module.  In fact there is not much more we can say since the
 implementation obviously is different for each function.  But a few
 general rules must be followed by all functions.
 
@@ -635,7 +633,7 @@ As explained above this function could also have an additional last
 argument.  This depends on the database used; it happens only for
 @code{host} and @code{networks}.
 
-The function shall return @code{NSS_STATUS_SUCCESS} as long as their are
+The function shall return @code{NSS_STATUS_SUCCESS} as long as there are
 more entries.  When the last entry was read it should return
 @code{NSS_STATUS_NOTFOUND}.  When the buffer given as an argument is too
 small for the data to be returned @code{NSS_STATUS_TRYAGAIN} should be

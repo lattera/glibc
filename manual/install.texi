@@ -49,8 +49,8 @@ GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
 @cindex configuring
 @cindex compiling
 
-GNU Libc can be compiled in the source directory but we strongly advise to
-build in a separate build directory.  For example, if you have unpacked
+GNU libc can be compiled in the source directory, but we strongly advise to
+build it in a separate build directory.  For example, if you have unpacked
 the glibc sources in @file{/src/gnu/glibc-2.1.0}, create a directory
 @file{/src/gnu/glibc-build} to put the object files in.  This allows to
 remove the whole build directory in case an error occurs which is the
@@ -64,7 +64,7 @@ $ ../glibc-2.1.0/configure @var{args...}
 @end smallexample
 
 Please note that even if you're building in a separate build directory,
-the compiliation needs to modify a few files in the source
+the compilation needs to modify a few files in the source
 directory, especially some files in the manual subdirectory.
 
 @noindent
@@ -74,14 +74,14 @@ only two: @samp{--prefix} and @samp{--enable-add-ons}.  The
 This defaults to @file{/usr/local}.  The @samp{--enable-add-ons} option
 tells configure to use all the add-on bundles it finds in the source
 directory.  Since important functionality is provided in add-ons, you
-should always give this option.
+should always specify this option.
 
 It may also be useful to set the @var{CC} and @var{CFLAGS} variables in
 the environment when running @code{configure}.  @var{CC} selects the C
 compiler that will be used, and @var{CFLAGS} sets optimization options
 for the compiler.
 
-Here are all the useful options known by @code{configure}:
+The following list describes all of the available options for @code{configure}:
 
 @table @samp
 @item --prefix=@var{directory}
@@ -91,13 +91,13 @@ Install machine-independent data files in subdirectories of
 @item --exec-prefix=@var{directory}
 Install the library and other machine-dependent files in subdirectories
 of @file{@var{directory}}.  The default is to the @samp{--prefix}
-directory if that option is given, or @file{/usr/local} otherwise.
+directory if that option is specified, or @file{/usr/local} otherwise.
 
 @item --with-headers=@var{directory}
 Look for kernel header files in @var{directory}, not
 @file{/usr/include}.  Glibc needs information from the kernel's private
 header files.  It will normally look in @file{/usr/include} for them,
-but if you give this option, it will look in @var{DIRECTORY} instead.
+but if you specify this option, it will look in @var{DIRECTORY} instead.
 
 This option is primarily of use on a system where the headers in
 @file{/usr/include} come from an older version of glibc.  Conflicts can
@@ -107,7 +107,7 @@ compile glibc with a newer set of kernel headers than the ones found in
 @file{/usr/include}.
 
 @item --enable-add-ons[=@var{list}]
-Enable add-on packages in your source tree.  If this option is given
+Enable add-on packages in your source tree.  If this option is specified
 with no list, it enables all the add-on packages it finds.  If you do
 not wish to use some add-on package that you have present in your source
 tree, give this option a list of the add-ons that you @emph{do} want
@@ -117,10 +117,10 @@ used, like this: @samp{--enable-add-ons=crypt,linuxthreads}
 Use the binutils (assembler and linker) in @file{@var{directory}}, not
 the ones the C compiler would default to.  You could use this option if
 the default binutils on your system cannot deal with all the constructs
-in the GNU C library.  (@code{configure} will detect the problem and
-suppress these constructs, so the library will still be usable, but
-functionality may be lost---for example, you can not build a shared libc
-with old binutils.)
+in the GNU C library.  In that case, @code{configure} will detect the problem and
+suppress these constructs, so that the library will still be usable, but
+functionality may be lost---for example, you can't build a shared libc
+with old binutils.
 
 @item --without-fp
 Use this option if your computer lacks hardware floating-point support
@@ -132,7 +132,7 @@ and your operating system does not emulate an FPU.
 @c days, but we recommend you build them in case you need them.
 
 @item --disable-shared
-Don't build shared libraries even if we could.  Not all systems support
+Don't build shared libraries even if it is possible.  Not all systems support
 shared libraries; you need ELF support and (currently) the GNU linker.
 
 @item --disable-profile
@@ -148,7 +148,7 @@ you won't be able to trace bugs through the C library.
 
 @item --disable-versioning
 Don't compile the shared libraries with symbol version information.
-Doing this will make the library that's built incompatible with old
+Doing this will make the resulting library incompatible with old
 binaries, so it's not recommended.
 
 @item --enable-static-nss
@@ -159,22 +159,22 @@ reconfigured to use a different name database.
 
 @item --build=@var{build-system}
 @itemx --host=@var{host-system}
-These options are for cross-compiling.  If you give them both and
+These options are for cross-compiling.  If you specify both options and
 @var{build-system} is different from @var{host-system}, @code{configure}
 will prepare to cross-compile glibc from @var{build-system} to be used
 on @var{host-system}.  You'll probably need the @samp{--with-headers}
 option too, and you may have to override @var{configure}'s selection of
 the compiler and/or binutils.
 
-If you give just @samp{--host}, configure will prepare for a native
-compile but use what you say instead of guessing what your system is.
+If you only specify @samp{--host}, configure will prepare for a native
+compile but use what you specify instead of guessing what your system is.
 This is most useful to change the CPU submodel.  For example, if
 configure guesses your machine as @code{i586-pc-linux-gnu} but you want
 to compile a library for 386es, give @samp{--host=i386-pc-linux-gnu} or
 just @samp{--host=i386-linux} and add the appropriate compiler flags
 (@samp{-mcpu=i386} will do the trick) to @var{CFLAGS}.
 
-If you give just @samp{--build}, configure will get confused.
+If you specify just @samp{--build}, configure will get confused.
 @end table
 
 To build the library and related programs, type @code{make}.  This will
@@ -200,17 +200,18 @@ Instead, edit the generated @file{Makefile} and uncomment the line
 @noindent
 You can change the @samp{4} to some other number as appropriate for
 your system.  Instead of changing the @file{Makefile}, you could give
-this option directly to @code{make} and call it as, e.g.
+this option directly to @code{make} and call it as, for example,
 @code{make PARALLELMFLAGS=-j4}.  If you're building in the source
-directory, you've got to use the latter approach since in this case no
-new @file{Makefile} is generated which you can change.
+directory, you must use the latter approach since in this case no
+new @file{Makefile} is generated for you to change.
 
-To build and run some test programs which exercise some of the library
-facilities, type @code{make check}.  This should complete successfully;
-if it doesn't, do not use the built library, and report a bug.
-@xref{Reporting Bugs}, for how to do that.  Note that some of the tests
-assume they are not being run by @code{root}.  We recommend you compile
-and test glibc as an unprivileged user.
+To build and run test programs which exercise some of the library
+facilities, type @code{make check}.  If it does not complete
+successfully, do not use the built library, and report a bug after
+verifying that the problem is not already known.  @xref{Reporting Bugs},
+for instructions on reporting bugs.  Note that some of the tests assume
+they are not being run by @code{root}.  We recommend you compile and
+test glibc as an unprivileged user.
 
 To format the @cite{GNU C Library Reference Manual} for printing, type
 @w{@code{make dvi}}.  You need a working @TeX{} installation to do this.
@@ -224,8 +225,8 @@ info}}, but it shouldn't be necessary.
 
 To install the library and its header files, and the Info files of the
 manual, type @code{make install}.  This will build things if necessary,
-before installing them.  Don't rely on that; compile everything first.
-If you are installing glibc as your primary C library, we recommend you
+before installing them.  However, you should still compile everything first.
+If you are installing glibc as your primary C library, we recommend that you
 shut the system down to single-user mode first, and reboot afterward.
 This minimizes the risk of breaking things when the library changes out
 from underneath.
@@ -233,8 +234,8 @@ from underneath.
 If you are upgrading from a previous installation of glibc 2.0 or 2.1,
 @samp{make install} will do the entire job.  If you're upgrading from
 Linux libc5 or some other C library, you need to rename the old
-@file{/usr/include} directory out of the way before running @samp{make
-install}, or you will end up with a mixture of header files from both
+@file{/usr/include} directory before running @samp{make install},
+or you will end up with a mixture of header files from both
 libraries, and you won't be able to compile anything.  You may also need
 to reconfigure GCC to work with the new library.  The easiest way to do
 that is to figure out the compiler switches to make it work again
@@ -279,7 +280,7 @@ build the GNU C library:
 GNU @code{make} 3.75
 
 You need the latest version of GNU @code{make}.  Modifying the GNU C
-Library to work with other @code{make} programs would be so hard that we
+Library to work with other @code{make} programs would be so difficult that we
 recommend you port GNU @code{make} instead.  @strong{Really.}  We
 recommend version GNU @code{make} version 3.75 or 3.77.  All earlier
 versions have severe bugs or lack features. Version 3.76 is known to
@@ -418,8 +419,8 @@ they definitely don't work anymore.  Porting the library is not hard.
 If you are interested in doing a port, please contact the glibc
 maintainers by sending electronic mail to @email{bug-glibc@@gnu.org}.
 
-Each case of @samp{i@var{x}86} can be @samp{i386}, @samp{i486},
-@samp{i586}, or @samp{i686}.  All of those configurations produce a
+Valid cases of @samp{i@var{x}86} include @samp{i386}, @samp{i486},
+@samp{i586}, and @samp{i686}.  All of those configurations produce a
 library that can run on this processor and newer processors.  The GCC
 compiler by default generates code that's optimized for the machine it's
 configured for and will use the instructions available on that machine.
@@ -436,7 +437,7 @@ switches via @var{CFLAGS}.
 
 If you are installing GNU libc on a Linux system, you need to have
 the header files from a 2.2 kernel around for reference.  You do not
-need to use the 2.2 kernel, just have its headers where glibc can get
+need to use the 2.2 kernel, just have its headers where glibc can access
 at them.  The easiest way to do this is to unpack it in a directory
 such as @file{/usr/src/linux-2.2.1}.  In that directory, run
 @samp{make config} and accept all the defaults.  Then run @samp{make
@@ -483,8 +484,8 @@ errors and omissions in this manual.  If you report them, they will get
 fixed.  If you don't, no one will ever know about them and they will
 remain unfixed for all eternity, if not longer.
 
-It is a good idea to check first that the problem was not reported
-before.  Bugs are documented in two places: The file @file{BUGS}
+It is a good idea to verify that the problem has not already been
+reported.  Bugs are documented in two places: The file @file{BUGS}
 describes a number of well known bugs and the bug tracking system has a
 WWW interface at
 @url{http://www-gnats.gnu.org:8080/cgi-bin/wwwgnats.pl}.  The WWW
@@ -525,5 +526,5 @@ function's behavior disagrees with the manual, then either the library
 or the manual has a bug, so report the disagreement.  If you find any
 errors or omissions in this manual, please report them to the Internet
 address @email{bug-glibc-manual@@gnu.org}.  If you refer to specific
-sections when reporting on the manual, please include the section names
-for easier identification.
+sections of the manual, please include the section names for easier
+identification.

@@ -112,7 +112,7 @@ flag is used).
 @comment GNU
 @deftypevar {const char *} argp_program_bug_address
 If defined or set by the user program to a non-zero value,
-@code{argp_program_bug_address} should point to string that is the
+@code{argp_program_bug_address} should point to a string that is the
 bug-reporting address for the program.  It will be printed at the end of
 the standard output for the @samp{--help} option, embedded in a sentence
 that says something like @samp{Report bugs to @var{address}.}.
@@ -180,7 +180,7 @@ If non-zero, a string describing what non-option arguments are wanted by
 this parser; it is only used to print the @samp{Usage:} message.  If it
 contains newlines, the strings separated by them are considered
 alternative usage patterns, and printed on separate lines (lines after
-the first are prefix by @samp{ or: } instead of @samp{Usage:}).
+the first are prefixed by @samp{ or: } instead of @samp{Usage:}).
 
 @item const char *doc
 If non-zero, a string containing extra text to be printed before and

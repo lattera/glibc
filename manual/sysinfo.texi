@@ -82,7 +82,7 @@ This process cannot set the host name because it is not privileged.
 @deftypefun {long int} gethostid (void)
 This function returns the ``host ID'' of the machine the program is
 running on.  By convention, this is usually the primary Internet address
-of that machine, converted to a @w{@code{long int}}.  However, some
+of that machine, converted to a @w{@code{long int}}.  However, on some
 systems it is a meaningless but unique number which is hard-coded for
 each machine.
 @end deftypefun
@@ -95,7 +95,7 @@ to @var{id}.  Only privileged processes are allowed to do this.  Usually
 it happens just once, at system boot time.
 
 The return value is @code{0} on success and @code{-1} on failure.
-The following @code{errno} error condition is defined for this function:
+The following @code{errno} error conditions are defined for this function:
 
 @table @code
 @item EPERM
@@ -186,10 +186,10 @@ possibility.
 @section Which filesystems are mounted and/or available?
 
 The Unix concept of @emph{Everything is a file} is based on the
-possibility to @dfn{mount} filesystems or other things into the
+ability to @dfn{mount} filesystems or other things into the
 filesystem.  For some programs it is desirable and necessary to access
-the information whether and, if yes, where a certain filesystem is
-mounted or simply to get lists of all the available filesystems.  The
+information about whether a certain filesystem is mounted and, if it is, 
+where, or simply to get lists of all the available filesystems.  The
 GNU libc provides some functions to retrieve this information portably.
 
 Traditionally Unix systems have a file named @file{/etc/fstab} which
@@ -252,7 +252,7 @@ more than one option, separated from the others by a comma.  Each option
 consists of a name and an optional value part, introduced by an @code{=}
 character.
 
-If the value of this element must be processed it should best happen
+If the value of this element must be processed it should ideally be done
 using the @code{getsubopt} function; see @ref{Suboptions}.
 
 @item const char *fs_type
@@ -323,7 +323,7 @@ is the first call to any of the functions handling @file{fstab} since
 program start or the last call of @code{endfsent}, the file will be
 opened.
 
-The function returns a pointer to an variable of type @code{struct
+The function returns a pointer to a variable of type @code{struct
 fstab}.  This variable is shared by all threads and therefore this
 function is not thread-safe.  If an error occurred @code{getfsent}
 returns a @code{NULL} pointer.
@@ -340,7 +340,7 @@ argument.  If this is the first call to any of the functions handling
 @file{fstab} since program start or the last call of @code{endfsent},
 the file will be opened.
 
-The function returns a pointer to an variable of type @code{struct
+The function returns a pointer to a variable of type @code{struct
 fstab}.  This variable is shared by all threads and therefore this
 function is not thread-safe.  If an error occurred @code{getfsent}
 returns a @code{NULL} pointer.
@@ -357,7 +357,7 @@ argument.  If this is the first call to any of the functions handling
 @file{fstab} since program start or the last call of @code{endfsent},
 the file will be opened.
 
-The function returns a pointer to an variable of type @code{struct
+The function returns a pointer to a variable of type @code{struct
 fstab}.  This variable is shared by all threads and therefore this
 function is not thread-safe.  If an error occurred @code{getfsent}
 returns a @code{NULL} pointer.
@@ -387,11 +387,11 @@ filesystem.  It corresponds to the @code{fs_file} element in
 @item char *mnt_type
 @code{mnt_type} describes the filesystem type and is therefore
 equivalent to @code{fs_vfstype} in @code{struct fstab}.  @file{mntent.h}
-defines a few symbolic names for some of the value this string can have.
-But since the kernel can support an arbitrary filesystems it does not
+defines a few symbolic names for some of the values this string can have.
+But since the kernel can support arbitrary filesystems it does not
 make much sense to give them symbolic names.  If one knows the symbol
 name one also knows the filesystem name.  Nevertheless here follows the
-list of the symbol provided in @file{mntent.h}.
+list of the symbols provided in @file{mntent.h}.
 
 @vtable @code
 @item MNTTYPE_IGNORE
@@ -414,7 +414,7 @@ the filesystem.  As for the equivalent element @code{fs_mntops} of
 
 The @file{mntent.h} file defines a number of macros with string values
 which correspond to some of the options understood by the kernel.  There
-might be many more options which are possible so it makes not much sense
+might be many more options which are possible so it doesn't make much sense
 to rely on these macros but to be consistent here is the list:
 
 @vtable @code
@@ -539,7 +539,7 @@ end of file reached,
 @comment mntent.h
 @comment BSD
 @deftypefun int addmntent (FILE *@var{stream}, const struct mntent *@var{mnt})
-The @code{addmntent} function allows to add a new entry to the file
+The @code{addmntent} function allows adding a new entry to the file
 previously opened with @code{setmntent}.  The new entries are always
 appended.  I.e., even if the position of the file descriptor is not at
 the end of the file this function does not overwrite an existing entry

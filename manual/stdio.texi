@@ -1847,14 +1847,14 @@ The information is stored in the array @var{argtypes}; each element of
 this array describes one argument.  This information is encoded using
 the various @samp{PA_} macros, listed below.
 
-The @var{n} argument specifies the number of elements in the array
-@var{argtypes}.  This is the most elements that
+The argument @var{n} specifies the number of elements in the array
+@var{argtypes}.  This is the maximum number of elements that
 @code{parse_printf_format} will try to write.
 
 @code{parse_printf_format} returns the total number of arguments required
 by @var{template}.  If this number is greater than @var{n}, then the
 information returned describes only the first @var{n} arguments.  If you
-want information about more than that many arguments, allocate a bigger
+want information about additional arguments, allocate a bigger
 array and call @code{parse_printf_format} again.
 @end deftypefun
 
@@ -2107,9 +2107,9 @@ about this.
 @c but if you are never going to call @code{parse_printf_format}, you do
 @c not need to define an arginfo function.
 
-@strong{Attention:} In the GNU C library version before 2.0 the
+@strong{Attention:} In the GNU C library versions before 2.0 the
 @var{arginfo-function} function did not need to be installed unless
-the user uses the @code{parse_printf_format} function.  This changed.
+the user used the @code{parse_printf_format} function.  This has changed.
 Now a call to any of the @code{printf} functions will call this
 function when this format specifier appears in the format string.
 
@@ -2220,7 +2220,7 @@ width.  The value is @code{'0'} if the @samp{0} flag was specified, and
 Now let's look at how to define the handler and arginfo functions
 which are passed as arguments to @code{register_printf_function}.
 
-@strong{Compatibility Note:} The interface changed in the GNU libc
+@strong{Compatibility Note:} The interface changed in GNU libc
 version 2.0.  Previously the third argument was of type
 @code{va_list *}.
 
@@ -2254,7 +2254,7 @@ a description of this data structure.
 @c arguments that your handler processes.  @xref{Variadic Functions}.)
 
 The @var{args} is a vector of pointers to the arguments data.
-The number of arguments were determined by calling the argument
+The number of arguments was determined by calling the argument
 information function provided by the user.
 
 Your handler function should return a value just like @code{printf}
@@ -2328,7 +2328,7 @@ which implement a special way to print floating-point numbers.
 Print a given floating point number as for the format @code{%f} except
 that there is a postfix character indicating the divisor for the
 number to make this less than 1000.  There are two possible divisors:
-powers of 1024 or powers to 1000.  Which one is used depends on the
+powers of 1024 or powers of 1000.  Which one is used depends on the
 format character specified while registered this handler.  If the
 character is of lower case, 1024 is used.  For upper case characters,
 1000 is used.
@@ -2378,7 +2378,7 @@ format character as if it were @code{%.3fk} and will yield @code{1.000k}.
 @end deftypefun
 
 Due to the requirements of @code{register_printf_function} we must also
-provide the function which return information about the arguments.
+provide the function which returns information about the arguments.
 
 @comment printf.h
 @comment GNU
@@ -2403,14 +2403,14 @@ register_printf_function ('b', printf_size, printf_size_info);
 @end smallexample
 
 @noindent
-we could also print using power of 1024.  Please note that all what is
-different in these both lines in the format specifier.  The
-@code{printf_size} function knows about the difference of low and upper
+we could also print using a power of 1024.  Please note that all that is
+different in these two lines is the format specifier.  The
+@code{printf_size} function knows about the difference between lower and upper
 case format specifiers.
 
 The use of @code{'B'} and @code{'b'} is no coincidence.  Rather it is
 the preferred way to use this functionality since it is available on
-some other systems also available using the format specifiers.
+some other systems which also use format specifiers.
 
 @node Formatted Input
 @section Formatted Input
@@ -2784,7 +2784,7 @@ in.  @xref{Dynamic String Input}.
 @end itemize
 
 The @samp{%c} conversion is the simplest: it matches a fixed number of
-characters, always.  The maximum field with says how many characters to
+characters, always.  The maximum field width says how many characters to
 read; if you don't specify the maximum, the default is 1.  This
 conversion doesn't append a null character to the end of the text it
 reads.  It also does not skip over initial whitespace characters.  It
@@ -2903,7 +2903,7 @@ conversion specification to read a ``variable assignment'' of the form
 This section describes the miscellaneous input conversions.
 
 The @samp{%p} conversion is used to read a pointer value.  It recognizes
-the same syntax as is used by the @samp{%p} output conversion for
+the same syntax used by the @samp{%p} output conversion for
 @code{printf} (@pxref{Other Output Conversions}); that is, a hexadecimal
 number just as the @samp{%x} conversion accepts.  The corresponding
 argument should be of type @code{void **}; that is, the address of a
@@ -2946,9 +2946,9 @@ The optional arguments are pointers to the places which receive the
 resulting values.
 
 The return value is normally the number of successful assignments.  If
-an end-of-file condition is detected before any matches are performed
-(including matches against whitespace and literal characters in the
-template), then @code{EOF} is returned.
+an end-of-file condition is detected before any matches are performed,
+including matches against whitespace and literal characters in the
+template, then @code{EOF} is returned.
 @end deftypefun
 
 @comment stdio.h
@@ -2987,7 +2987,7 @@ extensions.
 @comment stdio.h
 @comment GNU
 @deftypefun int vscanf (const char *@var{template}, va_list @var{ap})
-This function is similar to @code{scanf} except that, instead of taking
+This function is similar to @code{scanf}, but instead of taking
 a variable number of arguments directly, it takes an argument list
 pointer @var{ap} of type @code{va_list} (@pxref{Variadic Functions}).
 @end deftypefun
@@ -3010,8 +3010,8 @@ In GNU C, there is a special construct you can use to let the compiler
 know that a function uses a @code{scanf}-style format string.  Then it
 can check the number and types of arguments in each call to the
 function, and warn you when they do not match the format string.
-@xref{Function Attributes, , Declaring Attributes of Functions,
-gcc.info, Using GNU CC}, for details.
+For details, @xref{Function Attributes, , Declaring Attributes of Functions,
+gcc.info, Using GNU CC}.
 
 @node EOF and Errors
 @section End-Of-File and Errors
@@ -3169,18 +3169,15 @@ possibly for other reasons as well.  If a failure occurs, a value of
 @comment stdio.h
 @comment Unix98
 @deftypefun off_t ftello (FILE *@var{stream})
-The @code{ftello} function is similar to @code{ftell} only it corrects a
-problem which the POSIX type system.  In this type system all file
-positions are described using values of type @code{off_t} which is not
-necessarily of the same size as @code{long int}.  Therefore using
-@code{ftell} can lead to problems if the implementation is written on
-top of a POSIX compliant lowlevel I/O implementation.
+The @code{ftello} function is similar to @code{ftell}, except that it
+returns a value of type @code{off_t}.  Systems which support this type
+use it to describe all file positions, unlike the POSIX specification
+which uses a long int.  The two are not necessarily the same size.
+Therefore, using ftell can lead to problems if the implementation is
+written on top of a POSIX compliant low-level I/O implementation, and using
+@code{ftello} is preferable whenever it is available.
 
-Therefore it is a good idea to prefer @code{ftello} whenever it is
-available since its functionality is (if different at all) closer the
-underlying definition.
-
-If this function fails it return @code{(off_t) -1}.  This can happen due
+If this function fails it returns @code{(off_t) -1}.  This can happen due
 to missing support for file positioning or internal errors.  Otherwise
 the return value is the current file position.
 
@@ -3360,9 +3357,9 @@ the same file position.
 
 @item
 In a call to @code{fseek} or @code{fseeko} on a text stream, either the
-@var{offset} must either be zero; or @var{whence} must be
-@code{SEEK_SET} and the @var{offset} must be the result of an earlier
-call to @code{ftell} on the same stream.
+@var{offset} must be zero, or @var{whence} must be @code{SEEK_SET} and
+and the @var{offset} must be the result of an earlier call to @code{ftell}
+on the same stream.
 
 @item
 The value of the file position indicator of a text stream is undefined
@@ -3484,7 +3481,7 @@ If you are writing programs that do interactive input and output using
 streams, you need to understand how buffering works when you design the
 user interface to your program.  Otherwise, you might find that output
 (such as progress or prompt messages) doesn't appear when you intended
-it to, or other unexpected behavior.
+it to, or displays some other unexpected behavior.
 
 This section deals only with controlling when characters are transmitted
 between the stream and the file or device, and @emph{not} with how
@@ -3756,8 +3753,8 @@ This function opens a stream that allows the access specified by the
 by the argument @var{buf}.  This array must be at least @var{size} bytes long.
 
 If you specify a null pointer as the @var{buf} argument, @code{fmemopen}
-dynamically allocates (as with @code{malloc}; @pxref{Unconstrained
-Allocation}) an array @var{size} bytes long.  This is really only useful
+dynamically allocates an array @var{size} bytes long (as with @code{malloc};
+@pxref{Unconstrained Allocation}).  This is really only useful
 if you are going to write things to the buffer and then read them back
 in again, because you have no way of actually getting a pointer to the
 buffer (for this, try @code{open_memstream}, below).  The buffer is
@@ -4162,7 +4159,7 @@ Display a message described by its parameters on the device(s) specified
 in the @var{classification} parameter.  The @var{label} parameter
 identifies the source of the message.  The string should consist of two
 colon separated parts where the first part has not more than 10 and the
-second part not more the 14 characters.  The @var{text} parameter
+second part not more than 14 characters.  The @var{text} parameter
 describes the condition of the error, the @var{action} parameter possible
 steps to recover from the error and the @var{tag} parameter is a
 reference to the online documentation where more information can be
@@ -4228,7 +4225,7 @@ inserted if necessary, i.e., if the corresponding parameter is not
 ignored.
 
 This function is specified in the X/Open Portability Guide.  It is also
-available on all system derived from System V.
+available on all systems derived from System V.
 
 The function returns the value @code{MM_OK} if no error occurred.  If
 only the printing to standard error failed, it returns @code{MM_NOMSG}.
@@ -4241,7 +4238,7 @@ is incorrect.
 There are two environment variables which influence the behaviour of
 @code{fmtmsg}.  The first is @code{MSGVERB}.  It is used to control the
 output actually happening on standard error (@emph{not} the console
-output).  Each of the five fields can explicitely be enabled.  To do
+output).  Each of the five fields can explicitly be enabled.  To do
 this the user has to put the @code{MSGVERB} variable with a format like
 the following in the environment before calling the @code{fmtmsg} function
 the first time:
@@ -4291,17 +4288,17 @@ not print the numeric value but instead the string representation).
 @subsection Adding Severity Classes
 @cindex severity class
 
-There is another possibility to introduce severity classes beside using
+There is another possibility to introduce severity classes besides using
 the environment variable @code{SEV_LEVEL}.  This simplifies the task of
 introducing new classes in a running program.  One could use the
 @code{setenv} or @code{putenv} function to set the environment variable,
 but this is toilsome.
 
 @deftypefun int addseverity (int @var{severity}, const char *@var{string})
-This function allows to introduce new severity classes which can be
+This function allows the introduction of new severity classes which can be
 addressed by the @var{severity} parameter of the @code{fmtmsg} function.
 The @var{severity} parameter of @code{addseverity} must match the value
-for the parameter with the same name of @code{fmtmsg} and @var{string}
+for the parameter with the same name of @code{fmtmsg}, and @var{string}
 is the string printed in the actual messages instead of the numeric
 value.
 
@@ -4332,14 +4329,14 @@ functions described in this section.
 @include fmtmsgexpl.c.texi
 @end smallexample
 
-The second call to @code{fmtmsg} illustrates a use of this function how
-it usually happens on System V systems which heavily use this function.
-It might be worth a thought to follow the scheme used in System V
-systems so we give a short explanation here.  The value of the
+The second call to @code{fmtmsg} illustrates a use of this function as
+it usually occurs on System V systems, which heavily use this function.
+It seems worthwhile to give a short explanation here of how this system
+works on System V.  The value of the
 @var{label} field (@code{UX:cat}) says that the error occured in the
 Unix program @code{cat}.  The explanation of the error follows and the
 value for the @var{action} parameter is @code{"refer to manual"}.  One
-could me more specific here, if needed.  The @var{tag} field contains,
+could be more specific here, if necessary.  The @var{tag} field contains,
 as proposed above, the value of the string given for the @var{label}
 parameter, and additionally a unique ID (@code{001} in this case).  For
 a GNU environment this string could contain a reference to the
@@ -4362,7 +4359,7 @@ form.  The string must contain two fields, separated by a colon
 (@pxref{Printing Formatted Messages}).  The third @code{fmtmsg} call
 produced no output since the class with the numeric value @code{6} is
 not defined.  Although a class with numeric value @code{5} is also not
-defined by default, the call the @code{addseverity} introduces it and
+defined by default, the call to @code{addseverity} introduces it and
 the second call to @code{fmtmsg} produces the above output.
 
 When we change the environment of the program to contain
@@ -4375,11 +4372,11 @@ label:foo: NOTE: text
 TO FIX: action tag
 @end smallexample
 
-Now the third call the @code{fmtmsg} produced some output and we see how
+Now the third call to @code{fmtmsg} produced some output and we see how
 the string @code{NOTE} from the environment variable appears in the
 message.
 
-Now we can reduce the output by specifying in which fields we are
+Now we can reduce the output by specifying which fields we are
 interested in.  If we additionally set the environment variable
 @code{MSGVERB} to the value @code{severity:label:action} we get the
 following output:
@@ -4395,5 +4392,5 @@ TO FIX: action
 I.e., the output produced by the @var{text} and the @var{tag} parameters
 to @code{fmtmsg} vanished.  Please also note that now there is no colon
 after the @code{NOTE} and @code{NOTE2} strings in the output.  This is
-not necessary since there is no more output on this line since the text
+not necessary since there is no more output on this line because the text
 is missing.

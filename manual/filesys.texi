@@ -5,7 +5,7 @@
 This chapter describes the GNU C library's functions for manipulating
 files.  Unlike the input and output functions (@pxref{I/O on Streams};
 @pxref{Low-Level I/O}), these functions are concerned with operating
-on the files themselves, rather than on their contents.
+on the files themselves rather than on their contents.
 
 Among the facilities described in this chapter are functions for
 examining or modifying directories, functions for renaming and deleting
@@ -251,8 +251,8 @@ The only way you can tell that the directory entries belong to a
 single file is that they have the same value for the @code{d_fileno}
 field.
 
-File attributes such as size, modification times, and the like are part
-of the file itself, not any particular directory entry.  @xref{File
+File attributes such as size, modification times etc., are part of the
+file itself, not of any particular directory entry.  @xref{File
 Attributes}.
 @end deftp
 
@@ -320,7 +320,7 @@ returns a pointer to a structure containing information about the file.
 This structure is statically allocated and can be rewritten by a
 subsequent call.
 
-@strong{Portability Note:} On some systems, @code{readdir} may not
+@strong{Portability Note:} On some systems @code{readdir} may not
 return entries for @file{.} and @file{..}, even though these are always
 valid file names in any directory.  @xref{File Name Resolution}.
 
@@ -343,9 +343,9 @@ value.  Use @code{readdir_r} when this is critical.
 @deftypefun int readdir_r (DIR *@var{dirstream}, struct dirent *@var{entry}, struct dirent **@var{result})
 This function is the reentrant version of @code{readdir}.  Like
 @code{readdir} it returns the next entry from the directory.  But to
-prevent conflicts for simultaneously running threads the result is not
-stored in some internal memory.  Instead the argument @var{entry} has to
-point to a place where the result is stored.
+prevent conflicts between simultaneously running threads the result is
+not stored in statically allocated memory.  Instead the argument
+@var{entry} points to a place to store the result.
 
 The return value is @code{0} in case the next entry was read
 successfully.  In this case a pointer to the result is returned in
@@ -357,14 +357,14 @@ the function returns a value indicating the error (as described for
 If there are no more directory entries, @code{readdir_r}'s return value is
 @code{0}, and *@var{result} is set to @code{NULL}.
 
-@strong{Portability Note:} On some systems, @code{readdir_r} may not
-return a terminated string as the file name even if no @code{d_reclen}
-element is available in @code{struct dirent} and the file name as the
-maximal allowed size.  Modern systems all have the @code{d_reclen} field
-and on old systems multi threading is not critical.  In any case, there
-is no such problem with the @code{readdir} function so that even on
-systems without @code{d_reclen} field one could use multiple threads by
-using external locking.
+@strong{Portability Note:} On some systems @code{readdir_r} may not
+return a NUL terminated string for the file name, even when there is no
+@code{d_reclen} field in @code{struct dirent} and the file
+name is the maximum allowed size.  Modern systems all have the
+@code{d_reclen} field, and on old systems multi-threading is not
+critical.  In any case there is no such problem with the @code{readdir}
+function, so that even on systems without the @code{d_reclen} member one
+could use multiple threads by using external locking.
 @end deftypefun
 
 @comment dirent.h
@@ -443,38 +443,38 @@ closing and reopening the directory can invalidate values returned by
 
 A higher-level interface to the directory handling functions is the
 @code{scandir} function.  With its help one can select a subset of the
-entries in a directory, possibly sort them and get as the result a list
-of names.
+entries in a directory, possibly sort them and get a list of names as
+the result.
 
 @comment dirent.h
 @comment BSD/SVID
 @deftypefun int scandir (const char *@var{dir}, struct dirent ***@var{namelist}, int (*@var{selector}) (const struct dirent *), int (*@var{cmp}) (const void *, const void *))
 
 The @code{scandir} function scans the contents of the directory selected
-by @var{dir}.  The result in @var{namelist} is an array of pointers to
+by @var{dir}.  The result in *@var{namelist} is an array of pointers to
 structure of type @code{struct dirent} which describe all selected
 directory entries and which is allocated using @code{malloc}.  Instead
 of always getting all directory entries returned, the user supplied
 function @var{selector} can be used to decide which entries are in the
-result.  Only the entries for which @var{selector} returns a nonzero
+result.  Only the entries for which @var{selector} returns a non-zero
 value are selected.
 
-Finally the entries in the @var{namelist} are sorted using the user
-supplied function @var{cmp}.  The arguments of the @var{cmp} function
-are of type @code{struct dirent **}.  I.e., one cannot directly use the
-@code{strcmp} or @code{strcoll} function; see the functions
-@code{alphasort} and @code{versionsort} below.
+Finally the entries in *@var{namelist} are sorted using the
+user-supplied function @var{cmp}.  The arguments passed to the @var{cmp}
+function are of type @code{struct dirent **}, therefore one cannot
+directly use the @code{strcmp} or @code{strcoll} functions; instead see
+the functions @code{alphasort} and @code{versionsort} below.
 
-The return value of the function gives the number of entries placed in
-@var{namelist}.  If it is @code{-1} an error occurred (either the
+The return value of the function is the number of entries placed in
+*@var{namelist}.  If it is @code{-1} an error occurred (either the
 directory could not be opened for reading or the malloc call failed) and
 the global variable @code{errno} contains more information on the error.
 @end deftypefun
 
-As said above the fourth argument to the @code{scandir} function must be
-a pointer to a sorting function.  For the convenience of the programmer
-the GNU C library contains implementations of functions which are very
-helpful for this purpose.
+As described above the fourth argument to the @code{scandir} function
+must be a pointer to a sorting function.  For the convenience of the
+programmer the GNU C library contains implementations of functions which
+are very helpful for this purpose.
 
 @comment dirent.h
 @comment BSD/SVID
@@ -484,14 +484,14 @@ The @code{alphasort} function behaves like the @code{strcoll} function
 are not string pointers but instead they are of type
 @code{struct dirent **}.
 
-Return value of @code{alphasort} is less than, equal to, or greater than
-zero depending on the order of the two entries @var{a} and @var{b}.
+The return value of @code{alphasort} is less than, equal to, or greater
+than zero depending on the order of the two entries @var{a} and @var{b}.
 @end deftypefun
 
 @comment dirent.h
 @comment GNU
 @deftypefun int versionsort (const void *@var{a}, const void *@var{b})
-The @code{versionsort} function is like @code{alphasort}, excepted that it
+The @code{versionsort} function is like @code{alphasort} except that it
 uses the @code{strverscmp} function internally.
 @end deftypefun
 
@@ -504,20 +504,19 @@ dirent64}}.  To use this we need a new function.
 @comment GNU
 @deftypefun int scandir64 (const char *@var{dir}, struct dirent64 ***@var{namelist}, int (*@var{selector}) (const struct dirent64 *), int (*@var{cmp}) (const void *, const void *))
 The @code{scandir64} function works like the @code{scandir} function
-only that the directory entries it returns are described by elements of
-type @w{@code{struct dirent64}}.  The function pointed to by
-@var{selector} is again used to select the wanted entries only that
+except that the directory entries it returns are described by elements
+of type @w{@code{struct dirent64}}.  The function pointed to by
+@var{selector} is again used to select the desired entries, except that
 @var{selector} now must point to a function which takes a
 @w{@code{struct dirent64 *}} parameter.
 
-The @var{cmp} now must be a function which expects its two arguments to
-be of type @code{struct dirent64 **}.
+Similarly the @var{cmp} function should expect its two arguments to be
+of type @code{struct dirent64 **}.
 @end deftypefun
 
-As just said the function expected as the fourth is different from the
-function expected in @code{scandir}.  Therefore we cannot use the
-@code{alphasort} and @code{versionsort} functions anymore.  Instead we
-have two similar functions available.
+As @var{cmp} is now a function of a different type, the functions
+@code{alphasort} and @code{versionsort} cannot be supplied for that
+argument.  Instead we provide the two replacement functions below.
 
 @comment dirent.h
 @comment GNU
@@ -538,7 +537,7 @@ The @code{versionsort64} function is like @code{alphasort64}, excepted that it
 uses the @code{strverscmp} function internally.
 @end deftypefun
 
-It is important not to mix the use of @code{scandir} and the 64 bits
+It is important not to mix the use of @code{scandir} and the 64-bit
 comparison functions or vice versa.  There are systems on which this
 works but on others it will fail miserably.
 
@@ -547,35 +546,37 @@ works but on others it will fail miserably.
 
 Here is a revised version of the directory lister found above
 (@pxref{Simple Directory Lister}).  Using the @code{scandir} function we
-can avoid using the functions which directly work with the directory
-contents.  After the call the found entries are available for direct
-used.
+can avoid the functions which work directly with the directory contents.
+After the call the returned entries are available for direct use.
 
 @smallexample
 @include dir2.c.texi
 @end smallexample
 
-Please note the simple selector function for this example.  Since
-we want to see all directory entries we always return @code{1}.
+Note the simple selector function in this example.  Since we want to see
+all directory entries we always return @code{1}.
 
 
-@node Working on Directory Trees
-@section Working on Directory Trees
+@node Working with Directory Trees
+@section Working with Directory Trees
 @cindex directory hierarchy
 @cindex hierarchy, directory
 @cindex tree, directory
 
-The functions to handle files in directories described so far allowed to
-retrieve all the information in small pieces or process all files in a
-directory (see @code{scandir}).  Sometimes it is useful to process whole
-hierarchies of directories and the contained files.  The X/Open
-specification define two functions to do this.  The simpler form is
-derived from an early definition in @w{System V} systems and therefore
-this function is available on SVID derived systems.  The prototypes and
-required definitions can be found in the @file{ftw.h} header.
+The functions described so far for handling the files in a directory
+have allowed you to either retrieve the information bit by bit, or to
+process all the files as a group (see @code{scandir}).  Sometimes it is
+useful to process whole hierarchies of directories and their contained
+files.  The X/Open specification defines two functions to do this.  The
+simpler form is derived from an early definition in @w{System V} systems
+and therefore this function is available on SVID-derived systems.  The
+prototypes and required definitions can be found in the @file{ftw.h}
+header.
 
-Both functions of this @code{ftw} family take as one of the arguments a
-reference to a callback function.  The functions must be of these types.
+There are four functions in this family: @code{ftw}, @code{nftw} and
+their 64-bit counterparts @code{ftw64} and @code{nftw64}.  These
+functions take as one of their arguments a pointer to a callback
+function of the appropriate type.
 
 @comment ftw.h
 @comment GNU
@@ -585,25 +586,24 @@ reference to a callback function.  The functions must be of these types.
 int (*) (const char *, const struct stat *, int)
 @end smallexample
 
-Type for callback functions given to the @code{ftw} function.  The first
-parameter will contain a pointer to the filename, the second parameter
-will point to an object of type @code{struct stat} which will be filled
-for the file named by the first parameter.
+The type of callback functions given to the @code{ftw} function.  The
+first parameter points to the file name, the second parameter to an
+object of type @code{struct stat} which is filled in for the file named
+in the first parameter.
 
 @noindent
-The last parameter is a flag given more information about the current
+The last parameter is a flag giving more information about the current
 file.  It can have the following values:
 
 @vtable @code
 @item FTW_F
-The current item is a normal file or files which do not fit into one of
-the following categories.  This means especially special files, sockets
-etc.
+The item is either a normal file or a file which does not fit into one
+of the following categories.  This could be special files, sockets etc.
 @item FTW_D
-The current item is a directory.
+The item is a directory.
 @item FTW_NS
-The @code{stat} call to fill the object pointed to by the second
-parameter failed and so the information is invalid.
+The @code{stat} call failed and so the information pointed to by the
+second paramater is invalid.
 @item FTW_DNR
 The item is a directory which cannot be read.
 @item FTW_SL
@@ -617,11 +617,11 @@ the first header.  The original SVID systems do not have symbolic links.
 @end vtable
 
 If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
-type is in fact @code{__ftw64_func_t} since this mode also changes
+type is in fact @code{__ftw64_func_t} since this mode changes
 @code{struct stat} to be @code{struct stat64}.
 @end deftp
 
-For the LFS interface and the use in the function @code{ftw64} the
+For the LFS interface and for use in the function @code{ftw64}, the
 header @file{ftw.h} defines another function type.
 
 @comment ftw.h
@@ -633,8 +633,8 @@ int (*) (const char *, const struct stat64 *, int)
 @end smallexample
 
 This type is used just like @code{__ftw_func_t} for the callback
-function, but this time called from @code{ftw64}.  The second parameter
-to the function is this time a pointer to a variable of type
+function, but this time is called from @code{ftw64}.  The second
+parameter to the function is a pointer to a variable of type
 @code{struct stat64} which is able to represent the larger values.
 @end deftp
 
@@ -648,14 +648,14 @@ int (*) (const char *, const struct stat *, int, struct FTW *)
 
 @vindex FTW_DP
 @vindex FTW_SLN
-The first three arguments have the same as for the @code{__ftw_func_t}
-type.  A difference is that for the third argument some additional
-values are defined to allow finer differentiation:
+The first three arguments are the same as for the @code{__ftw_func_t}
+type.  However for the third argument some additional values are defined
+to allow finer differentiation:
 @table @code
 @item FTW_DP
 The current item is a directory and all subdirectories have already been
 visited and reported.  This flag is returned instead of @code{FTW_D} if
-the @code{FTW_DEPTH} flag is given to @code{nftw} (see below).
+the @code{FTW_DEPTH} flag is passed to @code{nftw} (see below).
 @item FTW_SLN
 The current item is a stale symbolic link.  The file it points to does
 not exist.
@@ -665,7 +665,7 @@ The last parameter of the callback function is a pointer to a structure
 with some extra information as described below.
 
 If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
-type is in fact @code{__nftw64_func_t} since this mode also changes
+type is in fact @code{__nftw64_func_t} since this mode changes
 @code{struct stat} to be @code{struct stat64}.
 @end deftp
 
@@ -681,31 +681,31 @@ int (*) (const char *, const struct stat64 *, int, struct FTW *)
 @end smallexample
 
 This type is used just like @code{__nftw_func_t} for the callback
-function, but this time called from @code{nftw64}.  The second parameter
-to the function is this time a pointer to a variable of type
+function, but this time is called from @code{nftw64}.  The second
+parameter to the function is this time a pointer to a variable of type
 @code{struct stat64} which is able to represent the larger values.
 @end deftp
 
 @comment ftw.h
 @comment XPG4.2
 @deftp {Data Type} {struct FTW}
-The contained information helps to interpret the name parameter and
-gives some information about current state of the traversal of the
-directory hierarchy.
+The information contained in this structure helps in interpreting the
+name parameter and gives some information about the current state of the
+traversal of the directory hierarchy.
 
 @table @code
 @item int base
-The value specifies which part of the filename argument given in the
-first parameter to the callback function is the name of the file.  The
-rest of the string is the path to locate the file.  This information is
-especially important if the @code{FTW_CHDIR} flag for @code{nftw} was
-set since then the current directory is the one the current item is
-found in.
+The value is the offset into the string passed in the first parameter to
+the callback function of the beginning of the file name.  The rest of
+the string is the path of the file.  This information is especially
+important if the @code{FTW_CHDIR} flag was set in calling @code{nftw}
+since then the current directory is the one the current item is found
+in.
 @item int level
-While processing the directory the function tracks how many directories
-have been examined to find the current item.  This nesting level is
-@math{0} for the item given starting item (file or directory) and is
-incremented by one for each entered directory.
+Whilst processing, the code tracks how many directories down it has gone
+to find the current file.  This nesting level starts at @math{0} for
+files in the initial directory (or is zero for the initial file if a
+file was passed).
 @end table
 @end deftp
 
@@ -717,48 +717,46 @@ The @code{ftw} function calls the callback function given in the
 parameter @var{func} for every item which is found in the directory
 specified by @var{filename} and all directories below.  The function
 follows symbolic links if necessary but does not process an item twice.
-If @var{filename} names no directory this item is the only object
-reported by calling the callback function.
+If @var{filename} is not a directory then it itself is the only object
+returned to the callback function.
 
-The filename given to the callback function is constructed by taking the
-@var{filename} parameter and appending the names of all passed
+The file name passed to the callback function is constructed by taking
+the @var{filename} parameter and appending the names of all passed
 directories and then the local file name.  So the callback function can
-use this parameter to access the file.  Before the callback function is
-called @code{ftw} calls @code{stat} for this file and passes the
-information up to the callback function.  If this @code{stat} call was
-not successful the failure is indicated by setting the falg argument of
-the callback function to @code{FTW_NS}.  Otherwise the flag is set
-according to the description given in the description of
-@code{__ftw_func_t} above.
+use this parameter to access the file.  @code{ftw} also calls
+@code{stat} for the file and passes that information on to the callback
+function.  If this @code{stat} call was not successful the failure is
+indicated by setting the third argument of the callback function to
+@code{FTW_NS}.  Otherwise it is set according to the description given
+in the account of @code{__ftw_func_t} above.
 
 The callback function is expected to return @math{0} to indicate that no
-error occurred and the processing should be continued.  If an error
-occurred in the callback function or the call to @code{ftw} shall return
-immediately the callback function can return a value other than
+error occurred and that processing should continue.  If an error
+occurred in the callback function or it wants @code{ftw} to return
+immediately, the callback function can return a value other than
 @math{0}.  This is the only correct way to stop the function.  The
-program must not use @code{setjmp} or similar techniques to continue the
-program in another place.  This would leave the resources allocated in
-the @code{ftw} function allocated.
+program must not use @code{setjmp} or similar techniques to continue
+from another place.  This would leave resources allocated by the
+@code{ftw} function unfreed.
 
-The @var{descriptors} parameter to the @code{ftw} function specifies how
-many file descriptors the @code{ftw} function is allowed to consume.
-The more descriptors can be used the faster the function can run.  For
-each level of directories at most one descriptor is used so that for
-very deep directory hierarchies the limit on open file descriptors for
-the process or the system can be exceeded.  Beside this the limit on
-file descriptors is counted together for all threads in a multi-threaded
-program and therefore it is always good too limit the maximal number of
-open descriptors to a reasonable number.
+The @var{descriptors} parameter to @code{ftw} specifies how many file
+descriptors it is allowed to consume.  The function runs faster the more
+descriptors it can use.  For each level in the directory hierarchy at
+most one descriptor is used, but for very deep ones any limit on open
+file descriptors for the process or the system may be exceeded.
+Moreover, file descriptor limits in a multi-threaded program apply to
+all the threads as a group, and therefore it is a good idea to supply a
+reasonable limit to the number of open descriptors.
 
 The return value of the @code{ftw} function is @math{0} if all callback
 function calls returned @math{0} and all actions performed by the
-@code{ftw} succeeded.  If some function call failed (other than calling
-@code{stat} on an item) the function return @math{-1}.  If a callback
+@code{ftw} succeeded.  If a function call failed (other than calling
+@code{stat} on an item) the function returns @math{-1}.  If a callback
 function returns a value other than @math{0} this value is returned as
 the return value of @code{ftw}.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
-32 bits system this function is in fact @code{ftw64}.  I.e., the LFS
+32-bit system this function is in fact @code{ftw64}, i.e. the LFS
 interface transparently replaces the old interface.
 @end deftypefun
 
@@ -766,63 +764,61 @@ interface transparently replaces the old interface.
 @comment Unix98
 @deftypefun int ftw64 (const char *@var{filename}, __ftw64_func_t @var{func}, int @var{descriptors})
 This function is similar to @code{ftw} but it can work on filesystems
-with large files since the information about the files is reported using
-a variable of type @code{struct stat64} which is passed by reference to
-the callback function.
+with large files.  File information is reported using a variable of type
+@code{struct stat64} which is passed by reference to the callback
+function.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
-32 bits system this function is available under the name @code{ftw} and
+32-bit system this function is available under the name @code{ftw} and
 transparently replaces the old implementation.
 @end deftypefun
 
 @comment ftw.h
 @comment XPG4.2
 @deftypefun int nftw (const char *@var{filename}, __nftw_func_t @var{func}, int @var{descriptors}, int @var{flag})
-The @code{nftw} functions works like the @code{ftw} functions.  It calls
-the callback function @var{func} for all items it finds in the directory
+The @code{nftw} function works like the @code{ftw} functions.  They call
+the callback function @var{func} for all items found in the directory
 @var{filename} and below.  At most @var{descriptors} file descriptors
 are consumed during the @code{nftw} call.
 
-The differences are that for one the callback function is of a different
-type.  It is of type @w{@code{struct FTW *}} and provides the callback
-functions the information described above.
+One difference is that the callback function is of a different type.  It
+is of type @w{@code{struct FTW *}} and provides the callback function
+with the extra information described above.
 
-The second difference is that @code{nftw} takes an additional fourth
-argument which is @math{0} or a combination of any of the following
-values, combined using bitwise OR.
+A second difference is that @code{nftw} takes a fourth argument, which
+is @math{0} or a bitwise-OR combination of any of the following values.
 
 @vtable @code
 @item FTW_PHYS
-While traversing the directory symbolic links are not followed.  I.e.,
-if this flag is given symbolic links are reported using the
-@code{FTW_SL} value for the type parameter to the callback function.
-Please note that if this flag is used the appearance of @code{FTW_SL} in
-a callback function does not mean the referenced file does not exist.
-To indicate this the extra value @code{FTW_SLN} exists.
+While traversing the directory symbolic links are not followed.  Instead
+symbolic links are reported using the @code{FTW_SL} value for the type
+parameter to the callback function.  If the file referenced by a
+symbolic link does not exist {FTW_SLN} is returned instead.
 @item FTW_MOUNT
 The callback function is only called for items which are on the same
-mounted filesystem as the directory given as the @var{filename}
+mounted filesystem as the directory given by the @var{filename}
 parameter to @code{nftw}.
 @item FTW_CHDIR
 If this flag is given the current working directory is changed to the
-directory containing the reported object before the callback function is
-called.
+directory of the reported object before the callback function is called.
+When @code{ntfw} finally returns the current directory is restored to
+its original value.
 @item FTW_DEPTH
-If this option is given the function visits first all files and
-subdirectories before the callback function is called for the directory
-itself (depth-first processing).  This also means the type flag given to
-the callback function is @code{FTW_DP} and not @code{FTW_D}.
+If this option is specified then all subdirectories and files within
+them are processed before processing the top directory itself
+(depth-first processing).  This also means the type flag given to the
+callback function is @code{FTW_DP} and not @code{FTW_D}.
 @end vtable
 
 The return value is computed in the same way as for @code{ftw}.
-@code{nftw} return @math{0} if no failure occurred in @code{nftw} and
-all callback function call return values are also @math{0}.  For
-internal errors such as memory problems @math{-1} is returned and
-@var{errno} is set accordingly.  If the return value of a callback
-invocation is nonzero this very same value is returned.
+@code{nftw} returns @math{0} if no failures occurred and all callback
+functions returned @math{0}.  In case of internal errors, such as memory
+problems, the return value is @math{-1} and @var{errno} is set
+accordingly.  If the return value of a callback invocation was non-zero
+then that value is returned.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
-32 bits system this function is in fact @code{nftw64}.  I.e., the LFS
+32-bit system this function is in fact @code{nftw64}, i.e. the LFS
 interface transparently replaces the old interface.
 @end deftypefun
 
@@ -830,12 +826,12 @@ interface transparently replaces the old interface.
 @comment Unix98
 @deftypefun int nftw64 (const char *@var{filename}, __nftw64_func_t @var{func}, int @var{descriptors}, int @var{flag})
 This function is similar to @code{nftw} but it can work on filesystems
-with large files since the information about the files is reported using
-a variable of type @code{struct stat64} which is passed by reference to
-the callback function.
+with large files.  File information is reported using a variable of type
+@code{struct stat64} which is passed by reference to the callback
+function.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
-32 bits system this function is available under the name @code{nftw} and
+32-bit system this function is available under the name @code{nftw} and
 transparently replaces the old implementation.
 @end deftypefun
 
@@ -882,8 +878,8 @@ following @code{errno} error conditions are defined for this function:
 
 @table @code
 @item EACCES
-You are not allowed to write the directory in which the new link is to
-be written.
+You are not allowed to write to the directory in which the new link is
+to be written.
 @ignore
 Some implementations also require that the existing file be accessible
 by the caller, and use this error to report failure for that reason.
@@ -951,8 +947,8 @@ of on the link itself.
 By contrast, other operations such as deleting or renaming the file
 operate on the link itself.  The functions @code{readlink} and
 @code{lstat} also refrain from following symbolic links, because their
-purpose is to obtain information about the link.  So does @code{link},
-the function that makes a hard link---it makes a hard link to the
+purpose is to obtain information about the link.  @code{link}, the
+function that makes a hard link, does too.  It makes a hard link to the
 symbolic link, which one rarely wants.
 
 Prototypes for the functions listed in this section are in
@@ -1049,11 +1045,11 @@ A hardware error occurred while reading or writing data on the disk.
 @cindex removing a file
 @cindex unlinking a file
 
-You can delete a file with the functions @code{unlink} or @code{remove}.
+You can delete a file with @code{unlink} or @code{remove}.
 
 Deletion actually deletes a file name.  If this is the file's only name,
-then the file is deleted as well.  If the file has other names as well
-(@pxref{Hard Links}), it remains accessible under its other names.
+then the file is deleted as well.  If the file has other remaining names
+(@pxref{Hard Links}), it remains accessible under those names.
 
 @comment unistd.h
 @comment POSIX.1
@@ -1086,14 +1082,14 @@ system.
 The file name to be deleted doesn't exist.
 
 @item EPERM
-On some systems, @code{unlink} cannot be used to delete the name of a
-directory, or can only be used this way by a privileged user.
-To avoid such problems, use @code{rmdir} to delete directories.
-(In the GNU system @code{unlink} can never delete the name of a directory.)
+On some systems @code{unlink} cannot be used to delete the name of a
+directory, or at least can only be used this way by a privileged user.
+To avoid such problems, use @code{rmdir} to delete directories.  (In the
+GNU system @code{unlink} can never delete the name of a directory.)
 
 @item EROFS
-The directory in which the file name is to be deleted is on a read-only
-file system, and can't be modified.
+The directory containing the file name to be deleted is on a read-only
+file system and can't be modified.
 @end table
 @end deftypefun
 
@@ -1142,40 +1138,39 @@ The @code{rename} function is used to change a file's name.
 @comment stdio.h
 @comment ISO
 @deftypefun int rename (const char *@var{oldname}, const char *@var{newname})
-The @code{rename} function renames the file name @var{oldname} with
+The @code{rename} function renames the file @var{oldname} to
 @var{newname}.  The file formerly accessible under the name
-@var{oldname} is afterward accessible as @var{newname} instead.  (If the
-file had any other names aside from @var{oldname}, it continues to have
-those names.)
+@var{oldname} is afterwards accessible as @var{newname} instead.  (If
+the file had any other names aside from @var{oldname}, it continues to
+have those names.)
 
-The directory containing the name @var{newname} must be on the same
-file system as the file (as indicated by the name @var{oldname}).
+The directory containing the name @var{newname} must be on the same file
+system as the directory containing the name @var{oldname}.
 
 One special case for @code{rename} is when @var{oldname} and
 @var{newname} are two names for the same file.  The consistent way to
-handle this case is to delete @var{oldname}.  However, POSIX requires
-that in this case @code{rename} do nothing and report success---which is
-inconsistent.  We don't know what your operating system will do.
+handle this case is to delete @var{oldname}.  However, in this case
+POSIX requires that @code{rename} do nothing and report success---which
+is inconsistent.  We don't know what your operating system will do.
 
-If the @var{oldname} is not a directory, then any existing file named
+If @var{oldname} is not a directory, then any existing file named
 @var{newname} is removed during the renaming operation.  However, if
 @var{newname} is the name of a directory, @code{rename} fails in this
 case.
 
-If the @var{oldname} is a directory, then either @var{newname} must not
+If @var{oldname} is a directory, then either @var{newname} must not
 exist or it must name a directory that is empty.  In the latter case,
 the existing directory named @var{newname} is deleted first.  The name
 @var{newname} must not specify a subdirectory of the directory
 @code{oldname} which is being renamed.
 
-One useful feature of @code{rename} is that the meaning of the name
-@var{newname} changes ``atomically'' from any previously existing file
-by that name to its new meaning (the file that was called
-@var{oldname}).  There is no instant at which @var{newname} is
-nonexistent ``in between'' the old meaning and the new meaning.  If
-there is a system crash during the operation, it is possible for both
-names to still exist; but @var{newname} will always be intact if it
-exists at all.
+One useful feature of @code{rename} is that the meaning of @var{newname}
+changes ``atomically'' from any previously existing file by that name to
+its new meaning (i.e. the file that was called @var{oldname}).  There is
+no instant at which @var{newname} is non-existent ``in between'' the old
+meaning and the new meaning.  If there is a system crash during the
+operation, it is possible for both names to still exist; but
+@var{newname} will always be intact if it exists at all.
 
 If @code{rename} fails, it returns @code{-1}.  In addition to the usual
 file name errors (@pxref{File Name Errors}), the following
@@ -1199,16 +1194,17 @@ The directory @var{newname} isn't empty.  The GNU system always returns
 @code{ENOTEMPTY} for this, but some other systems return @code{EEXIST}.
 
 @item EINVAL
-The @var{oldname} is a directory that contains @var{newname}.
+@var{oldname} is a directory that contains @var{newname}.
 
 @item EISDIR
-The @var{newname} names a directory, but the @var{oldname} doesn't.
+@var{newname} is a directory but the @var{oldname} isn't.
 
 @item EMLINK
-The parent directory of @var{newname} would have too many links.
+The parent directory of @var{newname} would have too many links
+(entries).
 
 @item ENOENT
-The file named by @var{oldname} doesn't exist.
+The file @var{oldname} doesn't exist.
 
 @item ENOSPC
 The directory that would contain @var{newname} has no room for another
@@ -1219,7 +1215,7 @@ The operation would involve writing to a directory on a read-only file
 system.
 
 @item EXDEV
-The two file names @var{newname} and @var{oldnames} are on different
+The two file names @var{newname} and @var{oldname} are on different
 file systems.
 @end table
 @end deftypefun
@@ -1237,7 +1233,7 @@ a shell command @code{mkdir} which does the same thing.)
 @comment sys/stat.h
 @comment POSIX.1
 @deftypefun int mkdir (const char *@var{filename}, mode_t @var{mode})
-The @code{mkdir} function creates a new, empty directory whose name is
+The @code{mkdir} function creates a new, empty directory with name
 @var{filename}.
 
 The argument @var{mode} specifies the file permissions for the new
@@ -1258,7 +1254,7 @@ directory is to be added.
 A file named @var{filename} already exists.
 
 @item EMLINK
-The parent directory has too many links.
+The parent directory has too many links (entries).
 
 Well-designed file systems never report this error, because they permit
 more links than your disk could possibly hold.  However, you must still
@@ -1270,7 +1266,7 @@ The file system doesn't have enough room to create the new directory.
 
 @item EROFS
 The parent directory of the directory being created is on a read-only
-file system, and cannot be modified.
+file system and cannot be modified.
 @end table
 
 To use this function, your program should include the header file
@@ -1284,12 +1280,11 @@ To use this function, your program should include the header file
 @pindex ls
 When you issue an @samp{ls -l} shell command on a file, it gives you
 information about the size of the file, who owns it, when it was last
-modified, and the like.  This kind of information is called the
-@dfn{file attributes}; it is associated with the file itself and not a
-particular one of its names.
+modified, etc.  These are called the @dfn{file attributes}, and are
+associated with the file itself and not a particular one of its names.
 
 This section contains information about how you can inquire about and
-modify these attributes of files.
+modify the attributes of a file.
 
 @menu
 * Attribute Meanings::          The names of the file attributes,
@@ -1311,7 +1306,7 @@ modify these attributes of files.
 @end menu
 
 @node Attribute Meanings
-@subsection What the File Attribute Values Mean
+@subsection The meaning of the File Attributes
 @cindex status of a file
 @cindex attributes of a file
 @cindex file attributes
@@ -1361,10 +1356,9 @@ The user ID of the file's owner.  @xref{File Owner}.
 The group ID of the file.  @xref{File Owner}.
 
 @item off_t st_size
-This specifies the size of a regular file in bytes.  For files that
-are really devices and the like, this field isn't usually meaningful.
-For symbolic links, this specifies the length of the file name the link
-refers to.
+This specifies the size of a regular file in bytes.  For files that are
+really devices this field isn't usually meaningful.  For symbolic links
+this specifies the length of the file name the link refers to.
 
 @item time_t st_atime
 This is the last access time for the file.  @xref{File Times}.
@@ -1378,7 +1372,7 @@ This is the time of the last modification to the contents of the file.
 @xref{File Times}.
 
 @item unsigned long int st_mtime_usec
-This is the fractional part of the time of last modification to the
+This is the fractional part of the time of the last modification to the
 contents of the file.  @xref{File Times}.
 
 @item time_t st_ctime
@@ -1386,7 +1380,7 @@ This is the time of the last modification to the attributes of the file.
 @xref{File Times}.
 
 @item unsigned long int st_ctime_usec
-This is the fractional part of the time of last modification to the
+This is the fractional part of the time of the last modification to the
 attributes of the file.  @xref{File Times}.
 
 @c !!! st_rdev
@@ -1418,9 +1412,9 @@ writing the file.  (This is unrelated to @code{st_blocks}.)
 @end table
 @end deftp
 
-The extensions for the Large File Support (LFS) require even on 32 bits
-machine types which can handle file sizes up to @math{2^63}.  Therefore
-a new definition of @code{struct stat} is necessary.
+The extensions for the Large File Support (LFS) require, even on 32-bit
+machines, types which can handle file sizes up to @math{2^63}.
+Therefore a new definition of @code{struct stat} is necessary.
 
 @comment sys/stat.h
 @comment LFS
@@ -1460,10 +1454,9 @@ The user ID of the file's owner.  @xref{File Owner}.
 The group ID of the file.  @xref{File Owner}.
 
 @item off64_t st_size
-This specifies the size of a regular file in bytes.  For files that
-are really devices and the like, this field isn't usually meaningful.
-For symbolic links, this specifies the length of the file name the link
-refers to.
+This specifies the size of a regular file in bytes.  For files that are
+really devices this field isn't usually meaningful.  For symbolic links
+this specifies the length of the file name the link refers to.
 
 @item time_t st_atime
 This is the last access time for the file.  @xref{File Times}.
@@ -1477,7 +1470,7 @@ This is the time of the last modification to the contents of the file.
 @xref{File Times}.
 
 @item unsigned long int st_mtime_usec
-This is the fractional part of the time of last modification to the
+This is the fractional part of the time of the last modification to the
 contents of the file.  @xref{File Times}.
 
 @item time_t st_ctime
@@ -1485,7 +1478,7 @@ This is the time of the last modification to the attributes of the file.
 @xref{File Times}.
 
 @item unsigned long int st_ctime_usec
-This is the fractional part of the time of last modification to the
+This is the fractional part of the time of the last modification to the
 attributes of the file.  @xref{File Times}.
 
 @c !!! st_rdev
@@ -1583,15 +1576,15 @@ header file @file{sys/stat.h}.
 @comment POSIX.1
 @deftypefun int stat (const char *@var{filename}, struct stat *@var{buf})
 The @code{stat} function returns information about the attributes of the
-file named by @w{@var{filename}} in the structure pointed at by @var{buf}.
+file named by @w{@var{filename}} in the structure pointed to by @var{buf}.
 
 If @var{filename} is the name of a symbolic link, the attributes you get
 describe the file that the link points to.  If the link points to a
-nonexistent file name, then @code{stat} fails, reporting a nonexistent
+nonexistent file name, then @code{stat} fails reporting a nonexistent
 file.
 
-The return value is @code{0} if the operation is successful, and @code{-1}
-on failure.  In addition to the usual file name errors
+The return value is @code{0} if the operation is successful, or
+@code{-1} on failure.  In addition to the usual file name errors
 (@pxref{File Name Errors}, the following @code{errno} error conditions
 are defined for this function:
 
@@ -1609,13 +1602,13 @@ replaces the normal implementation.
 @comment Unix98
 @deftypefun int stat64 (const char *@var{filename}, struct stat64 *@var{buf})
 This function is similar to @code{stat} but it is also able to work on
-file larger then @math{2^31} bytes on 32 bits systems.  To be able to do
+files larger then @math{2^31} bytes on 32-bit systems.  To be able to do
 this the result is stored in a variable of type @code{struct stat64} to
 which @var{buf} must point.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
 function is available under the name @code{stat} and so transparently
-replaces the interface for small fiels on 32 bits machines.
+replaces the interface for small files on 32-bit machines.
 @end deftypefun
 
 @comment sys/stat.h
@@ -1642,15 +1635,15 @@ replaces the normal implementation.
 @comment sys/stat.h
 @comment Unix98
 @deftypefun int fstat64 (int @var{filedes}, struct stat64 *@var{buf})
-This function is similar to @code{fstat} but it is prepared to work on
-large files on 32 bits platforms.  For large files the file descriptor
-@var{filedes} should be returned by @code{open64} or @code{creat64}.
+This function is similar to @code{fstat} but is able to work on large
+files on 32-bit platforms.  For large files the file descriptor
+@var{filedes} should be obtained by @code{open64} or @code{creat64}.
 The @var{buf} pointer points to a variable of type @code{struct stat64}
 which is able to represent the larger values.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
 function is available under the name @code{fstat} and so transparently
-replaces the interface for small fiels on 32 bits machines.
+replaces the interface for small files on 32-bit machines.
 @end deftypefun
 
 @comment sys/stat.h
@@ -1658,7 +1651,7 @@ replaces the interface for small fiels on 32 bits machines.
 @deftypefun int lstat (const char *@var{filename}, struct stat *@var{buf})
 The @code{lstat} function is like @code{stat}, except that it does not
 follow symbolic links.  If @var{filename} is the name of a symbolic
-link, @code{lstat} returns information about the link itself; otherwise,
+link, @code{lstat} returns information about the link itself; otherwise
 @code{lstat} works like @code{stat}.  @xref{Symbolic Links}.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
@@ -1670,13 +1663,13 @@ replaces the normal implementation.
 @comment Unix98
 @deftypefun int lstat64 (const char *@var{filename}, struct stat64 *@var{buf})
 This function is similar to @code{lstat} but it is also able to work on
-file larger then @math{2^31} bytes on 32 bits systems.  To be able to do
+files larger then @math{2^31} bytes on 32-bit systems.  To be able to do
 this the result is stored in a variable of type @code{struct stat64} to
 which @var{buf} must point.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
 function is available under the name @code{lstat} and so transparently
-replaces the interface for small fiels on 32 bits machines.
+replaces the interface for small files on 32-bit machines.
 @end deftypefun
 
 @node Testing File Type
@@ -1685,17 +1678,16 @@ replaces the interface for small fiels on 32 bits machines.
 The @dfn{file mode}, stored in the @code{st_mode} field of the file
 attributes, contains two kinds of information: the file type code, and
 the access permission bits.  This section discusses only the type code,
-which you can use to tell whether the file is a directory, whether it is
-a socket, and so on.  For information about the access permission,
+which you can use to tell whether the file is a directory, socket,
+symbolic link, and so on.  For details about access permissions see
 @ref{Permission Bits}.
 
-There are two predefined ways you can access the file type portion of
-the file mode.  First of all, for each type of file, there is a
-@dfn{predicate macro} which examines a file mode value and returns
-true or false---is the file of that type, or not.  Secondly, you can
-mask out the rest of the file mode to get just a file type code.
-You can compare this against various constants for the supported file
-types.
+There are two ways you can access the file type information in a file
+mode.  Firstly, for each file type there is a @dfn{predicate macro}
+which examines a given file mode and returns whether it is of that type
+or not.  Secondly, you can mask out the rest of the file mode to leave
+just the file type code, and compare this against constants for each of
+the supported file types.
 
 All of the symbols listed in this section are defined in the header file
 @file{sys/stat.h}.
@@ -1708,53 +1700,53 @@ that file:
 @comment sys/stat.h
 @comment POSIX
 @deftypefn Macro int S_ISDIR (mode_t @var{m})
-This macro returns nonzero if the file is a directory.
+This macro returns non-zero if the file is a directory.
 @end deftypefn
 
 @comment sys/stat.h
 @comment POSIX
 @deftypefn Macro int S_ISCHR (mode_t @var{m})
-This macro returns nonzero if the file is a character special file (a
+This macro returns non-zero if the file is a character special file (a
 device like a terminal).
 @end deftypefn
 
 @comment sys/stat.h
 @comment POSIX
 @deftypefn Macro int S_ISBLK (mode_t @var{m})
-This macro returns nonzero if the file is a block special file (a device
+This macro returns non-zero if the file is a block special file (a device
 like a disk).
 @end deftypefn
 
 @comment sys/stat.h
 @comment POSIX
 @deftypefn Macro int S_ISREG (mode_t @var{m})
-This macro returns nonzero if the file is a regular file.
+This macro returns non-zero if the file is a regular file.
 @end deftypefn
 
 @comment sys/stat.h
 @comment POSIX
 @deftypefn Macro int S_ISFIFO (mode_t @var{m})
-This macro returns nonzero if the file is a FIFO special file, or a
+This macro returns non-zero if the file is a FIFO special file, or a
 pipe.  @xref{Pipes and FIFOs}.
 @end deftypefn
 
 @comment sys/stat.h
 @comment GNU
 @deftypefn Macro int S_ISLNK (mode_t @var{m})
-This macro returns nonzero if the file is a symbolic link.
+This macro returns non-zero if the file is a symbolic link.
 @xref{Symbolic Links}.
 @end deftypefn
 
 @comment sys/stat.h
 @comment GNU
 @deftypefn Macro int S_ISSOCK (mode_t @var{m})
-This macro returns nonzero if the file is a socket.  @xref{Sockets}.
+This macro returns non-zero if the file is a socket.  @xref{Sockets}.
 @end deftypefn
 
 An alternate non-POSIX method of testing the file type is supported for
-compatibility with BSD.  The mode can be bitwise ANDed with
+compatibility with BSD.  The mode can be bitwise AND-ed with
 @code{S_IFMT} to extract the file type code, and compared to the
-appropriate type code constant.  For example,
+appropriate constant.  For example,
 
 @smallexample
 S_ISCHR (@var{mode})
@@ -1770,8 +1762,7 @@ is equivalent to:
 @comment sys/stat.h
 @comment BSD
 @deftypevr Macro int S_IFMT
-This is a bit mask used to extract the file type code portion of a mode
-value.
+This is a bit mask used to extract the file type code from a mode value.
 @end deftypevr
 
 These are the symbolic names for the different file type codes:
@@ -1781,45 +1772,43 @@ These are the symbolic names for the different file type codes:
 @comment BSD
 @item S_IFDIR
 @vindex S_IFDIR
-This macro represents the value of the file type code for a directory file.
+This is the file type constant of a directory file.
 
 @comment sys/stat.h
 @comment BSD
 @item S_IFCHR
 @vindex S_IFCHR
-This macro represents the value of the file type code for a
-character-oriented device file.
+This is the file type constant of a character-oriented device file.
 
 @comment sys/stat.h
 @comment BSD
 @item S_IFBLK
 @vindex S_IFBLK
-This macro represents the value of the file type code for a block-oriented
-device file.
+This is the file type constant of a block-oriented device file.
 
 @comment sys/stat.h
 @comment BSD
 @item S_IFREG
 @vindex S_IFREG
-This macro represents the value of the file type code for a regular file.
+This is the file type constant of a regular file.
 
 @comment sys/stat.h
 @comment BSD
 @item S_IFLNK
 @vindex S_IFLNK
-This macro represents the value of the file type code for a symbolic link.
+This is the file type constant of a symbolic link.
 
 @comment sys/stat.h
 @comment BSD
 @item S_IFSOCK
 @vindex S_IFSOCK
-This macro represents the value of the file type code for a socket.
+This is the file type constant of a socket.
 
 @comment sys/stat.h
 @comment BSD
 @item S_IFIFO
 @vindex S_IFIFO
-This macro represents the value of the file type code for a FIFO or pipe.
+This is the file type constant of a FIFO or pipe.
 @end table
 
 @node File Owner
@@ -1829,26 +1818,25 @@ This macro represents the value of the file type code for a FIFO or pipe.
 @cindex group owner of a file
 
 Every file has an @dfn{owner} which is one of the registered user names
-defined on the system.  Each file also has a @dfn{group}, which is one
-of the defined groups.  The file owner can often be useful for showing
-you who edited the file (especially when you edit with GNU Emacs), but
-its main purpose is for access control.
+defined on the system.  Each file also has a @dfn{group} which is one of
+the defined groups.  The file owner can often be useful for showing you
+who edited the file (especially when you edit with GNU Emacs), but its
+main purpose is for access control.
 
 The file owner and group play a role in determining access because the
-file has one set of access permission bits for the user that is the
-owner, another set that apply to users who belong to the file's group,
-and a third set of bits that apply to everyone else.  @xref{Access
-Permission}, for the details of how access is decided based on this
-data.
+file has one set of access permission bits for the owner, another set
+that applies to users who belong to the file's group, and a third set of
+bits that applies to everyone else.  @xref{Access Permission} for the
+details of how access is decided based on this data.
 
-When a file is created, its owner is set from the effective user ID of
-the process that creates it (@pxref{Process Persona}).  The file's group
-ID may be set from either effective group ID of the process, or the
-group ID of the directory that contains the file, depending on the
-system where the file is stored.  When you access a remote file system,
-it behaves according to its own rule, not according to the system your
+When a file is created, its owner is set to the effective user ID of the
+process that creates it (@pxref{Process Persona}).  The file's group ID
+may be set to either the effective group ID of the process, or the group
+ID of the directory that contains the file, depending on the system
+where the file is stored.  When you access a remote file system, it
+behaves according to its own rules, not according to the system your
 program is running on.  Thus, your program must be prepared to encounter
-either kind of behavior, no matter what kind of system you run it on.
+either kind of behavior no matter what kind of system you run it on.
 
 @pindex chown
 @pindex chgrp
@@ -1866,9 +1854,9 @@ The @code{chown} function changes the owner of the file @var{filename} to
 @var{owner}, and its group owner to @var{group}.
 
 Changing the owner of the file on certain systems clears the set-user-ID
-and set-group-ID bits of the file's permissions.  (This is because those
-bits may not be appropriate for the new owner.)  The other file
-permission bits are not changed.
+and set-group-ID permission bits.  (This is because those bits may not
+be appropriate for the new owner.)  Other file permission bits are not
+changed.
 
 The return value is @code{0} on success and @code{-1} on failure.
 In addition to the usual file name errors (@pxref{File Name Errors}),
@@ -1896,8 +1884,8 @@ The file is on a read-only file system.
 @comment unistd.h
 @comment BSD
 @deftypefun int fchown (int @var{filedes}, int @var{owner}, int @var{group})
-This is like @code{chown}, except that it changes the owner of the file
-with open file descriptor @var{filedes}.
+This is like @code{chown}, except that it changes the owner of the open
+file with descriptor @var{filedes}.
 
 The return value from @code{fchown} is @code{0} on success and @code{-1}
 on failure.  The following @code{errno} error codes are defined for this
@@ -1912,8 +1900,8 @@ The @var{filedes} argument corresponds to a pipe or socket, not an ordinary
 file.
 
 @item EPERM
-This process lacks permission to make the requested change.  For
-details, see @code{chmod}, above.
+This process lacks permission to make the requested change.  For details
+see @code{chmod} above.
 
 @item EROFS
 The file resides on a read-only file system.
@@ -1927,7 +1915,7 @@ The @dfn{file mode}, stored in the @code{st_mode} field of the file
 attributes, contains two kinds of information: the file type code, and
 the access permission bits.  This section discusses only the access
 permission bits, which control who can read or write the file.
-@xref{Testing File Type}, for information about the file type code.
+@xref{Testing File Type} for information about the file type code.
 
 All of the symbols listed in this section are defined in the header file
 @file{sys/stat.h}.
@@ -1946,8 +1934,8 @@ access permission for the file:
 @comment BSD
 @itemx S_IREAD
 @vindex S_IREAD
-Read permission bit for the owner of the file.  On many systems, this
-bit is 0400.  @code{S_IREAD} is an obsolete synonym provided for BSD
+Read permission bit for the owner of the file.  On many systems this bit
+is 0400.  @code{S_IREAD} is an obsolete synonym provided for BSD
 compatibility.
 
 @comment sys/stat.h
@@ -2049,16 +2037,16 @@ This is the set-group-ID on execute bit, usually 02000.
 @vindex S_ISVTX
 This is the @dfn{sticky} bit, usually 01000.
 
-On a directory, it gives permission to delete a file in the directory
-only if you own that file.  Ordinarily, a user either can delete all the
-files in the directory or cannot delete any of them (based on whether
-the user has write permission for the directory).  The same restriction
-applies---you must both have write permission for the directory and own
+For a directory it gives permission to delete a file in that directory
+only if you own that file.  Ordinarily, a user can either delete all the
+files in a directory or cannot delete any of them (based on whether the
+user has write permission for the directory).  The same restriction
+applies---you must have both write permission for the directory and own
 the file you want to delete.  The one exception is that the owner of the
 directory can delete any file in the directory, no matter who owns it
 (provided the owner has given himself write permission for the
 directory).  This is commonly used for the @file{/tmp} directory, where
-anyone may create files, but not delete files created by other users.
+anyone may create files but not delete files created by other users.
 
 Originally the sticky bit on an executable file modified the swapping
 policies of the system.  Normally, when a program terminated, its pages
@@ -2082,10 +2070,10 @@ it means the opposite: never cache the pages of this file at all.  The
 main use of this is for the files on an NFS server machine which are
 used as the swap area of diskless client machines.  The idea is that the
 pages of the file will be cached in the client's memory, so it is a
-waste of the server's memory to cache them a second time.  In this use
-the sticky bit also says that the filesystem may fail to record the
-file's modification time onto disk reliably (the idea being that no-one
-cares for a swap file).
+waste of the server's memory to cache them a second time.  With this
+usage the sticky bit also implies that the filesystem may fail to record
+the file's modification time onto disk reliably (the idea being that
+no-one cares for a swap file).
 
 This bit is only available on BSD systems (and those derived from
 them).  Therefore one has to use the @code{_BSD_SOURCE} feature select
@@ -2098,9 +2086,9 @@ These bit values are correct for most systems, but they are not
 guaranteed.
 
 @strong{Warning:} Writing explicit numbers for file permissions is bad
-practice.  It is not only non-portable, it also requires everyone who
-reads your program to remember what the bits mean.  To make your
-program clean, use the symbolic names.
+practice.  Not only is it not portable, it also requires everyone who
+reads your program to remember what the bits mean.  To make your program
+clean use the symbolic names.
 
 @node Access Permission
 @subsection How Your Access to a File is Decided
@@ -2109,10 +2097,10 @@ program clean, use the symbolic names.
 @cindex file access permission
 
 Recall that the operating system normally decides access permission for
-a file based on the effective user and group IDs of the process, and its
+a file based on the effective user and group IDs of the process and its
 supplementary group IDs, together with the file's owner, group and
-permission bits.  These concepts are discussed in detail in
-@ref{Process Persona}.
+permission bits.  These concepts are discussed in detail in @ref{Process
+Persona}.
 
 If the effective user ID of the process matches the owner user ID of the
 file, then permissions for read, write, and execute/search are
@@ -2122,10 +2110,9 @@ process matches the group owner ID of the file, then permissions are
 controlled by the ``group'' bits.  Otherwise, permissions are controlled
 by the ``other'' bits.
 
-Privileged users, like @samp{root}, can access any file, regardless of
-its file permission bits.  As a special case, for a file to be
-executable even for a privileged user, at least one of its execute bits
-must be set.
+Privileged users, like @samp{root}, can access any file regardless of
+its permission bits.  As a special case, for a file to be executable
+even by a privileged user, at least one of its execute bits must be set.
 
 @node Setting Permissions
 @subsection Assigning File Permissions
@@ -2134,18 +2121,17 @@ must be set.
 @cindex umask
 The primitive functions for creating files (for example, @code{open} or
 @code{mkdir}) take a @var{mode} argument, which specifies the file
-permissions for the newly created file.  But the specified mode is
-modified by the process's @dfn{file creation mask}, or @dfn{umask},
-before it is used.
+permissions to give the newly created file.  This mode is modified by
+the process's @dfn{file creation mask}, or @dfn{umask}, before it is
+used.
 
 The bits that are set in the file creation mask identify permissions
 that are always to be disabled for newly created files.  For example, if
 you set all the ``other'' access bits in the mask, then newly created
-files are not accessible at all to processes in the ``other''
-category, even if the @var{mode} argument specified to the creation
-function would permit such access.  In other words, the file creation
-mask is the complement of the ordinary access permissions you want to
-grant.
+files are not accessible at all to processes in the ``other'' category,
+even if the @var{mode} argument passed to the create function would
+permit such access.  In other words, the file creation mask is the
+complement of the ordinary access permissions you want to grant.
 
 Programs that create files typically specify a @var{mode} argument that
 includes all the permissions that make sense for the particular file.
@@ -2155,22 +2141,21 @@ specified by the individual user's own file creation mask.
 
 @findex chmod
 To change the permission of an existing file given its name, call
-@code{chmod}.  This function ignores the file creation mask; it uses
-exactly the specified permission bits.
+@code{chmod}.  This function uses the specified permission bits and
+ignores the file creation mask.
 
 @pindex umask
-In normal use, the file creation mask is initialized in the user's login
+In normal use, the file creation mask is initialized by the user's login
 shell (using the @code{umask} shell command), and inherited by all
 subprocesses.  Application programs normally don't need to worry about
-the file creation mask.  It will do automatically what it is supposed to
+the file creation mask.  It will automatically do what it is supposed to
 do.
 
-When your program should create a file and bypass the umask for its
+When your program needs to create a file and bypass the umask for its
 access permissions, the easiest way to do this is to use @code{fchmod}
-after opening the file, rather than changing the umask.
-
-In fact, changing the umask is usually done only by shells.  They use
-the @code{umask} function.
+after opening the file, rather than changing the umask.  In fact,
+changing the umask is usually done only by shells.  They use the
+@code{umask} function.
 
 The functions in this section are declared in @file{sys/stat.h}.
 @pindex sys/stat.h
@@ -2197,7 +2182,7 @@ read_umask (void)
 
 @noindent
 However, it is better to use @code{getumask} if you just want to read
-the mask value, because that is reentrant (at least if you use the GNU
+the mask value, because it is reentrant (at least if you use the GNU
 operating system).
 @end deftypefun
 
@@ -2214,8 +2199,8 @@ process.  This function is a GNU extension.
 The @code{chmod} function sets the access permission bits for the file
 named by @var{filename} to @var{mode}.
 
-If the @var{filename} names a symbolic link, @code{chmod} changes the
-permission of the file pointed to by the link, not those of the link
+If @var{filename} is a symbolic link, @code{chmod} changes the
+permissions of the file pointed to by the link, not those of the link
 itself.
 
 This function returns @code{0} if successful and @code{-1} if not.  In
@@ -2228,9 +2213,9 @@ this function:
 The named file doesn't exist.
 
 @item EPERM
-This process does not have permission to change the access permission of
-this file.  Only the file's owner (as judged by the effective user ID of
-the process) or a privileged user can change them.
+This process does not have permission to change the access permissions
+of this file.  Only the file's owner (as judged by the effective user ID
+of the process) or a privileged user can change them.
 
 @item EROFS
 The file resides on a read-only file system.
@@ -2251,8 +2236,8 @@ for full details on the sticky bit.
 @comment sys/stat.h
 @comment BSD
 @deftypefun int fchmod (int @var{filedes}, int @var{mode})
-This is like @code{chmod}, except that it changes the permissions of
-the file currently open via descriptor @var{filedes}.
+This is like @code{chmod}, except that it changes the permissions of the
+currently open file given by @var{filedes}.
 
 The return value from @code{fchmod} is @code{0} on success and @code{-1}
 on failure.  The following @code{errno} error codes are defined for this
@@ -2267,9 +2252,9 @@ The @var{filedes} argument corresponds to a pipe or socket, or something
 else that doesn't really have access permissions.
 
 @item EPERM
-This process does not have permission to change the access permission of
-this file.  Only the file's owner (as judged by the effective user ID of
-the process) or a privileged user can change them.
+This process does not have permission to change the access permissions
+of this file.  Only the file's owner (as judged by the effective user ID
+of the process) or a privileged user can change them.
 
 @item EROFS
 The file resides on a read-only file system.
@@ -2288,11 +2273,9 @@ files off-limits to ordinary users---for example, to modify
 access such files use the setuid bit feature so that they always run
 with @code{root} as the effective user ID.
 
-Such a program may also access files specified by the user, files which
-conceptually are being accessed explicitly by the user.  Since the
-program runs as @code{root}, it has permission to access whatever file
-the user specifies---but usually the desired behavior is to permit only
-those files which the user could ordinarily access.
+Since the program runs as @code{root}, it has permission to access
+whatever file the user specifies---but usually the desired behavior is
+to permit only those files which the user could ordinarily access.
 
 The program therefore must explicitly check whether @emph{the user}
 would have the necessary access to a file, before it reads or writes the
@@ -2328,8 +2311,8 @@ argument.  The @var{how} argument either can be the bitwise OR of the
 flags @code{R_OK}, @code{W_OK}, @code{X_OK}, or the existence test
 @code{F_OK}.
 
-This function uses the @emph{real} user and group ID's of the calling
-process, rather than the @emph{effective} ID's, to check for access
+This function uses the @emph{real} user and group IDs of the calling
+process, rather than the @emph{effective} IDs, to check for access
 permission.  As a result, if you use the function from a @code{setuid}
 or @code{setgid} program (@pxref{How Change Persona}), it gives
 information relative to the user who actually ran the program.
@@ -2362,25 +2345,25 @@ are integer constants.
 @comment unistd.h
 @comment POSIX.1
 @deftypevr Macro int R_OK
-Argument that means, test for read permission.
+Flag meaning test for read permission.
 @end deftypevr
 
 @comment unistd.h
 @comment POSIX.1
 @deftypevr Macro int W_OK
-Argument that means, test for write permission.
+Flag meaning test for write permission.
 @end deftypevr
 
 @comment unistd.h
 @comment POSIX.1
 @deftypevr Macro int X_OK
-Argument that means, test for execute/search permission.
+Flag meaning test for execute/search permission.
 @end deftypevr
 
 @comment unistd.h
 @comment POSIX.1
 @deftypevr Macro int F_OK
-Argument that means, test for existence of the file.
+Flag meaning test for existence of the file.
 @end deftypevr
 
 @node File Times
@@ -2410,13 +2393,13 @@ Adding a new name for a file with the @code{link} function updates the
 attribute change time field of the file being linked, and both the
 attribute change time and modification time fields of the directory
 containing the new name.  These same fields are affected if a file name
-is deleted with @code{unlink}, @code{remove}, or @code{rmdir}.  Renaming
+is deleted with @code{unlink}, @code{remove} or @code{rmdir}.  Renaming
 a file with @code{rename} affects only the attribute change time and
 modification time fields of the two parent directories involved, and not
 the times for the file being renamed.
 
-Changing attributes of a file (for example, with @code{chmod}) updates
-its attribute change time field.
+Changing the attributes of a file (for example, with @code{chmod})
+updates its attribute change time field.
 
 You can also change some of the time stamps of a file explicitly using
 the @code{utime} function---all except the attribute change time.  You
@@ -2448,7 +2431,7 @@ named @var{filename}.
 If @var{times} is a null pointer, then the access and modification times
 of the file are set to the current time.  Otherwise, they are set to the
 values from the @code{actime} and @code{modtime} members (respectively)
-of the @code{utimbuf} structure pointed at by @var{times}.
+of the @code{utimbuf} structure pointed to by @var{times}.
 
 The attribute modification time for the file is set to the current time
 in either case (since changing the time stamps is itself a modification
@@ -2464,15 +2447,14 @@ are defined for this function:
 There is a permission problem in the case where a null pointer was
 passed as the @var{times} argument.  In order to update the time stamp on
 the file, you must either be the owner of the file, have write
-permission on the file, or be a privileged user.
+permission for the file, or be a privileged user.
 
 @item ENOENT
 The file doesn't exist.
 
 @item EPERM
 If the @var{times} argument is not a null pointer, you must either be
-the owner of the file or be a privileged user.  This error is used to
-report the problem.
+the owner of the file or be a privileged user.
 
 @item EROFS
 The file lives on a read-only file system.
@@ -2494,8 +2476,8 @@ in the header file @file{sys/time.h}.
 @comment sys/time.h
 @comment BSD
 @deftypefun int utimes (const char *@var{filename}, struct timeval @var{tvp}@t{[2]})
-This function sets the file access and modification times for the file
-named by @var{filename}.  The new file access time is specified by
+This function sets the file access and modification times of the file
+@var{filename}.  The new file access time is specified by
 @code{@var{tvp}[0]}, and the new modification time by
 @code{@var{tvp}[1]}.  This function comes from BSD.
 
@@ -2507,11 +2489,11 @@ function.
 @subsection File Size
 
 Normally file sizes are maintained automatically.  A file begins with a
-size of @math{0} and is automatically extended when data is written
-past its end.  It is also possible to empty a file completely in an
+size of @math{0} and is automatically extended when data is written past
+its end.  It is also possible to empty a file completely by an
 @code{open} or @code{fopen} call.
 
-However, sometimes it is neccessary to @emph{reduce} the size of a file.
+However, sometimes it is necessary to @emph{reduce} the size of a file.
 This can be done with the @code{truncate} and @code{ftruncate} functions.
 They were introduced in BSD Unix.  @code{ftruncate} was later added to
 POSIX.1.
@@ -2519,8 +2501,8 @@ POSIX.1.
 Some systems allow you to extend a file (creating holes) with these
 functions.  This is useful when using memory-mapped I/O
 (@pxref{Memory-mapped I/O}), where files are not automatically extended.
-However it is not portable but must be implemented if @code{mmap} allows
-mapping of files (i.e., @code{_POSIX_MAPPED_FILES} is defined).
+However, it is not portable but must be implemented if @code{mmap}
+allows mapping of files (i.e., @code{_POSIX_MAPPED_FILES} is defined).
 
 Using these functions on anything other than a regular file gives
 @emph{undefined} results.  On many systems, such a call will appear to
@@ -2558,7 +2540,7 @@ The file is a directory or not writable.
 The operation would extend the file beyond the limits of the operating system.
 
 @item EIO
-A hardware I/O error occured.
+A hardware I/O error occurred.
 
 @item EPERM
 The file is "append-only" or "immutable".
@@ -2620,7 +2602,7 @@ following errors may occur:
 @var{fd} does not correspond to an open file.
 
 @item EACCES
-@var{fd} is a directory or not open for write.
+@var{fd} is a directory or not open for writing.
 
 @item EINVAL
 @var{length} is negative.
@@ -2631,7 +2613,7 @@ The operation would extend the file beyond the limits of the operating system.
 @c files with extra-large offsets.
 
 @item EIO
-A hardware I/O error occured.
+A hardware I/O error occurred.
 
 @item EPERM
 The file is "append-only" or "immutable".
@@ -2660,7 +2642,7 @@ When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} on a
 @code{ftruncate} and so transparently replaces the 32 bits interface.
 @end deftypefun
 
-As announced here is a little example how to use @code{ftruncate} in
+As announced here is a little example of how to use @code{ftruncate} in
 combination with @code{mmap}:
 
 @smallexample
@@ -2690,12 +2672,12 @@ add (off_t at, void *block, size_t size)
 @}
 @end smallexample
 
-The function @code{add} allows to add at arbitrary positions in the file
-given blocks of memory.  If the current size of the file is too small it
-is extended.  Please note the it is extended in multiples of a pagesize.
-This is a requirement of @code{mmap}.  The program has to track the real
-size and once the program finished to work a final @code{ftruncate} call
-should set the real size of the file.
+The function @code{add} writes a block of memory at an arbitrary
+position in the file.  If the current size of the file is too small it
+is extended.  Note the it is extended by a round number of pages.  This
+is a requirement of @code{mmap}.  The program has to keep track of the
+real size, and when it has finished a final @code{ftruncate} call should
+set the real size of the file.
 
 @node Making Special Files
 @section Making Special Files
@@ -2748,13 +2730,13 @@ this file, you must remove the old file explicitly first.
 
 If you need to use a temporary file in your program, you can use the
 @code{tmpfile} function to open it.  Or you can use the @code{tmpnam}
-(better: @code{tmpnam_r}) function to make a name for a temporary file and
-then you can open it in the usual way with @code{fopen}.
+(better: @code{tmpnam_r}) function to provide a name for a temporary
+file and then you can open it in the usual way with @code{fopen}.
 
 The @code{tempnam} function is like @code{tmpnam} but lets you choose
 what directory temporary files will go in, and something about what
-their file names will look like.  Important for multi threaded programs
-is that @code{tempnam} is reentrant while @code{tmpnam} is not since it
+their file names will look like.  Important for multi-threaded programs
+is that @code{tempnam} is reentrant, while @code{tmpnam} is not since it
 returns a pointer to a static buffer.
 
 These facilities are declared in the header file @file{stdio.h}.
@@ -2772,16 +2754,16 @@ terminates abnormally).
 This function is reentrant.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
-32 bits system this function is in fact @code{tmpfile64}.  I.e., the
-LFS interface transparently replaces the old interface.
+32-bit system this function is in fact @code{tmpfile64}, i.e. the LFS
+interface transparently replaces the old interface.
 @end deftypefun
 
 @comment stdio.h
 @comment Unix98
 @deftypefun {FILE *} tmpfile64 (void)
-This function is similar to @code{tmpfile} but the stream it returns a
-pointer for is opened using @code{tmpfile64}.  Therefore this stream can be
-used even on files larger then @math{2^31} bytes on 32 bits machines.
+This function is similar to @code{tmpfile}, but the stream it returns a
+pointer to was opened using @code{tmpfile64}.  Therefore this stream can
+be used for files larger then @math{2^31} bytes on 32-bit machines.
 
 Please note that the return type is still @code{FILE *}.  There is no
 special @code{FILE} type for the LFS interface.
@@ -2794,44 +2776,43 @@ and so transparently replaces the old interface.
 @comment stdio.h
 @comment ISO
 @deftypefun {char *} tmpnam (char *@var{result})
-This function constructs and returns a file name that is a valid file
-name and that does not name any existing file.  If the @var{result}
-argument is a null pointer, the return value is a pointer to an internal
-static string, which might be modified by subsequent calls and therefore
-makes this function non-reentrant.  Otherwise, the @var{result} argument
-should be a pointer to an array of at least @code{L_tmpnam} characters,
-and the result is written into that array.
+This function constructs and returns a valid file name that does not
+refer to any existing file.  If the @var{result} argument is a null
+pointer, the return value is a pointer to an internal static string,
+which might be modified by subsequent calls and therefore makes this
+function non-reentrant.  Otherwise, the @var{result} argument should be
+a pointer to an array of at least @code{L_tmpnam} characters, and the
+result is written into that array.
 
 It is possible for @code{tmpnam} to fail if you call it too many times
-without removing previously created files.  This is because the fixed
-length of a temporary file name gives room for only a finite number of
-different names.  If @code{tmpnam} fails, it returns a null pointer.
+without removing previously-created files.  This is because the limited
+length of the temporary file names gives room for only a finite number
+of different names.  If @code{tmpnam} fails it returns a null pointer.
 
-@strong{Warning:} Since between the time the pathname is constructed and
-the file is created another process might have created a file with this
-name using @code{tmpnam} is a possible security hole.  The
-implementation generates names which hardly can be predicted but opening
-the file in any case should use the @code{O_EXCL} flag.  Using
+@strong{Warning:} Between the time the pathname is constructed and the
+file is created another process might have created a file with the same
+name using @code{tmpnam}, leading to a possible security hole.  The
+implementation generates names which can hardly be predicted, but when
+opening the file you should use the @code{O_EXCL} flag.  Using
 @code{tmpfile} is a safe way to avoid this problem.
 @end deftypefun
 
 @comment stdio.h
 @comment GNU
 @deftypefun {char *} tmpnam_r (char *@var{result})
-This function is nearly identical to the @code{tmpnam} function.  But it
-does not allow @var{result} to be a null pointer.  In the later case a
-null pointer is returned.
+This function is nearly identical to the @code{tmpnam} function, except
+that if @var{result} is a null pointer it returns a null pointer.
 
-This function is reentrant because the non-reentrant situation of
+This guarantees reentrancy because the non-reentrant situation of
 @code{tmpnam} cannot happen here.
 @end deftypefun
 
 @comment stdio.h
 @comment ISO
 @deftypevr Macro int L_tmpnam
-The value of this macro is an integer constant expression that represents
-the minimum allocation size of a string large enough to hold the
-file name generated by the @code{tmpnam} function.
+The value of this macro is an integer constant expression that
+represents the minimum size of a string large enough to hold a file name
+generated by the @code{tmpnam} function.
 @end deftypevr
 
 @comment stdio.h
@@ -2843,26 +2824,26 @@ you can create with @code{tmpnam}.  You can rely on being able to call
 have made too many temporary file names.
 
 With the GNU library, you can create a very large number of temporary
-file names---if you actually create the files, you will probably run out
-of disk space before you run out of names.  Some other systems have a
-fixed, small limit on the number of temporary files.  The limit is never
-less than @code{25}.
+file names.  If you actually created the files, you would probably run
+out of disk space before you ran out of names.  Some other systems have
+a fixed, small limit on the number of temporary files.  The limit is
+never less than @code{25}.
 @end deftypevr
 
 @comment stdio.h
 @comment SVID
 @deftypefun {char *} tempnam (const char *@var{dir}, const char *@var{prefix})
-This function generates a unique temporary filename.  If @var{prefix} is
-not a null pointer, up to five characters of this string are used as a
-prefix for the file name.  The return value is a string newly allocated
-with @code{malloc}; you should release its storage with @code{free} when
-it is no longer needed.
+This function generates a unique temporary file name.  If @var{prefix}
+is not a null pointer, up to five characters of this string are used as
+a prefix for the file name.  The return value is a string newly
+allocated with @code{malloc}, so you should release its storage with
+@code{free} when it is no longer needed.
 
 Because the string is dynamically allocated this function is reentrant.
 
-The directory prefix for the temporary file name is determined by testing
-each of the following, in sequence.  The directory must exist and be
-writable.
+The directory prefix for the temporary file name is determined by
+testing each of the following in sequence.  The directory must exist and
+be writable.
 
 @itemize @bullet
 @item
@@ -2914,11 +2895,11 @@ name, it makes @var{template} an empty string and returns that.  If
 @var{template} does not end with @samp{XXXXXX}, @code{mktemp} returns a
 null pointer.
 
-@strong{Warning:} Since between the time the pathname is constructed and
-the file is created another process might have created a file with this
-name using @code{mktemp} is a possible security hole.  The
-implementation generates names which hardly can be predicted but opening
-the file in any case should use the @code{O_EXCL} flag.  Using
+@strong{Warning:} Between the time the pathname is constructed and the
+file is created another process might have created a file with the same
+name using @code{mktemp}, leading to a possible security hole.  The
+implementation generates names which can hardly be predicted, but when
+opening the file you should use the @code{O_EXCL} flag.  Using
 @code{mkstemp} is a safe way to avoid this problem.
 @end deftypefun
 
@@ -2928,21 +2909,21 @@ the file in any case should use the @code{O_EXCL} flag.  Using
 The @code{mkstemp} function generates a unique file name just as
 @code{mktemp} does, but it also opens the file for you with @code{open}
 (@pxref{Opening and Closing Files}).  If successful, it modifies
-@var{template} in place and returns a file descriptor open on that file
+@var{template} in place and returns a file descriptor for that file open
 for reading and writing.  If @code{mkstemp} cannot create a
 uniquely-named file, it returns @code{-1}.  If @var{template} does not
 end with @samp{XXXXXX}, @code{mkstemp} returns @code{-1} and does not
 modify @var{template}.
 
 The file is opened using mode @code{0600}.  If the file is meant to be
-used by other users the mode must be changed explicitly.
+used by other users this mode must be changed explicitly.
 @end deftypefun
 
 Unlike @code{mktemp}, @code{mkstemp} is actually guaranteed to create a
 unique file that cannot possibly clash with any other program trying to
 create a temporary file.  This is because it works by calling
-@code{open} with the @code{O_EXCL} flag bit, which says you want to
-always create a new file, and get an error if the file already exists.
+@code{open} with the @code{O_EXCL} flag, which says you want to create a
+new file and get an error if the file already exists.
 
 @comment stdlib.h
 @comment BSD

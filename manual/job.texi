@@ -1298,7 +1298,7 @@ process.
 @comment Unix98
 @deftypefun pid_t tcgetsid (int @var{fildes})
 This function is used to obtain the process group ID of the session
-for which terminal specified by @var{fildes} is the controlling terminal.
+for which the terminal specified by @var{fildes} is the controlling terminal.
 If the call is successful the group ID is returned.  Otherwise the
 return value is @code{(pid_t) -1} and the global variable @var{errno}
 is set to the following value:
@@ -1308,6 +1308,6 @@ The @var{filedes} argument is not a valid file descriptor.
 
 @item ENOTTY
 The calling process does not have a controlling terminal, or the file
-ins not the controlling terminal.
+is not the controlling terminal.
 @end table
 @end deftypefun
