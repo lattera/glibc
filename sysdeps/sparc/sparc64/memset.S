@@ -38,11 +38,9 @@
 	.text
 	.align		32
 ENTRY(memset)
-#ifndef USE_BPR
-	srl		%o1, 0, %o1
+	andcc		%o1, 0xff, %o1
 	mov		%o0, %g3
-#endif
-	brz,a,pt	%o1, 50f
+	be,a,pt		%icc, 50f
 #ifndef USE_BPR
 	 srl		%o2, 0, %o1
 #else

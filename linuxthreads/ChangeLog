@@ -1,3 +1,9 @@
+1999-05-18  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	* sysdeps/sparc/sparc64/pt-machine.h (__compare_and_swap): Use
+	casx not cas, also successful casx returns the old value in rd
+	and not the new value.
+
 1999-05-16  Xavier Leroy  <Xavier.Leroy@inria.fr>
 
 	* manager.c: If pthread_create() is given a NULL attribute

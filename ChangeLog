@@ -1,3 +1,13 @@
+1999-05-18  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	* sysdeps/sparc/sparc64/rawmemchr.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/rawmemchr.S: New file.
+
+	* sysdeps/sparc/sparc64/memchr.S: Fix if the second argument
+	contains garbage in bits 8-63.
+	* sysdeps/sparc/sparc64/memset.S: Ditto.
+	* sysdeps/sparc/sparc64/strchr.S: Ditto.
+
 1999-05-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/wordsize-64/stdint.h (INTPTR_MAX): Add missing ).

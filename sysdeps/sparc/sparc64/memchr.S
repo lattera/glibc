@@ -56,37 +56,37 @@
 	.text
 	.align		32
 ENTRY(memchr)
-	sll		%o1, 8, %g3			/* IEU0		Group		*/
+	and		%o1, 0xff, %o1			/* IEU0		Group		*/
 #ifdef USE_BPR
 	brz,pn		%o2, 12f			/* CTI+IEU1			*/
 #else
 	tst		%o2				/* IEU1				*/
 	be,pn		%XCC, 12f			/* CTI				*/
-	 srl		%o1, 0, %o1			/* IEU0				*/
 #endif
-	 add		%o0, %o2, %o2			/* IEU0		Group		*/
-	sethi		%hi(0x01010101), %g1		/* IEU1				*/
+	 sll		%o1, 8, %g3			/* IEU0		Group		*/
+	add		%o0, %o2, %o2			/* IEU1				*/
 
-	or		%g3, %o1, %g3			/* IEU0		Group		*/
+	sethi		%hi(0x01010101), %g1		/* IEU0		Group		*/
+	or		%g3, %o1, %g3			/* IEU1				*/
 	ldub		[%o0], %o3			/* Load				*/
 	sllx		%g3, 16, %g5			/* IEU0		Group		*/
-	or		%g1, %lo(0x01010101), %g1	/* IEU1				*/
 
+	or		%g1, %lo(0x01010101), %g1	/* IEU1				*/
 	sllx		%g1, 32, %g2			/* IEU0		Group		*/
 	or		%g3, %g5, %g3			/* IEU1				*/
 	sllx		%g3, 32, %g5			/* IEU0		Group		*/
-	cmp		%o3, %o1			/* IEU1				*/
 
+	cmp		%o3, %o1			/* IEU1				*/
 	be,pn		%xcc, 13f			/* CTI				*/
 	 or		%g1, %g2, %g1			/* IEU0		Group		*/
 	andcc		%o0, 7, %g0			/* IEU1				*/
-	bne,a,pn	%icc, 21f			/* CTI				*/
 
+	bne,a,pn	%icc, 21f			/* CTI				*/
 	 add		%o0, 1, %o0			/* IEU0		Group		*/
 	ldx		[%o0], %o3			/* Load		Group		*/
 	sllx		%g1, 7, %g2			/* IEU0				*/
-	or		%g3, %g5, %g3			/* IEU1				*/
 
+	or		%g3, %g5, %g3			/* IEU1				*/
 1:	add		%o0, 8, %o0			/* IEU0		Group		*/
 	xor		%o3, %g3, %o4			/* IEU1				*/
 							/* %g1 = 0101010101010101	*
@@ -95,49 +95,50 @@ ENTRY(memchr)
 							 * %o3 =      value		*
 							 * %o4 =   value XOR c		*/
 2:	cmp		%o0, %o2			/* IEU1		Group		*/
-	bg,pn		%XCC, 11f			/* CTI				*/
 
+	bg,pn		%XCC, 11f			/* CTI				*/
 	 ldxa		[%o0] ASI_PNF, %o3		/* Load				*/
 	sub		%o4, %g1, %o5			/* IEU0		Group		*/
 	add		%o0, 8, %o0			/* IEU1				*/
 #ifdef EIGHTBIT_NOT_RARE
 	andn		%o5, %o4, %o5			/* IEU0		Group		*/
 #endif
-	andcc		%o5, %g2, %g0			/* IEU1		Group		*/
 
+	andcc		%o5, %g2, %g0			/* IEU1		Group		*/
 	be,a,pt		%xcc, 2b			/* CTI				*/
 	 xor		%o3, %g3, %o4			/* IEU0				*/
 	srlx		%o4, 56, %g5			/* IEU0				*/
-	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 
+	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 3f			/* CTI				*/
 	 srlx		%o4, 48, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
-	be,pn		%icc, 4f			/* CTI				*/
 
+	be,pn		%icc, 4f			/* CTI				*/
 	 srlx		%o4, 40, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 5f			/* CTI				*/
-	 srlx		%o4, 32, %g5			/* IEU0				*/
 
+	 srlx		%o4, 32, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 6f			/* CTI				*/
 	 srlx		%o4, 24, %g5			/* IEU0				*/
-	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 
+	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 7f			/* CTI				*/
 	 srlx		%o4, 16, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
-	be,pn		%icc, 8f			/* CTI				*/
 
+	be,pn		%icc, 8f			/* CTI				*/
 	 srlx		%o4, 8, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 9f			/* CTI				*/
-	 andcc		%o4, 0xff, %g0			/* IEU1		Group		*/
 
+	 andcc		%o4, 0xff, %g0			/* IEU1		Group		*/
 	bne,pt		%icc, 2b			/* CTI				*/
 	 xor		%o3, %g3, %o4			/* IEU0				*/
 	retl						/* CTI+IEU1	Group		*/
+
 	 add		%o0, -9, %o0			/* IEU0				*/
 
 	.align		16

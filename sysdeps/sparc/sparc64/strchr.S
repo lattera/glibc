@@ -46,34 +46,32 @@
 	.text
 	.align		32
 ENTRY(strchr)
-#ifndef USE_BPR
-	srl		%o1, 0, %o1			/* IEU0		Group		*/
-#endif
-	brz,pn		%o1, 17f			/* CTI+IEU1	Group		*/
-	 sllx		%o1, 8, %g3			/* IEU0				*/
-	sethi		%hi(0x01010101), %g1		/* IEU0		Group		*/
-	or		%g3, %o1, %g3			/* IEU1				*/
+	andcc		%o1, 0xff, %o1			/* IEU1		Group		*/
+	be,pn		%icc, 17f			/* CTI				*/
+	 sllx		%o1, 8, %g3			/* IEU0		Group		*/
+	sethi		%hi(0x01010101), %g1		/* IEU1				*/
 
+	or		%g3, %o1, %g3			/* IEU0		Group		*/
 	ldub		[%o0], %o3			/* Load				*/
 	sllx		%g3, 16, %g5			/* IEU0		Group		*/
 	or		%g1, %lo(0x01010101), %g1	/* IEU1				*/
-	sllx		%g1, 32, %g2			/* IEU0		Group		*/
 
+	sllx		%g1, 32, %g2			/* IEU0		Group		*/
 	brz,pn		%o3, 5f				/* CTI+IEU1			*/
 	 orcc		%g3, %g5, %g3			/* IEU1		Group		*/
 	sllx		%g3, 32, %g5			/* IEU0				*/
-	cmp		%o3, %o1			/* IEU1		Group		*/
 
+	cmp		%o3, %o1			/* IEU1		Group		*/
 	be,pn		%xcc, 14f			/* CTI				*/
 	 or		%g1, %g2, %g1			/* IEU0				*/
 	andcc		%o0, 7, %g0			/* IEU1		Group		*/
-	bne,a,pn	%icc, 15f			/* CTI				*/
 
+	bne,a,pn	%icc, 15f			/* CTI				*/
 	 add		%o0, 1, %o0			/* IEU0				*/
 	ldx		[%o0], %o3			/* Load		Group		*/
 1:	sllx		%g1, 7, %g2			/* IEU0				*/
-	or		%g3, %g5, %g3			/* IEU1				*/
 
+	or		%g3, %g5, %g3			/* IEU1				*/
 	add		%o0, 8, %o0			/* IEU0		Group		*/
 	xor		%o3, %g3, %o4			/* IEU1				*/
 							/* %g1 = 0101010101010101	*
@@ -82,8 +80,8 @@ ENTRY(strchr)
 							 * %o3 =      value		*
 							 * %o4 =   value XOR c		*/
 2:	sub		%o3, %g1, %o2			/* IEU0		Group		*/
-	sub		%o4, %g1, %o5			/* IEU1				*/
 
+	sub		%o4, %g1, %o5			/* IEU1				*/
 #ifdef EIGHTBIT_NOT_RARE
 	andn		%o2, %o3, %g7			/* IEU0		Group		*/
 	andn		%o5, %o4, %o5			/* IEU1				*/
@@ -94,86 +92,87 @@ ENTRY(strchr)
 	or		%o5, %o2, %o5			/* IEU0		Group		*/
 #endif
 	add		%o0, 8, %o0			/* IEU1				*/
-	andcc		%o5, %g2, %g0			/* IEU1		Group		*/
 
+	andcc		%o5, %g2, %g0			/* IEU1		Group		*/
 	be,a,pt		%xcc, 2b			/* CTI				*/
 	 xor		%o3, %g3, %o4			/* IEU0				*/
 	srlx		%o5, 32, %g5			/* IEU0		Group		*/
-	add		%o2, %g1, %o2			/* IEU1				*/
 
+	add		%o2, %g1, %o2			/* IEU1				*/
 3:	andcc		%g5, %g2, %g0			/* IEU1		Group		*/
 	be,pn		%xcc, 4f			/* CTI				*/
 	 srlx		%o2, 56, %g5			/* IEU0				*/
-	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 
+	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 5f			/* CTI				*/
 	 srlx		%o4, 56, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
-	be,pn		%icc, 6f			/* CTI				*/
 
+	be,pn		%icc, 6f			/* CTI				*/
 	 srlx		%o2, 48, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 5f			/* CTI				*/
-	 srlx		%o4, 48, %g5			/* IEU0				*/
 
+	 srlx		%o4, 48, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 7f			/* CTI				*/
 	 srlx		%o2, 40, %g5			/* IEU0				*/
-	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 
+	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 5f			/* CTI				*/
 	 srlx		%o4, 40, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
-	be,pn		%icc, 8f			/* CTI				*/
 
+	be,pn		%icc, 8f			/* CTI				*/
 	 srlx		%o2, 32, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 5f			/* CTI				*/
-	 srlx		%o4, 32, %g5			/* IEU0				*/
 
+	 srlx		%o4, 32, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 9f			/* CTI				*/
 4:	 srlx		%o2, 24, %g5			/* IEU0				*/
-	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 
+	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 5f			/* CTI				*/
 	 srlx		%o4, 24, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
-	be,pn		%icc, 10f			/* CTI				*/
 
+	be,pn		%icc, 10f			/* CTI				*/
 	 srlx		%o2, 16, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 5f			/* CTI				*/
-	 srlx		%o4, 16, %g5			/* IEU0				*/
 
+	 srlx		%o4, 16, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 11f			/* CTI				*/
 	 srlx		%o2, 8, %g5			/* IEU0				*/
-	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 
+	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 5f			/* CTI				*/
 	 srlx		%o4, 8, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
-	be,pn		%icc, 12f			/* CTI				*/
 
+	be,pn		%icc, 12f			/* CTI				*/
 	andcc		%o2, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 5f			/* CTI				*/
 	 sub		%o3, %g1, %o2			/* IEU0				*/
-	andcc		%o4, 0xff, %g0			/* IEU1		Group		*/
 
+	andcc		%o4, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 13f			/* CTI				*/
 	 xor		%o3, %g3, %o4			/* IEU0				*/
 	ldxa		[%o0] ASI_PNF, %o3		/* Load		Group		*/
-	sub		%o4, %g1, %o5			/* IEU0				*/
 
+	sub		%o4, %g1, %o5			/* IEU0				*/
 	or		%o5, %o2, %o5			/* IEU1				*/
 	add		%o0, 8, %o0			/* IEU0		Group		*/
 	andcc		%o5, %g2, %g0			/* IEU1				*/
-	be,a,pt		%xcc, 2b			/* CTI				*/
 
+	be,a,pt		%xcc, 2b			/* CTI				*/
 	 xor		%o3, %g3, %o4			/* IEU0		Group		*/
 	srlx		%o5, 32, %g5			/* IEU0		Group		*/
 	ba,pt		%xcc, 3b			/* CTI				*/
+
 	 add		%o2, %g1, %o2			/* IEU1				*/
 
 	.align		16
@@ -330,29 +329,27 @@ END(strchr)
 
 	.align		32
 ENTRY(strrchr)
-#ifndef USE_BPR
-	srl		%o1, 0, %o1			/* IEU0		Group		*/
-#endif
-	brz,pn		%o1, 17b			/* CTI+IEU1	Group		*/
+	andcc		%o1, 0xff, %o1			/* IEU1		Group		*/
+	be,pn		%icc, 17b			/* CTI				*/
 	 clr		%g4				/* IEU0				*/
 	andcc		%o0, 7, %g0			/* IEU1		Group		*/
-	bne,pn		%icc, 13f			/* CTI				*/
 
+	bne,pn		%icc, 13f			/* CTI				*/
 	 sllx		%o1, 8, %g3			/* IEU0				*/
 	ldx		[%o0], %o3			/* Load		Group		*/
 1:	sethi		%hi(0x01010101), %g1		/* IEU0				*/
-	or		%g3, %o1, %g3			/* IEU1				*/
 
+	or		%g3, %o1, %g3			/* IEU1				*/
 	sllx		%g3, 16, %g5			/* IEU0		Group		*/
 	or		%g1, %lo(0x01010101), %g1	/* IEU1				*/
 	sllx		%g1, 32, %g2			/* IEU0		Group		*/
-	or		%g3, %g5, %g3			/* IEU1				*/
 
+	or		%g3, %g5, %g3			/* IEU1				*/
 	sllx		%g3, 32, %g5			/* IEU0		Group		*/
 	or		%g1, %g2, %g1			/* IEU1				*/
 	sllx		%g1, 7, %g2			/* IEU0		Group		*/
-	or		%g3, %g5, %g3			/* IEU1				*/
 
+	or		%g3, %g5, %g3			/* IEU1				*/
 	add		%o0, 8, %o0			/* IEU0		Group		*/
 	xor		%o3, %g3, %o4			/* IEU1				*/
 							/* %g1 = 0101010101010101	*
@@ -361,97 +358,99 @@ ENTRY(strrchr)
 							 * %o3 =   value		*
 							 * %o4 =   value XOR c		*/
 2:	sub		%o3, %g1, %o2			/* IEU0		Group		*/
+
 3:	sub		%o4, %g1, %o5			/* IEU1				*/
 #ifdef EIGHTBIT_NOT_RARE
 	andn		%o2, %o3, %g7			/* IEU0		Group		*/
 	andn		%o5, %o4, %o5			/* IEU1				*/
 	ldxa		[%o0] ASI_PNF, %o3		/* Load				*/
+
 	or		%o5, %g7, %o5			/* IEU0		Group		*/
 #else
 	ldxa		[%o0] ASI_PNF, %o3		/* Load				*/
+
 	or		%o5, %o2, %o5			/* IEU0		Group		*/
 #endif
-
 	add		%o0, 8, %o0			/* IEU1				*/
 	andcc		%o5, %g2, %g0			/* IEU1		Group		*/
 	be,a,pt		%xcc, 2b			/* CTI				*/
-	 xor		%o3, %g3, %o4			/* IEU0				*/
 
+	 xor		%o3, %g3, %o4			/* IEU0				*/
 	srlx		%o5, 32, %g5			/* IEU0		Group		*/
 	add		%o2, %g1, %o2			/* IEU1				*/
 	andcc		%g5, %g2, %g0			/* IEU1		Group		*/
-	be,pn		%xcc, 7f			/* CTI				*/
 
+	be,pn		%xcc, 7f			/* CTI				*/
 	 srlx		%o2, 56, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 12f			/* CTI				*/
-	 srlx		%o4, 56, %g5			/* IEU0				*/
 
+	 srlx		%o4, 56, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	srlx		%o2, 48, %g5			/* IEU0				*/
 	be,a,pn		%icc, 4f			/* CTI				*/
-	 add		%o0, -16, %g4			/* IEU0		Group		*/
 
+	 add		%o0, -16, %g4			/* IEU0		Group		*/
 4:	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 12f			/* CTI				*/
 	 srlx		%o4, 48, %g5			/* IEU0				*/
-	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 
+	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	srlx		%o2, 40, %g5			/* IEU0				*/
 	be,a,pn		%icc, 5f			/* CTI				*/
 	 add		%o0, -15, %g4			/* IEU0		Group		*/
-5:	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 
+5:	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 12f			/* CTI				*/
 	 srlx		%o4, 40, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
-	srlx		%o2, 32, %g5			/* IEU0				*/
 
+	srlx		%o2, 32, %g5			/* IEU0				*/
 	be,a,pn		%icc, 6f			/* CTI				*/
 	 add		%o0, -14, %g4			/* IEU0		Group		*/
 6:	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
-	be,pn		%icc, 12f			/* CTI				*/
 
+	be,pn		%icc, 12f			/* CTI				*/
 	 srlx		%o4, 32, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,a,pn		%icc, 7f			/* CTI				*/
-	 add		%o0, -13, %g4			/* IEU0				*/
 
+	 add		%o0, -13, %g4			/* IEU0				*/
 7:	srlx		%o2, 24, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 12f			/* CTI				*/
-	 srlx		%o4, 24, %g5			/* IEU0				*/
 
+	 srlx		%o4, 24, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	srlx		%o2, 16, %g5			/* IEU0				*/
 	be,a,pn		%icc, 8f			/* CTI				*/
-	 add		%o0, -12, %g4			/* IEU0		Group		*/
 
+	 add		%o0, -12, %g4			/* IEU0		Group		*/
 8:	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 12f			/* CTI				*/
 	 srlx		%o4, 16, %g5			/* IEU0				*/
-	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 
+	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	srlx		%o2, 8, %g5			/* IEU0				*/
 	be,a,pn		%icc, 9f			/* CTI				*/
 	 add		%o0, -11, %g4			/* IEU0		Group		*/
-9:	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 
+9:	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 12f			/* CTI				*/
 	 srlx		%o4, 8, %g5			/* IEU0				*/
 	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
-	be,a,pn		%icc, 10f			/* CTI				*/
 
+	be,a,pn		%icc, 10f			/* CTI				*/
 	 add		%o0, -10, %g4			/* IEU0				*/
 10:	andcc		%o2, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 12f			/* CTI				*/
-	 sub		%o3, %g1, %o2			/* IEU0				*/
 
+	 sub		%o3, %g1, %o2			/* IEU0				*/
 	andcc		%o4, 0xff, %g0			/* IEU1		Group		*/
 	be,a,pn		%icc, 11f			/* CTI				*/
 	 add		%o0, -9, %g4			/* IEU0				*/
-11:	ba,pt		%xcc, 3b			/* CTI		Group		*/
 
+11:	ba,pt		%xcc, 3b			/* CTI		Group		*/
 	 xor		%o3, %g3, %o4			/* IEU0		Group		*/
 12:	retl						/* CTI+IEU1	Group		*/
 	 mov		%g4, %o0			/* IEU0				*/

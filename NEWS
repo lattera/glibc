@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  1999-04-29
+GNU C Library NEWS -- history of user-visible changes.  1999-05-18
 
 Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -13,13 +13,13 @@ Version 2.1.1
 
 * New xdr functions are added; some rpc functions are now 64bit clean.
 
-* Fixed a number of bugs.
+* Fixed a number of bugs and memory leaks (especially in NIS+ code).
 
 * Fixed known incompatibilities with glibc 2.0.
 
-* New functions lock64 and strchrnul.
+* New functions lock64, strchrnul, rawmemchr, getutmp and getutmpx.
 
-* Optimized a number of functions.
+* Optimized a number of functions (especially the ELF dynamic loader).
 
 * Update timezone data files.
 
