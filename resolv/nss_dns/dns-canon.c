@@ -53,81 +53,97 @@ _nss_dns_getcanonname_r (const char *name, char *buffer, size_t buflen,
     unsigned char *ptr;
   } ansp = { .ptr = buf };
   enum nss_status status;
+  int qtypes[] = { ns_t_a, ns_t_aaaa };
+#define nqtypes (sizeof (qtypes) / sizeof (qtypes[0]))
 
-  int r = __libc_res_nquery (&_res, name, ns_c_in, ns_t_cname,
-			     buf, sizeof (buf), &ansp.ptr);
-  if (r > 0)
+  for (int i = 0; i < nqtypes; ++i)
     {
-      /* We need to decode the response.  Just one question record.
-	 And if we got no answers we bail out, too.  */
-      if (ansp.buf->hdr.qdcount != htons (1)
-	  || ansp.buf->hdr.ancount == 0)
-	goto unavail;
-
-      /* Beginning and end of the buffer with query, answer, and the
-	 rest.  */
-      unsigned char *ptr = &ansp.buf->buf[sizeof (HEADER)];
-      unsigned char *endptr = ansp.ptr + r;
-
-      /* Skip over the query.  This is the name, type, and class.  */
-      int s = __dn_skipname (ptr, endptr);
-      if (s < 0)
-	goto unavail;
-
-      /* Skip over the name and the two 16-bit values containing type
-	 and class.  */
-      ptr += s + 2 * sizeof (uint16_t);
-
-      /* Now the reply.  First again the name from the query, then
-	 type, class, TTL, and the length of the RDATA.  */
-      s = __dn_skipname (ptr, endptr);
-      if (s < 0)
-	goto unavail;
-
-      ptr += s;
-
-      /* Check whether type and class match.  */
-      if (*(uint16_t *) ptr != htons (ns_t_cname))
-	goto unavail;
-
-      ptr += sizeof (uint16_t);
-      if (*(uint16_t *) ptr != htons (ns_c_in))
-	goto unavail;
-
-      /* Also skip over the TTL and rdata length.  */
-      ptr += sizeof (uint16_t) + sizeof (uint32_t) + sizeof (int16_t);
-
-      /* Now the name we are looking for.  */
-      s = __dn_expand (ansp.buf->buf, endptr, ptr, buffer, buflen);
-      if (s < 0)
+      int r = __libc_res_nquery (&_res, name, ns_c_in, qtypes[i],
+				 buf, sizeof (buf), &ansp.ptr);
+      if (r > 0)
 	{
-	  if (errno != EMSGSIZE)
-	    goto unavail;
+	  /* We need to decode the response.  Just one question record.
+	     And if we got no answers we bail out, too.  */
+	  if (ansp.buf->hdr.qdcount != htons (1))
+	    continue;
 
-	  /* The buffer is too small.  */
-	  *errnop = ERANGE;
-	  status = NSS_STATUS_TRYAGAIN;
-	  h_errno = NETDB_INTERNAL;
+	  /* Number of answers.   */
+	  unsigned int ancount = ntohs (ansp.buf->hdr.ancount);
+
+	  /* Beginning and end of the buffer with query, answer, and the
+	     rest.  */
+	  unsigned char *ptr = &ansp.buf->buf[sizeof (HEADER)];
+	  unsigned char *endptr = ansp.ptr + r;
+
+	  /* Skip over the query.  This is the name, type, and class.  */
+	  int s = __dn_skipname (ptr, endptr);
+	  if (s < 0)
+	    {
+	    unavail:
+	      status = NSS_STATUS_UNAVAIL;
+	      break;
+	    }
+
+	  /* Skip over the name and the two 16-bit values containing type
+	     and class.  */
+	  ptr += s + 2 * sizeof (uint16_t);
+
+	  while (ancount-- > 0)
+	    {
+	      /* Now the reply.  First again the name from the query,
+		 then type, class, TTL, and the length of the RDATA.
+		 We remember the name start.  */
+	      unsigned char *namestart = ptr;
+	      s = __dn_skipname (ptr, endptr);
+	      if (s < 0)
+		goto unavail;
+
+	      ptr += s;
+
+	      /* Check whether type and class match.  */
+	      unsigned int type = ntohs (*(uint16_t *) ptr);
+	      if (type == qtypes[i])
+		{
+		  /* We found the record.  */
+		  s = __dn_expand (ansp.buf->buf, endptr, namestart,
+				   buffer, buflen);
+		  if (s < 0)
+		    {
+		      if (errno != EMSGSIZE)
+			goto unavail;
+
+		      /* The buffer is too small.  */
+		      *errnop = ERANGE;
+		      status = NSS_STATUS_TRYAGAIN;
+		      h_errno = NETDB_INTERNAL;
+		    }
+		  else
+		    {
+		      /* Success.  */
+		      *result = buffer;
+		      status = NSS_STATUS_SUCCESS;
+		    }
+
+		  goto out;
+		}
+
+	      if (type != ns_t_cname)
+		goto unavail;
+
+	      ptr += sizeof (uint16_t);
+	      if (*(uint16_t *) ptr != htons (ns_c_in))
+		goto unavail;
+
+	      /* Also skip over the TTL.  */
+	      ptr += sizeof (uint16_t) + sizeof (uint32_t);
+
+	      /* Skip over the data length and data.  */
+	      ptr += sizeof (uint16_t) + ntohs (*(uint16_t *) ptr);
+	    }
 	}
-      else
-	{
-	  /* Success.  */
-	  *result = buffer;
-	  status = NSS_STATUS_SUCCESS;
-	}
     }
-  else if (h_errno == TRY_AGAIN)
-    {
-    again:
-      status = NSS_STATUS_TRYAGAIN;
-      *errnop = errno;
-    }
-  else
-    {
-    unavail:
-      status = NSS_STATUS_UNAVAIL;
-      *errnop = errno;
-    }
+
+ out:
   *h_errnop = h_errno;
 
   if (ansp.ptr != buf)
