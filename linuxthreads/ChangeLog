@@ -1,3 +1,9 @@
+2000-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* mutex.c (__pthread_mutex_lock): Always initialize __m_owner.
+	(__pthread_mutex_trylock): Likewise.
+	(__pthread_mutex_unlock): Always clear __m_owner.
+
 2000-03-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* condvar.c (pthread_cond_wait): Check whether mutex is owned by
