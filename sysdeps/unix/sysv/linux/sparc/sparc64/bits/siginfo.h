@@ -127,7 +127,9 @@ typedef struct siginfo
    signals.  */
 enum
 {
-  SI_SIGIO = -5,		/* Sent by queued SIGIO. */
+  SI_ASYNCNL = -6,		/* Sent by asynch name lookup completion.  */
+# define SI_ASYNCNL	SI_ASYNCNL
+  SI_SIGIO,			/* Sent by queued SIGIO. */
 # define SI_SIGIO	SI_SIGIO
   SI_ASYNCIO,			/* Sent by AIO completion.  */
 # define SI_ASYNCIO	SI_ASYNCIO
