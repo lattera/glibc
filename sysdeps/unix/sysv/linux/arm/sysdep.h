@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 95-99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
    ARM changes by Philip Blundell, <pjb27@cam.ac.uk>, May 1997.
@@ -109,7 +109,7 @@
 #define UNDOARGS_2 /* nothing */
 #define UNDOARGS_3 /* nothing */
 #define UNDOARGS_4 /* nothing */
-#define UNDOARGS_5 ldr r4, [sp, $4]!;
+#define UNDOARGS_5 ldr r4, [sp], $4;
 #define UNDOARGS_6 ldmfd sp!, {r4, r5};
 #define UNDOARGS_7 ldmfd sp!, {r4, r5, r6};
 
