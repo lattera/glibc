@@ -234,9 +234,9 @@ V[]  =  {1.27304834834123699328e-02, /* 0x3F8A1270, 0x91C9C71A */
 	u2 = U[2]+z*U[3]; z4=z2*z2;
 	u3 = U[4]+z*U[5]; z6=z4*z2;
 	u = u1 + z2*u2 + z4*u3 + z6*U[6];
-	v1 = one+z*V[1];
-	v2 = V[2]+z*V[3];
-	v = v1 + z2*v2 + z4*V[4];
+	v1 = one+z*V[0];
+	v2 = V[1]+z*V[2];
+	v = v1 + z2*v2 + z4*V[3];
 #endif
 	return(u/v + tpi*(__ieee754_j0(x)*__ieee754_log(x)));
 }

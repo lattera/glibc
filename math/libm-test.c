@@ -45,11 +45,13 @@
    frexp, gamma, hypot,
    ilogb, isfinite, isinf, isnan, isnormal,
    isless, islessequal, isgreater, isgreaterequal, islessgreater, isunordered,
+   j0, j1,
    ldexp, lgamma, log, log10, log1p, log2, logb,
    modf, nearbyint, nextafter,
    pow, remainder, remquo, rint, lrint, llrint,
    round, lround, llround,
-   scalb, scalbn, signbit, sin, sincos, sinh, sqrt, tan, tanh, tgamma, trunc
+   scalb, scalbn, signbit, sin, sincos, sinh, sqrt, tan, tanh, tgamma, trunc,
+   y0, y1
 
    and for the following complex math functions:
    cabs, cacos, cacosh, carg, casin, casinh, catan, catanh,
@@ -57,7 +59,7 @@
 
    At the moment the following functions aren't tested:
    conj, cproj, cimag, creal, drem,
-   j0, j1, jn, y0, y1, yn,
+   jn, yn,
    significand,
    nan
 
@@ -5496,6 +5498,119 @@ fma_test (void)
 		   INVALID_EXCEPTION);
 }
 
+static void
+j0_test (void)
+{
+  errno = 0;
+  FUNC(j0) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+  
+  /* j0 is the Bessel function of the first kind of order 0 */
+  check_isnan ("j0 (NaN) = NaN", FUNC(j0) (nan_value));
+
+  check ("j0 (-1.0) = 0.76519...", FUNC(j0) (-1.0), 0.76519768655796655145);
+  check ("j0 (0) = 1", FUNC(j0) (0.0), 1.0);
+  check ("j0 (0.1) = 0.99750...", FUNC(j0) (0.1), 0.99750156206604003228);
+  check ("j0 (0.7) = 0.88120...", FUNC(j0) (0.7), 0.88120088860740528084);
+  check ("j0 (1.0) = 0.76519...", FUNC(j0) (1.0), 0.76519768655796655145);
+  check ("j0 (1.5) = 0.51182...", FUNC(j0) (1.5), 0.51182767173591812875);
+  check_eps ("j0 (2.0) = 0.22389...", FUNC(j0) (2.0), 0.22389077914123566805,
+	     CHOOSE(0, 3e-17, 1.5e-8));
+  check_eps ("j0 (8.0) = 0.17165...", FUNC(j0) (8.0), 0.17165080713755390609,
+	     CHOOSE(0, 0, 1.5e-8));
+  check_eps ("j0 (10.0) = -0.24593...", FUNC(j0) (10.0), -0.24593576445134833520,
+	     CHOOSE(0, 6e-17, 1.5e-8));
+}
+
+static void
+j1_test (void)
+{
+  errno = 0;
+  FUNC(j1) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  /* j is the Bessel function of the first kind of order 1 */
+  check_isnan ("j1 (NaN) = NaN", FUNC(j0) (nan_value));
+
+  check ("j1 (-1.0) = -0.44005...", FUNC(j1) (-1.0), -0.44005058574493351596);
+  check ("j1 (0) = 0", FUNC(j1) (0.0), 0.0);
+  check ("j1 (0.1) = 0.049937...", FUNC(j1) (0.1), 0.049937526036241997556);
+  check ("j1 (0.7) = 0.32899...", FUNC(j1) (0.7), 0.32899574154005894785);
+  check ("j1 (1.0) = 0.44005...", FUNC(j1) (1.0), 0.44005058574493351596);
+  check ("j1 (1.5) = 0.55793...", FUNC(j1) (1.5), 0.55793650791009964199);
+  check_eps ("j1 (2.0) = 0.57672...", FUNC(j1) (2.0), 0.57672480775687338720,
+	     CHOOSE(0, 2e-16, 0));
+  check_eps ("j1 (8.0) = 0.23463...", FUNC(j1) (8.0), 0.23463634685391462438,
+	     CHOOSE(0, 0, 1.5e-8));
+  check_eps ("j1 (10.0) = 0.04347...", FUNC(j1) (10.0), 0.043472746168861436670,
+	     CHOOSE(0, 7e-18, 3.8e-9));
+}
+
+
+static void
+y0_test (void)
+{
+  errno = 0;
+  FUNC(y0) (1);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  /* y0 is the Bessel function of the second kind of order 0 */
+  check_isinfn ("y0 (-1.0) = -inf", FUNC(y0) (-1.0));
+  check_isinfn ("y0 (0) = -inf", FUNC(y0) (0.0));
+  check_isnan ("y0 (NaN) = NaN", FUNC(y0) (nan_value));
+
+  check_eps ("y0 (0.1) = -1.53423...", FUNC(y0) (0.1), -1.5342386513503668441,
+	     CHOOSE(0, 3e-16, 1.2e-7));
+  check_eps ("y0 (0.7) = -0.19066...", FUNC(y0) (0.7), -0.19066492933739506743,
+	     CHOOSE(0, 6e-17, 1.5e-8));
+  check_eps ("y0 (1.0) = 0.08825...", FUNC(y0) (1.0), 0.088256964215676957983,
+	     CHOOSE(0, 2e-17, 7.5e-9));
+  check_eps ("y0 (1.5) = 0.38244...", FUNC(y0) (1.5), 0.38244892379775884396,
+	     CHOOSE(0, 6e-17, 3.0e-8));
+  check_eps ("y0 (2.0) = 0.51037...", FUNC(y0) (2.0), 0.51037567264974511960,
+	     CHOOSE(0, 2e-16 ,0));
+  check_eps ("y0 (8.0) = 0.22352...", FUNC(y0) (8.0), 0.22352148938756622053,
+	     CHOOSE(0, 3e-17, 1.5e-8));
+  check_eps ("y0 (10.0) = 0.05567...", FUNC(y0) (10.0), 0.055671167283599391424,
+	     CHOOSE(0, 0, 3.8e-9));
+}
+
+
+static void
+y1_test (void)
+{
+  errno = 0;
+  FUNC(y1) (1);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  /* y1 is the Bessel function of the second kind of order 1 */
+  check_isinfn ("y1 (-1.0) = -inf", FUNC(y1) (-1.0));
+  check_isinfn ("y1 (0) = -inf", FUNC(y1) (0.0));
+  check_isnan ("y1 (NaN) = NaN", FUNC(y1) (nan_value));
+
+  check_eps ("y1 (0.1) = -6.45895...", FUNC(y1) (0.1), -6.4589510947020269877,
+	     CHOOSE(0, 9e-16, 4.8e-7));
+  check_eps ("y1 (0.7) = -1.10324...", FUNC(y1) (0.7), -1.1032498719076333697,
+	     CHOOSE(0, 3e-16, 0));
+  check_eps ("y1 (1.0) = -0.78121...", FUNC(y1) (1.0), -0.78121282130028871655,
+	     CHOOSE(0, 2e-16, 0));
+  check ("y1 (1.5) = -0.41230...", FUNC(y1) (1.5), -0.41230862697391129595);
+  check_eps ("y1 (2.0) = -0.10703...", FUNC(y1) (2.0), -0.10703243154093754689,
+	     CHOOSE(0, 2e-17, 1.5e-8));
+  check_eps ("y1 (8.0) = -0.15806...", FUNC(y1) (8.0), -0.15806046173124749426,
+	     CHOOSE(0, 0, 3.0e-8));
+  check_eps ("y1 (10.0) = 0.24901...", FUNC(y1) (10.0), 0.24901542420695388392,
+	     CHOOSE(0, 9e-17, 3.0e-8));
+}
+
 
 /* Tests for the comparison macros */
 typedef enum { is_less, is_equal, is_greater, is_unordered } comp_result;
@@ -5994,6 +6109,12 @@ main (int argc, char *argv[])
   /* multiply and add */
   fma_test ();
 
+  /* Bessel functions  */
+  j0_test ();
+  j1_test ();
+  y0_test ();
+  y1_test ();
+  
   /* special tests */
   identities ();
   inverse_functions ();

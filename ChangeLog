@@ -1,4 +1,15 @@
-1999-06-02  Jakub Jelinek   <jj@ultra.linux.cz>
+1999-06-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/libm-ieee754/e_j0.c (__ieee754_y0): Fix array indices.
+	Patch by mhagger@dera.gov.uk [PR libc/1145].
+
+	* math/libm-test.c (y1_test): New tests.
+	(y0_test): Likewise.
+	(j1_test): Likewise.
+	(j0_test): Likewise.
+	(main): Added new tests.
+
+1999-06-02  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* stdlib/longlong.h: Define UDIV_TIME on sparc64.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/sigpending.c: New file.
