@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,6 +44,14 @@ do_test (void)
       exit (1);
     }
 
+  pthread_rwlockattr_t rwa;
+
+  if (pthread_rwlockattr_init (&rwa) != 0)
+    {
+      puts ("rwlockattr_init failed");
+      exit (1);
+    }
+
   /* XXX Remove if default value is clear.  */
   pthread_attr_setinheritsched (&a, PTHREAD_INHERIT_SCHED);
   pthread_attr_setschedpolicy (&a, SCHED_OTHER);
@@ -59,6 +68,11 @@ do_test (void)
 	  if (e == 0)
 	    {
 	      printf ("attr_setdetachstate with value %ld succeeded\n", r);
+	      exit (1);
+	    }
+	  if (e != EINVAL)
+	    {
+	      puts ("attr_setdetachstate didn't return EINVAL");
 	      exit (1);
 	    }
 
@@ -86,6 +100,11 @@ detach state changed to %d by invalid setdetachstate call\n", s);
 	      printf ("attr_setinheritsched with value %ld succeeded\n", r);
 	      exit (1);
 	    }
+	  if (e != EINVAL)
+	    {
+	      puts ("attr_setinheritsched didn't return EINVAL");
+	      exit (1);
+	    }
 
 	  int s;
 	  if (pthread_attr_getinheritsched (&a, &s) != 0)
@@ -109,6 +128,11 @@ inheritsched changed to %d by invalid setinheritsched call\n", s);
 	  if (e == 0)
 	    {
 	      printf ("attr_setschedpolicy with value %ld succeeded\n", r);
+	      exit (1);
+	    }
+	  if (e != EINVAL)
+	    {
+	      puts ("attr_setschedpolicy didn't return EINVAL");
 	      exit (1);
 	    }
 
@@ -136,6 +160,11 @@ schedpolicy changed to %d by invalid setschedpolicy call\n", s);
 	      printf ("attr_setscope with value %ld succeeded\n", r);
 	      exit (1);
 	    }
+	  if (e != EINVAL)
+	    {
+	      puts ("attr_setscope didn't return EINVAL");
+	      exit (1);
+	    }
 
 	  int s;
 	  if (pthread_attr_getscope (&a, &s) != 0)
@@ -161,6 +190,11 @@ contentionscope changed to %d by invalid setscope call\n", s);
 	      printf ("mutexattr_setpshared with value %ld succeeded\n", r);
 	      exit (1);
 	    }
+	  if (e != EINVAL)
+	    {
+	      puts ("mutexattr_setpshared didn't return EINVAL");
+	      exit (1);
+	    }
 
 	  int s;
 	  if (pthread_mutexattr_getpshared (&ma, &s) != 0)
@@ -173,6 +207,92 @@ contentionscope changed to %d by invalid setscope call\n", s);
 	    {
 	      printf ("\
 pshared changed to %d by invalid mutexattr_setpshared call\n", s);
+	      exit (1);
+	    }
+
+	  e = pthread_rwlockattr_setpshared (&rwa, r);
+
+	  if (e == 0)
+	    {
+	      printf ("rwlockattr_setpshared with value %ld succeeded\n", r);
+	      exit (1);
+	    }
+	  if (e != EINVAL)
+	    {
+	      puts ("rwlockattr_setpshared didn't return EINVAL");
+	      exit (1);
+	    }
+
+	  if (pthread_rwlockattr_getpshared (&rwa, &s) != 0)
+	    {
+	      puts ("rwlockattr_getpshared failed");
+	      exit (1);
+	    }
+
+	  if (s != PTHREAD_PROCESS_PRIVATE)
+	    {
+	      printf ("\
+pshared changed to %d by invalid rwlockattr_setpshared call\n", s);
+	      exit (1);
+	    }
+	}
+
+      if (r != PTHREAD_CANCEL_ENABLE && r != PTHREAD_CANCEL_DISABLE)
+	{
+	  int e = pthread_setcancelstate (r, NULL);
+
+	  if (e == 0)
+	    {
+	      printf ("setcancelstate with value %ld succeeded\n", r);
+	      exit (1);
+	    }
+
+	  if (e != EINVAL)
+	    {
+	      puts ("setcancelstate didn't return EINVAL");
+	      exit (1);
+	    }
+
+	  int s;
+	  if (pthread_setcancelstate (PTHREAD_CANCEL_ENABLE, &s) != 0)
+	    {
+	      puts ("setcancelstate failed for PTHREAD_CANCEL_ENABLE");
+	      exit (1);
+	    }
+
+	  if (s != PTHREAD_CANCEL_ENABLE)
+	    {
+	      puts ("invalid setcancelstate changed state");
+	      exit (1);
+	    }
+	}
+
+      if (r != PTHREAD_CANCEL_DEFERRED && r != PTHREAD_CANCEL_ASYNCHRONOUS)
+	{
+	  int e = pthread_setcanceltype (r, NULL);
+
+	  if (e == 0)
+	    {
+	      printf ("setcanceltype with value %ld succeeded\n", r);
+	      exit (1);
+	    }
+
+	  if (e != EINVAL)
+	    {
+	      puts ("setcanceltype didn't return EINVAL");
+	      exit (1);
+	    }
+
+	  int s;
+	  if (pthread_setcanceltype (PTHREAD_CANCEL_DEFERRED, &s) != 0)
+	    {
+	      puts ("setcanceltype failed for PTHREAD_CANCEL_DEFERRED");
+	      exit (1);
+	    }
+
+	  if (s != PTHREAD_CANCEL_DEFERRED)
+	    {
+	      puts ("invalid setcanceltype changed state");
 	      exit (1);
 	    }
 	}

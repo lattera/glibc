@@ -1,5 +1,8 @@
 2003-02-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-attr1.c (do_test): Add tests for pthread_setcanceltype,
+	pthread_setcancelstate, and pthread_rwlock_setpshared.
+
 	* tst-cancel7.c (do_test): Make sure the pid file exists before
 	canceling the thread.
 
