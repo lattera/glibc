@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger <davidm@azstarnet.com>, 1995.
 
@@ -18,8 +18,8 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include "kernel_sysinfo.h"
 
-#define GSI_IEEE_FP_CONTROL	45
 
 	.text
 
