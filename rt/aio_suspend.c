@@ -30,6 +30,7 @@
 #undef aio_suspend64
 
 #include <errno.h>
+#include <stdlib.h>
 
 #include "aio_misc.h"
 

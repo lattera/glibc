@@ -1,3 +1,10 @@
+2000-06-21  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/pthread/timer_routines.c: Include <stdlib.h> for memset
+	prototype.
+
+	* join.c: Include <stdlib.h> for exit prototype.
+
 2000-06-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/useldt.h: Include <stdlib.h>.
