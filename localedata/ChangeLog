@@ -1,5 +1,8 @@
 2000-06-28  Andreas Jaeger  <aj@suse.de>
 
+	* tests-mbwc/tst_wcscat.c (tst_wcscat): Correct format to avoid
+	warning.
+
 	* Makefile (locale_test_suite): Add tst_mbrlen.
 	(tst_mbrlen-ENV): New.
 

@@ -51,7 +51,7 @@ tst_wcscat (FILE * fp, int debug_flg)
 	    {
 	      if (debug_flg)
 		{
-		  fprintf (stdout, "tst_wcscat() : ws1[%d] = 0x%x\n", i,
+		  fprintf (stdout, "tst_wcscat() : ws1[%d] = 0x%lx\n", i,
 			   ws1[i]);
 		}
 
