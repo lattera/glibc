@@ -1,6 +1,8 @@
 2000-06-17  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/alpha/pathconf.c: Define LINK_MAX.
+	* sysdeps/unix/sysv/linux/alpha/fpathconf.c: Define and use
+	LINUX_LINK_MAX.
+	* sysdeps/unix/sysv/linux/alpha/pathconf.c: Likewise.
 
 	* locale/programs/ld-ctype.c (ctype_output): Really write out
 	mboutdigits information.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,10 @@
 #include <sys/statfs.h>
 
 #include <linux_fsinfo.h>
+
+
+/* The Linux kernel header mentioned this as a kind of generic value.  */
+#define LINUX_LINK_MAX	127
 
 static long int default_fpathconf (int fd, int name);
 
@@ -60,7 +64,7 @@ __fpathconf (fd, name)
       /* Determine the filesystem type.  */
       if (__fstatfs (fd, &fsbuf) < 0)
 	/* not possible, return the default value.  */
-	return LINK_MAX;
+	return LINUX_LINK_MAX;
 
       switch (fsbuf.f_type)
 	{
@@ -90,7 +94,7 @@ __fpathconf (fd, name)
 	  return UFS_LINK_MAX;
 
 	default:
-	  return LINK_MAX;
+	  return LINUX_LINK_MAX;
 	}
     }
 
