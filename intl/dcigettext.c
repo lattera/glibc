@@ -177,7 +177,7 @@ static void *mempcpy PARAMS ((void *dest, const void *src, size_t n));
 struct known_translation_t
 {
   /* Domain in which to search.  */
-  char *domainname;
+  const char *domainname;
 
   /* The category.  */
   int category;
@@ -436,7 +436,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
   search = (struct known_translation_t *)
 	   alloca (offsetof (struct known_translation_t, msgid) + msgid_len);
   memcpy (search->msgid, msgid1, msgid_len);
-  search->domainname = (char *) domainname;
+  search->domainname = domainname;
   search->category = category;
 
   /* Since tfind/tsearch manage a balanced tree, concurrent tfind and
@@ -632,9 +632,11 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 			    + msgid_len + domainname_len + 1);
 		  if (newp != NULL)
 		    {
-		      newp->domainname =
-			mempcpy (newp->msgid, msgid1, msgid_len);
-		      memcpy (newp->domainname, domainname, domainname_len + 1);
+		      char *new_domainname;
+
+		      new_domainname = mempcpy (newp->msgid, msgid1, msgid_len);
+		      memcpy (new_domainname, domainname, domainname_len + 1);
+		      newp->domainname = new_domainname;
 		      newp->category = category;
 		      newp->counter = _nl_msg_cat_cntr;
 		      newp->domain = domain;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1989,91,93,1996-2003, 2004  Free Software Foundation, Inc.
+/* Copyright (C) 1989,91,93,1996-2003, 2004, 2005  Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -73,7 +73,9 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
   /* Start is one, because we have the first group as parameter.  */
   long int start = 1;
 
-  (*groupsp)[0] = group;
+  /* Never store more than the starting *SIZE number of elements.  */
+  if (*size > 0)
+    (*groupsp)[0] = group;
 
   if (__nss_group_database != NULL)
     {
