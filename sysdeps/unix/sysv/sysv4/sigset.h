@@ -48,7 +48,11 @@ typedef struct
 #define	__SSELT(s)	((s) / __NSSBITS)
 #define	__SSMASK(s)	(1 << ((s) % __NSSBITS))
 
-extern __inline int
+#ifndef _EXTERN_INLINE
+#define _EXTERN_INLINE
+#endif
+
+_EXTERN_INLINE int
 __sigemptyset (__sigset_t *__set)
 {
   __set->__sigbits[0] = __set->__sigbits[1] =
@@ -56,7 +60,7 @@ __sigemptyset (__sigset_t *__set)
   return 0;
 }
 
-extern __inline int
+_EXTERN_INLINE int
 __sigfillset (__sigset_t *__set)
 {
   /* SVR4 has a system call for `sigfillset' (!), and it only sets the bits
@@ -67,21 +71,21 @@ __sigfillset (__sigset_t *__set)
   return 0;
 }
 
-extern __inline int
+_EXTERN_INLINE int
 __sigaddset (__sigset_t *__set, int __sig)
 {
   __set->__sigbits[__SSELT (__sig)] |= __SSMASK (__sig);
   return 0;
 }
 
-extern __inline int
+_EXTERN_INLINE int
 __sigdelset (__sigset_t *__set, int __sig)
 {
   __set->__sigbits[__SSELT (__sig)] &= ~__SSMASK (__sig);
   return 0;
 }
 
-extern __inline int
+_EXTERN_INLINE int
 __sigismember (__const __sigset_t *__set, int __sig)
 {
   if (__set->__sigbits[__SSELT (__sig)] & __SSMASK (__sig))
