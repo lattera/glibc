@@ -1,3 +1,8 @@
+2000-10-27  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/programs/charmap.c (charmap_read): Verify ASCII
+	compatibility of charmap.
+
 2000-11-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* catgets/gencat.c (main): Don't use exit() to avoid warnings with

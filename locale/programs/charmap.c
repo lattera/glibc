@@ -26,6 +26,7 @@
 #include <libintl.h>
 #include <limits.h>
 #include <obstack.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -190,6 +191,64 @@ charmap_read (const char *filename)
       if (result == NULL)
 	error (4, errno, _("default character map file `%s' not found"),
 	       DEFAULT_CHARMAP);
+    }
+
+  /* Test of ASCII compatibility of locale encoding.
+
+     Verify that the encoding to be used in a locale is ASCII compatible,
+     at least for the graphic characters, excluding the control characters,
+     '$' and '@'.  This constraint comes from an ISO C 99 restriction.
+
+     ISO C 99 section 7.17.(2) (about wchar_t):
+       the null character shall have the code value zero and each member of
+       the basic character set shall have a code value equal to its value
+       when used as the lone character in an integer character constant.
+     ISO C 99 section 5.2.1.(3):
+       Both the basic source and basic execution character sets shall have
+       the following members: the 26 uppercase letters of the Latin alphabet
+            A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+       the 26 lowercase letters of the Latin alphabet
+            a b c d e f g h i j k l m n o p q r s t u v w x y z
+       the 10 decimal digits
+            0 1 2 3 4 5 6 7 8 9
+       the following 29 graphic characters
+            ! " # % & ' ( ) * + , - . / : ; < = > ? [ \ ] ^ _ { | } ~
+       the space character, and control characters representing horizontal
+       tab, vertical tab, and form feed.
+
+     Therefore, for all members of the "basic character set", the 'char' code
+     must have the same value as the 'wchar_t' code, which in glibc is the
+     same as the Unicode code, which for all of the enumerated characters
+     is identical to the ASCII code. */
+  if (result != NULL)
+    {
+      static const char basic_charset[] =
+	{
+	  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+	  'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+	  'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+	  'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+	  '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+	  '!', '"', '#', '%', '&', '\'', '(', ')', '*', '+', ',', '-',
+	  '.', '/', ':', ';', '<', '=', '>', '?', '[', '\\', ']', '^',
+	  '_', '{', '|', '}', '~', ' ', '\t', '\v', '\f', '\0'
+	};
+      int failed = 0;
+      const char *p = basic_charset;
+
+      do
+	{
+	  struct charseq * seq = charmap_find_symbol (result, p, 1);
+
+	  if (seq == NULL || seq->ucs4 != *p)
+	    failed = 1;
+	}
+      while (*p++ != '\0');
+
+      if (failed)
+	fprintf (stderr, _("\
+character map `%s' is not ASCII compatible, locale not ISO C compliant\n"),
+		 result->code_set_name);
     }
 
   return result;
