@@ -175,8 +175,6 @@ extern struct tm *localtime __P ((__const time_t *__timer));
 # if defined __USE_POSIX || defined __USE_MISC
 /* Return the `struct tm' representation of *TIMER in UTC,
    using *TP to store the result.  */
-extern struct tm *__gmtime_r __P ((__const time_t *__restrict __timer,
-				   struct tm *__restrict __tp));
 extern struct tm *gmtime_r __P ((__const time_t *__restrict __timer,
 				 struct tm *__restrict __tp));
 
