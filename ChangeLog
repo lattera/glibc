@@ -1,3 +1,13 @@
+2000-06-07  Andreas Jaeger  <aj@suse.de>
+
+	* elf/Makefile: Build ldconfig only when building shared libraries.
+
+2000-06-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/fpu/bits/mathinline.h (__fdimf): Only declare if
+	__USE_ISOC99.
+	(fdimf, __fdim, fdim): Likewise.
+
 2000-06-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/findlocale.c: Add __builtin_expect in many places.

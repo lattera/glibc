@@ -67,6 +67,7 @@ others-static   = sln
 install-rootsbin = sln
 
 ifeq (yes,$(use-ldconfig))
+ifeq (yes,$(build-shared))
 others-static	+= ldconfig
 others		+= ldconfig
 install-rootsbin += ldconfig
@@ -77,6 +78,7 @@ extra-objs	+= $(ldconfig-modules:=.o)
 # To find xmalloc.c and xstrdup.c
 vpath %.c ../locale/programs
 
+endif
 endif
 
 ifeq (yes,$(build-shared))
