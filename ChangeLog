@@ -1,5 +1,8 @@
 2001-02-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* configure.in: Don't check fir libgd if user set --without-gd.
+	Patch by Achim Gottinger <achim@gentoo.org>.
+
 	* sysdeps/i386/i686/strtok.S: Continue to return NULL after the
 	first time this happened.
 

@@ -1324,16 +1324,20 @@ fi
 
 dnl Check whether we have the gd library available.
 AC_MSG_CHECKING(for libgd)
-old_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS $libgd_include"
-old_LDFLAGS="$LDFLAGS"
-LDFLAGS="$LDFLAGS $libgd_ldflags"
-old_LIBS="$LIBS"
-LIBS="$LIBS -lgd -lpng -lz -lm"
-AC_TRY_LINK([#include <gd.h>], [gdImagePng (0, 0)], LIBGD=yes, LIBGD=no)
-CFLAGS="$old_CFLAGS"
-LDFLAGS="$old_LDFLAGS"
-LIBS="$old_LIBS"
+if test "$with_gd" != "no"; then
+  old_CFLAGS="$CFLAGS"
+  CFLAGS="$CFLAGS $libgd_include"
+  old_LDFLAGS="$LDFLAGS"
+  LDFLAGS="$LDFLAGS $libgd_ldflags"
+  old_LIBS="$LIBS"
+  LIBS="$LIBS -lgd -lpng -lz -lm"
+  AC_TRY_LINK([#include <gd.h>], [gdImagePng (0, 0)], LIBGD=yes, LIBGD=no)
+  CFLAGS="$old_CFLAGS"
+  LDFLAGS="$old_LDFLAGS"
+  LIBS="$old_LIBS"
+else
+  LIBGD=no
+fi
 AC_MSG_RESULT($LIBGD)
 AC_SUBST(LIBGD)
 

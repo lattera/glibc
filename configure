@@ -2221,7 +2221,7 @@ else
 fi
 
 
-for ac_prog in mawk gawk nawk awk
+for ac_prog in gawk mawk nawk awk
 do
 # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -3287,21 +3287,22 @@ fi
 
 echo $ac_n "checking for libgd""... $ac_c" 1>&6
 echo "configure:3290: checking for libgd" >&5
-old_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS $libgd_include"
-old_LDFLAGS="$LDFLAGS"
-LDFLAGS="$LDFLAGS $libgd_ldflags"
-old_LIBS="$LIBS"
-LIBS="$LIBS -lgd -lpng -lz -lm"
-cat > conftest.$ac_ext <<EOF
-#line 3298 "configure"
+if test "$with_gd" != "no"; then
+  old_CFLAGS="$CFLAGS"
+  CFLAGS="$CFLAGS $libgd_include"
+  old_LDFLAGS="$LDFLAGS"
+  LDFLAGS="$LDFLAGS $libgd_ldflags"
+  old_LIBS="$LIBS"
+  LIBS="$LIBS -lgd -lpng -lz -lm"
+  cat > conftest.$ac_ext <<EOF
+#line 3299 "configure"
 #include "confdefs.h"
 #include <gd.h>
 int main() {
 gdImagePng (0, 0)
 ; return 0; }
 EOF
-if { (eval echo configure:3305: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:3306: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
   LIBGD=yes
 else
@@ -3311,14 +3312,17 @@ else
   LIBGD=no
 fi
 rm -f conftest*
-CFLAGS="$old_CFLAGS"
-LDFLAGS="$old_LDFLAGS"
-LIBS="$old_LIBS"
+  CFLAGS="$old_CFLAGS"
+  LDFLAGS="$old_LDFLAGS"
+  LIBS="$old_LIBS"
+else
+  LIBGD=no
+fi
 echo "$ac_t""$LIBGD" 1>&6
 
 
 echo $ac_n "checking size of long double""... $ac_c" 1>&6
-echo "configure:3322: checking size of long double" >&5
+echo "configure:3326: checking size of long double" >&5
 if eval "test \"`echo '$''{'ac_cv_sizeof_long_double'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3326,7 +3330,7 @@ else
   ac_cv_sizeof_long_double=0
 else
   cat > conftest.$ac_ext <<EOF
-#line 3330 "configure"
+#line 3334 "configure"
 #include "confdefs.h"
 #include <stdio.h>
 main()
@@ -3337,7 +3341,7 @@ main()
   exit(0);
 }
 EOF
-if { (eval echo configure:3341: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:3345: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   ac_cv_sizeof_long_double=`cat conftestval`
 else
@@ -3405,7 +3409,7 @@ if test "$uname" = "sysdeps/generic"; then
   fi
 
   echo $ac_n "checking OS release for uname""... $ac_c" 1>&6
-echo "configure:3409: checking OS release for uname" >&5
+echo "configure:3413: checking OS release for uname" >&5
 if eval "test \"`echo '$''{'libc_cv_uname_release'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3427,7 +3431,7 @@ echo "$ac_t""$libc_cv_uname_release" 1>&6
   uname_release="$libc_cv_uname_release"
 
   echo $ac_n "checking OS version for uname""... $ac_c" 1>&6
-echo "configure:3431: checking OS version for uname" >&5
+echo "configure:3435: checking OS version for uname" >&5
 if eval "test \"`echo '$''{'libc_cv_uname_version'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3449,7 +3453,7 @@ else
 fi
 
 echo $ac_n "checking stdio selection""... $ac_c" 1>&6
-echo "configure:3453: checking stdio selection" >&5
+echo "configure:3457: checking stdio selection" >&5
 
 case $stdio in
 libio) cat >> confdefs.h <<\EOF
@@ -3463,7 +3467,7 @@ echo "$ac_t""$stdio" 1>&6
 # Test for old glibc 2.0.x headers so that they can be removed properly
 # Search only in includedir.
 echo $ac_n "checking for old glibc 2.0.x headers""... $ac_c" 1>&6
-echo "configure:3467: checking for old glibc 2.0.x headers" >&5
+echo "configure:3471: checking for old glibc 2.0.x headers" >&5
 if eval test -f "${includedir}/elfclass.h" -a -f "${includedir}/fcntlbits.h"
 then
   old_glibc_headers=yes
@@ -3518,7 +3522,7 @@ if test $shared = default; then
 fi
 
 echo $ac_n "checking whether -fPIC is default""... $ac_c" 1>&6
-echo "configure:3522: checking whether -fPIC is default" >&5
+echo "configure:3526: checking whether -fPIC is default" >&5
 if eval "test \"`echo '$''{'pic_default'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
