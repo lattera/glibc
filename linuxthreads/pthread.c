@@ -37,6 +37,11 @@
 /* Descriptor of the initial thread */
 
 struct _pthread_descr_struct __pthread_initial_thread = {
+  {
+    {
+      &__pthread_initial_thread /* pthread_descr self */
+    }
+  },
   &__pthread_initial_thread,  /* pthread_descr p_nextlive */
   &__pthread_initial_thread,  /* pthread_descr p_prevlive */
   NULL,                       /* pthread_descr p_nextwaiting */
@@ -71,7 +76,6 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   0,                          /* int p_userstack */
   NULL,                       /* void * p_guardaddr */
   0,                          /* size_t p_guardsize */
-  &__pthread_initial_thread,  /* pthread_descr p_self */
   0,                          /* Always index 0 */
   0,                          /* int p_report_events */
   {{{0, }}, 0, NULL},         /* td_eventbuf_t p_eventbuf */
@@ -88,6 +92,11 @@ struct _pthread_descr_struct __pthread_initial_thread = {
    and the address for identification.  */
 
 struct _pthread_descr_struct __pthread_manager_thread = {
+  {
+    {
+      &__pthread_manager_thread /* pthread_descr self */
+    }
+  },
   NULL,                       /* pthread_descr p_nextlive */
   NULL,                       /* pthread_descr p_prevlive */
   NULL,                       /* pthread_descr p_nextwaiting */
@@ -122,7 +131,6 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   0,                          /* int p_userstack */
   NULL,                       /* void * p_guardaddr */
   0,                          /* size_t p_guardsize */
-  &__pthread_manager_thread,  /* pthread_descr p_self */
   1,                          /* Always index 1 */
   0,                          /* int p_report_events */
   {{{0, }}, 0, NULL},         /* td_eventbuf_t p_eventbuf */
@@ -369,12 +377,12 @@ static void pthread_initialize(void)
   sa.sa_flags = 0;
   __sigaction(__pthread_sig_restart, &sa, NULL);
   sa.sa_handler = pthread_handle_sigcancel;
-  sa.sa_flags = 0;
+  // sa.sa_flags = 0;
   __sigaction(__pthread_sig_cancel, &sa, NULL);
   if (__pthread_sig_debug > 0) {
     sa.sa_handler = pthread_handle_sigdebug;
     sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
+    // sa.sa_flags = 0;
     __sigaction(__pthread_sig_debug, &sa, NULL);
   }
   /* Initially, block __pthread_sig_restart. Will be unblocked on demand. */

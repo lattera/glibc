@@ -385,7 +385,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_resp = &new_thread->p_res;
   new_thread->p_guardaddr = guardaddr;
   new_thread->p_guardsize = guardsize;
-  new_thread->p_self = new_thread;
+  new_thread->p_header.data.self = new_thread;
   new_thread->p_nr = sseg;
   /* Initialize the thread handle */
   __pthread_init_lock(&__pthread_handles[sseg].h_lock);

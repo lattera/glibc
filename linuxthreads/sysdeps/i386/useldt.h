@@ -54,7 +54,8 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 ({									      \
   register pthread_descr __self;					      \
   __asm__ ("movl %%gs:%c1,%0" : "=r" (__self)				      \
-	   : "i" (offsetof (struct _pthread_descr_struct, p_self)));	      \
+	   : "i" (offsetof (struct _pthread_descr_struct,		      \
+			    p_header.data.self)));			      \
   __self;								      \
 })
 

@@ -1,4 +1,14 @@
-2000-04-29  Bruno Haible  <clisp.cons.org>
+2000-05-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* internals.h (struct _pthread_descr_struct): Reorganization.
+	Allocate room for 16 pointers at head of the structure for future
+	thread-local data handling.  Move p_self member in this area.
+	* manager.c (pthread_handle_create): Adjust use of p_self.
+	* sysdeps/i386/useldt.h (THREAD_SELF): Likewise.
+	* pthread.c (__pthread_initial_thread): Adjust initialization.
+	(__pthread_manager_thread): Likewise.
+
+2000-04-29  Bruno Haible  <haible@clisp.cons.org>
 
 	* join.c (pthread_exit): Use THREAD_GETMEM_NC instead of THREAD_GETMEM
 	for eventmask larger than 1 word.

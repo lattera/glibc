@@ -922,17 +922,17 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 		   - MAP_BASE_ADDR (l));
 
 	/* Remember which part of the address space this object uses.  */
-	l->l_map_start = map_segment (mappref, maplength, c->prot, 0,
-				      c->mapoff);
+	l->l_map_start = (ElfW(Addr)) map_segment (mappref, maplength, c->prot,
+						   0, c->mapoff);
 	l->l_map_end = l->l_map_start + maplength;
-	l->l_addr = (ElfW(Addr)) mapat - c->mapstart;
+	l->l_addr = l->l_map_start - c->mapstart;
 
 	/* Change protection on the excess portion to disallow all access;
 	   the portions we do not remap later will be inaccessible as if
 	   unallocated.  Then jump into the normal segment-mapping loop to
 	   handle the portion of the segment past the end of the file
 	   mapping.  */
-	__mprotect ((caddr_t) l->l_map_start,
+	__mprotect ((caddr_t) (l->l_addr + c->mapend),
 		    loadcmds[nloadcmds - 1].allocend - c->mapend,
 		    0);
 

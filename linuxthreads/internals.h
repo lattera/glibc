@@ -124,6 +124,12 @@ typedef struct _pthread_rwlock_info {
 } pthread_readlock_info;
 
 struct _pthread_descr_struct {
+  union {
+    struct {
+      pthread_descr self;	/* Pointer to this structure */
+    } data;
+    void *__padding[16];
+  } p_header;
   pthread_descr p_nextlive, p_prevlive;
                                 /* Double chaining of active threads */
   pthread_descr p_nextwaiting;  /* Next element in the queue holding the thr */
@@ -157,7 +163,6 @@ struct _pthread_descr_struct {
   int p_userstack;		/* nonzero if the user provided the stack */
   void *p_guardaddr;		/* address of guard area or NULL */
   size_t p_guardsize;		/* size of guard area */
-  pthread_descr p_self;		/* Pointer to this structure */
   int p_nr;                     /* Index of descriptor in __pthread_handles */
   int p_report_events;		/* Nonzero if events must be reported.  */
   td_eventbuf_t p_eventbuf;     /* Data for event.  */

@@ -39,7 +39,7 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   dl-cache.h dl-hash.h soinit.c sofini.c ldd.bash.in \
 		   genrtldtbl.awk atomicity.h dl-procinfo.h ldsodefs.h \
 		   dl-librecon.h interp.c sln.c dl-dst.h hp-timing.h \
-		   do-lookup.h sprof.c gen-trusted-dirs.awk \
+		   do-lookup.h dl-lookupcfg.h sprof.c gen-trusted-dirs.awk \
 		   testobj1.c testobj2.c testobj3.c testobj4.c testobj5.c \
 		   testobj6.c testobj1_1.c failobj.c \
 		   ldconfig.h ldconfig.c cache.c readlib.c readelflib.c \
