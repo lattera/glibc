@@ -1,3 +1,7 @@
+1998-06-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/terminal.texi (Pseudo-Terminals): Correct typos.
+
 1998-06-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* config.make.in: Remove LDAP support.

@@ -1837,9 +1837,9 @@ example does so.
 @cindex pseudo-terminals
 
 A @dfn{pseudo-terminal} is a special interprocess communication channel
-that acts like a terminal.  On one end of the channel is called the
+that acts like a terminal.  One end of the channel is called the
 @dfn{master} side or @dfn{master pseudo-terminal device}, the other side
-is called the @dfn{slave} side.  Data written to the the master side is
+is called the @dfn{slave} side.  Data written to the master side is
 received by the slave side as if it was the result of a user typing at
 an ordinary terminal, and data written to the slave side is sent to the
 master side as if it was written on an ordinary terminal.
@@ -1858,7 +1858,7 @@ implement their terminal emulation functionality.
 @cindex allocating pseudo-terminals
 
 @pindex stdlib.h
-This subsection describes functions for allocating a pseudo-terminals,
+This subsection describes functions for allocating a pseudo-terminal,
 and for making this pseudo-terminal available for actual use.  These
 functions are declared in the header file @file{stdlib.h}.
 
@@ -2020,7 +2020,7 @@ These functions, derived from BSD, are available in the separate
 This function allocates and opens a pseudo-terminal pair, returning the
 file descriptor for the master in @var{*amaster}, and the file
 descriptor for the slave in @var{*aslave}.  If the argument @var{name}
-is not a null pointer, the name file name of the slave pseudo-terminal
+is not a null pointer, the file name of the slave pseudo-terminal
 device is stored in @code{*name}.  If @var{termp} is not a null pointer,
 the terminal attributes of the slave are set to the ones specified in
 the structure that @var{termp} points to (@pxref{Terminal Modes}).
@@ -2031,11 +2031,12 @@ the slave is set to the values specified in the structure that
 The normal return value from @code{openpty} is @math{0}; a value of
 @math{-1} is returned in case of failure.
 
-@strong{Warning:} Using the @code{openpty} with @var{name} not set to
-@code{NULL} is @strong{very dangerous} because it provides no protection
-against overflowing the string @var{name}.  You should use the
-@code{ttyname} function on the file descriptor returned in @var{*slave}
-to find out the file name of the slave pseudo-terminal device instead.
+@strong{Warning:} Using the @code{openpty} function with @var{name} not
+set to @code{NULL} is @strong{very dangerous} because it provides no
+protection against overflowing the string @var{name}.  You should use
+the @code{ttyname} function on the file descriptor returned in
+@var{*slave} to find out the file name of the slave pseudo-terminal
+device instead.
 @end deftypefun
 
 @comment pty.h
