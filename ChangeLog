@@ -1,5 +1,9 @@
 2004-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/powerpc/powerpc64/bits/atomic.h: Never use matching
+	constraints for asm mem parameters.
+	* sysdeps/powerpc/bits/atomic.h: Likewise.
+
 	* sysdeps/powerpc/elf/libc-start.c: no need for a separate
 	function for __aux_init_cache.
 

@@ -1,5 +1,5 @@
 /* Atomic operations.  PowerPC64 version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -61,8 +61,8 @@
   __tmp != 0;								      \
 })
 
-/* 
- * Only powerpc64 processors support Load doubleword and reserve index (ldarx) 
+/*
+ * Only powerpc64 processors support Load doubleword and reserve index (ldarx)
  * and Store doubleword conditional indexed (stdcx) instructions.  So here
  * we define the 64-bit forms.
  */
@@ -141,7 +141,7 @@
 			"	bne-	1b\n"				      \
 		  " " __ARCH_ACQ_INSTR					      \
 			: "=&r" (__val), "=m" (*mem)			      \
-			: "b" (mem), "r" (value), "1" (*mem)		      \
+			: "b" (mem), "r" (value), "m" (*mem)		      \
 			: "cr0", "memory");				      \
       __val;								      \
     })
@@ -154,7 +154,7 @@
 			"	stdcx.	%3,0,%2\n"			      \
 			"	bne-	1b"				      \
 			: "=&r" (__val), "=m" (*mem)			      \
-			: "b" (mem), "r" (value), "1" (*mem)		      \
+			: "b" (mem), "r" (value), "m" (*mem)		      \
 			: "cr0", "memory");				      \
       __val;								      \
     })
@@ -167,7 +167,7 @@
 			"	stdcx.	%1,0,%3\n"			      \
 			"	bne-	1b"				      \
 			: "=&b" (__val), "=&r" (__tmp), "=m" (*mem)	      \
-			: "b" (mem), "r" (value), "2" (*mem)		      \
+			: "b" (mem), "r" (value), "m" (*mem)		      \
 			: "cr0", "memory");				      \
       __val;								      \
     })
@@ -182,17 +182,17 @@
 		       "	bne-	1b\n"				      \
 		       "2:	" __ARCH_ACQ_INSTR			      \
 		       : "=&b" (__val), "=&r" (__tmp), "=m" (*mem)	      \
-		       : "b" (mem), "2" (*mem)				      \
+		       : "b" (mem), "m" (*mem)				      \
 		       : "cr0", "memory");				      \
      __val;								      \
   })
 
-/* 
- * All powerpc64 processors support the new "light weight"  sync (lwsync).   
+/*
+ * All powerpc64 processors support the new "light weight"  sync (lwsync).
  */
 # define atomic_read_barrier()	__asm ("lwsync" ::: "memory")
-/* 
- * "light weight" sync can also be used for the release barrier.   
+/*
+ * "light weight" sync can also be used for the release barrier.
  */
 # ifndef UP
 #  define __ARCH_REL_INSTR	"lwsync"
@@ -200,6 +200,6 @@
 
 /*
  * Include the rest of the atomic ops macros which are common to both
- * powerpc32 and powerpc64. 
+ * powerpc32 and powerpc64.
  */
 #include_next <bits/atomic.h>

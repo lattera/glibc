@@ -1,5 +1,5 @@
 /* Atomic operations.  PowerPC Common version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -53,7 +53,7 @@ typedef uintmax_t uatomic_max_t;
 
 #define __arch_compare_and_exchange_bool_16_acq(mem, newval, oldval) \
   (abort (), 0)
-  
+
 #define __arch_compare_and_exchange_bool_8_rel(mem, newval, oldval) \
   (abort (), 0)
 
@@ -116,7 +116,7 @@ typedef uintmax_t uatomic_max_t;
 		      "		bne-	1b\n"				      \
 		      "   " __ARCH_ACQ_INSTR				      \
 		      : "=&r" (__val), "=m" (*mem)			      \
-		      : "b" (mem), "r" (value), "1" (*mem)		      \
+		      : "b" (mem), "r" (value), "m" (*mem)		      \
 		      : "cr0", "memory");				      \
     __val;								      \
   })
@@ -129,7 +129,7 @@ typedef uintmax_t uatomic_max_t;
 		      "		stwcx.	%3,0,%2\n"			      \
 		      "		bne-	1b"				      \
 		      : "=&r" (__val), "=m" (*mem)			      \
-		      : "b" (mem), "r" (value), "1" (*mem)		      \
+		      : "b" (mem), "r" (value), "m" (*mem)		      \
 		      : "cr0", "memory");				      \
     __val;								      \
   })
@@ -142,7 +142,7 @@ typedef uintmax_t uatomic_max_t;
 		      "		stwcx.	%1,0,%3\n"			      \
 		      "		bne-	1b"				      \
 		      : "=&b" (__val), "=&r" (__tmp), "=m" (*mem)	      \
-		      : "b" (mem), "r" (value), "2" (*mem)		      \
+		      : "b" (mem), "r" (value), "m" (*mem)		      \
 		      : "cr0", "memory");				      \
     __val;								      \
   })
@@ -157,7 +157,7 @@ typedef uintmax_t uatomic_max_t;
 		       "	bne-	1b\n"				      \
 		       "2:	" __ARCH_ACQ_INSTR			      \
 		       : "=&b" (__val), "=&r" (__tmp), "=m" (*mem)	      \
-		       : "b" (mem), "2" (*mem)				      \
+		       : "b" (mem), "m" (*mem)				      \
 		       : "cr0", "memory");				      \
      __val;								      \
   })
@@ -173,7 +173,7 @@ typedef uintmax_t uatomic_max_t;
        abort ();							      \
     __result;								      \
   })
-  
+
 #define atomic_compare_and_exchange_val_rel(mem, newval, oldval) \
   ({									      \
     __typeof (*(mem)) __result;						      \
