@@ -1,5 +1,12 @@
 Tue Jun 18 17:56:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Makerules ($(common-objpfx)distinfo-$(subdir)): Change target from
+	distinfo to this.
+	(distinfo): Make phony target depending on that.
+	(TAGS, po/%.pot, dist): Change deps.
+	(common-clean): Remove that file.
+	* rpm/Makefile (distinfo): Change names.
+
 	* rpm/Makefile (clean): New target.
 
 	* stdlib/test-canon.c: New test program contributed by David Mosberger.

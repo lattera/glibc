@@ -9,7 +9,8 @@ include ../Makeconfig
 include $(common-objpfx)soversions.mk
 include $(common-objpfx)version.mk
 
-distinfo := $(wildcard $(subdirs:%=../%/distinfo))
+distinfo := $(common-objpfx)distinfo- \
+	    $(wildcard $(subdirs:%=$(common-objpfx)distinfo-%))
 -include $(distinfo)
 
 config = $(config-machine)-$(config-vendor)-$(config-os)

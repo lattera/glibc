@@ -739,10 +739,10 @@ endif
 check: tests
 
 .PHONY: TAGS
-TAGS: distinfo $(..)MakeTAGS
+TAGS: $(common-objpfx)distinfo-$(subdir) $(..)MakeTAGS
 	$(MAKE) $(addprefix -f ,$^) $@
 
-$(..)po/%.pot: distinfo $(..)MakeTAGS FORCE
+$(..)po/%.pot: $(common-objpfx)distinfo-$(subdir) $(..)MakeTAGS FORCE
 	$(MAKE) $(addprefix -f ,$(filter-out FORCE,$^)) $@
 FORCE:
 
@@ -774,6 +774,7 @@ endef
 # Also remove the dependencies and generated source files.
 common-clean: common-mostlyclean
 	-rm -f $(addprefix $(objpfx),$(generated)) $(+depfiles)
+	-rm -f $(common-objpfx)distinfo-$(subdir)
 
 # Produce a file `stub-$(subdir)' which contains `#define __stub_FUNCTION'
 # for each function which is a stub.  We grovel over all the .d files
@@ -796,7 +797,7 @@ $(common-objpfx)stub-$(subdir): $(+depfiles)
 # Make the distribution tar file.
 
 .PHONY: dist
-dist: distinfo $(..)Make-dist
+dist: $(common-objpfx)distinfo-$(subdir) $(..)Make-dist
 	$(MAKE) -f $< -f $(word 2,$^) $(Make-dist-args)
 
 # Avoid depending on source files found in sysdeps dirs,
@@ -807,11 +808,12 @@ dist: $(filter-out %.c %.S %.s,$(distribute))
 # environment get too large.  Instead, we write all the information into
 # a generated makefile fragment `distinfo', and then include it with -f in
 # the sub-make that makes the distribution (above).
-distinfo: Makefile $(..)Makerules
+$(common-objpfx)distinfo-$(subdir): Makefile $(..)Makerules
 	$(distinfo-vars)
 	mv -f $@.new $@
-.PHONY: subdir_distinfo
+.PHONY: subdir_distinfo distinfo
 subdir_distinfo: distinfo
+distinfo: $(common-objpfx)distinfo-$(subdir)
 
 define distinfo-vars
 rm -f $@.new
