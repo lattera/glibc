@@ -53,6 +53,8 @@ LEAF(SELECT, 64)
 	jsr	AT, (AT), _mcount
 	.set at
 #endif
+	stq	ra, 40(sp)
+	.mask	0x4000000, 40-64
 	.prologue 1
 
 #ifdef CENABLE
@@ -131,9 +133,9 @@ $do_cancel:
 	stq	a1, 16(sp)
 	stq	a2, 24(sp)
 	stq	a3, 32(sp)
-	stq	ra, 40(sp)
 
 	CENABLE
+	mov	v0, ra
 
 	ldl	t0, __libc_missing_axp_tv64
 	bne	t0, $do_cancel32
@@ -147,6 +149,8 @@ $do_cancel:
 
 	ldi	v0, SYS_ify(select)
 	callsys
+
+	mov	ra, a0
 	bne	a3, $cancel_err64
 
 	stq	v0, 8(sp)
@@ -184,6 +188,8 @@ $do_cancel32:
 
 1:	ldi	v0, SYS_ify(osf_select)
 	callsys
+
+	mov	ra, a0
 	bne	a3, $cancel_error
 
 	/* ... and bounce the remaining timeout back.  */
