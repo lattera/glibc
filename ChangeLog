@@ -1,3 +1,7 @@
+1998-10-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* signal/signal.h: Include bits/sigthread.h only for Unix98.
+
 1998-10-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* include/libc-symbols.h: If HAVE_BUILTIN_EXPECT is not defined

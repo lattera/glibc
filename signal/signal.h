@@ -39,7 +39,7 @@ __BEGIN_DECLS
 #  undef __need_sig_atomic_t
 #  define __sig_atomic_t_defined 1
 typedef __sig_atomic_t sig_atomic_t;
-# endif 
+# endif
 #endif
 
 #ifndef __sigset_t_defined
@@ -335,13 +335,11 @@ extern int sigignore __P ((int __sig));
 
 /* Set the disposition of SIG.  */
 extern __sighandler_t sigset __P ((int __sig, __sighandler_t __disp));
-#endif /* use Unix98 */
 
-#ifdef __USE_POSIX199506
 /* Some of the functions for handling signals in threaded programs must
    be defined here.  */
 # include <bits/sigthread.h>
-#endif
+#endif /* use Unix98 */
 
 /* The following functions are used internally in the C library and in
    other code which need deep insights.  */
