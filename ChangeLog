@@ -1,3 +1,8 @@
+2003-01-25  Jim Meyering  <jim@meyering.net>
+
+	* io/ftw.c (object_compare): Compare inode numbers before device
+	numbers, since the former are much more likely to differ.
+
 2003-02-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/tzfile.c (__tzfile_compute): Change return value type to
