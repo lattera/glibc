@@ -121,4 +121,56 @@ fdimf (float __x, float __y) __THROW
 
 #endif /* __USE_ISOC99 */
 #endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
+
+/* This code is used internally in the GNU libc.  */
+#  ifdef __LIBC_INTERNAL_MATH_INLINES
+
+#include <sysdep.h>
+#include <ldsodefs.h>
+#include <dl-procinfo.h>
+
+extern double __slow_ieee754_sqrt (double);
+__MATH_INLINE double
+__ieee754_sqrt (double __x)
+{
+  double __z;
+  
+  /* If the CPU is 64-bit we can use the optional FP instructions we.  */
+  if ((GLRO(dl_hwcap) & PPC_FEATURE_64) != 0)
+  {
+    /* Volatile is required to prevent the compiler from moving the 
+       fsqrt instruction above the branch.  */
+     __asm __volatile (
+	"	fsqrt	%0,%1\n"
+		: "=f" (__z)
+		: "f" (__x));
+  }
+  else
+     __z = __slow_ieee754_sqrt(__x);
+     
+  return __z;
+}
+
+extern float __slow_ieee754_sqrtf (float);
+__MATH_INLINE float
+__ieee754_sqrtf (float __x)
+{
+  float __z;
+  
+  /* If the CPU is 64-bit we can use the optional FP instructions we.  */
+  if ((GLRO(dl_hwcap) & PPC_FEATURE_64) != 0)
+  {
+    /* Volatile is required to prevent the compiler from moving the 
+       fsqrts instruction above the branch.  */
+     __asm __volatile (
+	"	fsqrts	%0,%1\n"
+		: "=f" (__z)
+		: "f" (__x));
+  }
+  else
+     __z = __slow_ieee754_sqrtf(__x);
+     
+  return __z;
+}
+#  endif /* __LIBC_INTERNAL_MATH_INLINES */
 #endif /* __GNUC__ && !_SOFT_FLOAT */

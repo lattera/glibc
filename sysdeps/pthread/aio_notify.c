@@ -1,5 +1,6 @@
 /* Notify initiator of AIO request.
-   Copyright (C) 1997,98,99,2000,2001,2003 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -22,8 +23,11 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "aio_misc.h"
+#include <aio_misc.h>
 
+#ifndef aio_start_notify_thread
+# define aio_start_notify_thread() do { } while (0)
+#endif
 
 struct notify_func
   {
@@ -34,6 +38,7 @@ struct notify_func
 static void *
 notify_func_wrapper (void *arg)
 {
+  aio_start_notify_thread ();
   struct notify_func *const n = arg;
   void (*func) (sigval_t) = n->func;
   sigval_t value = n->value;

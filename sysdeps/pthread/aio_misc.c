@@ -27,8 +27,27 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/time.h>
+#include <aio_misc.h>
 
-#include "aio_misc.h"
+#ifndef aio_create_helper_thread
+# define aio_create_helper_thread __aio_create_helper_thread
+
+extern inline int
+__aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *), void *arg)
+{
+  pthread_attr_t attr;
+
+  /* Make sure the thread is created detached.  */
+  pthread_attr_init (&attr);
+  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+
+  int ret = pthread_create (threadp, &attr, tf, arg);
+
+  (void) pthread_attr_destroy (&attr);
+  return ret;
+}                                                                                 
+
+#endif
 
 static void add_request_to_runlist (struct requestlist *newrequest);
 
@@ -400,16 +419,11 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
       if (nthreads < optim.aio_threads && idle_thread_count == 0)
 	{
 	  pthread_t thid;
-	  pthread_attr_t attr;
-
-	  /* Make sure the thread is created detached.  */
-	  pthread_attr_init (&attr);
-	  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
 
 	  running = newp->running = allocated;
 
 	  /* Now try to start a thread.  */
-	  if (pthread_create (&thid, &attr, handle_fildes_io, newp) == 0)
+	  if (aio_create_helper_thread (&thid, handle_fildes_io, newp) == 0)
 	    /* We managed to enqueue the request.  All errors which can
 	       happen now can be recognized by calls to `aio_return' and
 	       `aio_error'.  */

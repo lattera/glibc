@@ -16,6 +16,20 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+/* 
+ * Powerpc Feature masks for the Aux Vector Hardware Capabilities (AT_HWCAP). 
+ * This entry is copied to _dl_hwcap or rtld_global._dl_hwcap during startup.
+ * The following must match the kernels linux/asm/cputable.h.  
+ */
+#define PPC_FEATURE_32			0x80000000 /* 32-bit mode. */
+#define PPC_FEATURE_64			0x40000000 /* 64-bit mode. */
+#define PPC_FEATURE_601_INSTR		0x20000000 /* 601 chip, Old POWER ISA.  */
+#define PPC_FEATURE_HAS_ALTIVEC		0x10000000 /* SIMD/Vector Unit.  */
+#define PPC_FEATURE_HAS_FPU		0x08000000 /* Floating Point Unit.  */
+#define PPC_FEATURE_HAS_MMU		0x04000000 /* Memory Management Unit.  */
+#define PPC_FEATURE_HAS_4xxMAC		0x02000000 /* 4xx Multiply Accumulator.  */
+#define PPC_FEATURE_UNIFIED_CACHE	0x01000000 /* Unified I/D cache.  */
+
 #ifdef __ASSEMBLER__
 
 /* Symbolic names for the registers.  The only portable way to write asm
@@ -146,19 +160,5 @@
 #define ASM_SIZE_DIRECTIVE(name) .size name,.-name
 
 #endif /* __ELF__ */
-
-/* 
- * Powerpc Feature masks for the Aux Vector Hardware Capabilities (AT_HWCAP). 
- * This entry is copied to _dl_hwcap or rtld_global._dl_hwcap during startup.
- * The following must match the kernels linux/asm/cputable.h.  
- */
-#define PPC_FEATURE_32			0x80000000 /* 32-bit mode. */
-#define PPC_FEATURE_64			0x40000000 /* 64-bit mode. */
-#define PPC_FEATURE_601_INSTR		0x20000000 /* 601 chip, Old POWER ISA.  */
-#define PPC_FEATURE_HAS_ALTIVEC		0x10000000 /* SIMD/Vector Unit.  */
-#define PPC_FEATURE_HAS_FPU		0x08000000 /* Floating Point Unit.  */
-#define PPC_FEATURE_HAS_MMU		0x04000000 /* Memory Management Unit.  */
-#define PPC_FEATURE_HAS_4xxMAC		0x02000000 /* 4xx Multiply Accumulator.  */
-#define PPC_FEATURE_UNIFIED_CACHE	0x01000000 /* Unified I/D cache.  */
-
 #endif	/* __ASSEMBLER__ */
+

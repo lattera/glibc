@@ -1,3 +1,48 @@
+2004-05-25  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/fpu/Makefile: Make ld.so a dependency of libm.so.
+	* sysdeps/powerpc/fpu/bits/mathinline.h [__LIBC_INERNAL_MATH_INLINES]
+	(__ieee754_sqrt): Define as __MATH_INLINE using fsqrt instruction.
+	(__ieee754_sqrtf): Define as __MATH_INLINE using fsqrts instruction.
+	* sysdeps/powerpc/fpu/e_sqrt.c (__slow_ieee754_sqrt): Moved
+	implementation from w_sqrt.c.
+	* sysdeps/powerpc/fpu/e_sqrtf.c (__slow_ieee754_sqrtf): Moved
+	implementation from w_sqrtf.c.
+	* sysdeps/powerpc/fpu/w_sqrt.c (__sqrt): Wrapper implementation
+	using inline __ieee754_sqrt().
+	* sysdeps/powerpc/fpu/w_sqrtf.c (__sqrtf): Wrapper implementation
+	using inline __ieee754_sqrtf().
+	* sysdeps/powerpc/powerpc32/sysdep.h [__ASSEMBLER__]: Include
+	<sysdeps/powerpc/sysdep.h> independent of __ASSEMBLER__.
+	* sysdeps/powerpc/sysdep.h [__ASSEMBLER__] (PPC_FEATURE_*): Define
+	PPC_FEATURE_*  independent of __ASSEMBLER__.
+
+2004-05-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/aio_notify.c: Use <> instead of "" for aio_misc.h
+	include.
+	(aio_start_notify_thread): Define if not defined.
+	(notify_func_wrapper): Use it.
+	* sysdeps/pthread/aio_misc.c: Use <> instead of "" for aio_misc.h
+	include.
+	(aio_create_helper_thread): Define if not defined.
+	(__aio_create_helper_thread): New function.
+	(__aio_enqueue_request): Use aio_create_helper_thread.
+
+	* nis/ypclnt.c (ypall_data, ypall_foreach): Remove.
+	(struct ypresp_all_data): New type.
+	(__xdr_ypresp_all): Change second argument to
+	struct ypresp_all_data *.  Replace ypall_foreach and
+	ypall_data with objp->foreach and objp->data.
+	(yp_all): Remove status variable, add data.  Replace
+	all uses of status with data.status.  Initialize data.foreach
+	and data.data instead of ypall_foreach and ypall_data.
+
+2004-05-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-lookup.c (add_dependency): Set DF_1_NODELETE bit
+	in l_flags_1, not in l_flags.
+
 2004-04-10  Robert Millan  <robertmh@gnu.org>
 
 	* sysdeps/unix/sysv/linux/bits/in.h: Cosmetic fixes to get in sync

@@ -618,12 +618,16 @@ yp_order (const char *indomain, const char *inmap, unsigned int *outorder)
   return YPERR_SUCCESS;
 }
 
-static void *ypall_data;
-static int (*ypall_foreach) (int status, char *key, int keylen,
-			     char *val, int vallen, char *data);
+struct ypresp_all_data
+{
+  unsigned long status;
+  void *data;
+  int (*foreach) (int status, char *key, int keylen,
+		  char *val, int vallen, char *data);
+};
 
 static bool_t
-__xdr_ypresp_all (XDR *xdrs, u_long *objp)
+__xdr_ypresp_all (XDR *xdrs, struct ypresp_all_data *objp)
 {
   while (1)
     {
@@ -633,13 +637,13 @@ __xdr_ypresp_all (XDR *xdrs, u_long *objp)
       if (!xdr_ypresp_all (xdrs, &resp))
 	{
 	  xdr_free ((xdrproc_t) xdr_ypresp_all, (char *) &resp);
-	  *objp = YP_YPERR;
+	  objp->status = YP_YPERR;
 	  return FALSE;
 	}
       if (resp.more == 0)
 	{
 	  xdr_free ((xdrproc_t) xdr_ypresp_all, (char *) &resp);
-	  *objp = YP_NOMORE;
+	  objp->status = YP_NOMORE;
 	  return TRUE;
 	}
 
@@ -656,24 +660,24 @@ __xdr_ypresp_all (XDR *xdrs, u_long *objp)
 	       But we are allowed to add data behind the buffer,
 	       if we don't modify the length. So add an extra NUL
 	       character to avoid trouble with broken code. */
-	    *objp = YP_TRUE;
+	    objp->status = YP_TRUE;
 	    memcpy (key, resp.ypresp_all_u.val.key.keydat_val, keylen);
 	    key[keylen] = '\0';
 	    memcpy (val, resp.ypresp_all_u.val.val.valdat_val, vallen);
 	    val[vallen] = '\0';
 	    xdr_free ((xdrproc_t) xdr_ypresp_all, (char *) &resp);
-	    if ((*ypall_foreach) (*objp, key, keylen,
-				  val, vallen, ypall_data))
+	    if ((*objp->foreach) (objp->status, key, keylen,
+				  val, vallen, objp->data))
 	      return TRUE;
 	  }
 	  break;
 	default:
-	  *objp = resp.ypresp_all_u.val.stat;
+	  objp->status = resp.ypresp_all_u.val.stat;
 	  xdr_free ((xdrproc_t) xdr_ypresp_all, (char *) &resp);
 	  /* Sun says we don't need to make this call, but must return
 	     immediatly. Since Solaris makes this call, we will call
 	     the callback function, too. */
-	  (*ypall_foreach) (*objp, NULL, 0, NULL, 0, ypall_data);
+	  (*objp->foreach) (objp->status, NULL, 0, NULL, 0, objp->data);
 	  return TRUE;
 	}
     }
@@ -689,7 +693,7 @@ yp_all (const char *indomain, const char *inmap,
   enum clnt_stat result;
   struct sockaddr_in clnt_sin;
   CLIENT *clnt;
-  unsigned long status;
+  struct ypresp_all_data data;
   int clnt_sock;
   int saved_errno = errno;
 
@@ -725,12 +729,12 @@ yp_all (const char *indomain, const char *inmap,
       req.domain = (char *) indomain;
       req.map = (char *) inmap;
 
-      ypall_foreach = incallback->foreach;
-      ypall_data = (void *) incallback->data;
+      data.foreach = incallback->foreach;
+      data.data = (void *) incallback->data;
 
       result = clnt_call (clnt, YPPROC_ALL, (xdrproc_t) xdr_ypreq_nokey,
 			  (caddr_t) &req, (xdrproc_t) __xdr_ypresp_all,
-			  (caddr_t) &status, RPCTIMEOUT);
+			  (caddr_t) &data, RPCTIMEOUT);
 
       if (result != RPC_SUCCESS)
 	{
@@ -744,10 +748,10 @@ yp_all (const char *indomain, const char *inmap,
 
       clnt_destroy (clnt);
 
-      if (res == YPERR_SUCCESS && status != YP_NOMORE)
+      if (res == YPERR_SUCCESS && data.status != YP_NOMORE)
 	{
 	  __set_errno (saved_errno);
-	  return ypprot_err (status);
+	  return ypprot_err (data.status);
 	}
       ++try;
     }
