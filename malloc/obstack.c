@@ -46,6 +46,9 @@
 #endif
 #endif
 
+#if defined _LIBC && defined USE_IN_LIBIO
+# include <wchar.h>
+#endif
 
 #ifndef ELIDE_CODE
 

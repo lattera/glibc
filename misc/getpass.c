@@ -22,6 +22,7 @@
 #include <unistd.h>
 
 #ifdef USE_IN_LIBIO
+# include <wchar.h>
 # define flockfile(s) _IO_flockfile (s)
 # define funlockfile(s) _IO_funlockfile (s)
 #endif
