@@ -481,7 +481,7 @@ repertoire_find_value (const struct repertoire_t *rep, const char *name,
   void *result;
 
   if (rep == NULL)
-    error (5, 0, _("FATAL: no repertoire map specified"));
+    return ILLEGAL_CHAR_VALUE;
 
   if (find_entry ((hash_table *) &rep->char_table, name, len, &result) < 0)
     return ILLEGAL_CHAR_VALUE;
@@ -496,7 +496,7 @@ repertoire_find_symbol (const struct repertoire_t *rep, uint32_t ucs)
   void *result;
 
   if (rep == NULL)
-    error (5, 0, _("FATAL: no repertoire map specified"));
+    return NULL;
 
   if (find_entry ((hash_table *) &rep->reverse_table, &ucs, sizeof (ucs),
 		  &result) < 0)
@@ -512,7 +512,7 @@ repertoire_find_seq (const struct repertoire_t *rep, uint32_t ucs)
   void *result;
 
   if (rep == NULL)
-    error (5, 0, _("FATAL: no repertoire map specified"));
+    return NULL;
 
   if (find_entry ((hash_table *) &rep->seq_table, &ucs, sizeof (ucs),
 		  &result) < 0)

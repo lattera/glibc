@@ -1162,7 +1162,13 @@ get_character (struct token *now, struct charmap_t *charmap,
     }
   else if (now->tok == tok_ucs4)
     {
-      *seqp = repertoire_find_seq (repertoire, now->val.ucs4);
+      char utmp[10];
+
+      snprintf (utmp, sizeof (utmp), "U%08X", now->val.ucs4);
+      *seqp = charmap_find_value (charmap, utmp, 9);
+
+      if (*seqp == NULL)
+	*seqp = repertoire_find_seq (repertoire, now->val.ucs4);
 
       if (*seqp == NULL)
 	{
@@ -1352,32 +1358,46 @@ to-value <U%0*X> of range is smaller than from-value <U%0*X>"),
       {
 	/* We have to find out whether there is a byte sequence corresponding
 	   to this UCS4 value.  */
-	struct charseq *seq = repertoire_find_seq (repertoire, last_wch);
+	struct charseq *seq;
+	char utmp[10];
+
+	snprintf (utmp, sizeof (utmp), "U%08X", last_wch);
+	seq = charmap_find_value (charmap, utmp, 9);
+
+	if (seq == NULL)
+	  /* Try looking in the repertoire map.  */
+	  seq = repertoire_find_seq (repertoire, last_wch);
 
 	/* If this is the first time we look for this sequence create a new
 	   entry.  */
 	if (seq == NULL)
 	  {
+	    static const struct charseq negative
+	      = { .ucs4 = ILLEGAL_CHAR_VALUE };
+
 	    /* Find the symbolic name for this UCS4 value.  */
-	    const char *symbol = repertoire_find_symbol (repertoire, last_wch);
-	    uint32_t *newp = obstack_alloc (&repertoire->mem_pool, 4);
-	    *newp = last_wch;
-
-	    if (symbol != NULL)
-	      /* We have a name, now search the multibyte value.  */
-	      seq = charmap_find_value (charmap, symbol, strlen (symbol));
-
-	    if (seq == NULL)
+	    if (repertoire != NULL)
 	      {
-		/* We have to create a fake entry.  */
-		static const struct charseq negative
-		  = { .ucs4 = ILLEGAL_CHAR_VALUE };
-		seq = (struct charseq *) &negative;
+		const char *symbol = repertoire_find_symbol (repertoire,
+							     last_wch);
+		uint32_t *newp = obstack_alloc (&repertoire->mem_pool, 4);
+		*newp = last_wch;
+
+		if (symbol != NULL)
+		  /* We have a name, now search the multibyte value.  */
+		  seq = charmap_find_value (charmap, symbol, strlen (symbol));
+
+		if (seq == NULL)
+		  /* We have to create a fake entry.  */
+		  seq = (struct charseq *) &negative;
+		else
+		  seq->ucs4 = last_wch;
+
+		insert_entry (&repertoire->seq_table, newp, 4, seq);
 	      }
 	    else
-	      seq->ucs4 = last_wch;
-
-	    insert_entry (&repertoire->seq_table, newp, 4, seq);
+	      /* We have to create a fake entry.  */
+	      seq = (struct charseq *) &negative;
 	  }
 
 	/* We have a name, now search the multibyte value.  */
@@ -1484,7 +1504,7 @@ to-value character sequence is smaller than from-value sequence"));
 	      if (seq->ucs4 == UNINITIALIZED_CHAR_VALUE)
 		seq->ucs4 = repertoire_find_value (repertoire, seq->name,
 						   strlen (seq->name));
-	      wch = seq->ucs4;
+	      wch = seq == NULL ? ILLEGAL_CHAR_VALUE : seq->ucs4;
 
 	      if (wch != ILLEGAL_CHAR_VALUE && class_bit != 0)
 		*find_idx (ctype, &ctype->class_collection,
@@ -1560,8 +1580,11 @@ read_widestring (struct linereader *ldfile, struct token *now,
       wstr[0] = repertoire_find_value (repertoire, now->val.str.startmb,
 				       now->val.str.lenmb);
       if (wstr[0] == ILLEGAL_CHAR_VALUE)
-	/* We cannot proceed, we don't know the UCS4 value.  */
-	return NULL;
+	{
+	  /* We cannot proceed, we don't know the UCS4 value.  */
+	  free (wstr);
+	  return NULL;
+	}
 
       wstr[1] = 0;
     }
@@ -1726,11 +1749,9 @@ read_translit_ignore_entry (struct linereader *ldfile,
       if (now->tok == tok_ucs4)
 	from = now->val.ucs4;
       else
-	{
-	  /* Try to get the value.  */
-	  from = repertoire_find_value (repertoire, now->val.str.startmb,
-					now->val.str.lenmb);
-	}
+	/* Try to get the value.  */
+	from = repertoire_find_value (repertoire, now->val.str.startmb,
+				      now->val.str.lenmb);
 
       if (from == ILLEGAL_CHAR_VALUE)
 	{
@@ -1777,11 +1798,9 @@ read_translit_ignore_entry (struct linereader *ldfile,
 	  if (now->tok == tok_ucs4)
 	    to = now->val.ucs4;
 	  else
-	    {
-	      /* Try to get the value.  */
-	      to = repertoire_find_value (repertoire, now->val.str.startmb,
-					  now->val.str.lenmb);
-	    }
+	    /* Try to get the value.  */
+	    to = repertoire_find_value (repertoire, now->val.str.startmb,
+					now->val.str.lenmb);
 
 	  if (to == ILLEGAL_CHAR_VALUE)
 	    lr_error (ldfile, "invalid character name");
@@ -2556,20 +2575,8 @@ set_class_defaults (struct locale_ctype_t *ctype, struct charmap_t *charmap,
 
       for (ch = from; ch <= to; ++ch)
 	{
-	  uint32_t value;
 	  struct charseq *seq;
 	  tmp[0] = ch;
-
-	  value = repertoire_find_value (repertoire, tmp, 1);
-	  if (value == ILLEGAL_CHAR_VALUE)
-	    {
-	      if (!be_quiet)
-		error (0, 0, _("\
-%s: character `%s' not defined in repertoire while needed as default value"),
-		       "LC_CTYPE", tmp);
-	    }
-	  else
-	    ELEM (ctype, class_collection, , value) |= bitw;
 
 	  seq = charmap_find_value (charmap, tmp, 1);
 	  if (seq == NULL)
@@ -2585,6 +2592,10 @@ set_class_defaults (struct locale_ctype_t *ctype, struct charmap_t *charmap,
 		   "LC_CTYPE", tmp);
 	  else
 	    ctype->class256_collection[seq->bytes[0]] |= bit;
+
+	  /* No need to search here, the ASCII value is also the Unicode
+	     value.  */
+	  ELEM (ctype, class_collection, , ch) |= bitw;
 	}
     }
 
@@ -2645,21 +2656,11 @@ set_class_defaults (struct locale_ctype_t *ctype, struct charmap_t *charmap,
 	<vertical-tab>, ..., shall automatically belong to this class,
 	with implementation-defined character values."  [P1003.2, 2.5.2.1]  */
     {
-      uint32_t value;
       struct charseq *seq;
 
-      value = repertoire_find_value (repertoire, "space", 5);
-      if (value == ILLEGAL_CHAR_VALUE)
-	{
-	  if (!be_quiet)
-	    error (0, 0, _("\
-%s: character `%s' not defined while needed as default value"),
-		   "LC_CTYPE", "<space>");
-	}
-      else
-	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
-
       seq = charmap_find_value (charmap, "space", 5);
+      if (seq == NULL)
+	seq = charmap_find_value (charmap, "U00000020", 9);
       if (seq == NULL)
 	{
 	  if (!be_quiet)
@@ -2674,19 +2675,12 @@ set_class_defaults (struct locale_ctype_t *ctype, struct charmap_t *charmap,
       else
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_space);
 
-
-      value = repertoire_find_value (repertoire, "form-feed", 9);
-      if (value == ILLEGAL_CHAR_VALUE)
-	{
-	  if (!be_quiet)
-	    error (0, 0, _("\
-%s: character `%s' not defined while needed as default value"),
-		   "LC_CTYPE", "<form-feed>");
-	}
-      else
-	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
+      /* No need to search.  */
+      ELEM (ctype, class_collection, , L' ') |= BIT (tok_space);
 
       seq = charmap_find_value (charmap, "form-feed", 9);
+      if (seq == NULL)
+	seq = charmap_find_value (charmap, "U0000000C", 9);
       if (seq == NULL)
 	{
 	  if (!be_quiet)
@@ -2701,19 +2695,13 @@ set_class_defaults (struct locale_ctype_t *ctype, struct charmap_t *charmap,
       else
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_space);
 
+      /* No need to search.  */
+      ELEM (ctype, class_collection, , L'\f') |= BIT (tok_space);
 
-      value = repertoire_find_value (repertoire, "newline", 7);
-      if (value == ILLEGAL_CHAR_VALUE)
-	{
-	  if (!be_quiet)
-	    error (0, 0, _("\
-%s: character `%s' not defined while needed as default value"),
-		   "LC_CTYPE", "<newline>");
-	}
-      else
-	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       seq = charmap_find_value (charmap, "newline", 7);
+      if (seq == NULL)
+	seq = charmap_find_value (charmap, "U0000000A", 9);
       if (seq == NULL)
 	{
 	  if (!be_quiet)
@@ -2728,19 +2716,13 @@ character `%s' not defined while needed as default value"),
       else
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_space);
 
+      /* No need to search.  */
+      ELEM (ctype, class_collection, , L'\n') |= BIT (tok_space);
 
-      value = repertoire_find_value (repertoire, "carriage-return", 15);
-      if (value == ILLEGAL_CHAR_VALUE)
-	{
-	  if (!be_quiet)
-	    error (0, 0, _("\
-%s: character `%s' not defined while needed as default value"),
-		   "LC_CTYPE", "<carriage-return>");
-	}
-      else
-	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       seq = charmap_find_value (charmap, "carriage-return", 15);
+      if (seq == NULL)
+	seq = charmap_find_value (charmap, "U0000000D", 9);
       if (seq == NULL)
 	{
 	  if (!be_quiet)
@@ -2755,19 +2737,13 @@ character `%s' not defined while needed as default value"),
       else
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_space);
 
+      /* No need to search.  */
+      ELEM (ctype, class_collection, , L'\r') |= BIT (tok_space);
 
-      value = repertoire_find_value (repertoire, "tab", 3);
-      if (value == ILLEGAL_CHAR_VALUE)
-	{
-	  if (!be_quiet)
-	    error (0, 0, _("\
-%s: character `%s' not defined while needed as default value"),
-		   "LC_CTYPE", "<tab>");
-	}
-      else
-	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       seq = charmap_find_value (charmap, "tab", 3);
+      if (seq == NULL)
+	seq = charmap_find_value (charmap, "U00000009", 9);
       if (seq == NULL)
 	{
 	  if (!be_quiet)
@@ -2782,19 +2758,13 @@ character `%s' not defined while needed as default value"),
       else
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_space);
 
+      /* No need to search.  */
+      ELEM (ctype, class_collection, , L'\t') |= BIT (tok_space);
 
-      value = repertoire_find_value (repertoire, "vertical-tab", 12);
-      if (value == ILLEGAL_CHAR_VALUE)
-	{
-	  if (!be_quiet)
-	    error (0, 0, _("\
-%s: character `%s' not defined while needed as default value"),
-		   "LC_CTYPE", "<vertical-tab>");
-	}
-      else
-	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       seq = charmap_find_value (charmap, "vertical-tab", 12);
+      if (seq == NULL)
+	seq = charmap_find_value (charmap, "U0000000B", 9);
       if (seq == NULL)
 	{
 	  if (!be_quiet)
@@ -2808,6 +2778,9 @@ character `%s' not defined while needed as default value"),
 	       "LC_CTYPE", "<vertical-tab>");
       else
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_space);
+
+      /* No need to search.  */
+      ELEM (ctype, class_collection, , L'\v') |= BIT (tok_space);
     }
 
   if ((ctype->class_done & BITw (tok_xdigit)) == 0)
@@ -2825,21 +2798,11 @@ character `%s' not defined while needed as default value"),
     /* "If this keyword [blank] is unspecified, the characters <space> and
        <tab> shall belong to this character class."  [P1003.2, 2.5.2.1]  */
    {
-      uint32_t value;
       struct charseq *seq;
 
-      value = repertoire_find_value (repertoire, "space", 5);
-      if (value == ILLEGAL_CHAR_VALUE)
-	{
-	  if (!be_quiet)
-	    error (0, 0, _("\
-%s: character `%s' not defined while needed as default value"),
-		   "LC_CTYPE", "<space>");
-	}
-      else
-	ELEM (ctype, class_collection, , value) |= BIT (tok_blank);
-
       seq = charmap_find_value (charmap, "space", 5);
+      if (seq == NULL)
+	seq = charmap_find_value (charmap, "U00000020", 9);
       if (seq == NULL)
 	{
 	  if (!be_quiet)
@@ -2854,19 +2817,13 @@ character `%s' not defined while needed as default value"),
       else
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_blank);
 
+      /* No need to search.  */
+      ELEM (ctype, class_collection, , L' ') |= BIT (tok_blank);
 
-      value = repertoire_find_value (repertoire, "tab", 3);
-      if (value == ILLEGAL_CHAR_VALUE)
-	{
-	  if (!be_quiet)
-	    error (0, 0, _("\
-%s: character `%s' not defined while needed as default value"),
-		   "LC_CTYPE", "<tab>");
-	}
-      else
-	ELEM (ctype, class_collection, , value) |= BIT (tok_blank);
 
       seq = charmap_find_value (charmap, "tab", 3);
+      if (seq == NULL)
+	seq = charmap_find_value (charmap, "U00000009", 9);
       if (seq == NULL)
 	{
 	  if (!be_quiet)
@@ -2880,6 +2837,9 @@ character `%s' not defined while needed as default value"),
 	       "LC_CTYPE", "<tab>");
       else
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_blank);
+
+      /* No need to search.  */
+      ELEM (ctype, class_collection, , L'\t') |= BIT (tok_blank);
     }
 
   if ((ctype->class_done & BITw (tok_graph)) == 0)
@@ -2909,7 +2869,6 @@ character `%s' not defined while needed as default value"),
       unsigned long int mask = BIT (tok_upper) | BIT (tok_lower) |
 	BIT (tok_alpha) | BIT (tok_digit) | BIT (tok_xdigit) | BIT (tok_punct);
       size_t cnt;
-      uint32_t space;
       struct charseq *seq;
 
       for (cnt = 0; cnt < ctype->class_collection_act; ++cnt)
@@ -2921,18 +2880,9 @@ character `%s' not defined while needed as default value"),
 	  ctype->class256_collection[cnt] |= BIT (tok_print);
 
 
-      space = repertoire_find_value (repertoire, "space", 5);
-      if (space == ILLEGAL_CHAR_VALUE)
-	{
-	  if (!be_quiet)
-	    error (0, 0, _("\
-%s: character `%s' not defined while needed as default value"),
-		   "LC_CTYPE", "<space>");
-	}
-      else
-	ELEM (ctype, class_collection, , space) |= BIT (tok_print);
-
       seq = charmap_find_value (charmap, "space", 5);
+      if (seq == NULL)
+	seq = charmap_find_value (charmap, "U00000020", 9);
       if (seq == NULL)
 	{
 	  if (!be_quiet)
@@ -2946,6 +2896,9 @@ character `%s' not defined while needed as default value"),
 	       "LC_CTYPE", "<space>");
       else
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_print);
+
+      /* No need to search.  */
+      ELEM (ctype, class_collection, , L' ') |= BIT (tok_print);
     }
 
   if (ctype->tomap_done[0] == 0)
@@ -2961,36 +2914,9 @@ character `%s' not defined while needed as default value"),
 
       for (ch = 'a'; ch <= 'z'; ++ch)
 	{
-	  uint32_t value_from, value_to;
 	  struct charseq *seq_from, *seq_to;
 
 	  tmp[1] = (char) ch;
-
-	  value_from = repertoire_find_value (repertoire, &tmp[1], 1);
-	  if (value_from == ILLEGAL_CHAR_VALUE)
-	    {
-	      if (!be_quiet)
-		error (0, 0, _("\
-%s: character `%s' not defined while needed as default value"),
-		       "LC_CTYPE", tmp);
-	    }
-	  else
-	    {
-	      /* This conversion is implementation defined.  */
-	      tmp[1] = (char) (ch + ('A' - 'a'));
-	      value_to = repertoire_find_value (repertoire, &tmp[1], 1);
-	      if (value_to == ILLEGAL_CHAR_VALUE)
-		{
-		  if (!be_quiet)
-		    error (0, 0, _("\
-%s: character `%s' not defined while needed as default value"),
-			   "LC_CTYPE", tmp);
-		}
-	      else
-		/* The index [0] is determined by the order of the
-		   `ctype_map_newP' calls in `ctype_startup'.  */
-		ELEM (ctype, map_collection, [0], value_from) = value_to;
-	    }
 
 	  seq_from = charmap_find_value (charmap, &tmp[1], 1);
 	  if (seq_from == NULL)
@@ -3032,6 +2958,9 @@ character `%s' not defined while needed as default value"),
 		ctype->map256_collection[0][seq_from->bytes[0]]
 		  = seq_to->bytes[0];
 	    }
+
+	  /* No need to search.  */
+	  ELEM (ctype, map_collection, [0], ch) = ch + ('A' - 'a');
 	}
     }
 
