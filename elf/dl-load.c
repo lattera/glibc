@@ -126,6 +126,8 @@ static const size_t system_dirs_len[] =
 {
   SYSTEM_DIRS_LEN
 };
+#define nsystem_dirs_len \
+  (sizeof (system_dirs_len) / sizeof (system_dirs_len[0]))
 
 
 /* Local version of `strdup' function.  */
@@ -362,32 +364,6 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
       if (len > 0 && cp[len - 1] != '/')
 	cp[len++] = '/';
 
-      /* Make sure we don't use untrusted directories if we run SUID.  */
-      if (check_trusted)
-	{
-	  const char *trun = system_dirs;
-	  size_t idx;
-
-	  /* All trusted directories must be complete names.  */
-	  if (cp[0] != '/')
-	    continue;
-
-	  for (idx = 0;
-	       idx < sizeof (system_dirs_len) / sizeof (system_dirs_len[0]);
-	       ++idx)
-	    {
-	      if (len == system_dirs_len[idx] && memcmp (trun, cp, len) == 0)
-		/* Found it.  */
-		break;
-
-	      trun += system_dirs_len[idx] + 1;
-	    }
-
-	  if (idx == sizeof (system_dirs_len) / sizeof (system_dirs_len[0]))
-	    /* It's no trusted directory, skip it.  */
-	    continue;
-	}
-
       /* See if this directory is already known.  */
       for (dirp = all_dirs; dirp != NULL; dirp = dirp->next)
 	if (dirp->dirnamelen == len && memcmp (cp, dirp->dirname, len) == 0)
@@ -408,7 +384,7 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	{
 	  size_t cnt;
 	  enum r_dir_status init_val;
-	  size_t where_len = strlen (where) + 1;
+	  size_t where_len = where ? strlen (where) + 1 : 0;
 
 	  /* It's a new directory.  Create an entry and add it.  */
 	  dirp = (struct r_search_path_elem *)
@@ -424,17 +400,51 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	  if (len > max_dirnamelen)
 	    max_dirnamelen = len;
 
-	  /* We have to make sure all the relative directories are never
-	     ignored.  The current directory might change and all our
-	     saved information would be void.  */
-	  init_val = cp[0] != '/' ? existing : unknown;
+	  /* Make sure we don't use untrusted directories if we run SUID.  */
+	  if (__builtin_expect (check_trusted, 0))
+	    {
+	      const char *trun = system_dirs;
+	      size_t idx;
+
+	      /* By default we don't trust anything.  */
+	      init_val = nonexisting;
+
+	      /* All trusted directories must be complete names.  */
+	      if (cp[0] == '/')
+		{
+		  for (idx = 0; idx < nsystem_dirs_len; ++idx)
+		    {
+		      if (len == system_dirs_len[idx]
+			  && memcmp (trun, cp, len) == 0)
+			/* Found it.  */
+			break;
+
+		      trun += system_dirs_len[idx] + 1;
+		    }
+
+		  if (idx < nsystem_dirs_len)
+		    /* It's a trusted directory so allow checking for it.  */
+		    init_val = unknown;
+		}
+	    }
+	  else
+	    /* We don't have to check for trusted directories and can
+	       accept everything.  We have to make sure all the
+	       relative directories are never ignored.  The current
+	       directory might change and all our saved information
+	       would be void.  */
+	    init_val = cp[0] != '/' ? existing : unknown;
+
 	  for (cnt = 0; cnt < ncapstr; ++cnt)
 	    dirp->status[cnt] = init_val;
 
 	  dirp->what = what;
-	  dirp->where = memcpy ((char *) dirp + sizeof (*dirp)
-				+ ncapstr * sizeof (enum r_dir_status),
-				where, where_len);
+	  if (__builtin_expect (where != NULL, 1))
+	    dirp->where = memcpy ((char *) dirp + sizeof (*dirp)
+				  + ncapstr * sizeof (enum r_dir_status),
+				  where, where_len);
+	  else
+	    dirp->where = NULL;
 
 	  dirp->next = all_dirs;
 	  all_dirs = dirp;
@@ -531,8 +541,7 @@ _dl_init_paths (const char *llp)
 
   /* First set up the rest of the default search directory entries.  */
   aelem = rtld_search_dirs = (struct r_search_path_elem **)
-    malloc ((sizeof (system_dirs_len) / sizeof (system_dirs_len[0]) + 1)
-	     * sizeof (struct r_search_path_elem *));
+    malloc ((nsystem_dirs_len + 1) * sizeof (struct r_search_path_elem *));
   if (rtld_search_dirs == NULL)
     _dl_signal_error (ENOMEM, NULL, N_("cannot create search path array"));
 
@@ -570,13 +579,11 @@ _dl_init_paths (const char *llp)
 	for (cnt = 0; cnt < ncapstr; ++cnt)
 	  pelem->status[cnt] = unknown;
 
-      pelem->next = (++idx == (sizeof (system_dirs_len)
-			       / sizeof (system_dirs_len[0]))
-		     ? NULL : (pelem + round_size));
+      pelem->next = (++idx == nsystem_dirs_len ? NULL : (pelem + round_size));
 
       pelem += round_size;
     }
-  while (idx < sizeof (system_dirs_len) / sizeof (system_dirs_len[0]));
+  while (idx < nsystem_dirs_len);
 
   max_dirnamelen = SYSTEM_DIRS_MAX_LEN;
   *aelem = NULL;
@@ -1506,8 +1513,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 		      dirp += system_dirs_len[cnt] + 1;
 		      ++cnt;
 		    }
-		  while (cnt < (sizeof (system_dirs_len)
-				/ sizeof (system_dirs_len[0])));
+		  while (cnt < nsystem_dirs_len);
 		}
 
 	      if (cached)
