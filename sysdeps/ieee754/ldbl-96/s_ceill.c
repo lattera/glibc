@@ -59,8 +59,13 @@ static long double huge = 1.0e4930;
 		if(((i0&i)|i1)==0) return x; /* x is integral */
 		if(huge+x>0.0) {	/* raise inexact flag */
 		    if(sx==0) {
-			if (j0>0) i0 += (0x80000000)>>j0;
-			else ++se;
+			if (j0>0 && (i0+(0x80000000>>j0))>i0)
+			  i0+=0x80000000>>j0;
+			else
+			  {
+			    i = 0x7fffffff;
+			    ++se;
+			  }
 		    }
 		    i0 &= (~i); i1=0;
 		}

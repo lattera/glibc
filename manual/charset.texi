@@ -15,7 +15,7 @@ limitations of this approach became more apparent as more people
 grappled with non-Roman character sets, where not all the characters
 that make up a language's character set can be represented by @math{2^8}
 choices.  This chapter shows the functionality which was added to the C
-library to correctly support multiple character sets.
+library to support multiple character sets.
 
 @menu
 * Extended Char Intro::              Introduction to Extended Characters.
@@ -46,13 +46,13 @@ through whatever communication channel.  Examples of external
 representations include files lying in a directory that are going to be
 read and parsed.
 
-Traditionally there was no difference between the two representations.
-It was equally comfortable and useful to use the same one-byte
+Traditionally there has been no difference between the two representations.
+It was equally comfortable and useful to use the same single-byte
 representation internally and externally.  This changes with more and
 larger character sets.
 
 One of the problems to overcome with the internal representation is
-handling text which is externally encoded using different character
+handling text that is externally encoded using different character
 sets.  Assume a program which reads two texts and compares them using
 some metric.  The comparison can be usefully done only if the texts are
 internally kept in a common format.
@@ -69,14 +69,28 @@ than four bytes seem not to be necessary).
 As shown in some other part of this manual,
 @c !!! Ahem, wide char string functions are not yet covered -- drepper
 there exists a completely new family of functions which can handle texts
-of this kind in memory.  The most commonly used character set for such
-internal wide character representations are Unicode and @w{ISO 10646}.
-The former is a subset of the latter and used when wide characters are
-chosen to by 2 bytes (@math{= 16} bits) wide.  The standard names of the
-@cindex UCS2
-@cindex UCS4
-encodings used in these cases are UCS2 (@math{= 16} bits) and UCS4
-(@math{= 32} bits).
+of this kind in memory.  The most commonly used character sets for such
+internal wide character representations are Unicode and @w{ISO 10646}
+(also known as UCS for Universal Character Set). Unicode was originally
+planned as a 16-bit character set, whereas @w{ISO 10646} was designed to
+be a 31-bit large code space. The two standards are practically identical.
+They have the same character repertoire and code table, but Unicode specifies
+added semantics.  At the moment, only characters in the first @code{0x10000}
+code positions (the so-called Basic Multilingual Plane, BMP) have been
+assigned, but the assignment of more specialized characters outside this
+16-bit space is already in progress. A number of encodings have been
+defined for Unicode and @w{ISO 10646} characters:
+@cindex UCS-2
+@cindex UCS-4
+@cindex UTF-8
+@cindex UTF-16
+UCS-2 is a 16-bit word that can only represent characters
+from the BMP, UCS-4 is a 32-bit word than can represent any Unicode
+and @w{ISO 10646} character, UTF-8 is an ASCII compatible encoding where
+ASCII characters are represented by ASCII bytes and non-ASCII characters
+by sequences of 2-6 non-ASCII bytes, and finally UTF-16 is an extension
+of UCS-2 in which pairs of certain UCS-2 words can be used to encode
+non-BMP characters up to @code{0x10ffff}.
 
 To represent wide characters the @code{char} type is not suitable.  For
 this reason the @w{ISO C} standard introduces a new type which is
@@ -93,18 +107,18 @@ for multibyte character strings.  The type is defined in @file{stddef.h}.
 
 The @w{ISO C90} standard, where this type was introduced, does not say
 anything specific about the representation.  It only requires that this
-type is capable to store all elements of the basic character set.
+type is capable of storing all elements of the basic character set.
 Therefore it would be legitimate to define @code{wchar_t} as
 @code{char}.  This might make sense for embedded systems.
 
 But for GNU systems this type is always 32 bits wide.  It is therefore
-capable to represent all UCS4 value therefore covering all of @w{ISO
-10646}.  Some Unix systems define @code{wchar_t} as a 16 bit type and
+capable of representing all UCS-4 values and  therefore covering all of
+@w{ISO 10646}.  Some Unix systems define @code{wchar_t} as a 16-bit type and
 thereby follow Unicode very strictly.  This is perfectly fine with the
 standard but it also means that to represent all characters from Unicode
-and @w{ISO 10646} one has to use surrogate character which is in fact a
-multi-wide-character encoding.  But this contradicts the purpose of the
-@code{wchar_t} type.
+and @w{ISO 10646} one has to use UTF-16 surrogate characters which is in
+fact a multi-wide-character encoding.  But this contradicts the purpose
+of the @code{wchar_t} type.
 @end deftp
 
 @comment wchar.h
@@ -119,8 +133,8 @@ defined as @code{char} the type @code{wint_t} must be defined as
 @code{int} due to the parameter promotion.
 
 @pindex wchar.h
-This type is defined in @file{wchar.h} and got introduced in the second
-amendment to @w{ISO C90}.
+This type is defined in @file{wchar.h} and got introduced in
+@w{Amendment 1} to @w{ISO C90}.
 @end deftp
 
 As there are for the @code{char} data type there also exist macros
@@ -133,7 +147,7 @@ type @code{wchar_t}.
 The macro @code{WCHAR_MIN} evaluates to the minimum value representable
 by an object of type @code{wint_t}.
 
-This macro got introduced in the second amendment to @w{ISO C90}.
+This macro got introduced in @w{Amendment 1} to @w{ISO C90}.
 @end deftypevr
 
 @comment wchar.h
@@ -142,7 +156,7 @@ This macro got introduced in the second amendment to @w{ISO C90}.
 The macro @code{WCHAR_MIN} evaluates to the maximum value representable
 by an object of type @code{wint_t}.
 
-This macro got introduced in the second amendment to @w{ISO C90}.
+This macro got introduced in @w{Amendment 1} to @w{ISO C90}.
 @end deftypevr
 
 Another special wide character value is the equivalent to @code{EOF}.
@@ -180,7 +194,7 @@ are used.
 @end smallexample
 
 @pindex wchar.h
-This macro was introduced in the second amendment to @w{ISO C90} and is
+This macro was introduced in @w{Amendment 1} to @w{ISO C90} and is
 defined in @file{wchar.h}.
 @end deftypevr
 
@@ -198,7 +212,7 @@ oriented character set.
 @cindex multibyte character
 @cindex EBCDIC
    For all the above reasons, an external encoding which is different
-from the internal encoding is often used if the latter is UCS2 or UCS4.
+from the internal encoding is often used if the latter is UCS-2 or UCS-4.
 The external encoding is byte-based and can be chosen appropriately for
 the environment and for the texts to be handled.  There exist a variety
 of different character sets which can be used for this external
@@ -215,7 +229,7 @@ system calls have to be converted first anyhow.
 
 @itemize @bullet
 @item
-The simplest character sets are one-byte character sets.  There can be
+The simplest character sets are single-byte character sets.  There can be
 only up to 256 characters (for @w{8 bit} character sets) which is not
 sufficient to cover all languages but might be sufficient to handle a
 specific text.  Another reason to choose this is because of constraints
@@ -240,7 +254,7 @@ big advantage that whenever one can identify the beginning of the byte
 sequence of a character one can interpret a text correctly.  Examples of
 character sets using this policy are the various EUC character sets
 (used by Sun's operations systems, EUC-JP, EUC-KR, EUC-TW, and EUC-CN)
-or SJIS (Shift JIS, a Japanese encoding).
+or SJIS (Shift-JIS, a Japanese encoding).
 
 But there are also character sets using a state which is valid for more
 than one character and has to be changed by another byte sequence.
@@ -257,23 +271,23 @@ acute accent, following by lower-case `a') to get the ``small a with
 acute'' character.  To get the acute accent character on its on one has
 to write @code{0xc2 0x20} (the non-spacing acute followed by a space).
 
-This type of characters sets is quite frequently used in embedded
-systems such as video text.
+This type of character set is used in some embedded systems such as
+teletex.
 
 @item
 @cindex UTF-8
-Instead of converting the Unicode or @w{ISO 10646} text used internally
+Instead of converting the Unicode or @w{ISO 10646} text used internally,
 it is often also sufficient to simply use an encoding different than
-UCS2/UCS4.  The Unicode and @w{ISO 10646} standards even specify such an
+UCS-2/UCS-4.  The Unicode and @w{ISO 10646} standards even specify such an
 encoding: UTF-8.  This encoding is able to represent all of @w{ISO
-10464} 31 bits in a byte string of length one to seven.
+10464} 31 bits in a byte string of length one to six.
 
 @cindex UTF-7
 There were a few other attempts to encode @w{ISO 10646} such as UTF-7
 but UTF-8 is today the only encoding which should be used.  In fact,
-UTF-8 will hopefully soon be the only external which has to be
+UTF-8 will hopefully soon be the only external encoding that has to be
 supported.  It proves to be universally usable and the only disadvantage
-is that it favor Roman languages very much by making the byte string
+is that it favors Roman languages by making the byte string
 representation of other scripts (Cyrillic, Greek, Asian scripts) longer
 than necessary if using a specific character set for these scripts.
 Methods like the Unicode compression scheme can alleviate these
@@ -324,7 +338,7 @@ developing libraries (as opposed to applications).
 The second family of functions got introduced in the early Unix standards
 (XPG2) and is still part of the latest and greatest Unix standard:
 @w{Unix 98}.  It is also the most powerful and useful set of functions.
-But we will start with the functions defined in the second amendment to
+But we will start with the functions defined in @w{Amendment 1} to
 @w{ISO C90}.
 
 @node Restartable multibyte conversion
@@ -377,7 +391,7 @@ We already said above that the currently selected locale for the
 by the functions we are about to describe.  Each locale uses its own
 character set (given as an argument to @code{localedef}) and this is the
 one assumed as the external multibyte encoding.  The wide character
-character set always is UCS4, at least on GNU systems.
+character set always is UCS-4, at least on GNU systems.
 
 A characteristic of each multibyte character set is the maximum number
 of bytes which can be necessary to represent one character.  This
@@ -456,8 +470,8 @@ about the @dfn{shift state} needed from one call to a conversion
 function to another.
 
 @pindex wchar.h
-This type is defined in @file{wchar.h}.  It got introduced in the second
-amendment to @w{ISO C90}.
+This type is defined in @file{wchar.h}.  It got introduced in
+@w{Amendment 1} to @w{ISO C90}.
 @end deftp
 
 To use objects of this type the programmer has to define such objects
@@ -495,7 +509,7 @@ object is in the initial state the return value is nonzero.  Otherwise
 it is zero.
 
 @pindex wchar.h
-This function was introduced in the second amendment to @w{ISO C90} and
+This function was introduced in @w{Amendment 1} to @w{ISO C90} and
 is declared in @file{wchar.h}.
 @end deftypefun
 
@@ -559,7 +573,7 @@ which the state information is taken and the function also does not use
 any static state.
 
 @pindex wchar.h
-This function was introduced in the second amendment of @w{ISO C90} and
+This function was introduced in @w{Amendment 1} to @w{ISO C90} and
 is declared in @file{wchar.h}.
 @end deftypefun
 
@@ -608,7 +622,7 @@ value of this function is this character.  Otherwise the return value is
 @code{EOF}.
 
 @pindex wchar.h
-This function was introduced in the second amendment of @w{ISO C90} and
+This function was introduced in @w{Amendment 1} to @w{ISO C90} and
 is declared in @file{wchar.h}.
 @end deftypefun
 
@@ -655,7 +669,7 @@ a valid multibyte character also no value is stored, the global variable
 @code{(size_t) -1}.  The conversion state is afterwards undefined.
 
 @pindex wchar.h
-This function was introduced in the second amendment to @w{ISO C90} and
+This function was introduced in @w{Amendment 1} to @w{ISO C90} and
 is declared in @file{wchar.h}.
 @end deftypefun
 
@@ -733,7 +747,7 @@ object pointed to by @var{ps}.  If @var{ps} is a null pointer, a state
 object local to @code{mbrlen} is used.
 
 @pindex wchar.h
-This function was introduced in the second amendment to @w{ISO C90} and
+This function was introduced in @w{Amendment 1} to @w{ISO C90} and
 is declared in @file{wchar.h}.
 @end deftypefun
 
@@ -839,7 +853,7 @@ character.  So the caller has to make sure that there is enough space
 available, otherwise buffer overruns can occur.
 
 @pindex wchar.h
-This function was introduced in the second amendment to @w{ISO C} and is
+This function was introduced in @w{Amendment 1} to @w{ISO C90} and is
 declared in @file{wchar.h}.
 @end deftypefun
 
@@ -977,7 +991,7 @@ byte in the input string was reached) or the address of the byte
 following the last converted multibyte character.
 
 @pindex wchar.h
-This function was introduced in the second amendment to @w{ISO C} and is
+This function was introduced in @w{Amendment 1} to @w{ISO C90} and is
 declared in @file{wchar.h}.
 @end deftypefun
 
@@ -1058,7 +1072,7 @@ the initial shift state in case the terminating NUL wide character was
 converted.
 
 @pindex wchar.h
-This function was introduced in the second amendment to @w{ISO C} and is
+This function was introduced in @w{Amendment 1} to @w{ISO C90} and is
 declared in @file{wchar.h}.
 @end deftypefun
 
@@ -1231,8 +1245,8 @@ file_mbsrtowcs (int input, int output)
 @node Non-reentrant Conversion
 @section Non-reentrant Conversion Function
 
-The functions described in the last chapter are defined in the second
-amendment to @w{ISO C90}.  But the original @w{ISO C90} standard also
+The functions described in the last chapter are defined in
+@w{Amendment 1} to @w{ISO C90}.  But the original @w{ISO C90} standard also
 contained functions for character set conversion.  The reason that they
 are not described in the first place is that they are almost entirely
 useless.
@@ -1369,8 +1383,8 @@ The function @code{mblen} is declared in @file{stdlib.h}.
 
 For convenience reasons the @w{ISO C90} standard defines also functions
 to convert entire strings instead of single characters.  These functions
-suffer from the same problems as their reentrant counterparts from the
-second amendment to @w{ISO C90}; see @ref{Converting Strings}.
+suffer from the same problems as their reentrant counterparts from
+@w{Amendment 1} to @w{ISO C90}; see @ref{Converting Strings}.
 
 @comment stdlib.h
 @comment ISO
@@ -1513,7 +1527,7 @@ common that they operate on character sets which are not directly
 specified by the functions.  The multibyte encoding used is specified by
 the currently selected locale for the @code{LC_CTYPE} category.  The
 wide character set is fixed by the implementation (in the case of GNU C
-library it always is UCS4 encoded @w{ISO 10646}.
+library it always is UCS-4 encoded @w{ISO 10646}.
 
 This has of course several problems when it comes to general character
 conversion:
@@ -1806,12 +1820,12 @@ file2wcs (int fd, const char *charset, wchar_t *outbuf, size_t avail)
   int result = 0;
   iconv_t cd;
 
-  cd = iconv_open ("UCS4", charset);
+  cd = iconv_open ("UCS-4", charset);
   if (cd == (iconv_t) -1)
     @{
       /* @r{Something went wrong.}  */
       if (errno == EINVAL)
-        error (0, 0, "conversion from `%s' to `UCS4' no available",
+        error (0, 0, "conversion from '%s' to 'UCS-4' not available",
                charset);
       else
         perror ("iconv_open");
@@ -2024,7 +2038,7 @@ will succeed but how to find @math{@cal{B}}?
 
 Unfortunately, the answer is: there is no general solution.  On some
 systems guessing might help.  On those systems most character sets can
-convert to and from UTF8 encoded @w{ISO 10646} or Unicode text.
+convert to and from UTF-8 encoded @w{ISO 10646} or Unicode text.
 Beside this only some very system-specific methods can help.  Since the
 conversion functions come from loadable modules and these modules must
 be stored somewhere in the filesystem, one @emph{could} try to find them
@@ -2082,7 +2096,7 @@ wanted conversion.
 
 @cindex triangulation
 This is achieved by providing for each character set a conversion from
-and to UCS4 encoded @w{ISO 10646}.  Using @w{ISO 10646} as an
+and to UCS-4 encoded @w{ISO 10646}.  Using @w{ISO 10646} as an
 intermediate representation it is possible to @dfn{triangulate}, i.e.,
 converting with an intermediate representation.
 
@@ -2210,15 +2224,15 @@ ending with @code{//}.  There often is a character set named
 @code{INTERNAL} mentioned.  From the discussion above and the chosen
 name it should have become clear that this is the name for the
 representation used in the intermediate step of the triangulation.  We
-have said that this is UCS4 but actually it is not quite right.  The
-UCS4 specification also includes the specification of the byte ordering
-used.  Since a UCS4 value consists of four bytes a stored value is
+have said that this is UCS-4 but actually it is not quite right.  The
+UCS-4 specification also includes the specification of the byte ordering
+used.  Since a UCS-4 value consists of four bytes a stored value is
 effected by byte ordering.  The internal representation is @emph{not}
-the same as UCS4 in case the byte ordering of the processor (or at least
-the running process) is not the same as the one required for UCS4.  This
+the same as UCS-4 in case the byte ordering of the processor (or at least
+the running process) is not the same as the one required for UCS-4.  This
 is done for performance reasons as one does not want to perform
 unnecessary byte-swapping operations if one is not interested in actually
-seeing the result in UCS4.  To avoid trouble with endianess the internal
+seeing the result in UCS-4.  To avoid trouble with endianess the internal
 representation consistently is named @code{INTERNAL} even on big-endian
 systems where the representations are identical.
 
@@ -2570,7 +2584,7 @@ One interesting thing is the initialization of the @code{__min_} and
 character can consist of one to four bytes.  Therefore the
 @code{MIN_NEEDED_FROM} and @code{MAX_NEEDED_FROM} macros are defined
 this way.  The output is always the @code{INTERNAL} character set (aka
-UCS4) and therefore each character consists of exactly four bytes.  For
+UCS-4) and therefore each character consists of exactly four bytes.  For
 the conversion from @code{INTERNAL} to ISO-2022-JP we have to take into
 account that escape sequences might be necessary to switch the character
 sets.  Therefore the @code{__max_needed_to} element for this direction

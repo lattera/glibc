@@ -1,3 +1,60 @@
+2000-09-30 H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ieee754/ldbl-96/s_ceill.c (__ceill): Handle overflow.
+	* sysdeps/ieee754/ldbl-96/s_floorl.c (__floorl): Likewise.
+
+2000-09-29  H.J. Lu  <hjl@gnu.org>
+
+	* math/libm-test.inc (init_max_error): Clear all exceptions
+	before starting test.
+	(acosh_test): Test for existence of function.
+	(asinh_test): Likewise.
+	(atan2_test): Likewise.
+	(cabs_test): Likewise.
+	(cacos_test): Likewise.
+	(cacosh_test): Likewise.
+	(casin_test): Likewise.
+	(casinh_test): Likewise.
+	(catan_test): Likewise.
+	(catanh_test): Likewise.
+	(ccos_test): Likewise.
+	(ccosh_test): Likewise.
+	(cexp_test): Likewise.
+	(clog_test): Likewise.
+	(clog10_test): Likewise.
+	(cosh_test): Likewise.
+	(cpow_test): Likewise.
+	(csin_test): Likewise.
+	(csinh_test): Likewise.
+	(csqrt_test): Likewise.
+	(ctan_test): Likewise.
+	(ctanh_test): Likewise.
+	(fmod_test): Likewise.
+	(hypot_test): Likewise.
+	(remainder_test): Likewise.
+	(remquo_test): Likewise.
+	(sincos_test): Likewise.
+	(sinh_test): Likewise.
+	(tanh_test): Likewise.
+
+2000-09-29  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ia64/ieee754.h: New file.
+
+	* sysdeps/ia64/fpu/math_ldbl.h: New file.
+
+2000-09-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/ldconfig.h (FLAG_X8664_LIB64): Define.
+	* sysdeps/unix/sysv/linux/i386/readelflib.c: New file.
+
+2000-09-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/charset.texi: Correct notations, reference to C90 amd 1,
+	and some other details.
+	* manual/ctype.texi: Likewise.
+	Patches by Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk>.
+
 2000-09-30  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/ieee754/flt-32/s_frexpf.c: Make it aliasing safe.

@@ -189,6 +189,7 @@ init_max_error (void)
   max_error = 0;
   real_max_error = 0;
   imag_max_error = 0;
+  feclearexcept (FE_ALL_EXCEPT);
 }
 
 static void
@@ -723,6 +724,12 @@ acos_test (void)
 static void
 acosh_test (void)
 {
+  errno = 0;
+  FUNC(acosh) (7);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (acosh);
 
   TEST_f_f (acosh, plus_infty, plus_infty);
@@ -770,6 +777,12 @@ asin_test (void)
 static void
 asinh_test (void)
 {
+  errno = 0;
+  FUNC(asinh) (0.7);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (asinh);
 
   TEST_f_f (asinh, 0, 0);
@@ -815,6 +828,11 @@ atan_test (void)
 static void
 atanh_test (void)
 {
+  errno = 0;
+  FUNC(atanh) (0.7);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
 
   START (atanh);
 
@@ -838,6 +856,12 @@ atanh_test (void)
 static void
 atan2_test (void)
 {
+  errno = 0;
+  FUNC(atan2) (-0, 1);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (atan2);
 
   /* atan2 (0,x) == 0 for x > 0.  */
@@ -904,6 +928,12 @@ atan2_test (void)
 static void
 cabs_test (void)
 {
+  errno = 0;
+  FUNC(cabs) (BUILD_COMPLEX (0.7, 12.4));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (cabs);
 
   /* cabs (x + iy) is specified as hypot (x,y) */
@@ -944,6 +974,12 @@ cabs_test (void)
 static void
 cacos_test (void)
 {
+  errno = 0;
+  FUNC(cacos) (BUILD_COMPLEX (0.7, 1.2));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (cacos);
 
 
@@ -1002,6 +1038,12 @@ cacos_test (void)
 static void
 cacosh_test (void)
 {
+  errno = 0;
+  FUNC(cacosh) (BUILD_COMPLEX (0.7, 1.2));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (cacosh);
 
 
@@ -1125,6 +1167,12 @@ carg_test (void)
 static void
 casin_test (void)
 {
+  errno = 0;
+  FUNC(casin) (BUILD_COMPLEX (0.7, 1.2));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (casin);
 
   TEST_c_c (casin, 0, 0, 0.0, 0.0);
@@ -1183,6 +1231,12 @@ casin_test (void)
 static void
 casinh_test (void)
 {
+  errno = 0;
+  FUNC(casinh) (BUILD_COMPLEX (0.7, 1.2));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (casinh);
 
   TEST_c_c (casinh, 0, 0, 0.0, 0.0);
@@ -1241,6 +1295,12 @@ casinh_test (void)
 static void
 catan_test (void)
 {
+  errno = 0;
+  FUNC(catan) (BUILD_COMPLEX (0.7, 1.2));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (catan);
 
   TEST_c_c (catan, 0, 0, 0, 0);
@@ -1303,6 +1363,12 @@ catan_test (void)
 static void
 catanh_test (void)
 {
+  errno = 0;
+  FUNC(catanh) (BUILD_COMPLEX (0.7, 1.2));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (catanh);
 
   TEST_c_c (catanh, 0, 0, 0.0, 0.0);
@@ -1384,6 +1450,11 @@ cbrt_test (void)
 static void
 ccos_test (void)
 {
+  errno = 0;
+  FUNC(ccos) (BUILD_COMPLEX (0, 0));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
 
   START (ccos);
 
@@ -1448,6 +1519,11 @@ ccos_test (void)
 static void
 ccosh_test (void)
 {
+  errno = 0;
+  FUNC(ccosh) (BUILD_COMPLEX (0.7, 1.2));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
 
   START (ccosh);
 
@@ -1530,6 +1606,12 @@ ceil_test (void)
 static void
 cexp_test (void)
 {
+  errno = 0;
+  FUNC(cexp) (BUILD_COMPLEX (0, 0));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (cexp);
 
   TEST_c_c (cexp, plus_zero, plus_zero, 1, 0.0);
@@ -1602,6 +1684,12 @@ cimag_test (void)
 static void
 clog_test (void)
 {
+  errno = 0;
+  FUNC(clog) (BUILD_COMPLEX (-2, -3));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (clog);
 
   TEST_c_c (clog, minus_zero, 0, minus_infty, M_PIl, DIVIDE_BY_ZERO_EXCEPTION);
@@ -1661,6 +1749,12 @@ clog_test (void)
 static void
 clog10_test (void)
 {
+  errno = 0;
+  FUNC(clog10) (BUILD_COMPLEX (0.7, 1.2));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (clog10);
 
   TEST_c_c (clog10, minus_zero, 0, minus_infty, M_PIl, DIVIDE_BY_ZERO_EXCEPTION);
@@ -1791,6 +1885,12 @@ cos_test (void)
 static void
 cosh_test (void)
 {
+  errno = 0;
+  FUNC(cosh) (0.7);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (cosh);
   TEST_f_f (cosh, 0, 1);
   TEST_f_f (cosh, minus_zero, 1);
@@ -1809,6 +1909,12 @@ cosh_test (void)
 static void
 cpow_test (void)
 {
+  errno = 0;
+  FUNC(cpow) (BUILD_COMPLEX (1, 0), BUILD_COMPLEX (0, 0));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (cpow);
 
   TEST_cc_c (cpow, 1, 0, 0, 0, 1.0, 0.0);
@@ -1862,6 +1968,11 @@ creal_test (void)
 static void
 csin_test (void)
 {
+  errno = 0;
+  FUNC(csin) (BUILD_COMPLEX (0.7, 1.2));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
 
   START (csin);
 
@@ -1926,6 +2037,11 @@ csin_test (void)
 static void
 csinh_test (void)
 {
+  errno = 0;
+  FUNC(csinh) (BUILD_COMPLEX (0.7, 1.2));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
 
   START (csinh);
 
@@ -1988,6 +2104,12 @@ csinh_test (void)
 static void
 csqrt_test (void)
 {
+  errno = 0;
+  FUNC(csqrt) (BUILD_COMPLEX (-1, 0));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (csqrt);
 
   TEST_c_c (csqrt, 0, 0, 0.0, 0.0);
@@ -2048,6 +2170,12 @@ csqrt_test (void)
 static void
 ctan_test (void)
 {
+  errno = 0;
+  FUNC(ctan) (BUILD_COMPLEX (0.7, 1.2));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (ctan);
 
   TEST_c_c (ctan, 0, 0, 0.0, 0.0);
@@ -2100,6 +2228,12 @@ ctan_test (void)
 static void
 ctanh_test (void)
 {
+  errno = 0;
+  FUNC(ctanh) (BUILD_COMPLEX (0, 0));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (ctanh);
 
   TEST_c_c (ctanh, 0, 0, 0.0, 0.0);
@@ -2485,6 +2619,12 @@ fmin_test (void)
 static void
 fmod_test (void)
 {
+  errno = 0;
+  FUNC(fmod) (6.5, 2.3);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (fmod);
 
   /* fmod (+0, y) == +0 for y != 0.  */
@@ -2585,6 +2725,12 @@ gamma_test (void)
 static void
 hypot_test (void)
 {
+  errno = 0;
+  FUNC(hypot) (0.7, 12.4);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (hypot);
 
   TEST_ff_f (hypot, plus_infty, 1, plus_infty, IGNORE_ZERO_INF_SIGN);
@@ -3399,6 +3545,11 @@ pow_test (void)
 static void
 remainder_test (void)
 {
+  errno = 0;
+  FUNC(remainder) (1.625, 1.0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
 
   START (remainder);
 
@@ -3423,6 +3574,12 @@ remquo_test (void)
 {
   /* x is needed.  */
   int x;
+
+  errno = 0;
+  FUNC(remquo) (1.625, 1.0, &x);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
 
   START (remquo);
 
@@ -3637,6 +3794,12 @@ sincos_test (void)
 {
   FLOAT sin_res, cos_res;
 
+  errno = 0;
+  FUNC(sincos) (0, &sin_res, &cos_res);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (sincos);
 
   /* sincos is treated differently because it returns void.  */
@@ -3658,6 +3821,12 @@ sincos_test (void)
 static void
 sinh_test (void)
 {
+  errno = 0;
+  FUNC(sinh) (0.7);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (sinh);
   TEST_f_f (sinh, 0, 0);
   TEST_f_f (sinh, minus_zero, minus_zero);
@@ -3732,6 +3901,12 @@ tan_test (void)
 static void
 tanh_test (void)
 {
+  errno = 0;
+  FUNC(tanh) (0.7);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (tanh);
 
   TEST_f_f (tanh, 0, 0);

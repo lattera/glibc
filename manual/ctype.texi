@@ -265,8 +265,8 @@ with the SVID.
 @node Classification of Wide Characters, Using Wide Char Classes, Case Conversion, Character Handling
 @section Character class determination for wide characters
 
-The second amendment to @w{ISO C89} defines functions to classify wide
-characters.  Although the original @w{ISO C89} standard already defined
+@w{Amendment 1} to @w{ISO C90} defines functions to classify wide
+characters.  Although the original @w{ISO C90} standard already defined
 the type @code{wchar_t}, no functions operating on them were defined.
 
 The general design of the classification functions for wide characters
