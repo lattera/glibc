@@ -1,5 +1,8 @@
 1999-06-21  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Makeconfig (CPPFLAGS): Revert last change.  It has too many
+	weird effects.
+
 	* stdlib/longlong.h: Provide __P definition if not already
 	defined.
 
