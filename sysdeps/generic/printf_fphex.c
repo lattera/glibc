@@ -284,21 +284,21 @@ __printf_fphex (FILE *fp,
 
       if (sizeof (unsigned long int) > 6)
 	{
-	  wnumstr = _itowa_word (num, wnumbuf + sizeof wnumbuf, 16,
+	  wnumstr = _itowa_word (num, wnumbuf + (sizeof wnumbuf) / sizeof (wchar_t), 16,
 				 info->spec == 'A');
 	  numstr = _itoa_word (num, numbuf + sizeof numbuf, 16,
 			       info->spec == 'A');
 	}
       else
 	{
-	  wnumstr = _itowa (num, wnumbuf + sizeof wnumbuf, 16,
+	  wnumstr = _itowa (num, wnumbuf + sizeof wnumbuf / sizeof (wchar_t), 16,
 			    info->spec == 'A');
 	  numstr = _itoa (num, numbuf + sizeof numbuf, 16,
 			  info->spec == 'A');
 	}
 
       /* Fill with zeroes.  */
-      while (wnumstr > wnumbuf + (sizeof wnumbuf - 52 / 4))
+      while (wnumstr > wnumbuf + (sizeof wnumbuf - 52) / sizeof (wchar_t))
 	{
 	  *--wnumstr = L'0';
 	  *--numstr = '0';

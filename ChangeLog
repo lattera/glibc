@@ -1,3 +1,8 @@
+2000-07-31  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/generic/printf_fphex.c (__printf_fphex): Correctly
+	handle the wchar_t array.
+
 2000-07-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/gb18030.c: Don't map to and from positions in ISO
