@@ -2,6 +2,18 @@ sinclude(./aclocal.m4)dnl Autoconf lossage
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/unix/sysv/linux.
 
+# The Linux kernel headers can be found in
+#   /lib/modules/$(uname -r)/build/include
+# Check whether this directory is available.
+if test -z "$sysheaders" &&
+   test -d /lib/modules/`uname -r`/build/include; then
+  sysheaders="/lib/modules/`uname -r`/build/include"
+  ccheaders=`$CC -print-file-name=include`
+  dnl We don't have to use -nostdinc.  We just want one more directory
+  dnl to be used.
+  SYSINCLUDES="-I $sysheaders"
+fi
+
 # Don't bother trying to generate any glue code to be compatible with the
 # existing system library, because we are the only system library.
 inhibit_glue=yes
@@ -191,7 +203,7 @@ if test "$prefix" = "/usr/local" -o "$prefix" = "/usr/local/" -o "$prefix" = "NO
 *** On GNU/Linux systems the GNU C Library should not be installed into
 *** /usr/local since this might make your system totally unusable.
 *** We strongly advise to use a different prefix.  For details read the FAQ.
-*** If you really mean to do this, run configure again using the extra 
+*** If you really mean to do this, run configure again using the extra
 *** parameter \`--disable-sanity-checks'."
     exit 1
   else
