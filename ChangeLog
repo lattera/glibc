@@ -1,3 +1,8 @@
+1998-04-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/getnameinfo.c (getnameinfo): Change parameter to match
+	declaration.  Patch by Richard Henderson.
+
 1998-04-10 12:40  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
 	* manual/process.texi (SIGCHLD example): Save errno.
