@@ -9,3 +9,9 @@ rt_sigsuspend	-	rt_sigsuspend	i:pi	__syscall_rt_sigsuspend
 rt_sigtimedwait	-	rt_sigtimedwait	i:pppi	__syscall_rt_sigtimedwait
 oldgetrlimit	EXTRA	getrlimit	i:ip	__old_getrlimit	getrlimit@GLIBC_2.0
 oldsetrlimit	EXTRA	setrlimit	i:ip	__old_setrlimit	setrlimit@GLIBC_2.0
+
+# System calls with 64bit args
+s_ftruncate64	ftruncate64 ftruncate64	i:iii	__syscall_ftruncate64
+s_pread64	pread64	pread		i:ibnii	__syscall_pread
+s_pwrite64	pwrite64 pwrite		i:ibnii	__syscall_pwrite
+s_truncate64	truncate64 truncate64	i:sii	__syscall_truncate64

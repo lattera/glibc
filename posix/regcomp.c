@@ -468,6 +468,7 @@ regcomp (preg, pattern, cflags)
   preg->buffer = NULL;
   preg->allocated = 0;
   preg->used = 0;
+  preg->can_be_null = 0;
 
   /* Try to allocate space for the fastmap.  */
   preg->fastmap = re_malloc (char, SBC_MAX);

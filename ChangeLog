@@ -1,3 +1,7 @@
+2002-11-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c (regcomp): Initialize preg->can_be_null to zero.
+
 2002-11-05  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h: Handle
@@ -15,6 +19,9 @@
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h (INLINE_SYSCALL):
 	Update clobber list and add a comment about the syscall ABI.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list (s_pread64,
+	s_pwrite64, s_ftruncate, s_truncate): Re-add.
 
 2002-11-05  Jakub Jelinek  <jakub@redhat.com>
 
