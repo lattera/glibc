@@ -69,6 +69,10 @@ Name           Flags   Address         Netmask         Broadcast/Destination");
 #endif
 	    case AF_UNSPEC:
 	      return "---";
+
+	    case AF_PACKET:
+	      return "<packet>";
+
 	    default:
 	      ++failures;
 	      printf ("sa_family=%d %08x\n", sa->sa_family,

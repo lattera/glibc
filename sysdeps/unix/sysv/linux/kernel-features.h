@@ -279,3 +279,9 @@
     && (defined __ia64__ || defined __s390__ || defined __powerpc__)
 # define __ASSUME_CLONE_THREAD_FLAGS	1
 #endif
+
+/* With kernel 2.4.17 we always have netlink support.  */
+#if __LINUX_KERNEL_VERSION >= (132096+17)
+# define __ASSUME_NETLINK_SUPPORT	1
+#endif
+

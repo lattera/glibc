@@ -1,3 +1,10 @@
+2003-03-28  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/ifaddrs.c: New file.
+	* inet/test-ifaddrs.c: Allow AF_PACKET.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Add
+	__ASSUME_NETLINK_SUPPORT.
+
 2003-03-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/vismain.c (do_test): Comment out tests which fail in the moment.
