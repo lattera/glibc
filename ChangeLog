@@ -1,3 +1,8 @@
+2005-01-28  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/bits/string.h (strlen, strncpy, strcat, strncat,
+	strncat, memchr, strcmp): Add missing memory clobber.
+
 2005-01-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/oldglob.c (__old_globfree): Also
