@@ -15,6 +15,8 @@ main (void)
 {
   unsigned long count;
 
+  setvbuf (stdout, NULL, _IONBF, 0);
+
   for (count = 0; count < 2000; ++count)
     {
       pthread_t thread;
@@ -33,7 +35,7 @@ main (void)
 	}
       /* pthread_detach (thread); */
       pthread_join (thread, NULL);
-      usleep (50);
+      usleep (10);
     }
   return 0;
 }

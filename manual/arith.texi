@@ -152,7 +152,11 @@ not have to worry about the type of their argument.
 @comment math.h
 @comment BSD
 @deftypefun int isinf (double @var{x})
+@comment math.h
+@comment BSD
 @deftypefunx int isinff (float @var{x})
+@comment math.h
+@comment BSD
 @deftypefunx int isinfl (long double @var{x})
 This function returns @code{-1} if @var{x} represents negative infinity,
 @code{1} if @var{x} represents positive infinity, and @code{0} otherwise.
@@ -161,7 +165,11 @@ This function returns @code{-1} if @var{x} represents negative infinity,
 @comment math.h
 @comment BSD
 @deftypefun int isnan (double @var{x})
+@comment math.h
+@comment BSD
 @deftypefunx int isnanf (float @var{x})
+@comment math.h
+@comment BSD
 @deftypefunx int isnanl (long double @var{x})
 This function returns a nonzero value if @var{x} is a ``not a number''
 value, and zero otherwise.
@@ -179,7 +187,11 @@ function for some reason, you can write
 @comment math.h
 @comment BSD
 @deftypefun int finite (double @var{x})
+@comment math.h
+@comment BSD
 @deftypefunx int finitef (float @var{x})
+@comment math.h
+@comment BSD
 @deftypefunx int finitel (long double @var{x})
 This function returns a nonzero value if @var{x} is finite or a ``not a
 number'' value, and zero otherwise.
@@ -566,7 +578,11 @@ to test for overflow on both old and new hardware.
 @comment math.h
 @comment ISO
 @deftypevr Macro double HUGE_VAL
+@comment math.h
+@comment ISO
 @deftypevrx Macro float HUGE_VALF
+@comment math.h
+@comment ISO
 @deftypevrx Macro {long double} HUGE_VALL
 An expression representing a particular very large number.  On machines
 that use @w{IEEE 754} floating point format, @code{HUGE_VAL} is infinity.
@@ -816,7 +832,11 @@ Prototypes for @code{abs}, @code{labs} and @code{llabs} are in @file{stdlib.h};
 @comment stdlib.h
 @comment ISO
 @deftypefun int abs (int @var{number})
+@comment stdlib.h
+@comment ISO
 @deftypefunx {long int} labs (long int @var{number})
+@comment stdlib.h
+@comment ISO
 @deftypefunx {long long int} llabs (long long int @var{number})
 These functions return the absolute value of @var{number}.
 
@@ -830,7 +850,11 @@ cannot be represented; thus, @w{@code{abs (INT_MIN)}} is not defined.
 @comment math.h
 @comment ISO
 @deftypefun double fabs (double @var{number})
+@comment math.h
+@comment ISO
 @deftypefunx float fabsf (float @var{number})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} fabsl (long double @var{number})
 This function returns the absolute value of the floating-point number
 @var{number}.
@@ -839,7 +863,11 @@ This function returns the absolute value of the floating-point number
 @comment complex.h
 @comment ISO
 @deftypefun double cabs (complex double @var{z})
+@comment complex.h
+@comment ISO
 @deftypefunx float cabsf (complex float @var{z})
+@comment complex.h
+@comment ISO
 @deftypefunx {long double} cabsl (complex long double @var{z})
 These functions return the absolute  value of the complex number @var{z}
 (@pxref{Complex Numbers}).  The absolute value of a complex number is:
@@ -872,7 +900,11 @@ All these functions are declared in @file{math.h}.
 @comment math.h
 @comment ISO
 @deftypefun double frexp (double @var{value}, int *@var{exponent})
+@comment math.h
+@comment ISO
 @deftypefunx float frexpf (float @var{value}, int *@var{exponent})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} frexpl (long double @var{value}, int *@var{exponent})
 These functions are used to split the number @var{value}
 into a normalized fraction and an exponent.
@@ -893,7 +925,11 @@ zero is stored in @code{*@var{exponent}}.
 @comment math.h
 @comment ISO
 @deftypefun double ldexp (double @var{value}, int @var{exponent})
+@comment math.h
+@comment ISO
 @deftypefunx float ldexpf (float @var{value}, int @var{exponent})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} ldexpl (long double @var{value}, int @var{exponent})
 These functions return the result of multiplying the floating-point
 number @var{value} by 2 raised to the power @var{exponent}.  (It can
@@ -909,7 +945,11 @@ equivalent to those of @code{ldexp} and @code{frexp}.
 @comment math.h
 @comment BSD
 @deftypefun double logb (double @var{x})
+@comment math.h
+@comment BSD
 @deftypefunx float logbf (float @var{x})
+@comment math.h
+@comment BSD
 @deftypefunx {long double} logbl (long double @var{x})
 These functions return the integer part of the base-2 logarithm of
 @var{x}, an integer value represented in type @code{double}.  This is
@@ -931,7 +971,11 @@ the value that @code{frexp} would store into @code{*@var{exponent}}.
 @comment math.h
 @comment BSD
 @deftypefun double scalb (double @var{value}, int @var{exponent})
+@comment math.h
+@comment BSD
 @deftypefunx float scalbf (float @var{value}, int @var{exponent})
+@comment math.h
+@comment BSD
 @deftypefunx {long double} scalbl (long double @var{value}, int @var{exponent})
 The @code{scalb} function is the BSD name for @code{ldexp}.
 @end deftypefun
@@ -939,7 +983,11 @@ The @code{scalb} function is the BSD name for @code{ldexp}.
 @comment math.h
 @comment BSD
 @deftypefun {long long int} scalbn (double @var{x}, int n)
+@comment math.h
+@comment BSD
 @deftypefunx {long long int} scalbnf (float @var{x}, int n)
+@comment math.h
+@comment BSD
 @deftypefunx {long long int} scalbnl (long double @var{x}, int n)
 @code{scalbn} is identical to @code{scalb}, except that the exponent
 @var{n} is an @code{int} instead of a floating-point number.
@@ -948,7 +996,11 @@ The @code{scalb} function is the BSD name for @code{ldexp}.
 @comment math.h
 @comment BSD
 @deftypefun {long long int} scalbln (double @var{x}, long int n)
+@comment math.h
+@comment BSD
 @deftypefunx {long long int} scalblnf (float @var{x}, long int n)
+@comment math.h
+@comment BSD
 @deftypefunx {long long int} scalblnl (long double @var{x}, long int n)
 @code{scalbln} is identical to @code{scalb}, except that the exponent
 @var{n} is a @code{long int} instead of a floating-point number.
@@ -957,7 +1009,11 @@ The @code{scalb} function is the BSD name for @code{ldexp}.
 @comment math.h
 @comment BSD
 @deftypefun {long long int} significand (double @var{x})
+@comment math.h
+@comment BSD
 @deftypefunx {long long int} significandf (float @var{x})
+@comment math.h
+@comment BSD
 @deftypefunx {long long int} significandl (long double @var{x})
 @code{significand} returns the mantissa of @var{x} scaled to the range
 @math{[1, 2)}.
@@ -987,7 +1043,11 @@ result as a @code{double} instead to get around this problem.
 @comment math.h
 @comment ISO
 @deftypefun double ceil (double @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx float ceilf (float @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} ceill (long double @var{x})
 These functions round @var{x} upwards to the nearest integer,
 returning that value as a @code{double}.  Thus, @code{ceil (1.5)}
@@ -997,7 +1057,11 @@ is @code{2.0}.
 @comment math.h
 @comment ISO
 @deftypefun double floor (double @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx float floorf (float @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} floorl (long double @var{x})
 These functions round @var{x} downwards to the nearest
 integer, returning that value as a @code{double}.  Thus, @code{floor
@@ -1007,7 +1071,11 @@ integer, returning that value as a @code{double}.  Thus, @code{floor
 @comment math.h
 @comment ISO
 @deftypefun double trunc (double @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx float truncf (float @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} truncl (long double @var{x})
 @code{trunc} is another name for @code{floor}
 @end deftypefun
@@ -1015,7 +1083,11 @@ integer, returning that value as a @code{double}.  Thus, @code{floor
 @comment math.h
 @comment ISO
 @deftypefun double rint (double @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx float rintf (float @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} rintl (long double @var{x})
 These functions round @var{x} to an integer value according to the
 current rounding mode.  @xref{Floating Point Parameters}, for
@@ -1031,7 +1103,11 @@ inexact exception.
 @comment math.h
 @comment ISO
 @deftypefun double nearbyint (double @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx float nearbyintf (float @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} nearbyintl (long double @var{x})
 These functions return the same value as the @code{rint} functions, but
 do not raise the inexact exception if @var{x} is not an integer.
@@ -1040,7 +1116,11 @@ do not raise the inexact exception if @var{x} is not an integer.
 @comment math.h
 @comment ISO
 @deftypefun double round (double @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx float roundf (float @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} roundl (long double @var{x})
 These functions are similar to @code{rint}, but they round halfway
 cases away from zero instead of to the nearest even integer.
@@ -1049,7 +1129,11 @@ cases away from zero instead of to the nearest even integer.
 @comment math.h
 @comment ISO
 @deftypefun {long int} lrint (double @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx {long int} lrintf (float @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx {long int} lrintl (long double @var{x})
 These functions are just like @code{rint}, but they return a
 @code{long int} instead of a floating-point number.
@@ -1058,7 +1142,11 @@ These functions are just like @code{rint}, but they return a
 @comment math.h
 @comment ISO
 @deftypefun {long long int} llrint (double @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx {long long int} llrintf (float @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx {long long int} llrintl (long double @var{x})
 These functions are just like @code{rint}, but they return a
 @code{long long int} instead of a floating-point number.
@@ -1067,7 +1155,11 @@ These functions are just like @code{rint}, but they return a
 @comment math.h
 @comment ISO
 @deftypefun {long int} lround (double @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx {long int} lroundf (float @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx {long int} lroundl (long double @var{x})
 These functions are just like @code{round}, but they return a
 @code{long int} instead of a floating-point number.
@@ -1076,7 +1168,11 @@ These functions are just like @code{round}, but they return a
 @comment math.h
 @comment ISO
 @deftypefun {long long int} llround (double @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx {long long int} llroundf (float @var{x})
+@comment math.h
+@comment ISO
 @deftypefunx {long long int} llroundl (long double @var{x})
 These functions are just like @code{round}, but they return a
 @code{long long int} instead of a floating-point number.
@@ -1086,7 +1182,11 @@ These functions are just like @code{round}, but they return a
 @comment math.h
 @comment ISO
 @deftypefun double modf (double @var{value}, double *@var{integer-part})
+@comment math.h
+@comment ISO
 @deftypefunx float modff (float @var{value}, float *@var{integer-part})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} modfl (long double @var{value}, long double *@var{integer-part})
 These functions break the argument @var{value} into an integer part and a
 fractional part (between @code{-1} and @code{1}, exclusive).  Their sum
@@ -1108,7 +1208,11 @@ suits your problem.
 @comment math.h
 @comment ISO
 @deftypefun double fmod (double @var{numerator}, double @var{denominator})
+@comment math.h
+@comment ISO
 @deftypefunx float fmodf (float @var{numerator}, float @var{denominator})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} fmodl (long double @var{numerator}, long double @var{denominator})
 These functions compute the remainder from the division of
 @var{numerator} by @var{denominator}.  Specifically, the return value is
@@ -1126,7 +1230,11 @@ If @var{denominator} is zero, @code{fmod} signals a domain error.
 @comment math.h
 @comment BSD
 @deftypefun double drem (double @var{numerator}, double @var{denominator})
+@comment math.h
+@comment BSD
 @deftypefunx float dremf (float @var{numerator}, float @var{denominator})
+@comment math.h
+@comment BSD
 @deftypefunx {long double} dreml (long double @var{numerator}, long double @var{denominator})
 These functions are like @code{fmod} except that they rounds the
 internal quotient @var{n} to the nearest integer instead of towards zero
@@ -1145,7 +1253,11 @@ If @var{denominator} is zero, @code{drem} signals a domain error.
 @comment math.h
 @comment BSD
 @deftypefun double remainder (double @var{numerator}, double @var{denominator})
+@comment math.h
+@comment BSD
 @deftypefunx float remainderf (float @var{numerator}, float @var{denominator})
+@comment math.h
+@comment BSD
 @deftypefunx {long double} remainderl (long double @var{numerator}, long double @var{denominator})
 This function is another name for @code{drem}.
 @end deftypefun
@@ -1162,7 +1274,11 @@ bits.
 @comment math.h
 @comment ISO
 @deftypefun double copysign (double @var{x}, double @var{y})
+@comment math.h
+@comment ISO
 @deftypefunx float copysignf (float @var{x}, float @var{y})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} copysignl (long double @var{x}, long double @var{y})
 These functions return @var{x} but with the sign of @var{y}.  They work
 even if @var{x} or @var{y} are NaN or zero.  Both of these can carry a
@@ -1191,7 +1307,11 @@ false, but @code{signbit (-0.0)} will return a nonzero value.
 @comment math.h
 @comment ISO
 @deftypefun double nextafter (double @var{x}, double @var{y})
+@comment math.h
+@comment ISO
 @deftypefunx float nextafterf (float @var{x}, float @var{y})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} nextafterl (long double @var{x}, long double @var{y})
 The @code{nextafter} function returns the next representable neighbor of
 @var{x} in the direction towards @var{y}.  The size of the step between
@@ -1210,7 +1330,11 @@ recommended functions in @w{IEEE 754}/@w{IEEE 854}).
 @comment math.h
 @comment ISO
 @deftypefun {long long int} nextafterx (double @var{x}, long double @var{y})
+@comment math.h
+@comment ISO
 @deftypefunx {long long int} nextafterxf (float @var{x}, long double @var{y})
+@comment math.h
+@comment ISO
 @deftypefunx {long long int} nextafterxl (long double @var{x}, long double @var{y})
 These functions are identical to the corresponding versions of
 @code{nextafter} except that their second argument is a @code{long
@@ -1221,7 +1345,11 @@ double}.
 @comment math.h
 @comment ISO
 @deftypefun double nan (const char *@var{tagp})
+@comment math.h
+@comment ISO
 @deftypefunx float nanf (const char *@var{tagp})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} nanl (const char *@var{tagp})
 The @code{nan} function returns a representation of NaN, provided that
 NaN is supported by the target platform.
@@ -1328,7 +1456,11 @@ perform these operations faster than the equivalent C code.
 @comment math.h
 @comment ISO
 @deftypefun double fmin (double @var{x}, double @var{y})
+@comment math.h
+@comment ISO
 @deftypefunx float fminf (float @var{x}, float @var{y})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} fminl (long double @var{x}, long double @var{y})
 The @code{fmin} function returns the lesser of the two values @var{x}
 and @var{y}.  It is similar to the expression
@@ -1344,7 +1476,11 @@ are NaN, NaN is returned.
 @comment math.h
 @comment ISO
 @deftypefun double fmax (double @var{x}, double @var{y})
+@comment math.h
+@comment ISO
 @deftypefunx float fmaxf (float @var{x}, float @var{y})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} fmaxl (long double @var{x}, long double @var{y})
 The @code{fmax} function returns the greater of the two values @var{x}
 and @var{y}.
@@ -1356,7 +1492,11 @@ are NaN, NaN is returned.
 @comment math.h
 @comment ISO
 @deftypefun double fdim (double @var{x}, double @var{y})
+@comment math.h
+@comment ISO
 @deftypefunx float fdimf (float @var{x}, float @var{y})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} fdiml (long double @var{x}, long double @var{y})
 The @code{fdim} function returns the positive difference between
 @var{x} and @var{y}.  The positive difference is @math{@var{x} -
@@ -1368,7 +1508,11 @@ If @var{x}, @var{y}, or both are NaN, NaN is returned.
 @comment math.h
 @comment ISO
 @deftypefun double fma (double @var{x}, double @var{y}, double @var{z})
+@comment math.h
+@comment ISO
 @deftypefunx float fmaf (float @var{x}, float @var{y}, float @var{z})
+@comment math.h
+@comment ISO
 @deftypefunx {long double} fmal (long double @var{x}, long double @var{y}, long double @var{z})
 @cindex butterfly
 The @code{fma} function performs floating-point multiply-add.  This is
@@ -1494,7 +1638,11 @@ available in three variants, one for each of the three complex types.
 @comment complex.h
 @comment ISO
 @deftypefun double creal (complex double @var{z})
+@comment complex.h
+@comment ISO
 @deftypefunx float crealf (complex float @var{z})
+@comment complex.h
+@comment ISO
 @deftypefunx {long double} creall (complex long double @var{z})
 These functions return the real part of the complex number @var{z}.
 @end deftypefun
@@ -1502,7 +1650,11 @@ These functions return the real part of the complex number @var{z}.
 @comment complex.h
 @comment ISO
 @deftypefun double cimag (complex double @var{z})
+@comment complex.h
+@comment ISO
 @deftypefunx float cimagf (complex float @var{z})
+@comment complex.h
+@comment ISO
 @deftypefunx {long double} cimagl (complex long double @var{z})
 These functions return the imaginary part of the complex number @var{z}.
 @end deftypefun
@@ -1510,7 +1662,11 @@ These functions return the imaginary part of the complex number @var{z}.
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} conj (complex double @var{z})
+@comment complex.h
+@comment ISO
 @deftypefunx {complex float} conjf (complex float @var{z})
+@comment complex.h
+@comment ISO
 @deftypefunx {complex long double} conjl (complex long double @var{z})
 These functions return the conjugate value of the complex number
 @var{z}.  The conjugate of a complex number has the same real part and a
@@ -1520,7 +1676,11 @@ negated imaginary part.  In other words, @samp{conj(a + bi) = a + -bi}.
 @comment complex.h
 @comment ISO
 @deftypefun double carg (complex double @var{z})
+@comment complex.h
+@comment ISO
 @deftypefunx float cargf (complex float @var{z})
+@comment complex.h
+@comment ISO
 @deftypefunx {long double} cargl (complex long double @var{z})
 These functions return the argument of the complex number @var{z}.
 The argument of a complex number is the angle in the complex plane
@@ -1534,7 +1694,11 @@ to @math{2@pi{}}.
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} cproj (complex double @var{z})
+@comment complex.h
+@comment ISO
 @deftypefunx {complex float} cprojf (complex float @var{z})
+@comment complex.h
+@comment ISO
 @deftypefunx {complex long double} cprojl (complex long double @var{z})
 These functions return the projection of the complex value @var{z} onto
 the Riemann sphere.  Values with a infinite imaginary part are projected
@@ -1952,6 +2116,8 @@ examining @var{errno} and @var{tailptr}.
 @comment stdlib.h
 @comment GNU
 @deftypefun float strtof (const char *@var{string}, char **@var{tailptr})
+@comment stdlib.h
+@comment GNU
 @deftypefunx {long double} strtold (const char *@var{string}, char **@var{tailptr})
 These functions are analogous to @code{strtod}, but return @code{float}
 and @code{long double} values respectively.  They report errors in the

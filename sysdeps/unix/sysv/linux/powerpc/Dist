@@ -2,3 +2,5 @@ clone.S
 kernel_stat.h
 kernel_termios.h
 init-first.h
+sys/procfs.h
+sys/user.h

@@ -74,7 +74,7 @@ libc.dvi: texinfo.tex
 # Generate the summary from the Texinfo source files for each chapter.
 summary.texi: stamp-summary ;
 stamp-summary: summary.awk $(filter-out summary.texi, $(texis))
-	$(AWK) -f $^ | sort -df +1 -2 | tr '\014' '\012' > summary-tmp
+	$(AWK) -f $^ | sort -t '' -df +0 -1 | tr '\014' '\012' > summary-tmp
 	$(move-if-change) summary-tmp summary.texi
 	touch $@
 
@@ -111,7 +111,7 @@ minimal-dist = summary.awk texis.awk libc-texinfo.sh libc.texinfo	\
 doc-only-dist = Makefile COPYING.LIB
 distribute = $(minimal-dist) $(examples) texis stdio-fp.c		\
 	     libc.info* libc.?? libc.??s texinfo.tex stamp-summary	\
-	     xtract-typefun.awk dir-add.texinfo dir-add.info dir	\
+	     xtract-typefun.awk dir-add.info dir			\
 	     chapters.texi top-menu.texi summary.texi
 export distribute := $(distribute)
 

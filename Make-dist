@@ -65,6 +65,7 @@ all-headers = $(filter-out $(sysdep_headers),$(headers))
 else
 +distinfo := $(shell MAKEFLAGS= MFLAGS= $(MAKE) -s no_deps=t \
 		     inhibit_interface_rules=t inhibit_mach_syscalls=t \
+		     inhibit_timezone_rules=t \
 		     subdirs='$(subdirs)' echo-distinfo | grep -v '^make')
 foo:=$(shell echo>&2 '+distinfo=$(+distinfo)')
 all-headers := $(patsubst +header+%,%,$(filter +header+%,$(+distinfo)))

@@ -53,8 +53,10 @@ define nl
 
 
 endef
-ifndef no_deps
+ifndef avoid-generated
+ifndef inhibit_timezone_rules
 -include $(addprefix $(objpfx)z.,$(tzfiles))
+endif
 endif
 
 # Make these absolute file names.

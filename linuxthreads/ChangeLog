@@ -1,3 +1,8 @@
+1998-12-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Examples/ex6.c: Unbuffer stdout and reduce sleep time to reduce
+	overall runtime.
+
 1998-12-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Examples/ex3.c: Wait until all threads are started before

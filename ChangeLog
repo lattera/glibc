@@ -1,7 +1,30 @@
-1998-12-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+1998-12-12  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
  
-	* math/libm-test.c: Remove macro ISINF.  Change all usages of 
-	ISINF to isinf. 
+	* timezone/Makefile: Protect inclusion of z.* by avoid-generated
+	and inhibit_timezone_rules instead of no_deps.
+	* Make-dist: Pass inhibit_timezone_rules=t when making
+	echo-distinfo.
+ 
+1998-12-12  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+ 
+	* manual/Makefile (distribute): Remove dir-add.texinfo.
+ 
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Add sys/procfs.h and
+	sys/user.h.
+ 
+1998-12-11  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+ 
+	* manual/Makefile (stamp-summary): Use ^L as separator for
+	sorting.
+	* manual/arith.texi: Add comments before all @deffoox lines to get
+	them added to the summary.
+	* manual/creature.texi: Likewise.
+	* manual/math.texi: Likewise.
+ 
+1998-12-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+ 
+	* math/libm-test.c: Remove macro ISINF.  Change all usages of
+	ISINF to isinf.
  
 1998-12-13  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -15,37 +38,37 @@
 	* string/stratcliff.c: Use MAP_ANON instead of MAP_ANONYMOUS.
 	Patch by UCHIYAMA Yasushi <uch@nop.or.jp>.
 
-1998-12-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+1998-12-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
  
-	* sysdeps/alpha/fpu/fsetexcptflg.c: Avoid -Wparentheses warning. 
+	* sysdeps/alpha/fpu/fsetexcptflg.c: Avoid -Wparentheses warning.
  
-	* sysdeps/libm-ieee754/s_expm1.c (__expm1): Avoid -Wparentheses 
-	warning. 
-	* sysdeps/libm-ieee754/s_log1p.c (__log1p): Likewise. 
-	* sysdeps/libm-ieee754/e_logf.c (__ieee754_logf): Likewise. 
-	* sysdeps/libm-ieee754/s_expm1f.c (__expm1f): Likewise. 
-	* sysdeps/libm-ieee754/e_log.c (__ieee754_log): Likewise. 
-	* sysdeps/libm-ieee754/s_log1pf.c (__log1pf): Likewise. 
+	* sysdeps/libm-ieee754/s_expm1.c (__expm1): Avoid -Wparentheses
+	warning.
+	* sysdeps/libm-ieee754/s_log1p.c (__log1p): Likewise.
+	* sysdeps/libm-ieee754/e_logf.c (__ieee754_logf): Likewise.
+	* sysdeps/libm-ieee754/s_expm1f.c (__expm1f): Likewise.
+	* sysdeps/libm-ieee754/e_log.c (__ieee754_log): Likewise.
+	* sysdeps/libm-ieee754/s_log1pf.c (__log1pf): Likewise.
 
-1998-12-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+1998-12-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
  
-	* sunrpc/svc_udp.c (svcudp_bufcreate): Declare len as socklen_t. 
-	(svcudp_recv): Likewise. 
+	* sunrpc/svc_udp.c (svcudp_bufcreate): Declare len as socklen_t.
+	(svcudp_recv): Likewise.
  
-1998-12-13  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de> 
+1998-12-13  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
  
-	* nis/nss-nisplus.h: Change some mappings of NIS+ errors to 
-	NSS error codes to avoid endless loops. 
+	* nis/nss-nisplus.h: Change some mappings of NIS+ errors to
+	NSS error codes to avoid endless loops.
  
 1998-12-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/gconv-modules: Correct aliases for ISO-8859-13 and add
 	aliases for ISO-8859-14.
 
-1998-12-12  Geoff Keating  <geoffk@ozemail.com.au> 
+1998-12-12  Geoff Keating  <geoffk@ozemail.com.au>
  
-	* posix/fnmatch.c (fnmatch): Arguments to FOLD must not have 
-	side-effects. 
+	* posix/fnmatch.c (fnmatch): Arguments to FOLD must not have
+	side-effects.
  
 1998-12-12  Ulrich Drepper  <drepper@cygnus.com>
 
