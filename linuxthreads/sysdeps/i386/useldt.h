@@ -20,6 +20,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stddef.h>	/* For offsetof.  */
+#include <stdlib.h>	/* For abort().  */
 
 
 /* We don't want to include the kernel header.  So duplicate the

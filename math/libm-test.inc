@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1997.
 
@@ -119,6 +119,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <argp.h>
 
 /* Possible exceptions */
@@ -3106,7 +3107,7 @@ nearbyint_test (void)
   TEST_f_f (nearbyint, 1.5, 2.0);
   TEST_f_f (nearbyint, -0.5, minus_zero);
   TEST_f_f (nearbyint, -1.5, -2.0);
-  
+
   END (nearbyint);
 }
 
@@ -3977,7 +3978,7 @@ main (int argc, char **argv)
   output_points = 1;
   /* XXX set to 0 for releases.  */
   ignore_max_ulp = 0;
-  
+
   /* Parse and process arguments.  */
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
 
