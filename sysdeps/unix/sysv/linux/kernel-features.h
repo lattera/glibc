@@ -406,3 +406,8 @@
 #if __LINUX_KERNEL_VERSION >= 132355
 # define __ASSUME_BRK_PAGE_ROUNDED	1
 #endif
+
+/* Starting with version 2.6.9, the waitid system call is available.  */
+#if __LINUX_KERNEL_VERSION >=  0x020609
+# define __ASSUME_WAITID_SYSCALL	1
+#endif

@@ -1,3 +1,12 @@
+2004-09-01  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/waitflags.h
+	(WSTOPPED, WEXITED, WCONTINUED, WNOWAIT): New macros.
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_WAITID_SYSCALL):
+	New macro.
+	* sysdeps/unix/sysv/linux/waitid.c: New file.  Use new syscall when
+	available, or fall back to the waitpid-based generic code.
+
 2004-08-14  Alfred M. Szmidt  <ams@kemisten.nu>
 
 	* sysdeps/mach/hurd/i386/init-first.c (_hurd_stack_setup): Let gcc
