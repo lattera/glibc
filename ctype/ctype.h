@@ -68,12 +68,12 @@ enum
    char' value [0,255]; by EOF (-1); or by any `signed char' value
    [-128,-1).  ANSI requires that the ctype functions work for `unsigned
    char' values and for EOF; we also support negative `signed char' values
-   for broken old programs.  The case conversion arrays are of `short int's
+   for broken old programs.  The case conversion arrays are of `int's
    rather than `unsigned char's because tolower (EOF) must be EOF, which
    doesn't fit into an `unsigned char'.  */
 extern __const unsigned short int *__ctype_b;	/* Characteristics.  */
-extern __const short int *__ctype_tolower;	/* Case conversions.  */
-extern __const short int *__ctype_toupper;	/* Case conversions.  */
+extern __const int *__ctype_tolower; /* Case conversions.  */
+extern __const int *__ctype_toupper; /* Case conversions.  */
 
 #define	__isctype(c, type) \
   (__ctype_b[(int) (c)] & (unsigned short int) type)

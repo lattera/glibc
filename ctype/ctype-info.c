@@ -24,8 +24,8 @@ extern const char _nl_C_LC_CTYPE_class[];
 extern const char _nl_C_LC_CTYPE_toupper[];
 extern const char _nl_C_LC_CTYPE_tolower[];
 
-#define b(u,x) (((u short int *) _nl_C_LC_CTYPE_##x) + 128);
+#define b(u,x) (((u int *) _nl_C_LC_CTYPE_##x) + 128);
 
-const unsigned short int *__ctype_b = b(unsigned, class);
-const short int *__ctype_tolower = b(, tolower);
-const short int *__ctype_toupper = b(, toupper);
+const unsigned short int *__ctype_b = b(unsigned short, class);
+const int *__ctype_tolower = b(, tolower);
+const int *__ctype_toupper = b(, toupper);

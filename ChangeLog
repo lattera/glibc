@@ -1,3 +1,24 @@
+Wed Mar  8 13:38:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/glob/configure.bat: Fixes from DJ.
+
+	* time/backward, time/europe, time/northamerica, time/pacificnew,
+	time/zdump.c, time/zic.c, time/tzfile.h, time/private.h,
+	time/ialloc.c: Code and data updated from ADO's 95b.
+	* time/emkdir.c: File removed.
+	* time/Makefile (distribute, extra-objs, zic): Omit it.
+	
+	* time/localtime.c: Deansideclized.  Never #define __tzname et al
+ 	to non-__ names.
+
+	* locale/lc-ctype.c (__ctype_tolower, __ctype_toupper): Use int *
+ 	instead of short int *.
+	* ctype/ctype-info.c: Likewise.
+	* ctype/ctype.h: Likewise.
+
+	* locale/langinfo.h (_NL_CTYPE_CLASS): Use this (just one) instead
+ 	of EB and EL versions.
+
 Mon Mar  6 12:34:56 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* ctype/ctype.h (_ISbit): New macro, defined dependent on byte order.

@@ -22,8 +22,8 @@
 subdir	:= time
 
 headers	:= time.h sys/time.h sys/timeb.h
-distribute := tzfile.h private.h scheck.c ialloc.c emkdir.c yearistype
-extra-objs = scheck.o ialloc.o emkdir.o zonenames $(tzfiles:%=z.%)
+distribute := tzfile.h private.h scheck.c ialloc.c yearistype
+extra-objs = scheck.o ialloc.o zonenames $(tzfiles:%=z.%)
 
 routines	:= offtime asctime clock ctime difftime gmtime	\
 		   localtime mktime strftime time tzset tzfile	\
@@ -113,7 +113,7 @@ $(installed-posixrules-file): $(zonedir)/$(posixrules) $(objpfx)zic
 endif
 
 
-$(objpfx)zic: $(objpfx)scheck.o $(objpfx)ialloc.o $(objpfx)emkdir.o
+$(objpfx)zic: $(objpfx)scheck.o $(objpfx)ialloc.o
 
 $(objpfx)tzfile.o: tzfile.c; $(tz-cc)
 $(objpfx)zic.o: zic.c; $(tz-cc)

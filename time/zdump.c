@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zdump.c	7.12";
+static char	elsieid[] = "@(#)zdump.c	7.20";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -10,10 +10,11 @@ static char	elsieid[] = "@(#)zdump.c	7.12";
 ** You can use this code to help in verifying other implementations.
 */
 
-#include "stdio.h"	/* for stdout, stderr */
+#include "stdio.h"	/* for stdout, stderr, perror */
 #include "string.h"	/* for strcpy */
 #include "sys/types.h"	/* for time_t */
 #include "time.h"	/* for struct tm */
+#include "stdlib.h"	/* for exit, malloc, atoi */
 
 #ifndef MAX_STRING_LENGTH
 #define MAX_STRING_LENGTH	1024
@@ -71,9 +72,11 @@ static char	elsieid[] = "@(#)zdump.c	7.12";
 #ifdef lint
 #define GNUC_or_lint
 #endif /* defined lint */
+#ifndef lint
 #ifdef __GNUC__
 #define GNUC_or_lint
 #endif /* defined __GNUC__ */
+#endif /* !defined lint */
 #endif /* !defined GNUC_or_lint */
 
 #ifndef INITIALIZE
@@ -92,11 +95,6 @@ extern int	optind;
 extern time_t	time();
 extern char *	tzname[2];
 
-#ifdef USG
-extern void	exit();
-extern void	perror();
-#endif /* defined USG */
-
 static char *	abbr();
 static long	delta();
 static time_t	hunt();
@@ -109,16 +107,19 @@ main(argc, argv)
 int	argc;
 char *	argv[];
 {
-	register int		i, c;
+	register int		i;
+	register int		c;
 	register int		vflag;
 	register char *		cutoff;
 	register int		cutyear;
 	register long		cuttime;
 	char **			fakeenv;
 	time_t			now;
-	time_t			t, newt;
+	time_t			t;
+	time_t			newt;
 	time_t			hibit;
-	struct tm		tm, newtm;
+	struct tm		tm;
+	struct tm		newtm;
 
 	INITIALIZE(cuttime);
 	progname = argv[0];
@@ -152,15 +153,18 @@ char *	argv[];
 	for (hibit = 1; (hibit << 1) != 0; hibit <<= 1)
 		continue;
 	{
-		register int	from, to;
+		register int	from;
+		register int	to;
 
 		for (i = 0;  environ[i] != NULL;  ++i)
 			continue;
-		fakeenv = (char **) malloc((i + 2) * sizeof *fakeenv);
+		fakeenv = (char **) malloc((size_t) ((i + 2) *
+			sizeof *fakeenv));
 		if (fakeenv == NULL ||
-			(fakeenv[0] = (char *) malloc(longest + 4)) == NULL) {
-				(void) perror(progname);
-				(void) exit(EXIT_FAILURE);
+			(fakeenv[0] = (char *) malloc((size_t) (longest +
+				4))) == NULL) {
+					(void) perror(progname);
+					(void) exit(EXIT_FAILURE);
 		}
 		to = 0;
 		(void) strcpy(fakeenv[to++], "TZ=");

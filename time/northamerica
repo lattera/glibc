@@ -1,4 +1,4 @@
-# @(#)northamerica	7.12
+# @(#)northamerica	7.15
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
@@ -148,7 +148,7 @@ Zone America/Phoenix	-7:00	US	M%sT	1946
 # large size and location in three states."  (The "only" means that other
 # tribal nations don't use DST.)
 
-Link America/Denver Navajo
+Link	America/Denver	America/Shiprock
 
 # From Bob Devine (January 28, 1988):
 # Michigan didn't observe DST from 1968 to 1973.

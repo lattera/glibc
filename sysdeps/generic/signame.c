@@ -284,7 +284,7 @@ strsignal (signal)
   static char buf[] = "Signal 12345678901234567890";
  
   if (signal > 0 || signal < NSIG)
-    return sys_siglist[signal];
+    return (char *) sys_siglist[signal];
  
   sprintf (buf, "Signal %d", signal);
   return buf;

@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stddef.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -25,20 +24,15 @@ Cambridge, MA 02139, USA.  */
 #include <time.h>
 
 
-#ifndef	HAVE_GNU_LD
-#define	__tzname	tzname
-#define	__daylight	daylight
-#define	__timezone	timezone
-#endif
-
 /* Return the `struct tm' representation of *TIMER in the local timezone.  */
 struct tm *
-DEFUN(localtime, (timer), CONST time_t *timer)
+localtime (timer)
+     const time_t *timer;
 {
   extern int __use_tzfile;
-  extern int EXFUN(__tz_compute, (time_t timer, struct tm *tp));
-  extern int EXFUN(__tzfile_compute, (time_t timer,
-				      long int *leap_correct, int *leap_hit));
+  extern int __tz_compute __P ((time_t timer, struct tm *tp));
+  extern int __tzfile_compute __P ((time_t timer,
+				    long int *leap_correct, int *leap_hit));
   register struct tm *tp;
   long int leap_correction;
   int leap_extra_secs;

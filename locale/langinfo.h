@@ -96,18 +96,17 @@ typedef enum
 
   ERA,				/* Alternate era.  */
   ERA_YEAR,			/* Year in alternate era format.  */
-  ERA_D_FMT,			/* Date in alternate ear format.  */
+  ERA_D_FMT,			/* Date in alternate era format.  */
   ALT_DIGITS,			/* Alternate symbols for digits.  */
 
   _NL_NUM_LC_TIME,		/* Number of indices in LC_TIME category.  */
 
   /* LC_CTYPE category: character classification.
      This information is accessed by the functions in <ctype.h>.
-     These `nl_langinfo' names are used internally.  */
-  _NL_CTYPE_CLASS_EB = _NL_ITEM (LC_CTYPE, 0),
+     These `nl_langinfo' names are used only internally.  */
+  _NL_CTYPE_CLASS = _NL_ITEM (LC_CTYPE, 0),
   _NL_CTYPE_TOUPPER_EB,
   _NL_CTYPE_TOLOWER_EB,
-  _NL_CTYPE_CLASS_EL,
   _NL_CTYPE_TOUPPER_EL,
   _NL_CTYPE_TOLOWER_EL,
   _NL_NUM_LC_CTYPE,

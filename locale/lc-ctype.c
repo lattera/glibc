@@ -40,12 +40,13 @@ _nl_postload_ctype (void)
 #else
 #error bizarre byte order
 #endif
+#define eval(x) x
 
 #define current(unsigned,x) \
-  ((const unsigned short int *) _NL_CURRENT (LC_CTYPE, bo(_NL_CTYPE_##x)) \
+  ((const unsigned int *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_##eval(x)) \
    + 128)
 
-  __ctype_b = current (unsigned, CLASS);
-  __ctype_toupper = current (, TOUPPER);
-  __ctype_tolower = current (, TOLOWER);
+  __ctype_b = current (unsigned short, CLASS);
+  __ctype_toupper = current (, bo (TOUPPER));
+  __ctype_tolower = current (, bo (TOLOWER));
 }
