@@ -23,8 +23,11 @@
 
 #include "DEFS.h"
 
-ENTRY(htonl, 0)
+ENTRY(__htonl, 0)
 	rotl	$-8,4(ap),r0
 	insv	r0,$16,$8,r0
 	movb	7(ap),r0
 	ret
+strong_alias (__htonl, __ntohl)
+weak_alias (__htonl, htonl)
+weak_alias (__ntohl, ntohl)
