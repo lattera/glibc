@@ -17,6 +17,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifdef PIC
+
 #include <dlfcn.h>
 #include <stddef.h>
 #include <elf/ldsodefs.h>
@@ -41,16 +43,17 @@ dlopen_doit (void *a)
 
 
 void *
-__dlopen_check (const char *file, int mode)
+__dlopen_nocheck (const char *file, int mode)
 {
   struct dlopen_args args;
   args.file = file;
+
+  if ((mode & RTLD_BINDING_MASK) == 0)
+    /* By default assume RTLD_LAZY.  */
+    mode |= RTLD_LAZY;
   args.mode = mode;
 
   return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
 }
-#if defined PIC && defined DO_VERSIONING
-default_symbol_version (__dlopen_check, dlopen, GLIBC_2.1);
-#else
-weak_alias (__dlopen_check, dlopen)
+symbol_version (__dlopen_nocheck, dlopen, GLIBC_2.0);
 #endif

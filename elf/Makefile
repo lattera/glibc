@@ -42,7 +42,7 @@ distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 
 extra-libs	 = libdl
 extra-libs-others = $(extra-libs)
-libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr
+libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr dlopenold
 
 before-compile = $(objpfx)trusted-dirs.h
 

@@ -1,5 +1,15 @@
 1998-11-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/Makefile (libdl-routines): Add dlopenold.
+	* elf/Versions [libdl, GLIBC_2.1]: Add dlopen.
+	* elf/dl-open.c (_dl_open): Check whether RTLD_LAZY or RTLD_GLOBAL
+	is set and bounce otherwise.
+	* elf/dlopen.c: Rename function to __dlopen_check and make version
+	named dlopen.
+	* elf/dlopenold.c: New file.
+
+1998-11-02  Ulrich Drepper  <drepper@cygnus.com>
+
 	* elf/Versions [libc, GLIBC_2.01]: Add _dl_global_scope_alloc.
 	* elf/dl-open.c (_dl_global_scope_alloc): Move definition to
 	* elf/dl-deps.c: ...here.

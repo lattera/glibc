@@ -154,6 +154,10 @@ _dl_open (const char *file, int mode)
   char *errstring;
   int errcode;
 
+  if ((mode & RTLD_BINDING_MASK) == 0)
+    /* One of the flags must be set.  */
+    _dl_signal_error (EINVAL, file, _("invalid mode for dlopen()"));
+
   /* Make sure we are alone.  */
   __libc_lock_lock (_dl_load_lock);
 

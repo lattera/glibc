@@ -32,6 +32,6 @@ libdl {
     dladdr; dlclose; dlerror; dlopen; dlsym;
   }
   GLIBC_2.1 {
-    dlvsym;
+    dlopen; dlvsym;
   }
 }
