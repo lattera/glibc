@@ -317,7 +317,7 @@ extern int wcswidth __P ((__const wchar_t *__s, size_t __n));
 extern double wcstod __P ((__const wchar_t *__restrict __nptr,
 			   wchar_t **__restrict __endptr));
 
-#ifdef __USE_GNU
+#ifdef __USE_ISOC9X
 /* Likewise for `float' and `long double' sizes of floating-point numbers.  */
 extern float wcstof __P ((__const wchar_t *__restrict __nptr,
 			  wchar_t **__restrict __endptr));
