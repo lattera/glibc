@@ -1,3 +1,7 @@
+2000-05-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/aix/aix-termios.h: Define AIX_CBAUD.
+
 2000-05-31  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h: Use array for
@@ -5,7 +9,7 @@
 
 	* sysdeps/unix/sysv/linux/mips/Versions: Export _flush_cache.
 	Patches by Maciej W. Rozycki <macro@ds2.pg.gda.pl>.
-	
+
 	* sysdeps/unix/sysv/linux/mips/ftruncate64.c: Fix prototype of
 	syscall.
 	* sysdeps/unix/sysv/linux/mips/truncate64.c: Likewise.
