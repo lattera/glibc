@@ -709,7 +709,7 @@ int pthread_equal(pthread_t thread1, pthread_t thread2)
 
 #ifndef THREAD_SELF
 
-pthread_descr __pthread_find_self()
+pthread_descr __pthread_find_self(void)
 {
   char * sp = CURRENT_STACK_FRAME;
   pthread_handle h;
@@ -718,6 +718,21 @@ pthread_descr __pthread_find_self()
      the manager threads handled specially in thread_self(), so start at 2 */
   h = __pthread_handles + 2;
   while (! (sp <= (char *) h->h_descr && sp >= h->h_bottom)) h++;
+  return h->h_descr;
+}
+
+#else
+
+static pthread_descr thread_self_stack(void)
+{
+  char *sp = CURRENT_STACK_FRAME;
+  pthread_handle h;
+
+  if (sp >= __pthread_manager_thread_bos && sp < __pthread_manager_thread_tos)
+    return &__pthread_manager_thread;
+  h = __pthread_handles + 2;
+  while (! (sp <= (char *) h->h_descr && sp >= h->h_bottom))
+    h++;
   return h->h_descr;
 }
 
@@ -769,7 +784,7 @@ int pthread_getschedparam(pthread_t thread, int *policy,
   return 0;
 }
 
-int __pthread_yield ()
+int __pthread_yield (void)
 {
   /* For now this is equivalent with the POSIX call.  */
   return sched_yield ();
@@ -841,8 +856,26 @@ static void pthread_handle_sigcancel(int sig)
 
   if (self == &__pthread_manager_thread)
     {
+#ifdef THREAD_SELF
+      /* A new thread might get a cancel signal before it is fully
+	 initialized, so that the thread register might still point to the
+	 manager thread.  Double check that this is really the manager
+	 thread.  */
+      pthread_descr real_self = thread_self_stack();
+      if (real_self == &__pthread_manager_thread)
+	{
+	  __pthread_manager_sighandler(sig);
+	  return;
+	}
+      /* Oops, thread_self() isn't working yet..  */
+      self = real_self;
+# ifdef INIT_THREAD_SELF
+      INIT_THREAD_SELF(self, self->p_nr);
+# endif
+#else
       __pthread_manager_sighandler(sig);
       return;
+#endif
     }
   if (__builtin_expect (__pthread_exit_requested, 0)) {
     /* Main thread should accumulate times for thread manager and its
@@ -884,7 +917,7 @@ static void pthread_handle_sigdebug(int sig)
    Notice that we can't free the stack segments, as the forked thread
    may hold pointers into them. */
 
-void __pthread_reset_main_thread()
+void __pthread_reset_main_thread(void)
 {
   pthread_descr self = thread_self();
   struct rlimit limit;

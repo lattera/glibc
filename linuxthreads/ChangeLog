@@ -1,3 +1,13 @@
+2001-11-30  Andreas Schwab  <schwab@suse.de>
+
+	* pthread.c (pthread_handle_sigcancel) [THREAD_SELF]: Double check
+	that self is the manager thread, and initialize the thread
+	register if not.
+	(thread_self_stack) [THREAD_SELF]: New function to find self via
+	stack pointer.
+	* manager.c (pthread_handle_create): Don't block cancel signal any
+	more.
+
 2001-11-29  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/pt-machine.h: Use %gs as thread specific
@@ -5,7 +15,7 @@
 	(THREAD_SELF): New.
 	(INIT_THREAD_SELF): New.
 	(THREAD_GETMEM): New.
-	(THREAD_GETMEM_NC): 
+	(THREAD_GETMEM_NC):
 	(THREAD_SETMEM): New.
 	(THREAD_SETMEM_NC): New.
 	(FLOATING_STACKS): Define.

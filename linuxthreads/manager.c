@@ -534,7 +534,6 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   size_t guardsize = 0;
   int pagesize = __getpagesize();
   int saved_errno;
-  sigset_t newmask, oldmask;
 
   /* First check whether we have to change the policy and if yes, whether
      we can  do this.  Normally this should be done by examining the
@@ -620,11 +619,6 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
       if ((mask & (__pthread_threads_events.event_bits[idx]
 		   | event_maskp->event_bits[idx])) != 0)
 	{
-	  /* Block cancel signal in the child until it is fully
-	     initialized.  */
-	  sigemptyset(&newmask);
-	  sigaddset(&newmask, __pthread_sig_cancel);
-	  sigprocmask(SIG_BLOCK, &newmask, &oldmask);
 	  /* Lock the mutex the child will use now so that it will stop.  */
 	  __pthread_lock(new_thread->p_lock, NULL);
 
@@ -653,7 +647,6 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 			__pthread_sig_cancel, new_thread);
 #endif
 	  saved_errno = errno;
-	  sigprocmask(SIG_SETMASK, &oldmask, NULL);
 	  if (pid != -1)
 	    {
 	      /* Now fill in the information about the new thread in
@@ -679,11 +672,6 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
     }
   if (pid == 0)
     {
-      /* Block cancel signal in the child until it is fully
-	 initialized.  */
-      sigemptyset(&newmask);
-      sigaddset(&newmask, __pthread_sig_cancel);
-      sigprocmask(SIG_BLOCK, &newmask, &oldmask);
 #ifdef NEED_SEPARATE_REGISTER_STACK
       pid = __clone2(pthread_start_thread,
 		     (void **)new_thread_bottom,
@@ -700,7 +688,6 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 		    __pthread_sig_cancel, new_thread);
 #endif /* !NEED_SEPARATE_REGISTER_STACK */
       saved_errno = errno;
-      sigprocmask(SIG_SETMASK, &oldmask, NULL);
     }
   /* Check if cloning succeeded */
   if (pid == -1) {
