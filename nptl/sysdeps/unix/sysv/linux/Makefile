@@ -22,7 +22,7 @@ sysdep_routines += register-atfork unregister-atfork libc_pthread_init
 
 libpthread-sysdep_routines += pt-fork
 
-gen-as-const-headers += lowlevelcond.sym
+gen-as-const-headers += lowlevelcond.sym lowlevelrwlock.sym
 endif
 
 ifeq ($(subdir),posix)
