@@ -54,7 +54,7 @@ struct gap
 #define PREPARE_LOOP \
   enum direction dir = ((struct iso2022jp_data *) step->data)->dir;	      \
   enum variant var = ((struct iso2022jp_data *) step->data)->var;	      \
-  int save_state;							      \
+  int save_set;								      \
   int set = data->statep->count;
 #define END_LOOP \
   data->statep->count = set;

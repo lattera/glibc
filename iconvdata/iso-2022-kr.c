@@ -23,11 +23,17 @@
 #include <string.h>
 #include "ksc5601.h"
 
+#include <assert.h>
+
 /* This makes obvious what everybody knows: 0x1b is the Esc character.  */
+#define ESC	0x1b
+
+/* The shift sequences for this charset (we it does not use ESC).  */
 #define SI	0x0f
 #define SO	0x0e
 
 /* Definitions used in the body of the `gconv' function.  */
+#define CHARSET_NAME		"ISO-2022-KR//"
 #define DEFINE_INIT		1
 #define DEFINE_FINI		1
 #define FROM_LOOP		from_iso2022kr_loop
@@ -37,8 +43,10 @@
 #define MIN_NEEDED_TO		4
 #define MAX_NEEDED_TO		4
 #define PREPARE_LOOP \
-  int save_set;
+  int save_set;								      \
   int set = data->statep->count;
+#define EXTRA_LOOP_ARGS		, set
+
 
 /* The COUNT element of the state keeps track of the currently selected
    character set.  The possible values are:  */
@@ -58,7 +66,7 @@ enum
       if (step->data == &from_object)					      \
 	/* It's easy, we don't have to emit anything, we just reset the	      \
 	   state for the input.  */					      \
-	set = 0;							      \
+	data->statep->count = 0;					      \
       else								      \
 	{								      \
 	  char *outbuf = data->outbuf;					      \
@@ -73,7 +81,7 @@ enum
 	      /* Write out the shift sequence.  */			      \
 	      *outbuf++ = SO;						      \
 	      data->outbuf = outbuf;					      \
-	      set = 0;							      \
+	      data->statep->count = 0;					      \
 	    }								      \
 	}								      \
     }
@@ -221,43 +229,46 @@ enum
 	       later and now simply use a fixed order in which we test for    \
 	       availability  */						      \
 									      \
-	if (ch <= 0x7f)							      \
-	  {								      \
-	    /* We must encode using ASCII.  First write out the		      \
-	       escape sequence.  */					      \
-	    *outptr++ = SO;						      \
-	    set = ASCII_set;						      \
-									      \
-	    if (NEED_LENGTH_TEST && outptr == outend)			      \
+	    if (ch <= 0x7f)						      \
 	      {								      \
-		result = GCONV_FULL_OUTPUT;				      \
-		break;							      \
-	      }								      \
+		/* We must encode using ASCII.  First write out the	      \
+		   escape sequence.  */					      \
+		*outptr++ = SO;						      \
+		set = ASCII_set;					      \
 									      \
-	    *outptr++ = ch;						      \
-	  }								      \
-	else								      \
-	  {								      \
-	    written = ucs4_to_ksc5601 (ch, buf, 2);			      \
-	    if (written != UNKNOWN_10646_CHAR)				      \
-	      {								      \
-		/* We use KSC 5601.  */					      \
-		*outptr++ = SI;						      \
-		set = KSC5601_set;					      \
-									      \
-		if (NEED_LENGTH_TEST && outptr + 2 > outend)		      \
+		if (NEED_LENGTH_TEST && outptr == outend)		      \
 		  {							      \
 		    result = GCONV_FULL_OUTPUT;				      \
 		    break;						      \
 		  }							      \
 									      \
-		*outptr++ = buf[0];					      \
-		*outptr++ = buf[1];					      \
+		*outptr++ = ch;						      \
 	      }								      \
 	    else							      \
 	      {								      \
-		result = GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
+		char buf[2];						      \
+									      \
+		written = ucs4_to_ksc5601 (ch, buf, 2);			      \
+		if (written != UNKNOWN_10646_CHAR)			      \
+		  {							      \
+		    /* We use KSC 5601.  */				      \
+		    *outptr++ = SI;					      \
+		    set = KSC5601_set;					      \
+									      \
+		    if (NEED_LENGTH_TEST && outptr + 2 > outend)	      \
+		      {							      \
+			result = GCONV_FULL_OUTPUT;			      \
+			break;						      \
+		      }							      \
+									      \
+		    *outptr++ = buf[0];					      \
+		    *outptr++ = buf[1];					      \
+		  }							      \
+		else							      \
+		  {							      \
+		    result = GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
 	      }								      \
 	  }								      \
       }									      \

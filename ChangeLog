@@ -1,3 +1,8 @@
+1998-04-26 18:44  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/Makefile: Correct rules to generate gap table.
+	* iconvdata/gap.pl: Simplify.
+
 1998-04-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/Makefile: Add rules for ISO-2022-KR.
