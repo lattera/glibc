@@ -1,3 +1,7 @@
+1998-08-22  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/bits/string.h: New file.
+
 1998-08-12  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/sysv/linux/configure.in: Obey --with-headers,
