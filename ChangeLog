@@ -1,4 +1,48 @@
+Tue Jul  2 10:44:37 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* pwd/fgetpwent.c: Don't include ../nss/nss_files/files-parse.c to
+	define parse_line function.
+	(parse_line): #define to _nss_files_parse_pwent and
+	add extern decl for that.
+
+	* nss/nss_files/files-XXX.c (internal_getent): Return
+	NSS_STATUS_TRYAGAIN for ERANGE error.
+
+	* sysdeps/i386/strtok.S (LreturnNULL): Save current state ptr instead
+	of null, so next round returns null again instead of bombing.  Fix
+	from drepper.
+
+	* nss/nss_files/files-parse.c (LINE_PARSER): Take new first arg EOLSET.
+	Remove ; after `ENTDATA_DECL (data)'.
+	Truncate line at strpbrk (line, EOLSET "\n").
+	(ENTDATA_DECL): Put ; at end.
+	(MIDLINE_COMMENTS): Macro removed.
+	* nss/nss_files/files-ethers.c: Pass new argument.
+	* nss/nss_files/files-hosts.c: Likewise.
+	* nss/nss_files/files-network.c: Likewise.
+	* nss/nss_files/files-parse.c: Likewise.
+	* nss/nss_files/files-proto.c: Likewise.
+	* nss/nss_files/files-rpc.c: Likewise.
+	* nss/nss_files/files-service.c: Likewise.
+	* grp/fgetgrent.c: Likewise.
+	* pwd/fgetpwent.c: Likewise.
+	* nss/nss_files/files-pwd.c: Get parse_line with extern decl, since
+	fgetpwent.c already defines it.
+	* nss/nss_files/files-grp.c: Likewise.
+
+	* elf/dl-load.c (_dl_map_object): Use any object with matching l_name
+	as well as any matching with l_libname.  Fix DT_SONAME lookup to use
+	string table properly.
+
+	* elf/rtld.c (dl_main): Set _dl_rtld_map.l_name from _dl_argv[0] when
+	invoked directly, and l_libname from that if PT_INTERP missing.
+	Set l_name from l_libname only if not set from argv.
+
+	* time/europe, time/northamerica: Updated from ADO 96i.
+
 Mon Jul  1 15:44:34 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* stdio-common/tst-ungetc.c: Include unistd.h.
 
 	* inet/Makefile (routines): Change getnetbypt to getnetbyad.
 

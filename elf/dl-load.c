@@ -460,11 +460,13 @@ _dl_map_object (struct link_map *loader, const char *name, int type)
   /* Look for this name among those already loaded.  */
   for (l = _dl_loaded; l; l = l->l_next)
     if (! strcmp (name, l->l_libname) || /* NAME was requested before.  */
+	! strcmp (name, l->l_name) || /* NAME was found before.  */
 	/* If the requested name matches the soname of a loaded object,
 	   use that object.  */
 	(l->l_info[DT_SONAME] &&
 	 ! strcmp (name, (const char *) (l->l_addr +
-					 l->l_info[DT_SONAME]->d_un.d_ptr))))
+					 l->l_info[DT_STRTAB]->d_un.d_ptr +
+					 l->l_info[DT_SONAME]->d_un.d_val))))
       {
 	/* The object is already loaded.
 	   Just bump its reference count and return it.  */

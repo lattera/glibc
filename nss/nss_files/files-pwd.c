@@ -25,19 +25,10 @@ Cambridge, MA 02139, USA.  */
 struct pwent_data {};
 
 #include "files-parse.c"
-LINE_PARSER
-({
-  STRING_FIELD (result->pw_name, ISCOLON, 0);
-  STRING_FIELD (result->pw_passwd, ISCOLON, 0);
-  INT_FIELD (result->pw_uid, ISCOLON, 0, 10,);
-  INT_FIELD (result->pw_gid, ISCOLON, 0, 10,);
-  STRING_FIELD (result->pw_gecos, ISCOLON, 0);
-  STRING_FIELD (result->pw_dir, ISCOLON, 0);
-  result->pw_shell = line;
-  line = strchr (line, '\n');
-  if (line)
-    *line = '\0';
-})
+/* Our parser function is already defined in fgetpwent.c, so use that.
+   to parse lines from the database file.  */
+extern int parse_line (char *line, struct STRUCTURE *result,
+		       void *buffer, int buflen);
 
 #include "files-XXX.c"
 

@@ -144,7 +144,7 @@ internal_getent (struct STRUCTURE *result,
   if (buflen < (int) sizeof *data + 1)
     {
       errno = ERANGE;
-      return NSS_STATUS_NOTFOUND;
+      return NSS_STATUS_TRYAGAIN;
     }
 
   do

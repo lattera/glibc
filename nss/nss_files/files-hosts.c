@@ -43,52 +43,53 @@ struct hostent_data
 #define TRAILING_LIST_SEPARATOR_P	isspace
 #include "files-parse.c"
 LINE_PARSER
-({
-  char *addr;
+("#",
+ {
+   char *addr;
 
-  STRING_FIELD (addr, isspace, 1);
+   STRING_FIELD (addr, isspace, 1);
 
-  /* Parse address.  */
-  if ((_res.options & RES_USE_INET6)
-      && inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
-    {
-      result->h_addrtype = AF_INET6;
-      result->h_length = IN6ADDRSZ;
-    }
-  else if (inet_pton (AF_INET, addr, entdata->host_addr) > 0)
-    {
-      if (_res.options & RES_USE_INET6)
-	{
-	  map_v4v6_address ((char *) entdata->host_addr,
-			    (char *) entdata->host_addr);
-	  result->h_addrtype = AF_INET6;
-	  result->h_length = IN6ADDRSZ;
-	}
-      else
-	{
-	  result->h_addrtype = AF_INET;
-	  result->h_length = INADDRSZ;
-	}
-    }
-  else
-    /* Illegal address: ignore line.  */
-    return 0;
+   /* Parse address.  */
+   if ((_res.options & RES_USE_INET6)
+       && inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
+     {
+       result->h_addrtype = AF_INET6;
+       result->h_length = IN6ADDRSZ;
+     }
+   else if (inet_pton (AF_INET, addr, entdata->host_addr) > 0)
+     {
+       if (_res.options & RES_USE_INET6)
+	 {
+	   map_v4v6_address ((char *) entdata->host_addr,
+			     (char *) entdata->host_addr);
+	   result->h_addrtype = AF_INET6;
+	   result->h_length = IN6ADDRSZ;
+	 }
+       else
+	 {
+	   result->h_addrtype = AF_INET;
+	   result->h_length = INADDRSZ;
+	 }
+     }
+   else
+     /* Illegal address: ignore line.  */
+     return 0;
 
-  /* Store a pointer to the address in the expected form.  */
-  entdata->h_addr_ptrs[0] = entdata->host_addr;
-  entdata->h_addr_ptrs[1] = NULL;
-  result->h_addr_list = entdata->h_addr_ptrs;
+   /* Store a pointer to the address in the expected form.  */
+   entdata->h_addr_ptrs[0] = entdata->host_addr;
+   entdata->h_addr_ptrs[1] = NULL;
+   result->h_addr_list = entdata->h_addr_ptrs;
 
-  /* If we need the host entry in IPv6 form change it now.  */
-  if (_res.options & RES_USE_INET6)
-    {
-      char *bufptr = data->linebuffer;
-      int buflen = (char *) data + datalen - bufptr;
-      map_v4v6_hostent (result, &bufptr, &buflen);
-    }
+   /* If we need the host entry in IPv6 form change it now.  */
+   if (_res.options & RES_USE_INET6)
+     {
+       char *bufptr = data->linebuffer;
+       int buflen = (char *) data + datalen - bufptr;
+       map_v4v6_hostent (result, &bufptr, &buflen);
+     }
 
-  STRING_FIELD (result->h_name, isspace, 1);
-})
+   STRING_FIELD (result->h_name, isspace, 1);
+ })
 
 #include "files-XXX.c"
 

@@ -269,15 +269,15 @@ L11:
 LreturnNULL:
 	xorl %eax, %eax
 
-	/* Store NULL as pointer to the next character.  */
+	/* Store current pointer for next round.  */
 #ifdef USE_AS_STRTOK_R
 	movl 12(%esp), %ecx
-	movl %eax, (%ecx)
+	movl %edx, (%ecx)
 #else
 # ifndef PIC
-	movl %eax, save_ptr
+	movl %edx, save_ptr
 # else
-	movl %eax, save_ptr@GOTOFF(%ebx)
+	movl %edx, save_ptr@GOTOFF(%ebx)
 	popl %ebx
 # endif
 #endif

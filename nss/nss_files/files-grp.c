@@ -27,12 +27,10 @@ struct grent_data {};
 #define TRAILING_LIST_MEMBER		gr_mem
 #define TRAILING_LIST_SEPARATOR_P(c)	((c) == ',')
 #include "files-parse.c"
-LINE_PARSER
-(
- STRING_FIELD (result->gr_name, ISCOLON, 0);
- STRING_FIELD (result->gr_passwd, ISCOLON, 0);
- INT_FIELD (result->gr_gid, ISCOLON, 0, 10,);
-)
+/* Our parser function is already defined in fgetgrent.c, so use that.
+   to parse lines from the database file.  */
+extern int parse_line (char *line, struct STRUCTURE *result,
+		       void *buffer, int buflen);
 
 #include "files-XXX.c"
 

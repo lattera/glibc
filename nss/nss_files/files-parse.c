@@ -35,7 +35,7 @@ struct parser_data
   {
 #ifdef ENTDATA
     struct ENTDATA entdata;
-#define ENTDATA_DECL(data) struct ENTDATA *const entdata = &data->entdata
+#define ENTDATA_DECL(data) struct ENTDATA *const entdata = &data->entdata;
 #else
 #define ENTDATA_DECL(data)
 #endif
@@ -52,25 +52,20 @@ struct parser_data
 #define parse_line CONCAT(_nss_files_parse_,ENTNAME)
 #endif
 
-#define LINE_PARSER(BODY)						      \
+#define LINE_PARSER(EOLSET, BODY)					      \
 parser_stclass int							      \
 parse_line (char *line, struct STRUCTURE *result,			      \
 	    struct parser_data *data, int datalen)			      \
 {									      \
-  ENTDATA_DECL (data);							      \
+  ENTDATA_DECL (data)							      \
+  char *p = strpbrk (line, EOLSET "\n");				      \
+  if (p)								      \
+    *p = '\0';								      \
   BODY;									      \
   TRAILING_LIST_PARSER;							      \
   return 1;								      \
 }
 
-
-/* Comments can come mid-line; trim the line at the first # seen.  */
-#define MIDLINE_COMMENTS						      \
-  {									      \
-    char *p = strchr (line, '#');					      \
-    if (p)								      \
-      *p = '\0';							      \
-  }
 
 #define STRING_FIELD(variable, terminator_p, swallow)			      \
   {									      \

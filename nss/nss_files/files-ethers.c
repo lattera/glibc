@@ -33,8 +33,7 @@ struct etherent_data {};
 #define DATAFILE	"/etc/ethers"
 #include "files-parse.c"
 LINE_PARSER
-(
- MIDLINE_COMMENTS;
+("#",
  /* Read the ethernet address: 6 x 8bit hexadecimal number.  */
  {
    size_t cnt;

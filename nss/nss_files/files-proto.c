@@ -29,8 +29,7 @@ struct protoent_data {};
 #define TRAILING_LIST_SEPARATOR_P	isspace
 #include "files-parse.c"
 LINE_PARSER
-(
- MIDLINE_COMMENTS;
+("#",
  STRING_FIELD (result->p_name, isspace, 1);
  INT_FIELD (result->p_proto, isspace, 1, 10,);
  )

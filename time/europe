@@ -1,4 +1,4 @@
-# @(#)europe	7.37
+# @(#)europe	7.38
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -124,6 +124,15 @@
 # In the tables below, we condense this complicated story into a single
 # transition date for London, namely 1847 Sep 22.  We don't know as much
 # about Dublin, so we use 1880 Aug 2, the legal transition time.
+
+# From Paul Eggert (1996-06-12):
+# Summer Time was first seriously proposed by William Willett (1857-1915),
+# a London builder who circulated a pamphlet ``Waste of Daylight'' (1907)
+# that proposed advancing clocks 20 minutes on each of four Sundays in April,
+# and retarding them by the same amount on four Sundays in September.
+# A bill was drafted in 1909 and introduced in Parliament several times,
+# but it met with ridicule and opposition, especially from farming interests.
+# One-hour Summer Time was eventually adopted as a wartime measure in 1916.
 
 # From Arthur David Olson (January 19, 1989):
 #
@@ -418,6 +427,22 @@
 # who provided the wartime regulations and a snippet of Hansard explaining
 # why double summer time started on a Monday in 1945 (it was Easter).
 
+# From Peter Ilieve <peter@aldie.co.uk> (1996-05-29):
+# I have now got a copy of the British Standard Time Act 1968.
+# It says (S4(2)) that it expires at 02:00 GMT on 31 October 1971 unless
+# an Order in Council was passed in Parliament to make the Act permanent.
+# No Order was passed, so 02:00 1971-10-31 it is...
+#
+# Interestingly, it says baldly `This Act shall come into force on
+# 27 October 1968', without giving a time. As S1 of the Act merely
+# stated that `The time for general purposes in the United Kingdom
+# (to be known as British standard time) shall be one hour in
+# advance of Greenwich mean time throughout the year; ...' you could
+# possibly argue that the start time of BStandardT was 00:00 1968-10-27,
+# especially as the Act repealed the Summer Time Acts 1916--1947 in toto,
+# thereby destroying the authority of the Summer Time Order specifying
+# summer time in 1968....
+
 # From Peter Ilieve <peter@memex.co.uk> (November 18, 1993)
 #
 # Here is a revised version of my tabrules file for the perl script I sent
@@ -617,7 +642,7 @@
 # To maintain strict historical accuracy you could start a new UK ending rule
 # of Oct Sun>=22 in 1990.
 
-# From Paul Eggert <eggert@twinsun.com> (November 18, 1993):
+# From Paul Eggert <eggert@twinsun.com> (1996-06-12):
 #
 # As Ilieve remarks, the date `20 April 1924' in the table of ``Summer Time: A
 # Consultation Document'' (Cm 722, 1989) table is a transcription error;
@@ -637,14 +662,27 @@
 # It actually just had one transition.
 #     * Northern Ireland used single daylight savings time throughout WW II.
 # Actually, it conformed to Britain.
+#     * GB-Eire changed standard time to 1 hour ahead of GMT on 1968-02-18.
+# Actually, that date saw the usual switch to summer time.
+# Standard time was not changed until 1968-10-27 (the clocks didn't change).
 #
-# The following claim by Shanks is possible though doubtful;
-# we'll ignore it for now.
+# The following claims by Shanks are possible though doubtful;
+# we'll ignore them for now.
 #     * Jersey, Guernsey, and the Isle of Man did not switch from GMT
 #	to daylight savings time until 1921 Apr 3, when they began to
 #	conform with Great Britain.
+#     * Dublin's 1971-10-31 switch was at 02:00, even though London's was 03:00.
+#
 #
 # Whitman says Dublin Mean Time was -0:25:21, which is more precise than Shanks.
+
+# From an anonymous contributor (1996-06-02):
+# The law governing time in Ireland is under Statutory Instrument SI 395/94,
+# which gives force to European Union 7th Council Directive # 94/21/EC.
+# Under this directive, the Minister for Justice in Ireland makes appropriate
+# regulations. I spoke this morning with the Secretary of the Department of
+# Justice (tel +353 1 678 9711) who confirmed to me that the correct name is
+# "Irish Summer Time", abbreviated to "IST".
 
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 # 1916 to 1925--irregular
@@ -710,11 +748,11 @@ Rule	GB-Eire	1958	1959	-	Apr	Sun>=16	2:00s	1:00	BST
 Rule	GB-Eire	1960	only	-	Apr	10	2:00s	1:00	BST
 Rule	GB-Eire	1961	1963	-	Mar	lastSun	2:00s	1:00	BST
 Rule	GB-Eire	1964	1967	-	Mar	Sun>=19	2:00s	1:00	BST
+Rule	GB-Eire	1968	only	-	Feb	18	2:00s	1:00	BST
 Rule	GB-Eire	1972	1980	-	Mar	Sun>=16	2:00s	1:00	BST
 # 1953 to 1980, ending rules
 Rule	GB-Eire	1953	1960	-	Oct	Sun>=1	2:00s	0	GMT
-Rule	GB-Eire	1961	1967	-	Oct	Sun>=23	2:00s	0	GMT
-Rule	GB-Eire	1971	only	-	Oct	31	3:00	0	GMT
+Rule	GB-Eire	1961	1968	-	Oct	Sun>=23	2:00s	0	GMT
 Rule	GB-Eire	1972	1980	-	Oct	Sun>=23	2:00s	0	GMT
 # 1981 on
 Rule	GB-Eire	1981	1995	-	Mar	lastSun	1:00u	1:00	BST
@@ -724,29 +762,30 @@ Rule	GB-Eire 1990	1995	-	Oct	Sun>=22	1:00u	0	GMT
 
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Europe/London	-0:01:15 -	LMT	1847 Sep 22
-			 0:00	GB-Eire	%s	1968 Feb 18 2:00
-			 1:00	-	BST	1971 Oct 31 2:00
+			 0:00	GB-Eire	%s	1968 Oct 27
+			 1:00	-	BST	1971 Oct 31 2:00u
 			 0:00	GB-Eire	%s	1996
 			 0:00	EU	GMT/BST
 Zone	Europe/Belfast	-0:23:40 -	LMT	1880 Aug  2
 			-0:25:21 -	DMT	1916 May 21 2:00    # Dublin MT
 			-0:25:21 1:00	DST	1916 Oct  1 3:00
-			 0:00	GB-Eire	%s	1968 Feb 18 2:00
-			 1:00	-	BST	1971 Oct 31 3:00
+			 0:00	GB-Eire	%s	1968 Oct 27
+			 1:00	-	BST	1971 Oct 31 2:00u
 			 0:00	GB-Eire	%s	1996
 			 0:00	EU	GMT/BST
 Zone	Europe/Dublin	-0:25:21 -	LMT	1880 Aug  2
 			-0:25:21 -	DMT	1916 May 21 2:00    # Dublin MT
 			-0:25:21 1:00	DST	1916 Oct  1 3:00
-			 0:00	GB-Eire	%s	1940 Feb 25 2:00
-			 0:00	1:00	BST	1946 Oct  6 2:00
+			 0:00	GB-Eire	%s	1921 Dec  6
+			 0:00	GB-Eire	GMT/IST	1940 Feb 25 2:00
+			 0:00	1:00	IST	1946 Oct  6 2:00
 			 0:00	-	GMT	1947 Mar 16 2:00
-			 0:00	1:00	BST	1947 Nov  2 2:00
+			 0:00	1:00	IST	1947 Nov  2 2:00
 			 0:00	-	GMT	1948 Apr 18 2:00
-			 0:00	GB-Eire	%s	1968 Feb 18 2:00
-			 1:00	-	BST	1971 Oct 31 3:00
-			 0:00	GB-Eire	%s	1996
-			 0:00	EU	GMT/BST
+			 0:00	GB-Eire	GMT/IST	1968 Oct 27
+			 1:00	-	IST	1971 Oct 31 2:00u
+			 0:00	GB-Eire	GMT/IST	1996
+			 0:00	EU	GMT/IST
 
 ###############################################################################
 
@@ -1294,11 +1333,11 @@ Zone Atlantic/Reykjavik	-1:27:24 -	LMT	1837
 # Italy
 # From Paul Eggert (1996-05-06):
 # For Italian DST we have three sources: Shanks, Whitman, and F. Pollastri
-# <http://pisolo.cstv.to.cnr.it/toi/it/ienitlt.html> (see `FP' below),
+# <URL:http://pisolo.cstv.to.cnr.it/toi/uk/ienitlt.html> (see `FP' below),
 # taken from a publication of the Italian National Electrotechnical Institute.
 # When the three sources disagree, guess who's right, as follows:
 #
-# year 	FP	Shanks (S)	Whitman (W)	Go with:
+# year	FP	Shanks (S)	Whitman (W)	Go with:
 # 1916	06-03	06-03 24:00	06-03 00:00	FP & W
 #	09-30	09-30 24:00	09-30 01:00	FP; guess 24:00s
 # 1917	04-01	03-31 24:00	03-31 00:00	FP & S

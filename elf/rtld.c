@@ -117,7 +117,6 @@ dl_main (const ElfW(Phdr) *phdr,
 {
   const ElfW(Phdr) *ph;
   struct link_map *l;
-  const char *interpreter_name;
   int lazy;
   int list_only = 0;
 
@@ -154,7 +153,8 @@ file you run.  This is mostly of use for maintainers to test new versions\n\
 of this helper program; chances are you did not intend to run this program.\n",
 			  NULL);
 
-      interpreter_name = _dl_argv[0];
+      /* Note the place where the dynamic linker actually came from.  */
+      _dl_rtld_map.l_name = _dl_argv[0];
 
       if (! strcmp (_dl_argv[1], "--list"))
 	{
@@ -182,7 +182,6 @@ of this helper program; chances are you did not intend to run this program.\n",
       l = _dl_new_object ((char *) "", "", lt_library);
       l->l_phdr = phdr;
       l->l_phnum = phent;
-      interpreter_name = 0;
       l->l_entry = *user_entry;
     }
 
@@ -216,10 +215,14 @@ of this helper program; chances are you did not intend to run this program.\n",
 	   dlopen call or DT_NEEDED entry, for something that wants to link
 	   against the dynamic linker as a shared library, will know that
 	   the shared object is already loaded.  */
-	interpreter_name = (void *) l->l_addr + ph->p_vaddr;
+	_dl_rtld_map.l_libname = (const char *) l->l_addr + ph->p_vaddr;
 	break;
       }
-  assert (interpreter_name);	/* How else did we get here?  */
+  if (! _dl_rtld_map.l_libname && _dl_rtld_map.l_name)
+    /* We were invoked directly, so the program might not have a PT_INTERP.  */
+    _dl_rtld_map.l_libname = _dl_rtld_map.l_name;
+  else
+    assert (_dl_rtld_map.l_libname); /* How else did we get here?  */
 
   /* Extract the contents of the dynamic section for easy access.  */
   elf_get_dynamic_info (l->l_ld, l->l_info);
@@ -229,7 +232,10 @@ of this helper program; chances are you did not intend to run this program.\n",
 
   /* Put the link_map for ourselves on the chain so it can be found by
      name.  */
-  _dl_rtld_map.l_name = (char *) _dl_rtld_map.l_libname = interpreter_name;
+  if (! _dl_rtld_map.l_name)
+    /* If not invoked directly, the dynamic linker shared object file was
+       found by the PT_INTERP name.  */
+    _dl_rtld_map.l_name = (char *) _dl_rtld_map.l_libname;
   _dl_rtld_map.l_type = lt_library;
   while (l->l_next)
     l = l->l_next;

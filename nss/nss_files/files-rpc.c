@@ -29,8 +29,7 @@ struct rpcent_data {};
 #define TRAILING_LIST_SEPARATOR_P	isspace
 #include "files-parse.c"
 LINE_PARSER
-(
- MIDLINE_COMMENTS;
+("#",
  STRING_FIELD (result->r_name, isspace, 1);
  INT_FIELD (result->r_number, isspace, 1, 10,);
  )

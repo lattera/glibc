@@ -30,11 +30,11 @@ struct grent_data {};
 #define TRAILING_LIST_SEPARATOR_P(c)	((c) == ',')
 #include "../nss/nss_files/files-parse.c"
 LINE_PARSER
-(
+(,
  STRING_FIELD (result->gr_name, ISCOLON, 0);
  STRING_FIELD (result->gr_passwd, ISCOLON, 0);
  INT_FIELD (result->gr_gid, ISCOLON, 0, 10,);
-)
+ )
 
 
 /* Read one entry from the given stream.  */

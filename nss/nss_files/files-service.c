@@ -31,8 +31,7 @@ struct servent_data {};
 #include "files-parse.c"
 #define ISSLASH(c) ((c) == '/')
 LINE_PARSER
-(
- MIDLINE_COMMENTS;
+("#",
  STRING_FIELD (result->s_name, isspace, 1);
  INT_FIELD (result->s_port, ISSLASH, 10, 0, htons);
  STRING_FIELD (result->s_proto, isspace, 1);

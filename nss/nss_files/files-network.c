@@ -30,15 +30,16 @@ struct netent_data {};
 #define TRAILING_LIST_SEPARATOR_P	isspace
 #include "files-parse.c"
 LINE_PARSER
-({
-  char *addr;
+("#",
+ {
+   char *addr;
 
-  STRING_FIELD (result->n_name, isspace, 1);
+   STRING_FIELD (result->n_name, isspace, 1);
 
-  STRING_FIELD (addr, isspace, 1);
-  result->n_net = inet_network (addr);
+   STRING_FIELD (addr, isspace, 1);
+   result->n_net = inet_network (addr);
 
-})
+ })
 
 #include "files-XXX.c"
 
