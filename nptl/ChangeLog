@@ -29,7 +29,7 @@
 	* sysdeps/sh/jmpbuf-unwind.h: New file.
 	* sysdeps/sparc/sparc32/jmpbuf-unwind.h: New file.
 	* sysdeps/x86_64/jmpbuf-unwind.h: New file.
-	* sysdeps/ia64/jmpbuf-unwind.h: Include stdint.h.
+	* sysdeps/unix/sysv/linux/ia64/jmpbuf-unwind.h: Include stdint.h.
 	(_JMPBUF_CFA_UNWINDS): Remove.
 	(_JMPBUF_CFA_UNWINDS_ADJ, _JMPBUF_UNWINDS_ADJ): Define.
 
