@@ -40,7 +40,7 @@ ENTRY (strcspn)
 	   table.  */
 	movq %rdi, %r8			/* Save value.  */
 	subq $256, %rsp			/* Make space for 256 bytes.  */
-	cfi_adjust_cfa_offset(-256)
+	cfi_adjust_cfa_offset(256)
 	movq $32,  %rcx			/* 32*8 bytes = 256 bytes.  */
 	movq %rsp, %rdi
 	xorq %rax, %rax			/* We store 0s.  */
