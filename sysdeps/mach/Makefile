@@ -25,11 +25,7 @@ ifneq (mach,$(subdir))
 # Subdirectories other than mach/ might use the generated Mach headers.
 # So make sure we get a chance to run in mach/ to make them before all else.
 
-ifdef objpfx
-mach-objpfx = $(objpfx)
-else
-mach-objpfx = $(..)mach/
-endif
+mach-objpfx = $(common-objpfx)mach/
 
 # These are all the generated files that <mach.h> includes.
 mach-before-compile := $(mach-objpfx)mach-shortcuts.h \

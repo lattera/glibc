@@ -396,7 +396,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --posix               be strictly POSIX conform\n\
 \n\
 System's directory for character maps: %s\n\
-                       locale files  : %s\n"),
+                       locale files  : %s\n\
+Report bugs to <bug-glibc@gnu.ai.mit.edu>."),
 	    program_invocation_name, CHARMAP_PATH, LOCALE_PATH);
 
   exit (status);

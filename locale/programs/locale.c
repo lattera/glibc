@@ -244,7 +244,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -m, --charmaps        write names of available charmaps\n\
 \n\
   -c, --category-name   write names of selected categories\n\
-  -k, --keyword-name    write names of selected keywords\n"),
+  -k, --keyword-name    write names of selected keywords\n\
+Report bugs to <bug-glibc@gnu.ai.mit.edu>."),
 	    __progname);
 
   exit (status);

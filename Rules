@@ -62,16 +62,16 @@ subdir_lib: lib-noranlib
 
 # Some subdirs need to install a dummy library.
 # They can use "$(objpfx)libfnord.a: $(dep-dummy-lib); $(make-dummy-lib)".
-dep-dummy-lib = $(objpfx)dummy.o
+dep-dummy-lib = $(common-objpfx)dummy.o
 define make-dummy-lib
 $(AR) cr$(verbose) $@ $<
 endef
-$(objpfx)dummy.c:
+$(common-objpfx)dummy.c:
 	rm -f $@
 	echo 'void __dummy__ () { }' > $@
-$(objpfx)empty.c:
+$(common-objpfx)empty.c:
 	cp -f /dev/null $@
-generated := $(generated) dummy.o dummy.c empty.c empty.o
+generated := $(generated) $(..)dummy.o $(..)dummy.c $(..)empty.c $(..)empty.o
 
 # This makes all the auxilliary and test programs.
 
@@ -141,7 +141,7 @@ endif
 ifdef static-only-routines
 # These routines are to be omitted from the shared library object,
 # so we replace the PIC objects for them with the empty object file.
-$(static-only-routines:%=$(objpfx)%.so): %.so: $(objpfx)empty.o
+$(static-only-routines:%=$(objpfx)%.so): %.so: $(common-objpfx)empty.o
 	rm -f $@
 	ln $< $@
 endif

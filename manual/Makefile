@@ -165,8 +165,17 @@ $(glibc-targets):
 # changed the library.
 lib: $(foreach o,$(object-suffixes),$(objpfx)stamp$o-$(subdir))
 stubs: $(common-objpfx)stub-manual
-$(common-objpfx)stub-manual ../po/manual.pot:; cp /dev/null $@
-$(objpfx)stamp%-$(subdir):; cp /dev/null $@
+$(common-objpfx)stub-manual ../po/manual.pot $(objpfx)stamp%-$(subdir):
+	$(make-target-directory)
+	cp /dev/null $@
+
+
+# Make the target directory if it doesn't exist, using the `mkinstalldirs'
+# script that does `mkdir -p' even if `mkdir' doesn't support that flag.
+define make-target-directory
+$(addprefix $(..)./mkinstalldirs ,\
+	    $(filter-out $(wildcard $(@D:%/=%)),$(@D:%/=%)))
+endef
 
 # The top-level glibc Makefile expects subdir_install to update the stubs file.
 subdir_install: stubs

@@ -48,7 +48,7 @@ $(objpfx)lib$(config-vendor).a: $(bare-routines:%=$(objpfx)%.o)
 # from scratch each time.
 	rm -f $@
 ifdef objdir
-	cd $(objdir); $(AR) cq$(verbose) $@ $(^:$(objpfx)%=%)
+	cd $(objpfx); $(AR) cq$(verbose) $(@:$(objpfx)%=%) $(^:$(objpfx)%=%)
 else
 	$(AR) cq$(verbose) $@ $^
 endif

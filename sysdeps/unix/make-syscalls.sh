@@ -58,7 +58,7 @@ EOF
 
   # Emit a compilation rule for this syscall.
   echo "\
-\$(foreach o,\$(object-suffixes),\$(objpfx)$file\$o): \$(objpfx)s-proto.d
+\$(foreach o,\$(object-suffixes),\$(objpfx)$file\$o): \$(common-objpfx)s-proto.d
 	(echo '#include <sysdep.h>'; \\
 	 echo 'PSEUDO ($strong, $syscall, $nargs)'; \\
 	 echo '	ret'; \\

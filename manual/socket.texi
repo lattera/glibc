@@ -151,7 +151,7 @@ Use of this style is covered in detail in @ref{Connections}.
 @comment BSD
 @deftypevr Macro int SOCK_DGRAM
 The @code{SOCK_DGRAM} style is used for sending
-individually-addressed packets, unreliably.  
+individually-addressed packets, unreliably.
 It is the diametrical opposite of @code{SOCK_STREAM}.
 
 Each time you write data to a socket of this kind, that data becomes
@@ -585,7 +585,7 @@ for information about this.
 * Services Database::           Ports may have symbolic names.
 * Byte Order::		        Different hosts may use different byte
                                  ordering conventions; you need to
-                                 canonicalize host address and port number. 
+                                 canonicalize host address and port number.
 * Inet Example::	        Putting it all together.
 @end menu
 
@@ -650,7 +650,7 @@ numeric address it stands for.
 * Names: Host Names.		Translating host names to host numbers.
 @end menu
 
-@node Abstract Host Addresses 
+@node Abstract Host Addresses
 @subsubsection Internet Host Addresses
 @cindex host address, Internet
 @cindex Internet host address
@@ -683,7 +683,7 @@ of an Internet address specifies a network.  The remaining bytes of the
 Internet address specify the address within that network.
 
 The Class A network 0 is reserved for broadcast to all networks.  In
-addition, the host number 0 within each network is reserved for broadcast 
+addition, the host number 0 within each network is reserved for broadcast
 to all hosts in that network.
 
 The Class A network 127 is reserved for loopback; you can always use
@@ -966,9 +966,9 @@ This condition happens when the name server could not be contacted.  If
 you try again later, you may succeed then.
 
 @comment netdb.h
-@comment BSD 
-@item NO_RECOVERY 
-@vindex NO_RECOVERY 
+@comment BSD
+@item NO_RECOVERY
+@vindex NO_RECOVERY
 A non-recoverable error occurred.
 
 @comment netdb.h
@@ -1421,7 +1421,7 @@ read and write operations.  But, like pipes, sockets do not support file
 positioning operations.
 @end deftypefun
 
-For examples of how to call the @code{socket} function, 
+For examples of how to call the @code{socket} function,
 see @ref{File Namespace}, or @ref{Inet Example}.
 
 
@@ -1615,7 +1615,7 @@ error conditions are defined for this function:
 The socket @var{socket} is not a valid file descriptor.
 
 @item ENOTSOCK
-The socket @var{socket} is not a socket.
+File descriptor @var{socket} is not a socket.
 
 @item EADDRNOTAVAIL
 The specified address is not available on the remote machine.
@@ -2635,7 +2635,7 @@ This option gets or sets the size of the input buffer.  The value is a
 @comment GNU
 @item SO_STYLE
 @comment sys/socket.h
-@comment BSD 
+@comment BSD
 @itemx SO_TYPE
 This option can be used with @code{getsockopt} only.  It is used to
 get the socket's communication style.  @code{SO_TYPE} is the
@@ -2644,7 +2644,7 @@ The value has type @code{int} and its value designates a communication
 style; see @ref{Communication Styles}.
 
 @comment sys/socket.h
-@comment BSD 
+@comment BSD
 @item SO_ERROR
 @c Extra blank line here makes the table look better.
 
@@ -2712,7 +2712,7 @@ network.
 @deftypefun {struct netent *} getnetbyaddr (long @var{net}, int @var{type})
 The @code{getnetbyaddr} function returns information about the network
 of type @var{type} with number @var{net}.  You should specify a value of
-@code{AF_INET} for the @var{type} argument for Internet networks.  
+@code{AF_INET} for the @var{type} argument for Internet networks.
 
 @code{getnetbyaddr} returns a null pointer if there is no such
 network.

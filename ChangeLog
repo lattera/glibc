@@ -1,3 +1,87 @@
+Fri Aug 30 01:26:44 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/Dist: Add close.S.
+	* sysdeps/unix/sysv/linux/m68k/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/Dist: Likewise.
+
+	* version.c: Add comment about where to report bugs to.
+	* catgets/gencat.c (usage): Likewise.
+	* db/makedb.c (usage): Likewise.
+	* locale/programs/locale.c (usage): Likewise.
+	* locale/programs/localedef.c (usage): Likewise.
+
+	* manual/socket.texi: A little bit better wording.
+
+Thu Aug 29 18:03:06 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules: Make sure directory exists before generating stamp file.
+	(BUILD_CFLAGS): Always refer to using $(..).
+	* manual/Makefile: Make sure directory exists before generating
+ 	stamp file.
+	(make-target-directory): Add macro definition.
+	* sysdeps/generic/Makefile: Make sure directory exists before
+ 	generating stamp file.
+
+	* Makefile (distribute): Add autolock.sh.  Reported by Fila Kolodny.
+
+Tue Aug 27 10:06:22 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	When compiling in separate directory put objects into
+	subdirectories matching the source layout.
+	* Makeconfig (objpfx) [ifdef objdir]: Append $(subdir).
+	When looking for configparms try in $(common-objpfx).
+	Use $(common-objpfx)SUBDIR to find objects from other subdirectory
+	builds.
+	* Makerules: Add $(objpfx) to vpath list.
+	(make-dummy-dep): Use $(common-objpfx) to avoid creating dummy.d
+	more than once.  All uses in dependency lists changed.
+	(+make-deps): Make target directory.
+	(sed-remove-objpfx): Substitute $(common-objpfx).
+	(do-ar, build-extra-lib, $(common-objpfx)stub-$(subdir)): Use
+	$(objpfx) instead of $(objdir) for cd command.
+	(O%-lib): Always find libc relative to $(..).
+	(subdir-stamps): Collect stamp files from subdirs.
+	(common-mostlyclean): Remove stub file in $(common-objpfx).
+	* MakeTAGS ($P/siglist.pot): Find siglist.c in stdio-common.
+	* Rules (dep-dummy-lib): Use $(common-objpfx) to avoid creating to
+	more than once.
+	($(objpfx)dummy.c, $(objpfx)empty.c): Change target name to use
+	$(common-objfpx).  All uses in dependency lists changed.
+	(generated): Prepend $(..) to names.
+	* bare/Makefile ($(objpfx)lib$(config-vendor).a): Remove $(objpfx)
+	from $@.
+	* nss/Makefile ($(objpfx)libnss_dns.so, $(objpfx)libnss_db.so):
+	Use $(common-objpfx) instead of $(..) in dependencies.
+	* sysdeps/mach/Makefile (mach-objpfx): Unconditionally use
+	$(common-objpfx) instead of $(..) and (objpfx).
+	* sysdeps/mach/hurd/Makefile (hurd-objpfx): Likewise.
+	(rpath-link): Likewise.
+	(rpcuserlibs): Likewise.
+	* sysdeps/unix/Makefile [$(subdir) = stdio-common]: Check for
+	errlist.c in $(objpfx), not $(common-objpfx).
+	($(common-objpfx)s-proto.d): Special rule not covered by pattern
+	rule.
+	* sysdeps/unix/make-syscalls.sh: Make syscall rules depending on
+	s-proto.d in $(common-objpfx), not $(objpfx).
+
+Thu Aug 29 17:45:49 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nsswitch.c (nss_dlerror_run): Free returned error
+	string.
+
+Thu Aug 29 15:53:33 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/e_acoshl.c: New file. `long double'
+ 	implementation.
+	* sysdeps/libm-ieee754/e_atanhl.c: Likewise.
+	* sysdeps/libm-ieee754/e_remainderl.c: Likewise.
+	* sysdeps/libm-ieee754/e_scalbl.c: Likewise.
+	* sysdeps/libm-ieee754/s_asinhl.c: Likewise.
+	* sysdeps/libm-ieee754/s_cosl.c: Likewise.
+	* sysdeps/libm-ieee754/s_sinl.c: Likewise.
+	* sysdeps/libm-ieee754/s_tanhl.c: Likewise.
+	* sysdeps/libm-ieee754/s_tanl.c: Likewise.
+
 Thu Aug 29 12:00:30 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 	
 	* sysdeps/mach/hurd/setitimer.c (setitimer_locked): Correct
@@ -16,7 +100,7 @@ Thu Aug 29 12:00:30 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 Thu Aug 29 00:28:08 1996  Ulrich Drepper  <drepper@cygnus.com>
 
-	* stdio-common/printf_fp.c (__printf_fp): Use default value `.` if
+	* stdio-common/printf_fp.c (__printf_fp): Use default value '.' if
  	`decimal' char is 0.
 
 	* C-numeric.c (not_available): New constant.

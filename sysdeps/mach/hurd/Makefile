@@ -41,11 +41,7 @@ ifeq (,$(filter mach hurd,$(subdir)))
 # (But we don't want to do this in mach/, because hurd/ needs some things
 # there, and we know mach/ doesn't need anything from hurd/.)
 
-ifdef objpfx
-hurd-objpfx = $(objpfx)
-else
-hurd-objpfx = $(..)hurd/
-endif
+hurd-objpfx = $(common-objpfx)hurd/
 
 # These are all the generated headers that <hurd.h> includes.
 before-compile += $(patsubst %,$(hurd-objpfx)hurd/%.h,io fs process)
@@ -104,12 +100,10 @@ endif
 
 # For the shared library, we don't need to do the linker script machination.
 # Instead, we specify the required libraries when building the shared object.
-rpcuserlibs := $(firstword $(objdir) $(..)mach)/libmachuser.so \
-	       $(firstword $(objdir) $(..)hurd)/libhurduser.so
+rpcuserlibs := $(common-objpfx)mach/libmachuser.so \
+	       $(common-objpfx)hurd/libhurduser.so
 $(common-objpfx)libc.so: $(rpcuserlibs)
-ifndef objpfx
-rpath-link += $(..)mach:$(..)hurd
-endif
+rpath-link += $(common-objpfx)mach:$(common-objpfx)hurd
 
 # The RPC stubs from these libraries are needed in building the dynamic
 # linker, too.  It must be self-contained, so we link the needed PIC

@@ -231,7 +231,7 @@ distribute  := README INSTALL FAQ NOTES NEWS PROJECTS			\
 	       ansidecl.h mkinstalldirs move-if-change install-sh	\
 	       configure configure.in aclocal.m4 config.sub config.guess\
 	       config.h.in config.make.in config-name.in Makefile.in	\
-	       munch-tmpl.c munch.awk \
+	       autolock.sh munch-tmpl.c munch.awk \
 	       sysdep.h set-hooks.h libc-symbols.h version.h shlib-versions \
 	       rpm/Makefile rpm/template rpm/rpmrc
 

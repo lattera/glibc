@@ -212,7 +212,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -o, --output=NAME   write output to file NAME\n\
   -V, --version       output version information and exit\n\
 If INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n\
-is -, output is written to standard output.\n"),
+is -, output is written to standard output.\n\
+Report bugs to <bug-glibc@gnu.ai.mit.edu>.\n"),
 	   program_invocation_name, program_invocation_name);
 
   exit (status);

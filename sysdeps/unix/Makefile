@@ -209,7 +209,7 @@ common-generated := $(common-generated) \
 endif
 
 ifeq ($(subdir),stdio-common)
-ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
+ifeq (,$(filter-out $(sysdep_dir)/stub/ $(objpfx),\
 	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/errlist.c))))))
 
 before-compile: $(objpfx)errlist.c
@@ -301,5 +301,8 @@ ifndef no_deps
 -include $(common-objpfx)s-proto.d
 endif
 endif
+
+$(common-objpfx)s-proto.d: $(..)sysdeps/unix/s-proto.S $(before-compile)
+	$(+make-deps)
 
 endif

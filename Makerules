@@ -85,7 +85,7 @@ endif
 # This is here so things in sysdep Makefiles can easily depend on foo.h as
 # appropriate and not worry about where foo.h comes from, which may be
 # system dependent and not known by that Makefile.
-vpath %.h $(subst $(empty) ,:,$(strip $(common-objpfx) \
+vpath %.h $(subst $(empty) ,:,$(strip $(common-objpfx) $(objpfx) \
 				      $(addprefix $(sysdep_dir)/,$(sysdirs)) \
 				      $(..)))
 
@@ -150,9 +150,9 @@ endif
 # have source in .s files, and thus do not in fact need a .d file.
 # So we must define rules to make .d files for .s files.
 define make-dummy-dep
-$(addprefix ln $(objpfx)dummy.d ,$(filter-out $(wildcard $@),$@))
+$(addprefix ln $(common-objpfx)dummy.d ,$(filter-out $(wildcard $@),$@))
 endef
-$(objpfx)dummy.d:
+$(common-objpfx)dummy.d:
 	echo '# .s files cannot contain includes, so they need no deps.' > $@
 
 # It matters that this set of rules, for compiling from sources in
@@ -169,7 +169,7 @@ $(objpfx)%.o: %.s $(before-compile); $(compile-command.s)
 $(objpfx)%.so: %.s $(before-compile); $(compile-command.s)
 $(objpfx)%.po: %.s $(before-compile); $(compile-command.s)
 $(objpfx)%.go: %.s $(before-compile); $(compile-command.s)
-$(objpfx)%.d: %.s $(objpfx)dummy.d; $(make-dummy-dep)
+$(objpfx)%.d: %.s $(common-objpfx)dummy.d; $(make-dummy-dep)
 $(objpfx)%.o: %.c $(before-compile); $(compile-command.c)
 $(objpfx)%.so: %.c $(before-compile); $(compile-command.c)
 $(objpfx)%.po: %.c $(before-compile); $(compile-command.c)
@@ -190,7 +190,7 @@ $(objpfx)%.o: $(objpfx)%.s $(before-compile); $(compile-command.s)
 $(objpfx)%.so: $(objpfx)%.s $(before-compile); $(compile-command.s)
 $(objpfx)%.po: $(objpfx)%.s $(before-compile); $(compile-command.s)
 $(objpfx)%.go: $(objpfx)%.s $(before-compile); $(compile-command.s)
-$(objpfx)%.d: $(objpfx)%.s $(objpfx)dummy.d; $(make-dummy-dep)
+$(objpfx)%.d: $(objpfx)%.s $(common-objpfx)dummy.d; $(make-dummy-dep)
 $(objpfx)%.o: $(objpfx)%.c $(before-compile); $(compile-command.c)
 $(objpfx)%.so: $(objpfx)%.c $(before-compile); $(compile-command.c)
 $(objpfx)%.po: $(objpfx)%.c $(before-compile); $(compile-command.c)
@@ -239,7 +239,7 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 		  \$$(compile-command.c)";				      \
 	   done; \
 	   $(open-check-inhibit-asm) \
-	   echo "\$$(objpfx)%.d: $$dir/%.s \$$(objpfx)dummy.d; \
+	   echo "\$$(objpfx)%.d: $$dir/%.s \$$(common-objpfx)dummy.d; \
 		\$$(make-dummy-dep)";			       \
 	   echo "\$$(objpfx)%.d: $$dir/%.S \$$(before-compile); \
 		\$$(+make-deps)";					      \
@@ -279,6 +279,7 @@ OUTPUT_OPTION = -o $@
 
 S-CPPFLAGS = $(asm-CPPFLAGS)
 define +make-deps
+$(make-target-directory)
 -@rm -f $@
 $(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
 sed -e 's,$(subst .,\.,$*)\.o,$(foreach o,$(object-suffixes),$(@:.d=$o)) $@,' \
@@ -289,7 +290,9 @@ ifneq (,$(objpfx))
 # Continuation lines here are dangerous because they introduce spaces!
 define sed-remove-objpfx
 -e 's@ $(subst .,\.,$(subst @,\@,$(objpfx)))@ $$(objpfx)@g' \
--e 's@^$(subst .,\.,$(subst @,\@,$(objpfx)))@$$(objpfx)@g'
+-e 's@^$(subst .,\.,$(subst @,\@,$(objpfx)))@$$(objpfx)@g' \
+-e 's@ $(subst .,\.,$(subst @,\@,$(common-objpfx)))@ $$(common-objpfx)@g' \
+-e 's@^$(subst .,\.,$(subst @,\@,$(common-objpfx)))@$$(common-objpfx)@g'
 endef
 endif
 
@@ -327,7 +330,7 @@ LDFLAGS-c.so = -nostdlib -nostartfiles
 # Give libc.so an entry point and make it directly runnable itself.
 LDFLAGS-c.so += -e __libc_main
 # Use our own special initializer and finalizer files for libc.so.
-elfobjdir := $(firstword $(objdir) $(patsubst ../$(subdir),.,$(..)elf))
+elfobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)elf)
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.so \
 			 $(common-objpfx)libc_pic.a \
 			 $(elfobjdir)/sofini.so $(elfobjdir)/ld.so
@@ -443,6 +446,7 @@ ifndef objects
 # Create the stamp$o files to keep the parent makefile happy.
 subdir_lib: $(foreach o,$(object-suffixes),$(objpfx)stamp$o-$(subdir))
 $(foreach o,$(object-suffixes),$(objpfx)stamp$o-$(subdir)):
+	$(make-target-directory)
 	rm -f $@; > $@
 else
 
@@ -471,17 +475,13 @@ object-suffixes-left := $(object-suffixes)
 include $(o-iterator)
 define do-ar
 topdir=`cd $(..).; pwd`; \
-$(patsubst %,cd %;,$(objdir)) \
+$(patsubst %/,cd %;,$(objpfx)) \
 $$topdir/autolock.sh ${O%-lib}.lck $(AR) cru$(verbose) ${O%-lib} \
 					 $(patsubst $(objpfx)%,%,$^)
 rm -f $@
 touch $@
 endef
-ifdef subdir
-O%-lib = $(filter ../,$(firstword $(objdir) ../))$(patsubst %,$(libtype$*),c)
-else
-O%-lib = $(patsubst %,$(libtype$*),c)
-endif
+O%-lib = $(..)$(patsubst %,$(libtype$*),c)
 
 endif
 
@@ -496,8 +496,7 @@ $(common-objpfx)$(patsubst %,$(libtype$o),c)($(ar-symtab-name)): \
 	  $$(RANLIB) $$(common-objpfx)$$(patsubst %,$$(libtype$o),c)
 endef
 ifndef subdir
-subdirs-stamps := $(foreach d,$(subdirs),\
-			    $(firstword $(objdir) $(subdir))/stamp%-$d)
+subdirs-stamps := $(foreach d,$(subdirs),$(common-objpfx)$d/stamp%-$d)
 subdirs-stamp-o = $(subst %,$o,$(subdirs-stamps))
 $(subdirs-stamps): subdir_lib;
 endif
@@ -512,7 +511,7 @@ objects objs: $(foreach o,$(object-suffixes),$(o-objects)) \
 
 # Canned sequence for building an extra library archive.
 define build-extra-lib
-$(patsubst %,cd %;,$(objdir)) \
+$(patsubst %/,cd %;,$(objpfx)) \
 $(AR) cru$(verbose) $(@:$(objpfx)%=%) \
       $(patsubst $(objpfx)%,%,$^)
 $(RANLIB) $@
@@ -736,12 +735,7 @@ cd $(@D); $(BUILD_CC) $(BUILD_CFLAGS) $(<:$(common-objpfx)%=%) -o $(@F)
 endef
 
 # We always want to use configuration definitions.
-ifdef objdir
-# This is always used in $(common-objdir), so we use no directory name.
-BUILD_CFLAGS = -include config.h
-else
 BUILD_CFLAGS = -include $(..)config.h
-endif
 
 # Support the GNU standard name for this target.
 .PHONY: check
@@ -773,7 +767,7 @@ common-mostlyclean:
 				     $(addsuffix .o,$(tests) $(others)) \
 				     $(addsuffix .out,$(tests)))
 	-rm -f $(addprefix $(objpfx),$(extra-objs) $(install-lib))
-	-rm -f core $(objpfx)stub-$(subdir)
+	-rm -f core $(common-objpfx)stub-$(subdir)
 	$(rmobjs)
 define rmobjs
 $(foreach o,$(object-suffixes),
@@ -796,7 +790,7 @@ s = $(sysdep_dir)/stub
 $(common-objpfx)stub-$(subdir): $(+depfiles)
 # Use /dev/null since `...` might expand to empty.
 	(s=`cd $s; /bin/pwd`; \
-	 $(patsubst %,cd %;,$(objdir)) \
+	 $(patsubst %/,cd %;,$(objpfx)) \
 	 sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
 	     `sed -n 's@^.*$s/\([a-z0-9_-]*\.c\).*$$@'"$$s"/'\1@p' \
 		  $(patsubst $(objpfx)%,%,$^) /dev/null` \

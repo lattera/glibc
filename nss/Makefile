@@ -66,10 +66,9 @@ libnss_db-inhibit-o	= $(filter-out .so,$(object-suffixes))
 include ../Rules
 
 
-$(objpfx)libnss_dns.so: $(firstword $(objdir) $(..)resolv)/libresolv.so
+$(objpfx)libnss_dns.so: $(common-objpfx)resolv/libresolv.so
 
-$(objpfx)libnss_db.so: $(firstword $(objdir) $(..)db)/libdb.so \
-		       $(objpfx)libnss_files.so
+$(objpfx)libnss_db.so: $(common-objpfx)db/libdb.so $(objpfx)libnss_files.so
 
 $(libnss_db-routines:%=$(objpfx)%.c): $(objpfx)db-%.c: nss_files/files-%.c
 	@rm -f $@.new

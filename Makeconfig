@@ -59,8 +59,8 @@ endif
 # $(common-objdir) is the place to put objects and
 # such that are not specific to a single subdir.
 ifdef objdir
-objpfx = $(objdir)/
-common-objpfx = $(objpfx)
+objpfx := $(patsubst %//,%/,$(objdir)/$(subdir)/)
+common-objpfx = $(objdir)/
 common-objdir = $(objdir)
 else
 objpfx :=
@@ -110,8 +110,8 @@ ifneq ($(wildcard $(..)configparms),)
 include $(..)configparms
 endif
 ifneq ($(objpfx),)
-ifneq ($(wildcard $(objpfx)configparms),)
-include $(objpfx)configparms
+ifneq ($(wildcard $(common-objpfx)configparms),)
+include $(common-objpfx)configparms
 endif
 endif
 
@@ -325,7 +325,7 @@ default-rpath = $(libdir)
 endif
 # This is how to find at build-time things that will be installed there.
 rpath-link = $(common-objdir):$(elfobjdir):$(nssobjdir)
-nssobjdir := $(firstword $(objdir) $(patsubst ../$(subdir),.,$(..)nss))
+nssobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)nss)
 else
 link-libc = $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
 endif
@@ -337,13 +337,8 @@ ifeq ($(elf),yes)
 +preinit = $(addprefix $(csu-objpfx),crti.o)
 +postinit = $(addprefix $(csu-objpfx),crtn.o)
 endif
-ifdef objpfx
-csu-objpfx = $(objpfx)
-elf-objpfx = $(objpfx)
-else
-csu-objpfx = $(..)csu/
-elf-objpfx = $(..)elf/
-endif
+csu-objpfx = $(common-objpfx)csu/
+elf-objpfx = $(common-objpfx)elf/
 
 ifeq (yes,$(build-shared))
 # The name under which the run-time dynamic linker is installed.

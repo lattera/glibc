@@ -41,6 +41,7 @@ $(objpfx)siglist.c: $(objpfx)make_siglist
 	mv $@-tmp $@
 
 $(objpfx)make_siglist: $(sysdep_dir)/generic/make_siglist.c
+	$(make-target-directory)
 	signum_h=`cd $(dir $(firstword $(wildcard \
 			   $(+sysdep_dirs:%=%/signum.h)))); pwd`/signum.h; \
 	$(native-compile) \

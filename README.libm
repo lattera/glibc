@@ -1,0 +1,31 @@
+The following functions for the `long double' versions of the libm
+function have to be written:
+
+e_acosl.c
+e_asinl.c
+e_atan2l.c
+e_acoshl.c
+e_expl.c
+e_fmodl.c
+e_hypotl.c
+e_j0l.c
+e_j1l.c
+e_jnl.c
+e_lgammal_r.c
+e_logl.c
+e_log10l.c
+e_powl.c
+e_rem_pio2l.c
+e_sinhl.c
+e_sqrtl.c
+
+k_cosl.c
+k_rem_pio2l.c
+k_sinl.c
+k_tanl.c
+
+s_atanl.c
+s_cbrtl.c
+s_erfl.c
+s_expm1l.c
+s_log1pl.c

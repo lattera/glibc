@@ -207,7 +207,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --quiet         don't print messages while building database\n\
   -u, --undo          print content of database file, one entry a line\n\
   -V, --version       output version information and exit\n\
-If INPUT-FILE is -, input is read from standard input.\n"),
+If INPUT-FILE is -, input is read from standard input.\n\
+Report bugs to <bug-glibc@gnu.ai.mit.edu>.\n"),
 	    program_invocation_name, program_invocation_name,
 	    program_invocation_name);
 
