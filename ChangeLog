@@ -1,3 +1,9 @@
+1999-08-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/ether_hton.c: Pass errno pointer to NSS function.
+	* inet/getnetgrent_r.c: Likewise.
+	Reported by Marty Leisner <leisner@rochester.rr.com>.
+
 1999-08-02  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nis/nis_callback.c: Fix port problem on big-endian machines

@@ -207,7 +207,7 @@ __internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
   no_more = setup ((void **) &fct, "getnetgrent_r", 0);
   while (! no_more)
     {
-      status = (*fct) (datap, buffer, buflen);
+      status = (*fct) (datap, buffer, buflen, &errno);
 
       if (status == NSS_STATUS_RETURN)
 	{

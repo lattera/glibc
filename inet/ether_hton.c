@@ -73,7 +73,7 @@ ether_hostton (const char *hostname, struct ether_addr *addr)
     {
       char buffer[1024];
 
-      status = (*fct) (hostname, &etherent, buffer, sizeof buffer);
+      status = (*fct) (hostname, &etherent, buffer, sizeof buffer, &errno);
 
       no_more = __nss_next (&nip, "gethostton_r", (void **) &fct, status, 0);
     }
