@@ -769,7 +769,7 @@ show_locale_vars (void)
 {
   size_t cat_no;
   const char *lcall = getenv ("LC_ALL");
-  const char *lang = getenv ("LANG") ? : "POSIX";
+  const char *lang = getenv ("LANG") ? : "";
 
   auto void get_source (const char *name);
 
@@ -778,7 +778,8 @@ show_locale_vars (void)
       char *val = getenv (name);
 
       if ((lcall ?: "")[0] != '\0' || val == NULL)
-	printf ("%s=\"%s\"\n", name, (lcall ?: "")[0] ? lcall : lang);
+	printf ("%s=\"%s\"\n", name,
+		(lcall ?: "")[0] ? lcall : (lang ?: "")[0] ? lang : "POSIX");
       else
 	printf ("%s=%s\n", name, val);
     }
