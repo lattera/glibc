@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -170,8 +170,8 @@ mv -f $@.new $@
 test ! -d CVS || cvs commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
 endef
 
-configure: configure.in; $(autoconf-it)
-%/configure: %/configure.in; $(autoconf-it)
+configure: configure.in aclocal.m4; $(autoconf-it)
+%/configure: %/configure.in aclocal.m4; $(autoconf-it)
 
 .PHONY: dist
 dist: $(tardir).tar.gz $(tardir)-crypt.tar.gz

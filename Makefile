@@ -36,8 +36,8 @@ mv -f $@.new $@
 test ! -d CVS || cvs commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
 endef
 
-configure: configure.in; $(autoconf-it)
-%/configure: %/configure.in; $(autoconf-it)
+configure: configure.in aclocal.m4; $(autoconf-it)
+%/configure: %/configure.in aclocal.m4; $(autoconf-it)
 
 include Makeconfig
 

@@ -48,14 +48,38 @@ static char sccsid[] = "@(#)mcount.c	8.1 (Berkeley) 6/4/93";
  * _mcount updates data structures that represent traversals of the
  * program's call graph edges.  frompc and selfpc are the return
  * address and function address that represents the given call graph edge.
- * 
+ *
  * Note: the original BSD code used the same variable (frompcindex) for
  * both frompcindex and frompc.  Any reasonable, modern compiler will
  * perform this optimization.
  */
+#if 0
 _MCOUNT_DECL(frompc, selfpc)	/* _mcount; may be static, inline, etc */
 	register u_long frompc, selfpc;
+#endif
+
+/* GCC version 2 gives us a perfect magical function to get
+   just the information we need:
+     void *__builtin_return_address (unsigned int N)
+   returns the return address of the frame N frames up.  */
+
+#if __GNUC__ < 2
+ #error "This file uses __builtin_return_address, a GCC 2 extension."
+#endif
+
+#include <sysdep.h>
+#ifndef NO_UNDERSCORES
+/* The asm symbols for C functions are `_function'.
+   The canonical name for the counter function is `mcount', no _.  */
+void _mcount (void) asm ("mcount");
+#endif
+
+void
+_mcount (void)
 {
+	register u_long selfpc = (u_long) __builtin_return_address (0);
+	register u_long frompc = (u_long) __builtin_return_address (1);
+
 	register u_short *frompcindex;
 	register struct tostruct *top, *prevtop;
 	register struct gmonparam *p;
@@ -154,7 +178,7 @@ _MCOUNT_DECL(frompc, selfpc)	/* _mcount; may be static, inline, etc */
 			*frompcindex = toindex;
 			goto done;
 		}
-		
+
 	}
 done:
 #ifdef KERNEL
@@ -171,8 +195,10 @@ overflow:
 	return;
 }
 
+#if 0				/* Obsolete with __builtin_return_address.  */
 /*
  * Actual definition of mcount function.  Defined in <machine/profile.h>,
  * which is included by <sys/gmon.h>.
  */
 MCOUNT
+#endif

@@ -1,4 +1,36 @@
+Tue Feb 13 00:12:12 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* gmon/Makefile (headers): Remove machine-gmon.h.
+	* sysdeps/stub/machine-gmon.h, sysdeps/i386/machine-gmon.h: Removed.
+	* gmon/mcount.c [! NO_UNDERSCORES] (_mcount): Specify "mcount" as
+	the asm name.
+	(_mcount): Define normally, taking no args.
+	Use __builtin_return_address to fetch PC values of caller and caller's
+	caller.
+
+	* Makerules: Rewrote rules to update libc archives of all flavors.
+	Define separate specific rules for each flavor using o-iterator.
+
+	* sysdeps/unix/Makefile: Include s-proto.d only ifdef subdir.
+
+Sat Feb 10 11:35:16 1996 Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (ar-symtab-name): New macro.  Replace all occurences
+	of __.SYMDEF by $(ar-symtab-name).
+	* sysdeps/unix/sysv/Makefile (ar-symtab-name): Define as empty.
+
 Mon Feb 12 03:10:41 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* Makefile (configure, %/configure): Depend on aclocal.m4.
+	* Make-dist (configure, %/configure): Likewise.
+
+	* sysdeps/unix/Makefile: Include s-proto.d for its deps.
+
+	* gmon/sys/gmon.h: Don't include machine-gmon.h; those defns are
+	only needed in the implementation, not for any users.
+
+	* time/northamerica: Updated from ADO 96c, new rules for Mexico in
+	1996.
 
 	* sunrpc/pm_getport.c: #if 0 out gratuitous inclusion of <net/if.h>.
 	* sunrpc/pm_getmaps.c: Likewise.

@@ -37,7 +37,6 @@
 #define _SYS_GMON_H_
 
 #include <sys/cdefs.h>
-#include <machine-gmon.h>
 
 /*
  * Structure prepended to gmon.out profiling data file.

@@ -21,7 +21,7 @@
 #
 subdir	:= gmon
 
-headers	:= sys/gmon.h machine-gmon.h
+headers	:= sys/gmon.h
 
 routines := gmon mcount profil
 
