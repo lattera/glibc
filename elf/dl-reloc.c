@@ -76,6 +76,14 @@ _dl_relocate_object (struct link_map *l, int lazy)
     else
       scope = _dl_loaded;
 
+    if (l->l_type == lt_interpreter)
+      /* We cannot be lazy when relocating the dynamic linker itself.  It
+	 was previously relocated eagerly (allowing us to be running now),
+	 and needs always to be fully relocated so it can run without the
+	 aid of run-time fixups (because it's the one to do them), so we
+	 must always re-relocate its PLT eagerly.  */
+      lazy = 0;
+
     ELF_DYNAMIC_RELOCATE (l, lazy, resolve);
 
     /* Restore list frobnication done above for DT_SYMBOLIC.  */

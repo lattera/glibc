@@ -281,6 +281,10 @@ extern pid_t __task2pid (task_t task), task2pid (task_t task);
 
 extern task_t __pid2task (pid_t pid), pid2task (pid_t pid);
 
+/* Return the current thread's thread port.  This is a cheap operation (no
+   system call), but it relies on Hurd signal state being set up.  */
+extern thread_t hurd_thread_self (void);
+
 
 /* Return the io server port for file descriptor FD.
    This adds a Mach user reference to the returned port.

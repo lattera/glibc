@@ -70,6 +70,13 @@ _dl_start (void *arg)
   /* Relocate ourselves so we can do normal function calls and
      data access using the global offset table.  */
 
+  /* We must initialize `l_type' to make sure it is not `lt_interpreter'.
+     That is the type to describe us, but not during bootstrapping--it
+     indicates to elf_machine_rel{,a} that we were already relocated during
+     bootstrapping, so it must anti-perform each bootstrapping relocation
+     before applying the final relocation when ld.so is linked in as
+     normal a shared library.  */
+  rtld_map.l_type = lt_library;
   ELF_DYNAMIC_RELOCATE (&rtld_map, 0, NULL);
 
 

@@ -1,3 +1,15 @@
+Sun Jun  4 22:14:11 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/Makefile (sig): Added thread-self.
+	* hurd/hurd.h: Declare hurd_thread_self.
+	* hurd/thread-self.c: New file.
+
+Thu Jun  1 12:17:52 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/rtld.c: Initialize RTLD_MAP.l_type.
+	* elf/dl-reloc.c (_dl_relocate_object): Clear LAZY if relocating
+ 	the dynamic linker itself.
+
 Tue May 30 15:52:32 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* mach/Makefile (server-interfaces): Removed notify and
