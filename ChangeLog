@@ -1,3 +1,8 @@
+1999-11-26  Andreas Jaeger  <aj@suse.de>
+
+	* inet/rcmd.c: Include stdlib for declaration of free.
+	Declare iruserok.
+
 1999-11-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv.c (__gconv): Always initialize
