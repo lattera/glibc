@@ -1,3 +1,9 @@
+2000-03-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/getopt.c (_getopt_internal): Return -1 if argc < 1.
+	Reported by Andrew Wiseman <a.wiseman@bandc.dircon.co.uk>
+	(PR libc/1677).
+
 2000-03-30  Andreas Jaeger  <aj@suse.de>
 
 	* misc/sys/cdefs.h: Remove K&R support.

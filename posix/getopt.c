@@ -521,6 +521,9 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
   if (optstring[0] == ':')
     print_errors = 0;
 
+  if (argc < 1)
+    return -1;
+
   optarg = NULL;
 
   if (optind == 0 || !__getopt_initialized)
