@@ -1,5 +1,10 @@
 2001-04-21  Andreas Jaeger  <aj@suse.de>
 
+	* rt/aio_misc.c (handle_fildes_io): Add noreturn attribute.
+	* resolv/gai_misc.c (handle_requests): Likewise.
+	* malloc/obstack.c (print_and_abort): Likewise.
+	* malloc/mcheck.c (mabort): Likewise.
+
 	* sysdeps/unix/i386/i586/clock_settime.c: Include
 	"libc-internal.h" for __get_clockfreq declaration.
 
