@@ -165,7 +165,7 @@ tests-nodlopen-yes = nodlopen nodlopen2
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
-tests += tst-pie1
+tests: $(objpfx)tst-pie1.out
 endif
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 unloadmod \
