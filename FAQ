@@ -211,6 +211,7 @@ in the future, are:
 	mips*-*-linux-gnu	Linux-2.x on MIPS
 	ia64-*-linux-gnu	Linux-2.x on ia64
 	s390-*-linux-gnu	Linux-2.x on IBM S/390
+	s390x-*-linux-gnu	Linux-2.x on IBM S/390 64-bit
 
 Ports to other Linux platforms are in development, and may in fact work
 already, but no one has sent us success reports for them.  Currently no
@@ -1248,9 +1249,9 @@ http://clisp.cons.org/~haible/gccinclude-glibc-2.2-compat.diff
 
 2.35.	When recompiling GCC, I get compilation errors in libio.
 
-{BH} You are trying to recompile gcc 2.95.2?  Use gcc 2.95.2.1 instead.
+{BH} You are trying to recompile gcc 2.95.2?  Use gcc 2.95.3 instead.
 This version is needed because the fpos_t type and a few libio internals
-have changed in glibc 2.2, and gcc 2.95.2.1 contains a corresponding patch.
+have changed in glibc 2.2, and gcc 2.95.3 contains a corresponding patch.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 

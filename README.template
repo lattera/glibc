@@ -18,6 +18,7 @@ configurations:
 		mips*-*-linux-gnu	Linux-2.x on MIPS
 		ia64-*-linux-gnu	Linux-2.x on ia64
 		s390-*-linux-gnu	Linux-2.x on IBM S/390
+		s390x-*-linux-gnu	Linux-2.x on IBM S/390 64-bit
 
 Former releases of this library (version 1.09.1 and perhaps earlier
 versions) used to run on the following configurations:
