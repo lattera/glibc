@@ -37,6 +37,10 @@ Version 2.2
 
 * Plural handling in gettext implemented by Ulrich Drepper.
 
+* The utmp daemon has been removed.
+
+* The port to MIPS-Linux has been finished by Andreas Jaeger.
+
 
 Version 2.1.3
 

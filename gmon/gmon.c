@@ -90,6 +90,7 @@ __moncontrol (mode)
       p->state = GMON_PROF_OFF;
     }
 }
+weak_alias (__moncontrol, moncontrol)
 
 
 void

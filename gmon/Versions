@@ -7,9 +7,13 @@ libc {
     __monstartup; _mcleanup; __profile_frequency;
 
     # m*
-    moncontrol; monstartup;
+    monstartup;
 
     # p*
     profil; profil_counter;
+  }
+  GLIBC_2.2 {
+    # m*
+    moncontrol;
   }
 }
