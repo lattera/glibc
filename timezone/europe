@@ -1,4 +1,4 @@
-# @(#)europe	7.72
+# @(#)europe	7.73
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -1189,6 +1189,10 @@ Zone	Europe/Vaduz	0:38:04 -	LMT	1894 Jun
 # motion to give up shifting to summer time in spring, as it was
 # already done by Estonia. 
 
+# From the <a href="http://www.tourism.lt/informa/ff.htm">
+# Fact File, Lithuanian State Department of Tourism
+# </a> (2000-03-27): Local time is GMT+2 hours ..., no daylight saving.
+
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Europe/Vilnius	1:41:16	-	LMT	1880
 			1:24:00	-	WMT	1917	    # Warsaw Mean Time
@@ -1203,7 +1207,7 @@ Zone	Europe/Vilnius	1:41:16	-	LMT	1880
 			2:00	C-Eur	EE%sT	1998
 			2:00	-	EET	1998 Mar 29 1:00u
 			1:00	EU	CE%sT	1999 Oct 31 1:00u
-			2:00	EU	EE%sT
+			2:00	-	EET
 
 # Luxembourg
 # Whitman disagrees with most of these dates in minor ways; go with Shanks.

@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char    elsieid[] = "@(#)zic.c  7.100";
+static char	elsieid[] = "@(#)zic.c	7.101";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -10,8 +10,6 @@ static char    elsieid[] = "@(#)zic.c  7.100";
 #ifdef unix
 #include "sys/stat.h"			/* for umask manifest constants */
 #endif /* defined unix */
-
-#include <libintl.h>
 
 /*
 ** On some ancient hosts, predicates like `isspace(C)' are defined
@@ -442,7 +440,7 @@ const char * const	string;
 static void
 usage P((void))
 {
-	(void) fprintf(stderr, _("%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d directory ]\n\t[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"),
+	(void) fprintf(stderr, _("%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n\t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"),
 		progname, progname);
 	(void) exit(EXIT_FAILURE);
 }

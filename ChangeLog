@@ -1,3 +1,11 @@
+2000-08-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/zic.c: Update from tzcode2000f.
+	* timezone/australasia: Update from tzdata2000f.
+	* timezone/europe: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/yearistype: Likewise.
+
 2000-08-01  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/unix/sysv/linux/i386/sys/elf.h (elf_greg_t, ELF_NGREG,

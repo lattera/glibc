@@ -41,6 +41,10 @@ extern struct __res_state _res;
 # error "This must not happen; new kernel assumed but old headers"
 #endif
 
+/* These variables are used by the setup code.  */
+extern int _errno;
+extern int _h_errno;
+
 /* Descriptor of the initial thread */
 
 struct _pthread_descr_struct __pthread_initial_thread = {
@@ -70,9 +74,9 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   0,                          /* char p_cancelstate */
   0,                          /* char p_canceltype */
   0,                          /* char p_canceled */
-  NULL,                       /* int *p_errnop */
+  &_errno,                    /* int *p_errnop */
   0,                          /* int p_errno */
-  NULL,                       /* int *p_h_errnop */
+  &_h_errno,                  /* int *p_h_errnop */
   0,                          /* int p_h_errno */
   NULL,                       /* char * p_in_sighandler */
   0,                          /* char p_sigwaiting */
@@ -208,10 +212,6 @@ const int __pthread_offsetof_pid = offsetof(struct _pthread_descr_struct,
                                             p_pid);
 const int __linuxthread_pthread_sizeof_descr
   = sizeof(struct _pthread_descr_struct);
-
-/* These variables are used by the setup code.  */
-extern int _errno;
-extern int _h_errno;
 
 /* Forward declarations */
 
@@ -376,9 +376,6 @@ extern void *__dso_handle __attribute__ ((weak));
 void
 __pthread_initialize_minimal(void)
 {
-  /* The errno/h_errno variable of the main thread are the global ones.  */
-  __pthread_initial_thread.p_errnop = &_errno;
-  __pthread_initial_thread.p_h_errnop = &_h_errno;
   /* If we have special thread_self processing, initialize that for the
      main thread now.  */
 #ifdef INIT_THREAD_SELF
