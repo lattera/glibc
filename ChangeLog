@@ -1,3 +1,8 @@
+2003-02-23  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/posix/pause.c: New file.
+	* sysdeps/unix/common/pause.c: File removed.
+
 2003-02-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/bits/confname.h: Remove #ifs.
