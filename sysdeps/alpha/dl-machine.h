@@ -507,7 +507,7 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
-static inline void
+auto inline void
 elf_machine_rela (struct link_map *map,
 		  const Elf64_Rela *reloc,
 		  const Elf64_Sym *sym,
@@ -645,7 +645,7 @@ elf_machine_rela (struct link_map *map,
    can be skipped.  */
 #define ELF_MACHINE_REL_RELATIVE 1
 
-static inline void
+auto inline void
 elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
 			   void *const reloc_addr_arg)
 {
@@ -661,7 +661,7 @@ elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
   memcpy (reloc_addr_arg, &reloc_addr_val, 8);
 }
 
-static inline void
+auto inline void
 elf_machine_lazy_rel (struct link_map *map,
 		      Elf64_Addr l_addr, const Elf64_Rela *reloc)
 {
