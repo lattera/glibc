@@ -60,7 +60,8 @@ pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
 
 #if _HAVE_UT_TYPE - 0
   /* Seek position to write.  */
-  if (utmp_data->ubuf.ut_type != id->ut_type)
+  if (utmp_data->loc_utmp >= sizeof (utmp)
+      && utmp_data->ubuf.ut_type != id->ut_type)
     {
       /* We must not overwrite the data in UTMP_DATA.  */
       struct utmp_data *data_tmp = alloca (sizeof (*data_tmp));
@@ -82,16 +83,6 @@ pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
     }
 #endif
 
-  /* Find out how large the file is.  */
-  if (fstat (utmp_data->ut_fd, &st) < 0)
-    return -1;
-
-  /* Position file correctly.  */
-  if (utmp_data->loc_utmp <= st.st_size
-      && lseek (utmp_data->ut_fd, utmp_data->loc_utmp - sizeof (struct utmp),
-		SEEK_SET) < 0)
-    return -1;
-
   /* Try to lock the file.  */
   if (flock (utmp_data->ut_fd, LOCK_EX | LOCK_NB) < 0 && errno != ENOSYS)
     {
@@ -102,20 +93,39 @@ pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
       (void) flock (utmp_data->ut_fd, LOCK_EX | LOCK_NB);
     }
 
-  /* Write the new data.  */
-  if (write (utmp_data->ut_fd, id, sizeof (struct utmp))
-      != sizeof (struct utmp))
-    {
-      /* If we appended a new record this is only partially written.
-	 Remove it.  */
-      if (utmp_data->loc_utmp > st.st_size)
-	{
-	  (void) ftruncate (utmp_data->ut_fd, st.st_size);
-	  utmp_data->loc_utmp = st.st_size;
-	}
+  /* Find out how large the file is.  */
+  result = fstat (utmp_data->ut_fd, &st);
 
-      result = -1;
-    }
+  if (result == 0)
+    /* Position file correctly.  */
+    if (utmp_data->loc_utmp < sizeof (struct utmp))
+      /* Not located at any valid entry.  Add at the end.  */
+      {
+	result = lseek (utmp_data->ut_fd, 0L, SEEK_END);
+	if (result == 0)
+	  /* Where we'll be if the write succeeds.  */
+	  utmp_data->loc_utmp = st.st_size + sizeof (struct utmp);
+      }
+    else if (utmp_data->loc_utmp <= st.st_size)
+      result =
+	lseek (utmp_data->ut_fd, utmp_data->loc_utmp - sizeof (struct utmp),
+	       SEEK_SET);
+
+  if (result == 0)
+    /* Write the new data.  */
+    if (write (utmp_data->ut_fd, id, sizeof (struct utmp))
+	!= sizeof (struct utmp))
+      {
+	/* If we appended a new record this is only partially written.
+	   Remove it.  */
+	if (utmp_data->loc_utmp > st.st_size)
+	  {
+	    (void) ftruncate (utmp_data->ut_fd, st.st_size);
+	    utmp_data->loc_utmp = st.st_size;
+	  }
+
+	result = -1;
+      }
 
   /* And unlock the file.  */
   (void) flock (utmp_data->ut_fd, LOCK_UN);
