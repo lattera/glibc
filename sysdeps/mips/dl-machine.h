@@ -24,6 +24,34 @@
 #define ELF_MACHINE_NAME "MIPS"
 
 #include <assert.h>
+#include <entry.h>
+
+#ifndef ENTRY_POINT
+#error ENTRY_POINT needs to be defined for MIPS.
+#endif
+
+#ifndef _RTLD_PROLOGUE
+#ifdef __STDC__
+#define _RTLD_PROLOGUE(entry) "\n\t.globl " #entry \
+			      "\n\t.ent " #entry \
+			      "\n\t" #entry ":\n\t"
+#else
+#define _RTLD_PROLOGUE(entry) "\n\t.globl entry\n\t.ent entry\n\t entry:\n\t"
+#endif
+#endif
+
+#ifndef _RTLD_EPILOGUE
+#ifdef __STDC__
+#define _RTLD_EPILOGUE(entry) "\t.end " #entry "\n"
+#else
+#define _RTLD_EPILOGUE(entry) "\t.end entry\n"
+#endif
+#endif
+
+/* I have no idea what I am doing. */
+#define ELF_MACHINE_RELOC_NOPLT			-1
+#define elf_machine_lookup_noplt_p(type)	(1)
+#define elf_machine_lookup_noexec_p(type)	(0)
 
 /* Translate a processor specific dynamic tag to the index
    in l_info array.  */
@@ -32,6 +60,18 @@
 #if 0
 /* We may need 64k alignment. */
 #define ELF_MACHINE_ALIGN_MASK 0xffff
+#endif
+
+/*
+ * MIPS libraries are usually linked to a non-zero base address.  We
+ * subtrace the base address from the address where we map the object
+ * to.  This results in more efficient address space usage.
+ */
+#if 0
+#define MAP_BASE_ADDR(l) ((l)->l_info[DT_MIPS(BASE_ADDRESS)] ? \
+			  (l)->l_info[DT_MIPS(BASE_ADDRESS)]->d_un.d_ptr : 0)
+#else
+#define MAP_BASE_ADDR(l) 0x5ffe0000
 #endif
 
 /* If there is a DT_MIPS_RLD_MAP entry in the dynamic section, fill it in
@@ -43,7 +83,7 @@ do { if ((l)->l_info[DT_MIPS (RLD_MAP)]) \
    } while (0)
 
 /* Return nonzero iff E_MACHINE is compatible with the running host.  */
-static inline int
+static inline int __attribute__ ((unused))
 elf_machine_matches_host (ElfW(Half) e_machine)
 {
   switch (e_machine)
@@ -56,6 +96,16 @@ elf_machine_matches_host (ElfW(Half) e_machine)
     }
 }
 
+/* Return the link-time address of _DYNAMIC.  Conveniently, this is the
++   first element of the GOT.  This must be inlined in a function which
++   uses global data.  */
++static inline ElfW(Addr)
++elf_machine_dynamic (void)
++{
++  register ElfW(Addr) gp asm ("$28");
++  return * (ElfW(Addr) *) (gp - 0x7ff0);
++}
++
 static inline ElfW(Addr) *
 elf_mips_got_from_gpreg (ElfW(Addr) gpreg)
 {
@@ -75,6 +125,16 @@ elf_machine_got (void)
 }
 
 
+/* Return the link-time address of _DYNAMIC.  Conveniently, this is the
+   first element of the GOT.  This must be inlined in a function which
+   uses global data.  */
+static inline ElfW(Addr)
+elf_machine_dynamic (void)
+{
+  register ElfW(Addr) gp asm ("$28");
+  return * (ElfW(Addr) *) (gp - 0x7ff0);
+}
+
 /* Return the run-time load address of the shared object.  */
 static inline ElfW(Addr)
 elf_machine_load_address (void)
@@ -87,7 +147,9 @@ elf_machine_load_address (void)
        "	nop\n"
        "here:	dsubu %0, $31, %0\n"
        "	.set reorder\n"
-       : "=r" (addr));
+       :	"=r" (addr)
+       :	/* No inputs */
+       :	"$31");
 #else
   asm ("	.set noreorder\n"
        "	la %0, here\n"
@@ -95,7 +157,9 @@ elf_machine_load_address (void)
        "	nop\n"
        "here:	subu %0, $31, %0\n"
        "	.set reorder\n"
-       : "=r" (addr));
+       :	"=r" (addr)
+       :	/* No inputs */
+       :	"$31");
 #endif
   return addr;
 }
@@ -105,7 +169,7 @@ elf_machine_load_address (void)
 
 /* Relocate GOT. */
 static inline void
-elf_machine_got_rel (struct link_map *map)
+elf_machine_got_rel (struct link_map *map, int lazy)
 {
   ElfW(Addr) *got;
   ElfW(Sym) *sym;
@@ -119,7 +183,7 @@ elf_machine_got_rel (struct link_map *map)
       const ElfW(Sym) *ref = sym; \
       ElfW(Addr) sym_loadaddr; \
       sym_loadaddr = _dl_lookup_symbol (strtab + sym->st_name, &ref, scope, \
-					map->l_name, DL_LOOKUP_NOPLT); \
+					map->l_name, ELF_MACHINE_RELOC_NOPLT);\
       (ref)? sym_loadaddr + ref->st_value: 0; \
     })
 
@@ -151,7 +215,7 @@ elf_machine_got_rel (struct link_map *map)
 	{
 	  if (ELFW(ST_TYPE) (sym->st_info) == STT_FUNC)
 	    {
-	      if (sym->st_value /* && maybe_stub (sym->st_value) */)
+	      if (sym->st_value && lazy)
 		*got = sym->st_value + map->l_addr;
 	      else
 		*got = RESOLVE_GOTSYM (sym);
@@ -163,7 +227,7 @@ elf_machine_got_rel (struct link_map *map)
 	*got = RESOLVE_GOTSYM (sym);
       else if (ELFW(ST_TYPE) (sym->st_info) == STT_FUNC
 	       && *got != sym->st_value
-	       /* && maybe_stub (*got) */)
+	       && lazy)
 	*got += map->l_addr;
       else if (ELFW(ST_TYPE) (sym->st_info) == STT_SECTION)
 	{
@@ -193,6 +257,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy)
   extern void _dl_runtime_resolve (ElfW(Word));
   extern int _dl_mips_gnu_objects;
 
+#ifdef RTLD_BOOTSTRAP
+    {
+      return lazy;
+    }
+#endif
   if (lazy)
     {
       /* The GOT entries for functions have not yet been filled in.
@@ -216,7 +285,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy)
     }
 
   /* Relocate global offset table.  */
-  elf_machine_got_rel (l);
+  elf_machine_got_rel (l, lazy);
 
   return lazy;
 }
@@ -282,6 +351,7 @@ elf_machine_runtime_link_map (ElfW(Addr) gpreg, ElfW(Addr) stub_pc)
     }
 
   _dl_signal_error (0, NULL, "cannot find runtime link map");
+  return NULL;
 }
 
 /* Mips has no PLT but define elf_machine_relplt to be elf_machine_rel. */
@@ -295,211 +365,220 @@ elf_machine_runtime_link_map (ElfW(Addr) gpreg, ElfW(Addr) stub_pc)
    to usual c arguments.  */
 
 #ifdef __mips64
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE \
-/* The flag _dl_mips_gnu_objects is set if all dynamic objects are \
-   generated by the gnu linker. */\
-int _dl_mips_gnu_objects = 1;\
-\
+#define ELF_MACHINE_RUNTIME_TRAMPOLINE					      \
+/* The flag _dl_mips_gnu_objects is set if all dynamic objects are	      \
+   generated by the gnu linker. */					      \
+int _dl_mips_gnu_objects = 1;						      \
+									      \
 /* This is called from assembly stubs below which the compiler can't see.  */ \
-static ElfW(Addr) \
-__dl_runtime_resolve (ElfW(Word), ElfW(Word), ElfW(Addr), ElfW(Addr)) \
-                  __attribute__ ((unused)); \
-\
-static ElfW(Addr) \
-__dl_runtime_resolve (ElfW(Word) sym_index,\
-		      ElfW(Word) return_address,\
-		      ElfW(Addr) old_gpreg,\
-		      ElfW(Addr) stub_pc)\
-{\
-  struct link_map *l = elf_machine_runtime_link_map (old_gpreg, stub_pc);\
-  const ElfW(Sym) *const symtab\
-    = (const ElfW(Sym) *) (l->l_addr + l->l_info[DT_SYMTAB]->d_un.d_ptr);\
-  const char *strtab\
-    = (void *) (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);\
-  const ElfW(Addr) *got\
-    = (const ElfW(Addr) *) (l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);\
-  const ElfW(Word) local_gotno\
-    = (const ElfW(Word)) l->l_info[DT_MIPS (LOCAL_GOTNO)]->d_un.d_val;\
-  const ElfW(Word) gotsym\
-    = (const ElfW(Word)) l->l_info[DT_MIPS (GOTSYM)]->d_un.d_val;\
-  const ElfW(Sym) *definer;\
-  ElfW(Addr) loadbase;\
-  ElfW(Addr) funcaddr;\
-  struct link_map **scope;\
-\
-  /* Look up the symbol's run-time value.  */\
-  scope = _dl_object_relocation_scope (l);\
-  definer = &symtab[sym_index];\
-\
-  loadbase = _dl_lookup_symbol (strtab + definer->st_name, &definer,\
-				scope, l->l_name, DL_LOOKUP_NOPLT);\
-\
-  *_dl_global_scope_end = NULL;\
-\
-  /* Apply the relocation with that value.  */\
-  funcaddr = loadbase + definer->st_value;\
-  *(got + local_gotno + sym_index - gotsym) = funcaddr;\
-\
-  return funcaddr;\
-}\
-\
-asm ("\n\
-	.text\n\
-	.align	3\n\
-	.globl	_dl_runtime_resolve\n\
-	.type	_dl_runtime_resolve,@function\n\
-	.ent	_dl_runtime_resolve\n\
-_dl_runtime_resolve:\n\
-	.set noreorder\n\
-	# Save old GP to $3.\n\
-	move	$3,$28\n\
-	# Modify t9 ($25) so as to point .cpload instruction.\n\
-	daddu	$25,2*8\n\
-	# Compute GP.\n\
-	.cpload $25\n\
-	.set reorder\n\
-	# Save slot call pc.\n\
-        move	$2, $31\n\
-	# Save arguments and sp value in stack.\n\
-	dsubu	$29, 10*8\n\
-	.cprestore 8*8\n\
-	sd	$15, 9*8($29)\n\
-	sd	$4, 3*8($29)\n\
-	sd	$5, 4*8($29)\n\
-	sd	$6, 5*8($29)\n\
-	sd	$7, 6*8($29)\n\
-	sd	$16, 7*8($29)\n\
-	move	$16, $29\n\
-	move	$4, $24\n\
-	move	$5, $15\n\
-	move	$6, $3\n\
-	move	$7, $2\n\
-	jal	__dl_runtime_resolve\n\
-	move	$29, $16\n\
-	ld	$31, 9*8($29)\n\
-	ld	$4, 3*8($29)\n\
-	ld	$5, 4*8($29)\n\
-	ld	$6, 5*8($29)\n\
-	ld	$7, 6*8($29)\n\
-	ld	$16, 7*8($29)\n\
-	daddu	$29, 10*8\n\
-	move	$25, $2\n\
-	jr	$25\n\
-	.end	_dl_runtime_resolve\n\
+static ElfW(Addr)							      \
+__dl_runtime_resolve (ElfW(Word), ElfW(Word), ElfW(Addr), ElfW(Addr))	      \
+                  __attribute__ ((unused));				      \
+									      \
+static ElfW(Addr)							      \
+__dl_runtime_resolve (ElfW(Word) sym_index,				      \
+		      ElfW(Word) return_address,			      \
+		      ElfW(Addr) old_gpreg,				      \
+		      ElfW(Addr) stub_pc)				      \
+{									      \
+  struct link_map *l = elf_machine_runtime_link_map (old_gpreg, stub_pc);     \
+  const ElfW(Sym) *const symtab						      \
+    = (const ElfW(Sym) *) (l->l_addr + l->l_info[DT_SYMTAB]->d_un.d_ptr);     \
+  const char *strtab							      \
+    = (void *) (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);		      \
+  const ElfW(Addr) *got							      \
+    = (const ElfW(Addr) *) (l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);    \
+  const ElfW(Word) local_gotno						      \
+    = (const ElfW(Word)) l->l_info[DT_MIPS (LOCAL_GOTNO)]->d_un.d_val;	      \
+  const ElfW(Word) gotsym						      \
+    = (const ElfW(Word)) l->l_info[DT_MIPS (GOTSYM)]->d_un.d_val;	      \
+  const ElfW(Sym) *definer;						      \
+  ElfW(Addr) loadbase;							      \
+  ElfW(Addr) funcaddr;							      \
+  struct link_map **scope;						      \
+									      \
+  /* Look up the symbol's run-time value.  */				      \
+  scope = _dl_object_relocation_scope (l);				      \
+  definer = &symtab[sym_index];						      \
+									      \
+  loadbase = _dl_lookup_symbol (strtab + definer->st_name, &definer,	      \
+				scope, l->l_name, ELF_MACHINE_RELOC_NOPLT);   \
+									      \
+  *_dl_global_scope_end = NULL;						      \
+									      \
+  /* Apply the relocation with that value.  */				      \
+  funcaddr = loadbase + definer->st_value;				      \
+  *(got + local_gotno + sym_index - gotsym) = funcaddr;			      \
+									      \
+  return funcaddr;							      \
+}									      \
+									      \
+asm ("\n								      \
+	.text\n								      \
+	.align	3\n							      \
+	.globl	_dl_runtime_resolve\n					      \
+	.type	_dl_runtime_resolve,@function\n				      \
+	.ent	_dl_runtime_resolve\n					      \
+_dl_runtime_resolve:\n							      \
+	.set noreorder\n						      \
+	# Save old GP to $3.\n						      \
+	move	$3,$28\n						      \
+	# Modify t9 ($25) so as to point .cpload instruction.\n		      \
+	daddu	$25,2*8\n						      \
+	# Compute GP.\n							      \
+	.cpload $25\n							      \
+	.set reorder\n							      \
+	# Save slot call pc.\n						      \
+        move	$2, $31\n						      \
+	# Save arguments and sp value in stack.\n			      \
+	dsubu	$29, 10*8\n						      \
+	.cprestore 8*8\n						      \
+	sd	$15, 9*8($29)\n						      \
+	sd	$4, 3*8($29)\n						      \
+	sd	$5, 4*8($29)\n						      \
+	sd	$6, 5*8($29)\n						      \
+	sd	$7, 6*8($29)\n						      \
+	sd	$16, 7*8($29)\n						      \
+	move	$16, $29\n						      \
+	move	$4, $24\n						      \
+	move	$5, $15\n						      \
+	move	$6, $3\n						      \
+	move	$7, $2\n						      \
+	jal	__dl_runtime_resolve\n					      \
+	move	$29, $16\n						      \
+	ld	$31, 9*8($29)\n						      \
+	ld	$4, 3*8($29)\n						      \
+	ld	$5, 4*8($29)\n						      \
+	ld	$6, 5*8($29)\n						      \
+	ld	$7, 6*8($29)\n						      \
+	ld	$16, 7*8($29)\n						      \
+	daddu	$29, 10*8\n						      \
+	move	$25, $2\n						      \
+	jr	$25\n							      \
+	.end	_dl_runtime_resolve\n					      \
 ");
 #else
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE \
-/* The flag _dl_mips_gnu_objects is set if all dynamic objects are \
-   generated by the gnu linker. */\
-int _dl_mips_gnu_objects = 1;\
-\
+#define ELF_MACHINE_RUNTIME_TRAMPOLINE					      \
+/* The flag _dl_mips_gnu_objects is set if all dynamic objects are	      \
+   generated by the gnu linker. */					      \
+int _dl_mips_gnu_objects = 1;						      \
+									      \
 /* This is called from assembly stubs below which the compiler can't see.  */ \
-static ElfW(Addr) \
-__dl_runtime_resolve (ElfW(Word), ElfW(Word), ElfW(Addr), ElfW(Addr)) \
-                  __attribute__ ((unused)); \
-\
-static ElfW(Addr) \
-__dl_runtime_resolve (ElfW(Word) sym_index,\
-		      ElfW(Word) return_address,\
-		      ElfW(Addr) old_gpreg,\
-		      ElfW(Addr) stub_pc)\
-{\
-  struct link_map *l = elf_machine_runtime_link_map (old_gpreg, stub_pc);\
-  const ElfW(Sym) *const symtab\
-    = (const ElfW(Sym) *) (l->l_addr + l->l_info[DT_SYMTAB]->d_un.d_ptr);\
-  const char *strtab\
-    = (void *) (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);\
-  const ElfW(Addr) *got\
-    = (const ElfW(Addr) *) (l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);\
-  const ElfW(Word) local_gotno\
-    = (const ElfW(Word)) l->l_info[DT_MIPS (LOCAL_GOTNO)]->d_un.d_val;\
-  const ElfW(Word) gotsym\
-    = (const ElfW(Word)) l->l_info[DT_MIPS (GOTSYM)]->d_un.d_val;\
-  const ElfW(Sym) *definer;\
-  ElfW(Addr) loadbase;\
-  ElfW(Addr) funcaddr;\
-  struct link_map **scope;\
-\
-  /* Look up the symbol's run-time value.  */\
-  scope = _dl_object_relocation_scope (l);\
-  definer = &symtab[sym_index];\
-\
-  loadbase = _dl_lookup_symbol (strtab + definer->st_name, &definer,\
-				scope, l->l_name, DL_LOOKUP_NOPLT);\
-\
-  *_dl_global_scope_end = NULL;\
-\
-  /* Apply the relocation with that value.  */\
-  funcaddr = loadbase + definer->st_value;\
-  *(got + local_gotno + sym_index - gotsym) = funcaddr;\
-\
-  return funcaddr;\
-}\
-\
-asm ("\n\
-	.text\n\
-	.align	2\n\
-	.globl	_dl_runtime_resolve\n\
-	.type	_dl_runtime_resolve,@function\n\
-	.ent	_dl_runtime_resolve\n\
-_dl_runtime_resolve:\n\
-	.set noreorder\n\
-	# Save old GP to $3.\n\
-	move	$3,$28\n\
-	# Modify t9 ($25) so as to point .cpload instruction.\n\
-	addu	$25,8\n\
-	# Compute GP.\n\
-	.cpload $25\n\
-	.set reorder\n\
-	# Save slot call pc.\n\
-        move	$2, $31\n\
-	# Save arguments and sp value in stack.\n\
-	subu	$29, 40\n\
-	.cprestore 32\n\
-	sw	$15, 36($29)\n\
-	sw	$4, 12($29)\n\
-	sw	$5, 16($29)\n\
-	sw	$6, 20($29)\n\
-	sw	$7, 24($29)\n\
-	sw	$16, 28($29)\n\
-	move	$16, $29\n\
-	move	$4, $24\n\
-	move	$5, $15\n\
-	move	$6, $3\n\
-	move	$7, $2\n\
-	jal	__dl_runtime_resolve\n\
-	move	$29, $16\n\
-	lw	$31, 36($29)\n\
-	lw	$4, 12($29)\n\
-	lw	$5, 16($29)\n\
-	lw	$6, 20($29)\n\
-	lw	$7, 24($29)\n\
-	lw	$16, 28($29)\n\
-	addu	$29, 40\n\
-	move	$25, $2\n\
-	jr	$25\n\
-	.end	_dl_runtime_resolve\n\
+static ElfW(Addr)							      \
+__dl_runtime_resolve (ElfW(Word), ElfW(Word), ElfW(Addr), ElfW(Addr))	      \
+                  __attribute__ ((unused));				      \
+									      \
+static ElfW(Addr)							      \
+__dl_runtime_resolve (ElfW(Word) sym_index,				      \
+		      ElfW(Word) return_address,			      \
+		      ElfW(Addr) old_gpreg,				      \
+		      ElfW(Addr) stub_pc)				      \
+{									      \
+  struct link_map *l = elf_machine_runtime_link_map (old_gpreg, stub_pc);     \
+  const ElfW(Sym) *const symtab						      \
+    = (const ElfW(Sym) *) (l->l_addr + l->l_info[DT_SYMTAB]->d_un.d_ptr);     \
+  const char *strtab							      \
+    = (void *) (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);		      \
+  const ElfW(Addr) *got							      \
+    = (const ElfW(Addr) *) (l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);    \
+  const ElfW(Word) local_gotno						      \
+    = (const ElfW(Word)) l->l_info[DT_MIPS (LOCAL_GOTNO)]->d_un.d_val;	      \
+  const ElfW(Word) gotsym						      \
+    = (const ElfW(Word)) l->l_info[DT_MIPS (GOTSYM)]->d_un.d_val;	      \
+  const ElfW(Sym) *definer;						      \
+  ElfW(Addr) loadbase;							      \
+  ElfW(Addr) funcaddr;							      \
+  struct link_map **scope;						      \
+									      \
+  /* Look up the symbol's run-time value.  */				      \
+  scope = _dl_object_relocation_scope (l);				      \
+  definer = &symtab[sym_index];						      \
+									      \
+  loadbase = _dl_lookup_symbol (strtab + definer->st_name, &definer,	      \
+				scope, l->l_name, ELF_MACHINE_RELOC_NOPLT);   \
+									      \
+  *_dl_global_scope_end = NULL;						      \
+									      \
+  /* Apply the relocation with that value.  */				      \
+  funcaddr = loadbase + definer->st_value;				      \
+  *(got + local_gotno + sym_index - gotsym) = funcaddr;			      \
+									      \
+  return funcaddr;							      \
+}									      \
+									      \
+asm ("\n								      \
+	.text\n								      \
+	.align	2\n							      \
+	.globl	_dl_runtime_resolve\n					      \
+	.type	_dl_runtime_resolve,@function\n				      \
+	.ent	_dl_runtime_resolve\n					      \
+_dl_runtime_resolve:\n							      \
+	.set noreorder\n						      \
+	# Save slot call pc.\n						      \
+	move	$3, $31\n						      \
+	# Modify t9 ($25) so as to point .cpload instruction.\n		      \
+	addu	$25,8\n							      \
+	# Compute GP.\n							      \
+	.cpload $25\n							      \
+	.set reorder\n							      \
+	# Save slot call pc.\n						      \
+        move	$2, $31\n						      \
+	# Save arguments and sp value in stack.\n			      \
+	subu	$29, 40\n						      \
+	.cprestore 32\n							      \
+	sw	$15, 36($29)\n						      \
+	sw	$4, 12($29)\n						      \
+	sw	$5, 16($29)\n						      \
+	sw	$6, 20($29)\n						      \
+	sw	$7, 24($29)\n						      \
+	sw	$16, 28($29)\n						      \
+	move	$16, $29\n						      \
+	move	$4, $24\n						      \
+	move	$5, $15\n						      \
+	move	$6, $3\n						      \
+	move	$7, $2\n						      \
+	jal	__dl_runtime_resolve\n					      \
+	move	$29, $16\n						      \
+	lw	$31, 36($29)\n						      \
+	lw	$4, 12($29)\n						      \
+	lw	$5, 16($29)\n						      \
+	lw	$6, 20($29)\n						      \
+	lw	$7, 24($29)\n						      \
+	lw	$16, 28($29)\n						      \
+	addu	$29, 40\n						      \
+	move	$25, $2\n						      \
+	jr	$25\n							      \
+	.end	_dl_runtime_resolve\n					      \
 ");
 #endif
 
 /* Mask identifying addresses reserved for the user program,
    where the dynamic linker should not map anything.  */
-#define ELF_MACHINE_USER_ADDRESS_MASK	0x00000000UL
+#define ELF_MACHINE_USER_ADDRESS_MASK	0x80000000UL
 
 
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
-   its return value is the user program's entry point.  */
+   its return value is the user program's entry point.
+   Note how we have to be careful about two things:
+
+   1) That we allocate a minimal stack of 24 bytes for
+      every function call, the MIPS ABI states that even
+      if all arguments are passed in registers the procedure
+      called can use the 16 byte area pointed to by $sp
+      when it is called to store away the arguments passed
+      to it.
+
+   2) That under Linux the entry is named __start
+      and not just plain _start.  */
 
 #ifdef __mips64
 #define RTLD_START asm ("\
 	.text\n\
-	.align	3\n\
-	.globl _start\n\
-	.globl _dl_start_user\n\
-	.ent _start\n\
-_start:\n\
+	.align	3\n"\
+_RTLD_PROLOGUE (ENTRY_POINT)\
+"	.globl _dl_start_user\n\
 	.set noreorder\n\
 	bltzal $0, 0f\n\
 	nop\n\
@@ -561,16 +640,15 @@ _dl_start_user:\n\
 	ld $5, 1*8($29)\n\
 	ld $6, 2*8$29)\n\
 	ld $7, 3*8($29)\n\
-	jr $25\n\
-	.end _start\n\
-");
+	jr $25\n"\
+_RTLD_EPILOGUE(ENTRY_POINT) \
+);
+
 #else
 #define RTLD_START asm ("\
-	.text\n\
-	.globl _start\n\
-	.globl _dl_start_user\n\
-	.ent _start\n\
-_start:\n\
+	.text\n"\
+_RTLD_PROLOGUE(ENTRY_POINT)\
+"	.globl _dl_start_user\n\
 	.set noreorder\n\
 	bltzal $0, 0f\n\
 	nop\n\
@@ -582,7 +660,9 @@ _start:\n\
 	la $4, _DYNAMIC\n\
 	sw $4, -0x7ff0($28)\n\
 	move $4, $29\n\
+	subu $29, 16\n\
 	jal _dl_start\n\
+	addiu $29, 16\n\
 	# Get the value of label '_dl_start_user' in t9 ($25).\n\
 	la $25, _dl_start_user\n\
 _dl_start_user:\n\
@@ -610,7 +690,9 @@ _dl_start_user:\n\
 	lw $4, 8($2)\n\
 	# Call _dl_init_next to return the address of an initializer\n\
 	# function to run.\n\
+	subu $29, 16\n\
 	jal _dl_init_next\n\
+	addiu $29, 16\n\
 	move $28, $16\n\
 	# Check for zero return,  when out of initializers.\n\
 	beq $2, $0, 2f\n\
@@ -624,16 +706,18 @@ _dl_start_user:\n\
 	move $28, $16\n\
 	# Loop to call _dl_init_next for the next initializer.\n\
 	b 1b\n\
+2:	# Clear the startup flag.  Assumes 32 bit ints.\n\
+	sw $0, _dl_starting_up\n\
 	# Pass our finalizer function to the user in ra.\n\
-2:	la $31, _dl_fini\n\
+	la $31, _dl_fini\n\
 	# Jump to the user entry point.\n\
 	move $25, $17\n\
 	lw $4, 0($29)\n\
 	lw $5, 4($29)\n\
 	lw $6, 8($29)\n\
 	lw $7, 12($29)\n\
-	jr $25\n\
-	.end _start\n\
+	jr $25\n"\
+_RTLD_EPILOGUE(ENTRY_POINT)\
 ");
 #endif
 
