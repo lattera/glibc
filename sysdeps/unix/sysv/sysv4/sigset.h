@@ -49,7 +49,7 @@ typedef struct
 #define	__SSMASK(s)	(1 << ((s) % __NSSBITS))
 
 #ifndef _EXTERN_INLINE
-#define _EXTERN_INLINE
+#define _EXTERN_INLINE	extern __inline
 #endif
 
 _EXTERN_INLINE int
