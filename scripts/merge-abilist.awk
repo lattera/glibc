@@ -12,9 +12,11 @@
 #	 function F
 #	 variable D 0x4
 
+BEGIN { current = "UNSET" }
+
 /^[^| ]/ {
   if (NF < 2 && config == "") {
-    print "BAD LINE:", $0 > "/dev/stderr";
+    print FILENAME ":" FNR ": BAD SET LINE:", $0 > "/dev/stderr";
     exit 2;
   }
 
@@ -44,8 +46,8 @@
 }
 
 /^\| / {
-  if (NF < 3) {
-    print "BAD LINE:", $0 > "/dev/stderr";
+  if (NF < 3 || current == "UNSET") {
+    print FILENAME ":" FNR ": BAD | LINE:", $0 > "/dev/stderr";
     exit 2;
   }
 
@@ -61,12 +63,20 @@
 
 {
   if (current == "") next;
+  if (current == "UNSET") {
+    print FILENAME ":" FNR ": IGNORED LINE:", $0 > "/dev/stderr";
+    next;
+  }
 
   ns = split(seen[$0], s, ",");
   nc = split(current, c, ",");
   for (i = 1; i <= nc; ++i) {
+    if (c[i] == "")
+      continue;
     # Sorted insert.
     for (j = 1; j <= ns; ++j) {
+      if (c[i] == s[j])
+        break;
       if (c[i] < s[j]) {
 	for (k = ns; k >= j; --k)
 	  s[k + 1] = s[k];
@@ -75,7 +85,7 @@
 	break;
       }
     }
-    if (j >= ns)
+    if (j > ns)
       s[++ns] = c[i];
   }
 
@@ -97,7 +107,9 @@ END {
   ns = split("", s);
   for (configs in stanzas) {
     # Sorted insert.
-    for (j = 1; j <= ns; ++j)
+    for (j = 1; j <= ns; ++j) {
+      if (configs == s[j])
+        break;
       if (configs < s[j]) {
 	for (k = ns; k >= j; --k)
 	  s[k + 1] = s[k];
@@ -105,7 +117,8 @@ END {
 	++ns;
 	break;
       }
-    if (j >= ns)
+    }
+    if (j > ns)
       s[++ns] = configs;
   }
 

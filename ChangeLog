@@ -1,5 +1,10 @@
 2003-03-02  Roland McGrath  <roland@redhat.com>
 
+	* scripts/merge-abilist.awk: More checks for bogus input.
+	Uniquify duplicate config names.
+
+	* scripts/abilist.awk: Don't distinguish weak symbols in normal output.
+
 	* sysdeps/powerpc/powerpc32/dl-machine.c (_dl_reloc_overflow): Renamed
 	from dl_reloc_overflow, make global.
 	(__process_machine_rela): Update callers.
