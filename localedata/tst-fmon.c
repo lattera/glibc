@@ -1,5 +1,5 @@
 /* Testing the implementation of strfmon(3).
-   Copyright (C) 1996, 1997, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jochen Hein <jochen.hein@delphi.central.de>, 1997.
 
@@ -58,7 +58,7 @@ main (int argc, char *argv[])
   if (strcmp (s, argv[4]) != 0)
     {
       printf ("\
-Locale: \"%s\" Format: \"%s\" Value: \"%s\" Recieved: \"%s\" Expected: \"%s\" => %s\n",
+Locale: \"%s\" Format: \"%s\" Value: \"%s\" Received: \"%s\" Expected: \"%s\" => %s\n",
 	      argv[1], argv[2], argv[3], s, argv[4],
 	      strcmp (s, argv[4]) != 0 ? "false" : "correct");
       exit (EXIT_FAILURE);
