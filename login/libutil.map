@@ -1,6 +1,6 @@
 GLIBC_2.0 {
   global:
-    forkpty; login; login_tty; logout; logwtmp; openpty; updwtmp;
+    forkpty; login; login_tty; logout; logwtmp; openpty;
 
   local:
     *;

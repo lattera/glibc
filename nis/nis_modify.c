@@ -28,6 +28,9 @@ nis_modify (const_nis_name name, const nis_object *obj)
   nis_result *res;
   nis_error status;
   struct ns_request req;
+  char *p1, *p2, *p3, *p4;
+  char buf1 [strlen (name) + 20];
+  char buf4 [strlen (name) + 20];
 
   res = calloc (1, sizeof (nis_result));
 
@@ -36,10 +39,32 @@ nis_modify (const_nis_name name, const nis_object *obj)
   req.ns_object.ns_object_len = 1;
   req.ns_object.ns_object_val = nis_clone_object (obj, NULL);
 
+  p1 = req.ns_object.ns_object_val[0].zo_name;
+  if (p1 == NULL || strlen (p1) == 0)
+    req.ns_object.ns_object_val[0].zo_name =
+      nis_leaf_of_r (name, buf1, sizeof (buf1));
+
+  p2 = req.ns_object.ns_object_val[0].zo_owner;
+  if (p2 == NULL || strlen (p2) == 0)
+    req.ns_object.ns_object_val[0].zo_owner = nis_local_principal ();
+
+  p3 = req.ns_object.ns_object_val[0].zo_group;
+  if (p3 == NULL || strlen (p3) == 0)
+    req.ns_object.ns_object_val[0].zo_group = nis_local_group ();
+
+  p4 = req.ns_object.ns_object_val[0].zo_domain;
+  req.ns_object.ns_object_val[0].zo_domain =
+    nis_domain_of_r (name, buf4, sizeof (buf4));
+
   if ((status = __do_niscall (name, NIS_MODIFY, (xdrproc_t) xdr_ns_request,
 			      (caddr_t) & req, (xdrproc_t) xdr_nis_result,
 			      (caddr_t) res, MASTER_ONLY)) != RPC_SUCCESS)
     res->status = status;
+
+  req.ns_object.ns_object_val[0].zo_name = p1;
+  req.ns_object.ns_object_val[0].zo_owner = p2;
+  req.ns_object.ns_object_val[0].zo_group = p3;
+  req.ns_object.ns_object_val[0].zo_domain = p4;
 
   nis_destroy_object (req.ns_object.ns_object_val);
 

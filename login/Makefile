@@ -25,7 +25,7 @@ subdir	:= login
 headers	:= utmp.h utmpbits.h lastlog.h pty.h
 
 routines := getutent getutent_r getutid getutline getutid_r getutline_r \
-	    utmp_file utmp_daemon utmpname
+	    utmp_file utmp_daemon utmpname updwtmp
 
 others = utmpd
 install-sbin = utmpd
@@ -42,7 +42,7 @@ vpath %.c programs
 extra-libs      := libutil
 extra-libs-others := $(extra-libs)
 
-libutil-routines:= login login_tty logout logwtmp pty updwtmp
+libutil-routines:= login login_tty logout logwtmp pty
 libutil-map	:= libutil.map
 
 include ../Rules

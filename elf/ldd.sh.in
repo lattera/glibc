@@ -30,11 +30,12 @@ bind_now=
 
 while test $# -gt 0; do
   case "$1" in
-  --v | --ve | --ver | --vers | --versi | --versio | --version)
+  --vers | --versi | --versio | --version)
     echo 'ldd (GNU libc) @VERSION@
 Copyright (C) 1996, 1997 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.'
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+Written by Roland McGrath and Ulrich Drepper.'
     exit 0 ;;
   --h | --he | --hel | --help)
     echo "ldd [OPTION]... FILE...
@@ -42,6 +43,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.'
       --version           print version information and exit
   -d, --data-relocs       process data relocations
   -r, --function-relocs   process data and function relocations
+  -v, --verbose           print all information
 Report bugs using the \`glibcbug' script to <bugs@gnu.ai.mit.edu>."
     exit 0 ;;
   -d | --d | --da | --dat | --data | --data- | --data-r | --data-re | \
@@ -54,6 +56,12 @@ Report bugs using the \`glibcbug' script to <bugs@gnu.ai.mit.edu>."
     warn=yes
     bind_now=yes
     shift ;;
+  -v | --verb | --verbo | --verbos | --verbose)
+    verbose=yes
+    shift ;;
+  --v | --ve | --ver)
+    echo >&2 "ldd: option \`$1' is ambiguous"
+    exit 1 ;;
   --)		# Stop option processing.
     shift; break ;;
   -*)
@@ -67,6 +75,7 @@ Try \`ldd --help' for more information."
 done
 
 add_env="LD_TRACE_LOADED_OBJECTS=1 LD_WARN=$warn LD_BIND_NOW=$bind_now"
+add_env="$add_env LD_VERBOSE=$verbose"
 case $# in
 0)
   echo >&2 "\

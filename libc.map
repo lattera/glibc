@@ -6,8 +6,6 @@ GLIBC_2.0 {
     _IO_stderr_; _IO_stdin_; _IO_stdout_;
     _nl_msg_cat_cntr; __environ; _environ;
 
-#  __libc_multiple_libcs; __libc_argc; __libc_argv; _dl_starting_up; __exit_funcs;
-
     # helper functions
     __errno_location; __libc_init_first;
 
@@ -40,6 +38,7 @@ GLIBC_2.0 {
     _obstack_allocated_p; _obstack_begin; _obstack_begin_1;
     _obstack_free; _obstack_memory_used; _obstack_newchunk;
     __assert_fail; __assert_perror_fail;
+    _IO_getc; _IO_peekc_unlocked; _IO_putc; _IO_feof; _IO_ferror;
 
     # functions used in other libraries
     __printf_fp;

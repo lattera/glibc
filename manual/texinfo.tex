@@ -1,5 +1,5 @@
 %% TeX macros to handle Texinfo files.
-%% $Id: texinfo.tex,v 2.202 1997/06/12 20:07:10 drepper Exp $
+%% $Id: texinfo.tex,v 2.203 1997/06/13 22:43:07 drepper Exp $
 
 %  Copyright (C) 1985, 86, 88, 90, 91, 92, 93,
 %                94, 95, 96, 97 Free Software Foundation, Inc.
@@ -36,7 +36,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 2.202 $
+\deftexinfoversion$Revision: 2.203 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % If in a .fmt file, print the version number
@@ -120,7 +120,7 @@
 
 % For @cropmarks command.
 % Do @cropmarks to get crop marks.
-% 
+%
 \newif\ifcropmarks
 \let\cropmarks = \cropmarkstrue
 %
@@ -1346,7 +1346,7 @@ where each line of input produces a line of output.}
 
 % @uref (abbreviation for `urlref') takes an optional second argument
 % specifying the text to display.  First (mandatory) arg is the url.
-% 
+%
 \def\uref#1{\urefxxx #1,,\finish}
 \def\urefxxx#1,#2,#3\finish{%
   \setbox0 = \hbox{\ignorespaces #2}%
@@ -2101,7 +2101,7 @@ July\or August\or September\or October\or November\or December\fi
 \global\colcount=0\relax}}
 }
 
-\def\setultitablespacing{% test to see if user has set \multitablelinespace.
+\def\setmultitablespacing{% test to see if user has set \multitablelinespace.
 % If so, do nothing. If not, give it an appropriate dimension based on
 % current baselineskip.
 \ifdim\multitablelinespace=0pt
@@ -2569,7 +2569,7 @@ width0pt\relax} \fi
 \def\begindoublecolumns{\begingroup % ended by \enddoublecolumns
   % Grab any single-column material above us.
   \output = {\global\setbox\partialpage = \vbox{%
-    % 
+    %
     % Here is a possibility not foreseen in manmac: if we accumulate a
     % whole lot of material, we might end up calling this \output
     % routine twice in a row (see the doublecol-lose test, which is

@@ -161,9 +161,8 @@ nis_clone_group (const group_obj *src, group_obj *dest)
     {
       if (res->gr_members.gr_members_val == NULL)
 	{
-	  res->gr_members.gr_members_val =
-	    malloc (res->gr_members.gr_members_len * sizeof (nis_name));
-	  if (res->gr_members.gr_members_val == NULL)
+	  if ((res->gr_members.gr_members_val =
+	       malloc (res->gr_members.gr_members_len * sizeof (nis_name))) == NULL)
 	    return NULL;
 	}
       for (i = 0; i < res->gr_members.gr_members_len; ++i)
@@ -208,9 +207,8 @@ nis_clone_table (const table_obj *src, table_obj *dest)
   res->ta_cols.ta_cols_len = src->ta_cols.ta_cols_len;
   if (res->ta_cols.ta_cols_val == NULL)
     {
-      res->ta_cols.ta_cols_val =
-	malloc (src->ta_cols.ta_cols_len * sizeof (table_col));
-      if (res->ta_cols.ta_cols_val == NULL)
+      if ((res->ta_cols.ta_cols_val =
+	   calloc (1, src->ta_cols.ta_cols_len * sizeof (table_col))) == NULL)
 	return NULL;
     }
   for (i = 0; i < res->ta_cols.ta_cols_len; i++)
@@ -312,16 +310,19 @@ nis_clone_nis_attr (const nis_attr *src, nis_attr *dest)
     res->zattr_ndx = NULL;
 
   res->zattr_val.zattr_val_len = src->zattr_val.zattr_val_len;
-  if (res->zattr_val.zattr_val_val == NULL)
+  if (res->zattr_val.zattr_val_len > 0)
     {
-      res->zattr_val.zattr_val_val =
-	malloc (src->zattr_val.zattr_val_len);
       if (res->zattr_val.zattr_val_val == NULL)
-	return NULL;
+	{
+	  if ((res->zattr_val.zattr_val_val =
+	       calloc (1, src->zattr_val.zattr_val_len)) == NULL)
+	    return NULL;
+	}
+      memcpy (res->zattr_val.zattr_val_val, src->zattr_val.zattr_val_val,
+	      src->zattr_val.zattr_val_len);
     }
-  memcpy (res->zattr_val.zattr_val_val, src->zattr_val.zattr_val_val,
-	  src->zattr_val.zattr_val_len);
-
+  else
+    res->zattr_val.zattr_val_val = NULL;
   return res;
 }
 
@@ -440,15 +441,12 @@ nis_clone_objdata (const objdata *src, objdata *dest)
 	src->objdata_u.po_data.po_data_len;
       if (src->objdata_u.po_data.po_data_val)
         {
-	  res->objdata_u.po_data.po_data_val =
-	    malloc (res->objdata_u.po_data.po_data_len);
-	  if (res->objdata_u.po_data.po_data_val == NULL)
+	  if ((res->objdata_u.po_data.po_data_val =
+	       malloc (res->objdata_u.po_data.po_data_len)) == NULL)
 	    return NULL;
 	  memcpy (res->objdata_u.po_data.po_data_val,
 		  src->objdata_u.po_data.po_data_val,
 		  src->objdata_u.po_data.po_data_len);
-	  if (res->objdata_u.po_data.po_data_val == NULL)
-	    return NULL;
         }
       else
         {

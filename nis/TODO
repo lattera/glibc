@@ -1,4 +1,7 @@
 
+ * nis_addmember: Where checks for duplicate group members ? nisgrpadm or
+		  nis_addmember ?
+
  * nss_nisplus: When using parser form nss_files, rewrite parser
 
  * nis_table.c: nis_list(): 

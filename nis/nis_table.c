@@ -261,8 +261,11 @@ nis_add_entry (const_nis_name name, const nis_object *obj,
 	       u_long flags)
 {
   nis_result *res;
-  struct ib_request ibreq;
   nis_error status;
+  struct ib_request ibreq;
+  char *p1, *p2, *p3, *p4;
+  char buf1 [strlen (name) + 20];
+  char buf4 [strlen (name) + 20];
 
   res = calloc (1, sizeof (nis_result));
 
@@ -276,12 +279,34 @@ nis_add_entry (const_nis_name name, const nis_object *obj,
   ibreq.ibr_obj.ibr_obj_val = nis_clone_object (obj, NULL);
   ibreq.ibr_obj.ibr_obj_len = 1;
 
+  p1 = ibreq.ibr_obj.ibr_obj_val[0].zo_name;
+  if (p1 == NULL || strlen (p1) == 0)
+    ibreq.ibr_obj.ibr_obj_val[0].zo_name =
+      nis_leaf_of_r (name, buf1, sizeof (buf1));
+
+  p2 = ibreq.ibr_obj.ibr_obj_val[0].zo_owner;
+  if (p2 == NULL || strlen (p2) == 0)
+    ibreq.ibr_obj.ibr_obj_val[0].zo_owner = nis_local_principal ();
+
+  p3 = ibreq.ibr_obj.ibr_obj_val[0].zo_group;
+  if (p3 == NULL || strlen (p3) == 0)
+    ibreq.ibr_obj.ibr_obj_val[0].zo_group = nis_local_group ();
+
+  p4 = ibreq.ibr_obj.ibr_obj_val[0].zo_domain;
+  ibreq.ibr_obj.ibr_obj_val[0].zo_domain =
+    nis_domain_of_r (name, buf4, sizeof (buf4));
+
   if ((status = __do_niscall (ibreq.ibr_name, NIS_IBADD,
 			      (xdrproc_t) xdr_ib_request,
 			      (caddr_t) &ibreq,
 			      (xdrproc_t) xdr_nis_result,
 			      (caddr_t) res, 0)) != RPC_SUCCESS)
     res->status = status;
+
+  ibreq.ibr_obj.ibr_obj_val[0].zo_name = p1;
+  ibreq.ibr_obj.ibr_obj_val[0].zo_owner = p2;
+  ibreq.ibr_obj.ibr_obj_val[0].zo_group = p3;
+  ibreq.ibr_obj.ibr_obj_val[0].zo_domain = p4;
 
   nis_free_request (&ibreq);
 
@@ -293,8 +318,11 @@ nis_modify_entry (const_nis_name name, const nis_object *obj,
 		  u_long flags)
 {
   nis_result *res;
-  struct ib_request ibreq;
   nis_error status;
+  struct ib_request ibreq;
+  char *p1, *p2, *p3, *p4;
+  char buf1 [strlen (name) + 20];
+  char buf4 [strlen (name) + 20];
 
   res = calloc (1, sizeof (nis_result));
 
@@ -308,11 +336,33 @@ nis_modify_entry (const_nis_name name, const nis_object *obj,
   ibreq.ibr_obj.ibr_obj_val = nis_clone_object (obj, NULL);
   ibreq.ibr_obj.ibr_obj_len = 1;
 
+  p1 = ibreq.ibr_obj.ibr_obj_val[0].zo_name;
+  if (p1 == NULL || strlen (p1) == 0)
+    ibreq.ibr_obj.ibr_obj_val[0].zo_name =
+      nis_leaf_of_r (name, buf1, sizeof (buf1));
+
+  p2 = ibreq.ibr_obj.ibr_obj_val[0].zo_owner;
+  if (p2 == NULL || strlen (p2) == 0)
+    ibreq.ibr_obj.ibr_obj_val[0].zo_owner = nis_local_principal ();
+
+  p3 = ibreq.ibr_obj.ibr_obj_val[0].zo_group;
+  if (p3 == NULL || strlen (p3) == 0)
+    ibreq.ibr_obj.ibr_obj_val[0].zo_group = nis_local_group ();
+
+  p4 = ibreq.ibr_obj.ibr_obj_val[0].zo_domain;
+  ibreq.ibr_obj.ibr_obj_val[0].zo_domain =
+    nis_domain_of_r (name, buf4, sizeof (buf4));
+
   if ((status = __do_niscall (ibreq.ibr_name, NIS_IBMODIFY,
 			      (xdrproc_t) xdr_ib_request,
 			      (caddr_t) & ibreq, (xdrproc_t) xdr_nis_result,
 			      (caddr_t) res, 0)) != RPC_SUCCESS)
     res->status = status;
+
+  ibreq.ibr_obj.ibr_obj_val[0].zo_name = p1;
+  ibreq.ibr_obj.ibr_obj_val[0].zo_owner = p2;
+  ibreq.ibr_obj.ibr_obj_val[0].zo_group = p3;
+  ibreq.ibr_obj.ibr_obj_val[0].zo_domain = p4;
 
   nis_free_request (&ibreq);
 

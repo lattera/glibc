@@ -1,4 +1,42 @@
-<1997-06-12 21:22  Ulrich Drepper  <drepper@cygnus.com>
+1997-06-14 00:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Add more libio functions which are used in libio.h.
+
+	* login/Makefile (libutil-routines): Move updwtmp to ...
+	(routines): ...here.
+	Suggested by Mark Kettenis <kettenis@phys.uva.nl>.
+
+	* sysdeps/stub/s_erfl.c: Add stub definition of erfcl.
+	Reported by Andreas Jaeger <aj@arthur.rhein-neckar.de>.
+
+1997-06-13 21:10  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nis_add.c (nis_add): Create object name only if not set.
+
+	* nis/nis_clone.c: Use calloc instead of malloc to prevent
+	RPC encode errors.
+
+	* nis/nis_modify.c (nis_modify): Create default object entrys if
+	given are NULL.
+	* nis/nis/nis_table.c (nis_add_entry, nis_modify_entry): Likewise.
+
+1997-06-13 14:17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+
+	* sysdeps/i386/addmul_1.S: Replace size with sizeP, otherwise the
+	define might also replace the expanded macro ASM_SIZE_DIRECTIVE.
+	* sysdeps/i386/submul_1.S: Likewise.
+
+1997-06-13 12:19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c: Print version information if LD_TRACE_LOADED_OBJECT
+	and LD_VERBOSE are given.
+
+	* elf/ldd.sh.in: Add -v|--verbose option.  Add author information
+	as per Coding Standard.
+	* elf/ldd.bash.in: Likewise.
+
+1997-06-12 21:22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile (libc-map): Define before including Makerules.
 	* Makerules (lib%.so): Depend on $(lib%-map).

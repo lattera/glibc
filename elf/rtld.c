@@ -23,7 +23,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>		/* Check if MAP_ANON is defined.  */
-#include "../stdio-common/_itoa.h"
+#include <stdio-common/_itoa.h>
 #include <assert.h>
 #include "dynamic-link.h"
 
@@ -186,6 +186,54 @@ version_check_doit (void *a)
   if (_dl_check_all_versions (args->main_map, 1) && args->doexit)
     /* We cannot start the application.  Abort now.  */
     _exit (1);
+}
+
+
+static inline struct link_map *
+find_needed (const char *name)
+{
+  unsigned int n;
+
+  for (n = 0; n < _dl_loaded->l_nsearchlist; ++n)
+    if (_dl_name_match_p (name, _dl_loaded->l_searchlist[n]))
+      return _dl_loaded->l_searchlist[n];
+
+  /* Should never happen.  */
+  return NULL;
+}
+
+static int
+match_version (const char *string, struct link_map *map)
+{
+  const char *strtab = (const char *) (map->l_addr
+				       + map->l_info[DT_STRTAB]->d_un.d_ptr);
+  ElfW(Verdef) *def;
+
+#define VERDEFTAG (DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (DT_VERDEF))
+  if (map->l_info[VERDEFTAG] == NULL)
+    /* The file has no symbol versioning.  */
+    return 0;
+
+  def = (ElfW(Verdef) *) ((char *) map->l_addr
+			  + map->l_info[VERDEFTAG]->d_un.d_ptr);
+  while (1)
+    {
+      ElfW(Verdaux) *aux = (ElfW(Verdaux) *) ((char *) def + def->vd_aux);
+
+      /* Compare the version strings.  */
+      if (strcmp (string, strtab + aux->vda_name) == 0)
+	/* Bingo!  */
+	return 1;
+
+      /* If no more definitions we failed to find what we want.  */
+      if (def->vd_next == 0)
+	break;
+
+      /* Next definition.  */
+      def = (ElfW(Verdef) *) ((char *) def + def->vd_next);
+    }
+
+  return 0;
 }
 
 unsigned int _dl_skip_args;	/* Nonzero if we were run directly.  */
@@ -576,27 +624,113 @@ of this helper program; chances are you did not intend to run this program.\n",
 	      *--bp = '0';
 	    _dl_sysdep_message (" in object at 0x", bp, "\n", NULL);
 	  }
-      else if (lazy >= 0)
+      else
 	{
-	  /* We have to do symbol dependency testing.  */
-	  struct relocate_args args;
-	  struct link_map *l;
-
-	  args.lazy = lazy;
-
-	  l = _dl_loaded;
-	  while (l->l_next)
-	    l = l->l_next;
-	  do
+	  if (lazy >= 0)
 	    {
-	      if (l != &_dl_rtld_map && l->l_opencount > 0)
+	      /* We have to do symbol dependency testing.  */
+	      struct relocate_args args;
+	      struct link_map *l;
+
+	      args.lazy = lazy;
+
+	      l = _dl_loaded;
+	      while (l->l_next)
+		l = l->l_next;
+	      do
 		{
-		  args.l = l;
-		  _dl_receive_error (print_unresolved, relocate_doit, &args);
-		  *_dl_global_scope_end = NULL;
+		  if (l != &_dl_rtld_map && l->l_opencount > 0)
+		    {
+		      args.l = l;
+		      _dl_receive_error (print_unresolved, relocate_doit,
+					 &args);
+		      *_dl_global_scope_end = NULL;
+		    }
+		  l = l->l_prev;
+		} while (l);
+	    }
+
+#define VERNEEDTAG (DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (DT_VERNEED))
+	  if (*(getenv ("LD_VERBOSE") ?: "") != '\0')
+	    {
+	      /* Print more information.  This means here, print information
+		 about the versions needed.  */
+	      int first = 1;
+	      struct link_map *map = _dl_loaded;
+
+	      for (map = _dl_loaded; map != NULL; map = map->l_next)
+		{
+		  const char *strtab =
+		    (const char *) (map->l_addr
+				    + map->l_info[DT_STRTAB]->d_un.d_ptr);
+		  ElfW(Dyn) *dyn = map->l_info[VERNEEDTAG];
+
+		  if (dyn != NULL)
+		    {
+		      ElfW(Verneed) *ent =
+			(ElfW(Verneed) *) (map->l_addr + dyn->d_un.d_ptr);
+
+		      if (first)
+			{
+			  _dl_sysdep_message ("\n\tVersion information:\n",
+					      NULL);
+			  first = 0;
+			}
+
+		      _dl_sysdep_message ("\t", (map->l_name[0]
+						 ? map->l_name
+						 : _dl_argv[0]), ":\n",
+					  NULL);
+
+		      while (1)
+			{
+			  ElfW(Vernaux) *aux;
+			  struct link_map *needed;
+
+			  needed = find_needed (strtab + ent->vn_file);
+			  aux = (ElfW(Vernaux) *) ((char *) ent + ent->vn_aux);
+
+			  while (1)
+			    {
+			      const char *fname = NULL;
+
+			      _dl_sysdep_message ("\t\t",
+						  strtab + ent->vn_file,
+						  " (", strtab + aux->vna_name,
+						  ") ",
+						  (aux->vna_flags
+						   & VER_FLG_WEAK
+						   ? "[WEAK] " : ""),
+						  "=> ", NULL);
+
+			      if (needed != NULL
+				  && match_version (strtab + aux->vna_name,
+						    needed))
+				fname = needed->l_name;
+
+			      _dl_sysdep_message (fname ?: "not found", "\n",
+						  NULL);
+
+			      if (aux->vna_next == 0)
+				/* No more symbols.  */
+				break;
+
+			      /* Next symbol.  */
+			      aux = (ElfW(Vernaux) *) ((char *) aux
+						   + aux->vna_next);
+			    }
+
+			  if (ent->vn_next == 0)
+			    /* No more dependencies.  */
+			    break;
+
+			  /* Next dependency.  */
+			  ent = (ElfW(Verneed) *) ((char *) ent
+						   + ent->vn_next);
+			}
+		    }
 		}
-	      l = l->l_prev;
-	    } while (l);
+	    }
 	}
 
       _exit (0);
