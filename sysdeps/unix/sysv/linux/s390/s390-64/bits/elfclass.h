@@ -1,15 +1,13 @@
-/* gmp-mparam.h -- Compiler/machine parameter header file.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
+   This file is part of the GNU C Library.
 
-   This file is part of the GNU MP Library.
-
-   The GNU MP Library is free software; you can redistribute it and/or
+   The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
    published by the Free Software Foundation; either version 2 of the
    License, or (at your option) any later version.
 
-   The GNU MP Library is distributed in the hope that it will be useful,
+   The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Library General Public License for more details.
@@ -17,15 +15,20 @@
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA. */
+   Boston, MA 02111-1307, USA.  */
+
+/* This file specifies the native word size of the machine, which indicates
+   the ELF file class used for executables and shared objects on this
+   machine.  */
+
+#ifndef _LINK_H
+# error "Never use <bits/elfclass.h> directly; include <link.h> instead."
+#endif
 
 #include <bits/wordsize.h>
 
-#define BITS_PER_MP_LIMB	__WORDSIZE
-#define BYTES_PER_MP_LIMB	(__WORDSIZE / 8)
-#define BITS_PER_LONGINT	__WORDSIZE
-#define BITS_PER_INT		32
-#define BITS_PER_SHORTINT	16
-#define BITS_PER_CHAR		8
+#define __ELF_NATIVE_CLASS __WORDSIZE
 
-#define IEEE_DOUBLE_BIG_ENDIAN 0
+/* 64 bit Linux for S/390 is exceptional as it has .hash section with
+   64 bit entries.  */
+typedef uint64_t Elf_Symndx;

@@ -1,15 +1,13 @@
-/* gmp-mparam.h -- Compiler/machine parameter header file.
+/* Search a character in a block of memory.  For IBM S390
    Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-   This file is part of the GNU MP Library.
-
-   The GNU MP Library is free software; you can redistribute it and/or
+   The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
    published by the Free Software Foundation; either version 2 of the
    License, or (at your option) any later version.
 
-   The GNU MP Library is distributed in the hope that it will be useful,
+   The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Library General Public License for more details.
@@ -17,15 +15,26 @@
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA. */
+   Boston, MA 02111-1307, USA.  */
 
-#include <bits/wordsize.h>
+/*
+ * R2 = address to memory area
+ * R3 = character to find
+ * R4 = number of bytes to search
+ */
 
-#define BITS_PER_MP_LIMB	__WORDSIZE
-#define BYTES_PER_MP_LIMB	(__WORDSIZE / 8)
-#define BITS_PER_LONGINT	__WORDSIZE
-#define BITS_PER_INT		32
-#define BITS_PER_SHORTINT	16
-#define BITS_PER_CHAR		8
+#include "sysdep.h"
+#include "asm-syntax.h"
 
-#define IEEE_DOUBLE_BIG_ENDIAN 0
+	.text
+ENTRY(memchr)
+	lhi   %r0,0xff
+	nr    %r0,%r3
+	lr    %r1,%r2
+	la    %r2,0(%r4,%r1)
+0:      srst  %r2,%r1
+	jo    0b
+	brc   13,1f
+	slr   %r2,%r2
+1:      br    %r14
+END(memchr)

@@ -1,3 +1,326 @@
+2001-03-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/Dist: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/Dist: ...here.
+	* sysdeps/unix/sysv/linux/s390/Makefile: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/Makefile: ...here.
+	* sysdeps/unix/sysv/linux/s390/Versions: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/Versions: ...here.
+	* sysdeps/unix/sysv/linux/s390/alphasort64.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/alphasort64.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/bits/fcntl.h: ...here.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/bits/mman.h: ...here.
+	* sysdeps/unix/sysv/linux/s390/bits/resource.h: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/bits/resource.h: ...here.
+	* sysdeps/unix/sysv/linux/s390/bits/stat.h: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/bits/stat.h: ...here.
+	* sysdeps/unix/sysv/linux/s390/chown.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/chown.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/clone.S: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S: ...here.
+	* sysdeps/unix/sysv/linux/s390/fchown.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/fchown.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/fcntl.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/fcntl.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/fxstat.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/fxstat.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/getdents64.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/getdents64.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/getegid.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/getegid.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/geteuid.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/geteuid.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/getgid.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/getgid.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/getgroups.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/getgroups.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/getresgid.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/getresgid.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/getresuid.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/getresuid.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/getrlimit.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/getrlimit.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/getrlimit64.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/getrlimit64.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/getuid.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/getuid.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/lchown.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/lchown.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/lockf64.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/lockf64.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/lxstat.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/lxstat.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/mmap.S: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/mmap.S: ...here.
+	* sysdeps/unix/sysv/linux/s390/mmap64.S: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/mmap64.S: ...here.
+	* sysdeps/unix/sysv/linux/s390/msgctl.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/msgctl.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/oldgetrlimit64.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/oldgetrlimit64.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/readdir64.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/readdir64.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/readdir64_r.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/readdir64_r.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/register-dump.h: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/register-dump.h: ...here.
+	* sysdeps/unix/sysv/linux/s390/scandir64.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/scandir64.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/semctl.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/semctl.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/setegid.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/setegid.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/seteuid.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/seteuid.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/setfsgid.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/setfsgid.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/setfsuid.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/setfsuid.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/setgid.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/setgid.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/setgroups.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/setgroups.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/setregid.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/setregid.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/setresgid.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/setresgid.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/setresuid.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/setresuid.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/setreuid.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/setreuid.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/setrlimit.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/setrlimit.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/setuid.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/setuid.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/shmctl.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/shmctl.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/socket.S: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/socket.S: ...here.
+	* sysdeps/unix/sysv/linux/s390/sys/procfs.h: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/sys/procfs.h: ...here.
+	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/sys/ucontext.h: ...here.
+	* sysdeps/unix/sysv/linux/s390/syscall.S: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscall.S: ...here.
+	* sysdeps/unix/sysv/linux/s390/syscalls.list: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscalls.list: ...here.
+	* sysdeps/unix/sysv/linux/s390/sysdep.S: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.S: ...here.
+	* sysdeps/unix/sysv/linux/s390/sysdep.h: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: ...here.
+	* sysdeps/unix/sysv/linux/s390/versionsort64.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/versionsort64.c: ...here.
+	* sysdeps/unix/sysv/linux/s390/xstat.c: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/xstat.c: ...here.
+
+2001-03-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-64/Dist: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/Makefile: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/elfclass.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/fcntl.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/ipc.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/mman.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/msq.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/resource.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/sem.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/shm.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/sigaction.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/siginfo.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/sigstack.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/stat.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/types.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/fstatfs64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/ftruncate64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/fxstat.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/fxstat64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/getdents.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/getdents64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/getrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/glob.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/glob64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/kernel_stat.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/lxstat.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/lxstat64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/mmap.S: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/mmap64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/pread64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/pwrite64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/readdir.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/readdir64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/readdir64_r.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/readdir_r.c : New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/register-dump.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/setrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigaction.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigpending.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigprocmask.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigsuspend.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/socket.S: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/statfs64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sys/procfs.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sys/ucontext.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscall.S: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.S: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/truncate64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/xstat.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/xstat64.c: New file.
+
+2001-03-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/Dist: Move to...
+	* sysdeps/s390/390-32/Dist: ...here.
+	* sysdeps/s390/Implies: Move to...
+	* sysdeps/s390/s390-32/Implies: ...here.
+	* sysdeps/s390/Makefile: Move to...
+	* sysdeps/s390/s390-32/Makefile: ...here.
+	* sysdeps/s390/Versions: Move to...
+	* sysdeps/s390-32/s390/Versions: ...here.
+	* sysdeps/s390/add_n.S: Move to...
+	* sysdeps/s390/s390-32/add_n.S: ...here.
+	* sysdeps/s390/addmul_1.S: Move to...
+	* sysdeps/s390/s390-32/addmul_1.S: ...here.
+	* sysdeps/s390/atomicity.h: Move to...
+	* sysdeps/s390/s390-32/atomicity.h: ...here.
+	* sysdeps/s390/backtrace.c: Move to...
+	* sysdeps/s390/s390-32/backtrace.c: ...here.
+	* sysdeps/s390/bcopy.S: Move to...
+	* sysdeps/s390/s390-32/bcopy.S: ...here.
+	* sysdeps/s390/bits/byteswap.h: Move to...
+	* sysdeps/s390/s390-32/bits/byteswap.h: ...here.
+	* sysdeps/s390/bits/huge_val.h: Move to...
+	* sysdeps/s390/s390-32/bits/huge_val.h: ...here.
+	* sysdeps/s390/bsd-_setjmp.S: Move to...
+	* sysdeps/s390/s390-32/bsd-_setjmp.S: ...here.
+	* sysdeps/s390/bsd-setjmp.S: Move to...
+	* sysdeps/s390/s390-32/bsd-setjmp.S: ...here.
+	* sysdeps/s390/bzero.S: Move to...
+	* sysdeps/s390/s390-32/bzero.S: ...here.
+	* sysdeps/s390/elf/bsd-_setjmp.S: Move to...
+	* sysdeps/s390/s390-32/elf/bsd-_setjmp.S: ...here.
+	* sysdeps/s390/elf/bsd-setjmp.S: Move to...
+	* sysdeps/s390/s390-32/elf/bsd-setjmp.S: ...here.
+	* sysdeps/s390/elf/start.S: Move to...
+	* sysdeps/s390/s390-32/elf/start.S: ...here.
+	* sysdeps/s390/ffs.c: Move to...
+	* sysdeps/s390/s390-32/ffs.c: ...here.
+	* sysdeps/s390/memchr.S: Move to...
+	* sysdeps/s390/s390-32/memchr.S: ...here.
+	* sysdeps/s390/memcpy.S: Move to...
+	* sysdeps/s390/s390-32/memcpy.S: ...here.
+	* sysdeps/s390/memset.S: Move to...
+	* sysdeps/s390/s390-32/memset.S: ...here.
+	* sysdeps/s390/mul_1.S: Move to...
+	* sysdeps/s390/s390-32/mul_1.S: ...here.
+	* sysdeps/s390/s390-mcount.S: Move to...
+	* sysdeps/s390/s390-32/s390-mcount.S: ...here.
+	* sysdeps/s390/strcpy.S: Move to...
+	* sysdeps/s390/s390-32/strcpy.S: ...here.
+	* sysdeps/s390/strncpy.S: Move to...
+	* sysdeps/s390/s390-32/strncpy.S: ...here.
+	* sysdeps/s390/sub_n.S: Move to...
+	* sysdeps/s390/s390-32/sub_n.S: ...here.
+
+2001-03-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-64/Dist: New file.
+	* sysdeps/s390/s390-64/Implies: New file.
+	* sysdeps/s390/s390-64/Makefile: New file.
+	* sysdeps/s390/s390-64/__longjmp.c: New file.
+	* sysdeps/s390/s390-64/add_n.S: New file.
+	* sysdeps/s390/s390-64/atomicity.h: New file.
+	* sysdeps/s390/s390-64/backtrace.c: New file.
+	* sysdeps/s390/s390-64/bcopy.S: New file.
+	* sysdeps/s390/s390-64/bits/byteswap.h: New file.
+	* sysdeps/s390/s390-64/bits/huge_val.h: New file.
+	* sysdeps/s390/s390-64/bits/setjmp.h: New file.
+	* sysdeps/s390/s390-64/bits/string.h: New file.
+	* sysdeps/s390/s390-64/bsd-_setjmp.S: New file.
+	* sysdeps/s390/s390-64/bsd-setjmp.S: New file.
+	* sysdeps/s390/s390-64/bzero.S: New file.
+	* sysdeps/s390/s390-64/dl-machine.h: New file.
+	* sysdeps/s390/s390-64/elf/bsd-_setjmp.S: New file.
+	* sysdeps/s390/s390-64/elf/bsd-setjmp.S: New file.
+	* sysdeps/s390/s390-64/elf/setjmp.S: New file.
+	* sysdeps/s390/s390-64/elf/start.S: New file.
+	* sysdeps/s390/s390-64/ffs.c: New file.
+	* sysdeps/s390/s390-64/initfini.c: New file.
+	* sysdeps/s390/s390-64/memchr.S: New file.
+	* sysdeps/s390/s390-64/memcpy.S: New file.
+	* sysdeps/s390/s390-64/memset.S: New file.
+	* sysdeps/s390/s390-64/s390x-mcount.S: New file.
+	* sysdeps/s390/s390-64/setjmp.S: New file.
+	* sysdeps/s390/s390-64/strcpy.S: New file.
+	* sysdeps/s390/s390-64/strncpy.S: New file.
+	* sysdeps/s390/s390-64/sub_n.S: New file.
+	* sysdeps/s390/s390-64/sysdep.h: New file.
+
+2001-03-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* scripts/config.guess: Add support for Linux on 64 bit S/390.
+	* scripts/config.sub: Likewise.
+
+2001-03-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* configure.in: Add support for 64 bit S/390.
+
+	* elf/elf.h: Add new relocations for 64 bit S/390.
+
+	* shlib-versions: Add rules for Linux on 64 bit S/390.
+
+2001-03-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/__longjmp.c: Move to...
+	* sysdeps/s390/s390-32/__longjmp.c: ...here.  Add code
+	to load the floating point registers that should be saved
+	according to the ABI.
+
+	* sysdeps/s390/bits/setjmp.h: Move to...
+	* sysdeps/s390/s390-32/bits/setjmp.h: ...here.  Avoid
+	the use of long long in the __jmp_buf type definition.
+
+	* sysdeps/s390/bits/string.h: Move to...
+	* sysdeps/s390/s390-32/bits/string.h: ...here.  Add several missing
+	#ifndef _FORCE_INLINES.
+
+	* sysdeps/s390/dl-machine.h: Move to...
+	* sysdeps/s390/s390-32/dl-machine.h: ...here.  Add a check for the
+	executables EI_CLASS in elf_machine_matches_host.
+
+	* sysdeps/s390/elf/setjmp.S: Move to...
+	* sysdeps/s390/s390-32/elf/setjmp.S: ...here.  Replace
+	branches to globally defined symbol __sigsetjmp by branches to
+	a local label (this avoids the generation of a R_390_PC16DBL
+	relocation in -fpic code).
+
+	* sysdeps/s390/gmp-mparam.h: Use defines from <bits/wordsize.h> to
+	calculate BITS_PER_MP_LIMB, BYTES_PER_MP_LIMB and BITS_PER_LONGINT.
+
+	* sysdeps/s390/initfini.c: Move to...
+	* sysdeps/s390/s390-32/initfini.c: ...here.  Replace ALIGN with
+	".align 4,0x07".
+
+	* sysdeps/s390/setjmp.S: Move to...
+	* sysdeps/s390/s390-32/setjmp.S: ...here.  Add code to store the
+	floating point registers that should be saved according to the ABI.
+
+	* sysdeps/s390/sys/ucontext.h: Remove since it is unused.
+
+	* sysdeps/unix/sysv/linux/s390/sysdep.h: Move to...
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: ...here. Include
+	sysdeps/s390/s390-32/sysdep.h instead of sysdeps/s390/sysdep.h.
+
+2001-03-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* configure.in: Change machine=s390 to machine=s390/s390-32.
+
+	* elf/elf.h: Correct comment for R_390_PLT16DBL.
+
 2001-03-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* csu/Makefile (abi-tag.h): Define OS and version separately, allow

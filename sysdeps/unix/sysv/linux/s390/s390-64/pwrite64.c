@@ -1,0 +1,1 @@
+/* Empty since the pwrite syscall is equivalent.  */
