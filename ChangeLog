@@ -1,5 +1,10 @@
 2001-06-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regex.c: Reorganize code to build code twice, once for single
+	byte, once for multi-byte charsets.  Choose function set adequate for
+	locale at runtime.
+	Patch by Isamu Hasegawa <isamu@yamato.ibm.com>.
+
 	* po/nl.po: Update from translation team.
 
 2001-06-09  Bruno Haible  <haible@clisp.cons.org>
