@@ -70,14 +70,17 @@ svc_run (void)
       switch (i = __poll (my_pollfd, svc_max_pollfd, -1))
 	{
 	case -1:
+	  free (my_pollfd);
 	  if (errno == EINTR)
 	    continue;
 	  perror (_("svc_run: - poll failed"));
 	  return;
 	case 0:
+	  free (my_pollfd);
 	  continue;
 	default:
 	  svc_getreq_poll (my_pollfd, i);
+	  free (my_pollfd);
 	}
     }
 }

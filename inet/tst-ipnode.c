@@ -21,5 +21,5 @@ main (void)
       ++errors;
     }
 
-  return errors != NULL;
+  return errors != 0;
 }

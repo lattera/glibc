@@ -367,7 +367,7 @@ svc_getreq_poll (struct pollfd *pfdp, int pollretval)
 	  ++fds_found;
 
 	  if (p->revents & POLLNVAL)
-	    xprt_unregister (p->fd);
+	    xprt_unregister (xports[p->fd]);
 	  else
 	    svc_getreq_common (p->fd);
 	}

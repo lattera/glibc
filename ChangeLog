@@ -1,3 +1,27 @@
+1999-08-09  Scott Bambrough  <scottb@netwinder.org>
+
+	* elf/elf.h: Added definition of ELFOSABI_ARM.
+	* elf/dl-load.c (_dl_map_object_from_fd): Use VALID_ELF_HEADER,
+	VALID_ELF_OSABI, VALID_ELF_ABIVERSION to decide whether an
+	object's header and ABI values are acceptable.
+	(VALID_ELF_HEADER): New macro; provide default definition.
+	(VALID_ELF_OSABI): New macro; provide default definition.
+	(VALID_ELF_ABIVERSION): New macro; provide default definition.
+	* sysdeps/arm/dl-machine.h Define ARM specific versions of
+	VALID_ELF_HEADER, VALID_ELF_OSABI, VALID_ELF_ABIVERSION.
+
+1999-08-09  Andreas Schwab  <schwab@suse.de>
+
+	* inet/tst-ipnode.c (main): Don't compare integer with NULL.
+
+1999-08-09  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sunrpc/svc_run.c (svc_run): Free my_pollfd.
+
+1999-08-09  Andreas Schwab  <schwab@suse.de>
+
+	* sunrpc/svc.c (svc_getreq_poll): Fix argument of xprt_unregister.
+
 1999-08-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/ieee754/ieee754.h: Handle platforms with special

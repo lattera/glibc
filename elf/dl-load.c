@@ -673,6 +673,11 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   /* This is the expected ELF header.  */
 #define ELF32_CLASS ELFCLASS32
 #define ELF64_CLASS ELFCLASS64
+#ifndef VALID_ELF_HEADER
+# define VALID_ELF_HEADER(hdr,exp,size)	(memcmp (hdr, exp, size) == 0)
+# define VALID_ELF_OSABI(osabi)		(osabi == ELFOSABI_SYSV)
+# define VALID_ELF_ABIVERSION(ver)	(ver == 0)
+#endif
   static const unsigned char expected[EI_PAD] =
   {
     [EI_MAG0] = ELFMAG0,
@@ -739,7 +744,8 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   header = (void *) readbuf;
 
   /* Check the header for basic validity.  */
-  if (__builtin_expect (memcmp (header->e_ident, expected, EI_PAD), 0) != 0)
+  if (__builtin_expect (VALID_ELF_HEADER (header->e_ident, expected, EI_PAD),
+			0) != 0)
     {
       /* Something is wrong.  */
       if (*(Elf32_Word *) &header->e_ident !=
@@ -764,10 +770,10 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	LOSE (0, "ELF file version ident not " STRING(EV_CURRENT));
       /* XXX We should be able so set system specific versions which are
 	 allowed here.  */
-      if (header->e_ident[EI_OSABI] != ELFOSABI_SYSV)
-	LOSE (0, "ELF file OS ABI not " STRING(ELFOSABI_SYSV));
-      if (header->e_ident[EI_ABIVERSION] != 0)
-	LOSE (0, "ELF file ABI version not 0");
+      if (!VALID_ELF_OSABI (header->e_ident[EI_OSABI]))
+	LOSE (0, "ELF file OS ABI invalid.");
+      if (!VALID_ELF_ABIVERSION (header->e_ident[EI_ABIVERSION]))
+	LOSE (0, "ELF file ABI version invalid.");
       LOSE (0, "internal error");
     }
 

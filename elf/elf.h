@@ -135,6 +135,7 @@ typedef struct
 #define EI_OSABI	7		/* OS ABI identification */
 #define ELFOSABI_SYSV		0	/* UNIX System V ABI */
 #define ELFOSABI_HPUX		1	/* HP-UX */
+#define ELFOSABI_ARM		97	/* ARM */
 #define ELFOSABI_STANDALONE	255	/* Standalone (embedded) application */
 
 #define EI_ABIVERSION	8		/* ABI version */
