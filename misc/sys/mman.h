@@ -123,6 +123,13 @@ extern void *mremap (void *__addr, size_t __old_len, size_t __new_len,
 extern int mincore (void *__start, size_t __len, unsigned char *__vec);
 #endif
 
+
+/* Open shared memory segment.  */
+extern int shm_open (__const char *__name, int __oflag, mode_t __mode);
+
+/* Remove shared memory segment.  */
+extern int shm_unlink (__const char *__name);
+
 __END_DECLS
 
 #endif	/* sys/mman.h */
