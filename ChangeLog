@@ -1,3 +1,17 @@
+2002-10-07  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/bits/time.h: Replaced with contents of the
+	sysdeps/unix/sysv/linux/i386/bits/time.h file.  All the following
+	files were identical except for the absence of CLOCK_THREAD_CPUTIME_ID
+	and CLOCK_PROCESS_CPUTIME_ID in .../linux/bits/time.h; adding these
+	macros is ok even for architectures that don't now implement them.
+	* sysdeps/mach/hurd/bits/time.h: File removed.
+	* sysdeps/unix/sysv/linux/bits/time.h: File removed.
+	* sysdeps/unix/sysv/linux/i386/bits/time.h: File removed.
+	* sysdeps/unix/sysv/linux/ia64/bits/time.h: File removed.
+	* sysdeps/unix/sysv/linux/sparc/bits/time.h: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/bits/time.h: File removed.
+
 2002-10-18  Jeff Bailey  <jbailey@gnu.org>
 
         * configure.in: Replace AC_FD_CC with AS_MESSAGE_LOG_FD.

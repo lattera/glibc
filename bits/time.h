@@ -1,5 +1,5 @@
-/* System-dependent timing definitions.  Stub version.
-   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* System-dependent timing definitions.  Generic version.
+   Copyright (C) 1996,1997,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,24 +25,43 @@
 # ifndef _BITS_TIME_H
 #  define _BITS_TIME_H	1
 
-#  define CLOCKS_PER_SEC 60
+/* ISO/IEC 9899:1990 7.12.1: <time.h>
+   The macro `CLOCKS_PER_SEC' is the number per second of the value
+   returned by the `clock' function. */
+/* CAE XSH, Issue 4, Version 2: <time.h>
+   The value of CLOCKS_PER_SEC is required to be 1 million on all
+   XSI-conformant systems. */
+#  define CLOCKS_PER_SEC  1000000l
+
+#  if !defined __STRICT_ANSI__ && !defined __USE_XOPEN2K
+/* Even though CLOCKS_PER_SEC has such a strange value CLK_TCK
+   presents the real value for clock ticks per second for the system.  */
+#   include <bits/types.h>
+extern long int __sysconf (int);
+#   define CLK_TCK ((__clock_t) __sysconf (2))	/* 2 is _SC_CLK_TCK */
+#  endif
 
 #  ifdef __USE_POSIX199309
 /* Identifier for system-wide realtime clock.  */
-#   define CLOCK_REALTIME	0
+#   define CLOCK_REALTIME		0
+/* High-resolution timer from the CPU.  */
+#   define CLOCK_PROCESS_CPUTIME_ID	2
+/* Thread-specific CPU-time clock.  */
+#   define CLOCK_THREAD_CPUTIME_ID	3
 
 /* Flag to indicate time is absolute.  */
-#   define TIMER_ABSTIME	1
+#   define TIMER_ABSTIME		1
 #  endif
 
 # endif	/* bits/time.h */
 #endif
 
-
 #ifdef __need_timeval
 # undef __need_timeval
 # ifndef _STRUCT_TIMEVAL
 #  define _STRUCT_TIMEVAL	1
+#  include <bits/types.h>
+
 /* A time value that is accurate to the nearest
    microsecond but also has a range of years.  */
 struct timeval
