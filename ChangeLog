@@ -1,5 +1,7 @@
 2001-02-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-init.c: Add a few __builtin_expect.
+
 	* hesiod/hesiod.c: Remove unnecessary code.  Remove all uses of strcat.
 
 2001-02-02  Ulrich Drepper  <drepper@redhat.com>

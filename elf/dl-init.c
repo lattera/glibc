@@ -43,11 +43,13 @@ call_init (struct link_map *l, int argc, char **argv, char **env)
   l->l_init_called = 1;
 
   /* Check for object which constructors we do not run here.  */
-  if (l->l_name[0] == '\0' && l->l_type == lt_executable)
+  if (__builtin_expect (l->l_name[0], 'a') == '\0'
+      && l->l_type == lt_executable)
     return;
 
   /* Are there any constructors?  */
-  if (l->l_info[DT_INIT] == NULL && l->l_info[DT_INIT_ARRAY] == NULL)
+  if (l->l_info[DT_INIT] == NULL
+      && __builtin_expect (l->l_info[DT_INIT_ARRAY] == NULL, 1))
     return;
 
   /* Print a debug message if wanted.  */
@@ -93,14 +95,14 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
   struct r_debug *r;
   unsigned int i;
 
-  if (_dl_initfirst != NULL)
+  if (__builtin_expect (_dl_initfirst != NULL, 0))
     {
       call_init (_dl_initfirst, argc, argv, env);
       _dl_initfirst = NULL;
     }
 
   /* Don't do anything if there is no preinit array.  */
-  if (preinit_array != NULL
+  if (__builtin_expect (preinit_array != NULL, 0)
       && (i = preinit_array->d_un.d_val / sizeof (ElfW(Addr))) > 0)
     {
       ElfW(Addr) *addrs;
@@ -124,7 +126,7 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
   r->r_state = RT_ADD;
   _dl_debug_state ();
 
-  /* Stupid users forces the ELF specification to be changed.  It now
+  /* Stupid users forced the ELF specification to be changed.  It now
      says that the dynamic loader is responsible for determining the
      order in which the constructors have to run.  The constructors
      for all dependencies of an object must run before the constructor
