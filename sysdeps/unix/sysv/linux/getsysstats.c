@@ -1,5 +1,5 @@
 /* Determine various system internal values, Linux version.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -19,32 +19,45 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <alloca.h>
+#include <assert.h>
 #include <errno.h>
 #include <mntent.h>
 #include <paths.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/sysinfo.h>
 
+#include <atomicity.h>
+
+
+/* The default value for the /proc filesystem mount point.  */
+static const char path_proc[] = "/proc";
+
+/* Actual mount point of /proc filesystem.  */
+static char *mount_proc;
 
 /* Determine the path to the /proc filesystem if available.  */
-static char *
+static const char *
 internal_function
 get_proc_path (char *buffer, size_t bufsize)
 {
-  FILE *fp;
   struct mntent mount_point;
   struct mntent *entry;
-  char *result = NULL;
+  char *result;
+  char *copy_result;
+  FILE *fp;
 
   /* First find the mount point of the proc filesystem.  */
-  fp = __setmntent (_PATH_MNTTAB, "r");
+  fp = __setmntent (_PATH_MOUNTED, "r");
+  if (fp == NULL)
+    fp = __setmntent (_PATH_MNTTAB, "r");
   if (fp != NULL)
     {
       while ((entry = __getmntent_r (fp, &mount_point, buffer, bufsize))
 	     != NULL)
-	if (strcmp (mount_point.mnt_type, "proc") == 0)
+	if (strcmp (mount_point.mnt_type, path_proc) == 0)
 	  {
 	    result = mount_point.mnt_dir;
 	    break;
@@ -52,7 +65,28 @@ get_proc_path (char *buffer, size_t bufsize)
       __endmntent (fp);
     }
 
-  return result;
+  /* If we haven't found anything this is generally a bad sign but we
+     handle it gracefully.  We return what is hopefully the right
+     answer (/proc) but we don't remember this.  This will enable
+     programs which started before the system is fully running to
+     adjust themselves.  */
+  if (result == NULL)
+    return path_proc;
+
+  /* Make a copy we can keep around.  */
+  copy_result = __strdup (result);
+  if (copy_result == NULL)
+    return result;
+
+  /* Now strore the copied value.  But do it atomically.  */
+  assert (sizeof (long int) == sizeof (void *));
+  if (compare_and_swap ((long int *) &mount_proc, (long int) 0,
+			(long int) copy_result) == 0)
+    /* Replacing the value failed.  This means another thread was
+       faster and we don't need the copy anymore.  */
+    free (copy_result);
+
+  return mount_proc;
 }
 
 
@@ -91,7 +125,7 @@ __get_nprocs ()
 {
   FILE *fp;
   char buffer[8192];
-  char *proc_path;
+  const char *proc_path;
   int result = 1;
 
   /* XXX Here will come a test for the new system call.  */
@@ -126,7 +160,7 @@ __get_nprocs_conf ()
 {
   FILE *fp;
   char buffer[8192];
-  char *proc_path;
+  const char *proc_path;
   int result = 1;
 
   /* XXX Here will come a test for the new system call.  */
@@ -166,7 +200,7 @@ phys_pages_info (const char *format)
 {
   FILE *fp;
   char buffer[8192];
-  char *proc_path;
+  const char *proc_path;
   int result = -1;
 
   /* Get mount point of proc filesystem.  */
@@ -244,3 +278,11 @@ __get_avphys_pages ()
   return phys_pages_info ("MemFree: %d kB");
 }
 weak_alias (__get_avphys_pages, get_avphys_pages)
+
+
+static void
+free_mem (void)
+{
+  free (mount_proc);
+}
+text_set_element (__libc_subfreeres, free_mem);

@@ -1,5 +1,9 @@
 2000-07-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path): Cache
+	result.  Search first in /etc/mtab (proc/mounts would be stupid).
+	If mount not in the file fall back on /proc.
+
 	* crypt/md5-crypt.c (__md5_crypt_r): Clear arrays the key and salt
 	string got copied in.
 	Patch by Solar Designer <solar@false.com>.
