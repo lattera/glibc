@@ -1,5 +1,13 @@
 Sun Jul 14 01:51:39 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Makeconfig (rtld-installed-name): Set to ld.so.1.
+	* sysdeps/unix/sysv/linux/Makefile (rtld-installed-name): Variable
+	removed.
+
+	* manual/Makefile (glibc-targets): Remove subdir_ from elts.
+
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_read_whole_file): New fn.
+
 	* MakeTAGS (extract): Pass --add-comments=TRANS.
 	* sysdeps/gnu/errlist.awk: Write comments into the output with the
 	descriptive paragraphs from the manual preceded by TRANS.

@@ -153,8 +153,10 @@ subdir_%: ;
 
 # These are targets that each glibc subdirectory is expected to understand.
 # ../Rules defines them for code subdirectories; for us, they are no-ops.
-glibc-targets	:= subdir_lib objects objs others tests subdir_lint.out \
-		   subdir_echo-headers subdir_echo-distinfo stubs
+# None of these should be `subdir_TARGET'; those targets are transformed
+# by the implicit rule above into `TARGET' deps.
+glibc-targets	:= lib objects objs others tests lint.out \
+		   echo-headers echo-distinfo stubs
 .PHONY: $(glibc-targets)
 $(glibc-targets):
 

@@ -43,7 +43,5 @@ ifeq ($(subdir), termios)
 sysdep_headers += termio.h
 endif
 
-rtld-installed-name = ld-gnu.so.1
-
 # Don't compile the ctype glue code, since there is no old non-GNU C library.
 inhibit-glue = yes

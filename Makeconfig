@@ -346,8 +346,11 @@ elf-objpfx = $(..)elf/
 endif
 
 ifeq (yes,$(build-shared))
+# The name under which the run-time dynamic linker is installed.
+# We are currently going for the convention that `/lib/ld.so.1'
+# names the SVR4/ELF ABI-compliant dynamic linker.
 ifndef rtld-installed-name
-rtld-installed-name = ld.so
+rtld-installed-name = ld.so.1
 endif
 endif
 
