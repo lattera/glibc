@@ -223,7 +223,8 @@ _dl_reloc_bad_type (struct link_map *map, unsigned int type, int plt)
 
   cp = __stpcpy (msgbuf, msg[plt]);
   *cp++ = DIGIT (type >> 4);
-  *cp = DIGIT (type);
+  *cp++ = DIGIT (type);
+  *cp = '\0';
 
   INTUSE(_dl_signal_error) (0, map->l_name, NULL, msgbuf);
 }
