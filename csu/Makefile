@@ -182,7 +182,11 @@ $(objpfx)version-info.h: $(common-objpfx)config.make $(all-Banner-files)
 		       version=`uname -r`; \
 		     fi; \
 		   fi; \
-		   echo "\"Compiled on a Linux $$version system" \
+		   os=`uname -s 2> /dev/null`; \
+		   if [ -z "$$os" ]; then \
+		     os=Linux; \
+		   fi; \
+		   echo "\"Compiled on a $$os $$version system" \
 		        "on `date +%Y-%m-%d`.\\n\"" ;; \
 	   *) ;; \
 	 esac; \

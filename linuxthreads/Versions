@@ -135,5 +135,8 @@ libpthread {
     pthread_spin_destroy; pthread_spin_init; pthread_spin_lock;
     pthread_spin_trylock; pthread_spin_unlock;
     pthread_getcpuclockid;
+
+    # Extensions.
+    pthread_yield;
   }
 }

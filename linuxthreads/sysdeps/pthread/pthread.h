@@ -272,6 +272,14 @@ extern int pthread_getconcurrency (void) __THROW;
 extern int pthread_setconcurrency (int __level) __THROW;
 #endif
 
+#ifdef __USE_GNU
+/* Yield the processor to another thread or process.
+   This function is similar to the POSIX `sched_yield' function but
+   might be differently implemented in the case of a m-on-n thread
+   implementation.  */
+extern int pthread_yield (void) __THROW;
+#endif
+
 /* Functions for mutex handling.  */
 
 /* Initialize MUTEX using attributes in *MUTEX_ATTR, or use the
