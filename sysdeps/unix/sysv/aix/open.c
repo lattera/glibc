@@ -35,3 +35,4 @@ __open (const char *file, int oflag, ...)
 
   return open (file, oflag, mode);
 }
+strong_alias (__open, __libc_open)
