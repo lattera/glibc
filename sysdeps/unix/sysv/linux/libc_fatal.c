@@ -151,17 +151,18 @@ __libc_message (int do_abort, const char *fmt, ...)
 	  if (n > 2)
 	    {
 #define strnsize(str) str, strlen (str)
-	      write (fd, strnsize ("======= Backtrace: =========\n"));
+#define writestr(str) write_not_cancel (fd, str)
+	      writestr (strnsize ("======= Backtrace: =========\n"));
 	      __backtrace_symbols_fd (addrs + 1, n - 1, fd);
 
-	      write (fd, strnsize ("======= Memory map: ========\n"));
-	      int fd2 = open ("/proc/self/maps", O_RDONLY);
+	      writestr (strnsize ("======= Memory map: ========\n"));
+	      int fd2 = open_not_cancel_2 ("/proc/self/maps", O_RDONLY);
 	      char buf[1024];
 	      ssize_t n2;
-	      while ((n2 = read (fd2, buf, sizeof (buf))) > 0)
-		if (write (fd, buf, n2) != n2)
+	      while ((n2 = read_not_cancel (fd2, buf, sizeof (buf))) > 0)
+		if (write_not_cancel (fd, buf, n2) != n2)
 		  break;
-	      close (fd2);
+	      close_not_cancel_no_status (fd2);
 	    }
 	}
 

@@ -1,3 +1,8 @@
+2005-02-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/libc_fatal.c (__libc_message): Use
+	non-cancelable I/O functions.
+
 2005-02-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/nscd-client.h: Include sys/uio.h.
