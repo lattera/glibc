@@ -170,7 +170,7 @@
 	 __set_errno (- __sys_res);		\
 	 __sys_res = (unsigned long) -1;	\
        }					\
-     __sys_res;					\
+     (long int) __sys_res;			\
    })
 
 #define LOAD_ARGS_c_0()
