@@ -47,9 +47,9 @@ struct hurd_signal_preempter;	/* <hurd/sigpreempt.h> */
 
 struct hurd_sigstate
   {
-    spin_lock_t lock;		/* Locks most of the rest of the structure.  */
+    spin_lock_t critical_section_lock; /* Held if in critical section.  */
 
-    int critical_section;	/* Nonzero if in critical section.  */
+    spin_lock_t lock;		/* Locks most of the rest of the structure.  */
 
     thread_t thread;
     struct hurd_sigstate *next; /* Linked-list of thread sigstates.  */
@@ -159,27 +159,22 @@ _hurd_critical_section_lock (void)
     (void *) __hurd_threadvar_location (_HURD_THREADVAR_SIGSTATE);
   struct hurd_sigstate *ss = *location;
   if (ss == NULL)
-    /* The thread variable is unset; this must be the first time we've
-       asked for it.  In this case, the critical section flag cannot
-       possible already be set.  Look up our sigstate structure the slow
-       way; this locks the sigstate lock.  */
-    ss = *location = _hurd_thread_sigstate (__mach_thread_self ());
-  else
-    __spin_lock (&ss->lock);
-
-  if (ss->critical_section)
     {
-      /* We are already in a critical section, so do nothing.  */
+      /* The thread variable is unset; this must be the first time we've
+	 asked for it.  In this case, the critical section flag cannot
+	 possible already be set.  Look up our sigstate structure the slow
+	 way; this locks the sigstate lock.  */
+      ss = *location = _hurd_thread_sigstate (__mach_thread_self ());
       __spin_unlock (&ss->lock);
-      return NULL;
     }
 
-  /* Set the critical section flag so no signal handler will run.  */
-  ss->critical_section = 1;
-  __spin_unlock (&ss->lock);
+  if (! __spin_try_lock (&ss->critical_section_lock))
+    /* We are already in a critical section, so do nothing.  */
+    return NULL;
 
-  /* Return our sigstate pointer; this will be passed to
-     _hurd_critical_section_unlock to clear the critical section flag. */
+  /* With the critical section lock held no signal handler will run.
+     Return our sigstate pointer; this will be passed to
+     _hurd_critical_section_unlock to unlock it.  */
   return ss;
 }
 
@@ -191,19 +186,18 @@ _hurd_critical_section_unlock (void *our_lock)
     return;
   else
     {
-      /* It was us who acquired the critical section lock.  Clear the
-	 critical section flag.  */
+      /* It was us who acquired the critical section lock.  Unlock it.  */
       struct hurd_sigstate *ss = our_lock;
       sigset_t pending;
       __spin_lock (&ss->lock);
-      ss->critical_section = 0;
+      __spin_unlock (&ss->critical_section_lock);
       pending = ss->pending & ~ss->blocked;
       __spin_unlock (&ss->lock);
       if (pending)
 	/* There are unblocked signals pending, which weren't
 	   delivered because we were in the critical section.
 	   Tell the signal thread to deliver them now.  */
-	__msg_sig_post (_hurd_msgport, 0, __mach_task_self ());
+	__msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
     }
 }
 

@@ -56,7 +56,7 @@ _hurdsig_longjmp_from_handler (void *data, jmp_buf env, int val)
   __spin_lock (&ss->lock);
   /* We should only ever be called from _longjmp_unwind (in jmp-unwind.c),
      which calls us inside a critical section.  */
-  assert (ss->critical_section);
+  assert (__spin_lock_locked (&ss->critical_section_lock));
   /* Are we on the alternate signal stack now?  */
   onstack = (ss->sigaltstack.ss_flags & SA_ONSTACK);
   __spin_unlock (&ss->lock);
@@ -122,7 +122,7 @@ _hurdsig_longjmp_from_handler (void *data, jmp_buf env, int val)
 	 having run all the unwind forms back to ENV's frame, but our SP is
 	 still inside those unwound frames.  */
       __spin_lock (&ss->lock);
-      ss->critical_section = 0;
+      __spin_unlock (&ss->critical_section_lock);
       ss->blocked = ~(sigset_t) 0 & ~_SIG_CANT_MASK;
       __spin_unlock (&ss->lock);
 

@@ -22,7 +22,7 @@ Boston, MA 02111-1307, USA.  */
 
 /* Pause execution for a number of nanoseconds.  */
 int
-nanosleep (const struct timespec *requested_time, struct time_spec *remaining)
+nanosleep (const struct timespec *requested_time, struct timespec *remaining)
 {
   errno = ENOSYS;
   return -1;

@@ -42,7 +42,7 @@ _hurd_sig_post (pid_t pid, int sig, mach_port_t arg_refport)
 			      (refport = arg_refport, 0), 0,
 			      /* If no message port we cannot send signals.  */
 			      msgport == MACH_PORT_NULL ? EPERM :
-			      __msg_sig_post (msgport, sig, refport));
+			      __msg_sig_post (msgport, sig, 0, refport));
       if (! err)
 	delivered = 1;
     }

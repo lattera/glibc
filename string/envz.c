@@ -29,13 +29,13 @@
 /* Returns a pointer to the entry in ENVZ for NAME, or 0 if there is none.
    If NAME contains the separator character, only the portion before it is
    used in the comparison.  */
-const char *
+char *
 envz_entry (const char *envz, size_t envz_len, const char *name)
 {
   while (envz_len)
     {
-      char *p = name;
-      char *entry = envz;	/* Start of this entry. */
+      const char *p = name;
+      const char *entry = envz;	/* Start of this entry. */
 
       /* See how far NAME and ENTRY match.  */
       while (envz_len && *p == *envz && *p && *p != SEP)
@@ -43,7 +43,7 @@ envz_entry (const char *envz, size_t envz_len, const char *name)
 
       if ((*envz == '\0' || *envz == SEP) && (*p == '\0' || *p == SEP))
 	/* Bingo! */
-	return entry;
+	return (char *) entry;
 
       /* No match, skip to the next entry.  */
       while (envz_len && *envz)
@@ -60,7 +60,7 @@ envz_entry (const char *envz, size_t envz_len, const char *name)
 const char *
 envz_get (const char *envz, size_t envz_len, const char *name)
 {
-  char *entry = envz_entry (envz, envz_len, name);
+  const char *entry = envz_entry (envz, envz_len, name);
   if (entry)
     {
       while (*entry && *entry != SEP)
@@ -75,7 +75,7 @@ envz_get (const char *envz, size_t envz_len, const char *name)
 
 /* Remove the entry for NAME from ENVZ & ENVZ_LEN, if any.  */
 void
-envz_remove (char **envz, size_t *envz_len, char *name)
+envz_remove (char **envz, size_t *envz_len, const char *name)
 {
   char *entry = envz_entry (*envz, *envz_len, name);
   if (entry)

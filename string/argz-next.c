@@ -28,7 +28,7 @@ __argz_next (char *argz, size_t argz_len, const char *entry)
       if (entry < argz + argz_len)
 	entry = strchr (entry, '\0') + 1;
 
-      return entry >= argz + argz_len ? NULL : entry;
+      return entry >= argz + argz_len ? NULL : (char *) entry;
     }
   else
     if (argz_len > 0)

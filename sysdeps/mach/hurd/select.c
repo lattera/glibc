@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/fd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 /* All user select types.  */
 #define SELECT_ALL (SELECT_READ | SELECT_WRITE | SELECT_URG)
@@ -41,12 +42,8 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
       fd_set *exceptfds AND struct timeval *timeout)
 {
   int i;
-  mach_port_t port;
+  mach_port_t portset;
   int got;
-  int *types;
-  struct hurd_userlink *ulink;
-  mach_port_t *ports;
-  struct hurd_fd **cells;
   error_t err;
   fd_set rfds, wfds, xfds;
   int firstfd, lastfd;
@@ -54,6 +51,14 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 			   (timeout->tv_sec * 1000 +
 			    timeout->tv_usec / 1000) :
 			   0);
+  struct
+    {
+      struct hurd_userlink ulink;
+      struct hurd_fd *cell;
+      mach_port_t io_port;
+      int type;
+      mach_port_t reply_port;
+    } d[nfds];
 
   /* Use local copies so we can't crash from user bogosity.  */
   if (readfds == NULL)
@@ -76,10 +81,6 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
     nfds = _hurd_dtablesize;
 
   /* Collect the ports for interesting FDs.  */
-  cells = __alloca (nfds * sizeof (*cells));
-  ports = __alloca (nfds * sizeof (*ports));
-  types = __alloca (nfds * sizeof (*types));
-  ulink = __alloca (nfds * sizeof (*ulink));
   firstfd = lastfd = -1;
   for (i = 0; i < nfds; ++i)
     {
@@ -90,16 +91,16 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	type |= SELECT_WRITE;
       if (exceptfds != NULL && FD_ISSET (i, &xfds))
 	type |= SELECT_URG;
-      types[i] = type;
+      d[i].type = type;
       if (type)
 	{
-	  cells[i] = _hurd_dtable[i];
-	  ports[i] = _hurd_port_get (&cells[i]->port, &ulink[i]);
-	  if (ports[i] == MACH_PORT_NULL)
+	  d[i].cell = _hurd_dtable[i];
+	  d[i].io_port = _hurd_port_get (&d[i].cell->port, &d[i].ulink);
+	  if (d[i].io_port == MACH_PORT_NULL)
 	    {
 	      /* If one descriptor is bogus, we fail completely.  */
 	      while (i-- > 0)
-		_hurd_port_free (&cells[i]->port, &ulink[i], ports[i]);
+		_hurd_port_free (&d[i].cell->port, &d[i].ulink, d[i].io_port);
 	      errno = EBADF;
 	      break;
 	    }
@@ -115,58 +116,63 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
   if (i < nfds)
     return -1;
 
-  /* Get a port to receive the io_select_reply messages on.  */
-  port = __mach_reply_port ();
-
   /* Send them all io_select request messages.  */
-  got = 0;
   err = 0;
+  got = 0;
+  portset = MACH_PORT_NULL;
   for (i = firstfd; i <= lastfd; ++i)
-    if (types[i])
+    if (d[i].type)
       {
-	if (!err)
+	int type = d[i].type;
+	d[i].reply_port = __mach_reply_port ();
+	err = __io_select (d[i].io_port, d[i].reply_port,
+			   /* Poll for each but the last.  */
+			   (i == lastfd && got == 0) ? to : 0,
+			   &type);
+	switch (err)
 	  {
-	    int tag = i;
-	    int type = types[i];
-	    err = __io_select (ports[i], port,
-			       /* Poll for each but the last.  */
-			       (i == lastfd && got == 0) ? to : 0,
-			       &type, &tag);
-	    switch (err)
+	  case MACH_RCV_TIMED_OUT:
+	    /* No immediate response.  This is normal.  */
+	    err = 0;
+	    if (got == 0)
 	      {
-	      case MACH_RCV_TIMED_OUT:
-		/* No immediate response.  This is normal.  */
-		err = 0;
-		break;
-
-	      case 0:
-		/* We got an answer.  This is not necessarily the answer to
-                   the query we sent just now.  It may correspond to any
-                   prior query which timed out before its answer arrived.  */
-		if (tag < 0 || tag > i || (type & SELECT_ALL) == 0)
-		  /* This is not a proper answer to any query we have yet
-                     made.  */
-		  err = EGRATUITOUS;
-		else
-		  {
-		    /* Some port is ready.  TAG tells us which.  */
-		    types[tag] &= type;
-		    types[tag] |= SELECT_RETURNED;
-		    ++got;
-		  }
-		break;
-
-	      default:
-		/* Any other error kills us.
-		   But we must continue to loop to free the ports.  */
-		break;
+		/* We will wait again for a reply later.  */
+		if (portset == MACH_PORT_NULL)
+		  /* Create the portset to receive all the replies on.  */
+		  err = __mach_port_allocate (__mach_task_self (),
+					      MACH_PORT_RIGHT_PORT_SET,
+					      &portset);
+		if (! err)
+		  /* Put this reply port in the port set.  */
+		  __mach_port_move_member (__mach_task_self (),
+					   d[i].reply_port, portset);
 	      }
+	    break;
+
+	  default:
+	    /* No other error should happen.  Callers of select don't
+	       expect to see errors, so we simulate readiness of the erring
+	       object and the next call hopefully will get the error again.  */
+	    type = SELECT_ALL;
+	    /* FALLTHROUGH */
+
+	  case 0:
+	    /* We got an answer.  */
+	    if ((type & SELECT_ALL) == 0)
+	      /* Bogus answer; treat like an error, as a fake positive.  */
+	      type = SELECT_ALL;
+
+	    /* This port is already ready already.  */
+	    d[i].type &= type;
+	    d[i].type |= SELECT_RETURNED;
+	    ++got;
+	    break;
 	  }
-	_hurd_port_free (&cells[i]->port, &ulink[i], ports[i]);
+	_hurd_port_free (&d[i].cell->port, &d[i].ulink, d[i].io_port);
       }
 
   /* Now wait for reply messages.  */
-  if (!err && got == 0 && port != MACH_PORT_NULL)
+  if (!err && got == 0)
     {
       /* Now wait for io_select_reply messages on PORT,
 	 timing out as appropriate.  */
@@ -187,15 +193,13 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	      error_t err;
 	      mach_msg_type_t result_type;
 	      int result;
-	      mach_msg_type_t tag_type;
-	      int tag;
 	    } success;
 	} msg;
       mach_msg_option_t options = (timeout == NULL ? 0 : MACH_RCV_TIMEOUT);
       error_t msgerr;
       while ((msgerr = __mach_msg (&msg.head,
 				   MACH_RCV_MSG | options,
-				   0, sizeof msg, port, to,
+				   0, sizeof msg, portset, to,
 				   MACH_PORT_NULL)) == MACH_MSG_SUCCESS)
 	{
 	  /* We got a message.  Decode it.  */
@@ -209,34 +213,45 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	    {
 	      /* This is a properly formatted message so far.
 		 See if it is a success or a failure.  */
-	      if (msg.error.err)
+	      if (msg.error.err == EINTR &&
+		  msg.head.msgh_size == sizeof msg.error)
 		{
-		  err = msg.error.err;
-		  if (msg.head.msgh_size != sizeof msg.error)
-		    __mach_msg_destroy (&msg);
+		  /* EINTR response; poll for further responses
+		     and then return quickly.  */
+		  err = EINTR;
+		  goto poll;
 		}
-	      else if (msg.head.msgh_size != sizeof msg.success ||
-		       *(int *) &msg.success.tag_type != *(int *) &inttype ||
-		       *(int *) &msg.success.result_type != *(int *) &inttype)
-		__mach_msg_destroy (&msg);
-	      else if ((msg.success.result & SELECT_ALL) == 0 ||
-		       msg.success.tag < firstfd || msg.success.tag > lastfd)
-		err = EGRATUITOUS;
-	      else
+	      if (msg.error.err ||
+		  msg.head.msgh_size != sizeof msg.success ||
+		  *(int *) &msg.success.result_type != *(int *) &inttype ||
+		  (msg.success.result & SELECT_ALL) == 0)
 		{
-		  /* This is a winning io_select_reply message!
-		     Record the readiness it indicates and send a reply.  */
-		  types[msg.success.tag] &= msg.success.result;
-		  types[msg.success.tag] |= SELECT_RETURNED;
-		  ++got;
+		  /* Error or bogus reply.  Simulate readiness.  */
+		  __mach_msg_destroy (&msg);
+		  msg.success.result = SELECT_ALL;
 		}
+
+	      /* Look up the respondant's reply port and record its
+                 readiness.  */
+	      {
+		int had = got;
+		for (i = firstfd; i <= lastfd; ++i)
+		  if (d[i].type && d[i].reply_port == msg.head.msgh_local_port)
+		    {
+		      d[i].type &= msg.success.result;
+		      d[i].type |= SELECT_RETURNED;
+		      ++got;
+		    }
+		assert (got > had);
+	      }
 	    }
 
 	  if (msg.head.msgh_remote_port != MACH_PORT_NULL)
 	    __mach_port_deallocate (__mach_task_self (),
 				    msg.head.msgh_remote_port);
 
-	  if (got || err == EINTR)
+	  if (got)
+	  poll:
 	    {
 	      /* Poll for another message.  */
 	      to = 0;
@@ -252,19 +267,17 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	   message waiting.  */
 	err = 0;
 
-      if (got && err == EINTR)
-	/* Some calls were interrupted, but at least one descriptor
-	   is known to be ready now, so we will return success.  */
+      if (got)
+	/* At least one descriptor is known to be ready now, so we will
+	   return success.  */
 	err = 0;
     }
 
-  if (port != MACH_PORT_NULL)
-    /* We must destroy the port if we made some select requests
-       that might send notification on that port after we no longer care.
-       If the port were reused, that notification could confuse the next
-       select call to use the port.  The notification might be valid,
-       but the descriptor may have changed to a different server.  */
-    __mach_port_destroy (__mach_task_self (), port);
+  for (i = firstfd; i <= lastfd; ++i)
+    if (d[i].type)
+      __mach_port_destroy (__mach_task_self (), d[i].reply_port);
+  if (portset != MACH_PORT_NULL)
+    __mach_port_destroy (__mach_task_self (), portset);
 
   if (err)
     return __hurd_fail (err);
@@ -277,7 +290,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
      ones are initially set.  */
   for (i = firstfd; i <= lastfd; ++i)
     {
-      int type = types[i];
+      int type = d[i].type;
 
       if ((type & SELECT_RETURNED) == 0)
 	type = 0;

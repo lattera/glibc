@@ -58,7 +58,7 @@ __sigreturn (struct sigcontext *scp)
 	 arrange to have us called over again in the new reality.  */
       ss->context = scp;
       __spin_unlock (&ss->lock);
-      __msg_sig_post (_hurd_msgport, 0, __mach_task_self ());
+      __msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
       /* If a pending signal was handled, sig_post never returned.
 	 If it did return, the pending signal didn't run a handler;
 	 proceed as usual.  */

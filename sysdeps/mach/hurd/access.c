@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +44,6 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 	   err = __io_reauthenticate (port, ref, MACH_MSG_TYPE_MAKE_SEND);
 	   if (!err)
 	     err = __auth_user_authenticate (_hurd_id.rid_auth,
-					     port,
 					     ref, MACH_MSG_TYPE_MAKE_SEND,
 					     result);
 	   err;
@@ -106,7 +105,7 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 					    &_hurd_id.rid_auth)))
 	goto lose;
     }
-  
+
   if (!err)
     /* Look up the file name using the modified init ports.  */
     err = __hurd_file_name_lookup (&init_port, &__getdport,

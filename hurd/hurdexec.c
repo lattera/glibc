@@ -25,6 +25,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/fd.h>
 #include <hurd/signal.h>
+#include <assert.h>
 #include <argz.h>
 
 /* Overlay TASK, executing FILE with arguments ARGV and environment ENVP.
@@ -35,7 +36,7 @@ _hurd_exec (task_t task, file_t file,
 	    char *const argv[], char *const envp[])
 {
   error_t err;
-  char *args, *env, *ap;
+  char *args, *env;
   size_t argslen, envlen;
   int ints[INIT_INT_MAX];
   mach_port_t ports[_hurd_nports];
@@ -44,10 +45,10 @@ _hurd_exec (task_t task, file_t file,
   unsigned int dtablesize, i;
   struct hurd_port **dtable_cells;
   struct hurd_userlink *ulink_dtable;
-  char *const *p;
   struct hurd_sigstate *ss;
   mach_port_t *please_dealloc, *pdp;
 
+  /* XXX needs to be hurdmalloc XXX */
   if (err = __argz_create (argv, &args, &argslen))
     return err;
   if (err = __argz_create (envp, &env, &envlen))
@@ -89,6 +90,10 @@ _hurd_exec (task_t task, file_t file,
       }
 
   ss = _hurd_self_sigstate ();
+
+  assert (! __spin_lock_locked (&ss->critical_section_lock));
+  __spin_lock (&ss->critical_section_lock);
+
   __spin_lock (&ss->lock);
   ints[INIT_SIGMASK] = ss->blocked;
   ints[INIT_SIGPENDING] = ss->pending;
@@ -105,7 +110,6 @@ _hurd_exec (task_t task, file_t file,
      critical section flag avoids anything we call trying to acquire the
      sigstate lock.  */
 
-  ss->critical_section = 1;
   __spin_unlock (&ss->lock);
 
   /* Pack up the descriptor table to give the new program.  */
@@ -192,8 +196,7 @@ _hurd_exec (task_t task, file_t file,
 	  *pdp++ = dtable[i];
       }
 
-    err = __file_exec (file, task,
-		       _hurd_exec_flags & EXEC_INHERITED,
+    err = __file_exec (file, task, 0,
 		       args, argslen, env, envlen,
 		       dtable, MACH_MSG_TYPE_COPY_SEND, dtablesize,
 		       ports, MACH_MSG_TYPE_COPY_SEND, _hurd_nports,
@@ -219,15 +222,7 @@ _hurd_exec (task_t task, file_t file,
   __mutex_unlock (&_hurd_dtable_lock);
 
   /* Safe to let signals happen now.  */
-  {
-    sigset_t pending;
-    __spin_lock (&ss->lock);
-    ss->critical_section = 0;
-    pending = ss->pending & ~ss->blocked;
-    __spin_unlock (&ss->lock);
-    if (pending)
-      __msg_sig_post (_hurd_msgport, 0, __mach_task_self ());
-  }
+  _hurd_critical_section_unlock (ss);
 
  outargs:
   free (args);

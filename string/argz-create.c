@@ -26,11 +26,12 @@
    ARGZ, and the total length in LEN.  If a memory allocation error occurs,
    ENOMEM is returned, otherwise 0.  */
 error_t
-__argz_create (char **argv, char **argz, size_t *len)
+__argz_create (char *const argv[], char **argz, size_t *len)
 {
   int argc;
   size_t tlen = 0;
-  char *p, **ap;
+  char *const *ap;
+  char *p;
 
   for (argc = 0; argv[argc] != NULL; ++argc)
     tlen += strlen (argv[argc]);

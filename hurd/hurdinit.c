@@ -30,6 +30,7 @@ int _hurd_exec_flags;
 struct hurd_port *_hurd_ports;
 unsigned int _hurd_nports;
 mode_t _hurd_umask;
+sigset_t _hurdsig_traced;
 
 error_t
 _hurd_ports_use (int which, error_t (*operate) (mach_port_t))
@@ -77,6 +78,9 @@ _hurd_init (int flags, char **argv,
     _hurd_umask = intarray[INIT_UMASK] & 0777;
   else
     _hurd_umask = CMASK;
+
+  if (intarraysize > INIT_TRACEMASK)
+    _hurdsig_traced = intarray[INIT_TRACEMASK];
 
   /* All done with init ints and ports.  */
   __vm_deallocate (__mach_task_self (),
@@ -147,11 +151,11 @@ _hurd_proc_init (char **argv)
      here, like _hurd_pid, are already initialized.  */
   RUN_HOOK (_hurd_proc_subinit, ());
 
-  if (_hurd_exec_flags & EXEC_TRACED)
+  if (_hurdsig_traced)
     /* This process is "traced", meaning it should stop on signals or exec.
        We are all set up now to handle signals.  Stop ourselves, to inform
        our parent (presumably a debugger) that the exec has completed.  */
-    __msg_sig_post (_hurd_msgport, SIGTRAP, __mach_task_self ());
+    __msg_sig_post (_hurd_msgport, SIGTRAP, 0, __mach_task_self ());
 }
 
 /* Called when we get a message telling us to change our proc server port.  */

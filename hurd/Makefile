@@ -42,6 +42,7 @@ server-interfaces	:= hurd/msg
 
 routines = hurdstartup hurdinit \
 	   hurdid hurdlookup hurdpid hurdrlimit hurdprio hurdexec \
+	   path-lookup \
 	   setauth \
 	   pid2task task2pid \
 	   getuids setuids getumask fchroot \

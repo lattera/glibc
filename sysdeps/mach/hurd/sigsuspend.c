@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -57,7 +57,7 @@ DEFUN(sigsuspend, (set), CONST sigset_t *set)
 
   if (pending)
     /* Tell the signal thread to check for pending signals.  */
-    __msg_sig_post (_hurd_msgport, 0, __mach_task_self ());
+    __msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
 
   /* Wait for the signal thread's message.  */
   __mach_msg (&msg, MACH_RCV_MSG, 0, sizeof (msg), wait,
@@ -71,8 +71,8 @@ DEFUN(sigsuspend, (set), CONST sigset_t *set)
 
   if (pending)
     /* Tell the signal thread to check for pending signals.  */
-    __msg_sig_post (_hurd_msgport, 0, __mach_task_self ());
-    
+    __msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
+
   /* We've been interrupted!  And a good thing, too.
      Otherwise we'd never return.
      That's right; this function always returns an error.  */

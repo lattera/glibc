@@ -564,7 +564,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
     {
       /* No preemption.  Do normal handling.  */
 
-      if (!untraced && (_hurd_exec_flags & EXEC_TRACED))
+      if (!untraced && __sigismember (&_hurdsig_traced, signo))
 	{
 	  /* We are being traced.  Stop to tell the debugger of the signal.  */
 	  if (_hurd_stopped)
@@ -785,7 +785,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	    /* The thread was in sigreturn, not in any interruptible RPC.  */
 	    wait_for_reply = 0;
 
-	    assert (! ss->critical_section);
+	    assert (! __spin_lock_locked (&ss->critical_section_lock));
 	  }
 	else
 	  {
@@ -795,7 +795,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 				      &reply)
 		 != MACH_PORT_NULL);
 
-	    if (ss->critical_section)
+	    if (__spin_lock_locked (&ss->critical_section_lock))
 	      {
 		/* The thread is in a critical section.  Mark the signal as
 		   pending.  When it finishes the critical section, it will
@@ -883,7 +883,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
        thread finishes its critical section.  */
     inline int signals_pending (void)
       {
-	if (_hurd_stopped || ss->critical_section)
+	if (_hurd_stopped || __spin_lock_locked (&ss->critical_section_lock))
 	  return 0;
 	return pending = ss->pending & ~ss->blocked;
       }
@@ -1057,7 +1057,7 @@ signal_allowed (int signo, mach_port_t refport)
 kern_return_t
 _S_msg_sig_post (mach_port_t me,
 		 mach_port_t reply_port, mach_msg_type_name_t reply_port_type,
-		 int signo,
+		 int signo, natural_t sigcode,
 		 mach_port_t refport)
 {
   error_t err;
@@ -1068,7 +1068,7 @@ _S_msg_sig_post (mach_port_t me,
   /* Post the signal to the designated signal-receiving thread.  This will
      reply when the signal can be considered delivered.  */
   _hurd_internal_post_signal (_hurd_thread_sigstate (_hurd_sigthread),
-			      signo, 0, 0, reply_port, reply_port_type,
+			      signo, sigcode, 0, reply_port, reply_port_type,
 			      0); /* Stop if traced.  */
 
   return MIG_NO_REPLY;		/* Already replied.  */
@@ -1081,7 +1081,7 @@ kern_return_t
 _S_msg_sig_post_untraced (mach_port_t me,
 			  mach_port_t reply_port,
 			  mach_msg_type_name_t reply_port_type,
-			  int signo,
+			  int signo, natural_t sigcode,
 			  mach_port_t refport)
 {
   error_t err;
@@ -1092,7 +1092,7 @@ _S_msg_sig_post_untraced (mach_port_t me,
   /* Post the signal to the designated signal-receiving thread.  This will
      reply when the signal can be considered delivered.  */
   _hurd_internal_post_signal (_hurd_thread_sigstate (_hurd_sigthread),
-			      signo, 0, 0, reply_port, reply_port_type,
+			      signo, sigcode, 0, reply_port, reply_port_type,
 			      1); /* Untraced flag. */
 
   return MIG_NO_REPLY;		/* Already replied.  */
@@ -1170,7 +1170,7 @@ reauth_proc (mach_port_t new)
   if (! HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
 		       __proc_reauthenticate (port, ref,
 					      MACH_MSG_TYPE_MAKE_SEND) ||
-		       __auth_user_authenticate (new, port, ref,
+		       __auth_user_authenticate (new, ref,
 						 MACH_MSG_TYPE_MAKE_SEND,
 						 &ignore))
       && ignore != MACH_PORT_NULL)

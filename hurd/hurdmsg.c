@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <limits.h>
 #include <string.h>
+#include <argz.h>
 
 
 #define AUTHCHECK \
@@ -377,54 +378,12 @@ _S_msg_set_environment (mach_port_t msgport, mach_port_t auth,
 
   AUTHCHECK;
 
-  envc = _hurd_split_args (data, datalen, NULL);
+  envc = __argz_count (data, datalen);
   envp = malloc ((envc + 1) * sizeof (char *));
   if (envp == NULL)
     return errno;
-  _hurd_split_args (data, datalen, envp);
+  __argz_extract (data, datalen, envp);
   __environ = envp;		/* XXX cooperate with loadenv et al */
-  return 0;
-}
-
-/* Get and frob the exec flags.  */
-
-kern_return_t
-_S_msg_get_exec_flags (mach_port_t process, mach_port_t auth,
-		       int *flags)
-{
-  AUTHCHECK;
-
-  *flags = _hurd_exec_flags;
-  return 0;
-}
-
-kern_return_t
-_S_msg_set_all_exec_flags (mach_port_t process, mach_port_t auth,
-			   int flags)
-{
-  AUTHCHECK;
-
-  _hurd_exec_flags = flags;
-  return 0;
-}
-
-kern_return_t
-_S_msg_set_some_exec_flags (mach_port_t process, mach_port_t auth,
-			    int flags)
-{
-  AUTHCHECK;
-
-  _hurd_exec_flags |= flags;
-  return 0;
-}
-
-kern_return_t
-_S_msg_clear_some_exec_flags (mach_port_t process, mach_port_t auth,
-			      int flags)
-{
-  AUTHCHECK;
-
-  _hurd_exec_flags &= ~flags;
   return 0;
 }
 
@@ -444,8 +403,4 @@ _S_msg_set_dtable (mach_port_t process,
 		   mach_port_t refport,
 		   portarray_t dtable,
 		   mach_msg_type_number_t dtableCnt)
-{ return EOPNOTSUPP; }
-
-kern_return_t
-_S_msg_startup_dosync (mach_port_t process)
 { return EOPNOTSUPP; }

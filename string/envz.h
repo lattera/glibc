@@ -28,8 +28,8 @@
 #include <argz.h>
 
 /* Returns a pointer to the entry in ENVZ for NAME, or 0 if there is none.  */
-const char *envz_entry __P ((__const char *__envz, size_t __envz_len,
-			     __const char *__name));
+char *envz_entry __P ((__const char *__envz, size_t __envz_len,
+		       __const char *__name));
 
 /* Returns a pointer to the value portion of the entry in ENVZ for NAME, or 0
    if there is none.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -47,6 +47,7 @@ DEFUN(__sigaction, (sig, act, oact),
 
   ss = _hurd_self_sigstate ();
 
+  __spin_lock (&ss->critical_section_lock);
   __spin_lock (&ss->lock);
   old = ss->actions[sig];
   if (act != NULL)
@@ -55,7 +56,6 @@ DEFUN(__sigaction, (sig, act, oact),
   if (act != NULL && sig == SIGCHLD &&
       (a.sa_flags & SA_NOCLDSTOP) != (old.sa_flags & SA_NOCLDSTOP))
     {
-      ss->critical_section = 1;
       __spin_unlock (&ss->lock);
 
       /* Inform the proc server whether or not it should send us SIGCHLD for
@@ -65,16 +65,16 @@ DEFUN(__sigaction, (sig, act, oact),
 		 __proc_mod_stopchild (port, !(a.sa_flags & SA_NOCLDSTOP)));
 
       __spin_lock (&ss->lock);
-      ss->critical_section = 0;
       pending = ss->pending & ~ss->blocked;
     }
   else
     pending = 0;
 
   __spin_unlock (&ss->lock);
+  __spin_unlock (&ss->critical_section_lock);
 
   if (pending)
-    __msg_sig_post (_hurd_msgport, 0, __mach_task_self ());
+    __msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
 
   if (oact != NULL)
     *oact = old;

@@ -100,7 +100,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
       mach_port_t ref = __mach_reply_port ();
       error_t reauth (auth_t auth)
 	{
-	  return __auth_user_authenticate (auth, unauth, ref,
+	  return __auth_user_authenticate (auth, ref,
 					   MACH_MSG_TYPE_MAKE_SEND,
 					   result);
 	}

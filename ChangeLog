@@ -1,4 +1,112 @@
+Sat May  4 05:44:25 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* hurd/hurd-raise.c (_hurd_raise_signal): Pass sigcode in msg_sig_post
+	rpc.
+
+	* hurd/hurdmsg.c (_S_msg_set_environment): Use argz.h functions
+	instead of _hurd_split_args.
+	(_S_msg_*_exec_flags): Functions removed.
+	(_S_msg_startup_dosync): Stub removed.
+
+Sat May  4 02:11:55 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/ptrace.c: Set _hurdsig_traced instead of
+	EXEC_TRACED bit in _hurd_exec_flags.
+	Pass sigcode arg in msg_sig_post_untraced rpc.
+
+	* sysdeps/mach/hurd/access.c: Don't pass io port in
+	auth_user_authenticate rpc.
+
+	* posix/sched.h: Fix typos.
+
+	* sysdeps/mach/hurd/fork.c: Use new critical section lock.
+	Clear _hurdsig_traced instead of EXEC_TRACED.
+
+	* sysdeps/stub/nanosleep.c (nanosleep): Fix typo.
+
+	* wcsmbs/wcstol.c: Find strtol.c in ../stdlib.
+	* wcsmbs/wcstof.c: Find strtod.c in ../stdlib.
+	* wcsmbs/wcstod.c: Likewise.
+	* wcsmbs/wcstold.c: Likewise.
+
+	* wcsmbs/wcwidth.h: Find cname-lookup.h in ../wctype.
+
+	* string/envz.c (envz_entry): Use const.
+	(envz_get, envz_remove): Likewise.
+	(envz_entry): Return char *, not const char *.
+
+	* string/envz.h: Fix decl.
+
+	* string/argz-create.c: Use const in prototype.
+	* string/argz-next.c: Likewise.
+
 Fri May  3 13:32:08 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/sigprocmask.c: Pass sigcode arg to msg_sig_post.
+	* sysdeps/mach/hurd/i386/sigreturn.c: Likewise.
+	* sysdeps/mach/hurd/sigsuspend.c: Likewise.
+	* sysdeps/mach/hurd/kill.c: Likewise.
+
+	* hurd/hurdexec.c (_hurd_exec): Use new critical section lock.
+	* hurd/catch-exc.c (_S_catch_exception_raise): Likewise.
+	* hurd/sigunwind.c (_hurdsig_longjmp_from_handler): Likewise.
+	* hurd/thread-cancel.c (hurd_thread_cancel, hurd_check_cancel):
+	Likewise.
+	* sysdeps/mach/hurd/jmp-unwind.c (_longjmp_unwind): Likewise.
+	* sysdeps/mach/hurd/sigaction.c: Likewise.
+
+	* sysdeps/mach/hurd/errnos.awk: Don't use ARGV in comment; it can
+	change meaninglessly.
+
+	* hurd/hurd/signal.h (struct hurd_sigstate): Replace critical section
+ 	flag with a spin lock.
+	(_hurd_critical_section_lock): Use spin_try_lock on that to see if we
+ 	get it.  No need to take SS->lock at all.
+	(_hurd_critical_section_unlock): Unlock SS->critical_section_lock
+	instead of clearing the old flag member.
+	* hurd/hurdsig.c (_hurd_internal_post_signal): Use spin_lock_locked to
+	test the critical section state.
+
+	* hurd/hurdinit.c (_hurd_init): Set _hurdsig_traced from the intarray.
+
+	* hurd/hurdkill.c (_hurd_sig_post): Pass 0 sigcode in msg_sig_post.
+
+	* hurd/hurdsig.c (_hurd_internal_post_signal): Test _hurdsig_traced
+ 	instead of testing (_hurd_exec_flags & EXEC_TRACED).
+	(_S_msg_sig_post): Take sigcode arg and pass it through.
+	(_S_msg_sig_post_untraced): Likewise.
+	(reauth_proc): Don't pass proc port in auth_user_authenticate.
+
+	* hurd/setauth.c (_hurd_setauth): Don't pass object ports in
+	auth_user_authenticate RPCs, just the one-off rendezvous port.
+	* hurd/dtable.c (reauth_dtable): Likewise.
+	* hurd/hurdlookup.c (__hurd_file_name_lookup_retry): Likewise.
+
+	* hurd/hurdexec.c (_hurd_exec): Pass 0 flags to file_exec.
+	Pass sigcode arg to msg_sig_post.
+
+	* string/argz.h (argz_create): Use const in prototype.
+
+	* hurd/hurdinit.c (_hurd_proc_init): Test _hurdsig_traced instead of
+	testing (_hurd_exec_flags & EXEC_TRACED).
+	Pass sigcode arg to msg_sig_post.
+
+	* hurd/hurd.h: Declare _hurdsig_traced.
+
+	* string/argz.h (__argz_next): Cast ENTRY before returning it.
+
+	* hurd/hurd/signal.h (_hurd_critical_section_unlock): Pass sigcode arg
+	to msg_sig_post.
+
+	* hurd/path-lookup.c: New file.
+	* hurd/Makefile (routines): Add path-lookup.
+	* hurd/hurd/lookup.h: Declare file_name_path_scan,
+	hurd_file_name_path_lookup.
+	* hurd/hurd.h: Declare file_name_path_lookup.
+
+	* sysdeps/mach/hurd/select.c: The io_select rpc no longer has a TAG_ID
+	argument.  Instead, use a separate reply port for each RPC and put them
+	all in a port set to wait for slow replies.
 
 	* intl/Makefile (CPPFLAGS): Change $(nlsdir) to $(i18ndir) in
 	LOCALE_ALIAS_PATH.

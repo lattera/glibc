@@ -76,6 +76,7 @@ extern int _hurd_exec_flags;	/* Flags word passed in exec_startup.  */
 extern struct hurd_port *_hurd_ports;
 extern unsigned int _hurd_nports;
 extern volatile mode_t _hurd_umask;
+extern sigset_t _hurdsig_traced;
 
 /* Shorthand macro for internal library code referencing _hurd_ports (see
    <hurd/port.h>).  */
@@ -181,6 +182,21 @@ extern file_t __file_name_lookup_under (file_t startdir, const char *file,
 					int flags, mode_t mode);
 extern file_t file_name_lookup_under (file_t startdir, const char *file,
 				      int flags, mode_t mode);
+
+
+/* Lookup FILE_NAME and return the node opened with FLAGS & MODE
+   (see hurd_file_name_lookup for details), but a simple file name (without
+   any directory prefixes) will be consecutively prefixed with the pathnames
+   in the `:' separated list PATH until one succeeds in a successful lookup.
+   If none succeed, then the first error that wasn't ENOENT is returned, or
+   ENOENT if no other errors were returned.  If PREFIXED_NAME is non-NULL,
+   then if the result is looked up directly, *PREFIXED_NAME is set to NULL, and
+   if it is looked up using a prefix from PATH, *PREFIXED_NAME is set to
+   malloc'd storage containing the prefixed name.  */
+extern file_t file_name_path_lookup (const char *file_name, const char *path,
+				     int flags, mode_t mode,
+				     char **prefixed_name);
+
 
 
 /* Open a file descriptor on a port.  FLAGS are as for `open'; flags

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -44,5 +44,5 @@ _hurd_raise_signal (struct hurd_sigstate *ss,
 
   /* Send a message to the signal thread so it
      will wake up and check for pending signals.  */
-  __msg_sig_post (_hurd_msgport, 0, __mach_task_self ());
+  __msg_sig_post (_hurd_msgport, signo, sigcode, __mach_task_self ());
 }

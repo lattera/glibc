@@ -61,9 +61,7 @@ __fork (void)
   struct hurd_sigstate *volatile ss;
 
   ss = _hurd_self_sigstate ();
-  __spin_lock (&ss->lock);
-  ss->critical_section = 1;
-  __spin_unlock (&ss->lock);
+  __spin_lock (&ss->critical_section_lock);
 
 #undef	LOSE
 #define LOSE assert_perror (err) /* XXX */
@@ -606,7 +604,7 @@ __fork (void)
 					     &_hurd_orphaned));
 
       /* Forking clears the trace flag.  */
-      _hurd_exec_flags &= ~EXEC_TRACED;
+      __sigemptyset (&_hurdsig_traced);
 
       /* Run things that want to run in the child task to set up.  */
       RUN_HOOK (_hurd_fork_child_hook, ());

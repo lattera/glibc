@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -73,7 +73,6 @@ _hurd_setauth (auth_t new)
 	      ! HURD_PORT_USE (&_hurd_ports[INIT_PORT_AUTH],
 			       __auth_user_authenticate
 			       (port,
-				_hurd_init_dtable[d],
 				ref, MACH_MSG_TYPE_MAKE_SEND,
 				&new)))
 	    {
@@ -88,7 +87,7 @@ _hurd_setauth (auth_t new)
   if (__USEPORT (CRDIR,
 		 ! __io_reauthenticate (port,
 					ref, MACH_MSG_TYPE_MAKE_SEND) &&
-		 ! __auth_user_authenticate (new, port,
+		 ! __auth_user_authenticate (new,
 					     ref, MACH_MSG_TYPE_MAKE_SEND,
 					     &newport)))
     _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], newport);
@@ -98,7 +97,7 @@ _hurd_setauth (auth_t new)
   if (__USEPORT (CWDIR,
 		 ! __io_reauthenticate (port,
 					ref, MACH_MSG_TYPE_MAKE_SEND) &&
-		 ! __auth_user_authenticate (new, port,
+		 ! __auth_user_authenticate (new,
 					     ref, MACH_MSG_TYPE_MAKE_SEND,
 					     &newport)))
     _hurd_port_set (&_hurd_ports[INIT_PORT_CWDIR], newport);

@@ -1,5 +1,5 @@
 /* Process tracing interface `ptrace' for GNU Hurd.
-Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -93,7 +93,7 @@ ptrace (enum __ptrace_request request, ... )
     {
     case PTRACE_TRACEME:
       /* Make this process be traced.  */
-      _hurd_exec_flags |= EXEC_TRACED;
+      __sigfillset (&_hurdsig_traced);
       __USEPORT (PROC, __proc_mark_traced (port));
       break;
 
@@ -144,7 +144,7 @@ ptrace (enum __ptrace_request request, ... )
 	      /* Tell the process to take the signal (or just resume if 0).  */
 	      err = HURD_MSGPORT_RPC
 		(__USEPORT (PROC, __proc_getmsgport (port, pid, &msgport)),
-		 0, 0, __msg_sig_post_untraced (msgport, data, task));
+		 0, 0, __msg_sig_post_untraced (msgport, data, 0, task));
 	  }
 	__mach_port_deallocate (__mach_task_self (), task);
 	return err ? __hurd_fail (err) : 0;
@@ -178,25 +178,17 @@ ptrace (enum __ptrace_request request, ... )
 	err = __USEPORT (PROC, __proc_getmsgport (port, pid, &msgport));
 	if (! err)
 	  {
-	    err = (request == PTRACE_ATTACH ?
-		   __msg_set_some_exec_flags :
-		   __msg_clear_some_exec_flags) (msgport, task, EXEC_TRACED);
-#ifdef notyet			/* XXX */
-	    if (! err)
-	      /* Request (or request an end to) SIGCHLD notification
-		 when PID stops or dies, and proc_wait working on PID.  */
-	      err = __USEPORT (PROC,
-			       __proc_trace_pid (port, pid,
-						 request == PTRACE_ATTACH));
-#endif
+	    err = __msg_set_init_int (msgport, task, INIT_TRACEMASK,
+				      request == PTRACE_DETACH ? 0 :
+				      ~(sigset_t) 0);
 	    if (! err)
 	      {
 		if (request == PTRACE_ATTACH)
 		  /* Now stop the process.  */
-		  err = __msg_sig_post (msgport, SIGSTOP, task);
+		  err = __msg_sig_post (msgport, SIGSTOP, 0, task);
 		else
 		  /* Resume the process from tracing stop.  */
-		  err = __msg_sig_post_untraced (msgport, 0, task);
+		  err = __msg_sig_post_untraced (msgport, 0, 0, task);
 	      }
 	    __mach_port_deallocate (__mach_task_self (), msgport);
 	  }

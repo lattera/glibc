@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -64,7 +64,7 @@ _S_catch_exception_raise (mach_port_t port,
 	 no code should do anything that can fault while holding the
 	 sigstate lock.  */
 
-      ss->critical_section = 0;
+      __spin_unlock (&ss->critical_section_lock);
       ss->context = NULL;
       __spin_unlock (&ss->lock);
     }

@@ -28,4 +28,4 @@ Boston, MA 02111-1307, USA.  */
 #define	FLOAT_HUGE_VAL	HUGE_VALl
 #define	USE_WIDE_CHAR	1
 
-#include "strtod.c"
+#include "../stdlib/strtod.c"

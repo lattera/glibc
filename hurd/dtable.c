@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -173,7 +173,7 @@ static void
 ctty_new_pgrp (void)
 {
   int i;
-  
+
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
 
@@ -226,7 +226,7 @@ reauth_dtable (void)
     {
       struct hurd_fd *const d = _hurd_dtable[i];
       mach_port_t new, newctty, ref;
-      
+
       if (d == NULL)
 	/* Nothing to do for an unused descriptor cell.  */
 	continue;
@@ -235,14 +235,13 @@ reauth_dtable (void)
 
       /* Take the descriptor cell's lock.  */
       __spin_lock (&d->port.lock);
-      
+
       /* Reauthenticate the descriptor's port.  */
       if (d->port.port != MACH_PORT_NULL &&
 	  ! __io_reauthenticate (d->port.port,
 				 ref, MACH_MSG_TYPE_MAKE_SEND) &&
 	  ! __USEPORT (AUTH, __auth_user_authenticate
 		       (port,
-			d->port.port,
 			ref, MACH_MSG_TYPE_MAKE_SEND,
 			&new)))
 	{
@@ -254,7 +253,6 @@ reauth_dtable (void)
 				     ref, MACH_MSG_TYPE_MAKE_SEND) &&
 	      ! __USEPORT (AUTH, __auth_user_authenticate
 			   (port,
-			    d->ctty.port,
 			    ref, MACH_MSG_TYPE_MAKE_SEND,
 			    &newctty)))
 	    _hurd_port_set (&d->ctty, newctty);
