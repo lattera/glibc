@@ -1,4 +1,12 @@
+2001-08-12  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdlookup.c (__hurd_file_name_lookup): Comment fix.
+
 2001-08-11  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/bits/time.h
+	(CLOCK_PROCESS_CPUTIME_ID, CLOCK_THREAD_CPUTIME_ID): New macros.
+	* sysdeps/mach/hurd/i386/bits/time.h: File removed.
 
 	* posix/getopt.c (nonoption_flags_max_len, nonoption_flags_len):
 	Make these defns conditional on [USE_NONOPTION_FLAGS].
