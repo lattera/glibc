@@ -1772,15 +1772,15 @@ realloc_hook_ini(ptr, sz, caller)
 
 static Void_t*
 #if __STD_C
-memalign_hook_ini(size_t sz, size_t alignment, const __malloc_ptr_t caller)
+memalign_hook_ini(size_t alignment, size_t sz, const __malloc_ptr_t caller)
 #else
-memalign_hook_ini(sz, alignment, caller)
-     size_t sz; size_t alignment; const __malloc_ptr_t caller;
+memalign_hook_ini(alignment, sz, caller)
+     size_t alignment; size_t sz; const __malloc_ptr_t caller;
 #endif
 {
   __memalign_hook = NULL;
   ptmalloc_init();
-  return mEMALIGn(sz, alignment);
+  return mEMALIGn(alignment, sz);
 }
 
 void weak_variable (*__malloc_initialize_hook) __MALLOC_P ((void)) = NULL;
@@ -1792,7 +1792,7 @@ __malloc_ptr_t weak_variable (*__realloc_hook)
  __MALLOC_P ((__malloc_ptr_t __ptr, size_t __size, const __malloc_ptr_t))
      = realloc_hook_ini;
 __malloc_ptr_t weak_variable (*__memalign_hook)
- __MALLOC_P ((size_t __size, size_t __alignment, const __malloc_ptr_t))
+ __MALLOC_P ((size_t __alignment, size_t __size, const __malloc_ptr_t))
      = memalign_hook_ini;
 void weak_variable (*__after_morecore_hook) __MALLOC_P ((void)) = NULL;
 

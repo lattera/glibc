@@ -225,8 +225,8 @@ extern __malloc_ptr_t (*__malloc_hook) __MALLOC_PMT ((size_t __size,
 extern __malloc_ptr_t (*__realloc_hook) __MALLOC_PMT ((__malloc_ptr_t __ptr,
 						     size_t __size,
 						     __const __malloc_ptr_t));
-extern __malloc_ptr_t (*__memalign_hook) __MALLOC_PMT ((size_t __size,
-						      size_t __alignment,
+extern __malloc_ptr_t (*__memalign_hook) __MALLOC_PMT ((size_t __alignment,
+						      size_t __size,
 						      __const __malloc_ptr_t));
 extern void (*__after_morecore_hook) __MALLOC_PMT ((void));
 
