@@ -103,7 +103,6 @@ __ttyname_r (fd, buf, buflen)
      char *buf;
      size_t buflen;
 {
-  static int dev_pts_available = 1;
   char procname[30];
   struct stat st, st1;
   int dostat = 0;
@@ -149,24 +148,20 @@ __ttyname_r (fd, buf, buflen)
   memcpy (buf, "/dev/pts/", sizeof ("/dev/pts/"));
   buflen -= sizeof ("/dev/pts/") - 1;
 
-  if (dev_pts_available)
+  if (__xstat (_STAT_VER, buf, &st1) == 0 && S_ISDIR (st1.st_mode))
     {
-      if (__xstat (_STAT_VER, buf, &st1) == 0 && S_ISDIR (st1.st_mode))
-	{
 #ifdef _STATBUF_ST_RDEV
-	  ret = getttyname_r (buf, buflen, st.st_rdev, st.st_ino, save,
-			      &dostat);
+      ret = getttyname_r (buf, buflen, st.st_rdev, st.st_ino, save,
+			  &dostat);
 #else
-	  ret = getttyname_r (buf, buflen, st.st_dev, st.st_ino, save,
-			      &dostat);
+      ret = getttyname_r (buf, buflen, st.st_dev, st.st_ino, save,
+			  &dostat);
 #endif
-	}
-      else
-	{
-	  __set_errno (save);
-	  ret = ENOENT;
-	  dev_pts_available = 0;
-	}
+    }
+  else
+    {
+      __set_errno (save);
+      ret = ENOENT;
     }
 
   if (ret && dostat != -1)

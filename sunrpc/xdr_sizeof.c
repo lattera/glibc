@@ -123,6 +123,13 @@ x_destroy (XDR *xdrs)
   return;
 }
 
+static bool_t
+x_putint32 (XDR *xdrs, const int32_t *int32p)
+{
+  xdrs->x_handy += BYTES_PER_XDR_UNIT;
+  return TRUE;
+}
+
 unsigned long
 xdr_sizeof (xdrproc_t func, void *data)
 {
@@ -132,6 +139,7 @@ xdr_sizeof (xdrproc_t func, void *data)
   /* to stop ANSI-C compiler from complaining */
   typedef bool_t (*dummyfunc1) (XDR *, long *);
   typedef bool_t (*dummyfunc2) (XDR *, caddr_t, u_int);
+  typedef bool_t (*dummyfunc3) (XDR *, int32_t *);
 
   ops.x_putlong = x_putlong;
   ops.x_putbytes = x_putbytes;
@@ -139,10 +147,12 @@ xdr_sizeof (xdrproc_t func, void *data)
   ops.x_getpostn = x_getpostn;
   ops.x_setpostn = x_setpostn;
   ops.x_destroy = x_destroy;
+  ops.x_putint32 = x_putint32;
 
   /* the other harmless ones */
   ops.x_getlong = (dummyfunc1) harmless;
   ops.x_getbytes = (dummyfunc2) harmless;
+  ops.x_getint32 = (dummyfunc3) harmless;
 
   x.x_op = XDR_ENCODE;
   x.x_ops = &ops;

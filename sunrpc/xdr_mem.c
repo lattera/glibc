@@ -54,6 +54,8 @@ static u_int xdrmem_getpos (const XDR *);
 static bool_t xdrmem_setpos (XDR *, u_int);
 static long *xdrmem_inline (XDR *, int);
 static void xdrmem_destroy (XDR *);
+static bool_t xdrmem_getint32 (XDR *, int32_t *);
+static bool_t xdrmem_putint32 (XDR *, const int32_t *);
 
 static const struct xdr_ops xdrmem_ops =
 {
@@ -64,7 +66,9 @@ static const struct xdr_ops xdrmem_ops =
   xdrmem_getpos,
   xdrmem_setpos,
   xdrmem_inline,
-  xdrmem_destroy
+  xdrmem_destroy,
+  xdrmem_getint32,
+  xdrmem_putint32
 };
 
 /*
@@ -218,4 +222,36 @@ xdrmem_inline (xdrs, len)
       xdrs->x_private += len;
     }
   return buf;
+}
+
+/*
+ * Gets the next word from the memory referenced by xdrs and places it
+ * in the int pointed to by ip.  It then increments the private word to
+ * point at the next element.  Neither object pointed to is const
+ */
+static bool_t
+xdrmem_getint32 (XDR *xdrs, int32_t *ip)
+{
+
+  if ((xdrs->x_handy -= 4) < 0)
+    return FALSE;
+  *ip = ntohl ((*((int32_t *) (xdrs->x_private))));
+  xdrs->x_private += 4;
+  return TRUE;
+}
+
+/*
+ * Puts the long pointed to by lp in the memory referenced by xdrs.  It
+ * then increments the private word to point at the next element.  The
+ * long pointed at is const
+ */
+static bool_t
+xdrmem_putint32 (XDR *xdrs, const int32_t *ip)
+{
+
+  if ((xdrs->x_handy -= 4) < 0)
+    return FALSE;
+  *(int32_t *) xdrs->x_private = htonl (*ip);
+  xdrs->x_private += 4;
+  return TRUE;
 }

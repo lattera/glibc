@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -25,15 +25,13 @@
 #include <rpcsvc/nis.h>
 
 #include "nss-nisplus.h"
+#include "nisplus-parser.h"
 
 __libc_lock_define_initialized (static, lock)
 
 static nis_result *result = NULL;
 static nis_name tablename_val = NULL;
 static u_long tablename_len = 0;
-
-extern int _nss_nisplus_parse_pwent (nis_result *res, struct passwd *pw,
-				     char *buffer, size_t buflen, int *errnop);
 
 static enum nss_status
 _nss_create_tablename (int *errnop)

@@ -61,6 +61,8 @@ static u_int xdrstdio_getpos (const XDR *);
 static bool_t xdrstdio_setpos (XDR *, u_int);
 static long *xdrstdio_inline (XDR *, int);
 static void xdrstdio_destroy (XDR *);
+static bool_t xdrstdio_getint32 (XDR *, int32_t *);
+static bool_t xdrstdio_putint32 (XDR *, const int32_t *);
 
 /*
  * Ops vector for stdio type XDR
@@ -74,7 +76,9 @@ static const struct xdr_ops xdrstdio_ops =
   xdrstdio_getpos,		/* get offset in the stream */
   xdrstdio_setpos,		/* set offset in the stream */
   xdrstdio_inline,		/* prime stream for inline macros */
-  xdrstdio_destroy		/* destroy stream */
+  xdrstdio_destroy,		/* destroy stream */
+  xdrstdio_getint32,		/* deserialize a int */
+  xdrstdio_putint32		/* serialize a int */
 };
 
 /*
@@ -180,4 +184,26 @@ xdrstdio_inline (XDR *xdrs, int len)
    * management on this buffer, so we don't do this.
    */
   return NULL;
+}
+
+static bool_t
+xdrstdio_getint32 (XDR *xdrs, int32_t *ip)
+{
+  int32_t mycopy;
+
+  if (fread ((caddr_t) &mycopy, 4, 1, (FILE *) xdrs->x_private) != 1)
+    return FALSE;
+  *ip = ntohl (mycopy);
+  return TRUE;
+}
+
+static bool_t
+xdrstdio_putint32 (XDR *xdrs, const int32_t *ip)
+{
+  int32_t mycopy = htonl (*ip);
+
+  ip = &mycopy;
+  if (fwrite ((caddr_t) ip, 4, 1, (FILE *) xdrs->x_private) != 1)
+    return FALSE;
+  return TRUE;
 }

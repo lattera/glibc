@@ -107,11 +107,10 @@ ttyname (fd)
 {
   static char *buf;
   static size_t buflen = 0;
-  static int dev_pts_available = 1;
   char procname[30];
   struct stat st, st1;
   int dostat = 0;
-  char *name = NULL;
+  char *name;
   int save = errno;
 
   if (!__isatty (fd))
@@ -139,21 +138,18 @@ ttyname (fd)
   if (__fxstat (_STAT_VER, fd, &st) < 0)
     return NULL;
 
-  if (dev_pts_available)
+  if (__xstat (_STAT_VER, "/dev/pts", &st1) == 0 && S_ISDIR (st1.st_mode))
     {
-      if (__xstat (_STAT_VER, "/dev/pts", &st1) == 0 && S_ISDIR (st1.st_mode))
-	{
 #ifdef _STATBUF_ST_RDEV
-	  name = getttyname ("/dev/pts", st.st_rdev, st.st_ino, save, &dostat);
+      name = getttyname ("/dev/pts", st.st_rdev, st.st_ino, save, &dostat);
 #else
-	  name = getttyname ("/dev/pts", st.st_dev, st.st_ino, save, &dostat);
+      name = getttyname ("/dev/pts", st.st_dev, st.st_ino, save, &dostat);
 #endif
-	}
-      else
-	{
-	  __set_errno (save);
-	  dev_pts_available = 0;
-	}
+    }
+  else
+    {
+      __set_errno (save);
+      name = NULL;
     }
 
   if (!name && dostat != -1)

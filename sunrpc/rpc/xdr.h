@@ -82,12 +82,11 @@ __BEGIN_DECLS
  * XDR_FREE can be used to release the space allocated by an XDR_DECODE
  * request.
  */
-enum xdr_op
-  {
-    XDR_ENCODE = 0,
-    XDR_DECODE = 1,
-    XDR_FREE = 2
-  };
+enum xdr_op {
+  XDR_ENCODE = 0,
+  XDR_DECODE = 1,
+  XDR_FREE = 2
+};
 
 /*
  * This is the number of bytes per unit of external data.
@@ -135,6 +134,10 @@ struct XDR
 	/* buf quick ptr to buffered data */
 	void (*x_destroy) __PMT ((XDR *__xdrs));
 	/* free privates of this xdr_stream */
+	bool_t (*x_getint32) __PMT ((XDR *__xdrs, int32_t *__ip));
+	/* get a int from underlying stream */
+	bool_t (*x_putint32) __PMT ((XDR *__xdrs, __const int32_t *__ip));
+	/* put a int to " */
       }
      *x_ops;
     caddr_t x_public;		/* users' data */
@@ -165,14 +168,14 @@ typedef bool_t (*xdrproc_t) __PMT ((XDR *, void *,...));
  * u_int         pos;
  */
 #define XDR_GETINT32(xdrs, int32p)                      \
-        (*(xdrs)->x_ops->x_getlong)(xdrs, (long *)int32p)
+        (*(xdrs)->x_ops->x_getint32)(xdrs, int32p)
 #define xdr_getint32(xdrs, int32p)                      \
-        (*(xdrs)->x_ops->x_getlong)(xdrs, (long *)int32p)
+        (*(xdrs)->x_ops->x_getint32)(xdrs, int32p)
 
 #define XDR_PUTINT32(xdrs, int32p)                      \
-        (*(xdrs)->x_ops->x_putlong)(xdrs, (long *)int32p)
+        (*(xdrs)->x_ops->x_putint32)(xdrs, int32p)
 #define xdr_putint32(xdrs, int32p)                      \
-        (*(xdrs)->x_ops->x_putlong)(xdrs, (long *)int32p)
+        (*(xdrs)->x_ops->x_putint32)(xdrs, int32p)
 
 #define XDR_GETLONG(xdrs, longp)			\
 	(*(xdrs)->x_ops->x_getlong)(xdrs, longp)

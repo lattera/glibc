@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -311,6 +311,8 @@ nis_print_entry (const entry_obj *obj)
 void
 nis_print_object (const nis_object * obj)
 {
+  time_t buf;
+
   printf (_("Object Name   : %s\n"), obj->zo_name);
   printf (_("Directory     : %s\n"), obj->zo_domain);
   printf (_("Owner         : %s\n"), obj->zo_owner);
@@ -319,8 +321,10 @@ nis_print_object (const nis_object * obj)
   nis_print_rights (obj->zo_access);
   printf (_("\nTime to Live  : "));
   print_ttl (obj->zo_ttl);
-  printf (_("Creation Time : %s"), ctime ((time_t *)&obj->zo_oid.ctime));
-  printf (_("Mod. Time     : %s"), ctime ((time_t *)&obj->zo_oid.mtime));
+  buf = obj->zo_oid.ctime;
+  printf (_("Creation Time : %s"), ctime (&buf));
+  buf = obj->zo_oid.mtime;
+  printf (_("Mod. Time     : %s"), ctime (&buf));
   fputs (_("Object Type   : "), stdout);
   nis_print_objtype (obj->zo_data.zo_type);
   switch (obj->zo_data.zo_type)

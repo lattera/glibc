@@ -66,6 +66,8 @@ static u_int xdrrec_getpos (const XDR *);
 static bool_t xdrrec_setpos (XDR *, u_int);
 static long *xdrrec_inline (XDR *, int);
 static void xdrrec_destroy (XDR *);
+static bool_t xdrrec_getint32 (XDR *, int32_t *);
+static bool_t xdrrec_putint32 (XDR *, const int32_t *);
 
 static const struct xdr_ops xdrrec_ops =
 {
@@ -76,7 +78,9 @@ static const struct xdr_ops xdrrec_ops =
   xdrrec_getpos,
   xdrrec_setpos,
   xdrrec_inline,
-  xdrrec_destroy
+  xdrrec_destroy,
+  xdrrec_getint32,
+  xdrrec_putint32
 };
 
 /*
@@ -251,11 +255,8 @@ xdrrec_putlong (xdrs, lp)
   return TRUE;
 }
 
-static bool_t			/* must manage buffers, fragments, and records */
-xdrrec_getbytes (xdrs, addr, len)
-     XDR *xdrs;
-     caddr_t addr;
-     u_int len;
+static bool_t	   /* must manage buffers, fragments, and records */
+xdrrec_getbytes (XDR *xdrs, caddr_t addr, u_int len)
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
   u_int current;
@@ -420,6 +421,53 @@ xdrrec_destroy (xdrs)
   mem_free ((caddr_t) rstrm, sizeof (RECSTREAM));
 }
 
+static bool_t
+xdrrec_getint32 (XDR *xdrs, int32_t *ip)
+{
+  RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
+  int32_t *bufip = (int32_t *) rstrm->in_finger;
+  int32_t mylong;
+
+  /* first try the inline, fast case */
+  if (rstrm->fbtbc >= BYTES_PER_XDR_UNIT &&
+      rstrm->in_boundry - (char *) bufip >= BYTES_PER_XDR_UNIT)
+    {
+      *ip = ntohl (*bufip);
+      rstrm->fbtbc -= BYTES_PER_XDR_UNIT;
+      rstrm->in_finger += BYTES_PER_XDR_UNIT;
+    }
+  else
+    {
+      if (!xdrrec_getbytes (xdrs, (caddr_t) &mylong,
+			    BYTES_PER_XDR_UNIT))
+	return FALSE;
+      *ip = ntohl (mylong);
+    }
+  return TRUE;
+}
+
+static bool_t
+xdrrec_putint32 (XDR *xdrs, const int32_t *ip)
+{
+  RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
+  int32_t *dest_ip = (int32_t *) rstrm->out_finger;
+
+  if ((rstrm->out_finger += BYTES_PER_XDR_UNIT) > rstrm->out_boundry)
+    {
+      /*
+       * this case should almost never happen so the code is
+       * inefficient
+       */
+      rstrm->out_finger -= BYTES_PER_XDR_UNIT;
+      rstrm->frag_sent = TRUE;
+      if (!flush_out (rstrm, FALSE))
+	return FALSE;
+      dest_ip = (int32_t *) rstrm->out_finger;
+      rstrm->out_finger += BYTES_PER_XDR_UNIT;
+    }
+  *dest_ip = htonl (*ip);
+  return TRUE;
+}
 
 /*
  * Exported routines to manage xdr records

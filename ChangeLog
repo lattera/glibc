@@ -1,3 +1,34 @@
+1999-03-08  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/ttyname.c (ttyname): Undo last change.
+	/dev/pts status may change during runtime.
+
+1999-03-08  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r): Undo last
+	change.  /dev/pts status can change during runtime.
+
+1999-03-07  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sunrpc/svc_tcp.c (readtcp): go into fatal error state if
+	poll reports error.
+	* nis/nss_nisplus/nisplus-parser.c: Avoid duplicate strlen calls,
+	add some more sanity checks.
+	* nis/nss_nisplus/nisplus-pwd.c: Include nisplus-parser.h for
+	parser prototype.
+
+1999-03-05  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sunrpc/rpc/xdr.h: Add x_getint32/x_putint32 to xdr_ops,
+	change XDR_GETINT32/XDR_PUTINT32 to sue new functions.
+	* sunrpc/xdr_mem.c: Add xdrmem_getint32, xdrmem_putint32.
+	* sunrpc/xdr_rec.c: Add xdrrec_getint32, xdrrec_putint32.
+	* sunrpc/xdr_sizeof.c: Add x_putint32, add dummy function
+	for x_getint32.
+	* sunrpc/xdr_stdio.c: Add xdrstdio_getint32, xdrstdio_putint32.
+	* nis/nis_print.c: Fix ctime argument for platforms where
+	sizeof (time_t) != sizeof (int).
+
 1999-03-07  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/unix/bsd/clock.c (timeval_to_clock_t): Use
@@ -16,7 +47,7 @@
 1999-03-05  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* resolv/inet_addr.c (inet_aton): Don't allow componets >
-	255. Patch by Bruno Haible <haible@ilog.fr> [PR libc/1010].
+	255.  Patch by Bruno Haible <haible@ilog.fr> [PR libc/1010].
 
 1999-03-05  Geoff Keating  <geoffk@ozemail.com.au>
 
