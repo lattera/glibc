@@ -69,6 +69,7 @@
  *   so I don't need the stream to add null characters on its own.)
  */
 
+#include <errno.h>
 #include <libio.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -96,7 +97,7 @@ fmemopen_read (void *cookie, char *b, size_t s)
   if (c->pos + s > c->size)
     {
       if (c->pos == c->size)
-	return -1;
+	return 0;
       s = c->size - c->pos;
     }
 
@@ -123,7 +124,10 @@ fmemopen_write (void *cookie, const char *b, size_t s)
   if (c->pos + s + addnullc > c->size)
     {
       if (c->pos + addnullc == c->size)
-	return -1;
+	{
+	  __set_errno (ENOSPC);
+	  return -1;
+	}
       s = c->size - c->pos - addnullc;
     }
 
@@ -142,7 +146,7 @@ fmemopen_write (void *cookie, const char *b, size_t s)
 
 
 int
-fmemopen_seek (void *cookie, _IO_off64_t * p, int w)
+fmemopen_seek (void *cookie, _IO_off64_t *p, int w)
 {
   _IO_off64_t np;
   fmemopen_cookie_t *c;

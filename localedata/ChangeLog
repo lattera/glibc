@@ -1,3 +1,68 @@
+2000-10-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* locales/translit_hangul: New file.
+	* locales/ko_KR (LC_CTYPE): Include it.
+
+2000-10-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* locales/translit_cjk_variants: New file.
+	* locales/ja_JP (LC_CTYPE): Include it.
+
+2000-10-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* locales/da_DK (LC_CTYPE): Include translit_combining, add A-ring
+	transliteration rules.
+
+2000-10-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* locales/de_DE (LC_CTYPE): Include translit_combining, add umlaut
+	transliteration rules.
+	* locales/de_AT (LC_CTYPE): Include de_DE instead of i18n.
+	* locales/de_BE (LC_CTYPE): Likewise.
+	* locales/de_CH (LC_CTYPE): Likewise.
+	* locales/de_LU (LC_CTYPE): Likewise.
+	* locales/de_DE@euro (LC_CTYPE): Include de_DE instead of i18n.
+	* locales/de_AT@euro (LC_CTYPE): Include de_AT instead of i18n.
+	* locales/de_BE@euro (LC_CTYPE): Include de_BE instead of i18n.
+	* locales/de_LU@euro (LC_CTYPE): Include de_LU instead of i18n.
+
+2000-10-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* locales/translit_combining: New file.
+	* locales/fr_FR (LC_CTYPE): Include it.
+	* locales/fr_BE (LC_CTYPE): Include fr_FR instead of i18n.
+	* locales/fr_CA (LC_CTYPE): Likewise.
+	* locales/fr_CH (LC_CTYPE): Likewise.
+	* locales/fr_LU (LC_CTYPE): Likewise.
+	* locales/fr_FR@euro (LC_CTYPE): Include fr_FR instead of i18n.
+	* locales/fr_BE@euro (LC_CTYPE): Include fr_BE instead of i18n.
+	* locales/fr_LU@euro (LC_CTYPE): Include fr_LU instead of i18n.
+
+2000-10-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* locales/translit_wide: New file.
+	* locales/translit_narrow: New file.
+	* locales/translit_font: New file.
+	* locales/translit_circle: New file.
+	* locales/translit_small: New file.
+	* locales/translit_fraction: New file.
+	* locales/translit_compat: New file.
+	* locales/translit_cjk_compat: New file.
+	* locales/translit_neutral: New file.  Include all of the above.
+	* locales/i18n (LC_CTYPE): Include translit_neutral.  Remove a few
+	German and Danish specific rules.
+
+2000-10-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* locales/ja_JP (LC_CTYPE): Refer to "i18n" instead of duplicating it.
+	* locales/zh_CN (LC_CTYPE): Likewise.
+	* locales/ko_KR (LC_CTYPE): Likewise.
+
+2000-10-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/UTF-8: Set width of U200B to 0.
+	* charmaps/GB18030: Likewise.
+
 2000-10-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/BIG5: Update.

@@ -1,5 +1,14 @@
 2000-10-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/Makefile (tests): Add tst-fmemopen.
+	* stdio-common/tst-fmemopen.c: New file.
+	Test case by Ben Collins <bcollins@debian.org>.
+
+	* libio/iofopncook.c (_IO_cookie_seek): Correct test for error.
+
+	* libio/fmemopen.c (fmemopen_read): Return 0 at end of buffer.
+	(fmemopen_write): Set errno at end of buffer.
+
 	* posix/runtests.c (main): Don't use exit() to avoid warning with
 	broken compilers.
 

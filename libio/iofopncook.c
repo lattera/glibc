@@ -76,7 +76,8 @@ _IO_cookie_seek (fp, offset, dir)
 
   return ((cfile->__io_functions.seek == NULL
 	   || (cfile->__io_functions.seek (cfile->__cookie, &offset, dir)
-	       == (_IO_off64_t) -1))
+	       == -1)
+	   || offset == (_IO_off64_t) -1)
 	  ? _IO_pos_BAD : offset);
 }
 
