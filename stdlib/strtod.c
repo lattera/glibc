@@ -47,13 +47,16 @@ Cambridge, MA 02139, USA.  */
 
 
 /* Constants we need from float.h; select the set for the FLOAT precision.  */
-#define MANT_DIG	FLT##_MANT_DIG
-#define	MAX_EXP		FLT##_MAX_EXP
-#define	MIN_EXP		FLT##_MIN_EXP
-#define MAX_10_EXP	FLT##_MAX_10_EXP
-#define MIN_10_EXP	FLT##_MIN_10_EXP
-#define	MAX_10_EXP_LOG	FLT##_MAX_10_EXP_LOG
+#define MANT_DIG	PASTE(FLT,_MANT_DIG)
+#define	MAX_EXP		PASTE(FLT,_MAX_EXP)
+#define	MIN_EXP		PASTE(FLT,_MIN_EXP)
+#define MAX_10_EXP	PASTE(FLT,_MAX_10_EXP)
+#define MIN_10_EXP	PASTE(FLT,_MIN_10_EXP)
+#define	MAX_10_EXP_LOG	PASTE(FLT,_MAX_10_EXP_LOG)
 
+/* Extra macros required to get FLT expanded before the pasting.  */
+#define PASTE(a,b)	PASTE1(a,b)
+#define PASTE1(a,b)	a##b
 
 /* Function to construct a floating point number from an MP integer
    containing the fraction bits, a base 2 exponent, and a sign flag.  */

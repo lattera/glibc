@@ -13,6 +13,13 @@
 
 /* Define if using the GNU assembler, gas.  */
 #undef	HAVE_GNU_AS
+
+/* ELF has weak symbols, and with GNU ld a.out does too.  */
+#ifndef HAVE_WEAK_SYMBOLS
+#if defined (HAVE_ELF) || defined (HAVE_GNU_LD)
+#define HAVE_WEAK_SYMBOLS
+#endif
+#endif
 
 /* These symbols might be defined by some sysdeps configures.  */
 
