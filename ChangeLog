@@ -1,3 +1,8 @@
+2003-08-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/posix_fadvise64.S: Fix typo in
+	syscall name.
+
 2003-08-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/shm_open.c (shm_open): Fold EISDIR error

@@ -118,7 +118,7 @@ L(overflow):
 END (BP_SYM (__posix_fadvise64_l64))
 
 #ifdef __NR_fadvise64
-PSEUDO_ERRVAL (__posix_fadvise64_l32, posix_fadvise64, 5)
+PSEUDO_ERRVAL (__posix_fadvise64_l32, fadvise64, 5)
 	ret
 PSEUDO_END_ERRVAL (__posix_fadvise64_l32)
 #else
