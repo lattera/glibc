@@ -43,9 +43,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   const unsigned char *inbuf;
   char *outbuf = (char *) (pwc ?: buf);
 
-  /* Tell where we want the result.  */
-  data.__outbuf = outbuf;
-  data.__outbufend = outbuf + sizeof (wchar_t);
+  /* Set information for this step.  */
   data.__invocation_counter = 0;
   data.__internal_use = 1;
   data.__is_last = 1;
@@ -55,12 +53,16 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
      initial state.  */
   if (s == NULL)
     {
-      data.__outbuf = (char *) buf;
+      outbuf = (char *) buf;
       s = "";
       n = 1;
       temp_state = *data.__statep;
       data.__statep = &temp_state;
     }
+
+  /* Tell where we want the result.  */
+  data.__outbuf = outbuf;
+  data.__outbufend = outbuf + sizeof (wchar_t);
 
   /* Make sure we use the correct function.  */
   update_conversion_ptrs ();
