@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,95,96,97,98,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,96,97,98,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@
 #include "stdio.h"
 
 #include <shlib-compat.h>
+#include <fd_to_filename.h>
 
 FILE*
 freopen (filename, mode, fp)
@@ -35,11 +36,18 @@ freopen (filename, mode, fp)
      FILE* fp;
 {
   FILE *result;
+  int fd = -1;
   CHECK_FILE (fp, NULL);
   if (!(fp->_flags & _IO_IS_FILEBUF))
     return NULL;
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
+  if (filename == NULL && _IO_fileno (fp) >= 0)
+    {
+      fd = dup (_IO_fileno (fp));
+      if (fd != -1)
+	filename = fd_to_filename (fd);
+    }
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
   if (&_IO_stdin_used == NULL)
     /* If the shared C library is used by the application binary which
@@ -54,6 +62,12 @@ freopen (filename, mode, fp)
   if (result != NULL)
     /* unbound stream orientation */
     result->_mode = 0;
+  if (fd != -1)
+    {
+      close (fd);
+      if (filename != NULL)
+	free ((char *) filename);
+    }
   _IO_funlockfile (fp);
   _IO_cleanup_region_end (0);
   return result;

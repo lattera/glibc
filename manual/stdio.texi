@@ -873,7 +873,7 @@ The @code{putchar} function is equivalent to @code{putc} with
 
 @comment wchar.h
 @comment ISO
-@deftypefun wint_t putchar (wchar_t @var{wc})
+@deftypefun wint_t putwchar (wchar_t @var{wc})
 The @code{putwchar} function is equivalent to @code{putwc} with
 @code{stdout} as the value of the @var{stream} argument.
 @end deftypefun

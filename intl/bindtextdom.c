@@ -100,7 +100,7 @@ __libc_rwlock_define (extern, _nl_state_lock)
 static void set_binding_values PARAMS ((const char *domainname,
 					const char **dirnamep,
 					const char **codesetp));
-     
+
 /* Specifies the directory name *DIRNAMEP and the output codeset *CODESETP
    to be used for the DOMAINNAME message catalog.
    If *DIRNAMEP or *CODESETP is NULL, the corresponding attribute is not
@@ -218,6 +218,7 @@ set_binding_values (domainname, dirnamep, codesetp)
 			free (binding->codeset);
 
 		      binding->codeset = result;
+		      ++binding->codeset_cntr;
 		      modified = 1;
 		    }
 		}
@@ -281,6 +282,8 @@ set_binding_values (domainname, dirnamep, codesetp)
 	/* The default value.  */
 	new_binding->dirname = (char *) _nl_default_dirname;
 
+      new_binding->codeset_cntr = 0;
+
       if (codesetp)
 	{
 	  const char *codeset = *codesetp;
@@ -301,6 +304,7 @@ set_binding_values (domainname, dirnamep, codesetp)
 	      memcpy (result, codeset, len);
 #endif
 	      codeset = result;
+	      ++new_binding->codeset_cntr;
 	    }
 	  *codesetp = codeset;
 	  new_binding->codeset = (char *) codeset;

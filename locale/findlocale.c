@@ -123,7 +123,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 				    language, territory, codeset,
 				    normalized_codeset, modifier, special,
 				    sponsor, revision,
-				    _nl_category_names[category], NULL, 0);
+				    _nl_category_names[category], 0);
 
   if (locale_file == NULL)
     {
@@ -134,7 +134,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 					language, territory, codeset,
 					normalized_codeset, modifier, special,
 					sponsor, revision,
-					_nl_category_names[category], NULL, 1);
+					_nl_category_names[category], 1);
       if (locale_file == NULL)
 	/* This means we are out of core.  */
 	return NULL;

@@ -1,5 +1,5 @@
 /* Error handler for noninteractive utilities
-   Copyright (C) 1990-1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1990-1998, 2000, 2001 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
@@ -139,13 +139,11 @@ error (status, errnum, message, va_alist)
   va_list args;
 #endif
 
+  fflush (stdout);
   if (error_print_progname)
     (*error_print_progname) ();
   else
-    {
-      fflush (stdout);
-      fprintf (stderr, "%s: ", program_name);
-    }
+    fprintf (stderr, "%s: ", program_name);
 
 #ifdef VA_START
   VA_START (args, message);
@@ -211,13 +209,11 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
       old_line_number = line_number;
     }
 
+  fflush (stdout);
   if (error_print_progname)
     (*error_print_progname) ();
   else
-    {
-      fflush (stdout);
-      fprintf (stderr, "%s:", program_name);
-    }
+    fprintf (stderr, "%s:", program_name);
 
   if (file_name != NULL)
     fprintf (stderr, "%s:%d: ", file_name, line_number);

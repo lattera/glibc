@@ -107,15 +107,14 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
      be one data set in the list of loaded domains.  */
   retval = _nl_make_l10nflist (&_nl_loaded_domains, dirname,
 			       strlen (dirname) + 1, 0, locale, NULL, NULL,
-			       NULL, NULL, NULL, NULL, NULL, domainname,
-			       domainbinding, 0);
+			       NULL, NULL, NULL, NULL, NULL, domainname, 0);
   if (retval != NULL)
     {
       /* We know something about this locale.  */
       int cnt;
 
       if (retval->decided == 0)
-	_nl_load_domain (retval);
+	_nl_load_domain (retval, domainbinding);
 
       if (retval->data != NULL)
 	return retval;
@@ -123,7 +122,7 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
       for (cnt = 0; retval->successor[cnt] != NULL; ++cnt)
 	{
 	  if (retval->successor[cnt]->decided == 0)
-	    _nl_load_domain (retval->successor[cnt]);
+	    _nl_load_domain (retval->successor[cnt], domainbinding);
 
 	  if (retval->successor[cnt]->data != NULL)
 	    break;
@@ -164,21 +163,20 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
   retval = _nl_make_l10nflist (&_nl_loaded_domains, dirname,
 			       strlen (dirname) + 1, mask, language, territory,
 			       codeset, normalized_codeset, modifier, special,
-			       sponsor, revision, domainname, domainbinding,
-			       1);
+			       sponsor, revision, domainname, 1);
   if (retval == NULL)
     /* This means we are out of core.  */
     return NULL;
 
   if (retval->decided == 0)
-    _nl_load_domain (retval);
+    _nl_load_domain (retval, domainbinding);
   if (retval->data == NULL)
     {
       int cnt;
       for (cnt = 0; retval->successor[cnt] != NULL; ++cnt)
 	{
 	  if (retval->successor[cnt]->decided == 0)
-	    _nl_load_domain (retval->successor[cnt]);
+	    _nl_load_domain (retval->successor[cnt], domainbinding);
 	  if (retval->successor[cnt]->data != NULL)
 	    break;
 	}

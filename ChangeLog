@@ -1,3 +1,62 @@
+2001-04-05  David S. Miller  <davem@redhat.com>
+
+	Add hp-timing support for sparcv9/sparc64 targets.
+	* sysdeps/sparc/sparc32/sparcv9/hp-timing.c: New file
+	* sysdeps/sparc/sparc32/sparcv9/hp-timing.h: New file
+	* sysdeps/sparc/sparc64/hp-timing.c: New file
+	* sysdeps/sparc/sparc64/hp-timing.h: New file
+	* sysdeps/sparc/sparc32/sparcv9/Makefile: Build hp-timing.
+	* sysdeps/sparc/sparc64/Makefile: Likewise.
+
+2001-04-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/fd_to_filename.h: New file.
+	* sysdeps/unix/sysv/linux/fd_to_filename.h: New file.
+	* libio/freopen.c (freopen): If FILENAME is NULL, try to get
+	filename from the open file descriptor.
+	* libio/freopen64.c (freopen64): Likewise.
+
+2001-04-09  Bruno Haible  <haible@clisp.cons.org>
+
+	* misc/error.c (error): fflush stdout also if
+	error_print_progname != NULL.
+	(error_at_line): Likewise.
+
+2001-04-07  Bruno Haible <haible@clisp.cons.org>
+
+	* intl/gettextP.h (struct loaded_domain): Add codeset_cntr field.
+	(struct binding): Add codeset_cntr field.
+	(_nl_load_domain): Add domainbinding argument.
+	(_nl_init_domain_conv, _nl_free_domain_conv): New declarations.
+	(_nl_find_msg): New declaration, moved here from loadinfo.h.
+	* intl/loadinfo.h (struct loaded_l10nfile): Remove domainbinding field.
+	(_nl_make_l10nflist): Remove domainbinding argument.
+	(_nl_find_msg): Move declaration to gettextP.h.
+	* intl/bindtextdom.c (set_binding_values): Initialize ->codeset_cntr
+	to 0.  Increment it when ->codeset is changed.
+	* intl/dcigettext.c (DCIGETTEXT): Pass binding to _nl_find_msg.
+	(_nl_find_msg): Add domainbinding argument.  Reinitialize the converter
+	if domainbinding->codeset_cntr has been incremented.
+	* intl/finddomain.c (_nl_find_domain): Don't pass domainbinding to
+	_nl_make_l10nflist().  Pass it to _nl_load_domain() instead.
+	* intl/l10nflist.c (_nl_make_l10nflist): Remove domainbinding argument.
+	* intl/loadmsgcat.c (_nl_init_domain_conv): New function, extracted
+	 from _nl_load_domain.  Append //TRANSLIT also when using libiconv.
+	(_nl_free_domain_conv): New function, extracted from _nl_unload_domain.
+	(_nl_load_domain): Add domainbinding argument.  Call
+	_nl_init_domain_conv.
+	(_nl_unload_domain): Call _nl_free_domain_conv.
+	* intl/Makefile (distribute): Add tst-codeset.sh, tstcodeset.po.
+	(test-srcs): Add tst-codeset.
+	(tests): Depend on tst-codeset.out.
+	(tst-codeset.out): New rule.
+	(CFLAGS-tst-codeset.c): New variable.
+	* intl/tst-codeset.sh: New file.
+	* intl/tstcodeset.po: New file.
+	* intl/tst-codeset.c: New file.
+	* locale/findlocale.c (_nl_find_locale): Update _nl_make_l10nflist
+	calls.
+
 2001-04-07  Roland McGrath  <roland@frob.com>
 
 	* mach/msgserver.c (__mach_msg_server_timeout): Add an assert.

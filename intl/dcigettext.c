@@ -574,7 +574,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
       if (domain != NULL)
 	{
-	  retval = _nl_find_msg (domain, msgid1, &retlen);
+	  retval = _nl_find_msg (domain, binding, msgid1, &retlen);
 
 	  if (retval == NULL)
 	    {
@@ -582,8 +582,8 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
 	      for (cnt = 0; domain->successor[cnt] != NULL; ++cnt)
 		{
-		  retval = _nl_find_msg (domain->successor[cnt], msgid1,
-					 &retlen);
+		  retval = _nl_find_msg (domain->successor[cnt], binding,
+					 msgid1, &retlen);
 
 		  if (retval != NULL)
 		    {
@@ -652,8 +652,9 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
 char *
 internal_function
-_nl_find_msg (domain_file, msgid, lengthp)
+_nl_find_msg (domain_file, domainbinding, msgid, lengthp)
      struct loaded_l10nfile *domain_file;
+     struct binding *domainbinding;
      const char *msgid;
      size_t *lengthp;
 {
@@ -663,7 +664,7 @@ _nl_find_msg (domain_file, msgid, lengthp)
   size_t resultlen;
 
   if (domain_file->decided == 0)
-    _nl_load_domain (domain_file);
+    _nl_load_domain (domain_file, domainbinding);
 
   if (domain_file->data == NULL)
     return NULL;
@@ -742,6 +743,16 @@ _nl_find_msg (domain_file, msgid, lengthp)
   resultlen = W (domain->must_swap, domain->trans_tab[act].length) + 1;
 
 #if defined _LIBC || HAVE_ICONV
+  if (domain->codeset_cntr
+      != (domainbinding != NULL ? domainbinding->codeset_cntr : 0))
+    {
+      /* The domain's codeset has changed through bind_textdomain_codeset()
+	 since the message catalog was initialized or last accessed.  We
+	 have to reinitialize the converter.  */
+      _nl_free_domain_conv (domain);
+      _nl_init_domain_conv (domain_file, domain, domainbinding);
+    }
+
   if (
 # ifdef _LIBC
       domain->conv != (__gconv_t) -1

@@ -131,6 +131,7 @@ struct loaded_domain
   struct string_desc *trans_tab;
   nls_uint32 hash_size;
   nls_uint32 *hash_tab;
+  int codeset_cntr;
 #ifdef _LIBC
   __gconv_t conv;
 #else
@@ -158,6 +159,7 @@ struct binding
 {
   struct binding *next;
   char *dirname;
+  int codeset_cntr;	/* Incremented each time codeset changes.  */
   char *codeset;
   char domainname[ZERO];
 };
@@ -172,9 +174,21 @@ struct loaded_l10nfile *_nl_find_domain PARAMS ((const char *__dirname,
 						 const char *__domainname,
 					      struct binding *__domainbinding))
      internal_function;
-void _nl_load_domain PARAMS ((struct loaded_l10nfile *__domain))
+void _nl_load_domain PARAMS ((struct loaded_l10nfile *__domain,
+			      struct binding *__domainbinding))
      internal_function;
 void _nl_unload_domain PARAMS ((struct loaded_domain *__domain))
+     internal_function;
+const char *_nl_init_domain_conv PARAMS ((struct loaded_l10nfile *__domain_file,
+					  struct loaded_domain *__domain,
+					  struct binding *__domainbinding))
+     internal_function;
+void _nl_free_domain_conv PARAMS ((struct loaded_domain *__domain))
+     internal_function;
+
+char *_nl_find_msg PARAMS ((struct loaded_l10nfile *domain_file,
+			    struct binding *domainbinding,
+			    const char *msgid, size_t *lengthp))
      internal_function;
 
 #ifdef _LIBC

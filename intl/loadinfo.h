@@ -55,7 +55,6 @@
 struct loaded_l10nfile
 {
   const char *filename;
-  struct binding *domainbinding;
   int decided;
 
   const void *data;
@@ -80,8 +79,7 @@ _nl_make_l10nflist PARAMS ((struct loaded_l10nfile **l10nfile_list,
 			    const char *normalized_codeset,
 			    const char *modifier, const char *special,
 			    const char *sponsor, const char *revision,
-			    const char *filename,
-			    struct binding *domainbinding, int do_allocate));
+			    const char *filename, int do_allocate));
 
 
 extern const char *_nl_expand_alias PARAMS ((const char *name));
@@ -98,10 +96,5 @@ extern int _nl_explode_name PARAMS ((char *name, const char **language,
 				     const char **revision));
 
 extern char *_nl_find_language PARAMS ((const char *name));
-
-
-extern char *_nl_find_msg PARAMS ((struct loaded_l10nfile *domain_file,
-				   const char *msgid, size_t *lengthp))
-     internal_function;
 
 #endif	/* loadinfo.h */
