@@ -1,3 +1,9 @@
+2001-05-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sigprocmask.c (__sigprocmask): Use
+	CHECK_SIGSET_NULL_OK and not CHECK_SIGSET for all parameters.
+	Reported by Mark Burton <markb@ordern.com>.
+
 2001-05-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/ldconfig.c (add_dir): Only warn about stat failure if
