@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Olaf Flebbe.
 
@@ -87,13 +87,20 @@ Boston, MA 02111-1307, USA.  */
 /* IEEE:  same as above, but exceptions */
 #define _FPU_IEEE     0x137f
 
-/* private namespace. It should only be used in init-first.o. */
-extern unsigned short __fpu_control;
+/* Type of the control word.  */
+typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));
+
+/* Macros for accessing the hardware control word.  */
+#define _FPU_GETCW(cw) __asm__ ("fnstcw %0" : "=m" (cw))
+#define _FPU_SETCW(cw) __asm__ ("fldcw %0" : "m" (cw))
+
+/* Default control word set at startup.  */
+extern fpu_control_t __fpu_control;
 
 __BEGIN_DECLS
 
-/* called in init-first.o. It can be used to manipulate 387 control word. */
-extern void __setfpucw __P ((unsigned short));
+/* Called at startup.  It can be used to manipulate fpu control register.  */
+extern void __setfpucw __P ((fpu_control_t));
 
 __END_DECLS
 

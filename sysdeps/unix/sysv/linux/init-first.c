@@ -1,5 +1,5 @@
-/* Initialization code run first thing by the ELF startup code.  i386/Linux
-Copyright (C) 1995 Free Software Foundation, Inc.
+/* Initialization code run first thing by the ELF startup code.  Linux version.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,10 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 #include "fpu_control.h"
 
+/* This code is mostly the same for all machines.  This version works at
+   least for i386 and m68k, and probably any CISCy machine with a normal
+   stack arrangement.  */
+
 extern void __libc_init (int, char **, char **);
 extern void __libc_global_ctors (void);
 
@@ -32,6 +36,7 @@ init (int *data)
   char **argv = (void *) (data + 1);
   char **envp = &argv[argc + 1];
 
+#ifdef __i386__
   /* Make sure we are not using the iBSC2 personality.  The `personality'
      syscall takes one argument; zero means the Linux personality.  The
      argument arrives in %ebx; we have to save and restore %ebx by hand
@@ -42,6 +47,7 @@ init (int *data)
        "int $0x80 # syscall no %0\n"
        "popl %%ebx"
        : : "a" (SYS_ify (personality)));
+#endif
 
   /* Set the FPU control word to the proper default value.  */
   __setfpucw (__fpu_control);

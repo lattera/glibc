@@ -1,5 +1,5 @@
-/* Default control word for ix86 FPU.
-Copyright (C) 1995 Free Software Foundation, Inc.
+/* Set the FPU control word.
+Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,4 +17,21 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-unsigned short __fpu_control = 0;
+#include "fpu_control.h"
+
+void
+__setfpucw (fpu_control_t set)
+{
+  fpu_control_t cw;
+
+  /* Fetch the current control word.  */
+  _FPU_GETCW (cw);
+
+  /* Preserve the reserved bits, and set the rest as the user
+     specified (or the default, if the user gave zero).  */
+  _FPU_SETCW ((cw & _FPU_RESERVED) | ((set ?: _FPU_DEFAULT) & ~_FPU_RESERVED));
+}
+
+/* The startup code in init-first.c calls __setfpucw (__fpu_control).  */
+
+fpu_control_t __fpu_control;

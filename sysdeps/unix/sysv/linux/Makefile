@@ -1,3 +1,13 @@
+ifeq ($(subdir), math)
+sysdep_routines += setfpucw
+extra-objs += ieee-fpucw.o
+install-lib += libieee.a
+
+$(objpfx)libieee.a: $(objpfx)ieee-fpucw.o
+	rm -f $@
+	ln $< $@
+endif
+
 ifeq ($(subdir), io)
 sysdep_routines += fxstat lxstat xstat
 endif
@@ -7,17 +17,13 @@ sysdep_routines += xmknod mount umount s_ptrace
 headers += sys/mount.h
 endif
 
-#ifeq ($(subdir), posix)
-#sysdep_routines := $(sysdep_routines) setpgrp
-#endif
-
 ifeq ($(subdir), time)
-sysdep_routines := $(sysdep_routines) adjtimex
+sysdep_routines += adjtimex
 headers += sys/timex.h
 endif
 
 ifeq ($(subdir), sysvipc)
-sysdep_routines := $(sysdep_routines) ipc
+sysdep_routines += ipc
 endif
 
 ifeq ($(subdir), socket)

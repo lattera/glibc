@@ -1,5 +1,19 @@
 Tue Feb 13 05:12:02 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=math]
+	(sysdep_routines): Append setfpucw.
+	(extra-objs): Append ieee-fpucw.o.
+	(install-lib): Append libieee.a.
+	(libieee.a): New target.
+	* sysdeps/unix/sysv/linux/ieee-fpucw.c: New file.
+	* sysdeps/unix/sysv/linux/i386/fpu_control.h
+	(_FPU_GETCW, _FPU_SETCW): New macros.
+	(fpu_control_t): New typedef.
+	(__setfpucw): Use fpu_control_t for argument type.
+	* sysdeps/unix/sysv/linux/fpu_control.c: Moved from linux/i386.
+
+	* sysdeps/unix/sysv/linux/init-first.c: Moved from linux/i386.
+
 	* sysdeps/unix/sysv/linux/syscalls.list: Add ipc syscall.
 	* sysdeps/unix/sysv/linux/i386/syscalls.list: File removed.
 
