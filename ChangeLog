@@ -1,4 +1,6 @@
-2001-09-19  Andreas Jaeger  <aj@suse.de>
+2001-09-20  Andreas Jaeger  <aj@suse.de>
+
+	* elf/elf.h (R_390_NUM): Correct value.
 
 	* Versions.def: Add missing versions 2.2.3 for libthread_db and
 	libpthread.
