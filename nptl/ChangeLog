@@ -1,3 +1,10 @@
+2004-06-29  Roland McGrath  <roland@redhat.com>
+
+	* Banner: NPTL no longer has its own version number.
+	* Makefile (nptl-version): Variable removed.
+	* sysdeps/pthread/Makefile (CFLAGS-confstr.c): Set LIBPTHREAD_VERSION
+	using $(version), the glibc version number.
+
 2004-06-29  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/pthread_once.S (__pthread_once):
