@@ -554,12 +554,37 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     return;
   else
     {
+# ifndef RESOLVE_CONFLICT_FIND_MAP
+      const Elf32_Sym *const refsym = sym;
+# endif
       Elf32_Addr value = RESOLVE (&sym, version, r_type);
       if (sym)
 	value += sym->st_value;
 
       switch (r_type)
 	{
+#  ifndef RESOLVE_CONFLICT_FIND_MAP
+	  /* Not needed for dl-conflict.c.  */
+	case R_ARM_COPY:
+	  if (sym == NULL)
+	    /* This can happen in trace mode if an object could not be
+	       found.  */
+	    break;
+	  if (sym->st_size > refsym->st_size
+	      || (GL(dl_verbose) && sym->st_size < refsym->st_size))
+	    {
+	      const char *strtab;
+
+	      strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
+	      _dl_error_printf ("\
+%s: Symbol `%s' has different size in shared object, consider re-linking\n",
+				rtld_progname ?: "<program name unknown>",
+				strtab + refsym->st_name);
+	    }
+	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
+						   refsym->st_size));
+	  break;
+#  endif /* !RESOLVE_CONFLICT_FIND_MAP */
 	case R_ARM_GLOB_DAT:
 	case R_ARM_JUMP_SLOT:
 	case R_ARM_ABS32:
