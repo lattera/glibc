@@ -1,5 +1,7 @@
 Wed Jan 24 03:22:07 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* malloc/mcheck.c (mabort): Declare prototype.
+
 	* sysdeps/unix/sysv/linux/fcntlbits.h: Moved from linux/i386.
 
 	* Makerules: Use -include for generated makefiles.
