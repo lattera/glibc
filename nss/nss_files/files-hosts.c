@@ -1,5 +1,5 @@
 /* Hosts file parser in nss_files module.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -166,7 +166,11 @@ _nss_files_get##name##_r (proto,					      \
 		      newstrlen += strlen (tmp_result_buf.h_name) + 1;	      \
 		    }							      \
 									      \
-		  /* Now we can check whether the buffer is large enough.  */ \
+		  /* Make sure bufferend is aligned.  */		      \
+		  assert ((bufferend - (char *) 0) % sizeof (char *) == 0);   \
+									      \
+		  /* Now we can check whether the buffer is large enough.     \
+		     16 is the maximal size of the IP address.  */	      \
 		  if (bufferend + 16 + (naddrs + 2) * sizeof (char *)	      \
 		      + roundup (newstrlen, sizeof (char *))		      \
 		      + (naliases + newaliases + 1) * sizeof (char *)	      \
@@ -217,7 +221,7 @@ _nss_files_get##name##_r (proto,					      \
 		  /* Round up the buffer end address.  */		      \
 		  bufferend += (sizeof (char *)				      \
 				- ((bufferend - (char *) 0)		      \
-				   % sizeof (char *)));			      \
+				   % sizeof (char *))) % sizeof (char *);     \
 									      \
 		  /* Now the new address.  */				      \
 		  new_h_addr_list[naddrs++] =				      \

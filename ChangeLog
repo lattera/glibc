@@ -1,3 +1,8 @@
+2003-02-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/nss_files/files-hosts.c (HOST_DB_LOOKUP): Compute alignment
+	correctly.  Reported by Thorsten Kukuk.
+
 2003-02-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Makefile (check-textrel-CFLAGS): Pass _XOPEN_SOURCE and
