@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  For i386/Hurd.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -247,4 +247,16 @@ __libc_init_first (int argc __attribute__ ((unused)), ...)
   
   _hurd_startup ((void **) &argc, &doinit);
 #endif
+}
+
+
+/* This function is defined here so that if this file ever gets into
+   ld.so we will get a link error.  Having this file silently included
+   in ld.so causes disaster, because the _init definition above will
+   cause ld.so to gain an init function, which is not a cool thing. */
+
+void 
+_dl_start () 
+{ 
+  abort (); 
 }

@@ -1,3 +1,21 @@
+Sat Sep 21 14:59:22 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* shlib-versions (*-*-gnu*): Increment libc to 0.2 for upcoming
+	binary distribution.
+
+	* sysdeps/mach/hurd/Makefile (rtld-installed-name): Provide
+	definition to override dangerous one in Makeconfig.
+
+	* hurd/Makefile (install-headers-nosubdir): Install <rpc/netdb.h>.
+	($(includedir)/rpc/netdb.h): New rule.
+	[ This is XXX until sunrpc can be built; <rpc/netdb.h> is
+	essential. ]
+
+Fri Sep 20 16:06:06 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/i386/init-first.c (_dl_start): Add definition,
+	to guarantee link errors if this is included in ld.so.
+
 Thu Sep 19 23:36:19 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* hurd/hurdinit.c (__libc_argv): Provide common decl.

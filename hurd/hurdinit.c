@@ -31,6 +31,8 @@ struct hurd_port *_hurd_ports;
 unsigned int _hurd_nports;
 mode_t _hurd_umask;
 sigset_t _hurdsig_traced;
+char **__libc_argv;
+
 
 error_t
 _hurd_ports_use (int which, error_t (*operate) (mach_port_t))
@@ -165,7 +167,6 @@ _hurd_setproc (process_t procserver)
 {
   error_t err;
   mach_port_t oldmsg;
-  extern char **__libc_argv;
 
   /* Give the proc server our message port.  */
   if (err = __proc_setmsgport (procserver, _hurd_msgport, &oldmsg))

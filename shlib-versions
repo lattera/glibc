@@ -24,8 +24,8 @@ alpha-*-linux*		libc=6
 # libhurduser.so.0.0 corresponds to hurd/*.defs as of 7 May 1996.
 *-*-gnu*		libhurduser=0.0
 
-# libc.so.0.0 is for the Hurd alpha release 0.0.
-*-*-gnu*		libc=0.0
+# libc.so.0.2 is for the Hurd alpha release 0.2.
+*-*-gnu*		libc=0.2
 
 # The -ldl interface (see <dlfcn.h>) is the same on all platforms.
 *-*-*			libdl=2
