@@ -59,40 +59,6 @@ __pthread_enable_asynccancel (void)
   return oldval;
 }
 
-/* XXX Ideally we have only one version.  But this needs preparation.  */
-void
-internal_function attribute_hidden
-__pthread_enable_asynccancel_2 (int *oldvalp)
-{
-  struct pthread *self = THREAD_SELF;
-  int oldval = THREAD_GETMEM (self, cancelhandling);
-
-  while (1)
-    {
-      int newval = oldval | CANCELTYPE_BITMASK;
-
-      if (newval == oldval)
-	break;
-
-      /* We have to store the value before enablying asynchronous
-	 cancellation.  */
-      *oldvalp = oldval;
-
-      int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling, newval,
-					      oldval);
-      if (__builtin_expect (curval == oldval, 1))
-	{
-	  if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
-	    {
-	      THREAD_SETMEM (self, result, PTHREAD_CANCELED);
-	      __do_cancel ();
-	    }
-
-	  break;
-	}
-    }
-}
-
 
 void
 internal_function attribute_hidden
