@@ -1,5 +1,8 @@
 2004-10-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_init.c (res_thread_freeres): Reset _res.options.
+	[BZ #434]
+
 	* resolv/res_send.c (send_dg): Use nonblocking sockets.  Add
 	appropriate poll/select calls and restart operation if necessary.
 	Also handle EINTR.

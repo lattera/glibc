@@ -597,6 +597,9 @@ res_thread_freeres (void)
 	free (_res._u._ext.nsaddrs[ns]);
 	_res._u._ext.nsaddrs[ns] = NULL;
       }
+
+  /* Make sure we do a full re-initialization the next time.  */
+  _res.options = 0;
 }
 text_set_element (__libc_thread_subfreeres, res_thread_freeres);
 text_set_element (__libc_subfreeres, res_thread_freeres);
