@@ -492,38 +492,54 @@ this is the first definition"));
 	{
 	  const char *ident = this_line;
 	  int message_number;
+	  int any_space;
 
 	  do
 	    ++this_line;
-	  while (this_line[0] != '\0' && !isspace (this_line[0]));;
-	  this_line[0] = '\0';	/* Terminate the identifier.  */
+	  while (this_line[0] != '\0' && !isspace (this_line[0]));
+	  any_space = isspace (*this_line);
+	  *this_line++ = '\0';	/* Terminate the identifier.  */
 
-	  do
-	    ++this_line;
-	  while (isspace (this_line[0]));
 	  /* Now we found the beginning of the message itself.  */
 
 	  if (isdigit (ident[0]))
 	    {
 	      struct message_list *runp;
+	      struct message_list *lastp;
 
 	      message_number = atoi (ident);
 
 	      /* Find location to insert the new message.  */
 	      runp = current->current_set->messages;
+	      lastp = NULL;
 	      while (runp != NULL)
 		if (runp->number == message_number)
 		  break;
 		else
-		  runp = runp->next;
+		  {
+		    lastp = runp;
+		    runp = runp->next;
+		  }
 	      if (runp != NULL)
 		{
-		  /* Oh, oh.  There is already a message with this
-		     number is the message set.  */
-		  error_at_line (0, 0, fname, start_line,
-				 gettext ("duplicated message number"));
-		  error_at_line (0, 0, runp->fname, runp->line,
-				 gettext ("this is the first definition"));
+		  if (any_space)
+		    {
+		      /* Oh, oh.  There is already a message with this
+			 number in the message set.  */
+		      error_at_line (0, 0, fname, start_line,
+				     gettext ("duplicated message number"));
+		      error_at_line (0, 0, runp->fname, runp->line,
+				     gettext ("this is the first definition"));
+		    }
+		  else
+		    {
+		      /* We have to remove this message.  */
+		      if (lastp != NULL)
+			lastp->next = runp->next;
+		      else
+			current->current_set->messages = runp->next;
+		      free (runp);
+		    }
 		  message_number = 0;
 		}
 	      ident = NULL;	/* We don't have a symbol.  */
@@ -535,10 +551,12 @@ this is the first definition"));
 	  else if (ident[0] != '\0')
 	    {
 	      struct message_list *runp;
-	      runp = current->current_set->messages;
+	      struct message_list *lastp;
 
 	      /* Test whether the symbolic name was not used for
 		 another message in this message set.  */
+	      runp = current->current_set->messages;
+	      lastp = NULL;
 	      while (runp != NULL)
 		if (runp->symbol != NULL && strcmp (ident, runp->symbol) == 0)
 		  break;
@@ -546,11 +564,24 @@ this is the first definition"));
 		  runp = runp->next;
 	      if (runp != NULL)
 		{
-		  /* The name is already used.  */
-		  error_at_line (0, 0, fname, start_line,
-				 gettext ("duplicated message identifier"));
-		  error_at_line (0, 0, runp->fname, runp->line,
-				 gettext ("this is the first definition"));
+		  if (any_space)
+		    {
+		      /* The name is already used.  */
+		      error_at_line (0, 0, fname, start_line,
+				     gettext ("\
+duplicated message identifier"));
+		      error_at_line (0, 0, runp->fname, runp->line,
+				     gettext ("this is the first definition"));
+		    }
+		  else
+		    {
+		      /* We have to remove this message.  */
+		      if (lastp != NULL)
+			lastp->next = runp->next;
+		      else
+			current->current_set->messages = runp->next;
+		      free (runp);
+		    }
 		  message_number = 0;
 		}
 	      else
