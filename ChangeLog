@@ -1,5 +1,7 @@
 Tue Jun 25 02:59:11 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* inet/getrpcent_r.c (DATABASE_NAME): New macro.
+
 	* inet/getrpcbynumber.c (BUFLEN): New macro.
 
 	* configure.in (--no-whole-archive check): Remove backslashes in cmd.

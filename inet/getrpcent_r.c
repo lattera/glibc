@@ -19,6 +19,7 @@ Boston, MA 02111-1307, USA.  */
 #include <rpc/netdb.h>
 
 
+#define DATABASE_NAME	rpc
 #define LOOKUP_TYPE	struct rpcent
 #define	GETFUNC_NAME	rpcent
 #define BUFLEN		1024
