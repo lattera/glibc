@@ -1,5 +1,7 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* intl/loadmsgcat.c: Include <locale.h.> for _LIBC.
+
 	* conform/data/netinet/in.h-data: Add reserved prefixes.
 
 	* conform/data/arpa/inet.h-data: Fix a few typos.

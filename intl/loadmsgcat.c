@@ -49,6 +49,7 @@
 
 #ifdef _LIBC
 # include <langinfo.h>
+# include <locale.h>
 #endif
 
 #if (defined HAVE_MMAP && defined HAVE_MUNMAP && !defined DISALLOW_MMAP) \
