@@ -1,5 +1,8 @@
 2003-04-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* configure.in: Add AC_PROG_CXX.
+	* config.make.in (CXX): Define.
+
 	* sysdeps/i386/i686/hp-timing.h (HP_TIMING_PRINT): Change type of
 	__len to size_t to avoid warnings.
 

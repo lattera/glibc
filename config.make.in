@@ -84,6 +84,7 @@ force-install = @force_install@
 
 # Build tools.
 CC = @CC@
+CXX = @CXX@
 BUILD_CC = @BUILD_CC@
 CFLAGS = @CFLAGS@
 AR = @AR@

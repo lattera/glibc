@@ -1,5 +1,8 @@
 2003-04-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h
+	(DL_SYSINFO_IMPLEMENTATION): Add .eh_frame information.
+
 	* sysdeps/unix/sysv/linux/unregister-atfork.c
 	(__unregister_atfork): Don't free memory not allocated dynamically.
 
