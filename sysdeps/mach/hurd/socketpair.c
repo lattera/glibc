@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -48,7 +48,8 @@ DEFUN(socketpair, (domain, type, protocol, fds),
   /* Create two sockets and connect them together.  */
 
   err = __socket_create (server, type, protocol, &sock1);
-  if (err == MACH_SEND_INVALID_DEST || err == MIG_SERVER_DIED)
+  if (err == MACH_SEND_INVALID_DEST || err == MIG_SERVER_DIED
+      || err == MIG_BAD_ID || err == EOPNOTSUPP)
     {
       /* On the first use of the socket server during the operation,
 	 allow for the old server port dying.  */

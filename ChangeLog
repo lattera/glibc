@@ -1,3 +1,10 @@
+Fri Jul 21 12:57:29 1995  Michael I Bushnell  <mib@geech.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/socket.c (socket): Consider MIG_BAD_ID and
+ 	EOPNOTSUPP as indications that the server has died.
+	* sysdeps/mach/hurd/pipe.c (__pipe): Likewise.
+	* sysdeps/mach/hurd/socketpair.c (socketpair): Likewise.
+
 Mon Jul 17 08:45:40 1995  Jim Meyering  (meyering@comco.com)
 
 	* strtol.c: Portability changes from Uli Drepper.
