@@ -6,7 +6,7 @@ type sa_family_t
 type {struct sockaddr}
 
 element {struct sockaddr} sa_family_t sa_family
-element {struct sockaddr} char sa_data [0]
+element {struct sockaddr} char sa_data []
 
 type {struct sockaddr_storage}
 
@@ -64,7 +64,7 @@ macro SO_RCVTIMEO
 macro SO_REUSEADDR
 macro SO_SNDBUF
 macro SO_SNDLOWAT
-macro SO_SNFTIMEO
+macro SO_SNDTIMEO
 macro SO_TYPE
 
 macro SOMAXCONN
@@ -80,7 +80,7 @@ macro MSG_WAITALL
 macro AF_UNIX
 macro AF_UNSPEC
 macro AF_INET
-macro_AF_INET6
+macro AF_INET6
 
 macro SHUT_RD
 macro SHUT_WR
@@ -91,18 +91,29 @@ function int bind (int, const struct sockaddr*, socklen_t)
 function int connect (int, const struct sockaddr*, socklen_t)
 function int getpeername (int, struct sockaddr*, socklen_t*)
 function int getsockname (int, struct sockaddr*, socklen_t*)
-function int getsockopt (int, int, int, void*, socklen_t)
+function int getsockopt (int, int, int, void*, socklen_t*)
 function int listen (int, int)
 function ssize_t recv (int, void*, size_t, int)
-function ssize_t recvfrom (int, void*, size_t, int)
+function ssize_t recvfrom (int, void*, size_t, int, struct sockaddr*, socklen_t*)
 function ssize_t recvmsg (int, struct msghdr*, int)
-function ssize_t send (int, const struct msghdr*, int)
+function ssize_t send (int, const void*, size_t, int)
 function ssize_t sendmsg (int, const struct msghdr*, int)
 function ssize_t sendto (int, const void*, size_t, int, const struct sockaddr*, socklen_t)
 function int setsockopt (int, int, int, const void*, socklen_t)
 function int shutdown (int, int)
 function int socket (int, int, int)
-function int socketpair (int, int, int, int)
+function int socketpair (int, int, int, int[2])
 
 allow-header sys/uio.h
+
+allow ss_*
+allow sa_*
+allow if_*
+allow ifc_*
+allow ifru_*
+allow infu_*
+allow ifra_*
+allow msg_*
+allow cmsg_*
+allow l_*
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1997, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@
 int
 listen (fd, n)
      int fd;
-     unsigned int n;
+     int n;
 {
   error_t err = HURD_DPORT_USE (fd, __socket_listen (port, n));
   if (err)

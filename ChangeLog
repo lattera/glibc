@@ -1,5 +1,23 @@
 2001-01-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/sys/socket.h-data: Fix typos.  Correct getsockopt,
+	recvfrom, send, and socketpair prototypes.  Add allow lines.
+	* socket/sys/socket.h: Include <sys/uio.h>.
+	Don't use fancy __SOCKADDR_ARG definition unless __USE_GNU.
+	Fix type of second parameter of listen.
+	Don't declare isfdtype unless __USE_MISC.
+	* sysdeps/generic/listen.c: Fix type of second parameter of listen.
+	* sysdeps/mach/hurd/listen.c: Likewise.
+	* sysdeps/generic/bits/socket.h (struct sockaddr_storage): Define
+	ss_family and __ss_family.
+	* sysdeps/unix/sysv/aix/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
+	(struct msghdr): Change type of msg_iovlen to int and type of
+	msg_controllen to socklen_t.
+	* sysdeps/unix/sysv/linux/alpha/bits/socket.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/bits/socket.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/socket.h: New file.
+
 	* conform/data/sys/shm.h-data: SHMLBA is not required to by a constant.
 	* conform/conformtest.pl: Implement handling of symbol.
 

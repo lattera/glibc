@@ -1,5 +1,5 @@
 /* Declarations of socket constants, types, and functions.
-   Copyright (C) 1991,92,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,1994-1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 
 __BEGIN_DECLS
 
+#include <sys/uio.h>
 #define	__need_size_t
 #include <stddef.h>
 
@@ -61,7 +62,7 @@ enum
    uses with any of the listed types to be allowed without complaint.
    G++ 2.7 does not support transparent unions so there we want the
    old-style declaration, too.  */
-#if defined __cplusplus || !__GNUC_PREREQ (2, 7)
+#if defined __cplusplus || !__GNUC_PREREQ (2, 7) || !defined __USE_GNU
 # define __SOCKADDR_ARG		struct sockaddr *__restrict
 # define __CONST_SOCKADDR_ARG	__const struct sockaddr *
 #else
@@ -178,7 +179,7 @@ extern int setsockopt (int __fd, int __level, int __optname,
 /* Prepare to accept connections on socket FD.
    N connection requests will be queued before further requests are refused.
    Returns 0 on success, -1 for errors.  */
-extern int listen (int __fd, unsigned int __n) __THROW;
+extern int listen (int __fd, int __n) __THROW;
 
 /* Await a connection on socket FD.
    When a connection arrives, open a new socket to communicate with it,
@@ -198,10 +199,12 @@ extern int accept (int __fd, __SOCKADDR_ARG __addr,
 extern int shutdown (int __fd, int __how) __THROW;
 
 
+#ifdef __USE_MISC
 /* FDTYPE is S_IFSOCK or another S_IF* macro defined in <sys/stat.h>;
    returns 1 if FD is open on an object of the indicated type, 0 if not,
    or -1 for errors (setting errno).  */
 extern int isfdtype (int __fd, int __fdtype) __THROW;
+#endif
 
 __END_DECLS
 

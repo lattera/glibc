@@ -1,5 +1,5 @@
-/* System-specific socket constants and types.  Linux/MIPS version.
-   Copyright (C) 1991,92,1994-1999,2000,2001 Free Software Foundation, Inc.
+/* System-specific socket constants and types.  Linux/SPARC64 version.
+   Copyright (C) 1991,1992,1994-1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,12 +40,12 @@ typedef __socklen_t socklen_t;
 /* Types of sockets.  */
 enum __socket_type
 {
-  SOCK_DGRAM = 1,		/* Connectionless, unreliable datagrams
-				   of fixed maximum length.  */
-#define SOCK_DGRAM SOCK_DGRAM
-  SOCK_STREAM = 2,		/* Sequenced, reliable, connection-based
+  SOCK_STREAM = 1,		/* Sequenced, reliable, connection-based
 				   byte streams.  */
 #define SOCK_STREAM SOCK_STREAM
+  SOCK_DGRAM = 2,		/* Connectionless, unreliable datagrams
+				   of fixed maximum length.  */
+#define SOCK_DGRAM SOCK_DGRAM
   SOCK_RAW = 3,			/* Raw protocol interface.  */
 #define SOCK_RAW SOCK_RAW
   SOCK_RDM = 4,			/* Reliably-delivered messages.  */
@@ -212,10 +212,10 @@ struct msghdr
     socklen_t msg_namelen;	/* Length of address data.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
-    int msg_iovlen;		/* Number of elements in the vector.  */
+    size_t msg_iovlen;		/* Number of elements in the vector.  */
 
     void *msg_control;		/* Ancillary data (eg BSD filedesc passing). */
-    socklen_t msg_controllen;	/* Ancillary data buffer length.  */
+    size_t msg_controllen;	/* Ancillary data buffer length.  */
 
     int msg_flags;		/* Flags on received message.  */
   };
