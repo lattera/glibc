@@ -168,7 +168,7 @@ CODE facilitynames[] =
 
 __BEGIN_DECLS
 
-/* Close desriptor used to write to system logger.
+/* Close descriptor used to write to system logger.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */

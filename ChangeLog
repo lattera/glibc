@@ -1,3 +1,7 @@
+2005-02-14  GOTO Masanori  <gotom@debian.or.jp>
+
+	* misc/sys/syslog.h: Fix typo in comment.
+
 2005-02-14  Roland McGrath  <roland@redhat.com>
 
 	[BZ #720]
