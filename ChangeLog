@@ -1,3 +1,9 @@
+2003-03-03  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/elf/configure.in: Don't define
+	PI_STATIC_AND_HIDDEN.
+	* sysdeps/powerpc/powerpc32/elf/configure: Regenerated.
+
 2003-03-03  Ian Wienand  <ianw@gelato.unsw.edu.au>
 
 	* sysdeps/unix/sysv/linux/ia64/clone2.S: Update to take extra clone
