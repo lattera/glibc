@@ -1,3 +1,14 @@
+2003-10-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/asia: Update from tzdata2003d.
+	* australasia: Likewise.
+	* backward: Likewise.
+	* europe: Likewise.
+	* iso3166.tab: Likewise.
+	* northamerica: Likewise.
+	* southamerica: Likewise.
+	* zone.tab: Likewise.
+
 2003-10-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/backtrace.c: New file.
@@ -31,7 +42,7 @@
 	(_help, __argp_error, __argp_failure) [!_LIBC && (HAVE_FLOCKFILE
 	&& HAVE_FUNLOCKFILE)]: Protect call to flockfile and funlockfile.
 	(__argp_basename) [!_LIBC]: New. Taken from LSH, by Niels Möller,
-	modifed after comments from Ulrich Drepper.
+	modified after comments from Ulrich Drepper.
 	(__argp_short_program_name): Ditto.
 	(__argp_state_help, __argp_error, __argp_failure): Use it.
 	(__argp_failure): Use strerror when necessary.
