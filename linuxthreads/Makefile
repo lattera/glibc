@@ -86,6 +86,7 @@ ifeq ($(build-shared),yes)
 # We do it once and save the result in a generated makefile.
 -include $(objpfx)multidir.mk
 $(objpfx)multidir.mk: $(common-objpfx)config.make
+	$(make-target-directory)
 	dir=`$(CC) $(CFLAGS) $(CPPFLAGS) -print-multi-directory`; \
 	echo "multidir := $$dir" > $@T
 	mv -f $@T $@
@@ -308,7 +309,7 @@ $(objpfx)$(multidir)/crtn.o: $(objpfx)crtn.o $(objpfx)$(multidir)
 	ln -f $< $@
 endif
 
-generated += crti.S crtn.S defs.h pt-initfini.s libpthread_nonshared.a 
+generated += crti.S crtn.S defs.h pt-initfini.s libpthread_nonshared.a
 endif
 
 ifeq (yes,$(build-static-nss))
