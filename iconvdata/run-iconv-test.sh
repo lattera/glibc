@@ -1,6 +1,6 @@
 #! /bin/sh -f
 # Run available iconv(1) tests.
-# Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 #
@@ -59,7 +59,11 @@ while read from to subset targets; do
   for t in $targets; do
     echo $ac_n "test data: $from -> $t $ac_c"
     $PROG -f $from -t $t testdata/$from > $temp1 ||
-      { echo "FAILED"; failed=1; continue; }
+      { if test $? -gt 128; then exit 1; fi
+	echo "FAILED"
+	failed=1
+	continue
+      }
     echo $ac_n "OK$ac_c"
     if test -s testdata/$from..$t; then
       cmp $temp1 testdata/$from..$t > /dev/null 2>&1 ||
@@ -68,7 +72,11 @@ while read from to subset targets; do
     fi
     echo $ac_n " -> $from $ac_c"
     $PROG -f $t -t $to -o $temp2 $temp1 ||
-      { echo "FAILED"; failed=1; continue; }
+      { if test $? -gt 128; then exit 1; fi
+	echo "FAILED"
+	failed=1
+	continue
+      }
     echo $ac_n "OK$ac_c"
     test -s $temp1 && cmp testdata/$from $temp2 > /dev/null 2>&1 ||
       { echo "/FAILED"; failed=1; continue; }
@@ -82,8 +90,11 @@ while read from to subset targets; do
       echo $ac_n "   suntzu: $from -> $t -> $to $ac_c"
       $PROG -f $from -t $t testdata/suntzus |
       $PROG -f $t -t $to > $temp1 ||
-	{ echo "FAILED"; failed=1;
-	  continue; }
+	{ if test $? -gt 128; then exit 1; fi
+	  echo "FAILED"
+	  failed=1
+	  continue
+	}
       echo $ac_n "OK$ac_c"
       cmp testdata/suntzus $temp1 ||
 	{ echo "/FAILED";
@@ -92,8 +103,11 @@ while read from to subset targets; do
       echo $ac_n "   suntzu: $from -> ASCII -> $to $ac_c"
       $PROG -f ASCII -t $to testdata/suntzus |
       $PROG -f $to -t ASCII > $temp1 ||
-        { echo "FAILED";
-	  failed=1; continue; }
+        { if test $? -gt 128; then exit 1; fi
+	  echo "FAILED"
+	  failed=1
+	  continue
+	}
       echo $ac_n "OK$ac_c"
       cmp testdata/suntzus $temp1 ||
         { echo "/FAILED";

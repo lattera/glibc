@@ -1,5 +1,8 @@
 2000-09-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/run-iconv-test.sh: Add code to immediate stop the
+	script when ^C is hit.
+
 	* locale/programs/localedef.c (construct_output_path): Correct
 	computation of endp after asprintf.
 	* locale/programs/locfile.c (write_locale_data): Don't add extra
