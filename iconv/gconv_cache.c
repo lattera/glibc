@@ -20,7 +20,6 @@
 
 #include <dlfcn.h>
 #include <fcntl.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -241,8 +240,7 @@ __gconv_lookup_cache (const char *toset, const char *fromset,
   if (find_module_idx (toset, &toidx) != 0
       || (header->module_offset + (toidx + 1) * sizeof (struct module_entry)
 	  > cache_size))
-    {puts("toset not found");
-    return __GCONV_NOCONV;}
+    return __GCONV_NOCONV;
   to_module = &modtab[toidx];
 
   /* Avoid copy-only transformations if the user requests.   */
