@@ -1,3 +1,7 @@
+2001-04-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/alpha/fpu/libm-test-ulps: Adjust error values for atan2f.
+
 2001-04-17  David S. Miller  <davem@redhat.com>
 
 	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Update for new atan2 tests.

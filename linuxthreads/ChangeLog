@@ -1,3 +1,7 @@
+2001-04-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile: New file.
+
 2001-04-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* signals.c (sigwait): NSIG is no signal number.  Block all
