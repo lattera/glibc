@@ -90,5 +90,34 @@ Got %d instead\n",
 
   fclose (f);
 
+
+  if ((f = fopen (fname, "r+")) == (FILE *) NULL)
+    {
+      perror ("fopen(\"r+\")");
+    }
+
+  fread (buf, 3, 1, f);
+  if (ftell (f) != 3)
+    {
+      puts ("ftell failed");
+      return 1;
+    }
+  errno = 0;
+  if (fseek (f, -10, SEEK_CUR) == 0)
+    {
+      printf ("fseek() for r+ to before start of file worked!\n");
+      result = 1;
+    }
+  else if (errno != EINVAL)
+    {
+      printf ("\
+fseek() for r+ to before start of file did not set errno to EINVAL.  \
+Got %d instead\n",
+	 errno);
+      result = 1;
+    }
+
+  fclose (f);
+
   return result;
 }

@@ -1,3 +1,9 @@
+2002-07-22  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/errlist.c: Remove extra weak alias
+	definiton of _old_sys_nerr.  Define _old_sys_errlist as strong
+	alias.
+
 2002-07-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/hashval.h: Make more self-containedby defining LONG_BITS.

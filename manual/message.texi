@@ -1688,27 +1688,15 @@ of the environment variable.  It can split the value is different pieces
 and by leaving out the only or the other part it can construct new
 values.  This happens of course in a predictable way.  To understand
 this one must know the format of the environment variable value.  There
-are two more or less standardized forms:
+is one more or less standardized form, originally from the X/Open
+specification:
 
-@table @emph
-@item X/Open Format
 @code{language[_territory[.codeset]][@@modifier]}
 
-@item CEN Format (European Community Standard)
-@code{language[_territory][+audience][+special][,[sponsor][_revision]]}
-@end table
-
-The functions will automatically recognize which format is used.  Less
-specific locale names will be stripped of in the order of the following
-list:
+Less specific locale names will be stripped of in the order of the
+following list:
 
 @enumerate
-@item
-@code{revision}
-@item
-@code{sponsor}
-@item
-@code{special}
 @item
 @code{codeset}
 @item
@@ -1716,13 +1704,10 @@ list:
 @item
 @code{territory}
 @item
-@code{audience}/@code{modifier}
+@code{modifier}
 @end enumerate
 
-From the last entry one can see that the meaning of the @code{modifier}
-field in the X/Open format and the @code{audience} format have the same
-meaning.  Beside one can see that the @code{language} field for obvious
-reasons never will be dropped.
+The @code{language} field will never be dropped for obvious reasons.
 
 The only new thing is the @code{normalized codeset} entry.  This is
 another goodie which is introduced to help reducing the chaos which
