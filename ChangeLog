@@ -1,3 +1,10 @@
+2005-01-05  Roland McGrath  <roland@redhat.com>
+
+	* configure.in (libc_cv_cpp_asm_debuginfo): Checked moved ...
+	* sysdeps/i386/configure.in: ... here.  New file.
+	* sysdeps/i386/configure: New generated file.
+	* configure: Regenerated.
+
 2005-01-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/libc-start.c [SHARED] (__libc_start_main): Don't
