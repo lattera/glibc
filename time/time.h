@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -132,6 +132,13 @@ struct itimerspec
 struct sigevent;
 
 #endif	/* POSIX.1b */
+
+#ifdef __USE_XOPEN2K
+# ifndef __pid_t_defined
+typedef __pid_t pid_t;
+#  define __pid_t_defined
+# endif
+#endif
 
 
 /* Time used by the program so far (user time + system time).
@@ -268,6 +275,11 @@ extern int clock_gettime (clockid_t __clock_id, struct timespec *__tp) __THROW;
 /* Set clock CLOCK_ID to value TP.  */
 extern int clock_settime (clockid_t __clock_id, __const struct timespec *__tp)
      __THROW;
+
+#  ifdef __USE_XOPEN2K
+/* Return clock ID for CPU-time clock.  */
+extern int clock_getcpuclockid (pid_t __pid, clockid_t *__clock_id);
+#  endif
 
 
 /* Create new per-process timer using CLOCK_ID.  */

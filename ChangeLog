@@ -22,6 +22,7 @@
 	* time/Versions [libc] (GLIBC_2.2): Remove clock_getres, clock_gettime,
 	clock_settime, timer_create, timer_delete, timer_getoverrun,
 	timer_gettime, and timer_settime.
+	* time/time.h: Define pid_t.  Add prototype for clock_getcpuclockid.
 
 	* sysdeps/mach/hurd/bits/time.h: Drop K&R compatibility.  Use __const__
 	and not const as attribute name.
