@@ -1,3 +1,9 @@
+2001-05-11  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/Makefile ($(link-rpcuserlibs)): Don't use
+	$(build-module) here, since we don't need the full magilla.
+	Just use $(build-module-helper) and append our special options.
+
 2001-05-09  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/readdir.c: Make sure we don't modify errno when we
