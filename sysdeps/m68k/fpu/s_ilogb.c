@@ -21,9 +21,9 @@ Cambridge, MA 02139, USA.  */
 #include <math.h>
 
 int
-DEFUN(__isnanl, (x), long double x)
+DEFUN(__ilogb, (x), double x)
 {
-  return __m81_u(__isnanl)(x);
+  return __m81_u(__ilogb)(x);
 }
 
-weak_alias (__isnanl, isnanl)
+weak_alias (__ilogb, ilogb)

@@ -20,10 +20,12 @@ Cambridge, MA 02139, USA.  */
 #define	__NO_MATH_INLINES
 #include <math.h>
 
-int
-DEFUN(__isnanl, (x), long double x)
-{
-  return __m81_u(__isnanl)(x);
-}
+#ifndef FUNC
+#define FUNC __ieee754_fmod
+#endif
 
-weak_alias (__isnanl, isnanl)
+double
+DEFUN(FUNC, (x, y), double x AND double y)
+{
+  return __m81_u(FUNC)(x, y);
+}

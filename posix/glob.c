@@ -268,48 +268,121 @@ glob (pattern, flags, errfunc, pglob)
       const char *begin = strchr (pattern, '{');
       if (begin != NULL)
 	{
-	  const char *end = strchr (begin + 1, '}');
-	  if (end != NULL && end != begin + 1)
+	  int firstc;
+	  size_t restlen;
+	  const char *p, *end, *next;
+	  unsigned int depth = 0;
+
+	  /* Find the end of the brace expression, by counting braces.
+	     While we're at it, notice the first comma at top brace level.  */
+	  end = begin + 1;
+	  next = NULL;
+	  while (1)
 	    {
-	      size_t restlen = strlen (end + 1) + 1;
-	      const char *p, *comma;
-	      char *buf;
-	      size_t bufsz = 0;
-	      int firstc;
-	      if (!(flags & GLOB_APPEND))
+	      switch (*end++)
 		{
-		  pglob->gl_pathc = 0;
-		  pglob->gl_pathv = NULL;
-		}
-	      firstc = pglob->gl_pathc;
-	      for (p = begin + 1;; p = comma + 1)
-		{
-		  int result;
-		  comma = strchr (p, ',');
-		  if (comma == NULL)
-		    comma = strchr (p, '\0');
-		  if ((begin - pattern) + (comma - p) + 1 > bufsz)
-		    {
-		      if (bufsz * 2 < comma - p + 1)
-			bufsz *= 2;
-		      else
-			bufsz = comma - p + 1;
-		      buf = __alloca (bufsz);
-		    }
-		  memcpy (buf, pattern, begin - pattern);
-		  memcpy (buf + (begin - pattern), p, comma - p);
-		  memcpy (buf + (begin - pattern) + (comma - p), end, restlen);
-		  result = glob (buf, ((flags & ~(GLOB_NOCHECK|GLOB_NOMAGIC)) |
-				       GLOB_APPEND), errfunc, pglob);
-		  if (result && result != GLOB_NOMATCH)
-		    return result;
-		  if (*comma == '\0')
+		case ',':
+		  if (depth == 0 && next == NULL)
+		    next = end;
+		  continue;
+		case '{':
+		  ++depth;
+		  continue;
+		case '}':
+		  if (depth-- == 0)
 		    break;
+		  continue;
+		case '\0':
+		  return glob (pattern, flags &~ GLOB_BRACE, errfunc, pglob);
 		}
-	      if (pglob->gl_pathc == firstc &&
-		  !(flags & (GLOB_NOCHECK|GLOB_NOMAGIC)))
-		return GLOB_NOMATCH;
+	      break;
 	    }
+	  restlen = strlen (end) + 1;
+	  if (next == NULL)
+	    next = end;
+
+	  /* We have a brace expression.  BEGIN points to the opening {,
+	     NEXT points past the terminator of the first element, and END
+	     points past the final }.  We will accumulate result names from
+	     recursive runs for each brace alternative in the buffer using
+	     GLOB_APPEND.  */
+
+	  if (!(flags & GLOB_APPEND))
+	    {
+	      /* This call is to set a new vector, so clear out the
+		 vector so we can append to it.  */
+	      pglob->gl_pathc = 0;
+	      pglob->gl_pathv = NULL;
+	    }
+	  firstc = pglob->gl_pathc;
+
+	  /* In this loop P points to the beginning of the current element
+	     and NEXT points past its terminator.  */
+	  p = begin + 1;
+	  while (1)
+	    {
+	      /* Construct a whole name that is one of the brace
+		 alternatives in a temporary buffer.  */
+	      int result;
+	      size_t bufsz = (begin - pattern) + (next - 1 - p) + restlen;
+#ifdef __GNUC__
+	      char onealt[bufsz];
+#else
+	      char *onealt = malloc (bufsz);
+	      if (onealt == NULL)
+		{
+		  if (!(flags & GLOB_APPEND))
+		    globfree (&pglob);
+		  return GLOB_NOSPACE;
+		}
+#endif
+	      memcpy (onealt, pattern, begin - pattern);
+	      memcpy (&onealt[begin - pattern], p, next - 1 - p);
+	      memcpy (&onealt[(begin - pattern) + (next - 1 - p)],
+		      end, restlen);
+	      result = glob (onealt,
+			     ((flags & ~(GLOB_NOCHECK|GLOB_NOMAGIC)) |
+			      GLOB_APPEND), errfunc, pglob);
+#ifndef __GNUC__
+	      free (onealt);
+#endif
+
+	      /* If we got an error, return it.  */
+	      if (result && result != GLOB_NOMATCH)
+		{
+		  if (!(flags & GLOB_APPEND))
+		    globfree (pglob);
+		  return result;
+		}
+
+	      /* Advance past this alternative and process the next.  */
+	      p = next;
+	      depth = 0;
+	    scan:
+	      switch (*p++)
+		{
+		case ',':
+		  if (depth == 0)
+		    {
+		      /* Found the next alternative.  Loop to glob it.  */
+		      next = p;
+		      continue;
+		    }
+		  goto scan;
+		case '{':
+		  ++depth;
+		  goto scan;
+		case '}':
+		  if (depth-- == 0)
+		    /* End of the brace expression.  Break out of the loop.  */
+		    break;
+		  goto scan;
+		}
+	    }
+
+	  if (pglob->gl_pathc == firstc &&
+	      !(flags & (GLOB_NOCHECK|GLOB_NOMAGIC)))
+	    return GLOB_NOMATCH;
 	}
     }
 

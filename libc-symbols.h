@@ -48,6 +48,9 @@ Cambridge, MA 02139, USA.  */
 #define _LIBC	1
 
 #include <config.h>
+
+/* This disables sccsid/rcsid strings in lots of code of non-GNU origin.  */
+#define lint	1
 /*
 
 */

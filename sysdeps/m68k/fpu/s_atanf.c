@@ -20,10 +20,17 @@ Cambridge, MA 02139, USA.  */
 #define	__NO_MATH_INLINES
 #include <math.h>
 
-int
-DEFUN(__isnanl, (x), long double x)
+#ifndef FUNC
+#define FUNC atanf
+#endif
+
+#define __CONCATX(a,b) __CONCAT(a,b)
+
+float
+DEFUN(__CONCATX(__,FUNC), (x), float x)
 {
-  return __m81_u(__isnanl)(x);
+  return __m81_u(__CONCATX(__,FUNC))(x);
 }
 
-weak_alias (__isnanl, isnanl)
+#define weak_aliasx(a,b) weak_alias(a,b)
+weak_aliasx (__CONCATX(__,FUNC), FUNC)

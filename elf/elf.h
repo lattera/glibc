@@ -412,12 +412,12 @@ typedef struct
 
 typedef struct
 {
-  int a_type;				/* Entry type */
+  int a_type;			/* Entry type */
   union
     {
-      long a_val;			/* Integer value */
-      void *a_ptr;			/* Pointer value */
-      void (*a_fcn) ();			/* Function pointer value */
+      long int a_val;		/* Integer value */
+      void *a_ptr;		/* Pointer value */
+      void (*a_fcn) (void);	/* Function pointer value */
     } a_un;
 } Elf32_auxv_t;
 

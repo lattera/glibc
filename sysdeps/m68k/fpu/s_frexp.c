@@ -20,10 +20,9 @@ Cambridge, MA 02139, USA.  */
 #define	__NO_MATH_INLINES
 #include <math.h>
 
-int
-DEFUN(__isnanl, (x), long double x)
+double
+DEFUN(__frexp, (value, expptr), double value AND int *expptr)
 {
-  return __m81_u(__isnanl)(x);
+  return __m81_u(__frexp)(value, expptr);
 }
-
-weak_alias (__isnanl, isnanl)
+weak_alias (__frexp, frexp)

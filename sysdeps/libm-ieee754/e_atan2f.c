@@ -49,7 +49,7 @@ pi_lo   = 1.5099578832e-07; /* 0x34222168 */
 	if((ix>0x7f800000)||
 	   (iy>0x7f800000))	/* x or y is NaN */
 	   return x+y;
-	if(hx==0x3f800000) return atanf(y);   /* x=1.0 */
+	if(hx==0x3f800000) return __atanf(y);   /* x=1.0 */
 	m = ((hy>>31)&1)|((hx>>30)&2);	/* 2*sign(x)+sign(y) */
 
     /* when y = 0 */
@@ -89,7 +89,7 @@ pi_lo   = 1.5099578832e-07; /* 0x34222168 */
 	k = (iy-ix)>>23;
 	if(k > 60) z=pi_o_2+(float)0.5*pi_lo; 	/* |y/x| >  2**60 */
 	else if(hx<0&&k<-60) z=0.0; 	/* |y|/x < -2**60 */
-	else z=atanf(fabsf(y/x));	/* safe to do y/x */
+	else z=__atanf(fabsf(y/x));	/* safe to do y/x */
 	switch (m) {
 	    case 0: return       z  ;	/* atan(+,+) */
 	    case 1: {

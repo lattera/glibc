@@ -17,13 +17,13 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#define	__NO_MATH_INLINES
 #include <math.h>
 
-int
-DEFUN(__isnanl, (x), long double x)
+float
+DEFUN(__kernel_tanf, (x, y, iy), float x AND float y AND int iy)
 {
-  return __m81_u(__isnanl)(x);
+  if (iy == 1)
+    return __tanf (x + y);
+  else
+    return -1.0 / __tanf (x + y);
 }
-
-weak_alias (__isnanl, isnanl)

@@ -1,3 +1,79 @@
+Sat Mar 16 20:08:22 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/alpha/memchr.S: new file.
+	* sysdeps/alpha/memchr.c: obsolete file removed.
+
+Sat Mar 16 16:26:09 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* misc/Makefile (headers): Add sysexits.h.
+	* misc/sysexits.h: New file.
+
+Thu Mar 14 15:20:45 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/e_atan2.c (__ieee754_atan2): Change atan
+	call to __atan.
+	* sysdeps/libm-ieee754/e_atan2f.c (__ieee754_atan2f): Change atanf
+ 	call to __atanf.
+
+	* sysdeps/m68k/fpu/e_acos.c, sysdeps/m68k/fpu/e_acosf.c,
+	sysdeps/m68k/fpu/e_asin.c, sysdeps/m68k/fpu/e_asinf.c,
+	sysdeps/m68k/fpu/e_atanh.c, sysdeps/m68k/fpu/e_atanhf.c,
+	sysdeps/m68k/fpu/e_cosh.c, sysdeps/m68k/fpu/e_coshf.c,
+	sysdeps/m68k/fpu/e_exp.c, sysdeps/m68k/fpu/e_expf.c,
+	sysdeps/m68k/fpu/e_fmod.c, sysdeps/m68k/fpu/e_fmodf.c,
+	sysdeps/m68k/fpu/e_log.c, sysdeps/m68k/fpu/e_log10.c,
+	sysdeps/m68k/fpu/e_log10f.c, sysdeps/m68k/fpu/e_logf.c,
+	sysdeps/m68k/fpu/e_pow.c, sysdeps/m68k/fpu/e_powf.c,
+	sysdeps/m68k/fpu/e_remainder.c, sysdeps/m68k/fpu/e_remainderf.c,
+	sysdeps/m68k/fpu/e_scalb.c, sysdeps/m68k/fpu/e_scalbf.c,
+	sysdeps/m68k/fpu/e_sinh.c, sysdeps/m68k/fpu/e_sinhf.c,
+	sysdeps/m68k/fpu/e_sqrt.c, sysdeps/m68k/fpu/e_sqrtf.c,
+	sysdeps/m68k/fpu/k_cos.c, sysdeps/m68k/fpu/k_cosf.c,
+	sysdeps/m68k/fpu/k_sin.c, sysdeps/m68k/fpu/k_sinf.c,
+	sysdeps/m68k/fpu/k_tan.c, sysdeps/m68k/fpu/k_tanf.c,
+	sysdeps/m68k/fpu/s_atan.c, sysdeps/m68k/fpu/s_atanf.c,
+	sysdeps/m68k/fpu/s_ceil.c, sysdeps/m68k/fpu/s_ceilf.c,
+	sysdeps/m68k/fpu/s_cos.c, sysdeps/m68k/fpu/s_cosf.c,
+	sysdeps/m68k/fpu/s_expm1.c, sysdeps/m68k/fpu/s_expm1f.c,
+	sysdeps/m68k/fpu/s_fabs.c, sysdeps/m68k/fpu/s_fabsf.c,
+	sysdeps/m68k/fpu/s_finite.c, sysdeps/m68k/fpu/s_finitef.c,
+	sysdeps/m68k/fpu/s_floor.c, sysdeps/m68k/fpu/s_floorf.c,
+	sysdeps/m68k/fpu/s_frexp.c, sysdeps/m68k/fpu/s_frexpf.c,
+	sysdeps/m68k/fpu/s_ilogb.c, sysdeps/m68k/fpu/s_ilogbf.c,
+	sysdeps/m68k/fpu/s_isinf.c, sysdeps/m68k/fpu/s_isinff.c,
+	sysdeps/m68k/fpu/s_isnan.c, sysdeps/m68k/fpu/s_isnanf.c,
+	sysdeps/m68k/fpu/s_ldexp.c, sysdeps/m68k/fpu/s_ldexpf.c,
+	sysdeps/m68k/fpu/s_log1p.c, sysdeps/m68k/fpu/s_log1pf.c,
+	sysdeps/m68k/fpu/s_logb.c, sysdeps/m68k/fpu/s_logbf.c,
+	sysdeps/m68k/fpu/s_modf.c, sysdeps/m68k/fpu/s_modff.c,
+	sysdeps/m68k/fpu/s_rint.c, sysdeps/m68k/fpu/s_rintf.c,
+	sysdeps/m68k/fpu/s_scalbn.c, sysdeps/m68k/fpu/s_scalbnf.c,
+	sysdeps/m68k/fpu/s_significand.c,
+	sysdeps/m68k/fpu/s_significandf.c, sysdeps/m68k/fpu/s_sin.c,
+	sysdeps/m68k/fpu/s_sinf.c, sysdeps/m68k/fpu/s_tan.c,
+	sysdeps/m68k/fpu/s_tanf.c, sysdeps/m68k/fpu/s_tanh.c,
+	sysdeps/m68k/fpu/s_tanhf.c: New files, for m68881 port of fdlibm.
+
+	* sysdeps/m68k/fpu/__math.h: Rewritten for fdlibm.
+
+	* sysdeps/m68k/fpu/isinfl.c: Rewritten to get argument type right.
+	* sysdeps/m68k/fpu/isnanl.c: Likewise.
+
+Thu Mar 14 06:01:07 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* posix/glob.c (glob): In GLOB_BRACE brace expansion, fix buffer size
+	calculation to include trailing invariant portion.  Don't use alloca;
+	instead use a dynamic auto array for GCC, malloc for non-GCC.
+	Handle nested braces properly.
+
+	* elf/elf.h (Elf32_auxv_t): Specify prototype (void) for `a_un.a_fcn'.
+
+	* libc-symbols.h (lint): New macro.
+
+Fri Mar 15 01:18:00 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libio/iosetvbuf.c: Add weak alias setvbuf.
+
 Thu Mar 14 06:01:07 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* string/strnlen.c: New file.
