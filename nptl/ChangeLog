@@ -38,7 +38,7 @@
 	(__lll_mutex_timedlock_wait): Address futex correctly.
 
 	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S
-	(__lll_mutex_timedlock_wait): I woken but cannot get the lock,
+	(__lll_mutex_timedlock_wait): If woken but cannot get the lock,
 	make sure 2 is stored in the futex and we looked at the old value.
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
 	(__lll_mutex_timedlock_wait): Likewise.  Fix a few other problems
