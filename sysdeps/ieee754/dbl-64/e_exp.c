@@ -92,10 +92,10 @@ double __ieee754_exp(double x) {
   if (n <= smallint) return 1.0;
 
   if (n >= badint) {
-    if (n > infint) return(zero/zero);               /* x is NaN,  return invalid */
+    if (n > infint) return(x+x);               /* x is NaN */
     if (n < infint) return ( (x>0) ? (hhuge*hhuge) : (tiny*tiny) );
     /* x is finite,  cause either overflow or underflow  */
-    if (junk1.i[LOW_HALF] != 0)  return (zero/zero);                /*  x is NaN  */
+    if (junk1.i[LOW_HALF] != 0)  return (x+x);                /*  x is NaN  */
     return ((x>0)?inf.x:zero );             /* |x| = inf;  return either inf or 0 */
   }
 
