@@ -27,6 +27,7 @@ Cambridge, MA 02139, USA.  */
 #define	STRTOF		strtod
 #define	MPN2FLOAT	__mpn_construct_double
 #define	FLOAT_HUGE_VAL	HUGE_VAL
+#define	IMPLICIT_ONE	1
 #endif
 /* End of configuration part.  */
 
@@ -36,18 +37,19 @@ Cambridge, MA 02139, USA.  */
 #include <localeinfo.h>
 #include <math.h>
 #include <stdlib.h>
-#include "../stdio/gmp.h"
-#include "../stdio/gmp-impl.h"
+#include "gmp.h"
+#include "gmp-impl.h"
 #include <gmp-mparam.h>
-#include "../stdio/longlong.h"
-#include "../stdio/fpioconst.h"
+#include "longlong.h"
+#include "fpioconst.h"
 
-/* #define NDEBUG 1 */
+#define NDEBUG 1
 #include <assert.h>
 
 
 /* Constants we need from float.h; select the set for the FLOAT precision.  */
 #define MANT_DIG	PASTE(FLT,_MANT_DIG)
+#define	DIG		PASTE(FLT,_DIG)
 #define	MAX_EXP		PASTE(FLT,_MAX_EXP)
 #define	MIN_EXP		PASTE(FLT,_MIN_EXP)
 #define MAX_10_EXP	PASTE(FLT,_MAX_10_EXP)
@@ -75,15 +77,16 @@ extern FLOAT MPN2FLOAT (mp_srcptr mpn, int exponent, int negative);
 
 
 /* Local data structure.  */
-static const mp_limb _tens_in_limb[MAX_DIG_PER_LIMB] =
-{    0,                  10,                100,
-     1000,               10000,             100000,
-     1000000,            10000000,          100000000
+static const mp_limb _tens_in_limb[MAX_DIG_PER_LIMB + 1] =
+{    0,                   10,                   100,
+     1000,                10000,                100000,
+     1000000,             10000000,             100000000,
+     1000000000
 #if BITS_PER_MP_LIMB > 32
-   , 1000000000,         10000000000,       100000000000,
-     1000000000000,      10000000000000,    100000000000000,
-     1000000000000000,   10000000000000000, 100000000000000000,
-     1000000000000000000
+	       ,	  10000000000,          100000000000,
+     1000000000000,       10000000000000,       100000000000000,
+     1000000000000000,    10000000000000000,    100000000000000000,
+     1000000000000000000, 10000000000000000000
 #endif
 #if BITS_PER_MP_LIMB > 64
   #error "Need to expand tens_in_limb table to" MAX_DIG_PER_LIMB
@@ -102,7 +105,7 @@ static const mp_limb _tens_in_limb[MAX_DIG_PER_LIMB] =
 	do { if (endptr != 0) *endptr = (char *) end; return val; } while (0)
 
 /* Maximum size necessary for mpn integers to hold floating point numbers.  */ 
-#define	MPNSIZE		(howmany (MAX_EXP + MANT_DIG, BITS_PER_MP_LIMB) + 1)
+#define	MPNSIZE		(howmany (MAX_EXP + 2 * MANT_DIG, BITS_PER_MP_LIMB) + 2)
 /* Declare an mpn integer variable that big.  */
 #define	MPN_VAR(name)	mp_limb name[MPNSIZE]; mp_size_t name##size
 /* Copy an mpn integer value.  */
@@ -116,9 +119,9 @@ static inline FLOAT
 round_and_return (mp_limb *retval, int exponent, int negative,
 		  mp_limb round_limb, mp_size_t round_bit, int more_bits)
 {
-  if (exponent < MIN_EXP)
+  if (exponent < MIN_EXP - 2 + IMPLICIT_ONE)
     {
-      mp_size_t shift = MIN_EXP - 1 - exponent;
+      mp_size_t shift = MIN_EXP - 2 + IMPLICIT_ONE - exponent;
 
       if (shift >= MANT_DIG)
 	{
@@ -131,44 +134,43 @@ round_and_return (mp_limb *retval, int exponent, int negative,
 	{
 	  round_limb = retval[(shift - 1) / BITS_PER_MP_LIMB];
 	  round_bit = (shift - 1) % BITS_PER_MP_LIMB;
-#if RETURN_LIMB_SIZE <= 2
-	  assert (RETURN_LIMB_SIZE == 2);
-	  more_bits |= retval[0] != 0;
-	  retval[0] = retval[1];
-	  retval[1] = 0;
-#else
-	  int disp = shift / BITS_PER_MP_LIMB;
-	  int i = 0;
-	  while (retval[i] == 0 && i < disp)
-	    ++i;
-	  more_bits |= i < disp;
-	  for (i = disp; i < RETURN_LIMB_SIZE; ++i)
-	    retval[i - disp] = retval[i];
-	  MPN_ZERO (&retval[RETURN_LIMB_SIZE - disp], disp);
-#endif
-	  shift %= BITS_PER_MP_LIMB;
+
+	  (void) __mpn_rshift (retval, &retval[shift / BITS_PER_MP_LIMB],
+                               RETURN_LIMB_SIZE - (shift / BITS_PER_MP_LIMB),
+                               shift % BITS_PER_MP_LIMB);
+          MPN_ZERO (&retval[RETURN_LIMB_SIZE - (shift / BITS_PER_MP_LIMB)],
+                    shift / BITS_PER_MP_LIMB);
 	}
-      else
+      else if (shift > 0)
 	{
           round_limb = retval[0];
           round_bit = shift - 1;
+	  (void) __mpn_rshift (retval, retval, RETURN_LIMB_SIZE, shift);
 	}
-      (void) __mpn_rshift (retval, retval, RETURN_LIMB_SIZE, shift);
       exponent = MIN_EXP - 2;
     }
 
-  if ((round_limb & (1 << round_bit)) != 0 &&
-      (more_bits || (retval[0] & 1) != 0 ||
-       (round_limb & ((1 << round_bit) - 1)) != 0))
+  if ((round_limb & (1 << round_bit)) != 0
+      && (more_bits || (retval[0] & 1) != 0
+          || (round_limb & ((1 << round_bit) - 1)) != 0))
     {
       mp_limb cy = __mpn_add_1 (retval, retval, RETURN_LIMB_SIZE, 1);
-      if (cy || (retval[RETURN_LIMB_SIZE - 1]
-		 & (1 << (MANT_DIG % BITS_PER_MP_LIMB))) != 0)
+
+      if (((MANT_DIG % BITS_PER_MP_LIMB) == 0 && cy) ||
+          ((MANT_DIG % BITS_PER_MP_LIMB) != 0 &&
+           (retval[RETURN_LIMB_SIZE - 1]
+            & (1 << (MANT_DIG % BITS_PER_MP_LIMB))) != 0))
 	{
 	  ++exponent;
 	  (void) __mpn_rshift (retval, retval, RETURN_LIMB_SIZE, 1);
-	  retval[RETURN_LIMB_SIZE - 1] |= 1 << (MANT_DIG % BITS_PER_MP_LIMB);
+	  retval[RETURN_LIMB_SIZE - 1] |= 1 << ((MANT_DIG - 1)
+						% BITS_PER_MP_LIMB);
 	}
+      else if (IMPLICIT_ONE && exponent == MIN_EXP - 2
+	       && (retval[RETURN_LIMB_SIZE - 1]
+		   & (1 << ((MANT_DIG - 1) % BITS_PER_MP_LIMB))) != 0)
+	  /* The number was denormalized but now normalized.  */
+	exponent = MIN_EXP - 1;
     }
 
   if (exponent > MAX_EXP)
@@ -305,7 +307,7 @@ STRTOF (nptr, endptr)
   /* Points at the character following the integer and fractional digits.  */
   const char *expp;
   /* Total number of digit and number of digits in integer part.  */
-  int dig_no, int_no;
+  int dig_no, int_no, lead_zero;
   /* Contains the last character read.  */
   char c;
 
@@ -440,15 +442,18 @@ STRTOF (nptr, endptr)
   /* We have the number digits in the integer part.  Whether these are all or
      any is really a fractional digit will be decided later.  */
   int_no = dig_no;
+  lead_zero = int_no == 0 ? -1 : 0;
 
   /* Read the fractional digits.  */
   if (c == decimal)
     {
       if (isdigit (cp[1]))
 	{
-	  ++cp;
+	  c = *++cp;
 	  do
 	    {
+	      if (c != '0' && lead_zero == -1)
+		lead_zero = dig_no - int_no;
 	      ++dig_no;
 	      c = *++cp;
 	    }
@@ -547,7 +552,7 @@ STRTOF (nptr, endptr)
       return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
     }
 
-  if (int_no - dig_no + exponent < MIN_10_EXP - MANT_DIG)
+  if (exponent - MAX(0, lead_zero) < MIN_10_EXP - (DIG + 1))
     {
       errno = ERANGE;
       return 0.0;
@@ -607,20 +612,26 @@ STRTOF (nptr, endptr)
 	 to determine the result.  */
       if (bits > MANT_DIG)
 	{
+	  int i;
 	  const mp_size_t least_idx = (bits - MANT_DIG) / BITS_PER_MP_LIMB;
 	  const mp_size_t least_bit = (bits - MANT_DIG) % BITS_PER_MP_LIMB;
 	  const mp_size_t round_idx = least_bit == 0 ? least_idx - 1
 						     : least_idx;
 	  const mp_size_t round_bit = least_bit == 0 ? BITS_PER_MP_LIMB - 1
-						     : least_idx - 1;
-	  int i;
+						     : least_bit - 1;
 
 	  if (least_bit == 0)
 	    memcpy (retval, &num[least_idx],
 		    RETURN_LIMB_SIZE * sizeof (mp_limb));
 	  else
-	    (void) __mpn_rshift (retval, &num[least_idx],
-				 numsize - least_idx + 1, least_bit);
+            {
+              for (i = least_idx; i < numsize - 1; ++i)
+                retval[i - least_idx] = (num[i] >> least_bit)
+                                        | (num[i + 1]
+                                           << (BITS_PER_MP_LIMB - least_bit));
+              if (i - least_idx < RETURN_LIMB_SIZE)
+                retval[RETURN_LIMB_SIZE - 1] = num[i] >> least_bit;
+            }
 
 	  /* Check whether any limb beside the ones in RETVAL are non-zero.  */
 	  for (i = 0; num[i] == 0; ++i)
@@ -686,13 +697,31 @@ STRTOF (nptr, endptr)
 
     int expbit;
     int cnt;
+    int neg_exp;
+    int more_bits;
     mp_limb cy;
     mp_limb *psrc = den;
     mp_limb *pdest = num;
-    int neg_exp = dig_no - int_no - exponent;
     const struct mp_power *ttab = &_fpioconst_pow10[0];
 
     assert (dig_no > int_no && exponent <= 0);
+
+
+    /* For the fractional part we need not process too much digits.  One
+       decimal digits gives us log_2(10) ~ 3.32 bits.  If we now compute
+                        ceil(BITS / 3) =: N
+       digits we should have enough bits for the result.  The remaining
+       decimal digits give us the information that more bits are following.
+       This can be used while rounding.  (One added as a safety margin.)  */
+    if (dig_no - int_no > (MANT_DIG - bits + 2) / 3 + 1)
+      {
+        dig_no = int_no + (MANT_DIG - bits + 2) / 3 + 1;
+        more_bits = 1;
+      }
+    else
+      more_bits = 0;
+
+    neg_exp = dig_no - int_no - exponent;
 
     /* Construct the denominator.  */
     densize = 0;
@@ -782,36 +811,38 @@ STRTOF (nptr, endptr)
 		  exponent -= cnt;					      \
 		  if (BITS_PER_MP_LIMB - cnt > MANT_DIG)		      \
 		    {							      \
-		      used = cnt + MANT_DIG;				      \
+		      used = MANT_DIG + cnt;				      \
 		      retval[0] = quot >> (BITS_PER_MP_LIMB - used);	      \
-		      bits -= BITS_PER_MP_LIMB - used;			      \
+		      bits = MANT_DIG + 1;				      \
 		    }							      \
 		  else							      \
 		    {							      \
 		      /* Note that we only clear the second element.  */      \
-		      retval[1] = 0;					      \
+		      /* The conditional is determined at compile time.  */   \
+		      if (RETURN_LIMB_SIZE > 1)				      \
+			retval[1] = 0;					      \
 		      retval[0] = quot;					      \
-		      bits -= cnt;					      \
+		      bits = -cnt;					      \
 		    }							      \
 		}							      \
 	      else if (bits + BITS_PER_MP_LIMB <= MANT_DIG)		      \
-		__mpn_lshift_1 (retval, RETURN_LIMB_SIZE, BITS_PER_MP_LIMB,    \
+		__mpn_lshift_1 (retval, RETURN_LIMB_SIZE, BITS_PER_MP_LIMB,   \
 				quot);					      \
 	      else							      \
 		{							      \
 		  used = MANT_DIG - bits;				      \
 		  if (used > 0)						      \
-		    __mpn_lshift_1 (retval, RETURN_LIMB_SIZE, used, quot);     \
+		    __mpn_lshift_1 (retval, RETURN_LIMB_SIZE, used, quot);    \
 		}							      \
 	      bits += BITS_PER_MP_LIMB
 
-              got_limb;
+	      got_limb;
 	    }
 	  while (bits <= MANT_DIG);
 
 	  return round_and_return (retval, exponent - 1, negative,
 				   quot, BITS_PER_MP_LIMB - 1 - used,
-				   n != 0);
+				   more_bits || n != 0);
 	}
       case 2:
 	{
@@ -893,7 +924,7 @@ STRTOF (nptr, endptr)
 	    
 	  return round_and_return (retval, exponent - 1, negative,
 				   quot, BITS_PER_MP_LIMB - 1 - used,
-				   n1 != 0 || n0 != 0);
+				   more_bits || n1 != 0 || n0 != 0);
 	}
       default:
 	{
@@ -907,7 +938,7 @@ STRTOF (nptr, endptr)
 
 	  /* The division does not work if the upper limb of the two-limb
 	     numerator is greater than the denominator.  */
-	  if (num[numsize - 1] > dX)
+	  if (__mpn_cmp (num, &den[densize - numsize], numsize) > 0)
 	    num[numsize++] = 0;
 
 	  if (numsize < densize)
@@ -1017,11 +1048,11 @@ STRTOF (nptr, endptr)
 	      got_limb;
 	    }
 
-	  for (i = densize - 1; num[i] != 0 && i >= 0; --i)
+	  for (i = densize; num[i] == 0 && i >= 0; --i)
 	    ;
 	  return round_and_return (retval, exponent - 1, negative,
 				   quot, BITS_PER_MP_LIMB - 1 - used,
-				   i >= 0);
+				   more_bits || i >= 0);
 	}
       }
   }

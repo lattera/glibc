@@ -338,7 +338,7 @@ DEFUN(vfprintf, (s, format, args),
 
       /* Check for type modifiers.  */
       is_short = is_long = is_long_double = 0;
-      while (*f == 'h' || *f == 'l' || *f == 'L' || *f == 'q')
+      while (*f == 'h' || *f == 'l' || *f == 'L' || *f == 'q' || *f == 'Z')
 	switch (*f++)
 	  {
 	  case 'h':

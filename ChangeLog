@@ -1,5 +1,12 @@
 Wed Mar  1 00:57:47 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* stdlib/strtod.c: Fixes from drepper.
+	[IMPLICIT_ONE]: New macro, one for IEEE754 formats.
+	* stdlib/strtold.c [IMPLICIT_ONE]: New macro, 0.
+	* stdlib/strtof.c [IMPLICIT_ONE]: New macro, 1.
+
+	* stdio/vfprintf.c: Correctly notice Z modifier.
+
 	* misc/search.h: New file.
 	* misc/Makefile (headers): Add search.h.
 	* misc/insremque.c: Include search.h.
