@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/paths.h>
 #include <fcntl.h>
-#include "stdio/_itoa.h"
+#include "stdio-common/_itoa.h"
 #include <string.h>
 
 /* Temporary hack; this belongs in a header file, probably types.h. */
