@@ -56,7 +56,9 @@ static void charmap_new_char (struct linereader *lr, struct charmap_t *cm,
 			      const char *to, int decimal_ellipsis, int step);
 
 
+#ifdef NEED_NULL_POINTER
 static const char *null_pointer;
+#endif
 
 static struct linereader *
 cmlr_open (const char *directory, const char *name, kw_hash_fct_t hf)

@@ -43,7 +43,7 @@ CFLAGS-iconv_prog.c = -I../locale/programs
 CFLAGS-iconv_charmap.c = -I../locale/programs
 CFLAGS-dummy-repertoire.c = -I../locale/programs
 CFLAGS-charmap.c = -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
-		   -DDEFAULT_CHARMAP=null_pointer
+		   -DDEFAULT_CHARMAP=null_pointer -DNEED_NULL_POINTER
 
 tests	= tst-iconv1 tst-iconv2 tst-iconv3
 
