@@ -503,7 +503,7 @@ regcomp (preg, pattern, cflags)
   if (BE (ret == REG_NOERROR, 1))
     /* Compute the fastmap now, since regexec cannot modify the pattern
        buffer.  This function nevers fails in this implementation.  */
-    (void) __re_compile_fastmap (preg);
+    (void) re_compile_fastmap (preg);
   else
     {
       /* Some error occurred while compiling the expression.  */

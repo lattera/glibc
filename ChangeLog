@@ -1,3 +1,12 @@
+2002-12-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex_internal.c (re_string_context_at): Guard wide char
+	code with #ifdef RE_ENABLE_I18N.
+
+2002-11-22  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regcomp.c (regcomp): __re_compile_fastmap -> re_compile_fastmap
+
 2002-12-13  Roland McGrath  <roland@redhat.com>
 
 	* posix/bug-regex15.c: New file.
