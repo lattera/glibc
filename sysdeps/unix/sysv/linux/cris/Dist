@@ -1,0 +1,5 @@
+clone.S
+setresuid.c
+setresgid.c
+setfsuid.c
+setfsgid.c
