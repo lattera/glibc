@@ -1,5 +1,9 @@
 2000-03-29  Andreas Jaeger  <aj@suse.de>
 
+	* include/unistd.h: Remove duplicate entry for __rmdir.
+	Remove declaration of __mkdir since __mkdir is declared in
+	sys/stat.h.
+
 	* manual/creature.texi (Feature Test Macros): Fix typo, reported
 	by Michael Deutschmann <michael@talamasca.ocis.net>.
 
