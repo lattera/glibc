@@ -1,5 +1,5 @@
-#define	socket	recvmsg
+#define	socket	__recvmsg
 #define	__socket __libc_recvmsg
+#define SOCKOP___recvmsg SOCKOP_recvmsg
 #define	NARGS	3
 #include <socket.S>
-weak_alias (__libc_recvmsg, __recvmsg)

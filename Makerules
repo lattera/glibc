@@ -345,7 +345,8 @@ $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
 	  -Wl,--whole-archive \
-	  $(filter-out $(map-file) $(@F:.so=.map) $(+preinit) $(+postinit),$^) \
+	  $(filter-out $(map-file) $(common-objpfx)$(@F:.so=.map) \
+		       $(+preinit) $(+postinit),$^) \
 	  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
 endef
 

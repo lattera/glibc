@@ -21,6 +21,7 @@
 #include <sys/types.h>
 #include <regex.h>
 #include <stdio.h>
+#include <string.h>
 
 /* Data structure to describe the tests.  */
 struct test
@@ -108,7 +109,7 @@ main (int argc, char *argv[])
 	regfree (&re);
       }
 
-  printf ("\n%u tests, %d errors\n", cnt, errors);
+  printf ("\n%Zu tests, %d errors\n", cnt, errors);
 
   /* We should return here the error status but since some tests are known
      to fail this would only cause the libc testsuite to fail.  */

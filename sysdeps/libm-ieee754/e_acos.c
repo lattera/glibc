@@ -71,7 +71,7 @@ qS[] ={1.0, -2.40339491173441421878e+00, /* 0xC0033A27, 0x1C8A2D4B */
 	double x;
 #endif
 {
-	double z,p,q,r,w,s,c,df,p1,p2,p3,q1,q2,q3,z2,z4,z6;
+	double z,p,q,r,w,s,c,df,p1,p2,p3,q1,q2,z2,z4,z6;
 	int32_t hx,ix;
 	GET_HIGH_WORD(hx,x);
 	ix = hx&0x7fffffff;

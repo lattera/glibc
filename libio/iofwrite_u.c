@@ -26,7 +26,7 @@
 #include "libioP.h"
 
 _IO_size_t
-_IO_fwrite (buf, size, count, fp)
+fwrite_unlocked (buf, size, count, fp)
      const void *buf;
      _IO_size_t size;
      _IO_size_t count;
@@ -39,17 +39,9 @@ _IO_fwrite (buf, size, count, fp)
      but ANSI requires us to return count in this case. */
   if (request == 0)
     return count;
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
   written = _IO_sputn (fp, (const char *) buf, request);
-  _IO_funlockfile (fp);
-  _IO_cleanup_region_end (0);
   if (written == request)
     return count;
   else
     return written / size;
 }
-
-#ifdef weak_alias
-weak_alias (_IO_fwrite, fwrite)
-#endif

@@ -20,6 +20,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 int failed = 0;
@@ -29,14 +30,16 @@ struct test_times
   const char *name;
   int daylight;
   int timezone;
+  const char *tzname[2];
 };
 
 static const struct test_times tests[] =
 {
-  { "Europe/Berlin", 1, -3600 },
-  { "Universal", 0, 0 },
-  { "Australia/Melbourne", 1, -36000 },
-  { "America/Sao_Paulo", 1, 10800 },
+  { "Europe/Berlin", 1, -3600, { "CET", "CEST" }},
+  { "Universal", 0, 0, {"UTC", "UTC" }},
+  { "Australia/Melbourne", 1, -36000, { "EST", "EST" }},
+  { "America/Sao_Paulo", 1, 10800, {"EST", "EDT" }},
+  { "America/Los_Angeles", 1, 28800, {"PST", "PDT" }},
   { NULL, 0, 0 }
 };
 
@@ -52,8 +55,10 @@ print_tzvars (void)
 
 
 void
-check_tzvars (const char *name, int dayl, int timez)
+check_tzvars (const char *name, int dayl, int timez, const char *const tznam[])
 {
+  int i;
+
   if (daylight != dayl)
     {
       printf ("Timezone: %s, daylight is: %d but should be: %d\n",
@@ -66,6 +71,13 @@ check_tzvars (const char *name, int dayl, int timez)
 	      name, timezone, timez);
       ++failed;
     }
+  for (i = 0; i <= 1; ++i)
+    if (strcmp (tzname[i], tznam[i]) != 0)
+      {
+	printf ("Timezone: %s, tzname[%d] is: %s but should be: %s\n",
+		name, i, tzname[i], tznam[i]);
+	++failed;
+      }
 }
 
 
@@ -92,12 +104,12 @@ main (int argc, char ** argv)
 	}
       tzset ();
       print_tzvars ();
-      check_tzvars (pt->name, pt->daylight, pt->timezone);
+      check_tzvars (pt->name, pt->daylight, pt->timezone, pt->tzname);
 
       /* calling localtime shouldn't make a difference */
       localtime (&t);
       print_tzvars ();
-      check_tzvars (pt->name, pt->daylight, pt->timezone);
+      check_tzvars (pt->name, pt->daylight, pt->timezone, pt->tzname);
     }
 
   return failed ? EXIT_FAILURE : EXIT_SUCCESS;

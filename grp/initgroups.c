@@ -59,12 +59,18 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
   get_function getgrent_fct;
   end_function endgrent_fct;
 
-  setgrent_fct = __nss_lookup_function (nip, "setgrent");
-  status = _CALL_DL_FCT (setgrent_fct, ());
-  if (status != NSS_STATUS_SUCCESS)
-    return status;
-
   getgrent_fct = __nss_lookup_function (nip, "getgrent_r");
+  if (getgrent_fct == NULL)
+    return NSS_STATUS_UNAVAIL;
+
+  setgrent_fct = __nss_lookup_function (nip, "setgrent");
+  if (setgrent_fct)
+    {
+      status = _CALL_DL_FCT (setgrent_fct, ());
+      if (status != NSS_STATUS_SUCCESS)
+	return status;
+    }
+
   endgrent_fct = __nss_lookup_function (nip, "endgrent");
 
   tmpbuf = __alloca (buflen);
@@ -115,7 +121,8 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
   while (status == NSS_STATUS_SUCCESS);
 
  done:
-  _CALL_DL_FCT (endgrent_fct, ());
+  if (endgrent_fct)
+    _CALL_DL_FCT (endgrent_fct, ());
 
   return NSS_STATUS_SUCCESS;
 }

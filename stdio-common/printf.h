@@ -59,17 +59,17 @@ struct printf_info
    The function should return the number of characters written,
    or -1 for errors.  */
 
-typedef int printf_function __P ((FILE *__stream,
-				  __const struct printf_info *__info,
-				  __const void *__const *__args));
+typedef int printf_function __PMT ((FILE *__stream,
+				    __const struct printf_info *__info,
+				    __const void *__const *__args));
 
 /* Type of a printf specifier-arginfo function.
    INFO gives information about the format specification.
    N, ARGTYPES, and return value are as for printf_parse_format.  */
 
-typedef int printf_arginfo_function __P ((__const struct printf_info *__info,
-					  size_t __n,
-					  int *__argtypes));
+typedef int printf_arginfo_function __PMT ((__const struct printf_info *__info,
+					    size_t __n,
+					    int *__argtypes));
 
 
 /* Register FUNC to be called to format SPEC specifiers; ARGINFO must be

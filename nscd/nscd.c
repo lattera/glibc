@@ -309,7 +309,7 @@ write_pid (const char *file)
 typedef int (*pwbyname_function) (const char *name, struct passwd *pw,
 				   char *buffer, size_t buflen);
 
-/* Hanlde incoming requests.  */
+/* Handle incoming requests.  */
 static
 void handle_requests (void)
 {
@@ -317,6 +317,12 @@ void handle_requests (void)
   int conn; /* Handle on which connection (client) the request came from.  */
   int done = 0;
   char *key;
+  pthread_attr_t th_attr;
+
+  /* We will create all threads detached.  Therefore prepare an attribute
+     now.  */
+  pthread_attr_init (&th_attr);
+  pthread_attr_setdetachstate (&th_attr, PTHREAD_CREATE_DETACHED);
 
   while (!done)
     {
@@ -331,15 +337,23 @@ void handle_requests (void)
 	  {
 	    param_t *param = malloc (sizeof (param_t));
 	    pthread_t thread;
+	    int status;
 
 	    if (debug_flag)
 	      dbg_log ("\tGETPWBYNAME (%s)", key);
 	    param->key = key;
 	    param->conn = conn;
 	    if (disabled_passwd)
-	      pthread_create (&thread, NULL, cache_pw_disabled, (void *)param);
+	      status = pthread_create (&thread, &th_attr, cache_pw_disabled,
+				       (void *)param);
 	    else
-	      pthread_create (&thread, NULL, cache_getpwnam, (void *)param);
+	      status = pthread_create (&thread, &th_attr, cache_getpwnam,
+				       (void *)param);
+	    if (status != 0)
+	      {
+		dbg_log (_("Creation of thread failed: %s"), strerror (errno));
+		close_socket (conn);
+	      }
 	    pthread_detach (thread);
 	  }
 	  break;
@@ -347,48 +361,69 @@ void handle_requests (void)
 	  {
 	    param_t *param = malloc (sizeof (param_t));
 	    pthread_t thread;
+	    int status;
 
 	    if (debug_flag)
 	      dbg_log ("\tGETPWBYUID (%s)", key);
 	    param->key = key;
 	    param->conn = conn;
 	    if (disabled_passwd)
-	      pthread_create (&thread, NULL, cache_pw_disabled, (void *)param);
+	      status = pthread_create (&thread, &th_attr, cache_pw_disabled,
+			      (void *)param);
 	    else
-	      pthread_create (&thread, NULL, cache_getpwuid, (void *)param);
-	    pthread_detach (thread);
+	      status = pthread_create (&thread, &th_attr, cache_getpwuid,
+				       (void *)param);
+	    if (status != 0)
+	      {
+		dbg_log (_("Creation of thread failed: %s"), strerror (errno));
+		close_socket (conn);
+	      }
 	  }
 	  break;
 	case GETGRBYNAME:
 	  {
 	    param_t *param = malloc (sizeof (param_t));
 	    pthread_t thread;
+	    int status;
 
 	    if (debug_flag)
 	      dbg_log ("\tGETGRBYNAME (%s)", key);
 	    param->key = key;
 	    param->conn = conn;
 	    if (disabled_group)
-	      pthread_create (&thread, NULL, cache_gr_disabled, (void *)param);
+	      status = pthread_create (&thread, &th_attr, cache_gr_disabled,
+				       (void *)param);
 	    else
-	      pthread_create (&thread, NULL, cache_getgrnam, (void *)param);
-	    pthread_detach (thread);
+	      status = pthread_create (&thread, &th_attr, cache_getgrnam,
+				       (void *)param);
+	    if (status != 0)
+	      {
+		dbg_log (_("Creation of thread failed: %s"), strerror (errno));
+		close_socket (conn);
+	      }
 	  }
 	  break;
 	case GETGRBYGID:
 	  {
 	    param_t *param = malloc (sizeof (param_t));
 	    pthread_t thread;
+	    int status;
 
 	    if (debug_flag)
 	      dbg_log ("\tGETGRBYGID (%s)", key);
 	    param->key = key;
 	    param->conn = conn;
 	    if (disabled_group)
-	      pthread_create (&thread, NULL, cache_gr_disabled, (void *)param);
+	      status = pthread_create (&thread, &th_attr, cache_gr_disabled,
+				       (void *)param);
 	    else
-	      pthread_create (&thread, NULL, cache_getgrgid, (void *)param);
-	    pthread_detach (thread);
+	      status = pthread_create (&thread, &th_attr, cache_getgrgid,
+				       (void *)param);
+	    if (status != 0)
+	      {
+		dbg_log (_("Creation of thread failed: %s"), strerror (errno));
+		close_socket (conn);
+	      }
 	  }
 	  break;
 	case GETHOSTBYNAME:
@@ -432,4 +467,6 @@ void handle_requests (void)
 	  break;
 	}
     }
+
+  pthread_attr_destroy (&th_attr);
 }

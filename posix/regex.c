@@ -5509,12 +5509,12 @@ re_comp (s)
     {
       re_comp_buf.buffer = (unsigned char *) malloc (200);
       if (re_comp_buf.buffer == NULL)
-        return gettext (re_error_msgid[(int) REG_ESPACE]);
+        return (char *) gettext (re_error_msgid[(int) REG_ESPACE]);
       re_comp_buf.allocated = 200;
 
       re_comp_buf.fastmap = (char *) malloc (1 << BYTEWIDTH);
       if (re_comp_buf.fastmap == NULL)
-	return gettext (re_error_msgid[(int) REG_ESPACE]);
+	return (char *) gettext (re_error_msgid[(int) REG_ESPACE]);
     }
 
   /* Since `re_exec' always passes NULL for the `regs' argument, we

@@ -115,7 +115,7 @@ char *
 __tzstring (string)
      const char *string;
 {
-  struct tzstring_head *h = &tzstring_list.head;
+  struct tzstring_head *h;
   size_t needed;
   char *p;
 
@@ -139,7 +139,8 @@ __tzstring (string)
       size_t buffer_size = tzstring_last_buffer_size;
       while ((buffer_size *= 2) < needed)
 	continue;
-      if (! (h = h->next = malloc (sizeof *h + buffer_size)))
+      h = malloc (sizeof *h + buffer_size);
+      if (h == NULL)
 	return NULL;
       h->next = NULL;
       tzstring_last_buffer_size = buffer_size;

@@ -58,7 +58,7 @@ ifeq ($(subdir),socket)
 sysdep_headers += net/if.h net/if_ppp.h net/ppp-comp.h \
 		  net/ppp_defs.h net/if_arp.h net/route.h net/ethernet.h \
 		  net/if_slip.h net/if_packet.h
-sysdep_routines += cmsg_nxthdr sa_len
+sysdep_routines += cmsg_nxthdr sa_len __sendmsg __recvmsg
 endif
 
 ifeq ($(subdir),sunrpc)
@@ -75,7 +75,7 @@ inhibit-siglist := yes
 endif
 
 ifeq ($(subdir),posix)
-headers := bits/pthreadtypes.h
+sysdep_headers += bits/pthreadtypes.h
 endif
 
 ifeq ($(subdir),inet)

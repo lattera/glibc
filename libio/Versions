@@ -98,6 +98,6 @@ libc {
 
     # f*
     fgetpos64; fopen64; freopen64; fseeko; fseeko64; fsetpos64; ftello;
-    ftello64; fopen; fclose; fdopen;
+    ftello64; fopen; fclose; fdopen; fread_unlocked; fwrite_unlocked;
   }
 }

@@ -22,6 +22,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <rpcsvc/nis.h>
 #include <sys/types.h>
 
@@ -48,7 +49,7 @@ typedef struct grphash grphash;
 struct gidhash
 {
   struct gidhash *next;
-  struct grphash *grptr;
+  struct group *grptr;
 };
 typedef struct gidhash gidhash;
 
@@ -176,6 +177,7 @@ static int
 add_cache (struct group *grp)
 {
   grphash *work;
+  gidhash *gidwork;
   unsigned long int hash = __nis_hash (grp->gr_name,
 				       strlen (grp->gr_name)) % modulo;
 
@@ -197,7 +199,17 @@ add_cache (struct group *grp)
     }
 
   time (&work->create);
-  gidtbl[grp->gr_gid % modulo].grptr = work;
+  gidwork = &gidtbl[grp->gr_gid % modulo];
+  if (gidwork->grptr == NULL)
+    gidwork->grptr = work->grp;
+  else
+    {
+      while (gidwork->next != NULL)
+	gidwork = gidwork->next;
+
+      gidwork->next = calloc (1, sizeof (gidhash));
+      gidwork->next->grptr = work->grp;
+    }
 
   return 0;
 }
@@ -231,8 +243,8 @@ cache_search_gid (gid_t gid)
 
   while (work->grptr != NULL)
     {
-      if (work->grptr->grp->gr_gid == gid)
-	return work->grptr->grp;
+      if (work->grptr->gr_gid == gid)
+	return work->grptr;
       if (work->next != NULL)
 	work = work->next;
       else
@@ -475,7 +487,7 @@ cache_getgrgid (void *v_param)
   return NULL;
 }
 
-void *
+static void *
 grptable_update (void *v)
 {
   time_t now;
@@ -509,7 +521,7 @@ grptable_update (void *v)
 
 		  while (uh && uh->grptr)
 		    {
-		      if (uh->grptr->grp->gr_gid == work->grp->gr_gid)
+		      if (uh->grptr->gr_gid == work->grp->gr_gid)
 			{
 			  if (debug_flag > 3)
 			    dbg_log (_("Give gid for \"%s\" free"),
@@ -543,14 +555,14 @@ grptable_update (void *v)
 	    }
 	}
       if (debug_flag > 2)
-	dbg_log (_("(pwdtable_update) Release wait lock\n"));
+	dbg_log (_("(grptable_update) Release wait lock"));
       pthread_rwlock_unlock (&grplock);
       sleep (20);
     }
   return NULL;
 }
 
-void *
+static void *
 negtable_update (void *v)
 {
   time_t now;
@@ -561,12 +573,12 @@ negtable_update (void *v)
   while (!do_shutdown)
     {
       if (debug_flag > 2)
-	dbg_log (_("(negtable_update) Wait for write lock!"));
+	dbg_log (_("(neggrptable_update) Wait for write lock!"));
 
       pthread_rwlock_wrlock (&neglock);
 
       if (debug_flag > 2)
-	dbg_log (_("(negtable_update) Have write lock"));
+	dbg_log (_("(neggrptable_update) Have write lock"));
 
       time (&now);
       for (i = 0; i < modulo; ++i)
@@ -597,7 +609,7 @@ negtable_update (void *v)
 	    }
 	}
       if (debug_flag > 2)
-	dbg_log (_("(negtable_update) Release wait lock"));
+	dbg_log (_("(neggrptable_update) Release wait lock"));
       pthread_rwlock_unlock (&neglock);
       sleep (10);
     }

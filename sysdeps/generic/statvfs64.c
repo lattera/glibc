@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <sys/statvfs.h>
 #include <stddef.h>
+#include <string.h>
 
 /* Return information about the filesystem on which FILE resides.  */
 int

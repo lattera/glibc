@@ -22,6 +22,7 @@
 #include <pthread.h>
 #include <pwd.h>
 #include <string.h>
+#include <unistd.h>
 #include <rpcsvc/nis.h>
 #include <sys/types.h>
 
@@ -48,7 +49,7 @@ typedef struct pwdhash pwdhash;
 struct uidhash
 {
   struct uidhash *next;
-  struct pwdhash *pwptr;
+  struct passwd *pwptr;
 };
 typedef struct uidhash uidhash;
 
@@ -159,6 +160,7 @@ static int
 add_cache (struct passwd *pwd)
 {
   pwdhash *work;
+  uidhash *uidwork;
   unsigned long int hash = __nis_hash (pwd->pw_name,
 				       strlen (pwd->pw_name)) % modulo;
 
@@ -180,8 +182,17 @@ add_cache (struct passwd *pwd)
     }
   /* Set a pointer from the pwuid hash table to the pwname hash table */
   time (&work->create);
-  uidtbl[pwd->pw_uid % modulo].pwptr = work;
+  uidwork = &uidtbl[pwd->pw_uid % modulo];
+  if (uidwork->pwptr == NULL)
+    uidwork->pwptr = work->pwd;
+  else
+   {
+      while (uidwork->next != NULL)
+	uidwork = uidwork->next;
 
+      uidwork->next = calloc (1, sizeof (uidhash));
+      uidwork->next->pwptr = work->pwd;
+    }
   return 0;
 }
 
@@ -214,8 +225,8 @@ cache_search_uid (uid_t uid)
 
   while (work->pwptr != NULL)
     {
-      if (work->pwptr->pwd->pw_uid == uid)
-	return work->pwptr->pwd;
+      if (work->pwptr->pw_uid == uid)
+	return work->pwptr;
       if (work->next != NULL)
 	work = work->next;
       else
@@ -458,7 +469,7 @@ cache_getpwuid (void *v_param)
   return NULL;
 }
 
-void *
+static void *
 pwdtable_update (void *v)
 {
   time_t now;
@@ -492,7 +503,7 @@ pwdtable_update (void *v)
 
 		  while (uh != NULL && uh->pwptr)
 		    {
-		      if (uh->pwptr->pwd->pw_uid == work->pwd->pw_uid)
+		      if (uh->pwptr->pw_uid == work->pwd->pw_uid)
 			{
 			  if (debug_flag)
 			    dbg_log (_("Give uid for \"%s\" free"),
@@ -533,7 +544,7 @@ pwdtable_update (void *v)
   return NULL;
 }
 
-void *
+static void *
 negtable_update (void *v)
 {
   time_t now;
@@ -544,12 +555,12 @@ negtable_update (void *v)
   while (!do_shutdown)
     {
       if (debug_flag > 2)
-	dbg_log (_("(negtable_update) Wait for write lock!"));
+	dbg_log (_("(negpwdtable_update) Wait for write lock!"));
 
       pthread_rwlock_wrlock (&neglock);
 
-      if (debug_flag)
-	dbg_log (_("(negtable_update) Have write lock"));
+      if (debug_flag > 2)
+	dbg_log (_("(negpwdtable_update) Have write lock"));
 
       time (&now);
       for (i = 0; i < modulo; ++i)
@@ -579,8 +590,8 @@ negtable_update (void *v)
 	      work = work->next;
 	    }
 	}
-      if (debug_flag)
-	dbg_log (_("(negtable_update) Release wait lock"));
+      if (debug_flag > 2)
+	dbg_log (_("(negpwdtable_update) Release wait lock"));
 
       pthread_rwlock_unlock (&neglock);
       sleep (10);

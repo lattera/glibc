@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -26,30 +26,17 @@
 #include "libioP.h"
 
 _IO_size_t
-_IO_fwrite (buf, size, count, fp)
-     const void *buf;
+fread_unlocked (buf, size, count, fp)
+     void *buf;
      _IO_size_t size;
      _IO_size_t count;
      _IO_FILE *fp;
 {
-  _IO_size_t request = size * count;
-  _IO_size_t written;
+  _IO_size_t bytes_requested = size*count;
+  _IO_size_t bytes_read;
   CHECK_FILE (fp, 0);
-  /* Many traditional implementations return 0 if size==0 && count > 0,
-     but ANSI requires us to return count in this case. */
-  if (request == 0)
-    return count;
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
-  written = _IO_sputn (fp, (const char *) buf, request);
-  _IO_funlockfile (fp);
-  _IO_cleanup_region_end (0);
-  if (written == request)
-    return count;
-  else
-    return written / size;
+  if (bytes_requested == 0)
+    return 0;
+  bytes_read = _IO_sgetn (fp, (char *) buf, bytes_requested);
+  return bytes_requested == bytes_read ? count : bytes_read / size;
 }
-
-#ifdef weak_alias
-weak_alias (_IO_fwrite, fwrite)
-#endif

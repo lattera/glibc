@@ -1,3 +1,7 @@
+1998-07-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* attr.c: Include <string.h>.
+
 1998-06-30 11:47  Ulrich Drepper  <drepper@cygnus.com>
 
 	* attr.c: Include errno.h.  Use memcpy to copy sched_param.

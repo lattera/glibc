@@ -1,3 +1,4 @@
+bits/pthreadtypes.h
 stdio_lim.h.in
 cmsg_nxthdr.c
 errlist.h
@@ -74,3 +75,5 @@ sys/user.h
 sys/vt.h
 xstatconv.c
 getdents64.c
+__sendmsg.S
+__recvmsg.S

@@ -33,7 +33,7 @@ main(int argc, char *argv[])
 
 	      if (strlen (buf) != words * 4 + lens[last])
 		{
-		  printf ("failed for base=%d, words=%d, and last=%d\n",
+		  printf ("failed for base=%Zu, words=%Zu, and last=%Zu\n",
 			  base, words, last);
 		  return 1;
 		}

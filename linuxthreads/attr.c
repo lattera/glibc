@@ -15,6 +15,7 @@
 /* Handling of thread attributes */
 
 #include <errno.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/param.h>
 #include "pthread.h"

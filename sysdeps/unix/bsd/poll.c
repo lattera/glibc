@@ -16,11 +16,14 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <alloca.h>
 #include <sys/poll.h>
 #include <sys/types.h>
 #include <errno.h>
 #include <string.h>
 #include <sys/time.h>
+#include <sys/param.h>
+#include <unistd.h>
 
 /* Poll the file descriptors described by the NFDS structures starting at
    FDS.  If TIMEOUT is nonzero and not -1, allow TIMEOUT milliseconds for
@@ -34,25 +37,37 @@ __poll (fds, nfds, timeout)
      unsigned long int nfds;
      int timeout;
 {
+  static int max_fd_size;
   struct timeval tv;
-  fd_set rset, wset, xset;
+  fd_set *rset, *wset, *xset;
   struct pollfd *f;
   int ready;
   int maxfd = 0;
+  int bytes;
 
-  FD_ZERO (&rset);
-  FD_ZERO (&wset);
-  FD_ZERO (&xset);
+  if (!max_fd_size)
+    max_fd_size = __getdtablesize ();
+
+  bytes = howmany (max_fd_size, __NFDBITS);
+  rset = alloca (bytes);
+  wset = alloca (bytes);
+  xset = alloca (bytes);
+
+  /* We can't call FD_ZERO, since FD_ZERO only works with sets
+     of exactly __FD_SETSIZE size.  */
+  __bzero (rset, bytes);
+  __bzero (wset, bytes);
+  __bzero (xset, bytes);
 
   for (f = fds; f < &fds[nfds]; ++f)
     if (f->fd >= 0)
       {
 	if (f->events & POLLIN)
-	  FD_SET (f->fd, &rset);
+	  FD_SET (f->fd, rset);
 	if (f->events & POLLOUT)
-	  FD_SET (f->fd, &wset);
+	  FD_SET (f->fd, wset);
 	if (f->events & POLLPRI)
-	  FD_SET (f->fd, &xset);
+	  FD_SET (f->fd, xset);
 	if (f->fd > maxfd && (f->events & (POLLIN|POLLOUT|POLLPRI)))
 	  maxfd = f->fd;
       }
@@ -60,19 +75,18 @@ __poll (fds, nfds, timeout)
   tv.tv_sec = timeout / 1000;
   tv.tv_usec = (timeout % 1000) * 1000;
 
-  ready = __select (maxfd + 1, &rset, &wset, &xset,
-		    timeout == -1 ? NULL : &tv);
+  ready = __select (maxfd + 1, rset, wset, xset, timeout == -1 ? NULL : &tv);
   if (ready > 0)
     for (f = fds; f < &fds[nfds]; ++f)
       {
 	f->revents = 0;
 	if (f->fd >= 0)
 	  {
-	    if (FD_ISSET (f->fd, &rset))
+	    if (FD_ISSET (f->fd, rset))
 	      f->revents |= POLLIN;
-	    if (FD_ISSET (f->fd, &wset))
+	    if (FD_ISSET (f->fd, wset))
 	      f->revents |= POLLOUT;
-	    if (FD_ISSET (f->fd, &xset))
+	    if (FD_ISSET (f->fd, xset))
 	      f->revents |= POLLPRI;
 	  }
       }

@@ -222,12 +222,32 @@ __cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg)
    <linux/socket.h>.  */
 enum
   {
-    SCM_RIGHTS = 0x01,		/* Data array contains access rights.  */
+    SCM_RIGHTS = 0x01,		/* Transfer file descriptors.  */
 #define SCM_RIGHTS SCM_RIGHTS
-    __SCM_CREDENTIALS = 0x02,	/* Data array is `struct ucred'.  */
-    __SCM_CONNECT = 0x03	/* Data array is `struct scm_connect'.  */
+#ifdef __USE_BSD
+    SCM_CREDS = 0x02,		/* BSD-compatible credentials passing.  */
+# define SCM_CREDS SCM_CREDS
+#endif
+    __SCM_CONNECT = 0x03,	/* Data array is `struct scm_connect'.  */
   };
 
+#ifdef __USE_BSD
+
+/* User visible structure for SCM_CREDS message
+   (chosen for BSD source compatibility) */
+
+# define CMGROUP_MAX 16  /* Linux does not provide this info, so it doesn't
+			    matter... use what bsd does. */
+struct cmsgcred
+{
+  pid_t cmcred_pid;			/* PID of sending process.  */
+  uid_t cmcred_uid;			/* Real UID of sending process.  */
+  uid_t cmcred_euid;			/* Effective UID of sending process. */
+  gid_t cmcred_gid;			/* Real GID of sending process.  */
+  short int cmcred_ngroups;		/* Number or groups.  */
+  gid_t cmcred_groups[CMGROUP_MAX];	/* Groups.  */
+};
+#endif
 
 /* Get socket manipulation related informations from kernel headers.  */
 #include <asm/socket.h>

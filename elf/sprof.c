@@ -449,7 +449,7 @@ load_shobj (const char *name)
   else
     log_hashfraction = -1;
   if (do_test)
-    printf ("hashfraction = %d\ndivider = %d\n",
+    printf ("hashfraction = %d\ndivider = %Zu\n",
 	    result->hashfraction,
 	    result->hashfraction * sizeof (struct here_fromstruct));
   result->tossize = textsize / HASHFRACTION;
@@ -1197,7 +1197,7 @@ generate_call_graph (struct profdata *profdata)
 	  }
 
 	/* Info abount the function itself.  */
-	n = printf ("[%d]", cnt);
+	n = printf ("[%Zu]", cnt);
 	printf ("%*s%5.1f%8.2f%8.2f%9" PRIdMAX "         %s [%Zd]\n",
 		7 - n, " ",
 		total_ticks ? (100.0 * sortsym[cnt]->ticks) / total_ticks : 0,

@@ -30,7 +30,7 @@ headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 
 distribute := confstr.h TESTS TESTS2C.sed testcases.h \
 	      PTESTS PTESTS2C.sed ptestcases.h \
-	      globtest.c globtest.sh wordexp-tst.sh
+	      globtest.c globtest.sh wordexp-tst.sh annexc.c
 
 routines :=								      \
 	uname								      \
@@ -63,7 +63,8 @@ gpl2lgpl := getopt.c getopt1.c getopt.h	regex.c regex.h
 before-compile	:= testcases.h ptestcases.h
 
 # So they get cleaned up.
-generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10)
+generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
+	     $(objpfx)annexc $(objpfx)annexc.out
 
 include ../Rules
 

@@ -12,12 +12,12 @@ main (void)
   stream = open_memstream (&bp, &size);
   fprintf (stream, "hello");
   fflush (stream);
-  printf ("buf = %s, size = %d\n", bp, size);
+  printf ("buf = %s, size = %Zu\n", bp, size);
   lose |= size != 5;
   lose |= strncmp (bp, "hello", size);
   fprintf (stream, ", world");
   fclose (stream);
-  printf ("buf = %s, size = %d\n", bp, size);
+  printf ("buf = %s, size = %Zu\n", bp, size);
   lose |= size != 12;
   lose |= strncmp (bp, "hello, world", 12);
 

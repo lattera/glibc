@@ -57,6 +57,8 @@ extern int clone __P ((int (*__fn) (void *__arg), void *__child_stack,
 		       int __flags, void *__arg));
 #endif
 
+__END_DECLS
+
 #endif	/* need schedparam */
 
 #if !defined __defined_schedparam \
@@ -69,5 +71,3 @@ struct __sched_param
   };
 # undef __need_schedparam
 #endif
-
-__END_DECLS

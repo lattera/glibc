@@ -14,6 +14,9 @@ libc {
     wctrans; wctype; wcwidth;
   }
   GLIBC_2.1 {
+    # functions used in inline functions or macros
+    __towctrans;
+
     # i*
     iswblank;
   }

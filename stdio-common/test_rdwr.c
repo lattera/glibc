@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -61,13 +61,13 @@ main (int argc, char **argv)
 	int c = getc (f);
 	if (c == EOF)
 	  {
-	    printf ("EOF at %u.\n", i);
+	    printf ("EOF at %Zu.\n", i);
 	    lose = 1;
 	    break;
 	  }
 	else if (c != hello[i])
 	  {
-	    printf ("Got '%c' instead of '%c' at %u.\n",
+	    printf ("Got '%c' instead of '%c' at %Zu.\n",
 		    (unsigned char) c, hello[i], i);
 	    lose = 1;
 	    break;
@@ -83,7 +83,7 @@ main (int argc, char **argv)
 	for (i = replace_from; i < replace_to; ++i)
 	  if (putc(replace[i], f) == EOF)
 	    {
-	      printf ("putc('%c') got %s at %u.\n",
+	      printf ("putc('%c') got %s at %Zu.\n",
 		      replace[i], strerror (errno), i);
 	      lose = 1;
 	      break;
@@ -97,7 +97,7 @@ main (int argc, char **argv)
       }
     else
       {
-	printf ("ftell returns %lu; should be %u.\n", where, replace_from);
+	printf ("ftell returns %lu; should be %Zu.\n", where, replace_from);
 	lose = 1;
       }
   }

@@ -60,6 +60,7 @@ static size_t num_leaps;
 static struct leap *leaps = NULL;
 
 #include <endian.h>
+#include <byteswap.h>
 
 /* Decode the four bytes at PTR as a signed integer in network byte order.  */
 static inline int
@@ -67,6 +68,8 @@ decode (const void *ptr)
 {
   if ((BYTE_ORDER == BIG_ENDIAN) && sizeof (int) == 4)
     return *(const int *) ptr;
+  else if (BYTE_ORDER == LITTLE_ENDIAN && sizeof (int) == 4)
+    return bswap_32 (*(const int *) ptr);
   else
     {
       const unsigned char *p = ptr;
@@ -157,7 +160,7 @@ __tzfile_read (const char *file)
   if (f == NULL)
     return;
 
-  if (fread ((void *) &tzhead, sizeof (tzhead), 1, f) != 1)
+  if (fread_unlocked ((void *) &tzhead, sizeof (tzhead), 1, f) != 1)
     goto lose;
 
   num_transitions = (size_t) decode (tzhead.tzh_timecnt);
@@ -198,8 +201,8 @@ __tzfile_read (const char *file)
   if (sizeof (time_t) < 4)
       abort ();
 
-  if (fread(transitions, 4, num_transitions, f) != num_transitions ||
-      fread(type_idxs, 1, num_transitions, f) != num_transitions)
+  if (fread_unlocked (transitions, 4, num_transitions, f) != num_transitions
+      || fread_unlocked (type_idxs, 1, num_transitions, f) != num_transitions)
     goto lose;
 
   /* Check for bogus indices in the data file, so we can hereafter
@@ -222,32 +225,32 @@ __tzfile_read (const char *file)
   for (i = 0; i < num_types; ++i)
     {
       unsigned char x[4];
-      if (fread (x, 1, 4, f) != 4 ||
-	  fread (&types[i].isdst, 1, 1, f) != 1 ||
-	  fread (&types[i].idx, 1, 1, f) != 1)
+      if (fread_unlocked (x, 1, 4, f) != 4
+	  || fread_unlocked (&types[i].isdst, 1, 1, f) != 1
+	  || fread_unlocked (&types[i].idx, 1, 1, f) != 1)
 	goto lose;
       if (types[i].idx >= chars) /* Bogus index in data file.  */
 	goto lose;
       types[i].offset = (long int) decode (x);
     }
 
-  if (fread (zone_names, 1, chars, f) != chars)
+  if (fread_unlocked (zone_names, 1, chars, f) != chars)
     goto lose;
 
   for (i = 0; i < num_leaps; ++i)
     {
       unsigned char x[4];
-      if (fread (x, 1, sizeof (x), f) != sizeof (x))
+      if (fread_unlocked (x, 1, sizeof (x), f) != sizeof (x))
 	goto lose;
       leaps[i].transition = (time_t) decode (x);
-      if (fread (x, 1, sizeof (x), f) != sizeof (x))
+      if (fread_unlocked (x, 1, sizeof (x), f) != sizeof (x))
 	goto lose;
       leaps[i].change = (long int) decode (x);
     }
 
   for (i = 0; i < num_isstd; ++i)
     {
-      int c = getc (f);
+      int c = getc_unlocked (f);
       if (c == EOF)
 	goto lose;
       types[i].isstd = c != 0;
@@ -257,7 +260,7 @@ __tzfile_read (const char *file)
 
   for (i = 0; i < num_isgmt; ++i)
     {
-      int c = getc (f);
+      int c = getc_unlocked (f);
       if (c == EOF)
 	goto lose;
       types[i].isgmt = c != 0;
@@ -271,8 +274,7 @@ __tzfile_read (const char *file)
      We choose the offsets in the types of each flavor that are
      transitioned to earliest in time.  */
   __tzname[1] = NULL;
-  for (i = 0; i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
-       ++i)
+  for (i = 0; i < num_types; ++i)
     __tzname[types[i].isdst] = __tzstring (&zone_names[types[i].idx]);
   if (__tzname[1] == NULL)
     __tzname[1] = __tzname[0];
@@ -296,8 +298,8 @@ __tzfile_read (const char *file)
   __use_tzfile = 1;
   return;
 
- lose:;
-  fclose(f);
+ lose:
+  fclose (f);
 }
 
 /* The user specified a hand-made timezone, but not its DST rules.
@@ -425,10 +427,8 @@ __tzfile_compute (time_t timer, int use_localtime,
       __daylight = rule_stdoff != rule_dstoff;
       __timezone = -rule_stdoff;
       __tzname[1] = NULL;
-      for (i = 0;
-	   i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
-	   ++i)
-	__tzname[types[i].isdst] = &zone_names[types[i].idx];
+      for (i = 0; i < num_types; ++i)
+	__tzname[types[i].isdst] = __tzstring (&zone_names[types[i].idx]);
       if (__tzname[1] == NULL)
 	/* There is no daylight saving time.  */
 	__tzname[1] = __tzname[0];
@@ -455,9 +455,9 @@ __tzfile_compute (time_t timer, int use_localtime,
        leaps[i].change > leaps[i - 1].change))
     {
       *leap_hit = 1;
-      while (i > 0 &&
-	     leaps[i].transition == leaps[i - 1].transition + 1 &&
-	     leaps[i].change == leaps[i - 1].change + 1)
+      while (i > 0
+	     && leaps[i].transition == leaps[i - 1].transition + 1
+	     && leaps[i].change == leaps[i - 1].change + 1)
 	{
 	  ++*leap_hit;
 	  --i;
@@ -483,5 +483,6 @@ compute_tzname_max (size_t chars)
 	++p;
       if ((size_t) (p - start) > __tzname_cur_max)
 	__tzname_cur_max = p - start;
-    } while (++p < &zone_names[chars]);
+    }
+  while (++p < &zone_names[chars]);
 }

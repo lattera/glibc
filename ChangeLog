@@ -1,4 +1,144 @@
-Fri Jul  3 14:35:55 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-07-04 10:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/Makefile (routines): Add iofread_u and iofwrite_u.
+	* libio/Versions: Add fread_unlocked and fwrite_unlocked.
+
+	* Makerules (lib%.so): Adjust ignore pattern for last makefile change.
+
+	* time/tzfile.c (decode): Optimize by using bswap_32.
+	(__tzfile_read): Use _unlocked stream functions.  Correct setting of
+	__tzname array values.
+	(__tzfile_compute): Correct setting of __tzname array values.
+	* time/tzset.c (__tzstring): Clean up a bit.
+
+1998-06-29 19:01  Jim Wilson  <wilson@cygnus.com>
+
+	* posix/regex.c (re_comp): Add cast to char * before gettext calls.
+
+1998-06-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/bsd/poll.c (__poll): Allocate fd_set dynamically so
+	that fd can be bigger than FD_SETSIZE.
+
+1998-07-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nscd/grpcache.c: Include <unistd.h>.
+	* nscd/pwdcache.c: Likewise.
+
+	* nis/nis_modify.c: Include <string.h>.
+	* nis/nis_add.c: Likewise.
+	* nis/nis_checkpoint.c: Likewise.
+	* posix/runptests.c: Likewise.
+	* sysdeps/generic/statvfs64.c: Likewise.
+	* sysdeps/generic/fstatvfs64.c: Likewise.
+
+1998-07-03 13:16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* localedata/charmaps/ISO-8859-9: Change mapping for 0xea, 0xec, 0xef
+	to match data from Unicode.
+	Reported by Michael Deutschmann <michael@talamasca.wkpowerlink.com>.
+
+1998-07-03 11:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/printf.h: Define printf_function and
+	printf_arginfo_function types using __PMT not __P.
+	Reported by Marc Lehmann.
+
+1998-07-02 14:07 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* assert/test-assert.c: New test.
+	* assert/test-assert-perr.c: New test.
+	* assert/Makefile (tests): Add test-assert and test-assert-perr.
+
+1998-07-02 13:45  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	BSD-style SCM_CREDS support.
+
+	* sysdeps/unix/sysv/linux/socket.h: Define struct cmsgcred and
+	SCM_CREDS.
+	* sysdeps/unix/sysv/linux/sendmsg.c: New file.  Convert user
+	visible SCM_CREDS packet to what the kernel wants.
+	* sysdeps/unix/sysv/linux/recvmsg.c: New file.  Convert
+	SCM_CREDS packet output by kernel to what users want.
+
+	* sysdeps/unix/sysv/linux/sendmsg.S: Moved to...
+	* sysdeps/unix/sysv/linux/__sendmsg.S: here.
+	* sysdeps/unix/sysv/linux/recvmsg.S: Moved to...
+	* sysdeps/unix/sysv/linux/__recvmsg.S: here.
+
+	* sysdeps/unix/sysv/linux/Makefile [subdir=socket]: Add
+	__sendmsg and __recvmsg to sysdep_routines.
+	* sysdeps/unix/sysv/linux/Dist: Add __sendmsg.S and __recvmsg.S.
+
+1998-07-02  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nscd/grpcache.c: Fix gid pointer handling and debug messages.
+	* nscd/pwdcache.c: Fix uid pointer handling and debug messages.
+	* nscd/nscd.c: Check, if pthread_create fails.
+
+1998-07-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* stdio-common/test_rdwr.c (main): Use %Zu for size_t in printf
+	format strings.
+	* stdio-common/bug1.c (main): Likewise.
+	* stdio-common/bug5.c (main): Likewise.
+	* stdio-common/tstgetln.c (main): Likewise.
+	* elf/sprof.c (generate_call_graph): Likewise.
+	(load_shobj): Likewise.
+	* posix/runptests.c (main): Likewise.
+	* string/tst-strlen.c (main): Likewise.
+
+	* sysdeps/libm-ieee754/e_acos.c (__ieee754_acos): Remove unused
+	variable q3.
+	* sysdeps/libm-ieee754/e_asin.c (__ieee754_asin): Likewise
+
+1998-07-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* wctype/Versions: Add __towctrans.
+	Noticed by Alex Buell <alex.buell@tahallah.demon.co.uk>.
+
+1998-07-02  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* grp/initgroups.c (compat_call): Only call dynamically loaded
+	functions if they are really present.
+
+1998-07-02  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/unix/sysv/linux/bits/sched.h: Move __END_DECLS within
+	#ifdef that contains __BEGIN_DECLS.
+
+1998-07-02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libio/iofwrite.c: Fix return value when size == 0.
+
+1998-07-01  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/Makefile (distribute): Add annexc.c.
+	(generated): Add $(objpfx)annexc and $(objpfx)annexc.out.
+
+1998-07-01  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/pthreadtypes.h here, and do not clobber headers.
+
+	* sysdeps/unix/sysv/linux/Dist: Add bits/pthreadtypes.h.
+
+1998-07-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* timezone/tst-timezone.c: Add tests for tzname variable.
+
+1998-07-03 12:17  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* Makefile [versioning=yes]: Build the mapfiles with a pattern
+	rule that lists all of them as targets.
+	(sysd-versions): Depend only on Versions.def.  Write a Makefile
+	fragment that defines $(vers-libs) based on contents of that file;
+	then include it.
+	(lib-noranlib): Depend on lib-mapfiles not sysd-versions.
+	(lib-mapfiles): New target, depends on sysd-versions and $(vers-libs).
+	Predicate all this on avoid-generated unset as well as versioning.
+
+1998-07-03 14:35  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/m68k/Versions: New file.
 

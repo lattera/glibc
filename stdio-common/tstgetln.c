@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ main (int argc, char *argv[])
 
   while ((len = getline (&buf, &size, stdin)) != -1)
     {
-      printf ("bufsize %u; read %d: ", size, len);
+      printf ("bufsize %Zu; read %Zd: ", size, len);
       if (fwrite (buf, len, 1, stdout) != 1)
 	{
 	  perror ("fwrite");

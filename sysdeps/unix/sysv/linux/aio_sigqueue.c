@@ -24,9 +24,6 @@
 
 extern int __syscall_rt_sigqueueinfo (int, int, siginfo_t *);
 
-/* This variable is used quite often in the libc code.  */
-extern pid_t __libc_pid;
-
 
 /* Return any pending signal or wait for one for the given time.  */
 int
@@ -40,10 +37,8 @@ __aio_sigqueue (sig, val)
   info.si_signo = sig;
   info.si_errno = 0;
   info.si_code = SI_ASYNCIO;
-
   info.si_pid = getpid ();
   info.si_uid = getuid ();
-
   info.si_value = val;
 
   return __syscall_rt_sigqueueinfo (info.si_pid, sig, &info);
