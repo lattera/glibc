@@ -1898,7 +1898,17 @@ tf_msgrcv (void *arg)
     long int type;
     char mem[10];
   } m;
-  msgrcv (tempmsg, (struct msgbuf *) &m, 10, 100, 0);
+  int randnr;
+  /* We need a positive random number.  */
+  do
+    randnr = random ();
+  while (randnr <= 0);
+  do
+    {
+      errno = 0;
+      msgrcv (tempmsg, (struct msgbuf *) &m, 10, randnr, 0);
+    }
+  while (errno == EIDRM);
 
   pthread_cleanup_pop (0);
 
@@ -1939,7 +1949,10 @@ tf_msgsnd (void *arg)
     long int type;
     char mem[1];
   } m;
-  m.type = 100;
+  /* We need a positive random number.  */
+  do
+    m.type = random ();
+  while (m.type <= 0);
   msgsnd (tempmsg, (struct msgbuf *) &m, sizeof (m.mem), 0);
 
   pthread_cleanup_pop (0);

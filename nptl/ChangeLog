@@ -1,5 +1,10 @@
 2003-06-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-cancel4.c (tf_msgsnd): Don't always use 100 as the type,
+	find a random value.
+	(tf_msgrcv): Likewise.  Also don't report msgrcv returns if
+	errno==EIDRM.
+
 	* sysdeps/unix/sysv/linux/timer_settime.c: Add prototype for
 	compat_timer_settime.
 	* sysdeps/unix/sysv/linux/timer_gettime.c: Add prototype for
