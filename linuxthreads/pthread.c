@@ -22,6 +22,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/wait.h>
+#include <sys/resource.h>
 #include "pthread.h"
 #include "internals.h"
 #include "spinlock.h"
@@ -134,8 +135,8 @@ const int __pthread_offsetof_pid = offsetof(struct _pthread_descr_struct,
                                             p_pid);
 
 /* Signal numbers used for the communication.  */
-int __pthread_sig_restart;
-int __pthread_sig_cancel;
+int __pthread_sig_restart = DEFAULT_SIG_RESTART;
+int __pthread_sig_cancel = DEFAULT_SIG_CANCEL;
 
 /* These variables are used by the setup code.  */
 extern int _errno;
@@ -149,7 +150,7 @@ static void pthread_handle_sigrestart(int sig);
 
 /* Initialize the pthread library.
    Initialization is split in two functions:
-   - a constructor function that blocks the PTHREAD_SIG_RESTART signal
+   - a constructor function that blocks the __pthread_sig_restart signal
      (must do this very early, since the program could capture the signal
       mask with e.g. sigsetjmp before creating the first thread);
    - a regular function called from pthread_create when needed. */
@@ -160,6 +161,8 @@ static void pthread_initialize(void)
 {
   struct sigaction sa;
   sigset_t mask;
+  struct rlimit limit;
+  int max_stack;
 
   /* If already done (e.g. by a constructor called earlier!), bail out */
   if (__pthread_initial_thread_bos != NULL) return;
@@ -172,6 +175,15 @@ static void pthread_initialize(void)
      STACK_SIZE boundary. */
   __pthread_initial_thread_bos =
     (char *)(((long)CURRENT_STACK_FRAME - 2 * STACK_SIZE) & ~(STACK_SIZE - 1));
+  /* Play with the stack size limit to make sure that no stack ever grows
+     beyond STACK_SIZE minus two pages (one page for the thread descriptor
+     immediately beyond, and one page to act as a guard page). */
+  getrlimit(RLIMIT_STACK, &limit);
+  max_stack = STACK_SIZE - 2 * __getpagesize();
+  if (limit.rlim_cur > max_stack) {
+    limit.rlim_cur = max_stack;
+    setrlimit(RLIMIT_STACK, &limit);
+  }
   /* Update the descriptor for the initial thread. */
   __pthread_initial_thread.p_pid = __getpid();
   /* If we have special thread_self processing, initialize that for the
@@ -190,8 +202,8 @@ static void pthread_initialize(void)
     {
       /* The kernel does not support real-time signals.  Use as before
 	 the available signals in the fixed set.  */
-      __pthread_sig_restart = SIGUSR1;
-      __pthread_sig_cancel = SIGUSR2;
+      __pthread_sig_restart = DEFAULT_SIG_RESTART;
+      __pthread_sig_cancel = DEFAULT_SIG_CANCEL;
     }
 #endif
   /* Setup signal handlers for the initial thread.
@@ -201,14 +213,14 @@ static void pthread_initialize(void)
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = SA_RESTART; /* does not matter for regular threads, but
                                better for the thread manager */
-  __sigaction(PTHREAD_SIG_RESTART, &sa, NULL);
+  __sigaction(__pthread_sig_restart, &sa, NULL);
   sa.sa_handler = pthread_handle_sigcancel;
   sa.sa_flags = 0;
-  __sigaction(PTHREAD_SIG_CANCEL, &sa, NULL);
+  __sigaction(__pthread_sig_cancel, &sa, NULL);
 
-  /* Initially, block PTHREAD_SIG_RESTART. Will be unblocked on demand. */
+  /* Initially, block __pthread_sig_restart. Will be unblocked on demand. */
   sigemptyset(&mask);
-  sigaddset(&mask, PTHREAD_SIG_RESTART);
+  sigaddset(&mask, __pthread_sig_restart);
   sigprocmask(SIG_BLOCK, &mask, NULL);
   /* Register an exit function to kill all other threads. */
   /* Do it early so that user-registered atexit functions are called
@@ -254,7 +266,7 @@ int __pthread_initialize_manager(void)
   __pthread_manager_reader = manager_pipe[0]; /* reading end */
   __pthread_manager_thread.p_pid = pid;
   /* Make gdb aware of new thread manager */
-  if (__pthread_threads_debug) raise(PTHREAD_SIG_CANCEL);
+  if (__pthread_threads_debug) raise(__pthread_sig_cancel);
   /* Synchronize debugging of the thread manager */
   request.req_kind = REQ_DEBUG;
   __libc_write(__pthread_manager_request, (char *) &request, sizeof(request));
@@ -433,7 +445,7 @@ static void pthread_handle_sigrestart(int sig)
    The debugging strategy is as follows:
    On reception of a REQ_DEBUG request (sent by new threads created to
    the thread manager under debugging mode), the thread manager throws
-   PTHREAD_SIG_CANCEL to itself. The debugger (if active) intercepts
+   __pthread_sig_cancel to itself. The debugger (if active) intercepts
    this signal, takes into account new threads and continue execution
    of the thread manager by propagating the signal because it doesn't
    know what it is specifically done for. In the current implementation,

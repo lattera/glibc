@@ -1,8 +1,14 @@
+1998-07-29  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (__lseek): New function.
+	(__getpid): New function.
+	(abort): New function.
+
 1998-07-29 15:07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/arm/fpu/Dist: New file.  Add ieee754.h.
 
-	* nis/nis_chache2_xdr.c: Removed.
+	* nis/nis_cache2_xdr.c: Removed.
 	* nis/nis_cache.c: Removed.
 	* nis/nis_cache2.h: Removed.
 

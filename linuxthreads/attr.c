@@ -146,10 +146,8 @@ int __pthread_attr_setguardsize(pthread_attr_t *attr, size_t guardsize)
   /* First round up the guard size.  */
   guardsize = roundup (guardsize, ps);
 
-  /* The current implementation of LinuxThreads allocates 2MB stack space
-     for each thread.  So the maximum guardsize is 2MB - pagesize.  */
-  if (guardsize >= STACK_SIZE - ps)
-    return EINVAL;
+  /* The guard size must not be larger than the stack itself */
+  if (guardsize >= attr->stacksize) return EINVAL;
 
   attr->guardsize = guardsize;
 

@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <sys/poll.h>		/* for poll */
 #include <sys/mman.h>           /* for mmap */
+#include <sys/param.h>
 #include <sys/time.h>
 #include <sys/wait.h>           /* for waitpid macros */
 #include <linux/tasks.h>
@@ -99,11 +100,11 @@ int __pthread_manager(void *arg)
   /* Set the error variable.  */
   __pthread_manager_thread.p_errnop = &__pthread_manager_thread.p_errno;
   __pthread_manager_thread.p_h_errnop = &__pthread_manager_thread.p_h_errno;
-  /* Block all signals except PTHREAD_SIG_RESTART, PTHREAD_SIG_CANCEL
+  /* Block all signals except __pthread_sig_restart, __pthread_sig_cancel
      and SIGTRAP */
   sigfillset(&mask);
-  sigdelset(&mask, PTHREAD_SIG_RESTART);
-  sigdelset(&mask, PTHREAD_SIG_CANCEL); /* for debugging new threads */
+  sigdelset(&mask, __pthread_sig_restart);
+  sigdelset(&mask, __pthread_sig_cancel); /* for debugging new threads */
   sigdelset(&mask, SIGTRAP);            /* for debugging purposes */
   sigprocmask(SIG_SETMASK, &mask, NULL);
   /* Raise our priority to match that of main thread */
@@ -161,7 +162,7 @@ int __pthread_manager(void *arg)
         break;
       case REQ_DEBUG:
         /* Make gdb aware of new thread */
-        if (__pthread_threads_debug) raise(PTHREAD_SIG_CANCEL);
+	if (__pthread_threads_debug) raise(__pthread_sig_cancel);
         restart(request.req_thread);
         break;
       }
@@ -205,6 +206,78 @@ static int pthread_start_thread(void *arg)
   return 0;
 }
 
+static int pthread_allocate_stack(const pthread_attr_t *attr,
+                                  pthread_descr default_new_thread,
+                                  int pagesize,
+                                  pthread_descr * out_new_thread,
+                                  char ** out_new_thread_bottom,
+                                  char ** out_guardaddr,
+                                  size_t * out_guardsize)
+{
+  pthread_descr new_thread;
+  char * new_thread_bottom;
+  char * guardaddr;
+  size_t stacksize, guardsize;
+
+  if (attr != NULL && attr->stackaddr_set)
+    {
+      /* The user provided a stack. */
+      new_thread =
+        (pthread_descr) ((long)(attr->stackaddr) & -sizeof(void *)) - 1;
+      new_thread_bottom = (char *) attr->stackaddr - attr->stacksize;
+      guardaddr = NULL;
+      guardsize = 0;
+    }
+  else
+    {
+      /* Allocate space for stack and thread descriptor at default address */
+      new_thread = default_new_thread;
+      new_thread_bottom = (char *) new_thread - STACK_SIZE;
+      if (mmap((caddr_t)((char *)(new_thread + 1) - INITIAL_STACK_SIZE),
+               INITIAL_STACK_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC,
+               MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED | MAP_GROWSDOWN,
+               -1, 0) == MAP_FAILED)
+        /* Bad luck, this segment is already mapped. */
+        return -1;
+      /* We manage to get a stack.  Now see whether we need a guard
+         and allocate it if necessary.  Notice that the default
+         attributes (stack_size = STACK_SIZE - pagesize and
+         guardsize = pagesize) do not need a guard page, since
+         the RLIMIT_STACK soft limit prevents stacks from
+         running into one another. */
+      if (attr == NULL ||
+          attr->guardsize == 0 ||
+          (attr->guardsize == pagesize &&
+           attr->stacksize == STACK_SIZE - pagesize))
+        {
+          /* We don't need a guard page. */
+          guardaddr = NULL;
+          guardsize = 0;
+        }
+      else
+        {
+          /* Put a bad page at the bottom of the stack */
+          stacksize = roundup(attr->stacksize, pagesize);
+          if (stacksize >= STACK_SIZE - pagesize)
+            stacksize = STACK_SIZE - pagesize;
+          guardaddr = (void *)new_thread - stacksize;
+          guardsize = attr->guardsize;
+          if (mmap ((caddr_t) guardaddr, guardsize, 0, MAP_FIXED, -1, 0)
+              == MAP_FAILED)
+            {
+              /* We don't make this an error.  */
+              guardaddr = NULL;
+              guardsize = 0;
+            }
+        }
+    }
+  *out_new_thread = new_thread;
+  *out_new_thread_bottom = new_thread_bottom;
+  *out_guardaddr = guardaddr;
+  *out_guardsize = guardsize;
+  return 0;
+}
+
 static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 				 void * (*start_routine)(void *), void *arg,
 				 sigset_t * mask, int father_pid)
@@ -214,8 +287,9 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   pthread_descr new_thread;
   char * new_thread_bottom;
   pthread_t new_thread_id;
-  void *guardaddr = NULL;
+  char *guardaddr = NULL;
   size_t guardsize = 0;
+  int pagesize = __getpagesize();
 
   /* First check whether we have to change the policy and if yes, whether
      we can  do this.  Normally this should be done by examining the
@@ -223,50 +297,17 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
      but this is hard to implement.  FIXME  */
   if (attr != NULL && attr->schedpolicy != SCHED_OTHER && geteuid () != 0)
     return EPERM;
-  /* Find a free stack segment for the current stack */
+  /* Find a free segment for the thread, and allocate a stack if needed */
   for (sseg = 1; ; sseg++)
     {
       if (sseg >= PTHREAD_THREADS_MAX)
 	return EAGAIN;
       if (__pthread_handles[sseg].h_descr != NULL)
 	continue;
-
-      if (attr == NULL || !attr->stackaddr_set)
-	{
-	  new_thread = thread_segment(sseg);
-	  new_thread_bottom = (char *) new_thread - STACK_SIZE;
-	  /* Allocate space for stack and thread descriptor. */
-	  if (mmap((caddr_t)((char *)(new_thread+1) - INITIAL_STACK_SIZE),
-		   INITIAL_STACK_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC,
-		   MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED | MAP_GROWSDOWN,
-		   -1, 0) != MAP_FAILED)
-	    {
-	      /* We manage to get a stack.  Now see whether we need a guard
-		 and allocate it if necessary.  */
-	      if (attr == NULL || attr->guardsize != 0)
-		{
-		  guardsize = attr ? attr->guardsize : __getpagesize ();
-		  guardaddr = mmap ((caddr_t)((char *)(new_thread+1)
-					      - STACK_SIZE),
-				    guardsize, 0, MAP_FIXED, -1, 0);
-		  if (guardaddr == MAP_FAILED)
-		    {
-		      /* We don't make this an error.  */
-		      guardaddr = NULL;
-		      guardsize = 0;
-		    }
-		}
-	      break;
-	    }
-	  /* It seems part of this segment is already mapped. Try the next. */
-	}
-      else
-	{
-	  new_thread = (pthread_descr) ((long) attr->stackaddr
-					& -sizeof(void *)) - 1;
-	  new_thread_bottom = (char *) attr->stackaddr - attr->stacksize;
-	  break;
-	}
+      if (pthread_allocate_stack(attr, thread_segment(sseg), pagesize,
+                                 &new_thread, &new_thread_bottom,
+                                 &guardaddr, &guardsize) == 0)
+        break;
     }
   /* Allocate new thread identifier */
   pthread_threads_counter += PTHREAD_THREADS_MAX;
@@ -329,7 +370,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   /* Do the cloning */
   pid = __clone(pthread_start_thread, (void **) new_thread,
                 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
-                PTHREAD_SIG_RESTART,
+                __pthread_sig_restart,
                 new_thread);
   /* Check if cloning succeeded */
   if (pid == -1) {
@@ -492,7 +533,7 @@ static void pthread_handle_exit(pthread_descr issuing_thread, int exitcode)
   for (th = issuing_thread->p_nextlive;
        th != issuing_thread;
        th = th->p_nextlive) {
-    kill(th->p_pid, PTHREAD_SIG_CANCEL);
+    kill(th->p_pid, __pthread_sig_cancel);
   }
   /* Now, wait for all these threads, so that they don't become zombies
      and their times are properly added to the thread manager's times. */
@@ -505,7 +546,7 @@ static void pthread_handle_exit(pthread_descr issuing_thread, int exitcode)
   _exit(0);
 }
 
-/* Handler for PTHREAD_SIG_RESTART in thread manager thread */
+/* Handler for __pthread_sig_restart in thread manager thread */
 
 void __pthread_manager_sighandler(int sig)
 {

@@ -500,6 +500,18 @@ __libc_read (int fd, void *buf, size_t nbytes)
   return nread;
 }
 
+off_t weak_function
+__lseek (int fd, off_t offset, int whence)
+{
+  error_t err;
+  
+  err = __io_seek ((mach_port_t) fd, offset, whence, &offset);
+  if (err)
+    return __hurd_fail (err);
+  
+  return offset;
+}
+
 __ptr_t weak_function
 __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
@@ -570,7 +582,6 @@ __fxstat (int vers, int fd, struct stat *buf)
     return __hurd_fail (err);
 
   return 0;
-  
 }
 
 int weak_function
@@ -590,6 +601,19 @@ __xstat (int vers, const char *file, struct stat *buf)
   return 0;
 }
 
+pid_t weak_function
+__getpid ()
+{
+  pid_t pid, ppid;
+  int orphaned;
+  
+  if (__proc_getpids (_dl_hurd_data->portarray[INIT_PORT_PROC],
+		      &pid, &ppid, &orphaned))
+    return -1;
+
+  return pid;
+}
+
 void weak_function
 _exit (int status)
 {
@@ -597,6 +621,29 @@ _exit (int status)
 		    W_EXITCODE (status, 0), 0);
   while (__task_terminate (__mach_task_self ()))
     __mach_task_self_ = (__mach_task_self) ();
+}
+
+/* Try to get a machine dependent instruction which will make the
+   program crash.  This is used in case everything else fails.  */
+#include <abort-instr.h>
+#ifndef ABORT_INSTRUCTION
+/* No such instruction is available.  */
+# define ABORT_INSTRUCTION
+#endif
+
+void weak_function
+abort (void)
+{
+  /* Try to abort using the system specific command.  */
+  ABORT_INSTRUCTION;
+
+  /* If the abort instruction failed, exit.  */
+  _exit (127);
+
+  /* If even this fails, make sure we never return.  */
+  while (1)
+    /* Try for ever and ever.  */
+    ABORT_INSTRUCTION;
 }
 
 /* This function is called by interruptible RPC stubs.  For initial

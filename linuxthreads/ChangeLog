@@ -1,3 +1,20 @@
+1998-07-29  Xavier Leroy  <Xavier.Leroy@inria.fr>
+
+	* Banner: Bump version number to 0.8
+	* FAQ.html: Many updates, in particular w.r.t. debugging.
+	* manager.c: Support for non-default stacksize for
+	LinuxThreads-allocated stacks;
+	don't use guard pages for stacks with default size, rely on
+	rlimit(RLIMIT_STACK) instead (it's cheaper).
+	* attr.c: Likewise.
+	* cancel.c: Use __pthread_sig_cancel and __pthread_sig_restart
+	everywhere instead of PTHREAD_SIG_CANCEL and PTHREAD_SIG_RESTART.
+	* condvar.c: Likewise.
+	* internals.h: Likewise.
+	* restart.h: Likewise.
+	* signals.c: Likewise.
+	* pthread.c: Likewise; set rlimit(RLIMIT_STACK) as we need it.
+
 1998-07-23  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* weaks.c: Define pthread_mutexattr_[sg]ettype instead of

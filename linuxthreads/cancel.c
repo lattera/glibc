@@ -61,7 +61,7 @@ int pthread_cancel(pthread_t thread)
   handle->h_descr->p_canceled = 1;
   pid = handle->h_descr->p_pid;
   __pthread_unlock(&handle->h_lock);
-  kill(pid, PTHREAD_SIG_CANCEL);
+   kill(pid, __pthread_sig_cancel);
   return 0;
 }
 

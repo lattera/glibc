@@ -26,18 +26,18 @@ int pthread_sigmask(int how, const sigset_t * newmask, sigset_t * oldmask)
 
   if (newmask != NULL) {
     mask = *newmask;
-    /* Don't allow PTHREAD_SIG_RESTART to be unmasked.
-       Don't allow PTHREAD_SIG_CANCEL to be masked. */
+    /* Don't allow __pthread_sig_restart to be unmasked.
+       Don't allow __pthread_sig_cancel to be masked. */
     switch(how) {
     case SIG_SETMASK:
-      sigaddset(&mask, PTHREAD_SIG_RESTART);
-      sigdelset(&mask, PTHREAD_SIG_CANCEL);
+      sigaddset(&mask, __pthread_sig_restart);
+      sigdelset(&mask, __pthread_sig_cancel);
       break;
     case SIG_BLOCK:
-      sigdelset(&mask, PTHREAD_SIG_CANCEL);
+      sigdelset(&mask, __pthread_sig_cancel);
       break;
     case SIG_UNBLOCK:
-      sigdelset(&mask, PTHREAD_SIG_RESTART);
+      sigdelset(&mask, __pthread_sig_restart);
       break;
     }
     newmask = &mask;
@@ -94,7 +94,7 @@ int sigaction(int sig, const struct sigaction * act,
 {
   struct sigaction newact;
 
-  if (sig == PTHREAD_SIG_RESTART || sig == PTHREAD_SIG_CANCEL)
+  if (sig == __pthread_sig_restart || sig == __pthread_sig_cancel)
     return EINVAL;
   newact = *act;
   if (act->sa_handler != SIG_IGN && act->sa_handler != SIG_DFL)
@@ -116,9 +116,9 @@ int sigwait(const sigset_t * set, int * sig)
   /* Get ready to block all signals except those in set
      and the cancellation signal */
   sigfillset(&mask);
-  sigdelset(&mask, PTHREAD_SIG_CANCEL);
+  sigdelset(&mask, __pthread_sig_cancel);
   for (s = 1; s <= NSIG; s++) {
-    if (sigismember(set, s) && s != PTHREAD_SIG_CANCEL)
+    if (sigismember(set, s) && s != __pthread_sig_cancel)
       sigdelset(&mask, s);
   }
   /* Test for cancellation */

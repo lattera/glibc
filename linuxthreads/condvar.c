@@ -86,7 +86,7 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
     } else {
       /* Unblock the restart signal */
       sigemptyset(&unblock);
-      sigaddset(&unblock, PTHREAD_SIG_RESTART);
+      sigaddset(&unblock, __pthread_sig_restart);
       sigprocmask(SIG_UNBLOCK, &unblock, &initial_mask);
       /* Sleep for the required duration */
       retsleep = __libc_nanosleep(reltime, NULL);

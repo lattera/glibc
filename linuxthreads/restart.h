@@ -18,7 +18,7 @@
 
 static inline void restart(pthread_descr th)
 {
-  kill(th->p_pid, PTHREAD_SIG_RESTART);
+  kill(th->p_pid, __pthread_sig_restart);
 }
 
 static inline void suspend(pthread_descr self)
@@ -26,11 +26,11 @@ static inline void suspend(pthread_descr self)
   sigset_t mask;
 
   sigprocmask(SIG_SETMASK, NULL, &mask); /* Get current signal mask */
-  sigdelset(&mask, PTHREAD_SIG_RESTART); /* Unblock the restart signal */
+  sigdelset(&mask, __pthread_sig_restart); /* Unblock the restart signal */
   do {
     self->p_signal = 0;
     sigsuspend(&mask);                   /* Wait for signal */
-  } while (self->p_signal != PTHREAD_SIG_RESTART);
+  } while (self->p_signal !=__pthread_sig_restart );
 }
 
 static inline void suspend_with_cancellation(pthread_descr self)
@@ -39,7 +39,7 @@ static inline void suspend_with_cancellation(pthread_descr self)
   sigjmp_buf jmpbuf;
 
   sigprocmask(SIG_SETMASK, NULL, &mask); /* Get current signal mask */
-  sigdelset(&mask, PTHREAD_SIG_RESTART); /* Unblock the restart signal */
+  sigdelset(&mask, __pthread_sig_restart); /* Unblock the restart signal */
   /* No need to save the signal mask, we'll restore it ourselves */
   if (sigsetjmp(jmpbuf, 0) == 0) {
     self->p_cancel_jmp = &jmpbuf;
@@ -47,11 +47,11 @@ static inline void suspend_with_cancellation(pthread_descr self)
       do {
 	self->p_signal = 0;
         sigsuspend(&mask);               /* Wait for a signal */
-      } while (self->p_signal != PTHREAD_SIG_RESTART);
+      } while (self->p_signal != __pthread_sig_restart);
     }
     self->p_cancel_jmp = NULL;
   } else {
-    sigaddset(&mask, PTHREAD_SIG_RESTART); /* Reblock the restart signal */
+    sigaddset(&mask, __pthread_sig_restart); /* Reblock the restart signal */
     sigprocmask(SIG_SETMASK, &mask, NULL);
   }
 }

@@ -130,16 +130,13 @@ struct pthread_request {
 
 /* Signals used for suspend/restart and for cancellation notification.  */
 
-#ifdef SIGRTMIN
-/* The have real-time signals.  */
 extern int __pthread_sig_restart;
 extern int __pthread_sig_cancel;
-# define PTHREAD_SIG_RESTART __pthread_sig_restart
-# define PTHREAD_SIG_CANCEL __pthread_sig_cancel
-#else
-# define PTHREAD_SIG_RESTART SIGUSR1
-# define PTHREAD_SIG_CANCEL SIGUSR2
-#endif
+
+/* Default signals used if we don't have realtime signals */
+
+#define DEFAULT_SIG_RESTART SIGUSR1
+#define DEFAULT_SIG_CANCEL SIGUSR2
 
 /* Global array of thread handles, used for validating a thread id
    and retrieving the corresponding thread descriptor. Also used for
