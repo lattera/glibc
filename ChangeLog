@@ -1,3 +1,7 @@
+2004-10-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-open.c (dl_open_worker): Remove reference to glibcbug script.
+
 2004-10-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object): Use cache_rpath to check for

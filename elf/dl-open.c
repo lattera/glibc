@@ -506,7 +506,7 @@ cannot create TLS data structures"));
   /* Bump the generation number if necessary.  */
   if (any_tls)
     if (__builtin_expect (++GL(dl_tls_generation) == 0, 0))
-      __libc_fatal (_("TLS generation counter wrapped!  Please send report with the 'glibcbug' script."));
+      __libc_fatal (_("TLS generation counter wrapped!  Please report this."));
 #endif
 
   /* Run the initializer functions of new objects.  */
