@@ -228,7 +228,7 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 
   do
     {
-      if (__builtin_expect (*name, 'a') == '$')
+      if (__builtin_expect (*name == '$', 0))
 	{
 	  const char *repl = NULL;
 	  size_t len = 1;
@@ -504,6 +504,8 @@ decompose_rpath (struct r_search_path_struct *sps,
   char *cp;
   struct r_search_path_elem **result;
   size_t nelems;
+  /* Initialize to please the compiler.  */
+  const char *errstring = NULL;
 
   /* First see whether we must forget the RUNPATH and RPATH from this
      object.  */
@@ -521,8 +523,13 @@ decompose_rpath (struct r_search_path_struct *sps,
 	      result = (struct r_search_path_elem **)
 		malloc (sizeof (*result));
 	      if (result == NULL)
-		_dl_signal_error (ENOMEM, NULL, NULL,
-				  N_("cannot create cache for search path"));
+		{
+		signal_error_cache:
+		  errstring = N_("cannot create cache for search path");
+		signal_error:
+		  _dl_signal_error (ENOMEM, NULL, NULL, errstring);
+		}
+
 	      result[0] = NULL;
 
 	      sps->dirs = result;
@@ -537,8 +544,10 @@ decompose_rpath (struct r_search_path_struct *sps,
      string tokens.  */
   copy = expand_dynamic_string_token (l, rpath);
   if (copy == NULL)
-    _dl_signal_error (ENOMEM, NULL, NULL,
-		      N_("cannot create RUNPATH/RPATH copy"));
+    {
+      errstring = N_("cannot create RUNPATH/RPATH copy");
+      goto signal_error;
+    }
 
   /* Count the number of necessary elements in the result array.  */
   nelems = 0;
@@ -551,8 +560,7 @@ decompose_rpath (struct r_search_path_struct *sps,
   result = (struct r_search_path_elem **) malloc ((nelems + 1 + 1)
 						  * sizeof (*result));
   if (result == NULL)
-    _dl_signal_error (ENOMEM, NULL, NULL,
-		      N_("cannot create cache for search path"));
+    goto signal_error_cache;
 
   fillin_rpath (copy, result, ":", 0, what, where);
 
@@ -577,6 +585,8 @@ _dl_init_paths (const char *llp)
 #ifdef SHARED
   struct link_map *l;
 #endif
+  /* Initialize to please the compiler.  */
+  const char *errstring = NULL;
 
   /* Fill in the information about the application's RPATH and the
      directories addressed by the LD_LIBRARY_PATH environment variable.  */
@@ -589,8 +599,11 @@ _dl_init_paths (const char *llp)
   aelem = rtld_search_dirs.dirs = (struct r_search_path_elem **)
     malloc ((nsystem_dirs_len + 1) * sizeof (struct r_search_path_elem *));
   if (rtld_search_dirs.dirs == NULL)
-    _dl_signal_error (ENOMEM, NULL, NULL,
-		      N_("cannot create search path array"));
+    {
+      errstring = N_("cannot create search path array");
+    signal_error:
+      _dl_signal_error (ENOMEM, NULL, NULL, errstring);
+    }
 
   round_size = ((2 * sizeof (struct r_search_path_elem) - 1
 		 + ncapstr * sizeof (enum r_dir_status))
@@ -600,8 +613,10 @@ _dl_init_paths (const char *llp)
     malloc ((sizeof (system_dirs) / sizeof (system_dirs[0]))
 	    * round_size * sizeof (struct r_search_path_elem));
   if (rtld_search_dirs.dirs[0] == NULL)
-    _dl_signal_error (ENOMEM, NULL, NULL,
-		      N_("cannot create cache for search path"));
+    {
+      errstring = N_("cannot create cache for search path");
+      goto signal_error;
+    }
 
   rtld_search_dirs.malloced = 0;
   pelem = _dl_all_dirs = rtld_search_dirs.dirs[0];
@@ -693,8 +708,10 @@ _dl_init_paths (const char *llp)
       env_path_list.dirs = (struct r_search_path_elem **)
 	malloc ((nllp + 1) * sizeof (struct r_search_path_elem *));
       if (env_path_list.dirs == NULL)
-	_dl_signal_error (ENOMEM, NULL, NULL,
-			  N_("cannot create cache for search path"));
+	{
+	  errstring = N_("cannot create cache for search path");
+	  goto signal_error;
+	}
 
       (void) fillin_rpath (llp_tmp, env_path_list.dirs, ":;",
 			   __libc_enable_secure, "LD_LIBRARY_PATH", NULL);
@@ -721,7 +738,6 @@ _dl_init_paths (const char *llp)
    performance does not count.  The function used to be "inlinable" and
    the compiled did so all the time.  This increased the code size for
    absolutely no good reason.  */
-#define LOSE(code, s) lose (code, fd, name, realname, l, s)
 static void
 __attribute__ ((noreturn))
 lose (int code, int fd, const char *name, char *realname, struct link_map *l,
@@ -761,31 +777,25 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 			int mode)
 {
   struct link_map *l = NULL;
-
-  auto inline caddr_t map_segment (ElfW(Addr) mapstart, size_t len,
-				   int prot, int fixed, off_t offset);
-
-  inline caddr_t map_segment (ElfW(Addr) mapstart, size_t len,
-			      int prot, int fixed, off_t offset)
-    {
-      caddr_t mapat = __mmap ((caddr_t) mapstart, len, prot,
-			      fixed|MAP_COPY|MAP_FILE,
-			      fd, offset);
-      if (mapat == MAP_FAILED)
-	LOSE (errno, N_("failed to map segment from shared object"));
-      return mapat;
-    }
-
   const ElfW(Ehdr) *header;
   const ElfW(Phdr) *phdr;
   const ElfW(Phdr) *ph;
   size_t maplength;
   int type;
   struct stat64 st;
+  /* Initialize to keep the compiler happy.  */
+  const char *errstring = NULL;
+  int errval = 0;
 
   /* Get file information.  */
-  if (__fxstat64 (_STAT_VER, fd, &st) < 0)
-    LOSE (errno, N_("cannot stat shared object"));
+  if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st) < 0, 0))
+    {
+      errstring = N_("cannot stat shared object");
+    call_lose_errno:
+      errval = errno;
+    call_lose:
+      lose (errval, fd, name, realname, l, errstring);
+    }
 
   /* Look again to see if the real name matched another already loaded.  */
   for (l = _dl_loaded; l; l = l->l_next)
@@ -832,7 +842,10 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
   /* Enter the new object in the list of loaded objects.  */
   l = _dl_new_object (realname, name, l_type, loader);
   if (__builtin_expect (! l, 0))
-    LOSE (ENOMEM, N_("cannot create shared object descriptor"));
+    {
+      errstring = N_("cannot create shared object descriptor");
+      goto call_lose_errno;
+    }
 
   /* Extract the remaining details we need from the ELF header
      and then read in the program header table.  */
@@ -848,7 +861,10 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
       phdr = alloca (maplength);
       __lseek (fd, SEEK_SET, header->e_phoff);
       if (__libc_read (fd, (void *) phdr, maplength) != maplength)
-        LOSE (errno, N_("cannot read file data"));
+	{
+	  errstring = N_("cannot read file data");
+	  goto call_lose_errno;
+	}
     }
 
   {
@@ -875,6 +891,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	  l->l_ld = (void *) ph->p_vaddr;
 	  l->l_ldnum = ph->p_memsz / sizeof (ElfW(Dyn));
 	  break;
+
 	case PT_PHDR:
 	  l->l_phdr = (void *) ph->p_vaddr;
 	  break;
@@ -882,11 +899,18 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	case PT_LOAD:
 	  /* A load command tells us to map in part of the file.
 	     We record the load commands and process them all later.  */
-	  if (ph->p_align % _dl_pagesize != 0)
-	    LOSE (0, N_("ELF load command alignment not page-aligned"));
-	  if ((ph->p_vaddr - ph->p_offset) % ph->p_align)
-	    LOSE (0,
-		  N_("ELF load command address/offset not properly aligned"));
+	  if ((ph->p_align & (_dl_pagesize - 1)) != 0)
+	    {
+	      errstring = N_("ELF load command alignment not page-aligned");
+	      goto call_lose;
+	    }
+	  if (((ph->p_vaddr - ph->p_offset) & (ph->p_align - 1)) != 0)
+	    {
+	      errstring
+		= N_("ELF load command address/offset not properly aligned");
+	      goto call_lose;
+	    }
+
 	  {
 	    struct loadcmd *c = &loadcmds[nloadcmds++];
 	    c->mapstart = ph->p_vaddr & ~(ph->p_align - 1);
@@ -938,8 +962,16 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 		   - MAP_BASE_ADDR (l));
 
 	/* Remember which part of the address space this object uses.  */
-	l->l_map_start = (ElfW(Addr)) map_segment (mappref, maplength, c->prot,
-						   0, c->mapoff);
+	l->l_map_start = (ElfW(Addr)) __mmap ((void *) mappref, maplength,
+					      c->prot, MAP_COPY | MAP_FILE,
+					      fd, c->mapoff);
+	if ((void *) l->l_map_start == MAP_FAILED)
+	  {
+	  map_error:
+	    errstring = N_("failed to map segment from shared object");
+	    goto call_lose_errno;
+	  }
+
 	l->l_map_end = l->l_map_start + maplength;
 	l->l_addr = l->l_map_start - c->mapstart;
 
@@ -960,7 +992,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
            happen for objects loaded with dlopen().  */
 	if (__builtin_expect (mode & __RTLD_DLOPEN, 0))
 	  {
-	    LOSE (0, N_("cannot dynamically load executable"));
+	    errstring = N_("cannot dynamically load executable");
+	    goto call_lose;
 	  }
 
 	/* Notify ELF_PREFERRED_ADDRESS that we have to load this one
@@ -974,10 +1007,13 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
     while (c < &loadcmds[nloadcmds])
       {
-	if (c->mapend > c->mapstart)
-	  /* Map the segment contents from the file.  */
-	  map_segment (l->l_addr + c->mapstart, c->mapend - c->mapstart,
-		       c->prot, MAP_FIXED, c->mapoff);
+	if (c->mapend > c->mapstart
+	    /* Map the segment contents from the file.  */
+	    && (__mmap ((void *) (l->l_addr + c->mapstart),
+			c->mapend - c->mapstart, c->prot,
+			MAP_FIXED | MAP_COPY | MAP_FILE, fd, c->mapoff)
+		== MAP_FAILED))
+	  goto map_error;
 
       postmap:
 	if (l->l_phdr == 0
@@ -1010,7 +1046,10 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 		    /* Dag nab it.  */
 		    if (__mprotect ((caddr_t) (zero & ~(_dl_pagesize - 1)),
 				    _dl_pagesize, c->prot|PROT_WRITE) < 0)
-		      LOSE (errno, N_("cannot change memory protections"));
+		      {
+			errstring = N_("cannot change memory protections");
+			goto call_lose_errno;
+		      }
 		  }
 		memset ((void *) zero, '\0', zeropage - zero);
 		if ((c->prot & PROT_WRITE) == 0)
@@ -1026,7 +1065,10 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 				c->prot, MAP_ANON|MAP_PRIVATE|MAP_FIXED,
 				ANONFD, 0);
 		if (mapat == MAP_FAILED)
-		  LOSE (errno, N_("cannot map zero-fill pages"));
+		  {
+		    errstring = N_("cannot map zero-fill pages");
+		    goto call_lose_errno;
+		  }
 	      }
 	  }
 
@@ -1041,7 +1083,10 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	ElfW(Phdr) *newp = (ElfW(Phdr) *) malloc (header->e_phnum
 						  * sizeof (ElfW(Phdr)));
 	if (newp == NULL)
-	  LOSE (ENOMEM, N_("cannot allocate memory for program header"));
+	  {
+	    errstring = N_("cannot allocate memory for program header");
+	    goto call_lose_errno;
+	  }
 
 	l->l_phdr = memcpy (newp, phdr,
 			    (header->e_phnum * sizeof (ElfW(Phdr))));
@@ -1061,7 +1106,10 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
   if (l->l_ld == 0)
     {
       if (type == ET_DYN)
-	LOSE (0, N_("object file has no dynamic section"));
+	{
+	  errstring = N_("object file has no dynamic section");
+	  goto call_lose;
+	}
     }
   else
     (ElfW(Addr)) l->l_ld += l->l_addr;
@@ -1129,7 +1177,10 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	(struct link_map **) malloc (sizeof (struct link_map *));
 
       if (l->l_symbolic_searchlist.r_list == NULL)
-	LOSE (ENOMEM, N_("cannot create searchlist"));
+	{
+	  errstring = N_("cannot create searchlist");
+	  goto call_lose_errno;
+	}
 
       l->l_symbolic_searchlist.r_list[0] = l;
       l->l_symbolic_searchlist.r_nlist = 1;
@@ -1143,7 +1194,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
     }
 
   /* Remember whether this object must be initialized first.  */
-  if (__builtin_expect (l->l_flags_1 & DF_1_INITFIRST, 0))
+  if (l->l_flags_1 & DF_1_INITFIRST)
     _dl_initfirst = l;
 
   /* Finally the file information.  */
@@ -1223,11 +1274,17 @@ open_verify (const char *name, struct filebuf *fbp)
     [EI_OSABI] = ELFOSABI_SYSV,
     [EI_ABIVERSION] = 0
   };
-  static const struct {
-    ElfW(Word) vendorlen, datalen, type;
+  static const struct
+  {
+    ElfW(Word) vendorlen;
+    ElfW(Word) datalen;
+    ElfW(Word) type;
     char vendor[4];
   } expected_note = { 4, 16, 1, "GNU" };
   int fd;
+  /* Initialize it to make the compiler happy.  */
+  const char *errstring = NULL;
+  int errval = 0;
 
   /* Open the file.  We always open files read-only.  */
   fd = __open (name, O_RDONLY);
@@ -1250,8 +1307,13 @@ open_verify (const char *name, struct filebuf *fbp)
 
       /* Now run the tests.  */
       if (__builtin_expect (fbp->len < (ssize_t) sizeof (ElfW(Ehdr)), 0))
-	lose (errno, fd, name, NULL, NULL,
-	      errno == 0 ? N_("file too short") : N_("cannot read file data"));
+	{
+	  errval = errno;
+	  errstring = (errval == 0
+		       ? N_("file too short") : N_("cannot read file data"));
+	call_lose:
+	  lose (errval, fd, name, NULL, NULL, errstring);
+	}
 
       /* See whether the ELF header is what we expect.  */
       if (__builtin_expect (! VALID_ELF_HEADER (ehdr->e_ident, expected,
@@ -1271,49 +1333,54 @@ open_verify (const char *name, struct filebuf *fbp)
 	       (ELFMAG3 << (EI_MAG0 * 8)))
 #endif
 	      )
-	    lose (0, fd, name, NULL, NULL, N_("invalid ELF header"));
-
-	  if (ehdr->e_ident[EI_CLASS] != ELFW(CLASS))
+	    errstring = N_("invalid ELF header");
+	  else if (ehdr->e_ident[EI_CLASS] != ELFW(CLASS))
 	    /* This is not a fatal error.  On architectures where
 	       32-bit and 64-bit binaries can be run this might
 	       happen.  */
 	    goto close_and_out;
-
-	  if (ehdr->e_ident[EI_DATA] != byteorder)
+	  else if (ehdr->e_ident[EI_DATA] != byteorder)
 	    {
 	      if (BYTE_ORDER == BIG_ENDIAN)
-		lose (0, fd, name, NULL, NULL,
-		      "ELF file data encoding not big-endian");
+		errstring = N_("ELF file data encoding not big-endian");
 	      else
-		lose (0, fd, name, NULL, NULL,
-		      "ELF file data encoding not little-endian");
+		errstring = N_("ELF file data encoding not little-endian");
 	    }
-	  if (ehdr->e_ident[EI_VERSION] != EV_CURRENT)
-	    lose (0, fd, name, NULL, NULL,
-		  N_("ELF file version ident does not match current one"));
+	  else if (ehdr->e_ident[EI_VERSION] != EV_CURRENT)
+	    errstring
+	      = N_("ELF file version ident does not match current one");
 	  /* XXX We should be able so set system specific versions which are
 	     allowed here.  */
-	  if (!VALID_ELF_OSABI (ehdr->e_ident[EI_OSABI]))
-	    lose (0, fd, name, NULL, NULL, N_("ELF file OS ABI invalid"));
-	  if (!VALID_ELF_ABIVERSION (ehdr->e_ident[EI_ABIVERSION]))
-	    lose (0, fd, name, NULL, NULL,
-		  N_("ELF file ABI version invalid"));
-	  lose (0, fd, name, NULL, NULL, N_("internal error"));
+	  else if (!VALID_ELF_OSABI (ehdr->e_ident[EI_OSABI]))
+	    errstring = N_("ELF file OS ABI invalid");
+	  else if (!VALID_ELF_ABIVERSION (ehdr->e_ident[EI_ABIVERSION]))
+	    errstring = N_("ELF file ABI version invalid");
+	  else
+	    /* Otherwise we don't know what went wrong.  */
+	    errstring = N_("internal error");
+
+	  goto call_lose;
 	}
 
       if (__builtin_expect (ehdr->e_version, EV_CURRENT) != EV_CURRENT)
-	lose (0, fd, name, NULL, NULL,
-	      N_("ELF file version does not match current one"));
+	{
+	  errstring = N_("ELF file version does not match current one");
+	  goto call_lose;
+	}
       if (! __builtin_expect (elf_machine_matches_host (ehdr), 1))
 	goto close_and_out;
       else if (__builtin_expect (ehdr->e_phentsize, sizeof (ElfW(Phdr)))
 	       != sizeof (ElfW(Phdr)))
-	lose (0, fd, name, NULL, NULL,
-	      N_("ELF file's phentsize not the expected size"));
+	{
+	  errstring = N_("ELF file's phentsize not the expected size");
+	  goto call_lose;
+	}
       else if (__builtin_expect (ehdr->e_type, ET_DYN) != ET_DYN
 	       && __builtin_expect (ehdr->e_type, ET_EXEC) != ET_EXEC)
-	lose (0, fd, name, NULL, NULL,
-	      N_("only ET_DYN and ET_EXEC can be loaded"));
+	{
+	  errstring = N_("only ET_DYN and ET_EXEC can be loaded");
+	  goto call_lose;
+	}
 
       maplength = ehdr->e_phnum * sizeof (ElfW(Phdr));
       if (ehdr->e_phoff + maplength <= fbp->len)
@@ -1323,7 +1390,12 @@ open_verify (const char *name, struct filebuf *fbp)
 	  phdr = alloca (maplength);
 	  __lseek (fd, SEEK_SET, ehdr->e_phoff);
 	  if (__libc_read (fd, (void *) phdr, maplength) != maplength)
-	    lose (errno, fd, name, NULL, NULL, N_("cannot read file data"));
+	    {
+	    read_error:
+	      errval = errno;
+	      errstring = N_("cannot read file data");
+	      goto call_lose;
+	    }
 	}
 
       /* Check .note.ABI-tag if present.  */
@@ -1336,8 +1408,8 @@ open_verify (const char *name, struct filebuf *fbp)
 	      {
 		__lseek (fd, SEEK_SET, ph->p_offset);
 		if (__libc_read (fd, (void *) abi_note_buf, 32) != 32)
-		  lose (errno, fd, name, NULL, NULL,
-			N_("cannot read file data"));
+		  goto read_error;
+
 		abi_note = abi_note_buf;
 	      }
 
