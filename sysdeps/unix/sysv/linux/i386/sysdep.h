@@ -421,7 +421,7 @@ asm (".L__X'%ebx = 1\n\t"
 #define ASMFMT_1(arg1) \
 	, "acdSD" (arg1)
 #define ASMFMT_2(arg1, arg2) \
-	, "adSD" (arg1), "c" (arg2)
+	, "d" (arg1), "c" (arg2)
 #define ASMFMT_3(arg1, arg2, arg3) \
 	, "aSD" (arg1), "c" (arg2), "d" (arg3)
 #define ASMFMT_4(arg1, arg2, arg3, arg4) \

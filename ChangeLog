@@ -1,3 +1,9 @@
+2003-06-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (ASMFMT_2): Only allow
+	%edx for first parameter.  This means no pushl and therefore the
+	unwind info isn't screwed up.
+
 2003-06-04  Richard Henderson  <rth@redhat.com>
 
         * sysdeps/alpha/dl-machine.h (RTLD_START): Fix top-of-stack backtrace.
