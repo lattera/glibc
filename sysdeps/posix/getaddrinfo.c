@@ -848,30 +848,31 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	for (st2 = st; st2 != NULL; st2 = st2->next)
 	  {
-	    *pai = malloc (sizeof (struct addrinfo) + socklen);
-	    if (*pai == NULL)
+	    struct addrinfo *ai;
+	    ai = *pai = malloc (sizeof (struct addrinfo) + socklen);
+	    if (ai == NULL)
 	      return -EAI_MEMORY;
 
-	    (*pai)->ai_flags = req->ai_flags;
-	    (*pai)->ai_family = family;
-	    (*pai)->ai_socktype = st2->socktype;
-	    (*pai)->ai_protocol = st2->protocol;
-	    (*pai)->ai_addrlen = socklen;
-	    (*pai)->ai_addr = (void *) (*pai + 1);
+	    ai->ai_flags = req->ai_flags;
+	    ai->ai_family = family;
+	    ai->ai_socktype = st2->socktype;
+	    ai->ai_protocol = st2->protocol;
+	    ai->ai_addrlen = socklen;
+	    ai->ai_addr = (void *) (ai + 1);
 
 	    /* We only add the canonical name once.  */
-	    (*pai)->ai_canonname = (char *) canon;
+	    ai->ai_canonname = (char *) canon;
 	    canon = NULL;
 
 #if SALEN
-	    (*pai)->ai_addr->sa_len = socklen;
+	    ai->ai_addr->sa_len = socklen;
 #endif /* SALEN */
-	    (*pai)->ai_addr->sa_family = family;
+	    ai->ai_addr->sa_family = family;
 
 	    if (family == AF_INET6)
 	      {
 		struct sockaddr_in6 *sin6p =
-		  (struct sockaddr_in6 *) (*pai)->ai_addr;
+		  (struct sockaddr_in6 *) ai->ai_addr;
 
 		sin6p->sin6_port = st2->port;
 		sin6p->sin6_flowinfo = 0;
@@ -882,16 +883,16 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    else
 	      {
 		struct sockaddr_in *sinp =
-		  (struct sockaddr_in *) (*pai)->ai_addr;
+		  (struct sockaddr_in *) ai->ai_addr;
 		sinp->sin_port = st2->port;
 		memcpy (&sinp->sin_addr,
 			at2->addr, sizeof (struct in_addr));
 		memset (sinp->sin_zero, '\0', sizeof (sinp->sin_zero));
 	      }
 
-	    (*pai)->ai_next = NULL;
-	    pai = &((*pai)->ai_next);
+	    pai = &(ai->ai_next);
 	  }
+	*pai = NULL;
 
       ignore:
 	at2 = at2->next;

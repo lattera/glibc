@@ -1,5 +1,8 @@
 2004-08-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Minor optimizations in
+	list generation.
+
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't use
 	getcanonname_r function if AI_CANONNAME flag is not set in
 	request.
