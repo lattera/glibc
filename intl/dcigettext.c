@@ -535,10 +535,10 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
       if (domain != NULL)
 	{
+	  unsigned long int index = 0;
 #if defined HAVE_TSEARCH || defined _LIBC
 	  struct loaded_domain *domaindata =
 	    (struct loaded_domain *) domain->data;
-	  unsigned long int index = 0;
 
 	  if (plural != 0)
 	    {
@@ -1059,7 +1059,7 @@ mempcpy (dest, src, n)
      const void *src;
      size_t n;
 {
-  return (void *) ((char *) memcpy (dst, src, n) + n);
+  return (void *) ((char *) memcpy (dest, src, n) + n);
 }
 #endif
 
