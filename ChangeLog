@@ -1,3 +1,8 @@
+2004-08-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getent.c: Allow queries for getaddrinfo with AF_INET and
+	AF_INET6.
+
 2004-08-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/de.po: Update from translation team.

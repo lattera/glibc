@@ -295,7 +295,7 @@ hosts_keys (int number, char *key[])
 
 /* This is for hosts, but using getaddrinfo */
 static int
-ahosts_keys (int number, char *key[])
+ahosts_keys_int (int af, int xflags, int number, char *key[])
 {
   int result = 0;
   int i;
@@ -312,8 +312,8 @@ ahosts_keys (int number, char *key[])
 
   struct addrinfo hint;
   memset (&hint, '\0', sizeof (hint));
-  hint.ai_flags = AI_V4MAPPED | AI_ADDRCONFIG | AI_CANONNAME;
-  hint.ai_family = AF_UNSPEC;
+  hint.ai_flags = AI_V4MAPPED | AI_ADDRCONFIG | AI_CANONNAME | xflags;
+  hint.ai_family = af;
 
   for (i = 0; i < number; ++i)
     {
@@ -358,6 +358,24 @@ ahosts_keys (int number, char *key[])
     }
 
   return result;
+}
+
+static int
+ahosts_keys (int number, char *key[])
+{
+  return ahosts_keys_int (AF_UNSPEC, 0, number, key);
+}
+
+static int
+ahostsv4_keys (int number, char *key[])
+{
+  return ahosts_keys_int (AF_INET, 0, number, key);
+}
+
+static int
+ahostsv6_keys (int number, char *key[])
+{
+  return ahosts_keys_int (AF_INET6, AI_V4MAPPED, number, key);
 }
 
 /* This is for netgroup */
@@ -715,6 +733,8 @@ struct
   {
 #define D(name) { #name, name ## _keys },
 D(ahosts)
+D(ahostsv4)
+D(ahostsv6)
 D(aliases)
 D(ethers)
 D(group)
