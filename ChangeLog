@@ -1,3 +1,9 @@
+2001-08-03  Tom Rix  <trix@redhat.com>
+
+	* config.h.in: Add HAVE_XCOFF for AIX.
+	* configure.in: Add --with-xcoff option.
+	* include/libc-symbols.h: Disable the .stabs macros.
+
 2001-08-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/8bit-gap.c: Correctly use __builtin_expect.

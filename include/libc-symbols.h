@@ -220,10 +220,18 @@
   static const char __evoke_link_warning_##symbol[]	\
     __attribute__ ((section (".gnu.warning." #symbol "\n\t#"))) = msg;
 #  endif
-# else
-#  define link_warning(symbol, msg)		\
-  asm (".stabs \"" msg "\",30,0,0,0\n\t"	\
-       ".stabs \"" __SYMBOL_PREFIX #symbol "\",1,0,0,0\n");
+# else /* Not ELF: a.out */
+#  ifdef HAVE_XCOFF
+/* XCOFF does not support .stabs.
+   The native aix linker will remove the .stab and .stabstr sections
+   The gnu linker will have a fatal error if there is a relocation for
+   symbol in the .stab section.  Silently disable this macro.  */
+#   define link_warning(symbol, msg) 
+#  else
+#   define link_warning(symbol, msg)		\
+     asm (".stabs \"" msg "\",30,0,0,0\n\t"	\
+          ".stabs \"" __SYMBOL_PREFIX #symbol "\",1,0,0,0\n");
+#  endif /* XCOFF */
 # endif
 #else
 /* We will never be heard; they will all die horribly.  */
@@ -285,11 +293,21 @@
 
 # else	/* Not ELF: a.out.  */
 
-#  define text_set_element(set, symbol)	\
-  asm (".stabs \"" __SYMBOL_PREFIX #set "\",23,0,0," __SYMBOL_PREFIX #symbol)
-#  define data_set_element(set, symbol)	\
-  asm (".stabs \"" __SYMBOL_PREFIX #set "\",25,0,0," __SYMBOL_PREFIX #symbol)
-#  define bss_set_element(set, symbol)	?error Must use initialized data.
+#  ifdef HAVE_XCOFF
+/* XCOFF does not support .stabs.
+   The native aix linker will remove the .stab and .stabstr sections
+   The gnu linker will have a fatal error if there is a relocation for
+   symbol in the .stab section.  Silently disable these macros.  */
+#   define text_set_element(set, symbol) 
+#   define data_set_element(set, symbol) 
+#   define bss_set_element(set, symbol)	 
+#  else
+#   define text_set_element(set, symbol)	\
+    asm (".stabs \"" __SYMBOL_PREFIX #set "\",23,0,0," __SYMBOL_PREFIX #symbol)
+#   define data_set_element(set, symbol)	\
+    asm (".stabs \"" __SYMBOL_PREFIX #set "\",25,0,0," __SYMBOL_PREFIX #symbol)
+#   define bss_set_element(set, symbol)	?error Must use initialized data.
+#  endif /* XCOFF */
 #  define symbol_set_define(set)	void *const (set)[1];
 #  define symbol_set_declare(set)	extern void *const (set)[1];
 

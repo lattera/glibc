@@ -65,6 +65,9 @@ AC_ARG_WITH(binutils, dnl
 AC_ARG_WITH(elf, dnl
   --with-elf		  if using the ELF object format,
 	    elf=$withval, elf=no)
+AC_ARG_WITH(xcoff, dnl
+  --with-xcoff		  if using the XCOFF object format,
+	    xcoff=$withval, xcoff=no)
 AC_ARG_WITH(cvs, dnl
 [  --without-cvs           if CVS should not be used],
 	    with_cvs=$withval, with_cvs=yes)
@@ -248,6 +251,11 @@ linux*ecoff* | linux*aout* | gnu*aout* | gnu*ecoff*)
 gnu* | linux* | sysv4* | solaris2* | irix6*)
   # These systems (almost) always use the ELF format.
   elf=yes
+  ;;
+aix*)
+  # These systems are always xcoff
+  xcoff=yes
+  elf=no    
   ;;
 esac
 
@@ -1521,7 +1529,7 @@ AC_SUBST(libc_cv_rootsbindir)
 AC_SUBST(use_ldconfig)
 AC_SUBST(ldd_rewrite_script)
 
-AC_SUBST(gnu_ld) AC_SUBST(gnu_as) AC_SUBST(elf)
+AC_SUBST(gnu_ld) AC_SUBST(gnu_as) AC_SUBST(elf) AC_SUBST(xcoff)
 if test $gnu_ld = yes; then
   AC_DEFINE(HAVE_GNU_LD)
 fi
@@ -1530,6 +1538,9 @@ if test $gnu_as = yes; then
 fi
 if test $elf = yes; then
   AC_DEFINE(HAVE_ELF)
+fi
+if test $xcoff = yes; then
+  AC_DEFINE(HAVE_XCOFF)
 fi
 
 AC_SUBST(static)

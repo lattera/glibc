@@ -1,5 +1,8 @@
 2001-08-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile: Add rules to build and run tst-mbswcs6.
+	* tst-mbswcs6.c: New file.
+
 	* SUPPORTED: Add several new locales.
 
 	* charmaps/KOI8-T: New file.

@@ -8,6 +8,9 @@
    --with-elf.  */
 #undef	HAVE_ELF
 
+/* Define if using XCOFF. Set by --with-xcoff.  */
+#undef	HAVE_XCOFF
+
 /* Define if C symbols are asm symbols.  Don't define if C symbols
    have a `_' prepended to make the asm symbol.  */
 #undef	NO_UNDERSCORES
