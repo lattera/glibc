@@ -1,3 +1,36 @@
+Fri Nov 15 12:27:25 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/statbuf.h (S_IPTRANS, S_IATRANS, S_IROOT,
+	S_ITRANS): New macros.
+	(S_ISPARE): Update to include new macros and S_IUSEUNK.
+
+	* sysdeps/mach/hurd/select.c (__select): Construct arg to
+	mach_msg_destroy more nicely.
+
+	* sysdeps/mach/hurd/ioctl.c: Include <mach/mig-support.h>.
+
+	* stdio/fopen.c (__getmode): Declare with prototype.
+	* stdio/memstream.c (enlarge_buffer, seek, free_info): Likewise.
+	* stdio/internals.c (__stdio_check_funcs, init_stream,
+	seek_to_target, flushbuf, fillbuf): Likewise.
+
+	* stdio-common/vfscanf.c (encode_error) [! USE_IN_LIBIO]: Call
+	funlockfile, not _IO_funlockfile.
+
+	* sysdeps/posix/readv.c (readv): Change return type to ssize_t.
+  	Deansideclized.
+	* sysdeps/posix/writev.c (writev): Likewise.
+
+	* sysdeps/mach/hurd/lchown.c: Include <fcntl.h> and fix typo.
+
+Thu Nov 14 12:53:16 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/i386/init-first.c (_dl_start): Make this a
+	prototyped definition.
+
+	* sysdeps/mach/hurd/select.c (__select): Deal properly when there
+	are no bits set in the masks.  Reported by baldazzi@csr.unibo.it. 
+
 Thu Nov 14 02:00:33 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/Makefile (headers): Add aliases.h.
@@ -45,6 +78,26 @@ Thu Nov 14 02:00:33 1996  Ulrich Drepper  <drepper@cygnus.com>
 Wed Nov 13 03:09:16 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Require at least autoconf-2.10.2.
+
+Tue Nov 12 16:58:41 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* mach/mach.h (__mach_msg_destroy, mach_msg_destroy, __mach_msg):
+ 	Provide prototypes.
+
+	* mach/msg-destroy.c (mach_msg_destroy_port,
+	mach_msg_destroy_memory): Use prototype	syntax.
+	* hurd/hurdmalloc.c (more_memory, malloc_fork_prepare,
+	malloc_fork_parent, malloc_fork_child): Likewise. 
+
+	* stdio/stdio.h: Repair broken cpp syntax.
+
+	* sysdeps/mach/hurd/lchown.c: New file.  Guts from chown.c, except
+	we pass O_NOLINK on the open.
+
+	* manual/errno.texi (EBADMSG, EIDRM, EMULTIHOP, ENODATA, ENOLINK,
+ 	ENOMSG, ENOSR, ENOSTR, EOVERFLOW, EPROTO, ETIME): Redesignate as
+ 	an XOPEN error code, move to before the "Linux only" section, and
+ 	give it a new number for the Hurd.
 
 Tue Nov 12 03:35:01 1996  Christian von Roques  <roques@pond.sub.org>
 
@@ -406,8 +459,8 @@ Tue Nov  5 18:06:06 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 Tue Nov  5 12:09:29 1996  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdep/generic/sysdep.h: Define END only if not yet defined.
-	* sysdep/unix/sysdep.h: Define PSEUDO_END only if not yet defined.
+	* sysdeps/generic/sysdep.h: Define END only if not yet defined.
+	* sysdeps/unix/sysdep.h: Define PSEUDO_END only if not yet defined.
 	Reported by Thomas Bushnell, n/BSG.
 
 Mon Nov  4 22:46:53 1996  Ulrich Drepper  <drepper@cygnus.com>
