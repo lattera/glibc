@@ -9,7 +9,7 @@
 	* sysdeps/unix/sysv/linux/ldsodefs.h
 	[__ASSUME_AT_SECURE] (HAVE_AUX_SECURE): Define it.
 	* sysdeps/unix/sysv/linux/kernel-features.h
-	[__LINUX_KERNEL_VERSION >= 132425] (__ASSUME_AT_SECURE): Define it.
+	[__LINUX_KERNEL_VERSION >= 132426] (__ASSUME_AT_SECURE): Define it.
 
 2003-06-26  Ulrich Drepper  <drepper@redhat.com>
 
