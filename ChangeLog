@@ -1,3 +1,7 @@
+2003-04-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c: Include <stdbool.h>.
+
 2003-04-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/link.h (NO_TLS_OFFSET): Define to 0 if not defined.
