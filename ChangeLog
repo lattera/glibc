@@ -1,3 +1,9 @@
+Sat Feb 10 05:57:08 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* sysdeps/generic/make_siglist.c: #undef _SIGNAL_H before defining it.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add sigprocmask, sigsuspend.
+
 Sat Feb 10 04:18:48 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/execvp.c: If execv fails with ENOEXEC, run the shell on
