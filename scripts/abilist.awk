@@ -45,7 +45,9 @@ $2 == "g" || $2 == "w" && NF == 7 {
     next;
   }
 
-  desc = " " symbol " " (weak == "w" ? tolower(type) : type) size;
+  # Disabled -- weakness should not matter to shared library ABIs any more.
+  #if (weak == "w") type = tolower(type);
+  desc = " " symbol " " type size;
 
   if (version in versions) {
     versions[version] = versions[version] "\n" desc;
