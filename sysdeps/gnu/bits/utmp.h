@@ -1,5 +1,5 @@
 /* The `struct utmp' type, describing entries in the utmp file.  GNU version.
-   Copyright (C) 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -44,13 +44,8 @@ struct lastlog
    type is used in `struct utmp' below.  */
 struct exit_status
   {
-#ifdef __USE_GNU
     short int e_termination;	/* Process termination status.  */
     short int e_exit;		/* Process exit status.  */
-#else
-    short int __e_termination;	/* Process termination status.  */
-    short int __e_exit;		/* Process exit status.  */
-#endif
   };
 
 

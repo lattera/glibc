@@ -1,5 +1,8 @@
 1999-01-26  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/gnu/bits/utmp.h: Don't prepend exit_status elements with
+	__ since utmp.h is not mentioned in any standard.
+
 	* sysdeps/unix/sysv/linux/i386/clone.S: When not using PIC don't
 	use jecxz since the label might be far away.
 
