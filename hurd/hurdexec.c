@@ -189,6 +189,8 @@ _hurd_exec (task_t task, file_t file,
   /* The information is all set up now.  Try to exec the file.  */
 
   {
+    int flags;
+
     if (pdp)
       {
 	/* Request the exec server to deallocate some ports from us if the exec
@@ -204,7 +206,15 @@ _hurd_exec (task_t task, file_t file,
 	  *pdp++ = dtable[i];
       }
 
-    err = __file_exec (file, task, 0,
+    flags = 0;
+#ifdef EXEC_SIGTRAP
+    /* PTRACE_TRACEME sets all bits in _hurdsig_traced, which is propagated
+       through exec by INIT_TRACEMASK, so this checks if PTRACE_TRACEME has
+       been called in this process in any of its current or prior lives.  */
+    if (__sigismember (&_hurdsig_traced, SIGKILL))
+      flags |= EXEC_SIGTRAP;
+#endif
+    err = __file_exec (file, task, flags,
 		       args, argslen, env, envlen,
 		       dtable, MACH_MSG_TYPE_COPY_SEND, dtablesize,
 		       ports, MACH_MSG_TYPE_COPY_SEND, _hurd_nports,
