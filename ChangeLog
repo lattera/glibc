@@ -1,4 +1,11 @@
+Thu Mar 30 01:38:00 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/elf.h (STN_UNDEF): New macro (distinct from SHN_UNDEF, though
+ 	both are zero).
+
 Wed Mar 29 11:26:48 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/dlfcn.h: New file.
 
 	* Make-dist (README): Commit it to CVS if there is a CVS directory.
 

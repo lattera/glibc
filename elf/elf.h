@@ -188,9 +188,9 @@ typedef struct
   Elf32_Half	st_shndx;		/* Section index */
 } Elf32_Sym;
 
-/* Special symbol index.  */
+/* Special section index.  */
 
-#define SHN_UNDEF	0		/* Undefined symbol */
+#define SHN_UNDEF	0		/* No section, undefined symbol.  */
 
 /* How to extract and insert information held in the st_info field.  */
 
@@ -215,6 +215,14 @@ typedef struct
 #define STT_FILE	4		/* Symbol's name is file name */
 #define STT_LOPROC	13		/* Start of processor-specific */
 #define STT_HIPROC	15		/* End of processor-specific */
+
+
+/* Symbol table indices are found in the hash buckets and chain table
+   of a symbol hash table section.  This special index value indicates
+   the end of a chain, meaning no further symbols are found in that bucket.  */
+
+#define STN_UNDEF	0		/* End of a chain.  */
+
 
 /* Relocation table entry without addend (in section of type SHT_REL).  */
 
