@@ -806,7 +806,7 @@ __printf_fp (FILE *fp,
 	dig_max = INT_MAX;		/* Unlimited.  */
 	significant = 1;		/* Does not matter here.  */
       }
-    else if (info->spec == 'f')
+    else if (_tolower (info->spec) == 'f')
       {
 	type = 'f';
 	fracdig_min = fracdig_max = info->prec < 0 ? 6 : info->prec;
