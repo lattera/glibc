@@ -2924,13 +2924,13 @@ should use the POSIX.1 names above instead.
 @comment fcntl.h
 @comment GNU
 @deftypevr Macro int O_READ
-Open the file for reading.  Same as @code{O_RDWR}; only defined on GNU.
+Open the file for reading.  Same as @code{O_RDONLY}; only defined on GNU.
 @end deftypevr
 
 @comment fcntl.h
 @comment GNU
 @deftypevr Macro int O_WRITE
-Open the file for reading.  Same as @code{O_WRONLY}; only defined on GNU.
+Open the file for writing.  Same as @code{O_WRONLY}; only defined on GNU.
 @end deftypevr
 
 @comment fcntl.h
