@@ -1,3 +1,9 @@
+2003-07-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/wcpncpy.c (__wcpncpy): Correct destination pointer handling.
+	* wcsmbs/Makefile (tests): Add tst-wcpncpy.
+	* wcsmbs/tst-wcpncpy.c: New file.
+
 2003-07-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/sched.h (CLONE_STOPPED): Define.
