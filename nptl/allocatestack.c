@@ -194,7 +194,7 @@ queue_stack (struct pthread *stack)
 	{
 	  struct pthread *curr;
 
-	  curr = list_entry(entry, struct pthread, header.data.list);
+	  curr = list_entry (entry, struct pthread, header.data.list);
 	  if (FREE_P (curr))
 	    {
 	      /* Unlink the block.  */

@@ -224,7 +224,7 @@ typedef pthread_key_t __libc_key_t;
       __pthread_once (&(ONCE_CONTROL), (INIT_FUNCTION));		      \
     else if ((ONCE_CONTROL) == PTHREAD_ONCE_INIT) {			      \
       INIT_FUNCTION ();							      \
-      (ONCE_CONTROL) = !PTHREAD_ONCE_INIT;				      \
+      (ONCE_CONTROL) = 2;						      \
     }									      \
   } while (0)
 

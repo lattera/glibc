@@ -1,3 +1,9 @@
+2003-02-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h (__libc_once): Set control
+	variable for non-libpthread case to the same value the
+	pthread_once function would use.
+
 2003-02-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S (__vfork): If

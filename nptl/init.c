@@ -33,8 +33,13 @@
 #include <shlib-compat.h>
 
 
-/* XXX For the time being...  */
-#define __NR_set_tid_address	258
+/* XXX For the time being...  Once we can rely on the kernel headers
+   having the definition remove these lines.  */
+#if defined __s390__
+# define __NR_set_tid_address	252
+#else
+# define __NR_set_tid_address	258
+#endif
 
 
 /* Default stack size.  */
