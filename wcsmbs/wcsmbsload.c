@@ -239,6 +239,9 @@ void
 internal_function
 __wcsmbs_clone_conv (struct gconv_fcts *copy)
 {
+  /* First make sure the function table is up-to-date.  */
+  update_conversion_ptrs ();
+
   /* Make sure the data structures remain the same until we are finished.  */
   __libc_lock_lock (lock);
 

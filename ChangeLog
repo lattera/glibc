@@ -1,6 +1,13 @@
+1999-08-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* wcsmbs/wcsmbsload.c (__wcsmbs_clone_conv): Call
+	update_conversion_ptrs.
+	Reported by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
+
 1999-08-15  Ulrich Drepper  <drepper@cygnus.com>
 
-	* wcsmbs/wcsnlen.c: Correct decrement maxlen.
+	* wcsmbs/wcsnlen.c: Correct decrement of maxlen.
+	Reported by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
 
 	* wcsmbs/Makefile (tests): Add tst-wcsnlen.
 	* wcsmbs/tst-wcsnlen.c: New file.
