@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -28,18 +28,12 @@ nis_local_group (void)
 {
   static char __nisgroup[NIS_MAXNAMELEN + 1];
 
-  if (__nisgroup[0] == '\0')
+  char *cptr;
+  if (__nisgroup[0] == '\0'
+      && (cptr = getenv ("NIS_GROUP")) != NULL
+      && strlen (cptr) < NIS_MAXNAMELEN)
     {
-      char *cptr;
-      char *cp;
-
-      if ((cptr = getenv ("NIS_GROUP")) == NULL)
-	return __nisgroup;
-
-      if (strlen (cptr) >= NIS_MAXNAMELEN)
-	return __nisgroup;
-
-      cp = stpcpy (__nisgroup, cptr);
+      char *cp = stpcpy (__nisgroup, cptr);
 
       if (cp[-1] != '.')
 	{
@@ -56,7 +50,7 @@ nis_local_group (void)
 
   return __nisgroup;
 }
-
+libnsl_hidden_def (nis_local_group)
 
 nis_name
 nis_local_directory (void)
@@ -82,6 +76,7 @@ nis_local_directory (void)
 
   return __nisdomainname;
 }
+libnsl_hidden_def (nis_local_directory)
 
 nis_name
 nis_local_principal (void)
@@ -101,6 +96,7 @@ nis_local_principal (void)
 			      uid, nis_local_directory ());
 
 	  if (len >= NIS_MAXNAMELEN - 1)
+	    nobody:
 	    /* XXX The buffer is too small.  Can this happen???  */
 	    return strcpy (__principal, "nobody");
 
@@ -114,7 +110,7 @@ nis_local_principal (void)
 			  FOLLOW_PATH, NULL, NULL);
 
 	  if (res == NULL)
-	    return strcpy (__principal, "nobody");
+	    goto nobody;
 
 	  if (NIS_RES_STATUS (res) == NIS_SUCCESS)
 	    {
@@ -134,17 +130,18 @@ LOCAL entry for UID %d in directory %s not unique\n"),
 	  else
 	    {
 	      nis_freeresult (res);
-	      return strcpy (__principal, "nobody");
+	      goto nobody;
 	    }
 	}
       else
 	return strcpy (__principal, nis_local_host ());
 
       /* Should be never reached */
-      return strcpy (__principal, "nobody");
+      goto nobody;
     }
   return __principal;
 }
+libnsl_hidden_def (nis_local_principal)
 
 nis_name
 nis_local_host (void)
@@ -178,3 +175,4 @@ nis_local_host (void)
 
   return __nishostname;
 }
+libnsl_hidden_def (nis_local_host)

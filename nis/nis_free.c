@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -29,6 +29,7 @@ __free_fdresult (fd_result *res)
       free (res);
     }
 }
+libnsl_hidden_def (__free_fdresult)
 
 void
 nis_free_request (ib_request *ibreq)
@@ -39,6 +40,7 @@ nis_free_request (ib_request *ibreq)
       free (ibreq);
     }
 }
+libnsl_hidden_def (nis_free_request)
 
 void
 nis_free_directory (directory_obj *obj)
@@ -49,6 +51,7 @@ nis_free_directory (directory_obj *obj)
       free (obj);
     }
 }
+libnsl_hidden_def (nis_free_directory)
 
 void
 nis_free_object (nis_object *obj)
@@ -59,6 +62,7 @@ nis_free_object (nis_object *obj)
       free (obj);
     }
 }
+libnsl_hidden_def (nis_free_object)
 
 void
 nis_freeresult (nis_result *res)
@@ -69,3 +73,4 @@ nis_freeresult (nis_result *res)
       free (res);
     }
 }
+libnsl_hidden_def (nis_freeresult)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1997.
 
@@ -38,7 +38,7 @@ nis_modify (const_nis_name name, const nis_object *obj2)
   if (res == NULL)
     return NULL;
 
-  req.ns_name = (char *)name;
+  req.ns_name = (char *) name;
 
   memcpy (&obj, obj2, sizeof (nis_object));
 
@@ -72,3 +72,4 @@ nis_modify (const_nis_name name, const nis_object *obj2)
 
   return res;
 }
+libnsl_hidden_def (nis_modify)

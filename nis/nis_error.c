@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -84,6 +84,7 @@ nis_sperrno (const nis_error status)
   else
     return gettext (nis_errlist[status]);
 }
+libnsl_hidden_def (nis_sperrno)
 
 void
 nis_perror (const nis_error status, const char *label)
@@ -115,6 +116,7 @@ nis_sperror_r (const nis_error status, const char *label,
 
     return buffer;
 }
+libnsl_hidden_def (nis_sperror_r)
 
 char *
 nis_sperror (const nis_error status, const char *label)

@@ -1,5 +1,28 @@
 2004-10-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/libc-symbols.h: Define hidden attribute macros for libnsl.
+	* include/rpcsvc/nislib.h: Use libnsl_hidden_proto for various
+	functions.
+	* nis/nis_add.c: Add libnsl_hidden_def.  Minor optimizations.
+	* nis/nis_call.c: Likewise.
+	* nis/nis_clone_obj.c: Likewise.
+	* nis/nis_defaults.c: Likewise.
+	* nis/nis_domain_of_r.c: Likewise.
+	* nis/nis_error.c: Likewise.
+	* nis/nis_file.c: Likewise.
+	* nis/nis_free.c: Likewise.
+	* nis/nis_local_names.c: Likewise.
+	* nis/nis_lookup.c: Likewise.
+	* nis/nis_modify.c: Likewise.
+	* nis/nis_print.c: Likewise.
+	* nis/nis_remove.c: Likewise.
+	* nis/nis_subr.c: Likewise.
+	* nis/nis_table.c: Likewise.
+	* nis/nis_util.c: Likewise.
+	* nis/yp_xdr.c: Likewise.
+	* nis/ypclnt.c: Likewise.
+	* nis/ypupdate_xdr.c: Likewise.
+
 	* resolv/res_send.c (send_dg): Cope with failures.
 
 	* include/libc-symbols.h: Define hidden attribute macros for

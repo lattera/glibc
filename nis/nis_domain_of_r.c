@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -29,7 +29,7 @@ nis_domain_of_r (const_nis_name name, char *buffer, size_t buflen)
 
   if (buffer == NULL)
     {
-      errno = ERANGE;
+      __set_errno (ERANGE);
       return NULL;
     }
 
@@ -44,14 +44,14 @@ nis_domain_of_r (const_nis_name name, char *buffer, size_t buflen)
   cptr_len = strlen (cptr);
 
   if (cptr_len == 0)
-    strcpy (buffer, ".");
-  else if (cptr_len >= buflen)
+    return strcpy (buffer, ".");
+
+  if (__builtin_expect (cptr_len >= buflen, 0))
     {
-      errno = ERANGE;
+      __set_errno (ERANGE);
       return NULL;
     }
-  else
-    memcpy (buffer, cptr, cptr_len + 1);
 
-  return buffer;
+  return memcpy (buffer, cptr, cptr_len + 1);
 }
+libnsl_hidden_proto (nis_domain_of_r)

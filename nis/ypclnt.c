@@ -230,6 +230,7 @@ yp_bind (const char *indomain)
 
   return status;
 }
+libnsl_hidden_def (yp_bind)
 
 static void
 yp_unbind_locked (const char *indomain)
@@ -394,6 +395,7 @@ yp_get_default_domain (char **outdomain)
 
   return result;
 }
+libnsl_hidden_def (yp_get_default_domain)
 
 int
 __yp_check (char **domain)
@@ -580,6 +582,7 @@ yp_master (const char *indomain, const char *inmap, char **outname)
 
   return *outname == NULL ? YPERR_YPERR : YPERR_SUCCESS;
 }
+libnsl_hidden_def (yp_master)
 
 int
 yp_order (const char *indomain, const char *inmap, unsigned int *outorder)
@@ -823,36 +826,29 @@ yperr_string (const int error)
   return _("Unknown NIS error code");
 }
 
+static const int8_t yp_2_yperr[] =
+  {
+#define YP2YPERR(yp, yperr)  [YP_##yp - YP_VERS] = YPERR_##yperr
+    YP2YPERR (TRUE, SUCCESS),
+    YP2YPERR (NOMORE, NOMORE),
+    YP2YPERR (FALSE, YPERR),
+    YP2YPERR (NOMAP, MAP),
+    YP2YPERR (NODOM, DOMAIN),
+    YP2YPERR (NOKEY, KEY),
+    YP2YPERR (BADOP, YPERR),
+    YP2YPERR (BADDB, BADDB),
+    YP2YPERR (YPERR, YPERR),
+    YP2YPERR (BADARGS, BADARGS),
+    YP2YPERR (VERS, VERS)
+  };
 int
 ypprot_err (const int code)
 {
-  switch (code)
-    {
-    case YP_TRUE:
-      return YPERR_SUCCESS;
-    case YP_NOMORE:
-      return YPERR_NOMORE;
-    case YP_FALSE:
-      return YPERR_YPERR;
-    case YP_NOMAP:
-      return YPERR_MAP;
-    case YP_NODOM:
-      return YPERR_DOMAIN;
-    case YP_NOKEY:
-      return YPERR_KEY;
-    case YP_BADOP:
-      return YPERR_YPERR;
-    case YP_BADDB:
-      return YPERR_BADDB;
-    case YP_YPERR:
-      return YPERR_YPERR;
-    case YP_BADARGS:
-      return YPERR_BADARGS;
-    case YP_VERS:
-      return YPERR_VERS;
-    }
-  return YPERR_YPERR;
+  if (code < YP_VERS || code > YP_NOKEY)
+    return YPERR_YPERR;
+  return yp_2_yperr[code];
 }
+libnsl_hidden_def (ypprot_err)
 
 const char *
 ypbinderr_string (const int error)
@@ -871,7 +867,7 @@ ypbinderr_string (const int error)
       return _("Unknown ypbind error");
     }
 }
-
+libnsl_hidden_def (ypbinderr_string)
 
 #define WINDOW 60
 

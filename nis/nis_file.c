@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -28,21 +28,17 @@ static const char cold_start_file[] = "/var/nis/NIS_COLD_START";
 directory_obj *
 readColdStartFile (void)
 {
-  XDR xdrs;
-  FILE *in;
-  bool_t status = TRUE;
-  directory_obj *obj;
-
-  in = fopen (cold_start_file, "rb");
+  FILE *in = fopen (cold_start_file, "rc");
   if (in == NULL)
     return NULL;
 
-  obj = calloc (1, sizeof (directory_obj));
+  directory_obj *obj = calloc (1, sizeof (directory_obj));
 
   if (obj != NULL)
     {
+      XDR xdrs;
       xdrstdio_create (&xdrs, in, XDR_DECODE);
-      status = _xdr_directory_obj (&xdrs, obj);
+      bool_t status = _xdr_directory_obj (&xdrs, obj);
       xdr_destroy (&xdrs);
 
       if (!status)
@@ -56,6 +52,7 @@ readColdStartFile (void)
 
   return obj;
 }
+libnsl_hidden_def (readColdStartFile)
 
 bool_t
 writeColdStartFile (const directory_obj *obj)

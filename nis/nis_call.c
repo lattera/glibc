@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -71,6 +71,7 @@ __nisbind_destroy (dir_binding *bind)
       clnt_destroy (bind->clnt);
     }
 }
+libnsl_hidden_def (__nisbind_destroy)
 
 nis_error
 __nisbind_next (dir_binding *bind)
@@ -114,6 +115,7 @@ __nisbind_next (dir_binding *bind)
 
   return NIS_FAIL;
 }
+libnsl_hidden_def (__nisbind_next)
 
 nis_error
 __nisbind_connect (dir_binding *dbp)
@@ -179,6 +181,7 @@ __nisbind_connect (dir_binding *dbp)
 
   return NIS_SUCCESS;
 }
+libnsl_hidden_def (__nisbind_connect)
 
 nis_error
 __nisbind_create (dir_binding *dbp, const nis_server *serv_val,
@@ -216,6 +219,7 @@ __nisbind_create (dir_binding *dbp, const nis_server *serv_val,
 
   return NIS_SUCCESS;
 }
+libnsl_hidden_def (__nisbind_create)
 
 /* __nisbind_connect (dbp) must be run before calling this function !
    So we could use the same binding twice */

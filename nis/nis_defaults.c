@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -395,6 +395,7 @@ __nis_default_owner (char *defaults)
 
   return strdup (default_owner);
 }
+libnsl_hidden_def (__nis_default_owner)
 
 nis_name
 __nis_default_group (char *defaults)
@@ -435,6 +436,7 @@ __nis_default_group (char *defaults)
 
   return strdup (default_group);
 }
+libnsl_hidden_def (__nis_default_group)
 
 uint32_t
 __nis_default_ttl (char *defaults)
@@ -483,3 +485,4 @@ __nis_default_access (char *param, unsigned int defaults)
 
   return result;
 }
+libnsl_hidden_def (__nis_default_access)

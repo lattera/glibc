@@ -41,7 +41,7 @@ nis_leaf_of_r (const_nis_name name, char *buffer, size_t buflen)
 
   if (i > buflen - 1)
     {
-      errno = ERANGE;
+      __set_errno (ERANGE);
       return NULL;
     }
 
@@ -49,7 +49,7 @@ nis_leaf_of_r (const_nis_name name, char *buffer, size_t buflen)
     {
       if ((size_t)i >= buflen)
 	{
-	  errno = ERANGE;
+	  __set_errno (ERANGE);
 	  return NULL;
 	}
 
@@ -58,6 +58,7 @@ nis_leaf_of_r (const_nis_name name, char *buffer, size_t buflen)
 
   return buffer;
 }
+libnsl_hidden_def (nis_leaf_of_r)
 
 nis_name
 nis_name_of (const_nis_name name)
@@ -84,7 +85,7 @@ nis_name_of_r (const_nis_name name, char *buffer, size_t buflen)
 
   if ((size_t) diff >= buflen)
     {
-      errno = ERANGE;
+      __set_errno (ERANGE);
       return NULL;
     }
 
@@ -95,14 +96,15 @@ nis_name_of_r (const_nis_name name, char *buffer, size_t buflen)
 
   return buffer;
 }
+libnsl_hidden_def (nis_name_of_r)
 
 static int
 count_dots (const_nis_name str)
 {
   int count = 0;
-  size_t i;
+  size_t l = strlen (str);
 
-  for (i = 0; i < strlen (str); ++i)
+  for (size_t i = 0; i < l; ++i)
     if (str[i] == '.')
       ++count;
 
@@ -252,6 +254,7 @@ nis_getnames (const_nis_name name)
 
   return getnames;
 }
+libnsl_hidden_def (nis_getnames)
 
 void
 nis_freenames (nis_name *names)
@@ -266,6 +269,7 @@ nis_freenames (nis_name *names)
 
   free (names);
 }
+libnsl_hidden_def  (nis_freenames)
 
 name_pos
 nis_dir_cmp (const_nis_name n1, const_nis_name n2)
@@ -303,9 +307,11 @@ nis_dir_cmp (const_nis_name n1, const_nis_name n2)
 
     }
 }
+libnsl_hidden_def (nis_dir_cmp)
 
 void
 nis_destroy_object (nis_object *obj)
 {
   nis_free_object (obj);
 }
+libnsl_hidden_def (nis_destroy_object)

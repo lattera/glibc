@@ -476,6 +476,7 @@ nis_list (const_nis_name name, unsigned int flags,
 
   return res;
 }
+libnsl_hidden_def (nis_list)
 
 nis_result *
 nis_add_entry (const_nis_name name, const nis_object *obj2, unsigned int flags)

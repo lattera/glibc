@@ -36,11 +36,10 @@
 bool_t
 xdr_yp_buf (XDR *xdrs, yp_buf *objp)
 {
-  if (!xdr_bytes (xdrs, (char **) &objp->yp_buf_val,
-		  (u_int *) &objp->yp_buf_len, ~0))
-    return FALSE;
-  return TRUE;
+  return xdr_bytes (xdrs, (char **) &objp->yp_buf_val,
+		    (u_int *) &objp->yp_buf_len, ~0);
 }
+libnsl_hidden_def (xdr_yp_buf)
 
 bool_t
 xdr_ypupdate_args (XDR *xdrs, ypupdate_args *objp)
@@ -49,9 +48,7 @@ xdr_ypupdate_args (XDR *xdrs, ypupdate_args *objp)
     return FALSE;
   if (!xdr_yp_buf (xdrs, &objp->key))
     return FALSE;
-  if (!xdr_yp_buf (xdrs, &objp->datum))
-    return FALSE;
-  return TRUE;
+  return xdr_yp_buf (xdrs, &objp->datum);
 }
 
 bool_t
@@ -59,7 +56,5 @@ xdr_ypdelete_args (XDR *xdrs, ypdelete_args *objp)
 {
   if (!xdr_string (xdrs, &objp->mapname, ~0))
     return FALSE;
-  if (!xdr_yp_buf (xdrs, &objp->key))
-    return FALSE;
-  return TRUE;
+  return xdr_yp_buf (xdrs, &objp->key);
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -87,7 +87,7 @@ print_flags (const unsigned int flags)
     }
   else
     {
-      fputs("TEXTUAL DATA", stdout);
+      fputs ("TEXTUAL DATA", stdout);
       if (flags & TA_SEARCHABLE)
 	{
 	  if (flags & TA_CASE)
@@ -156,6 +156,7 @@ nis_print_rights (const unsigned int access)
     }
   fputs (result, stdout);
 }
+libnsl_hidden_def (nis_print_rights)
 
 void
 nis_print_directory (const directory_obj *dir)
@@ -243,6 +244,7 @@ nis_print_directory (const directory_obj *dir)
 	}
     }
 }
+libnsl_hidden_def (nis_print_directory)
 
 void
 nis_print_group (const group_obj *obj)
@@ -257,6 +259,7 @@ nis_print_group (const group_obj *obj)
   for (i = 0; i < obj->gr_members.gr_members_len; i++)
     printf ("\t%s\n", obj->gr_members.gr_members_val[i]);
 }
+libnsl_hidden_def (nis_print_group)
 
 void
 nis_print_table (const table_obj *obj)
@@ -279,6 +282,7 @@ nis_print_table (const table_obj *obj)
       fputc ('\n', stdout);
     }
 }
+libnsl_hidden_def (nis_print_table)
 
 void
 nis_print_link (const link_obj *obj)
@@ -288,6 +292,7 @@ nis_print_link (const link_obj *obj)
   printf (_("Linked to : %s\n"), obj->li_name);
   /* XXX Print the attributs here, if they exists */
 }
+libnsl_hidden_def (nis_print_link)
 
 void
 nis_print_entry (const entry_obj *obj)
@@ -311,6 +316,7 @@ nis_print_entry (const entry_obj *obj)
 		obj->en_cols.en_cols_val[i].ec_value.ec_value_val);
     }
 }
+libnsl_hidden_def (nis_print_entry)
 
 void
 nis_print_object (const nis_object * obj)
@@ -356,6 +362,7 @@ nis_print_object (const nis_object * obj)
       break;
     }
 }
+libnsl_hidden_def (nis_print_object)
 
 void
 nis_print_result (const nis_result *res)

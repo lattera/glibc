@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -29,43 +29,41 @@ nis_clone_object (const nis_object *src, nis_object *dest)
   unsigned char *addr;
   unsigned long size;
   XDR xdrs;
-  nis_object *res;
+  nis_object *res = NULL;
 
   if (src == NULL)
     return (NULL);
 
-  size = xdr_sizeof ((xdrproc_t)_xdr_nis_object, (char *)src);
-  if ((addr = calloc(1, size)) == NULL)
+  size = xdr_sizeof ((xdrproc_t)_xdr_nis_object, (char *) src);
+  if ((addr = calloc (1, size)) == NULL)
     return NULL;
 
   if (dest == NULL)
     {
       if ((res = calloc (1, sizeof (nis_object))) == NULL)
-	{
-	  free (addr);
-	  return NULL;
-	}
+	goto out2;
     }
   else
     res = dest;
 
-  xdrmem_create(&xdrs, addr, size, XDR_ENCODE);
+  xdrmem_create (&xdrs, addr, size, XDR_ENCODE);
   if (!_xdr_nis_object (&xdrs, (nis_object *)src))
-    {
-      xdr_destroy (&xdrs);
-      free (addr);
-      return NULL;
-    }
+    goto out3;
   xdr_destroy (&xdrs);
-  xdrmem_create(&xdrs, addr, size, XDR_DECODE);
-  if (!_xdr_nis_object(&xdrs, res))
+  xdrmem_create (&xdrs, addr, size, XDR_DECODE);
+  if (!_xdr_nis_object (&xdrs, res))
     {
-      xdr_destroy (&xdrs);
-      free (addr);
-      return NULL;
+    out3:
+      if (dest == NULL)
+	free (res);
+      res = NULL;
     }
+
+ out:
   xdr_destroy (&xdrs);
+ out2:
   free (addr);
 
   return res;
 }
+libnsl_hidden_def (nis_clone_object)
