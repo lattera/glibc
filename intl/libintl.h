@@ -82,34 +82,7 @@ extern char *bindtextdomain (__const char *__domainname,
 # define dgettext(domainname, msgid)					      \
   dcgettext (domainname, msgid, LC_MESSAGES)
 
-# if __GLIBC__ >= 2 && __GNUC_PREREQ (2,7)
-/* Variable defined in loadmsgcat.c which gets incremented every time a
-   new catalog is loaded.  */
-extern int _nl_msg_cat_cntr;
-
-#  define dcgettext(domainname, msgid, category)			      \
-  (__extension__							      \
-   ({									      \
-     char *__result;							      \
-     if (__builtin_constant_p (msgid))					      \
-       {								      \
-	 static char *__translation__;					      \
-	 static int __catalog_counter__;				      \
-	 if (! __translation__ || __catalog_counter__ != _nl_msg_cat_cntr)    \
-	   {								      \
-	     __translation__ =						      \
-	       __dcgettext ((domainname), (msgid), (category));		      \
-	     __catalog_counter__ = _nl_msg_cat_cntr;			      \
-	   }								      \
-	 __result = __translation__;					      \
-       }								      \
-     else								      \
-       __result = __dcgettext ((domainname), (msgid), (category));	      \
-     __result;								      \
-    }))
-# endif
-#endif /* Optimizing. */
-
+#endif	/* Optimizing.  */
 
 __END_DECLS
 

@@ -307,13 +307,6 @@ setlocale (int category, const char *locale)
       while (category-- > 0)
 	if (category != LC_ALL)
 	  {
-	    /* XXX hack.  Remove when collation works.  */
-	    if (category == LC_COLLATE)
-	      {
-		newdata[category] = NULL;
-		continue;
-	      }
-
 	    newdata[category] = _nl_find_locale (locale_path, locale_path_len,
 						 category,
 						 &newnames[category]);
@@ -349,11 +342,6 @@ setlocale (int category, const char *locale)
       free (locale_path);
 
       return composite;
-    }
-  else if (category == LC_COLLATE)
-    {
-      /* XXX Remove when LC_COLLATE works.  */
-      return NULL;
     }
   else
     {

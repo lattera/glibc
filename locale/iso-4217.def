@@ -12,14 +12,13 @@ DEFINE_INT_CURR("AFA ")		/* Afghanistan Afgani  */
 DEFINE_INT_CURR("ALL ")		/* Albanian Lek  */
 DEFINE_INT_CURR("AMD ")		/* Armenia Dram  */
 DEFINE_INT_CURR("ANG ")		/* Netherlands Antilles  */
-DEFINE_INT_CURR("AOK ")		/* Angolan Kwanza  */ /* obsolete */
 DEFINE_INT_CURR("AON ")		/* Angolan New Kwanza  */
 DEFINE_INT_CURR("ARS ")		/* Argentine Peso  */
 DEFINE_INT_CURR("ATS ")		/* Austrian Schilling  */
 DEFINE_INT_CURR("AUD ")		/* Australian Dollar  */
 DEFINE_INT_CURR("AWG ")		/* Aruba Guilder  */
 DEFINE_INT_CURR("AZM ")		/* Azerbaijan Manat  */
-DEFINE_INT_CURR("BAD ")		/* Bosnian Dinar  */
+DEFINE_INT_CURR("BAK ")		/* Bosnian and Herzegovina Convertible Mark  */
 DEFINE_INT_CURR("BBD ")		/* Barbados Dollar  */
 DEFINE_INT_CURR("BDT ")		/* Bangladesh Taka  */
 DEFINE_INT_CURR("BEF ")		/* Belgian Franc  */
@@ -32,7 +31,6 @@ DEFINE_INT_CURR("BOB ")		/* Bolivian Boliviano  */
 DEFINE_INT_CURR("BPS ")		/* Canton and Enderbury Islands  */ /* ?? */
 DEFINE_INT_CURR("BRE ")		/* Brazil Real  */ /* obsolete */
 DEFINE_INT_CURR("BRL ")		/* Brazil Cruzeiro  */
-DEFINE_INT_CURR("BRR ")		/* Brazil Real  */ /* obsolete */
 DEFINE_INT_CURR("BSD ")		/* Bahamas Dollar  */
 DEFINE_INT_CURR("BTN ")		/* Bhutan Ngultrum  */
 DEFINE_INT_CURR("BUK ")		/* Burma  */ /* obsolete */
@@ -129,6 +127,7 @@ DEFINE_INT_CURR("MWK ")		/* Malawi Kwacha  */
 DEFINE_INT_CURR("MXP ")		/* Mexican Peso  */
 DEFINE_INT_CURR("MYR ")		/* Malaysian Ringgit  */
 DEFINE_INT_CURR("MZM ")		/* Mozambique Metical  */
+DEFINE_INT_CURR("NAD ")		/* Namibia Dollar  */
 DEFINE_INT_CURR("NGN ")		/* Nigeria Naira  */
 DEFINE_INT_CURR("NIC ")		/* Nicaragua Cordoba  */
 DEFINE_INT_CURR("NLG ")		/* Netherlands Guilder  */

@@ -36,9 +36,7 @@
 #define	LIMAGIC(category)	(0x980505 ^ (category))
 
 /* Two special weight constants for the collation data.  */
-#define FORWARD_CHAR ((uint32_t) 0xfffffffd)
-#define ELLIPSIS_CHAR ((uint32_t) 0xfffffffe)
-#define IGNORE_CHAR ((uint32_t) 0xffffffff)
+#define IGNORE_CHAR	2
 
 /* We use a special value for the usage counter in `locale_data' to
    signal that this data must never be removed anymore.  */
@@ -184,13 +182,8 @@ extern const wchar_t *_nl_get_walt_digit (unsigned int number);
 
 
 /* Global variables for LC_COLLATE category data.  */
-extern const uint32_t *__collate_tablewc;
-extern const uint32_t *__collate_extrawc;
-extern const uint32_t *__collate_element_hash;
-extern const char *__collate_element_strings;
-extern const uint32_t *__collate_element_values;
-extern const uint32_t *__collate_symbol_hash;
-extern const char *__collate_symbol_strings;
-extern const uint32_t *__collate_symbol_classes;
+extern const int32_t *__collate_tablemb;
+extern const unsigned char *__collate_extrweightmb;
+extern const unsigned char *__collate_extramb;
 
 #endif	/* localeinfo.h */

@@ -1,3 +1,9 @@
+1999-12-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/en_BW: New file.
+	* locale/en_ZW: New file.
+	Contributed by Schalk W. Cronjé <schalkc@ntaba.co.za>.
+
 1999-12-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/ja_JP: Fix cntrl mapping and era definition.
@@ -6,6 +12,7 @@
 1999-12-20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/af_ZA: New file.
+	Contributed by Schalk W. Cronjé <schalkc@ntaba.co.za>.
 
 1999-12-19  Ulrich Drepper  <drepper@cygnus.com>
 

@@ -43,6 +43,10 @@ DEFINE_CATEGORY
  LC_COLLATE, "LC_COLLATE",
  (
   DEFINE_ELEMENT (_NL_COLLATE_NRULES,         "collate-nrules",           std, word)
+  DEFINE_ELEMENT (_NL_COLLATE_RULESETS,       "collate-rulesets",         std, string)
+  DEFINE_ELEMENT (_NL_COLLATE_TABLEMB,        "collate-tablemb",          std, string)
+  DEFINE_ELEMENT (_NL_COLLATE_WEIGHTMB,       "collate-weightmb",         std, string)
+  DEFINE_ELEMENT (_NL_COLLATE_EXTRAMB,        "collate-extramb",          std, string)
   ), _nl_postload_collate)
 
 

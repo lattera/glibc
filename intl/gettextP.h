@@ -92,6 +92,8 @@ struct binding
   char *dirname;
 };
 
+extern int _nl_msg_cat_cntr;
+
 struct loaded_l10nfile *_nl_find_domain PARAMS ((const char *__dirname,
 						 char *__locale,
 						 const char *__domainname))

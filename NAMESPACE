@@ -6,6 +6,7 @@ complex.h	cerf{,f,l}, cerfc{,f,l}, cexp2{,f,l},
 		clog2{,f,l}, clgamma{,f,l}, ctgamma{,f,l}
 ctype.h		is[a-z], to[a-z]
 dirent.h	d_
+dlfcn.h		RTLD_
 errno.h		E
 fcntl.h		l_
 glob.h		gl_, GLOB_

@@ -21,47 +21,22 @@
 #include <endian.h>
 
 
-extern const u_int32_t _nl_C_LC_COLLATE_symbol_hash[];
-extern const char _nl_C_LC_COLLATE_symbol_strings[];
-extern const u_int32_t _nl_C_LC_COLLATE_symbol_classes[];
-
-
 _NL_CURRENT_DEFINE (LC_COLLATE);
 
-const u_int32_t *__collate_tablewc;
-const u_int32_t *__collate_extrawc;
-
-const u_int32_t *__collate_element_hash;
-const char *__collate_element_strings;
-const uint32_t *__collate_element_values;
-
-const u_int32_t *__collate_symbol_hash = _nl_C_LC_COLLATE_symbol_hash;
-const char *__collate_symbol_strings = _nl_C_LC_COLLATE_symbol_strings;
-const u_int32_t *__collate_symbol_classeswc = _nl_C_LC_COLLATE_symbol_classes;
-
+const int32_t *__collate_tablemb;
+const unsigned char *__collate_weightmb;
+const unsigned char *__collate_extramb;
 
 /* We are called after loading LC_CTYPE data to load it into
    the variables used by the collation functions and regex.  */
 void
 _nl_postload_collate (void)
 {
-#if 0
-  /* XXX For now */
 #define paste(a,b) paste1(a,b)
 #define paste1(a,b) a##b
+#define current(x) _NL_CURRENT (LC_COLLATE, paste(_NL_COLLATE_,x))
 
-#define current(x)							      \
-  ((const unsigned int *) _NL_CURRENT (LC_COLLATE, paste(_NL_COLLATE_,x)))
-
-  __collate_tablewc = current (TABLEWC);
-  __collate_extrawc = current (EXTRAWC);
-
-  __collate_element_hash = current (ELEM_HASH);
-  __collate_element_strings = (const char *) current (ELEM_STR_POOL);
-  __collate_element_values = (const uint32_t *) current (ELEM_VAL);
-
-  __collate_symbol_hash = current (SYMB_HASH);
-  __collate_symbol_strings = (const char *) current (SYMB_STR_POOL);
-  __collate_symbol_classeswc = current (SYMB_CLASSWC);
-#endif
+  __collate_tablemb = (const int32_t *) current (TABLEMB);
+  __collate_weightmb = (const unsigned char *) current (WEIGHTMB);
+  __collate_extramb = (const unsigned char *) current (EXTRAMB);
 }

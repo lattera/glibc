@@ -54,6 +54,8 @@ struct section_list
   struct element_t *last;
   /* These are the rules for this section.  */
   enum coll_sort_rule *rules;
+  /* Index of the rule set in the appropriate section of the output file.  */
+  int ruleidx;
 };
 
 struct element_t;
@@ -72,7 +74,9 @@ struct element_t
   const char *name;
 
   const char *mbs;
+  size_t nmbs;
   const uint32_t *wcs;
+  size_t nwcs;
   int *mborder;
   int wcorder;
 
@@ -175,6 +179,55 @@ struct locale_collate_t
 static int nrules;
 
 
+/* These are definitions used by some of the functions for handling
+   UTF-8 encoding below.  */
+static const uint32_t encoding_mask[] =
+{
+  ~0x7ff, ~0xffff, ~0x1fffff, ~0x3ffffff
+};
+
+static const unsigned char encoding_byte[] =
+{
+  0xc0, 0xe0, 0xf0, 0xf8, 0xfc
+};
+
+
+/* We need UTF-8 encoding of numbers.  */
+static inline int
+utf8_encode (char *buf, int val)
+{
+  char *startp = buf;
+  int retval;
+
+  if (val < 0x80)
+    {
+      *buf++ = (char) val;
+      retval = 1;
+    }
+  else
+    {
+      int step;
+
+      for (step = 2; step < 6; ++step)
+	if ((val & encoding_mask[step - 2]) == 0)
+	  break;
+      retval = step;
+
+      *buf = encoding_byte[step - 2];
+      --step;
+      do
+	{
+	  buf[step] = 0x80 | (val & 0x3f);
+	  val >>= 6;
+	}
+      while (--step > 0);
+      *buf |= val;
+    }
+
+  return buf - startp;
+}
+
+
 static struct section_list *
 make_seclist_elem (struct locale_collate_t *collate, const char *string,
 		   struct section_list *next)
@@ -202,19 +255,29 @@ new_element (struct locale_collate_t *collate, const char *mbs, size_t mbslen,
   newp->name = name == NULL ? NULL : obstack_copy0 (&collate->mempool,
 						    name, namelen);
   if (mbs != NULL)
-    newp->mbs = obstack_copy0 (&collate->mempool, mbs, mbslen);
+    {
+      newp->mbs = obstack_copy0 (&collate->mempool, mbs, mbslen);
+      newp->nmbs = mbslen;
+    }
   else
-    newp->mbs = NULL;
+    {
+      newp->mbs = NULL;
+      newp->nmbs = 0;
+    }
   if (wcs != NULL)
     {
-      size_t nwcs = wcslen ((wchar_t *) wcs) + 1;
+      size_t nwcs = wcslen ((wchar_t *) wcs);
       uint32_t zero = 0;
       obstack_grow (&collate->mempool, wcs, nwcs * sizeof (uint32_t));
       obstack_grow (&collate->mempool, &zero, sizeof (uint32_t));
       newp->wcs = (uint32_t *) obstack_finish (&collate->mempool);
+      newp->nwcs = nwcs;
     }
   else
-    newp->wcs = NULL;
+    {
+      newp->wcs = NULL;
+      newp->nwcs = 0;
+    }
   newp->mborder = NULL;
   newp->wcorder = 0;
   newp->used_in_level = 0;
@@ -225,7 +288,7 @@ new_element (struct locale_collate_t *collate, const char *mbs, size_t mbslen,
   newp->file = NULL;
   newp->line = 0;
 
-  newp->section = NULL;
+  newp->section = collate->current_section;
 
   newp->last = NULL;
   newp->next = NULL;
@@ -532,6 +595,7 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
   elem->line = ldfile->lineno;
   elem->last = collate->cursor;
   elem->next = collate->cursor ? collate->cursor->next : NULL;
+  elem->section = collate->current_section;
   if (collate->cursor != NULL)
     collate->cursor->next = elem;
   if (collate->start == NULL)
@@ -801,6 +865,25 @@ insert_value (struct linereader *ldfile, struct token *arg,
 	    /* This cannot happen.  */
 	    assert (! "Internal error");
 	}
+      else
+	{
+	  /* Maybe the character was used before the definition.  In this case
+	     we have to insert the byte sequences now.  */
+	  if (elem->mbs == NULL && seq != NULL)
+	    {
+	      elem->mbs = obstack_copy0 (&collate->mempool,
+					 seq->bytes, seq->nbytes);
+	      elem->nmbs = seq->nbytes;
+	    }
+
+	  if (elem->wcs == NULL && seq != ILLEGAL_CHAR_VALUE)
+	    {
+	      uint32_t wcs[2] = { wc, 0 };
+
+	      elem->wcs = obstack_copy (&collate->mempool, wcs, sizeof (wcs));
+	      elem->nwcs = 1;
+	    }
+	}
     }
 
   /* Test whether this element is not already in the list.  */
@@ -808,7 +891,7 @@ insert_value (struct linereader *ldfile, struct token *arg,
 			     && elem->next == collate->cursor))
     {
       lr_error (ldfile, _("order for `%.*s' already defined at %s:%zu"),
-		arg->val.str.lenmb, arg->val.str.startmb,
+		(int) arg->val.str.lenmb, arg->val.str.startmb,
 		elem->file, elem->line);
       lr_ignore_rest (ldfile, 0);
       return 1;
@@ -866,8 +949,8 @@ handle_ellipsis (struct linereader *ldfile, struct token *arg,
 	 sequences for the first and end character must be the same.
 	 This is mainly to prevent unwanted effects and this is often
 	 not what is wanted.  */
-      size_t len = (startp->mbs != NULL ? strlen (startp->mbs)
-		    : (endp->mbs != NULL ? strlen (endp->mbs) : 0));
+      size_t len = (startp->mbs != NULL ? startp->nmbs
+		    : (endp->mbs != NULL ? endp->nmbs : 0));
       char mbcnt[len + 1];
       char mbend[len + 1];
 
@@ -878,7 +961,7 @@ handle_ellipsis (struct linereader *ldfile, struct token *arg,
 
       if (startp != NULL && endp != NULL
 	  && startp->mbs != NULL && endp->mbs != NULL
-	  && strlen (startp->mbs) != strlen (endp->mbs))
+	  && startp->nmbs != endp->nmbs)
 	{
 	  lr_error (ldfile, _("\
 %s: byte sequences of first and last character must have the same length"),
@@ -974,7 +1057,8 @@ sequence is not lower than that of the last character"), "LC_COLLATE");
 		    {
 		      lr_error (ldfile, _("\
 order for `%.*s' already defined at %s:%zu"),
-				namelen, seq->name, elem->file, elem->line);
+				(int) namelen, seq->name,
+				elem->file, elem->line);
 		      goto increment;
 		    }
 
@@ -1066,7 +1150,7 @@ order for `%.*s' already defined at %s:%zu"),
 	    invalid_range:
 	      lr_error (ldfile, _("\
 `%s' and `%.*s' are no valid names for symbolic range"),
-			startp->name, lento, endp->name);
+			startp->name, (int) lento, endp->name);
 	      return;
 	    }
 
@@ -1112,7 +1196,7 @@ order for `%.*s' already defined at %s:%zu"),
 		    {
 		      lr_error (ldfile, _("\
 %s: order for `%.*s' already defined at %s:%zu"),
-				"LC_COLLATE", lenfrom, buf,
+				"LC_COLLATE", (int) lenfrom, buf,
 				elem->file, elem->line);
 		      continue;
 		    }
@@ -1160,8 +1244,11 @@ order for `%.*s' already defined at %s:%zu"),
 		    {
 		      /* Update the element.  */
 		      if (seq != NULL)
-			elem->mbs = obstack_copy0 (&collate->mempool,
-						   seq->bytes, seq->nbytes);
+			{
+			  elem->mbs = obstack_copy0 (&collate->mempool,
+						     seq->bytes, seq->nbytes);
+			  elem->nmbs = seq->nbytes;
+			}
 
 		      if (wc != ILLEGAL_CHAR_VALUE)
 			{
@@ -1172,11 +1259,13 @@ order for `%.*s' already defined at %s:%zu"),
 			  obstack_grow (&collate->mempool,
 					&zero, sizeof (uint32_t));
 			  elem->wcs = obstack_finish (&collate->mempool);
+			  elem->nwcs = 1;
 			}
 		    }
 
 		  elem->file = ldfile->fname;
 		  elem->line = ldfile->lineno;
+		  elem->section = collate->current_section;
 		}
 
 	      /* Enqueue the new element.  */
@@ -1281,6 +1370,8 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
   struct element_t *runp;
   int i;
   int need_undefined = 0;
+  struct section_list *sect;
+  int ruleidx;
 
   /* If this assertion is hit change the type in `element_t'.  */
   assert (nrules <= sizeof (runp->used_in_level) * 8);
@@ -1327,7 +1418,7 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
      Since at each time only the weights for each of the rules are
      only compared to other weights for this rule it is possible to
      assign more compact weight values than simply counting all
-     weights in sequence.  We can assign weights from 2 one for each
+     weights in sequence.  We can assign weights from 3, one for each
      rule individually and only for those elements, which are actually
      used for this rule.
 
@@ -1336,44 +1427,64 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
      be encoded to make it possible to emit the value as a byte
      string.  */
   for (i = 0; i < nrules; ++i)
-    mbact[i] = 2;
-  wcact = 2;
+    mbact[i] = 3;
+  wcact = 3;
   runp = collate->start;
   while (runp != NULL)
     {
+      /* Determine the order.  */
+      if (runp->used_in_level != 0)
+	{
+	  runp->mborder = (int *) obstack_alloc (&collate->mempool,
+						 nrules * sizeof (int));
+
+	  for (i = 0; i < nrules; ++i)
+	    if ((runp->used_in_level & (1 << i)) != 0)
+	      runp->mborder[i] = mbact[i]++;
+	    else
+	      runp->mborder[i] = 0;
+	}
+
       if (runp->mbs != NULL)
 	{
 	  struct element_t **eptr;
-
-	  /* Determine the order.  */
-	  if (runp->used_in_level != 0)
-	    {
-	      runp->mborder = (int *) obstack_alloc (&collate->mempool,
-						     nrules * sizeof (int));
-
-	      for (i = 0; i < nrules; ++i)
-		if ((runp->used_in_level & (1 << i)) != 0)
-		  runp->mborder[i] = mbact[i]++;
-		else
-		  runp->mborder[i] = 0;
-	    }
 
 	  /* Find the point where to insert in the list.  */
 	  eptr = &collate->mbheads[((unsigned char *) runp->mbs)[0]];
 	  while (*eptr != NULL)
 	    {
-	      /* Check which string is larger, the one we want to insert
-		 or the current element of the list we are looking at.  */
-	      assert (runp->mbs[0] == (*eptr)->mbs[0]);
-	      if (strcmp (runp->mbs, (*eptr)->mbs) > 0)
+	      if ((*eptr)->nmbs < runp->nmbs)
 		break;
 
+	      if ((*eptr)->nmbs == runp->nmbs)
+		{
+		  int c = memcmp ((*eptr)->mbs, runp->mbs, runp->nmbs);
+
+		  if (c == 0)
+		    {
+		      /* This should not happen.  It means that we have
+			 to symbols with the same byte sequence.  It is
+			 of course an error.  */
+		      error_at_line (0, 0, (*eptr)->file, (*eptr)->line,
+				     _("symbol `%s' has same encoding as"),
+				     (*eptr)->name);
+		      error_at_line (0, 0, runp->file, runp->line,
+				     _("symbol `%s'"), runp->name);
+		      goto dont_insert;
+		    }
+		  else if (c < 0)
+		    /* Insert it here.  */
+		    break;
+		}
+
+	      /* To the next entry.  */
 	      eptr = &(*eptr)->mbnext;
 	    }
 
 	  /* Set the pointers.  */
 	  runp->mbnext = *eptr;
 	  *eptr = runp;
+	dont_insert:
 	}
 
       if (runp->wcs != NULL)
@@ -1394,6 +1505,7 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 
   /* Now determine whether the UNDEFINED entry is needed and if yes,
      whether it was defined.  */
+  collate->undefined.used_in_level = need_undefined ? ~0ul : 0;
   if (need_undefined && collate->undefined.file == NULL)
     {
       error (0, 0, _("no definition of `UNDEFINED'"));
@@ -1407,6 +1519,81 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 
       collate->undefined.wcorder = wcact++;
     }
+
+  /* Finally, try to unify the rules for the sections.  Whenever the rules
+     for a section are the same as those for another section give the
+     ruleset the same index.  Since there are never many section we can
+     use an O(n^2) algorithm here.  */
+  sect = collate->sections;
+  assert (sect != NULL);
+  ruleidx = 0;
+  do
+    {
+      struct section_list *osect = collate->sections;
+
+      while (osect != sect)
+	if (memcmp (osect->rules, sect->rules, nrules) == 0)
+	  break;
+	else
+	  osect = osect->next;
+
+      if (osect == sect)
+	sect->ruleidx = ruleidx++;
+      else
+	sect->ruleidx = osect->ruleidx;
+
+      /* Next section.  */
+      sect = sect->next;
+    }
+  while (sect != NULL);
+  /* We are currently not prepared for more than 256 rulesets.  But this
+     should never really be a problem.  */
+  assert (ruleidx <= 256);
+}
+
+
+static inline int32_t
+output_weight (struct obstack *pool, struct locale_collate_t *collate,
+	       struct element_t *elem)
+{
+  size_t cnt;
+  int32_t retval;
+
+  /* Optimize the use of UNDEFINED.  */
+  if (elem == &collate->undefined)
+    /* The weights are already inserted.  */
+    return 0;
+
+  /* This byte can start exactly one collation element and this is
+     a single byte.  We can directly give the index to the weights.  */
+  retval = obstack_object_size (pool);
+
+  /* Construct the weight.  */
+  for (cnt = 0; cnt < nrules; ++cnt)
+    {
+      char buf[elem->weights[cnt].cnt * 7];
+      int len = 0;
+      int i;
+
+      /* Add the direction.  */
+      obstack_1grow (pool, elem->section->rules[cnt]);
+
+      for (i = 0; i < elem->weights[cnt].cnt; ++i)
+	/* Encode the weight value.  */
+	if (elem->weights[cnt].w[i] == NULL)
+	  {
+	    /* This entry was IGNORE.  */
+	    buf[len++] = '\3';
+	  }
+	else
+	  len += utf8_encode (&buf[len],
+			      elem->weights[cnt].w[i]->mborder[cnt]);
+
+      /* And add the buffer content.  */
+      obstack_grow (pool, buf, len);
+    }
+
+  return retval;
 }
 
 
@@ -1420,6 +1607,15 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   struct locale_file data;
   uint32_t idx[nelems];
   size_t cnt;
+  size_t ch;
+  int32_t tablemb[256];
+  struct obstack weightpool;
+  struct obstack extrapool;
+  struct section_list *sect;
+  int i;
+
+  obstack_init (&weightpool);
+  obstack_init (&extrapool);
 
   data.magic = LIMAGIC (LC_COLLATE);
   data.n = nelems;
@@ -1437,6 +1633,208 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[2 + cnt].iov_len = sizeof (uint32_t);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   ++cnt;
+
+  /* Prepare the ruleset table.  */
+  for (sect = collate->sections, i = 0; sect != NULL; sect = sect->next)
+    if (sect->ruleidx == i)
+      {
+	obstack_grow (&weightpool, sect->rules, nrules);
+	++i;
+      }
+  /* And align the output.  */
+  i = (nrules * i) % __alignof__ (int32_t);
+  if (i > 0)
+    do
+      obstack_1grow (&weightpool, '\0');
+    while (++i < __alignof__ (int32_t));
+
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_RULESETS));
+  iov[2 + cnt].iov_len = obstack_object_size (&weightpool);
+  iov[2 + cnt].iov_base = obstack_finish (&weightpool);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
+  /* Generate the 8-bit table.  Walk through the lists of sequences
+     starting with the same byte and add them one after the other to
+     the table.  In case we have more than one sequence starting with
+     the same byte we have to use extra indirection.
+
+     First add a record for the NUL byte.  This entry will never be used
+     so it does not matter.  */
+  tablemb[0] = 0;
+
+  /* Now insert the `UNDEFINED' value if it is used.  Since this value
+     will probably be used more than once it is good to store the
+     weights only once.  */
+  if (collate->undefined.used_in_level != 0)
+    output_weight (&weightpool, collate, &collate->undefined);
+
+  for (ch = 1; ch < 256; ++ch)
+    if (collate->mbheads[ch]->mbnext == NULL
+	&& collate->mbheads[ch]->nmbs == 1)
+      {
+	tablemb[ch] = output_weight (&weightpool, collate,
+				      collate->mbheads[ch]);
+      }
+    else
+      {
+	/* The entries in the list are sorted by length and then
+           alphabetically.  This is the order in which we will add the
+           elements to the collation table.  This allows to simply
+           walk the table in sequence and stop at the first matching
+           entry.  Since the longer sequences are coming first in the
+           list they have the possibility to match first, just as it
+           has to be.  In the worst case we are walking to the end of
+           the list where we put, if no singlebyte sequence is defined
+           in the locale definition, the weights for UNDEFINED.
+
+	   To reduce the length of the search list we compress them a bit.
+	   This happens by collecting sequences of consecutive byte
+	   sequences in one entry (having and begin and end byte sequence)
+	   and add only one index into the weight table.  We can find the
+	   consecutive entries since they are also consecutive in the list.  */
+	struct element_t *runp = collate->mbheads[ch];
+	struct element_t *lastp;
+
+	tablemb[ch] = -obstack_object_size (&extrapool);
+
+	do
+	  {
+	    /* Store the current index in the weight table.  We know that
+	       the current position in the `extrapool' is aligned on a
+	       32-bit address.  */
+	    int32_t weightidx;
+	    int added;
+
+	    /* Output the weight info.  */
+	    weightidx = output_weight (&weightpool, collate, runp);
+
+	    /* Find out wether this is a single entry or we have more than
+	       one consecutive entry.  */
+	    if (runp->mbnext != NULL
+		&& runp->nmbs == runp->mbnext->nmbs
+		&& memcmp (runp->mbs, runp->mbnext->mbs, runp->nmbs - 1) == 0
+		&& (runp->mbs[runp->nmbs - 1] + 1
+		    == runp->mbnext->mbs[runp->nmbs - 1]))
+	      {
+		int i;
+
+		/* More than one consecutive entry.  We mark this by having
+		   a negative index into the weight table.  */
+		weightidx = -weightidx;
+
+		/* Now add first the initial byte sequence.  */
+		added = ((sizeof (int32_t) + 1 + 1 + 2 * (runp->nmbs - 1)
+			  + __alignof__ (int32_t) - 1)
+			 & ~(__alignof__ (int32_t) - 1));
+		obstack_make_room (&extrapool, added);
+
+		if (sizeof (int32_t) == sizeof (int))
+		  obstack_int_grow_fast (&extrapool, weightidx);
+		else
+		  obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
+		obstack_1grow_fast (&extrapool, runp->section->ruleidx);
+		obstack_1grow_fast (&extrapool, runp->nmbs - 1);
+		for (i = 1; i < runp->nmbs; ++i)
+		  obstack_1grow_fast (&extrapool, runp->mbs[i]);
+
+		/* Now find the end of the consecutive sequence.  */
+		do
+		  runp = runp->next;
+		while (runp->mbnext != NULL
+		       && runp->nmbs == runp->mbnext->nmbs
+		       && memcmp (runp->mbs, runp->mbnext->mbs,
+				  runp->nmbs - 1) == 0
+		       && (runp->mbs[runp->nmbs - 1] + 1
+			   == runp->mbnext->mbs[runp->nmbs - 1]));
+
+		/* And add the end by sequence.  Without length this time.  */
+		for (i = 1; i < runp->nmbs; ++i)
+		  obstack_1grow_fast (&extrapool, runp->mbs[i]);
+	      }
+	    else
+	      {
+		/* A single entry.  Simply add the index and the length and
+		   string (except for the first character which is already
+		   tested for).  */
+		int i;
+
+		added = ((sizeof (int32_t) + 1 + 1 + runp->nmbs - 1
+			  + __alignof__ (int32_t) - 1)
+			 & ~(__alignof__ (int32_t) - 1));
+		obstack_make_room (&extrapool, added);
+
+		if (sizeof (int32_t) == sizeof (int))
+		  obstack_int_grow_fast (&extrapool, weightidx);
+		else
+		  obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
+		obstack_1grow_fast (&extrapool, runp->section->ruleidx);
+		obstack_1grow_fast (&extrapool, runp->nmbs - 1);
+		for (i = 1; i < runp->nmbs; ++i)
+		  obstack_1grow_fast (&extrapool, runp->mbs[i]);
+	      }
+
+	    /* Add alignment bytes if necessary.  */
+	    i = added % __alignof__ (int32_t);
+	    if (i > 0)
+	      do
+		obstack_1grow_fast (&extrapool, '\0');
+	      while (++i != __alignof__ (int32_t));
+
+	    /* Next entry.  */
+	    lastp = runp;
+	    runp = runp->mbnext;
+	  }
+	while (runp != NULL);
+
+	/* If the final entry in the list is not a single character we
+           add an UNDEFINED entry here.  */
+	if (lastp->nmbs != 1)
+	  {
+	    int added = ((sizeof (int32_t) + 1 + 1 + __alignof__ (int32_t))
+			 & ~(__alignof__ (int32_t) - 1));
+	    obstack_make_room (&extrapool, added);
+
+	    if (sizeof (int32_t) == sizeof (int))
+	      obstack_int_grow_fast (&extrapool, 0);
+	    else
+	      {
+		int32_t zero = 0;
+		obstack_grow (&extrapool, &zero, sizeof (int32_t));
+	      }
+	    /* XXX What rule? We just pick the first.  */
+	    obstack_1grow_fast (&extrapool, 0);
+	    /* Length is zero.  */
+	    obstack_1grow_fast (&extrapool, 0);
+
+	    /* Add alignment bytes if necessary.  */
+	    i = added % __alignof__ (int32_t);
+	    if (i > 0)
+	      do
+		obstack_1grow_fast (&extrapool, '\0');
+	      while (++i != __alignof__ (int32_t));
+	  }
+      }
+
+  /* Now add the three tables.  */
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_TABLEMB));
+  iov[2 + cnt].iov_base = tablemb;
+  iov[2 + cnt].iov_len = sizeof (tablemb);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_WEIGHTMB));
+  iov[2 + cnt].iov_len = obstack_object_size (&weightpool);
+  iov[2 + cnt].iov_base = obstack_finish (&weightpool);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_EXTRAMB));
+  iov[2 + cnt].iov_len = obstack_object_size (&extrapool);
+  iov[2 + cnt].iov_base = obstack_finish (&extrapool);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
 
   assert (cnt == _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE));
 
@@ -1859,6 +2257,12 @@ error while adding equivalent collating symbol"));
 			    "LC_COLLATE", arg->val.str.startmb);
 		  /* We use the error section.  */
 		  collate->current_section = &collate->error_section;
+
+		  if (collate->error_section.first == NULL)
+		    {
+		      collate->error_section.next = collate->sections;
+		      collate->sections = &collate->error_section;
+		    }
 		}
 	      else
 		{
@@ -1871,6 +2275,11 @@ error while adding equivalent collating symbol"));
 		    lr_error (ldfile, _("\
 %s: multiple order definitions for section `%s'"),
 			      "LC_COLLATE", sp->name);
+		  else
+		    {
+		      sp->next = collate->sections;
+		      collate->sections = sp;
+		    }
 
 		  /* Next should come the end of the line or a semicolon.  */
 		  arg = lr_token (ldfile, charmap, repertoire);
@@ -1909,6 +2318,11 @@ error while adding equivalent collating symbol"));
 		lr_error (ldfile, _("\
 %s: multiple order definitions for unnamed section"),
 			  "LC_COLLATE");
+	      else
+		{
+		  collate->unnamed_section.next = collate->sections;
+		  collate->sections = &collate->unnamed_section;
+		}
 	    }
 
 	  /* Now read the direction names.  */
@@ -1987,7 +2401,7 @@ error while adding equivalent collating symbol"));
                      insert does not exist.  */
 		  lr_error (ldfile, _("\
 %s: cannot reorder after %.*s: symbol not known"),
-			    "LC_COLLATE", arg->val.str.lenmb,
+			    "LC_COLLATE", (int) arg->val.str.lenmb,
 			    arg->val.str.startmb);
 		  collate->cursor = NULL;
 		  no_error = 0;
@@ -2072,7 +2486,7 @@ error while adding equivalent collating symbol"));
                      process the whole rest of this reorder
                      specification.  */
 		  lr_error (ldfile, _("%s: section `%.*s' not known"),
-			    "LC_COLLATE", arg->val.str.lenmb,
+			    "LC_COLLATE", (int) arg->val.str.lenmb,
 			    arg->val.str.startmb);
 
 		  do
@@ -2194,7 +2608,7 @@ error while adding equivalent collating symbol"));
 	      if (runp == NULL)
 		{
 		  lr_error (ldfile, _("%s: section `%.*s' not known"),
-			    "LC_COLLATE", arg->val.str.lenmb,
+			    "LC_COLLATE", (int) arg->val.str.lenmb,
 			    arg->val.str.startmb);
 		  lr_ignore_rest (ldfile, 0);
 		}

@@ -20,11 +20,12 @@
 #include <endian.h>
 #include "localeinfo.h"
 
+#if 0
 /* These tables' entries contain values which make the function behave
    according to POSIX.2 Table 2-8 ``LC_COLLATE Category Definition in
    the POSIX Locale''.  */
 
-const u_int32_t _nl_C_LC_COLLATE_symbol_hash[446] =
+const uint32_t _nl_C_LC_COLLATE_symbol_hash[446] =
 {
   0xffffffffu, 0xffffffffu, 0xffffffffu, 0xffffffffu, 0xffffffffu, 0xffffffffu,
   0xffffffffu, 0xffffffffu, 0x00000154u, 0x00000060u, 0xffffffffu, 0xffffffffu,
@@ -123,7 +124,7 @@ const char _nl_C_LC_COLLATE_symbol_strings[732] =
   "r\0" "s\0" "t\0" "u\0" "v\0" "w\0" "x\0" "y\0" "z\0" "left-curly-bracket\0"
   "vertical-line\0" "right-curly-bracket\0" "tilde\0" "DEL\0";
 
-const u_int32_t _nl_C_LC_COLLATE_symbol_classes[256] =
+const uint32_t _nl_C_LC_COLLATE_symbol_classes[256] =
 {
   1,   0, 1,   1, 1,   2, 1,   3, 1,   4, 1,   5, 1,   6, 1,   7,
   1,   8, 1,   9, 1,  10, 1,  11, 1,  12, 1,  13, 1,  14, 1,  15,
@@ -142,43 +143,19 @@ const u_int32_t _nl_C_LC_COLLATE_symbol_classes[256] =
   1, 112, 1, 113, 1, 114, 1, 115, 1, 116, 1, 117, 1, 118, 1, 119,
   1, 120, 1, 121, 1, 122, 1, 123, 1, 124, 1, 125, 1, 126, 1, 127
 };
+#endif
 
 const struct locale_data _nl_C_LC_COLLATE =
 {
   _nl_C_name,
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
-  30,
+  5,
   {
     { word: 0 },
     { string: NULL },
-    { word: 0 },
-    { word: 0 },
     { string: NULL },
     { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { word: 0 },
-    { word: 0 },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { word: 0 },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { word: 223 },
-    { string: (const char *) _nl_C_LC_COLLATE_symbol_hash },
-    { string: _nl_C_LC_COLLATE_symbol_strings },
-    { string: NULL },
-    { string: NULL },
-    { string: (const char *) _nl_C_LC_COLLATE_symbol_classes }
+    { string: NULL }
   }
 };

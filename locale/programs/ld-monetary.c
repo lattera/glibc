@@ -247,7 +247,7 @@ not correspond to a valid name in ISO 4217"),
 	error (0, 0, _("%s: field `%s' not defined"),
 	       "LC_MONETARY", "mon_grouping");
 
-      monetary->mon_grouping = "\177";
+      monetary->mon_grouping = (char *) "\177";
       monetary->mon_grouping_len = 1;
     }
 
