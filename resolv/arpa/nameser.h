@@ -83,7 +83,7 @@
  * is new enough to contain a certain feature.
  */
 
-#define	__BIND		19940417	/* interface version stamp */
+#define	__BIND		19950621	/* interface version stamp */
 
 /*
  * Define constants based on rfc883
@@ -258,8 +258,7 @@ typedef struct {
 	unsigned	rd: 1;		/* recursion desired */
 			/* fields in fourth byte */
 	unsigned	ra: 1;		/* recursion available */
-	unsigned	pr: 1;		/* primary server req'd (!standard) */
-	unsigned	unused :2;	/* unused bits (MBZ as of 4.9.3a3) */
+	unsigned	unused :3;	/* unused bits (MBZ as of 4.9.3a3) */
 	unsigned	rcode :4;	/* response code */
 #endif
 #if BYTE_ORDER == LITTLE_ENDIAN || BYTE_ORDER == PDP_ENDIAN
@@ -271,8 +270,7 @@ typedef struct {
 	unsigned	qr :1;		/* response flag */
 			/* fields in fourth byte */
 	unsigned	rcode :4;	/* response code */
-	unsigned	unused :2;	/* unused bits (MBZ as of 4.9.3a3) */
-	unsigned	pr :1;		/* primary server req'd (!standard) */
+	unsigned	unused :3;	/* unused bits (MBZ as of 4.9.3a3) */
 	unsigned	ra :1;		/* recursion available */
 #endif
 			/* remaining bytes */

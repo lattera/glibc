@@ -34,7 +34,6 @@ inet_nsap_addr(ascii, binary, maxlen)
 	int maxlen;
 {
 	register u_char c, nib;
-	u_char *start = binary;
 	u_int len = 0;
 
 	while ((c = *ascii++) != '\0' && len < maxlen) {

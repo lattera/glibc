@@ -250,10 +250,12 @@ getanswer(answer, anslen, qname, qclass, qtype)
 			continue;
 		}
 		if (type != qtype) {
-			syslog(LOG_NOTICE|LOG_AUTH,
+			/* CNAME->PTR should not cause a log message. */
+			if (!(qtype == T_PTR && type == T_CNAME))
+				syslog(LOG_NOTICE|LOG_AUTH,
 	       "gethostby*.getanswer: asked for \"%s %s %s\", got type \"%s\"",
-			       qname, p_class(qclass), p_type(qtype),
-			       p_type(type));
+				       qname, p_class(qclass), p_type(qtype),
+				       p_type(type));
 			cp += n;
 			continue;		/* XXX - had_error++ ? */
 		}
@@ -380,6 +382,11 @@ gethostbyname(name)
 	int n;
 	extern struct hostent *_gethtbyname();
 
+	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
+		h_errno = NETDB_INTERNAL;
+		return (NULL);
+	}
+
 	/*
 	 * if there aren't any dots, it could be a user-level alias.
 	 * this is also done in res_query() since we are not the only
@@ -406,7 +413,9 @@ gethostbyname(name)
 					h_errno = HOST_NOT_FOUND;
 					return (NULL);
 				}
-				host.h_name = (char *)name;
+				strncpy(hostbuf, name, MAXDNAME);
+				hostbuf[MAXDNAME] = '\0';
+				host.h_name = hostbuf;
 				host.h_aliases = host_aliases;
 				host_aliases[0] = NULL;
 				host.h_addrtype = AF_INET;
@@ -451,6 +460,10 @@ gethostbyaddr(addr, len, type)
 #endif /*SUNSECURITY*/
 	extern struct hostent *_gethtbyaddr();
 	
+	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
+		h_errno = NETDB_INTERNAL;
+		return (NULL);
+	}
 	if (type != AF_INET) {
 		errno = EAFNOSUPPORT;
 		h_errno = NETDB_INTERNAL;
@@ -480,7 +493,7 @@ gethostbyaddr(addr, len, type)
 	old_options = _res.options;
 	_res.options &= ~RES_DNSRCH;
 	_res.options |= RES_DEFNAMES;
-	if (!(rhp = gethostbyname(hp->h_name))) {
+	if (!(rhp = gethostbyname(hname2))) {
 		syslog(LOG_NOTICE|LOG_AUTH,
 		       "gethostbyaddr: No A record for %s (verifying [%s])",
 		       hname2, inet_ntoa(*((struct in_addr *)addr)));

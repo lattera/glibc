@@ -60,6 +60,7 @@ static char rcsid[] = "$Id$";
 
 #include <sys/param.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
@@ -75,7 +76,7 @@ static char rcsid[] = "$Id$";
 # include "../conf/portability.h"
 #endif
 
-/*
+/*-------------------------------------- info about "sortlist" --------------
  * Marc Majka		1994/04/16
  * Allan Nathanson	1994/10/29 (BIND 4.9.3.x)
  *
@@ -93,10 +94,9 @@ static char rcsid[] = "$Id$";
  *   "search" property.
  * - The sortlist comprised of IP address netmask pairs are stored as
  *   values of the "sortlist" property. The IP address and optional netmask
- *   should be seperated by a slash (/) character.
+ *   should be seperated by a slash (/) or ampersand (&) character.
  * - Internal resolver variables can be set from the value of the "options"
  *   property.
- *
  */
 #if defined(NeXT)
 #  include <netinfo/ni.h>
@@ -112,6 +112,8 @@ static int netinfo_res_init __P((int *haveenv, int *havesearch));
 static void res_setoptions __P((char *, char *));
 
 #ifdef RESOLVSORT
+static const char sort_mask[] = "/&";
+#define ISSORTMASK(ch) (strchr(sort_mask, ch) != NULL)
 static u_int32_t net_mask __P((struct in_addr));
 #endif
 
@@ -146,11 +148,12 @@ struct __res_state _res;
  *
  * Return 0 if completes successfully, -1 on error
  */
+int
 res_init()
 {
 	register FILE *fp;
 	register char *cp, **pp;
-	register int n, dots;
+	register int n;
 	char buf[BUFSIZ];
 	int nserv = 0;    /* number of nameserver records read from file */
 	int haveenv = 0;
@@ -158,6 +161,9 @@ res_init()
 #ifdef RESOLVSORT
 	int nsort = 0;
 	char *net;
+#endif
+#ifndef RFC1535
+	int dots;
 #endif
 
 	/*
@@ -172,13 +178,26 @@ res_init()
 	 * will follow.  Zero for any of these fields would make no sense,
 	 * so one can safely assume that the applications were already getting
 	 * unexpected results.
+	 *
+	 * _res.options is tricky since some apps were known to diddle the bits
+	 * before res_init() was first called. We can't replicate that semantic
+	 * with dynamic initialization (they may have turned bits off that are
+	 * set in RES_DEFAULT).  Our solution is to declare such applications
+	 * "broken".  They could fool us by setting RES_INIT but none do (yet).
 	 */
 	if (!_res.retrans)
 		_res.retrans = RES_TIMEOUT;
 	if (!_res.retry)
 		_res.retry = 4;
 	if (!(_res.options & RES_INIT))
-		_res.options |= RES_DEFAULT;
+		_res.options = RES_DEFAULT;
+
+	/*
+	 * This one used to initialize implicitly to zero, so unless the app
+	 * has set it to something in particular, we can randomize it now.
+	 */
+	if (!_res.id)
+		_res.id = res_randomid();
 
 #ifdef USELOOPBACK
 	_res.nsaddr.sin_addr = inet_makeaddr(IN_LOOPBACKNET, 1);
@@ -317,17 +336,18 @@ res_init()
 			if (*cp == '\0' || *cp == '\n' || *cp == ';')
 			    break;
 			net = cp;
-			while (*cp && *cp != '/' &&
+			while (*cp && !ISSORTMASK(*cp) && *cp != ';' &&
 			       isascii(*cp) && !isspace(*cp))
 				cp++;
 			n = *cp;
 			*cp = 0;
 			if (inet_aton(net, &a)) {
 			    _res.sort_list[nsort].addr = a;
-			    if (n == '/') {
+			    if (ISSORTMASK(n)) {
 				*cp++ = n;
 				net = cp;
-				while (*cp && isascii(*cp) && !isspace(*cp))
+				while (*cp && *cp != ';' &&
+					isascii(*cp) && !isspace(*cp))
 				    cp++;
 				n = *cp;
 				*cp = 0;
@@ -343,7 +363,7 @@ res_init()
 			    }
 			    nsort++;
 			}
-			*cp++ = n;
+			*cp = n;
 		    }
 		    continue;
 		}
@@ -448,6 +468,7 @@ res_setoptions(options, source)
 }
 
 #ifdef RESOLVSORT
+/* XXX - should really support CIDR which means explicit masks always. */
 static u_int32_t
 net_mask(in)		/* XXX - should really use system's version of this */
 	struct in_addr in;
@@ -556,17 +577,26 @@ netinfo_res_init(haveenv, havesearch)
 			 n++) {
 			char ch;
 			char *cp;
+			const char *sp;
 			struct in_addr a;
 
-			cp = strchr(nl.ni_namelist_val[n], '/');
-			if (cp != NULL) {
-			    ch = *cp;
-			    *cp = '\0';
+			cp = NULL;
+			for (sp = sort_mask; *sp; sp++) {
+				char *cp1;
+				cp1 = strchr(nl.ni_namelist_val[n], *sp);
+				if (cp && cp1)
+					cp = (cp < cp1)? cp : cp1;
+				else if (cp1)
+					cp = cp1;
 			}
-			
+			if (cp != NULL) {
+				ch = *cp;
+				*cp = '\0';
+				break;
+			}
 			if (inet_aton(nl.ni_namelist_val[n], &a)) {
 			    _res.sort_list[nsort].addr = a;
-			    if (*cp && ch == '/') {
+			    if (*cp && ISSORTMASK(ch)) {
 			    	*cp++ = ch;
 			        if (inet_aton(cp, &a)) {
 				    _res.sort_list[nsort].mask = a.s_addr;
@@ -607,3 +637,12 @@ netinfo_res_init(haveenv, havesearch)
     return(0);	/* if not using DNS configuration from NetInfo */
 }
 #endif	/* NeXT */
+
+u_int16_t
+res_randomid()
+{
+	struct timeval now;
+
+	gettimeofday(&now, NULL);
+	return (0xffff & (now.tv_sec ^ now.tv_usec ^ getpid()));
+}

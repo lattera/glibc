@@ -324,6 +324,10 @@ res_querydomain(name, domain, class, type, answer, anslen)
 	const char *longname = nbuf;
 	int n;
 
+	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
+		h_errno = NETDB_INTERNAL;
+		return (-1);
+	}
 #ifdef DEBUG
 	if (_res.options & RES_DEBUG)
 		printf(";; res_querydomain(%s, %s, %d, %d)\n",
@@ -356,9 +360,12 @@ __hostalias(name)
 	char buf[BUFSIZ];
 	static char abuf[MAXDNAME];
 
+	if (_res.options & RES_NOALIASES)
+		return (NULL);
 	file = getenv("HOSTALIASES");
 	if (file == NULL || (fp = fopen(file, "r")) == NULL)
 		return (NULL);
+	setbuf(fp, NULL);
 	buf[sizeof(buf) - 1] = '\0';
 	while (fgets(buf, sizeof(buf), fp)) {
 		for (cp1 = buf; *cp1 && !isspace(*cp1); ++cp1)

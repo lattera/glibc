@@ -44,11 +44,7 @@ extern int _net_stayopen;
 
 struct netent *
 _getnetbyname(name)
-#if (defined(sun) || defined(DGUX))
-	register char *name;
-#else
 	register const char *name;
-#endif
 {
 	register struct netent *p;
 	register char **cp;

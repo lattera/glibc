@@ -714,11 +714,10 @@ Rule	GB-Eire	1961	1967	-	Oct	Sun>=23	2:00s	0	GMT
 Rule	GB-Eire	1971	only	-	Oct	31	3:00	0	GMT
 Rule	GB-Eire	1972	1980	-	Oct	Sun>=23	2:00s	0	GMT
 # 1981 on
-Rule	GB-Eire	1981	max	-	Mar	lastSun	1:00u	1:00	BST
+Rule	GB-Eire	1981	1995	-	Mar	lastSun	1:00u	1:00	BST
 Rule	GB-Eire 1981	1989	-	Oct	Sun>=23	1:00u	0	GMT
 Rule	GB-Eire 1990	1995	-	Oct	Sun>=22	1:00u	0	GMT
-Rule	GB-Eire 1996	max	-	Oct	lastSun	1:00u	0	GMT
-# Also see EC, which (starting 1996) differs only in LETTER/S.
+# See EC for rules starting in 1996.
 
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Europe/London	-0:01:15 -	LMT	1847 Sep 22
@@ -760,7 +759,6 @@ Rule	EC	1978	only	-	Oct	 1	 1:00u	0	-
 Rule	EC	1979	1995	-	Sep	lastSun	 1:00u	0	-
 Rule	EC	1981	max	-	Mar	lastSun	 1:00u	1:00	" DST"
 Rule	EC	1996	max	-	Oct	lastSun	 1:00u	0	-
-# Also see GB-Eire, which (starting 1996) differs only in LETTER/S.
 
 # W-Eur differs from EC only in that W-Eur uses standard time.
 Rule	W-Eur	1800	only	-	Jan	 1	 0:00	0	-
@@ -824,7 +822,6 @@ Rule	Russia	1985	max	-	Mar	lastSun	 2:00s	1:00	D
 Zone	WET		0:00	EC	WET%s
 Zone	MET		1:00	M-Eur	MET%s
 Zone	EET		2:00	EC	EET%s
-Zone	W-SU		3:00	M-Eur	????
 
 # Tom Hoffman says that MET is also known as Central European Time
 
@@ -1789,7 +1786,7 @@ Zone Asia/Anadyr	11:49:56 -	LMT	1924 May  2
 			12:00	-	ASK	1992 Jan 19 2:00s
 			13:00	Russia	AS%s
 
-# Serbia
+# Yugoslavia (what's left of it -- mostly Serbia)
 # They switched from the Julian to the Gregorian calendar on 1918 Mar 18.
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Europe/Belgrade	1:22:00	-	LMT	1884

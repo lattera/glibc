@@ -1,4 +1,4 @@
-# @(#)backward	7.8
+# @(#)backward	7.9
 
 # This file provides links between current names for time zones
 # and their old names.  Many names changed in late 1993.
@@ -73,4 +73,5 @@ Link	America/Los_Angeles	US/Pacific
 Link	Pacific/Samoa		US/Samoa
 Link	Etc/UTC			UTC
 Link	Etc/Universal		Universal
+Link	Europe/Moscow		W-SU
 Link	Etc/Zulu		Zulu

@@ -56,7 +56,6 @@ static char rcsid[] = "$Id$";
 #include <ctype.h>
 #include <errno.h>
 #include <string.h>
-#include "conf/portability.h"
 
 extern int h_errno;
 
@@ -65,11 +64,7 @@ extern int errno;
 #endif
 
 struct netent *_getnetbyaddr __P((long net, int type));
-#if defined(sun)
-struct netent *_getnetbyname __P((char *name));
-#else
 struct netent *_getnetbyname __P((const char *name));
-#endif
 
 #define BYADDR 0
 #define BYNAME 1
@@ -102,8 +97,7 @@ getnetanswer(answer, anslen, net_i)
 	register u_char *cp;
 	register int n;
 	u_char *eom;
-	int type, class, buflen, ancount, qdcount, haveanswer, i, nchar,
-		getclass = C_ANY, net_length = 0;
+	int type, class, buflen, ancount, qdcount, haveanswer, i, nchar;
 	char aux1[30], aux2[30], ans[30], *in, *st, *pauxt, *bp, **ap,
 		*paux1 = &aux1[0], *paux2 = &aux2[0], flag = 0;
 static	struct netent net_entry;
@@ -264,19 +258,18 @@ getnetbyaddr(net, net_type)
 
 struct netent *
 getnetbyname(net)
-#if defined(sun)
-	register char *net;
-#else
 	register const char *net;
-#endif
 {
-	unsigned int netbr[4];
 	int anslen;
 	querybuf buf;
 	char qbuf[MAXDNAME];
 	struct netent *net_entry;
 
-	strcpy(&qbuf[0],net);
+	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
+		h_errno = NETDB_INTERNAL;
+		return (NULL);
+	}
+	strcpy(&qbuf[0], net);
 	anslen = res_search(qbuf, C_IN, T_PTR, (u_char *)&buf, sizeof(buf));
 	if (anslen < 0) {
 #ifdef DEBUG

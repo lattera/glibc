@@ -78,11 +78,13 @@ static char rcsid[] = "$Id$";
 #include <arpa/inet.h>
 
 #include <stdio.h>
+#include <netdb.h>
 #include <errno.h>
 #include <resolv.h>
 #if defined(BSD) && (BSD >= 199306)
 # include <stdlib.h>
 # include <string.h>
+# include <unistd.h>
 #else
 # include "../conf/portability.h"
 #endif
@@ -109,14 +111,14 @@ static int vc = 0;	/* is the socket a virtual ciruit? */
 
 #ifndef DEBUG
 #   define Dprint(cond, args) /*empty*/
-#   define DprintQ(cond, args, query) /*empty*/
+#   define DprintQ(cond, args, query, size) /*empty*/
 #   define Aerror(file, string, error, address) /*empty*/
 #   define Perror(file, string, error) /*empty*/
 #else
 #   define Dprint(cond, args) if (cond) {fprintf args;} else {}
-#   define DprintQ(cond, args, query) if (cond) {\
+#   define DprintQ(cond, args, query, size) if (cond) {\
 			fprintf args;\
-			__p_query(query);\
+			__fp_nquery(query, size, stdout);\
 		} else {}
     static void
     Aerror(file, string, error, address)
@@ -230,7 +232,7 @@ res_nameinquery(name, type, class, buf, eom)
 		if (n < 0)
 			return (-1);
 		cp += n;
-		ttype = _getshort(cp);	cp += INT16SZ;
+		ttype = _getshort(cp); cp += INT16SZ;
 		tclass = _getshort(cp); cp += INT16SZ;
 		if (ttype == type &&
 		    tclass == class &&
@@ -290,10 +292,12 @@ res_send(buf, buflen, ans, anssiz)
 	register int n;
 	u_int badns;	/* XXX NSMAX can't exceed #/bits in this var */
 
-	DprintQ((_res.options & RES_DEBUG) || (_res.pfcode & RES_PRF_QUERY),
-		(stdout, ";; res_send()\n"), buf);
-	if (!(_res.options & RES_INIT) && res_init() == -1)
+	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
+		/* errno should have been set by res_init() in this case. */
 		return (-1);
+	}
+	DprintQ((_res.options & RES_DEBUG) || (_res.pfcode & RES_PRF_QUERY),
+		(stdout, ";; res_send()\n"), buf, buflen);
 	v_circuit = (_res.options & RES_USEVC) || buflen > PACKETSZ;
 	gotsomewhere = 0;
 	connreset = 0;
@@ -362,12 +366,13 @@ res_send(buf, buflen, ans, anssiz)
 				if (s >= 0)
 					_res_close();
 
-				s = socket(AF_INET, SOCK_STREAM, PF_UNSPEC);
+				s = socket(PF_INET, SOCK_STREAM, 0);
 				if (s < 0) {
 					terrno = errno;
 					Perror(stderr, "socket(vc)", errno);
 					return (-1);
 				}
+				errno = 0;
 				if (connect(s, (struct sockaddr *)nsap,
 					    sizeof(struct sockaddr)) < 0) {
 					terrno = errno;
@@ -477,9 +482,12 @@ res_send(buf, buflen, ans, anssiz)
 			if ((s < 0) || vc) {
 				if (vc)
 					_res_close();
-				s = socket(AF_INET, SOCK_DGRAM, PF_UNSPEC);
+				s = socket(PF_INET, SOCK_DGRAM, 0);
 				if (s < 0) {
- bad_dg_sock:				terrno = errno;
+#if !defined(BSD) || (BSD < 199103)
+ bad_dg_sock:
+#endif
+					terrno = errno;
 					Perror(stderr, "socket(dg)", errno);
 					return (-1);
 				}
@@ -541,8 +549,7 @@ res_send(buf, buflen, ans, anssiz)
 						        &no_addr,
 						       sizeof(no_addr));
 #else
-					int s1 = socket(AF_INET, SOCK_DGRAM,
-							PF_UNSPEC);
+					int s1 = socket(PF_INET, SOCK_DGRAM,0);
 					if (s1 < 0)
 						goto bad_dg_sock;
 					(void) dup2(s1, s);
@@ -593,6 +600,7 @@ res_send(buf, buflen, ans, anssiz)
 				_res_close();
 				goto next_ns;
 			}
+			errno = 0;
 			fromlen = sizeof(struct sockaddr_in);
 			resplen = recvfrom(s, (char*)ans, anssiz, 0,
 					   (struct sockaddr *)&from, &fromlen);
@@ -611,7 +619,7 @@ res_send(buf, buflen, ans, anssiz)
 				DprintQ((_res.options & RES_DEBUG) ||
 					(_res.pfcode & RES_PRF_REPLY),
 					(stdout, ";; old answer:\n"),
-					ans);
+					ans, resplen);
 				goto wait;
 			}
 #if CHECK_SRVR_ADDR
@@ -625,7 +633,7 @@ res_send(buf, buflen, ans, anssiz)
 				DprintQ((_res.options & RES_DEBUG) ||
 					(_res.pfcode & RES_PRF_REPLY),
 					(stdout, ";; not our server:\n"),
-					ans);
+					ans, resplen);
 				goto wait;
 			}
 #endif
@@ -640,7 +648,7 @@ res_send(buf, buflen, ans, anssiz)
 				DprintQ((_res.options & RES_DEBUG) ||
 					(_res.pfcode & RES_PRF_REPLY),
 					(stdout, ";; wrong query name:\n"),
-					ans);
+					ans, resplen);
 				goto wait;
 			}
 			if (anhp->rcode == SERVFAIL ||
@@ -648,7 +656,7 @@ res_send(buf, buflen, ans, anssiz)
 			    anhp->rcode == REFUSED) {
 				DprintQ(_res.options & RES_DEBUG,
 					(stdout, "server rejected query:\n"),
-					ans);
+					ans, resplen);
 				badns |= (1 << ns);
 				_res_close();
 				/* don't retry if called from dig */
@@ -670,7 +678,7 @@ res_send(buf, buflen, ans, anssiz)
 		DprintQ((_res.options & RES_DEBUG) ||
 			(_res.pfcode & RES_PRF_REPLY),
 			(stdout, ";; got answer:\n"),
-			ans);
+			ans, resplen);
 		/*
 		 * If using virtual circuits, we assume that the first server
 		 * is preferred over the rest (i.e. it is on the local

@@ -340,11 +340,7 @@ dn_find(exp_dn, msg, dnptrs, lastdnptr)
 }
 
 /*
- * Routines to insert/extract short/long's. Must account for byte
- * order and non-alignment problems. This code at least has the
- * advantage of being portable.
- *
- * used by sendmail.
+ * Routines to insert/extract short/long's.
  */
 
 u_int16_t

@@ -24,7 +24,7 @@ subdir	:= inet
 headers	:= netinet/in.h $(wildcard arpa/*.h protocols/*.h) netdb.h
 
 routines := ntohl ntohs htonl htons		\
-	    inet_addr inet_lnaof inet_mkadr	\
+	    inet_lnaof inet_mkadr	\
 	    inet_netof inet_ntoa inet_net	\
 	    getproto getprtent getprtname	\
 	    getsrvbynm getsrvbypt getservent	\

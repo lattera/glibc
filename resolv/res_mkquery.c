@@ -63,6 +63,7 @@ static char rcsid[] = "$Id$";
 #include <arpa/nameser.h>
 
 #include <stdio.h>
+#include <netdb.h>
 #include <resolv.h>
 #if defined(BSD) && (BSD >= 199103)
 # include <string.h>
@@ -92,18 +93,20 @@ res_mkquery(op, dname, class, type, data, datalen, newrr_in, buf, buflen)
 	register HEADER *hp;
 	register u_char *cp;
 	register int n;
+#ifdef ALLOW_UPDATES
 	struct rrec *newrr = (struct rrec *) newrr_in;
+#endif
 	u_char *dnptrs[20], **dpp, **lastdnptr;
 
+	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
+		h_errno = NETDB_INTERNAL;
+		return (-1);
+	}
 #ifdef DEBUG
 	if (_res.options & RES_DEBUG)
 		printf(";; res_mkquery(%d, %s, %d, %d)\n",
 		       op, dname, class, type);
 #endif
-	if (!(_res.options & RES_INIT)) {
-		if (res_init() == -1)
-			return (-1);
-	}
 	/*
 	 * Initialize header fields.
 	 */
@@ -113,7 +116,6 @@ res_mkquery(op, dname, class, type, data, datalen, newrr_in, buf, buflen)
 	hp = (HEADER *) buf;
 	hp->id = htons(++_res.id);
 	hp->opcode = op;
-	hp->pr = (_res.options & RES_PRIMARY) != 0;
 	hp->rd = (_res.options & RES_RECURSE) != 0;
 	hp->rcode = NOERROR;
 	cp = buf + HFIXEDSZ;

@@ -78,7 +78,7 @@
  * is new enough to contain a certain feature.
  */
 
-#define	__RES	19941130
+#define	__RES	19950621
 
 /*
  * Resolver configuration file.
@@ -128,9 +128,9 @@ struct __res_state {
  */
 #define RES_INIT	0x00000001	/* address initialized */
 #define RES_DEBUG	0x00000002	/* print debug messages */
-#define RES_AAONLY	0x00000004	/* authoritative answers only */
+#define RES_AAONLY	0x00000004	/* authoritative answers only (!IMPL)*/
 #define RES_USEVC	0x00000008	/* use virtual circuit */
-#define RES_PRIMARY	0x00000010	/* query primary server only */
+#define RES_PRIMARY	0x00000010	/* query primary server only (!IMPL) */
 #define RES_IGNTC	0x00000020	/* ignore trucation errors */
 #define RES_RECURSE	0x00000040	/* recursion desired */
 #define RES_DEFNAMES	0x00000080	/* use default domain name */
@@ -138,6 +138,7 @@ struct __res_state {
 #define RES_DNSRCH	0x00000200	/* search up local domain tree */
 #define	RES_INSECURE1	0x00000400	/* type 1 security disabled */
 #define	RES_INSECURE2	0x00000800	/* type 2 security disabled */
+#define	RES_NOALIASES	0x00001000	/* shuts off HOSTALIASES feature */
 
 #define RES_DEFAULT	(RES_RECURSE | RES_DEFNAMES | RES_DNSRCH)
 
@@ -196,6 +197,7 @@ extern struct __res_state _res;
 #define	p_fqname	__p_fqname
 #define	p_rr		__p_rr
 #define	p_option	__p_option
+#define	res_randomid	__res_randomid
 #define	res_isourserver	__res_isourserver
 #define	res_nameinquery	__res_nameinquery
 #define	res_queriesmatch __res_queriesmatch
@@ -220,6 +222,7 @@ int	 dn_comp __P((const char *, u_char *, int, u_char **, u_char **));
 int	 dn_expand __P((const u_char *, const u_char *, const u_char *,
 			char *, int));
 int	 res_init __P((void));
+u_int16_t res_randomid __P((void));
 int	 res_query __P((const char *, int, int, u_char *, int));
 int	 res_search __P((const char *, int, int, u_char *, int));
 int	 res_querydomain __P((const char *, const char *, int, int,

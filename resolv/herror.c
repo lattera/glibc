@@ -68,7 +68,7 @@ static char rcsid[] = "$Id$";
 # include "../conf/portability.h"
 #endif
 
-char	*h_errlist[] = {
+const char *h_errlist[] = {
 	"Resolver Error 0 (no error)",
 	"Unknown host",				/* 1 HOST_NOT_FOUND */
 	"Host name lookup failure",		/* 2 TRY_AGAIN */
@@ -98,7 +98,7 @@ herror(s)
 		v->iov_len = 2;
 		v++;
 	}
-	v->iov_base = hstrerror(h_errno);
+	v->iov_base = (char *)hstrerror(h_errno);
 	v->iov_len = strlen(v->iov_base);
 	v++;
 	v->iov_base = "\n";
@@ -106,7 +106,7 @@ herror(s)
 	writev(STDERR_FILENO, iov, (v - iov) + 1);
 }
 
-char *
+const char *
 hstrerror(err)
 	int err;
 {

@@ -1,4 +1,6 @@
-/*-
+/*
+ * ++Copyright++ 1980, 1983, 1988, 1993
+ * -
  * Copyright (c) 1980, 1983, 1988, 1993
  *	The Regents of the University of California.  All rights reserved.
  *
@@ -29,19 +31,16 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
- *      @(#)netdb.h	8.1 (Berkeley) 6/2/93
- *	$Id$
  * -
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
- * 
+ *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies, and that
  * the name of Digital Equipment Corporation not be used in advertising or
  * publicity pertaining to distribution of the document or software without
  * specific, written prior permission.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
@@ -54,14 +53,27 @@
  * --Copyright--
  */
 
+/*
+ *      @(#)netdb.h	8.1 (Berkeley) 6/2/93
+ *	$Id$
+ */
+
 #ifndef _NETDB_H_
 #define _NETDB_H_
+
+#include <sys/param.h>
+#if (!defined(BSD)) || (BSD < 199306)
+# include <sys/bitypes.h>
+#endif
+#include <sys/cdefs.h>
 
 #define	_PATH_HEQUIV	"/etc/hosts.equiv"
 #define	_PATH_HOSTS	"/etc/hosts"
 #define	_PATH_NETWORKS	"/etc/networks"
 #define	_PATH_PROTOCOLS	"/etc/protocols"
 #define	_PATH_SERVICES	"/etc/services"
+
+extern int h_errno;
 
 /*
  * Structures returned by network data base library.  All addresses are
@@ -106,8 +118,6 @@ struct	protoent {
  * (left in extern int h_errno).
  */
 
-extern int h_errno;
-
 #define	NETDB_INTERNAL	-1	/* see errno */
 #define	NETDB_SUCCESS	0	/* no problem */
 #define	HOST_NOT_FOUND	1 /* Authoritative Answer Host not found */
@@ -115,8 +125,6 @@ extern int h_errno;
 #define	NO_RECOVERY	3 /* Non recoverable errors, FORMERR, REFUSED, NOTIMP */
 #define	NO_DATA		4 /* Valid name, no data record of requested type */
 #define	NO_ADDRESS	NO_DATA		/* no address, look for MX record */
-
-#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 void		endhostent __P((void));
@@ -136,12 +144,26 @@ struct servent	*getservbyname __P((const char *, const char *));
 struct servent	*getservbyport __P((int, const char *));
 struct servent	*getservent __P((void));
 void		herror __P((const char *));
-char		*hstrerror __P((int));
+const char	*hstrerror __P((int));
 void		sethostent __P((int));
 /* void		sethostfile __P((const char *)); */
 void		setnetent __P((int));
 void		setprotoent __P((int));
 void		setservent __P((int));
 __END_DECLS
+
+/* This is nec'y to make this include file properly replace the sun version. */
+#ifdef __GNU_LIBRARY__
+#include <rpc/netdb.h>
+#else
+#ifdef sun
+struct rpcent {
+	char	*r_name;	/* name of server for this rpc program */
+	char	**r_aliases;	/* alias list */
+	int	r_number;	/* rpc program number */
+};
+struct rpcent	*getrpcbyname(), *getrpcbynumber(), *getrpcent();
+#endif /* sun */
+#endif /* __GNU_LIBRARY__ */
 
 #endif /* !_NETDB_H_ */

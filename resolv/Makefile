@@ -1,4 +1,4 @@
-# Copyright (C) 1994 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,6 @@ distribute := ../conf/portability.h
 
 routines := gethnamaddr getnetbyaddr getnetbyname getnetent getnetnamadr \
 	    herror nsap_addr res_comp res_debug res_init res_mkquery \
-	    res_query res_send sethostent
+	    res_query res_send sethostent inet_addr
 
 include ../Rules

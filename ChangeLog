@@ -1,5 +1,35 @@
 Wed Jul 26 02:00:29 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* asia, backward, europe, leapseconds, southamerica: New data from
+	ADO's 95e.
+
+	* inet/Makefile (routines): Removed inet_addr.
+	* inet/inet_addr.c: Moved to resolv/ subdirectory.
+	* resolv/Makefile (routines): Added inet_addr.
+	* resolv/inet_addr.c: Incorporated from BIND 4.9.3-BETA24 release.
+	* resolv/gethnamaddr.c: Likewise.
+	* resolv/getnetbyaddr.c: Likewise.
+	* resolv/getnetbyname.c: Likewise.
+	* resolv/getnetent.c: Likewise.
+	* resolv/getnetnamadr.c: Likewise.
+	* resolv/herror.c: Likewise.
+	* resolv/nsap_addr.c: Likewise.
+	* resolv/res_comp.c: Likewise.
+	* resolv/res_debug.c: Likewise.
+	* resolv/res_init.c: Likewise.
+	* resolv/res_mkquery.c: Likewise.
+	* resolv/res_query.c: Likewise.
+	* resolv/res_send.c: Likewise.
+	* resolv/resolv.h: Likewise.
+	* resolv/sethostent.c: Likewise.
+	* resolv/arpa/nameser.h: Likewise.
+	* inet/netdb.h: Incorporated from BIND 4.9.3-BETA24 release.
+	[__GNU_LIBRARY__]: Include <rpc/netdb.h> instead of repeating
+	its declarations (and doing so only #ifdef sun!).
+
+	* posix/sys/types.h [__USE_BSD] (__BIT_TYPES_DEFINED__): New macro.
+	[__USE_BSD] [__GNUC__] (int64_t, u_int64_t, register_t): New typedefs.
+
 	* malloc/memalign.c: Allocate (SIZE + ALIGNMENT - 1) and then trim
  	if possible.
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -71,12 +71,21 @@ typedef unsigned int uint;
 #ifdef __USE_BSD
 /* These size-specific names are used by some of the inet code.  */
 
-typedef	int int32_t;
-typedef	short int int16_t;
 typedef	char int8_t;
-typedef	unsigned int u_int32_t;
-typedef	unsigned short int u_int16_t;
 typedef	unsigned char u_int8_t;
+typedef	short int int16_t;
+typedef	unsigned short int u_int16_t;
+typedef	int int32_t;
+typedef	unsigned int u_int32_t;
+#ifdef __GNUC__
+typedef long long int int64_t;
+typedef unsigned long long int u_int64_t;
+typedef int register_t __attribute__ ((__mode__ (word)));
+#endif
+
+/* Some code from BIND tests this macro to see if the types above are
+   defined.  */
+#define __BIT_TYPES_DEFINED__	1
 #endif
 
 
