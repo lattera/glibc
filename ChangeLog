@@ -1,3 +1,41 @@
+1998-11-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig: Don't read sysd-sorted unless sysd-dirs is read.
+	Patch by Zack Weinberg.
+
+	* math/bits/mathcalls.h: Adjust comments.  Remove gamma_r prototype.
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Make log2 only available if
+	__USE_ISOC9X is defined.  Provide rint optimization.
+
+1998-11-21  H.J. Lu  <hjl@gnu.org>
+
+	* libio/Versions (_IO_popen, _IO_proc_open, _IO_proc_close,
+	popen, pclose): Add to GLIBC_2.1.
+
+	* libio/Makefile (routines): Add oldiopopen and oldpclose.
+	(shared-only-routines): Likewise.
+
+	* libio/pclose.c (pclose): Make it default for GLIBC_2.1.
+	* libio/iopopen.c (_IO_proc_open, _IO_popen, popen,
+	_IO_proc_close): Likewise.
+
+	* libio/iolibio.h (_IO_new_popen, _IO_old_popen, __new_pclose,
+	__old_pclose): New prototypes.
+
+	* libio/libioP.h (_IO_new_file_jumps): Removed.
+	(_IO_old_proc_jumps): Added.
+	(_IO_new_proc_open, _IO_old_proc_open): New prototypes.
+
+	* libio/oldiopopen.c: New file.
+
+	* libio/oldpclose.c: New file.
+
+1998-11-22  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nss/Makefile: Build and install getent.
+	* nss/getent.c: New, get entries from administrative database.
+
 1998-11-22  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/i386/init-first.c (init): Provide temporary storage

@@ -499,8 +499,6 @@ ldexp (double __x, int __y)
 /* Optimized versions for some non-standardized functions.  */
 #if defined __USE_ISOC9X || defined __USE_MISC
 
-__inline_mathop(log2, "fld1; fxch; fyl2x")
-
 __inline_mathcode (expm1, __x, __expm1_code)
 
 /* We cannot rely on M_SQRT being defined.  So we do it for ourself
@@ -533,7 +531,6 @@ __inline_mathcode (atanh, __x, \
   register long double __y = __fabsl (__x);				      \
   return -0.5 * log1pl (-(__y + __y) / (1.0 + __y)) * __sgn1l (__x))
 
-
 /* The argument range of the inline version of hypotl is slightly reduced.  */
 __inline_mathcode2 (hypot, __x, __y, return __sqrtl (__x * __x + __y * __y))
 
@@ -544,6 +541,11 @@ __inline_mathcode(logb, __x, \
     ("fxtract\n\t"							      \
      : "=t" (__junk), "=u" (__value) : "0" (__x));			      \
   return __value)
+
+#endif
+
+#ifdef __USE_ISOC9X
+__inline_mathop(log2, "fld1; fxch; fyl2x")
 
 __MATH_INLINE float ldexpf (float __x, int __y);
 __MATH_INLINE float
@@ -560,6 +562,9 @@ ldexpl (long double __x, int __y)
 }
 
 __inline_mathcode3 (fma, __x, __y, __z, return (__x * __y) + __z)
+
+__inline_mathop(rint, "frndint")
+
 #endif
 
 

@@ -225,7 +225,7 @@ __MATHCALL (yn,, (int, _Mdouble_));
 
 
 #if defined __USE_MISC || defined __USE_XOPEN || defined __USE_ISOC9X
-/* Error, gamma, and Bessel functions.  */
+/* Error and gamma functions.  */
 __MATHCALL (erf,, (_Mdouble_));
 __MATHCALL (erfc,, (_Mdouble_));
 __MATHCALL (lgamma,, (_Mdouble_));
@@ -233,15 +233,15 @@ __MATHCALL (tgamma,, (_Mdouble_));
 #endif
 
 #if defined __USE_MISC || defined __USE_XOPEN
+/* Obsolete alias for `lgamma'.  */
 __MATHCALL (gamma,, (_Mdouble_));
 #endif
 
 #ifdef __USE_MISC
-/* Reentrant versions of gamma and lgamma.  Those functions use the global
-   variable `signgam'.  The reentrant versions instead take a pointer and
-   store the value through it.  */
-__MATHCALL (gamma,_r, (_Mdouble_, int *));
-__MATHCALL (lgamma,_r, (_Mdouble_, int *));
+/* Reentrant version of lgamma.  This function uses the global variable
+   `signgam'.  The reentrant version instead takes a pointer and stores
+   the value through it.  */
+__MATHCALL (lgamma,_r, (_Mdouble_, int *__signgamp));
 #endif
 
 

@@ -334,10 +334,10 @@ extern int _IO_default_showmanyc __P ((_IO_FILE *));
 extern void _IO_default_imbue __P ((_IO_FILE *, void *));
 
 extern struct _IO_jump_t _IO_file_jumps;
-extern struct _IO_jump_t _IO_new_file_jumps;
 extern struct _IO_jump_t _IO_old_file_jumps;
 extern struct _IO_jump_t _IO_streambuf_jumps;
 extern struct _IO_jump_t _IO_proc_jumps;
+extern struct _IO_jump_t _IO_old_proc_jumps;
 extern struct _IO_jump_t _IO_str_jumps;
 extern int _IO_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
 extern int _IO_new_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
@@ -424,7 +424,11 @@ extern void _IO_old_file_finish __P ((_IO_FILE *, int));
 
 /* Jumptable functions for proc_files. */
 extern _IO_FILE* _IO_proc_open __P ((_IO_FILE *, const char *, const char *));
+extern _IO_FILE* _IO_new_proc_open __P ((_IO_FILE *, const char *, const char *));
+extern _IO_FILE* _IO_old_proc_open __P ((_IO_FILE *, const char *, const char *));
 extern int _IO_proc_close __P ((_IO_FILE *));
+extern int _IO_new_proc_close __P ((_IO_FILE *));
+extern int _IO_old_proc_close __P ((_IO_FILE *));
 
 /* Jumptable functions for strfiles. */
 extern int _IO_str_underflow __P ((_IO_FILE *));

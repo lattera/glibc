@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -24,6 +24,7 @@
    other reasons why the executable file might be covered by the GNU
    General Public License.  */
 
+#define _IO_USE_OLD_IO_FILE
 #ifndef _POSIX_SOURCE
 # define _POSIX_SOURCE
 #endif
@@ -101,10 +102,10 @@ struct _IO_proc_file
 };
 typedef struct _IO_proc_file _IO_proc_file;
 
-static struct _IO_proc_file *proc_file_chain = NULL;
+static struct _IO_proc_file *old_proc_file_chain = NULL;
 
 _IO_FILE *
-_IO_new_proc_open (fp, command, mode)
+_IO_old_proc_open (fp, command, mode)
      _IO_FILE *fp;
      const char *command;
      const char *mode;
@@ -148,10 +149,10 @@ _IO_new_proc_open (fp, command, mode)
       /* POSIX.2:  "popen() shall ensure that any streams from previous
          popen() calls that remain open in the parent process are closed
 	 in the new child process." */
-      while (proc_file_chain)
+      while (old_proc_file_chain)
 	{
-	  _IO_close (_IO_fileno ((_IO_FILE *) proc_file_chain));
-	  proc_file_chain = proc_file_chain->next;
+	  _IO_close (_IO_fileno ((_IO_FILE *) old_proc_file_chain));
+	  old_proc_file_chain = old_proc_file_chain->next;
 	}
 
       _IO_execl ("/bin/sh", "sh", "-c", command, (char *) 0);
@@ -165,9 +166,9 @@ _IO_new_proc_open (fp, command, mode)
     }
   _IO_fileno (fp) = parent_end;
 
-  /* Link into proc_file_chain. */
-  ((_IO_proc_file *) fp)->next = proc_file_chain;
-  proc_file_chain = (_IO_proc_file *) fp;
+  /* Link into old_proc_file_chain. */
+  ((_IO_proc_file *) fp)->next = old_proc_file_chain;
+  old_proc_file_chain = (_IO_proc_file *) fp;
 
   _IO_mask_flags (fp, read_or_write, _IO_NO_READS|_IO_NO_WRITES);
   return fp;
@@ -177,7 +178,7 @@ _IO_new_proc_open (fp, command, mode)
 }
 
 _IO_FILE *
-_IO_new_popen (command, mode)
+_IO_old_popen (command, mode)
      const char *command;
      const char *mode;
 {
@@ -198,12 +199,12 @@ _IO_new_popen (command, mode)
 #endif
   fp = &new_f->fpx.file.file;
   _IO_init (fp, 0);
-  _IO_JUMPS (fp) = &_IO_proc_jumps;
-  _IO_new_file_init (fp);
+  _IO_JUMPS (fp) = &_IO_old_proc_jumps;
+  _IO_old_file_init (fp);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fpx.file.vtable = NULL;
 #endif
-  if (_IO_new_proc_open (fp, command, mode) != NULL)
+  if (_IO_old_proc_open (fp, command, mode) != NULL)
     return fp;
   _IO_un_link (fp);
   free (new_f);
@@ -211,17 +212,17 @@ _IO_new_popen (command, mode)
 }
 
 int
-_IO_new_proc_close (fp)
+_IO_old_proc_close (fp)
      _IO_FILE *fp;
 {
   /* This is not name-space clean. FIXME! */
 #if _IO_HAVE_SYS_WAIT
   int wstatus;
-  _IO_proc_file **ptr = &proc_file_chain;
+  _IO_proc_file **ptr = &old_proc_file_chain;
   _IO_pid_t wait_pid;
   int status = -1;
 
-  /* Unlink from proc_file_chain. */
+  /* Unlink from old_proc_file_chain. */
   for ( ; *ptr != NULL; ptr = &(*ptr)->next)
     {
       if (*ptr == (_IO_proc_file *) fp)
@@ -251,42 +252,31 @@ _IO_new_proc_close (fp)
 #endif
 }
 
-struct _IO_jump_t _IO_proc_jumps = {
+struct _IO_jump_t _IO_old_proc_jumps = {
   JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_new_file_finish),
-  JUMP_INIT(overflow, _IO_new_file_overflow),
-  JUMP_INIT(underflow, _IO_new_file_underflow),
+  JUMP_INIT(finish, _IO_old_file_finish),
+  JUMP_INIT(overflow, _IO_old_file_overflow),
+  JUMP_INIT(underflow, _IO_old_file_underflow),
   JUMP_INIT(uflow, _IO_default_uflow),
   JUMP_INIT(pbackfail, _IO_default_pbackfail),
-  JUMP_INIT(xsputn, _IO_new_file_xsputn),
+  JUMP_INIT(xsputn, _IO_old_file_xsputn),
   JUMP_INIT(xsgetn, _IO_default_xsgetn),
-  JUMP_INIT(seekoff, _IO_new_file_seekoff),
+  JUMP_INIT(seekoff, _IO_old_file_seekoff),
   JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, _IO_new_file_setbuf),
-  JUMP_INIT(sync, _IO_new_file_sync),
+  JUMP_INIT(setbuf, _IO_old_file_setbuf),
+  JUMP_INIT(sync, _IO_old_file_sync),
   JUMP_INIT(doallocate, _IO_file_doallocate),
   JUMP_INIT(read, _IO_file_read),
-  JUMP_INIT(write, _IO_new_file_write),
+  JUMP_INIT(write, _IO_old_file_write),
   JUMP_INIT(seek, _IO_file_seek),
-  JUMP_INIT(close, _IO_new_proc_close),
+  JUMP_INIT(close, _IO_old_proc_close),
   JUMP_INIT(stat, _IO_file_stat),
   JUMP_INIT(showmanyc, _IO_default_showmanyc),
   JUMP_INIT(imbue, _IO_default_imbue)
 };
 
-#if defined PIC && DO_VERSIONING
-strong_alias (_IO_new_popen, __new_popen)
-default_symbol_version (_IO_new_popen, _IO_popen, GLIBC_2.1);
-default_symbol_version (__new_popen, popen, GLIBC_2.1);
-default_symbol_version (_IO_new_proc_open, _IO_proc_open, GLIBC_2.1);
-default_symbol_version (_IO_new_proc_close, _IO_proc_close, GLIBC_2.1);
-#else
-# ifdef strong_alias
-strong_alias (_IO_new_popen, popen)
-# endif
-# ifdef weak_alias
-weak_alias (_IO_new_popen, _IO_popen)
-weak_alias (_IO_new_proc_open, _IO_proc_open)
-weak_alias (_IO_new_proc_close, _IO_proc_close)
-# endif
-#endif
+strong_alias (_IO_old_popen, __old_popen)
+symbol_version (_IO_old_popen, _IO_popen, GLIBC_2.0);
+symbol_version (__old_popen, popen, GLIBC_2.0);
+symbol_version (_IO_old_proc_open, _IO_proc_open, GLIBC_2.0);
+symbol_version (_IO_old_proc_close, _IO_proc_close, GLIBC_2.0);

@@ -62,6 +62,10 @@ extern int _IO_obstack_printf __P ((struct obstack *, const char *, ...));
   (_IO_file_close_it(FP), _IO_file_fopen(FP, FILENAME, MODE, 1))
 #define _IO_fileno(FP) ((FP)->_fileno)
 extern _IO_FILE* _IO_popen __P((const char*, const char*));
+extern _IO_FILE* _IO_new_popen __P((const char*, const char*));
+extern _IO_FILE* _IO_old_popen __P((const char*, const char*));
+extern int __new_pclose __P((_IO_FILE *));
+extern int __old_pclose __P((_IO_FILE *));
 #define _IO_pclose _IO_fclose
 #define _IO_setbuf(_FP, _BUF) _IO_setbuffer(_FP, _BUF, _IO_BUFSIZ)
 #define _IO_setlinebuf(_FP) _IO_setvbuf(_FP, NULL, 1, 0)

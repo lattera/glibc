@@ -81,13 +81,13 @@ libc {
     _IO_2_1_stdin_; _IO_2_1_stdout_; _IO_2_1_stderr_;
 
     # functions used in other libraries
-    _IO_fclose; _IO_fopen; _IO_fdopen; __asprintf;
+    _IO_fclose; _IO_fopen; _IO_fdopen; _IO_popen; __asprintf;
 
     # functions used in libstdc++
     _IO_do_write; _IO_file_attach; _IO_file_close_it; _IO_file_finish;
     _IO_file_fopen; _IO_file_init; _IO_file_overflow; _IO_file_seekoff;
     _IO_file_setbuf; _IO_file_sync; _IO_file_underflow;
-    _IO_file_write; _IO_file_xsputn;
+    _IO_file_write; _IO_file_xsputn; _IO_proc_open; _IO_proc_close;
 
     # Changed getline function in libio.
     _IO_getline_info;
@@ -95,6 +95,6 @@ libc {
     # f*
     fgetpos64; fopen64; freopen64; fseeko; fseeko64; fsetpos64; ftello;
     ftello64; fopen; fclose; fdopen; fread_unlocked; fwrite_unlocked;
-    fgets_unlocked; fputs_unlocked;
+    fgets_unlocked; fputs_unlocked; popen; pclose;
   }
 }

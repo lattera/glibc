@@ -36,6 +36,9 @@ routines		= nsswitch $(addsuffix -lookup,$(databases))
 databases		= proto service hosts network grp pwd rpc ethers \
 			  spwd netgrp key alias
 
+others                  := getent
+install-bin             := getent
+
 tests			= test-netdb
 
 include ../Makeconfig
