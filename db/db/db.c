@@ -74,7 +74,7 @@ dbopen(fname, flags, mode, type, openinfo)
 }
 
 static int
-__dberr()
+__dberr __P((void))
 {
 	return (RET_ERROR);
 }
@@ -90,10 +90,14 @@ __dbpanic(dbp)
 	DB *dbp;
 {
 	/* The only thing that can succeed is a close. */
-	dbp->del = (int (*)())__dberr;
-	dbp->fd = (int (*)())__dberr;
-	dbp->get = (int (*)())__dberr;
-	dbp->put = (int (*)())__dberr;
-	dbp->seq = (int (*)())__dberr;
-	dbp->sync = (int (*)())__dberr;
+	dbp->del = (int (*)__P((const struct __db *,
+				const DBT *, u_int))) __dberr;
+	dbp->get = (int (*)__P((const struct __db *,
+				const DBT *, DBT *, u_int))) __dberr;
+	dbp->put = (int (*)__P((const struct __db *,
+				DBT *, const DBT *, u_int))) __dberr;
+	dbp->seq = (int (*)__P((const struct __db *,
+				DBT *, DBT *, u_int))) __dberr;
+	dbp->sync = (int (*)__P((const struct __db *, u_int))) __dberr;
+	dbp->fd = (int (*)__P((const struct __db *))) __dberr;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,10 +27,9 @@ Cambridge, MA 02139, USA.  */
 
 /* Return a string describing the errno code in ERRNUM.  */
 char *
-_strerror_internal (errnum, buf, buflen)
-     int errnum;
-     char *buf;
-     size_t buflen;
+_strerror_internal (int errnum,
+		    char *buf,
+		    size_t buflen)
 {
   if (errnum < 0 || errnum >= _sys_nerr)
     {

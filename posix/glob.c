@@ -358,7 +358,7 @@ glob (pattern, flags, errfunc, pglob)
 	  dirname = getenv ("HOME");
 	  if (dirname == NULL || dirname[0] == '\0')
 	    {
-	      extern char *getlogin ();
+	      extern char *getlogin __P ((void));
 	      char *name = getlogin ();
 	      if (name != NULL)
 		{

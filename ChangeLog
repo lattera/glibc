@@ -1,5 +1,18 @@
 Fri Jan 19 13:28:59 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/unix/sysv/linux/tcdrain.c: Define tcdrain, not
+	__tcdrain.
+
+	* posix/glob.c (glob): Use prototype in getlogin decl.
+
+	* db/ndbm.h: Declare dbm_error, dbm_clearerr.
+	* db/db/db.c (__dberr): Define with prototype.
+	(__dbpanic): Use prototypes in casts.
+	* db/hash/hash_log2.c: Add prototype decl.
+
+	* sysdeps/generic/_strerror.c (_strerror_internal): Define with
+	prototype.
+
 	* sysdeps/unix/mkdir.c, syspdep/unix/rmdir.c: Moved from unix/sysv.
 	They will be overridden with syscalls if extant by unix/syscalls.list.
 
