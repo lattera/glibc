@@ -1,3 +1,10 @@
+2003-11-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/am_ET: Various updates.
+	* locales/ti_ER: Likewise.
+	* locales/ti_ET: Likewise.
+	Patch by Daniel Yacob <locales@geez.org>.
+
 2003-10-31  Roland McGrath  <roland@redhat.com>
 
 	* bug-usesetlocale.c: New file.
