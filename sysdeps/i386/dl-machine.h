@@ -196,6 +196,10 @@ _dl_runtime_profile:
 
 #define RTLD_START asm ("\
 .text\n\
+	.align 16\n\
+0:	movl (%esp), %ebx\n\
+	ret\n\
+	.align 16\n\
 .globl _start\n\
 .globl _dl_start_user\n\
 _start:\n\
@@ -206,9 +210,8 @@ _dl_start_user:\n\
 	# Save the user entry point address in %edi.\n\
 	movl %eax, %edi\n\
 	# Point %ebx at the GOT.
-	call 0f\n\
-0:	popl %ebx\n\
-	addl $_GLOBAL_OFFSET_TABLE_+[.-0b], %ebx\n\
+	call 0b\n\
+	addl $_GLOBAL_OFFSET_TABLE_, %ebx\n\
 	# Store the highest stack address\n\
 	movl __libc_stack_end@GOT(%ebx), %eax\n\
 	movl %esp, (%eax)\n\

@@ -1,11 +1,14 @@
+2000-03-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/dl-machine.h (RTLD_START): Optimize for i686.
+	* elf/dl-support.c: Define _dl_starting_up.
+
 2000-03-30  Ulrich Drepper  <drepper@redhat.com>
 
-	* elf/dl-init.c (_dl_init): Clear _dl_starting_up at end of
-	with size of dynamic sectionfunction.
+	* elf/dl-init.c (_dl_init): Clear _dl_starting_up at end of function.
 	* sysdeps/i386/dl-machine.h: Remove code to clear _dl_starting_up.
 
-	* misc/sys/cdefs.h: Don't allow gcc in traditional mode to be
-	with size of dynamic sectionused.
+	* misc/sys/cdefs.h: Don't allow gcc in traditional mode to be used.
 
 	* elf/Makefile (dl-routines): Remove preinit.
 	* elf/Versions: Remove _dl_preinit.
@@ -14,7 +17,7 @@
 	* sysdeps/i386/dl-machine.h (RTLD_START): Remove call to _dl_preinit.
 
 	* sysdeps/generic/bits/shm.h (struct shmid_ds): Correct names of
-	with size of dynamic sectionelements.
+	elements.
 
 2000-03-29  Geoff Clare  <gwc@unisoft.com>
 
