@@ -1,3 +1,8 @@
+2001-06-19  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/powerpc/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE):
+	Handle profiling.
+
 2001-06-29  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/ldbl-128/s_asinhl.c: New file.
