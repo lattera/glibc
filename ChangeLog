@@ -1,5 +1,8 @@
 2000-11-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/bits/string2.h: Disable strstr optimizations for newer
+	gcc versions.  Patch by Joseph S. Myers <jsm28@cam.ac.uk>.
+
 	* configure.in (with_cvs): Test for pserver access.
 
 2000-10-31  Ulrich Drepper  <drepper@redhat.com>

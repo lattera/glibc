@@ -1006,8 +1006,9 @@ __strpbrk_c3 (__const char *__s, char __accept1, char __accept2,
 #endif
 
 
-/* Find the first occurrence of NEEDLE in HAYSTACK.  */
-#ifndef _HAVE_STRING_ARCH_strstr
+/* Find the first occurrence of NEEDLE in HAYSTACK.  Newer gcc versions
+   do this itself.  */
+#if !defined _HAVE_STRING_ARCH_strstr && !__GNUC_PREREQ (2, 97)
 # define strstr(haystack, needle) \
   (__extension__ (__builtin_constant_p (needle) && __string2_1bptr_p (needle) \
 		  ? (((__const char *) (needle))[0] == '\0'		      \
