@@ -1,3 +1,12 @@
+2003-09-05  Roland McGrath  <roland@redhat.com>
+
+	* nss/getXXbyYY.c (FUNCTION_NAME): Remove unused variable.
+
+2003-09-04  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/mmap.c (__mmap): If io_map fails with MIG_BAD_ID,
+	EOPNOTSUPP, or ENOSYS, change it to ENODEV.
+
 2003-09-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/sigstack.h (MINSIGSTKSZ):

@@ -1,4 +1,5 @@
-/* Copyright (C) 1994,95,96,97,99,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1994,1995,1996,1997,1999,2002,2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,7 +98,11 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
       {
 	mach_port_t robj, wobj;
 	if (err = HURD_DPORT_USE (fd, __io_map (port, &robj, &wobj)))
-	  return (__ptr_t) (long int) __hurd_dfail (fd, err);
+	  {
+	    if (err == MIG_BAD_ID || err == EOPNOTSUPP || err == ENOSYS)
+	      err = ENODEV;	/* File descriptor doesn't support mmap.  */
+	    return (__ptr_t) (long int) __hurd_dfail (fd, err);
+	  }
 	switch (prot & (PROT_READ|PROT_WRITE))
 	  {
 	  case PROT_READ:
