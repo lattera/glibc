@@ -1,6 +1,6 @@
 Open jobs for finishing GNU libc:
 ---------------------------------
-Status: February 2001
+Status: September 2002
 
 If you have time and talent to take over any of the jobs below please
 contact <bug-glibc@gnu.org>.
@@ -52,15 +52,6 @@ contact <bug-glibc@gnu.org>.
      work.
 
 
-[10] Extend regex and/or rx to work with wide characters and complete
-     implementation of character class and collation class handling.
-
-     It is planned to do a complete rewrite.
-
-***  We have now multibyte character support.  But a rewrite is still
-     necessary.
-
-
 [11] Write access function for netmasks, bootparams, and automount
      databases for nss_files and nss_db module.
      The functions should be embedded in the nss scheme.  This is not
@@ -80,18 +71,6 @@ contact <bug-glibc@gnu.org>.
 ***  The conformtest.pl tool helps cleaning the namespace.  As far as
      known the prototypes all contain parameter names.  But maybe some
      comments can be improved.
-
-
-[16] The libio stream file functions should be extended in a way to use
-     mmap to map the file and use it as the buffer to user sees.  For
-     read-only streams this should be rather easy and it avoids all read()
-     calls.
-
-     A more sophisticated solution would use mmap also for writing.  The
-     standards do not demand that the file on the disk is always in the
-     correct form so it would be possible to enlarge it always according
-     to the page size and install the correct length only for fclose() and
-     fflush() calls.
 
 
 [18] Based on the sprof program we need tools to analyze the output.  The
@@ -116,7 +95,7 @@ contact <bug-glibc@gnu.org>.
 
 [21] The nscd program and the stubs in the libc should be changed so
      that each program uses only one socket connect.  Take a look at
-	http://www.cygnus.com/~drepper/nscd.html
+	http://people.redhat.com/drepper/nscd.html
 
      An alternative approach is to use an mmap()ed file.  The idea is
      the following:
