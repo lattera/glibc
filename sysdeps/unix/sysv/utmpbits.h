@@ -1,4 +1,5 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* The `struct utmp' type, describing entries in the utmp file.  System V.
+Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -13,22 +14,29 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
 
-#ifndef _SYS_VM86_H
+#ifndef _UTMPBITS_H
 
-#define _SYS_VM86_H	1
-#include <features.h>
+#define _UTMPBITS_H	1
 
-/* Get constants and data types from kernel header file.  */
-#include <asm/vm86.h>
+#include <time.h>
 
-__BEGIN_DECLS
+struct utmp
+  {
+#define	ut_name	ut_user
+    char ut_user[8];
+    char ut_id[4];
+    char ut_line[12];
+    short ut_pid;
+    short ut_type;
+    struct exit_status
+      {
+	short e_termination;
+	short e_exit;
+      } ut_exit;
+    time_t ut_time;
+  };
 
-/* Enter virtual 8086 mode.  */
-extern int vm86 __P ((struct vm86_struct *__info));
-
-__END_DECLS
-
-#endif	/* sys/vm86.h */
+#endif /* utmpbits.h  */

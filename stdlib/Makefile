@@ -21,7 +21,7 @@
 #
 subdir	:= stdlib
 
-headers	:= stdlib.h alloca.h
+headers	:= stdlib.h alloca.h monetary.h
 
 routines	:=							      \
 	atof atoi atol							      \
@@ -40,9 +40,9 @@ routines	:=							      \
 	drand48-iter							      \
 	strtol strtoul strtoq strtouq					      \
 	strtof strtod strtold						      \
-	system								      \
+	system realpath							      \
 	a64l l64a							      \
-	rpmatch
+	rpmatch strfmon
 
 distribute	:= exit.h grouping.h
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv

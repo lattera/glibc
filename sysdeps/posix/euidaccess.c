@@ -78,6 +78,16 @@ extern int errno;
 #define R_OK 4
 #endif
 
+#if !defined (S_IROTH) && defined (R_OK)
+# define S_IROTH R_OK
+#endif
+#if !defined (S_IWOTH) && defined (W_OK)
+# define S_IWOTH W_OK
+#endif
+#if !defined (S_IXOTH) && defined (X_OK)
+# define S_IXOTH X_OK
+#endif
+
 
 #ifdef _LIBC
 

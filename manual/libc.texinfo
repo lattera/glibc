@@ -10,10 +10,10 @@
 @set xref-automatic-section-title
 @smallbook
 
-@c  I've already told people the printed edition will be 0.06
-@set EDITION 0.06
+@c sold 0.06/1.09, print run out 21may96
+@set EDITION 0.07 DRAFT
 @set VERSION 1.09 Beta
-@set UPDATED 23 December 1994
+@set UPDATED 21 May 1996
 @set ISBN 1-882114-53-1
 
 @ifinfo
@@ -22,7 +22,7 @@ This file documents the GNU C library.
 This is Edition @value{EDITION}, last updated @value{UPDATED},
 of @cite{The GNU C Library Reference Manual}, for Version @value{VERSION}.
 
-Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1993, '94, '95, '96 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -66,11 +66,11 @@ Foundation.
 @center for version @value{VERSION}
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1993, 1994, 1995 Free Software Foundation, Inc.
+Copyright @copyright{} 1993, '94, '95, '96 Free Software Foundation, Inc.
 @sp 2
 Published by the Free Software Foundation @*
-675 Massachusetts Avenue @*
-Cambridge, MA 02139 USA @*
+59 Temple Place -- Suite 330, @*
+Boston, MA 02111-1307 USA @*
 Printed copies are available for $50 each. @*
 ISBN @value{ISBN} @*
 
@@ -145,7 +145,7 @@ of the GNU C Library.
 
 Appendices
 
-* Language Features::           C language features provided by the library. 
+* Language Features::           C language features provided by the library.
 
 * Library Summary::             A summary showing the syntax, header file,
                                  and derivation of each library feature.
@@ -173,10 +173,10 @@ Introduction
 Standards and Portability
 
 * ANSI C::                      The American National Standard for the
-                                 C programming language.  
+                                 C programming language.
 * POSIX::                       The IEEE 1003 standards for operating systems.
 * Berkeley Unix::               BSD and SunOS.
-* SVID::                        The System V Interface Description.  
+* SVID::                        The System V Interface Description.
 
 Using the Library
 
@@ -243,9 +243,9 @@ Obstacks
 				 complicated) growing objects.
 * Status of an Obstack::        Inquiries about the status of an obstack.
 * Obstacks Data Alignment::     Controlling alignment of objects in obstacks.
-* Obstack Chunks::              How obstacks obtain and release chunks. 
+* Obstack Chunks::              How obstacks obtain and release chunks.
 				Efficiency considerations.
-* Summary of Obstacks::         
+* Summary of Obstacks::
 
 Automatic Storage with Variable Size
 
@@ -291,7 +291,7 @@ Extended Characters
                                    and vice versa.
 * Length of Char::              how many bytes make up one multibyte char.
 * Converting One Char::         Converting a string character by character.
-* Example of Conversion::       Example showing why converting 
+* Example of Conversion::       Example showing why converting
 				   one character at a time may be useful.
 * Shift State::                 Multibyte codes with "shift characters".
 
@@ -305,7 +305,7 @@ Locales and Internationalization
 * Standard Locales::            Locale names available on all systems.
 * Numeric Formatting::          How to format numbers for the chosen locale.
 
-Searching and Sorting 
+Searching and Sorting
 
 * Comparison Functions::        Defining how to compare two objects.
 				Since the sort and search facilities are
@@ -345,7 +345,7 @@ File Names
 I/O on Streams
 
 * Streams::                     About the data type representing a stream.
-* Standard Streams::            Streams to the standard input and output 
+* Standard Streams::            Streams to the standard input and output
                                  devices are created for you.
 * Opening Streams::             How to create a stream to talk to a file.
 * Closing Streams::             Close a stream when you are finished with it.
@@ -388,10 +388,10 @@ Formatted Output
 
 Customizing Printf
 
-* Registering New Conversions::  
-* Conversion Specifier Options::  
-* Defining the Output Handler::  
-* Printf Extension Example::    
+* Registering New Conversions::
+* Conversion Specifier Options::
+* Defining the Output Handler::
+* Printf Extension Example::
 
 Formatted Input
 
@@ -412,13 +412,13 @@ Stream Buffering
 
 Other Kinds of Streams
 
-* String Streams::              
-* Custom Streams::              
+* String Streams::
+* Custom Streams::
 
 Programming Your Own Custom Streams
 
-* Streams and Cookies::         
-* Hook Functions::              
+* Streams and Cookies::
+* Hook Functions::
 
 Low-Level I/O
 
@@ -512,7 +512,7 @@ Internet Domain
 * Services Database::           Ports may have symbolic names.
 * Byte Order::                  Different hosts may use different byte
                                  ordering conventions; you need to
-                                 canonicalize host address and port number. 
+                                 canonicalize host address and port number.
 * Inet Example::                Putting it all together.
 
 Host Addresses
@@ -588,9 +588,9 @@ Terminal Modes
 
 Special Characters
 
-* Editing Characters::          
-* Signal Characters::           
-* Start/Stop Characters::       
+* Editing Characters::
+* Signal Characters::
+* Start/Stop Characters::
 
 Mathematics
 
@@ -689,12 +689,12 @@ Specifying Signal Actions
 
 Defining Signal Handlers
 
-* Handler Returns::             
-* Termination in Handler::      
-* Longjmp in Handler::          
-* Signals in Handler::       
-* Nonreentrancy::               
-* Atomic Data Access::          
+* Handler Returns::
+* Termination in Handler::
+* Longjmp in Handler::
+* Signals in Handler::
+* Nonreentrancy::
+* Atomic Data Access::
 
 Generating Signals
 
@@ -726,7 +726,7 @@ Waiting for a Signal
 BSD Signal Handling
 
 * BSD Handler::                 BSD Function to Establish a Handler.
-* Blocking in BSD::             BSD Functions for Blocking Signals 
+* Blocking in BSD::             BSD Functions for Blocking Signals
 
 Process Startup and Termination
 
@@ -756,12 +756,12 @@ Program Termination
 
 * Normal Termination::          If a program calls @code{exit}, a
                                  process terminates normally.
-* Exit Status::                 The @code{exit status} provides information 
-                                 about why the process terminated. 
+* Exit Status::                 The @code{exit status} provides information
+                                 about why the process terminated.
 * Cleanups on Exit::            A process can run its own cleanup
-                                 functions upon normal termination. 
+                                 functions upon normal termination.
 * Aborting a Program::          The @code{abort} function causes
-                                 abnormal program termination. 
+                                 abnormal program termination.
 * Termination Internals::       What happens when a process terminates.
 
 
@@ -773,7 +773,7 @@ Child Processes
 * Creating a Process::          How to fork a child process.
 * Executing a File::            How to make a child execute another program.
 * Process Completion::          How to tell when a child process has completed.
-* Process Completion Status::   How to interpret the status value 
+* Process Completion Status::   How to interpret the status value
                                  returned from a child process.
 * BSD Wait Functions::          More functions, for backward compatibility.
 * Process Creation Example::    A complete example program.
@@ -814,11 +814,11 @@ Users and Groups
                                  its user and/or group IDs.
 * How Change Persona::          Restrictions on changing user and group IDs.
 * Reading Persona::             Examining the process's user and group IDs.
-* Setting User ID::             
-* Setting Groups::              
-* Enable/Disable Setuid::       
+* Setting User ID::
+* Setting Groups::
+* Enable/Disable Setuid::
 * Setuid Program Example::      Setuid Program Example
-* Tips for Setuid::             
+* Tips for Setuid::
 * Who Logged In::               Getting the name of the user who logged in,
                                  or of the real user ID of the current process.
 
@@ -831,15 +831,15 @@ Users and Groups
 
 User Database
 
-* User Data Structure::         
-* Lookup User::                 
+* User Data Structure::
+* Lookup User::
 * Scanning All Users::          Scanning the List of All Users
-* Writing a User Entry::        
+* Writing a User Entry::
 
 Group Database
 
-* Group Data Structure::        
-* Lookup Group::                
+* Group Data Structure::
+* Lookup Group::
 * Scanning All Groups::         Scanning the List of All Groups
 
 System Information
@@ -858,17 +858,17 @@ System Configuration Limits
 * Sysconf::			Getting specific configuration values
 				 of general limits and system options.
 * Minimums::			Minimum values for general limits.
-   
+
 * Limits for Files::		Size limitations on individual files.
 				 These can vary between file systems
 				  or even from file to file.
 * Options for Files::		Optional features that some files may support.
 * File Minimums::		Minimum values for file limits.
 * Pathconf::			Getting the limit values for a particular file.
-   
+
 * Utility Limits::		Capacity limits of POSIX.2 utility programs.
 * Utility Minimums::		Minimum allowable values of those limits.
-   
+
 * String Parameters::		Getting the default search path.
 
 Library Facilities that are Part of the C Language

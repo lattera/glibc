@@ -18,7 +18,7 @@ facility.
 
 @menu
 * Checking for Errors::         How errors are reported by library functions.
-* Error Codes::                 Error code macros; all of these expand 
+* Error Codes::                 Error code macros; all of these expand
                                  into integer constant values.
 * Error Messages::              Mapping error codes onto error messages.
 @end menu
@@ -492,7 +492,7 @@ A file that isn't a socket was specified when a socket is required.
 @deftypevr Macro int EMSGSIZE
 @comment errno 40 @c DO NOT REMOVE
 The size of a message sent on a socket was larger than the supported
-maximum size.  
+maximum size.
 @end deftypevr
 
 @comment errno.h
@@ -836,6 +836,14 @@ of error you get if you request them and they are not supported.
 @end deftypevr
 
 @comment errno.h
+@comment ISO C: Invalid or incomplete multibyte or wide character
+@deftypevr Macro int EILSEQ
+@comment errno 106 @c DO NOT REMOVE
+While decoding a multibyte character the function came along an invalid
+or an incomplete sequence of bytes or the given wide character is invalid.
+@end deftypevr
+
+@comment errno.h
 @comment GNU: Inappropriate operation for background process
 @deftypevr Macro int EBACKGROUND
 @comment errno 100 @c DO NOT REMOVE
@@ -920,11 +928,11 @@ This function prints an error message to the stream @code{stderr};
 see @ref{Standard Streams}.
 
 If you call @code{perror} with a @var{message} that is either a null
-pointer or an empty string, @code{perror} just prints the error message 
+pointer or an empty string, @code{perror} just prints the error message
 corresponding to @code{errno}, adding a trailing newline.
 
 If you supply a non-null @var{message} argument, then @code{perror}
-prefixes its output with this string.  It adds a colon and a space 
+prefixes its output with this string.  It adds a colon and a space
 character to separate the @var{message} from the error string corresponding
 to @code{errno}.
 
@@ -952,7 +960,7 @@ variable @code{program_invocation_name}:
 
 @comment errno.h
 @comment GNU
-@deftypevar {char *} program_invocation_name 
+@deftypevar {char *} program_invocation_name
 This variable's value is the name that was used to invoke the program
 running in the current process.  It is the same as @code{argv[0]}.  Note
 that this is not necessarily a useful file name; often it contains no
@@ -961,7 +969,7 @@ directory names.  @xref{Program Arguments}.
 
 @comment errno.h
 @comment GNU
-@deftypevar {char *} program_invocation_short_name 
+@deftypevar {char *} program_invocation_short_name
 This variable's value is the name that was used to invoke the program
 running in the current process, with directory names removed.  (That is
 to say, it is the same as @code{program_invocation_name} minus
@@ -997,10 +1005,10 @@ functions might overwrite @code{errno} in the meantime.
 
 FILE *
 open_sesame (char *name)
-@{ 
+@{
   FILE *stream;
 
-  errno = 0;                     
+  errno = 0;
   stream = fopen (name, "r");
   if (stream == NULL)
     @{
@@ -1012,4 +1020,3 @@ open_sesame (char *name)
     return stream;
 @}
 @end smallexample
-

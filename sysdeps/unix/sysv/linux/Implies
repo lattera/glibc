@@ -1,3 +1,7 @@
+# The gnu subdirectory exists for things common to both Linux-based and
+# Hurd-based GNU systems.
+gnu
+
 # Linux shares most of the syscalls which are also common to BSD and SVR4.
 unix/common
 

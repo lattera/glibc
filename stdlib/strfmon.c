@@ -1,0 +1,504 @@
+/* strfmon -- formating a monetary value according to the current locale
+Copyright (C) 1996 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
+Contributed by Ulrich Drepper <drepper@cygnus.com>
+and Jochen Hein <Jochen.Hein@informatik.TU-Clausthal.de>, 1996.
+
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
+
+#include <ctype.h>
+#include <errno.h>
+#include <langinfo.h>
+#include <monetary.h>
+#ifdef USE_IN_LIBIO
+# include "../libio/libioP.h"
+# include "../libio/strfile.h"
+#endif
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+#include "../stdio-common/printf.h"
+#include "../locale/localeinfo.h"
+
+
+#define out_char(Ch)							      \
+  do {									      \
+    if (dest >= s + maxsize - 1)					      \
+      {									      \
+	errno = E2BIG;							      \
+	va_end (ap);							      \
+	return -1;							      \
+      }									      \
+    *dest++ = (Ch);							      \
+  } while (0)
+
+#define out_string(String)						      \
+  do {									      \
+    const char *_s = (String);						      \
+    while (*_s)								      \
+      out_char (*_s++);							      \
+  } while (0)
+
+#define to_digit(Ch) ((Ch) - '0')
+
+extern int __printf_fp (FILE *, const struct printf_info *,
+			const void **const);
+/* This function determines the number of digit groups in the output.
+   The definition is in printf_fp.c.  */
+extern unsigned int __guess_grouping (unsigned int intdig_max,
+				      const char *grouping, wchar_t sepchar);
+
+
+/* We have to overcome some problems with this implementation.  On the
+   one hand the strfmon() function is specified by in XPG4 and of
+   course it has to follow this.  But on the other hand POSIX.2
+   specifies some information in the LC_MONETARY category which should
+   be used, too.  Some of the information contradicts the information
+   which can be specified in format string.  */
+ssize_t
+strfmon (char *s, size_t maxsize, const char *format, ...)
+{
+#ifdef USE_IN_LIBIO
+  _IO_strfile f;
+#else
+  FILE f;
+#endif
+  struct printf_info info;
+  va_list ap;			/* Scan through the varargs.  */
+  char *dest;			/* Pointer so copy the output.  */
+  const char *fmt;		/* Pointer that walks through format.  */
+
+  va_start (ap, format);
+
+  dest = s;
+  fmt = format;
+
+  /* Loop through the format-string.  */
+  while (*fmt != '\0')
+    {
+      /* The floating-point value to output.  */
+      union
+      {
+	double dbl;
+	__long_double_t ldbl;
+      }
+      fpnum;
+      int print_curr_symbol;
+      int left_prec;
+      int right_prec;
+      int group;
+      char pad;
+      int is_long_double;
+      int p_sign_posn;
+      int n_sign_posn;
+      int sign_posn;
+      int left;
+      int is_negative;
+      int sep_by_space;
+      int cs_precedes;
+      char sign_char;
+      int done;
+      const char *currency_symbol;
+      int width;
+      char *startp;
+      const void *ptr;
+
+      /* Process all character which do not introduce a format
+	 specification.  */
+      if (*fmt != '%')
+	{
+	  out_char (*fmt++);
+	  continue;
+	}
+
+      /* "%%" means a single '%' character.  */
+      if (fmt[1] == '%')
+	{
+	  out_char (*++fmt);
+	  ++fmt;
+	  continue;
+	}
+
+      /* Defaults for formatting.  */
+      print_curr_symbol = 1;		/* Print the currency symbol.  */
+      left_prec = -1;			/* No left precision specified.  */
+      right_prec = -1;			/* No right precision specified.  */
+      group = 1;			/* Print digits grouped.  */
+      pad = ' ';			/* Fill character is <SP>.  */
+      is_long_double = 0;		/* Double argument by default.  */
+      p_sign_posn = -1;			/* This indicates whether the */
+      n_sign_posn = -1;			/* '(' flag is given.  */
+      width = -1;			/* No width specified so far.  */
+      left = 0;				/* Right justified by default.  */
+
+      /* Parse group characters.  */
+      while (1)
+	{
+	  switch (*++fmt)
+	    {
+	    case '=':			/* Set fill character.  */
+	      pad = *++fmt;
+	      continue;
+	    case '^':			/* Don't group digits.  */
+	      group = 0;
+	      continue;
+	    case '+':			/* Use +/- for sign of number.  */
+	      if (n_sign_posn != -1)
+		{
+		  errno = EINVAL;
+		  va_end (ap);
+		  return -1;
+		}
+	      if (*_NL_CURRENT (LC_MONETARY, P_SIGN_POSN) == '\0')
+		p_sign_posn = 1;
+	      else
+		p_sign_posn = *_NL_CURRENT (LC_MONETARY, P_SIGN_POSN);
+	      if (*_NL_CURRENT (LC_MONETARY, N_SIGN_POSN) == '\0')
+		n_sign_posn = 1;
+	      else
+		n_sign_posn = *_NL_CURRENT (LC_MONETARY, N_SIGN_POSN);
+	      continue;
+	    case '(':			/* Use ( ) for negative sign.  */
+	      if (n_sign_posn != -1)
+		{
+		  errno = EINVAL;
+		  va_end (ap);
+		  return -1;
+		}
+	      n_sign_posn = 5;	/* This is a else unused value.  */
+	      continue;
+	    case '!':			/* Don't print the currency symbol.  */
+	      print_curr_symbol = 0;
+	      continue;
+	    case '-':			/* Print left justified.  */
+	      left = 1;
+	      continue;
+	    default:
+	      /* Will stop the loop.  */;
+	    }
+	  break;
+	}
+
+      if (isdigit (*fmt))
+	{
+	  /* Parse field width.  */
+	  width = to_digit (*fmt);
+
+	  while (isdigit (*++fmt))
+	    {
+	      width *= 10;
+	      width += to_digit (*fmt);
+	    }
+
+	  /* If we don't have enough room for the demanded width we
+	     can stop now and return an error.  */
+	  if (dest + width >= s + maxsize)
+	    {
+	      errno = E2BIG;
+	      va_end (ap);
+	      return -1;
+	    }
+	}
+
+      /* Recognize left precision.  */
+      if (*fmt == '#')
+	{
+	  if (!isdigit (*++fmt))
+	    {
+	      errno = EINVAL;
+	      va_end (ap);
+	      return -1;
+	    }
+	  left_prec = to_digit (*fmt);
+
+	  while (isdigit (*++fmt))
+	    {
+	      left_prec *= 10;
+	      left_prec += to_digit (*fmt);
+	    }
+	}
+
+      /* Recognize right precision.  */
+      if (*fmt == '.')
+	{
+	  if (!isdigit (*++fmt))
+	    {
+	      errno = EINVAL;
+	      va_end (ap);
+	      return -1;
+	    }
+	  right_prec = to_digit (*fmt);
+
+	  while (isdigit (*++fmt))
+	    {
+	      right_prec *= 10;
+	      right_prec += to_digit (*fmt);
+	    }
+	}
+
+      /* Handle modifier.  This is an extension.  */
+      if (*fmt == 'L')
+	{
+	  ++fmt;
+	  is_long_double = 1;
+	}
+      
+      /* Handle format specifier.  */
+      switch (*fmt++)
+	{
+	case 'i':		/* Use international currency symbol.  */
+	  currency_symbol = _NL_CURRENT (LC_MONETARY, INT_CURR_SYMBOL);
+	  if (right_prec == -1)
+	    if (*_NL_CURRENT (LC_MONETARY, INT_FRAC_DIGITS) == '\177')
+	      right_prec = 2;
+	    else
+	      right_prec = *_NL_CURRENT (LC_MONETARY, INT_FRAC_DIGITS);
+	  break;
+	case 'n':		/* Use national currency symbol.  */
+	  currency_symbol = _NL_CURRENT (LC_MONETARY, CURRENCY_SYMBOL);
+	  if (right_prec == -1)
+	    if (*_NL_CURRENT (LC_MONETARY, FRAC_DIGITS) == '\177')
+	      right_prec = 2;
+	    else
+	      right_prec = *_NL_CURRENT (LC_MONETARY, FRAC_DIGITS);
+	  break;
+	default:		/* Any unrecognized format is an error.  */
+	  errno = EINVAL;
+	  va_end (ap);
+	  return -1;
+	}
+
+      /* If we have to print the digits grouped determine how many
+	 extra characters this means.  */
+      if (group && left_prec != -1)
+	left_prec += __guess_grouping (left_prec,
+				       _NL_CURRENT (LC_MONETARY, MON_GROUPING),
+				       *_NL_CURRENT (LC_MONETARY,
+						     MON_THOUSANDS_SEP));
+      
+      /* Now it's time to get the value.  */
+      if (is_long_double == 1)
+	{
+	  fpnum.ldbl = va_arg (ap, long double);
+	  is_negative = fpnum.ldbl < 0;
+	  if (is_negative)
+	    fpnum.ldbl = -fpnum.ldbl;
+	}
+      else
+	{
+	  fpnum.dbl = va_arg (ap, double);
+	  is_negative = fpnum.dbl < 0;
+	  if (is_negative)
+	    fpnum.dbl = -fpnum.dbl;
+	}
+
+      /* We now know the sign of the value and can determine the format.  */
+      if (is_negative)
+	{
+	  sign_char = *_NL_CURRENT (LC_MONETARY, NEGATIVE_SIGN);
+	  /* If the locale does not specify a character for the
+	     negative sign we use a '-'.  */
+	  if (sign_char == '\0')
+	    sign_char = '-';
+	  cs_precedes = *_NL_CURRENT (LC_MONETARY, N_CS_PRECEDES);
+	  sep_by_space = *_NL_CURRENT (LC_MONETARY, N_SEP_BY_SPACE);
+	  /* If the '(' flag is not given use the sign position from
+	     the current locale.  */
+	  if (n_sign_posn == -1)
+	    sign_posn = *_NL_CURRENT (LC_MONETARY, N_SIGN_POSN);
+	  else
+	    /* This means use parentheses.  */
+	    sign_posn = 0;
+	}
+      else
+	{
+	  sign_char = *_NL_CURRENT (LC_MONETARY, POSITIVE_SIGN);
+	  /* If the locale does not specify a character for the
+	     positive sign we use a <SP>.  */
+	  if (sign_char == '\0')
+	    sign_char = ' ';
+	  cs_precedes = *_NL_CURRENT (LC_MONETARY, P_CS_PRECEDES);
+	  sep_by_space = *_NL_CURRENT (LC_MONETARY, P_SEP_BY_SPACE);
+	  if (n_sign_posn == -1)
+	    sign_posn = *_NL_CURRENT (LC_MONETARY, P_SIGN_POSN);
+	  else
+	    /* Here we don't set SIGN_POSN to 0 because we don'want to
+	       print <SP> instead of the braces and this is what the
+	       value 5 means.  */
+	    sign_posn = 5;
+	}
+
+      /* Set default values for unspecified information.  */
+      if (cs_precedes != 0)
+	cs_precedes = 1;
+      if (sep_by_space == 127)
+	sep_by_space = 0;
+      if (left_prec == -1)
+	left_prec = 0;
+	
+
+      /* Perhaps we'll someday make these things configurable so
+	 better start using symbolic names now.  */
+#define left_paren '('
+#define right_paren ')'
+
+      startp = dest;		/* Remember start so we can compute lenght.  */
+      
+      if (sign_posn == 0)
+	out_char (left_paren);
+      if (sign_posn == 5)	/* This is for positive number and ( flag.  */
+	out_char (' ');
+
+      if (cs_precedes)
+	{
+	  if (sign_posn != 0 && sign_posn != 2 && sign_posn != 4
+	      && sign_posn != 5)
+	    {
+	      out_char (sign_char);
+	      if (sep_by_space == 2)
+		out_char (' ');
+	    }
+	  
+	  if (print_curr_symbol)
+	    {
+	      out_string (currency_symbol);
+
+	      if (sign_posn == 4)
+		{
+		  if (sep_by_space == 2)
+		    out_char (' ');
+		  out_char (sign_char);
+		}
+	      else
+		if (sep_by_space == 1)
+		  out_char (' ');
+	    }
+	}
+      else
+	if (sign_posn != 0 && sign_posn != 2 && sign_posn != 3
+	    && sign_posn != 4 && sign_posn != 5)
+	  out_char (sign_char);
+
+      /* Print the number.  */
+#ifdef USE_IN_LIBIO
+      _IO_init ((_IO_FILE *) &f, 0);
+      _IO_JUMPS ((_IO_FILE *) &f) = &_IO_str_jumps;
+      _IO_str_init_static ((_IO_FILE *) &f, dest, (s + maxsize) - dest, dest);
+#else
+      memset((PTR) &f, 0, sizeof(f));
+      f.__magic = _IOMAGIC;
+      f.__mode.__write = 1;
+      /* The buffer size is one less than MAXLEN
+	 so we have space for the null terminator.  */
+      f.__bufp = f.__buffer = (char *) dest;
+      f.__bufsize = (s + maxsize) - dest;
+      f.__put_limit = f.__buffer + f.__bufsize;
+      f.__get_limit = f.__buffer;
+      /* After the buffer is full (MAXLEN characters have been written),
+	 any more characters written will go to the bit bucket.  */
+      f.__room_funcs = __default_room_functions;
+      f.__io_funcs.__write = NULL;
+      f.__seen = 1;
+#endif
+      /* We clear the last available byte so we can find out whether
+	 the numeric representation is too long.  */
+      s[maxsize - 1] = '\0';
+
+      info.prec = right_prec;
+      info.width = left_prec + (right_prec ? (right_prec + 1) : 0);
+      info.spec = 'f';
+      info.is_long_double = is_long_double;
+      info.is_short = 0;
+      info.is_long = 0;
+      info.alt = 0;
+      info.space = 0;
+      info.left = left;
+      info.showsign = 0;
+      info.group = group;
+      info.pad = pad;
+      info.extra = 1;		/* This means use values from LC_MONETARY.  */
+
+      ptr = &fpnum;
+      done = __printf_fp ((FILE *) &f, &info, &ptr);
+      if (done < 0)
+	{
+	  va_end (ap);
+	  return -1;
+	}
+
+      if (s[maxsize - 1] != '\0')
+	return -1;
+
+      dest += done;
+      
+      if (!cs_precedes)
+	{
+	  if (sign_posn == 3)
+	    {
+	      if (sep_by_space == 1)
+		out_char (' ');
+	      out_char (sign_char);
+	    }
+
+	  if (print_curr_symbol)
+	    {
+	      if (sign_posn == 3 && sep_by_space == 2)
+		out_char (' ');
+	      out_string (currency_symbol);
+	    }
+	}
+      else
+	if (sign_posn == 2)
+	  {
+	    if (sep_by_space == 2)
+	      out_char (' ');
+	    out_char (sign_char);
+	  }
+      
+      if (sign_posn == 0)
+	out_char (right_paren);
+      if (sign_posn == 5)
+	out_char (' ');		/* This is for positive number and ( flag.  */
+
+      /* Now test whether the output width is filled.  */
+      if (dest - startp < width)
+	if (left)
+	  /* We simply have to fill using spaces.  */
+	  do
+	    out_char (' ');
+	  while (dest - startp < width);
+	else
+	  {
+	    int dist = width - (dest - startp);
+	    char *cp;
+	    for (cp = dest - 1; cp >= startp; --cp)
+	      cp[dist] = cp[0];
+
+	    dest += dist;
+
+	    do
+	      startp[--dist] = ' ';
+	    while (dist > 0);
+	  }
+    }
+
+  /* Terminate the string.  */
+  out_char ('\0');
+  
+  va_end (ap);
+
+  return dest - s - 1;
+}

@@ -414,7 +414,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	{								      \
 	  long long int signed_number;					      \
 									      \
-	  signed_number = va_arg (ap, long long int);			      \
+	  if (fspec == NULL)						      \
+	    signed_number = va_arg (ap, long long int);			      \
+	  else								      \
+	    signed_number = args_value[fspec->data_arg].pa_long_long_int;     \
 									      \
 	  is_negative = signed_number < 0;				      \
 	  number.longlong = is_negative ? (- signed_number) : signed_number;  \
@@ -425,10 +428,16 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	{								      \
 	  long int signed_number;					      \
 									      \
-	  if (is_long)							      \
-	    signed_number = va_arg (ap, long int);			      \
-	  else	/* `short int' will be promoted to `int'.  */		      \
-	    signed_number = va_arg (ap, int);				      \
+	  if (fspec == NULL)						      \
+	    if (is_long)						      \
+	      signed_number = va_arg (ap, long int);			      \
+	    else	/* `short int' will be promoted to `int'.  */	      \
+	      signed_number = va_arg (ap, int);				      \
+	  else								      \
+	    if (is_long)						      \
+	      signed_number = args_value[fspec->data_arg].pa_long_int;	      \
+	    else							      \
+	      signed_number = args_value[fspec->data_arg].pa_int;	      \
 									      \
 	  is_negative = signed_number < 0;				      \
 	  number.word = is_negative ? (- signed_number) : signed_number;      \
@@ -463,7 +472,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
       if (is_longlong)							      \
 	{								      \
-	  number.longlong = va_arg (ap, unsigned long long int);	      \
+	  if (fspec == NULL)						      \
+	    number.longlong = va_arg (ap, unsigned long long int);	      \
+	  else								      \
+	    number.longlong = args_value[fspec->data_arg].pa_u_long_long_int; \
 									      \
 	LABEL (longlong_number):					      \
 	  if (prec < 0)							      \
@@ -493,12 +505,21 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	}								      \
       else								      \
 	{								      \
-	  if (is_long)							      \
-	    number.word = va_arg (ap, unsigned long int);		      \
-	  else if (!is_short)						      \
-	    number.word = va_arg (ap, unsigned int);			      \
+	  if (fspec == NULL)						      \
+	    if (is_long)						      \
+	      number.word = va_arg (ap, unsigned long int);		      \
+	    else if (!is_short)						      \
+	      number.word = va_arg (ap, unsigned int);			      \
+	    else							      \
+	      number.word = (unsigned short int) va_arg (ap, unsigned int);   \
 	  else								      \
-	    number.word = (unsigned short int) va_arg (ap, unsigned int);     \
+	    if (is_long)						      \
+	      number.word = args_value[fspec->data_arg].pa_u_long_int;	      \
+	    else if (!is_short)						      \
+	      number.word = args_value[fspec->data_arg].pa_u_int;	      \
+	    else							      \
+	      number.word = (unsigned short int)			      \
+		args_value[fspec->data_arg].pa_u_short_int;		      \
 									      \
 	LABEL (number):							      \
 	  if (prec < 0)							      \
@@ -617,13 +638,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	const void *ptr;						      \
 	int function_done;						      \
 									      \
-	if (is_long_double)						      \
-	  the_arg.pa_long_double = va_arg (ap, long double);		      \
-	else								      \
-	  the_arg.pa_double = va_arg (ap, double);			      \
-									      \
-	ptr = (const void *) &the_arg;					      \
-									      \
 	if (fspec == NULL)						      \
 	  {								      \
 	    struct printf_info info = { prec: prec,			      \
@@ -637,12 +651,23 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 					left: left,			      \
 					showsign: showsign,		      \
 					group: group,			      \
-					pad: pad };			      \
+					pad: pad,			      \
+					extra: 0 };			      \
+									      \
+	    if (is_long_double)						      \
+	      the_arg.pa_long_double = va_arg (ap, long double);	      \
+	    else							      \
+	      the_arg.pa_double = va_arg (ap, double);			      \
+	    ptr = (const void *) &the_arg;				      \
 									      \
 	    function_done = __printf_fp (s, &info, &ptr);		      \
 	  }								      \
 	else								      \
-	  function_done = __printf_fp (s, &fspec->info, &ptr);		      \
+	  {								      \
+	    ptr = (const void *) &args_value[fspec->data_arg];		      \
+									      \
+	    function_done = __printf_fp (s, &fspec->info, &ptr);	      \
+	  }								      \
 									      \
 	if (function_done < 0)						      \
 	  /* Error in print handler.  */				      \
@@ -657,7 +682,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       --width;	/* Account for the character itself.  */		      \
       if (!left)							      \
 	PAD (' ');							      \
-      outchar ((unsigned char) va_arg (ap, int));	/* Promoted.  */      \
+      if (fspec == NULL)						      \
+	outchar ((unsigned char) va_arg (ap, int));	/* Promoted.  */      \
+      else								      \
+	outchar ((unsigned char) args_value[fspec->data_arg].pa_char);	      \
       if (left)								      \
 	PAD (' ');							      \
       break;								      \
@@ -668,7 +696,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
 	/* The string argument could in fact be `char *' or `wchar_t *'.      \
 	   But this should not make a difference here.  */		      \
-	string = (char *) va_arg (ap, const char *);			      \
+	if (fspec == NULL)						      \
+	  string = (char *) va_arg (ap, const char *);			      \
+	else								      \
+	  string = (char *) args_value[fspec->data_arg].pa_string;	      \
 									      \
 	/* Entry point for printing other strings.  */			      \
       LABEL (print_string):						      \
@@ -738,7 +769,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       /* Generic pointer.  */						      \
       {									      \
 	const void *ptr;						      \
-	ptr = va_arg (ap, void *);					      \
+	if (fspec == NULL)						      \
+	  ptr = va_arg (ap, void *);					      \
+	else								      \
+	  ptr = args_value[fspec->data_arg].pa_pointer;			      \
 	if (ptr != NULL)						      \
 	  {								      \
 	    /* If the pointer is not NULL, write it as a %#x spec.  */	      \
@@ -765,14 +799,24 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
     LABEL (form_number):						      \
       /* Answer the count of characters written.  */			      \
-      if (is_longlong)							      \
-	*(long long int *) va_arg (ap, void *) = done;			      \
-      else if (is_long)							      \
-	*(long int *) va_arg (ap, void *) = done;			      \
-      else if (!is_short)						      \
-	*(int *) va_arg (ap, void *) = done;				      \
+      if (fspec == NULL)						      \
+	if (is_longlong)						      \
+	  *(long long int *) va_arg (ap, void *) = done;		      \
+	else if (is_long)						      \
+	  *(long int *) va_arg (ap, void *) = done;			      \
+	else if (!is_short)						      \
+	  *(int *) va_arg (ap, void *) = done;				      \
+	else								      \
+	  *(short int *) va_arg (ap, void *) = done;			      \
       else								      \
-	*(short int *) va_arg (ap, void *) = done;			      \
+	if (is_longlong)						      \
+	  *(long long int *) args_value[fspec->data_arg].pa_pointer = done;   \
+	else if (is_long)						      \
+	  *(long int *) args_value[fspec->data_arg].pa_pointer = done;	      \
+	else if (!is_short)						      \
+	  *(int *) args_value[fspec->data_arg].pa_pointer = done;	      \
+	else								      \
+	  *(short int *) args_value[fspec->data_arg].pa_pointer = done;	      \
       break;								      \
 									      \
     LABEL (form_strerror):						      \
@@ -827,6 +871,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       STEP0_3_TABLE;
       STEP4_TABLE;
 
+      union printf_arg *args_value;	/* This is not used here but ... */
       int is_negative;	/* Flag for negative number.  */
       union
       {

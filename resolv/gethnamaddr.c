@@ -409,8 +409,8 @@ struct hostent *
 gethostbyname(name)
 	const char *name;
 {
-  /* Moved #if line to here because declararing HP would lead to a
-     warining.  --drepper@gnu  */
+  /* Moved #if line to here because declaring HP would lead to a
+     warning.  --drepper@gnu  */
 #if defined(AF_INET6) && defined(RES_TRY_INET6)
 	struct hostent *hp;
 

@@ -105,6 +105,13 @@ extern int errno;
 # endif
 #else
 # define LONG long
+
+#ifndef ULONG_MAX
+# define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
+#endif
+#ifndef LONG_MAX
+# define LONG_MAX ((long int) (ULONG_MAX >> 1))
+#endif
 #endif
 
 #ifdef USE_WIDE_CHAR
@@ -128,8 +135,11 @@ extern int errno;
 #ifdef __STDC__
 # define INTERNAL(x) INTERNAL1(x)
 # define INTERNAL1(x) __##x##_internal
+# define WEAKNAME(x) WEAKNAME1(x)
+# define WEAKNAME1(x) __##x
 #else
 # define INTERNAL(x) __/**/x/**/_internal
+# define WEAKNAME(x) __/**/x
 #endif
 
 #ifdef USE_NUMBER_GROUPING
@@ -290,8 +300,10 @@ INTERNAL (strtol) (nptr, endptr, base, group)
 #if !UNSIGNED
   /* Check for a value that is within the range of
      `unsigned LONG int', but outside the range of `LONG int'.  */
-  if (i > (negative ?
-	   -(unsigned LONG int) LONG_MIN : (unsigned LONG int) LONG_MAX))
+  if (overflow == 0
+      && i > (negative
+	      ? -((unsigned LONG int) (LONG_MIN + 1)) + 1
+	      : (unsigned LONG int) LONG_MAX))
     overflow = 1;
 #endif
 
@@ -326,8 +338,13 @@ noconv:
 
 /* External user entry point.  */
 
+/* Prototype.  */
+INT WEAKNAME (strtol) __P ((const STRING_TYPE *nptr, STRING_TYPE **endptr,
+			    int base));
+
+
 INT
-strtol (nptr, endptr, base)
+WEAKNAME (strtol) (nptr, endptr, base)
      const STRING_TYPE *nptr;
      STRING_TYPE **endptr;
      int base;
@@ -335,9 +352,9 @@ strtol (nptr, endptr, base)
   return INTERNAL (strtol) (nptr, endptr, base, 0);
 }
 
-#ifdef weak_symbol
+#ifdef weak_alias
 /* We need this indirection when `strtol' is defined as a macro
    for one of the other names.  */
-#define weak1(x) weak_symbol(x)
-weak1 (strtol)
+#define weak1(x, y) weak_alias (x, y)
+weak1 (WEAKNAME (strtol), strtol)
 #endif

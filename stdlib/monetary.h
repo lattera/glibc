@@ -1,6 +1,6 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Header file for monetary value formatting functions.
+Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -17,28 +17,20 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-#include "localeinfo.h"
+#ifndef	_MONETARY_H
 
-const struct locale_data _nl_C_LC_MONETARY =
-{
-  _nl_C_name,
-  NULL, 0, /* no file mapped */
-  15,
-  {
-    { string: "" },
-    { string: "" },
-    { string: "." },
-    { string: "" },
-    { string: "\177" },
-    { string: "" },
-    { string: "" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" }
-  }
-};
+#define	_MONETARY_H	1
+#include <features.h>
+
+/* Get needed types.  */
+#include <sys/types.h>
+
+__BEGIN_DECLS
+
+/* Formating a monetary value according to the current locale.  */
+extern ssize_t strfmon __P ((char *__s, size_t __maxsize,
+			     __const char *__format, ...));
+
+__END_DECLS
+
+#endif	/* monetary.h */

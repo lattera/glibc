@@ -121,10 +121,10 @@ extern mp_size_t __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
 extern mp_size_t __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 					    int *expt, int *is_neg,
 					    long double value);
+extern unsigned int __guess_grouping (unsigned int intdig_max,
+				      const char *grouping, wchar_t sepchar);
 
 
-static unsigned int guess_grouping (unsigned int intdig_max,
-				    const char *grouping, wchar_t sepchar);
 static char *group_number (char *buf, char *bufend, unsigned int intdig_no,
 			   const char *grouping, wchar_t thousands_sep);
 
@@ -229,22 +229,51 @@ __printf_fp (FILE *fp,
 
 
   /* Figure out the decimal point character.  */
-  if (mbtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
-	      strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT))) <= 0)
-    decimal = (wchar_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
+  if (info->extra == 0)
+    {
+      if (mbtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
+		  strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT))) <= 0)
+	decimal = (wchar_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
+    }
+  else
+    {
+      if (mbtowc (&decimal, _NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT),
+		  strlen (_NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT))) <= 0)
+	decimal = (wchar_t) *_NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT);
+    }
 
 
   if (info->group)
     {
-      grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
+      if (info->extra == 0)
+	grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
+      else
+	grouping = _NL_CURRENT (LC_MONETARY, MON_GROUPING);
+	
       if (*grouping <= 0 || *grouping == CHAR_MAX)
 	grouping = NULL;
       else
 	{
 	  /* Figure out the thousands seperator character.  */
-	  if (mbtowc (&thousands_sep, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
-		      strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
-	    thousands_sep = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+	  if (info->extra == 0)
+	    {
+	      if (mbtowc (&thousands_sep, _NL_CURRENT (LC_NUMERIC,
+						       THOUSANDS_SEP),
+			  strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP)))
+		  <= 0)
+		thousands_sep = (wchar_t) *_NL_CURRENT (LC_NUMERIC,
+							THOUSANDS_SEP);
+	    }
+	  else
+	    {
+	      if (mbtowc (&thousands_sep, _NL_CURRENT (LC_MONETARY,
+						       MON_THOUSANDS_SEP),
+			  strlen (_NL_CURRENT (LC_MONETARY,
+					       MON_THOUSANDS_SEP))) <= 0)
+		thousands_sep = (wchar_t) *_NL_CURRENT (LC_MONETARY,
+							MON_THOUSANDS_SEP);
+	    }
+	    
 	  if (thousands_sep == L'\0')
 	    grouping = NULL;
 	}
@@ -726,7 +755,7 @@ __printf_fp (FILE *fp,
     if (grouping)
       /* Guess the number of groups we will make, and thus how
 	 many spaces we need for separator characters.  */
-      chars_needed += guess_grouping (intdig_max, grouping, thousands_sep);
+      chars_needed += __guess_grouping (intdig_max, grouping, thousands_sep);
 
     /* Allocate buffer for output.  We need two more because while rounding
        it is possible that we need two more characters in front of all the
@@ -933,8 +962,9 @@ __printf_fp (FILE *fp,
 /* Return the number of extra grouping characters that will be inserted
    into a number with INTDIG_MAX integer digits.  */
 
-static unsigned int
-guess_grouping (unsigned int intdig_max, const char *grouping, wchar_t sepchar)
+unsigned int
+__guess_grouping (unsigned int intdig_max, const char *grouping,
+		  wchar_t sepchar)
 {
   unsigned int groups;
 
@@ -972,7 +1002,7 @@ static char *
 group_number (char *buf, char *bufend, unsigned int intdig_no,
 	      const char *grouping, wchar_t thousands_sep)
 {
-  unsigned int groups = guess_grouping (intdig_no, grouping, thousands_sep);
+  unsigned int groups = __guess_grouping (intdig_no, grouping, thousands_sep);
   char *p;
 
   if (groups == 0)

@@ -34,11 +34,7 @@ struct printf_info
 {
   int prec;			/* Precision.  */
   int width;			/* Width.  */
-#ifdef THIS_IS_INCOMPATIBLE_WITH_LINUX_LIBC
   wchar_t spec;			/* Format letter.  */
-#else
-  char spec;			/* Format letter.  */
-#endif
   unsigned int is_long_double:1;/* L flag.  */
   unsigned int is_short:1;	/* h flag.  */
   unsigned int is_long:1;	/* l flag.  */
@@ -47,6 +43,7 @@ struct printf_info
   unsigned int left:1;		/* - flag.  */
   unsigned int showsign:1;	/* + flag.  */
   unsigned int group:1;		/* ' flag.  */
+  unsigned int extra:1;		/* For special use.  */
   char pad;			/* Padding character.  */
 };
 

@@ -1,3 +1,85 @@
+Wed May 22 01:48:54 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/strtol.c [!QUAD] (ULONG_MAX, LONG_MAX): Define these
+	macros if they are not available.
+	(WEAKNAME): New macro to declare argument as weak.
+	Define function with __ prefix and add normal name as weak alias.
+
+	* sysdeps/posix/euidaccess.c (S_IROTH, S_IWOTH, S_IXOTH): Defines
+	these macros if not already available based on R_OK, W_OK, and
+	X_OK.
+
+Tue May 21 18:48:46 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* misc/sys/syslog.h (__need___va_list): Define this instead of
+	__need_va_list before including <stdarg.h>.
+
+	* Makerules (o-iterator): Use $(object-suffixes-left) instead
+	of $(object-suffixes) to produce repetitions; this is used for other
+	lists than just that one.
+	[versioned]: Use $(o-iterator) properly.
+
+	* sysdeps/unix/sysv/linux/Implies: Include `gnu'.
+	* sysdeps/mach/hurd/Implies: Likewise.
+
+Sat May 18 02:57:46 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* login/Makefile: New file.  This directory contains functions
+	for user administration.
+	* Makefile (subdirs): Add login.
+
+	* misc/Makefile (headers): Remove utmp.h.  Now in login/utmp.h.
+	(extra-libs, libutil-routines): Ditto.
+	* misc/login.c, misc/login_tty.c, misc/logout.c, misc/logwtmp.c,
+	misc/utmp.h: Moved to misc/.
+	* login/login.c, login/login_tty.c, login/logout.c,
+        login/logwtmp.c, login/utmp.h: Moved to here from misc/.
+
+	* login/utmp.h: Split file.  Definitions of data structures
+	and constants are now in the system dependent utmpbits.h file.
+
+	* login/setutent_r.c, login/setutent.c, login/endutent_r.c,
+	login/endutent.c, login/getutent_r.c, login/getutent.c,
+	login/getutid_r.c, login/getutid.c, login/getutline_r.c,
+	login/getutline.c, login/pututline_r.c, login/pututline.c:
+	New files.  Routines to handle utmp-style files.
+
+	* sysdeps/gnu/utmpbits.h: New file.  Contains GNU/Linux
+	specific definitions of utmp data structures and constants.
+
+	* sysdeps/unix/sysv/utmpbits.h: Renamed from sysdeps/unix/sysv/utmp.h.
+
+	* sysdeps/generic/utmpbits.h: New file.  Generic (BSDish) version of
+	definitions of utmp data structures and constants.
+
+Fri May 17 00:01:31 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/C-monetary.c: Default value for mon_decimal_point should be
+        '.'.
+
+	* stdio-common/printf.h: Remove Linux libc compatibility stuff.
+	Add `extra' flag.  Currently used in __printf_fp.
+
+	* stdio-common/printf_fp.c (__guess_grouping): Renamed from
+        `guess_grouping' and extend visibility to extern.  This function
+        is now used in `strfmon'.
+	(__printf_fp): Recognize new bit flag in info struct.  This
+	triggers to use the grouping information and decimal point from
+	the LC_MONETARY category instead of the LC_NUMERIC category.
+
+	* stdio-common/vfprintf.c (process_arg): Correct major bug.  In
+	`complicated' loop we must not use the varargs because the args
+	are already available in the ARGS_VALUE array.
+
+	* stdlib/Makefile (headers): Add monetary.h.
+	(routines): Add strfmon.
+	* stdlib/monetary.h: New file.  Header for strfmon function.
+	* stdlib/strfmon.c: New file.  Implement strfmon function to print
+	monetary amounts according to current locale's rules.
+
+	* sysdeps/unix/sysv/linux/i386/sys/vm86.h: The kernel header is
+	now (>= Linux-1.3.100) called <asm/vm86.h>.
+
 Thu May 16 00:31:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* Makerules [versioned]: Make symlinks in the build directory, because

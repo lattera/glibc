@@ -446,20 +446,20 @@ These functions are declared in @file{stdlib.h}.
 @deftypefun {long int} strtol (const char *@var{string}, char **@var{tailptr}, int @var{base})
 The @code{strtol} (``string-to-long'') function converts the initial
 part of @var{string} to a signed integer, which is returned as a value
-of type @code{long int}.  
+of type @code{long int}.
 
 This function attempts to decompose @var{string} as follows:
 
 @itemize @bullet
-@item 
+@item
 A (possibly empty) sequence of whitespace characters.  Which characters
 are whitespace is determined by the @code{isspace} function
 (@pxref{Classification of Characters}).  These are discarded.
 
-@item 
+@item
 An optional plus or minus sign (@samp{+} or @samp{-}).
 
-@item 
+@item
 A nonempty sequence of digits in the radix specified by @var{base}.
 
 If @var{base} is zero, decimal radix is assumed unless the series of
@@ -471,7 +471,7 @@ Otherwise @var{base} must have a value between @code{2} and @code{35}.
 If @var{base} is @code{16}, the digits may optionally be preceded by
 @samp{0x} or @samp{0X}.
 
-@item 
+@item
 Any remaining characters in the string.  If @var{tailptr} is not a null
 pointer, @code{strtol} stores a pointer to this tail in
 @code{*@var{tailptr}}.
@@ -499,9 +499,11 @@ There is an example at the end of this section.
 @comment ANSI
 @deftypefun {unsigned long int} strtoul (const char *@var{string}, char **@var{tailptr}, int @var{base})
 The @code{strtoul} (``string-to-unsigned-long'') function is like
-@code{strtol} except that it returns its value with type @code{unsigned
-long int}.  The value returned in case of overflow is @code{ULONG_MAX}
-(@pxref{Range of Type}).
+@code{strtol} except it deals with unsigned numbers, and returns its
+value with type @code{unsigned long int}.  No @samp{+} or @samp{-} sign
+may appear before the number, but the syntax is otherwise the same as
+described above for @code{strtol}.  The value returned in case of
+overflow is @code{ULONG_MAX} (@pxref{Range of Type}).
 @end deftypefun
 
 @comment stdlib.h
@@ -568,12 +570,12 @@ These functions are declared in @file{stdlib.h}.
 @deftypefun double strtod (const char *@var{string}, char **@var{tailptr})
 The @code{strtod} (``string-to-double'') function converts the initial
 part of @var{string} to a floating-point number, which is returned as a
-value of type @code{double}.  
+value of type @code{double}.
 
 This function attempts to decompose @var{string} as follows:
 
 @itemize @bullet
-@item 
+@item
 A (possibly empty) sequence of whitespace characters.  Which characters
 are whitespace is determined by the @code{isspace} function
 (@pxref{Classification of Characters}).  These are discarded.

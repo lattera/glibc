@@ -1,6 +1,6 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -17,28 +17,34 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-#include "localeinfo.h"
+#include <unistd.h>
+#include <utmp.h>
 
-const struct locale_data _nl_C_LC_MONETARY =
+
+int
+getutent_r (struct utmp **utmp, struct utmp_data *utmp_data)
 {
-  _nl_C_name,
-  NULL, 0, /* no file mapped */
-  15,
-  {
-    { string: "" },
-    { string: "" },
-    { string: "." },
-    { string: "" },
-    { string: "\177" },
-    { string: "" },
-    { string: "" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" }
-  }
-};
+  /* Open utmp file if not already done.  */
+  if (utmp_data->ut_fd == -1)
+    {
+      setutent_r (utmp_data);
+      if (utmp_data->ut_fd == -1)
+	return -1;
+    }
+
+  /* Position file correctly.  */
+  if (lseek (utmp_data->ut_fd, utmp_data->loc_utmp, SEEK_SET) == -1)
+    return -1;
+
+  /* Read the next entry.  */
+  if (read (utmp_data->ut_fd, &utmp_data->ubuf, sizeof (struct utmp))
+      != sizeof (struct utmp))
+    return -1;
+
+  /* Update position pointer.  */
+  utmp_data->loc_utmp += sizeof (struct utmp);
+
+  *utmp = &utmp_data->ubuf;
+
+  return 0;
+}
