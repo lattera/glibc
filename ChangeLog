@@ -1,3 +1,7 @@
+1999-05-01  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/m68k/stackinfo.h: New file.
+
 1999-04-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/tester.c (test_strchrnul): New function.
