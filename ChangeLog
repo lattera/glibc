@@ -1,3 +1,7 @@
+2004-03-30  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/remqu.S: Detect power-of-two special case.
+
 2004-03-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/libc-start.c (LIBC_START_MAIN)
