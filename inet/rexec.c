@@ -45,7 +45,7 @@ static char sccsid[] = "@(#)rexec.c	8.1 (Berkeley) 6/4/93";
 #include <unistd.h>
 
 int	rexecoptions;
-char	ahostbuf[NI_MAXHOST];
+static char	ahostbuf[NI_MAXHOST];
 
 int
 rexec_af(ahost, rport, name, pass, cmd, fd2p, af)
@@ -68,7 +68,7 @@ rexec_af(ahost, rport, name, pass, cmd, fd2p, af)
 	__snprintf(servbuff, sizeof(servbuff), "%d", ntohs(rport));
 	servbuff[sizeof(servbuff) - 1] = '\0';
 
-	memset(&hints, 0, sizeof(hints));
+	memset(&hints, '\0', sizeof(hints));
 	hints.ai_family = af;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_CANONNAME;

@@ -1,5 +1,7 @@
 2002-03-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/rexec.c (ahostbuf): Define as static.
+
 	* wctype/wcfuncs.c (__ctype32_wctype): Declare as hidden.
 	(__ctype32_wctrans): Likewise.
 	* wcsmbs/wcwidth.h (__ctype32_width): Declare as hidden.
