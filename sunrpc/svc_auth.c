@@ -111,6 +111,7 @@ _authenticate (register struct svc_req *rqst, struct rpc_msg *msg)
 
   return AUTH_REJECTEDCRED;
 }
+INTDEF(_authenticate)
 
 static enum auth_stat
 _svcauth_null (struct svc_req *rqst, struct rpc_msg *msg)

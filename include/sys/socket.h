@@ -2,22 +2,24 @@
 #include <socket/sys/socket.h>
 
 /* Now define the internal interfaces.  */
-extern int __socket (int __domain, int __type, int __protocol);
+extern int __socket (int __domain, int __type,
+		     int __protocol) attribute_hidden;
 
 /* Create two new sockets, of type TYPE in domain DOMAIN and using
    protocol PROTOCOL, which are connected to each other, and put file
    descriptors for them in FDS[0] and FDS[1].  If PROTOCOL is zero,
    one will be chosen automatically.  Returns 0 on success, -1 for errors.  */
 extern int __socketpair (int __domain, int __type, int __protocol,
-			 int __fds[2]);
+			 int __fds[2]) attribute_hidden;
 
 /* Return a socket of any type.  The socket can be used in subsequent
    ioctl calls to talk to the kernel.  */
-extern int __opensock (void) internal_function;
+extern int __opensock (void) internal_function attribute_hidden;
 
 /* Put the address of the peer connected to socket FD into *ADDR
    (which is *LEN bytes long), and its actual length into *LEN.  */
-extern int __getpeername (int __fd, __SOCKADDR_ARG __addr, socklen_t *__len);
+extern int __getpeername (int __fd, __SOCKADDR_ARG __addr,
+			  socklen_t *__len) attribute_hidden;
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
 extern ssize_t __send (int __fd, __const void *__buf, size_t __n, int __flags);
@@ -29,6 +31,50 @@ extern ssize_t __send (int __fd, __const void *__buf, size_t __n, int __flags);
 extern int __connect (int __fd, __CONST_SOCKADDR_ARG __addr, socklen_t __len);
 extern int __connect_internal (int __fd, __CONST_SOCKADDR_ARG __addr,
 			       socklen_t __len) attribute_hidden;
+
+/* Send N bytes of BUF on socket FD to peer at address ADDR (which is
+   ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
+extern ssize_t __sendto (int __fd, __const void *__buf, size_t __n,
+			 int __flags, __CONST_SOCKADDR_ARG __addr,
+			 socklen_t __addr_len) attribute_hidden;
+
+/* Read N bytes into BUF through socket FD.
+   If ADDR is not NULL, fill in *ADDR_LEN bytes of it with tha address of
+   the sender, and store the actual size of the address in *ADDR_LEN.
+   Returns the number of bytes read or -1 for errors.  */
+extern ssize_t __recvfrom (int __fd, void *__restrict __buf, size_t __n,
+			   int __flags, __SOCKADDR_ARG __addr,
+			   socklen_t *__restrict __addr_len) attribute_hidden;
+
+/* Send a message described MESSAGE on socket FD.
+   Returns the number of bytes sent, or -1 for errors.  */
+extern ssize_t __sendmsg (int __fd, __const struct msghdr *__message,
+			  int __flags) attribute_hidden;
+
+/* Receive a message as described by MESSAGE from socket FD.
+   Returns the number of bytes read or -1 for errors.  */
+extern ssize_t __recvmsg (int __fd, struct msghdr *__message,
+			  int __flags) attribute_hidden;
+
+/* Set socket FD's option OPTNAME at protocol level LEVEL
+   to *OPTVAL (which is OPTLEN bytes long).
+   Returns 0 on success, -1 for errors.  */
+extern int __setsockopt (int __fd, int __level, int __optname,
+			 __const void *__optval,
+			 socklen_t __optlen) attribute_hidden;
+
+/* Put the local address of FD into *ADDR and its length in *LEN.  */
+extern int __getsockname (int __fd, __SOCKADDR_ARG __addr,
+			  socklen_t *__restrict __len) attribute_hidden;
+
+/* Give the socket FD the local address ADDR (which is LEN bytes long).  */
+extern int __bind (int __fd, __CONST_SOCKADDR_ARG __addr,
+		   socklen_t __len) attribute_hidden;
+
+/* Prepare to accept connections on socket FD.
+   N connection requests will be queued before further requests are refused.
+   Returns 0 on success, -1 for errors.  */
+extern int __listen (int __fd, int __n) attribute_hidden;
 
 /* Return the length of a `sockaddr' structure.  */
 #ifdef _HAVE_SA_LEN

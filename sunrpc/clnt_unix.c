@@ -200,7 +200,7 @@ clntunix_create (struct sockaddr_un *raddr, u_long prog, u_long vers,
 			 (caddr_t) ct, readunix, writeunix);
   h->cl_ops = &unix_ops;
   h->cl_private = (caddr_t) ct;
-  h->cl_auth = authnone_create ();
+  h->cl_auth = INTUSE(authnone_create) ();
   return h;
 
 fooy:
@@ -211,6 +211,7 @@ fooy:
   mem_free ((caddr_t) h, sizeof (CLIENT));
   return (CLIENT *) NULL;
 }
+INTDEF (clntunix_create)
 
 static enum clnt_stat
 clntunix_call (h, proc, xdr_args, args_ptr, xdr_results, results_ptr, timeout)
@@ -466,13 +467,13 @@ __msgread (int sock, void *data, size_t cnt)
 #ifdef SO_PASSCRED
   {
     int on = 1;
-    if (setsockopt (sock, SOL_SOCKET, SO_PASSCRED, &on, sizeof (on)))
+    if (__setsockopt (sock, SOL_SOCKET, SO_PASSCRED, &on, sizeof (on)))
       return -1;
   }
 #endif
 
  restart:
-  len = recvmsg (sock, &msg, 0);
+  len = __recvmsg (sock, &msg, 0);
   if (len >= 0)
     {
       if (msg.msg_flags & MSG_CTRUNC || len == 0)
@@ -523,7 +524,7 @@ __msgwrite (int sock, void *data, size_t cnt)
   msg.msg_flags = 0;
 
  restart:
-  len = sendmsg (sock, &msg, 0);
+  len = __sendmsg (sock, &msg, 0);
   if (len >= 0)
     return len;
   if (errno == EINTR)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 1999, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
    the sender, and store the actual size of the address in *ADDR_LEN.
    Returns the number of bytes read or -1 for errors.  */
 ssize_t
-recvfrom (fd, buf, n, flags, addrarg, addr_len)
+__recvfrom (fd, buf, n, flags, addrarg, addr_len)
      int fd;
      void *buf;
      size_t n;
@@ -103,3 +103,5 @@ recvfrom (fd, buf, n, flags, addrarg, addr_len)
 
   return nread;
 }
+
+weak_alias (__recvfrom, recvfrom)

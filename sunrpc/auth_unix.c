@@ -156,6 +156,7 @@ no_memory:
   marshal_new_auth (auth);
   return auth;
 }
+INTDEF (authunix_create)
 
 /*
  * Returns an auth handle with parameters determined by doing lots of
@@ -182,8 +183,9 @@ authunix_create_default (void)
   /* This braindamaged Sun code forces us here to truncate the
      list of groups to NGRPS members since the code in
      authuxprot.c transforms a fixed array.  Grrr.  */
-  return authunix_create (machname, uid, gid, MIN (NGRPS, len), gids);
+  return INTUSE(authunix_create) (machname, uid, gid, MIN (NGRPS, len), gids);
 }
+INTDEF (authunix_create_default)
 
 /*
  * authunix operations

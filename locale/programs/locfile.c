@@ -337,7 +337,7 @@ write_all_categories (struct localedef_t *definitions,
 
       /* Open the archive.  This call never returns if we cannot
 	 successfully open the archive.  */
-      open_archive (&ah);
+      open_archive (&ah, false);
 
       if (add_locale_to_archive (&ah, locname, to_archive, true) != 0)
 	error (EXIT_FAILURE, errno, _("cannot add to locale archive"));

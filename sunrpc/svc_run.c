@@ -79,7 +79,7 @@ svc_run (void)
 	  free (my_pollfd);
 	  continue;
 	default:
-	  svc_getreq_poll (my_pollfd, i);
+	  INTUSE(svc_getreq_poll) (my_pollfd, i);
 	  free (my_pollfd);
 	}
     }

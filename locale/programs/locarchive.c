@@ -142,7 +142,7 @@ create_archive (const char *archivefname, struct locarhandle *ah)
 	{
 	  /* There is already an archive.  Must have been a localedef run
 	     which happened in parallel.  Simply open this file then.  */
-	  open_archive (ah);
+	  open_archive (ah, false);
 	  return;
 	}
 
@@ -334,7 +334,7 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
 
 
 void
-open_archive (struct locarhandle *ah)
+open_archive (struct locarhandle *ah, bool readonly)
 {
   struct stat64 st;
   struct stat64 st2;
@@ -350,13 +350,27 @@ open_archive (struct locarhandle *ah)
 
  again:
   /* Open the archive.  We must have exclusive write access.  */
-  fd = open64 (archivefname, O_RDWR);
+  fd = open64 (archivefname, readonly ? O_RDONLY : O_RDWR);
   if (fd == -1)
     {
       /* Maybe the file does not yet exist.  */
       if (errno == ENOENT)
 	{
-	  create_archive (archivefname, ah);
+	  if (readonly)
+	    {
+	      static const struct locarhead nullhead =
+		{
+		  .namehash_used = 0,
+		  .namehash_offset = 0,
+		  .namehash_size = 0
+		};
+
+	      ah->addr = (void *) &nullhead;
+	      ah->fd = -1;
+	    }
+	  else
+	    create_archive (archivefname, ah);
+
 	  return;
 	}
       else
@@ -368,7 +382,7 @@ open_archive (struct locarhandle *ah)
     error (EXIT_FAILURE, errno, _("cannot stat locale archive \"%s\""),
 	   archivefname);
 
-  if (lockf64 (fd, F_LOCK, st.st_size) == -1)
+  if (!readonly && lockf64 (fd, F_LOCK, sizeof (struct locarhead)) == -1)
     {
       close (fd);
 
@@ -394,13 +408,17 @@ open_archive (struct locarhandle *ah)
       || st.st_dev != st2.st_dev
       || st.st_ino != st2.st_ino)
     {
+      (void) lockf64 (fd, F_ULOCK, sizeof (struct locarhead));
       close (fd);
       goto again;
     }
 
   /* Read the header.  */
   if (TEMP_FAILURE_RETRY (read (fd, &head, sizeof (head))) != sizeof (head))
-    error (EXIT_FAILURE, errno, _("cannot read archive header"));
+    {
+      (void) lockf64 (fd, F_ULOCK, sizeof (struct locarhead));
+      error (EXIT_FAILURE, errno, _("cannot read archive header"));
+    }
 
   ah->fd = fd;
   ah->len = (head.sumhash_offset
@@ -408,17 +426,24 @@ open_archive (struct locarhandle *ah)
 
   /* Now we know how large the administrative information part is.
      Map all of it.  */
-  ah->addr = mmap64 (NULL, ah->len, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+  ah->addr = mmap64 (NULL, ah->len, PROT_READ | (readonly ? 0 : PROT_WRITE),
+		     MAP_SHARED, fd, 0);
   if (ah->addr == MAP_FAILED)
-    error (EXIT_FAILURE, errno, _("cannot map archive header"));
+    {
+      (void) lockf64 (fd, F_ULOCK, sizeof (struct locarhead));
+      error (EXIT_FAILURE, errno, _("cannot map archive header"));
+    }
 }
 
 
 void
 close_archive (struct locarhandle *ah)
 {
-  munmap (ah->addr, ah->len);
-  close (ah->fd);
+  if (ah->fd != -1)
+    {
+      munmap (ah->addr, ah->len);
+      close (ah->fd);
+    }
 }
 
 
@@ -648,7 +673,7 @@ add_locales_to_archive (nlist, list, replace)
 
   /* Open the archive.  This call never returns if we cannot
      successfully open the archive.  */
-  open_archive (&ah);
+  open_archive (&ah, false);
 
   while (nlist-- > 0)
     {
@@ -847,7 +872,7 @@ delete_locales_from_archive (nlist, list)
 
   /* Open the archive.  This call never returns if we cannot
      successfully open the archive.  */
-  open_archive (&ah);
+  open_archive (&ah, false);
 
   head = ah.addr;
   namehashtab = (struct namehashent *) ((char *) ah.addr
@@ -897,30 +922,62 @@ delete_locales_from_archive (nlist, list)
 }
 
 
-static int
-xstrcmp (const void *a, const void *b)
+struct nameent
 {
-  return strcmp (*(const char **) a, *(const char **) b);
+  char *name;
+  uint32_t locrec_offset;
+};
+
+
+struct dataent
+{
+  const unsigned char *sum;
+  uint32_t file_offset;
+  uint32_t nlink;
+};
+
+
+static int
+nameentcmp (const void *a, const void *b)
+{
+  return strcmp (((const struct nameent *) a)->name,
+		 ((const struct nameent *) b)->name);
+}
+
+
+static int
+dataentcmp (const void *a, const void *b)
+{
+  if (((const struct dataent *) a)->file_offset
+      < ((const struct dataent *) b)->file_offset)
+    return -1;
+
+  if (((const struct dataent *) a)->file_offset
+      > ((const struct dataent *) b)->file_offset)
+    return 1;
+
+  return 0;
 }
 
 
 void
-show_archive_content (void)
+show_archive_content (int verbose)
 {
   struct locarhandle ah;
   struct locarhead *head;
   struct namehashent *namehashtab;
+  struct nameent *names;
   int cnt;
-  char **names;
   int used;
 
   /* Open the archive.  This call never returns if we cannot
      successfully open the archive.  */
-  open_archive (&ah);
+  open_archive (&ah, true);
 
   head = ah.addr;
 
-  names = (char **) xmalloc (head->namehash_used * sizeof (char *));
+  names = (struct nameent *) xmalloc (head->namehash_used
+				      * sizeof (struct nameent));
 
   namehashtab = (struct namehashent *) ((char *) ah.addr
 					+ head->namehash_offset);
@@ -928,14 +985,91 @@ show_archive_content (void)
     if (namehashtab[cnt].locrec_offset != 0)
       {
 	assert (used < head->namehash_used);
-	names[used++] = ah.addr + namehashtab[cnt].name_offset;
+	names[used].name = ah.addr + namehashtab[cnt].name_offset;
+	names[used++].locrec_offset = namehashtab[cnt].locrec_offset;
       }
 
   /* Sort the names.  */
-  qsort (names, used, sizeof (char *), xstrcmp);
+  qsort (names, used, sizeof (struct nameent), nameentcmp);
 
-  for (cnt = 0; cnt < used; ++cnt)
-    puts (names[cnt]);
+  if (verbose)
+    {
+      struct dataent *files;
+      struct sumhashent *sumhashtab;
+      int sumused;
+
+      files = (struct dataent *) xmalloc (head->sumhash_used
+					  * sizeof (struct sumhashent));
+
+      sumhashtab = (struct sumhashent *) ((char *) ah.addr
+					  + head->sumhash_offset);
+      for (cnt = sumused = 0; cnt < head->sumhash_size; ++cnt)
+	if (sumhashtab[cnt].file_offset != 0)
+	  {
+	    assert (sumused < head->sumhash_used);
+	    files[sumused].sum = (const unsigned char *) sumhashtab[cnt].sum;
+	    files[sumused].file_offset = sumhashtab[cnt].file_offset;
+	    files[sumused++].nlink = 0;
+	  }
+
+      /* Sort by file locations.  */
+      qsort (files, sumused, sizeof (struct dataent), dataentcmp);
+
+      /* Compute nlink fields.  */
+      for (cnt = 0; cnt < used; ++cnt)
+	{
+	  struct locrecent *locrec;
+	  int idx;
+
+	  locrec = (struct locrecent *) ((char *) ah.addr
+					 + names[cnt].locrec_offset);
+	  for (idx = 0; idx < __LC_LAST; ++idx)
+	    if (idx != LC_ALL)
+	      {
+		struct dataent *data, dataent;
+
+		dataent.file_offset = locrec->record[idx].offset;
+		data = (struct dataent *) bsearch (&dataent, files, sumused,
+						   sizeof (struct dataent),
+						   dataentcmp);
+		assert (data != NULL);
+		++data->nlink;
+	      }
+	}
+
+      /* Print it.  */
+      for (cnt = 0; cnt < used; ++cnt)
+	{
+	  struct locrecent *locrec;
+	  int idx, i;
+
+	  locrec = (struct locrecent *) ((char *) ah.addr
+					 + names[cnt].locrec_offset);
+	  for (idx = 0; idx < __LC_LAST; ++idx)
+	    if (idx != LC_ALL)
+	      {
+		struct dataent *data, dataent;
+
+		dataent.file_offset = locrec->record[idx].offset;
+		data = (struct dataent *) bsearch (&dataent, files, sumused,
+						   sizeof (struct dataent),
+						   dataentcmp);
+		printf ("%6d %7x %3d ",
+			locrec->record[idx].len, locrec->record[idx].offset,
+			data->nlink);
+		for (i = 0; i < 16; i += 4)
+		    printf ("%02x%02x%02x%02x",
+			    data->sum[i], data->sum[i + 1],
+			    data->sum[i + 2], data->sum[i + 3]);
+		printf (" %s/%s\n", names[cnt].name,
+			idx == LC_MESSAGES ? "LC_MESSAGES/SYS_LC_MESSAGES"
+			: locnames[idx]);
+	      }
+	}
+    }
+  else
+    for (cnt = 0; cnt < used; ++cnt)
+      puts (names[cnt].name);
 
   close_archive (&ah);
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -150,3 +150,4 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 }
 
 weak_alias (__libc_sendmsg, sendmsg)
+weak_alias (__libc_sendmsg, __sendmsg)

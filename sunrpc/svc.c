@@ -192,6 +192,7 @@ pmap_it:
 
   return TRUE;
 }
+INTDEF (svc_register)
 
 /* Remove a service program from the callout list. */
 void
@@ -213,6 +214,7 @@ svc_unregister (rpcprog_t prog, rpcvers_t vers)
   /* now unregister the information with the local binder service */
   pmap_unset (prog, vers);
 }
+INTDEF (svc_unregister)
 
 /* ******************* REPLY GENERATION ROUTINES  ************ */
 
@@ -231,6 +233,7 @@ svc_sendreply (register SVCXPRT *xprt, xdrproc_t xdr_results,
   rply.acpted_rply.ar_results.proc = xdr_results;
   return SVC_REPLY (xprt, &rply);
 }
+INTDEF (svc_sendreply)
 
 /* No procedure error reply */
 void
@@ -257,6 +260,7 @@ svcerr_decode (register SVCXPRT *xprt)
   rply.acpted_rply.ar_stat = GARBAGE_ARGS;
   SVC_REPLY (xprt, &rply);
 }
+INTDEF (svcerr_decode)
 
 /* Some system error */
 void
@@ -345,8 +349,9 @@ svc_getreq (int rdfds)
 
   FD_ZERO (&readfds);
   readfds.fds_bits[0] = rdfds;
-  svc_getreqset (&readfds);
+  INTUSE(svc_getreqset) (&readfds);
 }
+INTDEF (svc_getreq)
 
 void
 svc_getreqset (fd_set *readfds)
@@ -361,8 +366,9 @@ svc_getreqset (fd_set *readfds)
   maskp = (u_int32_t *) readfds->fds_bits;
   for (sock = 0; sock < setsize; sock += 32)
     for (mask = *maskp++; (bit = ffs (mask)); mask ^= (1 << (bit - 1)))
-      svc_getreq_common (sock + bit - 1);
+      INTUSE(svc_getreq_common) (sock + bit - 1);
 }
+INTDEF (svc_getreqset)
 
 void
 svc_getreq_poll (struct pollfd *pfdp, int pollretval)
@@ -382,10 +388,11 @@ svc_getreq_poll (struct pollfd *pfdp, int pollretval)
 	  if (p->revents & POLLNVAL)
 	    xprt_unregister (xports[p->fd]);
 	  else
-	    svc_getreq_common (p->fd);
+	    INTUSE(svc_getreq_common) (p->fd);
 	}
     }
 }
+INTDEF (svc_getreq_poll)
 
 
 void
@@ -477,6 +484,7 @@ svc_getreq_common (const int fd)
     }
   while (stat == XPRT_MOREREQS);
 }
+INTDEF (svc_getreq_common)
 
 #ifdef _RPC_THREAD_SAFE_
 

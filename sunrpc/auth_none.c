@@ -96,6 +96,7 @@ authnone_create (void)
   __libc_once (authnone_private_guard, authnone_create_once);
   return &authnone_private.no_client;
 }
+INTDEF (authnone_create)
 
 static bool_t
 authnone_marshal (AUTH *client, XDR *xdrs)

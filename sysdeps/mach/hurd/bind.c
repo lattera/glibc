@@ -30,7 +30,7 @@
 
 /* Give the socket FD the local address ADDR (which is LEN bytes long).  */
 int
-bind  (int fd, __CONST_SOCKADDR_ARG addrarg, socklen_t len)
+__bind  (int fd, __CONST_SOCKADDR_ARG addrarg, socklen_t len)
 {
   addr_port_t aport;
   error_t err;
@@ -121,3 +121,5 @@ bind  (int fd, __CONST_SOCKADDR_ARG addrarg, socklen_t len)
 
   return err ? __hurd_dfail (fd, err) : 0;
 }
+
+weak_alias (__bind, bind)

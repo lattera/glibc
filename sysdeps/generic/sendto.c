@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1996,1997,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
 ssize_t
-sendto (fd, buf, n, flags, addr, addr_len)
+__sendto (fd, buf, n, flags, addr, addr_len)
      int fd;
      __const __ptr_t buf;
      size_t n;
@@ -33,6 +33,8 @@ sendto (fd, buf, n, flags, addr, addr_len)
   __set_errno (ENOSYS);
   return -1;
 }
+
+weak_alias (__sendto, sendto)
 
 stub_warning (sendto)
 #include <stub-tag.h>

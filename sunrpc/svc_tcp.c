@@ -160,13 +160,13 @@ svctcp_create (int sock, u_int sendsize, u_int recvsize)
     }
   __bzero ((char *) &addr, sizeof (addr));
   addr.sin_family = AF_INET;
-  if (bindresvport (sock, &addr))
+  if (INTUSE(bindresvport) (sock, &addr))
     {
       addr.sin_port = 0;
-      (void) bind (sock, (struct sockaddr *) &addr, len);
+      (void) __bind (sock, (struct sockaddr *) &addr, len);
     }
-  if ((getsockname (sock, (struct sockaddr *) &addr, &len) != 0) ||
-      (listen (sock, 2) != 0))
+  if ((__getsockname (sock, (struct sockaddr *) &addr, &len) != 0) ||
+      (__listen (sock, 2) != 0))
     {
       perror (_("svc_tcp.c - cannot getsockname or listen"));
       if (madesock)

@@ -19,4 +19,13 @@ DECLARE_NSS_PROTOTYPES (nisplus)
 extern bool_t xdr_des_block_internal (XDR *__xdrs, des_block *__blkp);
 extern bool_t xdr_opaque_auth_internal (XDR *, struct opaque_auth *);
 
+extern AUTH *authunix_create_internal (char *__machname, __uid_t __uid,
+				       __gid_t __gid, int __len,
+				       __gid_t *__aup_gids) attribute_hidden;
+extern AUTH *authunix_create_default_internal (void) attribute_hidden;
+extern AUTH *authnone_create_internal (void) attribute_hidden;
+extern AUTH *authdes_pk_create_internal (const char *, netobj *, u_int,
+					 struct sockaddr *,
+					 des_block *) attribute_hidden;
+
 #endif

@@ -121,8 +121,9 @@ pmap_set (u_long program, u_long version, int protocol, u_short port)
 
   if (!__get_myaddress (&myaddress))
     return FALSE;
-  client = clntudp_bufcreate (&myaddress, PMAPPROG, PMAPVERS,
-			timeout, &socket, RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
+  client = INTUSE(clntudp_bufcreate) (&myaddress, PMAPPROG, PMAPVERS,
+				      timeout, &socket, RPCSMALLMSGSIZE,
+				      RPCSMALLMSGSIZE);
   if (client == (CLIENT *) NULL)
     return (FALSE);
   parms.pm_prog = program;
@@ -156,8 +157,9 @@ pmap_unset (u_long program, u_long version)
 
   if (!__get_myaddress (&myaddress))
     return FALSE;
-  client = clntudp_bufcreate (&myaddress, PMAPPROG, PMAPVERS,
-			timeout, &socket, RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
+  client = INTUSE(clntudp_bufcreate) (&myaddress, PMAPPROG, PMAPVERS,
+				      timeout, &socket, RPCSMALLMSGSIZE,
+				      RPCSMALLMSGSIZE);
   if (client == (CLIENT *) NULL)
     return FALSE;
   parms.pm_prog = program;

@@ -128,7 +128,7 @@ clntraw_create (u_long prog, u_long vers)
    * create client handle
    */
   client->cl_ops = &client_ops;
-  client->cl_auth = authnone_create ();
+  client->cl_auth = INTUSE(authnone_create) ();
   return client;
 }
 
@@ -170,7 +170,7 @@ call_again:
    * We have to call server input routine here because this is
    * all going on in one process. Yuk.
    */
-  svc_getreq (1);
+  INTUSE(svc_getreq) (1);
 
   /*
    * get results

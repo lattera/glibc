@@ -84,7 +84,7 @@ pmap_rmtcall (addr, prog, vers, proc, xdrargs, argsp, xdrres, resp, tout, port_p
   enum clnt_stat stat;
 
   addr->sin_port = htons (PMAPPORT);
-  client = clntudp_create (addr, PMAPPROG, PMAPVERS, timeout, &socket);
+  client = INTUSE(clntudp_create) (addr, PMAPPROG, PMAPVERS, timeout, &socket);
   if (client != (CLIENT *) NULL)
     {
       a.prog = prog;
@@ -239,7 +239,7 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
      resultproc_t eachresult;	/* call with each result obtained */
 {
   enum clnt_stat stat = RPC_FAILED;
-  AUTH *unix_auth = authunix_create_default ();
+  AUTH *unix_auth = INTUSE(authunix_create_default) ();
   XDR xdr_stream;
   XDR *xdrs = &xdr_stream;
   struct timeval t;
@@ -271,7 +271,7 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
       goto done_broad;
     }
 #ifdef SO_BROADCAST
-  if (setsockopt (sock, SOL_SOCKET, SO_BROADCAST, &on, sizeof (on)) < 0)
+  if (__setsockopt (sock, SOL_SOCKET, SO_BROADCAST, &on, sizeof (on)) < 0)
     {
       perror (_("Cannot set socket option SO_BROADCAST"));
       stat = RPC_CANTSEND;
@@ -321,9 +321,9 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
       for (i = 0; i < nets; i++)
 	{
 	  baddr.sin_addr = addrs[i];
-	  if (sendto (sock, outbuf, outlen, 0,
-		      (struct sockaddr *) &baddr,
-		      sizeof (struct sockaddr)) != outlen)
+	  if (__sendto (sock, outbuf, outlen, 0,
+			(struct sockaddr *) &baddr,
+			sizeof (struct sockaddr)) != outlen)
 	    {
 	      perror (_("Cannot send broadcast packet"));
 	      stat = RPC_CANTSEND;
@@ -357,8 +357,8 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 	}			/* end of poll results switch */
     try_again:
       fromlen = sizeof (struct sockaddr);
-      inlen = recvfrom (sock, inbuf, UDPMSGSIZE, 0,
-			(struct sockaddr *) &raddr, &fromlen);
+      inlen = __recvfrom (sock, inbuf, UDPMSGSIZE, 0,
+			  (struct sockaddr *) &raddr, &fromlen);
       if (inlen < 0)
 	{
 	  if (errno == EINTR)

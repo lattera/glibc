@@ -96,8 +96,8 @@ rtime (struct sockaddr_in *addrp, struct rpc_timeval *timep,
   addrp->sin_port = htons (IPPORT_TIMESERVER);
   if (type == SOCK_DGRAM)
     {
-      res = sendto (s, (char *) &thetime, sizeof (thetime), 0,
-		    (struct sockaddr *) addrp, sizeof (*addrp));
+      res = __sendto (s, (char *) &thetime, sizeof (thetime), 0,
+		      (struct sockaddr *) addrp, sizeof (*addrp));
       if (res < 0)
 	{
 	  do_close (s);
@@ -117,8 +117,8 @@ rtime (struct sockaddr_in *addrp, struct rpc_timeval *timep,
 	  return (-1);
 	}
       fromlen = sizeof (from);
-      res = recvfrom (s, (char *) &thetime, sizeof (thetime), 0,
-		      (struct sockaddr *) &from, &fromlen);
+      res = __recvfrom (s, (char *) &thetime, sizeof (thetime), 0,
+			(struct sockaddr *) &from, &fromlen);
       do_close (s);
       if (res < 0)
 	return -1;

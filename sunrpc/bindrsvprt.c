@@ -78,8 +78,9 @@ bindresvport (int sd, struct sockaddr_in *sin)
 	{
 	  port = STARTPORT;
 	}
-      res = bind (sd, sin, sizeof (struct sockaddr_in));
+      res = __bind (sd, sin, sizeof (struct sockaddr_in));
     }
 
   return res;
 }
+INTDEF (bindresvport)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,8 +22,10 @@ extern ssize_t nrecvfrom (int s, void *uap_buf, size_t len, int flags,
 			  void *uap_from, socklen_t *uap_fromlenaddr);
 
 ssize_t
-recvfrom (int fd, void *buf, size_t n, int flags, __SOCKADDR_ARG addr,
-	  socklen_t *addr_len)
+__recvfrom (int fd, void *buf, size_t n, int flags, __SOCKADDR_ARG addr,
+	    socklen_t *addr_len)
 {
   return nrecvfrom (fd, buf, n, flags, addr.__sockaddr__, addr_len);
 }
+
+weak_alias (__recvfrom, recvfrom)

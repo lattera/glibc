@@ -1,4 +1,132 @@
+2002-05-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/netinet/in.h (bindresvport_internal): Add prototype.
+	* include/rpc/auth.h  (authunix_create_internal,
+	authunix_create_default_internal, authnone_create_internal,
+	authdes_pk_create_internal): Add prototypes.
+	* include/rpc/clnt.h (clnt_create_internal, clnttcp_create_internal,
+	clntudp_create_internal, clntudp_bufcreate_internal,
+	clntunix_create_internal): Add prototypes.
+	* include/rpc/svc.h (svc_sendreply_internal, svcerr_decode_internal,
+	svc_getreq_internal, svc_getreq_common_internal,
+	svc_getreqset_internal, svc_getreq_poll_internal,
+	svc_register_internal, svc_unregister_internal,
+	svcudp_create_internal, svcudp_bufcreate_internal): Add prototypes.
+	* include/rpc/svc_auth.h (_authenticate_internal): Add prototype.
+	* include/sys/socket.h (__sendto, __recvfrom, __sendmsg, __recvmsg,
+	__setsockopt, __getsockname, __bind, __listen): Add prototypes.
+	* inet/rexec.c (rexec_af): Use __listen and __getsockname.
+	* inet/rcmd.c (rcmd_af): Use __listen.
+	(rresvport_af): Use __bind.
+	* sunrpc/clnt_udp.c: Use INTUSE calls to bindresvport,
+	authunix_create, authunix_create_default, authnone_create,
+	authdes_pk_create, clnt_create, clnttcp_create, clntudp_create,
+	clntudp_bufcreate, clntunix_create svc_sendreply, svcerr_decode,
+	svc_getreq, svc_getreq_common, svc_getreqset, svc_getreq_poll,
+	svc_register, svc_unregister, svcudp_create, svcudp_bufcreate,
+	_authenticate, add INTDEF after such function definitions.
+	Use __listen, __bind, __sendto, __recvfrom, __sendmsg, __recvmsg,
+	__setsockopt, __getsockname instead of non-__ variants.
+	* sunrpc/pmap_rmt.c: Likewise.
+	* sunrpc/rtime.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sunrpc/svc_unix.c: Likewise.
+	* sunrpc/bindrsvprt.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/auth_none.c: Likewise.
+	* sunrpc/clnt_raw.c: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/key_call.c: Likewise.
+	* sunrpc/clnt_gen.c: Likewise.
+	* sunrpc/pm_getmaps.c: Likewise.
+	* sunrpc/clnt_simp.c: Likewise.
+	* sunrpc/pmap_clnt.c: Likewise.
+	* sunrpc/svc_run.c: Likewise.
+	* sunrpc/svc.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+	* sunrpc/pm_getport.c: Likewise.
+	* sunrpc/auth_des.c: Likewise.
+	* sunrpc/svc_auth.c: Likewise.
+	* sysdeps/generic/unwind-dw2-fde.c (__register_frame_info_bases,
+	__register_frame_info_table_bases, __deregister_frame_info_bases):
+	Add INTDEF.
+	(__register_frame_info_bases_internal,
+	__register_frame_info_table_bases_internal,
+	__deregister_frame_info_bases_internal): Add prototypes.
+	(__register_frame_info, __register_frame): Use INTUSE in call to
+	__register_frame_info_bases.
+	(__register_frame_info_table): Similarly.
+	(__deregister_frame_info, __deregister_frame): Similarly.
+	* sysdeps/generic/sendto.c (__sendto): Renamed from sendto, add
+	sendto as weak alias.
+	* sysdeps/mach/hurd/sendto.c: Likewise.
+	* sysdeps/generic/recvfrom.c (__recvfrom): Renamed from recvfrom, add
+	recvfrom as weak alias.
+	* sysdeps/mach/hurd/recvfrom.c: Likewise.
+	* sysdeps/unix/sysv/aix/recvfrom.c: Likewise.
+	* sysdeps/generic/recvmsg.c (__recvmsg): Renamed from recvmsg, add
+	recvmsg as weak alias.
+	* sysdeps/unix/sysv/aix/recvmsg.c: Likewise.
+	* sysdeps/generic/sendmsg.c (__sendmsg): Renamed from sendmsg, add
+	sendmsg as weak alias.
+	* sysdeps/unix/sysv/aix/sendmsg.c: Likewise.
+	* sysdeps/generic/setsockopt.c (__setsockopt): Renamed from
+	setsockopt, add setsockopt as weak alias.
+	* sysdeps/mach/hurd/setsockopt.c: Likewise.
+	* sysdeps/generic/bind.c (__bind): Renamed from bind, add bind as
+	weak alias.
+	* sysdeps/mach/hurd/bind.c: Likewise.
+	* sysdeps/generic/listen.c (__listen): Renamed from listen, add listen
+	as weak alias.
+	* sysdeps/mach/hurd/listen.c: Likewise.
+	* sysdeps/generic/getsockname.c (__getsockname): Renamed from
+	getsockname, add getsockname as weak alias.
+	* sysdeps/mach/hurd/getsockname.c: Likewise.
+	* sysdeps/unix/sysv/aix/getsockname.c: Likewise.
+	* sysdeps/mach/hurd/recvmsg.c (__recvmsg): Add weak alias.
+	* sysdeps/mach/hurd/sendmsg.c (__sendmsg): Add weak alias.
+	* sysdeps/unix/inet/syscalls.list (__bind, __listen, __recvmsg,
+	__recvfrom, __sendmsg, __sendto, __setsockopt): Add aliases.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (__recvmsg, __sendmsg):
+	Add aliases.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/recvfrom.S (__recvfrom): Add weak alias.
+	* sysdeps/unix/sysv/linux/recvmsg.S (__recvmsg): Likewise.
+	* sysdeps/unix/sysv/linux/sendmsg.S (__sendmsg): Likewise.
+	* sysdeps/unix/sysv/linux/sendto.S (__sendto): Likewise.
+	* sysdeps/unix/sysv/linux/setsockopt.S (__setsockopt): Likewise.
+	* sysdeps/unix/sysv/linux/bind.S (__bind): Likewise.
+	* sysdeps/unix/sysv/linux/listen.S (__listen): Likewise.
+	* sysdeps/unix/sysv/linux/getsockname.S (__getsockname): Likewise.
+
+2002-05-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/localedef.h (show_archive_content): Add verbose
+	argument.
+	* locale/programs/localedef.c (main): Adjust caller.
+	* locale/programs/locarchive.c (struct nameent, struct dataent): New.
+	(nameentcmp, dataentcmp): New functions.
+	(xstrcmp): Remove.
+	(show_archive_content): Print verbose listing with --list-archive -v.
+
 2002-05-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/locarchive.c (open_archive): Take extra argument
+	readonly.  If true open file with O_RDONLY and don't create the
+	archive if it doesn't exist.
+	Adapt all callers.
+	(close_archive): Don't do anything if fd element is -1.
+	* locale/programs/localedef.h (open_archive): Adjust prototype.
+	* locale/programs/locfile.c (write_all_categories): Adjust open_archive
+	call.
+
+	* malloc/malloc.c (__posix_memalign): Correct check for size of
+	alignment value [PR libc/3444].
 
 	* include/stdio.h: Remove references to old stdio implementation.
 

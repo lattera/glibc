@@ -133,12 +133,12 @@ svcudp_bufcreate (sock, sendsz, recvsz)
     }
   __bzero ((char *) &addr, sizeof (addr));
   addr.sin_family = AF_INET;
-  if (bindresvport (sock, &addr))
+  if (INTUSE(bindresvport) (sock, &addr))
     {
       addr.sin_port = 0;
-      (void) bind (sock, (struct sockaddr *) &addr, len);
+      (void) __bind (sock, (struct sockaddr *) &addr, len);
     }
-  if (getsockname (sock, (struct sockaddr *) &addr, &len) != 0)
+  if (__getsockname (sock, (struct sockaddr *) &addr, &len) != 0)
     {
       perror (_("svcudp_create - cannot getsockname"));
       if (madesock)
@@ -188,8 +188,8 @@ svcudp_bufcreate (sock, sendsz, recvsz)
       return NULL;
     }
   pad = 1;
-  if (setsockopt (sock, SOL_IP, IP_PKTINFO, (void *) &pad,
-		  sizeof (pad)) == 0)
+  if (__setsockopt (sock, SOL_IP, IP_PKTINFO, (void *) &pad,
+		    sizeof (pad)) == 0)
     /* Set the padding to all 1s. */
     pad = 0xff;
   else
@@ -201,14 +201,15 @@ svcudp_bufcreate (sock, sendsz, recvsz)
   xprt_register (xprt);
   return xprt;
 }
+INTDEF (svcudp_bufcreate)
 
 SVCXPRT *
 svcudp_create (sock)
      int sock;
 {
-
-  return svcudp_bufcreate (sock, UDPMSGSIZE, UDPMSGSIZE);
+  return INTUSE(svcudp_bufcreate) (sock, UDPMSGSIZE, UDPMSGSIZE);
 }
+INTDEF (svcudp_create)
 
 static enum xprt_stat
 svcudp_stat (xprt)
@@ -256,15 +257,15 @@ again:
 					  + sizeof (struct msghdr)];
       mesgp->msg_controllen = sizeof(xprt->xp_pad)
 			      - sizeof (struct iovec) - sizeof (struct msghdr);
-      rlen = recvmsg (xprt->xp_sock, mesgp, 0);
+      rlen = __recvmsg (xprt->xp_sock, mesgp, 0);
       if (rlen >= 0)
 	len = mesgp->msg_namelen;
     }
   else
 #endif
-    rlen = recvfrom (xprt->xp_sock, rpc_buffer (xprt),
-		     (int) su->su_iosz, 0,
-		     (struct sockaddr *) &(xprt->xp_raddr), &len);
+    rlen = __recvfrom (xprt->xp_sock, rpc_buffer (xprt),
+		       (int) su->su_iosz, 0,
+		       (struct sockaddr *) &(xprt->xp_raddr), &len);
   xprt->xp_addrlen = len;
   if (rlen == -1 && errno == EINTR)
     goto again;
@@ -284,12 +285,12 @@ again:
 	    {
 	      iovp->iov_base = reply;
 	      iovp->iov_len = replylen;
-	      (void) sendmsg (xprt->xp_sock, mesgp, 0);
+	      (void) __sendmsg (xprt->xp_sock, mesgp, 0);
 	    }
 	  else
 #endif
-	    (void) sendto (xprt->xp_sock, reply, (int) replylen, 0,
-			   (struct sockaddr *) &xprt->xp_raddr, len);
+	    (void) __sendto (xprt->xp_sock, reply, (int) replylen, 0,
+			     (struct sockaddr *) &xprt->xp_raddr, len);
 	  return TRUE;
 	}
     }
@@ -323,13 +324,13 @@ svcudp_reply (xprt, msg)
 	  iovp = (struct iovec *) &xprt->xp_pad [0];
 	  iovp->iov_base = rpc_buffer (xprt);
 	  iovp->iov_len = slen;
-	  sent = sendmsg (xprt->xp_sock, mesgp, 0);
+	  sent = __sendmsg (xprt->xp_sock, mesgp, 0);
 	}
       else
 #endif
-	sent = sendto (xprt->xp_sock, rpc_buffer (xprt), slen, 0,
-		       (struct sockaddr *) &(xprt->xp_raddr),
-		       xprt->xp_addrlen);
+	sent = __sendto (xprt->xp_sock, rpc_buffer (xprt), slen, 0,
+			 (struct sockaddr *) &(xprt->xp_raddr),
+			 xprt->xp_addrlen);
       if (sent == slen)
 	{
 	  stat = TRUE;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1996,1997,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
    N connection requests will be queued before further requests are refused.
    Returns 0 on success, -1 for errors.  */
 int
-listen (fd, n)
+__listen (fd, n)
      int fd;
      int n;
 {
@@ -31,6 +31,7 @@ listen (fd, n)
   return -1;
 }
 
+weak_alias (__listen, listen)
 
 stub_warning (listen)
 #include <stub-tag.h>

@@ -25,13 +25,12 @@
 /* Set socket FD's option OPTNAME at protocol level LEVEL
    to *OPTVAL (which is OPTLEN bytes long).
    Returns 0 on success, -1 for errors.  */
-/* XXX __setsockopt ? */
 int
-setsockopt (int fd,
-	    int level,
-	    int optname,
-	    const void *optval,
-	    socklen_t optlen)
+__setsockopt (int fd,
+	      int level,
+	      int optname,
+	      const void *optval,
+	      socklen_t optlen)
 {
   error_t err = HURD_DPORT_USE (fd, __socket_setopt (port,
 						     level, optname,
@@ -40,3 +39,5 @@ setsockopt (int fd,
     return __hurd_dfail (fd, err);
   return 0;
 }
+
+weak_alias (__setsockopt, setsockopt)

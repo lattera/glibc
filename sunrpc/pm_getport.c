@@ -66,8 +66,9 @@ pmap_getport (address, program, version, protocol)
   struct pmap parms;
 
   address->sin_port = htons (PMAPPORT);
-  client = clntudp_bufcreate (address, PMAPPROG,
-	      PMAPVERS, timeout, &socket, RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
+  client = INTUSE(clntudp_bufcreate) (address, PMAPPROG, PMAPVERS, timeout,
+				      &socket, RPCSMALLMSGSIZE,
+				      RPCSMALLMSGSIZE);
   if (client != (CLIENT *) NULL)
     {
       struct rpc_createerr *ce = &get_rpc_createerr ();

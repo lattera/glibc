@@ -115,7 +115,7 @@ authdes_create (const char *servername, u_int window,
 
   pkey.n_bytes = (char *) pkey_data;
   pkey.n_len = strlen ((char *) pkey_data) + 1;
-  return authdes_pk_create (servername, &pkey, window, syncaddr, ckey);
+  return INTUSE(authdes_pk_create) (servername, &pkey, window, syncaddr, ckey);
 }
 
 AUTH *
@@ -206,6 +206,7 @@ failed:
     }
   return NULL;
 }
+INTDEF(authdes_pk_create)
 
 /*
  * Implement the five authentication operations

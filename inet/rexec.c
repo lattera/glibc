@@ -115,9 +115,9 @@ retry:
 			(void) __close(s);
 			return (-1);
 		}
-		listen(s2, 1);
+		__listen(s2, 1);
 		sa2len = sizeof (sa2);
-		if (getsockname(s2, (struct sockaddr *)&sa2, &sa2len) < 0) {
+		if (__getsockname(s2, (struct sockaddr *)&sa2, &sa2len) < 0) {
 			perror("getsockname");
 			(void) __close(s2);
 			goto bad;

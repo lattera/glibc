@@ -63,8 +63,8 @@ pmap_getmaps (struct sockaddr_in *address)
   minutetimeout.tv_sec = 60;
   minutetimeout.tv_usec = 0;
   address->sin_port = htons (PMAPPORT);
-  client = clnttcp_create (address, PMAPPROG,
-			   PMAPVERS, &socket, 50, 500);
+  client = INTUSE(clnttcp_create) (address, PMAPPROG,
+				   PMAPVERS, &socket, 50, 500);
   if (client != (CLIENT *) NULL)
     {
       if (CLNT_CALL (client, PMAPPROC_DUMP, (xdrproc_t)INTUSE(xdr_void), NULL,

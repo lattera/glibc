@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,9 @@
 extern int ngetsockname (int s, void *uap_asa, int *uap_alen);
 
 int
-getsockname (int fd, __SOCKADDR_ARG addr, socklen_t *len)
+__getsockname (int fd, __SOCKADDR_ARG addr, socklen_t *len)
 {
   return ngetsockname (fd, addr.__sockaddr__, len);
 }
+
+weak_alias (__getsockname, getsockname)

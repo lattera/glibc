@@ -215,9 +215,9 @@ key_gendes (des_block *key)
   sin.sin_addr.s_addr = htonl (INADDR_LOOPBACK);
   __bzero (sin.sin_zero, sizeof (sin.sin_zero));
   socket = RPC_ANYSOCK;
-  client = clntudp_bufcreate (&sin, (u_long) KEY_PROG, (u_long) KEY_VERS,
-			      trytimeout, &socket, RPCSMALLMSGSIZE,
-			      RPCSMALLMSGSIZE);
+  client = INTUSE(clntudp_bufcreate) (&sin, (u_long) KEY_PROG,
+				      (u_long) KEY_VERS, trytimeout, &socket,
+				      RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
   if (client == NULL)
     return -1;
 
@@ -425,7 +425,7 @@ getkeyserv_handle (int vers)
         kcp->uid = __geteuid ();
         auth_destroy (kcp->client->cl_auth);
         kcp->client->cl_auth =
-          authunix_create ((char *)"", kcp->uid, 0, 0, NULL);
+          INTUSE(authunix_create) ((char *)"", kcp->uid, 0, 0, NULL);
         if (kcp->client->cl_auth == NULL)
           {
             clnt_destroy (kcp->client);
@@ -440,14 +440,16 @@ getkeyserv_handle (int vers)
 
   if ((kcp->client == (CLIENT *) NULL))
     /* Use the AF_UNIX transport */
-    kcp->client = clnt_create ("/var/run/keyservsock", KEY_PROG, vers, "unix");
+    kcp->client = INTUSE(clnt_create) ("/var/run/keyservsock", KEY_PROG, vers,
+				       "unix");
 
   if (kcp->client == (CLIENT *) NULL)
     return (CLIENT *) NULL;
 
   kcp->uid = __geteuid ();
   kcp->pid = __getpid ();
-  kcp->client->cl_auth = authunix_create ((char *)"", kcp->uid, 0, 0, NULL);
+  kcp->client->cl_auth = INTUSE(authunix_create) ((char *)"", kcp->uid, 0, 0,
+						  NULL);
   if (kcp->client->cl_auth == NULL)
     {
       clnt_destroy (kcp->client);

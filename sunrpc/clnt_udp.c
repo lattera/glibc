@@ -191,13 +191,13 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
 	  goto fooy;
 	}
       /* attempt to bind to prov port */
-      (void) bindresvport (*sockp, (struct sockaddr_in *) 0);
+      (void) INTUSE(bindresvport) (*sockp, (struct sockaddr_in *) 0);
       /* the sockets rpc controls are non-blocking */
       (void) __ioctl (*sockp, FIONBIO, (char *) &dontblock);
 #ifdef IP_RECVERR
       {
 	int on = 1;
-	setsockopt(*sockp, SOL_IP, IP_RECVERR, &on, sizeof(on));
+	__setsockopt (*sockp, SOL_IP, IP_RECVERR, &on, sizeof(on));
       }
 #endif
       cu->cu_closeit = TRUE;
@@ -207,7 +207,7 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
       cu->cu_closeit = FALSE;
     }
   cu->cu_sock = *sockp;
-  cl->cl_auth = authnone_create ();
+  cl->cl_auth = INTUSE(authnone_create) ();
   return cl;
 fooy:
   if (cu)
@@ -216,6 +216,7 @@ fooy:
     mem_free ((caddr_t) cl, sizeof (CLIENT));
   return (CLIENT *) NULL;
 }
+INTDEF (clntudp_bufcreate)
 
 CLIENT *
 clntudp_create (raddr, program, version, wait, sockp)
@@ -225,10 +226,10 @@ clntudp_create (raddr, program, version, wait, sockp)
      struct timeval wait;
      int *sockp;
 {
-
-  return clntudp_bufcreate (raddr, program, version, wait, sockp,
-			    UDPMSGSIZE, UDPMSGSIZE);
+  return INTUSE(clntudp_bufcreate) (raddr, program, version, wait, sockp,
+				    UDPMSGSIZE, UDPMSGSIZE);
 }
+INTDEF (clntudp_create)
 
 static int
 is_network_up (int sock)
@@ -312,8 +313,8 @@ call_again:
   outlen = (int) XDR_GETPOS (xdrs);
 
 send_again:
-  if (sendto (cu->cu_sock, cu->cu_outbuf, outlen, 0,
-	      (struct sockaddr *) &(cu->cu_raddr), cu->cu_rlen)
+  if (__sendto (cu->cu_sock, cu->cu_outbuf, outlen, 0,
+		(struct sockaddr *) &(cu->cu_raddr), cu->cu_rlen)
       != outlen)
     {
       cu->cu_error.re_errno = errno;
@@ -395,7 +396,7 @@ send_again:
 	  msg.msg_flags = 0;
 	  msg.msg_control = cbuf;
 	  msg.msg_controllen = 256;
-	  ret = recvmsg (cu->cu_sock, &msg, MSG_ERRQUEUE);
+	  ret = __recvmsg (cu->cu_sock, &msg, MSG_ERRQUEUE);
 	  if (ret >= 0
 	      && memcmp (cbuf + 256, cu->cu_outbuf, ret) == 0
 	      && (msg.msg_flags & MSG_ERRQUEUE)
@@ -419,9 +420,9 @@ send_again:
       do
 	{
 	  fromlen = sizeof (struct sockaddr);
-	  inlen = recvfrom (cu->cu_sock, cu->cu_inbuf,
-			    (int) cu->cu_recvsz, 0,
-			    (struct sockaddr *) &from, &fromlen);
+	  inlen = __recvfrom (cu->cu_sock, cu->cu_inbuf,
+			      (int) cu->cu_recvsz, 0,
+			      (struct sockaddr *) &from, &fromlen);
 	}
       while (inlen < 0 && errno == EINTR);
       if (inlen < 0)

@@ -27,12 +27,12 @@
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
 ssize_t
-sendto (int fd,
-	const void *buf,
-	size_t n,
-	int flags,
-	const struct sockaddr_un *addr,
-	socklen_t addr_len)
+__sendto (int fd,
+	  const void *buf,
+	  size_t n,
+	  int flags,
+	  const struct sockaddr_un *addr,
+	  socklen_t addr_len)
 {
   addr_port_t aport;
   error_t err;
@@ -81,3 +81,5 @@ sendto (int fd,
 
   return err ? __hurd_dfail (fd, err) : wrote;
 }
+
+weak_alias (__sendto, sendto)

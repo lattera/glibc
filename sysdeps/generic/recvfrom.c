@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1996,1997,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
    at address ADDR (which is ADDR_LEN bytes long).
    Returns the number read or -1 for errors.  */
 ssize_t
-recvfrom (fd, buf, n, flags, addr, addr_len)
+__recvfrom (fd, buf, n, flags, addr, addr_len)
      int fd;
      void *buf;
      size_t n;
@@ -34,6 +34,8 @@ recvfrom (fd, buf, n, flags, addr, addr_len)
   __set_errno (ENOSYS);
   return -1;
 }
+
+weak_alias (__recvfrom, recvfrom)
 
 stub_warning (recvfrom)
 #include <stub-tag.h>

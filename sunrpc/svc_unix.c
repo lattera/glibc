@@ -158,10 +158,10 @@ svcunix_create (int sock, u_int sendsize, u_int recvsize, char *path)
   memcpy (addr.sun_path, path, len);
   len += sizeof (addr.sun_family);
 
-  bind (sock, (struct sockaddr *) &addr, len);
+  __bind (sock, (struct sockaddr *) &addr, len);
 
-  if (getsockname (sock, (struct sockaddr *) &addr, &len) != 0
-      || listen (sock, 2) != 0)
+  if (__getsockname (sock, (struct sockaddr *) &addr, &len) != 0
+      || __listen (sock, 2) != 0)
     {
       perror (_("svc_unix.c - cannot getsockname or listen"));
       if (madesock)
@@ -334,13 +334,13 @@ __msgread (int sock, void *data, size_t cnt)
 #ifdef SO_PASSCRED
   {
     int on = 1;
-    if (setsockopt (sock, SOL_SOCKET, SO_PASSCRED, &on, sizeof (on)))
+    if (__setsockopt (sock, SOL_SOCKET, SO_PASSCRED, &on, sizeof (on)))
       return -1;
   }
 #endif
 
  restart:
-  len = recvmsg (sock, &msg, 0);
+  len = __recvmsg (sock, &msg, 0);
   if (len >= 0)
     {
       if (msg.msg_flags & MSG_CTRUNC || len == 0)
@@ -391,7 +391,7 @@ __msgwrite (int sock, void *data, size_t cnt)
   msg.msg_flags = 0;
 
  restart:
-  len = sendmsg (sock, &msg, 0);
+  len = __sendmsg (sock, &msg, 0);
   if (len >= 0)
     return len;
   if (errno == EINTR)

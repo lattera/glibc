@@ -201,7 +201,7 @@ clnttcp_create (struct sockaddr_in *raddr, u_long prog, u_long vers,
    * pre-serialize the static part of the call msg and stash it away
    */
   INTUSE(xdrmem_create) (&(ct->ct_xdrs), ct->ct_mcall, MCALL_MSG_SIZE,
-		 XDR_ENCODE);
+			 XDR_ENCODE);
   if (!INTUSE(xdr_callhdr) (&(ct->ct_xdrs), &call_msg))
     {
       if (ct->ct_closeit)
@@ -221,7 +221,7 @@ clnttcp_create (struct sockaddr_in *raddr, u_long prog, u_long vers,
 			 (caddr_t) ct, readtcp, writetcp);
   h->cl_ops = &tcp_ops;
   h->cl_private = (caddr_t) ct;
-  h->cl_auth = authnone_create ();
+  h->cl_auth = INTUSE(authnone_create) ();
   return h;
 
 fooy:
@@ -232,6 +232,7 @@ fooy:
   mem_free ((caddr_t) h, sizeof (CLIENT));
   return ((CLIENT *) NULL);
 }
+INTDEF (clnttcp_create)
 
 static enum clnt_stat
 clnttcp_call (h, proc, xdr_args, args_ptr, xdr_results, results_ptr, timeout)

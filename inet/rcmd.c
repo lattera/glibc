@@ -268,7 +268,7 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 
 		if (s2 < 0)
 			goto bad;
-		listen(s2, 1);
+		__listen(s2, 1);
 		(void)__snprintf(num, sizeof(num), "%d", lport);
 		if (__write(s, num, strlen(num)+1) != (ssize_t)strlen(num)+1) {
 			char *buf = NULL;
@@ -444,7 +444,7 @@ rresvport_af(alport, family)
 
 	for (;;) {
 		*sport = htons((uint16_t) *alport);
-		if (bind(s, (struct sockaddr *)&ss, len) >= 0)
+		if (__bind(s, (struct sockaddr *)&ss, len) >= 0)
 			return s;
 		if (errno != EADDRINUSE) {
 			(void)__close(s);
