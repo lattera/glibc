@@ -662,9 +662,9 @@ fi
 # Check whether --enable-add-ons or --disable-add-ons was given.
 if test "${enable_add_ons+set}" = set; then
   enableval="$enable_add_ons"
-  add_ons=`echo "$enableval" | sed 's/
+  add_ons=`echo "$enableval" | sed 's/,/ /g'`
 else
-  / /g'`
+  add_ons=
 fi
 
 ac_aux_dir=
