@@ -90,7 +90,7 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
 
   /* Register the destructor of the dynamic linker if there is any.  */
   if (rtld_fini != NULL)
-    atexit (rtld_fini);
+    __cxa_atexit ((void (*) (void *)) rtld_fini, NULL, NULL);
 
   /* Call the initializer of the libc.  */
 #ifdef SHARED
@@ -101,7 +101,7 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
 
   /* Register the destructor of the program, if any.  */
   if (stinfo->fini)
-    atexit (stinfo->fini);
+    __cxa_atexit ((void (*) (void *)) stinfo->fini, NULL, NULL);
 
   /* Call the initializer of the program, if any.  */
 #ifdef SHARED
