@@ -166,7 +166,7 @@ work (void *arg)
       /* Determine what to do.  */
       unsigned int rnum;
 
-      /* Equal distribution.  */
+      /* Uniform distribution.  */
       do
 	rnum = rand_r (&state);
       while (rnum >= UINT_MAX - (UINT_MAX % 100));

@@ -1,3 +1,7 @@
+2002-12-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/fi.po: Update from translation team.
+
 2002-12-01  Roland McGrath  <roland@redhat.com>
 
 	* scripts/versions.awk: Don't pass -n flag to sort command.
