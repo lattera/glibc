@@ -85,6 +85,10 @@ system's tools.
 Always get the newest release of GNU binutils available.  Older releases are
 known to have bugs that prevent a successful compilation.
 
+{AJ} Please don't use binutils 2.7.  That release contains some bugs which
+might make it necessary that you've got to recompile all your glibc2
+binaries when upgrading the GNU C library.
+
 {ZW} As of release 2.1 a linker supporting symbol versions is required.  For
 Linux, get binutils-2.8.1.0.23 or later.  Other systems may have native
 linker support, but it's moot right now, because glibc has not been ported
@@ -299,6 +303,23 @@ There are some failures which are not directly related to the GNU libc:
   floating point handling has quite a number of bugs and therefore most of
   the test cases in the math subdirectory will fail.  The current Linux 2.1
   development kernels have fixes for the floating point support on Alpha.
+
+??	What is symbol versioning good for?  Do I need it?
+
+{AJ} Symbol versioning solves problems that are related to interface
+changes.  One version of an interface might have been introduced in a
+previous version of the GNU C library but the interface or the semantics of
+the function has been changed in the meantime.  For binary compatibility
+with the old library, a newer library needs to still have the old interface
+for old programs.  On the other hand new programs should use the new
+interface.  Symbol versioning is the solution for this problem.  The GNU
+libc version 2.1 uses by default symbol versioning if the binutils support
+it.
+
+We don't advise to build without symbol versioning since you lose binary
+compatibility if you do - for ever!  The binary compatibility you lose is
+not only against the previous version of the GNU libc (version 2.0) but also
+against future versions.
 
 
 ? Installation and configuration issues
@@ -600,7 +621,7 @@ file is usually the culprit.
 
 {AJ} If you have an entry "db" in /etc/nsswitch.conf you should also create
 the database files.  The glibc sources contain a Makefile which does the
-neccessary conversion and calls to create those files.  The file is
+necessary conversion and calls to create those files.  The file is
 `db-Makefile' in the subdirectory `nss' and you can call it with `make -f
 db-Makefile'.  Please note that not all services are capable of using a
 database.  Currently passwd, group, ethers, protocol, rpc, services shadow
