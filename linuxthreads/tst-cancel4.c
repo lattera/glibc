@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -357,8 +357,11 @@ tf_waitid (void *arg)
       exit (0);
     }
 
+#ifndef WEXITED
+# define WEXITED 0
+#endif
   siginfo_t si;
-  int s = waitid (P_PID, pid, &si, 0);
+  int s = waitid (P_PID, pid, &si, WEXITED);
 
   printf ("%s: waitid returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
