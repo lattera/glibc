@@ -45,6 +45,10 @@ error_t
 __hurd_file_name_lookup (error_t (*use_init_port)
 			   (int which, error_t (*operate) (file_t)),
 			 file_t (*get_dtable_port) (int fd),
+			 error_t (*lookup)
+			   (file_t dir, char *name, int flags, mode_t mode,
+			    retry_type *do_retry, string_t retry_name,
+			    mach_port_t *result),
 			 const char *file_name, int flags, mode_t mode,
 			 file_t *result)
 {
@@ -52,20 +56,23 @@ __hurd_file_name_lookup (error_t (*use_init_port)
   enum retry_type doretry;
   char retryname[1024];		/* XXX string_t LOSES! */
 
-  error_t lookup (mach_port_t startdir)
+  error_t lookup_op (mach_port_t startdir)
     {
       while (file_name[0] == '/')
 	file_name++;
 
-      return lookup_error (__dir_lookup (startdir, file_name, flags, mode,
-					 &doretry, retryname, result));
+      return lookup_error ((*lookup) (startdir, file_name, flags, mode,
+				      &doretry, retryname, result));
     }
+
+  if (! lookup)
+    lookup = __dir_lookup;
 
   err = (*use_init_port) (file_name[0] == '/'
 			  ? INIT_PORT_CRDIR : INIT_PORT_CWDIR,
-			  &lookup);
+			  &lookup_op);
   if (! err)
-    err = __hurd_file_name_lookup_retry (use_init_port, get_dtable_port,
+    err = __hurd_file_name_lookup_retry (use_init_port, get_dtable_port, lookup,
 					 doretry, retryname, flags, mode,
 					 result);
 
@@ -77,6 +84,10 @@ error_t
 __hurd_file_name_lookup_retry (error_t (*use_init_port)
 			         (int which, error_t (*operate) (file_t)),
 			       file_t (*get_dtable_port) (int fd),
+			       error_t (*lookup)
+			         (file_t dir, char *name, int flags, mode_t mode,
+				  retry_type *do_retry, string_t retry_name,
+				  mach_port_t *result),
 			       enum retry_type doretry,
 			       char retryname[1024],
 			       int flags, mode_t mode,
@@ -86,13 +97,13 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
   char *file_name;
   int nloops;
 
-  error_t lookup (file_t startdir)
+  error_t lookup_op (file_t startdir)
     {
       while (file_name[0] == '/')
 	file_name++;
 
-      return lookup_error (__dir_lookup (startdir, file_name, flags, mode,
-					 &doretry, retryname, result));
+      return lookup_error ((*lookup) (startdir, file_name, flags, mode,
+				      &doretry, retryname, result));
     }
   error_t reauthenticate (file_t unauth)
     {
@@ -111,6 +122,9 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
       __mach_port_deallocate (__mach_task_self (), unauth);
       return err;
     }
+
+  if (! lookup)
+    lookup = __dir_lookup;
 
   nloops = 0;
   err = 0;
@@ -291,12 +305,12 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 
       if (startdir != MACH_PORT_NULL)
 	{
-	  err = lookup (startdir);
+	  err = lookup_op (startdir);
 	  __mach_port_deallocate (__mach_task_self (), startdir);
 	  startdir = MACH_PORT_NULL;
 	}
       else
-	err = (*use_init_port) (dirport, &lookup);
+	err = (*use_init_port) (dirport, &lookup_op);
     } while (! err);
 
   return err;
@@ -307,6 +321,10 @@ error_t
 __hurd_file_name_split (error_t (*use_init_port)
 			  (int which, error_t (*operate) (file_t)),
 			file_t (*get_dtable_port) (int fd),
+			error_t (*lookup)
+			  (file_t dir, char *name, int flags, mode_t mode,
+			   retry_type *do_retry, string_t retry_name,
+			   mach_port_t *result),
 			const char *file_name,
 			file_t *dir, char **name)
 {
@@ -334,8 +352,9 @@ __hurd_file_name_split (error_t (*use_init_port)
 	  memcpy (dirname, file_name, lastslash - file_name);
 	  dirname[lastslash - file_name] = '\0';
 	  *name = (char *) lastslash + 1;
-	  return __hurd_file_name_lookup (use_init_port, get_dtable_port,
-					  dirname, 0, 0, dir);
+	  return
+	    __hurd_file_name_lookup (use_init_port, get_dtable_port, lookup,
+				     dirname, 0, 0, dir);
 	}
     }
   else
@@ -354,7 +373,7 @@ __file_name_lookup (const char *file_name, int flags, mode_t mode)
   error_t err;
   file_t result;
 
-  err = __hurd_file_name_lookup (&_hurd_ports_use, &__getdport,
+  err = __hurd_file_name_lookup (&_hurd_ports_use, &__getdport, 0,
 				 file_name, flags, mode & ~_hurd_umask,
 				 &result);
 
@@ -369,7 +388,7 @@ __file_name_split (const char *file_name, char **name)
   error_t err;
   file_t result;
 
-  err = __hurd_file_name_split (&_hurd_ports_use, &__getdport,
+  err = __hurd_file_name_split (&_hurd_ports_use, &__getdport, 0,
 				file_name, &result, name);
 
   return err ? (__hurd_fail (err), MACH_PORT_NULL) : result;
@@ -390,7 +409,7 @@ __file_name_lookup_under (file_t startdir,
 	      _hurd_ports_use (which, operate));
     }
 
-  err = __hurd_file_name_lookup (&use_init_port, &__getdport,
+  err = __hurd_file_name_lookup (&use_init_port, &__getdport, 0,
 				 file_name, flags, mode & ~_hurd_umask,
 				 &result);
 
