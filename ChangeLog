@@ -1,3 +1,11 @@
+2003-06-26  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/xstatconv.h [!STAT_IS_KERNEL_STAT]:
+	Conditionalize function definitions that use struct kernel_stat.
+	* sysdeps/unix/sysv/linux/fxstat.c: Remove __syscall_fstat extern.
+	* sysdeps/unix/sysv/linux/lxstat.c: Remove __syscall_lstat extern.
+	* sysdeps/unix/sysv/linux/xstat.c: Remove __syscall_stat extern.
+
 2003-06-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/semtimedop.c (semtimedop): Add real

@@ -19,7 +19,8 @@
 
 #include "kernel-features.h"
 
-
+#ifndef STAT_IS_KERNEL_STAT
 extern int __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf);
 extern int __xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf);
+#endif
 extern int __xstat32_conv (int vers, struct stat64 *kbuf, struct stat *buf);

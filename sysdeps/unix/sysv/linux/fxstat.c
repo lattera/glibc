@@ -33,8 +33,6 @@
 
 #include <xstatconv.h>
 
-extern int __syscall_fstat (int, struct kernel_stat *__unbounded);
-
 /* Get information about the file FD in BUF.  */
 int
 __fxstat (int vers, int fd, struct stat *buf)

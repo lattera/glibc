@@ -32,9 +32,6 @@
 
 #include <xstatconv.h>
 
-extern int __syscall_lstat (const char *__unbounded,
-			    struct kernel_stat *__unbounded);
-
 /* Get information about the file NAME in BUF.  */
 int
 __lxstat (int vers, const char *name, struct stat *buf)
