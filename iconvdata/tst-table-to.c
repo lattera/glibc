@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 
@@ -32,6 +32,7 @@ main (int argc, char *argv[])
 {
   const char *charset;
   iconv_t cd;
+  int bmp_only;
 
   if (argc != 2)
     {
@@ -40,22 +41,38 @@ main (int argc, char *argv[])
     }
   charset = argv[1];
 
-  cd = iconv_open (charset, "UCS-2");
+  cd = iconv_open (charset, "UTF-8");
   if (cd == (iconv_t)(-1))
     {
       perror ("iconv_open");
       return 1;
     }
 
+  /* When testing UTF-8 or GB18030, stop at 0x10000, otherwise the output
+     file gets too big.  */
+  bmp_only = (strcmp (charset, "UTF-8") == 0
+	      || strcmp (charset, "GB18030") == 0);
+
   {
     unsigned int i;
     unsigned char buf[10];
 
-    for (i = 0; i < 0x10000; i++)
+    for (i = 0; i < (bmp_only ? 0x10000 : 0x30000); i++)
       {
-	unsigned short in = i;
-	const char *inbuf = (const char *) &in;
-	size_t inbytesleft = sizeof (unsigned short);
+	unsigned char in[6];
+	unsigned int incount =
+	  (i < 0x80 ? (in[0] = i, 1)
+	   : i < 0x800 ? (in[0] = 0xc0 | (i >> 6),
+			  in[1] = 0x80 | (i & 0x3f), 2)
+	   : i < 0x10000 ? (in[0] = 0xe0 | (i >> 12),
+			    in[1] = 0x80 | ((i >> 6) & 0x3f),
+			    in[2] = 0x80 | (i & 0x3f), 3)
+	   : /* i < 0x200000 */ (in[0] = 0xf0 | (i >> 18),
+				 in[1] = 0x80 | ((i >> 12) & 0x3f),
+				 in[2] = 0x80 | ((i >> 6) & 0x3f),
+				 in[3] = 0x80 | (i & 0x3f), 4));
+	const char *inbuf = (const char *) in;
+	size_t inbytesleft = incount;
 	char *outbuf = (char *) buf;
 	size_t outbytesleft = sizeof (buf);
 	size_t result = iconv (cd,
@@ -78,7 +95,7 @@ main (int argc, char *argv[])
 	    if (inbytesleft != 0 || outbytesleft == sizeof (buf))
 	      {
 		fprintf (stderr, "0x%02X: inbytes = %ld, outbytes = %ld\n", i,
-			 (long) (sizeof (unsigned short) - inbytesleft),
+			 (long) (incount - inbytesleft),
 			 (long) (sizeof (buf) - outbytesleft));
 		return 1;
 	      }

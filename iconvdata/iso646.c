@@ -1,5 +1,5 @@
 /* Conversion to and from the various ISO 646 CCS.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -879,7 +879,10 @@ gconv_end (struct __gconv_step *data)
 	break;								      \
       default:								      \
 	if (__builtin_expect (ch, 0) > 0x7f)				      \
-	  failure = __GCONV_ILLEGAL_INPUT;				      \
+	  {								      \
+	    UNICODE_TAG_HANDLER (ch, 4);				      \
+	    failure = __GCONV_ILLEGAL_INPUT;				      \
+	  }								      \
 	break;								      \
       }									      \
 									      \

@@ -1,5 +1,5 @@
 /* Mapping tables for SJIS handling.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -4471,8 +4471,11 @@ static const char from_ucs4_extra[0x100][2] =
 		 && __builtin_expect (ch, 0xff01) <= 0xffef)		      \
 	  cp = from_ucs4_extra[ch - 0xff00];				      \
 	else								      \
-	  /* Illegal character.  */					      \
-	  cp = "";							      \
+	  {								      \
+	    UNICODE_TAG_HANDLER (ch, 4);				      \
+	    /* Illegal character.  */					      \
+	    cp = "";							      \
+	  }								      \
       }									      \
     else								      \
       cp = from_ucs4_lat1[ch];						      \

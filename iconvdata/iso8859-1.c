@@ -1,5 +1,5 @@
 /* Conversion to and from ISO 8859-1.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -48,6 +48,8 @@
     uint32_t ch = *((const uint32_t *) inptr);				      \
     if (__builtin_expect (ch, 0) > 0xff)				      \
       {									      \
+	UNICODE_TAG_HANDLER (ch, 4);					      \
+									      \
 	/* We have an illegal character.  */				      \
 	STANDARD_ERR_HANDLER (4);					      \
       }									      \

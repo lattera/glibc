@@ -10,7 +10,7 @@
  * ====================================================
  */
 
-/* __log2(x)
+/* __ieee754_log2(x)
  * Return the logarithm to base 2 of x
  *
  * Method :
@@ -79,9 +79,9 @@ static double zero   =  0.0;
 #endif
 
 #ifdef __STDC__
-	double __log2(double x)
+	double __ieee754_log2(double x)
 #else
-	double __log2(x)
+	double __ieee754_log2(x)
 	double x;
 #endif
 {
@@ -128,9 +128,3 @@ static double zero   =  0.0;
 	    return dk-((s*(f-R))-f)/ln2;
 	}
 }
-
-weak_alias (__log2, log2)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__log2, __log2l)
-weak_alias (__log2, log2l)
-#endif

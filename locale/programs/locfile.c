@@ -338,30 +338,33 @@ write_locale_data (const char *output_path, const char *category,
      data.  This means we need to have a directory LC_MESSAGES in
      which we place the file under the name SYS_LC_MESSAGES.  */
   sprintf (fname, "%s%s", output_path, category);
+  fd = -2;
   if (strcmp (category, "LC_MESSAGES") == 0)
     {
       struct stat st;
 
       if (stat (fname, &st) < 0)
 	{
-	  if (mkdir (fname, 0777) < 0)
-	    fd = creat (fname, 0666);
-	  else
+	  if (mkdir (fname, 0777) >= 0)
 	    {
 	      fd = -1;
 	      errno = EISDIR;
 	    }
 	}
-      else if (S_ISREG (st.st_mode))
-	fd = creat (fname, 0666);
-      else
+      else if (!S_ISREG (st.st_mode))
 	{
 	  fd = -1;
 	  errno = EISDIR;
 	}
     }
-  else
-    fd = creat (fname, 0666);
+
+  /* Create the locale file with nlinks == 1; this avoids crashing processes
+     which currently use the locale.  */
+  if (fd == -2)
+    {
+      unlink (fname);
+      fd = creat (fname, 0666);
+    }
 
   if (fd == -1)
     {
@@ -369,7 +372,8 @@ write_locale_data (const char *output_path, const char *category,
 
       if (errno == EISDIR)
 	{
-	  sprintf (fname, "%1$s/%2$s/SYS_%2$s", output_path, category);
+	  sprintf (fname, "%1$s%2$s/SYS_%2$s", output_path, category);
+	  unlink (fname);
 	  fd = creat (fname, 0666);
 	  if (fd == -1)
 	    save_err = errno;
@@ -381,6 +385,7 @@ write_locale_data (const char *output_path, const char *category,
 	    error (0, save_err, _("\
 cannot open output file `%s' for category `%s'"),
 		   fname, category);
+	  free (fname);
 	  return;
 	}
     }

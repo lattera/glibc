@@ -1,5 +1,5 @@
 /* Mapping tables for EUC-TW handling.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -61,14 +61,14 @@
       }									      \
     else								      \
       {									      \
-	/* Two or more byte character.  First test whether the next	      \
-	   character is also available.  */				      \
+	/* Two or more byte character.  First test whether the next byte      \
+	   is also available.  */					      \
 	uint32_t ch2;							      \
 									      \
 	if (inptr + 1 >= inend)						      \
 	  {								      \
-	    /* The second character is not available.  Store the	      \
-	       intermediate result.  */					      \
+	    /* The second byte is not available.  Store the intermediate      \
+	       result.  */						      \
 	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
@@ -99,7 +99,7 @@
 									      \
 	    if (ch == 0)						      \
 	      {								      \
-		/* The third or fourth character is not available.  Store     \
+		/* The third or fourth byte is not available.  Store	      \
 		   the intermediate result.  */				      \
 		result = __GCONV_INCOMPLETE_INPUT;			      \
 		break;							      \
@@ -170,7 +170,7 @@
       *outptr++ = ch;							      \
     else								      \
       {									      \
-	/* Try the JIS character sets.  */				      \
+	/* Try the CNS 11643 planes.  */				      \
 	size_t found;							      \
 									      \
 	found = ucs4_to_cns11643l1 (ch, outptr, outend - outptr);	      \
@@ -199,6 +199,8 @@
 	      }								      \
 	    if (__builtin_expect (found, 0) == __UNKNOWN_10646_CHAR)	      \
 	      {								      \
+		UNICODE_TAG_HANDLER (ch, 4);				      \
+									      \
 		/* Illegal character.  */				      \
 		STANDARD_ERR_HANDLER (4);				      \
 	      }								      \

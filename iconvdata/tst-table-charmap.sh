@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 #
@@ -30,6 +30,6 @@ case "$1" in
     ;;
   *)
     # New Unicode based format
-    sed -e 's,^%IRREVERSIBLE%,,' | grep '^<U....>[ 	]*/x' | grep -v 'not a real character' | sed -e 's,<U\(....\)>[ 	]*\([/x0-9A-Fa-f]*\).*$,\2	0x\1,' | tr abcdef ABCDEF | sed -e 's,/x\([0-9A-F][0-9A-F]\),\1,g' | sed -e 's,^,0x,' | sort | uniq | grep -v '^0x00	0x\([1-9A-F]...\|.[1-9A-F]..\|..[1-9A-F].\|...[1-9A-F]\)'
+    sed -e 's,^%IRREVERSIBLE%,,' | grep '^<U[0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F]*>[ 	]*/x' | grep -v 'not a real character' | sed -e 's,<U\(....\)>[ 	]*\([/x0-9A-Fa-f]*\).*$,\2	0x\1,' -e 's,<U0*\([1-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F]*\)>[ 	]*\([/x0-9A-Fa-f]*\).*$,\2	0x\1,' | tr abcdef ABCDEF | sed -e 's,/x\([0-9A-F][0-9A-F]\),\1,g' | sed -e 's,^,0x,' | sort | uniq | grep -v '^0x00	0x\([1-9A-F]...\|.[1-9A-F]..\|..[1-9A-F].\|...[1-9A-F]\)'
     ;;
 esac

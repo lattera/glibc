@@ -1,3 +1,56 @@
+2001-05-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/UTF-8: Update for Unicode 3.1: Add <U03F4>..<U03F5>. Use
+	range syntax for <U3400>..<U4DB5>, <U4E00>..<U9FA5>, <UE000>..<UF8FF>.
+	Add Unicode planes 1 (scripts, symbols), 2 (CJK), 14 (tags), 15 and 16
+	(private use). Update width table. Assign width 1 to <U3008>, <U3009>,
+	<U3014>, <U3015>, <U3018>, <U3019>.
+
+2001-05-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* gen-unicode-ctype.c: Update to Unicode 3.1.
+	(unicode_attributes): Change size to 0x110000.
+	(fill_attribute): Change limit for i to 0x110000. Ignore surrogates;
+	Unicode now officially allows a 32-bit representation and deprecates
+	the use of surrogates in this representation.
+	(fill_attributes): Loop up to 0x110000.
+	(unicode_combining): Remove array.
+	(fill_combining): Remove function. Unicode 3.1 PropList.txt doesn't
+	contain this property any more.
+	(is_alpha): Incorporate changes by Theppitak Karoonboonyanan
+	2001-02-15.
+	(is_combining): Use new but equivalent definition.
+	(ucs_symbol, ucs_symbol_range): New functions.
+	(output_charclass): Loop up to 0x110000.
+	(output_charmap): Likewise.
+	(output_tables): Fix header. Loop up to 0x110000. Use ucs_symbol where
+	appropriate.
+	(main): Expect only two arguments. Remove fill_combining() call.
+	* locales/i18n (LC_CTYPE): To "upper", add <U03F4> and Deseret letters.
+	To "lower", add <U03F5> and Deseret letters.
+	To "alpha", add <U03F4>, <U03F5>, <U16EE>..<U16F0>, Old Italic letters,
+	Gothic letters, Deseret letters, mathematical symbols.
+	From "punct", remove <U16EE>..<U16F0> and surrogates. Add many new
+	Unicode 3.1 characters.
+	To "graph" and "print", add <U03F4>, <U03F5>. Remove surrogates. Add
+	many new Unicode 3.1 characters.
+	"toupper", "tolower", "totitle": Update.
+	To "combining", add some new musical symbols.
+	To "combining_level3", add some new musical symbols.
+	* locales/tr_TR (LC_CTYPE): Update from i18n.
+	* locales/translit_font: Add transliterations for new Unicode 3.1
+	mathematical symbols.
+	* locales/translit_compat: Add transliterations for <U03F4>, <U03F5>.
+	* locales/translit_cjk_compat: Add transliterations for CJK
+	compatibility characters in Unicode plane 2.
+
+2001-05-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/EUC-TW: Update to Unicode 3.1. Add mappings for
+	<U4EA0>, <U51AB>, <U52F9>. Remove 0x8EAExxxx mappings. Add
+	0x8EA3xxxx, 0x8EA4xxxx, 0x8EA5xxxx, 0x8EA6xxxx, 0x8EA7xxxx,
+	0x8EAFxxxx mappings instead.
+
 2001-05-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/ro_RO: Correct abday, day, abmon, and mon info.

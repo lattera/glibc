@@ -1,5 +1,5 @@
 /* Mapping tables for EUC-CN handling.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -140,6 +140,8 @@
 	  {								      \
 	    if (__builtin_expect (found, 0) == __UNKNOWN_10646_CHAR)	      \
 	      {								      \
+		UNICODE_TAG_HANDLER (ch, 4);				      \
+									      \
 		/* Illegal character.  */				      \
 		STANDARD_ERR_HANDLER (4);				      \
 	      }								      \

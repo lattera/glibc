@@ -1,5 +1,5 @@
-/* Conversion module for ISO-2022-JP.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Conversion module for ISO-2022-JP and ISO-2022-JP-2.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -90,14 +90,14 @@ struct iso2022jp_data
 enum
 {
   ASCII_set = 0,
-  JISX0208_1978_set = 8,
-  JISX0208_1983_set = 16,
-  JISX0201_Roman_set = 24,
-  JISX0201_Kana_set = 32,
-  GB2312_set = 40,
-  KSC5601_set = 48,
-  JISX0212_set = 56,
-  CURRENT_SEL_MASK = 56
+  JISX0208_1978_set = 1 << 3,
+  JISX0208_1983_set = 2 << 3,
+  JISX0201_Roman_set = 3 << 3,
+  JISX0201_Kana_set = 4 << 3,
+  GB2312_set = 5 << 3,
+  KSC5601_set = 6 << 3,
+  JISX0212_set = 7 << 3,
+  CURRENT_SEL_MASK = 7 << 3
 };
 
 /* The second value stored is the designation of the G2 set.  The following
@@ -105,9 +105,25 @@ enum
 enum
 {
   UNSPECIFIED_set = 0,
-  ISO88591_set = 64,
-  ISO88597_set = 128,
-  CURRENT_ASSIGN_MASK = 192
+  ISO88591_set = 1 << 6,
+  ISO88597_set = 2 << 6,
+  CURRENT_ASSIGN_MASK = 3 << 6
+};
+
+/* The third value, only used during conversion from Unicode to ISO-2022-JP-2,
+   describes the language tag parsing status.  The possible values are as
+   follows.  Values >= TAG_language are temporary tag parsing states.  */
+enum
+{
+  TAG_none = 0,
+  TAG_language = 4 << 8,
+  TAG_language_j = 5 << 8,
+  TAG_language_ja = 1 << 8,
+  TAG_language_k = 6 << 8,
+  TAG_language_ko = 2 << 8,
+  TAG_language_z = 7 << 8,
+  TAG_language_zh = 3 << 8,
+  CURRENT_TAG_MASK = 7 << 8
 };
 
 
@@ -198,7 +214,8 @@ gconv_end (struct __gconv_step *data)
 									      \
   if ((data->__statep->__count & ~7) != ASCII_set)			      \
     {									      \
-      if (dir == from_iso2022jp)					      \
+      if (dir == from_iso2022jp						      \
+	  || (data->__statep->__count & CURRENT_SEL_MASK) == ASCII_set)	      \
 	{								      \
 	  /* It's easy, we don't have to emit anything, we just reset the     \
 	     state for the input.  Note that this also clears the G2	      \
@@ -503,6 +520,23 @@ gconv_end (struct __gconv_step *data)
 
 
 /* Next, define the other direction.  */
+
+enum conversion { none = 0, european, japanese, chinese, korean, other };
+
+/* A datatype for conversion lists.  */
+typedef unsigned int cvlist_t;
+#define CVLIST(cv1, cv2, cv3, cv4, cv5) \
+  ((cv1) + ((cv2) << 3) + ((cv3) << 6) + ((cv4) << 9) + ((cv5) << 12))
+#define CVLIST_FIRST(cvl) ((cvl) & ((1 << 3) - 1))
+#define CVLIST_REST(cvl) ((cvl) >> 3)
+static const cvlist_t conversion_lists[4] =
+  {
+    /* TAG_none */        CVLIST (japanese, european, chinese, korean, other),
+    /* TAG_language_ja */ CVLIST (japanese, european, chinese, korean, other),
+    /* TAG_language_ko */ CVLIST (korean, european, japanese, chinese, other),
+    /* TAG_language_zh */ CVLIST (chinese, european, japanese, korean, other)
+  };
+
 #define MIN_NEEDED_INPUT	MIN_NEEDED_TO
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
 #define MAX_NEEDED_OUTPUT	(MAX_NEEDED_FROM + 2)
@@ -510,12 +544,56 @@ gconv_end (struct __gconv_step *data)
 #define BODY \
   {									      \
     uint32_t ch;							      \
-    size_t written = 0;							      \
+    size_t written;							      \
 									      \
     ch = get32 (inptr);							      \
 									      \
+    if (var == iso2022jp2)						      \
+      {									      \
+	/* Handle Unicode tag characters (range U+E0000..U+E007F).  */	      \
+	if (__builtin_expect ((ch >> 7) == (0xe0000 >> 7), 0))		      \
+	  {								      \
+	    ch &= 0x7f;							      \
+	    if (ch >= 'A' && ch <= 'Z')					      \
+	      ch += 'a' - 'A';						      \
+	    if (ch == 0x01)						      \
+	      tag = TAG_language;					      \
+	    else if (ch == 'j' && tag == TAG_language)			      \
+	      tag = TAG_language_j;					      \
+	    else if (ch == 'a' && tag == TAG_language_j)		      \
+	      tag = TAG_language_ja;					      \
+	    else if (ch == 'k' && tag == TAG_language)			      \
+	      tag = TAG_language_k;					      \
+	    else if (ch == 'o' && tag == TAG_language_k)		      \
+	      tag = TAG_language_ko;					      \
+	    else if (ch == 'z' && tag == TAG_language)			      \
+	      tag = TAG_language_z;					      \
+	    else if (ch == 'h' && tag == TAG_language_z)		      \
+	      tag = TAG_language_zh;					      \
+	    else if (ch == 0x7f)					      \
+	      tag = TAG_none;						      \
+	    else							      \
+	      {								      \
+		/* Other tag characters reset the tag parsing state (if the   \
+		   current state is a temporary state) or are ignored (if     \
+		   the current state is a stable one).  */		      \
+		if (tag >= TAG_language)				      \
+		  tag = TAG_none;					      \
+	      }								      \
+									      \
+	    inptr += 4;							      \
+	    continue;							      \
+	  }								      \
+									      \
+	/* Non-tag characters reset the tag parsing state, if the current     \
+	   state is a temporary state.  */				      \
+	if (__builtin_expect (tag >= TAG_language, 0))			      \
+	  tag = TAG_none;						      \
+      }									      \
+									      \
     /* First see whether we can write the character using the currently	      \
-       selected character set.  */					      \
+       selected character set.  But ignore the selected character set if      \
+       the current language tag shows different preferences.  */	      \
     if (set == ASCII_set)						      \
       {									      \
 	/* Please note that the NUL byte is *not* matched if we are not	      \
@@ -525,58 +603,75 @@ gconv_end (struct __gconv_step *data)
 	  {								      \
 	    *outptr++ = ch;						      \
 	    written = 1;						      \
+									      \
+	    /* At the beginning of a line, G2 designation is cleared.  */     \
+	    if (var == iso2022jp2 && ch == 0x0a)			      \
+	      set2 = UNSPECIFIED_set;					      \
 	  }								      \
-	/* At the beginning of a line, G2 designation is cleared.  */	      \
-	if (var == iso2022jp2 && ch == 0x0a)				      \
-	  set2 = UNSPECIFIED_set;					      \
+	else								      \
+	  written = __UNKNOWN_10646_CHAR;				      \
       }									      \
     /* ISO-2022-JP recommends to encode the newline character always in	      \
        ASCII since this allows a context-free interpretation of the	      \
        characters at the beginning of the next line.  Otherwise it would      \
        have to be known whether the last line ended using ASCII or	      \
        JIS X 0201.  */							      \
-    else if (set == JISX0201_Roman_set)					      \
+    else if (set == JISX0201_Roman_set					      \
+	     && (__builtin_expect (tag == TAG_none, 1)			      \
+		 || tag == TAG_language_ja))				      \
       {									      \
-	unsigned char buf[2];						      \
+	unsigned char buf[1];						      \
 	written = ucs4_to_jisx0201 (ch, buf);				      \
-	if (written != __UNKNOWN_10646_CHAR && buf[0] > 0x20		      \
-	    && buf[0] < 0x80)						      \
+	if (written != __UNKNOWN_10646_CHAR)				      \
 	  {								      \
-	    *outptr++ = buf[0];						      \
-	    written = 1;						      \
+	    if (buf[0] > 0x20 && buf[0] < 0x80)				      \
+	      {								      \
+		*outptr++ = buf[0];					      \
+		written = 1;						      \
+	      }								      \
+	    else							      \
+	      written = __UNKNOWN_10646_CHAR;				      \
 	  }								      \
-	else								      \
-	  written = __UNKNOWN_10646_CHAR;				      \
       }									      \
-    else if (set == JISX0201_Kana_set)					      \
+    else if (set == JISX0201_Kana_set					      \
+	     && (__builtin_expect (tag == TAG_none, 1)			      \
+		 || tag == TAG_language_ja))				      \
       {									      \
-	unsigned char buf[2];						      \
+	unsigned char buf[1];						      \
 	written = ucs4_to_jisx0201 (ch, buf);				      \
-	if (written != __UNKNOWN_10646_CHAR && buf[0] > 0xa0		      \
-	    && buf[0] < 0xe0)						      \
+	if (written != __UNKNOWN_10646_CHAR)				      \
 	  {								      \
-	    *outptr++ = buf[0] - 0x80;					      \
-	    written = 1;						      \
+	    if (buf[0] > 0xa0 && buf[0] < 0xe0)				      \
+	      {								      \
+		*outptr++ = buf[0] - 0x80;				      \
+		written = 1;						      \
+	      }								      \
+	    else							      \
+	      written = __UNKNOWN_10646_CHAR;				      \
 	  }								      \
-	else								      \
-	  written = __UNKNOWN_10646_CHAR;				      \
       }									      \
     else								      \
       {									      \
-	if (set == JISX0208_1978_set || set == JISX0208_1983_set)	      \
+	if ((set == JISX0208_1978_set || set == JISX0208_1983_set)	      \
+	    && (__builtin_expect (tag == TAG_none, 1)			      \
+		|| tag == TAG_language_ja))				      \
 	  written = ucs4_to_jisx0208 (ch, outptr, outend - outptr);	      \
-	else if (set == JISX0212_set)					      \
+	else if (set == JISX0212_set					      \
+		 && (__builtin_expect (tag == TAG_none, 1)		      \
+		     || tag == TAG_language_ja))			      \
 	  written = ucs4_to_jisx0212 (ch, outptr, outend - outptr);	      \
-	else if (set == GB2312_set)					      \
+	else if (set == GB2312_set					      \
+		 && (__builtin_expect (tag == TAG_none, 1)		      \
+		     || tag == TAG_language_zh))			      \
 	  written = ucs4_to_gb2312 (ch, outptr, outend - outptr);	      \
+	else if (set == KSC5601_set					      \
+		 && (__builtin_expect (tag == TAG_none, 1)		      \
+		     || tag == TAG_language_ko))			      \
+	  written = ucs4_to_ksc5601 (ch, outptr, outend - outptr);	      \
 	else								      \
-	  {								      \
-	    assert (set == KSC5601_set);				      \
+	  written = __UNKNOWN_10646_CHAR;				      \
 									      \
-	    written = ucs4_to_ksc5601 (ch, outptr, outend - outptr);	      \
-	  }								      \
-									      \
-	if (__builtin_expect (written, 1) == 0)				      \
+	if (__builtin_expect (written == 0, 0))				      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
@@ -585,18 +680,19 @@ gconv_end (struct __gconv_step *data)
 	  outptr += written;						      \
       }									      \
 									      \
-    if (written == __UNKNOWN_10646_CHAR || written == 0)		      \
+    if (written == __UNKNOWN_10646_CHAR					      \
+	&& __builtin_expect (tag == TAG_none, 1))			      \
       {									      \
 	if (set2 == ISO88591_set)					      \
 	  {								      \
-	    if (__builtin_expect (outptr + 3 > outend, 0))		      \
+	    if (ch >= 0x80 && ch <= 0xff)				      \
 	      {								      \
-		result = __GCONV_FULL_OUTPUT;				      \
-		break;							      \
-	      }								      \
+		if (__builtin_expect (outptr + 3 > outend, 0))		      \
+		  {							      \
+		    result = __GCONV_FULL_OUTPUT;			      \
+		    break;						      \
+		  }							      \
 									      \
-	    if (ch >= 0x80 && ch <= 0xff) 				      \
-	      {								      \
 		*outptr++ = ESC;					      \
 		*outptr++ = 'N';					      \
 		*outptr++ = ch & 0x7f;					      \
@@ -629,18 +725,15 @@ gconv_end (struct __gconv_step *data)
 	  }								      \
       }									      \
 									      \
-    if (written == __UNKNOWN_10646_CHAR || written == 0)		      \
+    if (written == __UNKNOWN_10646_CHAR)				      \
       {									      \
-	/* Either this is an unknown character or we have to switch	      \
-	   the currently selected character set.  The character sets	      \
-	   do not code entirely separate parts of ISO 10646 and		      \
-	   therefore there is no single correct result.  If we choose	      \
-	   the character set to use wrong we might be end up with	      \
-	   using yet another character set for the next character	      \
-	   though the current and the next could be encoded with one	      \
-	   character set.  We leave this kind of optimization for	      \
-	   later and now simply use a fixed order in which we test for	      \
-	   availability  */						      \
+	/* The attempts to use the currently selected character set	      \
+	   failed, either because the language tag changed, or because	      \
+	   the character requires a different character set, or because	      \
+	   the character is unknown.					      \
+	   The CJK character sets partially overlap when seen as subsets      \
+	   of ISO 10646; therefore there is no single correct result.	      \
+	   We use a preferrence order which depends on the language tag.  */  \
 									      \
 	if (ch <= 0x7f)							      \
 	  {								      \
@@ -671,127 +764,75 @@ gconv_end (struct __gconv_step *data)
 	else								      \
 	  {								      \
 	    /* Now it becomes difficult.  We must search the other	      \
-	       character sets one by one and we cannot use simple	      \
-	       arithmetic to determine whether the character can be	      \
-	       encoded using this set.  */				      \
-	    size_t written;						      \
+	       character sets one by one.  Use an ordered conversion	      \
+	       list that depends on the current language tag.  */	      \
+	    cvlist_t conversion_list;					      \
 	    unsigned char buf[2];					      \
 									      \
-	    written = ucs4_to_jisx0201 (ch, buf);			      \
-	    if (written != __UNKNOWN_10646_CHAR && buf[0] < 0x80)	      \
-	      {								      \
-		/* We use JIS X 0201.  */				      \
-		if (__builtin_expect (outptr + 3 > outend, 0))		      \
-		  {							      \
-		    result = __GCONV_FULL_OUTPUT;			      \
-		    break;						      \
-		  }							      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 									      \
-		*outptr++ = ESC;					      \
-		*outptr++ = '(';					      \
-		*outptr++ = 'J';					      \
-		set = JISX0201_Roman_set;				      \
-									      \
-		if (__builtin_expect (outptr + 1 > outend, 0))		      \
-		  {							      \
-		    result = __GCONV_FULL_OUTPUT;			      \
-		    break;						      \
-		  }							      \
-		*outptr++ = buf[0];					      \
-	      }								      \
+	    if (var == iso2022jp2)					      \
+	      conversion_list = conversion_lists[tag >> 8];		      \
 	    else							      \
-	      {								      \
-		written = ucs4_to_jisx0208 (ch, buf, 2);		      \
-		if (written != __UNKNOWN_10646_CHAR)			      \
+	      conversion_list = CVLIST (japanese, 0, 0, 0, 0);		      \
+									      \
+	    do								      \
+	      switch (CVLIST_FIRST (conversion_list))			      \
+		{							      \
+		case european:						      \
+									      \
+		  /* Try ISO 8859-1 upper half.   */			      \
+		  if (ch >= 0x80 && ch <= 0xff)				      \
+		    {							      \
+		      if (set2 != ISO88591_set)				      \
+			{						      \
+			  if (__builtin_expect (outptr + 3 > outend, 0))      \
+			    {						      \
+			      result = __GCONV_FULL_OUTPUT;		      \
+			      break;					      \
+			    }						      \
+			  *outptr++ = ESC;				      \
+			  *outptr++ = '.';				      \
+			  *outptr++ = 'A';				      \
+			  set2 = ISO88591_set;				      \
+			}						      \
+									      \
+		      if (__builtin_expect (outptr + 3 > outend, 0))	      \
+			{						      \
+			  result = __GCONV_FULL_OUTPUT;			      \
+			  break;					      \
+			}						      \
+		      *outptr++ = ESC;					      \
+		      *outptr++ = 'N';					      \
+		      *outptr++ = ch - 0x80;				      \
+		      result = __GCONV_OK;				      \
+		      break;						      \
+		    }							      \
+									      \
+		  /* Try ISO 8859-7 upper half.  */			      \
 		  {							      \
-		    /* We use JIS X 0208.  */				      \
-		    if (__builtin_expect (outptr + 3 > outend, 0))	      \
-		      {							      \
-			result = __GCONV_FULL_OUTPUT;			      \
-			break;						      \
-		      }							      \
+		    const struct gap *rp = from_idx;			      \
 									      \
-		    *outptr++ = ESC;					      \
-		    *outptr++ = '$';					      \
-		    *outptr++ = 'B';					      \
-		    set = JISX0208_1983_set;				      \
-									      \
-		    if (__builtin_expect (outptr + 2 > outend, 0))	      \
+		    while (ch > rp->end)				      \
+		      ++rp;						      \
+		    if (ch >= rp->start)				      \
 		      {							      \
-			result = __GCONV_FULL_OUTPUT;			      \
-			break;						      \
-		      }							      \
-		    *outptr++ = buf[0];					      \
-		    *outptr++ = buf[1];					      \
-		  }							      \
-		else if (__builtin_expect (var, iso2022jp2) == iso2022jp)     \
-		  {							      \
-		    /* We have no other choice.  */			      \
-		    STANDARD_ERR_HANDLER (4);				      \
-		  }							      \
-		else							      \
-		  {							      \
-		    written = ucs4_to_jisx0212 (ch, buf, 2);		      \
-		    if (written != __UNKNOWN_10646_CHAR)		      \
-		      {							      \
-			/* We use JIS X 0212.  */			      \
-			if (__builtin_expect (outptr + 4 > outend, 0))	      \
+			unsigned char res =				      \
+			  iso88597_from_ucs4[ch - 0xa0 + rp->idx];	      \
+			if (res != '\0')				      \
 			  {						      \
-			    result = __GCONV_FULL_OUTPUT;		      \
-			    break;					      \
-			  }						      \
-			*outptr++ = ESC;				      \
-			*outptr++ = '$';				      \
-			*outptr++ = '(';				      \
-			*outptr++ = 'D';				      \
-			set = JISX0212_set;				      \
-									      \
-			if (__builtin_expect (outptr + 2 > outend, 0))	      \
-			  {						      \
-			    result = __GCONV_FULL_OUTPUT;		      \
-			    break;					      \
-			  }						      \
-			*outptr++ = buf[0];				      \
-			*outptr++ = buf[1];				      \
-		      }							      \
-		    else						      \
-		      {							      \
-			written = ucs4_to_jisx0201 (ch, buf);		      \
-			if (written != __UNKNOWN_10646_CHAR		      \
-			    && buf[0] >= 0x80)				      \
-			  {						      \
-			    /* We use JIS X 0201.  */			      \
-			    if (__builtin_expect (outptr + 3 > outend, 0))    \
+			    if (set2 != ISO88597_set)			      \
 			      {						      \
-			        result = __GCONV_FULL_OUTPUT;		      \
-			        break;					      \
+				if (__builtin_expect (outptr + 3 > outend, 0))\
+				  {					      \
+				    result = __GCONV_FULL_OUTPUT;	      \
+				    break;				      \
+				  }					      \
+				*outptr++ = ESC;			      \
+				*outptr++ = '.';			      \
+				*outptr++ = 'F';			      \
+				set2 = ISO88597_set;			      \
 			      }						      \
-									      \
-			    *outptr++ = ESC;				      \
-			    *outptr++ = '(';				      \
-			    *outptr++ = 'I';				      \
-			    set = JISX0201_Kana_set;			      \
-									      \
-			    if (__builtin_expect (outptr + 1 > outend, 0))    \
-			      {						      \
-			        result = __GCONV_FULL_OUTPUT;		      \
-			        break;					      \
-			      }						      \
-			    *outptr++ = buf[0] - 0x80;			      \
-			  }						      \
-			else if (ch != 0xa5 && ch >= 0x80 && ch <= 0xff)      \
-			  {						      \
-			    /* ISO 8859-1 upper half.   */		      \
-			    if (__builtin_expect (outptr + 3 > outend, 0))    \
-			      {						      \
-				result = __GCONV_FULL_OUTPUT;		      \
-				break;					      \
-			      }						      \
-									      \
-			    *outptr++ = ESC;				      \
-			    *outptr++ = '.';				      \
-			    *outptr++ = 'A';				      \
-			    set2 = ISO88591_set;			      \
 									      \
 			    if (__builtin_expect (outptr + 3 > outend, 0))    \
 			      {						      \
@@ -800,106 +841,221 @@ gconv_end (struct __gconv_step *data)
 			      }						      \
 			    *outptr++ = ESC;				      \
 			    *outptr++ = 'N';				      \
-			    *outptr++ = ch - 0x80;			      \
-			  }						      \
-			else						      \
-			  {						      \
-			    written = ucs4_to_gb2312 (ch, buf, 2);	      \
-			    if (written != __UNKNOWN_10646_CHAR)	      \
-			      {						      \
-				/* We use GB 2312.  */			      \
-				if (__builtin_expect (outptr + 3 > outend, 0))\
-				  {					      \
-				    result = __GCONV_FULL_OUTPUT;	      \
-				    break;				      \
-				  }					      \
-									      \
-				*outptr++ = ESC;			      \
-				*outptr++ = '$';			      \
-				*outptr++ = 'A';			      \
-				set = GB2312_set;			      \
-									      \
-				if (__builtin_expect (outptr + 2 > outend, 0))\
-				  {					      \
-				    result = __GCONV_FULL_OUTPUT;	      \
-				    break;				      \
-				  }					      \
-				*outptr++ = buf[0];			      \
-				*outptr++ = buf[1];			      \
-			      }						      \
-			    else					      \
-			      {						      \
-				written = ucs4_to_ksc5601 (ch, buf, 2);	      \
-				if (written != __UNKNOWN_10646_CHAR)	      \
-				  {					      \
-				    /* We use KSC 5601.  */		      \
-				    if (__builtin_expect (outptr + 4 > outend,\
-							  0))		      \
-				      {					      \
-					result = __GCONV_FULL_OUTPUT;	      \
-					break;				      \
-				      }					      \
-				    *outptr++ = ESC;			      \
-				    *outptr++ = '$';			      \
-				    *outptr++ = '(';			      \
-				    *outptr++ = 'C';			      \
-				    set = KSC5601_set;			      \
-									      \
-				    if (__builtin_expect (outptr + 2 > outend,\
-							  0))		      \
-				      {					      \
-					result = __GCONV_FULL_OUTPUT;	      \
-					break;				      \
-				      }					      \
-				    *outptr++ = buf[0];			      \
-				    *outptr++ = buf[1];			      \
-				  }					      \
-				else					      \
-				  {					      \
-				    const struct gap *rp = from_idx;	      \
-				    unsigned char gch = 0;		      \
-									      \
-				    while (ch > rp->end)		      \
-				      ++rp;				      \
-				    if (ch >= rp->start)		      \
-				      {					      \
-					ch = ch - 0xa0 + rp->idx;	      \
-					gch = iso88597_from_ucs4[ch];	      \
-				      }					      \
-									      \
-				    if (__builtin_expect (gch, 1) != 0)	      \
-				      {					      \
-					/* We use ISO 8859-7 greek.  */	      \
-					if (__builtin_expect (outptr + 3      \
-							      > outend, 0))   \
-					  {				      \
-					    result = __GCONV_FULL_OUTPUT;     \
-					    break;			      \
-					  }				      \
-					*outptr++ = ESC;		      \
-					*outptr++ = '.';		      \
-					*outptr++ = 'F';		      \
-					set2 = ISO88597_set;		      \
-									      \
-					if (__builtin_expect (outptr + 3      \
-							      > outend, 0))   \
-					  {				      \
-					    result = __GCONV_FULL_OUTPUT;     \
-					    break;			      \
-					  }				      \
-					*outptr++ = ESC;		      \
-					*outptr++ = 'N';		      \
-					*outptr++ = gch;		      \
-				      }					      \
-				    else				      \
-				      {					      \
-					STANDARD_ERR_HANDLER (4);	      \
-				      }					      \
-				  }					      \
-			      }						      \
+			    *outptr++ = res;				      \
+			    result = __GCONV_OK;			      \
+			    break;					      \
 			  }						      \
 		      }							      \
 		  }							      \
+									      \
+		  break;						      \
+									      \
+		case japanese:						      \
+									      \
+		  /* Try JIS X 0201 Roman.  */				      \
+		  written = ucs4_to_jisx0201 (ch, buf);			      \
+		  if (written != __UNKNOWN_10646_CHAR			      \
+		      && buf[0] > 0x20 && buf[0] < 0x80)		      \
+		    {							      \
+		      if (set != JISX0201_Roman_set)			      \
+			{						      \
+			  if (__builtin_expect (outptr + 3 > outend, 0))      \
+			    {						      \
+			      result = __GCONV_FULL_OUTPUT;		      \
+			      break;					      \
+			    }						      \
+			  *outptr++ = ESC;				      \
+			  *outptr++ = '(';				      \
+			  *outptr++ = 'J';				      \
+			  set = JISX0201_Roman_set;			      \
+			}						      \
+									      \
+		      if (__builtin_expect (outptr + 1 > outend, 0))	      \
+			{						      \
+			  result = __GCONV_FULL_OUTPUT;			      \
+			  break;					      \
+			}						      \
+		      *outptr++ = buf[0];				      \
+		      result = __GCONV_OK;				      \
+		      break;						      \
+		    }							      \
+									      \
+		  /* Try JIS X 0208.  */				      \
+		  written = ucs4_to_jisx0208 (ch, buf, 2);		      \
+		  if (written != __UNKNOWN_10646_CHAR)			      \
+		    {							      \
+		      if (set != JISX0208_1983_set)			      \
+			{						      \
+			  if (__builtin_expect (outptr + 3 > outend, 0))      \
+			    {						      \
+			      result = __GCONV_FULL_OUTPUT;		      \
+			      break;					      \
+			    }						      \
+			  *outptr++ = ESC;				      \
+			  *outptr++ = '$';				      \
+			  *outptr++ = 'B';				      \
+			  set = JISX0208_1983_set;			      \
+			}						      \
+									      \
+		      if (__builtin_expect (outptr + 2 > outend, 0))	      \
+			{						      \
+			  result = __GCONV_FULL_OUTPUT;			      \
+			  break;					      \
+			}						      \
+		      *outptr++ = buf[0];				      \
+		      *outptr++ = buf[1];				      \
+		      result = __GCONV_OK;				      \
+		      break;						      \
+		    }							      \
+									      \
+		  if (__builtin_expect (var == iso2022jp, 0))		      \
+		    /* Don't use the other Japanese character sets.  */	      \
+		    break;						      \
+									      \
+		  /* Try JIS X 0212.  */				      \
+		  written = ucs4_to_jisx0212 (ch, buf, 2);		      \
+		  if (written != __UNKNOWN_10646_CHAR)			      \
+		    {							      \
+		      if (set != JISX0212_set)				      \
+			{						      \
+			  if (__builtin_expect (outptr + 4 > outend, 0))      \
+			    {						      \
+			      result = __GCONV_FULL_OUTPUT;		      \
+			      break;					      \
+			    }						      \
+			  *outptr++ = ESC;				      \
+			  *outptr++ = '$';				      \
+			  *outptr++ = '(';				      \
+			  *outptr++ = 'D';				      \
+			  set = JISX0212_set;				      \
+			}						      \
+									      \
+		      if (__builtin_expect (outptr + 2 > outend, 0))	      \
+			{						      \
+			  result = __GCONV_FULL_OUTPUT;			      \
+			  break;					      \
+			}						      \
+		      *outptr++ = buf[0];				      \
+		      *outptr++ = buf[1];				      \
+		      result = __GCONV_OK;				      \
+		      break;						      \
+		    }							      \
+									      \
+		  break;						      \
+									      \
+		case chinese:						      \
+		  assert (var == iso2022jp2);				      \
+									      \
+		  /* Try GB 2312.  */					      \
+		  written = ucs4_to_gb2312 (ch, buf, 2);		      \
+		  if (written != __UNKNOWN_10646_CHAR)			      \
+		    {							      \
+		      if (set != GB2312_set)				      \
+			{						      \
+			  if (__builtin_expect (outptr + 3 > outend, 0))      \
+			    {						      \
+			      result = __GCONV_FULL_OUTPUT;		      \
+			      break;					      \
+			    }						      \
+			  *outptr++ = ESC;				      \
+			  *outptr++ = '$';				      \
+			  *outptr++ = 'A';				      \
+			  set = GB2312_set;				      \
+			}						      \
+									      \
+		      if (__builtin_expect (outptr + 2 > outend, 0))	      \
+			{						      \
+			  result = __GCONV_FULL_OUTPUT;			      \
+			  break;					      \
+			}						      \
+		      *outptr++ = buf[0];				      \
+		      *outptr++ = buf[1];				      \
+		      result = __GCONV_OK;				      \
+		      break;						      \
+		    }							      \
+									      \
+		  break;						      \
+									      \
+		case korean:						      \
+		  assert (var == iso2022jp2);				      \
+									      \
+		  /* Try KSC 5601.  */					      \
+		  written = ucs4_to_ksc5601 (ch, buf, 2);		      \
+		  if (written != __UNKNOWN_10646_CHAR)			      \
+		    {							      \
+		      if (set != KSC5601_set)				      \
+			{						      \
+			  if (__builtin_expect (outptr + 4 > outend, 0))      \
+			    {						      \
+			      result = __GCONV_FULL_OUTPUT;		      \
+			      break;					      \
+			    }						      \
+			  *outptr++ = ESC;				      \
+			  *outptr++ = '$';				      \
+			  *outptr++ = '(';				      \
+			  *outptr++ = 'C';				      \
+			  set = KSC5601_set;				      \
+			}						      \
+									      \
+		      if (__builtin_expect (outptr + 2 > outend, 0))	      \
+			{						      \
+			  result = __GCONV_FULL_OUTPUT;			      \
+			  break;					      \
+			}						      \
+		      *outptr++ = buf[0];				      \
+		      *outptr++ = buf[1];				      \
+		      result = __GCONV_OK;				      \
+		      break;						      \
+		    }							      \
+									      \
+		  break;						      \
+									      \
+		case other:						      \
+		  assert (var == iso2022jp2);				      \
+									      \
+		  /* Try JIS X 0201 Kana.  This is not officially part	      \
+		     of ISO-2022-JP-2, according to RFC 1554.  Therefore      \
+		     we try this only after all other attempts.  */	      \
+		  written = ucs4_to_jisx0201 (ch, buf);			      \
+		  if (written != __UNKNOWN_10646_CHAR && buf[0] >= 0x80)      \
+		    {							      \
+		      if (set != JISX0201_Kana_set)			      \
+			{						      \
+			  if (__builtin_expect (outptr + 3 > outend, 0))      \
+			    {						      \
+			      result = __GCONV_FULL_OUTPUT;		      \
+			      break;					      \
+			    }						      \
+			  *outptr++ = ESC;				      \
+			  *outptr++ = '(';				      \
+			  *outptr++ = 'I';				      \
+			  set = JISX0201_Kana_set;			      \
+			}						      \
+									      \
+		      if (__builtin_expect (outptr + 1 > outend, 0))	      \
+			{						      \
+			  result = __GCONV_FULL_OUTPUT;			      \
+			  break;					      \
+			}						      \
+		      *outptr++ = buf[0] - 0x80;			      \
+		      result = __GCONV_OK;				      \
+		      break;						      \
+		    }							      \
+									      \
+		  break;						      \
+									      \
+		default:						      \
+		  abort ();						      \
+		}							      \
+	    while (result == __GCONV_ILLEGAL_INPUT			      \
+		   && (conversion_list = CVLIST_REST (conversion_list)) != 0);\
+									      \
+	    if (result == __GCONV_FULL_OUTPUT)				      \
+	      break;							      \
+									      \
+	    if (result == __GCONV_ILLEGAL_INPUT)			      \
+	      {								      \
+		STANDARD_ERR_HANDLER (4);				      \
 	      }								      \
 	  }								      \
       }									      \
@@ -910,8 +1066,9 @@ gconv_end (struct __gconv_step *data)
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS	, enum variant var, int *setp
 #define INIT_PARAMS		int set = *setp & CURRENT_SEL_MASK;	      \
-				int set2 = *setp & CURRENT_ASSIGN_MASK
-#define UPDATE_PARAMS		*setp = set | set2
+				int set2 = *setp & CURRENT_ASSIGN_MASK;	      \
+				int tag = *setp & CURRENT_TAG_MASK;
+#define UPDATE_PARAMS		*setp = set | set2 | tag
 #include <iconv/loop.c>
 
 

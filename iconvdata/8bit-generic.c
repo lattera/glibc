@@ -1,5 +1,5 @@
 /* Generic conversion to and from 8bit charsets.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -67,6 +67,8 @@
     if (__builtin_expect (ch >= sizeof (from_ucs4) / sizeof (from_ucs4[0]), 0)\
 	|| (__builtin_expect (from_ucs4[ch], '\1') == '\0' && ch != 0))	      \
       {									      \
+	UNICODE_TAG_HANDLER (ch, 4);					      \
+									      \
 	/* This is an illegal character.  */				      \
 	STANDARD_ERR_HANDLER (4);					      \
       }									      \

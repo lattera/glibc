@@ -195,6 +195,8 @@ enum
 				     / sizeof (__ucs4_to_ibm937db[0])), 0)    \
 	    || __builtin_expect (cp[0], '\1') == '\0')			      \
 	  {								      \
+	    UNICODE_TAG_HANDLER (ch, 4);				      \
+									      \
 	    /* This is an illegal character.  */			      \
 	    if (! ignore_errors_p ())					      \
 	      {								      \

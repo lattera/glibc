@@ -16,10 +16,12 @@ static char rcsid[] = "$NetBSD: s_ilogb.c,v 1.9 1995/05/10 20:47:28 jtc Exp $";
 
 /* ilogb(double x)
  * return the binary exponent of non-zero x
- * ilogb(0) = 0x80000001
- * ilogb(inf/NaN) = 0x7fffffff (no signal is raised)
+ * ilogb(0) = FP_ILOGB0
+ * ilogb(NaN) = FP_ILOGBNAN (no signal is raised)
+ * ilogb(+-Inf) = INT_MAX (no signal is raised)
  */
 
+#include <limits.h>
 #include "math.h"
 #include "math_private.h"
 
@@ -47,7 +49,13 @@ static char rcsid[] = "$NetBSD: s_ilogb.c,v 1.9 1995/05/10 20:47:28 jtc Exp $";
 	    return ix;
 	}
 	else if (hx<0x7ff00000) return (hx>>20)-1023;
-	else return FP_ILOGBNAN;
+	else if (FP_ILOGBNAN != INT_MAX) {
+	    /* ISO C99 requires ilogb(+-Inf) == INT_MAX.  */
+	    GET_LOW_WORD(lx,x);
+	    if(((hx^0x7ff00000)|lx) == 0)
+		return INT_MAX;
+	}
+	return FP_ILOGBNAN;
 }
 weak_alias (__ilogb, ilogb)
 #ifdef NO_LONG_DOUBLE

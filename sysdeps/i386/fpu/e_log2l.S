@@ -32,7 +32,7 @@ limit:	.double 0.29
 #endif
 
 	.text
-ENTRY(__log2l)
+ENTRY(__ieee754_log2l)
 #ifdef PIC
 	call	1f
 1:	popl	%edx
@@ -64,5 +64,4 @@ ENTRY(__log2l)
 	fstp	%st(1)
 	fstp	%st(1)
 	ret
-END (__log2l)
-weak_alias (__log2l, log2l)
+END (__ieee754_log2l)

@@ -32,14 +32,14 @@ limit:	.double 0.29
 #endif
 
 	.text
-ENTRY(__log2f)
+ENTRY(__ieee754_log2)
 #ifdef PIC
 	call	1f
 1:	popl	%edx
 	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %edx
 #endif
 	fldl	MO(one)
-	flds	4(%esp)		// x : 1
+	fldl	4(%esp)		// x : 1
 	fxam
 	fnstsw
 	fld	%st		// x : x : 1
@@ -64,5 +64,4 @@ ENTRY(__log2f)
 	fstp	%st(1)
 	fstp	%st(1)
 	ret
-END (__log2f)
-weak_alias (__log2f, log2f)
+END (__ieee754_log2)

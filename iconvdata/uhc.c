@@ -1,5 +1,5 @@
 /* Mapping tables for UHC handling.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jungshik Shin <jshin@pantheon.yale.edu>, 1998.
 
@@ -3243,6 +3243,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	  }								      \
 	if (__builtin_expect (written, 0) == __UNKNOWN_10646_CHAR)	      \
 	  {								      \
+	    UNICODE_TAG_HANDLER (ch, 4);				      \
 	    STANDARD_ERR_HANDLER (4);					      \
 	  }								      \
 									      \

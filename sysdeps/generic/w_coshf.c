@@ -37,7 +37,7 @@ static char rcsid[] = "$NetBSD: w_coshf.c,v 1.3 1995/05/10 20:48:49 jtc Exp $";
 	float z;
 	z = __ieee754_coshf(x);
 	if(_LIB_VERSION == _IEEE_ || __isnanf(x)) return z;
-	if(fabsf(x)>(float)8.9415985107e+01) {	
+	if(!__finite(z) && __finite(x)) {	
 		/* cosh overflow */
 	        return (float)__kernel_standard((double)x,(double)x,105);
 	} else

@@ -79,6 +79,28 @@ main (void)
 	  }
 	puts ("ok");
       }
+
+    for (i = LDBL_MIN_EXP, x = LDBL_MIN; i >= LDBL_MIN_EXP - LDBL_MANT_DIG + 1;
+	 --i, x /= 2.0L)
+      {
+        printf ("2^%d: ", i);
+
+        r = frexpl (x, &e);
+        if (r != 0.5L)
+          {
+            printf ("mantissa incorrect: %.20La\n", r);
+            result = 1;
+            continue;
+          }
+        if (e != i)
+          {
+            printf ("exponent wrong %d (%.20Lg)\n", e, x);
+            result = 1;
+            continue;
+          }
+        puts ("ok");
+      }
+
   }
 # endif
 

@@ -7,7 +7,7 @@
 #include "math_private.h"
 
 static const float o_threshold= (float) FLT_MAX_EXP;
-static const float u_threshold= (float) FLT_MIN_EXP;
+static const float u_threshold= (float) (FLT_MIN_EXP - FLT_MANT_DIG - 1);
 
 float
 __exp2f (float x)		/* wrapper exp2f */
@@ -22,7 +22,7 @@ __exp2f (float x)		/* wrapper exp2f */
       if (x > o_threshold)
 	/* exp2 overflow */
 	return (float) __kernel_standard ((double) x, (double) x, 144);
-      else if (x < u_threshold)
+      else if (x <= u_threshold)
 	/* exp2 underflow */
 	return (float) __kernel_standard ((double) x, (double) x, 145);
     }

@@ -120,6 +120,7 @@
 #include <math.h>
 #include <float.h>
 #include <fenv.h>
+#include <limits.h>
 
 #include <errno.h>
 #include <stdlib.h>
@@ -2800,6 +2801,8 @@ ilogb_test (void)
 
   TEST_f_i (ilogb, 0.0, FP_ILOGB0, EXCEPTIONS_OK);
   TEST_f_i (ilogb, nan_value, FP_ILOGBNAN, EXCEPTIONS_OK);
+  TEST_f_i (ilogb, plus_infty, INT_MAX, EXCEPTIONS_OK);
+  TEST_f_i (ilogb, minus_infty, INT_MAX, EXCEPTIONS_OK);
 
   END (ilogb);
 }
@@ -3301,6 +3304,13 @@ llround_test (void)
   TEST_f_L (llround, 36028797018963968.0, 36028797018963968LL);
   /* 0x100000000000000 */
   TEST_f_L (llround, 72057594037927936.0, 72057594037927936LL);
+
+#ifndef TEST_FLOAT
+  /* 0x100000000 */
+  TEST_f_L (llround, 4294967295.5, 4294967296LL);
+  /* 0x200000000 */
+  TEST_f_L (llround, 8589934591.5, 8589934592LL);
+#endif
 
   END (llround);
 }

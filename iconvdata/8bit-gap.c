@@ -1,6 +1,6 @@
 /* Generic conversion to and from 8bit charsets,
    converting from UCS using gaps.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -83,7 +83,10 @@ struct gap
     unsigned char res;							      \
 									      \
     if (__builtin_expect (ch, 0) >= 0xffff)				      \
-      rp = NULL;							      \
+      {									      \
+	UNICODE_TAG_HANDLER (ch, 4);					      \
+	rp = NULL;							      \
+      }									      \
     else								      \
       while (ch > rp->end)						      \
 	++rp;								      \

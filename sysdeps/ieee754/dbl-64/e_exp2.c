@@ -1,5 +1,5 @@
 /* Double-precision floating point 2^x.
-   Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Geoffrey Keating <geoffk@ozemail.com.au>
 
@@ -44,10 +44,10 @@ double
 __ieee754_exp2 (double x)
 {
   static const double himark = (double) DBL_MAX_EXP;
-  static const double lomark = (double) (DBL_MIN_EXP - DBL_MANT_DIG - 1) - 1.0;
+  static const double lomark = (double) (DBL_MIN_EXP - DBL_MANT_DIG - 1);
 
   /* Check for usual case.  */
-  if (isless (x, himark) && isgreater (x, lomark))
+  if (isless (x, himark) && isgreaterequal (x, lomark))
     {
       static const double THREEp42 = 13194139533312.0;
       int tval, unsafe;

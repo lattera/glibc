@@ -1,5 +1,5 @@
 /* Single-precision floating point 2^x.
-   Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Geoffrey Keating <geoffk@ozemail.com.au>
 
@@ -45,10 +45,10 @@ float
 __ieee754_exp2f (float x)
 {
   static const float himark = (float) FLT_MAX_EXP;
-  static const float lomark = (float) (FLT_MIN_EXP - FLT_MANT_DIG - 1) - 1.0;
+  static const float lomark = (float) (FLT_MIN_EXP - FLT_MANT_DIG - 1);
 
   /* Check for usual case.  */
-  if (isless (x, himark) && isgreater (x, lomark))
+  if (isless (x, himark) && isgreaterequal (x, lomark))
     {
       static const float THREEp14 = 49152.0;
       int tval, unsafe;

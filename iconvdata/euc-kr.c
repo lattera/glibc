@@ -1,5 +1,5 @@
 /* Mapping tables for EUC-KR handling.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jungshik Shin <jshin@pantheon.yale.edu>
    and Ulrich Drepper <drepper@cygnus.com>, 1998.
@@ -142,10 +142,12 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 									      \
     /* Decomposing Hangul syllables not available in KS C 5601 into	      \
        Jamos should be considered either here or in euckr_from_ucs4() */      \
-    euckr_from_ucs4 (ch, cp) ;						      \
+    euckr_from_ucs4 (ch, cp);						      \
 									      \
     if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)		      \
       {									      \
+	UNICODE_TAG_HANDLER (ch, 4);					      \
+									      \
 	/* Illegal character.  */					      \
 	STANDARD_ERR_HANDLER (4);					      \
       }									      \

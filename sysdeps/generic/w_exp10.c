@@ -21,14 +21,6 @@
 #include "math_private.h"
 
 #ifdef __STDC__
-static const double
-#else
-static double
-#endif
-o_threshold=  3.0825471555991674389672e+02,
-u_threshold= -3.2360724533877978485251e+02;
-
-#ifdef __STDC__
 	double __exp10(double x)		/* wrapper exp10 */
 #else
 	double __exp10(x)			/* wrapper exp10 */
@@ -41,11 +33,9 @@ u_threshold= -3.2360724533877978485251e+02;
 	double z;
 	z = __ieee754_exp10(x);
 	if(_LIB_VERSION == _IEEE_) return z;
-	if(__finite(x)) {
-	    if(x>o_threshold)
-	        return __kernel_standard(x,x,46); /* exp10 overflow */
-	    else if(x<u_threshold)
-	        return __kernel_standard(x,x,47); /* exp10 underflow */
+	if(!__finite(z) && __finite(x)) {
+	    /* exp10 overflow (46) if x > 0, underflow (47) if x < 0.  */
+	    return __kernel_standard(x,x,46+!!__signbit(x));
 	}
 	return z;
 #endif

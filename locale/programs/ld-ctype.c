@@ -116,6 +116,14 @@ struct translit_include_t
 };
 
 
+/* Sparse table of uint32_t.  */
+#define TABLE idx_table
+#define ELEMENT uint32_t
+#define DEFAULT ~((uint32_t) 0)
+#define NO_FINALIZE
+#include "3level.h"
+
+
 /* The real definition of the struct for the LC_CTYPE locale.  */
 struct locale_ctype_t
 {
@@ -123,8 +131,7 @@ struct locale_ctype_t
   size_t charnames_max;
   size_t charnames_act;
   /* An index lookup table, to speedup find_idx.  */
-#define MAX_CHARNAMES_IDX 0x10000
-  uint32_t *charnames_idx;
+  struct idx_table charnames_idx;
 
   struct repertoire_t *repertoire;
 
@@ -261,10 +268,7 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
 	  for (cnt = 0; cnt < 256; ++cnt)
 	    ctype->charnames[cnt] = cnt;
 	  ctype->charnames_act = 256;
-	  ctype->charnames_idx =
-	    (uint32_t *) xmalloc (MAX_CHARNAMES_IDX * sizeof (uint32_t));
-	  for (cnt = 0; cnt < MAX_CHARNAMES_IDX; ++cnt)
-	    ctype->charnames_idx[cnt] = ~((uint32_t) 0);
+	  idx_table_init (&ctype->charnames_idx);
 
 	  /* Fill character class information.  */
 	  ctype->last_class_char = ILLEGAL_CHAR_VALUE;
@@ -1280,23 +1284,17 @@ find_idx (struct locale_ctype_t *ctype, uint32_t **table, size_t *max,
   if (idx < 256)
     return table == NULL ? NULL : &(*table)[idx];
 
-  /* If idx is in the usual range, use the charnames_idx lookup table
-     instead of the slow search loop.  */
-  if (idx < MAX_CHARNAMES_IDX)
-    {
-      if (ctype->charnames_idx[idx] != ~((uint32_t) 0))
-	/* Found.  */
-	cnt = ctype->charnames_idx[idx];
-      else
-	/* Not found.  */
-	cnt = ctype->charnames_act;
-    }
-  else
-    {
-      for (cnt = 256; cnt < ctype->charnames_act; ++cnt)
-	if (ctype->charnames[cnt] == idx)
-	  break;
-    }
+  /* Use the charnames_idx lookup table instead of the slow search loop.  */
+#if 1
+  cnt = idx_table_get (&ctype->charnames_idx, idx);
+  if (cnt == ~((uint32_t) 0))
+    /* Not found.  */
+    cnt = ctype->charnames_act;
+#else
+  for (cnt = 256; cnt < ctype->charnames_act; ++cnt)
+    if (ctype->charnames[cnt] == idx)
+      break;
+#endif
 
   /* We have to distinguish two cases: the name is found or not.  */
   if (cnt == ctype->charnames_act)
@@ -1310,8 +1308,7 @@ find_idx (struct locale_ctype_t *ctype, uint32_t **table, size_t *max,
 		      sizeof (uint32_t) * ctype->charnames_max);
 	}
       ctype->charnames[ctype->charnames_act++] = idx;
-      if (idx < MAX_CHARNAMES_IDX)
-	ctype->charnames_idx[idx] = cnt;
+      idx_table_add (&ctype->charnames_idx, idx, cnt);
     }
 
   if (table == NULL)

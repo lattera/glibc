@@ -203,6 +203,7 @@ enum
 									      \
     if (__builtin_expect (ch, 0) >= 0xffff)				      \
       {									      \
+	UNICODE_TAG_HANDLER (ch, 4);					      \
 	rp1 = NULL;							      \
 	rp2 = NULL;							      \
       }									      \

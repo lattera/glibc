@@ -1,5 +1,5 @@
 /* Mapping tables for GBK handling.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Sean Chen <sean.chen@turbolinux.com>, 1999.
 
@@ -13471,6 +13471,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  cp = "\xa1\xe9\0\0\xa1\xea\0\0\xa9\x56\0\0\xa3\xfe\0\0\xa9\x57\0\0\xa3\xa4" + ((ch - 0xffe0) * 4); \
 	  break;							      \
 	default:							      \
+	  UNICODE_TAG_HANDLER (ch, 4);					      \
 	  cp = "";							      \
 	  break; 							      \
 	}								      \

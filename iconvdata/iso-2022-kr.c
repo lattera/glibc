@@ -1,5 +1,5 @@
 /* Conversion module for ISO-2022-KR.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -221,7 +221,6 @@ enum
 #define BODY \
   {									      \
     uint32_t ch;							      \
-    size_t written = 0;							      \
 									      \
     ch = get32 (inptr);							      \
 									      \
@@ -241,16 +240,18 @@ enum
 	  }								      \
  									      \
 	*outptr++ = ch;							      \
-	written = 1;							      \
       }									      \
     else								      \
       {									      \
 	char buf[2];							      \
+	size_t written;							      \
 									      \
 	written = ucs4_to_ksc5601 (ch, buf, 2);				      \
 									      \
 	if (__builtin_expect (written, 0) == __UNKNOWN_10646_CHAR)	      \
 	  {								      \
+	    UNICODE_TAG_HANDLER (ch, 4);				      \
+									      \
 	    /* Illegal character.  */					      \
 	    STANDARD_ERR_HANDLER (4);					      \
 	  }								      \

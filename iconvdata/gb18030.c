@@ -5683,7 +5683,8 @@ static const uint16_t __fourbyte_to_ucs1[] =
   [0x0309] = 0x03e5, [0x030a] = 0x03e6, [0x030b] = 0x03e7, [0x030c] = 0x03e8,
   [0x030d] = 0x03e9, [0x030e] = 0x03ea, [0x030f] = 0x03eb, [0x0310] = 0x03ec,
   [0x0311] = 0x03ed, [0x0312] = 0x03ee, [0x0313] = 0x03ef, [0x0314] = 0x03f0,
-  [0x0315] = 0x03f1, [0x0316] = 0x03f2, [0x0317] = 0x03f3, [0x0324] = 0x0400,
+  [0x0315] = 0x03f1, [0x0316] = 0x03f2, [0x0317] = 0x03f3, [0x0318] = 0x03f4,
+  [0x0319] = 0x03f5, [0x0324] = 0x0400,
   [0x0325] = 0x0402, [0x0326] = 0x0403, [0x0327] = 0x0404, [0x0328] = 0x0405,
   [0x0329] = 0x0406, [0x032a] = 0x0407, [0x032b] = 0x0408, [0x032c] = 0x0409,
   [0x032d] = 0x040a, [0x032e] = 0x040b, [0x032f] = 0x040c, [0x0330] = 0x040d,
@@ -9517,6 +9518,7 @@ static const unsigned char __ucs_to_gb18030_tab1[][2] =
   [0x036b] = "\x23\x0f", [0x036c] = "\x23\x10", [0x036d] = "\x23\x11",
   [0x036e] = "\x23\x12", [0x036f] = "\x23\x13", [0x0370] = "\x23\x14",
   [0x0371] = "\x23\x15", [0x0372] = "\x23\x16", [0x0373] = "\x23\x17",
+  [0x0374] = "\x23\x18", [0x0375] = "\x23\x19",
   [0x0380] = "\x23\x24", [0x0381] = "\xa7\xa7", [0x0382] = "\x23\x25",
   [0x0383] = "\x23\x26", [0x0384] = "\x23\x27", [0x0385] = "\x23\x28",
   [0x0386] = "\x23\x29", [0x0387] = "\x23\x2a", [0x0388] = "\x23\x2b",
@@ -21954,15 +21956,15 @@ static const unsigned char __ucs_to_gb18030_tab2[][2] =
 	}								      \
       else								      \
 	{								      \
-	  /* Two or four byte character.  First test whether the	      \
-	     next character is also available.  */			      \
+	  /* Two or four byte character.  First test whether the next	      \
+	     byte is also available.  */				      \
 	  uint32_t ch2;							      \
 	  unsigned long int idx;					      \
 									      \
 	  if (inptr + 1 >= inend)					      \
 	    {								      \
-	      /* The second character is not available.  Store		      \
-		 the intermediate result.  */				      \
+	      /* The second byte is not available.  Store the		      \
+		 intermediate result.  */				      \
 	      result = __GCONV_INCOMPLETE_INPUT;			      \
 	      break;							      \
 	    }								      \
@@ -21992,7 +21994,7 @@ static const unsigned char __ucs_to_gb18030_tab2[][2] =
 									      \
 	      if (inptr + 3 >= inend)					      \
 	 	{							      \
-		  /* Not all characters are available.  Store		      \
+		  /* Not all bytes are available.  Store		      \
 		     the intermediate result.  */			      \
 		  result = __GCONV_INCOMPLETE_INPUT;			      \
 		  break;						      \
@@ -22035,17 +22037,19 @@ static const unsigned char __ucs_to_gb18030_tab2[][2] =
 		      + ch3 - 0x81) * 10 + ch4 - 0x30;			      \
 									      \
 	      if (idx <= 0x4A18)					      \
-		  ch = __fourbyte_to_ucs1[idx];				      \
+		ch = __fourbyte_to_ucs1[idx];				      \
 	      else if (idx >= 0x4ABD && idx <= 0x4F49)			      \
-		  ch = idx + 0x5543; 					      \
+		ch = idx + 0x5543; 					      \
 	      else if (idx >= 0x4F4D && idx <= 0x4F83)			      \
-		  ch = __fourbyte_to_ucs2[idx-0x4F4D];			      \
+		ch = __fourbyte_to_ucs2[idx-0x4F4D];			      \
 	      else if (idx >= 0x56BD && idx <= 0x8260)			      \
-		  ch = idx + 0x5543; 					      \
+		ch = idx + 0x5543; 					      \
 	      else if (idx >= 0x93A9 && idx <= 0x99F9)			      \
-		  ch = __fourbyte_to_ucs3[idx-0x93A9];			      \
+		ch = __fourbyte_to_ucs3[idx-0x93A9];			      \
+	      else if (idx >= 0x2E248 && idx <= 0x12E247)		      \
+		ch = idx - 0x1E248;					      \
 	      else							      \
-		  ch = 0;						      \
+		ch = 0;							      \
 									      \
 	      if (ch == 0 && *inptr != '\0')				      \
 		{							      \
@@ -22148,6 +22152,11 @@ static const unsigned char __ucs_to_gb18030_tab2[][2] =
 		len = 4;						      \
 	    }								      \
 	  }								      \
+	else if (ch >= 0x10000 && ch <= 0x10FFFF)			      \
+	  {								      \
+	    idx = ch + 0x1E248;						      \
+	    len = 4;							      \
+	  }								      \
 	else  								      \
 	  len = 0;							      \
 									      \
@@ -22175,7 +22184,7 @@ static const unsigned char __ucs_to_gb18030_tab2[][2] =
 	  }								      \
 	else /* len == 4 */						      \
 	  {								      \
-	    /* See whether there is enough room for the second byte we	      \
+	    /* See whether there is enough room for all four bytes we	      \
 	       write.  */						      \
 	    if (__builtin_expect (outptr + 3 >= outend, 0))		      \
 	      {								      \

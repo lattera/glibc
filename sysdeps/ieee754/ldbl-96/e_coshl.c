@@ -79,16 +79,15 @@ static long double one = 1.0, half=0.5, huge = 1.0e4900L;
 	if (ex < 0x400c || (ex == 0x400c && mx < 0xb1700000u))
 		return half*__ieee754_expl(fabsl(x));
 
-    /* |x| in [log(maxdouble), overflowthresold] */
-	if (ex < 0x400d
-	    || (ex == 0x400d && (mx < 0xb170b513u
-				  || (mx == 0xb170b513u && lx < 0xa1dfd60cu))))
+    /* |x| in [log(maxdouble), log(2*maxdouble)) */
+	if (ex == 0x400c && (mx < 0xb174ddc0u
+			     || (mx == 0xb174ddc0u && lx < 0x31aec0ebu)))
 	{
 	    w = __ieee754_expl(half*fabsl(x));
 	    t = half*w;
 	    return t*w;
 	}
 
-    /* |x| > overflowthresold, cosh(x) overflow */
+    /* |x| >= log(2*maxdouble), cosh(x) overflow */
 	return huge*huge;
 }

@@ -1,5 +1,5 @@
 /* Generate a Unicode conforming LC_CTYPE category from a UnicodeData file.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000-2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 
@@ -19,9 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /* Usage example:
-     $ gen-unicode /usr/local/share/Unidata/UnicodeData.txt \
-		   /usr/local/share/Unidata/PropList.txt \
-		   3.0
+     $ gen-unicode /usr/local/share/Unidata/UnicodeData.txt 3.1
  */
 
 #include <stdio.h>
@@ -54,7 +52,7 @@ struct unicode_attribute
 #define NONE (~(unsigned int)0)
 
 /* The entire contents of the UnicodeData.txt file.  */
-struct unicode_attribute unicode_attributes [0x10000];
+struct unicode_attribute unicode_attributes [0x110000];
 
 /* Stores in unicode_attributes[i] the values from the given fields.  */
 static void
@@ -69,11 +67,14 @@ fill_attribute (unsigned int i,
 {
   struct unicode_attribute * uni;
 
-  if (i >= 0x10000)
+  if (i >= 0x110000)
     {
       fprintf (stderr, "index too large\n");
       exit (1);
     }
+  if (strcmp (field2, "Cs") == 0)
+    /* Surrogates are UTF-16 artefacts, not real characters. Ignore them.  */
+    return;
   uni = &unicode_attributes[i];
   /* Copy the strings.  */
   uni->name          = strdup (field1);
@@ -151,7 +152,7 @@ fill_attributes (const char *unicodedata_filename)
   char field14[FIELDLEN];
   int lineno = 0;
 
-  for (i = 0; i < 0x10000; i++)
+  for (i = 0; i < 0x110000; i++)
     unicode_attributes[i].name = NULL;
 
   stream = fopen (unicodedata_filename, "r");
@@ -247,87 +248,6 @@ fill_attributes (const char *unicodedata_filename)
     }
 }
 
-/* The combining property from the PropList.txt file.  */
-char unicode_combining[0x10000];
-
-/* Stores in unicode_combining[] the Combining property from the
-   PropList.txt file.  */
-static void
-fill_combining (const char *proplist_filename)
-{
-  unsigned int i;
-  FILE *stream;
-  char buf[100+1];
-
-  for (i = 0; i < 0x10000; i++)
-    unicode_combining[i] = 0;
-
-  stream = fopen (proplist_filename, "r");
-  if (stream == NULL)
-    {
-      fprintf (stderr, "error during fopen of '%s'\n", proplist_filename);
-      exit (1);
-    }
-
-  /* Search for the "Property dump for: 0x20000004 (Combining)" line.  */
-  do
-    {
-      if (fscanf (stream, "%100[^\n]\n", buf) < 1)
-	{
-	  fprintf (stderr, "no combining property found in '%s'\n",
-		   proplist_filename);
-	  exit (1);
-	}
-    }
-  while (strstr (buf, "(Combining)") == NULL);
-
-  for (;;)
-    {
-      unsigned int i1, i2;
-
-      if (fscanf (stream, "%100[^\n]\n", buf) < 1)
-	{
-	  fprintf (stderr, "premature end of combining property in '%s'\n",
-		   proplist_filename);
-	  exit (1);
-	}
-      if (buf[0] == '*')
-	break;
-      if (strlen (buf) >= 10 && buf[4] == '.' && buf[5] == '.')
-	{
-	  if (sscanf (buf, "%4X..%4X", &i1, &i2) < 2)
-	    {
-	      fprintf (stderr, "parse error in combining property in '%s'\n",
-		       proplist_filename);
-	      exit (1);
-	    }
-	}
-      else if (strlen (buf) >= 4)
-	{
-	  if (sscanf (buf, "%4X", &i1) < 1)
-	    {
-	      fprintf (stderr, "parse error in combining property in '%s'\n",
-		       proplist_filename);
-	      exit (1);
-	    }
-	  i2 = i1;
-	}
-      else
-	{
-	  fprintf (stderr, "parse error in combining property in '%s'\n",
-		   proplist_filename);
-	  exit (1);
-	}
-      for (i = i1; i <= i2; i++)
-	unicode_combining[i] = 1;
-    }
-  if (ferror (stream) || fclose (stream))
-    {
-      fprintf (stderr, "error reading from '%s'\n", proplist_filename);
-      exit (1);
-    }
-}
-
 /* Character mappings.  */
 
 static unsigned int
@@ -380,7 +300,15 @@ static bool
 is_alpha (unsigned int ch)
 {
   return (unicode_attributes[ch].name != NULL
-	  && (unicode_attributes[ch].category[0] == 'L'
+	  && ((unicode_attributes[ch].category[0] == 'L'
+	       /* Theppitak Karoonboonyanan <thep@links.nectec.or.th> says
+		  <U0E2F>, <U0E46> should belong to is_punct.  */
+	       && (ch != 0x0E2F) && (ch != 0x0E46))
+	      /* Theppitak Karoonboonyanan <thep@links.nectec.or.th> says
+		 <U0E31>, <U0E34>..<U0E3A>, <U0E47>..<U0E4E> are is_alpha.  */
+	      || (ch == 0x0E31)
+	      || (ch >= 0x0E34 && ch <= 0x0E3A)
+	      || (ch >= 0x0E47 && ch <= 0x0E4E)
 	      /* Avoid warning for <U0345>.  */
 	      || (ch == 0x0345)
 	      /* Avoid warnings for <U2160>..<U217F>.  */
@@ -528,8 +456,15 @@ is_punct (unsigned int ch)
 static bool
 is_combining (unsigned int ch)
 {
+  /* Up to Unicode 3.0.1 we took the Combining property from the PropList.txt
+     file. In 3.0.1 it was identical to the union of the general categories
+     "Mn", "Mc", "Me". In Unicode 3.1 this property has been dropped from the
+     PropList.txt file, so we take the latter definition.  */
   return (unicode_attributes[ch].name != NULL
-	  && unicode_combining[ch] != 0);
+	  && unicode_attributes[ch].category[0] == 'M'
+	  && (unicode_attributes[ch].category[1] == 'n'
+	      || unicode_attributes[ch].category[1] == 'c'
+	      || unicode_attributes[ch].category[1] == 'e'));
 }
 
 static bool
@@ -541,43 +476,65 @@ is_combining_level3 (unsigned int ch)
 	      && strtoul (unicode_attributes[ch].combining, NULL, 10) >= 200);
 }
 
+/* Return the UCS symbol string for a Unicode character.  */
+static const char *
+ucs_symbol (unsigned int i)
+{
+  static char buf[11+1];
+
+  sprintf (buf, (i < 0x10000 ? "<U%04X>" : "<U%08X>"), i);
+  return buf;
+}
+
+/* Return the UCS symbol range string for a Unicode characters interval.  */
+static const char *
+ucs_symbol_range (unsigned int low, unsigned int high)
+{
+  static char buf[24+1];
+
+  strcpy (buf, ucs_symbol (low));
+  strcat (buf, "..");
+  strcat (buf, ucs_symbol (high));
+  return buf;
+}
+
 /* Output a character class (= property) table.  */
 
 static void
 output_charclass (FILE *stream, const char *classname,
 		  bool (*func) (unsigned int))
 {
-  char table[0x10000];
+  char table[0x110000];
   unsigned int i;
   bool need_semicolon;
   const int max_column = 75;
   int column;
 
-  for (i = 0; i < 0x10000; i++)
+  for (i = 0; i < 0x110000; i++)
     table[i] = (int) func (i);
 
   fprintf (stream, "%s ", classname);
   need_semicolon = false;
   column = 1000;
-  for (i = 0; i < 0x10000; )
+  for (i = 0; i < 0x110000; )
     {
       if (!table[i])
 	i++;
       else
 	{
 	  unsigned int low, high;
-	  char buf[17];
+	  char buf[25];
 
 	  low = i;
 	  do
 	    i++;
-	  while (i < 0x10000 && table[i]);
+	  while (i < 0x110000 && table[i]);
 	  high = i - 1;
 
 	  if (low == high)
-	    sprintf (buf, "<U%04X>", low);
+	    strcpy (buf, ucs_symbol (low));
 	  else
-	    sprintf (buf, "<U%04X>..<U%04X>", low, high);
+	    strcpy (buf, ucs_symbol_range (low, high));
 
 	  if (need_semicolon)
 	    {
@@ -605,24 +562,28 @@ static void
 output_charmap (FILE *stream, const char *mapname,
 		unsigned int (*func) (unsigned int))
 {
-  char table[0x10000];
+  char table[0x110000];
   unsigned int i;
   bool need_semicolon;
   const int max_column = 75;
   int column;
 
-  for (i = 0; i < 0x10000; i++)
+  for (i = 0; i < 0x110000; i++)
     table[i] = (func (i) != i);
 
   fprintf (stream, "%s ", mapname);
   need_semicolon = false;
   column = 1000;
-  for (i = 0; i < 0x10000; i++)
+  for (i = 0; i < 0x110000; i++)
     if (table[i])
       {
-	char buf[18];
+	char buf[25+1];
 
-	sprintf (buf, "(<U%04X>,<U%04X>)", i, func (i));
+	strcpy (buf, "(");
+	strcat (buf, ucs_symbol (i));
+	strcat (buf, ",");
+	strcat (buf, ucs_symbol (func (i)));
+	strcat (buf, ")");
 
 	if (need_semicolon)
 	  {
@@ -668,7 +629,7 @@ output_tables (const char *filename, const char *version)
   fprintf (stream, "escape_char /\n");
   fprintf (stream, "comment_char %%\n");
   fprintf (stream, "\n");
-  fprintf (stream, "%% Generated automatically by gen-unicode for Unicode %s.\n",
+  fprintf (stream, "%% Generated automatically by gen-unicode-ctype for Unicode %s.\n",
 	   version);
   fprintf (stream, "\n");
 
@@ -690,76 +651,76 @@ output_tables (const char *filename, const char *version)
     strftime (date, sizeof (date), "%Y-%m-%d", gmtime (&now));
     fprintf (stream, "date      \"%s\"\n", date);
   }
-  fprintf (stream, "category  \"unicode:2000\";LC_CTYPE\n");
+  fprintf (stream, "category  \"unicode:2001\";LC_CTYPE\n");
   fprintf (stream, "END LC_IDENTIFICATION\n");
   fprintf (stream, "\n");
 
   /* Verifications. */
-  for (ch = 0; ch < 0x10000; ch++)
+  for (ch = 0; ch < 0x110000; ch++)
     {
       /* toupper restriction: "Only characters specified for the keywords
 	 lower and upper shall be specified.  */
       if (to_upper (ch) != ch && !(is_lower (ch) || is_upper (ch)))
 	fprintf (stderr,
-		 "<U%04X> is not upper|lower but toupper(0x%04X) = 0x%04X\n",
-		 ch, ch, to_upper (ch));
+		 "%s is not upper|lower but toupper(0x%04X) = 0x%04X\n",
+		 ucs_symbol (ch), ch, to_upper (ch));
 
       /* tolower restriction: "Only characters specified for the keywords
 	 lower and upper shall be specified.  */
       if (to_lower (ch) != ch && !(is_lower (ch) || is_upper (ch)))
 	fprintf (stderr,
-		 "<U%04X> is not upper|lower but tolower(0x%04X) = 0x%04X\n",
-		 ch, ch, to_lower (ch));
+		 "%s is not upper|lower but tolower(0x%04X) = 0x%04X\n",
+		 ucs_symbol (ch), ch, to_lower (ch));
 
       /* alpha restriction: "Characters classified as either upper or lower
 	 shall automatically belong to this class.  */
       if ((is_lower (ch) || is_upper (ch)) && !is_alpha (ch))
-	fprintf (stderr, "<U%04X> is upper|lower but not alpha\n", ch);
+	fprintf (stderr, "%s is upper|lower but not alpha\n", ucs_symbol (ch));
 
       /* alpha restriction: "No character specified for the keywords cntrl,
 	 digit, punct or space shall be specified."  */
       if (is_alpha (ch) && is_cntrl (ch))
-	fprintf (stderr, "<U%04X> is alpha and cntrl\n", ch);
+	fprintf (stderr, "%s is alpha and cntrl\n", ucs_symbol (ch));
       if (is_alpha (ch) && is_digit (ch))
-	fprintf (stderr, "<U%04X> is alpha and digit\n", ch);
+	fprintf (stderr, "%s is alpha and digit\n", ucs_symbol (ch));
       if (is_alpha (ch) && is_punct (ch))
-	fprintf (stderr, "<U%04X> is alpha and punct\n", ch);
+	fprintf (stderr, "%s is alpha and punct\n", ucs_symbol (ch));
       if (is_alpha (ch) && is_space (ch))
-	fprintf (stderr, "<U%04X> is alpha and space\n", ch);
+	fprintf (stderr, "%s is alpha and space\n", ucs_symbol (ch));
 
       /* space restriction: "No character specified for the keywords upper,
 	 lower, alpha, digit, graph or xdigit shall be specified."
 	 upper, lower, alpha already checked above.  */
       if (is_space (ch) && is_digit (ch))
-	fprintf (stderr, "<U%04X> is space and digit\n", ch);
+	fprintf (stderr, "%s is space and digit\n", ucs_symbol (ch));
       if (is_space (ch) && is_graph (ch))
-	fprintf (stderr, "<U%04X> is space and graph\n", ch);
+	fprintf (stderr, "%s is space and graph\n", ucs_symbol (ch));
       if (is_space (ch) && is_xdigit (ch))
-	fprintf (stderr, "<U%04X> is space and xdigit\n", ch);
+	fprintf (stderr, "%s is space and xdigit\n", ucs_symbol (ch));
 
       /* cntrl restriction: "No character specified for the keywords upper,
 	 lower, alpha, digit, punct, graph, print or xdigit shall be
 	 specified."  upper, lower, alpha already checked above.  */
       if (is_cntrl (ch) && is_digit (ch))
-	fprintf (stderr, "<U%04X> is cntrl and digit\n", ch);
+	fprintf (stderr, "%s is cntrl and digit\n", ucs_symbol (ch));
       if (is_cntrl (ch) && is_punct (ch))
-	fprintf (stderr, "<U%04X> is cntrl and punct\n", ch);
+	fprintf (stderr, "%s is cntrl and punct\n", ucs_symbol (ch));
       if (is_cntrl (ch) && is_graph (ch))
-	fprintf (stderr, "<U%04X> is cntrl and graph\n", ch);
+	fprintf (stderr, "%s is cntrl and graph\n", ucs_symbol (ch));
       if (is_cntrl (ch) && is_print (ch))
-	fprintf (stderr, "<U%04X> is cntrl and print\n", ch);
+	fprintf (stderr, "%s is cntrl and print\n", ucs_symbol (ch));
       if (is_cntrl (ch) && is_xdigit (ch))
-	fprintf (stderr, "<U%04X> is cntrl and xdigit\n", ch);
+	fprintf (stderr, "%s is cntrl and xdigit\n", ucs_symbol (ch));
 
       /* punct restriction: "No character specified for the keywords upper,
 	 lower, alpha, digit, cntrl, xdigit or as the <space> character shall
 	 be specified."  upper, lower, alpha, cntrl already checked above.  */
       if (is_punct (ch) && is_digit (ch))
-	fprintf (stderr, "<U%04X> is punct and digit\n", ch);
+	fprintf (stderr, "%s is punct and digit\n", ucs_symbol (ch));
       if (is_punct (ch) && is_xdigit (ch))
-	fprintf (stderr, "<U%04X> is punct and xdigit\n", ch);
+	fprintf (stderr, "%s is punct and xdigit\n", ucs_symbol (ch));
       if (is_punct (ch) && (ch == 0x0020))
-	fprintf (stderr, "<U%04X> is punct\n", ch);
+	fprintf (stderr, "%s is punct\n", ucs_symbol (ch));
 
       /* graph restriction: "No character specified for the keyword cntrl
 	 shall be specified."  Already checked above.  */
@@ -772,9 +733,11 @@ output_tables (const char *filename, const char *version)
 	 I think susv2/xbd/locale.html should speak of "space characters",
 	 not "space character".  */
       if (is_print (ch) && !(is_graph (ch) || /* ch == 0x0020 */ is_space (ch)))
-	fprintf (stderr, "<U%04X> is print but not graph|<space>\n", ch);
+	fprintf (stderr,
+		 "%s is print but not graph|<space>\n", ucs_symbol (ch));
       if (!is_print (ch) && (is_graph (ch) || ch == 0x0020))
-	fprintf (stderr, "<U%04X> is graph|<space> but not print\n", ch);
+	fprintf (stderr,
+		 "%s is graph|<space> but not print\n", ucs_symbol (ch));
     }
 
   fprintf (stream, "LC_CTYPE\n");
@@ -808,17 +771,15 @@ output_tables (const char *filename, const char *version)
 int
 main (int argc, char * argv[])
 {
-  if (argc != 4)
+  if (argc != 3)
     {
-      fprintf (stderr, "Usage: %s UnicodeData.txt PropList.txt version\n",
-	       argv[0]);
+      fprintf (stderr, "Usage: %s UnicodeData.txt version\n", argv[0]);
       exit (1);
     }
 
   fill_attributes (argv[1]);
-  fill_combining (argv[2]);
 
-  output_tables ("unicode", argv[3]);
+  output_tables ("unicode", argv[2]);
 
   return 0;
 }

@@ -807,6 +807,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
   {									      \
     if (__builtin_expect (*((const uint32_t *) inptr), 0) > 0x7f)	      \
       {									      \
+	UNICODE_TAG_HANDLER (*((const uint32_t *) inptr), 4);		      \
 	STANDARD_ERR_HANDLER (4);					      \
       }									      \
     else								      \
@@ -1199,6 +1200,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 									      \
     if (__builtin_expect (val, 0) >= 0x10000)				      \
       {									      \
+	UNICODE_TAG_HANDLER (val, 4);					      \
 	STANDARD_ERR_HANDLER (4);					      \
       }									      \
     else if (__builtin_expect (val >= 0xd800 && val < 0xe000, 0))	      \
@@ -1288,6 +1290,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
     uint32_t val = *((const uint32_t *) inptr);				      \
     if (__builtin_expect (val, 0) >= 0x10000)				      \
       {									      \
+	UNICODE_TAG_HANDLER (val, 4);					      \
 	STANDARD_ERR_HANDLER (4);					      \
       }									      \
     else if (__builtin_expect (val >= 0xd800 && val < 0xe000, 0))	      \

@@ -1,5 +1,5 @@
 /* Generic conversion to and from ISO 6937.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -536,6 +536,7 @@ static const char from_ucs4[][2] =
 	    cp = "\xd5";						      \
 	    break;							      \
 	  default:							      \
+	    UNICODE_TAG_HANDLER (ch, 4);				      \
 	    cp = NULL;							      \
 	    fail = 1;							      \
 	  }								      \

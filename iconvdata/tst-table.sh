@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 #
@@ -61,8 +61,15 @@ diff ${objpfx}tst-${charset}.table ${objpfx}tst-${charset}.inverse.table | \
   grep '^[<>]' | sed -e 's,^. ,,' > ${objpfx}tst-${charset}.irreversible.table
 
 # Check 1: charmap and iconv forward should be identical.
-cmp -s ${objpfx}tst-${charset}.charmap.table ${objpfx}tst-${charset}.table ||
-exit 1
+if test ${charset} = GB18030; then
+  grep '0x....$' < ${objpfx}tst-${charset}.charmap.table \
+    > ${objpfx}tst-${charset}.truncated.table
+  cmp -s ${objpfx}tst-${charset}.truncated.table ${objpfx}tst-${charset}.table ||
+  exit 1
+else
+  cmp -s ${objpfx}tst-${charset}.charmap.table ${objpfx}tst-${charset}.table ||
+  exit 1
+fi
 
 # Check 2: the difference between the two iconv directions.
 if test -f ${irreversible}; then

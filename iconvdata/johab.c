@@ -1,5 +1,5 @@
 /* Mapping tables for JOHAB handling.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jungshik Shin <jshin@pantheon.yale.edu>
    and Ulrich Drepper <drepper@cygnus.com>, 1998.
@@ -426,6 +426,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	    if (__builtin_expect (written, 1) == __UNKNOWN_10646_CHAR	      \
 		|| (outptr[0] == 0x22 && outptr[1] > 0x65))		      \
 	      {								      \
+		UNICODE_TAG_HANDLER (ch, 4);				      \
 		STANDARD_ERR_HANDLER (4);				      \
 	      }								      \
 									      \

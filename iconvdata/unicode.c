@@ -1,5 +1,5 @@
 /* Conversion module for Unicode
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -154,6 +154,7 @@ gconv_end (struct __gconv_step *data)
 									      \
     if (__builtin_expect (c, 0) >= 0x10000)				      \
       {									      \
+	UNICODE_TAG_HANDLER (c, 4);					      \
 	STANDARD_ERR_HANDLER (4);					      \
       }									      \
     else if (__builtin_expect (c >= 0xd800 && c < 0xe000, 0))		      \

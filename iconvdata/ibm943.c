@@ -1,5 +1,5 @@
 /* Conversion from and to IBM943.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@jp.ibm.com>, 2000.
 
@@ -156,7 +156,10 @@
     uint16_t pccode;							      \
 									      \
     if (__builtin_expect (ch, 0) >= 0xffff)				      \
+      {									      \
+	UNICODE_TAG_HANDLER (ch, 4);					      \
 	rp = NULL;							      \
+      }									      \
     else								      \
       while (ch > rp->end)						      \
 	++rp;								      \
@@ -188,26 +191,26 @@
 		break;							      \
 	      }								      \
 	  }								      \
-	  if (found) 							      \
-	    {								      \
-	      if (__builtin_expect (outptr + 2 > outend, 0))		      \
-		{							      \
-		  result = __GCONV_FULL_OUTPUT;				      \
-		  break;						      \
-		}							      \
-	      *outptr++ = pccode >> 8 & 0xff;				      \
-	      *outptr++ = pccode & 0xff;				      \
-	    }								      \
-	  else								      \
-	    {								      \
-	      /* This is an illegal character.  */			      \
-	      if (! ignore_errors_p ())					      \
-		{							      \
-		  result = __GCONV_ILLEGAL_INPUT;			      \
-		  break;						      \
-		}							      \
-	      ++*irreversible;						      \
-	    }								      \
+	if (found) 							      \
+	  {								      \
+	    if (__builtin_expect (outptr + 2 > outend, 0))		      \
+	      {								      \
+		result = __GCONV_FULL_OUTPUT;				      \
+		break;							      \
+	      }								      \
+	    *outptr++ = pccode >> 8 & 0xff;				      \
+	    *outptr++ = pccode & 0xff;					      \
+	  }								      \
+	else								      \
+	  {								      \
+	    /* This is an illegal character.  */			      \
+	    if (! ignore_errors_p ())					      \
+	      {								      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+	    ++*irreversible;						      \
+	  }								      \
       }									      \
     else								      \
       {									      \
@@ -224,8 +227,8 @@
 	  *outptr++ = sc;						      \
       }									      \
 									      \
-      /* Now that we wrote the output increment the input pointer.  */	      \
-      inptr += 4;							      \
+    /* Now that we wrote the output increment the input pointer.  */	      \
+    inptr += 4;								      \
   }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>

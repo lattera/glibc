@@ -1042,7 +1042,7 @@ hexadecimal range format should use only capital characters"));
 	  char *endp;
 
 	  errno = 0;
-	  newp->ucs4 = strtoul (name_end, &endp, 16);
+	  newp->ucs4 = strtoul (name_end + 1, &endp, 16);
 	  if (endp - name_end != len1
 	      || (newp->ucs4 == ULONG_MAX && errno == ERANGE)
 	      || newp->ucs4 >= 0x80000000)

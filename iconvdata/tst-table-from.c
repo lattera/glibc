@@ -28,6 +28,9 @@
 #include <iconv.h>
 #include <errno.h>
 
+/* If nonzero, ignore conversions outside Unicode plane 0.  */
+static int bmp_only;
+
 /* Converts a byte buffer to a hexadecimal string.  */
 static const char*
 hexbuf (unsigned char buf[], unsigned int buflen)
@@ -162,6 +165,10 @@ utf8_decode (const unsigned char *out, unsigned int outlen)
 	  out += 1; outlen -= 1;
 	}
 
+      if (bmp_only && strlen (p) > 6)
+	/* Ignore conversions outside Unicode plane 0.  */
+	return NULL;
+
       p += strlen (p);
     }
 
@@ -173,6 +180,7 @@ main (int argc, char *argv[])
 {
   const char *charset;
   iconv_t cd;
+  int search_depth;
 
   if (argc != 2)
     {
@@ -187,6 +195,12 @@ main (int argc, char *argv[])
       perror ("iconv_open");
       exit (1);
     }
+
+  /* When testing UTF-8 or GB18030, stop at 0x10000, otherwise the output
+     file gets too big.  */
+  bmp_only = (strcmp (charset, "UTF-8") == 0
+	      || strcmp (charset, "GB18030") == 0);
+  search_depth = (strcmp (charset, "UTF-8") == 0 ? 3 : 4);
 
   {
     unsigned char out[6];
@@ -203,8 +217,9 @@ main (int argc, char *argv[])
 	  }
 	else if (result > 0)
 	  {
-	    printf ("0x%02X\t%s\n",
-		    i0, utf8_decode (out, result));
+	    const char *unicode = utf8_decode (out, result);
+	    if (unicode != NULL)
+	      printf ("0x%02X\t%s\n", i0, unicode);
 	  }
 	else
 	  {
@@ -217,8 +232,9 @@ main (int argc, char *argv[])
 		  }
 		else if (result > 0)
 		  {
-		    printf ("0x%02X%02X\t%s\n",
-			    i0, i1, utf8_decode (out, result));
+		    const char *unicode = utf8_decode (out, result);
+		    if (unicode != NULL)
+		      printf ("0x%02X%02X\t%s\n", i0, i1, unicode);
 		  }
 		else
 		  {
@@ -231,10 +247,12 @@ main (int argc, char *argv[])
 			  }
 			else if (result > 0)
 			  {
-			    printf ("0x%02X%02X%02X\t%s\n",
-				    i0, i1, i2, utf8_decode (out, result));
+			    const char *unicode = utf8_decode (out, result);
+			    if (unicode != NULL)
+			      printf ("0x%02X%02X%02X\t%s\n",
+				      i0, i1, i2, unicode);
 			  }
-			else if (strcmp (charset, "UTF-8"))
+			else if (search_depth > 3)
 			  {
 			    for (i3 = 0; i3 < 0x100; i3++)
 			      {
@@ -245,9 +263,11 @@ main (int argc, char *argv[])
 				  }
 				else if (result > 0)
 				  {
-				    printf ("0x%02X%02X%02X%02X\t%s\n",
-					    i0, i1, i2, i3,
-					    utf8_decode (out, result));
+				    const char *unicode =
+				      utf8_decode (out, result);
+				    if (unicode != NULL)
+				      printf ("0x%02X%02X%02X%02X\t%s\n",
+					      i0, i1, i2, i3, unicode);
 				  }
 				else
 				  {

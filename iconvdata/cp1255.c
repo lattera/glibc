@@ -451,7 +451,10 @@ static const struct {
 	else if (ch == 0x2122)						      \
 	  res = 0x99;							      \
 	else								      \
-	  res = 0;							      \
+	  {								      \
+	    UNICODE_TAG_HANDLER (ch, 4);				      \
+	    res = 0;							      \
+	  }								      \
 									      \
 	if (__builtin_expect (res != 0, 1))				      \
 	  {								      \

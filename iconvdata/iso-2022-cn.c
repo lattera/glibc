@@ -1,5 +1,5 @@
 /* Conversion module for ISO-2022-CN.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -320,6 +320,8 @@ enum
 		  used = GB2312_set + CNS11643_1_set - used;		      \
 		else							      \
 		  {							      \
+		    UNICODE_TAG_HANDLER (ch, 4);			      \
+									      \
 		    /* Even this does not work.  Error.  */		      \
 		    STANDARD_ERR_HANDLER (4);				      \
 		  }							      \

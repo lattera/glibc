@@ -1,5 +1,5 @@
 /* Generic conversion to and from ANSI_X3.110-1983.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -549,6 +549,8 @@ static const char from_ucs4[][2] =
 	  cp = "\xd5";							      \
 	else								      \
 	  {								      \
+	    UNICODE_TAG_HANDLER (ch, 4);				      \
+									      \
 	    /* Illegal characters.  */					      \
 	    STANDARD_ERR_HANDLER (4);					      \
 	  }								      \

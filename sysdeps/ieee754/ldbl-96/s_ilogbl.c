@@ -20,10 +20,12 @@ static char rcsid[] = "$NetBSD: $";
 
 /* ilogbl(long double x)
  * return the binary exponent of non-zero x
- * ilogbl(0) = 0x80000001
- * ilogbl(inf/NaN) = 0x7fffffff (no signal is raised)
+ * ilogbl(0) = FP_ILOGB0
+ * ilogbl(NaN) = FP_ILOGBNAN (no signal is raised)
+ * ilogbl(+-Inf) = INT_MAX (no signal is raised)
  */
 
+#include <limits.h>
 #include "math.h"
 #include "math_private.h"
 
@@ -51,6 +53,9 @@ static char rcsid[] = "$NetBSD: $";
 	    return ix;
 	}
 	else if (es<0x7fff) return es-0x3fff;
-	else return FP_ILOGBNAN;
+	else if (FP_ILOGBNAN != INT_MAX && (hx|lx) == 0)
+	    /* ISO C99 requires ilogbl(+-Inf) == INT_MAX.  */
+	    return INT_MAX;
+	return FP_ILOGBNAN;
 }
 weak_alias (__ilogbl, ilogbl)

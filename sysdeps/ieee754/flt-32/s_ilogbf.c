@@ -17,6 +17,7 @@
 static char rcsid[] = "$NetBSD: s_ilogbf.c,v 1.4 1995/05/10 20:47:31 jtc Exp $";
 #endif
 
+#include <limits.h>
 #include "math.h"
 #include "math_private.h"
 
@@ -39,6 +40,11 @@ static char rcsid[] = "$NetBSD: s_ilogbf.c,v 1.4 1995/05/10 20:47:31 jtc Exp $";
 	    return ix;
 	}
 	else if (hx<0x7f800000) return (hx>>23)-127;
-	else return FP_ILOGBNAN;
+	else if (FP_ILOGBNAN != INT_MAX) {
+	    /* ISO C99 requires ilogbf(+-Inf) == INT_MAX.  */
+	    if (hx==0x7f800000)
+		return INT_MAX;
+	}
+	return FP_ILOGBNAN;
 }
 weak_alias (__ilogbf, ilogbf)

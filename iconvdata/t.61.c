@@ -1,5 +1,5 @@
 /* Generic conversion to and from T.61.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -468,6 +468,8 @@ static const char from_ucs4[][2] =
 		 || __builtin_expect (ch, 0x2d8) > 0x2dd		      \
 		 || __builtin_expect (ch, 0x2d8) == 0x02dc)		      \
 	  {								      \
+	    UNICODE_TAG_HANDLER (ch, 4);				      \
+									      \
 	    /* Illegal characters.  */					      \
 	    STANDARD_ERR_HANDLER (4);					      \
 	  }								      \

@@ -1,7 +1,220 @@
-2001-06-05  Philipp Thomas  <pthomas@suse.de>
+2001-06-04  Bruno Haible  <haible@clisp.cons.org>
 
-	* nis/nis_call.c (__nisbind_connect): Don't mark for translation
-	what can't be translated.
+	* iconv/loop.c (UNICODE_TAG_HANDLER): New macro.
+	* iconv/gconv_simple.c (__gconv_transform_internal_ascii): Invoke
+	UNICODE_TAG_HANDLER.
+	(__gconv_transform_internal_ucs2): Likewise.
+	(__gconv_transform_internal_ucs2reverse): Likewise.
+	* iconvdata/8bit-gap.c (BODY for TO_LOOP): Invoke UNICODE_TAG_HANDLER.
+	* iconvdata/8bit-generic.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/ansi_x3.110.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/big5.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/big5hkscs.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/cp1255.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/cp1258.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/euc-cn.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/euc-jp.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/euc-kr.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/euc-tw.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/gbk.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/ibm930.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/ibm932.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/ibm933.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/ibm935.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/ibm937.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/ibm939.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/ibm943.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/iso646.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/iso8859-1.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/iso_6937.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/iso_6937-2.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/iso-2022-cn.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/iso-2022-cn-ext.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/iso-2022-kr.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/johab.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/sjis.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/t.61.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/uhc.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/unicode.c (BODY for TO_LOOP): Likewise.
+	* iconvdata/iso-2022-jp.c (TAG_none, TAG_language, TAG_language_j,
+	TAG_language_ja, TAG_language_k, TAG_language_ko, TAG_language_z,
+	TAG_language_zh, CURRENT_TAG_MASK): New enum values.
+	(EMIT_SHIFT_TO_INIT): Don't emit an escape sequence if ASCII_set
+	is already selected but set2 or tag are set.
+	(conversion): New enum type.
+	(cvlist_t): New type.
+	(CVLIST, CVLIST_FIRST, CVLIST_REST): New macros.
+	(conversion_lists): New array.
+	(BODY for TO_LOOP): Keep track of Unicode 3.1 language tag. If "ja",
+	prefer conversion to Japanese character sets. If "zh", prefer
+	conversion to GB2312. If "ko", prefer conversion to KSC5601. Small
+	optimizations.
+	(INIT_PARAMS): Add tag.
+	(UPDATE_PARAMS): Add tag.
+
+2001-06-04  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/programs/locfile.c (write_locale_data): Before creat(),
+	unlink the file, to avoid crashing the processes that mmap it.  Change
+	a double slash to a single slash.  Free fname in case of error return.
+
+2001-06-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/fpu/s_frexpl.S (__frexpl): Mostly revert 2000-12-03
+	changes, do the special handling for denormal numbers, not for
+	normalized numbers (patch by <trevin@xmission.com>).
+
+	* math/test-misc.c (main): Test frexpl with denormal arguments.
+
+2001-06-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/libm-test.inc (llround_test): Add two new llround tests.
+	* sysdeps/ieee754/ldbl-96/s_llroundl.c (__llroundl): Don't allow
+	overflow when rounding away from zero.
+
+2001-06-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/Makefile (libm-calls): Add e_log2, w_log2, remove s_log2.
+	* math/math_private.h (__ieee754_log2, __ieee754_log2f,
+	__ieee754_log2l): New prototypes.
+	* sysdeps/generic/w_log2.c: New file.
+	* sysdeps/generic/w_log2f.c: New file.
+	* sysdeps/generic/w_log2l.c: New file.
+	* sysdeps/generic/s_log2l.c: Move...
+	* sysdeps/generic/e_log2l.c: ...to here. Rename to __ieee754_log2l.
+	* sysdeps/ieee754/k_standard.c (__kernel_standard): Handle log2(0)
+	and log2(x < 0).
+	* sysdeps/i386/fpu/s_log2.S: Move...
+	* sysdeps/i386/fpu/e_log2.S: ...to here. Rename to __ieee754_log2.
+	* sysdeps/i386/fpu/s_log2f.S: Move...
+	* sysdeps/i386/fpu/e_log2f.S: ...to here. Rename to __ieee754_log2f.
+	* sysdeps/i386/fpu/s_log2l.S: Move...
+	* sysdeps/i386/fpu/e_log2l.S: ...to here. Rename to __ieee754_log2l.
+	* sysdeps/m68k/fpu/s_log2.S: Move...
+	* sysdeps/m68k/fpu/e_log2.S: ...to here. Rename to __ieee754_log2.
+	* sysdeps/m68k/fpu/s_log2f.S: Move...
+	* sysdeps/m68k/fpu/e_log2f.S: ...to here. Rename to __ieee754_log2f.
+	* sysdeps/m68k/fpu/s_log2l.S: Move...
+	* sysdeps/m68k/fpu/e_log2l.S: ...to here. Rename to __ieee754_log2l.
+	* sysdeps/ieee754/dbl-64/s_log2.c: Move...
+	* sysdeps/ieee754/dbl-64/e_log2.c: ...to here. Rename to
+	__ieee754_log2.
+	* sysdeps/ieee754/flt-32/s_log2f.c: Move...
+	* sysdeps/ieee754/flt-32/e_log2f.c: ...to here. Rename to
+	__ieee754_log2f.
+
+2001-06-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/w_exp2.c (u_threshold): Lower threshold so that
+	even arguments which result in denormalized exp2 are accepted.
+	(__exp2): Arguments equal to u_threshold already result into
+	underflow.
+	* sysdeps/generic/w_exp2f.c (u_threshold, __exp2f): Likewise.
+	* sysdeps/generic/w_exp2l.c (u_threshold, __exp2l): Likewise.
+	* sysdeps/ieee754/dbl-64/e_exp2.c (__ieee754_exp2): Lomark was too
+	low, with corrected lowmark use greaterequal, not greater.
+	* sysdeps/ieee754/flt-32/e_exp2f.c (__ieee754_exp2f): Likewise.
+
+2001-06-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/libm-test.inc (ilogb_test): Test that ilogb(+-Inf) == INT_MAX.
+	* sysdeps/i386/fpu/s_ilogb.S (__ilogb): Return INT_MAX for +-Inf.
+	* sysdeps/i386/fpu/s_ilogbf.S (__ilogbf): Likewise.
+	* sysdeps/i386/fpu/s_ilogbl.S (__ilogbl): Likewise.
+	* sysdeps/ieee754/dbl-64/s_ilogb.c (__ilogb): Likewise.
+	* sysdeps/ieee754/flt-32/s_ilogbf.c (__ilogbf): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_ilogbl.c (__ilogbl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_ilogbl.c (__ilogbl): Likewise.
+
+2001-06-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/w_coshl.c (__coshl): Test if finite argument
+	gave non-finite result instead of using constant in generic
+	version.
+	* sysdeps/generic/w_coshf.c (__coshf): Likewise.
+	* sysdeps/generic/w_cosh.c (__cosh): Likewise.
+	* sysdeps/generic/w_exp10.c (o_threshold, u_threshold): Remove.
+	(__exp10): Test if finite argument gave non-finite result.
+	* sysdeps/generic/w_exp10f.c (o_threshold, u_threshold, __exp10f):
+	Likewise.
+	* sysdeps/generic/w_exp10l.c (o_threshold, u_threshold, __exp10l):
+	Likewise.
+
+2001-06-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-96/e_coshl.c (__ieee754_coshl): Fix
+	overflow threshold constant (log(LDBL_MAX)+M_LN2l).
+
+2001-05-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/programs/ld-ctype.c (idx_table): New struct type.
+	(idx_table_init, idx_table_get, idx_table_add): New functions.
+	(MAX_CHARNAMES_IDX): Remove macro.
+	(locale_ctype_t): Change type of charnames_idx field.
+	(ctype_startup): Change initialization of charnames_idx field.
+	(find_idx): Use idx_table_get and idx_table_add for speed.
+
+	* locale/programs/charmap.c (charmap_new_char): Fix ucs4 value
+	computation of characters in a range.
+
+2001-05-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/gb18030.c (__fourbyte_to_ucs1): Add mappings for <U03F4>,
+	<U03F5>.
+	(__ucs_to_gb18030_tab1): Likewise.
+	(BODY for FROM_LOOP): Add mapping for <U00010000>..<U0010FFFF>.
+	(BODY for TO_LOOP): Likewise.
+	* iconvdata/tst-table-charmap.sh: Update for charmaps containing
+	<U00xxxxxx> syntax.
+	* iconvdata/tst-table-from.c (bmp_only): New variable.
+	(utf8_decode): If bmp_only, don't return characters outside Unicode
+	plane 0.
+	(main): When testing UTF-8 or GB18030, set bmp_only to 1. Don't print
+	a conversion line if utf8_decode returns NULL.
+	* iconvdata/tst-table-to.c (main): When testing encodings other than
+	UTF-8 and GB18030, loop upto U+30000 instead of U+10000. Use UTF-8
+	instead of UCS-2 as input.
+	* iconvdata/tst-table.sh: For GB18030, use only the part < 0x10000
+	of the charmap.
+
+2001-05-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/cns11643l1.c: Update to Unicode 3.1.
+	(__cns11643l1_to_ucs4_tab): Regenerated.
+	(__cns11643l1_from_ucs4_tab12): Regenerated.
+	* iconvdata/cns11643.c: Update to Unicode 3.1.
+	(__cns11643l14_to_ucs4_tab): Remove array.
+	(__cns11643l3_to_ucs4_tab, __cns11643l4_to_ucs4_tab,
+	__cns11643l5_to_ucs4_tab, __cns11643l6_to_ucs4_tab,
+	__cns11643l7_to_ucs4_tab, __cns11643l15_to_ucs4_tab): New arrays.
+	(__cns11643_from_ucs4p0_tab): Renamed from __cns11643_from_ucs4_tab.
+	(__cns11643_from_ucs4p2_tab): New array.
+	* iconvdata/cns11643.h (__cns11643l14_to_ucs4_tab): Remove declaration.
+	(__cns11643l3_to_ucs4_tab, __cns11643l4_to_ucs4_tab,
+	__cns11643l5_to_ucs4_tab, __cns11643l6_to_ucs4_tab,
+	__cns11643l7_to_ucs4_tab, __cns11643l15_to_ucs4_tab): New declarations.
+	(cns11643_to_ucs4): Treat planes 3, 4, 5, 6, 7, 15 instead of 14.
+	(__cns11643_from_ucs4_tab): Remove declaration.
+	(__cns11643_from_ucs4p0_tab, __cns11643_from_ucs4p2_tab): New
+	declarations.
+	(ucs4_to_cns11643): Update for new arrays. Treat U+3400..U+4DFF and
+	U+20000..U+2A6D6.
+	* iconvdata/cns11643l2.h (__cns11643_from_ucs4_tab): Remove
+	declaration.
+	(__cns11643_from_ucs4p0_tab): New declaration.
+	(ucs4_to_cns11643l2): Update for new arrays.
+	* iconvdata/iso-2022-cn-ext.c (BODY for FROM_LOOP): Handle planes
+	3 to 7.
+	(BODY for TO_LOOP): Handle planes 3 to 7, instead of plane 14.
+	* iconvdata/EUC-TW.irreversible: New file.
+	* iconvdata/tst-table.sh: Use it.
+	* iconvdata/Makefile (distribute): Add CP1255.irreversible,
+	CP1258.irreversible, EUC-TW.irreversible.
+
+2001-05-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/C-translit.h.in: Add transliterations for new Unicode 3.1
+	mathematical symbols.
 
 2001-06-05  Andreas Jaeger  <aj@suse.de>
 

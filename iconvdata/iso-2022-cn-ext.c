@@ -538,6 +538,7 @@ enum
 		  }							      \
 		if (used == ASCII_set)					      \
 		  {							      \
+		    UNICODE_TAG_HANDLER (ch, 4);			      \
 		    STANDARD_ERR_HANDLER (4);				      \
 		  }							      \
 	      }								      \

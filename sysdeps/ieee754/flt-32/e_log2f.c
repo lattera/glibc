@@ -40,9 +40,9 @@ static float zero   =  0.0;
 #endif
 
 #ifdef __STDC__
-	float __log2f(float x)
+	float __ieee754_log2f(float x)
 #else
-	float __log2f(x)
+	float __ieee754_log2f(x)
 	float x;
 #endif
 {
@@ -88,4 +88,3 @@ static float zero   =  0.0;
 	    return dk-((s*(f-R))-f)/ln2;
 	}
 }
-weak_alias (__log2f, log2f)
