@@ -1,5 +1,7 @@
 Tue Feb 13 05:12:02 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
+	* sysdeps/unix/common/syscalls.list: Add sigaction syscall.
+
 	* sysdeps/unix/sysv/linux/gnu/types.h: Moved from linux/i386.
 
 	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=math]
