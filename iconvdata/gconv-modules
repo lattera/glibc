@@ -872,8 +872,9 @@ module	INTERNAL		BIG5//			BIG5		1
 
 #	from			to			module		cost
 alias	EUCJP//			EUC-JP//
-alais	CSEUCPKDFMTJAPANESE//	EUC-JP//
+alias	CSEUCPKDFMTJAPANESE//	EUC-JP//
 alias	OSF00030010//		EUC-JP//
+alias	UJIS//			EUC-JP//
 module	EUC-JP//		INTERNAL		EUC-JP		1
 module	INTERNAL		EUC-JP//		EUC-JP		1
 
