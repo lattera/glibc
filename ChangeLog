@@ -1,5 +1,8 @@
 2003-08-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* assert/assert.h (assert): Use !! in front of expression to allow
+	use of pointers.
+
 	* iconvdata/cp932.c: Fixed checking of a few border of code areas.
 	Changed conversion of JIS X 0201 from using a table to calculating.
 	* iconvdata/euc-jp-ms.c: Fixed conversion table and rewrote

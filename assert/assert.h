@@ -89,7 +89,7 @@ __END_DECLS
    enough estimate for when the feature became available.  */
 # if __GNUC_PREREQ (3, 0)
 #  define assert(expr) \
-  (__ASSERT_VOID_CAST (__builtin_expect (expr, 1) ? 0 :			      \
+  (__ASSERT_VOID_CAST (__builtin_expect (!!(expr), 1) ? 0 :		      \
 		       (__assert_fail (__STRING(expr), __FILE__, __LINE__,    \
 				       __ASSERT_FUNCTION), 0)))
 # else
