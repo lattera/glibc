@@ -14,7 +14,7 @@ config-sysdirs = @sysnames@
 
 config-defines = @DEFS@
 
-# Configureation options.
+# Configuration options.
 gnu-as = @gnu_as@
 gnu-ld = @gnu_ld@
 elf = @elf@
@@ -23,10 +23,12 @@ build-shared = @shared@
 build-profile = @profile@
 build-omitfp = @omitfp@
 
+# Build tools.
 CC = @CC@
 AR = @AR@
 RANLIB = @RANLIB@
 
+# Installation tools.
 INSTALL = @INSTALL@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@

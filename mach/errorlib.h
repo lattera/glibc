@@ -26,7 +26,10 @@
 /*
  * HISTORY
  * $Log$
- * Revision 1.4  1993/12/17 21:56:16  roland
+ * Revision 1.5  1995/03/10 23:57:44  roland
+ * (errors): Use const for decl.
+ *
+ * Revision 1.4  1993/12/17  21:56:16  roland
  * entered into RCS
  *
  * Revision 2.3  92/03/31  15:18:52  rpd
@@ -82,6 +85,6 @@ struct error_system {
 };
 
 #define errors __mach_error_systems
-extern	struct error_system 	errors[err_max_system+1];
+extern const struct error_system 	errors[err_max_system+1];
 
 #define	errlib_count(s)		(sizeof(s)/sizeof(s[0]))

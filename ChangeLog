@@ -1,4 +1,38 @@
+Sun Mar 12 18:21:10 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* malloc/malloc.h (_malloc_internal, _realloc_internal): Declare these.
+	* malloc/realloc.c (_realloc_internal): Renamed from realloc;
+ 	don't use __realloc_hook.
+	(realloc): New function; call __realloc_hook ?: _realloc_internal.
+	* malloc/malloc.c (_malloc_internal): Renamed from malloc;
+	don't use __malloc_hook.
+	(malloc): New function; call __malloc_hook ?: _malloc_internal.
+	(initialize): Set up _heaplimit to cover the _heapinfo table.
+	(morecore_recursing): New static variable.
+	(morecore): If that is set, return null immediately.
+	When growing the info table, before getting new core from the
+ 	system for it, set morecore_recursing and try moving _heapinfo
+ 	with _realloc_internal.  When that fails and we get new core, set
+ 	_heaplimit to cover the core for the new _heapinfo table.
+	(register_heapinfo): New function.  Record the _heapinfo table's
+	own blocks in that table and in the statistics variables.
+	(initialize, _malloc_internal): Use it after allocating new table.
+
+Fri Mar 10 22:26:28 1995  Jim Meyering  (meyering@comco.com)
+
+	* sysdeps/generic/memchr.c: Remove ansidecl.h and clean up for use
+	by other packages.
+	[LONG_MAX <= LONG_MAX_32_BITS]: Don't compile 64-bit code.
+
 Fri Mar 10 13:31:29 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* mach/errorlib.h (errors): Use const for decl.
+
+	* time/tzfile.c (uc2ul, _uc2ul): Macros removed.
+	(decode): New inline function; decode signed 32-bit integers, and
+	sign-extend properly when long is longer than 32 bits.
+	(__tzfile_read): Changed all uses of uc2ul to decode.
+	Decode the transition times properly when sizeof (time_t) > 4.
 
 	* stdio/printf.h: Doc fixes.  Don't #include <stddef.h>.
 	(printf_function): Make last arg ARGS a vector of pointers instead of a
@@ -6,8 +40,8 @@ Fri Mar 10 13:31:29 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 Fri Mar 10 13:46:25 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
 
-	* stdio/vfprintf.c (PAD): use return value of _IO_padn.
-	(buffered_vfprintf): remove line buffer when flush failed.
+	* stdio/vfprintf.c [USE_IN_LIBIO] (PAD): Use return value of _IO_padn.
+	(buffered_vfprintf): Remove line buffer when flush failed.
 
 Fri Mar 10 00:04:55 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 

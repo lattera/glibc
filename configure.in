@@ -41,13 +41,13 @@ dnl Arguments to enable or disable building the shared, profiled, and
 dnl -fomit-frame-pointer libraries.
 AC_ARG_ENABLE(shared, dnl
 [  --enable-shared         build shared library [default=yes if GNU ld & ELF]],
-	    shared=yes, shared=no, shared=default)
+	    shared=$enableval, shared=default)
 AC_ARG_ENABLE(profile, dnl
 [  --enable-profile        build profiled library [default=yes]],
-	    profile=yes, profile=no, profile=yes)
+	    profile=$enableval, profile=yes)
 AC_ARG_ENABLE(omitfp, dnl
 [  --enable-omitfp       build undebuggable optimized library [default=no]],
-	    omitfp=yes, omitfp=no, omitfp=no)
+	    omitfp=$enableval, omitfp=no)
 
 AC_CANONICAL_HOST
 # We keep the original values in `$config_*' and never modify them, so we
