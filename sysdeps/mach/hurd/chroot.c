@@ -36,11 +36,11 @@ chroot (const char *path)
   /* Append trailing "/." to directory name to force ENOTDIR if it's not a
      directory and EACCES if we don't have search permission.  */
   len = strlen (path);
-  if (path[len - 2] == '/' && path[len - 1] == '.')
+  if (len >= 2 && path[len - 2] == '/' && path[len - 1] == '.')
     lookup = path;
   else
     {
-      char *n = alloca (len + 2);
+      char *n = alloca (len + 3);
       memcpy (n, path, len);
       n[len] = '/';
       n[len + 1] = '.';

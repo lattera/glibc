@@ -1,4 +1,14 @@
+2002-05-13  Marcus Brinkmann  <marcus@gnu.org>
+
+        * hurd/hurdchdir.c (_hurd_change_directory_port_from_name):
+        Allocate three, not two, more than LEN when appending '/.'.
+        * sysdeps/mach/hurd/chroot.c (chroot): Likewise.  Don't check
+        if NAME ends with '/.' if it is shorter than 2 chars.
+
 2002-05-12  Roland McGrath  <roland@frob.com>
+
+	* mach/Makefile ($(mach-syscalls:%=$(objpfx)%.S)): Make the generated
+	files #include <sysdep.h> instead of <mach/machine/syscall_sw.h>.
 
 	* hurd/hurdexec.c (_hurd_exec): Reauthenticate ports/dtable used in
 	file_exec to effect svuid=euid, svgid=egid if that is not a no-op.

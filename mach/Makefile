@@ -96,8 +96,8 @@ ifndef mach-syscalls
 no_deps=t
 else
 $(mach-syscalls:%=$(objpfx)%.S): $(objpfx)%.S: $(objpfx)mach-syscalls.mk
-	(echo '#include <mach/machine/syscall_sw.h>'; \
-	 echo 'kernel_trap(__$*,$(sysno-$*),$(nargs-$*))'; \
+	(echo '#include <sysdep.h>'; \
+	 echo 'kernel_trap (__$*,$(sysno-$*),$(nargs-$*))'; \
 	 echo 'weak_alias (__$*, $*)') > $@-new
 	 mv -f $@-new $@
 generated += $(mach-syscalls:=.S)

@@ -40,7 +40,7 @@ _hurd_change_directory_port_from_name (struct hurd_port *portcell,
     lookup = name;
   else
     {
-      char *n = alloca (len + 2);
+      char *n = alloca (len + 3);
       memcpy (n, name, len);
       n[len] = '/';
       n[len + 1] = '.';
