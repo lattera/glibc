@@ -1,3 +1,8 @@
+2003-11-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/configure.in: Make missing forced unwind support
+	fatal.
+
 2003-11-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthreadP.h: Don't declare __pthread_unwind as weak inside libpthread.

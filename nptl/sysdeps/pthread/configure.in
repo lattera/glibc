@@ -45,4 +45,6 @@ libc_cv_c_cleanup=yes, libc_cv_c_cleanup=no)])
   if test $libc_cv_c_cleanup = no; then
     AC_MSG_ERROR([the compiler must support C cleanup handling])
   fi
+else
+  AC_MSG_ERROR(forced unwind support is required)
 fi
