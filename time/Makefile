@@ -21,7 +21,7 @@
 #
 subdir	:= time
 
-headers	:= time.h sys/time.h sys/timeb.h
+headers	:= time.h sys/time.h sys/timeb.h timebits.h
 distribute := tzfile.h private.h scheck.c ialloc.c yearistype
 extra-objs = scheck.o ialloc.o zonenames $(tzfiles:%=z.%)
 

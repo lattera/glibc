@@ -40,11 +40,14 @@ __BEGIN_DECLS
 
 
 #ifdef	_TIME_H
-/* Processor clock ticks per second.  */
-#define	CLOCKS_PER_SEC	1	/* ??? */
 
+/* This defines CLOCKS_PER_SEC, which is the number of processor clock
+   ticks per second.  */
+#include <timebits.h>
+
+/* This is the obsolete POSIX.1-1988 name for the same constant.  */
 #ifdef	__USE_POSIX
-#define	CLK_TCK		60	/* ??? */
+#define	CLK_TCK		CLOCKS_PER_SEC
 #endif
 
 #endif /* <time.h> included.  */

@@ -1,3 +1,13 @@
+Fri May 10 18:36:14 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* FAQ: New file contributed by drepper.
+
+	* time/Makefile (headers): Add timebits.h.
+	* sysdeps/unix/sysv/linux/timebits.h: New file.
+	* sysdeps/stub/timebits.h: New file.
+	* time/time.h (CLK_TCK): Define to CLOCKS_PER_SEC.
+	(CLOCKS_PER_SEC): Remove this macro.  Instead #include <timebits.h>.
+
 Fri May 10 16:22:44 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
 
 	* string/argz-create.c (__argz_create): Restore const keyword to
@@ -5,7 +15,7 @@ Fri May 10 16:22:44 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
 	* string/argz.h (__argz_create, argz_create): Restore const
  	keyword.
 	* string/envz.c (envz_get): Don't declare ENTRY const.
-	
+
 Fri May 10 11:48:03 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* string/argz.h (argz_create): Fix param type.
@@ -18,7 +28,7 @@ Fri May 10 09:41:54 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
 	from declaration of ARGV.
 	* string/envz.h (envz_get): Omit const from declaration of return
 	type.
-	
+
 Thu May  9 09:17:46 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* aclocal.m4 (AC_FD_MSG, AC_FD_CC): Fix these for autoconf weirdness.
