@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@gnu.org>.
 
@@ -34,6 +34,10 @@ ENTRY (__vfork)
 	/* Pop the return PC value into ECX.  */
 	popl	%ecx
 
+#ifdef SAVE_PID
+	SAVE_PID
+#endif
+
 	/* Stuff the syscall number in EAX and enter into the kernel.  */
 	movl	$SYS_ify (vfork), %eax
 	int	$0x80
@@ -42,6 +46,10 @@ ENTRY (__vfork)
 	   disturbs the branch target cache.  Instead push the return
 	   address back on the stack.  */
 	pushl	%ecx
+
+#ifdef RESTORE_PID
+	RESTORE_PID
+#endif
 
 	cmpl	$-4095, %eax
 	/* Branch forward if it failed.  */

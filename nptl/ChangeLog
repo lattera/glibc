@@ -1,7 +1,9 @@
 2004-03-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/tcb-offsets.sym: Add PID.
+	* sysdeps/x86_64/tcb-offsets.sym: Likewise.
 	* sysdeps/unix/sysv/linux/i386/vfork.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S: New file.
 
 2004-03-08  Steven Munroe  <sjmunroe@us.ibm.com>
 

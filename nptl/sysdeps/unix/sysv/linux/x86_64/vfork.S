@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,17 +18,14 @@
 
 #include <tcb-offsets.h>
 
-/* Save the PID value.  */
 #define SAVE_PID \
-	movl	%gs:PID, %edx; 						      \
-	movl	$-1, %gs:PID
+	movl	%fs:PID, %esi;						      \
+	movl	$-1, %fs:PID
 
-/* Restore the old PID value in the parent.  In the child store 0.  */
 #define RESTORE_PID \
-	testl	%eax, %eax;						      \
+	testq	%rax, %rax;						      \
 	je	1f;							      \
-	movl	%edx, %gs:PID;						      \
+	movl	%esi, %fs:PID;						      \
 1:
 
-
-#include <sysdeps/unix/sysv/linux/i386/vfork.S>
+#include <sysdeps/unix/sysv/linux/x86_64/vfork.S>

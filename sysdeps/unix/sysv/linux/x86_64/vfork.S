@@ -32,6 +32,10 @@ ENTRY (__vfork)
 	popq	%rdi
 	cfi_adjust_cfa_offset(-8)
 
+#ifdef SAVE_PID
+	SAVE_PID
+#endif
+
 	/* Stuff the syscall number in RAX and enter into the kernel.  */
 	movl	$SYS_ify (vfork), %eax
 	syscall
@@ -39,6 +43,10 @@ ENTRY (__vfork)
 	/* Push back the return PC.  */
 	pushq	%rdi
 	cfi_adjust_cfa_offset(8)
+
+#ifdef RESTORE_PID
+	RESTORE_PID
+#endif
 
 	cmpl	$-4095, %eax
 	jae SYSCALL_ERROR_LABEL		/* Branch forward if it failed.  */

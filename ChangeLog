@@ -1,5 +1,10 @@
 2004-03-08  Ulrich Drepper  <drepper@redhat.com>
 
+
+	* sysdeps/unix/sysv/linux/i386/vfork.S: If SAVE_PID and
+	RESTORE_PID are defined, use it.
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S: Likewise.
+
 	* sysdeps/posix/gai_strerror.c: Add error string for EAI_IDN_ENCODE.
 
 	* Makerules: Use extra-modules.mk if modules-names is defined.
