@@ -1,5 +1,5 @@
 /* We must use the appropriate version for the system.  */
-#ifdef __ELF__
+#ifdef HAVE_ELF
 # include <elf/ldsodefs.h>
 #else
 /* We have no dynamic loading.  Define the macros we need here as dummy

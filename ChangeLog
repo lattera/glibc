@@ -1,5 +1,7 @@
 1998-10-24  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* include/ldsodefs.h: Test HAVE_ELF instead of __ELF__.
+
 	* sysdeps/mach/hurd/opendir.c (__opendir): Return ENOENT for "".
 	(__opendir): Add trailing slash to name for open, for ENOTDIR check.
 
