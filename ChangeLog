@@ -1,3 +1,7 @@
+2000-04-10  Andreas Jaeger  <aj@suse.de>
+
+	* intl/Makefile: Don't run do-gettext-test when cross-compiling.
+
 2000-04-09  Ulrich Drepper  <drepper@redhat.com>
 
 	Implement handling of restartable conversion functions according to
