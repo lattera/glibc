@@ -1,7 +1,11 @@
 1998-11-11  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* hurd/hurdsig.c (_hurdsig_init): Add assertion that no pending,
+	unblocked signals are set in the startup masks.
+
 	* hurd/hurdsig.c (_hurdsig_init): Take new args, INTARRAY and
 	INTARRAYSIZE.  Initialize main thread's sigstate from INIT_SIG* ints.
+
 	* hurd/hurd/signal.h: Update _hurdsig_init decl.
 	* hurd/hurdinit.c (_hurd_proc_init): Take new args, INTARRAY and
 	INTARRAYSIZE, pass them down to _hurdsig_init.

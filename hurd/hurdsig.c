@@ -1236,6 +1236,12 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
   /* Receive exceptions on the signal port.  */
   __task_set_special_port (__mach_task_self (),
 			   TASK_EXCEPTION_PORT, _hurd_msgport);
+
+  /* Sanity check.  Any pending, unblocked signals should have been
+     taken by our predecessor incarnation (i.e. parent or pre-exec state)
+     before packing up our init ints.  This assert is last (not above)
+     so that signal handling is all set up to handle the abort.  */
+  assert ((ss->pending &~ ss->blocked) == 0);
 }
 				/* XXXX */
 /* Reauthenticate with the proc server.  */
