@@ -774,6 +774,9 @@ _IO_flush_all_linebuffered ()
     if ((fp->_flags & _IO_NO_WRITES) == 0 && fp->_flags & _IO_LINE_BUF)
       _IO_OVERFLOW (fp, EOF);
 }
+#ifdef _LIBC
+weak_alias (_IO_flush_all_linebuffered, _flushlbf)
+#endif
 
 static void _IO_unbuffer_write __P ((void));
 

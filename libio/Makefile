@@ -21,7 +21,8 @@
 #
 subdir	:= libio
 
-headers	:= stdio.h libio.h _G_config.h bits/stdio.h bits/stdio-lock.h
+headers	:= stdio.h libio.h _G_config.h bits/stdio.h bits/stdio-lock.h \
+	   stdio_ext.h
 
 routines	:=							      \
 	filedoalloc iofclose iofdopen iofflush iofgetpos iofgets iofopen      \
@@ -40,6 +41,9 @@ routines	:=							      \
 	memstream pclose putc putchar rewind setbuf setlinebuf vasprintf      \
 	iovdprintf vscanf vsnprintf obprintf fcloseall fseeko ftello	      \
 	freopen64 fseeko64 ftello64					      \
+									      \
+	__fbufsize __freading __fwriting __freadable __fwritable __flbf	      \
+	__fpurge __fpending __fsetlocking				      \
 									      \
 	libc_fatal fmemopen
 

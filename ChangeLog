@@ -1,5 +1,24 @@
 2000-09-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/Makefile (headers): Add stdio_ext.h.
+	(routines): Add __fbufsize, __freading, __fwriting, __freadable,
+	__fwritable, __flbf, __fpurge, __fpending, and __fsetlocking.
+	* libio/Versions [libc] (GLIBC_2.2): Add __fbufsize, __freading,
+	__fwriting, __freadable, __fwritable, __flbf, __fpurge, __fpending,
+	__fsetlocking, and _flushlbf.
+	* libio/__fbufsize.c: New file.
+	* libio/__flbf.c: New file.
+	* libio/__fpending.c: New file.
+	* libio/__fpurge.c: New file.
+	* libio/__freadable.c: New file.
+	* libio/__freading.c: New file.
+	* libio/__fsetlocking.c: New file.
+	* libio/__fwritable.c: New file.
+	* libio/__fwriting.c: New file.
+	* libio/stdio_ext.h: New file.
+	* libio/genops.c (_IO_flush_all_linebuffered): Add alias _flushlbf.
+	* libio/libio.h (_IO_USER_LOCK): Define.
+
 	* iconv/gconv_open.c (__gconv_open): Set res to __GCONV_NOMEM is
 	malloc fails.
 
