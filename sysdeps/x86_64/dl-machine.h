@@ -260,18 +260,16 @@ _dl_runtime_profile:\n\
 .globl _start\n\
 .globl _dl_start_user\n\
 _start:\n\
+	# Store the highest stack address\n\
+	movq %rsp, __libc_stack_end(%rip)\n\
 	movq %rsp, %rdi\n\
 	call _dl_start\n\
 _dl_start_user:\n\
 	# Save the user entry point address in %r12.\n\
 	movq %rax, %r12\n\
-	# Store the highest stack address\n\
-	movq __libc_stack_end@GOTPCREL(%rip), %rax\n\
-	movq %rsp, (%rax)\n\
 	# See if we were run as a command with the executable file\n\
 	# name as an extra leading argument.\n\
-	movq _dl_skip_args@GOTPCREL(%rip), %rax\n\
-	movl (%rax), %eax\n\
+	movl _dl_skip_args(%rip), %eax\n\
 	# Pop the original argument count.\n\
 	popq %rdx\n\
 	# Adjust the stack pointer to skip _dl_skip_args words.\n\
@@ -284,8 +282,7 @@ _dl_start_user:\n\
 	# argc -> rsi\n\
 	movq %rdx, %rsi\n\
 	# _dl_loaded -> rdi\n\
-	movq _rtld_local@GOTPCREL(%rip), %rdi\n\
-	movq (%rdi), %rdi\n\
+	movq _rtld_local(%rip), %rdi\n\
 	# env -> rcx\n\
 	leaq 16(%rsp,%rdx,8), %rcx\n\
 	# argv -> rdx\n\
@@ -293,7 +290,7 @@ _dl_start_user:\n\
 	# Call the function to run the initializers.\n\
 	call _dl_init_internal@PLT\n\
 	# Pass our finalizer function to the user in %rdx, as per ELF ABI.\n\
-	movq _dl_fini@GOTPCREL(%rip), %rdx\n\
+	leaq _dl_fini(%rip), %rdx\n\
 	# Jump to the user's entry point.\n\
 	jmp *%r12\n\
 .previous\n\
