@@ -1,5 +1,5 @@
 /* Linux specific extensions to fpathconf.
-   Copyright (C) 1991, 95, 96, 98, 99, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1991,95,96,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <unistd.h>
 #include <limits.h>
 #include <sys/statfs.h>
@@ -42,8 +43,14 @@ __fpathconf (fd, name)
 
       /* Determine the filesystem type.  */
       if (__fstatfs (fd, &fsbuf) < 0)
-	/* not possible, return the default value.  */
-	return LINUX_LINK_MAX;
+	{
+	  if (errno == ENOSYS)
+	    /* not possible, return the default value.  */
+	    return LINUX_LINK_MAX;
+
+	  /* Some error occured.  */
+          return -1;
+	}
 
       switch (fsbuf.f_type)
 	{

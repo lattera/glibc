@@ -1,3 +1,13 @@
+2001-03-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/pathconf.c (__pathconf): Return
+	LINUX_LINK_MAX only if the statfs function is not implemented for
+	the filesystem.
+
+	* sysdeps/unix/sysv/linux/fpathconf.c (__fpathconf): Return
+	LINUX_LINK_MAX only if the fstatfs function is not implemented for
+	the filesystem.
+
 2001-03-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-dst.h (DL_DST_COUNT): Add __builtin_expect.
