@@ -206,7 +206,7 @@ __realpath (const char *name, char *resolved)
   *dest = '\0';
 
   assert (resolved == NULL || resolved == rpath);
-  return resolved ?: rpath;
+  return rpath;
 
 error:
   assert (resolved == NULL || resolved == rpath);

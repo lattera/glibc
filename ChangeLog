@@ -1,5 +1,7 @@
 2004-02-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/canonicalize.c (__realpath): Simplify.
+
 	* posix/regcomp.c (parse_expression): Avoid duplication in calls
 	to build_charclass_op.
 
