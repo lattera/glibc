@@ -1,3 +1,15 @@
+2003-04-27  Bruno Haible  <bruno@clisp.org>
+
+	* manual/message.texi (Advanced gettext functions): Add information
+	about Korean, Portuguese, Latvian. Gaeilge is also known as Irish.
+	Add section about Lithuanian, reported by Ricardas Cepas
+	<rch@richard.eu.org>.
+	Add information about Croatian.
+	Ukrainian is like Russian, reported by Andy Rysin <arysin@yahoo.com>.
+	Remove remark about continuation lines that is not true for PO files.
+	Fix formula for Slovenian, reported by Roman Maurer
+	<roman.maurer@amis.net>.
+
 2003-08-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/math_private.h: Declare __copysignf.

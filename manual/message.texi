@@ -1236,7 +1236,7 @@ Languages with this property include:
 @item Finno-Ugric family
 Hungarian
 @item Asian family
-Japanese
+Japanese, Korean
 @item Turkic/Altaic family
 Turkish
 @end table
@@ -1265,7 +1265,7 @@ Greek
 @item Semitic family
 Hebrew
 @item Romance family
-Italian, Spanish
+Italian, Portuguese, Spanish
 @item Artificial
 Esperanto
 @end table
@@ -1282,7 +1282,22 @@ Languages with this property include:
 
 @table @asis
 @item Romanic family
-French
+French, Brazilian Portuguese
+@end table
+
+@item Three forms, special case for zero
+The header entry would be:
+
+@smallexample
+Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;
+@end smallexample
+
+@noindent
+Languages with this property include:
+
+@table @asis
+@item Baltic family
+Latvian
 @end table
 
 @item Three forms, special cases for one and two
@@ -1297,7 +1312,24 @@ Languages with this property include:
 
 @table @asis
 @item Celtic
-Gaeilge
+Gaeilge (Irish)
+@end table
+
+@item Three forms, special case for numbers ending in 1[2-9]
+The header entry would look like this:
+
+@smallexample
+Plural-Forms: nplurals=3; \
+    plural=n%10==1 && n%100!=11 ? 0 : \
+           n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2;
+@end smallexample
+
+@noindent
+Languages with this property include:
+
+@table @asis
+@item Baltic family
+Lithuanian
 @end table
 
 @item Three forms, special cases for numbers ending in 1 and 2, 3, 4, except those ending in 1[1-4]
@@ -1313,7 +1345,7 @@ Languages with this property include:
 
 @table @asis
 @item Slavic family
-Czech, Russian
+Croatian, Czech, Russian, Ukrainian
 @end table
 
 @item Three forms, special cases for 1 and 2, 3, 4
@@ -1341,8 +1373,6 @@ Plural-Forms: nplurals=3; \
            n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;
 @end smallexample
 
-(Continuation in the next line is possible.)
-
 @noindent
 Languages with this property include:
 
@@ -1351,12 +1381,12 @@ Languages with this property include:
 Polish
 @end table
 
-@item Four forms, special case for one and all numbers ending in 2, 3, or 4
+@item Four forms, special case for one and all numbers ending in 02, 03, or 04
 The header entry would look like this:
 
 @smallexample
 Plural-Forms: nplurals=4; \
-    plural=n==1 ? 0 : n%10==2 ? 1 : n%10==3 || n%10==4 ? 2 : 3;
+    plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;
 @end smallexample
 
 @noindent
