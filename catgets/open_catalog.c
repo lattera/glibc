@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>.
 
@@ -237,7 +237,7 @@ __open_catalog (const char *cat_name, const char *nlspath, const char *env_var,
       /* Save read, handle partial reads.  */
       do
 	{
-	  size_t now = __read (fd, (((char *) &catalog->file_ptr)
+	  size_t now = __read (fd, (((char *) catalog->file_ptr)
 				    + (st.st_size - todo)), todo);
 	  if (now == 0 || now == (size_t) -1)
 	    {

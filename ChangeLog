@@ -1,3 +1,14 @@
+2002-02-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_load_address, RTLD_START):
+	Work around an Alpha gas bug.
+
+2002-02-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* catgets/open_catalog.c (__open_catalog): Fix typo in code which
+	uses read to load the catalog.
+	Patch by Andy Isaacson <adi@unlimitedscale.com> [PR libc/3011].
+
 2002-02-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/Makefile (distribute): Add regcomp.c, regexec.c,
@@ -32,7 +43,7 @@
 2002-02-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* assert/assert-perr.c: Use INTUSE to reference functions and variables
-	inside libc itself.  Ise INTDEF and INTDEF2 to define appropriate
+	inside libc itself.  Use INTDEF and INTDEF2 to define appropriate
 	aliases.  Add prototypes for the new aliases.
 	* assert/assert.c: Likewise.
 	* include/libc-symbols.h: Likewise.

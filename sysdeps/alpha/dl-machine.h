@@ -74,7 +74,7 @@ elf_machine_load_address (void)
       "0:\n\t"
       "br $0, 2f\n"
       "1:\n\t"
-      ".data\n"
+      ".section\t.data\n"
       "2:\n\t"
       ".quad 0b\n\t"
       ".previous"
@@ -294,7 +294,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    its return value is the user program's entry point.  */
 
 #define RTLD_START asm ("\
-.text								\n\
+	.section .text						\n\
 	.set at							\n\
 	.globl _start						\n\
 	.ent _start						\n\
