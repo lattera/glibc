@@ -12,6 +12,9 @@ Version 2.3.2
   and are now also available on the Hurd.
 
 * ELF thread-local storage support (TLS) now works on x86-64.
+
+* The new dynamic string token $LIB is expanded in shared library names.
+  This normally expands to lib, but on some 64-bit platforms to lib64 instead.
 
 Version 2.3
 
