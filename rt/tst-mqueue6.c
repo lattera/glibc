@@ -37,8 +37,8 @@
 #if _POSIX_THREADS
 # include <pthread.h>
 
-#define mqsend(q) (mqsend) (q, __LINE__)
-static inline int
+# define mqsend(q) (mqsend) (q, __LINE__)
+static int
 (mqsend) (mqd_t q, int line)
 {
   char c;
@@ -50,8 +50,8 @@ static inline int
   return 0;
 }
 
-#define mqrecv(q) (mqrecv) (q, __LINE__)
-static inline int
+# define mqrecv(q) (mqrecv) (q, __LINE__)
+static int
 (mqrecv) (mqd_t q, int line)
 {
   char c;
@@ -104,7 +104,7 @@ fct (union sigval s)
   fct_err |= mqsend (q);
 }
 
-#define TEST_FUNCTION do_test ()
+# define TEST_FUNCTION do_test ()
 static int
 do_test (void)
 {

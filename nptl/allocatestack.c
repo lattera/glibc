@@ -618,6 +618,10 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 	  pd->guardsize = guardsize;
 	}
+      /* The pthread_getattr_np() calls need to get passed the size
+	 requested in the attribute, regardless of how large the
+	 actually used guardsize is.  */
+      pd->reported_guardsize = guardsize;
     }
 
 #ifndef __ASSUME_CLONE_STOPPED

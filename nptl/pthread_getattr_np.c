@@ -59,7 +59,7 @@ pthread_getattr_np (thread_id, attr)
     iattr->flags |= ATTR_FLAG_DETACHSTATE;
 
   /* This is the guardsize after adjusting it.  */
-  iattr->guardsize = thread->guardsize;
+  iattr->guardsize = thread->reported_guardsize;
 
   /* The sizes are subject to alignment.  */
   if (__builtin_expect (thread->stackblock != NULL, 1))

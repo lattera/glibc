@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -236,6 +236,8 @@ struct pthread
   size_t stackblock_size;
   /* Size of the included guard area.  */
   size_t guardsize;
+  /* This is what the user specified and what we will report.  */
+  size_t reported_guardsize;
 
   /* Resolver state.  */
   struct __res_state res;
