@@ -158,13 +158,17 @@ extern const char _nl_POSIX_name[] attribute_hidden;
 /* The standard codeset.  */
 extern const char _nl_C_codeset[] attribute_hidden;
 
+/* Return a pointer to the current `struct locale_data' for CATEGORY.  */
+#define _NL_CURRENT_DATA(category)	\
+  ((const struct locale_data *) _nl_current_##category)
+
 /* Extract the current CATEGORY locale's string for ITEM.  */
 #define _NL_CURRENT(category, item) \
   (_nl_current_##category->values[_NL_ITEM_INDEX (item)].string)
 
 /* Extract the current CATEGORY locale's string for ITEM.  */
 #define _NL_CURRENT_WSTR(category, item) \
-  ((wchar_t *) (_nl_current_##category->values[_NL_ITEM_INDEX (item)].wstr))
+  ((wchar_t *) _nl_current_##category->values[_NL_ITEM_INDEX (item)].wstr)
 
 /* Extract the current CATEGORY locale's word for ITEM.  */
 #define _NL_CURRENT_WORD(category, item) \

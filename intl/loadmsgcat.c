@@ -805,7 +805,7 @@ _nl_init_domain_conv (domain_file, domain, domainbinding)
 	      if (outcharset == NULL || outcharset[0] == '\0')
 		{
 # ifdef _LIBC
-		  outcharset = (*_nl_current[LC_CTYPE])->values[_NL_ITEM_INDEX (CODESET)].string;
+		  outcharset = _NL_CURRENT (LC_CTYPE, CODESET);
 # else
 #  if HAVE_ICONV
 		  extern const char *locale_charset (void);

@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,99,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
+   Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -44,5 +44,5 @@ wctrans (const char *property)
     return 0;
 
   i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + cnt;
-  return (wctrans_t) _nl_current_LC_CTYPE->values[i].string;
+  return (wctrans_t) _NL_CURRENT_DATA (LC_CTYPE)->values[i].string;
 }

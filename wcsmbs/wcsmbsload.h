@@ -57,6 +57,6 @@ extern int __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
 static inline void
 update_conversion_ptrs (void)
 {
-  if (__wcsmbs_last_locale != _nl_current_LC_CTYPE)
-    __wcsmbs_load_conv (_nl_current_LC_CTYPE);
+  if (__wcsmbs_last_locale != _NL_CURRENT_DATA (LC_CTYPE))
+    __wcsmbs_load_conv (_NL_CURRENT_DATA (LC_CTYPE));
 }
