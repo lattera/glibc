@@ -9,7 +9,8 @@ CPPFLAGS += -DHAVE_LLSEEK=1
 endif
 
 ifeq ($(subdir),misc)
-sysdep_routines += sysctl clone llseek getresuid getresgid sys_setresuid
+sysdep_routines += sysctl clone llseek getresuid getresgid sys_setresuid \
+		   umount umount2
 
 sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h sys/mtio.h \
 		  sys/io.h sys/klog.h sys/kdaemon.h \

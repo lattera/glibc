@@ -82,6 +82,5 @@ sys_writev	writev	writev		3	__syscall_writev
 sysinfo		EXTRA	sysinfo		1	sysinfo
 swapon		-	swapon		2	__swapon	swapon
 swapoff		-	swapoff		1	__swapoff	swapoff
-umount		EXTRA	umount		1	__umount	umount
 uselib		EXTRA	uselib		1	uselib
 wait4		-	wait4		4	__wait4		wait4

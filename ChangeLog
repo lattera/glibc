@@ -1,3 +1,13 @@
+1998-08-20 19:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Makefile [subdirs=misc] (sysdeps_routines):
+	Add umount and umount2.
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove umount.
+	* sysdeps/unix/sysv/linux/umount.S: New file.
+	* sysdeps/unix/sysv/linux/umount2.S: New file.
+	* sysdeps/unix/sysv/linux/sys/mount.h: Declare umount2.
+	Define MNT_FORCE.
+
 1998-08-20 16:01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/ldd.sh.in: Redirect warnings and error messages to stderr.

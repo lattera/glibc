@@ -82,6 +82,10 @@ enum
 #define BLKRAGET   _IO(0x12, 99) /* Get current read ahead setting.  */
 
 
+/* Possible value for FLAGS parameter of `umount2'.  */
+#define MNT_FORCE		/* Force unmounting.  */
+
+
 __BEGIN_DECLS
 
 /* Mount a filesystem.  */
@@ -91,6 +95,9 @@ extern int mount __P ((__const char *__special_file, __const char *__dir,
 
 /* Unmount a filesystem.  */
 extern int umount __P ((__const char *__special_file));
+
+/* Unmount a filesystem.  Forst unmounting if FALGS is set to MNT_FORCE.  */
+extern int umount2 __P ((__const char *__special_file, int __flags));
 
 __END_DECLS
 
