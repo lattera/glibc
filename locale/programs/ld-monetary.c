@@ -152,7 +152,7 @@ monetary_startup (struct linereader *lr, struct localedef_t *locale,
   if (lr != NULL)
     {
       lr->translate_strings = 1;
-      lr->return_widestr = 1;
+      lr->return_widestr = 0;
     }
 }
 
@@ -609,9 +609,14 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 	       struct charmap_t *charmap, const char *repertoire_name,
 	       int ignore_content)
 {
+  struct repertoire_t *repertoire = NULL;
   struct locale_monetary_t *monetary;
   struct token *now;
   enum token_t nowtok;
+
+  /* Get the repertoire we have to use.  */
+  if (repertoire_name != NULL)
+    repertoire = repertoire_read (repertoire_name);
 
   /* The rest of the line containing `LC_MONETARY' must be free.  */
   lr_ignore_rest (ldfile, 1);
@@ -695,7 +700,8 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;							      \
 	    }								      \
 									      \
-	  now = lr_token (ldfile, charmap, NULL);			      \
+	  ldfile->return_widestr = 1;					      \
+	  now = lr_token (ldfile, charmap, repertoire);			      \
 	  if (now->tok != tok_string)					      \
 	    goto err_label;						      \
 	  if (monetary->cat != NULL)					      \
@@ -720,6 +726,7 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 	      if (now->val.str.startwc != NULL)				      \
 		monetary->cat##_wc = *now->val.str.startwc;		      \
 	    }								      \
+	  ldfile->return_widestr = 0;					      \
 	  break
 
 	  STR_ELEM_WC (mon_decimal_point);

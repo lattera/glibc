@@ -1,7 +1,8 @@
 2000-01-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-monetary.c (STR_ELEM_WC): Fix test for too
-	long string in definition.
+	long string in definition.Only enable returning wide character
+	strings if really needed.
 	* locale/programs/ld-numeric.c (STR_ELEM): Likewise.
 
 	* configure.in: Add check for recent enough sed version.
