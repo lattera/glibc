@@ -1,5 +1,7 @@
 1998-10-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* include/ldsodefs.h: Fix typo.
+
 	* posix/Makefile (tests): Add tst-preadwrite.
 	* posix/tst-preadwrite.c: New file.
 

@@ -9,7 +9,7 @@
 
 /* Call a function through a pointer.  */
 # define _CALL_DL_FCT(fctp, args) (*fctp) args
-# define CALL_DL_FCT(fctp, args) (*fctp) args
+# define DL_CALL_FCT(fctp, args) (*fctp) args
 
 # endif	/* ldsodefs.h */
 #endif
