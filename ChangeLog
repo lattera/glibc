@@ -1,3 +1,8 @@
+2000-07-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/fnmatch_loop.c: Fixes for use outside glibc.
+	Patch by MacGyver <macgyver@tos.net>.
+
 2000-07-26  Andreas Jaeger  <aj@suse.de>
 
 	* rt/tst-aio4.c: New file, slighlty modified version of tst-aio2.
