@@ -1,3 +1,33 @@
+2002-03-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ttyname.c: Comment out definition and
+	use of __ttyname.
+
+	* posix/regcomp.c (__re_error_msgid): Renamed from re_error_msgid.
+	Define as hidden.
+	(__re_error_msgid_idx): Renamed from re_error_msgid_idx.  Define as
+	hidden.  Change all users of these variables.
+
+	* posix/regex_internal.h (__re_error_msgid): Renamed from
+	re_error_msgid.  Declare as hidden.
+	(__re_error_msgid_idx): Renamed from re_error_msgid_idx.  Declare as
+	hidden.
+
+	* stdio-common/reg-printf.c (__printf_arginfo_table): Define as hidden.
+	(__printf_function_table): Likewise.
+	* stdio-common/printf-parse.h (__printf_arginfo_table): Declare as
+	hidden.
+	(__printf_function_table): Likewise.
+
+	* nscd/nscd_proto.h: Declare __nss_not_use_nscd_passwd,
+	__nss_not_use_nscd_group, and __nss_not_use_nscd_hosts as hidden.
+
+	* nss/XXX-lookup.c (DATABASE_NAME_SYMBOL): Define as hidden.
+	* nss/nsswitch.c: Declare _nss_*_database as hidden.
+
+	* stdlib/wctomb.c (__no_r_state): Declare as hidden.
+	* stdlib/mbtowc.c (__no_r_state): Define as hidden.
+
 2002-03-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* ctype/ctype-info.c: Declare _nl_C_LC_CTYPE_class,

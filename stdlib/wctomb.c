@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995-1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #include <wcsmbs/wcsmbsload.h>
 
 
-extern mbstate_t __no_r_state;	/* Defined in mbtowc.c.  */
+extern mbstate_t __no_r_state attribute_hidden;	/* Defined in mbtowc.c.  */
 
 /* Convert WCHAR into its multibyte character representation,
    putting this in S and returning its length.

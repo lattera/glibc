@@ -132,7 +132,7 @@ static bin_tree_t *duplicate_tree (const bin_tree_t *src, re_dfa_t *dfa);
    POSIX doesn't require that we do anything for REG_NOERROR,
    but why not be nice?  */
 
-const char re_error_msgid[] =
+const char __re_error_msgid[] attribute_hidden =
   {
 #define REG_NOERROR_IDX	0
     gettext_noop ("Success")	/* REG_NOERROR */
@@ -186,7 +186,7 @@ const char re_error_msgid[] =
     gettext_noop ("Unmatched ) or \\)") /* REG_ERPAREN */
   };
 
-const size_t re_error_msgid_idx[] =
+const size_t __re_error_msgid_idx[] attribute_hidden =
   {
     REG_NOERROR_IDX,
     REG_NOMATCH_IDX,
@@ -241,7 +241,7 @@ re_compile_pattern (pattern, length, bufp)
 
   if (!ret)
     return NULL;
-  return gettext (re_error_msgid + re_error_msgid_idx[(int) ret]);
+  return gettext (__re_error_msgid + __re_error_msgid_idx[(int) ret]);
 }
 #ifdef _LIBC
 weak_alias (__re_compile_pattern, re_compile_pattern)
@@ -483,15 +483,15 @@ regerror (errcode, preg, errbuf, errbuf_size)
   size_t msg_size;
 
   if (BE (errcode < 0
-          || errcode >= (int) (sizeof (re_error_msgid_idx)
-                               / sizeof (re_error_msgid_idx[0])), 0))
+          || errcode >= (int) (sizeof (__re_error_msgid_idx)
+                               / sizeof (__re_error_msgid_idx[0])), 0))
     /* Only error codes returned by the rest of the code should be passed
        to this routine.  If we are given anything else, or if other regex
        code generates an invalid error code, then the program has a bug.
        Dump core so we can fix it.  */
     abort ();
 
-  msg = gettext (re_error_msgid + re_error_msgid_idx[errcode]);
+  msg = gettext (__re_error_msgid + __re_error_msgid_idx[errcode]);
 
   msg_size = strlen (msg) + 1; /* Includes the null.  */
 
@@ -623,8 +623,8 @@ re_comp (s)
     {
       re_comp_buf.fastmap = (char *) malloc (SBC_MAX);
       if (re_comp_buf.fastmap == NULL)
-	return (char *) gettext (re_error_msgid
-				 + re_error_msgid_idx[(int) REG_ESPACE]);
+	return (char *) gettext (__re_error_msgid
+				 + __re_error_msgid_idx[(int) REG_ESPACE]);
     }
 
   /* Since `re_exec' always passes NULL for the `regs' argument, we
@@ -639,7 +639,7 @@ re_comp (s)
     return NULL;
 
   /* Yes, we're discarding `const' here if !HAVE_LIBINTL.  */
-  return (char *) gettext (re_error_msgid + re_error_msgid_idx[(int) ret]);
+  return (char *) gettext (__re_error_msgid + __re_error_msgid_idx[(int) ret]);
 }
 #endif /* _REGEX_RE_COMP */
 

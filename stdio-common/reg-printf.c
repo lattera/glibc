@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,9 +22,10 @@
 
 /* Array of functions indexed by format character.  */
 static printf_function *printf_funcs[UCHAR_MAX + 1];
-printf_arginfo_function *__printf_arginfo_table[UCHAR_MAX + 1];
+printf_arginfo_function *__printf_arginfo_table[UCHAR_MAX + 1]
+     attribute_hidden;
 
-printf_function **__printf_function_table;
+printf_function **__printf_function_table attribute_hidden;
 
 int __register_printf_function __P ((int, printf_function,
                                      printf_arginfo_function));

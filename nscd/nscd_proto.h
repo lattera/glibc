@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -25,9 +25,9 @@
 #include <pwd.h>
 
 /* Variables for communication between NSCD handler functions and NSS.  */
-extern int __nss_not_use_nscd_passwd;
-extern int __nss_not_use_nscd_group;
-extern int __nss_not_use_nscd_hosts;
+extern int __nss_not_use_nscd_passwd attribute_hidden;
+extern int __nss_not_use_nscd_group attribute_hidden;
+extern int __nss_not_use_nscd_hosts attribute_hidden;
 
 extern int __nscd_getpwnam_r (const char *name, struct passwd *resultbuf,
 			      char *buffer, size_t buflen);

@@ -1,5 +1,5 @@
 /* Internal header for parsing printf format strings.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of th GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -117,8 +117,8 @@ find_spec (const UCHAR_T *format, mbstate_t *ps)
 
 
 /* These are defined in reg-printf.c.  */
-extern printf_arginfo_function *__printf_arginfo_table[];
-extern printf_function **__printf_function_table;
+extern printf_arginfo_function *__printf_arginfo_table[] attribute_hidden;
+extern printf_function **__printf_function_table attribute_hidden;
 
 
 /* FORMAT must point to a '%' at the beginning of a spec.  Fills in *SPEC

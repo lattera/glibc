@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,1996-1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,1996-2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,10 @@
 
 #include <stdio-common/_itoa.h>
 
+#if 0
+/* Is this used anywhere?  It is not exported.  */
 char *__ttyname;
+#endif
 
 static char *getttyname (const char *dev, dev_t mydev,
 			 ino64_t myino, int save, int *dostat)
@@ -85,7 +88,9 @@ getttyname (const char *dev, dev_t mydev, ino64_t myino, int save, int *dostat)
 	   )
 	  {
 	    (void) __closedir (dirstream);
+#if 0
 	    __ttyname = getttyname_name;
+#endif
 	    __set_errno (save);
 	    return getttyname_name;
 	  }

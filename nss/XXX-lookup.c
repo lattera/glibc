@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999, 2000  Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -53,9 +53,10 @@
 #define DEFAULT_CONFIG NULL
 #endif
 
-service_user *DATABASE_NAME_SYMBOL;
+service_user *DATABASE_NAME_SYMBOL attribute_hidden;
 
-extern int DB_LOOKUP_FCT (service_user **ni, const char *fct_name, void **fctp);
+extern int DB_LOOKUP_FCT (service_user **ni, const char *fct_name,
+			  void **fctp);
 
 int
 DB_LOOKUP_FCT (service_user **ni, const char *fct_name, void **fctp)
