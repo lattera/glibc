@@ -132,7 +132,7 @@ clear_once_control:
 	movl	$0, (%rdi)
 
 	movl	$0x7fffffff, %edx
-	movl	$FUTEX_WAKE, %esi
+	movq	$FUTEX_WAKE, %rsi
 	movq	$SYS_futex, %rax
 	syscall
 
