@@ -1,3 +1,8 @@
+2001-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c: First attempt to fix the
+	broken code.  Patch by Jes Sorensen.
+
 2001-02-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/pthread/pthread.h: Move __pthread_initialize from here

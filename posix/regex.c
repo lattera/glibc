@@ -62,7 +62,13 @@
 # define US_CHAR_TYPE wchar_t/* unsigned character type */
 # define COMPILED_BUFFER_VAR wc_buffer
 # define OFFSET_ADDRESS_SIZE 1 /* the size which STORE_NUMBER macro use */
-# define PUT_CHAR(c) printf ("%C", c) /* Should we use wide stream??  */
+# define PUT_CHAR(c) \
+  do {									      \
+    if (MC_CUR_MAX == 1)						      \
+      putchar (c);							      \
+    else								      \
+      printf ("%C", (wint_t) c); /* Should we use wide stream??  */	      \
+  } while (0)
 # define TRUE 1
 # define FALSE 0
 #else
@@ -754,7 +760,7 @@ print_partial_compiled_pattern (start, end)
   while (p < pend)
     {
 #ifdef _LIBC
-      printf ("%t:\t", p - start);
+      printf ("%td:\t", p - start);
 #else
       printf ("%ld:\t", (long int) (p - start));
 #endif
@@ -782,7 +788,7 @@ print_partial_compiled_pattern (start, end)
 	  printf ("/exactn_bin/%d", mcnt);
           do
 	    {
-	      printf("/%x", *p++);
+	      printf("/%lx", (long int) *p++);
             }
           while (--mcnt);
           break;
@@ -790,16 +796,16 @@ print_partial_compiled_pattern (start, end)
 
 	case start_memory:
           mcnt = *p++;
-          printf ("/start_memory/%d/%d", mcnt, *p++);
+          printf ("/start_memory/%d/%ld", mcnt, (long int) *p++);
           break;
 
 	case stop_memory:
           mcnt = *p++;
-	  printf ("/stop_memory/%d/%d", mcnt, *p++);
+	  printf ("/stop_memory/%d/%ld", mcnt, (long int) *p++);
           break;
 
 	case duplicate:
-	  printf ("/duplicate/%d", *p++);
+	  printf ("/duplicate/%ld", (long int) *p++);
 	  break;
 
 	case anychar:
@@ -817,7 +823,7 @@ print_partial_compiled_pattern (start, end)
 	    p += 5;
 	    length = *workp++; /* the length of char_classes */
 	    for (i=0 ; i<length ; i++)
-	      printf("[:%x:]", *p++);
+	      printf("[:%lx:]", (long int) *p++);
 	    length = *workp++; /* the length of collating_symbol */
 	    for (i=0 ; i<length ;)
 	      {
@@ -841,11 +847,17 @@ print_partial_compiled_pattern (start, end)
 	      {
 		wchar_t range_start = *p++;
 		wchar_t range_end = *p++;
-		printf("%C-%C", range_start, range_end);
+		if (MB_CUR_MAX == 1)
+		  printf("%c-%c", (char) range_start, (char) range_end);
+		else
+		  printf("%C-%C", (wint_t) range_start, (wint_t) range_end);
 	      }
 	    length = *workp++; /* the length of char */
 	    for (i=0 ; i<length ; i++)
-	      printf("%C", *p++);
+	      if (MB_CUR_MAX == 1)
+		putchar (*p++);
+	      else
+		printf("%C", (wint_t) *p++);
 	    putchar (']');
 #else
             register int c, last = -100;
@@ -900,7 +912,7 @@ print_partial_compiled_pattern (start, end)
 	case on_failure_jump:
           extract_number_and_incr (&mcnt, &p);
 #ifdef _LIBC
-  	  printf ("/on_failure_jump to %t", p + mcnt - start);
+  	  printf ("/on_failure_jump to %td", p + mcnt - start);
 #else
   	  printf ("/on_failure_jump to %ld", (long int) (p + mcnt - start));
 #endif
@@ -909,7 +921,7 @@ print_partial_compiled_pattern (start, end)
 	case on_failure_keep_string_jump:
           extract_number_and_incr (&mcnt, &p);
 #ifdef _LIBC
-  	  printf ("/on_failure_keep_string_jump to %t", p + mcnt - start);
+  	  printf ("/on_failure_keep_string_jump to %td", p + mcnt - start);
 #else
   	  printf ("/on_failure_keep_string_jump to %ld",
 		  (long int) (p + mcnt - start));
@@ -919,7 +931,7 @@ print_partial_compiled_pattern (start, end)
 	case dummy_failure_jump:
           extract_number_and_incr (&mcnt, &p);
 #ifdef _LIBC
-  	  printf ("/dummy_failure_jump to %t", p + mcnt - start);
+  	  printf ("/dummy_failure_jump to %td", p + mcnt - start);
 #else
   	  printf ("/dummy_failure_jump to %ld", (long int) (p + mcnt - start));
 #endif
@@ -932,7 +944,7 @@ print_partial_compiled_pattern (start, end)
         case maybe_pop_jump:
           extract_number_and_incr (&mcnt, &p);
 #ifdef _LIBC
-  	  printf ("/maybe_pop_jump to %t", p + mcnt - start);
+  	  printf ("/maybe_pop_jump to %td", p + mcnt - start);
 #else
   	  printf ("/maybe_pop_jump to %ld", (long int) (p + mcnt - start));
 #endif
@@ -941,7 +953,7 @@ print_partial_compiled_pattern (start, end)
         case pop_failure_jump:
 	  extract_number_and_incr (&mcnt, &p);
 #ifdef _LIBC
-  	  printf ("/pop_failure_jump to %t", p + mcnt - start);
+  	  printf ("/pop_failure_jump to %td", p + mcnt - start);
 #else
   	  printf ("/pop_failure_jump to %ld", (long int) (p + mcnt - start));
 #endif
@@ -950,7 +962,7 @@ print_partial_compiled_pattern (start, end)
         case jump_past_alt:
 	  extract_number_and_incr (&mcnt, &p);
 #ifdef _LIBC
-  	  printf ("/jump_past_alt to %t", p + mcnt - start);
+  	  printf ("/jump_past_alt to %td", p + mcnt - start);
 #else
   	  printf ("/jump_past_alt to %ld", (long int) (p + mcnt - start));
 #endif
@@ -959,7 +971,7 @@ print_partial_compiled_pattern (start, end)
         case jump:
 	  extract_number_and_incr (&mcnt, &p);
 #ifdef _LIBC
-  	  printf ("/jump to %t", p + mcnt - start);
+  	  printf ("/jump to %td", p + mcnt - start);
 #else
   	  printf ("/jump to %ld", (long int) (p + mcnt - start));
 #endif
@@ -970,7 +982,7 @@ print_partial_compiled_pattern (start, end)
 	  p1 = p + mcnt;
           extract_number_and_incr (&mcnt2, &p);
 #ifdef _LIBC
-	  printf ("/succeed_n to %t, %d times", p1 - start, mcnt2);
+	  printf ("/succeed_n to %td, %d times", p1 - start, mcnt2);
 #else
 	  printf ("/succeed_n to %ld, %d times",
 		  (long int) (p1 - start), mcnt2);
@@ -989,7 +1001,7 @@ print_partial_compiled_pattern (start, end)
 	  p1 = p + mcnt;
           extract_number_and_incr (&mcnt2, &p);
 #ifdef _LIBC
-	  printf ("/set_number_at location %t to %d", p1 - start, mcnt2);
+	  printf ("/set_number_at location %td to %d", p1 - start, mcnt2);
 #else
 	  printf ("/set_number_at location %ld to %d",
 		  (long int) (p1 - start), mcnt2);
@@ -1055,14 +1067,14 @@ print_partial_compiled_pattern (start, end)
           break;
 
         default:
-          printf ("?%d", *(p-1));
+          printf ("?%ld", (long int) *(p-1));
 	}
 
       putchar ('\n');
     }
 
 #ifdef _LIBC
-  printf ("%t:\tend of pattern.\n", p - start);
+  printf ("%td:\tend of pattern.\n", p - start);
 #else
   printf ("%ld:\tend of pattern.\n", (long int) (p - start));
 #endif
@@ -1909,7 +1921,7 @@ static reg_errcode_t compile_range _RE_ARGS ((unsigned int range_start,
 /* Make sure we have at least N more bytes of space in buffer.  */
 #ifdef MBS_SUPPORT
 # define GET_BUFFER_SPACE(n)						\
-    while (((unsigned long)b - (unsigned long)COMPILED_BUFFER_VAR			\
+    while (((unsigned long)b - (unsigned long)COMPILED_BUFFER_VAR	\
             + (n)*sizeof(CHAR_TYPE)) > bufp->allocated)			\
       EXTEND_BUFFER ()
 #else
@@ -1922,7 +1934,7 @@ static reg_errcode_t compile_range _RE_ARGS ((unsigned int range_start,
 #define BUF_PUSH(c)							\
   do {									\
     GET_BUFFER_SPACE (1);						\
-    *b++ = (US_CHAR_TYPE) (c);					\
+    *b++ = (US_CHAR_TYPE) (c);						\
   } while (0)
 
 
@@ -4153,7 +4165,7 @@ regex_compile (pattern, size, syntax, bufp)
 
   /* We have succeeded; set the length of the buffer.  */
 #ifdef MBS_SUPPORT
-  bufp->used = (int) b - (int) COMPILED_BUFFER_VAR;
+  bufp->used = (uintptr_t) b - (uintptr_t) COMPILED_BUFFER_VAR;
 #else
   bufp->used = b - bufp->buffer;
 #endif
@@ -5936,7 +5948,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
 	    goto fail;
 
           SET_REGS_MATCHED ();
-          DEBUG_PRINT2 ("  Matched `%d'.\n", *d);
+          DEBUG_PRINT2 ("  Matched `%ld'.\n", (long int) *d);
           d++;
 	  break;
 
@@ -6308,7 +6320,8 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
            matched within the group is recorded (in the internal
            registers data structure) under the register number.  */
         case start_memory:
-	  DEBUG_PRINT3 ("EXECUTING start_memory %d (%d):\n", *p, p[1]);
+	  DEBUG_PRINT3 ("EXECUTING start_memory %ld (%ld):\n",
+			(long int) *p, (long int) p[1]);
 
           /* Find out if this group can match the empty string.  */
 	  p1 = p;		/* To send to group_match_null_string_p.  */
@@ -6356,7 +6369,8 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
            arguments are the same as start_memory's: the register
            number, and the number of inner groups.  */
 	case stop_memory:
-	  DEBUG_PRINT3 ("EXECUTING stop_memory %d (%d):\n", *p, p[1]);
+	  DEBUG_PRINT3 ("EXECUTING stop_memory %ld (%ld):\n",
+			(long int) *p, (long int) p[1]);
 
           /* We need to save the string position the last time we were at
              this close-group operator in case the group is operated
@@ -6766,8 +6780,16 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
                   {
   		    p[-(1+OFFSET_ADDRESS_SIZE)] = (US_CHAR_TYPE)
 		      pop_failure_jump;
-                    DEBUG_PRINT3 ("  %c != %c => pop_failure_jump.\n",
-                                  c, p1[3+OFFSET_ADDRESS_SIZE]);
+#ifdef MBS_SUPPORT
+		    if (MB_CUR_MAX != 1)
+		      DEBUG_PRINT3 ("  %C != %C => pop_failure_jump.\n",
+				    (wint_t) c,
+				    (wint_t) p1[3+OFFSET_ADDRESS_SIZE]);
+		    else
+#endif
+		      DEBUG_PRINT3 ("  %c != %c => pop_failure_jump.\n",
+				    (char) c,
+				    (char) p1[3+OFFSET_ADDRESS_SIZE]);
                   }
 
 #ifndef MBS_SUPPORT
@@ -6776,7 +6798,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
 		  {
 		    int not = (re_opcode_t) p1[3] == charset_not;
 
-		    if (c < (unsigned char) (p1[4] * BYTEWIDTH)
+		    if (c < (unsigned) (p1[4] * BYTEWIDTH)
 			&& p1[5 + c / BYTEWIDTH] & (1 << (c % BYTEWIDTH)))
 		      not = !not;
 

@@ -60,13 +60,11 @@ _init:
 	st8 [r12] = gp, -16
 	br.call.sptk.many b0 = __pthread_initialize_minimal# ;;
 	;;
-	cmp.eq p6, p7 = 0, r15
-	(p6) br.cond.dptk .L5
+	cmp.ne p6, p0 = 0, r15
 
-	br.call.sptk.many b0 = __gmon_start__# ;;
+(p6)	br.call.sptk.many b0 = __gmon_start__# ;;
 	adds r12 = 16, r12
 	;;
-.L5:
 	ld8 gp = [r12]
 	;;
 	.align 16
