@@ -39,11 +39,11 @@ const int __old_sys_nerr = OLD_ERRLIST_SIZE;
 
 strong_alias (__old_sys_nerr, _old_sys_nerr);
 weak_alias (__old_sys_nerr, _old_sys_nerr)
-symbol_version (__old_sys_nerr, _sys_nerr, GLIBC_2.0);
-symbol_version (_old_sys_nerr, sys_nerr, GLIBC_2.0);
+compat_symbol (libc, __old_sys_nerr, _sys_nerr, GLIBC_2_0);
+compat_symbol (libc, _old_sys_nerr, sys_nerr, GLIBC_2_0);
 weak_alias (__old_sys_errlist, _old_sys_errlist);
-symbol_version (__old_sys_errlist, _sys_errlist, GLIBC_2.0);
-symbol_version (_old_sys_errlist, sys_errlist, GLIBC_2.0);
+compat_symbol (libc, __old_sys_errlist, _sys_errlist, GLIBC_2_0);
+compat_symbol (libc, _old_sys_errlist, sys_errlist, GLIBC_2_0);
 #endif
 
 strong_alias (__new_sys_nerr, _new_sys_nerr)
