@@ -45,7 +45,7 @@ const char *it = "<UNSET>";	/* Routine name for message routines. */
 size_t errors = 0;
 
 /* Complain if condition is not true.  */
-void
+static void
 check (int thing, int number)
 {
   if (!thing)
@@ -56,7 +56,7 @@ check (int thing, int number)
 }
 
 /* Complain if first two args don't strcmp as equal.  */
-void
+static void
 equal (const char *a, const char *b, int number)
 {
   check(a != NULL && b != NULL && STREQ (a, b), number);
@@ -66,7 +66,7 @@ char one[50];
 char two[50];
 char *cp;
 
-void
+static void
 test_strcmp (void)
 {
   it = "strcmp";
@@ -120,7 +120,7 @@ test_strcmp (void)
   do {									      \
     int __n;								      \
     char *cp;								      \
-    for (__n = 0; __n < sizeof (one); ++__n)				      \
+    for (__n = 0; __n < (int) sizeof (one); ++__n)			      \
       one[__n] = 'Z';							      \
     fn (one, str);							      \
     for (cp = one, __n = 0; __n < n; ++__n, ++cp)			      \
@@ -128,7 +128,7 @@ test_strcmp (void)
     check (*cp == '\0', ntest);						      \
   } while (0)
 
-void
+static void
 test_strcpy (void)
 {
   int i;
@@ -175,7 +175,7 @@ test_strcpy (void)
   SIMPLE_COPY(strcpy, 16, "6666666666666666", 57);
 }
 
-void
+static void
 test_stpcpy (void)
 {
   it = "stpcpy";
@@ -257,7 +257,7 @@ test_stpcpy (void)
   SIMPLE_COPY(stpcpy, 16, "6666666666666666", 59);
 }
 
-void
+static void
 test_stpncpy (void)
 {
   it = "stpncpy";
@@ -272,7 +272,7 @@ test_stpncpy (void)
   check (one[4] == '\0' && one[5] == '\0' && one[6] == 'x', 8);
 }
 
-void
+static void
 test_strcat (void)
 {
   it = "strcat";
@@ -302,7 +302,7 @@ test_strcat (void)
   equal (one, "cd", 9);
 }
 
-void
+static void
 test_strncat (void)
 {
   /* First test it as strcat, with big counts, then test the count
@@ -344,7 +344,7 @@ test_strncat (void)
   equal (one, "abcdgh", 12);		/* Count and length equal. */
 }
 
-void
+static void
 test_strncmp (void)
 {
   /* First test as strcmp with big counts, then test count code.  */
@@ -364,7 +364,7 @@ test_strncmp (void)
   check (strncmp ("abc", "def", 0) == 0, 13);	/* Zero count. */
 }
 
-void
+static void
 test_strncpy (void)
 {
   /* Testing is a bit different because of odd semantics.  */
@@ -406,7 +406,7 @@ test_strncpy (void)
   equal (one, "hi there", 15);		/* Stomped on source? */
 }
 
-void
+static void
 test_strlen (void)
 {
   it = "strlen";
@@ -427,7 +427,7 @@ test_strlen (void)
    }
 }
 
-void
+static void
 test_strchr (void)
 {
   it = "strchr";
@@ -456,7 +456,7 @@ test_strchr (void)
    }
 }
 
-void
+static void
 test_strchrnul (void)
 {
   const char *os;
@@ -490,7 +490,7 @@ test_strchrnul (void)
    }
 }
 
-void
+static void
 test_rawmemchr (void)
 {
   it = "rawmemchr";
@@ -517,7 +517,7 @@ test_rawmemchr (void)
    }
 }
 
-void
+static void
 test_index (void)
 {
   it = "index";
@@ -534,7 +534,7 @@ test_index (void)
   check (index (one, '\0') == one, 8);	/* NUL in empty string. */
 }
 
-void
+static void
 test_strrchr (void)
 {
   it = "strrchr";
@@ -563,7 +563,7 @@ test_strrchr (void)
    }
 }
 
-void
+static void
 test_memrchr (void)
 {
   size_t l;
@@ -609,7 +609,7 @@ test_memrchr (void)
   }
 }
 
-void
+static void
 test_rindex (void)
 {
   it = "rindex";
@@ -626,7 +626,7 @@ test_rindex (void)
   check (rindex (one, '\0') == one, 8);	/* NUL in empty string. */
 }
 
-void
+static void
 test_strpbrk (void)
 {
   it = "strpbrk";
@@ -655,7 +655,7 @@ test_strpbrk (void)
   check(strpbrk(one, "efgh") == one+6, 17);	/* And yet another. */
 }
 
-void
+static void
 test_strstr (void)
 {
   it = "strstr";
@@ -682,7 +682,7 @@ test_strstr (void)
   check(strstr(one, "bbca") == one+1, 16);	/* With overlap. */
 }
 
-void
+static void
 test_strspn (void)
 {
   it = "strspn";
@@ -693,7 +693,7 @@ test_strspn (void)
   check(strspn("abc", "") == 0, 5);	/* Null search list. */
 }
 
-void
+static void
 test_strcspn (void)
 {
   it = "strcspn";
@@ -704,7 +704,7 @@ test_strcspn (void)
   check(strcspn("abc", "") == 3, 5);	/* Null search list. */
 }
 
-void
+static void
 test_strtok (void)
 {
   it = "strtok";
@@ -754,7 +754,7 @@ test_strtok (void)
   equal(one+4, "c", 33);
 }
 
-void
+static void
 test_strtok_r (void)
 {
   it = "strtok_r";
@@ -804,7 +804,7 @@ test_strtok_r (void)
   equal(one+4, "c", 33);
 }
 
-void
+static void
 test_strsep (void)
 {
   char *ptr;
@@ -937,7 +937,7 @@ test_strsep (void)
   check(cp == NULL, 88);
 }
 
-void
+static void
 test_memcmp (void)
 {
   it = "memcmp";
@@ -951,7 +951,7 @@ test_memcmp (void)
   check(memcmp("abc", "def", 0) == 0, 8);	/* Zero count. */
 }
 
-void
+static void
 test_memchr (void)
 {
   it = "memchr";
@@ -994,7 +994,7 @@ test_memchr (void)
   }
 }
 
-void
+static void
 test_memcpy (void)
 {
   int i;
@@ -1031,7 +1031,7 @@ test_memcpy (void)
     }
 }
 
-void
+static void
 test_mempcpy (void)
 {
   int i;
@@ -1068,7 +1068,7 @@ test_mempcpy (void)
     }
 }
 
-void
+static void
 test_memmove (void)
 {
   it = "memmove";
@@ -1102,7 +1102,7 @@ test_memmove (void)
   equal(one, "abcdefgh", 9);		/* 100% overlap. */
 }
 
-void
+static void
 test_memccpy (void)
 {
   /* First test like memcpy, then the search part The SVID, the only
@@ -1144,7 +1144,7 @@ test_memccpy (void)
   equal(two, "xbcdlebee", 15);
 }
 
-void
+static void
 test_memset (void)
 {
   int i;
@@ -1166,7 +1166,7 @@ test_memset (void)
 
   /* Non-8bit fill character.  */
   memset (one, 0x101, sizeof (one));
-  for (i = 0; i < sizeof (one); ++i)
+  for (i = 0; i < (int) sizeof (one); ++i)
     check (one[i] == '\01', 7);
 
   /* Test for more complex versions of memset, for all alignments and
@@ -1206,7 +1206,7 @@ test_memset (void)
   }
 }
 
-void
+static void
 test_bcopy (void)
 {
   /* Much like memcpy.  Berklix manual is silent about overlap, so
@@ -1230,7 +1230,7 @@ test_bcopy (void)
   equal(one, "hi there", 5);		/* Stomped on source? */
 }
 
-void
+static void
 test_bzero (void)
 {
   it = "bzero";
@@ -1245,7 +1245,7 @@ test_bzero (void)
   equal(one, "abcdef", 4);		/* Zero-length copy. */
 }
 
-void
+static void
 test_bcmp (void)
 {
   it = "bcmp";
@@ -1258,7 +1258,7 @@ test_bcmp (void)
   check(bcmp("abc", "def", 0) == 0, 8);	/* Zero count. */
 }
 
-void
+static void
 test_strerror (void)
 {
   int f;
@@ -1386,5 +1386,6 @@ main (void)
       status = EXIT_FAILURE;
       printf("%Zd errors.\n", errors);
     }
-  exit(status);
+
+  return status;
 }

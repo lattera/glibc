@@ -1,5 +1,7 @@
 2000-11-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/tester.c: Mark test functions as static to avoid warnings.
+
 	* iconv/gconv_conf.c (read_conf_file): Make mod_counter static to
 	preserve value over different gconv-modules files.
 
