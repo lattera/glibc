@@ -1,3 +1,20 @@
+1999-05-16  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/malloc.c: Cleanup to bring in line with released
+	stand-alone version `ptmalloc'.  Update some comments.
+	(internal_function): Move fallback definition so that the source
+	compiles outside of libc, and use it in more places.
+	(malloc_atfork): Fix when malloc_check is in use.
+
+1999-05-16  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* stdlib/tst-strtod.c: Fix typo.
+
+1999-05-16  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* elf/dl-close.c (_dl_close): Add cast to avoid warning about
+	const incorrectness.
+
 1999-05-16  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/generic/bits/termios.h (CRTSCTS): New macro.

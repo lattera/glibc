@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -88,7 +88,7 @@ main (int argc, char ** argv)
   sprintf (buf, "%f", strtod ("-0.0", NULL));
   if (strcmp (buf, "-0.000000") != 0)
     {
-      printf ("  strtod (\"-0.0\', NULL) returns \"%s\"\n", buf);
+      printf ("  strtod (\"-0.0\", NULL) returns \"%s\"\n", buf);
       status = 1;
     }
 

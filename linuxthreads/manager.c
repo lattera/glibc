@@ -189,9 +189,19 @@ static int pthread_start_thread(void *arg)
   sigprocmask(SIG_SETMASK, &self->p_start_args.mask, NULL);
   /* Set the scheduling policy and priority for the new thread, if needed */
   if (THREAD_GETMEM(self, p_start_args.schedpolicy) >= 0)
+    /* Explicit scheduling attributes were provided: apply them */
     __sched_setscheduler(THREAD_GETMEM(self, p_pid),
 			 THREAD_GETMEM(self, p_start_args.schedpolicy),
                          &self->p_start_args.schedparam);
+else if (__pthread_manager_thread.p_priority > 0)
+    /* Default scheduling required, but thread manager runs in realtime
+       scheduling: switch new thread to SCHED_OTHER policy */
+    {
+      struct sched_param default_params;
+      default_params.sched_priority = 0;
+      __sched_setscheduler(THREAD_GETMEM(self, p_pid),
+                           SCHED_OTHER, &default_params);
+    }
   /* Make gdb aware of new thread */
   if (__pthread_threads_debug && __pthread_sig_debug > 0) {
     request.req_thread = self;
@@ -347,7 +357,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 	      sizeof (struct sched_param));
       break;
     case PTHREAD_INHERIT_SCHED:
-      /* schedpolicy doesn't need to be set, only get priority */
+      new_thread->p_start_args.schedpolicy = __sched_getscheduler(father_pid);
       __sched_getparam(father_pid, &new_thread->p_start_args.schedparam);
       break;
     }

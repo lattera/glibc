@@ -182,10 +182,11 @@
   MALLOC_HOOKS             (default: NOT defined)
      Define to enable support run-time replacement of the allocation
      functions through user-defined `hooks'.
-  REALLOC_ZERO_BYTES_FREES (default: NOT defined)
+  REALLOC_ZERO_BYTES_FREES (default: defined)
      Define this if you think that realloc(p, 0) should be equivalent
-     to free(p). Otherwise, since malloc returns a unique pointer for
-     malloc(0), so does realloc(p, 0).
+     to free(p).  (The C standard requires this behaviour, therefore
+     it is the default.)  Otherwise, since malloc returns a unique
+     pointer for malloc(0), so does realloc(p, 0).
   HAVE_MEMCPY               (default: defined)
      Define if you are not otherwise using ANSI STD C, but still
      have memcpy and memset in your C library and want to use them.
@@ -366,10 +367,10 @@ extern "C" {
 #endif
 
 /*
-  REALLOC_ZERO_BYTES_FREES should be set if a call to
-  realloc with zero bytes should be the same as a call to free.
-  Some people think it should. Otherwise, since this malloc
-  returns a unique pointer for malloc(0), so does realloc(p, 0).
+  REALLOC_ZERO_BYTES_FREES should be set if a call to realloc with
+  zero bytes should be the same as a call to free.  The C standard
+  requires this. Otherwise, since this malloc returns a unique pointer
+  for malloc(0), so does realloc(p, 0).
 */
 
 
@@ -527,6 +528,9 @@ do {                                                                          \
 
 #if !defined(MAP_ANONYMOUS) && defined(MAP_ANON)
 #define MAP_ANONYMOUS MAP_ANON
+#endif
+#if !defined(MAP_FAILED)
+#define MAP_FAILED ((char*)-1)
 #endif
 
 #ifndef MAP_NORESERVE
@@ -816,6 +820,15 @@ do {                                                                          \
 
 /* If THREAD_STATS is non-zero, some statistics on mutex locking are
    computed. */
+
+
+
+/* On some platforms we can compile internal, not exported functions better.
+   Let the environment provide a macro and define it to be empty if it
+   is not available.  */
+#ifndef internal_function
+# define internal_function
+#endif
 
 
 /*
@@ -1230,13 +1243,6 @@ static void      free_atfork();
 
 #endif
 
-/* On some platforms we can compile internal, not exported functions better.
-   Let the environment provide a macro and define it to be empty if it
-   is not available.  */
-#ifndef internal_function
-# define internal_function
-#endif
-
 
 
 /* sizes, alignments */
@@ -1613,7 +1619,7 @@ ptmalloc_init_all __MALLOC_P((void))
   (void)mutex_init(&list_lock);
 }
 
-#endif
+#endif /* !defined NO_THREADS */
 
 /* Initialization routine. */
 #if defined(_LIBC)
@@ -1852,10 +1858,12 @@ mmap_chunk(size) size_t size;
   return p;
 }
 
+static void
+internal_function
 #if __STD_C
-static void munmap_chunk(mchunkptr p)
+munmap_chunk(mchunkptr p)
 #else
-static void munmap_chunk(p) mchunkptr p;
+munmap_chunk(p) mchunkptr p;
 #endif
 {
   INTERNAL_SIZE_T size = chunksize(p);
@@ -1877,10 +1885,12 @@ static void munmap_chunk(p) mchunkptr p;
 
 #if HAVE_MREMAP
 
+static mchunkptr
+internal_function
 #if __STD_C
-static mchunkptr mremap_chunk(mchunkptr p, size_t new_size)
+mremap_chunk(mchunkptr p, size_t new_size)
 #else
-static mchunkptr mremap_chunk(p, new_size) mchunkptr p; size_t new_size;
+mremap_chunk(p, new_size) mchunkptr p; size_t new_size;
 #endif
 {
   size_t page_mask = malloc_getpagesize - 1;
@@ -1899,7 +1909,7 @@ static mchunkptr mremap_chunk(p, new_size) mchunkptr p; size_t new_size;
   cp = (char *)mremap((char *)p - offset, size + offset, new_size,
                       MREMAP_MAYMOVE);
 
-  if (cp == (char *)-1) return 0;
+  if (cp == MAP_FAILED) return 0;
 
   p = (mchunkptr)(cp + offset);
 
@@ -3034,7 +3044,7 @@ chunk_free(ar_ptr, p) arena *ar_ptr; mchunkptr p;
   if(next->size < MINSIZE &&
      (unsigned long)sz > trim_threshold &&
      ar_ptr != &main_arena) {                /* fencepost */
-    heap_info* heap = heap_for_ptr(top(ar_ptr));
+    heap_info *heap = heap_for_ptr(top(ar_ptr));
 
     if(top(ar_ptr) == chunk_at_offset(heap, sizeof(*heap)) &&
        heap->prev == heap_for_ptr(p))
@@ -4212,6 +4222,7 @@ mALLOC_SET_STATe(msptr) Void_t* msptr;
    into a user pointer with requested size sz. */
 
 static Void_t*
+internal_function
 #if __STD_C
 chunk2mem_check(mchunkptr p, size_t sz)
 #else
@@ -4293,6 +4304,7 @@ mem2chunk_check(mem) Void_t* mem;
    necessary. */
 
 static int
+internal_function
 #if __STD_C
 top_check(void)
 #else
@@ -4525,11 +4537,18 @@ malloc_atfork(sz, caller) size_t sz; const Void_t *caller;
 #endif
 {
   Void_t *vptr = NULL;
+  mchunkptr victim;
 
   tsd_getspecific(arena_key, vptr);
   if(!vptr) {
-    mchunkptr victim = chunk_alloc(&main_arena, request2size(sz));
-    return victim ? chunk2mem(victim) : 0;
+    if(save_malloc_hook != malloc_check) {
+      victim = chunk_alloc(&main_arena, request2size(sz));
+      return victim ? chunk2mem(victim) : 0;
+    } else {
+      if(top_check() < 0) return 0;
+      victim = chunk_alloc(&main_arena, request2size(sz+1));
+      return victim ? chunk2mem_check(victim, sz) : 0;
+    }
   } else {
     /* Suspend the thread until the `atfork' handlers have completed.
        By that time, the hooks will have been reset as well, so that
@@ -4554,7 +4573,7 @@ free_atfork(mem, caller) Void_t* mem; const Void_t *caller;
   if (mem == 0)                              /* free(0) has no effect */
     return;
 
-  p = mem2chunk(mem);
+  p = mem2chunk(mem);         /* do not bother to replicate free_check here */
 
 #if HAVE_MMAP
   if (chunk_is_mmapped(p))                       /* release mmapped memory. */
@@ -4573,7 +4592,7 @@ free_atfork(mem, caller) Void_t* mem; const Void_t *caller;
     (void)mutex_unlock(&ar_ptr->mutex);
 }
 
-#endif
+#endif /* !defined NO_THREADS */
 
 #endif /* defined _LIBC || defined MALLOC_HOOKS */
 
