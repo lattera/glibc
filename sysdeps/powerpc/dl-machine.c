@@ -119,7 +119,7 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
       mapend = l->l_map_end | (_dl_pagesize - 1);
       assert (mapend > mapstart);
 
-      if (mapend >= high && high >= mapstart)
+      if ((mapend >= high || l == _dl_loaded) && high >= mapstart)
 	high = mapstart;
       else if (mapend >= low && low >= mapstart)
 	low = mapend;
