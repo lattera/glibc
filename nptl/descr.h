@@ -197,6 +197,9 @@ struct pthread
   /* True if the user provided the stack.  */
   bool user_stack;
 
+  /* True if thread must stop at startup time.  */
+  bool stopped_start;
+
   /* Lock to synchronize access to the descriptor.  */
   lll_lock_t lock;
 

@@ -1,3 +1,12 @@
+2004-09-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/setuid.c (__setuid): Remove second
+	result declaration.
+
+2004-09-22  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h: Adjust whitespace.
+
 2004-09-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/daemon.c (daemon): Don't succeed if /dev/null cannot be

@@ -252,14 +252,17 @@ start_thread (void *arg)
       /* Store the new cleanup handler info.  */
       THREAD_SETMEM (pd, cleanup_jmp_buf, &unwind_buf);
 
-      int oldtype = CANCEL_ASYNC ();
+      if (__builtin_expect (pd->stopped_start, 0))
+	{
+	  int oldtype = CANCEL_ASYNC ();
 
-      /* Get the lock the parent locked to force synchronization.  */
-      lll_lock (pd->lock);
-      /* And give it up right away.  */
-      lll_unlock (pd->lock);
+	  /* Get the lock the parent locked to force synchronization.  */
+	  lll_lock (pd->lock);
+	  /* And give it up right away.  */
+	  lll_unlock (pd->lock);
 
-      CANCEL_RESET (oldtype);
+	  CANCEL_RESET (oldtype);
+	}
 
       /* Run the code the user provided.  */
 #ifdef CALL_THREAD_FCT

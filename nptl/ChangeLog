@@ -1,3 +1,11 @@
+2004-09-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* descr.h (struct pthread): Add stopped_start field.
+	* sysdeps/pthread/createthread.c (create_thread): Set
+	start_stopped flag in descriptor for new thread appropriately.
+	* pthread_create.c (start_thread): Only take lock to be stopped on
+	startup if stopped_start flag says so.
+
 2004-09-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_create.c (__pthread_create_2_1): Remember whether thread

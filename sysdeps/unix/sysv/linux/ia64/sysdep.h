@@ -165,7 +165,7 @@
 
 #undef PSEUDO_ERRVAL
 #define	PSEUDO_ERRVAL(name, syscall_name, args)	\
-  ENTRY(name)						\
+  ENTRY(name)					\
     DO_CALL (SYS_ify(syscall_name));		\
 	cmp.eq p6,p0=-1,r10;			\
 (p6)	mov r10=r8;
@@ -241,14 +241,14 @@
   DO_INLINE_SYSCALL_NCS (__NR_##name, nr, ##args)
 
 #undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)	\
-  ({						\
-    DO_INLINE_SYSCALL_NCS(__NR_##name, nr, args)\
-    if (_r10 == -1)				\
-      {						\
-	__set_errno (_retval);			\
-	_retval = -1;				\
-      }						\
+#define INLINE_SYSCALL(name, nr, args...)		\
+  ({							\
+    DO_INLINE_SYSCALL_NCS (__NR_##name, nr, args)	\
+    if (_r10 == -1)					\
+      {							\
+	__set_errno (_retval);				\
+	_retval = -1;					\
+      }							\
     _retval; })
 
 #undef INTERNAL_SYSCALL_DECL
@@ -257,7 +257,7 @@
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL_NCS(name, err, nr, args...)	\
   ({							\
-    DO_INLINE_SYSCALL_NCS(name, nr, args)		\
+    DO_INLINE_SYSCALL_NCS (name, nr, args)		\
     err = _r10;						\
     _retval; })
 #define INTERNAL_SYSCALL(name, err, nr, args...)	\
