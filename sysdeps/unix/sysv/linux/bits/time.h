@@ -1,5 +1,5 @@
 /* System-dependent timing definitions.  Linux version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@
 # endif	/* bits/time.h */
 #endif
 
-#ifdef __need_timeval 
+#ifdef __need_timeval
 # undef __need_timeval
 # ifndef _STRUCT_TIMEVAL
 #  define _STRUCT_TIMEVAL	1
@@ -53,7 +53,7 @@
 struct timeval
   {
     __time_t tv_sec;		/* Seconds.  */
-    __time_t tv_usec;		/* Microseconds.  */
+    __suseconds_t tv_usec;	/* Microseconds.  */
   };
 # endif	/* struct timeval */
-#endif	/* need timeval */ 
+#endif	/* need timeval */

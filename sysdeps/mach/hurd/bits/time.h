@@ -56,7 +56,7 @@ extern int __libc_clk_tck __P ((void)) __attribute__ ((const));
 struct timeval
   {
     __time_t tv_sec;		/* Seconds.  */
-    __time_t tv_usec;		/* Microseconds.  */
+    __suseconds_t tv_usec;	/* Microseconds.  */
   };
 # endif	/* struct timeval */
 #endif	/* need timeval */

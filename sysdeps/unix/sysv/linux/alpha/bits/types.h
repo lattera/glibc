@@ -76,6 +76,7 @@ typedef struct
 typedef int __daddr_t;			/* Type of a disk address.  */
 typedef char *__caddr_t;		/* Type of a core address.  */
 typedef long int __time_t;
+typedef long int __suseconds_t;
 typedef long int __swblk_t;		/* Type of a swap block maybe?  */
 typedef long int __clock_t;
 typedef int __key_t;			/* Type of a SYSV IPC key. */

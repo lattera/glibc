@@ -120,6 +120,10 @@ typedef __key_t key_t;
 #define	__need_time_t
 #include <time.h>
 
+#ifdef __USE_XOPEN
+typedef __suseconds_t suseconds_t;
+#endif
+
 #define	__need_size_t
 #include <stddef.h>
 
