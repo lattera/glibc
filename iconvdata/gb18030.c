@@ -1,5 +1,5 @@
 /* Mapping tables for GBK handling.
-   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Sean Chen <seanc@turbolinux.com.cn>, 1999.
 
@@ -25769,7 +25769,8 @@ static const unsigned char __ucs_to_gb18030_tab2[8192][2] =
 	    }							      	      \
 	}								      \
 									      \
-    *((uint32_t *) outptr)++ = ch;					      \
+    *((uint32_t *) outptr) = ch;					      \
+    outptr += sizeof (uint32_t);					      \
   }
 #define LOOP_NEED_FLAGS
 #define ONEBYTE_BODY \

@@ -1,6 +1,6 @@
 /* An alternative to qsort, with an identical interface.
    This file is part of the GNU C Library.
-   Copyright (C) 1992,95-97,99,2000,01,02 Free Software Foundation, Inc.
+   Copyright (C) 1992,95-97,99,2000,01,02,04 Free Software Foundation, Inc.
    Written by Mike Haertel, September 1988.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,12 +56,16 @@ msort_with_tmp (void *b, size_t n, size_t s, __compar_fn_t cmp,
 	if ((*cmp) (b1, b2) <= 0)
 	  {
 	    --n1;
-	    *((op_t *) tmp)++ = *((op_t *) b1)++;
+	    *((op_t *) tmp) = *((op_t *) b1);
+	    tmp += sizeof (op_t);
+	    b1 += sizeof (op_t);
 	  }
 	else
 	  {
 	    --n2;
-	    *((op_t *) tmp)++ = *((op_t *) b2)++;
+	    *((op_t *) tmp) = *((op_t *) b2);
+	    tmp += sizeof (op_t);
+	    b2 += sizeof (op_t);
 	  }
       }
   else

@@ -1,5 +1,5 @@
 /* Conversion to and from ARMSCII-8
-   Copyright (C) 1997-1999, 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 1997-1999, 2000-2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -57,11 +57,17 @@ static const uint16_t map_from_armscii_8[0xfe - 0xa2 + 1] =
     uint_fast8_t ch = *inptr;						      \
 									      \
     if (ch <= 0xa0)							      \
-      /* Upto and including 0xa0 the ARMSCII-8 corresponds to Unicode.  */    \
-      *((uint32_t *) outptr)++ = ch;					      \
+      {									      \
+        /* Upto and including 0xa0 the ARMSCII-8 corresponds to Unicode.  */  \
+        *((uint32_t *) outptr) = ch;					      \
+        outptr += sizeof (uint32_t);					      \
+      }									      \
     else if (ch >= 0xa2 && ch <= 0xfe)					      \
-      /* Use the table.  */						      \
-      *((uint32_t *) outptr)++ = map_from_armscii_8[ch - 0xa2];		      \
+      {									      \
+        /* Use the table.  */						      \
+        *((uint32_t *) outptr) = map_from_armscii_8[ch - 0xa2];		      \
+        outptr += sizeof (uint32_t);					      \
+      }									      \
     else								      \
       {									      \
 	/* This is an illegal character.  */				      \

@@ -1,5 +1,5 @@
 /* Conversion to and from ISO 8859-1.
-   Copyright (C) 1997-1999, 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 1997-1999, 2000-2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -35,7 +35,8 @@
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
 #define BODY \
-  *((uint32_t *) outptr)++ = *inptr++;
+  *((uint32_t *) outptr) = *inptr++;					      \
+  outptr += sizeof (uint32_t);
 #define ONEBYTE_BODY \
   {									      \
     return c;								      \

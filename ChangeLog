@@ -1,3 +1,21 @@
+2004-02-07  Andreas Jaeger  <aj@suse.de>
+
+	* iconv/gconv_simple.c (ucs4le_internal_loop): Remove cast used as
+	lvalue.
+	(internal_ucs4le_loop_single): Likewise.
+	(ucs4_internal_loop): Likewise.
+	(BODY): Likewise.
+	(internal_ucs4_loop_single): Likewise.
+	* iconvdata/iso8859-1.c (BODY): Likewise.
+	* iconvdata/cp1255.c (EMIT_SHIFT_TO_INIT): Likewise.
+	* iconvdata/cp1258.c (EMIT_SHIFT_TO_INIT): Likewise.
+	* iconvdata/gb18030.c (BODY): Likewise.
+	* iconvdata/armscii-8.c (BODY): Likewise.
+	* stdlib/msort.c (msort_with_tmp): Likewise.
+
+	* iconv/gconv_open.c (__gconv_open): Remove conditional expression
+	as lvalue.
+
 2004-02-06  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/dl-machine.c: Declare __cache_line_size as
