@@ -293,7 +293,7 @@ __dl_runtime_resolve (ElfW(Word) sym_index,				      \
 	  {								      \
 	    const ElfW(Half) *vernum =					      \
 	      (const void *) D_PTR (l, l_info[VERSYMIDX (DT_VERSYM)]);	      \
-	    ElfW(Half) ndx = vernum[sym_index];				      \
+	    ElfW(Half) ndx = vernum[sym_index & 0x7fff];		      \
 	    const struct r_found_version *version = &l->l_versions[ndx];      \
 									      \
 	    if (version->hash != 0)					      \
@@ -562,7 +562,7 @@ elf_machine_got_rel (struct link_map *map, int lazy)
     ({									  \
       const ElfW(Sym) *ref = sym;					  \
       const struct r_found_version *version				  \
-        = vernum ? &map->l_versions[vernum[sym_index]] : NULL;		  \
+        = vernum ? &map->l_versions[vernum[sym_index] & 0x7fff] : NULL;	  \
       ElfW(Addr) value;							  \
       value = RESOLVE (&ref, version, R_MIPS_REL32);			  \
       (ref)? value + ref->st_value: 0;					  \
