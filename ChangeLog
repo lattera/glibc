@@ -1,5 +1,7 @@
 2000-04-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/updwtmp.c: Remove daemon support.
+
 	* login/Makefile (routines): Remove utmp_daemon.
 
 	* sysdeps/unix/sysv/aix/gethostname.c: Fix type of len argument.

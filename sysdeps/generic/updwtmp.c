@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 
@@ -28,14 +28,8 @@
 void
 __updwtmp (const char *wtmp_file, const struct utmp *utmp)
 {
-  /* See whether utmpd is running.  */
-  if ((*__libc_utmp_daemon_functions.updwtmp) (wtmp_file, utmp) < 0)
-    {
-      const char *file_name;
+  file_name = TRANSFORM_UTMP_FILE_NAME (wtmp_file);
 
-      file_name = TRANSFORM_UTMP_FILE_NAME (wtmp_file);
-
-      (*__libc_utmp_file_functions.updwtmp) (file_name, utmp);
-    }
+  (*__libc_utmp_file_functions.updwtmp) (file_name, utmp);
 }
 weak_alias (__updwtmp, updwtmp)
