@@ -1,3 +1,12 @@
+2003-01-03  Roland McGrath  <roland@redhat.com>
+
+	* td_thr_setgregs.c (td_thr_setgregs): *_BIT -> *_BITMASK
+	* td_thr_setfpregs.c (td_thr_setfpregs): Likewise.
+	* td_thr_get_info.c (td_thr_get_info): Likewise.
+	* td_thr_getgregs.c (td_thr_getgregs): Likewise.
+	* td_thr_getfpregs.c (td_thr_getfpregs): Likewise.
+	* td_ta_thr_iter.c (iterate_thread_list): Likewise.
+
 2002-12-12  Roland McGrath  <roland@redhat.com>
 
 	* td_ta_thr_iter.c (iterate_thread_list): Handle special case of
