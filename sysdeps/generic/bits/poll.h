@@ -38,8 +38,3 @@
 #define POLLERR         010             /* Error condition.  */
 #define POLLHUP         020             /* Hung up.  */
 #define POLLNVAL        040             /* Invalid polling request.  */
-
-#ifdef __USE_MISC
-/* Canonical number of polling requests to read in at a time in poll.  */
-# define NPOLLFILE	30
-#endif

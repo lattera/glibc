@@ -1,5 +1,11 @@
 2001-07-31  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/sparc/bits/poll.h (NPOLLFILE): Removed.
+	* sysdeps/unix/sysv/linux/mips/bits/poll.h (NPOLLFILE): Removed.
+	* sysdeps/unix/sysv/linux/m68k/bits/poll.h (NPOLLFILE): Removed.
+	* sysdeps/unix/sysv/linux/bits/poll.h (NPOLLFILE): Removed.
+	* sysdeps/generic/bits/poll.h (NPOLLFILE): Removed.
+
 	* libio/genops.c (flush_cleanup): Guard list_all_lock to allow
 	compilation without threads.
 
