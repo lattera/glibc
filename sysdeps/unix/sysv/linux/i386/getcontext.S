@@ -1,5 +1,5 @@
 /* Save current context.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -56,6 +56,10 @@ ENTRY(__getcontext)
 	movl	%ecx, oFPREGS(%eax)
 	/* Save the floating-point context.  */
 	fnstenv	(%ecx)
+	/* And load it right back since the processor changes the mask.
+	   Intel thought this opcode to be used in interrupt handlers which
+	   would block all exceptions.  */
+	fldenv	(%ecx)
 
 	/* Save the current signal mask.  */
 	pushl	%ebx

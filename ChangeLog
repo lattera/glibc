@@ -1,3 +1,9 @@
+2003-05-19  Ed Connell  <ed.connell@sas.com>
+
+	* sysdeps/unix/sysv/linux/i386/getcontext.S (getcontext): Retain
+	floating point mask.
+	* sysdeps/i386/fpu/fegetenv.c (fegetenv): Likewise.
+
 2003-06-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/aio_misc.h: Mark __aio_requests_mutex,

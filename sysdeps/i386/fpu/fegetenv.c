@@ -1,5 +1,5 @@
 /* Store current floating-point environment.
-   Copyright (C) 1997,99,2000,01 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2000,2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -25,6 +25,10 @@ int
 __fegetenv (fenv_t *envp)
 {
   __asm__ ("fnstenv %0" : "=m" (*envp));
+  /* And load it right back since the processor changes the mask.
+     Intel thought this opcode to be used in interrupt handlers which
+     would block all exceptions.  */
+  __asm__ ("fldenv %0" : : "m" (*envp));
 
   /* Success.  */
   return 0;
