@@ -1,5 +1,6 @@
 2004-04-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* SUPPORTED (SUPPORTED-LOCALES): Add kk_KZ/PT154.
 	* locales/kk_KZ: New file.
 	* charmaps/PT154: New file.
 	* charmaps/RK1048: New file.

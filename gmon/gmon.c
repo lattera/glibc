@@ -114,7 +114,7 @@ __monstartup (lowpc, highpc)
   p->lowpc = ROUNDDOWN(lowpc, HISTFRACTION * sizeof(HISTCOUNTER));
   p->highpc = ROUNDUP(highpc, HISTFRACTION * sizeof(HISTCOUNTER));
   p->textsize = p->highpc - p->lowpc;
-  p->kcountsize = p->textsize / HISTFRACTION;
+  p->kcountsize = ROUNDUP(p->textsize / HISTFRACTION, sizeof(*p->froms));
   p->hashfraction = HASHFRACTION;
   p->log_hashfraction = -1;
   /* The following test must be kept in sync with the corresponding

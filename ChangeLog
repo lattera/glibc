@@ -1,4 +1,61 @@
+2004-04-04  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* sysdeps/hppa/Dist: Add bits/link.h elf/entry.h.
+
+	* sysdeps/hppa/bits/link.h: New file.
+
+	* sysdeps/hppa/dl-machine.h (__hppa_init_bootstrap_fdesc_table):
+	Initialze the fdesc table for the generic code.
+	(elf_machine_dynamic): Use asm version.
+	(elf_machine_load_addresss): Simplify asm by calling
+	elf_machine_dynamic.
+	(elf_machine_fixup_plt): Correct comment.
+	(elf_machine_profile_fixup_plt): New.
+	(elf_machine_runtime_setup): Check PLT exists, if lazy=1  process
+	normally, else relocate all the absolute entries.
+	(RTLD_START): Fix comments.
+	(TRAMPOLINE_TEMPLATE): Reformat assembly, add return pointer for
+	calls to profile_fixup.
+	(ELF_MACHINE_SIZEOF_JMP_SLOT, DL_STATIC_FUNCTION_ADDRESS,
+	DL_PLATFORM_INIT): Define.
+	(DL_FUNCTION_ADDRESS): Remove.
+	(dl_platform_init): New.
+	(elf_machine_rela): Use generic fdesc code, and process all COPY
+	relocations. Use __attribute__((always_inline)).
+	(elf_machine_rela_relative): Add sanity checks, remove IPLT
+	processing, print error message in default case. Use
+	__attribute__((always_inline)).
+	(elf_machine_lazy_rel): Use __attribute__((always_inline)).
+
+2004-04-05  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* sysdeps/hppa/fpu/feupdateenv.c (feupdateenv): Use only sw[0]
+	and call feraiseexcept.
+
+2003-11-15  Randolph Chung  <tausq@debian.org>
+
+	* gmon/gmon.c (__monstartup): Round kcountsize to multiples of
+	the froms[] array so the array is properly aligned.
+
+2004-04-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makeconfig (libgcc_eh): Add -Wl,.
+
+	* configure.in: Add -lgcc_s for --as-needed check.
+
+2004-04-16  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/elf/configure.in: New file.
+
 2004-04-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/gconv-modules: Add PT154 and RK1048 entries.
+	* iconvdata/tst-tables.sh: Add PT154 and RK1048.
+	* iconvdata/Makefile (modules): Add PT154 anhd RK1048.
+	(distribute): Add pt154.c and rk1048.c.
+	(gen-8bit-gap-modules): Add pt154 and rk1048.
+	* icondata/pt154.c: New file.
+	* iconvdata/rk1048.c: New file.
 
 	* rt/tst-timer4.c: Disable some tests, mark errors better.
 
