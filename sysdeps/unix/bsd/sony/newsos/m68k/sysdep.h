@@ -34,6 +34,8 @@ Cambridge, MA 02139, USA.  */
   _/**/name/**/:
 #endif
 
+/* NewsOS 4 wants a stack frame around syscalls.  */
+
 #ifdef	__STDC__
 #define	PSEUDO(name, syscall_name, args)				      \
   .even;								      \
