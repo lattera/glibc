@@ -27,7 +27,6 @@
 #include "hurdmalloc.h"		/* XXX */
 
 extern void __mach_init (void);
-extern void __libc_init_secure (void);
 extern void __libc_init (int, char **, char **);
 extern void __getopt_clean_environment (char **);
 extern void __libc_global_ctors (void);
@@ -36,6 +35,7 @@ unsigned int __hurd_threadvar_max;
 unsigned long int __hurd_threadvar_stack_offset;
 unsigned long int __hurd_threadvar_stack_mask;
 
+int __libc_enable_secure;
 int __libc_multiple_libcs = 1;
 
 extern int __libc_argc;
@@ -107,7 +107,7 @@ init1 (int argc, char *arg0, ...)
 		d->intarray, d->intarraysize);
 
 #ifndef PIC
-  __libc_init_secure ();
+  __libc_enable_secure = _dl_hurd_data->flags & EXEC_SECURE;
 #endif
 
   __libc_init (argc, argv, __environ);
