@@ -1,5 +1,5 @@
 /* Set a thread's floating-point register set.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -34,9 +34,13 @@ td_thr_setfpregs (const td_thrhandle_t *th, const prfpregset_t *fpregs)
     return TD_ERR;
 
   /* Only set the registers if the thread hasn't yet terminated.  */
-  if (pds.p_terminated == 0
-      && ps_lsetfpregs (th->th_ta_p->ph, pds.p_pid, fpregs) != PS_OK)
-    return TD_ERR;
+  if (pds.p_terminated == 0)
+    {
+      pid_t pid = pds.p_pid ?: ps_getpid (th->th_ta_p->ph);
+
+      if (ps_lsetfpregs (th->th_ta_p->ph, pid, fpregs) != PS_OK)
+	return TD_ERR;
+    }
 
   return TD_OK;
 }
