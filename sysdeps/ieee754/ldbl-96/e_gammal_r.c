@@ -1,5 +1,5 @@
 /* Implementation of gamma function according to ISO C.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -38,11 +38,17 @@ __ieee754_gammal_r (long double x, int *signgamp)
       *signgamp = 0;
       return x / x;
     }
-  if ((hx & 0x8000) != 0 && (hx & 0x7fff) != 0x7fff && __rintl (x) == x)
+  if ((es & 0x8000) != 0 && x < 0xffffffff && __rintl (x) == x)
     {
       /* Return value for integer x < 0 is NaN with invalid exception.  */
       *signgamp = 0;
       return (x - x) / (x - x);
+    }
+  if (es == 0xffffffff && ((hx & 0x7fffffff) | lx) == 0)
+    {
+      /* x == -Inf.  According to ISO this is NaN.  */
+      *signgamp = 0;
+      return x - x;
     }
 
   /* XXX FIXME.  */

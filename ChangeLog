@@ -1,5 +1,15 @@
 2001-03-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ieee754/ldbl-96/e_lgammal_r.c: New file.
+	Contributed by Stephen L. Moshier <moshier@na-net.ornl.gov>.
+
+	* sysdeps/ieee754/ldbl-96/e_gammal_r.c: Fix handling of boundary cases.
+
+	* sysdeps/ieee754/dbl-64/e_gamma_r.c: Always initialize sign variable.
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c: Likewise.
+
+	* sysdeps/i386/fpu/libm-test-ulps: Adjust after addition of lgammal.
+
 	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Fix typo in last change.
 
 2001-03-04  Andreas Jaeger  <aj@suse.de>
