@@ -18,36 +18,14 @@
 
 #include <errno.h>
 #include <unistd.h>
-#include <sys/types.h>
-
-#include <sysdep.h>
-#include <sys/syscall.h>
-
-#include <linux/posix_types.h>
-#include "kernel-features.h"
-#include <pthread-functions.h>
+#include <setxid.h>
 
 
 int
 __setresgid (gid_t rgid, gid_t egid, gid_t sgid)
 {
-  int result;
-
-  result = INLINE_SYSCALL (setresgid, 3, (signed int)rgid, (signed int)egid, (signed int)sgid);
-
-#if defined HAVE_PTR__NPTL_SETXID && !defined SINGLE_THREAD
-  if (result == 0 && __libc_pthread_functions.ptr__nptl_setxid != NULL)
-    {
-      struct xid_command cmd;
-      cmd.syscall_no = __NR_setresgid;
-      cmd.id[0] = rgid;
-      cmd.id[1] = egid;
-      cmd.id[2] = sgid;
-      __libc_pthread_functions.ptr__nptl_setxid (&cmd);
-    }
-#endif
-
-  return result;
+  return INLINE_SETXID_SYSCALL (setresgid, 3, (int) rgid,
+				(int) egid, (int) sgid);
 }
 libc_hidden_def (__setresgid)
 #ifndef __setresgid
