@@ -67,7 +67,6 @@ __longjmp:
 	and r8=0x3f,r8
 	;;
 	cmp.lt pNeg,pPos=r8,r0
-	dep r11=r0,r11,16,14	// clear ar.rsc.loadrs
 	mov r2=in0
 	;;
 (pPos)	mov r16=r8
@@ -117,7 +116,6 @@ __longjmp:
 	ld8.nta r11=[r2],16		// ar.pfs
 	ld8.nta r22=[r3],56		// ar.lc
 	;;
-	loadrs			// invalidate stacked regs (must be first in insn group)
 	ld8.nta r24=[r2],32		// pr
 	mov b0=r16
 	;;
