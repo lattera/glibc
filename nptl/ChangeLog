@@ -7,8 +7,9 @@
 	(start_thread): Call deallocate_tsd here.
 	* pthread_setspecific.c: Set specific_used flag really only when
 	needed.
-	* Makefile (tests): Add tst-tsd3.c
+	* Makefile (tests): Add tst-tsd3.c and tst-tsd4.
 	* tst-tsd3.c: New file.
+	* tst-tsd4.c: New file.
 
 2003-03-31  Ulrich Drepper  <drepper@redhat.com>
 
