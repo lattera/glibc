@@ -1,5 +1,15 @@
 2000-11-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/strcoll.c: Add casts to avoid warnings.
+	* string/strnlen.c: Likewise.
+	* string/strxfrm.c: Likewise.
+	* sysdeps/generic/_strerror.c: Likewise.
+	* sysdeps/generic/memrchr.c: Likewise.
+	* sysdeps/generic/strcasestr.c: Likewise.
+	* sysdeps/generic/strstr.c: Likewise.
+
+	* locale/weight.h (findidx): Add const to cast to avoid warning.
+
 	* elf/loadfail.c: Little cosmetic changes to avoid warnings.
 	* elf/loadtest.c: Likewise.
 	* elf/multiload.c: Likewise.

@@ -38,7 +38,7 @@ findidx (const unsigned char **cpp)
       size_t nhere;
 
       /* The first thing is the index.  */
-      i = *((int32_t *) cp);
+      i = *((const int32_t *) cp);
       cp += sizeof (int32_t);
 
       /* Next is the length of the byte sequence.  These are always
