@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,9 +39,9 @@ __BEGIN_DECLS
 
 # include <endian.h>
 # if __BYTE_ORDER == __BIG_ENDIAN
-#  define _ISbit(bit)	(1 << bit)
+#  define _ISbit(bit)	(1 << (bit))
 # else /* __BYTE_ORDER == __LITTLE_ENDIAN */
-#  define _ISbit(bit)	(bit < 8 ? ((1 << bit) << 8) : ((1 << bit) >> 8))
+#  define _ISbit(bit)	((bit) < 8 ? ((1 << (bit)) << 8) : ((1 << (bit)) >> 8))
 # endif
 
 enum
