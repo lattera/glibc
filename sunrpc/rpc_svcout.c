@@ -31,8 +31,10 @@
 /*
  * From: @(#)rpc_svcout.c 1.29 89/03/30 (C) 1987 SMI
  */
-char svcout_rcsid[] =
+#if defined(LIBC_SCCS) && !defined(lint)
+static const char svcout_rcsid[] =
   "$Id$";
+#endif
 
 /*
  * rpc_svcout.c, Server-skeleton outputter for the RPC protocol compiler

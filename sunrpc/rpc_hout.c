@@ -31,8 +31,10 @@
 /*
  * From: @(#)rpc_hout.c 1.12 89/02/22 (C) 1987 SMI
  */
-char hout_rcsid[] =
+#if defined(LIBC_SCCS) && !defined(lint)
+static const char hout_rcsid[] =
   "$Id$";
+#endif
 
 /*
  * rpc_hout.c, Header file outputter for the RPC protocol compiler

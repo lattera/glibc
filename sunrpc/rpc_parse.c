@@ -31,8 +31,10 @@
 /*
  * From: @(#)rpc_parse.c 1.8 89/02/22 (C) 1987 SMI
  */
-const char parse_rcsid[] =
+#if defined(LIBC_SCCS) && !defined(lint)
+static const char parse_rcsid[] =
   "$Id$";
+#endif
 
 /*
  * rpc_parse.c, Parser for the RPC protocol compiler

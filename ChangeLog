@@ -1,3 +1,16 @@
+2004-10-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/rpc_clntout.c: Avoid including rcsid into binary.
+	* sunrpc/rpc_cout.c: Likewise.
+	* sunrpc/rpc_hout.c: Likewise.
+	* sunrpc/rpc_main.c: Likewise.
+	* sunrpc/rpc_parse.c: Likewise.
+	* sunrpc/rpc_sample.c: Likewise.
+	* sunrpc/rpc_scan.c: Likewise.
+	* sunrpc/rpc_svcout.c: Likewise.
+	* sunrpc/rpc_tblout.c: Likewise.
+	* sunrpc/rpc_util.c: Likewise.
+
 2004-10-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep.h (PUSHARGS_6, DOARGS_6,

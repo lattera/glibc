@@ -31,8 +31,10 @@
 /*
  * From @(#)rpc_main.c 1.30 89/03/30 (C) 1987 SMI;
  */
-const char main_rcsid[] =
+#if defined(LIBC_SCCS) && !defined(lint)
+static const char main_rcsid[] =
   "$Id$";
+#endif
 
 /*
  * rpc_main.c, Top level of the RPC protocol compiler.
