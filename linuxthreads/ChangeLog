@@ -1,3 +1,8 @@
+2000-11-15  Wolfram Gloger  <wg@malloc.de>
+
+	* manager.c (pthread_free): [!FLOATING_STACKS]: Only remap the
+	stack to PROT_NONE, don't unmap it, avoiding collisions with malloc.
+
 2000-12-27  Andreas Jaeger  <aj@suse.de>
 
 	* Examples/ex13.c: Make local functions static.

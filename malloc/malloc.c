@@ -423,11 +423,12 @@ Void_t* memmove();
 #endif
 #endif
 
-#if USE_MEMCPY
-
 /* The following macros are only invoked with (2n+1)-multiples of
    INTERNAL_SIZE_T units, with a positive integer n. This is exploited
-   for fast inline execution when n is small. */
+   for fast inline execution when n is small.  If the regions to be
+   copied do overlap, the destination lies always _below_ the source.  */
+
+#if USE_MEMCPY
 
 #define MALLOC_ZERO(charp, nbytes)                                            \
 do {                                                                          \
@@ -446,7 +447,9 @@ do {                                                                          \
   } else memset((charp), 0, mzsz);                                            \
 } while(0)
 
-#define MALLOC_COPY(dest,src,nbytes)                                          \
+/* If the regions overlap, dest is always _below_ src.  */
+
+#define MALLOC_COPY(dest,src,nbytes,overlap)                                  \
 do {                                                                          \
   INTERNAL_SIZE_T mcsz = (nbytes);                                            \
   if(mcsz <= 9*sizeof(mcsz)) {                                                \
@@ -461,11 +464,11 @@ do {                                                                          \
                                      *mcdst++ = *mcsrc++;                     \
                                      *mcdst++ = *mcsrc++;                     \
                                      *mcdst   = *mcsrc  ;                     \
-  } else memcpy(dest, src, mcsz);                                             \
+  } else if(overlap)                                                          \
+    memmove(dest, src, mcsz);                                                 \
+  else                                                                        \
+    memcpy(dest, src, mcsz);                                                  \
 } while(0)
-
-#define MALLOC_MEMMOVE(dest,src,nbytes)                                       \
-  memmove(dest, src, mcsz)
 
 #else /* !USE_MEMCPY */
 
@@ -488,7 +491,9 @@ do {                                                                          \
   }                                                                           \
 } while(0)
 
-#define MALLOC_COPY(dest,src,nbytes)                                          \
+/* If the regions overlap, dest is always _below_ src.  */
+
+#define MALLOC_COPY(dest,src,nbytes,overlap)                                  \
 do {                                                                          \
   INTERNAL_SIZE_T* mcsrc = (INTERNAL_SIZE_T*) src;                            \
   INTERNAL_SIZE_T* mcdst = (INTERNAL_SIZE_T*) dest;                           \
@@ -3255,7 +3260,7 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
     /* Must alloc, copy, free. */
     newmem = mALLOc(bytes);
     if (newmem == 0) return 0; /* propagate failure */
-    MALLOC_COPY(newmem, oldmem, oldsize - 2*SIZE_SZ);
+    MALLOC_COPY(newmem, oldmem, oldsize - 2*SIZE_SZ, 0);
     munmap_chunk(oldp);
     return newmem;
   }
@@ -3370,7 +3375,8 @@ arena* ar_ptr; mchunkptr oldp; INTERNAL_SIZE_T oldsize, nb;
             unlink(prev, bck, fwd);
             newp = prev;
             newsize += prevsize + nextsize;
-            MALLOC_COPY(BOUNDED_N(chunk2mem(newp), oldsize), oldmem, oldsize);
+            MALLOC_COPY(BOUNDED_N(chunk2mem(newp), oldsize), oldmem, oldsize,
+                        1);
             top(ar_ptr) = chunk_at_offset(newp, nb);
             set_head(top(ar_ptr), (newsize - nb) | PREV_INUSE);
             set_head_size(newp, nb);
@@ -3385,7 +3391,7 @@ arena* ar_ptr; mchunkptr oldp; INTERNAL_SIZE_T oldsize, nb;
           unlink(prev, bck, fwd);
           newp = prev;
           newsize += nextsize + prevsize;
-          MALLOC_COPY(BOUNDED_N(chunk2mem(newp), oldsize), oldmem, oldsize);
+          MALLOC_COPY(BOUNDED_N(chunk2mem(newp), oldsize), oldmem, oldsize, 1);
           goto split;
         }
       }
@@ -3396,7 +3402,7 @@ arena* ar_ptr; mchunkptr oldp; INTERNAL_SIZE_T oldsize, nb;
         unlink(prev, bck, fwd);
         newp = prev;
         newsize += prevsize;
-        MALLOC_COPY(BOUNDED_N(chunk2mem(newp), oldsize), oldmem, oldsize);
+        MALLOC_COPY(BOUNDED_N(chunk2mem(newp), oldsize), oldmem, oldsize, 1);
         goto split;
       }
     }
@@ -3436,7 +3442,7 @@ arena* ar_ptr; mchunkptr oldp; INTERNAL_SIZE_T oldsize, nb;
     }
 
     /* Otherwise copy, free, and exit */
-    MALLOC_COPY(BOUNDED_N(chunk2mem(newp), oldsize), oldmem, oldsize);
+    MALLOC_COPY(BOUNDED_N(chunk2mem(newp), oldsize), oldmem, oldsize, 0);
     chunk_free(ar_ptr, oldp);
     return newp;
   }
@@ -4605,7 +4611,7 @@ realloc_check(oldmem, bytes, caller)
         newp = (top_check() >= 0) ? chunk_alloc(&main_arena, nb) : NULL;
         if (newp) {
           MALLOC_COPY(BOUNDED_N(chunk2mem(newp), nb),
-		      oldmem, oldsize - 2*SIZE_SZ);
+		      oldmem, oldsize - 2*SIZE_SZ, 0);
           munmap_chunk(oldp);
         }
       }

@@ -418,7 +418,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 
       new_thread_bottom = (char *) map_addr + guardsize;
       new_thread = ((pthread_descr) (new_thread_bottom + stacksize)) - 1;
-# else
+# else /* !FLOATING_STACKS */
       if (attr != NULL)
 	{
 	  guardsize = page_roundup (attr->__guardsize, granularity);
@@ -696,23 +696,24 @@ static void pthread_free(pthread_descr th)
     {
       size_t guardsize = th->p_guardsize;
       /* Free the stack and thread descriptor area */
+      char *guardaddr = th->p_guardaddr;
+      /* Guardaddr is always set, even if guardsize is 0.  This allows
+	 us to compute everything else.  */
+      size_t stacksize = (char *)(th+1) - guardaddr - guardsize;
 #ifdef NEED_SEPARATE_REGISTER_STACK
-      char *guardaddr = th->p_guardaddr;
-      /* We unmap exactly what we mapped, in case there was something
-	 else in the same region.  Guardaddr is always set, eve if
-	 guardsize is 0.  This allows us to compute everything else.  */
-      size_t stacksize = (char *)(th+1) - guardaddr - guardsize;
-      /* Unmap the register stack, which is below guardaddr.  */
-      munmap((caddr_t)(guardaddr-stacksize),
-	     2 * stacksize + th->p_guardsize);
+      /* Take account of the register stack, which is below guardaddr.  */
+      guardaddr -= stacksize;
+      stacksize *= 2;
+#endif
+#if FLOATING_STACKS
+      /* Can unmap safely.  */
+      munmap(guardaddr, stacksize + guardsize);
 #else
-      char *guardaddr = th->p_guardaddr;
-      /* We unmap exactly what we mapped, in case there was something
-	 else in the same region.  Guardaddr is always set, eve if
-	 guardsize is 0.  This allows us to compute everything else.  */
-      size_t stacksize = (char *)(th+1) - guardaddr - guardsize;
-
-      munmap (guardaddr, stacksize + guardsize);
+      /* Only remap to PROT_NONE, so that the region is reserved in
+         case we map the stack again later.  Avoid collision with
+         other mmap()s, in particular by malloc().  */
+      mmap(guardaddr, stacksize + guardsize, PROT_NONE,
+	   MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
 #endif
     }
 }

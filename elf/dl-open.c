@@ -269,10 +269,6 @@ dl_open_worker (void *a)
   /* Load that object's dependencies.  */
   _dl_map_object_deps (new, NULL, 0, 0);
 
-  /* Increment the open count for all dependencies.  */
-  for (i = 0; i < new->l_searchlist.r_nlist; ++i)
-    ++new->l_searchlist.r_list[i]->l_opencount;
-
   /* So far, so good.  Now check the versions.  */
   for (i = 0; i < new->l_searchlist.r_nlist; ++i)
     if (new->l_searchlist.r_list[i]->l_versions == NULL)
@@ -320,6 +316,10 @@ dl_open_worker (void *a)
 	break;
       l = l->l_prev;
     }
+
+  /* Increment the open count for all dependencies.  */
+  for (i = 0; i < new->l_searchlist.r_nlist; ++i)
+    ++new->l_searchlist.r_list[i]->l_opencount;
 
   /* Run the initializer functions of new objects.  */
   _dl_init (new, __libc_argc, __libc_argv, __environ);
@@ -399,11 +399,10 @@ _dl_open (const char *file, int mode, const void *caller)
 	{
 	  int i;
 
-	  /* Increment open counters for all objects which did not get
-	     correctly loaded.  */
+	  /* Increment open counters for all objects since this has
+	     not happened yet.  */
 	  for (i = 0; i < args.map->l_searchlist.r_nlist; ++i)
-	    if (args.map->l_searchlist.r_list[i]->l_opencount == 0)
-	      args.map->l_searchlist.r_list[i]->l_opencount = 1;
+	    ++args.map->l_searchlist.r_list[i]->l_opencount;
 
 	  _dl_close (args.map);
 	}
