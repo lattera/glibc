@@ -185,9 +185,6 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
    XXX In future we might even want to avoid it on UP machines.  */
 # include <tls.h>
 
-/* Nonzero if locking is needed.  */
-extern int __libc_locking_needed attribute_hidden;
-
 # define lll_trylock(futex) \
   ({ unsigned char ret;							      \
      __asm __volatile ("cmpl $0, %%gs:%P5\n\t"				      \
