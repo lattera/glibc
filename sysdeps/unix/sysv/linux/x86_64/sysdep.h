@@ -23,6 +23,7 @@
 #include <sysdeps/unix/x86_64/sysdep.h>
 #include <bp-sym.h>
 #include <bp-asm.h>
+#include <tls.h>
 
 #ifdef IS_IN_rtld
 # include <dl-sysdep.h>		/* Defines RTLD_PRIVATE_ERRNO.  */
@@ -82,15 +83,6 @@
 
 #ifndef PIC
 #define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
-#elif USE___THREAD
-# define SYSCALL_ERROR_HANDLER			\
-0:						\
-  movq errno@GOTTPOFF(%rip), %rcx;		\
-  xorq %rdx, %rdx;				\
-  subq %rax, %rdx;				\
-  movl %edx, %fs:(%rcx);			\
-  orq $-1, %rax;				\
-  jmp L(pseudo_end);
 #elif RTLD_PRIVATE_ERRNO
 # define SYSCALL_ERROR_HANDLER			\
 0:						\
@@ -98,6 +90,15 @@
   xorq %rdx, %rdx;				\
   subq %rax, %rdx;				\
   movl %edx, (%rcx);				\
+  orq $-1, %rax;				\
+  jmp L(pseudo_end);
+#elif USE___THREAD
+# define SYSCALL_ERROR_HANDLER			\
+0:						\
+  movq errno@GOTTPOFF(%rip), %rcx;		\
+  xorq %rdx, %rdx;				\
+  subq %rax, %rdx;				\
+  movl %edx, %fs:(%rcx);			\
   orq $-1, %rax;				\
   jmp L(pseudo_end);
 #elif defined _LIBC_REENTRANT

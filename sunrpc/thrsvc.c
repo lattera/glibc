@@ -8,23 +8,32 @@
 #define PROGNUM 1234
 #define VERSNUM 1
 #define PROCNUM 1
+#define PROCQUIT 2
 
 static int exitcode;
+
+struct rpc_arg
+{
+  CLIENT *client;
+  u_long proc;
+};
 
 static void
 dispatch(struct svc_req *request, SVCXPRT *xprt)
 {
-    svc_sendreply(xprt, (xdrproc_t)xdr_void, 0);
+  svc_sendreply(xprt, (xdrproc_t)xdr_void, 0);
+  if (request->rq_proc == PROCQUIT)
+    exit (0);
 }
 
 static void
-test_one_call (CLIENT *c)
+test_one_call (struct rpc_arg *a)
 {
   struct timeval tout = { 60, 0 };
   enum clnt_stat result;
 
   printf ("test_one_call: ");
-  result = clnt_call (c, PROCNUM,
+  result = clnt_call (a->client, a->proc,
 		      (xdrproc_t) xdr_void, 0,
 		      (xdrproc_t) xdr_void, 0, tout);
   if (result == RPC_SUCCESS)
@@ -40,7 +49,14 @@ test_one_call (CLIENT *c)
 static void *
 thread_wrapper (void *arg)
 {
-  test_one_call ((CLIENT *)arg);
+  struct rpc_arg a;
+
+  a.client = (CLIENT *)arg;
+  a.proc = PROCNUM;
+  test_one_call (&a);
+  a.client = (CLIENT *)arg;
+  a.proc = PROCQUIT;
+  test_one_call (&a);
   return 0;
 }
 
@@ -55,6 +71,7 @@ main (void)
   struct sockaddr_in sin;
   struct timeval wait = { 5, 0 };
   int sock = RPC_ANYSOCK;
+  struct rpc_arg a;
 
   svx = svcudp_create (RPC_ANYSOCK);
   svc_register (svx, PROGNUM, VERSNUM, dispatch, 0);
@@ -74,8 +91,11 @@ main (void)
 
   clnt = clntudp_create (&sin, PROGNUM, VERSNUM, wait, &sock);
 
+  a.client = clnt;
+  a.proc = PROCNUM;
+
   /* Test in this thread */
-  test_one_call (clnt);
+  test_one_call (&a);
 
   /* Test in a child thread */
   err = pthread_create (&tid, 0, thread_wrapper, (void *) clnt);

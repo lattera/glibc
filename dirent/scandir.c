@@ -1,4 +1,4 @@
-/* Copyright (C) 1992-1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992-1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,20 +80,24 @@ SCANDIR (dir, namelist, select, cmp)
   if (__builtin_expect (errno, 0) != 0)
     {
       save = errno;
-      (void) __closedir (dp);
+
       while (i > 0)
 	free (v[--i]);
       free (v);
-      __set_errno (save);
-      return -1;
+
+      i = -1;
+    }
+  else
+    {
+      /* Sort the list if we have a comparison function to sort with.  */
+      if (cmp != NULL)
+	qsort (v, i, sizeof (*v), cmp);
+
+      *namelist = v;
     }
 
   (void) __closedir (dp);
   __set_errno (save);
 
-  /* Sort the list if we have a comparison function to sort with.  */
-  if (cmp != NULL)
-    qsort (v, i, sizeof (*v), cmp);
-  *namelist = v;
   return i;
 }
