@@ -354,7 +354,7 @@ timeval_subtract (result, x, y)
     y->tv_sec += nsec;
   @}
   if (x->tv_usec - y->tv_usec > 1000000) @{
-    int nsec = (y->tv_usec - x->tv_usec) / 1000000;
+    int nsec = (x->tv_usec - y->tv_usec) / 1000000;
     y->tv_usec += 1000000 * nsec;
     y->tv_sec -= nsec;
   @}

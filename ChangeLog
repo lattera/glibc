@@ -1,3 +1,8 @@
+1999-03-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/time.texi (High Resolution Timer): Correct computation in
+	example.  Reported by jjf@devel.cemsys.com.
+
 1999-03-02  Philip Blundell  <pb@nexus.co.uk>
 
 	* sysdeps/arm/dl-machine.h (elf_machine_runtime_setup): DT_PLTGOT
