@@ -212,6 +212,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 
       switch (ELF64_R_TYPE_ID (reloc->r_info))
 	{
+#ifndef RTLD_BOOTSTRAP
 	case R_SPARC_COPY:
 	  if (sym == NULL)
 	    /* This can happen in trace mode if an object could not be
@@ -232,11 +233,12 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
 						   refsym->st_size));
 	  break;
-
+#endif
 	case R_SPARC_64:
 	case R_SPARC_GLOB_DAT:
 	  *reloc_addr = value;
 	  break;
+#ifndef RTLD_BOOTSTRAP
 	case R_SPARC_8:
 	  *(char *) reloc_addr = value;
 	  break;
@@ -311,11 +313,11 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	    ((*(unsigned int *)reloc_addr & 0xffc00000) |
 	     ((value >> 10) & 0x003fffff));
 	  break;
-
+#endif
 	case R_SPARC_JMP_SLOT:
 	  elf_machine_fixup_plt(map, 0, reloc, reloc_addr, value);
 	  break;
-
+#ifndef RTLD_BOOTSTRAP
 	case R_SPARC_UA64:
 	  if (! ((long) reloc_addr & 3))
 	    {
@@ -333,10 +335,12 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  ((unsigned char *) reloc_addr) [6] = value >> 8;
 	  ((unsigned char *) reloc_addr) [7] = value;
 	  break;
-
+#endif
+#if !defined RTLD_BOOTSTRAP || defined _NDEBUG
 	default:
 	  _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 0);
 	  break;
+#endif
 	}
     }
 }
