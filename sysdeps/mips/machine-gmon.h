@@ -1,5 +1,5 @@
 /* Machine-specific calling sequence for `mcount' profiling function.  MIPS
-   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,8 +42,9 @@
         "sw $1,0($29);" \
         "sw $31,4($29);" \
         "move $5,$31;" \
-        "jal __mcount;" \
         "move $4,$1;" \
+        "jal __mcount;" \
+	"nop;" \
         "lw $4,8($29);" \
         "lw $5,12($29);" \
         "lw $6,16($29);" \
