@@ -1,3 +1,10 @@
+2005-03-10  GOTO Masanori  <gotom@debian.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Define MAP_POPULATE and
+	MAP_NONBLOCK.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: Likewise.
+	Correct MAP_GROWSDOWN value.
+
 2005-03-13  Roland McGrath  <roland@redhat.com>
 
 	* elf/tls-macros.h: #include_next <tls-macros.h> to get a sysdeps
