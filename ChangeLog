@@ -1,5 +1,7 @@
 1998-07-14  Ulrich Drepper  <drepper@cygnus.com>
 
+	* wcsmbs/wcslen.c (__wcslen): Fix comment.
+
 	* configure.in: Allow egcs-2.92.
 
 1998-07-10 18:14 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>

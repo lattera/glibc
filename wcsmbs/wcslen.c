@@ -20,7 +20,7 @@
 #include <wchar.h>
 
 
-/* Copy SRC to DEST.  */
+/* Return length of string S.  */
 size_t
 __wcslen (s)
      const wchar_t *s;
