@@ -100,7 +100,10 @@ inet_aton(cp, addr)
 	struct in_addr *addr;
 {
 	register u_int32_t val;	/* changed from u_long --david */
-	register int base, n;
+#ifndef _LIBC
+	register int base;
+#endif
+	register int n;
 	register char c;
 	u_int32_t parts[4];
 	register u_int32_t *pp = parts;
