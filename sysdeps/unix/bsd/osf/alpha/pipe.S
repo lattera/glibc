@@ -26,5 +26,6 @@ SYSCALL__ (pipe, 1)
 	/* Go out with a clean status.  */
 	mov zero, r0
 	ret
+	.end __pipe
 
 weak_alias (__pipe, pipe)

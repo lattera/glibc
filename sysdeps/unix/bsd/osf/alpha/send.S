@@ -23,3 +23,4 @@ Cambridge, MA 02139, USA.  */
 
 SYSCALL (send, 4)
 	ret
+	.end send

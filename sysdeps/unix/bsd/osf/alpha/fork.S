@@ -21,5 +21,6 @@ Cambridge, MA 02139, USA.  */
 SYSCALL__ (fork, 0)
 	cmovne a4, 0, v0
 	ret
+	.end __fork
 
 weak_alias (__fork, fork)

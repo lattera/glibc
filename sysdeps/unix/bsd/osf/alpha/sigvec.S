@@ -23,5 +23,6 @@ Cambridge, MA 02139, USA.  */
 
 SYSCALL__ (sigvec, 3)
 	ret
+	.end __sigvec
 
 weak_alias (__sigvec, sigvec)

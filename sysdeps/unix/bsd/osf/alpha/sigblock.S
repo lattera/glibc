@@ -23,5 +23,6 @@ Cambridge, MA 02139, USA.  */
 
 SYSCALL__ (sigblock, 1)
 	ret
+	.end __sigblock
 
 weak_alias (__sigblock, sigblock)

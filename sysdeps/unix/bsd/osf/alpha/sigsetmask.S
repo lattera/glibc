@@ -23,5 +23,6 @@ Cambridge, MA 02139, USA.  */
 
 SYSCALL__ (sigsetmask, 1)
 	ret
+	.end __sigsetmask
 
 weak_alias (__sigsetmask, sigsetmask)

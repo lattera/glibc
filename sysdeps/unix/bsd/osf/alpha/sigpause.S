@@ -23,5 +23,6 @@ Cambridge, MA 02139, USA.  */
 
 SYSCALL__ (sigpause, 1)
 	ret
+	.end __sigpause
 
 weak_alias (__sigpause, sigpause)
