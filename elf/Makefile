@@ -21,7 +21,7 @@
 subdir		:= elf
 
 headers		= elf.h bits/elfclass.h link.h
-routines	= $(dl-routines) dl-open dl-close dl-symbol dl-support \
+routines	= $(dl-routines) dl-open dl-close dl-support \
 		  dl-addr enbl-secure dl-profstub dl-origin dl-libc dl-sym
 
 # The core dynamic linking functions are in libc for the static and

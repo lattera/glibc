@@ -93,11 +93,6 @@ struct r_scope_elem
   struct link_map **r_list;
   /* Number of entries in the scope.  */
   unsigned int r_nlist;
-
-  /* Array of maps which also includes duplicates.  */
-  struct link_map **r_duplist;
-  /* Number of elements in this list.  */
-  unsigned int r_nduplist;
 };
 
 

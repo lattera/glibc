@@ -75,16 +75,15 @@ __libc_lock_define (extern, _dl_load_lock)
    without versioning.  gcc is not able to optimize a single function
    definition serving for both purposes so we define two functions.  */
 #define VERSIONED	0
-#define PROTECTED	0
 #include "do-lookup.h"
 
 #define VERSIONED	1
-#define PROTECTED	0
 #include "do-lookup.h"
 
 
 /* Add extra dependency on MAP to UNDEF_MAP.  */
 static int
+internal_function
 add_dependency (struct link_map *undef_map, struct link_map *map)
 {
   struct link_map **list;
@@ -180,6 +179,19 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
   return result;
 }
 
+static int
+internal_function
+_dl_do_lookup (const char *undef_name, unsigned long int hash,
+	       const ElfW(Sym) *ref, struct sym_val *result,
+	       struct r_scope_elem *scope, size_t i,
+	       struct link_map *skip, int noexec, int noplt);
+static int
+internal_function
+_dl_do_lookup_versioned (const char *undef_name, unsigned long int hash,
+			 const ElfW(Sym) *ref, struct sym_val *result,
+			 struct r_scope_elem *scope, size_t i,
+			 const struct r_found_version *const version,
+			 struct link_map *skip, int noexec, int noplt);
 
 /* Search loaded objects' symbol tables for a definition of the symbol
    UNDEF_NAME.  */
@@ -261,8 +273,8 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
       struct sym_val protected_value = { NULL, NULL };
 
       for (scope = symbol_scope; *scope; ++scope)
-	if (do_lookup (undef_name, hash, *ref, &protected_value, *scope, 0,
-		       NULL, 0, 1))
+	if (_dl_do_lookup (undef_name, hash, *ref, &protected_value, *scope,
+			   0, NULL, 0, 1))
 	  break;
 
       if (protected_value.s == NULL || protected_value.m == undef_map)
@@ -299,15 +311,14 @@ _dl_lookup_symbol_skip (const char *undef_name,
 
   /* Search the relevant loaded objects for a definition.  */
   scope = symbol_scope;
-  for (i = 0; (*scope)->r_duplist[i] != skip_map; ++i)
-    assert (i < (*scope)->r_nduplist);
+  for (i = 0; (*scope)->r_list[i] != skip_map; ++i)
+    assert (i < (*scope)->r_nlist);
 
-  if (i >= (*scope)->r_nlist
-	 || ! do_lookup (undef_name, hash, *ref, &current_value, *scope, i,
-			 skip_map, 0, 0))
+  if (! _dl_do_lookup (undef_name, hash, *ref, &current_value, *scope, i,
+		       skip_map, 0, 0))
     while (*++scope)
-      if (do_lookup (undef_name, hash, *ref, &current_value, *scope, 0,
-		     skip_map, 0, 0))
+      if (_dl_do_lookup (undef_name, hash, *ref, &current_value, *scope, 0,
+			 skip_map, 0, 0))
 	break;
 
   if (__builtin_expect (current_value.s == NULL, 0))
@@ -338,11 +349,11 @@ _dl_lookup_symbol_skip (const char *undef_name,
       struct sym_val protected_value = { NULL, NULL };
 
       if (i >= (*scope)->r_nlist
-	  || !do_lookup (undef_name, hash, *ref, &protected_value, *scope, i,
-			 skip_map, 0, 1))
+	  || !_dl_do_lookup (undef_name, hash, *ref, &protected_value, *scope,
+			     i, skip_map, 0, 1))
 	while (*++scope)
-	  if (do_lookup (undef_name, hash, *ref, &protected_value, *scope, 0,
-			 skip_map, 0, 1))
+	  if (_dl_do_lookup (undef_name, hash, *ref, &protected_value, *scope,
+			     0, skip_map, 0, 1))
 	    break;
 
       if (protected_value.s == NULL || protected_value.m == undef_map)
@@ -465,8 +476,8 @@ _dl_lookup_versioned_symbol (const char *undef_name,
       struct sym_val protected_value = { NULL, NULL };
 
       for (scope = symbol_scope; *scope; ++scope)
-	if (do_lookup_versioned (undef_name, hash, *ref, &protected_value,
-				 *scope, 0, version, NULL, 0, 1))
+	if (_dl_do_lookup_versioned (undef_name, hash, *ref, &protected_value,
+				     *scope, 0, version, NULL, 0, 1))
 	  break;
 
       if (protected_value.s == NULL || protected_value.m == undef_map)
@@ -502,15 +513,14 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 
   /* Search the relevant loaded objects for a definition.  */
   scope = symbol_scope;
-  for (i = 0; (*scope)->r_duplist[i] != skip_map; ++i)
-    assert (i < (*scope)->r_nduplist);
+  for (i = 0; (*scope)->r_list[i] != skip_map; ++i)
+    assert (i < (*scope)->r_nlist);
 
-  if (i >= (*scope)->r_nlist
-      || ! do_lookup_versioned (undef_name, hash, *ref, &current_value,
-				*scope, i, version, skip_map, 0, 0))
+  if (! _dl_do_lookup_versioned (undef_name, hash, *ref, &current_value,
+				 *scope, i, version, skip_map, 0, 0))
     while (*++scope)
-      if (do_lookup_versioned (undef_name, hash, *ref, &current_value, *scope,
-			       0, version, skip_map, 0, 0))
+      if (_dl_do_lookup_versioned (undef_name, hash, *ref, &current_value,
+				   *scope, 0, version, skip_map, 0, 0))
 	break;
 
   if (__builtin_expect (current_value.s == NULL, 0))
@@ -554,11 +564,13 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
       struct sym_val protected_value = { NULL, NULL };
 
       if (i >= (*scope)->r_nlist
-	  || !do_lookup_versioned (undef_name, hash, *ref, &protected_value,
-				   *scope, i, version, skip_map, 0, 1))
+	  || !_dl_do_lookup_versioned (undef_name, hash, *ref,
+				       &protected_value, *scope, i, version,
+				       skip_map, 0, 1))
 	while (*++scope)
-	  if (do_lookup_versioned (undef_name, hash, *ref, &protected_value,
-				   *scope, 0, version, skip_map, 0, 1))
+	  if (_dl_do_lookup_versioned (undef_name, hash, *ref,
+				       &protected_value, *scope, 0, version,
+				       skip_map, 0, 1))
 	    break;
 
       if (protected_value.s == NULL || protected_value.m == undef_map)
@@ -590,4 +602,29 @@ _dl_setup_hash (struct link_map *map)
   map->l_buckets = hash;
   hash += map->l_nbuckets;
   map->l_chain = hash;
+}
+
+/* These are here so that we only inline do_lookup{,_versioned} in the common
+   case, not everywhere.  */
+static int
+internal_function
+_dl_do_lookup (const char *undef_name, unsigned long int hash,
+	       const ElfW(Sym) *ref, struct sym_val *result,
+	       struct r_scope_elem *scope, size_t i,
+	       struct link_map *skip, int noexec, int noplt)
+{
+  return do_lookup (undef_name, hash, ref, result, scope, i, skip, noexec,
+  		    noplt);
+}
+
+static int
+internal_function
+_dl_do_lookup_versioned (const char *undef_name, unsigned long int hash,
+			 const ElfW(Sym) *ref, struct sym_val *result,
+			 struct r_scope_elem *scope, size_t i,
+			 const struct r_found_version *const version,
+			 struct link_map *skip, int noexec, int noplt)
+{
+  return do_lookup_versioned (undef_name, hash, ref, result, scope, i,
+			      version, skip, noexec, noplt);
 }

@@ -1126,8 +1126,6 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
       l->l_symbolic_searchlist.r_list[0] = l;
       l->l_symbolic_searchlist.r_nlist = 1;
-      l->l_symbolic_searchlist.r_duplist = l->l_symbolic_searchlist.r_list;
-      l->l_symbolic_searchlist.r_nduplist = 1;
 
       /* Now move the existing entries one back.  */
       memmove (&l->l_scope[1], &l->l_scope[0],

@@ -1,3 +1,31 @@
+2001-05-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-lookup.c (PROTECTED): Remove defines.
+	(add_dependency): Mark it with internal_function.
+	(_dl_do_lookup, _dl_do_lookup_versioned): New functions.
+	(_dl_lookup_symbol, _dl_lookup_symbol_skip,
+	_dl_lookup_versioned_symbol, _dl_lookup_versioned_symbol_skip): Use
+	it if we don't want do_lookup* inlined.
+
+2001-05-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/link.h (struct r_scope_elem): Remove r_duplist and
+	r_nduplist fields.
+	* elf/dl-load.c (_dl_map_object_from_fd): Don't initialize them.
+	* elf/dl-lookup.c (_dl_lookup_symbol_skip): Look in r_list, not
+	r_duplist.
+	(_dl_lookup_versioned_symbol_skip): Likewise.
+	* elf/dl-deps.c (struct list): Remove dup field, rename unique to next.
+	(_dl_map_object_deps): Don't compute duplicate list.
+
+	* elf/dl-symbol.c: Removed.
+	* elf/Makefile (routines): Remove dl-symbol.
+
+2001-05-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/el.po: Update from translation team.
+	* po/sv.po: Likewise.
+
 2001-05-20  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconvdata/cp1255.c: Completely rewritten.
