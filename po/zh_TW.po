@@ -1578,7 +1578,7 @@ msgid ""
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 msgstr ""
 "版權 (C) %s 自由軟體基金會\n"
-"這是一個自由軟體；請見源始碼的授權條款。這裏沒有擔保；甚至也沒有專為銷\n"
+"這是一個自由軟體；請見源始碼的授權條款。這沒有擔保；甚至也沒有專為銷\n"
 "售或者適合某些特殊目的。\n"
 
 #: nscd/nscd_conf.c:166

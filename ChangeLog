@@ -1,3 +1,7 @@
+2001-09-08  H.J. Lu  <hjl@gnu.org>
+
+	* po/zh_TW.po: Fix a typo.
+
 2001-09-07  Tom Rix  <trix@redhat.com>
 
 	* sysdeps/unix/sysv/aix/sysv_termio.h: New file.
