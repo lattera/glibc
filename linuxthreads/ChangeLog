@@ -1,3 +1,14 @@
+2004-04-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/local_lim.h (MQ_PRIO_MAX): Define.
+	* sysdeps/unix/sysv/linux/alpha/bits/local_lim.h (MQ_PRIO_MAX): Define.
+	* sysdeps/unix/sysv/linux/ia64/bits/local_lim.h (MQ_PRIO_MAX): Define.
+	* sysdeps/unix/sysv/linux/sparc/bits/local_lim.h (MQ_PRIO_MAX): Define.
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h (_POSIX_MESSAGE_PASSING):
+	Define.
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h
+	(_POSIX_MESSAGE_PASSING): Define.
+
 2004-04-10  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/pt-machine.h: Add used attribute to stack_pointer

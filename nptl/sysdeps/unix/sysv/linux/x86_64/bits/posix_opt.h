@@ -1,5 +1,5 @@
 /* Define POSIX options for Linux.
-   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -132,8 +132,8 @@
 /* The barrier functions are available.  */
 #define _POSIX_BARRIERS	200112L
 
-/* POSIX message queues are not yet supported.  */
-#undef	_POSIX_MESSAGE_PASSING
+/* POSIX message queues are available.  */
+#define	_POSIX_MESSAGE_PASSING	200112L
 
 /* Thread process-shared synchronization is supported.  */
 #define _POSIX_THREAD_PROCESS_SHARED	200112L

@@ -1,3 +1,44 @@
+2004-04-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/tst-mqueue3.c: New file.
+	* rt/Makefile (tests): Add tst-mqueue3.
+
+2004-04-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* rt/tst-mqueue1.c: New file.
+	* rt/tst-mqueue2.c: New file.
+	* rt/tst-mqueue4.c: New file.
+	* rt/Makefile (tests): Add tst-mqueue1, tst-mqueue2, tst-mqueue4.
+
+	* rt/Versions (librt): Add mq_*@@GLIBC_2.3.4.
+	* rt/Makefile (headers): Add mqueue.h and bits/mqueue.h.
+	(mq-routines): Set.
+	(librt-routines): Use it.
+	* rt/mqueue.h: New file.
+	* include/mqueue.h: New file.
+	* sysdeps/generic/bits/mqueue.h: New file.
+	* sysdeps/generic/mq_setattr.c: New file.
+	* sysdeps/generic/mq_getattr.c: New file.
+	* sysdeps/generic/mq_notify.c: New file.
+	* sysdeps/generic/mq_close.c: New file.
+	* sysdeps/generic/mq_send.c: New file.
+	* sysdeps/generic/mq_unlink.c: New file.
+	* sysdeps/generic/mq_receive.c: New file.
+	* sysdeps/generic/mq_timedreceive.c: New file.
+	* sysdeps/generic/mq_timedsend.c: New file.
+	* sysdeps/generic/mq_open.c: New file.
+	* sysdeps/unix/sysv/linux/bits/local_lim.h (MQ_PRIO_MAX): Define.
+	* sysdeps/unix/sysv/linux/bits/mqueue.h: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add mq_timedsend,
+	mq_timedreceive and mq_setattr.
+	* sysdeps/unix/sysv/linux/mq_getattr.c: New file.
+	* sysdeps/unix/sysv/linux/mq_notify.c: New file.
+	* sysdeps/unix/sysv/linux/mq_close.c: New file.
+	* sysdeps/unix/sysv/linux/mq_send.c: New file.
+	* sysdeps/unix/sysv/linux/mq_unlink.c: New file.
+	* sysdeps/unix/sysv/linux/mq_receive.c: New file.
+	* sysdeps/unix/sysv/linux/mq_open.c: New file.
+
 2004-04-09  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/ia64/sysdep.h (DO_INLINE_SYSCALL): Move
@@ -18,14 +59,6 @@
 	(LOAD_REGS_5, LOAD_REGS_6): New macros to actually load the
 	syscall argument registers.
 
-2004-04-09  Thorsten Kukuk  <kukuk@suse.de>
-
-	* sysdeps/s390/ffs.c: Don't add ffsl weak alias on s390x.
-
-2004-04-09  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/unix/sysv/linux/powerpc/powerpc64/umount.c: New file.
-
 2004-04-09  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/sysdep.h (INTERNAL_SYSCALL): Add
@@ -36,6 +69,14 @@
 	(LOAD_REGS_0, LOAD_REGS_1, LOAD_REGS_2, LOAD_REGS_3, LOAD_REGS_4)
 	(LOAD_REGS_5, LOAD_REGS_6): New macros to actually load the
 	syscall argument registers.
+
+2004-04-09  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/s390/ffs.c: Don't add ffsl weak alias on s390x.
+
+2004-04-09  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/umount.c: New file.
 
 2004-04-08  Ulrich Drepper  <drepper@redhat.com>
 

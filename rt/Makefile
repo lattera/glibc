@@ -1,4 +1,4 @@
-# Copyright (C) 1997-2001, 2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1997-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #
 subdir	:= rt
 
-headers	:= aio.h
+headers	:= aio.h mqueue.h bits/mqueue.h
 
 aio-routines   := aio_cancel aio_error aio_fsync aio_misc aio_read	\
 		  aio_read64 aio_return aio_suspend aio_write		\
@@ -33,14 +33,17 @@ clock-routines := get_clockfreq clock_getcpuclockid			\
 timer-routines := timer_create timer_delete timer_getoverr		\
 		  timer_gettime timer_settime
 shm-routines   := shm_open shm_unlink
+mq-routines    := mq_open mq_close mq_unlink mq_getattr mq_setattr	\
+		  mq_notify mq_send mq_receive mq_timedsend		\
+		  mq_timedreceive
 
 librt-routines = $(aio-routines) \
 		 $(clock-routines) $(timer-routines) \
-		 $(shm-routines)
+		 $(shm-routines) $(mq-routines)
 
 tests := tst-shm tst-clock tst-clock_nanosleep tst-timer tst-timer2 \
 	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6 \
-	 tst-aio7
+	 tst-aio7 tst-mqueue1 tst-mqueue2 tst-mqueue3 tst-mqueue4
 
 extra-libs := librt
 extra-libs-others := $(extra-libs)
@@ -52,6 +55,8 @@ include ../Rules
 CFLAGS-aio_suspend.c = -fexceptions
 CFLAGS-clock_nanosleep.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-librt-cancellation.c = -fasynchronous-unwind-tables
+
+LDFLAGS-rt.so = -Wl,--enable-new-dtags,-z,nodelete
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
