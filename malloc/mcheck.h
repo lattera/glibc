@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,6 +40,13 @@ enum mcheck_status
    (see enum above) when an inconsistency is detected.  If ABORTFUNC is
    null, the standard function prints on stderr and then calls `abort'.  */
 extern int mcheck (void (*__abortfunc) (enum mcheck_status)) __THROW;
+
+/* Similar to `mcheck´ but performs checks for all block whenever one of
+   the memory handling functions is called.  This can be very slow.  */
+extern int mcheck_pedantic (void (*__abortfunc) (enum mcheck_status)) __THROW;
+
+/* Similar to `mcheck', but perform tests on all blocks every time.  */
+extern int mcheck_verbose (void (*func) __P ((enum mcheck_status)));
 
 /* Check for aberrations in a particular malloc'd block.  You must have
    called `mcheck' already.  These are the same checks that `mcheck' does

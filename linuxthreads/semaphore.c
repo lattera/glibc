@@ -190,6 +190,131 @@ int sem_unlink(const char *name)
   return -1;
 }
 
+int sem_timedwait(sem_t *sem, const struct timespec *abstime)
+{
+  pthread_descr self = thread_self();
+  pthread_extricate_if extr;
+  int already_canceled = 0;
+  int was_signalled = 0;
+  sigjmp_buf jmpbuf;
+  sigset_t unblock;
+  sigset_t initial_mask;
+
+  __pthread_lock((struct _pthread_fastlock *) &sem->__sem_lock, self);
+  if (sem->__sem_value > 0) {
+    --sem->__sem_value;
+    __pthread_unlock((struct _pthread_fastlock *) &sem->__sem_lock);
+    return 0;
+  }
+
+  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000) {
+    /* The standard requires that if the function would block and the
+       time value is illegal, the function returns with an error.  */
+    __pthread_unlock((struct _pthread_fastlock *) &sem->__sem_lock);
+    return EINVAL;
+  }
+
+  /* Set up extrication interface */
+  extr.pu_object = sem;
+  extr.pu_extricate_func = new_sem_extricate_func;
+
+  /* Register extrication interface */
+  __pthread_set_own_extricate_if(self, &extr);
+  /* Enqueue only if not already cancelled. */
+  if (!(THREAD_GETMEM(self, p_canceled)
+      && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE))
+    enqueue(&sem->__sem_waiting, self);
+  else
+    already_canceled = 1;
+  __pthread_unlock((struct _pthread_fastlock *) &sem->__sem_lock);
+
+  if (already_canceled) {
+    __pthread_set_own_extricate_if(self, 0);
+    pthread_exit(PTHREAD_CANCELED);
+  }
+
+  /* Set up a longjmp handler for the restart signal, unblock
+     the signal and sleep. */
+
+  if (sigsetjmp(jmpbuf, 1) == 0) {
+    THREAD_SETMEM(self, p_signal_jmp, &jmpbuf);
+    THREAD_SETMEM(self, p_signal, 0);
+    /* Unblock the restart signal */
+    sigemptyset(&unblock);
+    sigaddset(&unblock, __pthread_sig_restart);
+    sigprocmask(SIG_UNBLOCK, &unblock, &initial_mask);
+
+    while (1) {
+        struct timeval now;
+        struct timespec reltime;
+
+        /* Compute a time offset relative to now.  */
+        __gettimeofday (&now, NULL);
+        reltime.tv_nsec = abstime->tv_nsec - now.tv_usec * 1000;
+        reltime.tv_sec = abstime->tv_sec - now.tv_sec;
+        if (reltime.tv_nsec < 0) {
+          reltime.tv_nsec += 1000000000;
+          reltime.tv_sec -= 1;
+        }
+
+        /* Sleep for the required duration. If woken by a signal,
+           resume waiting as required by Single Unix Specification.  */
+        if (reltime.tv_sec < 0 || __libc_nanosleep(&reltime, NULL) == 0)
+          break;
+      }
+
+    /* Block the restart signal again */
+    sigprocmask(SIG_SETMASK, &initial_mask, NULL);
+    was_signalled = 0;
+  } else {
+    was_signalled = 1;
+  }
+  THREAD_SETMEM(self, p_signal_jmp, NULL);
+
+  /* Now was_signalled is true if we exited the above code
+     due to the delivery of a restart signal.  In that case,
+     everything is cool. We have been removed from the queue
+     by the other thread, and consumed its signal.
+
+     Otherwise we this thread woke up spontaneously, or due to a signal other
+     than restart. The next thing to do is to try to remove the thread
+     from the queue. This may fail due to a race against another thread
+     trying to do the same. In the failed case, we know we were signalled,
+     and we may also have to consume a restart signal. */
+
+  if (!was_signalled) {
+    int was_on_queue;
+
+    /* __pthread_lock will queue back any spurious restarts that
+       may happen to it. */
+
+    __pthread_lock((struct _pthread_fastlock *)&sem->__sem_lock, self);
+    was_on_queue = remove_from_queue(&sem->__sem_waiting, self);
+    __pthread_unlock((struct _pthread_fastlock *)&sem->__sem_lock);
+
+    if (was_on_queue) {
+      __pthread_set_own_extricate_if(self, 0);
+      return ETIMEDOUT;
+    }
+
+    /* Eat the outstanding restart() from the signaller */
+    suspend(self);
+  }
+ __pthread_set_own_extricate_if(self, 0);
+
+  /* Terminate only if the wakeup came from cancellation. */
+  /* Otherwise ignore cancellation because we got the semaphore. */
+
+  if (THREAD_GETMEM(self, p_woken_by_cancel)
+      && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
+    THREAD_SETMEM(self, p_woken_by_cancel, 0);
+    pthread_exit(PTHREAD_CANCELED);
+  }
+  /* We got the semaphore */
+  return 0;
+}
+
+
 versioned_symbol (libpthread, __new_sem_init, sem_init, GLIBC_2_1);
 versioned_symbol (libpthread, __new_sem_wait, sem_wait, GLIBC_2_1);
 versioned_symbol (libpthread, __new_sem_trywait, sem_trywait, GLIBC_2_1);

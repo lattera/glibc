@@ -1,5 +1,5 @@
 /* Standard debugging hooks for `malloc'.
-   Copyright (C) 1990,91,92,93,94,95,96,97,99 Free Software Foundation, Inc.
+   Copyright (C) 1990-1997, 1999, 2000 Free Software Foundation, Inc.
    Written May 1989 by Mike Haertel.
 
    This library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 # define _MALLOC_INTERNAL
 # include <malloc.h>
 # include <mcheck.h>
+# include <stdint.h>
 # include <stdio.h>
 # include <libintl.h>
 #endif
@@ -46,9 +47,18 @@ static void (*abortfunc) __P ((enum mcheck_status));
 
 struct hdr
   {
-    __malloc_size_t size;		/* Exact size requested by user.  */
+    __malloc_size_t size;	/* Exact size requested by user.  */
     unsigned long int magic;	/* Magic number to check header integrity.  */
+    struct hdr *prev;
+    struct hdr *next;
   };
+
+/* This is the beginning of the list of all memory blocks allocated.
+   It is only constructed if the pedantic testing is requested.  */
+static struct hdr *root;
+
+/* Nonzero if pedentic checking of all blocks is requested.  */
+static int pedantic;
 
 #if defined _LIBC || defined STDC_HEADERS || defined USG
 # include <string.h>
@@ -73,7 +83,7 @@ checkhdr (hdr)
      const struct hdr *hdr;
 {
   enum mcheck_status status;
-  switch (hdr->magic)
+  switch (hdr->magic ^ ((uintptr_t) hdr->prev + (uintptr_t) hdr->next))
     {
     default:
       status = MCHECK_HEAD;
@@ -93,17 +103,77 @@ checkhdr (hdr)
   return status;
 }
 
+static void check_all __P ((void));
+static void
+check_all ()
+{
+  /* Walk through all the active blocks and test whether they were tempered
+     with.  */
+  struct hdr *runp = root;
+
+  while (runp != NULL)
+    {
+      (void) checkhdr (runp);
+
+      runp = runp->next;
+    }
+}
+
+static void unlink_blk __P ((struct hdr *ptr));
+static void
+unlink_blk (ptr)
+     struct hdr *ptr;
+{
+  if (ptr->next != NULL)
+    {
+      ptr->next->prev = ptr->prev;
+      ptr->next->magic = MAGICWORD ^ ((uintptr_t) ptr->next->prev
+				      + (uintptr_t) ptr->next->next);
+    }
+  if (ptr->prev != NULL)
+    {
+      ptr->prev->next = ptr->next;
+      ptr->prev->magic = MAGICWORD ^ ((uintptr_t) ptr->prev->prev
+				      + (uintptr_t) ptr->prev->next);
+    }
+  else
+    root = ptr->next;
+}
+
+static void link_blk  __P ((struct hdr *ptr));
+static void
+link_blk (hdr)
+     struct hdr *hdr;
+{
+  hdr->prev = NULL;
+  hdr->next = root;
+  root = hdr;
+  hdr->magic = MAGICWORD ^ (uintptr_t) hdr->next;
+
+  /* And the next block.  */
+  if (hdr->next != NULL)
+    {
+      hdr->next->prev = hdr;
+      hdr->next->magic = MAGICWORD ^ ((uintptr_t) hdr
+				      + (uintptr_t) hdr->next->next);
+    }
+}
+
 static void freehook __P ((__ptr_t, const __ptr_t));
 static void
 freehook (ptr, caller)
      __ptr_t ptr;
      const __ptr_t caller;
 {
+  if (pedantic)
+    check_all ();
   if (ptr)
     {
       struct hdr *hdr = ((struct hdr *) ptr) - 1;
       checkhdr (hdr);
       hdr->magic = MAGICFREE;
+      unlink_blk (hdr);
+      hdr->prev = hdr->next = NULL;
       flood (ptr, FREEFLOOD, hdr->size);
       ptr = (__ptr_t) hdr;
     }
@@ -123,6 +193,9 @@ mallochook (size, caller)
 {
   struct hdr *hdr;
 
+  if (pedantic)
+    check_all ();
+
   __malloc_hook = old_malloc_hook;
   if (old_malloc_hook != NULL)
     hdr = (struct hdr *) (*old_malloc_hook) (sizeof (struct hdr) + size + 1,
@@ -134,7 +207,7 @@ mallochook (size, caller)
     return NULL;
 
   hdr->size = size;
-  hdr->magic = MAGICWORD;
+  link_blk (hdr);
   ((char *) &hdr[1])[size] = MAGICBYTE;
   flood ((__ptr_t) (hdr + 1), MALLOCFLOOD, size);
   return (__ptr_t) (hdr + 1);
@@ -150,12 +223,16 @@ reallochook (ptr, size, caller)
   struct hdr *hdr;
   __malloc_size_t osize;
 
+  if (pedantic)
+    check_all ();
+
   if (ptr)
     {
       hdr = ((struct hdr *) ptr) - 1;
       osize = hdr->size;
 
       checkhdr (hdr);
+      unlink_blk (hdr);
       if (size < osize)
 	flood ((char *) ptr + size, FREEFLOOD, osize - size);
     }
@@ -181,7 +258,7 @@ reallochook (ptr, size, caller)
     return NULL;
 
   hdr->size = size;
-  hdr->magic = MAGICWORD;
+  link_blk (hdr);
   ((char *) &hdr[1])[size] = MAGICBYTE;
   if (size > osize)
     flood ((char *) (hdr + 1) + osize, MALLOCFLOOD, size - osize);
@@ -242,6 +319,14 @@ mcheck (func)
     }
 
   return mcheck_used ? 0 : -1;
+}
+
+int
+mcheck_pedantic (func)
+      void (*func) __P ((enum mcheck_status));
+{
+  pedantic = 1;
+  return mcheck (func);
 }
 
 enum mcheck_status

@@ -48,4 +48,8 @@ libc {
     # Special functions.
     __libc_freeres;
   }
+  GLIBC_2.2 {
+    # m*
+    mcheck_pedantic;
+  }
 }

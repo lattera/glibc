@@ -17,6 +17,10 @@
 
 #include <features.h>
 #include <sys/types.h>
+#ifdef __USE_XOPEN2K
+# define __need_timespec
+# include <time.h>
+#endif
 
 #ifndef _PTHREAD_DESCR_DEFINED
 /* Thread descriptors.  Needed for `sem_t' definition.  */
@@ -65,6 +69,12 @@ extern int sem_unlink (__const char *__name) __THROW;
 
 /* Wait for SEM being posted.  */
 extern int sem_wait (sem_t *__sem) __THROW;
+
+#ifdef __USE_XOPEN2K
+/* Similar to `sem_wait' but wait only until ABSTIME.  */
+extern int sem_timedwait (sem_t *__sem, __const struct timespec *__abstime)
+     __THROW;
+#endif
 
 /* Test whether SEM is posted.  */
 extern int sem_trywait (sem_t *__sem) __THROW;

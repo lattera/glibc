@@ -1,3 +1,15 @@
+2000-03-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/features.h: Undef and document __USE_XOPEN2K.
+
+	* malloc/mcheck.c: Implement pedantic checking of all allocated blocks
+	whenever a function is called.  Initiated by calling mcheck_pedantic
+	instead of mcheck.
+	* malloc/mcheck.h: Declare mcheck_pedantic.
+	* malloc/Versions [libc] (GLIBC_2.2): Add mcheck_pedantic.
+	* locale/programs/localdef.c: Use mcheck_pedantic instead of mcheck
+	for now.
+
 2000-03-26  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* dlfcn/dlopen.c: Use <shlib-compat.h> macros.

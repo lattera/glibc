@@ -3,6 +3,7 @@
 	* semaphore.c (sem_timedwait): New function.
 	Patch by Carl Mailloux <carlm@oricom.ca>.
 	* semaphore.h: Declare sem_timedwait.
+	* Versions [libpthread] (GLIBC_2.2): Add sem_timedwait.
 
 2000-03-26  Roland McGrath  <roland@baalperazim.frob.com>
 

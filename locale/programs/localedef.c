@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1997,1998,1999,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -136,7 +136,7 @@ main (int argc, char *argv[])
   int remaining;
 
   /* Enable `malloc' debugging.  */
-  mcheck (NULL);
+  mcheck_pedantic (NULL);
 
   /* Set initial values for global variables.  */
   copy_list = NULL;

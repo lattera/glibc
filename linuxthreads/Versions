@@ -129,5 +129,8 @@ libpthread {
     __pthread_rwlock_init; __pthread_rwlock_destroy; __pthread_rwlock_rdlock;
     __pthread_rwlock_tryrdlock; __pthread_rwlock_wrlock;
     __pthread_rwlock_trywrlock; __pthread_rwlock_unlock;
+
+    # New functions from IEEE Std. 10003.1-200x.
+    sem_timedwait;
   }
 }
