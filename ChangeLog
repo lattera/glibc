@@ -1,3 +1,7 @@
+2000-04-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-lookup.c (add_dependency): Correct __builtin_expect use.
+
 2000-04-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* csu/Makefile ($(objpfx)version-info.h): Get OS name from uname and

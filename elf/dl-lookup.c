@@ -102,7 +102,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
     if (list[i] == map)
       break;
 
-  if (__builtin_expect (i, act) == act)
+  if (__builtin_expect (i == act, 1))
     {
       /* No normal dependency.  See whether we already had to add it
 	 to the special list of dynamic dependencies.  */

@@ -1,5 +1,9 @@
 2000-04-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* condvar.c (pthread_cond_timedwait_relative): Don't test for owner
+	if fast mutex is used.  Don't initialize `already_canceled' twice.
+	Correctly test for return value of timedsuspend.
+
 	* pthread.c: Correct long-time braino.  We never set SA_SIGINFO and
 	therefore don't need the _rt versions of the signal handlers.
 
