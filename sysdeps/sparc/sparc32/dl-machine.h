@@ -111,7 +111,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 Their initial contents will arrange when called to set the high 22
 	 bits of %g1 with an offset into the .rela.plt section and jump to
 	 the beginning of the PLT.  */
-      plt = (Elf32_Addr *) (l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);
+      plt = (Elf32_Addr *) l->l_info[DT_PLTGOT]->d_un.d_ptr;
       if (! profile)
 	rfunc = (Elf32_Addr) &_dl_runtime_resolve;
       else

@@ -80,7 +80,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 to push an offset into the .rela.plt section, push
 	 _GLOBAL_OFFSET_TABLE_[1], and then jump to
 	 _GLOBAL_OFFSET_TABLE_[2].  */
-      got = (Elf32_Addr *) (l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);
+      got = (Elf32_Addr *) l->l_info[DT_PLTGOT]->d_un.d_ptr;
       got[1] = (Elf32_Addr) l;	/* Identify this shared object.  */
 
       /* The got[2] entry contains the address of a function which gets

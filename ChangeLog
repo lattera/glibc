@@ -1,5 +1,17 @@
 1999-02-20  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/i386/dl-machine.h (elf_machine_runtime_setup): DT_PLTGOT
+	entry is already relocated.
+	* sysdeps/alpha/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	* sysdeps/m68k/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	* sysdeps/mips/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_runtime_setup):
+	Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_runtime_setup):
+	Likewise.
+	* sysdeps/mips/mips64/dl-machine.h (elf_machine_runtime_setup):
+	Likewise.
+
 	* elf/dynamic-link.h (elf_get_dynamic_info): Take new argument with
 	load address.  Relocate d_ptr in DT_DTRTAB, DT_SYMTAB, DT_RELA, DT_REL,
 	DT_JMPREL, DT_PLTGOT, and DT_VERSYM l_info entry.
@@ -44,6 +56,7 @@
 	* sysdeps/powerpc/dl-machine.c (__process_machine_rela): Likewise.
 	* sysdeps/mips/dl-machine.h (elf_machine_got_rel): Likewise.
 	(elf_machine_got_rel): Likewise for DT_SYMTAB and DT_STRTAB.
+	* sysdeps/mips/mips64/dl-machine.h: Likewise.
 
 	* grp/initgroups.c (initgroups): If function in current module was
 	successful don't stop but continue to process to get all the groups.

@@ -355,8 +355,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       extern void _dl_runtime_profile_0 (void);
       extern void _dl_runtime_profile_1 (void);
       Elf64_Addr res0_addr, res1_addr;
-      unsigned int *plt = (unsigned int *)
-	(l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);
+      unsigned int *plt = (void *) l->l_info[DT_PLTGOT]->d_un.d_ptr;
 
       if (! profile)
 	{
