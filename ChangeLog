@@ -1,3 +1,7 @@
+1999-06-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* grp/tst_fgetgrent.c (write_users): Correctly generate long line.
+
 1999-06-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* grp/Makefile: Add rules for tst_fgetgrent.

@@ -34,7 +34,7 @@ write_users (FILE *f, int large_pos, int pos)
     {
       /* we need more than 2048 bytes for proper testing.  */
       for (i = 0; i < 500; i++)
-	fprintf (f, ",user%03d", i);
+	fprintf (f, "%suser%03d", i == 0 ? ":" : ",", i);
     }
   fprintf (f, "\n");
 
@@ -44,7 +44,7 @@ static void
 write_group (const char *filename, int pos)
 {
   FILE *f;
-  
+
   f = fopen (filename, "w");
   fprintf (f, "one:x:1:one");
   write_users (f, pos, 1);
@@ -64,7 +64,7 @@ test_entry (const char *name, gid_t gid, struct group *g)
       errors++;
       return;
     }
-  
+
   if ((g->gr_gid == gid) && (strcmp (g->gr_name, name) == 0))
     printf ("Ok: %s: %d\n", g->gr_name, g->gr_gid);
   else
@@ -93,7 +93,7 @@ test_fgetgrent (const char *filename)
   fclose (f);
 }
 
-		  
+
 int
 main (int argc, char *argv[])
 {
@@ -112,6 +112,6 @@ main (int argc, char *argv[])
   test_fgetgrent (file);
 
   remove (file);
-  
+
   return (errors != 0);
 }
