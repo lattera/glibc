@@ -1,3 +1,9 @@
+2002-03-11  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/s390/ldd-rewrite.sed: Fix for bi-arch
+	support.
+	Patch by Susanne Oberhauser <froh@SuSE.de>.
+
 2002-03-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* inet/rexec.c (ahostbuf): Define as static.
