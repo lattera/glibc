@@ -1,3 +1,7 @@
+Sun Jul 30 01:09:08 1995  Jim Meyering  (meyering@comco.com)
+
+	* strtol.c [!defined errno]: Declare it.
+
 Wed Jul 26 02:00:29 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* csu/Makefile [$(elf)=yes] (have-initfini): Set to yes.
