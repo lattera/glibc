@@ -940,11 +940,6 @@ _IO_file_seekoff_mmap (fp, offset, dir, mode)
     case _IO_seek_cur:
       /* Adjust for read-ahead (bytes is buffer). */
       offset += fp->_IO_read_ptr - fp->_IO_read_base;
-      if (offset < 0)
-	{
-	  __set_errno (EINVAL);
-	  return EOF;
-	}
       break;
     case _IO_seek_set:
       break;
@@ -955,8 +950,11 @@ _IO_file_seekoff_mmap (fp, offset, dir, mode)
   /* At this point, dir==_IO_seek_set. */
 
   if (offset < 0)
-    /* No negative offsets are valid.  */
-    return EOF;
+    {
+      /* No negative offsets are valid.  */
+      __set_errno (EINVAL);
+      return EOF;
+    }
 
   result = _IO_SYSSEEK (fp, offset, 0);
   if (result < 0)
@@ -964,6 +962,7 @@ _IO_file_seekoff_mmap (fp, offset, dir, mode)
 
   _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base + offset,
 	    fp->_IO_buf_base + offset);
+  fp->_offset = result;
 
   _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
 
