@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -17,10 +17,11 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <nss.h>
-#include <grp.h>
+#include <alloca.h>
 #include <ctype.h>
 #include <errno.h>
+#include <grp.h>
+#include <nss.h>
 #include <string.h>
 #include <unistd.h>
 #include <rpcsvc/yp.h>
@@ -159,10 +160,7 @@ _nss_nis_initgroups_dyn (const char *user, gid_t group, long int *start,
 	      internal_getgrent_r (&grpbuf, tmpbuf, buflen, errnop,
 				   &intern)) == NSS_STATUS_TRYAGAIN
              && *errnop == ERANGE)
-        {
-          buflen *= 2;
-          tmpbuf = __alloca (buflen);
-        }
+	tmpbuf = extend_alloca (tmpbuf, buflen, 2 * buflen);
 
       if (status != NSS_STATUS_SUCCESS)
 	goto done;

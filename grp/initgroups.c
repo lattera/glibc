@@ -1,4 +1,4 @@
-/* Copyright (C) 1989,91,93,1996-2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1989,91,93,1996-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/param.h>
 #include <sys/types.h>
 #include <nsswitch.h>
 
@@ -207,6 +208,9 @@ getgrouplist (const char *user, gid_t group, gid_t *groups, int *ngroups)
     return -1;
 
   result = internal_getgrouplist (user, group, &size, &newgroups, -1);
+
+  memcpy (groups, newgroups, MIN (*ngroups, result) * sizeof (gid_t));
+
   if (result > *ngroups)
     {
       *ngroups = result;
@@ -214,8 +218,6 @@ getgrouplist (const char *user, gid_t group, gid_t *groups, int *ngroups)
     }
   else
     *ngroups = result;
-
-  memcpy (groups, newgroups, *ngroups * sizeof (gid_t));
 
   free (newgroups);
   return result;
