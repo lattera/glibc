@@ -1,3 +1,8 @@
+2000-12-10  Andreas Jaeger  <aj@suse.de>
+
+	* locale/programs/ld-ctype.c (charclass_symbolic_ellipsis): Fixed
+	cast as suggested by Jakub Jelinek <jakub@redhat.com>.
+
 2000-12-09  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/sigaction.c: New file.
@@ -169,7 +174,7 @@
 	* sysdeps/mach/hurd/ioctl.c: Include <stdint.h>.
 	(__ioctl): Use uintptr_t instead of unsigned long int.
 
-2000-12-06  Jim Wilson  <wilson@redhat.com>
+2000-12-06  Jim Wilson	<wilson@redhat.com>
 
 	* stdlib/l64a.c (l64a): Truncate M to 32-bit value.
 
@@ -276,7 +281,7 @@
 
 	* sysdeps/unix/sysv/linux/sys/param.h: Revert last patch.
 
-2000-12-05  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+2000-12-05  Martin Schwidefsky	<schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/mmap64.S: Use mmap if mmap2 isn't
 	available.
@@ -504,7 +509,7 @@
 	* time/strftime.c: Add const where necessary to avoid warnings.
 	* time/strptime.c (strptime_internal): Add casts to avoid warnings.
 
-2000-11-22  Paul Eggert  <eggert@twinsun.com>
+2000-11-22  Paul Eggert	 <eggert@twinsun.com>
 
 	* time/strftime.c (my_strftime): Do not invoke mbrlen with a
 	size of (size_t) -1; it's not portable.
@@ -525,7 +530,7 @@
 	* sysdeps/unix/sysv/linux/ia64/machine-gmon.h: Moved to...
 	* sysdeps/ia64/machine-gmon.h: ...here.
 
-2000-11-28  Masahide Washizawa  <washi@jp.ibm.com>
+2000-11-28  Masahide Washizawa	<washi@jp.ibm.com>
 
 	* iconvdata/Makefile (modules): Add IBM922, IBM1124, and IBM1129.
 	(distribute): Add ibm922.c, ibm1124.c, ibm1129.c, ibm922.h, ibm1124.h,
@@ -744,7 +749,7 @@
 	* csu/gmon-start.c (__gmon_start__): Avoid over-clever trick `if
 	(called++) return;'
 
-2000-11-21  Alan Modra  <alan@linuxcare.com.au>
+2000-11-21  Alan Modra	<alan@linuxcare.com.au>
 
 	* sysdeps/generic/bsd-_setjmp.c (setjmp): Rename to _setjmp.
 
@@ -776,7 +781,7 @@
 
 	* sysdeps/s390/bits/string.h (strncat): Add missing quotation marks.
 
-2000-11-21  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+2000-11-21  Martin Schwidefsky	<schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/bits/string.h: Make strncat always add a \0.
 
@@ -1026,7 +1031,7 @@
 	output of program.
 
 	* intl/tst-gettext2.c: Set C locale if setting other locale
-	failed.  Use gettext() not _().
+	failed.	 Use gettext() not _().
 
 	* locale/setlocale.c: Increment _nl_msg_cat_cntr whenever we
 	successfully loaded a new locale.
@@ -1209,7 +1214,7 @@
 	* inet/getnameinfo.c: Wake-up sin6_scope_id support in
 	getnameinfo(): check for whether sin6_socpe_id exist was wrong.
 
-2000-11-09  Martin Schwidefsky  <mschwide@nc.boeblingen.de.ibm.com>
+2000-11-09  Martin Schwidefsky	<mschwide@nc.boeblingen.de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/mmap.S: Use mmap2 if it is present.
 	* sysdeps/unix/sysv/linux/s390/mmap64.S: New file.
