@@ -1,5 +1,13 @@
 1998-11-13  Ulrich Drepper  <drepper@cygnus.com>
 
+	* version.h (VERSION): Bump to 2.0.102.
+
+	* stdio-common/tstdiomisc.c (t2): Update test case for last scanf
+	change.
+	* stdio-common/scanf7.c (main): Likewise.
+
+1998-11-13  Ulrich Drepper  <drepper@cygnus.com>
+
 	* stdio-common/vfscanf.c: Return EOF for invalid format
 	characters.
 

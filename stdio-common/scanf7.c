@@ -16,7 +16,7 @@ main (int argc, char *argv[])
   n = -2;
   ret = sscanf ("1000", "%llld", &n);
   printf ("%%llld: ret: %d, n: %Ld\n", ret, n);
-  if (ret != 0 || n >= 0L)
+  if (ret > 0 || n >= 0L)
     abort ();
 
   return 0;
