@@ -24,9 +24,13 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
-/* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
-		       pid_t *tid, void *tls);
- */
+/* int clone(int (*fn)(void *arg), void *child_stack, int flags,
+	     void *arg, pid_t *ptid, void *tls, pid_t *ctid);
+
+   Note that everything past ARG is technically optional, based
+   on FLAGS, and that CTID is arg 7, and thus is on the stack.
+   However, since a load from top-of-stack better be legal always,
+   we don't bother checking FLAGS.  */
 
         .text
 ENTRY(__clone)
@@ -51,11 +55,13 @@ ENTRY(__clone)
 	stq	a0,0(a1)
 	stq	a3,8(a1)
 
-	/* Shift the flags, tid and tls arguments into place; the
+	/* The syscall is of the form clone(flags, usp, ptid, ctid, tls).
+	   Shift the flags, ptid, ctid, tls arguments into place; the
 	   child_stack argument is already correct.  */
 	mov	a2,a0
 	mov	a4,a2
-	mov	a5,a3
+	ldq	a3,0(sp)
+	mov	a5,a4
 
 	/* Do the system call.  */
 	ldiq	v0,__NR_clone
