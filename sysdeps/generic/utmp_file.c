@@ -67,7 +67,7 @@ static void timeout_handler (int signum) {};
   memset (&fl, '\0', sizeof (struct flock));                            \
   fl.l_type = (type);                                                   \
   fl.l_whence = SEEK_SET;                                               \
-  __fcntl ((fd), F_SETLKW, &fl)
+  if (__fcntl ((fd), F_SETLKW, &fl) < 0)
 
 #define UNLOCK_FILE(fd) \
   /* Unlock the file.  */                                               \
@@ -171,7 +171,11 @@ getutent_r_file (struct utmp *buffer, struct utmp **result)
       return -1;
     }
 
-  LOCK_FILE (file_fd, F_RDLCK);
+  LOCK_FILE (file_fd, F_RDLCK)
+    {
+      *result = NULL;
+      return -1;
+    }
 
   /* Read the next entry.  */
   nbytes = __read (file_fd, &last_entry, sizeof (struct utmp));
@@ -227,7 +231,8 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer)
 {
   int result = -1;
 
-  LOCK_FILE (file_fd, F_RDLCK);
+  LOCK_FILE (file_fd, F_RDLCK)
+    return result;
 
 #if _HAVE_UT_TYPE - 0
   if (id->ut_type == RUN_LVL || id->ut_type == BOOT_TIME
@@ -325,7 +330,11 @@ getutline_r_file (const struct utmp *line, struct utmp *buffer,
       return -1;
     }
 
-  LOCK_FILE (file_fd, F_RDLCK);
+  LOCK_FILE (file_fd, F_RDLCK)
+    {
+      *result = NULL;
+      return -1;
+    }
 
   while (1)
     {
@@ -386,7 +395,8 @@ pututline_file (const struct utmp *data)
   else
     found = internal_getut_r (data, &buffer);
 
-  LOCK_FILE (file_fd, F_WRLCK);
+  LOCK_FILE (file_fd, F_WRLCK)
+    return NULL;
 
   if (found < 0)
     {
@@ -455,7 +465,11 @@ updwtmp_file (const char *file, const struct utmp *utmp)
   if (fd < 0)
     return -1;
 
-  LOCK_FILE (fd, F_WRLCK);
+  LOCK_FILE (fd, F_WRLCK)
+    {
+      __close (fd);
+      return result;
+    }
 
   /* Remember original size of log file.  */
   offset = __lseek64 (fd, 0, SEEK_END);
