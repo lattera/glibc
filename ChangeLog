@@ -1,3 +1,8 @@
+2003-02-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_libc.c [USE___THREAD] (_res): Initialize _vcsock
+	element to -1.
+
 2003-02-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/dl-sysdep.c: Avoid warning.

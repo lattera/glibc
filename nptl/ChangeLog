@@ -1,3 +1,10 @@
+2003-02-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_create.c (start_thread): Set EXITING_BIT early.
+
+	* sysdeps/i386/tls.h (THREAD_GETMEM): Mark asm as volatile.
+	(THREAD_GETMEM_NC): Likewise.
+
 2003-02-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_barrier_wait.S: Shave

@@ -228,6 +228,9 @@ start_thread (void *arg)
       pd->result = pd->start_routine (pd->arg);
     }
 
+  /* The thread is exiting now.  */
+  atomic_bit_set (&pd->cancelhandling, EXITING_BIT);
+
   /* Clean up any state libc stored in thread-local variables.  */
   __libc_thread_freeres ();
 
@@ -266,9 +269,6 @@ start_thread (void *arg)
 	}
     }
 
-
-  /* The thread is exiting now.  */
-  atomic_bit_set (&pd->cancelhandling, EXITING_BIT);
 
   /* If the thread is detached free the TCB.  */
   if (IS_DETACHED (pd))

@@ -247,13 +247,13 @@ union user_desc_init
 # define THREAD_GETMEM(descr, member) \
   ({ __typeof (descr->member) __value;					      \
      if (sizeof (__value) == 1)						      \
-       asm ("movb %%gs:%P2,%b0"						      \
-	    : "=q" (__value)						      \
-	    : "0" (0), "i" (offsetof (struct pthread, member)));	      \
+       asm volatile ("movb %%gs:%P2,%b0"				      \
+		     : "=q" (__value)					      \
+		     : "0" (0), "i" (offsetof (struct pthread, member)));     \
      else if (sizeof (__value) == 4)					      \
-       asm ("movl %%gs:%P1,%0"						      \
-	    : "=r" (__value)						      \
-	    : "i" (offsetof (struct pthread, member)));			      \
+       asm volatile ("movl %%gs:%P1,%0"					      \
+		     : "=r" (__value)					      \
+		     : "i" (offsetof (struct pthread, member)));	      \
      else								      \
        {								      \
 	 if (sizeof (__value) != 8)					      \
@@ -261,11 +261,11 @@ union user_desc_init
 	      4 or 8.  */						      \
 	   abort ();							      \
 									      \
-	 asm ("movl %%gs:%P1,%%eax\n\t"					      \
-	      "movl %%gs:%P2,%%edx"					      \
-	      : "=A" (__value)						      \
-	      : "i" (offsetof (struct pthread, member)),		      \
-		"i" (offsetof (struct pthread, member) + 4));		      \
+	 asm volatile ("movl %%gs:%P1,%%eax\n\t"			      \
+		       "movl %%gs:%P2,%%edx"				      \
+		       : "=A" (__value)					      \
+		       : "i" (offsetof (struct pthread, member)),	      \
+			 "i" (offsetof (struct pthread, member) + 4));	      \
        }								      \
      __value; })
 
@@ -274,14 +274,15 @@ union user_desc_init
 # define THREAD_GETMEM_NC(descr, member, idx) \
   ({ __typeof (descr->member[0]) __value;				      \
      if (sizeof (__value) == 1)						      \
-       asm ("movb %%gs:%P2(%3),%b0"					      \
-	    : "=q" (__value)						      \
-	    : "0" (0), "i" (offsetof (struct pthread, member[0])),	      \
-	      "r" (idx));						      \
+       asm volatile ("movb %%gs:%P2(%3),%b0"				      \
+		     : "=q" (__value)					      \
+		     : "0" (0), "i" (offsetof (struct pthread, member[0])),   \
+		     "r" (idx));					      \
      else if (sizeof (__value) == 4)					      \
-       asm ("movl %%gs:%P1(,%2,4),%0"					      \
-	    : "=r" (__value)						      \
-	    : "i" (offsetof (struct pthread, member[0])), "r" (idx));	      \
+       asm volatile ("movl %%gs:%P1(,%2,4),%0"				      \
+		     : "=r" (__value)					      \
+		     : "i" (offsetof (struct pthread, member[0])),	      \
+		       "r" (idx));					      \
      else								      \
        {								      \
 	 if (sizeof (__value) != 8)					      \
@@ -289,10 +290,11 @@ union user_desc_init
 	      4 or 8.  */						      \
 	   abort ();							      \
 									      \
-	 asm ("movl %%gs:%P1(,%2,8),%%eax\n\t"				      \
-	      "movl %%gs:4+%P1(,%2,8),%%edx"				      \
-	      : "=&A" (__value)						      \
-	      : "i" (offsetof (struct pthread, member[0])), "r" (idx));	      \
+	 asm volatile  ("movl %%gs:%P1(,%2,8),%%eax\n\t"		      \
+			"movl %%gs:4+%P1(,%2,8),%%edx"			      \
+			: "=&A" (__value)				      \
+			: "i" (offsetof (struct pthread, member[0])),	      \
+			  "r" (idx));					      \
        }								      \
      __value; })
 
