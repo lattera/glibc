@@ -130,7 +130,7 @@ gaih_local (const char *name, const struct gaih_service *service,
     return GAIH_OKIFUNSPEC | -EAI_NONAME;
 
   if ((name != NULL) || (req->ai_flags & AI_CANONNAME))
-    if (uname (&utsname))
+    if (uname (&utsname) < 0)
       return -EAI_SYSTEM;
 
   if (name != NULL)

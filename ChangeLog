@@ -1,5 +1,8 @@
 2000-08-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (gaih_local): uname does not everywhere
+	return 0 for success but always < 0 on failure.
+
 	* nss/getXXbyYY_r.c: Define result to *result before including
 	digits_dots.c.
 
