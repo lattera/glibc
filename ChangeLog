@@ -1,3 +1,14 @@
+2004-04-09  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h (INTERNAL_SYSCALL): Add
+	LOAD_REGS_##nr.
+	(LOAD_ARGS_0, LOAD_ARGS_1, LOAD_ARGS_2, LOAD_ARGS_3, LOAD_ARGS_4)
+	(LOAD_ARGS_5, LOAD_ARGS_6): Load argument values into temporary
+	variables.
+	(LOAD_REGS_0, LOAD_REGS_1, LOAD_REGS_2, LOAD_REGS_3, LOAD_REGS_4)
+	(LOAD_REGS_5, LOAD_REGS_6): New macros to actually load the
+	syscall argument registers.
+
 2004-04-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/nl.po: Update from translation team.
