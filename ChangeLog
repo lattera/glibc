@@ -10,12 +10,12 @@
 	* configure.in (libc_cv_cc_with_libunwind): Set to yes if gcc
 	uses -lunwind for static binaries.
 
-22004-06-05  Joseph S. Myers  <jsm@polyomino.org.uk>
+2004-06-05  Joseph S. Myers  <jsm@polyomino.org.uk>
 
 	* malloc/Makefile (install-bin): Remove memusage.
 	(install-bin-script): Add memusage.
 
-004-12-15  Jakub Jelinek  <jakub@redhat.com>
+2004-12-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* nis/nis_domain_of_r.c (nis_domain_of_r): Use libnsl_hidden_def,
 	not libnsl_hidden_proto.
