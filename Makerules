@@ -343,7 +343,7 @@ ifeq (yes,$(build-shared))
 lib%.so: lib%_pic.a
 	$(LINK.o) -shared -o $@ -Wl,--whole-archive $< \
 		  -L$(firstword $(objdir) .)  -L$(common-objpfx:%/=%) \
-		  $(LDLIBS-$*.so)
+		  $(LDLIBS-$(notdir $*).so)
 endif
 
 libobjs: $(foreach o,$(object-suffixes),\

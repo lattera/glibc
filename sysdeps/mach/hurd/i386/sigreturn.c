@@ -28,6 +28,7 @@ int
 __sigreturn (struct sigcontext *scp)
 {
   struct hurd_sigstate *ss;
+  struct hurd_userlink *link = (void *) &scp[1];
   mach_port_t *reply_port;
 
   if (scp == NULL || (scp->sc_mask & _SIG_CANT_MASK))
@@ -38,6 +39,11 @@ __sigreturn (struct sigcontext *scp)
 
   ss = _hurd_self_sigstate ();
   __spin_lock (&ss->lock);
+
+  /* Remove the link on the `active resources' chain added by
+     _hurd_setup_sighandler.  Its purpose was to make sure
+     that we got called; now we have, it is done.  */
+  _hurd_userlink_unlink (link);
 
   /* Restore the set of blocked signals, and the intr_port slot.  */
   ss->blocked = scp->sc_mask;

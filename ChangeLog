@@ -1,3 +1,18 @@
+Sun Apr  2 13:13:52 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/i386/trampoline.c: Add a link to
+ 	SS->active_resources, so that _hurdsig_longjmp_from_handler will
+ 	be called when a longjmp unwinds the signal frame.
+	* sysdeps/mach/hurd/i386/sigreturn.c: Remove the link on the
+ 	SS->active_resources chain added by _hurd_setup_sighandler.
+	* hurd/sigunwind.c: New file.
+	* hurd/Makefile (sig): Add sigunwind.
+
+	* Makerules (lib%.so: lib%_pic.a): Remove dir name from $*.
+
+	* MakeTAGS (tags-sources): Include $(all-dist).
+	[subdir] (all-dist): Define to $(distribute).
+
 Sat Apr  1 00:08:06 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makerules (lib%.so: lib%_pic.a): Pass -L options for subdir and

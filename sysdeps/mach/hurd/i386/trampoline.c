@@ -18,6 +18,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd/signal.h>
+#include <hurd/userlink.h>
 #include "thread_state.h"
 #include <assert.h>
 #include <errno.h>
@@ -55,6 +56,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
       void *sigreturn_returns_here;
       struct sigcontext *return_scp; /* Same; arg to sigreturn.  */
       struct sigcontext ctx;
+      struct hurd_userlink link;
     } *stackframe;
 
   if (ss->context)
@@ -117,6 +119,24 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
   else
     {
       int ok;
+
+      extern void _hurdsig_longjmp_from_handler (void *, jmp_buf, int);
+
+      /* Add a link to the thread's active-resources list.  We mark this as
+	 the only user of the "resource", so the cleanup function will be
+	 called by any longjmp which is unwinding past the signal frame.
+	 The cleanup function (in sigunwind.c) will make sure that all the
+	 appropriate cleanups done by sigreturn are taken care of.  */
+      stackframe->link.cleanup = &_hurdsig_longjmp_from_handler;
+      stackframe->link.cleanup_data = &stackframe->ctx;
+      stackframe->link.resource.next = NULL;
+      stackframe->link.resource.prevp = NULL;
+      stackframe->link.thread.next = ss->active_resources;
+      stackframe->link.thread.prevp = &ss->active_resources;
+      if (stackframe->link.thread.next)
+	stackframe->link.thread.next->thread.prevp
+	  = &stackframe->link.thread.next;
+      ss->active_resources = &stackframe->link;
 
       /* Set up the arguments for the signal handler.  */
       stackframe->signo = signo;

@@ -1,6 +1,6 @@
 # Make the TAGS files.
 
-# Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+# Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -33,9 +33,9 @@ ifeq ($(subdir),ctype)
 # the header files so tags for optimizing #define's in the
 # headers won't be put in the tags files, but for ctype,
 # the functions are just backup for the #define's in the header.
-tags_sources = $(all-headers) $(all-sources)
+tags_sources = $(all-headers) $(all-sources) $(all-dist)
 else	# Not ctype.
-tags_sources = $(all-sources) $(all-headers)
+tags_sources = $(all-sources) $(all-headers) $(all-dist)
 endif	# ctype
 endif	# No tags_sources
 
@@ -67,6 +67,8 @@ all-dist = $(foreach Dist,$(wildcard $(all-dirs:%=%/Dist)),\
 				 $(filter %.c %.h %.S %.s,\
 					  $(shell cat $(Dist)))))
 tags_sources = $(all-sources) $(all-headers) $(all-dist)
+else
+all-dist = $(distribute)
 endif
 
 # All different versions of $(sources), preserving the configured sysdep

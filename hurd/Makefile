@@ -51,7 +51,7 @@ routines = hurdinit hurdid hurdlookup hurdpid hurdrlimit hurdprio hurdexec \
 	   ports-get ports-set hurdports hurdmsg \
 	   $(sig) $(dtable) hurdinline port-cleanup
 sig	= hurdsig hurdfault faultexc siginfo hurd-raise preempt-sig \
-	  trampoline longjmp-ts catch-exc exc2signal hurdkill
+	  trampoline longjmp-ts catch-exc exc2signal hurdkill sigunwind
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  getdport openport \
 	  fd-close fd-read fd-write hurdioctl ctty-input ctty-output
