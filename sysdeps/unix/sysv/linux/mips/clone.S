@@ -26,25 +26,18 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
-/* int clone(int (*fn)(), void *child_stack, int flags, void *arg) */
-
-#define FRAMESZ  8*SZREG
-#if _MIPS_SIM == _MIPS_SIM_ABI32
-#define MAX_REG_ARGS 4
-#else
-#define MAX_REG_ARGS 6
-#endif
+/* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg) */
 
 	.text
-NESTED(__clone,FRAMESZ,sp)
+NESTED(__clone,4*SZREG,sp)
 #ifdef __PIC__
 	.set		noreorder
 	.cpload		$25
 	.set		reorder
-	PTR_SUBIU	sp,FRAMESZ
-	.cprestore	SZREG*4
+	subu		sp,32
+	.cprestore	16
 #else
-	PTR_SUBIU	sp,FRAMESZ
+	subu		sp,32
 #endif
 #ifdef PROF
 	.set		noat
@@ -53,17 +46,15 @@ NESTED(__clone,FRAMESZ,sp)
 	.set		at
 #endif
 
-	REG_S		s0,FRAMESZ-SZREG*2(sp)
-	REG_S		s1,FRAMESZ-SZREG*3(sp)
+
 	/* Sanity check arguments.  */
 	li		v0,EINVAL
-	beqz		a0,error	/* no NULL function pointers */
-	beqz		a1,error	/* no NULL stack pointers */
+	beqz		a0,error	/* No NULL function pointers.  */
+	beqz		a1,error	/* No NULL stack pointers.  */
 
-	/* Allocate space on the new stack and copy args over */
-	/* Save the arg for user's function */
-	move		s0,a3		/* Save arg __thread_start.  */
-	move		s1,a0		/* Save func. pointer.  */
+	subu		a1,32		/* Reserve argument save space.  */
+	sw		a0,0(a1)	/* Save function pointer.  */
+	sw		a3,4(a1)	/* Save argument pointer.  */
 
 
 	/* Do the system call */
@@ -75,16 +66,12 @@ NESTED(__clone,FRAMESZ,sp)
 	beqz		v0,__thread_start
 
 	/* Successful return from the parent */
-	REG_L		s0,FRAMESZ-SZREG*2(sp)
-	REG_L		s1,FRAMESZ-SZREG*3(sp)
-	PTR_ADDIU	sp,FRAMESZ
+	addiu		sp,32
 	ret
 
 	/* Something bad happened -- no child created */
 error:
-	REG_L		s0,FRAMESZ-SZREG*2(sp)
-	REG_L		s1,FRAMESZ-SZREG*3(sp)
-	PTR_ADDIU	sp,FRAMESZ
+	addiu		sp,32
 #ifdef PIC
 	la		t9,__syscall_error
 	jr		t9
@@ -100,10 +87,11 @@ error:
    At this point we have s0=arg, s1=fn.  */
 
 NESTED(__thread_start,FRAMESZ,sp)
+	/* cp is already loaded.  */
 	/* The stackframe has been created on entry of clone().  */
 	/* Resort the arg for user's function.  */
-	move		a0,s0
-	move		t9,s1
+	move		a0,0(sp)	/* Function pointer.  */
+	move		t9,4(sp)	/* Argument pointer.  */
 
 	/* Call the user's function.  */
 	jalr		t9
