@@ -32,8 +32,15 @@ int __have_no_fcntl64;
 
 
 int
-__fcntl_nocancel (int fd, int cmd, void *arg)
+__fcntl_nocancel (int fd, int cmd, ...)
 {
+  va_list ap;
+  void *arg;
+
+  va_start (ap, cmd);
+  arg = va_arg (ap, void *);
+  va_end (ap);
+
 #if __ASSUME_FCNTL64 == 0
 # ifdef __NR_fcntl64
   if (! __have_no_fcntl64)
