@@ -1,5 +1,10 @@
 2000-07-27  Jes Sorensen  <jes@linuxcare.com>
 
+	* intl/tst-translit.c: Include string.h to get prototype for
+	strcmp().
+
+2000-07-27  Jes Sorensen  <jes@linuxcare.com>
+
 	* sysdeps/unix/sysv/linux/ia64/fork.c: Make __libc_fork the strong
 	name and add weak alias for __fork.
 
