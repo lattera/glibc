@@ -245,7 +245,9 @@ CFLAGS-cache.c = $(SYSCONF-FLAGS)
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(strip $(modules-names))))
 generated += $(addsuffix .so,$(strip $(modules-names)))
 
+ifeq (yes,$(build-shared))
 tests: $(objpfx)tst-pathopt.out
+endif
 
 $(objpfx)testobj1.so: $(libdl)
 $(objpfx)testobj1_1.so: $(objpfx)testobj1.so $(libdl)

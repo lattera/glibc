@@ -1,5 +1,14 @@
 2001-02-10  Andreas Jaeger  <aj@suse.de>
 
+	* stdlib/Makefile (tests): Don't run tst-fmtmsg when
+	cross-compiling.
+	($(objpfx)tst-fmtmsg.out): Pass run-program-prefix.
+
+	* stdlib/tst-fmtmsg.sh (test): Use run_program_prefix for static
+	only builds.
+
+	* elf/Makefile (tests): Only run tst-pathopt with shared libs.
+
 	* posix/Makefile: Fix typo, it's build-static-nss.
 
 	* iconv/Makefile (extra-objs): New.
