@@ -383,3 +383,11 @@ auth_errmsg (enum auth_stat stat)
     }
   return NULL;
 }
+
+
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  free (buf);
+}
+text_set_element (__libc_subfreeres, free_mem);
