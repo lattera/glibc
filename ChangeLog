@@ -3,6 +3,12 @@
 	* nis/nss_compat/compat-pwd.c (internal_getpwuid_r): Set errno in
 	one more case.
 
+	* sysdeps/i386/fpu/bits/mathinline.h (atan): Add st(1) to clobbers.
+	(log): Likewise.
+	(log10): Likewise.
+	(log1p): Likewise.
+	(log2): Likewise.
+
 1999-09-22  Andreas Jaeger  <aj@suse.de>
 
 	* stdio-common/tstscanf.c (main): Add test case from PR libc/1313

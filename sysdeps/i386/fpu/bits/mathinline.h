@@ -361,7 +361,7 @@ __inline_mathcode (tan, __x, \
 #define __atan2_code \
   register long double __value;						      \
   __asm __volatile__							      \
-    ("fpatan\n\t"							      \
+    ("fpatan"								      \
      : "=t" (__value) : "0" (__x), "u" (__y) : "st(1)");		      \
   return __value
 __inline_mathcode2 (atan2, __y, __x, __atan2_code)
@@ -441,9 +441,9 @@ __inline_mathop (sin, "fsin")
 /* The argument range of this inline version is reduced.  */
 __inline_mathop (cos, "fcos")
 
-__inline_mathop (atan, "fld1; fpatan")
-__inline_mathop (log, "fldln2; fxch; fyl2x")
-__inline_mathop (log10, "fldlg2; fxch; fyl2x")
+__inline_mathop_decl (atan, "fld1; fpatan", "0" (__x) : "st(1)")
+__inline_mathop_decl (log, "fldln2; fxch; fyl2x", "0" (__x) : "st(1)")
+__inline_mathop_decl (log10, "fldlg2; fxch; fyl2x", "0" (__x) : "st(1)")
 
 __inline_mathcode (asin, __x, return __atan2l (__x, __sqrtl (1.0 - __x * __x)))
 __inline_mathcode (acos, __x, return __atan2l (__sqrtl (1.0 - __x * __x), __x))
@@ -520,7 +520,7 @@ __inline_mathcode (log1p, __x, \
       ("fldln2\n\t"							      \
        "fxch\n\t"							      \
        "fyl2xp1"							      \
-       : "=t" (__value) : "0" (__x));					      \
+       : "=t" (__value) : "0" (__x) : "st(1)");				      \
   return __value)
 
 
@@ -551,7 +551,7 @@ __inline_mathcode(logb, __x, \
 #endif
 
 #ifdef __USE_ISOC9X
-__inline_mathop(log2, "fld1; fxch; fyl2x")
+__inline_mathop_decl (log2, "fld1; fxch; fyl2x", "0" (__x) : "st(1)")
 
 __MATH_INLINE float ldexpf (float __x, int __y);
 __MATH_INLINE float
