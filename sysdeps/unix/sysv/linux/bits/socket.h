@@ -227,7 +227,7 @@ enum
     SCM_CREDENTIALS = 0x02,     /* Credentials passing.  */
 # define SCM_CREDENTIALS SCM_CREDENTIALS
 #endif
-    __SCM_CONNECT = 0x03,	/* Data array is `struct scm_connect'.  */
+    __SCM_CONNECT = 0x03	/* Data array is `struct scm_connect'.  */
   };
 
 /* User visible structure for SCM_CREDENTIALS message */

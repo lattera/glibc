@@ -5570,7 +5570,8 @@ re_exec (s)
        REG_EXTENDED bit in CFLAGS is set; otherwise, to
        RE_SYNTAX_POSIX_BASIC;
      `newline_anchor' to REG_NEWLINE being set in CFLAGS;
-     `fastmap' and `fastmap_accurate' to zero;
+     `fastmap' to an allocated space for the fastmap;
+     `fastmap_accurate' to zero;
      `re_nsub' to the number of subexpressions in PATTERN.
 
    PATTERN is the address of the pattern string.
@@ -5609,11 +5610,8 @@ regcomp (preg, pattern, cflags)
   preg->allocated = 0;
   preg->used = 0;
 
-  /* Don't bother to use a fastmap when searching.  This simplifies the
-     REG_NEWLINE case: if we used a fastmap, we'd have to put all the
-     characters after newlines into the fastmap.  This way, we just try
-     every character.  */
-  preg->fastmap = 0;
+  /* Try to allocate space for the fastmap.  */
+  preg->fastmap = (char *) malloc (1 << BYTEWIDTH);
 
   if (cflags & REG_ICASE)
     {
@@ -5652,6 +5650,19 @@ regcomp (preg, pattern, cflags)
   /* POSIX doesn't distinguish between an unmatched open-group and an
      unmatched close-group: both are REG_EPAREN.  */
   if (ret == REG_ERPAREN) ret = REG_EPAREN;
+
+  if (ret == REG_NOERROR && preg->fastmap)
+    {
+      /* Compute the fastmap now, since regexec cannot modify the pattern
+	 buffer.  */
+      if (re_compile_fastmap (preg) == -2)
+	{
+	  /* Some error occured while computing the fastmap, just forget
+	     about it.  */
+	  free (preg->fastmap);
+	  preg->fastmap = NULL;
+	}
+    }
 
   return (int) ret;
 }
@@ -5701,10 +5712,10 @@ regexec (preg, string, nmatch, pmatch, eflags)
   if (want_reg_info)
     {
       regs.num_regs = nmatch;
-      regs.start = TALLOC (nmatch, regoff_t);
-      regs.end = TALLOC (nmatch, regoff_t);
-      if (regs.start == NULL || regs.end == NULL)
+      regs.start = TALLOC (nmatch * 2, regoff_t);
+      if (regs.start == NULL)
         return (int) REG_NOMATCH;
+      regs.end = regs.start + nmatch;
     }
 
   /* Perform the searching operation.  */
@@ -5728,7 +5739,6 @@ regexec (preg, string, nmatch, pmatch, eflags)
 
       /* If we needed the temporary register info, free the space now.  */
       free (regs.start);
-      free (regs.end);
     }
 
   /* We want zero return to mean success, unlike `re_search'.  */

@@ -1,3 +1,8 @@
+1998-10-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/i686/pt-machine.h: Remove unused inline
+	definitions.
+
 1998-10-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* semaphore.h: Include <sys/types.h> so that _pthread_descr

@@ -58,21 +58,5 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 }
 
 
-extern inline int
-get_eflags (void)
-{
-  int res;
-  __asm__ __volatile__ ("pushfl; popl %0" : "=r" (res) : );
-  return res;
-}
-
-
-extern inline void
-set_eflags (int newflags)
-{
-  __asm__ __volatile__ ("pushl %0; popfl" : : "r" (newflags) : "cc");
-}
-
-
 /* Use the LDT implementation only if the kernel is fixed.  */
 //#include "../useldt.h"
