@@ -75,9 +75,6 @@ tests           += wordexp-test tst-exec tst-spawn
 endif
 others		:= getconf
 install-bin	:= getconf
-ifeq (yes,$(build-static))
-install-lib	:= libposix.a
-endif
 gpl2lgpl := getopt.c getopt1.c getopt.h	regex.c regex.h
 
 before-compile	:= testcases.h ptestcases.h
@@ -111,9 +108,6 @@ tst-exec-ARGS = -- $(built-program-cmd)
 tst-spawn-ARGS = -- $(built-program-cmd)
 
 tst-fnmatch-ENV = LOCPATH=$(common-objpfx)localedata
-
-$(objpfx)libposix.a: $(dep-dummy-lib); $(make-dummy-lib)
-lib: $(objpfx)libposix.a
 
 testcases.h: TESTS TESTS2C.sed
 	sed -f TESTS2C.sed < $< > $@T
