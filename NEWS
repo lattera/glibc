@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2001-1-30
+GNU C Library NEWS -- history of user-visible changes.  2001-2-9
 
 Copyright (C) 1992-1999, 2000, 2001 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -9,13 +9,33 @@ Please send GNU C library bug reports using the `glibcbug' script to
 
 Version 2.2.2
 
-* lots of headers were cleaned up.  Using the tool in the conform/ subdir
+* Lots of headers were cleaned up.  Using the tool in the conform/ subdir
   we can now check for namespace violations and missing declarations.  The
   result is that almost all headers are now Unix-compliant (as defined in
   the upcoming XPG6).  The negative side is that some programs might need
   corrections, too, if they depend on the incorrect form of the headers in
   previous versions which defined too many symbols and included too many
   other headers.
+
+* regex now handles multibyte character sets correctly.
+  Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
+
+* iconv (the program) does now conform to the upcoming XPG6 and handles
+  charmaps.  Instead of the charset names the path of charmaps can be
+  provided and the conversion happens based on this data.
+  Contributed by Ulrich Drepper.
+
+* The locale program now provides detailed information about the installed
+  locales.  While
+
+    locale -a
+
+  only lists the names of the supported locales
+
+    locale -a --verbose
+
+  provides details such as country, language, and codeset name.
+  Contributed by Ulrich Drepper.
 
 Version 2.2.1
 
