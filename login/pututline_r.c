@@ -96,13 +96,13 @@ pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
   /* Find out how large the file is.  */
   result = fstat (utmp_data->ut_fd, &st);
 
-  if (result == 0)
+  if (result >= 0)
     /* Position file correctly.  */
     if (utmp_data->loc_utmp < sizeof (struct utmp))
       /* Not located at any valid entry.  Add at the end.  */
       {
 	result = lseek (utmp_data->ut_fd, 0L, SEEK_END);
-	if (result == 0)
+	if (result >= 0)
 	  /* Where we'll be if the write succeeds.  */
 	  utmp_data->loc_utmp = st.st_size + sizeof (struct utmp);
       }
@@ -111,7 +111,7 @@ pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
 	lseek (utmp_data->ut_fd, utmp_data->loc_utmp - sizeof (struct utmp),
 	       SEEK_SET);
 
-  if (result == 0)
+  if (result >= 0)
     /* Write the new data.  */
     if (write (utmp_data->ut_fd, id, sizeof (struct utmp))
 	!= sizeof (struct utmp))
