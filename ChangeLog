@@ -1,3 +1,12 @@
+2004-10-06  Maciej W. Rozycki  <macro@mips.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h
+	(__SYSCALL_CLOBBERS): Add "memory".
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h
+	(__SYSCALL_CLOBBERS): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h
+	(__SYSCALL_CLOBBERS): Likewise.
+
 2004-10-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/libc-symbols.h: Define libresolv_hidden_proto and friends.
