@@ -1,3 +1,7 @@
+2000-09-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/bits/time.h: Remove CLOCK_MONOTONIC.
+
 2000-09-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/sparc32/bits/endian.h: Remove.

@@ -212,11 +212,22 @@ static inline long atomic_decrement(struct pthread_atomic *pa)
 
 
 static inline void
-__pthread_set_own_extricate_if(pthread_descr self, pthread_extricate_if *peif)
+__pthread_set_own_extricate_if (pthread_descr self, pthread_extricate_if *peif)
 {
-  /* The locks here are not ensuring an atomic update of the p_extricate
-     pointer.  They protect users of the pointer from using stale memory.  */
-  __pthread_lock(THREAD_GETMEM(self, p_lock), self);
-  THREAD_SETMEM(self, p_extricate, peif);
-  __pthread_unlock(THREAD_GETMEM (self, p_lock));
+  /* Only store a non-null peif if the thread has cancellation enabled.
+     Otherwise pthread_cancel will unconditionally call the extricate handler,
+     and restart the thread giving rise to forbidden spurious wakeups. */
+  if (peif == NULL
+      || THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE)
+    {
+      /* If we are removing the extricate interface, we need to synchronize
+	 against pthread_cancel so that it does not continue with a pointer
+         to a deallocated pthread_extricate_if struct! The thread lock
+         is (ab)used for this synchronization purpose. */
+      if (peif == NULL)
+	__pthread_lock (THREAD_GETMEM(self, p_lock), self);
+      THREAD_SETMEM(self, p_extricate, peif);
+      if (peif == NULL)
+	__pthread_unlock (THREAD_GETMEM(self, p_lock));
+    }
 }
