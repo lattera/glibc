@@ -1,3 +1,8 @@
+1998-04-24 13:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/bits/socket.h: Add #defines for enum values.
+	Patch by Thomas Bushnell, n/BSG.
+
 1998-04-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/rcmd.c (iruserok): Initialize hostf variable to NULL.
