@@ -130,7 +130,7 @@ do-tst-trans: tst-trans.sh $(objpfx)tst-trans
 do-tst-mbswcs: tst-mbswcs.sh $(objpfx)tst-mbswcs1 $(objpfx)tst-mbswcs2 \
 	       $(objpfx)tst-mbswcs3 $(objpfx)tst-mbswcs4 $(objpfx)tst-mbswcs5
 	$(SHELL) -e $< $(common-objpfx)
-do-tst-ctype: tst-ctype.sh $(objpfx)tst-ctype do-collate-test
+do-tst-ctype: tst-ctype.sh $(objpfx)tst-ctype do-collate-test do-tst-mbswcs
 	$(SHELL) -e $< $(common-objpfx)
 $(addsuffix .out,$(addprefix $(objpfx),$(locale_test_suite))): %: do-tst-ctype\
 	do-tst-mbswcs
@@ -149,7 +149,7 @@ install-locales:
 			$(inst_localedir)/$$locale; \
 	done < SUPPORTED
 
-TEST_MBWC_ENV:= LOCPATH=$(common-objpfx)/localedata
+TEST_MBWC_ENV:= LOCPATH=$(common-objpfx)localedata
 tst_iswalnum-ENV = $(TEST_MBWC_ENV)
 tst_iswalpha-ENV = $(TEST_MBWC_ENV)
 tst_iswcntrl-ENV = $(TEST_MBWC_ENV)

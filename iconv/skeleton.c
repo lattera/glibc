@@ -294,9 +294,16 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 #ifdef EMIT_SHIFT_TO_INIT
       /* Emit the escape sequence to reset the state.  */
       EMIT_SHIFT_TO_INIT;
+#else
+      /* Clear the state object.  There might be bytes in there from
+	 previous calls with CONSUME_INCOMPLETE == 1.  */
+      memset (data->__statep, '\0', sizeof (*data->__statep));
 #endif
       /* Call the steps down the chain if there are any but only if we
-         successfully emitted the escape sequence.  */
+         successfully emitted the escape sequence.  This should only
+	 fail if the output buffer is full.  If the input is invalid
+	 it should be discarded since the user wants to start from a
+	 clean slate.  */
       if (status == __GCONV_OK && ! (data->__flags & __GCONV_IS_LAST))
 	status = DL_CALL_FCT (fct, (next_step, next_data, NULL, NULL,
 				    NULL, irreversible, 1,
