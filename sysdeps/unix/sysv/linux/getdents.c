@@ -97,7 +97,6 @@ ssize_t
 internal_function
 __GETDENTS (int fd, char *buf, size_t nbytes)
 {
-  DIRENT_TYPE *dp;
   off64_t last_offset = -1;
   ssize_t retval;
 
@@ -109,7 +108,12 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 # ifndef __ASSUME_GETDENTS64_SYSCALL
       int saved_errno = errno;
 # endif
-      char *kbuf = buf;
+      union
+      {
+	struct kernel_dirent64 k;
+	DIRENT_TYPE u;
+	char b[1];
+      } *kbuf = (void *) buf, *outp, *inp;
       size_t kbytes = nbytes;
       if (offsetof (DIRENT_TYPE, d_name)
 	  < offsetof (struct kernel_dirent64, d_name)
@@ -125,7 +129,6 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
       if (retval != -1 && errno != -EINVAL)
 # endif
 	{
-	  struct kernel_dirent64 *kdp;
 	  const size_t size_diff = (offsetof (struct kernel_dirent64, d_name)
 				    - offsetof (DIRENT_TYPE, d_name));
 
@@ -137,31 +140,43 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 	     need, don't do any conversions.  */
 	  if (offsetof (DIRENT_TYPE, d_name)
 	      == offsetof (struct kernel_dirent64, d_name)
-	      && sizeof (dp->d_ino) == sizeof (kdp->d_ino)
-	      && sizeof (dp->d_off) == sizeof (kdp->d_off))
+	      && sizeof (outp->u.d_ino) == sizeof (inp->k.d_ino)
+	      && sizeof (outp->u.d_off) == sizeof (inp->k.d_off))
 	    return retval;
 
-	  dp = (DIRENT_TYPE *)buf;
-	  kdp = (struct kernel_dirent64 *) kbuf;
-	  while ((char *) kdp < kbuf + retval)
+	  /* These two pointers might alias the same memory buffer.
+	     Standard C requires that we always use the same type for them,
+	     so we must use the union type.  */
+	  inp = kbuf;
+	  outp = (void *) buf;
+
+	  while (&inp->b < &kbuf->b + retval)
 	    {
 	      const size_t alignment = __alignof__ (DIRENT_TYPE);
-	      /* Since kdp->d_reclen is already aligned for the kernel
+	      /* Since inp->k.d_reclen is already aligned for the kernel
 		 structure this may compute a value that is bigger
 		 than necessary.  */
-	      size_t old_reclen = kdp->d_reclen;
+	      size_t old_reclen = inp->k.d_reclen;
 	      size_t new_reclen = ((old_reclen - size_diff + alignment - 1)
 				  & ~(alignment - 1));
-	      uint64_t d_ino = kdp->d_ino;
-	      int64_t d_off = kdp->d_off;
-	      unsigned char d_type = kdp->d_type;
 
-	      DIRENT_SET_DP_INO (dp, d_ino);
-	      dp->d_off = d_off;
-	      if ((sizeof (dp->d_ino) != sizeof (kdp->d_ino)
-		   && dp->d_ino != d_ino)
-		  || (sizeof (dp->d_off) != sizeof (kdp->d_off)
-		      && dp->d_off != d_off))
+	      /* Copy the data out of the old structure into temporary space.
+		 Then copy the name, which may overlap if BUF == KBUF.  */
+	      const uint64_t d_ino = inp->k.d_ino;
+	      const int64_t d_off = inp->k.d_off;
+	      const uint8_t d_type = inp->k.d_type;
+
+	      memmove (outp->u.d_name, inp->k.d_name,
+		       old_reclen - offsetof (struct kernel_dirent64, d_name));
+
+	      /* Now we have copied the data from INP and access only OUTP.  */
+
+	      DIRENT_SET_DP_INO (&outp->u, d_ino);
+	      outp->u.d_off = d_off;
+	      if ((sizeof (outp->u.d_ino) != sizeof (inp->k.d_ino)
+		   && outp->u.d_ino != d_ino)
+		  || (sizeof (outp->u.d_off) != sizeof (inp->k.d_off)
+		      && outp->u.d_off != d_off))
 		{
 		  /* Overflow.  If there was at least one entry
 		     before this one, return them without error,
@@ -169,23 +184,21 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 		  if (last_offset != -1)
 		    {
 		      __lseek64 (fd, last_offset, SEEK_SET);
-		      return (char *) dp - buf;
+		      return outp->b - buf;
 		    }
 		  __set_errno (EOVERFLOW);
 		  return -1;
 		}
 
 	      last_offset = d_off;
-	      dp->d_reclen = new_reclen;
-	      dp->d_type = d_type;
-	      memmove (dp->d_name, kdp->d_name,
-		       old_reclen - offsetof (struct kernel_dirent64, d_name));
+	      outp->u.d_reclen = new_reclen;
+	      outp->u.d_type = d_type;
 
-	      dp = (DIRENT_TYPE *) ((char *) dp + new_reclen);
-	      kdp = (struct kernel_dirent64 *) ((char *) kdp + old_reclen);
+	      inp = (void *) inp + old_reclen;
+	      outp = (void *) outp + new_reclen;
 	    }
 
-	  return (char *) dp - buf;
+	  return outp->b - buf;
 	}
 
 # ifndef __ASSUME_GETDENTS64_SYSCALL
@@ -205,7 +218,6 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 			 * size_diff),
 		      nbytes - size_diff);
 
-    dp = (DIRENT_TYPE *) buf;
     skdp = kdp = __alloca (red_nbytes);
 
     retval = INLINE_SYSCALL (getdents, 3, fd,
@@ -214,6 +226,7 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
     if (retval == -1)
       return -1;
 
+    DIRENT_TYPE *dp = (DIRENT_TYPE *) buf;
     while ((char *) kdp < (char *) skdp + retval)
       {
 	const size_t alignment = __alignof__ (DIRENT_TYPE);
@@ -250,7 +263,7 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 	dp = (DIRENT_TYPE *) ((char *) dp + new_reclen);
 	kdp = (struct kernel_dirent *) (((char *) kdp) + kdp->d_reclen);
       }
-    }
 
-  return (char *) dp - buf;
+    return (char *) dp - buf;
+  }
 }

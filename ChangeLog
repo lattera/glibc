@@ -1,5 +1,9 @@
 2002-11-02  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/getdents.c (__GETDENTS): Use union type for
+	pointers that can alias.
+	Reported by Daniel Jacobowitz <drow@mvista.com>.
+
 	* sysdeps/unix/bsd/bsd4.4/freebsd/bits/typesizes.h: New file.
 
 2002-11-02  Roland McGrath  <roland@redhat.com>
