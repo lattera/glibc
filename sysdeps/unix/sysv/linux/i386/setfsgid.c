@@ -28,10 +28,7 @@
 
 #ifdef __NR_setfsgid
 
-extern int __syscall_setfsgid (__kernel_gid_t);
-
 # ifdef __NR_setfsgid32
-extern int __syscall_setfsgid32 (__kernel_gid32_t);
 #  if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */

@@ -1,5 +1,20 @@
 2003-09-02  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/alpha/bits/local_lim.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/Versions: New file.
+	* sysdeps/unix/sysv/linux/ia64/bits/local_lim.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/Versions: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/local_lim.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/Versions: New file.
+	* attr.c (__old_pthread_attr_setstacksize,
+	__old_pthread_attr_setstack): New functions.
+	(pthread_attr_setstacksize): If PTHREAD_STACK_MIN != 16384, export
+	as @@GLIBC_2.3.2 and also export compatibility @GLIBC_2.1.
+	(pthread_attr_setstack): If PTHREAD_STACK_MIN != 16384, export
+	as @@GLIBC_2.3.2 and also export compatibility @GLIBC_2.2.
+	* tststack.c: Include limits.h and sys/param.h.
+	(main): Set size to MAX (70 * 1024, PTHREAD_STACK_MIN).
+
 	* barrier.c (__pthread_barrierattr_getpshared): Always
 	return PTHREAD_PROCESS_PRIVATE.
 	(pthread_barrierattr_setpshared): Return EINVAL if pshared

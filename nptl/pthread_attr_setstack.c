@@ -48,4 +48,44 @@ __pthread_attr_setstack (attr, stackaddr, stacksize)
 
   return 0;
 }
+
+#if PTHREAD_STACK_MIN == 16384
 strong_alias (__pthread_attr_setstack, pthread_attr_setstack)
+#else
+# include <shlib-compat.h>
+versioned_symbol (libpthread, __pthread_attr_setstack, pthread_attr_setstack,
+		  GLIBC_2_3_3);
+
+# if SHLIB_COMPAT(libpthread, GLIBC_2_2, GLIBC_2_3_3)
+
+int
+__old_pthread_attr_setstack (attr, stackaddr, stacksize)
+     pthread_attr_t *attr;
+     void *stackaddr;
+     size_t stacksize;
+{
+  struct pthread_attr *iattr;
+
+  assert (sizeof (*attr) >= sizeof (struct pthread_attr));
+  iattr = (struct pthread_attr *) attr;
+
+  /* Catch invalid sizes.  */
+  if (stacksize < 16384)
+    return EINVAL;
+
+# ifdef EXTRA_PARAM_CHECKS
+  EXTRA_PARAM_CHECKS;
+# endif
+
+  iattr->stacksize = stacksize;
+  iattr->stackaddr = (char *) stackaddr + stacksize;
+  iattr->flags |= ATTR_FLAG_STACKADDR;
+
+  return 0;
+}
+
+compat_symbol (libpthread, __old_pthread_attr_setstack, pthread_attr_setstack,
+	       GLIBC_2_2);
+# endif
+
+#endif

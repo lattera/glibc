@@ -220,7 +220,44 @@ int __pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize)
   attr->__stacksize = stacksize;
   return 0;
 }
+
+#if PTHREAD_STACK_MIN == 16384
 weak_alias (__pthread_attr_setstacksize, pthread_attr_setstacksize)
+#else
+versioned_symbol (libpthread, __pthread_attr_setstacksize,
+                  pthread_attr_setstacksize, GLIBC_2_3_3);
+
+# if SHLIB_COMPAT(libpthread, GLIBC_2_1, GLIBC_2_3_3)
+
+int __old_pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize)
+{
+#  ifdef FLOATING_STACKS
+  /* We have to check against the maximum allowed stack size.  This is no
+     problem if the manager is already started and we determined it.  If
+     this hasn't happened, we have to find the limit outself.  */
+  if (__pthread_max_stacksize == 0)
+    __pthread_init_max_stacksize ();
+
+  if (stacksize > __pthread_max_stacksize)
+    return EINVAL;
+#  else
+  /* We have a fixed size limit.  */
+  if (stacksize > STACK_SIZE)
+    return EINVAL;
+#  endif
+
+  /* We don't accept value smaller than old PTHREAD_STACK_MIN.  */
+  if (stacksize < 16384)
+    return EINVAL;
+
+  attr->__stacksize = stacksize;
+  return 0;
+}
+compat_symbol (libpthread, __old_pthread_attr_setstacksize,
+	       pthread_attr_setstacksize, GLIBC_2_1);
+# endif
+#endif
+
 
 int __pthread_attr_getstacksize(const pthread_attr_t *attr, size_t *stacksize)
 {
@@ -251,7 +288,41 @@ int __pthread_attr_setstack (pthread_attr_t *attr, void *stackaddr,
 
   return err;
 }
+
+#if PTHREAD_STACK_MIN == 16384
 weak_alias (__pthread_attr_setstack, pthread_attr_setstack)
+#else
+versioned_symbol (libpthread, __pthread_attr_setstack, pthread_attr_setstack,
+                  GLIBC_2_3_3);
+# if SHLIB_COMPAT(libpthread, GLIBC_2_2, GLIBC_2_3_3)
+int __old_pthread_attr_setstack (pthread_attr_t *attr, void *stackaddr,
+				 size_t stacksize)
+{
+  int err;
+
+  if ((((uintptr_t) stackaddr)
+       & (__alignof__ (struct _pthread_descr_struct) - 1)) != 0)
+    err = EINVAL;
+  else
+    err = __old_pthread_attr_setstacksize (attr, stacksize);
+  if (err == 0)
+    {
+#  ifndef _STACK_GROWS_UP
+      attr->__stackaddr = (char *) stackaddr + stacksize;
+#  else
+      attr->__stackaddr = stackaddr;
+#  endif
+      attr->__stackaddr_set = 1;
+    }
+
+  return err;
+}
+
+compat_symbol (libpthread, __old_pthread_attr_setstack, pthread_attr_setstack,
+               GLIBC_2_2);
+
+# endif
+#endif
 
 int __pthread_attr_getstack (const pthread_attr_t *attr, void **stackaddr,
 			     size_t *stacksize)

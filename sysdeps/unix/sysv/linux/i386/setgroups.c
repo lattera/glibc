@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,98,2000,02 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,10 +29,7 @@
 #include "kernel-features.h"
 
 
-extern int __syscall_setgroups (int, const __kernel_gid_t *__unbounded);
-
 #ifdef __NR_setgroups32
-extern int __syscall_setgroups32 (int, const __kernel_gid32_t *__unbounded);
 # if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */

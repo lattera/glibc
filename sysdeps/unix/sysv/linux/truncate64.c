@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,10 +32,6 @@
 /* The variable is shared between all wrappers around *truncate64 calls.  */
 int __have_no_truncate64;
 #endif
-
-/* The order of hight, low depends on endianness.  */
-extern int __syscall_truncate64 (const char *__unbounded path,
-				 int high_length, int low_length);
 
 /* Truncate the file FD refers to to LENGTH bytes.  */
 int

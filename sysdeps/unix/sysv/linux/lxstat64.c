@@ -32,12 +32,7 @@
 # include <xstatconv.h>
 #endif
 
-extern int __syscall_lstat (const char *__unbounded,
-			    struct kernel_stat *__unbounded);
-
 #ifdef __NR_lstat64
-extern int __syscall_lstat64 (const char *__unbounded,
-			      struct stat64 *__unbounded);
 # if  __ASSUME_STAT64_SYSCALL == 0
 /* The variable is shared between all wrappers around *stat64 calls.  */
 extern int __have_no_stat64;

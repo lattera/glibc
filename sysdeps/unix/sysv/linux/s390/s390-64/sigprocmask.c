@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,9 +25,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-
-extern int __syscall_rt_sigprocmask (int, const sigset_t *,
-				     sigset_t *, size_t);
 
 /* Get and/or change the set of blocked signals.  */
 int

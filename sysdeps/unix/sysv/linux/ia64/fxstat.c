@@ -1,5 +1,6 @@
 /* fxstat using old-style Unix fstat system call.
-   Copyright (C) 1991,95,96,97,98,2000,2002 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1995, 1996, 1997, 1998, 2000, 2002, 2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,8 +29,6 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
-
-extern int __syscall_fstat (int, struct stat *__unbounded);
 
 /* Get information about the file FD in BUF.  */
 int

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,8 +28,6 @@
 #include "aio_misc.h"
 
 #ifdef __NR_rt_sigqueueinfo
-extern int __syscall_rt_sigqueueinfo (int, int, siginfo_t *__unbounded);
-
 
 /* Return any pending signal or wait for one for the given time.  */
 int

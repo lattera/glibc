@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,14 +30,7 @@
 
 #ifdef __NR_getresuid
 
-extern int __syscall_getresuid (__kernel_uid_t *__unbounded ruid,
-				__kernel_uid_t *__unbounded euid,
-				__kernel_uid_t *__unbounded suid);
-
 # ifdef __NR_getresuid32
-extern int __syscall_getresuid32 (__kernel_uid32_t *__unbounded ruid,
-				  __kernel_uid32_t *__unbounded euid,
-				  __kernel_uid32_t *__unbounded suid);
 #  if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */

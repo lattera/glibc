@@ -33,9 +33,6 @@ __extension__ typedef long long int reg_type;
 typedef long int reg_type;
 #endif
 
-extern reg_type __syscall_ptrace (int, pid_t, void *__unbounded,
-				  reg_type __unbounded);
-
 reg_type
 ptrace (enum __ptrace_request request, ...)
 {

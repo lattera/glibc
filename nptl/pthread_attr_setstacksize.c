@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -41,4 +41,37 @@ __pthread_attr_setstacksize (attr, stacksize)
 
   return 0;
 }
+
+#if PTHREAD_STACK_MIN == 16384
 strong_alias (__pthread_attr_setstacksize, pthread_attr_setstacksize)
+#else
+# include <shlib-compat.h>
+versioned_symbol (libpthread, __pthread_attr_setstacksize,
+		  pthread_attr_setstacksize, GLIBC_2_3_3);
+
+# if SHLIB_COMPAT(libpthread, GLIBC_2_1, GLIBC_2_3_3)
+
+int
+__old_pthread_attr_setstacksize (attr, stacksize)
+     pthread_attr_t *attr;
+     size_t stacksize;
+{
+  struct pthread_attr *iattr;
+
+  assert (sizeof (*attr) >= sizeof (struct pthread_attr));
+  iattr = (struct pthread_attr *) attr;
+
+  /* Catch invalid sizes.  */
+  if (stacksize < 16384)
+    return EINVAL;
+
+  iattr->stacksize = stacksize;
+
+  return 0;
+}
+
+compat_symbol (libpthread, __old_pthread_attr_setstacksize,
+	       pthread_attr_setstacksize, GLIBC_2_1);
+# endif
+
+#endif

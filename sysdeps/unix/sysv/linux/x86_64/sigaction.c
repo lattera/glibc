@@ -36,9 +36,6 @@
 /* We do not globally define the SA_RESTORER flag so do it here.  */
 #define SA_RESTORER 0x04000000
 
-extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *__unbounded,
-				   struct kernel_sigaction *__unbounded, size_t);
-
 /* Using the hidden attribute here does not change the code but it
    helps to avoid warnings.  */
 #if defined HAVE_HIDDEN && defined HAVE_VISIBILITY_ATTRIBUTE \

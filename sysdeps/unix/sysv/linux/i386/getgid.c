@@ -24,10 +24,7 @@
 
 #include "kernel-features.h"
 
-extern int __syscall_getgid (void);
-
 #ifdef __NR_getgid32
-extern int __syscall_getgid32 (void);
 # if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */

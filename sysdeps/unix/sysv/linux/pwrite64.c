@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,1999,2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -35,9 +35,6 @@
 #endif
 
 #if defined __NR_pwrite || __ASSUME_PWRITE_SYSCALL > 0
-
-extern ssize_t __syscall_pwrite (int fd, const void *__unbounded buf, size_t count,
-				 off_t offset_hi, off_t offset_lo);
 
 # if __ASSUME_PWRITE_SYSCALL == 0
 static ssize_t __emulate_pwrite64 (int fd, const void *buf, size_t count,

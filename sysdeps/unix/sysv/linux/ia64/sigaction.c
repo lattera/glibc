@@ -29,9 +29,6 @@
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
-extern int __syscall_rt_sigaction (int, const struct sigaction *__unbounded,
-				   struct sigaction *__unbounded, size_t);
-
 /* The variable is shared between all wrappers around signal handling
    functions which have RT equivalents.  This is the definition.  */
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,11 +23,6 @@
 #include <alloca.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
-
-extern int __syscall_execve (const char *__unbounded file,
-			     char *__unbounded const *__unbounded argv,
-			     char *__unbounded const *__unbounded envp);
-
 
 int
 __execve (file, argv, envp)

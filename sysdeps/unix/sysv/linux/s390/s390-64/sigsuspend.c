@@ -23,9 +23,6 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-extern int __syscall_rt_sigsuspend (const sigset_t *, size_t);
-
-
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
 int

@@ -37,15 +37,6 @@
 
 #if defined __NR_pwrite || __ASSUME_PWRITE_SYSCALL > 0
 
-extern ssize_t __syscall_pwrite (int fd, const void *__unbounded buf, size_t count,
-				 int dummy,
-#if defined _ABI64 && _MIPS_SIM == _ABI64
-				 off_t offset
-#else
-				 off_t offset_hi, off_t offset_lo
-#endif
-				 );
-
 # if __ASSUME_PWRITE_SYSCALL == 0
 static ssize_t __emulate_pwrite (int fd, const void *buf, size_t count,
 				 off_t offset) internal_function;

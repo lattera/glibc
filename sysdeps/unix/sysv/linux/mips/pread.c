@@ -41,16 +41,6 @@
 static ssize_t __emulate_pread (int fd, void *buf, size_t count,
 				off_t offset) internal_function;
 # endif
-extern ssize_t __syscall_pread (int fd, void *__unbounded buf, size_t count,
-				int dummy,
-#if defined _ABI64 && _MIPS_SIM == _ABI64
-				off_t offset
-#else
-				off_t offset_hi, off_t offset_lo
-#endif
-				);
-
-
 
 ssize_t
 __libc_pread (fd, buf, count, offset)

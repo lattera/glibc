@@ -1,5 +1,24 @@
 2003-09-02  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/bits/local_lim.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/Versions (libpthread): Export
+	pthread_attr_setstack and pthread_attr_setstacksize @@GLIBC_2.3.3.
+	* sysdeps/unix/sysv/linux/alpha/bits/local_lim.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/Versions: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/local_lim.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/Versions: New file.
+	* pthread_attr_setstack.c (__old_pthread_attr_setstack): New function.
+	(pthread_attr_setstack): If PTHREAD_STACK_MIN != 16384, export
+	as @@GLIBC_2.3.2 and also export compatibility @GLIBC_2.2.
+	* pthread_attr_setstacksize.c (__old_pthread_attr_setstacksize): New
+	function.
+	(pthread_attr_setstacksize): If PTHREAD_STACK_MIN != 16384, export
+	as @@GLIBC_2.3.2 and also export compatibility @GLIBC_2.1.
+	* Makefile (tests): Add tst-stack2.
+	* tst-stack2.c: New test.
+	* tst-stack1.c: Include limits.h and sys/param.h.
+	(do_test): Set size to MAX (4 * getpagesize (), PTHREAD_STACK_MIN).
+
 	* pthread_condattr_setpshared.c: Include errno.h.
 	(pthread_condattr_setpshared): Return EINVAL if pshared
 	is neither PTHREAD_PROCESS_PRIVATE nor PTHREAD_PROCESS_SHARED.
@@ -24,7 +43,6 @@
 	* sysdeps/unix/sysv/linux/s390/not-cancel.h: New file.
 	* sysdeps/unix/sysv/linux/powerpc/not-cancel.h: New file.
 	* sysdeps/unix/sysv/linux/sparc/not-cancel.h: New file.
-
 
 	* sysdeps/unix/sysv/linux/x86_64/not-cancel.h: Fix a typo.
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -40,17 +40,6 @@
 static ssize_t __emulate_pread64 (int fd, void *buf, size_t count,
 				  off64_t offset) internal_function;
 # endif
-
-extern ssize_t __syscall_pread (int fd, void *__unbounded buf, size_t count,
-				int dummy,
-#if defined _ABI64 && _MIPS_SIM == _ABI64
-				off_t offset
-#else
-				off_t offset_hi, off_t offset_lo
-#endif
-				);
-
-
 
 ssize_t
 __libc_pread64 (fd, buf, count, offset)

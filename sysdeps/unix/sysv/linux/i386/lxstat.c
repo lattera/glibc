@@ -1,5 +1,6 @@
 /* lxstat using old-style Unix lstat system call.
-   Copyright (C) 1991,95,96,97,98,2000,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1995, 1996, 1997, 1998, 2000, 2002, 2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,12 +35,7 @@
 
 #include <xstatconv.h>
 
-extern int __syscall_lstat (const char *__unbounded,
-			    struct kernel_stat *__unbounded);
-
 #ifdef __NR_stat64
-extern int __syscall_lstat64 (const char *__unbounded,
-			      struct stat64 *__unbounded);
 # if  __ASSUME_STAT64_SYSCALL == 0
 /* The variable is shared between all wrappers around *stat64 calls.  */
 extern int __have_no_stat64;

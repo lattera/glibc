@@ -1,4 +1,5 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000, 2002, 2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,9 +26,6 @@
 #include <bp-checks.h>
 
 #include "kernel-features.h"
-
-extern int __syscall_sigsuspend (int, unsigned long int, unsigned long int);
-extern int __syscall_rt_sigsuspend (const sigset_t *__unbounded, size_t);
 
 
 #if !__ASSUME_REALTIME_SIGNALS

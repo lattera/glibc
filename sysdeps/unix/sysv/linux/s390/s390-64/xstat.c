@@ -1,5 +1,5 @@
 /* xstat using old-style Unix stat system call.  64 bit S/390 version.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,8 +27,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-
-extern int __syscall_stat (const char *, struct stat *);
 
 /* Get information about the file NAME in BUF.  */
 int

@@ -1,5 +1,5 @@
 /* Tests for variable stack size handling.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2003 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <limits.h>
+#include <sys/param.h>
 
 static void *f1 (void *);
 static void *f2 (void *);
@@ -34,7 +36,7 @@ main (void)
   void *res2;
 
   pthread_attr_init (&attr);
-  if (pthread_attr_setstacksize (&attr, 70*1024) != 0)
+  if (pthread_attr_setstacksize (&attr, MAX (70*1024, PTHREAD_STACK_MIN)) != 0)
     {
       puts ("invalid stack size");
       return 1;

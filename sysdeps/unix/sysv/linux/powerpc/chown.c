@@ -31,9 +31,6 @@
   This file emulates chown() under the old kernels.
 */
 
-extern int __syscall_chown (const char *__file __unbounded,
-			    uid_t __owner, gid_t __group);
-
 int
 __chown (const char *file, uid_t owner, gid_t group)
 {

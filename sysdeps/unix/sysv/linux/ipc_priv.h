@@ -32,15 +32,7 @@ struct __old_ipc_perm
 };
 
 
-__BEGIN_DECLS
-
-/* The actual system call: all functions are multiplexed by this.  */
-extern int __syscall_ipc (int __call, int __first, int __second,
-			  int __third, void *__ptr);
-
-__END_DECLS
-
-/* The codes for the functions to use the multiplexer `__syscall_ipc'.  */
+/* The codes for the functions to use the ipc syscall multiplexer.  */
 #define IPCOP_semop	 1
 #define IPCOP_semget	 2
 #define IPCOP_semctl	 3

@@ -27,10 +27,7 @@
 #include "kernel-features.h"
 
 
-extern int __syscall_setreuid (__kernel_uid_t, __kernel_uid_t);
-
 #ifdef __NR_setreuid32
-extern int __syscall_setreuid32 (__kernel_uid32_t, __kernel_uid32_t);
 # if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */

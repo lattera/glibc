@@ -23,10 +23,7 @@
 #include <sys/syscall.h>
 #include "kernel-features.h"
 
-extern int __syscall_geteuid (void);
-
 #ifdef __NR_geteuid32
-extern int __syscall_geteuid32 (void);
 # if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */

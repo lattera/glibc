@@ -223,7 +223,7 @@ tests = tst-attr1 tst-attr2 \
 	tst-exec1 tst-exec2 tst-exec3 tst-exec4 \
 	tst-exit1 \
 	tst-stdio1 tst-stdio2 \
-	tst-stack1 \
+	tst-stack1 tst-stack2 \
 	tst-unload \
 	tst-dlsym1 \
 	tst-sysconf \

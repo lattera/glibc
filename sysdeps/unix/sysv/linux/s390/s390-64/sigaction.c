@@ -26,9 +26,6 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-extern int __syscall_rt_sigaction (int, const struct sigaction *,
-				   struct sigaction *, size_t);
-
 /* The variable is shared between all wrappers around signal handling
    functions which have RT equivalents.  This is the definition.  */
 

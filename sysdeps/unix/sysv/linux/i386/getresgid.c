@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,15 +30,7 @@
 
 #ifdef __NR_getresgid
 
-extern int __syscall_getresgid (__kernel_gid_t *__unbounded rgid,
-				__kernel_gid_t *__unbounded egid,
-				__kernel_gid_t *__unbounded sgid);
-
 # ifdef __NR_getresgid32
-extern int __syscall_getresgid32 (__kernel_gid32_t *__unbounded rgid,
-				  __kernel_gid32_t *__unbounded egid,
-				  __kernel_gid32_t *__unbounded sgid);
-
 #  if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */

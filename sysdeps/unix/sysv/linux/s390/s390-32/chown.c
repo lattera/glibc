@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,14 +37,9 @@
   has therefore to route calls to chown to the old chown function.
 */
 
-extern int __syscall_chown (const char *__file,
-			    __kernel_uid_t __owner, __kernel_gid_t __group);
-
 /* Running under Linux > 2.1.80.  */
 
 #ifdef __NR_chown32
-extern int __syscall_chown32 (const char *__file,
-			      __kernel_uid32_t owner, __kernel_gid32_t group);
 # if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */

@@ -1,5 +1,6 @@
 /* xmknod call using old-style Unix mknod system call.
-   Copyright (C) 1991,93,95,96,97,98,00,2002 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1993, 1995, 1996, 1997, 1998, 2000, 2002, 2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,8 +26,6 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
-
-extern int __syscall_mknod (const char *__unbounded, unsigned long, unsigned int);
 
 /* Create a device file named PATH, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor

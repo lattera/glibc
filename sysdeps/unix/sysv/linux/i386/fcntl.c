@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,11 +24,6 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 #include "../kernel-features.h"
-
-extern int __syscall_fcntl (int __fd, int __cmd, ...);
-#ifdef __NR_fcntl64
-extern int __syscall_fcntl64 (int __fd, int __cmd, ...);
-#endif
 
 #if __ASSUME_FCNTL64 == 0
 /* This variable is shared with all files that check for fcntl64.  */

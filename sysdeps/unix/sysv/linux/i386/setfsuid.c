@@ -28,10 +28,7 @@
 
 #ifdef __NR_setfsuid
 
-extern int __syscall_setfsuid (__kernel_uid_t);
-
 # ifdef __NR_setfsuid32
-extern int __syscall_setfsuid32 (__kernel_uid32_t);
 #  if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */

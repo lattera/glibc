@@ -37,9 +37,6 @@
 #define SA_RESTORER 0x04000000
 
 
-extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *__unbounded,
-				   struct kernel_sigaction *__unbounded, size_t);
-
 #if __ASSUME_REALTIME_SIGNALS == 0
 /* The variable is shared between all wrappers around signal handling
    functions which have RT equivalents.  */

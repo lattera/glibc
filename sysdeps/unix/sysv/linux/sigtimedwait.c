@@ -25,9 +25,6 @@
 #include <bp-checks.h>
 
 #ifdef __NR_rt_sigtimedwait
-extern int __syscall_rt_sigtimedwait (const sigset_t *__unbounded, siginfo_t *__unbounded,
-				      const struct timespec *__unbounded, size_t);
-
 
 static int
 do_sigtimedwait (const sigset_t *set, siginfo_t *info,

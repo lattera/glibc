@@ -1,4 +1,155 @@
+2003-09-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/Makefile (sysdep_routines): Remove
+	rt_sigsuspend, rt_sigprocmask, rt_sigtimedwait, rt_sigqueueinfo and
+	rt_sigpending.
+	* sysdeps/unix/sysv/linux/alpha/sigaction.c (__syscall_rt_sigaction):
+	New prototype.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list (__syscall_*): Remove
+	unused __syscall_ stubs.
+	* sysdeps/unix/sysv/linux/arm/Makefile (sysdep_routines): Remove
+	rt_*.
+	* sysdeps/unix/sysv/linux/cris/Makefile: Removed.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list
+	(__syscall_recvfrom, __syscall_sendto): Remove unused aliases.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list (__syscall_*): Remove
+	unused __syscall_ stubs.
+	* sysdeps/unix/sysv/linux/mips/Makefile (sysdep_routines): Remove rt_*.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list
+	(__syscall_*): Remove unused __syscall_ stubs.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/syscalls.list
+	(__syscall_*): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile (sysdep_routines): Remove
+	rt_*.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list (__syscall_*):
+	Remove unused __syscall_ stubs.
+	* sysdeps/unix/sysv/linux/sh/Makefile (sysdep_routines): Remove rt_*.
+	* sysdeps/unix/sysv/linux/rt_sigaction.c: Removed.
+	* sysdeps/unix/sysv/linux/rt_sigpending.c: Removed.
+	* sysdeps/unix/sysv/linux/rt_sigprocmask.c: Removed.
+	* sysdeps/unix/sysv/linux/rt_sigqueueinfo.c: Removed.
+	* sysdeps/unix/sysv/linux/rt_sigreturn.c: Removed.
+	* sysdeps/unix/sysv/linux/rt_sigsuspend.c: Removed.
+	* sysdeps/unix/sysv/linux/rt_sigtimedwait.c: Removed.
+	* sysdeps/unix/sysv/linux/s_pread64.c: Removed.
+	* sysdeps/unix/sysv/linux/s_pwrite64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/gethostname.c: Remove unused
+	__syscall_* prototypes.
+	* sysdeps/unix/sysv/linux/alpha/ipc_priv.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/msgctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/geteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getmsg.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lockf64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/putmsg.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setfsgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setfsuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigpending.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigprocmask.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigsuspend.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/ftruncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/ptrace.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/truncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/ustat.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/xmknod.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/ioctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/lchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigpending.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigprocmask.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigsuspend.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigpending.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigprocmask.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/execve.c: Likewise.
+	* sysdeps/unix/sysv/linux/aio_sigqueue.c: Likewise.
+	* sysdeps/unix/sysv/linux/reboot.c: Likewise.
+	* sysdeps/unix/sysv/linux/_exit.c: Likewise.
+	* sysdeps/unix/sysv/linux/ftruncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/fxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/gai_sigqueue.c: Likewise.
+	* sysdeps/unix/sysv/linux/readahead.c: Likewise.
+	* sysdeps/unix/sysv/linux/getcwd.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/getdents.c: Likewise.
+	* sysdeps/unix/sysv/linux/readv.c: Likewise.
+	* sysdeps/unix/sysv/linux/getpriority.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/ipc_priv.h: Likewise.
+	* sysdeps/unix/sysv/linux/llseek.c: Likewise.
+	* sysdeps/unix/sysv/linux/sysctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/lxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mmap64.c: Likewise.
+	* sysdeps/unix/sysv/linux/ustat.c: Likewise.
+	* sysdeps/unix/sysv/linux/poll.c: Likewise.
+	* sysdeps/unix/sysv/linux/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.
+	* sysdeps/unix/sysv/linux/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/ptrace.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigpending.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigprocmask.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigqueue.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c: Likewise.
+	* sysdeps/unix/sysv/linux/truncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/xmknod.c: Likewise.
+	* sysdeps/unix/sysv/linux/xstat64.c: Likewise.
+
+2003-09-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (PSEUDO): Revert last change.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: New file.
+	* sysdeps/unix/sysv/linux/sparc/syscalls.list: New file.
+
 2003-09-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/Makefile (CFLAGS-vprintf.c): Add -fexceptions.
+
+	* intl/loadmsgcat.c: For _LIBC, call not cancelable versions of
+	open, close, and read.
 
 	* sysdeps/unix/sysv/linux/i386/sysdep.h (PSEUDO): Also define
 	*_nocancel name.

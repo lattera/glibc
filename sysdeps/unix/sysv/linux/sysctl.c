@@ -1,5 +1,5 @@
 /* Read or write system information.  Linux version.
-   Copyright (C) 1996-1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,8 +23,6 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
-
-extern int __syscall__sysctl (struct __sysctl_args *__unbounded args);
 
 int
 __sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,

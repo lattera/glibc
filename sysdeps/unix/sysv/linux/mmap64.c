@@ -28,9 +28,6 @@
 #include "kernel-features.h"
 
 #ifdef __NR_mmap2
-/* We have the system call that takes page number instead of byte address.  */
-extern void *__unbounded __syscall_mmap2 (void *__unbounded, size_t,
-					  int, int, int, off_t);
 
 /* This is always 12, even on architectures where PAGE_SHIFT != 12.  */
 # ifndef MMAP2_PAGE_SHIFT

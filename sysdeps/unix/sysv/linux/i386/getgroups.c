@@ -29,10 +29,7 @@
 #include <kernel-features.h>
 
 
-extern int __syscall_getgroups (int, __kernel_gid_t *__unbounded);
-
 #ifdef __NR_getgroups32
-extern int __syscall_getgroups32 (int, __kernel_gid32_t *__unbounded);
 # if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */

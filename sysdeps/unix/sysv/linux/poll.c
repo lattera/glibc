@@ -28,9 +28,6 @@
 
 #if defined __NR_poll || __ASSUME_POLL_SYSCALL > 0
 
-extern int __syscall_poll (struct pollfd *__unbounded fds,
-			   unsigned int nfds, int timeout);
-
 # if __ASSUME_POLL_SYSCALL == 0
 static int __emulate_poll (struct pollfd *fds, nfds_t nfds,
 			   int timeout) internal_function;

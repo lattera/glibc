@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,8 +24,6 @@
 
 /* The user-visible size of struct termios has changed.  Catch ioctl calls
    using the new-style struct termios, and translate them to old-style.  */
-
-extern int __syscall_ioctl (int fd, unsigned long int request, ...);
 
 int
 __ioctl (int fd, unsigned long int request, ...)

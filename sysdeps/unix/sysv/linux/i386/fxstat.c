@@ -34,10 +34,7 @@
 
 #include <xstatconv.h>
 
-extern int __syscall_fstat (int, struct kernel_stat *__unbounded);
-
 #ifdef __NR_stat64
-extern int __syscall_fstat64 (int, struct stat64 *__unbounded);
 # if  __ASSUME_STAT64_SYSCALL == 0
 /* The variable is shared between all wrappers around *stat64 calls.  */
 extern int __have_no_stat64;

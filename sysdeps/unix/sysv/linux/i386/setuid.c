@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,10 +26,7 @@
 #include <linux/posix_types.h>
 #include "kernel-features.h"
 
-extern int __syscall_setuid (__kernel_uid_t);
-
 #ifdef __NR_setuid32
-extern int __syscall_setuid32 (__kernel_uid32_t);
 # if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */

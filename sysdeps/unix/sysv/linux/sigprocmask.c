@@ -27,11 +27,6 @@
 #include "kernel-features.h"
 
 
-extern int __syscall_sigprocmask (int, const sigset_t *__unbounded,
-				  sigset_t *__unbounded);
-extern int __syscall_rt_sigprocmask (int, const sigset_t *__unbounded,
-				     sigset_t *__unbounded, size_t);
-
 /* The variable is shared between all wrappers around signal handling
    functions which have RT equivalents.  The definition is in sigaction.c.  */
 extern int __libc_missing_rt_sigs;

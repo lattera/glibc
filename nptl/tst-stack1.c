@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -17,9 +17,11 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <limits.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/param.h>
 #include <unistd.h>
 
 
@@ -74,7 +76,7 @@ do_test (void)
 {
   int result = 0;
 
-  size = 4 * getpagesize ();
+  size = MAX (4 * getpagesize (), PTHREAD_STACK_MIN);
   if (posix_memalign (&stack, getpagesize (), size) != 0)
     {
       puts ("out of memory while allocating the stack memory");
