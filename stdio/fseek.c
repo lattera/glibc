@@ -42,7 +42,7 @@ DEFUN(fseek, (stream, offset, whence),
     return EOF;
 
   /* Make sure we know the current offset info.  */
-  stream.__offset = -1;
+  stream->__offset = -1;
   if (__stdio_check_offset (stream) == EOF)
     return EOF;
 

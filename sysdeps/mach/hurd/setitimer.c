@@ -159,7 +159,7 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old,
       /* Just return the current value in OLD without changing anything.
 	 This is what BSD does, even though it's not documented. */
       if (old)
-	*old = _hurd_itemerval;
+	*old = _hurd_itimerval;
       spin_unlock (&_hurd_itimer_lock);
       _hurd_critical_section_unlock (crit);
       return 0;

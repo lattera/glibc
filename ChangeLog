@@ -1,4 +1,7 @@
 Thu Aug 29 12:00:30 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+	
+	* sysdeps/mach/hurd/setitimer.c (setitimer_locked): Correct
+ 	spelling error of _hurd_itimerval.
 
 	* mach/Makefile (MIGFLAGS-mach/mach4): Define variable.
   	mach/Machrules (mig.uh, mig.__h): Include $(user-MIGFLAGS) and
