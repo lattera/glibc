@@ -25,9 +25,9 @@ Cambridge, MA 02139, USA.  */
        "	br	$27, 1f\n" /* Load GP from PC.  */
        "1:	ldgp	$29, 0($27)\n"
        "	jmp	$26, _start0");	/* Jump to _start0; don't return.  */
-#define START_ARGS	char **sp
+#define START_ARGS	char **sparg
 #define SNARF_ARGS(argc, argv, envp) \
-  (envp = &(argv = &sp[1])[(argc = *(int *) sp) + 1])
+  (envp = &(argv = &sparg[1])[(argc = *(int *) sparg) + 1])
 
 #define CALL_WITH_SP(fn, sp) \
   ({ register long int __fn = fn, __sp = (long int) sp; \
