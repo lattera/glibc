@@ -309,14 +309,20 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
 		'\0', (GL(dl_rtld_map).l_tls_blocksize
 		       - GL(dl_rtld_map).l_tls_initimage_size));
 
+	/* Install the pointer to the dtv.  */
+
 	/* Initialize the thread pointer.  */
 # if TLS_TCB_AT_TP
 	GL(dl_rtld_map).l_tls_offset
 	  = roundup (GL(dl_rtld_map).l_tls_blocksize, TLS_INIT_TCB_ALIGN);
-	TLS_INIT_TP ((char *) tlsblock + GL(dl_rtld_map).l_tls_offset,
+
+	INSTALL_DTV ((char *) tlsblock + GL(dl_rtld_map).l_tls_offset,
 		     initdtv);
+
+	TLS_INIT_TP ((char *) tlsblock + GL(dl_rtld_map).l_tls_offset);
 # elif TLS_DTV_AT_TP
-	TLS_INIT_TP (tlsblock, initdtv);
+	INSTALL_DTV (tlsblock, initdtv);
+	TLS_INIT_TP (tlsblock);
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
@@ -476,6 +482,9 @@ dl_main (const ElfW(Phdr) *phdr,
   hp_timing_t start;
   hp_timing_t stop;
   hp_timing_t diff;
+#endif
+#ifdef USE_TLS
+  void *tcbp;
 #endif
 
   /* Process the environment variable which control the behaviour.  */
@@ -1169,6 +1178,53 @@ of this helper program; chances are you did not intend to run this program.\n\
       _exit (0);
     }
 
+#ifdef USE_TLS
+  /* Now it is time to determine the layout of the static TLS block
+     and allocate it for the initial thread.  Note that we always
+     allocate the static block, we never defer it even if no
+     DF_STATIC_TLS bit is set.  The reason is that we know glibc will
+     use the static model.  First add the dynamic linker to the list
+     if it also uses TLS.  */
+  if (GL(dl_rtld_map).l_tls_blocksize != 0)
+    {
+      /* At to the list.  */
+      if (GL(dl_initimage_list) == NULL)
+	GL(dl_initimage_list) = GL(dl_rtld_map).l_tls_nextimage
+	  = GL(dl_rtld_map).l_tls_previmage = &GL(dl_rtld_map);
+	  else
+	    {
+	      GL(dl_rtld_map).l_tls_nextimage
+		= GL(dl_initimage_list)->l_tls_nextimage;
+	      GL(dl_rtld_map).l_tls_nextimage->l_tls_previmage
+		= &GL(dl_rtld_map);
+	      GL(dl_rtld_map).l_tls_previmage = GL(dl_initimage_list);
+	      GL(dl_rtld_map).l_tls_previmage->l_tls_nextimage
+		= &GL(dl_rtld_map);
+	      GL(dl_initimage_list) = &GL(dl_rtld_map);
+	    }
+
+      /* Assign a module ID.  */
+      GL(dl_rtld_map).l_tls_modid = _dl_next_tls_modid ();
+    }
+
+  /* Computer the TLS offsets for the various blocks.  We call this
+     function even if none of the modules available at startup time
+     uses TLS to initialize some variables.  */
+    _dl_determine_tlsoffset (GL(dl_initimage_list));
+
+  /* Construct the static TLS block and the dtv for the initial
+     thread.  For some platforms this will include allocating memory
+     for the thread descriptor.  The memory for the TLS block will
+     never be freed.  It should be allocated accordingly.  The dtv
+     array can be changed if dynamic loading requires it.  */
+  tcbp = _dl_allocate_tls ();
+  if (tcbp == NULL)
+    _dl_fatal_printf ("cannot allocate TLS data structures for inital thread");
+
+  /* And finally install it for the main thread.  */
+  TLS_INIT_TP (tcbp);
+#endif
+
   if (GL(dl_loaded)->l_info [ADDRIDX (DT_GNU_LIBLIST)]
       && ! __builtin_expect (GL(dl_profile) != NULL, 0))
     {
@@ -1332,47 +1388,6 @@ of this helper program; chances are you did not intend to run this program.\n\
   /* Save the information about the original global scope list since
      we need it in the memory handling later.  */
   GL(dl_initial_searchlist) = *GL(dl_main_searchlist);
-
-#ifdef USE_TLS
-  /* Now it is time to determine the layout of the static TLS block
-     and allocate it for the initial thread.  Note that we always
-     allocate the static block, we never defer it even if no
-     DF_STATIC_TLS bit is set.  The reason is that we know glibc will
-     use the static model.  First add the dynamic linker to the list
-     if it also uses TLS.  */
-  if (GL(dl_rtld_map).l_tls_blocksize != 0)
-    {
-      /* At to the list.  */
-      if (GL(dl_initimage_list) == NULL)
-	GL(dl_initimage_list) = GL(dl_rtld_map).l_tls_nextimage
-	  = GL(dl_rtld_map).l_tls_previmage = &GL(dl_rtld_map);
-	  else
-	    {
-	      GL(dl_rtld_map).l_tls_nextimage
-		= GL(dl_initimage_list)->l_tls_nextimage;
-	      GL(dl_rtld_map).l_tls_nextimage->l_tls_previmage
-		= &GL(dl_rtld_map);
-	      GL(dl_rtld_map).l_tls_previmage = GL(dl_initimage_list);
-	      GL(dl_rtld_map).l_tls_previmage->l_tls_nextimage
-		= &GL(dl_rtld_map);
-	      GL(dl_initimage_list) = &GL(dl_rtld_map);
-	    }
-
-      /* Assign a module ID.  */
-      GL(dl_rtld_map).l_tls_modid = _dl_next_tls_modid ();
-    }
-
-  if (GL(dl_initimage_list) != NULL)
-    /* This means we actually have some modules which use TLS.
-       Computer the TLS offsets for the various blocks.  */
-    _dl_determine_tlsoffset (GL(dl_initimage_list)->l_tls_nextimage);
-
-  /* Construct the static TLS block and the dtv for the initial
-     thread.  For some platforms this will include allocating memory
-     for the thread descriptor.  The memory for the TLS block will
-     never be freed.  It should be allocated accordingly.  The dtv
-     array can be changed if dynamic loading requires it.  */
-#endif
 
   {
     /* Initialize _r_debug.  */

@@ -1403,7 +1403,7 @@ AC_CACHE_CHECK(for __builtin_memset, libc_cv_gcc_builtin_memset, [dnl
 cat > conftest.c <<\EOF
 void zero (void *x)
 {
-  __builtin_memset (x, 0, 4);
+  __builtin_memset (x, 0, 1000);
 }
 EOF
 dnl

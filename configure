@@ -3396,7 +3396,7 @@ else
   cat > conftest.c <<\EOF
 void zero (void *x)
 {
-  __builtin_memset (x, 0, 4);
+  __builtin_memset (x, 0, 1000);
 }
 EOF
 if { ac_try='${CC-cc} -O3 -S conftest.c -o - | fgrep "memset" > /dev/null'; { (eval echo configure:3403: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; };

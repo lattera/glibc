@@ -42,7 +42,7 @@ typedef struct
 
 
 /* We can support TLS only if the floating-stack support is available.  */
-#ifdef HAVE_TLS_SUPPORT
+#if defined FLOATING_STACKS && defined HAVE_TLS_SUPPORT
 
 /* Get system call information.  */
 # include <sysdep.h>
@@ -66,10 +66,15 @@ typedef struct
    thread pointer points to is unspecified.  Allocate the TCB there.  */
 # define TLS_TCB_AT_TP	1
 
+
+/* Install the dtv pointer.  */
+# define INSTALL_DTV(descr, dtvp) \
+  ((tcbhead_t *) descr)->dtv = dtvp
+
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
-# define TLS_INIT_TP(descr, dtvp) \
+# define TLS_INIT_TP(descr) \
   do {									      \
     void *_descr = (descr);						      \
     struct modify_ldt_ldt_s ldt_entry =					      \
@@ -78,7 +83,6 @@ typedef struct
     tcbhead_t *head = _descr;						      \
 									      \
     head->tcb = _descr;							      \
-    head->dtv = dtvp;							      \
 									      \
     asm ("pushl %%ebx\n\t"						      \
 	 "movl $1, %%ebx\n\t"						      \
@@ -94,16 +98,10 @@ typedef struct
 
 
 /* Return the address of the dtv for the current thread.  */
-# if FLOATING_STACKS
-#  define THREAD_DTV() \
+# define THREAD_DTV() \
   ({ struct _pthread_descr_struct *__descr;				      \
      THREAD_GETMEM (__descr, p_header.data.dtvp); })
-# else
-#  define THREAD_DTV() \
-  ({ struct _pthread_descr_struct *__descr = thread_self ();		      \
-     THREAD_GETMEM (__descr, p_header.data.dtvp); })
-# endif
 
-#endif	/* HAVE_TLS_SUPPORT */
+#endif	/* FLOATING_STACKS && HAVE_TLS_SUPPORT */
 
 #endif	/* tls.h */

@@ -303,6 +303,9 @@ struct rtld_global
   EXTERN size_t _dl_tls_static_size;
   /* Alignment requirement of the static TLS block.  */
   EXTERN size_t _dl_tls_static_align;
+
+  /* True if the dtv for the initial thread was malloc()ed.  */
+  EXTERN bool _dl_initial_dtv_malloced;
 #endif
 
   /* Name of the shared object to be profiled (if any).  */
@@ -666,6 +669,8 @@ extern size_t _dl_next_tls_modid (void) internal_function;
 extern void _dl_determine_tlsoffset (struct link_map *firstp)
      internal_function;
 
+/* Allocate memory for static TLS block and dtv.  */
+extern void *_dl_allocate_tls (void) internal_function;
 
 __END_DECLS
 

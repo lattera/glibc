@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <assert.h>
+#include <stdlib.h>
 
 #include <tls.h>
 
@@ -84,6 +85,16 @@ _dl_determine_tlsoffset (struct link_map *firstp)
   size_t max_align = 0;
   size_t offset;
 
+  if (GL(dl_initimage_list) == NULL)
+    {
+      /* None of the objects used at startup time uses TLS.  We still
+	 have to allocate the TCB adn dtv.  */
+      GL(dl_tls_static_size) = TLS_TCB_SIZE;
+      GL(dl_tls_static_align) = TLS_TCB_ALIGN;
+
+      return;
+    }
+
 # if TLS_TCB_AT_TP
   /* We simply start with zero.  */
   offset = 0;
@@ -146,6 +157,79 @@ _dl_determine_tlsoffset (struct link_map *firstp)
 
   /* The alignment requirement for the static TLS block.  */
   GL(dl_tls_static_align) = MAX (TLS_TCB_ALIGN, max_align);
+}
+
+
+void *
+internal_function
+_dl_allocate_tls (void)
+{
+  void *result;
+  dtv_t *dtv;
+
+  /* Allocate a correctly aligned chunk of memory.  */
+  /* XXX For now */
+  assert (GL(dl_tls_static_align) <= GL(dl_pagesize));
+#ifdef MAP_ANON
+# define _dl_zerofd (-1)
+#else
+# define _dl_zerofd GL(dl_zerofd)
+  if ((dl_zerofd) == -1)
+    GL(dl_zerofd) = _dl_sysdep_open_zero_fill ();
+# define MAP_ANON 0
+#endif
+  result = __mmap (0, GL(dl_tls_static_size), PROT_READ|PROT_WRITE,
+		   MAP_ANON|MAP_PRIVATE, _dl_zerofd, 0);
+
+  dtv = (dtv_t *) malloc ((GL(dl_tls_max_dtv_idx) + 1) * sizeof (dtv_t));
+  if (result != MAP_FAILED && dtv != NULL)
+    {
+      struct link_map *runp;
+
+# if TLS_TCB_AT_TP
+      /* The TCB follows the TLS blocks.  */
+      result = (char *) result + GL(dl_tls_static_size) - TLS_TCB_SIZE;
+# endif
+
+      /* XXX Fill in an correct generation number.  */
+      dtv[0].counter = 0;
+
+      /* Initialize the memory from the initialization image list and clear
+	 the BSS parts.  */
+      if (GL(dl_initimage_list) != NULL)
+	{
+	  runp = GL(dl_initimage_list)->l_tls_nextimage;
+	  do
+	    {
+	      assert (runp->l_tls_modid > 0);
+	      assert (runp->l_tls_modid <= GL(dl_tls_max_dtv_idx));
+# if TLS_TCB_AT_TP
+	      dtv[runp->l_tls_modid].pointer = result - runp->l_tls_offset;
+# elif TLS_DTV_AT_TP
+	      dtv[runp->l_tls_modid].pointer = result + runp->l_tls_offset;
+# else
+#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+# endif
+
+	      memset (__mempcpy (dtv[runp->l_tls_modid].pointer,
+				 runp->l_tls_initimage,
+				 runp->l_tls_initimage_size),
+		      '\0',
+		      runp->l_tls_blocksize - runp->l_tls_initimage_size);
+	    }
+	  while ((runp = runp->l_tls_nextimage) != NULL);
+	}
+
+      /* Add the dtv to the thread data structures.  */
+      INSTALL_DTV (result, dtv);
+    }
+  else if (result != NULL)
+    {
+      free (result);
+      result = NULL;
+    }
+
+  return result;
 }
 
 

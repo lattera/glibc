@@ -1,3 +1,20 @@
+2002-02-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (_dl_start_final): Install DTV explicitly.
+	(dl_main): Move dtv/static TLS handling before relocation.
+	Unconditionally call _dl_tlsoffset.  Call _dl_allocate_tls and
+	TLS_INIT_TP to allocate and install the dtv/static TLS block.
+	* sysdeps/generic/dl-tls.c (_dl_determine_tlsoffset): If no object
+	so far uses TLS initialize GL(dl_tls_static_size) and
+	GL(dl_tls_static_align) to account for the TCB.
+	(_dl_allocate_tls): New function.
+	* sysdeps/generic/ldsodefs.h (rtld_global): Add
+	_dl_initial_dtv_malloced.
+
+	* configure.in: Test for __builtin_memset more realistically.
+
+	* csu/version.c (banner): If TLS support available say so.
+
 2002-02-04  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/mips/dl-machine.h (elf_machine_matches_host): Use
