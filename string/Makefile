@@ -45,9 +45,9 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 # for -fbounded-pointer compiles.  Glibc uses memchr for explicit checks.
 o-objects.ob	:= memcpy.o memset.o memchr.o
 
-strop-tests	:= memchr memcmp memcpy memmove mempcpy memset stpcpy	\
-		   stpncpy strcat strchr strcmp strcpy strcspn strlen	\
-		   strncmp strncpy strpbrk strrchr strspn
+strop-tests	:= memchr memcmp memcpy memmove mempcpy memset memccpy	\
+		   stpcpy stpncpy strcat strchr strcmp strcpy strcspn	\
+		   strlen strncmp strncpy strpbrk strrchr strspn
 tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   tst-strlen stratcliff tst-svc tst-inlcall		\
 		   bug-strncat1 bug-strspn1 bug-strpbrk1 tst-bswap	\
