@@ -8,7 +8,7 @@ setfsgid setfsuid sysinfo uselib s_reboot
 
 sysdep_headers += sys/mount.h sys/sysinfo.h sys/acct.h sys/sysctl.h \
 		  sys/module.h sys/io.h sys/klog.h sys/kdaemon.h \
-		  syscall-list.h
+		  sys/user.h syscall-list.h
 
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
 $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/syscall.h

@@ -1,5 +1,9 @@
 Fri Jul  5 12:22:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* sysdeps/unix/sysv/linux/sys/user.h: New file.
+	* sysdeps/unix/sysv/linux/Dist: Add it.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add sys/user.h.
+
 	* nss/nss_files/files-parse.c (parse_list): Set EOL from LINE if it
 	points within DATA->linebuffer; otherwise use all of DATA->linebuffer
 	itself, no need to skip past a NUL.

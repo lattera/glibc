@@ -12,4 +12,5 @@ sys/socketcall.h
 sys/sysctl.h
 sys/sysinfo.h
 sys/timex.h
+sys/user.h
 termio.h
