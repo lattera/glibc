@@ -1,5 +1,5 @@
 /* Return backtrace of current program state.  Generic version.
-   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -58,6 +58,11 @@ extern void *__libc_stack_end;
 # define ADVANCE_STACK_FRAME(next) BOUNDED_1 ((struct layout *) (next))
 #endif
 
+/* By default, the frame pointer is just what we get from gcc.  */
+#ifndef FIRST_FRAME_POINTER
+# define FIRST_FRAME_POINTER  __builtin_frame_address (0)
+#endif
+
 int
 __backtrace (array, size)
      void **array;
@@ -68,7 +73,7 @@ __backtrace (array, size)
   void *__unbounded top_stack;
   int cnt = 0;
 
-  top_frame = __builtin_frame_address (0);
+  top_frame = FIRST_FRAME_POINTER;
   top_stack = CURRENT_STACK_FRAME;
 
   /* We skip the call to this function, it makes no sense to record it.  */

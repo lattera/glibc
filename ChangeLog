@@ -1,3 +1,24 @@
+2002-07-12  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/generic/backtrace.c (FIRST_FRAME_POINTER): New macro.
+	(__backtrace): Use it.
+	* sysdeps/arm/frame.h (FIRST_FRAME_POINTER): Define.  [PR libc/2632]
+
+2002-07-12  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_rel): Don't handle
+	R_ARM_RELATIVE if RTLD_BOOTSTRAP and HAVE_Z_COMBRELOC.  Only check
+	for rtld map if neither RTLD_BOOTSTRAP nor HAVE_Z_COMBRELOC is defined.
+	(elf_machine_rela): Remove unused variable.
+
+	* sysdeps/unix/sysv/linux/arm/Makefile [subdir=elf]
+	(sysdep-rtld-routines, sysdep_routines, sysdep-dl-routines): Don't
+	define.
+
+2002-07-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/gconv-modules: Add aliases for ISO-8859-11.
+
 2002-07-14  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/bits/link.h: Add biarch support.
