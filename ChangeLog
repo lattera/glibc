@@ -1,3 +1,7 @@
+Mon May 13 19:52:33 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/Makefile (subdir_lib): Depend on ld.so.
+
 Sun May 12 22:52:22 1996  Bruce Elliott  <belliott@accessone.com>
 
 	* stdio-common/vfprintf.c: Correct handling of unsigned short

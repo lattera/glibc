@@ -43,9 +43,14 @@ generated	= librtld.so dl-allobjs.so
 install-others	= $(slibdir)/$(rtld-installed-name)
 install-bin	= ldd
 
+# Make sure this is built in the `make lib' pass so it can be used
+# to run programs during the `make others' pass.
+subdir_lib: $(objpfx)ld.so
+
 ifneq (,$(filter linux%,$(config-os)))
 extra-objs	+= linux-compat.so
 install-others	+= $(slibdir)/ld-linux.so.1
+subdir_lib: $(objpfx)ld-linux.so.1
 endif
 endif
 
