@@ -583,7 +583,9 @@ versioned := $(strip $(foreach so,$(install-lib.so),\
 $(addprefix $(libdir)/,$(filter-out $(versioned),$(install-lib.so))): \
 $(libdir)/%.so: $(objpfx)%.so; $(do-install-program)
 
-make-link = cd $(@D); rm -f $(@F); $(LN_S) $(<F) $(@F)
+define make-link
+cd $(@D); rm -f $(@F).new; $(LN_S) $(<F) $(@F).new; mv -f $(@F).new $(@F)
+endef
 
 ifdef libc.so-version
 # For a library specified to be version N, install three files:

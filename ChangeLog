@@ -1,3 +1,11 @@
+Tue Jul 16 16:43:58 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/mmap.c: Use same inheritance arg in second vm_map
+	call as in first.
+
+	* Makerules (make-link): Install the new link with atomic mv -f in
+	case ln itself requires the library being installed.
+
 Tue Jul 16 00:31:31 1996  Richard Henderson  <rth@tamu.edu>
 
 	* sysdeps/alpha/dl-machine.h: Mirror Roland's changes to

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -135,11 +135,10 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 	err = __vm_map (__mach_task_self (),
 			&mapaddr, (vm_size_t) len, (vm_address_t) 0,
 			0, memobj, (vm_offset_t) offset,
-			flags & (MAP_COPY|MAP_PRIVATE),
+			! (flags & MAP_SHARED),
 			vmprot, VM_PROT_ALL,
-			(flags & MAP_INHERIT) == 0 ? VM_INHERIT_NONE :
-			(flags & (MAP_COPY|MAP_PRIVATE)) ? VM_INHERIT_COPY :
-			VM_INHERIT_SHARE);
+			(flags & MAP_SHARED) ? VM_INHERIT_SHARE
+			: VM_INHERIT_COPY);
     }
 
   if (memobj != MACH_PORT_NULL)
