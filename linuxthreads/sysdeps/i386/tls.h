@@ -113,10 +113,10 @@ typedef struct
 #   define TLS_LOAD_EBX
 #  endif
 
+#  include "useldt.h"		/* For the structure.  */
 #  if __ASSUME_LDT_WORKS > 0
 #   define TLS_DO_MODIFY_LDT_KERNEL_CHECK(doit) (doit) /* Nothing to check.  */
 #  else
-#   include "useldt.h"		/* For the structure.  */
 #   define TLS_DO_MODIFY_LDT_KERNEL_CHECK(doit)				      \
   (__builtin_expect (GLRO(dl_osversion) < 131939, 0)			      \
    ? "kernel too old for thread-local storage support\n"			      \
