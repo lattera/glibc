@@ -1,3 +1,14 @@
+2001-06-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/zic.c: Update from tzcode2001c.
+	* timezone/private.h: Likewise.
+	* timezone/africa: Update from tzdata2001c.
+	* timezone/asia: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+
 2001-06-04  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconv/loop.c (UNICODE_TAG_HANDLER): New macro.

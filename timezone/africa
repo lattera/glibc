@@ -1,4 +1,4 @@
-# @(#)africa	7.34
+# @(#)africa	7.35
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -481,6 +481,12 @@ Zone	Africa/Dakar	-1:09:44 -	LMT	1912
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Indian/Mahe	3:41:48 -	LMT	1906 Jun	# Victoria
 			4:00	-	SCT	# Seychelles Time
+# From Paul Eggert (2001-05-30):
+# Aldabra, Farquhar, and Desroches, originally dependencies of the
+# Seychelles, were transferred to the British Indian Ocean Territory
+# in 1965 and returned to Seychelles control in 1976.  We don't know
+# whether this affected their time zone, so omit this for now.
+# Possibly the islands were uninhabited.
 
 # Sierra Leone
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S

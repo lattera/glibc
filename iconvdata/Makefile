@@ -100,6 +100,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      tst-table-charmap.sh tst-table-from.c tst-table-to.c	    \
 	      EUC-JP.irreversible ISIRI-3342.irreversible SJIS.irreversible \
 	      EUC-KR.irreversible BIG5HKSCS.irreversible BIG5.irreversible  \
+	      CP1255.irreversible CP1258.irreversible EUC-TW.irreversible   \
 	      8bit-generic.c 8bit-gap.c					    \
 	      ansi_x3.110.c asmo_449.c big5.c cp737.c cp737.h		    \
 	      cp775.c cp775.h ibm874.c cns11643.c cns11643.h		    \

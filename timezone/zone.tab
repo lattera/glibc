@@ -1,4 +1,4 @@
-# @(#)zone.tab	1.22
+# @(#)zone.tab	1.23
 #
 # TZ zone descriptions
 #
@@ -12,7 +12,7 @@
 #     first latitude (+ is north), then longitude (+ is east).
 # 3.  Zone name used in value of TZ environment variable.
 # 4.  Comments; present if and only if the country has multiple rows.
-#     
+#
 # Columns are separated by a single tab.
 # The table is sorted first by country, then an order within the country that
 # (1) makes some geographical sense, and
@@ -120,8 +120,8 @@ CG	-0416+01517	Africa/Brazzaville
 CH	+4723+00832	Europe/Zurich
 CI	+0519-00402	Africa/Abidjan
 CK	-2114-15946	Pacific/Rarotonga
-CL	-3327-07040	America/Santiago	mainland
-CL	-2710-10927	Pacific/Easter	Easter Island
+CL	-3327-07040	America/Santiago	most locations
+CL	-2710-10927	Pacific/Easter	Easter Island & Sala y Gomez
 CM	+0403+00942	Africa/Douala
 CN	+4545+12641	Asia/Harbin	north Manchuria
 CN	+3114+12128	Asia/Shanghai	China coast
@@ -187,7 +187,8 @@ HR	+4548+01558	Europe/Zagreb
 HT	+1832-07220	America/Port-au-Prince
 HU	+4730+01905	Europe/Budapest
 ID	-0610+10648	Asia/Jakarta	Java & Sumatra
-ID	-0507+11924	Asia/Ujung_Pandang	Borneo & Celebes
+ID	-0002+10920	Asia/Pontianak	west & central Borneo
+ID	-0507+11924	Asia/Ujung_Pandang	east & south Borneo, Celebes, Bali, Nusa Tengarra, west Timor
 ID	-0232+14042	Asia/Jayapura	Irian Jaya & the Moluccas
 IE	+5320-00615	Europe/Dublin
 IL	+3146+03514	Asia/Jerusalem
@@ -237,7 +238,8 @@ ML	+1239-00800	Africa/Bamako	southwest Mali
 ML	+1446-00301	Africa/Timbuktu	northeast Mali
 MM	+1647+09610	Asia/Rangoon
 MN	+4755+10653	Asia/Ulaanbaatar	most locations
-MN	+4801+09139	Asia/Hovd	Bayan-Olgiy, Hovd, Uvs
+MN	+4801+09139	Asia/Hovd	Bayan-Olgiy, Govi-Altai, Hovd, Uvs, Zavkhan
+#MN	+4804+11430	Asia/Choibalsan	Dornod, Sukhbaatar (unsure about this)
 MO	+2214+11335	Asia/Macao
 MP	+1512+14545	Pacific/Saipan
 MQ	+1436-06105	America/Martinique

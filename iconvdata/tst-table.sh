@@ -41,7 +41,9 @@ ${SHELL} tst-table-charmap.sh ${charmap:-$charset} \
 # Precompute expected differences between the two iconv directions.
 if test ${charset} = EUC-TW; then
   irreversible=${objpfx}tst-${charset}.irreversible
-  grep '^0x8EA1' ${objpfx}tst-${charset}.charmap.table > ${irreversible}
+  (grep '^0x8EA1' ${objpfx}tst-${charset}.charmap.table
+   cat ${charset}.irreversible
+  ) > ${irreversible}
 else
   irreversible=${charset}.irreversible
 fi

@@ -21,7 +21,7 @@
 
 #ifndef lint
 #ifndef NOID
-static char	privatehid[] = "@(#)private.h	7.51";
+static char	privatehid[] = "@(#)private.h	7.52";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -53,6 +53,10 @@ static char	privatehid[] = "@(#)private.h	7.51";
 #ifndef HAVE_SYMLINK
 #define HAVE_SYMLINK		1
 #endif /* !defined HAVE_SYMLINK */
+
+#ifndef HAVE_SYS_STAT_H
+#define HAVE_SYS_STAT_H		1
+#endif /* !defined HAVE_SYS_STAT_H */
 
 #ifndef HAVE_SYS_WAIT_H
 #define HAVE_SYS_WAIT_H		1
@@ -121,16 +125,6 @@ static char	privatehid[] = "@(#)private.h	7.51";
 /*
 ** Workarounds for compilers/systems.
 */
-
-/*
-** SunOS 4.1.1 cc lacks const.
-*/
-
-#ifndef const
-#ifndef __STDC__
-#define const
-#endif /* !defined __STDC__ */
-#endif /* !defined const */
 
 /*
 ** SunOS 4.1.1 cc lacks prototypes.

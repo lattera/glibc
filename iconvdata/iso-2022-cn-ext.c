@@ -1,5 +1,5 @@
 /* Conversion module for ISO-2022-CN-EXT.
-   Copyright (C) 2000,01 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
@@ -301,7 +301,7 @@ enum
 	/* This is a character from CNS 11643 plane 2.			      \
 	   XXX We could test here whether the use of this character	      \
 	   set was announced.						      \
-	   XXX Current GB7589 and GB13131 are not supported.  */	      \
+	   XXX Currently GB7589 and GB13131 are not supported.  */	      \
 	inptr += 2;							      \
 	ch = cns11643l2_to_ucs4 (&inptr, 2, 0);				      \
 	if (ch == __UNKNOWN_10646_CHAR)					      \
@@ -332,17 +332,27 @@ enum
 	switch (ann & SS3_ann)						      \
 	  {								      \
 	  case CNS11643_3_ann:						      \
-	    /* CNS 11643 plane 3 is part of the old CNS 11643 plane 14.  */   \
-	    if (buf[1] < 0x62 || (buf[1] == 0x62 && buf[2] <= 0x45))	      \
-	      {								      \
-		buf[0] = 0x2e;						      \
-		ch = cns11643_to_ucs4 (&tmp, 3, 0);			      \
-	      }								      \
-	    else							      \
-	      ch = __UNKNOWN_10646_CHAR;				      \
+	    buf[0] = 0x23;						      \
+	    ch = cns11643_to_ucs4 (&tmp, 3, 0);				      \
+	    break;							      \
+	  case CNS11643_4_ann:						      \
+	    buf[0] = 0x24;						      \
+	    ch = cns11643_to_ucs4 (&tmp, 3, 0);				      \
+	    break;							      \
+	  case CNS11643_5_ann:						      \
+	    buf[0] = 0x25;						      \
+	    ch = cns11643_to_ucs4 (&tmp, 3, 0);				      \
+	    break;							      \
+	  case CNS11643_6_ann:						      \
+	    buf[0] = 0x26;						      \
+	    ch = cns11643_to_ucs4 (&tmp, 3, 0);				      \
+	    break;							      \
+	  case CNS11643_7_ann:						      \
+	    buf[0] = 0x27;						      \
+	    ch = cns11643_to_ucs4 (&tmp, 3, 0);				      \
 	    break;							      \
 	  default:							      \
-	    /* XXX Currently planes 4 to 7 are not supported.  */	      \
+	    /* XXX Currently GB7590 and GB13132 are not supported.  */	      \
 	    ch = __UNKNOWN_10646_CHAR;					      \
 	    break;							      \
 	  }								      \
@@ -516,22 +526,35 @@ enum
 		      }							      \
 									      \
 		    written = ucs4_to_cns11643 (ch, tmpbuf, 3);		      \
-		    if (written == 3 && tmpbuf[0] != 1 && tmpbuf[0] != 2)     \
+		    if (written == 3 && tmpbuf[0] >= 3 && tmpbuf[0] <= 7)     \
 		      {							      \
 			buf[0] = tmpbuf[1];				      \
 			buf[1] = tmpbuf[2];				      \
-			written = 2;					      \
-			/* CNS 11643 plane 3 is part of the old CNS 11643     \
-			   plane 14.					      \
-			   XXX Currently planes 4 to 7 are not supported.  */ \
-			if (tmpbuf[0] == 14				      \
-			    && (tmpbuf[1] < 0x62			      \
-				|| (tmpbuf[1] == 0x62 && tmpbuf[2] <= 0x45))) \
+			switch (tmpbuf[0])				      \
 			  {						      \
+			  case 3:					      \
 			    used = CNS11643_3_set;			      \
 			    break;					      \
+			  case 4:					      \
+			    used = CNS11643_4_set;			      \
+			    break;					      \
+			  case 5:					      \
+			    used = CNS11643_5_set;			      \
+			    break;					      \
+			  case 6:					      \
+			    used = CNS11643_6_set;			      \
+			    break;					      \
+			  case 7:					      \
+			    used = CNS11643_7_set;			      \
+			    break;					      \
+			  default:					      \
+			    abort ();					      \
 			  }						      \
+			written = 2;					      \
+			break;						      \
 		      }							      \
+									      \
+		    /* XXX Currently GB7590 and GB13132 are not supported.  */\
 									      \
 		    /* Even this does not work.  Error.  */		      \
 		    used = ASCII_set;					      \

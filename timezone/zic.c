@@ -1,15 +1,21 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.101";
+static char	elsieid[] = "@(#)zic.c	7.102";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
 #include "private.h"
 #include "locale.h"
 #include "tzfile.h"
-#ifdef unix
-#include "sys/stat.h"			/* for umask manifest constants */
-#endif /* defined unix */
+
+#if HAVE_SYS_STAT_H
+#include "sys/stat.h"
+#endif
+#ifdef S_IRUSR
+#define MKDIR_UMASK (S_IRUSR|S_IWUSR|S_IXUSR|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH)
+#else
+#define MKDIR_UMASK 0755
+#endif
 
 /*
 ** On some ancient hosts, predicates like `isspace(C)' are defined
@@ -2198,7 +2204,7 @@ char * const	argname;
 			** created by some other multiprocessor, so we get
 			** to do extra checking.
 			*/
-			if (mkdir(name, S_IRUSR|S_IWUSR|S_IXUSR|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH) != 0) {
+			if (mkdir(name, MKDIR_UMASK) != 0) {
 				const char *e = strerror(errno);
 
 				if (errno != EEXIST || !itsdir(name)) {

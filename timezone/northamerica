@@ -1,4 +1,4 @@
-# @(#)northamerica	7.58
+# @(#)northamerica	7.59
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
@@ -81,12 +81,12 @@
 # From Joseph Gallant <notquite@hotmail.com>, citing
 # George H. Douglas, _The Early Days of Radio Broadcasting_ (1987):
 # At 7 P.M. (Eastern War Time) [on 1945-08-14], the networks were set
-# to switch to London for Atlee's address, but the American people
+# to switch to London for Attlee's address, but the American people
 # never got to hear his speech live. According to one press account,
 # CBS' Bob Trout was first to announce the word of Japan's surrender,
 # but a few seconds later, NBC, ABC and Mutual also flashed the word
 # of surrender, all of whom interrupting the bells of Big Ben in
-# London which were to precede Mr. Atlee's speech.
+# London which were to precede Mr. Attlee's speech.
 
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	US	1918	1919	-	Mar	lastSun	2:00	1:00	D
@@ -185,13 +185,6 @@ Rule	US	1987	max	-	Apr	Sun>=1	2:00	1:00	D
 # "Chamorro Standard Time" for time in Guam and the Northern Marianas.
 # See the file "australasia".
 
-# From Ryan Alessi of the Thousand Oaks Star (2001-02-15) via Rives McDow:
-# Brad Sherman, D-Sherman Oaks, introduced a bill in Congress on
-# Wednesday that could have California operating on Denver time as
-# early as this summer....  The options include keeping
-# daylight-saving time all year long, or setting clocks back two hours
-# -- instead of just one -- during the existing daylight-saving time.
-
 
 # US Eastern time, represented by New York
 
@@ -280,13 +273,20 @@ Zone America/Los_Angeles -7:52:58 -	LMT	1883 Nov 18 12:00
 # Alaska
 # AK%sT is the modern abbreviation for -9:00 per USNO.
 #
-# From Paul Eggert (2001-04-01):
+# From Paul Eggert (2001-05-30):
 # Howse writes that Alaska switched from the Julian to the Gregorian calendar,
 # and from east-of-GMT to west-of-GMT days, when the US bought it from Russia.
 # This was on 1867-10-18, a Friday; the previous day was 1867-10-06 Julian,
 # also a Friday.  Include only the time zone part of this transition,
 # ignoring the switch from Julian to Gregorian, since we can't represent
 # the Julian calendar.
+#
+# As far as we know, none of the exact locations mentioned below were
+# permanently inhabited in 1867 by anyone using either calendar.
+# (Yakutat was colonized by the Russians in 1799, but the settlement
+# was destroyed in 1805 by a Yakutat-kon war party.)  However, there
+# were nearby inhabitants in some cases and for our purposes perhaps
+# it's best to simply use the official transition.
 #
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone America/Juneau	 15:02:19 -	LMT	1867 Oct 18
@@ -407,7 +407,7 @@ Zone America/Boise	-7:44:49 -	LMT	1883 Nov 18 12:00
 # Pam Belluck reported in the New York Times (2001-01-31) that the
 # Indiana Legislature is considering a bill to adopt DST statewide.
 # Her article mentioned Vevay, whose post office observes a different
-# time zone than Danner's Hardware across the street.
+# time zone from Danner's Hardware across the street.
 
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER
 Rule Indianapolis 1941	only	-	Jun	22	2:00	1:00	D
@@ -589,10 +589,11 @@ Zone America/Menominee	-5:50:27 -	LMT	1885 Sep 18 12:00
 			-6:00	US	C%sT
 
 # Navassa
+# administered by the US Fish and Wildlife Service
 # claimed by US under the provisions of the 1856 Guano Islands Act
 # also claimed by Haiti
 # occupied 1857/1900 by the Navassa Phosphate Co
-# US lighthouse 1917/1997-01
+# US lighthouse 1917/1996-09
 # currently uninhabited
 # see Mark Fineman, ``An Isle Rich in Guano and Discord'',
 # _Los Angeles Times_ (1998-11-10), A1, A10; it cites

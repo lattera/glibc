@@ -1,5 +1,5 @@
 /* Access functions for CNS 11643, plane 2 handling.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -54,7 +54,7 @@ cns11643l2_to_ucs4 (const unsigned char **s, size_t avail,
 
 
 /* The table which contains the CNS 11643 level 2 mappings.  */
-extern const char __cns11643_from_ucs4_tab[][3];
+extern const char __cns11643_from_ucs4p0_tab[][3];
 
 
 static inline size_t
@@ -65,7 +65,7 @@ ucs4_to_cns11643l2 (uint32_t wch, unsigned char *s, size_t avail)
 
   if (ch >= 0x4e07 && ch <= 0x9fa4)
     {
-      cp = __cns11643_from_ucs4_tab[ch - 0x4e00];
+      cp = __cns11643_from_ucs4p0_tab[ch - 0x3400];
       if (cp[0] == '\2')
 	++cp;
       else

@@ -1,5 +1,5 @@
-/* Access functions for CNS 11643, plane 2 handling.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Access functions for CNS 11643 handling.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -20,12 +20,23 @@
 
 #include <stdint.h>
 
+
 /* Table for CNS 11643, plane 1 to UCS4 conversion.  */
 extern const uint16_t __cns11643l1_to_ucs4_tab[];
 /* Table for CNS 11643, plane 2 to UCS4 conversion.  */
 extern const uint16_t __cns11643l2_to_ucs4_tab[];
-/* Table for CNS 11643, plane 14 to UCS4 conversion.  */
-extern const uint16_t __cns11643l14_to_ucs4_tab[];
+/* Table for CNS 11643, plane 3 to UCS4 conversion.  */
+extern const uint32_t __cns11643l3_to_ucs4_tab[];
+/* Table for CNS 11643, plane 4 to UCS4 conversion.  */
+extern const uint32_t __cns11643l4_to_ucs4_tab[];
+/* Table for CNS 11643, plane 5 to UCS4 conversion.  */
+extern const uint32_t __cns11643l5_to_ucs4_tab[];
+/* Table for CNS 11643, plane 6 to UCS4 conversion.  */
+extern const uint32_t __cns11643l6_to_ucs4_tab[];
+/* Table for CNS 11643, plane 7 to UCS4 conversion.  */
+extern const uint32_t __cns11643l7_to_ucs4_tab[];
+/* Table for CNS 11643, plane 15 (old) to UCS4 conversion.  */
+extern const uint32_t __cns11643l15_to_ucs4_tab[];
 
 
 static inline uint32_t
@@ -53,26 +64,51 @@ cns11643_to_ucs4 (const char **s, size_t avail, unsigned char offset)
 
   idx = (ch2 - 0x21 - offset) * 94 + (ch3 - 0x21 - offset);
 
-  if ((ch - 0x20 - offset) == 1)
+  switch (ch - 0x20 - offset)
     {
+    case 1:
       if (idx > 0x21f2)
 	return __UNKNOWN_10646_CHAR;
       result = __cns11643l1_to_ucs4_tab[idx];
-    }
-  else if ((ch - 0x20 - offset) == 2)
-    {
+      break;
+    case 2:
       if (idx > 0x1de1)
 	return __UNKNOWN_10646_CHAR;
       result = __cns11643l2_to_ucs4_tab[idx];
-    }
-  else if ((ch - 0x20 - offset) == 0xe)
-    {
+      break;
+    case 3:
       if (idx > 0x19bd)
 	return __UNKNOWN_10646_CHAR;
-      result = __cns11643l14_to_ucs4_tab[idx];
+      result = __cns11643l3_to_ucs4_tab[idx];
+      break;
+    case 4:
+      if (idx > 0x1c81)
+	return __UNKNOWN_10646_CHAR;
+      result = __cns11643l4_to_ucs4_tab[idx];
+      break;
+    case 5:
+      if (idx > 0x219a)
+	return __UNKNOWN_10646_CHAR;
+      result = __cns11643l5_to_ucs4_tab[idx];
+      break;
+    case 6:
+      if (idx > 0x18f3)
+	return __UNKNOWN_10646_CHAR;
+      result = __cns11643l6_to_ucs4_tab[idx];
+      break;
+    case 7:
+      if (idx > 0x198a)
+	return __UNKNOWN_10646_CHAR;
+      result = __cns11643l7_to_ucs4_tab[idx];
+      break;
+    case 15:
+      if (idx > 0x1c00)
+	return __UNKNOWN_10646_CHAR;
+      result = __cns11643l15_to_ucs4_tab[idx];
+      break;
+    default:
+      return __UNKNOWN_10646_CHAR;
     }
-  else
-    return __UNKNOWN_10646_CHAR;
 
   if (result != L'\0')
     (*s) += 3;
@@ -98,7 +134,8 @@ extern const char __cns11643l1_from_ucs4_tab11[][2];
 extern const char __cns11643l1_from_ucs4_tab12[][2];
 extern const char __cns11643l1_from_ucs4_tab13[][2];
 extern const char __cns11643l1_from_ucs4_tab14[][2];
-extern const char __cns11643_from_ucs4_tab[][3];
+extern const char __cns11643_from_ucs4p0_tab[][3];
+extern const char __cns11643_from_ucs4p2_tab[][3];
 
 
 static inline size_t
@@ -179,14 +216,14 @@ ucs4_to_cns11643 (uint32_t wch, char *s, size_t avail)
       break;
     case 0x4e00 ... 0x9f9c:
       cp = __cns11643l1_from_ucs4_tab12[ch - 0x4e00];
-
       if (cp[0] != '\0')
 	break;
       /* FALLTHROUGH.  Let's try the other planes.  */
+    case 0x3400 ... 0x4dff:
     case 0x9f9d ... 0x9fa5:
       /* Let's try the other planes.  */
       needed = 3;
-      cp = __cns11643_from_ucs4_tab[ch - 0x4e00];
+      cp = __cns11643_from_ucs4p0_tab[ch - 0x3400];
       break;
     case 0xfe30 ... 0xfe6b:
       cp = __cns11643l1_from_ucs4_tab13[ch - 0xfe30];
@@ -202,6 +239,10 @@ ucs4_to_cns11643 (uint32_t wch, char *s, size_t avail)
       break;
     case 0xffe5:
       cp = "\x22\x64";
+      break;
+    case 0x20000 ... 0x2a6d6:
+      needed = 3;
+      cp = __cns11643_from_ucs4p2_tab[ch - 0x20000];
       break;
     default:
       return __UNKNOWN_10646_CHAR;
