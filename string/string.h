@@ -174,6 +174,7 @@ extern char *strerror __P ((int __errnum));
 #ifdef	__USE_REENTRANT
 /* Reentrant version of `strerror'.  If a temporary buffer is required, at
    most BUFLEN bytes of BUF will be used.  */
+extern char *__strerror_r __P ((int __errnum, char *__buf, size_t __buflen));
 extern char *strerror_r __P ((int __errnum, char *__buf, size_t __buflen));
 #endif
 

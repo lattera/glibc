@@ -36,6 +36,7 @@ static char sccsid[] = "@(#)ttyslot.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 
 #include <ttyent.h>
+#include <alloca.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -47,12 +48,19 @@ ttyslot()
 	register int slot;
 	register char *p;
 	int cnt;
+	size_t buflen = __sysconf (_SC_TTY_NAME_MAX) + 1;
 	char *name;
 
+	if (buflen == 0)
+	  /* This should be enough if no fixed value is given.  */
+	  buflen = 32;
+
+	name = __alloca (buflen);
+
 	setttyent();
-	for (cnt = 0; cnt < 3; ++cnt) 
-		if (name = ttyname(cnt)) {
-			if (p = rindex(name, '/')) 
+	for (cnt = 0; cnt < 3; ++cnt)
+		if (__ttyname_r (cnt, name, buflen) >= 0) {
+			if (p = rindex(name, '/'))
 				++p;
 			else
 				p = name;

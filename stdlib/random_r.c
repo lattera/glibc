@@ -154,7 +154,6 @@ __srandom_r (x, buf)
 }
 
 weak_alias (__srandom_r, srandom_r)
-weak_alias (__srandom_r, srand_r)
 
 /* Initialize the state information in the given array of N bytes for
    future random number generation.  Based on the number of bytes we

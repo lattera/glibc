@@ -1,20 +1,20 @@
 /* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* Wants:
    AC_STDC_HEADERS
@@ -187,6 +187,10 @@ extern char *alloca ();
 #define __getcwd getcwd
 #endif
 
+#if defined HAVE_READDIR_R && !defined _LIBC
+#define __readdir_r readdir_r
+#endif
+
 /* Get the pathname of the current working directory, and put it in SIZE
    bytes of BUF.  Returns NULL if the directory couldn't be determined or
    SIZE was too small.  If successful, returns BUF.  In GNU, if BUF is
@@ -250,6 +254,9 @@ __getcwd (buf, size)
     {
       register DIR *dirstream;
       register struct dirent *d;
+#if defined HAVE_READDIR_R || defined _LIBC
+      struct dirent dirbuf;
+#endif
       dev_t dotdev;
       ino_t dotino;
       char mount_point;
@@ -292,7 +299,13 @@ __getcwd (buf, size)
       dirstream = __opendir (dotp);
       if (dirstream == NULL)
 	goto lose;
-      while ((d = __readdir (dirstream)) != NULL)
+      while (
+#if defined HAVE_READDIR_R || defined _LIBC
+	     __readdir_r (dirstream, &dirbuf, &d) >= 0
+#else
+	     (d = __readdir (dirstream)) != NULL
+#endif
+	     )
 	{
 	  if (d->d_name[0] == '.' &&
 	      (d->d_name[1] == '\0' ||

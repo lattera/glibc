@@ -347,7 +347,6 @@ LDFLAGS-c.so = -nostdlib -nostartfiles
 # Give libc.so an entry point and make it directly runnable itself.
 LDFLAGS-c.so += -e __libc_main
 # Use our own special initializer and finalizer files for libc.so.
-elfobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)elf)
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.so \
 			 $(common-objpfx)libc_pic.a \
 			 $(elfobjdir)/sofini.so $(elfobjdir)/ld.so
@@ -638,7 +637,8 @@ install: $(libdir)/libc.so
 $(libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
 		   $(elfobjdir)/$(rtld-installed-name) \
 		   $(libdir)/lib$(libc-name).a
-	(echo '/* Use the shared library, but some functions are only in';\
+	(echo '/* GNU ld script';\
+	 echo '   Use the shared library, but some functions are only in';\
 	 echo '   the static library, so try that secondarily.'; \
 	 echo '   The dynamic linker defines some functions used by $(<F),';\
 	 echo '	  but ld uses definitions from libc.a before examining the';\

@@ -14,9 +14,9 @@
 # Library General Public License for more details.
 
 # You should have received a copy of the GNU Library General Public
-# License along with the GNU C Library; see the file COPYING.LIB.  If
-# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-# Cambridge, MA 02139, USA.
+# License along with the GNU C Library; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
 
 # Make this the default goal.
 TAGS:
@@ -43,8 +43,10 @@ sysdep-dirs := $(full-config-sysdirs)
 
 ifndef sysdep_dirs
 # Find all sysdep directories.
-sysdep_dirs := $(shell find $(..)sysdeps -type d \
-					 ! -name RCS ! -name CVS -print)
+sysdep_dirs := $(shell find $(..)sysdeps \
+			    $(wildcard \
+				$(patsubst %,$(..)%/sysdeps,$(add-ons))) \
+			    -type d ! -name RCS ! -name CVS -print)
 endif
 
 # Find all sysdep dirs there are, but putting the ones
@@ -145,7 +147,8 @@ else
 	$(extract)
 endif
 
-$P/siglist.pot: $(common-objpfx)stdio-common/siglist.c; $(extract)
+#$P/siglist.pot: $(common-objpfx)stdio-common/siglist.c; $(extract)
+$P/siglist.pot: siglist.c; $(extract)
 
 # Extract all strings from this file; its strings are not marked.
 # Their surroundings are also not interesting.

@@ -201,8 +201,8 @@ _nl_make_l10nflist (l10nfile_list, dirlist, dirlist_len, mask, language,
 				  + ((mask & XPG_NORM_CODESET) != 0
 				     ? strlen (normalized_codeset) + 1 : 0)
 				  + (((mask & XPG_MODIFIER) != 0
-				      || (mask & CEN_AUDIENCE) != 0) ?
-				     strlen (modifier) + 1 : 0)
+				      || (mask & CEN_AUDIENCE) != 0)
+				     ? strlen (modifier) + 1 : 0)
 				  + ((mask & CEN_SPECIAL) != 0
 				     ? strlen (special) + 1 : 0)
 				  + ((mask & (CEN_SPONSOR | CEN_REVISION) != 0)

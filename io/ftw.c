@@ -1,23 +1,22 @@
 /* Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ian Lance Taylor (ian@airs.com).
+   This file is part of the GNU C Library.
+   Contributed by Ian Lance Taylor (ian@airs.com).
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <limits.h>
 #include <stdlib.h>
@@ -36,20 +35,17 @@ Cambridge, MA 02139, USA.  */
 /* Traverse one level of a directory tree.  */
 
 static int
-DEFUN (ftw_dir, (dirs, level, descriptors, dir, len, func),
-       DIR **dirs AND int level AND int descriptors AND
-       char *dir AND size_t len AND
-       int EXFUN((*func), (CONST char *file, struct stat *status,
-			   int flag)))
+ftw_dir (DIR **dirs, int level, int descriptors, char *dir, size_t len,
+	 int (*func) (const char *file, struct stat *status, int flag))
 {
   int got;
-  struct dirent *entry;
+  struct dirent dirbuf, *entry;
 
   got = 0;
 
   __set_errno (0);
 
-  while ((entry = readdir (dirs[level])) != NULL)
+  while (__readdir_r (dirs[level], &dirbuf, &entry) >= 0)
     {
       struct stat s;
       int flag, retval, newlev;
@@ -78,7 +74,7 @@ DEFUN (ftw_dir, (dirs, level, descriptors, dir, len, func),
 	}
 
       dir[len] = '/';
-      memcpy ((PTR) (dir + len + 1), (PTR) entry->d_name,
+      memcpy ((void *) (dir + len + 1), (void *) entry->d_name,
 	      namlen + 1);
 
       if (stat (dir, &s) < 0)
@@ -140,7 +136,7 @@ DEFUN (ftw_dir, (dirs, level, descriptors, dir, len, func),
 	  while (skip-- != 0)
 	    {
 	      __set_errno (0);
-	      if (readdir (dirs[level]) == NULL)
+	      if (__readdir_r (dirs[level], &dirbuf, &entry) < 0)
 		return errno == 0 ? 0 : -1;
 	    }
 	}
@@ -154,11 +150,9 @@ DEFUN (ftw_dir, (dirs, level, descriptors, dir, len, func),
 /* Call a function on every element in a directory tree.  */
 
 int
-DEFUN(ftw, (dir, func, descriptors),
-      CONST char *dir AND
-      int EXFUN((*func), (CONST char *file, struct stat *status,
-			  int flag)) AND
-      int descriptors)
+ftw (const char *dir,
+     int (*func) (const char *file, struct stat *status, int flag),
+     int descriptors)
 {
   DIR **dirs;
   size_t len;
@@ -197,7 +191,7 @@ DEFUN(ftw, (dir, func, descriptors),
     flag = FTW_F;
 
   len = strlen (dir);
-  memcpy ((PTR) buf, (PTR) dir, len + 1);
+  memcpy ((void *) buf, (void *) dir, len + 1);
 
   retval = (*func) (buf, &s, flag);
 

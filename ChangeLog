@@ -1,3 +1,33 @@
+Tue Dec  3 08:38:15 1996  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/unix/alpha/sysdep.S: Remove definition of __errno_location.
+	Reformat copyright.
+
+	* elf/rtld.c (_dl_start): Don't dereference the value returned by
+	elf_machine_got to get _DYNAMIC, instead call new function
+	elf_machine_dynamic.
+	* sysdeps/alpha/dl-machine.h: Permute elf_machine_got to
+	elf_machine_dynamic.  Reformat copyright.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	* sysdeps/m68k/dl-machine.h: Likewise.
+	* sysdeps/mips/dl-machine.h: Likewise.
+	* sysdeps/sparc/dl-machine.h: Likewise.
+	* sysdeps/stub/dl-machine.h: Likewise.
+
+Tue Oct 15 23:46:00 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* MakeTAGS (sysdep_dirs): Include add-on sysdep directories.
+
+Tue Dec  3 02:06:18 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules ($(libdir)/libc.so): Make first line of generated
+	link script contain `/* GNU ld script'.  This will be used in
+	ldconfig to check for linker scripts.
+	* sysdeps/mach/hurd/libc-ldscript: Likewise.
+	* sysdeps/mach/hurd/libc_p-ldscript: Likewise.
+
+	* stdlib/getsubopt.c: Update copyright.  Correct typo in comment.
+
 Mon Dec  2 15:32:15 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-lookup.c (_dl_lookup_symbol_skip): Remove unused variable

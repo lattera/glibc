@@ -265,6 +265,12 @@ extern int rand __P ((void));
 /* Seed the random number generator with the given number.  */
 extern void srand __P ((unsigned int __seed));
 
+#ifdef __USE_REENTRANT
+/* Reentrant interface according to POSIX.1.  */
+extern int __rand_r __P ((unsigned int *__seed));
+extern int rand_r __P ((unsigned int *__seed));
+#endif
+
 
 #if defined(__USE_SVID) || defined(__USE_XOPEN)
 /* System V style 48-bit random number generator functions.  */

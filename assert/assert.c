@@ -1,29 +1,28 @@
-/* Copyright (C) 1991, 1994, 1995 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1991, 1994, 1995, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sysdep.h>
 
 
-CONST char *__assert_program_name;
+const char *__assert_program_name;
 
 /* This function, when passed a string containing an asserted
    expression, a filename, and a line number, prints a message
@@ -36,9 +35,8 @@ CONST char *__assert_program_name;
 #endif
 
 void
-DEFUN(__assert_fail, (assertion, file, line, function),
-      CONST char *assertion AND
-      CONST char *file AND unsigned int line AND CONST char *function)
+__assert_fail (const char *assertion, const char *file, unsigned int line,
+	       const char *function)
 {
 #ifdef FATAL_PREPARE
   FATAL_PREPARE;
@@ -61,8 +59,7 @@ DEFUN(__assert_fail, (assertion, file, line, function),
 #include <string.h>
 
 static void
-DEFUN(set_progname, (argc, argv, envp),
-      int argc AND char **argv AND char **envp)
+set_progname (int argc, char **argv, char **envp)
 {
   char *p;
 

@@ -64,7 +64,7 @@ $(objpfx)localedef: $(localedef-modules:%=$(objpfx)%.o)
 $(objpfx)locale: $(locale-modules:%=$(objpfx)%.o)
 $(objpfx)localedef $(objpfx)locale: $(lib-modules:%=$(objpfx)%.o)
 
-localepath = "$(localeddir)"
+localepath = "$(localedir):$(i18ndir)"
 
 CPPFLAGS := -DLOCALE_PATH='$(localepath)' \
 	    -DLOCALEDIR='"$(localedir)"' \

@@ -1,19 +1,19 @@
 /* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with this library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with this library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* AIX requires this to be the first thing in the file.  */
 #if defined (_AIX) && !defined (__GNUC__)
@@ -843,10 +843,24 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 	  {
 	    const char *name;
 	    size_t len;
-	    struct dirent *d = ((flags & GLOB_ALTDIRFUNC) ?
-				(*pglob->gl_readdir) (stream) :
-				readdir ((DIR *) stream));
-	    if (d == NULL)
+	    struct dirent dirbuf, *d;
+	    int success;
+
+	    if (flags & GLOB_ALTDIRFUNC)
+	      {
+		d = (*pglob->gl_readdir) (stream);
+		success = d != NULL;
+	      }
+	    else
+	      {
+#if defined HAVE_READDIR_R || defined _LIBC
+		success = __readdir_r ((DIR *) stream, &dirbuf, &d) >= 0;
+#else
+		d = readdir ((DIR *) stream);
+		success = d != NULL;
+#endif
+	      }
+	    if (! success)
 	      break;
 	    if (! REAL_DIR_ENTRY (d))
 	      continue;

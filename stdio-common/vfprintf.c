@@ -210,6 +210,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   /* Count number of specifiers we already processed.  */
   int nspecs_done;
 
+  /* For the %m format we may need the current `errno' value.  */
+  int save_errno = errno;
+
 
   /* This table maps a character into a number representing a
      class.  In each step there is a destination label for each
@@ -849,7 +852,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	extern char *_strerror_internal __P ((int, char *buf, size_t));	      \
 									      \
 	string = (char *)						      \
-	  _strerror_internal (errno, work_buffer, sizeof work_buffer);	      \
+	  _strerror_internal (save_errno, work_buffer, sizeof work_buffer);   \
       }									      \
       is_long = 0;		/* This is no wide-char string.  */	      \
       goto LABEL (print_string)

@@ -68,6 +68,9 @@ please let me know.
 	  `setsockopt', `getsockname', `getpeername', `send',
 	  `sendto', and `recvfrom' are different in GNU libc than
 	  on any other system I saw.  This is a bug, isn't it?''
+
+[Q19]	``My XXX kernel emulates a floating-point coprocessor for me.
+	  Should I enable --with-fp?''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -568,6 +571,15 @@ So better change now.
 This change is critical for system which have
 	sizeof (int) != sizeof (size_t)
 like the Alpha.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q19]	``My XXX kernel emulates a floating-point coprocessor for me.
+	  Should I enable --with-fp?''
+
+[A19] {UD} As `configure --help' shows the default value is `yes' and
+this should not be changed unless the FPU instructions would be
+invalid.  I.e., an emulated FPU is for the libc as good as a real one.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~

@@ -1,4 +1,5 @@
-/* This linker script is installed as /lib/libc.a.
+/* GNU ld script
+   This linker script is installed as /lib/libc.a.
    It makes -lc become just like -( -lcrt -lmachuser -lhurduser -).
    */
 

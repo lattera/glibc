@@ -77,11 +77,12 @@ unsigned int error_message_count;
    name of the executing program.  */
 extern char *program_name;
 
-#if HAVE_STRERROR
-# ifndef strerror		/* On some systems, strerror is a macro */
+#ifndef HAVE_STRERROR_R
+# if HAVE_STRERROR
+#  ifndef strerror		/* On some systems, strerror is a macro */
 char *strerror ();
-# endif
-#else
+#  endif
+# else
 static char *
 private_strerror (errnum)
      int errnum;
@@ -93,8 +94,9 @@ private_strerror (errnum)
     return _(sys_errlist[errnum]);
   return _("Unknown system error");
 }
-#define strerror private_strerror
-#endif	/* HAVE_STRERROR */
+#  define strerror private_strerror
+# endif	/* HAVE_STRERROR */
+#endif	/* HAVE_STRERROR_R */
 #endif	/* _LIBC */
 
 /* Print the program name and error message MESSAGE, which is a printf-style
@@ -140,7 +142,14 @@ error (status, errnum, message, va_alist)
 
   ++error_message_count;
   if (errnum)
-    fprintf (stderr, ": %s", strerror (errnum));
+    {
+#if defined HAVE_STRERROR_R || defined _LIBC
+      char errbuf[1024];
+      fprintf (stderr, ": %s", __strerror_r (errnum, errbuf, sizeof errbuf));
+#else
+      fprintf (stderr, ": %s", strerror (errnum));
+#endif
+    }
   putc ('\n', stderr);
   fflush (stderr);
   if (status)
@@ -208,7 +217,14 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
 
   ++error_message_count;
   if (errnum)
-    fprintf (stderr, ": %s", strerror (errnum));
+    {
+#if defined HAVE_STRERROR_R || defined _LIBC
+      char errbuf[1024];
+      fprintf (stderr, ": %s", __strerror_r (errnum, errbuf, sizeof errbuf));
+#else
+      fprintf (stderr, ": %s", strerror (errnum));
+#endif
+    }
   putc ('\n', stderr);
   fflush (stderr);
   if (status)

@@ -40,6 +40,7 @@
 #define DATAFILE	"/etc/" DATABASE
 
 #ifdef NEED_H_ERRNO
+# include <netdb.h>
 # define H_ERRNO_PROTO	, int *herrnop
 # define H_ERRNO_ARG	, herrnop
 # define H_ERRNO_SET(val) (*herrnop = (val))
@@ -149,7 +150,7 @@ internal_getent (struct STRUCTURE *result,
   if (buflen < (int) sizeof *data + 1)
     {
       __set_errno (ERANGE);
-      HERRNO_SET (NETDB_INTERNAL);
+      H_ERRNO_SET (NETDB_INTERNAL);
       return NSS_STATUS_TRYAGAIN;
     }
 

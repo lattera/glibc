@@ -5,8 +5,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 1.96\n"
-"POT-Creation-Date: 1996-10-17 03:22+0200\n"
+"Project-Id-Version: libc 1.98\n"
+"POT-Creation-Date: 1996-12-03 13:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+DIST\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,17 +63,17 @@ msgstr ""
 msgid "%s in ruleless zone"
 msgstr ""
 
-#: assert/assert.c:48
+#: assert/assert.c:46
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr ""
 
-#: assert/assert-perr.c:46
+#: assert/assert-perr.c:47
 #, c-format
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr ""
 
-#: stdio-common/psignal.c:48
+#: stdio-common/psignal.c:47
 #, c-format
 msgid "%s%sUnknown signal %d\n"
 msgstr ""
@@ -268,19 +268,19 @@ msgstr ""
 msgid ".lib section in a.out corrupted"
 msgstr ""
 
-#: inet/rcmd.c:328
+#: inet/rcmd.c:358
 msgid ".rhosts fstat failed"
 msgstr ""
 
-#: inet/rcmd.c:324
+#: inet/rcmd.c:354
 msgid ".rhosts lstat failed"
 msgstr ""
 
-#: inet/rcmd.c:326
+#: inet/rcmd.c:356
 msgid ".rhosts not regular file"
 msgstr ""
 
-#: inet/rcmd.c:332
+#: inet/rcmd.c:362
 msgid ".rhosts writeable by other than owner"
 msgstr ""
 
@@ -325,7 +325,7 @@ msgstr ""
 msgid "Address family not supported by protocol"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:714
+#: stdio-common/../sysdeps/gnu/errlist.c:730
 msgid "Advertise error"
 msgstr ""
 
@@ -366,8 +366,12 @@ msgstr ""
 msgid "Bad file descriptor"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:682
+#: stdio-common/../sysdeps/gnu/errlist.c:718
 msgid "Bad font file format"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:610
+msgid "Bad message"
 msgstr ""
 
 #. TRANS A file that isn't a block special file was given in a situation that
@@ -398,6 +402,22 @@ msgstr ""
 
 #: stdio-common/../sysdeps/gnu/errlist.c:758
 msgid "Can not access a needed shared library"
+msgstr ""
+
+#: nis/ypclnt.c:637
+msgid "Can't bind to server which serves this domain"
+msgstr ""
+
+#: nis/ypclnt.c:649
+msgid "Can't communicate with portmapper"
+msgstr ""
+
+#: nis/ypclnt.c:651
+msgid "Can't communicate with ypbind"
+msgstr ""
+
+#: nis/ypclnt.c:653
+msgid "Can't communicate with ypserv"
 msgstr ""
 
 #. TRANS No memory available.  The system cannot allocate more virtual memory
@@ -442,7 +462,7 @@ msgstr ""
 msgid "Cannot set socket option SO_BROADCAST"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:622
+#: stdio-common/../sysdeps/gnu/errlist.c:658
 msgid "Channel number out of range"
 msgstr ""
 
@@ -453,7 +473,7 @@ msgstr ""
 msgid "Client credential too weak"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:722
+#: stdio-common/../sysdeps/gnu/errlist.c:738
 msgid "Communication error on send"
 msgstr ""
 
@@ -501,6 +521,10 @@ msgid ""
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 msgstr ""
 
+#: nis/ypclnt.c:663
+msgid "Database is busy"
+msgstr ""
+
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
@@ -508,7 +532,7 @@ msgstr ""
 msgid "Destination address required"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:686
+#: stdio-common/../sysdeps/gnu/errlist.c:638
 msgid "Device not a stream"
 msgstr ""
 
@@ -539,12 +563,16 @@ msgstr ""
 msgid "Disc quota exceeded"
 msgstr ""
 
+#: nis/ypclnt.c:709
+msgid "Domain not bound"
+msgstr ""
+
 #: sunrpc/clnt_perr.c:254
 #, c-format
 msgid "Error %d"
 msgstr ""
 
-#: string/../sysdeps/mach/_strerror.c:43
+#: string/../sysdeps/mach/_strerror.c:52
 msgid "Error in unknown error system: "
 msgstr ""
 
@@ -552,7 +580,7 @@ msgstr ""
 msgid "Error: .netrc file is readable by others."
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:662
+#: stdio-common/../sysdeps/gnu/errlist.c:698
 msgid "Exchange full"
 msgstr ""
 
@@ -580,7 +608,7 @@ msgstr ""
 msgid "File exists"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:678
+#: stdio-common/../sysdeps/gnu/errlist.c:714
 msgid "File locking deadlock error"
 msgstr ""
 
@@ -632,7 +660,7 @@ msgstr ""
 msgid "IOT trap"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:618
+#: stdio-common/../sysdeps/gnu/errlist.c:614
 msgid "Identifier removed"
 msgstr ""
 
@@ -674,6 +702,14 @@ msgstr ""
 msgid "Input/output error"
 msgstr ""
 
+#: nis/ypclnt.c:643
+msgid "Internal NIS error"
+msgstr ""
+
+#: nis/ypclnt.c:707
+msgid "Internal ypbind error"
+msgstr ""
+
 msgid "Interrupt"
 msgstr ""
 
@@ -688,7 +724,7 @@ msgstr ""
 msgid "Interrupted system call"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:610
+#: stdio-common/../sysdeps/gnu/errlist.c:654
 msgid "Interrupted system call should be restarted"
 msgstr ""
 
@@ -729,7 +765,7 @@ msgstr ""
 msgid "Invalid cross-device link"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:654
+#: stdio-common/../sysdeps/gnu/errlist.c:690
 msgid "Invalid exchange"
 msgstr ""
 
@@ -751,11 +787,11 @@ msgstr ""
 msgid "Invalid regular expression"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:670
+#: stdio-common/../sysdeps/gnu/errlist.c:706
 msgid "Invalid request code"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:658
+#: stdio-common/../sysdeps/gnu/errlist.c:694
 msgid "Invalid request descriptor"
 msgstr ""
 
@@ -763,7 +799,7 @@ msgstr ""
 msgid "Invalid server verifier"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:674
+#: stdio-common/../sysdeps/gnu/errlist.c:710
 msgid "Invalid slot"
 msgstr ""
 
@@ -780,31 +816,39 @@ msgstr ""
 msgid "Killed"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:650
+#: stdio-common/../sysdeps/gnu/errlist.c:686
 msgid "Level 2 halted"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:626
+#: stdio-common/../sysdeps/gnu/errlist.c:662
 msgid "Level 2 not synchronized"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:630
+#: stdio-common/../sysdeps/gnu/errlist.c:666
 msgid "Level 3 halted"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:634
+#: stdio-common/../sysdeps/gnu/errlist.c:670
 msgid "Level 3 reset"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:710
+#: stdio-common/../sysdeps/gnu/errlist.c:626
 msgid "Link has been severed"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:638
+#: stdio-common/../sysdeps/gnu/errlist.c:674
 msgid "Link number out of range"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:702
+#: nis/ypclnt.c:655
+msgid "Local domain name not set"
+msgstr ""
+
+#: nis/ypclnt.c:645
+msgid "Local resource allocation failure"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:722
 msgid "Machine is not on the network"
 msgstr ""
 
@@ -818,8 +862,16 @@ msgstr ""
 msgid "Message too long"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:730
+#: stdio-common/../sysdeps/gnu/errlist.c:618
 msgid "Multihop attempted"
+msgstr ""
+
+#: nis/ypclnt.c:659
+msgid "NIS client/server version mismatch - can't supply service"
+msgstr ""
+
+#: nis/ypclnt.c:657
+msgid "NIS map data base is bad"
 msgstr ""
 
 #: stdio-common/../sysdeps/gnu/errlist.c:746
@@ -847,7 +899,7 @@ msgstr ""
 msgid "Network is unreachable"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:646
+#: stdio-common/../sysdeps/gnu/errlist.c:682
 msgid "No CSI structure available"
 msgstr ""
 
@@ -859,7 +911,7 @@ msgstr ""
 msgid "No address associated with name"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:666
+#: stdio-common/../sysdeps/gnu/errlist.c:702
 msgid "No anode"
 msgstr ""
 
@@ -877,7 +929,7 @@ msgstr ""
 msgid "No child processes"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:690
+#: stdio-common/../sysdeps/gnu/errlist.c:622
 msgid "No data available"
 msgstr ""
 
@@ -893,8 +945,12 @@ msgstr ""
 msgid "No match"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:614
+#: stdio-common/../sysdeps/gnu/errlist.c:630
 msgid "No message of desired type"
+msgstr ""
+
+#: nis/ypclnt.c:647
+msgid "No more records in map database"
 msgstr ""
 
 #: posix/regex.c:5204
@@ -923,6 +979,14 @@ msgstr ""
 msgid "No such file or directory"
 msgstr ""
 
+#: nis/ypclnt.c:641
+msgid "No such key in map"
+msgstr ""
+
+#: nis/ypclnt.c:639
+msgid "No such map in server's domain"
+msgstr ""
+
 #. TRANS No process matches the specified process ID.
 #: stdio-common/../sysdeps/gnu/errlist.c:24
 msgid "No such process"
@@ -930,10 +994,6 @@ msgstr ""
 
 #: stdio-common/../sysdeps/gnu/errlist.c:786
 msgid "Not a XENIX named type file"
-msgstr ""
-
-#: stdio-common/../sysdeps/gnu/errlist.c:738
-msgid "Not a data message"
 msgstr ""
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
@@ -1014,16 +1074,16 @@ msgstr ""
 msgid "Operation would block"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:698
+#: stdio-common/../sysdeps/gnu/errlist.c:634
 msgid "Out of streams resources"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:706
+#: stdio-common/../sysdeps/gnu/errlist.c:726
 msgid "Package not installed"
 msgstr ""
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
-#: stdio-common/../sysdeps/gnu/errlist.c:96
+#: nis/ypclnt.c:661 stdio-common/../sysdeps/gnu/errlist.c:96
 msgid "Permission denied"
 msgstr ""
 
@@ -1037,11 +1097,11 @@ msgstr ""
 msgid "Profiling timer expired"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:642
+#: stdio-common/../sysdeps/gnu/errlist.c:678
 msgid "Protocol driver not attached"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:726
+#: stdio-common/../sysdeps/gnu/errlist.c:646
 msgid "Protocol error"
 msgstr ""
 
@@ -1071,13 +1131,17 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:734
+#: stdio-common/../sysdeps/gnu/errlist.c:742
 msgid "RFS specific error"
 msgstr ""
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:527
 msgid "RPC bad procedure for program"
+msgstr ""
+
+#: nis/ypclnt.c:635
+msgid "RPC failure on NIS operation"
 msgstr ""
 
 #. TRANS ???
@@ -1176,6 +1240,10 @@ msgstr ""
 msgid "RPC: Unknown protocol"
 msgstr ""
 
+#: elf/dlsym.c:49
+msgid "RTLD_NEXT used in code not dynamically loaded"
+msgstr ""
+
 #. TRANS An attempt was made to modify something on a read-only file system.
 #: stdio-common/../sysdeps/gnu/errlist.c:206
 msgid "Read-only file system"
@@ -1202,11 +1270,15 @@ msgstr ""
 msgid "Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"
 msgstr ""
 
+#: nis/ypclnt.c:633
+msgid "Request arguments bad"
+msgstr ""
+
 #: resolv/herror.c:73
 msgid "Resolver Error 0 (no error)"
 msgstr ""
 
-#: resolv/herror.c:115
+#: resolv/herror.c:117
 msgid "Resolver internal error"
 msgstr ""
 
@@ -1277,7 +1349,7 @@ msgstr ""
 msgid "Software caused connection abort"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:718
+#: stdio-common/../sysdeps/gnu/errlist.c:734
 msgid "Srmount error"
 msgstr ""
 
@@ -1309,8 +1381,13 @@ msgstr ""
 msgid "Structure needs cleaning"
 msgstr ""
 
-#: posix/regex.c:940 stdio-common/../sysdeps/gnu/errlist.c:7
+#: nis/ypclnt.c:631 nis/ypclnt.c:705 posix/regex.c:940
+#: stdio-common/../sysdeps/gnu/errlist.c:7
 msgid "Success"
+msgstr ""
+
+#: nis/ypclnt.c:711
+msgid "System resource allocation failure"
 msgstr ""
 
 msgid "Terminated"
@@ -1325,7 +1402,7 @@ msgstr ""
 msgid "Text file busy"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:694
+#: stdio-common/../sysdeps/gnu/errlist.c:650
 msgid "Timer expired"
 msgstr ""
 
@@ -1412,7 +1489,7 @@ msgstr ""
 msgid "Try `%s --help' for more information.\n"
 msgstr ""
 
-#: inet/rcmd.c:121
+#: inet/rcmd.c:136
 #, c-format
 msgid "Trying %s...\n"
 msgstr ""
@@ -1422,8 +1499,12 @@ msgstr ""
 msgid "Unknown .netrc keyword %s"
 msgstr ""
 
-#: string/../sysdeps/generic/_strerror.c:36
-#: string/../sysdeps/mach/_strerror.c:58
+#: nis/ypclnt.c:665
+msgid "Unknown NIS error code"
+msgstr ""
+
+#: string/../sysdeps/generic/_strerror.c:44
+#: string/../sysdeps/mach/_strerror.c:67
 msgid "Unknown error "
 msgstr ""
 
@@ -1431,7 +1512,7 @@ msgstr ""
 msgid "Unknown host"
 msgstr ""
 
-#: resolv/herror.c:118
+#: resolv/herror.c:120
 msgid "Unknown resolver error"
 msgstr ""
 
@@ -1439,13 +1520,17 @@ msgstr ""
 msgid "Unknown server error"
 msgstr ""
 
-#: string/strsignal.c:40
+#: string/strsignal.c:41
 #, c-format
 msgid "Unknown signal %d"
 msgstr ""
 
-#: misc/error.c:94
+#: misc/error.c:95
 msgid "Unknown system error"
+msgstr ""
+
+#: nis/ypclnt.c:713
+msgid "Unknown ypbind error"
 msgstr ""
 
 #: posix/regex.c:948
@@ -1464,7 +1549,7 @@ msgstr ""
 msgid "Unmatched \\{"
 msgstr ""
 
-#: posix/getconf.c:191
+#: posix/getconf.c:260
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr ""
@@ -1537,7 +1622,7 @@ msgid ""
 "  -k, --keyword-name    write names of selected keywords\n"
 msgstr ""
 
-#: posix/getconf.c:138
+#: posix/getconf.c:200
 #, c-format
 msgid "Usage: %s variable_name [pathname]\n"
 msgstr ""
@@ -1552,7 +1637,7 @@ msgstr ""
 msgid "User defined signal 2"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:742
+#: stdio-common/../sysdeps/gnu/errlist.c:642
 msgid "Value too large for defined data type"
 msgstr ""
 
@@ -1570,6 +1655,23 @@ msgstr ""
 #: locale/programs/localedef.c:182
 #, c-format
 msgid "Written by %s.\n"
+msgstr ""
+
+#: nis/ypclnt.c:146
+msgid "YPBINDPROC_DOMAIN: Internal error\n"
+msgstr ""
+
+#: nis/ypclnt.c:150
+#, c-format
+msgid "YPBINDPROC_DOMAIN: No server for domain %s\n"
+msgstr ""
+
+#: nis/ypclnt.c:154
+msgid "YPBINDPROC_DOMAIN: Resource allocation failure\n"
+msgstr ""
+
+#: nis/ypclnt.c:158
+msgid "YPBINDPROC_DOMAIN: Unknown error\n"
 msgstr ""
 
 #. TRANS You did @strong{what}?
@@ -1591,7 +1693,7 @@ msgstr ""
 msgid "`-1' must be last entry in `%s' field in `%s' category"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1651
+#: locale/programs/ld-collate.c:1652
 msgid "`...' must only be used in `...' and `UNDEFINED' entries"
 msgstr ""
 
@@ -1599,7 +1701,7 @@ msgstr ""
 msgid "`from' expected after first argument to `collating-element'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1108
+#: locale/programs/ld-collate.c:1109
 msgid ""
 "`from' string in collation element declaration contains unknown character"
 msgstr ""
@@ -1618,7 +1720,7 @@ msgstr ""
 msgid "auth_none.c - Fatal marshalling problem"
 msgstr ""
 
-#: inet/rcmd.c:330
+#: inet/rcmd.c:360
 msgid "bad .rhosts owner"
 msgstr ""
 
@@ -1668,16 +1770,16 @@ msgstr ""
 msgid "cannot `stat' locale file `%s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1313
+#: locale/programs/ld-collate.c:1314
 #, c-format
 msgid "cannot insert collation element `%.*s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1492 locale/programs/ld-collate.c:1497
+#: locale/programs/ld-collate.c:1493 locale/programs/ld-collate.c:1498
 msgid "cannot insert into result table"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1165 locale/programs/ld-collate.c:1207
+#: locale/programs/ld-collate.c:1166 locale/programs/ld-collate.c:1208
 #, c-format
 msgid "cannot insert new collating symbol definition: %s"
 msgstr ""
@@ -1707,7 +1809,7 @@ msgstr ""
 msgid "cannot open output file `%s' for category `%s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1359
+#: locale/programs/ld-collate.c:1360
 msgid "cannot process order specification"
 msgstr ""
 
@@ -1749,17 +1851,12 @@ msgstr ""
 msgid "character <SP> not defined in character map"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:1141
-#, c-format
-msgid "character `%c' not defined while needed as default value"
-msgstr ""
-
 #: locale/programs/ld-ctype.c:939 locale/programs/ld-ctype.c:1002
 #: locale/programs/ld-ctype.c:1010 locale/programs/ld-ctype.c:1018
 #: locale/programs/ld-ctype.c:1026 locale/programs/ld-ctype.c:1034
 #: locale/programs/ld-ctype.c:1042 locale/programs/ld-ctype.c:1068
 #: locale/programs/ld-ctype.c:1076 locale/programs/ld-ctype.c:1114
-#: locale/programs/ld-ctype.c:1152
+#: locale/programs/ld-ctype.c:1141 locale/programs/ld-ctype.c:1152
 #, c-format
 msgid "character `%s' not defined while needed as default value"
 msgstr ""
@@ -1783,13 +1880,14 @@ msgstr ""
 msgid "clnt_raw.c - Fatal header serialization error."
 msgstr ""
 
-#: locale/programs/ld-collate.c:1328
+#: locale/programs/ld-collate.c:1329
 #, c-format
 msgid "collation element `%.*s' appears more than once: ignore line"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1346
-msgid "collation symbol `.*s' appears more than once: ignore line"
+#: locale/programs/ld-collate.c:1347
+#, c-format
+msgid "collation symbol `%.*s' appears more than once: ignore line"
 msgstr ""
 
 #: locale/programs/locfile.c:522
@@ -1797,21 +1895,13 @@ msgstr ""
 msgid "collation symbol expected after `%s'"
 msgstr ""
 
-#: inet/rcmd.c:114
+#: inet/rcmd.c:129
 #, c-format
 msgid "connect to address %s: "
 msgstr ""
 
 #: sunrpc/svc_simple.c:70
 msgid "couldn't create an rpc server\n"
-msgstr ""
-
-#: sunrpc/portmap.c:121
-msgid "couldn't do tcp_create\n"
-msgstr ""
-
-#: sunrpc/portmap.c:99
-msgid "couldn't do udp_create\n"
 msgstr ""
 
 #: sunrpc/svc_simple.c:77
@@ -1843,11 +1933,11 @@ msgstr ""
 msgid "duplicate character name `%s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1140
+#: locale/programs/ld-collate.c:1141
 msgid "duplicate collating element definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1286
+#: locale/programs/ld-collate.c:1287
 #, c-format
 msgid "duplicate definition for character `%.*s'"
 msgstr ""
@@ -1873,7 +1963,7 @@ msgstr ""
 msgid "duplicated message number"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1695
+#: locale/programs/ld-collate.c:1696
 msgid "empty weight name: line ignored"
 msgstr ""
 
@@ -1893,15 +1983,15 @@ msgstr ""
 msgid "enablecache: could not allocate cache fifo"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1418
+#: locale/programs/ld-collate.c:1419
 msgid "end point of ellipsis range is bigger then start"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1148
+#: locale/programs/ld-collate.c:1149
 msgid "error while inserting collation element into hash table"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1160
+#: locale/programs/ld-collate.c:1161
 msgid "error while inserting to hash table"
 msgstr ""
 
@@ -1970,11 +2060,11 @@ msgstr ""
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1766
+#: locale/programs/ld-collate.c:1767
 msgid "illegal character constant in string"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1115
+#: locale/programs/ld-collate.c:1116
 msgid "illegal collation element"
 msgstr ""
 
@@ -2088,11 +2178,11 @@ msgstr ""
 msgid "invalid weekday name"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1411
+#: locale/programs/ld-collate.c:1412
 msgid "line after ellipsis must contain character definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1390
+#: locale/programs/ld-collate.c:1391
 msgid "line before ellipsis does not contain definition for character constant"
 msgstr ""
 
@@ -2118,10 +2208,14 @@ msgid "memory clobbered past end of allocated block"
 msgstr ""
 
 #: locale/programs/ld-collate.c:167 locale/programs/ld-collate.c:173
-#: locale/programs/ld-collate.c:177 locale/programs/ld-collate.c:1438
-#: locale/programs/ld-collate.c:1467 locale/programs/locfile.c:940
-#: locale/programs/xmalloc.c:68 posix/getconf.c:181
+#: locale/programs/ld-collate.c:177 locale/programs/ld-collate.c:1439
+#: locale/programs/ld-collate.c:1468 locale/programs/locfile.c:940
+#: locale/programs/xmalloc.c:68 posix/getconf.c:250
 msgid "memory exhausted"
+msgstr ""
+
+#: malloc/obstack.c:425
+msgid "memory exhausted\n"
 msgstr ""
 
 #: malloc/mcheck.c:180
@@ -2187,18 +2281,6 @@ msgstr ""
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
 msgstr ""
 
-#: sunrpc/portmap.c:451
-msgid "portmap CALLIT: cannot fork.\n"
-msgstr ""
-
-#: sunrpc/portmap.c:94 sunrpc/portmap.c:116
-msgid "portmap cannot bind"
-msgstr ""
-
-#: sunrpc/portmap.c:86 sunrpc/portmap.c:112
-msgid "portmap cannot create socket"
-msgstr ""
-
 #: db/makedb.c:326
 #, c-format
 msgid "problems while reading `%s'"
@@ -2220,18 +2302,18 @@ msgstr ""
 msgid "program %lu version %lu ready and waiting\n"
 msgstr ""
 
-#: inet/rcmd.c:157
+#: inet/rcmd.c:171
 #, c-format
-msgid "rcmd: select (setting up stderr): %s\n"
+msgid "rcmd: select (setting up stderr): %m\n"
 msgstr ""
 
-#: inet/rcmd.c:87
+#: inet/rcmd.c:103
 msgid "rcmd: socket: All ports in use\n"
 msgstr ""
 
-#: inet/rcmd.c:144
+#: inet/rcmd.c:159
 #, c-format
-msgid "rcmd: write (setting up stderr): %s\n"
+msgid "rcmd: write (setting up stderr): %m\n"
 msgstr ""
 
 #: sunrpc/svc_simple.c:83
@@ -2270,19 +2352,15 @@ msgstr ""
 msgid "rpcinfo: can't contact portmapper: "
 msgstr ""
 
-#: sunrpc/portmap.c:137
-msgid "run_svc returned unexpectedly\n"
-msgstr ""
-
 #: time/zic.c:708 time/zic.c:710
 msgid "same rule name in multiple files"
 msgstr ""
 
-#: inet/rcmd.c:161
+#: inet/rcmd.c:174
 msgid "select: protocol failure in circuit setup\n"
 msgstr ""
 
-#: inet/rcmd.c:179
+#: inet/rcmd.c:192
 msgid "socket: protocol failure in circuit setup\n"
 msgstr ""
 
@@ -2290,7 +2368,7 @@ msgstr ""
 msgid "sorting order `forward' and `backward' are mutually exclusive"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1567 locale/programs/ld-collate.c:1613
+#: locale/programs/ld-collate.c:1568 locale/programs/ld-collate.c:1614
 msgid ""
 "specification of sorting weight for collation symbol does not make sense"
 msgstr ""
@@ -2341,35 +2419,35 @@ msgstr ""
 msgid "svcudp_create: socket creation problem"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1190
+#: locale/programs/ld-collate.c:1191
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates element "
 "definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1063
+#: locale/programs/ld-collate.c:1064
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates other element "
 "definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1199
+#: locale/programs/ld-collate.c:1200
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates other symbol "
 "definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1072
+#: locale/programs/ld-collate.c:1073
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates symbol "
 "definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1054 locale/programs/ld-collate.c:1181
+#: locale/programs/ld-collate.c:1055 locale/programs/ld-collate.c:1182
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates symbolic name "
@@ -2481,7 +2559,7 @@ msgstr ""
 msgid "too many transitions?!"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1622
+#: locale/programs/ld-collate.c:1623
 msgid "too many weights"
 msgstr ""
 
@@ -2498,12 +2576,16 @@ msgstr ""
 msgid "trouble replying to prog %d\n"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1382
+#: locale/programs/ld-collate.c:1383
 msgid "two lines in a row containing `...' are not allowed"
 msgstr ""
 
 #: time/zic.c:1283
 msgid "typed single year"
+msgstr ""
+
+#: posix/getconf.c:239
+msgid "undefined"
 msgstr ""
 
 #: locale/programs/charmap.c:617 locale/programs/charmap.c:628
@@ -2535,8 +2617,8 @@ msgstr ""
 msgid "unknown signal"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1366 locale/programs/ld-collate.c:1557
-#: locale/programs/ld-collate.c:1731
+#: locale/programs/ld-collate.c:1367 locale/programs/ld-collate.c:1558
+#: locale/programs/ld-collate.c:1732
 #, c-format
 msgid "unknown symbol `%.*s': line ignored"
 msgstr ""
@@ -2557,7 +2639,7 @@ msgstr ""
 msgid "unterminated symbolic name"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1684
+#: locale/programs/ld-collate.c:1685
 msgid "unterminated weight name"
 msgstr ""
 
@@ -2609,7 +2691,7 @@ msgstr ""
 msgid "values for field `%s' in category `%s' must not be zero"
 msgstr ""
 
-#: login/setutent_r.c:47
+#: login/utmp_file.c:84
 msgid "while opening UTMP file"
 msgstr ""
 
@@ -2647,4 +2729,16 @@ msgstr ""
 
 #: time/zic.c:939
 msgid "wrong number of fields on Zone line"
+msgstr ""
+
+#: nis/ypclnt.c:570
+msgid "yp_all: clnttcp_create failed"
+msgstr ""
+
+#: nis/ypclnt.c:772
+msgid "yp_update: cannot convert host to netname\n"
+msgstr ""
+
+#: nis/ypclnt.c:784
+msgid "yp_update: cannot get server address\n"
 msgstr ""

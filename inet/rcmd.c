@@ -102,8 +102,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 				(void)fprintf(stderr,
 				    _("rcmd: socket: All ports in use\n"));
 			else
-				(void)fprintf(stderr, "rcmd: socket: %s\n",
-				    strerror(errno));
+				(void)fprintf(stderr, "rcmd: socket: %m\n");
 			sigsetmask(oldmask);
 			return (-1);
 		}
@@ -138,7 +137,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 			    inet_ntoa(sin.sin_addr));
 			continue;
 		}
-		(void)fprintf(stderr, "%s: %s\n", hp->h_name, strerror(errno));
+		(void)fprintf(stderr, "%s: %m\n", hp->h_name);
 		sigsetmask(oldmask);
 		return (-1);
 	}
@@ -157,8 +156,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 		(void)snprintf(num, sizeof(num), "%d", lport);
 		if (write(s, num, strlen(num)+1) != strlen(num)+1) {
 			(void)fprintf(stderr,
-			    _("rcmd: write (setting up stderr): %s\n"),
-			    strerror(errno));
+			    _("rcmd: write (setting up stderr): %m\n"));
 			(void)close(s2);
 			goto bad;
 		}
@@ -170,8 +168,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 		    !FD_ISSET(s2, &reads)) {
 			if (errno != 0)
 				(void)fprintf(stderr,
-				   _("rcmd: select (setting up stderr): %s\n"),
-				   strerror(errno));
+				  _("rcmd: select (setting up stderr): %m\n"));
 			else
 				(void)fprintf(stderr,
 			     _("select: protocol failure in circuit setup\n"));
@@ -182,7 +179,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 		(void)close(s2);
 		if (s3 < 0) {
 			(void)fprintf(stderr,
-			    "rcmd: accept: %s\n", strerror(errno));
+			    "rcmd: accept: %m\n");
 			lport = 0;
 			goto bad;
 		}
@@ -201,7 +198,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 	(void)write(s, cmd, strlen(cmd)+1);
 	if (read(s, &c, 1) != 1) {
 		(void)fprintf(stderr,
-		    "rcmd: %s: %s\n", *ahost, strerror(errno));
+		    "rcmd: %s: %m\n", *ahost);
 		goto bad2;
 	}
 	if (c != 0) {

@@ -187,7 +187,6 @@ _dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
 			struct link_map *skip_map,
 			int flags)
 {
-  int found_entry = 0;
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { 0, NULL };
   struct link_map **scope;
