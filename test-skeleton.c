@@ -1,5 +1,5 @@
 /* Skeleton for test programs.
-   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -64,6 +64,7 @@ struct temp_name_list
 
 /* Add temporary files in list.  */
 static void
+__attribute__ ((unused))
 add_temp_file (const char *name)
 {
   struct temp_name_list *newp

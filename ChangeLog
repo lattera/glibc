@@ -1,3 +1,11 @@
+2001-08-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* test-skeleton.c (add_temp_file): Add __attribute__ ((unused)) to
+	avoid warnings.
+
+	* dlfcn/tst-dladdr.c (do_test): Get address of ref1 using
+	DL_LOOKUP_ADDRESS.
+
 2001-08-22  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/generic/bits/sigaction.h (struct sigaction): Fix up
