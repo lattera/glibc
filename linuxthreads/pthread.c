@@ -456,19 +456,10 @@ void __pthread_initialize(void)
   pthread_initialize();
 }
 
-int __pthread_initialize_manager(void)
+void __pthread_init_max_stacksize(void)
 {
-  int manager_pipe[2];
-  int pid;
-  struct pthread_request request;
   struct rlimit limit;
-  int max_stack;
-
-#ifndef HAVE_Z_NODELETE
-  if (__builtin_expect (&__dso_handle != NULL, 1))
-    __cxa_atexit ((void (*) (void *)) pthread_atexit_retcode, NULL,
-		  __dso_handle);
-#endif
+  size_t max_stack;
 
   getrlimit(RLIMIT_STACK, &limit);
 #ifdef FLOATING_STACKS
@@ -478,9 +469,7 @@ int __pthread_initialize_manager(void)
   max_stack = limit.rlim_cur / 2;
 # else
   max_stack = limit.rlim_cur;
-#endif
-
-  __pthread_max_stacksize = max_stack;
+# endif
 #else
   /* Play with the stack size limit to make sure that no stack ever grows
      beyond STACK_SIZE minus one page (to act as a guard page). */
@@ -496,6 +485,23 @@ int __pthread_initialize_manager(void)
     setrlimit(RLIMIT_STACK, &limit);
   }
 #endif
+  __pthread_max_stacksize = max_stack;
+}
+
+int __pthread_initialize_manager(void)
+{
+  int manager_pipe[2];
+  int pid;
+  struct pthread_request request;
+
+#ifndef HAVE_Z_NODELETE
+  if (__builtin_expect (&amp;__dso_handle != NULL, 1))
+    __cxa_atexit ((void (*) (void *)) pthread_atexit_retcode, NULL,
+		  __dso_handle);
+#endif
+
+  if (__pthread_max_stacksize == 0)
+    __pthread_init_max_stacksize ();
   /* If basic initialization not done yet (e.g. we're called from a
      constructor run before our constructor), do it now */
   if (__pthread_initial_thread_bos == NULL) pthread_initialize();

@@ -193,16 +193,7 @@ int __pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize)
      problem if the manager is already started and we determined it.  If
      this hasn't happened, we have to find the limit outself.  */
   if (__pthread_max_stacksize == 0)
-    {
-      struct rlimit limit;
-
-      getrlimit(RLIMIT_STACK, &limit);
-# ifdef NEED_SEPARATE_REGISTER_STACK
-      __pthread_max_stacksize = limit.rlim_max / 2;
-# else
-      __pthread_max_stacksize = limit.rlim_max;
-# endif
-    }
+    __pthread_init_max_stacksize ();
 
   if (stacksize > __pthread_max_stacksize)
     return EINVAL;

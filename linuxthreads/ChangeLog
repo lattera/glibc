@@ -1,3 +1,12 @@
+2001-02-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* internals.h (__pthread_init_max_stacksize): New prototype.
+	* attr.c (__pthread_attr_setstacksize): Call
+	__pthread_init_max_stacksize if not yet initialized.
+	* pthread.c (__pthread_init_max_stacksize): New function.
+	(__pthread_initialize_manager): Call it.
+	Patch by <dtc@cmucl.cons.org>.
+
 2001-03-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* attr.c (pthread_getattr_np): Fix __stacksize computation for IA-64.

@@ -13,8 +13,8 @@ Version 2.2.3
   accurate implementatations for most basic and standard math functions
   in float, double, and long double format.
 
-* Stephen Moshier implemented j0, j1, jn, y0, y1, yn, and lgamma for the
-  96-bit long double format.
+* Stephen Moshier implemented j0, j1, jn, y0, y1, yn, lgamma, erf, and
+  erfc for the 96-bit long double format.
 
 * The beginning of a last-bit accurate math library by IBM Haifa were added.
   The basic double functions exist today.  Contributed by Abraham Ziv
@@ -27,6 +27,9 @@ Version 2.2.3
 
 * Port to S390/64bit contributed by Martin Schwidefsky
   <schwidefsky@de.ibm.com>.
+
+* David Mosberger <davidm@hpl.hp.com> implemented the setcontext family
+  of functions for Linux/IA-64.
 
 Version 2.2.2
 

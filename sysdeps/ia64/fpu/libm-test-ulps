@@ -566,11 +566,15 @@ ldouble: 3074
 Test "erfc (0.7) == 0.32219880616258152702":
 double: 1
 idouble: 1
+ldouble: 1
+ildouble: 1
 Test "erfc (1.2) == 0.089686021770364619762":
 float: 2
 double: 1
 idouble: 1
 ifloat: 2
+ldouble: 2
+ildouble: 2
 Test "erfc (2.0) == 0.0046777349810472658379":
 double: 1
 idouble: 1
@@ -579,6 +583,8 @@ double: 24
 float: 12
 idouble: 24
 ifloat: 12
+ldouble: 12
+ildouble: 12
 
 # exp
 Test "exp (0.7) == 2.0137527074704765216":
@@ -1487,6 +1493,8 @@ double: 24
 float: 12
 idouble: 24
 ifloat: 12
+ldouble: 12
+ildouble: 12
 
 Function: "exp":
 ildouble: 412

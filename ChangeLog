@@ -1,3 +1,12 @@
+2001-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/ldbl-96/s_erfl.c: New file.
+	Contributed by Stephen L. Moshier <moshier@na-net.ornl.gov>.
+
+	* sysdeps/i386/fpu/libm-test-ulps: Adjust for addition of erfl and
+	erfcl.
+	* sysdeps/ia64/fpu/libm-test-ulps: Likewise.
+
 2001-03-16  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h (struct sigcontext):
@@ -23,6 +32,7 @@
 	* sysdeps/unix/sysv/linux/ia64/getcontext.S: New file.
 	* sysdeps/unix/sysv/linux/ia64/__start_context.S: New file.
 	* sysdeps/unix/sysv/linux/ia64/makecontext.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/swapcontext.c: New file.
 
 	* sysdeps/unix/sysv/linux/ia64/__longjmp.S (__longjmp): Use extr.u
 	instead of shift & and.

@@ -430,6 +430,7 @@ static inline pthread_descr thread_self (void)
 
 extern void __pthread_destroy_specifics (void);
 extern void __pthread_perform_cleanup (void);
+extern void __pthread_init_max_stacksize (void);
 extern int __pthread_initialize_manager (void);
 extern void __pthread_message (char * fmt, ...);
 extern int __pthread_manager (void *reqfd);
