@@ -655,7 +655,7 @@ static void pthread_handle_sigrestart_nonrt(int sig, struct sigcontext ctx)
 static void pthread_handle_sigrestart_rt(int sig, struct siginfo *si,
 					 struct ucontext *uc)
 {
-  asm volatile ("movw %w0,%%gs" : : "r" (uc->uc_mcontext.gregs[GS]));
+  asm volatile ("movw %w0,%%gs" : : "r" (uc->uc_mcontext.gregs[REG_GS]));
   pthread_handle_sigrestart(sig);
 }
 #endif
@@ -704,7 +704,7 @@ static void pthread_handle_sigcancel_nonrt(int sig, struct sigcontext ctx)
 static void pthread_handle_sigcancel_rt(int sig, struct siginfo *si,
 					 struct ucontext *uc)
 {
-  asm volatile ("movw %w0,%%gs" : : "r" (uc->uc_mcontext.gregs[GS]));
+  asm volatile ("movw %w0,%%gs" : : "r" (uc->uc_mcontext.gregs[REG_GS]));
   pthread_handle_sigcancel(sig);
 }
 #endif
