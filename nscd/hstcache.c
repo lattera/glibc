@@ -211,18 +211,24 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
       /* Now get the lock to safely insert the records.  */
       pthread_rwlock_rdlock (&db->lock);
 
-      /* First add all the aliases.  */
-      for (cnt = 0; cnt < h_aliases_cnt; ++cnt)
-	{
-	  if (addr_list_type == GETHOSTBYADDR)
-	    cache_add (GETHOSTBYNAME, aliases, h_aliases_len[cnt], data, total,
-		       data, 0, t, db, owner);
+      /* First add all the aliases.  If the record contains more than
+         one IP address (used for load balancing etc) don't cache the
+         entry.  This is something the current cache handling cannot
+         handle and it is more than questionable whether it is
+         worthwhile complicating the cache handling just for handling
+         such a special case.  */
+      if (hst->h_addr_list[1] == NULL)
+	for (cnt = 0; cnt < h_aliases_cnt; ++cnt)
+	  {
+	    if (addr_list_type == GETHOSTBYADDR)
+	      cache_add (GETHOSTBYNAME, aliases, h_aliases_len[cnt], data,
+			 total, data, 0, t, db, owner);
 
-	  cache_add (GETHOSTBYNAMEv6, aliases, h_aliases_len[cnt], data, total,
-		     data, 0, t, db, owner);
+	    cache_add (GETHOSTBYNAMEv6, aliases, h_aliases_len[cnt], data,
+		       total, data, 0, t, db, owner);
 
-	  aliases += h_aliases_len[cnt];
-	}
+	    aliases += h_aliases_len[cnt];
+	  }
 
       /* Next the normal addresses.  */
       for (cnt = 0; cnt < h_addr_list_cnt; ++cnt)
@@ -241,22 +247,27 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
 	    addresses += IN6ADDRSZ;
 	  }
 
-      /* If necessary add the key for this request.  */
-      if (req->type == GETHOSTBYNAME || req->type == GETHOSTBYNAMEv6)
+      /* Avoid adding names if more than one address is available.  See
+	 above for more info.  */
+      if (hst->h_addr_list[1] == NULL)
 	{
-	  if (addr_list_type == GETHOSTBYADDR)
-	    cache_add (GETHOSTBYNAME, key_copy, req->key_len, data, total,
-		       data, 0, t, db, owner);
-	  cache_add (GETHOSTBYNAMEv6, key_copy, req->key_len, data,
-		     total, data, 0, t, db, owner);
-	}
+	  /* If necessary add the key for this request.  */
+	  if (req->type == GETHOSTBYNAME || req->type == GETHOSTBYNAMEv6)
+	    {
+	      if (addr_list_type == GETHOSTBYADDR)
+		cache_add (GETHOSTBYNAME, key_copy, req->key_len, data, total,
+			   data, 0, t, db, owner);
+	      cache_add (GETHOSTBYNAMEv6, key_copy, req->key_len, data,
+			 total, data, 0, t, db, owner);
+	    }
 
-      /* And finally the name.  We mark this as the last entry.  */
-      if (addr_list_type == GETHOSTBYADDR)
-	cache_add (GETHOSTBYNAME, data->strdata, h_name_len, data, total, data,
-		   0, t, db, owner);
-      cache_add (GETHOSTBYNAMEv6, data->strdata, h_name_len, data,
-		 total, data, 1, t, db, owner);
+	  /* And finally the name.  We mark this as the last entry.  */
+	  if (addr_list_type == GETHOSTBYADDR)
+	    cache_add (GETHOSTBYNAME, data->strdata, h_name_len, data, total,
+		       data, 0, t, db, owner);
+	  cache_add (GETHOSTBYNAMEv6, data->strdata, h_name_len, data,
+		     total, data, 1, t, db, owner);
+	}
 
       pthread_rwlock_unlock (&db->lock);
     }
