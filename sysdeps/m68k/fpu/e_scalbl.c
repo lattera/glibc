@@ -1,2 +1,3 @@
-#define FUNC __ieee754_scalbl
-#include <e_fmodl.c>
+#define SUFF l
+#define float_type long double
+#include <e_scalb.c>
