@@ -16,6 +16,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3)
+
 #include <ctype.h>
 #include <locale/localeinfo.h>
 
@@ -36,36 +39,21 @@ extern const char _nl_C_LC_CTYPE_class_blank[] attribute_hidden;
 extern const char _nl_C_LC_CTYPE_class_cntrl[] attribute_hidden;
 extern const char _nl_C_LC_CTYPE_class_punct[] attribute_hidden;
 extern const char _nl_C_LC_CTYPE_class_alnum[] attribute_hidden;
-extern const char _nl_C_LC_CTYPE_map_toupper[] attribute_hidden;
-extern const char _nl_C_LC_CTYPE_map_tolower[] attribute_hidden;
-extern const char _nl_C_LC_CTYPE_width[] attribute_hidden;
 
 #define b(t,x,o) (((const t *) _nl_C_LC_CTYPE_##x) + o)
 
-const unsigned short int *__ctype_b = b (unsigned short int, class, 128);
-const __uint32_t *__ctype32_b = b (__uint32_t, class32, 0);
-const __int32_t *__ctype_tolower = b (__int32_t, tolower, 128);
-const __int32_t *__ctype_toupper = b (__int32_t, toupper, 128);
-const __uint32_t *__ctype32_tolower = b (__uint32_t, tolower, 128);
-const __uint32_t *__ctype32_toupper = b (__uint32_t, toupper, 128);
-const char *__ctype32_wctype[12] attribute_hidden =
-{
-  b(char, class_upper, 32),
-  b(char, class_lower, 32),
-  b(char, class_alpha, 32),
-  b(char, class_digit, 32),
-  b(char, class_xdigit, 32),
-  b(char, class_space, 32),
-  b(char, class_print, 32),
-  b(char, class_graph, 32),
-  b(char, class_blank, 32),
-  b(char, class_cntrl, 32),
-  b(char, class_punct, 32),
-  b(char, class_alnum, 32)
-};
-const char *__ctype32_wctrans[2] attribute_hidden =
-{
-  b(char, map_toupper, 0),
-  b(char, map_tolower, 0)
-};
-const char *__ctype32_width attribute_hidden = b (char, width, 0);
+const unsigned short int *__ctype_old_b = b (unsigned short int, class, 128);
+const __uint32_t *__ctype32_old_b = b (__uint32_t, class32, 0);
+const __int32_t *__ctype_old_tolower = b (__int32_t, tolower, 128);
+const __int32_t *__ctype_old_toupper = b (__int32_t, toupper, 128);
+const __uint32_t *__ctype32_old_tolower = b (__uint32_t, tolower, 128);
+const __uint32_t *__ctype32_old_toupper = b (__uint32_t, toupper, 128);
+
+compat_symbol (libc, __ctype_old_b, __ctype_b, GLIBC_2_0);
+compat_symbol (libc, __ctype_old_tolower, __ctype_tolower, GLIBC_2_0);
+compat_symbol (libc, __ctype_old_toupper, __ctype_toupper, GLIBC_2_0);
+compat_symbol (libc, __ctype32_old_b, __ctype32_b, GLIBC_2_0);
+compat_symbol (libc, __ctype32_old_tolower, __ctype32_tolower, GLIBC_2_2);
+compat_symbol (libc, __ctype32_old_toupper, __ctype32_toupper, GLIBC_2_2);
+
+#endif

@@ -62,31 +62,13 @@ enum
 };
 #endif /* ! _ISbit  */
 
-/* These are defined in ctype-info.c.
-   The declarations here must match those in localeinfo.h.
-
-   These point into arrays of 384, so they can be indexed by any `unsigned
-   char' value [0,255]; by EOF (-1); or by any `signed char' value
-   [-128,-1).  ISO C requires that the ctype functions work for `unsigned
-   char' values and for EOF; we also support negative `signed char' values
-   for broken old programs.  The case conversion arrays are of `int's
-   rather than `unsigned char's because tolower (EOF) must be EOF, which
-   doesn't fit into an `unsigned char'.  But today more important is that
-   the arrays are also used for multi-byte character sets.  */
-extern __const unsigned short int *__ctype_b;	/* Characteristics.  */
-extern __const __int32_t *__ctype_tolower; /* Case conversions.  */
-extern __const __int32_t *__ctype_toupper; /* Case conversions.  */
-
-#define	__isctype(c, type) \
-  (__ctype_b[(int) (c)] & (unsigned short int) type)
-
 #define	__isascii(c)	(((c) & ~0x7f) == 0)	/* If C is a 7 bit value.  */
 #define	__toascii(c)	((c) & 0x7f)		/* Mask off high bits.  */
 
 #define	__exctype(name)	extern int name (int) __THROW
 
-
 __BEGIN_NAMESPACE_STD
+
 /* The following names are all functions:
      int isCHARACTERISTIC(int c);
    which return nonzero iff C has CHARACTERISTIC.
@@ -147,59 +129,20 @@ __exctype (_tolower);
 	  if (__builtin_constant_p (c))					      \
 	    {								      \
 	      int __c = (c);						      \
-	      __res = __c < -128 || __c > 255 ? __c : a[__c];		      \
+	      __res = __c < -128 || __c > 255 ? __c : (a)[__c];		      \
 	    }								      \
 	  else								      \
 	    __res = f args;						      \
 	}								      \
       else								      \
-	__res = a[(int) (c)];						      \
+	__res = (a)[(int) (c)];						      \
       __res; }))
 
 #if !defined __NO_CTYPE && !defined __cplusplus
-# define isalnum(c)	__isctype((c), _ISalnum)
-# define isalpha(c)	__isctype((c), _ISalpha)
-# define iscntrl(c)	__isctype((c), _IScntrl)
-# define isdigit(c)	__isctype((c), _ISdigit)
-# define islower(c)	__isctype((c), _ISlower)
-# define isgraph(c)	__isctype((c), _ISgraph)
-# define isprint(c)	__isctype((c), _ISprint)
-# define ispunct(c)	__isctype((c), _ISpunct)
-# define isspace(c)	__isctype((c), _ISspace)
-# define isupper(c)	__isctype((c), _ISupper)
-# define isxdigit(c)	__isctype((c), _ISxdigit)
-
-# ifdef	__USE_ISOC99
-#  define isblank(c)	__isctype((c), _ISblank)
-# endif
-
-# ifdef __USE_EXTERN_INLINES
-extern __inline int
-tolower (int __c) __THROW
-{
-  return __c >= -128 && __c < 256 ? __ctype_tolower[__c] : __c;
-}
-
-extern __inline int
-toupper (int __c) __THROW
-{
-  return __c >= -128 && __c < 256 ? __ctype_toupper[__c] : __c;
-}
-# endif
-
-# if __GNUC__ >= 2 && defined __OPTIMIZE__ && !defined __cplusplus
-#  define tolower(c) __tobody (c, tolower, __ctype_tolower, (c))
-#  define toupper(c) __tobody (c, toupper, __ctype_toupper, (c))
-# endif	/* Optimizing gcc */
-
 # if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
 #  define isascii(c)	__isascii (c)
 #  define toascii(c)	__toascii (c)
-
-#  define _tolower(c)	((int) __ctype_tolower[(int) (c)])
-#  define _toupper(c)	((int) __ctype_toupper[(int) (c)])
 # endif
-
 #endif /* Not __NO_CTYPE.  */
 
 

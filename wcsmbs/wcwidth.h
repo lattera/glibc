@@ -21,6 +21,7 @@
 #include <wchar.h>
 #include <wctype.h>
 #include "../wctype/wchar-lookup.h"
+#include "../locale/localeinfo.h"
 
 /* Table containing width information.  */
 extern const char *__ctype32_width attribute_hidden;
@@ -33,7 +34,7 @@ internal_wcwidth (wchar_t wc)
   /* The tables have been prepared in such a way that
      1. wc == L'\0' yields res = 0,
      2. !iswprint (wc) implies res = '\xff'.  */
-  res = wcwidth_table_lookup (__ctype32_width, wc);
+  res = wcwidth_table_lookup (_NL_CURRENT (LC_CTYPE, _NL_CTYPE_WIDTH), wc);
 
   return res == (unsigned char) '\xff' ? -1 : (int) res;
 }

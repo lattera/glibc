@@ -63,7 +63,7 @@ __libc_lock_define_initialized (static, lock)
 
 static FILE *stream;
 static fpos_t position;
-static enum { none, getent, getby } last_use;
+static enum { nouse, getent, getby } last_use;
 static int keep_stream;
 
 /* Open database file if not already opened.  */
@@ -265,7 +265,7 @@ CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
 	    fgetpos (stream, &position);
 	  else
 	    /* We must make sure we reposition the stream the next call.  */
-	    last_use = none;
+	    last_use = nouse;
 	}
     }
 

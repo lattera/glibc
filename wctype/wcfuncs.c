@@ -21,19 +21,17 @@
 
 #include "wchar-lookup.h"
 
-/* These are not exported.  */
-extern const char *__ctype32_wctype[12] attribute_hidden;
-extern const char *__ctype32_wctrans[2] attribute_hidden;
-
 /* Provide real-function versions of all the wctype macros.  */
 
-#define	func(name, type)					\
-  extern int __##name (wint_t __wc);				\
-  int								\
-  __##name (wint_t wc)						\
-  {								\
-    return wctype_table_lookup (__ctype32_wctype[type], wc);	\
-  }								\
+#define	func(name, type)						      \
+  extern int __##name (wint_t __wc);					      \
+  int									      \
+  __##name (wint_t wc)							      \
+  {									      \
+    size_t i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_CLASS_OFFSET) + type;    \
+    const char *desc = _NL_CURRENT (LC_CTYPE, i);			      \
+    return wctype_table_lookup (desc, wc);				      \
+  }									      \
   weak_alias (__##name, name)
 
 #undef iswalnum
@@ -71,7 +69,9 @@ wint_t
 towlower (wc)
      wint_t wc;
 {
-  return wctrans_table_lookup (__ctype32_wctrans[__TOW_tolower], wc);
+  size_t i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + __TOW_tolower;
+  const char *desc = _NL_CURRENT (LC_CTYPE, i);
+  return wctrans_table_lookup (desc, wc);
 }
 libc_hidden_def (towlower)
 
@@ -80,6 +80,8 @@ wint_t
 towupper (wc)
      wint_t wc;
 {
-  return wctrans_table_lookup (__ctype32_wctrans[__TOW_toupper], wc);
+  size_t i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + __TOW_toupper;
+  const char *desc = _NL_CURRENT (LC_CTYPE, i);
+  return wctrans_table_lookup (desc, wc);
 }
 libc_hidden_def (towupper)

@@ -270,40 +270,23 @@ _nl_remove_locale (int locale, struct locale_data *data)
 {
   if (--data->usage_count == 0)
     {
-      /* First search the entry in the list of loaded files.  */
-      struct loaded_l10nfile *ptr = _nl_locale_file_list[locale];
-
-      /* Search for the entry.  It must be in the list.  Otherwise it
-	 is a bug and we crash badly.  */
-      while ((struct locale_data *) ptr->data != data)
-	ptr = ptr->next;
-
-      /* Mark the data as not available anymore.  So when the data has
-	 to be used again it is reloaded.  */
-      ptr->decided = 0;
-      ptr->data = NULL;
-
-      /* Free the name.  */
-      free ((char *) data->name);
-
-#ifdef _POSIX_MAPPED_FILES
-      /* Really delete the data.  First delete the real data.  */
-      if (__builtin_expect (data->alloc == ld_mapped, 1))
+      if (data->alloc != ld_archive)
 	{
-	  /* Try to unmap the area.  If this fails we mark the area as
-	     permanent.  */
-	  if (__munmap ((caddr_t) data->filedata, data->filesize) != 0)
-	    {
-	      data->usage_count = UNDELETABLE;
-	      return;
-	    }
-	}
-      else
-#endif	/* _POSIX_MAPPED_FILES */
-	/* The memory was malloced.  */
-	free ((void *) data->filedata);
+	  /* First search the entry in the list of loaded files.  */
+	  struct loaded_l10nfile *ptr = _nl_locale_file_list[locale];
 
-      /* Now free the structure itself.  */
-      free (data);
+	  /* Search for the entry.  It must be in the list.  Otherwise it
+	     is a bug and we crash badly.  */
+	  while ((struct locale_data *) ptr->data != data)
+	    ptr = ptr->next;
+
+	  /* Mark the data as not available anymore.  So when the data has
+	     to be used again it is reloaded.  */
+	  ptr->decided = 0;
+	  ptr->data = NULL;
+	}
+
+      /* This does the real work.  */
+      _nl_unload_locale (data);
     }
 }

@@ -122,7 +122,6 @@ ifeq (yes,$(have_doors))
 CPPFLAGS-key_call.c += -DHAVE_DOORS=1
 endif
 CPPFLAGS += -D_RPC_THREAD_SAFE_
-CPPFLAGS-rpc_main += -DNOT_IN_libc
 
 include ../Rules
 
@@ -130,6 +129,11 @@ $(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) \
   $(sort $(filter $(common-objpfx)libc%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link)
+
+# This makes sure -DNOT_IN_libc is passed for all these modules.
+cpp-srcs-left := $(rpcgen-objs:.o=.c)
+lib := rpcgen
+include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
 # Tell rpcgen where to find the C preprocessor.
 rpcgen-cmd = CPP='$(CC) -E -x c-header' $(built-program-cmd) -Y ../scripts

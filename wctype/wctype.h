@@ -190,64 +190,6 @@ extern wctype_t wctype (__const char *__property) __THROW;
 extern int iswctype (wint_t __wc, wctype_t __desc) __THROW;
 __END_NAMESPACE_C99
 
-#if __GNUC__ >= 2 && defined __OPTIMIZE__ && !defined __cplusplus
-/* The tables are always organized in a way which allows direct access
-   for single byte characters.  */
-extern unsigned int *__ctype32_b;
-
-# define iswalnum(wc) \
-  (__extension__							      \
-    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
-     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwalnum) : iswalnum (wc)))
-# define iswalpha(wc) \
-  (__extension__							      \
-    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
-     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwalpha) : iswalpha (wc)))
-# define iswcntrl(wc) \
-  (__extension__							      \
-    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
-     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwcntrl) : iswcntrl (wc)))
-# define iswdigit(wc) \
-  (__extension__							      \
-    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
-     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwdigit) : iswdigit (wc)))
-# define iswlower(wc) \
-  (__extension__							      \
-    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
-     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwlower) : iswlower (wc)))
-# define iswgraph(wc) \
-  (__extension__							      \
-    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
-     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwgraph) : iswgraph (wc)))
-# define iswprint(wc) \
-  (__extension__							      \
-    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
-     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwprint) : iswprint (wc)))
-# define iswpunct(wc) \
-  (__extension__							      \
-    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
-     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwpunct) : iswpunct (wc)))
-# define iswspace(wc) \
-  (__extension__							      \
-    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
-     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwspace) : iswspace (wc)))
-# define iswupper(wc) \
-  (__extension__							      \
-    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
-     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwupper) : iswupper (wc)))
-# define iswxdigit(wc) \
-  (__extension__							      \
-    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
-     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwxdigit) : iswxdigit (wc)))
-
-# ifdef __USE_ISOC99
-#  define iswblank(wc) \
-  (__extension__							      \
-    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
-     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwblank) : iswblank (wc)))
-# endif
-
-#endif	/* gcc && optimizing */
 
 /*
  * Wide-character case-mapping functions: 7.15.3.1.
@@ -269,24 +211,6 @@ extern wint_t towlower (wint_t __wc) __THROW;
 /* Converts an lowercase letter to the corresponding uppercase letter.  */
 extern wint_t towupper (wint_t __wc) __THROW;
 __END_NAMESPACE_C99
-
-#if __GNUC__ >= 2 && defined __OPTIMIZE__ && !defined __cplusplus
-/* The tables are always organized in a way which allows direct access
-   for single byte characters.  */
-extern const wint_t *__ctype32_tolower;
-extern const wint_t *__ctype32_toupper;
-
-# define towlower(wc) \
-  (__extension__							      \
-    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
-     ? (wint_t) __ctype32_tolower[(wint_t) (wc)] : towlower (wc)))
-
-# define towupper(wc) \
-  (__extension__							      \
-    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
-     ? (wint_t) __ctype32_toupper[(wint_t) (wc)] : towupper (wc)))
-
-#endif	/* gcc && optimizing */
 
 __END_DECLS
 

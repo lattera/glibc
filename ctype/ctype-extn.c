@@ -19,6 +19,11 @@
 #define	__NO_CTYPE
 #include <ctype.h>
 
+#define __ctype_tolower \
+  ((uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOLOWER) + 128)
+#define __ctype_toupper \
+  ((uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOUPPER) + 128)
+
 /* Real function versions of the non-ANSI ctype functions.  isblank is
    now in ISO C99 but we leave it here.  */
 

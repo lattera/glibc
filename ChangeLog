@@ -1,4 +1,63 @@
+2002-09-01  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/libc-tls.c (__pthread_initialize_minimal): Pass
+	TLS_INIT_TCB_SIZE, TLS_INIT_TCB_ALIGN instead of 0, 1.
+
+	* include/getopt.h: Include <features.h> before <posix/getopt.h>.
+
+	* locale/findlocale.c (_nl_remove_locale): Don't search in
+	_nl_locale_file_list if DATA->alloc is ld_archive.
+	Use _nl_unload_locale to do the rest of the work.
+
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Set usage_count
+	of new structure to UNDELETABLE.
+
+	* wctype/wctype.h (iswalnum, iswalpha, iswcntrl, iswdigit, iswlower,
+	iswgraph, iswprint, iswpunct, iswspace, iswupper, iswxdigit, iswblank,
+	towlower, towupper): Macros removed.
+	* ctype/ctype.h (__tobody): Put parens around macro argument.
+	(__isctype): Macro removed.
+	(__ctype_b, __ctype_tolower, __ctype_toupper): Decls removed.
+	(isalnum, isalpha, iscntrl, isdigit, islower, isgraph, isprint,
+	ispunct, isspace, isupper, isxdigit, isblank, _tolower, _toupper,
+	tolower, toupper): Macros and inlines removed.
+	* include/ctype.h [! NOT_IN_libc]
+	(isalnum, isalpha, iscntrl, isdigit, islower, isgraph, isprint,
+	ispunct, isspace, isupper, isxdigit, isblank, _tolower, _toupper,
+	tolower, toupper): Define here instead, using _NL_CURRENT.
+	* ctype/ctype.c (__ctype_tolower, __ctype_toupper): Define as macros
+	using _NL_CURRENT.
+	* ctype/ctype-extn.c (__ctype_tolower, __ctype_toupper): Likewise.
+	* ctype/ctype-info.c (__ctype_b, __ctype_tolower, __ctype_toupper):
+	Renamed these to __ctype_old_*. Define old names only for SHLIB_COMPAT.
+	(__ctype32_b, __ctype32_tolower, __ctype32_toupper): Likewise.
+	(__ctype32_wctrans, __ctype32_wctrans, __ctype32_width): Removed.
+	* locale/lc-ctype.c (_nl_postload_ctype): Use renamed variables,
+	conditional on SHLIB_COMPAT.  Don't set removed variables at all.
+	* wctype/wcfuncs.c: Use _NL_CURRENT instead of those globals.
+	* wcsmbs/wcwidth.h (internal_wcwidth): Likewise.
+	* resolv/res_init.c [RESOLVSORT] (sort_mask): Renamed sort_mask_chars.
+	(ISSORTMASK): Update use.
+	* intl/localealias.c [__GNUC__]: #undef alloca before #define.
+	* nss/nss_files/files-XXX.c (last_use): Rename `none' to `nouse'.
+	(_nss_files_getENTNAME_r): Likewise.
+	* nss/nss_files/files-alias.c (last_use, _nss_files_getaliasent_r):
+	Likewise.
+
+	* Makerules (all-nonlib): Renamed from all-tests.
+	Include $(others) here too.
+	* locale/Makefile (CPPFLAGS-locale, CPPFLAGS-localedef,
+	CPPFLAGS-ld-ctype, CPPFLAGS-ld-time, CPPFLAGS-ld-numeric,
+	CPPFLAGS-ld-monetary, CPPFLAGS-ld-collate, CPPFLAGS-ld-identification,
+	CPPFLAGS-charmap, CPPFLAGS-locarchive, CPPFLAGS-linereader,
+	CPPFLAGS-charmap-dir): Variables removed.  Instead, catch all
+	the program modules via cppflags-iterator.mk.
+	* sunrpc/Makefile (CPPFLAGS-rpc_main): Variable removed.
+	Instead, catch all rpcgen-objs via cppflags-iterator.mk.
+
 2002-08-31  Roland McGrath  <roland@redhat.com>
+
+	* posix/tst-getconf.sh: If no third arg, work with static linking.
 
 	* locale/categories.def (LC_TIME): No more _nl_postload_time.
 

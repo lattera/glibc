@@ -477,6 +477,15 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	    /* _nl_intern_locale_data leaves us these fields to initialize.  */
 	    lia->data[cnt]->alloc = ld_archive;
 	    lia->data[cnt]->name = lia->name;
+
+	    /* We do this instead of bumping the count each time we return
+	       this data because the mappings stay around forever anyway
+	       and we might as well hold on to a little more memory and not
+	       have to rebuild it on the next lookup of the same thing.
+	       If we were to maintain the usage_count normally and let the
+	       structures be freed, we would have to remove the elements
+	       from archloaded too.  */
+	    lia->data[cnt]->usage_count = UNDELETABLE;
 	  }
       }
 

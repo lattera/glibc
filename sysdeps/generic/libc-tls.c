@@ -176,6 +176,6 @@ void
 __attribute__ ((weak))
 __pthread_initialize_minimal (void)
 {
-  __libc_setup_tls (0, 1);
+  __libc_setup_tls (TLS_INIT_TCB_SIZE, TLS_INIT_TCB_ALIGN);
 }
 #endif

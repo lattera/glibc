@@ -1,5 +1,5 @@
 /* Mail alias file parser in nss_files module.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,98,99,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -36,7 +36,7 @@ __libc_lock_define_initialized (static, lock)
 
 static FILE *stream;
 static fpos_t position;
-static enum { none, getent, getby } last_use;
+static enum { nouse, getent, getby } last_use;
 
 
 static enum nss_status
@@ -408,7 +408,7 @@ _nss_files_getaliasent_r (struct aliasent *result, char *buffer, size_t buflen,
 	  if (status == NSS_STATUS_SUCCESS)
 	    fgetpos (stream, &position);
 	  else
-	    last_use = none;
+	    last_use = nouse;
 	}
     }
 

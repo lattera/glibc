@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 2000.
 
@@ -19,6 +19,7 @@
 
 #include <ctype.h>
 #include <locale.h>
+#include <langinfo.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -72,11 +73,14 @@ main (void)
   char *resline = NULL;
   size_t reslinelen = 0;
   int n;
+  const unsigned short int *__ctype_b;
 
   setlocale (LC_ALL, "");
 
   printf ("Testing the ctype data of the `%s' locale\n",
 	  setlocale (LC_CTYPE, NULL));
+
+  __ctype_b = ((const unsigned short *) nl_langinfo (_NL_CTYPE_CLASS)) + 128;
 
 #if 0
   /* Just for debugging.  */
