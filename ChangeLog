@@ -1,5 +1,8 @@
 2000-09-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* scripts/config.sub: Strip out -unknown for Linux targets.
+	Patch by Scott Bambrough <scottb@netwinder.org>.
+
 	* posix/tst-dir.c (main): Correct one bug (missing NULL test) and
 	add one more test.
 
