@@ -1,0 +1,123 @@
+.TH PTHREAD_SIGNAL 3 LinuxThreads
+
+.XREF pthread_kill
+.XREF sigwait
+
+.SH NAME
+pthread_sigmask, pthread_kill, sigwait \- handling of signals in threads
+
+.SH SYNOPSIS
+#include <pthread.h>
+.br
+#include <signal.h>
+
+int pthread_sigmask(int how, const sigset_t *newmask, sigset_t *oldmask);
+
+int pthread_kill(pthread_t thread, int signo);
+
+int sigwait(const sigset_t *set, int *sig);
+
+.SH DESCRIPTION
+
+!pthread_sigmask! changes the signal mask for the calling thread as
+described by the |how| and |newmask| arguments. If |oldmask| is not
+!NULL!, the previous signal mask is stored in the location pointed to
+by |oldmask|. 
+
+The meaning of the |how| and |newmask| arguments is the same as for
+!sigprocmask!(2). If |how| is !SIG_SETMASK!, the signal mask is set to
+|newmask|. If |how| is !SIG_BLOCK!, the signals specified to |newmask|
+are added to the current signal mask.  If |how| is !SIG_UNBLOCK!, the
+signals specified to |newmask| are removed from the current signal
+mask.
+
+Recall that signal masks are set on a per-thread basis, but signal
+actions and signal handlers, as set with !sigaction!(2), are shared
+between all threads.
+
+!pthread_kill! send signal number |signo| to the thread
+|thread|. The signal is delivered and handled as described in
+!kill!(2).
+
+!sigwait! suspends the calling thread until one of the signals
+in |set| is delivered to the calling thread. It then stores the number
+of the signal received in the location pointed to by |sig| and
+returns. The signals in |set| must be blocked and not ignored on
+entrance to !sigwait!. If the delivered signal has a signal handler
+function attached, that function is |not| called.
+
+.SH CANCELLATION
+
+!sigwait! is a cancellation point.
+
+.SH "RETURN VALUE"
+
+On success, 0 is returned. On failure, a non-zero error code is returned.
+
+.SH ERRORS
+
+The !pthread_sigmask! function returns the following error codes
+on error:
+.RS
+.TP
+!EINVAL!
+|how| is not one of !SIG_SETMASK!, !SIG_BLOCK!, or !SIG_UNBLOCK!
+
+.TP
+!EFAULT!
+|newmask| or |oldmask| point to invalid addresses
+.RE
+
+The !pthread_kill! function returns the following error codes
+on error:
+.RS
+.TP
+!EINVAL!
+|signo| is not a valid signal number
+
+.TP
+!ESRCH!
+the thread |thread| does not exist (e.g. it has already terminated)
+.RE
+
+The !sigwait! function never returns an error.
+
+.SH AUTHOR
+Xavier Leroy <Xavier.Leroy@inria.fr>
+
+.SH "SEE ALSO"
+!sigprocmask!(2),
+!kill!(2),
+!sigaction!(2),
+!sigsuspend!(2).
+
+.SH NOTES
+
+For !sigwait! to work reliably, the signals being waited for must be
+blocked in all threads, not only in the calling thread, since
+otherwise the POSIX semantics for signal delivery do not guarantee
+that it's the thread doing the !sigwait! that will receive the signal.
+The best way to achieve this is block those signals before any threads
+are created, and never unblock them in the program other than by
+calling !sigwait!.
+
+.SH BUGS
+
+Signal handling in LinuxThreads departs significantly from the POSIX
+standard. According to the standard, ``asynchronous'' (external)
+signals are addressed to the whole process (the collection of all
+threads), which then delivers them to one particular thread. The
+thread that actually receives the signal is any thread that does
+not currently block the signal.
+
+In LinuxThreads, each thread is actually a kernel process with its own
+PID, so external signals are always directed to one particular thread.
+If, for instance, another thread is blocked in !sigwait! on that
+signal, it will not be restarted.
+
+The LinuxThreads implementation of !sigwait! installs dummy signal
+handlers for the signals in |set| for the duration of the wait. Since
+signal handlers are shared between all threads, other threads must not
+attach their own signal handlers to these signals, or alternatively
+they should all block these signals (which is recommended anyway --
+see the Notes section).

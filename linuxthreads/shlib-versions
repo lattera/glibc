@@ -1,0 +1,2 @@
+# Xavier Leroy's Linux clone based thread library.
+.*-.*-linux.*		libpthread=0

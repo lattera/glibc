@@ -1,0 +1,132 @@
+.TH SEMAPHORES 3 LinuxThreads
+
+.XREF sem_wait
+.XREF sem_trywait
+.XREF sem_post
+.XREF sem_getvalue
+.XREF sem_destroy
+
+.SH NAME
+sem_init, sem_wait, sem_trywait, sem_post, sem_getvalue, sem_destroy \- operations on semaphores
+
+.SH SYNOPSIS
+#include <semaphore.h>
+
+int sem_init(sem_t *sem, int pshared, unsigned int value);
+
+int sem_wait(sem_t * sem);
+
+int sem_trywait(sem_t * sem);
+
+int sem_post(sem_t * sem);
+
+int sem_getvalue(sem_t * sem, int * sval);
+
+int sem_destroy(sem_t * sem);
+
+.SH DESCRIPTION
+This manual page documents POSIX 1003.1b semaphores, not to be
+confused with SystemV semaphores as described in !ipc!(5), !semctl!(2)
+and !semop!(2).
+
+Semaphores are counters for resources shared between threads. The
+basic operations on semaphores are: increment the counter atomically,
+and wait until the counter is non-null and decrement it atomically.
+
+!sem_init! initializes the semaphore object pointed to by |sem|. The
+count associated with the semaphore is set initially to |value|. The
+|pshared| argument indicates whether the semaphore is local to the
+current process (|pshared| is zero) or is to be shared between several
+processes (|pshared| is not zero). LinuxThreads currently does not
+support process-shared semaphores, thus !sem_init! always returns with
+error !ENOSYS! if |pshared| is not zero.
+
+!sem_wait! suspends the calling thread until the semaphore pointed to
+by |sem| has non-zero count. It then atomically decreases the
+semaphore count.
+
+!sem_trywait! is a non-blocking variant of !sem_wait!. If the
+semaphore pointed to by |sem| has non-zero count, the count is
+atomically decreased and !sem_trywait! immediately returns 0.
+If the semaphore count is zero, !sem_trywait! immediately returns with
+error !EAGAIN!.
+
+!sem_post! atomically increases the count of the semaphore pointed to
+by |sem|. This function never blocks and can safely be used in
+asynchronous signal handlers.
+
+!sem_getvalue! stores in the location pointed to by |sval| the current
+count of the semaphore |sem|.
+
+!sem_destroy! destroys a semaphore object, freeing the resources it
+might hold. No threads should be waiting on the semaphore at the time
+!sem_destroy! is called. In the LinuxThreads implementation, no
+resources are associated with semaphore objects, thus !sem_destroy!
+actually does nothing except checking that no thread is waiting on the
+semaphore.
+
+.SH CANCELLATION
+
+!sem_wait! is a cancellation point.
+
+.SH "ASYNC-SIGNAL SAFETY"
+
+On processors supporting atomic compare-and-swap (Intel 486, Pentium
+and later, Alpha, PowerPC, MIPS II, Motorola 68k), the !sem_post!
+function is async-signal safe and can therefore be
+called from signal handlers. This is the only thread synchronization
+function provided by POSIX threads that is async-signal safe.
+
+On the Intel 386 and the Sparc, the current LinuxThreads
+implementation of !sem_post! is not async-signal safe by lack of the
+required atomic operations.
+
+.SH "RETURN VALUE"
+
+The !sem_wait! and !sem_getvalue! functions always return 0.
+All other semaphore functions return 0 on success and -1 on error, in
+addition to writing an error code in !errno!.
+
+.SH ERRORS
+
+The !sem_init! function sets !errno! to the following codes on error:
+.RS
+.TP
+!EINVAL!
+|value| exceeds the maximal counter value !SEM_VALUE_MAX!
+.TP
+!ENOSYS!
+|pshared| is not zero
+.RE
+
+The !sem_trywait! function sets !errno! to the following error code on error:
+.RS
+.TP
+!EAGAIN!
+the semaphore count is currently 0
+.RE
+
+The !sem_post! function sets !errno! to the following error code on error:
+.RS
+.TP
+!ERANGE!
+after incrementation, the semaphore value would exceed !SEM_VALUE_MAX!
+(the semaphore count is left unchanged in this case)
+.RE
+
+The !sem_destroy! function sets !errno! to the following error code on error:
+.RS
+.TP
+!EBUSY!
+some threads are currently blocked waiting on the semaphore.
+.RE
+
+.SH AUTHOR
+Xavier Leroy <Xavier.Leroy@inria.fr>
+
+.SH "SEE ALSO"
+!pthread_mutex_init!(3),
+!pthread_cond_init!(3),
+!pthread_cancel!(3),
+!ipc!(5).
+

@@ -1,0 +1,23 @@
+.TH PTHREAD_SELF 3 LinuxThreads
+
+.SH NAME
+pthread_self \- return identifier of current thread
+
+.SH SYNOPSIS
+#include <pthread.h>
+
+pthread_t pthread_self(void);
+
+.SH DESCRIPTION
+!pthread_self! return the thread identifier for the calling thread.
+
+.SH AUTHOR
+Xavier Leroy <Xavier.Leroy@inria.fr>
+
+.SH "SEE ALSO"
+!pthread_equal!(3),
+!pthread_join!(3),
+!pthread_detach!(3),
+!pthread_setschedparam!(3),
+!pthread_getschedparam!(3).
+

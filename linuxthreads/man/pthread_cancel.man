@@ -1,0 +1,155 @@
+.TH PTHREAD_CANCEL 3 LinuxThreads
+
+.XREF pthread_setcancelstate
+.XREF pthread_setcanceltype
+.XREF pthread_testcancel
+
+.SH NAME
+pthread_cancel, pthread_setcancelstate, pthread_setcanceltype, pthread_testcancel \- thread cancellation
+
+.SH SYNOPSIS
+#include <pthread.h>
+
+int pthread_cancel(pthread_t thread);
+
+int pthread_setcancelstate(int state, int *oldstate);
+
+int pthread_setcanceltype(int type, int *oldtype);
+
+void pthread_testcancel(void);
+
+.SH DESCRIPTION
+
+Cancellation is the mechanism by which a thread can terminate the
+execution of another thread. More precisely, a thread can send a
+cancellation request to another thread. Depending on its settings, the
+target thread can then either ignore the request, honor it
+immediately, or defer it till it reaches a cancellation point.
+
+When a thread eventually honors a cancellation request, it performs as
+if !pthread_exit(PTHREAD_CANCELED)! has been called at that point:
+all cleanup handlers are executed in reverse order, finalization
+functions for thread-specific data are called, and finally the thread
+stops executing with the return value !PTHREAD_CANCELED!. See
+!pthread_exit!(3) for more information.
+
+!pthread_cancel! sends a cancellation request to the thread denoted
+by the |thread| argument.
+
+!pthread_setcancelstate! changes the cancellation state for the
+calling thread -- that is, whether cancellation requests are ignored
+or not. The |state| argument is the new cancellation state: either
+!PTHREAD_CANCEL_ENABLE! to enable cancellation, or
+!PTHREAD_CANCEL_DISABLE! to disable cancellation (cancellation
+requests are ignored). If |oldstate| is not !NULL!, the previous
+cancellation state is stored in the location pointed to by |oldstate|,
+and can thus be restored later by another call to
+!pthread_setcancelstate!.
+
+!pthread_setcanceltype! changes the type of responses to cancellation
+requests for the calling thread: asynchronous (immediate) or deferred.
+The |type| argument is the new cancellation type: either
+!PTHREAD_CANCEL_ASYNCHRONOUS! to cancel the calling thread as soon as
+the cancellation request is received, or !PTHREAD_CANCEL_DEFERRED! to
+keep the cancellation request pending until the next cancellation
+point. If |oldtype| is not !NULL!, the previous
+cancellation state is stored in the location pointed to by |oldtype|,
+and can thus be restored later by another call to
+!pthread_setcanceltype!.
+
+Threads are always created by !pthread_create!(3) with cancellation
+enabled and deferred. That is, the initial cancellation state is
+!PTHREAD_CANCEL_ENABLE! and the initial type is
+!PTHREAD_CANCEL_DEFERRED!.
+
+Cancellation points are those points in the program execution where a
+test for pending cancellation requests is performed and cancellation
+is executed if positive. The following POSIX threads functions
+are cancellation points:
+
+!pthread_join!(3)
+.br
+!pthread_cond_wait!(3)
+.br
+!pthread_cond_timedwait!(3)
+.br
+!pthread_testcancel!(3)
+.br
+!sem_wait!(3)
+.br
+!sigwait!(3)
+
+All other POSIX threads functions are guaranteed not to be
+cancellation points. That is, they never perform cancellation in
+deferred cancellation mode.
+
+!pthread_testcancel! does nothing except testing for pending
+cancellation and executing it. Its purpose is to introduce explicit
+checks for cancellation in long sequences of code that do not call
+cancellation point functions otherwise.
+
+.SH "RETURN VALUE"
+
+!pthread_cancel!, !pthread_setcancelstate! and
+!pthread_setcanceltype! return 0 on success and a non-zero error code
+on error.
+
+.SH ERRORS
+!pthread_cancel! returns the following error code on error:
+.RS
+.TP
+!ESRCH!
+no thread could be found corresponding to that specified by the |thread| ID.
+.RE
+
+!pthread_setcancelstate! returns the following error code on error:
+.RS
+.TP
+!EINVAL!
+the |state| argument is not !PTHREAD_CANCEL_ENABLE! nor
+!PTHREAD_CANCEL_DISABLE!
+.RE
+
+!pthread_setcanceltype! returns the following error code on error:
+.RS
+.TP
+!EINVAL!
+the |type| argument is not !PTHREAD_CANCEL_DEFERRED! nor
+!PTHREAD_CANCEL_ASYNCHRONOUS!
+.RE
+
+.SH AUTHOR
+Xavier Leroy <Xavier.Leroy@inria.fr>
+
+.SH "SEE ALSO"
+!pthread_exit!(3),
+!pthread_cleanup_push!(3),
+!pthread_cleanup_pop!(3).
+
+.SH BUGS
+
+POSIX specifies that a number of system calls (basically, all
+system calls that may block, such as !read!(2), !write!(2), !wait!(2),
+etc.) and library functions that may call these system calls (e.g.
+!fprintf!(3)) are cancellation points.  LinuxThreads is not yet
+integrated enough with the C library to implement this, and thus none
+of the C library functions is a cancellation point.
+
+For system calls at least, there is a workaround. Cancellation
+requests are transmitted to the target thread by sending it a
+signal. That signal will interrupt all blocking system calls, causing
+them to return immediately with the !EINTR! error. So, checking for
+cancellation during a !read! system call, for instance, can be
+achieved as follows:
+
+.RS
+.ft 3
+.nf
+.sp
+pthread_testcancel();
+retcode = read(fd, buffer, length);
+pthread_testcancel();
+.ft
+.LP
+.RE
+.fi

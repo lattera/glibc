@@ -1,0 +1,44 @@
+/* Machine-dependent pthreads configuration and inline functions.
+   ARM version.
+   Copyright (C) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Philip Blundell <philb@gnu.org>.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+
+/* This will not work on ARM1 or ARM2 because SWP is lacking on those
+   machines.  Unfortunately we have no way to detect this at compile
+   time; let's hope nobody tries to use one.  */
+
+/* Spinlock implementation; required.  */
+extern inline int
+testandset (int *spinlock)
+{
+  register unsigned int ret;
+
+  __asm__ __volatile__("swp %0, %1, [%2]"
+		       : "=r"(ret)
+		       : "0"(1), "r"(spinlock));
+
+  return ret;
+}
+
+
+/* Get some notion of the current stack.  Need not be exactly the top
+   of the stack, just something somewhere in the current frame.  */
+#define CURRENT_STACK_FRAME  stack_pointer
+register char * stack_pointer __asm__ ("sp");

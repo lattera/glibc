@@ -1,0 +1,3 @@
+# Local configure fragment for sysdeps/unix/sysv/linux.
+
+DEFINES="$DEFINES -D_LIBC_REENTRANT"
