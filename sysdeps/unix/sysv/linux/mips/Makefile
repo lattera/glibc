@@ -5,7 +5,7 @@ sysdep_routines += rt_sigsuspend rt_sigprocmask rt_sigtimedwait	\
 endif
 
 ifeq ($(subdir),misc)
-sysdep_routines += cachectl cacheflush sysmips
+sysdep_routines += cachectl cacheflush sysmips _test_and_set
 
-headers += sys/cachectl.h sys/sysmips.h
+headers += sys/cachectl.h sys/sysmips.h sys/tas.h
 endif

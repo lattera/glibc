@@ -1,3 +1,15 @@
+2000-07-12  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
+
+	* sysdeps/unix/sysv/linux/mips/Dist: Add sys/tas.h.
+	* sysdeps/unix/sysv/linux/mips/Makefile (sysdep_routines): Add
+	_test_and_set.
+	(headers): Add sys/tas.h.
+	* sysdeps/unix/sysv/linux/mips/Versions: Export _test_and_set for
+	GLIBC_2.2 from libc.
+	* sysdeps/unix/sysv/linux/mips/_test_and_set.c: New file.
+	* sysdeps/unix/sysv/linux/mips/sys/tas.h: New file for
+	_test_and_set.
+
 2000-07-28  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/gnu/netinet/tcp.h: Add TCP options from Linux 2.4.
@@ -9,7 +21,7 @@
 
 	* dlfcn/tst-dladdr.c: New file.  Based on a test by Volkmar Sieh
 	<vs@caldera.de>.
-	
+
 2000-07-27  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Add truncate(64) and

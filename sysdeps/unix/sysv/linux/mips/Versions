@@ -14,4 +14,8 @@ libc {
     # s*
     sysmips;
   }
+  GLIBC_2.2 {
+    # _*
+    _test_and_set;
+  }
 }
