@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -82,6 +82,9 @@ __getdirentries (int fd, char *buf, size_t nbytes, off_t *basep)
 
   retval = INLINE_SYSCALL (getdents, 3, fd, (char *) kdp, red_nbytes);
 
+  if (retval == -1)
+    return -1;
+  
   while ((char *) kdp < (char *) skdp + retval)
     {
       const size_t alignment = __alignof__ (struct dirent);
