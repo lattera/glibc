@@ -98,7 +98,7 @@ dir-add.info: xtract-typefun.awk $(texis)
 	mv -f $@.new $@
 
 %.info: %.texinfo
-	$(MAKEINFO) $<
+	LANGUAGE=C LC_ALL=C $(MAKEINFO) $<
 
 %.dvi: %.texinfo
 	$(TEXI2DVI) $<

@@ -73,9 +73,9 @@ internal_setent (int stayopen)
 	}
       else
 	{
-	  /* We have to make sure the file is  `closed on exec'.  */
+	  /* We have to make sure the file is `closed on exec'.  */
 	  int fd;
-	  int result, flags;
+	  int result;
 
 	  err = db->fd (db, &fd);
 	  if (err != 0)
@@ -84,11 +84,14 @@ internal_setent (int stayopen)
 	      result = -1;
 	    }
 	  else
-	    result = flags = fcntl (fd, F_GETFD, 0);
-	  if (result >= 0)
 	    {
-	      flags |= FD_CLOEXEC;
-	      result = fcntl (fd, F_SETFD, flags);
+	      int flags = result = fcntl (fd, F_GETFD, 0);
+
+	      if (result >= 0)
+		{
+		  flags |= FD_CLOEXEC;
+		  result = fcntl (fd, F_SETFD, flags);
+		}
 	    }
 	  if (result < 0)
 	    {

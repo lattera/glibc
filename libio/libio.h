@@ -255,6 +255,7 @@ extern _IO_FILE *_IO_stderr;
 #endif
 
 
+#ifdef _GNU_SOURCE
 /* Define the user-visible type, with user-friendly member names.  */
 typedef struct
 {
@@ -272,6 +273,7 @@ struct _IO_cookie_file
   void *cookie;
   _IO_cookie_io_functions_t io_functions;
 };
+#endif
 
 
 #ifdef __cplusplus

@@ -24,12 +24,12 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 
-#define ICMPV6_FILTER 1
+#define ICMP6_FILTER 1
 
-#define ICMPV6_FILTER_BLOCK		1
-#define ICMPV6_FILTER_PASS		2
-#define ICMPV6_FILTER_BLOCKOTHERS	3
-#define ICMPV6_FILTER_PASSONLY		4
+#define ICMP6_FILTER_BLOCK		1
+#define ICMP6_FILTER_PASS		2
+#define ICMP6_FILTER_BLOCKOTHERS	3
+#define ICMP6_FILTER_PASSONLY		4
 
 struct icmp6_filter
   {

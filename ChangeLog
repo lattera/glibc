@@ -1,5 +1,26 @@
 1998-11-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* intl/locale.alias: Change `japanese' alais to match X11R6's.
+	Add `japanese.euc' alias.
+
+	* manual/Makefile (%.info): Set LANGUAGE and LC_ALL explicitly to C
+	before running makeinfo.
+
+	* math/Makefile (libm-routines): $(strip) entire value.
+
+	* nss/nss_db/db-XXX.c (internal_setent): Rewrite to avoid warning.
+
+1998-10-24  H.J. Lu  <hjl@gnu.org>
+
+	* libio/libio.h (_IO_cookie_io_functions_t): Protect with __USE_GNU.
+	(_IO_cookie_file): Likewise.
+
+1998-11-16  Philip Blundell  <philb@gnu.org>
+
+	* inet/netinet/icmp6.h: Correct naming of constants.
+
+1998-11-16  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/unix/opendir.c: Use o_directory_works differently.  Treat
 	zero value as uninitialized so that variable can go into .bss.
 
@@ -25,7 +46,7 @@
 
 	* libio/bits/stdio.h (fread_unlocked): Don't evaluate non-constant
 	twice.  Don't bother handling zero size.
-	(frwite_unlocked): Likewise.
+	(fwrite_unlocked): Likewise.
 
 1998-11-15  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
@@ -59,7 +80,7 @@
 1998-11-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/vfscanf.c: Don't return -1 in case of an invalid
-	format, jsut stop.
+	format, just stop.
 
 	* version.h (VERSION): Bump to 2.0.102.
 
