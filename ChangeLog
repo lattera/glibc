@@ -1,6 +1,37 @@
+Fri Jul 26 15:24:25 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/rpc/auth.h: Add protection against multiple inclusion
+	and change K&R prototypes to ANSI prototypes.
+	* sunrpc/rpc/auth_unix.h: Ditto.
+	* sunrpc/rpc/clnt.h: Ditto.
+	* sunrpc/rpc/pmap_clnt.h: Ditto.
+	* sunrpc/rpc/pmap_prot.h: Ditto.
+	* sunrpc/rpc/pmap_rmt.h: Ditto.
+	* sunrpc/rpc/rpc_msg.h: Ditto.
+	* sunrpc/rpc/svc.h: Ditto.
+	* sunrpc/rpc/svc_auth.h: Ditto.
+	* sunrpc/rpc/xdr.h: Ditto.
+
 Fri Jul 26 20:39:42 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* ctype/test_ctype.c: Test EOF too.
+
+Fri Jul 26 18:06:58 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/rpc/auth.h: Add __BEGIN_DECLS and __END_DECLS.
+	* sunrpc/rpc/auth_unix.h: Likewise.
+	* sunrpc/rpc/clnt.h: Likewise.
+	* sunrpc/rpc/netdb.h: Likewise.
+	* sunrpc/rpc/pmap_clnt.h: Likewise.
+	* sunrpc/rpc/pmap_prot.h: Likewise.
+	* sunrpc/rpc/rpc_msg.h: Likewise.
+	* sunrpc/rpc/svc.h: Likewise.
+	* sunrpc/rpc/svc_auth.h: Likewise.
+	* sunrpc/rpc/xdr.h: Likewise.
+
+	* sunrpc/rpc/pmap_clnt.h: Move definition of type `resultproc_t'
+	to here from...
+	* sunrpc/pmap_rmt.c: ...here.
 
 Fri Jul 26 16:10:43 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 

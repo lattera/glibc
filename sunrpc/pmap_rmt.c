@@ -207,7 +207,6 @@ getbroadcastnets(addrs, sock, buf)
 	return (i);
 }
 
-typedef bool_t (*resultproc_t)();
 
 enum clnt_stat
 clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)

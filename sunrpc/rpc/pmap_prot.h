@@ -6,23 +6,23 @@
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -33,8 +33,18 @@
  * Protocol for the local binder service, or pmap.
  *
  * Copyright (C) 1984, Sun Microsystems, Inc.
- *
- * The following procedures are supported by the protocol:
+ */
+
+#ifndef _RPC_PMAP_PROT_H
+
+#define _RPC_PMAP_PROT_H	1
+#include <features.h>
+
+#include <rpc/xdr.h>
+
+__BEGIN_DECLS
+
+/* The following procedures are supported by the protocol:
  *
  * PMAPPROC_NULL() returns ()
  * 	takes nothing, returns nothing
@@ -84,11 +94,15 @@ struct pmap {
 	long unsigned pm_port;
 };
 
-extern bool_t xdr_pmap();
+extern bool_t xdr_pmap __P ((XDR *__xdrs, struct pmap *__regs));
 
 struct pmaplist {
 	struct pmap	pml_map;
 	struct pmaplist *pml_next;
 };
 
-extern bool_t xdr_pmaplist();
+extern bool_t xdr_pmaplist __P ((XDR *__xdrs, struct pmaplist **__rp));
+
+__END_DECLS
+
+#endif /* rpc/pmap_prot.h */

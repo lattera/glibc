@@ -6,23 +6,23 @@
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -38,6 +38,12 @@
  * "sessions".
  */
 
+#ifndef _RPC_AUTH_H
+
+#define _RPC_AUTH_H	1
+#include <features.h>
+
+__BEGIN_DECLS
 
 #define MAX_AUTH_BYTES	400
 #define MAXNETNAMELEN	255	/* maximum length of network user's name */
@@ -81,6 +87,10 @@ struct opaque_auth {
 	u_int	oa_length;		/* not to exceed MAX_AUTH_BYTES */
 };
 
+#ifndef _RPC_AUTH_H
+
+#define _RPC_AUTH_H	1
+#include <features.h>
 
 /*
  * Auth handle, interface to client side authenticators.
@@ -150,13 +160,19 @@ extern struct opaque_auth _null_auth;
  *	int len;
  *	int *aup_gids;
  */
-extern AUTH *authunix_create();
-extern AUTH *authunix_create_default();	/* takes no parameters */
-extern AUTH *authnone_create();		/* takes no parameters */
+extern AUTH *authunix_create __P ((char *__machname, int __uid, int __gid,
+				   int __len, int *__aup_gids));
+extern AUTH *authunix_create_default __P ((void));
+extern AUTH *authnone_create __P ((void));
 extern AUTH *authdes_create();
 
 #define AUTH_NONE	0		/* no authentication */
 #define	AUTH_NULL	0		/* backward compatibility */
 #define	AUTH_UNIX	1		/* unix style (uid, gids) */
+#define	AUTH_SYS	1		/* unix style (uid, gids) */
 #define	AUTH_SHORT	2		/* short hand unix style */
 #define AUTH_DES	3		/* des style (encrypted timestamps) */
+
+__END_DECLS
+
+#endif /* rpc/auth.h */

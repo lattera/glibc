@@ -6,23 +6,23 @@
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -42,6 +42,19 @@
  * for the credentials.
  */
 
+#ifndef _RPC_AUTH_UNIX_H
+
+#define _RPC_AUTH_UNIX_H	1
+#include <features.h>
+
+__BEGIN_DECLS
+
+#ifndef _RPC_AUTH_UNIX_H
+
+#define _RPC_AUTH_UNIX_H	1
+#include <features.h>
+
+
 /* The machine name is part of a credential; it may not exceed 255 bytes */
 #define MAX_MACHINE_NAME 255
 
@@ -60,13 +73,18 @@ struct authunix_parms {
 	int	*aup_gids;
 };
 
-extern bool_t xdr_authunix_parms();
+extern bool_t xdr_authunix_parms __P ((XDR *__xdrs,
+				       struct authunix_parms *__p));
 
-/* 
- * If a response verifier has flavor AUTH_SHORT, 
+/*
+ * If a response verifier has flavor AUTH_SHORT,
  * then the body of the response verifier encapsulates the following structure;
  * again it is serialized in the obvious fashion.
  */
 struct short_hand_verf {
 	struct opaque_auth new_cred;
 };
+
+__END_DECLS
+
+#endif /* rpc/auth_unix.h */

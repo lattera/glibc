@@ -6,23 +6,23 @@
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -35,13 +35,22 @@
  * Copyright (C) 1986, Sun Microsystems, Inc.
  */
 
+#ifndef _RPC_PMAP_RMT_H
+
+#define _RPC_PMAP_RMT_H	1
+#include <features.h>
+
+
 struct rmtcallargs {
 	u_long prog, vers, proc, arglen;
 	caddr_t args_ptr;
 	xdrproc_t xdr_args;
 };
 
-bool_t xdr_rmtcall_args();
+bool_t xdr_rmtcallres __P ((XDR *__xdrs, struct rmtcallres *__crp));
+
+
+#endif /* rpc/pmap_rmt.h */
 
 struct rmtcallres {
 	u_long *port_ptr;
@@ -50,4 +59,7 @@ struct rmtcallres {
 	xdrproc_t xdr_results;
 };
 
-bool_t xdr_rmtcallres();
+bool_t xdr_rmtcallres __P ((XDR *__xdrs, struct rmtcallres *__crp));
+
+
+#endif /* rpc/pmap_rmt.h */
