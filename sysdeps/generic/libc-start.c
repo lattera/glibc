@@ -241,10 +241,10 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 	 terminate the entire process.  */
       result = 0;
 # ifdef SHARED
-      int *const ptr = __libc_pthread_functions.ptr_nthreads;
+      unsigned int *const ptr = __libc_pthread_functions.ptr_nthreads;
 # else
-      extern int __nptl_nthreads __attribute ((weak));
-      int *const ptr = &__nptl_nthreads;
+      extern unsigned int __nptl_nthreads __attribute ((weak));
+      unsigned int *const ptr = &__nptl_nthreads;
 # endif
 
       if (! atomic_decrement_and_test (ptr))

@@ -49,8 +49,9 @@ static void new_width (struct linereader *cmfile, struct charmap_t *result,
 		       const char *from, const char *to,
 		       unsigned long int width);
 static void charmap_new_char (struct linereader *lr, struct charmap_t *cm,
-			      int nbytes, char *bytes, const char *from,
-			      const char *to, int decimal_ellipsis, int step);
+			      size_t nbytes, unsigned char *bytes,
+			      const char *from, const char *to,
+			      int decimal_ellipsis, int step);
 
 
 bool enc_not_ascii_compatible;
@@ -927,7 +928,8 @@ charmap_find_value (const struct charmap_t *cm, const char *name, size_t len)
 
 static void
 charmap_new_char (struct linereader *lr, struct charmap_t *cm,
-		  int nbytes, char *bytes, const char *from, const char *to,
+		  size_t nbytes, unsigned char *bytes,
+		  const char *from, const char *to,
 		  int decimal_ellipsis, int step)
 {
   hash_table *ht = &cm->char_table;

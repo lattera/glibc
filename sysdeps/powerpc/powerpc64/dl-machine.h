@@ -810,17 +810,5 @@ elf_machine_lazy_rel (struct link_map *map,
   /* elf_machine_runtime_setup handles this.  */
 }
 
-auto inline void __attribute__ ((always_inline))
-elf_machine_rel (struct link_map *map, const Elf64_Rel *reloc,
-		 const ElfW(Sym) *sym, const struct r_found_version *version,
-		 void *const reloc_addr)
-{
-}
-
-auto inline void __attribute__ ((always_inline))
-elf_machine_rel_relative (ElfW(Addr) l_addr, const Elf64_Rel *reloc,
-			  void *const reloc_addr)
-{
-}
 
 #endif /* RESOLVE */

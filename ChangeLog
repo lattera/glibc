@@ -1,5 +1,94 @@
 2005-02-16  Roland McGrath  <roland@redhat.com>
 
+	* intl/dcigettext.c (_nl_find_msg): Add a cast.
+
+	* nis/nis_clone_dir.c (nis_clone_directory): Use char * for ADDR.
+	* nis/nis_clone_obj.c (nis_clone_object): Likewise.
+	* nis/nis_clone_res.c (nis_clone_result): Likewise.
+
+	* resolv/nss_dns/dns-network.c (getanswer_r): Use const unsigned char *
+	for END_OF_MESSAGE and CP.
+
+	* resolv/res_send.c (send_dg): Add else branch for case impossible
+	unless `poll' is buggy.
+
+	* crypt/crypt_util.c (__setkey_r): Add a cast.
+
+	* locale/programs/linereader.c (get_toplvl_escape): Use size_t for
+	NBYTES, and unsigned char * for BYTES.
+
+	* locale/programs/charmap.c (charmap_new_char): Use size_t and
+	unsighed char * for NBYTES, BYTES parameters.
+
+	* sysdeps/generic/dl-hash.h (_dl_elf_hash): Take const char * argument
+	and cast it.
+	* sysdeps/i386/i686/dl-hash.h (_dl_elf_hash): Likewise.
+
+	* sunrpc/create_xid.c (_create_xid): Don't use unsigned long for RES.
+
+	* sunrpc/svcauth_des.c (_svcauth_des): Fix cast type.
+
+	* sunrpc/auth_des.c (authdes_create): Don't use u_char for PKEY_DATA.
+	(authdes_marshal): Don't use unsigned int for LEN.
+	* sunrpc/xdr.c (xdr_hyper): Don't use unsigned long for T2.
+	(xdr_u_hyper): Likewise.
+	(xdr_u_short): Don't use u_long for L.
+	* sunrpc/xdr_intXX_t.c (xdr_int64_t): Don't use uint32_t for T2.
+
+	* inet/rexec.c (rexec_af): Use socklen_t.
+	* sunrpc/key_call.c (getkeyserv_handle): Likewise.
+	* sunrpc/rtime.c (rtime): Likewise.
+	* resolv/res_send.c (send_vc, send_dg): Likewise.
+	* nis/nis_callback.c (__nis_create_callback): Likewise.
+
+	* sysdeps/generic/libc-start.c: Use unsigned int for nthreads ptr.
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Fix type of ADDR local.
+
+	* libio/libio.h (_IO_BE): Add parenthesis around EXPR.
+
+	* intl/dcigettext.c (INTVARDEF, INTUSE): Macros removed.
+	(_nl_default_dirname): Use libc_hidden_data_def instead of INTVARDEF.
+	(libc_freeres_fn, DCIGETTEXT): Don't use INTUSE.
+	* intl/bindtextdom.c (INTUSE): Macro removed.
+	(_nl_default_dirname): Use libc_hidden_proto.
+	(set_binding_values): Don't use INTUSE.
+	* include/libintl.h (_libc_intl_domainname_internal): Decl removed.
+	(_libc_intl_domainname): Use libc_hidden_proto.
+	* posix/regex_internal.h (gettext): Remove INTUSE on it.
+	* locale/SYS_libc.c (_libc_intl_domainname): Use libc_hidden_data_def
+	rather than INTDEF.
+	* include/libintl.h (_): Don't use *_internal name.
+
+	* ctype/ctype-extn.c (__ctype_tolower, __ctype_toupper): Use int32_t,
+	not uint32_t.
+	* locale/lc-ctype.c (_nl_postload_ctype): Likewise for assignments.
+
+	* iconv/gconv_open.c (__gconv_open): Remove useless cast.
+
+	[BZ #721]
+	* sysdeps/i386/dl-machine.h (ELF_MACHINE_NO_RELA): Define this outside
+	of [RESOLVE_MAP].
+	* sysdeps/sh/dl-machine.h (ELF_MACHINE_NO_REL): Likewise.
+	* sysdeps/powerpc/powerpc32/dl-machine.h
+	(elf_machine_rel, elf_machine_rel_relative): Removed.
+	* sysdeps/powerpc/powerpc64/dl-machine.h
+	(elf_machine_rel, elf_machine_rel_relative): Removed.
+
+2005-02-03  Alexandre Oliva  <aoliva@redhat.com>
+
+	[BZ #721]
+	* elf/dynamic-link.h: Don't declare nested auto functions that are
+	not going to be defined.
+
+2004-07-23  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #284]
+	* include/features.h (_POSIX_SOURCE, _POSIX_C_SOURCE): Define
+	if _XOPEN_SOURCE >= 500 even if __STRICT_ANSI__ is defined.
+
+2005-02-16  Roland McGrath  <roland@redhat.com>
+
 	* sysdeps/generic/libc-start.c (LIBC_START_MAIN): Move UBP_EV defn
 	inside [! SHARED] where it's used.
 

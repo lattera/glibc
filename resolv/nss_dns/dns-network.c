@@ -262,14 +262,14 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
     char linebuffer[0];
   } *net_data = (struct net_data *) buffer;
   int linebuflen = buflen - offsetof (struct net_data, linebuffer);
-  const char *end_of_message = &answer->buf[anslen];
+  const unsigned char *end_of_message = &answer->buf[anslen];
   const HEADER *header_pointer = &answer->hdr;
   /* #/records in the answer section.  */
   int answer_count =  ntohs (header_pointer->ancount);
   /* #/entries in the question section.  */
   int question_count = ntohs (header_pointer->qdcount);
   char *bp = net_data->linebuffer;
-  const char *cp = &answer->buf[HFIXEDSZ];
+  const unsigned char *cp = &answer->buf[HFIXEDSZ];
   char **alias_pointer;
   int have_answer;
   char *ans;

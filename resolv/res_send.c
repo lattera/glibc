@@ -632,7 +632,7 @@ send_vc(res_state statp,
 	/* Are we still talking to whom we want to talk to? */
 	if (statp->_vcsock >= 0 && (statp->_flags & RES_F_VC) != 0) {
 		struct sockaddr_in6 peer;
-		int size = sizeof peer;
+		socklen_t size = sizeof peer;
 
 		if (getpeername(statp->_vcsock,
 				(struct sockaddr *)&peer, &size) < 0 ||
@@ -809,7 +809,8 @@ send_dg(res_state statp,
         int ptimeout;
 	struct sockaddr_in6 from;
 	static int socket_pf = 0;
-	int fromlen, resplen, seconds, n;
+	socklen_t fromlen;
+	int resplen, seconds, n;
 
 	if (EXT(statp).nssocks[ns] == -1) {
 		/* only try IPv6 if IPv6 NS and if not failed before */
@@ -1032,6 +1033,10 @@ send_dg(res_state statp,
 		/* Something went wrong.  We can stop trying.  */
 		res_nclose(statp);
 		return (0);
+	}
+	else {
+	  	/* poll should not have returned > 0 in this case.  */
+		abort ();
 	}
 }
 

@@ -80,7 +80,7 @@ rtime (struct sockaddr_in *addrp, struct rpc_timeval *timep,
   /* RFC 868 says the time is transmitted as a 32-bit value.  */
   uint32_t thetime;
   struct sockaddr_in from;
-  int fromlen;
+  socklen_t fromlen;
   int type;
 
   if (timeout == NULL)

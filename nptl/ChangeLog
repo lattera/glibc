@@ -1,3 +1,8 @@
+2005-02-16  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/pthread/pthread-functions.h (struct pthread_functions):
+	Use unsigned int * for ptr_nthreads.
+
 2005-02-14  Alan Modra  <amodra@bigpond.net.au>
 
 	* sysdeps/powerpc/tcb-offsets.sym (thread_offsetof): Redefine to suit
@@ -15,6 +20,7 @@
 
 2005-01-26  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #737]
 	* sysdeps/unix/sysv/linux/i386/i486/sem_trywait.S (__new_sem_trywait):
 	Use direct %gs segment access or, if NO_TLS_DIRECT_SEG_REFS,
 	at least gotntpoff relocation and addition.

@@ -1,5 +1,6 @@
 /* Find matching transformation algorithms and initialize steps.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2004,2005
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -279,7 +280,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 		  /* Allocate the buffer.  */
 		  size = (GCONV_NCHAR_GOAL * steps[cnt].__max_needed_to);
 
-		  result->__data[cnt].__outbuf = (char *) malloc (size);
+		  result->__data[cnt].__outbuf = malloc (size);
 		  if (result->__data[cnt].__outbuf == NULL)
 		    {
 		      res = __GCONV_NOMEM;

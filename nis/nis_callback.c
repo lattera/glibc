@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -274,7 +274,7 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
   struct nis_cb *cb;
   int sock = RPC_ANYSOCK;
   struct sockaddr_in sin;
-  int len = sizeof (struct sockaddr_in);
+  socklen_t len = sizeof (struct sockaddr_in);
   char addr[NIS_MAXNAMELEN + 1];
   unsigned short port;
 

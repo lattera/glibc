@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -26,7 +26,7 @@
 directory_obj *
 nis_clone_directory (const directory_obj *src, directory_obj *dest)
 {
-  unsigned char *addr;
+  char *addr;
   unsigned int size;
   XDR xdrs;
   directory_obj *res;

@@ -386,7 +386,7 @@ getkeyserv_handle (int vers)
   struct timeval wait_time;
   int fd;
   struct sockaddr_un name;
-  int namelen = sizeof(struct sockaddr_un);
+  socklen_t namelen = sizeof(struct sockaddr_un);
 
 #define TOTAL_TIMEOUT   30      /* total timeout talking to keyserver */
 #define TOTAL_TRIES     5       /* Number of tries */

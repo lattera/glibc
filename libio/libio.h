@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1995, 1997-2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1995,1997-2003,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -411,7 +411,7 @@ extern _IO_wint_t __wuflow (_IO_FILE *) __THROW;
 extern _IO_wint_t __woverflow (_IO_FILE *, _IO_wint_t) __THROW;
 
 #if  __GNUC__ >= 3
-# define _IO_BE(expr, res) __builtin_expect (expr, res)
+# define _IO_BE(expr, res) __builtin_expect ((expr), res)
 #else
 # define _IO_BE(expr, res) (expr)
 #endif

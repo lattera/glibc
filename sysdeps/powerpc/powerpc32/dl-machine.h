@@ -313,19 +313,6 @@ elf_machine_lazy_rel (struct link_map *map,
   /* elf_machine_runtime_setup handles this. */
 }
 
-auto inline void __attribute__ ((always_inline))
-elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
-		 const ElfW(Sym) *sym, const struct r_found_version *version,
-		 void *const reloc_addr)
-{
-}
-
-auto inline void __attribute__ ((always_inline))
-elf_machine_rel_relative (ElfW(Addr) l_addr, const Elf32_Rel *reloc,
-			  void *const reloc_addr)
-{
-}
-
 /* The SVR4 ABI specifies that the JMPREL relocs must be inside the
    DT_RELA table.  */
 #define ELF_MACHINE_PLTREL_OVERLAP 1

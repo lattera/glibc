@@ -225,8 +225,7 @@ INTDEF(xdr_u_long)
 bool_t
 xdr_hyper (XDR *xdrs, quad_t *llp)
 {
-  long t1;
-  unsigned long int t2;
+  long int t1, t2;
 
   if (xdrs->x_op == XDR_ENCODE)
     {
@@ -240,7 +239,7 @@ xdr_hyper (XDR *xdrs, quad_t *llp)
       if (!XDR_GETLONG(xdrs, &t1) || !XDR_GETLONG(xdrs, &t2))
 	return FALSE;
       *llp = ((quad_t) t1) << 32;
-      *llp |= t2;
+      *llp |= (unsigned long int) t2;
       return TRUE;
     }
 
@@ -259,8 +258,7 @@ INTDEF(xdr_hyper)
 bool_t
 xdr_u_hyper (XDR *xdrs, u_quad_t *ullp)
 {
-  unsigned long t1;
-  unsigned long t2;
+  long int t1, t2;
 
   if (xdrs->x_op == XDR_ENCODE)
     {
@@ -274,7 +272,7 @@ xdr_u_hyper (XDR *xdrs, u_quad_t *ullp)
       if (!XDR_GETLONG(xdrs, &t1) || !XDR_GETLONG(xdrs, &t2))
 	return FALSE;
       *ullp = ((u_quad_t) t1) << 32;
-      *ullp |= t2;
+      *ullp |= (unsigned long int) t2;
       return TRUE;
     }
 
@@ -332,7 +330,7 @@ INTDEF(xdr_short)
 bool_t
 xdr_u_short (XDR *xdrs, u_short *usp)
 {
-  u_long l;
+  long l;
 
   switch (xdrs->x_op)
     {
@@ -345,7 +343,7 @@ xdr_u_short (XDR *xdrs, u_short *usp)
 	{
 	  return FALSE;
 	}
-      *usp = (u_short) l;
+      *usp = (u_short) (u_long) l;
       return TRUE;
 
     case XDR_FREE:

@@ -60,7 +60,7 @@
 # ifdef _LIBC
 #  undef gettext
 #  define gettext(msgid) \
-  INTUSE(__dcgettext) (INTUSE(_libc_intl_domainname), msgid, LC_MESSAGES)
+  INTUSE(__dcgettext) (_libc_intl_domainname, msgid, LC_MESSAGES)
 # endif
 #else
 # define gettext(msgid) (msgid)

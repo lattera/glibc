@@ -680,7 +680,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 				    h->h_length);
 			  else
 			    {
-			      int32_t *addr = (uint32_t *) (*pat)->addr;
+			      uint32_t *addr = (uint32_t *) (*pat)->addr;
 			      addr[3] = *(uint32_t *) h->h_addr_list[i];
 			      addr[2] = htonl (0xffff);
 			      addr[1] = 0;

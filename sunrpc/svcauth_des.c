@@ -315,7 +315,7 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
   /*
    * xdr the timestamp before encrypting
    */
-  ixdr = (int32_t *) cryptbuf;
+  ixdr = (uint32_t *) cryptbuf;
   IXDR_PUT_INT32 (ixdr, timestamp.tv_sec - 1);
   IXDR_PUT_INT32 (ixdr, timestamp.tv_usec);
 

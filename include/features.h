@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993,1995-2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1995-2003,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -181,8 +181,8 @@
 
 /* If none of the ANSI/POSIX macros are defined, use POSIX.1 and POSIX.2
    (and IEEE Std 1003.1b-1993 unless _XOPEN_SOURCE is defined).  */
-#if (!defined __STRICT_ANSI__ && !defined _POSIX_SOURCE && \
-     !defined _POSIX_C_SOURCE)
+#if ((!defined __STRICT_ANSI__ || (_XOPEN_SOURCE - 0) >= 500) && \
+     !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE)
 # define _POSIX_SOURCE	1
 # if defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) < 500
 #  define _POSIX_C_SOURCE	2

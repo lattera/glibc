@@ -902,7 +902,7 @@ __setkey_r(__key, __data)
       c = c << 1 | *__key++;
     ktab[i] = c >> 1;
   }
-  _ufc_mk_keytab_r(ktab, __data);
+  _ufc_mk_keytab_r((char *) ktab, __data);
 }
 weak_alias (__setkey_r, setkey_r)
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001,2002,2003,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -347,8 +347,8 @@ get_toplvl_escape (struct linereader *lr)
   /* This is supposed to be a numeric value.  We return the
      numerical value and the number of bytes.  */
   size_t start_idx = lr->idx - 1;
-  char *bytes = lr->token.val.charcode.bytes;
-  int nbytes = 0;
+  unsigned char *bytes = lr->token.val.charcode.bytes;
+  size_t nbytes = 0;
   int ch;
 
   do
