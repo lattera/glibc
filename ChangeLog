@@ -1,5 +1,12 @@
 2000-05-08  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Fix arguments in
+	call to elf_machine_fixup_plt.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Likewise.
+
+2000-05-08  Jakub Jelinek  <jakub@redhat.com>
+
 	* elf/dl-fini.c (_dl_fini): Bump l_opencount of all objects so that
 	they are not dlclose'd from underneath us.
 
