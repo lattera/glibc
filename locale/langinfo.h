@@ -1,5 +1,5 @@
 /* Access to locale-dependent parameters.
-   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -128,9 +128,9 @@ enum
   MON_12,
 #define MON_12			MON_12
 
-  AM_STR,			/* Ante meridian string.  */
+  AM_STR,			/* Ante meridiem string.  */
 #define AM_STR			AM_STR
-  PM_STR,			/* Post meridian string.  */
+  PM_STR,			/* Post meridiem string.  */
 #define PM_STR			PM_STR
 
   D_T_FMT,			/* Date and time format for strftime.  */
@@ -205,8 +205,8 @@ enum
   _NL_WMON_11,
   _NL_WMON_12,
 
-  _NL_WAM_STR,		/* Ante meridian string.  */
-  _NL_WPM_STR,		/* Post meridian string.  */
+  _NL_WAM_STR,		/* Ante meridiem string.  */
+  _NL_WPM_STR,		/* Post meridiem string.  */
 
   _NL_WD_T_FMT,		/* Date and time format for strftime.  */
   _NL_WD_FMT,		/* Date format for strftime.  */
