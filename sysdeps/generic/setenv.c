@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1992,1995-2001,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -134,12 +134,9 @@ __add_to_environ (name, value, combined, replace)
 	  ++size;
     }
 
-  if (ep == NULL || *ep == NULL)
+  if (ep == NULL || __builtin_expect (*ep == NULL, 1))
     {
       char **new_environ;
-#ifdef USE_TSEARCH
-      char *new_value;
-#endif
 
       /* We allocated this space; we can extend it.  */
       new_environ = (char **) realloc (last_environ,
@@ -159,7 +156,11 @@ __add_to_environ (name, value, combined, replace)
 	{
 	  /* See whether the value is already known.  */
 #ifdef USE_TSEARCH
-	  new_value = (char *) alloca (namelen + 1 + vallen);
+# ifdef __GNUC__
+	  char new_value[namelen + 1 + vallen];
+# else
+	  char *new_value = (char *) alloca (namelen + 1 + vallen);
+# endif
 # ifdef _LIBC
 	  __mempcpy (__mempcpy (__mempcpy (new_value, name, namelen), "=", 1),
 		     value, vallen);
@@ -170,11 +171,11 @@ __add_to_environ (name, value, combined, replace)
 # endif
 
 	  new_environ[size] = KNOWN_VALUE (new_value);
-	  if (new_environ[size] == NULL)
+	  if (__builtin_expect (new_environ[size] == NULL, 1))
 #endif
 	    {
 	      new_environ[size] = (char *) malloc (namelen + 1 + vallen);
-	      if (new_environ[size] == NULL)
+	      if (__builtin_expect (new_environ[size] == NULL, 0))
 		{
 		  __set_errno (ENOMEM);
 		  UNLOCK;
@@ -213,7 +214,11 @@ __add_to_environ (name, value, combined, replace)
       else
 	{
 #ifdef USE_TSEARCH
-	  char *new_value = alloca (namelen + 1 + vallen);
+# ifdef __GNUC__
+	  char new_value[namelen + 1 + vallen];
+# else
+	  char *new_value = (char *) alloca (namelen + 1 + vallen);
+# endif
 # ifdef _LIBC
 	  __mempcpy (__mempcpy (__mempcpy (new_value, name, namelen), "=", 1),
 		     value, vallen);
@@ -224,11 +229,11 @@ __add_to_environ (name, value, combined, replace)
 # endif
 
 	  np = KNOWN_VALUE (new_value);
-	  if (np == NULL)
+	  if (__builtin_expect (np == NULL, 1))
 #endif
 	    {
 	      np = malloc (namelen + 1 + vallen);
-	      if (np == NULL)
+	      if (__builtin_expect (np == NULL, 0))
 		{
 		  UNLOCK;
 		  return -1;
