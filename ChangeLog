@@ -1,3 +1,9 @@
+1999-05-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* hesiod/Versions: Change _nss_hesiod_getpwuid and
+	_nss_hesiod_getgrgid to _nss_hesiod_getpwuid_r and
+	_nss_hesiod_getgrgid_r respectively.
+
 1999-05-09  Mark Kettenis  <kettenis@gnu.org>
 
 	* hurd/get-host.c (_hurd_get_host_config): Return an empty value
