@@ -1,3 +1,11 @@
+2004-06-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/setenv.c (setenv): Return -1/EINVAL if name is
+	NULL, "" or contains '=' character in it.  Reported by
+	Michael T Kerrisk <mtk-lists@gmx.net>.
+	* stdlib/tst-environ.c: Include errno.h.
+	(main): Add tests for these arguments to setenv/unsetenv.
+
 2004-06-07  Roland McGrath  <roland@frob.com>
 
 	* NEWS: Update bug reporting instructions.  Fix some typos.

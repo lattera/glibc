@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -170,6 +171,50 @@ main (void)
   if (valp == NULL || strcmp (valp, "one character test") != 0)
     {
       puts ("getenv #11 failed");
+      result = 1;
+    }
+
+  /* Both setenv and unsetenv should return -1/EINVAL for NULL or "" name
+     or if name contains '=' character.  */
+  errno = 0;
+  if (setenv (NULL, "val", 1) >= 0 || errno != EINVAL)
+    {
+      puts ("setenv #4 failed");
+      result = 1;
+    }
+
+  errno = 0;
+  if (setenv ("", "val", 0) >= 0 || errno != EINVAL)
+    {
+      puts ("setenv #5 failed");
+      result = 1;
+    }
+
+  errno = 0;
+  if (setenv ("var=val", "val", 1) >= 0 || errno != EINVAL)
+    {
+      puts ("setenv #6 failed");
+      result = 1;
+    }
+
+  errno = 0;
+  if (unsetenv (NULL) >= 0 || errno != EINVAL)
+    {
+      puts ("unsetenv #1 failed");
+      result = 1;
+    }
+
+  errno = 0;
+  if (unsetenv ("") >= 0 || errno != EINVAL)
+    {
+      puts ("unsetenv #2 failed");
+      result = 1;
+    }
+
+  errno = 0;
+  if (unsetenv ("x=y") >= 0 || errno != EINVAL)
+    {
+      puts ("unsetenv #3 failed");
       result = 1;
     }
 
