@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <errnos.h>
 
 /* .globl errno */
+.set noreorder
 
 ENTRY(syscall_error)
 #if defined (EWOULDBLOCK_sys) && EWOULDBLOCK_sys != EAGAIN
