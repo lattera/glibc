@@ -170,6 +170,14 @@ char *realloc ();
 # endif
 
 #endif /* not emacs */
+
+#if defined _LIBC || HAVE_LIMITS_H
+# include <limits.h>
+#endif
+
+#ifndef MB_LEN_MAX
+# define MB_LEN_MAX 1
+#endif
 
 /* Get the interface, including the syntax bits.  */
 #include <regex.h>

@@ -200,7 +200,7 @@ bool_t
 xdr_hyper (XDR *xdrs, quad_t *llp)
 {
   long t1;
-  long t2;
+  unsigned long int t2;
 
   if (xdrs->x_op == XDR_ENCODE)
     {

@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
 
@@ -25,7 +25,9 @@ bool_t
 xdr_int64_t (XDR *xdrs, int64_t *ip)
 {
   int32_t t1;
-  int32_t t2;
+  /* This must be unsigned, otherwise we get problems with sign
+     extension in the DECODE case.  */
+  uint32_t t2;
 
   switch (xdrs->x_op)
     {
@@ -139,11 +141,11 @@ xdr_uint16_t (XDR *xdrs, uint16_t *uip)
 
   switch (xdrs->x_op)
     {
-    case XDR_DECODE:
-      ut = (uint32_t) *uip;
-      return XDR_GETINT32 (xdrs, (int32_t *) &ut);
     case XDR_ENCODE:
-      if (!XDR_PUTINT32 (xdrs, (int32_t *) &ut))
+      ut = (uint32_t) *uip;
+      return XDR_PUTINT32 (xdrs, (int32_t *) &ut);
+    case XDR_DECODE:
+      if (!XDR_GETINT32 (xdrs, (int32_t *) &ut))
 	return FALSE;
       *uip = (uint16_t) ut;
       return TRUE;

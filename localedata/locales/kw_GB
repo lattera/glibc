@@ -1,0 +1,98 @@
+escape_char  /
+comment_char  %
+repertoiremap mnemonic.ds
+
+% Cornish language locale for Britain
+% WARNING: UNOFFICIAL; EXPERIMENTAL. CHECK WITH Keld Simonsen 
+% to see if there is an offical release.
+
+% Cornish language locale for Britain
+% Source: Alastair McKinstry
+% Address: Croí Lár, Ballinahalla, Maigh Cuilinn,
+%    Co. Gaillimh, Ireland
+% Contact: Alastair McKinstry
+% Email: mckinstry@computer.org
+% Tel: +353 91 556177
+% Language: kl
+% Territory: GB
+% Revision: 1.0
+% Date: 1999-08-09
+% Users: general
+% Repertoiremap: mnemonic,ds
+% Charset: ISO-8859-1
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_CTYPE
+copy "en_DK"
+END LC_CTYPE
+
+LC_COLLATE
+copy "en_DK"
+END LC_COLLATE
+
+LC_MONETARY
+int_curr_symbol         "<G><B><P><SP>"
+currency_symbol         "<Pd>"
+mon_decimal_point       "<.>"
+mon_thousands_sep       "<,>"
+mon_grouping            3;3
+positive_sign           ""
+negative_sign           "<->"
+int_frac_digits         2
+frac_digits             2
+p_cs_precedes           1
+p_sep_by_space          0
+n_cs_precedes           1
+n_sep_by_space          0
+p_sign_posn             1
+n_sign_posn             1
+END LC_MONETARY
+
+LC_NUMERIC
+decimal_point           "<.>"
+thousands_sep           "<,>"
+grouping                3;3
+END LC_NUMERIC
+
+LC_TIME
+abday       "<S><u><l>";"<L><u><n>";/
+            "<M><t><h>";"<M><h><r>";/
+            "<Y><o><w>";"<G><w><e>";/
+            "<S><a><d>"
+day         "<D><e><SP><S><u><l>";/
+            "<D><e><SP><L><u><n>";/
+            "<D><e><SP><M><e><r><t><h>";/
+            "<D><e><SP><M><e><r><h><e><r>";/
+            "<D><e><SP><Y><o><w>";/
+            "<D><e><SP><G><w><e><n><e><r>";/
+            "<D><e><SP><S><a><d><o><r><n>"
+abmon       "<G><e><n>";"<W><h><e>>";/
+            "<M><e><r>";"<E><b><r>";/
+            "<M><e>";"<E><v><n>";/
+            "<G><o><r>";"<E><s><t>";/
+            "<G><w><n>";"<H><e><d>";/
+            "<D><u>";"<K><e><v>"
+mon         "<M><y><s><SP><G><e><n><v><e><r>";/
+            "<M><y><s><SP><W><h><e><v><r><e><l>";/
+            "<M><y><s><SP><M><e><r><t><h>";/
+            "<M><y><s><SP><E><b><r><e><l>";/
+            "<M><y><s><SP><M><e>";/
+            "<M><y><s><SP><E><v><a><n>";/
+            "<M><y><s><SP><G><o><r><t><h><e><r><e><n>";/
+            "<M><y><e><SP><E><s><t>";/
+            "<M><y><s><SP><G><w><y><n><g><a><l><a>";/
+            "<M><y><s><SP><H><e><d><r><a>";/
+            "<M><y><s><SP><D><u>";/
+            "<M><y><s><SP><K><e><v><a><r><d><h><u>"
+d_t_fmt     "<%><a><SP><%><d><SP><%><b><SP><%><Y><SP><%><T><SP><%><Z>"
+d_fmt       "<%><d><//><%><m><//><%><y>"
+t_fmt       "<%><T>"
+am_pm       "";""
+t_fmt_ampm  ""
+END LC_TIME
+
+LC_MESSAGES
+yesexpr     "<<(><e><E><)/>><.><*>"
+noexpr      "<<(><n><N><)/>><.><*>"
+END LC_MESSAGES
