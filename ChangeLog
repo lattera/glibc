@@ -1,3 +1,16 @@
+2001-07-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/svc_tcp.c (svctcp_rendezvous_abort): New.
+	(svctcp_rendezvous_op): Use it.
+	* sunrpc/svc_unix.c (svcunix_rendezvous_abort): New.
+	(svcunix_rendezvous_op): Use it.
+
+2001-07-23  Andreas Schwab  <schwab@suse.de>
+
+	* math/Makefile (CPPFLAGS-test-ifloat.c, CPPFLAGS-test-idouble.c,
+	CPPFLAGS-test-ildoubl.c): Renamed from CFLAGS-*.
+	(math-CPPFLAGS): Set this instead of CPPFLAGS.
+
 2001-07-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/elf.h: Add more definitions from Sun's latest version.

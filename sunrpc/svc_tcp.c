@@ -81,14 +81,23 @@ static const struct xp_ops svctcp_op =
  */
 static bool_t rendezvous_request (SVCXPRT *, struct rpc_msg *);
 static enum xprt_stat rendezvous_stat (SVCXPRT *);
+static void svctcp_rendezvous_abort (void);
+
+/* This function makes sure abort() relocation goes through PLT
+   and thus can be lazy bound.  */
+static void
+svctcp_rendezvous_abort (void)
+{
+  abort ();
+};
 
 static const struct xp_ops svctcp_rendezvous_op =
 {
   rendezvous_request,
   rendezvous_stat,
-  (bool_t (*) (SVCXPRT *, xdrproc_t, caddr_t)) abort,
-  (bool_t (*) (SVCXPRT *, struct rpc_msg *)) abort,
-  (bool_t (*) (SVCXPRT *, xdrproc_t, caddr_t)) abort,
+  (bool_t (*) (SVCXPRT *, xdrproc_t, caddr_t)) svctcp_rendezvous_abort,
+  (bool_t (*) (SVCXPRT *, struct rpc_msg *)) svctcp_rendezvous_abort,
+  (bool_t (*) (SVCXPRT *, xdrproc_t, caddr_t)) svctcp_rendezvous_abort,
   svctcp_destroy
 };
 

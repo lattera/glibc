@@ -121,10 +121,10 @@ endif
 CFLAGS-test-float.c = -fno-inline -ffloat-store
 CFLAGS-test-double.c = -fno-inline -ffloat-store
 CFLAGS-test-ldouble.c = -fno-inline -ffloat-store
-CFLAGS-test-ifloat.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
-CFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
-CFLAGS-test-ildoubl.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
 CFLAGS-test-tgmath.c = -fno-builtin
+CPPFLAGS-test-ifloat.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
+CPPFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
+CPPFLAGS-test-ildoubl.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
 
 distribute += libm-test.inc gen-libm-test.pl README.libm-test
 
@@ -145,7 +145,7 @@ CPPFLAGS-s_lib_version.c := -D_POSIX_MODE
 
 # We don't want the fdlibm code to use the inline math functions,
 # only the fdlibm code.
-CPPFLAGS += -D__NO_MATH_INLINES -D__LIBC_INTERNAL_MATH_INLINES
+math-CPPFLAGS += -D__NO_MATH_INLINES -D__LIBC_INTERNAL_MATH_INLINES
 
 ifneq ($(long-double-fcts),yes)
 # The `double' and `long double' types are the same on this machine.
@@ -153,7 +153,7 @@ ifneq ($(long-double-fcts),yes)
 # to define aliases for the `FUNCl' names.  To avoid type conflicts in
 # defining those aliases, tell <math.h> to declare the `FUNCl' names with
 # `double' instead of `long double'.
-CPPFLAGS += -DNO_LONG_DOUBLE -D_Mlong_double_=double
+math-CPPFLAGS += -DNO_LONG_DOUBLE -D_Mlong_double_=double
 endif
 
 # The fdlibm code generates a lot of these warnings but is otherwise clean.

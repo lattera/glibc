@@ -74,14 +74,23 @@ static const struct xp_ops svcunix_op =
  */
 static bool_t rendezvous_request (SVCXPRT *, struct rpc_msg *);
 static enum xprt_stat rendezvous_stat (SVCXPRT *);
+static void svcunix_rendezvous_abort (void);
+
+/* This function makes sure abort() relocation goes through PLT
+   and thus can be lazy bound.  */
+static void
+svcunix_rendezvous_abort (void)
+{
+  abort ();
+};
 
 static const struct xp_ops svcunix_rendezvous_op =
 {
   rendezvous_request,
   rendezvous_stat,
-  (bool_t (*) (SVCXPRT *, xdrproc_t, caddr_t)) abort,
-  (bool_t (*) (SVCXPRT *, struct rpc_msg *)) abort,
-  (bool_t (*) (SVCXPRT *, xdrproc_t, caddr_t)) abort,
+  (bool_t (*) (SVCXPRT *, xdrproc_t, caddr_t)) svcunix_rendezvous_abort,
+  (bool_t (*) (SVCXPRT *, struct rpc_msg *)) svcunix_rendezvous_abort,
+  (bool_t (*) (SVCXPRT *, xdrproc_t, caddr_t)) svcunix_rendezvous_abort,
   svcunix_destroy
 };
 

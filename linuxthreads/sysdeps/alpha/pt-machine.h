@@ -108,3 +108,9 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 
   return ret;
 }
+
+/* We want the OS to assign stack addresses.  */
+#define FLOATING_STACKS 1
+
+/* Maximum size of the stack if the rlimit is unlimited.  */
+#define ARCH_STACK_MAX_SIZE     32*1024*1024

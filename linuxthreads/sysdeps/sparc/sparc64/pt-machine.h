@@ -86,3 +86,9 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 #define THREAD_GETMEM_NC(descr, member) __thread_self->member
 #define THREAD_SETMEM(descr, member, value) __thread_self->member = (value)
 #define THREAD_SETMEM_NC(descr, member, value) __thread_self->member = (value)
+
+/* We want the OS to assign stack addresses.  */
+#define FLOATING_STACKS 1
+
+/* Maximum size of the stack if the rlimit is unlimited.  */
+#define ARCH_STACK_MAX_SIZE     32*1024*1024

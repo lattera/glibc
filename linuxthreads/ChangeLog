@@ -1,3 +1,10 @@
+2001-07-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/pt-machine.h (FLOATING_STACKS): Define.
+	(ARCH_STACK_MAX_SIZE): Define.
+	* sysdeps/sparc/sparc32/pt-machine.h: Likewise.
+	* sysdeps/sparc/sparc64/pt-machine.h: Likewise.
+
 2001-07-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/useldt.h: Fix typo in ARCH_STACK_MAX_SIZE comment.
