@@ -1,3 +1,9 @@
+2003-11-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/PTESTS: Cleanup.  Fix typoes.  Correct bugs in 2003.2.
+	* posix/runptests.c (main): Handle comments.
+	* posix/PTESTS2C.sed: Handle comments.
+
 2003-11-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regcomp.c (optimize_utf8): New function.

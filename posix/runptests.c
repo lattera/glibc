@@ -1,5 +1,5 @@
 /* POSIX regex testsuite from IEEE 2003.2.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -50,6 +50,8 @@ main (int argc, char *argv[])
 		(int) strlen (tests[cnt].reg),
 		"-----------------------------------------------------");
       }
+    else if (tests[cnt].reg == NULL)
+	printf ("!!! %s\n", tests[cnt].str);
     else
       {
 	regex_t re;

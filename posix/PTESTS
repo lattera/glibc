@@ -123,15 +123,23 @@
 -1¦-1¦[[=a=]b]¦ABc¦
 3¦3¦[^[=a=]b]¦abc¦
 # GA126
-2¦7¦[[:alnum:]]*¦ aB28gH¦
-2¦5¦[^[:alnum:]]*¦2 	,a¦
-2¦5¦[[:alpha:]]*¦ aBgH2¦
+#W the expected result for [[:alnum:]]* is 2-7 which is wrong
+0¦0¦[[:alnum:]]*¦ aB28gH¦
+2¦7¦[[:alnum:]][[:alnum:]]*¦ aB28gH¦
+#W the expected result for [^[:alnum:]]* is 2-5 which is wrong
+0¦0¦[^[:alnum:]]*¦2 	,a¦
+2¦5¦[^[:alnum:]][^[:alnum:]]*¦2 	,a¦
+#W the expected result for [[:alpha:]]* is 2-5 which is wrong
+0¦0¦[[:alpha:]]*¦ aBgH2¦
+2¦5¦[[:alpha:]][[:alpha:]]*¦ aBgH2¦
 1¦6¦[^[:alpha:]]*¦2 	8,a¦
 1¦2¦[[:blank:]]*¦ 	¦
 1¦8¦[^[:blank:]]*¦aB28gH, ¦
 1¦2¦[[:cntrl:]]*¦	 ¦
 1¦8¦[^[:cntrl:]]*¦aB2 8gh,¦
-2¦3¦[[:digit:]]*¦a28¦
+#W the expected result for [[:digit:]]* is 2-3 which is wrong
+0¦0¦[[:digit:]]*¦a28¦
+2¦3¦[[:digit:]][[:digit:]]*¦a28¦
 1¦8¦[^[:digit:]]*¦aB 	gH,¦
 1¦7¦[[:graph:]]*¦aB28gH, ¦
 1¦3¦[^[:graph:]]*¦ 	,¦
@@ -139,14 +147,23 @@
 1¦8¦[^[:lower:]]*¦B2 	8H,a¦
 1¦8¦[[:print:]]*¦aB2 8gH,	¦
 1¦2¦[^[:print:]]*¦	 ¦
-2¦2¦[[:punct:]]*¦a,2¦
+#W the expected result for [[:punct:]]* is 2-2 which is wrong
+0¦0¦[[:punct:]]*¦a,2¦
+2¦3¦[[:punct:]][[:punct:]]*¦a,,2¦
 1¦9¦[^[:punct:]]*¦aB2 	8gH¦
 1¦3¦[[:space:]]*¦ 	¦
-2¦9¦[^[:space:]]*¦ aB28gH,	¦
-2¦3¦[[:upper:]]*¦aBH2¦
+#W the expected result for [^[:space:]]* is 2-9 which is wrong
+0¦0¦[^[:space:]]*¦ aB28gH,	¦
+2¦9¦[^[:space:]][^[:space:]]*¦ aB28gH,	¦
+#W the expected result for [[:upper:]]* is 2-3 which is wrong
+0¦0¦[[:upper:]]*¦aBH2¦
+2¦3¦[[:upper:]][[:upper:]]*¦aBH2¦
 1¦8¦[^[:upper:]]*¦a2 	8g,B¦
-2¦5¦[[:xdigit:]]*¦gaB28h¦
-2¦7¦[^[:xdigit:]]*¦a 	gH,2¦
+#W the expected result for [[:xdigit:]]* is 2-5 which is wrong
+0¦0¦[[:xdigit:]]*¦gaB28h¦
+2¦5¦[[:xdigit:]][[:xdigit:]]*¦gaB28h¦
+#W the expected result for [^[:xdigit:]]* is 2-7 which is wrong
+2¦7¦[^[:xdigit:]][^[:xdigit:]]*¦a 	gH,2¦
 # GA127
 -2¦-2¦[b-a]¦abc¦
 1¦1¦[a-c]¦bbccde¦
@@ -232,8 +249,9 @@
 1¦2¦a\{2\}¦aaaa¦
 1¦7¦\([a-c]*\)\{0,\}¦aabcaab¦
 1¦2¦\(a\)\1\{1,2\}¦aabc¦
-1¦3¦\(a\)010\{1,2\}¦aaaabc¦
-1¦4¦\(\(a\)\1\)\{1,2\}¦aaaabc¦
+1¦3¦\(a\)\1\{1,2\}¦aaaabc¦
+#W the expression \(\(a\)\1\)\{1,2\} is ill-formed, using \2
+1¦4¦\(\(a\)\2\)\{1,2\}¦aaaabc¦
 # GA140
 1¦2¦a\{2\}¦aaaa¦
 -1¦-1¦a\{2\}¦abcd¦
@@ -241,7 +259,8 @@
 1¦64¦a\{64\}¦aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa¦
 # GA141
 1¦7¦\([a-c]*\)\{0,\}¦aabcaab¦
--1¦-1¦\([a-c]*\)\{2,\}¦abcdefg¦
+#W the expected result for \([a-c]*\)\{2,\} is failure which isn't correct
+1¦3¦\([a-c]*\)\{2,\}¦abcdefg¦
 1¦3¦\([a-c]*\)\{1,\}¦abcdefg¦
 -1¦-1¦a\{64,\}¦aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa¦
 # GA142
@@ -253,11 +272,15 @@
 # GA143
 2¦20¦\^\[[[.].]]\\(\\1\\)\\*\\{1,2\\}\$¦a^[]\(1\)\*\{1,2\}$b¦
 1¦6¦[[=*=]][[=\=]][[=]=]][[===]][[...]][[:punct:]]¦*\]=.;¦
-1¦6¦[$\(*\)1]*¦$\()*^¦
+1¦6¦[$\(*\)^]*¦$\()*^¦
 1¦1¦[\1]¦1¦
 1¦1¦[\{1,2\}]¦{¦
-2¦2¦\(*\)*\1*¦a*b*11¦
-1¦5¦\(a\(b\{1,2\}\)\{1,2\}\)¦abbab¦
+#W the expected result for \(*\)*\1* is 2-2 which isn't correct
+0¦0¦\(*\)*\1*¦a*b*11¦
+2¦3¦\(*\)*\1*b¦a*b*11¦
+#W the expected result for \(a\(b\{1,2\}\)\{1,2\}\) is 1-5 which isn't correct
+1¦3¦\(a\(b\{1,2\}\)\{1,2\}\)¦abbab¦
+1¦5¦\(a\(b\{1,2\}\)\)\{1,2\}¦abbab¦
 1¦1¦^\(^\(^a$\)$\)$¦a¦
 1¦2¦\(a\)\1$¦aa¦
 1¦3¦ab*¦abb¦
@@ -284,7 +307,8 @@
 3¦3¦a$¦cba¦
 -1¦-1¦a$¦abc¦
 5¦7¦[a-z]*$¦99ZZxyz¦
-9¦9¦[a-z]*$¦99ZZxyz99¦
+#W the expected result for [a-z]*$ is failure which isn't correct
+10¦9¦[a-z]*$¦99ZZxyz99¦
 3¦3¦$$¦ab$¦
 -1¦-1¦$$¦$ab¦
 3¦3¦\$$¦ab$¦
