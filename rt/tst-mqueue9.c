@@ -56,7 +56,7 @@ do_test (void)
       return 0;
     }
 
-  int result;
+  int result = 0;
   if (mq_unlink (name) == 0)
     {
       puts ("mq_unlink unexpectedly succeeded");
