@@ -1,6 +1,6 @@
 /* BSD-compatible versions of functions where BSD and POSIX.1 conflict.
 
-Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,33 +18,15 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#define	_BSD_SOURCE
-
-#include <ansidecl.h>
 #include <sys/types.h>
-#include <unistd.h>
-#include <gnu-stabs.h>
-#include <limits.h>
-#include <setjmp.h>
 
-#undef	getpgrp
-function_alias(getpgrp, __getpgrp, pid_t, (pid),
-	       DEFUN(getpgrp, (pid), pid_t pid))
+/* Don't include unistd.h because it declares a conflicting
+   prototype for the POSIX.1 `getpgrp' function.  */
+extern pid_t __getpgid __P ((pid_t));
 
-/* These entry points allow for things compiled for another C library
-   that want the BSD-compatible definitions.  (Of course, their jmp_buf
-   must be big enough.)  */
-
-#undef	longjmp
-#ifdef __STDC__
-#define void __NORETURN void
-#endif
-function_alias_void(longjmp, siglongjmp, (env, val),
-		    DEFUN(longjmp, (env, val), CONST jmp_buf env AND int val))
-
-#undef	setjmp
-int
-DEFUN(setjmp, (env), jmp_buf env)
+pid_t
+getpgrp (pid)
+     pid_t pid;
 {
-  return sigsetjmp (env, 1);
+  return __getpgid (pid);
 }

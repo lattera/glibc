@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  26 January 1995
+GNU C Library NEWS -- history of user-visible changes.  17 February 1995
 
 Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -11,8 +11,8 @@ Version 1.10
   symbols where available.  The ELF object file format supports weak
   symbols; GNU ld also supports weak symbols in the a.out format.  (There
   is also now support for other GNU ld extensions in ELF.  Use the
-  `--with-elf' option to configure to indicate you have elf, and
-  `--with-gnu-ld' if using GNU ld.)  This changed resulted in the deletion
+  `--with-elf' option to configure to indicate you have ELF, and
+  `--with-gnu-ld' if using GNU ld.)  This change resulted in the deletion
   of many files which contained only symbol aliases, reducing the size of
   the source and the compiled library; many other files were renamed to
   less cryptic names previously occupied by the symbol alias files.
@@ -40,6 +40,10 @@ Version 1.10
   strings, like `strtol' and `strtoul', but they return `long long int' and
   `unsigned long long int' values, respectively (64-bit quantities).
 
+* The new functions `strtof' and `strtold' parse floating-point values from
+  strings, like `strtod', but they return `float' and `long double' values,
+  respectively (on some machines `double' and `long double' are the same).
+
 * There is a new malloc debugging hook `__memalign_hook'.
 
 * There are new typedefs `ushort' for `unsigned short int' and `uint' for
@@ -48,6 +52,17 @@ Version 1.10
 
 * The `-lmcheck' library to enable standard malloc debugging hooks is now
   done differently, so that it works even without GNU ld.
+
+* Ulrich Drepper has contributed new implementations of the floating-point
+  printing and reading code used in the `printf' family of functions and
+  `strtod', `strtof', and `strtold'.  These new functions are perfectly
+  accurate, and much faster than the old ones.
+
+* The `printf' family of functions now understand a new formatting flag
+  for numeric conversions: the ' flag (e.g. %'d or %'f) says to group
+  numbers as indicated by the locale.  In the default "C" locale, numbers
+  are not grouped; but locales for specific countries will define the
+  usual conventions (i.e. separate thousands with `,' in the US locale).
 
 Version 1.09
 

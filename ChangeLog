@@ -1,5 +1,8 @@
 Tue Feb 21 00:10:50 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* misc/bsd-compat.c (longjmp, setjmp): Functions removed.
+	(getpgrp): Call __getpgid instead of __getpgrp.
+
 	* Makefile (subdirs): Add elf first.
 	* elf/Makefile: New file.
 	* elf/elf.h: New file.
