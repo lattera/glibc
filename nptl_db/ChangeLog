@@ -1,3 +1,11 @@
+2002-12-04  Roland McGrath  <roland@redhat.com>
+
+	* td_thr_get_info.c (td_thr_get_info): ti_tid is pthread_t, not a PID.
+
+	* thread_db.h (td_thrinfo_t): Comment fix.
+
+	* td_ta_map_lwp2thr.c: Moved to ../nptl/sysdeps/i386/.
+
 2002-12-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* td_ta_thr_iter.c (iterate_thread_list): At end of iteration read
