@@ -137,28 +137,33 @@ __LABEL($syscall_error)						\
 #  define CDISABLE	jsr ra, __local_disable_asynccancel; ldgp ra, 0(gp)
 # endif
 
-#endif
-
-#if defined IS_IN_libpthread || !defined NOT_IN_libc
-# ifndef __ASSEMBLER__
+# if defined IS_IN_libpthread || !defined NOT_IN_libc
+#  ifndef __ASSEMBLER__
 extern int __local_multiple_threads attribute_hidden;
-#  define SINGLE_THREAD_P \
+#   define SINGLE_THREAD_P \
 	__builtin_expect (__local_multiple_threads == 0, 1)
-# elif defined(PIC)
-#  define SINGLE_THREAD_P(reg)  ldl reg, __local_multiple_threads(gp) !gprel
-# else
-#  define SINGLE_THREAD_P(reg)					\
+#  elif defined(PIC)
+#   define SINGLE_THREAD_P(reg)  ldl reg, __local_multiple_threads(gp) !gprel
+#  else
+#   define SINGLE_THREAD_P(reg)					\
 	ldah	reg, __local_multiple_threads(gp) !gprelhigh;	\
 	ldl	reg, __local_multiple_threads(reg) !gprellow
-# endif
-#else
-# ifndef __ASSEMBLER__
-#  define SINGLE_THREAD_P \
+#  endif
+# else
+#  ifndef __ASSEMBLER__
+#   define SINGLE_THREAD_P \
 	__builtin_expect (THREAD_GETMEM (THREAD_SELF, \
 				   header.multiple_threads) == 0, 1)
-# else
-#  define SINGLE_THREAD_P(reg)					\
+#  else
+#   define SINGLE_THREAD_P(reg)					\
 	call_pal PAL_rduniq;					\
 	ldl reg, MULTIPLE_THREADS_OFFSET($0)
+#  endif
 # endif
+
+#else
+
+# define SINGLE_THREAD_P (1)
+# define NO_CANCELLATION 1
+
 #endif
