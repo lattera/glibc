@@ -20,7 +20,7 @@
 #include <errno.h>
 #include <string.h>
 #include <sys/stat.h>
-
+#include <kernel_stat.h>
 #include <xstatconv.h>
 
 

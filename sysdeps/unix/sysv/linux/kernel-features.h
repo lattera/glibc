@@ -136,7 +136,7 @@
 # define __ASSUME_IPC64		1
 #endif
 
-/* mips platforms had IPC64 all along.  */
+/* MIPS platforms had IPC64 all along.  */
 #if defined __mips__
 # define __ASSUME_IPC64		1
 #endif
@@ -156,7 +156,7 @@
 /* The changed st_ino field appeared in 2.4.0-test6.  But we cannot
    distinguish this version from other 2.4.0 releases.  Therefore play
    save and assume it available is for 2.4.1 and up.  */
-#if __LINUX_KERNEL_VERSION >= 132097
+#if __LINUX_KERNEL_VERSION >= 132097 && !defined __alpha__
 # define __ASSUME_ST_INO_64_BIT		1
 #endif
 
@@ -250,6 +250,11 @@
 # define __ASSUME_ST_INO_64_BIT		1
 # define __ASSUME_FCNTL64		1
 # define __ASSUME_GETDENTS64_SYSCALL	1
+#endif
+
+/* Alpha switched to a 64-bit timeval sometime before 2.2.0.  */
+#if __LINUX_KERNEL_VERSION >= 131584 && defined __alpha__
+# define __ASSUME_TIMEVAL64		1
 #endif
 
 #if defined __mips__ && defined _ABIN32 && _MIPS_SIM == _ABIN32
