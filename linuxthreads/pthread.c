@@ -82,6 +82,7 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   {{{0, }}, 0, NULL},         /* td_eventbuf_t p_eventbuf */
   ATOMIC_INITIALIZER,         /* struct pthread_atomic p_resume_count */
   0,                          /* char p_woken_by_cancel */
+  0,                          /* char p_condvar_avail */
   NULL,                       /* struct pthread_extricate_if *p_extricate */
   NULL,	                      /* pthread_readlock_info *p_readlock_list; */
   NULL,                       /* pthread_readlock_info *p_readlock_free; */
@@ -137,6 +138,7 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   {{{0, }}, 0, NULL},         /* td_eventbuf_t p_eventbuf */
   ATOMIC_INITIALIZER,         /* struct pthread_atomic p_resume_count */
   0,                          /* char p_woken_by_cancel */
+  0,                          /* char p_condvar_avail */
   NULL,                       /* struct pthread_extricate_if *p_extricate */
   NULL,	                      /* pthread_readlock_info *p_readlock_list; */
   NULL,                       /* pthread_readlock_info *p_readlock_free; */
@@ -377,8 +379,6 @@ static void pthread_initialize(void)
 {
   struct sigaction sa;
   sigset_t mask;
-  struct rlimit limit;
-  int max_stack;
 
   /* If already done (e.g. by a constructor called earlier!), bail out */
   if (__pthread_initial_thread_bos != NULL) return;
@@ -393,20 +393,6 @@ static void pthread_initialize(void)
     (char *)(((long)CURRENT_STACK_FRAME - 2 * STACK_SIZE) & ~(STACK_SIZE - 1));
   /* Update the descriptor for the initial thread. */
   __pthread_initial_thread.p_pid = __getpid();
-  /* Play with the stack size limit to make sure that no stack ever grows
-     beyond STACK_SIZE minus one page (to act as a guard page). */
-  getrlimit(RLIMIT_STACK, &limit);
-#ifdef NEED_SEPARATE_REGISTER_STACK
-  /* STACK_SIZE bytes hold both the main stack and register backing
-     store. The rlimit value applies to each individually.  */
-  max_stack = STACK_SIZE/2 - __getpagesize();
-#else
-  max_stack = STACK_SIZE - __getpagesize();
-#endif
-  if (limit.rlim_cur > max_stack) {
-    limit.rlim_cur = max_stack;
-    setrlimit(RLIMIT_STACK, &limit);
-  }
   /* Likewise for the resolver state _res.  */
   __pthread_initial_thread.p_resp = &_res;
 #ifdef __SIGRTMIN
@@ -457,7 +443,23 @@ int __pthread_initialize_manager(void)
   int manager_pipe[2];
   int pid;
   struct pthread_request request;
+  struct rlimit limit;
+  int max_stack;
 
+  /* Play with the stack size limit to make sure that no stack ever grows
+     beyond STACK_SIZE minus one page (to act as a guard page). */
+  getrlimit(RLIMIT_STACK, &limit);
+#ifdef NEED_SEPARATE_REGISTER_STACK
+  /* STACK_SIZE bytes hold both the main stack and register backing
+     store. The rlimit value applies to each individually.  */
+  max_stack = STACK_SIZE/2 - __getpagesize();
+#else
+  max_stack = STACK_SIZE - __getpagesize();
+#endif
+  if (limit.rlim_cur > max_stack) {
+    limit.rlim_cur = max_stack;
+    setrlimit(RLIMIT_STACK, &limit);
+  }
   /* If basic initialization not done yet (e.g. we're called from a
      constructor run before our constructor), do it now */
   if (__pthread_initial_thread_bos == NULL) pthread_initialize();
@@ -787,6 +789,7 @@ static void pthread_handle_sigdebug(int sig)
 void __pthread_reset_main_thread()
 {
   pthread_descr self = thread_self();
+  struct rlimit limit;
 
   if (__pthread_manager_request != -1) {
     /* Free the thread manager stack */
@@ -808,6 +811,12 @@ void __pthread_reset_main_thread()
   THREAD_SETMEM(self, p_errnop, &_errno);
   THREAD_SETMEM(self, p_h_errnop, &_h_errno);
   THREAD_SETMEM(self, p_resp, &_res);
+
+  if (getrlimit (RLIMIT_STACK, &limit) == 0
+      && limit.rlim_cur != limit.rlim_max) {
+    limit.rlim_cur = limit.rlim_max;
+    setrlimit (STACK_SIZE, &limit);
+  }
 }
 
 /* Process-wide exec() request */
