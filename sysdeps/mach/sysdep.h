@@ -28,6 +28,17 @@ Cambridge, MA 02139, USA.  */
 #define EXT(x) C_SYMBOL_NAME(x)
 #define LEXT(x) C_SYMBOL_NAME(x##:)
 
+#ifdef HAVE_ELF
+/* For ELF we need to add the `.type' directive to make shared libraries
+   work right.  */
+#undef ENTRY
+#define ENTRY(name) \
+  ASM_GLOBAL_DIRECTIVE name; \
+  .align ALIGN; \
+  .type name,@function; \
+  name:
+#endif
+
 #endif
 
 /* This is invoked by things run when there is random lossage, before they

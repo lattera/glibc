@@ -350,24 +350,6 @@ lib: lib-noranlib $(foreach l,$(libtypes),$(patsubst %,$(common-objpfx)$l,c))
 # Pattern rule for libraries: depend on the __.SYMDEF member updated by ranlib.
 lib%.a: lib%.a(__.SYMDEF) ;
 
-ifeq (yes,$(build-shared))
-# Pattern rule to build a shared object from an archive of PIC objects.
-# $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
-# on other shared objects.
-lib%.so: lib%_pic.a
-	$(LINK.o) -shared -o $@ \
-		  $(LDFLAGS.so) $(LDFLAGS-$(notdir $*).so) \
-		  -L$(firstword $(objdir) .)  -L$(common-objpfx:%/=%) \
-		  $(LDLIBS-$(notdir $*).so) -Wl,--whole-archive $< \
-
-# Don't try to use -lc when making libc.so itself.
-# Also omits crti.o and crtn.o, which we do not want
-# since we define our own `.init' section specially.
-LDFLAGS-c.so = -nostdlib -nostartfiles
-# Give libc.so an entry point and make it directly runnable itself.
-LDFLAGS-c.so += -Wl,-dynamic-linker -Wl,/lib/ld.so -e __libc_print_version
-endif
-
 libobjs: $(foreach o,$(object-suffixes),\
 		   $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
 		   $(notdir $(objects:.o=$o))))
@@ -564,6 +546,27 @@ install-no-libc.a-nosubdir: install-headers-nosubdir install-data-nosubdir\
 			    install-others-nosubdir install-sbin-nosubdir
 install: install-no-libc.a-nosubdir
 
+ifeq (yes,$(build-shared))
+# Pattern rule to build a shared object from an archive of PIC objects.
+# This must come after the installation rules so Make doesn't try to
+# build shared libraries in place from the installed *_pic.a files.
+# $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
+# on other shared objects.
+lib%.so: lib%_pic.a
+	$(LINK.o) -shared -o $@ \
+		  $(LDFLAGS.so) $(LDFLAGS-$(notdir $*).so) \
+		  -L$(firstword $(objdir) .)  -L$(common-objpfx:%/=%) \
+		  $(LDLIBS-$(notdir $*).so) -Wl,--whole-archive $< \
+
+# Don't try to use -lc when making libc.so itself.
+# Also omits crti.o and crtn.o, which we do not want
+# since we define our own `.init' section specially.
+LDFLAGS-c.so = -nostdlib -nostartfiles
+# Give libc.so an entry point and make it directly runnable itself.
+LDFLAGS-c.so += -Wl,-dynamic-linker -Wl,/lib/ld.so -e __libc_print_version
+endif
+
+
 # Command to compile $< in $(objdir) using the native libraries.
 define native-compile
 cwd=`pwd`; cd $(@D); $(BUILD_CC) $(BUILD_CFLAGS) \

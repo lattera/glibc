@@ -1,3 +1,12 @@
+Mon Jun 12 13:15:45 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makerules (lib%.so: lib%_pic.a): Moved this rule to after
+ 	installation rules.
+
+	* sysdeps/mach/sysdep.h [HAVE_ELF] (ENTRY): Redefine this macro so
+ 	it uses the `.type' directive, which is necessary for shared
+ 	libraries to work properly.
+
 Thu Jun  8 02:50:26 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* elf/dl-load.c (_dl_map_object): Add MAP_INHERIT flag in mmap
