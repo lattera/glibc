@@ -58,7 +58,10 @@ libpthread-routines = init events version \
 		      pthread_mutexattr_setpshared \
 		      pthread_mutexattr_gettype pthread_mutexattr_settype \
 		      pthread_rwlock_init pthread_rwlock_destroy \
+		      pthread_rwlock_rdlock pthread_rwlock_timedrdlock \
+		      pthread_rwlock_wrlock pthread_rwlock_timedwrlock \
 		      pthread_rwlock_tryrdlock pthread_rwlock_trywrlock \
+		      pthread_rwlock_unlock \
 		      pthread_rwlockattr_init pthread_rwlockattr_destroy \
 		      pthread_rwlockattr_getpshared \
 		      pthread_rwlockattr_setpshared \
@@ -96,7 +99,7 @@ libpthread-routines = init events version \
 		      cleanup cleanup_defer \
 		      pt-longjmp \
 		      cancellation \
-		      lowlevellock lowlevelmutex lowlevelrwlock \
+		      lowlevellock lowlevelmutex \
 		      pt-vfork \
 		      ptw-write ptw-read ptw-close ptw-fcntl ptw-accept \
 		      ptw-connect ptw-recv ptw-recvfrom ptw-recvmsg ptw-send \

@@ -1,0 +1,192 @@
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+#include <sysdep.h>
+#include <lowlevelrwlock.h>
+
+
+#define SYS_gettimeofday	__NR_gettimeofday
+#define SYS_futex		240
+#define FUTEX_WAIT		0
+#define FUTEX_WAKE		1
+
+#define EAGAIN		11
+#define EDEADLK		35
+#define ETIMEDOUT	110
+
+#ifndef UP
+# define LOCK lock
+#else
+# define LOCK
+#endif
+
+
+	.text
+
+	.globl	pthread_rwlock_timedrdlock
+	.type	pthread_rwlock_timedrdlock,@function
+	.align	16
+pthread_rwlock_timedrdlock:
+	pushl	%esi
+	pushl	%edi
+	pushl	%ebx
+	pushl	%ebp
+	subl	$8, %esp
+
+	movl	28(%esp), %ebp
+	movl	32(%esp), %edi
+
+	/* Get the lock.  */
+	movl	$1, %eax
+	LOCK
+#if MUTEX == 0
+	xaddl	%eax, (%ebp)
+#else
+	xaddl	%eax, MUTEX(%ebp)
+#endif
+	testl	%eax, %eax
+	jne	1f
+
+2:	movl	WRITER(%ebp), %eax
+	testl	%eax, %eax
+	jne	14f
+	cmp	$0, WRITERS_QUEUED(%ebp)
+	je	5f
+	cmpl	$0, FLAGS(%ebp)
+	je	5f
+
+3:	incl	READERS_QUEUED(%ebp)
+	je	4f
+
+	LOCK
+#if MUTEX == 0
+	decl	(%ebp)
+#else
+	decl	MUTEX(%ebp)
+#endif
+	jne	10f
+
+	/* Get current time.  */
+11:	movl	%esp, %ebx
+	xorl	%ecx, %ecx
+	movl	$SYS_gettimeofday, %eax
+	ENTER_KERNEL
+
+	/* Compute relative timeout.  */
+	movl	4(%esp), %eax
+	movl	$1000, %edx
+	mul	%edx		/* Milli seconds to nano seconds.  */
+	movl	(%edi), %ecx
+	movl	4(%edi), %edx
+	subl	(%esp), %ecx
+	subl	%eax, %edx
+	jns	15f
+	addl	$1000000000, %edx
+	decl	%ecx
+15:	testl	%ecx, %ecx
+	js	16f		/* Time is already up.  */
+
+	/* Futex call.  */
+	movl	%ecx, (%esp)	/* Store relative timeout.  */
+	movl	%edx, 4(%esp)
+	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
+	movl	%esp, %esi
+	movl	%ecx, %edx
+	leal	READERS_WAKEUP(%ebp), %ebx
+	movl	$SYS_futex, %eax
+	ENTER_KERNEL
+	movl	%eax, %edx
+17:
+
+	/* Reget the lock.  */
+	movl	$1, %eax
+	LOCK
+#if MUTEX == 0
+	xaddl	%eax, (%ebp)
+#else
+	xaddl	%eax, MUTEX(%ebp)
+#endif
+	testl	%eax, %eax
+	jne	12f
+
+13:	cmpl	$-ETIMEDOUT, %ecx
+	je	18f
+	decl	READERS_QUEUED(%ebp)
+	jne	2b
+	movl	$0, READERS_WAKEUP(%ebp)
+	jmp	2b
+
+
+5:	xorl	%ecx, %ecx
+	incl	NR_READERS(%ebp)
+	je	8f
+9:	LOCK
+#if MUTEX == 0
+	decl	(%ebp)
+#else
+	decl	MUTEX(%ebp)
+#endif
+	jne	6f
+
+7:	movl	%ecx, %eax
+
+	addl	$8, %esp
+	popl	%ebp
+	popl	%ebx
+	popl	%edi
+	popl	%esi
+	ret
+
+1:	movl	%ebp, %ecx
+	call	__lll_mutex_lock_wait
+	jmp	2b
+
+14:	cmpl	%gs:8, %eax
+	jne	3b
+	movl	$EDEADLK, %ecx
+	jmp	9b
+
+6:	movl	%ebp, %eax
+	call	__lll_mutex_unlock_wake
+	jmp	7b
+
+	/* Overflow.  */
+8:	decl	NR_READERS(%ebp)
+	movl	$EAGAIN, %ecx
+	jmp	9b
+
+	/* Overflow.  */
+4:	decl	READERS_QUEUED(%ebp)
+	movl	$EAGAIN, %ecx
+	jmp	9b
+
+10:	movl	%ebp, %eax
+	call	__lll_mutex_unlock_wake
+	jmp	11b
+
+12:	movl	%ebx, %ecx
+	call	__lll_mutex_lock_wait
+	jmp	13b
+
+16:	movl	$-ETIMEDOUT, %ecx
+	jmp	17b
+
+18:	movl	$ETIMEDOUT, %ecx
+	jmp	9b
+	.size	pthread_rwlock_timedrdlock,.-pthread_rwlock_timedrdlock
