@@ -161,7 +161,14 @@ elf_machine_rela (struct link_map *map,
 {
   Elf64_Addr *const reloc_addr = (void *)(map->l_addr + reloc->r_offset);
   unsigned long r_info = ELF64_R_TYPE (reloc->r_info);
-  weak_symbol (_dl_rtld_map);	/* Defined in rtld.c, but not in libc.a.  */
+#ifndef RTLD_BOOTSTRAP
+  /* This is defined in rtld.c, but nowhere in the static libc.a; make the
+     reference weak so static programs can still link.  This declaration
+     cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
+     because rtld.c contains the common defn for _dl_rtld_map, which is
+     incompatible with a weak decl in the same file.  */
+  weak_extern (_dl_rtld_map);
+#endif
 
   /* We cannot use a switch here because we cannot locate the switch
      jump table until we've self-relocated.  */
@@ -169,38 +176,37 @@ elf_machine_rela (struct link_map *map,
   if (r_info == R_ALPHA_RELATIVE)
     {
       /* Already done in dynamic linker.  */
-      if (!resolve || map != &_dl_rtld_map)
+#ifndef RTLD_BOOTSTRAP
+      if (map != &_dl_rtld_map)
+#endif
 	*reloc_addr += map->l_addr;
     }
   else if (r_info == R_ALPHA_NONE)
-    ;
+    return;
   else
     {
       Elf64_Addr loadbase, sym_value;
 
-      if (resolve)
-	{
-	  loadbase = (*resolve)(&sym, (Elf64_Addr)reloc_addr,
-				r_info == R_ALPHA_JMP_SLOT);
-	}
-      else
-	loadbase = map->l_addr;
-
+#ifndef RTLD_BOOTSTRAP
+      loadbase = (*resolve)(&sym, (Elf64_Addr)reloc_addr,
+			    r_info == R_ALPHA_JMP_SLOT);
+#else
+      loadbase = map->l_addr;
+#endif
       sym_value = sym ? loadbase + sym->st_value : 0;
 
       if (r_info == R_ALPHA_GLOB_DAT)
-	{
-	  *reloc_addr = sym_value;
-	}
+	*reloc_addr = sym_value;
       else if (r_info == R_ALPHA_JMP_SLOT)
 	{
 	  *reloc_addr = sym_value;
-	  elf_alpha_fix_plt(map, reloc, (Elf64_Addr)reloc_addr, sym_value);
+	  elf_alpha_fix_plt (map, reloc, (Elf64_Addr) reloc_addr, sym_value);
 	}
       else if (r_info == R_ALPHA_REFQUAD)
 	{
 	  sym_value += *reloc_addr;
-	  if (resolve && map == &_dl_rtld_map)
+#ifndef RTLD_BOOTSTRAP
+	  if (map == &_dl_rtld_map)
 	    {
 	      /* Undo the relocation done here during bootstrapping.
 		 Now we will relocate anew, possibly using a binding
@@ -213,6 +219,7 @@ elf_machine_rela (struct link_map *map,
 	      sym_value -= dlsymtab[ELF64_R_SYM(reloc->r_info)].st_value;
 	    }
 	  else
+#endif
 	    sym_value += reloc->r_addend;
 	  *reloc_addr = sym_value;
 	}
