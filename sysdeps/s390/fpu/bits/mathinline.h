@@ -52,10 +52,6 @@ __NTH (__signbit (double __x))
 /* This code is used internally in the GNU libc.  */
 #ifdef __LIBC_INTERNAL_MATH_INLINES
 
-#include <sysdep.h>
-#include <ldsodefs.h>
-#include <dl-procinfo.h>
-
 __MATH_INLINE double
 __NTH (__ieee754_sqrt (double x))
 {
