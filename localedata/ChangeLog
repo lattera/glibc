@@ -1,3 +1,11 @@
+2005-03-18  Andreas Schwab  <schwab@suse.de>
+
+	* locales/pa_IN (am_pm): Fix character names.
+
+2005-03-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add af_ZA.UTF-8.
+
 2004-12-19  Roland McGrath  <roland@frob.com>
 
 	* gen-unicode-ctype.c (output_tables): Fix email address in output.

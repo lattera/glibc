@@ -5,7 +5,7 @@ escape_char     /
 
 LC_IDENTIFICATION
 title      "Punjabi language locale for Indian Punjabi(Gurmukhi)"
-source     "IndLinux.org"	
+source     "IndLinux.org"
 address    ""
 contact    ""
 email      "bug-glibc-locales@gnu.org"
@@ -14,7 +14,7 @@ fax        ""
 language   "Punjabi"
 territory  "India"
 revision   "0.2"
-date       "2004-09-30"	
+date       "2004-09-30"
 %
 category  "pa_IN:2000";LC_IDENTIFICATION
 category  "pa_IN:2000";LC_CTYPE
@@ -122,8 +122,8 @@ mon         "<U0A1C><U0A28><U0A35><U0A30><U0A40>";/
 
 %
 % Equivalent of AM PM
-am_pm       "<U0A38><U035><U0A47><U0A30><U0A47>";/
-            "<U0A36><U0A3E><U02E>"
+am_pm       "<U0A38><U0035><U0A47><U0A30><U0A47>";/
+            "<U0A36><U0A3E><U002E>"
 
 %
 % Appropriate date and time representation
