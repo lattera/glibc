@@ -21,6 +21,7 @@
 #define _SYS_PTRACE_H	1
 
 #include <features.h>
+#include <sys/ucontext.h>
 
 __BEGIN_DECLS
 
@@ -90,10 +91,33 @@ enum __ptrace_request
   PTRACE_DETACH = 17,
 #define PT_DETACH PTRACE_DETACH
 
+  /* Get all registers (pt_all_user_regs) in one shot */
+  PTRACE_GETREGS = 18,
+#define PT_GETREGS PTRACE_GETREGS
+
+  /* Set all registers (pt_all_user_regs) in one shot */
+  PTRACE_SETREGS = 19,
+#define PT_SETREGS PTRACE_SETREGS
+
   /* Continue and stop at the next (return from) syscall.  */
   PTRACE_SYSCALL = 24
 #define PT_SYSCALL PTRACE_SYSCALL
 };
+
+/* pt_all_user_regs is used for PTRACE_GETREGS/PTRACE_SETREGS.  */
+struct pt_all_user_regs
+  {
+    unsigned long nat;
+    unsigned long cr_iip;
+    unsigned long cfm;
+    unsigned long cr_ipsr;
+    unsigned long pr;
+
+    unsigned long gr[32];
+    unsigned long br[8];
+    unsigned long ar[128];
+    struct ia64_fpreg fr[128];
+  };
 
 /* Perform process tracing functions.  REQUEST is one of the values
    above, and determines the action to be taken.

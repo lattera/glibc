@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jes Sorensen <jes@linuxcare.com>, July 2000
 
@@ -24,8 +24,15 @@
 #ifndef _BITS_SIGCONTEXT_H
 #define _BITS_SIGCONTEXT_H 1
 
-#include <asm/fpu.h>
 #include <bits/sigstack.h>
+
+struct ia64_fpreg
+  {
+    union
+      {
+	unsigned long bits[2];
+      } u;
+  } __attribute__ ((aligned (16)));
 
 struct sigcontext
 {

@@ -1,3 +1,29 @@
+2003-10-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/ia64/fpu/fraiseexcpt.c: Don't include <asm/fpu.h>.
+
+2003-10-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h: Don't include
+	<asm/fpu.h>.
+	(struct ia64_fpreg): New definition.
+
+	* sysdeps/unix/sysv/linux/ia64/sys/procfs.h: Don't include
+	<asm/elf.h>.
+	(ELF_NGREG): New.
+	(ELF_NFPREG): Likewise.
+	(elf_greg_t): Likewise.
+	(elf_gregset_t): Likewise.
+	(elf_fpreg_t): Likewise.
+	(elf_fpregset_t): Likewise.
+
+2003-10-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h: Include
+	<sys/ucontext.h>.
+	(__ptrace_request): Add PTRACE_GETREGS and PTRACE_SETREGS.
+	(pt_all_user_regs): New.
+
 2003-10-10  Simon Josefsson  <jas@extundo.com>
 
 	* argp/argp-namefrob.h [!_LIBC]: Include mempcpy.h, strcase.h,

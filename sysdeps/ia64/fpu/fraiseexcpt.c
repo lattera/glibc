@@ -23,7 +23,6 @@
 #include <math.h>
 #include <signal.h>
 #include <unistd.h>
-#include <asm/fpu.h>
 
 int
 feraiseexcept (int excepts)

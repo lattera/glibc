@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,6 @@
 #include <sys/types.h>
 #include <sys/ucontext.h>
 #include <sys/user.h>
-#include <asm/elf.h>
 
 __BEGIN_DECLS
 
@@ -39,6 +38,17 @@ struct elf_siginfo
     int si_code;			/* Extra code.  */
     int si_errno;			/* Errno.  */
   };
+
+/* We really need just 72 but let's leave some headroom...  */
+#define ELF_NGREG	128
+/* f0 and f1 could be omitted, but so what...  */
+#define ELF_NFPREG	128
+
+typedef unsigned long elf_greg_t;
+typedef elf_greg_t elf_gregset_t[ELF_NGREG];
+
+typedef struct ia64_fpreg elf_fpreg_t;
+typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
 
 typedef elf_greg_t greg_t;
 typedef elf_gregset_t gregset_t;
