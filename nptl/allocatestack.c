@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <sys/param.h>
+#include <dl-sysdep.h>
 #include <tls.h>
 
 
@@ -275,6 +276,12 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       /* There is at least one more thread.  */
       pd->header.data.multiple_threads = 1;
 
+#ifdef NEED_DL_SYSINFO
+      /* Copy the sysinfo value from the parent.  */
+      pd->header.data.sysinfo
+	= THREAD_GETMEM (THREAD_SELF, header.data.sysinfo);
+#endif
+
       /* Allocate the DTV for this thread.  */
       if (_dl_allocate_tls (pd) == NULL)
 	/* Something went wrong.  */
@@ -342,6 +349,12 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 	  /* There is at least one more thread.  */
 	  pd->header.data.multiple_threads = 1;
+
+#ifdef NEED_DL_SYSINFO
+	  /* Copy the sysinfo value from the parent.  */
+	  pd->header.data.sysinfo
+	    = THREAD_GETMEM (THREAD_SELF, header.data.sysinfo);
+#endif
 
 	  /* Allocate the DTV for this thread.  */
 	  if (_dl_allocate_tls (pd) == NULL)
