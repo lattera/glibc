@@ -1,3 +1,8 @@
+2000-02-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/nl_langinfo.c: Correct return value in error case.  Don't
+	set errno (PR libc/1582).
+
 2000-02-02  Andreas Schwab  <schwab@suse.de>
 
 	* malloc/Makefile (distribute): Add memprof.h.

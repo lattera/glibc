@@ -1,5 +1,5 @@
 /* User interface for extracting locale-dependent parameters.
-   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,20 +34,14 @@ nl_langinfo (item)
   const struct locale_data *data;
 
   if (category < 0 || category >= LC_ALL)
-    {
-      /* Bogus category: bogus item.  */
-      __set_errno (EINVAL);
-      return NULL;
-    }
+    /* Bogus category: bogus item.  */
+    return "";
 
   data = *_nl_current[category];
 
   if (index >= data->nstrings)
-    {
-      /* Bogus index for this category: bogus item.  */
-      __set_errno (EINVAL);
-      return NULL;
-    }
+    /* Bogus index for this category: bogus item.  */
+    return "";
 
   /* Return the string for the specified item.  */
   return (char *) data->values[index].string;
