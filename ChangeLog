@@ -1,3 +1,8 @@
+2000-11-16  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/dl-cache.c (_DL_PLATFORMS_COUNT): Define to 0 if
+	it's not defined.
+
 2000-11-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* dlfcn/default.c (main): Add test for dladdr of main returning
