@@ -1,3 +1,7 @@
+2000-07-21  Andreas Jaeger  <aj@suse.de>
+
+	* libio/fwide.c: Include <wchar.h> for prototype.
+
 2000-07-21  Greg McGary  <greg@mcgary.org>
 
 	* malloc/malloc.c (next_chunk, prev_chunk, inuse_bit_at_offset,
