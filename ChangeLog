@@ -1,5 +1,8 @@
 2000-01-21  Ulrich Drepper  <drepper@cygnus.com>
 
+	* intl/libintl.h: Add format_arg attributes to declarations of new
+	functions.
+
 	* intl/Makefile (routines): Add dcigettext, dcngettext, dngettxt,
 	ngettext, and plural.
 	(distribute): Add plural.y, po2test.sed, and tst-gettext.sh.
