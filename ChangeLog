@@ -1,5 +1,8 @@
 2004-09-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/daemon.c (daemon): Define errno in case /dev/null is not
+	the correct device.
+
 	* nis/ypclnt.c (yp_bind_file): Optimize a bit.  Minimal cleanups.
 
 2004-09-23  Andreas Jaeger  <aj@suse.de>
