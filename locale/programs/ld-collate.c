@@ -1417,7 +1417,7 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	  != (collate->sections->rules[i] & sort_position))
 	{
 	  error (0, 0, _("\
-%s: `position' must be used for a specific level in all sections or now"),
+%s: `position' must be used for a specific level in all sections or none"),
 		 "LC_COLLATE");
 	  break;
 	}
