@@ -80,6 +80,9 @@ Version 2.2
   recompiled.  Don't expect binary compatibility with previous glibc
   versions.
 
+* various conversion modules for IBM character sets contributed by
+  Masahide Washizawa.
+
 * IA-64 port by Jes Sorensen and HJ Lu.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

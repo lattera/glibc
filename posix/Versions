@@ -105,5 +105,8 @@ libc {
     posix_spawn; posix_spawnp; posix_spawnattr_getschedpolicy;
     posix_spawnattr_setschedpolicy; posix_spawnattr_getschedparam;
     posix_spawnattr_setschedparam;
+
+    # Used in macros.
+    __sysconf;
   }
 }

@@ -87,6 +87,13 @@ will be used, and CFLAGS sets optimization options for the compiler.
      add-ons that you _do_ want used, like this:
      `--enable-add-ons=linuxthreads'
 
+`--enable-kernel=VERSION'
+     This option is currently only useful on Linux systems.  The
+     VERSION parameter should have the form X.Y.Z and describes the
+     smallest version of the Linux kernel the generated library is
+     expected to support.  The higher the VERSION number is, the less
+     compatibility code is added, and the faster the code gets.
+
 `--with-binutils=DIRECTORY'
      Use the binutils (assembler and linker) in `DIRECTORY', not the
      ones the C compiler would default to.  You could use this option if

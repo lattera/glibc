@@ -105,6 +105,13 @@ not wish to use some add-on package that you have present in your source
 tree, give this option a list of the add-ons that you @emph{do} want
 used, like this: @samp{--enable-add-ons=linuxthreads}
 
+@item --enable-kernel=@var{version}
+This option is currently only useful on Linux systems.  The
+@var{version} parameter should have the form X.Y.Z and describes the
+smallest version of the Linux kernel the generated library is expected
+to support.  The higher the @var{version} number is, the less
+compatibility code is added, and the faster the code gets.
+
 @item --with-binutils=@var{directory}
 Use the binutils (assembler and linker) in @file{@var{directory}}, not
 the ones the C compiler would default to.  You could use this option if
