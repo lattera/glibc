@@ -41,7 +41,7 @@ C_LABEL(_mcount)
 
 	/* Setup parameter for __mcount_internal.  */
 	/* selfpc is the return address on the stack.  */
-	movq	48(%rsp),%rsi
+	movq	56(%rsp),%rsi
 	/* Get frompc via the frame pointer.  */
 	movq	8(%rbp),%rdi
 #ifdef PIC
