@@ -1,5 +1,13 @@
 2003-05-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-rwlock6.c (do_test): Use correct format specifier.
+
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelmutex.S
+	(__lll_mutex_lock_wait): Replace one memory operation with one
+	register operation.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevelmutex.S
+	(__lll_mutex_lock_wait): Likewise.
+
 	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h
 	(__lll_mutex_cond_lock): Add one to value parameter of
 	__lll_lock_wait to reflect reality in the futex syscall.
