@@ -1,5 +1,8 @@
 2000-01-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Makeconfig (rpath-dirs): Remove db2.
+	(dbojdir): Remove variable.
+
 	* locale/programs/locfile.h (handle_copy): Take repertoire map
 	name as parameter, not pointer to repertoire structure.
 	* locale/programs/ld-address.c: Change caller.

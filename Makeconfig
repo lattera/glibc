@@ -414,11 +414,10 @@ link-libc = -Wl,-rpath-link=$(rpath-link) \
 	    $(common-objpfx)libc.so$(libc.so-version) \
 	    $(common-objpfx)$(patsubst %,$(libtype.oS),c) $(gnulib)
 # This is how to find at build-time things that will be installed there.
-rpath-dirs = math elf dlfcn nss nis db2 rt resolv
+rpath-dirs = math elf dlfcn nss nis rt resolv
 rpath-link = \
 $(common-objdir):$(subst $(empty) ,:,$(patsubst ../$(subdir),.,$(rpath-dirs:%=$(common-objpfx)%)))
 elfobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)elf)
-dbobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)db2)
 else
 nssobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)nss)
 resolvobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)resolv)

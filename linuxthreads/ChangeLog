@@ -1,3 +1,11 @@
+2000-01-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* rwlock.c (pthread_rwlock_unlock): Correct one more problem with
+	preference handling.
+	(pthread_rwlockattr_setkind_np): Allow
+	PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP.
+	Patches by Kaz Kylheku <kaz@ashi.footprints.net>.
+
 2000-01-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* internals.h (pthread_readlock_info): New structure.

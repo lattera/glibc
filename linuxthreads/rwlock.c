@@ -362,8 +362,9 @@ pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
 	}
       rwlock->__rw_writer = NULL;
 
-      if (rwlock->__rw_kind == PTHREAD_RWLOCK_PREFER_READER_NP
-	  || (th = dequeue (&rwlock->__rw_write_waiting)) == NULL)
+      if ((rwlock->__rw_kind == PTHREAD_RWLOCK_PREFER_READER_NP
+	   && !queue_is_empty(&rwlock->__rw_read_waiting))
+	  || (th = dequeue(&rwlock->__rw_write_waiting)) == NULL)
 	{
 	  /* Restart all waiting readers.  */
 	  torestart = rwlock->__rw_read_waiting;
@@ -477,6 +478,7 @@ pthread_rwlockattr_setkind_np (pthread_rwlockattr_t *attr, int pref)
 {
   if (pref != PTHREAD_RWLOCK_PREFER_READER_NP
       && pref != PTHREAD_RWLOCK_PREFER_WRITER_NP
+      && pref != PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP
       && pref != PTHREAD_RWLOCK_DEFAULT_NP)
     return EINVAL;
 
