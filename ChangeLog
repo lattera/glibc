@@ -1,3 +1,10 @@
+2000-09-07  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/mips/sys/syscall.h (SYS_getdents64): New.
+	(SYS_fcntl64): New.
+
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Add getdents64.
+
 2000-09-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/opendir.c: If O_DIRECTORY_WORKS is defined don't
