@@ -1,5 +1,5 @@
 /* Resource limits.
-   Copyright (C) 1994, 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994,95,97,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,16 @@ init_rlimit (void)
       if (_hurd_rlimits[i].rlim_max == 0)
 	_hurd_rlimits[i].rlim_max = RLIM_INFINITY;
       if (_hurd_rlimits[i].rlim_cur == 0)
-	_hurd_rlimits[i].rlim_cur = _hurd_rlimits[i].rlim_max;
+#define I(lim, val) case RLIMIT_##lim: _hurd_rlimits[i].rlim_cur = (val); break
+	switch (i)
+	  {
+	    I (NOFILE, 1024);	/* Linux 2.2.12 uses this initial value.  */
+
+	  default:
+	    _hurd_rlimits[i].rlim_cur = _hurd_rlimits[i].rlim_max;
+	    break;
+	  }
+#undef	I
     }
 
   (void) &init_rlimit;
