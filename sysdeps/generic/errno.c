@@ -32,9 +32,6 @@ extern __thread int __libc_errno __attribute__ ((alias ("errno")))
 int errno __attribute__ ((section (".bss")));
 strong_alias (errno, _errno)
 
-/* This alias is needed by libpthread.  */
-strong_alias (errno, __libc_errno)
-
 /* We declare these with compat_symbol so that they are not
    visible at link time.  Programs must use the accessor functions.  */
 # if defined HAVE_ELF && defined SHARED && defined DO_VERSIONING

@@ -21,10 +21,6 @@ libc {
 %if USE_TLS && HAVE___THREAD
     # This version is for the TLS symbol, GLIBC_2.0 is the old object symbol.
     errno;
-%else
-    # This internal alias is solely to give libpthread access
-    # to the variable that is not directly user-visible at link time.
-    __libc_errno;
 %endif
   }
 }

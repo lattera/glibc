@@ -24,22 +24,15 @@
 
 #include <tls.h>
 
-#if USE_TLS && HAVE___THREAD
+#if USE___THREAD
 /* With __thread support, this per-thread variable is used in all cases.  */
 __thread struct __res_state _res;
 extern __thread struct __res_state __libc_res __attribute__ ((alias ("_res")))
   attribute_hidden;
 # define _res __libc_res
 #else
-/* The resolver state for use by single-threaded programs.
-
-   This differs from a plain uninitialized definition in that it doesn't
-   create a common definition, but a plain symbol that resides in .bss,
-   which can have an alias.  */
-struct __res_state _res __attribute__ ((section (".bss")));
-
-/* This alias is needed by libpthread.  */
-strong_alias (_res, __libc_res)
+/* The resolver state for use by single-threaded programs.  */
+struct __res_state _res;
 
 /* We declare this with compat_symbol so that it's not
    visible at link time.  Programs must use the accessor functions.  */
@@ -52,7 +45,9 @@ compat_symbol (libc, _res, _res, GLIBC_2_0);
 /* This function is used to access the resolver state in
    single-threaded programs.  */
 struct __res_state *
+#if ! USE___THREAD
 weak_const_function
+#endif
 __res_state (void)
 {
   return &_res;
