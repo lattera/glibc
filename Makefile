@@ -200,7 +200,7 @@ parent-mostlyclean: common-mostlyclean # common-mostlyclean is in Makerules.
 parent-clean: parent-mostlyclean common-clean
 
 postclean = $(addprefix $(common-objpfx),$(postclean-generated)) \
-	    $(addprefix $(objpfx),sysd-Makefile sysd-dirs sysd-rules) \
+	    $(addprefix $(objpfx),sysd-dirs sysd-rules) \
 	    $(addprefix $(objpfx),sysd-sorted soversions.mk soversions.i)
 
 clean: parent-clean

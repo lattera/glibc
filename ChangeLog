@@ -1,3 +1,7 @@
+2001-06-03  Roland McGrath  <roland@frob.com>
+
+	* Makefile (postclean): Remove obsolete sysd-Makefile.
+
 2001-06-01  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/alpha/fpu/fclrexcpt.c: #include <shlib-compat.h>
