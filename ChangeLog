@@ -82,6 +82,7 @@ Fri Nov 29 23:22:14 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 	* Makeconfig (elfobjdir): Define it here instead, so that
 	expanding $(rpath-link) gets the right value.
 
+	* a.out.h: Removed.
 	* misc/a.out.h: Moved to...
 	* sysdeps/generic/a.out.h: ...here.
 	* sysdeps/unix/sysv/linux/a.out.h: New file.  Wrapper around
