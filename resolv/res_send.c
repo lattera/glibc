@@ -109,6 +109,13 @@ static int vc = 0;	/* is the socket a virtual ciruit? */
 #define FD_ZERO(p)	bzero((char *)(p), sizeof(*(p)))
 #endif
 
+/* XXX - this should be done in portability.h */
+#if (defined(BSD) && (BSD >= 199103)) || defined(linux)
+# define CAN_RECONNECT 1
+#else
+# define CAN_RECONNECT 0
+#endif
+
 #ifndef DEBUG
 #   define Dprint(cond, args) /*empty*/
 #   define DprintQ(cond, args, query, size) /*empty*/
@@ -484,7 +491,7 @@ res_send(buf, buflen, ans, anssiz)
 					_res_close();
 				s = socket(PF_INET, SOCK_DGRAM, 0);
 				if (s < 0) {
-#if !defined(BSD) || (BSD < 199103)
+#if !CAN_RECONNECT
  bad_dg_sock:
 #endif
 					terrno = errno;
@@ -538,7 +545,7 @@ res_send(buf, buflen, ans, anssiz)
 				 * for responses from more than one server.
 				 */
 				if (connected) {
-#if defined(BSD) && (BSD >= 199103)
+#if CAN_RECONNECT
 					struct sockaddr_in no_addr;
 
 					no_addr.sin_family = AF_INET;

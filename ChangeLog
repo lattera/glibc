@@ -1,8 +1,29 @@
+Tue Aug 22 16:49:12 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* inet/netdb.h: Moved to resolv.
+	* inet/Makefile (headers): Remove netdb.h.
+	* resolv/Makefile (headers): Add netdb.h.
+	* resolv/gethnamaddr.c, resolv/inet_addr.c, resolv/netdb.h,
+	resolv/res_send.c: Updated from BIND-4.9.3-BETA26.
+
+	* hurd/thread-cancel.c: If SS->cancel_hook is not null, call it before
+	resuming the thread.
+	* hurd/hurd/signal.h (struct hurd_sigstate): New member `cancel_hook'.
+
+	* hurd/Makefile: Removed dep on hurd/signal.h for RPC stub objects.
+
+Mon Aug 21 16:37:09 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Grok R_386_NONE
+	relocs, and do nothing.  Why the linker generates them we may
+	never know. 
+
 Thu Aug 17 16:18:38 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/Makefile: Don't elide sunrpc and manual from
  	`subdirs' variable.
 
+	* sysdeps/mach/hurd/i386/intr-msg.h: New file.
 	* hurd/intr-msg.c: Use INTR_MSG_TRAP macro from machine-dependent
  	"intr-msg.h" for special syscall code, instead of i386-specific asm.
 	* hurd/hurdsig.c: Use INTR_MSG_BACK_OUT macro from

@@ -1,1 +1,1 @@
-#include <inet/netdb.h>
+#include <resolv/netdb.h>

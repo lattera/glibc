@@ -21,7 +21,7 @@
 #
 subdir	:= resolv
 
-headers	:= resolv.h arpa/nameser.h sys/bitypes.h
+headers	:= resolv.h netdb.h arpa/nameser.h sys/bitypes.h
 distribute := ../conf/portability.h
 
 routines := gethnamaddr getnetbyaddr getnetbyname getnetent getnetnamadr \

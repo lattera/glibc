@@ -62,6 +62,12 @@ hurd_thread_cancel (thread_t thread)
 				  (natural_t *) &state.basic,
 				  MACHINE_THREAD_STATE_COUNT);
 
+      if (ss->cancel_hook)
+	/* The code being cancelled has a special wakeup function.
+	   Calling this should make the thread wake up and check the
+	   cancellation flag.  */
+	(*ss->cancel_hook) ();
+
       __thread_resume (thread);
     }
 

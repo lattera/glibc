@@ -66,10 +66,6 @@ static char rcsid[] = "$Id$";
 
 /* these are compatibility routines, not needed on recent BSD releases */
 
-#ifndef NEED_INETADDR
-int __inet_addr_unneeded__;
-#else
-
 /*
  * Ascii internet address interpretation routine.
  * The value returned is in network order.
@@ -84,11 +80,6 @@ inet_addr(cp)
 		return (val.s_addr);
 	return (INADDR_NONE);
 }
-#endif /*NEED_INETADDR*/
-
-#ifndef NEED_INETATON
-int __inet_aton_unneeded__;
-#else
 
 /* 
  * Check whether "cp" is a valid ascii representation
@@ -113,8 +104,10 @@ inet_aton(cp, addr)
 		/*
 		 * Collect number up to ``.''.
 		 * Values are specified as for C:
-		 * 0x=hex, 0=octal, other=decimal.
+		 * 0x=hex, 0=octal, isdigit=decimal.
 		 */
+		if (!isdigit(c))
+			return (0);
 		val = 0; base = 10;
 		if (c == '0') {
 			c = *++cp;
@@ -123,7 +116,7 @@ inet_aton(cp, addr)
 			else
 				base = 8;
 		}
-		while (c != '\0') {
+		for (;;) {
 			if (isascii(c) && isdigit(c)) {
 				val = (val * base) + (c - '0');
 				c = *++cp;
@@ -141,7 +134,7 @@ inet_aton(cp, addr)
 			 *	a.b.c	(with c treated as 16 bits)
 			 *	a.b	(with b treated as 24 bits)
 			 */
-			if (pp >= parts + 3 || val > 0xff)
+			if (pp >= parts + 3)
 				return (0);
 			*pp++ = val;
 			c = *++cp;
@@ -151,7 +144,7 @@ inet_aton(cp, addr)
 	/*
 	 * Check for trailing characters.
 	 */
-	if (c && (!isascii(c) || (!isspace(c) && !ispunct(c))))
+	if (c != '\0' && (!isascii(c) || !isspace(c)))
 		return (0);
 	/*
 	 * Concoct the address according to
@@ -188,4 +181,3 @@ inet_aton(cp, addr)
 		addr->s_addr = htonl(val);
 	return (1);
 }
-#endif /*NEED_INETATON*/

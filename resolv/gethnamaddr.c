@@ -93,6 +93,7 @@ static const char AskedForGot[] =
 			  "gethostby*.getanswer: asked for \"%s\", got \"%s\"";
 
 static char *h_addr_ptrs[MAXADDRS + 1];
+static struct hostent *gethostbyname_ipv4 __P((const char *));
 
 static struct hostent host;
 static char *host_aliases[MAXALIASES];
@@ -156,7 +157,9 @@ getanswer(answer, anslen, qname, qclass, qtype)
 	int haveanswer, had_error;
 	int toobig = 0;
 	char tbuf[MAXDNAME+1];
+	const char *tname;
 
+	tname = qname;
 	host.h_name = NULL;
 	eom = answer->buf + anslen;
 	/*
@@ -249,19 +252,36 @@ getanswer(answer, anslen, qname, qclass, qtype)
 			buflen -= n;
 			continue;
 		}
+		if (qtype == T_PTR && type == T_CNAME) {
+			n = dn_expand(answer->buf, eom, cp, tbuf, sizeof tbuf);
+			if (n < 0) {
+				had_error++;
+				continue;
+			}
+			cp += n;
+			/* Get canonical name. */
+			n = strlen(tbuf) + 1;	/* for the \0 */
+			if (n > buflen) {
+				had_error++;
+				continue;
+			}
+			strcpy(bp, tbuf);
+			tname = bp;
+			bp += n;
+			buflen -= n;
+			continue;
+		}
 		if (type != qtype) {
-			/* CNAME->PTR should not cause a log message. */
-			if (!(qtype == T_PTR && type == T_CNAME))
-				syslog(LOG_NOTICE|LOG_AUTH,
+			syslog(LOG_NOTICE|LOG_AUTH,
 	       "gethostby*.getanswer: asked for \"%s %s %s\", got type \"%s\"",
-				       qname, p_class(qclass), p_type(qtype),
-				       p_type(type));
+			       qname, p_class(qclass), p_type(qtype),
+			       p_type(type));
 			cp += n;
 			continue;		/* XXX - had_error++ ? */
 		}
 		switch (type) {
 		case T_PTR:
-			if (strcasecmp(qname, bp) != 0) {
+			if (strcasecmp(tname, bp) != 0) {
 				syslog(LOG_NOTICE|LOG_AUTH,
 				       AskedForGot, qname, bp);
 				cp += n;
@@ -375,6 +395,36 @@ getanswer(answer, anslen, qname, qclass, qtype)
 
 struct hostent *
 gethostbyname(name)
+	const char *name;
+{
+	struct hostent *hp;
+
+#if defined(AF_INET6) && defined(RES_TRY_INET6)
+	if (_res.options & RES_TRY_INET6) {
+		hp = gethostbyname2(name, AF_INET6);
+		if (hp)
+			return (hp);
+	}
+#endif
+	return (gethostbyname2(name, AF_INET));
+}
+
+struct hostent *
+gethostbyname2(name, af)
+	const char *name;
+	int af;
+{
+	switch (af) {
+	case AF_INET:
+		return (gethostbyname_ipv4(name));
+	}
+	errno = EAFNOSUPPORT;
+	h_errno = NETDB_INTERNAL;
+	return (NULL);
+}
+
+static struct hostent *
+gethostbyname_ipv4(name)
 	const char *name;
 {
 	querybuf buf;
@@ -727,23 +777,3 @@ dn_skipname(comp_dn, eom)
 	return (__dn_skipname(comp_dn, eom));
 }
 #endif /*old-style libc with yp junk in it*/
-
-#ifdef ultrix
-/* more icky libc packaging in ultrix */
-int
-local_hostname_length(hostname)
-	const char *hostname;
-{
-	int len_host, len_domain;
-
-	if (!*_res.defdname)
-		res_init();
-	len_host = strlen(hostname);
-	len_domain = strlen(_res.defdname);
-	if (len_host > len_domain &&
-	    !strcasecmp(hostname + len_host - len_domain, _res.defdname) &&
-	    hostname[len_host - len_domain - 1] == '.')
-		return (len_host - len_domain - 1);
-	return (0);
-}
-#endif

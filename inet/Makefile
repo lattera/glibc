@@ -21,7 +21,7 @@
 #
 subdir	:= inet
 
-headers	:= netinet/in.h $(wildcard arpa/*.h protocols/*.h) netdb.h
+headers	:= netinet/in.h $(wildcard arpa/*.h protocols/*.h)
 
 routines := ntohl ntohs htonl htons		\
 	    inet_lnaof inet_mkadr	\
