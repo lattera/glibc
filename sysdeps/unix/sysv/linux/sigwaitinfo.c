@@ -33,6 +33,18 @@ extern int __syscall_rt_sigtimedwait (const sigset_t *__unbounded, siginfo_t *__
 static int
 do_sigwaitinfo (const sigset_t *set, siginfo_t *info)
 {
+#ifdef SIGCANCEL
+  sigset_t tmpset;
+  if (set != NULL && __sigismember (set, SIGCANCEL))
+    {
+      /* Create a temporary mask without the bit for SIGCANCEL set.  */
+      // We are not copying more than we have to.
+      memcpy (&tmpset, set, _NSIG / 8);
+      __sigdelset (&tmpset, SIGCANCEL);
+      set = &tmpset;
+    }
+#endif
+
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
   int result = INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),

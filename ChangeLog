@@ -1,7 +1,13 @@
 2003-06-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sigtimedwait.c: If SIGCANCEL is defined
+	and part of the incoming set, create a temporary set without this
+	signal.
+	* sysdeps/unix/sysv/linux/sigwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/sleep.c: Use CANCELLATION_P if defined before
-	returning because seconds==0.
+	returning because seconds==0.  Add __builtin_expect.
 
 2003-06-16  Ulrich Drepper  <drepper@redhat.com>
 

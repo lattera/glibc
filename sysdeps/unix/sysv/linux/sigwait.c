@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +35,18 @@ static int
 do_sigwait (const sigset_t *set, int *sig)
 {
   int ret;
+
+#ifdef SIGCANCEL
+  sigset_t tmpset;
+  if (set != NULL && __sigismember (set, SIGCANCEL))
+    {
+      /* Create a temporary mask without the bit for SIGCANCEL set.  */
+      // We are not copying more than we have to.
+      memcpy (&tmpset, set, _NSIG / 8);
+      __sigdelset (&tmpset, SIGCANCEL);
+      set = &tmpset;
+    }
+#endif
 
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
