@@ -24,6 +24,8 @@
 
 2002-04-08  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/x86_64/ldd-rewrite.sed: Fix rewrite rule.
+
 	* sysdeps/x86_64/fpu/s_llrint.S: New.
 	* sysdeps/x86_64/fpu/s_llrintf.S: New.
 	* sysdeps/x86_64/fpu/s_llrintl.S: New.
