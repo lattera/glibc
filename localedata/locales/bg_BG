@@ -21,10 +21,10 @@ contact    "Delyan Toshev"
 email      "delyant@yahoo.com"
 tel        ""
 fax        ""
-language   "bg"
-territory  "BG"
-revision   "2.0"
-date       "2001-11-16"
+language   "Bulgarian"
+territory  "Bulgaria"
+revision   "2.0.1"
+date       "2002-09-10"
 
 category  "bg_BG:2000";LC_IDENTIFICATION
 category  "bg_BG:2000";LC_CTYPE

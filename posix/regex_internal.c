@@ -24,8 +24,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <wchar.h>
-#include <wctype.h>
+
+#if defined HAVE_WCHAR_H || defined _LIBC
+# include <wchar.h>
+#endif /* HAVE_WCHAR_H || _LIBC */
+#if defined HAVE_WCTYPE_H || defined _LIBC
+# include <wctype.h>
+#endif /* HAVE_WCTYPE_H || _LIBC */
 
 #ifdef _LIBC
 # ifndef _RE_DEFINE_LOCALE_FUNCTIONS
@@ -99,7 +104,8 @@ re_string_allocate (pstr, str, len, init_len, trans, icase)
   if (BE (ret != REG_NOERROR, 0))
     return ret;
 
-  pstr->mbs_case = (MBS_CASE_ALLOCATED (pstr) ? pstr->mbs_case : (char *) str);
+  pstr->mbs_case = (MBS_CASE_ALLOCATED (pstr) ? pstr->mbs_case
+                    : (unsigned char *) str);
   pstr->mbs = MBS_ALLOCATED (pstr) ? pstr->mbs : pstr->mbs_case;
   pstr->valid_len = (MBS_CASE_ALLOCATED (pstr) || MBS_ALLOCATED (pstr)
                      || MB_CUR_MAX > 1) ? pstr->valid_len : len;
@@ -127,7 +133,8 @@ re_string_construct (pstr, str, len, trans, icase)
       if (BE (ret != REG_NOERROR, 0))
         return ret;
     }
-  pstr->mbs_case = (MBS_CASE_ALLOCATED (pstr) ? pstr->mbs_case : (char *) str);
+  pstr->mbs_case = (MBS_CASE_ALLOCATED (pstr) ? pstr->mbs_case
+                    : (unsigned char *) str);
   pstr->mbs = MBS_ALLOCATED (pstr) ? pstr->mbs : pstr->mbs_case;
 
   if (icase)
@@ -176,13 +183,13 @@ re_string_realloc_buffers (pstr, new_buf_len)
 #endif /* RE_ENABLE_I18N  */
   if (MBS_ALLOCATED (pstr))
     {
-      pstr->mbs = re_realloc (pstr->mbs, char, new_buf_len);
+      pstr->mbs = re_realloc (pstr->mbs, unsigned char, new_buf_len);
       if (BE (pstr->mbs == NULL, 0))
         return REG_ESPACE;
     }
   if (MBS_CASE_ALLOCATED (pstr))
     {
-      pstr->mbs_case = re_realloc (pstr->mbs_case, char, new_buf_len);
+      pstr->mbs_case = re_realloc (pstr->mbs_case, unsigned char, new_buf_len);
       if (BE (pstr->mbs_case == NULL, 0))
         return REG_ESPACE;
       if (!MBS_ALLOCATED (pstr))
@@ -202,7 +209,7 @@ re_string_construct_common (str, len, pstr, trans, icase)
      int icase;
 {
   memset (pstr, '\0', sizeof (re_string_t));
-  pstr->raw_mbs = str;
+  pstr->raw_mbs = (const unsigned char *) str;
   pstr->len = len;
   pstr->trans = trans;
   pstr->icase = icase ? 1 : 0;
@@ -235,8 +242,8 @@ build_wcs_buffer (pstr)
       wchar_t wc;
       remain_len = end_idx - byte_idx;
       prev_st = pstr->cur_state;
-      mbclen = mbrtowc (&wc, pstr->raw_mbs + pstr->raw_mbs_idx + byte_idx,
-                        remain_len, &pstr->cur_state);
+      mbclen = mbrtowc (&wc, ((const char *) pstr->raw_mbs + pstr->raw_mbs_idx
+                              + byte_idx), remain_len, &pstr->cur_state);
       if (BE (mbclen == (size_t) -2, 0))
         {
           /* The buffer doesn't have enough space, finish to build.  */
@@ -254,9 +261,8 @@ build_wcs_buffer (pstr)
       /* Apply the translateion if we need.  */
       if (pstr->trans != NULL && mbclen == 1)
         {
-          int ch = *((unsigned char *) pstr->raw_mbs + pstr->raw_mbs_idx
-                     + byte_idx);
-          pstr->mbs_case[byte_idx] = pstr->trans[ch];
+          int ch = pstr->trans[pstr->raw_mbs[pstr->raw_mbs_idx + byte_idx]];
+          pstr->mbs_case[byte_idx] = ch;
         }
       /* Write wide character and padding.  */
       pstr->wcs[byte_idx++] = wc;
@@ -284,8 +290,8 @@ build_wcs_upper_buffer (pstr)
       wchar_t wc;
       remain_len = end_idx - byte_idx;
       prev_st = pstr->cur_state;
-      mbclen = mbrtowc (&wc, pstr->raw_mbs + pstr->raw_mbs_idx + byte_idx,
-                        remain_len, &pstr->cur_state);
+      mbclen = mbrtowc (&wc, ((const char *) pstr->raw_mbs + pstr->raw_mbs_idx
+                              + byte_idx), remain_len, &pstr->cur_state);
       if (BE (mbclen == (size_t) -2, 0))
         {
           /* The buffer doesn't have enough space, finish to build.  */
@@ -310,7 +316,7 @@ build_wcs_upper_buffer (pstr)
       else /* mbclen > 1 */
         {
           if (iswlower (wc))
-            wcrtomb (pstr->mbs + byte_idx, towupper (wc), &prev_st);
+            wcrtomb ((char *) pstr->mbs + byte_idx, towupper (wc), &prev_st);
           else
             memcpy (pstr->mbs + byte_idx,
                     pstr->raw_mbs + pstr->raw_mbs_idx + byte_idx, mbclen);
@@ -340,7 +346,7 @@ re_string_skip_chars (pstr, new_raw_idx)
     {
       int remain_len = pstr->len - rawbuf_idx;
       prev_st = pstr->cur_state;
-      mbclen = mbrlen (pstr->raw_mbs + rawbuf_idx, remain_len,
+      mbclen = mbrlen ((const char *) pstr->raw_mbs + rawbuf_idx, remain_len,
                        &pstr->cur_state);
       if (BE (mbclen == (size_t) -2 || mbclen == (size_t) -1 || mbclen == 0, 0))
         {
@@ -420,9 +426,9 @@ re_string_reconstruct (pstr, idx, eflags, newline)
       pstr->tip_context = ((eflags & REG_NOTBOL) ? CONTEXT_BEGBUF
                            : CONTEXT_NEWLINE | CONTEXT_BEGBUF);
       if (!MBS_CASE_ALLOCATED (pstr))
-        pstr->mbs_case = (char *) pstr->raw_mbs;
+        pstr->mbs_case = (unsigned char *) pstr->raw_mbs;
       if (!MBS_ALLOCATED (pstr) && !MBS_CASE_ALLOCATED (pstr))
-        pstr->mbs = (char *) pstr->raw_mbs;
+        pstr->mbs = (unsigned char *) pstr->raw_mbs;
       offset = idx;
     }
 

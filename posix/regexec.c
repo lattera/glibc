@@ -23,8 +23,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <wchar.h>
-#include <wctype.h>
+
+#if defined HAVE_WCHAR_H || defined _LIBC
+# include <wchar.h>
+#endif /* HAVE_WCHAR_H || _LIBC */
+#if defined HAVE_WCTYPE_H || defined _LIBC
+# include <wctype.h>
+#endif /* HAVE_WCTYPE_H || _LIBC */
 
 #ifdef _LIBC
 # ifndef _RE_DEFINE_LOCALE_FUNCTIONS
@@ -123,7 +128,7 @@ static re_dfastate_t **build_trtable (const regex_t *dfa,
 static int check_node_accept_bytes (const regex_t *preg, int node_idx,
                                     const re_string_t *input, int idx);
 # ifdef _LIBC
-static unsigned int find_collation_sequence_value (const char *mbs,
+static unsigned int find_collation_sequence_value (const unsigned char *mbs,
                                                    size_t name_len);
 # endif /* _LIBC */
 #endif /* RE_ENABLE_I18N */
@@ -1674,7 +1679,7 @@ transit_state_bkref_loop (preg, nodes, work_state_log, mctx)
           if (BE (err != REG_NOERROR, 0))
             return err;
         }
-      buf = re_string_get_buffer (mctx->input);
+      buf = (char *) re_string_get_buffer (mctx->input);
       if (strncmp (buf + cur_regs[subexp_idx].rm_so, buf + cur_str_idx,
                    subexp_len) != 0)
         continue;
@@ -1855,27 +1860,51 @@ build_trtable (preg, state, fl_search)
     }
 
   /* Update the transition table.  */
+  /* For all characters ch...:  */
   for (i = 0, ch = 0; i < BITSET_UINTS; ++i)
     for (j = 0; j < UINT_BITS; ++j, ++ch)
       if ((acceptable[i] >> j) & 1)
         {
+          /* The current state accepts the character ch.  */
           if (IS_WORD_CHAR (ch))
             {
               for (k = 0; k < ndests; ++k)
                 if ((dests_ch[k][i] >> j) & 1)
-                  trtable[ch] = dest_states_word[k];
+                  {
+                    /* k-th destination accepts the word character ch.  */
+                    trtable[ch] = dest_states_word[k];
+                    /* There must be only one destination which accepts
+                       character ch.  See group_nodes_into_DFAstates.  */
+                    break;
+                  }
             }
           else /* not WORD_CHAR */
             {
               for (k = 0; k < ndests; ++k)
                 if ((dests_ch[k][i] >> j) & 1)
-                  trtable[ch] = dest_states[k];
+                  {
+                    /* k-th destination accepts the non-word character ch.  */
+                    trtable[ch] = dest_states[k];
+                    /* There must be only one destination which accepts
+                       character ch.  See group_nodes_into_DFAstates.  */
+                    break;
+                  }
             }
         }
   /* new line */
-  for (k = 0; k < ndests; ++k)
-    if (bitset_contain (acceptable, NEWLINE_CHAR))
-      trtable[NEWLINE_CHAR] = dest_states_nl[k];
+  if (bitset_contain (acceptable, NEWLINE_CHAR))
+    {
+      /* The current state accepts newline character.  */
+      for (k = 0; k < ndests; ++k)
+        if (bitset_contain (dests_ch[k], NEWLINE_CHAR))
+          {
+            /* k-th destination accepts newline character.  */
+            trtable[NEWLINE_CHAR] = dest_states_nl[k];
+            /* There must be only one destination which accepts
+               newline.  See group_nodes_into_DFAstates.  */
+            break;
+          }
+    }
 
   re_free (dest_states_nl);
   re_free (dest_states_word);
@@ -2069,7 +2098,7 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
     {
       const re_charset_t *cset = node->opr.mbcset;
 # ifdef _LIBC
-      const char *pin = re_string_get_buffer (input) + str_idx;
+      const unsigned char *pin = re_string_get_buffer (input) + str_idx;
 # endif /* _LIBC */
       int match_len = 0;
       wchar_t wc = ((cset->nranges || cset->nchar_classes || cset->nmbchars)
@@ -2098,17 +2127,19 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
         {
           unsigned int in_collseq = 0;
           const int32_t *table, *indirect;
-          const char *weights, *extra, *collseqwc;
+          const unsigned char *weights, *extra;
+          const char *collseqwc;
           int32_t idx;
           /* This #include defines a local function!  */
 #  include <locale/weight.h>
 
           /* match with collating_symbol?  */
           if (cset->ncoll_syms)
-            extra = _NL_CURRENT (LC_COLLATE, _NL_COLLATE_SYMB_EXTRAMB);
+            extra = (const unsigned char *)
+              _NL_CURRENT (LC_COLLATE, _NL_COLLATE_SYMB_EXTRAMB);
           for (i = 0; i < cset->ncoll_syms; ++i)
             {
-              const char *coll_sym = extra + cset->coll_syms[i];
+              const unsigned char *coll_sym = extra + cset->coll_syms[i];
               /* Compare the length of input collating element and
                  the length of current collating element.  */
               if (*coll_sym != elem_len)
@@ -2147,11 +2178,13 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
           /* match with equivalence_class?  */
           if (cset->nequiv_classes)
             {
-              const unsigned char *cp = (const unsigned char *) pin;
+              const unsigned char *cp = pin;
               table = (const int32_t *)
                 _NL_CURRENT (LC_COLLATE, _NL_COLLATE_TABLEMB);
-              weights = _NL_CURRENT (LC_COLLATE, _NL_COLLATE_WEIGHTMB);
-              extra = _NL_CURRENT (LC_COLLATE, _NL_COLLATE_EXTRAMB);
+              weights = (const unsigned char *)
+                _NL_CURRENT (LC_COLLATE, _NL_COLLATE_WEIGHTMB);
+              extra = (const unsigned char *)
+                _NL_CURRENT (LC_COLLATE, _NL_COLLATE_EXTRAMB);
               indirect = (const int32_t *)
                 _NL_CURRENT (LC_COLLATE, _NL_COLLATE_INDIRECTMB);
               idx = findidx (&cp);
@@ -2215,7 +2248,7 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
 # ifdef _LIBC
 static unsigned int
 find_collation_sequence_value (mbs, mbs_len)
-    const char *mbs;
+    const unsigned char *mbs;
     size_t mbs_len;
 {
   uint32_t nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
@@ -2226,7 +2259,7 @@ find_collation_sequence_value (mbs, mbs_len)
           /* No valid character.  Match it as a single byte character.  */
           const unsigned char *collseq = (const unsigned char *)
             _NL_CURRENT (LC_COLLATE, _NL_COLLATE_COLLSEQMB);
-          return collseq[*(unsigned char *) mbs];
+          return collseq[mbs[0]];
         }
       return UINT_MAX;
     }

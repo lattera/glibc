@@ -1,3 +1,8 @@
+2002-09-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* localedata/locales/bg_BG: Update LC_IDENTIFICATION info.
+	Patch by Yanko Kaneti <yaneti@declera.com>.
+
 2002-09-01  Roland McGrath  <roland@redhat.com>
 
 	* tst-ctype.c (main): Use nl_langinfo instead of __ctype_b global.

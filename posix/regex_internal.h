@@ -228,15 +228,15 @@ struct re_string_t
 {
   /* Indicate the raw buffer which is the original string passed as an
      argument of regexec(), re_search(), etc..  */
-  const char *raw_mbs;
+  const unsigned char *raw_mbs;
   /* Store the multibyte string.  In case of "case insensitive mode" like
      REG_ICASE, upper cases of the string are stored, otherwise MBS points
      the same address that RAW_MBS points.  */
-  char *mbs;
+  unsigned char *mbs;
   /* Store the case sensitive multibyte string.  In case of
      "case insensitive mode", the original string are stored,
      otherwise MBS_CASE points the same address that MBS points.  */
-  char *mbs_case;
+  unsigned char *mbs_case;
 #ifdef RE_ENABLE_I18N
   /* Store the wide character string which is corresponding to MBS.  */
   wint_t *wcs;
@@ -512,7 +512,7 @@ typedef struct
   union
   {
     unsigned char ch;
-    char *name;
+    unsigned char *name;
     wchar_t wch;
   } opr;
 } bracket_elem_t;
@@ -580,7 +580,7 @@ re_string_elem_size_at (pstr, idx)
      int idx;
 {
 #ifdef _LIBC
-  const char *extra, *p;
+  const unsigned char *p, *extra;
   const int32_t *table, *indirect;
   int32_t tmp;
 # include <locale/weight.h>
@@ -589,11 +589,12 @@ re_string_elem_size_at (pstr, idx)
   if (nrules != 0)
     {
       table = (const int32_t *) _NL_CURRENT (LC_COLLATE, _NL_COLLATE_TABLEMB);
-      extra = (const char *) _NL_CURRENT (LC_COLLATE, _NL_COLLATE_EXTRAMB);
+      extra = (const unsigned char *)
+        _NL_CURRENT (LC_COLLATE, _NL_COLLATE_EXTRAMB);
       indirect = (const int32_t *) _NL_CURRENT (LC_COLLATE,
 						_NL_COLLATE_INDIRECTMB);
       p = pstr->mbs + idx;
-      tmp = findidx ((const unsigned char **) &p);
+      tmp = findidx (&p);
       return p - pstr->mbs - idx;
     }
   else

@@ -1,3 +1,40 @@
+2002-09-10  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regexec.c (build_trtable): Fix the destination of
+	newline to prevent wrong states from overwriting.
+	Append break statements to optimization.
+
+2002-09-10  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regcomp.c: Wrap #include wchar.h and wctype.h in #if.
+	(build_range_exp): Add castings to strlen invocations.
+	(build_collating_symbol): Restore the type of characters from "char"
+	to "unsigned char", and supplement castings.
+	(build_collating_symbol): Likewise.
+	(build_equiv_class): Likewise.
+	(build_charclass): Likewise.
+	(seek_collating_symbol_entry): Likewise.
+	(parse_bracket_exp): Likewise.
+	(build_word_op): Supplement a casting.
+	* posix/regex_internal.c: Wrap #include wchar.h and wctype.h in #if.
+	(re_string_allocate): Fix castings.
+	(re_string_construct): Likewise.
+	(re_string_construct_common): Likewise.
+	(re_string_realloc_buffers): Likewise.
+	(build_wcs_buffer): Likewise.
+	(build_wcs_upper_buffer): Likewise.
+	(re_string_skip_chars): Likewise.
+	(re_string_reconstruct): Likewise.
+	* posix/regex_internal.h: Restore the type of characters in
+	re_string_t and bracket_elem_t from "char" to "unsigned char".
+	(re_string_elem_size_at): Fix castings.
+	* posix/regexec.c: Wrap #include wchar.h and wctype.h in #if.
+	(transit_state_bkref_loop): Restore the type of characters from
+	"char" to "unsigned char", and append a cast to "char*" pointer in
+	array subscript.
+	(check_node_accept_bytes): Likewise.
+	(find_collation_sequence_value): Likewise.
+
 2002-09-10  Hartvig Ekner  <hartvige@mips.com>
 
 	* sysdeps/mips/memcpy.S: New file.
