@@ -477,6 +477,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 
 void
+internal_function
 __deallocate_stack (struct pthread *pd)
 {
   lll_lock (stack_cache_lock);

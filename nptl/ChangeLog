@@ -1,5 +1,17 @@
 2003-02-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthreadP.h: Mark declarations of __find_in_stack_list, __free_tcb,
+	and __deallocate_stack with internal_function.
+	* pthread_create.c: Adjust definitions appropriately.
+	* allocatestack.c: Likewise.
+
+	* pthread_join.c: Add one more __builtin_expect.
+	* pthread_timedjoin.c: Likewise.
+
+	* pthread_getspecific.c (__pthread_getspecific): Clear data->data
+	not data of sequence number does not match.
+	Add one __builtin_expect.
+
 	* Makefile (tests): Add tst-clock1.
 	* tst-clock1.c: New file.
 

@@ -154,14 +154,15 @@ __do_cancel (void)
 
 /* Thread list handling.  */
 extern struct pthread *__find_in_stack_list (struct pthread *pd)
-     attribute_hidden;
+     attribute_hidden internal_function;
 
 /* Deallocate a thread's stack after optionally making sure the thread
    descriptor is still valid.  */
-extern void __free_tcb (struct pthread *pd) attribute_hidden;
+extern void __free_tcb (struct pthread *pd) attribute_hidden internal_function;
 
 /* Free allocated stack.  */
-extern void __deallocate_stack (struct pthread *pd) attribute_hidden;
+extern void __deallocate_stack (struct pthread *pd)
+     attribute_hidden internal_function;
 
 /* Mark all the stacks except for the current one as available.  This
    function also re-initializes the lock for the stack cache.  */

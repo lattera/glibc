@@ -65,6 +65,7 @@ hidden_def (__pthread_keys)
 const int __pthread_pthread_sizeof_descr = sizeof (struct pthread);
 
 struct pthread *
+internal_function
 __find_in_stack_list (pd)
      struct pthread *pd;
 {
@@ -175,6 +176,7 @@ deallocate_tsd (struct pthread *pd)
 /* Deallocate a thread's stack after optionally making sure the thread
    descriptor is still valid.  */
 void
+internal_function
 __free_tcb (struct pthread *pd)
 {
   /* The thread is exiting now.  */
