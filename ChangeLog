@@ -1,5 +1,7 @@
 1999-08-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/weight.h: Include <errno.h>.
+
 	* posix/sys/types.h: Define type useconds_t if not done already.
 	* posix/unistd.h: Likewise.  Use this in ualarm and usleep
 	declarations.
