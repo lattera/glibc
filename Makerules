@@ -1355,18 +1355,22 @@ ifdef objpfx
 stubs: $(objpfx)stubs
 endif
 $(objpfx)stubs: $(+depfiles)
+ifneq (,$(strip $(+depfiles)))
 # Use /dev/null since `...` might expand to empty.
-	(s=`cd $(sysdep_dir) && $(PWD_P)`; \
-	 $(patsubst %/,cd % &&,$(objpfx)) \
-	 sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
-	  `sed -n -e 's@$(sysdep_dir)/@'"$$s"'/@g' \
-		  -e 's@\$$(common-objpfx)@$(..)@g' -e 's@\$$(objpfx)@@g' \
-		  -e '/:  *[^ ]/{s@^.*: *\([^ ]*\) .*$$@\1@; h; }' \
-		  -e '/:$$/d' \
-		  -e '/stub-tag\.h/{; g; p; }' \
-		  $(patsubst $(objpfx)%,%,$^) /dev/null` \
-	     /dev/null) > $@T
+	c=`($(patsubst %/,cd % &&,$(objpfx)) \
+	    sed -n -e 's@\$$(common-objpfx)@$(common-objpfx)@g' \
+		   -e 's@\$$(objpfx)@$(objpfx)@g' \
+		   -e '/stub-tag\.h/{; g; s/./&/p; }' \
+		   -e '/:/{x; s/^.*$$//; x; }' \
+		   -e 's/^.*://;s/\\$$//;s/^ *\([^ ][^ ]*\) .*$$/\1/' \
+		   -e '/^[^ ][^ ]*$$/{G;s/^.*\n\(..*\)/\1/;s/\n//;h; }' \
+		   $(patsubst $(objpfx)%,%,$^)) | sort | uniq`; \
+	sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
+	    $$c /dev/null > $@T
 	mv -f $@T $@
+else
+	> $@
+endif
 
 # Make the distribution tar file.
 
