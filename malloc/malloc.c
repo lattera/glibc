@@ -1772,15 +1772,15 @@ __malloc_check_init()
 
 static int dev_zero_fd = -1; /* Cached file descriptor for /dev/zero. */
 
-#define MMAP(size, prot, flags) ((dev_zero_fd < 0) ? \
+#define MMAP(addr, size, prot, flags) ((dev_zero_fd < 0) ? \
  (dev_zero_fd = open("/dev/zero", O_RDWR), \
-  mmap(0, (size), (prot), (flags), dev_zero_fd, 0)) : \
-   mmap(0, (size), (prot), (flags), dev_zero_fd, 0))
+  mmap((addr), (size), (prot), (flags), dev_zero_fd, 0)) : \
+   mmap((addr), (size), (prot), (flags), dev_zero_fd, 0))
 
 #else
 
-#define MMAP(size, prot, flags) \
- (mmap(0, (size), (prot), (flags)|MAP_ANONYMOUS, -1, 0))
+#define MMAP(addr, size, prot, flags) \
+ (mmap((addr), (size), (prot), (flags)|MAP_ANONYMOUS, -1, 0))
 
 #endif
 
@@ -1806,7 +1806,7 @@ mmap_chunk(size) size_t size;
    */
   size = (size + SIZE_SZ + page_mask) & ~page_mask;
 
-  p = (mchunkptr)MMAP(size, PROT_READ|PROT_WRITE, MAP_PRIVATE);
+  p = (mchunkptr)MMAP(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE);
   if(p == (mchunkptr) MAP_FAILED) return 0;
 
   n_mmaps++;
@@ -1939,7 +1939,7 @@ new_heap(size) size_t size;
      No swap space needs to be reserved for the following large
      mapping (on Linux, this is the case for all non-writable mappings
      anyway). */
-  p1 = (char *)MMAP(HEAP_MAX_SIZE<<1, PROT_NONE, MAP_PRIVATE|MAP_NORESERVE);
+  p1 = (char *)MMAP(0, HEAP_MAX_SIZE<<1, PROT_NONE, MAP_PRIVATE|MAP_NORESERVE);
   if(p1 == MAP_FAILED)
     return 0;
   p2 = (char *)(((unsigned long)p1 + HEAP_MAX_SIZE) & ~(HEAP_MAX_SIZE-1));
@@ -1980,7 +1980,10 @@ grow_heap(h, diff) heap_info *h; long diff;
     new_size = (long)h->size + diff;
     if(new_size < (long)sizeof(*h))
       return -1;
-    if(mprotect((char *)h + new_size, -diff, PROT_NONE) != 0)
+    /* Try to re-map the extra heap space freshly to save memory, and 
+       make it inaccessible. */ 
+    if((char *)MMAP((char *)h + new_size, -diff, PROT_NONE, 
+		    MAP_PRIVATE|MAP_FIXED) == (char *) MAP_FAILED)
       return -2;
   }
   h->size = new_size;
@@ -2136,7 +2139,10 @@ static void do_check_chunk(ar_ptr, p) arena *ar_ptr; mchunkptr p;
   if(ar_ptr != &main_arena) {
     heap_info *heap = heap_for_ptr(p);
     assert(heap->ar_ptr == ar_ptr);
-    assert((char *)p + sz <= (char *)heap + heap->size);
+    if(p != top(ar_ptr)) 
+      assert((char *)p + sz <= (char *)heap + heap->size); 
+    else 
+      assert((char *)p + sz == (char *)heap + heap->size);
     return;
   }
 #endif
