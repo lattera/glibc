@@ -1,5 +1,5 @@
 /* Declarations for internal libc locale interfaces
-   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96, 97, 98, 99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,7 +65,7 @@ struct locale_data
     const char *string;
     unsigned int word;
   }
-  values[0];	/* Items, usually pointers into `filedata'.  */
+  values __flexarr;	/* Items, usually pointers into `filedata'.  */
 };
 
 /* We know three kinds of collation sorting rules.  */

@@ -1,3 +1,17 @@
+2001-01-12  Andreas Jaeger  <aj@suse.de>
+
+	* posix/fnmatch_loop.c (FCT): Remove signed warnings.
+	* posix/wordexp.c (do_parse_glob): Likewise.
+	* sysdeps/posix/sigblock.c (__sigblock): Likewise.
+	* sysdeps/posix/sigsetmask.c (__sigsetmask): Likewise.
+	* elf/dl-open.c (_dl_open): Likewise.
+	* elf/dl-close.c (_dl_close): Likewise.
+	* elf/dl-load.c (_dl_map_object): Likewise.
+	* iconv/iconv_prog.c (process_fd): Likewise.
+
+	* locale/localeinfo.h (struct locale_data): Use __flexarr instead
+	of a zero-length array.
+
 2001-01-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/cxa_atexit.c (__cxa_atexit): Cast to (void *, int) func.
