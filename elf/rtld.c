@@ -1486,6 +1486,7 @@ print_statistics (void)
     }
 
   /* Print relocation statistics.  */
+#ifndef HP_TIMING_NONAVAIL
   if (HP_TIMING_AVAIL)
     {
       HP_TIMING_PRINT (buf, sizeof (buf), relocate_time);
@@ -1507,13 +1508,14 @@ print_statistics (void)
       *wp = '\0';
       _dl_debug_message (0, " (", buf, "%)\n", NULL);
     }
-
+#endif
   buf[sizeof (buf) - 1] = '\0';
   _dl_debug_message (1, "                 number of relocations: ",
 		     _itoa_word (_dl_num_relocations,
 				 buf + sizeof (buf) - 1, 10, 0),
 		     "\n", NULL);
 
+#ifndef HP_TIMING_NONAVAIL
   /* Time spend while loading the object and the dependencies.  */
   if (HP_TIMING_AVAIL)
     {
@@ -1536,4 +1538,5 @@ print_statistics (void)
       *wp = '\0';
       _dl_debug_message (0, " (", buf, "%)\n", NULL);
     }
+#endif
 }

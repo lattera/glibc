@@ -1,3 +1,8 @@
+2000-04-18  Andreas Jaeger  <aj@suse.de>
+
+	* elf/rtld.c (print_statistics): Added HP_TIMINIG_NONAVAIL where
+	needed.
+
 2000-04-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/Makefile (tests): Add tst-getaddrinfo.
