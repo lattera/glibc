@@ -1,3 +1,11 @@
+2003-09-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* dirent/scandir.c: Include bits/libc-lock.h.
+	(struct scandir_cancel_struct): New type.
+	(cancel_handler): New function.
+	(SCANDIR): Add __libc_cleanup_{push,pop}, save state into
+	scandir_cancel_struct.
+
 2003-09-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/Dist: Remove internal_statvfs.c.

@@ -20,11 +20,35 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <bits/libc-lock.h>
 
 #ifndef SCANDIR
 #define SCANDIR scandir
 #define READDIR __readdir
 #define DIRENT_TYPE struct dirent
+#endif
+
+#ifndef SCANDIR_CANCEL
+#define SCANDIR_CANCEL
+struct scandir_cancel_struct
+{
+  DIR *dp;
+  void *v;
+  size_t cnt;
+};
+
+static void
+cancel_handler (void *arg)
+{
+  struct scandir_cancel_struct *cp = arg;
+  size_t i;
+  void **v = cp->v;
+
+  for (i = 0; i < cp->cnt; ++i)
+    free (v[i]);
+  free (v);
+  (void) __closedir (cp->dp);
+}
 #endif
 
 
@@ -37,7 +61,8 @@ SCANDIR (dir, namelist, select, cmp)
 {
   DIR *dp = __opendir (dir);
   DIRENT_TYPE **v = NULL;
-  size_t vsize = 0, i;
+  size_t vsize = 0;
+  struct scandir_cancel_struct c;
   DIRENT_TYPE *d;
   int save;
 
@@ -47,7 +72,11 @@ SCANDIR (dir, namelist, select, cmp)
   save = errno;
   __set_errno (0);
 
-  i = 0;
+  c.dp = dp;
+  c.v = NULL;
+  c.cnt = 0;
+  __libc_cleanup_push (cancel_handler, &c);
+
   while ((d = READDIR (dp)) != NULL)
     {
       int use_it = select == NULL;
@@ -69,7 +98,7 @@ SCANDIR (dir, namelist, select, cmp)
 	  /* Ignore errors from select or readdir */
 	  __set_errno (0);
 
-	  if (__builtin_expect (i == vsize, 0))
+	  if (__builtin_expect (c.cnt == vsize, 0))
 	    {
 	      DIRENT_TYPE **new;
 	      if (vsize == 0)
@@ -80,6 +109,7 @@ SCANDIR (dir, namelist, select, cmp)
 	      if (new == NULL)
 		break;
 	      v = new;
+	      c.v = (void *) v;
 	    }
 
 	  dsize = &d->d_name[_D_ALLOC_NAMLEN (d)] - (char *) d;
@@ -87,7 +117,7 @@ SCANDIR (dir, namelist, select, cmp)
 	  if (vnew == NULL)
 	    break;
 
-	  v[i++] = (DIRENT_TYPE *) memcpy (vnew, d, dsize);
+	  v[c.cnt++] = (DIRENT_TYPE *) memcpy (vnew, d, dsize);
 	}
     }
 
@@ -95,23 +125,24 @@ SCANDIR (dir, namelist, select, cmp)
     {
       save = errno;
 
-      while (i > 0)
-	free (v[--i]);
+      while (c.cnt > 0)
+	free (v[--c.cnt]);
       free (v);
-
-      i = -1;
+      c.cnt = -1;
     }
   else
     {
       /* Sort the list if we have a comparison function to sort with.  */
       if (cmp != NULL)
-	qsort (v, i, sizeof (*v), cmp);
+	qsort (v, c.cnt, sizeof (*v), cmp);
 
       *namelist = v;
     }
 
+  __libc_cleanup_pop (0);
+
   (void) __closedir (dp);
   __set_errno (save);
 
-  return i;
+  return c.cnt;
 }
