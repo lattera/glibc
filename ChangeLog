@@ -1,3 +1,32 @@
+1998-09-28 23:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/ypclnt.c (__yp_bind): Pretty print.  Optimize readv result
+	check a bit.  Also close socket of domain client.  Close socket
+	in IPPORT_RESERVED error case.
+
+1998-09-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (__cmsg_nxthdr): Use
+	CMSG_ALIGN (fixes a bug) and correct test for availability of
+	another entry.
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Sync with generic
+	Linux version.
+	(__cmsg_nxthdr): Use CMSG_ALIGN (fixes a bug) and correct test for
+	availability of another entry.
+	Patch by ak@muc.de.
+
+	* sysdeps/unix/sysv/linux/netinet/ip.h (IPOPT_NOOP): Fix typo.
+	Patch by ak@muc.de.
+
+1998-09-27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/annexc.c (xsystem): New function.  Use it instead of
+	system.
+
+1998-09-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/longlong.h: Remove #endif for #if removed in last change.
+
 1998-09-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/strftime.c [emacs]: Define my_strftime to emacs_strftimeu.

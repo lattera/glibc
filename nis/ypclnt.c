@@ -64,7 +64,7 @@ __yp_bind (const char *domain, dom_binding **ypdb)
   int is_new = 0;
   int try;
 
-  if ((domain == NULL) || (domain[0] == '\0'))
+  if (domain == NULL || domain[0] == '\0')
     return YPERR_BADARGS;
 
   if (ypdb != NULL)
@@ -116,10 +116,8 @@ __yp_bind (const char *domain, dom_binding **ypdb)
 	      vec[1].iov_base = &ypbr;
 	      vec[1].iov_len = sizeof (ypbr);
 
-	      if (readv (fd, vec, 2) == vec[0].iov_len + vec[1].iov_len)
+	      if (readv (fd, vec, 2) == sizeof (port) + sizeof (ypbr))
 		{
-		  memset (&ysd->dom_server_addr, '\0',
-			  sizeof ysd->dom_server_addr);
 		  ysd->dom_server_addr.sin_family = AF_INET;
 		  memcpy (&ysd->dom_server_addr.sin_port,
 			  ypbr.ypbind_resp_u.ypbind_bindinfo.ypbind_binding_port,
@@ -138,9 +136,10 @@ __yp_bind (const char *domain, dom_binding **ypdb)
 
       if (ysd->dom_vers == -1)
 	{
-	  if(ysd->dom_client)
+	  if (ysd->dom_client)
 	    {
 	      clnt_destroy(ysd->dom_client);
+	      close (ysd->dom_socket);
 	      ysd->dom_client = NULL;
 	      ysd->dom_socket = -1;
 	    }
@@ -164,6 +163,7 @@ __yp_bind (const char *domain, dom_binding **ypdb)
           if (ntohs (clnt_saddr.sin_port) >= IPPORT_RESERVED)
             {
               clnt_destroy (client);
+	      close (clnt_sock);
               if (is_new)
                 free (ysd);
               return YPERR_YPBIND;
@@ -205,11 +205,6 @@ __yp_bind (const char *domain, dom_binding **ypdb)
 	  ysd->dom_domain[YPMAXDOMAIN] = '\0';
         }
 
-      if (ysd->dom_client)
-	{
-	  clnt_destroy (ysd->dom_client);
-	  close (ysd->dom_socket);
-	}
       ysd->dom_socket = RPC_ANYSOCK;
       ysd->dom_client = clntudp_create (&ysd->dom_server_addr, YPPROG, YPVERS,
                                         UDPTIMEOUT, &ysd->dom_socket);

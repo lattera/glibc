@@ -224,7 +224,7 @@ struct ip_timestamp
 #define	IPOPT_EOL		0		/* end of option list */
 #define	IPOPT_END		IPOPT_EOL
 #define	IPOPT_NOP		1		/* no operation */
-#define	IPOPT_NOOP		IP_NOP
+#define	IPOPT_NOOP		IPOPT_NOP
 
 #define	IPOPT_RR		7		/* record packet route */
 #define	IPOPT_TS		68		/* timestamp */
