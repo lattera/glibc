@@ -234,10 +234,10 @@ ucs4_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
   *outptrp = outptr;
 
   /* Determine the status.  */
-  if (*outptrp == outend)
-    result = __GCONV_FULL_OUTPUT;
-  else if (*inptrp == inend)
+  if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
+  else if (*outptrp == outend)
+    result = __GCONV_FULL_OUTPUT;
   else
     result = __GCONV_INCOMPLETE_INPUT;
 
@@ -296,10 +296,10 @@ ucs4_internal_loop_unaligned (const unsigned char **inptrp,
   *outptrp = outptr;
 
   /* Determine the status.  */
-  if (*outptrp == outend)
-    result = __GCONV_FULL_OUTPUT;
-  else if (*inptrp == inend)
+  if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
+  else if (*outptrp == outend)
+    result = __GCONV_FULL_OUTPUT;
   else
     result = __GCONV_INCOMPLETE_INPUT;
 
@@ -392,10 +392,10 @@ internal_ucs4le_loop (const unsigned char **inptrp, const unsigned char *inend,
 #endif
 
   /* Determine the status.  */
-  if (*outptrp == outend)
-    result = __GCONV_FULL_OUTPUT;
-  else if (*inptrp == inend)
+  if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
+  else if (*outptrp == outend)
+    result = __GCONV_FULL_OUTPUT;
   else
     result = __GCONV_INCOMPLETE_INPUT;
 
@@ -438,10 +438,10 @@ internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
 # endif
 
   /* Determine the status.  */
-  if (*outptrp == outend)
-    result = __GCONV_FULL_OUTPUT;
-  else if (*inptrp == inend)
+  if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
+  else if (*outptrp == outend)
+    result = __GCONV_FULL_OUTPUT;
   else
     result = __GCONV_INCOMPLETE_INPUT;
 
@@ -531,10 +531,10 @@ ucs4le_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
   *outptrp = outptr;
 
   /* Determine the status.  */
-  if (*outptrp == outend)
-    result = __GCONV_FULL_OUTPUT;
-  else if (*inptrp == inend)
+  if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
+  else if (*outptrp == outend)
+    result = __GCONV_FULL_OUTPUT;
   else
     result = __GCONV_INCOMPLETE_INPUT;
 
@@ -583,10 +583,10 @@ ucs4le_internal_loop_unaligned (const unsigned char **inptrp,
   *outptrp = outptr;
 
   /* Determine the status.  */
-  if (*outptrp == outend)
-    result = __GCONV_FULL_OUTPUT;
-  else if (*inptrp == inend)
+  if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
+  else if (*outptrp == outend)
+    result = __GCONV_FULL_OUTPUT;
   else
     result = __GCONV_INCOMPLETE_INPUT;
 

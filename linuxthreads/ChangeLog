@@ -1,3 +1,24 @@
+2000-05-06  Kaz Kylheku  <kaz@ashi.footprints.net>
+
+	* internals.h: New thread manager request type, REQ_KICK.
+	* join.c (pthread_exit): main thread now calls exit() instead
+	of _exit() in order to proper process cleanup.
+	* manager.c (__pthread_manager): Do not terminate manager
+	after unblocking main thread; wait for main thread's
+	REQ_PROCESS_EXIT request instead.
+	Also, added REQ_KICK case to handle new request; this just does
+	nothing.
+	* manager.c (pthread_exited): Do not terminate manager after
+	unblocking main thread.
+	* manager.c (__pthread_manager_sighandler): If the main thread
+	is waiting for all other threads to die, send a REQ_KICK into
+	the thread manager request pipe to get it to clean out the threads
+	and unblock the main thread as soon as possible. This fixes
+	the 2000 millisecond hang on shutdown bug.
+	* Examples/ex7.c: New file, tests shutdown behavior when all threads
+	including the main one call pthread_exit(), or implicitly do so.
+	* Makefile (tests): Add ex7.
+
 2000-05-05  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/i386/getcpuclockid.c

@@ -4,6 +4,12 @@
 	* iconv/tst-iconv1.c: New file.
 	* iconv/gconv_simple.c (internal_ucs4_loop): Prefer reporting
 	empty input buffer over full output buffer.
+	(ucs4_internal_loop): Likewise.
+	(ucs4_internal_loop_unaligned): Likewise.
+	(internal_ucs4le_loop): Likewise.
+	(internal_ucs4le_loop_unaligned): Likewise.
+	(ucs4le_internal_loop): Likewise.
+	(ucs4le_internal_loop_unaligned): Likewise.
 	Reported by yaoz@nih.gov.
 
 2000-05-06  Bruno Haible  <haible@clisp.cons.org>
