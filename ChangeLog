@@ -1,3 +1,7 @@
+1999-07-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/math.texi (FP Function Optimization): Mention drawbacks.
+
 1999-07-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/mblen.c: Use static state.

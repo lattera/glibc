@@ -1730,6 +1730,10 @@ are necessary.  This increases the speed significantly.  But the
 drawback is that the code size increases and this increase is not always
 neglectable.
 
+The speed increase has one drawback: the inline functions might not set
+@code{errno} and might not have the same precission as the library
+functions.
+
 In cases where the inline functions and macros are not wanted the symbol
 @code{__NO_MATH_INLINES} should be defined before any system header is
 included.  This will make sure only library functions are used.  Of
