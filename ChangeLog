@@ -1,4 +1,72 @@
-2000-09-30 H.J. Lu  <hjl@gnu.org>
+2000-09-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/programs/charmap-dir.h: New file.
+	* locale/programs/charmap-dir.c: New file.
+	* locale/programs/linereader.h (lr_create): New declaration.
+	* locale/programs/linereader.c (lr_create): New function, split out
+	from lr_open.
+	(lr_open): Tailcall lr_create.
+	* locale/programs/locale.c: Include "charmap-dir.h". Don't include
+	<unistd.h>.
+	(xstrdup): New declaration.
+	(more_help): Use xstrdup instead of strdup.
+	(write_locales): Likewise. When encountering a symbolic link, call
+	stat.
+	(write_charmaps): Simplify using the charmap-dir.h functions.
+	Use xstrdup instead of strdup.
+	* locale/programs/charmap.c: Include "charmap-dir.h". Don't include
+	<dirent.h> and <unistd.h>.
+	(cmlr_open): New function.
+	(charmap_read): Use cmlr_open instead of lr_open. Simplify using the
+	charmap-dir.h functions.
+	* locale/Makefile (distribute): Add charmap-dir.h.
+	(lib-modules): Add charmap-dir.
+	(CFLAGS-charmap-dir.c): Set to -Wno-write-strings, because posix_spawn
+	wants a 'char **', not a 'const char **'.
+	* include/spawn.h: New file.
+
+2000-09-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* posix/spawn_faction_init.c: Include "spawn_int.h".
+	(__posix_spawn_file_actions_realloc): Fix second realloc argument.
+
+2000-09-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/programs/config.h (DEFAULT_CHARMAP): Set to ANSI_X3.4-1968.
+
+2000-09-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* wcsmbs/wcwidth.h (__ctype32_wctype): Remove declaration.
+	(internal_wcwidth): Remove the tests for L'\0' and iswprint.
+	* locale/programs/ld-ctype.c (find_idx): If max == NULL, return
+	a pointer to the table entry, without extending the table.
+	(allocate_arrays): Set a width only for characters with 'print'
+	property. Set the width of L'\0' to 0.
+	* locale/C-ctype.c (_nl_C_LC_CTYPE_width): Use default entry 0xff
+	for unprintable characters.  Set entry of NUL to 0.
+
+2000-09-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/programs/charmap.c (charmap_read): Avoid redundant tests.
+	Don't forget to call closedir when the filename was found as a
+	code_set_name.
+
+2000-09-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconv/gconv.h (__gconv_trans_context_fct): Change first argument's
+	type to 'void *'.
+
+2000-09-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/programs/ld-ctype.c (wctype_table_init): Initialize level1,
+	level2, and level3 as well.
+	(wctype_table_add): Remove a few unnecessary conditionals.
+
+2000-09-30  Ralf Baechle  <ralf@gnu.org>
+
+	* wcsmbs/Versions [libc] (GLIBC_2.0): Add __mbrtowc.
+
+2000-09-30  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/ieee754/ldbl-96/s_ceill.c (__ceill): Handle overflow.
 	* sysdeps/ieee754/ldbl-96/s_floorl.c (__floorl): Likewise.

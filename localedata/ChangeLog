@@ -1,3 +1,7 @@
+2000-09-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* SUPPORTED: Add ko_KR.UTF-8.
+
 2000-10-01  Bruno Haible  <haible@clisp.cons.org>
 
 	* charmaps/BIG5: Add a width table.
