@@ -30,7 +30,7 @@ __lll_lock_wait (int *futex, int val)
   do
     {
       lll_futex_wait (futex, val + 1);
-      val = __lll_add (futex, 1);
+      val = atomic_exchange_and_add (futex, 1);
     }
   while (val != 0);
   *futex = 2;
@@ -70,7 +70,7 @@ __lll_timedlock_wait (int *futex, int val, const struct timespec *abstime)
       if (lll_futex_timed_wait (futex, val + 1, &rt) == -ETIMEDOUT)
 	return ETIMEDOUT;
     }
-  while ((val = __lll_add (futex, 1)) != 0);
+  while ((val = atomic_exchange_and_add (futex, 1)) != 0);
 
   *futex = 2;
   return 0;
@@ -83,7 +83,7 @@ hidden_proto (__lll_timedlock_wait)
 int
 lll_unlock_wake_cb (int *futex)
 {
-  int val = __lll_test_and_set (futex, 0);
+  int val = atomic_exchange (futex, 0);
 
   if (__builtin_expect (val > 1, 0))
     lll_futex_wake (futex, 1);
