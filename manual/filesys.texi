@@ -703,7 +703,7 @@ set since then the current directory is the one the current item is
 found in.
 @item int level
 While processing the directory the function tracks how many directories
-have been examineed to find the current item.  This nesting level is
+have been examined to find the current item.  This nesting level is
 @math{0} for the item given starting item (file or directory) and is
 incremented by one for each entered directory.
 @end table

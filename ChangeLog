@@ -1,3 +1,7 @@
+1999-06-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/bits/string2.h (strnlen): Remove extra prototype.
+
 1999-06-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/filesys.texi (Working on Directory Trees): Fix typos.

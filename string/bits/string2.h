@@ -943,7 +943,6 @@ __strpbrk_c3 (__const char *__s, char __accept1, char __accept2,
 
 #if defined __USE_GNU && !defined _FORCE_INLINES
 # ifndef _HAVE_STRING_ARCH_strnlen
-__STRING_INLINE size_t strnlen (__const char *__string, size_t __maxlen);
 __STRING_INLINE size_t
 strnlen (__const char *__string, size_t __maxlen)
 {
