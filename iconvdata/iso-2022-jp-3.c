@@ -1,5 +1,5 @@
 /* Conversion module for ISO-2022-JP-3.
-   Copyright (C) 1998-1999, 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 1998-1999, 2000-2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998,
    and Bruno Haible <bruno@clisp.org>, 2002.
@@ -61,8 +61,9 @@ enum
   JISX0208_1983_set = 2 << 3,	/* Esc $ B */
   JISX0201_Roman_set = 3 << 3,	/* Esc ( J */
   JISX0201_Kana_set = 4 << 3,	/* Esc ( I */
-  JISX0213_1_set = 5 << 3,	/* Esc $ ( O */
+  JISX0213_1_2000_set = 5 << 3,	/* Esc $ ( O */
   JISX0213_2_set = 6 << 3,	/* Esc $ ( P */
+  JISX0213_1_2004_set = 7 << 3,	/* Esc $ ( Q */
   CURRENT_SEL_MASK = 7 << 3
 };
 
@@ -211,10 +212,12 @@ enum
 	      }								      \
 	    else if (inptr[2] == '(')					      \
 	      {								      \
-		if (inptr[3] == 'O')					      \
+		if (inptr[3] == 'O' || inptr[3] == 'Q')			      \
 		  {							      \
 		    /* JIS X 0213 plane 1 selected.  */			      \
-		    set = JISX0213_1_set;				      \
+		    /* In this direction we don't need to distinguish the     \
+		       versions from 2000 and 2004. */			      \
+		    set = JISX0213_1_2004_set;				      \
 		    inptr += 4;						      \
 		    continue;						      \
 		  }							      \
@@ -274,7 +277,7 @@ enum
 	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
       }									      \
-    else /* (set == JISX0213_1_set || set == JISX0213_2_set) */		      \
+    else /* (set == JISX0213_1_2004_set || set == JISX0213_2_set) */	      \
       {									      \
 	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
 	  {								      \
@@ -282,8 +285,9 @@ enum
 	    break;							      \
 	  }								      \
 									      \
-	ch = jisx0213_to_ucs4 (((set - JISX0213_1_set + (1 << 3)) << 5) + ch, \
-			       inptr[1]);				      \
+	ch = jisx0213_to_ucs4 (						      \
+	       ((JISX0213_1_2004_set - set + (1 << 3)) << 5) + ch,	      \
+	       inptr[1]);						      \
 	if (ch == 0)							      \
 	  STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 									      \
@@ -408,7 +412,10 @@ static const struct
 	    /* We know the combined character is in JISX0213 plane 1,	      \
 	       but the buffered character may have been in JISX0208 or in     \
 	       JISX0213 plane 1.  */					      \
-	    size_t need = (lasttwo >> 16 || set != JISX0213_1_set ? 4 : 0);   \
+	    size_t need =						      \
+	      (lasttwo >> 16						      \
+	       || (set != JISX0213_1_2000_set && set != JISX0213_1_2004_set)  \
+	       ? 4 : 0);						      \
 									      \
 	    if (__builtin_expect (outptr + need + 2 > outend, 0))	      \
 	      {								      \
@@ -422,7 +429,7 @@ static const struct
 		*outptr++ = '$';					      \
 		*outptr++ = '(';					      \
 		*outptr++ = 'O';					      \
-		set = JISX0213_1_set;					      \
+		set = JISX0213_1_2000_set;				      \
 	      }								      \
 	    lasttwo = comp_table_data[idx].composed;			      \
 	    *outptr++ = (lasttwo >> 8) & 0xff;				      \
@@ -529,11 +536,16 @@ static const struct
       }									      \
     else								      \
       {									      \
-	/* (set == JISX0213_1_set || set == JISX0213_2_set) */		      \
+	/* (set == JISX0213_1_2000_set || set == JISX0213_1_2004_set	      \
+	    || set == JISX0213_2_set) */				      \
 	uint32_t jch = ucs4_to_jisx0213 (ch);				      \
 									      \
 	if (jch != 0							      \
-	    && (set == (jch & 0x8000 ? JISX0213_2_set : JISX0213_1_set)))     \
+	    && (jch & 0x8000						      \
+		? set == JISX0213_2_set					      \
+		: (set == JISX0213_1_2004_set				      \
+		   || (set == JISX0213_1_2000_set			      \
+		       && !jisx0213_added_in_2004_p (jch)))))		      \
 	  {								      \
 	    if (jch & 0x0080)						      \
 	      {								      \
@@ -658,7 +670,11 @@ static const struct
 		if (jch != 0)						      \
 		  {							      \
 		    int new_set =					      \
-		      (jch & 0x8000 ? JISX0213_2_set : JISX0213_1_set);	      \
+		      (jch & 0x8000					      \
+		       ? JISX0213_2_set					      \
+		       : jisx0213_added_in_2004_p (jch)			      \
+			 ? JISX0213_1_2004_set				      \
+			 : JISX0213_1_2000_set);			      \
 									      \
 		    if (set != new_set)					      \
 		      {							      \
@@ -670,7 +686,8 @@ static const struct
 			*outptr++ = ESC;				      \
 			*outptr++ = '$';				      \
 			*outptr++ = '(';				      \
-			*outptr++ = ((new_set - JISX0213_1_set) >> 3) + 'O';  \
+			*outptr++ =					      \
+			  ((new_set - JISX0213_1_2000_set) >> 3) + 'O';	      \
 			set = new_set;					      \
 		      }							      \
 									      \

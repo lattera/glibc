@@ -1,5 +1,5 @@
 /* Conversion from and to IBM932.
-   Copyright (C) 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 2000-2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@jp.ibm.com>, 2000.
 
@@ -169,20 +169,21 @@
 	high = (sizeof (__ucs4_to_ibm932db) >> 1)			      \
 		/ sizeof (__ucs4_to_ibm932db[0][FROM]);			      \
 	pccode = ch;							      \
-	while (low <= high)						      \
-	  {								      \
-	    i = (low + high) >> 1;					      \
-	    if (pccode < __ucs4_to_ibm932db[i][FROM])			      \
-	      high = i - 1;						      \
-	    else if (pccode > __ucs4_to_ibm932db[i][FROM])		      \
-	      low = i + 1;						      \
-	    else 							      \
-	      {								      \
-		pccode = __ucs4_to_ibm932db[i][TO];			      \
-		found = true;						      \
-		break;							      \
-	      }								      \
-	  }								      \
+	if (__builtin_expect (rp != NULL, 1))				      \
+	  while (low < high)						      \
+	    {								      \
+	      i = (low + high) >> 1;					      \
+	      if (pccode < __ucs4_to_ibm932db[i][FROM])			      \
+		high = i;						      \
+	      else if (pccode > __ucs4_to_ibm932db[i][FROM])		      \
+		low = i + 1;						      \
+	      else 							      \
+		{							      \
+		  pccode = __ucs4_to_ibm932db[i][TO];			      \
+		  found = true;						      \
+		  break;						      \
+		}							      \
+	    }								      \
 	if (found) 							      \
 	  {								      \
 	    if (__builtin_expect (outptr + 2 > outend, 0))		      \

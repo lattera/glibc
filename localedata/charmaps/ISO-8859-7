@@ -5,6 +5,7 @@
 %  source: ECMA registry
 
 % alias ISO-IR-126
+% alias ISO_8859-7:2003
 % alias ISO_8859-7:1987
 % alias ISO_8859-7
 % alias ELOT_928
@@ -176,10 +177,13 @@ CHARMAP
 <U2018>     /xa1         LEFT SINGLE QUOTATION MARK
 <U2019>     /xa2         RIGHT SINGLE QUOTATION MARK
 <U00A3>     /xa3         POUND SIGN
+<U20AC>     /xa4         EURO SIGN
+<U20AF>     /xa5         DRACHMA SIGN
 <U00A6>     /xa6         BROKEN BAR
 <U00A7>     /xa7         SECTION SIGN
 <U00A8>     /xa8         DIAERESIS
 <U00A9>     /xa9         COPYRIGHT SIGN
+<U037A>     /xaa         GREEK YPOGEGRAMMENI
 <U00AB>     /xab         LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
 <U00AC>     /xac         NOT SIGN
 <U00AD>     /xad         SOFT HYPHEN

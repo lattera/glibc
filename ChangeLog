@@ -1,3 +1,33 @@
+2004-08-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* iconvdata/ibm932.c (BODY): Avoid binary search for ch >= 0xffff.
+	Always treat high as highest number in range + 1.
+	* iconvdata/ibm943.c (BODY): Likewise.
+
+2004-07-31  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/JISX0213.TXT: Updated to JISX0213 plane 1 version 2004.
+	* iconvdata/jisx0213.c (__jisx0213_to_ucs_main,
+	__jisx0213_to_ucs_pagestart, __jisx0213_from_ucs_level1,
+	__jisx0213_from_ucs_level2): Regenerated.
+	* iconvdata/jisx0213.h (jisx0213_added_in_2004_p): New function.
+	* iconvdata/iso-2022-jp-3.c (JISX0213_1_2000_set): Renamed from
+	JISX0213_1_set.
+	(JISX0213_1_2004_set): New enum value.
+	(BODY for FROM_LOOP): Treat ESC $ ( Q like ESC $ ( O.
+	(BODY for TO_LOOP): For JISX 0213 plane 1 characters, emit ESC $ ( O
+	when possible, ESC $ ( Q when needed.
+	* iconvdata/testdata/EUC-JISX0213: Add the 10 new characters.
+	* iconvdata/testdata/EUC-JISX0213..UTF8: Update.
+	* iconvdata/testdata/SHIFT_JISX0213: Add the 10 new characters.
+	* iconvdata/testdata/SHIFT_JISX0213..UTF8: Update.
+	* iconvdata/testdata/ISO-2022-JP-3: Add the 10 new JISX0213 characters.
+	* iconvdata/testdata/ISO-2022-JP-3..UTF8: Update.
+
+2004-07-22  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/gconv-modules (ISO-8859-7): Add alias ISO_8859-7:2003.
+
 2004-07-29  David S. Miller  <davem@redhat.com>
 
 	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S (memcpy): Optimize

@@ -299,6 +299,7 @@ module	INTERNAL		ISO-8859-6//		ISO8859-6	1
 
 #	from			to			module		cost
 alias	ISO-IR-126//		ISO-8859-7//
+alias	ISO_8859-7:2003//	ISO-8859-7//
 alias	ISO_8859-7:1987//	ISO-8859-7//
 alias	ISO_8859-7//		ISO-8859-7//
 alias	ISO8859-7//		ISO-8859-7//

@@ -1,5 +1,5 @@
 /* Functions for JISX0213 conversion.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <bruno@clisp.org>, 2002.
 
@@ -75,6 +75,29 @@ ucs4_to_jisx0213 (uint32_t ucs)
 	return __jisx0213_from_ucs_level2[(index1 << 6) + (ucs & 0x3f)];
     }
   return 0x0000;
+}
+
+static inline int
+__attribute ((always_inline))
+jisx0213_added_in_2004_p (uint16_t val)
+{
+  /* From JISX 0213:2000 to JISX 0213:2004, 10 characters were added to
+     plane 1, and plane 2 was left unchanged.  See ISO-IR-233.  */
+  switch (val >> 8)
+    {
+    case 0x2e:
+      return val == 0x2e21;
+    case 0x2f:
+      return val == 0x2f7e;
+    case 0x4f:
+      return val == 0x4f54 || 0x4f7e;
+    case 0x74:
+      return val == 0x7427;
+    case 0x7e:
+      return val >= 0x7e7a && val <= 0x7e7e;
+    default:
+      return 0;
+    }
 }
 
 #endif /* _JISX0213_H */

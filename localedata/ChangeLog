@@ -1,3 +1,17 @@
+2004-07-31  Bruno Haible  <bruno@clisp.org>
+
+	* charmaps/EUC-JISX0213: Updated to JISX0213 plane 1 version 2004.
+	* charmaps/SHIFT_JISX0213: Likewise.
+
+2004-07-22  Bruno Haible  <bruno@clisp.org>
+
+	* charmaps/ISO-8859-7: Add mappings for 0xA4, 0xA5, 0xAA.  Add alias
+	ISO_8859-7:2003.
+
+2004-07-22  Bruno Haible  <bruno@clisp.org>
+
+	* charmaps/ISO-8859-11: Define identity mapping for 0x80..0x9F.
+
 2004-07-14  Petter Reinholdtsen  <pere@hungry.com>
 
 	* locales/kr_KO: Change month names to use latin numbers instead

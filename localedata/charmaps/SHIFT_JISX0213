@@ -6,7 +6,7 @@
 
 % Shift_JISX0213
 % Bruno Haible <bruno@clisp.org>, Gaspar Sinai, 2002
-% Last changed: 2002-04-15
+% Last changed: 2004-07-31
 
 CHARMAP
 <U0000>     /x00         <control>
@@ -165,7 +165,7 @@ CHARMAP
 <U3006>     /x81/x59     IDEOGRAPHIC CLOSING MARK
 <U3007>     /x81/x5a     IDEOGRAPHIC NUMBER ZERO
 <U30FC>     /x81/x5b     KATAKANA-HIRAGANA PROLONGED SOUND MARK
-<U2015>     /x81/x5c     HORIZONTAL BAR
+<U2014>     /x81/x5c     EM DASH
 <U2010>     /x81/x5d     HYPHEN
 <UFF0F>     /x81/x5e     FULLWIDTH SOLIDUS
 <UFF3C>     /x81/x5f     FULLWIDTH REVERSE SOLIDUS
@@ -350,7 +350,7 @@ CHARMAP
 <UFF17>     /x82/x56     FULLWIDTH DIGIT SEVEN
 <UFF18>     /x82/x57     FULLWIDTH DIGIT EIGHT
 <UFF19>     /x82/x58     FULLWIDTH DIGIT NINE
-<U2299>     /x82/x59     CIRCLED DOT OPERATOR
+<U29BF>     /x82/x59     CIRCLED BULLET
 <U25C9>     /x82/x5a     FISHEYE
 <U303D>     /x82/x5b     PART ALTERNATION MARK
 <UFE46>     /x82/x5c     WHITE SESAME DOT
@@ -1320,6 +1320,7 @@ CHARMAP
 <U22BF>     /x87/x99     RIGHT TRIANGLE
 <U2756>     /x87/x9d     BLACK DIAMOND MINUS WHITE X
 <U261E>     /x87/x9e     WHITE RIGHT POINTING INDEX
+<U4FF1>     /x87/x9f     <CJK>
 <U0002000B> /x87/xa0     <CJK>
 <U3402>     /x87/xa1     <CJK>
 <U4E28>     /x87/xa2     <CJK>
@@ -1506,6 +1507,7 @@ CHARMAP
 <U000218BD> /x88/x9b     <CJK>
 <U5B19>     /x88/x9c     <CJK>
 <U5B25>     /x88/x9d     <CJK>
+<U525D>     /x88/x9e     <CJK>
 <U4E9C>     /x88/x9f     <CJK>
 <U5516>     /x88/xa0     <CJK>
 <U5A03>     /x88/xa1     <CJK>
@@ -4471,6 +4473,7 @@ CHARMAP
 <U6E7E>     /x98/x70     <CJK>
 <U7897>     /x98/x71     <CJK>
 <U8155>     /x98/x72     <CJK>
+<U00020B9F> /x98/x73     <CJK>
 <U5B41>     /x98/x74     <CJK>
 <U5B56>     /x98/x75     <CJK>
 <U5B7D>     /x98/x76     <CJK>
@@ -4512,6 +4515,7 @@ CHARMAP
 <U5DA7>     /x98/x9b     <CJK>
 <U5DB8>     /x98/x9c     <CJK>
 <U5DCB>     /x98/x9d     <CJK>
+<U541E>     /x98/x9e     <CJK>
 <U5F0C>     /x98/x9f     <CJK>
 <U4E10>     /x98/xa0     <CJK>
 <U4E15>     /x98/xa1     <CJK>
@@ -7965,6 +7969,7 @@ CHARMAP
 <U7464>     /xea/xa2     <CJK>
 <U51DC>     /xea/xa3     <CJK>
 <U7199>     /xea/xa4     <CJK>
+<U5653>     /xea/xa5     <CJK>
 <U5DE2>     /xea/xa6     <CJK>
 <U5E14>     /xea/xa7     <CJK>
 <U5E18>     /xea/xa8     <CJK>
@@ -8987,6 +8992,11 @@ CHARMAP
 <U9F94>     /xef/xf5     <CJK>
 <U9F97>     /xef/xf6     <CJK>
 <U9FA2>     /xef/xf7     <CJK>
+<U59F8>     /xef/xf8     <CJK>
+<U5C5B>     /xef/xf9     <CJK>
+<U5E77>     /xef/xfa     <CJK>
+<U7626>     /xef/xfb     <CJK>
+<U7E6B>     /xef/xfc     <CJK>
 <U00020089> /xf0/x40     <CJK>
 <U4E02>     /xf0/x41     <CJK>
 <U4E0F>     /xf0/x42     <CJK>
