@@ -5,6 +5,9 @@
 
 	* elf/elf.h: Add DT_FLAGS_1 and the DF_1_* flag definitions.
 
+	* elf/sprof.c: Implement -c/--call-pairs option to emit list with
+	caller/callee and the number of calls.
+
 1998-07-29  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (__lseek): New function.

@@ -74,6 +74,8 @@ void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 static const struct argp_option options[] =
 {
   { NULL, 0, NULL, 0, N_("Output selection:") },
+  { "call-pairs", 'c', NULL, 0,
+    N_("print list of count paths and their number of use") },
   { "flat-profile", 'p', NULL, 0,
     N_("generate flat profile with counts and ticks") },
   { "graph", 'q', NULL, 0, N_("generate call graph") },
@@ -104,6 +106,7 @@ static enum
   NONE = 0,
   FLAT_MODE = 1 << 0,
   CALL_GRAPH_MODE = 1 << 1,
+  CALL_PAIRS = 1 << 2,
 
   DEFAULT_MODE = FLAT_MODE | CALL_GRAPH_MODE
 } mode;
@@ -218,6 +221,7 @@ static void read_symbols (struct shobj *shobj);
 static void add_arcs (struct profdata *profdata);
 static void generate_flat_profile (struct profdata *profdata);
 static void generate_call_graph (struct profdata *profdata);
+static void generate_call_pair_list (struct profdata *profdata);
 
 
 int
@@ -311,6 +315,9 @@ no filename for profiling data given and shared object `%s' has no soname"),
   if (mode & CALL_GRAPH_MODE)
     generate_call_graph (profdata_handle);
 
+  if (mode & CALL_PAIRS)
+    generate_call_pair_list (profdata_handle);
+
   /* Free the resources.  */
   unload_shobj (shobj_handle);
   unload_profdata (profdata_handle);
@@ -325,6 +332,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
 {
   switch (key)
     {
+    case 'c':
+      mode |= CALL_PAIRS;
+      break;
     case 'p':
       mode |= FLAT_MODE;
       break;
@@ -1184,7 +1194,7 @@ generate_call_graph (struct profdata *profdata)
 	    printf ("            %8.2f%8.2f%9" PRIdMAX "/%-9" PRIdMAX "   %s",
 		    (runp->idx != (size_t) -1l
 		     ? sortsym[runp->idx]->ticks * tick_unit : 0.0),
-		    0.0, /* FIXME: what's time for the childern, recursive */
+		    0.0, /* FIXME: what's time for the children, recursive */
 		    runp->count, sortsym[cnt]->calls,
 		    (runp->idx != (size_t) -1l ?
 		     sortsym[runp->idx]->name : "<UNKNOWN>"));
@@ -1202,7 +1212,7 @@ generate_call_graph (struct profdata *profdata)
 		7 - n, " ",
 		total_ticks ? (100.0 * sortsym[cnt]->ticks) / total_ticks : 0,
 		sortsym[cnt]->ticks * tick_unit,
-		0.0, /* FIXME: what's time for the childern, recursive */
+		0.0, /* FIXME: what's time for the children, recursive */
 		sortsym[cnt]->calls,
 		sortsym[cnt]->name, cnt);
 
@@ -1213,7 +1223,7 @@ generate_call_graph (struct profdata *profdata)
 	    printf ("            %8.2f%8.2f%9" PRIdMAX "/",
 		    (runp->idx != (size_t) -1l
 		     ? sortsym[runp->idx]->ticks * tick_unit : 0.0),
-		    0.0, /* FIXME: what's time for the childern, recursive */
+		    0.0, /* FIXME: what's time for the children, recursive */
 		    runp->count);
 
 	    if (runp->idx != (size_t) -1l)
@@ -1228,5 +1238,41 @@ generate_call_graph (struct profdata *profdata)
 	  }
 
 	fputs ("-----------------------------------------------\n", stdout);
+      }
+}
+
+
+static void
+generate_call_pair_list (struct profdata *profdata)
+{
+  size_t cnt;
+
+  for (cnt = 0; cnt < symidx; ++cnt)
+    if (sortsym[cnt]->froms != NULL || sortsym[cnt]->tos != NULL)
+      {
+	struct arc_list *runp;
+
+	/* First print the incoming arcs.  */
+	runp = sortsym[cnt]->froms;
+	while (runp != NULL)
+	  {
+	    if (runp->idx == (size_t) -1l)
+	      printf ("\
+<UNKNOWN>                          %-34s %9" PRIdMAX "\n",
+		      sortsym[cnt]->name, runp->count);
+	    runp = runp->next;
+	  }
+
+	/* Next the outgoing arcs.  */
+	runp = sortsym[cnt]->tos;
+	while (runp != NULL)
+	  {
+	    printf ("%-34s %-34s %9" PRIdMAX "\n",
+		    sortsym[cnt]->name,
+		    (runp->idx != (size_t) -1l
+		     ? sortsym[runp->idx]->name : "<UNKNOWN>"),
+		    runp->count);
+	    runp = runp->next;
+	  }
       }
 }
