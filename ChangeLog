@@ -1,3 +1,8 @@
+2003-10-31  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/strncmp.S: New File.
+	* sysdeps/powerpc/powerpc64/strncmp.S: New File.
+
 2003-11-01  Randolph Chung  <tausq@debian.org>
 
 	* sysdeps/unix/sysv/linux/hppa/sysdep.h (LOAD_ARGS_0, LOAD_ARGS_1,
