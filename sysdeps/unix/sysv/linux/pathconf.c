@@ -1,5 +1,5 @@
 /* Linux specific extensions to pathconf.
-   Copyright (C) 1991, 1995, 1996, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1991, 95, 96, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,10 @@
 #include <sys/statfs.h>
 
 #include "linux_fsinfo.h"
+
+
+/* The Linux kernel header mentioned this as a kind of generic value.  */
+#define LINUX_LINK_MAX	127
 
 static long int posix_pathconf (const char *path, int name);
 
@@ -72,7 +76,7 @@ __pathconf (path, name)
 	  return REISERFS_LINK_MAX;
 
 	default:
-	  return LINK_MAX;
+	  return LINUX_LINK_MAX;
 	}
     }
 
