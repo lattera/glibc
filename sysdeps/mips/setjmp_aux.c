@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,12 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <setjmp.h>
-
-#ifndef	__GNUC__
-  #error This file uses GNU C extensions; you must compile with GCC.
-#endif
 
 /* This function is only called via the assembly language routine
    __setjmp, which arranges to pass in the stack pointer and the frame
@@ -29,7 +24,7 @@ Cambridge, MA 02139, USA.  */
    access them in C.  */
 
 int
-DEFUN(__setjmp_aux, (env, sp, fp), __jmp_buf env AND int sp AND int fp)
+__sigsetjmp_aux (jmp_buf env, int savemask, int sp, int fp)
 {
   /* Store the floating point callee-saved registers...  */
   asm volatile ("s.d $f20, %0" : : "m" (env[0].__fpregs[0]));
@@ -62,8 +57,10 @@ DEFUN(__setjmp_aux, (env, sp, fp), __jmp_buf env AND int sp AND int fp)
   asm volatile ("sw $23, %0" : : "m" (env[0].__regs[7]));
 
   /* .. and finally get and reconstruct the floating point csr.  */
-  asm volatile ("cfc1 $2, $31");
-  asm volatile ("sw $2, %0" : : "m" (env[0].__fpc_csr));
+  asm ("cfc1 %0, $31" : "=r" (env[0].__fpc_csr));
+
+  /* Save the signal mask if requested.  */
+  __sigjmp_save (env, savemask);
 
   return 0;
 }
