@@ -40,7 +40,7 @@ __brk (void *addr)
 	 "trap #0"		/* Perform the system call.  */
 	 : "=d" (d0)
 	 : "0" (SYS_ify (brk)), "g" (addr)
-	 : "%d0", "%d1");
+	 : "%d1");
     newbrk = (void *) d0;
   }
   __curbrk = newbrk;
