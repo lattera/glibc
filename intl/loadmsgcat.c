@@ -87,6 +87,7 @@ char *alloca ();
 
 #ifdef _LIBC
 # include "../locale/localeinfo.h"
+# include <not-cancel.h>
 #endif
 
 /* Provide fallback values for macros that ought to be defined in <inttypes.h>.
@@ -453,9 +454,9 @@ char *alloca ();
 /* Rename the non ISO C functions.  This is required by the standard
    because some ISO C functions will require linking with this object
    file and the name space must not be polluted.  */
-# define open   __open
-# define close  __close
-# define read   __read
+# define open   open_not_cancel_2
+# define close  close_not_cancel_no_status
+# define read   read_not_cancel
 # define mmap   __mmap
 # define munmap __munmap
 #endif
