@@ -1,3 +1,16 @@
+2002-12-19  Roland McGrath  <roland@redhat.com>
+
+	* iconvdata/ibm856.h: Convert GCC extension initializer syntax to C99.
+	* iconvdata/ibm922.h: Likewise.
+	* iconvdata/ibm930.h: Likewise.
+	* iconvdata/ibm932.h: Likewise.
+	* iconvdata/ibm933.h: Likewise.
+	* iconvdata/ibm935.h: Likewise.
+	* iconvdata/ibm937.h: Likewise.
+	* iconvdata/ibm939.h: Likewise.
+	* iconvdata/ibm943.h: Likewise.
+	* iconvdata/isiri-3342.h: Likewise.
+
 2002-12-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* test-skeleton.c (main): Make sure correct value is seen as
