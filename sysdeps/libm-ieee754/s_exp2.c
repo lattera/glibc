@@ -42,14 +42,13 @@ static const volatile double TWOM1000 = 9.3326361850321887899e-302;
 double
 __ieee754_exp2 (double x)
 {
-  static const uint32_t a_minf = 0xff800000;
   static const double himark = (double) DBL_MAX_EXP;
   static const double lomark = (double) (DBL_MIN_EXP - DBL_MANT_DIG - 1) - 1.0;
 
   /* Check for usual case.  */
   if (isless (x, himark) && isgreater (x, lomark))
     {
-      static const float TWO43 = 8796093022208.0;
+      static const double TWO43 = 8796093022208.0;
       int tval, unsafe;
       double rx, x22, result;
       union ieee754_double ex2_u, scale_u;
@@ -125,7 +124,7 @@ __ieee754_exp2 (double x)
   /* Exceptional cases:  */
   else if (isless (x, himark))
     {
-      if (x == *(const float *) &a_minf)
+      if (__isinf (x))
 	/* e^-inf == 0, with no error.  */
 	return 0;
       else

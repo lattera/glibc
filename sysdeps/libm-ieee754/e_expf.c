@@ -66,7 +66,6 @@ static const volatile float TWO127 = 1.7014118346e+38;
 float
 __ieee754_expf (float x)
 {
-  static const uint32_t a_minf = 0xff800000;
   static const float himark = 88.72283935546875;
   static const float lomark = -103.972084045410;
   /* Check for usual case.  */
@@ -144,7 +143,7 @@ __ieee754_expf (float x)
   /* Exceptional cases:  */
   else if (isless (x, himark))
     {
-      if (x == *(const float *) &a_minf)
+      if (__isinff (x))
 	/* e^-inf == 0, with no error.  */
 	return 0;
       else

@@ -71,14 +71,13 @@ static const volatile double TWOM1000 = 9.3326361850321887899e-302;
 double
 __ieee754_exp (double x)
 {
-  static const uint32_t a_minf = 0xff800000;
   static const double himark = 709.7827128933840868;
   static const double lomark = -745.1332191019412221;
   /* Check for usual case.  */
   if (isless (x, himark) && isgreater (x, lomark))
     {
-      static const float TWO43 = 8796093022208.0;
-      static const float TWO52 = 4503599627370496.0;
+      static const double TWO43 = 8796093022208.0;
+      static const double TWO52 = 4503599627370496.0;
       /* 1/ln(2).  */
       static const double M_1_LN2 = 1.442695040888963387;
       /* ln(2), part 1 */
@@ -166,7 +165,7 @@ __ieee754_exp (double x)
   /* Exceptional cases:  */
   else if (isless (x, himark))
     {
-      if (x == *(const float *) &a_minf)
+      if (__isinf (x))
 	/* e^-inf == 0, with no error.  */
 	return 0;
       else

@@ -43,7 +43,6 @@ static const volatile float TWO127 = 1.7014118346e+38;
 float
 __ieee754_exp2f (float x)
 {
-  static const uint32_t a_minf = 0xff800000;
   static const float himark = (float) FLT_MAX_EXP;
   static const float lomark = (float) (FLT_MIN_EXP - FLT_MANT_DIG - 1) - 1.0;
 
@@ -76,7 +75,7 @@ __ieee754_exp2f (float x)
       else
 	{
 	  rx = x - TWO15;
-+	  rx += TWO15;
+	  rx += TWO15;
 	}
       x -= rx;  /* Compute x=x1. */
       /* Compute tval = (ex*256 + t)+128.
@@ -123,7 +122,7 @@ __ieee754_exp2f (float x)
   /* Exceptional cases:  */
   else if (isless (x, himark))
     {
-      if (x == *(const float *) &a_minf)
+      if (__isinff (x))
 	/* e^-inf == 0, with no error.  */
 	return 0;
       else

@@ -1,3 +1,13 @@
+1998-03-01 19:05  H.J. Lu  (hjl@gnu.org)
+
+	* sysdeps/libm-ieee754/e_exp.c (__ieee754_exp): Use __isinf.
+	Changed type of TWO43, TWO52 from float to double.
+	* sysdeps/libm-ieee754/e_expf.c (__ieee754_expf): Use __isinff.
+	* sysdeps/libm-ieee754/s_exp2.c (__ieee754_exp2): Use __isinf.
+	Changed type of TWO43 from float to double.
+	* sysdeps/libm-ieee754/s_exp2f.c (__ieee754_exp2f): Fix a typo.
+	Use __isinff.
+
 1998-03-01 18:52  H.J. Lu  (hjl@gnu.org)
 
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list (osf_settimeofday,
