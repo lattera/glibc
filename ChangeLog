@@ -1,3 +1,11 @@
+Sat Dec 16 10:33:11 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makerules: Use $(do-install-so) for installing shared objects.
+	(do-install-so): New canned sequence.  Make a symlink LIB.so after
+	installing LIB.so.VERSION.
+
+	* inet/netinet/in.h: Fixed typo in IPPORT_WHOIS.
+
 Fri Dec 15 04:41:22 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
 
 	* stdio-common/Makefile (tests): Add bug10.

@@ -482,14 +482,21 @@ install-lib-nosubdir: $(foreach so,$(install-lib.so),\
 
 install: $(slibdir)/libc.so$(libc.so-version)
 $(slibdir)/lib$(libprefix)c.so$(libc.so-version): $(common-objpfx)libc.so
-	$(do-install-program)
+	$(do-install-so)
 
-$(foreach v,$(sort $(foreach so,$(install-lib.so),.so$($(so)-version))),\
+define do-install-so
+$(do-install-program)
+$(patsubst %,ln -s -f $(@F) $(@D)/$(patsubst %$*.so,%,$(<F))$(libprefix)$*.so,\
+	   $(filter-out %.so,$@))
+endef
+
+so-versions := $(sort $(foreach so,$(install-lib.so),.so$($(so)-version)))
+$(foreach v,$(so-versions),\
 	  $(libdir)/lib$(libprefix)%$v): $(common-objpfx)lib%.so
-	$(do-install-program)
-$(foreach v,$(sort $(foreach so,$(install-lib.so),.so$($(so)-version))),\
+	$(do-install-so)
+$(foreach v,$(so-versions),\
 	  $(libdir)/$(libprefix)%$v): $(common-objpfx)%.so
-	$(do-install-program)
+	$(do-install-so)
 endif
 
 ifdef install-bin
