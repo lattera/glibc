@@ -1,3 +1,10 @@
+2003-05-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/st_ZA: New file.
+	* locales/xh_ZA: New file.
+	* locales/zu_ZA: New file.
+	Contribued by Dwayne Bailey <dwayne@translate.org.za>.
+
 2003-05-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/de_DE: Use two-letter abday values.

@@ -558,6 +558,7 @@ POSIX syntax had in mind.
 * Realtime Scheduling::             Scheduling among the process nobility
 * Basic Scheduling Functions::      Get/set scheduling policy, priority
 * Traditional Scheduling::          Scheduling among the vulgar masses
+* CPU Affinity::                    Limiting execution to certain CPUs
 @end menu
 
 
@@ -1245,6 +1246,180 @@ nice (int increment)
 @}
 @end smallexample
 @end deftypefun
+
+
+@node CPU Affinity
+@subsection Limiting execution to certain CPUs
+
+On a multi-processor system the operating system usually distributes
+the different processes which are runnable on all available CPUs in a
+way which allows the system to work most efficiently.  Which processes
+and threads run can be to some extend be control with the scheduling
+functionality described in the last sections.  But which CPU finally
+executes which process or thread is not covered.
+
+There are a number of reasons why a program might want to have control
+over this aspect of the system as well:
+
+@itemize @bullet
+@item
+One thread or process is responsible for absolutely critical work
+which under no circumstances must be interrupted or hindered from
+making process by other process or threads using CPU resources.  In
+this case the special process would be confined to a CPU which no
+other process or thread is allowed to use.
+
+@item
+The access to certain resources (RAM, I/O ports) has different costs
+from different CPUs.  This is the case in NUMA (Non-Uniform Memory
+Architecture) machines.  Preferrably memory should be accessed locally
+but this requirement is usually not visible to the scheduler.
+Therefore forcing a process or thread to the CPUs which have local
+access to the mostly used memory helps to significantly boost the
+performance.
+
+@item
+In controlled runtimes resource allocation and book-keeping work (for
+instance garbage collection) is performance local to processors.  This
+can help to reduce locking costs if the resources do not have to be
+protected from concurrent accesses from different processors.
+@end itemize
+
+The POSIX standard up to this date is of not much help to solve this
+problem.  The Linux kernel provides a set of interfaces to allow
+specifying @emph{affinity sets} for a process.  The scheduler will
+schedule the thread or process on on CPUs specified by the affinity
+masks.  The interfaces which the GNU C library define follow to some
+extend the Linux kernel interface.
+
+@comment sched.h
+@comment GNU
+@deftp {Data Type} cpu_set_t
+This data set is a bitset where each bit represents a CPU.  How the
+system's CPUs are mapped to bits in the bitset is system dependent.
+The data type has a fixed size; in the unlikely case that the number
+of bits are not sufficient to describe the CPUs of the system a
+different interface has to be used.
+
+This type is a GNU extension and is defined in @file{sched.h}.
+@end deftp
+
+To manipulate the bitset, to set and reset bits, a number of macros is
+defined.  Some of the macros take a CPU number as a parameter.  Here
+it is important to never exceed the size of the bitset.  The following
+macro specifies the number of bits in the @code{cpu_set_t} bitset.
+
+@comment sched.h
+@comment GNU
+@deftypevr Macro int CPU_SETSIZE
+The value of this macro is the maximum number of CPUs which can be
+handled with a @code{cpu_set_t} object.
+@end deftypevr
+
+The type @code{cpu_set_t} should be considered opaque; all
+manipulation should happen via the next four macros.
+
+@comment sched.h
+@comment GNU
+@deftypefn Macro void CPU_ZERO (cpu_set_t *@var{set})
+This macro initializes the CPU set @var{set} to be the empty set.
+
+This macro is a GNU extension and is defined in @file{sched.h}.
+@end deftypefn
+
+@comment sched.h
+@comment GNU
+@deftypefn Macro void CPU_SET (int @var{cpu}, cpu_set_t *@var{set})
+This macro adds @var{cpu} to the CPU set @var{set}.
+
+The @var{cpu} parameter must not have side effects since it is
+evaluated more than once.
+
+This macro is a GNU extension and is defined in @file{sched.h}.
+@end deftypefn
+
+@comment sched.h
+@comment GNU
+@deftypefn Macro void CPU_CLR (int @var{cpu}, cpu_set_t *@var{set})
+This macro removes @var{cpu} from the CPU set @var{set}.
+
+The @var{cpu} parameter must not have side effects since it is
+evaluated more than once.
+
+This macro is a GNU extension and is defined in @file{sched.h}.
+@end deftypefn
+
+@comment sched.h
+@comment GNU
+@deftypefn Macro int CPU_ISSET (int @var{cpu}, const cpu_set_t *@var{set})
+This macro returns a nonzero value (true) if @var{cpu} is a member
+of the CPU set @var{set}, and zero (false) otherwise.
+
+The @var{cpu} parameter must not have side effects since it is
+evaluated more than once.
+
+This macro is a GNU extension and is defined in @file{sched.h}.
+@end deftypefn
+
+
+CPU bitsets can be constructed from scratch or the currently installed
+affinity mask can be retrieved from the system.
+
+@comment sched.h
+@comment GNU
+@deftypefun int sched_getaffinity (pid_t @var{pid}, cpu_set_t *@var{cpuset})
+
+This functions stores the CPU affinity mask for the process or thread
+with the ID @var{pid} in the memory pointed to by @var{cpuset}.  If
+successful, the function always initializes all bits in the
+@code{cpu_set_t} object and returns zero.
+
+If @var{pid} does not correspond to a process or thread on the system
+the or the function fails for some other reason, it returns @code{-1}
+and @code{errno} is set to represent the error condition.
+
+@table @code
+@item ESRCH
+No process or thread with the given ID found.
+
+@item EFAULT
+The pointer @var{cpuset} is does not point to a valid object.
+@end table
+
+This function is a GNU extension and is declared in @file{sched.h}.
+@end deftypefun
+
+Note that it is not portably possible to use this information to
+retrieve the information for different POSIX threads.  A separate
+interface must be provided for that.
+
+@comment sched.h
+@comment GNU
+@deftypefun int sched_setaffinity (pid_t @var{pid}, const cpu_set_t *@var{cpuset})
+
+This function installs the affinity mask pointed to by @var{cpuset}
+for the process or thread with the ID @var{pid}.  If successful the
+function returns zero and the scheduler will in future take the
+affinity information into account.
+
+If the function fails it will return @code{-1} and @code{errno} is set
+to the error code:
+
+@table @code
+@item ESRCH
+No process or thread with the given ID found.
+
+@item EFAULT
+The pointer @var{cpuset} is does not point to a valid object.
+
+@item EINVAL
+The bitset is not valid.  This might mean that the affinity set might
+not leave a processor for the process or thread to run on.
+@end table
+
+This function is a GNU extension and is declared in @file{sched.h}.
+@end deftypefun
+
 
 @node Memory Resources
 @section Querying memory available resources

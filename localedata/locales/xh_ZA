@@ -1,0 +1,235 @@
+escape_char  /
+comment_char  %
+
+% ChangeLog
+% 0.1 (2003-05-08):
+%   - Initial Xhosa locale by Zuza Software Foundation
+
+LC_IDENTIFICATION
+title      "Xhosa locale for South Africa"
+source     "Zuza Software Foundation"
+address    "PO Box 13412, Mowbray, 7705, South Africa"
+contact    "Dwayne Bailey"
+email      "dwayne@translate.org.za"
+tel        "+27 (0)21 448 9265"
+fax        "+27 (0)21 448 9574"
+language   "Xhosa"
+territory  "South Africa"
+revision   "0.1"
+date       "2003-05-08"
+%
+category  "xh_ZA:2003";LC_IDENTIFICATION
+category  "xh_ZA:2003";LC_CTYPE
+category  "xh_ZA:2003";LC_COLLATE
+category  "xh_ZA:2003";LC_TIME
+category  "xh_ZA:2003";LC_NUMERIC
+category  "xh_ZA:2003";LC_MONETARY
+category  "xh_ZA:2003";LC_MESSAGES
+category  "xh_ZA:2003";LC_PAPER
+category  "xh_ZA:2003";LC_NAME
+category  "xh_ZA:2003";LC_ADDRESS
+category  "xh_ZA:2003";LC_TELEPHONE
+category  "xh_ZA:2003";LC_MEASUREMENT
+
+END LC_IDENTIFICATION
+
+LC_CTYPE
+% Use the characters described in the charmap file "i18n.tgz"
+copy "i18n"
+END LC_CTYPE
+
+LC_COLLATE
+% Copy the template from ISO/IEC 14651 i.e.
+% use the rules there when making ordered lists of words.
+copy "iso14651_t1"
+END LC_COLLATE
+
+LC_MONETARY
+copy "en_ZA"
+END LC_MONETARY
+
+LC_NUMERIC
+copy "en_ZA"
+END LC_NUMERIC
+
+LC_TIME
+% The abbreviations for the week days:
+% - Caw, Mvu, Bin, Tha, Sin, Hla, Mgq
+abday       "<U0043><U0061><U0077>";/
+            "<U004D><U0076><U0075>";/
+            "<U0042><U0069><U006E>";/
+            "<U0054><U0068><U0061>";/
+            "<U0053><U0069><U006E>";/
+            "<U0048><U006C><U0061>";/
+            "<U004D><U0067><U0071>"
+%
+% The full names of the week days:
+% - Cawe, Mvulo, Lwesibini, Lwesithathu, Lwesine, Lwesihlanu, Mgqibelo
+day         "<U0043><U0061><U0077><U0065>";/
+            "<U004D><U0076><U0075><U006C><U006F>";/
+            "<U004C><U0077><U0065><U0073><U0069><U0062><U0069><U006E><U0069>";/
+            "<U004C><U0077><U0065><U0073><U0069><U0074><U0068><U0061><U0074><U0068><U0075>";/
+            "<U004C><U0077><U0065><U0073><U0069><U006E><U0065>";/
+            "<U004C><U0077><U0065><U0073><U0069><U0068><U006C><U0061><U006E><U0075>";/
+            "<U004D><U0067><U0071><U0069><U0062><U0065><U006C><U006F>"
+%
+% The abbreviations for the months 
+% - Jan, Feb, Mat, Epr, Mey, Jun, Jul, Aga, Sep, Okt, Nov, Dis
+abmon       "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
+            "<U004D><U0061><U0074>";"<U0045><U0070><U0072>";/
+            "<U004D><U0065><U0079>";"<U004A><U0075><U006E>";/
+            "<U004A><U0075><U006C>";"<U0041><U0067><U0061>";/
+            "<U0053><U0065><U0070>";"<U004F><U006B><U0074>";/
+            "<U004E><U006F><U0076>";"<U0044><U0069><U0073>"
+%
+% The full names of the months - 
+% - Janyuwari, Februwari, Matshi, Epreli, Meyi, Juni, Julayi, Agasti, Septemba,
+%   Okthoba, Novemba, Disemba
+mon         "<U004A><U0061><U006E><U0079><U0075><U0077><U0061><U0072><U0069>";/
+            "<U0046><U0065><U0062><U0072><U0075><U0077><U0061><U0072><U0069>";/
+            "<U004D><U0061><U0074><U0073><U0068><U0069>";/
+            "<U0045><U0070><U0072><U0065><U006C><U0069>";/
+            "<U004D><U0065><U0079><U0069>";/
+            "<U004A><U0075><U006E><U0069>";/
+            "<U004A><U0075><U006C><U0061><U0079><U0069>";/
+            "<U0041><U0067><U0061><U0073><U0074><U0069>";/
+            "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0061>";/
+            "<U004F><U006B><U0074><U0068><U006F><U0062><U0061>";/
+            "<U004E><U006F><U0076><U0065><U006D><U0062><U0061>";/
+            "<U0044><U0069><U0073><U0065><U006D><U0062><U0061>"
+%
+% Abreviated date and time representation to be referenced by the "%c" field descriptor -
+d_t_fmt     "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+% "%a" (weekday name),
+% "%d" (day of month as a decimal number),
+% "%b" (month name),
+% "%Y" (year with century as a decimal number),
+% "%T" (24-hour clock time in format HH:MM:SS),
+% "%Z" (Time zone name)
+%
+% Date representation to be referenced by the "%x" field % descriptor -
+% "%d/%m/%Y", day/month/year as decimal numbers (01/01/2000).
+d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+%
+% Time representation to be referenced by the "%X" field descriptor -
+% "%T" (24-hour clock time in format HH:MM:SS)
+t_fmt       "<U0025><U0054>"
+%
+% Define representation of ante meridiem and post meridiem strings -
+% The ""s means default to "AM" and "PM".
+am_pm       "";""
+%
+% Define time representation in 12-hour format with "am_pm", to be referenced by the "%r"
+% field descriptor -
+% The "" means that this format is not supported.
+t_fmt_ampm  ""
+%
+% Date representation not described in ISO/IEC 14652. 
+% Comes out as - "%a %b %e %H:%M:%S %Z %Y" 
+date_fmt "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
+<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
+<U0025><U005A><U0020><U0025><U0059>"
+% which is:
+% abbreviated weekday name,
+% day of month as a decimal number (01 to 31),
+% day of month as a decimal number with leading space (1 to 31),
+% hour (24-hour clock) as a decimal number (00 to 23),
+% minute as a decimal number (00 to 59),
+% seconds as a decimal number (00 to 59),
+% time-zone name,
+% year with century as a decimal number,e.g. 2001.
+%
+END LC_TIME
+
+LC_MESSAGES
+% The affirmative response -
+% "^[yYeE].*"
+yesexpr     "<U005E><U005B><U0079><U0059><U0065><U0045><U005D><U002E><U002A>"
+%
+% The negative response -
+% "^[nNhH].*"
+noexpr      "<U005E><U005B><U006E><U004E><U0068><U0048><U005D><U002E><U002A>"
+%
+END LC_MESSAGES
+
+LC_PAPER
+copy "en_ZA"
+END LC_PAPER
+
+LC_TELEPHONE
+copy "en_ZA"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+copy "en_ZA"
+END LC_MEASUREMENT
+
+LC_NAME
+% Format for addressing a person.
+name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
+<U0025><U006D><U0025><U0074><U0025><U0066>"
+% "%d%t%g%t%m%t%f"
+% "Salutation",
+% "Empty string, or <Space>",
+% "First given name",
+% "Empty string, or <Space>",
+% "Middle names",
+% "Empty string, or <Space>",
+% "Clan names"
+%
+% Salutation for unmarried females - "Nkosazana"
+name_miss   "<U004E><U006B><U006F><U0073><U0061><U007A><U0061><U006E><U0061>"
+%
+% Salutation for males - "Mnumzana"
+name_mr     "<U004D><U006E><U0075><U006D><U007A><U0061><U006E><U0061>"
+%
+% Salutation for married females - "Nkosikazi"
+name_mrs    "<U004E><U006B><U006F><U0073><U0069><U006B><U0061><U007A><U0069>"
+%
+% Salutation valid for all females - "" (no term)
+name_ms     ""
+END LC_NAME
+
+LC_ADDRESS
+% Country name in Xhosa - "Mzantsi Afrika"
+country_name "<U004D><U007A><U0061><U006E><U0074><U0073><U0069><U0020>/
+<U0041><U0066><U0072><U0069><U006B><U0061>"
+%
+% Abbreviated country postal name - "ZA"
+country_post "<U005A><U0041>"
+%
+% ISO 3166 two letter country abbreviation - "ZA"
+country_ab2 "<U005A><U0041>"
+%
+% Representation of postal addresses (minus the addressee's name) in South
+% Africa. (Ignored for now)
+postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
+<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
+<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
+<U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
+<U004E><U0025><U0063><U0025><U004E>"
+% "%f%N%a%N%d%N%b%N%s %h %e %r%N%%z %T%N%c%N", which gives -
+% "firm name",
+% "end of line",
+% "C/O address",
+% "end of line",
+% "department name",
+% "Building name",
+% "end of line",
+% "street or block name",
+% "space",
+% "house number or designation",
+% "space",
+% "floor number",
+% "space",
+% "room number, door designation",
+% "end of line",
+% "postal code",
+% "space",
+% "town, city",
+% "end of line",
+% "country designation for the <country_post> keyword",
+% "end of line
+%
+END LC_ADDRESS
+

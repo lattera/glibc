@@ -1,3 +1,22 @@
+2003-05-09  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/netinet/igmp.h: Don't include kernel
+	headers, add defines from kernel header, move it from here...
+	* inet/netinet/igmp.h: ... to here.
+	* inet/Makefile (headers): Add netinet/igmp.h.
+	* sysdeps/unix/sysv/linux/Makefile: Remove netinet/igmp.h.
+	* sysdeps/unix/sysv/linux/Dist: Remove netinet/igmp.h.
+
+2003-05-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/lio_listio64.c (lio_listio64): If SIG == NULL,
+	use dummy sigevent structure with SIGEV_NONE [PR libc/5015].
+
+2003-05-09  Thorsten Kukuk <kukuk@suse.de>
+
+	* libio/bits/stdio.h: Sync prototypes with libio/stdio.h
+	(remove __THROW from possible cancellation points).
+
 2003-05-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/sched.h (CPU_SETSIZE): Define.

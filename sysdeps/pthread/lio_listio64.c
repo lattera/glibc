@@ -1,5 +1,5 @@
 /* Enqueue and list of read or write requests, 64bit offset version.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -42,6 +42,7 @@ lio_listio64 (mode, list, nent, sig)
      int nent;
      struct sigevent *sig;
 {
+  struct sigevent defsigev;
   struct requestlist *requests[nent];
   int cnt;
   volatile int total = 0;
@@ -52,6 +53,12 @@ lio_listio64 (mode, list, nent, sig)
     {
       __set_errno (EINVAL);
       return -1;
+    }
+
+  if (sig == NULL)
+    {
+      defsigev.sigev_notify = SIGEV_NONE;
+      sig = &defsigev;
     }
 
   /* Request the mutex.  */

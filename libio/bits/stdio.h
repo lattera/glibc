@@ -31,14 +31,14 @@
 #ifdef __USE_EXTERN_INLINES
 /* Write formatted output to stdout from argument list ARG.  */
 __STDIO_INLINE int
-vprintf (__const char *__restrict __fmt, _G_va_list __arg) __THROW
+vprintf (__const char *__restrict __fmt, _G_va_list __arg)
 {
   return vfprintf (stdout, __fmt, __arg);
 }
 
 /* Read a character from stdin.  */
 __STDIO_INLINE int
-getchar (void) __THROW
+getchar (void)
 {
   return _IO_getc (stdin);
 }
@@ -47,14 +47,14 @@ getchar (void) __THROW
 # if defined __USE_POSIX || defined __USE_MISC
 /* This is defined in POSIX.1:1996.  */
 __STDIO_INLINE int
-getc_unlocked (FILE *__fp) __THROW
+getc_unlocked (FILE *__fp)
 {
   return _IO_getc_unlocked (__fp);
 }
 
 /* This is defined in POSIX.1:1996.  */
 __STDIO_INLINE int
-getchar_unlocked (void) __THROW
+getchar_unlocked (void)
 {
   return _IO_getc_unlocked (stdin);
 }
@@ -63,7 +63,7 @@ getchar_unlocked (void) __THROW
 
 /* Write a character to stdout.  */
 __STDIO_INLINE int
-putchar (int __c) __THROW
+putchar (int __c)
 {
   return _IO_putc (__c, stdout);
 }
@@ -72,7 +72,7 @@ putchar (int __c) __THROW
 # ifdef __USE_MISC
 /* Faster version when locking is not necessary.  */
 __STDIO_INLINE int
-fputc_unlocked (int __c, FILE *__stream) __THROW
+fputc_unlocked (int __c, FILE *__stream)
 {
   return _IO_putc_unlocked (__c, __stream);
 }
@@ -82,14 +82,14 @@ fputc_unlocked (int __c, FILE *__stream) __THROW
 # if defined __USE_POSIX || defined __USE_MISC
 /* This is defined in POSIX.1:1996.  */
 __STDIO_INLINE int
-putc_unlocked (int __c, FILE *__stream) __THROW
+putc_unlocked (int __c, FILE *__stream)
 {
   return _IO_putc_unlocked (__c, __stream);
 }
 
 /* This is defined in POSIX.1:1996.  */
 __STDIO_INLINE int
-putchar_unlocked (int __c) __THROW
+putchar_unlocked (int __c)
 {
   return _IO_putc_unlocked (__c, stdout);
 }
@@ -99,7 +99,7 @@ putchar_unlocked (int __c) __THROW
 # ifdef	__USE_GNU
 /* Like `getdelim', but reads up to a newline.  */
 __STDIO_INLINE _IO_ssize_t
-getline (char **__lineptr, size_t *__n, FILE *__stream) __THROW
+getline (char **__lineptr, size_t *__n, FILE *__stream)
 {
   return __getdelim (__lineptr, __n, '\n', __stream);
 }

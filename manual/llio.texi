@@ -1542,19 +1542,28 @@ empty set.
 @comment BSD
 @deftypefn Macro void FD_SET (int @var{filedes}, fd_set *@var{set})
 This macro adds @var{filedes} to the file descriptor set @var{set}.
+
+The @var{filedes} parameter must not have side effects since it is
+evaluated more than once.
 @end deftypefn
 
 @comment sys/types.h
 @comment BSD
 @deftypefn Macro void FD_CLR (int @var{filedes}, fd_set *@var{set})
 This macro removes @var{filedes} from the file descriptor set @var{set}.
+
+The @var{filedes} parameter must not have side effects since it is
+evaluated more than once.
 @end deftypefn
 
 @comment sys/types.h
 @comment BSD
-@deftypefn Macro int FD_ISSET (int @var{filedes}, fd_set *@var{set})
+@deftypefn Macro int FD_ISSET (int @var{filedes}, const fd_set *@var{set})
 This macro returns a nonzero value (true) if @var{filedes} is a member
 of the file descriptor set @var{set}, and zero (false) otherwise.
+
+The @var{filedes} parameter must not have side effects since it is
+evaluated more than once.
 @end deftypefn
 
 Next, here is the description of the @code{select} function itself.
