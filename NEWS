@@ -1,5 +1,5 @@
-GNU C Library NEWS -- history of user-visible changes.  2001-12-11
-Copyright (C) 1992-2000, 2001 Free Software Foundation, Inc.
+GNU C Library NEWS -- history of user-visible changes.  2002-1-7
+Copyright (C) 1992-2000, 2001, 2002 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports using the `glibcbug' script to
@@ -18,6 +18,9 @@ Version 2.3
 
 * Prelinking support was added for ELF targets.  This requires additional
   tools and recent versions of the GNU binutils.  Contributed by Jakub Jelinek.
+
+* Read-only stdio streams now use mmap to speed up operation but eliminating
+  copying and buffer underflows.  Implemented by Ulrich Drepper.
 
 Version 2.2.5
 
@@ -36,6 +39,8 @@ Version 2.2.5
 
 * optimizations in the dynamic linker.  binaries created by recent binutils
   versions start up quicker due to reduced time spend on relocations.
+
+* Support for use of gcc3 added by Jakub Jelinek and HJ Lu.
 
 Version 2.2.4
 

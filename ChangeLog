@@ -1,3 +1,7 @@
+2002-01-02  Bruno Haible  <bruno@clisp.org>
+
+	* intl/plural.y: Fix %expect count.
+
 2002-01-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/Makefile (routines, shared-only-routines): Add
