@@ -256,8 +256,35 @@ FCT (pattern, string, no_leading_period, flags)
 		      /* Invalid character class name.  */
 		      return FNM_NOMATCH;
 
-		    if (ISWCTYPE (BTOWC ((UCHAR) *n), wt))
-		      goto matched;
+		    /* The following code is glibc specific but does
+		       there a good job in sppeding up the code since
+		       we can avoid the btowc() call.  The
+		       IS_CHAR_CLASS call will return a bit mask for
+		       the 32-bit table.  We have to convert it to a
+		       bitmask for the __ctype_b table.  This has to
+		       be done based on the byteorder as can be seen
+		       below.  In any case we will fall back on the
+		       code using btowc() if the class is not one of
+		       the standard classes.  */
+# if defined _LIBC && ! WIDE_CHAR_VERSION
+#  if __BYTE_ORDER == __LITTLE_ENDIAN
+		    if ((wt & 0xf0ffff) == 0)
+		      {
+			wt >>= 16;
+			if ((__ctype_b[(UCHAR) *n] & wt) != 0)
+			  goto matched;
+		      }
+#  else
+		    if (wt <= 0x800)
+		      {
+			if ((__ctype_b[(UCHAR) *n] & wt) != 0)
+			  goto matched;
+		      }
+#  endif
+		    else
+# endif
+		      if (ISWCTYPE (BTOWC ((UCHAR) *n), wt))
+			goto matched;
 #else
 		    if ((STREQ (str, L("alnum")) && ISALNUM ((UCHAR) *n))
 			|| (STREQ (str, L("alpha")) && ISALPHA ((UCHAR) *n))

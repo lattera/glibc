@@ -1,5 +1,8 @@
 2000-07-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/fnmatch_loop.c: Improve performance for single-byte
+	character sets by not using btowc.
+
 	* posix/tst-fnmatch.input: Add tests for locale dependent
 	behaviour.
 	* posix/tst-fnmatch.c (main): Also set LC_CTYPE category.
