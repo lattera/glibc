@@ -201,7 +201,7 @@ _dl_runtime_profile:\n\
 	.previous\n\
 ");
 # else
-# define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\n\
+#  define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\n\
 	.text\n\
 	.globl _dl_runtime_resolve\n\
 	.globl _dl_runtime_profile\n\
@@ -389,7 +389,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
     return;
 # endif
   else
-#endif
+#endif	/* !RTLD_BOOTSTRAP and have no -z combreloc */
     {
       const Elf32_Sym *const refsym = sym;
 #if defined USE_TLS && !defined RTLD_BOOTSTRAP
@@ -402,7 +402,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
       if (sym != NULL)
 # endif
 	value += sym->st_value;
-#endif
+#endif	/* use TLS and !RTLD_BOOTSTRAP */
 
       switch (r_type)
 	{
@@ -497,7 +497,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	default:
 	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
-#endif
+#endif	/* !RTLD_BOOTSTRAP */
 	}
     }
 }
@@ -521,7 +521,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       Elf32_Addr value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
       if (sym != NULL)
 	value += sym->st_value;
-#endif
+# endif
 
       switch (ELF32_R_TYPE (reloc->r_info))
 	{
@@ -534,7 +534,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  *reloc_addr = (value + reloc->r_addend - (Elf32_Addr) reloc_addr);
 	  break;
 
-#ifdef USE_TLS
+# ifdef USE_TLS
 	case R_386_TLS_DTPMOD32:
 	  /* Get the information from the link map returned by the
 	     resolv function.  */
@@ -567,7 +567,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	      + reloc->r_addend;
 	  CHECK_STATIC_TLS (map, sym_map);
 	  break;
-#endif	/* use TLS */
+# endif	/* use TLS */
 	default:
 	  /* We add these checks in the version to relocate ld.so only
 	     if we are still debugging.  */
@@ -576,7 +576,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	}
     }
 }
-#endif
+#endif	/* !RTLD_BOOTSTRAP */
 
 static inline void
 elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
@@ -593,7 +593,7 @@ elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
 {
   *reloc_addr = l_addr + reloc->r_addend;
 }
-#endif
+#endif	/* !RTLD_BOOTSTRAP */
 
 static inline void
 elf_machine_lazy_rel (struct link_map *map,
@@ -622,6 +622,6 @@ elf_machine_lazy_rela (struct link_map *map,
 {
 }
 
-#endif
+#endif	/* !RTLD_BOOTSTRAP */
 
 #endif /* RESOLVE */
