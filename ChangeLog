@@ -1,5 +1,7 @@
 2001-04-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Add getunwind.
+
 	* string/strcoll.c: Fix two memory allocation problems.
 	* string/Makefile (tests): Add bug-strcoll1.
 	* string/bug-strcoll1.c: New file.
