@@ -1,3 +1,7 @@
+2001-03-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* cancel.c (__pthread_perform_cleanup): Call __rpc_thread_destroy.
+
 2001-03-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: When generating DSO link with libc_nonshared.a.

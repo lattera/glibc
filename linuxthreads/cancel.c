@@ -15,6 +15,7 @@
 /* Thread cancellation */
 
 #include <errno.h>
+#include <rpc/rpc.h>
 #include "pthread.h"
 #include "internals.h"
 #include "spinlock.h"
@@ -163,6 +164,10 @@ void __pthread_perform_cleanup(void)
   struct _pthread_cleanup_buffer * c;
   for (c = THREAD_GETMEM(self, p_cleanup); c != NULL; c = c->__prev)
     c->__routine(c->__arg);
+
+  /* And the TSD which needs special help.  */
+  if (THREAD_GETMEM(self, p_libc_specific[_LIBC_TSD_KEY_RPC_VARS]) != NULL)
+    __rpc_thread_destroy ();
 }
 
 #ifndef SHARED
