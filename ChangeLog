@@ -1,3 +1,13 @@
+2001-07-18  Andreas Jaeger  <aj@suse.de>
+
+	* time/Makefile (tst-getdate-ENV): Add TZDIR to environment.
+
+	* time/Depend: New, add dependency on timezone.
+
+	* time/tst-getdate.c: Add testcase for bug report by Hendrik
+	Uhlmann <HUhlmann@stn-atlas.de>.
+	* time/datemsk: Likewise.
+
 2001-07-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/ldconfig.c (parse_conf): Disable implicit locking for the
