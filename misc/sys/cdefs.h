@@ -54,10 +54,11 @@
 #   define __NTH(fct)	fct
 #  endif
 # endif
-# define __P(args)	args __THROW
-/* This macro will be used for functions which might take C++ callback
-   functions.  */
-# define __PMT(args)	args
+/* These two macros are not usde in glibc anymore.  They are kept here
+   only because some other projects expect the macros to be
+   defined.  */
+# define __P(args)	BROKEN BROKEN args
+# define __PMT(args)	BROKEN BROKEN args
 
 #else	/* Not GCC.  */
 

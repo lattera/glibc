@@ -38,7 +38,7 @@ typedef struct
 } _IO_strnfile;
 
 
-static int _IO_strn_overflow __P ((_IO_FILE *fp, int c));
+static int _IO_strn_overflow (_IO_FILE *fp, int c) __THROW;
 
 static int
 _IO_strn_overflow (fp, c)

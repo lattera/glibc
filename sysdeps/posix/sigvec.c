@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,94,95,96,97,98,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,1994-98,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ struct sigvec_wrapper_data
   unsigned int sw_mask;
 };
 
-static void sigvec_wrapper_handler __P ((int sig));
+static void sigvec_wrapper_handler (int sig) __THROW;
 
 static struct sigvec_wrapper_data sigvec_wrapper_data[NSIG];
 #endif

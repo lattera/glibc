@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,9 +32,9 @@
 
 static const char dev[] = "/dev";
 
-static int getttyname_r __P ((int fd, char *buf, size_t buflen,
-			      dev_t mydev, ino_t myino, int save,
-			      int *dostat)) internal_function;
+static int getttyname_r (int fd, char *buf, size_t buflen,
+			 dev_t mydev, ino_t myino, int save,
+			 int *dostat) __THROW internal_function;
 
 static int
 internal_function

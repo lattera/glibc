@@ -1,4 +1,4 @@
-/* Copyright (C) 1994,96,97,2000,02 Free Software Foundation, Inc.
+/* Copyright (C) 1994,96,97,2000,02, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <sys/resource.h>
 #include <sys/sysmp.h>
 
-extern int __sysmp __P ((int, ...));
+extern int __sysmp (int, ...);
 
 /* Return the highest priority of any process specified by WHICH and WHO
    (see <sys/resource.h>); if WHO is zero, the current process, process group,

@@ -78,7 +78,7 @@ static __ptr_t (*tr_old_memalign_hook) (__malloc_size_t __alignment,
    set "mallwatch" to the address of interest, then put a breakpoint on
    tr_break.  */
 
-extern void tr_break __P ((void));
+extern void tr_break (void) __THROW;
 libc_hidden_proto (tr_break)
 void
 tr_break ()
@@ -86,7 +86,7 @@ tr_break ()
 }
 libc_hidden_def (tr_break)
 
-static void tr_where __P ((const __ptr_t)) internal_function;
+static void tr_where (const __ptr_t) __THROW internal_function;
 static void
 internal_function
 tr_where (caller)
@@ -134,7 +134,7 @@ tr_where (caller)
     }
 }
 
-static void tr_freehook __P ((__ptr_t, const __ptr_t));
+static void tr_freehook (__ptr_t, const __ptr_t) __THROW;
 static void
 tr_freehook (ptr, caller)
      __ptr_t ptr;
@@ -159,7 +159,7 @@ tr_freehook (ptr, caller)
   __libc_lock_unlock (lock);
 }
 
-static __ptr_t tr_mallochook __P ((__malloc_size_t, const __ptr_t));
+static __ptr_t tr_mallochook (__malloc_size_t, const __ptr_t) __THROW;
 static __ptr_t
 tr_mallochook (size, caller)
      __malloc_size_t size;
@@ -188,7 +188,8 @@ tr_mallochook (size, caller)
   return hdr;
 }
 
-static __ptr_t tr_reallochook __P ((__ptr_t, __malloc_size_t, const __ptr_t));
+static __ptr_t tr_reallochook (__ptr_t, __malloc_size_t, const __ptr_t)
+     __THROW;
 static __ptr_t
 tr_reallochook (ptr, size, caller)
      __ptr_t ptr;
@@ -234,8 +235,8 @@ tr_reallochook (ptr, size, caller)
   return hdr;
 }
 
-static __ptr_t tr_memalignhook __P ((__malloc_size_t, __malloc_size_t,
-				     const __ptr_t));
+static __ptr_t tr_memalignhook (__malloc_size_t, __malloc_size_t,
+				const __ptr_t) __THROW;
 static __ptr_t
 tr_memalignhook (alignment, size, caller)
      __malloc_size_t alignment, size;

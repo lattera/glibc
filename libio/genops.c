@@ -115,7 +115,7 @@ INTDEF(_IO_link_in)
 
 /* Return minimum _pos markers
    Assumes the current get area is the main get area. */
-_IO_ssize_t _IO_least_marker __P ((_IO_FILE *fp, char *end_p));
+_IO_ssize_t _IO_least_marker (_IO_FILE *fp, char *end_p);
 
 _IO_ssize_t
 _IO_least_marker (fp, end_p)
@@ -238,7 +238,7 @@ __overflow (f, ch)
 }
 libc_hidden_def (__overflow)
 
-static int save_for_backup __P ((_IO_FILE *fp, char *end_p))
+static int save_for_backup (_IO_FILE *fp, char *end_p)
 #ifdef _LIBC
      internal_function
 #endif
@@ -914,7 +914,7 @@ INTDEF(_IO_flush_all_linebuffered)
 weak_alias (_IO_flush_all_linebuffered, _flushlbf)
 #endif
 
-static void _IO_unbuffer_write __P ((void));
+static void _IO_unbuffer_write (void);
 
 static void
 _IO_unbuffer_write ()

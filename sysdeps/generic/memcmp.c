@@ -31,14 +31,6 @@
 # define __ptr_t	char *
 #endif /* C++ or ANSI C.  */
 
-#ifndef __P
-# if defined __GNUC__ || (defined __STDC__ && __STDC__)
-#  define __P(args) args
-# else
-#  define __P(args) ()
-# endif  /* GCC.  */
-#endif  /* Not __P.  */
-
 #if defined HAVE_STRING_H || defined _LIBC
 # include <string.h>
 #endif
@@ -102,7 +94,7 @@ typedef unsigned char byte;
    A and B are known to be different.
    This is needed only on little-endian machines.  */
 
-static int memcmp_bytes __P((op_t, op_t));
+static int memcmp_bytes (op_t, op_t) __THROW;
 
 # ifdef  __GNUC__
 __inline
@@ -127,7 +119,7 @@ memcmp_bytes (a, b)
 }
 #endif
 
-static int memcmp_common_alignment __P((long, long, size_t));
+static int memcmp_common_alignment (long, long, size_t) __THROW;
 
 /* memcmp_common_alignment -- Compare blocks at SRCP1 and SRCP2 with LEN `op_t'
    objects (not LEN bytes!).  Both SRCP1 and SRCP2 should be aligned for
@@ -214,7 +206,7 @@ memcmp_common_alignment (srcp1, srcp2, len)
   return 0;
 }
 
-static int memcmp_not_common_alignment __P((long, long, size_t));
+static int memcmp_not_common_alignment (long, long, size_t) __THROW;
 
 /* memcmp_not_common_alignment -- Compare blocks at SRCP1 and SRCP2 with LEN
    `op_t' objects (not LEN bytes!).  SRCP2 should be aligned for memory

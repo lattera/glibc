@@ -94,9 +94,9 @@ typedef union querybuf
 
 /* These functions are defined in res_comp.c.  */
 #define NS_MAXCDNAME	255	/* maximum compressed domain name */
-extern int __ns_name_ntop __P ((const u_char *, char *, size_t));
-extern int __ns_name_unpack __P ((const u_char *, const u_char *,
-				  const u_char *, u_char *, size_t));
+extern int __ns_name_ntop (const u_char *, char *, size_t) __THROW;
+extern int __ns_name_unpack (const u_char *, const u_char *,
+			     const u_char *, u_char *, size_t) __THROW;
 
 
 /* Prototypes for local functions.  */

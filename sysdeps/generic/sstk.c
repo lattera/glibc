@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 /* Increase the size of the stack by INCREMENT,
    and return the address of the bottom of the stack.  */
 
-void *sstk __P ((int increment));
+void *sstk (int increment) __THROW;
 
 void *
 sstk (increment)

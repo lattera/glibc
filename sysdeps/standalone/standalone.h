@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 2004 Free Software Foundation, Inc.
    Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
      On-Line Applications Research Corporation.
    This file is part of the GNU C Library.
@@ -23,9 +23,9 @@
 
 #include <sys/cdefs.h>
 
-extern void _Board_Initialize __P ((void));
+extern void _Board_Initialize (void);
 
-extern int _Console_Putc __P ((char c));
-extern int _Console_Getc __P ((int poll));
+extern int _Console_Putc (char c);
+extern int _Console_Getc (int poll);
 
 #endif

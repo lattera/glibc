@@ -26,15 +26,15 @@
 #ifndef _HESIOD_H_INCLUDED
 #define _HESIOD_H_INCLUDED
 
-int		hesiod_init __P((void **context));
-void		hesiod_end __P((void *context));
-char *		hesiod_to_bind __P((void *context, const char *name,
-				    const char *type));
-char **		hesiod_resolve __P((void *context, const char *name,
-				    const char *type));
-void		hesiod_free_list __P((void *context, char **list));
-struct __res_state * __hesiod_res_get __P((void *context));
-void		__hesiod_res_set __P((void *context, struct __res_state *,
-				      void (*)(void *)));
+int		hesiod_init (void **context);
+void		hesiod_end (void *context);
+char *		hesiod_to_bind (void *context, const char *name,
+				const char *type);
+char **		hesiod_resolve (void *context, const char *name,
+				const char *type);
+void		hesiod_free_list (void *context, char **list);
+struct __res_state * __hesiod_res_get (void *context);
+void		__hesiod_res_set (void *context, struct __res_state *,
+				  void (*)(void *));
 
 #endif /*_HESIOD_H_INCLUDED*/

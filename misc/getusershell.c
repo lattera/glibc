@@ -48,7 +48,7 @@ static char sccsid[] = "@(#)getusershell.c	8.1 (Berkeley) 6/4/93";
 
 static const char *okshells[] = { _PATH_BSHELL, _PATH_CSHELL, NULL };
 static char **curshell, **shells, *strings;
-static char **initshells __P((void));
+static char **initshells (void) __THROW;
 
 /*
  * Get a list of shells from _PATH_SHELLS, if it exists.

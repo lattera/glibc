@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1996,1997,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1996,1997,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,8 +27,8 @@ libc_freeres_ptr (printf_arginfo_function **__printf_arginfo_table)
   attribute_hidden;
 printf_function **__printf_function_table attribute_hidden;
 
-int __register_printf_function __P ((int, printf_function,
-                                     printf_arginfo_function));
+int __register_printf_function (int, printf_function,
+				printf_arginfo_function) __THROW;
 
 /* Register FUNC to be called to format SPEC specifiers.  */
 int

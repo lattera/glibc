@@ -1,5 +1,5 @@
 /* xstrdup.c -- copy a string with out of memory checking
-   Copyright (C) 1990, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1996, 1997, 1999, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,8 +26,8 @@
 #else
 # include <strings.h>
 #endif
-void *xmalloc __P ((size_t n));
-char *xstrdup __P ((char *string));
+void *xmalloc (size_t n) __THROW;
+char *xstrdup (char *string) __THROW;
 
 /* Return a newly allocated copy of STRING.  */
 

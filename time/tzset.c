@@ -69,10 +69,10 @@ typedef struct
 static tz_rule tz_rules[2];
 
 
-static void compute_change __P ((tz_rule *rule, int year)) internal_function;
-static void tz_compute __P ((const struct tm *tm))
-     internal_function;
-static void tzset_internal __P ((int always, int explicit)) internal_function;
+static void compute_change (tz_rule *rule, int year) __THROW internal_function;
+static void tz_compute (const struct tm *tm) __THROW internal_function;
+static void tzset_internal (int always, int explicit)
+     __THROW internal_function;
 
 /* List of buffers containing time zone strings. */
 struct tzstring_l

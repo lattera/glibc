@@ -50,7 +50,7 @@
 #else
 #define _IO_fork fork /* defined in libiberty, if needed */
 #endif
-extern _IO_pid_t _IO_fork __P ((void));
+extern _IO_pid_t _IO_fork (void) __THROW;
 #endif
 
 #endif /* _IO_HAVE_SYS_WAIT */
@@ -61,7 +61,7 @@ extern _IO_pid_t _IO_fork __P ((void));
 #else
 #define _IO_pipe pipe
 #endif
-extern int _IO_pipe __P ((int des[2]));
+extern int _IO_pipe (int des[2]) __THROW;
 #endif
 
 #ifndef _IO_dup2
@@ -70,7 +70,7 @@ extern int _IO_pipe __P ((int des[2]));
 #else
 #define _IO_dup2 dup2
 #endif
-extern int _IO_dup2 __P ((int fd, int fd2));
+extern int _IO_dup2 (int fd, int fd2) __THROW;
 #endif
 
 #ifndef _IO_waitpid

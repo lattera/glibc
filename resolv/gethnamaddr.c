@@ -108,11 +108,11 @@ static u_char host_addr[16];	/* IPv4 or IPv6 */
 static FILE *hostf = NULL;
 static int stayopen = 0;
 
-static void map_v4v6_address __P((const char *src, char *dst));
-static void map_v4v6_hostent __P((struct hostent *hp, char **bp, int *len));
+static void map_v4v6_address (const char *src, char *dst) __THROW;
+static void map_v4v6_hostent (struct hostent *hp, char **bp, int *len) __THROW;
 
 #ifdef RESOLVSORT
-extern void addrsort __P((char **, int));
+extern void addrsort (char **, int) __THROW;
 #endif
 
 #if PACKETSZ > 65536

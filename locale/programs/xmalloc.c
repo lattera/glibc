@@ -1,5 +1,5 @@
 /* xmalloc.c -- malloc with out of memory checking
-   Copyright (C) 1990,91,92,93,94,95,96,97 Free Software Foundation, Inc.
+   Copyright (C) 1990,91,92,93,94,95,96,97,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,10 +31,10 @@
 
 #if STDC_HEADERS || _LIBC
 #include <stdlib.h>
-static VOID *fixup_null_alloc __P ((size_t n));
-VOID *xmalloc __P ((size_t n));
-VOID *xcalloc __P ((size_t n, size_t s));
-VOID *xrealloc __P ((VOID *p, size_t n));
+static VOID *fixup_null_alloc (size_t n) __THROW;
+VOID *xmalloc (size_t n) __THROW;
+VOID *xcalloc (size_t n, size_t s) __THROW;
+VOID *xrealloc (VOID *p, size_t n) __THROW;
 #else
 VOID *calloc ();
 VOID *malloc ();

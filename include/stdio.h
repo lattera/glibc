@@ -75,18 +75,18 @@ extern int __asprintf_internal (char **__restrict __ptr,
 #    define __asprintf(ptr, fmt, args...) \
   INTUSE(__asprintf) (ptr, fmt, ##args)
 
-extern _IO_FILE *_IO_new_fopen __P((const char*, const char*));
+extern _IO_FILE *_IO_new_fopen (const char*, const char*);
 #   define fopen(fname, mode) _IO_new_fopen (fname, mode)
-extern _IO_FILE *_IO_new_fdopen __P((int, const char*));
+extern _IO_FILE *_IO_new_fdopen (int, const char*);
 #   define fdopen(fd, mode) _IO_new_fdopen (fd, mode)
-extern int _IO_new_fclose __P((_IO_FILE*));
+extern int _IO_new_fclose (_IO_FILE*);
 #   define fclose(fp) _IO_new_fclose (fp)
-extern int _IO_fputs __P((const char*, _IO_FILE*));
+extern int _IO_fputs (const char*, _IO_FILE*);
 libc_hidden_proto (_IO_fputs)
 #   define fputs(str, fp) _IO_fputs (str, fp)
-extern int _IO_new_fsetpos __P ((_IO_FILE *, const _IO_fpos_t *));
+extern int _IO_new_fsetpos (_IO_FILE *, const _IO_fpos_t *);
 #   define fsetpos(fp, posp) _IO_new_fsetpos (fp, posp)
-extern int _IO_new_fgetpos __P ((_IO_FILE *, _IO_fpos_t *));
+extern int _IO_new_fgetpos (_IO_FILE *, _IO_fpos_t *);
 #   define fgetpos(fp, posp) _IO_new_fgetpos (fp, posp)
 #  endif
 

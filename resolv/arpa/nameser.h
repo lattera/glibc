@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1983, 1989, 1993
  *    The Regents of the University of California.  All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -13,7 +13,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -499,53 +499,55 @@ typedef enum __ns_cert_types {
 #define	ns_samename		__ns_samename
 
 __BEGIN_DECLS
-u_int		ns_get16 __P((const u_char *));
-u_long		ns_get32 __P((const u_char *));
-void		ns_put16 __P((u_int, u_char *));
-void		ns_put32 __P((u_long, u_char *));
-int		ns_initparse __P((const u_char *, int, ns_msg *));
-int		ns_skiprr __P((const u_char *, const u_char *, ns_sect, int));
-int		ns_parserr __P((ns_msg *, ns_sect, int, ns_rr *));
-int		ns_sprintrr __P((const ns_msg *, const ns_rr *,
-				 const char *, const char *, char *, size_t));
-int		ns_sprintrrf __P((const u_char *, size_t, const char *,
-				  ns_class, ns_type, u_long, const u_char *,
-				  size_t, const char *, const char *,
-				  char *, size_t));
-int		ns_format_ttl __P((u_long, char *, size_t));
-int		ns_parse_ttl __P((const char *, u_long *));
-u_int32_t	ns_datetosecs __P((const char *cp, int *errp));
-int		ns_name_ntol __P((const u_char *, u_char *, size_t));
-int		ns_name_ntop __P((const u_char *, char *, size_t));
-int		ns_name_pton __P((const char *, u_char *, size_t));
-int		ns_name_unpack __P((const u_char *, const u_char *,
-				    const u_char *, u_char *, size_t));
-int		ns_name_pack __P((const u_char *, u_char *, int,
-				  const u_char **, const u_char **));
-int		ns_name_uncompress __P((const u_char *, const u_char *,
-					const u_char *, char *, size_t));
-int		ns_name_compress __P((const char *, u_char *, size_t,
-				      const u_char **, const u_char **));
-int		ns_name_skip __P((const u_char **, const u_char *));
-void		ns_name_rollback __P((const u_char *, const u_char **,
-				      const u_char **));
-int		ns_sign __P((u_char *, int *, int, int, void *,
-			     const u_char *, int, u_char *, int *, time_t));
-int		ns_sign_tcp __P((u_char *, int *, int, int,
-				 ns_tcp_tsig_state *, int));
-int		ns_sign_tcp_init __P((void *, const u_char *, int,
-					ns_tcp_tsig_state *));
-u_char		*ns_find_tsig __P((u_char *, u_char *));
-int		ns_verify __P((u_char *, int *, void *,
-			       const u_char *, int, u_char *, int *,
-			       time_t *, int));
-int		ns_verify_tcp __P((u_char *, int *, ns_tcp_tsig_state *, int));
-int		ns_verify_tcp_init __P((void *, const u_char *, int,
-					ns_tcp_tsig_state *));
-int		ns_samedomain __P((const char *, const char *));
-int		ns_subdomain __P((const char *, const char *));
-int		ns_makecanon __P((const char *, char *, size_t));
-int		ns_samename __P((const char *, const char *));
+u_int		ns_get16 (const u_char *) __THROW;
+u_long		ns_get32 (const u_char *) __THROW;
+void		ns_put16 (u_int, u_char *) __THROW;
+void		ns_put32 (u_long, u_char *) __THROW;
+int		ns_initparse (const u_char *, int, ns_msg *) __THROW;
+int		ns_skiprr (const u_char *, const u_char *, ns_sect, int)
+     __THROW;
+int		ns_parserr (ns_msg *, ns_sect, int, ns_rr *) __THROW;
+int		ns_sprintrr (const ns_msg *, const ns_rr *,
+			     const char *, const char *, char *, size_t)
+     __THROW;
+int		ns_sprintrrf (const u_char *, size_t, const char *,
+			      ns_class, ns_type, u_long, const u_char *,
+			      size_t, const char *, const char *,
+			      char *, size_t) __THROW;
+int		ns_format_ttl (u_long, char *, size_t) __THROW;
+int		ns_parse_ttl (const char *, u_long *) __THROW;
+u_int32_t	ns_datetosecs (const char *cp, int *errp) __THROW;
+int		ns_name_ntol (const u_char *, u_char *, size_t) __THROW;
+int		ns_name_ntop (const u_char *, char *, size_t) __THROW;
+int		ns_name_pton (const char *, u_char *, size_t) __THROW;
+int		ns_name_unpack (const u_char *, const u_char *,
+				const u_char *, u_char *, size_t) __THROW;
+int		ns_name_pack (const u_char *, u_char *, int,
+			      const u_char **, const u_char **) __THROW;
+int		ns_name_uncompress (const u_char *, const u_char *,
+				    const u_char *, char *, size_t) __THROW;
+int		ns_name_compress (const char *, u_char *, size_t,
+				  const u_char **, const u_char **) __THROW;
+int		ns_name_skip (const u_char **, const u_char *) __THROW;
+void		ns_name_rollback (const u_char *, const u_char **,
+				  const u_char **) __THROW;
+int		ns_sign (u_char *, int *, int, int, void *,
+			 const u_char *, int, u_char *, int *, time_t) __THROW;
+int		ns_sign_tcp (u_char *, int *, int, int,
+			     ns_tcp_tsig_state *, int) __THROW;
+int		ns_sign_tcp_init (void *, const u_char *, int,
+				  ns_tcp_tsig_state *) __THROW;
+u_char		*ns_find_tsig (u_char *, u_char *) __THROW;
+int		ns_verify (u_char *, int *, void *, const u_char *, int,
+			   u_char *, int *, time_t *, int) __THROW;
+int		ns_verify_tcp (u_char *, int *, ns_tcp_tsig_state *, int)
+     __THROW;
+int		ns_verify_tcp_init (void *, const u_char *, int,
+				    ns_tcp_tsig_state *) __THROW;
+int		ns_samedomain (const char *, const char *) __THROW;
+int		ns_subdomain (const char *, const char *) __THROW;
+int		ns_makecanon (const char *, char *, size_t) __THROW;
+int		ns_samename (const char *, const char *) __THROW;
 __END_DECLS
 
 #ifdef BIND_4_COMPAT

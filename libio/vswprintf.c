@@ -38,7 +38,7 @@ typedef struct
 } _IO_strnfile;
 
 
-static wint_t _IO_wstrn_overflow __P ((_IO_FILE *fp, wint_t c));
+static wint_t _IO_wstrn_overflow (_IO_FILE *fp, wint_t c) __THROW;
 
 static wint_t
 _IO_wstrn_overflow (fp, c)

@@ -61,11 +61,11 @@ static int	s_scale;
 
 #define ERR(s) write_not_cancel (STDERR_FILENO, s, sizeof (s) - 1)
 
-void moncontrol __P ((int mode));
-void __moncontrol __P ((int mode));
-static void write_hist __P ((int fd)) internal_function;
-static void write_call_graph __P ((int fd)) internal_function;
-static void write_bb_counts __P ((int fd)) internal_function;
+void moncontrol (int mode);
+void __moncontrol (int mode);
+static void write_hist (int fd) internal_function;
+static void write_call_graph (int fd) internal_function;
+static void write_bb_counts (int fd) internal_function;
 
 /*
  * Control profiling

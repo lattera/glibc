@@ -157,20 +157,20 @@ static const CHAR_T null[] = L_("(null)");
 
 
 /* Helper function to provide temporary buffering for unbuffered streams.  */
-static int buffered_vfprintf __P ((FILE *stream, const CHAR_T *fmt, va_list))
-     __attribute__ ((noinline)) internal_function;
+static int buffered_vfprintf (FILE *stream, const CHAR_T *fmt, va_list)
+     __THROW __attribute__ ((noinline)) internal_function;
 
 /* Handle unknown format specifier.  */
-static int printf_unknown __P ((FILE *, const struct printf_info *,
-				const void *const *));
+static int printf_unknown (FILE *, const struct printf_info *,
+			   const void *const *) __THROW;
 
 /* Group digits of number string.  */
 #ifdef COMPILE_WPRINTF
-static CHAR_T *group_number __P ((CHAR_T *, CHAR_T *, const char *, wchar_t))
-     internal_function;
+static CHAR_T *group_number (CHAR_T *, CHAR_T *, const char *, wchar_t)
+     __THROW internal_function;
 #else
-static CHAR_T *group_number __P ((CHAR_T *, CHAR_T *, const char *,
-				  const char *)) internal_function;
+static CHAR_T *group_number (CHAR_T *, CHAR_T *, const char *, const char *)
+     __THROW internal_function;
 #endif
 
 

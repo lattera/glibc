@@ -59,8 +59,8 @@ getttynam(tty)
 	return (t);
 }
 
-static char *skip __P((char *)) internal_function;
-static char *value __P((char *)) internal_function;
+static char *skip (char *) __THROW internal_function;
+static char *value (char *) __THROW internal_function;
 
 struct ttyent *
 getttyent()

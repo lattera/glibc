@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,94,95,96,97,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,95,96,97,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -35,9 +35,9 @@ typedef enum __idtype
     P_ALL = 7,
   } __idtype_t;
 
-extern __pid_t __getpgid __P ((__pid_t pid));
-extern int __waitid __P ((__idtype_t idtype, __pid_t id,
-			  __siginfo_t *infop, int options));
+extern __pid_t __getpgid (__pid_t pid);
+extern int __waitid (__idtype_t idtype, __pid_t id,
+		     __siginfo_t *infop, int options);
 
 /* Wait for a child matching PID to die.
    If PID is greater than 0, match any process whose process ID is PID.

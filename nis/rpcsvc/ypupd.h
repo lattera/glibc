@@ -74,7 +74,7 @@ extern  bool_t xdr_ypdelete_args (XDR *, ypdelete_args*);
 
 #define YPU_CHANGE 1
 extern  u_int * ypu_change_1 (ypupdate_args *, CLIENT *);
-extern  u_int * ypu_change_1_svc __P((ypupdate_args *, struct svc_req *));
+extern  u_int * ypu_change_1_svc (ypupdate_args *, struct svc_req *);
 #define YPU_INSERT 2
 extern  u_int * ypu_insert_1 (ypupdate_args *, CLIENT *);
 extern  u_int * ypu_insert_1_svc (ypupdate_args *, struct svc_req *);

@@ -99,7 +99,7 @@ static void res_setoptions (res_state, const char *, const char *)
 #ifdef RESOLVSORT
 static const char sort_mask_chars[] = "/&";
 #define ISSORTMASK(ch) (strchr(sort_mask_chars, ch) != NULL)
-static u_int32_t net_mask __P((struct in_addr));
+static u_int32_t net_mask (struct in_addr) __THROW;
 #endif
 
 #if !defined(isascii)	/* XXX - could be a function */

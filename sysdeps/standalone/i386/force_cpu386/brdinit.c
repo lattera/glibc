@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
      On-Line Applications Research Corporation.
@@ -25,7 +25,7 @@
 
 This routine initializes the FORCE CPU386 board.  */
 
-void _Console_Initialize __P ((void));
+void _Console_Initialize (void);
 
 void
 _Board_Initialize ()

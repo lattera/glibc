@@ -271,7 +271,7 @@ _IO_old_file_setbuf (fp, p, len)
     return fp;
 }
 
-static int old_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
+static int old_do_write (_IO_FILE *, const char *, _IO_size_t) __THROW;
 
 /* Write TO_DO bytes from DATA to FP.
    Then mark FP as having empty buffers. */

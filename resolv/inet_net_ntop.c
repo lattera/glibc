@@ -35,8 +35,8 @@ static const char rcsid[] = "$BINDId: inet_net_ntop.c,v 1.6 1999/01/08 19:23:42 
 # define SPRINTF(x) ((size_t)sprintf x)
 #endif
 
-static char *	inet_net_ntop_ipv4 __P((const u_char *src, int bits,
-					char *dst, size_t size));
+static char *	inet_net_ntop_ipv4 (const u_char *src, int bits,
+				    char *dst, size_t size) __THROW;
 
 /*
  * char *

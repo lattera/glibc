@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1996,1997,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ __sigaction (sig, act, oact)
 
   if (oact != NULL)
     {
-      oact->sa_handler = (void (*) __P ((int))) ovec.sv_handler;
+      oact->sa_handler = (void (*) (int)) ovec.sv_handler;
       oact->sa_mask = ovec.sv_mask;
       oact->sa_flags = (((ovec.sv_flags & SV_ONSTACK) ? SA_ONSTACK : 0) |
 			(!(ovec.sv_flags & SV_INTERRUPT) ? SA_RESTART : 0));

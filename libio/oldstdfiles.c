@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,94,96,97,99,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,96,97,99,2000,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,7 +67,7 @@ extern FILE *stdin;
 extern FILE *stdout;
 extern FILE *stderr;
 
-static void _IO_check_libio __P ((void)) __attribute__ ((constructor));
+static void _IO_check_libio (void) __THROW __attribute__ ((constructor));
 
 /* This function determines which shared C library the application
    was linked against. We then set up the stdin/stdout/stderr and

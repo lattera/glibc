@@ -122,14 +122,6 @@ extern char *tzname[];
 # endif
 #endif
 
-#ifndef __P
-# if defined __GNUC__ || (defined __STDC__ && __STDC__)
-#  define __P(args) args
-# else
-#  define __P(args) ()
-# endif  /* GCC.  */
-#endif  /* Not __P.  */
-
 #ifndef PTR
 # ifdef __STDC__
 #  define PTR void *
@@ -340,8 +332,8 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
    more reliable way to accept other sets of digits.  */
 #define ISDIGIT(Ch) ((unsigned int) (Ch) - L_('0') <= 9)
 
-static CHAR_T *memcpy_lowcase __P ((CHAR_T *dest, const CHAR_T *src,
-				    size_t len LOCALE_PARAM_PROTO));
+static CHAR_T *memcpy_lowcase (CHAR_T *dest, const CHAR_T *src,
+			       size_t len LOCALE_PARAM_PROTO) __THROW;
 
 static CHAR_T *
 memcpy_lowcase (dest, src, len LOCALE_PARAM)
@@ -355,8 +347,8 @@ memcpy_lowcase (dest, src, len LOCALE_PARAM)
   return dest;
 }
 
-static CHAR_T *memcpy_uppcase __P ((CHAR_T *dest, const CHAR_T *src,
-				    size_t len LOCALE_PARAM_PROTO));
+static CHAR_T *memcpy_uppcase (CHAR_T *dest, const CHAR_T *src,
+			       size_t len LOCALE_PARAM_PROTO) __THROW;
 
 static CHAR_T *
 memcpy_uppcase (dest, src, len LOCALE_PARAM)
@@ -375,7 +367,7 @@ memcpy_uppcase (dest, src, len LOCALE_PARAM)
 /* Yield the difference between *A and *B,
    measured in seconds, ignoring leap seconds.  */
 # define tm_diff ftime_tm_diff
-static int tm_diff __P ((const struct tm *, const struct tm *));
+static int tm_diff (const struct tm *, const struct tm *) __THROW;
 static int
 tm_diff (a, b)
      const struct tm *a;
@@ -409,7 +401,7 @@ tm_diff (a, b)
 #define ISO_WEEK_START_WDAY 1 /* Monday */
 #define ISO_WEEK1_WDAY 4 /* Thursday */
 #define YDAY_MINIMUM (-366)
-static int iso_week_days __P ((int, int));
+static int iso_week_days (int, int) __THROW;
 #ifdef __GNUC__
 __inline__
 #endif
@@ -464,8 +456,8 @@ static CHAR_T const month_name[][10] =
 #if !defined _LIBC && HAVE_TZNAME && HAVE_TZSET
   /* Solaris 2.5 tzset sometimes modifies the storage returned by localtime.
      Work around this bug by copying *tp before it might be munged.  */
-  size_t _strftime_copytm __P ((char *, size_t, const char *,
-			        const struct tm * ut_argument_spec_iso));
+  size_t _strftime_copytm (char *, size_t, const char *,
+			   const struct tm * ut_argument_spec_iso) __THROW;
   size_t
   my_strftime (s, maxsize, format, tp ut_argument)
       CHAR_T *s;

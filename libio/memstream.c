@@ -30,8 +30,8 @@ struct _IO_FILE_memstream
 };
 
 
-static int _IO_mem_sync __P ((_IO_FILE* fp));
-static void _IO_mem_finish __P ((_IO_FILE* fp, int));
+static int _IO_mem_sync (_IO_FILE* fp) __THROW;
+static void _IO_mem_finish (_IO_FILE* fp, int) __THROW;
 
 
 static const struct _IO_jump_t _IO_mem_jumps =

@@ -1,5 +1,5 @@
 /* Print floating point number in hexadecimal notation according to ISO C99.
-   Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -49,7 +49,7 @@
 #else	/* ! USE_IN_LIBIO */
 # define PUT(f, s, n) fwrite (s, 1, n, f)
 # define PAD(f, c, n) __printf_pad (f, c, n)
-ssize_t __printf_pad __P ((FILE *, char pad, int n)); /* In vfprintf.c.  */
+ssize_t __printf_pad (FILE *, char pad, int n) __THROW; /* In vfprintf.c.  */
 #endif	/* USE_IN_LIBIO */
 
 /* Macros for doing the actual output.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,95,96,97,98,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,95-98,2000,2001,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,11 +25,7 @@ extern "C" {
 
 #undef	__ptr_t
 #if defined __cplusplus || (defined __STDC__ && __STDC__) || defined WINDOWS32
-# if !defined __GLIBC__ || !defined __P
-#  undef __P
-#  undef __PMT
-#  define __P(protos)	protos
-#  define __PMT(protos)	protos
+# ifndef __GLIBC__
 #  if !defined __GNUC__ || __GNUC__ < 2
 #   undef __const
 #   define __const const
@@ -37,10 +33,6 @@ extern "C" {
 # endif
 # define __ptr_t	void *
 #else /* Not C++ or ANSI C.  */
-# undef	__P
-# undef __PMT
-# define __P(protos)	()
-# define __PMT(protos)	()
 # undef	__const
 # define __const
 # define __ptr_t	char *
@@ -120,20 +112,19 @@ typedef struct
 
     /* If the GLOB_ALTDIRFUNC flag is set, the following functions
        are used instead of the normal file access functions.  */
-    void (*gl_closedir) __PMT ((void *));
+    void (*gl_closedir) (void *);
 #ifdef _GNU_SOURCE
-    struct dirent *(*gl_readdir) __PMT ((void *));
+    struct dirent *(*gl_readdir) (void *);
 #else
-    void *(*gl_readdir) __PMT ((void *));
+    void *(*gl_readdir) (void *);
 #endif
-    __ptr_t (*gl_opendir) __PMT ((__const char *));
+    __ptr_t (*gl_opendir) (__const char *);
 #ifdef _GNU_SOURCE
-    int (*gl_lstat) __PMT ((__const char *__restrict,
-			    struct stat *__restrict));
-    int (*gl_stat) __PMT ((__const char *__restrict, struct stat *__restrict));
+    int (*gl_lstat) (__const char *__restrict, struct stat *__restrict);
+    int (*gl_stat) (__const char *__restrict, struct stat *__restrict);
 #else
-    int (*gl_lstat) __PMT ((__const char *__restrict, void *__restrict));
-    int (*gl_stat) __PMT ((__const char *__restrict, void *__restrict));
+    int (*gl_lstat) (__const char *__restrict, void *__restrict);
+    int (*gl_stat) (__const char *__restrict, void *__restrict);
 #endif
   } glob_t;
 
@@ -150,21 +141,19 @@ typedef struct
 
     /* If the GLOB_ALTDIRFUNC flag is set, the following functions
        are used instead of the normal file access functions.  */
-    void (*gl_closedir) __PMT ((void *));
+    void (*gl_closedir) (void *);
 # ifdef _GNU_SOURCE
-    struct dirent64 *(*gl_readdir) __PMT ((void *));
+    struct dirent64 *(*gl_readdir) (void *);
 # else
-    void *(*gl_readdir) __PMT ((void *));
+    void *(*gl_readdir) (void *);
 # endif
-    __ptr_t (*gl_opendir) __PMT ((__const char *));
+    __ptr_t (*gl_opendir) (__const char *);
 # ifdef _GNU_SOURCE
-    int (*gl_lstat) __PMT ((__const char *__restrict,
-			    struct stat64 *__restrict));
-    int (*gl_stat) __PMT ((__const char *__restrict,
-			   struct stat64 *__restrict));
+    int (*gl_lstat) (__const char *__restrict, struct stat64 *__restrict);
+    int (*gl_stat) (__const char *__restrict, struct stat64 *__restrict);
 # else
-    int (*gl_lstat) __PMT ((__const char *__restrict, void *__restrict));
-    int (*gl_stat) __PMT ((__const char *__restrict, void *__restrict));
+    int (*gl_lstat) (__const char *__restrict, void *__restrict);
+    int (*gl_stat) (__const char *__restrict, void *__restrict);
 # endif
   } glob64_t;
 #endif
@@ -183,26 +172,27 @@ typedef struct
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
 #if _FILE_OFFSET_BITS != 64 || __GNUC__ < 2
-extern int glob __P ((__const char *__restrict __pattern, int __flags,
-		      int (*__errfunc) (__const char *, int),
-		      glob_t *__restrict __pglob));
+extern int glob (__const char *__restrict __pattern, int __flags,
+		 int (*__errfunc) (__const char *, int),
+		 glob_t *__restrict __pglob) __THROW;
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
-extern void globfree __P ((glob_t *__pglob));
+extern void globfree (glob_t *__pglob) __THROW;
 #else
-extern int glob __P ((__const char *__restrict __pattern, int __flags,
-		      int (*__errfunc) (__const char *, int),
-		      glob_t *__restrict __pglob)) __asm__ ("glob64");
+extern int __REDIRECT_NTH (glob, (__const char *__restrict __pattern,
+				  int __flags,
+				  int (*__errfunc) (__const char *, int),
+				  glob_t *__restrict __pglob), glob64);
 
-extern void globfree __P ((glob_t *__pglob)) __asm__ ("globfree64");
+extern void __REDIRECT_NTH (globfree, (glob_t *__pglob), globfree64);
 #endif
 
 #ifdef _LARGEFILE64_SOURCE
-extern int glob64 __P ((__const char *__restrict __pattern, int __flags,
-			int (*__errfunc) (__const char *, int),
-			glob64_t *__restrict __pglob));
+extern int glob64 (__const char *__restrict __pattern, int __flags,
+		   int (*__errfunc) (__const char *, int),
+		   glob64_t *__restrict __pglob) __THROW;
 
-extern void globfree64 __P ((glob64_t *__pglob));
+extern void globfree64 (glob64_t *__pglob) __THROW;
 #endif
 
 
@@ -212,7 +202,7 @@ extern void globfree64 __P ((glob64_t *__pglob));
 
    This function is not part of the interface specified by POSIX.2
    but several programs want to use it.  */
-extern int glob_pattern_p __P ((__const char *__pattern, int __quote));
+extern int glob_pattern_p (__const char *__pattern, int __quote) __THROW;
 #endif
 
 #ifdef	__cplusplus

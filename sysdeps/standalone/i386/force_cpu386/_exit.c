@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 1999, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
      On-Line Applications Research Corporation.
@@ -23,7 +23,7 @@
 
 /* This returns control to FORCEbug. */
 
-void Bsp_cleanup __P ((void));
+void Bsp_cleanup (void);
 
 /* The function `_exit' should take a status argument and simply
    terminate program execution, using the low-order 8 bits of the

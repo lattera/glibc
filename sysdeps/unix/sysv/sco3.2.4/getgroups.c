@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #include <limits.h>
 #include <alloca.h>
 
-extern int __sco_getgroups __P ((int size, unsigned short int *list));
+extern int __sco_getgroups (int size, unsigned short int *list);
 
 int
 __getgroups (size, list)

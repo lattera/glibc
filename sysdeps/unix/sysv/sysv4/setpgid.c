@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1995,1996,1997,1999,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995-1997,1999,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 #include <errno.h>
 #include <unistd.h>
 
-extern int __pgrpsys __P ((pid_t type, ...));
+extern int __pgrpsys (pid_t type, ...);
 
 /* Set the process group ID of the process matching PID to PGID.
    If PID is zero, the current process's process group ID is set.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 97, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,97,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@
 
 #include <stddef.h>
 #include <stdlib.h>
-extern __malloc_ptr_t __sbrk __P ((ptrdiff_t increment));
+extern __malloc_ptr_t __sbrk (ptrdiff_t increment) __THROW;
 libc_hidden_proto (__sbrk)
 #endif
 

@@ -53,16 +53,16 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #endif
 
 
-static FTSENT	*fts_alloc __P((FTS *, const char *, int)) internal_function;
-static FTSENT	*fts_build __P((FTS *, int)) internal_function;
-static void	 fts_lfree __P((FTSENT *)) internal_function;
-static void	 fts_load __P((FTS *, FTSENT *)) internal_function;
-static size_t	 fts_maxarglen __P((char * const *)) internal_function;
-static void	 fts_padjust __P((FTS *, FTSENT *)) internal_function;
-static int	 fts_palloc __P((FTS *, size_t)) internal_function;
-static FTSENT	*fts_sort __P((FTS *, FTSENT *, int)) internal_function;
-static u_short	 fts_stat __P((FTS *, FTSENT *, int)) internal_function;
-static int      fts_safe_changedir __P((FTS *, FTSENT *, int, const char *))
+static FTSENT	*fts_alloc (FTS *, const char *, int) internal_function;
+static FTSENT	*fts_build (FTS *, int) internal_function;
+static void	 fts_lfree (FTSENT *) internal_function;
+static void	 fts_load (FTS *, FTSENT *) internal_function;
+static size_t	 fts_maxarglen (char * const *) internal_function;
+static void	 fts_padjust (FTS *, FTSENT *) internal_function;
+static int	 fts_palloc (FTS *, size_t) internal_function;
+static FTSENT	*fts_sort (FTS *, FTSENT *, int) internal_function;
+static u_short	 fts_stat (FTS *, FTSENT *, int) internal_function;
+static int      fts_safe_changedir (FTS *, FTSENT *, int, const char *)
      internal_function;
 
 #ifndef MAX
