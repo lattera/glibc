@@ -35,7 +35,7 @@
 
 /* On some systems, no flag bits are given to specify file mapping.  */
 #ifndef MAP_FILE
-#define MAP_FILE	0
+# define MAP_FILE	0
 #endif
 
 /* The right way to map in the shared library files is MAP_COPY, which
@@ -46,7 +46,7 @@
    means if the file is overwritten, we may at some point get some pages
    from the new version after starting with pages from the old version.  */
 #ifndef MAP_COPY
-#define MAP_COPY	MAP_PRIVATE
+# define MAP_COPY	MAP_PRIVATE
 #endif
 
 /* Some systems link their relocatable objects for another base address
@@ -55,30 +55,30 @@
    This results in a more efficient address space usage.  Defaults to
    zero for almost all systems.  */
 #ifndef MAP_BASE_ADDR
-#define MAP_BASE_ADDR(l)	0
+# define MAP_BASE_ADDR(l)	0
 #endif
 
 
 #include <endian.h>
 #if BYTE_ORDER == BIG_ENDIAN
-#define byteorder ELFDATA2MSB
-#define byteorder_name "big-endian"
+# define byteorder ELFDATA2MSB
+# define byteorder_name "big-endian"
 #elif BYTE_ORDER == LITTLE_ENDIAN
-#define byteorder ELFDATA2LSB
-#define byteorder_name "little-endian"
+# define byteorder ELFDATA2LSB
+# define byteorder_name "little-endian"
 #else
-#error "Unknown BYTE_ORDER " BYTE_ORDER
-#define byteorder ELFDATANONE
+# error "Unknown BYTE_ORDER " BYTE_ORDER
+# define byteorder ELFDATANONE
 #endif
 
 #define STRING(x) __STRING (x)
 
 #ifdef MAP_ANON
 /* The fd is not examined when using MAP_ANON.  */
-#define ANONFD -1
+# define ANONFD -1
 #else
 int _dl_zerofd = -1;
-#define ANONFD _dl_zerofd
+# define ANONFD _dl_zerofd
 #endif
 
 /* Handle situations where we have a preferred location in memory for
@@ -87,10 +87,10 @@ int _dl_zerofd = -1;
 ELF_PREFERRED_ADDRESS_DATA;
 #endif
 #ifndef ELF_PREFERRED_ADDRESS
-#define ELF_PREFERRED_ADDRESS(loader, maplength, mapstartpref) (mapstartpref)
+# define ELF_PREFERRED_ADDRESS(loader, maplength, mapstartpref) (mapstartpref)
 #endif
 #ifndef ELF_FIXED_ADDRESS
-#define ELF_FIXED_ADDRESS(loader, mapstart) ((void) 0)
+# define ELF_FIXED_ADDRESS(loader, mapstart) ((void) 0)
 #endif
 
 size_t _dl_pagesize;
@@ -436,7 +436,7 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 
 static struct r_search_path_elem **
 internal_function
-decompose_rpath (const char *rpath, struct link_map *l)
+decompose_rpath (const char *rpath, struct link_map *l, const char *what)
 {
   /* Make a copy we can work with.  */
   const char *where = l->l_name;
@@ -445,7 +445,8 @@ decompose_rpath (const char *rpath, struct link_map *l)
   struct r_search_path_elem **result;
   size_t nelems;
 
-  /* First see whether we must forget the RPATH from this object.  */
+  /* First see whether we must forget the RUNPATH and RPATH from this
+     object.  */
   if (_dl_inhibit_rpath != NULL && !__libc_enable_secure)
     {
       const char *found = strstr (_dl_inhibit_rpath, where);
@@ -455,8 +456,8 @@ decompose_rpath (const char *rpath, struct link_map *l)
 	  if ((found == _dl_inhibit_rpath || found[-1] == ':')
 	      && (found[len] == '\0' || found[len] == ':'))
 	    {
-	      /* This object is on the list of objects for which the RPATH
-		 must not be used.  */
+	      /* This object is on the list of objects for which the
+		 RUNPATH and RPATH must not be used.  */
 	      result = (struct r_search_path_elem **)
 		malloc (sizeof (*result));
 	      if (result == NULL)
@@ -473,7 +474,7 @@ decompose_rpath (const char *rpath, struct link_map *l)
      string tokens.  */
   copy = expand_dynamic_string_token (l, rpath);
   if (copy == NULL)
-    _dl_signal_error (ENOMEM, NULL, "cannot create RPATH copy");
+    _dl_signal_error (ENOMEM, NULL, "cannot create RUNPATH/RPATH copy");
 
   /* Count the number of necessary elements in the result array.  */
   nelems = 0;
@@ -488,7 +489,7 @@ decompose_rpath (const char *rpath, struct link_map *l)
   if (result == NULL)
     _dl_signal_error (ENOMEM, NULL, "cannot create cache for search path");
 
-  return fillin_rpath (copy, result, ":", 0, "RPATH", where);
+  return fillin_rpath (copy, result, ":", 0, what, where);
 }
 
 
@@ -570,15 +571,32 @@ _dl_init_paths (const char *llp)
     {
       assert (l->l_type != lt_loaded);
 
-      if (l->l_info[DT_RPATH])
-	/* Allocate room for the search path and fill in information
-	   from RPATH.  */
-	l->l_rpath_dirs =
-	  decompose_rpath ((const void *) (l->l_info[DT_STRTAB]->d_un.d_ptr
-					   + l->l_info[DT_RPATH]->d_un.d_val),
-			   l);
+      if (l->l_info[DT_RUNPATH])
+	{
+	  /* Allocate room for the search path and fill in information
+	     from RUNPATH.  */
+	  l->l_runpath_dirs =
+	    decompose_rpath ((const void *) (l->l_info[DT_STRTAB]->d_un.d_ptr
+					     + l->l_info[DT_RUNPATH]->d_un.d_val),
+			     l, "RUNPATH");
+
+	  /* The RPATH is ignored.  */
+	  l->l_rpath_dirs = NULL;
+	}
       else
-	l->l_rpath_dirs = NULL;
+	{
+	  l->l_runpath_dirs = NULL;
+
+	  if (l->l_info[DT_RPATH])
+	    /* Allocate room for the search path and fill in information
+	       from RPATH.  */
+	    l->l_rpath_dirs =
+	      decompose_rpath ((const void *) (l->l_info[DT_STRTAB]->d_un.d_ptr
+					       + l->l_info[DT_RPATH]->d_un.d_val),
+			       l, "RPATH");
+	  else
+	    l->l_rpath_dirs = NULL;
+	}
     }
 #endif	/* PIC */
 
@@ -1036,7 +1054,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 			 "  phnum:   ", buf3, "\n\n", NULL);
     }
 
-  elf_get_dynamic_info (l->l_ld, l->l_addr, l->l_info);
+  elf_get_dynamic_info (l);
   if (l->l_info[DT_HASH])
     _dl_setup_hash (l);
 
@@ -1292,34 +1310,58 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       fd = -1;
 
-      /* First try the DT_RPATH of the dependent object that caused NAME
-	 to be loaded.  Then that object's dependent, and on up.  */
-      for (l = loader; fd == -1 && l; l = l->l_loader)
-	if (l->l_info[DT_RPATH])
-	  {
-	    /* Make sure the cache information is available.  */
-	    if (l->l_rpath_dirs == NULL)
+      /* When the object has the RUNPATH information we don't use any
+         RPATHs.  */
+      if (loader != NULL && loader->l_info[DT_RUNPATH] == NULL)
+	{
+	  /* First try the DT_RPATH of the dependent object that caused NAME
+	     to be loaded.  Then that object's dependent, and on up.  */
+	  for (l = loader; fd == -1 && l; l = l->l_loader)
+	    if (l->l_info[DT_RPATH])
 	      {
-		size_t ptrval = (l->l_info[DT_STRTAB]->d_un.d_ptr
-				 + l->l_info[DT_RPATH]->d_un.d_val);
-		l->l_rpath_dirs =
-		  decompose_rpath ((const char *) ptrval, l);
+		/* Make sure the cache information is available.  */
+		if (l->l_rpath_dirs == NULL)
+		  {
+		    size_t ptrval = (l->l_info[DT_STRTAB]->d_un.d_ptr
+				     + l->l_info[DT_RPATH]->d_un.d_val);
+		    l->l_rpath_dirs =
+		      decompose_rpath ((const char *) ptrval, l, "RPATH");
+		  }
+
+		if (l->l_rpath_dirs != NULL)
+		  fd = open_path (name, namelen, preloaded, l->l_rpath_dirs,
+				  &realname);
 	      }
 
-	    if (l->l_rpath_dirs != NULL)
-	      fd = open_path (name, namelen, preloaded, l->l_rpath_dirs,
-			      &realname);
-	  }
-
-      /* If dynamically linked, try the DT_RPATH of the executable itself.  */
-      l = _dl_loaded;
-      if (fd == -1 && l && l->l_type != lt_loaded && l != loader
-	  && l->l_rpath_dirs != NULL)
-	fd = open_path (name, namelen, preloaded, l->l_rpath_dirs, &realname);
+	  /* If dynamically linked, try the DT_RPATH of the executable
+             itself.  */
+	  l = _dl_loaded;
+	  if (fd == -1 && l && l->l_type != lt_loaded && l != loader
+	      && l->l_rpath_dirs != NULL)
+	    fd = open_path (name, namelen, preloaded, l->l_rpath_dirs,
+			    &realname);
+	}
 
       /* Try the LD_LIBRARY_PATH environment variable.  */
       if (fd == -1 && env_path_list != NULL)
 	fd = open_path (name, namelen, preloaded, env_path_list, &realname);
+
+      /* Look at the RUNPATH informaiton for this binary.  */
+      if (loader != NULL && loader->l_info[DT_RUNPATH])
+	{
+	  /* Make sure the cache information is available.  */
+	   if (loader->l_runpath_dirs == NULL)
+	      {
+		size_t ptrval = (loader->l_info[DT_STRTAB]->d_un.d_ptr
+				 + loader->l_info[DT_RUNPATH]->d_un.d_val);
+		loader->l_runpath_dirs =
+		  decompose_rpath ((const char *) ptrval, loader, "RUNPATH");
+	      }
+
+	   if (loader->l_runpath_dirs != NULL)
+	      fd = open_path (name, namelen, preloaded, loader->l_runpath_dirs,
+			      &realname);
+	}
 
       if (fd == -1)
 	{

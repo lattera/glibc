@@ -448,7 +448,8 @@ of this helper program; chances are you did not intend to run this program.\n\
                         object we get handle\n\
   --library-path PATH   use given PATH instead of content of the environment\n\
                         variable LD_LIBRARY_PATH\n\
-  --inhibit-rpath LIST  ignore RPATH information in object names in LIST\n",
+  --inhibit-rpath LIST  ignore RUNPATH and RPATH information in object names\n\
+                        in LIST\n",
 			  NULL);
 
       ++_dl_skip_args;

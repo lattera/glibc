@@ -1,3 +1,23 @@
+1999-07-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-fini.c: Handle DT_FINI_ARRAY.
+	* elf/link.h (struct link_map): Remove l_init_running.  Add l_runcount
+	and l_initcount.
+	* elf/dl-init.c: Handle DT_INIT_ARRAY.
+	* elf/dynamic-link.h: Change parameters.  Now only get link_map
+	pointer.  Calculate l_initcount.
+
+	* elf/link.h (struct link_map): Add l_runpath_dirs.
+	* elf/dynamic-link.h: If RUNPATH is given, set RPATH to NULL.
+	* elf/dl-load.c: Pretty print.
+	(decompose_rpath): Take new parameter with info from where the path
+	comes.  Pass it the fillin_rpath.
+	(_dl_init_paths): Initialize l_runpath_dirs.
+	(_dl_map_object): Don't search using RPATHs if object has RUNPATH.
+	Search using RUNPATH after LD_LIBRARY_PATH.
+	* elf/dl-support.c: Adjust comment.
+	* elf/rtld.c: Adjust help message.
+
 1999-07-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* elf/rtld.c (dl_main): Adopt to changed _dl_lookup_symbol

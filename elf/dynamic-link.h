@@ -34,12 +34,17 @@ extern int _dl_verbose __attribute__ ((unused));
 /* Read the dynamic section at DYN and fill in INFO with indices DT_*.  */
 
 static inline void __attribute__ ((unused))
-elf_get_dynamic_info (ElfW(Dyn) *dyn, ElfW(Addr) l_addr,
-		      ElfW(Dyn) *info[DT_NUM + DT_PROCNUM + DT_VERSIONTAGNUM
-				     + DT_EXTRANUM])
+elf_get_dynamic_info (struct link_map *l)
 {
+  ElfW(Dyn) *dyn = l->l_ld;
+  ElfW(Addr) l_addr;
+  ElfW(Dyn) **info;
+
   if (! dyn)
     return;
+
+  l_addr = l->l_addr;
+  info = l->l_info;
 
   while (dyn->d_tag != DT_NULL)
     {
@@ -106,6 +111,16 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn, ElfW(Addr) l_addr,
       if (flags & DF_BIND_NOW)
 	info[DT_BIND_NOW] = info[DT_FLAGS];
     }
+  /* Determine how many constructors there are.  */
+  if (info[DT_INIT_ARRAY] != NULL)
+    info[DT_INIT_ARRAY]->d_un.d_ptr += l_addr;
+  l->l_initcount = 1 + (info[DT_INIT_ARRAY]
+			? (info[DT_INIT_ARRAYSZ]->d_un.d_val
+			   / sizeof (ElfW(Addr)))
+			: 0);
+  if (info[DT_RUNPATH] != NULL)
+    /* If both RUNPATH and RPATH are given, the latter is ignored.  */
+    info[DT_RPATH] = NULL;
 }
 
 #ifdef RESOLVE

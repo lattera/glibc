@@ -1,5 +1,5 @@
 /* Return the next shared object initializer function not yet run.
-   Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,39 +38,59 @@ _dl_init_next (struct r_scope_elem *searchlist)
   while (i-- > 0)
     {
       struct link_map *l = searchlist->r_list[i];
+      ElfW(Addr) *array;
 
       if (l->l_init_called)
 	/* This object is all done.  */
 	continue;
 
-      if (l->l_init_running)
+      /* Check for object which constructors we do not run here.
+	 XXX Maybe this should be pre-computed, but where?  */
+      if (l->l_name[0] == '\0' && l->l_type == lt_executable)
 	{
-	  /* This object's initializer was just running.
-	     Now mark it as having run, so this object
-	     will be skipped in the future.  */
-	  l->l_init_running = 0;
 	  l->l_init_called = 1;
 	  continue;
 	}
 
-      if (l->l_info[DT_INIT]
-	  && (l->l_name[0] != '\0' || l->l_type != lt_executable))
+      /* Account for running next constructor.  */
+      ++l->l_runcount;
+
+      if (l->l_runcount == 1)
 	{
-	  /* Run this object's initializer.  */
-	  l->l_init_running = 1;
+	  /* Try running the DT_INIT constructor.  */
+	  if (l->l_info[DT_INIT])
+	    {
+	      /* Print a debug message if wanted.  */
+	      if (_dl_debug_impcalls)
+		_dl_debug_message (1, "\ncalling init: ",
+				   l->l_name[0] ? l->l_name : _dl_argv[0],
+				   "\n\n", NULL);
 
-	  /* Print a debug message if wanted.  */
-	  if (_dl_debug_impcalls)
-	    _dl_debug_message (1, "\ncalling init: ",
-				l->l_name[0] ? l->l_name : _dl_argv[0],
-				"\n\n", NULL);
+	      return l->l_addr + l->l_info[DT_INIT]->d_un.d_ptr;
+	    }
 
-	  return l->l_addr + l->l_info[DT_INIT]->d_un.d_ptr;
+	  /* No DT_INIT, so go on with the array.  */
+	  ++l->l_runcount;
 	}
 
-      /* No initializer for this object.
-	 Mark it so we will skip it in the future.  */
-      l->l_init_called = 1;
+      if (l->l_runcount > l->l_initcount)
+	{
+	  /* That were all of the constructors.  */
+	  l->l_runcount = 0;
+	  l->l_init_called = 1;
+	  continue;
+	}
+
+      /* Print a debug message if wanted.  */
+      if (_dl_debug_impcalls && l->l_info[DT_INIT] == NULL
+	  && l->l_runcount == 2)
+	_dl_debug_message (1, "\ncalling init: ",
+			   l->l_name[0] ? l->l_name : _dl_argv[0],
+			   "\n\n", NULL);
+
+      array = (ElfW(Addr) *) l->l_info[DT_INIT_ARRAY]->d_un.d_ptr;
+      return l->l_addr + array[l->l_runcount - 2];
+      /* NOTREACHED */
     }
 
 

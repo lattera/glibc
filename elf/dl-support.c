@@ -51,7 +51,8 @@ struct r_search_path *_dl_search_paths;
 /* We never do profiling.  */
 const char *_dl_profile;
 
-/* Names of shared object for which the RPATHs should be ignored.  */
+/* Names of shared object for which the RUNPATHs and RPATHs should be
+   ignored.  */
 const char *_dl_inhibit_rpath;
 
 /* The map for the object we will profile.  */

@@ -163,7 +163,6 @@ struct link_map
       } l_type:2;
     unsigned int l_relocated:1;	/* Nonzero if object's relocations done.  */
     unsigned int l_init_called:1; /* Nonzero if DT_INIT function called.  */
-    unsigned int l_init_running:1; /* Nonzero while DT_INIT function runs.  */
     unsigned int l_global:1;	/* Nonzero if object in _dl_global_scope.  */
     unsigned int l_reserved:2;	/* Reserved for internal use.  */
 
@@ -202,6 +201,16 @@ struct link_map
 
     /* Nonzero if the data structure pointed to by `l_phdr' is allocated.  */
     int l_phdr_allocated;
+
+    /* Counter for running constructors and destructors.  */
+    unsigned int l_runcount;
+
+    /* Number of constructors.  We compute this during loading to avoid
+       duplication of this during the possibly many calls to _dl_init_next.  */
+    unsigned int l_initcount;
+
+    /* Collected information about own RUNPATH directories.  */
+    struct r_search_path_elem **l_runpath_dirs;
   };
 
 #endif /* link.h */
