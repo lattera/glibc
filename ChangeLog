@@ -1,3 +1,10 @@
+2001-10-31  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/register-dump (REGISTER_DUMP):
+	Correct second argument of register_dump call.
+	* sysdeps/unix/sysv/linux/s390/s390-64/register-dump (REGISTER_DUMP):
+	Likewise.
+
 2001-10-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/Makefile: Add support for IBM1132, IBM1133, and IBM1162
