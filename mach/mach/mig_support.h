@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,19 @@
 #include <mach/message.h>
 #include <sys/types.h>
 #include <string.h>
+
+#ifndef __USE_GNU
+/* The only problem that has come up so far is __stpncpy being undeclared
+   below because <string.h> doesn't declare it without __USE_GNU.  We could
+   work around that problem by just adding the declaration there, or by
+   eliding the inline functions in the absence of __USE_GNU.  But either of
+   these would result in unoptimized calls (because no inline version of
+   __stpncpy will have been defined), and there may be other niggling
+   problems lurking.  Instead we simply insist on _GNU_SOURCE for
+   compiling mig output; anyway, that better reflects the fact that mig
+   output requires nonstandard special support code not found elsewhere.  */
+# error mig stubs must be compiled with -D_GNU_SOURCE
+#endif
 
 /* MiG initialization.  */
 extern void __mig_init (void *__first);
