@@ -149,12 +149,13 @@ lib-noranlib: $(common-objpfx)hurd/libhurduser-link.so
 endif
 
 $(link-rpcuserlibs): %-link.so: %_pic.a
-# The $(build-module) variable now contains a sequence of several commands,
-# so we can't tweak the ld command just by adding text to this command line.
-	$(build-module)
-LDFLAGS-link-rpcuserlibs = -nostdlib -Wl,-soname=$(*F).so$($(*F).so-version)
-LDFLAGS-libmachuser-link.so = $(LDFLAGS-link-rpcuserlibs)
-LDFLAGS-libhurduser-link.so = $(LDFLAGS-link-rpcuserlibs)
+# These shared objects are just for the purpose of linking libc,
+# so they don't need abi-note.o linked into them.
+	$(build-module-helper) \
+		-o $@ -nostdlib -Wl,-soname=$(*F).so$($(*F).so-version) \
+		-Wl,--whole-archive \
+		$(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
+		$(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
 
 # And get them into the libc.so ldscript.
 $(inst_libdir)/libc.so: $(rpcuserlibs)
