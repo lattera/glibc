@@ -62,7 +62,7 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
   int already_canceled = 0;
 
   /* Check whether the mutex is locked and owned by this thread.  */
-  if (mutex->__m_kind != PTHREAD_MUTEX_TIMED_NP  
+  if (mutex->__m_kind != PTHREAD_MUTEX_TIMED_NP
       && mutex->__m_kind != PTHREAD_MUTEX_ADAPTIVE_NP
       && mutex->__m_owner != self)
     return EINVAL;
@@ -123,7 +123,7 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
   pthread_extricate_if extr;
 
   /* Check whether the mutex is locked and owned by this thread.  */
-  if (mutex->__m_kind != PTHREAD_MUTEX_TIMED_NP  
+  if (mutex->__m_kind != PTHREAD_MUTEX_TIMED_NP
       && mutex->__m_kind != PTHREAD_MUTEX_ADAPTIVE_NP
       && mutex->__m_owner != self)
     return EINVAL;
@@ -226,5 +226,23 @@ int pthread_condattr_init(pthread_condattr_t *attr)
 
 int pthread_condattr_destroy(pthread_condattr_t *attr)
 {
+  return 0;
+}
+
+int pthread_condattr_getpshared (const pthread_condattr_t *attr, int *pshared)
+{
+  *pshared = PTHREAD_PROCESS_PRIVATE;
+  return 0;
+}
+
+int pthread_condattr_setpshared (pthread_condattr_t *attr, int pshared)
+{
+  if (pshared != PTHREAD_PROCESS_PRIVATE && pshared != PTHREAD_PROCESS_SHARED)
+    return EINVAL;
+
+  /* For now it is not possible to shared a conditional variable.  */
+  if (pshared != PTHREAD_PROCESS_PRIVATE)
+    return ENOSYS;
+
   return 0;
 }
