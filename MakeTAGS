@@ -1,5 +1,6 @@
 # Make the TAGS files.
-# Copyright (C) 1992,1994,1995,1996,1998,2002 Free Software Foundation, Inc.
+# Copyright (C) 1992,1994,1995,1996,1998,2002,2003
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +26,9 @@ ifdef subdir
 endif
 
 include $(..)Makeconfig
+
+# Pass these to $(MAKE) calls to avoid source generation and such.
+sub-make-vars = generating=t no_deps=t
 
 ifndef tags_sources
 ifeq ($(subdir),ctype)
@@ -123,7 +127,7 @@ TAGS: subdir_TAGS
 .PHONY: subdir_TAGS $(subdirs:%=%/TAGS)
 subdir_TAGS: $(subdirs:%=%/TAGS)
 $(subdirs:%=%/TAGS):
-	$(MAKE) -C $(@D) no_deps=t $(@F)
+	$(MAKE) -C $(@D) $(sub-make-vars) $(@F)
 
 endif # subdir
 
@@ -180,6 +184,6 @@ ifeq ($(with-cvs),yes)
 endif
 
 $(subdirs:%=$P/%.pot): $P/%.pot: FORCE
-	$(MAKE) -C $* no_deps=t ../$@
+	$(MAKE) -C $* $(sub-make-vars) ../$@
 FORCE:
 endif
