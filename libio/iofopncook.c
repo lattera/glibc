@@ -75,7 +75,8 @@ _IO_cookie_seek (fp, offset, dir)
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
 
   return ((cfile->__io_functions.seek == NULL
-	   || cfile->__io_functions.seek (cfile->__cookie, &offset, dir))
+	   || (cfile->__io_functions.seek (cfile->__cookie, &offset, dir)
+	       == (_IO_off64_t) -1))
 	  ? _IO_pos_BAD : offset);
 }
 
