@@ -70,6 +70,6 @@ libc {
     # i*
     iruserok_af;
     # r*
-    rcmd_af; rexec_af; rrsesvport_af; ruserok_af;
+    rcmd_af; rexec_af; rresvport_af; ruserok_af;
   }
 }
