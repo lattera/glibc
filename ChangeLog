@@ -1,8 +1,22 @@
+2003-03-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (BREAK_INSN_1, BREAK_INSN,
+	ASM_OUTARGS_0, ASM_OUTARGS_1, ASM_OUTARGS_2, ASM_OUTARGS_3,
+	ASM_OUTARGS_4, ASM_OUTARGS_5, ASM_OUTARGS_6): Define.
+	(INTERNAL_SYSCALL, INLINE_SYSCALL): Use it.  Make syscall arguments
+	clobbered by the syscall.
+	(ASM_ARGS_1, ASM_ARGS_2, ASM_ARGS_3, ASM_ARGS_4, ASM_ARGS_5,
+	ASM_ARGS_6): Change constraints from r to index of corresponding
+	output register.
+	* sysdeps/unix/sysv/linux/ia64/clone2.S (__clone2): Swap
+	ptid and ctid to match kernel.
+	* sysdeps/unix/sysv/linux/ia64/system.c (FORK): Likewise.
+
 2003-03-12  Steven Munroe  <sjmunroe@us.ibm.com>
 
-        * sysdeps/powerpc/powerpc64/elf/configure.in: Remove
+	* sysdeps/powerpc/powerpc64/elf/configure.in: Remove
 	AC_DEFINE(PI_STATIC_AND_HIDDEN).  Not supported for PowerPC64.
-        * sysdeps/powerpc/powerpc64/elf/configure: Regenerated.
+	* sysdeps/powerpc/powerpc64/elf/configure: Regenerated.
 
 2003-03-11  Roland McGrath  <roland@redhat.com>
 

@@ -42,8 +42,8 @@ ENTRY(__clone2)
 	mov out0=in3		/* Flags are first syscall argument.	*/
 	mov out1=in1		/* Stack address.			*/
 	mov out2=in2		/* Stack size.				*/
-	mov out3=in7		/* Child TID Pointer			*/
-	mov out4=in5		/* Parent TID Pointer			*/
+	mov out3=in5		/* Parent TID Pointer			*/
+	mov out4=in7		/* Child TID Pointer			*/
  	mov out5=in6		/* TLS pointer				*/
         DO_CALL (SYS_ify (clone2))
         cmp.eq p6,p0=-1,r10

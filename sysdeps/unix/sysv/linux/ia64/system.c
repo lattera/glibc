@@ -35,7 +35,7 @@
 #ifdef __ASSUME_CLONE_THREAD_FLAGS
 # define FORK() \
   INLINE_SYSCALL (clone2, 6, CLONE_PARENT_SETTID | SIGCHLD, NULL, 0, \
-		  NULL, &pid, NULL)
+		  &pid, NULL, NULL)
 #endif
 
 static void cancel_handler (void *arg);

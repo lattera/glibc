@@ -105,6 +105,9 @@
 
 #else /* not __ASSEMBLER__ */
 
+#define BREAK_INSN_1(num) "break " #num ";;\n\t"
+#define BREAK_INSN(num) BREAK_INSN_1(num)
+
 /* On IA-64 we have stacked registers for passing arguments.  The
    "out" registers end up being the called function's "in"
    registers.
@@ -121,10 +124,10 @@
     register long _r15 asm ("r15") = __NR_##name;		\
     long _retval;						\
     LOAD_ARGS_##nr (args);					\
-    __asm __volatile ("break %3;;\n\t"				\
+    __asm __volatile (BREAK_INSN (__BREAK_SYSCALL)		\
                       : "=r" (_r8), "=r" (_r10), "=r" (_r15)	\
-                      : "i" (__BREAK_SYSCALL), "2" (_r15)	\
-			ASM_ARGS_##nr				\
+			ASM_OUTARGS_##nr			\
+                      : "2" (_r15) ASM_ARGS_##nr		\
                       : "memory" ASM_CLOBBERS_##nr);		\
     _retval = _r8;						\
     if (_r10 == -1)						\
@@ -145,10 +148,10 @@
     register long _r15 asm ("r15") = __NR_##name;		\
     long _retval;						\
     LOAD_ARGS_##nr (args);					\
-    __asm __volatile ("break %3;;\n\t"				\
+    __asm __volatile (BREAK_INSN (__BREAK_SYSCALL)		\
                       : "=r" (_r8), "=r" (_r10), "=r" (_r15)	\
-                      : "i" (__BREAK_SYSCALL), "2" (_r15)	\
-			ASM_ARGS_##nr				\
+			ASM_OUTARGS_##nr			\
+                      : "2" (_r15) ASM_ARGS_##nr		\
                       : "memory" ASM_CLOBBERS_##nr);		\
     _retval = _r8;						\
     err = _r10;							\
@@ -180,13 +183,21 @@
   register long _out5 asm ("out5") = (long) (out5);	\
   LOAD_ARGS_5 (out0, out1, out2, out3, out4)
 
+#define ASM_OUTARGS_0
+#define ASM_OUTARGS_1	ASM_OUTARGS_0, "=r" (_out0)
+#define ASM_OUTARGS_2	ASM_OUTARGS_1, "=r" (_out1)
+#define ASM_OUTARGS_3	ASM_OUTARGS_2, "=r" (_out2)
+#define ASM_OUTARGS_4	ASM_OUTARGS_3, "=r" (_out3)
+#define ASM_OUTARGS_5	ASM_OUTARGS_4, "=r" (_out4)
+#define ASM_OUTARGS_6	ASM_OUTARGS_5, "=r" (_out5)
+
 #define ASM_ARGS_0
-#define ASM_ARGS_1      ASM_ARGS_0, "r" (_out0)
-#define ASM_ARGS_2      ASM_ARGS_1, "r" (_out1)
-#define ASM_ARGS_3      ASM_ARGS_2, "r" (_out2)
-#define ASM_ARGS_4      ASM_ARGS_3, "r" (_out3)
-#define ASM_ARGS_5      ASM_ARGS_4, "r" (_out4)
-#define ASM_ARGS_6	ASM_ARGS_5, "r" (_out5)
+#define ASM_ARGS_1	ASM_ARGS_0, "3" (_out0)
+#define ASM_ARGS_2	ASM_ARGS_1, "4" (_out1)
+#define ASM_ARGS_3	ASM_ARGS_2, "5" (_out2)
+#define ASM_ARGS_4	ASM_ARGS_3, "6" (_out3)
+#define ASM_ARGS_5	ASM_ARGS_4, "7" (_out4)
+#define ASM_ARGS_6	ASM_ARGS_5, "8" (_out5)
 
 #define ASM_CLOBBERS_0	ASM_CLOBBERS_1, "out0"
 #define ASM_CLOBBERS_1	ASM_CLOBBERS_2, "out1"
