@@ -46,9 +46,13 @@ extern __inline__ int __mknod (__const char *__path, __mode_t __mode,
 # define __fstat(fd, buf)  INTUSE(__fxstat) (_STAT_VER, fd, buf)
 
 # define __fxstat(ver, fd, buf) INTUSE(__fxstat) (ver, fd, buf)
-# define __fxstat64(ver, fd, buf) INTUSE(__fxstat64) (ver, fd, buf)
+# ifndef __fxstat64
+#  define __fxstat64(ver, fd, buf) INTUSE(__fxstat64) (ver, fd, buf)
+# endif
 # define __lxstat(ver, name, buf) INTUSE(__lxstat) (ver, name, buf)
-# define __lxstat64(ver, name, buf) INTUSE(__lxstat64) (ver, name, buf)
+# ifndef __lxstat64
+#  define __lxstat64(ver, name, buf) INTUSE(__lxstat64) (ver, name, buf)
+# endif
 #else
 # define fstat64(fd, buf) __fxstat64 (_STAT_VER, fd, buf)
 # define fstat(fd, buf) __fxstat (_STAT_VER, fd, buf)
