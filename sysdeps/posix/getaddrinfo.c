@@ -576,7 +576,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
       if (at->family == AF_UNSPEC && (req->ai_flags & AI_NUMERICHOST) == 0)
 	{
-	  struct hostent *h;
+	  struct hostent *h = NULL;
 	  struct gaih_addrtuple **pat = &at;
 	  int no_data = 0;
 	  int no_inet6_data = 0;
@@ -656,8 +656,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			  char *buf = alloca (max_fqdn_len);
 			  char *s;
 
-			  if (DL_CALL_FCT (cfct, (name, buf, max_fqdn_len,
-						  &s, &rc, &herrno))
+			  if (DL_CALL_FCT (cfct, (h->h_name ?: name, buf,
+						  max_fqdn_len, &s, &rc,
+						  &herrno))
 			      == NSS_STATUS_SUCCESS)
 			    canon = s;
 			  else
@@ -856,7 +857,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    (*pai)->ai_addr = (void *) (*pai + 1);
 
 	    /* We only add the canonical name once.  */
-	    (*pai)->ai_canonname = canon;
+	    (*pai)->ai_canonname = (char *) canon;
 	    canon = NULL;
 
 #if SALEN

@@ -52,7 +52,7 @@ _nss_dns_getcanonname_r (const char *name, char *buffer, size_t buflen,
     querybuf *buf;
     unsigned char *ptr;
   } ansp = { .ptr = buf };
-  enum nss_status status;
+  enum nss_status status = NSS_STATUS_UNAVAIL;
   int qtypes[] = { ns_t_a, ns_t_aaaa };
 #define nqtypes (sizeof (qtypes) / sizeof (qtypes[0]))
 

@@ -1,3 +1,17 @@
+2004-08-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Cast canon to (char *)
+	to avoid warning.
+
+	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Initialize
+	status to NSS_STATUS_UNAVAIL.
+
+2004-08-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Use h->h_name in the
+	cannoname lookup since it has the FQDN even if the original NAME
+	value has not.
+
 2004-08-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Store NAME parameter
