@@ -56,7 +56,7 @@
 
 #define str		in0
 
-ENTRY(memchr)
+ENTRY(__memchr)
 	alloc saved_pfs = ar.pfs, 3, 0, 29, 32
 #include "softpipe.h"
 	.rotr	value[MEMLAT+1], addr[MEMLAT+3], aux[2], poschr[2]
@@ -121,4 +121,6 @@ ENTRY(memchr)
 	mov	ar.lc = saved_lc
 	br.ret.sptk.many b0
 
-END(memchr)
+END(__memchr)
+
+weak_alias (__memchr, memchr)

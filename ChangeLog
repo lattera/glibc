@@ -35,6 +35,22 @@
 	* string/Makefile (o-objects.ob): Add variable to pull
 	unbounded versions of memcpy, memset and memchr into libc_b.
 
+	* sysdeps/generic/bp-checks.h: Use unbounded __memchr
+	rather than non-existent __ubp_memchr.
+	(CHECK_STRINGopt, CHECK_FCNTL, BOUNDED_N, BOUNDED_1): New macros.
+	(_CHECK_STRING, _CHECK_N): New macros.
+	(CHECK_STRING, CHECK_N, CHECK_Nopt): Rewrite in terms of _CHECK_*.
+	(CHECK_IOCTL): Move inside `#if !__ASSEMBLER__'.
+	* sysdeps/alpha/memchr.S: Change strong name to "__memchr".
+	Add weak alias "memchr".
+	* sysdeps/generic/memchr.c: Likewise.
+	* sysdeps/i386/memchr.S: Likewise.
+	* sysdeps/ia64/memchr.S: Likewise.
+	* sysdeps/m68k/memchr.S: Likewise.
+	* sysdeps/sparc/sparc32/memchr.S: Likewise.
+	* sysdeps/sparc/sparc64/memchr.S: Likewise.
+	* sysdeps/vax/memchr.s: Likewise.
+
 2000-07-17  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconv/gconv_open.c (__gconv_open): Initialize the __data

@@ -50,13 +50,14 @@
 #endif
 
 #include <sys/types.h>
+#include <bp-sym.h>
 
 #undef memchr
 
 
 /* Search no more than N bytes of S for C.  */
 __ptr_t
-memchr (s, c_in, n)
+__memchr (s, c_in, n)
      const __ptr_t s;
      int c_in;
      size_t n;
@@ -200,3 +201,4 @@ memchr (s, c_in, n)
 
   return 0;
 }
+weak_alias (__memrchr, BP_SYM (memrchr))

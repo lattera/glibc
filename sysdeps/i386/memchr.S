@@ -42,7 +42,7 @@
 #define LEN	CHR+4
 
 	.text
-ENTRY (BP_SYM (memchr))
+ENTRY (BP_SYM (__memchr))
 	ENTER
 
 	/* Save callee-safe registers used in this function.  */
@@ -325,4 +325,6 @@ L(pop):	popl %edi		/* pop saved registers */
 
 	LEAVE
 	RET_PTR
-END (BP_SYM (memchr))
+END (BP_SYM (__memchr))
+
+weak_alias (BP_SYM (__memchr), BP_SYM (memchr))

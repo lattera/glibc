@@ -45,7 +45,7 @@
 
 #include "DEFS.h"
 
-ENTRY(memchr, 0)
+ENTRY(__memchr, 0)
 	movq	4(ap),r1	# r1 = cp; r2 = c
 	movl	12(ap),r0	# r0 = n
 	movzwl	$65535,r4	# handy constant
@@ -67,3 +67,6 @@ ENTRY(memchr, 0)
 	decw	r0		# from 0 to 65535
 	subl2	r0,r4		# adjust n
 	brb	0b		# and loop
+
+weak_alias (__memchr, memchr)
+	
