@@ -1,3 +1,19 @@
+Tue Sep 26 16:50:17 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* gmon: New directory of profiling code, incorporated from
+	4.4BSD-Lite and modified.
+	* sysdeps/i386/machine-gmon.h: New file.
+	* sysdeps/stub/machine-gmon.h: New file.
+	* sysdeps/mach/hurd/profil.c: New file.
+	* sysdeps/stub/profil.c: New file.
+	* sysdeps/unix/bsd/profil.S: New file.
+	* Makefile (subdirs): Add gmon.
+	* csu/gmon-start.c: New file.
+	* csu/Makefile (extra-objs): Add gmon-start.o,
+	g$(start-installed-name).
+	(install-lib, omit-deps): Add g$(start-installed-name).
+	($(objpfx)g$(start-installed-name)): New target.
+
 Fri Sep 22 14:24:25 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/Makefile: Elide sunrpc from $(subdirs) for the

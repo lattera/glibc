@@ -20,18 +20,21 @@
 
 # This directory contains the C startup code (that which calls main).  This
 # consists of the startfile, built from start.c and installed as crt0.o
-# (traditionally) or crt1.o (for ELF); and some initialization code which
-# is in the C library itself.  In ELF we also install crti.o and crtn.o,
-# special "initializer" and "finalizer" files in used in the link to make
-# the .init and .fini sections work right; both these files are built (in
-# an arcane manner) from initfini.c.
+# (traditionally) or crt1.o (for ELF).  In ELF we also install crti.o and
+# crtn.o, special "initializer" and "finalizer" files in used in the link
+# to make the .init and .fini sections work right; both these files are
+# built (in an arcane manner) from initfini.c.
 
 subdir := csu
 
 csu-dummies = $(filter-out $(start-installed-name),crt1.o Mcrt1.o)
-extra-objs = start.o $(start-installed-name) $(csu-dummies)
-omit-deps = $(patsubst %.o,%,$(start-installed-name) $(csu-dummies))
-install-lib = $(start-installed-name) $(csu-dummies)
+extra-objs = start.o gmon-start.o \
+	     $(start-installed-name) g$(start-installed-name) \
+	     $(csu-dummies)
+omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
+		             $(csu-dummies))
+install-lib = $(start-installed-name) g$(start-installed-name) \
+	      $(csu-dummies)
 distribute = initfini.c
 
 all: # Make this the default target; it will be defined in Rules.
@@ -94,6 +97,12 @@ $(objpfx)$(start-installed-name): $(objpfx)start.o
 	-rm -f $@
 	ln $< $@
 endif
+
+# The profiling startfile is made by linking together the normal
+# startfile with gmon-start.o, which defines a constructor function
+# to turn on profiling code at startup.
+$(objpfx)g$(start-installed-name): $(objpfx)start.o $(objpfx)gmon-start.o
+	$(CC) -nostdlib -nostartfiles -r -o $@ $^
 
 # These extra files are sometimes expected by system standard linking
 # procedures, but we have nothing for them to do.  So compile empty files.
