@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -143,6 +143,17 @@ struct termios {
 #define  B115200  00021
 #define  B230400  00022
 #define  B460800  00023
+#define  B500000  00024
+#define  B576000  00025
+#define  B921600  00026
+#define  B1000000 00027
+#define  B1152000 00030
+#define  B1500000 00031
+#define  B2000000 00032
+#define  B2500000 00033
+#define  B3000000 00034
+#define  B3500000 00035
+#define  B4000000 00036
 
 #define CSIZE	00001400
 #define   CS5	00000000

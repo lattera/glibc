@@ -1,5 +1,11 @@
 1999-01-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Add baud rates >
+	460800.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Likewise.
+
 	* math/Makefile (libm-calls): Rename s_nextafterx to s_nexttoward.
 	* math/Versions: Likewise.
 	* math/bits/mathcalls.h: Likewise.
