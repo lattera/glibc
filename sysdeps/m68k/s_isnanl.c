@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,10 +19,6 @@
 #include <math.h>
 #include "ieee754.h"
 
-#undef __isnanl
-#undef isnanl
-
-
 /* Return nonzero if VALUE is not a number.  */
 int
 __isnanl (long double value)
@@ -38,4 +34,5 @@ __isnanl (long double value)
 	  ((u.ieee.mantissa0 & 0x7fffffff) != 0 || u.ieee.mantissa1 != 0));
 }
 
+hidden_def (__isnanl)
 weak_alias (__isnanl, isnanl);
