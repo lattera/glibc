@@ -227,7 +227,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       switch (ELF32_R_TYPE (reloc->r_info))
 	{
 	case R_68K_COPY:
-	  if (sym->st_size != refsym->st_size)
+	  if (sym->st_size > refsym->st_size
+	      || (_dl_verbose && sym->st_size < refsym->st_size))
 	    {
 	      const char *strtab;
 
