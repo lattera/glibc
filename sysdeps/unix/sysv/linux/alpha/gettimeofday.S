@@ -32,7 +32,13 @@
 
 .text
 
-LEAF(__gettimeofday_tv64, 16)
+#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#define GETTIMEOFDAY	__gettimeofday_tv64
+#else
+#define GETTIMEOFDAY	__gettimeofday
+#endif
+
+LEAF(GETTIMEOFDAY, 16)
 	ldgp	gp, 0(pv)
 	subq	sp, 16, sp
 #ifdef PROF
@@ -62,7 +68,7 @@ LEAF(__gettimeofday_tv64, 16)
 	/* If we didn't get ENOSYS, it is a real error.  */
 	.align 3
 $err64:	cmpeq	v0, ENOSYS, t0
-	bne	t0, $error
+	beq	t0, $error
 	stl	t0, __libc_missing_axp_tv64
 
 	/* Recover the saved arguments.  */
@@ -91,8 +97,9 @@ $error:
 	addq	sp, 16, sp
 	jmp	zero, (pv), __syscall_error
 
-END(__gettimeofday_tv64)
+END(GETTIMEOFDAY)
 
+#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
 default_symbol_version (__gettimeofday_tv64, __gettimeofday, GLIBC_2.1)
 
 /* It seems to me to be a misfeature of the assembler that we can only
@@ -100,3 +107,6 @@ default_symbol_version (__gettimeofday_tv64, __gettimeofday, GLIBC_2.1)
    The 'p' is for 'public'.  *Shrug*  */
 strong_alias (__gettimeofday_tv64, __gettimeofday_tv64p)
 default_symbol_version (__gettimeofday_tv64p, gettimeofday, GLIBC_2.1)
+#else
+weak_alias (__gettimeofday, gettimeofday)
+#endif

@@ -32,7 +32,13 @@
 
 .text
 
-LEAF(__wait4_tv64, 32)
+#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#define WAIT4	__wait4_tv64
+#else
+#define WAIT4	__wait4
+#endif
+
+LEAF(WAIT4, 32)
 	ldgp	gp, 0(pv)
 	subq	sp, 32, sp
 #ifdef PROF
@@ -64,7 +70,7 @@ LEAF(__wait4_tv64, 32)
 	/* If we didn't get ENOSYS, it is a real error.  */
 	.align 3
 $err64:	cmpeq	v0, ENOSYS, t0
-	bne	t0, $error
+	beq	t0, $error
 	stl	t0, __libc_missing_axp_tv64
 
 	/* Recover the saved arguments.  */
@@ -79,7 +85,7 @@ $do32:	ldi	v0, SYS_ify(osf_wait4)
 	bne	a3, $error
 
 	/* Copy back to proper format.  */
-	ldq	a3, 8(sp)
+	ldq	a3, 24(sp)
 	beq	a3, 2f
 	ldl	t0, 0(a3)		# ru_utime.tv_sec
 	ldl	t1, 4(a3)		# ru_utime.tv_usec
@@ -98,6 +104,7 @@ $do32:	ldi	v0, SYS_ify(osf_wait4)
 	ldt	$f25, 96(a3)		# ru_msgrcv
 	ldt	$f26, 104(a3)		# ru_nsignals
 	ldt	$f27, 112(a3)		# ru_nvcsw
+	.set noat
 	ldt	$f28, 120(a3)		# ru_nivcsw
 	stq	t0, 0(a3)
 	stq	t1, 8(a3)
@@ -117,6 +124,7 @@ $do32:	ldi	v0, SYS_ify(osf_wait4)
 	stt	$f26, 120(a3)
 	stt	$f27, 128(a3)
 	stt	$f28, 136(a3)
+	.set at
 
 2:	addq	sp, 32, sp
 	ret
@@ -127,8 +135,9 @@ $error:
 	addq	sp, 32, sp
 	jmp	zero, (pv), __syscall_error
 
-END(__wait4_tv64)
+END(WAIT4)
 
+#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
 default_symbol_version (__wait4_tv64, __wait4, GLIBC_2.1)
 
 /* It seems to me to be a misfeature of the assembler that we can only
@@ -136,3 +145,6 @@ default_symbol_version (__wait4_tv64, __wait4, GLIBC_2.1)
    The 'p' is for 'public'.  *Shrug*  */
 strong_alias (__wait4_tv64, __wait4_tv64p)
 default_symbol_version (__wait4_tv64p, wait4, GLIBC_2.1)
+#else
+weak_alias (__wait4, wait4)
+#endif

@@ -32,7 +32,13 @@
 
 .text
 
-LEAF(__select_tv64, 64)
+#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#define SELECT	__select_tv64
+#else
+#define SELECT	__select
+#endif
+
+LEAF(SELECT, 64)
 	ldgp	gp, 0(pv)
 	subq	sp, 64, sp
 #ifdef PROF
@@ -64,7 +70,7 @@ LEAF(__select_tv64, 64)
 	/* If we didn't get ENOSYS, it is a real error.  */
 	.align 3
 $err64:	cmpeq	v0, ENOSYS, t0
-	bne	t0, $error
+	beq	t0, $error
 	stl	t0, __libc_missing_axp_tv64
 
 	/* Recover the saved arguments.  */
@@ -105,8 +111,9 @@ $error:
 	addq	sp, 64, sp
 	jmp	zero, (pv), __syscall_error
 
-END(__select_tv64)
+END(SELECT)
 
+#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
 default_symbol_version (__select_tv64, __select, GLIBC_2.1)
 
 /* It seems to me to be a misfeature of the assembler that we can only
@@ -114,3 +121,6 @@ default_symbol_version (__select_tv64, __select, GLIBC_2.1)
    The 'p' is for 'public'.  *Shrug*  */
 strong_alias (__select_tv64, __select_tv64p)
 default_symbol_version (__select_tv64p, select, GLIBC_2.1)
+#else
+weak_alias (__select, select)
+#endif
