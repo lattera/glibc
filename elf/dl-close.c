@@ -140,7 +140,7 @@ _dl_close (struct link_map *map)
 
 	  if (imap->l_versions != NULL)
 	    free (imap->l_versions);
-	  if (imap->l_origin != NULL)
+	  if (imap->l_origin != NULL && imap->l_origin != (char *) -1)
 	    free ((char *) imap->l_origin);
 
 	  /* This name always is allocated.  */
