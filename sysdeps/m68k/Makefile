@@ -34,3 +34,8 @@ long-double-fcts = yes
 ifeq ($(subdir),elf)
 CFLAGS-rtld.c += -Wno-uninitialized -Wno-unused
 endif
+
+ifeq ($(subdir),math)
+# Avoid a bug in gcc
+CFLAGS-s_copysignl.c += -mnobitfield
+endif
