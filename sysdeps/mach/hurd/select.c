@@ -121,16 +121,39 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	if (!err)
 	  {
 	    int tag = i;
+	    int type = types[i];
 	    err = __io_select (ports[i], port,
 			       /* Poll for each but the last.  */
 			       (i == lastfd && got == 0) ? to : 0,
-			       &types[i], &tag);
-	    if (!err)
+			       &type, &tag);
+	    switch (err)
 	      {
-		if (tag != i)
+	      case MACH_RCV_TIMED_OUT:
+		/* No immediate response.  This is normal.  */
+		err = 0;
+		break;
+
+	      case 0:
+		/* We got an answer.  This is not necessarily the answer to
+                   the query we sent just now.  It may correspond to any
+                   prior query which timed out before its answer arrived.  */
+		if (tag < 0 || tag > i ||
+		    (type & (SELECT_READ|SELECT_URG|SELECT_WRITE)) == 0)
+		  /* This is not a proper answer to any query we have yet
+                     made.  */
 		  err = EGRATUITOUS;
-		else if (types[i] & (SELECT_READ|SELECT_URG|SELECT_WRITE))
-		  ++got;
+		else
+		  {
+		    /* Some port is ready.  TAG tells us which.  */
+		    types[tag] &= type;
+		    ++got;
+		  }
+		break;
+
+	      default:
+		/* Any other error kills us.
+		   But we must continue to loop to free the ports.  */
+		break;
 	      }
 	  }
 	_hurd_port_free (&cells[i]->port, &ulink[i], ports[i]);

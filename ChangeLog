@@ -1,3 +1,18 @@
+Wed Aug 30 16:44:55 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/select.c: Deal with out of order replies
+	during io_select request loop.
+	Handle MACH_RCV_TIMED_OUT error from requests.
+	* hurd/intr-msg.c: If the user passed the MACH_RCV_TIMEOUT option,
+	distinguish MACH_RCV_TIMED_OUT from EINTR.
+
+	* posix/glob.c (glob): Use realloc to extend strings for GLOB_MARK
+	slash.
+	(glob_in_dir): Don't allocate extra byte here.
+
+	* sysdeps/i386/dl-machine.h (ELF_MACHINE_BEFORE_RTLD_RELOC):
+	Decrement the DT_RELSZ value for the skipped reloc.
+
 Tue Aug 29 12:35:56 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* time/australasia: Updated data from ADO.

@@ -417,7 +417,17 @@ glob (pattern, flags, errfunc, pglob)
       for (i = oldcount; i < pglob->gl_pathc; ++i)
 	if (__lstat (pglob->gl_pathv[i], &st) == 0 &&
 	    S_ISDIR (st.st_mode))
-	  strcat (pglob->gl_pathv[i], "/");
+	  {
+ 	    size_t len = strlen (pglob->gl_pathv[i]) + 2;
+	    char *new = realloc (pglob->gl_pathv[i], len);
+ 	    if (new == NULL)
+	      {
+		globfree (pglob);
+		return GLOB_NOSPACE;
+	      }
+	    strcpy (&new[len - 2], "/");
+	    pglob->gl_pathv[i] = new;
+	  }
     }
 
   if (!(flags & GLOB_NOSORT))
@@ -617,7 +627,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 		if (len == 0)
 		  len = strlen (name);
 		new->name
-		  = (char *) malloc (len + ((flags & GLOB_MARK) ? 1 : 0) + 1);
+		  = (char *) malloc (len + 1);
 		if (new->name == NULL)
 		  goto memory_error;
 		memcpy ((__ptr_t) new->name, name, len);
@@ -635,7 +645,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
       nfound = 1;
       names = (struct globlink *) __alloca (sizeof (struct globlink));
       names->next = NULL;
-      names->name = (char *) malloc (len + ((flags & GLOB_MARK) ? 1 : 0) + 1);
+      names->name = (char *) malloc (len + 1);
       if (names->name == NULL)
 	goto memory_error;
       memcpy (names->name, pattern, len);

@@ -35,6 +35,9 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 {
   struct hurd_sigstate *ss = _hurd_self_sigstate ();
   error_t err;
+  /* Notice now if the user requested a timeout.  OPTION may have the bit
+     added by interruption semantics, and we must distinguish.  */
+  int user_timeout = option & MACH_RCV_TIMEOUT;
 
   /* Tell the signal thread that we are doing an interruptible RPC on
      this port.  If we get a signal and should return EINTR, the signal
@@ -64,6 +67,15 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 
   switch (err)
     {
+    case MACH_RCV_TIMED_OUT:
+      if (user_timeout)
+	/* The real user RPC timed out.  */
+	break;
+      else
+	/* The operation was supposedly interrupted, but still has
+	   not returned.  Declare it interrupted.  */
+	goto interrupted;
+
     case MACH_SEND_INTERRUPTED: /* RPC didn't get out.  */
       if (ss->intr_port != MACH_PORT_NULL)
 	/* If this signal was for us and it should interrupt calls, the
@@ -78,10 +90,7 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	 so the signal thread destroyed the reply port.  */
       /* FALLTHROUGH */
 
-    case MACH_RCV_TIMED_OUT:
-      /* The operation was supposedly interrupted, but still has
-	 not returned.  Declare it interrupted.  */
-
+    interrupted:
       err = EINTR;
 
       /* The EINTR return indicates cancellation, so clear the flag.  */
@@ -95,7 +104,9 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	  /* This signal or cancellation was for us.  We need to wait for
              the reply, but not hang forever.  */
 	  option |= MACH_RCV_TIMEOUT;
-	  timeout = _hurd_interrupted_rpc_timeout;
+	  /* Never decrease the user's timeout.  */
+	  if (!user_timeout || timeout > _hurd_interrupted_rpc_timeout)
+	    timeout = _hurd_interrupted_rpc_timeout;
 	}
       goto message;		/* Retry the receive.  */
 
