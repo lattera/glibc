@@ -324,11 +324,12 @@ __gconv_lookup_cache (const char *toset, const char *fromset,
  try_internal:
   /* See whether we can convert via the INTERNAL charset.  */
   if ((fromidx != 0 && __builtin_expect (from_module->fromname_offset, 1) == 0)
-      || (toidx != 0 && __builtin_expect (to_module->toname_offset, 1) == 0))
+      || (toidx != 0 && __builtin_expect (to_module->toname_offset, 1) == 0)
+      || (fromidx == 0 && toidx == 0))
     /* Not possible.  Nothing we can do.  */
     return __GCONV_NOCONV;
 
-  /* Use the two modules.  */
+  /* We will use up to two modules.  Always allocate room for two.  */
   result = (struct __gconv_step *) malloc (2 * sizeof (struct __gconv_step));
   if (result == NULL)
     return __GCONV_NOMEM;
