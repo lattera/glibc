@@ -65,3 +65,4 @@ thread_start:
 .L1:	.long   _exit - .L0
 #endif
 PSEUDO_END (__clone)
+weak_alias (__clone, clone)

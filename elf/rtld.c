@@ -130,7 +130,7 @@ _dl_start (void *arg)
 {
   struct link_map bootstrap_map;
   hp_timing_t start_time;
-#if !__GNUC_PREREQ (2, 96)
+#ifndef HAVE_BUILTIN_MEMSET
   size_t cnt;
 #endif
 
@@ -150,7 +150,7 @@ _dl_start (void *arg)
      `memset' since it might not be built in or inlined and we cannot
      make function calls at this point.  Use '__builtin_memset' if we
      know it is available.  */
-#if __GNUC_PREREQ (2, 96)
+#ifdef HAVE_BUILTIN_MEMSET
   __builtin_memset (bootstrap_map.l_info, '\0', sizeof (bootstrap_map.l_info));
 #else
   for (cnt = 0;
@@ -1366,6 +1366,12 @@ of this helper program; chances are you did not intend to run this program.\n\
     /* This means we actually have some modules which use TLS.
        Computer the TLS offsets for the various blocks.  */
     _dl_determine_tlsoffset (GL(dl_initimage_list)->l_tls_nextimage);
+
+  /* Construct the static TLS block and the dtv for the initial
+     thread.  For some platforms this will include allocating memory
+     for the thread descriptor.  The memory for the TLS block will
+     never be freed.  It should be allocated accordingly.  The dtv
+     array can be changed if dynamic loading requires it.  */
 #endif
 
   {

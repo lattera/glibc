@@ -25,6 +25,12 @@ main (void)
   int r;
   int e;
 
+  if (getuid () == 0)
+    {
+      puts ("this test needs to be run by ordinary user");
+      exit (0);
+    }
+
   dname = mkdtemp (tmp);
   if (dname == NULL)
     {

@@ -1,5 +1,5 @@
 /* Low-level statistical profiling support function.  Linux/s390 version.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,5 +23,5 @@
 static void
 profil_counter (int signo, SIGCONTEXT scp)
 {
-  profile_count((void *) ((unsigned long) GET_PC (scp) & 0x7fffffffUL));
+  profil_count((void *) ((unsigned long) GET_PC (scp) & 0x7fffffffUL));
 }

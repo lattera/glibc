@@ -19,11 +19,11 @@
 
 #include <assert.h>
 
+#include <tls.h>
 
 /* We don't need any of this if TLS is not supported.  */
 #ifdef USE_TLS
 
-#include <tls.h>
 #include <dl-tls.h>
 #include <ldsodefs.h>
 

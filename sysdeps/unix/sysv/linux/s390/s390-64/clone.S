@@ -53,3 +53,4 @@ thread_start:
 #endif
 	jg	_exit@PLT	/* branch to _exit -> thread termination */
 PSEUDO_END (__clone)
+weak_alias (__clone, clone)

@@ -85,6 +85,9 @@
 /* Define if the compiler supports __builtin_expect.  */
 #undef	HAVE_BUILTIN_EXPECT
 
+/* Define if the compiler supports __builtin_memset.  */
+#undef	HAVE_BUILTIN_MEMSET
+
 /* Define if the regparm attribute shall be used for local functions
    (gcc on ix86 only).  */
 #undef	USE_REGPARMS

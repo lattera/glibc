@@ -1,13 +1,45 @@
+2002-02-07  Andreas Schwab  <schwab@suse.de>
+
+	* configure.in: Fix check for -zcombreloc.
+
+2002-02-06  H.J. Lu  <hjl@gnu.org>
+
+	* config.h.in (HAVE_BUILTIN_MEMSET): New.
+	* configure.in: Check if __builtin_memset really works.
+	* elf/rtld.c (_dl_start): Check HAVE_BUILTIN_MEMSET instead of
+	__GNUC_PREREQ (2, 96) before using __builtin_memset.
+
+2002-02-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/bug-ftw3.c (main): Don't try the test if root.
+
+2002-02-06  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/brk.c (__brk): Correct inline assembly
+	constraints.
+	* sysdeps/unix/sysv/linux/s390/s390-32/bits/resource.h (RLIMIT_LOCKS):
+	Add RLIMIT_LOCKS and adjust RLIMIT_NLIMITS.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/resource.h (RLIMIT_LOCKS):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S (clone): Make clone
+	a weak alias for __clone.
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S (clone): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/profil-counter.h: Fix typo.
+	* sysdeps/unix/sysv/linux/s390/s390-64/Makefile: Add framestate.
+	* sysdeps/unix/sysv/linux/s390/s390-64/Versions: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/mmap.S (__mmap64): Make __mmap
+	a weak alias for __mmap64.
+
 2002-02-05  H.J. Lu  <hjl@gnu.org>
 
-	* sysdeps/mips/atomicity.h (exchange_and_add): Not use branch
-	likely.
+	* sysdeps/mips/atomicity.h (exchange_and_add): Not use branch likely.
 	(atomic_add): Likewise.
 	(compare_and_swap): Likewise.
-	* sysdeps/unix/sysv/linux/mips/sys/tas.h (_test_and_set):
-	Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/tas.h (_test_and_set): Likewise.
 
 2002-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-tls.c: Don't read TLS header if TLS is not needed.
 
 	* sysdeps/generic/dl-tls.c (_dl_determine_tlsoffset): Account for
 	alignment of the TCB and store total size and alignment of static

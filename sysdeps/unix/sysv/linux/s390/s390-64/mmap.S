@@ -64,4 +64,4 @@ PSEUDO_END (__mmap)
 
 weak_alias (__mmap, mmap)
 weak_alias (__mmap, mmap64)
-
+weak_alias (__mmap, __mmap64)

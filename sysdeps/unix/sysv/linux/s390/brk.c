@@ -35,14 +35,13 @@ __brk (void *addr)
   void *newbrk;
 
   {
-    register long r0 asm ("2");
     register void *__addr asm("2") = addr;
 
     asm ("svc  %b1\n\t"		/* call sys_brk */
-	 : "=d" (r0)
+	 : "=d" (__addr)
 	 : "I" (SYS_ify(brk)), "r" (__addr)
-	 : _svc_clobber );
-    newbrk = (void *) r0;
+	 : "cc", "memory" );
+    newbrk = __addr;
   }
   __curbrk = newbrk;
 
