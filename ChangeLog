@@ -1,5 +1,8 @@
 2000-12-05  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/mips/sys/tas.h (_test_and_set): Don't
+	set mips2.
+
 	* sysdeps/unix/sysv/linux/mips/sysdep.h: New file.
 
 	* sysdeps/unix/sysv/linux/mips/sys/syscall.h: Removed.
