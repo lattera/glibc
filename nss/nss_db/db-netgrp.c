@@ -1,5 +1,5 @@
 /* Netgroup file parser in nss_db modules.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -61,7 +61,7 @@ _nss_db_setnetgrent (const char *group)
 	{
 	  /* We have to make sure the file is  `closed on exec'.  */
 	  int fd;
-	  int result, flags;
+	  int result;
 
 	  err = db->fd (db, &fd);
 	  if (err != 0)
@@ -70,12 +70,13 @@ _nss_db_setnetgrent (const char *group)
 	      result = -1;
 	    }
 	  else
-	    result = flags = fcntl (fd, F_GETFD, 0);
-	  if (result >= 0)
 	    {
-	      flags |= FD_CLOEXEC;
-	      result = fcntl (fd, F_SETFD, flags);
+	      result = fcntl (fd, F_GETFD, 0);
+
+	      if (result >= 0)
+		result = fcntl (fd, F_SETFD, result | FD_CLOEXEC);
 	    }
+
 	  if (result < 0)
 	    {
 	      /* Something went wrong.  Close the stream and return a

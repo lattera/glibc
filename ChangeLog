@@ -1,3 +1,17 @@
+1999-01-26  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* nss/nss_db/db-netgrp.c (_nss_db_setnetgrent): Suppress warning
+	about potentially uninitialized `flags'.
+	* nss/nss_db/db-alias.c (internal_setent): Likewise.
+
+1999-01-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* elf/failobj.c: Provide prototype for xyzzy.
+
+1999-01-25  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/sysv/linux/arm/clone.S: Correct error check again.
+
 1999-01-24  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/ioctl.c: Include <hurd/ioctls.defs>.
