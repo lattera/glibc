@@ -46,7 +46,7 @@ thread_start:
 	/* fn is in gpr 1, arg in gpr 5 */
 	lgr	%r2,%r5		/* set first parameter to void *arg */
 	sgr	%r11,%r11	/* terminate the stack frame */
-	aghi	%r15,-96	/* make room on the stack for the save area */
+	aghi	%r15,-160	/* make room on the stack for the save area */
 	basr	%r14,%r1	/* jump to fn */
 #ifdef PIC
 	larl	%r12,_GLOBAL_OFFSET_TABLE_

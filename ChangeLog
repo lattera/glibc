@@ -1,3 +1,7 @@
+2001-05-16  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S: Fix stack allocation.
+
 2001-05-16  Bruce Mitchener  <bruce@cubik.org>
 
 	* manual/llio.texi:  Many grammar and typo fixes to the section
