@@ -230,9 +230,6 @@ sem_open (const char *name, int oflag, ...)
 	  /* Create the file.  Don't overwrite an existing file.  */
 	  if (link (tmpfname, finalname) != 0)
 	    {
-	      /* Remove the file.  */
-	      unlink (tmpfname);
-
 	      /* Undo the mapping.  */
 	      (void) munmap (result, sizeof (sem_t));
 
@@ -242,7 +239,15 @@ sem_open (const char *name, int oflag, ...)
 	      /* This failed.  If O_EXCL is not set and the problem was
 		 that the file exists, try again.  */
 	      if ((oflag & O_EXCL) == 0 && errno == EEXIST)
-		goto try_again;
+		{
+		  /* Remove the file.  */
+		  (void) unlink (tmpfname);
+
+		  /* Close the file.  */
+		  (void) __libc_close (fd);
+
+		  goto try_again;
+		}
 	    }
 	}
 
@@ -256,7 +261,8 @@ sem_open (const char *name, int oflag, ...)
     result = SEM_FAILED;
 
   /* We don't need the file descriptor anymore.  */
-  __libc_close (fd);
+  if (fd != -1)
+    (void) __libc_close (fd);
 
   return result;
 }
