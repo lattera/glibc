@@ -297,8 +297,8 @@ extern uint16_t htons (uint16_t __hostshort)
 
 #define IN6_ARE_ADDR_EQUAL(a,b) \
 	((((uint32_t *) (a))[0] == ((uint32_t *) (b))[0]) && \
-	 (((uint32_t *) (a))[1] == ((uint32_t *) (b))[2]) && \
-	 (((uint32_t *) (a))[2] == ((uint32_t *) (b))[1]) && \
+	 (((uint32_t *) (a))[1] == ((uint32_t *) (b))[1]) && \
+	 (((uint32_t *) (a))[2] == ((uint32_t *) (b))[2]) && \
 	 (((uint32_t *) (a))[3] == ((uint32_t *) (b))[3]))
 
 /* Bind socket to a privileged IP port.  */

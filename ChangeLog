@@ -1,3 +1,8 @@
+2000-05-12  Andreas Jaeger  <aj@suse.de>
+
+	* inet/netinet/in.h (IN6_ARE_ADDR_EQUAL): Correct indices.
+	Reported by tmoestl@gmx.net, closes PR libc/1732.
+
 2000-05-11  Jan Hubicka  <jh@suse.cz>
 
 	* misc/sys/cdefs.h: Add support for pure attribute.
