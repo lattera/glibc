@@ -48,6 +48,7 @@ pthread_rwlock_rdlock(pthread_rwlock_t *rwlock)
     futex_wait(&rwlock->readers_wakeup, val)
 
     lll_lock(rwlock->lock);
+    rwlock->nr_readers_queued--;
   }
   rwlock->readers++;
   lll_unlock(rwlock->lock);

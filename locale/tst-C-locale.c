@@ -1,5 +1,5 @@
 /* Tests of C and POSIX locale contents.
-   Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -154,6 +154,11 @@ run_test (const char *locname)
   STRTEST (D_FMT, "%m/%d/%y");
   STRTEST (T_FMT, "%H:%M:%S");
   STRTEST (T_FMT_AMPM, "%I:%M:%S %p");
+  STRTEST (ERA, "");
+  STRTEST (ERA_D_FMT, "");
+  STRTEST (ERA_T_FMT, "");
+  STRTEST (ERA_D_T_FMT, "");
+  STRTEST (ALT_DIGITS, "");
 
   STRTEST (RADIXCHAR, ".");
   STRTEST (THOUSEP, "");
@@ -206,6 +211,10 @@ run_test (const char *locname)
   WSTRTEST (_NL_WD_FMT, L"%m/%d/%y");
   WSTRTEST (_NL_WT_FMT, L"%H:%M:%S");
   WSTRTEST (_NL_WT_FMT_AMPM, L"%I:%M:%S %p");
+  WSTRTEST (_NL_WERA_D_FMT, L"");
+  WSTRTEST (_NL_WERA_T_FMT, L"");
+  WSTRTEST (_NL_WERA_D_T_FMT, L"");
+  WSTRTEST (_NL_WALT_DIGITS, L"");
 
   STRTEST (_DATE_FMT, "%a %b %e %H:%M:%S %Z %Y");
   WSTRTEST (_NL_W_DATE_FMT, L"%a %b %e %H:%M:%S %Z %Y");
@@ -297,6 +306,11 @@ run_test (const char *locname)
       STRTEST (D_FMT, "%m/%d/%y");
       STRTEST (T_FMT, "%H:%M:%S");
       STRTEST (T_FMT_AMPM, "%I:%M:%S %p");
+      STRTEST (ERA, "");
+      STRTEST (ERA_D_FMT, "");
+      STRTEST (ERA_T_FMT, "");
+      STRTEST (ERA_D_T_FMT, "");
+      STRTEST (ALT_DIGITS, "");
 
       STRTEST (RADIXCHAR, ".");
       STRTEST (THOUSEP, "");
@@ -349,6 +363,10 @@ run_test (const char *locname)
       WSTRTEST (_NL_WD_FMT, L"%m/%d/%y");
       WSTRTEST (_NL_WT_FMT, L"%H:%M:%S");
       WSTRTEST (_NL_WT_FMT_AMPM, L"%I:%M:%S %p");
+      WSTRTEST (_NL_WERA_D_FMT, L"");
+      WSTRTEST (_NL_WERA_T_FMT, L"");
+      WSTRTEST (_NL_WERA_D_T_FMT, L"");
+      WSTRTEST (_NL_WALT_DIGITS, L"");
 
       STRTEST (_DATE_FMT, "%a %b %e %H:%M:%S %Z %Y");
       WSTRTEST (_NL_W_DATE_FMT, L"%a %b %e %H:%M:%S %Z %Y");

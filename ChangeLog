@@ -1,3 +1,8 @@
+2004-08-10  GOTO Masanori  <gotom@debian.or.jp>
+
+	* locale/C-time.c: Change default ERA value from NULL to "".
+	* locale/tst-C-locale.c: Add test case for ERA keywords.
+
 2004-08-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/resource.h: Define non-standard

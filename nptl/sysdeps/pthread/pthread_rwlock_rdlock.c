@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -81,6 +81,8 @@ __pthread_rwlock_rdlock (rwlock)
 
       /* Get the lock.  */
       lll_mutex_lock (rwlock->__data.__lock);
+
+      --rwlock->__data.__nr_readers_queued;
     }
 
   /* We are done, free the lock.  */

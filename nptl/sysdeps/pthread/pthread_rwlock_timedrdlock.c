@@ -119,6 +119,8 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
       /* Get the lock.  */
       lll_mutex_lock (rwlock->__data.__lock);
 
+      --rwlock->__data.__nr_readers_queued;
+
       /* Did the futex call time out?  */
       if (err == -ETIMEDOUT)
 	{
