@@ -912,7 +912,7 @@ read_symbols (struct shobj *shobj)
   obstack_init (&ob_list);
 
   /* Process the symbols.  */
-  if (shobj->symtab)
+  if (shobj->symtab != NULL)
     {
       const ElfW(Sym) *sym = shobj->symtab;
       const ElfW(Sym) *sym_end
@@ -965,7 +965,7 @@ read_symbols (struct shobj *shobj)
 
       /* We assume that the string table follows the symbol table,
 	 because there is no way in ELF to know the size of the
-	 dynamic symbol table!!  */
+	 dynamic symbol table without looking at the section headers.  */
       while ((void *) symtab < (void *) strtab)
 	{
 	  if ((ELFW(ST_TYPE)(symtab->st_info) == STT_FUNC
@@ -1006,9 +1006,9 @@ read_symbols (struct shobj *shobj)
 		    obstack_free (&shobj->ob_sym, newsym);
 		}
 	    }
-	}
 
-      ++symtab;
+	  ++symtab;
+	}
     }
 
   sortsym = malloc (n * sizeof (struct known_symbol *));
