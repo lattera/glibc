@@ -51,15 +51,17 @@ ENTRY(__expm1)
 	fldl	4(%esp)		// x
 	fxam			// Is NaN or +-Inf?
 	fstsw	%ax
+	movb	$0x45, %ch
+	andb	%ah, %ch
+	cmpb	$0x40, %ch
+	je	3f		// If +-0, jump.
 #ifdef	PIC
 	call	1f
 1:	popl	%edx
 	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %edx
 #endif
-	movb	$0x45, %ch
-	andb	%ah, %ch
 	cmpb	$0x05, %ch
-	je	2f		// Is +-Inf, jump.
+	je	2f		// If +-Inf, jump.
 
 	fldt	MO(l2e)		// log2(e) : x
 	fmulp			// log2(e)*x

@@ -347,7 +347,8 @@ else
 default-rpath = $(libdir)
 endif
 # This is how to find at build-time things that will be installed there.
-rpath-link = $(common-objdir):$(elfobjdir):$(nssobjdir)
+rpath-link = $(common-objdir):$(mathobjdir):$(elfobjdir):$(nssobjdir)
+mathobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)math)
 elfobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)elf)
 nssobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)nss)
 else
@@ -356,7 +357,13 @@ endif
 endif
 ifndef link-extra-libs
 ifeq (yes,$(build-shared))
+ifneq ($(common-objpfx),$(objpfx))
+link-extra-libs = $(foreach lib,$(LDLIBS-$(@F)),\
+	$(wildcard $(common-objpfx)$(lib).so$($(notdir $(lib)).so-version) \
+		   $(objpfx)$(lib).so$($(notdir $(lib)).so-version)))
+else
 link-extra-libs = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib).so$($(notdir $(lib)).so-version))
+endif
 else
 link-extra-libs = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib).a)
 endif

@@ -8,7 +8,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -57,8 +57,10 @@ static float one = 1.0;
 	} else {			/* no fraction part */
 	    u_int32_t ix;
 	    *iptr = x*one;
-	    GET_FLOAT_WORD(ix,x);
-	    SET_FLOAT_WORD(x,ix&0x80000000);	/* return +-0 */
+	    /* We must handle NaNs separately.  */
+	    if (j0 == 0x80 && (i0 & 0x7fffff))
+	      return x*one;
+	    SET_FLOAT_WORD(x,i0&0x80000000);	/* return +-0 */
 	    return x;
 	}
 }

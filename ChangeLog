@@ -1,3 +1,74 @@
+1997-03-20 01:49  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/s_tanhl.c (__tanhl): Correct handling of
+	-inf.
+
+	* Makeconfig: (rpath-link): Add math/ directory.
+	(math-objdir): New variable.
+	(link-extra-lib): Define to special version when
+	$(common-objpfx)!=$(objpfx) to allow libraries outside
+	$(common-objpfx) be linked to the application.
+
+	* math/Makefile: Add rules to build and run test programs.
+	* math/libm-test.c (_GNU_SOURCE): Define only if still undefined.
+	(check_equal): Correct check for error.
+	(ceil_test): Fix typo.
+	(log_test): Fix typo.
+	(floor_test): Fix typo.
+	(pow_test): Fix typos.
+	(log10_test): Allow slight incorrectness for `log10(e)'.
+	(modf_test): New functions to test `modf' et.al.
+	(hypot_test): Rewrite test completely.
+	Patch partly by Andreas Jaeger.
+	* math/test-double.h (__NO_MATH_INLINES): Define only if not
+	already defined.
+	* math/test-float.h: Likewise.
+	* math/test-logdouble.h: Likewise.
+
+	* setjmp/setjmp.h: Change references of ANSI C to ISO C.
+	* setjmp/tst-setjmp.c: Correct and extend test suite.
+	* sysdeps/i386/__longjmp.S: Update copyright.
+	* sysdeps/i386/bsd-_setjmp.S: Correct fatal bug in jump to
+	`__sigsetjmp' in PIC code.
+	* sysdeps/i386/bsd-setjmp.S: Likewise.
+
+	* sysdeps/libm-i387/e_pow.S: Correct recognition of mantissa
+	overflow.
+	* sysdeps/libm-i387/e_powf.S: Likewise.
+	* sysdeps/libm-i387/s_expm1.S: Handle x == +-0 as a special
+	case since expm1(-0) == -0.
+	* sysdeps/libm-i387/s_expm1f.S: Likewise.
+	* sysdeps/libm-i387/s_expm1l.S: Likewise.
+	* sysdeps/libm-ieee754/s_modf.c: Optimize code by avoiding unneeded
+	access to FP number.
+	* sysdeps/libm-ieee754/s_modff.c: Likewise.
+	* sysdeps/libm-ieee754/s_modfl.c: Correct former completely bogus
+	code.  It never worked correctly.
+	* sysdeps/libm-ieee754/s_tanh.c: Handle x == +-0 as a special
+	case since tanh(-0) == -0.
+	* sysdeps/libm-ieee754/s_tanhf.c: Likewise.
+
+1997-03-19 21:13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/strtod.c (STRTOL): Use wchar_t as type for `decimal' and
+	`thousands' to support systems with sizeof(wchar_t) !=
+	sizeof(wint_t).  Blargh.
+
+	* sysdeps/unix/sysv/linux/socketbits.h: Remove definition of
+	SOL_IP, SOL_TCP, SOL_UDP, and SOL_IPX as they are defined in
+	appropriate headers.
+
+	* sysdeps/unix/sysv/linux/writev.c: Don't use MAX_IOVEC.  Test for
+	UIO_FASTIOV and set to 8 if not available.
+	* sysdeps/unix/sysv/linux/readv.c: Likewise.
+	Patch by HJ Lu.
+
+	* sysdeps/unix/sysv/linux/xstat.c: Include <kernel_stat.h>, not
+	"kernel_stat.h".
+	* sysdeps/unix/sysv/linux/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/fxstat.c: Likewise.
+	Reported by fabsoft@fabsoft2.zarm.uni-bremen.de.
+
 1997-03-19 01:40  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/sco3.2.4/Dist: New file.

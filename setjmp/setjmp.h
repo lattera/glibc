@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ extern int __sigsetjmp __P ((jmp_buf __env, int __savemask));
 #ifndef	__FAVOR_BSD
 /* Set ENV to the current position and return 0, not saving the signal mask.
    This is just like `sigsetjmp (ENV, 0)'.
-   The ANSI C standard says `setjmp' is a macro.  */
+   The ISO C standard says `setjmp' is a macro.  */
 #define	setjmp(env)	__sigsetjmp ((env), 0)
 #else
 /* We are in 4.3 BSD-compatibility mode in which `setjmp'
@@ -61,7 +61,7 @@ extern int __sigsetjmp __P ((jmp_buf __env, int __savemask));
 
 #ifdef __USE_BSD
 /* Set ENV to the current position and return 0, not saving the signal mask.
-   This is the 4.3 BSD name for ANSI `setjmp'.  */
+   This is the 4.3 BSD name for ISO `setjmp'.  */
 #define _setjmp(env)	__sigsetjmp ((env), 0)
 #endif
 

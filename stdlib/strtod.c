@@ -383,14 +383,12 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   typedef unsigned int wint_t;
 #endif
   /* The radix character of the current locale.  */
-  wint_t decimal;
+  wchar_t decimal;
   /* The thousands character of the current locale.  */
-  wint_t thousands;
+  wchar_t thousands;
   /* The numeric grouping specification of the current locale,
      in the format described in <locale.h>.  */
   const char *grouping;
-
-  assert (sizeof (wchar_t) == sizeof (wint_t));
 
   if (group)
     {
@@ -400,10 +398,9 @@ INTERNAL (STRTOF) (nptr, endptr, group)
       else
 	{
 	  /* Figure out the thousands separator character.  */
-	  if (mbtowc ((wchar_t *) &thousands,
-		      _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
+	  if (mbtowc (&thousands, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
 		      strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
-	    thousands = (wint_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+	    thousands = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
 	  if (thousands == L'\0')
 	    grouping = NULL;
 	}
@@ -417,7 +414,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   /* Find the locale's decimal point character.  */
   if (mbtowc ((wchar_t *) &decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
 	      strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT))) <= 0)
-    decimal = (wint_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
+    decimal = (wchar_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
   assert (decimal != L'\0');
 
   /* Prepare number representation.  */
@@ -445,7 +442,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   /* Return 0.0 if no legal string is found.
      No character is used even if a sign was found.  */
   if ((c < L_('0') || c > L_('9'))
-      && ((wint_t) c != decimal || cp[1] < L_('0') || cp[1] > L_('9')))
+      && ((wchar_t) c != decimal || cp[1] < L_('0') || cp[1] > L_('9')))
     {
       int matched = 0;
       /* Check for `INF' or `INFINITY'.  */
@@ -511,14 +508,14 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   start_of_digits = startp = cp;
 
   /* Ignore leading zeroes.  This helps us to avoid useless computations.  */
-  while (c == L_('0') || (thousands != L'\0' && (wint_t) c == thousands))
+  while (c == L_('0') || (thousands != L'\0' && (wchar_t) c == thousands))
     c = *++cp;
 
   /* If no other digit but a '0' is found the result is 0.0.
      Return current read pointer.  */
   if ((c < L_('0') || c > L_('9')) &&
       (base == 16 && (c < TOLOWER (L_('a')) || c > TOLOWER (L_('f')))) &&
-      (wint_t) c != decimal &&
+      (wchar_t) c != decimal &&
       (base == 16 && (cp == start_of_digits || TOLOWER (c) != L_('p'))) &&
       (base != 16 && TOLOWER (c) != L_('e')))
     {
@@ -540,7 +537,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
       if ((c >= L_('0') && c <= L_('9'))
 	  || (base == 16 && TOLOWER (c) >= L_('a') && TOLOWER (c) <= L_('f')))
 	++dig_no;
-      else if (thousands == L'\0' || (wint_t) c != thousands)
+      else if (thousands == L'\0' || (wchar_t) c != thousands)
 	/* Not a digit or separator: end of the integer part.  */
 	break;
       c = *++cp;
@@ -590,7 +587,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 
   /* Read the fractional digits.  A special case are the 'american style'
      numbers like `16.' i.e. with decimal but without trailing digits.  */
-  if ((wint_t) c == decimal)
+  if ((wchar_t) c == decimal)
     {
       c = *++cp;
       while (c >= L_('0') && c <= L_('9') ||
@@ -693,7 +690,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   if (lead_zero)
     {
       /* Find the decimal point */
-      while ((wint_t) *startp != decimal)
+      while ((wchar_t) *startp != decimal)
 	++startp;
       startp += lead_zero + 1;
       exponent -= base == 16 ? 4 * lead_zero : lead_zero;

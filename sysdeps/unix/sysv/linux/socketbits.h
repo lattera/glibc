@@ -83,14 +83,13 @@ enum __socket_type
 #define	AF_INET6	PF_INET6
 #define	AF_MAX		PF_MAX
 
-/* Socket level values.  */
-#define SOL_IP          0
-#define SOL_TCP         6
-#define SOL_UDP         17
+/* Socket level values.  Others are defined in the appropriate headers.
+
+   XXX These definitions also should go into the appropriate headers as
+   far as they are available.  */
 #define SOL_IPV6        41
 #define SOL_ICMPV6      58
 #define SOL_RAW		255
-#define SOL_IPX         256
 #define SOL_AX25        257
 #define SOL_ATALK       258
 #define SOL_NETROM      259

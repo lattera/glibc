@@ -300,7 +300,7 @@ ENTRY(__ieee754_powf)
 	testb	$1, %dl
 	jz	24f		// jump if not odd
 	cmpl	$0xff000000, %edx
-	jbe	24f		// does not fit in mantissa bits
+	jae	24f		// does not fit in mantissa bits
 	// It's an odd integer.
 	fldl	MO(mzero)
 	ret

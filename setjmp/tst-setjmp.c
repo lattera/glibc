@@ -54,9 +54,42 @@ main (void)
 
   if (!lose && value == 10)
     {
-      /* Do a second test, this time without `setjmp' being a macro.  */
+      /* Do a second test, this time without `setjmp' being a macro.
+         This is not required by ISO C but we have this for compatibility.  */
 #undef setjmp
+      extern int setjmp (jmp_buf);
+
+      last_value = -1;
+      lose = 0;
+
       value = setjmp (env);
+      if (value != last_value + 1)
+	{
+	  fputs("Shouldn't have ", stdout);
+	  lose = 1;
+	}
+      last_value = value;
+      switch (value)
+	{
+	case 0:
+	  puts("Saved environment.");
+	  jump (0);
+	default:
+	  printf ("Jumped to %d.\n", value);
+	  if (value < 10)
+	    jump (value + 1);
+	}
+    }
+
+  if (!lose && value == 10)
+    {
+      /* And again for the `__setjmp' function.  */
+      extern int __setjmp (jmp_buf);
+
+      last_value = -1;
+      lose = 0;
+
+      value = __setjmp (env);
       if (value != last_value + 1)
 	{
 	  fputs("Shouldn't have ", stdout);

@@ -41,9 +41,9 @@
 /* This program isn't finished yet.
    It has tests for acos, acosh, asin, asinh, atan, atan2, atanh,
    cbrt, ceil, cos, cosh, exp, exp2, expm1, fabs, floor, fpclassify,
-   frexp, ldexp,
-   log, log10, log1p, log2, logb,
-   pow, sin, sinh, tan, tanh, fabs, hypot.
+   frexp, hypot, ldexp,
+   log, log10, log1p, log2, logb, modf,
+   pow, sin, sinh, tan, tanh.
    Tests for the other libm-functions will come later.
 
    The routines using random variables are still under construction. I don't
@@ -66,7 +66,9 @@
    log2.  */
 #undef ISO_9X_IMPLEMENTED
 
-#define _GNU_SOURCE
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE
+#endif
 
 #include <math.h>
 #include <float.h>
@@ -192,7 +194,7 @@ check_equal (MATHTYPE computed, MATHTYPE supplied, MATHTYPE eps, MATHTYPE * diff
 
   *diff = FUNC(fabs) (computed - supplied);
 
-  if (*diff <= eps || signbit (computed) != signbit (supplied))
+  if (*diff <= eps && (signbit (computed) == signbit (supplied) || eps != 0.0))
     return 1;
 
   return 0;
@@ -211,7 +213,7 @@ output_result_bool (const char *test_name, int result)
     {
       if (verbose)
 	printf ("Fail: %s\n", test_name);
-      noErrors++;
+      ++noErrors;
     }
 
   fpstack_test (test_name);
@@ -592,7 +594,7 @@ ceil_test (void)
   check_isinfn ("ceil (-inf) == -inf", FUNC(ceil) (minus_infty));
 
   check ("ceil (pi) == 4", FUNC(ceil) (M_PI), 4.0);
-  check ("ceil (-pi) == -3", FUNC(ceil) (-M_PI), 3.0);
+  check ("ceil (-pi) == -3", FUNC(ceil) (-M_PI), -3.0);
 }
 
 
@@ -802,7 +804,7 @@ log_test (void)
   check_isinfp ("log (+inf) == +inf", FUNC(log) (plus_infty));
 
   check_eps ("log (e) == 1", FUNC(log) (M_E), 1, CHOOSE (0, 0, 9e-8L));
-  check ("log (1/e) == -1", FUNC(log) (1.0 / M_E), 1);
+  check ("log (1/e) == -1", FUNC(log) (1.0 / M_E), -1);
   check ("log (2) == M_LN2", FUNC(log) (2), M_LN2);
   check ("log (10) == M_LN10", FUNC(log) (10), M_LN10);
 }
@@ -828,7 +830,7 @@ log10_test (void)
   check ("log10 (100) == 2", FUNC(log10) (100.0), 2);
   check ("log10 (10000) == 4", FUNC(log10) (10000.0), 4);
   check_eps ("log10 (e) == M_LOG10E", FUNC(log10) (M_E), M_LOG10E,
-	     CHOOSE (0, 0, 9e-8));
+	     CHOOSE (9e-20, 0, 9e-8));
 }
 
 
@@ -891,6 +893,42 @@ logb_test (void)
   check ("logb (e) == 1", FUNC(logb) (M_E), 1);
   check ("logb (1024) == 10", FUNC(logb) (1024), 10);
   check ("logb (-2000) == 10", FUNC(logb) (-2000), 10);
+
+}
+
+
+static void
+modf_test (void)
+{
+  MATHTYPE result, intpart;
+
+  result = FUNC(modf) (plus_infty, &intpart);
+  check ("modf (+inf, &x) returns +0", result, 0);
+  check_isinfp ("modf (+inf, &x) set x to +inf", intpart);
+
+  result = FUNC(modf) (minus_infty, &intpart);
+  check ("modf (-inf, &x) returns -0", result, minus_zero);
+  check_isinfn ("modf (-inf, &x) sets x to -inf", intpart);
+
+  result = FUNC(modf) (nan_value, &intpart);
+  check_isnan ("modf (NaN, &x) returns NaN", result);
+  check_isnan ("modf (-inf, &x) sets x to NaN", intpart);
+
+  result = FUNC(modf) (0, &intpart);
+  check ("modf (0, &x) returns 0", result, 0);
+  check ("modf (0, &x) sets x to 0", intpart, 0);
+
+  result = FUNC(modf) (minus_zero, &intpart);
+  check ("modf (-0, &x) returns -0", result, minus_zero);
+  check ("modf (-0, &x) sets x to -0", intpart, minus_zero);
+
+  result = FUNC(modf) (2.5, &intpart);
+  check ("modf (2.5, &x) returns 0.5", result, 0.5);
+  check ("modf (2.5, &x) sets x to 2", intpart, 2);
+
+  result = FUNC(modf) (-2.5, &intpart);
+  check ("modf (-2.5, &x) returns -0.5", result, -0.5);
+  check ("modf (-2.5, &x) sets x to -2", intpart, -2);
 
 }
 
@@ -971,58 +1009,33 @@ floor_test (void)
   check_isinfn ("floor (-inf) == -inf", FUNC(floor) (minus_infty));
 
   check ("floor (pi) == 3", FUNC(floor) (M_PI), 3.0);
-  check ("floor (-pi) == -4", FUNC(floor) (-M_PI), 4.0);
-}
-
-
-static void
-hypot_report (const char *test_name, MATHTYPE computed, MATHTYPE expected)
-{
-  MATHTYPE diff;
-  int result;
-
-  result = check_equal (computed, expected, 0, &diff);
-
-  if (result)
-    {
-      if (verbose > 2)
-	printf ("Pass: %s\n", test_name);
-    }
-  else
-    {
-      if (verbose)
-	printf ("Fail: %s\n", test_name);
-      if (verbose > 1)
-	{
-	  printf ("Result:\n");
-	  printf (" is:         %.20" PRINTF_EXPR, computed);
-	  printf (" should be:  %.20" PRINTF_EXPR, expected);
-	  printf (" difference: %.20" PRINTF_EXPR "\n", diff);
-	}
-      noErrors++;
-    }
-  fpstack_test (test_name);
-  output_result (test_name, result,
-		 computed, expected, diff, PRINT, PRINT);
+  check ("floor (-pi) == -4", FUNC(floor) (-M_PI), -4.0);
 }
 
 
 static void
 hypot_test (void)
 {
-  MATHTYPE a = FUNC(hypot) (12.4L, 0.7L);
+  MATHTYPE a;
 
-  hypot_report ("hypot (x,y) == hypot (y,x)", FUNC(hypot) (0.7L, 12.4L), a);
-  hypot_report ("hypot (x,y) == hypot (-x,y)", FUNC(hypot) (-12.4L, 0.7L), a);
-  hypot_report ("hypot (x,y) == hypot (-y,x)", FUNC(hypot) (-0.7L, 12.4L), a);
-  hypot_report ("hypot (x,y) == hypot (-x,-y)", FUNC(hypot) (-12.4L, -0.7L), a);
-  hypot_report ("hypot (x,y) == hypot (-y,-x)", FUNC(hypot) (-0.7L, -12.4L), a);
+  a = random_greater (0);
+  check_isinfp_ext ("hypot (+inf, x) == +inf", FUNC(hypot) (plus_infty, a), a);
+  check_isinfp_ext ("hypot (-inf, x) == +inf", FUNC(hypot) (minus_infty, a), a);
+
+  check_isnan ("hypot (NaN, NaN) == NaN", FUNC(hypot) (nan_value, nan_value));
+
+  a = FUNC(hypot) (12.4L, 0.7L);
+  check ("hypot (x,y) == hypot (y,x)", FUNC(hypot) (0.7L, 12.4L), a);
+  check ("hypot (x,y) == hypot (-x,y)", FUNC(hypot) (-12.4L, 0.7L), a);
+  check ("hypot (x,y) == hypot (-y,x)", FUNC(hypot) (-0.7L, 12.4L), a);
+  check ("hypot (x,y) == hypot (-x,-y)", FUNC(hypot) (-12.4L, -0.7L), a);
+  check ("hypot (x,y) == hypot (-y,-x)", FUNC(hypot) (-0.7L, -12.4L), a);
   check ("hypot (x,0) == fabs (x)", FUNC(hypot) (-0.7L, 0), 0.7L);
   check ("hypot (x,0) == fabs (x)", FUNC(hypot) (0.7L, 0), 0.7L);
   check ("hypot (x,0) == fabs (x)", FUNC(hypot) (-1.0L, 0), 1.0L);
-  check ("hypot (x,0) == fabs (x)", FUNC(hypot) (-1.0L, 0), 1.0L);
+  check ("hypot (x,0) == fabs (x)", FUNC(hypot) (1.0L, 0), 1.0L);
   check ("hypot (x,0) == fabs (x)", FUNC(hypot) (-5.7e7L, 0), 5.7e7L);
-  check ("hypot (x,0) == fabs (x)", FUNC(hypot) (-5.7e7L, 0), 5.7e7L);
+  check ("hypot (x,0) == fabs (x)", FUNC(hypot) (5.7e7L, 0), 5.7e7L);
 }
 
 
@@ -1084,9 +1097,9 @@ pow_test (void)
   check_isinfp ("pow (-inf, 11.1) == +inf", FUNC(pow) (minus_infty, 11.1));
   check_isinfp ("pow (-inf, 1001.1) == +inf", FUNC(pow) (minus_infty, 1001.1));
 
-  check ("pow (-inf, -1) == -0", FUNC(pow) (-minus_infty, -1), minus_zero);
-  check ("pow (-inf, -11) == -0", FUNC(pow) (-minus_infty, -11), minus_zero);
-  check ("pow (-inf, -1001) == -0", FUNC(pow) (-minus_infty, -1001), minus_zero);
+  check ("pow (-inf, -1) == -0", FUNC(pow) (minus_infty, -1), minus_zero);
+  check ("pow (-inf, -11) == -0", FUNC(pow) (minus_infty, -11), minus_zero);
+  check ("pow (-inf, -1001) == -0", FUNC(pow) (minus_infty, -1001), minus_zero);
 
   check ("pow (-inf, -2) == +0", FUNC(pow) (minus_infty, -2), 0);
   check ("pow (-inf, -12) == +0", FUNC(pow) (minus_infty, -12), 0);
@@ -1189,8 +1202,8 @@ pow_test (void)
 	     FUNC(pow) (minus_infty, x), minus_zero, x);
 
   x = ((rand () % 1000000) + 1) * -2.0;	/* Get random even integer < 0 */
-  check_ext ("pow (-inf, y) == -0 for y < 0 and not an odd integer",
-	     FUNC(pow) (minus_infty, x), minus_zero, x);
+  check_ext ("pow (-inf, y) == 0 for y < 0 and not an odd integer",
+	     FUNC(pow) (minus_infty, x), 0.0, x);
 
   x = (rand () % 1000000) * 2.0 + 1;	/* Get random odd integer > 0 */
   check_ext ("pow (+0, y) == +0 for y an odd integer > 0",
@@ -1497,6 +1510,7 @@ main (int argc, char *argv[])
   log2_test ();
 #endif
   logb_test ();
+  modf_test ();
   sin_test ();
   sinh_test ();
   tan_test ();

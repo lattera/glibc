@@ -24,6 +24,8 @@
 #define CHOOSE(Clongdouble,Cdouble,Cfloat) Clongdouble
 #define PRINTF_EXPR "Le"
 
-#define __NO_MATH_INLINES
+#ifndef __NO_MATH_INLINES
+# define __NO_MATH_INLINES
+#endif
 
 #include "libm-test.c"

@@ -21,7 +21,7 @@
 #include <stddef.h>
 #include <sys/stat.h>
 
-#include "kernel_stat.h"
+#include <kernel_stat.h>
 
 extern int __syscall_fstat (int, struct kernel_stat *);
 

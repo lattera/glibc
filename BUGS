@@ -1,0 +1,39 @@
+	    List of known bugs (certainly very incomplete)
+	    ----------------------------------------------
+
+Time-stamp: <1997-03-20T02:33:37+0100 drepper>
+
+This following list contains those bugs which I'm aware of.  Please
+make sure that bugs you report are not listed here.  I you can fix one
+of these bugs I'll certainly be glad to receive a patch.
+
+Severity: [  *] to [***]
+
+
+[***]  Profiling currently does not work with programs using NSS.
+
+[***]  At least on Linux/Alpha, there seem to be problems with dynamically
+       loading NSS modules in certain situations.
+       [PR libc/137]
+
+[ **]  For GNU libc on Linux, there is still no solution for the UTMP
+       problem.
+       [Among others: PR libc/39]
+
+[ **]  There are problems with signal handling when using LinuxThreads.
+
+[ **]  The `cbrtl' function is inaccurate.  The algorithm used for `double'
+       and `float' is not usable.
+
+[ **]  Not really a bug, but it could lead to such:
+       The RPC code is ugly ugly ugly.  It's more or less verbatim taken
+       from Sun's code and therefore mostly lacks complete prototypes and
+       (more important) the use of `const'.  It *definitely* needs to be
+       cleaned.
+
+[  *]  The precision of the `sinhl' and/or `asinhl' function do not seem
+       to be the best.
+
+[  *]  The syslog function should print to the console if the LOG_CONS
+       flag was given.
+       [PR libc/72]

@@ -26,15 +26,12 @@ extern ssize_t __syscall_readv __P ((int, __const struct iovec *, int));
 
 
 /* Not all versions of the kernel support the large number of records.  */
-#undef MAX_IOVEC
-#ifdef UIO_FASTIOV
-# define MAX_IOVEC	UIO_FASTIOV
-#else
-# define MAX_IOVEC	8	/* 8 is a safe number. */
+#ifndef UIO_FASTIOV
+# define UIO_FASTIOV	8	/* 8 is a safe number.  */
 #endif
 
 
-/* We should deal with kernel which have a smaller UIO_MAXIOV as well
+/* We should deal with kernel which have a smaller UIO_FASTIOV as well
    as a very big count.  */
 ssize_t
 readv (fd, vector, count)
@@ -47,7 +44,7 @@ readv (fd, vector, count)
 
   bytes_read = __syscall_readv (fd, vector, count);
 
-  if (bytes_read < 0 && errno == EINVAL && count > MAX_IOVEC)
+  if (bytes_read < 0 && errno == EINVAL && count > UIO_FASTIOV)
     {
       int i;
 
@@ -55,10 +52,10 @@ readv (fd, vector, count)
       __set_errno (errno_saved);
 
       bytes_read = 0;
-      for (i = 0; i < count; i += MAX_IOVEC)
+      for (i = 0; i < count; i += UIO_FASTIOV)
 	{
 	  ssize_t bytes = __syscall_readv (fd, vector + i,
-					   MIN (count - i, MAX_IOVEC));
+					   MIN (count - i, UIO_FASTIOV));
 
 	  if (bytes < 0)
 	    return bytes;

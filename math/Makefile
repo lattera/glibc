@@ -64,6 +64,20 @@ routines = $(calls) $(calls:=f) $(long-c-$(long-double-fcts))
 long-c-yes = $(calls:=l)
 distribute += $(long-c-yes:=.c)
 
+# Rules for the test suite.
+tests = test-float test-double $(test-longdouble-$(long-double-fcts))
+# We do the `long double' tests only if this data type is available and
+# distrinct from `double'.
+#
+# XXX This test is disabled for now since the functions are too buggy.
+#test-longdouble-yes = test-longdouble
+
+LDLIBS-test-float = libm
+LDLIBS-test-double = libm
+LDLIBS-test-longdouble = libm
+
+distribute += libm-test.c
+
 
 # The -lieee module sets the _LIB_VERSION_ switch to IEEE mode
 # for error handling in the -lm functions.

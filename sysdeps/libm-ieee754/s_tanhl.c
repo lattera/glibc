@@ -68,12 +68,15 @@ static long double one=1.0, two=2.0, tiny = 1.0e-4900L;
 
     /* x is INF or NaN */
 	if(ix==0x7fff) {
-	    if (se>=0x7fff) return one/x+one;    /* tanhl(+-inf)=+-1 */
-	    else            return one/x-one;    /* tanhl(NaN) = NaN */
+	    /* for NaN it's not important which branch: tanhl(NaN) = NaN */
+	    if (se&0x8000) return one/x-one;	/* tanhl(-inf)= -1; */
+	    else           return one/x+one;	/* tanhl(+inf)=+1 */
 	}
 
     /* |x| < 23 */
 	if (ix < 0x4003 || (ix == 0x4003 && j0 < 0xb8000000u)) {/* |x|<23 */
+	    if ((ix|j0|j1) == 0)
+		return x;		/* x == +- 0 */
 	    if (ix<0x3fc8) 		/* |x|<2**-55 */
 		return x*(one+x);    	/* tanh(small) = small */
 	    if (ix>=0x3fff) {	/* |x|>=1  */
