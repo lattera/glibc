@@ -138,4 +138,7 @@
 /* The monotonic clock might be available.  */
 #define _POSIX_MONOTONIC_CLOCK	0
 
+/* The clock selection interfaces are available.  */
+#define _POSIX_CLOCK_SELECTION	200112L
+
 #endif /* posix_opt.h */

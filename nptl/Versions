@@ -206,6 +206,11 @@ libpthread {
     pthread_tryjoin_np; pthread_timedjoin_np;
   }
 
+  GLIBC_2.3.3 {
+    # Unix CS option.
+    pthread_condattr_getclock; pthread_condattr_setclock;
+  }
+
   GLIBC_PRIVATE {
     __pthread_initialize_minimal; __pthread_cleanup_upto;
     __pthread_clock_gettime; __pthread_clock_settime;

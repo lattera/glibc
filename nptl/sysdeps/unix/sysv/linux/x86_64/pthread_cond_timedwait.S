@@ -265,7 +265,6 @@ __pthread_cond_timedwait:
 
 17:	movq	(%rsp), %rax
 	jmp	18b
-	.size	__pthread_cond_wait, .-__pthread_cond_wait
 	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
 versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 		  GLIBC_2_3_2)

@@ -89,7 +89,7 @@ typedef union
   struct
   {
     int __lock;
-    int __pad;
+    int __clock;
     unsigned long long int __total_seq;
     unsigned long long int __wakeup_seq;
     unsigned long long int __woken_seq;

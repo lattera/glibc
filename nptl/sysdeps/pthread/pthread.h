@@ -602,6 +602,18 @@ extern int pthread_condattr_getpshared (__const pthread_condattr_t *
 extern int pthread_condattr_setpshared (pthread_condattr_t *__attr,
                                         int __pshared) __THROW;
 
+#ifdef __USE_XOPEN2K
+/* Get the clock selected for the conditon variable attribute ATTR.  */
+extern int pthread_condattr_getclock (__const pthread_condattr_t *
+				      __restrict __attr,
+				      __clockid_t *__restrict __clock_id)
+     __THROW;
+
+/* Set the clock selected for the conditon variable attribute ATTR.  */
+extern int pthread_condattr_setclock (pthread_condattr_t *__attr,
+				      __clockid_t __clock_id) __THROW;
+
+#endif
 
 
 #ifdef __USE_XOPEN2K

@@ -112,6 +112,29 @@ __pthread_cond_timedwait:
 
 	/* Get the current time.  */
 	movl	%ebx, %edx
+#ifdef __NR_clock_gettime
+	/* Get the clock number.  Note that the field in the condvar
+	   structure stores the number minus 1.  */
+	movl	cond_clock(%ebx), %ebx
+	/* Only clocks 0 and 1 are allowed.  Both are handled in the
+	   kernel.  */
+	leal	12(%esp), %ecx
+	movl	$__NR_clock_gettime, %eax
+	ENTER_KERNEL
+# ifndef __ASSUME_POSIX_TIMERS
+	cmpl	$-ENOSYS, %eax
+	je	19f
+# endif
+	movl	%edx, %ebx
+
+	/* Compute relative timeout.  */
+	movl	(%ebp), %ecx
+	movl	4(%ebp), %edx
+	subl	12(%esp), %ecx
+	subl	16(%esp), %edx
+#else
+	/* Get the current time.  */
+	movl	%ebx, %edx
 	leal	12(%esp), %ebx
 	xorl	%ecx, %ecx
 	movl	$SYS_gettimeofday, %eax
@@ -126,6 +149,7 @@ __pthread_cond_timedwait:
 	movl	4(%ebp), %edx
 	subl	12(%esp), %ecx
 	subl	%eax, %edx
+#endif
 	jns	12f
 	addl	$1000000000, %edx
 	subl	$1, %ecx
@@ -133,7 +157,7 @@ __pthread_cond_timedwait:
 	js	13f
 
 	/* Store relative timeout.  */
-	movl	%ecx, 12(%esp)
+21:	movl	%ecx, 12(%esp)
 	movl	%edx, 16(%esp)
 	leal	12(%esp), %esi
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
@@ -275,7 +299,30 @@ __pthread_cond_timedwait:
 
 17:	popl	%eax
 	jmp	18b
-	.size	__pthread_cond_wait, .-__pthread_cond_wait
+
+#if defined __NR_clock_gettime && !defined __ASSUME_POSIX_TIMERS
+	/* clock_gettime not available.  */
+19:	leal	12(%esp), %ebx
+	xorl	%ecx, %ecx
+	movl	$SYS_gettimeofday, %eax
+	ENTER_KERNEL
+	movl	%edx, %ebx
+
+	/* Compute relative timeout.  */
+	movl	16(%esp), %eax
+	movl	$1000, %edx
+	mul	%edx		/* Milli seconds to nano seconds.  */
+	movl	(%ebp), %ecx
+	movl	4(%ebp), %edx
+	subl	12(%esp), %ecx
+	subl	%eax, %edx
+	jns	20f
+	addl	$1000000000, %edx
+	subl	$1, %ecx
+20:	testl	%ecx, %ecx
+	js	13b
+	jmp	21b
+#endif
 	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
 versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 		  GLIBC_2_3_2)

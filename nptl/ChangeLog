@@ -1,3 +1,33 @@
+2003-03-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_condattr_getclock.c: New file.
+	* pthread_condattr_setclock.c: New file.
+	* sysdeps/pthread/pthread.h: Declare these new functions.
+	* Versions [GLIBC_2.3.3] (libpthread): Add the new functions.
+	* Makefile (libpthread-routines): Add the new functions.
+	* sysdeps/unix/sysv/linux/internaltypes.h (struct pthread_condattr):
+	Renamed field to value.  Document use of the bits.
+	* pthread_condattr_getpshared.c: Adjust for struct pthread_condattr
+	change.
+	* pthread_condattr_setpshared.c: Likewise.
+	* sysdeps/unix/sysv/linux/lowlevelcond.sym: Add cond_clock symbol.
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h (pthread_cond_t):
+	Add __clock field.
+	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S:
+	Implement clock selection.
+	* sysdeps/pthread/pthread_cond_timedwait.c: Likewise.
+	* pthread-errnos.sym: Add ENOSYS.
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define
+	_POSIX_CLOCK_SELECTION.
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Remove
+	invalid .size directive.
+
 2003-03-17  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/lowlevellock.c (__lll_lock_wait):

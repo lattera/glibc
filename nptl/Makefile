@@ -76,6 +76,7 @@ libpthread-routines = init events version \
 		      old_pthread_cond_signal old_pthread_cond_broadcast \
 		      pthread_condattr_init pthread_condattr_destroy \
 		      pthread_condattr_getpshared pthread_condattr_setpshared \
+		      pthread_condattr_getclock pthread_condattr_setclock \
 		      pthread_spin_init pthread_spin_destroy \
 		      pthread_spin_lock pthread_spin_trylock \
 		      pthread_spin_unlock \
