@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1992,1995-1997,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995-1997,2000,2002,2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,8 +26,8 @@
 int
 __getpagesize ()
 {
-  if (GL(dl_pagesize) != 0)
-    return GL(dl_pagesize);
+  if (GLRO(dl_pagesize) != 0)
+    return GLRO(dl_pagesize);
 
 #ifdef	EXEC_PAGESIZE
   return EXEC_PAGESIZE;

@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  Linux version.
-   Copyright (C) 1995-1999,2000,01,02,03 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999,2000,01,02,03,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ init (int argc, char **argv, char **envp)
 	 kernel would use a different value.  (In a static program we
 	 don't have this information.)  */
 #ifdef SHARED
-      if (__fpu_control != GL(dl_fpu_control))
+      if (__fpu_control != GLRO(dl_fpu_control))
 #endif
 	__setfpucw (__fpu_control);
     }

@@ -1,5 +1,5 @@
 /* Determine realtime clock frequency.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,10 +27,10 @@ int
 __profile_frequency (void)
 {
 #ifdef __ASSUME_AT_CLKTCK
-  return GL(dl_clktck);
+  return GLRO(dl_clktck);
 #else
-  if (GL(dl_clktck) != 0)
-    return GL(dl_clktck);
+  if (GLRO(dl_clktck) != 0)
+    return GLRO(dl_clktck);
 
   struct itimerval tim;
 

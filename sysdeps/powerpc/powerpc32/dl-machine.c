@@ -120,8 +120,8 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
   for (l = GL(dl_loaded); l; l = l->l_next)
     {
       ElfW(Addr) mapstart, mapend;
-      mapstart = l->l_map_start & ~(GL(dl_pagesize) - 1);
-      mapend = l->l_map_end | (GL(dl_pagesize) - 1);
+      mapstart = l->l_map_start & ~(GLRO(dl_pagesize) - 1);
+      mapend = l->l_map_end | (GLRO(dl_pagesize) - 1);
       assert (mapend > mapstart);
 
       /* Prefer gaps below the main executable, note that l ==
@@ -142,7 +142,7 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
     }
 
   high -= 0x10000; /* Allow some room between objects.  */
-  maplength = (maplength | (GL(dl_pagesize) - 1)) + 1;
+  maplength = (maplength | (GLRO(dl_pagesize) - 1)) + 1;
   if (high <= low || high - low < maplength )
     return 0;
   return high - maplength;  /* Both high and maplength are page-aligned.  */
@@ -240,7 +240,7 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 					 : _dl_runtime_resolve);
 	  Elf32_Word offset;
 
-	  if (profile && _dl_name_match_p (GL(dl_profile), map))
+	  if (profile && _dl_name_match_p (GLRO(dl_profile), map))
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
 	    GL(dl_profile_map) = map;
@@ -499,7 +499,7 @@ __process_machine_rela (struct link_map *map,
 	   found.  */
 	return;
       if (sym->st_size > refsym->st_size
-	  || (GL(dl_verbose) && sym->st_size < refsym->st_size))
+	  || (GLRO(dl_verbose) && sym->st_size < refsym->st_size))
 	{
 	  const char *strtab;
 

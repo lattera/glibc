@@ -95,14 +95,6 @@ struct rtld_global _rtld_global =
     /* Get architecture specific initializer.  */
 #include <dl-procinfo.c>
     ._dl_debug_fd = STDERR_FILENO,
-#ifdef NEED_DL_SYSINFO
-    ._dl_sysinfo = DL_SYSINFO_DEFAULT,
-#endif
-    ._dl_lazy = 1,
-    ._dl_use_load_bias = -2,
-    ._dl_fpu_control = _FPU_DEFAULT,
-    ._dl_correct_cache_id = _DL_CACHE_DEFAULT_ID,
-    ._dl_hwcap_mask = HWCAP_IMPORTANT,
     /* Default presumption without further information is executable stack.  */
     ._dl_stack_flags = PF_R|PF_W|PF_X,
 #ifdef _LIBC_REENTRANT
@@ -115,6 +107,28 @@ struct rtld_global _rtld_global =
    visibility attribute.  */
 extern struct rtld_global _rtld_local
     __attribute__ ((alias ("_rtld_global"), visibility ("hidden")));
+
+
+/* This variable is similar to _rtld_local, but all values are
+   read-only after relocation.  */
+struct rtld_global_ro _rtld_global_ro attribute_relro =
+  {
+#ifdef NEED_DL_SYSINFO
+    ._dl_sysinfo = DL_SYSINFO_DEFAULT,
+#endif
+    ._dl_use_load_bias = -2,
+    ._dl_correct_cache_id = _DL_CACHE_DEFAULT_ID,
+    ._dl_hwcap_mask = HWCAP_IMPORTANT,
+    ._dl_lazy = 1,
+    ._dl_fpu_control = _FPU_DEFAULT,
+  };
+/* If we would use strong_alias here the compiler would see a
+   non-hidden definition.  This would undo the effect of the previous
+   declaration.  So spell out was strong_alias does plus add the
+   visibility attribute.  */
+extern struct rtld_global_ro _rtld_local_ro
+    __attribute__ ((alias ("_rtld_global_ro"), visibility ("hidden")));
+
 
 static void dl_main (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
 		     ElfW(Addr) *user_entry);
@@ -280,7 +294,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
     }
 #endif
 
-  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))
     {
 #ifndef HP_TIMING_NONAVAIL
       print_statistics (&rtld_total_time);
@@ -712,7 +726,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	if (! strcmp (INTUSE(_dl_argv)[1], "--list"))
 	  {
 	    mode = list;
-	    GL(dl_lazy) = -1;	/* This means do no dependency analysis.  */
+	    GLRO(dl_lazy) = -1;	/* This means do no dependency analysis.  */
 
 	    ++_dl_skip_args;
 	    --_dl_argc;
@@ -738,7 +752,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	else if (! strcmp (INTUSE(_dl_argv)[1], "--inhibit-rpath")
 		 && _dl_argc > 2)
 	  {
-	    GL(dl_inhibit_rpath) = INTUSE(_dl_argv)[2];
+	    GLRO(dl_inhibit_rpath) = INTUSE(_dl_argv)[2];
 
 	    _dl_skip_args += 2;
 	    _dl_argc -= 2;
@@ -1035,8 +1049,8 @@ of this helper program; chances are you did not intend to run this program.\n\
   /* If LD_USE_LOAD_BIAS env variable has not been seen, default
      to not using bias for non-prelinked PIEs and libraries
      and using it for executables or prelinked PIEs or libraries.  */
-  if (GL(dl_use_load_bias) == (ElfW(Addr)) -2)
-    GL(dl_use_load_bias) = (GL(dl_loaded)->l_addr == 0) ? -1 : 0;
+  if (GLRO(dl_use_load_bias) == (ElfW(Addr)) -2)
+    GLRO(dl_use_load_bias) = (GL(dl_loaded)->l_addr == 0) ? -1 : 0;
 
   /* Set up the program header information for the dynamic linker
      itself.  It is needed in the dl_iterate_phdr() callbacks.  */
@@ -1212,7 +1226,7 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 
 #ifdef NEED_DL_SYSINFO
   struct link_map *sysinfo_map = NULL;
-  if (GL(dl_sysinfo_dso) != NULL)
+  if (GLRO(dl_sysinfo_dso) != NULL)
     {
       /* Do an abridged version of the work _dl_map_object_from_fd would do
 	 to map in the object.  It's already mapped and prelinked (and
@@ -1224,9 +1238,9 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	{
 	  static ElfW(Dyn) dyn_temp[DL_RO_DYN_TEMP_CNT];
 
-	  l->l_phdr = ((const void *) GL(dl_sysinfo_dso)
-		       + GL(dl_sysinfo_dso)->e_phoff);
-	  l->l_phnum = GL(dl_sysinfo_dso)->e_phnum;
+	  l->l_phdr = ((const void *) GLRO(dl_sysinfo_dso)
+		       + GLRO(dl_sysinfo_dso)->e_phoff);
+	  l->l_phnum = GLRO(dl_sysinfo_dso)->e_phnum;
 	  for (uint_fast16_t i = 0; i < l->l_phnum; ++i)
 	    {
 	      const ElfW(Phdr) *const ph = &l->l_phdr[i];
@@ -1243,7 +1257,7 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 		    l->l_map_end = ph->p_vaddr + ph->p_memsz;
 		}
 	    }
-	  l->l_map_start = (ElfW(Addr)) GL(dl_sysinfo_dso);
+	  l->l_map_start = (ElfW(Addr)) GLRO(dl_sysinfo_dso);
 	  l->l_addr = l->l_map_start - l->l_addr;
 	  l->l_map_end += l->l_addr;
 	  l->l_ld = (void *) ((ElfW(Addr)) l->l_ld + l->l_addr);
@@ -1269,8 +1283,8 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	    }
 
 	  /* We have a prelinked DSO preloaded by the system.  */
-	  if (GL(dl_sysinfo) == DL_SYSINFO_DEFAULT)
-	    GL(dl_sysinfo) = GL(dl_sysinfo_dso)->e_entry + l->l_addr;
+	  if (GLRO(dl_sysinfo) == DL_SYSINFO_DEFAULT)
+	    GLRO(dl_sysinfo) = GLRO(dl_sysinfo_dso)->e_entry + l->l_addr;
 	  sysinfo_map = l;
 	}
     }
@@ -1437,7 +1451,7 @@ cannot allocate TLS data structures for initial thread");
 	 after relocation.  */
       struct link_map *l;
 
-      if (GL(dl_debug_mask) & DL_DEBUG_PRELINK)
+      if (GLRO(dl_debug_mask) & DL_DEBUG_PRELINK)
 	{
 	  struct r_scope_elem *scope = &GL(dl_loaded)->l_searchlist;
 
@@ -1449,8 +1463,8 @@ cannot allocate TLS data structures for initial thread");
 		  _dl_printf ("\t%s => not found\n", l->l_libname->name);
 		  continue;
 		}
-	      if (_dl_name_match_p (GL(dl_trace_prelink), l))
-		GL(dl_trace_prelink_map) = l;
+	      if (_dl_name_match_p (GLRO(dl_trace_prelink), l))
+		GLRO(dl_trace_prelink_map) = l;
 	      _dl_printf ("\t%s => %s (0x%0*Zx, 0x%0*Zx)",
 			  l->l_libname->name[0] ? l->l_libname->name
 			  : rtld_progname ?: "<main program>",
@@ -1507,13 +1521,13 @@ cannot allocate TLS data structures for initial thread");
       else
 	{
 	  /* If LD_WARN is set warn about undefined symbols.  */
-	  if (GL(dl_lazy) >= 0 && GL(dl_verbose))
+	  if (GLRO(dl_lazy) >= 0 && GLRO(dl_verbose))
 	    {
 	      /* We have to do symbol dependency testing.  */
 	      struct relocate_args args;
 	      struct link_map *l;
 
-	      args.lazy = GL(dl_lazy);
+	      args.lazy = GLRO(dl_lazy);
 
 	      l = GL(dl_loaded);
 	      while (l->l_next)
@@ -1529,7 +1543,7 @@ cannot allocate TLS data structures for initial thread");
 		  l = l->l_prev;
 		} while (l);
 
-	      if ((GL(dl_debug_mask) & DL_DEBUG_PRELINK)
+	      if ((GLRO(dl_debug_mask) & DL_DEBUG_PRELINK)
 		  && GL(dl_rtld_map).l_opencount > 1)
 		INTUSE(_dl_relocate_object) (&GL(dl_rtld_map),
 					     GL(dl_loaded)->l_scope, 0, 0);
@@ -1612,7 +1626,7 @@ cannot allocate TLS data structures for initial thread");
     }
 
   if (GL(dl_loaded)->l_info [ADDRIDX (DT_GNU_LIBLIST)]
-      && ! __builtin_expect (GL(dl_profile) != NULL, 0))
+      && ! __builtin_expect (GLRO(dl_profile) != NULL, 0))
     {
       ElfW(Lib) *liblist, *liblistend;
       struct link_map **r_list, **r_listend, *l;
@@ -1660,7 +1674,7 @@ cannot allocate TLS data structures for initial thread");
       if (r_list == r_listend && liblist == liblistend)
 	prelinked = true;
 
-      if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))
+      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))
 	_dl_printf ("\nprelink checking: %s\n", prelinked ? "ok" : "failed");
     }
 
@@ -1740,7 +1754,7 @@ cannot allocate TLS data structures for initial thread");
 	 know that because it is self-contained).  */
 
       struct link_map *l;
-      int consider_profiling = GL(dl_profile) != NULL;
+      int consider_profiling = GLRO(dl_profile) != NULL;
 #ifndef HP_TIMING_NONAVAIL
       hp_timing_t start;
       hp_timing_t stop;
@@ -1748,7 +1762,7 @@ cannot allocate TLS data structures for initial thread");
 #endif
 
       /* If we are profiling we also must do lazy reloaction.  */
-      GL(dl_lazy) |= consider_profiling;
+      GLRO(dl_lazy) |= consider_profiling;
 
       l = GL(dl_loaded);
       while (l->l_next)
@@ -1769,7 +1783,7 @@ cannot allocate TLS data structures for initial thread");
 	    }
 
 	  if (l != &GL(dl_rtld_map))
-	    INTUSE(_dl_relocate_object) (l, l->l_scope, GL(dl_lazy),
+	    INTUSE(_dl_relocate_object) (l, l->l_scope, GLRO(dl_lazy),
 					 consider_profiling);
 
 	  l = l->l_prev;
@@ -1792,7 +1806,8 @@ cannot allocate TLS data structures for initial thread");
 	 needs to have _dl_profile_map set up by the relocator.  */
       if (__builtin_expect (GL(dl_profile_map) != NULL, 0))
 	/* We must prepare the profiling.  */
-	INTUSE(_dl_start_profile) (GL(dl_profile_map), GL(dl_profile_output));
+	INTUSE(_dl_start_profile) (GL(dl_profile_map),
+				   GLRO(dl_profile_output));
 
       if (GL(dl_rtld_map).l_opencount > 1)
 	{
@@ -1928,7 +1943,7 @@ process_dl_debug (const char *dl_debug)
 	    if (debopts[cnt].len == len
 		&& memcmp (dl_debug, debopts[cnt].name, len) == 0)
 	      {
-		GL(dl_debug_mask) |= debopts[cnt].mask;
+		GLRO(dl_debug_mask) |= debopts[cnt].mask;
 		any_debug = 1;
 		break;
 	      }
@@ -1949,7 +1964,7 @@ warning: debug option `%s' unknown; try LD_DEBUG=help\n", copy);
       ++dl_debug;
     }
 
-  if (GL(dl_debug_mask) & DL_DEBUG_HELP)
+  if (GLRO(dl_debug_mask) & DL_DEBUG_HELP)
     {
       size_t cnt;
 
@@ -1983,7 +1998,7 @@ process_envvars (enum mode *modep)
   char *debug_output = NULL;
 
   /* This is the default place for profiling data file.  */
-  GL(dl_profile_output)
+  GLRO(dl_profile_output)
     = &"/var/tmp\0/var/profile"[INTUSE(__libc_enable_secure) ? 9 : 0];
 
   while ((envline = _dl_next_ld_env_entry (&runp)) != NULL)
@@ -2004,7 +2019,7 @@ process_envvars (enum mode *modep)
 	case 4:
 	  /* Warning level, verbose or not.  */
 	  if (memcmp (envline, "WARN", 4) == 0)
-	    GL(dl_verbose) = envline[5] != '\0';
+	    GLRO(dl_verbose) = envline[5] != '\0';
 	  break;
 
 	case 5:
@@ -2030,18 +2045,18 @@ process_envvars (enum mode *modep)
 
 	  /* Which shared object shall be profiled.  */
 	  if (memcmp (envline, "PROFILE", 7) == 0 && envline[8] != '\0')
-	    GL(dl_profile) = &envline[8];
+	    GLRO(dl_profile) = &envline[8];
 	  break;
 
 	case 8:
 	  /* Do we bind early?  */
 	  if (memcmp (envline, "BIND_NOW", 8) == 0)
 	    {
-	      GL(dl_lazy) = envline[9] == '\0';
+	      GLRO(dl_lazy) = envline[9] == '\0';
 	      break;
 	    }
 	  if (memcmp (envline, "BIND_NOT", 8) == 0)
-	    GL(dl_bind_not) = envline[9] != '\0';
+	    GLRO(dl_bind_not) = envline[9] != '\0';
 	  break;
 
 	case 9:
@@ -2054,14 +2069,15 @@ process_envvars (enum mode *modep)
 	case 10:
 	  /* Mask for the important hardware capabilities.  */
 	  if (memcmp (envline, "HWCAP_MASK", 10) == 0)
-	    GL(dl_hwcap_mask) = __strtoul_internal (&envline[11], NULL, 0, 0);
+	    GLRO(dl_hwcap_mask) = __strtoul_internal (&envline[11], NULL,
+						      0, 0);
 	  break;
 
 	case 11:
 	  /* Path where the binary is found.  */
 	  if (!INTUSE(__libc_enable_secure)
 	      && memcmp (envline, "ORIGIN_PATH", 11) == 0)
-	    GL(dl_origin_path) = &envline[12];
+	    GLRO(dl_origin_path) = &envline[12];
 	  break;
 
 	case 12:
@@ -2080,7 +2096,7 @@ process_envvars (enum mode *modep)
 	    }
 
 	  if (memcmp (envline, "DYNAMIC_WEAK", 12) == 0)
-	    GL(dl_dynamic_weak) = 1;
+	    GLRO(dl_dynamic_weak) = 1;
 	  break;
 
 	case 13:
@@ -2091,7 +2107,7 @@ process_envvars (enum mode *modep)
 #endif
 	  if (!INTUSE(__libc_enable_secure)
 	      && memcmp (envline, "USE_LOAD_BIAS", 13) == 0)
-	    GL(dl_use_load_bias) = envline[14] == '1' ? -1 : 0;
+	    GLRO(dl_use_load_bias) = envline[14] == '1' ? -1 : 0;
 	  break;
 
 	case 14:
@@ -2099,7 +2115,7 @@ process_envvars (enum mode *modep)
 	  if (!INTUSE(__libc_enable_secure)
 	      && memcmp (envline, "PROFILE_OUTPUT", 14) == 0
 	      && envline[15] != '\0')
-	    GL(dl_profile_output) = &envline[15];
+	    GLRO(dl_profile_output) = &envline[15];
 	  break;
 
 	case 16:
@@ -2107,9 +2123,9 @@ process_envvars (enum mode *modep)
 	  if (memcmp (envline, "TRACE_PRELINKING", 16) == 0)
 	    {
 	      mode = trace;
-	      GL(dl_verbose) = 1;
-	      GL(dl_debug_mask) |= DL_DEBUG_PRELINK;
-	      GL(dl_trace_prelink) = &envline[17];
+	      GLRO(dl_verbose) = 1;
+	      GLRO(dl_debug_mask) |= DL_DEBUG_PRELINK;
+	      GLRO(dl_trace_prelink) = &envline[17];
 	    }
 	  break;
 

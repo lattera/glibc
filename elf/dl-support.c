@@ -175,10 +175,10 @@ _dl_aux_init (ElfW(auxv_t) *av)
     switch (av->a_type)
       {
       case AT_PAGESZ:
-	GL(dl_pagesize) = av->a_un.a_val;
+	GLRO(dl_pagesize) = av->a_un.a_val;
 	break;
       case AT_CLKTCK:
-	GL(dl_clktck) = av->a_un.a_val;
+	GLRO(dl_clktck) = av->a_un.a_val;
 	break;
       case AT_PHDR:
 	GL(dl_phdr) = av->a_un.a_ptr;
@@ -187,7 +187,7 @@ _dl_aux_init (ElfW(auxv_t) *av)
 	GL(dl_phnum) = av->a_un.a_val;
 	break;
       case AT_HWCAP:
-	GL(dl_hwcap) = av->a_un.a_val;
+	GLRO(dl_hwcap) = av->a_un.a_val;
 	break;
 #ifdef NEED_DL_SYSINFO
       case AT_SYSINFO:

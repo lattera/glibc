@@ -118,7 +118,7 @@ fixup (
   value = elf_machine_plt_value (l, reloc, value);
 
   /* Finally, fix up the plt itself.  */
-  if (__builtin_expect (GL(dl_bind_not), 0))
+  if (__builtin_expect (GLRO(dl_bind_not), 0))
     return value;
 
   return elf_machine_fixup_plt (l, result, reloc, rel_addr, value);
@@ -209,7 +209,7 @@ profile_fixup (
       value = elf_machine_plt_value (l, reloc, value);
 
       /* Store the result for later runs.  */
-      if (__builtin_expect (! GL(dl_bind_not), 1))
+      if (__builtin_expect (! GLRO(dl_bind_not), 1))
 	*resultp = value;
     }
 

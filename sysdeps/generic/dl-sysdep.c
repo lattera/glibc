@@ -107,7 +107,7 @@ _dl_sysdep_start (void **start_argptr,
 			  _dl_auxv);
 
   user_entry = (ElfW(Addr)) ENTRY_POINT;
-  GL(dl_platform) = NULL; /* Default to nothing known about the platform.  */
+  GLRO(dl_platform) = NULL; /* Default to nothing known about the platform.  */
 
   for (av = _dl_auxv; av->a_type != AT_NULL; set_seen (av++))
     switch (av->a_type)
@@ -119,7 +119,7 @@ _dl_sysdep_start (void **start_argptr,
 	phnum = av->a_un.a_val;
 	break;
       case AT_PAGESZ:
-	GL(dl_pagesize) = av->a_un.a_val;
+	GLRO(dl_pagesize) = av->a_un.a_val;
 	break;
       case AT_ENTRY:
 	user_entry = av->a_un.a_val;
@@ -146,23 +146,23 @@ _dl_sysdep_start (void **start_argptr,
 	INTUSE(__libc_enable_secure) = av->a_un.a_val;
 	break;
       case AT_PLATFORM:
-	GL(dl_platform) = av->a_un.a_ptr;
+	GLRO(dl_platform) = av->a_un.a_ptr;
 	break;
       case AT_HWCAP:
-	GL(dl_hwcap) = av->a_un.a_val;
+	GLRO(dl_hwcap) = av->a_un.a_val;
 	break;
       case AT_CLKTCK:
-	GL(dl_clktck) = av->a_un.a_val;
+	GLRO(dl_clktck) = av->a_un.a_val;
 	break;
       case AT_FPUCW:
-	GL(dl_fpu_control) = av->a_un.a_val;
+	GLRO(dl_fpu_control) = av->a_un.a_val;
 	break;
 #ifdef NEED_DL_SYSINFO
       case AT_SYSINFO:
 	new_sysinfo = av->a_un.a_val;
 	break;
       case AT_SYSINFO_EHDR:
-	GL(dl_sysinfo_dso) = av->a_un.a_ptr;
+	GLRO(dl_sysinfo_dso) = av->a_un.a_ptr;
 	break;
 #endif
 #ifdef DL_PLATFORM_AUXV
@@ -195,14 +195,14 @@ _dl_sysdep_start (void **start_argptr,
 #endif
 
 #ifndef HAVE_AUX_PAGESIZE
-  if (GL(dl_pagesize) == 0)
-    GL(dl_pagesize) = __getpagesize ();
+  if (GLRO(dl_pagesize) == 0)
+    GLRO(dl_pagesize) = __getpagesize ();
 #endif
 
 #if defined NEED_DL_SYSINFO
   /* Only set the sysinfo value if we also have the vsyscall DSO.  */
-  if (GL(dl_sysinfo_dso) != 0 && new_sysinfo)
-    GL(dl_sysinfo) = new_sysinfo;
+  if (GLRO(dl_sysinfo_dso) != 0 && new_sysinfo)
+    GLRO(dl_sysinfo) = new_sysinfo;
 #endif
 
 #ifdef DL_SYSDEP_INIT
@@ -214,8 +214,8 @@ _dl_sysdep_start (void **start_argptr,
 #endif
 
   /* Determine the length of the platform name.  */
-  if (GL(dl_platform) != NULL)
-    GL(dl_platformlen) = strlen (GL(dl_platform));
+  if (GLRO(dl_platform) != NULL)
+    GLRO(dl_platformlen) = strlen (GLRO(dl_platform));
 
   if (__sbrk (0) == &_end)
     /* The dynamic linker was run as a program, and so the initial break
@@ -223,7 +223,8 @@ _dl_sysdep_start (void **start_argptr,
        will consume the rest of this page, so tell the kernel to move the
        break up that far.  When the user program examines its break, it
        will see this new value and not clobber our data.  */
-    __sbrk (GL(dl_pagesize) - ((&_end - (void *) 0) & (GL(dl_pagesize) - 1)));
+    __sbrk (GLRO(dl_pagesize)
+	    - ((&_end - (void *) 0) & (GLRO(dl_pagesize) - 1)));
 
   /* If this is a SUID program we make sure that FDs 0, 1, and 2 are
      allocated.  If necessary we are doing it ourself.  If it is not
@@ -338,7 +339,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 		      size_t *max_capstrlen)
 {
   /* Determine how many important bits are set.  */
-  unsigned long int masked = GL(dl_hwcap) & GL(dl_hwcap_mask);
+  unsigned long int masked = GLRO(dl_hwcap) & GLRO(dl_hwcap_mask);
   size_t cnt = platform != NULL;
   size_t n, m;
   size_t total;

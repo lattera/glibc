@@ -1,6 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.
    PowerPC64 version.
-   Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003
+   Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -416,7 +416,7 @@ elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 
 	  resolve_fd = (Elf64_FuncDesc *) (profile ? _dl_profile_resolve
 					   : _dl_runtime_resolve);
-	  if (profile && _dl_name_match_p (GL(dl_profile), map))
+	  if (profile && _dl_name_match_p (GLRO(dl_profile), map))
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
 	    GL(dl_profile_map) = map;
@@ -757,7 +757,8 @@ elf_machine_rela (struct link_map *map,
 	/* This can happen in trace mode when an object could not be found. */
         return;
       if (dont_expect (sym->st_size > refsym->st_size
-		       || (GL(dl_verbose) && sym->st_size < refsym->st_size)))
+		       || (GLRO(dl_verbose)
+			   && sym->st_size < refsym->st_size)))
 	{
           const char *strtab;
 

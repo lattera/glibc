@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ FCT (const char *undef_name, unsigned long int hash, const ElfW(Sym) *ref,
 	continue;
 
       /* Print some debugging info if wanted.  */
-      if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_SYMBOLS, 0))
+      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SYMBOLS, 0))
 	INTUSE(_dl_debug_printf) ("symbol=%s;  lookup in file=%s\n",
 				  undef_name, (map->l_name[0]
 					       ? map->l_name : rtld_progname));
@@ -183,7 +183,7 @@ FCT (const char *undef_name, unsigned long int hash, const ElfW(Sym) *ref,
 	    {
 	    case STB_WEAK:
 	      /* Weak definition.  Use this value if we don't find another.  */
-	      if (__builtin_expect (GL(dl_dynamic_weak), 0))
+	      if (__builtin_expect (GLRO(dl_dynamic_weak), 0))
 		{
 		  if (! result->s)
 		    {

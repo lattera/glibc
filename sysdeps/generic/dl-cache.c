@@ -1,5 +1,5 @@
 /* Support for reading /etc/ld.so.cache files written by Linux ldconfig.
-   Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -107,12 +107,12 @@ do									      \
 		if (_dl_cache_check_flags (flags)			      \
 		    && _dl_cache_verify_ptr (lib->value))		      \
 		  {							      \
-		    if (best == NULL || flags == GL(dl_correct_cache_id))     \
+		    if (best == NULL || flags == GLRO(dl_correct_cache_id))   \
 		      {							      \
 			HWCAP_CHECK;					      \
 			best = cache_data + lib->value;			      \
 									      \
-			if (flags == GL(dl_correct_cache_id))		      \
+			if (flags == GLRO(dl_correct_cache_id))		      \
 			  /* We've found an exact match for the shared	      \
 			     object and no general `ELF' release.  Stop	      \
 			     searching.  */				      \
@@ -187,7 +187,7 @@ _dl_load_cache_lookup (const char *name)
   const char *best;
 
   /* Print a message if the loading of libs is traced.  */
-  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))
     INTUSE(_dl_debug_printf) (" search cache=%s\n", LD_SO_CACHE);
 
   if (cache == NULL)
@@ -256,15 +256,15 @@ _dl_load_cache_lookup (const char *name)
       /* Now we can compute how large the string table is.  */
       cache_data_size = (const char *) cache + cachesize - cache_data;
 
-      hwcap = &GL(dl_hwcap);
-      platform = _dl_string_platform (GL(dl_platform));
+      hwcap = &GLRO(dl_hwcap);
+      platform = _dl_string_platform (GLRO(dl_platform));
       if (platform != (uint64_t) -1)
 	platform = 1ULL << platform;
 
       /* Only accept hwcap if it's for the right platform.  */
 #define HWCAP_CHECK \
-      if (GL(dl_osversion)						      \
-	  && cache_new->libs[middle].osversion > GL(dl_osversion))	      \
+      if (GLRO(dl_osversion)						      \
+	  && cache_new->libs[middle].osversion > GLRO(dl_osversion))	      \
 	continue;							      \
       if (_DL_PLATFORMS_COUNT && platform != -1				      \
 	  && (lib->hwcap & _DL_HWCAP_PLATFORM) != 0			      \
@@ -289,7 +289,8 @@ _dl_load_cache_lookup (const char *name)
     }
 
   /* Print our result if wanted.  */
-  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0) && best != NULL)
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0)
+      && best != NULL)
     INTUSE(_dl_debug_printf) ("  trying file=%s\n", best);
 
   return best;

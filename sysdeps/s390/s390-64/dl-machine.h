@@ -1,6 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.
    64 bit S/390 Version.
-   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -105,7 +105,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  got[2] = (Elf64_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (GL(dl_profile), l))
+	  if (_dl_name_match_p (GLRO(dl_profile), l))
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
 	    GL(dl_profile_map) = l;
@@ -322,9 +322,9 @@ _dl_start_user:\n\
 static inline void __attribute__ ((unused))
 dl_platform_init (void)
 {
-  if (GL(dl_platform) != NULL && *GL(dl_platform) == '\0')
+  if (GLRO(dl_platform) != NULL && *GLRO(dl_platform) == '\0')
     /* Avoid an empty string which would disturb us.  */
-    GL(dl_platform) = NULL;
+    GLRO(dl_platform) = NULL;
 }
 
 static inline Elf64_Addr
@@ -455,7 +455,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	    break;
 	  if (__builtin_expect (sym->st_size > refsym->st_size, 0)
 	      || (__builtin_expect (sym->st_size < refsym->st_size, 0)
-		  && __builtin_expect (GL(dl_verbose), 0)))
+		  && __builtin_expect (GLRO(dl_verbose), 0)))
 	    {
 	      const char *strtab;
 

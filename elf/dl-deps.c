@@ -1,5 +1,5 @@
 /* Load the dependencies of a mapped object.
-   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -126,7 +126,7 @@ empty dynamics string token substitution"));				      \
 	    else							      \
 	      {								      \
 		/* This is for DT_AUXILIARY.  */			      \
-		if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))  \
+		if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))\
 		  INTUSE(_dl_debug_printf) (N_("\
 cannot load auxiliary `%s' because of empty dynamic string token "	      \
 					    "substitution\n"), __str);	      \
@@ -291,7 +291,7 @@ _dl_map_object_deps (struct link_map *map,
 		    int err;
 
 		    /* Say that we are about to load an auxiliary library.  */
-		    if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS,
+		    if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS,
 					  0))
 		      INTUSE(_dl_debug_printf) ("load auxiliary object=%s"
 						" requested by file=%s\n",
@@ -319,7 +319,7 @@ _dl_map_object_deps (struct link_map *map,
 		    int err;
 
 		    /* Say that we are about to load an auxiliary library.  */
-		    if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS,
+		    if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS,
 					  0))
 		      INTUSE(_dl_debug_printf) ("load filtered object=%s"
 						" requested by file=%s\n",
@@ -510,7 +510,7 @@ _dl_map_object_deps (struct link_map *map,
       runp->map->l_reserved = 0;
     }
 
-  if (__builtin_expect(GL(dl_debug_mask) & DL_DEBUG_PRELINK, 0) != 0
+  if (__builtin_expect(GLRO(dl_debug_mask) & DL_DEBUG_PRELINK, 0) != 0
       && map == GL(dl_loaded))
     {
       /* If we are to compute conflicts, we have to build local scope

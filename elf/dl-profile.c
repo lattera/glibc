@@ -1,5 +1,5 @@
 /* Profiling of shared libraries.
-   Copyright (C) 1997-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
    Based on the BSD mcount implementation.
@@ -198,9 +198,9 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   for (ph = map->l_phdr; ph < &map->l_phdr[map->l_phnum]; ++ph)
     if (ph->p_type == PT_LOAD && (ph->p_flags & PF_X))
       {
-	ElfW(Addr) start = (ph->p_vaddr & ~(GL(dl_pagesize) - 1));
-	ElfW(Addr) end = ((ph->p_vaddr + ph->p_memsz + GL(dl_pagesize) - 1)
-			  & ~(GL(dl_pagesize) - 1));
+	ElfW(Addr) start = (ph->p_vaddr & ~(GLRO(dl_pagesize) - 1));
+	ElfW(Addr) end = ((ph->p_vaddr + ph->p_memsz + GLRO(dl_pagesize) - 1)
+			  & ~(GLRO(dl_pagesize) - 1));
 
 	if (start < mapstart)
 	  mapstart = start;
@@ -273,11 +273,11 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   /* First determine the output name.  We write in the directory
      OUTPUT_DIR and the name is composed from the shared objects
      soname (or the file name) and the ending ".profile".  */
-  filename = (char *) alloca (strlen (output_dir) + 1 + strlen (GL(dl_profile))
-			      + sizeof ".profile");
+  filename = (char *) alloca (strlen (output_dir) + 1
+			      + strlen (GLRO(dl_profile)) + sizeof ".profile");
   cp = __stpcpy (filename, output_dir);
   *cp++ = '/';
-  __stpcpy (__stpcpy (cp, GL(dl_profile)), ".profile");
+  __stpcpy (__stpcpy (cp, GLRO(dl_profile)), ".profile");
 
 #ifdef O_NOFOLLOW
 # define EXTRA_FLAGS | O_NOFOLLOW
@@ -310,11 +310,11 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   if (st.st_size == 0)
     {
       /* We have to create the file.  */
-      char buf[GL(dl_pagesize)];
+      char buf[GLRO(dl_pagesize)];
 
-      memset (buf, '\0', GL(dl_pagesize));
+      memset (buf, '\0', GLRO(dl_pagesize));
 
-      if (__lseek (fd, expected_size & ~(GL(dl_pagesize) - 1), SEEK_SET) == -1)
+      if (__lseek (fd, expected_size & ~(GLRO(dl_pagesize) - 1), SEEK_SET) == -1)
 	{
 	  char buf[400];
 	  int errnum;
@@ -327,7 +327,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 	}
 
       if (TEMP_FAILURE_RETRY (__libc_write (fd, buf, (expected_size
-						      & (GL(dl_pagesize)
+						      & (GLRO(dl_pagesize)
 							 - 1))))
 	  < 0)
 	goto cannot_create;
@@ -341,7 +341,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 	__munmap ((void *) addr, expected_size);
 
       _dl_error_printf ("%s: file is no correct profile data file for `%s'\n",
-			filename, GL(dl_profile));
+			filename, GLRO(dl_profile));
       return;
     }
 

@@ -284,7 +284,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	       found.  */
 	    break;
 	  if (sym->st_size > refsym->st_size
-	      || (GL(dl_verbose) && sym->st_size < refsym->st_size))
+	      || (GLRO(dl_verbose) && sym->st_size < refsym->st_size))
 	    {
 	      const char *strtab;
 
@@ -498,7 +498,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  res0_addr = (Elf64_Addr) &_dl_runtime_profile_0;
 	  res1_addr = (Elf64_Addr) &_dl_runtime_profile_1;
-	  if (_dl_name_match_p (GL(dl_profile), l))
+	  if (_dl_name_match_p (GLRO(dl_profile), l))
 	    GL(dl_profile_map) = l;
 	}
 

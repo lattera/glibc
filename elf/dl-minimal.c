@@ -1,5 +1,5 @@
 /* Minimal replacements for basic facilities used in the dynamic linker.
-   Copyright (C) 1995,96,97,98,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998,2000-2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -66,8 +66,8 @@ __libc_memalign (size_t align, size_t n)
       extern int _end attribute_hidden;
       alloc_ptr = &_end;
       alloc_end = (void *) 0 + (((alloc_ptr - (void *) 0)
-				 + GL(dl_pagesize) - 1)
-				& ~(GL(dl_pagesize) - 1));
+				 + GLRO(dl_pagesize) - 1)
+				& ~(GLRO(dl_pagesize) - 1));
     }
 
   /* Make sure the allocation pointer is ideally aligned.  */
@@ -78,7 +78,7 @@ __libc_memalign (size_t align, size_t n)
     {
       /* Insufficient space left; allocate another page.  */
       caddr_t page;
-      size_t nup = (n + GL(dl_pagesize) - 1) & ~(GL(dl_pagesize) - 1);
+      size_t nup = (n + GLRO(dl_pagesize) - 1) & ~(GLRO(dl_pagesize) - 1);
       page = __mmap (0, nup, PROT_READ|PROT_WRITE,
 		     MAP_ANON|MAP_PRIVATE, _dl_zerofd, 0);
       assert (page != MAP_FAILED);

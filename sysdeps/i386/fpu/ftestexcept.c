@@ -1,5 +1,5 @@
 /* Test exception in current environment.
-   Copyright (C) 1997, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -33,7 +33,7 @@ fetestexcept (int excepts)
   __asm__ ("fnstsw %0" : "=a" (temp));
 
   /* If the CPU supports SSE we test the MXCSR as well.  */
-  if ((GL(dl_hwcap) & HWCAP_I386_XMM) != 0)
+  if ((GLRO(dl_hwcap) & HWCAP_I386_XMM) != 0)
     __asm__ ("stmxcsr %0" : "=m" (*&xtemp));
 
   return (temp | xtemp) & excepts & FE_ALL_EXCEPT;

@@ -248,7 +248,7 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 			     INTUSE(__libc_enable_secure))) != 0)
 	    repl = l->l_origin;
 	  else if ((len = is_dst (start, name, "PLATFORM", is_path, 0)) != 0)
-	    repl = GL(dl_platform);
+	    repl = GLRO(dl_platform);
 	  else if ((len = is_dst (start, name, "LIB", is_path, 0)) != 0)
 	    repl = DL_DST_LIB;
 
@@ -502,10 +502,10 @@ decompose_rpath (struct r_search_path_struct *sps,
 
   /* First see whether we must forget the RUNPATH and RPATH from this
      object.  */
-  if (__builtin_expect (GL(dl_inhibit_rpath) != NULL, 0)
+  if (__builtin_expect (GLRO(dl_inhibit_rpath) != NULL, 0)
       && !INTUSE(__libc_enable_secure))
     {
-      const char *inhp = GL(dl_inhibit_rpath);
+      const char *inhp = GLRO(dl_inhibit_rpath);
 
       do
 	{
@@ -623,7 +623,7 @@ _dl_init_paths (const char *llp)
      directories addressed by the LD_LIBRARY_PATH environment variable.  */
 
   /* Get the capabilities.  */
-  capstr = _dl_important_hwcaps (GL(dl_platform), GL(dl_platformlen),
+  capstr = _dl_important_hwcaps (GLRO(dl_platform), GLRO(dl_platformlen),
 				 &ncapstr, &max_capstrlen);
 
   /* First set up the rest of the default search directory entries.  */
@@ -844,7 +844,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
     return NULL;
 
   /* Print debugging message.  */
-  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
     INTUSE(_dl_debug_printf) ("file=%s;  generating link map\n", name);
 
   /* This is the ELF header.  We read it in `open_verify'.  */
@@ -928,7 +928,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	case PT_LOAD:
 	  /* A load command tells us to map in part of the file.
 	     We record the load commands and process them all later.  */
-	  if (__builtin_expect ((ph->p_align & (GL(dl_pagesize) - 1)) != 0,
+	  if (__builtin_expect ((ph->p_align & (GLRO(dl_pagesize) - 1)) != 0,
 				0))
 	    {
 	      errstring = N_("ELF load command alignment not page-aligned");
@@ -944,8 +944,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
 	  c = &loadcmds[nloadcmds++];
 	  c->mapstart = ph->p_vaddr & ~(ph->p_align - 1);
-	  c->mapend = ((ph->p_vaddr + ph->p_filesz + GL(dl_pagesize) - 1)
-		       & ~(GL(dl_pagesize) - 1));
+	  c->mapend = ((ph->p_vaddr + ph->p_filesz + GLRO(dl_pagesize) - 1)
+		       & ~(GLRO(dl_pagesize) - 1));
 	  c->dataend = ph->p_vaddr + ph->p_filesz;
 	  c->allocend = ph->p_vaddr + ph->p_memsz;
 	  c->mapoff = ph->p_offset & ~(ph->p_align - 1);
@@ -1090,7 +1090,7 @@ cannot allocate TLS data structures for initial thread");
 	   the OS can do whatever it likes. */
 	ElfW(Addr) mappref;
 	mappref = (ELF_PREFERRED_ADDRESS (loader, maplength,
-					  c->mapstart & GL(dl_use_load_bias))
+					  c->mapstart & GLRO(dl_use_load_bias))
 		   - MAP_BASE_ADDR (l));
 
 	/* Remember which part of the address space this object uses.  */
@@ -1164,8 +1164,8 @@ cannot allocate TLS data structures for initial thread");
 
 	    zero = l->l_addr + c->dataend;
 	    zeroend = l->l_addr + c->allocend;
-	    zeropage = ((zero + GL(dl_pagesize) - 1)
-			& ~(GL(dl_pagesize) - 1));
+	    zeropage = ((zero + GLRO(dl_pagesize) - 1)
+			& ~(GLRO(dl_pagesize) - 1));
 
 	    if (zeroend < zeropage)
 	      /* All the extra data is in the last page of the segment.
@@ -1178,8 +1178,9 @@ cannot allocate TLS data structures for initial thread");
 		if (__builtin_expect ((c->prot & PROT_WRITE) == 0, 0))
 		  {
 		    /* Dag nab it.  */
-		    if (__mprotect ((caddr_t) (zero & ~(GL(dl_pagesize) - 1)),
-				    GL(dl_pagesize), c->prot|PROT_WRITE) < 0)
+		    if (__mprotect ((caddr_t) (zero
+					       & ~(GLRO(dl_pagesize) - 1)),
+				    GLRO(dl_pagesize), c->prot|PROT_WRITE) < 0)
 		      {
 			errstring = N_("cannot change memory protections");
 			goto call_lose_errno;
@@ -1187,8 +1188,8 @@ cannot allocate TLS data structures for initial thread");
 		  }
 		memset ((void *) zero, '\0', zeropage - zero);
 		if (__builtin_expect ((c->prot & PROT_WRITE) == 0, 0))
-		  __mprotect ((caddr_t) (zero & ~(GL(dl_pagesize) - 1)),
-			      GL(dl_pagesize), c->prot);
+		  __mprotect ((caddr_t) (zero & ~(GLRO(dl_pagesize) - 1)),
+			      GLRO(dl_pagesize), c->prot);
 	      }
 
 	    if (zeroend > zeropage)
@@ -1258,7 +1259,7 @@ cannot allocate TLS data structures for initial thread");
 
   l->l_entry += l->l_addr;
 
-  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
     INTUSE(_dl_debug_printf) ("\
   dynamic: 0x%0*lx  base: 0x%0*lx   size: 0x%0*Zx\n\
     entry: 0x%0*lx  phdr: 0x%0*lx  phnum:   %*u\n\n",
@@ -1350,7 +1351,7 @@ cannot enable executable stack as shared object requires");
 
   /* When we profile the SONAME might be needed for something else but
      loading.  Add it right away.  */
-  if (__builtin_expect (GL(dl_profile) != NULL, 0)
+  if (__builtin_expect (GLRO(dl_profile) != NULL, 0)
       && l->l_info[DT_SONAME] != NULL)
     add_name_to_object (l, ((const char *) D_PTR (l, l_info[DT_STRTAB])
 			    + l->l_info[DT_SONAME]->d_un.d_val));
@@ -1570,7 +1571,7 @@ open_verify (const char *name, struct filebuf *fbp)
 			+ (abi_note[6] & 0xff) * 256
 			+ (abi_note[7] & 0xff);
 	    if (abi_note[4] != __ABI_TAG_OS
-		|| (GL(dl_osversion) && GL(dl_osversion) < osversion))
+		|| (GLRO(dl_osversion) && GLRO(dl_osversion) < osversion))
 	      {
 	      close_and_out:
 		__close (fd);
@@ -1615,7 +1616,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 
       /* If we are debugging the search for libraries print the path
 	 now if it hasn't happened now.  */
-      if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0)
+      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0)
 	  && current_what != this_dir->what)
 	{
 	  current_what = this_dir->what;
@@ -1636,7 +1637,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 	     - buf);
 
 	  /* Print name we try if this is wanted.  */
-	  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))
+	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))
 	    INTUSE(_dl_debug_printf) ("  trying file=%s\n", buf);
 
 	  fd = open_verify (buf, fbp);
@@ -1769,7 +1770,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
     }
 
   /* Display information if we are debugging.  */
-  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0)
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0)
       && loader != NULL)
     INTUSE(_dl_debug_printf) ("\nfile=%s;  needed by %s\n", name,
 			      loader->l_name[0]
@@ -1781,7 +1782,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       size_t namelen = strlen (name) + 1;
 
-      if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))
+      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))
 	INTUSE(_dl_debug_printf) ("find library=%s; searching\n", name);
 
       fd = -1;
@@ -1886,7 +1887,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 			&realname, &fb);
 
       /* Add another newline when we are tracing the library loading.  */
-      if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))
+      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))
         INTUSE(_dl_debug_printf) ("\n");
     }
   else
@@ -1908,7 +1909,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
   if (__builtin_expect (fd, 0) == -1)
     {
       if (trace_mode
-	  && __builtin_expect (GL(dl_debug_mask) & DL_DEBUG_PRELINK, 0) == 0)
+	  && __builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_PRELINK, 0) == 0)
 	{
 	  /* We haven't found an appropriate library.  But since we
 	     are only interested in the list of libraries this isn't

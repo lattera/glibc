@@ -1,5 +1,5 @@
 /* Error handling for runtime dynamic linker.
-   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -121,7 +121,7 @@ internal_function
 _dl_signal_cerror (int errcode, const char *objname, const char *occation,
 		   const char *errstring)
 {
-  if (__builtin_expect (GL(dl_debug_mask)
+  if (__builtin_expect (GLRO(dl_debug_mask)
 			& ~(DL_DEBUG_STATISTICS|DL_DEBUG_PRELINK), 0))
     INTUSE(_dl_debug_printf) ("%s: error: %s: %s (%s)\n", objname, occation,
 			      errstring, receiver ? "continued" : "fatal");

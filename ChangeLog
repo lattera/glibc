@@ -52,6 +52,16 @@
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S: Likewise.
 	* sysdeps/x86_64/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h: Likewise.
+	* sysdeps/powerpc/powerpc64/dl-machine.h: Likewise.
+	* sysdeps/powerpc/powerpc32/dl-machine.c: Likewise.
+	* sysdeps/m68k/dl-machine.h: Likewise.
+	* sysdeps/ia64/dl-machine.h: Likewise.
+	* sysdeps/arm/dl-machine.h: Likewise.
+	* sysdeps/alpha/dl-machine.h: Likewise.
 
 2004-03-04  Ulrich Drepper  <drepper@redhat.com>
 

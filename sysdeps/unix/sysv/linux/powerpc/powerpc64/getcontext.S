@@ -73,12 +73,12 @@ ENTRY(__novec_getcontext)
   std  r0,(SIGCONTEXT_GP_REGS+(PT_XER*8))(r3)
   mfcr  r0
   std  r0,(SIGCONTEXT_GP_REGS+(PT_CCR*8))(r3)
-  
-  /* Set the return value of swapcontext to "success".  R3 is the only 
+
+  /* Set the return value of swapcontext to "success".  R3 is the only
      register whose value is not preserved in the saved context.  */
   li   r0,0
   std  r0,(SIGCONTEXT_GP_REGS+(PT_R3*8))(r3)
-  
+
   /* Zero fill fields that can't be set in user state or are unused.  */
   std  r0,(SIGCONTEXT_GP_REGS+(PT_MSR*8))(r3)
   std  r0,(SIGCONTEXT_GP_REGS+(34*8))(r3)
@@ -87,14 +87,14 @@ ENTRY(__novec_getcontext)
   std  r0,(SIGCONTEXT_GP_REGS+(41*8))(r3)
   std  r0,(SIGCONTEXT_GP_REGS+(42*8))(r3)
   std  r0,(SIGCONTEXT_GP_REGS+(PT_RESULT*8))(r3)
-  
-  /* Set the PT_REGS pointer to the address of sigcontext's gp_regs 
-     field.  Struct pt_regs and elf_gregset_t are the same thing.  
+
+  /* Set the PT_REGS pointer to the address of sigcontext's gp_regs
+     field.  Struct pt_regs and elf_gregset_t are the same thing.
      We kept the regs field for backwards compatibility with
      libraries built before we extended sigcontext.  */
   addi r0,r3,SIGCONTEXT_GP_REGS
   std  r0,SIGCONTEXT_PT_REGS(r3)
-  
+
   stfd  fp0,(SIGCONTEXT_FP_REGS+(PT_R0*8))(r3)
   stfd  fp1,(SIGCONTEXT_FP_REGS+(PT_R1*8))(r3)
   stfd  fp2,(SIGCONTEXT_FP_REGS+(PT_R2*8))(r3)
@@ -145,8 +145,8 @@ ENTRY(__novec_getcontext)
   nop
   li   r3,-1
 #endif
-  
-  ld    r0,128+FRAME_LR_SAVE(r1)  
+
+  ld    r0,128+FRAME_LR_SAVE(r1)
   addi  r1,r1,128
   mtlr  r0
   blr
@@ -159,10 +159,10 @@ compat_symbol (libc, __novec_getcontext, getcontext, GLIBC_2_3)
 	.section	".toc","aw"
 .LC__dl_hwcap:
 #ifdef SHARED
-	.tc _rtld_global[TC],_rtld_global
+	.tc _rtld_global_ro[TC],_rtld_global_ro
 #else
 	.tc _dl_hwcap[TC],_dl_hwcap
-#endif	
+#endif
 	.section ".text"
 
 ENTRY(__getcontext)
@@ -209,12 +209,12 @@ ENTRY(__getcontext)
   std  r0,(SIGCONTEXT_GP_REGS+(PT_XER*8))(r3)
   mfcr  r0
   std  r0,(SIGCONTEXT_GP_REGS+(PT_CCR*8))(r3)
-  
-  /* Set the return value of swapcontext to "success".  R3 is the only 
+
+  /* Set the return value of swapcontext to "success".  R3 is the only
      register whose value is not preserved in the saved context.  */
   li   r0,0
   std  r0,(SIGCONTEXT_GP_REGS+(PT_R3*8))(r3)
-  
+
   /* Zero fill fields that can't be set in user state or are unused.  */
   std  r0,(SIGCONTEXT_GP_REGS+(PT_MSR*8))(r3)
   std  r0,(SIGCONTEXT_GP_REGS+(34*8))(r3)
@@ -223,14 +223,14 @@ ENTRY(__getcontext)
   std  r0,(SIGCONTEXT_GP_REGS+(41*8))(r3)
   std  r0,(SIGCONTEXT_GP_REGS+(42*8))(r3)
   std  r0,(SIGCONTEXT_GP_REGS+(PT_RESULT*8))(r3)
-  
-  /* Set the PT_REGS pointer to the address of sigcontext's gp_regs 
-     field.  Struct pt_regs and elf_gregset_t are the same thing.  
+
+  /* Set the PT_REGS pointer to the address of sigcontext's gp_regs
+     field.  Struct pt_regs and elf_gregset_t are the same thing.
      We kept the regs field for backwards compatibility with
      libraries built before we extended sigcontext.  */
   addi r0,r3,SIGCONTEXT_GP_REGS
   std  r0,SIGCONTEXT_PT_REGS(r3)
-  
+
   stfd  fp0,(SIGCONTEXT_FP_REGS+(PT_R0*8))(r3)
   stfd  fp1,(SIGCONTEXT_FP_REGS+(PT_R1*8))(r3)
   stfd  fp2,(SIGCONTEXT_FP_REGS+(PT_R2*8))(r3)
@@ -265,120 +265,120 @@ ENTRY(__getcontext)
   stfd  fp30,(SIGCONTEXT_FP_REGS+(PT_R30*8))(r3)
   stfd  fp31,(SIGCONTEXT_FP_REGS+(PT_R31*8))(r3)
   stfd  fp0,(SIGCONTEXT_FP_REGS+(32*8))(r3)
-  
+
   ld    r5,.LC__dl_hwcap@toc(r2)
   li    r10,0
-#ifdef SHARED  
+#ifdef SHARED
 /* Load _rtld-global._dl_hwcap.  */
-  ld    r5,RTLD_GLOBAL_DL_HWCAP_OFFSET(r5) 
-#else  
+  ld    r5,RTLD_GLOBAL_DL_HWCAP_OFFSET(r5)
+#else
   ld    r5,0(r5) /* Load extern _dl_hwcap.  */
 #endif
   andis.  r5,r5,(PPC_FEATURE_HAS_ALTIVEC >> 16)
   beq   L(has_no_vec)
-  
+
   la    r10,(SIGCONTEXT_V_RESERVE+8)(r3)
   la    r9,(SIGCONTEXT_V_RESERVE+24)(r3)
   clrrdi  r10,r10,4
   clrrdi  r9,r9,4
-  
-  stvx  v0,0,r10  
+
+  stvx  v0,0,r10
   stvx  v1,0,r9
   addi  r10,r10,32
   addi  r9,r9,32
-  
-  stvx  v2,0,r10  
+
+  stvx  v2,0,r10
   stvx  v3,0,r9
   addi  r10,r10,32
   addi  r9,r9,32
-  
-  stvx  v4,0,r10  
+
+  stvx  v4,0,r10
   stvx  v5,0,r9
   addi  r10,r10,32
   addi  r9,r9,32
-  
-  stvx  v6,0,r10  
+
+  stvx  v6,0,r10
   stvx  v7,0,r9
   addi  r10,r10,32
   addi  r9,r9,32
-  
-  stvx  v8,0,r10  
+
+  stvx  v8,0,r10
   stvx  v9,0,r9
   addi  r10,r10,32
   addi  r9,r9,32
-  
-  stvx  v10,0,r10  
+
+  stvx  v10,0,r10
   stvx  v11,0,r9
   addi  r10,r10,32
   addi  r9,r9,32
-  
-  stvx  v12,0,r10  
+
+  stvx  v12,0,r10
   stvx  v13,0,r9
   addi  r10,r10,32
   addi  r9,r9,32
-  
-  stvx  v14,0,r10  
+
+  stvx  v14,0,r10
   stvx  v15,0,r9
   addi  r10,r10,32
   addi  r9,r9,32
-  
-  stvx  v16,0,r10  
+
+  stvx  v16,0,r10
   stvx  v17,0,r9
   addi  r10,r10,32
   addi  r9,r9,32
-  
-  stvx  v18,0,r10  
+
+  stvx  v18,0,r10
   stvx  v11,0,r9
   addi  r19,r10,32
   addi  r9,r9,32
-  
-  stvx  v20,0,r10  
+
+  stvx  v20,0,r10
   stvx  v21,0,r9
   addi  r10,r10,32
   addi  r9,r9,32
-  
-  stvx  v22,0,r10  
+
+  stvx  v22,0,r10
   stvx  v23,0,r9
   addi  r10,r10,32
   addi  r9,r9,32
-  
-  stvx  v24,0,r10  
+
+  stvx  v24,0,r10
   stvx  v25,0,r9
   addi  r10,r10,32
   addi  r9,r9,32
-  
-  stvx  v26,0,r10  
+
+  stvx  v26,0,r10
   stvx  v27,0,r9
   addi  r10,r10,32
   addi  r9,r9,32
-  
-  stvx  v28,0,r10  
+
+  stvx  v28,0,r10
   stvx  v29,0,r9
   addi  r10,r10,32
   addi  r9,r9,32
-  
-  stvx  v30,0,r10  
+
+  stvx  v30,0,r10
   stvx  v31,0,r9
   addi  r10,r10,32
   addi  r9,r9,32
-  
-  stvx  v10,0,r10  
+
+  stvx  v10,0,r10
   stvx  v11,0,r9
   addi  r10,r10,32
   addi  r9,r9,32
-  
+
   mfvscr  v0
   mfspr r0,VRSAVE
   stvx  v0,0,r10
   stw   r0,0(9)
-  
+
 L(has_no_vec):
-/* 
+/*
    Store either a NULL or a quadword aligned pointer to the Vector register
    array into *v_regs.
 */
   std   r10,(SIGCONTEXT_V_REGS_PTR)(r3)
-  
+
   addi  r5,r3,UCONTEXT_SIGMASK
   li  r4,0
   li  r3,SIG_BLOCK
@@ -394,12 +394,11 @@ L(has_no_vec):
   nop
   li   r3,-1
 #endif
-  
-  ld    r0,128+FRAME_LR_SAVE(r1)  
+
+  ld    r0,128+FRAME_LR_SAVE(r1)
   addi  r1,r1,128
   mtlr  r0
   blr
 PSEUDO_END(__getcontext)
 
 versioned_symbol (libc, __getcontext, getcontext, GLIBC_2_3_4)
-

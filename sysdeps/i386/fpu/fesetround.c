@@ -1,5 +1,5 @@
 /* Set current rounding direction.
-   Copyright (C) 1997, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -38,7 +38,7 @@ fesetround (int round)
   __asm__ ("fldcw %0" : : "m" (*&cw));
 
   /* If the CPU supports SSE we set the MXCSR as well.  */
-  if ((GL(dl_hwcap) & HWCAP_I386_XMM) != 0)
+  if ((GLRO(dl_hwcap) & HWCAP_I386_XMM) != 0)
     {
       unsigned int xcw;
 

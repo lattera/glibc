@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  nptl/i386 version.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -166,7 +166,7 @@ union user_desc_init
 
 #if defined NEED_DL_SYSINFO
 # define INIT_SYSINFO \
-  _head->sysinfo = GL(dl_sysinfo)
+  _head->sysinfo = GLRO(dl_sysinfo)
 #else
 # define INIT_SYSINFO
 #endif

@@ -146,7 +146,7 @@ _dl_fini (void)
 	    continue;
 
 	  /* When debugging print a message first.  */
-	  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
+	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
 	    INTUSE(_dl_debug_printf) ("\ncalling fini: %s\n\n",
 				      l->l_name[0]
 				      ? l->l_name : rtld_progname);
@@ -174,7 +174,7 @@ _dl_fini (void)
 
   __rtld_lock_unlock_recursive (GL(dl_load_lock));
 
-  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))
     {
       INTUSE(_dl_debug_printf) ("\nruntime linker statistics:\n");
       INTUSE(_dl_debug_printf) ("\

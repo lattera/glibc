@@ -1,5 +1,5 @@
 /* Set floating-point environment exception handling.
-   Copyright (C) 1997,99,2000,01 Free Software Foundation, Inc.
+   Copyright (C) 1997,99,2000,01, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -43,7 +43,7 @@ __fesetexceptflag (const fexcept_t *flagp, int excepts)
   __asm__ ("fldenv %0" : : "m" (*&temp));
 
   /* If the CPU supports SSE, we set the MXCSR as well.  */
-  if ((GL(dl_hwcap) & HWCAP_I386_XMM) != 0)
+  if ((GLRO(dl_hwcap) & HWCAP_I386_XMM) != 0)
     {
       unsigned int xnew_exc;
 
@@ -57,7 +57,7 @@ __fesetexceptflag (const fexcept_t *flagp, int excepts)
       /* Put the new data in effect.  */
       __asm__ ("ldmxcsr %0" : : "m" (*&xnew_exc));
     }
-  
+
   /* Success.  */
   return 0;
 }

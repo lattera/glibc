@@ -134,7 +134,7 @@ _dl_close (void *_map)
   if (map->l_opencount > 1 || map->l_type != lt_loaded)
     {
       /* There are still references to this object.  Do nothing more.  */
-      if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))
+      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
 	_dl_debug_printf ("\nclosing file=%s; opencount == %u\n",
 			  map->l_name, map->l_opencount);
 
@@ -224,7 +224,7 @@ _dl_close (void *_map)
 	  && (imap->l_flags_1 & DF_1_NODELETE) == 0)
 	{
 	  /* When debugging print a message first.  */
-	  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
+	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
 	    _dl_debug_printf ("\ncalling fini: %s\n\n", imap->l_name);
 
 	  /* Call its termination function.  Do not do it for

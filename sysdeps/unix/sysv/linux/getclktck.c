@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,5 +28,5 @@
 int
 __getclktck ()
 {
-  return GL(dl_clktck) ?: SYSTEM_CLK_TCK;
+  return GLRO(dl_clktck) ?: SYSTEM_CLK_TCK;
 }

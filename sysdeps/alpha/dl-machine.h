@@ -114,7 +114,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  *(Elf64_Addr *)(plt + 16) = (Elf64_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (GL(dl_profile), l))
+	  if (_dl_name_match_p (GLRO(dl_profile), l))
 	    {
 	      /* This is the object we are looking for.  Say that we really
 		 want profiling and the timers are started.  */
@@ -648,7 +648,7 @@ static inline void
 elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
 			   void *const reloc_addr_arg)
 {
-  /* XXX Make some timings.  Maybe it's preferable to test for 
+  /* XXX Make some timings.  Maybe it's preferable to test for
      unaligned access and only do it the complex way if necessary.  */
   Elf64_Addr reloc_addr_val;
 

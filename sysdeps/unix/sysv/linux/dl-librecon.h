@@ -1,5 +1,5 @@
 /* Optional code to distinguish library flavours.
-   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2001.
 
@@ -40,7 +40,7 @@ _dl_osversion_init (char *assume_kernel)
 	break;
     }
   if (osversion)
-    GL(dl_osversion) = osversion;
+    GLRO(dl_osversion) = osversion;
 }
 
 /* Recognizing extra environment variables.  */

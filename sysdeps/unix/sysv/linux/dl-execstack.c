@@ -31,7 +31,8 @@ internal_function
 _dl_make_stack_executable (void **stack_endp)
 {
   /* This gives us the highest/lowest page that needs to be changed.  */
-  uintptr_t page = (uintptr_t) __libc_stack_end & -(intptr_t) GL(dl_pagesize);
+  uintptr_t page = ((uintptr_t) __libc_stack_end
+		    & -(intptr_t) GLRO(dl_pagesize));
 
   /* Challenge the caller.  */
   if (__builtin_expect (*stack_endp != __libc_stack_end, 0))
@@ -46,7 +47,7 @@ _dl_make_stack_executable (void **stack_endp)
   if (! no_growsdown)
 #  endif
     {
-      if (__builtin_expect (__mprotect ((void *) page, GL(dl_pagesize),
+      if (__builtin_expect (__mprotect ((void *) page, GLRO(dl_pagesize),
 					PROT_READ|PROT_WRITE|PROT_EXEC
 					|PROT_GROWSDOWN) == 0, 1))
 	goto return_success;
@@ -67,8 +68,8 @@ _dl_make_stack_executable (void **stack_endp)
      so as to have extended the GROWSDOWN mapping to lower pages.  */
 
 # if __ASSUME_PROT_GROWSUPDOWN == 0
-  size_t size = GL(dl_pagesize) * 8;
-  page = page + GL(dl_pagesize) - size;
+  size_t size = GLRO(dl_pagesize) * 8;
+  page = page + GLRO(dl_pagesize) - size;
   while (1)
     {
       if (__mprotect ((void *) page, size,
@@ -80,7 +81,7 @@ _dl_make_stack_executable (void **stack_endp)
 	  if (errno != ENOMEM)	/* Unexpected failure mode.  */
 	    return errno;
 
-	  if (size == GL(dl_pagesize))
+	  if (size == GLRO(dl_pagesize))
 	    /* We just tried to mprotect the top hole page and failed.
 	       We are done.  */
 	    break;
@@ -101,7 +102,7 @@ _dl_make_stack_executable (void **stack_endp)
   if (! no_growsup)
 #  endif
     {
-      if (__mprotect ((void *) page, GL(dl_pagesize),
+      if (__mprotect ((void *) page, GLRO(dl_pagesize),
 		      PROT_READ|PROT_WRITE|PROT_EXEC|PROT_GROWSUP) == 0)
 	goto return_success;
 #  if __ASSUME_PROT_GROWSUPDOWN == 0
@@ -121,7 +122,7 @@ _dl_make_stack_executable (void **stack_endp)
      so as to have extended the GROWSUP mapping to higher pages.  */
 
 # if __ASSUME_PROT_GROWSUPDOWN == 0
-  size_t size = GL(dl_pagesize) * 8;
+  size_t size = GLRO(dl_pagesize) * 8;
   while (1)
     {
       if (__mprotect ((void *) page, size,
@@ -133,7 +134,7 @@ _dl_make_stack_executable (void **stack_endp)
 	  if (errno != ENOMEM)	/* Unexpected failure mode.  */
 	    return errno;
 
-	  if (size == GL(dl_pagesize))
+	  if (size == GLRO(dl_pagesize))
 	    /* We just tried to mprotect the lowest hole page and failed.
 	       We are done.  */
 	    break;

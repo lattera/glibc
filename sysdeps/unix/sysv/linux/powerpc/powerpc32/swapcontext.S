@@ -75,7 +75,7 @@ ENTRY(__swapcontext)
 	mfcr	r0
 	stw	r0,_UC_GREGS+(PT_CCR*4)(r3)
 
-	/* Set the return value of swapcontext to "success".  R3 is the only 
+	/* Set the return value of swapcontext to "success".  R3 is the only
 	   register whose value is not preserved in the saved context.  */
 	li	r0,0
 	stw	r0,_UC_GREGS+(PT_R3*4)(r3)
@@ -123,11 +123,11 @@ ENTRY(__swapcontext)
 	mflr    r8
 	bl      _GLOBAL_OFFSET_TABLE_@local-4
 	mflr    r7
-#ifdef SHARED	
-	lwz     r7,_rtld_global@got(r7)
+#ifdef SHARED
+	lwz     r7,_rtld_global_ro@got(r7)
 	mtlr    r8
 	lwz     r7,RTLD_GLOBAL_DL_HWCAP_OFFSET(r7)
-#else	
+#else
 	lwz     r7,_dl_hwcap@got(r7)
 	mtlr    r8
 	lwz     r7,0(r7)
@@ -138,95 +138,95 @@ ENTRY(__swapcontext)
 #endif
 	andis.	r7,r7,(PPC_FEATURE_HAS_ALTIVEC >> 16)
 	beq	L(no_vec)
-  
+
 	la	r10,(_UC_VREGS)(r3)
 	la	r9,(_UC_VREGS+16)(r3)
 
-	stvx  v0,0,r10  
+	stvx  v0,0,r10
 	stvx  v1,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	stvx  v2,0,r10  
+	stvx  v2,0,r10
 	stvx  v3,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	stvx  v4,0,r10  
+	stvx  v4,0,r10
 	stvx  v5,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	stvx  v6,0,r10  
+	stvx  v6,0,r10
 	stvx  v7,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	stvx  v8,0,r10  
+	stvx  v8,0,r10
 	stvx  v9,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	stvx  v10,0,r10  
+	stvx  v10,0,r10
 	stvx  v11,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	stvx  v12,0,r10  
+	stvx  v12,0,r10
 	stvx  v13,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	stvx  v14,0,r10  
+	stvx  v14,0,r10
 	stvx  v15,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	stvx  v16,0,r10  
+	stvx  v16,0,r10
 	stvx  v17,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	stvx  v18,0,r10  
+	stvx  v18,0,r10
 	stvx  v11,0,r9
 	addi  r19,r10,32
 	addi  r9,r9,32
 
-	stvx  v20,0,r10  
+	stvx  v20,0,r10
 	stvx  v21,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	stvx  v22,0,r10  
+	stvx  v22,0,r10
 	stvx  v23,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	stvx  v24,0,r10  
+	stvx  v24,0,r10
 	stvx  v25,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	stvx  v26,0,r10  
+	stvx  v26,0,r10
 	stvx  v27,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	stvx  v28,0,r10  
+	stvx  v28,0,r10
 	stvx  v29,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	stvx  v30,0,r10  
+	stvx  v30,0,r10
 	stvx  v31,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	stvx  v10,0,r10  
+	stvx  v10,0,r10
 	stvx  v11,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
-  
+
 	mfvscr	v0
 	mfspr	r0,VRSAVE
 	stvx	v0,0,r10
@@ -260,16 +260,16 @@ L(no_vec):
 	lwz	r0,_UC_GREGS+(PT_MSR*4)(r31)
 	cmpwi	r0,0
 	bne	L(do_sigret)
-	
+
 #ifdef PIC
 	mflr    r8
 	bl      _GLOBAL_OFFSET_TABLE_@local-4
 	mflr    r7
-#ifdef SHARED	
-	lwz     r7,_rtld_global@got(r7)
+#ifdef SHARED
+	lwz     r7,_rtld_global_ro@got(r7)
 	mtlr    r8
 	lwz     r7,RTLD_GLOBAL_DL_HWCAP_OFFSET(r7)
-#else	
+#else
 	lwz     r7,_dl_hwcap@got(r7)
 	mtlr    r8
 	lwz     r7,0(r7)
@@ -281,100 +281,100 @@ L(no_vec):
 	andis.	r7,r7,(PPC_FEATURE_HAS_ALTIVEC >> 16)
 	la	r10,(_UC_VREGS)(r31)
 	beq	L(has_no_vec)
-	
+
 	lwz   r0,(32*16)(r10)
 	li    r9,(32*16)
 	cmpwi r0,0
 	mtspr VRSAVE,r0
-	beq   L(has_no_vec)  
+	beq   L(has_no_vec)
 
 	lvx   v19,r9,r10
 	la    r9,(16)(r10)
 
-	lvx   v0,0,r10  
+	lvx   v0,0,r10
 	lvx   v1,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
 	mtvscr  v19
-	lvx   v2,0,r10  
+	lvx   v2,0,r10
 	lvx   v3,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v4,0,r10  
+	lvx   v4,0,r10
 	lvx   v5,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v6,0,r10  
+	lvx   v6,0,r10
 	lvx   v7,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v8,0,r10  
+	lvx   v8,0,r10
 	lvx   v9,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v10,0,r10  
+	lvx   v10,0,r10
 	lvx   v11,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v12,0,r10  
+	lvx   v12,0,r10
 	lvx   v13,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v14,0,r10  
+	lvx   v14,0,r10
 	lvx   v15,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v16,0,r10  
+	lvx   v16,0,r10
 	lvx   v17,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v18,0,r10  
+	lvx   v18,0,r10
 	lvx   v11,0,r9
 	addi  r19,r10,32
 	addi  r9,r9,32
 
-	lvx   v20,0,r10  
+	lvx   v20,0,r10
 	lvx   v21,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v22,0,r10  
+	lvx   v22,0,r10
 	lvx   v23,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v24,0,r10  
+	lvx   v24,0,r10
 	lvx   v25,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v26,0,r10  
+	lvx   v26,0,r10
 	lvx   v27,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v28,0,r10  
+	lvx   v28,0,r10
 	lvx   v29,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v30,0,r10  
+	lvx   v30,0,r10
 	lvx   v31,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v10,0,r10  
+	lvx   v10,0,r10
 	lvx   v11,0,r9
-	
+
 L(has_no_vec):
 	/* Restore the floating-point registers */
 	lfd	fp31,_UC_FREGS+(32*8)(r31)
@@ -522,7 +522,7 @@ ENTRY(__novec_swapcontext)
 	mfcr	r0
 	stw	r0,_UC_GREGS+(PT_CCR*4)(r3)
 
-	/* Set the return value of swapcontext to "success".  R3 is the only 
+	/* Set the return value of swapcontext to "success".  R3 is the only
 	   register whose value is not preserved in the saved context.  */
 	li	r0,0
 	stw	r0,_UC_GREGS+(PT_R3*4)(r3)

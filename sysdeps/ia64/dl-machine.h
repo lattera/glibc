@@ -123,7 +123,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	doit = (Elf64_Addr) ((struct fdesc *) &_dl_runtime_resolve)->ip;
       else
 	{
-	  if (_dl_name_match_p (GL(dl_profile), l))
+	  if (_dl_name_match_p (GLRO(dl_profile), l))
 	    {
 	      /* This is the object we are looking for.  Say that we really
 		 want profiling and the timers are started.  */

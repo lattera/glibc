@@ -1,5 +1,5 @@
 /* POSIX.1 `sigaction' call for Linux/i386.
-   Copyright (C) 1991,95,96,97,98,99,2000,02,03 Free Software Foundation, Inc.
+   Copyright (C) 1991,1995-2000,02,03, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -88,7 +88,7 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 	  kact.sa_flags = act->sa_flags;
 	  memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
 
-	  if (GL(dl_sysinfo_dso) == NULL)
+	  if (GLRO(dl_sysinfo_dso) == NULL)
 	    {
 	      kact.sa_flags |= SA_RESTORER;
 

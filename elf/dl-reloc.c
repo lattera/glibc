@@ -146,7 +146,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
       && __builtin_expect (l->l_info[DT_BIND_NOW] != NULL, 0))
     lazy = 0;
 
-  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_RELOC, 0))
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_RELOC, 0))
     INTUSE(_dl_debug_printf) ("\nrelocation processing: %s%s\n",
 			      l->l_name[0] ? l->l_name : rtld_progname,
 			      lazy ? " (lazy)" : "");
@@ -165,10 +165,10 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	    struct textrels *newp;
 
 	    newp = (struct textrels *) alloca (sizeof (*newp));
-	    newp->len = (((ph->p_vaddr + ph->p_memsz + GL(dl_pagesize) - 1)
-			  & ~(GL(dl_pagesize) - 1))
-			 - (ph->p_vaddr & ~(GL(dl_pagesize) - 1)));
-	    newp->start = ((ph->p_vaddr & ~(GL(dl_pagesize) - 1))
+	    newp->len = (((ph->p_vaddr + ph->p_memsz + GLRO(dl_pagesize) - 1)
+			  & ~(GLRO(dl_pagesize) - 1))
+			 - (ph->p_vaddr & ~(GLRO(dl_pagesize) - 1)));
+	    newp->start = ((ph->p_vaddr & ~(GLRO(dl_pagesize) - 1))
 			   + (caddr_t) l->l_addr);
 
 	    if (__mprotect (newp->start, newp->len, PROT_READ|PROT_WRITE) < 0)
@@ -318,9 +318,10 @@ INTDEF (_dl_relocate_object)
 void internal_function
 _dl_protect_relro (struct link_map *l)
 {
-  ElfW(Addr) start = ((l->l_addr + l->l_relro_addr) & ~(GL(dl_pagesize) - 1));
+  ElfW(Addr) start = ((l->l_addr + l->l_relro_addr)
+		      & ~(GLRO(dl_pagesize) - 1));
   ElfW(Addr) end = ((l->l_addr + l->l_relro_addr + l->l_relro_size)
-		    & ~(GL(dl_pagesize) - 1));
+		    & ~(GLRO(dl_pagesize) - 1));
 
   if (start != end
       && __mprotect ((void *) start, end - start, PROT_READ) < 0)

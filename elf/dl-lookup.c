@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -190,7 +190,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 	  ++(*list)->l_opencount;
 
       /* Display information if we are debugging.  */
-      if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))
+      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
 	INTUSE(_dl_debug_printf) ("\
 \nfile=%s;  needed by %s (relocation dependency)\n\n",
 				  map->l_name[0] ? map->l_name : rtld_progname,
@@ -315,7 +315,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
       return INTUSE(_dl_lookup_symbol) (undef_name, undef_map, ref,
 					symbol_scope, type_class, flags);
 
-  if (__builtin_expect (GL(dl_debug_mask)
+  if (__builtin_expect (GLRO(dl_debug_mask)
 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
     _dl_debug_bindings (undef_name, undef_map, ref, symbol_scope,
 			&current_value, NULL, type_class, protected);
@@ -389,7 +389,7 @@ _dl_lookup_symbol_skip (const char *undef_name,
 	}
     }
 
-  if (__builtin_expect (GL(dl_debug_mask)
+  if (__builtin_expect (GLRO(dl_debug_mask)
 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
     _dl_debug_bindings (undef_name, undef_map, ref, symbol_scope,
 			&current_value, NULL, 0, protected);
@@ -522,7 +522,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 						  ref, symbol_scope,
 						  version, type_class, flags);
 
-  if (__builtin_expect (GL(dl_debug_mask)
+  if (__builtin_expect (GLRO(dl_debug_mask)
 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
     _dl_debug_bindings (undef_name, undef_map, ref, symbol_scope,
 			&current_value, version, type_class, protected);
@@ -609,7 +609,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 	}
     }
 
-  if (__builtin_expect (GL(dl_debug_mask)
+  if (__builtin_expect (GLRO(dl_debug_mask)
 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
     _dl_debug_bindings (undef_name, undef_map, ref, symbol_scope,
 			&current_value, version, 0, protected);
@@ -650,7 +650,7 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 {
   const char *reference_name = undef_map->l_name;
 
-  if (GL(dl_debug_mask) & DL_DEBUG_BINDINGS)
+  if (GLRO(dl_debug_mask) & DL_DEBUG_BINDINGS)
     {
       INTUSE(_dl_debug_printf) ("binding file %s to %s: %s symbol `%s'",
 				(reference_name[0]
@@ -666,13 +666,13 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 	_dl_debug_printf_c ("\n");
     }
 #ifdef SHARED
-  if (GL(dl_debug_mask) & DL_DEBUG_PRELINK)
+  if (GLRO(dl_debug_mask) & DL_DEBUG_PRELINK)
     {
       int conflict = 0;
       struct sym_val val = { NULL, NULL };
 
-      if ((GL(dl_trace_prelink_map) == NULL
-	   || GL(dl_trace_prelink_map) == GL(dl_loaded))
+      if ((GLRO(dl_trace_prelink_map) == NULL
+	   || GLRO(dl_trace_prelink_map) == GL(dl_loaded))
 	  && undef_map != GL(dl_loaded))
 	{
 	  const unsigned long int hash = _dl_elf_hash (undef_name);
@@ -698,8 +698,8 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 #endif
 
       if (conflict
-	  || GL(dl_trace_prelink_map) == undef_map
-	  || GL(dl_trace_prelink_map) == NULL
+	  || GLRO(dl_trace_prelink_map) == undef_map
+	  || GLRO(dl_trace_prelink_map) == NULL
 	  || type_class == 4)
 	{
 	  _dl_printf ("%s 0x%0*Zx 0x%0*Zx -> 0x%0*Zx 0x%0*Zx ",

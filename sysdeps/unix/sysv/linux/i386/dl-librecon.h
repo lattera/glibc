@@ -1,5 +1,5 @@
 /* Optional code to distinguish library flavours.
-   Copyright (C) 1998, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -51,7 +51,7 @@
 #define EXTRA_LD_ENVVARS \
   case 15:								      \
     if (memcmp (envline, "LIBRARY_VERSION", 15) == 0)			      \
-      GL(dl_correct_cache_id) = envline[16] == '5' ? 2 : 3;		      \
+      GLRO(dl_correct_cache_id) = envline[16] == '5' ? 2 : 3;		      \
     break;								      \
 
 /* Extra unsecure variables.  The names are all stuffed in a single

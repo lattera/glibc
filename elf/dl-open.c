@@ -308,7 +308,7 @@ dl_open_worker (void *a)
   if (new->l_searchlist.r_list != NULL)
     {
       /* Let the user know about the opencount.  */
-      if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))
+      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
 	_dl_debug_printf ("opening file=%s; opencount == %u\n\n",
 			  new->l_name, new->l_opencount);
 
@@ -336,7 +336,7 @@ dl_open_worker (void *a)
 #endif
 
   /* Only do lazy relocation if `LD_BIND_NOW' is not set.  */
-  lazy = (mode & RTLD_BINDING_MASK) == RTLD_LAZY && GL(dl_lazy);
+  lazy = (mode & RTLD_BINDING_MASK) == RTLD_LAZY && GLRO(dl_lazy);
 
   /* Relocate the objects loaded.  We do this in reverse order so that copy
      relocs of earlier objects overwrite the data written by later objects.  */
@@ -349,7 +349,7 @@ dl_open_worker (void *a)
       if (! l->l_relocated)
 	{
 #ifdef SHARED
-	  if (GL(dl_profile) != NULL)
+	  if (GLRO(dl_profile) != NULL)
 	    {
 	      /* If this here is the shared object which we want to profile
 		 make sure the profile is started.  We can find out whether
@@ -362,7 +362,8 @@ dl_open_worker (void *a)
 
 	      if (old_profile_map == NULL && GL(dl_profile_map) != NULL)
 		/* We must prepare the profiling.  */
-		_dl_start_profile (GL(dl_profile_map), GL(dl_profile_output));
+		_dl_start_profile (GL(dl_profile_map),
+				   GLRO(dl_profile_output));
 	    }
 	  else
 #endif
@@ -548,7 +549,7 @@ dl_open_worker (void *a)
 #endif
 
   /* Let the user know about the opencount.  */
-  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
     _dl_debug_printf ("opening file=%s; opencount == %u\n\n",
 		      new->l_name, new->l_opencount);
 }
