@@ -12,3 +12,11 @@ endif
 ifeq ($(subdir),resource)
 sysdep_routines += oldgetrlimit64
 endif
+
+ifeq ($(subdir),elf)
+# extra shared linker files to link into dl-allobjs.so and libc
+sysdep-dl-routines += dl-procinfo
+sysdep_routines += dl-procinfo
+# extra shared linker files to link only into dl-allobjs.so
+sysdep-rtld-routines += dl-procinfo
+endif
