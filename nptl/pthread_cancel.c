@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -31,7 +31,7 @@ pthread_cancel (th)
   while (1)
     {
       int oldval = pd->cancelhandling;
-      int newval = oldval | CANCELED_BITMASK;
+      int newval = oldval | CANCELING_BITMASK | CANCELED_BITMASK;
 
       /* Avoid doing unnecessary work.  The atomic operation can
 	 potentially be expensive if the bug has to be locked and
@@ -44,6 +44,9 @@ pthread_cancel (th)
 	 expensive.  */
       if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
 	{
+	  /* Mark the cancellation as "in progress".  */
+	  atomic_bit_set (&pd->cancelhandling, CANCELING_BIT);
+
 	  /* The cancellation handler will take care of marking the
 	     thread as canceled.  */
 	  __pthread_kill (th, SIGCANCEL);

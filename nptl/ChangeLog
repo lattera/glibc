@@ -1,5 +1,15 @@
 2003-02-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* descr.h: Define CANCELING_BIT and CANCELING_BITMASK.  Introduce
+	after CANCELTYPE_BIT, move the other bits up.  Update CANCEL_RESTMASK.
+	* init.c (sigcancel_handler): Also set CANCELING_BITMASK bit in newval.
+	* pthread_cancel.c (pthread_cancel): Likewise.  Also set CANCELING_BIT
+	if asynchronous canceling is enabled.
+	* pthread_join.c (pthread_join): When recognizing circular joins,
+	take into account the other thread might be already canceled.
+	* Makefile (tests): Add tst-join5.
+	* tst-join5.c: New file.
+
 	* Makefile (tests): Add tst-join4.
 	* tst-join4.c: New file.
 

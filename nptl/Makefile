@@ -137,7 +137,7 @@ tests = tst-attr1 tst-attr2 \
 	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 \
 	tst-barrier1 tst-barrier2 tst-barrier3 \
 	tst-basic1 tst-basic2 \
-	tst-join1 tst-join2 tst-join3 tst-join4 \
+	tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 \
 	tst-tsd1 tst-tsd2 \
 	tst-fork1 tst-fork2 tst-fork3 \
 	tst-atfork1 \

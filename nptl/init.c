@@ -130,7 +130,7 @@ sigcancel_handler (int sig __attribute ((unused)))
 	 is already set but if the signal is directly send (internally or
 	 from another process) is has to be done here.  */
       int oldval = THREAD_GETMEM (self, cancelhandling);
-      int newval = oldval | CANCELED_BITMASK;
+      int newval = oldval | CANCELING_BITMASK | CANCELED_BITMASK;
 
       if (oldval == newval || (oldval & EXITING_BITMASK) != 0)
 	/* Already canceled or exiting.  */

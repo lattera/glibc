@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -42,15 +42,15 @@
      mq_send()             mq_timedreceive()  mq_timedsend()
      msgrcv()              msgsnd()           msync()
                            open()             pause()
-                           pread()            pthread_cond_timedwait()
-     pthread_cond_wait()   pthread_join()     pthread_testcancel()
+                           pread()
+			   pthread_join()     pthread_testcancel()
      putmsg()              putpmsg()          pwrite()
                                               recv()
      recvfrom()            recvmsg()
      sem_timedwait()       sem_wait()         send()
      sendmsg()             sendto()           sigpause()
      sigsuspend()          sigtimedwait()     sigwait()
-     sigwaitinfo()                            system()
+     sigwaitinfo()
      tcdrain()
 
    Since STREAMS are not supported in the standard Linux kernel there

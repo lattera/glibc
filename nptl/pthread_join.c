@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -50,7 +50,11 @@ pthread_join (threadid, thread_return)
     return EINVAL;
 
   self = THREAD_SELF;
-  if (pd == self || self->joinid == pd)
+  if (pd == self
+      || (self->joinid == pd
+	  && (pd->cancelhandling
+	      & (CANCELING_BITMASK | CANCELED_BITMASK | EXITING_BITMASK
+		 | TERMINATED_BITMASK)) == 0))
     /* This is a deadlock situation.  The threads are waiting for each
        other to finish.  Note that this is a "may" error.  To be 100%
        sure we catch this error we would have to lock the data

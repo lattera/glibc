@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -127,17 +127,20 @@ struct pthread
   /* Bit set if asynchronous cancellation mode is selected.  */
 #define CANCELTYPE_BIT		1
 #define CANCELTYPE_BITMASK	0x02
+  /* Bit set if canceling has been initiated.  */
+#define CANCELING_BIT		2
+#define CANCELING_BITMASK	0x04
   /* Bit set if canceled.  */
-#define CANCELED_BIT		2
-#define CANCELED_BITMASK	0x04
+#define CANCELED_BIT		3
+#define CANCELED_BITMASK	0x08
   /* Bit set if thread is exiting.  */
-#define EXITING_BIT		3
-#define EXITING_BITMASK		0x08
+#define EXITING_BIT		4
+#define EXITING_BITMASK		0x10
   /* Bit set if thread terminated and TCB is freed.  */
-#define TERMINATED_BIT		4
-#define TERMINATED_BITMASK	0x10
+#define TERMINATED_BIT		5
+#define TERMINATED_BITMASK	0x20
   /* Mask for the rest.  Helps the compiler to optimize.  */
-#define CANCEL_RESTMASK		0xffffffe0
+#define CANCEL_RESTMASK		0xffffffc0
 
 #define CANCEL_ENABLED_AND_CANCELED(value) \
   (((value) & (CANCELSTATE_BITMASK | CANCELED_BITMASK | EXITING_BITMASK	      \
