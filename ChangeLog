@@ -1,3 +1,7 @@
+2000-08-23  Martin Schwidefsky	<schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/bits/setjmp.h: Add __ to JB_GPR* defines.
+
 2000-08-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-ctype.c (ctype_read): Allow more than one
@@ -70,14 +74,14 @@
 	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Use DL_SYSDEP_OSCHECK
 	if defined.
 	* sysdeps/unix/sysv/linux/init-first.c: Perform kernel version test
-	only for !SHARED case.  Get the code from dl-osinfo.h.
+	only for !SHARED case.	Get the code from dl-osinfo.h.
 
 	* stdlib/random_r.c: Cleanups.
 	* stdlib/tst-random.c: New file.
 	* stdlib/Makefile (tests): Add tst-random.
 	Patches by Michael Fischer <fischer-michael@cs.yale.edu>.
 
-2000-08-21  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+2000-08-21  Martin Schwidefsky	<schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/getmsg.c: Remove.
 	* sysdeps/unix/sysv/linux/s390/getpmsg.c: Remove.
@@ -132,7 +136,7 @@
 
 	* intl/locale.alias: Add aliases for Korean.
 
-2000-08-21  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+2000-08-21  Martin Schwidefsky	<schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/__longjmp.c: Remove unused variable result.
 	* sysdeps/s390/fpu/bits/fenv.h: Move FPC_* definitions to fenv_libc.h.
