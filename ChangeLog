@@ -1,3 +1,7 @@
+2000-10-18  Ralf Baechle  <ralf@gnu.org>
+
+	* sysdeps/unix/sysv/linux/mips/sys/syscall.h: Include <asm/unistd.h>.
+
 2000-10-19  Geoffrey Keating  <geoffk@cygnus.com>
 
 	* sysdeps/powerpc/fpu/bits/mathinline.h: Add versions
