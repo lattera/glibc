@@ -52,6 +52,8 @@ sysdep-realclean := $(sysdep-realclean) $(divrem:%=sysdeps/sparc/%.S)
 
 ifeq ($(subdir),crypt)
 
+ifeq ($(crypt),crypt)
 crypt := crypt.sparc # Use crypt/crypt.sparc.S.
+endif
 
 endif # crypt

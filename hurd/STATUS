@@ -1,14 +1,10 @@
-Status of Hurd support in libc.  Last updated 22 Nov 1994.
+Status of Hurd support in libc.  Last updated 21 Feb 95.
 Roland McGrath <roland@gnu.ai.mit.edu>
 
 Everything not noted below is implemented, most of it tested.  There are
 various very small things unfinished or thought to be perhaps wrong
 throughout the code, marked by comments containing `XXX'.
 
-
-* Signals and job control work, but are a very hairy area.
-  There are various ways the signal thread can block and fail
-  to respond when the program is losing badly.
 
 * We are not sure about possible races between setpgrp (A, pgrp) from
   process B vs process A receiving proc_newids.
@@ -30,9 +26,6 @@ throughout the code, marked by comments containing `XXX'.
   variables and cthread data set up, which is not done.
 
 * malloc is a kludge.
-
-* Nothing uses mapped io.  Eventually stdio and read/write/seek should.  I
-  have written a little code for this, but it is far from finished.
 
 * Resource limits do not really work; current implementation is patchy and
   inconsistent.
@@ -65,7 +58,6 @@ profil
 recvmsg
 revoke
 sendmsg
-setpriority
 sstk
 statfs
 swapon

@@ -1,3 +1,10 @@
+Tue Feb 21 21:53:30 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/sparc/Makefile [subdir=crypt] (crypt): Reset only if set
+ 	to original value of `crypt'.
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/Makefile [subdir=crypt]
+ 	(crypt): New variable, set to crypt.solar.
+
 Tue Feb 21 11:50:37 1995  Brendan Kehoe  (brendan@zen.org)
 
 	* sysdeps/sparc/Makefile (routines): Reference `dotmul', not `mul'.
