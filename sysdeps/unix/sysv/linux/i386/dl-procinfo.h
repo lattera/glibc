@@ -27,8 +27,8 @@ static const char x86_cap_flags[][7] =
   {
     "fpu", "vme", "de", "pse", "tsc", "msr", "pae", "mce",
     "cx8", "apic", "10", "sep", "mtrr", "pge", "mca", "cmov",
-    "pat", "pse36", "18", "19", "20", "21", "22", "mmx",
-    "osfxsr", "25", "26", "27", "28", "29", "30", "amd3d"
+    "pat", "pse36", "psn", "19", "20", "21", "22", "mmx",
+    "osfxsr", "xmm", "26", "27", "28", "29", "30", "amd3d"
   };
 #define _DL_HWCAP_COUNT 32
 
@@ -89,7 +89,7 @@ __attribute__ ((unused))
 _dl_string_hwcap (const char *str)
 {
   int i;
-  
+
   for (i = 0; i < _DL_HWCAP_COUNT; i++)
     {
       if (strcmp (str, x86_cap_flags[i]) == 0)

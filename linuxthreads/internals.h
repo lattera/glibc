@@ -418,6 +418,8 @@ void __pthread_reset_main_thread(void);
 void __pthread_once_fork_prepare(void);
 void __pthread_once_fork_parent(void);
 void __pthread_once_fork_child(void);
+void __flockfilelist(void);
+void __funlockfilelist(void);
 void __fresetlockfiles(void);
 void __pthread_manager_adjust_prio(int thread_prio);
 void __pthread_set_own_extricate_if(pthread_descr self, pthread_extricate_if *peif);

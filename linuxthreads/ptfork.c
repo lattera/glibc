@@ -83,6 +83,7 @@ pid_t __fork(void)
 
   pthread_call_handlers(pthread_atfork_prepare);
   __pthread_once_fork_prepare();
+  __flockfilelist();
 
   pid = __libc_fork();
 
@@ -95,6 +96,7 @@ pid_t __fork(void)
 
     pthread_mutex_init(&pthread_atfork_lock, NULL);
   } else {
+    __funlockfilelist();
     __pthread_once_fork_parent();
     pthread_call_handlers(pthread_atfork_parent);
 

@@ -68,20 +68,39 @@ strong_alias (__ftrylockfile, _IO_ftrylockfile)
 #endif
 weak_alias (__ftrylockfile, ftrylockfile);
 
+void
+__flockfilelist(void)
+{
+#ifdef USE_IN_LIBIO
+  _IO_list_lock();
+#endif
+}
+
+void
+__funlockfilelist(void)
+{
+#ifdef USE_IN_LIBIO
+  _IO_list_unlock();
+#endif
+}
 
 void
 __fresetlockfiles (void)
 {
 #ifdef USE_IN_LIBIO
+  _IO_ITER i;
+
   _IO_FILE *fp;
   pthread_mutexattr_t attr;
 
   __pthread_mutexattr_init (&attr);
   __pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE_NP);
 
-  for (fp = _IO_list_all; fp != NULL; fp = fp->_chain)
-    __pthread_mutex_init (fp->_lock, &attr);
+  for (i = _IO_iter_begin(); i != _IO_iter_end(); i = _IO_iter_next(i))
+    __pthread_mutex_init (_IO_iter_file(i)->_lock, &attr);
 
   __pthread_mutexattr_destroy (&attr);
+
+  _IO_list_resetlock();
 #endif
 }

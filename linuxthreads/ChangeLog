@@ -1,3 +1,26 @@
+2000-06-04  Kaz Kylheku  <kaz@ashi.footprints.net>
+
+	Added missing fork time handling of global libio lock.
+
+	* lockfile.c (__fresetlockfiles): Now also resets the list lock,
+	not just the individual stream locks. Rewritten to use new
+	iterator interface provided by libio rather than accessing
+	global variable.
+
+	* lockfile.c (__flockfilelist, _funlockfilelist): New functions
+	which lock and unlock the stream list using the new interface
+	provied by libio.
+	* internals.h: Likewise.
+
+	* ptfork.c (__fork): Now calls __flockfilelist before fork,
+	and __funlockfilelist in the parent after the fork.
+	Child still calls __fresetlockfiles as before.
+
+	* linuxthreads.texi: Now explains what happens to streams at
+	fork time. Also whole new section on forking and thread added.
+	Definition of pthread_atfork moved out of Miscellaneous Functions
+	to this new section.
+
 2000-06-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/sparc32/sparcv9/pspinlock.c (__pthread_spin_lock):

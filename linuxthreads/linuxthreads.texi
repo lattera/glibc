@@ -27,6 +27,10 @@ use @var{errno}.
                                   different threads.
 * Threads and Signal Handling:: Why you should avoid mixing the two, and
                                   how to do it if you must.
+* Threads and Fork::            Interactions between threads and the 
+                                  @code{fork} function.
+* Streams and Fork::            Interactions between stdio streams and 
+                                  @code{fork}.
 * Miscellaneous Thread Functions:: A grab bag of utility routines.
 @end menu
 
@@ -1237,54 +1241,37 @@ threads must not attach their own signal handlers to these signals, or
 alternatively they should all block these signals (which is recommended
 anyway).
 
-@node Miscellaneous Thread Functions
-@section Miscellaneous Thread Functions
+@node Threads and Fork
+@section Threads and Fork
 
-@comment pthread.h
-@comment POSIX
-@deftypefun {pthread_t} pthread_self (@var{void})
-@code{pthread_self} returns the thread identifier for the calling thread.
-@end deftypefun
+It's not intuitively obvious what should happen when a multi-threaded POSIX
+process calls @code{fork}. Not only are the semantics tricky, but you may
+need to write code that does the right thing at fork time even if that code
+doesn't use the @code{fork} function. Moreover, you need to be aware of
+interaction between @code{fork} and some library features like
+@code{pthread_once} and stdio streams.
 
-@comment pthread.h
-@comment POSIX
-@deftypefun int pthread_equal (pthread_t thread1, pthread_t thread2)
-@code{pthread_equal} determines if two thread identifiers refer to the same
-thread.
+When @code{fork} is called by one of the threads of a process, it creates a new
+process which is copy of the  calling process. Effectively, in addition to
+copying certain system objects, the function takes a snapshot of the memory
+areas of the parent process, and creates identical areas in the child. 
+To make matters more complicated, with threads it's possible for two or more
+threads to concurrently call fork to create two or more child processes.
 
-A non-zero value is returned if @var{thread1} and @var{thread2} refer to
-the same thread. Otherwise, 0 is returned.
-@end deftypefun
+The child process has a copy of the address space of the parent, but it does
+not inherit any of its threads. Execution of the child process is carried out
+by a new thread which returns from @code{fork} function with a return value of
+zero; it is the only thread in the child process.  Because threads are not
+inherited across fork, issues arise. At the time of the call to @code{fork},
+threads in the parent process other than the one calling @code{fork} may have
+been executing critical regions of code.  As a result, the child process may
+get a copy of objects that are not in a well-defined state.  This potential
+problem affects all components of the program.
 
-@comment pthread.h
-@comment POSIX
-@deftypefun int pthread_detach (pthread_t @var{th})
-@code{pthread_detach} puts the thread @var{th} in the detached
-state. This guarantees that the memory resources consumed by @var{th}
-will be freed immediately when @var{th} terminates. However, this
-prevents other threads from synchronizing on the termination of @var{th}
-using @code{pthread_join}.
-
-A thread can be created initially in the detached state, using the
-@code{detachstate} attribute to @code{pthread_create}. In contrast,
-@code{pthread_detach} applies to threads created in the joinable state,
-and which need to be put in the detached state later.
-
-After @code{pthread_detach} completes, subsequent attempts to perform
-@code{pthread_join} on @var{th} will fail. If another thread is already
-joining the thread @var{th} at the time @code{pthread_detach} is called,
-@code{pthread_detach} does nothing and leaves @var{th} in the joinable
-state.
-
-On success, 0 is returned. On error, one of the following codes is
-returned:
-@table @code
-@item ESRCH
-No thread could be found corresponding to that specified by @var{th}
-@item EINVAL
-The thread @var{th} is already in the detached state
-@end table
-@end deftypefun
+Any program component which will continue being used in a child process must
+correctly handle its state during @code{fork}. For this purpose, the POSIX
+interface provides the special function @code{pthread_atfork} for installing
+pointers to handler functions which are called from within @code{fork}.
 
 @comment pthread.h
 @comment POSIX
@@ -1336,12 +1323,109 @@ their current locking state, but only the calling thread: other threads
 are not running in the child process. Thus, if a mutex is locked by a
 thread other than the thread calling @code{fork}, that mutex will remain
 locked forever in the child process, possibly blocking the execution of
-the child process. To avoid this, install handlers with
-@code{pthread_atfork} as follows: the @var{prepare} handler locks the
-global mutexes (in locking order), and the @var{parent} and @var{child}
-handlers unlock them (in reverse order). Alternatively, @var{prepare}
-and @var{parent} can be set to @code{NULL} and @var{child} to a function
-that calls @code{pthread_mutex_init} on the global mutexes.
+the child process. Or if some shared data, such as a linked list, was in the
+middle of being updated by a thread in the parent process, the child 
+will get a copy of the incompletely updated data which it cannot use.
+
+To avoid this, install handlers with @code{pthread_atfork} as follows: have the
+@var{prepare} handler lock the mutexes (in locking order), and the
+@var{parent} handler unlock the mutexes. The @var{child} handler should reset
+the mutexes using @code{pthread_mutex_init}, as well as any other
+synchronization objects such as condition variables.
+
+Locking the global mutexes before the fork ensures that all other threads are
+locked out of the critical regions of code protected by those mutexes.  Thus
+when @code{fork} takes a snapshot of the parent's address space, that snapshot
+will copy valid, stable data.  Resetting the synchronization objects in the
+child process will ensure they are properly cleansed of any artifacts from the
+threading subsystem of the parent process. For example, a mutex may inherit
+a wait queue of threads waiting for the lock; this wait queue makes no sense
+in the child process. Initializing the mutex takes care of this.
+
+@node Streams and Fork
+@section Streams and Fork
+
+The GNU standard I/O library has an internal mutex which guards the internal
+linked list of all standard C FILE objects. This mutex is properly taken care
+of during @code{fork} so that the child receives an intact copy of the list.
+This allows the @code{fopen} function, and related stream-creating functions,
+to work correctly in the child process, since these functions need to insert
+into the list.
+
+However, the individual stream locks are not completely taken care of.  Thus
+unless the multithreaded application takes special precautions in its use of
+@code{fork}, the child process might not be able to safely use the streams that
+it inherited from the parent.   In general, for any given open stream in the
+parent that is to be used by the child process, the application must ensure
+that that stream is not in use by another thread when @code{fork} is called.
+Otherwise an inconsistent copy of the stream object be produced. An easy way to
+ensure this is to use @code{flockfile} to lock the stream prior to calling
+@code{fork} and then unlock it with @code{funlockfile} inside the parent
+process, provided that the parent's threads properly honor these locks.
+Nothing special needs to be done in the child process, since the library
+internally resets all stream locks. 
+
+Note that the stream locks are not shared between the parent and child.
+For example, even if you ensure that, say, the stream @code{stdout} is properly
+treated and can be safely used in the child, the stream locks do not provide
+an exclusion mechanism between the parent and child. If both processes write
+to @code{stdout}, strangely interleaved output may result regardless of
+the explicit use of @code{flockfile} or implicit locks.
+
+Also note that these provisions are a GNU extension; other systems might not
+provide any way for streams to be used in the child of a multithreaded process.
+POSIX requires that such a child process confines itself to calling only
+asynchronous safe functions, which excludes much of the library, including
+standard I/O.
+
+@node Miscellaneous Thread Functions
+@section Miscellaneous Thread Functions
+
+@comment pthread.h
+@comment POSIX
+@deftypefun {pthread_t} pthread_self (@var{void})
+@code{pthread_self} returns the thread identifier for the calling thread.
+@end deftypefun
+
+@comment pthread.h
+@comment POSIX
+@deftypefun int pthread_equal (pthread_t thread1, pthread_t thread2)
+@code{pthread_equal} determines if two thread identifiers refer to the same
+thread.
+
+A non-zero value is returned if @var{thread1} and @var{thread2} refer to
+the same thread. Otherwise, 0 is returned.
+@end deftypefun
+
+@comment pthread.h
+@comment POSIX
+@deftypefun int pthread_detach (pthread_t @var{th})
+@code{pthread_detach} puts the thread @var{th} in the detached
+state. This guarantees that the memory resources consumed by @var{th}
+will be freed immediately when @var{th} terminates. However, this
+prevents other threads from synchronizing on the termination of @var{th}
+using @code{pthread_join}.
+
+A thread can be created initially in the detached state, using the
+@code{detachstate} attribute to @code{pthread_create}. In contrast,
+@code{pthread_detach} applies to threads created in the joinable state,
+and which need to be put in the detached state later.
+
+After @code{pthread_detach} completes, subsequent attempts to perform
+@code{pthread_join} on @var{th} will fail. If another thread is already
+joining the thread @var{th} at the time @code{pthread_detach} is called,
+@code{pthread_detach} does nothing and leaves @var{th} in the joinable
+state.
+
+On success, 0 is returned. On error, one of the following codes is
+returned:
+@table @code
+@item ESRCH
+No thread could be found corresponding to that specified by @var{th}
+@item EINVAL
+The thread @var{th} is already in the detached state
+@end table
+@end deftypefun
 
 @comment pthread.h
 @comment GNU
