@@ -1,3 +1,13 @@
+2001-09-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-deps.c (_dl_map_object_deps): Fix filter handling if filter
+	is already found earlier in the search scope.
+
+2001-09-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* rt/Makefile (LDFLAGS-rt.so): Use shared thread library as librt's
+	filter.
+
 2001-09-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Adjust expected errors for j0.

@@ -362,11 +362,11 @@ _dl_map_object_deps (struct link_map *map,
 		    /* This object is already in the search list we
 		       are building.  Don't add a duplicate pointer.
 		       Just added by _dl_map_object.  */
-		    for (late = newp; late->next; late = late->next)
+		    for (late = newp; late->next != NULL; late = late->next)
 		      if (late->next->map == args.aux)
 			break;
 
-		    if (late->next)
+		    if (late->next != NULL)
 		      {
 			/* The object is somewhere behind the current
 			   position in the search path.  We have to
@@ -380,9 +380,9 @@ _dl_map_object_deps (struct link_map *map,
 			late->next = late->next->next;
 
 			/* We must move the object earlier in the chain.  */
-			if (args.aux->l_prev)
+			if (args.aux->l_prev != NULL)
 			  args.aux->l_prev->l_next = args.aux->l_next;
-			if (args.aux->l_next)
+			if (args.aux->l_next != NULL)
 			  args.aux->l_next->l_prev = args.aux->l_prev;
 
 			args.aux->l_prev = newp->map->l_prev;
@@ -394,21 +394,10 @@ _dl_map_object_deps (struct link_map *map,
 		    else
 		      {
 			/* The object must be somewhere earlier in the
-			   list.  That's good, we only have to insert
-			   an entry for the duplicate list.  */
-			orig->next = NULL;	/* Never used.  */
-
-			/* Now we have a problem.  The element
-			   pointing to ORIG in the list must
-			   point to NEWP now.  This is the only place
-			   where we need this backreference and this
-			   situation is really not that frequent.  So
-			   we don't use a double-linked list but
-			   instead search for the preceding element.  */
-			late = known;
-			while (late->next != orig)
-			  late = late->next;
-			late->next = newp;
+			   list.  Undo to the current list element what
+			   we did above.  */
+			memcpy (orig, newp, sizeof (*newp));
+			continue;
 		      }
 		  }
 		else
