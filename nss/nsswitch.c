@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gnu/lib-names.h>
 
 #include "nsswitch.h"
 
@@ -63,8 +64,8 @@ static struct
 __libc_lock_define_initialized (static, lock)
 
 
-/* Nonzero if the sevices are already initialized.  */
-static int nss_initialized;
+/* String with revision number of the shared object files.  */
+const char *const __nss_shlib_revision = LIBNSS_FILES_SO + 15;
 
 
 /* The root of the whole data base.  */
@@ -88,7 +89,8 @@ __nss_database_lookup (const char *database, const char *alternate_name,
       return 0;
     }
 
-  if (nss_initialized == 0 && service_table == NULL)
+  /* Are we initialized yet?  */
+  if (service_table == NULL)
     /* Read config file.  */
     service_table = nss_parse_file (_PATH_NSSWITCH_CONF);
 
@@ -330,7 +332,7 @@ nss_lookup_function (service_user *ni, const char *fct_name)
 	    {
 	      /* Load the shared library.  */
 	      size_t shlen = (7 + strlen (ni->library->name) + 3
-			      + sizeof (NSS_SHLIB_REVISION));
+			      + strlen (NSS_SHLIB_REVISION) + 1);
 	      char shlib_name[shlen];
 
 	      void do_open (void)
@@ -340,9 +342,10 @@ nss_lookup_function (service_user *ni, const char *fct_name)
 		}
 
 	      /* Construct shared object name.  */
-	      __stpcpy (__stpcpy (__stpcpy (shlib_name, "libnss_"),
-				  ni->library->name),
-			".so" NSS_SHLIB_REVISION);
+	      __stpcpy (__stpcpy (__stpcpy (__stpcpy (shlib_name, "libnss_"),
+					    ni->library->name),
+				  ".so"),
+			NSS_SHLIB_REVISION);
 
 	      if (nss_dlerror_run (do_open) != 0)
 		/* Failed to load the library.  */

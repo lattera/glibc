@@ -38,7 +38,6 @@ build-shared = @shared@
 build-profile = @profile@
 build-omitfp = @omitfp@
 stdio = @stdio@
-malloc = @malloc@
 add-ons = @subdirs@
 
 # Build tools.

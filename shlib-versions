@@ -11,6 +11,7 @@
 # The interface to -lm depends only on cpu, not on operating system.
 i.86-.*-.*		libm=6
 m68k-.*-.*		libm=6
+alpha-.*-linux.*	libm=6.1
 alpha-.*-.*		libm=6
 
 # We provide libc.so.6 for Linux kernel versions 2.0 and later.
@@ -29,23 +30,32 @@ alpha-.*-linux.*	libc=6.1
 
 # The dynamic loader also requires different names.
 i.86-.*-linux.*		ld=ld-linux.so.2
+alpha-.*-linux.*	ld=ld-linux.so.2
 # We use the ELF ABI standard name for the default.
 .*-.*-.*		ld=ld.so.1
 
 # The -ldl interface (see <dlfcn.h>) is the same on all platforms.
+alpha-.*-linux.*	libdl=2.1
 .*-.*-.*		libdl=2
 
 # So far the -lutil interface is the same on all platforms, except for the
 # `struct utmp' format, which depends on libc.
+alpha-.*-linux.*	libutil=1.1
 .*-.*-.*		libutil=1
 
 # Version number 2 is used on other systems for the BIND 4.9.5 resolver
 # interface.
+alpha-.*-linux.*	libresolv=2.1
 .*-.*-.*		libresolv=2
 
 # Interface revision of nss_* modules.  This must match NSS_SHLIB_REVISION
 # in nss/nsswitch.h, which determines the library names used for service
 # names given in /etc/nsswitch.conf.
+alpha-.*-linux.*	libnss_files=1.1
+alpha-.*-linux.*	libnss_dns=1.1
+alpha-.*-linux.*	libnss_db=1.1
+alpha-.*-linux.*	libnss_compat=1.1
+alpha-.*-linux.*	libnss_nis=1.1
 .*-.*-.*		libnss_files=1
 .*-.*-.*		libnss_dns=1
 .*-.*-.*		libnss_db=1
@@ -53,13 +63,17 @@ i.86-.*-linux.*		ld=ld-linux.so.2
 .*-.*-.*		libnss_nis=1
 
 # Version for libnsl with YP functions.
+alpha-.*-linux.*	libnsl=1.1
 .*-.*-.*		libnsl=1
 
 # We use libdb.so.2 for the interface in version 1.85 of the Berkeley DB code.
+alpha-.*-linux.*	libdb=2.1
 .*-.*-.*		libdb=2
 
 # This defines the shared library version numbers we will install.
+alpha-.*-linux.*	libcrypt=1.1
 .*-.*-.*		libcrypt=1
 
 # The gross patch for programs assuming broken locale implementations.
+alpha-.*-linux.*	libBrokenLocale=1.1
 .*-.*-.*		libBrokenLocale=1

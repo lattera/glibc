@@ -1,3 +1,31 @@
+1997-01-29 04:30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/Makefile: Don't generate headers derived from .x files when
+	crosscompiling.
+
+1997-01-28 10:51  Richard Henderson  <rth@tamu.edu>
+
+	* Makefile: Generate gnu/lib-names.h in before-compile.
+	* nss/nss.h (NSS_SHLIB_REVISION): Turn it into a const variable.
+	* nss/nssswitch.c (__nss_shlib_revision): New variable.  Initialize
+	to the revision found for LIBNSS_FILES_SO.
+	(nss_initilized): Removed.  It was tested but never set.
+	(nss_lookup_function): Don't treat NSS_SHLIB_REVISION as a literal.
+
+	* shlib-versions: Tag all alpha-linux shlibs with a .1 "minor"
+	not just libc.  Except instead of ld.so.1.1 use ld-linux.so.2.
+
+	* sysdeps/unix/sysv/linux/alpha/ieee_set_fp_control.S: Typo in ldgp.
+
+1997-01-28 12:16  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* elf/Makefile (CFLAGS-dl-load.c): Use += to not
+	override the definition.
+
+1997-01-28 20:13  Fila Kolodny  <fila@ibi.com>
+
+	* config.make.in (malloc): Remove.
+
 1997-01-28 04:23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.1.

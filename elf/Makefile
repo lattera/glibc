@@ -118,7 +118,7 @@ $(objpfx)trusted-dirs.h: Makefile
 	 done;) > $@T
 	mv -f $@T $@
 CPPFLAGS-dl-load.c = -I$(objdir)/$(subdir)
-CFLAGS-dl-load.c = -Wno-uninitialized
+CFLAGS-dl-load.c += -Wno-uninitialized
 
 # Specify the dependencies of libdl.so; its commands come from the generic
 # rule to build a shared library.
