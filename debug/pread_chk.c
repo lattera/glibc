@@ -26,5 +26,5 @@ __pread_chk (int fd, void *buf, size_t nbytes, off_t offset, size_t buflen)
   if (nbytes > buflen)
     __chk_fail ();
 
-  return __pread (fd, buf, offset, MIN (nbytes, buflen + 1));
+  return __pread (fd, buf, offset, nbytes);
 }

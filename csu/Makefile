@@ -241,7 +241,7 @@ $(objpfx)version-info.h: $(common-objpfx)config.make $(all-Banner-files)
 	 esac; \
 	 files="$(all-Banner-files)";				\
 	 if test -n "$$files"; then				\
-	   echo "\"Available extensions:\\n\"";			\
+	   printf '"Available extensions:\\n"\n';		\
 	   sed -e '/^#/d' -e 's/^[[:space:]]*/	/'		\
 	       -e 's/^\(.*\)$$/\"\1\\n\"/' $$files;		\
 	 fi) > $@T

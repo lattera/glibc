@@ -1,3 +1,7 @@
+2005-02-26  GOTO Masanori  <gotom@debian.or.jp>
+
+	* csu/Makefile: Use printf instead of echo for some shells.
+
 2005-02-28  Roland McGrath  <roland@redhat.com>
 
 	* debug/warning-nop.c (__nop): Rename to nop, make it static.
