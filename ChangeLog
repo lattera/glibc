@@ -1,5 +1,15 @@
 2000-09-07  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Add __syscall_fcntl.
+
+	* sysdeps/mips/dl-machine.h (RESOLVE_GOTSYM): Fix calls to
+	dl_lookup.
+	(ELF_MACHINE_RUNTIME_TRAMPOLINE): Likewise.
+
+	* sysdeps/unix/sysv/linux/mips/fcntl.c: New file.
+
+	* stdlib/tst-bsearch.c (main): Add more test cases.
+
 	* locale/programs/ld-collate.c (handle_ellipsis): Fix typo.
 	* elf/dl-load.c (_dl_map_object_from_fd): Likewise.
 	Reported by GOTO Masanori <gotom@debian.or.jp>.

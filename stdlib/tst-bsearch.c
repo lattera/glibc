@@ -56,11 +56,11 @@ main (void)
 {
   int cnt;
   int result = 0;
+  struct entry key;
+  struct entry *res;
 
   for (cnt = 0; cnt < narr; ++cnt)
     {
-      struct entry key;
-      struct entry *res;
 
       key.val = arr[cnt].val;
 
@@ -73,6 +73,57 @@ main (void)
       else if (res != &arr[cnt])
 	{
 	  puts ("wrong entry returned");
+	  result = 1;
+	}
+    }
+
+  /* And some special tests that shouldn't find any entry.  */
+  key.val = -1;
+  res = (struct entry *) bsearch (&key, arr, narr, sizeof (arr[0]), comp);
+  if (res != NULL)
+    {
+      puts ("found an entry that's not there");
+      result = 1;
+    }
+
+  key.val = 11;
+  res = (struct entry *) bsearch (&key, arr, narr, sizeof (arr[0]), comp);
+  if (res != NULL)
+    {
+      puts ("found an entry that's not there");
+      result = 1;
+    }
+
+  key.val = 11;
+  res = (struct entry *) bsearch (&key, arr, 0, sizeof (arr[0]), comp);
+  if (res != NULL)
+    {
+      puts ("found an entry that's not there");
+      result = 1;
+    }
+  
+  /* Now the array contains only one element - no entry should be found.  */
+  for (cnt = 0; cnt < narr; ++cnt)
+    {
+      key.val = arr[cnt].val;
+
+      res = (struct entry *) bsearch (&key, &arr[5], 1, sizeof (arr[0]), comp);
+      if (cnt == 5)
+	{
+	  if (res == NULL)
+	    {
+	      printf ("entry %d not found\n", cnt);
+	      result = 1;
+	    }
+	  else if (res != &arr[cnt])
+	    {
+	      puts ("wrong entry returned");
+	      result = 1;
+	    }
+	}
+      else if (res != NULL)
+	{
+	  puts ("found an entry that's not there");
 	  result = 1;
 	}
     }
