@@ -41,8 +41,7 @@ testandset (int *spinlock)
   long int ret, temp;
 
   __asm__ __volatile__
-    (".set	mips2\n\t"
-     "/* Inline spinlock test & set */\n\t"
+    ("/* Inline spinlock test & set */\n\t"
      "1:\n\t"
      "ll	%0,%3\n\t"
      ".set	push\n\t"
@@ -88,8 +87,7 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
   long int ret;
 
   __asm__ __volatile__
-    (".set	mips2\n\t"
-     "/* Inline compare & swap */\n\t"
+    ("/* Inline compare & swap */\n\t"
      "1:\n\t"
      "ll	%0,%4\n\t"
      ".set	push\n"

@@ -3,7 +3,7 @@
 	* sysdeps/mips/pspinlock.c (__pthread_spin_lock): Don't set mips2.
 	* sysdeps/mips/pt-machine.h (testandset): Likewise.
 	(__compare_and_swap): Likewise.
-	Patches by "Maciej W. Rozycki" <macro@ds2.pg.gda.pl>.
+	Patches by Maciej W. Rozycki <macro@ds2.pg.gda.pl>.
 
 2000-11-20  Jakub Jelinek  <jakub@redhat.com>
 

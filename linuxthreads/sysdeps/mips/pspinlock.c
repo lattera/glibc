@@ -32,8 +32,7 @@ __pthread_spin_lock (pthread_spinlock_t *lock)
   unsigned int tmp;
 
   asm volatile
-    (".set	mips2\n\t"
-     "\t\t\t# spin_lock\n\t"
+    ("\t\t\t# spin_lock\n\t"
      "1:\n\t"
      "ll	%1,%2\n\t"
      ".set	push\n\t"
