@@ -1,3 +1,17 @@
+2005-03-15  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #786]
+	* sysdeps/generic/dl-tls.c (_dl_next_tls_modid): Handle
+	GL(dl_tls_static_nelem) == GL(dl_tls_max_dtv_idx).
+	* elf/Makefile: Add rules to build and run tst-tls15.
+	* elf/tst-tls15.c: New test.
+	* elf/tst-tlsmod15a.c: New file.
+	* elf/tst-tlsmod15b.c: New file.
+
+2005-03-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (dl_main): Always call init_tls if we have audit modules.
+
 2005-03-20  Alfred M. Szmidt  <ams@gnu.org>
 
 	* elf/dl-open.c (dl_open_worker): Fix typo.

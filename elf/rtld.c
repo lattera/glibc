@@ -1306,8 +1306,7 @@ ld.so does not support TLS, but program uses it!\n");
 
 	  /* Since we start using the auditing DSOs right away we need to
 	     initialize the data structures now.  */
-	  if (!TLS_INIT_TP_EXPENSIVE)
-	    tcbp = init_tls ();
+	  tcbp = init_tls ();
 #endif
 	  struct dlmopen_args dlmargs;
 	  dlmargs.fname = al->name;

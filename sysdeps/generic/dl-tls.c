@@ -71,26 +71,24 @@ _dl_next_tls_modid (void)
 	 NB: the offset +1 is due to the fact that DTV[0] is used
 	 for something else.  */
       result = GL(dl_tls_static_nelem) + 1;
-      /* If the following would not be true we mustn't have assumed
-	 there is a gap.  */
-      assert (result <= GL(dl_tls_max_dtv_idx));
-      do
-	{
-	  while (result - disp < runp->len)
-	    {
-	      if (runp->slotinfo[result - disp].map == NULL)
-		break;
+      if (result <= GL(dl_tls_max_dtv_idx))
+	do
+	  {
+	    while (result - disp < runp->len)
+	      {
+		if (runp->slotinfo[result - disp].map == NULL)
+		  break;
 
-	      ++result;
-	      assert (result <= GL(dl_tls_max_dtv_idx) + 1);
-	    }
+		++result;
+		assert (result <= GL(dl_tls_max_dtv_idx) + 1);
+	      }
 
-	  if (result - disp < runp->len)
-	    break;
+	    if (result - disp < runp->len)
+	      break;
 
-	  disp += runp->len;
-	}
-      while ((runp = runp->next) != NULL);
+	    disp += runp->len;
+	  }
+	while ((runp = runp->next) != NULL);
 
       if (result > GL(dl_tls_max_dtv_idx))
 	{
