@@ -99,7 +99,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 end in this function.  */
       if (profile)
 	{
-	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
+	  //got[2] = (Elf32_Addr) &_dl_runtime_profile;
+	  got[2] = (Elf32_Addr) &_dl_runtime_resolve;
 	  /* Say that we really want profiling and the timers are started.  */
 	  _dl_profile_map = l;
 	}
@@ -144,7 +145,6 @@ _dl_runtime_resolve:
 	stmdb	sp!,{r0-r3,sl,fp}
 
 	@ prepare to call fixup()
-
 	@ change &GOT[n+3] into 8*n        NOTE: reloc are 8 bytes each
 	sub	r1, ip, lr
 	sub	r1, r1, #4
@@ -153,6 +153,7 @@ _dl_runtime_resolve:
 	@ get pointer to linker struct
 	ldr	r0, [lr, #-4]
 
+	@ call fixup routine
 	" CALL_ROUTINE(fixup) "
 
 	@ save the return
@@ -165,21 +166,15 @@ _dl_runtime_resolve:
 	mov	pc, ip
 
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve
-
+	
 	.globl _dl_runtime_profile
 	.type _dl_runtime_profile, #function
 	.align 2
 _dl_runtime_profile:
-	@ we get caled with
-	@ 	stack[0] contains the return address from this call
-	@	ip contains &GOT[n+3] (pointer to function)
-	@	lr points to &GOT[2]
-
-	@ save almost everything; return add is already on the stack
-	stmdb	sp!,{r0-r3,fp}
+	@ save almost everything; lr is already on the stack
+	stmdb	sp!,{r0-r3,sl,fp}
 
 	@ prepare to call fixup()
-
 	@ change &GOT[n+3] into 8*n        NOTE: reloc are 8 bytes each
 	sub	r1, ip, lr
 	sub	r1, r1, #4
@@ -188,18 +183,19 @@ _dl_runtime_profile:
 	@ get pointer to linker struct
 	ldr	r0, [lr, #-4]
 
+	@ call profiling fixup routine
 	" CALL_ROUTINE(profile_fixup) "
 
 	@ save the return
 	mov	ip, r0
 
 	@ restore the stack
-	ldmia	sp!,{r0-r3,fp,lr}
+	ldmia	sp!,{r0-r3,sl,fp,lr}
 
 	@ jump to the newly found address
 	mov	pc, ip
 
-	.size _dl_runtime_profile, .-_dl_runtime_profile
+	.size _dl_runtime_resolve, .-_dl_runtime_resolve
 	.previous
 ");
 #else // PROF
@@ -212,15 +208,33 @@ _dl_runtime_profile:
 	.align 2
 _dl_runtime_resolve:
 _dl_runtime_profile:
-	stmdb	sp!,{r0-r3,fp}
-	ldr	r1,[sp,#0x34]
+	@ we get called with
+	@ 	stack[0] contains the return address from this call
+	@	ip contains &GOT[n+3] (pointer to function)
+	@	lr points to &GOT[2]
+
+	@ save almost everything; return add is already on the stack
+	stmdb	sp!,{r0-r3,sl,fp}
+
+	@ prepare to call fixup()
+	@ change &GOT[n+3] into 8*n        NOTE: reloc are 8 bytes each
 	sub	r1, ip, lr
 	sub	r1, r1, #4
 	add	r1, r1, r1
+
+	@ get pointer to linker struct
 	ldr	r0, [lr, #-4]
+
+	@ call profiling fixup routine
 	" CALL_ROUTINE(fixup) "
+
+	@ save the return
 	mov	ip, r0
-	ldmia	sp!,{r0-r3,fp,lr}
+
+	@ restore the stack
+	ldmia	sp!,{r0-r3,sl,fp,lr}
+
+	@ jump to the newly found address
 	mov	pc, ip
 
 	.size _dl_runtime_profile, .-_dl_runtime_profile
@@ -251,6 +265,10 @@ _dl_start_user:
 	ldr	sl, .L_GET_GOT
 	add	sl, pc, sl
 .L_GOT_GOT:
+	@ Store the highest stack address
+	ldr	r1, .L_STACK_END
+	ldr	r1, [sl, r1]
+	str	sp, [r1]
 	@ See if we were run as a command with the executable file
 	@ name as an extra leading argument.
 	ldr	r1, .L_SKIP_ARGS
@@ -299,6 +317,8 @@ _dl_start_user:
 	.word	_dl_starting_up(GOT)
 .L_FINI_PROC:
 	.word	_dl_fini(GOT)
+.L_STACK_END:
+	.word	__libc_stack_end(GOT)
 .previous\n\
 ");
 
@@ -421,14 +441,6 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	    *reloc_addr += value;
 	    break;
 	  }
-	case R_ARM_PC24:
-	  {
-	    long int disp = (value - (Elf32_Addr) reloc_addr) / 4;
-	    if ((disp >= (1<<24)) || (disp <= -(1<<24)))
-	      assert (! "address out of range for PC24 reloc");
-	    *reloc_addr += disp;
-	  }
-	  break;
 	default:
 	  assert (! "unexpected dynamic reloc type");
 	  break;
