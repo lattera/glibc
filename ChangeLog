@@ -1,3 +1,102 @@
+2002-05-12  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/testdata/EUC-JISX0213: New file.
+	* iconvdata/testdata/EUC-JISX0213..UTF8: New file.
+	* iconvdata/testdata/SHIFT_JISX0213: New file.
+	* iconvdata/testdata/SHIFT_JISX0213..UTF8: New file.
+	* iconvdata/testdata/ISO-2022-JP-3: New file.
+	* iconvdata/testdata/ISO-2022-JP-3..UTF8: New file.
+	* iconvdata/TESTS: Add EUC-JISX0213, SHIFT_JISX0213, ISO-2022-JP-3.
+	* iconvdata/run-iconv-test.sh: Skip the charmap test if the charmap
+	contains comments indicating precomposed characters.
+
+2002-04-21  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/iso-2022-jp-3.c: New file.
+	* iconvdata/gconv-modules (ISO-2022-JP-3): New module.
+	* iconvdata/Makefile (modules): Add ISO-2022-JP-3.
+	(LDFLAGS-ISO-2022-JP-3.so): New variable.
+	(ISO-2022-JP-3.so): Depend on libJIS.so and libJISX0213.so.
+	(distribute): Add iso-2022-jp-3.c.
+
+2002-05-12  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/tst-table-to.c (main): Restore handling of
+	transliterations, broken by last patch.
+
+2002-05-12  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/TESTS: Add IBM922, IBM1124, IBM1129.
+
+2002-05-12  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/euc-jisx0213.c (BODY for FROM_LOOP): Don't advance inptr
+	when there is not enough room in the output buffer.
+	* iconvdata/shift_jisx0213.c (BODY for FROM_LOOP): Likewise.
+
+2002-04-20  Bruno Haible  <bruno@clisp.org>
+
+	* iconv/skeleton.c ({FROM,TO}_LOOP_{MIN,MAX}_NEEDED_{FROM,TO}): New
+	macros.
+	(RESET_INPUT_BUFFER): Use them instead of {MIN,MAX}_NEEDED_{FROM,TO}.
+	Also make this macro work if FROM_DIRECTION evaluates to 0.
+	(gconv_init): Use the new macros instead of {MIN,MAX}_NEEDED_{FROM,TO}.
+	(FUNCTION_NAME): Likewise, in the handling of unaligned accesses and
+	of consume_incomplete.
+	* iconvdata/cp1255.c: Define {FROM,TO}_LOOP_{MIN,MAX}_NEEDED_{FROM,TO}
+	instead of {MIN,MAX}_NEEDED_{FROM,TO}. Set FROM_LOOP_MAX_NEEDED_TO to
+	4, not 8.
+	* iconvdata/cp1258.c: Likewise.
+	* iconvdata/ibm930.c: Define {FROM,TO}_LOOP_{MIN,MAX}_NEEDED_{FROM,TO}
+	instead of {MIN,MAX}_NEEDED_{FROM,TO}. Set TO_LOOP_MAX_NEEDED_TO to 3,
+	not 2.
+	* iconvdata/ibm933.c: Likewise.
+	* iconvdata/ibm935.c: Likewise.
+	* iconvdata/ibm937.c: Likewise.
+	* iconvdata/ibm939.c: Likewise.
+	* iconvdata/iso-2022-cn.c: Define
+	{FROM,TO}_LOOP_{MIN,MAX}_NEEDED_{FROM,TO} instead of
+	{MIN,MAX}_NEEDED_{FROM,TO}. Set TO_LOOP_MAX_NEEDED_TO to 6, not 4.
+	* iconvdata/iso-2022-cn-ext.c: Likewise.
+	* iconvdata/iso-2022-jp.c: Define
+	{FROM,TO}_LOOP_{MIN,MAX}_NEEDED_{FROM,TO} instead of
+	{MIN,MAX}_NEEDED_{FROM,TO}.
+	* iconvdata/tcvn5712-1.c: Define
+	{FROM,TO}_LOOP_{MIN,MAX}_NEEDED_{FROM,TO} instead of
+	{MIN,MAX}_NEEDED_{FROM,TO}. Set FROM_LOOP_MAX_NEEDED_FROM to 1, not 2.
+	* iconvdata/euc-jisx0213.c: Define
+	{FROM,TO}_LOOP_{MIN,MAX}_NEEDED_{FROM,TO} instead of
+	{MIN,MAX}_NEEDED_{FROM,TO}. Set FROM_LOOP_MAX_NEEDED_TO to 8, not 4.
+	* iconvdata/shift_jisx0213.c: Likewise.
+
+2002-05-14  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/powerpc/Makefile (sysdeps_routines): Add divdi3, cmpdi2,
+	shdi3, fixdfdi, fixsfdi in csu dir.
+	(shared-only-routines): Likewise.
+	* sysdeps/wordsize-32/cmpdi2.c: New file.
+	* sysdeps/wordsize-32/shdi3.c: New file.
+	* sysdeps/wordsize-32/fixdfdi.c: New file.
+	* sysdeps/wordsize-32/fixsfdi.c: New file.
+	* sysdeps/powerpc/Versions (__divdi3, __moddi3, __udivdi3, __umoddi3,
+	__ashldi3, __ashrdi3, __lshrdi3, __cmpdi2, __ucmpdi2, __fixdfdi,
+	__fixsfdi, __fixunsdfdi, __fixunssfdi): Export at GLIBC_2.0.
+
+	* sysdeps/unix/sysv/linux/semctl.c (__old_semctl, __new_semctl):
+	Only use va_arg if the argument will be used [PR libc/3259].
+
+2002-05-06  Michael A. Schmidt  <mmaass@us.ibm.com>
+
+	* catgets/catgets.c (catopen): Free buffer if internal catalog
+	open fails.
+
+2002-05-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* debug/xtrace.sh: Make more robust.  For realtime tracking use
+	non-buffering methods.
+	* debug/pcprofiledump.c: Implement -u option.
+	Patch by Roger Luethi <rl@hellgate.ch>.
+
 2002-05-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/netinet/in.h (bindresvport_internal): Add prototype.

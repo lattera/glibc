@@ -1,5 +1,5 @@
 /* Conversion module for ISO-2022-CN.
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -45,10 +45,14 @@
 #define DEFINE_FINI		1
 #define FROM_LOOP		from_iso2022cn_loop
 #define TO_LOOP			to_iso2022cn_loop
-#define MIN_NEEDED_FROM		1
-#define MAX_NEEDED_FROM		4
-#define MIN_NEEDED_TO		4
-#define MAX_NEEDED_TO		4
+#define FROM_LOOP_MIN_NEEDED_FROM	1
+#define FROM_LOOP_MAX_NEEDED_FROM	4
+#define FROM_LOOP_MIN_NEEDED_TO		4
+#define FROM_LOOP_MAX_NEEDED_TO		4
+#define TO_LOOP_MIN_NEEDED_FROM		4
+#define TO_LOOP_MAX_NEEDED_FROM		4
+#define TO_LOOP_MIN_NEEDED_TO		1
+#define TO_LOOP_MAX_NEEDED_TO		6
 #define PREPARE_LOOP \
   int save_set;								      \
   int *setp = &data->__statep->__count;
@@ -108,9 +112,10 @@ enum
 
 
 /* First define the conversion function from ISO-2022-CN to UCS4.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define MIN_NEEDED_INPUT	FROM_LOOP_MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	FROM_LOOP_MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	FROM_LOOP_MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT	FROM_LOOP_MAX_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
@@ -252,9 +257,10 @@ enum
 
 
 /* Next, define the other direction.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
+#define MIN_NEEDED_INPUT	TO_LOOP_MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	TO_LOOP_MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	TO_LOOP_MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT	TO_LOOP_MAX_NEEDED_TO
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \

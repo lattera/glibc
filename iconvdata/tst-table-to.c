@@ -77,15 +77,16 @@ main (int argc, char *argv[])
 	char *outbuf = (char *) buf;
 	size_t outbytesleft = sizeof (buf);
 	size_t result;
+	size_t result2 = 0;
 
 	iconv (cd, NULL, NULL, NULL, NULL);
 	result = iconv (cd,
 			(char **) &inbuf, &inbytesleft,
 			&outbuf, &outbytesleft);
 	if (result != (size_t)(-1))
-	  result = iconv (cd, NULL, NULL, &outbuf, &outbytesleft);
+	  result2 = iconv (cd, NULL, NULL, &outbuf, &outbytesleft);
 
-	if (result == (size_t)(-1))
+	if (result == (size_t)(-1) || result2 == (size_t)(-1))
 	  {
 	    if (errno != EILSEQ)
 	      {

@@ -1,6 +1,6 @@
 #! /bin/sh -f
 # Run available iconv(1) tests.
-# Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1998-2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 #
@@ -101,7 +101,8 @@ while read from to subset targets; do
       if test "$t" = UTF8; then tc=UTF-8; else tc="$t"; fi
       if test -f ../localedata/charmaps/$from &&
          test -f ../localedata/charmaps/$tc &&
-	 test -f testdata/$from; then
+	 test -f testdata/$from &&
+	 ! grep '<U....><U....>' ../localedata/charmaps/$from > /dev/null; then
 	echo $ac_n "test charmap: $from -> $t $ac_c"
 	$PROG -f ../localedata/charmaps/$from -t ../localedata/charmaps/$tc \
 	      testdata/$from > $temp1 ||

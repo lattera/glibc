@@ -1209,6 +1209,10 @@ module	ISO-2022-JP-2//		INTERNAL		ISO-2022-JP	1
 module	INTERNAL		ISO-2022-JP-2//		ISO-2022-JP	1
 
 #	from			to			module		cost
+module	ISO-2022-JP-3//		INTERNAL		ISO-2022-JP-3	1
+module	INTERNAL		ISO-2022-JP-3//		ISO-2022-JP-3	1
+
+#	from			to			module		cost
 alias	CSISO2022KR//		ISO-2022-KR//
 alias	ISO2022KR//		ISO-2022-KR//
 module	ISO-2022-KR//		INTERNAL		ISO-2022-KR	1

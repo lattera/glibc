@@ -44,9 +44,14 @@
 #define TO_LOOP			to_shift_jisx0213
 #define DEFINE_INIT		1
 #define DEFINE_FINI		1
-#define MIN_NEEDED_FROM		1
-#define MAX_NEEDED_FROM		2
-#define MIN_NEEDED_TO		4
+#define FROM_LOOP_MIN_NEEDED_FROM	1
+#define FROM_LOOP_MAX_NEEDED_FROM	2
+#define FROM_LOOP_MIN_NEEDED_TO		4
+#define FROM_LOOP_MAX_NEEDED_TO		8
+#define TO_LOOP_MIN_NEEDED_FROM		4
+#define TO_LOOP_MAX_NEEDED_FROM		4
+#define TO_LOOP_MIN_NEEDED_TO		1
+#define TO_LOOP_MAX_NEEDED_TO		2
 #define PREPARE_LOOP \
   int saved_state;							      \
   int *statep = &data->__statep->__count;
@@ -92,9 +97,10 @@
 
 
 /* First define the conversion function from Shift_JISX0213 to UCS-4.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define MIN_NEEDED_INPUT	FROM_LOOP_MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	FROM_LOOP_MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	FROM_LOOP_MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT	FROM_LOOP_MAX_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
@@ -185,8 +191,6 @@
 	    break;							      \
 	  }								      \
 									      \
-	inptr += 2;							      \
-									      \
 	if (ch < 0x80)							      \
 	  {								      \
 	    /* It's a combining character.  */				      \
@@ -196,6 +200,7 @@
 	    /* See whether we have room for two characters.  */		      \
 	    if (outptr + 8 <= outend)					      \
 	      {								      \
+		inptr += 2;						      \
 		put32 (outptr, u1);					      \
 		outptr += 4;						      \
 		put32 (outptr, u2);					      \
@@ -208,6 +213,8 @@
 		break;							      \
 	      }								      \
 	  }								      \
+									      \
+	inptr += 2;							      \
       }									      \
     else								      \
       {									      \
@@ -277,9 +284,10 @@ static const struct
   { 0x83f3, 0x83f6 }, /* 0x12678 = 0x12675 U+309A */
 };
 
-#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
+#define MIN_NEEDED_INPUT	TO_LOOP_MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	TO_LOOP_MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	TO_LOOP_MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT	TO_LOOP_MAX_NEEDED_TO
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \

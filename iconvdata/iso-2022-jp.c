@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <dlfcn.h>
 #include <gconv.h>
 #include <stdint.h>
@@ -48,10 +49,14 @@ struct gap
 /* Definitions used in the body of the `gconv' function.  */
 #define FROM_LOOP		from_iso2022jp_loop
 #define TO_LOOP			to_iso2022jp_loop
-#define MIN_NEEDED_FROM		1
-#define MAX_NEEDED_FROM		4
-#define MIN_NEEDED_TO		4
-#define MAX_NEEDED_TO		4
+#define FROM_LOOP_MIN_NEEDED_FROM	1
+#define FROM_LOOP_MAX_NEEDED_FROM	4
+#define FROM_LOOP_MIN_NEEDED_TO		4
+#define FROM_LOOP_MAX_NEEDED_TO		4
+#define TO_LOOP_MIN_NEEDED_FROM		4
+#define TO_LOOP_MAX_NEEDED_FROM		4
+#define TO_LOOP_MIN_NEEDED_TO		1
+#define TO_LOOP_MAX_NEEDED_TO		6
 #define FROM_DIRECTION		(dir == from_iso2022jp)
 #define PREPARE_LOOP \
   enum direction dir = ((struct iso2022jp_data *) step->__data)->dir;	      \
@@ -173,17 +178,17 @@ gconv_init (struct __gconv_step *step)
 
 	  if (dir == from_iso2022jp)
 	    {
-	      step->__min_needed_from = MIN_NEEDED_FROM;
-	      step->__max_needed_from = MAX_NEEDED_FROM;
-	      step->__min_needed_to = MIN_NEEDED_TO;
-	      step->__max_needed_to = MAX_NEEDED_TO;
+	      step->__min_needed_from = FROM_LOOP_MIN_NEEDED_FROM;
+	      step->__max_needed_from = FROM_LOOP_MAX_NEEDED_FROM;
+	      step->__min_needed_to = FROM_LOOP_MIN_NEEDED_TO;
+	      step->__max_needed_to = FROM_LOOP_MAX_NEEDED_TO;
 	    }
 	  else
 	    {
-	      step->__min_needed_from = MIN_NEEDED_TO;
-	      step->__max_needed_from = MAX_NEEDED_TO;
-	      step->__min_needed_to = MIN_NEEDED_FROM;
-	      step->__max_needed_to = MAX_NEEDED_FROM + 2;
+	      step->__min_needed_from = TO_LOOP_MIN_NEEDED_FROM;
+	      step->__max_needed_from = TO_LOOP_MAX_NEEDED_FROM;
+	      step->__min_needed_to = TO_LOOP_MIN_NEEDED_TO;
+	      step->__max_needed_to = TO_LOOP_MAX_NEEDED_TO;
 	    }
 
 	  /* Yes, this is a stateful encoding.  */
@@ -254,9 +259,10 @@ gconv_end (struct __gconv_step *data)
 
 
 /* First define the conversion function from ISO-2022-JP to UCS4.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define MIN_NEEDED_INPUT	FROM_LOOP_MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	FROM_LOOP_MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	FROM_LOOP_MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT	FROM_LOOP_MAX_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
@@ -537,9 +543,10 @@ static const cvlist_t conversion_lists[4] =
     /* TAG_language_zh */ CVLIST (chinese, european, japanese, korean, other)
   };
 
-#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_OUTPUT	(MAX_NEEDED_FROM + 2)
+#define MIN_NEEDED_INPUT	TO_LOOP_MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	TO_LOOP_MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	TO_LOOP_MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT	TO_LOOP_MAX_NEEDED_TO
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \

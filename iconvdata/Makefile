@@ -50,7 +50,8 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   ISO-2022-CN libISOIR165 UTF-16 UNICODE UTF-32 UTF-7 BIG5HKSCS \
 	   GB18030 ISO-2022-CN-EXT VISCII GBBIG5 CP10007 KOI8-T		 \
 	   GEORGIAN-PS GEORGIAN-ACADEMY ISO-IR-209 MAC-SAMI ARMSCII-8	 \
-	   TCVN5712-1 libJISX0213 EUC-JISX0213 SHIFT_JISX0213
+	   TCVN5712-1 libJISX0213 EUC-JISX0213 SHIFT_JISX0213		 \
+	   ISO-2022-JP-3
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -89,6 +90,8 @@ $(objpfx)SHIFT_JISX0213.so: $(objpfx)libJISX0213.so
 LDFLAGS-ISO-2022-JP.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)ISO-2022-JP.so: $(objpfx)libJIS.so $(objpfx)libGB.so \
 			 $(objpfx)libCNS.so $(objpfx)libKSC.so
+LDFLAGS-ISO-2022-JP-3.so = $(LDFLAGS-rpath-ORIGIN)
+$(objpfx)ISO-2022-JP-3.so: $(objpfx)libJIS.so $(objpfx)libJISX0213.so
 LDFLAGS-ISO-2022-KR.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)ISO-2022-KR.so: $(objpfx)libKSC.so
 LDFLAGS-ISO-2022-CN.so = $(LDFLAGS-rpath-ORIGIN)
@@ -159,7 +162,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      koi8-t.c georgian-ps.c georgian-academy.c iso-ir-209.c	    \
 	      mac-sami.c ibm1160.c ibm1160.h ibm1161.c ibm1161.h	    \
 	      ibm1163.c ibm1163.h ibm1164.c ibm1164.h jisx0213.c jisx0213.h \
-	      euc-jisx0213.c shift_jisx0213.c
+	      euc-jisx0213.c shift_jisx0213.c iso-2022-jp-3.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))

@@ -1,5 +1,5 @@
 /* Conversion from and to IBM933.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@yamato.ibm.co.jp>, 2000.
 
@@ -32,10 +32,14 @@
 #define CHARSET_NAME	"IBM933//"
 #define FROM_LOOP	from_ibm933
 #define TO_LOOP		to_ibm933
-#define MIN_NEEDED_FROM	1
-#define MAX_NEEDED_FROM	2
-#define MIN_NEEDED_TO	4
-#define MAX_NEEDED_TO	4
+#define FROM_LOOP_MIN_NEEDED_FROM	1
+#define FROM_LOOP_MAX_NEEDED_FROM	2
+#define FROM_LOOP_MIN_NEEDED_TO		4
+#define FROM_LOOP_MAX_NEEDED_TO		4
+#define TO_LOOP_MIN_NEEDED_FROM		4
+#define TO_LOOP_MAX_NEEDED_FROM		4
+#define TO_LOOP_MIN_NEEDED_TO		1
+#define TO_LOOP_MAX_NEEDED_TO		3
 #define PREPARE_LOOP \
   int save_curcs;							      \
   int *curcsp = &data->__statep->__count;
@@ -88,9 +92,10 @@ enum
 };
 
 /* First, define the conversion function from IBM-933 to UCS4.  */
-#define MIN_NEEDED_INPUT  	MIN_NEEDED_FROM
-#define MAX_NEEDED_INPUT  	MAX_NEEDED_FROM
-#define MIN_NEEDED_OUTPUT 	MIN_NEEDED_TO
+#define MIN_NEEDED_INPUT	FROM_LOOP_MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	FROM_LOOP_MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	FROM_LOOP_MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT	FROM_LOOP_MAX_NEEDED_TO
 #define LOOPFCT 		FROM_LOOP
 #define BODY \
   {									      \
@@ -192,9 +197,10 @@ enum
 #include <iconv/loop.c>
 
 /* Next, define the other direction.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
+#define MIN_NEEDED_INPUT	TO_LOOP_MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	TO_LOOP_MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	TO_LOOP_MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT	TO_LOOP_MAX_NEEDED_TO
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
@@ -221,7 +227,7 @@ enum
       ++rp1;								      \
 									      \
     /* Use the UCS4 table for single byte.  */				      \
-    if (__builtin_expect (ch < rp1->start, 0)			      \
+    if (__builtin_expect (ch < rp1->start, 0)				      \
 	|| (cp = __ucs4_to_ibm933sb[ch + rp1->idx],			      \
 	    __builtin_expect (cp[0], L'\1') == L'\0' && ch != '\0'))	      \
       {									      \

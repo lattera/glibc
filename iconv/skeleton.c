@@ -37,6 +37,27 @@
 			This macro is optional, it defaults to MIN_NEEDED_FROM.
      MAX_NEEDED_TO	likewise for the to-charset.
 
+     FROM_LOOP_MIN_NEEDED_FROM
+     FROM_LOOP_MAX_NEEDED_FROM
+                        minimal/maximal number of bytes needed on input
+                        of one round through the FROM_LOOP.  Defaults
+                        to MIN_NEEDED_FROM and MAX_NEEDED_FROM, respectively.
+     FROM_LOOP_MIN_NEEDED_TO
+     FROM_LOOP_MAX_NEEDED_TO
+                        minimal/maximal number of bytes needed on output
+                        of one round through the FROM_LOOP.  Defaults
+                        to MIN_NEEDED_TO and MAX_NEEDED_TO, respectively.
+     TO_LOOP_MIN_NEEDED_FROM
+     TO_LOOP_MAX_NEEDED_FROM
+                        minimal/maximal number of bytes needed on input
+                        of one round through the TO_LOOP.  Defaults
+                        to MIN_NEEDED_TO and MAX_NEEDED_TO, respectively.
+     TO_LOOP_MIN_NEEDED_TO
+     TO_LOOP_MAX_NEEDED_TO
+                        minimal/maximal number of bytes needed on output
+                        of one round through the TO_LOOP.  Defaults
+                        to MIN_NEEDED_FROM and MAX_NEEDED_FROM, respectively.
+
      DEFINE_DIRECTION_OBJECTS
 			two objects will be defined to be used when the
 			`gconv' function must only distinguish two
@@ -50,11 +71,11 @@
 
      EMIT_SHIFT_TO_INIT	this symbol is optional.  If it is defined it
 			defines some code which writes out a sequence
-			of characters which bring the current state into
+			of bytes which bring the current state into
 			the initial state.
 
      FROM_LOOP		name of the function implementing the conversion
-			from the current characters.
+			from the current character set.
      TO_LOOP		likewise for the other direction
 
      ONE_DIRECTION	optional.  If defined to 1, only one conversion
@@ -79,6 +100,24 @@
 
      EXTRA_LOOP_ARGS	optional macro specifying extra arguments passed
 			to loop function.
+
+   Modules can use mbstate_t to store conversion state as follows:
+
+   * Bits 2..0 of '__count' contain the number of lookahead input bytes
+     stored in __value.__wchb.  Always zero if the converter never
+     returns __GCONV_INCOMPLETE_INPUT.
+
+   * Bits 31..3 of '__count' are module dependent shift state.
+
+   * __value: When STORE_REST/UNPACK_BYTES aren't defined and when the
+     converter has returned __GCONV_INCOMPLETE_INPUT, this contains
+     at most 4 lookahead bytes. Converters with an mb_cur_max > 4
+     (currently only UTF-8) must find a way to store their state
+     in __value.__wch and define STORE_REST/UNPACK_BYTES appropriately.
+
+   When __value contains lookahead, __count must not be zero, because
+   the converter is not in the initial state then, and mbsinit() --
+   defined as a (__count == 0) test -- must reflect this.
  */
 
 #include <assert.h>
@@ -119,6 +158,32 @@ static int to_object;
 /* Same for the to-charset.  */
 #ifndef MAX_NEEDED_TO
 # define MAX_NEEDED_TO		MIN_NEEDED_TO
+#endif
+
+/* Defaults for the per-direction min/max constants.  */
+#ifndef FROM_LOOP_MIN_NEEDED_FROM
+# define FROM_LOOP_MIN_NEEDED_FROM	MIN_NEEDED_FROM
+#endif
+#ifndef FROM_LOOP_MAX_NEEDED_FROM
+# define FROM_LOOP_MAX_NEEDED_FROM	MAX_NEEDED_FROM
+#endif
+#ifndef FROM_LOOP_MIN_NEEDED_TO
+# define FROM_LOOP_MIN_NEEDED_TO	MIN_NEEDED_TO
+#endif
+#ifndef FROM_LOOP_MAX_NEEDED_TO
+# define FROM_LOOP_MAX_NEEDED_TO	MAX_NEEDED_TO
+#endif
+#ifndef TO_LOOP_MIN_NEEDED_FROM
+# define TO_LOOP_MIN_NEEDED_FROM	MIN_NEEDED_TO
+#endif
+#ifndef TO_LOOP_MAX_NEEDED_FROM
+# define TO_LOOP_MAX_NEEDED_FROM	MAX_NEEDED_TO
+#endif
+#ifndef TO_LOOP_MIN_NEEDED_TO
+# define TO_LOOP_MIN_NEEDED_TO		MIN_NEEDED_FROM
+#endif
+#ifndef TO_LOOP_MAX_NEEDED_TO
+# define TO_LOOP_MAX_NEEDED_TO		MAX_NEEDED_FROM
 #endif
 
 
@@ -192,21 +257,40 @@ static int to_object;
 /* For conversions from a fixed width character set to another fixed width
    character set we can define RESET_INPUT_BUFFER in a very fast way.  */
 #if !defined RESET_INPUT_BUFFER && !defined SAVE_RESET_STATE
-# if MIN_NEEDED_FROM == MAX_NEEDED_FROM && MIN_NEEDED_TO == MAX_NEEDED_TO
-/* We have to use these `#if's here since the compiler cannot know that
-   (outbuf - outerr) is always divisible by MIN_NEEDED_TO.  We have to
-   use preprocessor arithmetic and no C code because gcc 3.2 complains
-   about division by zero even in obviously dead code.  */
-#  if MIN_NEEDED_FROM % MIN_NEEDED_TO == 0
-#   define RESET_INPUT_BUFFER \
-  *inptrp -= (outbuf - outerr) * (MIN_NEEDED_FROM / MIN_NEEDED_TO)
-#  elif MIN_NEEDED_TO % MIN_NEEDED_FROM == 0
-#   define RESET_INPUT_BUFFER \
-  *inptrp -= (outbuf - outerr) / (MIN_NEEDED_TO / MIN_NEEDED_FROM)
-#  else
-#   define RESET_INPUT_BUFFER \
-  *inptrp -= ((outbuf - outerr) / MIN_NEEDED_TO) * MIN_NEEDED_FROM
-#  endif
+# if FROM_LOOP_MIN_NEEDED_FROM == FROM_LOOP_MAX_NEEDED_FROM \
+     && FROM_LOOP_MIN_NEEDED_TO == FROM_LOOP_MAX_NEEDED_TO \
+     && TO_LOOP_MIN_NEEDED_FROM == TO_LOOP_MAX_NEEDED_FROM \
+     && TO_LOOP_MIN_NEEDED_TO == TO_LOOP_MAX_NEEDED_TO
+/* We have to use these `if's here since the compiler cannot know that
+   (outbuf - outerr) is always divisible by FROM/TO_LOOP_MIN_NEEDED_TO.
+   The ?:1 avoids division by zero warnings that gcc 3.2 emits even for
+   obviously unreachable code.  */
+#  define RESET_INPUT_BUFFER \
+  if (FROM_DIRECTION)							      \
+    {									      \
+      if (FROM_LOOP_MIN_NEEDED_FROM % FROM_LOOP_MIN_NEEDED_TO == 0)	      \
+	*inptrp -= (outbuf - outerr)					      \
+		   * (FROM_LOOP_MIN_NEEDED_FROM / FROM_LOOP_MIN_NEEDED_TO);   \
+      else if (FROM_LOOP_MIN_NEEDED_TO % FROM_LOOP_MIN_NEEDED_FROM == 0)      \
+	*inptrp -= (outbuf - outerr)					      \
+		   / (FROM_LOOP_MIN_NEEDED_TO / FROM_LOOP_MIN_NEEDED_FROM     \
+		      ? : 1);						      \
+      else								      \
+	*inptrp -= ((outbuf - outerr) / FROM_LOOP_MIN_NEEDED_TO)	      \
+		   * FROM_LOOP_MIN_NEEDED_FROM;				      \
+    }									      \
+  else									      \
+    {									      \
+      if (TO_LOOP_MIN_NEEDED_FROM % TO_LOOP_MIN_NEEDED_TO == 0)		      \
+	*inptrp -= (outbuf - outerr)					      \
+		   * (TO_LOOP_MIN_NEEDED_FROM / TO_LOOP_MIN_NEEDED_TO);	      \
+      else if (TO_LOOP_MIN_NEEDED_TO % TO_LOOP_MIN_NEEDED_FROM == 0)	      \
+	*inptrp -= (outbuf - outerr)					      \
+		   / (TO_LOOP_MIN_NEEDED_TO / TO_LOOP_MIN_NEEDED_FROM ? : 1); \
+      else								      \
+	*inptrp -= ((outbuf - outerr) / TO_LOOP_MIN_NEEDED_TO)		      \
+		   * TO_LOOP_MIN_NEEDED_FROM;				      \
+    }
 # endif
 #endif
 
@@ -227,19 +311,19 @@ gconv_init (struct __gconv_step *step)
     {
       step->__data = &from_object;
 
-      step->__min_needed_from = MIN_NEEDED_FROM;
-      step->__max_needed_from = MAX_NEEDED_FROM;
-      step->__min_needed_to = MIN_NEEDED_TO;
-      step->__max_needed_to = MAX_NEEDED_TO;
+      step->__min_needed_from = FROM_LOOP_MIN_NEEDED_FROM;
+      step->__max_needed_from = FROM_LOOP_MAX_NEEDED_FROM;
+      step->__min_needed_to = FROM_LOOP_MIN_NEEDED_TO;
+      step->__max_needed_to = FROM_LOOP_MAX_NEEDED_TO;
     }
   else if (__builtin_expect (strcmp (step->__to_name, CHARSET_NAME), 0) == 0)
     {
       step->__data = &to_object;
 
-      step->__min_needed_from = MIN_NEEDED_TO;
-      step->__max_needed_from = MAX_NEEDED_TO;
-      step->__min_needed_to = MIN_NEEDED_FROM;
-      step->__max_needed_to = MAX_NEEDED_FROM;
+      step->__min_needed_from = TO_LOOP_MIN_NEEDED_FROM;
+      step->__max_needed_from = TO_LOOP_MAX_NEEDED_FROM;
+      step->__min_needed_to = TO_LOOP_MIN_NEEDED_TO;
+      step->__max_needed_to = TO_LOOP_MAX_NEEDED_TO;
     }
   else
     return __GCONV_NOCONV;
@@ -403,27 +487,45 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	 actually converted.  */
       size_t lirreversible = 0;
       size_t *lirreversiblep = irreversible ? &lirreversible : NULL;
-#if defined _STRING_ARCH_unaligned \
-    || MIN_NEEDED_FROM == 1 || MAX_NEEDED_FROM % MIN_NEEDED_FROM != 0 \
-    || MIN_NEEDED_TO == 1 || MAX_NEEDED_TO % MIN_NEEDED_TO != 0
-# define unaligned 0
-#else
+
+      /* The following assumes that encodings, which have a variable length
+	 what might unalign a buffer even though it is a aligned in the
+	 beginning, either don't have the minimal number of bytes as a divisor
+	 of the maximum length or have a minimum length of 1.  This is true
+	 for all known and supported encodings.
+	 We use && instead of || to combine the subexpression for the FROM
+	 encoding and for the TO encoding, because usually one of them is
+	 INTERNAL, for which the subexpression evaluates to 1, but INTERNAL
+	 buffers are always aligned correctly.  */
+#define POSSIBLY_UNALIGNED \
+  (!defined _STRING_ARCH_unaligned					      \
+   && (((FROM_LOOP_MIN_NEEDED_FROM != 1					      \
+	 && FROM_LOOP_MAX_NEEDED_FROM % FROM_LOOP_MIN_NEEDED_FROM == 0)	      \
+	&& (FROM_LOOP_MIN_NEEDED_TO != 1				      \
+	    && FROM_LOOP_MAX_NEEDED_TO % FROM_LOOP_MIN_NEEDED_TO == 0))	      \
+       || ((TO_LOOP_MIN_NEEDED_FROM != 1				      \
+	    && TO_LOOP_MAX_NEEDED_FROM % TO_LOOP_MIN_NEEDED_FROM == 0)	      \
+	   && (TO_LOOP_MIN_NEEDED_TO != 1				      \
+	       && TO_LOOP_MAX_NEEDED_TO % TO_LOOP_MIN_NEEDED_TO == 0))))
+#if POSSIBLY_UNALIGNED
       int unaligned;
 # define GEN_unaligned(name) GEN_unaligned2 (name)
 # define GEN_unaligned2(name) name##_unaligned
+#else
+# define unaligned 0
 #endif
 
 #ifdef PREPARE_LOOP
       PREPARE_LOOP
 #endif
 
-#if MAX_NEEDED_FROM > 1 || MAX_NEEDED_TO > 1
+#if FROM_LOOP_MAX_NEEDED_FROM > 1 || TO_LOOP_MAX_NEEDED_FROM > 1
       /* If the function is used to implement the mb*towc*() or wc*tomb*()
 	 functions we must test whether any bytes from the last call are
 	 stored in the `state' object.  */
-      if (((MAX_NEEDED_FROM > 1 && MAX_NEEDED_TO > 1)
-	   || (MAX_NEEDED_FROM > 1 && FROM_DIRECTION)
-	   || (MAX_NEEDED_TO > 1 && !FROM_DIRECTION))
+      if (((FROM_LOOP_MAX_NEEDED_FROM > 1 && TO_LOOP_MAX_NEEDED_FROM > 1)
+	   || (FROM_LOOP_MAX_NEEDED_FROM > 1 && FROM_DIRECTION)
+	   || (TO_LOOP_MAX_NEEDED_FROM > 1 && !FROM_DIRECTION))
 	  && consume_incomplete && (data->__statep->__count & 7) != 0)
 	{
 	  /* Yep, we have some bytes left over.  Process them now.
@@ -431,18 +533,20 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
              error handler.  */
 	  assert (outbufstart == NULL);
 
-# if MAX_NEEDED_FROM > 1
-	  if (MAX_NEEDED_TO == 1 || FROM_DIRECTION)
+# if FROM_LOOP_MAX_NEEDED_FROM > 1
+	  if (TO_LOOP_MAX_NEEDED_FROM == 1 || FROM_DIRECTION)
 	    status = SINGLE(FROM_LOOP) (step, data, inptrp, inend, &outbuf,
 					outend, lirreversiblep
 					EXTRA_LOOP_ARGS);
 # endif
-# if MAX_NEEDED_FROM > 1 && MAX_NEEDED_TO > 1 && !ONE_DIRECTION
+# if !ONE_DIRECTION
+#  if FROM_LOOP_MAX_NEEDED_FROM > 1 && TO_LOOP_MAX_NEEDED_FROM > 1
 	  else
-# endif
-# if MAX_NEEDED_TO > 1 && !ONE_DIRECTION
+#  endif
+#  if TO_LOOP_MAX_NEEDED_FROM > 1
 	    status = SINGLE(TO_LOOP) (step, data, inptrp, inend, &outbuf,
 				      outend, lirreversiblep EXTRA_LOOP_ARGS);
+#  endif
 # endif
 
 	  if (__builtin_expect (status, __GCONV_OK) != __GCONV_OK)
@@ -450,22 +554,16 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	}
 #endif
 
-#if !defined _STRING_ARCH_unaligned \
-    && MIN_NEEDED_FROM != 1 && MAX_NEEDED_FROM % MIN_NEEDED_FROM == 0 \
-    && MIN_NEEDED_TO != 1 && MAX_NEEDED_TO % MIN_NEEDED_TO == 0
-      /* The following assumes that encodings, which have a variable length
-	 what might unalign a buffer even though it is a aligned in the
-	 beginning, either don't have the minimal number of bytes as a divisor
-	 of the maximum length or have a minimum length of 1.  This is true
-	 for all known and supported encodings.  */
-      unaligned = ((FROM_DIRECTION
-		    && ((uintptr_t) inptr % MIN_NEEDED_FROM != 0
-			|| ((data->__flags & __GCONV_IS_LAST)
-			    && (uintptr_t) outbuf % MIN_NEEDED_TO != 0)))
-		   || (!FROM_DIRECTION
-		       && (((data->__flags & __GCONV_IS_LAST)
-			    && (uintptr_t) outbuf % MIN_NEEDED_FROM != 0)
-			   || (uintptr_t) inptr % MIN_NEEDED_TO != 0)));
+#if POSSIBLY_UNALIGNED
+      unaligned =
+	((FROM_DIRECTION
+	  && ((uintptr_t) inptr % FROM_LOOP_MIN_NEEDED_FROM != 0
+	      || ((data->__flags & __GCONV_IS_LAST)
+		  && (uintptr_t) outbuf % FROM_LOOP_MIN_NEEDED_TO != 0)))
+	 || (!FROM_DIRECTION
+	     && (((data->__flags & __GCONV_IS_LAST)
+		  && (uintptr_t) outbuf % TO_LOOP_MIN_NEEDED_TO != 0)
+		 || (uintptr_t) inptr % TO_LOOP_MIN_NEEDED_FROM != 0)));
 #endif
 
       while (1)
@@ -492,9 +590,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 		status = TO_LOOP (step, data, inptrp, inend, &outbuf, outend,
 				  lirreversiblep EXTRA_LOOP_ARGS);
 	    }
-#if !defined _STRING_ARCH_unaligned \
-    && MIN_NEEDED_FROM != 1 && MAX_NEEDED_FROM % MIN_NEEDED_FROM == 0 \
-    && MIN_NEEDED_TO != 1 && MAX_NEEDED_TO % MIN_NEEDED_TO == 0
+#if POSSIBLY_UNALIGNED
 	  else
 	    {
 	      if (FROM_DIRECTION)
@@ -589,9 +685,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 					       lirreversiblep
 					       EXTRA_LOOP_ARGS);
 			}
-# if !defined _STRING_ARCH_unaligned \
-     && MIN_NEEDED_FROM != 1 && MAX_NEEDED_FROM % MIN_NEEDED_FROM == 0 \
-     && MIN_NEEDED_TO != 1 && MAX_NEEDED_TO % MIN_NEEDED_TO == 0
+# if POSSIBLY_UNALIGNED
 		      else
 			{
 			  if (FROM_DIRECTION)
@@ -650,10 +744,10 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 
       /* If we are supposed to consume all character store now all of the
 	 remaining characters in the `state' object.  */
-#if MAX_NEEDED_FROM > 1 || MAX_NEEDED_TO > 1
-      if (((MAX_NEEDED_FROM > 1 && MAX_NEEDED_TO > 1)
-	   || (MAX_NEEDED_FROM > 1 && FROM_DIRECTION)
-	   || (MAX_NEEDED_TO > 1 && !FROM_DIRECTION))
+#if FROM_LOOP_MAX_NEEDED_FROM > 1 || TO_LOOP_MAX_NEEDED_FROM > 1
+      if (((FROM_LOOP_MAX_NEEDED_FROM > 1 && TO_LOOP_MAX_NEEDED_FROM > 1)
+	   || (FROM_LOOP_MAX_NEEDED_FROM > 1 && FROM_DIRECTION)
+	   || (TO_LOOP_MAX_NEEDED_FROM > 1 && !FROM_DIRECTION))
 	  && __builtin_expect (consume_incomplete, 0)
 	  && status == __GCONV_INCOMPLETE_INPUT)
 	{
@@ -675,6 +769,8 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 # endif
 	}
 #endif
+#undef unaligned
+#undef POSSIBLY_UNALIGNED
     }
 
   return status;
@@ -687,6 +783,14 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 #undef MIN_NEEDED_TO
 #undef MAX_NEEDED_FROM
 #undef MAX_NEEDED_TO
+#undef FROM_LOOP_MIN_NEEDED_FROM
+#undef FROM_LOOP_MAX_NEEDED_FROM
+#undef FROM_LOOP_MIN_NEEDED_TO
+#undef FROM_LOOP_MAX_NEEDED_TO
+#undef TO_LOOP_MIN_NEEDED_FROM
+#undef TO_LOOP_MAX_NEEDED_FROM
+#undef TO_LOOP_MIN_NEEDED_TO
+#undef TO_LOOP_MAX_NEEDED_TO
 #undef DEFINE_DIRECTION_OBJECTS
 #undef FROM_DIRECTION
 #undef EMIT_SHIFT_TO_INIT

@@ -69,8 +69,23 @@ __old_semctl (int semid, int semnum, int cmd, ...)
 
   va_start (ap, cmd);
 
-  /* Get the argument.  */
-  arg = va_arg (ap, union semun);
+  /* Get the argument only if required.  */
+  arg.buf = NULL;
+  switch (cmd)
+    {
+    case SETVAL:        /* arg.val */
+    case GETALL:        /* arg.array */
+    case SETALL:
+    case IPC_STAT:      /* arg.buf */
+    case IPC_SET:
+    case SEM_STAT:
+    case IPC_INFO:      /* arg.__buf */
+    case SEM_INFO:
+      va_start (ap, cmd);
+      arg = va_arg (ap, union semun);
+      va_end (ap);
+      break;
+    }
 
   va_end (ap);
 
@@ -88,8 +103,23 @@ __new_semctl (int semid, int semnum, int cmd, ...)
 
   va_start (ap, cmd);
 
-  /* Get the argument.  */
-  arg = va_arg (ap, union semun);
+  /* Get the argument only if required.  */
+  arg.buf = NULL;
+  switch (cmd)
+    {
+    case SETVAL:        /* arg.val */
+    case GETALL:        /* arg.array */
+    case SETALL:
+    case IPC_STAT:      /* arg.buf */
+    case IPC_SET:
+    case SEM_STAT:
+    case IPC_INFO:      /* arg.__buf */
+    case SEM_INFO:
+      va_start (ap, cmd);
+      arg = va_arg (ap, union semun);
+      va_end (ap);
+      break;
+    }
 
   va_end (ap);
 

@@ -1,3 +1,14 @@
+libc {
+  GLIBC_2.0 {
+    # Functions from libgcc.
+    __divdi3; __moddi3; __udivdi3; __umoddi3;
+    __cmpdi2; __ucmpdi2;
+    __ashldi3; __ashrdi3; __lshrdi3;
+    __fixdfdi; __fixunsdfdi;
+    __fixsfdi; __fixunssfdi;
+  }
+}
+
 libm {
   GLIBC_2.1 {
     # symbols used in macros from sysdeps/powerpc/bits/fenv.h

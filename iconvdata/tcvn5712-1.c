@@ -30,10 +30,14 @@
 #define TO_LOOP			to_tcvn5712_1
 #define DEFINE_INIT		1
 #define DEFINE_FINI		1
-#define MIN_NEEDED_FROM		1
-#define MAX_NEEDED_FROM		2
-#define MIN_NEEDED_TO		4
-#define MAX_NEEDED_TO		8
+#define FROM_LOOP_MIN_NEEDED_FROM	1
+#define FROM_LOOP_MAX_NEEDED_FROM	1
+#define FROM_LOOP_MIN_NEEDED_TO		4
+#define FROM_LOOP_MAX_NEEDED_TO		4
+#define TO_LOOP_MIN_NEEDED_FROM		4
+#define TO_LOOP_MAX_NEEDED_FROM		4
+#define TO_LOOP_MIN_NEEDED_TO		1
+#define TO_LOOP_MAX_NEEDED_TO		2
 #define PREPARE_LOOP \
   int saved_state;							      \
   int *statep = &data->__statep->__count;
@@ -356,10 +360,10 @@ static const struct
 
 
 /* First define the conversion function from TCVN5712-1 to UCS4.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
-#define MAX_NEEDED_OUTPUT	MAX_NEEDED_TO
+#define MIN_NEEDED_INPUT	FROM_LOOP_MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	FROM_LOOP_MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	FROM_LOOP_MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT	FROM_LOOP_MAX_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
@@ -599,9 +603,10 @@ static const struct
 
 
 /* Next, define the other direction.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
+#define MIN_NEEDED_INPUT	TO_LOOP_MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	TO_LOOP_MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	TO_LOOP_MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT	TO_LOOP_MAX_NEEDED_TO
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \

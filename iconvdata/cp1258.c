@@ -1,5 +1,5 @@
 /* Conversion from and to CP1258.
-   Copyright (C) 1998, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998,
    and Bruno Haible <haible@clisp.cons.org>, 2001.
@@ -32,10 +32,14 @@
 #define TO_LOOP			to_cp1258
 #define DEFINE_INIT		1
 #define DEFINE_FINI		1
-#define MIN_NEEDED_FROM		1
-#define MAX_NEEDED_FROM		1
-#define MIN_NEEDED_TO		4
-#define MAX_NEEDED_TO		4
+#define FROM_LOOP_MIN_NEEDED_FROM	1
+#define FROM_LOOP_MAX_NEEDED_FROM	1
+#define FROM_LOOP_MIN_NEEDED_TO		4
+#define FROM_LOOP_MAX_NEEDED_TO		4
+#define TO_LOOP_MIN_NEEDED_FROM		4
+#define TO_LOOP_MAX_NEEDED_FROM		4
+#define TO_LOOP_MIN_NEEDED_TO		1
+#define TO_LOOP_MAX_NEEDED_TO		2
 #define PREPARE_LOOP \
   int saved_state;							      \
   int *statep = &data->__statep->__count;
@@ -358,9 +362,10 @@ static const struct
     { COMP_TABLE_IDX_0323, COMP_TABLE_LEN_0323 }
   };
 
-#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
-#define MAX_NEEDED_OUTPUT	8
+#define MIN_NEEDED_INPUT	FROM_LOOP_MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	FROM_LOOP_MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	FROM_LOOP_MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT	FROM_LOOP_MAX_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
@@ -748,9 +753,10 @@ static const struct
     { 0x1fee, 0xa8, 0xec },
   };
 
-#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_OUTPUT	2
+#define MIN_NEEDED_INPUT	TO_LOOP_MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	TO_LOOP_MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	TO_LOOP_MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT	TO_LOOP_MAX_NEEDED_TO
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
