@@ -1,13 +1,13 @@
 # GNU libc message catalog for swedish
 # Copyright © 1996, 1998, 2001, 2002, 2003 Free Software Foundation, Inc.
 # Jan Dj‰rv <jan.h.d@swipnet.se>, 1996, 1998, 2001, 2002, 2003.
-# Revision: 1.45
+# Revision: 1.46
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3.2\n"
 "POT-Creation-Date: 2003-02-22 15:34-0800\n"
-"PO-Revision-Date: 2003-03-03 21:11+0100\n"
+"PO-Revision-Date: 2003-03-04 18:46+0100\n"
 "Last-Translator: Jan Dj‰rv <jan.h.d@swipnet.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -4702,7 +4702,7 @@ msgstr "\tTyp          : %s\n"
 
 #: nis/nis_print.c:239
 msgid "\tAccess rights: "
-msgstr "\t≈tkomstr‰ttigheter: "
+msgstr "\tR‰ttigheter  : "
 
 #: nis/nis_print.c:252
 msgid "Group Flags :"
@@ -4729,7 +4729,7 @@ msgstr "Antal kolumner      : %d\n"
 #: nis/nis_print.c:268
 #, c-format
 msgid "Character Separator : %c\n"
-msgstr "Teckenseparator: %c\n"
+msgstr "Teckenseparator     : %c\n"
 
 #: nis/nis_print.c:269
 #, c-format
@@ -4751,7 +4751,7 @@ msgstr "\t\tAttribut      : "
 
 #: nis/nis_print.c:277
 msgid "\t\tAccess Rights : "
-msgstr "\t\t≈tkomstr‰ttigheter: "
+msgstr "\t\tR‰ttigheter   : "
 
 #: nis/nis_print.c:286
 msgid "Linked Object Type : "
@@ -4802,7 +4802,7 @@ msgstr "Grupp         : %s\n"
 
 #: nis/nis_print.c:324
 msgid "Access Rights : "
-msgstr "≈tkomstr‰ttigheter: "
+msgstr "R‰ttigheter   : "
 
 #: nis/nis_print.c:326
 msgid ""
@@ -4815,7 +4815,7 @@ msgstr ""
 #: nis/nis_print.c:329
 #, c-format
 msgid "Creation Time : %s"
-msgstr "Skapad: %s"
+msgstr "Skapad        : %s"
 
 #: nis/nis_print.c:331
 #, c-format
