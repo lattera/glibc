@@ -3,8 +3,13 @@ Wed Apr 19 18:40:11 1995  Brendan Kehoe  (brendan@zen.org)
 	* time/tzset.c (__tzname, __daylight, __timezone): Don't check
 	HAVE_WEAK_SYBMOLS for doing weak_alias.
 
-Tue Apr 18 14:00:19 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+Wed Apr 19 18:12:56 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* configure.in: Move $os tests to set $elf et al earlier, before
+ 	construction of $sysnames.  Instead of prepending MACHINE/elf to
+ 	$sysnames, append &/elf after each elt appended to $mach.
+
+Tue Apr 18 14:00:19 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* configure.in (libc_cv_asm_global_directive): New check to define
  	ASM_GLOBAL_DIRECTIVE.
 	* config.h.in: Add #undef ASM_GLOBAL_DIRECTIVE.
