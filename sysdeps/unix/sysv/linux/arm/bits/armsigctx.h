@@ -1,5 +1,5 @@
 /* Definition of `struct sigcontext' for Linux/ARM
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,9 @@
 /* The format of struct sigcontext changed between 2.0 and 2.1 kernels.
    Fortunately 2.0 puts a magic number in the first word and this is not
    a legal value for `trap_no', so we can tell them apart.  */
+
+#ifndef __ARMSIGCTX_H
+#define __ARMSIGCTX_H	1
 
 #include <asm/ptrace.h>
 
@@ -59,3 +62,5 @@ union k_sigcontext
 };
 
 #define SIGCONTEXT_2_0_MAGIC	0x4B534154
+
+#endif	/* bits/armsigctx.h */

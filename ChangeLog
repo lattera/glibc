@@ -1,3 +1,10 @@
+1999-08-31  Scott Bambrough  <scottb@netwinder.org>
+
+	* sysdeps/unix/sysv/linux/arm/bits/armsigctx.h: Enclose header in an
+	#ifdef statement to prevent it from being included twice.
+	* sysdeps/unix/sysv/linux/arm/sigcontextinfo.h:
+	#include <bits/armsigctx.h>.
+
 1999-08-31  Andreas Schwab  <schwab@suse.de>
 
 	* locale/C-collate.c: Add missing initialisations.
