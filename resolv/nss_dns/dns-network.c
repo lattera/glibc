@@ -110,7 +110,12 @@ _nss_dns_getnetbyname_r (const char *name, struct netent *result,
 			 int *herrnop)
 {
   /* Return entry for network with NAME.  */
-  querybuf *net_buffer, *orig_net_buffer;
+  union
+  {
+    querybuf *buf;
+    u_char *ptr;
+  } net_buffer;
+  querybuf *orig_net_buffer;
   int anslen;
   char *qbuf;
   enum nss_status status;
@@ -120,25 +125,25 @@ _nss_dns_getnetbyname_r (const char *name, struct netent *result,
 
   qbuf = strdupa (name);
 
-  net_buffer = orig_net_buffer = (querybuf *) alloca (1024);
+  net_buffer.buf = orig_net_buffer = (querybuf *) alloca (1024);
 
-  anslen = __libc_res_nsearch (&_res, qbuf, C_IN, T_PTR, net_buffer->buf,
-			       1024, (u_char **) &net_buffer);
+  anslen = __libc_res_nsearch (&_res, qbuf, C_IN, T_PTR, net_buffer.buf->buf,
+			       1024, &net_buffer.ptr);
   if (anslen < 0)
     {
       /* Nothing found.  */
       *errnop = errno;
-      if (net_buffer != orig_net_buffer)
-	free (net_buffer);
+      if (net_buffer.buf != orig_net_buffer)
+	free (net_buffer.buf);
       return (errno == ECONNREFUSED
 	      || errno == EPFNOSUPPORT
 	      || errno == EAFNOSUPPORT)
 	? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
     }
 
-  status = getanswer_r (net_buffer, anslen, result, buffer, buflen, BYNAME);
-  if (net_buffer != orig_net_buffer)
-    free (net_buffer);
+  status = getanswer_r (net_buffer.buf, anslen, result, buffer, buflen, BYNAME);
+  if (net_buffer.buf != orig_net_buffer)
+    free (net_buffer.buf);
   return status;
 }
 
@@ -150,7 +155,12 @@ _nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
 {
   /* Return entry for network with NAME.  */
   enum nss_status status;
-  querybuf *net_buffer, *orig_net_buffer;
+  union
+  {
+    querybuf *buf;
+    u_char *ptr;
+  } net_buffer;
+  querybuf *orig_net_buffer;
   unsigned int net_bytes[4];
   char qbuf[MAXDNAME];
   int cnt, anslen;
@@ -190,26 +200,26 @@ _nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
       break;
     }
 
-  net_buffer = orig_net_buffer = (querybuf *) alloca (1024);
+  net_buffer.buf = orig_net_buffer = (querybuf *) alloca (1024);
 
-  anslen = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR, net_buffer->buf,
-			      1024, (u_char **) &net_buffer);
+  anslen = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR, net_buffer.buf->buf,
+			      1024, &net_buffer.ptr);
   if (anslen < 0)
     {
       /* Nothing found.  */
       int err = errno;
       __set_errno (olderr);
-      if (net_buffer != orig_net_buffer)
-	free (net_buffer);
+      if (net_buffer.buf != orig_net_buffer)
+	free (net_buffer.buf);
       return (err == ECONNREFUSED
 	      || err == EPFNOSUPPORT
 	      || err == EAFNOSUPPORT)
 	? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
     }
 
-  status = getanswer_r (net_buffer, anslen, result, buffer, buflen, BYADDR);
-  if (net_buffer != orig_net_buffer)
-    free (net_buffer);
+  status = getanswer_r (net_buffer.buf, anslen, result, buffer, buflen, BYADDR);
+  if (net_buffer.buf != orig_net_buffer)
+    free (net_buffer.buf);
   if (status == NSS_STATUS_SUCCESS)
     {
       /* Strip trailing zeros.  */

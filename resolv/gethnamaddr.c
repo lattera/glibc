@@ -262,9 +262,9 @@ getanswer(answer, anslen, qname, qtype)
 		cp += n;			/* name */
 		BOUNDS_CHECK(cp, 3 * INT16SZ + INT32SZ);
 		type = ns_get16(cp);
- 		cp += INT16SZ;			/* type */
+		cp += INT16SZ;			/* type */
 		class = ns_get16(cp);
- 		cp += INT16SZ + INT32SZ;	/* class, TTL */
+		cp += INT16SZ + INT32SZ;	/* class, TTL */
 		n = ns_get16(cp);
 		cp += INT16SZ;			/* len */
 		BOUNDS_CHECK(cp, n);
@@ -510,7 +510,12 @@ gethostbyname2(name, af)
 	const char *name;
 	int af;
 {
-	querybuf *buf, *origbuf;
+	union
+	{
+	  querybuf *buf;
+	  u_char *ptr;
+	} buf;
+	querybuf *origbuf;
 	register const char *cp;
 	char *bp;
 	int n, size, type, len;
@@ -616,20 +621,20 @@ gethostbyname2(name, af)
 				break;
 		}
 
-	buf = origbuf = (querybuf *) alloca (1024);
+	buf.buf = origbuf = (querybuf *) alloca (1024);
 
-	if ((n = __libc_res_nsearch(&_res, name, C_IN, type, buf->buf, 1024,
-				    (u_char **) &buf)) < 0) {
-		if (buf != origbuf)
-			free (buf);
+	if ((n = __libc_res_nsearch(&_res, name, C_IN, type, buf.buf->buf, 1024,
+				    &buf.ptr)) < 0) {
+		if (buf.buf != origbuf)
+			free (buf.buf);
 		dprintf("res_nsearch failed (%d)\n", n);
 		if (errno == ECONNREFUSED)
 			return (_gethtbyname2(name, af));
 		return (NULL);
 	}
-	ret = getanswer(buf, n, name, type);
-	if (buf != origbuf)
-		free (buf);
+	ret = getanswer(buf.buf, n, name, type);
+	if (buf.buf != origbuf)
+		free (buf.buf);
 	return ret;
 }
 
@@ -644,7 +649,12 @@ gethostbyaddr(addr, len, af)
 	static const u_char tunnelled[] = { 0,0, 0,0, 0,0, 0,0, 0,0, 0,0 };
 	int n;
 	socklen_t size;
-	querybuf *buf, *orig_buf;
+	union
+	{
+	  querybuf *buf;
+	  u_char *ptr;
+	} buf;
+	querybuf *orig_buf;
 	register struct hostent *hp;
 	char qbuf[MAXDNAME+1], *qp = NULL;
 #ifdef SUNSECURITY
@@ -706,27 +716,27 @@ gethostbyaddr(addr, len, af)
 		abort();
 	}
 
-	buf = orig_buf = (querybuf *) alloca (1024);
+	buf.buf = orig_buf = (querybuf *) alloca (1024);
 
-	n = __libc_res_nquery(&_res, qbuf, C_IN, T_PTR, buf->buf, 1024,
-			      (u_char **) &buf);
+	n = __libc_res_nquery(&_res, qbuf, C_IN, T_PTR, buf.buf->buf, 1024,
+			      &buf.ptr);
 	if (n < 0 && af == AF_INET6) {
 		strcpy(qp, "ip6.int");
-		n = __libc_res_nquery(&_res, qbuf, C_IN, T_PTR, buf->buf,
-				      buf != orig_buf ? MAXPACKET : 1024,
-				      (u_char **) &buf);
+		n = __libc_res_nquery(&_res, qbuf, C_IN, T_PTR, buf.buf->buf,
+				      buf.buf != orig_buf ? MAXPACKET : 1024,
+				      &buf.ptr);
 	}
 	if (n < 0) {
-		if (buf != orig_buf)
-			free (buf);
+		if (buf.buf != orig_buf)
+			free (buf.buf);
 		dprintf("res_nquery failed (%d)\n", n);
 		if (errno == ECONNREFUSED)
 			return (_gethtbyaddr(addr, len, af));
 		return (NULL);
 	}
-	hp = getanswer(buf, n, qbuf, T_PTR);
-	if (buf != orig_buf)
-		free (buf);
+	hp = getanswer(buf.buf, n, qbuf, T_PTR);
+	if (buf.buf != orig_buf)
+		free (buf.buf);
 	if (!hp)
 		return (NULL);	/* h_errno was set by getanswer() */
 #ifdef SUNSECURITY
