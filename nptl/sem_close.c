@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -17,13 +17,65 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <semaphore.h>
+#include <errno.h>
+#include <search.h>
 #include <sys/mman.h>
+#include "semaphoreP.h"
+
+
+/* Global variables to parametrize the walk function.  This works
+   since we always have to use locks.  And we have to use the twalk
+   function since the entries are not sorted wrt the mapping
+   address.  */
+static sem_t *the_sem;
+static struct inuse_sem *rec;
+
+static void
+walker (const void *inodep, const VISIT which, const int depth)
+{
+  struct inuse_sem *nodep = *(struct inuse_sem **) inodep;
+
+  if (nodep->sem == the_sem)
+    rec = nodep;
+}
 
 
 int
 sem_close (sem)
      sem_t *sem;
 {
-  return munmap (sem, sizeof (sem_t));
+  int result = 0;
+
+  /* Get the lock.  */
+  lll_lock (__sem_mappings_lock);
+
+  /* Locate the entry for the mapping the caller provided.  */
+  rec = NULL;
+  the_sem = sem;
+  twalk (__sem_mappings, walker);
+  if  (rec != NULL)
+    {
+      /* Check the reference counter.  If it is going to be zero, free
+	 all the resources.  */
+      if (--rec->refcnt == 0)
+	{
+	  /* Remove the record from the tree.  */
+	  (void) tdelete (rec, &__sem_mappings, __sem_search);
+
+	  result = munmap (rec->sem, sizeof (sem_t));
+
+	  free (rec);
+	}
+    }
+  else
+    {
+      /* This is no valid semaphore.  */
+      result = -1;
+      __set_errno (EINVAL);
+    }
+
+  /* Release the lock.  */
+  lll_unlock (__sem_mappings_lock);
+
+  return result;
 }
