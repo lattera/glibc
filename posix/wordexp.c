@@ -1018,6 +1018,7 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
   int colon_seen = 0;
   int depth = 0;
   int seen_hash = 0;
+  int free_value = 0;
   int error;
 
   for (; words[*offset]; ++(*offset))
@@ -1285,7 +1286,6 @@ envsubst:
       if (isdigit(*env))
 	{
 	  int n = *env - '0';
-	  char *param;
 
 	  free (env);
 	  if (n >= __libc_argc)
@@ -1293,12 +1293,8 @@ envsubst:
 	    return 0;
 
 	  /* Replace with the appropriate positional parameter */
-	  param = __strdup (__libc_argv[n]);
-	  if (!param)
-	    return WRDE_NOSPACE;
-
-	  *word = w_addstr (*word, word_length, max_length, param);
-	  return *word ? 0 : WRDE_NOSPACE;
+	  value = __libc_argv[n];
+	  goto maybe_fieldsplit;
 	}
       /* Is it `$$' ? */
       else if (*env == '$')
@@ -1347,6 +1343,7 @@ envsubst:
 		}
 	    }
 
+	  free_value = 1;
 	  if (value)
 	    goto maybe_fieldsplit;
 
@@ -1666,31 +1663,42 @@ envsubst:
       return *word ? 0 : WRDE_NOSPACE;
     }
 
-
  maybe_fieldsplit:
   if (quoted || !pwordexp)
     {
       /* Quoted - no field split */
       *word = w_addstr (*word, word_length, max_length, value);
+      if (free_value)
+	free (value);
+
       return *word ? 0 : WRDE_NOSPACE;
     }
   else
     {
       /* Need to field-split */
-      char *field_begin = value;
+      char *value_copy = __strdup (value); /* Don't modify value */
+      char *field_begin = value_copy;
       int seen_nonws_ifs = 0;
+
+      if (free_value)
+	free (value);
+
+      if (value_copy == NULL)
+	return WRDE_NOSPACE;
 
       do
 	{
 	  char *field_end = field_begin;
 	  char *next_field;
-	  char ch;
 
 	  /* If this isn't the first field, start a new word */
-	  if (field_begin != value)
+	  if (field_begin != value_copy)
 	    {
 	      if (w_addword (pwordexp, *word) == WRDE_NOSPACE)
-		return WRDE_NOSPACE;
+		{
+		  free (value_copy);
+		  return WRDE_NOSPACE;
+		}
 
 	      *word = NULL;
 	      *word_length = *max_length = 0;
@@ -1710,8 +1718,7 @@ envsubst:
 	    field_end++;
 
 	  /* Set up pointer to the character after end of field */
-	  ch = *field_end;
-	  next_field = ch ? field_end : NULL;
+	  next_field = *field_end ? field_end : NULL;
 
 	  /* Skip whitespace IFS after the field */
 	  while (next_field && *next_field && strchr (ifs_white, *next_field))
@@ -1729,13 +1736,19 @@ envsubst:
 	  *field_end = 0;
 
 	  /* Tag a copy onto the current word */
-	  *word = w_addstr (*word, word_length, max_length,
-			    __strdup (field_begin));
+	  *word = w_addstr (*word, word_length, max_length, field_begin);
+
 	  if (*word == NULL)
-	    return WRDE_NOSPACE;
+	    {
+	      free (value_copy);
+	      return WRDE_NOSPACE;
+	    }
 
 	  field_begin = next_field;
-	} while (seen_nonws_ifs || (field_begin && *field_begin));
+	}
+      while (seen_nonws_ifs || (field_begin != NULL && *field_begin));
+
+      free (value_copy);
     }
 
   return 0;

@@ -1,3 +1,21 @@
+1998-03-14 00:52  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp.c (parse_param): Perform field-splitting after
+	expanding positional parameter.
+
+	* posix/wordexp-tst.sh: Test that field-splitting is performed
+	after expanding positional parameter.
+
+	* posix/wordexp.c (parse_param): Fixed memory leak in
+	field-splitting after parameter expansion.
+
+1998-03-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/linereader.c (lr_token): Return EOF token at
+	EOF.
+	(get_toplvl_escape): Correctly terminate loop at EOF.
+	Patch by Cristian Gafton <gafton@redhat.com>.
+
 1998-03-13 16:55  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/tester.c (test_strpbrk): Add more strpbrk tests.

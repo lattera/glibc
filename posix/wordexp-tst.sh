@@ -61,11 +61,13 @@ we_wordv[0] = "5"
 EOF
 
 ${elf_objpfx}${rtld_installed_name} --library-path ${common_objpfx} \
-${common_objpfx}posix/wordexp-test '$2 ${3}' 2nd 3rd > ${testout}6
-cat <<"EOF" | cmp - ${testout}6 || failed=1
+${common_objpfx}posix/wordexp-test '$2 ${3} $4' 2nd 3rd "4 th" > ${testout}7
+cat <<"EOF" | cmp - ${testout}7 || failed=1
 wordexp returned 0
 we_wordv[0] = "2nd"
 we_wordv[1] = "3rd"
+we_wordv[2] = "4"
+we_wordv[3] = "th"
 EOF
 
 exit $failed

@@ -840,7 +840,7 @@ __strsep_g (char **__s, __const char *__reject)
   register char *__retval = *__s;
   if (__retval == NULL || *__retval == '\0')
     return NULL;
-  if ((*__s = strpbrk (__retval, __reject)) != '\0')
+  if ((*__s = strpbrk (__retval, __reject)) != NULL)
     *(*__s)++ = '\0';
   return __retval;
 }

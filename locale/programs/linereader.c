@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -159,6 +159,12 @@ lr_token (struct linereader *lr, const struct charset_t *charset)
 	{
 	  ch = lr_getc (lr);
 
+	  if (ch == EOF)
+	    {
+	      lr->token.tok = tok_eof;
+	      return &lr->token;
+	    };
+
 	  if (ch == '\n')
 	    {
 	      lr->token.tok = tok_eol;
@@ -283,7 +289,7 @@ get_toplvl_escape (struct linereader *lr)
 	esc_error:
 	  lr->token.val.str.start = &lr->buf[start_idx];
 
-	  while (ch != EOF || !isspace (ch))
+	  while (ch != EOF && !isspace (ch))
 	    ch = lr_getc (lr);
 	  lr->token.val.str.len = lr->idx - start_idx;
 
