@@ -1,6 +1,6 @@
 /* Convert characters in input buffer using conversion descriptor to
    output buffer.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -47,7 +47,7 @@ __gconv (__gconv_t cd, const unsigned char **inbuf,
     /* We just flush.  */
     result = DL_CALL_FCT (cd->__steps->__fct,
 			   (cd->__steps, cd->__data, NULL, NULL,
-			    converted, 1));
+			    converted, 1, 0));
   else
     {
       const unsigned char *last_start;
@@ -59,7 +59,7 @@ __gconv (__gconv_t cd, const unsigned char **inbuf,
 	  last_start = *inbuf;
 	  result = DL_CALL_FCT (cd->__steps->__fct,
 				 (cd->__steps, cd->__data, inbuf, inbufend,
-				  converted, 0));
+				  converted, 0, 0));
 	}
       while (result == __GCONV_EMPTY_INPUT && last_start != *inbuf
 	     && *inbuf + cd->__steps->__min_needed_from <= inbufend);
