@@ -25,7 +25,7 @@ SYSCALL (sethostid, 1)
 
 #else
 
-#include <errnos.h>
+#include <bits/errno.h>
 
 .globl _sethostid
 .even
