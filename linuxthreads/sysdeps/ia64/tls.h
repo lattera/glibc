@@ -22,6 +22,7 @@
 
 #ifndef __ASSEMBLER__
 
+# include <dl-sysdep.h>
 # include <pt-machine.h>
 # include <stddef.h>
 
@@ -80,11 +81,18 @@ typedef struct
 #  define GET_DTV(tcbp) \
   (((tcbhead_t *) (tcbp))->dtv)
 
+#if defined NEED_DL_SYSINFO
+# define INIT_SYSINFO \
+  (((tcbhead_t *)__thread_self)->private = GL(dl_sysinfo))
+#else
+# define INIT_SYSINFO 0
+#endif
+
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 #  define TLS_INIT_TP(tcbp, secondcall) \
-  (__thread_self = (__typeof (__thread_self)) (tcbp), NULL)
+  (__thread_self = (__typeof (__thread_self)) (tcbp), INIT_SYSINFO, NULL)
 
 /* Return the address of the dtv for the current thread.  */
 #  define THREAD_DTV() \

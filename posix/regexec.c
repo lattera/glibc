@@ -453,8 +453,7 @@ re_copy_regs (regs, pmatch, nregs, regs_allocated)
 
   /* Have the register data arrays been allocated?  */
   if (regs_allocated == REGS_UNALLOCATED)
-    { /* No.  So allocate them with malloc.  We allocate the arrays
-	 for the start and end in one block.  */
+    { /* No.  So allocate them with malloc.  */
       regs->start = re_malloc (regoff_t, need_regs);
       regs->end = re_malloc (regoff_t, need_regs);
       if (BE (regs->start == NULL, 0) || BE (regs->end == NULL, 0))
@@ -467,10 +466,12 @@ re_copy_regs (regs, pmatch, nregs, regs_allocated)
 	 leave it alone.  */
       if (BE (need_regs > regs->num_regs, 0))
 	{
-	  regs->start = re_realloc (regs->start, regoff_t, need_regs);
-	  regs->end = re_realloc (regs->end, regoff_t, need_regs);
-	  if (BE (regs->start == NULL, 0) || BE (regs->end == NULL, 0))
+	  regoff_t *new_start = re_realloc (regs->start, regoff_t, need_regs);
+	  regoff_t *new_end = re_realloc (regs->end, regoff_t, need_regs);
+	  if (BE (new_start == NULL, 0) || BE (new_end == NULL, 0))
 	    return REGS_UNALLOCATED;
+	  regs->start = new_start;
+	  regs->end = new_end;
 	  regs->num_regs = need_regs;
 	}
     }
@@ -1133,7 +1134,7 @@ proceed_next_node (preg, nregs, regs, mctx, pidx, node, eps_via_nodes, fs)
       int ndest, dest_nodes[2];
       err = re_node_set_insert (eps_via_nodes, node);
       if (BE (err < 0, 0))
-	return -1;
+	return -2;
       /* Pick up valid destinations.  */
       for (ndest = 0, i = 0; i < dfa->edests[node].nelem; ++i)
 	{
@@ -1149,8 +1150,10 @@ proceed_next_node (preg, nregs, regs, mctx, pidx, node, eps_via_nodes, fs)
       /* In order to avoid infinite loop like "(a*)*".  */
       if (re_node_set_contains (eps_via_nodes, dest_nodes[0]))
 	return dest_nodes[1];
-      if (fs != NULL)
-	push_fail_stack (fs, *pidx, dest_nodes, nregs, regs, eps_via_nodes);
+      if (fs != NULL
+	  && push_fail_stack (fs, *pidx, dest_nodes, nregs, regs,
+			      eps_via_nodes))
+	return -2;
       return dest_nodes[0];
     }
   else
@@ -1220,11 +1223,11 @@ push_fail_stack (fs, str_idx, dests, nregs, regs, eps_via_nodes)
   if (fs->num == fs->alloc)
     {
       struct re_fail_stack_ent_t *new_array;
-      fs->alloc *= 2;
       new_array = realloc (fs->stack, (sizeof (struct re_fail_stack_ent_t)
-				       * fs->alloc));
+				       * fs->alloc * 2));
       if (new_array == NULL)
 	return REG_ESPACE;
+      fs->alloc *= 2;
       fs->stack = new_array;
     }
   fs->stack[num].idx = str_idx;
@@ -1246,7 +1249,7 @@ pop_fail_stack (fs, pidx, nregs, regs, eps_via_nodes)
 {
   int num = --fs->num;
   assert (num >= 0);
- *pidx = fs->stack[num].idx;
+  *pidx = fs->stack[num].idx;
   memcpy (regs, fs->stack[num].regs, sizeof (regmatch_t) * nregs);
   re_node_set_free (eps_via_nodes);
   re_free (fs->stack[num].regs);
@@ -1328,8 +1331,12 @@ set_regs (preg, mctx, nmatch, pmatch, fl_backtrack)
 
       if (BE (cur_node < 0, 0))
 	{
-	  if (cur_node == -2)
-	    return REG_ESPACE;
+	  if (BE (cur_node == -2, 0))
+	    {
+	      re_node_set_free (&eps_via_nodes);
+	      free_fail_stack_return (fs);
+	      return REG_ESPACE;
+	    }
 	  if (fs)
 	    cur_node = pop_fail_stack (fs, &idx, nmatch, pmatch,
 				       &eps_via_nodes);
@@ -2911,21 +2918,12 @@ check_arrival_add_next_nodes (preg, dfa, mctx, str_idx, cur_nodes, next_nodes)
 		      re_node_set_free (&union_set);
 		      return err;
 		    }
-		  err = re_node_set_insert (&union_set, next_node);
-		  if (BE (err < 0, 0))
-		    {
-		      re_node_set_free (&union_set);
-		      return REG_ESPACE;
-		    }
 		}
-	      else
+	      err = re_node_set_insert (&union_set, next_node);
+	      if (BE (err < 0, 0))
 		{
-		  err = re_node_set_insert (&union_set, next_node);
-		  if (BE (err < 0, 0))
-		    {
-		      re_node_set_free (&union_set);
-		      return REG_ESPACE;
-		    }
+		  re_node_set_free (&union_set);
+		  return REG_ESPACE;
 		}
 	      mctx->state_log[next_idx] = re_acquire_state (&err, dfa,
 							    &union_set);
