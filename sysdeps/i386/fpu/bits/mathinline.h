@@ -240,7 +240,7 @@ __inline_mathcode (__pow2, __x, \
       return __value;							      \
     }									      \
   __asm __volatile__							      \
-    ("fldl	%%st(0)\n\t"						      \
+    ("fld	%%st(0)\n\t"						      \
      "frndint			# int(x)\n\t"				      \
      "fxch\n\t"								      \
      "fsub	%%st(1)		# fract(x)\n\t"				      \

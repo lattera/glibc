@@ -81,11 +81,11 @@ stamp-summary: summary.awk $(filter-out summary.texi, $(texis))
 # Generate a file which can be added to the `dir' content to provide direct
 # access to the documentation of the function, variables, and other
 # definitions.
-dir-add.texinfo: xtract-typefun.awk $(texis)
-	(echo "@dircategory GNU C library functions";			\
-	 echo "@direntry";						\
-	 $(AWK) -f $^;							\
-	 echo "@end direntry") > $@.new
+dir-add.info: xtract-typefun.awk $(texis)
+	(echo "INFO-DIR-SECTION GNU C library functions:";		\
+	 echo "START-INFO-DIR-ENTRY";					\
+	 $(AWK) -f $^ | sort;						\
+	 echo "END-INFO-DIR-ENTRY") > $@.new
 	mv -f $@.new $@
 
 # Generate Texinfo files from the C source for the example programs.
@@ -156,12 +156,27 @@ realclean: distclean
 .PHONY: install subdir_install installdirs install-data
 install-data subdir_install: install
 ifneq ($(strip $(MAKEINFO)),)
+# There are two variants of install-info out there.  The GNU version
+# knows about the INFO-DIR-SECTION tag, the Debian version doesn't.
+ifneq ($(OLD_DEBIAN_INSTALL_INFO),yes)
 install: $(inst_infodir)/libc.info dir-add.info
 	@if $(SHELL) -c '$(INSTALL_INFO) --version' >/dev/null 2>&1; then \
-	  test -f $(inst_infodir)/dir || cp dir $(inst_infodir);\
+	 test -f $(inst_infodir)/dir || cp dir $(inst_infodir);\
 	 $(INSTALL_INFO) --info-dir=$(inst_infodir) $(inst_infodir)/libc.info;\
 	 $(INSTALL_INFO) --info-dir=$(inst_infodir) dir-add.info;\
 	else : ; fi
+else
+install: $(inst_infodir)/libc.info dir-add.info
+	@if $(SHELL) -c '$(INSTALL_INFO) --version' >/dev/null 2>&1; then \
+	  test -f $(inst_infodir)/dir || cp dir $(inst_infodir);\
+	 $(INSTALL_INFO) --info-dir=$(inst_infodir) \
+	     --section '^GNU Libraries:' 'GNU Libraries:' \
+	     $(inst_infodir)/libc.info;\
+	 $(INSTALL_INFO) --info-dir=$(inst_infodir) \
+	     --section '^GNU C Library functions:' 'GNU C Library functions:' \
+	     dir-add.info;\
+	else : ; fi
+endif
 endif
 # Catchall implicit rule for other installation targets from the parent.
 install-%: ;

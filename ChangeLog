@@ -1,3 +1,34 @@
+1998-11-05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h (__pow2): Fix fldl -> fld.
+
+	* sysdeps/libm-i387/s_fma.S: Optimize a bit.
+	* sysdeps/libm-i387/s_fmaf.S: Likewise.
+
+1998-11-04 19:47 -0500  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* configure.in: Search for install-info and substitute it.
+	Determine whether install-info is the buggy Debian version
+	that doesn't understand INFO-DIR-SECTION.
+	* config.make.in: Add INSTALL_INFO and OLD_DEBIAN_INSTALL_INFO
+	to be substituted.
+	* manual/Makefile: If OLD_DEBIAN_INSTALL_INFO, give
+	install-info the --section argument it needs to work properly.
+	(dir-add.texinfo): Delete target.
+	(dir-add.info): Generate this directly.  Sort entries.  Put a
+	colon at the end of the INFO-DIR-SECTION line.
+	* manual/libc.texinfo: Put a colon at the end of the
+	@dircategory line.
+
+1998-11-05  Paul Eggert  <eggert@twinsun.com>
+
+	* time/mktime.c (__mktime_internal): Adopt the traditional (and
+	problematic) notion of what to do when tm_isdst doesn't match.
+
+1998-11-04  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* posix/PTESTS: Fix spelling.
+
 1998-11-04  Ulrich Drepper  <drepper@cygnus.com>
 
 	* misc/efgcvt_r.c (fcvt_r): Remove code which tries to use libm
@@ -8,20 +39,20 @@
 	* sysdeps/libm-i387/e_hypot.S: New file.
 	* sysdeps/libm-i387/e_hypotf.S: New file.
 
-1998-11-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
- 
-	* elf/dlopenold.c: Compile only if DO_VERSIONING is also defined. 
- 
-1998-11-03  H.J. Lu  <hjl@gnu.org> 
- 
-	* libio/fileops.c (new_do_write): New function. 
-	(_IO_new_do_write): Call new_do_write. 
-	(_IO_new_file_xsputn): Likewise. 
- 
-	* libio/oldfileops.c (old_do_write): New function. 
-	(_IO_old_do_write): Call old_do_write. 
-	(_IO_old_file_xsputn): Likewise. 
- 
+1998-11-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* elf/dlopenold.c: Compile only if DO_VERSIONING is also defined.
+
+1998-11-03  H.J. Lu  <hjl@gnu.org>
+
+	* libio/fileops.c (new_do_write): New function.
+	(_IO_new_do_write): Call new_do_write.
+	(_IO_new_file_xsputn): Likewise.
+
+	* libio/oldfileops.c (old_do_write): New function.
+	(_IO_old_do_write): Call old_do_write.
+	(_IO_old_file_xsputn): Likewise.
+
 1998-11-04  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/mktime.c (__mktime_internal): Correct last change.  We must

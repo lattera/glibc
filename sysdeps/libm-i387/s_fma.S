@@ -1,5 +1,5 @@
 /* Compute (X * Y) + Z as ternary operation.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -23,8 +23,7 @@
 	.text
 ENTRY(__fma)
 	fldl	4(%esp)		// x
-	fldl	12(%esp)	// x : y
-	fmulp			// x * y
+	fmull	12(%esp)	// x * y
 	fldl	20(%esp)	// z : x * y
 	faddp			// (x * y) + z
 	ret

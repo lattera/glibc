@@ -23,8 +23,7 @@
 	.text
 ENTRY(__fmaf)
 	flds	4(%esp)		// x
-	flds	8(%esp)		// x : y
-	fmulp			// x * y
+	fmuls	8(%esp)		// x * y
 	flds	12(%esp)	// z : x * y
 	faddp			// (x * y) + z
 	ret

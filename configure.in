@@ -558,8 +558,37 @@ fi
 AC_SUBST(libc_cv_have_ksh)
 
 AC_PROG_AWK
-AC_PATH_PROGS(PERL, perl, no)
+AC_PATH_PROG(PERL, perl, no)
 AC_SUBST(PERL)
+AC_PATH_PROG(INSTALL_INFO, install-info, no, dnl
+/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin)
+AC_SUBST(INSTALL_INFO)
+if test "$INSTALL_INFO" != "no"; then
+AC_CACHE_CHECK(for old Debian install-info, libc_cv_old_debian_install_info,
+ [mkdir conftest.d
+  # There is a hard ^_ on the next line.  I am open to better ideas.
+  (echo ''
+  echo 'File: dir	Node: Top	This is the top of the INFO tree'
+  echo '* Menu:') >conftest.d/dir
+  (echo 'INFO-DIR-SECTION i-d-s works'
+  echo 'START-INFO-DIR-ENTRY'
+  echo '* Prog: (prog).   Program.'
+  echo 'END-INFO-DIR-ENTRY') >conftest.d/prog.info
+  if $INSTALL_INFO --info-dir=conftest.d conftest.d/prog.info >&AC_FD_CC 2>&1
+  then 
+    if grep -s 'i-d-s works' conftest.d/dir >/dev/null
+    then libc_cv_old_debian_install_info=no
+    else libc_cv_old_debian_install_info=yes
+    fi
+  else libc_cv_old_debian_install_info=no testfailed=t
+  fi
+  rm -fr conftest.d])
+if test -n "$testfailed"
+then AC_MSG_WARN([install-info errored out, check config.log])
+fi
+OLD_DEBIAN_INSTALL_INFO=$libc_cv_old_debian_install_info
+fi
+AC_SUBST(OLD_DEBIAN_INSTALL_INFO)
 
 AC_CACHE_CHECK(for signed size_t type, libc_cv_signed_size_t, [dnl
 echo '#include <stddef.h>
