@@ -23,17 +23,7 @@ break value (instead of the new, requested one).  */
 #include <sysdep.h>
 #include <errnos.h>
 
-#ifndef       HAVE_GNU_LD
-#define _end           end
-#endif
-
-	.extern _end,8
-
-	.data
-
-	.globl __curbrk
-__curbrk:
-	.quad _end
+.comm __curbrk, 8
 
 	.text
 LEAF(__brk, 0)
@@ -42,11 +32,15 @@ LEAF(__brk, 0)
 
 	ldi	v0, __NR_brk
 	call_pal PAL_callsys
+
+	/* Correctly handle the brk(0) query case.  */
+	cmoveq	a0, v0, a0
+
 	subq	a0, v0, t0
 	bne	t0, error
 
 	/* Update __curbrk and return cleanly.  */
-	stl	a0, __curbrk
+	stq	a0, __curbrk
 	mov	zero, v0
 	ret
 
@@ -54,6 +48,6 @@ LEAF(__brk, 0)
 error:	ldi	v0, ENOMEM
 	jmp	zero, syscall_error
 
-	.end __brk
+	END(__brk)
 
 weak_alias (__brk, brk)

@@ -1,16 +1,31 @@
+#include <signal.h>
 #include <stdio.h>
 #include <time.h>
+#include <unistd.h>
 
-main ()
+volatile int gotit = 0;
+
+void
+alarm_handler (int signal)
 {
-  volatile int i;
-  double t1, t2, t;
+    gotit = 1;
+}
 
-  t1 = (double) clock ();
-  for (i = 0; i < 100000; ++i) ;
-  t2 = (double) clock ();
 
-  t = (t2 - t1) / ((double) CLOCKS_PER_SEC);
-  printf ("%f - %f = %f\n",t2,t1,t);
+int
+main (int argc, char ** argv)
+{
+  clock_t start, stop;
+
+  signal(SIGALRM, alarm_handler);
+  alarm(1);
+  start = clock ();
+  while (!gotit);
+  stop = clock ();
+
+  printf ("%ld clock ticks per second (start=%ld,stop=%ld)\n",
+	  stop - start, start, stop);
+  printf ("CLOCKS_PER_SEC=%d, sysconf(_SC_CLK_TCK)=%ld\n",
+	  CLOCKS_PER_SEC, sysconf(_SC_CLK_TCK));
   return 0;
 }

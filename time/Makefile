@@ -33,7 +33,7 @@ routines	:= offtime asctime clock ctime difftime gmtime	\
 		   strptime
 
 others	:= ap zdump zic
-tests	:= test_time clocktest
+tests	:= test_time clocktest test-tz
 
 tzfiles := africa antarctica asia australasia europe northamerica \
 	   southamerica etcetera factory systemv backward

@@ -60,6 +60,27 @@ union semun
   struct seminfo *__buf;		/* buffer for IPC_INFO */
 };
 
+#ifdef __USE_MISC
+
+/* ipcs ctl cmds */
+#define SEM_STAT 18
+#define SEM_INFO 19
+
+struct  seminfo {
+    int semmap;
+    int semmni;
+    int semmns;
+    int semmnu;
+    int semmsl;
+    int semopm;
+    int semume;
+    int semusz;
+    int semvmx;
+    int semaem;
+};
+
+#endif /* __USE_MISC */
+
 __END_DECLS
 
 #endif /* sys/sem_buf.h */

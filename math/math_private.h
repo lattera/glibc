@@ -219,7 +219,7 @@ do {								\
 #define GET_LDOUBLE_EXP(exp,d)					\
 do {								\
   ieee_long_double_shape_type ge_u;				\
-  ge_u.value = (d);
+  ge_u.value = (d);						\
   (exp) = ge_u.parts.sign_exponent;				\
 } while (0)
 

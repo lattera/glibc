@@ -69,8 +69,8 @@ struct utmp
   char ut_user[UT_NAMESIZE];	/* Username (not NUL terminated).  */
   char ut_host[UT_HOSTSIZE];	/* Hostname for remote login.  */
   int ut_exit;			/* Process termination/exit status.  */
-  struct timeval ut_tv;		/* Time entry was made.  */
   long ut_session;		/* Session ID, used for windowing.  */
+  struct timeval ut_tv;		/* Time entry was made.  */
   int32_t ut_addr;		/* Internet address of remote host.  */
   char pad[32];			/* Reserved for future use.  */
 };

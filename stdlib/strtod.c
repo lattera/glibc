@@ -57,6 +57,7 @@ Boston, MA 02111-1307, USA.  */
 #include "../locale/localeinfo.h"
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* The gmp headers need some configuration frobs.  */
 #define HAVE_ALLOCA 1

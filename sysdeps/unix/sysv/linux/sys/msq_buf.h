@@ -49,6 +49,28 @@ struct msqid_ds
   __pid_t msg_lrpid;		/* pid of last msgrcv() */
 };
 
+#ifdef __USE_MISC
+
+#define msg_cbytes	__msg_cbytes
+
+/* ipcs ctl commands */
+#define MSG_STAT 11
+#define MSG_INFO 12
+
+/* buffer for msgctl calls IPC_INFO, MSG_INFO */
+struct msginfo {
+    int msgpool;
+    int msgmap; 
+    int msgmax; 
+    int msgmnb; 
+    int msgmni; 
+    int msgssz; 
+    int msgtql; 
+    ushort  msgseg; 
+};
+
+#endif /* __USE_MISC */
+
 __END_DECLS
 
 #endif /* sys/msq_buf.h */

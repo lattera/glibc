@@ -1,4 +1,143 @@
+Wed May 29 00:57:37 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* time/Makefile (tests): Add test-tz.
+
+	* time/test-tz.c: New test.
+
+	* time/clocktest.c: Rewrite to test more meaningfully.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add bdflush,
+ 	create_module, delete_module, get_kernel_syms, init_module,
+ 	klogctl.
+
+	* sysdeps/unix/sysv/linux/sys/param.h (MAXSYMLINKS): Define as 5
+	instead of SYMLOOP_MAX, which is nowhere to be found.
+
+	* sysdeps/unix/sysv/linux/sys/msq_buf.h,
+ 	sysdeps/unix/sysv/linux/sys/sem_buf.h,
+ 	sysdeps/unix/sysv/linux/sys/shm_buf.h [__USE_MISC]: Add more
+ 	control ops and datastructures.
+
+	* sysdeps/unix/sysv/linux/sys/io.h: New file declaring low-level
+ 	I/O related functions.
+
+	* sysdeps/unix/sysv/linux/sys/kdaemon.h: New file declaring kernel
+	daemon related functions/operations.
+
+	* sysdeps/unix/sysv/linux/sys/klog.h: New file declaring kernel
+	logging related functions/operations.
+
+	* sysdeps/unix/sysv/linux/sys/module.h: New file declaring kernel
+	module related functions/operations.
+
+	* sysdeps/unix/sysv/linux/speed.c: Only do "mention this twice" hack
+	for non-Alpha based Linux systems.
+
+	* sysdeps/unix/sysv/linux/alpha/speed.c: Remove.
+
+	* sysdeps/unix/sysv/linux/Makefile (headers): Add sys/module.h,
+	sys/io.h, sys/klog.h, and sys/kdaemon.h.
+
+	* sysdeps/unix/sysdep.h (END): Define empty END macro for
+ 	platforms that don't need some sort of end directive at the
+	end of functions.
+
+	* sysdeps/unix/make-syscalls.sh: Emit END($strong) at end of
+ 	syscall wrapper to allow correct generation of debugging
+ 	information.
+
+	* sysdeps/unix/alpha/sysdep.h (END): Redefine to use .end
+ 	directive for both ELF and ECOFF.
+	(ret): Delete macro.  It was a dangerous macro and unnecessary
+ 	since the Alpha assemblers recognizes "ret" as a macro themselves.
+
+	* sysdeps/gnu/utmpbits.h (struct utmp): Move ut_tv behind
+ 	ut_session to guarantee long alignment.  This is important for
+ 	Linux/Alpha since ut_tv.tv_sec is 32 bits and time_t is 64 bits.
+  	This will all get cleaned up as programs start to use ut_tv
+ 	instead ut_time.
+
+	* sysdeps/alpha/divrem.h: Include <sysdep.h> instead of <*/regdef.h>.
+
+	* sysdeps/alpha/bsd-_setjmp.S (setjmp): Renamed entry point to
+	_setjmp.
+
+	* sysdeps/alpha/_mcount.S, sysdeps/alpha/bb_init_func.S,
+ 	sysdeps/alpha/bsd-_setjmp.S, sysdeps/alpha/bsd-setjmp.S,
+ 	sysdeps/alpha/copysign.S, sysdeps/alpha/divrem.h,
+ 	sysdeps/alpha/fabs.S, sysdeps/alpha/ffs.S, sysdeps/alpha/htonl.S,
+ 	sysdeps/alpha/htons.S, sysdeps/alpha/memchr.S,
+ 	sysdeps/alpha/setjmp.S, sysdeps/alpha/strlen.S,
+ 	sysdeps/unix/sysv/linux/alpha/ieee_get_fp_control.S,
+ 	sysdeps/unix/sysv/linux/alpha/ieee_set_fp_control.S,
+ 	sysdeps/unix/sysv/linux/alpha/llseek.S,
+ 	sysdeps/unix/sysv/linux/alpha/pipe.S,
+ 	sysdeps/unix/sysv/linux/alpha/sigsuspend.S,
+ 	sysdeps/unix/sysv/linux/alpha/sysdep.S: Use END macro instead of
+ 	.end directive.
+
+	* csu/initfini.c (_fini): Tell gcc that _fini is not a leaf
+ 	function by having it contain a dummy function call.
+
+	* configure.in (config_machine): Don't make ELF the default for
+ 	Linux/Alpha just yet (use --with-elf instead).
+	(.init/.fini check): Generate .text to ensure function start and
+ 	end are in same section.
+
+	* sysdeps/unix/bsd/osf/alpha/brk.S,
+ 	sysdeps/unix/sysv/linux/alpha/brk.S (__curbrk): Store the entire
+ 	break value, not just the low 32 bits to accomodate large
+ 	memories.
+
+Tue May 28 10:46:04 1996  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/unix/sysv/linux/alpha/brk.S: Rather than attempt to
+	dynamically resolve _end for initializing __curbrk, support the
+	brk(0) query idiom.
+
+	* sysdeps/alpha/bb_init_func.S: Don't make `init' an external symbol.
+
+	* sysdeps/alpha/bsd-_setjmp.S: The function is _setjmp not setjmp.
+
+Sun May 26 22:17:38 1996  Richard Henderson  <rth@tamu.edu>
+
+	* stdlib/lcong48_r.c, stdlib/seed48_r.c, stdlib/strtod.c,
+	stdlib/strtol.c: Include <string.h> for mem* and str* fns used.
+
+Thu May 23 02:15:56 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (headers): Add sys/io.h,
+ 	sys/klog.h, and sys/kdaemon.h.
+
+	* sysdeps/unix/sysv/linux/sys/io.h: New file.
+	* sysdeps/unix/sysv/linux/sys/klog.h: Ditto.
+	* sysdeps/unix/sysv/linux/sys/kdaemon.h: Ditto.
+
+	* sysdeps/unix/alpha/sysdep.h (ret): Remove macro.  It is
+ 	dangerous and unnecessary since both OSF/1 as and gas define "ret"
+ 	as a pseudo-instruction.
+
+Sat Jun  1 17:18:21 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* time/tzset.c (__tzset): Clear tz_rules name pointers after freeing
+	them.  Bug found by David Mosberger-Tang.
+
+	* sysdeps/posix/tempname.c (__stdio_gen_tempname): Use __ptr_t instead
+	of PTR.
+
+	* extra-lib.mk (extra-objs): Use patsubst intead of $(A:=B) syntax
+	to work around Make bug when A contains var ref.
+
+Fri May 31 18:27:52 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* string/string.h [__USE_MISC]: Declare basename; OSF/1 puts it here.
+
+	* sysdeps/unix/sysv/linux/syscalls.list (getpgid, setpgid): Define __
+	strong names and [gs]etpgid as weak aliases.
+
 Thu May 30 11:24:05 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* math/math_private.h (GET_LDOUBLE_EXP): Add missing backslash.
 
 	* po/header.pot: Replace with exact boilerplate pinard dictates.
 

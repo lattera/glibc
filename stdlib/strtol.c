@@ -39,6 +39,7 @@ extern int errno;
 #ifdef STDC_HEADERS
 # include <stddef.h>
 # include <stdlib.h>
+# include <string.h>
 #else
 # ifndef NULL
 #  define NULL 0

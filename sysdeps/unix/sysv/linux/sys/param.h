@@ -29,7 +29,7 @@ Boston, MA 02111-1307, USA.  */
 #ifndef	NGROUPS
 #define	NGROUPS		NGROUPS_MAX
 #endif
-#define	MAXSYMLINKS	SYMLOOP_MAX
+#define	MAXSYMLINKS	5
 #define	CANBSIZ		MAX_CANON
 #define	NCARGS		ARG_MAX
 #define MAXPATHLEN      PATH_MAX

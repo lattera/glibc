@@ -157,4 +157,4 @@ not_found:
 	mov	zero, v0
 	ret
 
-        .end    memchr
+        END(memchr)

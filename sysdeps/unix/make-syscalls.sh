@@ -61,7 +61,8 @@ EOF
 \$(foreach o,\$(object-suffixes),\$(objpfx)$file\$o): \$(objpfx)s-proto.d
 	(echo '#include <sysdep.h>'; \\
 	 echo 'PSEUDO ($strong, $syscall, $nargs)'; \\
-	 echo '	ret'; \\"
+	 echo '	ret'; \\
+	 echo 'END($strong)'; \\"
 
   # Append any weak aliases defined for this syscall function.
   for name in $weak; do

@@ -85,10 +85,16 @@ DEFUN_VOID(__tzset)
 
   /* Free old storage.  */
   if (tz_rules[0].name != NULL && *tz_rules[0].name != '\0')
-    free((PTR) tz_rules[0].name);
+    {
+      free((PTR) tz_rules[0].name);
+      tz_rules[0].name = NULL;
+    }
   if (tz_rules[1].name != NULL && *tz_rules[1].name != '\0' &&
       tz_rules[1].name != tz_rules[0].name)
-    free((PTR) tz_rules[1].name);
+    {
+      free((PTR) tz_rules[1].name);
+      tz_rules[1].name = NULL;
+    }
 
   /* Examine the TZ environment variable.  */
   tz = getenv ("TZ");

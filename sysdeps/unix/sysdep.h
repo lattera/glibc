@@ -54,3 +54,7 @@ Cambridge, MA 02139, USA.  */
 #else
 #define SYS_ify(syscall_name) SYS_/**/syscall_name
 #endif
+
+/* Terminate a function named SYM.  This is used on some platforms to
+   generate correct debugging information.  */
+#define END(sym)

@@ -24,4 +24,4 @@ ENTRY(fabs)
 	cpys	$f31,$f16,$f0
 	ret
 
-	.end fabs
+	END(fabs)

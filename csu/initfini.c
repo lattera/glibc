@@ -99,6 +99,15 @@ _fini (void)
      to crtn.s-new, followed by the function epilogue.  */
   asm ("\nEOF.crti.fini\
 \n\
+cat > /dev/null <<\\EOF.fini.skip");
+
+  /* Let GCC know that _fini is not a leaf function by having a dummy
+     function call here.  We arrange for this call to be omitted from
+     either crt file.  */
+  i_am_not_a_leaf();
+
+  asm ("\nEOF.fini.skip\
+\n\
 	fgrep .fini crti.s-new >>crtn.s-new\n\
 	cat >> crtn.s-new <<\\EOF.crtn.fini");
 }

@@ -218,7 +218,7 @@ __stdio_gen_tempname (const char *dir, const char *pfx, int dir_search,
 		  errno = save;
 		  return NULL;
 		}
-	      (*streamptr)->__cookie = (PTR) (long int) fd;
+	      (*streamptr)->__cookie = (__ptr_t) (long int) fd;
 	      (*streamptr)->__mode.__write = 1;
 	      (*streamptr)->__mode.__read = 1;
 	      (*streamptr)->__mode.__binary = 1;

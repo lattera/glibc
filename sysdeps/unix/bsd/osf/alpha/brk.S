@@ -41,7 +41,7 @@ ENTRY(__brk)
 
 	/* Update __curbrk and exit cleanly.  */
 /*	ldgp gp, 0(t12) */
-	stl a0, __curbrk
+	stq a0, __curbrk
 
 	mov zero, v0
 	ret

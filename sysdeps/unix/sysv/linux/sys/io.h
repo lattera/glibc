@@ -16,17 +16,24 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sysdep.h>
+#ifndef _SYS_IO_H
+#define _SYS_IO_H
 
-ENTRY(__htons)
-	.prologue 0
-	extwh	a0, 7, t1	# t1 = bb00
-	extbl	a0, 1, v0	# v0 = 00aa
-	bis	v0, t1, v0	# v0 = bbaa
-	ret
+#include <asm/io.h>
 
-	END(__htons)
+/* If TURN_ON is TRUE, request for permission to do direct i/o on the
+   port numbers in the range [FROM,FROM+NUM-1].  Otherwise, turn I/O
+   permission off for that range.  This call requires root privileges.
 
-strong_alias_asm(__htons, __ntohs)
-weak_alias(__htons, htons)
-weak_alias(__htons, ntohs)
+   Portability note: not all Linux platforms support this call.  Most
+   platforms based on the PC I/O architecture probably will, however.
+   E.g., Linux/Alpha for Alpha PCs supports this.  */
+extern int ioperm __P((unsigned long __from, unsigned long __num,
+		       int __turn_on));
+
+/* Set the I/O privilege level to LEVEL.  If LEVEL>3, permission to
+   access any I/O port is granted.  This call requires root
+   privileges. */
+extern int iopl __P((int __level));
+
+#endif /* _SYS_IO_H */

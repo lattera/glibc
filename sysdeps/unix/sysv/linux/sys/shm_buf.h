@@ -38,11 +38,11 @@ __BEGIN_DECLS
 /* Data structure describing a set of semaphores.  */
 struct shmid_ds
 {
-  struct ipc_perm sem_perm;		/* operation permisson struct */
+  struct ipc_perm shm_perm;		/* operation permisson struct */
   int shm_segsz;			/* size of segment in bytes */
-  __time_t sem_atime;			/* time of last shmat() */
-  __time_t sem_dtime;			/* time of last shmdt() */
-  __time_t sem_ctime;			/* time of last change by shmctl() */
+  __time_t shm_atime;			/* time of last shmat() */
+  __time_t shm_dtime;			/* time of last shmdt() */
+  __time_t shm_ctime;			/* time of last change by shmctl() */
   __pid_t shm_cpid;			/* pid of creator */
   __pid_t shm_lpid;			/* pid of last shmop */
   unsigned short int shm_nattch;	/* number of current attaches */
@@ -50,6 +50,35 @@ struct shmid_ds
   unsigned long int *__shm_pages;	/* array of ptrs to frames -> SHMMAX */
   struct vm_area_struct *__attaches;	/* descriptors for attaches */
 };
+
+#ifdef __USE_MISC
+
+/* ipcs ctl commands */
+#define SHM_STAT 	13
+#define SHM_INFO 	14
+
+/* shm_mode upper byte flags */
+#define	SHM_DEST	01000	/* segment will be destroyed on last detach */
+#define SHM_LOCKED      02000   /* segment will not be swapped */
+
+struct	shminfo {
+    int shmmax;	
+    int shmmin;	
+    int shmmni;	
+    int shmseg;	
+    int shmall;	
+};
+
+struct shm_info {
+	int   used_ids;
+	ulong shm_tot; /* total allocated shm */
+	ulong shm_rss; /* total resident shm */
+	ulong shm_swp; /* total swapped shm */
+	ulong swap_attempts;
+	ulong swap_successes;
+};
+
+#endif /* __USE_MISC */
 
 __END_DECLS
 

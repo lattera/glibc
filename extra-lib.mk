@@ -19,7 +19,8 @@ extra-objs := $(extra-objs)
 
 # Add each flavor of library to the lists of things to build and install.
 install-lib += $(foreach o,$(object-suffixes-$(lib)),$(lib:lib%=$(libtype$o)))
-extra-objs += $(foreach o,$(object-suffixes-$(lib)),$($(lib)-routines:=$o))
+extra-objs += $(foreach o,$(object-suffixes-$(lib)),\
+			$(patsubst %,%$o,$($(lib)-routines)))
 alltypes-$(lib) := $(foreach o,$(object-suffixes-$(lib)),\
 			     $(objpfx)$(patsubst %,$(libtype$o),\
 			     $(lib:lib%=%)))

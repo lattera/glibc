@@ -17,7 +17,9 @@ endif
 ifeq ($(subdir), misc)
 sysdep_routines += mount umount xmknod s_ptrace s_sysctl sysctl llseek \
 setfsgid setfsuid sysinfo uselib s_reboot
-headers += sys/mount.h sys/sysinfo.h sys/acct.h sys/sysctl.h
+
+headers += sys/mount.h sys/sysinfo.h sys/acct.h sys/sysctl.h sys/module.h \
+	sys/io.h sys/klog.h sys/kdaemon.h
 
 install-others += $(includedir)/sys/syscall.h
 

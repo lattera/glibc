@@ -24,6 +24,6 @@ ENTRY(__copysign)
 	cpys	$f17,$f16,$f0
 	ret
 
-	.end __copysign
+	END(__copysign)
 
 weak_alias(__copysign, copysign)

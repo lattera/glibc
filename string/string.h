@@ -213,6 +213,11 @@ extern char *strfry __P ((char *__string));
 extern __ptr_t memfrob __P ((__ptr_t __s, size_t __n));
 #endif
 
+#ifdef	__USE_MISC
+/* Return the file name within directory of FILENAME.  */
+extern char *basename __P ((__const char *filename));
+#endif
+
 __END_DECLS
 
 #endif /* string.h  */

@@ -86,13 +86,10 @@ esac
 case "$host_os" in
 gnu* | linux* | sysv4* | solaris2*)
   # These systems always use the ELF format.
-  elf=yes ;;
-esac
-
-# Linux/Alpha does not use ELF yet.
-case "$host_cpu-$host_os" in
-alpha*-linux*)
-  gnu_ld=no elf=no ;;
+  if test "$host_cpu" != alpha; then	# Linux/Alpha is not fully ELF yet
+    elf=yes
+  fi
+  ;;
 esac
 
 machine=$config_machine
@@ -406,7 +403,8 @@ fi
 if test $elf != yes; then
   AC_CACHE_CHECK(for .init and .fini sections, libc_cv_have_initfini,
 		 [AC_TRY_COMPILE(, [asm (".section .init");
-				    asm (".section .fini");],
+				    asm (".section .fini");
+				    asm (".text");],
 				 libc_cv_have_initfini=yes,
 				 libc_cv_have_initfini=no)])
   AC_SUBST(libc_cv_have_initfini)dnl

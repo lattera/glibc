@@ -39,7 +39,9 @@ static const speed_t speeds[] =
     9600,
     19200,
     38400,
+#ifndef __alpha__
     38400,		/* Mention this twice here is a trick.  */
+#endif
     57600,
     115200,
     230400,
