@@ -103,6 +103,10 @@ init1 (int argc, char *arg0, ...)
   char **argv = &arg0;
   char **envp = &argv[argc + 1];
   struct hurd_startup_data *d;
+#ifndef SHARED
+  extern ElfW(Phdr) *_dl_phdr;
+  extern size_t _dl_phnum;
+#endif
 
   while (*envp)
     ++envp;
