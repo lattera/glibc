@@ -76,7 +76,6 @@
 	* sysdeps/generic/bits/types.h: Likewise.
 	* posix/sys/types.h: Define suseconds_t for X/Open.
 
->>>>>>> 1.2438
 1999-07-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/bug1.c: Avoid memory leak.
