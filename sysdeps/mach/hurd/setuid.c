@@ -50,15 +50,15 @@ DEFUN(__setuid, (uid), uid_t uid)
       memcpy (&newgen[1], _hurd_id.gen.uids,
 	      _hurd_id.gen.nuids * sizeof (uid_t));
       newaux[0] = uid;
-      memcpy (&newaux[1], _hurd_id.aux.uids,
+      memcpy (&newaux[1], _hurd_id.aux.uids + 1,
 	      (_hurd_id.aux.nuids - 1) * sizeof (uid_t));
 
       err = __USEPORT (AUTH, __auth_makeauth
 		       (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
-			_hurd_id.gen.uids, _hurd_id.gen.nuids,
-			_hurd_id.aux.uids, _hurd_id.aux.nuids,
 			newgen, 1 + _hurd_id.gen.nuids,
 			newaux, _hurd_id.aux.nuids,
+			_hurd_id.gen.gids, _hurd_id.gen.ngids,
+			_hurd_id.aux.gids, _hurd_id.aux.ngids,
 			&newauth));
     }
   __mutex_unlock (&_hurd_id.lock);
