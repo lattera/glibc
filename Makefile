@@ -282,7 +282,7 @@ parent_echo-distinfo:
 
 # Run a test on the header files we use.
 tests: $(objpfx)isomac
-	$(objpfx)./isomac $(CC) '$(+sysdep-includes)' \
+	$(objpfx)./isomac '$(CC)' '$(+sysdep-includes)' \
 			  >$(common-objpfx)isomac.out
 
 $(objpfx)isomac: isomac.c

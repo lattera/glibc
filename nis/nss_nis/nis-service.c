@@ -204,7 +204,7 @@ _nss_nis_getservbyname_r (const char *name, char *protocol,
   enum nss_status status;
   int found;
 
-  if (name == NULL || protocol == NULL)
+  if (name == NULL)
     {
       __set_errno (EINVAL);
       return NSS_STATUS_UNAVAIL;
@@ -219,7 +219,7 @@ _nss_nis_getservbyname_r (const char *name, char *protocol,
          ((status = internal_nis_getservent_r (serv, buffer, buflen, &data))
           == NSS_STATUS_SUCCESS))
     {
-      if (strcmp (serv->s_proto, protocol) == 0)
+      if (protocol == NULL || strcmp (serv->s_proto, protocol) == 0)
 	{
 	  char **cp;
 

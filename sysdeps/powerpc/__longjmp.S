@@ -62,5 +62,6 @@ ENTRY (__longjmp)
 	lfd 30,((JB_FPRS+16*2)*4)(3)
 	lwz 31,((JB_GPRS+17)*4)(3)
 	lfd 31,((JB_FPRS+17*2)*4)(3)
+	mr 3,4
 	blr
 END (__longjmp)

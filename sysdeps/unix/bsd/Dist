@@ -1,1 +1,4 @@
-bsdtty.h 
+setrgid.c
+setruid.c
+bsdstat.h
+bsdtty.h

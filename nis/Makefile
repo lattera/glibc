@@ -22,15 +22,15 @@
 subdir	:= nis
 
 headers			:= $(wildcard rpcsvc/*.[hx])
-distribute		:= nss-nis.h
+distribute		:= nss-nis.h nss-nisplus.h
 
 # These are the databases available for the nis (and perhaps later nisplus)
 # service.  This must be a superset of the services in nss.
 databases		= proto service hosts network grp pwd rpc ethers \
 			  spwd netgrp alias
 
-# Specify rules for the nss_* modules.  Later we may have nisplus as well.
-services		:= nis compat
+# Specify rules for the nss_* modules.
+services		:= nis compat nisplus
 
 extra-libs		= libnsl $(services:%=libnss_%)
 # These libraries will be built in the `others' pass rather than
@@ -41,7 +41,10 @@ extra-libs-others	= $(extra-libs)
 subdir-dirs = $(services:%=nss_%)
 vpath %.c $(subdir-dirs)
 
-libnsl-routines = yp_xdr ypclnt ypupdate_xdr
+libnsl-routines = yp_xdr ypclnt ypupdate_xdr \
+                  nis_subr nis_local_names nis_free nis_file \
+                  nis_print nis_error nis_call nis_names nis_clone\
+                  nis_table nis_xdr nis_intern nis_server
 
 libnss_compat-routines	:= $(addprefix compat-,grp pwd spwd)
 libnss_compat-inhibit-o	= $(filter-out .so,$(object-suffixes))
@@ -49,6 +52,8 @@ libnss_compat-inhibit-o	= $(filter-out .so,$(object-suffixes))
 libnss_nis-routines	:= $(addprefix nis-,$(databases))
 libnss_nis-inhibit-o	= $(filter-out .so,$(object-suffixes))
 
+libnss_nisplus-routines	:= $(addprefix nisplus-,$(databases))
+libnss_nisplus-inhibit-o = $(filter-out .so,$(object-suffixes))
 
 # Sun's header files are not too clean.
 CFLAGS-compat-pwd.c = -Wno-strict-prototypes
@@ -69,6 +74,32 @@ CFLAGS-nis-spwd.c = -Wno-strict-prototypes
 CFLAGS-ypclnt.c = -Wno-strict-prototypes -Wno-write-strings -Irpcsvc
 CFLAGS-yp_xdr.c = -Wno-strict-prototypes -Irpcsvc
 CFLAGS-ypupdate_xdr.c = -Wno-strict-prototypes -Irpcsvc
+# For the NIS+ Code
+CFLAGS-nis_call.c = -DNO_DES_RPC -Wno-strict-prototypes
+CFLAGS-nis_subr.c = -Wno-strict-prototypes
+CFLAGS-nis_local_names.c = -Wno-strict-prototypes
+CFLAGS-nis_free.c = -Wno-strict-prototypes
+CFLAGS-nis_file.c = -Wno-strict-prototypes
+CFLAGS-nis_print.c = -Wno-strict-prototypes
+CFLAGS-nis_error.c = -Wno-strict-prototypes
+CFLAGS-nis_names.c = -Wno-strict-prototypes
+CFLAGS-nis_clone.c = -Wno-strict-prototypes
+CFLAGS-nis_table.c = -Wno-strict-prototypes
+CFLAGS-nis_server.c = -Wno-strict-prototypes
+CFLAGS-nis_xdr.c = -Wno-strict-prototypes
+CFLAGS-nis_intern.c = -Wno-strict-prototypes
+CFLAGS-nisplus-alias.c = -Wno-strict-prototypes
+CFLAGS-nisplus-ethers.c = -Wno-strict-prototypes
+CFLAGS-nisplus-grp.c = -Wno-strict-prototypes
+CFLAGS-nisplus-hosts.c = -Wno-strict-prototypes
+CFLAGS-nisplus-netgrp.c = -Wno-strict-prototypes
+CFLAGS-nisplus-network.c = -Wno-strict-prototypes
+CFLAGS-nisplus-proto.c = -Wno-strict-prototypes
+CFLAGS-nisplus-publickey.c = -Wno-strict-prototypes
+CFLAGS-nisplus-pwd.c = -Wno-strict-prototypes
+CFLAGS-nisplus-rpc.c = -Wno-strict-prototypes
+CFLAGS-nisplus-service.c = -Wno-strict-prototypes
+CFLAGS-nisplus-spwd.c = -Wno-strict-prototypes
 
 include ../Rules
 
@@ -77,6 +108,7 @@ $(objpfx)libnss_compat.so: $(objpfx)libnsl.so$(libnsl.so-version) \
 			   $(common-objpfx)nss/libnss_files.so
 $(objpfx)libnss_nis.so: $(objpfx)libnsl.so$(libnsl.so-version) \
 			$(common-objpfx)nss/libnss_files.so
+$(objpfx)libnss_nisplus.so: $(objpfx)libnsl.so$(libnsl.so-version)
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by

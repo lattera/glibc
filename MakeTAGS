@@ -87,8 +87,8 @@ sources += $(foreach lib,$(extra-libs),$($(lib)-routines:=.c))
 # Files that are found in the current directory cannot occur in
 # sysdep directories, so don't bother searching them.
 sysdep-sources := $(filter-out $(wildcard $(sources)), $(sources))
-all-sources = $(wildcard $(sort $(sources) $(sources:.c=.S) $(sources:.c=.s) \
-				$(others:=.c) $(tests:=.c))) \
+all-sources = $(wildcard $(sort $(sources) $(sources:.c=.S) $(sources:.c=.s)  \
+				$(others:=.c) $(tests:=.c) $(test-srcs:=.c))) \
 	      $(foreach dir,$(all-dirs),\
 			$(wildcard \
 			   $(addprefix $(dir)/,\

@@ -52,6 +52,29 @@ main (void)
 	jump (value + 1);
     }
 
+  if (!lose && value == 10)
+    {
+      /* Do a second test, this time without `setjmp' being a macro.  */
+#undef setjmp
+      value = setjmp (env);
+      if (value != last_value + 1)
+	{
+	  fputs("Shouldn't have ", stdout);
+	  lose = 1;
+	}
+      last_value = value;
+      switch (value)
+	{
+	case 0:
+	  puts("Saved environment.");
+	  jump (0);
+	default:
+	  printf ("Jumped to %d.\n", value);
+	  if (value < 10)
+	    jump (value + 1);
+	}
+    }
+
   if (lose || value != 10)
     puts ("Test FAILED!");
   else

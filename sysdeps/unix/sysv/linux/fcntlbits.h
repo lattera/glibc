@@ -27,7 +27,6 @@
 #ifdef __USE_GNU
 #define	O_READ		O_RDONLY /* Open for reading.  */
 #define O_WRITE		O_WRONLY /* Open for writing.  */
-#define O_NORW		0	/* Open without R/W access.  */
 #endif
 /* open/fcntl - O_SYNC is only implemented on blocks devices and on files
    located on an ext2 file system */

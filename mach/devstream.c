@@ -147,10 +147,16 @@ output (FILE *f, int c)
     {
       kern_return_t err;
       int wrote;
+      int thiswrite;
+
       while (to_write > 0)
 	{
+	  thiswrite = to_write;
+	  if (thiswrite > IO_INBAND_MAX)
+	    thiswrite = IO_INBAND_MAX;
+
 	  if (err = device_write_inband ((device_t) f->__cookie, 0,
-					 f->__target, p, to_write, &wrote))
+					 f->__target, p, thiswrite, &wrote))
 	    {
 	      errno = err;
 	      f->__error = 1;

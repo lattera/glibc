@@ -64,7 +64,7 @@ __offtime (t, offset, tp)
   while (days < 0 || days >= (__isleap (y) ? 366 : 365))
     {
       /* Guess a corrected year, assuming 365 days per year.  */
-      int yg = y + days / 365 - (days % 365 < 0);
+      long int yg = y + days / 365 - (days % 365 < 0);
 
       /* Adjust DAYS and Y to match the guessed year.  */
       days -= ((yg - y) * 365

@@ -106,6 +106,7 @@ _dl_start (void *arg)
 
   ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0);
 
+  elf_machine_runtime_setup (&bootstrap_map, 0);
 
   /* Now life is sane; we can call functions and access global data.
      Set up to use the operating system facilities, and find out from

@@ -1,0 +1,90 @@
+/* Copyright (C) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1997.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#ifndef _NIS_NSS_NISPLUS_H
+#define _NIS_NSS_NISPLUS_H	1
+
+#include <rpcsvc/nis.h>
+
+#include "nsswitch.h"
+
+
+/* Convert NIS+ error number to NSS error number.  */
+static enum nss_status niserr2nss_tab[] =
+{
+  [NIS_SUCCESS] = NSS_STATUS_SUCCESS,
+  [NIS_S_SUCCESS] = NSS_STATUS_SUCCESS,
+  [NIS_NOTFOUND] = NSS_STATUS_NOTFOUND,
+  [NIS_S_NOTFOUND] = NSS_STATUS_TRYAGAIN,
+  [NIS_CACHEEXPIRED] = NSS_STATUS_UNAVAIL,
+  [NIS_NAMEUNREACHABLE] = NSS_STATUS_TRYAGAIN,
+  [NIS_UNKNOWNOBJ] = NSS_STATUS_NOTFOUND,
+  [NIS_TRYAGAIN] = NSS_STATUS_TRYAGAIN,
+  [NIS_SYSTEMERROR] = NSS_STATUS_UNAVAIL,	/* Maybe TRYAGAIN ? */
+  [NIS_CHAINBROKEN] = NSS_STATUS_UNAVAIL,
+  [NIS_PERMISSION] = NSS_STATUS_UNAVAIL,
+  [NIS_NOTOWNER] = NSS_STATUS_UNAVAIL,
+  [NIS_NOT_ME] = NSS_STATUS_UNAVAIL,
+  [NIS_NOMEMORY] = NSS_STATUS_TRYAGAIN,
+  [NIS_NAMEEXISTS] = NSS_STATUS_UNAVAIL,
+  [NIS_NOTMASTER] = NSS_STATUS_UNAVAIL,
+  [NIS_INVALIDOBJ] = NSS_STATUS_UNAVAIL,
+  [NIS_BADNAME] = NSS_STATUS_UNAVAIL,
+  [NIS_NOCALLBACK] = NSS_STATUS_UNAVAIL,
+  [NIS_CBRESULTS] = NSS_STATUS_UNAVAIL,
+  [NIS_NOSUCHNAME] = NSS_STATUS_NOTFOUND,
+  [NIS_NOTUNIQUE] = NSS_STATUS_UNAVAIL,
+  [NIS_IBMODERROR] = NSS_STATUS_UNAVAIL,
+  [NIS_NOSUCHTABLE] = NSS_STATUS_UNAVAIL,
+  [NIS_TYPEMISMATCH] = NSS_STATUS_UNAVAIL,
+  [NIS_LINKNAMEERROR] = NSS_STATUS_UNAVAIL,
+  [NIS_PARTIAL] = NSS_STATUS_NOTFOUND,
+  [NIS_TOOMANYATTRS] = NSS_STATUS_UNAVAIL,
+  [NIS_RPCERROR] = NSS_STATUS_UNAVAIL,
+  [NIS_BADATTRIBUTE] = NSS_STATUS_UNAVAIL,
+  [NIS_NOTSEARCHABLE] = NSS_STATUS_UNAVAIL,
+  [NIS_CBERROR] = NSS_STATUS_UNAVAIL,
+  [NIS_FOREIGNNS] = NSS_STATUS_UNAVAIL,
+  [NIS_BADOBJECT] = NSS_STATUS_UNAVAIL,
+  [NIS_NOTSAMEOBJ] = NSS_STATUS_UNAVAIL,
+  [NIS_MODFAIL] = NSS_STATUS_UNAVAIL,
+  [NIS_BADREQUEST] = NSS_STATUS_UNAVAIL,
+  [NIS_NOTEMPTY] = NSS_STATUS_UNAVAIL,
+  [NIS_COLDSTART_ERR] = NSS_STATUS_UNAVAIL,
+  [NIS_RESYNC] = NSS_STATUS_UNAVAIL,
+  [NIS_FAIL] = NSS_STATUS_UNAVAIL,
+  [NIS_UNAVAIL] = NSS_STATUS_UNAVAIL,
+  [NIS_RES2BIG] = NSS_STATUS_UNAVAIL,
+  [NIS_SRVAUTH] = NSS_STATUS_UNAVAIL,
+  [NIS_CLNTAUTH] = NSS_STATUS_UNAVAIL,
+  [NIS_NOFILESPACE] = NSS_STATUS_UNAVAIL,
+  [NIS_NOPROC] = NSS_STATUS_TRYAGAIN,
+  [NIS_DUMPLATER] = NSS_STATUS_UNAVAIL
+};
+#define NISERR_COUNT (sizeof (niserr2nss_tab) / sizeof (niserr2nss_tab[0]))
+
+static inline enum nss_status
+niserr2nss (int errval)
+{
+  if ((unsigned int) errval > NISERR_COUNT)
+    return NSS_STATUS_UNAVAIL;
+  return niserr2nss_tab[errval];
+}
+
+#endif /* nis/nss-nisplus.h */

@@ -41,8 +41,8 @@ LINE_PARSER
 
 DB_LOOKUP (servbyname, 1 + strlen (name), (".%s/%s", name, proto),
 	   {
-	     /* Must match both protocol and name.  */
-	     if (strcmp (result->s_proto, proto))
+	     /* Must match both protocol (if specified) and name.  */
+	     if (proto != NULL && strcmp (result->s_proto, proto))
 	       continue;
 	     LOOKUP_NAME (s_name, s_aliases)
 	   },

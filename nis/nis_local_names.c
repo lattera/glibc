@@ -1,0 +1,184 @@
+/* Copyright (c) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#include <errno.h>
+#include <string.h>
+#include <unistd.h>
+#include <rpcsvc/nis.h>
+#include <rpcsvc/nislib.h>
+
+nis_name
+nis_local_group (void)
+{
+  static char __nisgroup[NIS_MAXNAMELEN + 1];
+
+  if (__nisgroup[0] == '\0')
+    {
+      char *cptr;
+
+      if ((cptr = getenv ("NIS_GROUP")) == NULL)
+	return __nisgroup;
+
+      if (strlen (cptr) >= NIS_MAXNAMELEN)
+	return __nisgroup;
+
+      strcpy (__nisgroup, cptr);
+
+      if (__nisgroup[strlen (__nisgroup) - 1] != '.')
+	{
+	  cptr = nis_local_directory ();
+	  if (strlen (__nisgroup) + strlen (cptr) + 1 < NIS_MAXNAMELEN)
+	    {
+	      strcat (__nisgroup, ".");
+	      strcat (__nisgroup, cptr);
+	    }
+	  else
+	    {
+	      __nisgroup[0] = '\0';
+	      return __nisgroup;
+	    }
+	}
+    }
+
+  return __nisgroup;
+}
+
+
+nis_name
+nis_local_directory (void)
+{
+  static char __nisdomainname[NIS_MAXNAMELEN + 1];
+  int len;
+
+  if (__nisdomainname[0] == '\0')
+    {
+      if (getdomainname (__nisdomainname, NIS_MAXNAMELEN) < 0)
+	strcpy (__nisdomainname, "\0");
+      else
+	{
+	  len = strlen (__nisdomainname);
+
+	  /* Missing trailing dot? */
+	  if (__nisdomainname[len - 1] != '.')
+	    {
+	      __nisdomainname[len] = '.';
+	      __nisdomainname[len + 1] = '\0';
+	    }
+	}
+    }
+
+  return __nisdomainname;
+}
+
+nis_name
+nis_local_principal (void)
+{
+  static char __principal[NIS_MAXNAMELEN + 1];
+
+  if (__principal[0] == '\0')
+    {
+      char buf[NIS_MAXNAMELEN + 1];
+      nis_result *res;
+      uid_t uid = geteuid ();
+
+      if (uid != 0)
+	{
+	  snprintf (buf, NIS_MAXNAMELEN - 1,
+		    "[auth_name=%d,auth_type=LOCAL],cred.org_dir.%s",
+		    uid, nis_local_directory ());
+
+	  if (buf[strlen (buf) - 1] != '.')
+	    strcat (buf, ".");
+
+	  res = nis_list (buf, USE_DGRAM + NO_AUTHINFO + FOLLOW_LINKS +
+			  FOLLOW_PATH, NULL, NULL);
+
+	  if (res == NULL)
+	    {
+	      strcpy (__principal, "nobody");
+	      return __principal;
+	    }
+
+	  if (res->status == NIS_SUCCESS)
+	    {
+	      if (res->objects.objects_len > 1)
+		{
+		  /* More than one principal with same uid?  something
+		     wrong with cred table. Should be unique Warn user
+		     and continue.  */
+		  printf (_("\
+LOCAL entry for UID %d in directory %s not unique\n"),
+			  uid, nis_local_directory ());
+		}
+	      strcpy (__principal, ENTRY_VAL (res->objects.objects_val, 0));
+	      nis_freeresult (res);
+	      return __principal;
+	    }
+	  else
+	    {
+	      nis_freeresult (res);
+	      strcpy (__principal, "nobody");
+	      return __principal;
+	    }
+	}
+      else
+	{
+	  strcpy (__principal, nis_local_host ());
+	  return __principal;
+	}
+
+      /* Should be never reached */
+      strcpy (__principal, "nobody");
+      return __principal;
+    }
+  return __principal;
+}
+
+nis_name
+nis_local_host (void)
+{
+  static char __nishostname[NIS_MAXNAMELEN + 1];
+  int len;
+
+  if (__nishostname[0] == '\0')
+    {
+      char *cp = __nishostname;
+
+      if (gethostname (__nishostname, NIS_MAXNAMELEN) < 0)
+	cp = stpcpy (cp, "\0");
+
+      len = cp - __nishostname;
+
+      /* Hostname already fully qualified? */
+      if (__nishostname[len - 1] == '.')
+	return __nishostname;
+
+      if (strlen (__nishostname + strlen (nis_local_directory ()) + 1) >
+	  NIS_MAXNAMELEN)
+	{
+	  __nishostname[0] = '\0';
+	  return __nishostname;
+	}
+
+      *cp++ = '.';
+      stpcpy (cp, nis_local_directory ());
+    }
+
+  return __nishostname;
+}

@@ -25,5 +25,9 @@
 
 ENTRY (_setjmp)
 	li 4,0				/* Set second argument to 0.  */
-	b C_SYMBOL_NAME(__sigsetjmp)
+#ifdef PIC
+	b __sigsetjmp@plt
+#else
+	b __sigsetjmp
+#endif
 END (_setjmp)

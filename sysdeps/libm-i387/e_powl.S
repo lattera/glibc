@@ -64,6 +64,13 @@ nan:	.byte 0, 0, 0, 0, 0, 0, 0xff, 0x7f
 ENTRY(__ieee754_powl)
 	fldt	16(%esp)	// y
 	fxam
+
+#ifdef	PIC
+	call	1f
+1:	popl	%ecx
+	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %ecx
+#endif
+
 	fnstsw
 	movb	%ah, %dl
 	andb	$0x45, %ah
@@ -75,12 +82,6 @@ ENTRY(__ieee754_powl)
 
 	cmpb	$0x01, %ah	// is y == NaN ?
 	je	30f
-
-#ifdef	PIC
-	call	1f
-1:	popl	%ecx
-	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %ecx
-#endif
 
 	fldt	4(%esp)		// x : y
 

@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  1997-02-13
+GNU C Library NEWS -- history of user-visible changes.  1997-03-18
 
 Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -24,6 +24,18 @@ Version 2.1
   numbers
 
 * scanf recognizes the %A format for scanning floating point numbers
+
+* the new header <inttypes.h> from ISO C 9X provides information and
+  interfaces for the available integer types
+
+* the new header <complex.h> contains definitions of the complex math
+  functions from ISO C 9X
+
+* Thorsten Kukuk provided an implementation for NIS+, securelevel 0 and 1.
+  The implementation for securelevel 2 will follow as soon as the Diffie-
+  Hellman patent expired.
+
+* Andreas Jaeger provided a test suite for the math library
 
 Version 2.0.2
 
@@ -32,6 +44,8 @@ Version 2.0.2
 * add atoll function
 
 * fix complex problems in Berkeley DB code
+
+* fix math functions
 
 Version 2.0.1
 

@@ -1,11 +1,193 @@
+1997-03-19 01:40  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/sco3.2.4/Dist: New file.
+
+	* sysdeps/unix/sysv/sysv4/Dist: Add __getpgid.c and __setpgid.c.
+
+	* sysdeps/unix/bsd/Dist: Add bsdstat.h, setrgid.c, and setruid.c.
+
+	* sysdeps/unix/sysv/Dist: Add direct.h.
+
+	* sysdeps/unix/sysv/linux/Dist: Add netinet/tcp.h.
+
+	* Make-dist ($(tardir).tar): Prefer writing temporary file to
+	$TMPDIR is available.  The default is /tmp.
+
+	* sysdeps/generic/ip.h: Move to...
+	* sysdeps/generic/netinet/ip.h: ...here.
+
+	* Makefile (tests): Quote $(CC) argument to isomac program.
+	Patch by H.J. Lu <hjl@gnu.ai.mit.edu>.
+
+	* sysdeps/i386/setjmp.S (__setjmp): Fix fatal bug where 0 argument
+	is placed in wrong place on the stack.
+	Reported by Marc Lehmann <mlehmann@hildesheim.sgh-net.de>.
+	* sysdeps/tst-setjmp.c: Add new test for above problem.
+
+	* sysdeps/libm-i387/e_pow.S: Compute PIC addres early.
+	* sysdeps/libm-i387/e_powf.S: Likewise.
+	* sysdeps/libm-i387/e_powl.S: Likewise.
+
+1997-03-18 23:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/offtime.c (__offtime): Change type of `yg' to long int.
+	Reported by a sun <asun@zoology.washington.edu>.
+
+1997-03-18 23:08  a sun  <asun@zoology.washington.edu>
+
+	* sysdeps/unix/sysv/linux/net/if_ppp.h (PPP_VERSION): Define to
+	2.2.0 to prevent version mismatch.
+
+1997-03-17 19:26  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* stdio-common/printf_fphex.c (MIN): Only define MIN if not
+	already defined.
+
+1997-03-14 23:34  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/unix/sysv/linux/powerpc/termbits.h: Leave ioctl numbers
+	in ioctls.h.
+
+	* elf/rtld.c (_dl_start): Call elf_machine_runtime_setup when the
+	loader first relocates itself.
+	* sysdeps/powerpc/elf/start.c (__start1): Fix bug for static objects.
+	* sysdeps/powerpc/dl-machine.h (elf_machine_rela): Fix bugs in
+	jump slot relocation. Prefer relative branches (some PowerPC chips
+	don't predict absolute branches).
+	(elf_machine_runtime_setup): Simplify and correct expressions.
+	(RTLD_START): Fix bug changing _dl_starting_up.
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c: Added. Deal with
+	strange Linux/PPC padding of initial stack.
+
+1997-03-11 04:14  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/unix/sysv/linux/powerpc/termbits.h: Increase NCCS to 39,
+	for future expansion.
+	* sysdeps/unix/sysv/linux/powerpc/sys/kernel_termios.h: Added.
+	* sysdeps/powerpc/dl-machine.h (elf_machine_rela): Explain why it
+	can't have a switch statement.
+	* sysdeps/powerpc/elf/start.c (__start1): Explain why it can't be
+	static.
+
+	* sysdeps/powerpc/elf/start.c (_start): Use .previous to avoid
+	confusing gcc's idea of the current section.
+	* sysdeps/powerpc/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE,
+	RTLD_START): Likewise.
+
+1997-03-08 09:10  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/dl-machine.h (elf_machine_rela,
+	elf_machine_runtime_setup): Flush data & instruction caches when
+	necessary, for 603/604 support. Add better support for large PLTs.
+	(elf_machine_rela): Remove relocations that wouldn't work if
+	anyone ever used them. Use memcpy for copy reloc, it'll be safe.
+	Never target branch relocations at a PLT entry.
+
+	* sysdeps/powerpc/bsd-setjmp.S: Make jump to PLT entry if we are
+	generating PIC.
+	* sysdeps/powerpc/bsd-_setjmp.S: Likewise.
+	* sysdeps/powerpc/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.h: Likewise.
+
+	* sysdeps/powerpc/elf/start.c: Clean up.
+
+	* sysdeps/powerpc/__longjmp.S: Return 'value' as result from
+	setjmp call.
+
+	* sysdeps/unix/sysv/linux/powerpc/statbuf.h: New file.
+
+1997-03-09 12:36  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* Make-dist (srcs): Add $(test-srcs).
+	* MakeTAGS (all-sources): Likewise.
+	* Makerules (depfiles, common-mostlyclean): Likewise.
+	* Rules (tests): Likewise.
+
+1997-03-18 05:28  Roland McGrath  <roland@frob.com>
+
+	* elf/dl-reloc.c (RESOLVE): Don't try to resolve ocal symbols.
+
+1997-03-17 21:39  Philip Blundell  <phil@london.uk.eu.org>
+
+	* nis/nss_nis/nis-service.c (_nss_nis_getservbyname_r): Allow
+	protocol=NULL to match any protocol rather than returning an
+	error.
+
+1997-03-17 19:00  Philip Blundell  <phil@london.uk.eu.org>
+
+	* nss/nss_files/files-service.c (servbyname): Match any protocol
+	if proto==NULL.
+
+1997-03-18 05:17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/fcntlbits.h: Don't define O_NORW.
+	* sysdeps/unix/sysv/linux/fcntlbits.h: Likewise.
+	Proposed by Thomas Bushnell, n/BSG.
+
+1997-03-18 07:53  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/generic/setenv.c (setenv): Don't copy name when we reuse
+	the buffer for replacement.
+
+1997-03-16 19:30  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add sys_fstat,
+	sys_lstat and sys_stat.
+
+1997-03-17 12:43  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	Add NIS+ functions
+	* shlib-versions: Add libnss_nisplus.
+	* nis/Makefile: Add NIS+ source files.
+	* nis/nis_call.c: New file.
+	* nis/nis_clone.c: New file.
+	* nis/nis_error.c: New file.
+	* nis/nis_file.c: New file.
+	* nis/nis_free.c: New file.
+	* nis/nis_intern.c: New file.
+	* nis/nis_intern.h: New file.
+	* nis/nis_local_names.c: New file.
+	* nis/nis_names.c: New file.
+	* nis/nis_print.c: New file.
+	* nis/nis_server.c: New file.
+	* nis/nis_subr.c: New file.
+	* nis/nis_table.c: New file.
+	* nis/nis_xdr.c: New file.
+	* nis/nss-nisplus.h: New file.
+	* nis/nss_nisplus/nisplus-alias.c: New file.
+	* nis/nss_nisplus/nisplus-ethers.c: New file.
+	* nis/nss_nisplus/nisplus-grp.c: New file.
+	* nis/nss_nisplus/nisplus-hosts.c: New file.
+	* nis/nss_nisplus/nisplus-netgrp.c: New file.
+	* nis/nss_nisplus/nisplus-network.c: New file.
+	* nis/nss_nisplus/nisplus-proto.c: New file.
+	* nis/nss_nisplus/nisplus-publickey.c: New file.
+	* nis/nss_nisplus/nisplus-pwd.c: New file.
+	* nis/nss_nisplus/nisplus-rpc.c: New file.
+	* nis/nss_nisplus/nisplus-service.c: New file.
+	* nis/nss_nisplus/nisplus-spwd.c: New file.
+	* nis/rpcsvc/nis.h: New file.
+	* nis/rpcsvc/nis.x: New file.
+	* nis/rpcsvc/nis_object.x: New file.
+	* nis/rpcsvc/nis_tags.h: New file.
+	* nis/rpcsvc/nislib.h: New file.
+
+1997-03-17 12:52  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* mach/devstream.c (output/write_some): Don't try and write more
+	than IO_INBAND_MAX in a single call to device_write_inband.
+
 1997-03-17 04:00  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdeps/libmieee754/w_atan2.c: Don't ignore exception if library
+	* sysdeps/libm-ieee754/w_atan2.c: Don't ignore exception if library
 	type is SVID.
-	* sysdeps/libmieee754/w_atan2f.c: Likewise.
-	* sysdeps/libmieee754/w_atan2l.c: Likewise.
+	* sysdeps/libm-ieee754/w_atan2f.c: Likewise.
+	* sysdeps/libm-ieee754/w_atan2l.c: Likewise.
 
-	* sysdeps/unix/sysv/linux/sys/mman.h (msync): Add descrption for
+	* sysdeps/unix/sysv/linux/sys/mman.h (msync): Add description for
 	FLAGS parameter.
 
 1997-03-16 20:28  Philip Blundell  <phil@london.uk.eu.org>
@@ -2099,7 +2281,7 @@
 
 1997-02-11 14:49  Andreas Jaeger  <jaeger@informatik.uni-kl.de>
 
-	* stdlib/atoll.c: Undefined atoll, not atol.
+	* stdlib/atoll.c: Undefine atoll, not atol.
 
 1997-02-08 09:36  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 

@@ -857,9 +857,10 @@ mostlyclean: common-mostlyclean
 
 # Remove the object files.
 common-mostlyclean:
-	-rm -f $(addprefix $(objpfx),$(tests) $(others) \
-				     $(addsuffix .o,$(tests) $(others)) \
-				     $(addsuffix .out,$(tests)))
+	-rm -f $(addprefix $(objpfx),$(tests) $(test-srcs) $(others) \
+				     $(addsuffix .o,$(tests) $(test-srcs) \
+						    $(others)) \
+				     $(addsuffix .out,$(tests) $(test-srcs)))
 	-rm -f $(addprefix $(objpfx),$(extra-objs) $(install-lib))
 	-rm -f core $(common-objpfx)stub-$(subdir)
 	$(rmobjs)

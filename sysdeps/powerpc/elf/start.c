@@ -26,22 +26,27 @@
 /* Just a little assembler stub before gcc gets its hands on our
    stack pointer... */
 asm ("\
-	.text
+	.section \".text\"
+	.align 2
 	.globl _start
 _start:
  # save the stack pointer, in case we're statically linked under Linux
-        mr 8,1
+	mr 8,1
  # set up an initial stack frame, and clear the LR
-        addi 1,1,-16
-        clrrwi 1,1,4
-        li 0,0
-        stw 0,0(1)
-        mtlr 0
+	addi 1,1,-16
+	clrrwi 1,1,4
+	li 0,0
+	stw 0,0(1)
+	mtlr 0
  # set r13 to point at the 'small data area'
-        lis 13,_SDA_BASE_@ha
-        addi 13,13,_SDA_BASE_@l
+	lis 13,_SDA_BASE_@ha
+	addi 13,13,_SDA_BASE_@l
  # and continue below.
-        b __start1
+	b __start1
+0:
+	.size	 _start,0b-_start
+ # undo '.section text'.
+	.previous
 ");
 
 /* Define a symbol for the first piece of initialized data.  */
@@ -53,38 +58,46 @@ weak_alias (__data_start, data_start)
 void (*_mach_init_routine) (void);
 void (*_thread_init_routine) (void);
 
-void __libc_init_first (int argc, char **argv, char **envp);
-int main (int argc, char **argv, char **envp, void *auxvec);
+extern void __libc_init_first (int argc, char **argv, char **envp);
+extern int main (int argc, char **argv, char **envp, void *auxvec);
 #ifdef HAVE_INITFINI
-void _init (void);
-void _fini (void);
+extern void _init (void);
+extern void _fini (void);
 #endif
 
-
+#if 0
+/* I'd like to say this, but it causes GCC to strip the whole procedure
+   from the object file (this is sort of reasonable, because you've told
+   GCC that the procedure is unused). :-( */
 static void __start1(int argc, char **argv, char **envp,
-		     void *auxvec, void (*exitfn) (void), char **arguments)
+		     void *auxvec, void (*exitfn) (void),
+		     char **stack_on_entry)
      __attribute__ ((unused));
-static void
+
+static
+#endif
+void
 __start1(int argc, char **argv, char **envp,
 	 void *auxvec, void (*exitfn) (void),
-	 char **arguments)
+	 char **stack_on_entry)
 {
   /* the PPC SVR4 ABI says that the top thing on the stack will
      be a NULL pointer, so if not we assume that we're being called
-     as a statically-linked program by Linux. */
-  int abi_compliant_startup = *arguments == NULL;
-
-  if (!abi_compliant_startup)
-  {
-    argc = *(int *) arguments;
-    argv = arguments+1;
-    envp = argv+argc+1;
-    auxvec = envp;
-    while (auxvec != NULL)
-      auxvec++;
-    auxvec++;
-    exitfn = NULL;
-  }
+     as a statically-linked program by Linux...	 */
+  if (*stack_on_entry != NULL)
+    {
+      /* ...in which case, we have argc as the top thing on the
+	 stack, followed by argv (NULL-terminated), envp (likewise),
+	 and the auxilary vector.  */
+      argc = *(int *) stack_on_entry;
+      argv = stack_on_entry + 1;
+      envp = argv + argc + 1;
+      auxvec = envp;
+      while (*(char **) auxvec != NULL)
+	++auxvec;
+      ++auxvec;
+      exitfn = NULL;
+    }
 
   if (exitfn != NULL)
     atexit (exitfn);

@@ -62,5 +62,9 @@ ENTRY (__sigsetjmp)
 	stfd 30,((JB_FPRS+16*2)*4)(3)
 	stw 31,((JB_GPRS+17)*4)(3)
 	stfd 31,((JB_FPRS+17*2)*4)(3)
+#ifdef PIC
+	b __sigjmp_save@plt
+#else
 	b __sigjmp_save
+#endif
 END (__sigsetjmp)

@@ -1,4 +1,4 @@
-*.d *.o *.so *.po *.go stamp.* *.stamp *.ustamp *.udeps
+*.d *.o *.so *.po *.go *.bo stamp.* *.stamp *.ustamp *.udeps
 *.gz *.Z *.tar *.tgz
 =*
 TODO COPYING* AUTHORS copyr-* copying.*

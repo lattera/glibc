@@ -76,7 +76,11 @@ ENTRY(P(__,socket))
 	DO_CALL(SYS_ify(socketcall))
 	addi 1,1,48
 	bnslr
+#ifdef PIC
+	b __syscall_error@plt
+#else
 	b __syscall_error
+#endif
 
 PSEUDO_END (P(__,socket))
 

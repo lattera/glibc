@@ -83,19 +83,19 @@ common-generated := $(common-generated) dummy.o dummy.c empty.c empty.o
 .PHONY: others tests
 others: $(addprefix $(objpfx),$(others) $(extra-objs))
 ifeq ($(cross-compiling),yes)
-tests: $(addprefix $(objpfx),$(tests))
+tests: $(addprefix $(objpfx),$(tests) $(test-srcs))
 else
 tests: $(tests:%=$(objpfx)%.out)
 endif
 
-ifneq "$(strip $(others) $(tests))" ""
-$(addprefix $(objpfx),$(others) $(tests)): %: %.o \
+ifneq "$(strip $(others) $(tests) $(test-srcs))" ""
+$(addprefix $(objpfx),$(others) $(tests) $(test-srcs)): %: %.o \
   $(sort $(filter $(common-objpfx)libc%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link)
 endif
 
-ifneq "$(strip $(tests))" ""
+ifneq "$(strip $(tests) $(test-srcs))" ""
 # These are the implicit rules for making test outputs
 # from the test programs and whatever input files are present.
 $(objpfx)%.out: %.args $(objpfx)% %.input

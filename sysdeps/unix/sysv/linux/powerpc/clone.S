@@ -71,4 +71,8 @@ child:
 badargs:
 	li 3,-EINVAL
 error:
+#ifdef PIC
+	b __syscall_error@plt
+#else
 	b __syscall_error
+#endif

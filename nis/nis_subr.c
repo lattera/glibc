@@ -1,0 +1,310 @@
+/* Copyright (c) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#include <errno.h>
+#include <string.h>
+#include <rpcsvc/nis.h>
+#include <rpcsvc/nislib.h>
+
+nis_name
+nis_leaf_of (const nis_name name)
+{
+  static char result[NIS_MAXNAMELEN + 1];
+
+  return nis_leaf_of_r (name, result, NIS_MAXNAMELEN);
+}
+
+nis_name
+nis_leaf_of_r (const nis_name name, char *buffer, size_t buflen)
+{
+  size_t i = 0;
+
+  buffer[0] = '\0';
+
+  while (name[i] != '.' && name[i] != '\0')
+    i++;
+
+  if (i > buflen - 1)
+    {
+      errno = ERANGE;
+      return NULL;
+    }
+
+  if (i > 1)
+    strncpy (buffer, name, i - 1);
+
+  return buffer;
+}
+
+nis_name
+nis_name_of (const nis_name name)
+{
+  static char result[NIS_MAXNAMELEN + 1];
+
+  return nis_name_of_r (name, result, NIS_MAXNAMELEN);
+}
+
+nis_name
+nis_name_of_r (const nis_name name, char *buffer, size_t buflen)
+{
+  char *local_domain;
+  int diff;
+
+  local_domain = nis_local_directory ();
+
+  diff = strlen (name) - strlen (local_domain);
+  if (diff <= 0)
+    return NULL;
+
+  if (strcmp (&name[diff], local_domain) != 0)
+    return NULL;
+
+  if ((size_t) diff >= buflen)
+    {
+      errno = ERANGE;
+      return NULL;
+    }
+  memcpy (buffer, name, diff - 1);
+  buffer[diff - 1] = '\0';
+
+  if (diff - 1 == 0)
+    return NULL;
+
+  return buffer;
+}
+
+nis_name
+nis_domain_of (const nis_name name)
+{
+  static char result[NIS_MAXNAMELEN + 1];
+
+  return nis_domain_of_r (name, result, NIS_MAXNAMELEN);
+}
+
+nis_name
+nis_domain_of_r (const nis_name name, char *buffer, size_t buflen)
+{
+  char *cptr;
+  size_t cptr_len;
+
+  cptr = strchr (name, '.');	/* XXX What happens if the NIS name
+				   does not contain a `.'?  */
+  ++cptr;
+  cptr_len = strlen (cptr);
+
+  if (cptr_len == 0)
+    strcpy (buffer, ".");
+  else if (cptr_len >= buflen)
+    {
+      errno = ERANGE;
+      return NULL;
+    }
+  else
+    memcpy (buffer, cptr, cptr_len + 1);
+
+  return buffer;
+}
+
+static int
+count_dots (const nis_name str)
+{
+  int count = 0;
+  size_t i;
+
+  for (i = 0; i < strlen (str); ++i)
+    if (str[i] == '.')
+      ++count;
+
+  return count;
+}
+
+nis_name *
+nis_getnames (const nis_name name)
+{
+  nis_name *getnames = NULL;
+  char local_domain[NIS_MAXNAMELEN + 1];
+  char *path, *cp;
+  int count, pos;
+
+
+  strncpy (local_domain, nis_local_directory (), NIS_MAXNAMELEN);
+  local_domain[NIS_MAXNAMELEN] = '\0';
+
+  count = 1;
+  if ((getnames = malloc ((count + 1) * sizeof (char *))) == NULL)
+      return NULL;
+
+  /* Do we have a fully qualified NIS+ name ? If yes, give it back */
+  if (name[strlen (name) - 1] == '.')
+    {
+      if ((getnames[0] = strdup (name)) == NULL)
+	{
+	  free (getnames);
+	  return NULL;
+	}
+      getnames[1] = NULL;
+
+      return getnames;
+    }
+
+  /* Get the search path, where we have to search "name" */
+  path = getenv ("NIS_PATH");
+  if (path == NULL)
+    path = strdupa ("$");
+  else
+    path = strdupa (path);
+
+  pos = 0;
+
+  cp = strtok (path, ":");
+  while (cp)
+    {
+      if (strcmp (cp, "$") == 0)
+	{
+	  char *cptr = local_domain;
+	  char *tmp;
+
+	  while (count_dots (cptr) >= 2)
+	    {
+	      if (pos >= count)
+		{
+		  count += 5;
+		  getnames = realloc (getnames, (count + 1) * sizeof (char *));
+		}
+	      tmp = malloc (strlen (cptr) + strlen (local_domain) +
+			    strlen (name) + 2);
+	      if (tmp == NULL)
+		return NULL;
+
+	      getnames[pos] = tmp;
+	      tmp = stpcpy (tmp, name);
+	      *tmp++ = '.';
+	      stpcpy (tmp, cptr);
+
+	      ++pos;
+
+	      while (*cptr != '.')
+		++cptr;
+	      ++cptr;
+	    }
+	}
+      else
+	{
+	  char *tmp;
+
+	  if (cp[strlen (cp) - 1] == '$')
+	    {
+	      tmp = malloc (strlen (cp) + strlen (local_domain) +
+			    strlen (name) + 2);
+	      if (tmp == NULL)
+		return NULL;
+
+	      tmp = stpcpy (tmp, name);
+	      *tmp++ = '.';
+	      tmp = stpcpy (tmp, cp);
+	      --tmp;
+	      if (tmp[-1] != '.')
+		*tmp++ = '.';
+	      stpcpy (tmp, local_domain);
+	    }
+	  else
+	    {
+	      tmp = malloc (strlen (cp) + strlen (name) + 2);
+	      if (tmp == NULL)
+		return NULL;
+
+	      tmp = stpcpy (tmp, name);
+	      *tmp++ = '.';
+	      stpcpy (tmp, cp);
+	    }
+
+	  if (pos > count)
+	    {
+	      count += 5;
+	      getnames = realloc (getnames, (count + 1) * sizeof (char *));
+	      if (getnames == NULL)
+		return NULL;
+	    }
+	  getnames[pos] = tmp;
+	  ++pos;
+	}
+      cp = strtok (NULL, ":");
+    }
+
+  getnames[pos] = NULL;
+
+  return getnames;
+}
+
+void
+nis_freenames (nis_name *names)
+{
+  int i = 0;
+
+  while (names[i] != NULL)
+    {
+      free (names[i]);
+      ++i;
+    }
+
+  free (names);
+}
+
+name_pos
+nis_dir_cmp (const nis_name n1, const nis_name n2)
+{
+  int len1, len2;
+
+  len1 = strlen (n1);
+  len2 = strlen (n2);
+
+  if (len1 == len2)
+    {
+      if (strcmp (n1, n2) == 0)
+	return SAME_NAME;
+      else
+	return NOT_SEQUENTIAL;
+    }
+
+  if (len1 < len2)
+    {
+      if (n2[len2 - len1 - 1] != '.')
+	return NOT_SEQUENTIAL;
+      else if (strcmp (&n2[len2 - len1], n1) == 0)
+	return HIGHER_NAME;
+      else
+	return NOT_SEQUENTIAL;
+    }
+  else
+    {
+      if (n1[len1 - len2 - 1] != '.')
+	return NOT_SEQUENTIAL;
+      else if (strcmp (&n1[len1 - len2], n2) == 0)
+	return LOWER_NAME;
+      else
+	return NOT_SEQUENTIAL;
+
+    }
+}
+
+void
+nis_destroy_object (nis_object *obj)
+{
+  nis_free_object (obj);
+}

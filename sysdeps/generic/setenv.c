@@ -132,9 +132,9 @@ setenv (name, value, replace)
 	      return -1;
 	    }
 	  *ep = new;
+	  memcpy (*ep, name, namelen);
+	  (*ep)[namelen] = '=';
 	}
-      memcpy (*ep, name, namelen);
-      (*ep)[namelen] = '=';
       memcpy (&(*ep)[namelen + 1], value, vallen);
     }
 
