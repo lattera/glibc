@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2003
+/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2003,2004
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -242,8 +242,7 @@ FCT (pattern, string, string_end, no_leading_period, flags)
 		    c = FOLD ((UCHAR) *p);
 		    ++p;
 
-		    if (c == fn)
-		      goto matched;
+		    goto normal_bracket;
 		  }
 		else if (c == L('[') && *p == L(':'))
 		  {

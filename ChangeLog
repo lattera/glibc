@@ -1,3 +1,11 @@
+2004-09-01  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #361]
+	* posix/fnmatch_loop.c (FCT): For backslash between brackets, branch
+	to normal_bracket after fetching the next character.
+	* posix/tst-fnmatch.input: Add 25 new tests.
+	Reported by Markus Oberhumer <markus@oberhumer.com>.
+
 2004-09-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/rtld.c (dl_main): First check existence of ld.so.preload

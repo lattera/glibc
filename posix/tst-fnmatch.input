@@ -1,5 +1,5 @@
 # Tests for fnmatch.
-# Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributes by Ulrich Drepper <drepper@redhat.com>.
 #
@@ -389,6 +389,31 @@ C		"az"			"[-a]z"		       0
 C		"bz"			"[-ab]z"	       0
 C		"cz"			"[-ab]z"	       NOMATCH
 C		"-z"			"[-ab]z"	       0
+C		"\\"			"[\\\\-a]"	       0
+C		"_"			"[\\\\-a]"	       0
+C		"a"			"[\\\\-a]"	       0
+C		"-"			"[\\\\-a]"	       NOMATCH
+C		"\\"			"[\\]-a]"	       NOMATCH
+C		"_"			"[\\]-a]"	       0
+C		"a"			"[\\]-a]"	       0
+C		"]"			"[\\]-a]"	       0
+C		"-"			"[\\]-a]"	       NOMATCH
+C		"\\"			"[!\\\\-a]"	       NOMATCH
+C		"_"			"[!\\\\-a]"	       NOMATCH
+C		"a"			"[!\\\\-a]"	       NOMATCH
+C		"-"			"[!\\\\-a]"	       0
+C		"!"			"[\\!-]"	       0
+C		"-"			"[\\!-]"	       0
+C		"\\"			"[\\!-]"	       NOMATCH
+C		"Z"			"[Z-\\\\]"	       0
+C		"["			"[Z-\\\\]"	       0
+C		"\\"			"[Z-\\\\]"	       0
+C		"-"			"[Z-\\\\]"	       NOMATCH
+C		"Z"			"[Z-\\]]"	       0
+C		"["			"[Z-\\]]"	       0
+C		"\\"			"[Z-\\]]"	       0
+C		"]"			"[Z-\\]]"	       0
+C		"-"			"[Z-\\]]"	       NOMATCH
 
 # Following are tests outside the scope of IEEE 2003.2 since they are using
 # locales other than the C locale.  The main focus of the tests is on the
