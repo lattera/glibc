@@ -460,7 +460,7 @@ insert_value (struct linereader *ldfile, struct token *arg,
   if (elem->next != NULL || elem->next == collate->cursor)
     {
       lr_error (ldfile, _("order for `%.*s' already defined at %s:%Z"),
-		arg->val.str.startmb, arg->val.str.lenmb,
+		arg->val.str.lenmb, arg->val.str.startmb,
 		elem->file, elem->line);
       return;
     }
