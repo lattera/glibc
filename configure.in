@@ -799,7 +799,8 @@ test -n "$aux_missing" && AC_MSG_WARN([
 # thing on a system that doesn't need fixincludes.  (Not presently a problem.)
 if test -n "$sysheaders"; then
   ccheaders=`$CC -print-file-name=include`
-  SYSINCLUDES="-nostdinc -isystem $ccheaders -isystem $sysheaders"
+  SYSINCLUDES="-nostdinc -isystem $ccheaders \
+-isystem `echo $sysheaders | sed 's/:/ -isystem /g'`"
 fi
 AC_SUBST(SYSINCLUDES)
 
