@@ -1,5 +1,5 @@
 /* Test program for tsearch et al.
-   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -171,8 +171,9 @@ mangle_tree (enum order how, enum action what, void **root, int lag)
 	  if (i >= lag)
 	    k = y[i - lag];
 	  else
-	    k = y[SIZE - i - 1 + lag];
-	  j = y[i];
+	    /* Ensure that the array index is within bounds.  */
+	    k = y[(SIZE - i - 1 + lag) % SIZE];
+	  j = y[i % SIZE];
 	  break;
 
 	case ascending:
