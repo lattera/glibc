@@ -91,5 +91,8 @@ END {
     outpipe = "sort";
     print versions[version] | outpipe;
     close(outpipe);
+
+    if (version == lastversion)
+      break;
   }
 }

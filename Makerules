@@ -1190,6 +1190,7 @@ check-abi-%: $(..)scripts/extract-abilist.awk $(common-objpfx)config.make \
 define check-abi
 	LC_ALL=C \
 	$(AWK) -f $< -v 'config=$(check-abi-config)' \
+	       $(patsubst %,-v 'lastversion=%',$($*-abi-frozen)) \
 	       $(filter %.abilist,$^) \
 	| { diff -p -U 0 - $(filter %.symlist,$^) $(check-abi-warn) ; }
 endef

@@ -25,6 +25,7 @@ all: # Make this the default target; it will be defined in Rules.
 
 linuxthreads-version := $(shell sed -n 's/^.*$(subdir)-\([0-9.]*\).*$$/\1/p' \
 				    Banner)
+libpthread-abi-frozen := GLIBC_2.3.2
 
 headers := pthread.h semaphore.h
 distribute := internals.h queue.h restart.h spinlock.h smp.h tst-signal.sh \

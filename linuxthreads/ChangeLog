@@ -1,3 +1,7 @@
+2004-08-30  Roland McGrath  <roland@frob.com>
+
+	* Makefile (libpthread-abi-frozen): New variable.
+
 2004-08-26  Roland McGrath  <roland@redhat.com>
 
 	* configure.in: New file.  If nptl add-on is also selected, barf if

@@ -1,3 +1,12 @@
+2004-08-30  Roland McGrath  <roland@frob.com>
+
+	* scripts/extract-abilist.awk: If `lastversion' variable defined, omit
+	later sets from output.
+	* Makerules (check-abi): Pass option to set that with value of
+	LIB-abi-frozen variable if one is set.
+
+	* abilist/libcidn.abilist: New file (empty).
+
 2004-08-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/bits/posix1_lim.h (_POSIX_CHILD_MAX, _POSIX_OPEN_MAX): If
