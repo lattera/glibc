@@ -17,6 +17,8 @@
 #include <errno.h>
 #include <sched.h>
 #include <time.h>
+#include <stdlib.h>
+#include <limits.h>
 #include "pthread.h"
 #include "internals.h"
 #include "spinlock.h"
@@ -145,6 +147,262 @@ again:
   restart(thr);
 
   return 0;
+}
+
+/* 
+ * Alternate fastlocks do not queue threads directly. Instead, they queue
+ * these wait queue node structures. When a timed wait wakes up due to
+ * a timeout, it can leave its wait node in the queue (because there
+ * is no safe way to remove from the quue). Some other thread will
+ * deallocate the abandoned node.
+ */
+
+
+struct wait_node {
+  struct wait_node *next;	/* Next node in null terminated linked list */
+  pthread_descr thr;		/* The thread waiting with this node */
+  int abandoned;		/* Atomic flag */
+};
+
+static long wait_node_free_list;
+static int wait_node_free_list_spinlock;
+
+/* Allocate a new node from the head of the free list using an atomic
+   operation, or else using malloc if that list is empty.  A fundamental
+   assumption here is that we can safely access wait_node_free_list->next.
+   That's because we never free nodes once we allocate them, so a pointer to a
+   node remains valid indefinitely. */
+
+static struct wait_node *wait_node_alloc(void)
+{
+  long oldvalue, newvalue;
+
+  do {
+    oldvalue = wait_node_free_list;
+
+    if (oldvalue == 0)
+      return malloc(sizeof *wait_node_alloc());
+
+    newvalue = (long) ((struct wait_node *) oldvalue)->next;
+    WRITE_MEMORY_BARRIER();
+  } while (! compare_and_swap(&wait_node_free_list, oldvalue, newvalue,
+                              &wait_node_free_list_spinlock));
+
+  return (struct wait_node *) oldvalue;
+}
+
+/* Return a node to the head of the free list using an atomic 
+   operation. */
+
+static void wait_node_free(struct wait_node *wn)
+{
+  long oldvalue, newvalue;
+
+  do {
+    oldvalue = wait_node_free_list;
+    wn->next = (struct wait_node *) oldvalue;
+    newvalue = (long) wn;
+    WRITE_MEMORY_BARRIER();
+  } while (! compare_and_swap(&wait_node_free_list, oldvalue, newvalue,
+                              &wait_node_free_list_spinlock));
+}
+
+/* Remove a wait node from the specified queue.  It is assumed
+   that the removal takes place concurrently with only atomic insertions at the
+   head of the queue. */
+    
+static void wait_node_dequeue(struct wait_node **pp_head,
+			      struct wait_node **pp_node,
+			      struct wait_node *p_node,
+			      int *spinlock)
+{
+  long oldvalue, newvalue;
+
+  /* If the node is being deleted from the head of the
+     list, it must be deleted using atomic compare-and-swap.
+     Otherwise it can be deleted in the straightforward way. */
+
+  if (pp_node == pp_head) {
+    oldvalue = (long) p_node;
+    newvalue = (long) p_node->next;
+
+    if (compare_and_swap((long *) pp_node, oldvalue, newvalue, spinlock))
+      return;
+
+    /* Oops! Compare and swap failed, which means the node is
+       no longer first. We delete it using the ordinary method.  But we don't
+       know the identity of the node which now holds the pointer to the node
+       being deleted, so we must search from the beginning. */
+
+    for (pp_node = pp_head; *pp_node != p_node; pp_node = &(*pp_node)->next)
+      ; /* null body */
+  }
+
+  *pp_node = p_node->next;
+  return;
+}
+
+void __pthread_alt_lock(struct _pthread_fastlock * lock,
+		        pthread_descr self)
+{
+  struct wait_node wait_node;
+  long oldstatus, newstatus;
+
+  do {
+    oldstatus = lock->__status;
+    if (oldstatus == 0) {
+      newstatus = 1;
+    } else {
+      if (self == NULL)
+	wait_node.thr = self = thread_self();
+      newstatus = (long) &wait_node;
+    }
+    wait_node.abandoned = 0;
+    wait_node.next = (struct wait_node *) oldstatus;
+    /* Make sure the store in wait_node.next completes before performing
+       the compare-and-swap */
+    MEMORY_BARRIER();
+  } while(! compare_and_swap(&lock->__status, oldstatus, newstatus,
+                             &lock->__spinlock));
+
+  /* Suspend. Note that unlike in __pthread_lock, we don't worry
+     here about spurious wakeup. That's because this lock is not
+     used in situations where that can happen; the restart can
+     only come from the previous lock owner. */
+
+  if (oldstatus != 0)
+    suspend(self);
+}
+
+/* Timed-out lock operation; returns 0 to indicate timeout. */
+
+int __pthread_alt_timedlock(struct _pthread_fastlock * lock,
+			    pthread_descr self, const struct timespec *abstime)
+{
+  struct wait_node *p_wait_node = wait_node_alloc();
+  long oldstatus, newstatus;
+ 
+  /* Out of memory, just give up and do ordinary lock. */
+  if (p_wait_node == 0) {
+    __pthread_alt_lock(lock, self);
+    return 1;
+  }
+
+  do {
+    oldstatus = lock->__status;
+    if (oldstatus == 0) {
+      newstatus = 1;
+    } else {
+      if (self == NULL)
+	p_wait_node->thr = self = thread_self();
+      newstatus = (long) p_wait_node;
+    }
+    p_wait_node->abandoned = 0;
+    p_wait_node->next = (struct wait_node *) oldstatus;
+    /* Make sure the store in wait_node.next completes before performing
+       the compare-and-swap */
+    MEMORY_BARRIER();
+  } while(! compare_and_swap(&lock->__status, oldstatus, newstatus,
+                             &lock->__spinlock));
+
+  /* If we did not get the lock, do a timed suspend. If we wake up due
+     to a timeout, then there is a race; the old lock owner may try
+     to remove us from the queue. This race is resolved by us and the owner
+     doing an atomic testandset() to change the state of the wait node from 0
+     to 1. If we succeed, then it's a timeout and we abandon the node in the
+     queue. If we fail, it means the owner gave us the lock. */
+
+  if (oldstatus != 0) {
+    if (timedsuspend(self, abstime) == 0) {
+      if (!testandset(&p_wait_node->abandoned))
+	return 0; /* Timeout! */
+
+      /* Eat oustanding resume from owner, otherwise wait_node_free() below
+	 will race with owner's wait_node_dequeue(). */
+      suspend(self);
+    }
+  }
+
+  wait_node_free(p_wait_node);
+
+  return 1; /* Got the lock! */
+}
+
+void __pthread_alt_unlock(struct _pthread_fastlock *lock)
+{
+  long oldstatus;
+  struct wait_node *p_node, **pp_node, *p_max_prio, **pp_max_prio;
+  struct wait_node ** const pp_head = (struct wait_node **) &lock->__status;
+  int maxprio;
+
+  while (1) {
+
+  /* If no threads are waiting for this lock, try to just
+     atomically release it. */
+
+    oldstatus = lock->__status;
+    if (oldstatus == 0 || oldstatus == 1) {
+      if (compare_and_swap_with_release_semantics (&lock->__status,
+	  oldstatus, 0, &lock->__spinlock))
+	return;
+      else
+	continue;
+    }
+  
+    /* Process the entire queue of wait nodes. Remove all abandoned
+       wait nodes and put them into the global free queue, and
+       remember the one unabandoned node which refers to the thread
+       having the highest priority. */
+
+    pp_max_prio = pp_node = pp_head;
+    p_max_prio = p_node = *pp_head;
+    maxprio = INT_MIN;
+
+    while (p_node != (struct wait_node *) 1) {
+      int prio;
+
+      if (p_node->abandoned) {
+	/* Remove abandoned node. */
+	wait_node_dequeue(pp_head, pp_node, p_node, &lock->__spinlock);
+	wait_node_free(p_node);
+	READ_MEMORY_BARRIER();
+	p_node = *pp_node;
+	continue;
+      } else if ((prio = p_node->thr->p_priority) >= maxprio) {
+	/* Otherwise remember it if its thread has a higher or equal priority
+	   compared to that of any node seen thus far. */
+	maxprio = prio;
+	pp_max_prio = pp_node;
+	p_max_prio = p_node;
+      }
+
+      pp_node = &p_node->next;
+      READ_MEMORY_BARRIER();
+      p_node = *pp_node;
+    }
+
+    READ_MEMORY_BARRIER();
+
+    /* If all threads abandoned, go back to top */
+    if (maxprio == INT_MIN)
+      continue;
+
+    ASSERT (p_max_prio != (struct wait_node *) 1);
+
+    /* Now we want to to remove the max priority thread's wait node from
+       the list. Before we can do this, we must atomically try to change the
+       node's abandon state from zero to nonzero. If we succeed, that means we
+       have the node that we will wake up. If we failed, then it means the
+       thread timed out and abandoned the node in which case we repeat the
+       whole unlock operation. */
+
+    if (!testandset(&p_max_prio->abandoned)) {
+      wait_node_dequeue(pp_head, pp_max_prio, p_max_prio, &lock->__spinlock);
+      WRITE_MEMORY_BARRIER();
+      restart(p_max_prio->thr);
+      return;
+    }
+  }
 }
 
 

@@ -62,7 +62,9 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
   int already_canceled = 0;
 
   /* Check whether the mutex is locked and owned by this thread.  */
-  if (mutex->__m_kind != PTHREAD_MUTEX_FAST_NP && mutex->__m_owner != self)
+  if (mutex->__m_kind != PTHREAD_MUTEX_TIMED_NP  
+      && mutex->__m_kind != PTHREAD_MUTEX_FAST_NP
+      && mutex->__m_owner != self)
     return EINVAL;
 
   /* Set up extrication interface */
@@ -121,7 +123,9 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
   pthread_extricate_if extr;
 
   /* Check whether the mutex is locked and owned by this thread.  */
-  if (mutex->__m_kind != PTHREAD_MUTEX_FAST_NP && mutex->__m_owner != self)
+  if (mutex->__m_kind != PTHREAD_MUTEX_TIMED_NP  
+      && mutex->__m_kind != PTHREAD_MUTEX_FAST_NP
+      && mutex->__m_owner != self)
     return EINVAL;
 
   /* Set up extrication interface */

@@ -29,7 +29,7 @@ int __pthread_mutex_init(pthread_mutex_t * mutex,
 {
   __pthread_init_lock(&mutex->__m_lock);
   mutex->__m_kind =
-    mutex_attr == NULL ? PTHREAD_MUTEX_FAST_NP : mutex_attr->__mutexkind;
+    mutex_attr == NULL ? PTHREAD_MUTEX_TIMED_NP : mutex_attr->__mutexkind;
   mutex->__m_count = 0;
   mutex->__m_owner = NULL;
   return 0;
@@ -65,10 +65,13 @@ int __pthread_mutex_trylock(pthread_mutex_t * mutex)
     }
     return retcode;
   case PTHREAD_MUTEX_ERRORCHECK_NP:
-    retcode = __pthread_trylock(&mutex->__m_lock);
+    retcode = __pthread_alt_trylock(&mutex->__m_lock);
     if (retcode == 0) {
       mutex->__m_owner = thread_self();
     }
+    return retcode;
+  case PTHREAD_MUTEX_TIMED_NP:
+    retcode = __pthread_alt_trylock(&mutex->__m_lock);
     return retcode;
   default:
     return EINVAL;
@@ -97,14 +100,60 @@ int __pthread_mutex_lock(pthread_mutex_t * mutex)
   case PTHREAD_MUTEX_ERRORCHECK_NP:
     self = thread_self();
     if (mutex->__m_owner == self) return EDEADLK;
-    __pthread_lock(&mutex->__m_lock, self);
+    __pthread_alt_lock(&mutex->__m_lock, self);
     mutex->__m_owner = self;
+    return 0;
+  case PTHREAD_MUTEX_TIMED_NP:
+    __pthread_alt_lock(&mutex->__m_lock, NULL);
     return 0;
   default:
     return EINVAL;
   }
 }
 strong_alias (__pthread_mutex_lock, pthread_mutex_lock)
+
+int __pthread_mutex_timedlock (pthread_mutex_t *mutex,
+			       const struct timespec *abstime)
+{
+  pthread_descr self;
+  int res;
+
+  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
+    return EINVAL;
+
+  switch(mutex->__m_kind) {
+  case PTHREAD_MUTEX_FAST_NP:
+    __pthread_lock(&mutex->__m_lock, NULL);
+    return 0;
+  case PTHREAD_MUTEX_RECURSIVE_NP:
+    self = thread_self();
+    if (mutex->__m_owner == self) {
+      mutex->__m_count++;
+      return 0;
+    }
+    __pthread_lock(&mutex->__m_lock, self);
+    mutex->__m_owner = self;
+    mutex->__m_count = 0;
+    return 0;
+  case PTHREAD_MUTEX_ERRORCHECK_NP:
+    self = thread_self();
+    if (mutex->__m_owner == self) return EDEADLK;
+    res = __pthread_alt_timedlock(&mutex->__m_lock, self, abstime);
+    if (res != 0)
+      {
+	mutex->__m_owner = self;
+	return 0;
+      }
+    return ETIMEDOUT;
+  case PTHREAD_MUTEX_TIMED_NP:
+    /* Only this type supports timed out lock. */
+    return (__pthread_alt_timedlock(&mutex->__m_lock, NULL, abstime)
+	    ? 0 : ETIMEDOUT);
+  default:
+    return EINVAL;
+  }
+}
+strong_alias (__pthread_mutex_timedlock, pthread_mutex_timedlock)
 
 int __pthread_mutex_unlock(pthread_mutex_t * mutex)
 {
@@ -124,7 +173,10 @@ int __pthread_mutex_unlock(pthread_mutex_t * mutex)
     if (mutex->__m_owner != thread_self() || mutex->__m_lock.__status == 0)
       return EPERM;
     mutex->__m_owner = NULL;
-    __pthread_unlock(&mutex->__m_lock);
+    __pthread_alt_unlock(&mutex->__m_lock);
+    return 0;
+  case PTHREAD_MUTEX_TIMED_NP:
+    __pthread_alt_unlock(&mutex->__m_lock);
     return 0;
   default:
     return EINVAL;
@@ -134,7 +186,7 @@ strong_alias (__pthread_mutex_unlock, pthread_mutex_unlock)
 
 int __pthread_mutexattr_init(pthread_mutexattr_t *attr)
 {
-  attr->__mutexkind = PTHREAD_MUTEX_FAST_NP;
+  attr->__mutexkind = PTHREAD_MUTEX_TIMED_NP;
   return 0;
 }
 strong_alias (__pthread_mutexattr_init, pthread_mutexattr_init)
@@ -149,7 +201,8 @@ int __pthread_mutexattr_settype(pthread_mutexattr_t *attr, int kind)
 {
   if (kind != PTHREAD_MUTEX_FAST_NP
       && kind != PTHREAD_MUTEX_RECURSIVE_NP
-      && kind != PTHREAD_MUTEX_ERRORCHECK_NP)
+      && kind != PTHREAD_MUTEX_ERRORCHECK_NP
+      && kind != PTHREAD_MUTEX_TIMED_NP)
     return EINVAL;
   attr->__mutexkind = kind;
   return 0;

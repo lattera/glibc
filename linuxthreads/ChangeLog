@@ -1,3 +1,32 @@
+2000-06-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add ex10.  Add rules to build it.
+	* Versions [GLIBC_2.2] (libpthread): Add pthread_mutex_timedlock,
+	pthread_rwlock_timedrdlock, and pthread_rwlock_timedwrlock.
+	* condvar.c (pthread_cond_wait): Allow mutex of kind
+	PTHREAD_MUTEX_TIMED_NP.
+	(pthread_cond_timedwait_relative): Likewise.
+	* mutex.c (__pthread_mutex_init): Default is PTHREAD_MUTEX_TIMED_NP.
+	(__pthread_mutex_trylock): Use __pthread_alt_trylock for
+	PTHREAD_MUTEX_ERRORCHECK_NP.  Handle PTHREAD_MUTEX_TIMED_NP.
+	(__pthread_mutex_lock): Use __pthread_alt_lock for
+	PTHREAD_MUTEX_ERRORCHECK_NP.  Handle PTHREAD_MUTEX_TIMED_NP.
+	(__pthread_mutex_timedlock): New function.
+	(__pthread_mutex_unlock): Use __pthread_alt_unlock for
+	PTHREAD_MUTEX_ERRORCHECK_NP.  Handle PTHREAD_MUTEX_TIMED_NP.
+	(__pthread_mutexattr_init): Use PTHREAD_MUTEX_TIMED_NP.
+	(__pthread_mutexattr_settype): Allow PTHREAD_MUTEX_TIMED_NP.
+	* spinlock.c: Implement alternate fastlocks.
+	* spinlock.h: Add prototypes.
+	* Examples/ex10.c: New file.
+	* sysdeps/pthread/pthread.h: Add prototypes for new functions.
+	Patch by Kaz Kylheku <kaz@ashi.footprints.net>.
+
+	* rwlock.c (__pthread_rwlock_rdlock): Optimize loop a bit.
+	(__pthread_rwlock_timedrdlock): New function.
+	(__pthread_rwlock_timedwrlock): New function.
+	Use laternate fastlock function everywhere.
+
 2000-06-21  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/pthread/timer_routines.c: Include <string.h> for memset

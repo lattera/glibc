@@ -106,7 +106,39 @@ static inline int __pthread_trylock (struct _pthread_fastlock * lock)
   return 0;
 }
 
+/* Variation of internal lock used for pthread_mutex_t, supporting 
+   timed-out waits.  Warning: do not mix these operations with the above ones
+   over the same lock object! */
+
+extern void __pthread_alt_lock(struct _pthread_fastlock * lock,
+			       pthread_descr self);
+
+extern int __pthread_alt_timedlock(struct _pthread_fastlock * lock,
+			       pthread_descr self, const struct timespec *abstime);
+
+extern void __pthread_alt_unlock(struct _pthread_fastlock *lock);
+
+static inline void __pthread_alt_init_lock(struct _pthread_fastlock * lock)
+{
+  lock->__status = 0;
+  lock->__spinlock = 0;
+}
+
+static inline int __pthread_alt_trylock (struct _pthread_fastlock * lock)
+{
+  long oldstatus;
+
+  do {
+    oldstatus = lock->__status;
+    if (oldstatus != 0) return EBUSY;
+  } while(! compare_and_swap(&lock->__status, 0, 1, &lock->__spinlock));
+  return 0;
+}
+
+/* Initializers for both lock variants */
+
 #define LOCK_INITIALIZER {0, 0}
+#define ALT_LOCK_INITIALIZER {0, 0}
 
 /* Operations on pthread_atomic, which is defined in internals.h */
 

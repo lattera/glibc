@@ -30,7 +30,7 @@ __BEGIN_DECLS
 /* Initializers.  */
 
 #define PTHREAD_MUTEX_INITIALIZER \
-  {0, 0, 0, PTHREAD_MUTEX_FAST_NP, {0, 0}}
+  {0, 0, 0, PTHREAD_MUTEX_TIMED_NP, {0, 0}}
 #ifdef __USE_GNU
 # define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
   {0, 0, 0, PTHREAD_MUTEX_RECURSIVE_NP, {0, 0}}
@@ -79,10 +79,11 @@ enum
 {
   PTHREAD_MUTEX_FAST_NP,
   PTHREAD_MUTEX_RECURSIVE_NP,
-  PTHREAD_MUTEX_ERRORCHECK_NP
+  PTHREAD_MUTEX_ERRORCHECK_NP,
+  PTHREAD_MUTEX_TIMED_NP
 #ifdef __USE_UNIX98
   ,
-  PTHREAD_MUTEX_NORMAL = PTHREAD_MUTEX_FAST_NP,
+  PTHREAD_MUTEX_NORMAL = PTHREAD_MUTEX_TIMED_NP,
   PTHREAD_MUTEX_RECURSIVE = PTHREAD_MUTEX_RECURSIVE_NP,
   PTHREAD_MUTEX_ERRORCHECK = PTHREAD_MUTEX_ERRORCHECK_NP,
   PTHREAD_MUTEX_DEFAULT = PTHREAD_MUTEX_NORMAL
@@ -304,6 +305,13 @@ extern int pthread_mutex_trylock (pthread_mutex_t *__mutex) __THROW;
 /* Wait until lock for MUTEX becomes available and lock it.  */
 extern int pthread_mutex_lock (pthread_mutex_t *__mutex) __THROW;
 
+#ifdef __USE_XOPEN2K
+/* Wait until lock becomes available, or specified time passes. */
+extern int pthread_mutex_timedlock (pthread_mutex_t *__mutex,
+				    __const struct timespec *__abstime)
+     __THROW;
+#endif
+
 /* Unlock MUTEX.  */
 extern int pthread_mutex_unlock (pthread_mutex_t *__mutex) __THROW;
 
@@ -311,7 +319,7 @@ extern int pthread_mutex_unlock (pthread_mutex_t *__mutex) __THROW;
 /* Functions for handling mutex attributes.  */
 
 /* Initialize mutex attribute object ATTR with default attributes
-   (kind is PTHREAD_MUTEX_FAST_NP).  */
+   (kind is PTHREAD_MUTEX_TIMED_NP).  */
 extern int pthread_mutexattr_init (pthread_mutexattr_t *__attr) __THROW;
 
 /* Destroy mutex attribute object ATTR.  */
@@ -385,11 +393,25 @@ extern int pthread_rwlock_rdlock (pthread_rwlock_t *__rwlock) __THROW;
 /* Try to acquire read lock for RWLOCK.  */
 extern int pthread_rwlock_tryrdlock (pthread_rwlock_t *__rwlock) __THROW;
 
+#ifdef __USE_XOPEN2K
+/* Try to acquire read lock for RWLOCK or return after specfied time.  */
+extern int pthread_rwlock_timedrdlock (pthread_rwlock_t *__rwlock,
+				       __const struct timespec *__abstime)
+     __THROW;
+#endif
+
 /* Acquire write lock for RWLOCK.  */
 extern int pthread_rwlock_wrlock (pthread_rwlock_t *__rwlock) __THROW;
 
-/* Try to acquire writelock for RWLOCK.  */
+/* Try to acquire write lock for RWLOCK.  */
 extern int pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock) __THROW;
+
+#ifdef __USE_XOPEN2K
+/* Try to acquire write lock for RWLOCK or return after specfied time.  */
+extern int pthread_rwlock_timedwrlock (pthread_rwlock_t *__rwlock,
+				       __const struct timespec *__abstime)
+     __THROW;
+#endif
 
 /* Unlock RWLOCK.  */
 extern int pthread_rwlock_unlock (pthread_rwlock_t *__rwlock) __THROW;
