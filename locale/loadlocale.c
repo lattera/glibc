@@ -189,7 +189,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   for (cnt = 0; cnt < newdata->nstrings; ++cnt)
     {
       off_t idx = filedata->strindex[cnt];
-      if (idx >= newdata->filesize)
+      if (idx > newdata->filesize)
 	{
 	  free (newdata);
 	  __set_errno (EINVAL);

@@ -1,5 +1,8 @@
 1999-11-22  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/loadlocale.c (_nl_load_locale): Allow index of entry in
+	file be equal to file size.
+
 	* stdlib/longlong.h: Add count_trailing_zeros back.
 
 	* stdlib/longlong.h: Update from latest egcs version.
