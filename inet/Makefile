@@ -54,3 +54,11 @@ CFLAGS-rexec.c = -w
 CFLAGS-ruserpass.c = -w
 
 include ../Rules
+
+ifeq ($(have-thread-library),yes)
+
+CFLAGS-gethstbyad_r.c = -DUSE_NSCD=1
+CFLAGS-gethstbynm_r.c = -DUSE_NSCD=1
+CFLAGS-gethstbynm2_r.c = -DUSE_NSCD=1
+
+endif

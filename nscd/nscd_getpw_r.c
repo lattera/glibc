@@ -31,9 +31,9 @@
 
 int __nss_not_use_nscd_passwd;
 
-static int __nscd_getpw_r (const char *key, request_type type,
-			   struct passwd *resultbuf, char *buffer,
-			   size_t buflen);
+static int nscd_getpw_r (const char *key, request_type type,
+			 struct passwd *resultbuf, char *buffer,
+			 size_t buflen);
 
 int
 __nscd_getpwnam_r (const char *name, struct passwd *resultbuf, char *buffer,
@@ -42,7 +42,7 @@ __nscd_getpwnam_r (const char *name, struct passwd *resultbuf, char *buffer,
   if (name == NULL)
     return 1;
 
-  return __nscd_getpw_r (name, GETPWBYNAME, resultbuf, buffer, buflen);
+  return nscd_getpw_r (name, GETPWBYNAME, resultbuf, buffer, buflen);
 }
 
 int
@@ -60,12 +60,12 @@ __nscd_getpwuid_r (uid_t uid, struct passwd *resultbuf, char *buffer,
     }
   p = buffer + plen + 1;
 
-  return __nscd_getpw_r (buffer, GETPWBYUID, resultbuf, p, buflen - plen -1);
+  return nscd_getpw_r (buffer, GETPWBYUID, resultbuf, p, buflen - plen - 1);
 }
 
 /* Create a socket connected to a name. */
 static int
-nscd_open_socket (void)
+open_socket (void)
 {
   struct sockaddr_un addr;
   int sock;
@@ -91,10 +91,10 @@ nscd_open_socket (void)
 }
 
 static int
-__nscd_getpw_r (const char *key, request_type type, struct passwd *resultbuf,
-		char *buffer, size_t buflen)
+nscd_getpw_r (const char *key, request_type type, struct passwd *resultbuf,
+	      char *buffer, size_t buflen)
 {
-  int sock = nscd_open_socket ();
+  int sock = open_socket ();
   request_header req;
   pw_response_header pw_resp;
   ssize_t nbytes;
@@ -107,7 +107,7 @@ __nscd_getpw_r (const char *key, request_type type, struct passwd *resultbuf,
 
   req.version = NSCD_VERSION;
   req.type = type;
-  req.key_len = strlen (key);
+  req.key_len = strlen (key) + 1;
   nbytes = __write (sock, &req, sizeof (request_header));
   if (nbytes != sizeof (request_header))
     {
@@ -139,68 +139,42 @@ __nscd_getpw_r (const char *key, request_type type, struct passwd *resultbuf,
 
   if (pw_resp.found == 1)
     {
-      struct iovec vec[5];
       char *p = buffer;
+      size_t total = (pw_resp.pw_name_len + pw_resp.pw_passwd_len
+		      + pw_resp.pw_gecos_len + pw_resp.pw_dir_len
+		      + pw_resp.pw_shell_len);
 
-      if (buflen < (pw_resp.pw_name_len + 1 + pw_resp.pw_passwd_len + 1
-		    + pw_resp.pw_gecos_len + 1 + pw_resp.pw_dir_len + 1
-		    + pw_resp.pw_shell_len + 1))
+      if (buflen < total)
 	{
 	  __set_errno (ERANGE);
 	  __close (sock);
 	  return -1;
 	}
 
-      /* get pw_name */
-      vec[0].iov_base = p;
-      vec[0].iov_len = pw_resp.pw_name_len;
-      p += pw_resp.pw_name_len + 1;
-      buflen -= (pw_resp.pw_name_len + 1);
-      /* get pw_passwd */
-      vec[1].iov_base = p;
-      vec[1].iov_len = pw_resp.pw_passwd_len;
-      p += pw_resp.pw_passwd_len + 1;
-      buflen -= (pw_resp.pw_passwd_len + 1);
-      /* get pw_gecos */
-      vec[2].iov_base = p;
-      vec[2].iov_len = pw_resp.pw_gecos_len;
-      p += pw_resp.pw_gecos_len + 1;
-      buflen -= (pw_resp.pw_gecos_len + 1);
-      /* get pw_dir */
-      vec[3].iov_base = p;
-      vec[3].iov_len = pw_resp.pw_dir_len;
-      p += pw_resp.pw_dir_len + 1;
-      buflen -= (pw_resp.pw_dir_len + 1);
-      /* get pw_pshell */
-      vec[4].iov_base = p;
-      vec[4].iov_len = pw_resp.pw_shell_len;
-      p += pw_resp.pw_shell_len + 1;
-      buflen -= (pw_resp.pw_shell_len + 1);
-
-      nbytes = __readv (sock, vec, 5);
-      if (nbytes !=  (pw_resp.pw_name_len + pw_resp.pw_passwd_len
-		      + pw_resp.pw_gecos_len + pw_resp.pw_dir_len
-		      + pw_resp.pw_shell_len))
-	{
-	  __close (sock);
-	  return 1;
-	}
-
-      resultbuf->pw_name = vec[0].iov_base;
-      resultbuf->pw_name[pw_resp.pw_name_len] = '\0';
-      resultbuf->pw_passwd = vec[1].iov_base;
-      resultbuf->pw_passwd[pw_resp.pw_passwd_len] = '\0';
+      /* Set the information we already have.  */
       resultbuf->pw_uid = pw_resp.pw_uid;
       resultbuf->pw_gid = pw_resp.pw_gid;
-      resultbuf->pw_gecos = vec[2].iov_base;
-      resultbuf->pw_gecos[pw_resp.pw_gecos_len] = '\0';
-      resultbuf->pw_dir = vec[3].iov_base;
-      resultbuf->pw_dir[pw_resp.pw_dir_len] = '\0';
-      resultbuf->pw_shell = vec[4].iov_base;
-      resultbuf->pw_shell[pw_resp.pw_shell_len] = '\0';
+
+      /* get pw_name */
+      resultbuf->pw_name = p;
+      p += pw_resp.pw_name_len;
+      /* get pw_passwd */
+      resultbuf->pw_passwd = p;
+      p += pw_resp.pw_passwd_len;
+      /* get pw_gecos */
+      resultbuf->pw_gecos = p;
+      p += pw_resp.pw_gecos_len;
+      /* get pw_dir */
+      resultbuf->pw_dir = p;
+      p += pw_resp.pw_dir_len;
+      /* get pw_pshell */
+      resultbuf->pw_shell = p;
+
+      nbytes = __read (sock, buffer, total);
 
       __close (sock);
-      return 0;
+
+      return nbytes == total ? 0 : 1;
     }
   else
     {

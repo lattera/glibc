@@ -120,11 +120,12 @@ typedef union querybuf
 static enum nss_status getanswer_r (const querybuf *answer, int anslen,
 				    const char *qname, int qtype,
 				    struct hostent *result, char *buffer,
-				    size_t buflen, int *h_errnop);
+				    size_t buflen, int *errnop, int *h_errnop);
 
 enum nss_status
 _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
-			   char *buffer, size_t buflen, int *h_errnop)
+			   char *buffer, size_t buflen, int *errnop,
+			   int *h_errnop)
 {
   querybuf host_buffer;
   int size, type, n;
@@ -141,7 +142,7 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
     break;
   default:
     *h_errnop = NETDB_INTERNAL;
-    __set_errno (EAFNOSUPPORT);
+    *errnop = EAFNOSUPPORT;
     return NSS_STATUS_UNAVAIL;
   }
 
@@ -160,26 +161,28 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
   if (n < 0)
     {
       *h_errnop = h_errno;
+      *errnop = errno;
       return errno == ECONNREFUSED ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
     }
 
   return getanswer_r (&host_buffer, n, name, type, result, buffer, buflen,
-		      h_errnop);
+		      errnop, h_errnop);
 }
 
 
 enum nss_status
 _nss_dns_gethostbyname_r (const char *name, struct hostent *result,
-			  char *buffer, size_t buflen, int *h_errnop)
+			  char *buffer, size_t buflen, int *errnop,
+			  int *h_errnop)
 {
   enum nss_status status = NSS_STATUS_NOTFOUND;
 
   if (_res.options & RES_USE_INET6)
     status = _nss_dns_gethostbyname2_r (name, AF_INET6, result, buffer,
-					buflen, h_errnop);
+					buflen, errnop, h_errnop);
   if (status == NSS_STATUS_NOTFOUND)
     status = _nss_dns_gethostbyname2_r (name, AF_INET, result, buffer,
-					buflen, h_errnop);
+					buflen, errnop, h_errnop);
 
   return status;
 }
@@ -188,7 +191,7 @@ _nss_dns_gethostbyname_r (const char *name, struct hostent *result,
 enum nss_status
 _nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
 			  struct hostent *result, char *buffer, size_t buflen,
-			  int *h_errnop)
+			  int *errnop, int *h_errnop)
 {
   static const u_char mapped[] = { 0,0, 0,0, 0,0, 0,0, 0,0, 0xff,0xff };
   static const u_char tunnelled[] = { 0,0, 0,0, 0,0, 0,0, 0,0, 0,0 };
@@ -224,13 +227,13 @@ _nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
       size = IN6ADDRSZ;
       break;
     default:
-      __set_errno (EAFNOSUPPORT);
+      *errnop = EAFNOSUPPORT;
       *h_errnop = NETDB_INTERNAL;
       return NSS_STATUS_UNAVAIL;
     }
   if (size != len)
     {
-      __set_errno (EAFNOSUPPORT);
+      *errnop = EAFNOSUPPORT;
       *h_errnop = NETDB_INTERNAL;
       return NSS_STATUS_UNAVAIL;
     }
@@ -256,14 +259,16 @@ _nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
   if (n < 0)
     {
       *h_errnop = h_errno;
+      *errnop = errno;
       return errno == ECONNREFUSED ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
     }
 
   status = getanswer_r (&host_buffer, n, qbuf, T_PTR, result, buffer, buflen,
-			h_errnop);
+			errnop, h_errnop);
   if (status != NSS_STATUS_SUCCESS)
     {
       *h_errnop = h_errno;
+      *errnop = errno;
       return status;
     }
 
@@ -292,7 +297,7 @@ _nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
 static enum nss_status
 getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	     struct hostent *result, char *buffer, size_t buflen,
-	     int *h_errnop)
+	     int *errnop, int *h_errnop)
 {
   struct host_data
   {
@@ -344,7 +349,17 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   n = dn_expand (answer->buf, end_of_message, cp, bp, linebuflen);
   if (n < 0 || (*name_ok) (bp) == 0)
     {
-      *h_errnop = NO_RECOVERY;
+      if (errno == EMSGSIZE)
+	{
+	  /* There is not enough room in the input buffer.  */
+	  *errnop = ERANGE;
+	  *h_errnop = NETDB_INTERNAL;
+	}
+      else
+	{
+	  *errnop = errno;
+	  *h_errnop = NO_RECOVERY;
+	}
       return NSS_STATUS_UNAVAIL;
     }
   cp += n + QFIXEDSZ;
@@ -358,7 +373,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       n = strlen (bp) + 1;             /* for the \0 */
       if (n >= MAXHOSTNAMELEN)
 	{
-	  __set_h_errno (NO_RECOVERY);
+	  *h_errnop = NO_RECOVERY;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       result->h_name = bp;

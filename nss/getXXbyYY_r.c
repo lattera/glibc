@@ -19,7 +19,9 @@
 
 #include <errno.h>
 #include "nsswitch.h"
-#include <nscd/nscd_proto.h>
+#ifdef USE_NSCD
+# include <nscd/nscd_proto.h>
+#endif
 
 /*******************************************************************\
 |* Here we assume several symbols to be defined:		   *|

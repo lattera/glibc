@@ -21,11 +21,13 @@
 #define _NSCD_PROTO_H 1
 
 #include <grp.h>
+#include <netdb.h>
 #include <pwd.h>
 
 /* Variables for communication between NSCD handler functions and NSS.  */
 extern int __nss_not_use_nscd_passwd;
 extern int __nss_not_use_nscd_group;
+extern int __nss_not_use_nscd_hosts;
 
 extern int __nscd_getpwnam_r __P ((const char *name, struct passwd *resultbuf,
 				   char *buffer, size_t buflen));
@@ -35,5 +37,17 @@ extern int __nscd_getgrnam_r __P ((const char *name, struct group *resultbuf,
 				   char *buffer, size_t buflen));
 extern int __nscd_getgrgid_r __P ((uid_t uid, struct group *resultbuf,
 				   char *buffer,  size_t buflen));
+extern int __nscd_gethostbyname_r __P ((const char *name,
+					struct hostent *resultbuf,
+					char *buffer, size_t buflen,
+					int *h_errnop));
+extern int __nscd_gethostbyname2_r __P ((const char *name, int af,
+					 struct hostent *resultbuf,
+					 char *buffer, size_t buflen,
+					 int *h_errnop));
+extern int __nscd_gethostbyaddr_r __P ((const char *addr, int len, int type,
+					struct hostent *resultbuf,
+					char *buffer, size_t buflen,
+					int *h_errnop));
 
 #endif /* _NSCD_PROTO_H */

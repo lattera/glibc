@@ -1,6 +1,7 @@
-/* Copyright (c) 1998 Free Software Foundation, Inc.
+/* Inner loops of cache daemon.
+   Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -15,551 +16,407 @@
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA. */
+   Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
+#include <assert.h>
 #include <error.h>
-#include <fcntl.h>
-#include <libintl.h>
-#include <locale.h>
+#include <errno.h>
 #include <pthread.h>
-#include <pwd.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/param.h>
 #include <sys/poll.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/uio.h>
 #include <sys/un.h>
 
 #include "nscd.h"
 #include "dbg_log.h"
 
-/* Socket 0 in the array is named and exported into the file namespace
-   as a connection point for clients.  There's a one to one
-   correspondence between sock[i] and read_polls[i].  */
-static int sock[MAX_NUM_CONNECTIONS];
-static int socks_active;
-static struct pollfd read_polls[MAX_NUM_CONNECTIONS];
-static pthread_mutex_t sock_lock = PTHREAD_MUTEX_INITIALIZER;
 
-
-/* Cleanup.  */
-void
-close_sockets (void)
+/* Mapping of request type to database.  */
+static const dbtype serv2db[LASTDBREQ + 1] =
 {
-  int i;
+  [GETPWBYNAME] = pwddb,
+  [GETPWBYUID] = pwddb,
+  [GETGRBYNAME] = grpdb,
+  [GETGRBYGID] = grpdb,
+  [GETHOSTBYNAME] = hstdb,
+  [GETHOSTBYNAMEv6] = hstdb,
+  [GETHOSTBYADDR] = hstdb,
+  [GETHOSTBYADDRv6] = hstdb,
+};
 
-  if (debug_flag)
-    dbg_log (_("close_sockets called"));
-
-  pthread_mutex_lock (&sock_lock);
-
-  /* Close sockets.  */
-  for (i = 0; i < MAX_NUM_CONNECTIONS; ++i)
-    if (sock[i] != 0)
-      {
-	if (close (sock[i]))
-	  dbg_log (_("socket [%d|%d] close: %s"), i, sock[i], strerror (errno));
-
-	sock[i] = 0;
-	read_polls[i].fd = -1;
-	--socks_active;
-      }
-
-  pthread_mutex_unlock (&sock_lock);
-}
-
-void
-close_socket (int conn)
+/* Map request type to a string.  */
+const char *serv2str[LASTREQ] =
 {
-  if (debug_flag > 2)
-    dbg_log (_("close socket (%d|%d)"), conn, sock[conn]);
+  [GETPWBYNAME] = "GETPWBYNAME",
+  [GETPWBYUID] = "GETPWBYUID",
+  [GETGRBYNAME] = "GETGRBYNAME",
+  [GETGRBYGID] = "GETGRBYGID",
+  [GETHOSTBYNAME] = "GETHOSTBYNAME",
+  [GETHOSTBYNAMEv6] = "GETHOSTBYNAMEv6",
+  [GETHOSTBYADDR] = "GETHOSTBYADDR",
+  [GETHOSTBYADDRv6] = "GETHOSTBYADDRv6",
+  [SHUTDOWN] = "SHUTDOWN",
+  [GETSTAT] = "GETSTAT"
+};
 
-  pthread_mutex_lock (&sock_lock);
-
-  close (sock[conn]);
-  sock[conn] = 0;
-  read_polls[conn].fd = -1;
-  --socks_active;
-
-  pthread_mutex_unlock (&sock_lock);
-}
-
-/* Local routine, assigns a socket to a new connection request.  */
-static void
-handle_new_connection (void)
+/* The control data structures for the services.  */
+static struct database dbs[lastdb] =
 {
-  int i;
-
-  if (debug_flag > 2)
-    dbg_log (_("handle_new_connection"));
-
-  pthread_mutex_lock (&sock_lock);
-
-  if (socks_active < MAX_NUM_CONNECTIONS)
-    /* Find a free socket entry to use.  */
-    for (i = 1; i < MAX_NUM_CONNECTIONS; ++i)
-      {
-	if (sock[i] == 0)
-	  {
-	    if ((sock[i] = accept (sock[0], NULL, NULL)) < 0)
-	      {
-		dbg_log (_("socket accept: %s"), strerror (errno));
-		return;
-	      }
-	    ++socks_active;
-	    read_polls[i].fd = sock[i];
-	    read_polls[i].events = POLLRDNORM;
-	    if (debug_flag > 2)
-	      dbg_log (_("handle_new_connection used socket %d|%d"), i,
-		       sock[i]);
-	    break;
-	  }
-      }
-  else
-    {
-      int black_widow_sock;
-      dbg_log (_("Supported number of simultaneous connections exceeded"));
-      dbg_log (_("Ignoring client connect request"));
-      /* There has to be a better way to ignore a connection request,..
-	 when I get my hands on a sockets wiz I'll modify this.  */
-      black_widow_sock  = accept (sock[0], NULL, NULL);
-      close (black_widow_sock);
-    }
-  pthread_mutex_unlock (&sock_lock);
-}
-
-/* Local routine, reads a request off a socket indicated by read_polls.  */
-static int
-handle_new_request (int **connp, request_header **reqp, char **key)
-{
-  ssize_t nbytes;
-  int i, found = 0;
-
-  if (debug_flag)
-    dbg_log ("handle_new_request");
-
-  /* Find the descriptor.  */
-  for (i = 1; i < MAX_NUM_CONNECTIONS; ++i) {
-    if (read_polls[i].fd >= 0
-	&& read_polls[i].revents & (POLLRDNORM|POLLERR|POLLNVAL))
-      {
-	found = i;
-	break;
-      }
-    if (read_polls[i].fd >= 0 && (read_polls[i].revents & POLLHUP))
-      {
-	/* Don't close the socket, we still need to send data.  Just
-	   stop polling for more data now.  */
-	read_polls[i].fd = -1;
-      }
+  [pwddb] = {
+    lock: PTHREAD_RWLOCK_INITIALIZER,
+    enabled: 1,
+    check_file: 1,
+    filename: "/etc/passwd",
+    module: 211,
+    disabled_iov: &pwd_iov_disabled
+  },
+  [grpdb] = {
+    lock: PTHREAD_RWLOCK_INITIALIZER,
+    enabled: 1,
+    check_file: 1,
+    filename: "/etc/group",
+    module: 211,
+    disabled_iov: &grp_iov_disabled
+  },
+  [hstdb] = {
+    lock: PTHREAD_RWLOCK_INITIALIZER,
+    enabled: 1,
+    check_file: 1,
+    filename: "/etc/hosts",
+    module: 211,
+    disabled_iov: &hst_iov_disabled
   }
+};
 
-  if (found == 0)
-    {
-      dbg_log (_("No sockets with data found !"));
-      return -1;
-    }
+/* Number of threads to use.  */
+int nthreads = -1;
 
-  if (debug_flag > 2)
-    dbg_log (_("handle_new_request uses socket %d"), i);
+/* Socket for incoming connections.  */
+static int sock;
 
-  /* Read from it.  */
-  nbytes = read (sock[i], *reqp, sizeof (request_header));
-  if (nbytes != sizeof (request_header))
-    {
-      /* Handle non-data read cases.  */
-      if (nbytes == 0)
-	{
-	  /* Close socket down.  */
-	  if (debug_flag > 2)
-	    dbg_log (_("Real close socket %d|%d"), i, sock[i]);
 
-	  pthread_mutex_lock (&sock_lock);
-	  read_polls[i].fd = -1;
-	  close (sock[i]);
-	  sock[i] = 0;
-	  --socks_active;
-	  pthread_mutex_unlock (&sock_lock);
-	}
-      else
-	if (nbytes < 0)
-	  {
-	    dbg_log (_("Read(%d|%d) error on get request: %s"),
-		     i, sock[i], strerror (errno));
-	    exit (1);
-	  }
-	else
-	  dbg_log (_("Read, data < request buf size, ignoring data"));
-
-      return -1;
-    }
-  else
-    {
-      *key = malloc ((*reqp)->key_len + 1);
-      /* Read the key from it */
-      nbytes = read (sock[i], *key, (*reqp)->key_len);
-      if (nbytes != (*reqp)->key_len)
-	{
-	  /* Handle non-data read cases.  */
-	  if (nbytes == 0)
-	    {
-	      /* Close socket down.  */
-	      if (debug_flag > 2)
-		dbg_log (_("Real close socket %d|%d"), i, sock[i]);
-
-	      pthread_mutex_lock (&sock_lock);
-	      read_polls[i].fd = -1;
-	      close (sock[i]);
-	      sock[i] = 0;
-	      --socks_active;
-	      pthread_mutex_unlock (&sock_lock);
-	    }
-	  else
-	    if (nbytes < 0)
-	      {
-		perror (_("Read() error on get request"));
-		return 0;
-	      }
-	    else
-	      fputs (_("Read, data < request buf size, ignoring data"),
-		     stderr);
-
-	  free (*key);
-	  return -1;
-	}
-      else
-	{
-	  /* Ok, have a live one, A real data req buf has been obtained.  */
-	  (*key)[(*reqp)->key_len] = '\0';
-	  **connp = i;
-	  return 0;
-	}
-    }
-}
-
+/* Initialize database information structures.  */
 void
-get_request (int *conn, request_header *req, char **key)
-{
-  int done = 0;
-  int nr;
-
-  if (debug_flag)
-    dbg_log ("get_request");
-
-  /* loop, processing new connection requests until a client buffer
-     is read in on an existing connection.  */
-  while (!done)
-    {
-      /* Poll active connections.  */
-      nr = poll (read_polls, MAX_NUM_CONNECTIONS, -1);
-      if (nr <= 0)
-	{
-	  perror (_("Poll new reads"));
-	  exit (1);
-	}
-      if (read_polls[0].revents & (POLLRDNORM|POLLERR|POLLHUP|POLLNVAL))
-	/* Handle the case of a new connection request on the named socket.  */
-	handle_new_connection ();
-      else
-	{
-	  /* Read data from client specific descriptor.  */
-	  if (handle_new_request (&conn, &req, key) == 0)
-	    done = 1;
-	}
-    } /* While not_done.  */
-}
-
-void
-init_sockets (void)
+nscd_init (const char *conffile)
 {
   struct sockaddr_un sock_addr;
-  int i;
+  size_t cnt;
 
-  /* Initialize the connections db.  */
-  socks_active = 0;
+  /* Read the configuration file.  */
+  if (nscd_parse_file (conffile, dbs) != 0)
+    {
+      /* We couldn't read the configuration file.  Disable all services
+	 by shutting down the srever.  */
+      dbg_log (_("cannot read configuration file; this is fatal"));
+      exit (1);
+    }
+  if (nthreads == -1)
+    /* No configuration for this value, assume a default.  */
+    nthreads = 2 * lastdb;
 
-  /* Initialize the poll array. */
-  for (i = 0; i < MAX_NUM_CONNECTIONS; i++)
-    read_polls[i].fd = -1;
+  for (cnt = 0; cnt < lastdb; ++cnt)
+    if (dbs[cnt].enabled)
+      {
+	pthread_rwlock_init (&dbs[cnt].lock, NULL);
+
+	dbs[cnt].array = (struct hashentry **)
+	  calloc (dbs[cnt].module, sizeof (struct hashentry *));
+	if (dbs[cnt].array == NULL)
+	  error (EXIT_FAILURE, errno, "while allocating cache");
+
+	if (dbs[cnt].check_file)
+	  {
+	    /* We need the modification date of the file.  */
+	    struct stat st;
+
+	    if (stat (dbs[cnt].filename, &st) < 0)
+	      {
+		char buf[128];
+		/* We cannot stat() the file, disable file checking.  */
+		dbg_log (_("cannot stat() file `%s': %s"),
+			 dbs[cnt].filename,
+			 strerror_r (errno, buf, sizeof (buf)));
+		dbs[cnt].check_file = 0;
+	      }
+	    else
+	      dbs[cnt].file_mtime = st.st_mtime;
+	  }
+      }
 
   /* Create the socket.  */
-  sock[0] = socket (AF_UNIX, SOCK_STREAM, 0);
-  if (sock[0] < 0)
+  sock = socket (AF_UNIX, SOCK_STREAM, 0);
+  if (sock < 0)
     {
-      perror (_("cannot create socket"));
+      dbg_log (_("cannot open socket: %s"), strerror (errno));
       exit (1);
     }
   /* Bind a name to the socket.  */
   sock_addr.sun_family = AF_UNIX;
   strcpy (sock_addr.sun_path, _PATH_NSCDSOCKET);
-  if (bind (sock[0], (struct sockaddr *) &sock_addr, sizeof (sock_addr)) < 0)
+  if (bind (sock, (struct sockaddr *) &sock_addr, sizeof (sock_addr)) < 0)
     {
       dbg_log ("%s: %s", _PATH_NSCDSOCKET, strerror (errno));
       exit (1);
     }
+
   /* Set permissions for the socket.  */
   chmod (_PATH_NSCDSOCKET, 0666);
 
   /* Set the socket up to accept connections.  */
-  if (listen (sock[0], MAX_NUM_CONNECTIONS) < 0)
+  if (listen (sock, SOMAXCONN) < 0)
     {
-      perror (_("cannot enable socket to accept connections"));
+      dbg_log (_("cannot enable socket to accept connections: %s"),
+	       strerror (errno));
       exit (1);
     }
-
-  /* Add the socket to the server's set of active sockets.  */
-  read_polls[0].fd = sock[0];
-  read_polls[0].events = POLLRDNORM;
-  ++socks_active;
 }
 
-void
-pw_send_answer (int conn, struct passwd *pwd)
-{
-  struct iovec vec[6];
-  pw_response_header resp;
-  size_t total_len;
-  int nblocks;
 
-  resp.version = NSCD_VERSION;
-  if (pwd != NULL)
+/* Close the connections.  */
+void
+close_sockets (void)
+{
+  close (sock);
+}
+
+
+/* Handle new request.  */
+static void
+handle_request (int fd, request_header *req, void *key)
+{
+  if (debug_level > 0)
+    dbg_log (_("handle_requests: request received (Version = %d)"),
+	     req->version);
+
+  if (req->version != NSCD_VERSION)
     {
-      resp.found = 1;
-      resp.pw_name_len = strlen (pwd->pw_name);
-      resp.pw_passwd_len = strlen (pwd->pw_passwd);
-      resp.pw_uid = pwd->pw_uid;
-      resp.pw_gid = pwd->pw_gid;
-      resp.pw_gecos_len = strlen (pwd->pw_gecos);
-      resp.pw_dir_len = strlen (pwd->pw_dir);
-      resp.pw_shell_len = strlen (pwd->pw_shell);
-    }
-  else
-    {
-      resp.found = 0;
-      resp.pw_name_len = 0;
-      resp.pw_passwd_len = 0;
-      resp.pw_uid = -1;
-      resp.pw_gid = -1;
-      resp.pw_gecos_len = 0;
-      resp.pw_dir_len = 0;
-      resp.pw_shell_len = 0;
-    }
-  if (sock[conn] == 0)
-    {
-      dbg_log (_("bad connection id on send response [%d|%d]"),
-	       conn, sock[conn]);
+      dbg_log (_("\
+cannot handle old request version %d; current version is %d"),
+	       req->version, NSCD_VERSION);
       return;
     }
 
-  /* Add response header.  */
-  vec[0].iov_base = &resp;
-  vec[0].iov_len = sizeof (pw_response_header);
-  total_len = sizeof (pw_response_header);
-  nblocks = 1;
-
-  if (resp.found)
+  if (req->type >= GETPWBYNAME && req->type <= LASTDBREQ)
     {
-      /* Add pw_name.  */
-      vec[1].iov_base = pwd->pw_name;
-      vec[1].iov_len = resp.pw_name_len;
-      total_len += resp.pw_name_len;
-      /* Add pw_passwd.  */
-      vec[2].iov_base = pwd->pw_passwd;
-      vec[2].iov_len = resp.pw_passwd_len;
-      total_len += resp.pw_passwd_len;
-      /* Add pw_gecos.  */
-      vec[3].iov_base = pwd->pw_gecos;
-      vec[3].iov_len = resp.pw_gecos_len;
-      total_len += resp.pw_gecos_len;
-      /* Add pw_dir.  */
-      vec[4].iov_base = pwd->pw_dir;
-      vec[4].iov_len = resp.pw_dir_len;
-      total_len += resp.pw_dir_len;
-      /* Add pw_shell.  */
-      vec[5].iov_base = pwd->pw_shell;
-      vec[5].iov_len = resp.pw_shell_len;
-      total_len += resp.pw_shell_len;
+      struct hashentry *cached;
+      struct database *db = &dbs[serv2db[req->type]];
 
-      nblocks = 6;
-    }
+      if (debug_level > 0)
+	dbg_log ("\t%s (%s)", serv2str[req->type], key);
 
-  /* Send all the data.  */
-  if (writev (sock[conn], vec, nblocks) != total_len)
-    dbg_log (_("write incomplete on send passwd answer: %s"),
-	     strerror (errno));
-}
-
-void
-pw_send_disabled (int conn)
-{
-  pw_response_header resp;
-
-  resp.version = NSCD_VERSION;
-  resp.found = -1;
-  resp.pw_name_len = 0;
-  resp.pw_passwd_len = 0;
-  resp.pw_uid = -1;
-  resp.pw_gid = -1;
-  resp.pw_gecos_len = 0;
-  resp.pw_dir_len = 0;
-  resp.pw_shell_len = 0;
-
-  if (sock[conn] == 0)
-    {
-      dbg_log (_("bad connection id on send response [%d|%d]"),
-	       conn, sock[conn]);
-      return;
-    }
-
-  /* Send response header.  */
-  if (write (sock[conn], &resp, sizeof (pw_response_header))
-      != sizeof (pw_response_header))
-    dbg_log (_("write incomplete on send response: %s"), strerror (errno));
-}
-
-void
-gr_send_answer (int conn, struct group *grp)
-{
-  struct iovec *vec;
-  size_t *len;
-  gr_response_header resp;
-  size_t total_len, sum;
-  int nblocks;
-  size_t maxiov;
-
-  resp.version = NSCD_VERSION;
-  if (grp != NULL)
-    {
-      resp.found = 1;
-      resp.gr_name_len = strlen (grp->gr_name);
-      resp.gr_passwd_len = strlen (grp->gr_passwd);
-      resp.gr_gid = grp->gr_gid;
-      resp.gr_mem_len = 0;
-      while (grp->gr_mem[resp.gr_mem_len])
-	++resp.gr_mem_len;
-    }
-  else
-    {
-      resp.found = 0;
-      resp.gr_name_len = 0;
-      resp.gr_passwd_len = 0;
-      resp.gr_gid = -1;
-      resp.gr_mem_len = 0;
-    }
-  if (sock[conn] == 0)
-    {
-      dbg_log (_("bad connection id on send response [%d|%d]"),
-	       conn, sock[conn]);
-      return;
-    }
-
-  /* We have no fixed number of records so allocate the IOV here.  */
-  vec = alloca ((3 + 1 + resp.gr_mem_len) * sizeof (struct iovec));
-  len = alloca (resp.gr_mem_len * sizeof (size_t));
-
-  /* Add response header.  */
-  vec[0].iov_base = &resp;
-  vec[0].iov_len = sizeof (gr_response_header);
-  total_len = sizeof (gr_response_header);
-  nblocks = 1;
-
-  if (resp.found)
-    {
-      unsigned int l = 0;
-
-      /* Add gr_name.  */
-      vec[1].iov_base = grp->gr_name;
-      vec[1].iov_len = resp.gr_name_len;
-      total_len += resp.gr_name_len;
-      /* Add gr_passwd.  */
-      vec[2].iov_base = grp->gr_passwd;
-      vec[2].iov_len = resp.gr_passwd_len;
-      total_len += resp.gr_passwd_len;
-      nblocks = 3;
-
-      if (grp->gr_mem[l])
+      /* Is this service enabled?  */
+      if (!db->enabled)
 	{
-	  vec[3].iov_base = len;
-	  vec[3].iov_len = resp.gr_mem_len * sizeof (size_t);
-	  total_len += resp.gr_mem_len * sizeof (size_t);
-	  nblocks = 4;
-
-	  do
+	  /* No sent the prepared record.  */
+	  if (TEMP_FAILURE_RETRY (write (fd, db->disabled_iov->iov_base,
+					 db->disabled_iov->iov_len))
+	      != db->disabled_iov->iov_len)
 	    {
-	      len[l] = strlen (grp->gr_mem[l]);
-
-	      vec[nblocks].iov_base = grp->gr_mem[l];
-	      vec[nblocks].iov_len = len[l];
-	      total_len += len[l];
-
-	      ++nblocks;
+	      /* We have problems sending the result.  */
+	      char buf[256];
+	      dbg_log (_("cannot write result: %s"),
+		       strerror_r (errno, buf, sizeof (buf)));
 	    }
-	  while (grp->gr_mem[++l]);
+
+	  return;
+	}
+
+      /* Be sure we can read the data.  */
+      pthread_rwlock_rdlock (&db->lock);
+
+      /* See whether we can handle it from the cache.  */
+      cached = (struct hashentry *) cache_search (req->type, key, req->key_len,
+						  db);
+      if (cached != NULL)
+	{
+	  /* Hurray it's in the cache.  */
+	  if (TEMP_FAILURE_RETRY (write (fd, cached->packet, cached->total))
+	      != cached->total)
+	    {
+	      /* We have problems sending the result.  */
+	      char buf[256];
+	      dbg_log (_("cannot write result: %s"),
+		       strerror_r (errno, buf, sizeof (buf)));
+	    }
+
+	  pthread_rwlock_unlock (&db->lock);
+
+	  return;
+	}
+
+      pthread_rwlock_unlock (&db->lock);
+    }
+  else
+    if (debug_level > 0)
+      dbg_log ("\t%s", serv2str[req->type]);
+
+  /* Handle the request.  */
+  switch (req->type)
+    {
+    case GETPWBYNAME:
+      addpwbyname (&dbs[serv2db[req->type]], fd, req, key);
+      break;
+
+    case GETPWBYUID:
+      addpwbyuid (&dbs[serv2db[req->type]], fd, req, key);
+      break;
+
+    case GETGRBYNAME:
+      addgrbyname (&dbs[serv2db[req->type]], fd, req, key);
+      break;
+
+    case GETGRBYGID:
+      addgrbygid (&dbs[serv2db[req->type]], fd, req, key);
+      break;
+
+    case GETHOSTBYNAME:
+      addhstbyname (&dbs[serv2db[req->type]], fd, req, key);
+      break;
+
+    case GETHOSTBYNAMEv6:
+      addhstbynamev6 (&dbs[serv2db[req->type]], fd, req, key);
+      break;
+
+    case GETHOSTBYADDR:
+      addhstbyaddr (&dbs[serv2db[req->type]], fd, req, key);
+      break;
+
+    case GETHOSTBYADDRv6:
+      addhstbyaddrv6 (&dbs[serv2db[req->type]], fd, req, key);
+      break;
+
+    case GETSTAT:
+      send_stats (fd, dbs);
+      break;
+
+    case SHUTDOWN:
+      termination_handler (0);
+      break;
+
+    default:
+      abort ();
+    }
+}
+
+
+/* This is the main loop.  It is replicated in different threads but the
+   `poll' call makes sure only one thread handles an incoming connection.  */
+static void *
+__attribute__ ((__noreturn__))
+nscd_run (void *p)
+{
+  int my_number = (int) p;
+  struct pollfd conn;
+  int run_prune = my_number < lastdb && dbs[my_number].enabled;
+  time_t now = time (NULL);
+  time_t next_prune = now + 15;
+  int timeout = run_prune ? 1000 * (next_prune - now) : -1;
+
+  conn.fd = sock;
+  conn.events = POLLRDNORM;
+
+  while (1)
+    {
+      int nr = poll (&conn, 1, timeout);
+
+      if (nr == 0)
+	{
+	  /* The `poll' call timed out.  It's time to clean up the cache.  */
+	  assert (my_number < lastdb);
+	  now = time (NULL);
+	  prune_cache (&dbs[my_number], now);
+	  next_prune = now + 15;
+	  timeout = 1000 * (next_prune - now);
+	  continue;
+	}
+
+      /* We have a new incoming connection.  */
+      if (conn.revents & (POLLRDNORM|POLLERR|POLLHUP|POLLNVAL))
+	{
+	  /* Accept the connection.  */
+	  int fd = accept (conn.fd, NULL, NULL);
+	  request_header req;
+	  char buf[256];
+
+	  if (fd < 0)
+	    {
+	      dbg_log (_("while accepting connection: %s"),
+		       strerror_r (errno, buf, sizeof (buf)));
+	      continue;
+	    }
+
+	  /* Now read the request.  */
+	  if (TEMP_FAILURE_RETRY (read (fd, &req, sizeof (req)))
+	      != sizeof (req))
+	    {
+	      dbg_log (_("short read while reading request: %s"),
+		       strerror_r (errno, buf, sizeof (buf)));
+	      close (fd);
+	      continue;
+	    }
+
+	  /* It should not be possible to crash the nscd with a silly
+	     request (i.e., a terribly large key.  We limit the size
+	     to 1kb.  */
+	  if (req.key_len < 0 || req.key_len > 1024)
+	    {
+	      dbg_log (_("key length in request to long: %Zd"), req.key_len);
+	      close (fd);
+	      continue;
+	    }
+	  else
+	    {
+	      /* Get the key.  */
+	      char keybuf[req.key_len];
+
+	      if (TEMP_FAILURE_RETRY (read (fd, keybuf, req.key_len))
+		  != req.key_len)
+		{
+		  dbg_log (_("short read while reading request key: %s"),
+			   strerror_r (errno, buf, sizeof (buf)));
+		  close (fd);
+		  continue;
+		}
+
+	      /* Phew, we got all the data, now process it.  */
+	      handle_request (fd, &req, keybuf);
+
+	      /* We are done.  */
+	      close (fd);
+	    }
+	}
+
+      if (run_prune)
+	{
+	  now = time (NULL);
+	  timeout = now < next_prune ? 1000 * (next_prune - now) : 0;
 	}
     }
-
-#ifdef UIO_MAXIOV
-  maxiov = UIO_MAXIOV;
-#else
-  maxiov = sysconf (_SC_UIO_MAXIOV);
-#endif
-
-  /* Send all the data.  */
-  sum = 0;
-  while (nblocks > maxiov)
-    {
-      sum += writev (sock[conn], vec, maxiov);
-      vec += maxiov;
-      nblocks -= maxiov;
-    }
-  if (sum + writev (sock[conn], vec, nblocks) != total_len)
-    dbg_log (_("write incomplete on send group answer: %s"),
-	     strerror (errno));
 }
 
+
+/* Start all the threads we want.  The initial process is thread no. 1.  */
 void
-gr_send_disabled (int conn)
+start_threads (void)
 {
-  gr_response_header resp;
+  int i;
+  pthread_attr_t attr;
+  pthread_t th;
 
-  resp.version = NSCD_VERSION;
-  resp.found = -1;
-  resp.gr_name_len = 0;
-  resp.gr_passwd_len = 0;
-  resp.gr_gid = -1;
-  resp.gr_mem_len = 0;
+  pthread_attr_init (&attr);
+  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
 
-  if (sock[conn] == 0)
-    {
-      dbg_log (_("bad connection id on send gr_disabled response [%d|%d]"),
-	       conn, sock[conn]);
-      return;
-    }
+  /* We allow less than LASTDB threads only for debugging.  */
+  if (debug_level == 0)
+    nthreads = MAX (nthreads, lastdb);
 
-  /* Send response header.  */
-  if (write (sock[conn], &resp, sizeof (gr_response_header))
-      != sizeof (gr_response_header))
-    dbg_log (_("write incomplete on send gr_disabled response: %s"),
-	     strerror (errno));
-}
+  for (i = 1; i < nthreads; ++i)
+    pthread_create (&th, &attr, nscd_run, (void *) i);
 
-void
-stat_send (int conn, stat_response_header *resp)
-{
-  if (sock[conn] == 0)
-    {
-      dbg_log (_("bad connection id on send stat response [%d|%d]"),
-	       conn, sock[conn]);
-      return;
-    }
+  pthread_attr_destroy (&attr);
 
-  /* send response header.  */
-  if (write (sock[conn], resp, sizeof (stat_response_header))
-      != sizeof (stat_response_header))
-    dbg_log (_("write incomplete on send stat response: %s"),
-	     strerror (errno));
+  nscd_run ((void *) 0);
 }

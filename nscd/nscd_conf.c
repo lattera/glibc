@@ -22,17 +22,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/param.h>
 #include <sys/types.h>
 
 #include "dbg_log.h"
 #include "nscd.h"
 
+/* Names of the databases.  */
+const char *dbnames[lastdb] =
+{
+  [pwddb] = "passwd",
+  [grpdb] = "group",
+  [hstdb] = "hosts"
+};
+
 int
-nscd_parse_file (const char *fname)
+nscd_parse_file (const char *fname, struct database dbs[lastdb])
 {
   FILE *fp;
   char *line, *cp, *entry, *arg1, *arg2;
   size_t len;
+  int cnt;
 
   /* Open the configuration file.  */
   fp = fopen (fname, "r");
@@ -92,41 +102,64 @@ nscd_parse_file (const char *fname)
 
       if (strcmp (entry, "positive-time-to-live") == 0)
 	{
-	  if (strcmp (arg1, "passwd") == 0)
-	    set_pos_pwd_ttl (atol (arg2));
-	  else if (strcmp (arg1, "group") == 0)
-	    set_pos_grp_ttl (atol (arg2));
-	  else
+	  for (cnt = 0; cnt < lastdb; ++cnt)
+	    if (strcmp (arg1, dbnames[cnt]) == 0)
+	      {
+		dbs[cnt].postimeout = atol (arg2);
+		break;
+	      }
+	  if (cnt == lastdb)
 	    dbg_log ("server %s is not supported\n", arg1);
 	}
       else if (strcmp (entry, "negative-time-to-live") == 0)
 	{
-	  if (strcmp (arg1, "passwd") == 0)
-	    set_neg_pwd_ttl (atol (arg2));
-	  else if (strcmp (arg1, "group") == 0)
-	    set_neg_grp_ttl (atol (arg2));
-	  else
-	    dbg_log (_("service %s is not supported"), arg1);
+	  for (cnt = 0; cnt < lastdb; ++cnt)
+	    if (strcmp (arg1, dbnames[cnt]) == 0)
+	      {
+		dbs[cnt].negtimeout = atol (arg2);
+		break;
+	      }
+	  if (cnt == lastdb)
+	    dbg_log ("server %s is not supported\n", arg1);
 	}
       else if (strcmp (entry, "suggested-size") == 0)
 	{
-	  if (strcmp (arg1, "passwd") == 0)
-	    set_pwd_modulo (atol (arg2));
-	  else if (strcmp (arg1, "group") == 0)
-	    set_grp_modulo (atol (arg2));
-	  else
-	    dbg_log (_("service %s is not supported"), arg1);
+	  for (cnt = 0; cnt < lastdb; ++cnt)
+	    if (strcmp (arg1, dbnames[cnt]) == 0)
+	      {
+		dbs[cnt].module = atol (arg2);
+		break;
+	      }
+	  if (cnt == lastdb)
+	    dbg_log ("server %s is not supported\n", arg1);
 	}
-      else if (strcmp (entry, "enable-cache") ==0)
+      else if (strcmp (entry, "enable-cache") == 0)
 	{
-	  if (strcmp (arg1, "passwd") == 0
-	      && strcmp (arg2, "no") == 0)
-	    disabled_passwd = 1;
-	  else if (strcmp (arg1, "group") == 0
-		   && strcmp (arg2, "no") == 0)
-	    disabled_group = 1;
-	  else
-	    dbg_log (_("service %s is not supported"), arg1);
+	  for (cnt = 0; cnt < lastdb; ++cnt)
+	    if (strcmp (arg1, dbnames[cnt]) == 0)
+	      {
+		if (strcmp (arg2, "no") == 0)
+		  dbs[cnt].enabled = 0;
+		else if (strcmp (arg2, "yes") == 0)
+		  dbs[cnt].enabled = 1;
+		break;
+	      }
+	  if (cnt == lastdb)
+	    dbg_log ("server %s is not supported\n", arg1);
+	}
+      else if (strcmp (entry, "check-files") == 0)
+	{
+	  for (cnt = 0; cnt < lastdb; ++cnt)
+	    if (strcmp (arg1, dbnames[cnt]) == 0)
+	      {
+		if (strcmp (arg2, "no") == 0)
+		  dbs[cnt].check_file = 0;
+		else if (strcmp (arg2, "yes") == 0)
+		  dbs[cnt].check_file = 1;
+		break;
+	      }
+	  if (cnt == lastdb)
+	    dbg_log ("server %s is not supported\n", arg1);
 	}
       else if (strcmp (entry, "logfile") == 0)
 	{
@@ -137,7 +170,12 @@ nscd_parse_file (const char *fname)
 	{
 	  int level = atoi (arg1);
 	  if (level > 0)
-	    debug_flag = level;
+	    debug_level = level;
+	}
+      else if (strcmp (entry, "threads") == 0)
+	{
+	  if (nthreads == -1)
+	    nthreads = MAX (atol (arg1), lastdb);
 	}
       else
 	dbg_log (_("Unknown option: %s %s %s"), entry, arg1, arg2);

@@ -1,6 +1,7 @@
-/* Copyright (c) 1998 Free Software Foundation, Inc.
+/* Cache handling for group lookup.
+   Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -15,605 +16,234 @@
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA. */
+   Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <errno.h>
+#include <error.h>
 #include <grp.h>
-#include <pthread.h>
+#include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <rpcsvc/nis.h>
-#include <sys/types.h>
 
-#include "dbg_log.h"
 #include "nscd.h"
+#include "dbg_log.h"
 
-static unsigned long modulo = 211;
-static unsigned long postimeout = 3600;
-static unsigned long negtimeout = 60;
-
-static unsigned long poshit = 0;
-static unsigned long posmiss = 0;
-static unsigned long neghit = 0;
-static unsigned long negmiss = 0;
-
-struct grphash
+/* This is the standard reply in case the service is disabled.  */
+static const gr_response_header disabled =
 {
-  time_t create;
-  struct grphash *next;
-  struct group *grp;
+  version: NSCD_VERSION,
+  found: -1,
+  gr_name_len: 0,
+  gr_passwd_len: 0,
+  gr_gid: -1,
+  gr_mem_cnt: 0,
 };
-typedef struct grphash grphash;
 
-struct gidhash
+/* This is the struct describing how to write this record.  */
+const struct iovec grp_iov_disabled =
 {
-  struct gidhash *next;
-  struct group *grptr;
+  iov_base: (void *) &disabled,
+  iov_len: sizeof (disabled)
 };
-typedef struct gidhash gidhash;
 
-struct neghash
+
+/* This is the standard reply in case we haven't found the dataset.  */
+static const gr_response_header notfound =
 {
-  time_t create;
-  struct neghash *next;
-  char *key;
+  version: NSCD_VERSION,
+  found: 0,
+  gr_name_len: 0,
+  gr_passwd_len: 0,
+  gr_gid: -1,
+  gr_mem_cnt: 0,
 };
-typedef struct neghash neghash;
 
-static grphash *grptbl;
-static gidhash *gidtbl;
-static neghash *negtbl;
-
-static pthread_rwlock_t grplock = PTHREAD_RWLOCK_INITIALIZER;
-static pthread_rwlock_t neglock = PTHREAD_RWLOCK_INITIALIZER;
-
-static void *grptable_update (void *);
-static void *negtable_update (void *);
-
-void
-get_gr_stat (stat_response_header *stat)
+/* This is the struct describing how to write this record.  */
+static const struct iovec iov_notfound =
 {
-  stat->gr_poshit = poshit;
-  stat->gr_posmiss = posmiss;
-  stat->gr_neghit = neghit;
-  stat->gr_negmiss = negmiss;
-  stat->gr_size = modulo;
-  stat->gr_posttl = postimeout;
-  stat->gr_negttl = negtimeout;
-}
+  iov_base: (void *) &notfound,
+  iov_len: sizeof (notfound)
+};
 
-void
-set_grp_modulo (unsigned long mod)
+
+struct groupdata
 {
-  modulo = mod;
-}
+  gr_response_header resp;
+  char strdata[0];
+};
 
-void
-set_pos_grp_ttl (unsigned long ttl)
-{
-  postimeout = ttl;
-}
-
-void
-set_neg_grp_ttl (unsigned long ttl)
-{
-  negtimeout = ttl;
-}
-
-int
-cache_grpinit ()
-{
-  pthread_attr_t attr;
-  pthread_t thread;
-
-  grptbl = calloc (modulo, sizeof (grphash));
-  if (grptbl == NULL)
-    return -1;
-  gidtbl = calloc (modulo, sizeof (grphash));
-  if (gidtbl == NULL)
-    return -1;
-  negtbl = calloc (modulo, sizeof (neghash));
-  if (negtbl == NULL)
-    return -1;
-
-  pthread_attr_init (&attr);
-  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
-
-  pthread_create (&thread, NULL, grptable_update, &attr);
-  pthread_create (&thread, NULL, negtable_update, &attr);
-
-  pthread_attr_destroy (&attr);
-
-  return 0;
-}
-
-static struct group *
-save_grp (struct group *src)
-{
-  struct group *dest;
-  unsigned long int l;
-  size_t tlen;
-  size_t name_len = strlen (src->gr_name) + 1;
-  size_t passwd_len = strlen (src->gr_passwd) + 1;
-  char *cp;
-
-  /* How many members does this group have?  */
-  l = tlen = 0;
-  while (src->gr_mem[l] != NULL)
-    tlen += strlen (src->gr_mem[l++]) + 1;
-
-  dest = malloc (sizeof (struct group) + (l + 1) * sizeof (char *)
-		 + name_len + passwd_len + tlen);
-  if (dest == NULL)
-    return NULL;
-
-  dest->gr_mem = (char **) (dest + 1);
-  cp = (char *) (dest->gr_mem + l + 1);
-
-  dest->gr_name = cp;
-  cp = mempcpy (cp, src->gr_name, name_len);
-  dest->gr_passwd = cp;
-  cp = mempcpy (cp, src->gr_passwd, passwd_len);
-  dest->gr_gid = src->gr_gid;
-
-  l = 0;
-  while (src->gr_mem[l] != NULL)
-    {
-      dest->gr_mem[l] = cp;
-      cp = stpcpy (cp, src->gr_mem[l]) + 1;
-      ++l;
-    }
-  dest->gr_mem[l] = NULL;
-
-  return dest;
-}
 
 static void
-free_grp (struct group *src)
+cache_addgr (struct database *db, int fd, request_header *req, void *key,
+	     struct group *grp)
 {
-  free (src);
-}
+  ssize_t total;
+  ssize_t written;
+  time_t t = time (NULL);
 
-static int
-add_cache (struct group *grp)
-{
-  grphash *work;
-  gidhash *gidwork;
-  unsigned long int hash = __nis_hash (grp->gr_name,
-				       strlen (grp->gr_name)) % modulo;
-
-  if (debug_flag)
-    dbg_log (_("grp_add_cache (%s)"), grp->gr_name);
-
-  work = &grptbl[hash];
-
-  if (grptbl[hash].grp == NULL)
-    grptbl[hash].grp = save_grp (grp);
-  else
+  if (grp == NULL)
     {
-      while (work->next != NULL)
-	work = work->next;
+      /* We have no data.  This means we send the standard reply for this
+	 case.  */
+      void *copy;
 
-      work->next = calloc (1, sizeof (grphash));
-      work->next->grp = save_grp (grp);
-      work = work->next;
-    }
+      total = sizeof (notfound);
 
-  time (&work->create);
-  gidwork = &gidtbl[grp->gr_gid % modulo];
-  if (gidwork->grptr == NULL)
-    gidwork->grptr = work->grp;
-  else
-    {
-      while (gidwork->next != NULL)
-	gidwork = gidwork->next;
+      written = writev (fd, &iov_notfound, 1);
 
-      gidwork->next = calloc (1, sizeof (gidhash));
-      gidwork->next->grptr = work->grp;
-    }
+      copy = malloc (req->key_len);
+      if (copy == NULL)
+	error (EXIT_FAILURE, errno, _("while allocating key copy"));
+      memcpy (copy, key, req->key_len);
 
-  return 0;
-}
+      /* Compute the timeout time.  */
+      t += db->negtimeout;
 
-static struct group *
-cache_search_name (const char *name)
-{
-  grphash *work;
-  unsigned long int hash = __nis_hash (name, strlen(name)) % modulo;
+      /* Now get the lock to safely insert the records.  */
+      pthread_rwlock_rdlock (&db->lock);
 
-  work = &grptbl[hash];
+      cache_add (req->type, copy, req->key_len, &iov_notfound,
+		 sizeof (notfound), (void *) -1, 0, t, db);
 
-  while (work->grp != NULL)
-    {
-      if (strcmp (work->grp->gr_name, name) == 0)
-	return work->grp;
-      if (work->next != NULL)
-	work = work->next;
-      else
-	return NULL;
-    }
-  return NULL;
-}
-
-static struct group *
-cache_search_gid (gid_t gid)
-{
-  gidhash *work;
-
-  work = &gidtbl[gid % modulo];
-
-  while (work->grptr != NULL)
-    {
-      if (work->grptr->gr_gid == gid)
-	return work->grptr;
-      if (work->next != NULL)
-	work = work->next;
-      else
-	return NULL;
-    }
-  return NULL;
-}
-
-static int
-add_negcache (char *key)
-{
-  neghash *work;
-  unsigned long int hash = __nis_hash (key, strlen (key)) % modulo;
-
-  if (debug_flag)
-    dbg_log (_("grp_add_netgache (%s|%ld)"), key, hash);
-
-  work = &negtbl[hash];
-
-  if (negtbl[hash].key == NULL)
-    {
-      negtbl[hash].key = strdup (key);
-      negtbl[hash].next = NULL;
+      pthread_rwlock_unlock (&db->lock);
     }
   else
     {
-      while (work->next != NULL)
-	work = work->next;
+      /* Determine the I/O structure.  */
+      struct groupdata *data;
+      size_t gr_name_len = strlen (grp->gr_name) + 1;
+      size_t gr_passwd_len = strlen (grp->gr_passwd) + 1;
+      size_t gr_mem_cnt = 0;
+      size_t *gr_mem_len;
+      size_t gr_mem_len_total = 0;
+      char *gr_name;
+      char *cp;
+      char buf[12];
+      ssize_t n;
+      size_t cnt;
 
-      work->next = calloc (1, sizeof (neghash));
-      work->next->key = strdup (key);
-      work = work->next;
+      /* We need this to insert the `bygid' entry.  */
+      n = snprintf (buf, sizeof (buf), "%d", grp->gr_gid) + 1;
+
+      /* Determine the length of all members.  */
+      while (grp->gr_mem[gr_mem_cnt])
+	++gr_mem_cnt;
+      gr_mem_len = (size_t *) alloca (gr_mem_cnt * sizeof (size_t));
+      for (gr_mem_cnt = 0; grp->gr_mem[gr_mem_cnt]; ++gr_mem_cnt)
+	{
+	  gr_mem_len[gr_mem_cnt] = strlen (grp->gr_mem[gr_mem_cnt]) + 1;
+	  gr_mem_len_total += gr_mem_len[gr_mem_cnt];
+	}
+
+      /* We allocate all data in one memory block: the iov vector,
+	 the response header and the dataset itself.  */
+      total = (sizeof (struct groupdata)
+	       + gr_mem_cnt * sizeof (size_t)
+	       + gr_name_len + gr_passwd_len + gr_mem_len_total);
+      data = (struct groupdata *) malloc (total + n);
+      if (data == NULL)
+	/* There is no reason to go on.  */
+	error (EXIT_FAILURE, errno, _("while allocating cache entry"));
+
+      data->resp.found = 1;
+      data->resp.gr_name_len = gr_name_len;
+      data->resp.gr_passwd_len = gr_passwd_len;
+      data->resp.gr_gid = grp->gr_gid;
+      data->resp.gr_mem_cnt = gr_mem_cnt;
+
+      cp = data->strdata;
+
+      /* This is the member string length array.  */
+      cp = mempcpy (cp, gr_mem_len, gr_mem_cnt * sizeof (size_t));
+      gr_name = cp = mempcpy (cp, grp->gr_name, gr_name_len);
+      cp = mempcpy (cp, grp->gr_passwd, gr_passwd_len);
+
+      for (cnt = 0; cnt < gr_mem_cnt; ++cnt)
+	cp = mempcpy (cp, grp->gr_mem[cnt], gr_mem_len[cnt]);
+
+      /* Finally the stringified GID value.  */
+      memcpy (cp, buf, n);
+
+      /* Write the result.  */
+      written = write (fd, &data->resp, total);
+
+      /* Compute the timeout time.  */
+      t += db->postimeout;
+
+      /* Now get the lock to safely insert the records.  */
+      pthread_rwlock_rdlock (&db->lock);
+
+      /* We have to add the value for both, byname and byuid.  */
+      cache_add (GETGRBYNAME, gr_name, gr_name_len, data,
+		 total, data, 0, t, db);
+
+      cache_add (GETGRBYGID, cp, n, data, total, data, 1, t, db);
+
+      pthread_rwlock_unlock (&db->lock);
     }
 
-  time (&work->create);
-  return 0;
-}
-
-static int
-cache_search_neg (const char *key)
-{
-  neghash *work;
-  unsigned long int hash = __nis_hash (key, strlen (key)) % modulo;
-
-  if (debug_flag)
-    dbg_log (_("grp_cache_search_neg (%s|%ld)"), key, hash);
-
-  work = &negtbl[hash];
-
-  while (work->key != NULL)
+  if (written != total)
     {
-      if (strcmp (work->key, key) == 0)
-	return 1;
-      if (work->next != NULL)
-	work = work->next;
-      else
-	return 0;
+      char buf[256];
+      dbg_log (_("short write in %s: %s"),  __FUNCTION__,
+	       strerror_r (errno, buf, sizeof (buf)));
     }
-  return 0;
 }
 
-void *
-cache_getgrnam (void *v_param)
+
+void
+addgrbyname (struct database *db, int fd, request_header *req, void *key)
 {
-  param_t *param = (param_t *)v_param;
+  /* Search for the entry matching the key.  Please note that we don't
+     look again in the table whether the dataset is now available.  We
+     simply insert it.  It does not matter if it is in there twice.  The
+     pruning function only will look at the timestamp.  */
+  int buflen = 256;
+  char *buffer = alloca (buflen);
+  struct group resultbuf;
   struct group *grp;
 
-  pthread_rwlock_rdlock (&grplock);
-  grp = cache_search_name (param->key);
+  if (debug_level > 0)
+    dbg_log (_("Haven't found \"%s\" in group cache!"), key);
 
-  /* I don't like it to hold the read only lock longer, but it is
-     necessary to avoid to much malloc/free/strcpy.  */
-
-  if (grp != NULL)
+  while (getgrnam_r (key, &resultbuf, buffer, buflen, &grp) != 0
+	 && errno == ERANGE)
     {
-      if (debug_flag)
-	dbg_log (_("Found \"%s\" in cache !"), param->key);
-
-      ++poshit;
-      gr_send_answer (param->conn, grp);
-      close_socket (param->conn);
-
-      pthread_rwlock_unlock (&grplock);
+      errno = 0;
+      buflen += 256;
+      buffer = alloca (buflen);
     }
-  else
-    {
-      int status;
-      int buflen = 1024;
-      char *buffer = calloc (1, buflen);
-      struct group resultbuf;
 
-      if (debug_flag)
-	dbg_log (_("Doesn't found \"%s\" in cache !"), param->key);
-
-      pthread_rwlock_unlock (&grplock);
-
-      pthread_rwlock_rdlock (&neglock);
-      status = cache_search_neg (param->key);
-      pthread_rwlock_unlock (&neglock);
-
-      if (status == 0)
-	{
-	  while (buffer != NULL
-		 && (getgrnam_r (param->key, &resultbuf, buffer, buflen, &grp)
-		     != 0)
-		 && errno == ERANGE)
-	    {
-	      errno = 0;
-	      buflen += 1024;
-	      buffer = realloc (buffer, buflen);
-	    }
-
-	  if (buffer != NULL && grp != NULL)
-	    {
-	      struct group *tmp;
-
-	      ++poshit;
-	      pthread_rwlock_wrlock (&grplock);
-	      /* While we are waiting on the lock, somebody else could
-		 add this entry.  */
-	      tmp = cache_search_name (param->key);
-	      if (tmp == NULL)
-		add_cache (grp);
-	      pthread_rwlock_unlock (&grplock);
-	    }
-	  else
-	    {
-	      pthread_rwlock_wrlock (&neglock);
-	      add_negcache (param->key);
-	      ++negmiss;
-	      pthread_rwlock_unlock (&neglock);
-	    }
-	}
-      else
-	++neghit;
-
-      gr_send_answer (param->conn, grp);
-      close_socket (param->conn);
-      if (buffer != NULL)
-	free (buffer);
-    }
-  free (param->key);
-  free (param);
-  return NULL;
+  cache_addgr (db, fd, req, key, grp);
 }
 
-void *
-cache_gr_disabled (void *v_param)
+
+void
+addgrbygid (struct database *db, int fd, request_header *req, void *key)
 {
-  param_t *param = (param_t *)v_param;
+  /* Search for the entry matching the key.  Please note that we don't
+     look again in the table whether the dataset is now available.  We
+     simply insert it.  It does not matter if it is in there twice.  The
+     pruning function only will look at the timestamp.  */
+  int buflen = 256;
+  char *buffer = alloca (buflen);
+  struct group resultbuf;
+  struct group *grp;
+  gid_t gid = atol (key);
 
-  if (debug_flag)
-    dbg_log (_("\tgroup cache is disabled\n"));
+  if (debug_level > 0)
+    dbg_log (_("Haven't found \"%d\" in group cache!"), gid);
 
-  gr_send_disabled (param->conn);
-  return NULL;
-}
-
-void *
-cache_getgrgid (void *v_param)
-{
-  param_t *param = (param_t *)v_param;
-  struct group *grp, resultbuf;
-  gid_t gid = strtol (param->key, NULL, 10);
-
-  pthread_rwlock_rdlock (&grplock);
-  grp = cache_search_gid (gid);
-
-  /* I don't like it to hold the read only lock longer, but it is
-     necessary to avoid to much malloc/free/strcpy.  */
-
-  if (grp != NULL)
+  while (getgrgid_r (gid, &resultbuf, buffer, buflen, &grp) != 0
+	 && errno == ERANGE)
     {
-      if (debug_flag)
-	dbg_log (_("Found \"%d\" in cache !"), gid);
-
-      ++poshit;
-      gr_send_answer (param->conn, grp);
-      close_socket (param->conn);
-
-      pthread_rwlock_unlock (&grplock);
+      errno = 0;
+      buflen += 256;
+      buffer = alloca (buflen);
     }
-  else
-    {
-      int buflen = 1024;
-      char *buffer = malloc (buflen);
-      int status;
 
-      if (debug_flag)
-	dbg_log (_("Doesn't found \"%d\" in cache !"), gid);
-
-      pthread_rwlock_unlock (&grplock);
-
-      pthread_rwlock_rdlock (&neglock);
-      status = cache_search_neg (param->key);
-      pthread_rwlock_unlock (&neglock);
-
-      if (status == 0)
-        {
-	  while (buffer != NULL
-		 && (getgrgid_r (gid, &resultbuf, buffer, buflen, &grp) != 0)
-		 && errno == ERANGE)
-	    {
-	      errno = 0;
-	      buflen += 1024;
-	      buffer = realloc (buffer, buflen);
-	    }
-
-	  if (buffer != NULL && grp != NULL)
-	    {
-	      struct group *tmp;
-
-	      ++posmiss;
-	      pthread_rwlock_wrlock (&grplock);
-	      /* While we are waiting on the lock, somebody else could
-		 add this entry.  */
-	      tmp = cache_search_gid (gid);
-	      if (tmp == NULL)
-		add_cache (grp);
-	      pthread_rwlock_unlock (&grplock);
-	    }
-	  else
-	    {
-	      ++negmiss;
-	      pthread_rwlock_wrlock (&neglock);
-	      add_negcache (param->key);
-	      pthread_rwlock_unlock (&neglock);
-	    }
-	}
-      else
-	++neghit;
-
-      gr_send_answer (param->conn, grp);
-      close_socket (param->conn);
-      if (buffer != NULL)
-	free (buffer);
-    }
-  free (param->key);
-  free (param);
-  return NULL;
-}
-
-static void *
-grptable_update (void *v)
-{
-  time_t now;
-  int i;
-
-  sleep (20);
-
-  while (!do_shutdown)
-    {
-      if (debug_flag > 2)
-	dbg_log (_("(grptable_update) Wait for write lock!"));
-
-      pthread_rwlock_wrlock (&grplock);
-
-      if (debug_flag > 2)
-	dbg_log (_("(grptable_update) Have write lock"));
-
-      time (&now);
-      for (i = 0; i < modulo; ++i)
-	{
-	  grphash *work = &grptbl[i];
-
-	  while (work && work->grp)
-	    {
-	      if ((now - work->create) >= postimeout)
-		{
-		  gidhash *uh = &gidtbl[work->grp->gr_gid % modulo];
-
-		  if (debug_flag)
-		    dbg_log (_("Give \"%s\" free"), work->grp->gr_name);
-
-		  while (uh && uh->grptr)
-		    {
-		      if (uh->grptr->gr_gid == work->grp->gr_gid)
-			{
-			  if (debug_flag > 3)
-			    dbg_log (_("Give gid for \"%s\" free"),
-				     work->grp->gr_name);
-			  if (uh->next != NULL)
-			    {
-			      gidhash *tmp = uh->next;
-			      uh->grptr = tmp->grptr;
-			      uh->next = tmp->next;
-			      free (tmp);
-			    }
-			  else
-			    uh->grptr = NULL;
-			}
-		      uh = uh->next;
-		    }
-
-		  free_grp (work->grp);
-		  if (work->next != NULL)
-		    {
-		      grphash *tmp = work->next;
-		      work->create = tmp->create;
-		      work->next = tmp->next;
-		      work->grp = tmp->grp;
-		      free (tmp);
-		    }
-		  else
-		    work->grp = NULL;
-		}
-	      work = work->next;
-	    }
-	}
-      if (debug_flag > 2)
-	dbg_log (_("(grptable_update) Release wait lock"));
-      pthread_rwlock_unlock (&grplock);
-      sleep (20);
-    }
-  return NULL;
-}
-
-static void *
-negtable_update (void *v)
-{
-  time_t now;
-  int i;
-
-  sleep (30);
-
-  while (!do_shutdown)
-    {
-      if (debug_flag > 2)
-	dbg_log (_("(neggrptable_update) Wait for write lock!"));
-
-      pthread_rwlock_wrlock (&neglock);
-
-      if (debug_flag > 2)
-	dbg_log (_("(neggrptable_update) Have write lock"));
-
-      time (&now);
-      for (i = 0; i < modulo; ++i)
-	{
-	  neghash *work = &negtbl[i];
-
-	  while (work && work->key)
-	    {
-	      if ((now - work->create) >= negtimeout)
-		{
-		  if (debug_flag)
-		    dbg_log (_("Give \"%s\" free"), work->key);
-
-		  free (work->key);
-
-		  if (work->next != NULL)
-		    {
-		      neghash *tmp = work->next;
-		      work->create = tmp->create;
-		      work->next = tmp->next;
-		      work->key = tmp->key;
-		      free (tmp);
-		    }
-		  else
-		    work->key = NULL;
-		}
-	      work = work->next;
-	    }
-	}
-      if (debug_flag > 2)
-	dbg_log (_("(neggrptable_update) Release wait lock"));
-      pthread_rwlock_unlock (&neglock);
-      sleep (10);
-    }
-  return NULL;
+  cache_addgr (db, fd, req, key, grp);
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -104,7 +104,7 @@ static enum nss_status getanswer_r (const querybuf *answer, int anslen,
 
 enum nss_status
 _nss_dns_getnetbyname_r (const char *name, struct netent *result,
-			 char *buffer, size_t buflen)
+			 char *buffer, size_t buflen, int *errnop)
 {
   /* Return entry for network with NAME.  */
   querybuf net_buffer;
@@ -115,11 +115,14 @@ _nss_dns_getnetbyname_r (const char *name, struct netent *result,
   anslen = res_search (qbuf, C_IN, T_PTR, (u_char *) &net_buffer,
 		       sizeof (querybuf));
   if (anslen < 0)
-    /* Nothing found.  */
-    return (errno == ECONNREFUSED
-	    || errno == EPFNOSUPPORT
-	    || errno == EAFNOSUPPORT)
-      ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
+    {
+      /* Nothing found.  */
+      *errnop = errno;
+      return (errno == ECONNREFUSED
+	      || errno == EPFNOSUPPORT
+	      || errno == EAFNOSUPPORT)
+	? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
+    }
 
   return getanswer_r (&net_buffer, anslen, result, buffer, buflen, BYNAME);
 }
@@ -127,7 +130,7 @@ _nss_dns_getnetbyname_r (const char *name, struct netent *result,
 
 enum nss_status
 _nss_dns_getnetbyaddr_r (long net, int type, struct netent *result,
-			 char *buffer, size_t buflen)
+			 char *buffer, size_t buflen, int *errnop)
 {
   /* Return entry for network with NAME.  */
   enum nss_status status;
@@ -170,11 +173,14 @@ _nss_dns_getnetbyaddr_r (long net, int type, struct netent *result,
   anslen = res_query (qbuf, C_IN, T_PTR, (u_char *) &net_buffer,
 		      sizeof (querybuf));
   if (anslen < 0)
-    /* Nothing found.  */
-    return (errno == ECONNREFUSED
-	    || errno == EPFNOSUPPORT
-	    || errno == EAFNOSUPPORT)
-      ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
+    {
+      /* Nothing found.  */
+      *errnop = errno;
+      return (errno == ECONNREFUSED
+	      || errno == EPFNOSUPPORT
+	      || errno == EAFNOSUPPORT)
+	? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
+    }
 
   status = getanswer_r (&net_buffer, anslen, result, buffer, buflen, BYADDR);
   if (status == NSS_STATUS_SUCCESS)

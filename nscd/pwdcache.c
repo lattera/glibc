@@ -1,6 +1,7 @@
-/* Copyright (c) 1998 Free Software Foundation, Inc.
+/* Cache handling for passwd lookup.
+   Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -15,597 +16,231 @@
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA. */
+   Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <malloc.h>
-#include <pthread.h>
+#include <error.h>
 #include <pwd.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
-#include <rpcsvc/nis.h>
-#include <sys/types.h>
 
-#include "dbg_log.h"
 #include "nscd.h"
+#include "dbg_log.h"
 
-static unsigned long int modulo = 211;
-static unsigned long int postimeout = 600;
-static unsigned long int negtimeout = 20;
-
-static unsigned long int poshit = 0;
-static unsigned long int posmiss = 0;
-static unsigned long int neghit = 0;
-static unsigned long int negmiss = 0;
-
-struct pwdhash
+/* This is the standard reply in case the service is disabled.  */
+static const pw_response_header disabled =
 {
-  time_t create;
-  struct pwdhash *next;
-  struct passwd *pwd;
+  version: NSCD_VERSION,
+  found: -1,
+  pw_name_len: 0,
+  pw_passwd_len: 0,
+  pw_uid: -1,
+  pw_gid: -1,
+  pw_gecos_len: 0,
+  pw_dir_len: 0,
+  pw_shell_len: 0
 };
-typedef struct pwdhash pwdhash;
 
-struct uidhash
+/* This is the struct describing how to write this record.  */
+const struct iovec pwd_iov_disabled =
 {
-  struct uidhash *next;
-  struct passwd *pwptr;
+  iov_base: (void *) &disabled,
+  iov_len: sizeof (disabled)
 };
-typedef struct uidhash uidhash;
 
-struct neghash
+
+/* This is the standard reply in case we haven't found the dataset.  */
+static const pw_response_header notfound =
 {
-  time_t create;
-  struct neghash *next;
-  char *key;
+  version: NSCD_VERSION,
+  found: 0,
+  pw_name_len: 0,
+  pw_passwd_len: 0,
+  pw_uid: -1,
+  pw_gid: -1,
+  pw_gecos_len: 0,
+  pw_dir_len: 0,
+  pw_shell_len: 0
 };
-typedef struct neghash neghash;
 
-static pwdhash *pwdtbl;
-static uidhash *uidtbl;
-static neghash *negtbl;
-
-static pthread_rwlock_t pwdlock = PTHREAD_RWLOCK_INITIALIZER;
-static pthread_rwlock_t neglock = PTHREAD_RWLOCK_INITIALIZER;
-
-static void *pwdtable_update (void *);
-static void *negtable_update (void *);
-
-void
-get_pw_stat (stat_response_header *stat)
+/* This is the struct describing how to write this record.  */
+static const struct iovec iov_notfound =
 {
-  stat->pw_poshit = poshit;
-  stat->pw_posmiss = posmiss;
-  stat->pw_neghit = neghit;
-  stat->pw_negmiss = negmiss;
-  stat->pw_size = modulo;
-  stat->pw_posttl = postimeout;
-  stat->pw_negttl = negtimeout;
-}
+  iov_base: (void *) &notfound,
+  iov_len: sizeof (notfound)
+};
 
-void
-set_pwd_modulo (unsigned long int mod)
+
+struct passwddata
 {
-  modulo = mod;
-}
+  pw_response_header resp;
+  char strdata[0];
+};
 
-void
-set_pos_pwd_ttl (unsigned long int ttl)
-{
-  postimeout = ttl;
-}
-
-void
-set_neg_pwd_ttl (unsigned long int ttl)
-{
-  negtimeout = ttl;
-}
-
-int
-cache_pwdinit ()
-{
-  pthread_attr_t attr;
-  pthread_t thread;
-
-  pwdtbl = calloc (modulo, sizeof (pwdhash));
-  if (pwdtbl == NULL)
-    return -1;
-  uidtbl = calloc (modulo, sizeof (uidhash));
-  if (uidtbl == NULL)
-    return -1;
-  negtbl = calloc (modulo, sizeof (neghash));
-  if (negtbl == NULL)
-    return -1;
-
-  pthread_attr_init (&attr);
-  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
-
-  pthread_create (&thread, NULL, pwdtable_update, &attr);
-  pthread_create (&thread, NULL, negtable_update, &attr);
-
-  pthread_attr_destroy (&attr);
-
-  return 0;
-}
-
-static struct passwd *
-save_pwd (struct passwd *src)
-{
-  struct passwd *dest;
-  size_t name_len = strlen (src->pw_name) + 1;
-  size_t passwd_len = strlen (src->pw_gecos) + 1;
-  size_t gecos_len = strlen (src->pw_dir) + 1;
-  size_t dir_len = strlen (src->pw_dir) + 1;
-  size_t shell_len = strlen (src->pw_shell) + 1;
-  char *cp;
-
-  dest = malloc (sizeof (struct passwd)
-		 + name_len + passwd_len + gecos_len + dir_len + shell_len);
-  if (dest == NULL)
-    return NULL;
-
-  cp = (char *) (dest + 1);
-  dest->pw_name = cp;
-  cp = mempcpy (cp, src->pw_name, name_len);
-  dest->pw_passwd = cp;
-  cp = mempcpy (cp, src->pw_passwd, passwd_len);
-  dest->pw_uid = src->pw_uid;
-  dest->pw_gid = src->pw_gid;
-  dest->pw_gecos = cp;
-  cp = mempcpy (cp, src->pw_gecos, gecos_len);
-  dest->pw_dir = cp;
-  cp = mempcpy (cp, src->pw_dir, dir_len);
-  dest->pw_shell = cp;
-  mempcpy (cp, src->pw_shell, shell_len);
-
-  return dest;
-}
 
 static void
-free_pwd (struct passwd *src)
+cache_addpw (struct database *db, int fd, request_header *req, void *key,
+	     struct passwd *pwd)
 {
-  free (src);
-}
+  ssize_t total;
+  ssize_t written;
+  time_t t = time (NULL);
 
-static int
-add_cache (struct passwd *pwd)
-{
-  pwdhash *work;
-  uidhash *uidwork;
-  unsigned long int hash = __nis_hash (pwd->pw_name,
-				       strlen (pwd->pw_name)) % modulo;
-
-  if (debug_flag)
-    dbg_log (_("pwd_add_cache (%s)"), pwd->pw_name);
-
-  work = &pwdtbl[hash];
-
-  if (pwdtbl[hash].pwd == NULL)
-    pwdtbl[hash].pwd = save_pwd (pwd);
-  else
+  if (pwd == NULL)
     {
-      while (work->next != NULL)
-	work = work->next;
+      /* We have no data.  This means we send the standard reply for this
+	 case.  */
+      void *copy;
 
-      work->next = calloc (1, sizeof (pwdhash));
-      work->next->pwd = save_pwd (pwd);
-      work = work->next;
-    }
-  /* Set a pointer from the pwuid hash table to the pwname hash table */
-  time (&work->create);
-  uidwork = &uidtbl[pwd->pw_uid % modulo];
-  if (uidwork->pwptr == NULL)
-    uidwork->pwptr = work->pwd;
-  else
-   {
-      while (uidwork->next != NULL)
-	uidwork = uidwork->next;
+      total = sizeof (notfound);
 
-      uidwork->next = calloc (1, sizeof (uidhash));
-      uidwork->next->pwptr = work->pwd;
-    }
-  return 0;
-}
+      written = writev (fd, &iov_notfound, 1);
 
-static struct passwd *
-cache_search_name (const char *name)
-{
-  pwdhash *work;
-  unsigned long int hash = __nis_hash (name, strlen (name)) % modulo;
+      copy = malloc (req->key_len);
+      if (copy == NULL)
+	error (EXIT_FAILURE, errno, _("while allocating key copy"));
+      memcpy (copy, key, req->key_len);
 
-  work = &pwdtbl[hash];
+      /* Compute the timeout time.  */
+      t += db->negtimeout;
 
-  while (work->pwd != NULL)
-    {
-      if (strcmp (work->pwd->pw_name, name) == 0)
-	return work->pwd;
-      if (work->next != NULL)
-	work = work->next;
-      else
-	return NULL;
-    }
-  return NULL;
-}
+      /* Now get the lock to safely insert the records.  */
+      pthread_rwlock_rdlock (&db->lock);
 
-static struct passwd *
-cache_search_uid (uid_t uid)
-{
-  uidhash *work;
+      cache_add (req->type, copy, req->key_len, &iov_notfound,
+		 sizeof (notfound), (void *) -1, 0, t, db);
 
-  work = &uidtbl[uid % modulo];
-
-  while (work->pwptr != NULL)
-    {
-      if (work->pwptr->pw_uid == uid)
-	return work->pwptr;
-      if (work->next != NULL)
-	work = work->next;
-      else
-	return NULL;
-    }
-  return NULL;
-}
-
-static int
-add_negcache (char *key)
-{
-  neghash *work;
-  unsigned long int hash = __nis_hash (key, strlen (key)) % modulo;
-
-  if (debug_flag)
-    dbg_log (_("pwd_add_netgache (%s|%ld)"), key, hash);
-
-  work = &negtbl[hash];
-
-  if (negtbl[hash].key == NULL)
-    {
-      negtbl[hash].key = strdup (key);
-      negtbl[hash].next = NULL;
+      pthread_rwlock_unlock (&db->lock);
     }
   else
     {
-      while (work->next != NULL)
-	work = work->next;
+      /* Determine the I/O structure.  */
+      struct passwddata *data;
+      size_t pw_name_len = strlen (pwd->pw_name) + 1;
+      size_t pw_passwd_len = strlen (pwd->pw_passwd) + 1;
+      size_t pw_gecos_len = strlen (pwd->pw_gecos) + 1;
+      size_t pw_dir_len = strlen (pwd->pw_dir) + 1;
+      size_t pw_shell_len = strlen (pwd->pw_shell) + 1;
+      char *cp;
+      char buf[12];
+      ssize_t n;
 
-      work->next = calloc (1, sizeof (neghash));
-      work->next->key = strdup (key);
-      work = work->next;
+      /* We need this to insert the `byuid' entry.  */
+      n = snprintf (buf, sizeof (buf), "%d", pwd->pw_uid) + 1;
+
+      /* We allocate all data in one memory block: the iov vector,
+	 the response header and the dataset itself.  */
+      total = (sizeof (struct passwddata) + pw_name_len + pw_passwd_len
+	       + pw_gecos_len + pw_dir_len + pw_shell_len);
+      data = (struct passwddata *) malloc (total + n);
+      if (data == NULL)
+	/* There is no reason to go on.  */
+	error (EXIT_FAILURE, errno, _("while allocating cache entry"));
+
+      data->resp.found = 1;
+      data->resp.pw_name_len = pw_name_len;
+      data->resp.pw_passwd_len = pw_passwd_len;
+      data->resp.pw_uid = pwd->pw_uid;
+      data->resp.pw_gid = pwd->pw_gid;
+      data->resp.pw_gecos_len = pw_gecos_len;
+      data->resp.pw_dir_len = pw_dir_len;
+      data->resp.pw_shell_len = pw_shell_len;
+
+      cp = data->strdata;
+
+      /* Copy the strings over into the buffer.  */
+      cp = mempcpy (cp, pwd->pw_name, pw_name_len);
+      cp = mempcpy (cp, pwd->pw_passwd, pw_passwd_len);
+      cp = mempcpy (cp, pwd->pw_gecos, pw_gecos_len);
+      cp = mempcpy (cp, pwd->pw_dir, pw_dir_len);
+      cp = mempcpy (cp, pwd->pw_shell, pw_shell_len);
+
+      /* Finally the stringified UID value.  */
+      memcpy (cp, buf, n);
+
+      /* We write the dataset before inserting it to the database
+	 since while inserting this thread might block and so would
+	 unnecessarily let the receiver wait.  */
+      written = write (fd, &data->resp, total);
+
+      /* Compute the timeout time.  */
+      t += db->postimeout;
+
+      /* Now get the lock to safely insert the records.  */
+      pthread_rwlock_rdlock (&db->lock);
+
+      /* We have to add the value for both, byname and byuid.  */
+      cache_add (GETPWBYNAME, data->strdata, pw_name_len, data,
+		 total, data, 0, t, db);
+
+      cache_add (GETPWBYUID, cp, n, data, total, data, 1, t, db);
+
+      pthread_rwlock_unlock (&db->lock);
     }
 
-  time (&work->create);
-
-  return 0;
-}
-
-static int
-cache_search_neg (const char *key)
-{
-  neghash *work;
-  unsigned long int hash = __nis_hash (key, strlen (key)) % modulo;
-
-  if (debug_flag)
-    dbg_log (_("pwd_cache_search_neg (%s|%ld)"), key, hash);
-
-  work = &negtbl[hash];
-
-  while (work->key != NULL)
+  if (written != total)
     {
-      if (strcmp (work->key, key) == 0)
-	return 1;
-      if (work->next != NULL)
-	work = work->next;
-      else
-	return 0;
+      char buf[256];
+      dbg_log (_("short write in %s: %s"),  __FUNCTION__,
+	       strerror_r (errno, buf, sizeof (buf)));
     }
-  return 0;
 }
 
-void *
-cache_getpwnam (void *v_param)
+
+void
+addpwbyname (struct database *db, int fd, request_header *req, void *key)
 {
+  /* Search for the entry matching the key.  Please note that we don't
+     look again in the table whether the dataset is now available.  We
+     simply insert it.  It does not matter if it is in there twice.  The
+     pruning function only will look at the timestamp.  */
+  int buflen = 256;
+  char *buffer = alloca (buflen);
+  struct passwd resultbuf;
   struct passwd *pwd;
-  param_t *param = (param_t *)v_param;
 
-  pthread_rwlock_rdlock (&pwdlock);
-  pwd = cache_search_name (param->key);
+  if (debug_level > 0)
+    dbg_log (_("Haven't found \"%s\" in password cache!"), key);
 
-  /* I don't like it to hold the read only lock longer, but it is
-     necessary to avoid to much malloc/free/strcpy.  */
-
-  if (pwd != NULL)
+  while (getpwnam_r (key, &resultbuf, buffer, buflen, &pwd) != 0
+	 && errno == ERANGE)
     {
-      if (debug_flag)
-	dbg_log (_("Found \"%s\" in cache !"), param->key);
-
-      ++poshit;
-      pw_send_answer (param->conn, pwd);
-      close_socket (param->conn);
-
-      pthread_rwlock_unlock (&pwdlock);
+      errno = 0;
+      buflen += 256;
+      buffer = alloca (buflen);
     }
-  else
-    {
-      int status;
-      int buflen = 1024;
-      char *buffer = calloc (1, buflen);
-      struct passwd resultbuf;
 
-      if (debug_flag)
-	dbg_log (_("Doesn't found \"%s\" in cache !"), param->key);
-
-      pthread_rwlock_unlock (&pwdlock);
-
-      pthread_rwlock_rdlock (&neglock);
-      status = cache_search_neg (param->key);
-      pthread_rwlock_unlock (&neglock);
-
-      if (status == 0)
-	{
-	  while (buffer != NULL
-		 && (getpwnam_r (param->key, &resultbuf, buffer, buflen, &pwd)
-		     != 0)
-		 && errno == ERANGE)
-	    {
-	      errno = 0;
-	      buflen += 1024;
-	      buffer = realloc (buffer, buflen);
-	    }
-
-	  if (buffer != NULL && pwd != NULL)
-	    {
-	      struct passwd *tmp;
-
-	      ++posmiss;
-	      pthread_rwlock_wrlock (&pwdlock);
-	      /* While we are waiting on the lock, somebody else could
-		 add this entry.  */
-	      tmp = cache_search_name (param->key);
-	      if (tmp == NULL)
-		add_cache (pwd);
-	      pthread_rwlock_unlock (&pwdlock);
-	    }
-	  else
-	    {
-	      ++negmiss;
-	      pthread_rwlock_wrlock (&neglock);
-	      add_negcache (param->key);
-	      pthread_rwlock_unlock (&neglock);
-	    }
-	}
-      else
-	++neghit;
-      pw_send_answer (param->conn, pwd);
-      close_socket (param->conn);
-      if (buffer != NULL)
-	free (buffer);
-    }
-  free (param->key);
-  free (param);
-  return NULL;
+  cache_addpw (db, fd, req, key, pwd);
 }
 
-void *
-cache_pw_disabled (void *v_param)
+
+void
+addpwbyuid (struct database *db, int fd, request_header *req, void *key)
 {
-  param_t *param = (param_t *)v_param;
+  /* Search for the entry matching the key.  Please note that we don't
+     look again in the table whether the dataset is now available.  We
+     simply insert it.  It does not matter if it is in there twice.  The
+     pruning function only will look at the timestamp.  */
+  int buflen = 256;
+  char *buffer = alloca (buflen);
+  struct passwd resultbuf;
+  struct passwd *pwd;
+  uid_t uid = atol (key);
 
-  if (debug_flag)
-    dbg_log (_("\tpasswd cache is disabled\n"));
+  if (debug_level > 0)
+    dbg_log (_("Haven't found \"%d\" in password cache!"), uid);
 
-  pw_send_disabled (param->conn);
-  return NULL;
-}
-
-void *
-cache_getpwuid (void *v_param)
-{
-  param_t *param = (param_t *)v_param;
-  struct passwd *pwd, resultbuf;
-  uid_t uid = strtol (param->key, NULL, 10);
-
-  pthread_rwlock_rdlock (&pwdlock);
-  pwd = cache_search_uid (uid);
-
-  /* I don't like it to hold the read only lock longer, but it is
-     necessary to avoid to much malloc/free/strcpy.  */
-
-  if (pwd != NULL)
+  while (getpwuid_r (uid, &resultbuf, buffer, buflen, &pwd) != 0
+	 && errno == ERANGE)
     {
-      if (debug_flag)
-	dbg_log (_("Found \"%d\" in cache !"), uid);
-
-      ++poshit;
-      pw_send_answer (param->conn, pwd);
-      close_socket (param->conn);
-
-      pthread_rwlock_unlock (&pwdlock);
+      errno = 0;
+      buflen += 256;
+      buffer = alloca (buflen);
     }
-  else
-    {
-      int buflen = 1024;
-      char *buffer = malloc (buflen);
-      int status;
 
-      if (debug_flag)
-	dbg_log (_("Doesn't found \"%d\" in cache !"), uid);
-
-      pthread_rwlock_unlock (&pwdlock);
-
-      pthread_rwlock_rdlock (&neglock);
-      status = cache_search_neg (param->key);
-      pthread_rwlock_unlock (&neglock);
-
-      if (status == 0)
-        {
-	  while (buffer != NULL
-		 && (getpwuid_r (uid, &resultbuf, buffer, buflen, &pwd) != 0)
-		 && errno == ERANGE)
-	    {
-	      errno = 0;
-	      buflen += 1024;
-	      buffer = realloc (buffer, buflen);
-	    }
-
-	  if (buffer != NULL && pwd != NULL)
-	    {
-	      struct passwd *tmp;
-
-	      ++posmiss;
-	      pthread_rwlock_wrlock (&pwdlock);
-	      /* While we are waiting on the lock, somebody else could
-		 add this entry.  */
-	      tmp = cache_search_uid (uid);
-	      if (tmp == NULL)
-		add_cache (pwd);
-	      pthread_rwlock_unlock (&pwdlock);
-	    }
-	  else
-	    {
-	      ++negmiss;
-	      pthread_rwlock_wrlock (&neglock);
-	      add_negcache (param->key);
-	      pthread_rwlock_unlock (&neglock);
-	    }
-	}
-      else
-	++neghit;
-
-      pw_send_answer (param->conn, pwd);
-      close_socket (param->conn);
-      if (buffer != NULL)
-	free (buffer);
-    }
-  free (param->key);
-  free (param);
-  return NULL;
-}
-
-static void *
-pwdtable_update (void *v)
-{
-  time_t now;
-  int i;
-
-  sleep (20);
-
-  while (!do_shutdown)
-    {
-      if (debug_flag > 2)
-	dbg_log (_("(pwdtable_update) Wait for write lock!"));
-
-      pthread_rwlock_wrlock (&pwdlock);
-
-      if (debug_flag > 2)
-	dbg_log (_("(pwdtable_update) Have write lock"));
-
-      time (&now);
-      for (i = 0; i < modulo; ++i)
-	{
-	  pwdhash *work = &pwdtbl[i];
-
-	  while (work && work->pwd)
-	    {
-	      if ((now - work->create) >= postimeout)
-		{
-		  uidhash *uh = &uidtbl[work->pwd->pw_uid % modulo];
-
-		  if (debug_flag)
-		    dbg_log (_("Give \"%s\" free"), work->pwd->pw_name);
-
-		  while (uh != NULL && uh->pwptr)
-		    {
-		      if (uh->pwptr->pw_uid == work->pwd->pw_uid)
-			{
-			  if (debug_flag)
-			    dbg_log (_("Give uid for \"%s\" free"),
-				     work->pwd->pw_name);
-			  if (uh->next != NULL)
-			    {
-			      uidhash *tmp = uh->next;
-			      uh->pwptr = tmp->pwptr;
-			      uh->next = tmp->next;
-			      free (tmp);
-			    }
-			  else
-			    uh->pwptr = NULL;
-			}
-		      uh = uh->next;
-		    }
-
-		  free_pwd (work->pwd);
-		  if (work->next != NULL)
-		    {
-		      pwdhash *tmp = work->next;
-		      work->create = tmp->create;
-		      work->next = tmp->next;
-		      work->pwd = tmp->pwd;
-		      free (tmp);
-		    }
-		  else
-		    work->pwd = NULL;
-		}
-	      work = work->next;
-	    }
-	}
-      if (debug_flag > 2)
-	dbg_log (_("(pwdtable_update) Release wait lock"));
-      pthread_rwlock_unlock (&pwdlock);
-      sleep (20);
-    }
-  return NULL;
-}
-
-static void *
-negtable_update (void *v)
-{
-  time_t now;
-  int i;
-
-  sleep (30);
-
-  while (!do_shutdown)
-    {
-      if (debug_flag > 2)
-	dbg_log (_("(negpwdtable_update) Wait for write lock!"));
-
-      pthread_rwlock_wrlock (&neglock);
-
-      if (debug_flag > 2)
-	dbg_log (_("(negpwdtable_update) Have write lock"));
-
-      time (&now);
-      for (i = 0; i < modulo; ++i)
-	{
-	  neghash *work = &negtbl[i];
-
-	  while (work && work->key)
-	    {
-	      if ((now - work->create) >= negtimeout)
-		{
-		  if (debug_flag)
-		    dbg_log (_("Give \"%s\" free"), work->key);
-
-		  free (work->key);
-
-		  if (work->next != NULL)
-		    {
-		      neghash *tmp = work->next;
-		      work->create = tmp->create;
-		      work->next = tmp->next;
-		      work->key = tmp->key;
-		      free (tmp);
-		    }
-		  else
-		    work->key = NULL;
-		}
-	      work = work->next;
-	    }
-	}
-      if (debug_flag > 2)
-	dbg_log (_("(negpwdtable_update) Release wait lock"));
-
-      pthread_rwlock_unlock (&neglock);
-      sleep (10);
-    }
-  return NULL;
+  cache_addpw (db, fd, req, key, pwd);
 }

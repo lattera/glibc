@@ -32,41 +32,36 @@
 
 int __nss_not_use_nscd_group;
 
-static int __nscd_getgr_r (const char *key, request_type type,
-			   struct group *resultbuf, char *buffer,
-			   size_t buflen);
+static int nscd_getgr_r (const char *key, size_t keylen, request_type type,
+			 struct group *resultbuf, char *buffer,
+			 size_t buflen);
+
 
 int
 __nscd_getgrnam_r (const char *name, struct group *resultbuf, char *buffer,
 		   size_t buflen)
 {
-  if (name == NULL)
-    return 1;
-
-  return __nscd_getgr_r (name, GETGRBYNAME, resultbuf, buffer, buflen);
+  return nscd_getgr_r (name, strlen (name) + 1, GETGRBYNAME, resultbuf,
+		       buffer, buflen);
 }
+
 
 int
 __nscd_getgrgid_r (gid_t gid, struct group *resultbuf, char *buffer,
 		   size_t buflen)
 {
-  char *p = buffer;
-  int plen;
+  char buf[12];
+  size_t n;
 
-  plen = __snprintf (buffer, buflen, "%d", gid);
-  if (plen == -1)
-    {
-      __set_errno (ERANGE);
-      return -1;
-    }
-  p = buffer + plen + 1;
+  n = __snprintf (buf, sizeof (buf), "%d", gid) + 1;
 
-  return __nscd_getgr_r (buffer, GETGRBYGID, resultbuf, p, buflen - plen -1);
+  return nscd_getgr_r (buf, n, GETGRBYGID, resultbuf, buffer, buflen);
 }
+
 
 /* Create a socket connected to a name. */
 static int
-nscd_open_socket (void)
+open_socket (void)
 {
   struct sockaddr_un addr;
   int sock;
@@ -91,16 +86,16 @@ nscd_open_socket (void)
   return sock;
 }
 
+
 static int
-__nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
-		char *buffer, size_t buflen)
+nscd_getgr_r (const char *key, size_t keylen, request_type type,
+	      struct group *resultbuf, char *buffer, size_t buflen)
 {
-  int sock = nscd_open_socket ();
+  int sock = open_socket ();
   request_header req;
   gr_response_header gr_resp;
   ssize_t nbytes;
-  size_t maxiov;
-  size_t sum;
+  struct iovec vec[2];
 
   if (sock == -1)
     {
@@ -110,16 +105,14 @@ __nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
 
   req.version = NSCD_VERSION;
   req.type = type;
-  req.key_len = strlen (key);
-  nbytes = __write (sock, &req, sizeof (request_header));
-  if (nbytes != sizeof (request_header))
-    {
-      __close (sock);
-      return 1;
-    }
+  req.key_len = keylen;
 
-  nbytes = __write (sock, key, req.key_len);
-  if (nbytes != req.key_len)
+  vec[0].iov_base = &req;
+  vec[0].iov_len = sizeof (request_header);
+  vec[1].iov_base = (void *) key;
+  vec[1].iov_len = keylen;
+
+  if (__writev (sock, vec, 2) != sizeof (request_header) + keylen)
     {
       __close (sock);
       return 1;
@@ -142,118 +135,79 @@ __nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
 
   if (gr_resp.found == 1)
     {
-      struct iovec *vec;
       size_t *len;
       char *p = buffer;
-      int nblocks;
       size_t total_len;
       uintptr_t align;
-
-      /* A first check whether the buffer is sufficently large is possible.  */
-      if (buflen < gr_resp.gr_name_len + 1 + gr_resp.gr_passwd_len + 1)
-	{
-	  __set_errno (ERANGE);
-	  __close (sock);
-	  return -1;
-	}
-
-      /* Allocate the IOVEC.  */
-      vec = alloca ((2 + gr_resp.gr_mem_len) * sizeof (struct iovec));
-      len = alloca (gr_resp.gr_mem_len * sizeof (size_t));
-
-      vec[0].iov_base = resultbuf->gr_name = p;
-      vec[0].iov_len = gr_resp.gr_name_len;
-      total_len = gr_resp.gr_name_len;
-      p += gr_resp.gr_name_len + 1;
-
-      vec[1].iov_base = resultbuf->gr_passwd = p;
-      vec[1].iov_len = gr_resp.gr_passwd_len;
-      total_len += gr_resp.gr_passwd_len;
-      p += gr_resp.gr_passwd_len + 1;
-      buflen -= total_len;
-      nblocks = 2;
-
-      if (gr_resp.gr_mem_len > 0)
-	{
-	  vec[2].iov_base = len;
-	  vec[2].iov_len = gr_resp.gr_mem_len * sizeof (size_t);
-	  total_len += gr_resp.gr_mem_len * sizeof (size_t);
-	  nblocks = 3;
-	}
-
-      /* Get this data.  */
-      if (__readv (sock, vec, nblocks) != total_len)
-	{
-	  __close (sock);
-	  return 1;
-	}
-
-      /* Now we know the sizes.  First terminate the strings we just read. */
-      resultbuf->gr_name[gr_resp.gr_name_len] = '\0';
-      resultbuf->gr_passwd[gr_resp.gr_passwd_len] = '\0';
-
-      resultbuf->gr_gid = gr_resp.gr_gid;
+      size_t cnt;
 
       /* Now allocate the buffer the array for the group members.  We must
 	 align the pointer.  */
       align = ((__alignof__ (char *) - (p - ((char *) 0)))
 	       & (__alignof__ (char *) - 1));
-      if (align + (1 + gr_resp.gr_mem_len) * sizeof (char *) > buflen)
+      if (buflen < (align + (1 + gr_resp.gr_mem_cnt) * sizeof (char *)
+		    + gr_resp.gr_name_len + gr_resp.gr_passwd_len))
 	{
+	no_room:
 	  __set_errno (ERANGE);
 	  __close (sock);
 	  return -1;
 	}
+
       p += align;
       resultbuf->gr_mem = (char **) p;
-      p += (1 + gr_resp.gr_mem_len) * sizeof (char *);
-      buflen -= align + (1 + gr_resp.gr_mem_len) * sizeof (char *);
+      p += (1 + gr_resp.gr_mem_cnt) * sizeof (char *);
+      buflen -= align + (1 + gr_resp.gr_mem_cnt) * sizeof (char *);
 
-      resultbuf->gr_mem[gr_resp.gr_mem_len] = NULL;
+      /* Set pointers for strings.  */
+      resultbuf->gr_name = p;
+      p += gr_resp.gr_name_len;
+      resultbuf->gr_passwd = p;
+      p += gr_resp.gr_passwd_len;
 
-      if (gr_resp.gr_mem_len > 0)
+      /* Fill in what we know now.  */
+      resultbuf->gr_gid = gr_resp.gr_gid;
+
+      /* Allocate array to store lengths.  */
+      len = alloca (gr_resp.gr_mem_cnt * sizeof (size_t));
+
+      total_len = gr_resp.gr_mem_cnt * sizeof (size_t);
+      vec[0].iov_base = len;
+      vec[0].iov_len = total_len;
+      vec[1].iov_base = resultbuf->gr_name;
+      vec[1].iov_len = gr_resp.gr_name_len + gr_resp.gr_passwd_len;
+      total_len += gr_resp.gr_name_len + gr_resp.gr_passwd_len;
+
+      buflen -= total_len;
+
+      /* Get this data.  */
+      if (__readv (sock, vec, 2) != total_len)
 	{
-	  /* Prepare reading the group members.  */
-	  size_t i;
-
-	  total_len = 0;
-	  for (i = 0; i < gr_resp.gr_mem_len; ++i)
-	    {
-	      if (len[i] >= buflen)
-		{
-		  __set_errno (ERANGE);
-		  __close (sock);
-		  return -1;
-		}
-
-	      vec[i].iov_base = resultbuf->gr_mem[i] = p;
-	      vec[i].iov_len = len[i];
-	      total_len += len[i];
-	      buflen -= len[i];
-	      p += len[i];
-	      *p++ = '\0';
-	    }
-
-#ifdef UIO_MAXIOV
-	  maxiov = UIO_MAXIOV;
-#else
-	  maxiov = sysconf (_SC_UIO_MAXIOV);
-#endif
-
-	  sum = 0;
-	  while (i > maxiov)
-	    {
-	      sum += __readv (sock, vec, maxiov);
-	      vec += maxiov;
-	      i -= maxiov;
-	    }
-
-	  if (sum + __readv (sock, vec, i) != total_len)
-	    {
-	      __close (sock);
-	      return -1;
-	    }
+	  __close (sock);
+	  return 1;
 	}
+
+      /* Clear the terminating entry.  */
+      resultbuf->gr_mem[gr_resp.gr_mem_cnt] = NULL;
+
+      /* Prepare reading the group members.  */
+      total_len = 0;
+      for (cnt = 0; cnt < gr_resp.gr_mem_cnt; ++cnt)
+	{
+	  resultbuf->gr_mem[cnt] = p;
+	  total_len += len[cnt];
+	  p += len[cnt];
+	}
+
+      if (total_len > buflen)
+	goto no_room;
+
+      if (__read (sock, resultbuf->gr_mem[0], total_len) != total_len)
+	{
+	  __close (sock);
+	  return -1;
+	}
+
       __close (sock);
       return 0;
     }

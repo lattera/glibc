@@ -17,71 +17,160 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA. */
 
+#include <errno.h>
+#include <error.h>
+#include <langinfo.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
-#include <sys/types.h>
+
 #include "nscd.h"
+#include "dbg_log.h"
+
+/* We use this to make sure the receiver is the same.  */
+static const char compilation[21] = __DATE__ " " __TIME__;
+
+/* Statistic data for one database.  */
+struct dbstat
+{
+  int enabled;
+  int check_file;
+  size_t module;
+
+  unsigned long int postimeout;
+  unsigned long int negtimeout;
+
+  unsigned long int poshit;
+  unsigned long int neghit;
+  unsigned long int posmiss;
+  unsigned long int negmiss;
+};
+
+/* Record for transmitting statistics.  */
+struct statdata
+{
+  char version[sizeof (compilation)];
+  int debug_level;
+  int ndbs;
+  struct dbstat dbs[lastdb];
+};
+
 
 void
-print_stat (void)
+send_stats (int fd, struct database dbs[lastdb])
 {
-  int sock = __nscd_open_socket ();
-  request_header req;
-  stat_response_header resp;
-  ssize_t nbytes;
+  struct statdata data;
+  int cnt;
 
-  if (sock == -1)
+  memcpy (data.version, compilation, sizeof (compilation));
+  data.debug_level = debug_level;
+  data.ndbs = lastdb;
+
+  for (cnt = 0; cnt < lastdb; ++cnt)
     {
-      fputs (_("nscd not running!\n"), stdout);
-      exit (EXIT_FAILURE);
+      data.dbs[cnt].enabled = dbs[cnt].enabled;
+      data.dbs[cnt].check_file = dbs[cnt].check_file;
+      data.dbs[cnt].module = dbs[cnt].module;
+      data.dbs[cnt].postimeout = dbs[cnt].postimeout;
+      data.dbs[cnt].negtimeout = dbs[cnt].negtimeout;
+      data.dbs[cnt].poshit = dbs[cnt].poshit;
+      data.dbs[cnt].neghit = dbs[cnt].neghit;
+      data.dbs[cnt].posmiss = dbs[cnt].posmiss;
+      data.dbs[cnt].negmiss = dbs[cnt].negmiss;
     }
 
+  if (TEMP_FAILURE_RETRY (write (fd, &data, sizeof (data))) != sizeof (data))
+    {
+      char buf[256];
+      dbg_log (_("cannot write statistics: %s"),
+	       strerror_r (errno, buf, sizeof (buf)));
+    }
+}
+
+
+int
+receive_print_stats (void)
+{
+  struct statdata data;
+  request_header req;
+  ssize_t nbytes;
+  int fd;
+  int i;
+
+  /* Open a socket to the running nscd.  */
+  fd = nscd_open_socket ();
+  if (fd == -1)
+    error (EXIT_FAILURE, 0, _("nscd not running!\n"));
+
+  /* Send the request.  */
   req.version = NSCD_VERSION;
   req.type = GETSTAT;
   req.key_len = 0;
-  nbytes = write (sock, &req, sizeof (request_header));
+  nbytes = TEMP_FAILURE_RETRY (write (fd, &req, sizeof (request_header)));
   if (nbytes != sizeof (request_header))
     {
-      perror (_("write incomplete"));
-      close (sock);
-      exit (EXIT_FAILURE);
+      int err = errno;
+      close (fd);
+      error (EXIT_FAILURE, err, _("write incomplete"));
     }
 
-  nbytes = read (sock, &resp, sizeof (stat_response_header));
-  if (nbytes != sizeof (stat_response_header))
+  /* Read as much data as we expect.  */
+  if (TEMP_FAILURE_RETRY (read (fd, &data, sizeof (data))) != sizeof (data)
+      || (memcmp (data.version, compilation, sizeof (compilation)) != 0
+	  /* Yes, this is an assignment!  */
+	  && errno == EINVAL))
     {
-      perror (_("read incomplete"));
-      close (sock);
-      exit (EXIT_FAILURE);
+      /* Not the right version.  */
+      int err = errno;
+      close (fd);
+      error (EXIT_FAILURE, err, _("cannot read statistics data"));
     }
 
-  close (sock);
+  printf (_("nscd configuration:\n\n%15d  server debug level\n"),
+	  data.debug_level);
 
-  printf (_("nscd configuration:\n\n"));
-  printf (_("%12d  server debug level\n\n"), resp.debug_level);
+  for (i = 0; i < lastdb; ++i)
+    {
+      unsigned long int hit = data.dbs[i].poshit + data.dbs[i].neghit;
+      unsigned long int all = hit + data.dbs[i].posmiss + data.dbs[i].negmiss;
+      const char *enabled = nl_langinfo (data.dbs[i].enabled ? YESSTR : NOSTR);
+      const char *check_file = nl_langinfo (data.dbs[i].check_file
+					    ? YESSTR : NOSTR);
 
-  printf (_("passwd cache:\n\n"));
-  printf (_("%12s  cache is enabled\n"), resp.pw_enabled ? _("Yes") : _("No"));
-  printf (_("%12ld  cache hits on positive entries\n"), resp.pw_poshit);
-  printf (_("%12ld  cache hits on negative entries\n"), resp.pw_neghit);
-  printf (_("%12ld  cache misses on positive entries\n"), resp.pw_posmiss);
-  printf (_("%12ld  cache misses on negative entries\n"), resp.pw_negmiss);
-  printf (_("%12ld  suggested size\n"), resp.pw_size);
-  printf (_("%12ld  seconds time to live for positive entries\n"),
-	  resp.pw_posttl);
-  printf (_("%12ld  seconds time to live for negative entries\n\n"),
-	  resp.pw_negttl);
+      if (enabled[0] == '\0')
+	/* The locale does not provide this information so we have to
+	   translate it ourself.  Since we should avoid short translation
+	   terms we artifically increase the length.  */
+	enabled = data.dbs[i].enabled ? _("     yes") : _("      no");
+      if (check_file[0] == '\0')
+	check_file = data.dbs[i].check_file ? _("     yes") : _("      no");
 
-  printf (_("group cache:\n\n"));
-  printf (_("%12s  cache is enabled\n"), resp.gr_enabled ? _("Yes") : _("No"));
-  printf (_("%12ld  cache hits on positive entries\n"), resp.gr_poshit);
-  printf (_("%12ld  cache hits on negative entries\n"), resp.gr_neghit);
-  printf (_("%12ld  cache misses on positive entries\n"), resp.gr_posmiss);
-  printf (_("%12ld  cache misses on negative entries\n"), resp.gr_negmiss);
-  printf (_("%12ld  suggested size\n"), resp.gr_size);
-  printf (_("%12ld  seconds time to live for positive entries\n"),
-	  resp.gr_posttl);
-  printf (_("%12ld  seconds time to live for negative entries\n"),
-	  resp.gr_negttl);
+      if (all == 0)
+	/* If nothing happened so far report a 0% hit rate.  */
+	all = 1;
+
+      printf (_("\n%s cache:\n\n"
+		"%15s  cache is enabled\n"
+		"%15Zd  suggested size\n"
+		"%15ld  seconds time to live for positive entries\n"
+		"%15ld  seconds time to live for negative entries\n"
+		"%15ld  cache hits on positive entries\n"
+		"%15ld  cache hits on negative entries\n"
+		"%15ld  cache misses on positive entries\n"
+		"%15ld  cache misses on negative entries\n"
+		"%15ld%% cache hit rate\n"
+		"%15s  check /etc/%s for changes\n"),
+	      dbnames[i], enabled,
+	      data.dbs[i].module,
+	      data.dbs[i].postimeout, data.dbs[i].negtimeout,
+	      data.dbs[i].poshit, data.dbs[i].neghit,
+	      data.dbs[i].posmiss, data.dbs[i].negmiss,
+	      (100 * hit) / all,
+	      check_file, dbnames[i]);
+    }
+
+  close (fd);
+
+  exit (0);
 }

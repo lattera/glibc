@@ -28,8 +28,8 @@
    if in debug mode and no debug file, we write the messages to stderr,
    else to syslog.  */
 
-FILE *dbgout = NULL;
-int debug_flag = 0;
+FILE *dbgout;
+int debug_level;
 
 int
 set_logfile (const char *logfile)
@@ -47,7 +47,7 @@ dbg_log (const char *fmt,...)
   va_start (ap, fmt);
   vsnprintf (msg2, sizeof (msg), fmt, ap);
 
-  if (debug_flag)
+  if (debug_level > 0)
     {
       snprintf (msg, sizeof (msg), "%d: %s\n", getpid (), msg2);
       if (dbgout)

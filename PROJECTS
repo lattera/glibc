@@ -149,3 +149,13 @@ contact <bug-glibc@gnu.org>.
 	  {
 	    ... use the plain file if it exists, otherwise the db ...
 	  }
+
+[23] The `strptime' function needs to be completed.  This includes among
+     other things that it must get teached about timezones.  The solution
+     envisioned is to extract the timezones from the ADO timezone
+     specifications.  Special care must be given names which are used
+     multiple times.  Here the precedence should (probably) be according
+     to the geograhical distance.  E.g., the timezone EST should be
+     treated as the `Eastern Australia Time' instead of the US `Eastern
+     Standard Time' if the current TZ variable is set to, say,
+     Australia/Canberra or if the current locale is en_AU.

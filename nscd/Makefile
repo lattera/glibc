@@ -21,12 +21,13 @@
 #
 subdir	:= nscd
 
-routines := nscd_getpw_r nscd_getgr_r
+routines := nscd_getpw_r nscd_getgr_r nscd_gethst_r
 
 include ../Makeconfig
 
 nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
-		getgrnam_r getgrgid_r dbg_log nscd_conf nscd_stat
+		getgrnam_r getgrgid_r hstcache gethstbyad_r gethstbynm2_r \
+		dbg_log nscd_conf nscd_stat cache
 
 ifeq ($(have-thread-library),yes)
 

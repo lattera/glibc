@@ -18,18 +18,37 @@
    Boston, MA 02111-1307, USA. */
 
 #ifndef _NSCD_H
-#define _NSCD_H 1
+#define _NSCD_H	1
 
-#include <grp.h>
-#include <pwd.h>
+#include <pthread.h>
+#include <time.h>
+#include <sys/uio.h>
+
 
 /* Version number of the daemon interface */
-#define NSCD_VERSION 1
+#define NSCD_VERSION 2
 
-/* How many threads do we spawn maximal ? */
-#define MAX_NUM_CONNECTIONS 16
+/* Path of the file where the PID of the running system is stored.  */
+#define _PATH_NSCDPID	 "/var/run/nscd.pid"
 
-/* Services provided */
+/* Path for the Unix domain socket.  */
+#define _PATH_NSCDSOCKET "/var/run/.nscd_socket"
+
+/* Path for the configuration file.  */
+#define _PATH_NSCDCONF	 "/etc/nscd.conf"
+
+
+/* Handle databases.  */
+typedef enum
+{
+  pwddb,
+  grpdb,
+  hstdb,
+  lastdb
+} dbtype;
+
+
+/* Available services.  */
 typedef enum
 {
   GETPWBYNAME,
@@ -37,22 +56,67 @@ typedef enum
   GETGRBYNAME,
   GETGRBYGID,
   GETHOSTBYNAME,
+  GETHOSTBYNAMEv6,
   GETHOSTBYADDR,
-  SHUTDOWN,		/* Shut the server down */
-  GETSTAT               /* Get the server statistic */
+  GETHOSTBYADDRv6,
+  LASTDBREQ = GETHOSTBYADDRv6,
+  SHUTDOWN,		/* Shut the server down.  */
+  GETSTAT,		/* Get the server statistic.  */
+  LASTREQ,
 } request_type;
+
+
+/* Structure for one hash table entry.  */
+struct hashentry
+{
+  request_type type;		/* Which type of dataset.  */
+  size_t len;			/* Length of key.  */
+  void *key;			/* Pointer to key.  */
+  struct hashentry *next;	/* Next entry in this hash bucket list.  */
+  time_t timeout;		/* Time when this entry becomes invalid.  */
+  ssize_t total;		/* Number of bytes in PACKET.  */
+  const void *packet;		/* Records for the result.  */
+  void *data;			/* The malloc()ed respond record.  */
+  int last;			/* Nonzero if DATA should be free()d.  */
+  struct hashentry *dellist;	/* Next record to be deleted.  */
+};
+
+/* Structure describing one database.  */
+struct database
+{
+  pthread_rwlock_t lock;
+
+  int enabled;
+  int check_file;
+  const char *filename;
+  time_t file_mtime;
+  size_t module;
+
+  const struct iovec *disabled_iov;
+
+  unsigned long int postimeout;
+  unsigned long int negtimeout;
+
+  unsigned long int poshit;
+  unsigned long int neghit;
+  unsigned long int posmiss;
+  unsigned long int negmiss;
+
+  struct hashentry **array;
+};
+
 
 /* Header common to all requests */
 typedef struct
 {
-  /* Version number of the daemon interface */
-  int version;
-  /* Service requested */
-  request_type type;
-  /* key len */
-  ssize_t key_len;
+  int version;		/* Version number of the daemon interface.  */
+  request_type type;	/* Service requested.  */
+  ssize_t key_len;	/* Key length.  */
 } request_header;
 
+
+/* Structure sent in reply to password query.  Note that this struct is
+   sent also if the service is disabled or there is no record found.  */
 typedef struct
 {
   int version;
@@ -66,6 +130,9 @@ typedef struct
   ssize_t pw_shell_len;
 } pw_response_header;
 
+
+/* Structure sent in reply to group query.  Note that this struct is
+   sent also if the service is disabled or there is no record found.  */
 typedef struct
 {
   int version;
@@ -73,77 +140,82 @@ typedef struct
   ssize_t gr_name_len;
   ssize_t gr_passwd_len;
   gid_t gr_gid;
-  ssize_t gr_mem_len;
+  ssize_t gr_mem_cnt;
 } gr_response_header;
 
+
+/* Structure sent in reply to host query.  Note that this struct is
+   sent also if the service is disabled or there is no record found.  */
 typedef struct
 {
-  int debug_level;
-  int pw_enabled;
-  unsigned long pw_poshit;
-  unsigned long pw_posmiss;
-  unsigned long pw_neghit;
-  unsigned long pw_negmiss;
-  unsigned long pw_size;
-  unsigned long pw_posttl;
-  unsigned long pw_negttl;
-  int gr_enabled;
-  unsigned long gr_poshit;
-  unsigned long gr_posmiss;
-  unsigned long gr_neghit;
-  unsigned long gr_negmiss;
-  unsigned long gr_size;
-  unsigned long gr_posttl;
-  unsigned long gr_negttl;
-} stat_response_header;
+  int version;
+  int found;
+  ssize_t h_name_len;
+  ssize_t h_aliases_cnt;
+  int h_addrtype;
+  int h_length;
+  ssize_t h_addr_list_cnt;
+  int error;
+} hst_response_header;
 
-#define _PATH_NSCDPID	 "/var/run/nscd.pid"
-#define _PATH_NSCDSOCKET "/var/run/.nscd_socket"
-#define _PATH_NSCDCONF	 "/etc/nscd.conf"
+/* Global variables.  */
+extern const char *dbnames[lastdb];
+extern const char *serv2str[LASTREQ];
 
-typedef struct
-{
-  char *key;
-  int conn;
-} param_t;
+extern const struct iovec pwd_iov_disabled;
+extern const struct iovec grp_iov_disabled;
+extern const struct iovec hst_iov_disabled;
 
-extern int  do_shutdown; /* 1 if we should quit the programm.  */
-extern int  disabled_passwd;
-extern int  disabled_group;
+/* Number of threads to run.  */
+extern int nthreads;
 
-extern int  nscd_parse_file __P ((const char *fname));
-extern int  set_logfile __P ((const char *logfile));
-extern void set_pos_pwd_ttl __P ((unsigned long));
-extern void set_neg_pwd_ttl __P ((unsigned long));
-extern void set_pos_grp_ttl __P ((unsigned long));
-extern void set_neg_grp_ttl __P ((unsigned long));
-extern void set_pwd_modulo __P ((unsigned long));
-extern void set_grp_modulo __P ((unsigned long));
 
-extern void init_sockets __P ((void));
-extern void close_socket __P ((int conn));
-extern void close_sockets __P ((void));
-extern void get_request __P ((int *conn, request_header *req, char **key));
-extern void pw_send_answer __P ((int conn, struct passwd *pwd));
-extern void pw_send_disabled __P ((int conn));
-extern void gr_send_answer __P ((int conn, struct group *grp));
-extern void gr_send_disabled __P ((int conn));
+/* Prototypes for global functions.  */
 
-extern int  cache_pwdinit __P ((void));
-extern void *cache_getpwnam __P ((void *param));
-extern void *cache_getpwuid __P ((void *param));
-extern void *cache_pw_disabled __P ((void *param));
+/* nscd.c */
+extern void termination_handler (int signum);
+extern int nscd_open_socket (void);
 
-extern int  cache_grpinit __P ((void));
-extern void *cache_getgrnam __P ((void *param));
-extern void *cache_getgrgid __P ((void *param));
-extern void *cache_gr_disabled __P ((void *param));
+/* connections.c */
+extern void nscd_init (const char *conffile);
+extern void close_sockets (void);
+extern void start_threads (void);
 
-extern int __nscd_open_socket __P ((void));
+/* nscd_conf.c */
+extern int nscd_parse_file (const char *fname, struct database dbs[lastdb]);
 
-extern void get_pw_stat __P ((stat_response_header *resp));
-extern void get_gr_stat __P ((stat_response_header *resp));
-extern void print_stat __P ((void));
-extern void stat_send __P ((int conn, stat_response_header *resp));
+/* nscd_stat.c */
+extern void send_stats (int fd, struct database dbs[lastdb]);
+extern int receive_print_stats (void);
 
-#endif
+/* cache.c */
+extern struct hashentry *cache_search (int type, void *key, size_t len,
+				       struct database *table);
+extern void cache_add (int type, void *key, size_t len,
+		       const void *packet, size_t iovtotal, void *data,
+		       int last, time_t t, struct database *table);
+extern void prune_cache (struct database *table, time_t now);
+
+/* pwdcache.c */
+extern void addpwbyname (struct database *db, int fd, request_header *req,
+			 void *key);
+extern void addpwbyuid (struct database *db, int fd, request_header *req,
+			void *key);
+
+/* grpcache.c */
+extern void addgrbyname (struct database *db, int fd, request_header *req,
+			 void *key);
+extern void addgrbygid (struct database *db, int fd, request_header *req,
+			void *key);
+
+/* hstcache.c */
+extern void addhstbyname (struct database *db, int fd, request_header *req,
+			  void *key);
+extern void addhstbyaddr (struct database *db, int fd, request_header *req,
+			  void *key);
+extern void addhstbynamev6 (struct database *db, int fd, request_header *req,
+			    void *key);
+extern void addhstbyaddrv6 (struct database *db, int fd, request_header *req,
+			    void *key);
+
+#endif /* nscd.h */

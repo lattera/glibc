@@ -28,7 +28,6 @@ routines := fgetpwent getpw putpwent \
 
 include ../Rules
 
-# We can later add the names of other thread packages here.
 ifeq ($(have-thread-library),yes)
 
 CFLAGS-getpwuid_r.c = -DUSE_NSCD=1

@@ -1,6 +1,6 @@
-/* Copyright (c) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -15,15 +15,17 @@
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA. */
+   Boston, MA 02111-1307, USA.  */
 
-#ifndef _DBG_LOG_H
-#define _DBG_LOG_H	1
+#include <netdb.h>
 
-extern int debug_level;
 
-extern void dbg_log (const char *str, ...);
+#define LOOKUP_TYPE	struct hostent
+#define FUNCTION_NAME	gethostbyaddr
+#define DATABASE_NAME	hosts
+#define ADD_PARAMS	const char *addr, int len, int type
+#define ADD_VARIABLES	addr, len, type
+#define NEED_H_ERRNO	1
+#define NEED__RES	1
 
-extern int set_logfile (const char *logfile);
-
-#endif
+#include "../nss/getXXbyYY_r.c"

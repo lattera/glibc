@@ -1,3 +1,56 @@
+1998-10-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/nss_dns/dns-host.c: Add missing errnop parameter to the
+	NSS functions.
+	* resolv/nss_dns/dns-network.c: Likewise.
+
+	* grp/Makefile: Don't search for linuxhtreads in add-ons, use
+	have-thread-library to determine whether threads are available.
+	* pwd/Makefile: Remove wrong comment.
+
+	* inet/Makefile: Define CFLAGS-gethstbyad_r.c, CFLAGS-gethstbynm_r.c,
+	and CFLAGS-gethstbynm2_r.c to -DUSE_NSCD=1.
+
+	* locale/C-messages.c: Define default strings for YESTR and NOSTR.
+
+	* nss/Versions: Add __nss_hosts_lookup.
+
+	* nss/getXXbyYY.c: Remove unneeded assignment.
+
+	* nss/getXXbyYY_r.c: Include nscd/nscd_proto.h only if needed.
+
+	Almost complete rewrite of the NSCD to make it smaller, faster,
+	add more functionnality and make it easier to extend.
+	* nscd/Makfile (routines): Add nscd_gethst_r.
+	(nscd-modules): Add hstcache, gethstbyad_r, gethstbynm2_r, and cache.
+	* nscd/cache.c: New file.
+	* nscd/gethstbyad_r.c: New file.
+	* nscd/gethstbynm2_r.c: New file.
+	* nscd/hstcache.c: New file.
+	* nscd/nscd_gethst_r.c: New file.
+	* nscd/connections.c: Rewritten.  Don't start new thread for every
+	new connection.  Use a fixed set of threads which handle all
+	connections and also the cache cleanup.
+	* nscd/grpcache.c: Rewritten to use generic cache handling functions
+	in cache.c.
+	* nscd/nscd.c: Recognize new parameter nthreads.  Adjust initialization
+	for rewrite.  Remove handle_requests function.
+	* nscd/nscd.h (NSCD_VERSION): Bump to 2.
+	Define new data structure for the new unified cache and the host
+	database entries.
+	* nscd/nscd_conf.c: Rewrite parsing partly to allow adding of more
+	databases easily.  Recognize check-files and threads definitions.
+	* nscd/nscd.conf: Add definition of enable-cache and check-files to
+	passwd and group definitions.  Add new set of definitions for hosts.
+	* nscd/nscd_getgr_r.c: Rewrite for new protocol.
+	* nscd/nscd_getpw_r.c: Likewise.
+	* nscd/nscd_proto.h: Add prototype for host database functions.
+	* nscd/nscd_stat.c: Rewrite to simplify printing of information
+	for many databases.
+	* nscd/dbg_log.c: Remove unnecessary variable initializations.
+	Global variable debug_flag is renamed to dbg_level.
+	* nscd/dbg_log.h: Declare set_logfile.
+
 1998-10-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/bits/fcntl.h: Add dummy definition of

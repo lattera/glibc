@@ -30,8 +30,7 @@ tests := testgrp
 
 include ../Rules
 
-# We can later add the names of other thread packages here.
-ifneq (,$(findstring linuxthreads,$(add-ons)))
+ifeq ($(have-thread-library),yes)
 
 CFLAGS-getgrgid_r.c = -DUSE_NSCD=1
 CFLAGS-getgrnam_r.c = -DUSE_NSCD=1

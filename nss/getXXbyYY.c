@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -117,7 +117,6 @@ FUNCTION_NAME (ADD_PARAMS)
 	     process gets a chance for a normal termination.  */
 	  save = errno;
 	  free (buffer);
-	  buffer = NULL;
 	  __set_errno (save);
 	}
       buffer = new_buf;

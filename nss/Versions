@@ -1,7 +1,7 @@
 libc {
   GLIBC_2.0 {
      # functions used in other libraries
-    __nss_passwd_lookup; __nss_group_lookup; __nss_next;
+    __nss_passwd_lookup; __nss_group_lookup; __nss_hosts_lookup; __nss_next;
     _nss_files_parse_grent; _nss_files_parse_pwent; _nss_files_parse_spent;
     __nss_database_lookup; __nss_configure_lookup;
   }

@@ -17,9 +17,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA. */
 
-/* nscd - Name Service Cache Daemon. Caches passwd and group.  */
+/* nscd - Name Service Cache Daemon. Caches passwd, group, and hosts.  */
 
 #include <argp.h>
+#include <assert.h>
 #include <errno.h>
 #include <error.h>
 #include <libintl.h>
@@ -61,12 +62,10 @@ int do_shutdown = 0;
 int disabled_passwd = 0;
 int disabled_group = 0;
 int go_background = 1;
-const char *conffile = _PATH_NSCDCONF;
+static const char *conffile = _PATH_NSCDCONF;
 
-static void termination_handler (int signum);
 static int check_pid (const char *file);
 static int write_pid (const char *file);
-static void handle_requests (void);
 
 /* Name and version of program.  */
 static void print_version (FILE *stream, struct argp_state *state);
@@ -79,6 +78,7 @@ static const struct argp_option options[] =
     N_("Read configuration data from NAME") },
   { "debug", 'd', NULL, 0,
     N_("Do not fork and display messages on the current tty") },
+  { "nthreads", 't', N_("NUMBER"), 0, N_("Start NUMBER threads") },
   { "shutdown", 'K', NULL, 0, N_("Shut the server down") },
   { "statistic", 'g', NULL, 0, N_("Print current configuration statistic") },
   { NULL, 0, NULL, 0, NULL }
@@ -118,10 +118,7 @@ main (int argc, char **argv)
 
   /* Check if we are already running. */
   if (check_pid (_PATH_NSCDPID))
-    {
-      fputs (_("already running"), stderr);
-      exit (EXIT_FAILURE);
-    }
+    error (EXIT_FAILURE, 0, _("already running"));
 
   /* Behave like a daemon.  */
   if (go_background)
@@ -144,7 +141,7 @@ main (int argc, char **argv)
       if (write_pid (_PATH_NSCDPID) < 0)
         dbg_log ("%s: %s", _PATH_NSCDPID, strerror (errno));
 
-      /* Ignore job control signals */
+      /* Ignore job control signals.  */
       signal (SIGTTOU, SIG_IGN);
       signal (SIGTTIN, SIG_IGN);
       signal (SIGTSTP, SIG_IGN);
@@ -155,21 +152,14 @@ main (int argc, char **argv)
   signal (SIGTERM, termination_handler);
   signal (SIGPIPE, SIG_IGN);
 
-  /* Cleanup files created by a previous `bind' */
+  /* Cleanup files created by a previous `bind'.  */
   unlink (_PATH_NSCDSOCKET);
 
-  nscd_parse_file (conffile);
+  /* Init databases.  */
+  nscd_init (conffile);
 
-  /* Create first sockets */
-  init_sockets ();
-  /* Init databases */
-  if ((cache_pwdinit () < 0) || (cache_grpinit () < 0))
-    {
-      fputs (_("Not enough memory\n"), stderr);
-      return 1;
-    }
   /* Handle incoming requests */
-  handle_requests ();
+  start_threads ();
 
   return 0;
 }
@@ -182,20 +172,19 @@ parse_opt (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case 'd':
-      debug_flag = 1;
+      ++debug_level;
       go_background = 0;
       break;
+
     case 'f':
       conffile = arg;
       break;
+
     case 'K':
       if (getuid () != 0)
-	{
-	  printf (_("Only root is allowed to use this option!\n\n"));
-	  exit (EXIT_FAILURE);
-	}
+	error (EXIT_FAILURE, 0, _("Only root is allowed to use this option!"));
       {
-	int sock = __nscd_open_socket ();
+	int sock = nscd_open_socket ();
 	request_header req;
 	ssize_t nbytes;
 
@@ -205,19 +194,24 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	req.version = NSCD_VERSION;
 	req.type = SHUTDOWN;
 	req.key_len = 0;
-	nbytes = write (sock, &req, sizeof (request_header));
+	nbytes = TEMP_FAILURE_RETRY (write (sock, &req,
+					    sizeof (request_header)));
 	close (sock);
-	if (nbytes != req.key_len)
-	  exit (EXIT_FAILURE);
-	else
-	  exit (EXIT_SUCCESS);
+	exit (nbytes != sizeof (request_header) ? EXIT_FAILURE : EXIT_SUCCESS);
       }
+
     case 'g':
-      print_stat ();
-      exit (EXIT_SUCCESS);
+      receive_print_stats ();
+      /* Does not return.  */
+
+    case 't':
+      nthreads = atol (arg);
+      break;
+
     default:
       return ARGP_ERR_UNKNOWN;
     }
+
   return 0;
 }
 
@@ -231,13 +225,14 @@ Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 "), "1998");
-  fprintf (stream, gettext ("Written by %s.\n"), "Thorsten Kukuk");
+  fprintf (stream, gettext ("Written by %s.\n"),
+	   "Thorsten Kukuk and Ulrich Drepper");
 }
 
 
-/* Create a socket connected to a name. */
+/* Create a socket connected to a name.  */
 int
-__nscd_open_socket (void)
+nscd_open_socket (void)
 {
   struct sockaddr_un addr;
   int sock;
@@ -247,6 +242,7 @@ __nscd_open_socket (void)
     return -1;
 
   addr.sun_family = AF_UNIX;
+  assert (sizeof (addr.sun_path) >= sizeof (_PATH_NSCDSOCKET));
   strcpy (addr.sun_path, _PATH_NSCDSOCKET);
   if (connect (sock, (struct sockaddr *) &addr, sizeof (addr)) < 0)
     {
@@ -258,12 +254,12 @@ __nscd_open_socket (void)
 }
 
 /* Cleanup.  */
-static void
+void
 termination_handler (int signum)
 {
   close_sockets ();
 
-  /* Clean up the files created by `bind'.  */
+  /* Clean up the file created by `bind'.  */
   unlink (_PATH_NSCDSOCKET);
 
   /* Clean up pid file.  */
@@ -282,11 +278,12 @@ check_pid (const char *file)
   if (fp)
     {
       pid_t pid;
+      int n;
 
-      fscanf (fp, "%d", &pid);
+      n = fscanf (fp, "%d", &pid);
       fclose (fp);
 
-      if (kill (pid, 0) == 0)
+      if (n != 1 || kill (pid, 0) == 0)
         return 1;
     }
 
@@ -305,176 +302,10 @@ write_pid (const char *file)
     return -1;
 
   fprintf (fp, "%d\n", getpid ());
-  if (ferror (fp))
+  if (fflush (fp) || ferror (fp))
     return -1;
 
   fclose (fp);
 
   return 0;
-}
-
-/* Type of the lookup function for netname2user.  */
-typedef int (*pwbyname_function) (const char *name, struct passwd *pw,
-				   char *buffer, size_t buflen);
-
-/* Handle incoming requests.  */
-static
-void handle_requests (void)
-{
-  request_header req;
-  int conn; /* Handle on which connection (client) the request came from.  */
-  int done = 0;
-  char *key;
-  pthread_attr_t th_attr;
-
-  /* We will create all threads detached.  Therefore prepare an attribute
-     now.  */
-  pthread_attr_init (&th_attr);
-  pthread_attr_setdetachstate (&th_attr, PTHREAD_CREATE_DETACHED);
-
-  while (!done)
-    {
-      key = NULL;
-      get_request (&conn, &req, &key);
-      if (debug_flag)
-	dbg_log (_("handle_requests: request received (Version = %d)"),
-		 req.version);
-      switch (req.type)
-	{
-	case GETPWBYNAME:
-	  {
-	    param_t *param = malloc (sizeof (param_t));
-	    pthread_t thread;
-	    int status;
-
-	    if (debug_flag)
-	      dbg_log ("\tGETPWBYNAME (%s)", key);
-	    param->key = key;
-	    param->conn = conn;
-	    if (disabled_passwd)
-	      status = pthread_create (&thread, &th_attr, cache_pw_disabled,
-				       (void *)param);
-	    else
-	      status = pthread_create (&thread, &th_attr, cache_getpwnam,
-				       (void *)param);
-	    if (status != 0)
-	      {
-		dbg_log (_("Creation of thread failed: %s"), strerror (errno));
-		close_socket (conn);
-	      }
-	    pthread_detach (thread);
-	  }
-	  break;
-	case GETPWBYUID:
-	  {
-	    param_t *param = malloc (sizeof (param_t));
-	    pthread_t thread;
-	    int status;
-
-	    if (debug_flag)
-	      dbg_log ("\tGETPWBYUID (%s)", key);
-	    param->key = key;
-	    param->conn = conn;
-	    if (disabled_passwd)
-	      status = pthread_create (&thread, &th_attr, cache_pw_disabled,
-			      (void *)param);
-	    else
-	      status = pthread_create (&thread, &th_attr, cache_getpwuid,
-				       (void *)param);
-	    if (status != 0)
-	      {
-		dbg_log (_("Creation of thread failed: %s"), strerror (errno));
-		close_socket (conn);
-	      }
-	  }
-	  break;
-	case GETGRBYNAME:
-	  {
-	    param_t *param = malloc (sizeof (param_t));
-	    pthread_t thread;
-	    int status;
-
-	    if (debug_flag)
-	      dbg_log ("\tGETGRBYNAME (%s)", key);
-	    param->key = key;
-	    param->conn = conn;
-	    if (disabled_group)
-	      status = pthread_create (&thread, &th_attr, cache_gr_disabled,
-				       (void *)param);
-	    else
-	      status = pthread_create (&thread, &th_attr, cache_getgrnam,
-				       (void *)param);
-	    if (status != 0)
-	      {
-		dbg_log (_("Creation of thread failed: %s"), strerror (errno));
-		close_socket (conn);
-	      }
-	  }
-	  break;
-	case GETGRBYGID:
-	  {
-	    param_t *param = malloc (sizeof (param_t));
-	    pthread_t thread;
-	    int status;
-
-	    if (debug_flag)
-	      dbg_log ("\tGETGRBYGID (%s)", key);
-	    param->key = key;
-	    param->conn = conn;
-	    if (disabled_group)
-	      status = pthread_create (&thread, &th_attr, cache_gr_disabled,
-				       (void *)param);
-	    else
-	      status = pthread_create (&thread, &th_attr, cache_getgrgid,
-				       (void *)param);
-	    if (status != 0)
-	      {
-		dbg_log (_("Creation of thread failed: %s"), strerror (errno));
-		close_socket (conn);
-	      }
-	  }
-	  break;
-	case GETHOSTBYNAME:
-	  /* Not yetimplemented.  */
-	  close_socket (conn);
-	  break;
-	case GETHOSTBYADDR:
-	  /* Not yet implemented. */
-	  close_socket (conn);
-	  break;
-	case SHUTDOWN:
-	  do_shutdown = 1;
-	  close_socket (0);
-	  close_socket (conn);
-	  /* Clean up the files created by `bind'.  */
-	  unlink (_PATH_NSCDSOCKET);
-	  /* Clean up pid file.  */
-	  unlink (_PATH_NSCDPID);
-	  done = 1;
-	  break;
-	case GETSTAT:
-	  {
-	    stat_response_header resp;
-
-	    if (debug_flag)
-	      dbg_log ("\tGETSTAT");
-
-	    get_pw_stat (&resp);
-	    get_gr_stat (&resp);
-	    resp.debug_level = debug_flag;
-	    resp.pw_enabled = !disabled_passwd;
-	    resp.gr_enabled = !disabled_group;
-
-	    stat_send (conn, &resp);
-
-	    close_socket (conn);
-	  }
-	  break;
-	default:
-	  dbg_log (_("Unknown request (%d)"), req.type);
-	  break;
-	}
-    }
-
-  pthread_attr_destroy (&th_attr);
 }
