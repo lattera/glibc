@@ -61,7 +61,7 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
   return 0;
 }
 
-static inline int
+static int
 pthread_cond_timedwait_relative(pthread_cond_t *cond,
 				pthread_mutex_t *mutex,
 				const struct timespec * reltime)

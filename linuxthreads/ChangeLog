@@ -1,3 +1,9 @@
+1999-10-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* restart.h (suspend_with_cancellation): Rewrite as a macro.
+
+	* condvar.c (pthread_cond_timedwait_relative): Don't mark as inline.
+
 1999-10-25  Andreas Jaeger  <aj@suse.de>
 
 	* internals.h: Remove K&R compatibility.
