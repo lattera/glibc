@@ -1,3 +1,8 @@
+1998-08-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/tstgetopt.c (options): Add NULL entry at end
+	Patch by Adrian Miranda <ade@psg.com>.
+
 1998-08-15 18:21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/elf.h: Add EI_OSABI, ELFOSABI*, and EI_ABIVERSION.  Move EI_PAD

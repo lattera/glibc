@@ -9,9 +9,10 @@ main (int argc, char **argv)
     {
       {"required", required_argument, NULL, 'r'},
       {"optional", optional_argument, NULL, 'o'},
-      {"none",     no_argument,       NULL, 'n'}
+      {"none",     no_argument,       NULL, 'n'},
+      {NULL,       0,                 NULL, 0 }
     };
-   
+
   int aflag = 0;
   int bflag = 0;
   char *cvalue = NULL;
