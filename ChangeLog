@@ -1,5 +1,9 @@
 2002-08-30  Roland McGrath  <roland@redhat.com>
 
+	* intl/dcigettext.c (DCIGETTEXT) [_LIBC]: Check for bogus CATEGORY.
+	[_LIBC] (category_to_name): Don't define the function.  Instead
+	define a macro using _nl_category_names.
+
 	* locale/xlocale.h (struct __locale_struct): New member `__names'.
 	* locale/xlocale.c (_nl_C_locobj): Update initializer.
 	* locale/global-locale.c (_nl_global_locale): Likewise.

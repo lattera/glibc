@@ -265,10 +265,15 @@ static char *plural_lookup PARAMS ((struct loaded_l10nfile *domain,
 				    const char *translation,
 				    size_t translation_len))
      internal_function;
-static const char *category_to_name PARAMS ((int category)) internal_function;
 static const char *guess_category_value PARAMS ((int category,
 						 const char *categoryname))
      internal_function;
+#ifdef _LIBC
+# include "../locale/localeinfo.h"
+# define category_to_name(category)	_nl_category_names[category]
+#else
+static const char *category_to_name PARAMS ((int category)) internal_function;
+#endif
 
 
 /* For those loosing systems which don't have `alloca' we have to add
@@ -390,6 +395,15 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
   /* If no real MSGID is given return NULL.  */
   if (msgid1 == NULL)
     return NULL;
+
+#ifdef _LIBC
+  if (category < 0 || category >= __LC_LAST || category == LC_ALL)
+    /* Bogus.  */
+    return (plural == 0
+	    ? (char *) msgid1
+	    /* Use the Germanic plural rule.  */
+	    : n == 1 ? (char *) msgid1 : (char *) msgid2);
+#endif
 
   __libc_rwlock_rdlock (_nl_state_lock);
 
@@ -985,7 +999,7 @@ plural_lookup (domain, n, translation, translation_len)
   return (char *) p;
 }
 
-
+#ifndef _LIBC
 /* Return string representation of locale CATEGORY.  */
 static const char *
 internal_function
@@ -1045,6 +1059,7 @@ category_to_name (category)
 
   return retval;
 }
+#endif
 
 /* Guess value of current locale from value of the environment variables.  */
 static const char *
