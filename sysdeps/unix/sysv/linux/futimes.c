@@ -82,14 +82,14 @@ __futimes (int fd, const struct timeval tvp[2])
       case ELOOP:
       case ENAMETOOLONG:
       case ENOTDIR:
-	errno = ENOSYS;
+	__set_errno (ENOSYS);
 	break;
 
       case ENOENT:
 	/* Validate the file descriptor by letting fcntl set errno to
 	   EBADF if it's bogus.  Otherwise it's a /proc issue.  */
 	if (INLINE_SYSCALL (fcntl, 3, fd, F_GETFD, 0) != -1)
-	  errno = ENOSYS;
+	  __set_errno (ENOSYS);
 	break;
       }
 
