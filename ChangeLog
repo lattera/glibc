@@ -1,3 +1,13 @@
+Tue Jul  9 06:19:29 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/generic/machine-gmon.h [NO_UNDERSCORES]: Declare _mcount
+	before using it in lhs of weak_alias.
+
+	* nss/getXXent_r.c (setup): New function, broken out of SETFUNC_NAME.
+	Call __nss_lookup when not setting STARTP.
+	(SETFUNC_NAME, ENDFUNC_NAME, REENTRANT_GETNAME): Call it to set up for
+	function-calling loop.
+
 Tue Jul  9 00:14:52 1996  Michael I. Bushnell p/BSG  <mib@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/ioctls.h (MDMBUF, ECHO, TOSTOP, FLUSHO,

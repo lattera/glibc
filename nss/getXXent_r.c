@@ -99,7 +99,32 @@ __libc_lock_define_initialized (static, lock);
 /* The lookup function for the first entry of this service.  */
 extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp);
 
-
+/* Set up NIP to run through the services.  If ALL is zero, use NIP's
+   current location if it's not nil.  Return nonzero if there are no
+   services (left).  */
+static enum nss_status
+setup (void **fctp, int all)
+{
+  int no_more;
+  if (startp == NULL)
+    {
+      no_more = DB_LOOKUP_FCT (&nip, SETFUNC_NAME_STRING, fctp);
+      startp = no_more ? (service_user *) -1 : nip;
+    }
+  else if (startp == (service_user *) -1)
+    /* No services at all.  */
+    return 1;
+  else
+    {
+      if (all || !nip)
+	/* Reset to the beginning of the service list.  */
+	nip = startp;
+      /* Look up the first function.  */
+      no_more = __nss_lookup (&nip, SETFUNC_NAME_STRING, fctp);
+    }
+  return no_more;
+}
+
 void
 SETFUNC_NAME (STAYOPEN)
 {
@@ -116,15 +141,8 @@ SETFUNC_NAME (STAYOPEN)
 
   __libc_lock_lock (lock);
 
-  if (startp == NULL)
-    {
-      no_more = DB_LOOKUP_FCT (&nip, SETFUNC_NAME_STRING, (void **) &fct);
-      startp = no_more == 0 ? (service_user *) -1 : nip;
-    }
-  else
-    no_more = (nip = startp) != (service_user *) -1;
-
   /* Cycle through all the services and run their setXXent functions.  */
+  no_more = setup ((void **) &fct, 1);
   while (! no_more)
     {
       /* Ignore status, we force check in __NSS_NEXT.  */
@@ -153,16 +171,9 @@ ENDFUNC_NAME (void)
 
   __libc_lock_lock (lock);
 
-  if (startp == NULL)
-    {
-      no_more = DB_LOOKUP_FCT (&nip, SETFUNC_NAME_STRING, (void **) &fct);
-      startp = no_more == 0 ? (service_user *) -1 : nip;
-    }
-  else
-    no_more = (nip = startp) != (service_user *) -1;
-
   /* Cycle through all the services and run their endXXent functions.  */
-  while (no_more == 0)
+  no_more = setup ((void **) &fct, 1);
+  while (! no_more)
     {
       /* Ignore status, we force check in __NSS_NEXT.  */
       (void) (*fct) ();
@@ -179,7 +190,7 @@ REENTRANT_GETNAME (LOOKUP_TYPE *result, char *buffer, int buflen H_ERRNO_PARM)
 {
   get_function fct;
   int no_more;
-  enum nss_status status = NSS_STATUS_NOTFOUND;
+  enum nss_status status;
 
 #ifdef NEED__RES
   if ((_res.options & RES_INIT) == 0 && res_init () == -1)
@@ -189,26 +200,16 @@ REENTRANT_GETNAME (LOOKUP_TYPE *result, char *buffer, int buflen H_ERRNO_PARM)
     }
 #endif /* need _res */
 
+  /* Initialize status to return if no more functions are found.  */
+  status = NSS_STATUS_NOTFOUND;
+
   __libc_lock_lock (lock);
 
-  if (nip)
-    /* Continuing a walk-through started before.  */
-    no_more = 0;
-  else
-    {
-      if (startp == NULL)
-	{
-	  no_more = DB_LOOKUP_FCT (&nip, SETFUNC_NAME_STRING, (void **) &fct);
-	  startp = no_more == 0 ? (service_user *) -1 : nip;
-	}
-      else
-	no_more = (nip = startp) != (service_user *) -1;
-
-      if (no_more != 0)
-	status = NSS_STATUS_UNAVAIL;
-    }
-
-  while (no_more == 0)
+  /* Run through available functions, starting with the same function last
+     run.  We will repeat each function as long as it succeeds, and then go
+     on to the next service action.  */
+  no_more = setup ((void **) &fct, 0);
+  while (! no_more)
     {
       status = (*fct) (result, buffer, buflen H_ERRNO_VAR);
 

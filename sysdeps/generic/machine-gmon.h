@@ -31,6 +31,11 @@ Cambridge, MA 02139, USA.  */
 /* The asm symbols for C functions are `_function'.
    The canonical name for the counter function is `mcount', no _.  */
 void _mcount (void) asm ("mcount");
+#else
+/* The canonical name for the function is `_mcount' in both C and asm,
+   but some old asm code might assume it's `mcount'.  */
+void _mcount (void);
+weak_alias (_mcount, mcount)
 #endif
 
 #define _MCOUNT_DECL(frompc, selfpc) \
@@ -42,7 +47,3 @@ void _mcount (void)							      \
   mcount_internal ((u_long) __builtin_return_address (0),		      \
 		   (u_long) __builtin_return_address (1));		      \
 }
-
-#ifdef NO_UNDERSCORES
-weak_alias (_mcount, mcount)
-#endif
