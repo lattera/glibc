@@ -1,3 +1,20 @@
+2000-09-16  Ralf Baechle  <ralf@gnu.org>
+
+	* sysdeps/mips/dl-machine.h (_RTLD_PROLOGUE): Reformat.  Declare
+	as function.
+	(_RTLD_EPILOGUE): Reformat.  Declare size of entry function.
+	(ELF_MACHINE_BEFORE_RTLD_RELOC): Relocate the dynamic linker itself so
+	it will even work when not loaded to the standard address.
+	(RTLD_START): Reformat.  Call _dl_start in a way that is safe even
+	before the dynamic linker itself is relocated.
+
+2000-09-18  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Always define
+	__ASSUME_32BITUIDS for MIPS.
+	* sysdeps/unix/sysv/linux/mips/ipc_priv.h: New file.
+	* sysdeps/unix/sysv/linux/mips/Dist: Add ipc_priv.h.
+
 2000-09-17  H.J. Lu  <hjl@gnu.org>
 
 	* catgets/Makefile ($(objpfx)de/libc.cat): Use
