@@ -365,7 +365,7 @@ static const char from_ucs4[][2] =
 
 
 /* Definitions used in the body of the `gconv' function.  */
-#define CHARSET_NAME		"T.61//"
+#define CHARSET_NAME		"T.61-8BIT//"
 #define FROM_LOOP		from_t_61
 #define TO_LOOP			to_t_61
 #define DEFINE_INIT		1

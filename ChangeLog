@@ -1,3 +1,8 @@
+1999-11-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/t.61.c (CHARSET_NAME): Correct name to what is used in
+	gconv-modules.
+
 1999-11-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-ctype.c (allocate_arrays): Complete last
