@@ -1,5 +1,8 @@
 2004-08-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* configure.in: Also recognize i786. [BZ #106]
+	Patch by <pluto@pld-linux.org>.
+
 	* resolv/res_query.c (__libc_res_nsearch): Correctly test whether
 	name contains any dots. [BZ #95]
 

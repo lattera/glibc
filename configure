@@ -1910,7 +1910,7 @@ c3[012])	base_machine=cx0 machine=cx0/c30 ;;
 c4[04])		base_machine=cx0 machine=cx0/c40 ;;
 hppa*64*)	base_machine=hppa machine=hppa/hppa64 ;;
 hppa*)		base_machine=hppa machine=hppa/hppa1.1 ;;
-i[3456]86)	base_machine=i386 machine=i386/$machine ;;
+i[34567]86)	base_machine=i386 machine=i386/$machine ;;
 ia64)		base_machine=ia64 machine=ia64 ;;
 m680?0)		base_machine=m68k machine=m68k/$machine ;;
 m68k)		base_machine=m68k machine=m68k/m68020 ;;
