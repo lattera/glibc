@@ -1083,7 +1083,7 @@ $(objpfx)%.symlist: $(..)scripts/abilist.awk $(objpfx)%.dynsym
 	$(AWK) -f $^ > $@T
 	mv -f $@T $@
 
-$(objpfx)%.dynsym: $(objpfx)%.so
+%.dynsym: %.so
 	$(OBJDUMP) --dynamic-syms $< > $@T
 	mv -f $@T $@
 
