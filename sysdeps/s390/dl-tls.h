@@ -1,5 +1,5 @@
 /* Thread-local storage handling in the ELF dynamic linker.  s390 version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,6 +31,7 @@ typedef struct
 extern void *__tls_get_addr (tls_index *ti) attribute_hidden;
 extern unsigned long __tls_get_offset (unsigned long got_offset);
 
+# ifdef IS_IN_rtld
 /* The special thing about the s390 TLS ABI is that we do not have the
    standard __tls_get_addr function but the __tls_get_offset function
    which differs in two important aspects:
@@ -39,7 +40,7 @@ extern unsigned long __tls_get_offset (unsigned long got_offset);
    2) __tls_get_offset returns the offset of the requested variable to
       the thread descriptor instead of a pointer to the variable.
  */
-#if defined __s390x__
+#  ifdef __s390x__
 asm("\n\
 	.text\n\
 	.globl __tls_get_offset\n\
@@ -49,7 +50,7 @@ __tls_get_offset:\n\
 	la	%r2,0(%r2,%r12)\n\
 	jg	__tls_get_addr\n\
 ");
-#elif defined __s390__
+#  elif defined __s390__
 asm("\n\
 	.text\n\
 	.globl __tls_get_offset\n\
@@ -62,12 +63,15 @@ __tls_get_offset:\n\
 	b	0(%r4,%r3)\n\
 1:	.long	__tls_get_addr - 0b\n\
 ");
-#endif
+#  endif
+# endif
 
-#define GET_ADDR_OFFSET \
+# define GET_ADDR_OFFSET \
   (ti->ti_offset - (unsigned long) __builtin_thread_pointer ())
 
-#define __TLS_GET_ADDR(__ti) \
-  (__tls_get_addr(__ti) + (unsigned long) __builtin_thread_pointer ())
+# define __TLS_GET_ADDR(__ti) \
+  ({ extern char _GLOBAL_OFFSET_TABLE_[] attribute_hidden;		  \
+     (void *) __tls_get_offset ((char *) (__ti) - _GLOBAL_OFFSET_TABLE_)  \
+     + (unsigned long) __builtin_thread_pointer (); }) 
 
 #endif
