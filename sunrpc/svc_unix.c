@@ -378,6 +378,9 @@ readunix (char *xprtptr, char *buf, int len)
 	case 0:
 	  goto fatal_err;
 	default:
+	  if ((pollfd.revents & POLLERR) || (pollfd.revents & POLLHUP)
+	      || (pollfd.revents & POLLNVAL))
+	    goto fatal_err;
 	  break;
 	}
     }
