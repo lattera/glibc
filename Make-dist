@@ -198,7 +198,8 @@ dist.tar: $(tardir) $(+tsrcs)
 	tar chvf $@ $(addprefix $(tardir)/,$(filter-out $(tardir),$^))
 
 $(tardir).tar: dist.tar subdir_dist
-	tar xfv $< -C /tmp | doschk
+	@echo Files listed here have names exceeding 14 chars.
+	tar xfv $< -C /tmp | sed -n '/[^/]\{15,\}/p'
 	tar covf $@ -C /tmp $(tardir)
 	-rm -fr /tmp/$(tardir) &
 

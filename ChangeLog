@@ -1,5 +1,9 @@
 Sun Jun  9 01:11:49 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Make-dist ($(tardir).tar): Use sed to check for file names longer
+	than 14 chars, instead of doschk which checks for other things we
+	don't care about.
+
 	* Version 1.90 test release.
 
 	* Makerules (make-target-directory): Use ./mkinstalldirs so we do not
