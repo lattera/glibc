@@ -1,5 +1,10 @@
 2000-04-18  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sparc/bits/sigcontext.h (struct sigcontext):
+	Remove the typedef keyword.
+
+2000-04-18  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/sparc/sparc64/pt-machine.h (MEMORY_BARRIER): Use membar,
 	not stbar.
 	(READ_MEMORY_BARRIER): Define.

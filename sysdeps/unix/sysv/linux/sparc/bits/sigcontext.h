@@ -30,7 +30,7 @@
    This one is for the "new" style signals, which are
    now delivered unless SA_SIGINFO is requested.  */
 
-typedef struct sigcontext
+struct sigcontext
   {
     struct
       {
