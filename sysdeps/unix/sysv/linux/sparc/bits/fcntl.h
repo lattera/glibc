@@ -35,6 +35,7 @@
 #define O_RDWR		0x0002
 #define O_ACCMODE	0x0003
 #define O_APPEND	0x0008
+#define O_ASYNC		0x0040
 #define O_CREAT		0x0200	/* not fcntl */
 #define O_TRUNC		0x0400	/* not fcntl */
 #define O_EXCL		0x0800	/* not fcntl */
