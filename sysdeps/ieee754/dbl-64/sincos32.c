@@ -5,9 +5,9 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or 
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 /****************************************************************/
 /*  MODULE_NAME: sincos32.c                                     */
@@ -48,11 +48,17 @@
 /* Compute Multi-Precision sin() function for given p.  Receive */
 /* Multi  Precision number x and result stored at y             */
 /****************************************************************/
-void ss32(mp_no *x, mp_no *y, int p) {
+static void ss32(mp_no *x, mp_no *y, int p) {
   int i;
-  double a,b;
-  static const mp_no mpone = {1,1.0,1.0};
-  mp_no mpt1,mpt2,x2,gor,sum ,mpk={1,1.0};
+  double a;
+#if 0
+  double b;
+  static const mp_no mpone = {1,{1.0,1.0}};
+#endif
+  mp_no mpt1,x2,gor,sum ,mpk={1,{1.0}};
+#if 0
+  mp_no mpt2;
+#endif
   for (i=1;i<=p;i++) mpk.d[i]=0;
 
   mul(x,x,&x2,p);
@@ -72,11 +78,17 @@ void ss32(mp_no *x, mp_no *y, int p) {
 /* Compute Multi-Precision cos() function for given p. Receive Multi  */
 /* Precision number x and result stored at y                          */
 /**********************************************************************/
-void cc32(mp_no *x, mp_no *y, int p) {
+static void cc32(mp_no *x, mp_no *y, int p) {
   int i;
-  double a,b;
-  static const mp_no mpone = {1,1.0,1.0};
-  mp_no mpt1,mpt2,x2,gor,sum ,mpk={1,1.0};
+  double a;
+#if 0
+  double b;
+  static const mp_no mpone = {1,{1.0,1.0}};
+#endif
+  mp_no mpt1,x2,gor,sum ,mpk={1,{1.0}};
+#if 0
+  mp_no mpt2;
+#endif
   for (i=1;i<=p;i++) mpk.d[i]=0;
 
   mul(x,x,&x2,p);
@@ -96,8 +108,8 @@ void cc32(mp_no *x, mp_no *y, int p) {
 /***************************************************************************/
 /* c32()   computes both sin(x), cos(x) as Multi precision numbers         */
 /***************************************************************************/
-void c32(mp_no *x, mp_no *y, mp_no *z, int p) {
-  static const mp_no mpt={1,1.0,2.0}, one={1,1.0,1.0};
+void __c32(mp_no *x, mp_no *y, mp_no *z, int p) {
+  static const mp_no mpt={1,{1.0,2.0}}, one={1,{1.0,1.0}};
   mp_no u,t,t1,t2,c,s;
   int i;
   cpy(x,&u,p);
@@ -121,7 +133,7 @@ void c32(mp_no *x, mp_no *y, mp_no *z, int p) {
 /*result which is more accurate                                         */
 /*Computing sin(x) with multi precision routine c32                     */
 /************************************************************************/
-double sin32(double x, double res, double res1) {
+double __sin32(double x, double res, double res1) {
   int p;
   mp_no a,b,c;
   p=32;
@@ -130,11 +142,11 @@ double sin32(double x, double res, double res1) {
   add(&a,&b,&c,p);
   if (x>0.8)
   { sub(&hp,&c,&a,p);
-    c32(&a,&b,&c,p);
+    __c32(&a,&b,&c,p);
   }
-  else c32(&c,&a,&b,p);     /* b=sin(0.5*(res+res1))  */
+  else __c32(&c,&a,&b,p);     /* b=sin(0.5*(res+res1))  */
   dbl_mp(x,&c,p);           /* c = x                  */
-  sub(&b,&c,&a,p);    
+  sub(&b,&c,&a,p);
   /* if a>0 return min(res,res1), otherwise return max(res,res1) */
   if (a.d[0]>0)  return (res<res1)?res:res1;
   else  return (res>res1)?res:res1;
@@ -145,7 +157,7 @@ double sin32(double x, double res, double res1) {
 /*result which is more accurate                                         */
 /*Computing cos(x) with multi precision routine c32                     */
 /************************************************************************/
-double cos32(double x, double res, double res1) {
+double __cos32(double x, double res, double res1) {
   int p;
   mp_no a,b,c;
   p=32;
@@ -154,14 +166,14 @@ double cos32(double x, double res, double res1) {
   add(&a,&b,&c,p);
   if (x>2.4)
   { sub(&pi,&c,&a,p);
-    c32(&a,&b,&c,p);
+    __c32(&a,&b,&c,p);
     b.d[0]=-b.d[0];
   }
-  else if (x>0.8) 
+  else if (x>0.8)
        { sub(&hp,&c,&a,p);
-         c32(&a,&c,&b,p); 
+         __c32(&a,&c,&b,p);
        }
-  else c32(&c,&b,&a,p);     /* b=cos(0.5*(res+res1))  */
+  else __c32(&c,&b,&a,p);     /* b=cos(0.5*(res+res1))  */
   dbl_mp(x,&c,p);    /* c = x                  */
   sub(&b,&c,&a,p);
              /* if a>0 return max(res,res1), otherwise return min(res,res1) */
@@ -173,7 +185,7 @@ double cos32(double x, double res, double res1) {
 /*Compute sin(x+dx) as Multi Precision number and return result as */
 /* double                                                          */
 /*******************************************************************/
-double mpsin(double x, double dx) {
+double __mpsin(double x, double dx) {
   int p;
   double y;
   mp_no a,b,c;
@@ -181,9 +193,9 @@ double mpsin(double x, double dx) {
   dbl_mp(x,&a,p);
   dbl_mp(dx,&b,p);
   add(&a,&b,&c,p);
-  if (x>0.8) { sub(&hp,&c,&a,p); c32(&a,&b,&c,p); }
-  else c32(&c,&a,&b,p);     /* b = sin(x+dx)     */
-  mp_dbl(&b,&y,p);
+  if (x>0.8) { sub(&hp,&c,&a,p); __c32(&a,&b,&c,p); }
+  else __c32(&c,&a,&b,p);     /* b = sin(x+dx)     */
+  __mp_dbl(&b,&y,p);
   return y;
 }
 
@@ -191,7 +203,7 @@ double mpsin(double x, double dx) {
 /* Compute cos()of double-length number (x+dx) as Multi Precision  */
 /* number and return result as double                              */
 /*******************************************************************/
-double mpcos(double x, double dx) {
+double __mpcos(double x, double dx) {
   int p;
   double y;
   mp_no a,b,c;
@@ -199,12 +211,12 @@ double mpcos(double x, double dx) {
   dbl_mp(x,&a,p);
   dbl_mp(dx,&b,p);
   add(&a,&b,&c,p);
-  if (x>0.8) 
+  if (x>0.8)
   { sub(&hp,&c,&b,p);
-    c32(&b,&a,&c,p);
+    __c32(&b,&a,&c,p);
   }
-  else c32(&c,&a,&b,p);     /* a = cos(x+dx)     */
-  mp_dbl(&a,&y,p);
+  else __c32(&c,&a,&b,p);     /* a = cos(x+dx)     */
+  __mp_dbl(&a,&y,p);
   return y;
 }
 
@@ -219,9 +231,9 @@ int mpranred(double x, mp_no *y, int p)
   number v;
   double t,xn;
   int i,k,n;
-  static const mp_no one = {1,1.0,1.0};
+  static const mp_no one = {1,{1.0,1.0}};
   mp_no a,b,c;
-  
+
   if (ABS(x) < 2.8e14) {
     t = (x*hpinv.d + toint.d);
     xn = t - toint.d;
@@ -246,7 +258,7 @@ int mpranred(double x, mp_no *y, int p)
     for (i=1;i<=p-c.e;i++) c.d[i]=c.d[i+c.e];
     for (i=p+1-c.e;i<=p;i++) c.d[i]=0;
     c.e=0;
-    if (c.d[1] >=  8388608.0)  
+    if (c.d[1] >=  8388608.0)
     { t +=1.0;
       sub(&c,&one,&b,p);
       mul(&b,&hp,y,p);
@@ -270,28 +282,28 @@ double mpsin1(double x)
   double y;
   p=32;
   n=mpranred(x,&u,p);               /* n is 0, 1, 2 or 3 */
-  c32(&u,&c,&s,p);
+  __c32(&u,&c,&s,p);
   switch (n) {                      /* in which quarter of unit circle y is*/
   case 0:
-    mp_dbl(&s,&y,p);
+    __mp_dbl(&s,&y,p);
     return y;
     break;
 
   case 2:
-    mp_dbl(&s,&y,p);
+    __mp_dbl(&s,&y,p);
     return -y;
     break;
 
   case 1:
-    mp_dbl(&c,&y,p);
+    __mp_dbl(&c,&y,p);
     return y;
     break;
-    
+
   case 3:
-    mp_dbl(&c,&y,p);
+    __mp_dbl(&c,&y,p);
     return -y;
     break;
-    
+
   }
   return 0;                     /* unreachable, to make the compiler happy */
 }
@@ -307,32 +319,32 @@ double mpcos1(double x)
   int n;
   mp_no u,s,c;
   double y;
-  
+
   p=32;
   n=mpranred(x,&u,p);              /* n is 0, 1, 2 or 3 */
-  c32(&u,&c,&s,p);
+  __c32(&u,&c,&s,p);
   switch (n) {                     /* in what quarter of unit circle y is*/
-    
+
   case 0:
-    mp_dbl(&c,&y,p);
+    __mp_dbl(&c,&y,p);
     return y;
     break;
-    
+
   case 2:
-    mp_dbl(&c,&y,p);
+    __mp_dbl(&c,&y,p);
     return -y;
     break;
-    
+
   case 1:
-    mp_dbl(&s,&y,p);
+    __mp_dbl(&s,&y,p);
     return -y;
     break;
-    
+
   case 3:
-    mp_dbl(&s,&y,p);
+    __mp_dbl(&s,&y,p);
     return y;
     break;
-    
+
   }
   return 0;                     /* unreachable, to make the compiler happy */
 }

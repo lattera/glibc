@@ -54,12 +54,20 @@ void __mpatan2(mp_no *,mp_no *,mp_no *,int);
 
 double __ieee754_atan2(double y,double x) {
 
-  int i,de,ux,dx,uy,dy,p;
+  int i,de,ux,dx,uy,dy;
+#if 0
+  int p;
+#endif
   static const int pr[MM]={6,8,10,20,32};
   double ax,ay,u,du,u9,ua,v,vv,dv,t1,t2,t3,t4,t5,t6,t7,t8,
-         z,zz,z1,z2,cor,s1,ss1,s2,ss2;
+         z,zz,cor,s1,ss1,s2,ss2;
+#if 0
+  double z1,z2;
+#endif
   number num;
+#if 0
   mp_no mperr,mpt1,mpx,mpy,mpz,mpz1,mpz2;
+#endif
 
   static const int ep= 59768832,   /*  57*16**5   */
                    em=-59768832;   /* -57*16**5   */
@@ -368,7 +376,7 @@ static double  normalized(double ax,double ay,double y, double z)
   p=6;
   dbl_mp(ax,&mpx,p);  dbl_mp(ay,&mpy,p);  dvd(&mpy,&mpx,&mpz,p);
   dbl_mp(ue.d,&mpt1,p);   mul(&mpz,&mpt1,&mperr,p);
-  sub(&mpz,&mperr,&mpz2,p);  mp_dbl(&mpz2,&z,p);
+  sub(&mpz,&mperr,&mpz2,p);  __mp_dbl(&mpz2,&z,p);
   return signArctan2(y,z);
 }
   /* Fix the sign and return after stage 1 or stage 2 */
@@ -388,7 +396,7 @@ static double  atan2Mp(double x,double y,const int pr[])
     __mpatan2(&mpy,&mpx,&mpz,p);
     dbl_mp(ud[i].d,&mpt1,p);   mul(&mpz,&mpt1,&mperr,p);
     add(&mpz,&mperr,&mpz1,p);  sub(&mpz,&mperr,&mpz2,p);
-    mp_dbl(&mpz1,&z1,p);       mp_dbl(&mpz2,&z2,p);
+    __mp_dbl(&mpz1,&z1,p);       __mp_dbl(&mpz2,&z2,p);
     if (z1==z2)   return z1;
   }
   return z1; /*if unpossible to do exact computing */

@@ -54,7 +54,10 @@ static int checkint(double x);
 /* it computes the correctly rounded (to nearest) value of X^y.            */
 /***************************************************************************/
 double __ieee754_upow(double x, double y) {
-  double z,a,aa,error, t,a1,a2,y1,y2,gor=1.0;
+  double z,a,aa,error, t,a1,a2,y1,y2;
+#if 0
+  double gor=1.0;
+#endif
   mynumber u,v;
   int k;
   int4 qx,qy;
@@ -154,8 +157,14 @@ static double power1(double x, double y) {
 /* The result is bounded by error (rightmost argument)                      */
 /****************************************************************************/
 static double log1(double x, double *delta, double *error) {
-  int i,j,m,n;
-  double uu,vv,eps,nx,e,e1,e2,t,t1,t2,res,cor,add=0;
+  int i,j,m;
+#if 0
+  int n;
+#endif
+  double uu,vv,eps,nx,e,e1,e2,t,t1,t2,res,add=0;
+#if 0
+  double cor;
+#endif
   mynumber u,v;
 
   u.x = x;
@@ -231,8 +240,14 @@ static double log1(double x, double *delta, double *error) {
 /* The result is bounded by error (right argument)                           */
 /****************************************************************************/
 static double log2(double x, double *delta, double *error) {
-  int i,j,m,n;
-  double uu,vv,eps,nx,e,e1,e2,t,t1,t2,res,cor,add=0;
+  int i,j,m;
+#if 0
+  int n;
+#endif
+  double uu,vv,eps,nx,e,e1,e2,t,t1,t2,res,add=0;
+#if 0
+  double cor;
+#endif
   double ou1,ou2,lu1,lu2,ov,lv1,lv2,a,a1,a2;
   double y,yy,z,zz,j1,j2,j3,j4,j5,j6,j7,j8;
   mynumber u,v;
@@ -308,7 +323,10 @@ static double log2(double x, double *delta, double *error) {
 /**********************************************************************/
 static int checkint(double x) {
   union {int4 i[2]; double x;} u;
-  int k,l,m,n;
+  int k,m,n;
+#if 0
+  int l;
+#endif
   u.x = x;
   m = u.i[HIGH_HALF]&0x7fffffff;    /* no sign */
   if (m >= 0x7ff00000) return 0;    /*  x is +/-inf or NaN  */

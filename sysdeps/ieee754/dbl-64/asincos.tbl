@@ -3,7 +3,7 @@
 /***************************************************************************/
 
 #ifdef BIG_ENDI
-static const union {int4 i[5136];double x[2568];} asncs = {
+static const union {int4 i[5136];double x[2568];} asncs = { .i = {
 /**/                   0x3FC04000, 0x00000000,
 /**/                   0x3FF02169, 0x88994424,
 /**/                   0x3FB0A6A2, 0xB799B115,
@@ -2571,11 +2571,11 @@ static const union {int4 i[5136];double x[2568];} asncs = {
 /**/                   0x3C935690, 0xE395EEA6,
 /**/                   0x3FF4FF86, 0x2E5965A2,
 /**/                   0x400F4000, 0x00000000,
-/**/                   0x3F7C6B82, 0xD36A5E70 };
+/**/                   0x3F7C6B82, 0xD36A5E70 } };
 
 #else
 #ifdef LITTLE_ENDI
-static const union {int4 i[5136];double x[2568];} asncs = {
+static const union {int4 i[5136];double x[2568];} asncs = { .i = {
 /**/                   0x00000000, 0x3FC04000,
 /**/                   0x88994424, 0x3FF02169,
 /**/                   0xB799B115, 0x3FB0A6A2,
@@ -5143,7 +5143,7 @@ static const union {int4 i[5136];double x[2568];} asncs = {
 /**/                   0xE395EEA6, 0x3C935690,
 /**/                   0x2E5965A2, 0x3FF4FF86,
 /**/                   0x00000000, 0x400F4000,
-/**/                   0xD36A5E70, 0x3F7C6B82 };
+/**/                   0xD36A5E70, 0x3F7C6B82 } };
 
 #endif
 #endif

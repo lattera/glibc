@@ -5,9 +5,9 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or 
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 /**********************************************************************/
 /* MODULE_NAME:mptan.c                                                */
@@ -38,7 +38,7 @@
 #include "mpa.h"
 
 int mpranred(double, mp_no *, int);
-void c32(mp_no *, mp_no *, mp_no *, int);
+void __c32(mp_no *, mp_no *, mp_no *, int);
 
 void mptan(double x, mp_no *mpy, int p) {
 
@@ -48,7 +48,7 @@ void mptan(double x, mp_no *mpy, int p) {
   mp_no mpw, mpc, mps;
 
   n = mpranred(x, &mpw, p) & 0x00000001; /* negative or positive result */
-  c32(&mpw, &mpc, &mps, p);              /* computing sin(x) and cos(x) */
+  __c32(&mpw, &mpc, &mps, p);              /* computing sin(x) and cos(x) */
   if (n)                     /* second or fourth quarter of unit circle */
   { dvd(&mpc,&mps,mpy,p);
     mpy->d[0] *= MONE;

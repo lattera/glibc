@@ -5,9 +5,9 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU  Lesser General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or 
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 /******************************************************************/
 /*                                                                */
@@ -29,18 +29,18 @@
 
 #ifdef BIG_ENDI
  static const  mynumber
-/**/             a1 = {0x3FC55580, 0x00000000 },  /*  0.1666717529296875     */
-/**/             a2 = {0xBED55555, 0x55552330 },  /* -5.0862630208224597e-06 */
-/**/            hp0 = {0x3FF921FB, 0x54442D18 },  /*  1.5707963267948966     */
-/**/            hp1 = {0x3C91A626, 0x33145C07 };  /*  6.123233995736766e-17  */
+/**/           a1 = {{0x3FC55580, 0x00000000 }},  /*  0.1666717529296875     */
+/**/           a2 = {{0xBED55555, 0x55552330 }},  /* -5.0862630208224597e-06 */
+/**/          hp0 = {{0x3FF921FB, 0x54442D18 }},  /*  1.5707963267948966     */
+/**/          hp1 = {{0x3C91A626, 0x33145C07 }};  /*  6.123233995736766e-17  */
 
 #else
 #ifdef LITTLE_ENDI
  static const  mynumber
-/**/             a1 = {0x00000000, 0x3FC55580 }, /*  0.1666717529296875     */
-/**/             a2 = {0x55552330, 0xBED55555 }, /* -5.0862630208224597e-06 */
-/**/            hp0 = {0x54442D18, 0x3FF921FB }, /*  1.5707963267948966     */
-/**/            hp1 = {0x33145C07, 0x3C91A626 }; /*  6.123233995736766e-17  */
+/**/           a1 = {{0x00000000, 0x3FC55580 }},  /*  0.1666717529296875     */
+/**/           a2 = {{0x55552330, 0xBED55555 }},  /* -5.0862630208224597e-06 */
+/**/          hp0 = {{0x54442D18, 0x3FF921FB }},  /*  1.5707963267948966     */
+/**/          hp1 = {{0x33145C07, 0x3C91A626 }};  /*  6.123233995736766e-17  */
 
 #endif
 #endif

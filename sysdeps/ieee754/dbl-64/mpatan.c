@@ -5,9 +5,9 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or 
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU  Lesser General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 /******************************************************************/
 /*                                                                */
@@ -35,36 +35,36 @@
 #include "mpa.h"
 void mpsqrt(mp_no *, mp_no *, int);
 
-void mpatan(mp_no *x, mp_no *y, int p) {  
+void mpatan(mp_no *x, mp_no *y, int p) {
 #include "mpatan.h"
-  
+
   int i,m,n;
   double dx;
   mp_no
-    mpone    = {0, 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+    mpone    = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
 		0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-		0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,},
-    mptwo    = {0, 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+		0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}},
+    mptwo    = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
 		0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-		0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,},
-    mptwoim1 = {0, 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+		0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}},
+    mptwoim1 = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
 		0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-		0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,};
+		0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
 
   mp_no mps,mpsm,mpt,mpt1,mpt2,mpt3;
-    
+
                       /* Choose m and initiate mpone, mptwo & mptwoim1 */
     if      (EX>0) m=7;
     else if (EX<0) m=0;
     else {
-      mp_dbl(x,&dx,p);  dx=ABS(dx);
-      for (m=6; m>0; m--) 
-        {if (dx>xm[m].d) break;} 
+      __mp_dbl(x,&dx,p);  dx=ABS(dx);
+      for (m=6; m>0; m--)
+        {if (dx>xm[m].d) break;}
     }
     mpone.e    = mptwo.e    = mptwoim1.e = 1;
     mpone.d[0] = mpone.d[1] = mptwo.d[0] = mptwoim1.d[0] = ONE;
     mptwo.d[1] = TWO;
-    
+
                                  /* Reduce x m times */
     mul(x,x,&mpsm,p);
     if (m==0) cpy(x,&mps,p);
@@ -92,10 +92,10 @@ void mpatan(mp_no *x, mp_no *y, int p) {
     }
     mul(&mps,&mpt,&mpt1,p);
     sub(&mps,&mpt1,&mpt,p);
-    
+
                           /* Compute Atan(x) */
     mptwoim1.d[1] = twom[m].d;
     mul(&mptwoim1,&mpt,y,p);
-    
+
   return;
 }

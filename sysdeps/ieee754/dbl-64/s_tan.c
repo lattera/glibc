@@ -48,7 +48,10 @@ double tan(double x) {
   t,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,w,x2,xn,xx2,y,ya,yya,z0,z,zz,z2,zz2;
   int p;
   number num,v;
-  mp_no mpa,mpy,mpt1,mpt2;
+  mp_no mpa,mpt1,mpt2;
+#if 0
+  mp_no mpy;
+#endif
 
   int branred(double, double *, double *);
   int mpranred(double, mp_no *, int);
@@ -382,8 +385,8 @@ double tan(double x) {
     /* Second stage */
     /* Reduction by algorithm iv */
     p=10;    n = (mpranred(x,&mpa,p)) & 0x00000001;
-    mp_dbl(&mpa,&a,p);        dbl_mp(a,&mpt1,p);
-    sub(&mpa,&mpt1,&mpt2,p);  mp_dbl(&mpt2,&da,p);
+    __mp_dbl(&mpa,&a,p);        dbl_mp(a,&mpt1,p);
+    sub(&mpa,&mpt1,&mpt2,p);  __mp_dbl(&mpt2,&da,p);
 
     MUL2(a,da,a,da,x2,xx2,t1,t2,t3,t4,t5,t6,t7,t8)
     c1 = x2*(a15.d+x2*(a17.d+x2*(a19.d+x2*(a21.d+x2*(a23.d+x2*(a25.d+

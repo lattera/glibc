@@ -5,9 +5,9 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or 
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 /****************************************************************************/
 /*  MODULE_NAME:mpsqrt.c                                                    */
@@ -48,12 +48,12 @@ void mpsqrt(mp_no *x, mp_no *y, int p) {
   int i,m,ex,ey;
   double dx,dy;
   mp_no
-    mphalf   = {0, 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+    mphalf   = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
                    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                   0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,},
-    mp3halfs = {0, 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                   0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}},
+    mp3halfs = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
                    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                   0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,};
+                   0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
   mp_no mpxn,mpz,mpu,mpt1,mpt2;
 
   /* Prepare multi-precision 1/2 and 3/2 */
@@ -61,7 +61,7 @@ void mpsqrt(mp_no *x, mp_no *y, int p) {
   mp3halfs.e=1;  mp3halfs.d[0]=ONE;  mp3halfs.d[1]=ONE;  mp3halfs.d[2]=HALFRAD;
 
   ex=EX;      ey=EX/2;     cpy(x,&mpxn,p);    mpxn.e -= (ey+ey);
-  mp_dbl(&mpxn,&dx,p);   dy=fastiroot(dx);    dbl_mp(dy,&mpu,p);
+  __mp_dbl(&mpxn,&dx,p);   dy=fastiroot(dx);    dbl_mp(dy,&mpu,p);
   mul(&mpxn,&mphalf,&mpz,p);
 
   m=mp[p];
@@ -86,7 +86,7 @@ double fastiroot(double x) {
   double y,z, t;
   long n;
   static const double c0 = 0.99674, c1 = -0.53380, c2 = 0.45472, c3 = -0.21553;
-  
+
   p.d = x;
   p.i[HIGH_HALF] = (p.i[HIGH_HALF] & 0x3FFFFFFF ) | 0x3FE00000 ;
   q.d = x;

@@ -5,7 +5,7 @@
 
 
 #ifdef BIG_ENDI
-static const union {int4 i[5800]; double x[2900];} ui = {
+static const union {int4 i[5800]; double x[2900];} ui = { .i = {
 /**/                   0x3FF6A000, 0x00000000,
 /**/                   0x3F33CD15, 0x3729043E,
 /**/                   0xBFD63003, 0x0B3AB000,
@@ -2905,9 +2905,9 @@ static const union {int4 i[5800]; double x[2900];} ui = {
 /**/                   0x3FE6A000, 0x00000000,
 /**/                   0x3F23CD15, 0x3729043E,
 /**/                   0x3FD62C82, 0xF2B9C000,
-/**/                   0x3D3E54BD, 0xBD7C8A98 };
+/**/                   0x3D3E54BD, 0xBD7C8A98 } };
 
-static const union {int4 i[4350]; double x[2175]; } vj = {
+static const union {int4 i[4350]; double x[2175]; } vj = { .i = {
 /**/                   0x3F46A400, 0x7D161C28,
 /**/                   0xBF46A200, 0x20600000,
 /**/                   0x3D27DC4E, 0xAA7623D9,
@@ -5082,11 +5082,11 @@ static const union {int4 i[4350]; double x[2175]; } vj = {
 /**/                   0x3D350532, 0xEA560DA0,
 /**/                   0xBF469C00, 0xECD62326,
 /**/                   0x3F469E00, 0x58400000,
-/**/                   0x3D341557, 0xE7B63DE2 };
+/**/                   0x3D341557, 0xE7B63DE2 } };
 
 #else
 #ifdef LITTLE_ENDI
-static const union {int4 i[5800]; double x[2900];} ui = {
+static const union {int4 i[5800]; double x[2900];} ui = { .i = {
 /**/                   0x00000000, 0x3FF6A000,
 /**/                   0x3729043E, 0x3F33CD15,
 /**/                   0x0B3AB000, 0xBFD63003,
@@ -7986,9 +7986,9 @@ static const union {int4 i[5800]; double x[2900];} ui = {
 /**/                   0x00000000, 0x3FE6A000,
 /**/                   0x3729043E, 0x3F23CD15,
 /**/                   0xF2B9C000, 0x3FD62C82,
-/**/                   0xBD7C8A98, 0x3D3E54BD };
+/**/                   0xBD7C8A98, 0x3D3E54BD } };
 
-static const union {int4 i[4350]; double x[2175]; } vj = {
+static const union {int4 i[4350]; double x[2175]; } vj = { .i = {
 /**/                   0x7D161C28, 0x3F46A400,
 /**/                   0x20600000, 0xBF46A200,
 /**/                   0xAA7623D9, 0x3D27DC4E,
@@ -10163,7 +10163,7 @@ static const union {int4 i[4350]; double x[2175]; } vj = {
 /**/                   0xEA560DA0, 0x3D350532,
 /**/                   0xECD62326, 0xBF469C00,
 /**/                   0x58400000, 0x3F469E00,
-/**/                   0xE7B63DE2, 0x3D341557 };
+/**/                   0xE7B63DE2, 0x3D341557 } };
 
 #endif
 #endif

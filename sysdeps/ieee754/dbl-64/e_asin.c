@@ -54,7 +54,10 @@ double __cos32(double x, double res, double res1);
 double __ieee754_asin(double x){
   double x1,x2,xx,s1,s2,res1,p,t,res,r,cor,cc,y,c,z,w[2];
   mynumber u,v;
-  int4 k,m,n,nn;
+  int4 k,m,n;
+#if 0
+  int4 nn;
+#endif
 
   u.x = x;
   m = u.i[HIGH_HALF];
@@ -90,7 +93,7 @@ double __ieee754_asin(double x){
 	  y=ABS(x);
 	  res=ABS(w[0]);
 	  res1=ABS(w[0]+1.1*w[1]);
-	  return (m>0)?sin32(y,res,res1):-sin32(y,res,res1);
+	  return (m>0)?__sin32(y,res,res1):-__sin32(y,res,res1);
 	}
       }
     }
@@ -123,7 +126,7 @@ double __ieee754_asin(double x){
 	else if (z<-1.0e-27) return (m>0)?max(res,res1):-max(res,res1);
 	else {
 	  y=ABS(x);
-	  return (m>0)?sin32(y,res,res1):-sin32(y,res,res1);
+	  return (m>0)?__sin32(y,res,res1):-__sin32(y,res,res1);
 	}
       }
     }
@@ -156,7 +159,7 @@ double __ieee754_asin(double x){
 	else if (z<-1.0e-27) return (m>0)?max(res,res1):-max(res,res1);
 	else {
 	  y=ABS(x);
-	  return (m>0)?sin32(y,res,res1):-sin32(y,res,res1);
+	  return (m>0)?__sin32(y,res,res1):-__sin32(y,res,res1);
 	}
       }
     }
@@ -191,7 +194,7 @@ double __ieee754_asin(double x){
 	else if (z<-1.0e-27) return (m>0)?max(res,res1):-max(res,res1);
 	else {
 	  y=ABS(x);
-	  return (m>0)?sin32(y,res,res1):-sin32(y,res,res1);
+	  return (m>0)?__sin32(y,res,res1):-__sin32(y,res,res1);
 	}
       }
     }
@@ -229,7 +232,7 @@ double __ieee754_asin(double x){
 	else if (z<-1.0e-27) return (m>0)?max(res,res1):-max(res,res1);
 	else {
 	  y=ABS(x);
-	  return (m>0)?sin32(y,res,res1):-sin32(y,res,res1);
+	  return (m>0)?__sin32(y,res,res1):-__sin32(y,res,res1);
 	}
       }
     }
@@ -268,7 +271,7 @@ double __ieee754_asin(double x){
 	else if (z<-1.0e-27) return (m>0)?max(res,res1):-max(res,res1);
 	else {
 	  y=ABS(x);
-	  return (m>0)?sin32(y,res,res1):-sin32(y,res,res1);
+	  return (m>0)?__sin32(y,res,res1):-__sin32(y,res,res1);
 	}
       }
     }
@@ -303,7 +306,7 @@ double __ieee754_asin(double x){
       else {
 	y=ABS(x);
 	res1=res+1.1*cor;
-	return (m>0)?sin32(y,res,res1):-sin32(y,res,res1);
+	return (m>0)?__sin32(y,res,res1):-__sin32(y,res,res1);
       }
     }
   }    /*   else  if (k < 0x3ff00000)    */
@@ -327,9 +330,14 @@ double __ieee754_asin(double x){
 double __ieee754_acos(double x)
 {
   double x1,x2,xx,s1,s2,res1,p,t,res,r,cor,cc,y,c,z,w[2],eps;
+#if 0
   double fc;
+#endif
   mynumber u,v;
-  int4 k,m,n,nn;
+  int4 k,m,n;
+#if 0
+  int4 nn;
+#endif
   u.x = x;
   m = u.i[HIGH_HALF];
   k = 0x7fffffff&m;
@@ -371,7 +379,7 @@ double __ieee754_acos(double x)
 	if (res ==(res +1.00000001*cor)) return res;
 	else {
 	  res1=res+1.1*cor;
-	  return cos32(x,res,res1);
+	  return __cos32(x,res,res1);
 	}
       }
     }
@@ -408,7 +416,7 @@ double __ieee754_acos(double x)
 	z=(w[0]-x)+w[1];
 	if (z>1.0e-27) return max(res,res1);
 	else if (z<-1.0e-27) return min(res,res1);
-	else return cos32(x,res,res1);
+	else return __cos32(x,res,res1);
       }
     }
   }    /*   else  if (k < 0x3fe00000)    */
@@ -443,7 +451,7 @@ double __ieee754_acos(double x)
        z=(w[0]-x)+w[1];
        if (z>1.0e-27) return max(res,res1);
        else if (z<-1.0e-27) return min(res,res1);
-       else return cos32(x,res,res1);
+       else return __cos32(x,res,res1);
      }
    }
   }    /*   else  if (k < 0x3fe80000)    */
@@ -478,7 +486,7 @@ double __ieee754_acos(double x)
 	z=(w[0]-x)+w[1];
 	if (z>1.0e-27) return max(res,res1);
 	else if (z<-1.0e-27) return min(res,res1);
-	else return cos32(x,res,res1);
+	else return __cos32(x,res,res1);
       }
     }
   }    /*   else  if (k < 0x3fed8000)    */
@@ -514,7 +522,7 @@ double __ieee754_acos(double x)
 	z=(w[0]-x)+w[1];
 	if (z>1.0e-27) return max(res,res1);
 	else if (z<-1.0e-27) return min(res,res1);
-	else return cos32(x,res,res1);
+	else return __cos32(x,res,res1);
       }
     }
   }    /*   else  if (k < 0x3fee8000)    */
@@ -550,7 +558,7 @@ double __ieee754_acos(double x)
        z=(w[0]-x)+w[1];
        if (z>1.0e-27) return max(res,res1);
        else if (z<-1.0e-27) return min(res,res1);
-       else return cos32(x,res,res1);
+       else return __cos32(x,res,res1);
      }
    }
   }    /*   else  if (k < 0x3fef0000)    */
@@ -586,7 +594,7 @@ double __ieee754_acos(double x)
 	else {
 	  res=res+res;
 	  res1=res+1.2*cor;
-	  return cos32(x,res,res1);
+	  return __cos32(x,res,res1);
 	}
       }
     }
@@ -604,7 +612,7 @@ double __ieee754_acos(double x)
 	else {
 	  res=res+res;
 	  res1=res+1.2*cor;
-	  return cos32(x,res,res1);
+	  return __cos32(x,res,res1);
 	}
       }
     }

@@ -5,9 +5,9 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or 
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,12 +15,12 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 /**************************************************************************/
 /*  MODULE_NAME:slowexp.c                                                 */
 /*                                                                        */
-/*  FUNCTION:slowexp                                                      */  
+/*  FUNCTION:slowexp                                                      */
 /*                                                                        */
 /*  FILES NEEDED:mpa.h                                                    */
 /*               mpa.c mpexp.c                                            */
@@ -34,10 +34,16 @@ void mpexp(mp_no *x, mp_no *y, int p);
 
 /*Converting from double precision to Multi-precision and calculating  e^x */
 double slowexp(double x) {
-  double y,w,z,res,eps=3.0e-26;
-  int orig,i,p;
+  double w,z,res,eps=3.0e-26;
+#if 0
+  double y;
+#endif
+  int p;
+#if 0
+  int orig,i;
+#endif
   mp_no mpx, mpy, mpz,mpw,mpeps,mpcor;
-  
+
   p=6;
   dbl_mp(x,&mpx,p); /* Convert a double precision number  x               */
                     /* into a multiple precision number mpx with prec. p. */
@@ -46,15 +52,14 @@ double slowexp(double x) {
   mul(&mpeps,&mpy,&mpcor,p);
   add(&mpy,&mpcor,&mpw,p);
   sub(&mpy,&mpcor,&mpz,p);
-  mp_dbl(&mpw, &w, p);
-  mp_dbl(&mpz, &z, p);
+  __mp_dbl(&mpw, &w, p);
+  __mp_dbl(&mpz, &z, p);
   if (w == z) return w;
   else  {                   /* if calculating is not exactly   */
     p = 32;
     dbl_mp(x,&mpx,p);
     mpexp(&mpx, &mpy, p);
-    mp_dbl(&mpy, &res, p);
+    __mp_dbl(&mpy, &res, p);
     return res;
   }
 }
-
