@@ -76,14 +76,18 @@ enum __rlimit_resource
   RLIMIT_AS = 9,
 #define RLIMIT_AS RLIMIT_AS
 
-  RLIM_NLIMITS = 10
+  /* Maximum number of file locks.  */
+  RLIMIT_LOCKS = 10,
+#define RLIMIT_LOCKS RLIMIT_LOCKS
+
+  RLIMIT_NLIMITS = 11,
+  RLIM_NLIMITS = RLIMIT_NLIMITS
 #define RLIMIT_NLIMITS RLIMIT_NLIMITS
 #define RLIM_NLIMITS RLIM_NLIMITS
 };
 
 /* Value to indicate that there is no limit.  */
-#undef RLIM_INFINITY
-# define RLIM_INFINITY ~0UL
+#define RLIM_INFINITY ~0UL
 
 #ifdef __USE_LARGEFILE64
 # define RLIM64_INFINITY ~0UL
@@ -189,6 +193,9 @@ struct rusage
 enum __priority_which
 {
   PRIO_PROCESS = 0,		/* WHO is a process ID.  */
+#define PRIO_PROCESS PRIO_PROCESS
   PRIO_PGRP = 1,		/* WHO is a process group ID.  */
+#define PRIO_PGRP PRIO_PGRP
   PRIO_USER = 2			/* WHO is a user ID.  */
+#define PRIO_USER PRIO_USER
 };
