@@ -1,5 +1,5 @@
 /* Miscellaneous support functions for dynamic linker
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 
 #include <assert.h>
 #include <fcntl.h>
-#include <unistd.h>
+#include <link.h>
 #include <stdarg.h>
 #include <string.h>
 #include <unistd.h>
@@ -45,11 +45,11 @@ void *
 _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
 {
   void *result;
-  struct stat st;
+  struct elf_stat st;
   int fd = __open (file, O_RDONLY);
   if (fd < 0)
     return NULL;
-  if (__fxstat (_STAT_VER, fd, &st) < 0
+  if (elf_fxstat (_STAT_VER, fd, &st) < 0
       /* No need to map the file if it is empty.  */
       || st.st_size == 0)
     result = NULL;

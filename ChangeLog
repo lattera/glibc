@@ -1,5 +1,16 @@
 2000-08-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/link.h: Include sysd-link.h.
+	* sysdeps/generic/sysd-link.h: New file.
+	* sysdeps/unix/sysv/linux/sysd-link.h: New file.
+	* elf/Makefile (distribute): Add sysd-link.h.
+	* elf/dl-load.c: Use definitions from sysd-link.h instead of stat
+	types and functions directly.
+	* elf/dl-misc.c: Likewise.
+	* elf/dl-profile.c: Likewise.
+
+	* elf/loadfail.c (main): Close all successfully loaded objects.
+
 	* elf/multiload.c: Add mtrace call.  Call dlclose for all handles and
 	free wd.
 	* elf/dl-deps.c (_dl_map_object_deps): Don't allocate needed list if
