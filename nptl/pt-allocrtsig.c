@@ -28,7 +28,7 @@ extern int __libc_allocate_rtsig_private (int high);
 
 
 /* We reserve __SIGRTMIN for use as the cancellation signal and
-   __SIGRTMIN+1 to andle setuid et.al.  These signals are used
+   __SIGRTMIN+1 to handle setuid et.al.  These signals are used
    internally.  */
 int
 __libc_current_sigrtmin (void)
