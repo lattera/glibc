@@ -1,5 +1,10 @@
 2000-09-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ia64/memchr.S: Add .pred.rel to avoid wrong assembler
+	warnings.
+	* sysdeps/ia64/memccpy.S: Likewise.
+	Patches by Jim Wilson <wilson@redhat.com>.
+
 	* sysdeps/unix/sysv/linux/dl-osinfo.h (DL_SYSDEP_OSCHECK): Use uname
 	before trying to read /proc.
 	Patch by Matt Wilson <msw@redhat.com>.

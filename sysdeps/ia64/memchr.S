@@ -114,6 +114,7 @@ ENTRY(__memchr)
 	cmp.ne	p6, p0 = r0, r0	// clear p6 (p7 was already 0 when we got here)
 	mov	ret0 = r0 ;;	// return NULL
 .foundit:
+	.pred.rel "mutex" p6, p7
 (p6)	adds	ret0 = -1, ret0 		   // if we got here from l1 or l3
 (p7)	add	ret0 = addr[MEMLAT+2], poschr[1]   // if we got here from l2
 	mov	pr = saved_pr, -1

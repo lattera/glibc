@@ -25,9 +25,9 @@
         in1:    src
   	in2:	char
         in3:    byte count
-  
+
    This implementation assumes little endian mode (UM.be = 0).
-  
+
    This implementation assumes that it is safe to do read ahead
    in the src block, without getting beyond its limit.  */
 
@@ -83,10 +83,10 @@ ENTRY(memccpy)
 .l1:					// copy -dest % 8 bytes
 	ld1	value = [src], 1	// value = *src++
 	;;
-	st1	[dest] = value, 1	// *dest++ = value  
+	st1	[dest] = value, 1	// *dest++ = value
 	cmp.eq	p6, p0 = value, char
 (p6)	br.cond.spnt .foundit
-	br.cloop.dptk .l1	
+	br.cloop.dptk .l1
 .dest_aligned:
 	and	sh1 = 7, src 		// sh1 = src % 8
 	and	tmp = -8, len   	// tmp = len & -OPSIZ
@@ -105,7 +105,7 @@ ENTRY(memccpy)
 	ld8	r[1] = [asrc], 8 	// r[1] = w0
 	cmp.ne	p6, p0 = r0, r0	;;	// clear p6
 	.align	32
-.l2:					
+.l2:
 (p[0])		ld8	r[0] = [asrc], 8		// r[0] = w1
 (p[MEMLAT])	shr.u	tmp1[0] = r[1 + MEMLAT], sh1	// tmp1 = w0 >> sh1
 (p[MEMLAT])	shl	tmp2[0] = r[0 + MEMLAT], sh2  	// tmp2 = w1 << sh2
@@ -148,6 +148,7 @@ ENTRY(memccpy)
 	mov 	ar.lc = saved_lc	// restore the loop counter
 	br.ret.sptk.many b0
 .gotit:
+	.pred.rel "mutex" p6, p7
 (p6)	mov	value = val[3]		// if coming from l2
 (p7)	mov	value = r[MEMLAT+2]	// if coming from l3
 	mov	ar.lc = pos0[1] ;;
@@ -160,5 +161,5 @@ ENTRY(memccpy)
 	mov	ar.pfs = saved_pfs
 	mov	pr = saved_pr, -1
 	mov	ar.lc = saved_lc
-	br.ret.sptk.many b0	
+	br.ret.sptk.many b0
 END(memccpy)
