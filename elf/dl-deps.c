@@ -139,7 +139,7 @@ _dl_map_object_deps (struct link_map *map,
     {
       struct link_map *l = runp->map;
 
-      if (l->l_info[AUXTAG] || l->l_info[FILTERTAG] || l->l_info[DT_NEEDED])
+      if (l->l_info[DT_NEEDED] || l->l_info[AUXTAG] || l->l_info[FILTERTAG])
 	{
 	  const char *strtab = ((void *) l->l_addr
 				+ l->l_info[DT_STRTAB]->d_un.d_ptr);
@@ -228,12 +228,11 @@ _dl_map_object_deps (struct link_map *map,
 		newp = alloca (sizeof (struct list));
 
 		/* Copy the content of the current entry over.  */
-		memcpy (newp, orig, sizeof (*newp));
+		orig->dup = memcpy (newp, orig, sizeof (*newp));
 
 		/* Initialize new entry.  */
 		orig->done = 0;
 		orig->map = args.aux;
-		orig->dup = newp;
 
 		/* We must handle two situations here: the map is new,
 		   so we must add it in all three lists.  If the map
@@ -347,7 +346,7 @@ _dl_map_object_deps (struct link_map *map,
       if (runp->done)
 	do
 	  runp = runp->unique;
-	while (runp && runp->done);
+	while (runp != NULL && runp->done);
     }
 
   /* Store the search list we built in the object.  It will be used for

@@ -99,6 +99,7 @@ GLIBC_2.0 {
     _rpc_dtablesize; _null_auth; _seterr_reply;
     __res_randomid;  __getpid;
     __strcasecmp; __write; _strerror_internal; _dl_sysdep_output;
+    _dl_debug_message;
     __ffs;
 
     # Exception handling support functions from libgcc

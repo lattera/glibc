@@ -78,6 +78,9 @@ int _dl_debug_libs;
 int _dl_debug_impcalls;
 int _dl_debug_bindings;
 int _dl_debug_symbols;
+int _dl_debug_versions;
+int _dl_debug_reloc;
+int _dl_debug_files;
 
 /* Set nonzero during loading and initialization of executable and
    libraries, cleared before the executable's entry point runs.  This
@@ -927,13 +930,40 @@ process_dl_debug (char *dl_debug)
 	++dl_debug;
       if (*dl_debug != '\0')
 	{
-	  if (strncmp (dl_debug, "bindings", 8) == 0
+	  if (strncmp (dl_debug, "files", 5) == 0
+	      && (issep (dl_debug[5]) || dl_debug[5] == '\0'))
+	    {
+	      _dl_debug_files = 1;
+	      _dl_debug_impcalls = 1;
+	      any_debug = 1;
+	      dl_debug += 5;
+	    }
+	  else if (strncmp (dl_debug, "bindings", 8) == 0
 	      && (issep (dl_debug[8]) || dl_debug[8] == '\0'))
 	    {
 	      _dl_debug_bindings = 1;
 	      _dl_debug_impcalls = 1;
 	      any_debug = 1;
 	      dl_debug += 8;
+	    }
+	  else if (strncmp (dl_debug, "help", 4) == 0
+		   && (issep (dl_debug[4]) || dl_debug[4] == '\0'))
+	    {
+	      _dl_sysdep_message ("\
+Valid options for the LD_DEBUG environment variable are:\n\
+\n\
+  bindings  display information about symbol binding\n\
+  files     display processing of files and libraries\n\
+  help      display this help message and exit\n\
+  libs      display library search paths\n\
+  reloc     display relocation processing\n\
+  symbols   display symbol table processing\n\
+  versions  display version dependencies\n\
+\n\
+To direct the debugging output into a file instead of standard output\n\
+a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",
+				  NULL);
+	      _exit (0);
 	    }
 	  else if (strncmp (dl_debug, "libs", 4) == 0
 	      && (issep (dl_debug[4]) || dl_debug[4] == '\0'))
@@ -943,21 +973,13 @@ process_dl_debug (char *dl_debug)
 	      any_debug = 1;
 	      dl_debug += 4;
 	    }
-	  else if (strncmp (dl_debug, "help", 4) == 0
-		   && (issep (dl_debug[4]) || dl_debug[4] == '\0'))
+	  else if (strncmp (dl_debug, "reloc", 4) == 0
+	      && (issep (dl_debug[5]) || dl_debug[5] == '\0'))
 	    {
-	      _dl_sysdep_message ("\
-Valid options for the LD_DEBUG environment variable are:\n\
-\n\
-  bindings  display information about symbol binding\n\
-  help      display this help message and exit\n\
-  libs      display library search paths\n\
-  symbols   display symbol table processing\n\
-\n\
-To direct the debugging output into a file instead of standard output\n\
-a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",
-				  NULL);
-	      _exit (0);
+	      _dl_debug_reloc = 1;
+	      _dl_debug_impcalls = 1;
+	      any_debug = 1;
+	      dl_debug += 5;
 	    }
 	  else if (strncmp (dl_debug, "symbols", 7) == 0
 	      && (issep (dl_debug[7]) || dl_debug[7] == '\0'))
@@ -966,6 +988,14 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",
 	      _dl_debug_impcalls = 1;
 	      any_debug = 1;
 	      dl_debug += 7;
+	    }
+	  else if (strncmp (dl_debug, "versions", 8) == 0
+	      && (issep (dl_debug[8]) || dl_debug[8] == '\0'))
+	    {
+	      _dl_debug_versions = 1;
+	      _dl_debug_impcalls = 1;
+	      any_debug = 1;
+	      dl_debug += 8;
 	    }
 	  else
 	    {

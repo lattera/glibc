@@ -22,8 +22,10 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
+#include <stdio-common/_itoa.h>
 
 #ifndef MAP_ANON
 /* This is the only dl-sysdep.c function that is actually needed at run-time
@@ -89,6 +91,54 @@ _dl_sysdep_output (int fd, const char *msg, ...)
       size_t len = strlen (msg);
       __write (fd, msg, len);
       msg = va_arg (ap, const char *);
-    } while (msg);
+    }
+  while (msg != NULL);
+  va_end (ap);
+}
+
+
+void
+_dl_debug_message (int new_line, const char *msg, ...)
+{
+  /* We print the strings we get passed one after the other but start all
+     lines using the current PID.  */
+  static int pid;
+  va_list ap;
+
+  if (pid == 0)
+    pid = getpid ();
+
+  va_start (ap, msg);
+  do
+    if (msg[0] == '\0')
+      /* Get the next argument.  */
+      msg = va_arg (ap, const char *);
+    else
+      {
+	const char *endp;
+
+	/* We actually will print something in this line.  So print the
+	   PID now if needed.  */
+	if (new_line)
+	  {
+	    char buf[7] = "00000:\t";
+	    __write (_dl_debug_fd, _itoa_word (pid, &buf[5], 10, 0), 7);
+	    new_line = 0;
+	  }
+
+	endp = strchr (msg, '\n');
+	if (endp == NULL)
+	  {
+	    __write (_dl_debug_fd, msg, strlen (msg));
+	    msg = va_arg (ap, const char *);
+	  }
+	else
+	  {
+	    __write (_dl_debug_fd, msg, endp - msg + 1);
+	    msg = endp + 1;
+	    new_line = 1;
+	  }
+      }
+  while (msg != NULL);
   va_end (ap);
 }

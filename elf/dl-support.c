@@ -39,6 +39,9 @@ int _dl_debug_libs;
 int _dl_debug_impcalls;
 int _dl_debug_bindings;
 int _dl_debug_symbols;
+int _dl_debug_versions;
+int _dl_debug_reloc;
+int _dl_debug_files;
 
 /* If nonzero print warnings about problematic situations.  */
 int _dl_verbose;

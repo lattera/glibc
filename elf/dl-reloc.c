@@ -32,6 +32,10 @@ _dl_relocate_object (struct link_map *l, struct link_map *scope[], int lazy)
   if (l->l_relocated)
     return;
 
+  if (_dl_debug_reloc)
+    _dl_debug_message (1, "\nrelocation processing: ",
+		       l->l_name[0] ? l->l_name : _dl_argv[0], "\n", NULL);
+
   if (l->l_info[DT_TEXTREL])
     {
       /* Bletch.  We must make read-only segments writable

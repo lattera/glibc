@@ -100,7 +100,7 @@ do_lookup (const char *undef_name, unsigned long int hash,
 
       /* Print some debugging info if wanted.  */
       if (_dl_debug_symbols)
-	_dl_debug_message ("\tsymbol=", undef_name, ";  lookup in file=",
+	_dl_debug_message (1, "symbol=", undef_name, ";  lookup in file=",
 			   map->l_name[0] ? map->l_name : _dl_argv[0],
 			   "\n", NULL);
 
@@ -236,7 +236,7 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
     }
 
   if (_dl_debug_bindings)
-    _dl_debug_message ("\tbinding file ", reference_name, " to ",
+    _dl_debug_message (1, "binding file ", reference_name, " to ",
 		       current_value.m->l_name[0]
 		       ? current_value.m->l_name : _dl_argv[0],
 		       ": symbol `", undef_name, "'\n", NULL);
@@ -281,7 +281,7 @@ _dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
     }
 
   if (_dl_debug_bindings)
-    _dl_debug_message ("\tbinding file ", reference_name, " to ",
+    _dl_debug_message (1, "binding file ", reference_name, " to ",
 		       current_value.m->l_name[0]
 		       ? current_value.m->l_name : _dl_argv[0],
 		       ": symbol `", undef_name, "'\n", NULL);
@@ -342,7 +342,7 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
     }
 
   if (_dl_debug_bindings)
-    _dl_debug_message ("\tbinding file ", reference_name, " to ",
+    _dl_debug_message (1, "binding file ", reference_name, " to ",
 		       current_value.m->l_name[0]
 		       ? current_value.m->l_name : _dl_argv[0],
 		       ": symbol `", undef_name, "' [", version->name,
@@ -396,7 +396,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
     }
 
   if (_dl_debug_bindings)
-    _dl_debug_message ("\tbinding file ", reference_name, " to ",
+    _dl_debug_message (1, "binding file ", reference_name, " to ",
 		       current_value.m->l_name[0]
 		       ? current_value.m->l_name : _dl_argv[0],
 		       ": symbol `", undef_name, "' [", version->name,

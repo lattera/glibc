@@ -60,7 +60,7 @@ _dl_init_next (struct link_map *map)
 
 	  /* Print a debug message if wanted.  */
 	  if (_dl_debug_impcalls)
-	    _dl_debug_message ("\tcalling init: ",
+	    _dl_debug_message (1, "\ncalling init: ",
 				l->l_name[0] ? l->l_name : _dl_argv[0],
 				"\n\n", NULL);
 

@@ -79,6 +79,12 @@ match_symbol (const char *name, ElfW(Word) hash, const char *string,
   ElfW(Addr) def_offset;
   ElfW(Verdef) *def;
 
+  /* Display information about what we are doing while debugging.  */
+  if (_dl_debug_versions)
+    _dl_debug_message (1, "checking for version `", string, "' in file ",
+		       map->l_name[0] ? map->l_name : _dl_argv[0],
+		       " required by file ", name, "\n", NULL);
+
   if (map->l_info[VERSTAG (DT_VERDEF)] == NULL)
     {
       /* The file has no symbol versioning.  I.e., the dependent

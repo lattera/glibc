@@ -1,4 +1,36 @@
+1998-03-10 17:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Add _dl_debug_message.
+	* elf/dl-misc.c: Make _dl_debug_message a function.  Print the PID
+	before every line.
+	* elf/fini.c: Correctly use new _dl_debug_message function.
+	* elf/init.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* sysdeps/unix/sysv/linux/libc-start.c: Likewise.
+	* elf/dl-load.c: Likewise.  Add more debugging prints.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* elf/dl-support.c: Add variables for debugging.
+	* elf/rtld.c: Likewise.  Recognize new debug options.
+	* elf/link.h: Declare new variables.
+
+	* elf/dl-deps.c (_dl_map_object_deps): Little optimizations.
+
 1998-03-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sys/quota.h: Extract information from
+	kernel headers.  Patch by a sun <asun@saul7.u.washington.edu>.
+
+1998-03-11 00:16  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp-test.c (command_line_test): New function to allow
+	testing of specific cases from the command-line.
+
+1998-03-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-init.c (_dl_init_next): Print nicer messages.
+	* elf/dl-fini.c (_dl_fini): Likewise.
+	* sysdeps/unix/sysv/linux/libc-start.c (__libc_start_main): Likewise.
 
 	* elf/dl-lookup.c (_dl_lookup_versioned_symbol): Print version
 	symbol in debug message.

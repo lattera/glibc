@@ -28,6 +28,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include "dynamic-link.h"
+#include <stdio-common/_itoa.h>
 
 
 /* On some systems, no flag bits are given to specify file mapping.  */
@@ -527,6 +528,7 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
   const ElfW(Ehdr) *header;
   const ElfW(Phdr) *phdr;
   const ElfW(Phdr) *ph;
+  size_t maplength;
   int type;
 
   /* Look again to see if the real name matched another already loaded.  */
@@ -544,6 +546,10 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 	++l->l_opencount;
 	return l;
       }
+
+  /* Print debugging message.  */
+  if (_dl_debug_files)
+    _dl_debug_message (1, "file=", name, ";  generating link map\n", NULL);
 
   /* Map in the first page to read the header.  */
   header = map (0, sizeof *header);
@@ -663,6 +669,9 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
     /* Now process the load commands and map segments into memory.  */
     c = loadcmds;
 
+    /* Length of the sections to be loaded.  */
+    maplength = loadcmds[nloadcmds - 1].allocend - c->mapstart;
+
     if (type == ET_DYN || type == ET_REL)
       {
 	/* This is a position-independent shared object.  We can let the
@@ -678,7 +687,6 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 	   the OS can do whatever it likes. */
  	caddr_t mapat;
 	ElfW(Addr) mappref;
-	size_t maplength = loadcmds[nloadcmds - 1].allocend - c->mapstart;
 	mappref = (ELF_PREFERRED_ADDRESS (loader, maplength, c->mapstart)
 		   - MAP_BASE_ADDR (l));
 	mapat = map_segment (mappref, maplength, c->prot, 0, c->mapoff);
@@ -786,6 +794,36 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 
   l->l_entry += l->l_addr;
 
+  if (_dl_debug_files)
+    {
+      const size_t nibbles = sizeof (void *) * 2;
+      char buf1[nibbles + 1];
+      char buf2[nibbles + 1];
+      char buf3[nibbles + 1];
+
+      buf1[nibbles] = '\0';
+      buf2[nibbles] = '\0';
+      buf3[nibbles] = '\0';
+
+      memset (buf1, '0', nibbles);
+      memset (buf2, '0', nibbles);
+      memset (buf3, '0', nibbles);
+      _itoa_word ((unsigned long int) l->l_ld, &buf1[nibbles], 16, 0);
+      _itoa_word ((unsigned long int) l->l_addr, &buf2[nibbles], 16, 0);
+      _itoa_word (maplength, &buf3[nibbles], 16, 0);
+
+      _dl_debug_message (1, "  dynamic: 0x", buf1, "  base: 0x", buf2,
+			 "   size: 0x", buf3, "\n", NULL);
+      memset (buf1, '0', nibbles);
+      memset (buf2, '0', nibbles);
+      memset (buf3, ' ', nibbles);
+      _itoa_word ((unsigned long int) l->l_entry, &buf1[nibbles], 16, 0);
+      _itoa_word ((unsigned long int) l->l_phdr, &buf2[nibbles], 16, 0);
+      _itoa_word (l->l_phnum, &buf3[nibbles], 10, 0);
+      _dl_debug_message (1, "    entry: 0x", buf1, "  phdr: 0x", buf2,
+			 "  phnum:   ", buf3, "\n\n", NULL);
+    }
+
   elf_get_dynamic_info (l->l_ld, l->l_info);
   if (l->l_info[DT_HASH])
     _dl_setup_hash (l);
@@ -800,7 +838,7 @@ print_search_path (struct r_search_path_elem **list,
 {
   int first = 1;
 
-  _dl_debug_message ("\t search path=", NULL);
+  _dl_debug_message (1, " search path=", NULL);
 
   while (*list != NULL && (*list)->what == what) /* Yes, ==.  */
     {
@@ -809,23 +847,23 @@ print_search_path (struct r_search_path_elem **list,
       if ((*list)->machdirstatus != nonexisting)
 	{
 	  buf[(*list)->machdirnamelen - 1] = '\0';
-	  _dl_debug_message (first ? "" : ":", buf, NULL);
+	  _dl_debug_message (0, first ? "" : ":", buf, NULL);
 	  first = 0;
 	}
       if ((*list)->dirstatus != nonexisting)
 	{
 	  buf[(*list)->dirnamelen - 1] = '\0';
-	  _dl_debug_message (first ? "" : ":", buf, NULL);
+	  _dl_debug_message (0, first ? "" : ":", buf, NULL);
 	  first = 0;
 	}
       ++list;
     }
 
   if (name != NULL)
-    _dl_debug_message ("\t\t(", what, " from file ",
+    _dl_debug_message (0, "\t\t(", what, " from file ",
 			name[0] ? name : _dl_argv[0], ")\n", NULL);
   else
-    _dl_debug_message ("\t\t(", what, ")\n", NULL);
+    _dl_debug_message (0, "\t\t(", what, ")\n", NULL);
 }
 
 /* Try to open NAME in one of the directories in DIRS.
@@ -871,7 +909,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 
           /* Print name we try if this is wanted.  */
 	  if (_dl_debug_libs)
-	    _dl_debug_message ("\t  trying file=", buf, "\n", NULL);
+	    _dl_debug_message (1, "  trying file=", buf, "\n", NULL);
 
 	  fd = __open (buf, O_RDONLY);
 	  if (this_dir->machdirstatus == unknown)
@@ -926,7 +964,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 
 	  /* Print name we try if this is wanted.  */
 	  if (_dl_debug_libs)
-	    _dl_debug_message ("\t  trying file=", buf, "\n", NULL);
+	    _dl_debug_message (1, "  trying file=", buf, "\n", NULL);
 
 	  fd = __open (buf, O_RDONLY);
 	  if (this_dir->dirstatus == unknown)
@@ -1038,6 +1076,12 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       return l;
     }
 
+  /* Display information if we are debugging.  */
+  if (_dl_debug_files && loader != NULL)
+    _dl_debug_message (1, "\nfile=", name, ";  needed by ",
+		       loader->l_name[0] ? loader->l_name : _dl_argv[0],
+		       "\n", NULL);
+
   if (strchr (name, '/') == NULL)
     {
       /* Search for NAME in several places.  */
@@ -1045,7 +1089,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       size_t namelen = strlen (name) + 1;
 
       if (_dl_debug_libs)
-	_dl_debug_message ("\tfind library=", name, "; searching\n", NULL);
+	_dl_debug_message (1, "find library=", name, "; searching\n", NULL);
 
       fd = -1;
 
@@ -1109,7 +1153,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       /* Add another newline when we a tracing the library loading.  */
       if (_dl_debug_libs)
-        _dl_debug_message ("\n", NULL);
+        _dl_debug_message (1, "\n", NULL);
     }
   else
     {

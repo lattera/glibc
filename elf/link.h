@@ -253,6 +253,9 @@ extern int _dl_debug_libs;
 extern int _dl_debug_impcalls;
 extern int _dl_debug_bindings;
 extern int _dl_debug_symbols;
+extern int _dl_debug_versions;
+extern int _dl_debug_reloc;
+extern int _dl_debug_files;
 
 /* File deccriptor to write debug messages to.  */
 extern int _dl_debug_fd;
@@ -267,9 +270,10 @@ extern void _dl_sysdep_output (int fd, const char *string, ...);
 
 /* OS-dependent function to write a debug message on the specified
    descriptor for this.  All arguments are `const char *'; args until
-   a null pointer are concatenated to form the message to print.  */
-#define _dl_debug_message(string, args...) \
-  _dl_sysdep_output (_dl_debug_fd, string, ##args)
+   a null pointer are concatenated to form the message to print.  If
+   NEW_LINE is nonzero it is assumed that the message starts on a new
+   line.*/
+extern void _dl_debug_message (int new_line, const char *string, ...);
 
 /* OS-dependent function to write a message on the standard output.
    All arguments are `const char *'; args until a null pointer

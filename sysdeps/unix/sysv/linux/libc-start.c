@@ -50,14 +50,14 @@ __libc_start_main (int (*main) (int, char **, char **), int argc,
   /* Call the initializer of the libc.  */
 #ifdef PIC
   if (_dl_debug_impcalls)
-    _dl_debug_message ("\tinitialize libc\n\n", NULL);
+    _dl_debug_message (1, "\ninitialize libc\n\n", NULL);
 #endif
   __libc_init_first (argc, argv, __environ);
 
   /* Call the initializer of the program.  */
 #ifdef PIC
   if (_dl_debug_impcalls)
-    _dl_debug_message ("\tinitialize program: ", argv[0], "\n\n", NULL);
+    _dl_debug_message (1, "\ninitialize program: ", argv[0], "\n\n", NULL);
 #endif
   (*init) ();
 
@@ -66,7 +66,7 @@ __libc_start_main (int (*main) (int, char **, char **), int argc,
 
 #ifdef PIC
   if (_dl_debug_impcalls)
-    _dl_debug_message ("\ttransferring control: ", argv[0], "\n\n", NULL);
+    _dl_debug_message (1, "\ntransferring control: ", argv[0], "\n\n", NULL);
 #endif
 
   exit ((*main) (argc, argv, __environ));

@@ -89,8 +89,19 @@ struct test_case_struct
 
 static int testit (struct test_case_struct *tc);
 
+void
+command_line_test (const char *words)
+{
+  wordexp_t we;
+  int i;
+  int retval = wordexp (words, &we, 0);
+  printf ("wordexp returned %d\n", retval);
+  for (i = 0; i < we.we_wordc; i++)
+    printf ("we_wordv[%d] = \"%s\"\n", i, we.we_wordv[i]);
+}
+
 int
-main (int argc, char * argv[])
+main (int argc, char *argv[])
 {
   struct passwd *pw;
   int test;
@@ -100,6 +111,12 @@ main (int argc, char * argv[])
   for (test = 0; test_case[test].retval != -1; test++)
     if (testit (&test_case[test]))
       ++fail;
+
+  if (argc > 1)
+    {
+      command_line_test (argv[1]);
+      return 0;
+    }
 
   pw = getpwnam ("root");
   if (pw != NULL)
