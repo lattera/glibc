@@ -18,8 +18,6 @@
 
 #include <errno.h>
 #include <unistd.h>
-#include <hurd.h>
-#include <hurd/fd.h>
 
 /* Read NBYTES into BUF from FD.  Return the number read or -1.  */
 ssize_t

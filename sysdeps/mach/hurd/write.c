@@ -18,13 +18,11 @@
 
 #include <errno.h>
 #include <unistd.h>
-#include <hurd.h>
-#include <hurd/fd.h>
 
 ssize_t
 __libc_write (int fd, const void *buf, size_t nbytes)
 {
-  return __pread (fd, buf, nbytes, (off_t) -1);
+  return __pwrite (fd, buf, nbytes, (off_t) -1);
 }
 
 weak_alias (__libc_write, __write)
