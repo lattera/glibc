@@ -1,4 +1,0 @@
-# File name	Caller	Syscall name	# args	Strong name	Weak names
-
-# System calls with wrappers.
-posix_fadvise64	-	fadvise64	Vi:iiii	posix_fadvise64	posix_fadvise

@@ -280,7 +280,7 @@ conversion from `%s' and to `%s' are not supported"),
 	    struct stat st;
 	    char *addr;
 #endif
-	    int fd;
+	    int fd, ret;
 
 	    if (verbose)
 	      printf ("%s:\n", argv[remaining]);
@@ -313,43 +313,42 @@ conversion from `%s' and to `%s' are not supported"),
 			 _("error while closing input `%s'"),
 			 argv[remaining]);
 
-		if (process_block (cd, addr, st.st_size, output) < 0)
-		  {
-		    /* Something went wrong.  */
-		    status = EXIT_FAILURE;
-
-		    /* We don't need the input data anymore.  */
-		    munmap ((void *) addr, st.st_size);
-
-		    /* We cannot go on with producing output since it might
-		       lead to problem because the last output might leave
-		       the output stream in an undefined state.  */
-		    break;
-		  }
+		ret = process_block (cd, addr, st.st_size, output);
 
 		/* We don't need the input data anymore.  */
 		munmap ((void *) addr, st.st_size);
+
+		if (ret != 0)
+		  {
+		    status = EXIT_FAILURE;
+
+		    if (ret < 0)
+		      /* We cannot go on with producing output since it might
+			 lead to problem because the last output might leave
+			 the output stream in an undefined state.  */
+		      break;
+		  }
 	      }
 	    else
 #endif	/* _POSIX_MAPPED_FILES */
 	      {
 		/* Read the file in pieces.  */
-		if (process_fd (cd, fd, output) != 0)
+		ret = process_fd (cd, fd, output);
+
+		/* Now close the file.  */
+		close (fd);
+
+		if (ret != 0)
 		  {
 		    /* Something went wrong.  */
 		    status = EXIT_FAILURE;
 
-		    /* We don't need the input file anymore.  */
-		    close (fd);
-
-		    /* We cannot go on with producing output since it might
-		       lead to problem because the last output might leave
-		       the output stream in an undefined state.  */
-		    break;
+		    if (ret < 0)
+		      /* We cannot go on with producing output since it might
+			 lead to problem because the last output might leave
+			 the output stream in an undefined state.  */
+		      break;
 		  }
-
-		/* Now close the file.  */
-		close (fd);
 	      }
 	  }
 	while (++remaining < argc);
@@ -438,12 +437,22 @@ process_block (iconv_t cd, char *addr, size_t len, FILE *output)
   char *outptr;
   size_t outlen;
   size_t n;
+  int ret = 0;
 
   while (len > 0)
     {
       outptr = outbuf;
       outlen = OUTBUF_SIZE;
       n = iconv (cd, &addr, &len, &outptr, &outlen);
+
+      if (n == (size_t) -1 && omit_invalid && errno == EILSEQ)
+	{
+	  ret = 1;
+	  if (len == 0)
+	    n = 0;
+	  else
+	    errno = E2BIG;
+	}
 
       if (outptr != outbuf)
 	{
@@ -469,7 +478,7 @@ conversion stopped due to problem in writing the output"));
              character sets we have to flush the state now.  */
 	  outptr = outbuf;
 	  outlen = OUTBUF_SIZE;
-	  (void) iconv (cd, NULL, NULL, &outptr, &outlen);
+	  n = iconv (cd, NULL, NULL, &outptr, &outlen);
 
 	  if (outptr != outbuf)
 	    {
@@ -489,7 +498,14 @@ conversion stopped due to problem in writing the output"));
 	      errno = errno_save;
 	    }
 
-	  break;
+	  if (n != (size_t) -1)
+	    break;
+
+	  if (omit_invalid && errno == EILSEQ)
+	    {
+	      ret = 1;
+	      break;
+	    }
 	}
 
       if (errno != E2BIG)
@@ -518,7 +534,7 @@ incomplete character or shift sequence at end of buffer"));
 	}
     }
 
-  return 0;
+  return ret;
 }
 
 
