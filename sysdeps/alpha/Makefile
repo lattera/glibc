@@ -1,4 +1,4 @@
-# Copyright (C) 1993 Free Software Foundation, Inc.
+# Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 # Contributed by Brendan Kehoe (brendan@zen.org).
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -88,4 +88,6 @@ $(divrem:%=$(sysdep_dir)/alpha/%.S): $(sysdep_dir)/alpha/divrem.m4 $(sysdep_dir)
 	       define(SYSDEP_DIR, \`$(sysdep_dir)/alpha')\
 	       /* This file is generated from divrem.m4; DO NOT EDIT! */"; \
 	 cat $<) | $(M4) > $@-tmp
-	mv $@-tmp $@
+# Make it unwritable so noone will edit it by mistake.
+	-chmod a-w $@-tmp
+	mv -f $@-tmp $@
