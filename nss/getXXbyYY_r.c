@@ -270,6 +270,7 @@ done:
 #define OLD1(name) __old_##name
 
 int
+attribute_compat_text_section
 OLD (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 		      size_t buflen, LOOKUP_TYPE **result H_ERRNO_PARM)
 {

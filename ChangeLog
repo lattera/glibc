@@ -1,3 +1,44 @@
+2004-03-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/libc-symbols.h: Define attribute_compat_text_section and
+	attribute_compat_data_section.
+	* io/ftw.c: Mark compat code with attribute_compat_text_section.
+	* libio/iofopncook.c: Likewise.
+	* libio/oldfileops.c: Likewise.
+	* libio/oldiofclose.c: Likewise.
+	* libio/oldiofdopen.c: Likewise.
+	* libio/oldiofgetpos.c: Likewise.
+	* libio/oldiofgetpos64.c: Likewise.
+	* libio/oldiofopen.c: Likewise.
+	* libio/oldiofsetpos.c: Likewise.
+	* libio/oldiofsetpos64.c: Likewise.
+	* libio/oldiopopen.c: Likewise.
+	* libio/oldpclose.c: Likewise.
+	* libio/oldtmpfile.c: Likewise.
+	* nptl/forward.c: Likewise.
+	* nss/getXXbyYY_r.c: Likewise.
+	* nss/getXXent_r.c: Likewise.
+	* posix/tst-vfork1.c: Likewise.
+	* stdlib/canonicalize.c: Likewise.
+	* stdlib/old_atexit.c: Likewise.
+	* sysdeps/generic/glob.c: Likewise.
+	* sysdeps/posix/posix_fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/alphasort64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/glob64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/msgctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/oldgetrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/posix_fadvise64.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/readdir64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/readdir64_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/scandir64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/versionsort64.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: vm86@@GLIBC_2.3.4
+	should be the default symbol. Having none misses the point.
+
 2004-03-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/qsort.c (_quicksort): Initialize first stack element [BZ #16].

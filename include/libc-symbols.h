@@ -759,4 +759,11 @@ for linking")
 /* Get some dirty hacks.  */
 #include <symbol-hacks.h>
 
+/* Move compatibility symbols out of the way by placing them all in a
+   special section.  */
+#define attribute_compat_text_section \
+    __attribute__ ((section (".text.compat")))
+#define attribute_compat_data_section \
+    __attribute__ ((section (".data.compat")))
+
 #endif /* libc-symbols.h */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1996-2000, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993,1996-2000,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,7 @@
    If we couldn't generate a unique filename or the file couldn't
    be opened, NULL is returned.  */
 FILE *
+attribute_compat_text_section
 __old_tmpfile (void)
 {
   char buf[FILENAME_MAX];

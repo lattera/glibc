@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995-1999, 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +33,7 @@ extern int __old_getrlimit64 (enum __rlimit_resource resource,
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
 int
+attribute_compat_text_section
 __old_getrlimit64 (enum __rlimit_resource resource, struct rlimit64 *rlimits)
 {
   struct rlimit rlimits32;

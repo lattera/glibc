@@ -219,6 +219,7 @@ versioned_symbol (libc, __realpath, realpath, GLIBC_2_3);
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3)
 char *
+attribute_compat_text_section
 __old_realpath (const char *name, char *resolved)
 {
   if (resolved == NULL)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -390,6 +390,9 @@ next_brace_sub (cp, flags)
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
 int
+#ifdef GLOB_ATTRIBUTE
+GLOB_ATTRIBUTE
+#endif
 glob (pattern, flags, errfunc, pglob)
      const char *pattern;
      int flags;

@@ -116,7 +116,10 @@ L(overflow):
 END (BP_SYM (__posix_fadvise64_l64))
 
 #ifdef __NR_fadvise64
-PSEUDO_ERRVAL (__posix_fadvise64_l32, fadvise64, 5)
+	.section	.text.compat, "ax"
+ENTRY (__posix_fadvise64_l32)
+	DO_CALL (fadvise64, 5)
+	negl %eax
 	ret
 PSEUDO_END_ERRVAL (__posix_fadvise64_l32)
 #else

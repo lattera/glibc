@@ -120,6 +120,7 @@ unlock (void *not_used)
 #endif
 
 _IO_FILE *
+attribute_compat_text_section
 _IO_old_proc_open (fp, command, mode)
      _IO_FILE *fp;
      const char *command;
@@ -202,6 +203,7 @@ _IO_old_proc_open (fp, command, mode)
 }
 
 _IO_FILE *
+attribute_compat_text_section
 _IO_old_popen (command, mode)
      const char *command;
      const char *mode;
@@ -236,6 +238,7 @@ _IO_old_popen (command, mode)
 }
 
 int
+attribute_compat_text_section
 _IO_old_proc_close (fp)
      _IO_FILE *fp;
 {

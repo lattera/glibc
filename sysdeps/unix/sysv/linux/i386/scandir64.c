@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ versioned_symbol (libc, __scandir64, scandir64, GLIBC_2_2);
 
 #include <sysdeps/unix/sysv/linux/i386/olddirent.h>
 
-#define SCANDIR __old_scandir64
+#define SCANDIR attribute_compat_text_section __old_scandir64
 #define READDIR __old_readdir64
 #define DIRENT_TYPE struct __old_dirent64
 

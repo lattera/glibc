@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -76,6 +76,7 @@ __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
 #if __WORDSIZE == 32 && SHLIB_COMPAT(libc, GLIBC_2_2, GLIBC_2_3_3)
 
 int
+attribute_compat_text_section
 __posix_fallocate64_l32 (int fd, off64_t offset, size_t len)
 {
   return __posix_fallocate64_l64 (fd, offset, len);

@@ -115,6 +115,7 @@ extern int errno;
 
 
 void
+attribute_compat_text_section
 _IO_old_file_init (fp)
      struct _IO_FILE_plus *fp;
 {
@@ -141,6 +142,7 @@ _IO_old_file_init (fp)
 }
 
 int
+attribute_compat_text_section
 _IO_old_file_close_it (fp)
      _IO_FILE *fp;
 {
@@ -168,6 +170,7 @@ _IO_old_file_close_it (fp)
 }
 
 void
+attribute_compat_text_section
 _IO_old_file_finish (fp, dummy)
      _IO_FILE *fp;
      int dummy;
@@ -182,6 +185,7 @@ _IO_old_file_finish (fp, dummy)
 }
 
 _IO_FILE *
+attribute_compat_text_section
 _IO_old_file_fopen (fp, filename, mode)
      _IO_FILE *fp;
      const char *filename;
@@ -231,6 +235,7 @@ _IO_old_file_fopen (fp, filename, mode)
 }
 
 _IO_FILE *
+attribute_compat_text_section
 _IO_old_file_attach (fp, fd)
      _IO_FILE *fp;
      int fd;
@@ -250,6 +255,7 @@ _IO_old_file_attach (fp, fd)
 }
 
 _IO_FILE *
+attribute_compat_text_section
 _IO_old_file_setbuf (fp, p, len)
      _IO_FILE *fp;
      char *p;
@@ -271,6 +277,7 @@ static int old_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
    Then mark FP as having empty buffers. */
 
 int
+attribute_compat_text_section
 _IO_old_do_write (fp, data, to_do)
      _IO_FILE *fp;
      const char *data;
@@ -280,8 +287,8 @@ _IO_old_do_write (fp, data, to_do)
 	 ? 0 : EOF;
 }
 
-static
-int
+static int
+attribute_compat_text_section
 old_do_write (fp, data, to_do)
      _IO_FILE *fp;
      const char *data;
@@ -315,6 +322,7 @@ old_do_write (fp, data, to_do)
 }
 
 int
+attribute_compat_text_section
 _IO_old_file_underflow (fp)
      _IO_FILE *fp;
 {
@@ -379,6 +387,7 @@ _IO_old_file_underflow (fp)
 }
 
 int
+attribute_compat_text_section
 _IO_old_file_overflow (f, ch)
       _IO_FILE *f;
       int ch;
@@ -430,6 +439,7 @@ _IO_old_file_overflow (f, ch)
 }
 
 int
+attribute_compat_text_section
 _IO_old_file_sync (fp)
      _IO_FILE *fp;
 {
@@ -464,6 +474,7 @@ _IO_old_file_sync (fp)
 }
 
 _IO_off64_t
+attribute_compat_text_section
 _IO_old_file_seekoff (fp, offset, dir, mode)
      _IO_FILE *fp;
      _IO_off64_t offset;
@@ -650,6 +661,7 @@ resync:
 }
 
 _IO_ssize_t
+attribute_compat_text_section
 _IO_old_file_write (f, data, n)
      _IO_FILE *f;
      const void *data;
@@ -674,6 +686,7 @@ _IO_old_file_write (f, data, n)
 }
 
 _IO_size_t
+attribute_compat_text_section
 _IO_old_file_xsputn (f, data, n)
      _IO_FILE *f;
      const void *data;

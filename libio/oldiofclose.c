@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997-2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997-2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +35,7 @@
 #endif
 
 int
+attribute_compat_text_section
 _IO_old_fclose (fp)
      _IO_FILE *fp;
 {

@@ -1,5 +1,5 @@
 /* File tree walker functions.
-   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -784,6 +784,7 @@ versioned_symbol (libc, NFTW_NEW_NAME, NFTW_NAME, GLIBC_2_3_3);
 int NFTW_OLD_NAME (const char *, NFTW_FUNC_T, int, int);
 
 int
+attribute_compat_text_section
 NFTW_OLD_NAME (path, func, descriptors, flags)
      const char *path;
      NFTW_FUNC_T func;

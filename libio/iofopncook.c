@@ -195,6 +195,7 @@ _IO_FILE * _IO_old_fopencookie (void *cookie, const char *mode,
 				_IO_cookie_io_functions_t io_functions);
 
 static _IO_off64_t
+attribute_compat_text_section
 _IO_old_cookie_seek (fp, offset, dir)
      _IO_FILE *fp;
      _IO_off64_t offset;
@@ -237,6 +238,7 @@ static const struct _IO_jump_t _IO_old_cookie_jumps = {
 };
 
 _IO_FILE *
+attribute_compat_text_section
 _IO_old_fopencookie (cookie, mode, io_functions)
      void *cookie;
      const char *mode;

@@ -43,6 +43,7 @@ int __old_glob64 (__const char *__pattern, int __flags,
 #define glob(pattern, flags, errfunc, pglob) \
   __old_glob64 (pattern, flags, errfunc, pglob)
 #define glob_in_dir __old_glob_in_dir
+#define GLOB_ATTRIBUTE attribute_compat_text_section
 
 #define GLOB_ONLY_P 1
 

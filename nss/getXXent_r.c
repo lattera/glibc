@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,97,98,99,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,98,99,2000,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -175,6 +175,7 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
 #define OLD1(name) __old_##name
 
 int
+attribute_compat_text_section
 OLD (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
 			 LOOKUP_TYPE **result H_ERRNO_PARM)
 {

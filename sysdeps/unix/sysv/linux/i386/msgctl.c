@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998, 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -63,6 +63,7 @@ extern int __libc_missing_32bit_uids;
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 int
+attribute_compat_text_section
 __old_msgctl (int msqid, int cmd, struct __old_msqid_ds *buf)
 {
   return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl,

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1998, 1999, 2000, 2002, 2003
+/* Copyright (C) 1993, 1995, 1996, 1997, 1998, 1999, 2000, 2002, 2003, 2004
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -33,6 +33,7 @@
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 
 int
+attribute_compat_text_section
 _IO_old_fgetpos (fp, posp)
      _IO_FILE *fp;
      _IO_fpos_t *posp;
