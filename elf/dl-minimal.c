@@ -1,5 +1,5 @@
 /* Minimal replacements for basic facilities used in the dynamic linker.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -75,6 +75,17 @@ malloc (size_t n)
   alloc_last_block = (void *) alloc_ptr;
   alloc_ptr += n;
   return alloc_last_block;
+}
+
+/* We use this function occasionally since the real implementation may
+   be optimized when it can assume the memory it returns already is
+   set to NUL.  */
+void * weak_function
+calloc (size_t nmemb, size_t size)
+{
+  size_t total = nmemb * size;
+  void *result = malloc (total);
+  return memset (result, '\0', total);
 }
 
 /* This will rarely be called.  */

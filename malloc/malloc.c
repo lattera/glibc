@@ -3306,11 +3306,11 @@ Void_t* cALLOc(n, elem_size) size_t n; size_t elem_size;
     if(mem == 0)
       return 0;
 #ifdef HAVE_MEMCPY
-    memset(mem, 0, sz);
+    return memset(mem, 0, sz);
 #else
     while(sz > 0) ((char*)mem)[--sz] = 0; /* rather inefficient */
-#endif
     return mem;
+#endif
   }
 #endif
 
@@ -3692,8 +3692,9 @@ void mALLOC_STATs()
 #endif
 #if !defined(NO_THREADS) && MALLOC_DEBUG > 1
     if(ar_ptr != &main_arena) {
+      heap_info *heap;
       (void)mutex_lock(&ar_ptr->mutex);
-      heap_info *heap = heap_for_ptr(top(ar_ptr));
+      heap = heap_for_ptr(top(ar_ptr));
       while(heap) { dump_heap(heap); heap = heap->prev; }
       (void)mutex_unlock(&ar_ptr->mutex);
     }

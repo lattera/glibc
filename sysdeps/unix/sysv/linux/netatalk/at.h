@@ -20,6 +20,7 @@
 #define __NETATALK_ATALK_H 1
 
 #include <asm/types.h>
+#include <sys/socket.h>
 #include <linux/atalk.h>
 
 #define SOL_ATALK       258     /* sockopt level for atalk */

@@ -35,7 +35,8 @@ aux		:= fpu_control setfpucw
 extra-libs	:= libm
 extra-libs-others = $(extra-libs)
 
-libm-support = k_standard s_lib_version s_matherr s_signgam
+libm-support = k_standard s_lib_version s_matherr s_signgam		\
+	       s_rinttol s_rinttoll
 libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     e_hypot e_j0 e_j1 e_jn e_lgamma_r e_log e_log10 e_pow	\
 	     e_rem_pio2 e_remainder e_scalb e_sinh e_sqrt k_cos		\
@@ -49,7 +50,7 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     w_log w_log10 w_pow w_remainder w_scalb w_sinh w_sqrt	\
 	     s_signbit s_fpclassify s_fmax s_fmin s_fdim s_nan s_trunc	\
 	     s_remquo s_log2 s_exp2					\
-	     conj cimag creal cabs carg s_cexp s_csinh s_ccosh
+	     conj cimag creal cabs carg s_cexp s_csinh s_ccosh s_clog
 libm-routines = $(libm-support) $(libm-calls) \
 		$(patsubst %_rf,%f_r,$(libm-calls:=f))	\
 		$(long-m-$(long-double-fcts))

@@ -1,6 +1,8 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Round argument to nearest integral value according to current rounding
+   direction.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,22 +19,14 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef __NIS_INTERN_H
+#include <sysdep.h>
 
-#define __NIS_INTERN_H
-#include <features.h>
-
-__BEGIN_DECLS
-
-extern nis_error __do_niscall (__const nis_server *server, int server_len,
-			       u_long prog, xdrproc_t xargs, caddr_t req,
-			       xdrproc_t xres, caddr_t resp, u_long flags);
-#if defined (HAVE_SECURE_RPC)
-extern AUTH *authdes_pk_create (const char *, const netobj *, u_int,
-				struct sockaddr *, des_block *);
-#endif
-extern nis_name *__nis_expandname (const char *);
-
-__END_DECLS
-
-#endif
+	.text
+ENTRY(__rinttol)
+	fldt	4(%esp)
+	subl	$4, %esp
+	fistpl	(%esp)
+	popl	%eax
+	ret
+END(__rinttol)
+weak_alias (__rinttol, rinttol)

@@ -91,6 +91,6 @@ __cexp (__complex__ double x)
 }
 weak_alias (__cexp, cexp)
 #ifdef NO_LONG_DOUBLE
-string_alias (__cexp, __cexpl)
+strong_alias (__cexp, __cexpl)
 weak_alias (__cexp, cexpl)
 #endif

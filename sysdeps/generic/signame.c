@@ -1,5 +1,5 @@
 /* Convert between signal names and numbers.
-   Copyright (C) 1990, 1992, 1993, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1990, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -230,6 +230,9 @@ signame_init ()
 #endif
 #if defined (SIGINFO)
   init_sig (SIGINFO, "INFO", "Information request");
+#endif
+#if defined (SIGNOFP)
+  init_sig (SIGNOFP, "NOFP", "Floating point co-processor not available");
 #endif
 }
 

@@ -22,33 +22,44 @@ if test $# -ne 2; then
   exit 1
 fi
 
-case $1 in
-/*)
-  # Make both paths absolute.
-  to=`echo $1 | sed 's%^/%%'`
+# A problem with this script is that we must be able to handle symbolic
+# links somewhere in the paths of either path.  To resolve symlinks we use
+# the `pwd' program.  But some `pwd' programs are no real programs but
+# instead aliases (defined by the user) or builtins (as in bash-2).  Both
+# kinds have in common that they might not give the correct result.  E.g.,
+# the builtin in bash-2 returns the path which was used to change to the
+# directory and not the real path.
+#
+# To prevent this problem we make sure the real `pwd' somewhere in the
+# path is used.  Currently there is only support for bash-2 available.
+# If other shells also have problems we have to add more code here.
 
-  if test -d $2; then
-    from=`echo $2 | sed 's%/*$%%'`
-  else
-    from=`echo $2 | sed 's%/*[^/]*$%%'`
-  fi
+if test "$BASH_VERSINFO" = "2"; then
+  unalias pwd
+  unset pwd
+  enable -n pwd
+fi
 
-  case "$from" in
-  /*) from=`echo $from | sed 's%^/*%%'` ;;
-  ?*) from=`cd $from && pwd | sed 's%^/%%'` ;;
-  *) from=`pwd | sed 's%^/%%'` ;;
-  esac
-  ;;
-*)
-  to=$1
+# Make both paths absolute.
+if test -d $1; then
+  to=`cd $1 && pwd`
+else
+  temp=`echo $1 | sed 's%/*[^/]*$%%'`
+  to=`cd $temp && pwd`
+  to="$to/`echo $1 | sed 's%.*/\([^/][^/]*\)$%\1%'`"
+fi
+to=`echo $to | sed 's%^/%%'`
 
-  if test -d $2; then
-    from=`echo $2 | sed 's%/*$%%'`
-  else
-    from=`echo $2 | sed 's%/*[^/]*$%%'`
-  fi
-  ;;
-esac
+if test -d $2; then
+  from=`echo $2 | sed 's%/*$%%'`
+else
+  from=`echo $2 | sed 's%/*[^/]*$%%'`
+fi
+
+if test -z "$from"; then
+  from=`pwd`;
+fi
+from=`cd $from && pwd | sed 's%^/%%'`
 
 while test -n "$to" && test -n "$from"; do
   preto=`echo $to | sed 's%^\([^/]*\)/.*%\1%'`

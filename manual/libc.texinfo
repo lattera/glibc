@@ -210,7 +210,6 @@ Memory Allocation
                                  calling function returns.
 * Relocating Allocator::        Waste less memory, if you can tolerate
                                  automatic relocation of the blocks you get.
-* Memory Warnings::             Getting warnings when memory is nearly full.
 
 Unconstrained Allocation
 

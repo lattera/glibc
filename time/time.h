@@ -22,8 +22,8 @@
 
 #ifndef	_TIME_H
 
-#if	(! defined (__need_time_t) && !defined (__need_clock_t) && \
-	 ! defined (__need_timespec))
+#if	(! defined __need_time_t && !defined __need_clock_t && \
+	 ! defined __need_timespec)
 #define	_TIME_H		1
 #include <features.h>
 
@@ -56,8 +56,7 @@ __BEGIN_DECLS
 #endif /* <time.h> included.  */
 
 
-#if	!defined (__clock_t_defined) &&			\
-	(defined (_TIME_H) || defined (__need_clock_t))
+#if !defined __clock_t_defined && (defined _TIME_H || defined __need_clock_t)
 #define	__clock_t_defined	1
 
 #include <gnu/types.h>
@@ -68,8 +67,7 @@ typedef __clock_t clock_t;
 #endif /* clock_t not defined and <time.h> or need clock_t.  */
 #undef	__need_clock_t
 
-#if	!defined (__time_t_defined) &&			\
-	(defined (_TIME_H) || defined (__need_time_t))
+#if !defined __time_t_defined && (defined _TIME_H || defined __need_time_t)
 #define	__time_t_defined	1
 
 #include <gnu/types.h>
@@ -81,9 +79,9 @@ typedef __time_t time_t;
 #undef	__need_time_t
 
 
-#if	! defined (__timespec_defined) &&			\
-	((defined (_TIME_H) && defined (__USE_POSIX)) ||	\
-	 defined (__need_timespec))
+#if	! defined __timespec_defined &&			\
+	((defined _TIME_H && defined __USE_POSIX) ||	\
+	 defined __need_timespec)
 #define	__timespec_defined	1
 
 /* POSIX.4 structure for a time value.  This is like a `struct timeval' but
@@ -235,7 +233,7 @@ extern long int __tzname_max __P ((void));
 extern void tzset __P ((void));
 #endif
 
-#if defined(__USE_SVID) || defined(__USE_XOPEN)
+#if defined __USE_SVID || defined __USE_XOPEN
 extern int daylight;
 extern long int timezone;
 #endif

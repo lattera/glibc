@@ -22,7 +22,7 @@
 #include "nis_intern.h"
 
 nis_error
-nis_mkdir (const nis_name dir, const nis_server *server)
+nis_mkdir (const_nis_name dir, const nis_server *server)
 {
   nis_error res;
 
@@ -54,7 +54,7 @@ nis_mkdir (const nis_name dir, const nis_server *server)
 }
 
 nis_error
-nis_rmdir (const nis_name dir, const nis_server *server)
+nis_rmdir (const_nis_name dir, const nis_server *server)
 {
   nis_error res;
 
@@ -116,7 +116,7 @@ nis_freetags (nis_tag *tags, const int numtags)
 }
 
 nis_server **
-nis_getservlist (const nis_name dir)
+nis_getservlist (const_nis_name dir)
 {
   nis_server **serv;
 

@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <ieee754.h>
 #include <stdlib.h>
 #include <limits.h>
 
@@ -27,6 +28,8 @@ erand48_r (xsubi, buffer, result)
      struct drand48_data *buffer;
      double *result;
 {
+  union ieee754_double temp;
+
   /* Compute next state.  */
   if (__drand48_iterate (xsubi, buffer) < 0)
     return -1;
@@ -35,9 +38,12 @@ erand48_r (xsubi, buffer, result)
      its fractional part so the resulting FP number is [0.0,1.0).  */
 
 #if USHRT_MAX == 65535
-  *result = ((double) xsubi[2] / (1ULL << 48) +
-	     (double) xsubi[1] / (1ULL << 32) +
-	     (double) xsubi[0] / (1ULL << 16));
+  temp.ieee.negative = 0;
+  temp.ieee.exponent = IEEE754_DOUBLE_BIAS - 1;
+  temp.ieee.mantissa0 = (xsubi[2] << 4) | (xsubi[1] >> 12);
+  temp.ieee.mantissa1 = ((xsubi[1] & 0xfff) << 20) | (xsubi[0] << 4);
+  /* Please note the lower 4 bits of mantissa1 are always 0.  */
+  *result = temp.d;
 #else
 # error Unsupported size of short int
 #endif

@@ -23,7 +23,7 @@
 #include "nis_intern.h"
 
 static void
-splitname (const nis_name name, nis_name *ibr_name, int *srch_len,
+splitname (const_nis_name name, nis_name *ibr_name, int *srch_len,
 	   nis_attr **srch_val)
 {
   char *cptr, *key, *val, *next;
@@ -138,7 +138,7 @@ splitname (const nis_name name, nis_name *ibr_name, int *srch_len,
 }
 
 static struct ib_request *
-__create_ib_request (const nis_name name, struct ib_request *ibreq,
+__create_ib_request (const_nis_name name, struct ib_request *ibreq,
 		     u_long flags)
 {
   splitname (name, &ibreq->ibr_name, &ibreq->ibr_srch.ibr_srch_len,
@@ -173,8 +173,8 @@ __create_ib_request (const nis_name name, struct ib_request *ibreq,
 }
 
 nis_result *
-nis_list (const nis_name name, const u_long flags,
-	  int (*callback) (const nis_name name,
+nis_list (const_nis_name name, u_long flags,
+	  int (*callback) (const_nis_name name,
 			   const nis_object *object,
 			   const void *userdata),
 	  const void *userdata)
@@ -257,8 +257,8 @@ nis_list (const nis_name name, const u_long flags,
 }
 
 nis_result *
-nis_add_entry (const nis_name name, const nis_object *obj,
-	       const u_long flags)
+nis_add_entry (const_nis_name name, const nis_object *obj,
+	       u_long flags)
 {
   nis_result *res;
   struct ib_request ibreq;
@@ -289,8 +289,8 @@ nis_add_entry (const nis_name name, const nis_object *obj,
 }
 
 nis_result *
-nis_modify_entry (const nis_name name, const nis_object *obj,
-		  const u_long flags)
+nis_modify_entry (const_nis_name name, const nis_object *obj,
+		  u_long flags)
 {
   nis_result *res;
   struct ib_request ibreq;
@@ -320,8 +320,8 @@ nis_modify_entry (const nis_name name, const nis_object *obj,
 }
 
 nis_result *
-nis_remove_entry (const nis_name name, const nis_object *obj,
-		  const u_long flags)
+nis_remove_entry (const_nis_name name, const nis_object *obj,
+		  u_long flags)
 {
   nis_result *res;
   struct ib_request ibreq;
@@ -354,7 +354,7 @@ nis_remove_entry (const nis_name name, const nis_object *obj,
 }
 
 nis_result *
-nis_first_entry (const nis_name name)
+nis_first_entry (const_nis_name name)
 {
   nis_result *res;
   struct ib_request ibreq;
@@ -379,7 +379,7 @@ nis_first_entry (const nis_name name)
 }
 
 nis_result *
-nis_next_entry (const nis_name name, const netobj *cookie)
+nis_next_entry (const_nis_name name, const netobj *cookie)
 {
   nis_result *res;
   struct ib_request ibreq;

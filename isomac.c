@@ -67,6 +67,10 @@
      will see messages about iso646.h, wctype.h and wchar.h not being
      found.  */
 
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE 1
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -168,18 +172,28 @@ static char *macros[] =
 #define NUMBER_OF_SUFFIXES             (sizeof suffix / sizeof *suffix)
 #define NUMBER_OF_MACROS               (sizeof macros / sizeof *macros)
 
+
+/* Format string to build command to invoke compiler.  */
+static const char fmt[] = "\
+echo \"#include <%s>\" |\
+%s -E -dM -ansi -pedantic %s -D_LIBC -I. -I `%s --print-prog-name=include` -\
+> %s";
+
+
 /* The compiler we use (given on the command line).  */
 char *CC;
 /* The -I parameters for CC to find all headers.  */
 char *INC;
 
-static int check_header (const char *);
+static const char **get_null_defines (void);
+static int check_header (const char *, const char **);
 
 int
 main (int argc, char *argv[])
 {
   int h;
   int result = 0;
+  const char **ignore_list;
 
   CC = argc > 1 ? argv[1] : "gcc";
   INC = argc > 2 ? argv[2] : "";
@@ -190,44 +204,107 @@ main (int argc, char *argv[])
       return EXIT_FAILURE;
     }
 
+  /* First get list of symbols which are defined by the compiler.  */
+  ignore_list = get_null_defines ();
+
   for (h = 0; h < NUMBER_OF_HEADERS; ++h)
     {
       char file_name[HEADER_MAX];
       sprintf (file_name, "%s.h", header[h]);
-      result |= check_header (file_name);
+      result |= check_header (file_name, ignore_list);
     }
 
-
-#if 0
   /* The test suite should return errors but for now this is not
      practical.  Give a warning and ask the user to correct the bugs.  */
   return result;
-#else
-  if (result)
-    fputs ("\
-##########################################################################\n\
-# The test suite found some problems with your system (see the generated #\n\
-# isomac.out file).  These are all violations of the ISO C rules and     #\n\
-# should be corrected.  If the problem is in the libc, report it using   #\n\
-# the glibcbug script to <bugs@gnu.ai.mit.edu>.  If it is a problem with #\n\
-# your compiler, contact the compiler manufacturer.                      #\n\
-##########################################################################\n",
-	   stderr);
-
-  return 0;
-#endif
 }
 
+
+static const char **
+get_null_defines (void)
+{
+  char line[BUFSIZ], *command;
+  char **result = NULL;
+  size_t result_len = 0;
+  size_t result_max = 0;
+  FILE *input;
+  int first = 1;
+
+  command = malloc (sizeof fmt + sizeof "/dev/null" + 2 * strlen (CC)
+		    + strlen (INC) + strlen (TMPFILE));
+
+  if (command == NULL)
+    {
+      puts ("No more memory.");
+      exit (1);
+    }
+
+  sprintf (command, fmt, "/dev/null", CC, INC, CC, TMPFILE);
+
+  if (system (command))
+    {
+      puts ("system() returned nonzero");
+      return NULL;
+    }
+  free (command);
+  input = fopen (TMPFILE, "r");
+
+  if (input == NULL)
+    {
+      printf ("Could not read %s: ", TMPFILE);
+      perror (NULL);
+      return NULL;
+    }
+
+  while (fgets (line, sizeof line, input) != NULL)
+    {
+      int i, okay = 0;
+      size_t endmac;
+      char *start, *end;
+      if (strlen (line) < 9 || line[7] != ' ')
+	{ /* "#define A" */
+	  printf ("Malformed input, expected '#define MACRO'\ngot '%s'\n",
+		  line);
+	  continue;
+	}
+      if (line[8] == '_')
+	/* It's a safe identifier.  */
+	continue;
+      if (result_len == result_max)
+	{
+	  result_max += 10;
+	  result = realloc (result, result_max * sizeof (char **));
+	  if (result == NULL)
+	    {
+	      puts ("No more memory.");
+	      exit (1);
+	    }
+	}
+      start = &line[8];
+      for (end = start + 1; !isspace (*end) && *end != '\0'; ++end)
+	;
+      result[result_len++] = strndup (start, end - start);
+
+      if (first)
+	{
+	  fputs ("The following identifiers will be ignored since the compiler defines them\nby default:\n", stdout);
+	  first = 0;
+	}
+      puts (result[result_len - 1]);
+    }
+  fclose (input);
+  remove (TMPFILE);
+
+  return (const char **) result;
+}
+
+
 static int
-check_header (const char *file_name)
+check_header (const char *file_name, const char **except)
 {
   char line[BUFSIZ], *command;
   FILE *input;
   int result = 0;
-  static const char fmt[] = "\
-echo \"#include <%s>\" |\
-%s -E -dM -ansi -pedantic %s -D_LIBC -I. -I `%s --print-prog-name=include` -\
-> %s";
 
   command = malloc (sizeof fmt + strlen (file_name) + 2 * strlen (CC)
 		    + strlen (INC) + strlen (TMPFILE));
@@ -260,6 +337,7 @@ echo \"#include <%s>\" |\
     {
       int i, okay = 0;
       size_t endmac;
+      const char **cpp;
       if (strlen (line) < 9 || line[7] != ' ')
 	{ /* "#define A" */
 	  printf ("Malformed input, expected '#define MACRO'\ngot '%s'\n",
@@ -278,7 +356,7 @@ echo \"#include <%s>\" |\
 	continue;
       for (i = 0; i < NUMBER_OF_MACROS; ++i)
 	{
-	  if (!strncmp (line+8, macros[i], strlen (macros[i])))
+	  if (!strncmp (line + 8, macros[i], strlen (macros[i])))
 	    {
 	      ++okay;
 	      break;
@@ -305,6 +383,18 @@ echo \"#include <%s>\" |\
 	      break;
 	    }
 	}
+      if (okay)
+	continue;
+      if (except != NULL)
+	for (cpp = except; *cpp != NULL; ++cpp)
+	  {
+	    size_t len = strlen (*cpp);
+	    if (!strncmp (line + 8, *cpp, len) && isspace (line[8 + len]))
+	      {
+		++okay;
+		break;
+	      }
+	  }
       if (!okay)
 	{
 	  fputs (line, stdout);

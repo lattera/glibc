@@ -36,9 +36,9 @@ static const long double
 #else
 static long double
 #endif
-TWO64[2]={
-  1.844674407370955161600000e+19, /* 0x403F, 0x00000000, 0x00000000 */
- -1.844674407370955161600000e+19, /* 0xC03F, 0x00000000, 0x00000000 */
+TWO63[2]={
+  9.223372036854775808000000e+18, /* 0x403E, 0x00000000, 0x00000000 */
+ -9.223372036854775808000000e+18  /* 0xC03E, 0x00000000, 0x00000000 */
 };
 
 #ifdef __STDC__
@@ -61,8 +61,8 @@ TWO64[2]={
 		i0 &= 0xe0000000;
 		i0 |= (i1|-i1)&0x80000000;
 		SET_LDOUBLE_MSW(x,i0);
-	        w = TWO64[sx]+x;
-	        t = w-TWO64[sx];
+	        w = TWO63[sx]+x;
+	        t = w-TWO63[sx];
 		GET_LDOUBLE_EXP(i0,t);
 		SET_LDOUBLE_EXP(t,(i0&0x7fff)|(sx<<15));
 	        return t;
@@ -80,17 +80,17 @@ TWO64[2]={
 		       s_rintf, too.  -- drepper@cygnus.com */
 		}
 	    }
-	} else if (j0>63) {
+	} else if (j0>62) {
 	    if(j0==0x4000) return x+x;	/* inf or NaN */
 	    else return x;		/* x is integral */
 	} else {
-	    i = ((u_int32_t)(0xffffffff))>>(j0-32);
+	    i = ((u_int32_t)(0xffffffff))>>(j0-31);
 	    if((i1&i)==0) return x;	/* x is integral */
 	    i>>=1;
-	    if((i1&i)!=0) i1 = (i1&(~i))|((0x40000000)>>(j0-32));
+	    if((i1&i)!=0) i1 = (i1&(~i))|((0x40000000)>>(j0-31));
 	}
 	SET_LDOUBLE_WORDS(x,se,i0,i1);
-	w = TWO64[sx]+x;
-	return w-TWO64[sx];
+	w = TWO63[sx]+x;
+	return w-TWO63[sx];
 }
 weak_alias (__rintl, rintl)

@@ -58,10 +58,7 @@ contact <bug-glibc@prep.ai.mit.edu>
 
      - exp2
      - nearbyint
-     - ceil
      - round
-     - rinttol
-     - rinttoll
      - roundtol
      - roundtoll
 

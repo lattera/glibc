@@ -199,7 +199,7 @@ _dl_check_map_versions (struct link_map *map, int verbose)
 				      aux->vna_flags & VER_FLG_WEAK);
 
 	      /* Compare the version index.  */
-	      if ((aux->vna_other & 0x7fff) > ndx_high)
+	      if ((unsigned int) (aux->vna_other & 0x7fff) > ndx_high)
 		ndx_high = aux->vna_other & 0x7fff;
 
 	      if (aux->vna_next == 0)
@@ -230,7 +230,7 @@ _dl_check_map_versions (struct link_map *map, int verbose)
       ent = (ElfW(Verdef)  *) (map->l_addr + def->d_un.d_ptr);
       while (1)
 	{
-	  if ((ent->vd_ndx & 0x7fff) > ndx_high)
+	  if ((unsigned int) (ent->vd_ndx & 0x7fff) > ndx_high)
 	    ndx_high = ent->vd_ndx & 0x7fff;
 
 	  if (ent->vd_next == 0)
@@ -247,9 +247,7 @@ _dl_check_map_versions (struct link_map *map, int verbose)
 	 which can be indexed by the version index in the VERSYM
 	 section.  */
       map->l_versions = (struct r_found_version *)
-	malloc ((ndx_high + 1) * sizeof (*map->l_versions));
-      memset (map->l_versions, '\0',
-	      (ndx_high + 1) * sizeof (*map->l_versions));
+	calloc (ndx_high + 1, sizeof (*map->l_versions));
       if (map->l_versions == NULL)
 	{
 	  _dl_signal_error (ENOMEM, (*map->l_name ? map->l_name : _dl_argv[0]),

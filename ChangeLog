@@ -1,3 +1,132 @@
+1997-04-09 01:24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* rellns-sh: Rewrite to work also in presence of symlinks.
+
+	* arpg/argp-fmtstream.c: Add casts to prevent warnings.
+	* argp/argp-fmtstream.h: Likewise.
+	* argp/argp-help.c: Likewise.
+
+	* elf/dl-minimal.c: Add definition of calloc.
+	* elf/version.c: Add casts to prevent warnings.
+	(_dl_check_map_versions): Use calloc instead of malloc+memset.
+
+	* locale/setlocale.c (_nl_current): Add element with index LC_ALL.
+	Reported by Greg McGary <gkm@eng.ascend.com>.
+
+	* manual/libc.texinfo: Update malloc documentation for new malloc.
+	* manual/memory.texi: Likewise.
+	Patch by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>.
+
+	* math/libm-test.c (check_long): New function.
+	(check_longlong): New function.
+	(rinttol_test): New function.
+	(rinttoll_test): New function.
+
+	* nis/nss_compat/compat-grp.c (in_blacklist): Improve a bit.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+
+	* stdlib/erand48_r.c (erand48_r): Build double value using
+	ieee754_double union and use random bits in different order to
+	increase effect of seed.
+	Reported by David Mosberger-Tang <davidm@AZStarNet.com>.
+
+	* sunrpc/svc_auth.c: Moved to ...
+	* sysdeps/generic/svc_auth.c: ...here.
+
+	* time/time.h: Pretty print.
+
+1997-04-08 07:19  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libio/genops.c (_IO_flush_all_linebuffered): don't flush on
+	a read-only stream.
+
+1997-04-09 01:19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/malloc.c (mALLOC_STATs) [MALLOC_DEBUG>1]: Put declaration
+	in correct place.
+	Patch by Marcus G. Daniels <marcus@cathcart.sysc.pdx.edu>.
+
+1997-04-07 15:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/Makefile (tests): Add tst-ferror.
+	* stdio-common/tst-ferror.c: New file.  Some tests for error
+	indicator of streams.
+	* stdio-common/tst-ferror.input: New file.
+
+	* isomac.c: Let tests not fail because the compiler defines itself
+	symbols which violate the name space rules.  gcc defines symbols
+	for the architecture which are not protected by an underscore
+	character.
+
+	* math/Makefile (libm-support): Add s_rinttol and s_rinttoll.
+	(libm-calls): Add s_clog.
+	* sysdeps/libm-ieee754/s_clog.c: New file.  Implementation of
+	logarithm of complex value.
+	* sysdeps/libm-ieee754/s_clogf.c: New file.
+	* sysdeps/libm-ieee754/s_clogl.c: New file.
+	* math/libm-test.c (clog_test): Compile this function.  Fix a few
+	typos.
+	(main): Call clog_test.
+
+	* sysdeps/libm-ieee754/s_rinttol.c: New file.  Round long double
+	value to long int.
+	* sysdeps/libm-i387/s_rinttol.S: New file.
+	* sysdeps/libm-ieee754/s_rinttoll.c: new file.  Round long double
+	value to long long int.
+	* sysdeps/libm-i387/s_rinttoll.S: New file.
+
+	* sysdeps/libm-ieee754/s_rintl.c: Many corrections.  The previous
+	version was full of errors.
+
+	* math/math.h (rinttol): Argument is of type `long double' not
+	`double'.
+	(rinttoll): Likewise.
+	(roundtol): Likewise.
+	(roundtoll): Likewise.
+
+1997-04-06 11:32  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* posix/getopt.c (_getopt_initialize): Preserve optind.
+	(_getopt_internal): Set optind to 1 if optind == 0 before
+	calling _getopt_initialize ().
+
+1997-04-05 16:45  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/rpcsvc/nislib.h: Change const nis_name to new type
+	const_nis_name.
+	* nis/nis_intern.c: Likewise.
+	* nis/nis_intern.h: Likewise.
+	* nis/nis_server.c: Likewise.
+	* nis/nis_subr.c: Likewise.
+	* nis/nis_table.c: Likewise.
+	* nis/nis_names.c: Likewise.  Fill out ns_request structure in
+	nis_add().
+
+	* nis/nss_compat/compat-pwd.c: Use reentrant netgroup functions.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+
+1997-03-27 07:37  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libio/fileops.c (_IO_file_overflow): Set error when try to write
+	on a read-only stream.
+
+	* sysdeps/gnu/utmpbits.h (ut_xtime): New symbol.
+	(ut_time): Define it only if _NO_UT_TIME is not defined.
+
+1997-04-06 00:42  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/tst-tsearch.c: Include <string.h>.  Define _GNU_SOURCE only
+	if not already defined.
+
+1997-04-05 16:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netatalk/at.h: Include <sys/socket.h> to
+	get definition of sa_family_t for <linux/atalk.h>.
+	Reported by a sun <asun@zoology.washington.edu>.
+
+	* malloc/malloc.c (cALLOc): Little optimization.
+
 1997-04-05 03:11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/arpa/inet.h: Rewrite.  Don't use the ugly BSD way to write

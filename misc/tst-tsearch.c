@@ -17,10 +17,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define _GNU_SOURCE	1
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE	1
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <search.h>
 
 #define SEED 0

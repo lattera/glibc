@@ -25,7 +25,7 @@
 /* Nearly the same as nis_getnames, but nis_getnames stopped
    when 2 points left */
 nis_name *
-__nis_expandname (const nis_name name)
+__nis_expandname (const char *name)
 {
   nis_name *getnames = NULL;
   char local_domain[NIS_MAXNAMELEN + 1];
@@ -145,13 +145,13 @@ __nis_expandname (const nis_name name)
 }
 
 fd_result *
-__nis_finddirectoy (nis_name dir_name)
+__nis_finddirectoy (const_nis_name name)
 {
   fd_args args;
   nis_error status;
   fd_result *res;
 
-  args.dir_name = dir_name;
+  args.dir_name = (char *) name;
   args.requester = nis_local_principal ();
 
   res = calloc (1, sizeof (fd_result));
@@ -160,7 +160,7 @@ __nis_finddirectoy (nis_name dir_name)
 
   if ((status = __do_niscall (NULL, 0, NIS_FINDDIRECTORY,
 			      (xdrproc_t) xdr_fd_args,
-			      (caddr_t) & args,
+			      (caddr_t) &args,
 			      (xdrproc_t) xdr_fd_result,
 			      (caddr_t) res, 0)) != RPC_SUCCESS)
     res->status = status;

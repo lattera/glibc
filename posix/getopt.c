@@ -397,7 +397,7 @@ _getopt_initialize (argc, argv, optstring)
      is the program name); the sequence of previously skipped
      non-option ARGV-elements is empty.  */
 
-  first_nonopt = last_nonopt = optind = 1;
+  first_nonopt = last_nonopt = optind;
 
   nextchar = NULL;
 
@@ -523,10 +523,11 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 {
   optarg = NULL;
 
-  if (!__getopt_initialized || optind == 0)
+  if (optind == 0 || !__getopt_initialized)
     {
+      if (optind == 0)
+	optind = 1;	/* Don't scan ARGV[0], the program name.  */
       optstring = _getopt_initialize (argc, argv, optstring);
-      optind = 1;		/* Don't scan ARGV[0], the program name.  */
       __getopt_initialized = 1;
     }
 

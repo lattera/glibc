@@ -157,7 +157,7 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	       the end of the buffer.  */
 	    nl = fs->p;
 	}
-      else if (fs->point_col + (nl - buf) < fs->rmargin)
+      else if (fs->point_col + (nl - buf) < (ssize_t) fs->rmargin)
 	{
 	  /* The buffer contains a full line that fits within the maximum
 	     line width.  Reset point and scan the next line.  */
@@ -309,7 +309,7 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 int
 __argp_fmtstream_ensure (struct argp_fmtstream *fs, size_t amount)
 {
-  if (fs->end - fs->p < amount)
+  if ((size_t) (fs->end - fs->p) < amount)
     {
       ssize_t wrote;
 
@@ -330,7 +330,7 @@ __argp_fmtstream_ensure (struct argp_fmtstream *fs, size_t amount)
 	  return 0;
 	}
 
-      if (fs->end - fs->buf < amount)
+      if ((size_t) (fs->end - fs->buf) < amount)
 	/* Gotta grow the buffer.  */
 	{
 	  size_t new_size = fs->end - fs->buf + amount;
@@ -354,7 +354,7 @@ __argp_fmtstream_ensure (struct argp_fmtstream *fs, size_t amount)
 ssize_t
 __argp_fmtstream_printf (struct argp_fmtstream *fs, const char *fmt, ...)
 {
-  size_t out;
+  int out;
   size_t size_guess = PRINTF_SIZE_GUESS; /* How much space to reserve. */
 
   do

@@ -38,7 +38,6 @@ will be freed automatically.  @xref{Variable Size Automatic}.
 				 calling function returns.
 * Relocating Allocator::        Waste less memory, if you can tolerate
 				 automatic relocation of the blocks you get.
-* Memory Warnings::		Getting warnings when memory is nearly full.
 @end menu
 
 @node Memory Concepts
@@ -140,6 +139,8 @@ any time (or never).
 				 these functions.
 * Aligned Memory Blocks::       Allocating specially aligned memory:
 				 @code{memalign} and @code{valloc}.
+* Malloc Tunable Parameters::   Use @code{mallopt} to adjust allocation
+                                 parameters.
 * Heap Consistency Checking::   Automatic checking for errors.
 * Hooks for Malloc::            You can use these hooks for debugging
 				 programs that use @code{malloc}.
@@ -238,10 +239,10 @@ savestring (const char *ptr, size_t len)
 
 The block that @code{malloc} gives you is guaranteed to be aligned so
 that it can hold any type of data.  In the GNU system, the address is
-always a multiple of eight; if the size of block is 16 or more, then the
-address is always a multiple of 16.  Only rarely is any higher boundary
-(such as a page boundary) necessary; for those cases, use
-@code{memalign} or @code{valloc} (@pxref{Aligned Memory Blocks}).
+always a multiple of eight on most systems, and a multiple of 16 on
+64-bit systems.  Only rarely is any higher boundary (such as a page
+boundary) necessary; for those cases, use @code{memalign} or
+@code{valloc} (@pxref{Aligned Memory Blocks}).
 
 Note that the memory located after the end of the block is likely to be
 in use for something else; perhaps a block already allocated by another
@@ -368,9 +369,11 @@ xrealloc (void *ptr, size_t size)
 @end smallexample
 
 You can also use @code{realloc} to make a block smaller.  The reason you
-would do this is to avoid tying up a lot of memory space when only a little
-is needed.  Making a block smaller sometimes necessitates copying it, so it
-can fail if no other space is available.
+is needed.
+@comment The following is no longer true with the new malloc.
+@comment But it seems wise to keep the warning for other implementations.
+In several allocation implementations, making a block smaller sometimes
+necessitates copying it, so it can fail if no other space is available.
 
 If the new size you specify is the same as the old size, @code{realloc}
 is guaranteed to change nothing and return the same address that you gave.
@@ -404,10 +407,18 @@ calloc (size_t count, size_t eltsize)
 @}
 @end smallexample
 
+But in general, it is not guaranteed that @code{calloc} calls
+@code{malloc} internally.  Therefore, if an application provides its own
+@code{malloc}/@code{realloc}/@code{free} outside the C library, it
+should always define @code{calloc}, too.
+
 @node Efficiency and Malloc
 @subsection Efficiency Considerations for @code{malloc}
 @cindex efficiency and @code{malloc}
 
+@ignore
+
+@c No longer true, see below instead.
 To make the best use of @code{malloc}, it helps to know that the GNU
 version of @code{malloc} always dispenses small amounts of memory in
 blocks whose sizes are powers of two.  It keeps separate pools for each
@@ -433,6 +444,24 @@ time using it.  Also, large blocks are normally fewer in number.
 Therefore, for large blocks, it makes sense to use a method which takes
 more time to minimize the wasted space.
 
+@end ignore
+
+As apposed to other versions, the @code{malloc} in GNU libc does not
+round up block sizes to powers of two, neither for large nor for small
+sizes.  Neighboring chunks can be coalesced on a @code{free} no matter
+what their size is.  This makes the implementation suitable for all
+kinds of allocation patterns without generally incurring high memory
+waste through fragmentation.
+
+Very large blocks (much larger than a page) are allocated with
+@code{mmap} (anonymous or via @code{/dev/zero}) by this implementation.
+This has the great advantage that these chunks are returned to the
+system immediately when they are freed.  Therefore, it cannot happen
+that a large chunk becomes ``locked'' in between smaller ones and even
+after calling @code{free} wastes memory.  The size threshold for
+@code{mmap} to be used can be adjusted with @code{mallopt}.  The use of
+@code{mmap} can also be disabled completely.
+
 @node Aligned Memory Blocks
 @subsection Allocating Aligned Memory Blocks
 
@@ -440,10 +469,10 @@ more time to minimize the wasted space.
 @cindex alignment (with @code{malloc})
 @pindex stdlib.h
 The address of a block returned by @code{malloc} or @code{realloc} in
-the GNU system is always a multiple of eight.  If you need a block whose
-address is a multiple of a higher power of two than that, use
-@code{memalign} or @code{valloc}.  These functions are declared in
-@file{stdlib.h}.
+the GNU system is always a multiple of eight (or sixteen on 64-bit
+systems).  If you need a block whose address is a multiple of a higher
+power of two than that, use @code{memalign} or @code{valloc}.  These
+functions are declared in @file{stdlib.h}.
 
 With the GNU library, you can use @code{free} to free the blocks that
 @code{memalign} and @code{valloc} return.  That does not work in BSD,
@@ -454,9 +483,9 @@ however---BSD does not provide any way to free such blocks.
 @deftypefun {void *} memalign (size_t @var{boundary}, size_t @var{size})
 The @code{memalign} function allocates a block of @var{size} bytes whose
 address is a multiple of @var{boundary}.  The @var{boundary} must be a
-power of two!  The function @code{memalign} works by calling
-@code{malloc} to allocate a somewhat larger block, and then returning an
-address within the block that is on the specified boundary.
+power of two!  The function @code{memalign} works by allocating a
+somewhat larger block, and then returning an address within the block
+that is on the specified boundary.
 @end deftypefun
 
 @comment malloc.h stdlib.h
@@ -473,6 +502,42 @@ valloc (size_t size)
 @}
 @end smallexample
 @c !!! xref getpagesize
+@end deftypefun
+
+@node Malloc Tunable Parameters
+@subsection Malloc Tunable Parameters
+
+You can adjust some parameters for dynamic memory allocation with the
+@code{mallopt} function.  This function is the general SVID/XPG
+interface, defined in @file{malloc.h}.
+@pindex malloc.h
+
+@deftypefun int mallopt (int @var{param}, int @var{value})
+When calling @code{mallopt}, the @var{param} argument specifies the
+parameter to be set, and @var{value} the new value to be set.  Possible
+choices for @var{param}, as defined in @file{malloc.h}, are:
+
+@table @code
+@item M_TRIM_THRESHOLD
+This is the minimum size (in bytes) of the top-most, releaseable chunk
+that will cause @code{sbrk} to be called with a negative argument in
+order to return memory to the system.
+@item M_TOP_PAD
+This parameter determines the amount of extra memory to obtain from the
+system when a call to @code{sbrk} is required.  It also specifies the
+number of bytes to retain when shrinking the heap by calling @code{sbrk}
+with a negative argument.  This provides the necessary hysteresis in
+heap size such that excessive amounts of system calls can be avoided.
+@item M_MMAP_THRESHOLD
+All chunks larger than this value are allocated outside the normal
+heap, using the @code{mmap} system call.  This way it is guaranteed
+that the memory for these chunks can be returned to the system on
+@code{free}.
+@item M_MMAP_MAX
+The maximum number of chunks to allocate with @code{mmap}.  Setting this
+to zero disables all use of @code{mmap}.
+@end table
+
 @end deftypefun
 
 @node Heap Consistency Checking
@@ -636,44 +701,62 @@ installing such hooks.
 
 @cindex allocation statistics
 You can get information about dynamic storage allocation by calling the
-@code{mstats} function.  This function and its associated data type are
-declared in @file{malloc.h}; they are a GNU extension.
+@code{mallinfo} function.  This function and its associated data type
+are declared in @file{malloc.h}; they are an extension of the standard
+SVID/XPG version.
 @pindex malloc.h
 
 @comment malloc.h
 @comment GNU
-@deftp {Data Type} {struct mstats}
+@deftp {Data Type} {struct mallinfo}
 This structure type is used to return information about the dynamic
 storage allocator.  It contains the following members:
 
 @table @code
-@item size_t bytes_total
-This is the total size of memory managed by @code{malloc}, in bytes.
+@item int arena
+This is the total size of memory allocated with @code{sbrk} by
+@code{malloc}, in bytes.
 
-@item size_t chunks_used
-This is the number of chunks in use.  (The storage allocator internally
-gets chunks of memory from the operating system, and then carves them up
-to satisfy individual @code{malloc} requests; see @ref{Efficiency and
-Malloc}.)
+@item int ordblks
+This is the number of chunks not in use.  (The storage allocator
+internally gets chunks of memory from the operating system, and then
+carves them up to satisfy individual @code{malloc} requests; see
+@ref{Efficiency and Malloc}.)
 
-@item size_t bytes_used
-This is the number of bytes in use.
+@item int smblks
+This field is unused.
 
-@item size_t chunks_free
-This is the number of chunks which are free -- that is, that have been
-allocated by the operating system to your program, but which are not
-now being used.
+@item int hblks
+This is the total number of chunks allocated with @code{mmap}.
 
-@item size_t bytes_free
-This is the number of bytes which are free.
+@item int hblkhd
+This is the total size of memory allocated with @code{mmap}, in bytes.
+
+@item int usmblks
+This field is unused.
+
+@item int fsmblks
+This field is unused.
+
+@item int uordblks
+This is the total size of memory occupied by chunks handed out by
+@code{malloc}.
+
+@item int fordblks
+This is the total size of memory occupied by free (not in use) chunks.
+
+@item int keepcost
+This is the size of the top-most, releaseable chunk that normally
+borders the end of the heap (i.e. the ``brk'' of the process).
+
 @end table
 @end deftp
 
 @comment malloc.h
-@comment GNU
-@deftypefun {struct mstats} mstats (void)
+@comment SVID
+@deftypefun {struct mallinfo} mallinfo (void)
 This function returns information about the current dynamic memory usage
-in a structure of type @code{struct mstats}.
+in a structure of type @code{struct mallinfo}.
 @end deftypefun
 
 @node Summary of Malloc
@@ -706,6 +789,9 @@ Allocate a block of @var{size} bytes, starting on a page boundary.
 Allocate a block of @var{size} bytes, starting on an address that is a
 multiple of @var{boundary}.  @xref{Aligned Memory Blocks}.
 
+@item int mallopt (int @var{param}, int @var{value})
+Adjust a tunable parameter.  @xref{Malloc Tunable Parameters}
+
 @item int mcheck (void (*@var{abortfn}) (void))
 Tell @code{malloc} to perform occasional consistency checks on
 dynamically allocated memory, and to call @var{abortfn} when an
@@ -720,7 +806,7 @@ A pointer to a function that @code{realloc} uses whenever it is called.
 @item void (*__free_hook) (void *@var{ptr})
 A pointer to a function that @code{free} uses whenever it is called.
 
-@item struct mstats mstats (void)
+@item struct mallinfo mallinfo (void)
 Return information about the current dynamic memory usage.
 @xref{Statistics of Malloc}.
 @end table
@@ -1744,10 +1830,13 @@ If enough memory is not available, this function returns a null pointer
 and does not modify @code{*@var{handleptr}}.
 @end deftypefun
 
-@node Memory Warnings
-@section Memory Usage Warnings
-@cindex memory usage warnings
-@cindex warnings of memory almost full
+@ignore
+@comment No longer available...
+
+@comment @node Memory Warnings
+@comment @section Memory Usage Warnings
+@comment @cindex memory usage warnings
+@comment @cindex warnings of memory almost full
 
 @pindex malloc.c
 You can ask for warnings as the program approaches running out of memory
@@ -1757,7 +1846,7 @@ system.  This is a GNU extension declared in @file{malloc.h}.
 
 @comment malloc.h
 @comment GNU
-@deftypefun void memory_warnings (void *@var{start}, void (*@var{warn-func}) (const char *))
+@comment @deftypefun void memory_warnings (void *@var{start}, void (*@var{warn-func}) (const char *))
 Call this function to request warnings for nearing exhaustion of virtual
 memory.
 
@@ -1775,3 +1864,5 @@ Normally it ought to display the string for the user to read.
 The warnings come when memory becomes 75% full, when it becomes 85%
 full, and when it becomes 95% full.  Above 95% you get another warning
 each time memory usage increases.
+
+@end ignore

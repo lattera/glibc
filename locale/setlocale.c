@@ -49,6 +49,9 @@ static struct locale_data * *const _nl_current[] =
     [category] = &_nl_current_##category,
 #include "categories.def"
 #undef	DEFINE_CATEGORY
+    /* We need this additional element to simplify the code.  It must
+       simply be != NULL.  */
+    [LC_ALL] = (struct locale_data **) ~0ul
   };
 
 /* Array indexed by category of pointers to _nl_C_CATEGORY slots.

@@ -317,6 +317,7 @@ DEFUN(_IO_file_overflow, (f, ch),
 {
   if (f->_flags & _IO_NO_WRITES) /* SET ERROR */
     {
+      f->_flags |= _IO_ERR_SEEN;
       __set_errno (EBADF);
       return EOF;
     }

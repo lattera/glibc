@@ -367,6 +367,63 @@ check_bool (const char *test_name, int computed)
 
 
 static void
+check_long (const char *test_name, long int computed, long int expected)
+{
+  long int diff = computed - expected;
+  int result = diff == 0;
+
+  if (result)
+    {
+      if (verbose > 2)
+	printf ("Pass: %s\n", test_name);
+    }
+  else
+    {
+      if (verbose)
+	printf ("Fail: %s\n", test_name);
+      if (verbose > 1)
+	{
+	  printf ("Result:\n");
+	  printf (" is:         %ld\n", computed);
+	  printf (" should be:  %ld\n", expected);
+	}
+      noErrors++;
+    }
+
+  fpstack_test (test_name);
+}
+
+
+static void
+check_longlong (const char *test_name, long long int computed,
+		long long int expected)
+{
+  long long int diff = computed - expected;
+  int result = diff == 0;
+
+  if (result)
+    {
+      if (verbose > 2)
+	printf ("Pass: %s\n", test_name);
+    }
+  else
+    {
+      if (verbose)
+	printf ("Fail: %s\n", test_name);
+      if (verbose > 1)
+	{
+	  printf ("Result:\n");
+	  printf (" is:         %lld\n", computed);
+	  printf (" should be:  %lld\n", expected);
+	}
+      noErrors++;
+    }
+
+  fpstack_test (test_name);
+}
+
+
+static void
 check_isnan (const char *test_name, MATHTYPE computed)
 {
   output_isvalue (test_name, isnan (computed), computed);
@@ -2485,6 +2542,7 @@ ctanh_test (void)
   check_isnan ("real(ctanh(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(ctanh(NaN + i NaN)) = NaN", __imag__ result);
 }
+#endif
 
 
 static void
@@ -2504,7 +2562,7 @@ clog_test (void)
   check ("imag(clog(0 + i0)) = 0", __imag__ result, 0);
   result = FUNC(clog) (BUILD_COMPLEX (0, minus_zero));
   check_isinfn ("real(clog(0 - i0)) = -Inf", __real__ result);
-  check ("imag(clog(0 - i0)) = -0", __imag__ result, -minus_zero);
+  check ("imag(clog(0 - i0)) = -0", __imag__ result, minus_zero);
 
   result = FUNC(clog) (BUILD_COMPLEX (minus_infty, plus_infty));
   check_isinfp ("real(clog(-Inf + i Inf)) = +Inf", __real__ result);
@@ -2566,10 +2624,10 @@ clog_test (void)
   check ("imag(clog(+Inf + i1)) = 0", __imag__ result, 0);
   result = FUNC(clog) (BUILD_COMPLEX (plus_infty, minus_zero));
   check_isinfp ("real(clog(+Inf - i0)) = +Inf", __real__ result);
-  check ("imag(clog(+Inf - i0)) = -0", __imag__ result, -0);
+  check ("imag(clog(+Inf - i0)) = -0", __imag__ result, minus_zero);
   result = FUNC(clog) (BUILD_COMPLEX (plus_infty, -1));
   check_isinfp ("real(clog(+Inf - i1)) = +Inf", __real__ result);
-  check ("imag(clog(+Inf - i1)) = -0", __imag__ result, -0);
+  check ("imag(clog(+Inf - i1)) = -0", __imag__ result, minus_zero);
 
   result = FUNC(clog) (BUILD_COMPLEX (plus_infty, nan_value));
   check_isinfp ("real(clog(+Inf + i NaN)) = +Inf", __real__ result);
@@ -2617,6 +2675,7 @@ clog_test (void)
 }
 
 
+#if 0
 static void
 csqrt_test (void)
 {
@@ -2738,6 +2797,46 @@ csqrt_test (void)
   check_isnan ("imag(csqrt(NaN + i NaN)) = NaN", __imag__ result);
 }
 #endif
+
+
+static void
+rinttol_test (void)
+{
+  /* XXX this test is incomplete.  We need to have a way to specifiy
+     the rounding method and test the critical cases.  So far, only
+     unproblematic numbers are tested.  */
+
+  check_long ("rinttol(0) = 0", 0.0, 0);
+  check_long ("rinttol(-0) = 0", minus_zero, 0);
+  check_long ("rinttol(0.2) = 0", 0.2, 0);
+  check_long ("rinttol(-0.2) = 0", -0.2, 0);
+
+  check_long ("rinttol(1.4) = 1", 1.4, 1);
+  check_long ("rinttol(-1.4) = -1", -1.4, -1);
+
+  check_long ("rinttol(8388600.3) = 8388600", 8388600.3, 8388600);
+  check_long ("rinttol(-8388600.3) = -8388600", -8388600.3, -8388600);
+}
+
+
+static void
+rinttoll_test (void)
+{
+  /* XXX this test is incomplete.  We need to have a way to specifiy
+     the rounding method and test the critical cases.  So far, only
+     unproblematic numbers are tested.  */
+
+  check_longlong ("rinttoll(0) = 0", 0.0, 0);
+  check_longlong ("rinttoll(-0) = 0", minus_zero, 0);
+  check_longlong ("rinttoll(0.2) = 0", 0.2, 0);
+  check_longlong ("rinttoll(-0.2) = 0", -0.2, 0);
+
+  check_longlong ("rinttoll(1.4) = 1", 1.4, 1);
+  check_longlong ("rinttoll(-1.4) = -1", -1.4, -1);
+
+  check_longlong ("rinttoll(8388600.3) = 8388600", 8388600.3, 8388600);
+  check_longlong ("rinttoll(-8388600.3) = -8388600", -8388600.3, -8388600);
+}
 
 
 static void
@@ -3070,6 +3169,10 @@ main (int argc, char *argv[])
   cexp_test ();
   csinh_test ();
   ccosh_test ();
+  clog_test ();
+
+  rinttol_test ();
+  rinttoll_test ();
 
   identities ();
   inverse_functions ();

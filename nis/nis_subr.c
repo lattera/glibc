@@ -23,7 +23,7 @@
 #include <rpcsvc/nislib.h>
 
 nis_name
-nis_leaf_of (const nis_name name)
+nis_leaf_of (const_nis_name name)
 {
   static char result[NIS_MAXNAMELEN + 1];
 
@@ -31,7 +31,7 @@ nis_leaf_of (const nis_name name)
 }
 
 nis_name
-nis_leaf_of_r (const nis_name name, char *buffer, size_t buflen)
+nis_leaf_of_r (const_nis_name name, char *buffer, size_t buflen)
 {
   size_t i = 0;
 
@@ -53,7 +53,7 @@ nis_leaf_of_r (const nis_name name, char *buffer, size_t buflen)
 }
 
 nis_name
-nis_name_of (const nis_name name)
+nis_name_of (const_nis_name name)
 {
   static char result[NIS_MAXNAMELEN + 1];
 
@@ -61,7 +61,7 @@ nis_name_of (const nis_name name)
 }
 
 nis_name
-nis_name_of_r (const nis_name name, char *buffer, size_t buflen)
+nis_name_of_r (const_nis_name name, char *buffer, size_t buflen)
 {
   char *local_domain;
   int diff;
@@ -90,7 +90,7 @@ nis_name_of_r (const nis_name name, char *buffer, size_t buflen)
 }
 
 nis_name
-nis_domain_of (const nis_name name)
+nis_domain_of (const_nis_name name)
 {
   static char result[NIS_MAXNAMELEN + 1];
 
@@ -98,7 +98,7 @@ nis_domain_of (const nis_name name)
 }
 
 nis_name
-nis_domain_of_r (const nis_name name, char *buffer, size_t buflen)
+nis_domain_of_r (const_nis_name name, char *buffer, size_t buflen)
 {
   char *cptr;
   size_t cptr_len;
@@ -122,7 +122,7 @@ nis_domain_of_r (const nis_name name, char *buffer, size_t buflen)
 }
 
 static int
-count_dots (const nis_name str)
+count_dots (const_nis_name str)
 {
   int count = 0;
   size_t i;
@@ -135,7 +135,7 @@ count_dots (const nis_name str)
 }
 
 nis_name *
-nis_getnames (const nis_name name)
+nis_getnames (const_nis_name name)
 {
   nis_name *getnames = NULL;
   char local_domain[NIS_MAXNAMELEN + 1];
@@ -267,7 +267,7 @@ nis_freenames (nis_name *names)
 }
 
 name_pos
-nis_dir_cmp (const nis_name n1, const nis_name n2)
+nis_dir_cmp (const_nis_name n1, const_nis_name n2)
 {
   int len1, len2;
 

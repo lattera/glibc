@@ -1,5 +1,5 @@
 /* The `struct utmp' type, describing entries in the utmp file.  GNU version.
-   Copyright (C) 1993, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -100,8 +100,13 @@ struct utmp
 };
 
 /* Backwards compatibility hacks.  */
-#define ut_time	ut_tv.tv_sec
-#define ut_addr ut_addr_v6[0]
+#ifndef _NO_UT_TIME
+/* We have a problem here: `ut_time' is also used otherwise.  Define
+   _NO_UT_TIME if the compiler complains.  */
+# define ut_time	ut_tv.tv_sec
+#endif
+#define ut_xtime	ut_tv.tv_sec
+#define ut_addr		ut_addr_v6[0]
 
 /* Tell the user that we have a modern system with UT_HOST, UT_PID,
    UT_TYPE, UT_ID and UT_TV fields.  */

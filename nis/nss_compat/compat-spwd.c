@@ -147,7 +147,7 @@ internal_setspent (ent_t *ent)
   /* If something was left over free it.  */
   if (ent->netgroup)
     __internal_endnetgrent (&ent->netgrdata);
-  
+
   if (ent->oldkey != NULL)
     {
       free (ent->oldkey);
@@ -166,7 +166,7 @@ internal_setspent (ent_t *ent)
       ent->names = NULL;
     }
   ent->names_nr = 0;
-  
+
   ent->blacklist.current = 0;
   if (ent->blacklist.data != NULL)
     ent->blacklist.data[0] = '\0';
@@ -199,7 +199,7 @@ _nss_compat_setspent (void)
       __nss_database_lookup ("shadow_compat", "passwd_compat", "nis", &ni);
       use_nisplus = (strcmp (ni->name, "nisplus") == 0);
     }
-  
+
   result = internal_setspent (&ext_ent);
 
   __libc_lock_unlock (lock);
@@ -240,11 +240,11 @@ internal_endspent (ent_t *ent)
       ent->names = NULL;
     }
   ent->names_nr = 0;
-  
+
   ent->blacklist.current = 0;
   if (ent->blacklist.data != NULL)
     ent->blacklist.data[0] = '\0';
-  
+
   give_spwd_free (&ent->pwd);
 
   return NSS_STATUS_SUCCESS;
@@ -342,8 +342,8 @@ getspent_next_nisplus_netgr (struct spwd *result, ent_t *ent, char *group,
   int status, parse_res;
   size_t p2len;
   nis_result *nisres;
-  
-  /* Maybe we should use domainname here ? We need the current 
+
+  /* Maybe we should use domainname here ? We need the current
      domainname for the domain field in netgroups */
   if (yp_get_default_domain (&ypdomain) != YPERR_SUCCESS)
     {
@@ -386,7 +386,7 @@ getspent_next_nisplus_netgr (struct spwd *result, ent_t *ent, char *group,
         }
       p2 = buffer + (buflen - p2len);
       buflen -= p2len;
-      {      
+      {
         char buf[strlen (user) + 30];
         sprintf(buf, "[name=%s],passwd.org_dir", user);
         nisres = nis_list(buf, EXPAND_NAME, NULL, NULL);
@@ -398,7 +398,7 @@ getspent_next_nisplus_netgr (struct spwd *result, ent_t *ent, char *group,
         }
       parse_res = _nss_nisplus_parse_spent (nisres, result, buffer, buflen);
       nis_freeresult (nisres);
-      
+
       if (parse_res)
         {
           copy_spwd_changes (result, &ent->pwd, p2, p2len);
@@ -414,9 +414,9 @@ getspent_next_netgr (struct spwd *result, ent_t *ent, char *group,
                      char *buffer, size_t buflen)
 {
   if (use_nisplus)
-    return getpwent_next_nisplus_netgr (result, ent, group, buffer, buflen);
+    return getspent_next_nisplus_netgr (result, ent, group, buffer, buflen);
   else
-    return getpwent_next_nis_netgr (result, ent, group, buffer, buflen);
+    return getspent_next_nis_netgr (result, ent, group, buffer, buflen);
 }
 
 static enum nss_status
@@ -426,7 +426,7 @@ getspent_next_nisplus (struct spwd *result, ent_t *ent, char *buffer,
   int parse_res;
   size_t p2len;
   char *p2;
-  
+
   if (ent->names == NULL)
     {
       ent->names = nis_getnames ("passwd.org_dir");
@@ -436,7 +436,7 @@ getspent_next_nisplus (struct spwd *result, ent_t *ent, char *buffer,
           return NSS_STATUS_UNAVAIL;
         }
     }
-  
+
   p2len = spwd_need_buflen (&ent->pwd);
   if (p2len > buflen)
     {
@@ -462,8 +462,8 @@ getspent_next_nisplus (struct spwd *result, ent_t *ent, char *buffer,
       else
         {
           nis_result *res;
-          
-          res = nis_next_entry(ent->names[ent->names_nr], 
+
+          res = nis_next_entry(ent->names[ent->names_nr],
                                &ent->result->cookie);
           nis_freeresult (ent->result);
           ent->result = res;
@@ -484,16 +484,16 @@ getspent_next_nisplus (struct spwd *result, ent_t *ent, char *buffer,
                 }
             }
         }
-      parse_res = _nss_nisplus_parse_spent (ent->result, result, buffer, 
+      parse_res = _nss_nisplus_parse_spent (ent->result, result, buffer,
                                             buflen);
-      if (parse_res && 
+      if (parse_res &&
           in_blacklist (result->sp_namp, strlen (result->sp_namp), ent))
         parse_res = 0; /* if result->pw_name in blacklist,search next entry */
     }
   while (!parse_res);
-  
+
   copy_spwd_changes (result, &ent->pwd, p2, p2len);
-  
+
   return NSS_STATUS_SUCCESS;
 }
 
@@ -576,7 +576,7 @@ getspent_next_nis (struct spwd *result, ent_t *ent,
 
 /* This function handle the +user entrys in /etc/shadow */
 static enum nss_status
-getspent_next_file_plususer (struct spwd *result, char *buffer, 
+getspent_next_file_plususer (struct spwd *result, char *buffer,
                              size_t buflen)
 {
   struct parser_data *data = (void *) buffer;
@@ -584,11 +584,11 @@ getspent_next_file_plususer (struct spwd *result, char *buffer,
   int parse_res;
   char *p;
   size_t plen;
-  
+
   memset (&pwd, '\0', sizeof (struct spwd));
-  
+
   copy_spwd_changes (&pwd, result, NULL, 0);
-  
+
   plen = spwd_need_buflen (&pwd);
   if (plen > buflen)
     {
@@ -597,19 +597,19 @@ getspent_next_file_plususer (struct spwd *result, char *buffer,
     }
   p = buffer + (buflen - plen);
   buflen -= plen;
-  
+
   if (use_nisplus) /* Do the NIS+ query here */
     {
       nis_result *res;
       char buf[strlen (result->sp_namp) + 24];
-      
+
       sprintf(buf, "[name=%s],passwd.org_dir",
               &result->sp_namp[1]);
       res = nis_list(buf, EXPAND_NAME, NULL, NULL);
       if (niserr2nss (res->status) != NSS_STATUS_SUCCESS)
         {
           enum nss_status status =  niserr2nss (res->status);
-          
+
           nis_freeresult (res);
           return status;
         }
@@ -621,22 +621,22 @@ getspent_next_file_plususer (struct spwd *result, char *buffer,
       char *domain;
       char *outval;
       int outvallen;
-      
+
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
         return NSS_STATUS_TRYAGAIN;
-      
+
       if (yp_match (domain, "passwd.byname", &result->sp_namp[1],
                     strlen (result->sp_namp) - 1, &outval, &outvallen)
           != YPERR_SUCCESS)
         return NSS_STATUS_TRYAGAIN;
-      p = strncpy (buffer, outval, 
+      p = strncpy (buffer, outval,
                    buflen < outvallen ? buflen : outvallen);
       free (outval);
       while (isspace (*p))
         p++;
       parse_res = _nss_files_parse_spent (p, result, data, buflen);
     }
-  
+
   if (parse_res)
     {
       copy_spwd_changes (result, &pwd, p, plen);
@@ -660,8 +660,7 @@ getspent_next_file (struct spwd *result, ent_t *ent,
   struct parser_data *data = (void *) buffer;
   while (1)
     {
-      char *p, *p2;
-      size_t p2len;
+      char *p;
 
       do
 	{
@@ -676,10 +675,10 @@ getspent_next_file (struct spwd *result, ent_t *ent,
 	  while (isspace (*p))
 	    ++p;
 	}
-      while (*p == '\0' || *p == '#' ||		/* Ignore empty and comment lines.  */
+      while (*p == '\0' || *p == '#'	/* Ignore empty and comment lines.  */
       /* Parse the line.  If it is invalid, loop to
          get the next line of the file to parse.  */
-	     !_nss_files_parse_spent (p, result, data, buflen));
+	     || !_nss_files_parse_spent (p, result, data, buflen));
 
       if (result->sp_namp[0] != '+' && result->sp_namp[0] != '-')
 	/* This is a real entry.  */
@@ -689,15 +688,19 @@ getspent_next_file (struct spwd *result, ent_t *ent,
       if (result->sp_namp[0] == '-' && result->sp_namp[1] == '@'
 	  && result->sp_namp[2] != '\0')
 	{
-	  char *user, *host, *domain;
+          char buf2[1024];
+ 	  char *user, *host, *domain;
+          struct __netgrent netgrdata;
 
-	  setnetgrent (&result->sp_namp[2]);
-	  while (getnetgrent (&host, &user, &domain))
+          bzero (&netgrdata, sizeof (struct __netgrent));
+          __internal_setnetgrent (&result->sp_namp[2], &netgrdata);
+	  while (__internal_getnetgrent_r (&host, &user, &domain,
+					   &netgrdata, buf2, sizeof (buf2)))
 	    {
 	      if (user != NULL && user[0] != '-')
 		blacklist_store_name (user, ent);
 	    }
-	  endnetgrent ();
+	  __internal_endnetgrent (&netgrdata);
 	  continue;
 	}
 
@@ -732,7 +735,7 @@ getspent_next_file (struct spwd *result, ent_t *ent,
 	  && result->sp_namp[1] != '@')
 	{
           enum nss_status status;
-	  
+
           status = getspent_next_file_plususer (result, buffer, buflen);
           if (status == NSS_STATUS_SUCCESS) /* We found the entry. */
             break;
@@ -800,7 +803,7 @@ _nss_compat_getspent_r (struct spwd *pwd, char *buffer, size_t buflen)
       __nss_database_lookup ("shadow_compat", "passwd_compat", "nis", &ni);
       use_nisplus = (strcmp (ni->name, "nisplus") == 0);
     }
-  
+
   /* Be prepared that the setspent function was not called before.  */
   if (ext_ent.stream == NULL)
     status = internal_setspent (&ext_ent);
@@ -830,7 +833,7 @@ _nss_compat_getspnam_r (const char *name, struct spwd *pwd,
       __nss_database_lookup ("shadow_compat", "passwd_compat", "nis", &ni);
       use_nisplus = (strcmp (ni->name, "nisplus") == 0);
     }
-  
+
   status = internal_setspent (&ent);
   if (status != NSS_STATUS_SUCCESS)
     return status;
@@ -890,16 +893,19 @@ blacklist_store_name (const char *name, ent_t *ent)
   return;
 }
 
-/* returns TRUE if ent->blacklist contains name, else FALSE */
+/* Returns TRUE if ent->blacklist contains name, else FALSE.  */
 static bool_t
 in_blacklist (const char *name, int namelen, ent_t *ent)
 {
   char buf[namelen + 3];
+  char *cp;
 
   if (ent->blacklist.data == NULL)
     return FALSE;
 
-  stpcpy (stpcpy (stpcpy (buf, "|"), name), "|");
+  buf[0] = '|';
+  cp = stpcpy (&buf[1], name);
+  *cp++= '|';
+  *cp = '\0';
   return strstr (ent->blacklist.data, buf) != NULL;
 }
-

@@ -1086,14 +1086,14 @@ hol_entry_help (struct hol_entry *entry, const struct argp_state *state,
       const char *fstr = filter_doc (tstr, real->key, entry->argp, state);
       if (fstr && *fstr)
 	{
-	  unsigned col = __argp_fmtstream_point (stream);
+	  unsigned int col = __argp_fmtstream_point (stream);
 
 	  __argp_fmtstream_set_lmargin (stream, uparams.opt_doc_col);
 	  __argp_fmtstream_set_wmargin (stream, uparams.opt_doc_col);
 
-	  if (col > uparams.opt_doc_col + 3)
+	  if (col > (unsigned int) (uparams.opt_doc_col + 3))
 	    __argp_fmtstream_putc (stream, '\n');
-	  else if (col >= uparams.opt_doc_col)
+	  else if (col >= (unsigned int) uparams.opt_doc_col)
 	    __argp_fmtstream_puts (stream, "   ");
 	  else
 	    indent_to (stream, uparams.opt_doc_col);
