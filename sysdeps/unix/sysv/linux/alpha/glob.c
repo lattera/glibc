@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,6 +44,9 @@ extern void __new_globfree (glob_t *__pglob);
 
 versioned_symbol (libc, __new_glob, glob, GLIBC_2_1);
 versioned_symbol (libc, __new_globfree, globfree, GLIBC_2_1);
+libc_hidden_ver (__new_glob, glob)
+libc_hidden_ver (__new_globfree, globfree)
 
 weak_alias (__new_glob, glob64)
 weak_alias (__new_globfree, globfree64)
+libc_hidden_ver (__new_globfree, globfree64)
