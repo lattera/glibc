@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.1\n"
 "POT-Creation-Date: 1998-11-28 09:29-0800\n"
-"PO-Revision-Date: 1999-09-26 21:59+02:00\n"
+"PO-Revision-Date: 1999-11-09 13:01+01:00\n"
 "Last-Translator: Vladimir Michl <Vladimir.Michl@seznam.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -133,10 +133,10 @@ msgstr "Zapsání výstup do souboru SOUBOR"
 
 #: catgets/gencat.c:115
 msgid ""
-"Generate message catalog.\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
+"Generate message catalog.\\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
 msgstr ""
-"  Generuje katalog zpráv.\vJe-li VSTUPNÍ_SOUBOR -, vstup bude naèten ze\n"
+"  Generuje katalog zpráv.\\vJe-li VSTUPNÍ_SOUBOR -, vstup bude naèten ze\n"
 "standardního vstupu. Je-li VÝSTUPNÍ_SOUBOR -, výstup bude zapsán na standardní\n"
 "výstup.\n"
 
@@ -1441,7 +1441,7 @@ msgstr "Jméno není tímto serverem obsluhováno"
 
 #: nis/nis_error.c:41
 msgid "Server out of memory"
-msgstr "Pamì» serveru byla vyøerpána"
+msgstr "Pamì» serveru byla vyèerpána"
 
 #: nis/nis_error.c:42
 msgid "Object with same name exists"
@@ -3775,14 +3775,14 @@ msgstr "Pou¾ití: %s vstupní_soubor\n"
 #, c-format
 msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
 msgstr ""
-"	%s [-abkCLNTM][-Dnázev[=hodnota]] [-i velikost] [-I [-K sekundy]]\n"
+"\t%s [-abkCLNTM][-Dnázev[=hodnota]] [-i velikost] [-I [-K sekundy]]\n"
 "           [-Y cesta] vst_soubor\n"
 
 #: sunrpc/rpc_main.c:1418
 #, c-format
 msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
 msgstr ""
-"	%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o výst_soubor]\n"
+"\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o výst_soubor]\n"
 "           [vst_soubor]\n"
 
 #: sunrpc/rpc_main.c:1420
@@ -4068,7 +4068,7 @@ msgstr " (pravidlo z \"%s\", øádek %d)"
 #, c-format
 msgid ""
 "%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d directory ]\n"
-"	[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
+"\t[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
 msgstr ""
 "%s: Pou¾ití: %s [ -s ] [ -v ] [ -l lokální_èas ]\n"
 "      [ -p posixová_pravidla ] [ -d adresáø ] [ -L pøestupných_sekund ]\n"
