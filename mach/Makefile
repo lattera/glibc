@@ -45,6 +45,9 @@ user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 				     default_pager default_pager_helper	\
 	            )\
 		   $(addprefix device/,device device_request)
+# We produce mach_interface.h from mach.defs because there is already a
+# <mach/mach.h> that is not the interface header (thanks CMU).
+mach_interface.defs = mach.defs
 server-interfaces := mach/exc
 tests := hello
 # It is important that we do not use the wildcard function to expand

@@ -75,6 +75,10 @@ foo:=$(shell echo 'stub/generic +sysdeps=$(+sysdeps)'>&2)
 +sysdep-names := $(sort $(notdir $(+sysdeps)))
 foo:=$(shell echo '+sysdep-names=$(+sysdep-names)' >&2)
 
+ifdef subdir-dirs
+vpath %.c $(addprefix $(subdir)/,$(subdir-dirs))
+endif
+
 # Now find all the sysdep versions of those files.
 +sysdeps := $(wildcard $(foreach dir,$(sysdep_dirs) $(source_dirs),\
 				 $(addprefix $(dir)/, \
@@ -206,7 +210,7 @@ README: README.template version.c
 	sed -e 's/RELEASE/$(release)/' -e 's/VERSION/$(version)/' < $< > $@
 # Make it unwritable so I won't change it by mistake.
 	chmod 444 $@
-	test ! -d CVS || commit -m'Remade for $(release)-$(version)' $@
+	test ! -d CVS || cvs commit -m'Remade for $(release)-$(version)' $@
 
 
 endif	# Subdirectory vs. parent makefile

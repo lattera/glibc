@@ -1,5 +1,32 @@
 Wed Jun  5 00:01:19 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Makerules (distinfo-vars): Add sysdep_routines.
+
+	* mach/Machrules (include-%.defs): New canned sequence.
+	Change all uses of `#include <$*.defs>' in cmds to use it.
+	* mach/Makefile (mach_interface.defs): New variable, set to mach.defs.
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Handle RESOLVE being
+	null in all cases but R_386_COPY.
+	(elf_machine_rel):
+
+	* sysdeps/unix/bsd/ultrix4/mips/Dist: Updated.
+	* sysdeps/unix/bsd/ultrix4/Dist: Removed.
+	* sysdeps/unix/sysv/sysv4/Dist: Updated.
+	* sysdeps/unix/sysv/sco3.2.4/Dist: Removed.
+	* sysdeps/unix/sysv/irix4/Dist: Updated.
+	* sysdeps/unix/sysv/linux/i386/Dist: Removed.
+	* sysdeps/unix/sysv/Dist: Updated.
+	* sysdeps/unix/bsd/sun/sunos4/Dist: Removed.
+	* sysdeps/unix/bsd/sony/newsos4/Dist: Removed.
+	* sysdeps/gnu/Dist: New file.
+	* sysdeps/alpha/Dist: Updated.
+	* sysdeps/mach/hurd/Dist: Updated.
+
+	* Make-dist [subdir-dirs]: Set a vpath for %.c.
+
+	* Make-dist (README): Fix typo in cvs cmd.
+
 	* elf/dl-lookup.c (_dl_lookup_symbol): Fix typos in last change.
 	Comment out ref to nonexistent _dl_close.
 

@@ -111,7 +111,9 @@ elf_machine_rel (struct link_map *map,
 	  *reloc_addr -= (map->l_addr +
 			  dlsymtab[ELF32_R_SYM (reloc->r_info)].st_value);
 	}
-      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = (resolve ? (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0) :
+		  /* RESOLVE is null during bootstrap relocation.  */
+		  map->l_addr);
       *reloc_addr += sym ? (loadbase + sym->st_value) : 0;
       break;
     case R_386_RELATIVE:
@@ -119,7 +121,9 @@ elf_machine_rel (struct link_map *map,
 	*reloc_addr += map->l_addr;
       break;
     case R_386_PC32:
-      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = (resolve ? (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0) :
+		  /* RESOLVE is null during bootstrap relocation.  */
+		  map->l_addr);
       *reloc_addr += ((sym ? (loadbase + sym->st_value) : 0) -
 		      (Elf32_Addr) reloc_addr);
       break;

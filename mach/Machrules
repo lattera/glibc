@@ -100,10 +100,17 @@ echo "weak_alias (__$$call, $$call)" >> $(objpfx)tmp_$${call}.c;
 endef
 endif
 
+
+# Generate `#include <NAME.defs>', taking $* for NAME.
+# If $(NAME.defs) is defined use its value in place of `NAME.defs'.
+define include-%.defs
+echo '#include <$(firstword $($*.defs) $*.defs)>'
+endef
+
 # Not an implicit rule so the stamps are never removed as intermediates!
 $(patsubst %,$(objpfx)%.ustamp,$(user-interfaces)): $(objpfx)%.ustamp:
 	rm -f $@
-	echo '#include <$*.defs>' | \
+	$(include-%.defs) | \
 	$(MIG) - /dev/null -prefix __ \
 	       $(MIGFLAGS) $(user-MIGFLAGS) $(MIGFLAGS-$*) \
 	       -i $(objpfx)tmp_ \
@@ -118,7 +125,7 @@ $(patsubst %,$(objpfx)%.ustamp,$(user-interfaces)): $(objpfx)%.ustamp:
 $(patsubst %,$(objpfx)%.udeps,$(user-interfaces)):
   $(objpfx)%.udeps: $(..)mach/Machrules
 	$(make-target-directory)
-	echo '#include <$*.defs>' | \
+	$(include-%.defs) | \
 	$(CC) $(CPPFLAGS) -M -x c - | \
 	sed -e 's,- *:,$@ $(@:.udeps=.ustamp) $(@:.udeps=.uh) $(@:.udeps=.__h)\
 			  $(@:.udeps=_server.c) $(@:.udeps=_server.h):,' \
@@ -130,7 +137,7 @@ vpath %_server.c $(addprefix $(objpfx),$(sort $(dir $(server-interfaces))))
 
 # Build the server stubs in $(objdir).
 $(objpfx)%_server.c $(objpfx)%_server.h:
-	echo '#include <$*.defs>' | \
+	$(include-%.defs) | \
 	$(MIG) - /dev/null -prefix _S_ \
 	       $(MIGFLAGS) $(server-MIGFLAGS) $(MIGFLAGS-$*) \
 	       $< -user /dev/null -header /dev/null \
@@ -141,14 +148,14 @@ $(objpfx)%_server.c $(objpfx)%_server.h:
 $(objpfx)%.uh:; $(mig.uh)
 define mig.uh
 $(make-target-directory)
-echo '#include <$*.defs>' | \
+$(include-%.defs) | \
 $(MIG) - /dev/null $(MIGFLAGS) \
        -header $@ -server /dev/null -user /dev/null
 endef
 $(objpfx)%.__h:; $(mig.__h)
 define mig.__h
 $(make-target-directory)
-echo '#include <$*.defs>' | \
+$(include-%.defs) | \
 $(MIG) - /dev/null $(MIGFLAGS) -prefix __ \
        -header $@ -server /dev/null -user /dev/null
 endef
