@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Pat Beirne <patb@corelcomputer.com>
 
@@ -35,10 +35,8 @@ ENTRY(__clone)
 	beq	PLTJMP(syscall_error)
 
 	@ insert the args onto the new stack
-	sub	r1, r1, #8
-	str	r3, [r1, #4]
-	@ save the function pointer as the 0th element
-	str	r0, [r1]
+	str	r3, [r1, #-4]!
+	str	r0, [r1, #-4]!
 
 	@ do the system call
 	@ get flags

@@ -1,3 +1,19 @@
+2002-12-20  Art Haas  <ahaas@airmail.net>
+
+	* sysdeps/gnu/siglist.c: Convert GCC extension initializer
+	syntax to C99.
+
+2002-12-21  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/elf/start.S (_start): Optimise a little.  Push stack
+	top as seventh arg to __libc_start_main.
+	Reported by paulnash@wildseed.com.
+
+	* sysdeps/unix/sysv/linux/arm/clone.S: Small optimisation.
+
+	* sysdeps/unix/sysv/linux/arm/sigcontextinfo.h: Elide
+	compatibility cruft when new enough kernel is assumed.
+
 2002-12-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/brk.c (__brk): Use INTERNAL_SYSCALL

@@ -25,7 +25,7 @@
 
 const char *const __new_sys_siglist[NSIG] =
 {
-#define init_sig(sig, abbrev, desc)   [sig] desc,
+#define init_sig(sig, abbrev, desc)   [sig] = desc,
 #include <siglist.h>
 #undef init_sig
 };
@@ -38,7 +38,7 @@ declare_symbol (__old_sys_siglist, object, OLD_SIGLIST_SIZE * __WORDSIZE / 8)
 
 const char *const __new_sys_sigabbrev[NSIG] =
 {
-#define init_sig(sig, abbrev, desc)   [sig] abbrev,
+#define init_sig(sig, abbrev, desc)   [sig] = abbrev,
 #include <siglist.h>
 #undef init_sig
 };

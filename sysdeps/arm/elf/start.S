@@ -45,26 +45,34 @@
 	.globl _start
 	.type _start,#function
 _start:
+	/* Fetch address of fini */
+	ldr ip, =__libc_csu_fini
+
 	/* Clear the frame pointer since this is the outermost frame.  */
 	mov fp, #0
 
 	/* Pop argc off the stack and save a pointer to argv */
-	ldmfd sp!, {a2}
+	ldr a2, [sp], #4
 	mov a3, sp
 
-	/* Push the last arguments to main() onto the stack */
-	stmfd sp!, {a1}
-	ldr a1, =__libc_csu_fini
-	stmfd sp!, {a1}
+	/* Push stack limit */
+	str a3, [sp, #-4]!
 
-	/* Set up the other arguments for main() that go in registers */
+	/* Push rtld_fini */
+	str a1, [sp, #-4]!
+
+	/* Set up the other arguments in registers */
 	ldr a1, =main
 	ldr a4, =__libc_csu_init
 
-	/* __libc_start_main (main, argc, argv, init, fini, rtld_fini) */
+	/* Push fini */
+	str ip, [sp, #-4]!
+
+	/* __libc_start_main (main, argc, argv, init, fini, rtld_fini, stack_end) */
 
 	/* Let the libc call main and exit with its return code.  */
 	bl __libc_start_main
+
 	/* should never get here....*/
 	bl abort
 
