@@ -170,11 +170,6 @@ typedef unsigned long int reg_syntax_t;
    If not set, then case is significant.  */
 #define RE_ICASE (RE_INVALID_INTERVAL_ORD << 1)
 
-/* This bit is used internally like RE_CONTEXT_INDEP_ANCHORS but only
-   for ^, because it is difficult to scan the regex backwards to find
-   whether ^ should be special.  */
-#define RE_CARET_ANCHORS_HERE (RE_ICASE << 1)
-
 /* This global variable defines the particular regexp syntax to use (for
    some interfaces).  When a regexp is compiled, the syntax used is
    stored in the pattern buffer, so changing this does not affect

@@ -1,5 +1,10 @@
 2003-09-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regcomp.c (peek_token): Remove recent changes for anchor
+	handling again.
+	(parse_reg_exp): Likewise.
+	* posix/regex.h: Remove RE_CARET_ANCHORS_HERE.
+
 	* csu/Makefile ($(objpfx)version-info.h): Fix sed script to handle
 	banners.
 
@@ -239,8 +244,8 @@
 	* posix/regcomp.c (build_word_op): Rename like...
 	(build_charclass_op): ...this.  Accept two extra parameters,
 	CLASS_NAME and EXTRA.  Add EXTRA to the result, not only _.
-	(peek_token): accept \s and \S as OP_SPACE and OP_NOTSPACE.
-	(parse_expression): replace build_word_op with
+	(peek_token): Accept \s and \S as OP_SPACE and OP_NOTSPACE.
+	(parse_expression): Replace build_word_op with
 	build_charclass_op, add new arguments, accept OP_SPACE
 	and OP_NOTSPACE.
 	* posix/regex_internal.h (re_token_type_t): Add OP_SPACE
