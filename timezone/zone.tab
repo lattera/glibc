@@ -1,4 +1,4 @@
-# @(#)zone.tab	1.21
+# @(#)zone.tab	1.22
 #
 # TZ zone descriptions
 #
@@ -37,6 +37,7 @@ AQ	-6448-06406	Antarctica/Palmer	Palmer Station, Anvers Island
 AQ	-6736+06253	Antarctica/Mawson	Mawson Station, Holme Bay
 AQ	-6835+07758	Antarctica/Davis	Davis Station, Vestfold Hills
 AQ	-6617+11031	Antarctica/Casey	Casey Station, Bailey Peninsula
+AQ	-7824+10654	Antarctica/Vostok	Vostok Station, S Magnetic Pole
 AQ	-6640+14001	Antarctica/DumontDUrville	Dumont-d'Urville Base, Terre Adelie
 AQ	-690022+0393524	Antarctica/Syowa	Syowa Station, E Ongul I
 AR	-3436-05827	America/Buenos_Aires	E Argentina (BA, DF, SC, TF)
@@ -51,7 +52,7 @@ AU	-3133+15905	Australia/Lord_Howe	Lord Howe Island
 AU	-4253+14719	Australia/Hobart	Tasmania
 AU	-3749+14458	Australia/Melbourne	Victoria
 AU	-3352+15113	Australia/Sydney	New South Wales - most locations
-AU	-3157+14127	Australia/Broken_Hill	New South Wales - Broken Hill
+AU	-3157+14127	Australia/Broken_Hill	New South Wales - Yancowinna
 AU	-2728+15302	Australia/Brisbane	Queensland - most locations
 AU	-2016+14900	Australia/Lindeman	Queensland - Holiday Islands
 AU	-3455+13835	Australia/Adelaide	South Australia
@@ -83,7 +84,7 @@ BR	-0846-06354	America/Porto_Velho	W Para, Rondonia
 BR	+0249-06040	America/Boa_Vista	Roraima
 BR	-0308-06001	America/Manaus	E Amazonas
 BR	-0640-06952	America/Eirunepe	W Amazonas
-BR	-0934-06731	America/Porto_Acre	Acre
+BR	-0958-06748	America/Rio_Branco	Acre
 BS	+2505-07721	America/Nassau
 BT	+2728+08939	Asia/Thimphu
 BW	-2545+02555	Africa/Gaborone
@@ -227,8 +228,7 @@ LV	+5657+02406	Europe/Riga
 LY	+3254+01311	Africa/Tripoli
 MA	+3339-00735	Africa/Casablanca
 MC	+4342+00723	Europe/Monaco
-MD	+4700+02850	Europe/Chisinau	most locations
-MD	+4651+02938	Europe/Tiraspol	Transdniestria
+MD	+4700+02850	Europe/Chisinau
 MG	-1855+04731	Indian/Antananarivo
 MH	+0709+17112	Pacific/Majuro	most locations
 MH	+0905+16720	Pacific/Kwajalein	Kwajalein

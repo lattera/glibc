@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zdump.c	7.28";
+static char	elsieid[] = "@(#)zdump.c	7.29";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -264,9 +264,8 @@ _("%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"),
 		show(argv[i], t, TRUE);
 	}
 	if (fflush(stdout) || ferror(stdout)) {
-		(void) fprintf(stderr, _("%s: Error writing "),
-			argv[0]);
-		(void) perror(_("standard output"));
+		(void) fprintf(stderr, "%s: ", argv[0]);
+		(void) perror(_("Error writing standard output"));
 		(void) exit(EXIT_FAILURE);
 	}
 	exit(EXIT_SUCCESS);

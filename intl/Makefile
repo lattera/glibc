@@ -53,8 +53,9 @@ include ../Rules
 
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
-fneq ($(strip $(MSGFMT)),:)
+ifneq ($(strip $(MSGFMT)),:)
 tests: $(objpfx)tst-translit.out $(objpfx)tst-gettext2.out
+endif
 ifneq (no,$(PERL))
 tests: $(objpfx)mtrace-tst-gettext
 endif

@@ -235,10 +235,18 @@ write_call_graph (fd)
 	   to_index != 0;
 	   to_index = _gmonparam.tos[to_index].link)
 	{
-	  *(char **) raw_arc[nfilled].from_pc = (char *) frompc;
-	  *(char **) raw_arc[nfilled].self_pc =
-	    (char *)_gmonparam.tos[to_index].selfpc;
-	  *(int *) raw_arc[nfilled].count = _gmonparam.tos[to_index].count;
+	  struct arc
+	    {
+	      char *frompc;
+	      char *selfpc;
+	      int32_t count;
+	    }
+	  arc;
+
+	  arc.frompc = (char *) frompc;
+	  arc.selfpc = (char *) _gmonparam.tos[to_index].selfpc;
+	  arc.count  = _gmonparam.tos[to_index].count;
+	  memcpy (raw_arc + nfilled, &arc, sizeof (raw_arc [0]));
 
 	  if (++nfilled == NARCS_PER_WRITEV)
 	    {

@@ -1,5 +1,5 @@
 /* Return point to next ancillary data entry in message header.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ __cmsg_nxthdr (struct msghdr *mhdr, struct cmsghdr *cmsg)
   if ((unsigned char *) (cmsg + 1) >= ((unsigned char *) mhdr->msg_control
 				       + mhdr->msg_controllen)
       || ((unsigned char *) cmsg + CMSG_ALIGN (cmsg->cmsg_len)
-	  >= ((unsigned char *) mhdr->msg_control + mhdr->msg_controllen)))
+	  > ((unsigned char *) mhdr->msg_control + mhdr->msg_controllen)))
     /* No more entries.  */
     return NULL;
   return cmsg;

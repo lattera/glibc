@@ -1,5 +1,43 @@
 2001-03-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* timezone/antarctica: Update from tzdata2001a.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/etcetera: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/systemv: Likewise.
+	* timezone/yearistype: Likewise.
+	* timezone/zone.tab: Likewise.
+	* timezone/tzdump.c: Update from tzcode2001a.
+
+2001-03-15  H.J. Lu  <hjl@gnu.org>
+
+	* intl/Makefile: Fix a typo.
+
+2001-03-14  David Mosberger  <davidm@hpl.hp.com>
+
+	* gmon/gmon.c (write_call_graph): Avoid unaligned accesses when
+	writing arc structures.
+
+2001-03-15  H.J. Lu  <hjl@gnu.org>
+
+	* elf/Makefile ($(objpfx)tst-pathopt.out): Protected against
+	cross-compiling.
+
+2001-03-13  Andreas Schwab  <schwab@suse.de>
+
+	* posix/PTESTS2C.sed: Replace literal CRs by `\r'.
+
+2001-03-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/cmsg_nxthdr.c (__cmsg_nxthdr): Fix test
+	for control message fitting into message data.
+	Patch by James Antill <james@and.org>.
+
 	* posix/tst-fnmatch.input: Add test case for FNM_PERIOD handling with
 	FNM_EXTMATCH.
 
