@@ -83,6 +83,10 @@ _nl_load_locale (int category, char **name)
   {
     /* Map in the file's data.  */
     int save = errno;
+#ifndef MAP_COPY
+    /* Linux seems to lack read-only copy-on-write.  */
+#define MAP_COPY MAP_PRIVATE
+#endif
     filedata = (void *) __mmap ((caddr_t) 0, st.st_size,
 				PROT_READ, MAP_FILE|MAP_COPY, fd, 0);
     if (filedata == (void *) -1)
