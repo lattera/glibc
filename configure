@@ -2578,13 +2578,50 @@ EOF
 fi
 fi
 
+if test "$host_cpu" = powerpc ; then
+# Check for a bug present in at least versions 2.8.x of GCC
+# and versions 1.0.x of EGCS.
+echo $ac_n "checking whether clobbering cr0 causes problems""... $ac_c" 1>&6
+echo "configure:2586: checking whether clobbering cr0 causes problems" >&5
+if eval "test \"`echo '$''{'libc_cv_c_asmcr0_bug'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 2591 "configure"
+#include "confdefs.h"
+int tester(int x) { asm ("" : : : "cc"); return x & 123; }
+int main() {
+
+; return 0; }
+EOF
+if { (eval echo configure:2598: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+  rm -rf conftest*
+  libc_cv_c_asmcr0_bug='no'
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  libc_cv_c_asmcr0_bug='yes'
+fi
+rm -f conftest*
+fi
+
+echo "$ac_t""$libc_cv_c_asmcr0_bug" 1>&6
+if test "$libc_cv_c_asmcr0_bug" != 'no'; then
+  cat >> confdefs.h <<\EOF
+#define BROKEN_PPC_ASM_CR0 1
+EOF
+
+fi
+fi
+
 echo $ac_n "checking for DWARF2 unwind info support""... $ac_c" 1>&6
-echo "configure:2583: checking for DWARF2 unwind info support" >&5
+echo "configure:2620: checking for DWARF2 unwind info support" >&5
 if eval "test \"`echo '$''{'libc_cv_gcc_dwarf2_unwind_info'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.c <<EOF
-#line 2588 "configure"
+#line 2625 "configure"
 static char __EH_FRAME_BEGIN__;
 _start ()
 {
@@ -2611,7 +2648,7 @@ __bzero () {}
 EOF
 if { ac_try='${CC-cc} $CFLAGS -DCHECK__register_frame_info
 			    -nostdlib -nostartfiles
-			    -o conftest conftest.c -lgcc >&5'; { (eval echo configure:2615: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+			    -o conftest conftest.c -lgcc >&5'; { (eval echo configure:2652: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   libc_cv_gcc_dwarf2_unwind_info=static
 else
   libc_cv_gcc_dwarf2_unwind_info=no
@@ -2619,7 +2656,7 @@ fi
 if test $libc_cv_gcc_dwarf2_unwind_info = no; then
   if { ac_try='${CC-cc} $CFLAGS -DCHECK__register_frame
 			      -nostdlib -nostartfiles
-			      -o conftest conftest.c -lgcc >&5'; { (eval echo configure:2623: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+			      -o conftest conftest.c -lgcc >&5'; { (eval echo configure:2660: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
     libc_cv_gcc_dwarf2_unwind_info=yes
   else
     libc_cv_gcc_dwarf2_unwind_info=no
@@ -2693,7 +2730,7 @@ if test "$uname" = "sysdeps/generic"; then
   fi
 
   echo $ac_n "checking OS release for uname""... $ac_c" 1>&6
-echo "configure:2697: checking OS release for uname" >&5
+echo "configure:2734: checking OS release for uname" >&5
 if eval "test \"`echo '$''{'libc_cv_uname_release'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2715,7 +2752,7 @@ echo "$ac_t""$libc_cv_uname_release" 1>&6
   uname_release="$libc_cv_uname_release"
 
   echo $ac_n "checking OS version for uname""... $ac_c" 1>&6
-echo "configure:2719: checking OS version for uname" >&5
+echo "configure:2756: checking OS version for uname" >&5
 if eval "test \"`echo '$''{'libc_cv_uname_version'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2737,7 +2774,7 @@ else
 fi
 
 echo $ac_n "checking stdio selection""... $ac_c" 1>&6
-echo "configure:2741: checking stdio selection" >&5
+echo "configure:2778: checking stdio selection" >&5
 
 case $stdio in
 libio) cat >> confdefs.h <<\EOF
@@ -2749,7 +2786,7 @@ esac
 echo "$ac_t""$stdio" 1>&6
 
 echo $ac_n "checking ldap selection""... $ac_c" 1>&6
-echo "configure:2753: checking ldap selection" >&5
+echo "configure:2790: checking ldap selection" >&5
 
 case $add_ons in
 *ldap*)
@@ -2800,7 +2837,7 @@ if test $shared = default; then
 fi
 
 echo $ac_n "checking whether -fPIC is default""... $ac_c" 1>&6
-echo "configure:2804: checking whether -fPIC is default" >&5
+echo "configure:2841: checking whether -fPIC is default" >&5
 if eval "test \"`echo '$''{'pic_default'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else

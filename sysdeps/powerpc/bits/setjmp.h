@@ -39,3 +39,8 @@
 #ifndef	_ASM
 typedef long int __jmp_buf[58];
 #endif
+
+/* Test if longjmp to JMPBUF would unwind the frame
+   containing a local variable at ADDRESS.  */
+#define _JMPBUF_UNWINDS(jmpbuf, address) \
+  ((void *) (address) < (void *) (jmpbuf)[JB_GPR1])

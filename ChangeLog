@@ -1,3 +1,8 @@
+1998-05-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/powerpc/bits/setjmp.h (_JMPBUF_UNWINDS): Define.
+	Patch by Matt McLean <keys@brio.yikes.com>.
+
 1997-05-07 13:26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* Makerules (lib): Put back dependency on lib-noranlib.
