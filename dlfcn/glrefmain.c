@@ -35,6 +35,8 @@ load (const char *name)
 
 
 #define TEST_FUNCTION do_test ()
+extern int do_test (void);
+
 int
 do_test (void)
 {

@@ -51,6 +51,9 @@ extern nis_error __do_niscall3 (dir_binding *dbp, u_long prog,
 				xdrproc_t xres, caddr_t resp,
 				unsigned int flags, nis_cb *cb);
 
+extern u_short __pmap_getnisport (struct sockaddr_in *address, u_long program,
+				  u_long version, u_int protocol);
+
 /* NIS+ callback */
 extern nis_error __nis_do_callback (struct dir_binding *bptr,
 				    netobj *cookie, struct nis_cb *cb);

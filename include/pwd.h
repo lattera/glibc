@@ -4,17 +4,31 @@
 /* Now define the internal interfaces.  */
 extern int __getpwent_r (struct passwd *__resultbuf, char *__buffer,
 			 size_t __buflen, struct passwd **__result);
+extern int __old_getpwent_r (struct passwd *__resultbuf, char *__buffer,
+			     size_t __buflen, struct passwd **__result);
 extern int __getpwuid_r (__uid_t __uid, struct passwd *__resultbuf,
 			 char *__buffer, size_t __buflen,
 			 struct passwd **__result);
+extern int __old_getpwuid_r (__uid_t __uid, struct passwd *__resultbuf,
+			     char *__buffer, size_t __buflen,
+			     struct passwd **__result);
 extern int __getpwnam_r (__const char *__name, struct passwd *__resultbuf,
 			 char *__buffer, size_t __buflen,
 			 struct passwd **__result);
+extern int __old_getpwnam_r (__const char *__name, struct passwd *__resultbuf,
+			     char *__buffer, size_t __buflen,
+			     struct passwd **__result);
 extern int __fgetpwent_r (FILE * __stream, struct passwd *__resultbuf,
 			  char *__buffer, size_t __buflen,
 			  struct passwd **__result);
 
 #include <nss/nss.h>
+
+struct parser_data;
+extern int _nss_files_parse_pwent (char *line, struct passwd *result,
+				   struct parser_data *data,
+				   size_t datalen, int *errnop);
+
 #define DECLARE_NSS_PROTOTYPES(service)					\
 extern enum nss_status _nss_ ## service ## _setpwent (int);		\
 extern enum nss_status _nss_ ## service ## _endpwent (void);		\

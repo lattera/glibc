@@ -28,6 +28,11 @@ extern int __vsscanf (__const char *__restrict __s,
 		      _G_va_list __arg)
      __attribute__ ((__format__ (__scanf__, 2, 0)));
 
+/* Prototypes for compatibility functions.  */
+extern FILE *__new_tmpfile (void);
+extern FILE *__old_tmpfile (void);
+
+
 #  else
 #   include <stdio/stdio.h>
 #  endif

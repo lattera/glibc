@@ -1,6 +1,6 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -98,7 +98,7 @@ _nss_create_tablename (int *errnop)
 
 
 enum nss_status
-_nss_nisplus_setetherent (void)
+_nss_nisplus_setetherent (int stayopen)
 {
   enum nss_status status;
   int err;

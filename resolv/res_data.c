@@ -82,9 +82,10 @@ struct __res_state _res
 #endif
 
 /* Proto. */
-
+#ifndef _LIBC
 int  res_ourserver_p(const res_state, const struct sockaddr_in *);
 void res_pquery(const res_state, const u_char *, int, FILE *);
+#endif
 
 #ifndef _LIBC
 /* Moved to res_libc.c since res_init() should go into libc.so but the

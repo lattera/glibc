@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
      On-Line Applications Research Corporation.
@@ -27,6 +27,9 @@ main (void)
 {
   int failures = 0;
   int i;
+
+  auto void try (int value, int expected);
+  
   void try (int value, int expected)
     {
       if (ffs (value) != expected)

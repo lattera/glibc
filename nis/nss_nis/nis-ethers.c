@@ -109,7 +109,7 @@ internal_nis_setetherent (void)
 }
 
 enum nss_status
-_nss_nis_setetherent (void)
+_nss_nis_setetherent (int stayopen)
 {
   enum nss_status result;
 

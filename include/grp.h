@@ -4,6 +4,8 @@
 /* Now define the internal interfaces.  */
 extern int __getgrent_r (struct group *__resultbuf, char *buffer,
 			 size_t __buflen, struct group **__result);
+extern int __old_getgrent_r (struct group *__resultbuf, char *buffer,
+			     size_t __buflen, struct group **__result);
 extern int __fgetgrent_r (FILE * __stream, struct group *__resultbuf,
 			  char *buffer, size_t __buflen,
 			  struct group **__result);
@@ -12,11 +14,22 @@ extern int __fgetgrent_r (FILE * __stream, struct group *__resultbuf,
 extern int __getgrgid_r (__gid_t __gid, struct group *__resultbuf,
 			 char *__buffer, size_t __buflen,
 			 struct group **__result);
+extern int __old_getgrgid_r (__gid_t __gid, struct group *__resultbuf,
+			     char *__buffer, size_t __buflen,
+			     struct group **__result);
 
 /* Search for an entry with a matching group name.  */
 extern int __getgrnam_r (__const char *__name, struct group *__resultbuf,
 			 char *__buffer, size_t __buflen,
 			 struct group **__result);
+extern int __old_getgrnam_r (__const char *__name, struct group *__resultbuf,
+			     char *__buffer, size_t __buflen,
+			     struct group **__result);
+
+struct parser_data;
+extern int _nss_files_parse_grent (char *line, struct group *result,
+				   struct parser_data *data,
+				   size_t datalen, int *errnop);
 
 #define DECLARE_NSS_PROTOTYPES(service)					   \
 extern enum nss_status _nss_ ## service ## _setgrent (int);		   \

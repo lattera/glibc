@@ -10,18 +10,23 @@ struct etherent
   struct ether_addr e_addr;
 };
 
-#define DECLARE_NSS_PROTOTYPES(service)					\
-extern enum nss_status _nss_ ## service ## _setetherent (void);		\
-extern enum nss_status _nss_ ## service ## _endetherent (void);		\
-extern enum nss_status _nss_ ## service ## _getetherent_r		\
-                       (struct etherent *result, char *buffer,		\
-			size_t buflen, int *errnop);			\
-extern enum nss_status _nss_ ## service ## _gethostton_r		\
-                       (const char *name, struct etherent *eth,		\
-			char *buffer, size_t buflen, int *errnop);	\
-extern enum nss_status _nss_ ## service ## _getntohost_r		\
-                       (const struct ether_addr *addr,			\
-			struct etherent *eth,				\
+struct parser_data;
+extern int _nss_files_parse_etherent (char *line, struct etherent *result,
+				      struct parser_data *data,
+				      size_t datalen, int *errnop);
+
+#define DECLARE_NSS_PROTOTYPES(service)						\
+extern enum nss_status _nss_ ## service ## _setetherent (int __stayopen);	\
+extern enum nss_status _nss_ ## service ## _endetherent (void);			\
+extern enum nss_status _nss_ ## service ## _getetherent_r			\
+                       (struct etherent *result, char *buffer,			\
+			size_t buflen, int *errnop);				\
+extern enum nss_status _nss_ ## service ## _gethostton_r			\
+                       (const char *name, struct etherent *eth,			\
+			char *buffer, size_t buflen, int *errnop);		\
+extern enum nss_status _nss_ ## service ## _getntohost_r			\
+                       (const struct ether_addr *addr,				\
+			struct etherent *eth,					\
 			char *buffer, size_t buflen, int *errnop);
 
 DECLARE_NSS_PROTOTYPES (files)

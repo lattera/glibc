@@ -17,16 +17,9 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <string.h>
+#include <netinet/ether.h>
 #include <netinet/if_ether.h>
 
-/* Because the `ethers' lookup does not fit so well in the scheme so
-   we define a dummy struct here which helps us to use the available
-   functions.  */
-struct etherent
-{
-  const char *e_name;
-  struct ether_addr e_addr;
-};
 struct etherent_data {};
 
 #define ENTNAME		etherent
@@ -72,4 +65,4 @@ DB_LOOKUP (ntohost, 18, ("=%x:%x:%x:%x:%x:%x",
 	     if (memcmp (&result->e_addr, addr,
 			 sizeof (struct ether_addr)) == 0)
 	       break;
-	   }, struct ether_addr *addr)
+	   }, const struct ether_addr *addr)

@@ -538,5 +538,7 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
 #if 0
   /* XXX See above,  Shouldn't be necessary anymore.  */
   state = GMON_PROF_ON;
+#else
+  ;
 #endif
 }
