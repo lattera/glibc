@@ -83,6 +83,8 @@ struct pthread_functions
 					   void (*) (void *), void *);
   void (*ptr__pthread_cleanup_pop_restore) (struct _pthread_cleanup_buffer *,
 					    int);
+#define HAVE_PTR_NTHREADS
+  int *ptr_nthreads;
 };
 
 /* Variable in libc.so.  */

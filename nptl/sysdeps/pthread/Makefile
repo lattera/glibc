@@ -17,6 +17,10 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 # 02111-1307 USA.
 
+ifeq ($(subdir),csu)
+CFLAGS-libc-start.c += -I../nptl
+endif
+
 ifeq ($(subdir),nptl)
 libpthread-sysdep_routines += errno-loc
 endif

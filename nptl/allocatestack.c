@@ -74,9 +74,6 @@ static LIST_HEAD (stack_used);
 list_t __stack_user __attribute__ ((nocommon));
 hidden_def (__stack_user)
 
-/* Number of threads running.  */
-static unsigned int nptl_nthreads = 1;
-
 /* Number of threads created.  */
 static unsigned int nptl_ncreated;
 
@@ -141,9 +138,6 @@ get_cached_stack (size_t *sizep, void **memp)
 
   /* And add to the list of stacks in use.  */
   list_add (&result->header.data.list, &stack_used);
-
-  /* One more thread.  */
-  ++nptl_nthreads;
 
   /* And decrease the cache size.  */
   stack_cache_actsize -= result->stackblock_size;
@@ -299,9 +293,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       /* And add to the list of stacks in use.  */
       list_add (&pd->header.data.list, &__stack_user);
 
-      /* One more thread.  */
-      ++nptl_nthreads;
-
       lll_unlock (stack_cache_lock);
     }
   else
@@ -416,9 +407,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  /* And add to the list of stacks in use.  */
 	  list_add (&pd->header.data.list, &stack_used);
 
-	  /* One more thread.  */
-	  ++nptl_nthreads;
-
 	  lll_unlock (stack_cache_lock);
 
 
@@ -443,9 +431,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 	      /* Remove the thread from the list.  */
 	      list_del (&pd->header.data.list);
-
-	      /* The thread is gone.  */
-	      --nptl_nthreads;
 
 	      lll_unlock (stack_cache_lock);
 
@@ -510,9 +495,6 @@ __deallocate_stack (struct pthread *pd)
     /* Free the memory associated with the ELF TLS.  */
     _dl_deallocate_tls (pd, false);
 
-  /* One less thread.  */
-  --nptl_nthreads;
-
   lll_unlock (stack_cache_lock);
 }
 
@@ -563,7 +545,7 @@ __reclaim_stacks (void)
     list_add (&self->header.data.list, &stack_used);
 
   /* There is one thread running.  */
-  nptl_nthreads = 1;
+  __nptl_nthreads = 1;
 
   /* Initialize the lock.  */
   stack_cache_lock = LLL_LOCK_INITIALIZER;

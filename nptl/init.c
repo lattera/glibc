@@ -110,7 +110,8 @@ static struct pthread_functions pthread_functions =
     .ptr___pthread_getspecific = __pthread_getspecific_internal,
     .ptr___pthread_setspecific = __pthread_setspecific_internal,
     .ptr__pthread_cleanup_push_defer = __pthread_cleanup_push_defer,
-    .ptr__pthread_cleanup_pop_restore = __pthread_cleanup_pop_restore
+    .ptr__pthread_cleanup_pop_restore = __pthread_cleanup_pop_restore,
+    .ptr_nthreads = &__nptl_nthreads
   };
 # define ptr_pthread_functions &pthread_functions
 #else

@@ -44,6 +44,9 @@ static td_thr_events_t __nptl_threads_events;
 /* Pointer to descriptor with the last event.  */
 static struct pthread *__nptl_last_event;
 
+/* Number of threads running.  */
+unsigned int __nptl_nthreads = 1;
+
 
 /* Code to allocate and deallocate a stack.  */
 #define DEFINE_DEALLOC
@@ -197,6 +200,9 @@ __free_tcb (struct pthread *pd)
 static int
 start_thread (void *arg)
 {
+  /* One more thread.  */
+  atomic_increment (&__nptl_nthreads);
+
   struct pthread *pd = (struct pthread *) arg;
 
 #if HP_TIMING_AVAIL
@@ -213,6 +219,14 @@ start_thread (void *arg)
       /* Run the code the user provided.  */
       pd->result = pd->start_routine (pd->arg);
     }
+
+
+  /* If this is the last thread we terminate the process now.  We
+     do not notify the debugger, it might just irritate it if there
+     is no thread left.  */
+  if (atomic_decrement_and_test (&__nptl_nthreads))
+    /* This was the last thread.  */
+    exit (0);
 
 
   /* Report the death of the thread if this is wanted.  */

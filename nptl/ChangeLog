@@ -1,5 +1,19 @@
 2003-02-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthreadP.h: Add declaraction for __nptl_nthreads.
+	* pthread_create.c: Define __nptl_nthreads
+	(start_thread): Increment __nptl_nthreads at beginning.  Decrement
+	after thread is done.  If Then zero call exit(0).
+	* sysdeps/pthread/pthread-functions.h (struct pthread_functions):
+	Add ptr_nthreads.  Define HAVE_PTR_NTHREADS.
+	* init.c (pthread_functions): Initialize ptr_nthreads.
+	* allocatestack.c (nptl_nthreads): Remove definition and all uses.
+	(__reclaim_stacks): Decrement __nptl_nthreads.
+	* sysdeps/pthread/Makefile [$(subdir)==csu] (CFLAGS-libc-start.c):
+	Define.
+	* Makefile (tests): Add tst-basic3.
+	* tst-basic3.c: New file.
+
 	* descr.h: Define CANCELING_BIT and CANCELING_BITMASK.  Introduce
 	after CANCELTYPE_BIT, move the other bits up.  Update CANCEL_RESTMASK.
 	* init.c (sigcancel_handler): Also set CANCELING_BITMASK bit in newval.

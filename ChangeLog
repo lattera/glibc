@@ -1,3 +1,8 @@
+2003-02-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/libc-start.c [HAVE_PTR_NTHREADS]: Decrement thread
+	counter and only call __exit_thread if this is not the last thread.
+
 2003-02-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Add instead of

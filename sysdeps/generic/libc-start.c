@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +36,11 @@ extern void __pthread_initialize_minimal (void)
      __attribute__ ((weak))
 # endif
      ;
+#endif
+
+#ifdef HAVE_PTR_NTHREADS
+/* We need atomic operations.  */
+# include <atomic.h>
 #endif
 
 
@@ -148,8 +153,24 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
     }
 #ifdef HAVE_CANCELBUF
   else
-    /* Not much left to do but to exit the thread, not the process.  */
-    __exit_thread (0);
+    {
+# ifdef HAVE_PTR_NTHREADS
+      /* One less thread.  Decrement the counter.  If it is zero we
+	 terminate the entire process.  */
+      result = 0;
+      int *const ptr;
+#  ifdef SHARED
+      ptr = __libc_pthread_functions.ptr_nthreads;
+#  else
+      extern int __nptl_nthreads __attribute ((weak));
+      ptr = &__nptl_nthreads;
+#  endif
+
+      if (! atomic_decrement_and_test (ptr))
+# endif
+	/* Not much left to do but to exit the thread, not the process.  */
+	__exit_thread (0);
+    }
 #endif
 
   exit (result);
