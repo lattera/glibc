@@ -1,3 +1,19 @@
+2004-03-11  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/kernel_stat.h (kernel_stat64): New.
+	(glibc21_stat): New.
+	* sysdeps/unix/sysv/linux/alpha/fxstat.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/lxstat.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/xstat.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/xstatconv.c (__xstat_conv): Add
+	code for _STAT_VER_GLIBC2_3_4.
+	(__libc_missing_axp_stat64): New.
+	* sysdeps/unix/sysv/linux/alpha/xstatconv.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/bits/stat.h (__ST_TIME): New.
+	(_STAT_VER_GLIBC2_3_4, _STAT_VER_KERNEL64): New.
+	(struct stat, struct stat64): Update to new format.
+	(_STATBUF_ST_NSEC): New.
+
 2004-03-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S
