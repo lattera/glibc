@@ -350,16 +350,28 @@ mb_tests (const char *pattern, int cflags, const char *string, int eflags,
   if (strstr (pattern, "[:xdigit:]"))
     return 0;
 
+  /* XXX: regex ATM handles only single byte equivalence classes.  */
+  if (strstr (pattern, "[[=b=]]"))
+    return 0;
+
   for (i = 1; i < 16; ++i)
     {
       char *p = letters;
-      if (i & 1)
+      if ((i & 1)
+	  && (strchr (pattern, 'a') || strchr (string, 'a')
+	      || strchr (pattern, 'A') || strchr (string, 'A')))
 	*p++ = 'a', *p++ = 'A';
-      if (i & 2)
+      if ((i & 2)
+	  && (strchr (pattern, 'b') || strchr (string, 'b')
+	      || strchr (pattern, 'B') || strchr (string, 'B')))
         *p++ = 'b', *p++ = 'B';
-      if (i & 4)
+      if ((i & 4)
+	  && (strchr (pattern, 'c') || strchr (string, 'c')
+	      || strchr (pattern, 'C') || strchr (string, 'C')))
         *p++ = 'c', *p++ = 'C';
-      if (i & 8)
+      if ((i & 8)
+	  && (strchr (pattern, 'd') || strchr (string, 'd')
+	      || strchr (pattern, 'D') || strchr (string, 'D')))
         *p++ = 'd', *p++ = 'D';
       *p++ = '\0';
       sprintf (fail, "UTF-8 %s FAIL", letters);
@@ -489,7 +501,11 @@ main (int argc, char **argv)
 	    replace_special_chars (matches);
         }
 
-      setlocale (LC_ALL, "C");
+      if (setlocale (LC_ALL, "C") == NULL)
+	{
+	  puts ("setlocale C failed");
+	  ret = 1;
+	}
       if (test (pattern, cflags, string, eflags, expect, matches, "FAIL")
 	  || (try_bre_ere
 	      && test (pattern, cflags & ~REG_EXTENDED, string, eflags,
@@ -497,12 +513,16 @@ main (int argc, char **argv)
 	ret = 1;
       else if (test_utf8)
 	{
-	  setlocale (LC_ALL, "cs_CZ.UTF-8");
-	  if (test (pattern, cflags, string, eflags, expect, matches,
-		    "UTF-8 FAIL")
-	      || (try_bre_ere
-		  && test (pattern, cflags & ~REG_EXTENDED, string, eflags,
-			   expect, matches, "UTF-8 FAIL")))
+	  if (setlocale (LC_ALL, "cs_CZ.UTF-8") == NULL)
+	    {
+	      puts ("setlocale cs_CZ.UTF-8 failed");
+	      ret = 1;
+	    }
+	  else if (test (pattern, cflags, string, eflags, expect, matches,
+			 "UTF-8 FAIL")
+		   || (try_bre_ere
+		       && test (pattern, cflags & ~REG_EXTENDED, string,
+				eflags, expect, matches, "UTF-8 FAIL")))
 	    ret = 1;
 	  else if (mb_tests (pattern, cflags, string, eflags, expect, matches)
 		   || (try_bre_ere

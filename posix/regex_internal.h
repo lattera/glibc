@@ -456,7 +456,6 @@ struct re_dfastate_t
   re_node_set nodes;
   re_node_set *entrance_nodes;
   struct re_dfastate_t **trtable;
-  struct re_dfastate_t **trtable_search;
   /* If this state is a special state.
      A state is a special state if the state is the halt state, or
      a anchor.  */
@@ -469,6 +468,7 @@ struct re_dfastate_t
   /* If this state has backreference node(s).  */
   unsigned int has_backref : 1;
   unsigned int has_constraint : 1;
+  unsigned int word_trtable : 1;
 };
 typedef struct re_dfastate_t re_dfastate_t;
 

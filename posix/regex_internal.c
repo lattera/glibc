@@ -1207,7 +1207,6 @@ create_newstate_common (dfa, nodes, hash)
       return NULL;
     }
   newstate->trtable = NULL;
-  newstate->trtable_search = NULL;
   newstate->hash = hash;
   return newstate;
 }
@@ -1369,6 +1368,5 @@ free_state (state)
     }
   re_node_set_free (&state->nodes);
   re_free (state->trtable);
-  re_free (state->trtable_search);
   re_free (state);
 }

@@ -1,3 +1,35 @@
+2003-11-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/PTESTS: Fix first test in GA143.
+
+2003-11-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex_internal.h (re_dfastate_t): Remove trtable_search.
+	Add word_trtable.
+	* posix/regex_internal.c (create_newstate_common, free_state):
+	Don't free trtable_search.
+	* posix/regexec.c (check_matching): Remove fl_search argument.
+	(transit_state_sb): Likewise.  #ifdef out as unused.
+	(build_trtable): Remove fl_search argument.  Set state->word_trtable
+	and state->trtable.  Build separate word and non-word tables if
+	multi-byte and they differ for some character.
+	(transit_state): Remove fl_search argument.  Don't update
+	state->trtable here.  Handle state->word_trtable.
+	#ifdef out unused call to transit_state_sb.
+	(re_search_internal): Update check_matching caller.
+	(group_nodes_into_DFAstates): Don't clear non-ascii chars in accepts
+	bitmask for multi-byte locales.
+	* posix/bug-regex19.c (tests): Enable some commented out tests, add
+	2 new tests.
+	* posix/tst-rxspencer.c (mb_tests): Don't test [[=b=]] for now as
+	multi-byte.  Don't run identical multi-byte tests multiple times
+	unnecessarily.
+	(main): Check setlocale return value.
+	* posix/Makefile (tst-rxspencer-ARGS): Add --utf8 argument.
+	(tst-rxspencer-ENV): Remove MALLOC_TRACE, add LOCPATH.
+	($(objpfx)tst-rxspencer-mem): Run another tst-rxspencer test
+	here, without --utf8 argument but with MALLOC_TRACE.
+
 2003-11-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regexec.c (extend_buffers): Don't allocate

@@ -37,17 +37,21 @@ static struct
      \xc3\x96		LATIN CAPITAL LETTER O WITH DIAERESIS
      \xe2\x80\x94	EM DASH  */
   /* Should not match.  */
+  {RE_SYNTAX_POSIX_BASIC, "\\<A", "aOAA", 0, -1},
   {RE_SYNTAX_POSIX_BASIC, "\\<A", "aOAA", 2, -1},
   {RE_SYNTAX_POSIX_BASIC, "A\\>", "aAAO", 1, -1},
+  {RE_SYNTAX_POSIX_BASIC, "\\bA", "aOAA", 0, -1},
   {RE_SYNTAX_POSIX_BASIC, "\\bA", "aOAA", 2, -1},
   {RE_SYNTAX_POSIX_BASIC, "A\\b", "aAAO", 1, -1},
+  {RE_SYNTAX_POSIX_BASIC, "\\<\xc3\x84", "a\xc3\x96\xc3\x84\xc3\x84", 0, -1},
   {RE_SYNTAX_POSIX_BASIC, "\\<\xc3\x84", "a\xc3\x96\xc3\x84\xc3\x84", 3, -1},
   {RE_SYNTAX_POSIX_BASIC, "\xc3\x84\\>", "a\xc3\x84\xc3\x84\xc3\x96", 1, -1},
 #if 0
-  /* XXX Not used since they fail so far.  */
+  /* XXX these 2 tests still fail.  */
+  {RE_SYNTAX_POSIX_BASIC, "\\b\xc3\x84", "a\xc3\x96\xc3\x84\xc3\x84", 0, -1},
   {RE_SYNTAX_POSIX_BASIC, "\\b\xc3\x84", "a\xc3\x96\xc3\x84\xc3\x84", 3, -1},
-  {RE_SYNTAX_POSIX_BASIC, "\xc3\x84\\b", "a\xc3\x84\xc3\x84\xc3\x96", 1, -1},
 #endif
+  {RE_SYNTAX_POSIX_BASIC, "\xc3\x84\\b", "a\xc3\x84\xc3\x84\xc3\x96", 1, -1},
   /* Should match.  */
   {RE_SYNTAX_POSIX_BASIC, "\\<A", "AA", 0, 0},
   {RE_SYNTAX_POSIX_BASIC, "\\<A", "a-AA", 2, 2},
@@ -57,8 +61,6 @@ static struct
   {RE_SYNTAX_POSIX_BASIC, "\\bA", "a-AA", 2, 2},
   {RE_SYNTAX_POSIX_BASIC, "A\\b", "aAA-", 1, 2},
   {RE_SYNTAX_POSIX_BASIC, "A\\b", "aAA", 1, 2},
-#if 0
-  /* XXX Not used since they fail so far.  */
   {RE_SYNTAX_POSIX_BASIC, "\\<\xc3\x84", "\xc3\x84\xc3\x84", 0, 0},
   {RE_SYNTAX_POSIX_BASIC, "\\<\xc3\x84", "a\xe2\x80\x94\xc3\x84\xc3\x84", 4, 4},
   {RE_SYNTAX_POSIX_BASIC, "\xc3\x84\\>", "a\xc3\x84\xc3\x84\xe2\x80\x94", 1, 3},
@@ -67,7 +69,6 @@ static struct
   {RE_SYNTAX_POSIX_BASIC, "\\b\xc3\x84", "a\xe2\x80\x94\xc3\x84\xc3\x84", 4, 4},
   {RE_SYNTAX_POSIX_BASIC, "\xc3\x84\\b", "a\xc3\x84\xc3\x84\xe2\x80\x94", 1, 3},
   {RE_SYNTAX_POSIX_BASIC, "\xc3\x84\\b", "a\xc3\x84\xc3\x84", 1, 3}
-#endif
 };
 
 int

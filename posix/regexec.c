@@ -57,7 +57,7 @@ static re_dfastate_t *acquire_init_state_context (reg_errcode_t *err,
 static reg_errcode_t prune_impossible_nodes (const regex_t *preg,
 					     re_match_context_t *mctx);
 static int check_matching (const regex_t *preg, re_match_context_t *mctx,
-			   int fl_search, int fl_longest_match);
+			   int fl_longest_match);
 static int check_halt_node_context (const re_dfa_t *dfa, int node,
 				    unsigned int context);
 static int check_halt_state_context (const regex_t *preg,
@@ -123,15 +123,16 @@ static reg_errcode_t merge_state_array (re_dfa_t *dfa, re_dfastate_t **dst,
 					re_dfastate_t **src, int num);
 static re_dfastate_t *transit_state (reg_errcode_t *err, const regex_t *preg,
 				     re_match_context_t *mctx,
-				     re_dfastate_t *state, int fl_search);
+				     re_dfastate_t *state);
 static reg_errcode_t check_subexp_matching_top (re_dfa_t *dfa,
 						re_match_context_t *mctx,
 						re_node_set *cur_nodes,
 						int str_idx);
+#if 0
 static re_dfastate_t *transit_state_sb (reg_errcode_t *err, const regex_t *preg,
 					re_dfastate_t *pstate,
-					int fl_search,
 					re_match_context_t *mctx);
+#endif
 #ifdef RE_ENABLE_I18N
 static reg_errcode_t transit_state_mb (const regex_t *preg,
 				       re_dfastate_t *pstate,
@@ -173,8 +174,7 @@ static reg_errcode_t expand_bkref_cache (const regex_t *preg,
 					 int last_str, int subexp_num,
 					 int fl_open);
 static re_dfastate_t **build_trtable (const regex_t *dfa,
-				      const re_dfastate_t *state,
-				      int fl_search);
+				      re_dfastate_t *state);
 #ifdef RE_ENABLE_I18N
 static int check_node_accept_bytes (const regex_t *preg, int node_idx,
 				    const re_string_t *input, int idx);
@@ -741,7 +741,7 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
 	  /* It seems to be appropriate one, then use the matcher.  */
 	  /* We assume that the matching starts from 0.  */
 	  mctx.state_log_top = mctx.nbkref_ents = mctx.max_mb_elem_len = 0;
-	  match_last = check_matching (preg, &mctx, 0, fl_longest_match);
+	  match_last = check_matching (preg, &mctx, fl_longest_match);
 	  if (match_last != -1)
 	    {
 	      if (BE (match_last == -2, 0))
@@ -919,8 +919,8 @@ acquire_init_state_context (err, preg, mctx, idx)
   if (dfa->init_state->has_constraint)
     {
       unsigned int context;
-      context =  re_string_context_at (mctx->input, idx - 1, mctx->eflags,
-				       preg->newline_anchor);
+      context = re_string_context_at (mctx->input, idx - 1, mctx->eflags,
+				      preg->newline_anchor);
       if (IS_WORD_CONTEXT (context))
 	return dfa->init_state_word;
       else if (IS_ORDINARY_CONTEXT (context))
@@ -947,16 +947,15 @@ acquire_init_state_context (err, preg, mctx, idx)
 /* Check whether the regular expression match input string INPUT or not,
    and return the index where the matching end, return -1 if not match,
    or return -2 in case of an error.
-   FL_SEARCH means we must search where the matching starts,
    FL_LONGEST_MATCH means we want the POSIX longest matching.
    Note that the matcher assume that the maching starts from the current
    index of the buffer.  */
 
 static int
-check_matching (preg, mctx, fl_search, fl_longest_match)
+check_matching (preg, mctx, fl_longest_match)
     const regex_t *preg;
     re_match_context_t *mctx;
-    int fl_search, fl_longest_match;
+    int fl_longest_match;
 {
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   reg_errcode_t err;
@@ -1006,31 +1005,15 @@ check_matching (preg, mctx, fl_search, fl_longest_match)
 
   while (!re_string_eoi (mctx->input))
     {
-      cur_state = transit_state (&err, preg, mctx, cur_state,
-				 fl_search && !match);
+      cur_state = transit_state (&err, preg, mctx, cur_state);
       if (cur_state == NULL) /* Reached at the invalid state or an error.  */
 	{
 	  cur_str_idx = re_string_cur_idx (mctx->input);
 	  if (BE (err != REG_NOERROR, 0))
 	    return -2;
-	  if (fl_search && !match)
-	    {
-	      /* Restart from initial state, since we are searching
-		 the point from where matching start.  */
-#ifdef RE_ENABLE_I18N
-	      if (dfa->mb_cur_max == 1
-		  || re_string_first_byte (mctx->input, cur_str_idx))
-#endif /* RE_ENABLE_I18N */
-		cur_state = acquire_init_state_context (&err, preg, mctx,
-							cur_str_idx);
-	      if (BE (cur_state == NULL && err != REG_NOERROR, 0))
-		return -2;
-	      if (mctx->state_log != NULL)
-		mctx->state_log[cur_str_idx] = cur_state;
-	    }
-	  else if (!fl_longest_match && match)
+	  if (!fl_longest_match && match)
 	    break;
-	  else /* (fl_longest_match && match) || (!fl_search && !match)  */
+	  else
 	    {
 	      if (mctx->state_log == NULL)
 		break;
@@ -2069,12 +2052,11 @@ sift_states_iter_mb (preg, mctx, sctx, node_idx, str_idx, max_str_idx)
    update the destination of STATE_LOG.  */
 
 static re_dfastate_t *
-transit_state (err, preg, mctx, state, fl_search)
+transit_state (err, preg, mctx, state)
      reg_errcode_t *err;
      const regex_t *preg;
      re_match_context_t *mctx;
      re_dfastate_t *state;
-     int fl_search;
 {
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   re_dfastate_t **trtable, *next_state;
@@ -2113,24 +2095,40 @@ transit_state (err, preg, mctx, state, fl_search)
 	{
 	  /* Use transition table  */
 	  ch = re_string_fetch_byte (mctx->input);
-	  trtable = fl_search ? state->trtable_search : state->trtable;
+	  trtable = state->trtable;
 	  if (trtable == NULL)
 	    {
-	      trtable = build_trtable (preg, state, fl_search);
-	      if (fl_search)
-		state->trtable_search = trtable;
-	      else
-		state->trtable = trtable;
+	      trtable = build_trtable (preg, state);
+	      if (trtable == NULL)
+		{
+		  *err = REG_ESPACE;
+		  return NULL;
+		}
 	    }
-	  next_state = trtable[ch];
+	  if (BE (state->word_trtable, 0))
+	    {
+	      unsigned int context;
+	      context
+		= re_string_context_at (mctx->input,
+					re_string_cur_idx (mctx->input) - 1,
+					mctx->eflags, preg->newline_anchor);
+	      if (IS_WORD_CONTEXT (context))
+		next_state = trtable[ch + SBC_MAX];
+	      else
+		next_state = trtable[ch];
+	    }
+	  else
+	    next_state = trtable[ch];
 	}
+#if 0
       else
 	{
 	  /* don't use transition table  */
-	  next_state = transit_state_sb (err, preg, state, fl_search, mctx);
+	  next_state = transit_state_sb (err, preg, state, mctx);
 	  if (BE (next_state == NULL && err != REG_NOERROR, 0))
 	    return NULL;
 	}
+#endif
     }
 
   cur_idx = re_string_cur_idx (mctx->input);
@@ -2242,15 +2240,15 @@ check_subexp_matching_top (dfa, mctx, cur_nodes, str_idx)
   return REG_NOERROR;
 }
 
+#if 0
 /* Return the next state to which the current state STATE will transit by
    accepting the current input byte.  */
 
 static re_dfastate_t *
-transit_state_sb (err, preg, state, fl_search, mctx)
+transit_state_sb (err, preg, state, mctx)
      reg_errcode_t *err;
      const regex_t *preg;
      re_dfastate_t *state;
-     int fl_search;
      re_match_context_t *mctx;
 {
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
@@ -2276,29 +2274,6 @@ transit_state_sb (err, preg, state, fl_search, mctx)
 	    }
 	}
     }
-  if (fl_search)
-    {
-#ifdef RE_ENABLE_I18N
-      int not_initial = 0;
-      if (dfa->mb_cur_max > 1)
-	for (node_cnt = 0; node_cnt < next_nodes.nelem; ++node_cnt)
-	  if (dfa->nodes[next_nodes.elems[node_cnt]].type == CHARACTER)
-	    {
-	      not_initial = dfa->nodes[next_nodes.elems[node_cnt]].mb_partial;
-	      break;
-	    }
-      if (!not_initial)
-#endif
-	{
-	  *err = re_node_set_merge (&next_nodes,
-				    dfa->init_state->entrance_nodes);
-	  if (BE (*err != REG_NOERROR, 0))
-	    {
-	      re_node_set_free (&next_nodes);
-	      return NULL;
-	    }
-	}
-    }
   context = re_string_context_at (mctx->input, cur_str_idx, mctx->eflags,
 				  preg->newline_anchor);
   next_state = re_acquire_state_context (err, dfa, &next_nodes, context);
@@ -2309,6 +2284,7 @@ transit_state_sb (err, preg, state, fl_search, mctx)
   re_string_skip_bytes (mctx->input, 1);
   return next_state;
 }
+#endif
 
 #ifdef RE_ENABLE_I18N
 static reg_errcode_t
@@ -3117,10 +3093,9 @@ expand_bkref_cache (preg, mctx, cur_nodes, cur_str, last_str, subexp_num,
    Return the new table if succeeded, otherwise return NULL.  */
 
 static re_dfastate_t **
-build_trtable (preg, state, fl_search)
+build_trtable (preg, state)
     const regex_t *preg;
-    const re_dfastate_t *state;
-    int fl_search;
+    re_dfastate_t *state;
 {
   reg_errcode_t err;
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
@@ -3154,6 +3129,7 @@ build_trtable (preg, state, fl_search)
 
   /* Initialize transiton table.  */
   trtable = (re_dfastate_t **) calloc (sizeof (re_dfastate_t *), SBC_MAX);
+  state->word_trtable = 0;
   if (BE (trtable == NULL, 0))
     {
       if (dests_node_malloced)
@@ -3170,7 +3146,10 @@ build_trtable (preg, state, fl_search)
 	free (dests_node);
       /* Return NULL in case of an error, trtable otherwise.  */
       if (ndests == 0)
-	return trtable;
+	{
+	  state->trtable = trtable;
+	  return trtable;
+	}
       free (trtable);
       return NULL;
     }
@@ -3224,26 +3203,6 @@ out_free:
 		goto out_free;
 	    }
 	}
-      /* If search flag is set, merge the initial state.  */
-      if (fl_search)
-	{
-#ifdef RE_ENABLE_I18N
-	  int not_initial = 0;
-	  for (j = 0; j < follows.nelem; ++j)
-	    if (dfa->nodes[follows.elems[j]].type == CHARACTER)
-	      {
-		not_initial = dfa->nodes[follows.elems[j]].mb_partial;
-		break;
-	      }
-	  if (!not_initial)
-#endif
-	    {
-	      err = re_node_set_merge (&follows,
-				       dfa->init_state->entrance_nodes);
-	      if (BE (err != REG_NOERROR, 0))
-		goto out_free;
-	    }
-	}
       dest_states[i] = re_acquire_state_context (&err, dfa, &follows, 0);
       if (BE (dest_states[i] == NULL && err != REG_NOERROR, 0))
 	goto out_free;
@@ -3274,31 +3233,41 @@ out_free:
     for (j = 0; j < UINT_BITS; ++j, ++ch)
       if ((acceptable[i] >> j) & 1)
 	{
-	  /* The current state accepts the character ch.  */
-	  if (IS_WORD_CHAR (ch))
-	    {
-	      for (k = 0; k < ndests; ++k)
-		if ((dests_ch[k][i] >> j) & 1)
+	  for (k = 0; k < ndests; ++k)
+	    if ((dests_ch[k][i] >> j) & 1)
+	      {
+		/* k-th destination accepts the word character ch.  */
+		if (state->word_trtable)
 		  {
-		    /* k-th destination accepts the word character ch.  */
-		    trtable[ch] = dest_states_word[k];
-		    /* There must be only one destination which accepts
-		       character ch.  See group_nodes_into_DFAstates.  */
-		    break;
-		  }
-	    }
-	  else /* not WORD_CHAR */
-	    {
-	      for (k = 0; k < ndests; ++k)
-		if ((dests_ch[k][i] >> j) & 1)
-		  {
-		    /* k-th destination accepts the non-word character ch.  */
 		    trtable[ch] = dest_states[k];
-		    /* There must be only one destination which accepts
-		       character ch.  See group_nodes_into_DFAstates.  */
-		    break;
+		    trtable[ch + SBC_MAX] = dest_states_word[k];
 		  }
-	    }
+		else if (dfa->mb_cur_max > 1
+			 && dest_states[k] != dest_states_word[k])
+		  {
+		    re_dfastate_t **new_trtable;
+
+		    new_trtable = (re_dfastate_t **)
+				  realloc (trtable,
+					   sizeof (re_dfastate_t *)
+					   * 2 * SBC_MAX);
+		    if (BE (new_trtable == NULL, 0))
+		      goto out_free;
+		    memcpy (new_trtable + SBC_MAX, new_trtable,
+			    sizeof (re_dfastate_t *) * SBC_MAX);
+		    trtable = new_trtable;
+		    state->word_trtable = 1;
+		    trtable[ch] = dest_states[k];
+		    trtable[ch + SBC_MAX] = dest_states_word[k];
+		  }
+		else if (IS_WORD_CHAR (ch))
+		  trtable[ch] = dest_states_word[k];
+		else
+		  trtable[ch] = dest_states[k];
+		/* There must be only one destination which accepts
+		   character ch.  See group_nodes_into_DFAstates.  */
+		break;
+	      }
 	}
   /* new line */
   if (bitset_contain (acceptable, NEWLINE_CHAR))
@@ -3309,6 +3278,8 @@ out_free:
 	  {
 	    /* k-th destination accepts newline character.  */
 	    trtable[NEWLINE_CHAR] = dest_states_nl[k];
+	    if (state->word_trtable)
+	      trtable[NEWLINE_CHAR + SBC_MAX] = dest_states_nl[k];
 	    /* There must be only one destination which accepts
 	       newline.  See group_nodes_into_DFAstates.  */
 	    break;
@@ -3325,6 +3296,7 @@ out_free:
   if (dests_node_malloced)
     free (dests_node);
 
+  state->trtable = trtable;
   return trtable;
 }
 
@@ -3386,6 +3358,8 @@ group_nodes_into_DFAstates (preg, state, dests_node, dests_ch)
 	 match it the context.  */
       if (constraint)
 	{
+	  int word_char_max;
+
 	  if (constraint & NEXT_NEWLINE_CONSTRAINT)
 	    {
 	      int accepts_newline = bitset_contain (accepts, NEWLINE_CHAR);
@@ -3400,11 +3374,16 @@ group_nodes_into_DFAstates (preg, state, dests_node, dests_ch)
 	      bitset_empty (accepts);
 	      continue;
 	    }
+
+	  /* This assumes ASCII compatible locale.  We cannot say
+	     anything about the non-ascii chars.  */
+	  word_char_max
+	    = dfa->mb_cur_max > 1 ? BITSET_UINTS / 2 : BITSET_UINTS;
 	  if (constraint & NEXT_WORD_CONSTRAINT)
-	    for (j = 0; j < BITSET_UINTS; ++j)
+	    for (j = 0; j < word_char_max; ++j)
 	      accepts[j] &= dfa->word_char[j];
 	  if (constraint & NEXT_NOTWORD_CONSTRAINT)
-	    for (j = 0; j < BITSET_UINTS; ++j)
+	    for (j = 0; j < word_char_max; ++j)
 	      accepts[j] &= ~dfa->word_char[j];
 	}
 

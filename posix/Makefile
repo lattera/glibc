@@ -148,7 +148,6 @@ tst-exec-ARGS = -- $(built-program-cmd)
 tst-spawn-ARGS = -- $(built-program-cmd)
 tst-dir-ARGS = `pwd` `cd $(common-objdir)/$(subdir); pwd` `cd $(common-objdir); pwd` $(objpfx)tst-dir
 tst-chmod-ARGS = `pwd`
-tst-rxspencer-ARGS = rxspencer/tests
 
 tst-fnmatch-ENV = LOCPATH=$(common-objpfx)localedata
 tst-regexloc-ENV = LOCPATH=$(common-objpfx)localedata
@@ -160,6 +159,8 @@ bug-regex17-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex18-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex19-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex20-ENV = LOCPATH=$(common-objpfx)localedata
+tst-rxspencer-ARGS = --utf8 rxspencer/tests
+tst-rxspencer-ENV = LOCPATH=$(common-objpfx)localedata
 
 testcases.h: TESTS TESTS2C.sed
 	sed -f TESTS2C.sed < $< > $@T
@@ -207,9 +208,13 @@ bug-regex21-ENV = MALLOC_TRACE=$(objpfx)bug-regex21.mtrace
 $(objpfx)bug-regex21-mem: $(objpfx)bug-regex21.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex21.mtrace > $@
 
-tst-rxspencer-ENV = MALLOC_TRACE=$(objpfx)tst-rxspencer.mtrace
-
+# tst-rxspencer.mtrace is generated only when run without --utf8
+# option, since otherwise the file has almost 100M and takes very long
+# time to process.
 $(objpfx)tst-rxspencer-mem: $(objpfx)tst-rxspencer.out
+	MALLOC_TRACE=$(objpfx)tst-rxspencer.mtrace $(tst-rxspencer-ENV) \
+	  $(run-program-prefix) $(objpfx)tst-rxspencer rxspencer/tests \
+	  > /dev/null
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-rxspencer.mtrace > $@
 
 $(objpfx)tst-getconf.out: tst-getconf.sh $(objpfx)getconf
