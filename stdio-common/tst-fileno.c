@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 static int

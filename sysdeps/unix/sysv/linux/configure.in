@@ -39,6 +39,9 @@ fi
 # kernel headers are young enough.  Additionally we have minimal
 # kernel versions for some architectures.
 case "$machine" in
+  mips*)
+    arch_minimum_kernel=2.2.15
+    ;;
   sh*)
     arch_minimum_kernel=2.3.99
     ;;

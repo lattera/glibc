@@ -1,3 +1,7 @@
+2000-06-21  Andreas Jaeger  <aj@suse.de>
+
+	* tst-trans.c: Include <stdlib.h> and <string.h>.
+
 2000-06-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/pt_BR: Correct day and month names.

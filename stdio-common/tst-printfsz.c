@@ -1,6 +1,7 @@
 /* Based on code by Larry McVoy <lm@neteng.engr.sgi.com>.  */
 #include <printf.h>
 #include <stdio.h>
+#include <string.h>
 
 #define V       12345678.12345678
 
