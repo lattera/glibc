@@ -51,7 +51,6 @@ ENTRY (BP_SYM (__mpn_addmul_1))
 	shll	$2, %size	/* convert limbs to bytes */
 	CHECK_BOUNDS_BOTH_WIDE (%res_ptr, RES(%esp), %size)
 	CHECK_BOUNDS_BOTH_WIDE (%s1_ptr, S1(%esp), %size)
-	CHECK_BOUNDS_BOTH_WIDE (%s2_limb, S2LIMB(%esp), %size)
 	shrl	$2, %size
 #endif
 	leal	(%res_ptr,%size,4), %res_ptr
