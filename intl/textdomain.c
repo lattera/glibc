@@ -51,6 +51,14 @@
 # define __libc_rwlock_unlock(NAME)
 #endif
 
+/* The internal variables in the standalone libintl.a must have different
+   names than the internal variables in GNU libc, otherwise programs
+   using libintl.a cannot be linked statically.  */
+#if !defined _LIBC
+# define _nl_default_default_domain _nl_default_default_domain__
+# define _nl_current_default_domain _nl_current_default_domain__
+#endif
+
 /* @@ end of prolog @@ */
 
 /* Name of the default text domain.  */

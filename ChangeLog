@@ -1,3 +1,10 @@
+2000-09-18  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/dcigettext.c: Outside libc, use local variable names that don't
+	clash with those in libc.
+	* intl/bindtextdom.c: Likewise.
+	* intl/textdomain.c: Likewise.
+
 2000-09-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/ldconfig.c (parse_conf): Print full name of config dir

@@ -57,6 +57,14 @@ void free ();
 # define __libc_rwlock_unlock(NAME)
 #endif
 
+/* The internal variables in the standalone libintl.a must have different
+   names than the internal variables in GNU libc, otherwise programs
+   using libintl.a cannot be linked statically.  */
+#if !defined _LIBC
+# define _nl_default_dirname _nl_default_dirname__
+# define _nl_domain_bindings _nl_domain_bindings__
+#endif
+
 /* @@ end of prolog @@ */
 
 /* Contains the default location of the message catalogs.  */

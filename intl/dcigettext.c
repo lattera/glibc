@@ -119,6 +119,16 @@ void free ();
     ((int) &((struct { char dummy1; TYPE dummy2; } *) 0)->dummy2)
 #endif
 
+/* The internal variables in the standalone libintl.a must have different
+   names than the internal variables in GNU libc, otherwise programs
+   using libintl.a cannot be linked statically.  */
+#if !defined _LIBC
+# define _nl_default_default_domain _nl_default_default_domain__
+# define _nl_current_default_domain _nl_current_default_domain__
+# define _nl_default_dirname _nl_default_dirname__
+# define _nl_domain_bindings _nl_domain_bindings__
+#endif
+
 /* @@ end of prolog @@ */
 
 #ifdef _LIBC
