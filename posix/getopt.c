@@ -64,6 +64,19 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #endif	/* GNU C library.  */
 
+#ifdef VMS
+#include <unixlib.h>
+#if HAVE_STRING_H - 0
+#include <string.h>
+#endif
+#endif
+
+#ifdef WIN32
+/* It's not Unix, really.  See?  Capital letters.  */
+#include <windows.h>
+#define getpid() GetCurrentProcessId()
+#endif
+
 #ifndef _
 /* This is for other GNU distributions with internationalized messages.
    When compiling libc, the _ macro is predefined.  */
