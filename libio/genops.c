@@ -48,7 +48,9 @@ flush_cleanup (void *not_used)
 {
   if (run_fp != NULL)
     _IO_funlockfile (run_fp);
+#ifdef _IO_MTSAFE_IO
   _IO_lock_unlock (list_all_lock);
+#endif
 }
 
 void
