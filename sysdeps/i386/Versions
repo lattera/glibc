@@ -20,3 +20,10 @@ libc {
     __strspn_cg; __strspn_g; __strstr_cg; __strstr_g;
   }
 }
+libm {
+  GLIBC_2.1 {
+    # A generic bug got this omitted from other configurations' version
+    # sets, but we always had it.
+    exp2l;
+  }
+}

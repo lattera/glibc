@@ -31,6 +31,6 @@ __exp2 (double x)		/* wrapper exp2 */
 }
 weak_alias (__exp2, exp2)
 #ifdef NO_LONG_DOUBLE
-strong_alias (__exp2, __expl2)
-weak_alias (__exp2, expl2)
+strong_alias (__exp2, __exp2l)
+weak_alias (__exp2, exp2l)
 #endif

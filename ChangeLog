@@ -1,5 +1,16 @@
 2005-03-28  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/generic/w_exp2.c [NO_LONG_DOUBLE]: Fix typos in alias names.
+	Reported by Mark Mitchell <mark@codesourcery.com>.
+	* Versions.def (libm): Define GLIBC_2.4 set.
+	* math/Versions (libm: GLIBC_2.4): Add this set, with exp2l.
+	* sysdeps/i386/Versions (libm: GLIBC_2.1): Add this set, with exp2l.
+	* sysdeps/ia64/Versions: Likewise.
+	* sysdeps/m68k/Versions: Likewise.
+	* sysdeps/sparc/sparc64/Versions: Likewise.
+	* sysdeps/x86_64/Versions: New file.
+	* sysdeps/mips/mips64/Versions: New file.
+
 	* locale/langinfo.h (_NL_LOCALE_NAME): New macro.
 	[__USE_GNU] (NL_LOCALE_NAME): New macro.
 	* locale/nl_langinfo.c: Grok special item value for _NL_LOCALE_NAME,
