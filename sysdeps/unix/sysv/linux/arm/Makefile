@@ -1,5 +1,5 @@
 ifeq ($(subdir),misc)
-sysdep_routines += setfsgid setfsuid setresgid setresuid
+sysdep_routines += setfsgid setfsuid setresgid setresuid ioperm
 endif
 
 ifeq ($(subdir),signal)
