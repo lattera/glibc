@@ -1247,6 +1247,7 @@ be needed after upgrading:
   anymore.
 - There's no more K&R compatibility in the glibc headers.  The GNU C library
   requires a C compiler that handles especially prototypes correctly.
+  Especially gcc -traditional will not work with glibc headers.
 
 Please read also the NEWS file which is the authoritative source for this
 and gives more details for some topics.
