@@ -1,5 +1,7 @@
 2003-10-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* SUPPORTED (SUPPORTED-LOCALES): Add uz_UZ@cyrillic.UTF-8.
+
 	* locales/uz_UZ: New version by Mashrab Kuvatov.
 	* locales/uz_UZ@cyrillic: New file.  Patch by Mashrab Kuvatov.
 
