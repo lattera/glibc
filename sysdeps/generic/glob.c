@@ -355,42 +355,14 @@ static
 inline
 #endif
 const char *
-next_brace_sub (begin)
-     const char *begin;
+next_brace_sub (cp)
+     const char *cp;
 {
   unsigned int depth = 0;
-  const char *cp = begin;
-
-  while (1)
-    {
-      if (depth == 0)
-	{
-	  if (*cp != ',' && *cp != '}' && *cp != '\0')
-	    {
-	      if (*cp == '{')
-		++depth;
-	      ++cp;
-	      continue;
-	    }
-	}
-      else
-	{
-	  while (*cp != '\0' && (*cp != '}' || depth > 0))
-	    {
-	      if (*cp == '}')
-		--depth;
-	      ++cp;
-	    }
-	  if (*cp == '\0')
-	    /* An incorrectly terminated brace expression.  */
-	    return NULL;
-
-	  continue;
-	}
-      break;
-    }
-
-  return cp;
+  while (*cp != '\0' && (*cp != '}' || depth--) && (*cp != ',' || depth))
+    if (*cp++ == '{')
+      depth++;
+  return *cp != '\0' ? cp : NULL;
 }
 
 #endif /* !GLOB_ONLY_P */
