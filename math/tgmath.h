@@ -1,4 +1,5 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -174,6 +175,36 @@
 			     __tgmres = Cfct##f (Val);			      \
 			 }						      \
 		       __tgmres; }))
+
+/* XXX This definition has to be changed as soon as the compiler understands
+   the imaginary keyword.  */
+# define __TGMATH_UNARY_REAL_IMAG_RET_REAL(Val, Fct, Cfct) \
+     (__extension__ ({ __tgmath_real_type (Val) __tgmres;		      \
+		       if (sizeof (__real__ (Val)) > sizeof (double)	      \
+			   && __builtin_classify_type (__real__ (Val)) == 8)  \
+			 {						      \
+			   if (sizeof (__real__ (Val)) == sizeof (Val))	      \
+			     __tgmres = __tgml(Fct) (Val);		      \
+			   else						      \
+			     __tgmres = __tgml(Cfct) (Val);		      \
+			 }						      \
+		       else if (sizeof (__real__ (Val)) == sizeof (double)    \
+				|| __builtin_classify_type (__real__ (Val))   \
+				   != 8)				      \
+			 {						      \
+			   if (sizeof (__real__ (Val)) == sizeof (Val))	      \
+			     __tgmres = Fct (Val);			      \
+			   else						      \
+			     __tgmres = Cfct (Val);			      \
+			 }						      \
+		       else						      \
+			 {						      \
+			   if (sizeof (__real__ (Val)) == sizeof (Val))	      \
+			     __tgmres = Fct##f (Val);			      \
+			   else						      \
+			     __tgmres = Cfct##f (Val);			      \
+			 }						      \
+		       __real__ __tgmres; }))
 
 /* XXX This definition has to be changed as soon as the compiler understands
    the imaginary keyword.  */
@@ -420,9 +451,9 @@
 /* Decomposing complex values.  */
 
 /* Imaginary part of Z.  */
-#define cimag(Val) __TGMATH_UNARY_REAL_IMAG (Val, cimag, cimag)
+#define cimag(Val) __TGMATH_UNARY_REAL_IMAG_RET_REAL (Val, cimag, cimag)
 
 /* Real part of Z.  */
-#define creal(Val) __TGMATH_UNARY_REAL_IMAG (Val, creal, creal)
+#define creal(Val) __TGMATH_UNARY_REAL_IMAG_RET_REAL (Val, creal, creal)
 
 #endif /* tgmath.h */
