@@ -1,5 +1,8 @@
 2002-12-03  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Include static TLS
+	area surplus in calculation for sbrk call.
+
 	* iconvdata/cp1125.c: New file.
 	* iconvdata/Makefile (distribute): Add it.
 	(modules): Add CP1125.
