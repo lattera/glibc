@@ -91,10 +91,10 @@ internal_ucs4_loop (struct __gconv_step *step,
 
   for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4)
     *outptr32++ = bswap_32 (*(const uint32_t *) inptr);
-  outptr = (unsigned char *) outptr32;
+  outptr = 
 
   *inptrp = inptr;
-  *outptrp = outptr;
+  *outptrp = (unsigned char *) outptr32;
 #elif __BYTE_ORDER == __BIG_ENDIAN
   /* Simply copy the data.  */
   *inptrp = inptr + n_convert * 4;
@@ -453,9 +453,11 @@ internal_ucs4le_loop (struct __gconv_step *step,
 #if __BYTE_ORDER == __BIG_ENDIAN
   /* Sigh, we have to do some real work.  */
   size_t cnt;
+  uint32_t *outptr32 = (uint32_t *) outptr;
 
   for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4)
-    *((uint32_t *) outptr)++ = bswap_32 (*(const uint32_t *) inptr);
+    *outptr32++ = bswap_32 (*(const uint32_t *) inptr);
+  outptr = (unsigned char *) outptr32;
 
   *inptrp = inptr;
   *outptrp = outptr;
