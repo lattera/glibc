@@ -1,5 +1,8 @@
 2001-12-10  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/mach/hurd/bind.c (bind): Don't deallocate IFSOCK if we never
+	set it.
+
 	* shlib-versions [USE_IN_LIBIO] (.*-.*-gnu-gnu.*): Set default
 	set to GLIBC_2.2.5, not GLIBC_2.2.4.
 

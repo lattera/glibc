@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1992,94,95,96,97,98,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,6 @@ bind (fd, addrarg, len)
 
       if (! err)
 	{
-	  file_t ifsock;
 	  /* Set the node's translator to make it a local-domain socket.  */
 	  err = __file_set_translator (node,
 				       FS_TRANS_EXCL | FS_TRANS_SET,
@@ -77,26 +76,27 @@ bind (fd, addrarg, len)
 	  if (! err)
 	    {
 	      /* Get a port to the ifsock translator.  */
-	      ifsock = __file_name_lookup_under (dir, n, 0, 0);
+	      file_t ifsock = __file_name_lookup_under (dir, n, 0, 0);
 	      if (ifsock == MACH_PORT_NULL)
 		{
 		  err = errno;
 		  /* If we failed, get rid of the node we created.  */
 		  __dir_unlink (dir, n);
 		}
+	      else
+		{
+		  /* Get the address port.  */
+		  err = __ifsock_getsockaddr (ifsock, &aport);
+		  if (err == MIG_BAD_ID || err == EOPNOTSUPP)
+		    /* We are not talking to /hurd/ifsock.  Probably
+		       someone came in after we linked our node, unlinked
+		       it, and replaced it with a different node, before we
+		       did our lookup.  Treat it as if our link had failed
+		       with EEXIST.  */
+		    err = EADDRINUSE;
+		}
+	      __mach_port_deallocate (__mach_task_self (), ifsock);
 	    }
-	  if (! err)
-	    {
-	      /* Get the address port.  */
-	      err = __ifsock_getsockaddr (ifsock, &aport);
-	      if (err == MIG_BAD_ID || err == EOPNOTSUPP)
-		/* We are not talking to /hurd/ifsock.  Probably someone
-		   came in after we linked our node, unlinked it, and
-		   replaced it with a different node, before we did our
-		   lookup.  Treat it as if our link had failed with EEXIST.  */
-		err = EADDRINUSE;
-	    }
-	  __mach_port_deallocate (__mach_task_self (), ifsock);
 	}
       __mach_port_deallocate (__mach_task_self (), dir);
 
