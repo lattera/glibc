@@ -1,3 +1,10 @@
+Tue Apr  2 21:27:01 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/glob.c (glob_pattern_p): Avoid scanning past eos if
+	the pattern ends with a backslash and quoting is enabled.
+	* posix/fnmatch.c (fnmatch): Likewise; return FNM_NOMATCH for such
+ 	patterns.
+
 Thu Mar 14 06:01:07 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* posix/glob.c (glob): In GLOB_BRACE brace expansion, fix buffer size
