@@ -1,5 +1,5 @@
 /* Definitions for POSIX memory map interface.  Linux/MIPS version.
-   Copyright (C) 1997, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +34,10 @@
 #define PROT_WRITE	0x2		/* Page can be written.  */
 #define PROT_EXEC	0x4		/* Page can be executed.  */
 #define PROT_NONE	0x0		/* Page can not be accessed.  */
+#define PROT_GROWSDOWN	0x01000000	/* Extend change to start of
+					   growsdown vma (mprotect only).  */
+#define PROT_GROWSUP	0x02000000	/* Extend change to start of
+					   growsup vma (mprotect only).  */
 
 /* Sharing types (must choose one and only one of these).  */
 #define MAP_SHARED	0x01		/* Share changes.  */
