@@ -1,5 +1,8 @@
 2003-01-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/Makefile (tests): Add bug14.
+	* stdio-common/bug14.c: New file.
+
 	* stdio-common/vfscanf.c: When recognizing multibyte characters in
 	string reset the byte counter after mbrtowc reported it is not a
 	partial character.  Reported by Al Viro <aviro@redhat.com>.
