@@ -79,10 +79,14 @@ C		 "]]"		        "[!a]]"		       0
 # *** implement [. .]
 
 # B.6 015(C)
-# *** implement [= =]
+C		 "a"			"[[=a=]]"	       0
+C		 "b"			"[[=a=]b]"	       0
+C		 "b"			"[[=a=][=b=]]"	       0
 
 # B.6 016(C)
-# *** implement [= =]
+C		 "="			"[[=a=]b]"	       NOMATCH
+C		 "]"			"[[=a=]b]"	       NOMATCH
+C		 "a"			"[[=b=]]"	       NOMATCH
 
 # B.6 017(C)
 C		 "a"			"[[:alnum:]]"	       0
@@ -385,3 +389,28 @@ de_DE.ISO-8859-1 "Z"			"[[:alpha:]]"	       0
 de_DE.ISO-8859-1 "Ä"			"[[:alpha:]]"	       0
 de_DE.ISO-8859-1 "Ö"			"[[:alpha:]]"	       0
 de_DE.ISO-8859-1 "Ü"			"[[:alpha:]]"	       0
+
+de_DE.ISO-8859-1 "a"			"[[=a=]b]"	       0
+de_DE.ISO-8859-1 "â"			"[[=a=]b]"	       0
+de_DE.ISO-8859-1 "à"			"[[=a=]b]"	       0
+de_DE.ISO-8859-1 "á"			"[[=a=]b]"	       0
+de_DE.ISO-8859-1 "b"			"[[=a=]b]"	       0
+de_DE.ISO-8859-1 "c"			"[[=a=]b]"	       NOMATCH
+de_DE.ISO-8859-1 "a"			"[[=â=]b]"	       0
+de_DE.ISO-8859-1 "â"			"[[=â=]b]"	       0
+de_DE.ISO-8859-1 "à"			"[[=â=]b]"	       0
+de_DE.ISO-8859-1 "á"			"[[=â=]b]"	       0
+de_DE.ISO-8859-1 "b"			"[[=â=]b]"	       0
+de_DE.ISO-8859-1 "c"			"[[=â=]b]"	       NOMATCH
+de_DE.ISO-8859-1 "a"			"[[=à=]b]"	       0
+de_DE.ISO-8859-1 "â"			"[[=à=]b]"	       0
+de_DE.ISO-8859-1 "à"			"[[=à=]b]"	       0
+de_DE.ISO-8859-1 "á"			"[[=à=]b]"	       0
+de_DE.ISO-8859-1 "b"			"[[=à=]b]"	       0
+de_DE.ISO-8859-1 "c"			"[[=à=]b]"	       NOMATCH
+de_DE.ISO-8859-1 "a"			"[[=á=]b]"	       0
+de_DE.ISO-8859-1 "â"			"[[=á=]b]"	       0
+de_DE.ISO-8859-1 "à"			"[[=á=]b]"	       0
+de_DE.ISO-8859-1 "á"			"[[=á=]b]"	       0
+de_DE.ISO-8859-1 "b"			"[[=á=]b]"	       0
+de_DE.ISO-8859-1 "c"			"[[=á=]b]"	       NOMATCH

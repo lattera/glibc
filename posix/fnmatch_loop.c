@@ -302,6 +302,112 @@ FCT (pattern, string, no_leading_period, flags)
 #endif
 		    c = *p++;
 		  }
+#ifdef _LIBC
+		else if (c == L('[') && *p == L('='))
+		  {
+		    UCHAR str[1];
+		    uint32_t nrules =
+		      _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
+		    const CHAR *startp = p;
+
+		    c = *++p;
+		    if (c == L('\0'))
+		      {
+			p = startp;
+			c = L('[');
+			goto normal_bracket;
+		      }
+		    str[0] = c;
+
+		    c = *++p;
+		    if (c != L('=') || p[1] != L(']'))
+		      {
+			p = startp;
+			c = L('[');
+			goto normal_bracket;
+		      }
+		    p += 2;
+
+		    if (nrules == 0)
+		      {
+			if ((UCHAR) *n == str[0])
+			  goto matched;
+		      }
+		    else
+		      {
+			const int32_t *table;
+# if WIDE_CHAR_VERSION
+			const int32_t *weights;
+			const int32_t *extra;
+# else
+			const unsigned char *weights;
+			const unsigned char *extra;
+# endif
+			const int32_t *indirect;
+			int32_t idx;
+			const UCHAR *cp = (const UCHAR *) str;
+
+			/* This #include defines a local function!  */
+# if WIDE_CHAR_VERSION
+#  include <locale/weightwc.h>
+# else
+#  include <locale/weight.h>
+# endif
+
+# if WIDE_CHAR_VERSION
+			table = (const int32_t *)
+			  _NL_CURRENT (LC_COLLATE, _NL_COLLATE_TABLEWC);
+			weights = (const int32_t *)
+			  _NL_CURRENT (LC_COLLATE, _NL_COLLATE_WEIGHTWC);
+			extra = (const int32_t *)
+			  _NL_CURRENT (LC_COLLATE, _NL_COLLATE_EXTRAWC);
+			indirect = (const int32_t *)
+			  _NL_CURRENT (LC_COLLATE, _NL_COLLATE_INDIRECTWC);
+# else
+			table = (const int32_t *)
+			  _NL_CURRENT (LC_COLLATE, _NL_COLLATE_TABLEMB);
+			weights = (const unsigned char *)
+			  _NL_CURRENT (LC_COLLATE, _NL_COLLATE_WEIGHTMB);
+			extra = (const unsigned char *)
+			  _NL_CURRENT (LC_COLLATE, _NL_COLLATE_EXTRAMB);
+			indirect = (const int32_t *)
+			  _NL_CURRENT (LC_COLLATE, _NL_COLLATE_INDIRECTMB);
+# endif
+
+			idx = findidx (&cp);
+			if (idx != 0)
+			  {
+			    /* We found a table entry.  Now see whether the
+			       character we are currently at has the same
+			       equivalance class value.  */
+			    int len = weights[idx];
+			    int32_t idx2;
+			    const UCHAR *np = (const UCHAR *) n;
+
+			    idx2 = findidx (&np);
+# if !WIDE_CHAR_VERSION
+			    if (idx2 != 0 && len == weights[idx2])
+			      {
+				int cnt = 0;
+
+				while (cnt < len
+				       && (weights[idx + 1 + cnt]
+					   == weights[idx2 + 1 + cnt]))
+				  ++cnt;
+
+				if (cnt == len)
+				  goto matched;
+			      }
+# else
+			    if (idx2 != 0 && weights[idx] == weights[idx2])
+			      goto matched;
+# endif
+			  }
+		      }
+
+		    c = *p++;
+		  }
+#endif
 		else if (c == L('\0'))
 		  /* [ (unterminated) loses.  */
 		  return FNM_NOMATCH;
