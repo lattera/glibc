@@ -35,6 +35,13 @@ do_test (void)
       return 1;
     }
 
+  fpos_t pos;
+  if (fgetpos (f, &pos) != 0)
+    {
+      printf ("fgetpos: %m\n");
+      return 1;
+    }
+
 #define L_(s) L##s
   //#define fwscanf fscanf
   //#define fwprintf fprintf
@@ -46,9 +53,9 @@ do_test (void)
       return 1;
     }
 
-  if (fseek (f, 0, SEEK_SET) != 0)
+  if (fsetpos (f, &pos) != 0)
     {
-      printf ("fseek: %m\n");
+      printf ("fsetpos: %m\n");
       return 1;
     }
 
