@@ -115,6 +115,10 @@ enum __rlimit_resource
 # define RLIM64_INFINITY 0x7fffffffffffffffLL
 #endif
 
+/* We can represent all limits.  */
+#define RLIM_SAVED_MAX	RLIM_INFINITY
+#define RLIM_SAVED_CUR	RLIM_INFINITY
+
 
 /* Type for resource quantity measurement.  */
 #ifndef __USE_FILE_OFFSET64

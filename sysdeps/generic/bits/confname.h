@@ -1,5 +1,5 @@
 /* `sysconf', `pathconf', and `confstr' NAME values.  Generic version.
-   Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,8 +48,10 @@ enum
 #define	_PC_ASYNC_IO			_PC_ASYNC_IO
     _PC_PRIO_IO,
 #define	_PC_PRIO_IO			_PC_PRIO_IO
-    _PC_SOCK_MAXBUF
+    _PC_SOCK_MAXBUF,
 #define	_PC_SOCK_MAXBUF			_PC_SOCK_MAXBUF
+    _PC_FILESIZEBITS
+#define _PC_FILESIZEBITS		_PC_FILESIZEBITS
   };
 
 /* Values for the argument to `sysconf'.  */

@@ -54,4 +54,7 @@
 	break;								      \
       }
 
+/* Extra unsecure variables.  */
+#define EXTRA_UNSECURE_ENVVARS "LD_AOUT_LIBRARY_PATH", "LD_AOUT_PRELOAD"
+
 #endif /* dl-librecon.h */

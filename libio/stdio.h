@@ -32,7 +32,9 @@ __BEGIN_DECLS
 # define __need_NULL
 # include <stddef.h>
 
-# define __need___va_list
+# ifndef __USE_XOPEN
+#  define __need___va_list
+# endif
 # include <stdarg.h>
 
 # include <bits/types.h>
@@ -111,7 +113,7 @@ extern void __libc_fatal __P ((__const char *__message))
 #define SEEK_END	2	/* Seek from end of file.  */
 
 
-#ifdef	__USE_SVID
+#if defined __USE_SVID || defined __USE_XOPEN
 /* Default path prefix for `tempnam' and `tmpnam'.  */
 # define P_tmpdir	"/tmp"
 #endif

@@ -1,5 +1,5 @@
 /* System dependand definitions for run-time dynamic loading.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,3 +30,8 @@
    the symbols of the loaded object and its dependencies are made
    visible as if the object were linked directly into the program.  */
 #define RTLD_GLOBAL	0x100
+
+/* Unix98 demands the following flag which is the inverse to RTLD_GLOBAL.
+   The implementation does this by default and so we can define the
+   value to zero.  */
+#define RTLD_LOCAL	0

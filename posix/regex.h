@@ -283,7 +283,7 @@ extern reg_syntax_t re_syntax_options;
 typedef enum
 {
 #if (_XOPEN_SOURCE - 0) == 500
-  REG_NOSYS = -1,	/* This will never happen for this implementation.  */
+  REG_ENOSYS = -1,	/* This will never happen for this implementation.  */
 #endif
 
   REG_NOERROR = 0,	/* Success.  */

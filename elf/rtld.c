@@ -1193,6 +1193,29 @@ process_envvars (enum mode *modep, int *lazyp)
 	}
     }
 
+  /* Extra security for SUID binaries.  Remove all dangerous environment
+     variables.  */
+  if (__libc_enable_secure)
+    {
+      static const char *unsecure_envvars[] =
+      {
+#ifdef EXTRA_UNSECURE_ENVVARS
+	EXTRA_UNSECURE_ENVVARS
+#endif
+      };
+      size_t cnt;
+
+      if (preloadlist != NULL)
+	unsetenv ("LD_PRELOAD");
+      if (library_path != NULL)
+	unsetenv ("LD_LIBRARY_PATH");
+
+      for (cnt = 0;
+	   cnt < sizeof (unsecure_envvars) / sizeof (unsecure_envvars[0]);
+	   ++cnt)
+	unsetenv (unsecure_envvars[cnt]);
+    }
+
   /* If we have to run the dynamic linker in debugging mode and the
      LD_DEBUG_OUTPUT environment variable is given, we write the debug
      messages to this file.  */

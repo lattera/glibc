@@ -49,6 +49,8 @@
 #define SYSV4_SUPER_MAGIC	0x012ff7b5
 #define SYSV2_SUPER_MAGIC	0x012ff7b6
 #define COH_SUPER_MAGIC		0x012ff7b7
+#define UFS_MAGIC		0x00011954
+#define UFS_CIGAM		0x54190100 /* byteswapped MAGIC */
 
 
 int
@@ -99,6 +101,8 @@ fstatvfs (int fd, struct statvfs *buf)
     case SYSV4_SUPER_MAGIC:
     case SYSV2_SUPER_MAGIC:
     case COH_SUPER_MAGIC:
+    case UFS_MAGIC:
+    case UFS_CIGAM:
     default:
       /* I hope it's safe to assume no fragmentation.  */
       buf->f_frsize = buf->f_bsize;

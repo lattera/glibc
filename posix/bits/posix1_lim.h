@@ -118,13 +118,16 @@
 /* Maximum length of login name.  */
 #define	_POSIX_LOGIN_NAME_MAX	9
 
+/* Maximum clock resolution in nanoseconds.  */
+#define _POSIX_CLOCKRES_MIN	20000000
+
 
 /* Get the implementation-specific values for the above.  */
 #include <bits/local_lim.h>
 
 
 #ifndef	SSIZE_MAX
-#define	SSIZE_MAX	INT_MAX
+# define SSIZE_MAX	INT_MAX
 #endif
 
 
@@ -132,7 +135,7 @@
    The current maximum can be got from `sysconf'.  */
 
 #ifndef	NGROUPS_MAX
-#define	NGROUPS_MAX	_POSIX_NGROUPS_MAX
+# define NGROUPS_MAX	_POSIX_NGROUPS_MAX
 #endif
 
 #endif	/* bits/posix1_lim.h  */

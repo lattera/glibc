@@ -246,11 +246,11 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 		Makefile.in sysdep.h set-hooks.h libc-symbols.h		\
 		version.h shlib-versions rpm/Makefile rpm/template	\
 		rpm/rpmrc glibcbug.in abi-tags stub-tag.h		\
-		test-skeleton.c include/des.h Versions.def versions.awk \
+		test-skeleton.c include/des.h Versions.def		\
 		$(addprefix scripts/,					\
 			    rellns-sh config.sub config.guess		\
 			    mkinstalldirs move-if-change install-sh	\
-			    test-installation.pl gen-FAQ.pl)
+			    test-installation.pl gen-FAQ.pl versions.awk)
 
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h

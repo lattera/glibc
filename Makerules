@@ -279,13 +279,18 @@ endif
 # Generate version maps.
 ifeq ($(versioning),yes)
 -include $(common-objpfx)sysd-versions
-$(common-objpfx)sysd-versions: $(..)Versions.def $(..)versions.awk \
+$(addprefix $(common-objpfx),$(version-maps)): $(common-objpfx)sysd-versions
+generated += $(versin-maps)
+
+ifndef avoid-generated
+$(common-objpfx)sysd-versions: $(..)Versions.def $(..)scripts/versions.awk \
 			       $(wildcard $(all-subdirs:%=$(..)%/Versions)) \
 			       $(wildcard $(+sysdep_dirs:%=%/Versions))
 	$(AWK) -v buildroot=$(common-objpfx) -v defsfile=$< \
+	       -v move_if_change='$(move-if-change)' \
 	       -f $(filter-out $<,$^) > $@T
 	mv -f $@T $@
-$(all-version-maps): $(common-objpfx)sysd-versions
+endif
 endif
 
 ifndef compile-command.S

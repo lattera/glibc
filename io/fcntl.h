@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,6 +47,13 @@ __BEGIN_DECLS
 #  define F_OK	0		/* Test for existence.  */
 # endif
 #endif /* Use misc.  */
+
+/* XPG wants the following symbols.  */
+#ifdef __USE_XOPEN		/* <stdio.h> has the same definitions.  */
+# define SEEK_SET	0	/* Seek from beginning of file.  */
+# define SEEK_CUR	1	/* Seek from current position.  */
+# define SEEK_END	2	/* Seek from end of file.  */
+#endif	/* XPG */
 
 /* Do the file control operation described by CMD on FD.
    The remaining arguments are interpreted depending on CMD.  */

@@ -279,6 +279,26 @@ _dl_next_ld_env_entry (char ***position)
   return result;
 }
 
+void
+unsetenv (const char *name)
+{
+  const size_t len = strlen (name);
+  char **ep;
+
+  for (ep = __environ; *ep != NULL; ++ep)
+    if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
+      {
+	/* Found it.  Remove this pointer by moving later ones back.  */
+	char **dp = ep;
+
+	do
+	  dp[0] = dp[1];
+	while (*dp++);
+	/* Continue the loop in case NAME appears again.  */
+      }
+}
+
+
 /* Return an array of useful/necessary hardware capability names.  */
 const struct r_strlenpair *
 internal_function

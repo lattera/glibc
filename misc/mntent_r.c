@@ -57,7 +57,10 @@ __getmntent_r (FILE *stream, struct mntent *mp, char *buffer, int bufsiz)
       char *end_ptr;
 
       if (fgets_unlocked (buffer, bufsiz, stream) == NULL)
-	return NULL;
+	{
+	  funlockfile (stream);
+	  return NULL;
+	}
 
       end_ptr = strchr (buffer, '\n');
       if (end_ptr != NULL)	/* chop newline */

@@ -110,6 +110,9 @@ typedef struct
 typedef int __t_scalar_t;
 typedef unsigned int __t_uscalar_t;
 
+/* Duplicates info from stdint.h but this is used in unistd.h.  */
+typedef long int __intptr_t;
+
 
 /* Now add the thread types.  */
 #include <bits/pthreadtypes.h>

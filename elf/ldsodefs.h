@@ -365,8 +365,7 @@ extern struct link_map *_dl_new_object (char *realname, const char *libname,
    If LAZY is nonzero, don't relocate its PLT.  */
 extern void _dl_relocate_object (struct link_map *map,
 				 struct link_map *scope[],
-				 int lazy, int consider_profiling)
-     internal_function;
+				 int lazy, int consider_profiling);
 
 /* Check the version dependencies of all objects available through
    MAP.  If VERBOSE print some more diagnostics.  */

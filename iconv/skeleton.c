@@ -77,6 +77,7 @@
  */
 
 #include <assert.h>
+#include <dlfcn.h>
 #include <gconv.h>
 #include <string.h>
 #define __need_size_t
@@ -219,8 +220,8 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 	  if (status == GCONV_OK)
 #endif
 	    /* Give the modules below the same chance.  */
-	    status = _CALL_DL_FCT (fct, (next_step, next_data, NULL, NULL,
-					 written, 1));
+	    status = DL_CALL_FCT (fct, (next_step, next_data, NULL, NULL,
+					written, 1));
 	}
     }
   else
@@ -286,8 +287,8 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 	      const char *outerr = data->outbuf;
 	      int result;
 
-	      result = _CALL_DL_FCT (fct, (next_step, next_data, &outerr,
-					   outbuf, written, 0));
+	      result = DL_CALL_FCT (fct, (next_step, next_data, &outerr,
+					  outbuf, written, 0));
 
 	      if (result != GCONV_EMPTY_INPUT)
 		{

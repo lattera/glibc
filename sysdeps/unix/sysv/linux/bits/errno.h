@@ -27,6 +27,10 @@
 /* Linux has no ENOTSUP error code.  */
 # define ENOTSUP EOPNOTSUPP
 
+/* Linux also has no ECANCELED error code.  Since it is not used here
+   we define it to an invalid value.  */
+# define ECANCELED	(-1)
+
 # ifndef __ASSEMBLER__
 /* We now need a declaration of the `errno' variable.  */
 extern int errno;

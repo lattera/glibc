@@ -82,13 +82,9 @@ extern int dladdr __P ((const void *__address, Dl_info *__info));
         foo = DL_CALL_FCT (fctp, (arg1, arg2));
 */
 # if __GNUC__ >= 2
-/* Do not ever use this variable directly, it is internal!  */
-extern struct link_map *_dl_profile_map;
-
 #  define DL_CALL_FCT(fctp, args) \
-  (__extension__ ({ if (_dl_profile_map != NULL)			      \
-		      _dl_mcount_wrapper_check (fctp);			      \
-		    (*fctp) args; })
+  (__extension__ ({ _dl_mcount_wrapper_check (fctp);			      \
+		    (*fctp) args; }))
 # else
 /* This feature is not available without GCC.  */
 #  define DL_CALL_FCT(fctp, args) (*fctp) args

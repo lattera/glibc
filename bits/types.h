@@ -115,4 +115,7 @@ typedef __u_quad_t __fsfilcnt64_t;
 typedef int __t_scalar_t;
 typedef unsigned int __t_uscalar_t;
 
+/* This definition makes this file kind of architecture dependent.  */
+typedef long int __intptr_t;
+
 #endif /* bits/types.h */

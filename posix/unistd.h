@@ -228,6 +228,11 @@ typedef __off64_t off64_t;
 typedef __pid_t pid_t;
 #  define pid_t pid_t
 # endif
+
+# ifndef intptr_t
+typedef __intptr_t intptr_t;
+#  define intptr_t intptr_t
+# endif
 #endif	/* Unix98 */
 
 /* Values for the second argument to access.
@@ -1054,8 +1059,26 @@ extern void swab __P ((__const __ptr_t __from, __ptr_t __to, ssize_t __n));
 /* Return the name of the controlling terminal.  */
 extern char *ctermid __P ((char *__s));
 
-/* Return the name of the current user.  */
+/* Return the name of the current user.  This function should not be
+   used and might go away some time.  */
 extern char *cuserid __P ((char *__s));
+
+
+/* This function is only available if the system has POSIX threads.  */
+
+/* Install handlers to be called when a new process is created with FORK.
+   The PREPARE handler is called in the parent process just before performing
+   FORK. The PARENT handler is called in the parent process just after FORK.
+   The CHILD handler is called in the child process.  Each of the three
+   handlers can be NULL, meaning that no handler needs to be called at that
+   point.
+   PTHREAD_ATFORK can be called several times, in which case the PREPARE
+   handlers are called in LIFO order (last added with PTHREAD_ATFORK,
+   first called before FORK), and the PARENT and CHILD handlers are called
+   in FIFO (first added, first called). */
+extern int pthread_atfork __P ((void (*__prepare) (void),
+				void (*__parent) (void),
+				void (*__child) (void)));
 #endif
 
 __END_DECLS

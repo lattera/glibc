@@ -91,5 +91,7 @@ libpthread {
     pthread_attr_getstacksize; pthread_attr_setstacksize;
 
     pthread_getconcurrency; pthread_setconcurrency;
+
+    pthread_mutexattr_gettype; pthread_mutexattr_settype;
   }
 }

@@ -154,6 +154,7 @@ int __pthread_mutexattr_setkind_np(pthread_mutexattr_t *attr, int kind)
   return 0;
 }
 weak_alias (__pthread_mutexattr_setkind_np, pthread_mutexattr_setkind_np)
+weak_alias (__pthread_mutexattr_setkind_np, pthread_mutexattr_settype)
 
 int __pthread_mutexattr_getkind_np(const pthread_mutexattr_t *attr, int *kind)
 {
@@ -161,6 +162,7 @@ int __pthread_mutexattr_getkind_np(const pthread_mutexattr_t *attr, int *kind)
   return 0;
 }
 weak_alias (__pthread_mutexattr_getkind_np, pthread_mutexattr_getkind_np)
+weak_alias (__pthread_mutexattr_getkind_np, pthread_mutexattr_gettype)
 
 /* Once-only execution */
 

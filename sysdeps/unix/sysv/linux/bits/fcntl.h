@@ -24,12 +24,6 @@
 
 #include <sys/types.h>
 
-
-/* In GNU, read and write are bits (unlike BSD).  */
-#ifdef __USE_GNU
-# define O_READ		O_RDONLY /* Open for reading.  */
-# define O_WRITE	O_WRONLY /* Open for writing.  */
-#endif
 /* open/fcntl - O_SYNC is only implemented on blocks devices and on files
    located on an ext2 file system */
 #define O_ACCMODE	  0003
@@ -46,6 +40,14 @@
 #define O_SYNC		010000
 #define O_FSYNC		O_SYNC
 #define O_ASYNC		020000
+
+/* For now Linux has synchronisity options for data and read operations.
+   We define the symbols here but let them do the same as O_SYNS since
+   this is a superset.  */
+#ifdef __USE_UNIX98
+# define O_DSYNC	O_SYNC	/* Synchronize data.  */
+# define O_RSYNC	O_SYNC	/* Synchronize read operations.  */
+#endif
 
 /* XXX missing */
 #ifdef __USE_LARGEFILE64

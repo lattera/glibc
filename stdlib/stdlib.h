@@ -386,7 +386,7 @@ extern int rand __P ((void));
 /* Seed the random number generator with the given number.  */
 extern void srand __P ((unsigned int __seed));
 
-#ifdef __USE_MISC
+#ifdef __USE_POSIX
 /* Reentrant interface according to POSIX.1.  */
 extern int __rand_r __P ((unsigned int *__seed));
 extern int rand_r __P ((unsigned int *__seed));

@@ -3,6 +3,11 @@
 # (C) Copyright 1998 Free Software Foundation, Inc.
 # Written by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
+# This script expects the following variables to be defined:
+# defsfile		name of Versions.def file
+# buildroot		name of build directory with trailing slash
+# move_if_change	move-if-change command
+
 # Read definitions for the versions.
 BEGIN {
   nlibs=0;
@@ -23,8 +28,8 @@ BEGIN {
   }
   close(defsfile);
 
-  tmpfile = (buildroot "Versions.tmp");
-  sort = ("sort -n >" tmpfile);
+  tmpfile = buildroot "Versions.tmp";
+  sort = "sort -n > " tmpfile;
 }
 
 # Remove comment lines.
@@ -68,23 +73,29 @@ function closeversion(name) {
   printf("}%s;\n", derived[oldlib, name]) > outfile;
 }
 
+function close_and_move(name, real_name) {
+  close(name);
+  system(move_if_change " " name " " real_name " >&2");
+}
+
 # Now print the accumulated information.
 END {
   close(sort);
-  oldlib="";
-  oldver="";
-  printf("all-version-maps =");
+  oldlib = "";
+  oldver = "";
+  printf("version-maps =");
   while(getline < tmpfile) {
     if ($1 != oldlib) {
       if (oldlib != "") {
 	closeversion(oldver);
 	oldver = "";
-	close(outfile);
+	close_and_move(outfile, real_outfile);
       }
       oldlib = $1;
-      outfile = (buildroot oldlib ".map");
+      real_outfile = buildroot oldlib ".map";
+      outfile = real_outfile "T";
       firstinfile = 1;
-      printf(" $(common-objpfx)%s.map", oldlib);
+      printf(" %s.map", oldlib);
     }
     if ($2 != oldver) {
       if (oldver != "") {
@@ -101,6 +112,6 @@ END {
   }
   printf("\n");
   closeversion(oldver);
-  close(outfile);
-  system("rm " tmpfile);
+  close_and_move(outfile, real_outfile);
+  system("rm -f " tmpfile);
 }

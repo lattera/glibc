@@ -314,15 +314,17 @@ extern int pthread_mutexattr_init __P ((pthread_mutexattr_t *__attr));
 extern int __pthread_mutexattr_destroy __P ((pthread_mutexattr_t *__attr));
 extern int pthread_mutexattr_destroy __P ((pthread_mutexattr_t *__attr));
 
-/* Set the mutex kind attribute in *ATTR to KIND (either PTHREAD_MUTEX_FAST_NP
-   or PTHREAD_MUTEX_RECURSIVE_NP). */
-extern int __pthread_mutexattr_setkind_np __P ((pthread_mutexattr_t *__attr,
-						int __kind));
-extern int pthread_mutexattr_setkind_np __P ((pthread_mutexattr_t *__attr,
-					      int __kind));
+#ifdef __USE_UNIX98
+/* Set the mutex kind attribute in *ATTR to KIND (either PTHREAD_MUTEX_NORMAL,
+   PTHREAD_MUTEX_RECURSIVE, PTHREAD_MUTEX_ERRORCHECK, or
+   PTHREAD_MUTEX_DEFAULT).  */
+extern int pthread_mutexattr_settype __P ((pthread_mutexattr_t *__attr,
+					   int __kind));
+
 /* Return in *KIND the mutex kind attribute in *ATTR. */
-extern int pthread_mutexattr_getkind_np __P ((__const pthread_mutexattr_t *__attr,
-                                              int *__kind));
+extern int pthread_mutexattr_gettype __P ((__const pthread_mutexattr_t *__attr,
+					   int *__kind));
+#endif
 
 
 /* Functions for handling conditional variables.  */
@@ -525,16 +527,7 @@ extern void _pthread_cleanup_pop_restore __P ((struct _pthread_cleanup_buffer *_
 #endif
 
 /* Functions for handling signals. */
-
-/* Modify the signal mask for the calling thread.  The arguments have
-   the same meaning as for sigprocmask(2). */
-
-extern int pthread_sigmask __P ((int __how, __const sigset_t *__newmask,
-				 sigset_t *__oldmask));
-
-/* Send signal SIGNO to the given thread. */
-
-extern int pthread_kill __P ((pthread_t __thread, int __signo));
+#include <bits/sigthread.h>
 
 
 /* Functions for handling process creation and process execution. */

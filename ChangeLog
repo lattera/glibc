@@ -1,3 +1,88 @@
+1998-07-08 22:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Versions: Add _dl_mcount_wrapper_check.
+	* elf/dlfcn.h (DL_CALL_FCT): Don't test _dl_profile_map, simply use
+	_dl_mcount_wrapper_check.
+	* iconv/skeleton.c: Use DL_CALL_FCT, not _CALL_DL_FCT.
+
+	* elf/dl-reloc.c (_dl_relocate_object): Don't declare using
+	internal_function.
+	* elf/ldsodefs.h: Likewise.
+
+	* io/fcntl.h: Define SEEK_SET, SEEK_CUR, and SEEK_END.
+
+	* libio/stdio.h: Make sure va_list is defined for X/Open.
+	Define P_tmpdir for X/Open.
+
+	* posix/regex.h: Fix typo.
+
+	* posix/unistd.h: Define intptr_t if not already happened.
+	Add pthread_atfork prototype.
+	* sysdeps/generic/bits/types.h: Define __intptr_t.
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/mips/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sparc/sparc64/types.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/types.h: Likewise.
+	* sysdeps/wordsize-32/stdint.h: Don't define intptr_t if already done.
+	* sysdeps/wordsize-64/stdint.h: Likewise.
+
+	* posix/bits/posix1_lim.h: Define _POSIX_CLOCKRES_MIN.
+
+	* signal/Makefile (headers): Add bits/sigthread.h.
+	* signal/signal.h: Include bits/sigthread.h.
+	* sysdeps/generic/bits/sigthread.h: New file.
+
+	* stdlib/stdlib.h: Declare rand_r use __USE_POSIX.
+
+	* sysdeps/generic/bits/confname.h: Define _PC_FILESIZEBITS.
+	* sysdeps/posix/pathconf.c: Handle _PC_FILESIZEBITS.
+	* sysdeps/unix/sysv/linux/alpha/fpathconf.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/pathconf.c: New file.
+
+	* sysdeps/generic/bits/dlfcn.h: Define RTLD_LOCAL.
+
+	* elf/rtld.c: Remove preloading and loadpath variables in SUID
+	programs.
+	* sysdeps/generic/dl-sysdep.c: Define unsetenv.
+	* sysdeps/unix/sysv/linux/i386/dl-librecon.h: Define other envvar
+	names.
+
+	* sysdeps/unix/sysv/linux/bits/errno.h: Define ECANCELED.
+
+	* sysdeps/unix/sysv/linux/bits/fcntl.h: Define O_RSYNC and O_DSYNC.
+	Remove O_READ and O_WRITE definition.
+
+	* sysdeps/unix/sysv/linux/bits/resource.h: Define RLIM_SAVED_MAX
+	and RLIM_SAVED_CUR.
+
+	* sysdeps/unix/sysv/linux/fstatvfs.h: Handle UFS filesystem.
+
+1998-07-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules ($(common-objpfx)sysd-versions): Expect awk script in
+	scripts directory.  Pass move-if-change to awk.
+	(common-generated): Add $(version-maps) and sysd-versions.
+	* versions.awk: Moved to...
+	* scripts/versions.awk: ... here.  Use move-if-change to void
+	touching unchanged files.  Print "version-maps = ..." instead of
+	"all-version-maps = ..." and without $(common-objpfx).  Explain
+	expected variable names.
+	* Makefile (distribute): Updated.
+
+1998-07-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* misc/getttyent.c (getttyent): Don't return with locked stream.
+	* misc/mntent_r.c (__getmntent_r): Likewise.
+
+1998-07-07 18:24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/fileops.c (_IO_do_write): Don't shrink wwrite buffer to zero
+	if stream is line buffered.
+	(_io_file_overflow): Likewise.
+	* libio/libio.h (_IO_putc_unlocked): Make sure that for line-buffered
+	streams writing '\n' flushes the string.
+
 1998-07-07 17:28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-profstub.c (_dl_profile_map): Only declare variable here.

@@ -1,3 +1,12 @@
+1998-07-08 22:26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Versions: Add pthread_mutexattr_gettype, pthread_mutexattr_settype.
+	* mutex.c: Define weak alias pthread_mutexattr_gettype and
+	pthread_mutexattr_settype.
+	* sysdeps/pthread/pthread.h: Declare these functions.
+	Move pthread_sigmask and pthread_kill declaration in separate header.
+	* sysdeps/unix/sysv/linux/bits/sigthread.h: New file.
+
 1998-07-07 15:20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile: Add rules to compile and run tests.
