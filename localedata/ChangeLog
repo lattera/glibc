@@ -1,3 +1,8 @@
+2000-09-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/en_GB: Update LC_PAPER and LC_MEASUREMENT information.
+	Reported by Joseph S. Myers <jsm28@cam.ac.uk>.
+
 2000-09-14  Bruno Haible  <haible@clisp.cons.org>
 
 	* charmaps/GB2312: Change code_set_name to GB2312.
