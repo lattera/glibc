@@ -1,3 +1,10 @@
+2004-12-15  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ia64/dl-machine.h (elf_machine_rela): Mark auto instead
+	of static, add always_inline attribute.
+	(elf_machine_rela_relative): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+
 2004-12-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Add support
