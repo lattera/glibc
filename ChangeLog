@@ -1,5 +1,10 @@
 2004-10-22  Paul Eggert  <eggert@cs.ucla.edu>
 
+	[BZ #470] Import fix from gnulib.
+	* time/mktime.c [!_LIBC] (__mktime_internal): Define to
+	mktime_internal, to avoid clashes with any __mktime_internal
+	function defined in the standard library.
+
 	[BZ #469] Imported from gnulib.
 	* time/mktime.c (__isleap): Remove; all uses replaced by:
 	(leapyear): New function, which avoids overflow by not adding

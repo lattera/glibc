@@ -108,6 +108,7 @@ const unsigned short int __mon_yday[2][13] =
 # include "time_r.h"
 # undef __localtime_r
 # define __localtime_r localtime_r
+# define __mktime_internal mktime_internal
 #endif
 
 
