@@ -115,6 +115,6 @@ libc {
   }
   GLIBC_PRIVATE {
     # needed by libpthread.
-    __rpc_thread_destroy;
+    __rpc_thread_destroy; __libc_tsd_RPC_VARS;
   }
 }

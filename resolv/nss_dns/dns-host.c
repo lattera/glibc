@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -233,7 +233,7 @@ _nss_dns_gethostbyaddr_r (const void *addr, socklen_t len, int af,
     char linebuffer[0];
   } *host_data = (struct host_data *) buffer;
   querybuf host_buffer;
-  char qbuf[MAXDNAME+1], *qp;
+  char qbuf[MAXDNAME+1], *qp = NULL;
   size_t size;
   int n, status;
 

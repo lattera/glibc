@@ -10,7 +10,11 @@
 
 /* Variable used in non-threaded applications or for the first thread.  */
 static struct rpc_thread_variables __libc_tsd_RPC_VARS_mem;
+#if USE_TLS && HAVE___THREAD
+__libc_tsd_define (, RPC_VARS)
+#else
 __libc_tsd_define (static, RPC_VARS)
+#endif
 
 /*
  * Task-variable destructor
@@ -85,6 +89,7 @@ __rpc_thread_svc_fdset (void)
 		return &svc_fdset;
 	return &tvp->svc_fdset_s;
 }
+libc_hidden_def (__rpc_thread_svc_fdset)
 
 struct rpc_createerr *
 __rpc_thread_createerr (void)
@@ -96,6 +101,7 @@ __rpc_thread_createerr (void)
 		return &rpc_createerr;
 	return &tvp->rpc_createerr_s;
 }
+libc_hidden_def (__rpc_thread_createerr)
 
 struct pollfd **
 __rpc_thread_svc_pollfd (void)

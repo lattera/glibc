@@ -202,8 +202,13 @@ void __pthread_perform_cleanup(char *currentframe)
     }
 
   /* And the TSD which needs special help.  */
+#if !(USE_TLS && HAVE___THREAD)
   if (THREAD_GETMEM(self, p_libc_specific[_LIBC_TSD_KEY_RPC_VARS]) != NULL)
     __rpc_thread_destroy ();
+#else
+  if (__libc_tsd_get (RPC_VARS) != NULL)
+    __rpc_thread_destroy ();
+#endif
 }
 
 #ifndef SHARED
