@@ -20,6 +20,7 @@
 #include <assert.h>
 #include <dlfcn.h>
 #include <errno.h>
+#include <libintl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -102,7 +103,7 @@ struct list
 	/* DST must not appear in SUID/SGID programs.  */		      \
 	if (__libc_enable_secure)					      \
 	  _dl_signal_error (0, __str,					      \
-			    "DST not allowed in SUID/SGID programs");	      \
+			    N_("DST not allowed in SUID/SGID programs"));     \
 									      \
 	__newp = (char *) alloca (DL_DST_REQUIRED (l, __str, strlen (__str),  \
 						   __cnt));		      \
@@ -114,8 +115,8 @@ struct list
 	    /* The replacement for the DST is not known.  We can't	      \
 	       processed.  */						      \
 	    if (fatal)							      \
-	      _dl_signal_error (0, __str,				      \
-				"empty dynamics string token substitution");  \
+	      _dl_signal_error (0, __str, N_("\
+empty dynamics string token substitution"));				      \
 	    else							      \
 	      {								      \
 		/* This is for DT_AUXILIARY.  */			      \
@@ -265,7 +266,8 @@ _dl_map_object_deps (struct link_map *map,
 	      }
 	    else if (d->d_tag == DT_AUXILIARY || d->d_tag == DT_FILTER)
 	      {
-		char *errstring;
+		const char *objname;
+		const char *errstring;
 		struct list *newp;
 		/* Object name.  */
 		const char *name;
@@ -289,11 +291,11 @@ _dl_map_object_deps (struct link_map *map,
 
 		    /* We must be prepared that the addressed shared
 		       object is not available.  */
-		    if (_dl_catch_error (&errstring, openaux, &args))
+		    if (_dl_catch_error (&objname, &errstring, openaux, &args))
 		      {
 			/* We are not interested in the error message.  */
 			assert (errstring != NULL);
-			free (errstring);
+			free ((char *) errstring);
 
 			/* Simply ignore this error and continue the work.  */
 			continue;
@@ -452,7 +454,7 @@ _dl_map_object_deps (struct link_map *map,
 	  l->l_initfini = malloc (nneeded * sizeof needed[0]);
 	  if (l->l_initfini == NULL)
 	    _dl_signal_error (ENOMEM, map->l_name,
-			      "cannot allocate dependency list");
+			      N_("cannot allocate dependency list"));
 	  memcpy (l->l_initfini, needed, nneeded * sizeof needed[0]);
 	}
 
@@ -470,7 +472,7 @@ _dl_map_object_deps (struct link_map *map,
 				     * sizeof (struct link_map *));
   if (map->l_searchlist.r_list == NULL)
     _dl_signal_error (ENOMEM, map->l_name,
-		      "cannot allocate symbol search list");
+		      N_("cannot allocate symbol search list"));
   map->l_searchlist.r_nlist = nlist;
 
   for (nlist = 0, runp = known; runp; runp = runp->unique)

@@ -20,6 +20,7 @@
 #include <elf.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <libintl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -62,10 +63,8 @@
 #include <endian.h>
 #if BYTE_ORDER == BIG_ENDIAN
 # define byteorder ELFDATA2MSB
-# define byteorder_name "big-endian"
 #elif BYTE_ORDER == LITTLE_ENDIAN
 # define byteorder ELFDATA2LSB
-# define byteorder_name "little-endian"
 #else
 # error "Unknown BYTE_ORDER " BYTE_ORDER
 # define byteorder ELFDATANONE
@@ -315,7 +314,7 @@ add_name_to_object (struct link_map *l, const char *name)
   if (newname == NULL)
     {
       /* No more memory.  */
-      _dl_signal_error (ENOMEM, name, "cannot allocate name record");
+      _dl_signal_error (ENOMEM, name, N_("cannot allocate name record"));
       return;
     }
   /* The object should have a libname set from _dl_new_object.  */
@@ -414,7 +413,7 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	    malloc (sizeof (*dirp) + ncapstr * sizeof (enum r_dir_status));
 	  if (dirp == NULL)
 	    _dl_signal_error (ENOMEM, NULL,
-			      "cannot create cache for search path");
+			      N_("cannot create cache for search path"));
 
 	  dirp->dirname = cp;
 	  dirp->dirnamelen = len;
@@ -475,7 +474,7 @@ decompose_rpath (const char *rpath, struct link_map *l, const char *what)
 		malloc (sizeof (*result));
 	      if (result == NULL)
 		_dl_signal_error (ENOMEM, NULL,
-				  "cannot create cache for search path");
+				  N_("cannot create cache for search path"));
 	      result[0] = NULL;
 
 	      return result;
@@ -487,7 +486,7 @@ decompose_rpath (const char *rpath, struct link_map *l, const char *what)
      string tokens.  */
   copy = expand_dynamic_string_token (l, rpath);
   if (copy == NULL)
-    _dl_signal_error (ENOMEM, NULL, "cannot create RUNPATH/RPATH copy");
+    _dl_signal_error (ENOMEM, NULL, N_("cannot create RUNPATH/RPATH copy"));
 
   /* Count the number of necessary elements in the result array.  */
   nelems = 0;
@@ -500,7 +499,7 @@ decompose_rpath (const char *rpath, struct link_map *l, const char *what)
   result = (struct r_search_path_elem **) malloc ((nelems + 1 + 1)
 						  * sizeof (*result));
   if (result == NULL)
-    _dl_signal_error (ENOMEM, NULL, "cannot create cache for search path");
+    _dl_signal_error (ENOMEM, NULL, N_("cannot create cache for search path"));
 
   return fillin_rpath (copy, result, ":", 0, what, where);
 }
@@ -530,7 +529,7 @@ _dl_init_paths (const char *llp)
     malloc ((sizeof (system_dirs_len) / sizeof (system_dirs_len[0]) + 1)
 	     * sizeof (struct r_search_path_elem *));
   if (rtld_search_dirs == NULL)
-    _dl_signal_error (ENOMEM, NULL, "cannot create search path array");
+    _dl_signal_error (ENOMEM, NULL, N_("cannot create search path array"));
 
   round_size = ((2 * sizeof (struct r_search_path_elem) - 1
 		 + ncapstr * sizeof (enum r_dir_status))
@@ -540,7 +539,7 @@ _dl_init_paths (const char *llp)
     malloc ((sizeof (system_dirs) / sizeof (system_dirs[0]))
 	    * round_size * sizeof (struct r_search_path_elem));
   if (rtld_search_dirs[0] == NULL)
-    _dl_signal_error (ENOMEM, NULL, "cannot create cache for search path");
+    _dl_signal_error (ENOMEM, NULL, N_("cannot create cache for search path"));
 
   pelem = all_dirs = rtld_search_dirs[0];
   strp = system_dirs;
@@ -632,7 +631,7 @@ _dl_init_paths (const char *llp)
 	malloc ((nllp + 1) * sizeof (struct r_search_path_elem *));
       if (env_path_list == NULL)
 	_dl_signal_error (ENOMEM, NULL,
-			  "cannot create cache for search path");
+			  N_("cannot create cache for search path"));
 
       (void) fillin_rpath (local_strdup (llp), env_path_list, ":;",
 			   __libc_enable_secure, "LD_LIBRARY_PATH", NULL);
@@ -720,7 +719,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 			      fixed|MAP_COPY|MAP_FILE,
 			      fd, offset);
       if (mapat == MAP_FAILED)
-	LOSE (errno, "failed to map segment from shared object");
+	LOSE (errno, N_("failed to map segment from shared object"));
       return mapat;
     }
 
@@ -735,7 +734,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 
   /* Get file information.  */
   if (__fxstat (_STAT_VER, fd, &st) < 0)
-    LOSE (errno, "cannot stat shared object");
+    LOSE (errno, N_("cannot stat shared object"));
 
   /* Look again to see if the real name matched another already loaded.  */
   for (l = _dl_loaded; l; l = l->l_next)
@@ -761,7 +760,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   readbuf = alloca (_dl_pagesize);
   readlength = __libc_read (fd, readbuf, _dl_pagesize);
   if (readlength < (ssize_t) sizeof (*header))
-    LOSE (errno, "cannot read file data");
+    LOSE (errno, N_("cannot read file data"));
   header = (void *) readbuf;
 
   /* Check the header for basic validity.  */
@@ -782,29 +781,39 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	   (ELFMAG3 << (EI_MAG0 * 8)))
 #endif
 	  )
-	LOSE (0, "invalid ELF header");
+	LOSE (0, N_("invalid ELF header"));
       if (header->e_ident[EI_CLASS] != ELFW(CLASS))
-	LOSE (0, "ELF file class not " STRING(__ELF_NATIVE_CLASS) "-bit");
+	{
+	  if (__ELF_NATIVE_CLASS == 32)
+	    LOSE (0, N_("ELF file class not 32-bit"));
+	  else
+	    LOSE (0, N_("ELF file class not 64-bit"));
+	}
       if (header->e_ident[EI_DATA] != byteorder)
-	LOSE (0, "ELF file data encoding not " byteorder_name);
+	{
+	  if (BYTE_ORDER == BIG_ENDIAN)
+	    LOSE (0, "ELF file data encoding not big-endian");
+	  else
+	    LOSE (0, "ELF file data encoding not little-endian");
+	}
       if (header->e_ident[EI_VERSION] != EV_CURRENT)
-	LOSE (0, "ELF file version ident not " STRING(EV_CURRENT));
+	LOSE (0, N_("ELF file version ident does not match current one"));
       /* XXX We should be able so set system specific versions which are
 	 allowed here.  */
       if (!VALID_ELF_OSABI (header->e_ident[EI_OSABI]))
-	LOSE (0, "ELF file OS ABI invalid.");
+	LOSE (0, N_("ELF file OS ABI invalid."));
       if (!VALID_ELF_ABIVERSION (header->e_ident[EI_ABIVERSION]))
-	LOSE (0, "ELF file ABI version invalid.");
-      LOSE (0, "internal error");
+	LOSE (0, N_("ELF file ABI version invalid."));
+      LOSE (0, N_("internal error"));
     }
 
   if (__builtin_expect (header->e_version, EV_CURRENT) != EV_CURRENT)
-    LOSE (0, "ELF file version not " STRING(EV_CURRENT));
+    LOSE (0, N_("ELF file version does not not match current one"));
   if (! __builtin_expect (elf_machine_matches_host (header->e_machine), 1))
-    LOSE (0, "ELF file machine architecture not " ELF_MACHINE_NAME);
+    LOSE (0, N_("ELF file machine architecture does not match"));
   if (__builtin_expect (header->e_phentsize, sizeof (ElfW(Phdr)))
       != sizeof (ElfW(Phdr)))
-    LOSE (0, "ELF file's phentsize not the expected size");
+    LOSE (0, N_("ELF file's phentsize not the expected size"));
 
 #ifndef MAP_ANON
 # define MAP_ANON 0
@@ -814,7 +823,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
       if (_dl_zerofd == -1)
 	{
 	  __close (fd);
-	  _dl_signal_error (errno, NULL, "cannot open zero fill device");
+	  _dl_signal_error (errno, NULL, N_("cannot open zero fill device"));
 	}
     }
 #endif
@@ -822,7 +831,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   /* Enter the new object in the list of loaded objects.  */
   l = _dl_new_object (realname, name, l_type, loader);
   if (__builtin_expect (! l, 0))
-    LOSE (ENOMEM, "cannot create shared object descriptor");
+    LOSE (ENOMEM, N_("cannot create shared object descriptor"));
   l->l_opencount = 1;
 
   /* Extract the remaining details we need from the ELF header
@@ -839,7 +848,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
       phdr = alloca (maplength);
       __lseek (fd, SEEK_SET, header->e_phoff);
       if (__libc_read (fd, (void *) phdr, maplength) != maplength)
-        LOSE (errno, "cannot read file data");
+        LOSE (errno, N_("cannot read file data"));
     }
 
   {
@@ -874,9 +883,10 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	  /* A load command tells us to map in part of the file.
 	     We record the load commands and process them all later.  */
 	  if (ph->p_align % _dl_pagesize != 0)
-	    LOSE (0, "ELF load command alignment not page-aligned");
+	    LOSE (0, N_("ELF load command alignment not page-aligned"));
 	  if ((ph->p_vaddr - ph->p_offset) % ph->p_align)
-	    LOSE (0, "ELF load command address/offset not properly aligned");
+	    LOSE (0,
+		  N_("ELF load command address/offset not properly aligned"));
 	  {
 	    struct loadcmd *c = &loadcmds[nloadcmds++];
 	    c->mapstart = ph->p_vaddr & ~(ph->p_align - 1);
@@ -993,7 +1003,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 		    /* Dag nab it.  */
 		    if (__mprotect ((caddr_t) (zero & ~(_dl_pagesize - 1)),
 				    _dl_pagesize, c->prot|PROT_WRITE) < 0)
-		      LOSE (errno, "cannot change memory protections");
+		      LOSE (errno, N_("cannot change memory protections"));
 		  }
 		memset ((void *) zero, 0, zeropage - zero);
 		if ((c->prot & PROT_WRITE) == 0)
@@ -1009,7 +1019,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 				c->prot, MAP_ANON|MAP_PRIVATE|MAP_FIXED,
 				ANONFD, 0);
 		if (mapat == MAP_FAILED)
-		  LOSE (errno, "cannot map zero-fill pages");
+		  LOSE (errno, N_("cannot map zero-fill pages"));
 	      }
 	  }
 
@@ -1024,7 +1034,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	ElfW(Phdr) *newp = (ElfW(Phdr) *) malloc (header->e_phnum
 						  * sizeof (ElfW(Phdr)));
 	if (newp == NULL)
-	  LOSE (ENOMEM, "cannot allocate memory for program header");
+	  LOSE (ENOMEM, N_("cannot allocate memory for program header"));
 
 	l->l_phdr = memcpy (newp, phdr,
 			    (header->e_phnum * sizeof (ElfW(Phdr))));
@@ -1044,7 +1054,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   if (l->l_ld == 0)
     {
       if (type == ET_DYN)
-	LOSE (0, "object file has no dynamic section");
+	LOSE (0, N_("object file has no dynamic section"));
     }
   else
     (ElfW(Addr)) l->l_ld += l->l_addr;
@@ -1099,7 +1109,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	(struct link_map **) malloc (sizeof (struct link_map *));
 
       if (l->l_symbolic_searchlist.r_list == NULL)
-	LOSE (ENOMEM, "cannot create searchlist");
+	LOSE (ENOMEM, N_("cannot create searchlist"));
 
       l->l_symbolic_searchlist.r_list[0] = l;
       l->l_symbolic_searchlist.r_nlist = 1;
@@ -1475,7 +1485,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  if ((name_copy = local_strdup (name)) == NULL
 	      || (l = _dl_new_object (name_copy, name, type, loader)) == NULL)
 	    _dl_signal_error (ENOMEM, name,
-			      "cannot create shared object descriptor");
+			      N_("cannot create shared object descriptor"));
 	  /* We use an opencount of 0 as a sign for the faked entry.
 	     Since the descriptor is initialized with zero we do not
 	     have do this here.
@@ -1488,7 +1498,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  return l;
 	}
       else
-	_dl_signal_error (errno, name, "cannot open shared object file");
+	_dl_signal_error (errno, name, N_("cannot open shared object file"));
     }
 
   return _dl_map_object_from_fd (name, fd, realname, loader, type);

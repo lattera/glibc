@@ -102,7 +102,7 @@ dl_open_worker (void *a)
       if (__libc_enable_secure)
 	/* This is an error.  */
 	_dl_signal_error (0, "dlopen",
-			  "DST not allowed in SUID/SGID programs");
+			  N_("DST not allowed in SUID/SGID programs"));
 
       /* We have to find out from which object the caller is calling.
 	 Find the highest-addressed object that ADDRESS is not below.  */
@@ -136,7 +136,7 @@ dl_open_worker (void *a)
       /* If the substitution failed don't try to load.  */
       if (*new_file == '\0')
 	_dl_signal_error (0, "dlopen",
-			  "empty dynamic string token substitution");
+			  N_("empty dynamic string token substitution"));
 
       /* Now we have a new file name.  */
       file = new_file;
@@ -237,7 +237,7 @@ dl_open_worker (void *a)
 	      _dl_global_scope_alloc = 0;
 	    nomem:
 	      _dl_signal_error (ENOMEM, new->l_libname->name,
-				"cannot extend global scope");
+				N_("cannot extend global scope"));
 	      return;
 	    }
 
@@ -290,12 +290,13 @@ internal_function
 _dl_open (const char *file, int mode, const void *caller)
 {
   struct dl_open_args args;
-  char *errstring;
+  const char *objname;
+  const char *errstring;
   int errcode;
 
   if ((mode & RTLD_BINDING_MASK) == 0)
     /* One of the flags must be set.  */
-    _dl_signal_error (EINVAL, file, _("invalid mode for dlopen()"));
+    _dl_signal_error (EINVAL, file, N_("invalid mode for dlopen()"));
 
   /* Make sure we are alone.  */
   __libc_lock_lock (_dl_load_lock);
@@ -304,7 +305,7 @@ _dl_open (const char *file, int mode, const void *caller)
   args.mode = mode;
   args.caller = caller;
   args.map = NULL;
-  errcode = _dl_catch_error (&errstring, dl_open_worker, &args);
+  errcode = _dl_catch_error (&objname, &errstring, dl_open_worker, &args);
 
 #ifndef MAP_COPY
   /* We must munmap() the cache file.  */
@@ -327,10 +328,10 @@ _dl_open (const char *file, int mode, const void *caller)
       /* Make a local copy of the error string so that we can release the
 	 memory allocated for it.  */
       local_errstring = strdupa (errstring);
-      free (errstring);
+      free ((char *) errstring);
 
       /* Reraise the error.  */
-      _dl_signal_error (errcode, NULL, local_errstring);
+      _dl_signal_error (errcode, objname, local_errstring);
     }
 
   return args.map;

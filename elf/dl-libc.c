@@ -1,5 +1,5 @@
 /* Handle loading and unloading shared objects for internal libc purposes.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.columbia.edu>, 1999.
 
@@ -35,14 +35,15 @@ static int
 internal_function
 dlerror_run (void (*operate) (void *), void *args)
 {
-  char *last_errstring = NULL;
+  const char *objname;
+  const char *last_errstring = NULL;
   int result;
 
-  (void) _dl_catch_error (&last_errstring, operate, args);
+  (void) _dl_catch_error (&objname, &last_errstring, operate, args);
 
   result = last_errstring != NULL;
   if (result)
-    free (last_errstring);
+    free ((char *) last_errstring);
 
   return result;
 }

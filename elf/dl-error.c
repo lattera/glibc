@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <libintl.h>
 #include <setjmp.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,7 +29,8 @@
    _dl_signal_error.  */
 struct catch
   {
-    char *errstring;		/* Error detail filled in here.  */
+    const char *objname;	/* Object/File name.  */
+    const char *errstring;	/* Error detail filled in here.  */
     jmp_buf env;		/* longjmp here on error.  */
   };
 
@@ -55,34 +57,21 @@ static receiver_fct receiver;
 
 void
 internal_function
-_dl_signal_error (int errcode,
-		  const char *objname,
-		  const char *errstring)
+_dl_signal_error (int errcode, const char *objname, const char *errstring)
 {
   struct catch *lcatch;
 
   if (! errstring)
-    errstring = "DYNAMIC LINKER BUG!!!";
+    errstring = N_("DYNAMIC LINKER BUG!!!");
 
   lcatch = tsd_getspecific ();
   if (lcatch != NULL)
     {
       /* We are inside _dl_catch_error.  Return to it.  We have to
 	 duplicate the error string since it might be allocated on the
-	 stack.  */
-      size_t objname_len = objname ? strlen (objname) + 2 : 0;
-      size_t errstring_len = strlen (errstring) + 1;
-      lcatch->errstring = malloc (objname_len + errstring_len);
-      if (lcatch->errstring != NULL)
-	{
-	  char *cp = lcatch->errstring;
-	  if (objname_len > 0)
-	    {
-	      cp = __mempcpy (cp, objname, objname_len - 2);
-	      cp = __mempcpy (cp, ": ", 2);
-	    }
-	  memcpy (cp, errstring, errstring_len);
-	}
+	 stack.  The object name is always a string constant.  */
+      lcatch->objname = objname;
+      lcatch->errstring = strdup (errstring);
       longjmp (lcatch->env, errcode ?: -1);
     }
   else
@@ -120,9 +109,8 @@ _dl_signal_cerror (int errcode,
 
 int
 internal_function
-_dl_catch_error (char **errstring,
-		 void (*operate) (void *),
-		 void *args)
+_dl_catch_error (const char **objname, const char **errstring,
+		 void (*operate) (void *), void *args)
 {
   int errcode;
   struct catch *volatile old;
@@ -141,12 +129,14 @@ _dl_catch_error (char **errstring,
       tsd_setspecific (&c);
       (*operate) (args);
       tsd_setspecific (old);
+      *objname = NULL;
       *errstring = NULL;
       return 0;
     }
 
   /* We get here only if we longjmp'd out of OPERATE.  */
   tsd_setspecific (old);
+  *objname = c.objname;
   *errstring = c.errstring;
   return errcode == -1 ? 0 : errcode;
 }

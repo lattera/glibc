@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <libintl.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <ldsodefs.h>
@@ -58,8 +59,8 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 			       & ~(_dl_pagesize - 1)));
 	    if (__mprotect (mapstart, mapend - mapstart,
 			    PROT_READ|PROT_WRITE) < 0)
-	      _dl_signal_error (errno, l->l_name,
-				"cannot make segment writable for relocation");
+	      _dl_signal_error (errno, l->l_name, N_("\
+cannot make segment writable for relocation"));
 	  }
     }
 
@@ -138,7 +139,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 
 	    if (__mprotect (mapstart, mapend - mapstart, prot) < 0)
 	      _dl_signal_error (errno, l->l_name,
-				"can't restore segment prot after reloc");
+				N_("can't restore segment prot after reloc"));
 
 #ifdef CLEAR_CACHE
 	    CLEAR_CACHE (mapstart, mapend);
@@ -157,14 +158,16 @@ _dl_reloc_bad_type (struct link_map *map, uint_fast8_t type, int plt)
   extern const char _itoa_lower_digits[];
   if (plt)
     {
-      char msg[] = "unexpected PLT reloc type 0x??";
+      /* XXX We cannot translate the message.  */
+      static char msg[] = "unexpected PLT reloc type 0x??";
       msg[sizeof msg - 3] = DIGIT(type >> 4);
       msg[sizeof msg - 2] = DIGIT(type);
       _dl_signal_error (0, map->l_name, msg);
     }
   else
     {
-      char msg[] = "unexpected reloc type 0x??";
+      /* XXX We cannot translate the message.  */
+      static char msg[] = "unexpected reloc type 0x??";
       msg[sizeof msg - 3] = DIGIT(type >> 4);
       msg[sizeof msg - 2] = DIGIT(type);
       _dl_signal_error (0, map->l_name, msg);

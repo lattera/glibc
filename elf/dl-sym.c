@@ -63,7 +63,7 @@ _dl_sym (void *handle, const char *name, void *who)
       else
 	{
 	  if (! match)
-	    _dl_signal_error (0, NULL, _("\
+	    _dl_signal_error (0, NULL, N_("\
 RTLD_NEXT used in code not dynamically loaded"));
 
 	  l = match;
@@ -113,7 +113,7 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
 	  match = l;
 
       if (! match)
-	_dl_signal_error (0, NULL, _("\
+	_dl_signal_error (0, NULL, N_("\
 RTLD_NEXT used in code not dynamically loaded"));
 
       l = match;

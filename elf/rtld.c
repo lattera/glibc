@@ -507,14 +507,15 @@ of this helper program; chances are you did not intend to run this program.\n\
 
       if (__builtin_expect (mode, normal) == verify)
 	{
-	  char *err_str = NULL;
+	  const char *objname;
+	  const char *err_str = NULL;
 	  struct map_args args;
 
 	  args.str = _dl_argv[0];
-	  (void) _dl_catch_error (&err_str, map_doit, &args);
-	  if (err_str != NULL)
+	  (void) _dl_catch_error (&objname, &err_str, map_doit, &args);
+	  if (__builtin_expect (err_str != NULL, 0))
 	    {
-	      free (err_str);
+	      free ((char *) err_str);
 	      _exit (EXIT_FAILURE);
 	    }
 	}

@@ -20,6 +20,7 @@
 
 #include <elf.h>
 #include <errno.h>
+#include <libintl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ldsodefs.h>
@@ -93,6 +94,7 @@ match_symbol (const char *name, ElfW(Word) hash, const char *string,
 	 object was linked against another version of this file.  We
 	 only print a message if verbose output is requested.  */
       if (verbose)
+	/* XXX We cannot translate the messages.  */
 	_dl_signal_cerror (0, map->l_name,
 			   make_string ("\
 no version information available (required by ",
@@ -112,6 +114,7 @@ no version information available (required by ",
 	{
 	  char buf[20];
 	  buf[sizeof (buf) - 1] = '\0';
+	  /* XXX We cannot translate the message.  */
 	  _dl_signal_error (0, map->l_name,
 			    make_string ("unsupported version ",
 					 _itoa_word (def->vd_version,
@@ -145,6 +148,7 @@ no version information available (required by ",
   if (__builtin_expect (weak, 1))
     {
       if (verbose)
+	/* XXX We cannot translate the message.  */
 	_dl_signal_cerror (0, map->l_name,
 			   make_string ("weak version `", string,
 					"' not found (required by ", name,
@@ -152,6 +156,7 @@ no version information available (required by ",
       return 0;
     }
 
+  /* XXX We cannot translate the message.  */
   _dl_signal_cerror (0, map->l_name,
 		     make_string ("version `", string,
 				  "' not found (required by ", name, ")"));
@@ -192,6 +197,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 	{
 	  char buf[20];
 	  buf[sizeof (buf) - 1] = '\0';
+	  /* XXX We cannot translate the message.  */
 	  _dl_signal_error (0, (*map->l_name ? map->l_name : _dl_argv[0]),
 			    make_string ("unsupported version ",
 					 _itoa_word (ent->vn_version,
@@ -282,7 +288,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
       if (__builtin_expect (map->l_versions == NULL, 0))
 	{
 	  _dl_signal_error (ENOMEM, (*map->l_name ? map->l_name : _dl_argv[0]),
-			    "cannot allocate version reference table");
+			    N_("cannot allocate version reference table"));
 	  result = 1;
 	}
       else

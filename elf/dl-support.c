@@ -21,6 +21,7 @@
    rtld.c and dl-sysdep.c in ways appropriate to bootstrap dynamic linking.  */
 
 #include <errno.h>
+#include <libintl.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <ldsodefs.h>
@@ -130,7 +131,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   /* XXX We don't try to find the capabilities in this case.  */
   result = (struct r_strlenpair *) malloc (sizeof (*result));
   if (result == NULL)
-    _dl_signal_error (ENOMEM, NULL, "cannot create capability list");
+    _dl_signal_error (ENOMEM, NULL, N_("cannot create capability list"));
 
   result[0].str = (char *) result;	/* Does not really matter.  */
   result[0].len = 0;

@@ -229,6 +229,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
     {
       if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
 	/* We could find no value for a strong reference.  */
+	/* XXX We cannot translate the messages.  */
 	_dl_signal_cerror (0, (reference_name && reference_name[0]
 			       ? reference_name
 			       : (_dl_argv[0] ?: "<main program>")),
@@ -446,6 +447,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 	{
 	  /* Oh, oh.  The file named in the relocation entry does not
 	     contain the needed symbol.  */
+	  /* XXX We cannot translate the message.  */
 	  _dl_signal_cerror (0, (reference_name && reference_name[0]
 				 ? reference_name
 				 : (_dl_argv[0] ?: "<main program>")),
@@ -465,6 +467,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
     {
       if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
 	/* We could find no value for a strong reference.  */
+	/* XXX We cannot translate the message.  */
 	_dl_signal_cerror (0, (reference_name && reference_name[0]
 			       ? reference_name
 			       : (_dl_argv[0] ?: "<main program>")),
@@ -594,6 +597,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 	  char buf[sizeof undefined_msg + len];
 	  __mempcpy (__mempcpy (buf, undefined_msg, sizeof undefined_msg - 1),
 		     undef_name, len + 1);
+	  /* XXX We cannot translate the messages.  */
 	  _dl_signal_cerror (0, (reference_name && reference_name[0]
 				 ? reference_name
 				 : (_dl_argv[0] ?: "<main program>")), buf);

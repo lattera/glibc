@@ -1,3 +1,33 @@
+2000-06-09  Ulrich Drepper  <drepper@redhat.com>
+
+	Rewrite error message handling.
+	* elf/dl-deps.c (_dl_map_object_deps): Pass new parameter to
+	_dl_catch_error.
+	* elf/dl-error (struct catch): Add objname member.
+	(_dl_signal_error): Take new parameter with object name.  When
+	passing message on simply store object name and duplicate error
+	message.
+	(_dl_catch_error): Take new parameter.  Store object name in the
+	place pointed to.
+	* include/dlfcn.h: Adjust _dl_catch_error prototype.
+	* sysdeps/generic/ldsodefs.h: Adjust _dl_signal_error prototype.
+	* elf/dl-libc.c (dlerror_run): Pass new parameter to _dl_catch_error.
+	* elf/dl-open.c (_dl_open): Likewise.
+	* elf/rtld.c (dl_main): Likewise.
+	* elf/dl-close.c: Mark error messages with N_().
+	* elf/dl-deps.c: Likewise.
+	* elf/dl-error.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-support.c: Likewise.
+	* elf/dl-sym.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* elf/dl-lookup.c: Add comments about problems with error message
+	translations.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-version.c: Likewise.
+
 2000-06-09  David Mosberger-Tang  <davidm@hpl.hp.com>
 
 	* sysdeps/unix/sysv/linux/ia64/__longjmp.S: new file

@@ -36,14 +36,15 @@ extern void *_dl_sym (void *handle, const char *name, void *who)
 extern void *_dl_vsym (void *handle, const char *name, const char *version,
 		       void *who)
     internal_function;
-     
+
 /* Call OPERATE, catching errors from `dl_signal_error'.  If there is no
    error, *ERRSTRING is set to null.  If there is an error, *ERRSTRING is
    set to a string constructed from the strings passed to _dl_signal_error,
-   and the error code passed is the return value.  ERRSTRING if nonzero
+   and the error code passed is the return value and *OBJNAME is set to
+   the object name which experienced the problems.  ERRSTRING if nonzero
    points to a malloc'ed string which the caller has to free after use.
    ARGS is passed as argument to OPERATE.  */
-extern int _dl_catch_error (char **errstring,
+extern int _dl_catch_error (const char **objname, const char **errstring,
 			    void (*operate) (void *),
 			    void *args)
      internal_function;

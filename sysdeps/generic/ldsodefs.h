@@ -240,8 +240,7 @@ extern int _dl_secure;
    zero; OBJECT is the name of the problematical shared object, or null if
    it is a general problem; ERRSTRING is a string describing the specific
    problem.  */
-extern void _dl_signal_error (int errcode,
-			      const char *object,
+extern void _dl_signal_error (int errcode, const char *object,
 			      const char *errstring)
      internal_function
      __attribute__ ((__noreturn__));

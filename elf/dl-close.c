@@ -19,6 +19,7 @@
 
 #include <assert.h>
 #include <dlfcn.h>
+#include <libintl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <bits/libc-lock.h>
@@ -36,8 +37,6 @@ typedef void (*fini_t) (void);
    protect `dlopen' and `dlclose' in dlclose.c.  */
 __libc_lock_define (extern, _dl_load_lock)
 
-#define LOSE(s) _dl_signal_error (0, map->l_name, s)
-
 void
 internal_function
 _dl_close (void *_map)
@@ -50,7 +49,7 @@ _dl_close (void *_map)
   unsigned int i;
 
   if (map->l_opencount == 0)
-    LOSE ("shared object not open");
+    _dl_signal_error (0, map->l_name, N_("shared object not open"));
 
   /* Acquire the lock.  */
   __libc_lock_lock (_dl_load_lock);
