@@ -1,3 +1,7 @@
+2003-03-21  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/arm/sysdep.h (CALL_MCOUNT): Add trailing semicolon.
+
 2003-03-21  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/mips/mips64/memcpy.S, sysdeps/mips/mips64/memset.S: New.
