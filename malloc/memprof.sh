@@ -29,11 +29,23 @@ do_usage() {
 
 do_help() {
   echo $"Usage: memprof [OPTION]... PROGRAM [PROGRAMOPTION...]
+Profile memory usage of PROGRAM.
+
       --help              print this help and exit
       --version           print version information and exit
       --progname          name of the program file to profile
       --png=FILE          generate PNG graphic and store it in FILE
       --data=FILE         generate binary data file and store it in FILE
+      --unbuffered        don't buffer output
+      --buffer=SIZE       collect SIZE entries before writing them out
+      --no-timer          don't collect additional information though timer
+
+   The following options only apply when generating graphical output:
+      --time-based        make graph linear in time
+      --total             also draw graph of total memory use
+      --title=STRING      use STRING as title of the graph
+      --x-size=SIZE       make graphic SIZE pixels wide
+      --y-size=SIZE       make graphic SIZE pixels high
 Report bugs using the \`glibcbug' script to <bugs@gnu.org>."
   exit 0
 }
@@ -57,13 +69,90 @@ while test $# -gt 0; do
     do_help
     ;;
   --pr | --pro | --prog | --progn | --progna | --prognam | --progname)
+    if test $# -eq 1; then
+      usage
+    fi
+    shift
     progname="$1"
     ;;
+  --pr=* | --pro=* | --prog=* | --progn=* | --progna=* | --prognam=* | --progname=*)
+    progname=${1##*=}
+    ;;
   --pn | --png)
+    if test $# -eq 1; then
+      usage
+    fi
+    shift
     png="$1"
     ;;
+  --pn=* | --png=*)
+    png=${1##*=}
+    ;;
   --d | --da | --dat | --data)
+    if test $# -eq 1; then
+      usage
+    fi
+    shift
     data="$1"
+    ;;
+  --d=* | --da=* | --dat=* | --data=*)
+    data=${1##*=}
+    ;;
+  --u | --un | --unb | --unbu | --unbuf | --unbuff | --unbuffe | --unbuffer | --unbuffere | --unbuffered)
+    buffer=1
+    ;;
+  --b | --bu | --buf | --buff | --buffe | --buffer)
+    if test $# -eq 1; then
+      usage
+    fi
+    shift
+    buffer="$1"
+    ;;
+  --b=* | --bu=* | --buf=* | --buff=* | --buffe=* | --buffer=*)
+    buffer=${1##*=}
+    ;;
+  --n | --no | --no- | --no-t | --no-ti | --no-tim | --no-time | --no-timer)
+    notimer=yes
+    ;;
+  --tim | --time | --time- | --time-b | --time-ba | --time-bas | --time-base | --time-based)
+    memprofstat_args="$memprofstat_args -t"
+    ;;
+  --to | --tot | --tota | --total)
+    memprofstat_args="$memprofstat_args -T"
+    ;;
+  --tit | --titl | --title)
+    if test $# -eq 1; then
+      usage
+    fi
+    shift
+    memprofstat_args="$memprofstat_args -s $1"
+    ;;
+  --tit=* | --titl=* | --title=*)
+    memprofstat_args="$memprofstat_args -s ${1##*=}"
+    ;;
+  --x | --x- | --x-s | --x-si | --x-siz | --x-size)
+    if test $# -eq 1; then
+      usage
+    fi
+    shift
+    memprofstat_args="$memprofstat_args -x $1"
+    ;;
+  --x=* | --x-=* | --x-s=* | --x-si=* | --x-siz=* | --x-size=*)
+    memprofstat_args="$memprofstat_args -x ${1##*=}"
+    ;;
+  --y | --y- | --y-s | --y-si | --y-siz | --y-size)
+    if test $# -eq 1; then
+      usage
+    fi
+    shift
+    memprofstat_args="$memprofstat_args -y $1"
+    ;;
+  --y=* | --y-=* | --y-s=* | --y-si=* | --y-siz=* | --y-size=*)
+    memprofstat_args="$memprofstat_args -y ${1##*=}"
+    ;;
+  --p | --p=* | --t | --t=* | --ti | --ti=*)
+    echo >&2 $"memprof: option \`${1##*=}' is ambiguous"
+    usage
     ;;
   --)
     # Stop processing arguments.
@@ -100,6 +189,16 @@ if test -n "$datafile"; then
   add_env="$add_env MEMPROF_OUTPUT=$datafile"
 fi
 
+# Set buffer size.
+if test -n "$buffer"; then
+  add_env="$add_env MEMPROF_BUFFER_SIZE=$buffer"
+fi
+
+# Disable timers.
+if test -n "$notimer"; then
+  add_env="$add_env MEMPROF_NO_TIMER=yes"
+fi
+
 # Execute the program itself.
 eval $add_env $*
 result=$?
@@ -107,10 +206,14 @@ result=$?
 # Generate the PNG data file is wanted and there is something to generate
 # it from.
 if test -n "$png" -a -s "$datafile"; then
-  eval $memprofstat $datafile $png
+  # Append extension .png if it isn't already there.
+  if test $png = ${png%*.png}; then
+    png="$png.png"
+  fi
+  eval $memprofstat $memprofstat_args $datafile $png
 fi
 
-if test -z $data -a -n $datafile; then
+if test -z "$data" -a -n $datafile; then
   rm -f $datafile
 fi
 

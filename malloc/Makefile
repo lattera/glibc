@@ -101,7 +101,7 @@ $(objpfx)mtrace: mtrace.pl
 
 $(objpfx)memprof: memprof.sh
 	rm -f $@.new
-	sed -e 's|@BASH@|$(BASH)|' -e 's|@VERSION@|$(VERSION)|' \
+	sed -e 's|@BASH@|$(BASH)|' -e 's|@VERSION@|$(version)|' \
 	    -e 's|@LIBDIR@|$(libdir)|' -e 's|@BINDIR@|$(bindir)|' $^ > $@.new \
 	&& rm -f $@ && mv $@.new $@ && chmod +x $@
 
