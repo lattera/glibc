@@ -932,7 +932,8 @@ _IO_file_seekoff_mmap (fp, offset, dir, mode)
      using a pushback buffer, but in the usual case has the same value as
      (fp->_IO_read_ptr - fp->_IO_buf_base).  */
   if (mode == 0)
-    return fp->_offset - (fp->_IO_read_end - fp->_IO_read_ptr);
+    return ((fp->_IO_buf_end - fp->_IO_buf_base)
+	    - (fp->_IO_read_end - fp->_IO_read_ptr));
 
   switch (dir)
     {

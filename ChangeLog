@@ -1,3 +1,8 @@
+2002-07-24  Roland McGrath  <roland@frob.com>
+
+	* libio/fileops.c (_IO_file_seekoff_mmap): Don't rely on FP->_offset,
+	which gets moved around.  Calculate size of mmap'd buffer instead.
+
 2002-07-24  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/arm/brk.S: Improve schedule.
