@@ -36,7 +36,7 @@ ENTRY(__getcontext)
 
 	/* sigprocmask (SIG_BLOCK, NULL, &sc->sc_mask).  */
 	la      %r2,SIG_BLOCK
-	slr	%r3,%r3
+	slgr	%r3,%r3
 	la	%r4,SC_MASK(%r5)
 	svc	SYS_ify(rt_sigprocmask)
 
@@ -60,7 +60,7 @@ ENTRY(__getcontext)
 	std     %f15,SC_FPRS+120(%r5)
 
 	/* Set __getcontext return value to 0.  */
-	slr     %r2,%r2
+	slgr    %r2,%r2
 
 	/* Store access registers.  */
 	stam    %a0,%a15,SC_ACRS(%r5)
