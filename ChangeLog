@@ -1,5 +1,9 @@
 2003-04-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* signal/sigfillset.c: Moved to...
+	* sysdeps/generic/sigfillset.c: ...here.  If SIGCANCEL is defined
+	do not set the corresponding bit.
+
 	* sysdeps/unix/sysv/linux/sigprocmask.c: Prevent changing mask for
 	SIGCANCEL.
 	* sysdeps/unix/sysv/linux/alpha/bits/siginfo.h: Define SI_TKILL.
