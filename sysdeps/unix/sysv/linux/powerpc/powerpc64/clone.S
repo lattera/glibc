@@ -92,9 +92,9 @@ ENTRY (BP_SYM (__clone))
 	mr	r1,r30
 
 #ifdef RESET_PID
-	andis.	r0,r28,1	/* This is & CLONE_THREAD */
+	rldicl.	r0,r28,48,63	/* This is & CLONE_THREAD */
 	bne+	r0,L(oldpid)
-	andi.	r0,r28,CLONE_VM
+	rldicl.	r0,r28,56,63	/* This is & CLONE_VM */
 	li	r3,-1
 	bne-	r0,L(nomoregetpid)
 	DO_CALL(SYS_ify(getpid))
