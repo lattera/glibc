@@ -1,3 +1,16 @@
+1997-05-03 00:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/TESTS2C.sed: Recognize only digits in first field.  This
+	enables us to use colons in the pattern.
+
+1997-05-01 20:02  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/unix/sysv/linux/alpha/brk.S: Don't presume that the kernel
+	will preserve non-call-saved registers; save and restore a0 across
+	the system call.
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Likewise tuck the thread
+	data onto the new thread's stack.
+
 1997-05-01 03:13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/shmat.c (shmat): For Linux-2.0 and up the
