@@ -1,3 +1,15 @@
+2004-11-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/ftello.c (ftello): Don't subtract save_end - save_base
+	if pos is _IO_pos_BAD.
+	* libio/ftello64.c (ftello64): Likewise.
+	* libio/iofgetpos.c (_IO_new_fgetpos): Likewise.
+	* libio/iofgetpos64.c (_IO_new_fgetpos64): Likewise.
+	* libio/oldiofgetpos.c (_IO_old_fgetpos): Likewise.
+	* libio/oldiofgetpos64.c (_IO_old_fgetpos64): Likewise.
+	* libio/ioftell.c (_IO_ftell): Likewise.
+	Cast to long int instead of off_t when checking for overflow.
+
 2004-11-04  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/register-dump.h (regnames): Align.
