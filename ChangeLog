@@ -1,3 +1,13 @@
+1998-03-20 12:14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/Makefile: Fix typo in last change.
+
+1998-03-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* dirent/dirent.h (scandir): Make argument of select function const.
+	* dirent/scandir.c (scandir): Likewise.
+	Reported by David.Faure@insa-lyon.fr [PR libc/512].
+
 1998-03-19 14:28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/strtok_r.c: Make __strtok_r real name and strtok_r
@@ -40,6 +50,10 @@
 
 	* posix/wordexp.c (parse_param): Don't immediately stop parsing a
 	parameter name after seeing a digit if it's enclosed in braces.
+
+1998-03-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/i686/Implies: Add libm-i387/i686.
 
 1998-03-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 

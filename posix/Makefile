@@ -64,7 +64,7 @@ before-compile	:= testcases.h
 include ../Rules
 
 ifeq (no,$(cross-compiling))
-.PHONY: do-globtest do-wordexp-tst
+.PHONY: do-globtest do-wordexp-test
 tests: do-globtest do-wordexp-test
 do-globtest: $(objpfx)globtest
 	$(SHELL) -e globtest.sh $(common-objpfx) $(elf-objpfx) \
