@@ -34,9 +34,10 @@ endif
 libdl-shared-only-routines += eval
 
 ifeq (yes,$(build-shared))
-tests = glrefmain failtest tst-dladdr default
+tests = glrefmain failtest tst-dladdr default errmsg1
 endif
-modules-names = glreflib1 glreflib2 failtestmod defaultmod1 defaultmod2
+modules-names = glreflib1 glreflib2 failtestmod defaultmod1 defaultmod2 \
+		errmsg1mod
 extra-objs += $(modules-names:=.os) eval.os
 generated := $(modules-names:=.so)
 
@@ -63,3 +64,6 @@ $(objpfx)default: $(libdl) $(objpfx)defaultmod1.so $(objpfx)defaultmod2.so
 $(objpfx)defaultmod1.so: $(libdl)
 LDFLAGS-defaultmod2.so = -Bsymbolic
 $(objpfx)defaultmod2.so: $(libdl)
+
+$(objpfx)errmsg1: $(libdl)
+$(objpfx)errmsg1.out: $(objpfx)errmsg1 $(objpfx)errmsg1mod.so

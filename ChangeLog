@@ -1,5 +1,11 @@
 2000-12-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* dlfcn/Makefile (tests): Add errmsg1.
+	(modules-names): Add errmsg1mod.
+	Add rules to run errmsg1.
+	* dlfcn/errmsg1.c: New file.
+	* dlfcn/errmsg1mod.c: New file.
+
 	* dlfcn/dlerror.c (dlerror): Always create output string which
 	includes object file name.
 
