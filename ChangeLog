@@ -1,3 +1,30 @@
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/sjis.c (halfkana_to_ucs4): Remove array.
+	(BODY for FROM_LOOP): Optimize the JISX0201:GR to Unicode conversion.
+
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/euc-jp.c (BODY for FROM_LOOP): When encountering an
+	invalid input (e.g. a byte > 0x80 followed by a byte < 0x80), skip
+	always one byte, not 0 bytes in some cases and 2 bytes in others.
+
+	* iconvdata/tst-table-from.c (main): Correct the usage message.
+
+2002-04-19  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regcomp.c (parse_expression): Fix incorrect error code.
+	(parse_dup_op): Fix error handling like "a{}".
+	(parse_bracket_exp): Add error handling.
+	(fetch_number): Add error handling for "a{<very_large_number>}".
+
+2002-04-19  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regcomp.c (parse_bracket_symbol): Add error handling
+	in case that the symbol name is too long.
+	(build_charclass): Handle [:lower:]/[:uppper:] correctly
+	in case of REG_ICASE.
+
 2002-04-19  Andreas Jaeger  <aj@suse.de>
 
 	* math/libm-test.inc: Fix comment, suggested by Hartvig Ekner

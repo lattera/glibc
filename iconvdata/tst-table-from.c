@@ -1,4 +1,4 @@
-/* Copyright (C) 2000-2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 
@@ -184,7 +184,7 @@ main (int argc, char *argv[])
 
   if (argc != 2)
     {
-      fprintf (stderr, "Usage: tst-table-to charset\n");
+      fprintf (stderr, "Usage: tst-table-from charset\n");
       exit (1);
     }
   charset = argv[1];

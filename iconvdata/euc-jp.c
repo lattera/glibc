@@ -63,12 +63,12 @@
     else								      \
       {									      \
 	/* Two or more byte character.  First test whether the next	      \
-	   character is also available.  */				      \
+	   byte is also available.  */					      \
 	int ch2;							      \
 									      \
 	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
 	  {								      \
-	    /* The second character is not available.  Store the	      \
+	    /* The second byte is not available.  Store the		      \
 	       intermediate result.  */					      \
 	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
@@ -104,6 +104,10 @@
 		    result = __GCONV_ILLEGAL_INPUT;			      \
 		    break;						      \
 		  }							      \
+									      \
+		++inptr;						      \
+		++*irreversible;					      \
+		continue;						      \
 	      }								      \
 									      \
 	    inptr += 2;							      \
@@ -143,7 +147,7 @@
 		    break;						      \
 		  }							      \
 									      \
-		inptr += 2;						      \
+		++inptr;						      \
 		++*irreversible;					      \
 		continue;						      \
 	      }								      \
