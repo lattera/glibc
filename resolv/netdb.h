@@ -124,6 +124,23 @@ extern struct hostent *gethostbyname __P ((__const char *__name));
    for IPv6.  */
 extern struct hostent *gethostbyname2 __P ((__const char *__name, int __af));
 
+#ifdef __USE_UNIX98
+/* Return entry from host data base which address match ADDR with
+   length LEN and type TYPE in newly allocated buffer.  */
+extern struct hostent *getipnodebyaddr __P ((__const char *__addr,
+					     size_t __len, int __type,
+					     int *__error_num));
+
+/* Return entry from host data base for host with NAME and newly allocated
+   buffer.  */
+extern struct hostent *getipnodebyname __P ((__const char *__name, int __type,
+					     int __flags, int *__error_num));
+
+/* Free structure returned by previous `getipnodebyaddr' or `getipnodebyname'
+   call.  */
+extern void freehostent __P ((struct hostent *__ptr));
+#endif
+
 #ifdef	__USE_MISC
 /* Reentrant versions of the functions above.  The additional
    arguments specify a buffer of BUFLEN starting at BUF.  The last
