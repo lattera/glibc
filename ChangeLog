@@ -1,3 +1,9 @@
+2000-04-28  Geoff Clare <gwc@unisoft.com>
+
+	* io/ftw.c: Set errno to ENOENT (instead of ENOTDIR) when the
+	path passed to ftw() or nftw() is an empty string.
+	Closes PR libc/1710.
+
 2000-04-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* localedata/Makefile (test-srcs): Add tst-mbswcs4 and tst-mbswcs5.
