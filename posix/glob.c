@@ -668,7 +668,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 
       stream = ((flags & GLOB_ALTDIRFUNC) ?
 		(*pglob->gl_opendir) (directory) :
-		opendir (directory));
+		(__ptr_t) opendir (directory));
       if (stream == NULL)
 	{
 	  if ((errfunc != NULL && (*errfunc) (directory, errno)) ||
@@ -682,7 +682,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 	    size_t len;
 	    struct dirent *d = ((flags & GLOB_ALTDIRFUNC) ?
 				(*pglob->gl_readdir) (stream) :
-				readdir (stream));
+				readdir ((DIR *) stream));
 	    if (d == NULL)
 	      break;
 	    if (! REAL_DIR_ENTRY (d))
@@ -757,7 +757,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
       if (flags & GLOB_ALTDIRFUNC)
 	(*pglob->gl_closedir) (stream);
       else
-	closedir (stream);
+	closedir ((DIR *) stream);
       errno = save;
     }
   return nfound == 0 ? GLOB_NOMATCH : 0;
@@ -768,7 +768,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
     if (flags & GLOB_ALTDIRFUNC)
       (*pglob->gl_closedir) (stream);
     else
-      closedir (stream);
+      closedir ((DIR *) stream);
     errno = save;
   }
   while (names != NULL)

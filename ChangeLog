@@ -1,3 +1,13 @@
+Thu Dec 14 02:28:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/glob.c (glob_in_dir): Cast result of opendir to __ptr_t,
+	and cast STREAM to DIR * before passing to readdir and closedir.
+
+Wed Dec 13 22:06:07 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c (_hurd_internal_post_signal: suspend): Reply
+	after aborting RPCs but before calling proc_mark_stop.
+
 Mon Dec 11 20:07:54 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/glob.c [! STDC_HEADERS]: Declare getenv.
