@@ -1,5 +1,7 @@
 2004-11-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* dlfcn/dlfcn.h: Remove nonnull attribute from dlopen.
+
 	* posix/confstr.c (confstr): Return appropriate strings for
 	_CS_LFS_LINTFLAGS, _CS_LFS64_CFLAGS, and _CS_LFS64_LINTFLAGS.
 
