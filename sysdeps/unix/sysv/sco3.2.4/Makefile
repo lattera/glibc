@@ -1,3 +1,3 @@
 ifeq (posix,$(subdir))
-sysdep_routines := $(sysdep_routines) sco_pgrp
+sysdep_routines := $(sysdep_routines) pgrpsys
 endif
