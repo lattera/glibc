@@ -89,14 +89,13 @@ _dl_sysdep_start (void **start_argptr,
   uid_t uid = 0;
   uid_t euid = 0;
   gid_t gid = 0;
-#ifdef HAVE_AUX_X
-  /* This adds a little bit of security.  If the kernel does not pass
-     any value up we default to the safe mode.  */
-  gid_t egid = 1;
-#else
   gid_t egid = 0;
+#ifdef HAVE_AUX_XID
+# define set_seen(tag) (tag) /* Evaluate for the side effects.  */
+#else
   unsigned int seen = 0;
 # define M(type) (1 << (type))
+# define set_seen(val) seen |= M ((tag)->a_type)
 #endif
 
   DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, _dl_argv, _environ,
@@ -105,7 +104,7 @@ _dl_sysdep_start (void **start_argptr,
   user_entry = (ElfW(Addr)) &ENTRY_POINT;
   _dl_platform = NULL; /* Default to nothing known about the platform.  */
 
-  for (av = _dl_auxv; av->a_type != AT_NULL; seen |= M ((++av)->a_type))
+  for (av = _dl_auxv; av->a_type != AT_NULL; set_seen (av++))
     switch (av->a_type)
       {
       case AT_PHDR:

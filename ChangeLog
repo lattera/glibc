@@ -1,8 +1,8 @@
 2001-01-20  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Initialize egid
-	to 1.  This helps those installing ld.so SUID (nobody will be that
-	stupid, I hope).  Don't define and use _dl_base_addr unless
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Fix typo
+	preventing optimization from being done.  Set the correct type bit
+	in seen.  Don't define and use _dl_base_addr unless
 	NEED_DL_BASE_ADDR is defined.
 
 	* io/ftw.c (ftw_dir): Add slash after directory name if there
