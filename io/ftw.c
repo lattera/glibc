@@ -472,7 +472,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   /* First make sure the parameters are reasonable.  */
   if (dir[0] == '\0')
     {
-      __set_errno (ENOTDIR);
+      __set_errno (ENOENT);
       return -1;
     }
 
