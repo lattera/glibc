@@ -19,9 +19,14 @@
 # write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+if test $# -eq 0; then
+  echo "$0: missing programm name" >&2
+  echo "Try \`$0 --help' for more information." >&2
+  exit 1
+fi
+
 prog="$1"
 shift
-args="$*"
 
 if test $# -eq 0; then
   case "$prog" in
@@ -45,31 +50,43 @@ Written by Ulrich Drepper.'
   esac
 fi
 
-LD_PRELOAD="${LD_PRELOAD:+${LD_PRELOAD}:}@SLIB@/libSegFault.so@SOVER@"
-export LD_PRELOAD
-SEGFAULT_USE_ALTSTACK=1
-export SEGFAULT_USE_ALTSTACK
-SEGFAULT_OUTPUT_NAME="${TMPDIR:-/tmp}/`basename $prog`.segv.$$"
-export SEGFAULT_OUTPUT_NAME
+segv_output=`basename "$prog"`.segv.$$
 
-$prog $args
+LD_PRELOAD=${LD_PRELOAD:+${LD_PRELOAD}:}@SLIB@/libSegFault.so \
+SEGFAULT_USE_ALTSTACK=1 \
+SEGFAULT_OUTPUT_NAME=$segv_output \
+"$prog" ${1+"$@"}
 exval=$?
 
-unset LD_PRELOAD
-# Check for an segmentation error.
-if test $exval -eq 139; then
+# Check for a segmentation error.
+if test $exval -eq 139 && test -f "$segv_output"; then
   # We caught a segmentation error.  The output is in the file with the
   # name we have in SEGFAULT_OUTPUT_NAME.  In the output the names of
   # functions in shared objects are available, but names in the static
   # part of the program are not.  We use addr2line to get this information.
+  case $prog in
+  */*) ;;
+  *)
+    old_IFS=$IFS
+    IFS=:
+    for p in $PATH; do
+      test -n "$p" || p=.
+      if test -f "$p/$prog"; then
+	prog=$p/$prog
+      break
+      fi
+    done
+    IFS=$old_IFS
+    ;;
+  esac
   (read line; echo "$line"
    read line; echo "$line"
    while read line; do
      case "$line" in
-       [*) addr="`echo $line | sed 's/^\[\(.*\)\]$/\1/'`"
-           complete="`addr2line -f -e $prog $addr 2>/dev/null`"
-           if test $? -eq 0; then
-             echo "`echo $complete|sed 's/\(.*\) \(.*\)/\2(\1)/;'`$line"
+       [*) addr=`echo $line | sed 's/^\[\(.*\)\]$/\1/'`
+	   complete=`addr2line -f -e "$prog" $addr 2>/dev/null`
+	   if test $? -eq 0; then
+             echo "`echo "$complete"|sed 'N;s/\(.*\)\n\(.*\)/\2(\1)/;'`$line"
            else
              echo "$line"
            fi
@@ -77,8 +94,8 @@ if test $exval -eq 139; then
         *) echo "$line"
            ;;
      esac
-   done) < $SEGFAULT_OUTPUT_NAME
-   rm $SEGFAULT_OUTPUT_NAME
+   done) < "$segv_output"
+   rm -f "$segv_output"
 fi
 
 exit $exval

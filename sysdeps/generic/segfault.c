@@ -63,12 +63,6 @@ struct layout
 };
 
 
-static void
-handle (int fd, void *addr)
-{
-}
-
-
 /* This function is called when a segmentation fault is caught.  The system
    is in an instable state now.  This means especially that malloc() might
    not work anymore.  */
@@ -115,7 +109,7 @@ catch_segfault (int signal, SIGCONTEXT ctx)
   arr = alloca (cnt * sizeof (void *));
 
   /* First handle the program counter from the structure.  */
-  arr[0] = GET_EIP (ctx);
+  arr[0] = GET_PC (ctx);
 
   current = (struct layout *) top_frame;
   cnt = 1;

@@ -1900,8 +1900,11 @@ handlers.  The obstack allocation functions are safe as long as you
 don't use the same obstack both inside and outside of a signal handler.
 @end ignore
 
+@ignore
+@comment Once we have r_alloc again add this paragraph.
 The relocating allocation functions (@pxref{Relocating Allocator})
 are certainly not safe to use in a signal handler.
+@end ignore
 
 @item
 Any function that modifies @code{errno} is non-reentrant, but you can

@@ -122,8 +122,7 @@ sources := $(filter-out $(addsuffix .c,$(basename $(.S.s))),$(sources)) $(.S.s)
 	$(+subdir-nodist) $(dont_distribute)
 foo:=$(shell echo '+out=$(+out)' >&2; echo foofoo >&2)
 +tsrcs	:= $(filter-out $(+out), $(sources) $(all-headers) $(distribute)) \
-	   $(foreach l,$(extra-libs),$($l-map)) \
-	   $(wildcard $(addsuffix .map,$(extra-libs))) $(+sysdeps)
+	   $(+sysdeps)
 foo:=$(shell echo 'made +tsrcs=$(+tsrcs)'>&2)
 foo:=$(shell echo generated='$(generated)' >&2)
 #generated := $(sort $(generated) $(generated:.S=.c) $(generated:.s=.c))
@@ -149,7 +148,7 @@ ifdef	   subdir
 
 foo:=$(shell echo subdir foo >&2)
 
-+tsrcs := Makefile $(+tsrcs) \
++tsrcs := Makefile $(wildcard Versions) $(+tsrcs) \
 	  $(addsuffix .c,$(others) $(tests) $(tests-static) $(test-srcs)) \
 	  $(wildcard $(addsuffix .input,$(tests) (tests-static) $(test-srcs)) \
 	  $(addsuffix .args,$(tests) $(tests-static) $(test-srcs)))

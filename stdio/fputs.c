@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,3 +32,4 @@ fputs (const char *s, FILE *stream)
     return EOF;
   return 0;
 }
+weak_alias (fputs, fputs_unlocked)

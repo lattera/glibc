@@ -350,8 +350,9 @@ ifeq (yes,$(build-shared))
 # Reference map file only when versioning is selected and a map file name
 # is given.
 ifeq ($(versioning),yes)
-map-file = $(firstword $(wildcard $($(@F:.so=-map)) \
-				  $(common-objpfx)$(@F:.so=.map)))
+map-file = $(firstword $($(@F:.so=-map)) \
+		       $(addprefix $(common-objpfx), \
+				   $(filter $(@F:.so=.map),$(version-maps))))
 load-map-file = $(map-file:%=-Wl,--version-script=%)
 endif
 
@@ -370,8 +371,7 @@ $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
 	  -Wl,--whole-archive \
-	  $(filter-out $(map-file) $(common-objpfx)$(@F:.so=.map) \
-		       $(+preinit) $(+postinit),$^) \
+	  $(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
 	  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
 endef
 
@@ -411,9 +411,11 @@ $(common-objpfx)libc_pic.os: $(common-objpfx)libc_pic.a
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.os \
 			 $(common-objpfx)libc_pic.os \
 			 $(elfobjdir)/sofini.os \
-			 $(elfobjdir)/interp.os $(elfobjdir)/ld.so \
-			 $(common-objpfx)libc.map
+			 $(elfobjdir)/interp.os $(elfobjdir)/ld.so
 	$(build-shlib)
+ifeq ($(versioning),yes)
+$(common-objpfx)libc.so: $(common-objpfx)libc.map
+endif
 common-generated += libc.so libc_pic.os
 ifdef libc.so-version
 $(common-objpfx)libc.so$(libc.so-version): $(common-objpfx)libc.so
@@ -615,17 +617,22 @@ endef
 
 install-lib.so := $(filter %.so,$(install-lib:%_pic.a=%.so))
 install-lib := $(filter-out %.so %_pic.a,$(install-lib))
+
 ifeq (yes,$(build-shared))
-
-install-lib-nosubdir: $(install-lib.so:%=$(inst_libdir)/%)
-
 # Find which .so's have versions.
 versioned := $(strip $(foreach so,$(install-lib.so),\
 			       $(patsubst %,$(so),$($(so)-version))))
 
+install-lib.so-versioned := $(filter $(versioned), $(install-lib.so))
+install-lib.so-unversioned := $(filter-out $(versioned), $(install-lib.so))
+
+install-lib-nosubdir: $(install-lib.so-versioned:%=$(inst_libdir)/%) \
+		      $(install-lib.so-unversioned:%=$(inst_slibdir)/%)
+
 # Install all the unversioned shared libraries.
-$(addprefix $(inst_slibdir)/, $(filter-out $(versioned),$(install-lib.so))): \
-	$(inst_slibdir)/%.so: $(objpfx)%.so $(+force); $(do-install-program)
+$(install-lib.so-unversioned:%=$(inst_slibdir)/%): $(inst_slibdir)/%.so: \
+    $(objpfx)%.so $(+force)
+	$(do-install-program)
 
 ifneq ($(findstring -s,$(LN_S)),)
 define make-link
@@ -954,7 +961,7 @@ echo > $@.new 'subdir := $(subdir)'
 $(foreach var,subdir-dirs sources elided-routines sysdep_routines \
 	      headers sysdep_headers distribute dont_distribute generated \
 	      others tests test-srcs extra-libs $(extra-libs:%=%-routines) \
-	      tests-static $(extra-libs:%=%-map) versioned \
+	      tests-static versioned \
 	      $(addprefix install-,lib lib.so data bin sbin others),
 echo >> $@.new '$(subdir)-$(var) := $($(var))'
 echo >> $@.new '$(var) = $$($(subdir)-$(var))')

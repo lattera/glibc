@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,20 +17,21 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <stddef.h>
 #include <signal.h>
 
+extern int __syscall_sigpending (int subcode, sigset_t *set);
 
-/* Change the set of blocked signals to SET,
-   wait until a signal arrives, and restore the set of blocked signals.  */
+
+/* Store in SET all signals that are blocked and pending.  */
 int
-__sigsuspend (set)
-     const sigset_t *set;
+sigpending (sigset_t *set)
 {
-  __set_errno (ENOSYS);
-  return -1;
-}
-weak_alias (__sigsuspend, sigsuspend)
+  if (set == NULL)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
-stub_warning (sigsuspend)
-stub_warning (__sigsuspend)
-#include <stub-tag.h>
+  return __syscall_sigpending (1, set);
+}

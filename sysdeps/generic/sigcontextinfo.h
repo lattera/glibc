@@ -19,6 +19,6 @@
 
 /* In general we cannot provide any information.  */
 #define SIGCONTEXT struct sigcontext *
-#define GET_EIP(ctx)	((void *) 0)
+#define GET_PC(ctx)	((void *) 0)
 #define GET_FRAME(ctx)	((void *) 0)
 #define GET_STACK(ctx)	((void *) 0)

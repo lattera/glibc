@@ -116,8 +116,6 @@ Memory Allocation
 * Variable Size Automatic::     Allocation of variable-sized blocks
 				 of automatic storage that are freed when the
 				 calling function returns.
-* Relocating Allocator::        Waste less memory, if you can tolerate
-				 automatic relocation of the blocks you get.
 
 Unconstrained Allocation
 
@@ -175,11 +173,6 @@ Variable Size Automatic
 * GNU C Variable-Size Arrays::  Only in GNU C, here is an alternative
 				 method of allocating dynamically and
 				 freeing automatically.
-
-Relocating Allocator
-
-* Relocator Concepts::		How to understand relocating allocation.
-* Using Relocator::		Functions for relocating allocation.
 
 Character Handling
 

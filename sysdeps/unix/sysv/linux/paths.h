@@ -58,6 +58,7 @@
 #define	_PATH_MOUNTED	"/etc/mtab"
 #define	_PATH_NOLOGIN	"/etc/nologin"
 #define	_PATH_PRESERVE	"/var/preserve"
+#define	_PATH_RWHODIR	"/var/spool/rwho"
 #define	_PATH_SENDMAIL	"/usr/sbin/sendmail"
 #define	_PATH_SHADOW	"/etc/shadow"
 #define	_PATH_SHELLS	"/etc/shells"

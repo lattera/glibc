@@ -1,3 +1,104 @@
+1998-07-20 17:09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* shlib-versions: Remove definition for libSegFault.
+
+	* memory.texi: Comment out the relocating allocator description.
+	* manual/signal.texi: Remove reference to relocating allocator.
+	* manual/top-menu.texi: Regenerated.
+
+	* posix/fnmatch.c: Implement [: :] and change to recognize
+	^ as negation only when not _POSIXLY_CORRECT.
+
+	* sysdeps/generic/glob.c: Add several optimizations.
+
+	* posix/glob.h: Undefine __PMT to prevent warnings.
+	Reported by Roland McGrath.
+
+	* posix/regex.c: Define namespace macros only for _LIBC.
+
+	* sysdeps/arm/dl-machine.h: Fix typo.
+
+	* sysdeps/unix/sysv/sysv4/solaris2/sigpending.c: New file.
+	* sysdeps/unix/sysv/sysv4/solaris2/sigstack.c: New file.
+	* sysdeps/unix/sysv/sysv4/solaris2/sigwaitinfo.c: New file.
+	* sysdeps/unix/sysv/sysv4/solaris2/syscalls.list: Add sigaltstack,
+	sigpending, sigqueue, and sigtimedwait.
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/sparc32/syscall.S: New file.
+
+	* timezone/leapseconds: Update from tzdata1998f.
+
+1998-07-18  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* stdio/stdio.h [__USE_GNU]: Add prototype for fputs_unlocked.
+	* stdio/Versions [GLIBC_2.1]: Add fputs_unlocked.
+	* libio/stdio.h: Fix typo.
+
+1998-07-19  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start): #if 0 out the
+	magic memobj port arg parsing stuff.  Fix it someday when we are ready
+	to really use it.
+	(_dl_sysdep_output): New function, modified from _dl_sysdep_error.
+	(_dl_sysdep_error, _dl_sysdep_message, _dl_sysdep_fatal): Removed.
+
+1998-07-19  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* stdio/fputs.c: Add fputs_unlocked as weak alias for fputs.
+
+1998-07-19  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/posix/sigsuspend.c: Define __sigsuspend with sigsuspend as
+	a weak alias.
+	* sysdeps/mach/hurd/sigsuspend.c: Likewise.
+	* sysdeps/generic/sigsuspend.c: Likewise.
+
+1998-07-19  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/i386/sigcontextinfo.h: New file.
+
+1998-07-19  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (map-file): Don't use $(wildcard) to find the
+	generated version script, instead look in $(version-maps).
+	($(common-objpfx)libc.so): Only depend on libc.map if versioning
+	is used.
+	* extra-lib.mk ($(objpfx)$(lib).so): Only depend on version script
+	if versioning is used.  Don't use $(wildcard) to find the
+	generated version script, instead look in $(verson-maps).
+
+1998-07-17  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/segfault.c: Rename GET_EIP to GET_PC.  Remove
+	unused function handle.
+	* sysdeps/generic/sigcontextinfo.h: Rename GET_EIP to GET_PC.
+	* sysdeps/unix/sysv/linux/i386/sigcontextinfo.h: Likewise.
+	* debug/catchsegv.sh: Fix argument processing, quoting and various
+	typos.  Put the crash info always in the current directory.  Find
+	program in $PATH if it contains no directory component.
+	* Makerules (install-lib.so-versioned,
+	install-lib.so-unversioned): New variables.
+	(install-lib-nosubdir): Depend on unversioned libs in
+	slibdir, not libdir.
+
+1998-07-19  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Make-dist (+tsrcs): Remove references to %-map variables and
+	*.map files.  Add Versions in subdirs.
+	* Makerules (distinfo-vars): Don't write out %-map variables.
+
+1998-07-20 13:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/protocols/rwhod.h: Remove definition of _PATH_RWHODIR.
+	Include <paths.h> instead.
+	* sysdeps/generic/paths.h: Define _PATH_RWHODIR.
+	* sysdeps/unix/sysv/linux/paths.h: Likewise.
+	Reported by Dale Scheetz <dwarf@polaris.net>.
+
+1998-07-17 21:44  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/open_catalog.c: Strictly check whether catalog file is
+	larger enough for the data.  Reported by Andries.Brouwer@cwi.nl.
+
 1998-07-17  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/m68k/sigcontextinfo.h: New file.

@@ -53,7 +53,8 @@ libc {
 
     # f*
     feof_unlocked; ferror_unlocked; fflush_unlocked;  fgets_unlocked;
-    fileno_unlocked; fputc_unlocked; fread_unlocked; fwrite_unlocked;
+    fileno_unlocked; fputc_unlocked; fputs_unlocked;
+    fread_unlocked; fwrite_unlocked;
 
     # g*
     getc_unlocked; getchar_unlocked;

@@ -122,6 +122,7 @@ _dl_sysdep_start (void **start_argptr,
 
 unfmh();			/* XXX */
 
+#if 0				/* XXX make this work for real someday... */
       if (_dl_hurd_data->user_entry == (vm_address_t) &ENTRY_POINT)
 	/* We were invoked as a command, not as the program interpreter.
 	   The generic ld.so code supports this: it will parse the args
@@ -166,6 +167,7 @@ unfmh();			/* XXX */
 	       can be retrieved by the program later.  */
 	    l->l_info[DT_NULL] = (void *) memobj;
 	  }
+#endif
 
       /* Call elf/rtld.c's main program.  It will set everything
 	 up and leave us to transfer control to USER_ENTRY.  */
@@ -643,10 +645,13 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   return result;
 }
 
+
 void weak_function
-_dl_sysdep_fatal (const char *msg, ...)
+_dl_sysdep_output (int fd, const char *msg, ...)
 {
   va_list ap;
+
+  assert(fd < _hurd_init_dtablesize);
 
   va_start (ap, msg);
   do
@@ -655,55 +660,7 @@ _dl_sysdep_fatal (const char *msg, ...)
       mach_msg_type_number_t nwrote;
       do
 	{
-	  if (__io_write (_hurd_init_dtable[2], msg, len, -1, &nwrote))
-	    break;
-	  len -= nwrote;
-	  msg += nwrote;
-	} while (nwrote > 0);
-      msg = va_arg (ap, const char *);
-    } while (msg);
-  va_end (ap);
-
-  _exit (127);
-}
-
-
-void weak_function
-_dl_sysdep_error (const char *msg, ...)
-{
-  va_list ap;
-
-  va_start (ap, msg);
-  do
-    {
-      size_t len = strlen (msg);
-      mach_msg_type_number_t nwrote;
-      do
-	{
-	  if (__io_write (_hurd_init_dtable[2], msg, len, -1, &nwrote))
-	    break;
-	  len -= nwrote;
-	  msg += nwrote;
-	} while (nwrote > 0);
-      msg = va_arg (ap, const char *);
-    } while (msg);
-  va_end (ap);
-}
-
-
-void weak_function
-_dl_sysdep_message (const char *msg, ...)
-{
-  va_list ap;
-
-  va_start (ap, msg);
-  do
-    {
-      size_t len = strlen (msg);
-      mach_msg_type_number_t nwrote;
-      do
-	{
-	  if (__io_write (_hurd_init_dtable[1], msg, len, -1, &nwrote))
+	  if (__io_write (_hurd_init_dtable[fd], msg, len, -1, &nwrote))
 	    break;
 	  len -= nwrote;
 	  msg += nwrote;

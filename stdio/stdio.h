@@ -684,6 +684,13 @@ getline (char **__lineptr, size_t *__n, FILE *__stream)
 /* Write a string to STREAM.  */
 extern int fputs __P ((__const char *__restrict __s,
 		       FILE *__restrict __stream));
+
+#ifdef __USE_GNU
+/* This function does the same as `fputs' but does not lock the stream.  */
+extern int fputs_unlocked __P ((__const char *__restrict __s,
+				FILE *__restrict __stream));
+#endif
+
 /* Write a string, followed by a newline, to stdout.  */
 extern int puts __P ((__const char *__s));
 

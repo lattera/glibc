@@ -65,6 +65,7 @@ struct	whod {
 #define	WHODVERSION	1
 #define	WHODTYPE_STATUS	1		/* host status */
 
-#define	_PATH_RWHODIR	"/var/rwho"
+/* We used to define _PATH_RWHOD here but it's now in <paths.h>.  */
+#include <paths.h>
 
 #endif /* protocols/rwhod.h */

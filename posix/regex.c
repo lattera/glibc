@@ -52,7 +52,9 @@
 /* Solaris 2.5 has a bug: <wchar.h> must be included before <wctype.h>.  */
 # include <wchar.h>
 # include <wctype.h>
+#endif
 
+#ifdef _LIBC
 /* We have to keep the namespace clean.  */
 # define regfree(preg) __regfree (preg)
 # define regexec(pr, st, nm, pm, ef) __regexec (pr, st, nm, pm, ef)

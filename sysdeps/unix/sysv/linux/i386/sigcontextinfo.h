@@ -18,6 +18,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #define SIGCONTEXT struct sigcontext
-#define GET_EIP(ctx)	((void *) ctx.eip)
+#define GET_PC(ctx)	((void *) ctx.eip)
 #define GET_FRAME(ctx)	((void *) ctx.ebp)
 #define GET_STACK(ctx)	((void *) ctx.esp_at_signal)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,21 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <signal.h>
-
-
-/* Change the set of blocked signals to SET,
-   wait until a signal arrives, and restore the set of blocked signals.  */
-int
-__sigsuspend (set)
-     const sigset_t *set;
-{
-  __set_errno (ENOSYS);
-  return -1;
-}
-weak_alias (__sigsuspend, sigsuspend)
-
-stub_warning (sigsuspend)
-stub_warning (__sigsuspend)
-#include <stub-tag.h>
+#define SIGCONTEXT struct sigcontext
+#define GET_PC(ctx)	((void *) (ctx).sc_eip)
+#define GET_FRAME(ctx)	((void *) (ctx).sc_ebp)
+#define GET_STACK(ctx)	((void *) (ctx).sc_uesp)

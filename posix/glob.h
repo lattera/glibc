@@ -25,6 +25,7 @@ extern "C" {
 #undef	__ptr_t
 #if defined __cplusplus || (defined __STDC__ && __STDC__) || defined WINDOWS32
 # undef	__P
+# undef __PMT
 # define __P(protos)	protos
 # define __PMT(protos)	protos
 # define __ptr_t	void *
@@ -34,6 +35,7 @@ extern "C" {
 # endif
 #else /* Not C++ or ANSI C.  */
 # undef	__P
+# undef __PMT
 # define __P(protos)	()
 # define __PMT(protos)	()
 # undef	__const
