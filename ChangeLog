@@ -1,3 +1,37 @@
+1998-07-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/pattern.texi (More Flags for Globbing): Fix typo.
+
+	* manual/math.texi (Special Functions): Fix typo.
+
+	* sysdeps/unix/sysv/linux/bits/in.h (IPV6_ROUTER_ALERT): New
+	constant from Linux 2.1.112.
+
+	* posix/Makefile (install-lib): Compile libposix.a only if
+	build-static == yes.
+
+1998-07-28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/glob.c: Maintain const correctness.  Move extern
+	declarations to file level.  Cope with unsupported
+	_SC_GETPW_R_SIZE_MAX.
+
+1998-07-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/tst-printf.c: %z is now recognized by printf.
+
+	* sysdeps/libm-ieee754/c_csqrt.c: Fix problems with some cancelation
+	errors.
+	* sysdeps/libm-ieee754/c_csqrtf.c: Likewise.
+	* sysdeps/libm-ieee754/c_csqrtlc: Likewise.
+	Patch by Stephen L Moshier <moshier@mediaone.net>.
+
+	* math/libm-test.c (csqrt_test): Correct typo in one test, add
+	another one.
+
+	* sysdeps/unix/sysv/linux/bits/siginfo.h: Adjust siginfo_t after
+	latest kernel change.
+
 1998-07-29  6:39  Kazushige Goto <goto@statabo.rim.or.jp>
 
 	* sysdeps/alpha/fpu/e_sqrt.c [!_IEEE_FP]: Correctly handle

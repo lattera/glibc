@@ -484,7 +484,7 @@ the home directory cannot be determined for other reasons this leads to
 an error.  @code{glob} will return @code{GLOB_NOMATCH} instead of using
 the pattern itself as the name.
 
-This funcationality is equivalent to what is available in C-shells if
+This functionality is equivalent to what is available in C-shells if
 @code{nonomatch} flag is not set.
 
 @comment glob.h

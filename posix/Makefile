@@ -57,7 +57,9 @@ tests		:= tstgetopt testfnm runtests wordexp-test runptests
 test-srcs	:= globtest
 others		:= getconf
 install-bin	:= getconf
+ifeq (yes,$(build-static))
 install-lib	:= libposix.a
+endif
 gpl2lgpl := getopt.c getopt1.c getopt.h	regex.c regex.h
 
 before-compile	:= testcases.h ptestcases.h

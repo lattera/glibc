@@ -886,7 +886,7 @@ instead of in the @var{signgam} global.
 @deftypefunx {long double} gammal (long double @var{x})
 These functions exist for compatibility reasons.  They are equivalent to
 @code{lgamma} etc.  It is better to use @code{lgamma} since for one the
-name reflect better the actual computation and @code{lgamma} is also
+name reflects better the actual computation and @code{lgamma} is also
 standardized in @w{ISO C 9x} while @code{gamma} is not.
 @end deftypefun
 

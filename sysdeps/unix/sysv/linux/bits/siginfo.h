@@ -72,6 +72,7 @@ typedef struct siginfo
 	struct
 	  {
 	    __pid_t si_pid;	/* Which child.  */
+	    __uid_t si_uid;	/* Real user ID of sending process.  */
 	    int si_status;	/* Exit value or signal.  */
 	    __clock_t si_utime;
 	    __clock_t si_stime;

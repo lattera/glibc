@@ -5157,10 +5157,16 @@ csqrt_test (void)
 	     0.5870453129635652115L, CHOOSE(7e-18L, 0, 0));
 
   result = FUNC(csqrt) (BUILD_COMPLEX (-2, -3));
-  check_eps ("real(csqrt(-2 - i 3)) == -0.89597...", __real__ result,
+  check_eps ("real(csqrt(-2 - i 3)) == 0.89597...", __real__ result,
 	     0.8959774761298381247L, CHOOSE(6e-20L, 2e-16, 6e-8));
   check_eps ("imag(csqrt(-2 - i 3)) == -1.67414...", __imag__ result,
 	     -1.6741492280355400404L, CHOOSE(0, 5e-16, 0));
+
+  result = FUNC(csqrt) (BUILD_COMPLEX (-2, 3));
+  check_eps ("real(csqrt(-2 + i 3)) == 0.89597...", __real__ result,
+	     0.8959774761298381247L, CHOOSE(6e-20L, 2e-16, 6e-8));
+  check_eps ("imag(csqrt(-2 + i 3)) == 1.67414...", __imag__ result,
+	     1.6741492280355400404L, CHOOSE(0, 5e-16, 0));
 }
 
 

@@ -155,6 +155,12 @@ extern void abort (), exit ();
 
 #endif	/* Standard headers.  */
 
+#ifdef HAVE_GETLOGIN_R
+extern int getlogin_r __P ((char *, size_t));
+#else
+extern char *getlogin __P ((void));
+#endif
+
 #ifndef	ANSI_STRING
 
 # ifndef bzero
@@ -179,7 +185,6 @@ extern void bcopy ();
 # define HAVE_MEMPCPY	1
 # define mempcpy(Dest, Src, Len) __mempcpy (Dest, Src, Len)
 #endif
-
 
 #ifndef	__GNU_LIBRARY__
 # ifdef	__GNUC__
@@ -245,6 +250,8 @@ extern char *alloca ();
 # define closedir(dir) __closedir (dir)
 # define opendir(name) __opendir (name)
 # define readdir(str) __readdir (str)
+# define getpwnam_r(name, bufp, buf, len, res) \
+   __getpwnam_r (name, bufp, buf, len, res)
 #endif
 
 #if !(defined STDC_HEADERS || defined __GNU_LIBRARY__)
@@ -349,7 +356,7 @@ glob (pattern, flags, errfunc, pglob)
      glob_t *pglob;
 {
   const char *filename;
-  char *dirname;
+  const char *dirname;
   size_t dirlen;
   int status;
   int oldcount;
@@ -507,9 +514,9 @@ glob (pattern, flags, errfunc, pglob)
 	{
 	  filename = pattern;
 #ifdef _AMIGA
-	  dirname = (char *) "";
+	  dirname = "";
 #else
-	  dirname = (char *) ".";
+	  dirname = ".";
 #endif
 	  dirlen = 0;
 	}
@@ -517,20 +524,22 @@ glob (pattern, flags, errfunc, pglob)
   else if (filename == pattern)
     {
       /* "/pattern".  */
-      dirname = (char *) "/";
+      dirname = "/";
       dirlen = 1;
       ++filename;
     }
   else
     {
+      char *newp;
       dirlen = filename - pattern;
-      dirname = (char *) __alloca (dirlen + 1);
+      newp = (char *) __alloca (dirlen + 1);
 #ifdef HAVE_MEMPCPY
-      *((char *) mempcpy (dirname, pattern, dirlen)) = '\0';
+      *((char *) mempcpy (newp, pattern, dirlen)) = '\0';
 #else
-      memcpy (dirname, pattern, dirlen);
-      dirname[dirlen] = '\0';
+      memcpy (newp, pattern, dirlen);
+      newp[dirlen] = '\0';
 #endif
+      dirname = newp;
       ++filename;
 
       if (filename[0] == '\0' && dirlen > 1)
@@ -558,7 +567,7 @@ glob (pattern, flags, errfunc, pglob)
       if (dirname[1] == '\0' || dirname[1] == '/')
 	{
 	  /* Look up home directory.  */
-	  char *home_dir = getenv ("HOME");
+	  const char *home_dir = getenv ("HOME");
 # ifdef _AMIGA
 	  if (home_dir == NULL || home_dir[0] == '\0')
 	    home_dir = "SYS:";
@@ -570,37 +579,38 @@ glob (pattern, flags, errfunc, pglob)
 	  if (home_dir == NULL || home_dir[0] == '\0')
 	    {
 	      int success;
-#   if defined HAVE_GETLOGIN_R || defined _LIBC
-	      extern int getlogin_r __P ((char *, size_t));
-	      size_t buflen = sysconf (_SC_LOGIN_NAME_MAX) + 1;
 	      char *name;
+#   if defined HAVE_GETLOGIN_R || defined _LIBC
+	      size_t buflen = sysconf (_SC_LOGIN_NAME_MAX) + 1;
 
 	      if (buflen == 0)
 		/* `sysconf' does not support _SC_LOGIN_NAME_MAX.  Try
 		   a moderate value.  */
-		buflen = 16;
+		buflen = 20;
 	      name = (char *) __alloca (buflen);
 
 	      success = getlogin_r (name, buflen) >= 0;
 #   else
-	      extern char *getlogin __P ((void));
-	      char *name;
-
 	      success = (name = getlogin ()) != NULL;
 #   endif
 	      if (success)
 		{
+		  struct passwd *p;
 #   if defined HAVE_GETPWNAM_R || defined _LIBC
 		  size_t pwbuflen = sysconf (_SC_GETPW_R_SIZE_MAX);
 		  char *pwtmpbuf;
-		  struct passwd pwbuf, *p;
+		  struct passwd pwbuf;
 
+		  if (pwbuflen == -1)
+		    /* `sysconf' does not support _SC_GETPW_R_SIZE_MAX.
+		       Try a moderate value.  */
+		    pwbuflen = 1024;
 		  pwtmpbuf = (char *) __alloca (pwbuflen);
 
-		  success = (__getpwnam_r (name, &pwbuf, pwtmpbuf,
-					   pwbuflen, &p) >= 0);
+		  success = (getpwnam_r (name, &pwbuf, pwtmpbuf, pwbuflen, &p)
+			     >= 0);
 #   else
-		  struct passwd *p = getpwnam (name);
+		  p = getpwnam (name);
 		  success = p != NULL;
 #   endif
 		  if (success)
@@ -611,7 +621,7 @@ glob (pattern, flags, errfunc, pglob)
 	    if (flags & GLOB_TILDE_CHECK)
 	      return GLOB_NOMATCH;
 	    else
-	      home_dir = (char *) "~"; /* No luck.  */
+	      home_dir = "~"; /* No luck.  */
 #  endif /* WINDOWS32 */
 # endif
 	  /* Now construct the full directory.  */
@@ -636,35 +646,45 @@ glob (pattern, flags, errfunc, pglob)
       else
 	{
 	  char *end_name = strchr (dirname, '/');
-	  char *user_name;
-	  char *home_dir;
+	  const char *user_name;
+	  const char *home_dir;
 
 	  if (end_name == NULL)
 	    user_name = dirname + 1;
 	  else
 	    {
-	      user_name = (char *) __alloca (end_name - dirname);
+	      char *newp;
+	      newp = (char *) __alloca (end_name - dirname);
 # ifdef HAVE_MEMPCPY
-	      *((char *) mempcpy (user_name, dirname + 1, end_name - dirname))
+	      *((char *) mempcpy (newp, dirname + 1, end_name - dirname))
 		= '\0';
 # else
-	      memcpy (user_name, dirname + 1, end_name - dirname);
-	      user_name[end_name - dirname - 1] = '\0';
+	      memcpy (newp, dirname + 1, end_name - dirname);
+	      newp[end_name - dirname - 1] = '\0';
 # endif
+	      user_name = newp;
 	    }
 
 	  /* Look up specific user's home directory.  */
 	  {
+	    struct passwd *p;
 #  if defined HAVE_GETPWNAM_R || defined _LIBC
 	    size_t buflen = sysconf (_SC_GETPW_R_SIZE_MAX);
-	    char *pwtmpbuf = (char *) __alloca (buflen);
-	    struct passwd pwbuf, *p;
-	    if (__getpwnam_r (user_name, &pwbuf, pwtmpbuf, buflen, &p) >= 0)
+	    char *pwtmpbuf;
+	    struct passwd pwbuf;
+
+	    if (buflen == -1)
+	      /* `sysconf' does not support _SC_GETPW_R_SIZE_MAX.  Try a
+		 moderate value.  */
+	      buflen = 1024;
+	    pwtmpbuf = (char *) __alloca (buflen);
+
+	    if (getpwnam_r (user_name, &pwbuf, pwtmpbuf, buflen, &p) >= 0)
 	      home_dir = p->pw_dir;
 	    else
 	      home_dir = NULL;
 #  else
-	    struct passwd *p = getpwnam (user_name);
+	    p = getpwnam (user_name);
 	    if (p != NULL)
 	      home_dir = p->pw_dir;
 	    else

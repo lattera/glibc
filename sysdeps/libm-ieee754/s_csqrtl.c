@@ -1,5 +1,5 @@
 /* Complex square root of long double value.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Based on an algorithm by Stephen L. Moshier <moshier@world.std.com>.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -84,22 +84,25 @@ __csqrtl (__complex__ long double x)
 	}
       else
 	{
-#if 0 /* FIXME: this is broken. */
-	  __complex__ long double q;
-	  long double t, r;
+#if 0
+	  long double d, r, s;
 
-	  if (fabsl (__imag__ x) < 2.0e-4 * fabsl (__real__ x))
-	    t = 0.25 * __imag__ x * (__imag__ x / __real__ x);
+	  d = __ieee754_hypotl (__real__ x, __imag__ x);
+	  /* Use the identity   2  Re res  Im res = Im x
+	     to avoid cancellation error in  d +/- Re x.  */
+	  if (__real__ x > 0)
+	    {
+	      r = __ieee754_sqrtl (0.5L * d + 0.5L * __real__ x);
+	      s = (0.5L * __imag__ x) / r;
+	    }
 	  else
-	    t = 0.5 * (__ieee754_hypotl (__real__ x, __imag__ x) - __real__ x);
+	    {
+	      s = __ieee754_sqrtl (0.5L * d - 0.5L * __real__ x);
+	      r = (0.5L * __imag__ x) / s;
+	    }
 
-	  r = __ieee754_sqrtl (t);
-
-	  __real__ q = __imag__ x / (2.0 * r);
-	  __imag__ q = r;
-
-	  /* Heron iteration in complex arithmetic.  */
-	  res = 0.5 * (q + q / x);
+	  __real__ res = r;
+	  __imag__ res = __copysignl (s, __imag__ x);
 #else
 	  long double d, imag;
 
