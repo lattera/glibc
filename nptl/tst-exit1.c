@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -52,14 +52,12 @@ do_test (void)
       exit (1);
     }
 
-  pthread_t th[N];
-  int i;
-  for (i = 0; i < N; ++i)
-    if (pthread_create (&th[i], NULL, tf, NULL) != 0)
-      {
-	puts ("create failed");
-	exit (1);
-      }
+  pthread_t th;
+  if (pthread_create (&th, NULL, tf, NULL) != 0)
+    {
+      puts ("create failed");
+      exit (1);
+    }
 
   int r = pthread_barrier_wait (&b);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
@@ -69,7 +67,7 @@ do_test (void)
     }
 
   /* Do nothing.  */
-  if (pthread_join (th[0], NULL) == 0)
+  if (pthread_join (th, NULL) == 0)
     {
       puts ("join succeeded!?");
       exit (1);
