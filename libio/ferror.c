@@ -25,7 +25,7 @@ the executable file might be covered by the GNU General Public License. */
 #include "stdio.h"
 
 int
-ferror (fp)
+_IO_ferror (fp)
      _IO_FILE* fp;
 {
   int result;
@@ -35,6 +35,7 @@ ferror (fp)
   _IO_funlockfile (fp);
   return result;
 }
+weak_alias (_IO_ferror, ferror)
 
 #ifdef _IO_MTSAFE_IO
 

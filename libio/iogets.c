@@ -53,3 +53,5 @@ _IO_gets (buf)
 }
 
 weak_alias (_IO_gets, gets)
+
+link_warning (gets, "the `gets' function is dangerous and should not be used.")

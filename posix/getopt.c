@@ -701,7 +701,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	const struct option *pfound = NULL;
 	int exact = 0;
 	int ambig = 0;
-	int indfound;
+	int indfound = 0;
 	int option_index;
 
 	/* This is an option that requires an argument.  */
@@ -743,7 +743,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	for (p = longopts, option_index = 0; p->name; p++, option_index++)
 	  if (!strncmp (p->name, nextchar, nameend - nextchar))
 	    {
-	      if (nameend - nextchar == strlen (p->name))
+	      if ((unsigned int) (nameend - nextchar) == strlen (p->name))
 		{
 		  /* Exact match found.  */
 		  pfound = p;

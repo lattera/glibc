@@ -850,9 +850,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
   /* Lock stream.  */
   __libc_cleanup_region_start ((void (*) (void *)) &__funlockfile, s);
-
-  if (__flockfile != NULL)
-    __flockfile (s);
+  __flockfile (s);
 
   /* Write the literal text before the first format.  */
   outstring ((const UCHAR_T *) format,

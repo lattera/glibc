@@ -25,25 +25,17 @@ the executable file might be covered by the GNU General Public License. */
 #include "libioP.h"
 #include "stdio.h"
 
-#undef _IO_getc
+#undef _IO_peekc
 
 int
-_IO_getc (fp)
+_IO_peekc_locked (fp)
      FILE *fp;
 {
   int result;
   CHECK_FILE (fp, EOF);
   __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
-  result = _IO_getc_unlocked (fp);
+  result = _IO_peekc_unlocked (fp);
   __libc_cleanup_region_end (1);
   return result;
 }
-#undef getc
-weak_alias (_IO_getc, getc)
-
-#ifdef _IO_MTSAFE_IO
-# undef getc_locked
-
-weak_alias (getc, getc_locked)
-#endif

@@ -1,3 +1,89 @@
+Sun Oct 13 22:52:56 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* shlib-versions: Add version number/name for ld.so.
+	* Makeconfig: Move definition of rtld-installed-name after
+	inclusion of soversions.mk.
+	Don't add . before version number from shlib-versions file when
+	when name does not start with digit.  This is needed for ld.so.
+
+Sat Oct 12 20:31:58 1996  Richard Henderson  <rth@tamu.edu>
+
+	* libio/iogets.c: Warn when gets used.
+	* stdio/gets.c: Strengthen the warning.
+
+Sat Oct 12 23:10:43 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/Makefile [_LIBC_REENTRANT] (routines): Add peekc.
+	* libio/libio.h: Add prototypes for _IO_getc, _IO_putc, _IO_feof,
+	_IO_ferror, _IO_peekc_locked, and _IO_ftrylockfile.
+	Remove prototypes for _IO_getc_locked and _IO_putc_locked.
+	[_IO_MTSAFE_IO]: Add weak aliases for _IO_flockfile and
+	_IO_funlockfile.
+	[! _IO_MTSAFE_IO]: Define _IO_ftrylockfile as empty.
+	Define _IO_getc, _IO_peekc, _IO_putc, _IO_feof, _IO_ferror to
+	appropriate values according to __USE_REENTRANT.
+	* libio/stdio.h: Add prototype for ftrylockfile.
+	[!_LIBC]: Define getc_locked, getchar_locked, putchar_locked,
+	getc, getchar, putc, and putchar using _IO_* names.
+	* libio/feof.c: Rename to _IO_feof and make feof weak alias.
+	* libio/ferror.c: Rename to _IO_ferror and make ferror weak alias.
+	* libio/getc.c: Rename to _IO_getc and make getc weak alias.
+	* libio/putc.c: Rename to _IO_putc and make putc weak alias.
+	* libio/putc_u.c: Don't define alias _IO_putc_unlocked.
+	* libio/peekc.c: New file.
+
+	* stdio-common/vfprintf.c (vfprintf): Unconditionally call
+	__flockfile.
+
+	* sysdeps/stub/locfile.c [USE_IN_LIBIO]: Also define _IO_* names.
+
+	* crypt/Makefile (tests): Add md5test and md5c-test.
+	* crypt/md5-crypt.c: Correct various error.  Now md5_process_bytes
+	is called, the buffer limit is honoured and a loop in a inner
+	loop is corrected.
+	* crypt/md5.h (struct md5_ctx): Add new fields.
+	Add prototypes for new functions.
+	* crypt/md5.c (md5_init_ctx): Initialize new fields.
+	(md5_finish_ctx): New function.  Like md5_read_ctx but before
+	perform correct finalization.
+	(md5_process_bytes): New function.  Similar to md5_proces_block,
+	but does not require input size to be multiple of 64.
+	(md5_stream): Rewrite using md5_process_bytes and md5_finish_ctx.
+	(md5_buffer): Likewise.
+	(md5_process_block): Count number of bytes.
+	* crypt/md5test.c: New file.  Test program for MD5 functions.
+	* crypt/md5c-test.c: New file:  Test program for MD5 crypt
+	function.
+
+	* po/fr.po: Update.
+
+	* time/strptime.c: Recognize %s, %u, %g, and %G format.
+
+	* posix/getopt.c: Add some more casts and initializations to
+	prevent warnings.
+
+Sat Oct 12 16:15:29 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/speed.c (speeds): Removed.  We provide
+	an extra function to provide this functionality.
+	(cfgetospeed): Simply return masked value.
+	(cfsetospeed): Don't use speeds array and so we can simply test
+	the value of SPEED for illegal values.
+	* termios/cfsetspeed.c: Rewrite.  We convert here between the
+	real values and the B* constants.
+	Changes suggested by Uwe Ohse <uwe@tirka.gun.de>.
+
+Fri Oct 11 21:45:34 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* locale/programs/xstrdup.c: Define prototypes.
+	* locale/programs/xmalloc.c: Likewise.
+
+	* stdio-common/xbug.c (main): Change definition to avoid warning.
+
+Fri Oct 11 23:36:31 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* db/hash/hash.c (__hash_open): Correctly test for a read-write db.
+
 Fri Oct 11 19:13:34 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/Makefile (CPPFLAGS): Set CHARMAP_PATH to

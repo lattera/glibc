@@ -26,6 +26,7 @@ the executable file might be covered by the GNU General Public License. */
 
 #ifndef _IO_STDIO_H
 #define _IO_STDIO_H
+#include <features.h>
 
 #include <_G_config.h>
 #define _IO_pos_t _G_fpos_t /* obsolete */
@@ -262,21 +263,43 @@ extern int __overflow __P((_IO_FILE*, int));
 #define _IO_feof_unlocked(__fp) (((__fp)->_flags & _IO_EOF_SEEN) != 0)
 #define _IO_ferror_unlocked(__fp) (((__fp)->_flags & _IO_ERR_SEEN) != 0)
 
+extern int _IO_getc __P ((_IO_FILE *__fp));
+extern int _IO_putc __P ((int __c, _IO_FILE *__fp));
+extern int _IO_feof __P ((_IO_FILE *__fp));
+extern int _IO_ferror __P ((_IO_FILE *__fp));
+
+extern int _IO_peekc_locked __P ((_IO_FILE *__fp));
+
 /* This one is for Emacs. */
 #define _IO_PENDING_OUTPUT_COUNT(_fp)	\
 	((_fp)->_IO_write_ptr - (_fp)->_IO_write_base)
 
-extern int _IO_getc_locked __P ((_IO_FILE *));
-extern int _IO_putc_locked __P ((int, _IO_FILE *));
-
 extern void _IO_flockfile __P ((_IO_FILE *));
 extern void _IO_funlockfile __P ((_IO_FILE *));
+extern int _IO_ftrylockfile __P ((_IO_FILE *));
 
-#ifndef _IO_MTSAFE_IO
-# define _IO_flockfile(FILE) /**/
-# define _IO_funlockfile(FILE) /**/
+#ifdef _IO_MTSAFE_IO
+weak_extern (_IO_flockfile)
+weak_extern (_IO_funlockfile)
+#else
+# define _IO_flockfile(_fp) /**/
+# define _IO_funlockfile(_fp) /**/
+# define _IO_ftrylockfile(_fp) /**/
 #endif /* !_IO_MTSAFE_IO */
 
+#ifdef __USE_REENTRANT
+# define _IO_getc(_fp) _IO_getc (_fp)
+# define _IO_peekc(_fp) _IO_peekc_locked (_fp)
+# define _IO_putc(_ch, _fp) _IO_putc (_ch, _fp)
+# define _IO_feof(_fp) _IO_feof (_fp)
+# define _IO_ferror(_fp) _IO_ferror (_fp)
+#else
+# define _IO_getc(_fp) _IO_getc_unlocked (_fp)
+# define _IO_peekc(_fp) _IO_peekc_unlocked (_fp)
+# define _IO_putc(_ch, _fp) _IO_putc_unlocked (_ch, _fp)
+# define _IO_feof(_fp) _IO_feof_unlocked (_fp)
+# define _IO_ferror(_fp) _IO_ferror_unlocked (_fp)
+#endif
 
 extern int _IO_vfscanf __P((_IO_FILE*, const char*, _IO_va_list, int*));
 extern int _IO_vfprintf __P((_IO_FILE*, const char*, _IO_va_list));

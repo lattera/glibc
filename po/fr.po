@@ -1,4 +1,4 @@
-# Messages frangais pour GNU concernant gcal.
+# Messages français pour GNU concernant libc.
 # Copyright (C) 1996 Free Software Foundation, Inc.
 # Michel Robitaille <robitail@IRO.UMontreal.CA>, 1996.
 #
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU libc 1.94\n"
 "POT-Creation-Date: 1996-09-08 03:45 -0400\n"
-"PO-Revision-Date: 1996-09-29 14:50 -0400\n"
+"PO-Revision-Date: 1996-10-10 19:03 -0400\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"

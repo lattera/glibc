@@ -21,48 +21,13 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <termios.h>
 
-static const speed_t speeds[] =
-  {
-    0,
-    50,
-    75,
-    110,
-    134,
-    150,
-    200,
-    300,
-    600,
-    1200,
-    1800,
-    2400,
-    4800,
-    9600,
-    19200,
-    38400,
-#ifndef __alpha__
-    38400,		/* Mention this twice here is a trick.  */
-#endif
-    57600,
-    115200,
-    230400,
-    460800,
-  };
-
 
 /* Return the output baud rate stored in *TERMIOS_P.  */
 speed_t
 cfgetospeed (termios_p)
      const struct termios *termios_p;
 {
-  speed_t retval = termios_p->c_cflag & (CBAUD | CBAUDEX);
-
-  if (retval & CBAUDEX)
-    {
-      retval &= ~CBAUDEX;
-      retval |= CBAUD + 1;
-    }
-
-  return retval;
+  return termios_p->c_cflag & (CBAUD | CBAUDEX);
 }
 
 /* Return the input baud rate stored in *TERMIOS_P.
@@ -75,30 +40,17 @@ cfsetospeed  (termios_p, speed)
      struct termios *termios_p;
      speed_t speed;
 {
-  register unsigned int i;
-
-  if (termios_p == NULL)
+  if ((speed & ~CBAUD) != 0
+      && (speed < B57600 || speed > B460800))
     {
       __set_errno (EINVAL);
       return -1;
     }
 
-  /* This allows either B1200 or 1200 to work.	XXX
-     Do we really want to try to support this, given that
-     fetching the speed must return one or the other?  */
+  termios_p->c_cflag &= ~(CBAUD | CBAUDEX);
+  termios_p->c_cflag |= speed;
 
-  for (i = 0; i < sizeof (speeds) / sizeof (speeds[0]); ++i)
-    if (i == speed || speeds[i] == speed)
-      {
-	termios_p->c_cflag &= ~(CBAUD | CBAUDEX);
-	termios_p->c_cflag |= (i & CBAUD);
-	if (i & ~CBAUD)
-	  termios_p->c_cflag |= CBAUDEX;
-	return 0;
-      }
-
-  __set_errno (EINVAL);
-  return -1;
+  return 0;
 }
 
 /* Set the input baud rate stored in *TERMIOS_P to SPEED.

@@ -70,7 +70,7 @@ Boston, MA 02111-1307, USA.  */
     if (rp == NULL)							      \
       return NULL;							      \
   } while (0)
-  
+
 
 char *
 strptime (const char *buf, const char *format, struct tm *tm)
@@ -211,12 +211,52 @@ strptime (const char *buf, const char *format, struct tm *tm)
 	case 'R':
 	  recursive ("%H:%M");
 	  break;
+	case 's':
+	  {
+	    /* The number of seconds may be very high so we cannot use
+	       the `get_number' macro.  Instead read the number
+	       character for character and construct the result while
+	       doing this.  */
+	    time_t secs;
+	    if (*rp < '0' || *rp > '9')
+	      /* We need at least one digit.  */
+	      return NULL;
+
+	    do
+	      {
+		secs *= 10;
+		secs += *rp++ - '0';
+	      }
+	    while (*rp >= '0' && *rp <= '9');
+
+	    if (__localtime_r (&secs, tm) == NULL)
+	      /* Error in function.  */
+	      return NULL;
+	  }
+	  break;
 	case 'S':
 	  get_number (0, 61);
 	  tm->tm_sec = val;
 	  break;
 	case 'T':
 	  recursive ("%H:%M:%S");
+	  break;
+	case 'u':
+	  get_number (1, 7);
+	  tm->tm_wday = val % 7;
+	  break;
+	case 'g':
+	  get_number (0, 99);
+	  /* XXX This cannot determine any field in TM.  */
+	  break;
+	case 'G':
+	  if (*rp < '0' || *rp > '9')
+	    return NULL;
+	  /* XXX Ignore the number since we would need some more
+	     information to compute a real date.  */
+	  do
+	    ++rp;
+	  while (*rp >= '0' && *rp <= '9');
 	  break;
 	case 'U':
 	case 'V':
@@ -339,6 +379,6 @@ strptime (const char *buf, const char *format, struct tm *tm)
 
   if (have_I && is_pm)
     tm->tm_hour += 12;
-  
+
   return (char *) rp;
 }

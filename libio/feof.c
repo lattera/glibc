@@ -25,7 +25,7 @@ the executable file might be covered by the GNU General Public License. */
 #include "stdio.h"
 
 int
-feof (fp)
+_IO_feof (fp)
      _IO_FILE* fp;
 {
   int result;
@@ -35,11 +35,12 @@ feof (fp)
   _IO_funlockfile (fp);
   return result;
 }
+weak_alias (_IO_feof, feof)
 
 #ifdef _IO_MTSAFE_IO
 /* The feof implementation for libio does not require locking because
    it only accesses once a single variable and this is already atomic
    (at least at thread level).  */
 
-weak_alias (feof, feof_locked)
+weak_alias (_IO_feof, feof_locked)
 #endif

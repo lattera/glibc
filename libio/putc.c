@@ -19,10 +19,10 @@ Cambridge, MA 02139, USA.  */
 #include "libioP.h"
 #include "stdio.h"
 
-#undef putc
+#undef _IO_putc
 
 int
-putc (c, fp)
+_IO_putc (c, fp)
      int c;
      _IO_FILE *fp;
 {
@@ -34,6 +34,8 @@ putc (c, fp)
   __libc_cleanup_region_end (1);
   return result;
 }
+#undef putc
+weak_alias (_IO_putc, putc)
 
 #ifdef _IO_MTSAFE_IO
 # undef putc_locked

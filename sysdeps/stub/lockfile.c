@@ -17,7 +17,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-#include <stdio.h>
+typedef FILE;
 
 
 void
@@ -25,6 +25,9 @@ __flockfile (FILE *stream)
 {
   /* Do nothing.  Using this version does not do any locking.  */
 }
+#ifdef USE_IN_LIBIO
+strong_alias (__flockfile, _IO_flockfile)
+#endif
 weak_alias (__flockfile, flockfile);
 
 
@@ -33,6 +36,9 @@ __funlockfile (FILE *stream)
 {
   /* Do nothing.  Using this version does not do any locking.  */
 }
+#ifdef USE_IN_LIBIO
+strong_alias (__funlockfile, _IO_funlockfile)
+#endif
 weak_alias (__funlockfile, funlockfile);
 
 
@@ -42,4 +48,7 @@ __ftrylockfile (FILE *stream)
   /* Do nothing.  Using this version does not do any locking.  */
   return 1;
 }
+#ifdef USE_IN_LIBIO
+strong_alias (__ftrylockfile, _IO_ftrylockfile)
+#endif
 weak_alias (__ftrylockfile, ftrylockfile);

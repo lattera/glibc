@@ -30,6 +30,9 @@
 #if STDC_HEADERS || _LIBC
 #include <stdlib.h>
 static VOID *fixup_null_alloc __P ((size_t n));
+VOID *xmalloc __P ((size_t n));
+VOID *xcalloc __P ((size_t n, size_t s));
+VOID *xrealloc __P ((VOID *p, size_t n));
 #else
 VOID *calloc ();
 VOID *malloc ();

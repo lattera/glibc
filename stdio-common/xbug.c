@@ -54,7 +54,7 @@ void ReadFile(buffer, input)
 int
 main(int argc, char *argv[])
 {
-  char * filename = "xbug.c";
+  char filename[] = "xbug.c";
   FILE *input;
   Buffer buffer;
 

@@ -27,6 +27,11 @@ alpha-*-linux*		libc=6
 # libc.so.0.2 is for the Hurd alpha release 0.2.
 *-*-gnu*		libc=0.2
 
+# The dynamic loader also requires different names.
+i?86-*-linux*		ld=ld-linux.so.2
+# We use the ELF ABI standard name for the default.
+*-*-*			ld=ld.so.1
+
 # The -ldl interface (see <dlfcn.h>) is the same on all platforms.
 *-*-*			libdl=2
 
@@ -34,7 +39,7 @@ alpha-*-linux*		libc=6
 # `struct utmp' format, which depends on libc.
 *-*-*			libutil=1
 
-# Version number 2 is used on other systems for the BIND 4.9.4 resolver
+# Version number 2 is used on other systems for the BIND 4.9.5 resolver
 # interface.
 *-*-*			libresolv=2
 

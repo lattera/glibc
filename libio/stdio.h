@@ -221,6 +221,7 @@ extern int fileno_locked __P ((FILE *));
 extern int fileno_unlocked __P ((FILE *));
 extern void flockfile __P ((FILE *));
 extern void funlockfile __P ((FILE *));
+extern int ftrylockfile __P ((FILE *));
 extern int fclose_unlocked __P ((FILE *));
 extern int fflush_locked __P ((FILE *));
 extern int fflush_unlocked __P ((FILE *));
@@ -240,17 +241,19 @@ extern int putchar_unlocked __P ((int));
 
 # ifndef _LIBC
 #  define getc_unlocked(fp) _IO_getc_unlocked (fp)
-#  define getc_locked(fp) fgetc (fp)
+#  define getc_locked(fp) _IO_getc (fp)
 #  define getchar_unlocked() _IO_getc_unlocked (stdin)
-#  define getchar_locked() getc (stdin)
+#  define getchar_locked() _IO_getc (stdin)
 #  define putchar_unlocked(c) _IO_putc_unlocked (c, stdout)
-#  define putchar_locked(c) putc (c, stdout)
+#  define putchar_locked(c) _IO_putc (c, stdout)
 # endif
 
 #endif /* __USE_REENTRANT */
 
-#define putchar(c) putc (c, stdout)
-#define getchar() getc (stdin)
+#define getc(_fp) _IO_getc (_fp)
+#define putc(_ch, _fp) _IO_putc (_ch, _fp)
+#define putchar(_ch) _IO_putc (_ch, stdout)
+#define getchar() _IO_getc (stdin)
 
 
 #ifdef __cplusplus

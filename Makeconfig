@@ -353,15 +353,6 @@ csu-objpfx = $(common-objpfx)csu/
 elf-objpfx = $(common-objpfx)elf/
 db-objpfx = $(common-objpfx)db/
 
-ifeq (yes,$(build-shared))
-# The name under which the run-time dynamic linker is installed.
-# We are currently going for the convention that `/lib/ld.so.1'
-# names the SVR4/ELF ABI-compliant dynamic linker.
-ifndef rtld-installed-name
-rtld-installed-name = ld.so.1
-endif
-endif
-
 # How to run a program we just linked with our library.
 # The program binary is assumed to be $(word 2,$^).
 built-program-file = $(dir $(word 2,$^))$(notdir $(word 2,$^))
@@ -539,7 +530,11 @@ $(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
 	       lib=`echo $$v | sed 's/=.*$$//'`; \
 	       if eval "test -z \"\$$vers_lib$$lib\""; then \
 		 eval vers_lib$${lib}=yes; \
-		 echo $$v | sed "s/^.*=/$$lib.so-version=./";  \
+		 number=`echo $$v | sed "s/^.*=//"`; \
+		 case $$number in \
+		   [0-9]*) echo "$$lib.so-version=.$$number";;  \
+		   *) echo "$$lib.so-version=$$number";;  \
+		 esac; \
 	       fi; \
 	   done ;; esac; done; \
 	 done;) > $@T; exit 0
@@ -547,6 +542,18 @@ $(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
 
 # Get $(version) defined with the release version number.
 -include $(common-objpfx)version.mk
+
+
+# The name under which the run-time dynamic linker is installed.
+# We are currently going for the convention that `/lib/ld.so.1'
+# names the SVR4/ELF ABI-compliant dynamic linker.
+ifndef rtld-installed-name
+ifdef ld.so-version
+rtld-installed-name = $(ld.so-version)
+else
+rtld-installed-name = ld.so.1
+endif
+endif
 
 endif # build-shared
 
