@@ -83,7 +83,7 @@ before-compile	:= testcases.h ptestcases.h
 # So they get cleaned up.
 generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     annexc annexc.out wordexp-tst.out bug-regex2-mem \
-	     bug-regex2.mtrace
+	     bug-regex2.mtrace tst-getconf.out
 
 include ../Rules
 
@@ -140,7 +140,7 @@ endif
 # XXX Please note that for now we ignore the result of this test.
 tests: $(objpfx)annexc.out
 ifeq (no,$(cross-compiling))
-tests:$(objpfx)bug-regex2-mem
+tests:$(objpfx)bug-regex2-mem $(objpfx)tst-getconf.out
 endif
 
 $(objpfx)annexc.out: $(objpfx)annexc
@@ -154,3 +154,6 @@ bug-regex2-ENV = MALLOC_TRACE=$(objpfx)bug-regex2.mtrace
 
 $(objpfx)bug-regex2-mem: $(objpfx)bug-regex2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex2.mtrace > $@
+
+$(objpfx)tst-getconf.out: tst-getconf.sh $(objpfx)getconf
+	$(SHELL) -e $< $(common-objpfx) $(elf-objpfx) $(rtld-installed-name)

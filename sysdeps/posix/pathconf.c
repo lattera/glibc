@@ -198,6 +198,23 @@ __pathconf (const char *path, int name)
 	  return -1;
 	return sv.f_frsize;
       }
+
+    case _PC_ALLOC_SIZE_MIN:
+      {
+	/* XXX It is not entirely clear what the limit is supposed to do.
+	   I assume that the number should reflect the minimal block
+	   alignment.  */
+	struct statvfs64 sv;
+
+	if (__statvfs64 (path, &sv) < 0)
+	  return -1;
+	return sv.f_frsize;
+      }
+
+    case _PC_SYMLINK_MAX:
+      /* In general there are no limits.  If a system has one it should
+	 overwrite this case.  */
+      return -1;
     }
 }
 

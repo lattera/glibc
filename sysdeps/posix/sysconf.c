@@ -951,9 +951,9 @@ __sysconf (name)
       return -1;
 #endif
 
-    case _SC_MULTIPLE_PROCESS:
-#ifdef _POSIX_MULTIPLE_PROCESS
-      return _POSIX_MULTIPLE_PROCESS;
+    case _SC_MULTI_PROCESS:
+#ifdef _POSIX_MULTI_PROCESS
+      return _POSIX_MULTI_PROCESS;
 #else
       return -1;
 #endif
@@ -1109,7 +1109,7 @@ __sysconf (name)
       return -1;
 #endif
 
-    case _SC_SYMLOOP:
+    case _SC_SYMLOOP_MAX:
 #ifdef SYMLOOP_MAX
       return SYMLOOP_MAX;
 #else

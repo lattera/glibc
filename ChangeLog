@@ -1,3 +1,19 @@
+2001-04-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/getconf.c: Fix names of XBS5 LFS test variables.
+	Add missing configuration variables from XPG6.
+	* posix/tst-getconf.c: New file.
+	* posix/Makefile (generated): Add tst-getconf.out.
+	(tests): Add ($objpfx)tst-getconf.out.
+	Add rule to run tst-getconf.sh.
+	* sysdeps/generic/bits/confname.h: Add missing _PC_ and _SC_ values
+	from XPG6.
+	* sysdeps/posix/fpathconf.c: Add handling of _PC_ALLOC_SIZE_MIN and
+	_PC_SYMLINK_MAX.
+	* sysdeps/posix/pathconf.c: Likewise.
+	* sysdeps/posix/sysconf.c: Correct spelling of _SC_MULTI_PROCESS
+	and _SC_SYMLOOP_MAX.
+
 2001-04-22  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/arm/fpu/feenablxcpt.c: New file.
