@@ -1,5 +1,7 @@
 2000-05-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/Makefile (tests): Add tst-fork.
+
 	* resolv/inet_pton.c: Loose __P.
 
 2000-05-21  Jakub Jelinek  <jakub@redhat.com>

@@ -1314,6 +1314,20 @@ handlers are called in FIFO order (first added, first called).
 If there is insufficient memory available to register the handlers,
 @code{pthread_atfork} fails and returns @code{ENOMEM}.  Otherwise it
 returns 0.
+
+The functions @code{fork} and @code{pthread_atfork} must not be regarded as
+reentrant from the context of the handlers.  That is to say, if a
+@code{pthread_atfork} handler invoked from within @code{fork} calls
+@code{pthread_atfork} or @code{fork}, the behavior is undefined.
+
+Registering a triplet of handlers is an atomic operation with respect to fork.
+If new handlers are registered at about the same time as a fork occurs, either
+all three handlers will be called, or none of them will be called.
+
+The handlers are inherited by the child process, and there is no 
+way to remove them, short of using @code{exec} to load a new
+pocess image.
+
 @end deftypefun
 
 To understand the purpose of @code{pthread_atfork}, recall that

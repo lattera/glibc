@@ -1,3 +1,23 @@
+2000-05-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add ex8.
+	* Examples/ex8.c: New file.
+
+2000-05-12  Kaz Kylheku  <kaz@ashi.footprints.net>
+
+	Bugfix: The pthread_atfork mechanism now takes care of its
+	own internal mutex at fork time.
+
+	* ptfork.c (__fork): Revised so that the mutex is held across
+	the fork operation and while the handlers are called, and so that
+	the child resets the mutex.
+	Added calls to new functions __flockallfiles and __funlockallfiles.
+
+	* linuxthreads.texi: Updated pthread_atfork documentation to make
+	it clear that fork and pthread_atfork can't be reentered from
+	atfork handlers, that pthread_atfork and fork are mutually atomic,
+	and that the handlers are inherited by the child process.
+
 2000-05-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (libpthread-routines): Add pspinlock.

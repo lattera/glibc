@@ -78,25 +78,29 @@ extern int __libc_fork(void);
 pid_t __fork(void)
 {
   pid_t pid;
-  struct handler_list * prepare, * child, * parent;
 
   pthread_mutex_lock(&pthread_atfork_lock);
-  prepare = pthread_atfork_prepare;
-  child = pthread_atfork_child;
-  parent = pthread_atfork_parent;
-  pthread_mutex_unlock(&pthread_atfork_lock);
-  pthread_call_handlers(prepare);
+
+  pthread_call_handlers(pthread_atfork_prepare);
   __pthread_once_fork_prepare();
+
   pid = __libc_fork();
+
   if (pid == 0) {
     __pthread_reset_main_thread();
+
     __fresetlockfiles();
-    pthread_call_handlers(child);
     __pthread_once_fork_child();
+    pthread_call_handlers(pthread_atfork_child);
+
+    pthread_mutex_init(&pthread_atfork_lock, NULL);
   } else {
-    pthread_call_handlers(parent);
     __pthread_once_fork_parent();
+    pthread_call_handlers(pthread_atfork_parent);
+
+    pthread_mutex_unlock(&pthread_atfork_lock);
   }
+
   return pid;
 }
 
