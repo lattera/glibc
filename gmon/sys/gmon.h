@@ -96,17 +96,43 @@ extern struct __bb *__bb_head;
 #define	HASHFRACTION	2
 
 /*
- * percent of text space to allocate for tostructs with a minimum.
+ * Percent of text space to allocate for tostructs.
+ * This is a heuristic; we will fail with a warning when profiling programs
+ * with a very large number of very small functions, but that's
+ * normally OK.
+ * 2 is probably still a good value for normal programs.
+ * Profiling a test case with 64000 small functions will work if
+ * you raise this value to 3 and link statically (which bloats the
+ * text size, thus raising the number of arcs expected by the heuristic).
  */
-#define ARCDENSITY	2
+#define ARCDENSITY	3
+
+/*
+ * Always allocate at least this many tostructs.  This
+ * hides the inadequacy of the ARCDENSITY heuristic, at least
+ * for small programs.
+ */
 #define MINARCS		50
-#define MAXARCS		((1 << (8 * sizeof(HISTCOUNTER))) - 2)
+
+/*
+ * The type used to represent indices into gmonparam.tos[].
+ */
+#define	ARCINDEX	u_long
+
+/* 
+ * Maximum number of arcs we want to allow.
+ * Used to be max representable value of ARCINDEX minus 2, but now 
+ * that ARCINDEX is a long, that's too large; we don't really want 
+ * to allow a 48 gigabyte table.
+ * The old value of 1<<16 wasn't high enough in practice for large C++
+ * programs; will 1<<20 be adequate for long?  FIXME
+ */
+#define MAXARCS		(1 << 20)
 
 struct tostruct {
-	u_long	selfpc;
-	long	count;
-	u_short	link;
-	u_short pad;
+	u_long		selfpc;
+	long		count;
+	ARCINDEX	link;
 };
 
 /*
@@ -132,7 +158,7 @@ struct gmonparam {
 	long int	state;
 	u_short		*kcount;
 	u_long		kcountsize;
-	u_short		*froms;
+	ARCINDEX	*froms;
 	u_long		fromssize;
 	struct tostruct	*tos;
 	u_long		tossize;
