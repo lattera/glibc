@@ -114,7 +114,8 @@ get_cached_stack (size_t *sizep, void **memp)
 	      break;
 	    }
 
-	  if (result->stackblock_size > curr->stackblock_size)
+	  if (result == NULL
+	      || result->stackblock_size > curr->stackblock_size)
 	    result = curr;
 	}
     }
