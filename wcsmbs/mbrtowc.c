@@ -106,3 +106,4 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 }
 libc_hidden_def (__mbrtowc)
 weak_alias (__mbrtowc, mbrtowc)
+libc_hidden_weak (mbrtowc)

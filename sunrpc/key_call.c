@@ -233,6 +233,7 @@ key_gendes (des_block *key)
 
   return 0;
 }
+libc_hidden_def (key_gendes)
 
 int
 key_setnet (struct key_netstarg *arg)

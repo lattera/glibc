@@ -28,6 +28,10 @@ libc_hidden_proto (rexec_af)
 libc_hidden_proto (rresvport_af)
 libc_hidden_proto (ruserok_af)
 
+libc_hidden_proto (getaddrinfo)
+libc_hidden_proto (getnameinfo)
+libc_hidden_proto (freeaddrinfo)
+
 /* Document internal interfaces.  */
 extern int __gethostent_r (struct hostent *__restrict __result_buf,
 			   char *__restrict __buf, size_t __buflen,

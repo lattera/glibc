@@ -163,7 +163,7 @@ envz_strip (char **envz, size_t *envz_len)
     {
       size_t entry_len = strlen (entry) + 1;
       left -= entry_len;
-      if (! index (entry, SEP))
+      if (! strchr (entry, SEP))
 	/* Null entry. */
 	memmove (entry + entry_len, entry, left);
       else

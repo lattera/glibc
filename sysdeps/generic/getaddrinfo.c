@@ -1,5 +1,5 @@
 /* Stub version of getaddrinfo function.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ getaddrinfo (const char *name, const char *service, const struct addrinfo *req,
   return EAI_SYSTEM;
 }
 stub_warning (getaddrinfo)
-
+libc_hidden_def (getaddrinfo)
 
 void
 freeaddrinfo (struct addrinfo *ai)
@@ -36,4 +36,6 @@ freeaddrinfo (struct addrinfo *ai)
   /* Nothing.  */
 }
 stub_warning (freeaddrinfo)
+libc_hidden_def (freeaddrinfo)
+
 #include <stub-tag.h>

@@ -283,3 +283,4 @@ _seterr_reply (struct rpc_msg *msg,
       break;
     }
 }
+libc_hidden_def (_seterr_reply)

@@ -59,7 +59,6 @@ extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen);
       __new[__len] = '\0';						      \
       (char *) memcpy (__new, __old, __len);				      \
     }))
-#endif
 
 libc_hidden_proto (__mempcpy)
 libc_hidden_proto (__stpcpy)
@@ -72,3 +71,12 @@ libc_hidden_proto (__strdup)
 libc_hidden_proto (__strndup)
 libc_hidden_proto (__strerror_r)
 libc_hidden_proto (__strverscmp)
+
+# ifndef index
+#  define index(s, c)	(strchr ((s), (c)))
+# endif
+# ifndef rindex
+#  define rindex(s, c)	(strrchr ((s), (c)))
+# endif
+
+#endif

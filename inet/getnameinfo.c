@@ -421,3 +421,4 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
   errno = serrno;
   return 0;
 }
+libc_hidden_def (getnameinfo)

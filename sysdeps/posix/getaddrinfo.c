@@ -789,6 +789,7 @@ getaddrinfo (const char *name, const char *service,
 
   return last_i ? -(last_i & GAIH_EAI) : EAI_NONAME;
 }
+libc_hidden_def (getaddrinfo)
 
 void
 freeaddrinfo (struct addrinfo *ai)
@@ -802,3 +803,4 @@ freeaddrinfo (struct addrinfo *ai)
       free (p);
     }
 }
+libc_hidden_def (freeaddrinfo)

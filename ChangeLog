@@ -1,5 +1,31 @@
 2002-08-05  Roland McGrath  <roland@redhat.com>
 
+	* include/rpc/auth.h: Use libc_hidden_proto for getnetname,
+	netname2user, host2netname, user2netname, key_gendes.
+	* sunrpc/netname.c: Add libc_hidden_def.
+	* sunrpc/key_call.c: Likewise.
+
+	* include/netdb.h: Use libc_hidden_proto for getaddrinfo, getnameinfo,
+	freeaddrinfo.
+	* inet/getnameinfo.c: Add libc_hidden_def.
+	* sysdeps/generic/getaddrinfo.c: Likewise.
+	* sysdeps/posix/getaddrinfo.c: Likewise.
+
+	* include/wchar.h: Use libc_hidden_proto for wmemchr, wmemset.
+	* wcsmbs/wmemchr.c: Add libc_hidden_def.
+	* wcsmbs/wmemset.c: Add libc_hidden_def.
+
+	* include/string.h: Move libc_hidden_proto's inside #ifndef _STRING_H.
+	(index, rindex): Define as macros for strchr, strrchr.
+
+	* string/envz.c (envz_strip): index -> strchr
+
+	* include/rpc/rpc_msg.h: Use libc_hidden_proto for _seterr_reply.
+	* sunrpc/rpc_prot.c: Add libc_hidden_def.
+
+	* include/wchar.h: Use libc_hidden_proto for mbrtowc.
+	* wcsmbs/mbrtowc.c: Add libc_hidden_weak.
+
 	* include/stdlib.h: Use libc_hidden_proto for wctomb.
 	* stdlib/wctomb.c: Add libc_hidden_def.
 
@@ -9,10 +35,6 @@
 	* inet/rcmd.c: Add libc_hidden_def.
 	* inet/ruserpass.c: Likewise.
 	* inet/getnetgrent_r.c: Likewise.
-
-	* include/rpc/auth.h: Use libc_hidden_proto for getnetname,
-	netname2user, host2netname, user2netname.
-	* sunrpc/netname.c: Add libc_hidden_def.
 
 	* include/rpc/svc.h: Use libc_hidden_proto for svc_register,
 	svc_unregister, remove *_internal decls.  Use libc_hidden_proto
