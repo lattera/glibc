@@ -29,6 +29,7 @@
 #include <rpcsvc/nis.h>
 #include <nsswitch.h>
 
+#include "nss-nis.h"
 #include "nss-nisplus.h"
 #include "nisplus-parser.h"
 
@@ -53,6 +54,12 @@ struct blacklist_t
     int size;
   };
 
+struct response_t
+{
+  char *val;
+  struct response_t *next;
+};
+
 struct ent_t
   {
     bool_t nis;
@@ -62,6 +69,8 @@ struct ent_t
     nis_result *result;
     FILE *stream;
     struct blacklist_t blacklist;
+    struct response_t *start;
+    struct response_t *next;
 };
 typedef struct ent_t ent_t;
 
@@ -69,6 +78,36 @@ typedef struct ent_t ent_t;
 /* Prototypes for local functions.  */
 static void blacklist_store_name (const char *, ent_t *);
 static int in_blacklist (const char *, int, ent_t *);
+
+static int
+saveit (int instatus, char *inkey, int inkeylen, char *inval,
+        int invallen, char *indata)
+{
+  ent_t *intern = (ent_t *) indata;
+
+  if (instatus != YP_TRUE)
+    return instatus;
+
+  if (inkey && inkeylen > 0 && inval && invallen > 0)
+    {
+      if (intern->start == NULL)
+        {
+          intern->start = malloc (sizeof (struct response_t));
+          intern->next = intern->start;
+        }
+      else
+        {
+          intern->next->next = malloc (sizeof (struct response_t));
+          intern->next = intern->next->next;
+        }
+      intern->next->next = NULL;
+      intern->next->val = malloc (invallen + 1);
+      strncpy (intern->next->val, inval, invallen);
+      intern->next->val[invallen] = '\0';
+    }
+
+  return 0;
+}
 
 static enum nss_status
 _nss_first_init (void)
@@ -104,6 +143,9 @@ internal_setgrent (ent_t *ent)
   enum nss_status status = NSS_STATUS_SUCCESS;
 
   ent->nis = ent->nis_first = 0;
+
+  ent->start = NULL;
+  ent->next = NULL;
 
   if (_nss_first_init () != NSS_STATUS_SUCCESS)
     return NSS_STATUS_UNAVAIL;
@@ -197,6 +239,16 @@ internal_endgrent (ent_t *ent)
   else
     ent->blacklist.current = 0;
 
+  while (ent->start != NULL)
+    {
+      if (ent->start->val != NULL)
+        free (ent->start->val);
+      ent->next = ent->start;
+      ent->start = ent->start->next;
+      free (ent->next);
+    }
+
+
   return NSS_STATUS_SUCCESS;
 }
 
@@ -205,10 +257,8 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
 		   size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
-  char *domain;
-  char *outkey, *outval;
-  int outkeylen, outvallen, parse_res;
-  char *p;
+  char *domain, *p;
+  int parse_res;
 
   if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
     {
@@ -216,85 +266,47 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
       return NSS_STATUS_NOTFOUND;
     }
 
+  if (ent->start == NULL)
+    {
+      struct ypall_callback ypcb;
+      enum nss_status status;
+
+      ypcb.foreach = saveit;
+      ypcb.data = (char *) ent;
+      status = yperr2nss (yp_all (domain, "group.byname", &ypcb));
+      ent->next = ent->start;
+
+      if (ent->start == NULL || status != NSS_STATUS_SUCCESS)
+	{
+	  ent->nis = 0;
+	  *errnop = ENOENT;
+	  return NSS_STATUS_UNAVAIL;
+	}
+    }
+
+
   do
     {
-      char *save_oldkey;
-      int save_oldlen;
-      bool_t save_nis_first;
-
-      if (ent->nis_first)
-	{
-	  if (yp_first (domain, "group.byname", &outkey, &outkeylen,
-			&outval, &outvallen) != YPERR_SUCCESS)
-	    {
-	      ent->nis = 0;
-	      *errnop = ENOENT;
-	      return NSS_STATUS_UNAVAIL;
-	    }
-
-	  if ( buflen < ((size_t) outvallen + 1))
-	    {
-	      free (outval);
-	      *errnop = ERANGE;
-	      return NSS_STATUS_TRYAGAIN;
-	    }
-
-	  save_oldkey = ent->oldkey;
-	  save_oldlen = ent->oldkeylen;
-	  save_nis_first = TRUE;
-	  ent->oldkey = outkey;
-	  ent->oldkeylen = outkeylen;
-	  ent->nis_first = FALSE;
-	}
-      else
-	{
-	  if (yp_next (domain, "group.byname", ent->oldkey, ent->oldkeylen,
-		       &outkey, &outkeylen, &outval, &outvallen)
-	      != YPERR_SUCCESS)
-	    {
-	      ent->nis = 0;
-	      *errnop = ENOENT;
-	      return NSS_STATUS_NOTFOUND;
-	    }
-
-	  if ( buflen < ((size_t) outvallen + 1))
-	    {
-	      free (outval);
-	      *errnop = ERANGE;
-	      return NSS_STATUS_TRYAGAIN;
-	    }
-
-	  save_oldkey = ent->oldkey;
-	  save_oldlen = ent->oldkeylen;
-	  save_nis_first = FALSE;
-	  ent->oldkey = outkey;
-	  ent->oldkeylen = outkeylen;
-	}
+      if (ent->next == NULL)
+        {
+          *errnop = ENOENT;
+	  ent->nis = 0;
+          return NSS_STATUS_NOTFOUND;
+        }
 
       /* Copy the found data to our buffer...  */
-      p = strncpy (buffer, outval, buflen);
-
-      /* ...and free the data.  */
-      free (outval);
-
+      p = strncpy (buffer, ent->next->val, buflen);
       while (isspace (*p))
-	++p;
+        ++p;
 
       parse_res = _nss_files_parse_grent (p, result, data, buflen, errnop);
       if (parse_res == -1)
 	{
-	  free (ent->oldkey);
-	  ent->oldkey = save_oldkey;
-	  ent->oldkeylen = save_oldlen;
-	  ent->nis_first = save_nis_first;
 	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
-      else
-	{
-	  if (!save_nis_first)
-	    free (save_oldkey);
-	}
+
+      ent->next = ent->next->next;
 
       if (parse_res &&
 	  in_blacklist (result->gr_name, strlen (result->gr_name), ent))
