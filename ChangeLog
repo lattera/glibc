@@ -1,3 +1,12 @@
+2003-03-20  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/mips/bits/setjmp.h: Store all N32 and N64 registers,
+	including pc, gp, sp and fp, as long long.
+	* sysdeps/mips/mips64/setjmp.S: Pass gp to __sigsetjmp_aux.
+	* sysdeps/mips/mips64/setjmp_aux.c: Adjust type of arguments.
+	Add gp argument, and set gp in the jmpbuf to it.
+	* sysdeps/mips/setjmp_aux.c: Revert to o32-only.
+
 2003-03-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/atomic.h: Define atomic_exchange and
