@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,10 +18,10 @@
 
 #include <sys/socket.h>
 
-extern int nrecvfrom (int s, void *uap_buf, int len, int flags,
-		      void *uap_from, int *uap_fromlenaddr);
+extern ssize_t nrecvfrom (int s, void *uap_buf, size_t len, int flags,
+			  void *uap_from, socklen_t *uap_fromlenaddr);
 
-int
+ssize_t
 recvfrom (int fd, void *buf, size_t n, int flags, __SOCKADDR_ARG addr,
 	  socklen_t *addr_len)
 {

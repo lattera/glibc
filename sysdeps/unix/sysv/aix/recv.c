@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,10 +18,11 @@
 
 #include <sys/socket.h>
 
-extern int nsendmsg (int s, const void *uap_msg, int flags);
+extern ssize_t recv (int fd, void *buf, size_t n, int flags);
+
 
 ssize_t
-sendmsg (int fd, const struct msghdr *message, int flags)
+__recv (int fd, void *buf, size_t n, int flags)
 {
-  return nsendmsg (fd, message, flags);
+  return recv (fd, buf, n, flags);
 }

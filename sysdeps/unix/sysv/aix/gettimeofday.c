@@ -21,10 +21,13 @@
 #include <sys/time.h>
 
 #ifndef HAVE_GNU_LD
-#define __daylight	daylight
-#define __timezone	timezone
-#define __tzname	tzname
+# define __daylight	daylight
+# define __timezone	timezone
+# define __tzname	tzname
 #endif
+
+extern int rtc_upper (void);
+extern int rtc_lower (void);
 
 /* Assembler Routines to access the timer registers */
 asm("
@@ -51,14 +54,14 @@ __gettimeofday (tv, tz)
       return -1;
     }
 
-  ts = rtc_upper();      /* seconds                         */
-  tl = rtc_lower();      /* nanoseconds                     */
-  tu = rtc_upper();      /* Check for a carry from          */
-  if (ts != tu)          /* the lower reg to the upper      */
-      tl  = rtc_lower(); /* Recover from the race condition */
+  ts = rtc_upper ();		/* Seconds.  */
+  tl = rtc_lower ();		/* Nanoseconds.  */
+  tu = rtc_upper ();		/* Check for a carry from.  */
+  if (ts != tu)			/* The lower reg to the upper.  */
+      tl  = rtc_lower ();	/* Recover from the race condition.  */
 
-  tv->tv_sec  = (long int) (tu + (double)tl/1000000000);
-  tv->tv_usec = (long int) ((double)tl/1000);
+  tv->tv_sec  = (long int) (tu + (double) tl / 1000000000);
+  tv->tv_usec = (long int) ((double) tl / 1000);
 
   if (tz != NULL)
     {

@@ -1,4 +1,20 @@
+2001-07-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/aix/sendmsg.c (sendmsg): Fix return type.
+	* sysdeps/unix/sysv/aix/recvmsg.c (recvmsg): Likewise.
+
+	* sysdeps/unix/sysv/aix/recv.c: New file.
+
+	* sysdeps/unix/sysv/aix/recvfrom.c: Fix various types.
+
 2001-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/recv.c: Fix return type.
+
+	* sysdeps/unix/sysv/aix/dl-libc.c (__libc_dlclose): Fix typo.
+
+	* sysdeps/unix/sysv/aix/gettimeofday.c (__gettimeofday): Add
+	declarations for asm functions.
 
 	* include/libc-symbols.h: Provide more dummy definitions for the
 	case if GNU ld isn't used.
