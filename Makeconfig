@@ -434,7 +434,7 @@ link-libc = -Wl,-rpath-link=$(rpath-link) \
 rpath-dirs = math elf dlfcn nss nis rt resolv crypt
 else
 ifneq (,$(findstring aix,$(config-os)))
-link-libc = $(common-objpfx)libc.so \
+link-libc = $(common-objpfx)libc.a \
 	    $(common-objpfx)$(patsubst %,$(libtype.oS),c) $(gnulib)
 rpath-dirs = math dlfcn nss nis rt resolv crypt
 endif

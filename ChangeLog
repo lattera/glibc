@@ -1,3 +1,7 @@
+2001-07-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makeconfig: Add some more changes to handle AIX linker better.
+
 2001-07-12  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/generic/segfault.c: Include <errno.h>.
