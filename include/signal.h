@@ -26,6 +26,12 @@ extern int __sigaltstack (__const struct sigaltstack *__ss,
 extern int __libc_sigaction (int sig, const struct sigaction *act,
 			     struct sigaction *oact);
 
+extern int __sigpause (int sig_or_mask, int is_sig);
+extern int __default_sigpause (int mask);
+extern int __xpg_sigpause (int sig);
+
+
+
 /* Allocate real-time signal with highest/lowest available priority.  */
 extern int __libc_allocate_rtsig (int __high);
 #endif
