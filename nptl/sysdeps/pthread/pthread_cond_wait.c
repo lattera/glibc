@@ -141,9 +141,7 @@ __pthread_cond_wait (cond, mutex)
   __pthread_cleanup_pop (&buffer, 0);
 
   /* Get the mutex before returning.  */
-  __pthread_mutex_lock_internal (mutex);
-
-  return 0;
+  return __pthread_mutex_lock_internal (mutex);
 }
 
 versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,

@@ -34,7 +34,8 @@ void
 __nptl_main (void)
 {
   INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL (write, err, 3, STDOUT_FILENO, banner, sizeof banner - 1);
+  INTERNAL_SYSCALL (write, err, 3, STDOUT_FILENO, (const char *) banner,
+		    sizeof banner - 1);
 
   _exit (0);
 }

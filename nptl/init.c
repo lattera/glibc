@@ -209,6 +209,13 @@ __pthread_initialize_minimal_internal (void)
 
   (void) __libc_sigaction (SIGCANCEL, &sa, NULL);
 
+  /* The parent process might have left the signal blocked.  Just in
+     case, unblock it.  We reuse the signal mask in the sigaction
+     structure.  It is already cleared.  */
+  __sigaddset (&sa.sa_mask, SIGCANCEL);
+  (void) INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_UNBLOCK, &sa.sa_mask,
+			   NULL, _NSIG / 8);
+
 
   /* Determine the default allowed stack size.  This is the size used
      in case the user does not specify one.  */

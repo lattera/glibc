@@ -78,15 +78,17 @@ typedef uintmax_t uatomic_max_t;
       do								      \
 	__oldval = __val;						      \
       while ((__val							      \
-	      = __arch_compare_and_exchange_32_val_acq (__memp, __oldval,     \
-							__oldval + __value))  \
+	      = __arch_compare_and_exchange_32_val_acq (__memp,		      \
+							__oldval + __value,   \
+							__oldval))	      \
 	     != __oldval);						      \
     else if (sizeof (*mem) == 8)					      \
       do								      \
 	__oldval = __val;						      \
       while ((__val							      \
-	      = __arch_compare_and_exchange_64_val_acq (__memp, __oldval,     \
-							__oldval + __value))  \
+	      = __arch_compare_and_exchange_64_val_acq (__memp,		      \
+							__oldval + __value,   \
+							__oldval))	      \
 	     != __oldval);						      \
     else								      \
       abort ();								      \

@@ -21,6 +21,7 @@
 #include <sysdep.h>
 #include <lowlevellock.h>
 #include <internaltypes.h>
+#include <semaphore.h>
 
 #include <shlib-compat.h>
 

@@ -46,7 +46,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 {
   struct _pthread_cleanup_buffer buffer;
   struct _condvar_cleanup_buffer cbuffer;
-  int result = 0, err;
+  int result = 0;
 
   /* Catch invalid parameters.  */
   if (abstime->tv_nsec >= 1000000000)
@@ -56,7 +56,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   lll_mutex_lock (cond->__data.__lock);
 
   /* Now we can release the mutex.  */
-  err = __pthread_mutex_unlock_internal (mutex);
+  int err = __pthread_mutex_unlock_internal (mutex);
   if (err)
     {
       lll_mutex_unlock (cond->__data.__lock);
@@ -92,8 +92,6 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 
   while (1)
     {
-      int err;
-
       /* Get the current time.  So far we support only one clock.  */
       struct timeval tv;
       (void) gettimeofday (&tv, NULL);
@@ -162,9 +160,9 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   __pthread_cleanup_pop (&buffer, 0);
 
   /* Get the mutex before returning.  */
-  __pthread_mutex_lock_internal (mutex);
+  err = __pthread_mutex_lock_internal (mutex);
 
-  return result;
+  return err ?: result;
 }
 
 versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,

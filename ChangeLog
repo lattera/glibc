@@ -1,5 +1,12 @@
 2003-03-11  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/system.c: New file.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_CLONE_THREAD_FLAGS): Define for IA-64 and s390* with
+	kernel >= 2.5.64.
+
+2003-03-11  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/generic/dl-sysdep.c (_dl_important_hwcaps): If CNT == 1,
 	allocate space even for the trailing '/'.
 	Reported by John Reiser <jreiser@BitWagon.com>.
@@ -13,7 +20,7 @@
 
 2003-03-10  Steven Munroe  <sjmunroe@us.ibm.com>
 
-        * sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Don't clobber R7.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Don't clobber R7.
 	Copy extra params for NPTL to registers used in clone syscall.
 
 2003-03-10  Martin Schwidefsky  <schwidefsky@de.ibm.com>

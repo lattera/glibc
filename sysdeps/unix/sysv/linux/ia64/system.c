@@ -1,0 +1,74 @@
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+#include <sched.h>
+#include <signal.h>
+#include <sysdep.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <bits/libc-lock.h>
+#include <kernel-features.h>
+
+/* We have to and actually can handle cancelable system().  The big
+   problem: we have to kill the child process if necessary.  To do
+   this a cleanup handler has to be registered and is has to be able
+   to find the PID of the child.  The main problem is to reliable have
+   the PID when needed.  It is not necessary for the parent thread to
+   return.  It might still be in the kernel when the cancellation
+   request comes.  Therefore we have to use the clone() calls ability
+   to have the kernel write the PID into the user-level variable.  */
+#ifdef __ASSUME_CLONE_THREAD_FLAGS
+# define FORK() \
+  INLINE_SYSCALL (clone2, 6, CLONE_PARENT_SETTID | SIGCHLD, NULL, 0, \
+		  NULL, &pid, NULL)
+#endif
+
+static void cancel_handler (void *arg);
+
+#define CLEANUP_HANDLER \
+  __libc_cleanup_region_start (1, cancel_handler, &pid)
+
+#define CLEANUP_RESET \
+  __libc_cleanup_region_end (0)
+
+
+/* Linux has waitpid(), so override the generic unix version.  */
+#include <sysdeps/posix/system.c>
+
+
+/* The cancellation handler.  */
+static void
+cancel_handler (void *arg)
+{
+  pid_t child = *(pid_t *) arg;
+
+  INTERNAL_SYSCALL_DECL (err);
+  INTERNAL_SYSCALL (kill, err, 2, child, SIGKILL);
+
+  TEMP_FAILURE_RETRY (__waitpid (child, NULL, 0));
+
+  DO_LOCK ();
+
+  if (SUB_REF () == 0)
+    {
+      (void) __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL);
+      (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
+    }
+
+  DO_UNLOCK ();
+}
