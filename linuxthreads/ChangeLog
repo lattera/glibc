@@ -1,3 +1,8 @@
+1998-04-23  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (linuxthreads-version): Renamed back from
+	libpthread-version.
+
 1998-04-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* ptlongjmp.c: Add prototypes for __libc_siglongjmp and

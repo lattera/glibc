@@ -212,6 +212,7 @@ install-others	= $(addprefix $(inst_gconvdir)/, $(modules.so))	\
 # If we have the localedata add-on available we can build the conversion
 # tables for numerous charsets.
 define generate-8bit-table
+$(make-target-directory)
 ( echo "static const uint32_t to_ucs4[256] = {"; \
   sed -e '/^[^[:space:]]*[[:space:]]*.x00/d' -e 's/^[^[:space:]]*[[:space:]]*.x\(..\)[[:space:]]*<U\(....\)>.*/  [0x\1] = 0x\2,/p' -e d $^ | sort -u; \
   echo "};"; \
@@ -233,6 +234,7 @@ sed-generated-headers := iso8859-2.h iso8859-3.h iso8859-4.h iso8859-5.h \
 			 ibm904.h ibm905.h ibm1047.h
 
 define generate-8bit-gap-table
+$(make-target-directory)
 ( echo "static const uint32_t to_ucs4[256] = {"; \
   sed -e '/^[^[:space:]]*[[:space:]]*.x00/d' -e 's/^[^[:space:]]*[[:space:]]*.x\(..\)[[:space:]]*<U\(....\)>.*/  [0x\1] = 0x\2,/p' -e d $^ | sort -u; \
   echo "};"; \

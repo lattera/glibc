@@ -1,3 +1,8 @@
+1998-04-24 16:30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/Makefile: Create target directory before generating
+	headers.
+
 1998-04-23  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* misc/sys/cdefs.h (__REDIRECT): Handle systems with non-empty
