@@ -232,21 +232,24 @@ group_keys (int number, char *key[])
 static inline void
 print_hosts (struct hostent *host)
 {
-  unsigned int i;
-  char buf[INET6_ADDRSTRLEN];
-  const char *ip = inet_ntop (host->h_addrtype, host->h_addr_list[0],
-			      buf, sizeof (buf));
+  unsigned int cnt;
 
-  printf ("%-15s %s", ip, host->h_name);
-
-  i = 0;
-  while (host->h_aliases[i] != NULL)
+  for (cnt = 0; host->h_addr_list[cnt] != NULL; ++cnt)
     {
-      putchar_unlocked (' ');
-      fputs_unlocked (host->h_aliases[i], stdout);
-      ++i;
+      char buf[INET6_ADDRSTRLEN];
+      const char *ip = inet_ntop (host->h_addrtype, host->h_addr_list[cnt],
+				  buf, sizeof (buf));
+
+      printf ("%-15s %s", ip, host->h_name);
+
+      unsigned int i;
+      for (i = 0; host->h_aliases[i] != NULL; ++i)
+	{
+	  putchar_unlocked (' ');
+	  fputs_unlocked (host->h_aliases[i], stdout);
+	}
+      putchar_unlocked ('\n');
     }
-  putchar_unlocked ('\n');
 }
 
 static int
