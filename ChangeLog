@@ -37,7 +37,6 @@
 	* sysdeps/mach/hurd/mmap.c (__mmap): If io_map fails with MIG_BAD_ID,
 	EOPNOTSUPP, or ENOSYS, change it to ENODEV.
 
->>>>>>> 1.7905
 2003-09-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/sigstack.h (MINSIGSTKSZ):
