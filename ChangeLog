@@ -1,3 +1,31 @@
+2005-03-28  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	[BZ #783]
+	* elf/tst-auditmod1.c: Add MIPS support.
+	* sysdeps/generic/ldsodefs.h (La_mips_32_regs): New.
+	(La_mips_32_retval): New.
+	(La_mips_64_regs): New.
+	(La_mips_64_retval): New.
+	(struct audit_ifaces): Add MIPS entries.
+	* sysdeps/mips/dl-machine.h: Check RESOLVE_MAP instead of RESOLVE.
+	(elf_machine_runtime_link_map, ELF_DL_FRAME_SIZE,
+	ELF_DL_SAVE_ARG_REGS, ELF_DL_RESTORE_ARG_REGS,
+	ELF_MACHINE_RUNTIME_TRAMPOLINE): Move to dl-trampoline.c.
+	(RTLD_START): Align the stack before calling _dl_init_internal.
+	Use .ent for _dl_start_user.
+	(ARCH_LA_PLTENTER, ARCH_LA_PLTEXIT): Define.
+	(elf_machine_rel, elf_machine_rel_relative, elf_machine_lazy_rel)
+	(elf_machine_runtime_setup): Use "auto inline".
+	(elf_machine_rela, elf_machine_rela_relative): Provide empty versions.
+	(elf_machine_got_rel): Likewise.  Use RESOLVE_MAP.
+	* sysdeps/mips/dl-trampoline.c: New file.
+	* sysdeps/mips/bits/link.h: New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h
+	(internal_syscall5): Use register operands instead of non-lvalue
+	memory operands.
+	(internal_syscall6): Likewise.
+	(internal_syscall7): Likewise.
+
 2005-03-27  Andreas Jaeger  <aj@suse.de>
 
 	* debug/warning-nop.c (__builtin___memcpy_chk): Define away to

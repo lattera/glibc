@@ -195,6 +195,10 @@ struct La_s390_64_regs;
 struct La_s390_64_retval;
 struct La_ia64_regs;
 struct La_ia64_retval;
+struct La_mips_32_regs;
+struct La_mips_32_retval;
+struct La_mips_64_regs;
+struct La_mips_64_retval;
 
 struct audit_ifaces
 {
@@ -251,6 +255,21 @@ struct audit_ifaces
 				     uintptr_t *, struct La_ia64_regs *,
 				     unsigned int *, const char *name,
 				     long int *framesizep);
+    Elf32_Addr (*mips_o32_gnu_pltenter) (Elf32_Sym *, unsigned int,
+					 uintptr_t *, uintptr_t *,
+					 const struct La_mips_32_regs *,
+					 unsigned int *, const char *name,
+					 long int *framesizep);
+    Elf32_Addr (*mips_n32_gnu_pltenter) (Elf32_Sym *, unsigned int,
+					 uintptr_t *, uintptr_t *,
+					 const struct La_mips_64_regs *,
+					 unsigned int *, const char *name,
+					 long int *framesizep);
+    Elf64_Addr (*mips_n64_gnu_pltenter) (Elf64_Sym *, unsigned int,
+					 uintptr_t *, uintptr_t *,
+					 const struct La_mips_64_regs *,
+					 unsigned int *, const char *name,
+					 long int *framesizep);
   };
   union
   {
@@ -294,6 +313,21 @@ struct audit_ifaces
 				      uintptr_t *,
 				      const struct La_ia64_regs *,
 				      struct La_ia64_retval *, const char *);
+    unsigned int (*mips_o32_gnu_pltexit) (Elf32_Sym *, unsigned int,
+					  uintptr_t *, uintptr_t *,
+					  const struct La_mips_32_regs *,
+					  struct La_mips_32_retval *,
+					  const char *);
+    unsigned int (*mips_n32_gnu_pltexit) (Elf32_Sym *, unsigned int,
+					  uintptr_t *, uintptr_t *,
+					  const struct La_mips_64_regs *,
+					  struct La_mips_64_retval *,
+					  const char *);
+    unsigned int (*mips_n64_gnu_pltexit) (Elf64_Sym *, unsigned int,
+					  uintptr_t *, uintptr_t *,
+					  const struct La_mips_64_regs *,
+					  struct La_mips_64_retval *,
+					  const char *);
   };
   unsigned int (*objclose) (uintptr_t *);
 

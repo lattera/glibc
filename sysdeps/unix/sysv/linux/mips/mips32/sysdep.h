@@ -194,16 +194,15 @@
 	register long __a3 asm("$7") = (long) arg4; 			\
 	__asm__ volatile ( 						\
 	".set\tnoreorder\n\t" 						\
-	"lw\t$2, %6\n\t" 						\
 	"subu\t$29, 32\n\t" 						\
-	"sw\t$2, 16($29)\n\t" 						\
+	"sw\t%6, 16($29)\n\t" 						\
 	"li\t$2, %5\t\t\t# " #name "\n\t" 				\
 	"syscall\n\t" 							\
 	"addiu\t$29, 32\n\t" 						\
 	".set\treorder" 						\
 	: "=r" (__v0), "+r" (__a3) 					\
 	: "r" (__a0), "r" (__a1), "r" (__a2), "i" (SYS_ify(name)), 	\
-	  "m" ((long)arg5) 						\
+	  "r" ((long)arg5) 						\
 	: __SYSCALL_CLOBBERS); 						\
 	err = __a3;							\
 	_sys_result = __v0;						\
@@ -223,18 +222,16 @@
 	register long __a3 asm("$7") = (long) arg4; 			\
 	__asm__ volatile ( 						\
 	".set\tnoreorder\n\t" 						\
-	"lw\t$2, %6\n\t" 						\
-	"lw\t$8, %7\n\t" 						\
 	"subu\t$29, 32\n\t" 						\
-	"sw\t$2, 16($29)\n\t" 						\
-	"sw\t$8, 20($29)\n\t" 						\
+	"sw\t%6, 16($29)\n\t" 						\
+	"sw\t%7, 20($29)\n\t" 						\
 	"li\t$2, %5\t\t\t# " #name "\n\t" 				\
 	"syscall\n\t" 							\
 	"addiu\t$29, 32\n\t" 						\
 	".set\treorder" 						\
 	: "=r" (__v0), "+r" (__a3) 					\
 	: "r" (__a0), "r" (__a1), "r" (__a2), "i" (SYS_ify(name)), 	\
-	  "m" ((long)arg5), "m" ((long)arg6)				\
+	  "r" ((long)arg5), "r" ((long)arg6)				\
 	: __SYSCALL_CLOBBERS); 						\
 	err = __a3;							\
 	_sys_result = __v0;						\
@@ -254,20 +251,17 @@
 	register long __a3 asm("$7") = (long) arg4; 			\
 	__asm__ volatile ( 						\
 	".set\tnoreorder\n\t" 						\
-	"lw\t$2, %6\n\t" 						\
-	"lw\t$8, %7\n\t" 						\
-	"lw\t$9, %8\n\t" 						\
 	"subu\t$29, 32\n\t" 						\
-	"sw\t$2, 16($29)\n\t" 						\
-	"sw\t$8, 20($29)\n\t" 						\
-	"sw\t$9, 24($29)\n\t" 						\
+	"sw\t%6, 16($29)\n\t" 						\
+	"sw\t%7, 20($29)\n\t" 						\
+	"sw\t%8, 24($29)\n\t" 						\
 	"li\t$2, %5\t\t\t# " #name "\n\t" 				\
 	"syscall\n\t" 							\
 	"addiu\t$29, 32\n\t" 						\
 	".set\treorder" 						\
 	: "=r" (__v0), "+r" (__a3) 					\
 	: "r" (__a0), "r" (__a1), "r" (__a2), "i" (SYS_ify(name)), 	\
-	  "m" ((long)arg5), "m" ((long)arg6), "m" ((long)arg7)		\
+	  "r" ((long)arg5), "r" ((long)arg6), "r" ((long)arg7)		\
 	: __SYSCALL_CLOBBERS); 						\
 	err = __a3;							\
 	_sys_result = __v0;						\
