@@ -1,3 +1,21 @@
+1998-12-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/speed.c (cfsetispeed): Make a real
+	function.  Don't set speed is SPEED parameter is zero since this
+	means set it to the output speed.
+
+	* version.h (VERSION): Bump to 2.0.106.
+
+1998-12-07 12:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* po/de.po: Update from translation team.
+	* po/ko.po: Likewise.
+
+1998-12-07  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/select.S: Save a4 through
+	both paths.
+
 1998-12-05  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/pselect.c: New file.

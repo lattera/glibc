@@ -1,5 +1,5 @@
 /* `struct termios' speed frobnication functions.  Linux version.
-   Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,5 +54,26 @@ cfsetospeed  (termios_p, speed)
 }
 
 /* Set the input baud rate stored in *TERMIOS_P to SPEED.
-   For Linux there is no difference between input and output speed.  */
-strong_alias (cfsetospeed, cfsetispeed);
+   Although for Linux there is no difference between input and output
+   speed, the numerical 0 is a special case for the input baud rate.  It
+   should set the input baud rate to the output baud rate.  */
+int
+cfsetispeed (termios_p, speed)
+     struct termios *termios_p;
+     speed_t speed;
+{
+  if ((speed & ~CBAUD) != 0
+      && (speed < B57600 || speed > B460800))
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  if (speed != 0)
+    {
+      termios_p->c_cflag &= ~(CBAUD | CBAUDEX);
+      termios_p->c_cflag |= speed;
+    }
+
+  return 0;
+}
