@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,6 +67,13 @@ extern void __assert_perror_fail (int __errnum, __const char *__file,
 				  unsigned int __line,
 				  __const char *__function)
      __THROW __attribute__ ((__noreturn__));
+
+
+/* The following is not at all used here but needed for standard
+   compliance.  */
+extern void __assert (const char *__assertion, const char *__file, int __line)
+     __THROW __attribute__ ((__noreturn__));
+
 
 __END_DECLS
 

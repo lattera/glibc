@@ -130,6 +130,14 @@ enum
 };
 
 
+/* LC_CTYPE specific:
+   Access a wide character class with a single character index.
+   _ISCTYPE (c, desc) = iswctype (btowc (c), desc).
+   c must be an `unsigned char'.  desc must be a nonzero wctype_t.  */
+#define _ISCTYPE(c, desc) \
+  (((((const uint32_t *) (desc)) - 8)[(c) >> 5] >> ((c) & 0x1f)) & 1)
+
+
 /* For each category declare the variable for the current locale data.  */
 #define DEFINE_CATEGORY(category, category_name, items, a) \
 extern struct locale_data *_nl_current_##category;

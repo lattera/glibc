@@ -1,4 +1,23 @@
 2000-08-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* gnulib/Makefile (tests): Add tst-gcc.
+	* gnulib/tst-gcc.c: New file.
+
+	* assert/Makefile (routines): Add __assert.
+	* assert/Versions: Export __assert for glibc 2.2.
+	* assert/__assert.c: New file.
+	* assert/assert.h: Declare __assert.
+
+2000-07-27  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/localeinfo.h (_ISCTYPE): New macro.
+	* posix/fnmatch_loop.c (internal_fnmatch): Use it, support new
+	LC_CTYPE locale format.
+	* locale/programs/ld-ctype.c (locale_ctype_t): New field class_b.
+	(ctype_output): Output class_b[nr] right before class_3level[nr].
+	(allocate_arrays): Fill class_b, similarly to class_3level.
+
+2000-08-01  Ulrich Drepper  <drepper@redhat.com>
 	    Joseph S. Myers  <jsm28@cam.ac.uk>
 
 	* math/tgmath.h: Make standard compliant.  Don't ask how.

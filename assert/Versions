@@ -3,4 +3,8 @@ libc {
     # functions used in inline functions or macros
     __assert_fail; __assert_perror_fail;
   }
+  GLIBC_2.2 {
+    # just for standard compliance
+    __assert;
+  }
 }

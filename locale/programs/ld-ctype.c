@@ -170,6 +170,7 @@ struct locale_ctype_t
   uint32_t *names;
   uint32_t **map;
   uint32_t **map32;
+  uint32_t **class_b;
   struct iovec *class_3level;
   struct iovec *map_3level;
   uint32_t *class_name_ptr;
@@ -842,7 +843,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 			 + (oldstyle_tables
 			    ? (ctype->map_collection_nr - 2)
 			    : (ctype->nr_charclass + ctype->map_collection_nr)));
-  struct iovec iov[2 + nelems + ctype->nr_charclass
+  struct iovec iov[2 + nelems + 2 * ctype->nr_charclass
 		  + ctype->map_collection_nr + 2];
   struct locale_file data;
   uint32_t idx[nelems + 1];
@@ -1169,6 +1170,12 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	      size_t nr = elem - _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1);
 	      if (nr < ctype->nr_charclass)
 		{
+		  iov[2 + elem + offset].iov_base = ctype->class_b[nr];
+		  iov[2 + elem + offset].iov_len = 256 / 32
+						   * sizeof (uint32_t);
+		  idx[elem] += iov[2 + elem + offset].iov_len;
+		  ++offset;
+
 		  iov[2 + elem + offset] = ctype->class_3level[nr];
 		}
 	      else
@@ -1182,7 +1189,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	}
     }
 
-  assert (2 + elem + offset == (nelems + ctype->nr_charclass
+  assert (2 + elem + offset == (nelems + 2 * ctype->nr_charclass
 				+ ctype->map_collection_nr + 2 + 2));
 
   write_locale_data (output_path, "LC_CTYPE", 2 + elem + offset, iov);
@@ -4083,8 +4090,12 @@ Computing table size for character classes might take a while..."),
     xcalloc ((oldstyle_tables ? ctype->plane_size * ctype->plane_cnt : 256),
 	     sizeof (char_class32_t));
   if (!oldstyle_tables)
-    ctype->class_3level = (struct iovec *)
-      xmalloc (ctype->nr_charclass * sizeof (struct iovec));
+    {
+      ctype->class_b = (uint32_t **)
+	xmalloc (ctype->nr_charclass * sizeof (uint32_t *));
+      ctype->class_3level = (struct iovec *)
+	xmalloc (ctype->nr_charclass * sizeof (struct iovec));
+    }
 
   /* This is the array accessed using the multibyte string elements.  */
   for (idx = 0; idx < 256; ++idx)
@@ -4112,6 +4123,16 @@ Computing table size for character classes might take a while..."),
   if (!oldstyle_tables)
     {
       size_t nr;
+
+      for (nr = 0; nr < ctype->nr_charclass; nr++)
+	{
+	  ctype->class_b[nr] = (uint32_t *)
+	    xcalloc (256 / 32, sizeof (uint32_t));
+
+	  for (idx = 0; idx < 256; ++idx)
+	    if (ctype->class256_collection[idx] & _ISbit (nr))
+	      ctype->class_b[nr][idx >> 5] |= (uint32_t)1 << (idx & 0x1f);
+	}
 
       for (nr = 0; nr < ctype->nr_charclass; nr++)
 	{

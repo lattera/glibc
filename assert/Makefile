@@ -22,7 +22,7 @@
 subdir	:= assert
 headers	:= assert.h
 
-routines := assert assert-perr
+routines := assert assert-perr __assert
 tests := test-assert test-assert-perr
 
 include ../Rules
