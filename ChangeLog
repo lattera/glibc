@@ -1,5 +1,15 @@
 2002-09-18  Roland McGrath  <roland@redhat.com>
 
+	* locale/lc-ctype.c (_nl_postload_ctype): Add compat_symbol decls for
+	the __ctype_* compat symbols, so the relocs generated bind to the
+	right versioned global symbol in the shared object.
+
+	* elf/do-rel.h (elf_dynamic_do_rel): Mask off 0x8000 bit (hidden flag)
+	from the value taken from the DT_VERSYM table.
+	* elf/dl-runtime.c (fixup, profile_fixup): Likewise.
+	* sysdeps/mips/dl-machine.h (__dl_runtime_resolve): Likewise.
+	(RESOLVE_GOTSYM): Likewise.
+
 	* sysdeps/unix/sysv/linux/sigaction.c (__libc_sigaction):
 	Add libc_hidden_def.
 	* sysdeps/unix/sysv/linux/arm/sigaction.c: Likewise.

@@ -111,7 +111,7 @@ elf_dynamic_do_rel (struct link_map *map,
 
 	  for (; r < end; ++r)
 	    {
-	      ElfW(Half) ndx = version[ELFW(R_SYM) (r->r_info)];
+	      ElfW(Half) ndx = version[ELFW(R_SYM) (r->r_info)] & 0x7fff;
 	      elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)],
 			       &map->l_versions[ndx],
 			       (void *) (l_addr + r->r_offset));
