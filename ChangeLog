@@ -1,5 +1,8 @@
 1997-06-26 02:06  Ulrich Drepper  <drepper@cygnus.com>
 
+	* posix/Makefile (CFLAGS-regex.c): -DDEBUG was not meant for the
+	public.
+
 	* Makerules ($(common-objpfx)libc.so): Use $(load-map-file) in
 	dependency, not $(libc-map).
 

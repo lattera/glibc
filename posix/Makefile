@@ -60,7 +60,7 @@ before-compile	:= testcases.h
 
 include ../Rules
 
-CFLAGS-regex.c = -Wno-unused -Wno-strict-prototypes -DDEBUG
+CFLAGS-regex.c = -Wno-unused -Wno-strict-prototypes
 CFLAGS-getaddrinfo.c = -DRESOLVER
 
 $(objpfx)libposix.a: $(dep-dummy-lib); $(make-dummy-lib)
