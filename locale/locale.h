@@ -119,11 +119,16 @@ struct lconv
 };
 
 
+__BEGIN_NAMESPACE_STD
+
 /* Set and/or return the current locale.  */
 extern char *setlocale (int __category, __const char *__locale) __THROW;
 
 /* Return the numeric/monetary information for the current locale.  */
 extern struct lconv *localeconv (void) __THROW;
+
+__END_NAMESPACE_STD
+
 
 #ifdef	__USE_GNU
 /* The concept of one static locale per category is not very well

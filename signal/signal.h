@@ -37,7 +37,9 @@ __BEGIN_DECLS
 #if defined __need_sig_atomic_t || defined _SIGNAL_H
 # ifndef __sig_atomic_t_defined
 #  define __sig_atomic_t_defined
+__BEGIN_NAMESPACE_STD
 typedef __sig_atomic_t sig_atomic_t;
+__END_NAMESPACE_STD
 # endif
 # undef __need_sig_atomic_t
 #endif
@@ -83,6 +85,7 @@ extern __sighandler_t sysv_signal (int __sig, __sighandler_t __handler)
 /* Set the handler for the signal SIG to HANDLER, returning the old
    handler, or SIG_ERR on error.
    By default `signal' has the BSD semantic.  */
+__BEGIN_NAMESPACE_STD
 #ifdef __USE_BSD
 extern __sighandler_t signal (int __sig, __sighandler_t __handler) __THROW;
 #else
@@ -96,6 +99,7 @@ extern __sighandler_t __REDIRECT (signal,
 #  define signal __sysv_signal
 # endif
 #endif
+__END_NAMESPACE_STD
 
 #ifdef __USE_XOPEN
 /* The X/Open definition of `signal' conflicts with the BSD version.
@@ -117,8 +121,10 @@ extern int kill (__pid_t __pid, int __sig) __THROW;
 extern int killpg (__pid_t __pgrp, int __sig) __THROW;
 #endif /* Use BSD || X/Open Unix.  */
 
+__BEGIN_NAMESPACE_STD
 /* Raise signal SIG, i.e., send SIG to yourself.  */
 extern int raise (int __sig) __THROW;
+__END_NAMESPACE_STD
 
 #ifdef __USE_SVID
 /* SVID names for the same things.  */

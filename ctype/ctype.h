@@ -85,6 +85,8 @@ extern __const __int32_t *__ctype_toupper; /* Case conversions.  */
 
 #define	__exctype(name)	extern int name (int) __THROW
 
+
+__BEGIN_NAMESPACE_STD
 /* The following names are all functions:
      int isCHARACTERISTIC(int c);
    which return nonzero iff C has CHARACTERISTIC.
@@ -101,10 +103,6 @@ __exctype (isspace);
 __exctype (isupper);
 __exctype (isxdigit);
 
-#ifdef	__USE_ISOC99
-__exctype (isblank);
-#endif
-
 
 /* Return the lowercase version of C.  */
 extern int tolower (int __c) __THROW;
@@ -112,6 +110,17 @@ extern int tolower (int __c) __THROW;
 /* Return the uppercase version of C.  */
 extern int toupper (int __c) __THROW;
 
+__END_NAMESPACE_STD
+
+
+/* ISO C99 introduced one new function.  */
+#ifdef	__USE_ISOC99
+__BEGIN_NAMESPACE_C99
+
+__exctype (isblank);
+
+__END_NAMESPACE_C99
+#endif
 
 #if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
 
@@ -147,7 +156,7 @@ __exctype (_tolower);
 	__res = a[(int) (c)];						      \
       __res; }))
 
-#ifndef	__NO_CTYPE
+#if !defined __NO_CTYPE && !defined __cplusplus
 # define isalnum(c)	__isctype((c), _ISalnum)
 # define isalpha(c)	__isctype((c), _ISalpha)
 # define iscntrl(c)	__isctype((c), _IScntrl)

@@ -40,6 +40,11 @@
    member of the extended character set.  */
 #  define _WINT_T
 typedef unsigned int wint_t;
+# else
+#  ifdef __USE_ISOC99
+__USING_NAMESPACE_C99(wint_t)
+#  endif
+__END_NAMESPACE_C99
 # endif
 
 /* Constant expression of type `wint_t' whose value does not correspond
@@ -56,9 +61,11 @@ typedef unsigned int wint_t;
 #ifndef __iswxxx_defined
 # define __iswxxx_defined	1
 
+__BEGIN_NAMESPACE_C99
 /* Scalar type that can hold values which represent locale-specific
    character classifications.  */
 typedef unsigned long int wctype_t;
+__END_NAMESPACE_C99
 
 # ifndef _ISwbit
 /* The characteristics are stored always in network byte order (big
@@ -109,6 +116,7 @@ enum
 
 __BEGIN_DECLS
 
+__BEGIN_NAMESPACE_C99
 /*
  * Wide-character classification functions: 7.15.2.1.
  */
@@ -180,8 +188,9 @@ extern wctype_t wctype (__const char *__property) __THROW;
 /* Determine whether the wide-character WC has the property described by
    DESC.  */
 extern int iswctype (wint_t __wc, wctype_t __desc) __THROW;
+__END_NAMESPACE_C99
 
-#if __GNUC__ >= 2 && defined __OPTIMIZE__
+#if __GNUC__ >= 2 && defined __OPTIMIZE__ && !defined __cplusplus
 /* The tables are always organized in a way which allows direct access
    for single byte characters.  */
 extern unsigned int *__ctype32_b;
@@ -244,17 +253,24 @@ extern unsigned int *__ctype32_b;
  * Wide-character case-mapping functions: 7.15.3.1.
  */
 
+__BEGIN_NAMESPACE_C99
 /* Scalar type that can hold values which represent locale-specific
    character mappings.  */
 typedef __const __int32_t *wctrans_t;
+__END_NAMESPACE_C99
+#ifdef __USE_GNU
+__USING_NAMESPACE_C99(wctrans_t)
+#endif
 
+__BEGIN_NAMESPACE_C99
 /* Converts an uppercase letter to the corresponding lowercase letter.  */
 extern wint_t towlower (wint_t __wc) __THROW;
 
 /* Converts an lowercase letter to the corresponding uppercase letter.  */
 extern wint_t towupper (wint_t __wc) __THROW;
+__END_NAMESPACE_C99
 
-#if __GNUC__ >= 2 && defined __OPTIMIZE__
+#if __GNUC__ >= 2 && defined __OPTIMIZE__ && !defined __cplusplus
 /* The tables are always organized in a way which allows direct access
    for single byte characters.  */
 extern const wint_t *__ctype32_tolower;
@@ -287,12 +303,14 @@ __END_DECLS
 
 __BEGIN_DECLS
 
+__BEGIN_NAMESPACE_C99
 /* Construct value that describes a mapping between wide characters
    identified by the string argument PROPERTY.  */
 extern wctrans_t wctrans (__const char *__property) __THROW;
 
 /* Map the wide character WC using the mapping described by DESC.  */
 extern wint_t towctrans (wint_t __wc, wctrans_t __desc) __THROW;
+__END_NAMESPACE_C99
 
 # ifdef __USE_GNU
 /* Declare the interface to extended locale model.  */

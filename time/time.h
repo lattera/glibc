@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999,2000,01,02 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,8 +55,13 @@ __BEGIN_DECLS
 
 # include <bits/types.h>
 
+__BEGIN_NAMESPACE_STD
 /* Returned by `clock'.  */
 typedef __clock_t clock_t;
+__END_NAMESPACE_STD
+#if defined __USE_XOPEN || defined __USE_POSIX || defined __USE_MISC
+__USING_NAMESPACE_STD(clock_t)
+#endif
 
 #endif /* clock_t not defined and <time.h> or need clock_t.  */
 #undef	__need_clock_t
@@ -66,8 +71,13 @@ typedef __clock_t clock_t;
 
 # include <bits/types.h>
 
+__BEGIN_NAMESPACE_STD
 /* Returned by `time'.  */
 typedef __time_t time_t;
+__END_NAMESPACE_STD
+#if defined __USE_POSIX || defined __USE_MISC || defined __USE_SVID
+__USING_NAMESPACE_STD(time_t)
+#endif
 
 #endif /* time_t not defined and <time.h> or need time_t.  */
 #undef	__need_time_t
@@ -114,6 +124,7 @@ struct timespec
 
 
 #ifdef	_TIME_H
+__BEGIN_NAMESPACE_STD
 /* Used by other time functions.  */
 struct tm
 {
@@ -127,14 +138,18 @@ struct tm
   int tm_yday;			/* Days in year.[0-365]	*/
   int tm_isdst;			/* DST.		[-1/0/1]*/
 
-# ifdef	__USE_BSD
+#ifdef	__USE_BSD
   long int tm_gmtoff;		/* Seconds east of UTC.  */
   __const char *tm_zone;	/* Timezone abbreviation.  */
-# else
+#else
   long int __tm_gmtoff;		/* Seconds east of UTC.  */
   __const char *__tm_zone;	/* Timezone abbreviation.  */
-# endif
+#endif
 };
+__END_NAMESPACE_STD
+#if defined __USE_XOPEN || defined __USE_POSIX || defined __USE_MISC
+__USING_NAMESPACE_STD(tm)
+#endif
 
 
 #ifdef __USE_POSIX199309
@@ -158,6 +173,7 @@ typedef __pid_t pid_t;
 #endif
 
 
+__BEGIN_NAMESPACE_STD
 /* Time used by the program so far (user time + system time).
    The result / CLOCKS_PER_SECOND is program time in seconds.  */
 extern clock_t clock (void) __THROW;
@@ -179,6 +195,7 @@ extern time_t mktime (struct tm *__tp) __THROW;
 extern size_t strftime (char *__restrict __s, size_t __maxsize,
 			__const char *__restrict __format,
 			__const struct tm *__restrict __tp) __THROW;
+__END_NAMESPACE_STD
 
 # ifdef __USE_XOPEN
 /* Parse S according to FORMAT and store binary time information in TP.
@@ -204,6 +221,7 @@ extern char *strptime_l (__const char *__restrict __s,
 # endif
 
 
+__BEGIN_NAMESPACE_STD
 /* Return the `struct tm' representation of *TIMER
    in Universal Coordinated Time (aka Greenwich Mean Time).  */
 extern struct tm *gmtime (__const time_t *__timer) __THROW;
@@ -211,6 +229,7 @@ extern struct tm *gmtime (__const time_t *__timer) __THROW;
 /* Return the `struct tm' representation
    of *TIMER in the local timezone.  */
 extern struct tm *localtime (__const time_t *__timer) __THROW;
+__END_NAMESPACE_STD
 
 # if defined __USE_POSIX || defined __USE_MISC
 /* Return the `struct tm' representation of *TIMER in UTC,
@@ -224,12 +243,14 @@ extern struct tm *localtime_r (__const time_t *__restrict __timer,
 			       struct tm *__restrict __tp) __THROW;
 # endif	/* POSIX or misc */
 
+__BEGIN_NAMESPACE_STD
 /* Return a string of the form "Day Mon dd hh:mm:ss yyyy\n"
    that is the representation of TP in this format.  */
 extern char *asctime (__const struct tm *__tp) __THROW;
 
 /* Equivalent to `asctime (localtime (timer))'.  */
 extern char *ctime (__const time_t *__timer) __THROW;
+__END_NAMESPACE_STD
 
 # if defined __USE_POSIX || defined __USE_MISC
 /* Reentrant versions of the above functions.  */

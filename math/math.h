@@ -1,5 +1,5 @@
 /* Declarations for math functions.
-   Copyright (C) 1991,92,93,95,96,97,98,99,2001 Free Software Foundation, Inc.
+   Copyright (C) 1991-1993,1995-1999,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,8 +60,12 @@ __BEGIN_DECLS
 
 #define _Mdouble_ 		double
 #define __MATH_PRECNAME(name,r)	__CONCAT(name,r)
+# define _Mdouble_BEGIN_NAMESPACE __BEGIN_NAMESPACE_STD
+# define _Mdouble_END_NAMESPACE   __END_NAMESPACE_STD
 #include <bits/mathcalls.h>
 #undef	_Mdouble_
+#undef _Mdouble_BEGIN_NAMESPACE
+#undef _Mdouble_END_NAMESPACE
 #undef	__MATH_PRECNAME
 
 #if defined __USE_MISC || defined __USE_ISOC99
@@ -79,8 +83,12 @@ __BEGIN_DECLS
 # else
 #  define __MATH_PRECNAME(name,r) name/**/f/**/r
 # endif
+# define _Mdouble_BEGIN_NAMESPACE __BEGIN_NAMESPACE_C99
+# define _Mdouble_END_NAMESPACE   __END_NAMESPACE_C99
 # include <bits/mathcalls.h>
 # undef	_Mdouble_
+# undef _Mdouble_BEGIN_NAMESPACE
+# undef _Mdouble_END_NAMESPACE
 # undef	__MATH_PRECNAME
 
 # if (__STDC__ - 0 || __GNUC__ - 0) && !defined __NO_LONG_DOUBLE_MATH
@@ -96,8 +104,12 @@ __BEGIN_DECLS
 #  else
 #   define __MATH_PRECNAME(name,r) name/**/l/**/r
 #  endif
+#  define _Mdouble_BEGIN_NAMESPACE __BEGIN_NAMESPACE_C99
+#  define _Mdouble_END_NAMESPACE   __END_NAMESPACE_C99
 #  include <bits/mathcalls.h>
 #  undef _Mdouble_
+# undef _Mdouble_BEGIN_NAMESPACE
+# undef _Mdouble_END_NAMESPACE
 #  undef __MATH_PRECNAME
 
 # endif /* __STDC__ || __GNUC__ */

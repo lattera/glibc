@@ -58,6 +58,10 @@
    member of the extended character set.  */
 # define _WINT_T
 typedef unsigned int wint_t;
+#else
+# ifdef __USE_GNU
+__USING_NAMESPACE_STD(wint_t)
+# endif
 #endif
 
 
@@ -81,8 +85,13 @@ typedef struct
    defined.  */
 #ifdef _WCHAR_H
 
+__BEGIN_NAMESPACE_C99
 /* Public type.  */
 typedef __mbstate_t mbstate_t;
+__END_NAMESPACE_C99
+#ifdef __USE_GNU
+__USING_NAMESPACE_C99(mbstate_t)
+#endif
 
 #ifndef WCHAR_MIN
 /* These constants might also be defined in <inttypes.h>.  */
@@ -100,13 +109,21 @@ typedef __mbstate_t mbstate_t;
 # include <wctype.h>
 #endif
 
-/* This incomplete type is defined in <time.h> but needed here because
-   of `wcsftime'.  */
-struct tm;
-
 
 __BEGIN_DECLS
 
+__BEGIN_NAMESPACE_STD
+/* This incomplete type is defined in <time.h> but needed here because
+   of `wcsftime'.  */
+struct tm;
+/* XXX We have to clean this up at some point.  Since tm is in the std
+   namespace but wcsftime is in __c99 the type wouldn't be found
+   without inserting it in the global namespace.  */
+__USING_NAMESPACE_STD(tm)
+__END_NAMESPACE_STD
+
+
+__BEGIN_NAMESPACE_C99
 /* Copy SRC to DEST.  */
 extern wchar_t *wcscpy (wchar_t *__restrict __dest,
 			__const wchar_t *__restrict __src) __THROW;
@@ -129,6 +146,7 @@ extern int wcscmp (__const wchar_t *__s1, __const wchar_t *__s2)
 /* Compare N wide-characters of S1 and S2.  */
 extern int wcsncmp (__const wchar_t *__s1, __const wchar_t *__s2, size_t __n)
      __THROW __attribute_pure__;
+__END_NAMESPACE_C99
 
 #ifdef __USE_GNU
 /* Compare S1 and S2, ignoring case.  */
@@ -149,6 +167,7 @@ extern int wcsncasecmp_l (__const wchar_t *__s1, __const wchar_t *__s2,
 			  size_t __n, __locale_t __loc) __THROW;
 #endif
 
+__BEGIN_NAMESPACE_C99
 /* Compare S1 and S2, both interpreted as appropriate to the
    LC_COLLATE category of the current locale.  */
 extern int wcscoll (__const wchar_t *__s1, __const wchar_t *__s2) __THROW;
@@ -157,6 +176,7 @@ extern int wcscoll (__const wchar_t *__s1, __const wchar_t *__s2) __THROW;
    `wcscoll' to the original strings.  */
 extern size_t wcsxfrm (wchar_t *__restrict __s1,
 		       __const wchar_t *__restrict __s2, size_t __n) __THROW;
+__END_NAMESPACE_C99
 
 #ifdef __USE_GNU
 /* Similar to the two functions above but take the information from
@@ -177,12 +197,14 @@ extern size_t wcsxfrm_l (wchar_t *__s1, __const wchar_t *__s2,
 extern wchar_t *wcsdup (__const wchar_t *__s) __THROW __attribute_malloc__;
 #endif
 
+__BEGIN_NAMESPACE_C99
 /* Find the first occurrence of WC in WCS.  */
 extern wchar_t *wcschr (__const wchar_t *__wcs, wchar_t __wc)
      __THROW __attribute_pure__;
 /* Find the last occurrence of WC in WCS.  */
 extern wchar_t *wcsrchr (__const wchar_t *__wcs, wchar_t __wc)
      __THROW __attribute_pure__;
+__END_NAMESPACE_C99
 
 #ifdef __USE_GNU
 /* This function is similar to `wcschr'.  But it returns a pointer to
@@ -191,6 +213,7 @@ extern wchar_t *wcschrnul (__const wchar_t *__s, wchar_t __wc)
      __THROW __attribute_pure__;
 #endif
 
+__BEGIN_NAMESPACE_C99
 /* Return the length of the initial segmet of WCS which
    consists entirely of wide characters not in REJECT.  */
 extern size_t wcscspn (__const wchar_t *__wcs, __const wchar_t *__reject)
@@ -206,12 +229,6 @@ extern wchar_t *wcspbrk (__const wchar_t *__wcs, __const wchar_t *__accept)
 extern wchar_t *wcsstr (__const wchar_t *__haystack, __const wchar_t *__needle)
      __THROW __attribute_pure__;
 
-#ifdef __USE_XOPEN
-/* Another name for `wcsstr' from XPG4.  */
-extern wchar_t *wcswcs (__const wchar_t *__haystack, __const wchar_t *__needle)
-     __THROW __attribute_pure__;
-#endif
-
 /* Divide WCS into tokens separated by characters in DELIM.  */
 extern wchar_t *wcstok (wchar_t *__restrict __s,
 			__const wchar_t *__restrict __delim,
@@ -219,6 +236,13 @@ extern wchar_t *wcstok (wchar_t *__restrict __s,
 
 /* Return the number of wide characters in S.  */
 extern size_t wcslen (__const wchar_t *__s) __THROW __attribute_pure__;
+__END_NAMESPACE_C99
+
+#ifdef __USE_XOPEN
+/* Another name for `wcsstr' from XPG4.  */
+extern wchar_t *wcswcs (__const wchar_t *__haystack, __const wchar_t *__needle)
+     __THROW __attribute_pure__;
+#endif
 
 #ifdef __USE_GNU
 /* Return the number of wide characters in S, but at most MAXLEN.  */
@@ -227,6 +251,7 @@ extern size_t wcsnlen (__const wchar_t *__s, size_t __maxlen)
 #endif
 
 
+__BEGIN_NAMESPACE_C99
 /* Search N wide characters of S for C.  */
 extern wchar_t *wmemchr (__const wchar_t *__s, wchar_t __c, size_t __n)
      __THROW __attribute_pure__;
@@ -247,6 +272,7 @@ extern wchar_t *wmemmove (wchar_t *__s1, __const wchar_t *__s2, size_t __n)
 
 /* Set N wide characters of S to C.  */
 extern wchar_t *wmemset (wchar_t *__s, wchar_t __c, size_t __n) __THROW;
+__END_NAMESPACE_C99
 
 #ifdef __USE_GNU
 /* Copy N wide characters of SRC to DEST and return pointer to following
@@ -257,6 +283,7 @@ extern wchar_t *wmempcpy (wchar_t *__restrict __s1,
 #endif
 
 
+__BEGIN_NAMESPACE_C99
 /* Determine whether C constitutes a valid (one-byte) multibyte
    character.  */
 extern wint_t btowc (int __c) __THROW;
@@ -284,6 +311,7 @@ extern size_t __mbrlen (__const char *__restrict __s, size_t __n,
 			mbstate_t *__restrict __ps) __THROW;
 extern size_t mbrlen (__const char *__restrict __s, size_t __n,
 		      mbstate_t *__restrict __ps) __THROW;
+__END_NAMESPACE_C99
 
 #ifdef __USE_EXTERN_INLINES
 /* Define inline function as optimization.  */
@@ -293,6 +321,7 @@ extern __inline size_t mbrlen (__const char *__restrict __s, size_t __n,
 	  ? mbrtowc (NULL, __s, __n, __ps) : __mbrlen (__s, __n, NULL)); }
 #endif
 
+__BEGIN_NAMESPACE_C99
 /* Write wide character representation of multibyte character string
    SRC to DST.  */
 extern size_t mbsrtowcs (wchar_t *__restrict __dst,
@@ -304,6 +333,7 @@ extern size_t mbsrtowcs (wchar_t *__restrict __dst,
 extern size_t wcsrtombs (char *__restrict __dst,
 			 __const wchar_t **__restrict __src, size_t __len,
 			 mbstate_t *__restrict __ps) __THROW;
+__END_NAMESPACE_C99
 
 
 #ifdef	__USE_GNU
@@ -333,6 +363,7 @@ extern int wcswidth (__const wchar_t *__s, size_t __n) __THROW;
 #endif	/* Use X/Open.  */
 
 
+__BEGIN_NAMESPACE_C99
 /* Convert initial portion of the wide string NPTR to `double'
    representation.  */
 extern double wcstod (__const wchar_t *__restrict __nptr,
@@ -358,22 +389,6 @@ extern unsigned long int wcstoul (__const wchar_t *__restrict __nptr,
 				  wchar_t **__restrict __endptr, int __base)
      __THROW;
 
-#if defined __GNUC__ && defined __USE_GNU
-/* Convert initial portion of wide string NPTR to `long int'
-   representation.  */
-__extension__
-extern long long int wcstoq (__const wchar_t *__restrict __nptr,
-			     wchar_t **__restrict __endptr, int __base)
-     __THROW;
-
-/* Convert initial portion of wide string NPTR to `unsigned long long int'
-   representation.  */
-__extension__
-extern unsigned long long int wcstouq (__const wchar_t *__restrict __nptr,
-				       wchar_t **__restrict __endptr,
-				       int __base) __THROW;
-#endif /* GCC and use GNU.  */
-
 #if defined __USE_ISOC99 || (defined __GNUC__ && defined __USE_GNU)
 /* Convert initial portion of wide string NPTR to `long int'
    representation.  */
@@ -389,6 +404,23 @@ extern unsigned long long int wcstoull (__const wchar_t *__restrict __nptr,
 					wchar_t **__restrict __endptr,
 					int __base) __THROW;
 #endif /* ISO C99 or GCC and GNU.  */
+__END_NAMESPACE_C99
+
+#if defined __GNUC__ && defined __USE_GNU
+/* Convert initial portion of wide string NPTR to `long int'
+   representation.  */
+__extension__
+extern long long int wcstoq (__const wchar_t *__restrict __nptr,
+			     wchar_t **__restrict __endptr, int __base)
+     __THROW;
+
+/* Convert initial portion of wide string NPTR to `unsigned long long int'
+   representation.  */
+__extension__
+extern unsigned long long int wcstouq (__const wchar_t *__restrict __nptr,
+				       wchar_t **__restrict __endptr,
+				       int __base) __THROW;
+#endif /* GCC and use GNU.  */
 
 #ifdef __USE_GNU
 /* The concept of one static locale per category is not very well
@@ -486,6 +518,7 @@ extern unsigned long long int __wcstoull_internal (__const wchar_t *
 
 #if defined __OPTIMIZE__ && __GNUC__ >= 2
 /* Define inline functions which call the internal entry points.  */
+__BEGIN_NAMESPACE_C99
 
 extern __inline double wcstod (__const wchar_t *__restrict __nptr,
 			       wchar_t **__restrict __endptr) __THROW
@@ -498,6 +531,7 @@ extern __inline unsigned long int wcstoul (__const wchar_t *__restrict __nptr,
                                            wchar_t **__restrict __endptr,
 					   int __base) __THROW
 { return __wcstoul_internal (__nptr, __endptr, __base, 0); }
+__END_NAMESPACE_C99
 
 # ifdef __USE_GNU
 extern __inline float wcstof (__const wchar_t *__restrict __nptr,
@@ -537,6 +571,7 @@ extern wchar_t *wcpncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n)
 
 /* Wide character I/O functions.  */
 #if defined __USE_ISOC99 || defined __USE_UNIX98
+__BEGIN_NAMESPACE_C99
 
 /* Select orientation for stream.  */
 extern int fwide (__FILE *__fp, int __mode) __THROW;
@@ -582,9 +617,13 @@ extern int wscanf (__const wchar_t *__restrict __format, ...)
 extern int swscanf (__const wchar_t *__restrict __s,
 		    __const wchar_t *__restrict __format, ...)
      __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
+
+__END_NAMESPACE_C99
 #endif /* Use ISO C99 and Unix98. */
 
 #ifdef __USE_ISOC99
+__BEGIN_NAMESPACE_C99
+
 /* Read formatted input from S into argument list ARG.  */
 extern int vfwscanf (__FILE *__restrict __s,
 		     __const wchar_t *__restrict __format,
@@ -599,9 +638,12 @@ extern int vswscanf (__const wchar_t *__restrict __s,
 		     __const wchar_t *__restrict __format,
 		     __gnuc_va_list __arg)
      __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
+
+__END_NAMESPACE_C99
 #endif /* Use ISO C99. */
 
 
+__BEGIN_NAMESPACE_C99
 /* Read a character from STREAM.  */
 extern wint_t fgetwc (__FILE *__stream) __THROW;
 extern wint_t getwc (__FILE *__stream) __THROW;
@@ -630,6 +672,7 @@ extern int fputws (__const wchar_t *__restrict __ws,
 
 /* Push a character back onto the input buffer of STREAM.  */
 extern wint_t ungetwc (wint_t __wc, __FILE *__stream) __THROW;
+__END_NAMESPACE_C99
 
 
 #ifdef __USE_GNU
@@ -660,12 +703,14 @@ extern int fputws_unlocked (__const wchar_t *__restrict __ws,
 #endif
 
 
+__BEGIN_NAMESPACE_C99
 /* Format TP into S according to FORMAT.
    Write no more than MAXSIZE wide characters and return the number
    of wide characters written, or 0 if it would exceed MAXSIZE.  */
 extern size_t wcsftime (wchar_t *__restrict __s, size_t __maxsize,
 			__const wchar_t *__restrict __format,
 			__const struct tm *__restrict __tp) __THROW;
+__END_NAMESPACE_C99
 
 # ifdef __USE_GNU
 # include <xlocale.h>
