@@ -1,3 +1,9 @@
+2001-08-02  Ulrich Weigand  <uweigand@de.ibm.com>
+
+	* sysdeps/s390/s390-32/memcpy.S: Fixed incorrect use of
+	mvcle introduced by 2001-07-12 change.
+	* sysdeps/s390/s390-64/memcpy.S: Likewise.
+
 2001-07-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/getcontext.S: Don't touch the %gs
