@@ -1,3 +1,7 @@
+2000-05-24  Andreas Jaeger  <aj@suse.de>
+
+	* intl/Makefile: Run gettext-test only if msgfmt is available.
+
 2000-05-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-sym.c: Minor cleanups.
