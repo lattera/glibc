@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -120,12 +120,6 @@ __sigwait (const sigset_t *set, int *sig)
 
 
 all_done:
-  /* Cause the pointless side-effect. */
-  __sigfillset (&ss->blocked);
-  for (signo = 1; signo < NSIG; signo++)
-    if (__sigismember (&mask, signo))
-      __sigdelset (&ss->blocked, signo);
-
   spin_unlock (&ss->lock);
 
   __mach_port_destroy (__mach_task_self (), wait);

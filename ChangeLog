@@ -1,3 +1,10 @@
+Fri Jan 17 14:16:28 1997  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* stdio/vdprintf.c: Moved file to ...
+	* sysdeps/posix/vdprintf.c: Here.  De-ansideclificate.
+	* sysdeps/stub/vdprintf.c: New file.
+	* sysdeps/mach/hurd/vdprintf.c: New file.
+
 Thu Jan  9 15:59:35 1997  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/posix_opt.h: New file.

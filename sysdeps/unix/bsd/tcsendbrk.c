@@ -44,7 +44,7 @@ tcsendbreak (fd, duration)
   delay.tv_usec = duration;
 
   /* Starting sending break.  */
-  if (__ioctl (fd, TIOCSBRK, (PTR) NULL) < 0)
+  if (__ioctl (fd, TIOCSBRK, (void *) NULL) < 0)
     return -1;
 
   /* Wait DURATION microseconds.  */
@@ -52,5 +52,5 @@ tcsendbreak (fd, duration)
 		   &delay);
 
   /* Turn off the break.  */
-  return __ioctl (fd, TIOCCBRK, (PTR) NULL);
+  return __ioctl (fd, TIOCCBRK, (void *) NULL);
 }

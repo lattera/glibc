@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  Mach cthreads version.
-Copyright (C) 1996 Free Software Foundation, Inc.
+Copyright (C) 1996, 1997 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -78,5 +78,13 @@ typedef struct __libc_lock_opaque__ __libc_lock_t;
    used as argument to __libc_cleanup_region_start.  */
 #define __libc_mutex_unlock __mutex_unlock
 #endif
+
+/* XXX until cthreads supports recursive locks */
+#define __libc_lock_define_initialized_recursive __libc_lock_define_initialized
+#define __libc_lock_init_recursive __libc_lock_init
+#define __libc_lock_fini_recursive __libc_lock_fini
+#define __libc_lock_trylock_recursive __libc_lock_trylock
+#define __libc_lock_unlock_recursive __libc_lock_unlock
+#define __libc_lock_lock_recursive __libc_lock_lock
 
 #endif	/* libc-lock.h */
