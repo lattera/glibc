@@ -35,6 +35,7 @@ _dl_make_stack_executable (void **stack_endp)
     return EPERM;
   *stack_endp = NULL;
 
+#ifdef IS_IN_rtld
   if (__mprotect ((void *)_dl_hurd_data->stack_base, _dl_hurd_data->stack_size,
 		  PROT_READ|PROT_WRITE|PROT_EXEC) != 0)
     return errno;
@@ -43,5 +44,9 @@ _dl_make_stack_executable (void **stack_endp)
   GL(dl_stack_flags) |= PF_X;
 
   return 0;
+#else
+  /* We don't bother to implement this for static linking.  */
+  return ENOSYS;
+#endif
 }
 rtld_hidden_def (_dl_make_stack_executable)
