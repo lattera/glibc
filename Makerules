@@ -370,16 +370,14 @@ endif
 
 # GCC can grok options after the file name, and it looks nicer that way.
 compile.c = $(CC) $< -c $(CFLAGS) $(CPPFLAGS)
-compile.S = \
-  $(CC) $< -c $(CPPFLAGS) -DASSEMBLER $(asm-CPPFLAGS) $(ASFLAGS-$(suffix $@))
-COMPILE.S = \
-  $(CC) -c $(CPPFLAGS) -DASSEMBLER $(asm-CPPFLAGS) $(ASFLAGS-$(suffix $@))
+compile.S = $(CC) $< -c $(CPPFLAGS) $(S-CPPFLAGS) $(ASFLAGS-$(suffix $@))
+COMPILE.S = $(CC) -c $(CPPFLAGS) $(S-CPPFLAGS) $(ASFLAGS-$(suffix $@))
 COMPILE.s = $(filter-out -pipe,$(CC)) -c $(ASFLAGS)
 
 # If we want to generate MD5 checksums for the sources do this now.
 ifeq ($(md5),yes)
 generate-md5 = ; rm -f $(@:.d=.md5); \
-$(CC) -E $< $(CFLAGS) $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
+$(CC) -E $< $(CFLAGS) $(CPPFLAGS) $($(patsubst .%,%,$(suffix $(<F)))-CPPFLAGS) | \
 sed '/^\#/d;/^[[:space:]]*$$/d' | md5sum > $(@:.d=.md5)
 else
 generate-md5 =
@@ -393,11 +391,11 @@ OUTPUT_OPTION = -o $@
 # We need the $(CFLAGS) to be in there to have the right predefines during
 # the dependency run for C sources.  But having it for assembly sources can
 # get the wrong predefines.
-S-CPPFLAGS = $(asm-CPPFLAGS)
+S-CPPFLAGS = -DASSEMBLER $(asm-CPPFLAGS)
 define +make-deps
 $(make-target-directory)
 $(+mkdep) $< $(if $(filter %.c,$<),$(CFLAGS)) \
-	     $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | sed \
+	     $(CPPFLAGS) $($(patsubst .%,%,$(suffix $(<F)))-CPPFLAGS) | sed \
 -e 's,$(subst .,\.,$*)\.o,$(foreach o,$(all-object-suffixes),$(@:.d=$o)) $@,' \
 $(sed-remove-objpfx) > $(@:.d=.T)
 mv -f $(@:.d=.T) $@ $(generate-md5)
