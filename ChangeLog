@@ -1,3 +1,7 @@
+2001-09-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-object.c (_dl_new_object): Remove unnecessary if.
+
 2001-09-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/rtld.c (dl_main): Increment l_opencount for main binary.

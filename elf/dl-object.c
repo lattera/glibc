@@ -91,7 +91,7 @@ _dl_new_object (char *realname, const char *libname, int type,
 	  /* It an absolute path.  Use it.  But we have to make a copy since
 	     we strip out the trailing slash.  */
 	  size_t len = strlen (realname) + 1;
-	  origin = malloc (len);
+	  origin = (char *) malloc (len);
 	  if (origin == NULL)
 	    origin = (char *) -1;
 	  else
@@ -104,7 +104,7 @@ _dl_new_object (char *realname, const char *libname, int type,
 	  char *result = NULL;
 
 	  /* Get the current directory name.  */
-	  origin = malloc (len);
+	  origin = (char *) malloc (len);
 
 	  while (origin != NULL
 		 && (result = __getcwd (origin, len - realname_len)) == NULL
@@ -117,8 +117,7 @@ _dl_new_object (char *realname, const char *libname, int type,
 	  if (result == NULL)
 	    {
 	      /* We were not able to determine the current directory.  */
-	      if (origin != NULL)
-		free (origin);
+	      free (origin);
 	      origin = (char *) -1;
 	    }
 	  else
