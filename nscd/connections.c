@@ -345,7 +345,7 @@ cannot handle old request version %d; current version is %d"),
       else if (req > LASTDBREQ && req < LASTREQ)
 	dbg_log ("\t%s", serv2str[req->type]);
       else
-	dbg_log ("\tinvalid request type %d", req->type);
+	dbg_log (_("\tinvalid request type %d"), req->type);
     }
 
   /* Handle the request.  */
