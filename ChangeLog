@@ -1,3 +1,10 @@
+2001-04-19  Andreas Jaeger  <aj@suse.de>
+
+	* po/zh_TW.po: Remove extraneous backslashes.
+
+	* sysdeps/ieee754/dbl-64/e_sqrt.c (__ieee754_sqrt): Remove unused
+	variables b and n.
+
 2001-04-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Update.

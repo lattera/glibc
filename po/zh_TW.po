@@ -560,12 +560,12 @@ msgstr "%s: 重複的定義 `%s'"
 #: locale/programs/ld-collate.c:3792
 #, c-format
 msgid "%s: empty category description not allowed"
-msgstr "%s: 空白的類別描述是不允許\的"
+msgstr "%s: 空白的類別描述是不允許的"
 
 #: locale/programs/ld-collate.c:717
 #, c-format
 msgid "%s: empty weight string not allowed"
-msgstr "%s: 空白的權重字串是不允許\的"
+msgstr "%s: 空白的權重字串是不允許的"
 
 #: locale/programs/charmap.c:794
 #, c-format
@@ -742,12 +742,12 @@ msgstr "%s: 國家數字代碼 `%d' 錯誤"
 #: locale/programs/ld-ctype.c:2613
 #, c-format
 msgid "%s: only one `include' instruction allowed"
-msgstr "%s: 只允許\一個 `include' 指令"
+msgstr "%s: 只允許一個 `include' 指令"
 
 #: posix/getopt.c:714
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
-msgstr "%s: 選項 `%c%s' 不允許\附加引數\n"
+msgstr "%s: 選項 `%c%s' 不允許附加引數\n"
 
 #: posix/getopt.c:684
 #, c-format
@@ -762,12 +762,12 @@ msgstr "%s: 選項 `%s' 需要一個引數\n"
 #: posix/getopt.c:709
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
-msgstr "%s: 選項 `--%s' 不允許\附加引數\n"
+msgstr "%s: 選項 `--%s' 不允許附加引數\n"
 
 #: posix/getopt.c:889
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
-msgstr "%s: 選項 `-W %s' 不允許\附加引數\n"
+msgstr "%s: 選項 `-W %s' 不允許附加引數\n"
 
 #: posix/getopt.c:871
 #, c-format
@@ -797,7 +797,7 @@ msgstr "%s: 對照符號 %.*s 的順序尚未定義"
 #: sunrpc/rpc_main.c:288
 #, c-format
 msgid "%s: output would overwrite %s\n"
-msgstr "%s: 輸出將會覆蓋\ %s\n"
+msgstr "%s: 輸出將會覆蓋 %s\n"
 
 #: timezone/zic.c:874 timezone/zic.c:1288 timezone/zic.c:1313
 #, c-format
@@ -1629,7 +1629,7 @@ msgstr "DNS"
 
 #: elf/dl-open.c:106
 msgid "DST not allowed in SUID/SGID programs"
-msgstr "DST 不允許\在 SUID/SGID 的程式中"
+msgstr "DST 不允許在 SUID/SGID 的程式中"
 
 #: elf/dl-error.c:71
 msgid "DYNAMIC LINKER BUG!!!"
@@ -2040,7 +2040,7 @@ msgstr "目錄的 resync 請求已滿"
 #. TRANS install a new version of the C library or the operating system.
 #: stdio-common/../sysdeps/gnu/errlist.c:576
 msgid "Function not implemented"
-msgstr "功\能沒有實作"
+msgstr "功能沒有實作"
 
 #: nis/nis_print.c:115
 msgid "GROUP\n"
@@ -2630,7 +2630,7 @@ msgstr "在重設時網路連線漏失"
 #: stdio-common/../sysdeps/gnu/errlist.c:379
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:157
 msgid "Network is down"
-msgstr "網路停擺\"
+msgstr "網路停擺"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
@@ -2949,7 +2949,7 @@ msgstr "此項操作並不適當"
 #. TRANS or processes with special privileges can perform the operation.
 #: stdio-common/../sysdeps/gnu/errlist.c:25
 msgid "Operation not permitted"
-msgstr "此項操作並不被允許\"
+msgstr "此項操作並不被允許"
 
 #. TRANS The operation you requested is not supported.  Some socket functions
 #. TRANS don't make sense for all types of sockets, and others may not be
@@ -3029,7 +3029,7 @@ msgstr "解析錯誤: %s"
 
 #: nis/nis_error.c:55
 msgid "Partial success"
-msgstr "部份成功\"
+msgstr "部份成功"
 
 #: nis/nis_error.c:63
 msgid "Passed object is not the same object on server"
@@ -3077,7 +3077,7 @@ msgstr "印出程式版本"
 
 #: nis/nis_error.c:30
 msgid "Probable success"
-msgstr "可能成功\"
+msgstr "可能成功"
 
 #: nis/nis_error.c:32
 msgid "Probably not found"
@@ -3218,7 +3218,7 @@ msgstr "RPC: 伺服器無法將引數解碼"
 
 #: sunrpc/clnt_perr.c:163
 msgid "RPC: Success"
-msgstr "RPC: 成功\"
+msgstr "RPC: 成功"
 
 #: sunrpc/clnt_perr.c:182
 msgid "RPC: Timed out"
@@ -3511,7 +3511,7 @@ msgstr "結構需要清理"
 #: nis/nis_error.c:29 nis/ypclnt.c:786 nis/ypclnt.c:860 posix/regex.c:1080
 #: stdio-common/../sysdeps/gnu/errlist.c:20
 msgid "Success"
-msgstr "成功\"
+msgstr "成功"
 
 #: locale/programs/localedef.c:101
 msgid "Suppress warnings and information messages"
@@ -4547,7 +4547,7 @@ msgstr "fcntl: F_SETFD"
 #: sunrpc/rpc_main.c:1153
 #, c-format
 msgid "file `%s' already exists and may be overwritten\n"
-msgstr "檔案 `%s' 已經存在並有可能會被覆蓋\掉\n"
+msgstr "檔案 `%s' 已經存在並有可能會被覆蓋掉\n"
 
 #: inet/rcmd.c:422
 msgid "fstat failed"
@@ -4747,17 +4747,17 @@ msgstr "在此請求訊號中使用的鍵值太長了: %zd"
 #: elf/ldconfig.c:606
 #, c-format
 msgid "libc4 library %s in wrong directory"
-msgstr "libc4 函式庫 %s 擺\錯目錄了"
+msgstr "libc4 函式庫 %s 擺錯目錄了"
 
 #: elf/ldconfig.c:600
 #, c-format
 msgid "libc5 library %s in wrong directory"
-msgstr "libc5 函式庫 %s 擺\錯目錄了"
+msgstr "libc5 函式庫 %s 擺錯目錄了"
 
 #: elf/ldconfig.c:603
 #, c-format
 msgid "libc6 library %s in wrong directory"
-msgstr "libc6 函式庫 %s 擺\錯目錄了"
+msgstr "libc6 函式庫 %s 擺錯目錄了"
 
 #: elf/ldconfig.c:633
 #, c-format
