@@ -115,19 +115,23 @@
 #  else
 #   define SYSCALL_ERROR_HANDLER \
 	neg r0,r1; \
+	mov.l r14,@-r15; \
 	mov.l r12,@-r15; \
 	mov.l r1,@-r15; \
 	mov.l 0f,r12; \
 	mova 0f,r0; \
 	add r0,r12; \
 	sts.l pr,@-r15; \
+	mov r15,r14; \
 	mov.l 1f,r1; \
 	bsrf r1; \
          nop; \
-     2: lds.l @r15+,pr; \
+     2: mov r14,r15; \
+	lds.l @r15+,pr; \
 	mov.l @r15+,r1; \
 	mov.l r1,@r0; \
 	mov.l @r15+,r12; \
+	mov.l @r15+,r14; \
 	bra .Lpseudo_end; \
 	 mov _IMM1,r0; \
 	.align 2; \
@@ -174,6 +178,13 @@
  1: .long SYS_ify (syscall_name);	\
  2:
 
+# ifdef NEED_SYSCALL_INST_PAD
+#  define SYSCALL_INST_PAD \
+	or r0,r0; or r0,r0; or r0,r0; or r0,r0; or r0,r0
+# else
+#  define SYSCALL_INST_PAD
+# endif
+
 #else /* not __ASSEMBLER__ */
 
 #define SYSCALL_INST_STR0	"trapa #0x10\n\t"
@@ -183,6 +194,13 @@
 #define SYSCALL_INST_STR4	"trapa #0x14\n\t"
 #define SYSCALL_INST_STR5	"trapa #0x15\n\t"
 #define SYSCALL_INST_STR6	"trapa #0x16\n\t"
+
+# ifdef NEED_SYSCALL_INST_PAD
+#  define SYSCALL_INST_PAD "\
+	or r0,r0; or r0,r0; or r0,r0; or r0,r0; or r0,r0"
+# else
+#  define SYSCALL_INST_PAD
+# endif
 
 #define ASMFMT_0
 #define ASMFMT_1 \
@@ -238,23 +256,39 @@
 	register long r2 asm ("%r2") = (long)(arg7)
 
 #undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...) 			\
+#define INLINE_SYSCALL(name, nr, args...) \
+  ({                                                                          \
+    unsigned int resultvar = INTERNAL_SYSCALL (name, , nr, args);             \
+    if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (resultvar, ), 0))         \
+      {                                                                       \
+        __set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, ));                   \
+        resultvar = 0xffffffff;                                               \
+      }                                                                       \
+    (int) resultvar; })
+
+#undef INTERNAL_SYSCALL
+#define INTERNAL_SYSCALL(name, err, nr, args...) \
   ({								\
     unsigned long resultvar;					\
     register long r3 asm ("%r3") = SYS_ify (name);		\
     SUBSTITUTE_ARGS_##nr(args);					\
 								\
-    asm volatile (SYSCALL_INST_STR##nr				\
+    asm volatile (SYSCALL_INST_STR##nr SYSCALL_INST_PAD		\
 		  : "=z" (resultvar)				\
 		  : "r" (r3) ASMFMT_##nr 			\
 		  : "memory");					\
 								\
-    if (resultvar >= 0xfffff001)			        \
-      {							        \
-	__set_errno (-resultvar);				\
-	resultvar = 0xffffffff;					\
-      }								\
     (int) resultvar; })
+
+#undef INTERNAL_SYSCALL_DECL
+#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
+
+#undef INTERNAL_SYSCALL_ERROR_P
+#define INTERNAL_SYSCALL_ERROR_P(val, err) \
+  ((unsigned int) (val) >= 0xfffff001u)
+
+#undef INTERNAL_SYSCALL_ERRNO
+#define INTERNAL_SYSCALL_ERRNO(val, err)        (-(val))
 
 #endif	/* __ASSEMBLER__ */
 

@@ -1,5 +1,5 @@
 /* brk system call for Linux/SH.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ __brk (void *addr)
   register long r3 asm ("%r3") = SYS_ify (brk);
   register long r4 asm ("%r4") = (long)addr;
 
-  asm volatile ("trapa #0x11"
+  asm volatile ("trapa #0x11\n\t" SYSCALL_INST_PAD
 		: "=z"(newbrk) 
 		: "r" (r3), "r" (r4));
 

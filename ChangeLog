@@ -1,3 +1,24 @@
+2003-02-07  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* elf/tls-macros.h: Add non-PIC TLS macros and fix clobber list
+	for SH.
+	* sysdeps/unix/sysv/linux/sh/brk.c: Add SYSCALL_INST_PAD
+	after the trapa instruction.
+	* sysdeps/unix/sysv/linux/sh/clone.S (__clone): Add additional
+	parameters.
+	* sysdeps/unix/sysv/linux/sh/sh4/sysdep.h: New file.
+	(NEED_SYSCALL_INST_PAD): Define.
+	* sysdeps/unix/sysv/linux/sh/sys/user.h (start_thread): Undef to
+	avoid to use definition for the kernel.
+	* sysdeps/unix/sysv/linux/sh/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Save and restore the frame pointer.
+	(SYSCALL_INST_PAD): Define.
+	(INLINE_SYSCALL): Make use of INTERNAL_SYSCALL.
+	(INTERNAL_SYSCALL): Make use of ERR parameter. Add SYSCALL_INST_PAD
+	after trapa instruction.
+	(INTERNAL_SYSCALL_DECL, INTERNAL_SYSCALL_ERRNO,
+	INTERNAL_SYSCALL_ERROR_P): Adjust accordingly.
+
 2003-02-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* resolv/res_libc.c (_res): Ensure _res is not common symbol,
