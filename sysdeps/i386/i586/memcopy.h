@@ -1,5 +1,5 @@
 /* memcopy.h -- definitions for memory copy functions.  Pentium version.
-   Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
 This file is part of the GNU C Library.
@@ -33,11 +33,14 @@ Cambridge, MA 02139, USA.  */
     {									\
       asm volatile ("subl	$32,%2\n"				\
 		    "js		2f\n"					\
+		    "movl	0(%0),%%edx\n"	/* alloc dest line */	\
 		    "1:\n"						\
-		    "movl	0(%1),%%eax\n"				\
-		    "movl	4(%1),%%edx\n"				\
-		    "movl	%%eax,0(%0)\n"				\
-		    "movl	%%edx,4(%0)\n"				\
+		    "movl	28(%0),%%eax\n"	/* alloc dest line */	\
+		    "subl	$32,%2\n"	/* decr loop count */	\
+		    "movl	0(%1),%%eax\n"	/* U pipe */		\
+		    "movl	4(%1),%%edx\n"	/* V pipe */		\
+		    "movl	%%eax,0(%0)\n"	/* U pipe */		\
+		    "movl	%%edx,4(%0)\n"	/* V pipe */		\
 		    "movl	8(%1),%%eax\n"				\
 		    "movl	12(%1),%%edx\n"				\
 		    "movl	%%eax,8(%0)\n"				\
@@ -50,9 +53,8 @@ Cambridge, MA 02139, USA.  */
 		    "movl	28(%1),%%edx\n"				\
 		    "movl	%%eax,24(%0)\n"				\
 		    "movl	%%edx,28(%0)\n"				\
-		    "addl	$32,%1\n"				\
-		    "addl	$32,%0\n"				\
-		    "subl	$32,%2\n"				\
+		    "leal	32(%1),%1\n"	/* update src ptr */	\
+		    "leal	32(%0),%0\n"	/* update dst ptr */	\
 		    "jns	1b\n"					\
 		    "2: addl	$32,%2" :				\
 		    "=r" (dst_bp), "=r" (src_bp), "=r" (nbytes_left) :	\
@@ -66,7 +68,10 @@ Cambridge, MA 02139, USA.  */
     {									\
       asm volatile ("subl	$32,%2\n"				\
 		    "js		2f\n"					\
+		    "movl	-4(%0),%%edx\n"				\
 		    "1:\n"						\
+		    "movl	-32(%0),%%eax\n"			\
+		    "subl	$32,%2\n"				\
 		    "movl	-4(%1),%%eax\n"				\
 		    "movl	-8(%1),%%edx\n"				\
 		    "movl	%%eax,-4(%0)\n"				\
@@ -83,9 +88,8 @@ Cambridge, MA 02139, USA.  */
 		    "movl	-32(%1),%%edx\n"			\
 		    "movl	%%eax,-28(%0)\n"			\
 		    "movl	%%edx,-32(%0)\n"			\
-		    "subl	$32,%1\n"				\
-		    "subl	$32,%0\n"				\
-		    "subl	$32,%2\n"				\
+		    "leal	-32(%1),%1\n"				\
+		    "leal	-32(%0),%0\n"				\
 		    "jns	1b\n"					\
 		    "2: addl	$32,%2" :				\
 		    "=r" (dst_ep), "=r" (src_ep), "=r" (nbytes_left) :	\

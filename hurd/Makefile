@@ -51,7 +51,7 @@ routines = hurdstartup hurdinit \
 	   fopenport \
  	   vpprintf \
 	   ports-get ports-set hurdports hurdmsg \
-	   $(sig) $(dtable) hurdinline port-cleanup # report-wait
+	   $(sig) $(dtable) hurdinline port-cleanup report-wait
 sig	= hurdsig hurdfault faultexc siginfo hurd-raise preempt-sig \
 	  trampoline longjmp-ts catch-exc exc2signal hurdkill sigunwind \
 	  thread-self thread-cancel intr-msg catch-signal

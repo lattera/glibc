@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -31,9 +31,11 @@ DEFUN(fchdir, (fd), int fd)
   error_t err;
   file_t dir;
 
-  err = HURD_DPORT_USE (fd, (dir = __file_name_lookup_under (port, "",
-							     O_EXEC, 0),
-			     errno));
+  err = HURD_DPORT_USE (fd,
+			({
+			  dir = __file_name_lookup_under (port, "", O_EXEC, 0);
+			  dir == MACH_PORT_NULL ? errno : 0;
+			}));
 
   if (! err)
     _hurd_port_set (&_hurd_ports[INIT_PORT_CWDIR], dir);

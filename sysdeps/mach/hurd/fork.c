@@ -252,6 +252,12 @@ __fork (void)
 		      if (old != MACH_PORT_NULL)
 			/* XXX what to do here? */
 			__mach_port_deallocate (__mach_task_self (), old);
+		      /* The new task will receive its own exceptions
+			 on its message port.  */
+		      if (err = __task_set_special_port (newtask,
+							 TASK_EXCEPTION_PORT,
+							 port))
+			LOSE;
 		    }
 		  if (err = __mach_port_insert_right (newtask,
 						      portnames[i],

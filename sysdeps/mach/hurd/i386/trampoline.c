@@ -23,20 +23,8 @@ Cambridge, MA 02139, USA.  */
 #include <assert.h>
 #include <errno.h>
 #include "hurdfault.h"
+#include "intr-msg.h"
 
-
-struct mach_msg_trap_args
-  {
-    void *retaddr;		/* Address mach_msg_trap will return to.  */
-    /* This is the order of arguments to mach_msg_trap.  */
-    mach_msg_header_t *msg;
-    mach_msg_option_t option;
-    mach_msg_size_t send_size;
-    mach_msg_size_t rcv_size;
-    mach_port_t rcv_name;
-    mach_msg_timeout_t timeout;
-    mach_port_t notify;
-  };
 
 struct sigcontext *
 _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
@@ -94,7 +82,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	 per-thread variables, cthreads.  */
     }
   /* This code has intimate knowledge of the special mach_msg system call
-     done in intr-msg.c; that code does:
+     done in intr-msg.c; that code does (see intr-msg.h):
 					movl %esp, %ecx
 					leal ARGS, %esp
 	_hurd_intr_rpc_msg_cx_sp:	movl $-25, %eax

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(sendto, (fd, buf, n, flags, addr, addr_len),
       int fd AND PTR buf AND size_t n AND int flags AND
-      struct sockaddr *addr AND size_t addr_len)
+      const struct sockaddr *addr AND size_t addr_len)
 {
   errno = ENOSYS;
   return -1;

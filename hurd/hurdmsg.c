@@ -449,10 +449,3 @@ _S_msg_set_dtable (mach_port_t process,
 kern_return_t
 _S_msg_startup_dosync (mach_port_t process)
 { return EOPNOTSUPP; }
-
-kern_return_t
-_S_msg_report_wait (mach_port_t process,
-		    mach_port_t thread,
-		    string_t wait_desc,
-		    int *wait_rpc)
-{ return EOPNOTSUPP; }

@@ -71,6 +71,8 @@ typedef unsigned int uint;
 #ifdef __USE_BSD
 /* These size-specific names are used by some of the inet code.  */
 
+#if !defined (__GNUC__) || __GNUC__ < 2 || __GNUC_MINOR__ < 7
+
 typedef	char int8_t;
 typedef	unsigned char u_int8_t;
 typedef	short int int16_t;
@@ -81,6 +83,27 @@ typedef	unsigned int u_int32_t;
 typedef long long int int64_t;
 typedef unsigned long long int u_int64_t;
 typedef int register_t __attribute__ ((__mode__ (word)));
+#endif
+
+#else
+
+/* For GCC 2.7 and later, we can use specific type-size attributes.  */
+#define __intN_t(N, MODE) \
+  typedef int int##N##_t __attribute__ ((__mode__ (MODE)))
+#define __u_intN_t(N, MODE) \
+  typedef unsigned int u_int##N##_t __attribute__ ((__mode__ (MODE)))
+
+__intN_t (8, __QI__);
+__u_intN_t (8, __QI__);
+__intN_t (16, __HI__);
+__u_intN_t (16, __HI__);
+__intN_t (32, __SI__);
+__u_intN_t (32, __SI__);
+__intN_t (64, __DI__);
+__u_intN_t (64, __DI__);
+
+typedef int register_t __attribute__ ((__mode__ (__word__)));
+
 #endif
 
 /* Some code from BIND tests this macro to see if the types above are

@@ -1,5 +1,5 @@
 /* Machine-dependent details of interruptible RPC messaging.  i386 version.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -44,4 +44,57 @@ INTR_MSG_BACK_OUT (struct i386_thread_state *state)
     state->uesp = state->ecx;
   else
     state->ecx = state->uesp;
+}
+
+#include "hurdfault.h"
+
+static inline int
+SYSCALL_EXAMINE (struct i386_thread_state *state, int *callno)
+{
+  struct { unsigned int c[2]; } *p = (void *) (state->eip - 7);
+  int result;
+  if (_hurdsig_catch_memory_fault (p))
+    return 0;
+  if (result = p->c[0] == 0x0000009a && (p->c[1] & 0x00ffffff) == 0x00000700)
+    /* The PC is just after an `lcall $7,$0' instruction.
+       This is a system call in progress; %eax holds the call number.  */
+    *callno = state->eax;
+  _hurdsig_end_catch_fault ();
+  return result;
+}
+
+
+struct mach_msg_trap_args
+  {
+    void *retaddr;		/* Address mach_msg_trap will return to.  */
+    /* This is the order of arguments to mach_msg_trap.  */
+    mach_msg_header_t *msg;
+    mach_msg_option_t option;
+    mach_msg_size_t send_size;
+    mach_msg_size_t rcv_size;
+    mach_port_t rcv_name;
+    mach_msg_timeout_t timeout;
+    mach_port_t notify;
+  };
+
+
+static inline mach_port_t
+MSG_EXAMINE (struct i386_thread_state *state, int *msgid)
+{
+  const struct mach_msg_trap_args *args = (const void *) state->uesp;
+  mach_msg_header_t *msg;
+  mach_port_t send_port;
+
+  if (_hurdsig_catch_memory_fault (args))
+    return MACH_PORT_NULL;
+  msg = args->msg;
+  _hurdsig_end_catch_fault ();
+
+  if (_hurdsig_catch_memory_fault (msg))
+    return MACH_PORT_NULL;
+  send_port = msg->msgh_remote_port;
+  *msgid = msg->msgh_id;
+  _hurdsig_end_catch_fault ();
+
+  return send_port;
 }

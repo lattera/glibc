@@ -21,7 +21,9 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 /* Make a definition for sys_errlist.  */
 
 extern int sys_nerr;
+#ifndef HAVE_STRERROR
 extern char *sys_errlist[];
+#endif
 
 int
 main ()
@@ -35,7 +37,13 @@ main ()
   puts ("CONST char *CONST _sys_errlist[] =\n  {");
 
   for (i = 0; i < sys_nerr; ++i)
-    printf ("    \"%s\",\n", sys_errlist[i]);
+    printf ("    \"%s\",\n",
+#ifdef HAVE_STRERROR
+          strerror (i)
+#else /* ! HAVE_STRERROR */
+          sys_errlist[i]
+#endif /* HAVE_STRERROR */
+          );
 
   puts ("    NULL\n  };\n");
 

@@ -1,3 +1,63 @@
+Wed Feb  7 18:48:30 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/hurdmsg.c (_S_msg_report_wait): Function removed.
+	* hurd/report-wait.c: New file.
+	* hurd/Makefile (routines): Added report-wait.
+
+	* sysdeps/mach/hurd/Makefile (inhibit-unix-syscalls): New variable.
+
+	* sysdeps/mach/hurd/i386/intr-msg.h (struct mach_msg_trap_args):
+	New type.
+	(SYSCALL_EXAMINE, MSG_EXAMINE): New inline functions.
+	* sysdeps/mach/hurd/i386/trampoline.c (struct mach_msg_trap_args):
+	Structure moved to intr-msg.h; include that.
+
+	* time/Makefile (CFLAGS-ialloc.c): Add -Wno-unused.
+	(CFLAGS-scheck.c): New variable.
+
+	* sysdeps/mach/hurd/dl-sysdep.c (__hurd_sigthread_stack_base,
+	__hurd_sigthread_stack_end, __hurd_sigthread_variables,
+	__hurd_threadvar_stack_mask): New variables.
+
+	* sysdeps/mach/hurd/fork.c: Set the new task's exception port to
+	its new message port.
+
+	* misc/init-misc.c: Put __init_misc in the __libc_subinit set.
+
+	* configure.in (uname): Add quoting.
+
+	* sysdeps/mach/hurd/fchdir.c: Don't consult errno unless lookup fails.
+	* hurd/fchroot.c: Likewise.
+
+	* posix/sys/types.h [GCC >= 2.7]: Define intN_t/u_intN_t using
+	__attribute__ ((__mode__ (__XX__))).
+
+Wed Feb 7 03:24:05 1996 Torbjorn Granlund  <tege@tmg.se>
+
+	* sysdeps/i386/i586/memcopy.h (WORD_COPY_FWD): Manually allocate
+	destination cache lines.
+	(WORD_COPY_BWD): Likewise.
+
+Wed Feb  7 14:16:36 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/generic/Makefile (make_siglist): Get signum.h absolute
+	file name first thing, before $(native-compile) changes directories.
+
+	From Gord Matzigkeit <gord@enci.ucalgary.ca>:
+	* sysdeps/unix/make_errlist.c: Use strerror if available.
+	* sysdeps/unix/configure.in: New file
+
+	* sysdeps/unix/bsd/sun/syscalls.list: Added sigvec.
+	* sysdeps/unix/bsd/sun/sigvec.S: File removed.
+
+	* sysdeps/stub/sendto.c: Make sockaddr arg pointer to const.
+	* sysdeps/stub/connect.c: Likewise.
+	* sysdeps/stub/bind.c: Likewise.
+
+	* hurd/hurdlookup.c (__hurd_file_name_lookup_retry): RETRYNAME of
+	"" is only special for FS_RETRY_NORMAL; for FS_RETRY_REAUTH, do
+	another dir_lookup of "".
+
 Fri Feb  2 13:09:18 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/fork.c: Clear trace flag in child.

@@ -418,13 +418,16 @@ for dir in $sysnames; do
     AC_MSG_RESULT(running configure fragment for $dir)
     . $sysdep_dir/$dir/configure
   fi
+[
   if test -z "$uname"; then
     if test -r $sysdep_dir/$dir/uname.c ||
        test -r $sysdep_dir/$dir/uname.S ||
        { test -r $sysdep_dir/$dir/syscalls.list &&
 	 grep '^uname[ 	]' $sysdep_dir/$dir/syscalls.list >/dev/null; }; then
       uname=$dir
+    fi
   fi
+]dnl
 done
 
 AC_LINK_FILES(`echo $libc_link_sources`, `echo $libc_link_dests`)

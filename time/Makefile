@@ -127,4 +127,5 @@ tz-cc = $(COMPILE.c) $(+gcc-nowarn) \
 
 CFLAGS-zdump.c = -Wno-strict-prototypes
 CFLAGS-zic.c = -Wno-strict-prototypes
-CFLAGS-ialloc.c = -Wno-strict-prototypes
+CFLAGS-ialloc.c = -Wno-strict-prototypes -Wno-unused
+CFLAGS-scheck.c = -Wno-strict-prototypes -Wno-unused

@@ -38,3 +38,7 @@ __init_misc (int argc, char **argv, char **envp)
       __progname_full = argv[0];
     }
 }
+
+#ifdef HAVE_GNU_LD
+text_set_element (__libc_subinit, __init_misc);
+#endif

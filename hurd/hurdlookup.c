@@ -133,7 +133,10 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 #endif
 
 	  /* An empty RETRYNAME indicates we have the final port.  */
-	  if (retryname[0] == '\0')
+	  if (retryname[0] == '\0' &&
+	      /* If reauth'd, we must do one more retry on "" to give the new
+		 translator a chance to make a new port for us.  */
+	      doretry == FS_RETRY_NORMAL)
 	    {
 	      /* We got a successful translation.  Now apply any open-time
 		 action flags we were passed.  */
