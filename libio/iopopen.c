@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1997-2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -104,6 +104,7 @@ struct _IO_proc_file
 };
 typedef struct _IO_proc_file _IO_proc_file;
 
+static struct _IO_jump_t _IO_proc_jumps;
 static struct _IO_jump_t _IO_wproc_jumps;
 
 static struct _IO_proc_file *proc_file_chain;
@@ -284,7 +285,7 @@ _IO_new_proc_close (fp)
 #endif
 }
 
-struct _IO_jump_t _IO_proc_jumps = {
+static struct _IO_jump_t _IO_proc_jumps = {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_new_file_finish),
   JUMP_INIT(overflow, _IO_new_file_overflow),

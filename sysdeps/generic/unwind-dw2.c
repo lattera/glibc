@@ -1,5 +1,5 @@
 /* DWARF2 exception handling and frame unwind runtime interface routines.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2003 Free Software Foundation, Inc.
 
    This file is part of GNU CC.
 
@@ -783,7 +783,7 @@ execute_cfa_program (const unsigned char *insn_ptr,
 	    fs->regs.reg[reg].loc.reg = reg2;
 	  }
 	  break;
-      
+
 	case DW_CFA_remember_state:
 	  {
 	    struct frame_state_reg_info *new_rs;
@@ -852,7 +852,7 @@ execute_cfa_program (const unsigned char *insn_ptr,
 	  fs->regs.reg[reg].how = REG_SAVED_OFFSET;
 	  fs->regs.reg[reg].loc.offset = offset;
 	  break;
-	  
+
 	case DW_CFA_def_cfa_sf:
 	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp);
 	  fs->cfa_reg = ptrtmp;
@@ -971,12 +971,18 @@ typedef struct frame_state
   char saved[DWARF_FRAME_REGISTERS+1];
 } frame_state;
 
+#ifndef STATIC
+# define STATIC
+#endif
+
+STATIC
 struct frame_state * __frame_state_for (void *, struct frame_state *);
 
 /* Called from pre-G++ 3.0 __throw to find the registers to restore for
    a given PC_TARGET.  The caller should allocate a local variable of
    `struct frame_state' and pass its address to STATE_IN.  */
 
+STATIC
 struct frame_state *
 __frame_state_for (void *pc_target, struct frame_state *state_in)
 {
@@ -1037,7 +1043,7 @@ uw_update_context_1 (struct _Unwind_Context *context, _Unwind_FrameState *fs)
       /* Special handling here: Many machines do not use a frame pointer,
 	 and track the CFA only through offsets from the stack pointer from
 	 one frame to the next.  In this case, the stack pointer is never
-	 stored, so it has no saved address in the context.  What we do 
+	 stored, so it has no saved address in the context.  What we do
 	 have is the CFA from the previous stack frame.  */
       if (context->reg[fs->cfa_reg] == NULL)
 	cfa = context->cfa;
@@ -1106,7 +1112,7 @@ uw_update_context (struct _Unwind_Context *context, _Unwind_FrameState *fs)
 
 /* Fill in CONTEXT for top-of-stack.  The only valid registers at this
    level will be the return address and the CFA.  */
-   
+
 #define uw_init_context(CONTEXT)					\
 do {									\
   /* Do any necessary initialization to access arbitrary stack frames.	\

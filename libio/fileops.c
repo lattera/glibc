@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997-2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -1185,12 +1185,9 @@ _IO_file_seekoff_mmap (fp, offset, dir, mode)
   return offset;
 }
 
-_IO_off64_t
-_IO_file_seekoff_maybe_mmap (fp, offset, dir, mode)
-     _IO_FILE *fp;
-     _IO_off64_t offset;
-     int dir;
-     int mode;
+static _IO_off64_t
+_IO_file_seekoff_maybe_mmap (_IO_FILE *fp, _IO_off64_t offset, int dir,
+			     int mode)
 {
   /* We only get here when we haven't tried to read anything yet.
      So there is nothing more useful for us to do here than just

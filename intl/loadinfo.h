@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -95,7 +95,5 @@ extern int _nl_explode_name PARAMS ((char *name, const char **language,
 				     const char **territory,
 				     const char **codeset,
 				     const char **normalized_codeset));
-
-extern char *_nl_find_language PARAMS ((const char *name));
 
 #endif	/* loadinfo.h */

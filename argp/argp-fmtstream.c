@@ -1,5 +1,5 @@
 /* Word-wrapping and line-truncating streams
-   Copyright (C) 1997, 1998, 1999, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -87,8 +87,11 @@ __argp_make_fmtstream (FILE *stream,
 
   return fs;
 }
+#if 0
+/* Not exported.  */
 #ifdef weak_alias
 weak_alias (__argp_make_fmtstream, argp_make_fmtstream)
+#endif
 #endif
 
 /* Flush FS to its stream, and free it (but don't close the stream).  */
@@ -108,8 +111,11 @@ __argp_fmtstream_free (argp_fmtstream_t fs)
   free (fs->buf);
   free (fs);
 }
+#if 0
+/* Not exported.  */
 #ifdef weak_alias
 weak_alias (__argp_fmtstream_free, argp_fmtstream_free)
+#endif
 #endif
 
 /* Process FS's buffer so that line wrapping is done from POINT_OFFS to the
@@ -424,8 +430,11 @@ __argp_fmtstream_printf (struct argp_fmtstream *fs, const char *fmt, ...)
 
   return out;
 }
+#if 0
+/* Not exported.  */
 #ifdef weak_alias
 weak_alias (__argp_fmtstream_printf, argp_fmtstream_printf)
+#endif
 #endif
 
 #endif /* !ARGP_FMTSTREAM_USE_LINEWRAP */

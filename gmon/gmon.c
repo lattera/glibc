@@ -381,7 +381,14 @@ __write_profiling (void)
     write_gmon ();
   _gmonparam.state = save;
 }
+#ifndef SHARED
+/* This symbol isn't used anywhere in the DSO and it is not exported.
+   This would normally mean it should be removed to get the same API
+   in static libraries.  But since profiling is special in static libs
+   anyway we keep it.  But not when building the DSO since some
+   quality assurance tests will otherwise trigger.  */
 weak_alias (__write_profiling, write_profiling)
+#endif
 
 
 void

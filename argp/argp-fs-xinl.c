@@ -1,5 +1,5 @@
 /* Real definitions for extern inline functions in argp-fmtstream.h
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -27,6 +27,8 @@
 #define __OPTIMIZE__
 #include "argp-fmtstream.h"
 
+#if 0
+/* Not exported.  */
 /* Add weak aliases.  */
 #if _LIBC - 0 && !defined (ARGP_FMTSTREAM_USE_LINEWRAP) && defined (weak_alias)
 
@@ -38,4 +40,5 @@ weak_alias (__argp_fmtstream_set_rmargin, argp_fmtstream_set_rmargin)
 weak_alias (__argp_fmtstream_set_wmargin, argp_fmtstream_set_wmargin)
 weak_alias (__argp_fmtstream_point, argp_fmtstream_point)
 
+#endif
 #endif

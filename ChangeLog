@@ -1,5 +1,28 @@
 2003-01-07  Ulrich Drepper  <drepper@redhat.com>
 
+	Unify symbols in user namespace exported by libc.so and libc.a.
+	* argp/argp-fmtstream.c: Don't define argp_make_fmtstream,
+	argp_fmtstream_free, and argp_fmtstream_printf.
+	* argp/argp-fs-xinl.c: Don't define argp_fmtstream_putc,
+	argp_fmtstream_puts, argp_fmtstream_write, argp_fmtstream_set_lmargin,
+	argp_fmtstream_set_rmargin, argp_fmtstream_set_wmargin, and
+	argp_fmtstream_point.
+	* gmon/gmon.c: Don't define write_profiling.
+	* libio/genops.c: Don't define _cleanup.
+
+	* intl/explodename.c (_nl_find_language.c): Mark as static.
+	* intl/loadinfo.h: Remove _nl_find_language prototype.
+
+	* libio/fileops.c (_IO_file_seekoff_maybe_mmap): Mark as static.
+	* libio/libioP.h: Remove declaration.
+
+	* libio/iopopen.c (_IO_proc_jumps): Mark as static.
+	* libio/libioP.h: Remove declaration.
+
+	* sysdeps/generic/unwind-dw2.c: Mark __frame_state_for with STATIC.
+	* sysdeps/generic/framestate.c: Define STATIC before including
+	unwind-dw2.c.
+
 	* time/Versions [GLIBC_2.3.2] (libc): Export strptime_l.
 
 2003-01-06  Philip Blundell  <philb@gnu.org>

@@ -71,6 +71,9 @@
 # define DOCARGS_5	stw 7,36(1); DOCARGS_4
 # define UNDOCARGS_5	lwz 7,36(1); UNDOCARGS_4
 
+# define DOCARGS_6	stw 8,40(1); DOCARGS_5
+# define UNDOCARGS_6	lwz 8,40(1); UNDOCARGS_5
+
 # ifdef IS_IN_libpthread
 #  define CENABLE	bl JUMPTARGET(__pthread_enable_asynccancel)
 #  define CDISABLE	bl JUMPTARGET(__pthread_disable_asynccancel)

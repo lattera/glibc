@@ -1,1 +1,2 @@
-libpthread-routines += sysdep s_pread64 s_pwrite64
+# pull in __syscall_error routine
+libpthread-routines += sysdep

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -38,7 +38,9 @@
 
 /* @@ end of prolog @@ */
 
-char *
+static char *_nl_find_language PARAMS ((const char *name));
+
+static char *
 _nl_find_language (name)
      const char *name;
 {

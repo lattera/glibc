@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1995,1997-2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1997-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1264,10 +1264,6 @@ __io_defs io_defs__;
 
 #endif /* TODO */
 
-#ifdef weak_alias
-weak_alias (_IO_cleanup, _cleanup)
-#endif
-
 #ifdef text_set_element
-text_set_element(__libc_atexit, _cleanup);
+text_set_element(__libc_atexit, _IO_cleanup);
 #endif
