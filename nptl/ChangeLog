@@ -1,3 +1,10 @@
+2003-02-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/pthread_once.S (clear_once_control): Fix
+	clearing of control variable.
+	* Makefile (tests): Add tst-once3.
+	* tst-once3.c: New file.
+
 2003-02-08  kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/Makefile: New file.
