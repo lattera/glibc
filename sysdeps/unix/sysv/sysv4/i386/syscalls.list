@@ -1,0 +1,6 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+xstat		-	xstat		3	__xstat		_xstat
+fxstat		-	fxstat		3	__fxstat	_fxstat
+lxstat		-	lxstat		3	__lxstat	_lxstat
+xmknod		-	xmknod		4	__xmknod	_xmknod

@@ -1,0 +1,5 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+getdents	-	getdirentries	4	__getdirentries	getdirentries
+setsid		-	setsid		0	__setsid	setsid
+uname		-	uname		1	uname
