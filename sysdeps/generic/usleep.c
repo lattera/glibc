@@ -21,7 +21,7 @@
 /* Sleep USECONDS microseconds, or until a previously set timer goes off.  */
 void
 usleep (useconds)
-     useconds_t< useconds;
+     useconds_t useconds;
 {
 }
 

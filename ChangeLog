@@ -1,5 +1,7 @@
 1999-12-01  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/generic/usleep.c: Fix typo.
+
 	* sysdeps/unix/Makefile (param.h.dep): Filter out sys/param.h
 	itself.
 
