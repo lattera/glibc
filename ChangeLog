@@ -1,5 +1,8 @@
 1999-02-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* catgets/catgets.c: Correctly handle NLSPATH from environment
+	[PR libc/980].
+
 	* io/Makefile (routines): Add lock64.
 	* io/Versions: Add lockf64 for GLIBC_2.1.1.
 	* sysdeps/generic/lockf64.c: New file.

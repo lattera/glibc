@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+   Contributed by Ulrich Drepper, <drepper@gnu.org>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -96,7 +96,7 @@ catopen (const char *cat_name, int flag)
       else
 	nlspath = NLSPATH;
 
-      result->nlspath = __strdup (NLSPATH);
+      result->nlspath = __strdup (nlspath);
       if (result->nlspath == NULL)
 	{
 	  free ((void *) result->cat_name);
