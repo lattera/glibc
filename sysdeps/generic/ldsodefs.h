@@ -344,6 +344,8 @@ extern ElfW(Addr) _dl_symbol_value (struct link_map *map, const char *name)
 extern struct link_map _dl_rtld_map;
 /* And a pointer to the map for the main map.  */
 extern struct link_map *_dl_loaded;
+/* Number of object in the _dl_loaded list.  */
+extern unsigned int _dl_nloaded;
 /* Array representing global scope.  */
 extern struct r_scope_elem *_dl_global_scope[2];
 /* Direct pointer to the searchlist of the main object.  */
