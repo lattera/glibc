@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -138,7 +138,10 @@ get_mapping (request_type type, const char *key,
     /* Failure or timeout.  */
     goto out_close2;
 
-  if (TEMP_FAILURE_RETRY (__recvmsg (sock, &msg, 0)) != keylen)
+#ifndef MSG_NOSIGNAL
+# define MSG_NOSIGNAL 0
+#endif
+  if (TEMP_FAILURE_RETRY (__recvmsg (sock, &msg, MSG_NOSIGNAL)) != keylen)
     goto out_close2;
 
   mapfd = *(int *) CMSG_DATA (cmsg);

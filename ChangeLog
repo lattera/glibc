@@ -1,3 +1,8 @@
+2005-01-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_helper.c (get_mapping): Use MSG_NOSIGNAL if available.
+	* nscd/connections.c (send_ro_fd): Likewise.
+
 2005-01-28  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/tst-auditmod1.c: Add ia64 entries.

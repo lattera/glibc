@@ -1,5 +1,5 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1998-2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -603,7 +603,10 @@ send_ro_fd (struct database_dyn *db, char *key, int fd)
 
   /* Send the control message.  We repeat when we are interrupted but
      everything else is ignored.  */
-  (void) TEMP_FAILURE_RETRY (sendmsg (fd, &msg, 0));
+#ifndef MSG_NOSIGNAL
+# define MSG_NOSIGNAL 0
+#endif
+  (void) TEMP_FAILURE_RETRY (sendmsg (fd, &msg, MSG_NOSIGNAL));
 
   if (__builtin_expect (debug_level > 0, 0))
     dbg_log (_("provide access to FD %d, for %s"), db->ro_fd, key);
