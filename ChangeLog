@@ -1,7 +1,9 @@
 2001-02-03  Ulrich Drepper  <drepper@redhat.com>
 
-	* iconv/iconv_prog.c (main): If -f or -t argument is missing use
-	charset of the current locale.
+	* iconv/iconv_prog.c (main): If output file name is "-" write to
+	stdout.
+	(main): If -f or -t argument is missing use charset of the current
+	locale.
 
 2001-02-03  Andreas Jaeger  <aj@suse.de>
 

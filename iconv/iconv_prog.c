@@ -193,7 +193,7 @@ main (int argc, char *argv[])
     }
 
   /* Determine output file.  */
-  if (output_file != NULL)
+  if (output_file != NULL && strcmp (output_file, "-") != 0)
     {
       output = fopen (output_file, "w");
       if (output == NULL)
