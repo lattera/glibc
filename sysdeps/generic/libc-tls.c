@@ -137,10 +137,10 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 
   INSTALL_DTV ((char *) tlsblock + tcb_offset, static_dtv);
 
-  TLS_INIT_TP ((char *) tlsblock + tcb_offset, 1);
+  TLS_INIT_TP ((char *) tlsblock + tcb_offset, 0);
 # elif TLS_DTV_AT_TP
   INSTALL_DTV (tlsblock, static_dtv);
-  TLS_INIT_TP (tlsblock, 1);
+  TLS_INIT_TP (tlsblock, 0);
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif

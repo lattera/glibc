@@ -262,12 +262,12 @@ _dl_start (void *arg)
 	INSTALL_DTV ((char *) tlsblock + bootstrap_map.l_tls_offset,
 		     initdtv);
 
-	if (TLS_INIT_TP ((char *) tlsblock + bootstrap_map.l_tls_offset, 1)
+	if (TLS_INIT_TP ((char *) tlsblock + bootstrap_map.l_tls_offset, 0)
 	    != 0)
 	  _dl_fatal_printf ("cannot setup thread-local storage\n");
 # elif TLS_DTV_AT_TP
 	INSTALL_DTV (tlsblock, initdtv);
-	if (TLS_INIT_TP (tlsblock, 1) != 0)
+	if (TLS_INIT_TP (tlsblock, 0) != 0)
 	  _dl_fatal_printf ("cannot setup thread-local storage\n");
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
@@ -275,6 +275,8 @@ _dl_start (void *arg)
 
 	/* So far this is module number one.  */
 	bootstrap_map.l_tls_modid = 1;
+	/* The TP got initialized.  */
+	bootstrap_map.l_tls_tp_initialized = 1;
 
 	/* There can only be one PT_TLS entry.  */
 	break;
@@ -371,6 +373,8 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
       GL(dl_rtld_map).l_tls_initimage = bootstrap_map_p->l_tls_initimage;
       GL(dl_rtld_map).l_tls_offset = bootstrap_map_p->l_tls_offset;
       GL(dl_rtld_map).l_tls_modid = 1;
+      GL(dl_rtld_map).l_tls_tp_initialized
+	= bootstrap_map_p->l_tls_tp_initialized;
     }
 #endif
 
@@ -1476,7 +1480,15 @@ cannot allocate TLS data structures for initial thread");
       _dl_allocate_tls_init (tcbp);
 
       /* And finally install it for the main thread.  */
-      TLS_INIT_TP (tcbp, 0);
+# ifndef HAVE___THREAD
+      TLS_INIT_TP (tcbp, GL(dl_rtld_map).l_tls_tp_initialized);
+# else
+      /* If the compiler supports the __thread keyword we know that
+	 at least ld.so itself uses TLS and therefore the thread
+	 pointer was initialized earlier.  */
+      assert (GL(dl_rtld_map).l_tls_tp_initialized != 0);
+      TLS_INIT_TP (tcbp, 1);
+# endif
     }
 #endif
 

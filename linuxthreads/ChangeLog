@@ -1,5 +1,12 @@
 2002-08-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/tls.h (TLS_DO_SET_THREAD_AREA): Second parameter is
+	renamed to secondcall and use is negated.
+	(TLS_SETUP_GS_SEGMENT): Likewise.
+	(TLS_INIT_TP): Likewise.
+	* sysdeps/sh/tls.h (TLS_INIT_TP): Second parameter is renamed to
+	secondcall.
+
 	* sysdeps/i386/tls.h: Use 32-bit operations when handling segment
 	registers.  No need to mask upper 16 bits in this case.
 	* sysdeps/i386/useldt.h: Likewise.
