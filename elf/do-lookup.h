@@ -149,9 +149,9 @@ FCT (const char *undef_name, struct link_map *undef_map,
 	 default version we still accept this symbol since there are
 	 no possible ambiguities.  */
 #if VERSIONED
-	sym = NULL;
+      sym = NULL;
 #else
-	sym = num_versions == 1 ? versioned_sym : NULL;
+      sym = num_versions == 1 ? versioned_sym : NULL;
 #endif
 
       if (sym != NULL

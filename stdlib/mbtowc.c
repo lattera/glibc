@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdlib.h>
+#include <string.h>
 #include <wchar.h>
 #include <gconv.h>
 #include <wcsmbs/wcsmbsload.h>

@@ -89,7 +89,7 @@ do_dlsym (void *ptr)
 static void
 do_dlclose (void *ptr)
 {
-    _dl_close ((struct link_map *) ptr);
+  _dl_close ((struct link_map *) ptr);
 }
 
 /* ... and these functions call dlerror_run. */
