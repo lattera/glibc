@@ -59,7 +59,7 @@ endif
 librt-tests = ex10 ex11
 tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 $(librt-tests) ex12 ex13 joinrace \
 	tststack $(tests-nodelete-$(have-z-nodelete)) ecmutex ex14 ex15 ex16 \
-	ex17 tst-cancel
+	ex17 #tst-cancel
 
 ifeq (yes,$(build-shared))
 tests-nodelete-yes = unload

@@ -25,15 +25,6 @@ cleanup (void *arg)
 }
 
 
-volatile int cleanupokcnt;
-
-static void
-cleanupok (void *arg)
-{
-  ++cleanupokcnt;
-}
-
-
 static void *
 t1 (void *arg)
 {
@@ -60,6 +51,16 @@ t2 (void *arg)
   inner ((int) (long int) arg);
   return NULL;
   pthread_cleanup_pop (0);
+}
+
+
+/* This does not work yet.  */
+volatile int cleanupokcnt;
+
+static void
+cleanupok (void *arg)
+{
+  ++cleanupokcnt;
 }
 
 

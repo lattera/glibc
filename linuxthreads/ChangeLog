@@ -1,5 +1,7 @@
 2001-04-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Comment out tst-cancel for now.
+
 	* tst-cancel.c (main): Cleanup 4 is supposed to run.  Create
 	temporary file in object directory.
 	* Makefile: Don't allow inlining when compiling tst-cancel.c.

@@ -22,7 +22,14 @@
 #include "restart.h"
 #include <stackinfo.h>
 
-#include <stdio.h>
+#ifdef _STACK_GROWS_DOWN
+# define FRAME_LEFT(frame, other) ((char *) frame >= (char *) other)
+#elif _STACK_GROWS_UP
+# define FRAME_LEFT(frame, other) ((char *) frame <= (char *) other)
+#else
+# error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
+#endif
+
 
 int pthread_setcancelstate(int state, int * oldstate)
 {
@@ -125,18 +132,8 @@ void _pthread_cleanup_push(struct _pthread_cleanup_buffer * buffer,
   buffer->__routine = routine;
   buffer->__arg = arg;
   buffer->__prev = THREAD_GETMEM(self, p_cleanup);
-  if (buffer->__prev != NULL)
-    {
-#if _STACK_GROWS_DOWN
-      if ((char *) buffer >= (char *) buffer->__prev)
-	buffer->__prev = NULL;
-#elif _STACK_GROWS_UP
-      if ((char *) buffer <= (char *) buffer->__prev)
-	buffer->__prev = NULL;
-#else
-# error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
-#endif
-    }
+  if (buffer->__prev != NULL && FRAME_LEFT (buffer, buffer->__prev))
+    buffer->__prev = NULL;
   THREAD_SETMEM(self, p_cleanup, buffer);
 }
 
@@ -156,16 +153,8 @@ void _pthread_cleanup_push_defer(struct _pthread_cleanup_buffer * buffer,
   buffer->__arg = arg;
   buffer->__canceltype = THREAD_GETMEM(self, p_canceltype);
   buffer->__prev = THREAD_GETMEM(self, p_cleanup);
-  if (buffer->__prev != NULL)
-    {
-#if _STACK_GROWS_DOWN
-      if ((char *) buffer >= (char *) buffer->__prev)
-	buffer->__prev = NULL;
-#elif _STACK_GROWS_UP
-      if ((char *) buffer <= (char *) buffer->__prev)
-	buffer->__prev = NULL;
-#endif
-    }
+  if (buffer->__prev != NULL && FRAME_LEFT (buffer, buffer->__prev))
+    buffer->__prev = NULL;
   THREAD_SETMEM(self, p_canceltype, PTHREAD_CANCEL_DEFERRED);
   THREAD_SETMEM(self, p_cleanup, buffer);
 }
@@ -186,18 +175,30 @@ void _pthread_cleanup_pop_restore(struct _pthread_cleanup_buffer * buffer,
 void __pthread_perform_cleanup(char *currentframe)
 {
   pthread_descr self = thread_self();
-  struct _pthread_cleanup_buffer * c;
+  struct _pthread_cleanup_buffer *c = THREAD_GETMEM(self, p_cleanup);
+  struct _pthread_cleanup_buffer *last;
 
-  for (c = THREAD_GETMEM(self, p_cleanup); c != NULL; c = c->__prev)
+  if (c != NULL)
+    while (FRAME_LEFT (currentframe, c))
+      {
+	last = c;
+	c = c->__prev;
+
+	if (c == NULL || FRAME_LEFT (last, c))
+	  {
+	    c = NULL;
+	    break;
+	  }
+      }
+
+  while (c != NULL)
     {
-#if _STACK_GROWS_DOWN
-      if ((char *) c <= currentframe)
-	break;
-#elif _STACK_GROWS_UP
-      if ((char *) c >= currentframe)
-	break;
-#endif
       c->__routine(c->__arg);
+
+      last = c;
+      c = c->__prev;
+      if (! FRAME_LEFT (last, c))
+	break;
     }
 
   /* And the TSD which needs special help.  */
