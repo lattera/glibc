@@ -42,6 +42,14 @@ eintr_source (void *arg)
 {
   struct timespec ts = { .tv_sec = 0, .tv_nsec = 500000 };
 
+  if (arg == NULL)
+    {
+      sigset_t ss;
+      sigemptyset (&ss);
+      sigaddset (&ss, the_sig);
+      pthread_sigmask (SIG_BLOCK, &ss, NULL);
+    }
+
   while (1)
     {
       if (arg != NULL)

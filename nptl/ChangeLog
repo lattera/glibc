@@ -1,3 +1,12 @@
+2003-12-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-eintr5.
+	* tst-eintr5.c: New file.
+
+	* eintr.c (eintr_source): Prevent sending signal to self.
+
+	* tst-eintr2.c (tf1): Improve error message.
+
 2003-12-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/Makefile (CFLAGS-getpid.c): Define.
