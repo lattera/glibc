@@ -691,7 +691,11 @@ print_partial_compiled_pattern (start, end)
   /* Loop over pattern commands.  */
   while (p < pend)
     {
-      printf ("%d:\t", p - start);
+#ifdef _LIBC
+      printf ("%t:\t", p - start);
+#else
+      printf ("%ld:\t", (long int) (p - start));
+#endif
 
       switch ((re_opcode_t) *p++)
 	{
@@ -781,17 +785,30 @@ print_partial_compiled_pattern (start, end)
 
 	case on_failure_jump:
           extract_number_and_incr (&mcnt, &p);
-  	  printf ("/on_failure_jump to %d", p + mcnt - start);
+#ifdef _LIBC
+  	  printf ("/on_failure_jump to %t", p + mcnt - start);
+#else
+  	  printf ("/on_failure_jump to %ld", (long int) (p + mcnt - start));
+#endif
           break;
 
 	case on_failure_keep_string_jump:
           extract_number_and_incr (&mcnt, &p);
-  	  printf ("/on_failure_keep_string_jump to %d", p + mcnt - start);
+#ifdef _LIBC
+  	  printf ("/on_failure_keep_string_jump to %t", p + mcnt - start);
+#else
+  	  printf ("/on_failure_keep_string_jump to %ld",
+		  (long int) (p + mcnt - start));
+#endif
           break;
 
 	case dummy_failure_jump:
           extract_number_and_incr (&mcnt, &p);
-  	  printf ("/dummy_failure_jump to %d", p + mcnt - start);
+#ifdef _LIBC
+  	  printf ("/dummy_failure_jump to %t", p + mcnt - start);
+#else
+  	  printf ("/dummy_failure_jump to %ld", (long int) (p + mcnt - start));
+#endif
           break;
 
 	case push_dummy_failure:
@@ -800,29 +817,50 @@ print_partial_compiled_pattern (start, end)
 
         case maybe_pop_jump:
           extract_number_and_incr (&mcnt, &p);
-  	  printf ("/maybe_pop_jump to %d", p + mcnt - start);
+#ifdef _LIBC
+  	  printf ("/maybe_pop_jump to %t", p + mcnt - start);
+#else
+  	  printf ("/maybe_pop_jump to %ld", (long int) (p + mcnt - start));
+#endif
 	  break;
 
         case pop_failure_jump:
 	  extract_number_and_incr (&mcnt, &p);
-  	  printf ("/pop_failure_jump to %d", p + mcnt - start);
+#ifdef _LIBC
+  	  printf ("/pop_failure_jump to %t", p + mcnt - start);
+#else
+  	  printf ("/pop_failure_jump to %ld", (long int) (p + mcnt - start));
+#endif
 	  break;
 
         case jump_past_alt:
 	  extract_number_and_incr (&mcnt, &p);
-  	  printf ("/jump_past_alt to %d", p + mcnt - start);
+#ifdef _LIBC
+  	  printf ("/jump_past_alt to %t", p + mcnt - start);
+#else
+  	  printf ("/jump_past_alt to %ld", (long int) (p + mcnt - start));
+#endif
 	  break;
 
         case jump:
 	  extract_number_and_incr (&mcnt, &p);
-  	  printf ("/jump to %d", p + mcnt - start);
+#ifdef _LIBC
+  	  printf ("/jump to %t", p + mcnt - start);
+#else
+  	  printf ("/jump to %ld", (long int) (p + mcnt - start));
+#endif
 	  break;
 
         case succeed_n:
           extract_number_and_incr (&mcnt, &p);
 	  p1 = p + mcnt;
           extract_number_and_incr (&mcnt2, &p);
-	  printf ("/succeed_n to %d, %d times", p1 - start, mcnt2);
+#ifdef _LIBC
+	  printf ("/succeed_n to %t, %d times", p1 - start, mcnt2);
+#else
+	  printf ("/succeed_n to %ld, %d times",
+		  (long int) (p1 - start), mcnt2);
+#endif
           break;
 
         case jump_n:
@@ -836,7 +874,12 @@ print_partial_compiled_pattern (start, end)
           extract_number_and_incr (&mcnt, &p);
 	  p1 = p + mcnt;
           extract_number_and_incr (&mcnt2, &p);
-	  printf ("/set_number_at location %d to %d", p1 - start, mcnt2);
+#ifdef _LIBC
+	  printf ("/set_number_at location %t to %d", p1 - start, mcnt2);
+#else
+	  printf ("/set_number_at location %ld to %d",
+		  (long int) (p1 - start), mcnt2);
+#endif
           break;
 
         case wordbound:
@@ -903,7 +946,11 @@ print_partial_compiled_pattern (start, end)
       putchar ('\n');
     }
 
-  printf ("%d:\tend of pattern.\n", p - start);
+#ifdef _LIBC
+  printf ("%t:\tend of pattern.\n", p - start);
+#else
+  printf ("%ld:\tend of pattern.\n", (long int) (p - start));
+#endif
 }
 
 
@@ -923,7 +970,11 @@ print_compiled_pattern (bufp)
       print_fastmap (bufp->fastmap);
     }
 
-  printf ("re_nsub: %d\t", bufp->re_nsub);
+#ifdef _LIBC
+  printf ("re_nsub: %Zd\t", bufp->re_nsub);
+#else
+  printf ("re_nsub: %ld\t", (long int) bufp->re_nsub);
+#endif
   printf ("regs_alloc: %d\t", bufp->regs_allocated);
   printf ("can_be_null: %d\t", bufp->can_be_null);
   printf ("newline_anchor: %d\n", bufp->newline_anchor);

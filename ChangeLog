@@ -1,3 +1,17 @@
+2000-03-20  Richard Henderson  <rth@cygnus.com>
+
+	* nis/nss_nis/nis-service.c (_nss_nis_getservbyport_r): Last
+	argument to yperr2nss is an int, not size_t.
+	* posix/regex.c (print_partial_compiled_pattern): Cast all
+	ptrdiff_t to long for printing.
+	(print_compiled_pattern): Use Z for printing size_t.
+	* posix/testfnm.c (tests): Avoid trigraphs.
+	* sysdeps/alpha/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE):
+	Use a C comment, not an assembly comment.
+
+	* sysdeps/unix/sysv/linux/alpha/msgctl.c: Clarify use
+	of __ASSUME_32BITUIDS.
+
 2000-03-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/iofopncook.c: Remove K&R prototypes.

@@ -325,6 +325,7 @@ _nss_nis_getservbyport_r (int port, char *protocol, struct servent *serv,
       char key[100 + strlen (protocol) + 2];
       char *domain, *result;
       size_t keylen, len;
+      int int_len;
 
       /* If this fails, the other solution will also fail. */
       if (yp_get_default_domain (&domain))
@@ -333,7 +334,8 @@ _nss_nis_getservbyport_r (int port, char *protocol, struct servent *serv,
       /* key is: "port/protocol" */
       keylen = snprintf (key, sizeof (key), "%d/%s", port, protocol);
       status = yperr2nss (yp_match (domain, "services.byname", key,
-				    keylen, &result, &len));
+				    keylen, &result, &int_len));
+      len = int_len;
 
       /* If we found the key, it's ok and parse the result. If not,
 	 fall through and parse the complete table. */
