@@ -1,3 +1,12 @@
+1999-01-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-close.c: Rewrite the way adding to the global scope works
+	to handle error cases better than the last change.
+	The l_global flag is now only set when the object is actually
+	counted in the global scope list.
+	* elf/dl-deps.c: Likewise.
+	* elf/dl-open.c: Likewise.
+
 1999-01-20  Philip Blundell  <pb@nexus.co.uk>
 
 	* sysdeps/unix/sysv/linux/arm/sigaction.c: New file.

@@ -1,5 +1,5 @@
 /* Load the dependencies of a mapped object.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -93,6 +93,7 @@ _dl_map_object_deps (struct link_map *map,
   struct list known[1 + npreloads + 1];
   struct list *runp, *utail, *dtail;
   unsigned int nlist, nduplist, i;
+  unsigned int to_add = 0;
 
   inline void preload (struct link_map *map)
     {
@@ -416,7 +417,6 @@ _dl_map_object_deps (struct link_map *map,
   if (global_scope)
     {
       unsigned int cnt;
-      unsigned int to_add = 0;
       struct link_map **new_global;
 
       /* Count the objects we have to put in the global scope.  */
@@ -479,16 +479,13 @@ _dl_map_object_deps (struct link_map *map,
       for (cnt = 0; cnt < nlist; ++cnt)
 	if (map->l_searchlist.r_list[cnt]->l_global == 0)
 	  {
-	    map->l_searchlist.r_list[cnt]->l_global = 1;
 	    _dl_main_searchlist->r_list[_dl_main_searchlist->r_nlist + to_add]
 	      = map->l_searchlist.r_list[cnt];
 	    ++to_add;
 	  }
 
       /* XXX Do we have to add something to r_dupsearchlist???  --drepper */
-
-      return to_add;
     }
 
-  return 0;
+  return to_add;
 }

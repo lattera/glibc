@@ -144,9 +144,9 @@ dl_open_worker (void *a)
     (*(void (*) (int, char **, char **)) init) (__libc_argc, __libc_argv,
 						__environ);
 
-  if (new->l_global)
-    /* Now we can make the new map available in the global scope.  */
-    _dl_main_searchlist->r_nlist += global_add;
+  /* Now we can make the new map available in the global scope.  */
+  while (global_add-- > 0)
+    _dl_main_searchlist->r_list[_dl_main_searchlist->r_nlist++]->l_global = 1;
 
   if (_dl_sysdep_start == NULL)
     /* We must be the static _dl_open in libc.a.  A static program that

@@ -849,16 +849,16 @@ Another problem is that older binaries that were linked statically against
 glibc 2.0 will reference the older nss modules (libnss_files.so.1 instead of
 libnss_files.so.2), so don't remove them.  Also, the old glibc-2.0 compiled
 static libraries (libfoo.a) which happen to depend on the older libio
-behavior will be broken by the glibc 2.1 upgrade.  The idea is to produce a
-libcompat.a that people will be able to use to link in if they want to
-compile a static library generated against glibc 2.0 into a program on a
-glibc 2.1 system.  You should just add -lcompat and you should be fine.
+behavior will be broken by the glibc 2.1 upgrade.  We plan to produce a
+compatibility library that people will be able to link in if they want
+to compile a static library generated against glibc 2.0 into a program
+on a glibc 2.1 system.  You just add -lcompat and you should be fine.
 
-The glibc-compat add-on will provide the libnss_* files and other stuff so
-that it is possible to use static library compiled against glibc 2.0 for
-development on a glibc 2.1 based system.  Please note that this is currently
-just an experiment, although the nss modules part should work.
-
+The glibc-compat add-on will provide the libcompat.a library, the older
+nss modules, and a few other files.  Together, they should make it
+possible to do development with old static libraries on a glibc 2.1
+system.  This add-on is still in development.  You can get it from <URL>
+but please keep in mind that it is experimental.
 
 ? Source and binary incompatibilities, and what to do about them
 

@@ -106,36 +106,15 @@ _dl_close (struct link_map *map)
 	      int cnt = _dl_main_searchlist->r_nlist;
 
 	      do
-		if (--cnt < 0)
-		  break;
+		--cnt;
 	      while (_dl_main_searchlist->r_list[cnt] != imap);
 
-	      if (cnt >= 0)
-		{
-		  /* The object was already correctly registered.  */
-		  while (++cnt < _dl_main_searchlist->r_nlist)
-		    _dl_main_searchlist->r_list[cnt - 1]
-		      = _dl_main_searchlist->r_list[cnt];
+	      /* The object was already correctly registered.  */
+	      while (++cnt < _dl_main_searchlist->r_nlist)
+		_dl_main_searchlist->r_list[cnt - 1]
+		  = _dl_main_searchlist->r_list[cnt];
 
-		  --_dl_main_searchlist->r_nlist;
-		}
-	      else
-		{
-		  /* This can happen if loading was interrupted by something
-		     like a missing symbol in the newly loaded objects.  In
-		     this case the object is already marked as global but
-		     `r_nlist' does not count it in.  The pointer is in the
-		     `r_list' array so we keep searching in the other
-		     direction.  */
-		  cnt = _dl_main_searchlist->r_nlist;
-		  while (_dl_main_searchlist->r_list[cnt] != imap)
-		    {
-		      ++cnt;
-		      /* Note that if _dl_global_scope_alloc is zero we
-			 should never come here in the first place.  */
-		      assert (cnt < _dl_global_scope_alloc);
-		    }
-		}
+	      --_dl_main_searchlist->r_nlist;
 	    }
 
 	  /* We can unmap all the maps at once.  We determined the
