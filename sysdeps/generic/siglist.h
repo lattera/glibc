@@ -67,7 +67,7 @@
 #endif
 #ifdef SIGINFO
   init_sig (SIGINFO, "INFO", N_("Information request"))
-#elif defined(SIGPWR)
+#elif defined(SIGPWR) && (!defined(SIGLOST) || (SIGPWR != SIGLOST))
   init_sig (SIGPWR, "PWR", N_("Power failure"))
 #endif
 #ifdef SIGLOST

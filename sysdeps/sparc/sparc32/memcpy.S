@@ -163,16 +163,10 @@
 	b		3f
 	 sub		%o0, 2, %o0
 
-0:	retl
-	 nop		! Only bcopy returns here and it retuns void...
-
 ENTRY(bcopy)
 	mov		%o0, %o3
 	mov		%o1, %o0
 	mov		%o3, %o1
-	tst		%o2
-	bcs		0b
-	 /* Do the cmp in the delay slot */
 END(bcopy)
 ENTRY(memmove)
 	cmp		%o0, %o1
