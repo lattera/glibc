@@ -44,13 +44,6 @@ _dl_sysdep_open_zero_fill (void)
 }
 #endif
 
-/* This should never be called.  */
-void
-_dl_sysdep_fatal (void)
-{
-  assert (! "_dl_sysdep_fatal called");
-}
-
 /* Read the whole contents of FILE into new mmap'd space with given
    protections.  *SIZEP gets the size of the file.  */
 

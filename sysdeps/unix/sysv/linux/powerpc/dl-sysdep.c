@@ -24,8 +24,6 @@
 #include <fcntl.h>
 #include <link.h>
 #include <unistd.h>
-#include <stdarg.h>
-#include <string.h>
 
 
 extern int _dl_argc;

@@ -973,8 +973,10 @@ comma (unsigned col, struct pentry_state *pest)
       if (pest->hhstate->sep_groups && pe && pest->entry->group != pe->group)
 	__argp_fmtstream_putc (pest->stream, '\n');
 
-      if (pe && cl && pe->cluster != cl && cl->header && *cl->header
-	  && !hol_cluster_is_child (pe->cluster, cl))
+      if (cl && cl->header && *cl->header
+	  && (!pe
+	      || (pe->cluster != cl
+		  && !hol_cluster_is_child (pe->cluster, cl))))
 	/* If we're changing clusters, then this must be the start of the
 	   ENTRY's cluster unless that is an ancestor of the previous one
 	   (in which case we had just popped into a sub-cluster for a bit).
@@ -1305,17 +1307,19 @@ argp_args_levels (const struct argp *argp)
    updated by this routine for the next call if ADVANCE is true.  True is
    returned as long as there are more patterns to output.  */
 static int
-argp_args_usage (const struct argp *argp, char **levels, int advance,
-		 argp_fmtstream_t stream)
+argp_args_usage (const struct argp *argp, const struct argp_state *state,
+		 char **levels, int advance, argp_fmtstream_t stream)
 {
   char *our_level = *levels;
   int multiple = 0;
   const struct argp_child *child = argp->children;
-  const char *doc = gettext (argp->args_doc), *nl = 0;
+  const char *tdoc = gettext (argp->args_doc), *nl = 0;
+  const char *fdoc = filter_doc (tdoc, ARGP_KEY_HELP_ARGS_DOC,
+				 state ? state->argp : 0, state);
 
-  if (doc)
+  if (fdoc)
     {
-      nl = strchr (doc, '\n');
+      nl = strchr (fdoc, '\n');
       if (nl)
 	/* This is a `multi-level' args doc; advance to the correct position
 	   as determined by our state in LEVELS, and update LEVELS.  */
@@ -1323,22 +1327,24 @@ argp_args_usage (const struct argp *argp, char **levels, int advance,
 	  int i;
 	  multiple = 1;
 	  for (i = 0; i < *our_level; i++)
-	    doc = nl + 1, nl = strchr (doc, '\n');
+	    fdoc = nl + 1, nl = strchr (fdoc, '\n');
 	  (*levels)++;
 	}
       if (! nl)
-	nl = doc + strlen (doc);
+	nl = fdoc + strlen (fdoc);
 
       /* Manually do line wrapping so that it (probably) won't get wrapped at
 	 any embedded spaces.  */
-      space (stream, 1 + nl - doc);
+      space (stream, 1 + nl - fdoc);
 
-      __argp_fmtstream_write (stream, doc, nl - doc);
+      __argp_fmtstream_write (stream, fdoc, nl - fdoc);
     }
+  if (fdoc && fdoc != tdoc)
+    free ((char *)fdoc);	/* Free user's modified doc string.  */
 
   if (child)
     while (child->argp)
-      advance = !argp_args_usage ((child++)->argp, levels, advance, stream);
+      advance = !argp_args_usage ((child++)->argp, state, levels, advance, stream);
 
   if (advance && multiple)
     /* Need to increment our level.  */
@@ -1517,7 +1523,7 @@ _help (const struct argp *argp, const struct argp_state *state, FILE *stream,
 	      flags |= ARGP_HELP_SHORT_USAGE; /* But only do so once.  */
 	    }
 
-	  more_patterns = argp_args_usage (argp, &levels, 1, fs);
+	  more_patterns = argp_args_usage (argp, state, &levels, 1, fs);
 
 	  __argp_fmtstream_set_wmargin (fs, old_wm);
 	  __argp_fmtstream_set_lmargin (fs, old_lm);

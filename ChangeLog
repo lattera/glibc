@@ -1,3 +1,31 @@
+1997-05-21 17:50  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile (dl-routines): Add dl-sysdepio.
+	* elf/dl-support.c (_dl_sysdep_fatal): Removed.
+	* sysdeps/generic/dl-sysdep.c: Move definition of _dl_sysdep_fatal,
+	_dl_sysdep_error and _dl_sysdep_warning to ...
+	* sysdeps/generic/dl-sysdepio.c: ...here.
+	* sysdeps/mach/hurd/dl-sysdep.c: Move the functions to ...
+	* sysdeps/mach/hurd/dl-sysdepio.c: ...here.
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c: Remove definition
+	of functions.
+	Bug reported by Marcus G. Daniels <marcus@cathcart.sysc.pdx.edu>.
+
+	* db/Makefile (libdb.so): Depend on libc.so for dynamic loading
+	and for Linux ld.so.
+	* login/Makefile (libutil.so): Likewise.
+	* math/Makefile (libm.so): Likewise.
+	* md5-crypt/Makefile (libcrypt.so): Likewise.
+	* nis/Makefile (libnss_%.so): Likewise.
+	* resolv/Makefile (libnss_dns.so): Likewise.
+
+1997-05-20 14:01  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* argp-help.c (_help): Supply STATE to argp_args_usage.
+	(argp_args_usage): Add filtering of the args doc string.
+	(comma): Print cluster headers for the first entry too.
+	* argp.h (ARGP_KEY_HELP_ARGS_DOC): New macro.
+
 1997-05-21 02:49  Ulrich Drepper  <drepper@cygnus.com>
 
 	* gnu-versions.h (_GNU_OBSTACK_INTERFACE_VERSION): Set to 2 since
@@ -20,6 +48,7 @@
 	* string/tst-svc.c: New file.  Test for strverscmp.
 	* string/tst-svc.input: New file.  Input data for tst-svc.
 	* string/tst-svc.expect: New file.  Expected out from tst-svc.
+	Patches by Jean-François Bignolles <bignolle@ecoledoc.ibp.fr>.
 
 	* math/Makefile (calls): Add s_signbit.
 
@@ -29,7 +58,7 @@
 	* sunrpc/pmap_rmt.c: Likewise.
 
 	* string/basename.c: Don't use ISO C definition style.
-	Include <config.h> is HAVE_CONFIG_H is defined.
+	Include <config.h> if HAVE_CONFIG_H is defined.
 
 	* sunrpc/proto.h: Add `const' wherever possible.
 	* sunrpc/rpc_cout.c: Likewise.
@@ -39,7 +68,7 @@
 	* sunrpc/xdr_stdio.c: Likewise.
 	* sunrpc/rpc_parse.c: Delete comma from end of enum definition.
 	* sunrpc/xdr.c: Little code cleanups.
-	* sunrpc/xdr_flaot.c: Likewise.
+	* sunrpc/xdr_float.c: Likewise.
 	Patches by Matthew Wilcox <matthew.wilcox@chbs.mhs.ciba.com>.
 
 	* sysdeps/i386/fpu/__math.h (__finite): Fix typo.

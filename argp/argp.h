@@ -242,6 +242,7 @@ struct argp
 /* Explanatory note emitted when duplicate option arguments have been
    suppressed.  */
 #define ARGP_KEY_HELP_DUP_ARGS_NOTE 0x2000005
+#define ARGP_KEY_HELP_ARGS_DOC	0x2000006 /* Argument doc string.  */
 
 /* When an argp has a non-zero CHILDREN field, it should point to a vector of
    argp_child structures, each of which describes a subsidiary argp.  */

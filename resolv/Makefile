@@ -56,4 +56,4 @@ CPPFLAGS += -Dgethostbyname=res_gethostbyname \
 $(objpfx)libresolv.so: $(common-objpfx)libc.so
 
 # The DNS NSS modules needs the resolver.
-$(objpfx)libnss_dns.so: $(objpfx)libresolv.so
+$(objpfx)libnss_dns.so: $(objpfx)libresolv.so $(common-objpfx)libc.so

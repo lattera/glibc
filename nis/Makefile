@@ -73,7 +73,7 @@ $(objpfx)libnss_nisplus.so: $(objpfx)libnsl.so$(libnsl.so-version)
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
 # a statically-linked program that hasn't already loaded it.
-$(services:%=$(objpfx)libnss_%.so): $(common-objpfx)libc.so
+$(services:%=$(objpfx)libnss_%.so) $(objpfx)libnsl.so: $(common-objpfx)libc.so
 
 
 ifeq ($(build-shared),yes)

@@ -64,3 +64,8 @@ $(objpfx)$(patsubst %,$(libtype$o),md5crypt): \
 endef
 object-suffixes-left = $(object-suffixes)
 include $(patsubst %,$(..)o-iterator.mk,$(object-suffixes))
+
+# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
+# This ensures they will load libc.so for needed symbols if loaded by
+# a statically-linked program that hasn't already loaded it.
+$(objpfx)libcrypt.so: $(common-objpfx)libc.so
