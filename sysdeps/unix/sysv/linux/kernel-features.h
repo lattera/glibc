@@ -196,9 +196,11 @@
 # define __ASSUME_AT_XID		1
 #endif
 
-/* Starting with 2.4.5 kernels PPC passes the AUXV in the standard way.  */
+/* Starting with 2.4.5 kernels PPC passes the AUXV in the standard way
+   and the vfork syscall made it into the official kernel.  */
 #if __LINUX_KERNEL_VERSION >= (132096+5) && defined __powerpc__
 # define __ASSUME_STD_AUXV		1
+# define __ASSUME_VFORK_SYSCALL		1
 #endif
 
 /* Starting with 2.4.5 kernels the mmap2 syscall made it into the official

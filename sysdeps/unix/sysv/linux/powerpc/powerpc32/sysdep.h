@@ -54,53 +54,29 @@
 
 # include <errno.h>
 
-/* On powerpc a system call basically clobbers the same registers like a
-   function call, with the exception of LR (which is needed for the
-   "sc; bnslr" sequence) and CR (where only CR0.SO is clobbered to signal
-   an error return status).  */
-
 # undef INLINE_SYSCALL
 # define INLINE_SYSCALL(name, nr, args...)				\
   ({									\
-    register long r0  __asm__ ("r0");					\
-    register long r3  __asm__ ("r3");					\
-    register long r4  __asm__ ("r4");					\
-    register long r5  __asm__ ("r5");					\
-    register long r6  __asm__ ("r6");					\
-    register long r7  __asm__ ("r7");					\
-    register long r8  __asm__ ("r8");					\
-    register long r9  __asm__ ("r9");					\
-    register long r10 __asm__ ("r10");					\
-    register long r11 __asm__ ("r11");					\
-    register long r12 __asm__ ("r12");					\
-    long ret, err;							\
-    LOADARGS_##nr(name, args);						\
-    __asm__ __volatile__						\
-      ("sc\n\t"								\
-       "mfcr	%0"							\
-       : "=&r" (r0),							\
-	 "=&r" (r3), "=&r" (r4), "=&r" (r5),  "=&r" (r6),  "=&r" (r7),	\
-	 "=&r" (r8), "=&r" (r9), "=&r" (r10), "=&r" (r11), "=&r" (r12)	\
-       : ASM_INPUT_##nr							\
-       : "cr0", "ctr", "memory");					\
-    err = r0;								\
-    ret = r3;								\
-    if (__builtin_expect (err & (1 << 28), 0))				\
+    INTERNAL_SYSCALL_DECL (sc_err);					\
+    long sc_ret = INTERNAL_SYSCALL (name, sc_err, nr, args);		\
+    if (INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			\
       {									\
-	__set_errno (ret);						\
-	ret = -1L;							\
+	__set_errno (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err));		\
+	sc_ret = -1L;							\
       }									\
-    ret;								\
+    sc_ret;								\
   })
 
 /* Define a macro which expands inline into the wrapper code for a system
    call. This use is for internal calls that do not need to handle errors
-   normally. It will never touch errno. This returns just what the kernel
-   gave back in the non-error (CR0.SO cleared) case, otherwise (CR0.SO set)
-   the negation of the return value in the kernel gets reverted.  */
+   normally. It will never touch errno.
+   On powerpc a system call basically clobbers the same registers like a
+   function call, with the exception of LR (which is needed for the
+   "sc; bnslr+" sequence) and CR (where only CR0.SO is clobbered to signal
+   an error return status).  */
 
 # undef INTERNAL_SYSCALL_DECL
-# define INTERNAL_SYSCALL_DECL(err) do { } while (0)
+# define INTERNAL_SYSCALL_DECL(err) long err
 
 # undef INTERNAL_SYSCALL
 # define INTERNAL_SYSCALL(name, err, nr, args...)			\
@@ -118,24 +94,23 @@
     register long r12 __asm__ ("r12");					\
     LOADARGS_##nr(name, args);						\
     __asm__ __volatile__						\
-      ("sc\n\t"								\
-       "bns+	0f\n\t"							\
-       "neg	%1,%1\n"						\
-       "0:"								\
+      ("sc   \n\t"							\
+       "mfcr %0"							\
        : "=&r" (r0),							\
 	 "=&r" (r3), "=&r" (r4), "=&r" (r5),  "=&r" (r6),  "=&r" (r7),	\
 	 "=&r" (r8), "=&r" (r9), "=&r" (r10), "=&r" (r11), "=&r" (r12)	\
        : ASM_INPUT_##nr							\
        : "cr0", "ctr", "memory");					\
+    err = r0;								\
     (int) r3;								\
   })
 
 # undef INTERNAL_SYSCALL_ERROR_P
 # define INTERNAL_SYSCALL_ERROR_P(val, err) \
-  ((unsigned long) (val) >= 0xfffff001u)
+  (__builtin_expect (err & (1 << 28), 0))
 
 # undef INTERNAL_SYSCALL_ERRNO
-# define INTERNAL_SYSCALL_ERRNO(val, err)     (-(val))
+# define INTERNAL_SYSCALL_ERRNO(val, err)     (val)
 
 # define LOADARGS_0(name, dummy) \
 	r0 = __NR_##name
@@ -181,4 +156,4 @@
 #endif /* __ASSEMBLER__ */
 
 
-#endif /* linux/powerpc/sysdep.h */
+#endif /* linux/powerpc/powerpc32/sysdep.h */
