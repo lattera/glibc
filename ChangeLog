@@ -1,5 +1,16 @@
 1999-05-03  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/Makefile (trusted-dirs.st): Use gen-trusted-dirs.awk.
+	* elf/gen-trusted-dirs.awk: New file.
+	* elf/dl-load.c (systems_dirs): Moved into file scope.  Initialize
+	from SYSTEM_DIRS macro.
+	(system_dirs_len): New variable.  Contains lengths of system_dirs
+	strings.
+	(fillin_rpath): Rewrite for systems_dirs being a simple string.
+	Improve string comparisons.  Change parameter trusted to be a flag.
+	Change all callers.
+	(_dt_init_paths): Improve using new format for system_dirs.
+
 	* elf/dl-load.c (expand_dynamic_string_token): Don't expand
 	$ORIGIN for SUID binaries.
 

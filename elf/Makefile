@@ -155,10 +155,8 @@ endif
 $(objpfx)trusted-dirs.h: $(objpfx)trusted-dirs.st; @:
 $(objpfx)trusted-dirs.st: Makefile $(..)Makeconfig
 	$(make-target-directory)
-	dirs="$(subst :, ,$(default-rpath) $(user-defined-trusted-dirs))";   \
-	for dir in $$dirs; do						     \
-	  echo "  \"$$dir/\",";						     \
-	done > ${@:st=T}
+	echo "$(subst :, ,$(default-rpath) $(user-defined-trusted-dirs))"    \
+	| $(AWK) -f gen-trusted-dirs.awk > ${@:st=T};
 	$(move-if-change) ${@:st=T} ${@:st=h}
 	touch $@
 CPPFLAGS-dl-load.c = -I$(objpfx).

@@ -120,6 +120,15 @@ const unsigned char _dl_pf_to_prot[8] =
 };
 
 
+/* Get the generated information about the trusted directories.  */
+#include "trusted-dirs.h"
+
+static const char system_dirs[] = SYSTEM_DIRS;
+static const size_t system_dirs_len[] =
+{
+  SYSTEM_DIRS_LEN
+};
+
 /* This function has no public prototype.  */
 extern ssize_t __libc_read (int, void *, size_t);
 
@@ -294,7 +303,7 @@ static size_t max_dirnamelen;
 
 static inline struct r_search_path_elem **
 fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
-	      const char **trusted, const char *what, const char *where)
+	      int check_trusted, const char *what, const char *where)
 {
   char *cp;
   size_t nelems = 0;
@@ -308,37 +317,43 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
          interpreted as `use the current directory'. */
       if (len == 0)
 	{
-	  static char curwd[] = "./";
-	  cp = curwd;
+	  static const char curwd[] = "./";
+	  cp = (char *) curwd;
 	}
 
       /* Remove trailing slashes (except for "/").  */
       while (len > 1 && cp[len - 1] == '/')
 	--len;
 
+      /* Now add one if there is none so far.  */
+      if (len > 0 && cp[len - 1] != '/')
+	cp[len++] = '/';
+
       /* Make sure we don't use untrusted directories if we run SUID.  */
-      if (trusted != NULL)
+      if (check_trusted)
 	{
-	  const char **trun = trusted;
+	  const char *trun = system_dirs;
+	  size_t idx;
 
 	  /* All trusted directories must be complete names.  */
 	  if (cp[0] != '/')
 	    continue;
 
-	  while (*trun != NULL
-		 && (memcmp (*trun, cp, len) != 0
-		     || (*trun)[len] != '/'
-		     || (*trun)[len + 1] != '\0'))
-	    ++trun;
+	  for (idx = 0;
+	       idx < sizeof (system_dirs_len) / sizeof (system_dirs_len[0]);
+	       ++idx)
+	    {
+	      if (len == system_dirs_len[idx] && memcmp (trun, cp, len) == 0)
+		/* Found it.  */
+		break;
 
-	  if (*trun == NULL)
+	      trun += system_dirs_len[idx] + 1;
+	    }
+
+	  if (idx == sizeof (system_dirs_len) / sizeof (system_dirs_len[0]))
 	    /* It's no trusted directory, skip it.  */
 	    continue;
 	}
-
-      /* Now add one if there is none so far.  */
-      if (len > 0 && cp[len - 1] != '/')
-	cp[len++] = '/';
 
       /* See if this directory is already known.  */
       for (dirp = all_dirs; dirp != NULL; dirp = dirp->next)
@@ -455,7 +470,7 @@ decompose_rpath (const char *rpath, struct link_map *l)
   if (result == NULL)
     _dl_signal_error (ENOMEM, NULL, "cannot create cache for search path");
 
-  return fillin_rpath (copy, result, ":", NULL, "RPATH", where);
+  return fillin_rpath (copy, result, ":", 0, "RPATH", where);
 }
 
 
@@ -463,12 +478,8 @@ void
 internal_function
 _dl_init_paths (const char *llp)
 {
-  static const char *system_dirs[] =
-  {
-#include "trusted-dirs.h"
-    NULL
-  };
-  const char **strp;
+  size_t idx;
+  const char *strp;
   struct r_search_path_elem *pelem, **aelem;
   size_t round_size;
 #ifdef PIC
@@ -484,7 +495,7 @@ _dl_init_paths (const char *llp)
 
   /* First set up the rest of the default search directory entries.  */
   aelem = rtld_search_dirs = (struct r_search_path_elem **)
-    malloc ((sizeof (system_dirs) / sizeof (system_dirs[0]))
+    malloc ((sizeof (system_dirs_len) / sizeof (system_dirs_len[0]))
 	     * sizeof (struct r_search_path_elem *));
   if (rtld_search_dirs == NULL)
     _dl_signal_error (ENOMEM, NULL, "cannot create search path array");
@@ -500,20 +511,21 @@ _dl_init_paths (const char *llp)
     _dl_signal_error (ENOMEM, NULL, "cannot create cache for search path");
 
   pelem = all_dirs = rtld_search_dirs[0];
-  for (strp = system_dirs; *strp != NULL; ++strp, pelem += round_size)
+  strp = system_dirs;
+  idx = 0;
+
+  do
     {
       size_t cnt;
 
       *aelem++ = pelem;
 
-      pelem->next = *(strp + 1) == NULL ? NULL : (pelem + round_size);
-
       pelem->what = "system search path";
       pelem->where = NULL;
 
-      pelem->dirnamelen = strlen (pelem->dirname = *strp);
-      if (pelem->dirnamelen > max_dirnamelen)
-	max_dirnamelen = pelem->dirnamelen;
+      pelem->dirname = strp;
+      pelem->dirnamelen = system_dirs_len[idx];
+      strp += system_dirs_len[idx] + 1;
 
       if (pelem->dirname[0] != '/')
 	for (cnt = 0; cnt < ncapstr; ++cnt)
@@ -521,7 +533,16 @@ _dl_init_paths (const char *llp)
       else
 	for (cnt = 0; cnt < ncapstr; ++cnt)
 	  pelem->status[cnt] = unknown;
+
+      pelem->next = (++idx == (sizeof (system_dirs_len)
+			       / sizeof (system_dirs_len[0]))
+		     ? NULL : (pelem + round_size));
+
+      pelem += round_size;
     }
+  while (idx < sizeof (system_dirs_len) / sizeof (system_dirs_len[0]));
+
+  max_dirnamelen = SYSTEM_DIRS_MAX_LEN;
   *aelem = NULL;
 
 #ifdef PIC
@@ -565,8 +586,7 @@ _dl_init_paths (const char *llp)
 			  "cannot create cache for search path");
 
       (void) fillin_rpath (local_strdup (llp), env_path_list, ":;",
-			   __libc_enable_secure ? system_dirs : NULL,
-			   "LD_LIBRARY_PATH", NULL);
+			   __libc_enable_secure, "LD_LIBRARY_PATH", NULL);
     }
 }
 
