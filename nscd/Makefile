@@ -38,7 +38,8 @@ extra-objs := $(nscd-modules:=.o)
 
 endif
 
-distribute := nscd.h dbg_log.h $(nscd-modules:=.c) TODO nscd.conf nscd.init \
+distribute := nscd.h nscd-client.h dbg_log.h \
+	      $(nscd-modules:=.c) TODO nscd.conf nscd.init \
 	      nscd_proto.h
 
 include ../Rules

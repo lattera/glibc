@@ -24,18 +24,10 @@
 #include <time.h>
 #include <sys/uio.h>
 
-
-/* Version number of the daemon interface */
-#define NSCD_VERSION 2
-
-/* Path of the file where the PID of the running system is stored.  */
-#define _PATH_NSCDPID	 "/var/run/nscd.pid"
-
-/* Path for the Unix domain socket.  */
-#define _PATH_NSCDSOCKET "/var/run/.nscd_socket"
-
-/* Path for the configuration file.  */
-#define _PATH_NSCDCONF	 "/etc/nscd.conf"
+/* The declarations for the request and response types are in the file
+   "nscd-client.h", which should contain everything needed by client
+   functions.  */
+#include "nscd-client.h"
 
 
 /* Handle databases.  */
@@ -46,24 +38,6 @@ typedef enum
   hstdb,
   lastdb
 } dbtype;
-
-
-/* Available services.  */
-typedef enum
-{
-  GETPWBYNAME,
-  GETPWBYUID,
-  GETGRBYNAME,
-  GETGRBYGID,
-  GETHOSTBYNAME,
-  GETHOSTBYNAMEv6,
-  GETHOSTBYADDR,
-  GETHOSTBYADDRv6,
-  LASTDBREQ = GETHOSTBYADDRv6,
-  SHUTDOWN,		/* Shut the server down.  */
-  GETSTAT,		/* Get the server statistic.  */
-  LASTREQ,
-} request_type;
 
 
 /* Structure for one hash table entry.  */
@@ -105,58 +79,6 @@ struct database
   struct hashentry **array;
 };
 
-
-/* Header common to all requests */
-typedef struct
-{
-  int version;		/* Version number of the daemon interface.  */
-  request_type type;	/* Service requested.  */
-  ssize_t key_len;	/* Key length.  */
-} request_header;
-
-
-/* Structure sent in reply to password query.  Note that this struct is
-   sent also if the service is disabled or there is no record found.  */
-typedef struct
-{
-  int version;
-  int found;
-  ssize_t pw_name_len;
-  ssize_t pw_passwd_len;
-  uid_t pw_uid;
-  gid_t pw_gid;
-  ssize_t pw_gecos_len;
-  ssize_t pw_dir_len;
-  ssize_t pw_shell_len;
-} pw_response_header;
-
-
-/* Structure sent in reply to group query.  Note that this struct is
-   sent also if the service is disabled or there is no record found.  */
-typedef struct
-{
-  int version;
-  int found;
-  ssize_t gr_name_len;
-  ssize_t gr_passwd_len;
-  gid_t gr_gid;
-  ssize_t gr_mem_cnt;
-} gr_response_header;
-
-
-/* Structure sent in reply to host query.  Note that this struct is
-   sent also if the service is disabled or there is no record found.  */
-typedef struct
-{
-  int version;
-  int found;
-  ssize_t h_name_len;
-  ssize_t h_aliases_cnt;
-  int h_addrtype;
-  int h_length;
-  ssize_t h_addr_list_cnt;
-  int error;
-} hst_response_header;
 
 /* Global variables.  */
 extern const char *dbnames[lastdb];
@@ -217,5 +139,6 @@ extern void addhstbynamev6 (struct database *db, int fd, request_header *req,
 			    void *key);
 extern void addhstbyaddrv6 (struct database *db, int fd, request_header *req,
 			    void *key);
+
 
 #endif /* nscd.h */
