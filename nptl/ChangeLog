@@ -1,3 +1,11 @@
+2004-02-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S
+	(__lll_mutex_lock_wait): Rewrite so that only one locked memory
+	operation per round is needed.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
+	(__lll_mutex_lock_wait): Likewise.
+
 2004-02-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-cancel9.c (cleanup): Don't print to stderr.

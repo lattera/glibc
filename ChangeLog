@@ -1,3 +1,9 @@
+2004-02-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/posix_fadvise64.S: Pop register
+	content also in case of an overflow in the parameter.
+	Reported by Momchil Velikov <velco@fadata.bg>.
+
 2004-02-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dynamic-link.h (elf_get_dynamic_info): Recognize DF_1_NOW.

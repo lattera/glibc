@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,96,97,98,99,2000,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2000,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -85,6 +85,7 @@ ENTRY (BP_SYM (__posix_fadvise64_l64))
 
 	/* Overflow check.  */
 	cmpl	$0, LENHI(%esp)
+	movl	$-EOVERFLOW, %eax
 	jne	L(overflow)
 
 	movl	FD(%esp), %ebx
@@ -97,6 +98,7 @@ ENTRY (BP_SYM (__posix_fadvise64_l64))
 	ENTER_KERNEL
 
 	/* Restore registers.  */
+L(overflow):
 	popl	%edi
 	popl	%esi
 	popl	%ebx
@@ -105,10 +107,6 @@ ENTRY (BP_SYM (__posix_fadvise64_l64))
 	negl	%eax
 
 	/* Successful; return the syscall's value.  */
-	ret
-
-L(overflow):
-	movl	$EOVERFLOW, %eax
 	ret
 #else
 	movl	$ENOSYS, %eax

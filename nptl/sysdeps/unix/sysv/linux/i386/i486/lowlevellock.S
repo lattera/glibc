@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -50,26 +50,25 @@ __lll_mutex_lock_wait:
 	xorl	%esi, %esi	/* No timeout.  */
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 
-1:	cmpl	%edx, %eax	/* NB:	 %edx == 2 */
-	je 3f
+	cmpl	%edx, %eax	/* NB:	 %edx == 2 */
+	je 1f
 
-	movl	$1, %eax
-	LOCK
-	cmpxchgl %edx, (%ebx)
+	movl	%edx, %eax
+	xchgl	%eax, (%ebx)	/* NB:	 lock is implied */
 
 	testl	%eax, %eax
 	je	2f
 
-3:	movl	$SYS_futex, %eax
+1:	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
-	xorl	%eax, %eax
-2:	LOCK
-	cmpxchgl %edx, (%ebx)
+	movl	%edx, %eax
+	xchgl	%eax, (%ebx)	/* NB:	 lock is implied */
 
+	testl	%eax, %eax
 	jnz,pn	1b
 
-	popl	%esi
+2:	popl	%esi
 	popl	%ebx
 	popl	%edx
 	ret
