@@ -51,6 +51,9 @@ libc {
     # w*
     wait4;
   }
+  GLIBC_2.1.1 {
+    getitimer;
+  }
   GLIBC_2.1.4 {
     pciconfig_iobase;
   }
