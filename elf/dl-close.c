@@ -140,7 +140,7 @@ _dl_close (void *_map)
     {
       /* There are still references to this object.  Do nothing more.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
-	_dl_debug_printf ("\nclosing file=%s; opencount == %u\n",
+	_dl_debug_printf ("\nclosing file=%s; opencount=%u\n",
 			  map->l_name, map->l_opencount);
 
       /* Decrement the object's reference counter, not the dependencies'.  */

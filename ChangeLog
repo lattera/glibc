@@ -1,5 +1,7 @@
 2005-03-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-close.c (_dl_close): Unify debug message format.
+
 	* elf/dl-close.c (_dl_close): Print debug message just before
 	destroying a link map.
 
