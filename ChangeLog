@@ -1,6 +1,7 @@
 2001-02-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/arm/sys/ucontext.h: File was using crlf.
+	Remove comma at end of enum.
 
 	* elf/dl-init.c: Add a few __builtin_expect.
 
