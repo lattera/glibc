@@ -941,6 +941,8 @@ void __pthread_wait_for_restart_signal(pthread_descr self)
   do {
     sigsuspend(&mask);                   /* Wait for signal */
   } while (THREAD_GETMEM(self, p_signal) !=__pthread_sig_restart);
+
+  READ_MEMORY_BARRIER(); /* See comment in __pthread_restart_new */
 }
 
 #if !__ASSUME_REALTIME_SIGNALS
@@ -1043,7 +1045,12 @@ __pthread_timedsuspend_old(pthread_descr self, const struct timespec *abstime)
 
 void __pthread_restart_new(pthread_descr th)
 {
-    kill(th->p_pid, __pthread_sig_restart);
+  /* The barrier is proabably not needed, in which case it still documents
+     our assumptions. The intent is to commit previous writes to shared
+     memory so the woken thread will have a consistent view.  Complementary
+     read barriers are present to the suspend functions. */
+  WRITE_MEMORY_BARRIER();
+  kill(th->p_pid, __pthread_sig_restart);
 }
 
 /* There is no __pthread_suspend_new because it would just
@@ -1101,6 +1108,7 @@ __pthread_timedsuspend_new(pthread_descr self, const struct timespec *abstime)
      the caller; the thread is still eligible for a restart wakeup
      so there is a race. */
 
+  READ_MEMORY_BARRIER(); /* See comment in __pthread_restart_new */
   return was_signalled;
 }
 

@@ -26,6 +26,13 @@
 
 #if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
 static void __pthread_acquire(int * spinlock);
+
+static inline void __pthread_release(int * spinlock)
+{
+  WRITE_MEMORY_BARRIER();
+  *spinlock = __LT_SPINLOCK_INIT;
+  __asm __volatile ("" : "=m" (*spinlock) : "0" (*spinlock));
+}
 #endif
 
 
@@ -85,6 +92,7 @@ again:
 	{
 	  if (spin_count)
 	    lock->__spinlock += (spin_count - lock->__spinlock) / 8;
+	  READ_MEMORY_BARRIER();
 	  return;
 	}
       }
@@ -139,6 +147,8 @@ again:
   /* Put back any resumes we caught that don't belong to us. */
   while (spurious_wakeup_count--)
     restart(self);
+
+  READ_MEMORY_BARRIER();
 #endif
 }
 
@@ -155,13 +165,14 @@ int __pthread_unlock(struct _pthread_fastlock * lock)
 #endif
 #if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
   {
-    WRITE_MEMORY_BARRIER();
-    lock->__spinlock = __LT_SPINLOCK_INIT;
+    __pthread_release(&lock->__spinlock);
     return 0;
   }
 #endif
 
 #if defined HAS_COMPARE_AND_SWAP
+  WRITE_MEMORY_BARRIER();
+
 again:
   oldstatus = lock->__status;
 
@@ -176,23 +187,26 @@ again:
   thr = (pthread_descr) (oldstatus & ~1L);
   maxprio = 0;
   maxptr = ptr;
+
+  /* Before we iterate over the wait queue, we need to execute
+     a read barrier, otherwise we may read stale contents of nodes that may
+     just have been inserted by other processors. One read barrier is enough to
+     ensure we have a stable list; we don't need one for each pointer chase
+     through the list, because we are the owner of the lock; other threads
+     can only add nodes at the front; if a front node is consistent,
+     the ones behind it must also be. */
+
+  READ_MEMORY_BARRIER();
+
   while (thr != 0) {
     if (thr->p_priority >= maxprio) {
       maxptr = ptr;
       maxprio = thr->p_priority;
     }
     ptr = &(thr->p_nextlock);
-    /* Prevent reordering of the load of lock->__status above and the
-       load of *ptr below, as well as reordering of *ptr between
-       several iterations of the while loop.  Some processors (e.g.
-       multiprocessor Alphas) could perform such reordering even though
-       the loads are dependent. */
-    READ_MEMORY_BARRIER();
     thr = *ptr;
   }
-  /* Prevent reordering of the load of lock->__status above and
-     thr->p_nextlock below */
-  READ_MEMORY_BARRIER();
+
   /* Remove max prio thread from waiting list. */
   if (maxptr == (pthread_descr *) &lock->__status) {
     /* If max prio thread is at head, remove it with compare-and-swap
@@ -211,15 +225,21 @@ again:
     thr = *maxptr;
     *maxptr = thr->p_nextlock;
 
+    /* Ensure deletion from linked list completes before we
+       release the lock. */
+    WRITE_MEMORY_BARRIER();
+
     do {
       oldstatus = lock->__status;
     } while (!__compare_and_swap_with_release_semantics(&lock->__status,
 	     oldstatus, oldstatus & ~1L));
   }
-  /* Prevent reordering of store to *maxptr above and store to thr->p_nextlock
-     below */
-  WRITE_MEMORY_BARRIER();
-  /* Wake up the selected waiting thread */
+
+  /* Wake up the selected waiting thread. Woken thread can check
+     its own p_nextlock field for NULL to detect that it has been removed. No
+     barrier is needed here, since restart() and suspend() take
+     care of memory synchronization. */
+
   thr->p_nextlock = NULL;
   restart(thr);
 
@@ -288,8 +308,9 @@ static struct wait_node *wait_node_alloc(void)
     if (oldvalue == 0)
       return malloc(sizeof *wait_node_alloc());
 
+    /* Ensure we don't read stale next link through oldvalue pointer. */
+    READ_MEMORY_BARRIER();
     newvalue = (long) ((struct wait_node *) oldvalue)->next;
-    WRITE_MEMORY_BARRIER();
   } while (! __compare_and_swap(&wait_node_free_list, oldvalue, newvalue));
 
   return (struct wait_node *) oldvalue;
@@ -324,6 +345,7 @@ static void wait_node_free(struct wait_node *wn)
     oldvalue = wait_node_free_list;
     wn->next = (struct wait_node *) oldvalue;
     newvalue = (long) wn;
+    /* Ensure node contents are written before we swap it into the list. */
     WRITE_MEMORY_BARRIER();
   } while (! __compare_and_swap(&wait_node_free_list, oldvalue, newvalue));
 #endif
@@ -344,6 +366,10 @@ static void wait_node_dequeue(struct wait_node **pp_head,
      Otherwise it can be deleted in the straightforward way. */
 
   if (pp_node == pp_head) {
+    /* We don't need a read barrier between these next two loads,
+       because it is assumed that the caller has already ensured
+       the stability of *p_node with respect to p_node. */
+
     long oldvalue = (long) p_node;
     long newvalue = (long) p_node->next;
 
@@ -355,8 +381,10 @@ static void wait_node_dequeue(struct wait_node **pp_head,
        know the identity of the node which now holds the pointer to the node
        being deleted, so we must search from the beginning. */
 
-    for (pp_node = pp_head; *pp_node != p_node; pp_node = &(*pp_node)->next)
-      ; /* null body */
+    for (pp_node = pp_head; p_node != *pp_node; ) {
+      pp_node = &(*pp_node)->next;
+      READ_MEMORY_BARRIER(); /* Stabilize *pp_node for next iteration. */
+    }
   }
 
   *pp_node = p_node->next;
@@ -394,8 +422,7 @@ void __pthread_alt_lock(struct _pthread_fastlock * lock,
       suspend_needed = 1;
     }
 
-    WRITE_MEMORY_BARRIER();
-    lock->__spinlock = __LT_SPINLOCK_INIT;
+    __pthread_release(&lock->__spinlock);
 
     if (suspend_needed)
       suspend (self);
@@ -428,6 +455,8 @@ void __pthread_alt_lock(struct _pthread_fastlock * lock,
 
   if (oldstatus != 0)
     suspend(self);
+
+  READ_MEMORY_BARRIER();
 #endif
 }
 
@@ -468,8 +497,7 @@ int __pthread_alt_timedlock(struct _pthread_fastlock * lock,
       oldstatus = 1; /* force suspend */
     }
 
-    WRITE_MEMORY_BARRIER();
-    lock->__spinlock = __LT_SPINLOCK_INIT;
+    __pthread_release(&lock->__spinlock);
     goto suspend;
   }
 #endif
@@ -517,6 +545,8 @@ int __pthread_alt_timedlock(struct _pthread_fastlock * lock,
 
   wait_node_free(p_wait_node);
 
+  READ_MEMORY_BARRIER();
+
   return 1; /* Got the lock! */
 }
 
@@ -525,6 +555,8 @@ void __pthread_alt_unlock(struct _pthread_fastlock *lock)
   struct wait_node *p_node, **pp_node, *p_max_prio, **pp_max_prio;
   struct wait_node ** const pp_head = (struct wait_node **) &lock->__status;
   int maxprio;
+
+  WRITE_MEMORY_BARRIER();
 
 #if defined TEST_FOR_COMPARE_AND_SWAP
   if (!__pthread_has_cas)
@@ -576,6 +608,8 @@ void __pthread_alt_unlock(struct _pthread_fastlock *lock)
     p_max_prio = p_node = *pp_head;
     maxprio = INT_MIN;
 
+    READ_MEMORY_BARRIER(); /* Prevent access to stale data through p_node */
+
     while (p_node != (struct wait_node *) 1) {
       int prio;
 
@@ -594,8 +628,13 @@ void __pthread_alt_unlock(struct _pthread_fastlock *lock)
 	  wait_node_dequeue(pp_head, pp_node, p_node);
 #endif
 	wait_node_free(p_node);
-	READ_MEMORY_BARRIER();
+	/* Note that the next assignment may take us to the beginning
+	   of the queue, to newly inserted nodes, if pp_node == pp_head.
+	   In that case we need a memory barrier to stabilize the first of
+	   these new nodes. */
 	p_node = *pp_node;
+	if (pp_node == pp_head)
+	  READ_MEMORY_BARRIER(); /* No stale reads through p_node */
 	continue;
       } else if ((prio = p_node->thr->p_priority) >= maxprio) {
 	/* Otherwise remember it if its thread has a higher or equal priority
@@ -605,12 +644,11 @@ void __pthread_alt_unlock(struct _pthread_fastlock *lock)
 	p_max_prio = p_node;
       }
 
+      /* This canno6 jump backward in the list, so no further read
+         barrier is needed. */
       pp_node = &p_node->next;
-      READ_MEMORY_BARRIER();
       p_node = *pp_node;
     }
-
-    READ_MEMORY_BARRIER();
 
     /* If all threads abandoned, go back to top */
     if (maxprio == INT_MIN)
@@ -638,7 +676,6 @@ void __pthread_alt_unlock(struct _pthread_fastlock *lock)
 #if defined HAS_COMPARE_AND_SWAP
 	wait_node_dequeue(pp_head, pp_max_prio, p_max_prio);
 #endif
-      WRITE_MEMORY_BARRIER();
       restart(p_max_prio->thr);
       break;
     }
@@ -649,8 +686,7 @@ void __pthread_alt_unlock(struct _pthread_fastlock *lock)
 #endif
 #if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
   {
-    WRITE_MEMORY_BARRIER();
-    lock->__spinlock = __LT_SPINLOCK_INIT;
+    __pthread_release(&lock->__spinlock);
   }
 #endif
 }
@@ -668,15 +704,17 @@ int __pthread_compare_and_swap(long * ptr, long oldval, long newval,
                                int * spinlock)
 {
   int res;
-  if (testandset(spinlock)) __pthread_acquire(spinlock);
+
+  __pthread_acquire(spinlock);
+
   if (*ptr == oldval) {
     *ptr = newval; res = 1;
   } else {
     res = 0;
   }
-  /* Prevent reordering of store to *ptr above and store to *spinlock below */
-  WRITE_MEMORY_BARRIER();
-  *spinlock = 0;
+
+  __pthread_release(spinlock);
+
   return res;
 }
 
@@ -705,6 +743,8 @@ static void __pthread_acquire(int * spinlock)
 {
   int cnt = 0;
   struct timespec tm;
+
+  READ_MEMORY_BARRIER();
 
   while (testandset(spinlock)) {
     if (cnt < MAX_SPIN_COUNT) {

@@ -1,3 +1,27 @@
+2001-05-01  Kaz Kylheku  <kaz@ashi.footprints.net>
+
+	Memory barrier overhaul following line by line inspection.
+	* mutex.c (pthread_once): Missing memory barriers added.
+	* pthread.c (__pthread_wait_for_restart_signal,
+	__pthread_timedsuspend_new, __pthread_restart_new): Added
+	memory barriers ``just in case'' and for documentary value.
+	* spinlock.c (__pthread_release): New inline function for releasing
+	spinlock, to complement __pthread_acquire.  Includes memory
+	barrier prior to assignment to spinlock, and __asm __volatile
+	dance to prevent reordering or optimization of the spinlock access.
+	* spinlock.c (__pthread_unlock, __pthread_alt_lock,
+	__pthread_alt_timedlock, __pthread_alt_unlock,
+	__pthread_compare_and_swap): Updated to use new __pthread_release
+	instead of updating spinlock directly.
+	* spinlock.c (__pthread_lock, __pthread_unlock, wait_node_alloc,
+	wait_node_free, wait_node_dequeue, __pthread_alt_lock,
+	__pthread_alt_timedlock, __pthread_alt_unlock, __pthread_acquire):
+	Memory barrier overhaul.  Lots of missing memory barriers added,
+	a couple needless ones removed.
+	* spinlock.c (__pthread_compare_and_swap): testandset optimization
+	removed, just calls __pthread_acquire, which has the new read
+	barrier in it before its testandset.
+
 2001-05-20  Roland McGrath  <roland@frob.com>
 
 	* Makeconfig: New file, variables used to be in main libc Makeconfig.

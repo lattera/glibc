@@ -285,7 +285,10 @@ int __pthread_once(pthread_once_t * once_control, void (*init_routine)(void))
   int state_changed;
 
   /* Test without locking first for speed */
-  if (*once_control == DONE) return 0;
+  if (*once_control == DONE) {
+    READ_MEMORY_BARRIER();
+    return 0;
+  }
   /* Lock and test again */
 
   state_changed = 0;
@@ -310,6 +313,7 @@ int __pthread_once(pthread_once_t * once_control, void (*init_routine)(void))
     init_routine();
     pthread_cleanup_pop(0);
     pthread_mutex_lock(&once_masterlock);
+    WRITE_MEMORY_BARRIER();
     *once_control = DONE;
     state_changed = 1;
   }
