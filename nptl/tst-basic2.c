@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -55,6 +55,12 @@ do_test (void)
       if (pthread_mutex_init (&lock[i], NULL) != 0)
 	{
 	  puts ("mutex_init failed");
+	  exit (1);
+	}
+
+      if (pthread_mutex_lock (&lock[i]) != 0)
+	{
+	  puts ("mutex_lock failed");
 	  exit (1);
 	}
 

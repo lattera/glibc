@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -26,12 +26,26 @@
 static pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
+static pthread_mutex_t syncm = PTHREAD_MUTEX_INITIALIZER;
+
 
 static void *
 tf (void *a)
 {
   int i = (long int) a;
   int err;
+
+  printf ("child %d: lock\n", i);
+
+  err = pthread_mutex_lock (&mut);
+  if (err != 0)
+    error (EXIT_FAILURE, err, "locking in child failed");
+
+  printf ("child %d: unlock sync\n", i);
+
+  err = pthread_mutex_unlock (&syncm);
+  if (err != 0)
+    error (EXIT_FAILURE, err, "child %d: unlock[1] failed", i);
 
   printf ("child %d: wait\n", i);
 
@@ -43,7 +57,7 @@ tf (void *a)
 
   err = pthread_mutex_unlock (&mut);
   if (err != 0)
-    error (EXIT_FAILURE, err, "child %d: unlock failed", i);
+    error (EXIT_FAILURE, err, "child %d: unlock[2] failed", i);
 
   printf ("child %d: done\n", i);
 
@@ -65,7 +79,7 @@ do_test (void)
 
   puts ("first lock");
 
-  err = pthread_mutex_lock (&mut);
+  err = pthread_mutex_lock (&syncm);
   if (err != 0)
     error (EXIT_FAILURE, err, "initial locking failed");
 
@@ -80,16 +94,18 @@ do_test (void)
       printf ("wait for child %d\n", i);
 
       /* Lock and thereby wait for the child to start up and get the
-	 conditional variable.  */
-      pthread_mutex_lock (&mut);
+	 mutex for the conditional variable.  */
+      pthread_mutex_lock (&syncm);
+      /* Unlock right away.  Yes, we can use barriers but then we
+	 would test more functionality here.  */
+      pthread_mutex_unlock (&syncm);
     }
 
-  puts ("final unlock");
+  puts ("get lock outselves");
 
-  /* Unlock in preparation of the broadcast.  */
-  err = pthread_mutex_unlock (&mut);
+  err = pthread_mutex_lock (&mut);
   if (err != 0)
-    error (EXIT_FAILURE, err, "parent: unlock failed");
+    error (EXIT_FAILURE, err, "mut locking failed");
 
   puts ("broadcast");
 
@@ -97,6 +113,10 @@ do_test (void)
   err = pthread_cond_broadcast (&cond);
   if (err != 0)
     error (EXIT_FAILURE, err, "parent: broadcast failed");
+
+  err = pthread_mutex_unlock (&mut);
+  if (err != 0)
+    error (EXIT_FAILURE, err, "mut unlocking failed");
 
   /* Join all threads.  */
   for (i = 0; i < N; ++i)
