@@ -1,5 +1,5 @@
 /* Startup code for Alpha/ELF.
-   Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>
 
@@ -31,55 +31,23 @@ _start:
 1:	ldgp	gp, 0(gp)
 	.prologue 1
 
-  /* Save v0.  When starting a binary via the dynamic linker, s0
-     contains the address of the shared library termination function,
-     which we will register below with atexit() to be called by exit().
-     If we are statically linked, this will be NULL.  */
-	mov	v0, s0
+  /* Load address of the user's main function.  */
+	lda	a0, main
 
-  /* Do essential libc initialization (sp points to argc, argv, and envp)  */
-	jsr	ra, __libc_init_first
+	ldl	a1, 0(sp)	/* get argc */
+	lda	a2, 8(sp)	/* get argv */
+
+  /* Load address of our own entry points to .fini and .init.  */
+	lda	a3, _init
+	lda	a4, _fini
+
+  /* Store address of the shared library termination function.  */
+	mov	v0, a5
+
+  /* Call the user's main function, and exit with its value.
+     But let the libc call main.    */
+	jsr	ra, __libc_start_main
 	ldgp	gp, 0(ra)
-
-  /* Now that we have the proper stack frame, register library termination
-     function, if there is any:  */
-
-	beq	s0, 1f
-	mov	s0, a0
-	jsr	ra, atexit
-	ldgp	gp, 0(ra)
-1:
-
-  /* Extract the arguments and environment as encoded on the stack.  */
-	ldl	a0, 0(sp)	/* get argc */
-	lda	a1, 8(sp)	/* get argv */
-	s8addq	a0, a1, a2	/* get envp */
-	addq	a2, 8, a2
-	stq	a2, _environ
-
-	mov	a0, s0		/* tuck them away */
-	mov	a1, s1
-	mov	a2, s2
-
-  /* Call _init, the entry point to our own .init section.  */
-	jsr	ra, _init
-	ldgp	gp, 0(ra)
-
-  /* Register our .fini section with atexit.  */
-	lda	a0, _fini
-	jsr	ra, atexit
-	ldgp	gp, 0(ra)
-
-  /* Call the user's main and exit with its return value.  */
-	mov	s0, a0
-	mov	s1, a1
-	mov	s2, a2
-
-	jsr	ra, main
-	ldgp	gp, 0(ra)
-
-	mov	v0, a0
-	jsr	ra, exit
 
   /* Die very horribly if exit returns.  Call_pal hlt is callable from
      kernel mode only; this will result in an illegal instruction trap.  */

@@ -62,6 +62,9 @@ getresgid	-	getresgid	3	getresgid
 pciconfig_read	EXTRA	pciconfig_read	5	pciconfig_read
 pciconfig_write	EXTRA	pciconfig_write	5	pciconfig_write
 
+# Wrapper for adjtimex.
+adjtimex       -       syscall_adjtimex 1      __syscall_adjtimex syscall_adjtimex
+
 # support old timeval32 entry points
 osf_select	-	osf_select	5	__select_tv32  __select@GLIBC_2.0 select@GLIBC_2.0
 osf_gettimeofday -	osf_gettimeofday 2	__gettimeofday_tv32  __gettimeofday@GLIBC_2.0 gettimeofday@GLIBC_2.0

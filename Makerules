@@ -725,7 +725,7 @@ ifndef subdir
 # What we install as libc.so for programs to link against is in fact a
 # link script.  It contains references for the various libraries we need.
 # The libc.so object is not complete since some functions are only defined
-# in libc.a and the dynamic linker is an extra object.
+# in libc_nonshared.a.
 install: $(inst_libdir)/libc.so
 $(inst_libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
 			$(inst_libdir)/$(patsubst %,$(libtype.oS),\

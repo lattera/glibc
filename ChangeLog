@@ -1,5 +1,31 @@
 1998-03-31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/Makefile: Use libKSC shared object in JOHAB and
+	EUC-KR.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (PF_FILE): Correct
+	comment.
+
+1998-03-30 08:43  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/alpha/elf/start.S: Let __libc_start_main do most of
+	the init stuff.
+
+1998-03-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Wrapper for
+	adjtimex syscall.
+	* sysdeps/unix/sysv/linux/alpha/Makefile (sysdep_routines): Add
+	adjtimex.
+	Patches by Dominik Kubla <kubla@sundiver.zdv.uni-mainz.de>.
+
+1998-03-31  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* Makerules (install): Change comment for libc.so following the
+	libc_nonshared changes.
+
+1998-03-31  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/generic/dl-sysdep.c (_dl_important_hwcaps): Fix typo.
 
 	* iconvdata/gap.pl: Avoid using %#06x.

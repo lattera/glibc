@@ -474,11 +474,7 @@ probably a missing or incorrect /usr/lib/libc.so file; note that this
 is a small text file now, not a symlink to libc.so.6.  It should look
 something like this:
 
-GROUP ( libc.so.6 ld.so.1 libc.a )
-
-or in ix86/Linux and alpha/Linux:
-
-GROUP ( libc.so.6 ld-linux.so.2 libc.a )
+GROUP ( libc.so.6 libc_nonshared.a )
 
 ??	How can I compile gcc 2.7.2.1 from the gcc source code using
 	glibc 2.x?
