@@ -33,17 +33,19 @@
 #endif
 
 
-/* stuff for the PLT */
+/* Stuff for the PLT.  */
 #define PLT_INITIAL_ENTRY_WORDS 18
-#define PLT_LONGBRANCH_ENTRY_WORDS 10
+#define PLT_LONGBRANCH_ENTRY_WORDS 0
+#define PLT_TRAMPOLINE_ENTRY_WORDS 6
 #define PLT_DOUBLE_SIZE (1<<13)
 #define PLT_ENTRY_START_WORDS(entry_number) \
-  (PLT_INITIAL_ENTRY_WORDS + (entry_number)*2 + \
-   ((entry_number) > PLT_DOUBLE_SIZE ? \
-    ((entry_number) - PLT_DOUBLE_SIZE)*2 : \
-    0))
+  (PLT_INITIAL_ENTRY_WORDS + (entry_number)*2				\
+   + ((entry_number) > PLT_DOUBLE_SIZE					\
+      ? ((entry_number) - PLT_DOUBLE_SIZE)*2				\
+      : 0))
 #define PLT_DATA_START_WORDS(num_entries) PLT_ENTRY_START_WORDS(num_entries)
 
+/* Macros to build PowerPC opcode words.  */
 #define OPCODE_ADDI(rd,ra,simm) \
   (0x38000000 | (rd) << 21 | (ra) << 16 | ((simm) & 0xffff))
 #define OPCODE_ADDIS(rd,ra,simm) \
@@ -55,11 +57,16 @@
 #define OPCODE_BCTR() 0x4e800420
 #define OPCODE_LWZ(rd,d,ra) \
   (0x80000000 | (rd) << 21 | (ra) << 16 | ((d) & 0xffff))
+#define OPCODE_LWZU(rd,d,ra) \
+  (0x84000000 | (rd) << 21 | (ra) << 16 | ((d) & 0xffff))
 #define OPCODE_MTCTR(rd) (0x7C0903A6 | (rd) << 21)
 #define OPCODE_RLWINM(ra,rs,sh,mb,me) \
   (0x54000000 | (rs) << 21 | (ra) << 16 | (sh) << 11 | (mb) << 6 | (me) << 1)
 
 #define OPCODE_LI(rd,simm)    OPCODE_ADDI(rd,0,simm)
+#define OPCODE_ADDIS_HI(rd,ra,value) \
+  OPCODE_ADDIS(rd,ra,((value) + 0x8000) >> 16)
+#define OPCODE_LIS_HI(rd,value) OPCODE_ADDIS_HI(rd,0,value)
 #define OPCODE_SLWI(ra,rs,sh) OPCODE_RLWINM(ra,rs,sh,0,31-sh)
 
 
@@ -136,131 +143,172 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
    Also install a small trampoline to be used by entries that have
    been relocated to an address too far away for a single branch.  */
 
-/* A PLT entry does one of three things:
-   (i)   Jumps to the actual routine. Such entries are set up above, in
-         elf_machine_rela.
+/* There are many kinds of PLT entries:
 
-   (ii)  Jumps to the actual routine via glue at the start of the PLT.
-         We do this by putting the address of the routine in space
-         allocated at the end of the PLT, and when the PLT entry is
-         called we load the offset of that word (from the start of the
-         space) into r11, then call the glue, which loads the word and
-         branches to that address. These entries are set up in
-         elf_machine_rela, but the glue is set up here.
+   (1)	A direct jump to the actual routine, either a relative or
+	absolute branch.  These are set up in __elf_machine_fixup_plt.
 
-   (iii) Loads the index of this PLT entry (we count the double-size
-	 entries as one entry for this purpose) into r11, then
-	 branches to code at the start of the PLT. This code then
-	 calls `fixup', in dl-runtime.c, via the glue in the macro
-	 ELF_MACHINE_RUNTIME_TRAMPOLINE, which resets the PLT entry to
-	 be one of the above two types. These entries are set up here.  */
+   (2)	Short lazy entries.  These cover the first 8192 slots in
+        the PLT, and look like (where 'index' goes from 0 to 8191):
+
+	li %r11, index*4
+	b  &plt[PLT_TRAMPOLINE_ENTRY_WORDS+1]
+
+   (3)	Short indirect jumps.  These replace (2) when a direct jump
+	wouldn't reach.  They look the same except that the branch
+	is 'b &plt[PLT_LONGBRANCH_ENTRY_WORDS]'.
+
+   (4)  Long lazy entries.  These cover the slots when a short entry
+	won't fit ('index*4' overflows its field), and look like:
+
+	lis %r11, %hi(index*4 + &plt[PLT_DATA_START_WORDS])
+	lwzu %r12, %r11, %lo(index*4 + &plt[PLT_DATA_START_WORDS])
+	b  &plt[PLT_TRAMPOLINE_ENTRY_WORDS]
+	bctr
+
+   (5)	Long indirect jumps.  These replace (4) when a direct jump
+	wouldn't reach.  They look like:
+
+	lis %r11, %hi(index*4 + &plt[PLT_DATA_START_WORDS])
+	lwz %r12, %r11, %lo(index*4 + &plt[PLT_DATA_START_WORDS])
+	mtctr %r12
+	bctr
+
+   (6) Long direct jumps.  These are used when thread-safety is not
+       required.  They look like:
+
+       lis %r12, %hi(finaladdr)
+       addi %r12, %r12, %lo(finaladdr)
+       mtctr %r12
+       bctr
+
+
+   The lazy entries, (2) and (4), are set up here in
+   __elf_machine_runtime_setup.  (1), (3), and (5) are set up in
+   __elf_machine_fixup_plt.  (1), (3), and (6) can also be constructed
+   in __process_machine_rela.
+
+   The reason for the somewhat strange construction of the long
+   entries, (4) and (5), is that we need to ensure thread-safety.  For
+   (1) and (3), this is obvious because only one instruction is
+   changed and the PPC architecture guarantees that aligned stores are
+   atomic.  For (5), this is more tricky.  When changing (4) to (5),
+   the `b' instruction is first changed to to `mtctr'; this is safe
+   and is why the `lwzu' instruction is not just a simple `addi'.
+   Once this is done, and is visible to all processors, the `lwzu' can
+   safely be changed to a `lwz'.  */
 int
 __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 {
   if (map->l_info[DT_JMPREL])
     {
       Elf32_Word i;
-      /* Fill in the PLT. Its initial contents are directed to a
-	 function earlier in the PLT which arranges for the dynamic
-	 linker to be called back.  */
       Elf32_Word *plt = (Elf32_Word *) map->l_info[DT_PLTGOT]->d_un.d_val;
       Elf32_Word num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
 				    / sizeof (Elf32_Rela));
       Elf32_Word rel_offset_words = PLT_DATA_START_WORDS (num_plt_entries);
+      Elf32_Word data_words = (Elf32_Word) (plt + rel_offset_words);
       Elf32_Word size_modified;
+
       extern void _dl_runtime_resolve (void);
       extern void _dl_prof_resolve (void);
-      Elf32_Word dlrr;
-
-      dlrr = (Elf32_Word)(char *)(profile
-				  ? _dl_prof_resolve
-				  : _dl_runtime_resolve);
-
-      if (profile && _dl_name_match_p (_dl_profile, map))
-	/* This is the object we are looking for.  Say that we really
-	   want profiling and the timers are started.  */
-	_dl_profile_map = map;
-
-      if (lazy)
-	for (i = 0; i < num_plt_entries; i++)
-	{
-	  Elf32_Word offset = PLT_ENTRY_START_WORDS (i);
-
-	  if (i >= PLT_DOUBLE_SIZE)
-	    {
-	      plt[offset  ] = OPCODE_LI (11, i * 4);
-	      plt[offset+1] = OPCODE_ADDIS (11, 11, (i * 4 + 0x8000) >> 16);
-	      plt[offset+2] = OPCODE_B (-(4 * (offset + 2)));
-	    }
-	  else
-	    {
-	      plt[offset  ] = OPCODE_LI (11, i * 4);
-	      plt[offset+1] = OPCODE_B (-(4 * (offset + 1)));
-	    }
-	}
-
-      /* Multiply index of entry by 3 (in r11).  */
-      plt[0] = OPCODE_SLWI (12, 11, 1);
-      plt[1] = OPCODE_ADD (11, 12, 11);
-      if (dlrr <= 0x01fffffc || dlrr >= 0xfe000000)
-	{
-	  /* Load address of link map in r12.  */
-	  plt[2] = OPCODE_LI (12, (Elf32_Word) (char *) map);
-	  plt[3] = OPCODE_ADDIS (12, 12, (((Elf32_Word) (char *) map
-					   + 0x8000) >> 16));
-
-	  /* Call _dl_runtime_resolve.  */
-	  plt[4] = OPCODE_BA (dlrr);
-	}
-      else
-	{
-	  /* Get address of _dl_runtime_resolve in CTR.  */
-	  plt[2] = OPCODE_LI (12, dlrr);
-	  plt[3] = OPCODE_ADDIS (12, 12, (dlrr + 0x8000) >> 16);
-	  plt[4] = OPCODE_MTCTR (12);
-
-	  /* Load address of link map in r12.  */
-	  plt[5] = OPCODE_LI (12, (Elf32_Word) (char *) map);
-	  plt[6] = OPCODE_ADDIS (12, 12, (((Elf32_Word) (char *) map
-					   + 0x8000) >> 16));
-
-	  /* Call _dl_runtime_resolve.  */
-	  plt[7] = OPCODE_BCTR ();
-	}
-
 
       /* Convert the index in r11 into an actual address, and get the
 	 word at that address.  */
-      plt[PLT_LONGBRANCH_ENTRY_WORDS] =
-	OPCODE_ADDIS (11, 11, (((Elf32_Word) (char*) (plt + rel_offset_words)
-				+ 0x8000) >> 16));
-      plt[PLT_LONGBRANCH_ENTRY_WORDS+1] =
-	OPCODE_LWZ (11, (Elf32_Word) (char*) (plt + rel_offset_words), 11);
+      plt[PLT_LONGBRANCH_ENTRY_WORDS] = OPCODE_ADDIS_HI (11, 11, data_words);
+      plt[PLT_LONGBRANCH_ENTRY_WORDS + 1] = OPCODE_LWZ (11, data_words, 11);
 
       /* Call the procedure at that address.  */
       plt[PLT_LONGBRANCH_ENTRY_WORDS + 2] = OPCODE_MTCTR (11);
       plt[PLT_LONGBRANCH_ENTRY_WORDS + 3] = OPCODE_BCTR ();
 
+      if (lazy)
+	{
+	  Elf32_Word *tramp = plt + PLT_TRAMPOLINE_ENTRY_WORDS;
+	  Elf32_Word dlrr = (Elf32_Word)(profile
+					 ? _dl_prof_resolve
+					 : _dl_runtime_resolve);
+	  Elf32_Word offset;
 
-      /* Now, we've modified code (quite a lot of code, possibly).  We
-	 need to write the changes from the data cache to a
-	 second-level unified cache, then make sure that stale data in
-	 the instruction cache is removed.  (In a multiprocessor
-	 system, the effect is more complex.)  Most of the PLT shouldn't
-	 be in the instruction cache, but there may be a little overlap
-	 at the start and the end.
+	  if (profile && _dl_name_match_p (_dl_profile, map))
+	    /* This is the object we are looking for.  Say that we really
+	       want profiling and the timers are started.  */
+	    _dl_profile_map = map;
+	  
+	  /* For the long entries, subtract off data_words.  */
+	  tramp[0] = OPCODE_ADDIS_HI (11, 11, -data_words);
+	  tramp[1] = OPCODE_ADDI (11, 11, -data_words);
+	  
+	  /* Multiply index of entry by 3 (in r11).  */
+	  tramp[2] = OPCODE_SLWI (12, 11, 1);
+	  tramp[3] = OPCODE_ADD (11, 12, 11);
+	  if (dlrr <= 0x01fffffc || dlrr >= 0xfe000000)
+	    {
+	      /* Load address of link map in r12.  */
+	      tramp[4] = OPCODE_LI (12, (Elf32_Word) map);
+	      tramp[5] = OPCODE_ADDIS_HI (12, 12, (Elf32_Word) map);
+	      
+	      /* Call _dl_runtime_resolve.  */
+	      tramp[6] = OPCODE_BA (dlrr);
+	    }
+	  else
+	    {
+	      /* Get address of _dl_runtime_resolve in CTR.  */
+	      tramp[4] = OPCODE_LI (12, dlrr);
+	      tramp[5] = OPCODE_ADDIS_HI (12, 12, dlrr);
+	      tramp[6] = OPCODE_MTCTR (12);
+	      
+	      /* Load address of link map in r12.  */
+	      tramp[7] = OPCODE_LI (12, (Elf32_Word) map);
+	      tramp[8] = OPCODE_ADDIS_HI (12, 12, (Elf32_Word) map);
+	      
+	      /* Call _dl_runtime_resolve.  */
+	      tramp[9] = OPCODE_BCTR ();
+	    }
+	  
+	  /* Set up the lazy PLT entries.  */
+	  offset = PLT_INITIAL_ENTRY_WORDS;
+	  i = 0;
+	  while (i < num_plt_entries && i < PLT_DOUBLE_SIZE)
+	    {
+	      plt[offset  ] = OPCODE_LI (11, i * 4);
+	      plt[offset+1] = OPCODE_B ((PLT_TRAMPOLINE_ENTRY_WORDS + 2
+					 - (offset+1))
+					* 4);
+	      i++;
+	      offset += 2;
+	    }
+	  while (i < num_plt_entries)
+	    {
+	      plt[offset  ] = OPCODE_LIS_HI (11, i * 4 + data_words);
+	      plt[offset+1] = OPCODE_LWZU (12, i * 4 + data_words, 11);
+	      plt[offset+2] = OPCODE_B ((PLT_TRAMPOLINE_ENTRY_WORDS
+					 - (offset+2))
+					* 4);
+	      plt[offset+3] = OPCODE_BCTR ();
+	      i++;
+	      offset += 4;
+	    }
+	}
 
-	 Assumes the cache line size is at least 32 bytes, or at least
-	 that dcbst and icbi apply to 32-byte lines. At present, all
-	 PowerPC processors have line sizes of exactly 32 bytes.  */
+      /* Now, we've modified code.  We need to write the changes from
+	 the data cache to a second-level unified cache, then make
+	 sure that stale data in the instruction cache is removed.
+	 (In a multiprocessor system, the effect is more complex.)
+	 Most of the PLT shouldn't be in the instruction cache, but
+	 there may be a little overlap at the start and the end.
 
-      size_modified = lazy ? rel_offset_words : PLT_INITIAL_ENTRY_WORDS;
-      for (i = 0; i < size_modified; i+= 8)
+	 Assumes that dcbst and icbi apply to lines of 16 bytes or
+	 more.  At present, all PowerPC processors have line sizes of
+	 16 or 32 bytes.  */
+
+      size_modified = lazy ? rel_offset_words : 6;
+      for (i = 0; i < size_modified; i += 4)
 	PPC_DCBST (plt + i);
       PPC_DCBST (plt + size_modified - 1);
       PPC_SYNC;
       PPC_ICBI (plt);
-      PPC_ICBI (plt + size_modified-1);
+      PPC_ICBI (plt + size_modified - 1);
       PPC_ISYNC;
     }
 
@@ -271,61 +319,45 @@ void
 __elf_machine_fixup_plt(struct link_map *map, const Elf32_Rela *reloc,
 			Elf32_Addr *reloc_addr, Elf32_Addr finaladdr)
 {
-  Elf32_Sword delta = finaladdr - (Elf32_Word) (char *) reloc_addr;
+  Elf32_Sword delta = finaladdr - (Elf32_Word) reloc_addr;
   if (delta << 6 >> 6 == delta)
     *reloc_addr = OPCODE_B (delta);
   else if (finaladdr <= 0x01fffffc || finaladdr >= 0xfe000000)
     *reloc_addr = OPCODE_BA (finaladdr);
   else
     {
-      Elf32_Word *plt;
-      Elf32_Word index;
-
+      Elf32_Word *plt, *data_words;
+      Elf32_Word index, offset, num_plt_entries;
+      
+      num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
+			 / sizeof(Elf32_Rela));
       plt = (Elf32_Word *) map->l_info[DT_PLTGOT]->d_un.d_val;
-      index = (reloc_addr - plt - PLT_INITIAL_ENTRY_WORDS)/2;
-      if (index >= PLT_DOUBLE_SIZE)
+      offset = reloc_addr - plt;
+      index = (offset - PLT_INITIAL_ENTRY_WORDS)/2;
+      data_words = plt + PLT_DATA_START_WORDS (num_plt_entries);
+
+      reloc_addr += 1;
+
+      if (index < PLT_DOUBLE_SIZE)
 	{
-	  /* Slots greater than or equal to 2^13 have 4 words available
-	     instead of two.  */
-	  /* FIXME: There are some possible race conditions in this code,
-	     when called from 'fixup'.
-
-	     1) Suppose that a lazy PLT entry is executing, a context switch
-	     between threads (or a signal) occurs, and the new thread or
-	     signal handler calls the same lazy PLT entry.  Then the PLT entry
-	     would be changed while it's being run, which will cause a segfault
-	     (almost always).
-
-	     2) Suppose the reverse: that a lazy PLT entry is being updated,
-	     a context switch occurs, and the new code calls the lazy PLT
-	     entry that is being updated.  Then the half-fixed PLT entry will
-	     be executed, which will also almost always cause a segfault.
-
-	     These problems don't happen with the 2-word entries, because
-	     only one of the two instructions are changed when a lazy entry
-	     is retargeted at the actual PLT entry; the li instruction stays
-	     the same (we have to update it anyway, because we might not be
-	     updating a lazy PLT entry).  */
-
-	  reloc_addr[0] = OPCODE_LI (11, finaladdr);
-	  reloc_addr[1] = OPCODE_ADDIS (11, 11, (finaladdr + 0x8000) >> 16);
-	  reloc_addr[2] = OPCODE_MTCTR (11);
-	  reloc_addr[3] = OPCODE_BCTR ();
+	  data_words[index] = finaladdr;
+	  PPC_SYNC;
+	  *reloc_addr = OPCODE_B ((PLT_LONGBRANCH_ENTRY_WORDS - (offset+1)) 
+				  * 4);
 	}
       else
 	{
-	  Elf32_Word num_plt_entries;
+	  index -= (index - PLT_DOUBLE_SIZE)/2;
 
-	  num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
-			     / sizeof(Elf32_Rela));
+	  data_words[index] = finaladdr;
+	  PPC_SYNC;
 
-	  plt[index+PLT_DATA_START_WORDS (num_plt_entries)] = finaladdr;
-	  reloc_addr[0] = OPCODE_LI (11, index*4);
-	  reloc_addr[1] = OPCODE_B (-(4*(index*2
-					 + 1
-					 - PLT_LONGBRANCH_ENTRY_WORDS
-					 + PLT_INITIAL_ENTRY_WORDS)));
-	  reloc_addr += 1;  /* This is the modified address.  */
+	  reloc_addr[1] = OPCODE_MTCTR (12);
+	  MODIFIED_CODE_NOQUEUE (reloc_addr + 1);
+	  PPC_SYNC;
+
+	  reloc_addr[0] = OPCODE_LWZ (12,
+				      (Elf32_Word) (data_words + index), 11);
 	}
     }
   MODIFIED_CODE (reloc_addr);
@@ -394,7 +426,7 @@ __process_machine_rela (struct link_map *map,
 
     case R_PPC_REL24:
       {
-	Elf32_Sword delta = finaladdr - (Elf32_Word) (char *) reloc_addr;
+	Elf32_Sword delta = finaladdr - (Elf32_Word) reloc_addr;
 	if (delta << 6 >> 6 != delta)
 	  _dl_signal_error (0, map->l_name,
 			    "R_PPC_REL24 relocation out of range");
@@ -423,12 +455,52 @@ __process_machine_rela (struct link_map *map,
       return;
 
     case R_PPC_REL32:
-      *reloc_addr = finaladdr - (Elf32_Word) (char *) reloc_addr;
+      *reloc_addr = finaladdr - (Elf32_Word) reloc_addr;
       return;
 
     case R_PPC_JMP_SLOT:
-      elf_machine_fixup_plt (map, reloc, reloc_addr, finaladdr);
-      return;
+      /* It used to be that elf_machine_fixup_plt was used here,
+	 but that doesn't work when ld.so relocates itself
+	 for the second time.  On the bright side, there's
+         no need to worry about thread-safety here.  */
+      {
+	Elf32_Sword delta = finaladdr - (Elf32_Word) reloc_addr;
+	if (delta << 6 >> 6 == delta)
+	  *reloc_addr = OPCODE_B (delta);
+	else if (finaladdr <= 0x01fffffc || finaladdr >= 0xfe000000)
+	  *reloc_addr = OPCODE_BA (finaladdr);
+	else
+	  {
+	    Elf32_Word *plt, *data_words;
+	    Elf32_Word index, offset, num_plt_entries;
+	    
+	    plt = (Elf32_Word *) map->l_info[DT_PLTGOT]->d_un.d_val;
+	    offset = reloc_addr - plt;
+
+	    if (offset < PLT_DOUBLE_SIZE*2 + PLT_INITIAL_ENTRY_WORDS)
+	      {
+		index = (offset - PLT_INITIAL_ENTRY_WORDS)/2;
+		num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
+				   / sizeof(Elf32_Rela));
+		data_words = plt + PLT_DATA_START_WORDS (num_plt_entries);
+		data_words[index] = finaladdr;
+		reloc_addr[0] = OPCODE_LI (11, index * 4);
+		reloc_addr[1] = OPCODE_B ((PLT_LONGBRANCH_ENTRY_WORDS 
+					   - (offset+1)) 
+					  * 4);
+		MODIFIED_CODE_NOQUEUE (reloc_addr + 1);
+	      }
+	    else
+	      {
+		reloc_addr[0] = OPCODE_LIS_HI (12, finaladdr);
+		reloc_addr[1] = OPCODE_ADDI (12, 12, finaladdr);
+		reloc_addr[2] = OPCODE_MTCTR (12);
+		reloc_addr[3] = OPCODE_BCTR ();
+		MODIFIED_CODE_NOQUEUE (reloc_addr + 3);
+	      }
+	  }
+      }
+      break;
 
     default:
       _dl_reloc_bad_type (map, rinfo, 0);
