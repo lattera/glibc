@@ -51,8 +51,8 @@ __argz_insert (char **argz, size_t *argz_len, char *before, const char *entry)
     if (new_argz)
       {
 	before = new_argz + (before - *argz);
-	memcpy (before + entry_len, before, after_before);
-	memcpy (before, entry, entry_len);
+	memmove (before + entry_len, before, after_before);
+	memmove (before, entry, entry_len);
 	*argz = new_argz;
 	*argz_len = new_argz_len;
 	return 0;
