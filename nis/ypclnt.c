@@ -66,15 +66,12 @@ __yp_bind (const char *domain, dom_binding **ypdb)
   if (domain == NULL || domain[0] == '\0')
     return YPERR_BADARGS;
 
-  if (ypdb != NULL)
+  ysd = *ypdb;
+  while (ysd != NULL)
     {
-      ysd = *ypdb;
-      while (ysd != NULL)
-	{
-	  if (strcmp (domain, ysd->dom_domain) == 0)
-	    break;
-	  ysd = ysd->dom_pnext;
-	}
+      if (strcmp (domain, ysd->dom_domain) == 0)
+	break;
+      ysd = ysd->dom_pnext;
     }
 
   if (ysd == NULL)
@@ -207,13 +204,8 @@ __yp_bind (const char *domain, dom_binding **ypdb)
 
   if (is_new)
     {
-      if (ypdb != NULL)
-	{
-	  ysd->dom_pnext = *ypdb;
-	  *ypdb = ysd;
-	}
-      else
-	free (ysd);
+      ysd->dom_pnext = *ypdb;
+      *ypdb = ysd;
     }
 
   return YPERR_SUCCESS;
@@ -224,6 +216,7 @@ __yp_unbind (dom_binding *ydb)
 {
   clnt_destroy (ydb->dom_client);
   ydb->dom_client = NULL;
+  free (ydb);
 }
 
 int
@@ -260,7 +253,6 @@ yp_unbind_locked (const char *indomain)
 	  else
 	    ydbptr2 = ydbptr->dom_pnext;
 	  __yp_unbind (work);
-	  free (work);
 	  break;
 	}
       ydbptr2 = ydbptr;
@@ -340,10 +332,7 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
 	      use_ypbindlist = FALSE;
 	    }
 	  else
-	    {
-	      __yp_unbind (ydb);
-	      free (ydb);
-	    }
+	    __yp_unbind (ydb);
 
 	  ydb = NULL;
 	  status = YPERR_RPC;
@@ -360,11 +349,7 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
     }
   else
     if (ydb != NULL)
-      {
-	__yp_unbind (ydb);
-	free (ydb);
-	ydb = NULL;
-      }
+      __yp_unbind (ydb);
 
   __set_errno (saved_errno);
 
@@ -715,7 +700,6 @@ yp_all (const char *indomain, const char *inmap,
 
       /* We don't need the UDP connection anymore.  */
       __yp_unbind (ydb);
-      free (ydb);
       ydb = NULL;
 
       clnt = clnttcp_create (&clnt_sin, YPPROG, YPVERS, &clnt_sock, 0, 0);

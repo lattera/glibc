@@ -1,5 +1,9 @@
 2003-04-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/ypclnt.c (__yp_bind): Expect ypdb parameter to always we !=
+	NULL.  Remove code made redundant by this assumption.
+	(__yp_unbind): Add call to free.  Adjust all callers.
+
 	* nis/ypclnt.c (yp_all): Free the dom_binding object after
 	unwinding it.
 
