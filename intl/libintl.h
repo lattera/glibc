@@ -1,6 +1,5 @@
 /* Message catalogs for internationalization.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
+   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is derived from the file libgettext.h in the GNU gettext package.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
@@ -52,6 +51,23 @@ extern char *__dcgettext (__const char *__domainname,
 			  __const char *__msgid, int __category) __THROW;
 
 
+/* Similar to `gettext' but select the plural form corresponding to the
+   number N.  */
+extern char *ngettext (__const char *__msgid1, __const char *__msgid2,
+		       unsigned long int __n) __THROW;
+
+/* Similar to `dgettext' but select the plural form corresponding to the
+   number N.  */
+extern char *dngettext (__const char *__domainname, __const char *__msgid1,
+			__const char *__msgid2, unsigned long int __n) __THROW;
+
+/* Similar to `dxgettext' but select the plural form corresponding to the
+   number N.  */
+extern char *dcngettext (__const char *__domainname, __const char *__msgid1,
+			 __const char *__msgid2, unsigned long int __n,
+			 int __category) __THROW;
+
+
 /* Set the current default message catalog to DOMAINNAME.
    If DOMAINNAME is null, return the current default.
    If DOMAINNAME is "", reset to the default of "messages".  */
@@ -81,6 +97,11 @@ extern char *bindtextdomain (__const char *__domainname,
 
 # define dgettext(domainname, msgid)					      \
   dcgettext (domainname, msgid, LC_MESSAGES)
+
+# define ngettext(msgid, n) dngettext (NULL, msgid, n)
+
+# define dngettext(domainname, msgid, n)				      \
+  dcngettext (domainname, msgid, n, LC_MESSAGES)
 
 #endif	/* Optimizing.  */
 

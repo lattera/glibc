@@ -1,5 +1,5 @@
 /* Implementation of gettext(3) function.
-   Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1997, 2000 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.
@@ -52,10 +52,10 @@
    prefix.  So we have to make a difference here.  */
 #ifdef _LIBC
 # define GETTEXT __gettext
-# define DGETTEXT __dgettext
+# define DCGETTEXT __dcgettext
 #else
 # define GETTEXT gettext__
-# define DGETTEXT dgettext__
+# define DCGETTEXT dcgettext__
 #endif
 
 /* Look up MSGID in the current default message catalog for the current
@@ -65,7 +65,7 @@ char *
 GETTEXT (msgid)
      const char *msgid;
 {
-  return DGETTEXT (NULL, msgid);
+  return DCGETTEXT (NULL, msgid, LC_MESSAGES);
 }
 
 #ifdef _LIBC

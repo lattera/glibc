@@ -1,3 +1,33 @@
+2000-01-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/Makefile (routines): Add dcigettext, dcngettext, dngettxt,
+	ngettext, and plural.
+	(distribute): Add plural.y, po2test.sed, and tst-gettext.sh.
+	(test-srcs): Add tst-gettext.
+	(before-compile): Add $(objpfx)msgs.h.
+	Add rules for plural.c and msgs.h generation and running tst-gettext.\
+	* intl/Versions [GLIBC_2.2]: Add __dcngettext, dcngettext, dngettext,
+	and ngettext.
+	* intl/dcgettext.c: Move most code into dcigettext.c.  Add call
+	dcigettext with appropriate parameters.
+	* intl/dcigettext.c: New file.
+	* intl/dcngettext.c: New file.
+	* intl/dngettext.c: New file.
+	* intl/ngettext.c: New file.
+	* intl/gettextP.h (struct expression): Define.
+	(struct loaded_domain): Add plural and nplurals members.
+	Add prototypes for new internal functions.
+	* intl/libintl.h: Declare new functions.  Add optimizations for them.
+	* intl/loadinfo.h: Add new parameter to _nl_find_msg declaration.
+	* intl/loadmsgcat.c (_nl_load_domain): Search for plural information in
+	header entry and parse and store the expression.
+	* intl/plural.y: New file.
+	* intl/po2test.sed: New file.
+	* intl/tst-gettext.c: New file.
+	* intl/tst-gettext.sh: New file.
+
+	* intl/gettext.c: Call __dcgettext directly.
+
 2000-01-20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/getopt.texi (Using the getopt function): Fix description of

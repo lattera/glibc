@@ -1,5 +1,5 @@
 /* Load needed message catalogs.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.
@@ -23,6 +23,7 @@
 # include <config.h>
 #endif
 
+#include <ctype.h>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -81,6 +82,32 @@
    with all translations.  This is important if the translations are
    cached by one of GCC's features.  */
 int _nl_msg_cat_cntr;
+
+/* These structs are the constant expression for the germanic plural
+   form determination.  */
+static const struct expression plvar =
+{
+  .operation = var,
+};
+static const struct expression plone =
+{
+  .operation = num,
+  .val =
+  {
+    .num = 1
+  }
+};
+static struct expression germanic_plural =
+{
+  .operation = not_equal,
+  .val =
+  {
+    .args2 = {
+      .left = (struct expression *) &plvar,
+      .right = (struct expression *) &plone
+    }
+  }
+};
 
 
 /* Load the message catalogs specified by FILENAME.  If it is no valid
@@ -230,10 +257,12 @@ _nl_load_domain (domain_file)
   domain->conv = (iconv_t) -1;
 # endif
 #endif
-  nullentry = _nl_find_msg (domain_file, "");
+  nullentry = _nl_find_msg (domain_file, "", 0);
   if (nullentry != NULL)
     {
-      char *charsetstr = strstr (nullentry, "charset=");
+      const char *charsetstr = strstr (nullentry, "charset=");
+      const char *plural;
+      const char *nplurals;
 
       if (charsetstr != NULL)
 	{
@@ -270,6 +299,42 @@ _nl_load_domain (domain_file)
 # endif
 #endif
 	}
+
+      /* Also look for a plural specification.  */
+      plural = strstr (nullentry, "plural=");
+      nplurals = strstr (nullentry, "nplurals=");
+      if (plural == NULL || nplurals == NULL)
+	{
+	  /* By default we are using the Germanic form: singular form only
+	     for `one', the plural form otherwise.  Yes, this is also what
+	     English is using since English is a Germanic language.  */
+	no_plural:
+	  domain->plural = &germanic_plural;
+	  domain->nplurals = 2;
+	}
+      else
+	{
+	  /* First get the number.  */
+	  char *endp;
+	  struct parse_args args;
+
+	  nplurals += 9;
+	  while (*nplurals != '\0' && isspace (*nplurals))
+	    ++nplurals;
+	  domain->nplurals = strtoul (nplurals, &endp, 10);
+	  if (nplurals == endp)
+	    goto no_plural;
+
+	  /* Due to the restrictions bison imposes onto the interface of the
+	     scanner function we have to put the input string and the result
+	     passed up from the parser into the same structure which address
+	     is passed down to the parser.  */
+	  plural += 7;
+	  args.cp = plural;
+	  if (__gettextparse (&args) != 0)
+	    goto no_plural;
+	  domain->plural = args.res;
+	}
     }
 }
 
@@ -280,6 +345,19 @@ internal_function
 _nl_unload_domain (domain)
      struct loaded_domain *domain;
 {
+  if (domain->plural != &germanic_plural)
+    __gettext_free_exp (domain->plural);
+
+#ifdef _LIBC
+  if (domain->conv != (__gconv_t) -1)
+    __gconv_close (domain->conv);
+#else
+# if HAVE_ICONV
+  if (domain->conv != (iconv_t) -1)
+    iconv_close (domain->conv);
+# endif
+#endif
+
 #ifdef _POSIX_MAPPED_FILES
   if (domain->use_mmap)
     munmap ((caddr_t) domain->data, domain->mmap_size);

@@ -1,4 +1,4 @@
-# Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,16 +21,40 @@
 subdir = intl
 headers = libintl.h
 routines = bindtextdom dcgettext dgettext gettext	\
+	   dcigettext dcngettext dngettext ngettext \
 	   finddomain loadmsgcat localealias textdomain	\
-	   l10nflist explodename
-distribute = gettext.h gettextP.h hash-string.h loadinfo.h locale.alias
+	   l10nflist explodename plural
+distribute = gettext.h gettextP.h hash-string.h loadinfo.h locale.alias \
+	     plural.y po2test.sed tst-gettext.sh
+
+test-srcs := tst-gettext
+
+before-compile = $(objpfx)msgs.h
 
 install-others = $(inst_msgcatdir)/locale.alias
 
+plural.c: plural.y
+	$(YACC) $(YFLAGS) $@ $^
+ifeq ($(with-cvs),yes)
+	test ! -d CVS || cvs $(CVSOPTS) commit -m'$(YACC) $(YFLAGS) $@ $^' $@
+endif
+$(objpfx)plural.o: plural.c
+
 include ../Rules
+
+.PHONY: do-gettext-test
+tests: do-gettext-test
+do-gettext-test: tst-gettext.sh $(objpfx)tst-gettext
+	$(SHELL) -e $< $(common-objpfx) $(objpfx)
+
+$(objpfx)msgs.h: po2test.sed ../po/de.po
+	sed -f $^ > $@
+
+CFLAGS-tst-gettext.c = -DTESTSTRS_H=\"$(objpfx)msgs.h\"
 
 CPPFLAGS += -D'GNULOCALEDIR="$(msgcatdir)"' \
 	    -D'LOCALE_ALIAS_PATH="$(msgcatdir):$(i18ndir)"'
+YFLAGS = --name-prefix=__gettext --output
 
 $(inst_msgcatdir)/locale.alias: locale.alias $(+force)
 	$(do-install)

@@ -18,4 +18,14 @@ libc {
     # t*
     textdomain;
   }
+  GLIBC_2.2 {
+    # functions used in inline functions or macros
+    __dcngettext;
+
+    # d*
+    dcngettext; dngettext;
+
+    # n*
+    ngettext;
+  }
 }

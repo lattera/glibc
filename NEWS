@@ -15,7 +15,7 @@ Version 2.2
 
 * Wide character I/O streams implemented by Ulrich Drepper.
 
-* functions from the extended socket API added by Ulrich Drepper.
+* Functions from the extended socket API added by Ulrich Drepper.
 
 * Functions feenableexcept and fedisableexcept to control the
   behaviour of individual exceptions have been added by Andreas Jaeger.
@@ -29,6 +29,13 @@ Version 2.2
 * Compatibility code for K&R C compilers has been removed from the
   header files.  A ISO C compiler is needed to use the library
   (conforming to either C89 or C99 standard).
+
+* Complete rewrite of the localedef program to support multibyte character
+  sets.  Implement handling of ISO 14651 and ISO 14652.  Rewrite strcoll,
+  strxfrm, wcscoll, and wcsxfrm functions.  Make isw*() functions work.
+  Implemented by Ulrich Drepper.
+
+* Plural handling in gettext implemented by Ulrich Drepper.
 
 
 Version 2.1.3
