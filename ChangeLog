@@ -1,5 +1,7 @@
 2005-04-05  Roland McGrath  <roland@redhat.com>
 
+	* NEWS: Copy 2.3.5 section from 2.3 branch.
+
 	* intl/tst-codeset.sh: Use mkdir -p.  Put msgfmt output in temporary
 	file and mv it into place.
 	* intl/tst-gettext3.sh: Likewise.
@@ -2347,7 +2349,7 @@
 	* sysdeps/ia64/fpu/w_lgammaf.c: Likewise.
 	* sysdeps/ia64/fpu/w_lgammal.c: Likewise.
 
-2004-12-09  H. J. Lu <hjl@lucon.org>
+2004-12-09  H.J. Lu <hjl@lucon.org>
 
 	[BZ #592]
 	* sysdeps/ia64/fpu/s_nextafterl.c: Remove.
