@@ -30,10 +30,10 @@
 #include <nscd.h>
 
 
-typedef enum nss_status (*nss_gethostbyname2_r)
+typedef enum nss_status (*nss_gethostbyname3_r)
   (const char *name, int af, struct hostent *host,
    char *buffer, size_t buflen, int *errnop,
-   int *h_errnop);
+   int *h_errnop, int32_t *, char **);
 typedef enum nss_status (*nss_getcanonname_r)
   (const char *name, char *buffer, size_t buflen, char **result,
    int *errnop, int *h_errnop);
@@ -114,19 +114,23 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
   size_t tmpbuf4len = 0;
   char *tmpbuf4 = NULL;
   char *canon = NULL;
+  int32_t ttl = UINT32_MAX;
   ssize_t total = 0;
   char *key_copy = NULL;
   bool alloca_used = false;
 
   while (!no_more)
     {
-      nss_gethostbyname2_r fct = __nss_lookup_function (nip,
-							"gethostbyname2_r");
       int status[2] = { NSS_STATUS_UNAVAIL, NSS_STATUS_UNAVAIL };
+
+      /* Prefer the function which also returns the TTL and canonical name.  */
+      nss_gethostbyname3_r fct = __nss_lookup_function (nip,
+							"gethostbyname3_r");
+      if (fct == NULL)
+	fct = __nss_lookup_function (nip, "gethostbyname2_r");
 
       if (fct != NULL)
 	{
- printf("fct=%p\n",fct);
 	  struct hostent th[2];
 
 	  /* Collect IPv6 information first.  */
@@ -134,7 +138,8 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	    {
 	      rc6 = 0;
 	      status[0] = DL_CALL_FCT (fct, (key, AF_INET6, &th[0], tmpbuf6,
-					     tmpbuf6len, &rc6, &herrno));
+					     tmpbuf6len, &rc6, &herrno,
+					     &ttl, &canon));
 	      if (rc6 != ERANGE || herrno != NETDB_INTERNAL)
 		break;
 	      tmpbuf6 = extend_alloca (tmpbuf6, tmpbuf6len, 2 * tmpbuf6len);
@@ -161,10 +166,12 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	    {
 	      rc4 = 0;
 	      status[1] = DL_CALL_FCT (fct, (key, AF_INET, &th[1], tmpbuf4,
-					     tmpbuf4len, &rc4, &herrno));
+					     tmpbuf4len, &rc4, &herrno,
+					     ttl == UINT32_MAX ? &ttl : NULL,
+					     canon == NULL ? &canon : NULL));
 	      if (rc4 != ERANGE || herrno != NETDB_INTERNAL)
 		break;
-	      tmpbuf4 = extend_alloca (tmpbuf6, tmpbuf6len, 2 * tmpbuf6len);
+	      tmpbuf4 = extend_alloca (tmpbuf4, tmpbuf4len, 2 * tmpbuf4len);
 	    }
 
 	  if (rc4 != 0 || herrno == NETDB_INTERNAL)
@@ -184,26 +191,69 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 		      addrslen += th[j].h_length;
 		    }
 
-	      /* Determine the canonical name.  */
-	      nss_getcanonname_r cfct;
-	      cfct = __nss_lookup_function (nip, "getcanonname_r");
-	      if (cfct != NULL)
+	      if (canon == NULL)
 		{
-		  const size_t max_fqdn_len = 256;
-		  char *buf = alloca (max_fqdn_len);
-		  char *s;
-		  int rc;
+		  /* Determine the canonical name.  */
+		  nss_getcanonname_r cfct;
+		  cfct = __nss_lookup_function (nip, "getcanonname_r");
+		  if (cfct != NULL)
+		    {
+		      const size_t max_fqdn_len = 256;
+		      char *buf = alloca (max_fqdn_len);
+		      char *s;
+		      int rc;
 
-		  if (DL_CALL_FCT (cfct, (key, buf, max_fqdn_len, &s, &rc,
-					  &herrno)) == NSS_STATUS_SUCCESS)
-		    canon = s;
+		      if (DL_CALL_FCT (cfct, (key, buf, max_fqdn_len, &s, &rc,
+					      &herrno)) == NSS_STATUS_SUCCESS)
+			canon = s;
+		      else
+			/* Set to name now to avoid using gethostbyaddr.  */
+			canon = key;
+		    }
 		  else
-		    /* Set to name now to avoid using gethostbyaddr.  */
-		    canon = key;
-		}
-	      else
-		{
-		  // XXX use gethostbyaddr
+		    {
+		      struct hostent *he = NULL;
+		      int herrno;
+		      struct hostent he_mem;
+		      void *addr;
+		      size_t addrlen;
+		      int addrfamily;
+
+		      if (status[1] == NSS_STATUS_SUCCESS)
+			{
+			  addr = th[1].h_addr_list[0];
+			  addrlen = sizeof (struct in_addr);
+			  addrfamily = AF_INET;
+			}
+		      else
+			{
+			  addr = th[0].h_addr_list[0];
+			  addrlen = sizeof (struct in6_addr);
+			  addrfamily = AF_INET6;
+			}
+
+		      size_t tmpbuflen = 512;
+		      char *tmpbuf = alloca (tmpbuflen);
+		      int rc;
+		      while (1)
+			{
+			  rc = __gethostbyaddr_r (addr, addrlen, addrfamily,
+						  &he_mem, tmpbuf, tmpbuflen,
+						  &he, &herrno);
+			  if (rc != ERANGE || herrno != NETDB_INTERNAL)
+			    break;
+			  tmpbuf = extend_alloca (tmpbuf, tmpbuflen,
+						  tmpbuflen * 2);
+			}
+
+		      if (rc == 0)
+			{
+			  if (he != NULL)
+			    canon = he->h_name;
+			  else
+			    canon = key;
+			}
+		    }
 		}
 	      size_t canonlen = canon == NULL ? 0 : (strlen (canon) + 1);
 
@@ -237,7 +287,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	      dataset->head.usable = true;
 
 	      /* Compute the timeout time.  */
-	      dataset->head.timeout = time (NULL) + db->postimeout;
+	      dataset->head.timeout = time (NULL) + MIN (db->postimeout, ttl);
 
 	      dataset->resp.version = NSCD_VERSION;
 	      dataset->resp.found = 1;

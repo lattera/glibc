@@ -1,5 +1,16 @@
 2004-09-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/aicache.c: Prefer using gethostbyname3_r NSS callback to also
+	get ttl and canonical name.  Use these two values.
+	* resolv/Versions: Export _nss_dns_gethostbyname3_r from libnss_dns.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Take two new parameters.
+	If nonnull fill with TTL and pointer to canonical name respectively.
+	(_nss_dns_gethostbyaddr_r): Pass NULL in new parameters of getanswer_r.
+	(_nss_dns_gethostbyname2_r): Just wrapper around
+	_nss_dns_gethostbyname3_r.
+	(_nss_dns_gethostbyname3_r): Renamed from _nss_dns_gethostbyname2_r.
+	Take two new parameters which as passed to getanswer_r.
+
 	* nscd/Makefile (rountines): Add nscd_getai.
 	(nscd-modules): Add aicache.
 	* nscd/aicache.c: New file.

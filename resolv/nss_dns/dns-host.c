@@ -125,12 +125,12 @@ static enum nss_status getanswer_r (const querybuf *answer, int anslen,
 				    const char *qname, int qtype,
 				    struct hostent *result, char *buffer,
 				    size_t buflen, int *errnop, int *h_errnop,
-				    int map);
+				    int map, int32_t *ttlp, char **canonp);
 
 enum nss_status
-_nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
+_nss_dns_gethostbyname3_r (const char *name, int af, struct hostent *result,
 			   char *buffer, size_t buflen, int *errnop,
-			   int *h_errnop)
+			   int *h_errnop, int32_t *ttlp, char **canonp)
 {
   union
   {
@@ -211,10 +211,20 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
     }
 
   status = getanswer_r (host_buffer.buf, n, name, type, result, buffer, buflen,
-			errnop, h_errnop, map);
+			errnop, h_errnop, map, ttlp, canonp);
   if (host_buffer.buf != orig_host_buffer)
     free (host_buffer.buf);
   return status;
+}
+
+
+enum nss_status
+_nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
+			   char *buffer, size_t buflen, int *errnop,
+			   int *h_errnop)
+{
+  return _nss_dns_gethostbyname3_r (name, af, result, buffer, buflen, errnop,
+				    h_errnop, NULL, NULL);
 }
 
 
@@ -355,7 +365,7 @@ _nss_dns_gethostbyaddr_r (const void *addr, socklen_t len, int af,
 
  got_it_already:
   status = getanswer_r (host_buffer.buf, n, qbuf, T_PTR, result, buffer, buflen,
-			errnop, h_errnop, 0 /* XXX */);
+			errnop, h_errnop, 0 /* XXX */, NULL, NULL);
   if (host_buffer.buf != orig_host_buffer)
     free (host_buffer.buf);
   if (status != NSS_STATUS_SUCCESS)
@@ -439,7 +449,7 @@ addrsort (char **ap, int num)
 static enum nss_status
 getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	     struct hostent *result, char *buffer, size_t buflen,
-	     int *errnop, int *h_errnop, int map)
+	     int *errnop, int *h_errnop, int map, int32_t *ttlp, char **canonp)
 {
   struct host_data
   {
@@ -458,6 +468,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   int (*name_ok) (const char *);
   u_char packtmp[NS_MAXCDNAME];
   int have_to_map = 0;
+  int32_t ttl = 0;
 
   if (__builtin_expect (linebuflen, 0) < 0)
     {
@@ -577,7 +588,9 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       type = ns_get16 (cp);
       cp += INT16SZ;			/* type */
       class = ns_get16 (cp);
-      cp += INT16SZ + INT32SZ;		/* class, TTL */
+      cp += INT16SZ;			/* class */
+      ttl = ns_get32 (cp);
+      cp += INT32SZ;			/* TTL */
       n = ns_get16 (cp);
       cp += INT16SZ;			/* len */
       if (class != C_IN)
@@ -749,6 +762,10 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	    {
 	      register int nn;
 
+	      if (ttlp != NULL && ttl != 0)
+		*ttlp = ttl;
+	      if (canonp != NULL)
+		*canonp = bp;
 	      result->h_name = bp;
 	      nn = strlen (bp) + 1;	/* for the \0 */
 	      bp += nn;

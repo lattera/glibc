@@ -126,7 +126,7 @@ endif
 endif
 
 CFLAGS-regex.c = -Wno-strict-prototypes
-CFLAGS-getaddrinfo.c = -DRESOLVER -fexceptions
+CFLAGS-getaddrinfo.c = -DRESOLVER -fexceptions -DUSE_NSCD
 CFLAGS-pread.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pread64.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pwrite.c = -fexceptions -fasynchronous-unwind-tables

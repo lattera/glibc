@@ -77,7 +77,7 @@ libresolv {
   GLIBC_PRIVATE {
     # Needed in libnss_dns.
     __ns_name_unpack; __ns_name_ntop;
-    __ns_get16;
+    __ns_get16; __ns_get32;
     __libc_res_nquery; __libc_res_nsearch;
   }
 }
@@ -85,6 +85,7 @@ libresolv {
 libnss_dns {
   GLIBC_PRIVATE {
     _nss_dns_gethostbyaddr_r; _nss_dns_gethostbyname2_r;
+    _nss_dns_gethostbyname3_r;
     _nss_dns_gethostbyname_r; _nss_dns_getnetbyaddr_r;
     _nss_dns_getnetbyname_r; _nss_dns_getcanonname_r;
   }
