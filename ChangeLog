@@ -1,6 +1,15 @@
+2001-01-24  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/init-first.c: Remove extra __sysctl
+	prototype.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: Likewise.
+
+	* include/sys/sysctl.h: New.
+
 2001-01-23  Andreas Jaeger  <aj@suse.de>
 
-	* stdlib/Makefile ($(objpfx)isomac.out): Also pass sysincludes to isomac.
+	* stdlib/Makefile ($(objpfx)isomac.out): Also pass sysincludes to
+	isomac.
 
 	* elf/dl-load.c (_dl_init_paths): Don't use strdupa in function
 	arguments.  Reported by Jiri Kubicek <kubicek@bitsmart.com>,

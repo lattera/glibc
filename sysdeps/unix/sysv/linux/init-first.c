@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  Linux version.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,10 +36,6 @@ extern void __libc_init (int, char **, char **);
 
 /* The function is called from assembly stubs the compiler can't see.  */
 static void init (int, char **, char **) __attribute__ ((unused));
-
-/* The function we use to get the kernel revision.  */
-extern int __sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
-		     void *newval, size_t newlen);
 
 extern int _dl_starting_up;
 weak_extern (_dl_starting_up)

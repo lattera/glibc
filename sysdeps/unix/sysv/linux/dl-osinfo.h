@@ -1,5 +1,5 @@
 /* Operating system specific code  for generic dynamic loader functions.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,11 +25,6 @@
 #ifndef MIN
 # define MIN(a,b) (((a)<(b))?(a):(b))
 #endif
-
-/* There is no prototype for __sysctl in that file.  */
-extern int __sysctl (int *name, int nlen, void *oldval,
-		     size_t *oldlenp, void *newval, size_t newlen);
-
 
 #ifdef SHARED
 /* This is the function used in the dynamic linker to print the fatal error
