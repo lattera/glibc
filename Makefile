@@ -23,6 +23,8 @@ ifneq (,)
 This makefile requires GNU Make.
 endif
 
+include Makeconfig
+
 
 # This is the default target; it makes everything except the tests.
 .PHONY: all
@@ -47,8 +49,6 @@ endif
 
 configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)
-
-include Makeconfig
 
 ifndef avoid-generated
 -include $(objpfx)sysd-dirs

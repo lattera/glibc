@@ -2758,20 +2758,8 @@ if test $shared = default; then
   fi
 fi
 
-if test $static = no && test $shared = yes; then
-  case "$host_os" in
-  linux* | gnu*)
-    { echo "configure: error: 
-*** You must compile with support for the static library since the shared
-*** library uses it.  Restart configure without \`--disable-static'." 1>&2; exit 1; }
-    ;;
-  *)
-    ;;
-  esac
-fi
-
 echo $ac_n "checking whether -fPIC is default""... $ac_c" 1>&6
-echo "configure:2775: checking whether -fPIC is default" >&5
+echo "configure:2763: checking whether -fPIC is default" >&5
 if eval "test \"`echo '$''{'pic_default'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else

@@ -1111,19 +1111,6 @@ if test $shared = default; then
   fi
 fi
 
-dnl We must not allow compilation without static library on some platforms.
-if test $static = no && test $shared = yes; then
-  case "$host_os" in
-  linux* | gnu*)
-    AC_MSG_ERROR([
-*** You must compile with support for the static library since the shared
-*** library uses it.  Restart configure without \`--disable-static'.])
-    ;;
-  *)
-    ;;
-  esac
-fi
-
 AC_CACHE_CHECK([whether -fPIC is default], pic_default,
 [pic_default=yes
 cat > conftest.c <<EOF

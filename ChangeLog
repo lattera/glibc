@@ -1,3 +1,11 @@
+1998-04-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile: Include makeconfig before defining rule to regenerate
+	configure files.
+
+	* configure.in: Remove restriction on compiling without static
+	libs.
+
 1998-04-14 16:34  Ulrich Drepper  <drepper@cygnus.com>
 
 	* test-skeleton.c: Provide hook for initializing code before the fork.

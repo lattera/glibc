@@ -118,7 +118,7 @@ please let me know.
 4.2.	When I try to compile code which uses IPv6 headers and
 	definitions on my Linux 2.x.y system I am in trouble.
 	Nothing seems to work.
-4.3.	When I set the timezone I'm by setting the TZ environment variable
+4.3.	When I set the timezone by setting the TZ environment variable
 	to EST5EDT things go wrong since glibc computes the wrong time
 	from this information.
 
@@ -1103,7 +1103,7 @@ snapshot, according to Philip Blundell <Philip.Blundell@pobox.com>, the
 required kernel version is at least 2.1.30.
 
 
-4.3.	When I set the timezone I'm by setting the TZ environment variable
+4.3.	When I set the timezone by setting the TZ environment variable
 	to EST5EDT things go wrong since glibc computes the wrong time
 	from this information.
 
