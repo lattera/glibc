@@ -116,8 +116,6 @@ __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
 #endif
 }
 
-#if defined PIC && DO_VERSIONING
-default_symbol_version (__new_msgctl, msgctl, GLIBC_2.2);
-#else
-weak_alias (__new_msgctl, msgctl);
-#endif
+#include <shlib-compat.h>
+versioned_symbol (libc, __new_msgctl, msgctl, GLIBC_2_2);
+

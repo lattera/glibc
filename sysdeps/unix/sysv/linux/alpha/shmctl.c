@@ -130,8 +130,5 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 #endif
 }
 
-#if defined PIC && DO_VERSIONING
-default_symbol_version (__new_shmctl, shmctl, GLIBC_2.2);
-#else
-weak_alias (__new_shmctl, shmctl);
-#endif
+#include <shlib-compat.h>
+versioned_symbol (libc, __new_shmctl, shmctl, GLIBC_2_2);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,18 +18,18 @@
 
 #include <sizes.h>
 #include <errlist.h>
+#include <shlib-compat.h>
 
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#define SYS_ERRLIST __new_sys_errlist
+#define SYS_NERR __new_sys_nerr
 
-# define SYS_ERRLIST __new_sys_errlist
-# define SYS_NERR __new_sys_nerr
-
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 asm (".data; .globl __old_sys_errlist;  __old_sys_errlist:");
 #endif
 
 #include <sysdeps/gnu/errlist.c>
 
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 asm (".type __old_sys_errlist,%object;.size __old_sys_errlist,"
      OLD_ERRLIST_SIZE_STR "*" PTR_SIZE_STR);
 
@@ -44,12 +44,11 @@ symbol_version (_old_sys_nerr, sys_nerr, GLIBC_2.0);
 weak_alias (__old_sys_errlist, _old_sys_errlist);
 symbol_version (__old_sys_errlist, _sys_errlist, GLIBC_2.0);
 symbol_version (_old_sys_errlist, sys_errlist, GLIBC_2.0);
-
-weak_alias (__new_sys_nerr, _new_sys_nerr)
-default_symbol_version (__new_sys_nerr, _sys_nerr, GLIBC_2.1);
-default_symbol_version (_new_sys_nerr, sys_nerr, GLIBC_2.1);
-weak_alias (__new_sys_errlist, _new_sys_errlist)
-default_symbol_version (__new_sys_errlist, _sys_errlist, GLIBC_2.1);
-default_symbol_version (_new_sys_errlist, sys_errlist, GLIBC_2.1);
-
 #endif
+
+strong_alias (__new_sys_nerr, _new_sys_nerr)
+versioned_symbol (libc, __new_sys_nerr, _sys_nerr, GLIBC_2_1);
+versioned_symbol (libc, _new_sys_nerr, sys_nerr, GLIBC_2_1);
+strong_alias (__new_sys_errlist, _new_sys_errlist)
+versioned_symbol (libc, __new_sys_errlist, _sys_errlist, GLIBC_2_1);
+versioned_symbol (libc, _new_sys_errlist, sys_errlist, GLIBC_2_1);

@@ -125,8 +125,5 @@ __new_semctl (int semid, int semnum, int cmd, ...)
 #endif
 }
 
-#if defined PIC && DO_VERSIONING
-default_symbol_version (__new_semctl, semctl, GLIBC_2.2);
-#else
-weak_alias (__new_semctl, semctl);
-#endif
+#include <shlib-compat.h>
+versioned_symbol (libc, __new_semctl, semctl, GLIBC_2_2);
