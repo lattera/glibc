@@ -1,3 +1,8 @@
+2004-12-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/posix/sysconf.c (__sysconf_check_spec): Remove leading
+	underscore from GETCONF_DIR filenames.
+
 2004-12-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/de.po: Update from translation team.

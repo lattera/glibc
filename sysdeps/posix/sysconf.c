@@ -1227,9 +1227,9 @@ __sysconf_check_spec (const char *spec)
   size_t getconf_dirlen = strlen (getconf_dir);
   size_t speclen = strlen (spec);
 
-  char name[getconf_dirlen + sizeof ("/_POSIX_V6_") + speclen];
+  char name[getconf_dirlen + sizeof ("/POSIX_V6_") + speclen];
   memcpy (mempcpy (mempcpy (name, getconf_dir, getconf_dirlen),
-		   "/_POSIX_V6_", sizeof ("/_POSIX_V6_") - 1),
+		   "/POSIX_V6_", sizeof ("/POSIX_V6_") - 1),
 	  spec, speclen + 1);
 
   struct stat64 st;
