@@ -1,3 +1,12 @@
+Tue Jul  9 00:14:52 1996  Michael I. Bushnell p/BSG  <mib@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/ioctls.h (MDMBUF, ECHO, TOSTOP, FLUSHO,
+ 	PENDIN, NOFLSH): Undefine these at start if they are already
+ 	defined to avoid collision with termbits.h.
+	* sysdeps/generic/termbits.h (ECHO, TOSTOP, NOFLSH): Likewise.
+	(MDMBUF, FLUSHO, PENDIN) [__USE_BSD]: Likewise.
+
+
 Mon Jul  8 13:37:40 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* math/math.h (_Mfloat_, _Mlong_double_): New macros, defined iff not
@@ -11,7 +20,21 @@ Mon Jul  8 13:37:40 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 	(routines): Remove s_modf, add s_frexpf, s_ldexpf; all but frexp and
 	ldexp have both f and l code, and those have f though not l code.
 
-Mon Jul  8 13:10:50 1996  Michael I. Bushnell p/BSG  <mib@psilocin.gnu.ai.mit.edu>
+Mon Jul  8 13:10:50 1996  Michael I. Bushnell p/BSG  <mib@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/errnos.awk: Skip entries where the
+ 	error is 0.  The "placeholder" entries recently added to 
+	errno.texi convert to zero since `???/' is at the front of them.
+	* sysdeps/gnu/errlist.awk (errnoh): Likewise.
+
+	* sysdeps/stub/setdomain.c (setdomainname): Declare NAME parm 
+	__const to conform with unistd.h.
+
+	* posix/regex.c (re_comp, re_exec): Use weak_function as
+	keyword in function defns instead of weak_symbol (NAME) after
+	the defn.
+
+	* stdlib/stdlib.h (random): Declare return type to be int32_t.
 
 	* string/argz-delete.c (argz_delete): Use memmove instead of
  	memcpy for possibly overlapping strings.

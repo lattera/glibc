@@ -20,6 +20,27 @@ Cambridge, MA 02139, USA.  */
 
 #define	_IOCTLS_H	1
 
+/* These macros are also defined in termbits.h (with numerically 
+   identical values) but this serves to shut up cpp's complaining. */
+#ifdef MDMBUF
+#undef MDMBUF
+#endif
+#ifdef ECHO
+#undef ECHO
+#endif
+#ifdef TOSTOP
+#undef TOSTOP
+#endif
+#ifdef FLUSHO
+#undef FLUSHO
+#endif
+#ifdef PENDIN
+#undef PENDIN
+#endif
+#ifdef NOFLSH
+#undef NOFLSH
+#endif
+
 /* Hurd ioctl request are made up of several fields:
 
     10987654321098765432109876543210

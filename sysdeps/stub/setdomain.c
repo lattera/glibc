@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
    This call is restricted to the super-user.  */
 int
 DEFUN(setdomainname, (name, len),
-      char *name AND size_t len)
+      __const char *name AND size_t len)
 {
   errno = ENOSYS;
   return -1;

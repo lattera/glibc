@@ -17,6 +17,33 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+/* These macros are also defined in some ioctls.h files (with numerically
+   identical values), but this serves to shut up cpp's complaining. */
+#ifdef __USE_BSD
+
+#ifdef MDMBUF
+#undef MDMBUF
+#endif
+#ifdef FLUSHO
+#undef FLUSHO
+#endif
+#ifdef PENDIN
+#undef PENDIN
+#endif
+
+#endif /* __USE_BSD */
+
+#ifdef ECHO
+#undef ECHO
+#endif
+#ifdef TOSTOP
+#undef TOSTOP
+#endif
+#ifdef NOFLSH
+#undef NOFLSH
+#endif
+
+
 /* These definitions match those used by the 4.4 BSD kernel.
    If the operating system has termios system calls or ioctls that
    correctly implement the POSIX.1 behavior, there should be a

@@ -5190,7 +5190,7 @@ re_compile_pattern (pattern, length, bufp)
 /* BSD has one and only one pattern buffer.  */
 static struct re_pattern_buffer re_comp_buf;
 
-char *
+char * weak_function
 re_comp (s)
     const char *s;
 {
@@ -5231,7 +5231,7 @@ re_comp (s)
 }
 
 
-int
+int weak_function
 re_exec (s)
     const char *s;
 {
@@ -5239,14 +5239,6 @@ re_exec (s)
   return
     0 <= re_search (&re_comp_buf, s, len, 0, len, (struct re_registers *) 0);
 }
-
-#ifdef _LIBC
-/* Make these definitions weak in libc, so POSIX programs can redefine
-   these names if they don't use our functions, and still use
-   regcomp/regexec below without link errors.  */
-weak_symbol (re_comp)
-weak_symbol (re_exec)
-#endif
 
 #endif /* _REGEX_RE_COMP */
 
