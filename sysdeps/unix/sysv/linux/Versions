@@ -85,6 +85,7 @@ libc {
   GLIBC_2.2 {
     # needed in other libraries.
     __endmntent; __getmntent_r; __setmntent; __statfs; __libc_sigaction;
+    __sysctl;
 
     # ipc ctl interface change.
     semctl; shmctl; msgctl;
