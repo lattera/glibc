@@ -82,12 +82,12 @@ match_symbol (const char *name, ElfW(Word) hash, const char *string,
   ElfW(Verdef) *def;
 
   /* Display information about what we are doing while debugging.  */
-  if (_dl_debug_versions)
+  if (__builtin_expect (_dl_debug_versions, 0))
     _dl_debug_message (1, "checking for version `", string, "' in file ",
 		       map->l_name[0] ? map->l_name : _dl_argv[0],
 		       " required by file ", name, "\n", NULL);
 
-  if (map->l_info[VERSYMIDX (DT_VERDEF)] == NULL)
+  if (__builtin_expect (map->l_info[VERSYMIDX (DT_VERDEF)] == NULL, 0))
     {
       /* The file has no symbol versioning.  I.e., the dependent
 	 object was linked against another version of this file.  We
@@ -108,7 +108,7 @@ no version information available (required by ",
     {
       /* Currently the version number of the definition entry is 1.
 	 Make sure all we see is this version.  */
-      if (def->vd_version  != 1)
+      if (__builtin_expect (def->vd_version, 1) != 1)
 	{
 	  char buf[20];
 	  buf[sizeof (buf) - 1] = '\0';
@@ -127,7 +127,8 @@ no version information available (required by ",
 	  ElfW(Verdaux) *aux = (ElfW(Verdaux) *) ((char *) def + def->vd_aux);
 
 	  /* To be safe, compare the string as well.  */
-	  if (strcmp (string, strtab + aux->vda_name) == 0)
+	  if (__builtin_expect (strcmp (string, strtab + aux->vda_name), 0)
+	      == 0)
 	    /* Bingo!  */
 	    return 0;
 	}
@@ -141,7 +142,7 @@ no version information available (required by ",
     }
 
   /* Symbol not found.  If it was a weak reference it is not fatal.  */
-  if (weak)
+  if (__builtin_expect (weak, 1))
     {
       if (verbose)
 	_dl_signal_cerror (0, map->l_name,
@@ -187,7 +188,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 
       /* Currently the version number of the needed entry is 1.
 	 Make sure all we see is this version.  */
-      if (ent->vn_version  != 1)
+      if (__builtin_expect (ent->vn_version, 1) != 1)
 	{
 	  char buf[20];
 	  buf[sizeof (buf) - 1] = '\0';
@@ -211,7 +212,8 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 
 	  /* Make sure this is no stub we created because of a missing
 	     dependency.  */
-	  if (! trace_mode || needed->l_opencount != 0)
+	  if (__builtin_expect (! trace_mode, 1)
+	      || __builtin_expect (needed->l_opencount, 1) != 0)
 	    {
 	      /* NEEDED is the map for the file we need.  Now look for the
 		 dependency symbols.  */
@@ -277,7 +279,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 	 section.  */
       map->l_versions = (struct r_found_version *)
 	calloc (ndx_high + 1, sizeof (*map->l_versions));
-      if (map->l_versions == NULL)
+      if (__builtin_expect (map->l_versions == NULL, 0))
 	{
 	  _dl_signal_error (ENOMEM, (*map->l_name ? map->l_name : _dl_argv[0]),
 			    "cannot allocate version reference table");
