@@ -333,6 +333,12 @@ extern int execvp __P ((__const char *__file, char *__const __argv[]));
 extern int execlp __P ((__const char *__file, ...));
 
 
+#ifdef __USE_MISC
+/* Add INC to priority of the current process.  */
+extern int nice __P ((int __inc));
+#endif
+
+
 /* Terminate program execution with the low-order 8 bits of STATUS.  */
 extern void _exit __P ((int __status)) __attribute__ ((__noreturn__));
 

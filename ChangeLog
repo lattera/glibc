@@ -1,3 +1,50 @@
+Mon Aug 12 03:31:58 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nsswitch.c (__nss_configure_lookup):  New function.
+	Allows to specify services.
+	* nss/XXX-lookup.h: Rename database variable and make global.
+	* nss/databases.def: New file.  Real names of all databases.
+
+	* nss/nss.h: New file.  Contains declaration useful for users
+	and service developers.
+	* nss/nsswitch.h: Move some declarations to nss/nss.h.
+	* nss.h: New file.  Wrapper around nss/nss.h.
+
+	* nss/Makefile (headers): Add nss.h.
+	(distributes): Add databases.h.
+
+Sun Aug 11 16:19:42 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	Help the poor people with fast machines by making sure only
+	one `ar' commands works on the library.
+	* autolock.sh: New file.  Written by Tom Tromey.
+	* Makerules (do-ar): Call autolock.sh shell script instead of
+	directly using `ar'.
+	* config.make.in: Make configuration variable AUTOLOCK which
+	gets initialized by configure.
+	* configure.in: Define variable AUTOLOCK to point to autolock.sh
+	script and mark it to substitute.
+
+	* string/Makefile: Add -fno-builtin for tst-strlen.c, too.
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): Allow self-referencing.
+	Patch by David Mosberger-Tang.
+
+Sun Aug 11 01:12:38 1996  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/alpha/dl-machine.h (elf_alpha_fix_plt): Optimize LD_BIND_NOW
+	startup by moving Icache flush from here ...
+	(ELF_MACHINE_RUNTIME_TRAMPOLINE): ... to here.
+	(ELF_MACHINE_USER_ADDRESS_MASK): Delete; it is unused.
+
+	* sysdeps/alpha/divrem.h: Update comment to reflect the actual
+	calling conventions.  The code is already correct.
+
+Sun Aug 11 01:06:42 1996  Richard Henderson  <rth@tamu.edu>
+
+	* string/Makefile: Compile tester with -fno-builtin as we want to
+	test our implementations, not gcc's.
+
 Sat Aug 10 13:17:27 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* shadow.h: New file.

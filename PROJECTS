@@ -77,6 +77,8 @@ contact <bug-glibc@prep.ai.mit.edu>
 	Usenix Winter '92, pp. 419--428
 
      or just ask.  Currently mostly i?86 optimized versions exist.
+     Alpha versions are on their way, so please ask before working
+     on this.
 
 
 [ 8] Write nftw() function.  Perhaps it might be good to reimplement the
@@ -102,14 +104,10 @@ contact <bug-glibc@prep.ai.mit.edu>
 	implementation
      c) will be extended with the current hooks and additional functions
 
+     Please contact bug-glibc@prep.ai.mit.edu before starting to avoid
+     duplicated work.
 
-[12] Implement shadow password handling.  There exist some but I don't
-     know of any falling under LGPL and where the author is willing to
-     contribute it to the FSF.
-
-
-[13] Write access function for shadow, netmasks, bootparams, netgroup,
-     publickey, automount, aliases databases for nss_files and nss_db
-     module.
+[12] Write access function for netmasks, bootparams, netgroup, publickey,
+     automount, aliases databases for nss_files and nss_db module.
      The functions should be embedded in the nss scheme.  This is not
      hard and not all services must be supported at once.

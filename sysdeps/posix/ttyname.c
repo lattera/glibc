@@ -44,6 +44,9 @@ DEFUN(ttyname, (fd), int fd)
   struct dirent *d;
   int save = errno;
 
+  if (!__isatty (fd))
+    return NULL;
+
   if (fstat (fd, &st) < 0)
     return NULL;
   mydev = st.st_dev;

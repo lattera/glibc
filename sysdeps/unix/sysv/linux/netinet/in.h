@@ -81,12 +81,19 @@ struct ip_opts
     char ip_opts[40];		/* Actually variable in size.  */
   };
 
+__BEGIN_DECLS
+
 /* Functions to convert between host and network byte order.  */
 
 extern unsigned long int ntohl __P ((unsigned long int));
 extern unsigned short int ntohs __P ((unsigned short int));
 extern unsigned long int htonl __P ((unsigned long int));
 extern unsigned short int htons __P ((unsigned short int));
+
+/* Bind socket FD to a privileged IP address SIN.  */
+extern int bindresvport __P ((int __fd, struct sockaddr_in * __sin));
+
+__END_DECLS
 
 #include <endian.h>
 
@@ -102,12 +109,5 @@ extern unsigned short int htons __P ((unsigned short int));
 #undef htons
 #define	htons(x)	(x)
 #endif
-
-__BEGIN_DECLS
-
-/* Bind socket FD to a privileged IP address SIN.  */
-extern int bindresvport __P((int __fd, struct sockaddr_in * __sin));
-
-__END_DECLS
 
 #endif	/* netinet/in.h */

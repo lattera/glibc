@@ -54,6 +54,9 @@ __ttyname_r (fd, buf, buflen)
       return -1;
     }
 
+  if (!__isatty (fd))
+    return -1;
+
   if (fstat (fd, &st) < 0)
     return -1;
   mydev = st.st_dev;
