@@ -1,0 +1,7 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+
+libc_cv_asm_line_sep='@'
+cat >>confdefs.h <<_ACEOF
+#define ASM_LINE_SEP $libc_cv_asm_line_sep
+_ACEOF
+

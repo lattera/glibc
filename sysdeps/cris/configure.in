@@ -1,0 +1,5 @@
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+
+dnl CRIS uses `;' to start comments and `@' for line separator.
+libc_cv_asm_line_sep='@'
+AC_DEFINE_UNQUOTED(ASM_LINE_SEP, $libc_cv_asm_line_sep)
