@@ -977,8 +977,10 @@ ifneq (,$(versioned))
 define o-iterator-doit
 $(inst_libdir)/$o: $(inst_slibdir)/$o$($o-version) $(+force); $$(make-link)
 endef
-object-suffixes-left := $(versioned)
+object-suffixes-left := $(filter-out $(install-lib-ldscripts),$(versioned))
+ifneq (,$(object-suffixes-left))
 include $(o-iterator)
+endif
 
 # Make symlinks in the build directory, because the versioned names might
 # be referenced by a DT_NEEDED in another library.
