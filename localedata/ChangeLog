@@ -1,5 +1,11 @@
 2000-09-24  Bruno Haible  <haible@clisp.cons.org>
 
+	* charmaps/UTF-8: Expand <Hangul Syllable> and <Private Use> ranges,
+	so they become printable and carry a width.  Comment out surrogate
+	ranges.  Add a WIDTH table.
+
+2000-09-24  Bruno Haible  <haible@clisp.cons.org>
+
 	* gen-unicode-ctype.c: New file.
 	* dump-ctype.c: New file.
 	* Makefile (distribute): Add them.

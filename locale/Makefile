@@ -35,7 +35,7 @@ distribute	= localeinfo.h categories.def iso-639.def iso-3166.def \
 			      locfile.h charmap.h repertoire.h localedef.h \
 			      3level.h)
 routines	= setlocale findlocale loadlocale localeconv nl_langinfo \
-		  mb_cur_max codeset_name \
+		  nl_langinfo_l mb_cur_max codeset_name \
 		  newlocale duplocale freelocale
 categories	= ctype messages monetary numeric time paper name \
 		  address telephone measurement identification collate

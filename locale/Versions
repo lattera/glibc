@@ -44,5 +44,8 @@ libc {
 
     # more functions from the experimental locale implementation
     __wctrans_l;
+
+    # missing function from the experimental locale implementation
+    __nl_langinfo_l;
   }
 }

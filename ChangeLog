@@ -1,3 +1,9 @@
+2000-09-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/Makefile (routines): Add nl_langinfo_l.
+	* locale/Versions [libc] (GLIBC_2.2): Add __nl_langinfo_l.
+	* locale/nl_langinfo_l.c: New file.
+
 2000-09-23  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconvdata/gbk.c (USE_PRIVATE_AREA): Define to 0.
