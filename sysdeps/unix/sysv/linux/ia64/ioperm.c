@@ -1,6 +1,6 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-     Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
+   Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -80,14 +80,14 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 	  unsigned long phys_io_base, len;
 	  int fd;
 
-	  io.page_mask = ~(getpagesize() - 1);
+	  io.page_mask = ~(__getpagesize() - 1);
 
 	  /* get I/O base physical address from ar.k0 as per PRM: */
 	  __asm__ ("mov %0=ar.k0" : "=r"(phys_io_base));
 
 	  /* The O_SYNC flag tells the /dev/mem driver to map the
              memory uncached: */
-	  fd = open ("/dev/mem", O_RDWR | O_SYNC);
+	  fd = __open ("/dev/mem", O_RDWR | O_SYNC);
 	  if (fd < 0)
 	    return -1;
 
@@ -100,7 +100,7 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 	  base = (unsigned long int) __mmap (0, len, PROT_NONE, MAP_SHARED,
 						fd, phys_io_base);
 #endif
-	  close (fd);
+	  __close (fd);
 
 	  if ((long) base == -1)
 	    return -1;

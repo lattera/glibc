@@ -1,5 +1,9 @@
 2001-08-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/ioperm.c (_ioperm): Use __open
+	instead of open, __close instead of close, __getpagesize instead
+	of getpagesize.
+
 	* string/argz-stringify.c (__argz_stringify): Use __strnlen
 	instead of strnlen.
 	* include/string.h (strndupa): Redefine here to use __strnlen
@@ -12,8 +16,8 @@
 2001-08-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Don't handle
-	R_ALPHA_RELATIVE if RTLD_BOOTSTRAP and HAVE_Z_COMBRELOC.  Only
-	check for rtld map if RTLD_BOOTSTRAP nor HAVE_Z_COMBRELOC is defined.
+	R_ALPHA_RELATIVE if RTLD_BOOTSTRAP and HAVE_Z_COMBRELOC.  Only check
+	for rtld map if neither RTLD_BOOTSTRAP nor HAVE_Z_COMBRELOC is defined.
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Similarly.
 	* sysdeps/ia64/dl-machine.h (elf_machine_rel): Similarly.
 	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rel): Similarly.
