@@ -141,6 +141,7 @@ _dl_map_object_deps (struct link_map *map,
   int errno_saved;
   int errno_reason;
   const char *errstring;
+  const char *objname;
 
   auto inline void preload (struct link_map *map);
 
@@ -221,7 +222,6 @@ _dl_map_object_deps (struct link_map *map,
 	      {
 		/* Map in the needed object.  */
 		struct link_map *dep;
-		const char *objname;
 
 		/* Recognize DSTs.  */
 		name = expand_dst (l, strtab + d->d_un.d_val, 0);
@@ -263,7 +263,6 @@ _dl_map_object_deps (struct link_map *map,
 	      }
 	    else if (d->d_tag == DT_AUXILIARY || d->d_tag == DT_FILTER)
 	      {
-		const char *objname;
 		struct list *newp;
 
 		/* Recognize DSTs.  */
@@ -289,7 +288,6 @@ _dl_map_object_deps (struct link_map *map,
 			assert (errstring != NULL);
 			if (errstring != _dl_out_of_memory)
 			  free ((char *) errstring);
-			errstring = NULL;
 
 			/* Simply ignore this error and continue the work.  */
 			continue;
@@ -541,5 +539,5 @@ out:
 
   if (errno_reason)
     _dl_signal_error (errno_reason == -1 ? 0 : errno_reason,
-		      errstring ?: "", N_("cannot load shared object file"));
+		      objname, errstring);
 }

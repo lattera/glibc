@@ -1,3 +1,18 @@
+2001-05-23  kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/dl-machine.h (_dl_runtime_resolve): Handle newer PLT.
+	(_dl_runtime_profile): Likewise..
+
+2001-05-23  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/posix/getaddrinfo.c: Support for AF_UNIX commented out.
+	* posix/tst-getaddrinfo.c: Remove AF_UNIX test.
+
+2001-05-19  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-deps.c (_dl_map_object_deps): Pass objname and
+	errstring of the failed DSO to _dl_signal_error ().
+
 2001-05-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/gconv-modules: Add more aliases to enable use in

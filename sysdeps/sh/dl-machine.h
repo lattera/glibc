@@ -165,6 +165,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	.type _dl_runtime_resolve, @function
 	.align 5
 _dl_runtime_resolve:
+	mov.l r2,@-r15
 	mov.l r3,@-r15
 	mov.l r4,@-r15
 	mov.l r5,@-r15
@@ -175,6 +176,10 @@ _dl_runtime_resolve:
 	mov.l r3,@-r15
 	" FGR_SAVE "
 	sts.l pr,@-r15
+	tst r0,r0
+	bt 1f
+	mov r0,r2
+1:
 	mov r0,r4		! PLT type
 	mov r2,r5		! link map address
 	" FUN_ADDR "
@@ -189,8 +194,9 @@ _dl_runtime_resolve:
 	mov.l @r15+,r6
 	mov.l @r15+,r5
 	mov.l @r15+,r4
+	mov.l @r15+,r3
 	jmp @r0			! Jump to function address.
-	 mov.l @r15+,r3
+	 mov.l @r15+,r2
 	.align 2
 3:
 	.long " GOTJMP (fixup) "
@@ -200,6 +206,7 @@ _dl_runtime_resolve:
 	.type _dl_runtime_profile, @function
 	.align 5
 _dl_runtime_profile:
+	mov.l r2,@-r15
 	mov.l r3,@-r15
 	mov.l r4,@-r15
 	mov.l r5,@-r15
@@ -210,6 +217,10 @@ _dl_runtime_profile:
 	mov.l r3,@-r15
 	" FGR_SAVE "
 	sts.l pr,@-r15
+	tst r0,r0
+	bt 1f
+	mov r0,r2
+1:
 	mov r0,r4		! PLT type
 	mov r2,r5		! link map address
 	sts pr,r7		! return address
@@ -225,8 +236,9 @@ _dl_runtime_profile:
 	mov.l @r15+,r6
 	mov.l @r15+,r5
 	mov.l @r15+,r4
+	mov.l @r15+,r3
 	jmp @r0			! Jump to function address.
-	 mov.l @r15+,r3
+	 mov.l @r15+,r2
 	.align 2
 3:
 	.long " GOTJMP (profile_fixup) "
@@ -243,6 +255,7 @@ _dl_runtime_profile:
 	.align 5
 _dl_runtime_resolve:
 _dl_runtime_profile:
+	mov.l r2,@-r15
 	mov.l r3,@-r15
 	mov.l r4,@-r15
 	mov.l r5,@-r15
@@ -253,6 +266,10 @@ _dl_runtime_profile:
 	mov.l r3,@-r15
 	" FGR_SAVE "
 	sts.l pr,@-r15
+	tst r0,r0
+	bt 1f
+	mov r0,r2
+1:
 	mov r0,r4		! PLT type
 	mov r2,r5		! link map address
 	sts pr,r7		! return address
@@ -268,8 +285,9 @@ _dl_runtime_profile:
 	mov.l @r15+,r6
 	mov.l @r15+,r5
 	mov.l @r15+,r4
+	mov.l @r15+,r3
 	jmp @r0			! Jump to function address.
-	 mov.l @r15+,r3
+	 mov.l @r15+,r2
 	.align 2
 3:
 	.long " GOTJMP (fixup) "

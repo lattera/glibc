@@ -125,6 +125,8 @@ static const struct addrinfo default_hints =
 #endif
 
 
+#if 0
+/* Using Unix sockets this way is a security risk.  */
 static int
 gaih_local (const char *name, const struct gaih_service *service,
 	    const struct addrinfo *req, struct addrinfo **pai)
@@ -232,6 +234,7 @@ gaih_local (const char *name, const struct gaih_service *service,
     (*pai)->ai_canonname = NULL;
   return 0;
 }
+#endif	/* 0 */
 
 static int
 gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
@@ -690,7 +693,9 @@ static struct gaih gaih[] =
   {
     { PF_INET6, gaih_inet },
     { PF_INET, gaih_inet },
+#if 0
     { PF_LOCAL, gaih_local },
+#endif
     { PF_UNSPEC, NULL }
   };
 

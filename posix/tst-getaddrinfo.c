@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 static int
 do_test (void)
 {
-  const int family[3] = { AF_INET, AF_INET6, AF_UNIX };
+  const int family[2] = { AF_INET, AF_INET6 };
   int result = 0;
   int gaierr, index;
   struct addrinfo hints, *ai, *aitop;
