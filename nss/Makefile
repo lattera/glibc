@@ -33,7 +33,7 @@ routines		= nsswitch $(addsuffix -lookup,$(databases))
 # Caution: if you add a database here, you must add its real name
 # in databases.def, too.
 databases		= proto service hosts network grp pwd rpc ethers \
-			  spwd netgrp
+			  spwd netgrp key
 
 # Specify rules for the nss_* modules.  We have some services.
 services		:= files dns db
@@ -48,12 +48,12 @@ subdir-dirs = $(services:%=nss_%)
 vpath %.c $(subdir-dirs)
 
 
-libnss_files-routines	:= $(addprefix files-,$(databases))
+libnss_files-routines	:= $(addprefix files-,$(filter-out key, $(databases)))
 distribute		+= files-XXX.c files-parse.c
 
 libnss_dns-routines	:= dns-host dns-network
 
-libnss_db-routines	:= $(addprefix db-,$(filter-out hosts network,\
+libnss_db-routines	:= $(addprefix db-,$(filter-out hosts network key,\
 							$(databases)))
 generated		+= $(filter-out db-netgrp.c, \
 					$(addsuffix .c,$(libnss_db-routines)))

@@ -1,3 +1,31 @@
+Sun Nov 10 23:28:16 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/getprtname_r.c: Reformat copyright.
+
+	* nss/Makefile (databases): Add key.
+	(libnss_files-routines): Exclude key database.
+	(libnss_db-routines): Likewise.
+	* nss/key-lookup.c: New file.
+
+	* nss/getXXent_r.c (last_nip): Remember last service used since
+	last setXXent call.
+	(SETFUNC): Don't force to work through whole list of services in
+	call to __nss_next.
+	Update last_nip if necessary.
+	(ENDFUNC): Only process endXXent function up to currently used
+	last service.
+	(GETFUNC): Update last_nip if necessary.
+
+	* nss/nss_files/files-netgrp.c (_nss_netgroup_parseline): Don't
+	make static.
+
+	* rpc/auth_des.h: New file.
+	* sunrpc/Makefile (headers): Add auth_des.h.
+	(routines): Add publickey.
+	* sunrpc/publickey.c: New file.  Interface to public key handling.
+	* sunrpc/rpc/auth_des.h: New file.
+	* sunrpc/rpc/netdb.h: Really include <rpc/auth_des.h>.
+
 Sun Nov 10 02:37:15 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/gethstent_r.c: Update copyright.

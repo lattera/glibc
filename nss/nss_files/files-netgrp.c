@@ -160,7 +160,7 @@ _nss_files_endnetgrent (struct __netgrent *result)
 }
 
 
-static enum nss_status
+enum nss_status
 _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
 			 char *buffer, int buflen)
 {

@@ -96,6 +96,8 @@ typedef int (*get_function) (LOOKUP_TYPE *, char *, int H_ERRNO_PARM);
 /* This handle for the NSS data base is shared between all
    set/get/endXXXent functions.  */
 static service_user *nip;
+/* Remember the last service used since the last call to  `endXXent'.  */
+static service_user *last_nip;
 /* Remember the first service_entry, it's always the same.  */
 static service_user *startp;
 
@@ -159,12 +161,14 @@ SETFUNC_NAME (STAYOPEN)
   no_more = setup ((void **) &fct, SETFUNC_NAME_STRING, 1);
   while (! no_more)
     {
+      int is_last_nip = nip == last_nip;
       enum nss_status status = (*fct) (STAYOPEN_VAR);
 
       no_more = __nss_next (&nip, SETFUNC_NAME_STRING, (void **) &fct,
-			    status, 1);
+			    status, 0);
+      if (is_last_nip)
+	last_nip = nip;
     }
-  nip = NULL;
 
 #ifdef STAYOPEN_TMP
   STAYOPEN_TMPVAR = STAYOPEN_VAR;
@@ -197,9 +201,13 @@ ENDFUNC_NAME (void)
       /* Ignore status, we force check in __NSS_NEXT.  */
       (void) (*fct) ();
 
+      if (nip == last_nip)
+	/* We have processed all services which were used.  */
+	break;
+
       no_more = __nss_next (&nip, ENDFUNC_NAME_STRING, (void **) &fct, 0, 1);
     }
-  nip = NULL;
+  last_nip = nip = NULL;
 
   __libc_lock_unlock (lock);
 }
@@ -232,6 +240,7 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
   no_more = setup ((void **) &fct, GETFUNC_NAME_STRING, 0);
   while (! no_more)
     {
+      int is_last_nip = nip == last_nip;
       service_user *current_nip = nip;
 
       status = (*fct) (resbuf, buffer, buflen H_ERRNO_VAR);
@@ -239,11 +248,14 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
       no_more = __nss_next (&nip, GETFUNC_NAME_STRING, (void **) &fct,
 			    status, 0);
 
+      if (is_last_nip)
+	last_nip = nip;
+
       if (! no_more && current_nip != nip)
 	/* Call the `setXXent' function.  This wasn't done before.  */
 	do
 	  {
-	    set_function *sfct;
+	    set_function sfct;
 
 	    no_more = __nss_lookup (&nip, SETFUNC_NAME_STRING,
 				    (void **) &sfct);

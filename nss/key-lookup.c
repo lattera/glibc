@@ -17,13 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <netdb.h>
+#define DATABASE_NAME publickey
+#define DEFAULT_CONFIG "nis nisplus"
 
-
-#define LOOKUP_TYPE	struct protoent
-#define FUNCTION_NAME	getprotobyname
-#define DATABASE_NAME	protocols
-#define ADD_PARAMS	const char *name
-#define ADD_VARIABLES	name
-
-#include "../nss/getXXbyYY_r.c"
+#include "XXX-lookup.c"
