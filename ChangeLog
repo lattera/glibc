@@ -1,3 +1,26 @@
+1999-05-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/i386/i486/Versions: New file with inline functions from
+	sysdeps/i386/i486/bits/string.h for now.
+
+	* sysdeps/i386/Versions: Add inline functions from
+	sysdeps/i386/bits/string.h.
+
+	* string/Versions: Add inline functions from <bits/string2.h>.
+
+	* string/Makefile (routines): Add string-inlines.
+	* string/string-inlines.c: New file, used for implementation of
+	extern inline functions.
+
+	* sysdeps/i386/i486/bits/string.h: Use _FORCE_INLINES to generate
+	non inlined versions of functions.
+	* string/bits/string2.h: Likewise.
+	* sysdeps/i386/bits/string.h: Likewise.
+
+1999-05-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/arpa/tftp.h: Add second packed attribute.
+
 1999-05-16  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
 
 	* malloc/malloc.c: Cleanup to bring in line with released

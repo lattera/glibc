@@ -39,10 +39,12 @@
    We must use here macros instead of inline functions since the
    trick won't work with the later.  */
 
-#ifdef __cplusplus
-# define __STRING_INLINE inline
-#else
-# define __STRING_INLINE extern __inline
+#ifndef __STRING_INLINE
+# ifdef __cplusplus
+#  define __STRING_INLINE inline
+# else
+#  define __STRING_INLINE extern __inline
+# endif
 #endif
 
 #if _STRING_ARCH_unaligned
@@ -939,7 +941,7 @@ __strpbrk_c3 (__const char *__s, char __accept1, char __accept2,
 #endif
 
 
-#ifdef __USE_GNU
+#if defined __USE_GNU && !defined _FORCE_INLINES
 # ifndef _HAVE_STRING_ARCH_strnlen
 __STRING_INLINE size_t strnlen (__const char *__string, size_t __maxlen);
 __STRING_INLINE size_t
@@ -1151,6 +1153,8 @@ __strsep_g (char **__s, __const char *__reject)
 
 #endif /* Use misc. or use GNU.  */
 
-#undef __STRING_INLINE
+#ifndef _FORCE_INLINES
+# undef __STRING_INLINE
+#endif
 
 #endif /* No string inlines.  */

@@ -30,10 +30,12 @@
 #if !defined __NO_STRING_INLINES && defined __USE_STRING_INLINES \
     && defined __GNUC__ && __GNUC__ >= 2
 
-#ifdef __cplusplus
-# define __STRING_INLINE inline
-#else
-# define __STRING_INLINE extern __inline
+#ifndef __STRING_INLINE
+# ifdef __cplusplus
+#  define __STRING_INLINE inline
+# else
+#  define __STRING_INLINE extern __inline
+# endif
 #endif
 
 /* The macros are used in some of the optimized implementations below.  */
@@ -133,7 +135,8 @@ __memcpy_g (void *__dest, __const void *__src, size_t __n)
   return __dest;
 }
 
-
+#define _HAVE_STRING_ARCH_memmove 1
+#ifndef _FORCE_INLINES
 /* Copy N bytes of SRC to DEST, guaranteeing
    correct behavior for overlapping strings.  */
 __STRING_INLINE void *
@@ -159,11 +162,12 @@ memmove (void *__dest, __const void *__src, size_t __n)
        : "memory");
   return __dest;
 }
-
+#endif
 
 /* Compare N bytes of S1 and S2.  */
 #define _HAVE_STRING_ARCH_memcmp 1
-#ifndef __PIC__
+#ifndef _FORCE_INLINES
+# ifndef __PIC__
 /* gcc has problems to spill registers when using PIC.  */
 __STRING_INLINE int
 memcmp (__const void *__s1, __const void *__s2, size_t __n)
@@ -183,8 +187,8 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
      : "cc");
   return __res;
 }
+# endif
 #endif
-
 
 /* Set N bytes of S to C.  */
 #define _HAVE_STRING_ARCH_memset 1
@@ -390,6 +394,7 @@ __memset_gcn_by2 (void *__s, int __c, size_t __n)
 
 /* Search N bytes of S for C.  */
 #define _HAVE_STRING_ARCH_memchr 1
+#ifndef _FORCE_INLINES
 __STRING_INLINE void *
 memchr (__const void *__s, int __c, size_t __n)
 {
@@ -421,10 +426,13 @@ memchr (__const void *__s, int __c, size_t __n)
 #endif
   return __res - 1;
 }
-
+#endif
 
 /* Return pointer to C in S.  */
 #define _HAVE_STRING_ARCH_rawmemchr 1
+__STRING_INLINE void *__rawmemchr (const void *__s, int __c); 
+ 
+#ifndef _FORCE_INLINES
 __STRING_INLINE void *
 __rawmemchr (const void *__s, int __c)
 {
@@ -438,13 +446,14 @@ __rawmemchr (const void *__s, int __c)
      : "cc");
   return __res - 1;
 }
-#ifdef __USE_GNU
+#if defined __USE_GNU && !defined _FORCE_INLINES
 __STRING_INLINE void *
 rawmemchr (const void *__s, int __c)
 {
   return __rawmemchr (__s, __c);
 }
-#endif	/* use GNU */
+# endif	/* use GNU */ 
+#endif
 
 
 /* Return the length of S.  */
@@ -1817,6 +1826,8 @@ __strstr_g (__const char *__haystack, __const char *__needle)
 # endif	/* i686 */
 #endif	/* BSD || X/Open */
 
-#undef __STRING_INLINE
+#ifndef _FORCE_INLINES
+# undef __STRING_INLINE
+#endif
 
 #endif	/* use string inlines && GNU CC */

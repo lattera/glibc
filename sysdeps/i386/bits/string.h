@@ -30,10 +30,12 @@
 #if !defined __NO_STRING_INLINES && defined __USE_STRING_INLINES \
     && defined __GNUC__ && __GNUC__ >= 2
 
-#ifdef __cplusplus
-# define __STRING_INLINE inline
-#else
-# define __STRING_INLINE extern __inline
+#ifndef __STRING_INLINE
+# ifdef __cplusplus
+#  define __STRING_INLINE inline
+# else
+#  define __STRING_INLINE extern __inline
+# endif
 #endif
 
 
@@ -138,6 +140,7 @@ __memcpy_c (void *__dest, __const void *__src, size_t __n)
 /* Copy N bytes of SRC to DEST, guaranteeing
    correct behavior for overlapping strings.  */
 #define _HAVE_STRING_ARCH_memmove 1
+#ifndef _FORCE_INLINES
 __STRING_INLINE void *
 memmove (void *__dest, __const void *__src, size_t __n)
 {
@@ -162,7 +165,7 @@ memmove (void *__dest, __const void *__src, size_t __n)
        : "memory");
   return __dest;
 }
-
+#endif
 
 /* Set N bytes of S to C.  */
 #define _HAVE_STRING_ARCH_memset 1
@@ -268,6 +271,7 @@ __memset_gg (void *__s, char __c, size_t __n)
 
 /* Search N bytes of S for C.  */
 #define _HAVE_STRING_ARCH_memchr 1
+#ifndef _FORCE_INLINES
 __STRING_INLINE void *
 memchr (__const void *__s, int __c, size_t __n)
 {
@@ -285,10 +289,11 @@ memchr (__const void *__s, int __c, size_t __n)
      : "a" (__c), "0" (__s), "1" (__n));
   return __res - 1;
 }
-
+#endif
 
 /* Return the length of S.  */
 #define _HAVE_STRING_ARCH_strlen 1
+#ifndef _FORCE_INLINES
 __STRING_INLINE size_t
 strlen (__const char *__str)
 {
@@ -303,10 +308,11 @@ strlen (__const char *__str)
      : "cc");
   return __res - 1;
 }
-
+#endif
 
 /* Copy SRC to DEST.  */
 #define _HAVE_STRING_ARCH_strcpy 1
+#ifndef _FORCE_INLINES
 __STRING_INLINE char *
 strcpy (char *__dest, __const char *__src)
 {
@@ -323,10 +329,11 @@ strcpy (char *__dest, __const char *__src)
      : "ax", "memory", "cc");
   return __dest;
 }
-
+#endif
 
 /* Copy no more than N characters of SRC to DEST.  */
 #define _HAVE_STRING_ARCH_strncpy 1
+#ifndef _FORCE_INLINES
 __STRING_INLINE char *
 strncpy (char *__dest, __const char *__src, size_t __n)
 {
@@ -347,10 +354,11 @@ strncpy (char *__dest, __const char *__src, size_t __n)
      : "ax", "memory", "cc");
   return __dest;
 }
-
+#endif
 
 /* Append SRC onto DEST.  */
 #define _HAVE_STRING_ARCH_strcat 1
+#ifndef _FORCE_INLINES
 __STRING_INLINE char *
 strcat (char *__dest, __const char *__src)
 {
@@ -369,10 +377,11 @@ strcat (char *__dest, __const char *__src)
      : "memory", "cc");
   return __dest;
 }
-
+#endif
 
 /* Append no more than N characters from SRC onto DEST.  */
 #define _HAVE_STRING_ARCH_strncat 1
+#ifndef _FORCE_INLINES
 __STRING_INLINE char *
 strncat (char *__dest, __const char *__src, size_t __n)
 {
@@ -399,10 +408,11 @@ strncat (char *__dest, __const char *__src, size_t __n)
      : "memory", "cc");
   return __dest;
 }
-
+#endif
 
 /* Compare S1 and S2.  */
 #define _HAVE_STRING_ARCH_strcmp 1
+#ifndef _FORCE_INLINES
 __STRING_INLINE int
 strcmp (__const char *__s1, __const char *__s2)
 {
@@ -427,10 +437,11 @@ strcmp (__const char *__s1, __const char *__s2)
      : "cc");
   return __res;
 }
-
+#endif
 
 /* Compare N characters of S1 and S2.  */
 #define _HAVE_STRING_ARCH_strncmp 1
+#ifndef _FORCE_INLINES
 __STRING_INLINE int
 strncmp (__const char *__s1, __const char *__s2, size_t __n)
 {
@@ -458,7 +469,7 @@ strncmp (__const char *__s1, __const char *__s2, size_t __n)
      : "cc");
   return __res;
 }
-
+#endif
 
 /* Find the first occurrence of C in S.  */
 #define _HAVE_STRING_ARCH_strchr 1
@@ -580,7 +591,8 @@ __strchrnul_c (__const char *__s, int __c)
 /* Return the length of the initial segment of S which
    consists entirely of characters not in REJECT.  */
 #define _HAVE_STRING_ARCH_strcspn 1
-#ifdef __PIC__
+#ifndef _FORCE_INLINES
+# ifdef __PIC__
 __STRING_INLINE size_t
 strcspn (__const char *__s, __const char *__reject)
 {
@@ -609,7 +621,7 @@ strcspn (__const char *__s, __const char *__reject)
      : "cc");
   return (__res - 1) - __s;
 }
-#else
+# else
 __STRING_INLINE size_t
 strcspn (__const char *__s, __const char *__reject)
 {
@@ -636,13 +648,15 @@ strcspn (__const char *__s, __const char *__reject)
      : "cc");
   return (__res - 1) - __s;
 }
+# endif
 #endif
 
 
 /* Return the length of the initial segment of S which
    consists entirely of characters in ACCEPT.  */
 #define _HAVE_STRING_ARCH_strspn 1
-#ifdef __PIC__
+#ifndef _FORCE_INLINES
+# ifdef __PIC__
 __STRING_INLINE size_t
 strspn (__const char *__s, __const char *__accept)
 {
@@ -671,7 +685,7 @@ strspn (__const char *__s, __const char *__accept)
      : "cc");
   return (__res - 1) - __s;
 }
-#else
+# else
 __STRING_INLINE size_t
 strspn (__const char *__s, __const char *__accept)
 {
@@ -698,12 +712,14 @@ strspn (__const char *__s, __const char *__accept)
      : "cc");
   return (__res - 1) - __s;
 }
+# endif
 #endif
 
 
 /* Find the first occurrence in S of any character in ACCEPT.  */
 #define _HAVE_STRING_ARCH_strpbrk 1
-#ifdef __PIC__
+#ifndef _FORCE_INLINES
+# ifdef __PIC__
 __STRING_INLINE char *
 strpbrk (__const char *__s, __const char *__accept)
 {
@@ -736,7 +752,7 @@ strpbrk (__const char *__s, __const char *__accept)
      : "cc");
   return __res;
 }
-#else
+# else
 __STRING_INLINE char *
 strpbrk (__const char *__s, __const char *__accept)
 {
@@ -767,12 +783,14 @@ strpbrk (__const char *__s, __const char *__accept)
      : "cc");
   return __res;
 }
+# endif
 #endif
 
 
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
 #define _HAVE_STRING_ARCH_strstr 1
-#ifdef __PIC__
+#ifndef _FORCE_INLINES
+# ifdef __PIC__
 __STRING_INLINE char *
 strstr (__const char *__haystack, __const char *__needle)
 {
@@ -804,7 +822,7 @@ strstr (__const char *__haystack, __const char *__needle)
      : "cc");
   return __res;
 }
-#else
+# else
 __STRING_INLINE char *
 strstr (__const char *__haystack, __const char *__needle)
 {
@@ -834,9 +852,11 @@ strstr (__const char *__haystack, __const char *__needle)
      : "cc");
   return __res;
 }
+# endif
 #endif
 
-
-#undef __STRING_INLINE
+#ifndef _FORCE_INLINES
+# undef __STRING_INLINE
+#endif
 
 #endif	/* use string inlines && GNU CC */

@@ -1,0 +1,13 @@
+libc {
+  GLIBC_2.1.1 {
+    # extern inline functions used by <bits/string.h>
+    __memcpy_by2; __memcpy_by4; __memcpy_g; __mempcpy_by2; __mempcpy_by4;
+    __mempcpy_byn; __memset_ccn_by2; __memset_ccn_by4; __memset_gcn_by2;
+    __memset_gcn_by4; __stpcpy_g; __strcat_c; __strcat_g; __strchr_c;
+    __strchr_g; __strchrnul_c; __strchrnul_g; __strcmp_gg; __strcpy_g;
+    __strcspn_c1; __strcspn_cg; __strcspn_g; __strlen_g; __strncat_g;
+    __strncmp_g; __strncpy_by2; __strncpy_by4; __strncpy_byn; __strncpy_gg;
+    __strpbrk_cg; __strpbrk_g; __strrchr_c; __strrchr_g; __strspn_c1;
+    __strspn_cg; __strspn_g; __strstr_cg; __strstr_g;
+  }
+}
