@@ -31,12 +31,7 @@ endif
 
 ifeq ($(subdir),elf)
 # The ld.so startup code cannot use literals until it self-relocates.
- ifeq ($(elf),yes)
-  CFLAGS-rtld.c = -mbuild-constants
- endif
-# The rest of ld.so shouldn't use FP regs for block moves so
-# that the lazy link trampoline doesn't have to save them.
-sysdep-CFLAGS += -mno-fp-regs
+CFLAGS-rtld.c = -mbuild-constants
 endif
 
 divrem := divl divq reml remq
