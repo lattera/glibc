@@ -1,0 +1,8 @@
+#if !defined ISO && !defined POSIX
+type size_t
+type ssize_t
+
+function ssize_t strfmon (char*, size_t, const char*, ...)
+
+allow *_t
+#endif

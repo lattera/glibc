@@ -1,0 +1,28 @@
+#ifndef ISO
+# should test for not an array type.
+type mqd_t
+
+type {struct sigevent}
+
+type {struct mq_attr}
+element {struct mq_attr} long mq_flags
+element {struct mq_attr} long mq_maxmsg
+element {struct mq_attr} long mq_msgsize
+element {struct mq_attr} long mq_curmsg
+
+function int mq_close (mqd_t)
+function int mq_getattr (mqd_t, struct mq_attr*)
+function int mq_notify (mqd_t, const struct sigevent*)
+function mqd_t mq_open (const char*, int, ...)
+function ssize_t mq_receive (mqd_t, char*, size_t, unsigned int*)
+function int mq_send (mqd_t, const char*, size_t, unsigned int)
+function int mq_setattr (mqd_t, const struct mq_attr*, struct mq_attr*)
+function int mq_unlink (const char*)
+
+allow-header fcntl.h
+allow-header signal.h
+allow-header sys/types.h
+allow-header time.h
+
+allow *_t
+#endif
