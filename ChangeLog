@@ -1,12 +1,17 @@
+2002-08-15  Roland McGrath  <roland@redhat.com>
+
+	* locale/loadarchive.c (_nl_load_locale_from_archive) Store strdup of
+	the name as passed, rather than the name in the archive dictionary.
+
 2002-08-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* csu/Makefile: Define elide-routines.os not static-only-routines.
 
 	* include/sched.h (__clone): Add varargs at the end.
 
-	* elf/rtld.c (_dl_start): All TLS_INIT_TP to fail and stop in that
+	* elf/rtld.c (_dl_start): Allow TLS_INIT_TP to fail, and stop in that
 	case.
-	(TLS_INIT_HELPER): If defined use it.
+	(TLS_INIT_HELPER): If defined, use it.
 	* sysdeps/generic/libc-tls.c (TLS_INIT_HELPER): Likewise.
 
 2002-08-15  Roland McGrath  <roland@redhat.com>
