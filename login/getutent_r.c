@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <bits/libc-lock.h>
+#include <stdlib.h>
 #include <utmp.h>
 
 #include "utmp-private.h"
