@@ -25,7 +25,7 @@
 
 
 /* Spinlock implementation; required.  */
-PT_EI int
+PT_EI long int
 testandset (int *spinlock)
 {
   int ret;

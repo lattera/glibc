@@ -38,7 +38,7 @@ register char * stack_pointer __asm__ ("%r30");
 #define xstr(s) str(s)
 #define str(s) #s
 /* Spinlock implementation; required.  */
-PT_EI int
+PT_EI long int
 testandset (int *spinlock)
 {
   int ret;

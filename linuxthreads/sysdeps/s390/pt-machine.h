@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    S390 version.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -24,7 +24,7 @@
 #endif
 
 /* Spinlock implementation; required.  */
-PT_EI int
+PT_EI long int
 testandset (int *spinlock)
 {
   int ret;
