@@ -1,3 +1,12 @@
+1999-07-01  Cristian Gafton  <gafton@redhat.com>
+ 
+	* time/strptime.c (strptime): Initialize the tm struct first to avoid
+	returning bogus results on incomplete data.
+	(strptime_internal): day_of_the_week() requres bith tm_mon and
+	tm_mday to be initializaed.
+	Computer them first if they are not given.
+	(strptime_internal): (have_mon, have_mday): New variables.
+ 
 1999-07-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* inet/rcmd.c (__icheckhost): Fix typo in last patch.

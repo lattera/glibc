@@ -252,13 +252,14 @@ strptime_internal (buf, format, tm, decided)
   int century, want_century;
   int have_wday, want_xday;
   int have_yday;
-
+  int have_mon, have_mday;
+  
   rp = buf;
   fmt = format;
   have_I = is_pm = 0;
   century = -1;
   want_century = 0;
-  have_wday = want_xday = have_yday = 0;
+  have_wday = want_xday = have_yday = have_mon = have_mday = 0;
 
   while (*fmt != '\0')
     {
@@ -407,6 +408,7 @@ strptime_internal (buf, format, tm, decided)
 	  /* Match day of month.  */
 	  get_number (1, 31);
 	  tm->tm_mday = val;
+	  have_mday = 1;
 	  want_xday = 1;
 	  break;
 	case 'F':
@@ -464,6 +466,7 @@ strptime_internal (buf, format, tm, decided)
 	  /* Match number of month.  */
 	  get_number (1, 12);
 	  tm->tm_mon = val - 1;
+	  have_mon = 1;
 	  want_xday = 1;
 	  break;
 	case 'M':
@@ -743,6 +746,7 @@ strptime_internal (buf, format, tm, decided)
 	      /* Match day of month using alternate numeric symbols.  */
 	      get_alt_number (1, 31);
 	      tm->tm_mday = val;
+	      have_mday = 1;
 	      want_xday = 1;
 	      break;
 	    case 'H':
@@ -763,6 +767,7 @@ strptime_internal (buf, format, tm, decided)
 	      /* Match month using alternate numeric symbols.  */
 	      get_alt_number (1, 12);
 	      tm->tm_mon = val - 1;
+	      have_mon = 1;
 	      want_xday = 1;
 	      break;
 	    case 'M':
@@ -809,8 +814,19 @@ strptime_internal (buf, format, tm, decided)
   if (want_century && century != -1)
     tm->tm_year = tm->tm_year % 100 + (century - 19) * 100;
 
-  if (want_xday && !have_wday)
-    day_of_the_week (tm);
+  if (want_xday && !have_wday) {
+      if ( !(have_mon && have_mday) && have_yday)  {
+	  /* we don't have tm_mon and/or tm_mday, compute them */
+	  int t_mon = 0;
+	  while (__mon_yday[__isleap(1900 + tm->tm_year)][t_mon] <= tm->tm_yday)
+	      t_mon++;
+	  if (!have_mon)
+	      tm->tm_mon = t_mon - 1;
+	  if (!have_mday)
+	      tm->tm_mday = tm->tm_yday - __mon_yday[__isleap(1900 + tm->tm_year)][t_mon - 1] + 1;
+      } 
+      day_of_the_week (tm);
+  }  
   if (want_xday && !have_yday)
     day_of_the_year (tm);
 
