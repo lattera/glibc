@@ -64,7 +64,7 @@
 /* The number of threads per process.  */
 #define _POSIX_THREAD_THREADS_MAX	64
 /* This is the value this implementation supports.  */
-#define PTHREAD_THREADS_MAX	1024
+#define PTHREAD_THREADS_MAX	16384
 
 /* Maximum amount by which a process can descrease its asynchronous I/O
    priority level.  */
