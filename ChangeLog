@@ -21,6 +21,7 @@
 	* sysdeps/mach/hurd/getpid.c: Use INTDEF for __getpid.
 	* sysdeps/generic/getpid.c: Likewise.
 	* sysdeps/unix/syscalls.list: Add __getpid_internal alias.
+	* posix/bsd-getpgrp.c: Use INTUSE for __getpgid call.
 
 	* include/unistd.h: Declare __getpgid_internal and define
 	__getpgid macro if not NOT_IN_libc.
