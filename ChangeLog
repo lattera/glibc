@@ -1,3 +1,48 @@
+2000-07-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconv/gconv_open.c (__gconv_open): Initialize the __data
+	field of struct __gconv_trans_data differently.  Don't pass NULL to
+	trans_init_fct.  Simplify list append operation.
+
+2000-07-14  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/dcigettext.c (dcigettext): Call plural_eval on all platforms,
+	not only those having tsearch.
+
+2000-07-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/langinfo.h: Add placeholder values in enum for removed
+	LC_CTYPE entries.
+
+2000-07-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-addr.c (_dl_addr): Keep searching in the _dl_loaded
+	chain if the PHDR check fails.
+
+2000-07-17  Mark Kettenis  <kettenis@gnu.org>
+
+	* nss/getent.c (print_hosts): Make sure we always print a space
+	between numeric addresses and hostnames.
+
+2000-07-17  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/malloc.c (chunk_alloc): Use mmap_chunk() only if allowed,
+	i.e. if n_mmaps_max>0.
+
+2000-07-16  Mark Kettenis  <kettenis@gnu.org>
+
+	* resolv/netdb.h (AI_V4MAPPED, AI_ALL, AI_ADDRCONFIG): Adjust
+	values to remove possible clash with other AI_* constants.
+	(AI_PASSIVE, AI_CANONNAME, AI_NUMERICHOST): Define as
+	hexadecimal constants to stress the fact they're in fact
+	bit flags.
+
+2000-07-15  Mark Kettenis  <kettenis@gnu.org>
+
+	* nss/getXXent_r.c [NEED__RES]: Include <resolv.h>.
+	(SETFUNC_NAME, ENDFUNC_NAME, REENTRANT_GETNAME): Use res_ninit
+	instead of res_init.
+
 2000-07-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* crypt/md5-crypt.c (__md5_crypt_r): Add casts for first

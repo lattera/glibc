@@ -36,27 +36,25 @@ _dl_addr (const void *address, Dl_info *info)
   for (l = _dl_loaded; l; l = l->l_next)
     if (addr >= l->l_map_start && addr < l->l_map_end)
       {
+	/* We know ADDRESS lies within L if in any shared object.
+	   Make sure it isn't past the end of L's segments.  */
+	size_t n = l->l_phnum;
+	if (n > 0)
+	  {
+	    do
+	      --n;
+	    while (l->l_phdr[n].p_type != PT_LOAD);
+	    if (addr >= (l->l_addr +
+			 l->l_phdr[n].p_vaddr + l->l_phdr[n].p_memsz))
+	      /* Off the end of the highest-addressed shared object.  */
+	      continue;
+	  }
+
 	match = l;
 	break;
       }
 
-  if (__builtin_expect (match != NULL, 1))
-    {
-      /* We know ADDRESS lies within MATCH if in any shared object.
-	 Make sure it isn't past the end of MATCH's segments.  */
-      size_t n = match->l_phnum;
-      if (n > 0)
-	{
-	  do
-	    --n;
-	  while (match->l_phdr[n].p_type != PT_LOAD);
-	  if (addr >= (match->l_addr +
-		       match->l_phdr[n].p_vaddr + match->l_phdr[n].p_memsz))
-	    /* Off the end of the highest-addressed shared object.  */
-	    return 0;
-	}
-    }
-  else
+  if (match == NULL)
     return 0;
 
   /* Now we know what object the address lies in.  */

@@ -212,13 +212,13 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 
 		      /* Match!  Now try the initializer.  */
 		      if (runp->trans_init_fct == NULL
-			  || (runp->trans_init_fct (data, steps[cnt].__to_name)
+			  || (runp->trans_init_fct (&data,
+						    steps[cnt].__to_name)
 			      == __GCONV_OK))
 			{
 			  /* Append at the end of the list.  */
 			  struct __gconv_trans_data *newp;
-			  struct __gconv_trans_data *endp;
-			  struct __gconv_trans_data *lastp;
+			  struct __gconv_trans_data **lastp;
 
 			  newp = (struct __gconv_trans_data *)
 			    malloc (sizeof (struct __gconv_trans_data));
@@ -228,18 +228,14 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 			  newp->__trans_fct = runp->trans_fct;
 			  newp->__trans_context_fct = runp->trans_context_fct;
 			  newp->__trans_end_fct = runp->trans_end_fct;
-			  newp->__data = NULL;
+			  newp->__data = data;
 			  newp->__next = NULL;
 
-			  lastp = NULL;
-			  for (endp = result->__data[cnt].__trans;
-			       endp != NULL; endp = endp->__next)
-			    lastp = endp;
+			  lastp = &result->__data[cnt].__trans;
+			  while (*lastp != NULL)
+			    lastp = &(*lastp)->__next;
 
-			  if (lastp == NULL)
-			    result->__data[cnt].__trans = newp;
-			  else
-			    lastp->__next = newp;
+			  *lastp = newp;
 			}
 		      break;
 		    }

@@ -22,6 +22,10 @@
 
 #include "nsswitch.h"
 
+#ifdef NEED__RES
+# include <resolv.h>
+#endif
+
 /*******************************************************************\
 |* Here we assume several symbols to be defined:		   *|
 |* 								   *|
@@ -149,7 +153,7 @@ SETFUNC_NAME (STAYOPEN)
   int no_more;
 
 #ifdef NEED__RES
-  if ((_res.options & RES_INIT) == 0 && res_init () == -1)
+  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
     {
       __set_h_errno (NETDB_INTERNAL);
       return;
@@ -187,7 +191,7 @@ ENDFUNC_NAME (void)
   int no_more;
 
 #ifdef NEED__RES
-  if ((_res.options & RES_INIT) == 0 && res_init () == -1)
+  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
     {
       __set_h_errno (NETDB_INTERNAL);
       return;
@@ -224,7 +228,7 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
   enum nss_status status;
 
 #ifdef NEED__RES
-  if ((_res.options & RES_INIT) == 0 && res_init () == -1)
+  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
     {
       __set_h_errno (NETDB_INTERNAL);
       *result = NULL;

@@ -257,8 +257,9 @@ print_hosts (struct hostent *host)
 			      buf, sizeof (buf));
 
   fputs (ip, stdout);
-  for (i = strlen (ip); i < 16; ++i)
+  for (i = strlen (ip); i < 15; ++i)
     fputs (" ", stdout);
+  fputs (" ", stdout);
   fputs (host->h_name, stdout);
 
   i = 0;

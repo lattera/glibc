@@ -553,24 +553,25 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
       if (domain != NULL)
 	{
 	  unsigned long int index = 0;
-#if defined HAVE_TSEARCH || defined _LIBC
-	  struct loaded_domain *domaindata =
-	    (struct loaded_domain *) domain->data;
 
 	  if (plural != 0)
 	    {
+	      struct loaded_domain *domaindata =
+		(struct loaded_domain *) domain->data;
+	      index = plural_eval (domaindata->plural, n);
+	      if (index >= domaindata->nplurals)
+		/* This should never happen.  It means the plural expression
+		   and the given maximum value do not match.  */
+		index = 0;
+
+#if defined HAVE_TSEARCH || defined _LIBC
 	      /* Try to find the translation among those which we
 		 found at some time.  */
 	      search = (struct known_translation_t *) alloca (sizeof (*search)
 							      + msgid_len);
 	      memcpy (search->msgid, msgid1, msgid_len);
 	      search->domain = (char *) domainname;
-	      search->plindex = plural_eval (domaindata->plural, n);
-	      if (search->plindex >= domaindata->nplurals)
-		/* This should never happen.  It means the plural expression
-		   and the given maximum value do not match.  */
-		search->plindex = 0;
-	      index = search->plindex;
+	      search->plindex = index;
 	      search->category = category;
 
 	      foundp = (struct known_translation_t **) tfind (search, &root,
@@ -580,8 +581,8 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 		  __libc_rwlock_unlock (_nl_state_lock);
 		  return (char *) (*foundp)->translation;
 		}
-	    }
 #endif
+	    }
 
 	  retval = _nl_find_msg (domain, msgid1, index);
 

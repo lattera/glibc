@@ -257,9 +257,12 @@ enum
      These `nl_langinfo' names are used only internally.  */
   _NL_CTYPE_CLASS = _NL_ITEM (LC_CTYPE, 0),
   _NL_CTYPE_TOUPPER,
+  _NL_CTYPE_GAP1,
   _NL_CTYPE_TOLOWER,
+  _NL_CTYPE_GAP2,
   _NL_CTYPE_CLASS32,
   _NL_CTYPE_NAMES,
+  _NL_CTYPE_GAP3,
   _NL_CTYPE_HASH_SIZE,
   _NL_CTYPE_HASH_LAYERS,
   _NL_CTYPE_CLASS_NAMES,

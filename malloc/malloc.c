@@ -2942,8 +2942,8 @@ chunk_alloc(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
     {
 #if HAVE_MMAP
       /* A last attempt:  when we are out of address space in the arena,
-         try mmap anyway, disregarding n_mmaps_max.  */
-      if((victim = mmap_chunk(nb)) != 0)
+         try mmap anyway, as long as it is allowed at all.  */
+      if (n_mmaps_max > 0 && (victim = mmap_chunk(nb)) != 0)
         return victim;
 #endif
       return 0; /* propagate failure */
