@@ -1,5 +1,13 @@
 2002-02-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/eu_ES: Corrections of date and time formats.
+	* locales/hu_HU: Adjust a comment.
+	* locales/wa_BE: New file.
+	Patches by Pablo Saratxaga <pablo@mandrakesoft.com>.
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add wa_BE and wa_BE@uero.
+	* locales/wa_BE@euro: New file.
+
 	* locales/zh_HK: Correct date information.
 	Patch by Anthony Fok <anthony@thizlinux.com>.
 

@@ -61,8 +61,11 @@ END LC_IDENTIFICATION
 LC_COLLATE
 copy "iso14651_t1"
 
-%% a a' b c cs d dz dzs e e' f g gy h i i' j k l ly m n ny o o' o: o" p q
-%% r s sz t ty u u' u: u" v w x y z zs
+%% a b c cs d dz dzs e f g gy h i j k l ly m n ny o o: p q
+%% r s sz t ty u u: v w x y z zs
+%%
+%% a' e' i' o' u' are sorted as if they were unaccented
+%% o" and u" are sorted as if they were o: and u:
 
 collating-symbol  <odouble>
 collating-symbol  <udouble>

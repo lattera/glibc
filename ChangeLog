@@ -1,5 +1,7 @@
 2002-02-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/iso-639.def: Add language codes for Walloon.
+
 	* elf/dl-fini.c (_dl_fini): Print some final statistics on the
 	total number of relocations performed.
 
