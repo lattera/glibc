@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,11 +40,6 @@
    the LC_COLLATE `order' keyword in the locale definition file.
    We have no fixed limit, 255 is very high.  */
 #define	_POSIX2_COLL_WEIGHTS_MAX	255
-
-/* The maximum number of weights that can be assigned to an entry of
-   the LC_COLLATE category `order' keyword in a locale definition.
-   We have no fixed limit, 255 is a high number.  */
-#define	_POSIX2_EQUIV_CLASS_MAX		255
 
 /* The maximum number of expressions that can be nested
    within parentheses by the `expr' utility.  */

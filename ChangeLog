@@ -1,3 +1,8 @@
+1999-12-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/bits/posix2_lim.h: Remove _POSIX2_EQUIV_CLASS_MAX.  I have
+	no idea where this came from.
+
 1999-12-31  Andreas Jaeger  <aj@suse.de>
 
 	* libio/strfile.h: Remove K&R compatibility.
