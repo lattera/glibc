@@ -714,11 +714,11 @@ gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
   gnu_ld=yes gnu_as=yes ;;
 esac
 case "$host_os" in
+linux*ecoff*)
+  ;;
 gnu* | linux* | sysv4* | solaris2*)
-  # These systems always use the ELF format.
-  if test "$host_cpu" != alpha; then	# Linux/Alpha is not fully ELF yet
-    elf=yes
-  fi
+  # These systems (almost) always use the ELF format.
+  elf=yes
   ;;
 esac
 

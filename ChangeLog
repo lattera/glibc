@@ -3,6 +3,16 @@ Fri Jun 28 23:25:35 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 	* login/login.c (login): Initialize DATA so that setutent_r will
  	actually do something.
 
+Fri Jun 28 15:46:02 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c (_hurd_internal_post_signal): In
+ 	check-for-pending signals code, release _hurd_siglock before
+ 	jumping to deliver_pending.
+
+	* hurd/hurdsig.c (_hurd_internal_post_signal): In pending signal
+	check for signal zero, repair logical sense of test by
+	parethisizing correctly. 
+	
 Fri Jun 28 07:27:10 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* string/strndup.c (strndup): Always terminate the string.

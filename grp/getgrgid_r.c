@@ -20,7 +20,7 @@ Boston, MA 02111-1307, USA.  */
 #include <grp.h>
 
 
-#define LOOKUP_TYPE	struct passwd
+#define LOOKUP_TYPE	struct group
 #define FUNCTION_NAME	getgrgid
 #define DATABASE_NAME	group
 #define ADD_PARAMS	gid_t gid
