@@ -57,7 +57,7 @@ ENTRY (__strchrnul)
 	      implementation (this is because all processor inherent
 	      boundaries are multiples of 4.  */
 
-	testb $3, %eax		/* correctly aligned ? */
+	testb $3, %al		/* correctly aligned ? */
 	jz L(11)		/* yes => begin loop */
 	movb (%eax), %cl	/* load byte in question (we need it twice) */
 	cmpb %cl, %dl		/* compare byte */
@@ -66,7 +66,7 @@ ENTRY (__strchrnul)
 	jz L(6)			/* yes => return NULL */
 	incl %eax		/* increment pointer */
 
-	testb $3, %eax		/* correctly aligned ? */
+	testb $3, %al		/* correctly aligned ? */
 	jz L(11)		/* yes => begin loop */
 	movb (%eax), %cl	/* load byte in question (we need it twice) */
 	cmpb %cl, %dl		/* compare byte */
@@ -75,7 +75,7 @@ ENTRY (__strchrnul)
 	jz L(6)			/* yes => return NULL */
 	incl %eax		/* increment pointer */
 
-	testb $3, %eax		/* correctly aligned ? */
+	testb $3, %al		/* correctly aligned ? */
 	jz L(11)		/* yes => begin loop */
 	movb (%eax), %cl	/* load byte in question (we need it twice) */
 	cmpb %cl, %dl		/* compare byte */

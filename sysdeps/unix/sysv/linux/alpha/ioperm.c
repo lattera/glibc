@@ -436,6 +436,8 @@ static struct ioswtch ioswtch[] = {
   }
 };
 
+#undef DEBUG_IOPERM
+
 /* routine to process the /proc/cpuinfo information into the fields */
 /* that are required for correctly determining the platform parameters */
 
@@ -474,7 +476,7 @@ process_cpuinfo(void)
 
   fclose (fp);
 
-#if 1
+#ifdef DEBUG_IOPERM
   fprintf(stderr, "system type: %s\n", systype);
   fprintf(stderr, "system vari: %s\n", sysvari);
   fprintf(stderr, "cpu model: %s\n", cpumodel);
@@ -598,7 +600,7 @@ init_iosys (void)
 
   /* systype is not a know platform name... */
   __set_errno (EINVAL);
-#if 1
+#ifdef DEBUG_IOPERM
   fprintf(stderr, "init_iosys: platform not recognized\n");
 #endif
   return -1;
@@ -612,7 +614,7 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
   int prot, err;
 
   if (!io.swp && init_iosys() < 0) {
-#if 1
+#ifdef DEBUG_IOPERM
 	    fprintf(stderr, "ioperm: init_iosys() failed\n");
 #endif
     return -1;
@@ -622,13 +624,13 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
   if (from >= MAX_PORT || from + num > MAX_PORT)
     {
       __set_errno (EINVAL);
-#if 1
+#ifdef DEBUG_IOPERM
       fprintf(stderr, "ioperm: from/num out of range\n");
 #endif
       return -1;
     }
 
-#if 1
+#ifdef DEBUG_IOPERM
       fprintf(stderr, "ioperm: turn_on %d io.base %ld\n", turn_on, io.base);
 #endif
 
@@ -645,7 +647,7 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 
 	  fd = open ("/dev/mem", O_RDWR);
 	  if (fd < 0) {
-#if 1
+#ifdef DEBUG_IOPERM
 	    fprintf(stderr, "ioperm: /dev/mem open failed\n");
 #endif
 	    return -1;
@@ -657,7 +659,7 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 	    (unsigned long int) __mmap (0, len, PROT_NONE, MAP_SHARED,
 					fd, io.io_base);
 	  close (fd);
-#if 1
+#ifdef DEBUG_IOPERM
 	  fprintf(stderr, "ioperm: mmap of len 0x%lx  returned 0x%lx\n",
 		  len, io.base);
 #endif
@@ -678,7 +680,7 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
   addr &= PAGE_MASK;
   len = port_to_cpu_addr (from + num, io.swiz, 1) - addr;
   err = mprotect ((void *) addr, len, prot);
-#if 1
+#ifdef DEBUG_IOPERM
   fprintf(stderr, "ioperm: mprotect returned %d\n", err);
 #endif
   return err;

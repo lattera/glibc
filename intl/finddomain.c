@@ -193,7 +193,7 @@ _nl_find_domain (dirname, locale, domainname)
 
   /* The space for normalized_codeset is dynamically allocated.  Free it.  */
   if (mask & XPG_NORM_CODESET)
-    free (normalized_codeset);
+    free ((void *) normalized_codeset);
 
   return retval;
 }

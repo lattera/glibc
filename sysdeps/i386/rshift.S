@@ -1,5 +1,5 @@
 /* i80386 __mpn_rshift --
-   Copyright (C) 1992, 1994, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1994, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -49,7 +49,7 @@ ENTRY(__mpn_rshift)
 	incl	%edx
 	jz	L(end)
 	pushl	%eax			/* push carry limb onto stack */
-	testb	$1,%edx
+	testb	$1,%dl
 	jnz	L(1)			/* enter loop in the middle */
 	movl	%ebx,%eax
 

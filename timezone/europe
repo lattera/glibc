@@ -1,4 +1,4 @@
-# @(#)europe	7.62
+# @(#)europe	7.64
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -154,6 +154,11 @@
 # acronym BDST for British Double Summer Time.  Look for the published
 # time of sunrise and sunset in The Times, when BDST was in effect, and
 # if you find a zone reference it will say, "All times B.D.S.T."
+
+# From Joseph S. Myers (1999-09-02):
+# ... some military cables (WO 219/4100 - this is a copy from the
+# main SHAEF archives held in the US National Archives, SHAEF/5252/8/516)
+# agree that the usage is BDST (this appears in a message dated 17 Feb 1945).
 
 # Howse writes (p 157) `DBST'; let's assume this is a typo.
 
@@ -708,6 +713,17 @@
 # Implements the eighth Directive. Has the same text about the Isle of Man,
 # Guernsey and Jersey as the 1994 Order.
 
+# From Joseph S. Myers (1999-09-02):
+# I today found the 1916 summer time orders for the Channel Islands in
+# the Public Record Office (HO 45/10811/312364)....  Alderney,
+# Jersey and Guernsey all enacted summer time for 1916 (and the
+# enactment for the Isle of Man is already noted).  This doesn't
+# complete the resolution of timekeeping in the Channel Islands, since
+# 1917-1921 need to be resolved for the Channel Islands, and it isn't
+# clear whether the islands were using GMT or local time then.  The
+# changes in Alderney and Guernsey were at the same 2am GMT time as
+# for Great Britain; the order for Jersey is more interesting.
+
 # From Joseph S. Myers <jsm28@hermes.cam.ac.uk> (1998-01-06):
 #
 # The legal time in the UK outside of summer time is definitely GMT, not UTC;
@@ -716,7 +732,7 @@
 # (Lords Hansard 11 June 1997 columns 964 to 976)
 # </a>.
 
-# From Paul Eggert <eggert@twinsun.com> (1996-06-12):
+# From Paul Eggert (1999-09-20):
 #
 # The date `20 April 1924' in the table of ``Summer Time: A
 # Consultation Document'' (Cm 722, 1989) table is a transcription error;
@@ -740,11 +756,14 @@
 # Actually, that date saw the usual switch to summer time.
 # Standard time was not changed until 1968-10-27 (the clocks didn't change).
 #
-# The following claims by Shanks are possible though doubtful;
-# we'll ignore them for now.
+# Here is another incorrect claim by Shanks: 
 #     * Jersey, Guernsey, and the Isle of Man did not switch from GMT
 #	to daylight saving time until 1921 Apr 3, when they began to
 #	conform with Great Britain.
+# S.R.&O. 1916, No. 382 and HO 45/10811/312364 (quoted above) say otherwise.
+#
+# The following claim by Shanks is possible though doubtful;
+# we'll ignore it for now.
 #     * Dublin's 1971-10-31 switch was at 02:00, even though London's was 03:00.
 #
 #
@@ -1165,6 +1184,12 @@ Zone	Europe/Brussels	0:17:30 -	LMT	1880
 # see Yugoslavia
 
 # Bulgaria
+#
+# From Plamen Simenov <P.Simeonov@cnsys.bg> via Steffen Thorsen (1999-09-09):
+# A document of Government of Bulgaria (No.94/1997) says:
+# EET --> EETDST is in 03:00 Local time in last Sunday of March ...
+# EETDST --> EET is in 04:00 Local time in last Sunday of October
+#
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Bulg	1979	only	-	Mar	31	23:00	1:00	S
 Rule	Bulg	1979	only	-	Oct	 1	 1:00	0	-
@@ -1179,7 +1204,8 @@ Zone	Europe/Sofia	1:33:16 -	LMT	1880
 			2:00	-	EET	1979 Mar 31 23:00
 			2:00	Bulg	EE%sT	1982 Sep 26  2:00
 			2:00	C-Eur	EE%sT	1991
-			2:00	E-Eur	EE%sT
+			2:00	E-Eur	EE%sT	1997
+			2:00	EU	EE%sT
 
 # Croatia
 # see Yugosloavia

@@ -1,4 +1,4 @@
-# @(#)southamerica	7.28
+# @(#)southamerica	7.31
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -351,12 +351,15 @@ Rule	Brazil	1997	only	-	Oct	 6	 0:00	1:00	S
 # (1998-02-10)
 Rule	Brazil	1998	only	-	Mar	 1	 0:00	0	-
 # Decree <a href="http://pcdsh01.on.br/figuras/Hv98.jpg">2,780</a> (1998-09-11)
-# adopted by the same states as before,
-# specifies only the 1998-10-11 and 1999-02-21 transitions;
+# adopted by the same states as before.
+Rule	Brazil	1998	only	-	Oct	11	 0:00	1:00	S
+Rule	Brazil	1999	only	-	Feb	21	 0:00	0	-
+# Decree <a href="http://pcdsh01.on.br/figuras/HV3150.gif">3,150</a>
+# (1999-08-23), adopted by same states, says only 1999-10-03 and 2000-02-27;
 # after that, these rules are guesses and are quite possibly wrong,
 # but they are more likely than no DST at all.
-Rule	Brazil	1998	max	-	Oct	Sun>=8	 0:00	1:00	S
-Rule	Brazil	1999	max	-	Feb	Sun>=15	 0:00	0	-
+Rule	Brazil	1999	max	-	Oct	Sun>=1	 0:00	1:00	S
+Rule	Brazil	2000	max	-	Feb	lastSun	 0:00	0	-
 
 
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -558,7 +561,7 @@ Rule	Para	1993	1995	-	Oct	 1	0:00	1:00	S
 Rule	Para	1994	1995	-	Feb	lastSun	0:00	0	-
 Rule	Para	1996	1998	-	Mar	 1	0:00	0	-
 Rule	Para	1996	max	-	Oct	Sun>=1	0:00	1:00	S
-Rule	Para	1999	max	-	Feb	lastSun	0:00	0	-
+Rule	Para	1999	max	-	Feb	lastSat	0:00	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone America/Asuncion	-3:50:40 -	LMT	1890
 			-3:50:40 -	AMT	1931 Oct 10 # Asuncion Mean Time

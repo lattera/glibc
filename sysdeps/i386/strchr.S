@@ -1,6 +1,6 @@
 /* strchr (str, ch) -- Return pointer to first occurrence of CH in STR.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Some optimisations by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -56,7 +56,7 @@ ENTRY (strchr)
 	      implementation (this is because all processor inherent
 	      boundaries are multiples of 4.  */
 
-	testb $3, %eax		/* correctly aligned ? */
+	testb $3, %al		/* correctly aligned ? */
 	jz L(11)		/* yes => begin loop */
 	movb (%eax), %cl	/* load byte in question (we need it twice) */
 	cmpb %cl, %dl		/* compare byte */
@@ -65,7 +65,7 @@ ENTRY (strchr)
 	jz L(2)			/* yes => return NULL */
 	incl %eax		/* increment pointer */
 
-	testb $3, %eax		/* correctly aligned ? */
+	testb $3, %al		/* correctly aligned ? */
 	jz L(11)		/* yes => begin loop */
 	movb (%eax), %cl	/* load byte in question (we need it twice) */
 	cmpb %cl, %dl		/* compare byte */
@@ -74,7 +74,7 @@ ENTRY (strchr)
 	jz L(2)			/* yes => return NULL */
 	incl %eax		/* increment pointer */
 
-	testb $3, %eax		/* correctly aligned ? */
+	testb $3, %al		/* correctly aligned ? */
 	jz L(11)		/* yes => begin loop */
 	movb (%eax), %cl	/* load byte in question (we need it twice) */
 	cmpb %cl, %dl		/* compare byte */

@@ -441,7 +441,7 @@ insert_value (struct linereader *ldfile, struct token *arg,
 					     arg->val.str.startwc);
 	}
       else if (find_entry (&collate->elem_table, arg->val.str.startmb,
-			   arg->val.str.lenmb, &elem) != 0)
+			   arg->val.str.lenmb, (void **) &elem) != 0)
 	/* It's also no collation element.  Therefore ignore it.  */
 	return;
     }

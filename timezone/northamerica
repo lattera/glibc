@@ -1,4 +1,4 @@
-# @(#)northamerica	7.45
+# @(#)northamerica	7.47
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
@@ -889,6 +889,25 @@ Zone America/Dawson_Creek -8:00:56 -	LMT	1884
 #	* O.I.C. 1987/056 changed DST to Apr firstSun 2:00 to Oct lastSun 2:00.
 # Shanks says Yukon's 1973-10-28 switch was at 2:00; go with Englander.
 
+# From Rives McDow (1999-09-04):
+# Nunavut ... moved ... to incorporate the whole territory into one time zone.
+# <a href="http://www.nunatsiaq.com/nunavut/nvt90903_13.html">
+# The change announcement
+# </a> 
+#
+# From Antoine Leca (1999-09-06):
+# We then need to create a new timezone for the Kitikmeot region of Nunavut
+# to differentiate it from the Yellowknife region.
+
+# From Paul Eggert (1999-09-20):
+# <a href="http://www.nunavut.com/basicfacts/english/basicfacts_1territory.html">
+# Basic Facts: The New Territory
+# </a> (1999) reports that Pangnirtung operates on Eastern time,
+# and that Coral Harbour does not observe DST.  We don't know when
+# Pangnirtung switched to Eastern time; we'll guess 1995.
+# We'll ignore the claim about Coral Harbour for now,
+# since we have no further info.
+
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	NT_YK	1918	only	-	Apr	14	2:00	1:00	D
 Rule	NT_YK	1918	only	-	Oct	27	2:00	0	S
@@ -903,11 +922,17 @@ Rule	NT_YK	1980	max	-	Oct	lastSun	2:00	0	S
 Rule	NT_YK	1987	max	-	Apr	Sun>=1	2:00	1:00	D
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone America/Pangnirtung -4:22:56 -	LMT	1884
-			-4:00	NT_YK	A%sT
-Zone America/Iqaluit	-4:33:52 -	LMT	1884	# Frobisher Bay
-			-5:00	NT_YK	E%sT
+			-4:00	NT_YK	A%sT	1995 Apr Sun>=1 2:00
+			-5:00	Canada	E%sT	1999 Oct 31 2:00
+			-6:00	Canada	C%sT
+Zone America/Iqaluit	-4:33:52 -	LMT	1884 # Frobisher Bay before 1987
+			-5:00	NT_YK	E%sT	1999 Oct 31 2:00
+			-6:00	Canada	C%sT
 Zone America/Rankin_Inlet -6:08:40 -	LMT	1884
 			-6:00	NT_YK	C%sT
+Zone America/Cambridge_Bay -7:00:20 -	LMT	1884
+			-7:00	NT_YK	M%sT	1999 Oct 31 2:00
+			-6:00	Canada	C%sT
 Zone America/Yellowknife -7:37:24 -	LMT	1884
 			-7:00	NT_YK	M%sT
 Zone America/Inuvik	-8:54:00 -	LMT	1884
@@ -1205,8 +1230,9 @@ Rule	Cuba	1990	1997	-	Apr	Sun>=1	0:00	1:00	D
 Rule	Cuba	1991	1995	-	Oct	Sun>=8	0:00s	0	S
 Rule	Cuba	1996	only	-	Oct	 6	0:00s	0	S
 Rule	Cuba	1997	only	-	Oct	12	0:00s	0	S
-Rule	Cuba	1998	max	-	Mar	lastSun	0:00s	1:00	D
+Rule	Cuba	1998	1999	-	Mar	lastSun	0:00s	1:00	D
 Rule	Cuba	1998	max	-	Oct	lastSun	0:00s	0	S
+Rule	Cuba	2000	max	-	Apr	 1	0:00s	1:00	D
 
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	America/Havana	-5:29:28 -	LMT	1890

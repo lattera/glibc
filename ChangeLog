@@ -1,7 +1,43 @@
+1999-10-01  Andreas Jaeger  <aj@suse.de>
+
+	* locale/programs/ld-collate.c (insert_value): Add cast to avoid
+	warning.
+	* intl/finddomain.c (_nl_find_domain): Likewise.
+
+1999-09-30  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Disable debug messages.
+
+1999-09-30  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/lshift.S: Correct assembler commands to fix warnings.
+	* sysdeps/i386/rshift.S: Likewise.
+	* sysdeps/i386/strchrnul.S: Likewise.
+	* sysdeps/i386/strchr.S: Likewise.
+	Patch by Michael Deutschmann <michael@talamasca.wkpowerlink.com>,
+	PR libc/1339.
+
+1999-09-30  Andreas Jaeger  <aj@suse.de>
+
+	* manual/examples/pipe.c: Close other end of pipe to make example work.
+
+1999-10-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* timezone/checktab.awk: Update from tzcode1999g.
+	* timezone/tzselect.ksh: Likewise.
+	* timezone/africa: Update from tzdata1999g.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/zone.tab: Likewise.
+
 1999-09-27  Andreas Jaeger  <aj@suse.de>
 
 	* resolv/netdb.h: Remove declaration of getnodebyname.  It has
- 	been renamed to getipnodebyname.  Move flags around.
+	been renamed to getipnodebyname.  Move flags around.
 
 1999-09-27  Andreas Schwab  <schwab@suse.de>
 

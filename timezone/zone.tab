@@ -1,3 +1,5 @@
+# @(#)zone.tab	1.15
+#
 # TZ zone descriptions
 #
 # From Paul Eggert <eggert@twinsun.com> (1996-08-05):
@@ -88,14 +90,15 @@ CA	+4734-05243	America/St_Johns	Newfoundland Island
 CA	+4439-06336	America/Halifax	Atlantic Time - Nova Scotia (most places), NB, W Labrador, E Quebec & PEI
 CA	+4612-05957	America/Glace_Bay	Atlantic Time - Nova Scotia - places that did not observe DST 1966-1971
 CA	+5320-06025	America/Goose_Bay	Atlantic Time - E Labrador
-CA	+6608-06544	America/Pangnirtung	Atlantic Time - Northwest Territories
 CA	+4531-07334	America/Montreal	Eastern Time - Ontario & Quebec - most locations
 CA	+4901-08816	America/Nipigon	Eastern Time - Ontario & Quebec - places that did not observe DST 1967-1973
 CA	+4823-08915	America/Thunder_Bay	Eastern Time - Thunder Bay, Ontario
-CA	+6344-06828	America/Iqaluit	Eastern Time - Northwest Territories
 CA	+4953-09709	America/Winnipeg	Central Time - Manitoba & west Ontario
 CA	+4843-09429	America/Rainy_River	Central Time - Rainy River & Fort Frances, Ontario
-CA	+6245-09210	America/Rankin_Inlet	Central Time - Northwest Territories
+CA	+6608-06544	America/Pangnirtung	Central Time - Pangnirtung, Nunavut
+CA	+6344-06828	America/Iqaluit	Central Time - east Nunavut
+CA	+6245-09210	America/Rankin_Inlet	Central Time - central Nunavut
+CA	+6903-10505	America/Cambridge_Bay	Central Time - west Nunavut
 CA	+5024-10439	America/Regina	Central Standard Time - Saskatchewan - most locations
 CA	+5017-10750	America/Swift_Current	Central Standard Time - Saskatchewan - midwest
 CA	+5333-11328	America/Edmonton	Mountain Time - Alberta, east British Columbia & west Saskatchewan
