@@ -1,3 +1,10 @@
+1999-05-02  H.J. Lu  <hjl@gnu.org>
+
+	* timezone/zic.c (dolink): Remove the symlink destination first.
+
+	* catgets/open_catalog.c (__open_catalog): Set catalog->status
+	to "nonexisting" if failed to open the file.
+
 1999-05-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/bits/string2.h: Only use __builtin_memset for egcs 1.1 and

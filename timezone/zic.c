@@ -621,6 +621,16 @@ const char * const	tofile;
 			        symlinkcontents = ecatalloc(symlinkcontents, "../");
 			symlinkcontents = ecatalloc(symlinkcontents, fromname);
 
+			result = unlink(toname);
+			if (result != 0 && errno != ENOENT) {
+				const char *e = strerror(errno);
+
+				(void) fprintf(stderr,
+					       _("%s: Can't unlink  %s: %s\n"),
+					       progname, toname, e);
+				(void) exit(EXIT_FAILURE);
+			}
+
 			result = symlink(symlinkcontents, toname);
 			if (result == 0)
 warning(_("hard link failed, symbolic link used"));

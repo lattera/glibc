@@ -183,7 +183,10 @@ __open_catalog (__nl_catd catalog)
 
   /* Avoid dealing with directories and block devices */
   if (fd < 0)
-    goto unlock_return;
+    {
+      catalog->status = nonexisting;
+      goto unlock_return;
+    }
 
   if (__fxstat (_STAT_VER, fd, &st) < 0)
     {
