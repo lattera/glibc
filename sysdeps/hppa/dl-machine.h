@@ -407,40 +407,40 @@ asm (									\
 #define TRAMPOLINE_TEMPLATE(tramp_name, fixup_name) \
   extern void tramp_name (void);		    \
   asm ( "\
-	/* Trampoline for " #tramp_name " */
-	.globl " #tramp_name "
-	.type " #tramp_name ",@function
-" #tramp_name ":
-	/* Save return pointer */
-	stw	%r2,-20(%sp)
-	/* Save argument registers in the call stack frame. */
-	stw	%r26,-36(%sp)
-	stw	%r25,-40(%sp)
-	stw	%r24,-44(%sp)
-	stw	%r23,-48(%sp)
-	/* Build a call frame. */
-	stwm	%sp,64(%sp)
-
-	/* Set up args to fixup func.  */
-	ldw	8+4(%r20),%r26	/* got[1] == struct link_map *  */
-	copy	%r19,%r25	/* reloc offset  */
-
-	/* Call the real address resolver. */
-	bl	" #fixup_name ",%r2
-	copy	%r21,%r19	/* delay slot, set fixup func ltp */
-
-	ldwm	-64(%sp),%sp
-	/* Arguments. */
-	ldw	-36(%sp),%r26
-	ldw	-40(%sp),%r25
-	ldw	-44(%sp),%r24
-	ldw	-48(%sp),%r23
-	/* Return pointer. */
-	ldw	-20(%sp),%r2
-	/* Call the real function. */
-	ldw	0(%r28),%r22
-	bv	%r0(%r22)
-	ldw	4(%r28),%r19
+	/* Trampoline for " #tramp_name " */				    \n\
+	.globl " #tramp_name "						    \n\
+	.type " #tramp_name ",@function					    \n\
+" #tramp_name ":							    \n\
+	/* Save return pointer */					    \n\
+	stw	%r2,-20(%sp)						    \n\
+	/* Save argument registers in the call stack frame. */		    \n\
+	stw	%r26,-36(%sp)						    \n\
+	stw	%r25,-40(%sp)						    \n\
+	stw	%r24,-44(%sp)						    \n\
+	stw	%r23,-48(%sp)						    \n\
+	/* Build a call frame. */					    \n\
+	stwm	%sp,64(%sp)						    \n\
+									    \n\
+	/* Set up args to fixup func.  */				    \n\
+	ldw	8+4(%r20),%r26	/* got[1] == struct link_map *  */	    \n\
+	copy	%r19,%r25	/* reloc offset  */			    \n\
+									    \n\
+	/* Call the real address resolver. */				    \n\
+	bl	" #fixup_name ",%r2					    \n\
+	copy	%r21,%r19	/* delay slot, set fixup func ltp */	    \n\
+									    \n\
+	ldwm	-64(%sp),%sp						    \n\
+	/* Arguments. */						    \n\
+	ldw	-36(%sp),%r26						    \n\
+	ldw	-40(%sp),%r25						    \n\
+	ldw	-44(%sp),%r24						    \n\
+	ldw	-48(%sp),%r23						    \n\
+	/* Return pointer. */						    \n\
+	ldw	-20(%sp),%r2						    \n\
+	/* Call the real function. */					    \n\
+	ldw	0(%r28),%r22						    \n\
+	bv	%r0(%r22)						    \n\
+	ldw	4(%r28),%r19						    \n\
 ");
 
 #ifndef PROF
@@ -567,13 +567,13 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	   probably haven't relocated the necessary values by this
 	   point so we have to find them ourselves. */
 
-	asm ("bl	0f,%0
-	      depi	0,31,2,%0
-0:	      addil	L'__boot_ldso_fptr - ($PIC_pcrel$0 - 8),%0
-	      ldo	R'__boot_ldso_fptr - ($PIC_pcrel$0 - 12)(%%r1),%1
-	      addil	L'__fptr_root - ($PIC_pcrel$0 - 16),%0
-	      ldo	R'__fptr_root - ($PIC_pcrel$0 - 20)(%%r1),%2
-	      addil	L'__fptr_count - ($PIC_pcrel$0 - 24),%0
+	asm ("bl	0f,%0						    \n\
+	      depi	0,31,2,%0					    \n\
+0:	      addil	L'__boot_ldso_fptr - ($PIC_pcrel$0 - 8),%0	    \n\
+	      ldo	R'__boot_ldso_fptr - ($PIC_pcrel$0 - 12)(%%r1),%1   \n\
+	      addil	L'__fptr_root - ($PIC_pcrel$0 - 16),%0		    \n\
+	      ldo	R'__fptr_root - ($PIC_pcrel$0 - 20)(%%r1),%2	    \n\
+	      addil	L'__fptr_count - ($PIC_pcrel$0 - 24),%0		    \n\
 	      ldo	R'__fptr_count - ($PIC_pcrel$0 - 28)(%%r1),%3"
 	     :
 	     "=r" (dot),
