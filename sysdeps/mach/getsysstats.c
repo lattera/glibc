@@ -1,5 +1,5 @@
 /* System dependent pieces of sysconf; Mach version
-   Copyright (C) 1996, 97, 99 Free Software Foundation, Inc.
+   Copyright (C) 1996, 97, 99, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ __get_nprocs ()
 }
 
 /* Return the number of physical pages on the system. */
-int
+long int
 __get_phys_pages ()
 {
   struct host_basic_info hbi;
@@ -78,7 +78,7 @@ __get_phys_pages ()
 }
 
 /* Return the number of available physical pages */
-int
+long int
 __get_avphys_pages ()
 {
   vm_statistics_data_t vs;

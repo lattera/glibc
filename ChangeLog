@@ -1,3 +1,9 @@
+2001-02-18  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/getsysstats.c (__get_phys_pages): Change return
+	value to long int.
+	(__get_avphys_pages): Likewise.
+
 2001-02-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/libm-test.inc (pow_test): Correct expected results for x == +-1.
