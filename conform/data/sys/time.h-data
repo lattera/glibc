@@ -11,9 +11,8 @@ element {struct itimerval} {struct timeval} it_value
 type time_t
 type suseconds_t
 
-type {struct fd_set}
-
-element {struct fd_set} long fds_bits []
+type fd_set
+element fd_set long fds_bits []
 
 constant ITIMER_REAL
 constant ITIMER_VIRTUAL

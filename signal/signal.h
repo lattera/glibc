@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,20 +34,20 @@ __BEGIN_DECLS
 
 /* An integral type that can be modified atomically, without the
    possibility of a signal arriving in the middle of the operation.  */
-#ifndef __sig_atomic_t_defined
-# if defined __need_sig_atomic_t || defined _SIGNAL_H
-#  undef __need_sig_atomic_t
+#if defined __need_sig_atomic_t || defined _SIGNAL_H
+# ifndef __sig_atomic_t_defined
 #  define __sig_atomic_t_defined
 typedef __sig_atomic_t sig_atomic_t;
 # endif
+# undef __need_sig_atomic_t
 #endif
 
-#ifndef __sigset_t_defined
-# if defined __need_sigset_t || (defined _SIGNAL_H && defined __USE_POSIX)
-#  undef __need_sigset_t
+#if defined __need_sigset_t || (defined _SIGNAL_H && defined __USE_POSIX)
+# ifndef __sigset_t_defined
 #  define __sigset_t_defined
 typedef __sigset_t sigset_t;
 # endif
+# undef __need_sigset_t
 #endif
 
 #ifdef _SIGNAL_H

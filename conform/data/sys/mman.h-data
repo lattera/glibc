@@ -22,17 +22,16 @@ constant POSIX_MADV_RANDOM
 constant POSIX_MADV_WILLNEED
 constant POSIX_MADV_DONTNEED
 
-constant POSIX_TYPED_MEM_ALLOCATE
-constant POSIX_TYPED_MEM_ALLOCATE_CONTIG
-constant POSIX_TYPED_MEM_MAP_ALLOCATABLE
+optional-constant POSIX_TYPED_MEM_ALLOCATE
+optional-constant POSIX_TYPED_MEM_ALLOCATE_CONTIG
+optional-constant POSIX_TYPED_MEM_MAP_ALLOCATABLE
 
 type size_t
 type off_t
 type mode_t
 
-type {struct posix_typedmem_info}
-
-element {struct posix_typedmem_info} size_t posix_tmi_length
+optional-type {struct posix_typedmem_info}
+optional-element {struct posix_typedmem_info} size_t posix_tmi_length
 
 function int mlock (const void*, size_t)
 function int mlockall (int)
@@ -42,9 +41,10 @@ function int msync (void*, size_t, int)
 function int munlock (const void*, size_t)
 function int munlockall (void)
 function int munmap (void*, size_t)
-function int posix_mem_offset (const void*, size_t, off_t*, size_t*, int*)
-function int posix_typed_mem_get_info (int, struct posix_typed_mem_info*)
-function int posix_typed_mem_open (const char*, int, int)
+function int posix_madvise (void*, size_t, int)
+optional-function int posix_mem_offset (const void*, size_t, off_t*, size_t*, int*)
+optional-function int posix_typed_mem_get_info (int, struct posix_typed_mem_info*)
+optional-function int posix_typed_mem_open (const char*, int, int)
 function int shm_open (const char*, int, mode_t)
 function int shm_unlink (const char*)
 

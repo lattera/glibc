@@ -15,18 +15,18 @@ if (@headers == ()) {
 	      "termios.h", "tar.h", "sys/wait.h", "sys/utsname.h", "sys/un.h",
 	      "sys/uio.h", "sys/types.h", "sys/times.h", "sys/timeb.h",
 	      "sys/time.h", "sys/statvfs.h", "sys/stat.h", "sys/socket.h",
-	      "sys/shm.h", "sys/sem.h", "sys/resource.h", "sys/msg.h",
-	      "sys/mman.h", "sys/ipc.h", "syslog.h", "stropts.h", "strings.h",
-	      "string.h", "stdlib.h", "stdio.h", "stdint.h", "stddef.h",
-	      "stdarg.h", "spawn.h", "signal.h", "setjmp.h", "semaphore.h",
-	      "search.h", "sched.h", "regex.h", "pwd.h", "pthread.h",
-	      "poll.h", "nl_types.h", "netinet/tcp.h", "netinet/in.h",
-	      "net/if.h", "netdb.h", "ndbm.h", "mqueue.h", "monetary.h",
-	      "math.h", "locale.h", "libgen.h", "limits.h", "langinfo.h",
-	      "iso646.h", "inttypes.h", "iconv.h", "grp.h", "glob.h", "ftw.h",
-	      "fnmatch.h", "fmtmsg.h", "float.h", "fcntl.h", "errno.h",
-	      "dlfcn.h", "dirent.h", "ctype.h", "cpio.h", "assert.h",
-	      "arpa/inet.h", "aio.h");
+	      "sys/shm.h", "sys/sem.h", "sys/select.h", "sys/resource.h",
+	      "sys/msg.h", "sys/mman.h", "sys/ipc.h", "syslog.h", "stropts.h",
+	      "strings.h", "string.h", "stdlib.h", "stdio.h", "stdint.h",
+	      "stddef.h", "stdarg.h", "spawn.h", "signal.h", "setjmp.h",
+	      "semaphore.h", "search.h", "sched.h", "regex.h", "pwd.h",
+	      "pthread.h", "poll.h", "nl_types.h", "netinet/tcp.h",
+	      "netinet/in.h", "net/if.h", "netdb.h", "ndbm.h", "mqueue.h",
+	      "monetary.h", "math.h", "locale.h", "libgen.h", "limits.h",
+	      "langinfo.h", "iso646.h", "inttypes.h", "iconv.h", "grp.h",
+	      "glob.h", "ftw.h", "fnmatch.h", "fmtmsg.h", "float.h", "fcntl.h",
+	      "errno.h", "dlfcn.h", "dirent.h", "ctype.h", "cpio.h",
+	      "assert.h", "arpa/inet.h", "aio.h");
 }
 
 if ($dialect ne "ISO" && $dialect ne "POSIX" && $dialect ne "XPG3"
@@ -590,6 +590,7 @@ while ($#headers >= 0) {
       }
     } elsif (/^optional-type *({([^}]*)|([a-zA-Z0-9_]*))/) {
       my($type) = "$2$3";
+      my($maybe_opaque) = 0;
 
       # Remember that this name is allowed.
       if ($type =~ /^struct *(.*)/) {
@@ -598,6 +599,7 @@ while ($#headers >= 0) {
 	push @allow, $1;
       } else {
 	push @allow, $type;
+	$maybe_opaque = 1;
       }
 
       # Remember that this name is allowed.
@@ -607,13 +609,18 @@ while ($#headers >= 0) {
       open (TESTFILE, ">$fnamebase.c");
       print TESTFILE "$prepend";
       print TESTFILE "#include <$h>\n";
-      print TESTFILE "$type *a;\n";
+      if ($maybe_opaque == 1) {
+	print TESTFILE "$type *a;\n";
+      } else {
+	print TESTFILE "$type a;\n";
+      }
       close (TESTFILE);
 
       compiletest ($fnamebase, "Testing for type $type",
-		   "Type \"$type\" not available.", $missing, 1);
+		   "NOT AVAILABLE", $missing, 1);
     } elsif (/^type *({([^}]*)|([a-zA-Z0-9_]*))/) {
       my($type) = "$2$3";
+      my($maybe_opaque) = 0;
 
       # Remember that this name is allowed.
       if ($type =~ /^struct *(.*)/) {
@@ -622,6 +629,7 @@ while ($#headers >= 0) {
 	push @allow, $1;
       } else {
 	push @allow, $type;
+	$maybe_opaque = 1;
       }
 
       # Remember that this name is allowed.
@@ -631,11 +639,48 @@ while ($#headers >= 0) {
       open (TESTFILE, ">$fnamebase.c");
       print TESTFILE "$prepend";
       print TESTFILE "#include <$h>\n";
-      print TESTFILE "$type *a;\n";
+      if ($maybe_opaque == 1) {
+	print TESTFILE "$type *a;\n";
+      } else {
+	print TESTFILE "$type a;\n";
+      }
       close (TESTFILE);
 
       compiletest ($fnamebase, "Testing for type $type",
 		   "Type \"$type\" not available.", $missing, 0);
+    } elsif (/^optional-function *({([^}]*)}|([a-zA-Z0-9_]*)) [(][*]([a-zA-Z0-9_]*) ([(].*[)])/) {
+      my($rettype) = "$2$3";
+      my($fname) = "$4";
+      my($args) = "$5";
+      my($res) = $missing;
+
+      # Remember that this name is allowed.
+      push @allow, $fname;
+
+      # Generate a program to test for availability of this function.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      # print TESTFILE "#undef $fname\n";
+      print TESTFILE "$rettype (*(*foobarbaz) $args = $fname;\n";
+      close (TESTFILE);
+
+      $res = compiletest ($fnamebase, "Test availability of function $fname",
+			  "NOT AVAILABLE", $res, 1);
+
+      if ($res == 0 || $missing == 1) {
+	# Generate a program to test for the type of this function.
+	open (TESTFILE, ">$fnamebase.c");
+	print TESTFILE "$prepend";
+	print TESTFILE "#include <$h>\n";
+	# print TESTFILE "#undef $fname\n";
+	print TESTFILE "extern $rettype (*(*foobarbaz) $args;\n";
+	print TESTFILE "extern __typeof__ (&$fname) foobarbaz;\n";
+	close (TESTFILE);
+
+	compiletest ($fnamebase, "Test for type of function $fname",
+		     "Function \"$fname\" has incorrect type.", $res, 0);
+      }
     } elsif (/^function *({([^}]*)}|([a-zA-Z0-9_]*)) [(][*]([a-zA-Z0-9_]*) ([(].*[)])/) {
       my($rettype) = "$2$3";
       my($fname) = "$4";
@@ -667,6 +712,39 @@ while ($#headers >= 0) {
 
       compiletest ($fnamebase, "Test for type of function $fname",
 		   "Function \"$fname\" has incorrect type.", $res, 0);
+    } elsif (/^optional-function *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
+      my($rettype) = "$2$3";
+      my($fname) = "$4";
+      my($args) = "$5";
+      my($res) = $missing;
+
+      # Remember that this name is allowed.
+      push @allow, $fname;
+
+      # Generate a program to test for availability of this function.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      # print TESTFILE "#undef $fname\n";
+      print TESTFILE "$rettype (*foobarbaz) $args = $fname;\n";
+      close (TESTFILE);
+
+      $res = compiletest ($fnamebase, "Test availability of function $fname",
+			  "NOT AVAILABLE", $res, 1);
+
+      if ($res == 0 || $missing != 0) {
+	# Generate a program to test for the type of this function.
+	open (TESTFILE, ">$fnamebase.c");
+	print TESTFILE "$prepend";
+	print TESTFILE "#include <$h>\n";
+	# print TESTFILE "#undef $fname\n";
+	print TESTFILE "extern $rettype (*foobarbaz) $args;\n";
+	print TESTFILE "extern __typeof__ (&$fname) foobarbaz;\n";
+	close (TESTFILE);
+
+	compiletest ($fnamebase, "Test for type of function $fname",
+		     "Function \"$fname\" has incorrect type.", $res, 0);
+      }
     } elsif (/^function *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
       my($rettype) = "$2$3";
       my($fname) = "$4";

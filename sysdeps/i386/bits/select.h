@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
     int __d0, __d1;							      \
     __asm__ __volatile__ ("cld; rep; stosl"				      \
 			  : "=c" (__d0), "=D" (__d1)			      \
-			  : "a" (0), "0" (sizeof (__fd_set)		      \
+			  : "a" (0), "0" (sizeof (fd_set)		      \
 					  / sizeof (__fd_mask)),	      \
 			    "1" (&__FDS_BITS (fdsp)[0])			      \
 			  : "memory");					      \
@@ -61,8 +61,8 @@
 # define __FD_ZERO(set)  \
   do {									      \
     unsigned int __i;							      \
-    __fd_set *__arr = (set);						      \
-    for (__i = 0; __i < sizeof (__fd_set) / sizeof (__fd_mask); ++__i)	      \
+    fd_set *__arr = (set);						      \
+    for (__i = 0; __i < sizeof (fd_set) / sizeof (__fd_mask); ++__i)	      \
       __FDS_BITS (__arr)[__i] = 0;					      \
   } while (0)
 # define __FD_SET(d, set)    (__FDS_BITS (set)[__FDELT (d)] |= __FDMASK (d))

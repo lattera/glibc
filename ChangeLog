@@ -1,3 +1,33 @@
+2001-01-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* signal/signal.h: Fix handling of __need_* symbols.
+	* misc/sys/select.c: Define fd_set here.  Remove __fd_set.  Define
+	fd_mask only if __USE_MISC.  Declare pselect for __USE_XOPEN2K.
+	* include/sys/select.h: Use fd_set not __fd_set.
+	* sysdeps/generic/bits/select.h: Likewise.
+	* sysdeps/i386/bits/select.h: Likewise.
+	* sysdeps/generic/bits/types.h: Don't define __fd_mask, __NFDBITS,
+	__FDELT, __FDMASK, and __fd_set here.
+	* sysdeps/unix/sysv/aix/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/hpux/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/types.h: Likewise.
+	* time/sys/time.h: Define struct timeval before including <time.h>
+	and <sys/select.h>.
+
+	* conform/data/sys/time.h-data: fd_set is a typedef.
+	* conform/data/sys/select.h-data: New file.
+	* conform/data/sys/mman.h-data: Make typed mem stuff optional.
+	* conform/conformtest.pl (@headers): Add sys/select.h.
+	(type, optional-type): Unless testing a typedef instantiate object.
+	Implement optional-function.
+
+	* math/test-misc.c: Include <float.h>.
+
 2001-01-27  Andreas Jaeger  <aj@suse.de>
 
 	* misc/efgcvt_r.c: Include <float.h>.

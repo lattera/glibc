@@ -1,0 +1,33 @@
+#if !defined ISO && !defined POSIX
+type {struct timeval}
+element {struct timeval} time_t tv_sec
+element {struct timeval} suseconds_t tv_usec
+
+type time_t
+type suseconds_t
+
+type sigset_t
+
+type {struct timespec}
+element {struct timespec} time_t tv_sec
+element {struct timespec} long tv_nsec
+
+type fd_set
+element fd_set long fds_bits []
+
+function-macro void FD_CLR (int, fd_set*)
+function-macro int FD_ISSET (int, fd_set*)
+function-macro void FD_SET (int, fd_set*)
+function-macro void FD_ZERO (fd_set*)
+
+macro FD_SETSIZE
+
+#ifdef XOPEN2K
+function int pselect (int, fd_set*, fd_set*, fd_set*, const struct timespec*, const sigset_t*)
+#endif
+function int select (int, fd_set*, fd_set*, fd_set*, struct timeval*)
+
+allow-header signal.h
+allow-header sys/time.h
+allow-header time.h
+#endif

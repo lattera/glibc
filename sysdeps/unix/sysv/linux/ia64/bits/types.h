@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -94,35 +94,9 @@ typedef int __ipc_pid_t;
 /* type to represent block size. */
 typedef long int __blksize_t;
 
-/* One element in the file descriptor mask array.  */
-typedef unsigned long int __fd_mask;
-
-/* Due to incaution, we may have gotten these from a kernel header file.  */
-#undef __FD_SETSIZE
-#undef __NFDBITS
-#undef __FDMASK
-
 /* Number of descriptors that can fit in an `fd_set'.  */
 #define __FD_SETSIZE	1024
 
-/* It's easier to assume 8-bit bytes than to get CHAR_BIT.  */
-#define __NFDBITS	(8 * sizeof (__fd_mask))
-#define	__FDELT(d)	((d) / __NFDBITS)
-#define	__FDMASK(d)	((__fd_mask) 1 << ((d) % __NFDBITS))
-
-/* fd_set for select and pselect.  */
-typedef struct
-  {
-    /* XPG4.2 requires this member name.  Otherwise avoid the name
-       from the user namespace.  */
-#ifdef __USE_XOPEN
-    __fd_mask fds_bits[__FD_SETSIZE / __NFDBITS];
-# define __FDS_BITS(set) ((set)->fds_bits)
-#else
-    __fd_mask __fds_bits[__FD_SETSIZE / __NFDBITS];
-# define __FDS_BITS(set) ((set)->__fds_bits)
-#endif
-  } __fd_set;
 
 /* Used in XTI.  */
 typedef int __t_scalar_t;
