@@ -311,6 +311,13 @@ alias	ISO6937//		ISO_6937//
 module	ISO_6937//		INTERNAL		ISO_6937	1
 module	INTERNAL		ISO_6937//		ISO_6937	1
 
+
+#	from			to			module		cost
+alias	ISO-IR-90//		ISO_6937-2//
+alias	ISO_6937-2:1983//	ISO_6937-2//
+module	ISO_6937-2//		INTERNAL		ISO_6937-2	1
+module	INTERNAL		ISO_6937-2//		ISO_6937-2	1
+
 #	from			to			module		cost
 alias	SHIFT-JIS//		SJIS//
 alias	CP932//			SJIS//
@@ -844,3 +851,86 @@ alias	CSA_T500//		ANSI_X3.110//
 alias	NAPLPS//		ANSI_X3.110//
 module	ANSI_X3.110//		INTERNAL		ANSI_X3.110	1
 module	INTERNAL		ANSI_X3.110//		ANSI_X3.110	1
+
+#	from			to			module		cost
+alias	ISO-IR-139//		CSN_369103//
+module	CSN_369103//		INTERNAL		CSN_369103	1
+module	INTERNAL		CSN_369103//		CSN_369103	1
+
+#	from			to			module		cost
+alias	CWI-2//			CWI//
+alias	CP-HU//			CWI//
+module	CWI//			INTERNAL		CWI		1
+module	INTERNAL		CWI//			CWI		1
+
+#	from			to			module		cost
+alias	DEC//			DEC-MCS//
+module	DEC-MCS//		INTERNAL		DEC-MCS		1
+module	INTERNAL		DEC-MCS//		DEC-MCS		1
+
+#	from			to			module		cost
+alias	ISO-IR-111//		ECMA-CYRILLIC//
+module	ECMA-CYRILLIC//		INTERNAL		ECMA-CYRILLIC	1
+module	INTERNAL		ECMA-CYRILLIC//		ECMA-CYRILLIC	1
+
+#	from			to			module		cost
+alias	ST_SEV_358-88//		GOST_19768-74//
+alias	GOST_19768//		GOST_19768-74//
+alias	ISO-IR-153//		GOST_19768-74//
+module	GOST_19768-74//		INTERNAL		GOST_19768-74	1
+module	INTERNAL		GOST_19768-74//		GOST_19768-74	1
+
+#	from			to			module		cost
+alias	ISO-IR-150//		GREEK-CCITT//
+module	GREEK-CCITT//		INTERNAL		GREEK-CCITT	1
+module	INTERNAL		GREEK-CCITT//		GREEK-CCITT	1
+
+#	from			to			module		cost
+alias	ISO-IR-88//		GREEK7//
+module	GREEK7//		INTERNAL		GREEK7		1
+module	INTERNAL		GREEK7//		GREEK7		1
+
+#	from			to			module		cost
+alias	ISO-IR-18//		GREEK7-OLD//
+module	GREEK7-OLD//		INTERNAL		GREEK7-OLD	1
+module	INTERNAL		GREEK7-OLD//		GREEK7-OLD	1
+
+#	from			to			module		cost
+alias	ISO-IR-49//		INIS//
+module	INIS//			INTERNAL		INIS		1
+module	INTERNAL		INIS//			INIS		1
+
+#	from			to			module		cost
+alias	ISO-IR-50//		INIS-8//
+module	INIS-8//		INTERNAL		INIS-8		1
+module	INTERNAL		INIS-8//		INIS-8		1
+
+#	from			to			module		cost
+alias	ISO-IR-51//		INIS-CYRILLIC//
+module	INIS-CYRILLIC//		INTERNAL		INIS-CYRILLIC	1
+module	INTERNAL		INIS-CYRILLIC//		INIS-CYRILLIC	1
+
+#	from			to			module		cost
+alias	ISO-IR-98//		ISO_2033//
+alias	ISO_2033-1983//		ISO_2033//
+alias	E13B/			ISO_2033//
+module	ISO_2033//		INTERNAL		ISO_2033	1
+module	INTERNAL		ISO_2033//		ISO_2033	1
+
+#	from			to			module		cost
+alias	ISO-IR-37//		ISO_5427//
+alias	KOI-7//			ISO_5427//
+module	ISO_5427//		INTERNAL		ISO_5427	1
+module	INTERNAL		ISO_5427//		ISO_5427	1
+
+#	from			to			module		cost
+alias	ISO-IR-54//		ISO_5427-EXT//
+alias	ISO_5427:1981//		ISO_5427-EXT//
+module	ISO_5427-EXT//		INTERNAL		ISO_5427-EXT	1
+module	INTERNAL		ISO_5427-EXT//		ISO_5427-EXT	1
+
+#	from			to			module		cost
+alias	ISO-IR-55//		ISO_5428//
+alias	ISO_5428:1980//		ISO_5428//
+module	ISO_5428//		INTERNAL		ISO_5428	1
+module	INTERNAL		ISO_5428//		ISO_5428	1

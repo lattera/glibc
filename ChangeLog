@@ -1,3 +1,38 @@
+1998-09-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/Makefile (modules): Add CSN_369103, CWI, DEC-MCS,
+	ECMA-CYRILLIC, GOST_19768-74, GREEK-CCITT, GREEK7, GREEK7-OLD, INIS,
+	INIS-8, INIS-CYRILLIC, ISO_6937-2, ISO_2033, ISO_5427, ISO_5427-EXT,
+	and ISO_5428.
+	Define *-routines variables for new modules.
+	(distribute): Add .c files for new modules.
+	(awk-generated-headers): Add csn_369103.h, cwi.h, dec-mcs.h,
+	ecma-cyrillic.h, gost_19768-74.h, greek-ccitt.h, greek7.h,
+	greek7-old.h, inis.h, inis-8.h, inis-cyrillic.h, iso_2033.h,
+	iso_5427.h, iso_5427-ext.h, and iso_5428.h.
+	Add rules for hedaer generation.
+	* iconvdata/gconv-modules: Add entries for new modules.
+	* iconvdata/csn_369103.c: New file.
+	* iconvdata/cwi.c: New file.
+	* iconvdata/dec-mcs.c: New file.
+	* iconvdata/ecma-cyrillic.c: New file.
+	* iconvdata/gost_19768-74.c: New file.
+	* iconvdata/greek-ccitt.c: New file.
+	* iconvdata/greek7-old.c: New file.
+	* iconvdata/greek7.c: New file.
+	* iconvdata/inis-8.c: New file.
+	* iconvdata/inis-cyrillic.c: New file.
+	* iconvdata/inis.c: New file.
+	* iconvdata/iso6937-2.c: New file.
+	* iconvdata/iso_2033.c: New file.
+	* iconvdata/iso_5427-ext.c: New file.
+	* iconvdata/iso_5427.c: New file.
+	* iconvdata/iso_5428.c: New file.
+
+	* iconvdata/iso6937.c (from_ucs4): Correct 0x80, 0x81, and 0xb9
+	entries.
+	Convert U02dd correctly.
+
 1998-09-11 20:46  Richard Henderson  <rth@cygnus.com>
 
 	* sysdeps/alpha/dl-machine.h (_dl_start_user): Pass pointer to
@@ -50,10 +85,10 @@
 	* include/limits.h: Include gcc's header even if this file is
 	found more than once before it (PR libc/778)
 
-	* sysdeps/unix/sysv/linux/Makefile (subdirs==misc)
-	[sysdep_headers]: Remove sys/debugreg.h.
-	* sysdeps/unix/sysv/linux/i386/Makefile (subdirs==misc)
-	[sysdep_headers]: Add sys/debugreg.h.
+	* sysdeps/unix/sysv/linux/Makefile [subdir==misc]
+	(sysdep_headers): Remove sys/debugreg.h.
+	* sysdeps/unix/sysv/linux/i386/Makefile [subdir==misc]
+	(sysdep_headers): Add sys/debugreg.h.
 	* sysdeps/unix/sysv/linux/sys/debugreg.h: Removed.
 	* sysdeps/unix/sysv/linux/i386/sys/debugreg.h: New file.
 

@@ -228,7 +228,7 @@ Locales
                                  with library functions.
 * Standard Locales::            Locale names available on all systems.
 * Locale Information::          How to access the information for the locale.
-* Formatting Numbers::          A dedicated functions to format numbers.
+* Formatting Numbers::          A dedicated function to format numbers.
 
 Locale Information
 
