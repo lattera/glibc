@@ -46,7 +46,7 @@ extern int __lll_mutex_lock_wait (int val, int *__futex)
      __attribute ((regparm (2))) attribute_hidden;
 /* Does not preserver %eax, %ecx, and %edx.  */
 extern int __lll_mutex_timedlock_wait (int val, int *__futex,
-				 const struct timespec *abstime)
+				       const struct timespec *abstime)
      __attribute ((regparm (3))) attribute_hidden;
 /* Preserves all registers but %eax.  */
 extern int __lll_mutex_unlock_wait (int *__futex)
