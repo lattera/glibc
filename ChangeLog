@@ -1,3 +1,8 @@
+2004-10-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_mkquery.c (res_nmkquery): Reject randombits value if
+	low 16 bits are zero.
+
 2004-10-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/tst-getaddrinfo2.c: Include stdlib.h and string.h.

@@ -141,7 +141,7 @@ res_nmkquery(res_state statp,
 	    randombits = (tv.tv_sec << 8) ^ tv.tv_usec;
 #endif
 	  }
-	while (randombits == 0);
+	while ((randombits & 0xffff) == 0);
 	statp->id = (statp->id + randombits) & 0xffff;
 #endif
 	hp->opcode = op;

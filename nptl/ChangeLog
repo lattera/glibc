@@ -1,3 +1,21 @@
+2004-10-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/jmp-unwind.c: Include pthreadP.h instead
+	of pthread-functions.h and pthreaddef.h.
+	* sysdeps/unix/sysv/linux/s390/jmp-unwind.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h (pthread_cond_t):
+	Change __data.__nwaiters from int to unsigned int.
+
+	* tst-clock2.c (do_test): Don't fail if _POSIX_THREAD_CPUTIME == 0 and
+	sysconf (_SC_THREAD_CPUTIME) returns negative value.
+
+	* allocatestack.c (__find_thread_by_id): Move attribute_hidden
+	before return type.
+
+	* sysdeps/s390/jmpbuf-unwind.h: Include bits/wordsize.h.
+	(JMPBUF_CFA_UNWINDS_ADJ): Subtract 96 resp. 160 bytes from CFA.
+
 2004-10-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-cancel4.c (tf_msgrcv): Check for failure in msgget.  If the
