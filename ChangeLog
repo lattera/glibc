@@ -1,3 +1,10 @@
+2002-09-21  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h (_DL_HWCAP_PLATFORM):
+	Correct the value so it covers all platforms, and is computed
+	from _DL_PLATFORMS_COUNT rather than hard-wired.
+	From Andrew Suffield <asuffield@debian.org>.
+
 2002-09-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path): Avoid
