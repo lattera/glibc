@@ -1,3 +1,8 @@
+1998-03-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/posix/mkstemp.c (mkstemp): Open temporary file mode
+	0600. Reported by Greg Alexander <galexand@sietch.bloomington.in.us>.
+
 1998-03-10 00:10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-lookup.c (do_lookup): Remove list and n parameter and add

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,7 +54,7 @@ mkstemp (template)
 
       template[len - 6] = letters[i];
 
-      fd = open (template, O_RDWR|O_CREAT|O_EXCL, 0666);
+      fd = open (template, O_RDWR|O_CREAT|O_EXCL, 0600);
       if (fd >= 0)
 	return fd;
     }
