@@ -85,9 +85,7 @@ TST_MBRLEN tst_mbrlen_loc [] = {
 	{
 	  {
 	    { 1, 0,		1,  0,		     },
-	    /* <WAIVER_? x 2> assuming ascii */
 	    { 1, EILSEQ,	1, -1,		     },
-	    /* <WAIVER_? x 2> assuming ascii */
 	    { 1, EILSEQ,	1, -1,		     },
 	  }
 	}
@@ -102,16 +100,20 @@ TST_MBRLEN tst_mbrlen_loc [] = {
 	{
 	  {
 	    { 1, "\317\302",   1,		   0, 0 },
+#ifdef SHOJI_IS_RIGHT
 	    { 0, "",	   0,		   0, 0 },
+#else
+	    /* XXX This test depends on the internal state being empty.
+	       XXX Therefore we must explicitly clean it.  */
+	    { 0, "",	   0,		   0, 1 },
+#endif
 	    { 1, "\317\302",   USE_MBCURMAX,   0, 0 },
 	  }
 	},
 	{
 	  {
 	    { 1, 0,		1, -2,		     },
-	    /* <WAIVER_?> returned -2 */
 	    { 1, 0,		1,  0,		     },
-	    /* <WAIVER_?> returned	 1 */
 	    { 1, 0,		1,  2,		     },
 	  }
 	}
@@ -127,8 +129,13 @@ TST_MBRLEN tst_mbrlen_loc [] = {
 	{
 	  {
 	    { 1, 0,		1, -2,		     },
-	    /* <WAIVER_?> returned -2 */
+#ifdef SHOJI_IS_RIGHT
 	    { 1, 0,		1, +2,		     },
+#else
+	    /* XXX ISO C explicitly says that the return value does not
+	       XXX reflect the bytes contained in the state.  */
+	    { 1, 0,		1, +1,		     },
+#endif
 	    { 1, 0,		1,  2,		     },
 	  }
 	}

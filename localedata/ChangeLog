@@ -1,5 +1,10 @@
 2000-06-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* tests-mbwc/dat_mbrlen.c: Correct some tests.  Remove old WAIVER
+	comments.
+	* tests-mbwc/tst_mbrlen.c: Enable code to respect t_ini.  Also clear
+	internal state of mbrlen.
+
 	* Makefile (do-tst-ctype): Add do-tst-mbswcs to list of dependencies.
 	(TEST_MBWC_ENV): Remove unnecessary slash.
 	* tst-ctype.sh: Add de_DE.UTF-8 to list of tested locales.

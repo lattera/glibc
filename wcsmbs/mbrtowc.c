@@ -35,7 +35,6 @@ static mbstate_t state;
 size_t
 __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 {
-  mbstate_t temp_state;
   wchar_t buf[1];
   struct __gconv_step_data data;
   int status;
@@ -43,6 +42,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   size_t dummy;
   const unsigned char *inbuf;
   char *outbuf = (char *) (pwc ?: buf);
+  int flush;
 
   /* Set information for this step.  */
   data.__invocation_counter = 0;
@@ -58,9 +58,10 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
       outbuf = (char *) buf;
       s = "";
       n = 1;
-      temp_state = *data.__statep;
-      data.__statep = &temp_state;
+      flush = 1;
     }
+  else
+    flush = *s == '\0' ? 1 : 0;
 
   /* Tell where we want the result.  */
   data.__outbuf = outbuf;
@@ -73,7 +74,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   inbuf = (const unsigned char *) s;
   status = DL_CALL_FCT (__wcsmbs_gconv_fcts.towc->__fct,
 			(__wcsmbs_gconv_fcts.towc, &data, &inbuf, inbuf + n,
-			 NULL, &dummy, 0, 1));
+			 NULL, &dummy, flush, 1));
 
   /* There must not be any problems with the conversion but illegal input
      characters.  The output buffer must be large enough, otherwise the

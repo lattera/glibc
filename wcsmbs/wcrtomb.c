@@ -37,7 +37,6 @@ static mbstate_t state;
 size_t
 __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 {
-  mbstate_t temp_state;
   char buf[MB_CUR_MAX];
   struct __gconv_step_data data;
   int status;
@@ -57,8 +56,6 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
     {
       s = buf;
       wc = L'\0';
-      temp_state = *data.__statep;
-      data.__statep = &temp_state;
     }
 
   /* Tell where we want to have the result.  */

@@ -53,12 +53,13 @@ tst_mbrlen (FILE * fp, int debug_flg)
 	  }
 
 	ps = (t_flg == 0) ? NULL : &s;
-#if 0
+
 	if (t_ini != 0)
 	  {
 	    memset (&s, 0, sizeof (s));
+	    mbrlen (NULL, 0, NULL);
 	  }
-#endif
+
 	TST_CLEAR_ERRNO;
 	ret = mbrlen (s_in, n, ps);
 	TST_SAVE_ERRNO;
