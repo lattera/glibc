@@ -417,7 +417,7 @@ ifndef +link-bounded
 	      $(link-extra-libs-bounded) $(link-libc-bounded) $(+postctor) $(+postinit)
 endif
 ifndef config-LDFLAGS
-ifeq (yes,$(build-shared))
+ifeq (yesyes,$(build-shared)$(elf))
 config-LDFLAGS = -Wl,-dynamic-linker=$(slibdir)/$(rtld-installed-name)
 endif
 endif

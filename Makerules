@@ -410,7 +410,7 @@ endef
 else
 ifneq (,$(findstring aix,$(config-os)))
 define build-shlib-helper
-$(LINK.o) -G -bM:SRE -bnoentry -bE:$(<:a=exp) \
+$(LINK.o) -Wl,-G,-bM:SRE,-bnoentry,-bE:$(<:a=exp) \
 	  $(sysdep-LDFLAGS) $(config-LDFLAGS) $(extra-B-$(@F:lib%.so=%).so) \
 	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
