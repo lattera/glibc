@@ -71,11 +71,9 @@
 #define F_GETLK		7	/* Get record locking info.  */
 #define F_SETLK		8	/* Set record locking info (non-blocking).  */
 #define F_SETLKW	9	/* Set record locking info (blocking).  */
-
-/* XXX missing */
-#define F_GETLK64	7	/* Get record locking info.  */
-#define F_SETLK64	8	/* Set record locking info (non-blocking).  */
-#define F_SETLKW64	9	/* Set record locking info (blocking).  */
+#define F_GETLK64	F_GETLK	/* Get record locking info.  */
+#define F_SETLK64	F_SETLK	/* Set record locking info (non-blocking).  */
+#define F_SETLKW64	F_SETLKW /* Set record locking info (blocking).  */
 
 #if defined __USE_BSD || defined __USE_XOPEN2K
 # define F_SETOWN	5	/* Get owner of socket (receiver of SIGIO).  */
