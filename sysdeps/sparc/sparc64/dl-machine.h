@@ -220,7 +220,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	      extern char **_dl_argv;
 	      const char *strtab;
 
-	      strtab = (const void *) map->l_info[DT_STRTAB]->d_un.d_ptr;
+	      strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
 	      _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>",
 				": Symbol `", strtab + refsym->st_name,
 				"' has different size in shared object, "
@@ -368,7 +368,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       extern void _dl_runtime_profile_0 (void);
       extern void _dl_runtime_profile_1 (void);
       Elf64_Addr res0_addr, res1_addr;
-      unsigned int *plt = (void *) l->l_info[DT_PLTGOT]->d_un.d_ptr;
+      unsigned int *plt = (void *) D_PTR (l, l_info[DT_PLTGOT]);
 
       if (! profile)
 	{

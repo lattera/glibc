@@ -203,7 +203,7 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
   if (map->l_info[DT_JMPREL])
     {
       Elf32_Word i;
-      Elf32_Word *plt = (Elf32_Word *) map->l_info[DT_PLTGOT]->d_un.d_val;
+      Elf32_Word *plt = (Elf32_Word *) D_PTR (map, l_info[DT_PLTGOT]);
       Elf32_Word num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
 				    / sizeof (Elf32_Rela));
       Elf32_Word rel_offset_words = PLT_DATA_START_WORDS (num_plt_entries);
@@ -331,7 +331,7 @@ __elf_machine_fixup_plt(struct link_map *map, const Elf32_Rela *reloc,
       
       num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
 			 / sizeof(Elf32_Rela));
-      plt = (Elf32_Word *) map->l_info[DT_PLTGOT]->d_un.d_val;
+      plt = (Elf32_Word *) D_PTR (map, l_info[DT_PLTGOT]);
       offset = reloc_addr - plt;
       index = (offset - PLT_INITIAL_ENTRY_WORDS)/2;
       data_words = plt + PLT_DATA_START_WORDS (num_plt_entries);
@@ -444,7 +444,7 @@ __process_machine_rela (struct link_map *map,
 	{
 	  const char *strtab;
 
-	  strtab = (const void *) map->l_info[DT_STRTAB]->d_un.d_ptr;
+	  strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
 	  _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>",
 			    ": Symbol `", strtab + refsym->st_name,
 			    "' has different size in shared object, "
@@ -474,7 +474,7 @@ __process_machine_rela (struct link_map *map,
 	    Elf32_Word *plt, *data_words;
 	    Elf32_Word index, offset, num_plt_entries;
 	    
-	    plt = (Elf32_Word *) map->l_info[DT_PLTGOT]->d_un.d_val;
+	    plt = (Elf32_Word *) D_PTR (map, l_info[DT_PLTGOT]);
 	    offset = reloc_addr - plt;
 
 	    if (offset < PLT_DOUBLE_SIZE*2 + PLT_INITIAL_ENTRY_WORDS)

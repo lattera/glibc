@@ -1,3 +1,49 @@
+2000-03-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_runtime_setup):
+	Use D_PTR to access relocated entries in l_info.
+	(elf_machine_rela): Likewise.
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_runtime_setup):
+	Likewise.
+	(elf_machine_rela): Likewise.
+
+	* sysdeps/powerpc/dl-machine.c (__elf_machine_runtime_setup):
+	Likewise.
+	(__elf_machine_fixup_plt): Likewise.
+	(__process_machine_rela): Likewise.
+
+	* sysdeps/m68k/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	(elf_machine_rela): Likewise.
+
+	* sysdeps/arm/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	(elf_machine_rel): Likewise.
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	(elf_machine_fixup_plt): Likewise.
+	(elf_machine_rela): Likewise.
+
+2000-03-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/msgctl.c: Use shlib-compat macros.
+	* sysdeps/unix/sysv/linux/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/msgctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/oldgetrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/msgctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/adjtime.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/chown.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/oldglob.c: Use shlib-compat
+	macros, remove K&R prototypes.
+
 2000-03-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/getopt.c (_getopt_internal): Return -1 if argc < 1.

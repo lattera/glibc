@@ -97,7 +97,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       /* The GOT entries for the functions in the PLT have not been
 	 filled in yet.  Their initial contents are directed to the
 	 PLT which arranges for the dynamic linker to be called.  */
-      plt = l->l_info[DT_PLTGOT]->d_un.d_ptr;
+      plt = D_PTR (l, l_info[DT_PLTGOT]);
 
       /* This function will be called to perform the relocation.  */
       if (!profile)
@@ -349,8 +349,8 @@ elf_machine_fixup_plt(struct link_map *l, const Elf64_Rela *reloc,
 
   /* Recover the PLT entry address by calculating reloc's index into the
      .rela.plt, and finding that entry in the .plt.  */
-  rela_plt = (void *) l->l_info[DT_JMPREL]->d_un.d_ptr;
-  plte = (void *) (l->l_info[DT_PLTGOT]->d_un.d_ptr + 32);
+  rela_plt = (void *) D_PTR (l, l_info[DT_JMPREL]);
+  plte = (void *) (D_PTR (l, [DT_PLTGOT]) + 32);
   plte += 3 * (reloc - rela_plt);
 
   /* Find the displacement from the plt entry to the function.  */
@@ -480,7 +480,7 @@ elf_machine_rela (struct link_map *map,
 		 than the dynamic linker's built-in definitions used
 		 while loading those libraries.  */
 	      const Elf64_Sym *const dlsymtab
-		= (void *) map->l_info[DT_SYMTAB]->d_un.d_ptr;
+		= (void *) D_PTR (map, l_info[DT_SYMTAB]);
 	      sym_value -= map->l_addr;
 	      sym_value -= dlsymtab[ELF64_R_SYM(reloc->r_info)].st_value;
 	      sym_value -= reloc->r_addend;
