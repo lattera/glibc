@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,3 +29,4 @@ __setegid (gid_t gid)
   return setgidx (ID_EFFECTIVE, gid);
 }
 strong_alias (__setegid, setegid)
+libc_hidden_def (setegid)
