@@ -18,6 +18,8 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <grp.h>
+#include <pwd.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <time.h>
