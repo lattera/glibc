@@ -58,9 +58,7 @@
    ccos, ccosh, cexp, clog, cpow, cproj, csin, csinh, csqrt, ctan, ctanh.
 
    At the moment the following functions aren't tested:
-   conj, cimag, creal, drem,
-   significand,
-   nan
+   drem, significand, nan
 
    Parameter handling is primitive in the moment:
    --verbose=[0..3] for different levels of output:
@@ -1563,6 +1561,21 @@ cexp_test (void)
 }
 
 static void
+cimag_test (void)
+{
+  START (cimag);
+  TEST_c_f (cimag, 1.0, 0.0, 0.0);
+  TEST_c_f (cimag, 1.0, minus_zero, minus_zero);
+  TEST_c_f (cimag, 1.0, nan_value, nan_value);
+  TEST_c_f (cimag, nan_value, nan_value, nan_value);
+  TEST_c_f (cimag, 1.0, plus_infty, plus_infty);
+  TEST_c_f (cimag, 1.0, minus_infty, minus_infty);
+  TEST_c_f (cimag, 2.0, 3.0, 3.0);
+
+  END (cimag);
+}
+
+static void
 clog_test (void)
 {
   START (clog);
@@ -1681,6 +1694,22 @@ clog10_test (void)
 }
 
 static void
+conj_test (void)
+{
+  START (conj);
+  TEST_c_c (conj, 0.0, 0.0, 0.0, minus_zero);
+  TEST_c_c (conj, 0.0, minus_zero, 0.0, 0.0);
+  TEST_c_c (conj, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (conj, plus_infty, minus_infty, plus_infty, plus_infty);
+  TEST_c_c (conj, plus_infty, plus_infty, plus_infty, minus_infty);
+  TEST_c_c (conj, 1.0, 2.0, 1.0, -2.0);
+  TEST_c_c (conj, 3.0, -4.0, 3.0, 4.0);
+
+  END (conj, complex);
+}
+
+
+static void
 copysign_test (void)
 {
   START (copysign);
@@ -1779,6 +1808,20 @@ cproj_test (void)
   END (cproj, complex);
 }
 
+static void
+creal_test (void)
+{
+  START (creal);
+  TEST_c_f (creal, 0.0, 1.0, 0.0);
+  TEST_c_f (creal, minus_zero, 1.0, minus_zero);
+  TEST_c_f (creal, nan_value, 1.0, nan_value);
+  TEST_c_f (creal, nan_value, nan_value, nan_value);
+  TEST_c_f (creal, plus_infty, 1.0, plus_infty);
+  TEST_c_f (creal, minus_infty, 1.0, minus_infty);
+  TEST_c_f (creal, 2.0, 3.0, 2.0);
+
+  END (creal);
+}
 
 static void
 csin_test (void)
@@ -3986,10 +4029,13 @@ main (int argc, char **argv)
   ccos_test ();
   ccosh_test ();
   cexp_test ();
+  cimag_test ();
   clog10_test ();
   clog_test ();
+  conj_test ();
   cpow_test ();
   cproj_test ();
+  creal_test ();
   csin_test ();
   csinh_test ();
   csqrt_test ();

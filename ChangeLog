@@ -1,3 +1,10 @@
+1999-10-21  Andreas Jaeger  <aj@suse.de>
+
+	* math/libm-test.inc (cimag_test): New function, tests cimag.
+	(creal_test): New function, tests creal.
+	(conj_test): New function, tests conj.
+	(main): Add new functions.
+
 1999-10-20  Andreas Jaeger  <aj@suse.de>
 
 	* math/libm-test.inc: Rewrite to allow different deltas for real
