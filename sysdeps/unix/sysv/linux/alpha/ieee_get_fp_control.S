@@ -41,18 +41,20 @@ LEAF(__ieee_get_fp_control, 16)
 	ldi	a0, GSI_IEEE_FP_CONTROL
 	ldi	v0, __NR_osf_getsysinfo
 	call_pal PAL_callsys
-	bne	a3, error
+	bne	a3, $error
 
 	ldq	v0, 0(sp)
 	lda	sp, 16(sp)
 	ret
 
-error:	lda	sp, 16(sp)
+$error:
 #ifndef PROF
 	br	gp, 1f
 1:	ldgp	gp, 0(gp)
 #endif
-	jmp	zero, __syscall_error
+	lda	pv, __syscall_error
+	lda	sp, 16(sp)
+	jmp	zero, (pv), __syscall_error
 
 	END(__ieee_get_fp_control)
 
