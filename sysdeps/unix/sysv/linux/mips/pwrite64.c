@@ -63,7 +63,7 @@ __libc_pwrite64 (fd, buf, count, offset)
   return result;
 }
 
-strong_alias (__libc_pwrite64, __pwrite64)
+weak_alias (__libc_pwrite64, __pwrite64)
 weak_alias (__libc_pwrite64, pwrite64)
 
 # define __libc_pwrite64(fd, buf, count, offset) \
@@ -73,4 +73,3 @@ weak_alias (__libc_pwrite64, pwrite64)
 #if __ASSUME_PWRITE_SYSCALL == 0
 # include <sysdeps/posix/pwrite64.c>
 #endif
-

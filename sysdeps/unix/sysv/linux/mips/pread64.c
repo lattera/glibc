@@ -63,7 +63,7 @@ __libc_pread64 (fd, buf, count, offset)
   return result;
 }
 
-strong_alias (__libc_pread64, __pread64)
+weak_alias (__libc_pread64, __pread64)
 weak_alias (__libc_pread64, pread64)
 
 # define __libc_pread64(fd, buf, count, offset) \

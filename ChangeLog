@@ -1,3 +1,17 @@
+2000-03-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/open64.c: Make __open64 weak alias.
+	* sysdeps/posix/pread64.c: Make __pread64 weak alias.
+	* sysdeps/unix/sysv/linux/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pread64.c: Likewise.
+	* sysdeps/posix/pwrite64.c: Make __pwrite64 weak alias.
+	* sysdeps/unix/sysv/linux/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite64.c: Likewise.
+
 2000-03-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c (platform): Add entry for
