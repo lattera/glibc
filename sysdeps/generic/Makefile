@@ -1,4 +1,4 @@
-# Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1992,93,94,95,96,97,99 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -31,27 +31,6 @@ common-generated := $(common-generated) bits/endian.h det_endian
 
 endif
 
-ifeq ($(subdir),stdio-common)
-ifneq ($(inhibit-siglist),yes)
-ifneq ($(cross-compiling),yes)
-ifeq	"$(filter %siglist.c,$(before-compile))" ""
-before-compile := $(before-compile) $(objpfx)siglist.c
-$(objpfx)siglist.c: $(objpfx)make_siglist
-	@rm -f $@
-	$(dir $<)$(notdir $<) > $@-tmp
-	mv $@-tmp $@
-
-make_siglist-CFLAGS = -DSIGNUM_H=\"$(shell pwd)/$(firstword $(wildcard \
-				   $(+sysdep_dirs:%=%/bits/signum.h)))\"
-$(objpfx)make_siglist: $(sysdep_dir)/generic/make_siglist.c
-	$(native-compile)
-
-generated := $(generated) make_siglist siglist.c
-endif
-endif
-endif
-endif
-
 ifeq ($(subdir),string)
 CFLAGS-wordcopy.c += -Wno-uninitialized
 endif

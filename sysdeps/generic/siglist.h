@@ -17,6 +17,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+/* This file should be usable for any platform, since it just associates
+   the SIG* macros with text names and descriptions.  The actual values
+   come from <bits/signum.h> (via <signal.h>).  For any signal macros do not
+   exist on every platform, we can use #ifdef tests here and still use
+   this single common file for all platforms.  */
+
 /* This file is included multiple times.  */
 
 /* Standard signals  */

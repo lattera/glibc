@@ -1,5 +1,19 @@
 1999-06-19  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* sysdeps/gnu/siglist.h: File moved to ...
+	* sysdeps/generic/siglist.h: ... here.  This file should be usable for
+	any platform, since it just associates the SIG* macros with text names
+	and descriptions. For any signal macros do not exist on every
+	platform, we can use #ifdef tests here and still use this single
+	common file for all platforms.
+	* sysdeps/generic/siglist.c: Rewrite using <siglist.h>.  This file
+	should be usable for all platforms after the binary compatibility
+	stuff in the current sysdeps/gnu version is no longer required.
+	* sysdeps/generic/Makefile: Remove rules for generating siglist.c.
+	* sysdeps/generic/make_siglist.c: File removed.
+
+1999-06-16  Roland McGrath  <roland@baalperazim.frob.com>
+
 	* sysdeps/unix/sysv/linux/siglist.c: Moved to ...
 	* sysdeps/gnu/siglist.c: ... here.
 	Use <siglist.h> instead of "siglist.h", to ensure sysdeps-search.

@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+/* Define list of all signal numbers and their names.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,26 +18,20 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stddef.h>
+#include <signal.h>
+#include <libintl.h>
 
-const char *const _sys_siglist[] =
-  {
-    "Signal 0",
-    "Aborted",
-    "Erroneous arithmetic operation",
-    "Illegal instruction",
-    "Interrupt",
-    "Invalid access to storage",
-    "Terminated",
-    "Hangup",
-    "Quit",
-    "Broken pipe",
-    "Killed",
-    "Alarm clock",
-    "Stopped (signal)",
-    "Stopped",
-    "Continued",
-    "Child exited",
-    "Stopped (tty input)",
-    "Stopped (tty output)",
-    NULL
-  };
+const char *const _sys_siglist[NSIG] =
+{
+#define init_sig(sig, abbrev, desc)   [sig] desc,
+#include <siglist.h>
+#undef init_sig
+};
+
+
+const char *const _sys_sigabbrev[NSIG] =
+{
+#define init_sig(sig, abbrev, desc)   [sig] abbrev,
+#include <siglist.h>
+#undef init_sig
+};
