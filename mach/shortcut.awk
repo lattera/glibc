@@ -35,11 +35,14 @@ echo == 1 { print $0; }
     print "{";
     print "  kern_return_t err;";
     print "  extern kern_return_t " syscall " (" proto ");";
+    print "  extern kern_return_t " rpc " (" proto ");";
     print "  err = " syscall " (" arglist ");";
     print "  if (err == MACH_SEND_INTERRUPTED)";
     print "    err = " rpc " (" arglist ");";
     print "  return err;"
     print "}";
-    print "weak_alias (" call ", " alias ")"
+    print "weak_alias (" call ", " alias ")";
+    # Declare RPC so the weak_alias that follows will work.
+    print "extern __typeof (" call ") " rpc ";";
     echo = 1;
   }

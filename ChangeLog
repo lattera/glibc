@@ -1,3 +1,15 @@
+Wed Jul 26 02:00:29 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* malloc/memalign.c: Allocate (SIZE + ALIGNMENT - 1) and then trim
+ 	if possible.
+
+	* mach/shortcut.awk: Emit decls for RPC.
+
+	* libc-symbols.h [GCC >= 2.7 && !ASSEMBLER] (weak_symbol,
+ 	weak_alias, strong_alias): Define using GCC __attribute__ syntax.
+
+	* Makerules ($(installed-libcs)): Depend on `lib' (only).
+
 Tue Jul 25 09:14:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/pathconf.c: Declare VALUE as int, not long int.

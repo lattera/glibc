@@ -134,6 +134,26 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 
+#if (!defined (ASSEMBLER) && \
+     (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7)))
+/* GCC 2.7 and later has special syntax for weak symbols and aliases.
+   Using that is better when possible, because the compiler and assembler
+   are better clued in to what we are doing.  */
+#undef	strong_alias
+#define strong_alias(name, aliasname) \
+  __typeof (name) aliasname __attribute__ ((alias (#name)));
+
+#ifdef HAVE_WEAK_SYMBOLS
+#undef	weak_symbol
+#define weak_symbol(name) \
+  __typeof (name) name __attribute__ ((weak));
+#undef	weak_alias
+#define weak_alias(name, aliasname) \
+  __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
+#endif	/* HAVE_WEAK_SYMBOLS.  */
+#endif	/* Not ASSEMBLER, and GCC 2.7 or later.  */
+
+
 
 /* When the file using this macro is linked in, the linker
    will emit a warning message MSG.  */
