@@ -1,3 +1,9 @@
+2004-10-25  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/unix/sysv/linux/linuxthreads/sysdep-cancel.h: Moved...
+	* sysdeps/unix/sysv/linux/am33/linuxthreads/sysdep-cancel.h:
+	... here, where it should have been added in the first place.
+
 2004-10-22  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/unix/sysv/linux/am33/bits/mman.h (PROT_GROWSDOWN): New.
