@@ -1,3 +1,7 @@
+Mon May  6 17:01:09 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
+
+	* hurd/hurd/signal.h (_hurd_intr_rpc_mach_msg): New declaration.
+
 Sat May  4 05:44:25 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* locale/setlocale.c (_nl_C_name): Variable removed.
