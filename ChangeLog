@@ -1,3 +1,10 @@
+2001-11-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Don't call
+	_dl_signal_error directly, always use lose.  Set fd to -1 after
+	file is closed.
+	(lose): Don't call close if fd == -1.
+
 2001-11-07  Kaoru Fukui  <k_fukui@highway.ne.jp>
 
 	* manual/charset.texi: Fix typo @w[ISO 6937] to  @w{ISO 6937}.

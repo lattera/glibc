@@ -749,7 +749,9 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
      which use `alloca'.  */
   int *a = alloca (sizeof (int));
   a[0] = fd;
-  (void) __close (a[0]);
+  /* The file might already be closed.  */
+  if (a[0] != -1)
+    (void) __close (a[0]);
   if (l != NULL)
     {
       /* Remove the stillborn object from the list and free it.  */
@@ -921,8 +923,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	    c->mapoff = ph->p_offset & ~(ph->p_align - 1);
 
 	    /* Optimize a common case.  */
-	    if ((PF_R | PF_W | PF_X) == 7
-		&& (PROT_READ | PROT_WRITE | PROT_EXEC) == 7)
+	    if ((PF_R | PF_W | PF_X) == 7)
 	      c->prot = _dl_pf_to_prot[ph->p_flags & (PF_R | PF_W | PF_X)];
 	    else
 	      {
@@ -1099,6 +1100,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
   /* We are done mapping in the file.  We no longer need the descriptor.  */
   __close (fd);
+  /* Signal that we closed the file.  */
+  fd = -1;
 
   if (l->l_type == lt_library && type == ET_EXEC)
     l->l_type = lt_executable;
@@ -1155,8 +1158,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
       free (l);
 
-      _dl_signal_error (0, name, NULL,
-			N_("shared object cannot be dlopen()ed"));
+      errstring = N_("shared object cannot be dlopen()ed");
+      goto call_lose;
     }
 
   if (l->l_info[DT_HASH])
@@ -1227,13 +1230,9 @@ print_search_path (struct r_search_path_elem **list,
 	      cp[0] = '\0';
 	    else
 	      cp[-1] = '\0';
-	    if (first)
-	      {
-		_dl_debug_printf_c ("%s", buf);
-		first = 0;
-	      }
-	    else
-	      _dl_debug_printf_c (":%s", buf);
+
+	    _dl_debug_printf_c (first ? "%s" : ":%s", buf);
+	    first = 0;
 	  }
 
       ++list;
