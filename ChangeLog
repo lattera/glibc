@@ -1,5 +1,10 @@
 1999-08-27  Ulrich Drepper  <drepper@cygnus.com>
 
+	* inet/rexec.c (rexec): Free memory if strings were allocated in
+	ruserpass.  Reported by Andrew Morton <morton@nortelnetworks.com>.
+
+1999-08-27  Ulrich Drepper  <drepper@cygnus.com>
+
 	* locale/categories.def: Use __YESSTR amd __NOSTR in definition.
 
 	* manual/argp.texi: Fixing language and typos.

@@ -54,6 +54,8 @@ rexec(ahost, rport, name, pass, cmd, fd2p)
 {
 	struct sockaddr_in sin, sin2, from;
 	struct hostent hostbuf, *hp;
+	const char *orig_name = name;
+	const char *orig_pass = pass;
 	size_t hstbuflen;
 	char *hsttmpbuf;
 	u_short port;
@@ -138,6 +140,14 @@ retry:
 	/* should public key encypt the password here */
 	(void) __write(s, pass, strlen(pass) + 1);
 	(void) __write(s, cmd, strlen(cmd) + 1);
+
+	/* We don't need the memory allocated for the name and the password
+	   in ruserpass anymore.  */
+	if (name != orig_name)
+	  free (name);
+	if (pass != orig_pass)
+	  free (pass);
+
 	if (__read(s, &c, 1) != 1) {
 		perror(*ahost);
 		goto bad;
