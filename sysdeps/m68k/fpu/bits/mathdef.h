@@ -32,9 +32,12 @@ typedef long double double_t;	/* `double' expressions are evaluated as
 /* Signal that both types are `long double'.  */
 #define FLT_EVAL_METHOD	2
 
-/* Define `INFINITY' as value of type `float_t'.  */
-#define INFINITY	HUGE_VALL
+/* Define `INFINITY' as value of type `float'.  */
+#define INFINITY	HUGE_VALF
 
 /* The values returned by `ilogb' for 0 and NaN respectively.  */
 #define FP_ILOGB0	0x80000000
 #define FP_ILOGBNAN	0x7fffffff
+
+/* Number of decimal digits for the `long double' type.  */
+#define DECIMAL_DIG	18
