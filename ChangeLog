@@ -1,3 +1,8 @@
+2000-04-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/arm/dl-machine.h (RTLD_START): Rewrite for new init
+	function interface.
+
 2000-04-11  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/dl-machine.h: Update some comments.
