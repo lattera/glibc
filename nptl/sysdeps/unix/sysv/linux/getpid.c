@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -28,11 +28,12 @@ static inline __attribute__((always_inline)) pid_t really_getpid (pid_t oldval);
 static inline __attribute__((always_inline)) pid_t
 really_getpid (pid_t oldval)
 {
-  pid_t selftid;
-  if (__builtin_expect (oldval == 0
-			&& ((selftid = THREAD_GETMEM (THREAD_SELF, tid))
-			    != 0), 1))
-    return selftid;
+  if (__builtin_expect (oldval == 0, 1))
+    {
+      pid_t selftid = THREAD_GETMEM (THREAD_SELF, tid);
+      if (__builtin_expect (selftid != 0), 1)
+	return selftid;
+    }
 
   INTERNAL_SYSCALL_DECL (err);
   pid_t result = INTERNAL_SYSCALL (getpid, err, 0);
