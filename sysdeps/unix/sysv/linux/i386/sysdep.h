@@ -24,12 +24,9 @@
 #include <sysdeps/unix/i386/sysdep.h>
 #include <bp-sym.h>
 #include <bp-asm.h>
+/* Defines RTLD_PRIVATE_ERRNO and NEED_DL_SYSINFO.  */
+#include <dl-sysdep.h>
 #include <tls.h>
-
-
-#ifdef IS_IN_rtld
-# include <dl-sysdep.h>		/* Defines RTLD_PRIVATE_ERRNO.  */
-#endif
 
 
 /* For Linux we can use the system call table in the header file
@@ -38,6 +35,12 @@
    so we have to redefine the `SYS_ify' macro here.  */
 #undef SYS_ify
 #define SYS_ify(syscall_name)	__NR_##syscall_name
+
+#if defined NEED_DL_SYSINFO && !defined IS_IN_rtld
+# define I386_USE_SYSENTER	1
+#else
+# undef I386_USE_SYSENTER
+#endif
 
 #ifdef __ASSEMBLER__
 
@@ -162,7 +165,15 @@ __i686.get_pc_thunk.reg:						      \
 
 /* The original calling convention for system calls on Linux/i386 is
    to use int $0x80.  */
-#define ENTER_KERNEL int $0x80
+#ifdef I386_USE_SYSENTER
+# ifdef SHARED
+#  define ENTER_KERNEL call *%gs:SYSINFO_OFFSET
+# else
+#  define ENTER_KERNEL call *_dl_sysinfo
+# endif
+#else
+# define ENTER_KERNEL int $0x80
+#endif
 
 /* Linux takes system call arguments in registers:
 
@@ -260,10 +271,6 @@ __i686.get_pc_thunk.reg:						      \
 
 #else	/* !__ASSEMBLER__ */
 
-/* The original calling convention for system calls on Linux/i386 is
-   to use int $0x80.  */
-#define ENTER_KERNEL "int $0x80"
-
 /* We need some help from the assembler to generate optimal code.  We
    define some macros here which later will be used.  */
 asm (".L__X'%ebx = 1\n\t"
@@ -318,17 +325,46 @@ asm (".L__X'%ebx = 1\n\t"
    normally.  It will never touch errno.  This returns just what the kernel
    gave back.  */
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, nr, args...) \
+#ifdef I386_USE_SYSENTER
+# ifdef SHARED
+#  define INTERNAL_SYSCALL(name, nr, args...) \
   ({									      \
     unsigned int resultvar;						      \
     asm volatile (							      \
     LOADARGS_##nr							      \
     "movl %1, %%eax\n\t"						      \
-    ENTER_KERNEL "\n\t"						      \
+    "call *%%gs:%P2\n\t"						      \
+    RESTOREARGS_##nr							      \
+    : "=a" (resultvar)							      \
+    : "i" (__NR_##name), "i" (offsetof (tcbhead_t, sysinfo))		      \
+      ASMFMT_##nr(args) : "memory", "cc");				      \
+    (int) resultvar; })
+# else
+#  define INTERNAL_SYSCALL(name, nr, args...) \
+  ({									      \
+    unsigned int resultvar;						      \
+    asm volatile (							      \
+    LOADARGS_##nr							      \
+    "movl %1, %%eax\n\t"						      \
+    "call *_dl_sysinfo\n\t"						      \
     RESTOREARGS_##nr							      \
     : "=a" (resultvar)							      \
     : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc");		      \
     (int) resultvar; })
+# endif
+#else
+# define INTERNAL_SYSCALL(name, nr, args...) \
+  ({									      \
+    unsigned int resultvar;						      \
+    asm volatile (							      \
+    LOADARGS_##nr							      \
+    "movl %1, %%eax\n\t"						      \
+    "int $0x80\n\t"						      \
+    RESTOREARGS_##nr							      \
+    : "=a" (resultvar)							      \
+    : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc");		      \
+    (int) resultvar; })
+#endif
 
 #undef INTERNAL_SYSCALL_ERROR_P
 #define INTERNAL_SYSCALL_ERROR_P(val)	((unsigned int) (val) >= 0xfffff001u)
@@ -337,17 +373,28 @@ asm (".L__X'%ebx = 1\n\t"
 #define INTERNAL_SYSCALL_ERRNO(val)	(-(val))
 
 #define LOADARGS_0
-#define LOADARGS_1 \
+#if defined I386_USE_SYSENTER && defined SHARED
+# define LOADARGS_1 \
+    "bpushl .L__X'%k3, %k3\n\t"						      \
+    "bmovl .L__X'%k3, %k3\n\t"
+#else
+# define LOADARGS_1 \
     "bpushl .L__X'%k2, %k2\n\t"						      \
     "bmovl .L__X'%k2, %k2\n\t"
+#endif
 #define LOADARGS_2	LOADARGS_1
 #define LOADARGS_3	LOADARGS_1
 #define LOADARGS_4	LOADARGS_1
 #define LOADARGS_5	LOADARGS_1
 
 #define RESTOREARGS_0
-#define RESTOREARGS_1 \
+#if defined I386_USE_SYSENTER && defined SHARED
+# define RESTOREARGS_1 \
+    "bpopl .L__X'%k3, %k3\n\t"
+#else
+# define RESTOREARGS_1 \
     "bpopl .L__X'%k2, %k2\n\t"
+#endif
 #define RESTOREARGS_2	RESTOREARGS_1
 #define RESTOREARGS_3	RESTOREARGS_1
 #define RESTOREARGS_4	RESTOREARGS_1

@@ -37,6 +37,7 @@
 #include <unsecvars.h>
 #include <dl-cache.h>
 #include <dl-procinfo.h>
+#include <tls.h>
 
 #include <assert.h>
 
@@ -328,6 +329,7 @@ _dl_start (void *arg)
      to it.  When we have something like GOTOFF relocs, we can use a plain
      reference to find the runtime address.  Without that, we have to rely
      on the `l_addr' value, which is not the value we want when prelinked.  */
+  dtv_t initdtv[3];
   ElfW(Ehdr) *ehdr
 # ifdef DONT_USE_BOOTSTRAP_MAP
     = (ElfW(Ehdr) *) &_begin;

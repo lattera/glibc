@@ -28,7 +28,11 @@
    all the libc functions that ld.so uses are called without PLT and always
    get the versions linked into ld.so rather than the libc ones.  */
 
-#define RTLD_PRIVATE_ERRNO 1
+#ifdef IS_IN_rtld
+# define RTLD_PRIVATE_ERRNO 1
+#else
+# define RTLD_PRIVATE_ERRNO 0
+#endif
 
 /* This configuration has in libc.so cancellable functions and other
    functions which have to behave differently if the application uses

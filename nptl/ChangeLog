@@ -1,5 +1,12 @@
 2002-12-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* allocatestack.c (allocate_stack) [NEED_DL_SYSINFO]: Set sysinfo
+	in new TCB.
+	* sysdeps/unix/sysv/linux/i386/createthread.c (create_thread): Check
+	that sysinfo is properly initialized.
+	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h: Define RTLD_PRIVATE_ERRNO
+	to 1 only for ld.so.
+
 	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h: Define
 	RTLD_CORRECT_DYNAMIC_WEAK.
 

@@ -108,6 +108,11 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
 	}
     }
 
+#ifdef NEED_DL_SYSINFO
+  assert (THREAD_GETMEM (THREAD_SELF, header.data.sysinfo)
+	  == pd->header.data.sysinfo);
+#endif
+
   /* We rely heavily on various flags the CLONE function understands:
 
      CLONE_VM, CLONE_FS, CLONE_FILES

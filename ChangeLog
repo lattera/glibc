@@ -1,3 +1,13 @@
+2002-12-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Add support to use AT_SYSINFO
+	information for system calls.
+
+	* sysdeps/generic/dl-sysdep.h: Define RTLD_PRIVATE_ERRNO to 1 only
+	for ld.so.
+
+	* elf/rtld.c (_dl_start) [USE___THREAD]: Define initdtv.
+
 2002-12-19  Roland McGrath  <roland@redhat.com>
 
 	* iconvdata/ibm856.h: Convert GCC extension initializer syntax to C99.
