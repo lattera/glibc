@@ -1,3 +1,8 @@
+2002-03-06  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/reg.h: Add compatibility for
+	32-bit.
+
 2002-03-04  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/readelflib.c: New.
