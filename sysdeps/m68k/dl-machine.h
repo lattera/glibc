@@ -157,9 +157,6 @@ _start:\n\
 _dl_start_user:\n\
 	| Save the user entry point address in %a4.\n\
 	move.l %d0, %a4\n\
-	| Remember the highest stack address.\n\
-	move.l __libc_stack_end@GOTPC(%pc), %a0\n\
-	move.l %sp, (%a0)\n\
 	| See if we were run as a command with the executable file\n\
 	| name as an extra leading argument.\n\
 	move.l _dl_skip_args(%pc), %d0\n\

@@ -188,9 +188,6 @@ _dl_start_user:\n\
 	; Point R0 at the GOT.\n\
 	move.d	$pc,$r0\n\
 	sub.d	.:GOTOFF,$r0\n\
-	; Remember the highest stack address.\n\
-	move.d	[$r0+__libc_stack_end:GOT16],$r13\n\
-	move.d	$sp,[$r13]\n\
 	; See if we were run as a command with the executable file\n\
 	; name as an extra leading argument.\n\
 	move.d	[$r0+_dl_skip_args:GOT16],$r13\n\

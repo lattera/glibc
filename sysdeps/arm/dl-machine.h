@@ -265,10 +265,6 @@ _dl_start_user:\n\
 	ldr	sl, .L_GET_GOT\n\
 	add	sl, pc, sl\n\
 .L_GOT_GOT:\n\
-	@ Store the highest stack address\n\
-	ldr	r1, .L_STACK_END\n\
-	ldr	r1, [sl, r1]\n\
-	str	sp, [r1]\n\
 	@ See if we were run as a command with the executable file\n\
 	@ name as an extra leading argument.\n\
 	ldr	r4, .L_SKIP_ARGS\n\
@@ -311,8 +307,6 @@ _dl_start_user:\n\
 	.word	_dl_starting_up(GOT)\n\
 .L_FINI_PROC:\n\
 	.word	_dl_fini(GOT)\n\
-.L_STACK_END:\n\
-	.word	__libc_stack_end(GOT)\n\
 .L_LOADED:\n\
 	.word	_rtld_local(GOT)\n\
 .previous\n\

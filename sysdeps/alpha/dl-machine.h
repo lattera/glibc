@@ -319,8 +319,6 @@ _dl_start_user:							\n\
 	.prologue 0						\n\
 	/* Save the user entry point address in s0.  */		\n\
 	mov	$0, $9						\n\
-	/* Store the highest stack address.  */			\n\
-	stq	$30, __libc_stack_end				\n\
 	/* See if we were run as a command with the executable	\n\
 	   file name as an extra leading argument.  */		\n\
 	ldl	$1, _dl_skip_args($gp)	!gprel			\n\
