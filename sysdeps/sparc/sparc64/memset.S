@@ -39,7 +39,7 @@
 	.align		32
 ENTRY(memset)
 	andcc		%o1, 0xff, %o1
-	mov		%o0, %g3
+	mov		%o0, %o5
 	be,a,pt		%icc, 50f
 #ifndef USE_BPR
 	 srl		%o2, 0, %o1
@@ -79,19 +79,19 @@ ENTRY(memset)
 	blu,pn		%xcc, 9f
 	 andcc		%o0, 0x38, %g5
 	be,pn		%icc, 6f
-	 mov		64, %o5
+	 mov		64, %o4
 	andcc		%o0, 8, %g0
 	be,pn		%icc, 1f
-	 sub		%o5, %g5, %o5
+	 sub		%o4, %g5, %o4
 	stx		%o1, [%o0]
 	add		%o0, 8, %o0
-1:	andcc		%o5, 16, %g0
+1:	andcc		%o4, 16, %g0
 	be,pn		%icc, 1f
-	 sub		%o2, %o5, %o2
+	 sub		%o2, %o4, %o2
 	stx		%o1, [%o0]
 	stx		%o1, [%o0 + 8]
 	add		%o0, 16, %o0
-1:	andcc		%o5, 32, %g0
+1:	andcc		%o4, 32, %g0
 	be,pn		%icc, 7f
 	 andncc		%o2, 0x3f, %o3
 	stw		%o1, [%o0]
@@ -162,14 +162,14 @@ ENTRY(memset)
 1:	bne,a,pn	%xcc, 8f
 	 stb		%o1, [%o0]
 8:	retl
-	 mov		%g3, %o0
+	 mov		%o5, %o0
 17:	brz,pn		%o2, 0f
 8:	 add		%o0, 1, %o0
 	subcc		%o2, 1, %o2
 	bne,pt		%xcc, 8b
 	 stb		%o1, [%o0 - 1]
 0:	retl
-	 mov		%g3, %o0
+	 mov		%o5, %o0
 
 6:	stx		%o1, [%o0]
 	andncc		%o2, 0x3f, %o3
@@ -195,7 +195,7 @@ ENTRY(__bzero)
 #ifndef USE_BPR
 	srl		%o1, 0, %o1
 #endif
-	mov		%o0, %g3
+	mov		%o0, %o5
 50:	cmp		%o1, 7
 	bleu,pn		%xcc, 17f
 	 andcc		%o0, 3, %o2
@@ -220,19 +220,19 @@ ENTRY(__bzero)
 2:	blu,pn		%xcc, 9f
 	 andcc		%o0, 0x38, %o2
 	be,pn		%icc, 6f
-	 mov		64, %o5
+	 mov		64, %o4
 	andcc		%o0, 8, %g0
 	be,pn		%icc, 1f
-	 sub		%o5, %o2, %o5
+	 sub		%o4, %o2, %o4
 	stx		%g0, [%o0]
 	add		%o0, 8, %o0
-1:	andcc		%o5, 16, %g0
+1:	andcc		%o4, 16, %g0
 	be,pn		%icc, 1f
-	 sub		%o1, %o5, %o1
+	 sub		%o1, %o4, %o1
 	stx		%g0, [%o0]
 	stx		%g0, [%o0 + 8]
 	add		%o0, 16, %o0
-1:	andcc		%o5, 32, %g0
+1:	andcc		%o4, 32, %g0
 	be,pn		%icc, 7f
 	 andncc		%o1, 0x3f, %o3
 	stx		%g0, [%o0]
@@ -299,7 +299,7 @@ ENTRY(__bzero)
 1:	bne,a,pn	%xcc, 8f
 	 stb		%g0, [%o0]
 8:	retl
-	 mov		%g3, %o0
+	 mov		%o5, %o0
 17:	be,pn		%xcc, 13b
 	 orcc		%o1, 0, %g0
 	be,pn		%xcc, 0f
@@ -308,7 +308,7 @@ ENTRY(__bzero)
 	bne,pt		%xcc, 8b
 	 stb		%g0, [%o0 - 1]
 0:	retl
-	 mov		%g3, %o0
+	 mov		%o5, %o0
 END(__bzero)
 
 weak_alias(__bzero, bzero)

@@ -24,6 +24,9 @@
 #include <asm/asi.h>
 #ifndef XCC
 #define USE_BPR
+	.register	%g2, #scratch
+	.register	%g3, #scratch
+	.register	%g7, #scratch
 #endif
 #define FPRS_FEF	4
 

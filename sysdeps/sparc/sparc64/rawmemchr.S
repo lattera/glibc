@@ -33,6 +33,8 @@
 #ifndef XCC
 #define XCC xcc
 #define USE_BPR
+	.register	%g2, #scratch
+	.register	%g3, #scratch
 #endif
 
 	/* Normally, this uses
@@ -81,9 +83,9 @@ ENTRY(__rawmemchr)
 
 	sub		%o3, %g1, %o2			/* IEU0		Group		*/
 #ifdef EIGHTBIT_NOT_RARE
-	andn		%o2, %o3, %g7			/* IEU0		Group		*/
+	andn		%o2, %o3, %o5			/* IEU0		Group		*/
 	ldxa		[%o0] ASI_PNF, %o3		/* Load				*/
-	andcc		%g7, %g2, %g0			/* IEU1		Group		*/
+	andcc		%o5, %g2, %g0			/* IEU1		Group		*/
 #else
 	ldxa		[%o0] ASI_PNF, %o3		/* Load				*/
 	andcc		%o2, %g2, %g0			/* IEU1		Group		*/

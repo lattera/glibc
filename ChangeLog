@@ -1,5 +1,34 @@
 1999-07-25  Jakub Jelinek  <jj@ultra.linux.cz>
 
+	* sysdeps/sparc/sparc64/add_n.S: Avoid using %g2, %g3, %g7 registers
+	as much as possible. Declare them using .register pseudo-op if they
+	are still used.
+	* sysdeps/sparc/sparc64/lshift.S: Likewise.
+	* sysdeps/sparc/sparc64/memchr.S: Likewise.
+	* sysdeps/sparc/sparc64/memcmp.S: Likewise.
+	* sysdeps/sparc/sparc64/memcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/memset.S: Likewise.
+	* sysdeps/sparc/sparc64/rawmemchr.S: Likewise.
+	* sysdeps/sparc/sparc64/rshift.S: Likewise.
+	* sysdeps/sparc/sparc64/stpcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/stpncpy.S: Likewise.
+	* sysdeps/sparc/sparc64/strcat.S: Likewise.
+	* sysdeps/sparc/sparc64/strchr.S: Likewise.
+	* sysdeps/sparc/sparc64/strcmp.S: Likewise.
+	* sysdeps/sparc/sparc64/strcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/strcspn.S: Likewise.
+	* sysdeps/sparc/sparc64/strlen.S: Likewise.
+	* sysdeps/sparc/sparc64/strncmp.S: Likewise.
+	* sysdeps/sparc/sparc64/strncpy.S: Likewise.
+	* sysdeps/sparc/sparc64/strpbrk.S: Likewise.
+	* sysdeps/sparc/sparc64/strspn.S: Likewise.
+	* sysdeps/sparc/sparc64/sub_n.S: Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h: Likewise.
+	Optimize trampoline code for .plt4-.plt32767.
+	Fix trampolines for .plt32768+.
+
+1999-07-25  Jakub Jelinek  <jj@ultra.linux.cz>
+
 	* sysdeps/sparc/sparc32/sparcv8/Makefile: -mv8 is deprecated, use
 	-mcpu=v8.
 	* sysdeps/sparc/sparc32/sparcv9/Makefile: Likewise.

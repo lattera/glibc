@@ -26,6 +26,7 @@
 #define XCC xcc
 #define STACK_SIZE	128
 #define STACK_OFFSET	128+0x7ff
+	.register	%g2, #scratch
 #else
 #define STACK_SIZE	64
 #define STACK_OFFSET	64
@@ -77,74 +78,74 @@ ENTRY(strpbrk)
 	 ldub		[%o0], %o2			/* Load				*/
 	ldx		[%o0], %o2			/* Load		Group		*/
 4:	srlx		%o2, 59, %o3			/* IEU0		Group		*/
-	srlx		%o2, 56, %g3			/* IEU0		Group		*/
+	srlx		%o2, 56, %g4			/* IEU0		Group		*/
 
 5:	and		%o3, 0x18, %o3			/* IEU1				*/
-	andcc		%g3, 0x3f, %g3			/* IEU1		Group		*/
+	andcc		%g4, 0x3f, %g4			/* IEU1		Group		*/
 	ldx		[%o5 + %o3], %g2		/* Load				*/
 	srlx		%o2, 51, %o3			/* IEU0				*/
 
-	sllx		%o4, %g3, %g1			/* IEU0		Group		*/
-	srlx		%o2, 48, %g3			/* IEU0		Group		*/
+	sllx		%o4, %g4, %g1			/* IEU0		Group		*/
+	srlx		%o2, 48, %g4			/* IEU0		Group		*/
 	andcc		%g2, %g1, %g2			/* IEU1				*/
 	bne,pn		%xcc, 13f			/* CTI				*/
 
 	 and		%o3, 0x18, %o3			/* IEU0		Group		*/
-	and		%g3, 0x3f, %g3			/* IEU1				*/
+	and		%g4, 0x3f, %g4			/* IEU1				*/
 	ldx		[%o5 + %o3], %g2		/* Load		Group		*/
 	srlx		%o2, 43, %o3			/* IEU0				*/
 
-	sllx		%o4, %g3, %g1			/* IEU0		Group		*/
-	srlx		%o2, 40, %g3			/* IEU0		Group		*/
+	sllx		%o4, %g4, %g1			/* IEU0		Group		*/
+	srlx		%o2, 40, %g4			/* IEU0		Group		*/
 	andcc		%g2, %g1, %g2			/* IEU1				*/
 	bne,pn		%xcc, 14f			/* CTI				*/
 
 	 and		%o3, 0x18, %o3			/* IEU0		Group		*/
-	and		%g3, 0x3f, %g3			/* IEU1				*/
+	and		%g4, 0x3f, %g4			/* IEU1				*/
 	ldx		[%o5 + %o3], %g2		/* Load		Group		*/
 	srlx		%o2, 35, %o3			/* IEU0				*/
 
-	sllx		%o4, %g3, %g1			/* IEU0		Group		*/
-	srlx		%o2, 32, %g3			/* IEU0		Group		*/
+	sllx		%o4, %g4, %g1			/* IEU0		Group		*/
+	srlx		%o2, 32, %g4			/* IEU0		Group		*/
 	andcc		%g2, %g1, %g2			/* IEU1				*/
 	bne,pn		%xcc, 15f			/* CTI				*/
 
 	 and		%o3, 0x18, %o3			/* IEU0		Group		*/
-	and		%g3, 0x3f, %g3			/* IEU1				*/
+	and		%g4, 0x3f, %g4			/* IEU1				*/
 	ldx		[%o5 + %o3], %g2		/* Load		Group		*/
 	srlx		%o2, 27, %o3			/* IEU0				*/
 
-	sllx		%o4, %g3, %g1			/* IEU0		Group		*/
-	srlx		%o2, 24, %g3			/* IEU0		Group		*/
+	sllx		%o4, %g4, %g1			/* IEU0		Group		*/
+	srlx		%o2, 24, %g4			/* IEU0		Group		*/
 	andcc		%g2, %g1, %g2			/* IEU1				*/
 	bne,pn		%xcc, 16f			/* CTI				*/
 
 	 and		%o3, 0x18, %o3			/* IEU0		Group		*/
-	and		%g3, 0x3f, %g3			/* IEU1				*/
+	and		%g4, 0x3f, %g4			/* IEU1				*/
 	ldx		[%o5 + %o3], %g2		/* Load		Group		*/
 	srlx		%o2, 19, %o3			/* IEU0				*/
 
-	sllx		%o4, %g3, %g1			/* IEU0		Group		*/
-	srlx		%o2, 16, %g3			/* IEU0		Group		*/
+	sllx		%o4, %g4, %g1			/* IEU0		Group		*/
+	srlx		%o2, 16, %g4			/* IEU0		Group		*/
 	andcc		%g2, %g1, %g2			/* IEU1				*/
 	bne,pn		%xcc, 17f			/* CTI				*/
 
 	 and		%o3, 0x18, %o3			/* IEU0		Group		*/
-	and		%g3, 0x3f, %g3			/* IEU1				*/
+	and		%g4, 0x3f, %g4			/* IEU1				*/
 	ldx		[%o5 + %o3], %g2		/* Load		Group		*/
 	srlx		%o2, 11, %o3			/* IEU0				*/
 
-	sllx		%o4, %g3, %g1			/* IEU0		Group		*/
+	sllx		%o4, %g4, %g1			/* IEU0		Group		*/
 	add		%o0, 8, %o0			/* IEU1				*/
-	srlx		%o2, 8, %g3			/* IEU0		Group		*/
+	srlx		%o2, 8, %g4			/* IEU0		Group		*/
 	andcc		%g2, %g1, %g2			/* IEU1				*/
 
 	bne,pn		%xcc, 18f			/* CTI				*/
 	 and		%o3, 0x18, %o3			/* IEU0		Group		*/
-	and		%g3, 0x3f, %g3			/* IEU1				*/
+	and		%g4, 0x3f, %g4			/* IEU1				*/
 	ldx		[%o5 + %o3], %g2		/* Load		Group		*/
 
-	sllx		%o4, %g3, %g1			/* IEU0				*/
+	sllx		%o4, %g4, %g1			/* IEU0				*/
 	mov		%o2, %g5			/* IEU1				*/
 	srlx		%o2, 3, %o3			/* IEU0		Group		*/
 	ldxa		[%o0] ASI_PNF, %o2		/* Load				*/
@@ -152,15 +153,15 @@ ENTRY(strpbrk)
 	andcc		%g2, %g1, %g2			/* IEU1		Group		*/
 	bne,pn		%xcc, 19f			/* CTI				*/
 	 and		%o3, 0x18, %o3			/* IEU0		Group		*/
-	and		%g5, 0x3f, %g3			/* IEU1				*/
+	and		%g5, 0x3f, %g4			/* IEU1				*/
 
 	ldx		[%o5 + %o3], %g2		/* Load		Group		*/
-	sllx		%o4, %g3, %g1			/* IEU0				*/
+	sllx		%o4, %g4, %g1			/* IEU0				*/
 	srlx		%o2, 59, %o3			/* IEU0		Group		*/
 	andcc		%g2, %g1, %g2			/* IEU1		Group		*/
 
 	be,pt		%xcc, 5b			/* CTI				*/
-	 srlx		%o2, 56, %g3			/* IEU0		Group		*/
+	 srlx		%o2, 56, %g4			/* IEU0		Group		*/
 	sub		%o0, 1, %o0			/* IEU1				*/
 	add		%sp, STACK_SIZE+32, %sp		/* IEU0		Group		*/
 

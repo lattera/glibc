@@ -27,6 +27,9 @@
    size		%o2
    cnt		%o3  */
 
+	.register	%g2, #scratch
+	.register	%g3, #scratch
+
 ENTRY(__mpn_rshift)
 	ldx	[%o1],%g2	! load first limb
 	sub	%g0,%o3,%o5	! negate shift count

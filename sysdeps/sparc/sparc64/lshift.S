@@ -27,6 +27,9 @@
    size		%o2
    cnt		%o3  */
 
+	.register	%g2, #scratch
+	.register	%g3, #scratch
+
 ENTRY(__mpn_lshift)
 	sllx	%o2,3,%g1
 	add	%o1,%g1,%o1	! make %o1 point at end of src

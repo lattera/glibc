@@ -35,6 +35,8 @@
 #ifndef XCC
 #define XCC xcc
 #define USE_BPR
+	.register	%g2, #scratch
+	.register	%g3, #scratch
 #endif
 
 	/* Normally, this uses

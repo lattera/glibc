@@ -25,6 +25,8 @@
 #ifndef XCC
 #define XCC xcc
 #define USE_BPR
+	.register	%g2, #scratch
+	.register	%g3, #scratch
 #endif
 
 	.text
@@ -114,12 +116,12 @@ ENTRY(memcmp)
 
 	ldxa		[%o0] ASI_PNF, %g5		/* Load				*/
 	sub		%o1, %o0, %o1			/* IEU1				*/
-	ldxa		[%o0 + %o1] ASI_PNF, %g7	/* Load		Group		*/
+	ldxa		[%o0 + %o1] ASI_PNF, %g4	/* Load		Group		*/
 	add		%o0, 8, %o0			/* IEU0				*/
 
-11:	sllx		%g7, %g2, %o4			/* IEU0		Group		*/
-	ldxa		[%o0 + %o1] ASI_PNF, %g7	/* Load				*/
-	srlx		%g7, %g3, %o5			/* IEU0		Group		*/
+11:	sllx		%g4, %g2, %o4			/* IEU0		Group		*/
+	ldxa		[%o0 + %o1] ASI_PNF, %g4	/* Load				*/
+	srlx		%g4, %g3, %o5			/* IEU0		Group		*/
 	mov		%g5, %o3			/* IEU1				*/   
 
 	ldxa		[%o0] ASI_PNF, %g5		/* Load				*/

@@ -22,6 +22,11 @@
 
 #include <sysdep.h>
 #include <asm/asi.h>
+#ifndef XCC
+	.register	%g2, #scratch
+	.register	%g3, #scratch
+	.register	%g7, #scratch
+#endif
 
 	/* Normally, this uses
 	   ((xword - 0x0101010101010101) & 0x8080808080808080) test

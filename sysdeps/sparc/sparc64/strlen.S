@@ -45,16 +45,16 @@ ENTRY(strlen)
 	or		%g1, %lo(0x01010101), %g1	/* IEU0		Group		*/
 	mov		%o0, %o1			/* IEU1				*/
 
-	sllx		%g1, 32, %g2			/* IEU0		Group 		*/
+	sllx		%g1, 32, %g4			/* IEU0		Group 		*/
 	andcc		%o0, 7, %g0			/* IEU1				*/
-	or		%g1, %g2, %g1			/* IEU0		Group		*/
+	or		%g1, %g4, %g1			/* IEU0		Group		*/
 	brz,pn		%o3, 13f			/* CTI+IEU1			*/
 
-	 sllx		%g1, 7, %g2			/* IEU0		Group		*/
+	 sllx		%g1, 7, %g4			/* IEU0		Group		*/
 	bne,a,pn	%icc, 15f			/* CTI				*/
 	 add		%o0, 1, %o0			/* IEU1				*/
 							/* %g1 = 0x0101010101010101	*
-							 * %g2 = 0x8080808080808080	*
+							 * %g4 = 0x8080808080808080	*
 							 * %o0 = string pointer		*
 							 * %o1 = start of string	*/
 1:	ldx		[%o0], %o3			/* Load		Group		*/
@@ -62,63 +62,63 @@ ENTRY(strlen)
 	add		%o0, 8, %o0			/* IEU1				*/
 2:	sub		%o3, %g1, %o2			/* IEU0		Group		*/
 #ifdef EIGHTBIT_NOT_RARE
-	andn		%o2, %o3, %g7			/* IEU0		Group		*/
+	andn		%o2, %o3, %o5			/* IEU0		Group		*/
 	ldxa		[%o0] ASI_PNF, %o3		/* Load				*/
-	andcc		%g7, %g2, %g0			/* IEU1		Group		*/
+	andcc		%o5, %g4, %g0			/* IEU1		Group		*/
 #else
 	ldxa		[%o0] ASI_PNF, %o3		/* Load				*/
-	andcc		%o2, %g2, %g0			/* IEU1		Group		*/
+	andcc		%o2, %g4, %g0			/* IEU1		Group		*/
 #endif
 
 	be,pt		%xcc, 2b			/* CTI				*/
 	 add		%o0, 8, %o0			/* IEU0				*/
- 	addcc		%o2, %g1, %g3			/* IEU1		Group		*/
+ 	addcc		%o2, %g1, %g5			/* IEU1		Group		*/
 #ifdef EIGHTBIT_NOT_RARE
-	srlx		%g7, 32, %g7			/* IEU0				*/
+	srlx		%o5, 32, %o5			/* IEU0				*/
 
-3:	andcc		%g7, %g2, %g0			/* IEU1		Group		*/
+3:	andcc		%o5, %g4, %g0			/* IEU1		Group		*/
 #else
 	srlx		%o2, 32, %o2			/* IEU0				*/
 
-3:	andcc		%o2, %g2, %g0			/* IEU1		Group		*/
+3:	andcc		%o2, %g4, %g0			/* IEU1		Group		*/
 #endif
 	be,pn		%xcc, 4f			/* CTI				*/
-	 srlx		%g3, 56, %o2			/* IEU0				*/
+	 srlx		%g5, 56, %o2			/* IEU0				*/
 	andcc		%o2, 0xff, %g0			/* IEU1		Group		*/
 
 	be,pn		%icc, 12f			/* CTI				*/
-	 srlx		%g3, 48, %o2			/* IEU0				*/
+	 srlx		%g5, 48, %o2			/* IEU0				*/
 	andcc		%o2, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 11f			/* CTI				*/
 
-	 srlx		%g3, 40, %o2			/* IEU0				*/
+	 srlx		%g5, 40, %o2			/* IEU0				*/
 	andcc		%o2, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 10f			/* CTI				*/
-	 srlx		%g3, 32, %o2			/* IEU0				*/
+	 srlx		%g5, 32, %o2			/* IEU0				*/
 
 	andcc		%o2, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 9f			/* CTI				*/
-4:	 srlx		%g3, 24, %o2			/* IEU0				*/
+4:	 srlx		%g5, 24, %o2			/* IEU0				*/
 	andcc		%o2, 0xff, %g0			/* IEU1		Group		*/
 
 	be,pn		%icc, 8f			/* CTI				*/
-	 srlx		%g3, 16, %o2			/* IEU0				*/
+	 srlx		%g5, 16, %o2			/* IEU0				*/
 	andcc		%o2, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 7f			/* CTI				*/
 
-	 srlx		%g3, 8, %o2			/* IEU0				*/
+	 srlx		%g5, 8, %o2			/* IEU0				*/
 	andcc		%o2, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 6f			/* CTI				*/
 	 sub		%o3, %g1, %o2			/* IEU0				*/
 
-	andcc		%g3, 0xff, %g0			/* IEU1		Group		*/
+	andcc		%g5, 0xff, %g0			/* IEU1		Group		*/
 	be,pn		%icc, 5f			/* CTI				*/
 	 ldxa		[%o0] ASI_PNF, %o3		/* Load				*/
-	andcc		%o2, %g2, %g0			/* IEU1		Group		*/
+	andcc		%o2, %g4, %g0			/* IEU1		Group		*/
 
 	be,pt		%xcc, 2b			/* CTI				*/
 	 add		%o0, 8, %o0			/* IEU0				*/
-	addcc		%o2, %g1, %g3			/* IEU1		Group		*/
+	addcc		%o2, %g1, %g5			/* IEU1		Group		*/
 	ba,pt		%xcc, 3b			/* CTI				*/
 
 	 srlx		%o2, 32, %o2			/* IEU0				*/

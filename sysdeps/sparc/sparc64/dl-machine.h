@@ -64,7 +64,7 @@ elf_machine_load_address (void)
   return pc - *(Elf64_Addr *)(elf_pic_register + la);
 }
 
-/* We have 3 cases to handle.  And we code different code sequences
+/* We have 4 cases to handle.  And we code different code sequences
    for each one.  I love V9 code models...  */
 static inline void
 elf_machine_fixup_plt(struct link_map *map, const Elf64_Rela *reloc,
@@ -76,9 +76,14 @@ elf_machine_fixup_plt(struct link_map *map, const Elf64_Rela *reloc,
   /* Now move plt_vaddr up to the call instruction.  */
   plt_vaddr += (2 * 4);
 
+  /* PLT entries .PLT32768 and above look always the same.  */
+  if (__builtin_expect (reloc->r_addend, 0) != 0)
+    {
+      *reloc_addr = value - map->l_addr;
+    }
   /* 32-bit Sparc style, the target is in the lower 32-bits of
      address space.  */
-  if ((value >> 32) == 0)
+  else if ((value >> 32) == 0)
     {
       /* sethi	%hi(target), %g1
 	 jmpl	%g1 + %lo(target), %g0  */
@@ -126,26 +131,26 @@ elf_machine_fixup_plt(struct link_map *map, const Elf64_Rela *reloc,
 	     constant formation code I wrote.  -DaveM  */
 
       /* sethi	%hh(value), %g1
-	 sethi	%lm(value), %g2
-	 or	%g1, %hl(value), %g1
-	 or	%g2, %lo(value), %g2
+	 sethi	%lm(value), %g5
+	 or	%g1, %hm(value), %g1
+	 or	%g5, %lo(value), %g5
 	 sllx	%g1, 32, %g1
-	 jmpl	%g1 + %g2, %g0
+	 jmpl	%g1 + %g5, %g0
 	  nop  */
 
-      insns[6] = 0x81c04002;
+      insns[6] = 0x81c04005;
       __asm __volatile ("flush %0 + 24" : : "r" (insns));
 
       insns[5] = 0x83287020;
       __asm __volatile ("flush %0 + 20" : : "r" (insns));
 
-      insns[4] = 0x8410a000 | (low32 & 0x3ff);
+      insns[4] = 0x8a116000 | (low32 & 0x3ff);
       __asm __volatile ("flush %0 + 16" : : "r" (insns));
 
       insns[3] = 0x82106000 | (high32 & 0x3ff);
       __asm __volatile ("flush %0 + 12" : : "r" (insns));
 
-      insns[2] = 0x05000000 | (low32 >> 10);
+      insns[2] = 0x0b000000 | (low32 >> 10);
       __asm __volatile ("flush %0 + 8" : : "r" (insns));
 
       insns[1] = 0x03000000 | (high32 >> 10);
@@ -381,33 +386,44 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       /* PLT0 looks like:
 
 	 save	%sp, -192, %sp
-	 sethi	%hh(_dl_runtime_{resolve,profile}_0), %g3
-	 sethi	%lm(_dl_runtime_{resolve,profile}_0), %g4
-	 or	%g3, %hm(_dl_runtime_{resolve,profile}_0), %g3
-	 or	%g4, %lo(_dl_runtime_{resolve,profile}_0), %g4
-	 sllx	%g3, 32, %g3
-	 jmpl	%g3 + %g4, %o0
-	  nop
-
-	 PLT1 is similar except we jump to _dl_runtime_{resolve,profile}_1.  */
+	 sethi	%hh(_dl_runtime_{resolve,profile}_0), %l0
+	 sethi	%lm(_dl_runtime_{resolve,profile}_0), %l1
+	 or	%l0, %hm(_dl_runtime_{resolve,profile}_0), %l0
+	 or	%l1, %lo(_dl_runtime_{resolve,profile}_0), %l1
+	 sllx	%l0, 32, %l0
+	 jmpl	%l0 + %l1, %l6
+	  sethi	%hi(0xffc00), %l2
+       */
 
       plt[0] = 0x9de3bf40;
-      plt[1] = 0x07000000 | (res0_addr >> (64 - 22));
-      plt[2] = 0x09000000 | ((res0_addr >> 10) & 0x003fffff);
-      plt[3] = 0x8610e000 | ((res0_addr >> 32) & 0x3ff);
-      plt[4] = 0x88112000 | (res0_addr & 0x3ff);
-      plt[5] = 0x8728f020;
-      plt[6] = 0x91c0c004;
-      plt[7] = 0x01000000;
+      plt[1] = 0x21000000 | (res0_addr >> (64 - 22));
+      plt[2] = 0x23000000 | ((res0_addr >> 10) & 0x003fffff);
+      plt[3] = 0xa0142000 | ((res0_addr >> 32) & 0x3ff);
+      plt[4] = 0xa2146000 | (res0_addr & 0x3ff);
+      plt[5] = 0xa12c3020;
+      plt[6] = 0xadc40011;
+      plt[7] = 0x250003ff;
+
+      /* PLT1 looks like:
+
+	 save	%sp, -192, %sp
+	 sethi	%hh(_dl_runtime_{resolve,profile}_1), %l0
+	 sethi	%lm(_dl_runtime_{resolve,profile}_1), %l1
+	 or	%l0, %hm(_dl_runtime_{resolve,profile}_1), %l0
+	 or	%l1, %lo(_dl_runtime_{resolve,profile}_1), %l1
+	 sllx	%l0, 32, %l0
+	 jmpl	%l0 + %l1, %l6
+	  srlx	%g1, 12, %o1
+       */
 
       plt[8 + 0] = 0x9de3bf40;
-      plt[8 + 1] = 0x07000000 | (res1_addr >> (64 - 22));
-      plt[8 + 2] = 0x09000000 | ((res1_addr >> 10) & 0x003fffff);
-      plt[8 + 3] = 0x8610e000 | ((res1_addr >> 32) & 0x3ff);
-      plt[8 + 4] = 0x88112000 | (res1_addr & 0x3ff);
-      plt[8 + 5] = 0x8728f020;
-      plt[8 + 6] = 0x91c0c004;
-      plt[8 + 7] = 0x01000000;
+      plt[8 + 1] = 0x21000000 | (res1_addr >> (64 - 22));
+      plt[8 + 2] = 0x23000000 | ((res1_addr >> 10) & 0x003fffff);
+      plt[8 + 3] = 0xa0142000 | ((res1_addr >> 32) & 0x3ff);
+      plt[8 + 4] = 0xa2146000 | (res1_addr & 0x3ff);
+      plt[8 + 5] = 0xa12c3020;
+      plt[8 + 6] = 0xadc40011;
+      plt[8 + 7] = 0x9330700c;
 
       /* Now put the magic cookie at the beginning of .PLT3
 	 Entry .PLT4 is unused by this implementation.  */
@@ -426,28 +442,27 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	.type	" #tramp_name "_0, @function
 	.align	32
 " #tramp_name "_0:
-	ldx	[%o0 + 32 + 8], %l0
-	sethi	%hi(1048576), %g2
-	sub	%g1, %o0, %o0
-	xor	%g2, -20, %g2
-	sethi	%hi(5120), %g3
-	add	%o0, %g2, %o0
-	sethi	%hi(32768), %o2
-	udivx	%o0, %g3, %g3
-	sllx	%g3, 2, %g1
-	add	%g1, %g3, %g1
-	sllx	%g1, 10, %g2
-	sllx	%g1, 5, %g1
-	sub	%o0, %g2, %o0
-	udivx	%o0, 24, %o0
-	add	%o0, %o2, %o0
-	add	%g1, %o0, %g1
-	sllx	%g1, 1, %o1
-	mov	%l0, %o0
-	add	%o1, %g1, %o1
+	! sethi   %hi(1047552), %l2 - Done in .PLT0
+	ldx	[%l6 + 32 + 8], %o0
+	sub     %g1, %l6, %l0
+	xor     %l2, -1016, %l2
+	sethi   %hi(5120), %l3
+	add     %l0, %l2, %l0
+	sethi   %hi(32768), %l4
+	udivx   %l0, %l3, %l3
+	sllx    %l3, 2, %l1
+	add     %l1, %l3, %l1
+	sllx    %l1, 10, %l2
+	sllx    %l1, 5, %l1
+	sub     %l0, %l2, %l0
+	udivx   %l0, 24, %l0
+	add     %l0, %l4, %l0
+	add     %l1, %l0, %l1
+	add     %l1, %l1, %l0
+	add     %l0, %l1, %l0
 	mov	%i7, %o2
 	call	" #fixup_name "
-	 sllx	%o1, 3, %o1
+	 sllx    %l0, 3, %o1
 	jmp	%o0
 	 restore
 	.size	" #tramp_name "_0, . - " #tramp_name "_0
@@ -456,13 +471,12 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	.type	" #tramp_name "_1, @function
 	.align	32
 " #tramp_name "_1:
-	srlx	%g1, 15, %o1
-	ldx	[%o0 + 8], %o0
-	sllx	%o1, 1, %o3
-	add	%o1, %o3, %o1
+	! srlx	%g1, 12, %o1 - Done in .PLT1
+	ldx	[%l6 + 8], %o0
+	add	%o1, %o1, %o3
 	mov	%i7, %o2
 	call	" #fixup_name "
-	 sllx	%o1, 3, %o1
+	 add	%o1, %o3, %o1
 	jmp	%o0
 	 restore
 	.size	" #tramp_name "_1, . - " #tramp_name "_1
@@ -513,17 +527,17 @@ _dl_start_user:
    /* Save the user entry point address in %l0.  */
 	mov	%o0,%l0
   /* Store the highest stack address.  */
-	sethi	%hi(__libc_stack_end), %g2
-	or	%g2, %lo(__libc_stack_end), %g2
-	ldx	[%l7 + %g2], %l1
+	sethi	%hi(__libc_stack_end), %g5
+	or	%g5, %lo(__libc_stack_end), %g5
+	ldx	[%l7 + %g5], %l1
 	add	%sp, 6*8, %l2
 	stx	%l2, [%l1]
    /* See if we were run as a command with the executable file name as an
       extra leading argument.  If so, we must shift things around since we
       must keep the stack doubleword aligned.  */
-	sethi	%hi(_dl_skip_args), %g2
-	or	%g2, %lo(_dl_skip_args), %g2
-	ldx	[%l7+%g2], %i0
+	sethi	%hi(_dl_skip_args), %g5
+	or	%g5, %lo(_dl_skip_args), %g5
+	ldx	[%l7+%g5], %i0
 	ld	[%i0], %i0
 	brz,pt	%i0, 2f
 	 nop
@@ -555,10 +569,10 @@ _dl_start_user:
 	brnz,pt	%i3, 13b
 	 add	%i1, 16, %i1
   /* Load searchlist of the main object to pass to _dl_init_next.  */
-2:	sethi	%hi(_dl_main_searchlist), %g2
-	or	%g2, %lo(_dl_main_searchlist), %g2
-	ldx	[%l7+%g2], %g2
-	ldx	[%g2], %l1
+2:	sethi	%hi(_dl_main_searchlist), %g5
+	or	%g5, %lo(_dl_main_searchlist), %g5
+	ldx	[%l7+%g5], %g5
+	ldx	[%g5], %l1
    /* Call _dl_init_next to return the address of an initializer to run.  */
 3:	call	_dl_init_next
 	 mov	%l1, %o0
@@ -567,10 +581,10 @@ _dl_start_user:
 	jmpl	%o0, %o7
 	 sub	%o7, 24, %o7
    /* Clear the startup flag.  */
-4:	sethi	%hi(_dl_starting_up), %g2
-	or	%g2, %lo(_dl_starting_up), %g2
-	ldx	[%l7+%g2], %g2
-	st	%g0, [%g2]
+4:	sethi	%hi(_dl_starting_up), %g5
+	or	%g5, %lo(_dl_starting_up), %g5
+	ldx	[%l7+%g5], %g5
+	st	%g0, [%g5]
    /* Pass our finalizer function to the user in %g1.  */
 	sethi	%hi(_dl_fini), %g1
 	or	%g1, %lo(_dl_fini), %g1
