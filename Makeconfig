@@ -799,26 +799,19 @@ ifndef avoid-generated
 # This lets add-ons give more-specific matches that override defaults
 # in the top-level file.
 $(common-objpfx)shlib-versions.v.i: \
-	$(wildcard $(patsubst %, $(..)%/shlib-versions,$(add-ons) $(subdirs)))\
+	$(wildcard $(patsubst %, $(..)%/shlib-versions,$(add-ons) \
+						       $(config-sysdirs) \
+						       $(subdirs))) \
 	$(..)shlib-versions
-$(common-objpfx)soversions.i: $(common-objpfx)shlib-versions.v
-	default_setname='$(filter-out %_default,$(oldest-abi:%=GLIBC_%))'; \
-	while read conf version setname; do \
-	  test -n "$$version" && \
-	  test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
-		     : "$$conf"` != 0 || continue; \
-	  if test "x$$version" = xDEFAULT; then \
-	    default_setname="$$setname"; \
-	  else \
-	    $(abi-default_setname) \
-	    lib=`echo $$version | sed 's/=.*$$//'`; \
-	    if eval test -z "\$${versioned_$${lib}}"; then \
-	      eval versioned_$${lib}=yes; \
-	      number=`echo $$version | sed "s/^.*=//"`; \
-	      echo $$lib $$number $${setname:-$${default_setname}}; \
-	    fi; \
-	  fi; \
-	done < $< > $@T; exit 0
+
+soversions-default-setname = $(patsubst %, %,\
+					$(filter-out %_default,\
+						     $(oldest-abi:%=GLIBC_%)))
+$(common-objpfx)soversions.i: $(..)scripts/soversions.awk \
+			      $(common-objpfx)shlib-versions.v
+	$(AWK) -v default_setname='$(soversions-default-setname)' \
+	       -v config='$(config-machine)-$(config-vendor)-$(config-os)' \
+	       -f $^ > $@T
 	mv -f $@T $@
 $(common-objpfx)soversions.mk: $(common-objpfx)soversions.i
 	(while read lib number setname; do \
