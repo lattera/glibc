@@ -1,3 +1,10 @@
+2003-02-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/strtod.c (INTERNAL): Remove bogus clearing of second word
+	when shifting retval.
+	* stdlib/tst-strtod.c (main): Add strtold test case.
+	Reported by Fred J. Tydeman <tydeman@tybor.com>.
+
 2003-02-21  Roland McGrath  <roland@redhat.com>
 
 	* malloc/thread-freeres.c: Conditionalize on _LIBC_REENTRANT.

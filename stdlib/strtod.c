@@ -1473,9 +1473,6 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 		      for (i = RETURN_LIMB_SIZE; i > empty; --i)
 			retval[i] = retval[i - empty];
 #endif
-#if RETURN_LIMB_SIZE > 1
-		      retval[1] = 0;
-#endif
 		      for (i = numsize; i > 0; --i)
 			num[i + empty] = num[i - 1];
 		      MPN_ZERO (num, empty + 1);
