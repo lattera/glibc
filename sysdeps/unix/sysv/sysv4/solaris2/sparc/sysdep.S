@@ -17,6 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
+#define _ERRNO_H
 #include <errnos.h>
 
 ENTRY(syscall_error)
