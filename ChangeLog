@@ -1,3 +1,8 @@
+2000-04-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/mbrtowc.c (__mbrtowc): Set end of buffer correctly if s
+	== NULL.
+
 2000-04-28  Geoff Clare <gwc@unisoft.com>
 
 	* io/ftw.c: Set errno to ENOENT (instead of ENOTDIR) when the
