@@ -1,5 +1,6 @@
 /* Guts of both `select' and `poll' for Hurd.
-   Copyright (C) 1991,92,93,94,95,96,97,98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,94,95,96,97,98,99,2001
+   	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -395,15 +396,18 @@ _hurd_select (int nfds,
     /* Fill in the `revents' members of the user's array.  */
     for (i = 0; i < nfds; ++i)
       {
-	const int type = d[i].type;
+	int type = d[i].type;
 	int_fast16_t revents = 0;
 
-	if (type & SELECT_READ)
-	  revents |= POLLIN;
-	if (type & SELECT_WRITE)
-	  revents |= POLLOUT;
-	if (type & SELECT_URG)
-	  revents |= POLLPRI;
+	if (type & SELECT_RETURNED)
+	  {
+	    if (type & SELECT_READ)
+	      revents |= POLLIN;
+	    if (type & SELECT_WRITE)
+	      revents |= POLLOUT;
+	    if (type & SELECT_URG)
+	      revents |= POLLPRI;
+	  }
 
 	pollfds[i].revents = revents;
       }
