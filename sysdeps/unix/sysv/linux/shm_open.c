@@ -218,11 +218,7 @@ shm_unlink (const char *name)
   __mempcpy (__mempcpy (fname, mountpoint.dir, mountpoint.dirlen),
 	     name, namelen + 1);
 
-  /* And get the file descriptor.
-     XXX Maybe we should test each descriptor whether it really is for a
-     file on the shmfs.  If this is what should be done the whole function
-     should be revamped since we can determine whether shmfs is available
-     while trying to open the file, all in one turn.  */
+  /* And remove the file.  */
   return unlink (fname);
 }
 
