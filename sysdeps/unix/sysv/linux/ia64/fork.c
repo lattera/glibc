@@ -1,6 +1,7 @@
-/* Copyright (C) 1995, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
+   Written by Andreas Schwab, <schwab@issan.informatik.uni-dortmund.de>,
+   December 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,15 +18,16 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <sys/shm.h>
-#include <ipc_priv.h>
+#include <unistd.h>
+#include <asm/signal.h>
 
-#include <sysdep.h>
-#include <sys/syscall.h>
+extern int __clone (int (*fn)(void *), void *ksp, unsigned long int flags,
+		  void *arg);
 
 int
-shmctl (int shmid, int cmd, struct shmid_ds *buf)
+__fork (void)
 {
-  return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, buf);
+  return __clone (NULL, NULL, SIGCHLD, 0);
 }
+
+weak_alias (__fork, fork)

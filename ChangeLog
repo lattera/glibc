@@ -1,3 +1,43 @@
+2000-07-13  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/clone.S: New file.
+	* sysdeps/unix/sysv/linux/ia64/fork.c: New file.
+
+2000-06-05  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: New file
+	based on sysdeps/unix/sysv/linux/bits/siginfo.h.
+	Change type of si_band from "int" to "long".
+	(si_imm) [USE_GNU]: Define
+	(si_isr) [USE_GNU]: Ditto.
+	(ILL_BREAK) [USE_GNU]: Ditto.
+	(FPE_DECOVF) [USE_GNU]: Ditto.
+	(FPE_DECDIV) [USE_GNU]: Ditto.
+	(FPE_DECERR) [USE_GNU]: Ditto.
+	(FPE_INVASC) [USE_GNU]: Ditto.
+	(FPE_INVDEC) [USE_GNU]: Ditto.
+	(TRAP_BRANCH) [USE_GNU]: Ditto.
+	(TRAP_HWBKPT) [USE_GNU]: Ditto.
+
+2000-07-06  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sys/ucontext.h: Do not include
+	bits/sigcontext as struct mcontext does not depend on it.
+
+	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h: New file.
+
+2000-07-04  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/shmctl.c: Removed.
+
+2000-07-04  David Mosberger-Tang  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/msq.h: New file.
+
+2000-06-22  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: New file.
+
 2000-07-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* intl/Makefile (test-srcs): Add tst-translit.
@@ -5,6 +45,7 @@
 	Add rules to build and run tst-translit.
 	* intl/tst-translit.c: New file.
 	* intl/tst-translit.sh: New file.
+	* intl/translit.po: New file.
 
 2000-07-14  Ulrich Drepper  <drepper@redhat.com>
 

@@ -22,7 +22,7 @@
 #include <features.h>
 #include <signal.h>
 
-#include <bits/sigcontext.h>
+#include <bits/sigstack.h>
 
 typedef struct
 {
