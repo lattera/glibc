@@ -3,6 +3,8 @@
 	* sysdeps/unix/sysv/linux/alpha/bits/ioctls.h: Remove __kernel_termios
 	again.  Use char[44] to define size of the struct.
 
+	* sysdeps/unix/sysv/linux/arm/Dist: Add bits/armsigctx.h.
+
 1998-10-14  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
  
 	* string/bits/string2.h (strcmp): Don't cache the result of

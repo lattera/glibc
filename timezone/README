@@ -1,14 +1,14 @@
 The files
 	zic.c zdump.c ialloc.c scheck.c tzfile.h
 	private.h tzselect.ksh checktab.awk
-come from the tzcode1998f package by Arthur David Olson et.al.
+come from the tzcode1998h package by Arthur David Olson et.al.
 
 The files
 	africa antarctica asia australasia europe
 	northamerica southamerica pacificnew etcetera factory
 	backward systemv solar87 solar88 solar89
 	iso3166.tab zone.tab leapseconds yearistype
-come from the tzdata1998e package by Arthur David Olson et.al.
+come from the tzdata1998i package by Arthur David Olson et.al.
 
 These packages may be found at ftp://elsie.nci.nih.gov/pub/.  Commentary
 should be addressed to tz@elsie.nci.nih.gov.
