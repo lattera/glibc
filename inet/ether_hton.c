@@ -24,16 +24,6 @@
 
 #include "../nss/nsswitch.h"
 
-/* Because the `ethers' lookup does not fit so well in the scheme so
-   we define a dummy struct here which helps us to use the available
-   functions.  */
-struct etherent
-{
-  const char *e_name;
-  struct ether_addr e_addr;
-};
-
-
 /* Type of the lookup function we need here.  */
 typedef int (*lookup_function) (const char *, struct etherent *, char *, int,
 				int *);

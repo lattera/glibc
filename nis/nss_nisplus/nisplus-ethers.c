@@ -35,15 +35,6 @@ static nis_result *result = NULL;
 static nis_name tablename_val = NULL;
 static u_long tablename_len = 0;
 
-/* Because the `ethers' lookup does not fit so well in the scheme so
-   we define a dummy struct here which helps us to use the available
-   functions.  */
-struct etherent
-{
-  const char *e_name;
-  struct ether_addr e_addr;
-};
-struct etherent_data {};
 
 #define NISENTRYVAL(idx,col,res) \
         ((res)->objects.objects_val[(idx)].zo_data.objdata_u.en_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
@@ -53,7 +44,7 @@ struct etherent_data {};
 
 static int
 _nss_nisplus_parse_etherent (nis_result *result, struct etherent *ether,
-			   char *buffer, size_t buflen, int *errnop)
+			     char *buffer, size_t buflen, int *errnop)
 {
   char *p = buffer;
   size_t room_left = buflen;

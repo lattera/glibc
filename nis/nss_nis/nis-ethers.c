@@ -24,6 +24,7 @@
 #include <bits/libc-lock.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
+#include <netinet/ether.h>
 #include <netinet/if_ether.h>
 
 #include "nss-nis.h"
@@ -31,15 +32,9 @@
 /* Protect global state against multiple changers */
 __libc_lock_define_initialized (static, lock)
 
-struct ether
-{
-  const char *e_name;
-  struct ether_addr e_addr;
-};
-
 /* Get the declaration of the parser function.  */
 #define ENTNAME etherent
-#define STRUCTURE ether
+#define STRUCTURE etherent
 #define EXTERN_PARSER
 #include <nss/nss_files/files-parse.c>
 
@@ -149,7 +144,7 @@ _nss_nis_endetherent (void)
 }
 
 static enum nss_status
-internal_nis_getetherent_r (struct ether *eth, char *buffer, size_t buflen,
+internal_nis_getetherent_r (struct etherent *eth, char *buffer, size_t buflen,
 			    int *errnop)
 {
   struct parser_data *data = (void *) buffer;
@@ -184,7 +179,7 @@ internal_nis_getetherent_r (struct ether *eth, char *buffer, size_t buflen,
 }
 
 enum nss_status
-_nss_nis_getetherent_r (struct ether *result, char *buffer, size_t buflen,
+_nss_nis_getetherent_r (struct etherent *result, char *buffer, size_t buflen,
 			int *errnop)
 {
   int status;
@@ -199,7 +194,7 @@ _nss_nis_getetherent_r (struct ether *result, char *buffer, size_t buflen,
 }
 
 enum nss_status
-_nss_nis_gethostton_r (const char *name, struct ether *eth,
+_nss_nis_gethostton_r (const char *name, struct etherent *eth,
 		       char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
@@ -256,7 +251,7 @@ _nss_nis_gethostton_r (const char *name, struct ether *eth,
 }
 
 enum nss_status
-_nss_nis_getntohost_r (struct ether_addr *addr, struct ether *eth,
+_nss_nis_getntohost_r (const struct ether_addr *addr, struct etherent *eth,
 		       char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
