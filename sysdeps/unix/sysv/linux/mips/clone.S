@@ -89,6 +89,7 @@ L(error):
    its own function so that we can terminate the stack trace with our
    debug info.  */
 
+ENTRY(__thread_start)
 L(thread_start):
 	/* cp is already loaded.  */
 	SAVE_GP (GPOFF)
