@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,3 +27,4 @@ accept (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len)
   assert (sizeof (socklen_t) == sizeof (int));
   return naccept (fd, addr.__sockaddr__, addr_len);
 }
+libc_hidden_def (accept)
