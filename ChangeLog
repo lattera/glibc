@@ -1,3 +1,9 @@
+2003-09-05  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/fcntl.c (__fcntl_nocancel): Change
+	prototype to use variable argument lists and get the possible one
+	argument via va_arg.
+
 2003-09-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/unistd.h: Add back __THROW to sysconf, pathconf, fpathconf.
