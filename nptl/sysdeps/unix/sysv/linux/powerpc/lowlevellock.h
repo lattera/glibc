@@ -93,7 +93,7 @@
 		       "	bne-	1b\n"				      \
 		       "2:	" __lll_acq_instr			      \
 		       : "=&r" (__val), "=m" (*futex)			      \
-		       : "r" (futex), "r" (1), "1" (*futex)		      \
+		       : "r" (futex), "r" (1), "m" (*futex)		      \
 		       : "cr0", "memory");				      \
      __val;								      \
   })
@@ -110,7 +110,7 @@
 		       "	bne-	1b\n"				      \
 		       "2:	" __lll_acq_instr			      \
 		       : "=&r" (__val), "=m" (*futex)			      \
-		       : "r" (futex), "r" (2), "1" (*futex)		      \
+		       : "r" (futex), "r" (2), "m" (*futex)		      \
 		       : "cr0", "memory");				      \
      __val;								      \
   })

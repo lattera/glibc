@@ -1,5 +1,9 @@
 2004-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/test-ffs.c: Also test ffsl and ffsll.
+
+	* sysdeps/powerpc/ffs.c: Don't define ffsl for ppc64.
+
 	* sysdeps/powerpc/powerpc64/bits/atomic.h: Never use matching
 	constraints for asm mem parameters.
 	* sysdeps/powerpc/bits/atomic.h: Likewise.

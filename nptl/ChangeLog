@@ -1,5 +1,8 @@
 2004-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Never use
+	matching constraints for asm mem parameters.
+
 	* tst-clock2.c (tf): Don't define unless needed.
 
 2004-03-30  H.J. Lu  <hongjiu.lu@intel.com>

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
      On-Line Applications Research Corporation.
@@ -28,24 +28,32 @@ main (void)
   int failures = 0;
   int i;
 
-  auto void try (int value, int expected);
+  auto void try (const char *name, long long int param, int value,
+		 int expected);
 
-  void try (int value, int expected)
+  void try (const char *name, long long int param, int value, int expected)
     {
-      if (ffs (value) != expected)
+      if (value != expected)
 	{
-	  fprintf (stderr, "%#x expected %d got %d\n",
-		   value, expected, ffs (value));
+	  printf ("%s(%#llx) expected %d got %d\n",
+		  name, param, expected, value);
 	  ++failures;
 	}
+      else
+	printf ("%s(%#llx) as expected %d\n", name, param, value);
     }
 
-  try (0, 0);
-  for (i=0 ; i<32 ; i++)
-    try (1<<i, i+1);
-  for (i=0 ; i<32 ; i++)
-    try ((~0 >> i) << i, i+1);
-  try (0x80008000, 16);
+#define TEST(fct, type) \
+  try (#fct, 0, fct ((type) 0), 0);					      \
+  for (i=0 ; i < 8 * sizeof (type); i++)				      \
+    try (#fct, 1ll << i, fct (((type) 1) << i), i + 1);			      \
+  for (i=0 ; i < 8 * sizeof (type) ; i++)				      \
+    try (#fct, (~0ll >> i) << i, fct ((~((type) 0) >> i) << i), i + 1);	      \
+  try (#fct, 0x80008000, fct ((type) 0x80008000), 16)
+
+  TEST (ffs, int);
+  TEST (ffsl, long int);
+  TEST (ffsll, long long int);
 
   if (failures)
     printf ("Test FAILED!  %d failure%s.\n", failures, &"s"[failures == 1]);
