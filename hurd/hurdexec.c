@@ -186,6 +186,10 @@ _hurd_exec (task_t task, file_t file,
       dtable_cells = NULL;
     }
 
+  /* Prune trailing null ports from the descriptor table.  */
+  while (dtable[dtablesize - 1] == MACH_PORT_NULL)
+    --dtablesize;
+
   /* The information is all set up now.  Try to exec the file.  */
 
   {
