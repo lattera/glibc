@@ -23,7 +23,7 @@
 #include <grp.h>
 #include <nss.h>
 #include <nsswitch.h>
-#include <stdio_lock.h>
+#include <stdio_ext.h>
 #include <string.h>
 #include <rpc/types.h>
 #include <bits/libc-lock.h>

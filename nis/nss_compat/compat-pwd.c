@@ -17,17 +17,18 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <nss.h>
-#include <pwd.h>
-#include <errno.h>
 #include <ctype.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <netdb.h>
+#include <nss.h>
+#include <nsswitch.h>
+#include <pwd.h>
+#include <stdio_ext.h>
 #include <string.h>
 #include <rpc/types.h>
 #include <rpcsvc/ypclnt.h>
 #include <bits/libc-lock.h>
-#include <nsswitch.h>
 
 #include "netgroup.h"
 
