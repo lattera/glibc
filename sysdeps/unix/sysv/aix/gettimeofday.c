@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96, 97, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,10 +57,9 @@ __gettimeofday (tv, tz)
   if (ts != tu)          /* the lower reg to the upper      */
       tl  = rtc_lower(); /* Recover from the race condition */
 
-  tv->tv_sec  = (long int) (tu + (double)tl/1000000000); 
+  tv->tv_sec  = (long int) (tu + (double)tl/1000000000);
   tv->tv_usec = (long int) ((double)tl/1000);
 
-#if 0
   if (tz != NULL)
     {
       const  time_t timer = tv->tv_sec;
@@ -86,7 +85,6 @@ __gettimeofday (tv, tz)
       if (tmp == NULL)
 	return -1;
     }
-#endif
 
   return 0;
 }
