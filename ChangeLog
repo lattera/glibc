@@ -1,3 +1,8 @@
+2002-09-10  Roland McGrath  <roland@redhat.com>
+
+	* posix/bug-regex5.c (main): Use `union locale_data_value' rather than
+	a cast to turn nl_langinfo return value into an integer.
+
 2002-09-10  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* posix/regexec.c (build_trtable): Fix the destination of
