@@ -1,3 +1,54 @@
+2001-01-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions.def (ld): Add GLIBC_2.2.
+
+	* catgets/gencat.c: Copyright 2001.
+	* csu/version.c: Likewise.
+	* debug/catchsegv.sh: Likewise.
+	* debug/xtrace.sh: Likewise.
+	* elf/ldconfig.c: Likewise.
+	* elf/sprof.c: Likewise.
+	* iconv/iconv_prog.c: Likewise.
+	* locale/locale.c: Likewise.
+	* locale/localedef.c: Likewise.
+	* malloc/memusage.sh: Likewise.
+	* malloc/mtrace.pl: Likewise.
+	* nscd/nscd.c: Likewise.
+	* posix/getconf.c: Likewise.
+
+2001-01-04  Mark Kettenis  <kettenis@gnu.org>
+
+	* include/stdio.h: Only provide __getwc_unlocked prototype if
+	USE_IN_LIBIO is defined.
+
+2001-01-04  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/socket.S (__socket): Fix error code
+	handling.
+
+2001-01-03  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/generic/strtoll.c: Remove unused __strtoq_internal alias.
+	* sysdeps/generic/strtoull.c: Remove unused __strtouq_internal alias.
+
+	* sysdeps/wordsize-64/strtol.c: Add strtoq alias and fix strtoll alias.
+	* sysdeps/wordsize-64/strtoul.c: Add strtouq alias and fix
+	strtoull alias.
+	* sysdeps/wordsize-64/wcstol.c: Add wcstoq alias and fix wcstoll alias.
+	* sysdeps/wordsize-64/wcstoul.c: Add wcstouq alias and fix
+	wcstoull alias.
+
+	* sysdeps/generic/strtoul.c: Make sure we find strtol.c in this
+	directory.
+	* sysdeps/generic/strtol_l.c: Likewise.
+	* sysdeps/generic/strtoul_l.c: Likewise.
+	* sysdeps/generic/wcstoul.c: Likewise, for wcstol.c.
+
+	* sysdeps/wordsize-64/strtol_l.c: Fix alias.
+	* sysdeps/wordsize-64/strtoul_l.c: Likewise.
+	* sysdeps/wordsize-64/wcstol_l.c: Fix alias.
+	* sysdeps/wordsize-64/wcstoul_l.c: Likewise.
+
 2001-01-04  Andreas Jaeger  <aj@suse.de>
 
 	* nss/nsswitch.c: Include files for missing prototypes, remove

@@ -25,4 +25,4 @@
 extern long int ____strtol_l_internal (const char *, char **, int, int,
 				       __locale_t);
 
-#include <strtol.c>
+#include "strtol.c"

@@ -66,7 +66,9 @@ extern void __funlockfile (FILE *__stream);
 extern int __ftrylockfile (FILE *__stream);
 
 extern int __getc_unlocked (FILE *__fp);
+#  ifdef USE_IN_LIBIO
 extern wint_t __getwc_unlocked (FILE *__fp);
+#  endif
 
 
 # endif

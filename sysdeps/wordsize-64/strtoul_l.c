@@ -7,4 +7,4 @@
 #undef ____strtoull_l_internal
 #undef __strtoull_l
 strong_alias (____strtoul_l_internal, ____strtoull_l_internal)
-weak_alias (____strtoull_l_internal, __strtoull_l)
+weak_alias (__strtoul_l, __strtoull_l)

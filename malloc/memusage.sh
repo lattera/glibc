@@ -1,5 +1,5 @@
 #! @BASH@
-# Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@gnu.org>, 1999.
 
@@ -65,7 +65,7 @@ Report bugs using the \`glibcbug' script to <bugs@gnu.org>."
 
 do_version() {
   echo 'memusage (GNU libc) @VERSION@'
-  echo $"Copyright (C) 2000 Free Software Foundation, Inc.
+  echo $"Copyright (C) 2001 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 Written by Ulrich Drepper."

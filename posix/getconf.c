@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 1995-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -752,7 +752,7 @@ main (int argc, char *argv[])
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1999");
+"), "2001");
       fprintf (stderr, gettext ("Written by %s.\n"), "Roland McGrath");
       return 0;
     }

@@ -18,4 +18,4 @@
 
 #define	UNSIGNED	1
 
-#include <strtol.c>
+#include "strtol.c"

@@ -27,4 +27,4 @@
 extern long int ____wcstol_l_internal (const wchar_t *, wchar_t **, int, int,
 				       __locale_t);
 
-#include <wcstol.c>
+#include "wcstol.c"

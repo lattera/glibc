@@ -21,5 +21,4 @@
 
 #include <strtol.c>
 
-strong_alias (__strtoll_internal, __strtoq_internal)
 weak_alias (strtoll, strtoq)
