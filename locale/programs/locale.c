@@ -34,6 +34,7 @@
 #include <locale.h>
 #include <search.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -364,7 +365,10 @@ write_locales (void)
 	/* Ignore non-existing files.  */
 	continue;
 
-      while (! feof (fp))
+      /* No threads present.  */
+      __fsetlocking (fp, FSETLOCKING_BYCALLER);
+
+      while (! feof_unlocked (fp))
 	{
 	  /* It is a reasonable approach to use a fix buffer here
 	     because

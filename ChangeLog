@@ -1,5 +1,8 @@
 2001-07-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/locale.c (write_locales): Disable implicit
+	locking for the stream.  Use feof_unlocked instead of feof.
+
 	* sysdeps/unix/sysv/linux/i386/makecontext.S: Initialize %fs, %gs,
 	and floating-point status as well.
 

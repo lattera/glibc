@@ -1,5 +1,8 @@
 2001-07-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-context.
+	* tst-context.c: New file.
+
 	* sysdeps/pthread/bits/stdio-lock.h: Define
 	_IO_cleanup_region_start_noarg.
 
