@@ -30,6 +30,8 @@ execvp (file, argv)
      const char *file;
      char *const argv[];
 {
+  int got_eacces = 0;
+
   void execute (const char *file, char *const argv[])
     {
       execv (file, argv);
@@ -39,19 +41,25 @@ execvp (file, argv)
 	  /* The file is accessible but it is not an executable file.
 	     Invoke the shell to interpret it as a script.  */
 
-	  int argc;
-	  char **new_argv;
-
 	  /* Count the arguments.  */
-	  for (argc = 0; argv[argc++];);
+	  int argc = 0;
+	  while (argv[argc++])
+	    ;
 
 	  /* Construct an argument list for the shell.  */
-	  new_argv = __alloca ((argc + 1) * sizeof (char *));
-	  for (new_argv[0] = _PATH_BSHELL; argc > 0; --argc)
-	    new_argv[argc] = argv[argc - 1];
+	  {
+	    char *new_argv[argc + 1];
+	    new_argv[0] = (char *) _PATH_BSHELL;
+	    new_argv[1] = (char *) file;
+	    while (argc > 1)
+	      {
+		new_argv[argc] = argv[argc - 1];
+		--argc;
+	      }
 
-	  /* Execute the shell.  */
-	  execv (new_argv[0], new_argv);
+	    /* Execute the shell.  */
+	    execv (new_argv[0], new_argv);
+	  }
 	}
     }
 
@@ -102,8 +110,12 @@ execvp (file, argv)
 
 	  switch (errno)
 	    {
-	    case ENOENT:
 	    case EACCES:
+	      /* Record the we got a `Permission denied' error.  If we end
+		 up finding no executable we can use, we want to diagnose
+		 that we did find one but were denied access.  */
+	      got_eacces = 1;
+	    case ENOENT:
 	      /* Those errors indicate the file is missing or not executable
 		 by us, in which case we want to just try the next path
 		 directory.  */
@@ -119,7 +131,12 @@ execvp (file, argv)
       while (*p++ != '\0');
     }
 
-  /* We tried every element and none of them worked.
-     Return the error from the last attempt (probably ENOENT).  */
+  /* We tried every element and none of them worked.  */
+
+  if (got_eacces)
+    /* At least one failure was due to permissions, so report that error.  */
+    errno = EACCES;
+
+  /* Return the error from the last attempt (probably ENOENT).  */
   return -1;
 }

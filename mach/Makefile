@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 				     default_pager default_pager_helper	\
 	            )\
 		   $(addprefix device/,device device_request)
-server-interfaces := mach/exc 
+server-interfaces := mach/exc
 tests := hello
 # It is important that we do not use the wildcard function to expand
 # `err_*.sub'.  Leaving the wildcard allows Make-dist to find all matching
@@ -98,8 +98,10 @@ install-others += $(includedir)/mach/version.h
 $(includedir)/mach/version.h: $(mach-srcdir)/sys/version.h; $(do-install)
 
 # Define mach-syscalls and sysno-*.
+ifndef no_deps
 ifndef inhibit_mach_syscalls
 include $(objpfx)mach-syscalls.mk
+endif
 endif
 $(objpfx)mach-syscalls.mk: mach/syscall_sw.h syscalls.awk
 # Go kludges!!!

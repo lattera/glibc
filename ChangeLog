@@ -1,5 +1,11 @@
 Wed Feb 14 01:08:58 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
+	* posix/execvp.c: When executing shell on script, first arg is
+	full file name, not argv[0].
+
+	* mach/Makefile [no_deps]: Inhibit inclusion of mach-syscalls.mk.
+	* mach/Machrules [no_deps]: Inhibit interface rules.
+
 	* malloc/Makefile (distribute): Removed TODO.
 
 Tue Feb 13 05:12:02 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>

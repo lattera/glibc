@@ -1,6 +1,6 @@
 # Rules for MiG interfaces that want to go into the C library.
 
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -58,8 +58,10 @@ define nl	# This is needed by *.ir.
 endef
 ifdef user-interfaces
 *.ir := $(addprefix $(objpfx),$(foreach if,$(user-interfaces),$(if).ir))
+ifndef no_deps
 ifndef inhibit_interface_rules
 include $(*.ir)
+endif
 endif
 ifneq "$(*.ir)" "$(wildcard $(*.ir))"
 # If any .ir file is missing, we will be unable to make all the deps.
