@@ -31,6 +31,9 @@ extern void __init_misc (int, char **, char **);
 #ifdef USE_NONOPTION_FLAGS
 extern void __getopt_clean_environment (char **);
 #endif
+#ifndef SHARED 
+extern void _dl_non_dynamic_init (void) internal_function;
+#endif
 extern void __libc_global_ctors (void);
 
 unsigned int __hurd_threadvar_max;
@@ -107,6 +110,9 @@ init1 (int argc, char *arg0, ...)
 		d->portarray, d->portarraysize,
 		d->intarray, d->intarraysize);
 
+#ifndef SHARED
+  _dl_non_dynamic_init ();
+#endif
   __init_misc (argc, argv, __environ);
   __libc_init (argc, argv, __environ);
 
