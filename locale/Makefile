@@ -25,7 +25,7 @@ headers		= locale.h
 distribute	= localeinfo.h categories.def \
 		  $(localedef-modules:=.c) $(locale-modules:=.c) \
 		  $(lib-modules:=.c) config.h hash.h iso-4217.def \
-		  keyword.gperf keyword.h localedef.h token.h error.h
+		  keyword.gperf keyword.h localedef.h token.h
 routines	= setlocale loadlocale localeconv nl_langinfo
 categories	= ctype messages monetary numeric time collate
 aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc
@@ -37,7 +37,7 @@ extra-objs	= $(localedef-modules:=.o) $(locale-modules:=.o) \
 localedef-modules	:= charmap locfile-lex locfile-parse locale-ctype \
 			   monetary messages collate numeric
 locale-modules		:= ctypedump
-lib-modules		:= error hash xmalloc
+lib-modules		:= hash xmalloc
 
 
 GPERF = gperf

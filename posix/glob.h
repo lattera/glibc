@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -47,10 +47,16 @@ extern "C"
 #define	GLOB_NOESCAPE	(1 << 6)/* Backslashes don't quote metacharacters.  */
 #define	GLOB_PERIOD	(1 << 7)/* Leading `.' can be matched by metachars.  */
 #define	__GLOB_FLAGS	(GLOB_ERR|GLOB_MARK|GLOB_NOSORT|GLOB_DOOFFS| \
-			 GLOB_NOESCAPE|GLOB_NOCHECK|GLOB_APPEND|GLOB_PERIOD)
+			 GLOB_NOESCAPE|GLOB_NOCHECK|GLOB_APPEND|     \
+			 GLOB_PERIOD|GLOB_ALTDIRFUNC|GLOB_BRACE|     \
+			 GLOB_NOMAGIC|GLOB_TILDE)
 
 #if !defined (_POSIX_C_SOURCE) || _POSIX_C_SOURCE < 2 || defined (_BSD_SOURCE)
 #define	GLOB_MAGCHAR	(1 << 8)/* Set in gl_flags if any metachars seen.  */
+#define GLOB_ALTDIRFUNC	(1 << 9)/* Use gl_opendir et al functions.  */
+#define GLOB_BRACE	(1 << 10)/* Expand "{a,b}" to "a" "b".  */
+#define GLOB_NOMAGIC	(1 << 11)/* If no magic chars, return the pattern.  */
+#define GLOB_TILDE	(1 <<12)/* Expand ~user and ~ to home directories.  */
 #endif
 
 /* Error returns from `glob'.  */
@@ -59,12 +65,21 @@ extern "C"
 #define	GLOB_NOMATCH	3	/* No matches found.  */
 
 /* Structure describing a globbing run.  */
+struct stat;
 typedef struct
   {
     int gl_pathc;		/* Count of paths matched by the pattern.  */
     char **gl_pathv;		/* List of matched pathnames.  */
     int gl_offs;		/* Slots to reserve in `gl_pathv'.  */
     int gl_flags;		/* Set to FLAGS, maybe | GLOB_MAGCHAR.  */
+
+    /* If the GLOB_ALTDIRFUNC flag is set, the following functions
+       are used instead of the normal file access functions.  */
+    void (*gl_closedir) __P ((void *));
+    struct dirent *(*gl_readdir) __P ((void *));
+    __ptr_t (*gl_opendir) __P ((const char *));
+    int (*gl_lstat) __P ((const char *, struct stat *));
+    int (*gl_stat) __P ((const char *, struct stat *));
   } glob_t;
 
 /* Do glob searching for PATTERN, placing results in PGLOB.

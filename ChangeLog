@@ -1,3 +1,30 @@
+Fri Dec  8 13:04:51 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* locale/error.c, locale/error.h: Files removed.
+	* locale/Makefile (distribute): Remove error.h.
+	(lib-modules): Remove error.
+
+	* hurd/hurdlookup.c (__hurd_file_name_lookup_retry): For "tty"
+	magic, return ENXIO if no ctty.
+
+	* sysdeps/mach/hurd/mmap.c: For MAP_FIXED, deallocate a previous
+	mapping if vm_map fails for that reason.
+
+	* posix/glob.c: Implement new options GLOB_ALTDIRFUNC, GLOB_BRACE,
+	GLOB_TILDE, GLOB_NOMAGIC.
+	(glob): Use stat instead of lstat to determine directoriness.
+	* posix/glob.h (GLOB_ALTDIRFUNC, GLOB_BRACE, GLOB_NOMAGIC, GLOB_TILDE):
+	New flag bits.
+	(__GLOB_FLAGS): Include them.
+	(glob_t): New members gl_closedir, gl_readdir, gl_opendir, gl_lstat,
+	gl_stat.
+
+	* elf/elf.h (ET_NUM, SHT_NUM, STB_NUM, STT_NUM, PT_NUM): New macros.
+
+	* sysdeps/unix/sysv/linux/sys/mman.h: Include <linux/mman.h> to
+	define all the bit values.
+	(MAP_*, MCL_*): Macros removed.
+
 Thu Dec  7 02:27:56 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* resolv/res_comp.c, resolv/res_debug.c, resolv/res_send.c:

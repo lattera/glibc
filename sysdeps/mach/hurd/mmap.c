@@ -110,6 +110,21 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 		  (flags & MAP_INHERIT) == 0 ? VM_INHERIT_NONE :
 		  (flags & (MAP_COPY|MAP_PRIVATE)) ? VM_INHERIT_COPY :
 		  VM_INHERIT_SHARE);
+  if (err == KERN_NO_SPACE && (flags & MAP_FIXED))
+    {
+      /* XXX this is not atomic as it is in unix! */
+      /* The region is already allocated; deallocate it first.  */
+      err = __vm_deallocate (__mach_task_self (), mapaddr, len);
+      if (! err)
+	err = __vm_map (__mach_task_self (),
+			&mapaddr, (vm_size_t) len, (vm_address_t) 0,
+			0, memobj, (vm_offset_t) offset,
+			flags & (MAP_COPY|MAP_PRIVATE),
+			vmprot, VM_PROT_ALL,
+			(flags & MAP_INHERIT) == 0 ? VM_INHERIT_NONE :
+			(flags & (MAP_COPY|MAP_PRIVATE)) ? VM_INHERIT_COPY :
+			VM_INHERIT_SHARE);
+    }
 
   if (memobj != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), memobj);

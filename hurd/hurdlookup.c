@@ -250,6 +250,8 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 			error_t err;
 			error_t ctty_open (file_t port)
 			  {
+			    if (port == MACH_PORT_NULL)
+			      return ENXIO; /* No controlling terminal.  */
 			    return __termctty_open_terminal (port,
 							     flags,
 							     result);
@@ -278,7 +280,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 	    bad_magic:
 	      return EGRATUITOUS;
 	    }
-	  break;		
+	  break;
 
 	default:
 	  return EGRATUITOUS;
@@ -308,7 +310,7 @@ __hurd_file_name_split (error_t (*use_init_port)
   error_t addref (file_t crdir)
     {
       *dir = crdir;
-      return __mach_port_mod_refs (__mach_task_self (), 
+      return __mach_port_mod_refs (__mach_task_self (),
 				   crdir, MACH_PORT_RIGHT_SEND, +1);
     }
 

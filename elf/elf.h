@@ -98,6 +98,7 @@ typedef struct
 #define ET_EXEC		2		/* Executable file */
 #define ET_DYN		3		/* Shared object file */
 #define ET_CORE		4		/* Core file */
+#define	ET_NUM		5		/* Number of defined types.  */
 #define ET_LOPROC	0xff00		/* Processor-specific */
 #define ET_HIPROC	0xffff		/* Processor-specific */
 
@@ -168,6 +169,7 @@ typedef struct
 #define SHT_REL		9		/* Relocation entries, no addends */
 #define SHT_SHLIB	10		/* Reserved */
 #define SHT_DYNSYM	11		/* Dynamic linker symbol table */
+#define	SHT_NUM		12		/* Number of defined types.  */
 #define SHT_LOPROC	0x70000000	/* Start of processor-specific */
 #define SHT_HIPROC	0x7fffffff	/* End of processor-specific */
 #define SHT_LOUSER	0x80000000	/* Start of application-specific */
@@ -207,6 +209,7 @@ typedef struct
 #define STB_LOCAL	0		/* Local symbol */
 #define STB_GLOBAL	1		/* Global symbol */
 #define STB_WEAK	2		/* Weak symbol */
+#define	STB_NUM		3		/* Number of defined types.  */
 #define STB_LOPROC	13		/* Start of processor-specific */
 #define STB_HIPROC	15		/* End of processor-specific */
 
@@ -217,6 +220,7 @@ typedef struct
 #define STT_FUNC	2		/* Symbol is a code object */
 #define STT_SECTION	3		/* Symbol associated with a section */
 #define STT_FILE	4		/* Symbol's name is file name */
+#define	STT_NUM		5		/* Number of defined types.  */
 #define STT_LOPROC	13		/* Start of processor-specific */
 #define STT_HIPROC	15		/* End of processor-specific */
 
@@ -273,6 +277,7 @@ typedef struct {
 #define PT_NOTE		4		/* Auxiliary information */
 #define PT_SHLIB	5		/* Reserved */
 #define PT_PHDR		6		/* Entry for header table itself */
+#define	PT_NUM		7		/* Number of defined types.  */
 #define PT_LOPROC	0x70000000	/* Start of processor-specific */
 #define PT_HIPROC	0x7fffffff	/* End of processor-specific */
 

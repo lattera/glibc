@@ -26,51 +26,10 @@ Cambridge, MA 02139, USA.  */
 #define __need_size_t
 #include <stddef.h>
 
-
-/* Protections are chosen from these bits, OR'd together.  The
-   implementation does not necessarily support PROT_EXEC or PROT_WRITE
-   without PROT_READ.  The only guarantees are that no writing will be
-   allowed without PROT_WRITE and no access will be allowed for PROT_NONE. */
-
-#define	PROT_NONE	0x00	/* No access.  */
-#define	PROT_READ	0x01	/* Pages can be read.  */
-#define	PROT_WRITE	0x02	/* Pages can be written.  */
-#define	PROT_EXEC	0x04	/* Pages can be executed.  */
-
-
-/* Flags contain mapping type, sharing type and options.  */
-
-/* Mapping type (must choose one and only one of these).  */
-#define	MAP_FILE	0x0000	/* Mapped from a file or device.  */
-#define	MAP_ANON	0x0020	/* Allocated from anonymous virtual memory.  */
-#define	MAP_TYPE	0x000f	/* Mask for type field.  */
-
-/* Sharing types (must choose one and only one of these).  */
-#define	MAP_COPY	MAP_PRIVATE	/* Virtual copy of region at mapping time.  */
-#define	MAP_SHARED	0x0001	/* Share changes.  */
-#define	MAP_PRIVATE	0x0002	/* Changes private; copy pages on write.  */
-
-/* Other flags.  */
-#define	MAP_FIXED	0x0010	/* Map address must be exactly as requested. */
-#define	MAP_NOEXTEND	0x0000	/* For MAP_FILE, don't change file size.
-				   Not available on Linux???  */
-#define	MAP_HASSEMPHORE	0x0000	/* Region may contain semaphores.
-				   Not available on Linux???  */
-#define	MAP_INHERIT	0x0000	/* Region is retained after exec.
-				   Not available on Linux???  */
-
-/* Advice to `madvise'.  */
-#define	MADV_NORMAL	0	/* No further special treatment.  */
-#define	MADV_RANDOM	1	/* Expect random page references.  */
-#define	MADV_SEQUENTIAL	2	/* Expect sequential page references.  */
-#define	MADV_WILLNEED	3	/* Will need these pages.  */
-#define	MADV_DONTNEED	4	/* Don't need these pages.  */
-
-/* Flags to `mlockall'.  */
-#define MCL_CURRENT     1	/* Lock all current mappings.  */
-#define MCL_FUTURE      2	/* Lock all future mappings.  */
-
 #include <sys/cdefs.h>
+
+/* Get the bit values from the kernel header file.  */
+#include <linux/mman.h>
 
 __BEGIN_DECLS
 /* Map addresses starting near ADDR and extending for LEN bytes.  from
