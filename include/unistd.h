@@ -141,4 +141,7 @@ extern void __libc_check_standard_fds (void);
 /* Special exit function which only terminates the current thread.  */
 extern void __exit_thread (int val) __attribute__ ((noreturn));
 
+/* Internal name for fork function.  */
+extern __pid_t __libc_fork (void);
+
 #endif
