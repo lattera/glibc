@@ -25,8 +25,9 @@ routines = bindtextdom dcgettext dgettext gettext	\
 	   finddomain loadmsgcat localealias textdomain	\
 	   l10nflist explodename plural
 distribute = gettext.h gettextP.h hash-string.h loadinfo.h locale.alias \
-	     plural.y po2test.sed tst-gettext.sh tst-translit.sh tst-codeset.sh \
-	     translit.po tst-gettext2.sh tstlang1.po tstlang2.po tstcodeset.po
+	     plural.y po2test.sed tst-gettext.sh tst-translit.sh \
+	     translit.po tst-gettext2.sh tstlang1.po tstlang2.po tstcodeset.po\
+	     tst-codeset.sh
 
 test-srcs := tst-gettext tst-translit tst-gettext2 tst-codeset
 tests = tst-ngettext
@@ -84,6 +85,8 @@ CFLAGS-tst-translit.c = -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-codeset.c = -DOBJPFX=\"$(objpfx)\"
 
 $(objpfx)tst-translit.out: $(objpfx)tst-gettext.out
+$(objpfx)tst-gettext2.out: $(objpfx)tst-gettext.out
+$(objpfx)tst-codeset.out: $(objpfx)tst-gettext.out
 
 CPPFLAGS += -D'LOCALEDIR="$(msgcatdir)"' \
 	    -D'LOCALE_ALIAS_PATH="$(msgcatdir)"'
