@@ -1,3 +1,8 @@
+2000-02-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/stdlib.h: Move definition X/Open compatibility stuff
+	inside the main #ifdef.
+
 2000-02-24  Geoff Clare  <gwc@unisoft.com>
 
 	* posix/wordexp-test.c: Updated to include tests for all the
