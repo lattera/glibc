@@ -1975,6 +1975,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	  *err = REG_ESUBREG;
 	  return NULL;
 	}
+      dfa->used_bkref_map |= 1 << (token->opr.idx - 1);
       new_idx = re_dfa_add_node (dfa, *token, 0);
       tree = create_tree (NULL, NULL, 0, new_idx);
       if (BE (new_idx == -1 || tree == NULL, 0))

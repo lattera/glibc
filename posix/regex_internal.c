@@ -614,7 +614,10 @@ re_node_set_init_1 (set, elem)
   set->nelem = 1;
   set->elems = re_malloc (int, 1);
   if (BE (set->elems == NULL, 0))
-    return REG_ESPACE;
+    {
+      set->alloc = set->nelem = 0;
+      return REG_ESPACE;
+    }
   set->elems[0] = elem;
   return REG_NOERROR;
 }
@@ -661,7 +664,10 @@ re_node_set_init_copy (dest, src)
       dest->alloc = dest->nelem;
       dest->elems = re_malloc (int, dest->alloc);
       if (BE (dest->elems == NULL, 0))
-	return REG_ESPACE;
+	{
+	  dest->alloc = dest->nelem = 0;
+	  return REG_ESPACE;
+	}
       memcpy (dest->elems, src->elems, src->nelem * sizeof (int));
     }
   else

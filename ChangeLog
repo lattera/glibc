@@ -1,3 +1,52 @@
+2002-11-27  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regcomp.c (parse_expression): Set the bit since the back
+	reference is used in the regular expression.
+	* posix/regex_internal.c (re_node_set_init_1): Make it clean in case
+	of malloc failure.
+	(re_node_set_init_copy): Likewise.
+	* posix/regex_internal.h (state_array_t): New structure.
+	(re_sub_match_last_t): Likewise.
+	(re_sub_match_top_t): Likewise.
+	(re_match_context_t): Add new members.
+	(re_dfa_t): Likewise.
+	* posix/regexec.c (re_search_internal): Invoke prune_impossible_nodes
+	to check the matching is really correct, and retry if failed.
+	Move the routin pruning the impossible nodes from here, ...
+	(prune_impossible_nodes): To this function.
+	(check_matching): Invoke check_subexp_matching_top, and replace
+	redundant checking with transit_state_bkref invocation.
+	(proceed_next_node): Replace strncmp with memcmp.  Reported by
+	Paolo Bonzini  <bonzini@gnu.org>.
+	(update_cur_sifted_state): Remove search_subexp invocation.
+	(search_subexp): Remove this function.
+	(check_dst_limits_calc_pos): Use search_cur_bkref_entry for
+	optimization.
+	(sift_states_bkref): Use search_cur_bkref_entry for optimization.
+	Remove unused invocation of match_ctx_add_entry.
+	(transit_state): Invoke check_subexp_matching_top.
+	(check_subexp_matching_top): New function.
+	(transit_state_bkref): Remove unused array.
+	Merge transit_state_bkref_loop.
+	(transit_state_bkref_loop): Use get_subexp instead of
+	sift_states_backward.  Use search_cur_bkref_entry for optimization.
+	Merge this function to transit_state_bkref.
+	(get_subexp): New function.
+	(get_subexp_sub): Likewise.
+	(find_subexp_node): Likewise.
+	(check_arrival): Likewise.
+	(check_arrival_expand_ecl): Likewise.
+	(check_arrival_expand_ecl_sub): Likewise.
+	(expand_bkref_cache): Likewise.
+	(match_ctx_init): Initialize new members.
+	(match_ctx_clean): New function.
+	(match_ctx_free): Release new members.
+	(match_ctx_free_subtops): New function.
+	(match_ctx_add_entry): Fix indent.
+	(search_cur_bkref_entry): New function.
+	(match_ctx_add_subtop): Likewise.
+	(match_ctx_add_sublast): Likewise.
+
 2002-11-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/Makefile (tests): Remove tst-iconv4.c

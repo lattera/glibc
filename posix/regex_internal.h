@@ -401,6 +401,39 @@ struct re_state_table_entry
   re_dfastate_t **array;
 };
 
+/* Array type used in re_sub_match_last_t and re_sub_match_top_t.  */
+
+typedef struct
+{
+  int next_idx;
+  int alloc;
+  re_dfastate_t **array;
+} state_array_t;
+
+/* Store information about the node NODE whose type is OP_CLOSE_SUBEXP.  */
+
+typedef struct
+{
+  int node;
+  int str_idx; /* The position NODE match at.  */
+  state_array_t path;
+} re_sub_match_last_t;
+
+/* Store information about the node NODE whose type is OP_OPEN_SUBEXP.
+   And information about the node, whose type is OP_CLOSE_SUBEXP,
+   corresponding to NODE is stored in LASTS.  */
+
+typedef struct
+{
+  int str_idx;
+  int node;
+  int next_last_offset;
+  state_array_t *path;
+  int alasts; /* Allocation size of LASTS.  */
+  int nlasts; /* The number of LASTS.  */
+  re_sub_match_last_t **lasts;
+} re_sub_match_top_t;
+
 struct re_backref_cache_entry
 {
   int node;
@@ -427,6 +460,9 @@ typedef struct
   int abkref_ents;
   struct re_backref_cache_entry *bkref_ents;
   int max_mb_elem_len;
+  int nsub_tops;
+  int asub_tops;
+  re_sub_match_top_t **sub_tops;
 } re_match_context_t;
 
 typedef struct
@@ -484,13 +520,15 @@ struct re_dfa_t
   int states_alloc;
   int init_node;
   int nbackref; /* The number of backreference in this dfa.  */
-  /* If this dfa has "multibyte node", which is a backreference or
-     a node which can accept multibyte character or multi character
-     collating element.  */
+  /* Bitmap expressing which backreference is used.  */
+  unsigned int used_bkref_map;
 #ifdef DEBUG
   char* re_str;
 #endif
   unsigned int has_plural_match : 1;
+  /* If this dfa has "multibyte node", which is a backreference or
+     a node which can accept multibyte character or multi character
+     collating element.  */
   unsigned int has_mb_node : 1;
 };
 typedef struct re_dfa_t re_dfa_t;

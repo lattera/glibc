@@ -17,8 +17,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <signal.h>
 #include <pthreadP.h>
+#include <sysdep.h>
 
 
 int
@@ -40,5 +42,13 @@ pthread_sigmask (how, newmask, oldmask)
       newmask = &local_newmask;
     }
 
-  return sigprocmask (how, newmask, oldmask);
+#ifdef INTERNAL_SYSCALL
+  int result = INTERNAL_SYSCALL (sigprocmask, 3, how, newmask, oldmask);
+
+  return (INTERNAL_SYSCALL_ERROR_P (result)
+	  ? INTERNAL_SYSCALL_ERRNO (result)
+	  : 0);
+#else
+  return sigprocmask (how, newmask, oldmask) == -1 : errno : 0;
+#endif
 }
