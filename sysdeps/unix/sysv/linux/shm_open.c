@@ -226,14 +226,10 @@ shm_unlink (const char *name)
 }
 
 
-static void  __attribute__ ((unused))
-freeit (void)
+/* Make sure the table is freed if we want to free everything before
+   exiting.  */
+libc_freeres_fn (freeit)
 {
   if (mountpoint.dir != defaultdir)
     free (mountpoint.dir);
 }
-
-
-/* Make sure the table is freed if we want to free everything before
-   exiting.  */
-text_set_element (__libc_subfreeres, freeit);

@@ -447,7 +447,7 @@ $(build-shlib-helper) \
 	  $(LDLIBS-$(@F:lib%.so=%).so) 2>&1 | \
 	  sed -e '/^=========/,/^=========/!d;/^=========/d' \
 	      -e 's/^.*\.hash[ 	]*:.*$$/  .note.ABI-tag : { *(.note.ABI-tag) } &/' \
-	  > $@.lds
+	      $(LDSEDCMD-$(@F:lib%.so=%).so) > $@.lds
 rm -f $@.new
 $(build-shlib-helper) -o $@ -T $@.lds \
 	  $(csu-objpfx)abi-note.o $(build-shlib-objlist)
@@ -548,6 +548,7 @@ ifeq ($(elf),yes)
 $(common-objpfx)libc_pic.os: $(common-objpfx)libc_pic.a
 	$(LINK.o) -nostdlib -nostartfiles -r -o $@ \
 	$(LDFLAGS-c_pic.os) -Wl,-d -Wl,--whole-archive $^
+LDSEDCMD-c.so = -e 's/^.*\*(\.dynbss).*$$/& __start___libc_freeres_ptrs = .; *(__libc_freeres_ptrs) __stop___libc_freeres_ptrs = .;/'
 # Use our own special initializer and finalizer files for libc.so.
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.os \
 			 $(common-objpfx)libc_pic.os \

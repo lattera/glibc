@@ -253,17 +253,20 @@
 /* Tacking on "\n\t#" to the section name makes gcc put it's bogus
    section attributes on what looks like a comment to the assembler.  */
 #  ifdef HAVE_SECTION_QUOTES
-#   define link_warning(symbol, msg) \
-  __make_section_unallocated (".gnu.warning." #symbol) \
-  static const char __evoke_link_warning_##symbol[]	\
-    __attribute__ ((unused, section (".gnu.warning." #symbol "\"\n\t#\""))) \
-    = msg;
+#   define __sec_comment "\"\n\t#\""
 #  else
-#   define link_warning(symbol, msg) \
+#   define __sec_comment "\n\t#"
+#  endif
+#  define link_warning(symbol, msg) \
   __make_section_unallocated (".gnu.warning." #symbol) \
   static const char __evoke_link_warning_##symbol[]	\
-    __attribute__ ((unused, section (".gnu.warning." #symbol "\n\t#"))) = msg;
-#  endif
+    __attribute__ ((unused, section (".gnu.warning." #symbol __sec_comment))) \
+    = msg;
+#  define libc_freeres_ptr(decl) \
+  __make_section_unallocated ("__libc_freeres_ptrs, \"aw\", @nobits") \
+  decl __attribute__ ((section ("__libc_freeres_ptrs" __sec_comment)))
+#  define __libc_freeres_fn_section \
+  __attribute__ ((section ("__libc_freeres_fn")))
 # else /* Not ELF: a.out */
 #  ifdef HAVE_XCOFF
 /* XCOFF does not support .stabs.
@@ -276,11 +279,19 @@
      asm (".stabs \"" msg "\",30,0,0,0\n\t"	\
           ".stabs \"" __SYMBOL_PREFIX #symbol "\",1,0,0,0\n");
 #  endif /* XCOFF */
+#  define libc_freeres_ptr(decl) decl
+#  define __libc_freeres_fn_section
 # endif
 #else
 /* We will never be heard; they will all die horribly.  */
 # define link_warning(symbol, msg)
+# define libc_freeres_ptr(decl) decl
+# define __libc_freeres_fn_section
 #endif
+#define libc_freeres_fn(name)	\
+  static void name (void) __attribute_used__ __libc_freeres_fn_section;	\
+  text_set_element (__libc_subfreeres, name);				\
+  static void name (void)
 
 /* A canned warning for sysdeps/stub functions.  */
 #define	stub_warning(name) \

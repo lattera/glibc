@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 96, 97, 98, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,96,97,98,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ static char *getttyname (int fd, dev_t mydev, ino_t myino,
 			 int save, int *dostat) internal_function;
 
 
-static char *getttyname_name;
+libc_freeres_ptr (static char *getttyname_name);
 
 static char *
 internal_function
@@ -134,11 +134,3 @@ ttyname (fd)
 
   return name;
 }
-
-
-static void
-free_mem (void)
-{
-  free (getttyname_name);
-}
-text_set_element (__libc_subfreeres, free_mem);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1996,1997,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 /* We need to protect the dynamic buffer handling.  */
 __libc_lock_define_initialized (static, lock);
 
-static char *buffer;
+libc_freeres_ptr (static char *buffer);
 
 /* Read one entry from the given stream.  */
 struct group *
@@ -83,13 +83,3 @@ fgetgrent (FILE *stream)
 
   return result;
 }
-
-
-/* Free all resources if necessary.  */
-static void __attribute__ ((unused))
-free_mem (void)
-{
-  free (buffer);
-}
-
-text_set_element (__libc_subfreeres, free_mem);

@@ -530,7 +530,7 @@ handle_fildes_io (void *arg)
 						  aiocbp->aiocb64.aio_offset));
 	      else
 		aiocbp->aiocb.__return_value =
-		  TEMP_FAILURE_RETRY (pwrite (fildes, (const void *)
+		  TEMP_FAILURE_RETRY (__libc_pwrite (fildes, (const void *)
 					      aiocbp->aiocb.aio_buf,
 					      aiocbp->aiocb.aio_nbytes,
 					      aiocbp->aiocb.aio_offset));
@@ -665,9 +665,7 @@ handle_fildes_io (void *arg)
 
 
 /* Free allocated resources.  */
-static void
-__attribute__ ((unused))
-free_res (void)
+libc_freeres_fn (free_res)
 {
   size_t row;
 
@@ -676,7 +674,6 @@ free_res (void)
 
   free (pool);
 }
-text_set_element (__libc_subfreeres, free_res);
 
 
 /* Add newrequest to the runlist. The __abs_prio flag of newrequest must

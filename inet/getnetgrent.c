@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,8 +21,8 @@
 #include <stdlib.h>
 #include <bits/libc-lock.h>
 
-/* Statis buffer for return value.  We allocate it when needed.  */
-static char *buffer;
+/* Static buffer for return value.  We allocate it when needed.  */
+libc_freeres_ptr (static char *buffer);
 /* All three strings should fit in a block of 1kB size.  */
 #define BUFSIZE 1024
 
@@ -48,15 +48,3 @@ getnetgrent (char **hostp, char **userp, char **domainp)
 
   return __getnetgrent_r (hostp, userp, domainp, buffer, BUFSIZE);
 }
-
-
-/* Make sure the memory is freed if the programs ends while in
-   memory-debugging mode and something actually was allocated.  */
-static void
-__attribute__ ((unused))
-free_mem (void)
-{
-  free (buffer);
-}
-
-text_set_element (__libc_subfreeres, free_mem);

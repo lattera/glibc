@@ -1,3 +1,109 @@
+2002-10-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/libc-symbols.h (__libc_freeres_fn_section, libc_freeres_fn):
+	New macros.
+	* elf/dl-close.c (free_mem): Use libc_freeres_fn macro, remove
+	text_set_element.
+	* elf/dl-libc.c (free_mem): Likewise.
+	* iconv/gconv_conf.c (free_mem): Likewise.
+	* iconv/gconv_db.c (free_mem): Likewise.
+	* iconv/gconv_dl.c (free_mem): Likewise.
+	* iconv/gconv_cache.c (free_mem): Likewise.
+	* intl/finddomain.c (free_mem): Likewise.
+	* intl/dcigettext.c (free_mem): Likewise.
+	* locale/setlocale.c (free_mem): Likewise.
+	* misc/fstab.c (fstab_free): Likewise.
+	* nss/nsswitch.c (free_mem): Likewise.
+	* posix/regcomp.c (free_mem): Likewise.
+	* resolv/gai_misc.c (free_res): Likewise.
+	* stdlib/fmtmsg.c (free_mem): Likewise.
+	* sunrpc/clnt_perr.c (free_mem): Likewise.
+	* sysdeps/generic/setenv.c (free_mem): Likewise.
+	* sysdeps/unix/sysv/linux/shm_open.c (freeit): Likewise.
+	* sysdeps/pthread/aio_misc.c (free_res): Likewise.
+	* time/tzset.c (free_mem): Likewise.
+	* malloc/mtrace.c (release_libc_mem): Add __libc_freeres_fn_section.
+	* locale/loadarchive.c (_nl_archive_subfreeres): Likewise.
+	* malloc/set-freeres.c (__libc_freeres): Likewise.
+
+	* login/getutent.c: Include stdlib.h instead of stddef.h.
+	(buffer): Change into pointer to utmp, add libc_freeres_ptr.
+	(__getutent): Allocate buffer the first time it is run.
+	* login/getutid.c: Include stdlib.h instead of stddef.h.
+	(buffer): Change into pointer to utmp, add libc_freeres_ptr.
+	(__getutid): Allocate buffer the first time it is run.
+	* login/getutline.c: Include stdlib.h instead of stddef.h.
+	(buffer): Change into pointer to utmp, add libc_freeres_ptr.
+	(__getutline): Allocate buffer the first time it is run.
+	* malloc/mtrace.c (malloc_trace_buffer): Change into char *.
+	(mtrace): Allocate malloc_trace_buffer.
+	* resolv/nsap_addr.c (inet_nsap_ntoa): Decrease size of tmpbuf.
+	* resolv/ns_print.c (ns_sprintrrf): Decrease size of t.
+	* string/strerror.c: Include libintl.h and errno.h.
+	(buf): New variable.
+	(strerror): Only allocate buffer if actually needed (unknown error).
+	* time/tzfile.c (transitions): Add libc_freeres_ptr.
+	(freeres): Remove.
+
+2002-10-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/libc-symbols.h (libc_freeres_ptr): New macro.
+	* malloc/set-freeres.c (__libc_freeres_ptrs): Define using
+	symbol_set_define.
+	(__libc_freeres): Free all pointers in that section.
+	* Makerules (build-shlib): Add $(LDSEDCMD-$(@F:lib%.so=%).so) to sed
+	commands when creating .lds script.
+	(LDSEDCMD-c.so): New variable.
+	* inet/rcmd.c (ahostbuf): Change into char *.  Add libc_freeres_ptr.
+	(rcmd_af): Use strdup to allocate ahostbuf.
+	* inet/rexec.c (ahostbuf): Change into char *.  Add libc_freeres_ptr.
+	(rexec_af): Use strdup to allocate ahostbuf.
+	* stdio-common/reg-printf.c (printf_funcs): Remove.
+	(__printf_arginfo_table): Change into printf_arginfo_function **.
+	Add libc_freeres_ptr.
+	(__register_printf_function): Allocate __printf_arginfo_table
+	and __printf_function_table the first time it is called.
+	* stdio-common/printf-parse.h (__printf_arginfo_table): Change into
+	printf_arginfo_function **.
+	(parse_one_spec): Add __builtin_expect.
+	* grp/fgetgrent.c (buffer): Add libc_freeres_ptr.
+	(free_mem): Remove.
+	* inet/getnetgrent.c (buffer): Add libc_freeres_ptr.
+	(free_mem): Remove.
+	* intl/localealias.c (libc_freeres_ptr): Define if !_LIBC.
+	(string_space, map): Add libc_freeres_ptr.
+	(free_mem): Remove.
+	* misc/efgcvt.c (FCVT_BUFPTR): Add libc_freeres_ptr.
+	(free_mem): Remove.
+	* misc/mntent.c (getmntent_buffer): Add libc_freeres_ptr.
+	(free_mem): Remove.
+	* crypt/md5-crypt.c (libc_freeres_ptr): Define if !_LIBC.
+	(buffer): Add libc_freeres_ptr.
+	(free_mem): Remove for _LIBC.
+	* nss/getXXbyYY.c (buffer): Add libc_freeres_ptr.
+	(free_mem): Remove.
+	* nss/getXXent.c (buffer): Add libc_freeres_ptr.
+	(free_mem): Remove.
+	* pwd/fgetpwent.c (buffer): Add libc_freeres_ptr.
+	(free_mem): Remove.
+	* resolv/res_hconf.c (ifaddrs): Add libc_freeres_ptr.
+	(free_mem): Remove.
+	* shadow/fgetspent.c (buffer): Add libc_freeres_ptr.
+	(free_mem): Remove.
+	* sysdeps/posix/ttyname.c (getttyname_name): Add libc_freeres_ptr.
+	(free_mem): Remove.
+	* sysdeps/unix/sysv/linux/getsysstats.c (mount_proc): Add
+	libc_freeres_ptr.
+	(free_mem): Remove.
+	* sysdeps/unix/sysv/linux/ttyname.c (getttyname_name, ttyname_buf): Add
+	libc_freeres_ptr.
+	(free_mem): Remove.
+
+2002-10-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/obstack.c [_LIBC] (obstack_free): Change into strong_alias
+	instead of duplicating the whole function in libc.
+
 2002-10-31  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/i386/bits/byteswap.h [__GNUC__ < 2] (__bswap_32):

@@ -1,5 +1,5 @@
 /* One way encryption based on MD5 sum.
-   Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -233,8 +233,10 @@ __md5_crypt_r (key, salt, buffer, buflen)
   return buffer;
 }
 
-
-static char *buffer;
+#ifndef _LIBC
+# define libc_freeres_ptr(decl) decl
+#endif
+libc_freeres_ptr (static char *buffer);
 
 char *
 __md5_crypt (const char *key, const char *salt)
@@ -261,10 +263,11 @@ __md5_crypt (const char *key, const char *salt)
   return __md5_crypt_r (key, salt, buffer, buflen);
 }
 
-
+#ifndef _LIBC
 static void
 __attribute__ ((__destructor__))
 free_mem (void)
 {
   free (buffer);
 }
+#endif

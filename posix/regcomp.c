@@ -696,12 +696,10 @@ re_comp (s)
 }
 
 #ifdef _LIBC
-static void __attribute__ ((unused))
-free_mem (void)
+libc_freeres_fn (free_mem)
 {
   __regfree (&re_comp_buf);
 }
-text_set_element (__libc_subfreeres, free_mem);
 #endif
 
 #endif /* _REGEX_RE_COMP */

@@ -123,8 +123,7 @@ __libc_dlclose (void *__map)
 }
 
 
-static void
-free_mem (void)
+libc_freeres_fn (free_mem)
 {
   struct link_map *l;
   struct r_search_path_elem *d;
@@ -154,4 +153,3 @@ free_mem (void)
 	}
     }
 }
-text_set_element (__libc_subfreeres, free_mem);

@@ -180,9 +180,7 @@ fstab_convert (struct fstab_state *state)
 
 /* Make sure the memory is freed if the programs ends while in
    memory-debugging mode and something actually was allocated.  */
-static void
-__attribute__ ((unused))
-fstab_free (void)
+libc_freeres_fn (fstab_free)
 {
   char *buffer;
 
@@ -190,5 +188,3 @@ fstab_free (void)
   if (buffer != NULL)
     free ((void *) buffer);
 }
-
-text_set_element (__libc_subfreeres, fstab_free);

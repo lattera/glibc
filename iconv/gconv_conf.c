@@ -597,11 +597,8 @@ __gconv_read_conf (void)
 
 
 /* Free all resources if necessary.  */
-static void __attribute__ ((unused))
-free_mem (void)
+libc_freeres_fn (free_mem)
 {
   if (__gconv_path_elem != NULL && __gconv_path_elem != &empty_path_elem)
     free ((void *) __gconv_path_elem);
 }
-
-text_set_element (__libc_subfreeres, free_mem);

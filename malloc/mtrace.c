@@ -50,7 +50,7 @@
 
 static FILE *mallstream;
 static const char mallenv[]= "MALLOC_TRACE";
-static char malloc_trace_buffer[TRACE_BUFFER_SIZE];
+static char *malloc_trace_buffer;
 
 __libc_lock_define_initialized (static, lock);
 
@@ -237,7 +237,7 @@ tr_reallochook (ptr, size, caller)
 /* This function gets called to make sure all memory the library
    allocates get freed and so does not irritate the user when studying
    the mtrace output.  */
-static void
+static void __libc_freeres_fn_section
 release_libc_mem (void)
 {
   /* Only call the free function if we still are running in mtrace mode.  */
@@ -274,6 +274,10 @@ mtrace ()
 #endif
   if (mallfile != NULL || mallwatch != NULL)
     {
+      char *mtb = malloc (TRACE_BUFFER_SIZE);
+      if (mtb == NULL)
+	return;
+
       mallstream = fopen (mallfile != NULL ? mallfile : "/dev/null", "w");
       if (mallstream != NULL)
 	{
@@ -285,6 +289,7 @@ mtrace ()
 	      __fcntl (fileno (mallstream), F_SETFD, flags);
 	    }
 	  /* Be sure it doesn't malloc its buffer!  */
+	  malloc_trace_buffer = mtb;
 	  setvbuf (mallstream, malloc_trace_buffer, _IOFBF, TRACE_BUFFER_SIZE);
 	  fprintf (mallstream, "= Start\n");
 	  tr_old_free_hook = __free_hook;
@@ -303,6 +308,8 @@ mtrace ()
 	    }
 #endif
 	}
+      else
+	free (mtb);
     }
 }
 

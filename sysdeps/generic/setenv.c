@@ -323,8 +323,7 @@ clearenv ()
   return 0;
 }
 #ifdef _LIBC
-static void
-free_mem (void)
+libc_freeres_fn (free_mem)
 {
   /* Remove all traces.  */
   clearenv ();
@@ -333,8 +332,6 @@ free_mem (void)
   __tdestroy (known_values, free);
   known_values = NULL;
 }
-text_set_element (__libc_subfreeres, free_mem);
-
 
 # undef setenv
 # undef unsetenv

@@ -445,8 +445,7 @@ __gconv_release_cache (struct __gconv_step *steps, size_t nsteps)
 
 
 /* Free all resources if necessary.  */
-static void __attribute__ ((unused))
-free_mem (void)
+libc_freeres_fn (free_mem)
 {
   if (cache_malloced)
     free (gconv_cache);
@@ -455,5 +454,3 @@ free_mem (void)
     __munmap (gconv_cache, cache_size);
 #endif
 }
-
-text_set_element (__libc_subfreeres, free_mem);

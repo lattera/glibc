@@ -489,6 +489,7 @@ _res_hconf_init (void)
 
 
 /* List of known interfaces.  */
+libc_freeres_ptr (
 static struct netaddr
 {
   int addrtype;
@@ -500,7 +501,7 @@ static struct netaddr
       u_int32_t	mask;
     } ipv4;
   } u;
-} *ifaddrs;
+} *ifaddrs);
 
 /* We need to protect the dynamic buffer handling.  */
 __libc_lock_define_initialized (static, lock);
@@ -657,13 +658,3 @@ _res_hconf_trim_domains (struct hostent *hp)
   for (i = 0; hp->h_aliases[i]; ++i)
     _res_hconf_trim_domain (hp->h_aliases[i]);
 }
-
-
-/* Free all resources if necessary.  */
-static void __attribute__ ((unused))
-free_mem (void)
-{
-  free (ifaddrs);
-}
-
-text_set_element (__libc_subfreeres, free_mem);

@@ -1,5 +1,5 @@
 /* Utilities for reading/writing fstab, mtab, etc.
-   Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 /* We don't want to allocate the static buffer all the time since it
    is not always used (in fact, rather infrequently).  Accept the
    extra cost of a `malloc'.  */
-static char *getmntent_buffer;
+libc_freeres_ptr (static char *getmntent_buffer);
 
 /* This is the size of the buffer.  This is really big.  */
 #define BUFFER_SIZE	4096
@@ -52,15 +52,3 @@ getmntent (FILE *stream)
 
   return __getmntent_r (stream, &m, getmntent_buffer, BUFFER_SIZE);
 }
-
-
-/* Make sure the memory is freed if the programs ends while in
-   memory-debugging mode and something actually was allocated.  */
-static void
-__attribute__ ((unused))
-free_mem (void)
-{
-  free (getmntent_buffer);
-}
-
-text_set_element (__libc_subfreeres, free_mem);

@@ -247,6 +247,11 @@ _dl_close (void *_map)
   _r_debug.r_state = RT_DELETE;
   _dl_debug_state ();
 
+#ifdef USE_TLS
+  size_t tls_free_start, tls_free_end;
+  tls_free_start = tls_free_end = GL(dl_tls_static_used);
+#endif
+
   /* Check each element of the search list to see if all references to
      it are gone.  */
   for (i = 0; list[i] != NULL; ++i)
@@ -286,6 +291,30 @@ _dl_close (void *_map)
 				     imap->l_init_called))
 		/* All dynamically loaded modules with TLS are unloaded.  */
 		GL(dl_tls_max_dtv_idx) = GL(dl_tls_static_nelem);
+
+	      if (imap->l_tls_offset != 0)
+		{
+		  /* Collect a contiguous chunk built from the objects in
+		     this search list, going in either direction.  When the
+		     whole chunk is at the end of the used area then we can
+		     reclaim it.  */
+		  if (imap->l_tls_offset == tls_free_end)
+		    /* Extend the contiguous chunk being reclaimed.  */
+		    tls_free_end += imap->l_tls_blocksize;
+		  else if (imap->l_tls_offset + imap->l_tls_blocksize
+			   == tls_free_start)
+		    /* Extend the chunk backwards.  */
+		    tls_free_start = imap->l_tls_offset;
+		  else
+		    {
+		      /* This isn't contiguous with the last chunk freed.
+			 One of them will be leaked.  */
+		      if (tls_free_end == GL(dl_tls_static_used))
+			GL(dl_tls_static_used) = tls_free_start;
+		      tls_free_start = imap->l_tls_offset;
+		      tls_free_end = tls_free_start + imap->l_tls_blocksize;
+		    }
+		}
 	    }
 #endif
 
@@ -363,11 +392,15 @@ _dl_close (void *_map)
     }
 
 #ifdef USE_TLS
-  /* If we removed any object which uses TLS bumnp the generation
-     counter.  */
+  /* If we removed any object which uses TLS bump the generation counter.  */
   if (any_tls)
-    if (__builtin_expect (++GL(dl_tls_generation) == 0, 0))
-      __libc_fatal (_("TLS generation counter wrapped!  Please send report with the 'glibcbug' script."));
+    {
+      if (__builtin_expect (++GL(dl_tls_generation) == 0, 0))
+	__libc_fatal (_("TLS generation counter wrapped!  Please send report with the 'glibcbug' script."));
+
+      if (tls_free_end == GL(dl_tls_static_used))
+	GL(dl_tls_static_used) = tls_free_start;
+    }
 #endif
 
   /* Notify the debugger those objects are finalized and gone.  */
@@ -424,8 +457,7 @@ free_slotinfo (struct dtv_slotinfo_list *elemp)
 #endif
 
 
-static void
-free_mem (void)
+libc_freeres_fn (free_mem)
 {
   if (__builtin_expect (GL(dl_global_scope_alloc), 0) != 0
       && GL(dl_main_searchlist)->r_nlist == GL(dl_initial_searchlist).r_nlist)
@@ -453,4 +485,3 @@ free_mem (void)
     GL(dl_tls_dtv_slotinfo_list)->next = NULL;
 #endif
 }
-text_set_element (__libc_subfreeres, free_mem);

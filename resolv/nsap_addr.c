@@ -70,7 +70,7 @@ char *
 inet_nsap_ntoa(int binlen, const u_char *binary, char *ascii) {
 	int nib;
 	int i;
-	static char tmpbuf[255*3];
+	static char tmpbuf[255*2 + 128];
 	char *start;
 
 	if (ascii)

@@ -27,7 +27,9 @@
 
 DEFINE_HOOK (__libc_subfreeres, (void));
 
-void
+symbol_set_define (__libc_freeres_ptrs);
+
+void __libc_freeres_fn_section
 __libc_freeres (void)
 {
   /* This function might be called from different places.  So better
@@ -36,11 +38,17 @@ __libc_freeres (void)
 
   if (compare_and_swap (&already_called, 0, 1))
     {
+      void * const *p;
+
 #ifdef USE_IN_LIBIO
       _IO_cleanup ();
 #endif
 
       RUN_HOOK (__libc_subfreeres, ());
+
+      for (p = symbol_set_first_element (__libc_freeres_ptrs);
+	   ! symbol_set_end_p (__libc_freeres_ptrs, p); ++p)
+	free (*p);
     }
 }
 libc_hidden_def (__libc_freeres)

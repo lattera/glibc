@@ -38,7 +38,7 @@
 static const char path_proc[] = "/proc";
 
 /* Actual mount point of /proc filesystem.  */
-static char *mount_proc;
+libc_freeres_ptr (static char *mount_proc);
 
 /* Determine the path to the /proc filesystem if available.  */
 static const char *
@@ -319,11 +319,3 @@ __get_avphys_pages ()
   return phys_pages_info ("MemFree: %ld kB");
 }
 weak_alias (__get_avphys_pages, get_avphys_pages)
-
-
-static void
-free_mem (void)
-{
-  free (mount_proc);
-}
-text_set_element (__libc_subfreeres, free_mem);

@@ -410,9 +410,7 @@ handle_requests (void *arg)
 
 
 /* Free allocated resources.  */
-static void
-__attribute__ ((unused))
-free_res (void)
+libc_freeres_fn (free_res)
 {
   size_t row;
 
@@ -421,4 +419,3 @@ free_res (void)
 
   free (pool);
 }
-text_set_element (__libc_subfreeres, free_res);

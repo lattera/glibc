@@ -624,8 +624,7 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
 }
 
 
-static void
-free_mem (void)
+libc_freeres_fn (free_mem)
 {
   while (tzstring_list != NULL)
     {
@@ -637,4 +636,3 @@ free_mem (void)
   free (old_tz);
   old_tz = NULL;
 }
-text_set_element (__libc_subfreeres, free_mem);

@@ -63,7 +63,7 @@ extern int INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer,
 __libc_lock_define_initialized (static, lock);
 
 /* This points to the static buffer used.  */
-static char *buffer;
+libc_freeres_ptr (static char *buffer);
 
 
 LOOKUP_TYPE *
@@ -87,13 +87,3 @@ GETFUNC_NAME (void)
   __set_errno (save);
   return result;
 }
-
-
-/* Free all resources if necessary.  */
-static void __attribute__ ((unused))
-free_mem (void)
-{
-  free (buffer);
-}
-
-text_set_element (__libc_subfreeres, free_mem);

@@ -463,8 +463,7 @@ free_category (int category,
     }
 }
 
-static void __attribute__ ((unused))
-free_mem (void)
+libc_freeres_fn (free_mem)
 {
 #ifdef NL_CURRENT_INDIRECT
   /* We don't use the loop because we want to have individual weak
@@ -494,4 +493,3 @@ free_mem (void)
      not called _nl_unload_locale on them above.  */
   _nl_archive_subfreeres ();
 }
-text_set_element (__libc_subfreeres, free_mem);

@@ -45,7 +45,7 @@ static char sccsid[] = "@(#)rexec.c	8.1 (Berkeley) 6/4/93";
 #include <unistd.h>
 
 int	rexecoptions;
-static char	ahostbuf[NI_MAXHOST];
+libc_freeres_ptr (static char *ahostbuf);
 
 int
 rexec_af(ahost, rport, name, pass, cmd, fd2p, af)
@@ -79,13 +79,15 @@ rexec_af(ahost, rport, name, pass, cmd, fd2p, af)
 	}
 
 	if (res0->ai_canonname){
-		strncpy(ahostbuf, res0->ai_canonname, sizeof(ahostbuf));
-		ahostbuf[sizeof(ahostbuf)-1] = '\0';
+		free (ahostbuf);
+		ahostbuf = strdup (res0->ai_canonname);
+		if (ahostbuf == NULL) {
+			perror ("rexec: strdup");
+			return (-1);
+		}
 		*ahost = ahostbuf;
-	}
-	else{
+	} else
 		*ahost = NULL;
-	}
 	ruserpass(res0->ai_canonname, &name, &pass);
 retry:
 	s = __socket(res0->ai_family, res0->ai_socktype, 0);

@@ -49,7 +49,7 @@ static struct ttinfo *find_transition (time_t timer) internal_function;
 static void compute_tzname_max (size_t) internal_function;
 
 static size_t num_transitions;
-static time_t *transitions;
+libc_freeres_ptr (static time_t *transitions);
 static unsigned char *type_idxs;
 static size_t num_types;
 static struct ttinfo *types;
@@ -553,14 +553,3 @@ compute_tzname_max (size_t chars)
     }
   while (++p < &zone_names[chars]);
 }
-
-/* This function is only called when we are checking for memory leaks.  */
-static void
-freeres (void)
-{
-  if (transitions != NULL)
-    free ((void *) transitions);
-}
-
-/* Make sure all allocated data is freed before exiting.  */
-text_set_element (__libc_subfreeres, freeres);

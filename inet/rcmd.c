@@ -101,7 +101,7 @@ int iruserok (u_int32_t raddr, int superuser, const char *ruser,
 
 libc_hidden_proto (iruserok_af)
 
-static char ahostbuf[NI_MAXHOST];
+libc_freeres_ptr(static char *ahostbuf);
 
 int
 rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
@@ -153,11 +153,21 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 	pfd[1].events = POLLIN;
 
 	if (res->ai_canonname){
-		strncpy(ahostbuf, res->ai_canonname, sizeof(ahostbuf));
-		ahostbuf[sizeof(ahostbuf)-1] = '\0';
+		free (ahostbuf);
+		ahostbuf = strdup (res->ai_canonname);
+		if (ahostbuf == NULL) {
+#ifdef USE_IN_LIBIO
+			if (_IO_fwide (stderr, 0) > 0)
+				__fwprintf(stderr, L"%s",
+					   _("rcmd: Cannot allocate memory\n"));
+			else
+#endif
+				fputs(_("rcmd: Cannot allocate memory\n"),
+				      stderr);
+			return (-1);
+		}
 		*ahost = ahostbuf;
-	}
-	else
+	} else
 		*ahost = NULL;
 	ai = res;
 	refused = 0;

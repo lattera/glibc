@@ -117,7 +117,7 @@ find_spec (const UCHAR_T *format, mbstate_t *ps)
 
 
 /* These are defined in reg-printf.c.  */
-extern printf_arginfo_function *__printf_arginfo_table[] attribute_hidden;
+extern printf_arginfo_function **__printf_arginfo_table attribute_hidden;
 extern printf_function **__printf_function_table attribute_hidden;
 
 
@@ -354,7 +354,7 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
 
   /* Get the format specification.  */
   spec->info.spec = (wchar_t) *format++;
-  if (__printf_function_table != NULL
+  if (__builtin_expect (__printf_function_table != NULL, 0)
       && spec->info.spec <= UCHAR_MAX
       && __printf_arginfo_table[spec->info.spec] != NULL)
     /* We don't try to get the types for all arguments if the format

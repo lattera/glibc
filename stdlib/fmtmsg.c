@@ -390,8 +390,7 @@ addseverity (int severity, const char *string)
 }
 
 
-static void __attribute__ ((unused))
-free_mem (void)
+libc_freeres_fn (free_mem)
 {
   struct severity_info *runp = severity_list;
 
@@ -407,4 +406,3 @@ free_mem (void)
     else
       runp = runp->next;
 }
-text_set_element (__libc_subfreeres, free_mem);

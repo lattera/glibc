@@ -418,6 +418,10 @@ _obstack_free (h, obj)
 
 /* This function is used from ANSI code.  */
 
+#ifdef _LIBC
+strong_alias (_obstack_free, obstack_free)
+#else
+
 void
 obstack_free (h, obj)
      struct obstack *h;
@@ -449,6 +453,7 @@ obstack_free (h, obj)
     /* obj is not in any of the chunks! */
     abort ();
 }
+#endif
 
 int
 _obstack_memory_used (h)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -17,12 +17,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <stddef.h>		/* For NULL.  */
+#include <stdlib.h>
 #include <utmp.h>
 
 
 /* Local buffer to store the result.  */
-static struct utmp buffer;
+libc_freeres_ptr (static struct utmp *buffer);
 
 
 struct utmp *
@@ -30,7 +30,13 @@ __getutline (const struct utmp *line)
 {
   struct utmp *result;
 
-  if (__getutline_r (line, &buffer, &result) < 0)
+  if (buffer == NULL)
+    {
+      buffer = (struct utmp *) malloc (sizeof (struct utmp));
+      if (buffer == NULL)
+        return NULL;
+    }
+  if (__getutline_r (line, buffer, &result) < 0)
     return NULL;
 
   return result;

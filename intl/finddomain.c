@@ -168,8 +168,7 @@ _nl_find_domain (dirname, locale, domainname, domainbinding)
 
 
 #ifdef _LIBC
-static void __attribute__ ((unused))
-free_mem (void)
+libc_freeres_fn (free_mem)
 {
   struct loaded_l10nfile *runp = _nl_loaded_domains;
 
@@ -183,6 +182,4 @@ free_mem (void)
       free (here);
     }
 }
-
-text_set_element (__libc_subfreeres, free_mem);
 #endif

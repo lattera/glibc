@@ -1,5 +1,5 @@
 /* Compatibility functions for floating point formatting.
-   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,7 +57,7 @@
 
 static char FCVT_BUFFER[MAXDIG];
 static char ECVT_BUFFER[MAXDIG];
-static char *FCVT_BUFPTR;
+libc_freeres_ptr (static char *FCVT_BUFPTR);
 
 char *
 APPEND (FUNC_PREFIX, fcvt) (value, ndigit, decpt, sign)
@@ -102,13 +102,3 @@ APPEND (FUNC_PREFIX, gcvt) (value, ndigit, buf)
   sprintf (buf, "%.*" FLOAT_FMT_FLAG "g", MIN (ndigit, NDIGIT_MAX), value);
   return buf;
 }
-
-/* Free all resources if necessary.  */
-static void __attribute__ ((unused))
-free_mem (void)
-{
-  if (FCVT_BUFPTR != NULL)
-    free (FCVT_BUFPTR);
-}                  
-
-text_set_element (__libc_subfreeres, free_mem);

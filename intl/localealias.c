@@ -117,10 +117,14 @@ struct alias_map
 };
 
 
-static char *string_space;
+#ifndef _LIBC
+# define libc_freeres_ptr(decl) decl
+#endif
+
+libc_freeres_ptr (static char *string_space);
 static size_t string_space_act;
 static size_t string_space_max;
-static struct alias_map *map;
+libc_freeres_ptr (static struct alias_map *map);
 static size_t nmap;
 static size_t maxmap;
 
@@ -369,19 +373,6 @@ extend_alias_table ()
   maxmap = new_size;
   return 0;
 }
-
-
-#ifdef _LIBC
-static void __attribute__ ((unused))
-free_mem (void)
-{
-  if (string_space != NULL)
-    free (string_space);
-  if (map != NULL)
-    free (map);
-}
-text_set_element (__libc_subfreeres, free_mem);
-#endif
 
 
 static int

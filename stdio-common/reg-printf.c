@@ -21,10 +21,8 @@
 #include <printf.h>
 
 /* Array of functions indexed by format character.  */
-static printf_function *printf_funcs[UCHAR_MAX + 1];
-printf_arginfo_function *__printf_arginfo_table[UCHAR_MAX + 1]
-     attribute_hidden;
-
+libc_freeres_ptr (printf_arginfo_function **__printf_arginfo_table)
+  attribute_hidden;
 printf_function **__printf_function_table attribute_hidden;
 
 int __register_printf_function __P ((int, printf_function,
@@ -43,9 +41,18 @@ __register_printf_function (spec, converter, arginfo)
       return -1;
     }
 
-  __printf_function_table = printf_funcs;
+  if (__printf_function_table == NULL)
+    {
+      __printf_arginfo_table = (printf_arginfo_function **)
+	malloc ((UCHAR_MAX + 1) * sizeof (void *) * 2);
+      if (__printf_arginfo_table == NULL)
+	return -1;
+      __printf_function_table = (printf_function **)
+	(__printf_arginfo_table + UCHAR_MAX + 1);
+    }
+
+  __printf_function_table[spec] = converter;
   __printf_arginfo_table[spec] = arginfo;
-  printf_funcs[spec] = converter;
 
   return 0;
 }

@@ -203,12 +203,10 @@ do_release_all (void *nodep)
   free (obj);
 }
 
-static void __attribute__ ((unused))
-free_mem (void)
+libc_freeres_fn (free_mem)
 {
   __tdestroy (loaded, do_release_all);
 }
-text_set_element (__libc_subfreeres, free_mem);
 
 
 #ifdef DEBUG

@@ -309,7 +309,9 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 		break;
 
 	case ns_t_nsap: {
-		char t[255*3];
+		/* 2*255 for hex digits, 128 for '.' and '\0', 2 for
+		   0x if inet_nsap_ntoa starts using it.  */
+		char t[255*2 + 128 + 2];
 
 		(void) inet_nsap_ntoa(rdlen, rdata, t);
 		T(addstr(t, strlen(t), &buf, &buflen));

@@ -778,8 +778,7 @@ free_modules_db (struct gconv_module *node)
 
 
 /* Free all resources if necessary.  */
-static void __attribute__ ((unused))
-free_mem (void)
+libc_freeres_fn (free_mem)
 {
   if (__gconv_alias_db != NULL)
     __tdestroy (__gconv_alias_db, free);
@@ -790,5 +789,3 @@ free_mem (void)
   if (known_derivations != NULL)
     __tdestroy (known_derivations, free_derivation);
 }
-
-text_set_element (__libc_subfreeres, free_mem);

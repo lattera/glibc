@@ -413,9 +413,8 @@ auth_errmsg (enum auth_stat stat)
 }
 
 
-static void __attribute__ ((unused))
-free_mem (void)
+libc_freeres_fn (free_mem)
 {
+  /* Not libc_freeres_ptr, since buf is a macro.  */
   free (buf);
 }
-text_set_element (__libc_subfreeres, free_mem);

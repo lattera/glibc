@@ -1124,8 +1124,7 @@ mempcpy (dest, src, n)
 #ifdef _LIBC
 /* If we want to free all resources we have to do some work at
    program's end.  */
-static void __attribute__ ((unused))
-free_mem (void)
+libc_freeres_fn (free_mem)
 {
   void *old;
 
@@ -1155,6 +1154,4 @@ free_mem (void)
       free (old);
     }
 }
-
-text_set_element (__libc_subfreeres, free_mem);
 #endif

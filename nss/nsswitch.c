@@ -697,8 +697,7 @@ nss_new_service (name_database *database, const char *name)
 
 
 /* Free all resources if necessary.  */
-static void __attribute__ ((unused))
-free_mem (void)
+libc_freeres_fn (free_mem)
 {
   name_database *top = service_table;
   name_database_entry *entry;
@@ -745,5 +744,3 @@ free_mem (void)
 
   free (top);
 }
-
-text_set_element (__libc_subfreeres, free_mem);

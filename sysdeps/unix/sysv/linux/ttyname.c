@@ -38,7 +38,7 @@ static char *getttyname (const char *dev, dev_t mydev,
      internal_function;
 
 
-static char *getttyname_name;
+libc_freeres_ptr (static char *getttyname_name);
 
 static char *
 internal_function
@@ -103,7 +103,7 @@ getttyname (const char *dev, dev_t mydev, ino64_t myino, int save, int *dostat)
 
 
 /* Static buffer in `ttyname'.  */
-static char *ttyname_buf;
+libc_freeres_ptr (static char *ttyname_buf);
 
 
 /* Return the pathname of the terminal FD is open on, or NULL on errors.
@@ -186,12 +186,3 @@ ttyname (int fd)
 
   return name;
 }
-
-
-static void
-free_mem (void)
-{
-  free (ttyname_buf);
-  free (getttyname_name);
-}
-text_set_element (__libc_subfreeres, free_mem);
