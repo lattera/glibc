@@ -1,3 +1,22 @@
+2001-12-21  Andreas Jaeger  <aj@suse.de>
+
+	* elf/dblloadmod1.c: Add prototype to avoid warning.
+	* elf/dblloadmod2.c: Likewise.
+	* elf/dblloadmod3.c: Likewise.
+	* elf/reldepmod5.c: Likewise.
+	* elf/reldepmod6.c: Likewise.
+
+	* elf/dl-conflict.c (_dl_resolve_conflicts): Add unused attribute
+	for resolve_conflict_map since RESOLVE_CONFLICT_FIND_MAP is not
+	used on all architectures.
+
+	* sunrpc/svc_tcp.c: Add noreturn attribute for
+	svctcp_rendezvous_abort.
+	* sunrpc/svc_unix.c: Likewise for svcunix_rendezvous_abort.
+
+	* sysdeps/generic/strstr.c (strstr): Add paranthese for assignment
+	to avoid warning.
+
 2001-12-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* manual/llio.texi (aio_fsync): Fix a typo.
