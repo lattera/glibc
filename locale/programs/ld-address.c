@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -416,15 +416,10 @@ address_read (struct linereader *ldfile, struct localedef_t *result,
 	      struct charmap_t *charmap, const char *repertoire_name,
 	      int ignore_content)
 {
-  struct repertoire_t *repertoire = NULL;
   struct locale_address_t *address;
   struct token *now;
   struct token *arg;
   enum token_t nowtok;
-
-  /* Get the repertoire we have to use.  */
-  if (repertoire_name != NULL)
-    repertoire = repertoire_read (repertoire_name);
 
   /* The rest of the line containing `LC_ADDRESS' must be free.  */
   lr_ignore_rest (ldfile, 1);
@@ -440,7 +435,7 @@ address_read (struct linereader *ldfile, struct localedef_t *result,
   /* If we see `copy' now we are almost done.  */
   if (nowtok == tok_copy)
     {
-      handle_copy (ldfile, charmap, repertoire, result, tok_lc_address,
+      handle_copy (ldfile, charmap, repertoire_name, result, tok_lc_address,
 		   LC_ADDRESS, "LC_ADDRESS", ignore_content);
       return;
     }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -213,15 +213,10 @@ name_read (struct linereader *ldfile, struct localedef_t *result,
 	   struct charmap_t *charmap, const char *repertoire_name,
 	   int ignore_content)
 {
-  struct repertoire_t *repertoire = NULL;
   struct locale_name_t *name;
   struct token *now;
   struct token *arg;
   enum token_t nowtok;
-
-  /* Get the repertoire we have to use.  */
-  if (repertoire_name != NULL)
-    repertoire = repertoire_read (repertoire_name);
 
   /* The rest of the line containing `LC_NAME' must be empty.  */
   lr_ignore_rest (ldfile, 1);
@@ -236,8 +231,8 @@ name_read (struct linereader *ldfile, struct localedef_t *result,
   /* If we see `copy' now we are almost done.  */
   if (nowtok == tok_copy)
     {
-      handle_copy (ldfile, charmap, repertoire, result, tok_lc_name, LC_NAME,
-		   "LC_NAME", ignore_content);
+      handle_copy (ldfile, charmap, repertoire_name, result, tok_lc_name,
+		   LC_NAME, "LC_NAME", ignore_content);
       return;
     }
 

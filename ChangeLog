@@ -1,3 +1,19 @@
+2000-01-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/locfile.h (handle_copy): Take repertoire map
+	name as parameter, not pointer to repertoire structure.
+	* locale/programs/ld-address.c: Change caller.
+	* locale/programs/ld-ctype.c: Likewise.
+	* locale/programs/ld-identification.c: Likewise.
+	* locale/programs/ld-measurement.c: Likewise.
+	* locale/programs/ld-messages.c: Likewise.
+	* locale/programs/ld-monetary.c: Likewise.
+	* locale/programs/ld-name.c: Likewise.
+	* locale/programs/ld-numeric.c: Likewise.
+	* locale/programs/ld-paper.c: Likewise.
+	* locale/programs/ld-telephone.c: Likewise.
+	* locale/programs/ld-time.c: Likewise.
+
 2000-01-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/mmap64.S: Fix code generated if

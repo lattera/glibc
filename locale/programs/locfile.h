@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -47,7 +47,7 @@ struct locale_file
 /* General handling of `copy'.  */
 static inline void
 handle_copy (struct linereader *ldfile, struct charmap_t *charmap,
-	     struct repertoire_t *repertoire, struct localedef_t *result,
+	     const char *repertoire_name, struct localedef_t *result,
 	     enum token_t token, int locale, const char *locale_name,
 	     int ignore_content)
 {
@@ -65,7 +65,7 @@ locale name should consist only of portable characters"));
       else
 	{
 	  (void) add_to_readlist (locale, now->val.str.startmb,
-				  repertoire->name, 1);
+				  repertoire_name, 1);
 	  result->copy_name[locale] = now->val.str.startmb;
 	}
     }
