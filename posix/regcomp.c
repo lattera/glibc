@@ -964,7 +964,7 @@ static void
 optimize_utf8 (dfa)
      re_dfa_t *dfa;
 {
-  int node;
+  int node, i;
 
   for (node = 0; node < dfa->nodes_len; ++node)
     switch (dfa->nodes[node].type)
@@ -998,6 +998,12 @@ optimize_utf8 (dfa)
       case OP_DUP_PLUS:
       case OP_OPEN_SUBEXP:
       case OP_CLOSE_SUBEXP:
+	break;
+      case SIMPLE_BRACKET:
+	/* Just double check.  */
+        for (i = 0x80 / UINT_BITS; i < BITSET_UINTS; ++i)
+	  if (dfa->nodes[node].opr.sbcset[i])
+	    return;
 	break;
       default:
 	return;

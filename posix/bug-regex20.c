@@ -47,8 +47,8 @@ static struct
   {RE_SYNTAX_POSIX_BASIC, "^x\\\\y\\{6\\}z\\+", "x\\yyyyyyzz\xc3\xb6", 0, 1},
   {RE_SYNTAX_POSIX_BASIC, "^x\\\\y\\{2,36\\}z\\+", "x\\yzz\xc3\xb6", -1, 1},
   {RE_SYNTAX_POSIX_BASIC, "^x\\\\y\\{,3\\}z\\+", "x\\yyyzz\xc3\xb6", 0, 1},
-  /* FIXME.  This one should be optimizable, but is not ATM.  */
-  {RE_SYNTAX_POSIX_BASIC, "x[ABC]y", "axCy", 1, 0},
+  {RE_SYNTAX_POSIX_BASIC, "x[C]y", "axCy", 1, 1},
+  {RE_SYNTAX_POSIX_BASIC, "x[ABC]y", "axCy", 1, 1},
   {RE_SYNTAX_POSIX_BASIC, "\\`x\\|z\\'", "x\xe2\x80\x94", 0, 1},
   {RE_SYNTAX_POSIX_BASIC, "\\(xy\\)z\\1a\\1", "\xe2\x80\x94xyzxyaxy\xc3\x84", 3, 1},
   {RE_SYNTAX_POSIX_BASIC, "xy\\?z", "\xc3\x84xz\xc3\xb6", 2, 1},
@@ -57,8 +57,8 @@ static struct
   {RE_SYNTAX_POSIX_EXTENDED, "^x\\\\y{6}z+", "x\\yyyyyyzz\xc3\xb6", 0, 1},
   {RE_SYNTAX_POSIX_EXTENDED, "^x\\\\y{2,36}z+", "x\\yzz\xc3\xb6", -1, 1},
   {RE_SYNTAX_POSIX_EXTENDED, "^x\\\\y{,3}z+", "x\\yyyzz\xc3\xb6", 0, 1},
-  /* FIXME.  This one should be optimizable, but is not ATM.  */
-  {RE_SYNTAX_POSIX_EXTENDED, "x[ABC]y", "axCy", 1, 0},
+  {RE_SYNTAX_POSIX_EXTENDED, "x[C]y", "axCy", 1, 1},
+  {RE_SYNTAX_POSIX_EXTENDED, "x[ABC]y", "axCy", 1, 1},
   {RE_SYNTAX_POSIX_EXTENDED, "\\`x|z\\'", "x\xe2\x80\x94", 0, 1},
   {RE_SYNTAX_POSIX_EXTENDED, "(xy)z\\1a\\1", "\xe2\x80\x94xyzxyaxy\xc3\x84", 3, 1},
   {RE_SYNTAX_POSIX_EXTENDED, "xy?z", "\xc3\x84xz\xc3\xb6", 2, 1},
@@ -69,6 +69,8 @@ static struct
   {RE_SYNTAX_POSIX_BASIC, "x[A-Z,]y", "axCy", 1, 0},
   {RE_SYNTAX_POSIX_BASIC, "x[^y]z", "ax\xe2\x80\x94z", 1, 0},
   {RE_SYNTAX_POSIX_BASIC, "x[[:alnum:]]z", "ax\xc3\x96z", 1, 0},
+  {RE_SYNTAX_POSIX_BASIC, "x[[=A=]]z", "axAz", 1, 0},
+  {RE_SYNTAX_POSIX_BASIC, "x[[=\xc3\x84=]]z", "ax\xc3\x84z", 1, 0},
   {RE_SYNTAX_POSIX_BASIC, "\\<g", "\xe2\x80\x94g", 3, 0},
   {RE_SYNTAX_POSIX_BASIC, "\\bg\\b", "\xe2\x80\x94g", 3, 0},
   {RE_SYNTAX_POSIX_BASIC, "\\Bg\\B", "\xc3\xa4g\xc3\xa4", 2, 0},
@@ -80,6 +82,8 @@ static struct
   {RE_SYNTAX_POSIX_EXTENDED, "x[A-Z,]y", "axCy", 1, 0},
   {RE_SYNTAX_POSIX_EXTENDED, "x[^y]z", "ax\xe2\x80\x94z", 1, 0},
   {RE_SYNTAX_POSIX_EXTENDED, "x[[:alnum:]]z", "ax\xc3\x96z", 1, 0},
+  {RE_SYNTAX_POSIX_EXTENDED, "x[[=A=]]z", "axAz", 1, 0},
+  {RE_SYNTAX_POSIX_EXTENDED, "x[[=\xc3\x84=]]z", "ax\xc3\x84z", 1, 0},
   {RE_SYNTAX_POSIX_EXTENDED, "\\<g", "\xe2\x80\x94g", 3, 0},
   {RE_SYNTAX_POSIX_EXTENDED, "\\bg\\b", "\xe2\x80\x94g", 3, 0},
   {RE_SYNTAX_POSIX_EXTENDED, "\\Bg\\B", "\xc3\xa4g\xc3\xa4", 2, 0},
@@ -101,6 +105,7 @@ main (void)
   for (i = 0; i < sizeof (tests) / sizeof (tests[0]); ++i)
     {
       int res, optimized;
+
       re_set_syntax (tests[i].syntax);
       memset (&regbuf, '\0', sizeof (regbuf));
       err = re_compile_pattern (tests[i].pattern, strlen (tests[i].pattern),
@@ -118,6 +123,37 @@ main (void)
         {
           printf ("pattern %zd %soptimized while it should%s be\n",
 		  i, optimized ? "" : "not ", tests[i].optimize ? "" : " not");
+	  ret = 1;
+        }
+
+      res = re_search (&regbuf, tests[i].string, strlen (tests[i].string), 0,
+		       strlen (tests[i].string), NULL);
+      if (res != tests[i].res)
+	{
+	  printf ("re_search %zd failed: %d\n", i, res);
+	  ret = 1;
+	  regfree (&regbuf);
+	  continue;
+	}
+      regfree (&regbuf);
+
+      re_set_syntax (tests[i].syntax | RE_ICASE);
+      memset (&regbuf, '\0', sizeof (regbuf));
+      err = re_compile_pattern (tests[i].pattern, strlen (tests[i].pattern),
+                                &regbuf);
+      if (err != NULL)
+	{
+	  printf ("re_compile_pattern failed: %s\n", err);
+	  ret = 1;
+	  continue;
+	}
+
+      /* Check if re_search will be done as multi-byte or single-byte.  */
+      optimized = ((re_dfa_t *) regbuf.buffer)->mb_cur_max == 1;
+      if (optimized)
+        {
+          printf ("pattern %zd optimized while it should not be when case insensitive\n",
+		  i);
 	  ret = 1;
         }
 
