@@ -1,3 +1,8 @@
+2003-03-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* argp/tst-argp1.c: Use test-skeleton.c.
+	* locale/tst-C-locale.c: Likewise.
+
 2003-03-17  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/mips/mips64/Implies: Move wordsize-64 to...
