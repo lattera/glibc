@@ -1,3 +1,7 @@
+2003-09-15  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/setjmp.c: Add hidden_def.
+
 2003-09-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/memstream.c (open_memstream): Don't allow wide char operations.
