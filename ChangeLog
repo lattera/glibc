@@ -1,3 +1,8 @@
+2004-11-30  GOTO Masanori  <gotom@debian.or.jp>
+
+	* posix/confstr.c: Enclose #error message with double quote
+	for gcc-3.3 and lower.
+
 2004-12-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/clone.S: Add support for NPTL where
