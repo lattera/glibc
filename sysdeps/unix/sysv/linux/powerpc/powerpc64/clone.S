@@ -1,5 +1,5 @@
 /* Wrapper around clone system call.  PowerPC64 version.
-   Copyright (C) 1997,98,99,2000,02 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2000,02, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -87,7 +87,11 @@ ENTRY (BP_SYM (__clone))
 	mr	r3,r31
 	bctrl
 	/* Call _exit with result from procedure.  */
+#ifdef SHARED
+	b	JUMPTARGET(__GI__exit)
+#else
 	b	JUMPTARGET(_exit)
+#endif
 
 L(parent):
 	/* Parent.  Restore registers & return.  */
