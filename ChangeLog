@@ -1,3 +1,8 @@
+2001-06-14  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/fpu/e_log2f.c: Fix typo.
+	* sysdeps/m68k/fpu/e_log2l.c: Fix typo.
+
 2001-06-14  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/bits/fcntl.h [ __USE_POSIX199309 || __USE_UNIX98]:
@@ -284,12 +289,12 @@
 	* sysdeps/i386/fpu/e_log2f.S: ...to here. Rename to __ieee754_log2f.
 	* sysdeps/i386/fpu/s_log2l.S: Move...
 	* sysdeps/i386/fpu/e_log2l.S: ...to here. Rename to __ieee754_log2l.
-	* sysdeps/m68k/fpu/s_log2.S: Move...
-	* sysdeps/m68k/fpu/e_log2.S: ...to here. Rename to __ieee754_log2.
-	* sysdeps/m68k/fpu/s_log2f.S: Move...
-	* sysdeps/m68k/fpu/e_log2f.S: ...to here. Rename to __ieee754_log2f.
-	* sysdeps/m68k/fpu/s_log2l.S: Move...
-	* sysdeps/m68k/fpu/e_log2l.S: ...to here. Rename to __ieee754_log2l.
+	* sysdeps/m68k/fpu/s_log2.c: Move...
+	* sysdeps/m68k/fpu/e_log2.c: ...to here. Rename to __ieee754_log2.
+	* sysdeps/m68k/fpu/s_log2f.c: Move...
+	* sysdeps/m68k/fpu/e_log2f.c: ...to here. Rename to __ieee754_log2f.
+	* sysdeps/m68k/fpu/s_log2l.c: Move...
+	* sysdeps/m68k/fpu/e_log2l.c: ...to here. Rename to __ieee754_log2l.
 	* sysdeps/ieee754/dbl-64/s_log2.c: Move...
 	* sysdeps/ieee754/dbl-64/e_log2.c: ...to here. Rename to
 	__ieee754_log2.
