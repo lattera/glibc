@@ -1,3 +1,7 @@
+2000-12-05  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/sys/param.h: Revert last patch.
+
 2000-12-05  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
         * sysdeps/unix/sysv/linux/s390/mmap64.S: Use mmap if mmap2 isn't

@@ -63,7 +63,4 @@
 #define DEV_BSIZE       512
 
 
-/* Maximum length of hostname.  */
-#define MAXHOSTNAMELEN	256
-
 #endif	/* sys/param.h */
