@@ -1,5 +1,9 @@
 2003-03-17  Alexandre Oliva  <aoliva@redhat.com>
 
+	* sysdeps/unix/sysv/linux/mips/sys/ptrace.h: New file.
+	* sysdeps/unix/sysv/linux/mips/ptrace.c: New file.  Use long
+	long type for registers on n32.
+
 	* sysdeps/mips/bits/wordsize.h: New file, appropriate for all
 	3 ABIs.
 	* sysdeps/mips/mips64/gmp-mparam.h: New file.  Define
