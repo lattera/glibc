@@ -24,6 +24,7 @@
 #include <sysdep.h>
 #include <string.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 #include "kernel-features.h"
 #include <shlib-compat.h>
@@ -31,13 +32,13 @@
 struct __old_msqid_ds
 {
   struct __old_ipc_perm msg_perm;	/* structure describing operation permission */
-  struct msg *__msg_first;		/* pointer to first message on queue */
-  struct msg *__msg_last;		/* pointer to last message on queue */
+  struct msg *__unbounded __msg_first;	/* pointer to first message on queue */
+  struct msg *__unbounded __msg_last;	/* pointer to last message on queue */
   __time_t msg_stime;			/* time of last msgsnd command */
   __time_t msg_rtime;			/* time of last msgrcv command */
   __time_t msg_ctime;			/* time of last change */
-  struct wait_queue *__wwait;		/* ??? */
-  struct wait_queue *__rwait;		/* ??? */
+  struct wait_queue *__unbounded __wwait; /* ??? */
+  struct wait_queue *__unbounded __rwait; /* ??? */
   unsigned short int __msg_cbytes;	/* current number of bytes on queue */
   unsigned short int msg_qnum;		/* number of messages currently on queue */
   unsigned short int msg_qbytes;	/* max number of bytes allowed on queue */
@@ -64,7 +65,8 @@ extern int __libc_missing_32bit_uids;
 int
 __old_msgctl (int msqid, int cmd, struct __old_msqid_ds *buf)
 {
-  return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl, msqid, cmd, 0, buf);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl,
+			 msqid, cmd, 0, CHECK_1 (buf));
 }
 compat_symbol (libc, __old_msgctl, msgctl, GLIBC_2_0);
 #endif
@@ -73,7 +75,8 @@ int
 __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
 {
 #if __ASSUME_32BITUIDS > 0
-  return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl, msqid, cmd | __IPC_64, 0, buf);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl,
+			 msqid, cmd | __IPC_64, 0, CHECK_1 (buf));
 #else
   switch (cmd) {
     case MSG_STAT:
@@ -81,7 +84,8 @@ __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
     case IPC_SET:
       break;
     default:
-      return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl, msqid, cmd, 0, buf);
+      return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl,
+			     msqid, cmd, 0, CHECK_1 (buf));
   }
 
   {
@@ -105,7 +109,8 @@ __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
 	  }
 	if (__libc_missing_32bit_uids <= 0)
 	  {
-	    result = INLINE_SYSCALL (ipc, 5, IPCOP_msgctl, msqid, cmd | __IPC_64, 0, buf);
+	    result = INLINE_SYSCALL (ipc, 5, IPCOP_msgctl,
+				     msqid, cmd | __IPC_64, 0, CHECK_1 (buf));
 	    return result;
 	  }
       }
@@ -124,7 +129,8 @@ __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
 	    return -1;
 	  }
       }
-    result = INLINE_SYSCALL (ipc, 5, IPCOP_msgctl, msqid, cmd, 0, &old);
+    result = INLINE_SYSCALL (ipc, 5, IPCOP_msgctl,
+			     msqid, cmd, 0, __ptrvalue (&old));
     if (result != -1 && cmd != IPC_SET)
       {
 	memset(buf, 0, sizeof(*buf));

@@ -26,6 +26,7 @@
 #include <sys/syscall.h>
 #include <bits/wordsize.h>
 #include <shlib-compat.h>
+#include <bp-checks.h>
 
 #include "kernel-features.h"
 
@@ -40,8 +41,8 @@ struct __old_shmid_ds
   __ipc_pid_t shm_lpid;			/* pid of last shmop */
   unsigned short int shm_nattch;	/* number of current attaches */
   unsigned short int __shm_npages;	/* size of segment (pages) */
-  unsigned long int *__shm_pages;	/* array of ptrs to frames -> SHMMAX */
-  struct vm_area_struct *__attaches;	/* descriptors for attaches */
+  unsigned long int *__unbounded __shm_pages; /* array of ptrs to frames -> SHMMAX */
+  struct vm_area_struct *__unbounded __attaches; /* descriptors for attaches */
 };
 
 struct __old_shminfo
@@ -63,7 +64,8 @@ int __new_shmctl (int, int, struct shmid_ds *);
 int
 __old_shmctl (int shmid, int cmd, struct __old_shmid_ds *buf)
 {
-  return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, buf);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid,
+			 cmd, 0, CHECK_1opt (buf));
 }
 compat_symbol (libc, __old_shmctl, shmctl, GLIBC_2_0);
 #endif
@@ -72,7 +74,7 @@ int
 __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 {
 #if __ASSUME_32BITUIDS > 0
-  return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd | __IPC_64, 0, buf);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd | __IPC_64, 0, CHECK_1 (buf));
 #else
   switch (cmd) {
     case SHM_STAT:
@@ -83,7 +85,7 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 #endif
       break;
     default:
-      return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, buf);
+      return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, CHECK_1 (buf));
   }
 
   {
@@ -92,7 +94,7 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 
     /* Unfortunately there is no way how to find out for sure whether
        we should use old or new shmctl.  */
-    result = INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd | __IPC_64, 0, buf);
+    result = INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd | __IPC_64, 0, CHECK_1 (buf));
     if (result != -1 || errno != EINVAL)
       return result;
 
@@ -109,7 +111,7 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 	    return -1;
 	  }
       }
-    result = INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, &old);
+    result = INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, __ptrvalue (&old));
     if (result != -1 && (cmd == SHM_STAT || cmd == IPC_STAT))
       {
 	memset(buf, 0, sizeof(*buf));

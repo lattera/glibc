@@ -24,6 +24,8 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#include <bp-checks.h>
+
 int
 msgsnd (msqid, msgp, msgsz, msgflg)
      int msqid;
@@ -31,5 +33,6 @@ msgsnd (msqid, msgp, msgsz, msgflg)
      size_t msgsz;
      int msgflg;
 {
-  return INLINE_SYSCALL (ipc, 5, IPCOP_msgsnd, msqid, msgsz, msgflg, (void *)msgp);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_msgsnd, msqid, msgsz,
+			 msgflg, CHECK_N (msgp, msgsz));
 }

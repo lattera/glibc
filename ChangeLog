@@ -1,3 +1,28 @@
+2000-07-26  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/gnu/bits/msq.h: Qualify kernel's
+	data structure pointers as __unbounded.
+	* sysdeps/unix/sysv/linux/mips/bits/shm.h: Likewise.
+	* sysdeps/generic/bp-semctl.h: New file.
+	* sysdeps/unix/sysv/linux/msgctl.c: Qualify kernel's data structure
+	pointers as __unbounded.  Check bounds of syscall args.
+	* sysdeps/unix/sysv/linux/msgrcv.c: Likewise.
+	* sysdeps/unix/sysv/linux/msgsnd.c: Likewise.
+	* sysdeps/unix/sysv/linux/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/semop.c: Likewise.
+	* sysdeps/unix/sysv/linux/shmat.c: Likewise.
+	* sysdeps/unix/sysv/linux/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/shmdt.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/msgctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/msgctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/msgctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/shmctl.c: Likewise.
+
 2000-07-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/iofwide.c: Enable transliteration for conversion from wchar_t

@@ -50,6 +50,9 @@ union semun
   struct seminfo *__buf;	/* buffer for IPC_INFO */
 };
 
+#include <bp-checks.h>
+#include <bp-semctl.h>		/* definition of CHECK_SEMCTL needs union semum */
+
 #ifdef __NR_getuid32
 # if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
@@ -79,7 +82,8 @@ __old_semctl (int semid, int semnum, int cmd, ...)
 
   va_end (ap);
 
-  return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd, &arg);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd,
+			 CHECK_SEMCTL (&arg, semid, cmd));
 }
 compat_symbol (libc, __old_semctl, semctl, GLIBC_2_0);
 #endif
@@ -98,7 +102,8 @@ __new_semctl (int semid, int semnum, int cmd, ...)
   va_end (ap);
 
 #if __ASSUME_32BITUIDS > 0
-  return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd | __IPC_64, &arg);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd | __IPC_64,
+			 CHECK_SEMCTL (&arg, semid, cmd | __IPC_64));
 #else
   switch (cmd) {
     case SEM_STAT:
@@ -106,7 +111,8 @@ __new_semctl (int semid, int semnum, int cmd, ...)
     case IPC_SET:
       break;
     default:
-      return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd, &arg);
+      return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd,
+			     CHECK_SEMCTL (&arg, semid, cmd));
   }
 
   {
@@ -131,7 +137,8 @@ __new_semctl (int semid, int semnum, int cmd, ...)
 	  }
 	if (__libc_missing_32bit_uids <= 0)
 	  {
-	    result = INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd | __IPC_64, &arg);
+	    result = INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd | __IPC_64,
+				     CHECK_SEMCTL (&arg, semid, cmd | __IPC_64));
 	    return result;
 	  }
       }
@@ -151,7 +158,8 @@ __new_semctl (int semid, int semnum, int cmd, ...)
 	    return -1;
 	  }
       }
-    result = INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd, &arg);
+    result = INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd,
+			     CHECK_SEMCTL (&arg, semid, cmd));
     if (result != -1 && cmd != IPC_SET)
       {
 	memset(buf, 0, sizeof(*buf));

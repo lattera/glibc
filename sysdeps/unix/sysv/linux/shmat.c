@@ -23,6 +23,7 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 /* Attach the shared memory segment associated with SHMID to the data
    segment of the calling process.  SHMADDR and SHMFLG determine how
@@ -34,11 +35,23 @@ shmat (shmid, shmaddr, shmflg)
      const void *shmaddr;
      int shmflg;
 {
-  long int retval;
-  unsigned long raddr;
+  void *__unbounded result;
+  void *__unbounded raddr;
 
-  retval = INLINE_SYSCALL (ipc, 5, IPCOP_shmat, shmid, shmflg,
-			   (long int) &raddr, (void *) shmaddr);
-  return ((unsigned long int) retval > -(unsigned long int) SHMLBA
-	  ? (void *) retval : (void *) raddr);
+#if __BOUNDED_POINTERS__
+  size_t length = ~0;
+  struct shmid_ds shmds;
+  /* It's unfortunate that we need to make another system call to get
+     the shared memory segment length...  */
+  if (shmctl (shmid, ICP_STAT, &shmds) == 0)
+    length = shmds.shm_segsz;
+#endif
+
+  result = (void *__unbounded) INLINE_SYSCALL (ipc, 5, IPCOP_shmat, shmid, shmflg,
+					       __ptrvalue (&raddr),
+					       __ptrvalue (shmaddr));
+  if ((unsigned long) result <= -(unsigned long) SHMLBA)
+    result = raddr;
+
+  return BOUNDED_N (result, length);
 }

@@ -24,12 +24,13 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#include <bp-checks.h>
 
 /* Kludge to work around Linux' restriction of only up to five
    arguments to a system call.  */
 struct ipc_kludge
   {
-    void *msgp;
+    void *__unbounded msgp;
     long int msgtyp;
   };
 
@@ -46,8 +47,8 @@ msgrcv (msqid, msgp, msgsz, msgtyp, msgflg)
      fives parameters to a system call.  */
   struct ipc_kludge tmp;
 
-  tmp.msgp = msgp;
+  tmp.msgp = CHECK_N (msgp, msgsz);
   tmp.msgtyp = msgtyp;
 
-  return INLINE_SYSCALL (ipc, 5, IPCOP_msgrcv, msqid, msgsz, msgflg, &tmp);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_msgrcv, msqid, msgsz, msgflg, __ptrvalue (&tmp));
 }

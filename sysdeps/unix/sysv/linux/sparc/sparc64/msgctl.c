@@ -23,6 +23,7 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 /* Allows to control internal state and destruction of message queue
    objects.  */
@@ -33,5 +34,5 @@ msgctl (msqid, cmd, buf)
      int cmd;
      struct msqid_ds *buf;
 {
-  return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl, msqid, cmd, 0, buf);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl, msqid, cmd, 0, CHECK_1 (buf));
 }

@@ -23,6 +23,7 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 /* Perform user-defined atomical operation of array of semaphores.  */
 
@@ -32,5 +33,6 @@ semop (semid, sops, nsops)
      struct sembuf *sops;
      size_t nsops;
 {
-  return INLINE_SYSCALL (ipc, 5, IPCOP_semop, semid, (int) nsops, 0, sops);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_semop,
+			 semid, (int) nsops, 0, CHECK_N (sops, nsops));
 }
