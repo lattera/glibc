@@ -1,3 +1,8 @@
+1999-06-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/nss_dns/dns-host.c (getanswer_r): Correctly track usage
+	of user-provided buffer.
+
 1999-06-11  Mark Kettenis  <kettenis@gnu.org>
 
 	* hurd/hurdsock.c (max_domain): Initialize to `-1'.
