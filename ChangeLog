@@ -1,5 +1,7 @@
 2002-09-27  Steven Munroe  <sjmunroe@us.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/Makefile: Fix typo in comment.
+
 	* sysdeps/powerpc/powerpc64/Makefile
 	[$(build-shared) = yes] (pic-ccflag): Define it.
 	[$(subdir) = csu] (CFLAGS-initfini.s): Add -fpic here too.

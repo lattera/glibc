@@ -12,7 +12,7 @@ ifeq ($(subdir),misc)
 sysdep_routines += gprsave0 gprrest0 gprsave1 gprrest1
 endif
 
-# On PPC, -fpic works until the GOT contains 215 bytes, and possibly
+# On PPC, -fpic works until the GOT contains 32768 bytes, and possibly
 # more depending on how clever the linker is.  Each GOT entry takes 4 bytes,
 # so that's at least 8192 entries.  Since libc only uses about 2000 entries,
 # we want to use -fpic, because this generates fewer relocs.
