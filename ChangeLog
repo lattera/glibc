@@ -1,3 +1,7 @@
+2002-09-14  Roland McGrath  <roland@redhat.com>
+
+	* Makefile (manual/%): Add this pattern target to the iconvdata/% rule.
+
 2002-07-29  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* stdlib/longlong.h [_ARCH_PPC && W_TYPE_SIZE!=32]: Add powerpc64
