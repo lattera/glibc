@@ -71,6 +71,7 @@ static struct platform {
   {"Chalice-CATS",	IO_BASE_FOOTBRIDGE,	IO_SHIFT_FOOTBRIDGE},
   {"DEC-EBSA285",	IO_BASE_FOOTBRIDGE,	IO_SHIFT_FOOTBRIDGE},
   {"Corel-NetWinder",	IO_BASE_FOOTBRIDGE,	IO_SHIFT_FOOTBRIDGE},
+  {"Rebel-NetWinder",	IO_BASE_FOOTBRIDGE,	IO_SHIFT_FOOTBRIDGE},
 };
 
 #define IO_ADDR(port)	(io.base + ((port) << io.shift))
