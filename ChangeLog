@@ -1,3 +1,7 @@
+2001-06-19  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-64/dl-cache.h: New file.
+
 2001-05-09  Michael Keezer  <mkeezer@redhat.com>
 
 	* Makeconfig: Added AIX-ld support for DSO.
