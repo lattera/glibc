@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,93,94,95,96,97,98,99,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1992-1999, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,11 +21,10 @@
 #include <termios.h>
 #include <unistd.h>
 
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-# define flockfile(s) _IO_flockfile (s)
-# define funlockfile(s) _IO_funlockfile (s)
-#endif
+#include <wchar.h>
+#define flockfile(s) _IO_flockfile (s)
+#define funlockfile(s) _IO_funlockfile (s)
+#include <bits/libc-lock.h>
 
 /* It is desirable to use this bit on systems that have it.
    The only bit of terminal state we want to twiddle is echoing, which is
@@ -35,6 +34,13 @@
 #ifndef TCSASOFT
 #define TCSASOFT 0
 #endif
+
+static void
+call_fclose (void *arg)
+{
+  if (arg != NULL)
+    fclose (arg);
+}
 
 char *
 getpass (prompt)
@@ -63,6 +69,10 @@ getpass (prompt)
 
       out = in;
     }
+
+  /* Make sure the stream we opened is closed even if the thread is
+     canceled.  */
+  __libc_cleanup_push (call_fclose, in == out ? in : NULL);
 
   flockfile (out);
 
@@ -116,6 +126,8 @@ getpass (prompt)
     (void) tcsetattr (fileno (in), TCSAFLUSH|TCSASOFT, &s);
 
   funlockfile (out);
+
+  __libc_cleanup_pop (0);
 
   if (in != stdin)
     /* We opened the terminal; now close it.  */

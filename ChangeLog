@@ -1,5 +1,16 @@
 2003-08-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/Makefile (CFLAGS-getpass.c): Add -fexceptions.
+	* misc/getpass.c (getpass): Add cleanup handler to ensure the
+	stream is closed even if the thread is canceled.
+	(call_fclose): New function.
+	* posix/unistd.h: Remove __THROW from getpass prorotype.
+
+	* posix/Makefile (CFLAGS-getopt.c): Add -fexceptions.
+
+	* signal/signal.h (psignal): Remove __THROW.
+	* stdio-common/Makefile (CFLAGS-psignal.c): Add -fexceptions.
+
 	* misc/Makefile (CFLAGS-error.c): Define.
 	* misc/error.c (error): Disable cancellation handling around the
 	actual output.  The message should in any case be printed.

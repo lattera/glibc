@@ -134,7 +134,7 @@ extern int gsignal (int __sig) __THROW;
 
 #ifdef __USE_MISC
 /* Print a message describing the meaning of the given signal number.  */
-extern void psignal (int __sig, __const char *__s) __THROW;
+extern void psignal (int __sig, __const char *__s);
 #endif /* Use misc.  */
 
 

@@ -845,7 +845,7 @@ extern int chroot (__const char *__path) __THROW;
 
 /* Prompt with PROMPT and read a string from the terminal without echoing.
    Uses /dev/tty if possible; otherwise stderr and stdin.  */
-extern char *getpass (__const char *__prompt) __THROW;
+extern char *getpass (__const char *__prompt);
 #endif /* Use BSD || X/Open.  */
 
 

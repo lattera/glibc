@@ -83,6 +83,7 @@ CFLAGS-writev.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-usleep.c = -fexceptions
 CFLAGS-syslog.c = -fexceptions
 CFLAGS-error.c = -fexceptions
+CFLAGS-getpass.c = -fexceptions
 
 include ../Rules
 
