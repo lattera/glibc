@@ -1,5 +1,5 @@
 /* FPU control word bits.  Alpha-maped-to-Intel version.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Olaf Flebbe.
 
@@ -102,12 +102,5 @@ typedef unsigned int fpu_control_t;
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
-
-__BEGIN_DECLS
-
-/* called by start.o. It can be used to manipulate fpu control word. */
-extern void __setfpucw __P ((unsigned short));
-
-__END_DECLS
 
 #endif	/* _ALPHA_FPU_CONTROL */

@@ -83,11 +83,4 @@ typedef unsigned int fpu_control_t;
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
 
-__BEGIN_DECLS
-
-/* Called at startup.  It can be used to manipulate fpu control register.  */
-extern void __setfpucw __P ((fpu_control_t));
-
-__END_DECLS
-
 #endif /* _FPU_CONTROL_H */
