@@ -1,3 +1,18 @@
+2002-10-18  Bruno Haible  <bruno@clisp.org>
+
+	* charmaps/KOI8-T: Correct a typo.
+	* charmaps/CP1256: Use official Unicode character names.
+	* charmaps/EUC-JP: Likewise.
+	* charmaps/GBK: Likewise.
+	* charmaps/ISO-8859-11: Likewise.
+	* charmaps/KOI8-U: Likewise.
+	* charmaps/MAC-SAMI: Likewise.
+	* charmaps/TIS-620: Likewise.
+	* charmaps/CP949: Likewise. Use Hangul syllable names according to
+	Unicode 3.0 book, section 3.11.
+	* charmaps/EUC-KR: Likewise.
+	* charmaps/JOHAB: Likewise.
+
 2002-09-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/zh_TW: Use shorter forms for abday and day.

@@ -1,5 +1,9 @@
 2002-11-02  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/bsd/bsd4.4/freebsd/bits/typesizes.h: New file.
+
+2002-11-02  Roland McGrath  <roland@redhat.com>
+
 	* manual/filesys.texi (Reading/Closing Directory): Rewrite readdir_r
 	description to be clearer and to say that *RESULT is set to ENTRY.
 
