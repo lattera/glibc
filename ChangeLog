@@ -1,5 +1,12 @@
 2004-02-23  Jakub Jelinek  <jakub@redhat.com>
 
+	* wcsmbs/mbrtowc.c (__mbrtowc): Cap s + n at the end of address space.
+	* stdlib/Makefile (tests): Add testmb2.
+	(testmb2-ENV): New.
+	* stdlib/testmb2.c: New test.
+
+2004-02-23  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): If _res has not been
 	inited yet, try to init it before saving old _res.options.
 	* posix/Makefile (xtests): Add bug-ga2.

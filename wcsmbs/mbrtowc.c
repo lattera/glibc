@@ -1,4 +1,5 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000, 2002, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -40,7 +41,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   int status;
   size_t result;
   size_t dummy;
-  const unsigned char *inbuf;
+  const unsigned char *inbuf, *endbuf;
   char *outbuf = (char *) (pwc ?: buf);
   const struct gconv_fcts *fcts;
 
@@ -69,8 +70,11 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 
   /* Do a normal conversion.  */
   inbuf = (const unsigned char *) s;
+  endbuf = inbuf + n;
+  if (__builtin_expect (endbuf < inbuf, 0))
+    endbuf = (const unsigned char *) ~(uintptr_t) 0;
   status = DL_CALL_FCT (fcts->towc->__fct,
-			(fcts->towc, &data, &inbuf, inbuf + n,
+			(fcts->towc, &data, &inbuf, endbuf,
 			 NULL, &dummy, 0, 1));
 
   /* There must not be any problems with the conversion but illegal input

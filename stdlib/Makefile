@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -63,7 +63,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   test-canon test-canon2 tst-strtoll tst-environ	    \
 		   tst-xpg-basename tst-random tst-bsearch tst-limits	    \
 		   tst-rand48 bug-strtod tst-setcontext test-a64l tst-qsort \
-		   tst-system
+		   tst-system testmb2
 
 
 # Several mpn functions from GNU MP are used by the strtod function.
@@ -105,6 +105,7 @@ include ../Rules
 test-canon-ARGS = --test-dir=${common-objpfx}stdlib
 
 tst-strtod-ENV = LOCPATH=$(common-objpfx)localedata
+testmb2-ENV = LOCPATH=$(common-objpfx)localedata
 
 # Run a test on the header files we use.
 tests: $(objpfx)isomac.out
