@@ -88,12 +88,26 @@ main (void)
   err = pthread_spin_trylock (s);
   if (err == 0)
     {
-      puts ("spin_trylock succeeded");
+      puts ("1st spin_trylock succeeded");
       exit (1);
     }
   else if (err != EBUSY)
     {
-      puts ("spin_trylock didn't return EBUSY");
+      puts ("1st spin_trylock didn't return EBUSY");
+      exit (1);
+    }
+
+  err = pthread_spin_unlock (s);
+  if (err != 0)
+    {
+      puts ("parent: spin_unlock failed");
+      exit (1);
+    }
+
+  err = pthread_spin_trylock (s);
+  if (err != 0)
+    {
+      puts ("2nd spin_trylock failed");
       exit (1);
     }
 

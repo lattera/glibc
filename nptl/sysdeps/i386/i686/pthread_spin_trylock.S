@@ -19,6 +19,13 @@
 
 #define EBUSY	16
 
+
+#ifdef UP
+# define LOCK
+#else
+# define LOCK lock
+#endif
+
 	.globl	pthread_spin_trylock
 	.type	pthread_spin_trylock,@function
 	.align	16
@@ -26,9 +33,10 @@ pthread_spin_trylock:
 	movl	4(%esp), %edx
 	movl	$1, %eax
 	xorl	%ecx, %ecx
+	LOCK
 	cmpxchgl %ecx, (%edx)
-	movl	$EBUSY, %ecx
-	movl	$0, %eax
-	cmovne	%ecx, %eax
+	movl	$EBUSY, %edx
+	movl	%ecx, %eax
+	cmovne	%edx, %eax
 	ret
 	.size	pthread_spin_trylock,.-pthread_spin_trylock

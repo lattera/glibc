@@ -42,10 +42,4 @@
 
 /* While there is no such syscall.  */
 #define __exit_thread_inline(val) \
-  while (1) {								      \
-    if (__builtin_constant_p (val) && (val) == 0)			      \
-      asm volatile ("xorl %%ebx, %%ebx; int $0x80" :: "a" (__NR_exit));	      \
-    else								      \
-      asm volatile ("movl %1, %%ebx; int $0x80"				      \
-		    :: "a" (__NR_exit), "r" (val));			      \
-  }
+  asm volatile ("syscall" :: "a" (__NR_exit), "D" (val))

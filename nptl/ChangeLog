@@ -1,6 +1,28 @@
 2002-11-27  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/x86_64/pthread_sigmask.c: New file.
+	* sysdeps/x86_64/pthreaddef.h: New file.
+
+	* sysdeps/i386/pthreaddef.h (gettid): Removed.
+
+	* sysdeps/x86_64/pthread_spin_init.c: New file.
+	* sysdeps/x86_64/pthread_spin_lock.c: New file.
+	* sysdeps/x86_64/pthread_spin_trylock.c: New file.
+	* sysdeps/x86_64/pthread_spin_unlock.c: New file.
+
+	* sysdeps/i386/i686/pthread_spin_trylock.S (pthread_spin_trylock):
+	Add missing lock prefix.  Minute optimization.
+
+	* tst-spin2.c (main): Also check successful trylock call.
+
+	* sysdeps/pthread/pthread_sigmask.c (pthread_sigmask): Use correct
+	syscall.  Fix typo in case INTERNAL_SYSCALL is not used.
+
+	* sysdeps/i386/pthread_spin_destroy.c: Moved to...
+	* sysdeps/pthread/pthread_spin_destroy.c: ...here.  New file.
+
+	* sysdeps/i386/pthread_sigmask.c: Removed.  Use the generic code.
+	* sysdeps/pthread/pthread_sigmask.c (pthread_sigmask): Return correct
+	value in case of an error.  Add support for INTERNAL_SYSCALL.
 
 	* sysdeps/i386/pthread_sigmask.c (pthread_sigmask): Return correct
 	value in case of an error.
