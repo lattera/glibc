@@ -144,4 +144,8 @@ extern void __exit_thread (int val) __attribute__ ((noreturn));
 /* Internal name for fork function.  */
 extern __pid_t __libc_fork (void);
 
+/* Suspend the process until a signal arrives.
+   This always returns -1 and sets `errno' to EINTR.  */
+extern int __libc_pause (void);
+
 #endif
