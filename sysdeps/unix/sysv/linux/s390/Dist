@@ -1,2 +1,3 @@
+ldd-rewrite.sed
 sys/elf.h
 sys/user.h
