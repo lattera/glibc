@@ -99,7 +99,7 @@ _dl_sysdep_start (void **start_argptr,
 # endif
 #endif
 #ifdef NEED_DL_SYSINFO
-  ElfW(Word) new_sysinfo = 0;
+  uintptr_t new_sysinfo = 0;
 #endif
 
   __libc_stack_end = DL_STACK_END (start_argptr);
