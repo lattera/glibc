@@ -74,7 +74,7 @@ __do_global_ctors_aux:
 	stq     $9,8($sp)
 	stq     $26,0($sp)
 	.mask   (1<<26)|(1<<9), -16
-	.prologue 1
+	.prologue 0
 
 	lda     $9,__CTOR_END__
 	br      1f

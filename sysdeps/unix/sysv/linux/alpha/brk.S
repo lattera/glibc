@@ -73,9 +73,8 @@ $ok:	stq	a0, __curbrk
 
 	/* What a horrible way to die.  */
 $err0:	ldi	v0, ENOMEM
-$err1:	lda	pv, __syscall_error
-	addq	sp, 8, sp
-	jmp	zero, (pv), __syscall_error
+$err1:	addq	sp, 8, sp
+	jmp	zero, __syscall_error
 
 	END(__brk)
 

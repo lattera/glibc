@@ -124,9 +124,8 @@ $do32:	ldi	v0, SYS_ify(osf_getrusage)
 
 	.align 3
 $error:
-	lda	pv, __syscall_error
 	addq	sp, 16, sp
-	jmp	zero, (pv), __syscall_error
+	jmp	zero, __syscall_error
 
 END(GETRUSAGE)
 

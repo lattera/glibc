@@ -1,3 +1,34 @@
+1998-08-23  Ricahrd Henderson  <rth@cygnus.com>
+
+	* sysdeps/alpha/elf/crtbegin.S: Fix .prologue; no pv used.
+	* sysdeps/alpha/elf/crtend.S: Likewise.
+	* sysdeps/alpha/elf/start.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/rt_sigaction.S: Fix .prologue;
+	non-standard pv usage.
+
+	* sysdeps/unix/sysv/linux/alpha/brk.S: Use jmp macro for relaxation.
+	* sysdeps/unix/sysv/linux/alpha/getitimer.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/getrusage.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/gettimeofday.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/ieee_get_fp_control.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/ieee_set_fp_control.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/select.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/setitimer.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/settimeofday.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/utimes.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/wait4.S: Likewise.
+
+	* sysdeps/alpha/fpu/e_sqrt.c: Use the asm version when the input is
+	a finite non-denormal, deferring to the full IEEE version otherwise.
+
+	* sysdeps/alpha/fpu/bits/mathinline.h (__floorf, __floor):
+	Early out for -0.  Optimize for !_IEEE_FP_INEXACT.
+	* sysdeps/alpha/fpu/s_floor.c: New.
+	* sysdeps/alpha/fpu/s_floorf.c: New.
+	* sysdeps/alpha/fpu/s_ceil.c: New.
+	* sysdeps/alpha/fpu/s_ceilf.c: New.
+
 1998-08-22  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/arm/bits/string.h: New file.

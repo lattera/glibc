@@ -75,7 +75,7 @@ __inline_copysign(copysign, double)
 #undef __MATH_INLINE_copysign
 
 
-#if defined __GNUC__ && (__GNUC__ > 2 || __GNUC__ == 2 && __GNUC_MINOR__ >= 8)
+#if defined __GNUC__ && (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 8))
 __MATH_INLINE float __fabsf (float __x) { return __builtin_fabsf (__x); }
 __MATH_INLINE float fabsf (float __x) { return __builtin_fabsf (__x); }
 __MATH_INLINE double __fabs (double __x) { return __builtin_fabs (__x); }
@@ -106,7 +106,8 @@ __inline_fabs(fabs, double)
 __MATH_INLINE float
 __floorf (float __x)
 {
-  if (fabsf (__x) < 16777216.0f)  /* 1 << FLT_MANT_DIG */
+  /* Check not zero since floor(-0) == -0.  */
+  if (__x != 0 && fabsf (__x) < 16777216.0f)  /* 1 << FLT_MANT_DIG */
     {
       /* Note that Alpha S_Floating is stored in registers in a
 	 restricted T_Floating format, so we don't even need to
@@ -116,10 +117,13 @@ __floorf (float __x)
       float __tmp1, __tmp2;
 
       __asm ("cvtst/s %3,%2\n\t"
+#ifdef _IEEE_FP_INEXACT
 	     "cvttq/svim %2,%1\n\t"
-	     "cvtqt/suim %1,%0\n\t"
-	     "trapb"
-	     : "=&f"(__x), "=&f"(__tmp1), "=&f"(__tmp2)
+#else
+	     "cvttq/svm %2,%1\n\t"
+#endif
+	     "cvtqt/m %1,%0\n\t"
+	     : "=f"(__x), "=&f"(__tmp1), "=&f"(__tmp2)
 	     : "f"(__x));
     }
   return __x;
@@ -128,13 +132,17 @@ __floorf (float __x)
 __MATH_INLINE double
 __floor (double __x)
 {
-  if (fabs (__x) < 9007199254740992.0)  /* 1 << DBL_MANT_DIG */
+  if (__x != 0 && fabs (__x) < 9007199254740992.0)  /* 1 << DBL_MANT_DIG */
     {
       double __tmp1;
-      __asm ("cvttq/svim %2,%1\n\t"
-	     "cvtqt/suim %1,%0\n\t"
-	     "trapb"
-	     : "=&f"(__x), "=&f"(__tmp1)
+      __asm (
+#ifdef _IEEE_FP_INEXACT
+	     "cvttq/svim %2,%1\n\t"
+#else
+	     "cvttq/svm %2,%1\n\t"
+#endif
+	     "cvtqt/m %1,%0\n\t"
+	     : "=f"(__x), "=&f"(__tmp1)
 	     : "f"(__x));
     }
   return __x;

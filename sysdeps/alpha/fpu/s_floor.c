@@ -1,6 +1,6 @@
-/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by David Mosberger <davidm@azstarnet.com>, 1995.
+   Contributed by Richard Henderson.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,43 +17,23 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
-
-#define SSI_IEEE_FP_CONTROL	14
-
-LEAF(__ieee_set_fp_control, 16)
-#ifdef PROF
-	ldgp	gp, 0(pv)
-	lda	sp, -16(sp)
-	.set noat
-	lda	AT, _mcount
-	jsr	AT, (AT), _mcount
-	.set at
-	.prologue 1
-#else
-	lda	sp, -16(sp)
-	.prologue 0
+#ifndef __USE_EXTERN_INLINES
+#define __USE_EXTERN_INLINES
 #endif
+#define __floor __i_floor
 
-	stq	a0, 0(sp)
-	mov	sp, a1
-	ldi	a0, SSI_IEEE_FP_CONTROL
-	ldi	v0, __NR_osf_setsysinfo
-	call_pal PAL_callsys
+#include <math.h>
 
-	bne	a3, $error
+#undef __floor
 
-	lda	sp, 16(sp)
-	ret
+double
+__floor (double x)
+{
+  return __i_floor(x);
+}
 
-$error:
-#ifndef PROF
-	br	gp, 1f
-1:	ldgp	gp, 0(gp)
+weak_alias (__floor, floor)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__floor, __floorl)
+weak_alias (__floor, floorl)
 #endif
-	lda	sp, 16(sp)
-	jmp	zero, __syscall_error
-
-	END(__ieee_set_fp_control)
-
-weak_alias (__ieee_set_fp_control, ieee_set_fp_control)
