@@ -1,3 +1,9 @@
+2004-09-10  Kazuhiro Inaoka <inaoka.kazuhiro@renesas.com>
+
+	* stdlib/longlong.h [__M32R__] (add_ssaaaa, sub_ddmmss): Fix broken
+	instruct operands.
+	* elf/elf.h: Add R_M32R_* relocs.
+
 2004-09-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/sys/cdefs.h: Despite what the gcc manual says, gcc 3.2
