@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)mp.h	10.22 (Sleepycat) 11/28/97
+ *	@(#)mp.h	10.25 (Sleepycat) 1/8/98
  */
 
 struct __bh;		typedef struct __bh BH;
@@ -41,13 +41,17 @@ struct __mpoolfile;	typedef struct __mpoolfile MPOOLFILE;
  *	Acquire the region lock.
  *	Find the buffer header.
  *	Increment the reference count (guarantee the buffer stays).
- *	If the BH_LOCKED flag is set (I/O is going on):
- *		Release the region lock.
- *		Request the buffer lock.
- *		The I/O will complete...
- *		Acquire the buffer lock.
- *		Release the buffer lock.
- *		Acquire the region lock.
+ *	While the BH_LOCKED flag is set (I/O is going on) {
+ *	    Release the region lock.
+ *		Explicitly yield the processor if it's not the first pass
+ *		through this loop, otherwise, we can simply spin because
+ *		we'll be simply switching between the two locks.
+ *	    Request the buffer lock.
+ *	    The I/O will complete...
+ *	    Acquire the buffer lock.
+ *	    Release the buffer lock.
+ *	    Acquire the region lock.
+ *	}
  *	Return the buffer.
  *
  * Reading/writing a buffer:
@@ -57,12 +61,16 @@ struct __mpoolfile;	typedef struct __mpoolfile MPOOLFILE;
  *	Set the BH_LOCKED flag.
  *	Acquire the buffer lock (guaranteed not to block).
  *	Release the region lock.
- *	Do the I/O and/or initialize buffer contents.
+ *	Do the I/O and/or initialize the buffer contents.
+ *	Release the buffer lock.
+ *	    At this point, the buffer lock is available, but the logical
+ *	    operation (flagged by BH_LOCKED) is not yet completed.  For
+ *	    this reason, among others, threads checking the BH_LOCKED flag
+ *	    must loop around their test.
  *	Acquire the region lock.
  *	Clear the BH_LOCKED flag.
  *	Release the region lock.
- *	Release the buffer lock.
- *	If reading, return the buffer.
+ *	Return/discard the buffer.
  *
  * Pointers to DB_MPOOL, MPOOL, DB_MPOOLFILE and MPOOLFILE structures are not
  * reacquired when a region lock is reacquired because they couldn't have been
@@ -70,7 +78,8 @@ struct __mpoolfile;	typedef struct __mpoolfile MPOOLFILE;
  */
 #define	LOCKINIT(dbmp, mutexp)						\
 	if (F_ISSET(dbmp, MP_LOCKHANDLE | MP_LOCKREGION))		\
-		(void)__db_mutex_init(mutexp, (dbmp)->fd)
+		(void)__db_mutex_init(mutexp,				\
+		    MUTEX_LOCK_OFFSET((dbmp)->maddr, mutexp))
 
 #define	LOCKHANDLE(dbmp, mutexp)					\
 	if (F_ISSET(dbmp, MP_LOCKHANDLE))				\

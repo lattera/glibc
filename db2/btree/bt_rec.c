@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_rec.c	10.17 (Sleepycat) 11/2/97";
+static const char sccsid[] = "@(#)bt_rec.c	10.18 (Sleepycat) 12/15/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -69,10 +69,17 @@ __bam_pg_alloc_recover(logp, dbtp, lsnp, redo, info)
 	 */
 	pgno = PGNO_METADATA;
 	if ((ret = memp_fget(mpf, &pgno, 0, &meta)) != 0) {
+		/* The metadata page must always exist. */
 		(void)__db_pgerr(file_dbp, pgno);
 		goto out;
 	}
 	if ((ret = memp_fget(mpf, &argp->pgno, DB_MPOOL_CREATE, &pagep)) != 0) {
+		/*
+		 * We specify creation and check for it later, because this
+		 * operation was supposed to create the page, and even in
+		 * the undo case it's going to get linked onto the freelist
+		 * which we're also fixing up.
+		 */
 		(void)__db_pgerr(file_dbp, argp->pgno);
 		(void)memp_fput(mpf, meta, 0);
 		goto out;
@@ -162,6 +169,15 @@ __bam_pg_free_recover(logp, dbtp, lsnp, redo, info)
 	 * we're undoing the operation, we get the page and restore its header.
 	 */
 	if ((ret = memp_fget(mpf, &argp->pgno, 0, &pagep)) != 0) {
+		/*
+		 * We don't automatically create the page.  The only way the
+		 * page might not exist is if the alloc never happened, and
+		 * the only way the alloc might never have happened is if we
+		 * are undoing, in which case there's no reason to create the
+		 * page.
+		 */
+		if (!redo)
+			goto done;
 		(void)__db_pgerr(file_dbp, argp->pgno);
 		goto out;
 	}
@@ -192,6 +208,7 @@ __bam_pg_free_recover(logp, dbtp, lsnp, redo, info)
 	 */
 	pgno = PGNO_METADATA;
 	if ((ret = memp_fget(mpf, &pgno, 0, &meta)) != 0) {
+		/* The metadata page must always exist. */
 		(void)__db_pgerr(file_dbp, pgno);
 		goto out;
 	}
@@ -217,7 +234,7 @@ __bam_pg_free_recover(logp, dbtp, lsnp, redo, info)
 		goto out;
 	}
 
-	*lsnp = argp->prev_lsn;
+done:	*lsnp = argp->prev_lsn;
 	ret = 0;
 
 out:	REC_CLOSE;
@@ -389,7 +406,7 @@ __bam_split_recover(logp, dbtp, lsnp, redo, info)
 		 * interest only if it wasn't a root split -- inserting a new
 		 * page in the tree requires that any following page have its
 		 * previous-page pointer updated to our new page.  The next
-		 * page had better exist.
+		 * page must exist because we're redoing the operation.
 		 */
 		if (!rootsplit && !IS_ZERO_LSN(argp->nlsn)) {
 			if ((ret = memp_fget(mpf, &argp->npgno, 0, &np)) != 0) {
@@ -409,12 +426,14 @@ __bam_split_recover(logp, dbtp, lsnp, redo, info)
 	} else {
 		/*
 		 * If the split page is wrong, replace its contents with the
-		 * logged page contents.  The split page had better exist.
+		 * logged page contents.  If the page doesn't exist, it means
+		 * that the create of the page never happened, nor did any of
+		 * the adds onto the page that caused the split, and there's
+		 * really no undo-ing to be done.
 		 */
 		if ((ret = memp_fget(mpf, &pgno, 0, &pp)) != 0) {
-			(void)__db_pgerr(file_dbp, pgno);
 			pp = NULL;
-			goto out;
+			goto lrundo;
 		}
 		if (log_compare(lsnp, &LSN(pp)) == 0) {
 			memcpy(pp, argp->pg.data, argp->pg.size);
@@ -424,13 +443,14 @@ __bam_split_recover(logp, dbtp, lsnp, redo, info)
 		}
 
 		/*
-		 * If it's a root split and the left child ever existed, put
-		 * it on the free list.  (If it's not a root split, we just
-		 * updated the left page -- it's the same as the split page.)
-		 * If the right child ever existed, root split or not, put it
-		 * on the free list.
+		 * If it's a root split and the left child ever existed, update
+		 * its LSN.  (If it's not a root split, we've updated the left
+		 * page already -- it's the same as the split page.) If the
+		 * right child ever existed, root split or not, update its LSN.
+		 * The undo of the page allocation(s) will restore them to the
+		 * free list.
 		 */
-		if ((rootsplit && lp != NULL) || rp != NULL) {
+lrundo:		if ((rootsplit && lp != NULL) || rp != NULL) {
 			if (rootsplit && lp != NULL &&
 			    log_compare(lsnp, &LSN(lp)) == 0) {
 				lp->lsn = argp->llsn;
@@ -453,14 +473,14 @@ __bam_split_recover(logp, dbtp, lsnp, redo, info)
 		 * Finally, undo the next-page link if necessary.  This is of
 		 * interest only if it wasn't a root split -- inserting a new
 		 * page in the tree requires that any following page have its
-		 * previous-page pointer updated to our new page.  The next
-		 * page had better exist.
+		 * previous-page pointer updated to our new page.  Since it's
+		 * possible that the next-page never existed, we ignore it as
+		 * if there's nothing to undo.
 		 */
 		if (!rootsplit && !IS_ZERO_LSN(argp->nlsn)) {
 			if ((ret = memp_fget(mpf, &argp->npgno, 0, &np)) != 0) {
-				(void)__db_pgerr(file_dbp, argp->npgno);
 				np = NULL;
-				goto out;
+				goto done;
 			}
 			if (log_compare(lsnp, &LSN(np)) == 0) {
 				PREV_PGNO(np) = argp->left;
@@ -472,8 +492,8 @@ __bam_split_recover(logp, dbtp, lsnp, redo, info)
 		}
 	}
 
-done:	ret = 0;
-	*lsnp = argp->prev_lsn;
+done:	*lsnp = argp->prev_lsn;
+	ret = 0;
 
 	if (0) {
 fatal:		(void)__db_panic(file_dbp);
@@ -525,8 +545,8 @@ __bam_rsplit_recover(logp, dbtp, lsnp, redo, info)
 	/* Fix the root page. */
 	pgno = PGNO_ROOT;
 	if ((ret = memp_fget(mpf, &pgno, 0, &pagep)) != 0) {
+		/* The root page must always exist. */
 		__db_pgerr(file_dbp, pgno);
-		pagep = NULL;
 		goto out;
 	}
 	modified = 0;
@@ -554,10 +574,15 @@ __bam_rsplit_recover(logp, dbtp, lsnp, redo, info)
 		goto out;
 	}
 
-	/* Fix the page copied over the root page. */
+	/*
+	 * Fix the page copied over the root page.  It's possible that the
+	 * page never made it to disk, so if we're undo-ing and the page
+	 * doesn't exist, it's okay and there's nothing further to do.
+	 */
 	if ((ret = memp_fget(mpf, &argp->pgno, 0, &pagep)) != 0) {
+		if (!redo)
+			goto done;
 		(void)__db_pgerr(file_dbp, argp->pgno);
-		pagep = NULL;
 		goto out;
 	}
 	modified = 0;
@@ -577,8 +602,8 @@ __bam_rsplit_recover(logp, dbtp, lsnp, redo, info)
 		goto out;
 	}
 
+done:	*lsnp = argp->prev_lsn;
 	ret = 0;
-	*lsnp = argp->prev_lsn;
 
 out:	REC_CLOSE;
 }
@@ -607,9 +632,11 @@ __bam_adj_recover(logp, dbtp, lsnp, redo, info)
 	REC_PRINT(__bam_adj_print);
 	REC_INTRO(__bam_adj_read);
 
+	/* Get the page; if it never existed and we're undoing, we're done. */
 	if ((ret = memp_fget(mpf, &argp->pgno, 0, &pagep)) != 0) {
+		if (!redo)
+			goto done;
 		(void)__db_pgerr(file_dbp, argp->pgno);
-		pagep = NULL;
 		goto out;
 	}
 
@@ -633,8 +660,11 @@ __bam_adj_recover(logp, dbtp, lsnp, redo, info)
 		LSN(pagep) = argp->lsn;
 		modified = 1;
 	}
-	if ((ret = memp_fput(mpf, pagep, modified ? DB_MPOOL_DIRTY : 0)) == 0)
-		*lsnp = argp->prev_lsn;
+	if ((ret = memp_fput(mpf, pagep, modified ? DB_MPOOL_DIRTY : 0)) != 0)
+		goto out;
+
+done:	*lsnp = argp->prev_lsn;
+	ret = 0;
 
 	if (0) {
 err:		(void)memp_fput(mpf, pagep, 0);
@@ -667,9 +697,11 @@ __bam_cadjust_recover(logp, dbtp, lsnp, redo, info)
 	REC_PRINT(__bam_cadjust_print);
 	REC_INTRO(__bam_cadjust_read);
 
+	/* Get the page; if it never existed and we're undoing, we're done. */
 	if ((ret = memp_fget(mpf, &argp->pgno, 0, &pagep)) != 0) {
+		if (!redo)
+			goto done;
 		(void)__db_pgerr(file_dbp, argp->pgno);
-		pagep = NULL;
 		goto out;
 	}
 
@@ -708,8 +740,11 @@ __bam_cadjust_recover(logp, dbtp, lsnp, redo, info)
 		LSN(pagep) = argp->lsn;
 		modified = 1;
 	}
-	if ((ret = memp_fput(mpf, pagep, modified ? DB_MPOOL_DIRTY : 0)) == 0)
-		*lsnp = argp->prev_lsn;
+	if ((ret = memp_fput(mpf, pagep, modified ? DB_MPOOL_DIRTY : 0)) != 0)
+		goto out;
+
+done:	*lsnp = argp->prev_lsn;
+	ret = 0;
 
 out:	REC_CLOSE;
 }
@@ -738,9 +773,11 @@ __bam_cdel_recover(logp, dbtp, lsnp, redo, info)
 	REC_PRINT(__bam_cdel_print);
 	REC_INTRO(__bam_cdel_read);
 
+	/* Get the page; if it never existed and we're undoing, we're done. */
 	if ((ret = memp_fget(mpf, &argp->pgno, 0, &pagep)) != 0) {
+		if (!redo)
+			goto done;
 		(void)__db_pgerr(file_dbp, argp->pgno);
-		pagep = NULL;
 		goto out;
 	}
 
@@ -760,8 +797,11 @@ __bam_cdel_recover(logp, dbtp, lsnp, redo, info)
 		LSN(pagep) = argp->lsn;
 		modified = 1;
 	}
-	if ((ret = memp_fput(mpf, pagep, modified ? DB_MPOOL_DIRTY : 0)) == 0)
-		*lsnp = argp->prev_lsn;
+	if ((ret = memp_fput(mpf, pagep, modified ? DB_MPOOL_DIRTY : 0)) != 0)
+		goto out;
+
+done:	*lsnp = argp->prev_lsn;
+	ret = 0;
 
 out:	REC_CLOSE;
 }
@@ -793,9 +833,11 @@ __bam_repl_recover(logp, dbtp, lsnp, redo, info)
 	REC_PRINT(__bam_repl_print);
 	REC_INTRO(__bam_repl_read);
 
+	/* Get the page; if it never existed and we're undoing, we're done. */
 	if ((ret = memp_fget(mpf, &argp->pgno, 0, &pagep)) != 0) {
+		if (!redo)
+			goto done;
 		(void)__db_pgerr(file_dbp, argp->pgno);
-		pagep = NULL;
 		goto out;
 	}
 	bk = GET_BKEYDATA(pagep, argp->indx);
@@ -860,8 +902,11 @@ __bam_repl_recover(logp, dbtp, lsnp, redo, info)
 		LSN(pagep) = argp->lsn;
 		modified = 1;
 	}
-	if ((ret = memp_fput(mpf, pagep, modified ? DB_MPOOL_DIRTY : 0)) == 0)
-		*lsnp = argp->prev_lsn;
+	if ((ret = memp_fput(mpf, pagep, modified ? DB_MPOOL_DIRTY : 0)) != 0)
+		goto out;
+
+done:	*lsnp = argp->prev_lsn;
+	ret = 0;
 
 	if (0) {
 err:		(void)memp_fput(mpf, pagep, 0);

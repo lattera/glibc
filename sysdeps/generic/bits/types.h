@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -110,5 +110,9 @@ typedef __u_quad_t __fsblkcnt64_t;
 /* Type to count file system inodes.  */
 typedef unsigned long int __fsfilcnt_t;
 typedef __u_quad_t __fsfilcnt64_t;
+
+/* Used in XTI.  */
+typedef int __t_scalar_t;
+typedef unsigned int __t_uscalar_t;
 
 #endif /* bits/types.h */

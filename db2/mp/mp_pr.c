@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_pr.c	10.20 (Sleepycat) 11/26/97";
+static const char sccsid[] = "@(#)mp_pr.c	10.21 (Sleepycat) 1/6/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -24,8 +24,6 @@ static const char sccsid[] = "@(#)mp_pr.c	10.20 (Sleepycat) 11/26/97";
 #include "shqueue.h"
 #include "db_shash.h"
 #include "mp.h"
-
-void __memp_debug __P((DB_MPOOL *, FILE *, int));
 
 static void __memp_pbh __P((FILE *, DB_MPOOL *, BH *, int));
 static void __memp_pdbmf __P((FILE *, DB_MPOOLFILE *, int));

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_cursor.c	10.37 (Sleepycat) 11/22/97";
+static const char sccsid[] = "@(#)bt_cursor.c	10.41 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -128,22 +128,25 @@ __bam_c_iclose(dbp, dbc)
 	CURSOR *cp;
 	int ret;
 
-	cp = dbc->internal;
+	/*
+	 * All cursors are queued from the master DB structure.  For
+	 * now, discard the DB handle which triggered this call, and
+	 * replace it with the cursor's reference.
+	 */
+	dbp = dbc->dbp;
 
 	/* If a cursor key was deleted, perform the actual deletion.  */
+	cp = dbc->internal;
 	ret = F_ISSET(cp, C_DELETED) ? __bam_c_physdel(dbp, cp, NULL) : 0;
 
 	/* Discard any lock if we're not inside a transaction. */
 	if (cp->lock != LOCK_INVALID)
 		(void)__BT_TLPUT(dbp, cp->lock);
 
-	/*
-	 * All cursors are queued from the master DB structure.  Remove the
-	 * cursor from that queue.
-	 */
-	DB_THREAD_LOCK(dbc->dbp);
-	TAILQ_REMOVE(&dbc->dbp->curs_queue, dbc, links);
-	DB_THREAD_UNLOCK(dbc->dbp);
+	/* Remove the cursor from the queue. */
+	DB_THREAD_LOCK(dbp);
+	TAILQ_REMOVE(&dbp->curs_queue, dbc, links);
+	DB_THREAD_UNLOCK(dbp);
 
 	/* Discard the structures. */
 	FREE(dbc->internal, sizeof(CURSOR));
@@ -451,6 +454,8 @@ __bam_c_rget(dbp, cp, data, flags)
 	DBT dbt;
 	db_recno_t recno;
 	int exact, ret;
+
+	COMPQUIET(flags, 0);
 
 	/* Get the page with the current item on it. */
 	if ((ret = __bam_pget(dbp, &cp->page, &cp->pgno, 0)) != 0)
@@ -1086,6 +1091,8 @@ __bam_ovfl_chk(dbp, cp, indx, to_end)
 /*
  * __bam_cprint --
  *	Display the current btree cursor list.
+ *
+ * PUBLIC: int __bam_cprint __P((DB *));
  */
 int
 __bam_cprint(dbp)
@@ -1258,12 +1265,11 @@ __bam_ca_dup(dbp, fpgno, first, fi, tpgno, ti)
  * __bam_ca_move --
  *	Adjust the cursors when moving data items to another page.
  *
- * PUBLIC: void __bam_ca_move __P((DB *, BTREE *, db_pgno_t, db_pgno_t));
+ * PUBLIC: void __bam_ca_move __P((DB *, db_pgno_t, db_pgno_t));
  */
 void
-__bam_ca_move(dbp, t, fpgno, tpgno)
+__bam_ca_move(dbp, fpgno, tpgno)
 	DB *dbp;
-	BTREE *t;
 	db_pgno_t fpgno, tpgno;
 {
 	CURSOR *cp;

@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_register.c	10.12 (Sleepycat) 9/29/97";
+static const char sccsid[] = "@(#)log_register.c	10.14 (Sleepycat) 1/19/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -35,8 +35,7 @@ log_register(dblp, dbp, name, type, idp)
 	DBTYPE type;
 	u_int32_t *idp;
 {
-	DBT r_name;
-	DBT fid_dbt;
+	DBT fid_dbt, r_name;
 	DB_LSN r_unused;
 	FNAME *fnp;
 	size_t len;
@@ -75,10 +74,7 @@ log_register(dblp, dbp, name, type, idp)
 		    R_ADDR(dblp, fnp->fileid_off), DB_FILE_ID_LEN)) {
 			++fnp->ref;
 			fid = fnp->id;
-			if (!F_ISSET(dblp, DB_AM_RECOVER) &&
-			    (ret = __log_add_logid(dblp, dbp, fid) != 0))
-				goto err;
-			goto ret1;
+			goto found;
 		}
 	}
 
@@ -107,7 +103,7 @@ log_register(dblp, dbp, name, type, idp)
 	SH_TAILQ_INSERT_HEAD(&dblp->lp->fq, fnp, q, __fname);
 	inserted = 1;
 
-	/* Log the registry. */
+found:	/* Log the registry. */
 	if (!F_ISSET(dblp, DB_AM_RECOVER)) {
 		r_name.data = (void *)name;		/* XXX: Yuck! */
 		r_name.size = strlen(name) + 1;
@@ -115,7 +111,7 @@ log_register(dblp, dbp, name, type, idp)
 		fid_dbt.data = dbp->lock.fileid;
 		fid_dbt.size = DB_FILE_ID_LEN;
 		if ((ret = __log_register_log(dblp, NULL, &r_unused,
-		    0, &r_name, &fid_dbt, fid, type)) != 0)
+		    0, LOG_OPEN, &r_name, &fid_dbt, fid, type)) != 0)
 			goto err;
 		if ((ret = __log_add_logid(dblp, dbp, fid)) != 0)
 			goto err;
@@ -136,7 +132,7 @@ err:		/*
 			__db_shalloc_free(dblp->addr, fnp);
 	}
 
-ret1:	UNLOCK_LOGREGION(dblp);
+	UNLOCK_LOGREGION(dblp);
 
 	if (fullname != NULL)
 		FREES(fullname);
@@ -155,17 +151,13 @@ log_unregister(dblp, fid)
 	DB_LOG *dblp;
 	u_int32_t fid;
 {
+	DBT fid_dbt, r_name;
 	DB_LSN r_unused;
 	FNAME *fnp;
 	int ret;
 
 	ret = 0;
 	LOCK_LOGREGION(dblp);
-
-	/* Unlog the registry. */
-	if (!F_ISSET(dblp, DB_AM_RECOVER) &&
-	    (ret = __log_unregister_log(dblp, NULL, &r_unused, 0, fid)) != 0)
-		return (ret);
 
 	/* Find the entry in the log. */
 	for (fnp = SH_TAILQ_FIRST(&dblp->lp->fq, __fname);
@@ -178,17 +170,31 @@ log_unregister(dblp, fid)
 		goto ret1;
 	}
 
-	/* If more than 1 reference, decrement the reference and return. */
-	if (fnp->ref > 1) {
-		--fnp->ref;
-		goto ret1;
+	/* Unlog the registry. */
+	if (!F_ISSET(dblp, DB_AM_RECOVER)) {
+		memset(&r_name, 0, sizeof(r_name));
+		r_name.data = R_ADDR(dblp, fnp->name_off);
+		r_name.size = strlen(r_name.data) + 1;
+		memset(&fid_dbt, 0, sizeof(fid_dbt));
+		fid_dbt.data =  R_ADDR(dblp, fnp->fileid_off);
+		fid_dbt.size = DB_FILE_ID_LEN;
+		if ((ret = __log_register_log(dblp, NULL, &r_unused,
+		    0, LOG_CLOSE, &r_name, &fid_dbt, fid, fnp->s_type)) != 0)
+			goto ret1;
 	}
 
-	/* Free the unique file information, name and structure. */
-	__db_shalloc_free(dblp->addr, R_ADDR(dblp, fnp->fileid_off));
-	__db_shalloc_free(dblp->addr, R_ADDR(dblp, fnp->name_off));
-	SH_TAILQ_REMOVE(&dblp->lp->fq, fnp, q, __fname);
-	__db_shalloc_free(dblp->addr, fnp);
+	/*
+	 * If more than 1 reference, just decrement the reference and return.
+	 * Otherwise, free the unique file information, name and structure.
+	 */
+	if (fnp->ref > 1)
+		--fnp->ref;
+	else {
+		__db_shalloc_free(dblp->addr, R_ADDR(dblp, fnp->fileid_off));
+		__db_shalloc_free(dblp->addr, R_ADDR(dblp, fnp->name_off));
+		SH_TAILQ_REMOVE(&dblp->lp->fq, fnp, q, __fname);
+		__db_shalloc_free(dblp->addr, fnp);
+	}
 
 	/*
 	 * Remove from the process local table.  If this operation is taking
@@ -199,6 +205,5 @@ log_unregister(dblp, fid)
 		__log_rem_logid(dblp, fid);
 
 ret1:	UNLOCK_LOGREGION(dblp);
-
 	return (ret);
 }

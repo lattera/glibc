@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)log.src	10.3 (Sleepycat) 8/20/97
+ *	@(#)log.src	10.4 (Sleepycat) 1/17/98
  *
  * This is the source file used to create the logging functions for the
  * log package.  Each access method (or set of routines wishing to register
@@ -40,14 +40,11 @@
  */
 PREFIX	log
 
-/* Used for registering new name/id translations. */
+/* Used for registering name/id translations at open or close. */
 BEGIN	register
+ARG	opcode		u_int32_t	lu
 DBT	name		DBT		s
 DBT	uid		DBT		s
 ARG	id		u_int32_t	lu
 ARG	ftype		DBTYPE		lx
-END
-
-BEGIN	unregister
-ARG	id		u_int32_t	lu
 END

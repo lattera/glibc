@@ -36,7 +36,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)db_185.h.src	8.4 (Sleepycat) 9/16/97
+ *	@(#)db_185.h.src	8.5 (Sleepycat) 1/15/98
  */
 
 #ifndef _DB_185_H_
@@ -76,8 +76,8 @@
  * XXX
  * SGI/IRIX already has a pgno_t.
  */
-#ifdef sgi
-#define        pgno_t  db_pgno_t
+#ifdef	sgi
+#define	pgno_t	db_pgno_t
 #endif
 
 #define	MAX_PAGE_NUMBER	0xffffffff	/* >= # of pages in a file */
@@ -174,6 +174,6 @@ DB *__dbopen __P((const char *, int, int, DBTYPE, const void *));
 DB *dbopen __P((const char *, int, int, DBTYPE, const void *));
 
 #if defined(__cplusplus)
-};
+}
 #endif
 #endif /* !_DB_185_H_ */

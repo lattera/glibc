@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_archive.c	10.29 (Sleepycat) 11/12/97";
+static const char sccsid[] = "@(#)log_archive.c	10.30 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -49,7 +49,7 @@ log_archive(dblp, listp, flags, db_malloc)
 	int array_size, n, ret;
 	char **array, **arrayp, *name, *p, *pref, buf[MAXPATHLEN];
 
-	fnum = 0;				/* XXX: Shut the compiler up. */
+	COMPQUIET(fnum, 0);
 
 #define	OKFLAGS	(DB_ARCH_ABS | DB_ARCH_DATA | DB_ARCH_LOG)
 	if (flags != 0) {

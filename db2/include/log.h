@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)log.h	10.16 (Sleepycat) 11/9/97
+ *	@(#)log.h	10.19 (Sleepycat) 1/17/98
  */
 
 #ifndef _LOG_H_
@@ -15,15 +15,13 @@ struct __hdr;		typedef struct __hdr HDR;
 struct __log;		typedef struct __log LOG;
 struct __log_persist;	typedef struct __log_persist LOGP;
 
-#define	MEGABYTE	(1024 * 1024)
-
 #define	MAXLFNAME	99999		/* Maximum log file name. */
 #define	LFNAME		"log.%05d"	/* Log file name template. */
 
 					/* Default log name. */
 #define DB_DEFAULT_LOG_FILE	"__db_log.share"
 
-#define	DEFAULT_MAX	(10 * 1048576)	/* 10 Mb. */
+#define	DEFAULT_MAX	(10 * MEGABYTE)	/* 10 Mb. */
 
 /* Macros to lock/unlock the region and threads. */
 #define	LOCK_LOGTHREAD(dblp)						\
@@ -125,7 +123,7 @@ struct __log {
 
 	/*
 	 * The s_lsn LSN is the last LSN that we know is on disk, not just
-	 * written, by synced.
+	 * written, but synced.
 	 */
 	DB_LSN	  s_lsn;		/* LSN of the last sync. */
 
@@ -165,6 +163,11 @@ struct __fname {
 
 	size_t	  name_off;		/* Name offset. */
 };
+
+/* File open/close register log record opcodes. */
+#define	LOG_CHECKPOINT	1		/* Checkpoint: file name/id dump. */
+#define	LOG_CLOSE	2		/* File close. */
+#define	LOG_OPEN	3		/* File open. */
 
 #include "log_auto.h"
 #include "log_ext.h"

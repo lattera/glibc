@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ libdb-routines := bt_close bt_compare bt_conv bt_cursor bt_delete \
 	bt_open bt_page bt_put bt_rec bt_recno bt_rsearch bt_search \
 	bt_split bt_stat btree_auto db db_appinit db_apprec \
 	db_auto \
-	db_byteorder db_conv db_dispatch db_dup db_err db_log2 \
+	db_byteorder db_conv db_dispatch db_dup db_err db_log2 os_alloc \
 	os_abs os_config os_dir os_fid os_fsync os_map os_oflags \
 	os_open os_rpath os_rw os_seek os_sleep os_stat os_unlink \
 	os_spin db_overflow db_pr db_rec db_region db_ret db_salloc \

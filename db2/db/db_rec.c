@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_rec.c	10.10 (Sleepycat) 11/2/97";
+static const char sccsid[] = "@(#)db_rec.c	10.12 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -87,8 +87,8 @@ __db_addrem_recover(logp, dbtp, lsnp, redo, info)
 	} else if ((cmp_n == 0 && !redo && argp->opcode == DB_ADD_DUP) ||
 	    (cmp_p == 0 && redo && argp->opcode == DB_REM_DUP)) {
 		/* Need to undo an add, or redo a delete. */
-		if ((ret = __db_ditem(file_dbp, pagep, argp->indx,
-		    argp->nbytes)) != 0)
+		if ((ret = __db_ditem(file_dbp,
+		    pagep, argp->indx, argp->nbytes)) != 0)
 			goto out;
 		change = DB_MPOOL_DIRTY;
 	}
@@ -585,6 +585,9 @@ __db_debug_recover(logp, dbtp, lsnp, redo, info)
 	__db_debug_args *argp;
 	int ret;
 
+	COMPQUIET(redo, 0);
+	COMPQUIET(logp, NULL);
+
 	REC_PRINT(__db_debug_print);
 	REC_NOOP_INTRO(__db_debug_read);
 
@@ -611,6 +614,9 @@ __db_noop_recover(logp, dbtp, lsnp, redo, info)
 {
 	__db_noop_args *argp;
 	int ret;
+
+	COMPQUIET(redo, 0);
+	COMPQUIET(logp, NULL);
 
 	REC_PRINT(__db_noop_print);
 	REC_NOOP_INTRO(__db_noop_read);

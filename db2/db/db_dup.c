@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_dup.c	10.10 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)db_dup.c	10.11 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -369,14 +369,13 @@ __db_dsplit(dbp, hp, indxp, size, newfunc)
  * __db_ditem --
  *	Remove an item from a page.
  *
- * PUBLIC:  int __db_ditem __P((DB *, PAGE *, int, u_int32_t));
+ * PUBLIC:  int __db_ditem __P((DB *, PAGE *, u_int32_t, u_int32_t));
  */
 int
 __db_ditem(dbp, pagep, indx, nbytes)
 	DB *dbp;
 	PAGE *pagep;
-	int indx;
-	u_int32_t nbytes;
+	u_int32_t indx, nbytes;
 {
 	DBT ldbt;
 	db_indx_t cnt, offset;

@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_open.c	10.21 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)bt_open.c	10.22 (Sleepycat) 1/6/98";
 #endif /* not lint */
 
 /*
@@ -265,18 +265,18 @@ __bam_setmeta(dbp, t)
 {
 	BTMETA *meta;
 	PAGE *root;
-	DB_LOCK mlock, rlock;
+	DB_LOCK metalock, rootlock;
 	db_pgno_t pgno;
 	int ret;
 
 	/* Get, and optionally create the metadata page. */
 	pgno = PGNO_METADATA;
 	if ((ret =
-	    __bam_lget(dbp, 0, PGNO_METADATA, DB_LOCK_WRITE, &mlock)) != 0)
+	    __bam_lget(dbp, 0, PGNO_METADATA, DB_LOCK_WRITE, &metalock)) != 0)
 		return (ret);
 	if ((ret =
 	    __bam_pget(dbp, (PAGE **)&meta, &pgno, DB_MPOOL_CREATE)) != 0) {
-		(void)__BT_LPUT(dbp, mlock);
+		(void)__BT_LPUT(dbp, metalock);
 		return (ret);
 	}
 
@@ -290,7 +290,7 @@ __bam_setmeta(dbp, t)
 		t->bt_minkey = meta->minkey;
 
 		(void)memp_fput(dbp->mpf, (PAGE *)meta, 0);
-		(void)__BT_LPUT(dbp, mlock);
+		(void)__BT_LPUT(dbp, metalock);
 		return (0);
 	}
 
@@ -320,10 +320,11 @@ __bam_setmeta(dbp, t)
 
 	/* Create and initialize a root page. */
 	pgno = PGNO_ROOT;
-	if ((ret = __bam_lget(dbp, 0, PGNO_ROOT, DB_LOCK_WRITE, &rlock)) != 0)
+	if ((ret =
+	    __bam_lget(dbp, 0, PGNO_ROOT, DB_LOCK_WRITE, &rootlock)) != 0)
 		return (ret);
 	if ((ret = __bam_pget(dbp, &root, &pgno, DB_MPOOL_CREATE)) != 0) {
-		(void)__BT_LPUT(dbp, rlock);
+		(void)__BT_LPUT(dbp, rootlock);
 		return (ret);
 	}
 	P_INIT(root, dbp->pgsize, PGNO_ROOT, PGNO_INVALID,
@@ -348,8 +349,8 @@ __bam_setmeta(dbp, t)
 		ret = EINVAL;
 
 	/* Release the locks. */
-	(void)__BT_LPUT(dbp, mlock);
-	(void)__BT_LPUT(dbp, rlock);
+	(void)__BT_LPUT(dbp, metalock);
+	(void)__BT_LPUT(dbp, rootlock);
 
 	return (ret);
 }

@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fget.c	10.32 (Sleepycat) 11/26/97";
+static const char sccsid[] = "@(#)mp_fget.c	10.33 (Sleepycat) 12/2/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -272,8 +272,17 @@ found:		/* Increment the reference count. */
 		 * discarded we know the buffer can't move and its contents
 		 * can't change.
 		 */
-		if (F_ISSET(bhp, BH_LOCKED)) {
+		for (cnt = 0; F_ISSET(bhp, BH_LOCKED); ++cnt) {
 			UNLOCKREGION(dbmp);
+
+			/*
+			 * Sleep so that we don't simply spin, switching locks.
+			 * (See the comment in include/mp.h.)
+			 */
+			if (cnt != 0 &&
+			    (__db_yield == NULL || __db_yield() != 0))
+				__db_sleep(0, 1);
+
 			LOCKBUFFER(dbmp, bhp);
 			/* Waiting for I/O to finish... */
 			UNLOCKBUFFER(dbmp, bhp);

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_err.c	10.19 (Sleepycat) 11/9/97";
+static const char sccsid[] = "@(#)db_err.c	10.21 (Sleepycat) 1/13/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -97,7 +97,9 @@ __db_ecursor(a, b, c)
 	DB_TXN *b;
 	DBC **c;
 {
-	a = a; b = b; c = c;			/* XXX: Shut the compiler up. */
+	COMPQUIET(a, NULL);
+	COMPQUIET(b, NULL);
+	COMPQUIET(c, NULL);
 
 	return (EPERM);
 }
@@ -113,7 +115,10 @@ __db_edel(a, b, c, d)
 	DBT *c;
 	int d;
 {
-	a = a; b = b; c = c; d = d;		/* XXX: Shut the compiler up. */
+	COMPQUIET(a, NULL);
+	COMPQUIET(b, NULL);
+	COMPQUIET(c, NULL);
+	COMPQUIET(d, 0);
 
 	return (EPERM);
 }
@@ -127,7 +132,8 @@ __db_efd(a, b)
 	DB *a;
 	int *b;
 {
-	a = a; b = b;				/* XXX: Shut the compiler up. */
+	COMPQUIET(a, NULL);
+	COMPQUIET(b, NULL);
 
 	return (EPERM);
 }
@@ -143,7 +149,11 @@ __db_egp(a, b, c, d, e)
 	DBT *c, *d;
 	int e;
 {
-	a = a; b = b; c = c; d = d; e = e;	/* XXX: Shut the compiler up. */
+	COMPQUIET(a, NULL);
+	COMPQUIET(b, NULL);
+	COMPQUIET(c, NULL);
+	COMPQUIET(d, NULL);
+	COMPQUIET(e, 0);
 
 	return (EPERM);
 }
@@ -159,7 +169,10 @@ __db_estat(a, b, c, d)
 	void *(*c) __P((size_t));
 	int d;
 {
-	a = a; b = b; c = c; d = d;		/* XXX: Shut the compiler up. */
+	COMPQUIET(a, NULL);
+	COMPQUIET(b, NULL);
+	COMPQUIET(c, NULL);
+	COMPQUIET(d, 0);
 
 	return (EPERM);
 }
@@ -173,7 +186,8 @@ __db_esync(a, b)
 	DB *a;
 	int b;
 {
-	a = a; b = b;				/* XXX: Shut the compiler up. */
+	COMPQUIET(a, NULL);
+	COMPQUIET(b, 0);
 
 	return (EPERM);
 }

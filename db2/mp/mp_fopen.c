@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fopen.c	10.32 (Sleepycat) 11/26/97";
+static const char sccsid[] = "@(#)mp_fopen.c	10.37 (Sleepycat) 1/18/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -28,8 +28,8 @@ static const char sccsid[] = "@(#)mp_fopen.c	10.32 (Sleepycat) 11/26/97";
 #include "common_ext.h"
 
 static int __memp_mf_close __P((DB_MPOOL *, DB_MPOOLFILE *));
-static int __memp_mf_open __P((DB_MPOOL *, DB_MPOOLFILE *,
-    const char *, int, size_t, off_t, int, DBT *, u_int8_t *, MPOOLFILE **));
+static int __memp_mf_open __P((DB_MPOOL *, const char *,
+    int, size_t, db_pgno_t, int, DBT *, u_int8_t *, MPOOLFILE **));
 
 /*
  * memp_fopen --
@@ -84,7 +84,9 @@ __memp_fopen(dbmp, mfp, path,
 {
 	DB_ENV *dbenv;
 	DB_MPOOLFILE *dbmfp;
-	off_t size;
+	db_pgno_t last_pgno;
+	size_t size;
+	u_int32_t mbytes, bytes;
 	int ret;
 	u_int8_t idbuf[DB_FILE_ID_LEN];
 	char *rpath;
@@ -120,6 +122,7 @@ __memp_fopen(dbmp, mfp, path,
 			goto err;
 		}
 		size = 0;
+		last_pgno = 0;
 	} else {
 		/* Get the real name for this file and open it. */
 		if ((ret = __db_appname(dbenv,
@@ -133,17 +136,20 @@ __memp_fopen(dbmp, mfp, path,
 		}
 
 		/* Don't permit files that aren't a multiple of the pagesize. */
-		if ((ret = __db_ioinfo(rpath, dbmfp->fd, &size, NULL)) != 0) {
+		if ((ret = __db_ioinfo(rpath,
+		    dbmfp->fd, &mbytes, &bytes, NULL)) != 0) {
 			__db_err(dbenv, "%s: %s", rpath, strerror(ret));
 			goto err;
 		}
-		if (size % pagesize) {
+		if (bytes % pagesize) {
 			__db_err(dbenv,
 			    "%s: file size not a multiple of the pagesize",
 			    rpath);
 			ret = EINVAL;
 			goto err;
 		}
+		size = mbytes * MEGABYTE + bytes;
+		last_pgno = size == 0 ? 0 : (size - 1) / pagesize;
 
 		/*
 		 * Get the file id if we weren't given one.  Generated file id's
@@ -155,6 +161,7 @@ __memp_fopen(dbmp, mfp, path,
 				goto err;
 			fileid = idbuf;
 		}
+		FREES(rpath);
 	}
 
 	/*
@@ -166,8 +173,8 @@ __memp_fopen(dbmp, mfp, path,
 		LOCKREGION(dbmp);
 
 	if (mfp == NULL)
-		ret = __memp_mf_open(dbmp, dbmfp, path,
-		    ftype, pagesize, size, lsn_offset, pgcookie, fileid, &mfp);
+		ret = __memp_mf_open(dbmp, path, ftype,
+		    pagesize, last_pgno, lsn_offset, pgcookie, fileid, &mfp);
 	else {
 		++mfp->ref;
 		ret = 0;
@@ -216,7 +223,7 @@ __memp_fopen(dbmp, mfp, path,
 		if (LF_ISSET(DB_NOMMAP))
 			F_CLR(mfp, MP_CAN_MMAP);
 		if (size > (dbenv == NULL || dbenv->mp_mmapsize == 0 ?
-		    DB_MAXMMAPSIZE : (off_t)dbenv->mp_mmapsize))
+		    DB_MAXMMAPSIZE : dbenv->mp_mmapsize))
 			F_CLR(mfp, MP_CAN_MMAP);
 	}
 	dbmfp->addr = NULL;
@@ -253,14 +260,13 @@ err:	/*
  *	Open an MPOOLFILE.
  */
 static int
-__memp_mf_open(dbmp, dbmfp, path,
-    ftype, pagesize, size, lsn_offset, pgcookie, fileid, retp)
+__memp_mf_open(dbmp, path,
+    ftype, pagesize, last_pgno, lsn_offset, pgcookie, fileid, retp)
 	DB_MPOOL *dbmp;
-	DB_MPOOLFILE *dbmfp;
 	const char *path;
 	int ftype, lsn_offset;
 	size_t pagesize;
-	off_t size;
+	db_pgno_t last_pgno;
 	DBT *pgcookie;
 	u_int8_t *fileid;
 	MPOOLFILE **retp;
@@ -314,7 +320,7 @@ __memp_mf_open(dbmp, dbmfp, path,
 	 * it away.
 	 */
 	mfp->stat.st_pagesize = pagesize;
-	mfp->last_pgno = size == 0 ? 0 : (size - 1) / mfp->stat.st_pagesize;
+	mfp->last_pgno = last_pgno;
 
 	F_SET(mfp, MP_CAN_MMAP);
 	if (ISTEMPORARY)

@@ -11,12 +11,13 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_apprec.c	10.19 (Sleepycat) 11/23/97";
+static const char sccsid[] = "@(#)db_apprec.c	10.23 (Sleepycat) 1/17/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
+#include <errno.h>
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
@@ -44,9 +45,9 @@ __db_apprec(dbenv, flags)
 {
 	DBT data;
 	DB_LOG *lp;
-	DB_LSN ckp_lsn, first_lsn, lsn, tmp_lsn;
+	DB_LSN ckp_lsn, first_lsn, lsn;
 	time_t now;
-	int first_flag, is_thread, ret;
+	int is_thread, ret;
 	void *txninfo;
 
 	lp = dbenv->lg_info;
@@ -63,73 +64,109 @@ __db_apprec(dbenv, flags)
 	F_CLR(lp, DB_AM_THREAD);
 
 	/*
-	 * Read forward through the log, opening the appropriate files so that
-	 * we can call recovery routines.  In general, we start at the last
-	 * checkpoint prior to the last checkpointed LSN.  For catastrophic
-	 * recovery, we begin at the first LSN that appears in any log file
-	 * (log_get figures this out for us when we pass it the DB_FIRST flag).
+	 * Recovery is done in three passes:
+	 * Pass #1:
+	 *	Read forward through the log from the last checkpoint to the
+	 *	end of the log, opening and closing files so that at the end
+	 *	of the log we have the "current" set of files open.
+	 * Pass #2:
+	 *	Read backward through the log undoing any uncompleted TXNs.
+	 *	If doing catastrophic recovery, we read to the beginning of
+	 *	the log, otherwise, to the most recent checkpoint that occurs
+	 *	before the most recent checkpoint LSN, which is returned by
+	 *	__log_findckp().  During this pass, checkpoint file information
+	 *	is ignored, and file openings and closings are undone.
+	 * Pass #3:
+	 *	Read forward through the log from the LSN found in pass #2,
+	 *	redoing any committed TXNs.  During this pass, checkpoint
+	 *	file information is ignored, and file openings and closings
+	 *	are redone.
 	 */
-	if (LF_ISSET(DB_RECOVER_FATAL))
-		first_flag = DB_FIRST;
-	else {
-		if ((ret = __log_findckp(lp, &lsn)) == DB_NOTFOUND)
-			goto out;
-		first_flag = DB_SET;
-	}
 
-	/* If we're a threaded application, we have to allocate space. */
+	/*
+	 * Find the last checkpoint in the log.  This is the point from which
+	 * we want to begin pass #1 (the TXN_OPENFILES pass).
+	 */
 	memset(&data, 0, sizeof(data));
-	if ((ret = log_get(lp, &lsn, &data, first_flag)) != 0) {
-		__db_err(dbenv, "Failure: unable to get log record");
-		if (first_flag == DB_SET)
-			__db_err(dbenv, "Retrieving LSN %lu %lu",
-			    (u_long)lsn.file, (u_long)lsn.offset);
-		else
-			__db_err(dbenv, "Retrieving first LSN");
-		goto out;
-	}
-
-	first_lsn = lsn;
-	for (;;) {
-		ret = __db_dispatch(lp, &data, &lsn, TXN_OPENFILES, txninfo);
-		if (ret != 0 && ret != DB_TXN_CKP)
-			goto msgerr;
-		if ((ret =
-		    log_get(dbenv->lg_info, &lsn, &data, DB_NEXT)) != 0) {
-			if (ret != DB_NOTFOUND)
-				goto out;
-			break;
+	if ((ret = log_get(lp, &ckp_lsn, &data, DB_CHECKPOINT)) != 0) {
+		/*
+		 * If we don't find a checkpoint, start from the beginning.
+		 * If that fails, we're done.  Note, we require that there
+		 * be log records if we're performing recovery, and fail if
+		 * there aren't.
+		 */
+		if ((ret = log_get(lp, &ckp_lsn, &data, DB_FIRST)) != 0) {
+			__db_err(dbenv, "First log record not found");
+			if (ret == DB_NOTFOUND)
+				ret = EINVAL;
+			goto out;
 		}
 	}
 
 	/*
-	 * Initialize the ckp_lsn to 0,0.  If we never find a valid
-	 * checkpoint in the log, then leaving ckp_lsn at 0,0 is correct.
+	 * Now, ckp_lsn is either the lsn of the last checkpoint or the lsn
+	 * of the first record in the log.  Begin the TXN_OPENFILES pass from
+	 * that lsn, and proceed to the end of the log.
 	 */
-	ZERO_LSN(ckp_lsn);
+	lsn = ckp_lsn;
+	for (;;) {
+		ret = __db_dispatch(lp, &data, &lsn, TXN_OPENFILES, txninfo);
+		if (ret != 0 && ret != DB_TXN_CKP)
+			goto msgerr;
+		if ((ret = log_get(lp, &lsn, &data, DB_NEXT)) != 0) {
+			if (ret == DB_NOTFOUND)
+				break;
+			goto out;
+		}
+	}
+
+	/*
+	 * Pass #2.
+	 *
+	 * Before we can begin pass #2, backward roll phase, we determine how
+	 * far back in the log to recover.  If we are doing catastrophic
+	 * recovery, then we go as far back as we have files.  If we are
+	 * doing normal recovery, we go as back to the most recent checkpoint
+	 * that occurs before the most recent checkpoint LSN.
+	 */
+	if (LF_ISSET(DB_RECOVER_FATAL)) {
+		ZERO_LSN(first_lsn);
+	} else
+		if ((ret = __log_findckp(lp, &first_lsn)) == DB_NOTFOUND) {
+			/*
+			 * If recovery was specified, there must be log files.
+			 * If we don't find one, it's an error.  (This should
+			 * have been caught above, when a log_get() of DB_FIRST
+			 * or DB_CHECKPOINT succeeded, but paranoia is good.)
+			 */
+			ret = EINVAL;
+			goto out;
+		}
 	for (ret = log_get(lp, &lsn, &data, DB_LAST);
 	    ret == 0 && log_compare(&lsn, &first_lsn) > 0;
-	    ret = log_get(lp,&lsn, &data, DB_PREV)) {
-		tmp_lsn = lsn;
+	    ret = log_get(lp, &lsn, &data, DB_PREV)) {
 		ret = __db_dispatch(lp,
 		    &data, &lsn, TXN_BACKWARD_ROLL, txninfo);
-		if (ret == DB_TXN_CKP) {
-			if (IS_ZERO_LSN(ckp_lsn))
-				ckp_lsn = tmp_lsn;
-			ret = 0;
-		} else if (ret != 0)
-			goto msgerr;
+		if (ret != 0)
+			if (ret != DB_TXN_CKP)
+				goto msgerr;
+			else
+				ret = 0;
 	}
 	if (ret != 0 && ret != DB_NOTFOUND)
 		goto out;
 
+	/*
+	 * Pass #3.
+	 */
 	for (ret = log_get(lp, &lsn, &data, DB_NEXT);
 	    ret == 0; ret = log_get(lp, &lsn, &data, DB_NEXT)) {
 		ret = __db_dispatch(lp, &data, &lsn, TXN_FORWARD_ROLL, txninfo);
-		if (ret == DB_TXN_CKP)
-			ret = 0;
-		else if (ret != 0)
-			goto msgerr;
+		if (ret != 0)
+			if (ret != DB_TXN_CKP)
+				goto msgerr;
+			else
+				ret = 0;
 	}
 	if (ret != DB_NOTFOUND)
 		goto out;
@@ -149,7 +186,7 @@ __db_apprec(dbenv, flags)
 		goto out;
 
 	if (dbenv->db_verbose) {
-		__db_err(lp->dbenv, "Recovery complete at %s", ctime(&now));
+		__db_err(lp->dbenv, "Recovery complete at %.24s", ctime(&now));
 		__db_err(lp->dbenv, "%s %lu %s [%lu][%lu]",
 		    "Maximum transaction id",
 		    (u_long)dbenv->tx_info->region->last_txnid,

@@ -1,5 +1,5 @@
 /* Definitions for POSIX-style memory management.  Linux version.
-   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -91,10 +91,10 @@ extern int munlockall __P ((void));
 
 /* Guarantee all whole pages mapped by the range [ADDR,ADDR+LEN) to
    be memory resident.  */
-extern int mlock __P ((__ptr_t __addr, size_t __len));
+extern int mlock __P ((__const __ptr_t __addr, size_t __len));
 
 /* Unlock whole pages previously mapped by the range [ADDR,ADDR+LEN).  */
-extern int munlock __P ((__ptr_t __addr, size_t __len));
+extern int munlock __P ((__const __ptr_t __addr, size_t __len));
 
 #ifdef __USE_MISC
 /* Remap pages mapped by the range [ADDR,ADDR+OLD_LEN) to new length

@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_printlog.c	10.10 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)db_printlog.c	10.11 (Sleepycat) 1/8/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -150,7 +150,8 @@ void
 onint(signo)
 	int signo;
 {
-	signo = 1;			/* XXX: Shut the compiler up. */
+	COMPQUIET(signo, 0);
+
 	interrupted = 1;
 }
 

@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash.c	10.33 (Sleepycat) 11/2/97";
+static const char sccsid[] = "@(#)hash.c	10.36 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -731,7 +731,7 @@ __ham_c_del(cursor, flags)
 		} else						/* Case 1 */
 			F_SET(hcp, H_DELETED);
 		if (chg_pgno != PGNO_INVALID)
-			__ham_c_update(hashp, hcp, chg_pgno, 0, 0, 1);
+			__ham_c_update(hcp, chg_pgno, 0, 0, 1);
 	} else if (F_ISSET(hcp, H_ISDUP)) {			/* on page */
 		if (hcp->dup_off == 0 && DUP_SIZE(hcp->dup_len) ==
 		    LEN_HDATA(hcp->pagep, hashp->hdr->pagesize, hcp->bndx))
@@ -747,7 +747,7 @@ __ham_c_del(cursor, flags)
 			ret = __ham_replpair(hashp, hcp, &repldbt, 0);
 			hcp->dup_tlen -= DUP_SIZE(hcp->dup_len);
 			F_SET(hcp, H_DELETED);
-			__ham_c_update(hashp, hcp, hcp->pgno,
+			__ham_c_update(hcp, hcp->pgno,
 			    DUP_SIZE(hcp->dup_len), 0, 1);
 		}
 
@@ -1009,9 +1009,9 @@ __ham_expand_table(hashp)
 		 * if the next doubling is going to be big (more than 8
 		 * pages), we have some extra pages around.
 		 */
-		if (hashp->hdr->max_bucket + 1 >= 8 && 
+		if (hashp->hdr->max_bucket + 1 >= 8 &&
 		    hashp->hdr->spares[hashp->hdr->ovfl_point] <
-		    hashp->hdr->spares[hashp->hdr->ovfl_point - 1] + 
+		    hashp->hdr->spares[hashp->hdr->ovfl_point - 1] +
 		    hashp->hdr->ovfl_point + 1)
 			__ham_init_ovflpages(hashp);
 	}
@@ -1347,17 +1347,15 @@ __ham_init_dbt(dbt, size, bufp, sizep)
  * added (add == 1) or deleted (add == 0).
  * dup indicates if the addition occurred into a duplicate set.
  *
- * PUBLIC: void __ham_c_update __P((HTAB *,
- * PUBLIC:    HASH_CURSOR *, db_pgno_t, u_int32_t, int, int));
+ * PUBLIC: void __ham_c_update
+ * PUBLIC:    __P((HASH_CURSOR *, db_pgno_t, u_int32_t, int, int));
  */
 void
-__ham_c_update(hashp, hcp, chg_pgno, len, add, dup)
-	HTAB *hashp;
+__ham_c_update(hcp, chg_pgno, len, add, is_dup)
 	HASH_CURSOR *hcp;
 	db_pgno_t chg_pgno;
 	u_int32_t len;
-	int add;
-	int dup;
+	int add, is_dup;
 {
 	DBC *cp;
 	HTAB *hp;
@@ -1365,22 +1363,21 @@ __ham_c_update(hashp, hcp, chg_pgno, len, add, dup)
 	int page_deleted;
 
 	/*
-	 * Regular adds are always at the end of a given page,
-	 * so we never have to adjust anyone's cursor after
-	 * a regular add.
+	 * Regular adds are always at the end of a given page, so we never
+	 * have to adjust anyone's cursor after a regular add.
 	 */
-	if (!dup && add)
+	if (!is_dup && add)
 		return;
 
 	/*
 	 * Determine if a page was deleted.    If this is a regular update
-	 * (i.e., not dup) then the deleted page's number will be that in
+	 * (i.e., not is_dup) then the deleted page's number will be that in
 	 * chg_pgno, and the pgno in the cursor will be different.  If this
 	 * was an onpage-duplicate, then the same conditions apply.  If this
 	 * was an off-page duplicate, then we need to verify if hcp->dpgno
 	 * is the same (no delete) or different (delete) than chg_pgno.
 	 */
-	if (!dup || hcp->dpgno == PGNO_INVALID)
+	if (!is_dup || hcp->dpgno == PGNO_INVALID)
 		page_deleted =
 		    chg_pgno != PGNO_INVALID && chg_pgno != hcp->pgno;
 	else
@@ -1397,17 +1394,18 @@ __ham_c_update(hashp, hcp, chg_pgno, len, add, dup)
 
 		lcp = (HASH_CURSOR *)cp->internal;
 
-		if (!dup && lcp->pgno != chg_pgno)
+		if (!is_dup && lcp->pgno != chg_pgno)
 			continue;
 
-		if (dup && F_ISSET(hcp, H_DELETED) && lcp->pgno != chg_pgno)
-			continue;
-
-		if (dup && !F_ISSET(hcp, H_DELETED) && lcp->dpgno != chg_pgno)
-			continue;
+		if (is_dup) {
+			if (F_ISSET(hcp, H_DELETED) && lcp->pgno != chg_pgno)
+				continue;
+			if (!F_ISSET(hcp, H_DELETED) && lcp->dpgno != chg_pgno)
+				continue;
+		}
 
 		if (page_deleted) {
-			if (dup) {
+			if (is_dup) {
 				lcp->dpgno = hcp->dpgno;
 				lcp->dndx = hcp->dndx;
 			} else {
@@ -1419,11 +1417,11 @@ __ham_c_update(hashp, hcp, chg_pgno, len, add, dup)
 			continue;
 		}
 
-		if (!dup && lcp->bndx > hcp->bndx)
+		if (!is_dup && lcp->bndx > hcp->bndx)
 			lcp->bndx--;
-		else if (!dup && lcp->bndx == hcp->bndx)
+		else if (!is_dup && lcp->bndx == hcp->bndx)
 			F_SET(lcp, H_DELETED);
-		else if (dup && lcp->bndx == hcp->bndx) {
+		else if (is_dup && lcp->bndx == hcp->bndx) {
 			/* Assign dpgno in case there was page conversion. */
 			lcp->dpgno = hcp->dpgno;
 			if (add && lcp->dndx >= hcp->dndx )

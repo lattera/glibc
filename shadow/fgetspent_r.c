@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,11 +41,17 @@ __fgetspent_r (FILE *stream, struct spwd *resbuf, char *buffer, size_t buflen,
 
   do
     {
+      buffer[buflen] = '\xff';
       p = fgets (buffer, buflen, stream);
-      if (p == NULL)
+      if (p == NULL && feof (stream))
 	{
 	  *result = NULL;
 	  return errno;
+	}
+      if (p == NULL || buffer[buflen] != '\xff')
+	{
+	  *result = NULL;
+	  return errno = ERANGE;
 	}
 
       /* Skip leading blanks.  */

@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_put.c	10.35 (Sleepycat) 11/22/97";
+static const char sccsid[] = "@(#)bt_put.c	10.38 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -69,8 +69,7 @@ static int __bam_lookup __P((DB *, DBT *, int *));
 static int __bam_ndup __P((DB *, PAGE *, u_int32_t));
 static int __bam_ovput __P((DB *, PAGE *, u_int32_t, DBT *));
 static int __bam_partial __P((DB *, DBT *, PAGE *, u_int32_t, u_int32_t));
-static u_int32_t
-	   __bam_partsize __P((DB *, DBT *, PAGE *, u_int32_t));
+static u_int32_t __bam_partsize __P((DBT *, PAGE *, u_int32_t));
 
 /*
  * __bam_put --
@@ -446,11 +445,11 @@ __bam_iitem(dbp, hp, indxp, key, data, op, flags)
 	u_int32_t data_size, have_bytes, need_bytes, needed;
 	int bigkey, bigdata, dupadjust, replace, ret;
 
+	COMPQUIET(bk, NULL);
+
 	t = dbp->internal;
 	h = *hp;
 	indx = *indxp;
-
-	bk = NULL;			/* XXX: Shut the compiler up. */
 	dupadjust = replace = 0;
 
 	/*
@@ -490,7 +489,7 @@ __bam_iitem(dbp, hp, indxp, key, data, op, flags)
 	 */
 	bigkey = LF_ISSET(BI_NEWKEY) && key->size > t->bt_ovflsize;
 	data_size = F_ISSET(data, DB_DBT_PARTIAL) ?
-	    __bam_partsize(dbp, data, h, indx) : data->size;
+	    __bam_partsize(data, h, indx) : data->size;
 	bigdata = data_size > t->bt_ovflsize;
 
 	needed = 0;
@@ -626,7 +625,7 @@ __bam_iitem(dbp, hp, indxp, key, data, op, flags)
 			/*
 			 * 5. Delete/re-add the data item.
 			 *
-			 * If we're dealing with offpage items, we have to 
+			 * If we're dealing with offpage items, we have to
 			 * delete and then re-add the item.
 			 */
 			if (bigdata || B_TYPE(bk->type) != B_KEYDATA) {
@@ -693,8 +692,7 @@ __bam_iitem(dbp, hp, indxp, key, data, op, flags)
  *	Figure out how much space a partial data item is in total.
  */
 static u_int32_t
-__bam_partsize(dbp, data, h, indx)
-	DB *dbp;
+__bam_partsize(data, h, indx)
 	DBT *data;
 	PAGE *h;
 	u_int32_t indx;
@@ -1041,7 +1039,8 @@ __bam_partial(dbp, dbt, h, indx, nbytes)
 	int ret;
 	u_int8_t *p;
 
-	bo = NULL;			/* XXX: Shut the compiler up. */
+	COMPQUIET(bo, NULL);
+
 	t = dbp->internal;
 
 	/* We use the record data return memory, it's only a short-term use. */

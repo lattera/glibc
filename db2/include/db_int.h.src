@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_int.h.src	10.37 (Sleepycat) 11/25/97
+ *	@(#)db_int.h.src	10.41 (Sleepycat) 1/8/98
  */
 
 #ifndef _DB_INTERNAL_H_
@@ -18,13 +18,21 @@
 /*******************************************************
  * General purpose constants and macros.
  *******************************************************/
-#define	UINT32_T_MAX	0xffffffff	/* Maximum 32 bit unsigned. */
 #define	UINT16_T_MAX	    0xffff	/* Maximum 16 bit unsigned. */
+#define	UINT32_T_MAX	0xffffffff	/* Maximum 32 bit unsigned. */
 
 #define	DB_MIN_PGSIZE	0x000200	/* Minimum page size. */
 #define	DB_MAX_PGSIZE	0x010000	/* Maximum page size. */
 
 #define	DB_MINCACHE	10		/* Minimum cached pages */
+
+#define	MEGABYTE	1048576
+
+/*
+ * If we are unable to determine the underlying filesystem block size, use
+ * 8K on the grounds that most OS's use less than 8K as their VM page size.
+ */
+#define	DB_DEF_IOSIZE	(8 * 1024)
 
 /*
  * Aligning items to particular sizes or in pages or memory.  ALIGNP is a
@@ -109,6 +117,9 @@ typedef struct __fn {
 #undef	DB_LINE
 #define	DB_LINE "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 
+/* Unused, or not-used-yet variable.  "Shut that bloody compiler up!" */
+#define	COMPQUIET(n, v)	(n) = (v)
+
 /*******************************************************
  * Files.
  *******************************************************/
@@ -155,18 +166,22 @@ typedef struct __fn {
 
 /*
  * The offset of a mutex in memory.
+ *
+ * !!!
+ * Not an off_t, so backing file offsets MUST be less than 4Gb.  See the
+ * off field of the db_mutex_t as well.
  */
-#define	MUTEX_LOCK_OFFSET(a, b)	((off_t)((u_int8_t *)b - (u_int8_t *)a))
+#define	MUTEX_LOCK_OFFSET(a, b)	((u_int32_t)((u_int8_t *)b - (u_int8_t *)a))
 
 typedef struct _db_mutex_t {
 #ifdef HAVE_SPINLOCKS
-	tsl_t	tsl_resource;		/* Resource test and set. */
+	tsl_t	  tsl_resource;		/* Resource test and set. */
 #ifdef DEBUG
-	u_long	pid;			/* Lock holder: 0 or process pid. */
+	u_long	  pid;			/* Lock holder: 0 or process pid. */
 #endif
 #else
-	off_t	off;			/* Backing file offset. */
-	u_long	pid;			/* Lock holder: 0 or process pid. */
+	u_int32_t off;			/* Backing file offset. */
+	u_long	  pid;			/* Lock holder: 0 or process pid. */
 #endif
 	u_int32_t spins;		/* Spins before block. */
 	u_int32_t mutex_set_wait;	/* Granted after wait. */

@@ -38,6 +38,7 @@ LINE_PARSER
 
    STRING_FIELD (addr, isspace, 1);
    result->n_net = inet_network (addr);
+   result->n_addrtype = AF_INET;
 
  })
 

@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_close.c	10.24 (Sleepycat) 9/17/97";
+static const char sccsid[] = "@(#)bt_close.c	10.25 (Sleepycat) 1/6/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -144,7 +144,7 @@ __bam_upstat(dbp)
 {
 	BTREE *t;
 	BTMETA *meta;
-	DB_LOCK mlock;
+	DB_LOCK metalock;
 	db_pgno_t pgno;
 	int flags, ret;
 
@@ -161,7 +161,7 @@ __bam_upstat(dbp)
 	pgno = PGNO_METADATA;
 
 	/* Lock and retrieve the page. */
-	if (__bam_lget(dbp, 0, pgno, DB_LOCK_WRITE, &mlock) != 0)
+	if (__bam_lget(dbp, 0, pgno, DB_LOCK_WRITE, &metalock) != 0)
 		return;
 	if (__bam_pget(dbp, (PAGE **)&meta, &pgno, 0) == 0) {
 		/* Log the change. */
@@ -178,5 +178,5 @@ __bam_upstat(dbp)
 	}
 
 err:	(void)memp_fput(dbp->mpf, (PAGE *)meta, flags);
-	(void)__BT_LPUT(dbp, mlock);
+	(void)__BT_LPUT(dbp, metalock);
 }

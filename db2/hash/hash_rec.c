@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_rec.c	10.14 (Sleepycat) 11/2/97";
+static const char sccsid[] = "@(#)hash_rec.c	10.15 (Sleepycat) 12/4/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -811,7 +811,7 @@ out:	if (getmeta)
 /*
  * __ham_copypage_recover --
  *	Recovery function for copypage.
- * 
+ *
  * PUBLIC: int __ham_copypage_recover
  * PUBLIC:   __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */

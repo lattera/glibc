@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mutex.c	10.29 (Sleepycat) 11/25/97";
+static const char sccsid[] = "@(#)mutex.c	10.32 (Sleepycat) 1/16/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -105,12 +105,12 @@ static const char sccsid[] = "@(#)mutex.c	10.29 (Sleepycat) 11/25/97";
  * __db_mutex_init --
  *	Initialize a DB mutex structure.
  *
- * PUBLIC: void __db_mutex_init __P((db_mutex_t *, off_t));
+ * PUBLIC: void __db_mutex_init __P((db_mutex_t *, u_int32_t));
  */
 void
 __db_mutex_init(mp, off)
 	db_mutex_t *mp;
-	off_t off;
+	u_int32_t off;
 {
 #ifdef DEBUG
 	if ((ALIGNTYPE)mp & (MUTEX_ALIGNMENT - 1)) {
@@ -123,6 +123,8 @@ __db_mutex_init(mp, off)
 	memset(mp, 0, sizeof(db_mutex_t));
 
 #ifdef HAVE_SPINLOCKS
+	COMPQUIET(off, 0);
+
 	TSL_INIT(&mp->tsl_resource);
 	mp->spins = __os_spin();
 #else
@@ -148,6 +150,8 @@ __db_mutex_lock(mp, fd)
 
 #ifdef HAVE_SPINLOCKS
 	int nspins;
+
+	COMPQUIET(fd, 0);
 
 	for (usecs = MS(10);;) {
 		/* Try and acquire the uncontested resource lock for N spins. */
@@ -202,7 +206,7 @@ __db_mutex_lock(mp, fd)
 		/* Acquire an exclusive kernel lock. */
 		k_lock.l_type = F_WRLCK;
 		if (fcntl(fd, F_SETLKW, &k_lock))
-			return (1);
+			return (errno);
 
 		/* If the resource tsl is still available, it's ours. */
 		if (mp->pid == 0) {
@@ -213,7 +217,7 @@ __db_mutex_lock(mp, fd)
 		/* Release the kernel lock. */
 		k_lock.l_type = F_UNLCK;
 		if (fcntl(fd, F_SETLK, &k_lock))
-			return (1);
+			return (errno);
 
 		/*
 		 * If we got the resource tsl we're done.
@@ -251,6 +255,8 @@ __db_mutex_unlock(mp, fd)
 #endif
 
 #ifdef HAVE_SPINLOCKS
+	COMPQUIET(fd, 0);
+
 #ifdef DEBUG
 	mp->pid = 0;
 #endif

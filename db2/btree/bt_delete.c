@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_delete.c	10.23 (Sleepycat) 11/22/97";
+static const char sccsid[] = "@(#)bt_delete.c	10.25 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -500,7 +500,8 @@ __bam_dpages(dbp, t)
 	db_recno_t rcnt;
 	int ret;
 
-	rcnt = 0;				/* XXX: Shut the compiler up. */
+	COMPQUIET(rcnt, 0);
+
 	epg = t->bt_sp;
 
 	/*
@@ -581,7 +582,7 @@ __bam_dpages(dbp, t)
 		++t->lstat.bt_freed;
 
 		/* Adjust the cursors. */
-		__bam_ca_move(dbp, t, h->pgno, PGNO_ROOT);
+		__bam_ca_move(dbp, h->pgno, PGNO_ROOT);
 	}
 
 	/* Release the top page in the subtree. */

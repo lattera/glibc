@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_deadlock.c	10.16 (Sleepycat) 10/14/97";
+static const char sccsid[] = "@(#)db_deadlock.c	10.17 (Sleepycat) 1/15/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -192,7 +192,7 @@ logpid(fname, is_open)
 		}
 		(void)time(&now);
 		fprintf(fp,
-		    "%s: %lu %s", progname, (u_long)getpid(), ctime(&now));
+		    "%.24s: %lu %s", progname, (u_long)getpid(), ctime(&now));
 		fclose(fp);
 	} else
 		(void)remove(fname);

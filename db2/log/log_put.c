@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_put.c	10.22 (Sleepycat) 11/12/97";
+static const char sccsid[] = "@(#)log_put.c	10.24 (Sleepycat) 1/17/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -82,8 +82,7 @@ __log_put(dblp, lsn, dbt, flags)
 	const DBT *dbt;
 	int flags;
 {
-	DBT t;
-	DBT fid_dbt;
+	DBT fid_dbt, t;
 	DB_LSN r_unused;
 	FNAME *fnp;
 	LOG *lp;
@@ -156,13 +155,15 @@ __log_put(dblp, lsn, dbt, flags)
 
 		for (fnp = SH_TAILQ_FIRST(&dblp->lp->fq, __fname);
 		    fnp != NULL; fnp = SH_TAILQ_NEXT(fnp, q, __fname)) {
+			memset(&t, 0, sizeof(t));
 			t.data = R_ADDR(dblp, fnp->name_off);
 			t.size = strlen(t.data) + 1;
 			memset(&fid_dbt, 0, sizeof(fid_dbt));
 			fid_dbt.data = R_ADDR(dblp, fnp->fileid_off);
 			fid_dbt.size = DB_FILE_ID_LEN;
-			if ((ret = __log_register_log(dblp, NULL, &r_unused,
-			    0, &t, &fid_dbt, fnp->id, fnp->s_type)) != 0)
+			if ((ret = __log_register_log(dblp, NULL, &r_unused, 0,
+			    LOG_CHECKPOINT, &t, &fid_dbt, fnp->id, fnp->s_type))
+			    != 0)
 				return (ret);
 		}
 	}
@@ -280,7 +281,7 @@ __log_flush(dblp, lsn)
 
 	/*
 	 * If the LSN is less than the last-sync'd LSN, we're done.  Note,
-	 * the last-sync LSN saved in s_lsn is the LSN of the first byte 
+	 * the last-sync LSN saved in s_lsn is the LSN of the first byte
 	 * we absolutely know has been written to disk, so the test is <=.
 	 */
 	if (lsn->file < lp->s_lsn.file ||

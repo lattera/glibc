@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_shash.c	10.3 (Sleepycat) 6/21/97";
+static const char sccsid[] = "@(#)db_shash.c	10.4 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -21,8 +21,8 @@ static const char sccsid[] = "@(#)db_shash.c	10.3 (Sleepycat) 6/21/97";
 
 /* Powers-of-2 and close-by prime number pairs. */
 static const struct {
-	int	power;
-	int	prime;
+	u_int	power;
+	u_int	prime;
 } list[] = {
 	{  64,	  67},
 	{ 128,	 131},
@@ -39,11 +39,11 @@ static const struct {
  * __db_tablesize --
  *	Choose a size for the hash table.
  *
- * PUBLIC: int __db_tablesize __P((int));
+ * PUBLIC: int __db_tablesize __P((u_int));
  */
 int
 __db_tablesize(n_buckets)
-	int n_buckets;
+	u_int n_buckets;
 {
 	int i;
 

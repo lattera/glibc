@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -78,8 +78,6 @@ __yp_bind (const char *domain, dom_binding **ypdb)
       ysd->dom_socket = -1;
       ysd->dom_vers = -1;
     }
-  else
-    ysd->dom_client = NULL;
 
   try = 0;
 

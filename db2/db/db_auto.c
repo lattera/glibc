@@ -20,7 +20,7 @@
  * PUBLIC: int __db_addrem_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
  * PUBLIC:     u_int32_t, u_int32_t, db_pgno_t, u_int32_t,
- * PUBLIC:     size_t, DBT *, DBT *, DB_LSN *));
+ * PUBLIC:     size_t, const DBT *, const DBT *, DB_LSN *));
  */
 int __db_addrem_log(logp, txnid, ret_lsnp, flags,
 	opcode, fileid, pgno, indx, nbytes, hdr,
@@ -34,8 +34,8 @@ int __db_addrem_log(logp, txnid, ret_lsnp, flags,
 	db_pgno_t pgno;
 	u_int32_t indx;
 	size_t nbytes;
-	DBT *hdr;
-	DBT *dbt;
+	const DBT *hdr;
+	const DBT *dbt;
 	DB_LSN * pagelsn;
 {
 	DBT logrec;
@@ -229,7 +229,7 @@ __db_addrem_read(recbuf, argpp)
 /*
  * PUBLIC: int __db_split_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
- * PUBLIC:     u_int32_t, u_int32_t, db_pgno_t, DBT *,
+ * PUBLIC:     u_int32_t, u_int32_t, db_pgno_t, const DBT *,
  * PUBLIC:     DB_LSN *));
  */
 int __db_split_log(logp, txnid, ret_lsnp, flags,
@@ -241,7 +241,7 @@ int __db_split_log(logp, txnid, ret_lsnp, flags,
 	u_int32_t opcode;
 	u_int32_t fileid;
 	db_pgno_t pgno;
-	DBT *pageimage;
+	const DBT *pageimage;
 	DB_LSN * pagelsn;
 {
 	DBT logrec;
@@ -400,7 +400,7 @@ __db_split_read(recbuf, argpp)
  * PUBLIC: int __db_big_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
  * PUBLIC:     u_int32_t, u_int32_t, db_pgno_t, db_pgno_t,
- * PUBLIC:     db_pgno_t, DBT *, DB_LSN *, DB_LSN *,
+ * PUBLIC:     db_pgno_t, const DBT *, DB_LSN *, DB_LSN *,
  * PUBLIC:     DB_LSN *));
  */
 int __db_big_log(logp, txnid, ret_lsnp, flags,
@@ -415,7 +415,7 @@ int __db_big_log(logp, txnid, ret_lsnp, flags,
 	db_pgno_t pgno;
 	db_pgno_t prev_pgno;
 	db_pgno_t next_pgno;
-	DBT *dbt;
+	const DBT *dbt;
 	DB_LSN * pagelsn;
 	DB_LSN * prevlsn;
 	DB_LSN * nextlsn;
@@ -1079,7 +1079,7 @@ __db_addpage_read(recbuf, argpp)
 /*
  * PUBLIC: int __db_debug_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
- * PUBLIC:     DBT *, u_int32_t, DBT *, DBT *,
+ * PUBLIC:     const DBT *, u_int32_t, const DBT *, const DBT *,
  * PUBLIC:     u_int32_t));
  */
 int __db_debug_log(logp, txnid, ret_lsnp, flags,
@@ -1088,10 +1088,10 @@ int __db_debug_log(logp, txnid, ret_lsnp, flags,
 	DB_TXN *txnid;
 	DB_LSN *ret_lsnp;
 	u_int32_t flags;
-	DBT *op;
+	const DBT *op;
 	u_int32_t fileid;
-	DBT *key;
-	DBT *data;
+	const DBT *key;
+	const DBT *data;
 	u_int32_t arg_flags;
 {
 	DBT logrec;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,6 +30,72 @@
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
 
+static const char dev[] = "/dev";
+
+static int getttyname_r __P ((int fd, char *buf, size_t buflen,
+			      dev_t mydev, ino_t myino, int save,
+			      int *dostat)) internal_function;
+
+static int
+internal_function
+getttyname_r (fd, buf, buflen, mydev, myino, save, dostat)
+     int fd;
+     char *buf;
+     size_t buflen;
+     dev_t mydev;
+     ino_t myino;
+     int save;
+     int *dostat;
+{
+  struct stat st;
+  DIR *dirstream;
+  struct dirent *d;
+
+  dirstream = opendir (dev);
+  if (dirstream == NULL)
+    {
+      *dostat = -1;
+      return errno;
+    }
+
+  while ((d = readdir (dirstream)) != NULL)
+    if ((ino_t) d->d_fileno == myino || *dostat)
+      {
+	char *cp;
+	size_t needed = _D_EXACT_NAMLEN (d) + 1;
+
+	if (needed > buflen)
+	  {
+	    *dostat = -1;
+	    (void) closedir (dirstream);
+	    __set_errno (ERANGE);
+	    return ERANGE;
+	  }
+
+	cp = __stpncpy (&buf[sizeof (dev)], d->d_name, needed);
+	cp[0] = '\0';
+
+	if (stat (buf, &st) == 0
+#ifdef _STATBUF_ST_RDEV
+	    && S_ISCHR (st.st_mode) && st.st_rdev == mydev
+#else
+	    && (ino_t) d->d_fileno == myino && st.st_dev == mydev
+#endif
+	   )
+	  {
+	    (void) closedir (dirstream);
+	    __set_errno (save);
+	    return 0;
+	  }
+      }
+
+  (void) closedir (dirstream);
+  __set_errno (save);
+  /* It is not clear what to return in this case.  `isatty' says FD
+     refers to a TTY but no entry in /dev has this inode.  */
+  return ENOTTY;
+}
+
 /* Store at most BUFLEN character of the pathname of the terminal FD is
    open on in BUF.  Return 0 on success,  otherwise an error number.  */
 int
@@ -38,16 +104,19 @@ __ttyname_r (fd, buf, buflen)
      char *buf;
      size_t buflen;
 {
-  static const char dev[] = "/dev";
   struct stat st;
-  dev_t mydev;
-  ino_t myino;
-  DIR *dirstream;
-  struct dirent *d;
+  int dostat = 0;
   int save = errno;
+  int ret;
 
   /* Test for the absolute minimal size.  This makes life easier inside
      the loop.  */
+  if (!buf)
+    {
+      __set_errno (EINVAL);
+      return EINVAL;
+    }
+
   if (buflen < (int) (sizeof (dev) + 1))
     {
       __set_errno (ERANGE);
@@ -62,46 +131,33 @@ __ttyname_r (fd, buf, buflen)
 
   if (fstat (fd, &st) < 0)
     return errno;
-  mydev = st.st_dev;
-  myino = st.st_ino;
-
-  dirstream = opendir (dev);
-  if (dirstream == NULL)
-    return errno;
 
   /* Prepare the result buffer.  */
   memcpy (buf, dev, sizeof (dev) - 1);
   buf[sizeof (dev) - 1] = '/';
   buflen -= sizeof (dev);
 
-  while ((d = readdir (dirstream)) != NULL)
-    if ((ino_t) d->d_fileno == myino)
-      {
-	char *cp;
-	size_t needed = _D_EXACT_NAMLEN (d) + 1;
+#ifdef _STATBUF_ST_RDEV
+  ret = getttyname_r (fd, buf, buflen, st.st_rdev, st.st_ino, save,
+		      &dostat);
+#else
+  ret = getttyname_r (fd, buf, buflen, st.st_dev, st.st_ino, save,
+		      &dostat);
+#endif
 
-	if (needed > buflen)
-	  {
-	    (void) closedir (dirstream);
-	    __set_errno (ERANGE);
-	    return ERANGE;
-	  }
+  if (ret && dostat != -1)
+    {
+      dostat = 1;
+#ifdef _STATBUF_ST_RDEV
+      ret = getttyname_r (fd, buf, buflen, st.st_rdev, st.st_ino,
+			  save, &dostat);
+#else
+      ret = getttyname_r (fd, buf, buflen, st.st_dev, st.st_ino,
+			  save, &dostat);
+#endif
+    }
 
-	cp = __stpncpy (&buf[sizeof (dev)], d->d_name, needed);
-	cp[0] = '\0';
-
-	if (stat (buf, &st) == 0 && st.st_dev == mydev)
-	  {
-	    (void) closedir (dirstream);
-	    __set_errno (save);
-	    return 0;
-	  }
-      }
-
-  (void) closedir (dirstream);
-  __set_errno (save);
-  /* It is not clear what to return in this case.  `isatty' says FD
-     refers to a TTY but no entry in /dev has this inode.  */
-  return ENOTTY;
+  return ret;
 }
+
 weak_alias (__ttyname_r, ttyname_r)

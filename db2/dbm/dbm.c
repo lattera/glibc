@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)dbm.c	10.7 (Sleepycat) 11/25/97";
+static const char sccsid[] = "@(#)dbm.c	10.10 (Sleepycat) 1/16/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -59,17 +59,11 @@ static const char sccsid[] = "@(#)dbm.c	10.7 (Sleepycat) 11/25/97";
 #include <string.h>
 #endif
 
-#define	DB_DBM_HSEARCH
+#define	DB_DBM_HSEARCH	1
 #include "db_int.h"
 
 #include "db_page.h"
 #include "hash.h"
-
-/* Provide prototypes here since there are none in db.h. */
-int dbm_clearerr __P((DBM *));
-int dbm_dirfno __P((DBM *));
-int dbm_error __P((DBM *));
-int dbm_pagfno __P((DBM *));
 
 /*
  *
@@ -82,7 +76,7 @@ static DBM *__cur_db;
 static void __db_no_open __P((void));
 
 int
-dbminit(file)
+__db_dbm_init(file)
 	char *file;
 {
 	if (__cur_db != NULL)
@@ -94,9 +88,10 @@ dbminit(file)
 		return (0);
 	return (-1);
 }
+weak_alias (__db_dbm_init, dbminit)
 
 datum
-fetch(key)
+__db_dbm_fetch(key)
 	datum key;
 {
 	datum item;
@@ -108,9 +103,10 @@ fetch(key)
 	}
 	return (dbm_fetch(__cur_db, key));
 }
+weak_alias (__db_dbm_fetch, fetch)
 
 datum
-firstkey()
+__db_dbm_firstkey()
 {
 	datum item;
 
@@ -121,12 +117,16 @@ firstkey()
 	}
 	return (dbm_firstkey(__cur_db));
 }
+#undef firstkey
+weak_alias (__db_dbm_firstkey, firstkey)
 
 datum
-nextkey(key)
+__db_dbm_nextkey(key)
 	datum key;
 {
 	datum item;
+
+	COMPQUIET(key.dsize, 0);
 
 	if (__cur_db == NULL) {
 		__db_no_open();
@@ -135,9 +135,10 @@ nextkey(key)
 	}
 	return (dbm_nextkey(__cur_db));
 }
+weak_alias (__db_dbm_nextkey, nextkey)
 
 int
-delete(key)
+__db_dbm_delete(key)
 	datum key;
 {
 	int ret;
@@ -151,9 +152,10 @@ delete(key)
 		ret = (((DB *)__cur_db)->sync)((DB *)__cur_db, 0);
 	return (ret);
 }
+weak_alias (__db_dbm_delete, delete)
 
 int
-store(key, dat)
+__db_dbm_store(key, dat)
 	datum key, dat;
 {
 	int ret;
@@ -167,6 +169,7 @@ store(key, dat)
 		ret = (((DB *)__cur_db)->sync)((DB *)__cur_db, 0);
 	return (ret);
 }
+weak_alias (__db_dbm_store, store)
 
 static void
 __db_no_open()
@@ -185,7 +188,7 @@ __db_no_open()
  *	 NULL on failure
  */
 DBM *
-dbm_open(file, oflags, mode)
+__db_ndbm_open(file, oflags, mode)
 	const char *file;
 	int oflags, mode;
 {
@@ -215,17 +218,19 @@ dbm_open(file, oflags, mode)
 		return (NULL);
 	return ((DBM *)dbp);
 }
+weak_alias (__db_ndbm_open, dbm_open)
 
 /*
  * Returns:
  *	Nothing.
  */
 void
-dbm_close(db)
+__db_ndbm_close(db)
 	DBM *db;
 {
 	(void)db->close(db, 0);
 }
+weak_alias (__db_ndbm_close, dbm_close)
 
 /*
  * Returns:
@@ -233,7 +238,7 @@ dbm_close(db)
  *	NULL on failure
  */
 datum
-dbm_fetch(db, key)
+__db_ndbm_fetch(db, key)
 	DBM *db;
 	datum key;
 {
@@ -255,6 +260,7 @@ dbm_fetch(db, key)
 	}
 	return (data);
 }
+weak_alias (__db_ndbm_fetch, dbm_fetch)
 
 /*
  * Returns:
@@ -262,7 +268,7 @@ dbm_fetch(db, key)
  *	NULL on failure
  */
 datum
-dbm_firstkey(db)
+__db_ndbm_firstkey(db)
 	DBM *db;
 {
 	DBT _key, _data;
@@ -289,6 +295,7 @@ dbm_firstkey(db)
 	}
 	return (key);
 }
+weak_alias (__db_ndbm_firstkey, dbm_firstkey)
 
 /*
  * Returns:
@@ -296,7 +303,7 @@ dbm_firstkey(db)
  *	NULL on failure
  */
 datum
-dbm_nextkey(db)
+__db_ndbm_nextkey(db)
 	DBM *db;
 {
 	DBC *cp;
@@ -322,6 +329,7 @@ dbm_nextkey(db)
 	}
 	return (key);
 }
+weak_alias (__db_ndbm_nextkey, dbm_nextkey)
 
 /*
  * Returns:
@@ -329,7 +337,7 @@ dbm_nextkey(db)
  *	<0 failure
  */
 int
-dbm_delete(db, key)
+__db_ndbm_delete(db, key)
 	DBM *db;
 	datum key;
 {
@@ -348,6 +356,7 @@ dbm_delete(db, key)
 	}
 	return (ret);
 }
+weak_alias (__db_ndbm_delete, dbm_delete)
 
 /*
  * Returns:
@@ -356,7 +365,7 @@ dbm_delete(db, key)
  *	 1 if DBM_INSERT and entry exists
  */
 int
-dbm_store(db, key, data, flags)
+__db_ndbm_store(db, key, data, flags)
 	DBM *db;
 	datum key, data;
 	int flags;
@@ -372,9 +381,10 @@ dbm_store(db, key, data, flags)
 	return (db->put((DB *)db,
 	    NULL, &_key, &_data, (flags == DBM_INSERT) ? DB_NOOVERWRITE : 0));
 }
+weak_alias (__db_ndbm_store, dbm_store)
 
 int
-dbm_error(db)
+__db_ndbm_error(db)
 	DBM *db;
 {
 	HTAB *hp;
@@ -382,9 +392,10 @@ dbm_error(db)
 	hp = (HTAB *)db->internal;
 	return (hp->local_errno);
 }
+weak_alias (__db_ndbm_error, dbm_error)
 
 int
-dbm_clearerr(db)
+__db_ndbm_clearerr(db)
 	DBM *db;
 {
 	HTAB *hp;
@@ -392,6 +403,19 @@ dbm_clearerr(db)
 	hp = (HTAB *)db->internal;
 	hp->local_errno = 0;
 	return (0);
+}
+weak_alias (__db_ndbm_clearerr, dbm_clearerr)
+
+/*
+ * Returns:
+ *	1 if read-only
+ *	0 if not read-only
+ */
+int
+__db_ndbm_rdonly(db)
+	DBM *db;
+{
+	return (F_ISSET((DB *)db, DB_AM_RDONLY) ? 1 : 0);
 }
 
 /*
@@ -401,7 +425,7 @@ dbm_clearerr(db)
  * and picked one to use at random.
  */
 int
-dbm_dirfno(db)
+__db_ndbm_dirfno(db)
 	DBM *db;
 {
 	int fd;
@@ -409,9 +433,10 @@ dbm_dirfno(db)
 	(void)db->fd(db, &fd);
 	return (fd);
 }
+weak_alias (__db_ndbm_dirfno, dbm_dirfno)
 
 int
-dbm_pagfno(db)
+__db_ndbm_pagfno(db)
 	DBM *db;
 {
 	int fd;
@@ -419,3 +444,4 @@ dbm_pagfno(db)
 	(void)db->fd(db, &fd);
 	return (fd);
 }
+weak_alias (__db_ndbm_pagfno, dbm_pagfno)

@@ -1,3 +1,223 @@
+1998-01-26 00:57  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db2/Makefile (routines): Add os_alloc.
+	* db2/db.h: Update from db-2.3.16.
+	* db2/db_185.h: Likewise.
+	* db2/db_int.h: Likewise.
+	* db2/btree/bt_close.c: Likewise.
+	* db2/btree/bt_cursor.c: Likewise.
+	* db2/btree/bt_delete.c: Likewise.
+	* db2/btree/bt_open.c: Likewise.
+	* db2/btree/bt_page.c: Likewise.
+	* db2/btree/bt_put.c: Likewise.
+	* db2/btree/bt_rec.c: Likewise.
+	* db2/btree/bt_recno.c: Likewise.
+	* db2/btree/btree_auto.c: Likewise.
+	* db2/common/db_appinit.c: Likewise.
+	* db2/common/db_apprec.c: Likewise.
+	* db2/common/db_err.c: Likewise.
+	* db2/common/db_region.c: Likewise.
+	* db2/common/db_shash.c: Likewise.
+	* db2/db/db.c: Likewise.
+	* db2/db/db_auto.c: Likewise.
+	* db2/db/db_conv.c: Likewise.
+	* db2/db/db_dispatch.c: Likewise.
+	* db2/db/db_dup.c: Likewise.
+	* db2/db/db_pr.c: Likewise.
+	* db2/db/db_rec.c: Likewise.
+	* db2/db185/db185.c: Likewise.
+	* db2/dbm/dbm.c: Likewise.
+	* db2/hash/hash.c: Likewise.
+	* db2/hash/hash_auto.c: Likewise.
+	* db2/hash/hash_dup.c: Likewise.
+	* db2/hash/hash_page.c: Likewise.
+	* db2/hash/hash_rec.c: Likewise.
+	* db2/include/btree_ext.h: Likewise.
+	* db2/include/clib_ext.h: Likewise.
+	* db2/include/common_ext.h: Likewise.
+	* db2/include/db.h.src: Likewise.
+	* db2/include/db_185.h.src: Likewise.
+	* db2/include/db_am.h: Likewise.
+	* db2/include/db_ext.h: Likewise.
+	* db2/include/db_int.h.src: Likewise.
+	* db2/include/hash_ext.h: Likewise.
+	* db2/include/lock_ext.h: Likewise.
+	* db2/include/log.h: Likewise.
+	* db2/include/log_auto.h: Likewise.
+	* db2/include/log_ext.h: Likewise.
+	* db2/include/mp.h: Likewise.
+	* db2/include/mp_ext.h: Likewise.
+	* db2/include/mutex_ext.h: Likewise.
+	* db2/include/os_ext.h: Likewise.
+	* db2/include/os_func.h: Likewise.
+	* db2/include/txn_ext.h: Likewise.
+	* db2/lock/lock.c: Likewise.
+	* db2/lock/lock_util.c: Likewise.
+	* db2/log/log.c: Likewise.
+	* db2/log/log.src: Likewise.
+	* db2/log/log_archive.c: Likewise.
+	* db2/log/log_auto.c: Likewise.
+	* db2/log/log_get.c: Likewise.
+	* db2/log/log_put.c: Likewise.
+	* db2/log/log_rec.c: Likewise.
+	* db2/log/log_register.c: Likewise.
+	* db2/mp/mp_bh.c: Likewise.
+	* db2/mp/mp_fget.c: Likewise.
+	* db2/mp/mp_fopen.c: Likewise.
+	* db2/mp/mp_fput.c: Likewise.
+	* db2/mp/mp_pr.c: Likewise.
+	* db2/mp/mp_sync.c: Likewise.
+	* db2/mutex/mutex.c: Likewise.
+	* db2/os/os_alloc.c: Likewise.
+	* db2/os/os_config.c: Likewise.
+	* db2/os/os_stat.c: Likewise.
+	* db2/progs/db_checkpoint/db_checkpoint.c: Likewise.
+	* db2/progs/db_deadlock/db_deadlock.c: Likewise.
+	* db2/progs/db_load/db_load.c: Likewise.
+	* db2/progs/db_printlog/db_printlog.c: Likewise.
+	* db2/progs/db_recover/db_recover.c: Likewise.
+	* db2/progs/db_stat/db_stat.c: Likewise.
+	* db2/txn/txn.c: Likewise.
+
+	* elf/dl-close.c (_dl_close): Rename inner variable named map to imap.
+	Unmap memory blocks in reverse order of allocation.
+	Call munmap with load address added to offset.
+	Bug reported by Miguel de Icaza.
+
+	* locale/programs/ld-collate.c (collate_end_weight): Correctly fill
+	up weight array.
+
+	* localedata/locales/cs_CZ: Update by Michael Mraka
+	<michael@informatics.muni.cz>.
+
+	* misc/sys/syslog.h: Reformat a bit.  Don't declare vsyslog unless
+	__USE_BSD.
+
+	* nis/nss_compat/compat-grp.c: Correctly handle buffer overflow while
+	reading line with fgets.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+	* nss/nss_files/files-XXX.c: Likewise.
+	* nss/nss_files/files-alias.c: Likewise.
+	* shadow/fgetspent_r.c: Likewise.
+
+	* string/strerror_r.c: Correct comment.  Patch by Andreas Jaeger.
+
+	* sysdeps/unix/sysv/linux/bits/stat.h: Define _STATBUF_ST_RDEV.
+	* sysdeps/unix/sysv/linux/alpha/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/stat.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h: Allocate room for
+	FP register content in ucontext_t.
+
+1998-01-22  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/libm-ieee754/s_modfl.c (modf): Correct
+	calculation.  Patch by Markus Schoder
+	<Markus.Schoder@dresdner-bank.de>.
+
+	* math/libm-test.c (modf_test): Add more tests for modf.
+
+	* sysdeps/unix/sysv/linux/sys/mman.h: Add const to mlock and
+	munlock according to Unix98.
+
+1998-01-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nss/nss_files/files-network.c (LINE_PARSER): Set n_addrtype to
+	AF_INET.
+
+1998-01-21 07:22  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/posix/ttyname.c: Handle symbolic links.
+	* sysdeps/posix/ttyname_r.c: Ditto.
+
+1998-01-25 19:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db2/makedb.c (process_input): Write terminating \0 for value.
+	(print_database): Simply print value string, don't use length.
+
+1998-01-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nss/nsswitch.c (__nss_configure_lookup): Correct test for early
+	exit of loop.
+
+1998-01-25  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/ypclnt.c: Don't set dom_client to NULL, or we will not
+	close all sockets.
+
+1998-01-25 14:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* signal/Makefile (routines): Add sighold, sigrelse, sigignore, and
+	sigset.
+	* signal/sighold.c: New file.
+	* signal/sigrelse.c: New file.
+	* sysdeps/generic/sigignore.c: New file.
+	* sysdeps/generic/sigset.c: New file.
+	* sysdeps/posix/sigignore.c: New file.
+	* sysdeps/posix/sigset.c: New file.
+	* signal/signal.h: Add prototypes for new functions.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/signum.h: Define SIG_HOLD.
+	* sysdeps/unix/sysv/linux/bits/signum.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/signum.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/signum.h: Likewise.
+
+1998-01-23 00:16  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp.c: Added IFS field-splitting in parameter and
+	command substitution.  Fixed an IFS-related bug that caused an
+	infinite loop.
+
+1998-01-25 12:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/Makefile (routines): Add getcontext, setcontext, makecontext,
+	and swapcontext.
+	* stdlib/ucontext.h: Correct prototypes.
+	* sysdeps/generic/getcontext.c: New file.
+	* sysdeps/generic/setcontext.c: New file.
+	* sysdeps/generic/makecontext.c: New file.
+	* sysdeps/generic/swapcontext.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile: Removed.
+
+1998-01-25 04:07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resource/sys/resource.h: Remove #include of ulimit.h which is
+	not allowed by SUSv2 and not available on other systems.
+	* sysdeps/unix/sysv/linux/ulimit.c: Include ulimit.h.
+
+	* streams/Makefile: New file.
+	* streams/stropts.h: New file.
+	* sysdeps/generic/bits/stropts.h: New file.
+	* sysdeps/generic/isastream.c: New file.
+	* sysdeps/generic/getmsg.c: New file.
+	* sysdeps/generic/getpmsg.c: New file.
+	* sysdeps/generic/putmsg.c: New file.
+	* sysdeps/generic/putpmsg.c: New file.
+	* sysdeps/generic/fattach.c: New file.
+	* sysdeps/generic/fdetach.c: New file.
+	* sysdeps/unix/inet/Subdirs: Add streams.
+	* sysdeps/generic/bits/types.h: Add definition of __t_scalar_t and
+	__t_uscalar_t.
+	* sysdeps/unix/sysv/linux/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/types.h: Likewise.
+
+	* sysdeps/mach/_strerror.c: Follow changes of generic version to
+	handle small buffers correctly.
+
+1998-01-24 17:31  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/alpha/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE):
+	Remove the 3rd arg and add declaration for _dl_runtime_resolve
+	and _dl_runtime_profile.
+
+1998-01-25 02:42  Ulrich Drepper  <drepper@cygnus.com>
+
+	* include/cpio.h: New file.  Mainly copied from GNU cpio.
+	* posix/Makefile (headers): Add cpio.h.
+
 1998-01-24  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
 	* nis/Makefile: Distribute nis_cache2.h, add nis cache functions

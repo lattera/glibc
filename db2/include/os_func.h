@@ -4,7 +4,7 @@
  * Copyright (c) 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)os_func.h	10.4 (Sleepycat) 11/28/97
+ *	@(#)os_func.h	10.5 (Sleepycat) 12/4/97
  */
 
 /* Calls which can be replaced by the application. */
@@ -17,8 +17,8 @@ struct __db_jumptab {
 		    __P((const char *, int *));
 	void	(*db_free) __P((void *));		/* DB_FUNC_FREE */
 	int	(*db_fsync) __P((int));			/* DB_FUNC_FSYNC */
-	int	(*db_ioinfo)				/* DB_FUNC_IOINFO */
-		    __P((const char *, int, off_t *, off_t *));
+	int	(*db_ioinfo) __P((const char *,		/* DB_FUNC_IOINFO */
+		    int, u_int32_t *, u_int32_t *, u_int32_t *));
 	void   *(*db_malloc) __P((size_t));		/* DB_FUNC_MALLOC */
 	int	(*db_map)				/* DB_FUNC_MAP */
 		    __P((int, size_t, int, int, void **));

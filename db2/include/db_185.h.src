@@ -36,7 +36,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)db_185.h.src	8.4 (Sleepycat) 9/16/97
+ *	@(#)db_185.h.src	8.5 (Sleepycat) 1/15/98
  */
 
 #ifndef _DB_185_H_
@@ -173,6 +173,6 @@ extern "C" {
 DB *dbopen __P((const char *, int, int, DBTYPE, const void *));
 
 #if defined(__cplusplus)
-};
+}
 #endif
 #endif /* !_DB_185_H_ */

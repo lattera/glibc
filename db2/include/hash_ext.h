@@ -1,17 +1,19 @@
 /* DO NOT EDIT: automatically built by dist/distrib. */
+#ifndef _hash_ext_h_
+#define _hash_ext_h_
 int __ham_open __P((DB *, DB_INFO *));
 int  __ham_close __P((DB *));
 int __ham_c_iclose __P((DB *, DBC *));
 int __ham_expand_table __P((HTAB *));
 u_int32_t __ham_call_hash __P((HTAB *, u_int8_t *, int32_t));
 int __ham_init_dbt __P((DBT *, u_int32_t, void **, u_int32_t *));
-void __ham_c_update __P((HTAB *,
-   HASH_CURSOR *, db_pgno_t, u_int32_t, int, int));
+void __ham_c_update
+   __P((HASH_CURSOR *, db_pgno_t, u_int32_t, int, int));
 int  __ham_hdup __P((DB *, DB *));
 int __ham_insdel_log
     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
     u_int32_t, u_int32_t, db_pgno_t, u_int32_t,
-    DB_LSN *, DBT *, DBT *));
+    DB_LSN *, const DBT *, const DBT *));
 int __ham_insdel_print
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __ham_insdel_read __P((void *, __ham_insdel_args **));
@@ -31,7 +33,7 @@ int __ham_splitmeta_print
 int __ham_splitmeta_read __P((void *, __ham_splitmeta_args **));
 int __ham_splitdata_log
     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
-    u_int32_t, u_int32_t, db_pgno_t, DBT *,
+    u_int32_t, u_int32_t, db_pgno_t, const DBT *,
     DB_LSN *));
 int __ham_splitdata_print
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
@@ -39,7 +41,7 @@ int __ham_splitdata_read __P((void *, __ham_splitdata_args **));
 int __ham_replace_log
     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
     u_int32_t, db_pgno_t, u_int32_t, DB_LSN *,
-    int32_t, DBT *, DBT *, u_int32_t));
+    int32_t, const DBT *, const DBT *, u_int32_t));
 int __ham_replace_print
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __ham_replace_read __P((void *, __ham_replace_args **));
@@ -61,7 +63,7 @@ int __ham_ovfl_read __P((void *, __ham_ovfl_args **));
 int __ham_copypage_log
     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
     u_int32_t, db_pgno_t, DB_LSN *, db_pgno_t,
-    DB_LSN *, db_pgno_t, DB_LSN *, DBT *));
+    DB_LSN *, db_pgno_t, DB_LSN *, const DBT *));
 int __ham_copypage_print
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __ham_copypage_read __P((void *, __ham_copypage_args **));
@@ -128,3 +130,4 @@ int __ham_ovfl_recover
 int __ham_copypage_recover
   __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __ham_stat __P((DB *, FILE *));
+#endif /* _hash_ext_h_ */

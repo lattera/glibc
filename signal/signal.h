@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -343,6 +343,23 @@ extern int sigaltstack __P ((__const struct sigaltstack *__ss,
 			     struct sigaltstack *__oss));
 
 #endif /* signal.h included and use BSD or X/Open Unix.  */
+
+
+#if defined _SIGNAL_H && defined __USE_UNIX98
+/* Simplified interface for signal management.  */
+
+/* Add SIG to the calling process' signal mask.  */
+extern int sighold __P ((int __sig));
+
+/* Remove SIG from the calling process' signal mask.  */
+extern int sigrelse __P ((int __sig));
+
+/* Set the disposition of SIG to SIG_IGN.  */
+extern int sigignore __P ((int __sig));
+
+/* Set the disposition of SIG.  */
+extern __sighandler_t sigset __P ((int __sig, __sighandler_t __disp));
+#endif
 
 
 /* The following functions are used internally in the C library and in

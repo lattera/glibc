@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_pr.c	10.19 (Sleepycat) 11/2/97";
+static const char sccsid[] = "@(#)db_pr.c	10.20 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -81,7 +81,7 @@ __db_dump(dbp, name, all)
 {
 	FILE *fp, *save_fp;
 
-	save_fp = NULL;				/* XXX: Shut the compiler up. */
+	COMPQUIET(save_fp, NULL);
 
 	if (set_psize == PSIZE_BOUNDARY)
 		__db_psize(dbp->mpf);

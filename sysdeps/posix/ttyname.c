@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,36 +28,34 @@
 
 char *__ttyname = NULL;
 
-/* Return the pathname of the terminal FD is open on, or NULL on errors.
-   The returned storage is good only until the next call to this function.  */
-char *
-ttyname (fd)
+static char * getttyname __P ((int fd, dev_t mydev, ino_t myino,
+			       int save, int *dostat)) internal_function;
+
+static char *
+internal_function
+getttyname (fd, mydev, myino, save, dostat)
      int fd;
+     dev_t mydev;
+     ino_t myino;
+     int save;
+     int *dostat;
 {
   static const char dev[] = "/dev";
   static char *name;
   static size_t namelen = 0;
   struct stat st;
-  dev_t mydev;
-  ino_t myino;
   DIR *dirstream;
   struct dirent *d;
-  int save = errno;
-
-  if (!__isatty (fd))
-    return NULL;
-
-  if (fstat (fd, &st) < 0)
-    return NULL;
-  mydev = st.st_dev;
-  myino = st.st_ino;
 
   dirstream = opendir (dev);
   if (dirstream == NULL)
-    return NULL;
+    {
+      *dostat = -1;
+      return NULL;
+    }
 
   while ((d = readdir (dirstream)) != NULL)
-    if ((ino_t) d->d_fileno == myino)
+    if ((ino_t) d->d_fileno == myino || *dostat)
       {
 	size_t dlen = _D_ALLOC_NAMLEN (d);
 	if (sizeof (dev) + dlen > namelen)
@@ -67,6 +65,7 @@ ttyname (fd)
 	    name = malloc (namelen);
 	    if (! name)
 	      {
+		*dostat = -1;
 		/* Perhaps it helps to free the directory stream buffer.  */
 		(void) closedir (dirstream);
 		return NULL;
@@ -74,7 +73,13 @@ ttyname (fd)
 	    *((char *) __mempcpy (name, dev, sizeof (dev) - 1)) = '/';
 	  }
 	(void) __mempcpy (&name[sizeof (dev)], d->d_name, dlen);
-	if (stat (name, &st) == 0 && st.st_dev == mydev)
+	if (stat (name, &st) == 0
+#ifdef _STATBUF_ST_RDEV
+	    && S_ISCHR (st.st_mode) && st.st_rdev == mydev
+#else
+	    && (ino_t) d->d_fileno == myino && st.st_dev == mydev
+#endif
+	   )
 	  {
 	    (void) closedir (dirstream);
 	    __ttyname = name;
@@ -86,4 +91,40 @@ ttyname (fd)
   (void) closedir (dirstream);
   __set_errno (save);
   return NULL;
+}
+
+/* Return the pathname of the terminal FD is open on, or NULL on errors.
+   The returned storage is good only until the next call to this function.  */
+char *
+ttyname (fd)
+     int fd;
+{
+  struct stat st;
+  int dostat = 0;
+  char *name;
+  int save = errno;
+
+  if (!__isatty (fd))
+    return NULL;
+
+  if (fstat (fd, &st) < 0)
+    return NULL;
+
+#ifdef _STATBUF_ST_RDEV
+  name = getttyname (fd, st.st_rdev, st.st_ino, save, &dostat);
+#else
+  name = getttyname (fd, st.st_dev, st.st_ino, save, &dostat);
+#endif
+
+  if (!name && dostat != -1)
+    {
+      dostat = 1;
+#ifdef _STATBUF_ST_RDEV
+      name = getttyname (fd, st.st_rdev, st.st_ino, save, &dostat);
+#else
+      name = getttyname (fd, st.st_dev, st.st_ino, save, &dostat);
+#endif
+    }
+
+  return name;
 }

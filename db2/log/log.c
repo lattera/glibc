@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log.c	10.34 (Sleepycat) 11/28/97";
+static const char sccsid[] = "@(#)log.c	10.39 (Sleepycat) 1/17/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -203,28 +203,21 @@ __log_recover(dblp)
 	 * Find a log file.  If none exist, we simply return, leaving
 	 * everything initialized to a new log.
 	 */
-	if ((ret = __log_find(dblp, &cnt)) != 0)
+	if ((ret = __log_find(dblp, 0, &cnt)) != 0)
 		return (ret);
 	if (cnt == 0)
 		return (0);
 
-	/* We have a log file name, find the last one. */
-	while (cnt < MAXLFNAME)
-		if (__log_valid(dblp, lp, ++cnt) != 0) {
-			--cnt;
-			break;
-		}
-
 	/*
 	 * We have the last useful log file and we've loaded any persistent
 	 * information.  Pretend that the log is larger than it can possibly
-	 * be, and read this file, looking for a checkpoint and its end.
+	 * be, and read the last file, looking for the last checkpoint and
+	 * the log's end.
 	 */
-	dblp->c_lsn.file = cnt;
-	dblp->c_lsn.offset = 0;
-	lsn = dblp->c_lsn;
 	lp->lsn.file = cnt + 1;
 	lp->lsn.offset = 0;
+	lsn.file = cnt;
+	lsn.offset = 0;
 
 	/* Set the cursor.  Shouldn't fail, leave error messages on. */
 	memset(&dbt, 0, sizeof(dbt));
@@ -264,9 +257,8 @@ __log_recover(dblp)
 	 * one in the last log file.  Start searching.
 	 */
 	while (!found_checkpoint && cnt > 1) {
-		dblp->c_lsn.file = --cnt;
-		dblp->c_lsn.offset = 0;
-		lsn = dblp->c_lsn;
+		lsn.file = --cnt;
+		lsn.offset = 0;
 
 		/* Set the cursor.  Shouldn't fail, leave error messages on. */
 		if ((ret = __log_get(dblp, &lsn, &dbt, DB_SET, 0)) != 0)
@@ -288,35 +280,34 @@ __log_recover(dblp)
 	}
 
 	/* If we never find a checkpoint, that's okay, just 0 it out. */
-	if (!found_checkpoint) {
-		lp->c_lsn.file = 1;
-		lp->c_lsn.offset = 0;
-	}
+	if (!found_checkpoint)
+		ZERO_LSN(lp->c_lsn);
 
 	__db_err(dblp->dbenv,
 	    "Recovering the log: last valid LSN: file: %lu offset %lu",
 	    (u_long)lp->lsn.file, (u_long)lp->lsn.offset);
-
-	/* Reset the cursor.  */
-	ZERO_LSN(dblp->c_lsn);
 
 	return (0);
 }
 
 /*
  * __log_find --
- *	Try to find a log file.
+ *	Try to find a log file.  If find_first is set, valp will contain
+ * the number of the first log file, else it will contain the number of
+ * the last log file.
  *
- * PUBLIC: int __log_find __P((DB_LOG *, int *));
+ * PUBLIC: int __log_find __P((DB_LOG *, int, int *));
  */
 int
-__log_find(dblp, valp)
+__log_find(dblp, find_first, valp)
 	DB_LOG *dblp;
-	int *valp;
+	int find_first, *valp;
 {
 	int cnt, fcnt, logval, ret;
 	const char *dir;
 	char **names, *p, *q;
+
+	*valp = 0;
 
 	/* Find the directory name. */
 	if ((ret = __log_name(dblp, 1, &p)) != 0)
@@ -340,21 +331,29 @@ __log_find(dblp, valp)
 	 * Search for a valid log file name, return a value of 0 on
 	 * failure.
 	 */
-	*valp = 0;
 	for (cnt = fcnt, logval = 0; --cnt >= 0;)
 		if (strncmp(names[cnt], "log.", sizeof("log.") - 1) == 0) {
 			logval = atoi(names[cnt] + 4);
 			if (logval != 0 &&
-			    __log_valid(dblp, dblp->lp, logval) == 0) {
-				*valp = logval;
+			    __log_valid(dblp, dblp->lp, logval) == 0)
 				break;
-			}
 		}
 
 	/* Discard the list. */
 	__db_dirfree(names, fcnt);
 
-	return (ret);
+	/* We have a valid log file, find either the first or last one. */
+	if (find_first) {
+		for (; logval > 0; --logval)
+			if (__log_valid(dblp, dblp->lp, logval - 1) != 0)
+				break;
+	} else
+		for (; logval < MAXLFNAME; ++logval)
+			if (__log_valid(dblp, dblp->lp, logval + 1) != 0)
+				break;
+	*valp = logval;
+
+	return (0);
 }
 
 /*
@@ -508,6 +507,10 @@ log_stat(dblp, gspp, db_malloc)
 
 	(*gspp)->st_region_nowait = lp->rlayout.lock.mutex_set_nowait;
 	(*gspp)->st_region_wait = lp->rlayout.lock.mutex_set_wait;
+
+	(*gspp)->st_cur_file = lp->lsn.file;
+	(*gspp)->st_cur_offset = lp->lsn.offset;
+
 	UNLOCK_LOGREGION(dblp);
 
 	return (0);

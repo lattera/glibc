@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_stat.c	8.26 (Sleepycat) 11/2/97";
+static const char sccsid[] = "@(#)db_stat.c	8.30 (Sleepycat) 1/8/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -30,9 +30,6 @@ static const char sccsid[] = "@(#)db_stat.c	8.26 (Sleepycat) 11/2/97";
 #include "clib_ext.h"
 
 #undef stat
-
-#define	MB	1048576
-#define	DIVIDER	"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 
 typedef enum { T_NOTSET, T_DB, T_LOG, T_MPOOL, T_TXN } test_t;
 
@@ -232,6 +229,8 @@ void
 hash_stats(dbp)
 	DB *dbp;
 {
+	COMPQUIET(dbp, NULL);
+
 	return;
 }
 
@@ -251,8 +250,9 @@ log_stats(dbenv)
 	printf("%#lx\tLog magic number.\n", (u_long)sp->st_magic);
 	printf("%lu\tLog version number.\n", (u_long)sp->st_version);
 	printf("%#o\tLog file mode.\n", sp->st_mode);
-	if (sp->st_lg_max % MB == 0)
-		printf("%luMb\tLog file size.\n", (u_long)sp->st_lg_max / MB);
+	if (sp->st_lg_max % MEGABYTE == 0)
+		printf("%luMb\tLog file size.\n",
+		    (u_long)sp->st_lg_max / MEGABYTE);
 	else if (sp->st_lg_max % 1024 == 0)
 		printf("%luKb\tLog file size.\n", (u_long)sp->st_lg_max / 1024);
 	else
@@ -263,6 +263,8 @@ log_stats(dbenv)
 	    (u_long)sp->st_wc_mbytes, (u_long)sp->st_wc_bytes);
 	printf("%lu\tTotal log file writes.\n", (u_long)sp->st_wcount);
 	printf("%lu\tTotal log file flushes.\n", (u_long)sp->st_scount);
+	printf("%lu\tCurrent log file number.\n", (u_long)sp->st_cur_file);
+	printf("%lu\tCurrent log file offset.\n", (u_long)sp->st_cur_offset);
 	printf("%lu\tThe number of region locks granted without waiting.\n",
 	    (u_long)sp->st_region_nowait);
 	printf("%lu\tThe number of region locks granted after waiting.\n",
@@ -325,7 +327,7 @@ mpool_stats(dbenv)
 	    (u_long)gsp->st_region_wait);
 
 	for (; fsp != NULL && *fsp != NULL; ++fsp) {
-		printf("%s\n", DIVIDER);
+		printf("%s\n", DB_LINE);
 		printf("%s\n", (*fsp)->file_name);
 		printf("%lu\tPage size.\n", (u_long)(*fsp)->st_pagesize);
 		printf("%lu\tRequested pages found in the cache",
@@ -513,7 +515,8 @@ void
 onint(signo)
 	int signo;
 {
-	signo = 1;			/* XXX: Shut the compiler up. */
+	COMPQUIET(signo, 0);
+
 	interrupted = 1;
 }
 

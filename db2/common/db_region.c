@@ -43,7 +43,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_region.c	10.18 (Sleepycat) 11/28/97";
+static const char sccsid[] = "@(#)db_region.c	10.21 (Sleepycat) 1/16/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -168,6 +168,8 @@ __db_rinit(dbenv, rp, fd, size, lock_region)
 {
 	int ret;
 
+	COMPQUIET(dbenv, NULL);
+
 	/*
 	 * Initialize the common information.
 	 *
@@ -190,6 +192,12 @@ __db_rinit(dbenv, rp, fd, size, lock_region)
 	 * been initialized in which case an attempt to get it could lead to
 	 * random behavior.  If the version number isn't there (the file size
 	 * is too small) or it's 0, we know that the region is being created.
+	 *
+	 * We also make sure to check the return of __db_mutex_lock() here,
+	 * even though we don't usually check elsewhere.  This is the first
+	 * lock we attempt to acquire, and if it fails we have to know.  (It
+	 * can fail -- SunOS, using fcntl(2) for locking, with an in-memory
+	 * filesystem specified as the database home.)
 	 */
 	__db_mutex_init(&rp->lock, MUTEX_LOCK_OFFSET(rp, &rp->lock));
 	if (lock_region && (ret = __db_mutex_lock(&rp->lock, fd)) != 0)
@@ -219,7 +227,8 @@ __db_ropen(dbenv, appname, path, file, flags, fdp, retp)
 	void *retp;
 {
 	RLAYOUT *rp;
-	off_t size1, size2;
+	size_t size;
+	u_int32_t mbytes, bytes;
 	int fd, ret;
 	char *name;
 
@@ -251,19 +260,20 @@ __db_ropen(dbenv, appname, path, file, flags, fdp, retp)
 	 * flatly impossible.  Hope that mmap fails if the file is too large.
 	 *
 	 */
-	if ((ret = __db_ioinfo(name, fd, &size1, NULL)) != 0) {
+	if ((ret = __db_ioinfo(name, fd, &mbytes, &bytes, NULL)) != 0) {
 		__db_err(dbenv, "%s: %s", name, strerror(ret));
 		goto err2;
 	}
+	size = mbytes * MEGABYTE + bytes;
 
 	/* Check to make sure the first block has been written. */
-	if ((size_t)size1 < sizeof(RLAYOUT)) {
+	if (size < sizeof(RLAYOUT)) {
 		ret = EAGAIN;
 		goto err2;
 	}
 
 	/* Map in whatever is there. */
-	if ((ret = __db_rmap(dbenv, fd, size1, &rp)) != 0)
+	if ((ret = __db_rmap(dbenv, fd, size, &rp)) != 0)
 		goto err2;
 
 	/*
@@ -284,11 +294,11 @@ __db_ropen(dbenv, appname, path, file, flags, fdp, retp)
 	 * getting the size of the file and checking the major version.  Check
 	 * to make sure we got the entire file.
 	 */
-	if ((ret = __db_ioinfo(name, fd, &size2, NULL)) != 0) {
+	if ((ret = __db_ioinfo(name, fd, &mbytes, &bytes, NULL)) != 0) {
 		__db_err(dbenv, "%s: %s", name, strerror(ret));
 		goto err1;
 	}
-	if (size1 != size2) {
+	if (size != mbytes * MEGABYTE + bytes) {
 		ret = EAGAIN;
 		goto err1;
 	}
@@ -490,11 +500,9 @@ __db_rgrow(dbenv, fd, incr)
 	int fd;
 	size_t incr;
 {
-#ifdef MMAP_INIT_NEEDED
 	size_t i;
-#endif
 	ssize_t nw;
-	int ret;
+	int mmap_init_needed, ret;
 	char buf[__DB_VMPAGESIZE];
 
 	/* Seek to the end of the region. */
@@ -506,33 +514,42 @@ __db_rgrow(dbenv, fd, incr)
 
 	/*
 	 * Historically, some systems required that all of the bytes of the
-	 * region be written before you could mmap it and access it randomly.
+	 * region be written before it could be mmapped and accessed randomly.
+	 *
+	 * Windows/95 doesn't have that problem, but it leaves file contents
+	 * uninitialized.  Win/NT apparently initializes them.
 	 */
 #ifdef MMAP_INIT_NEEDED
-	/* Extend the region by writing each new page. */
-	for (i = 0; i < incr; i += __DB_VMPAGESIZE) {
+	mmap_init_needed = 1;
+#else
+	mmap_init_needed = __os_oldwin();
+#endif
+	if (mmap_init_needed)
+		/* Extend the region by writing each new page. */
+		for (i = 0; i < incr; i += __DB_VMPAGESIZE) {
+			if ((ret = __db_write(fd, buf, sizeof(buf), &nw)) != 0)
+				goto err;
+			if (nw != sizeof(buf))
+				goto eio;
+		}
+	else {
+		/*
+		 * Extend the region by writing the last page.
+		 *
+		 * Round off the increment to the next page boundary.
+		 */
+		incr += __DB_VMPAGESIZE - 1;
+		incr -= incr % __DB_VMPAGESIZE;
+
+		/* Write the last page, not the page after the last. */
+		if ((ret =
+		    __db_seek(fd, 0, 0, incr - __DB_VMPAGESIZE, SEEK_CUR)) != 0)
+			goto err;
 		if ((ret = __db_write(fd, buf, sizeof(buf), &nw)) != 0)
 			goto err;
 		if (nw != sizeof(buf))
 			goto eio;
 	}
-#else
-	/*
-	 * Extend the region by writing the last page.
-	 *
-	 * Round off the increment to the next page boundary.
-	 */
-	incr += __DB_VMPAGESIZE - 1;
-	incr -= incr % __DB_VMPAGESIZE;
-
-	/* Write the last page, not the page after the last. */
-	if ((ret = __db_seek(fd, 0, 0, incr - __DB_VMPAGESIZE, SEEK_CUR)) != 0)
-		goto err;
-	if ((ret = __db_write(fd, buf, sizeof(buf), &nw)) != 0)
-		goto err;
-	if (nw != sizeof(buf))
-		goto eio;
-#endif
 	return (0);
 
 eio:	ret = EIO;

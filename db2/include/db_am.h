@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_am.h	10.7 (Sleepycat) 10/25/97
+ *	@(#)db_am.h	10.8 (Sleepycat) 1/8/98
  */
 #ifndef _DB_AM_H
 #define _DB_AM_H
@@ -79,7 +79,7 @@
 	(void)func(logp, dbtp, lsnp, redo, info);
 #else
 #define	REC_PRINT(func)							\
-	info = info;			/* XXX: Shut the compiler up. */
+	COMPQUIET(info, NULL);
 #endif
 
 #include "db_auto.h"

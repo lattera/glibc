@@ -233,7 +233,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1996, 1997");
+"), "1996, 1997, 1998");
   fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
 }
 
@@ -303,7 +303,7 @@ process_input (input, inname, output, to_lowercase, be_quiet)
 	++cp;
 
       val.data = cp;
-      val.size = &line[n] - cp;
+      val.size = (&line[n] - cp) + 1;
 
       /* Store the value.  */
       status = output->put (output, &key, &val, R_NOOVERWRITE);
@@ -349,7 +349,7 @@ print_database (db)
   no_more = db->seq (db, &key, &val, R_FIRST);
   while (!no_more)
     {
-      printf ("%.*s %.*s\n", (int) key.size, (char *) key.data, (int) val.size,
+      printf ("%.*s %s\n", (int) key.size, (char *) key.data,
 	      (char *) val.data);
 
       no_more = db->seq (db, &key, &val, R_NEXT);

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)lock.c	10.41 (Sleepycat) 11/28/97";
+static const char sccsid[] = "@(#)lock.c	10.43 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -79,14 +79,15 @@ __lock_create(path, mode, dbenv)
 	u_int maxlocks;
 	u_int32_t i;
 	int fd, lock_modes, nelements, ret;
-	u_int8_t *conflicts, *curaddr;
+	const u_int8_t *conflicts;
+	u_int8_t *curaddr;
 
 	maxlocks = dbenv == NULL || dbenv->lk_max == 0 ?
 	    DB_LOCK_DEFAULT_N : dbenv->lk_max;
 	lock_modes = dbenv == NULL || dbenv->lk_modes == 0 ?
 	    DB_LOCK_RW_N : dbenv->lk_modes;
 	conflicts = dbenv == NULL || dbenv->lk_conflicts == NULL ?
-	    (u_int8_t *)db_rw_conflicts : dbenv->lk_conflicts;
+	    db_rw_conflicts : dbenv->lk_conflicts;
 
 	if ((ret =
 	    __db_rcreate(dbenv, DB_APP_NONE, path, DB_DEFAULT_LOCK_FILE, mode,
@@ -666,8 +667,7 @@ __lock_get_internal(lt, locker, flags, obj, lock_mode, lockp)
 	newl->holder = locker;
 	newl->refcount = 1;
 
-	if ((ret =
-	    __lock_getobj(lt, 0, (DBT *)obj, DB_LOCK_OBJTYPE, &sh_obj)) != 0)
+	if ((ret = __lock_getobj(lt, 0, obj, DB_LOCK_OBJTYPE, &sh_obj)) != 0)
 		return (ret);
 
 	lrp = lt->region;			/* getobj might have grown */
@@ -955,10 +955,15 @@ __lock_grow_region(lt, which, howmuch)
 }
 
 #ifdef DEBUG
+/*
+ * __lock_dump_region --
+ *
+ * PUBLIC: void __lock_dump_region __P((DB_LOCKTAB *, u_int));
+ */
 void
 __lock_dump_region(lt, flags)
 	DB_LOCKTAB *lt;
-	unsigned long flags;
+	u_int flags;
 {
 	struct __db_lock *lp;
 	DB_LOCKOBJ *op;
@@ -1096,6 +1101,12 @@ __lock_dump_object(lt, op)
 	}
 }
 
+/*
+ * __lock_is_locked --
+ *
+ * PUBLIC: int __lock_is_locked
+ * PUBLIC:    __P((DB_LOCKTAB *, u_int32_t, DBT *, db_lockmode_t));
+ */
 int
 __lock_is_locked(lt, locker, dbt, mode)
 	DB_LOCKTAB *lt;
@@ -1135,7 +1146,7 @@ __lock_printlock(lt, lp, ispgno)
 	db_pgno_t pgno;
 	size_t obj;
 	u_int8_t *ptr;
-	char *mode, *stat;
+	const char *mode, *status;
 
 	switch (lp->mode) {
 	case DB_LOCK_IREAD:
@@ -1162,32 +1173,32 @@ __lock_printlock(lt, lp, ispgno)
 	}
 	switch (lp->status) {
 	case DB_LSTAT_ABORTED:
-		stat = "ABORT";
+		status = "ABORT";
 		break;
 	case DB_LSTAT_ERR:
-		stat = "ERROR";
+		status = "ERROR";
 		break;
 	case DB_LSTAT_FREE:
-		stat = "FREE";
+		status = "FREE";
 		break;
 	case DB_LSTAT_HELD:
-		stat = "HELD";
+		status = "HELD";
 		break;
 	case DB_LSTAT_NOGRANT:
-		stat = "NONE";
+		status = "NONE";
 		break;
 	case DB_LSTAT_WAITING:
-		stat = "WAIT";
+		status = "WAIT";
 		break;
 	case DB_LSTAT_PENDING:
-		stat = "PENDING";
+		status = "PENDING";
 		break;
 	default:
-		stat = "UNKNOWN";
+		status = "UNKNOWN";
 		break;
 	}
 	printf("\t%lx\t%s\t%lu\t%s\t",
-	    (u_long)lp->holder, mode, (u_long)lp->refcount, stat);
+	    (u_long)lp->holder, mode, (u_long)lp->refcount, status);
 
 	lockobj = (DB_LOCKOBJ *)((u_int8_t *)lp + lp->obj);
 	ptr = SH_DBT_PTR(&lockobj->lockobj);
@@ -1202,7 +1213,6 @@ __lock_printlock(lt, lp, ispgno)
 		printf("\n");
 	}
 }
-
 #endif
 
 static int
@@ -1239,13 +1249,13 @@ __lock_count_objs(lrp)
 
 /*
  * PUBLIC: int __lock_getobj  __P((DB_LOCKTAB *,
- * PUBLIC:     u_int32_t, DBT *, u_int32_t type, DB_LOCKOBJ **));
+ * PUBLIC:     u_int32_t, const DBT *, u_int32_t type, DB_LOCKOBJ **));
  */
 int
 __lock_getobj(lt, locker, dbt, type, objp)
 	DB_LOCKTAB *lt;
 	u_int32_t locker, type;
-	DBT *dbt;
+	const DBT *dbt;
 	DB_LOCKOBJ **objp;
 {
 	DB_LOCKREGION *lrp;

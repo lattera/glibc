@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_recno.c	10.22 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)bt_recno.c	10.26 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -71,6 +71,8 @@ __ram_open(dbp, type, dbinfo)
 	BTREE *t;
 	RECNO *rp;
 	int ret;
+
+	COMPQUIET(type, DB_RECNO);
 
 	ret = 0;
 
@@ -402,12 +404,16 @@ __ram_c_iclose(dbp, dbc)
 	DBC *dbc;
 {
 	/*
-	 * All cursors are queued from the master DB structure.  Remove the
-	 * cursor from that queue.
+	 * All cursors are queued from the master DB structure.  For
+	 * now, discard the DB handle which triggered this call, and
+	 * replace it with the cursor's reference.
 	 */
-	DB_THREAD_LOCK(dbc->dbp);
-	TAILQ_REMOVE(&dbc->dbp->curs_queue, dbc, links);
-	DB_THREAD_UNLOCK(dbc->dbp);
+	dbp = dbc->dbp;
+
+	/* Remove the cursor from the queue. */
+	DB_THREAD_LOCK(dbp);
+	TAILQ_REMOVE(&dbp->curs_queue, dbc, links);
+	DB_THREAD_UNLOCK(dbp);
 
 	/* Discard the structures. */
 	FREE(dbc->internal, sizeof(RCURSOR));
@@ -699,6 +705,8 @@ __ram_ca(dbp, recno, op)
 /*
  * __ram_cprint --
  *	Display the current recno cursor list.
+ *
+ * PUBLIC: int __ram_cprint __P((DB *));
  */
 int
 __ram_cprint(dbp)
@@ -844,7 +852,8 @@ __ram_source(dbp, rp, fname)
 	RECNO *rp;
 	const char *fname;
 {
-	off_t size;
+	size_t size;
+	u_int32_t mbytes, bytes;
 	int oflags, ret;
 
 	if ((ret = __db_appname(dbp->dbenv,
@@ -866,15 +875,17 @@ __ram_source(dbp, rp, fname)
 	 * compiler will perpetrate, doing the comparison in a portable way is
 	 * flatly impossible.  Hope that mmap fails if the file is too large.
 	 */
-	if ((ret = __db_ioinfo(rp->re_source, rp->re_fd, &size, NULL)) != 0) {
+	if ((ret = __db_ioinfo(rp->re_source,
+	    rp->re_fd, &mbytes, &bytes, NULL)) != 0) {
 		__db_err(dbp->dbenv, "%s: %s", rp->re_source, strerror(ret));
 		goto err;
 	}
-	if (size == 0) {
+	if (mbytes == 0 && bytes == 0) {
 		F_SET(rp, RECNO_EOF);
 		return (0);
 	}
 
+	size = mbytes * MEGABYTE + bytes;
 	if ((ret = __db_map(rp->re_fd, (size_t)size, 1, 1, &rp->re_smap)) != 0)
 		goto err;
 	rp->re_cmap = rp->re_smap;
@@ -981,7 +992,7 @@ __ram_writeback(dbp)
 		}
 		memset(pad, rp->re_pad, rp->re_len);
 	} else
-		pad = NULL;			/* XXX: Shut the compiler up. */
+		COMPQUIET(pad, NULL);
 	for (keyno = 1;; ++keyno) {
 		switch (ret = dbp->get(dbp, NULL, &key, &data, 0)) {
 		case 0:

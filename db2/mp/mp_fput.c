@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fput.c	10.16 (Sleepycat) 11/26/97";
+static const char sccsid[] = "@(#)mp_fput.c	10.17 (Sleepycat) 12/20/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -105,7 +105,7 @@ memp_fput(dbmfp, pgaddr, flags)
 #ifdef DEBUG
 	if (bhp->ref == 0) {
 		__db_err(dbmp->dbenv,
-		    "Internal error: bhp->ref on page %lu went negative.",
+    "Unpinned page returned: reference count on page %lu went negative.",
 		    (u_long)bhp->pgno);
 		abort();
 	}

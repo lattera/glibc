@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 93, 94, 95, 96, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,8 +21,8 @@
 
 extern char *_strerror_internal __P ((int, char *, size_t));
 
-/* Return a string describing the errno code in ERRNUM.  At most BUFLEN
-   characters of the result will be placed in STRERRBUF.  */
+/* Return a string describing the errno code in ERRNUM. If a temporary
+   buffer is required, at most BUFLEN bytes of BUF will be used.  */
 char *
 __strerror_r (int errnum, char *buf, size_t buflen)
 {

@@ -119,7 +119,7 @@ __dbopen(file, oflags, mode, type, openinfo)
 		 */
 		if (file != NULL) {
 			if (oflags & O_CREAT && __db_exists(file, NULL) != 0)
-				(void)__os_close(open(file, oflags, mode));
+				(void)__os_close(__os_open(file, oflags, mode));
 			dbinfop->re_source = (char *)file;
 			file = NULL;
 		}

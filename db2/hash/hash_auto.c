@@ -21,7 +21,7 @@
  * PUBLIC: int __ham_insdel_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
  * PUBLIC:     u_int32_t, u_int32_t, db_pgno_t, u_int32_t,
- * PUBLIC:     DB_LSN *, DBT *, DBT *));
+ * PUBLIC:     DB_LSN *, const DBT *, const DBT *));
  */
 int __ham_insdel_log(logp, txnid, ret_lsnp, flags,
 	opcode, fileid, pgno, ndx, pagelsn, key,
@@ -35,8 +35,8 @@ int __ham_insdel_log(logp, txnid, ret_lsnp, flags,
 	db_pgno_t pgno;
 	u_int32_t ndx;
 	DB_LSN * pagelsn;
-	DBT *key;
-	DBT *data;
+	const DBT *key;
+	const DBT *data;
 {
 	DBT logrec;
 	DB_LSN *lsnp, null_lsn;
@@ -555,7 +555,7 @@ __ham_splitmeta_read(recbuf, argpp)
 /*
  * PUBLIC: int __ham_splitdata_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
- * PUBLIC:     u_int32_t, u_int32_t, db_pgno_t, DBT *,
+ * PUBLIC:     u_int32_t, u_int32_t, db_pgno_t, const DBT *,
  * PUBLIC:     DB_LSN *));
  */
 int __ham_splitdata_log(logp, txnid, ret_lsnp, flags,
@@ -567,7 +567,7 @@ int __ham_splitdata_log(logp, txnid, ret_lsnp, flags,
 	u_int32_t fileid;
 	u_int32_t opcode;
 	db_pgno_t pgno;
-	DBT *pageimage;
+	const DBT *pageimage;
 	DB_LSN * pagelsn;
 {
 	DBT logrec;
@@ -726,7 +726,7 @@ __ham_splitdata_read(recbuf, argpp)
  * PUBLIC: int __ham_replace_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
  * PUBLIC:     u_int32_t, db_pgno_t, u_int32_t, DB_LSN *,
- * PUBLIC:     int32_t, DBT *, DBT *, u_int32_t));
+ * PUBLIC:     int32_t, const DBT *, const DBT *, u_int32_t));
  */
 int __ham_replace_log(logp, txnid, ret_lsnp, flags,
 	fileid, pgno, ndx, pagelsn, off, olditem,
@@ -740,8 +740,8 @@ int __ham_replace_log(logp, txnid, ret_lsnp, flags,
 	u_int32_t ndx;
 	DB_LSN * pagelsn;
 	int32_t off;
-	DBT *olditem;
-	DBT *newitem;
+	const DBT *olditem;
+	const DBT *newitem;
 	u_int32_t makedup;
 {
 	DBT logrec;
@@ -1279,7 +1279,7 @@ __ham_ovfl_read(recbuf, argpp)
  * PUBLIC: int __ham_copypage_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
  * PUBLIC:     u_int32_t, db_pgno_t, DB_LSN *, db_pgno_t,
- * PUBLIC:     DB_LSN *, db_pgno_t, DB_LSN *, DBT *));
+ * PUBLIC:     DB_LSN *, db_pgno_t, DB_LSN *, const DBT *));
  */
 int __ham_copypage_log(logp, txnid, ret_lsnp, flags,
 	fileid, pgno, pagelsn, next_pgno, nextlsn, nnext_pgno,
@@ -1295,7 +1295,7 @@ int __ham_copypage_log(logp, txnid, ret_lsnp, flags,
 	DB_LSN * nextlsn;
 	db_pgno_t nnext_pgno;
 	DB_LSN * nnextlsn;
-	DBT *page;
+	const DBT *page;
 {
 	DBT logrec;
 	DB_LSN *lsnp, null_lsn;

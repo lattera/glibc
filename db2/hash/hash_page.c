@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_page.c	10.29 (Sleepycat) 11/2/97";
+static const char sccsid[] = "@(#)hash_page.c	10.31 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 /*
@@ -720,7 +720,7 @@ __ham_del_pair(hashp, cursorp, reclaim_page)
 		chg_pgno = cursorp->pgno;
 		ret = __ham_dirty_page(hashp, p);
 	}
-	__ham_c_update(hashp, cursorp, chg_pgno, 0, 0, 0);
+	__ham_c_update(cursorp, chg_pgno, 0, 0, 0);
 
 	/*
 	 * Since we just deleted a pair from the master page, anything
@@ -1131,7 +1131,8 @@ __ham_add_el(hashp, hcp, key, val, type)
 	const DBT *key, *val;
 	int type;
 {
-	DBT *pkey, *pdata, key_dbt, data_dbt;
+	const DBT *pkey, *pdata;
+	DBT key_dbt, data_dbt;
 	DB_LSN new_lsn;
 	HOFFPAGE doff, koff;
 	db_pgno_t next_pgno;
@@ -1200,7 +1201,7 @@ __ham_add_el(hashp, hcp, key, val, type)
 		pkey = &key_dbt;
 		key_type = H_OFFPAGE;
 	} else {
-		pkey = (DBT *)key;
+		pkey = key;
 		key_type = H_KEYDATA;
 	}
 
@@ -1215,7 +1216,7 @@ __ham_add_el(hashp, hcp, key, val, type)
 		pdata = &data_dbt;
 		data_type = H_OFFPAGE;
 	} else {
-		pdata = (DBT *)val;
+		pdata = val;
 		data_type = type;
 	}
 
@@ -1593,7 +1594,7 @@ __ham_init_ovflpages(hp)
 	db_pgno_t last_pgno, new_pgno;
 	u_int32_t i, curpages, numpages;
 
-	curpages = hp->hdr->spares[hp->hdr->ovfl_point] - 
+	curpages = hp->hdr->spares[hp->hdr->ovfl_point] -
 	    hp->hdr->spares[hp->hdr->ovfl_point - 1];
 	numpages = hp->hdr->ovfl_point + 1 - curpages;
 

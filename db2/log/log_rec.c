@@ -40,7 +40,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_rec.c	10.14 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)log_rec.c	10.16 (Sleepycat) 1/17/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -80,73 +80,53 @@ __log_register_recover(logp, dbtp, lsnp, redo, info)
 #ifdef DEBUG_RECOVER
 	__log_register_print(logp, dbtp, lsnp, redo, info);
 #endif
-	info = info;				/* XXX: Shut the compiler up. */
-	lsnp = lsnp;
+	COMPQUIET(info, NULL);
+	COMPQUIET(lsnp, NULL);
 
 	F_SET(logp, DB_AM_RECOVER);
 
 	if ((ret = __log_register_read(dbtp->data, &argp)) != 0)
 		goto out;
 
-	ret = __log_open_file(logp,
-	    argp->uid.data, argp->name.data, argp->ftype, argp->id);
-	if (ret == ENOENT) {
-		if (redo == TXN_OPENFILES)
-			__db_err(logp->dbenv,
-			    "warning: file %s not found", argp->name.data);
-		ret = 0;
+	if ((argp->opcode == LOG_CHECKPOINT && redo == TXN_OPENFILES) ||
+	    (argp->opcode == LOG_OPEN &&
+	    (redo == TXN_REDO || redo == TXN_OPENFILES || 
+	     redo == TXN_FORWARD_ROLL)) ||
+	    (argp->opcode == LOG_CLOSE &&
+	    (redo == TXN_UNDO || redo == TXN_BACKWARD_ROLL))) {
+		/*
+		 * If we are redoing an open or undoing a close, then we need
+		 * to open a file.
+		 */
+		ret = __log_open_file(logp,
+		    argp->uid.data, argp->name.data, argp->ftype, argp->id);
+		if (ret == ENOENT) {
+			if (redo == TXN_OPENFILES)
+				__db_err(logp->dbenv,
+				    "warning: file %s not found",
+				    argp->name.data);
+			ret = 0;
+		}
+	} else if (argp->opcode != LOG_CHECKPOINT) {
+		/*
+		 * If we are redoing a close or undoing an open, then we need
+		 * to close the file.
+		 *
+		 * If the file is deleted, then we can just ignore this close.
+		 * Otherwise, we'd better have a valid dbp that we should either
+		 * close or whose reference count should be decremented.
+		 */
+		LOCK_LOGTHREAD(logp);
+		if (logp->dbentry[argp->id].dbp == NULL) {
+			if (!logp->dbentry[argp->id].deleted)
+				ret = EINVAL;
+		} else if (--logp->dbentry[argp->id].refcount == 0) {
+			ret = logp->dbentry[argp->id].dbp->close(
+			    logp->dbentry[argp->id].dbp, 0);
+			logp->dbentry[argp->id].dbp = NULL;
+		}
+		UNLOCK_LOGTHREAD(logp);
 	}
-
-out:	F_CLR(logp, DB_AM_RECOVER);
-	if (argp != NULL)
-		__db_free(argp);
-	return (ret);
-}
-
-/*
- * PUBLIC: int __log_unregister_recover
- * PUBLIC:     __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
- */
-int
-__log_unregister_recover(logp, dbtp, lsnp, redo, info)
-	DB_LOG *logp;
-	DBT *dbtp;
-	DB_LSN *lsnp;
-	int redo;
-	void *info;
-{
-	__log_unregister_args *argp;
-	int ret;
-
-#ifdef DEBUG_RECOVER
-	__log_unregister_print(logp, dbtp, lsnp, redo, info);
-#endif
-	info = info;				/* XXX: Shut the compiler up. */
-	lsnp = lsnp;
-
-	if (redo == TXN_OPENFILES ||
-	    redo == TXN_BACKWARD_ROLL || redo == TXN_UNDO)
-		return (0);
-
-	F_SET(logp, DB_AM_RECOVER);
-	if ((ret = __log_unregister_read(dbtp->data, &argp)) != 0)
-		goto out;
-
-	/*
-	 * If the file is deleted, then we can just ignore this close.
-	 * Otherwise, we'd better have a valid dbp that we should either
-	 * close or whose reference count should be decremented.
-	 */
-	LOCK_LOGTHREAD(logp);
-	if (logp->dbentry[argp->id].dbp == NULL) {
-		if (!logp->dbentry[argp->id].deleted)
-			ret = EINVAL;
-	} else if (--logp->dbentry[argp->id].refcount == 0) {
-		ret = logp->dbentry[argp->id].dbp->close(
-		    logp->dbentry[argp->id].dbp, 0);
-		logp->dbentry[argp->id].dbp = NULL;
-	}
-	UNLOCK_LOGTHREAD(logp);
 
 out:	F_CLR(logp, DB_AM_RECOVER);
 	if (argp != NULL)

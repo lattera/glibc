@@ -42,7 +42,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_dup.c	10.8 (Sleepycat) 10/14/97";
+static const char sccsid[] = "@(#)hash_dup.c	10.10 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 /*
@@ -182,7 +182,7 @@ __ham_add_dup(hashp, hcp, nval, flags)
 		ret = __ham_replpair(hashp, hcp, &tmp_val, 0);
 		if (ret == 0)
 			ret = __ham_dirty_page(hashp, hcp->pagep);
-		__ham_c_update(hashp, hcp, hcp->pgno, tmp_val.size, 1, 1);
+		__ham_c_update(hcp, hcp->pgno, tmp_val.size, 1, 1);
 		return (ret);
 	}
 
@@ -227,7 +227,7 @@ __ham_add_dup(hashp, hcp, nval, flags)
 	ret = __db_dput(hashp->dbp,
 	    nval, &hcp->dpagep, &hcp->dndx, __ham_overflow_page);
 	hcp->pgno = PGNO(hcp->pagep);
-	__ham_c_update(hashp, hcp, hcp->pgno, nval->size, 1, 1);
+	__ham_c_update(hcp, hcp->pgno, nval->size, 1, 1);
 	return (ret);
 }
 
@@ -325,9 +325,9 @@ __ham_dup_convert(hashp, hcp)
 }
 
 static int
-__ham_make_dup(notdup, dup, bufp, sizep)
+__ham_make_dup(notdup, duplicate, bufp, sizep)
 	const DBT *notdup;
-	DBT *dup;
+	DBT *duplicate;
 	void **bufp;
 	u_int32_t *sizep;
 {
@@ -337,22 +337,22 @@ __ham_make_dup(notdup, dup, bufp, sizep)
 
 	item_size = (db_indx_t)notdup->size;
 	tsize = DUP_SIZE(item_size);
-	if ((ret = __ham_init_dbt(dup, tsize, bufp, sizep)) != 0)
+	if ((ret = __ham_init_dbt(duplicate, tsize, bufp, sizep)) != 0)
 		return (ret);
 
-	dup->dlen = 0;
-	dup->flags = notdup->flags;
-	F_SET(dup, DB_DBT_PARTIAL);
+	duplicate->dlen = 0;
+	duplicate->flags = notdup->flags;
+	F_SET(duplicate, DB_DBT_PARTIAL);
 
-	p = dup->data;
+	p = duplicate->data;
 	memcpy(p, &item_size, sizeof(db_indx_t));
 	p += sizeof(db_indx_t);
 	memcpy(p, notdup->data, notdup->size);
 	p += notdup->size;
 	memcpy(p, &item_size, sizeof(db_indx_t));
 
-	dup->doff = 0;
-	dup->dlen = notdup->size;
+	duplicate->doff = 0;
+	duplicate->dlen = notdup->size;
 
 	return (0);
 }

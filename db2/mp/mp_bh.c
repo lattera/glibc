@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_bh.c	10.23 (Sleepycat) 11/26/97";
+static const char sccsid[] = "@(#)mp_bh.c	10.28 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -193,29 +193,27 @@ __memp_pgread(dbmfp, bhp, can_create)
 	/* Call any pgin function. */
 pgin:	ret = mfp->ftype == 0 ? 0 : __memp_pg(dbmfp, bhp, 1);
 
-	/* Reacquire the region lock. */
+	/* Unlock the buffer and reacquire the region lock. */
+err:	UNLOCKBUFFER(dbmp, bhp);
 	LOCKREGION(dbmp);
 
-	/* If the pgin function succeeded, the data is now valid. */
-	if (ret == 0)
+	/*
+	 * If no errors occurred, the data is now valid, clear the BH_TRASH
+	 * flag; regardless, clear the lock bit and let other threads proceed.
+	 */
+	F_CLR(bhp, BH_LOCKED);
+	if (ret == 0) {
 		F_CLR(bhp, BH_TRASH);
 
-	/* Update the statistics. */
-	if (can_create) {
-		++dbmp->mp->stat.st_page_create;
-		++mfp->stat.st_page_create;
-	} else {
-		++dbmp->mp->stat.st_page_in;
-		++mfp->stat.st_page_in;
+		/* Update the statistics. */
+		if (can_create) {
+			++dbmp->mp->stat.st_page_create;
+			++mfp->stat.st_page_create;
+		} else {
+			++dbmp->mp->stat.st_page_in;
+			++mfp->stat.st_page_in;
+		}
 	}
-
-	if (0) {
-err:		LOCKREGION(dbmp);
-	}
-
-	/* Release the buffer. */
-	F_CLR(bhp, BH_LOCKED);
-	UNLOCKBUFFER(dbmp, bhp);
 
 	return (ret);
 }
@@ -240,7 +238,7 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 	MPOOLFILE *mfp;
 	size_t pagesize;
 	ssize_t nw;
-	int callpgin, ret;
+	int callpgin, ret, syncfail;
 	const char *fail;
 
 	dbmp = dbmfp->dbmp;
@@ -255,8 +253,32 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 	callpgin = 0;
 	pagesize = mfp->stat.st_pagesize;
 
-	F_SET(bhp, BH_LOCKED);
+	/*
+	 * Check the dirty bit -- this buffer may have been written since we
+	 * decided to write it.
+	 */
+	if (!F_ISSET(bhp, BH_DIRTY)) {
+		if (wrotep != NULL)
+			*wrotep = 1;
+		return (0);
+	}
+
 	LOCKBUFFER(dbmp, bhp);
+
+	/*
+	 * If there were two writers, we may have just been waiting while the
+	 * other writer completed I/O on this buffer.  Check the dirty bit one
+	 * more time.
+	 */
+	if (!F_ISSET(bhp, BH_DIRTY)) {
+		UNLOCKBUFFER(dbmp, bhp);
+
+		if (wrotep != NULL)
+			*wrotep = 1;
+		return (0);
+	}
+
+	F_SET(bhp, BH_LOCKED);
 	UNLOCKREGION(dbmp);
 
 	if (restartp != NULL)
@@ -272,8 +294,9 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 		goto err;
 
 	/*
-	 * Call any pgout function.  We set the callpgin flag so that on
-	 * error we flag that the contents of the buffer may be trash.
+	 * Call any pgout function.  We set the callpgin flag so that we flag
+	 * that the contents of the buffer will need to be passed through pgin
+	 * before they are reused.
 	 */
 	if (mfp->ftype == 0)
 		ret = 0;
@@ -307,7 +330,7 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 		 * between the failing clauses to __db_lseek and __db_write and
 		 * this ret != 0.
 		 */
-		fail = NULL;
+		COMPQUIET(fail, NULL);
 		goto syserr;
 	}
 
@@ -320,17 +343,19 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 	if (wrotep != NULL)
 		*wrotep = 1;
 
-	/* Reacquire the region lock. */
+	/* Unlock the buffer and reacquire the region lock. */
+	UNLOCKBUFFER(dbmp, bhp);
 	LOCKREGION(dbmp);
 
-	/* Clean up the flags based on a successful write. */
-	F_SET(bhp, BH_CALLPGIN);
+	/*
+	 * Clean up the flags based on a successful write.
+	 *
+	 * If we rewrote the page, it will need processing by the pgin
+	 * routine before reuse.
+	 */
+	if (callpgin)
+		F_SET(bhp, BH_CALLPGIN);
 	F_CLR(bhp, BH_DIRTY | BH_LOCKED);
-
-	++mp->stat.st_page_clean;
-	--mp->stat.st_page_dirty;
-
-	UNLOCKBUFFER(dbmp, bhp);
 
 	/*
 	 * If we write a buffer for which a checkpoint is waiting, update
@@ -344,22 +369,35 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 	 *
 	 * XXX:
 	 * We ignore errors from the sync -- it makes no sense to return an
-	 * error to the calling process, so set a flag causing the sync to
-	 * be retried later.
-	 *
-	 * If the buffer we wrote has a LSN larger than the current largest
-	 * we've written for this checkpoint, update the saved value.
+	 * error to the calling process, so set a flag causing the checkpoint
+	 * to be retried later.
 	 */
 	if (F_ISSET(bhp, BH_WRITE)) {
-		if (log_compare(&lsn, &mp->lsn) > 0)
-			mp->lsn = lsn;
+		if (mfp->lsn_cnt == 1) {
+			UNLOCKREGION(dbmp);
+			syncfail = __db_fsync(dbmfp->fd) != 0;
+			LOCKREGION(dbmp);
+			if (syncfail)
+				F_SET(mp, MP_LSN_RETRY);
+
+		}
+
 		F_CLR(bhp, BH_WRITE);
 
-		--mp->lsn_cnt;
+		/*
+		 * If the buffer just written has a larger LSN than the current
+		 * max LSN written for this checkpoint, update the saved value.
+		 */
+		if (log_compare(&lsn, &mp->lsn) > 0)
+			mp->lsn = lsn;
 
-		if (--mfp->lsn_cnt == 0 && __db_fsync(dbmfp->fd) != 0)
-			F_SET(mp, MP_LSN_RETRY);
+		--mp->lsn_cnt;
+		--mfp->lsn_cnt;
 	}
+
+	/* Update the page clean/dirty statistics. */
+	++mp->stat.st_page_clean;
+	--mp->stat.st_page_dirty;
 
 	/* Update I/O statistics. */
 	++mp->stat.st_page_out;
@@ -370,11 +408,20 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 syserr:	__db_err(dbenv, "%s: %s failed for page %lu",
 	    __memp_fn(dbmfp), fail, (u_long)bhp->pgno);
 
-err:	UNLOCKBUFFER(dbmp, bhp);
+err:	/* Unlock the buffer and reacquire the region lock. */
+	UNLOCKBUFFER(dbmp, bhp);
 	LOCKREGION(dbmp);
+
+	/*
+	 * Clean up the flags based on a failure.
+	 *
+	 * The page remains dirty but we remove our lock.  If we rewrote the
+	 * page, it will need processing by the pgin routine before reuse.
+	 */
 	if (callpgin)
 		F_SET(bhp, BH_CALLPGIN);
 	F_CLR(bhp, BH_LOCKED);
+
 	return (ret);
 }
 

@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db.h.src	10.97 (Sleepycat) 11/28/97
+ *	@(#)db.h.src	10.102 (Sleepycat) 1/18/98
  */
 
 #ifndef _DB_H_
@@ -73,8 +73,8 @@
 
 #define	DB_VERSION_MAJOR	2
 #define	DB_VERSION_MINOR	3
-#define	DB_VERSION_PATCH	14
-#define	DB_VERSION_STRING	"Sleepycat Software: DB 2.3.14: (11/28/97)"
+#define	DB_VERSION_PATCH	16
+#define	DB_VERSION_STRING	"Sleepycat Software: DB 2.3.16: (1/19/98)"
 
 typedef	u_int32_t	db_pgno_t;	/* Page number type. */
 typedef	u_int16_t	db_indx_t;	/* Page offset type. */
@@ -241,7 +241,7 @@ struct __db_env {
 	DB_LOCKTAB	*lk_info;	/* Return from lock_open(). */
 	u_int8_t	*lk_conflicts;	/* Two dimensional conflict matrix. */
 	int		 lk_modes;	/* Number of lock modes in table. */
-	unsigned int	 lk_max;	/* Maximum number of locks. */
+	u_int		 lk_max;	/* Maximum number of locks. */
 	u_int32_t	 lk_detect;	/* Deadlock detect on every conflict. */
 
 	/* Logging. */
@@ -461,7 +461,6 @@ struct __db {
 #define	DB_RE_PAD	0x004000	/* DB_PAD (internal). */
 #define	DB_RE_RENUMBER	0x008000	/* DB_RENUMBER (internal). */
 #define	DB_RE_SNAPSHOT	0x010000	/* DB_SNAPSHOT (internal). */
-
 	u_int32_t flags;
 };
 
@@ -532,7 +531,7 @@ int   db_open __P((const char *, DBTYPE, int, int, DB_ENV *, DB_INFO *, DB **));
 int   db_value_set __P((int, int));
 char *db_version __P((int *, int *, int *));
 #if defined(__cplusplus)
-};
+}
 #endif
 
 /*******************************************************
@@ -611,7 +610,7 @@ int	  lock_unlink __P((const char *, int, DB_ENV *));
 int	  lock_vec __P((DB_LOCKTAB *,
 	    u_int32_t, int, DB_LOCKREQ *, int, DB_LOCKREQ **));
 #if defined(__cplusplus)
-};
+}
 #endif
 
 /*******************************************************
@@ -650,6 +649,8 @@ struct __db_log_stat {
 	u_int32_t st_scount;		/* Total writes to the log. */
 	u_int32_t st_region_wait;	/* Region lock granted after wait. */
 	u_int32_t st_region_nowait;	/* Region lock granted without wait. */
+	u_int32_t st_cur_file;		/* Current log file number. */
+	u_int32_t st_cur_offset;	/* Current log file offset. */
 };
 
 #if defined(__cplusplus)
@@ -668,7 +669,7 @@ int	 log_stat __P((DB_LOG *, DB_LOG_STAT **, void *(*)(size_t)));
 int	 log_unlink __P((const char *, int, DB_ENV *));
 int	 log_unregister __P((DB_LOG *, u_int32_t));
 #if defined(__cplusplus)
-};
+}
 #endif
 
 /*******************************************************
@@ -739,7 +740,7 @@ int	memp_sync __P((DB_MPOOL *, DB_LSN *));
 int	memp_trickle __P((DB_MPOOL *, int, int *));
 int	memp_unlink __P((const char *, int, DB_ENV *));
 #if defined(__cplusplus)
-};
+}
 #endif
 
 /*******************************************************
@@ -790,10 +791,13 @@ int	  txn_prepare __P((DB_TXN *));
 int	  txn_stat __P((DB_TXNMGR *, DB_TXN_STAT **, void *(*)(size_t)));
 int	  txn_unlink __P((const char *, int, DB_ENV *));
 #if defined(__cplusplus)
-};
+}
 #endif
 
-#ifdef DB_DBM_HSEARCH
+#ifndef DB_DBM_HSEARCH
+#define	DB_DBM_HSEARCH	0		/* No historic interfaces by default. */
+#endif
+#if DB_DBM_HSEARCH != 0
 /*******************************************************
  * Dbm/Ndbm historic interfaces.
  *******************************************************/
@@ -811,40 +815,74 @@ typedef struct {
 	int dsize;
 } datum;
 
+/*
+ * Translate DBM calls into DB calls so that DB doesn't step on the
+ * application's name space.
+ *
+ * The global variables dbrdonly, dirf and pagf were not retained when
+ * 4BSD replaced the dbm interface with ndbm, and are not support here.
+ */
+#define	dbminit(a)	__db_dbm_init(a)
+#if !defined(__cplusplus)
+#define	delete(a)	__db_dbm_delete(a)
+#endif
+#define	fetch(a)	__db_dbm_fetch(a)
+#define	firstkey	__db_dbm_firstkey
+#define	nextkey(a)	__db_dbm_nextkey(a)
+#define	store(a, b)	__db_dbm_store(a, b)
+
+/* Prototype the DB calls. */
 #if defined(__cplusplus)
 extern "C" {
 #endif
-int	 dbminit __P((char *));
-#if !defined(__cplusplus)
-int	 delete __P((datum));
+int	 __db_dbm_init __P((char *));
+int	 __db_dbm_delete __P((datum));
+int	 __db_dbm_dbrdonly __P((void));
+int	 __db_dbm_dirf __P((void));
+datum	 __db_dbm_fetch __P((datum));
+datum	 __db_dbm_firstkey __P((void));
+datum	 __db_dbm_nextkey __P((datum));
+int	 __db_dbm_pagf __P((void));
+int	 __db_dbm_store __P((datum, datum));
+#if defined(__cplusplus)
+}
 #endif
-datum	 fetch __P((datum));
-datum	 firstkey __P((void));
-datum	 nextkey __P((datum));
-int	 store __P((datum, datum));
 
 /*
- * !!!
- * Don't prototype:
- *
- *	 dbm_clearerr(DBM *db);
- *	 dbm_dirfno(DBM *db);
- *	 dbm_error(DBM *db);
- *	 dbm_pagfno(DBM *db);
- *	 dbm_rdonly(DBM *db);
- *
- * they weren't documented and were historically implemented as #define's.
+ * Translate NDBM calls into DB calls so that DB doesn't step on the
+ * application's name space.
  */
-void	 dbm_close __P((DBM *));
-int	 dbm_delete __P((DBM *, datum));
-datum	 dbm_fetch __P((DBM *, datum));
-datum	 dbm_firstkey __P((DBM *));
-long	 dbm_forder __P((DBM *, datum));
-datum	 dbm_nextkey __P((DBM *));
-DBM	*dbm_open __P((const char *, int, int));
-int	 dbm_store __P((DBM *, datum, datum, int));
+#define	dbm_clearerr(a)		__db_ndbm_clearerr(a)
+#define	dbm_close(a)		__db_ndbm_close(a)
+#define	dbm_delete(a, b)	__db_ndbm_delete(a, b)
+#define	dbm_dirfno(a)		__db_ndbm_dirfno(a)
+#define	dbm_error(a)		__db_ndbm_error(a)
+#define	dbm_fetch(a, b)		__db_ndbm_fetch(a, b)
+#define	dbm_firstkey(a)		__db_ndbm_firstkey(a)
+#define	dbm_nextkey(a)		__db_ndbm_nextkey(a)
+#define	dbm_open(a, b, c)	__db_ndbm_open(a, b, c)
+#define	dbm_pagfno(a)		__db_ndbm_pagfno(a)
+#define	dbm_rdonly(a)		__db_ndbm_rdonly(a)
+#define	dbm_store(a, b, c, d)	__db_ndbm_store(a, b, c, d)
+
+/* Prototype the DB calls. */
 #if defined(__cplusplus)
-};
+extern "C" {
+#endif
+int	 __db_ndbm_clearerr __P((DBM *));
+void	 __db_ndbm_close __P((DBM *));
+int	 __db_ndbm_delete __P((DBM *, datum));
+int	 __db_ndbm_dirfno __P((DBM *));
+int	 __db_ndbm_error __P((DBM *));
+datum	 __db_ndbm_fetch __P((DBM *, datum));
+datum	 __db_ndbm_firstkey __P((DBM *));
+datum	 __db_ndbm_nextkey __P((DBM *));
+DBM	*__db_ndbm_open __P((const char *, int, int));
+int	 __db_ndbm_pagfno __P((DBM *));
+int	 __db_ndbm_rdonly __P((DBM *));
+int	 __db_ndbm_store __P((DBM *, datum, datum, int));
+#if defined(__cplusplus)
+}
 #endif
 
 /*******************************************************
@@ -859,14 +897,23 @@ typedef struct entry {
 	void *data;
 } ENTRY;
 
+/*
+ * Translate HSEARCH calls into DB calls so that DB doesn't step on the
+ * application's name space.
+ */
+#define	hcreate(a)	__db_hcreate(a)
+#define	hdestroy	__db_hdestroy
+#define	hsearch(a, b)	__db_hsearch(a, b)
+
+/* Prototype the DB calls. */
 #if defined(__cplusplus)
 extern "C" {
 #endif
-int	 hcreate __P((unsigned int));
-void	 hdestroy __P((void));
-ENTRY	*hsearch __P((ENTRY, ACTION));
+int	 __db_hcreate __P((unsigned int));
+void	 __db_hdestroy __P((void));
+ENTRY	*__db_hsearch __P((ENTRY, ACTION));
 #if defined(__cplusplus)
-};
+}
 #endif
 #endif /* DB_DBM_HSEARCH */
 

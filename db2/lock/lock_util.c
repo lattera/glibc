@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)lock_util.c	10.4 (Sleepycat) 7/22/97";
+static const char sccsid[] = "@(#)lock_util.c	10.5 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -35,11 +35,11 @@ static const char sccsid[] = "@(#)lock_util.c	10.4 (Sleepycat) 7/22/97";
  * that it just returns true on equal and 0 on not-equal.  Therefore this
  * cannot be used as a sort function; its purpose is to be used as a
  * hash comparison function.
- * PUBLIC: int __lock_cmp __P((DBT *, DB_LOCKOBJ *));
+ * PUBLIC: int __lock_cmp __P((const DBT *, DB_LOCKOBJ *));
  */
 int
 __lock_cmp(dbt, lock_obj)
-	DBT *dbt;
+	const DBT *dbt;
 	DB_LOCKOBJ *lock_obj;
 {
 	void *obj_data;
@@ -69,11 +69,11 @@ __lock_locker_cmp(locker, lock_obj)
 }
 
 /*
- * PUBLIC: int __lock_ohash __P((DBT *));
+ * PUBLIC: int __lock_ohash __P((const DBT *));
  */
 int
 __lock_ohash(dbt)
-	DBT *dbt;
+	const DBT *dbt;
 {
 	return (__ham_func5(dbt->data, dbt->size));
 }

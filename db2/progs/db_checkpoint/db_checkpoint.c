@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_checkpoint.c	10.12 (Sleepycat) 9/4/97";
+static const char sccsid[] = "@(#)db_checkpoint.c	10.14 (Sleepycat) 1/17/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -46,7 +46,6 @@ void	 siginit __P((void));
 void	 usage __P((void));
 
 int	 interrupted;
-time_t	 now;					/* Checkpoint time. */
 const char
 	*progname = "db_checkpoint";		/* Program name. */
 
@@ -203,7 +202,7 @@ logpid(fname, is_open)
 		}
 		(void)time(&now);
 		fprintf(fp,
-		    "%s: %lu %s", progname, (u_long)getpid(), ctime(&now));
+		    "%.24s: %lu %s", progname, (u_long)getpid(), ctime(&now));
 		fclose(fp);
 	} else
 		(void)remove(fname);

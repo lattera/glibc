@@ -1,4 +1,6 @@
 /* DO NOT EDIT: automatically built by dist/distrib. */
+#ifndef _mp_ext_h_
+#define _mp_ext_h_
 int __memp_bhwrite
     __P((DB_MPOOL *, MPOOLFILE *, BH *, int *, int *));
 int __memp_pgread __P((DB_MPOOLFILE *, BH *, int));
@@ -14,3 +16,4 @@ int __memp_ralloc __P((DB_MPOOL *, size_t, size_t *, void *));
 int __memp_ropen
    __P((DB_MPOOL *, const char *, size_t, int, int));
 int __memp_rclose __P((DB_MPOOL *));
+#endif /* _mp_ext_h_ */

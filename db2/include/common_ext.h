@@ -1,4 +1,6 @@
 /* DO NOT EDIT: automatically built by dist/distrib. */
+#ifndef _common_ext_h_
+#define _common_ext_h_
 int __db_appname __P((DB_ENV *,
    APPNAME, const char *, const char *, int *, char **));
 int __db_apprec __P((DB_ENV *, int));
@@ -38,5 +40,6 @@ void __db_shalloc_free __P((void *, void *));
 size_t __db_shalloc_count __P((void *));
 size_t __db_shsizeof __P((void *));
 void __db_shalloc_dump __P((FILE *, void *));
-int __db_tablesize __P((int));
+int __db_tablesize __P((u_int));
 void __db_hashinit __P((void *, int));
+#endif /* _common_ext_h_ */

@@ -44,7 +44,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_conv.c	10.7 (Sleepycat) 9/21/97";
+static const char sccsid[] = "@(#)db_conv.c	10.8 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -94,7 +94,7 @@ __db_pgout(pg, pagesize, pp)
  */
 static int
 __db_convert(pg, pp, pagesize, pgin)
-	db_pgno_t pg;			/* Unused, but left for the future. */
+	db_pgno_t pg;
 	void *pp;
 	size_t pagesize;
 	int pgin;
@@ -106,6 +106,8 @@ __db_convert(pg, pp, pagesize, pgin)
 	RINTERNAL *ri;
 	db_indx_t i, len, tmp;
 	u_int8_t *p, *end;
+
+	COMPQUIET(pg, 0);
 
 	h = pp;
 	if (pgin) {

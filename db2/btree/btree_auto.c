@@ -182,7 +182,7 @@ __bam_pg_alloc_read(recbuf, argpp)
 /*
  * PUBLIC: int __bam_pg_free_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
- * PUBLIC:     u_int32_t, db_pgno_t, DB_LSN *, DBT *,
+ * PUBLIC:     u_int32_t, db_pgno_t, DB_LSN *, const DBT *,
  * PUBLIC:     db_pgno_t));
  */
 int __bam_pg_free_log(logp, txnid, ret_lsnp, flags,
@@ -194,7 +194,7 @@ int __bam_pg_free_log(logp, txnid, ret_lsnp, flags,
 	u_int32_t fileid;
 	db_pgno_t pgno;
 	DB_LSN * meta_lsn;
-	DBT *header;
+	const DBT *header;
 	db_pgno_t next;
 {
 	DBT logrec;
@@ -354,7 +354,7 @@ __bam_pg_free_read(recbuf, argpp)
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
  * PUBLIC:     u_int32_t, db_pgno_t, DB_LSN *, db_pgno_t,
  * PUBLIC:     DB_LSN *, u_int32_t, db_pgno_t, DB_LSN *,
- * PUBLIC:     DBT *));
+ * PUBLIC:     const DBT *));
  */
 int __bam_split_log(logp, txnid, ret_lsnp, flags,
 	fileid, left, llsn, right, rlsn, indx,
@@ -371,7 +371,7 @@ int __bam_split_log(logp, txnid, ret_lsnp, flags,
 	u_int32_t indx;
 	db_pgno_t npgno;
 	DB_LSN * nlsn;
-	DBT *pg;
+	const DBT *pg;
 {
 	DBT logrec;
 	DB_LSN *lsnp, null_lsn;
@@ -560,8 +560,8 @@ __bam_split_read(recbuf, argpp)
 /*
  * PUBLIC: int __bam_rsplit_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
- * PUBLIC:     u_int32_t, db_pgno_t, DBT *, db_pgno_t,
- * PUBLIC:     DBT *, DB_LSN *));
+ * PUBLIC:     u_int32_t, db_pgno_t, const DBT *, db_pgno_t,
+ * PUBLIC:     const DBT *, DB_LSN *));
  */
 int __bam_rsplit_log(logp, txnid, ret_lsnp, flags,
 	fileid, pgno, pgdbt, nrec, rootent, rootlsn)
@@ -571,9 +571,9 @@ int __bam_rsplit_log(logp, txnid, ret_lsnp, flags,
 	u_int32_t flags;
 	u_int32_t fileid;
 	db_pgno_t pgno;
-	DBT *pgdbt;
+	const DBT *pgdbt;
 	db_pgno_t nrec;
-	DBT *rootent;
+	const DBT *rootent;
 	DB_LSN * rootlsn;
 {
 	DBT logrec;
@@ -1215,7 +1215,7 @@ __bam_cdel_read(recbuf, argpp)
  * PUBLIC: int __bam_repl_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
  * PUBLIC:     u_int32_t, db_pgno_t, DB_LSN *, u_int32_t,
- * PUBLIC:     u_int32_t, DBT *, DBT *, u_int32_t,
+ * PUBLIC:     u_int32_t, const DBT *, const DBT *, u_int32_t,
  * PUBLIC:     u_int32_t));
  */
 int __bam_repl_log(logp, txnid, ret_lsnp, flags,
@@ -1230,8 +1230,8 @@ int __bam_repl_log(logp, txnid, ret_lsnp, flags,
 	DB_LSN * lsn;
 	u_int32_t indx;
 	u_int32_t isdeleted;
-	DBT *orig;
-	DBT *repl;
+	const DBT *orig;
+	const DBT *repl;
 	u_int32_t prefix;
 	u_int32_t suffix;
 {

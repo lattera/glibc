@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_recover.c	10.16 (Sleepycat) 10/28/97";
+static const char sccsid[] = "@(#)db_recover.c	10.17 (Sleepycat) 1/15/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -73,7 +73,7 @@ main(argc, argv)
 
 	dbenv = db_init(home, flags, verbose);
 	if (verbose) {
-		__db_err(dbenv, "Recovery complete at %s", ctime(&now));
+		__db_err(dbenv, "Recovery complete at %.24s", ctime(&now));
 		__db_err(dbenv, "%s %lu %s [%lu][%lu]",
 		    "Maximum transaction id",
 		    (u_long)dbenv->tx_info->region->last_txnid,

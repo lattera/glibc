@@ -1,4 +1,6 @@
 /* DO NOT EDIT: automatically built by dist/distrib. */
+#ifndef _clib_ext_h_
+#define _clib_ext_h_
 #ifdef __STDC__
 void err __P((int eval, const char *, ...));
 #else
@@ -63,3 +65,4 @@ char *strsep __P((char **, const char *));
 #ifndef HAVE_VSNPRINTF
 int vsnprintf();
 #endif
+#endif /* _clib_ext_h_ */

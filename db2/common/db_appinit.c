@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_appinit.c	10.37 (Sleepycat) 11/25/97";
+static const char sccsid[] = "@(#)db_appinit.c	10.38 (Sleepycat) 1/7/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -69,7 +69,8 @@ db_appinit(db_home, db_config, dbenv, flags)
 {
 	FILE *fp;
 	int ret;
-	char *lp, **p, buf[MAXPATHLEN * 2];
+	char * const *p;
+	char *lp, buf[MAXPATHLEN * 2];
 
 	/* Validate arguments. */
 	if (dbenv == NULL)
@@ -104,7 +105,7 @@ db_appinit(db_home, db_config, dbenv, flags)
 		goto err;
 
 	/* Parse the config array. */
-	for (p = (char **)db_config; p != NULL && *p != NULL; ++p)
+	for (p = db_config; p != NULL && *p != NULL; ++p)
 		if ((ret = __db_parse(dbenv, *p)) != 0)
 			goto err;
 

@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_page.c	10.5 (Sleepycat) 8/18/97";
+static const char sccsid[] = "@(#)bt_page.c	10.7 (Sleepycat) 1/7/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -75,17 +75,17 @@ __bam_new(dbp, type, pagepp)
 	PAGE **pagepp;
 {
 	BTMETA *meta;
-	DB_LOCK mlock;
+	DB_LOCK metalock;
 	PAGE *h;
 	db_pgno_t pgno;
 	int ret;
 
 	meta = NULL;
 	h = NULL;
-	mlock = LOCK_INVALID;
+	metalock = LOCK_INVALID;
 
 	pgno = PGNO_METADATA;
-	if ((ret = __bam_lget(dbp, 0, pgno, DB_LOCK_WRITE, &mlock)) != 0)
+	if ((ret = __bam_lget(dbp, 0, pgno, DB_LOCK_WRITE, &metalock)) != 0)
 		goto err;
 	if ((ret = __bam_pget(dbp, (PAGE **)&meta, &pgno, 0)) != 0)
 		goto err;
@@ -112,7 +112,7 @@ __bam_new(dbp, type, pagepp)
 	}
 
 	(void)memp_fput(dbp->mpf, (PAGE *)meta, DB_MPOOL_DIRTY);
-	(void)__BT_TLPUT(dbp, mlock);
+	(void)__BT_TLPUT(dbp, metalock);
 
 	P_INIT(h, dbp->pgsize, h->pgno, PGNO_INVALID, PGNO_INVALID, 0, type);
 	*pagepp = h;
@@ -122,8 +122,8 @@ err:	if (h != NULL)
 		(void)memp_fput(dbp->mpf, h, 0);
 	if (meta != NULL)
 		(void)memp_fput(dbp->mpf, meta, 0);
-	if (mlock != LOCK_INVALID)
-		(void)__BT_TLPUT(dbp, mlock);
+	if (metalock != LOCK_INVALID)
+		(void)__BT_TLPUT(dbp, metalock);
 	return (ret);
 }
 
@@ -140,7 +140,7 @@ __bam_free(dbp, h)
 {
 	BTMETA *meta;
 	DBT ldbt;
-	DB_LOCK mlock;
+	DB_LOCK metalock;
 	db_pgno_t pgno;
 	int is_dirty, ret, t_ret;
 
@@ -152,10 +152,10 @@ __bam_free(dbp, h)
 	 */
 	is_dirty = 0;
 	pgno = PGNO_METADATA;
-	if ((ret = __bam_lget(dbp, 0, pgno, DB_LOCK_WRITE, &mlock)) != 0)
+	if ((ret = __bam_lget(dbp, 0, pgno, DB_LOCK_WRITE, &metalock)) != 0)
 		goto err;
 	if ((ret = __bam_pget(dbp, (PAGE **)&meta, &pgno, 0)) != 0) {
-		(void)__BT_TLPUT(dbp, mlock);
+		(void)__BT_TLPUT(dbp, metalock);
 		goto err;
 	}
 
@@ -168,7 +168,7 @@ __bam_free(dbp, h)
 		    dbp->txn, &meta->lsn, 0, dbp->log_fileid, h->pgno,
 		    &meta->lsn, &ldbt, meta->free)) != 0) {
 			(void)memp_fput(dbp->mpf, (PAGE *)meta, 0);
-			(void)__BT_TLPUT(dbp, mlock);
+			(void)__BT_TLPUT(dbp, metalock);
 			return (ret);
 		}
 		LSN(h) = LSN(meta);
@@ -194,7 +194,7 @@ __bam_free(dbp, h)
 
 	/* Discard the metadata page. */
 	ret = memp_fput(dbp->mpf, (PAGE *)meta, DB_MPOOL_DIRTY);
-	if ((t_ret = __BT_TLPUT(dbp, mlock)) != 0)
+	if ((t_ret = __BT_TLPUT(dbp, metalock)) != 0)
 		ret = t_ret;
 
 	/* Discard the caller's page reference. */
@@ -213,6 +213,8 @@ err:	if ((t_ret = memp_fput(dbp->mpf, h, is_dirty)) != 0 && ret == 0)
 /*
  * __bam_lt --
  *	Print out the list of currently held locks.
+ *
+ * PUBLIC: int __bam_lt __P((DB *));
  */
 int
 __bam_lt(dbp)

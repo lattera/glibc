@@ -36,6 +36,11 @@
 #ifndef _SYS_SYSLOG_H
 #define _SYS_SYSLOG_H 1
 
+#include <features.h>
+#define __need___va_list
+#include <stdarg.h>
+
+
 #define	_PATH_LOG	"/dev/log"
 
 /*
@@ -165,11 +170,6 @@ CODE facilitynames[] =
 #define	LOG_NOWAIT	0x10	/* don't wait for console forks: DEPRECATED */
 #define	LOG_PERROR	0x20	/* log to stderr as well */
 
-#define __need___va_list
-#include <stdarg.h>
-
-#include <sys/cdefs.h>
-
 __BEGIN_DECLS
 
 /* Close desriptor used to write to system logger.  */
@@ -185,9 +185,11 @@ extern int setlogmask __P ((int __mask));
 /* Generate a log message using FMT string and option arguments.  */
 extern void syslog __P ((int __pri, __const char *__fmt, ...));
 
+#ifdef __USE_BSD
 /* Generate a log message using FMT and using arguments pointed to by AP.  */
 extern void vsyslog __P ((int __pri, __const char *__fmt,
 			  __gnuc_va_list __ap));
+#endif
 
 __END_DECLS
 

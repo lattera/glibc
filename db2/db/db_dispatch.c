@@ -43,7 +43,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_dispatch.c	10.7 (Sleepycat) 11/23/97";
+static const char sccsid[] = "@(#)db_dispatch.c	10.9 (Sleepycat) 1/17/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -61,6 +61,7 @@ static const char sccsid[] = "@(#)db_dispatch.c	10.7 (Sleepycat) 11/23/97";
 #include "db_dispatch.h"
 #include "db_am.h"
 #include "common_ext.h"
+#include "log_auto.h"
 
 /*
  * Data structures to manage the DB dispatch table.  The dispatch table
@@ -113,7 +114,8 @@ __db_dispatch(logp, db, lsnp, redo, info)
 		 * seen it, then we call the appropriate recovery routine
 		 * in "abort mode".
 		 */
-		if (__db_txnlist_find(info, txnid) == DB_NOTFOUND)
+		if (rectype == DB_log_register ||
+		    __db_txnlist_find(info, txnid) == DB_NOTFOUND)
 			return ((dispatch_table[rectype])(logp,
 			    db, lsnp, TXN_UNDO, info));
 		break;
@@ -122,7 +124,8 @@ __db_dispatch(logp, db, lsnp, redo, info)
 		 * In the forward pass, if we haven't seen the transaction,
 		 * do nothing, else recovery it.
 		 */
-		if (__db_txnlist_find(info, txnid) != DB_NOTFOUND)
+		if (rectype == DB_log_register ||
+		    __db_txnlist_find(info, txnid) != DB_NOTFOUND)
 			return ((dispatch_table[rectype])(logp,
 			    db, lsnp, TXN_REDO, info));
 		break;
@@ -258,6 +261,8 @@ __db_txnlist_find(listp, txnid)
 /*
  * __db_txnlist_print --
  *	Print out the transaction list.
+ *
+ * PUBLIC: void __db_txnlist_print __P((void *));
  */
 void
 __db_txnlist_print(listp)

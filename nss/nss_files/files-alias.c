@@ -150,12 +150,12 @@ get_next_alias (const char *match, struct aliasent *result,
 
       /* Read the first line.  It must contain the alias name and
 	 possibly some alias names.  */
-      first_unused[room_left - 1] = '\0';
+      first_unused[room_left - 1] = '\xff';
       line = fgets (first_unused, room_left, stream);
       if (line == NULL)
 	/* Nothing to read.  */
 	break;
-      else if (first_unused[room_left - 1] != '\0')
+      else if (first_unused[room_left - 1] != '\xff')
 	{
 	  /* The line is too long for our buffer.  */
 	no_more_room:
@@ -244,11 +244,11 @@ get_next_alias (const char *match, struct aliasent *result,
 			{
 			  while (! feof (listfile))
 			    {
-			      first_unused[room_left - 1] = '\0';
+			      first_unused[room_left - 1] = '\xff';
 			      line = fgets (first_unused, room_left, listfile);
 			      if (line == NULL)
 				break;
-			      if (first_unused[room_left - 1] != '\0')
+			      if (first_unused[room_left - 1] != '\xff')
 				{
 				  free (old_line);
 				  goto no_more_room;
@@ -344,9 +344,9 @@ get_next_alias (const char *match, struct aliasent *result,
 
 		  /* The just read character is a white space and so
 		     can be ignored.  */
-		  first_unused[room_left - 1] = '\0';
+		  first_unused[room_left - 1] = '\xff';
 		  line = fgets (first_unused, room_left, stream);
-		  if (first_unused[room_left - 1] != '\0')
+		  if (first_unused[room_left - 1] != '\xff')
 		    goto no_more_room;
 		  cp = strpbrk (line, "#\n");
 		  if (cp != NULL)

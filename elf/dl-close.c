@@ -1,5 +1,5 @@
 /* Close a shared object opened by `_dl_open'.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,25 +74,25 @@ _dl_close (struct link_map *map)
      it are gone.  */
   for (i = 0; i < map->l_nsearchlist; ++i)
     {
-      struct link_map *map = list[i];
-      if (map->l_opencount == 0 && map->l_type == lt_loaded)
+      struct link_map *imap = list[i];
+      if (imap->l_opencount == 0 && imap->l_type == lt_loaded)
 	{
 	  /* That was the last reference, and this was a dlopen-loaded
 	     object.  We can unmap it.  */
 	  const ElfW(Phdr) *ph;
 
-	  if (map->l_info[DT_FINI])
+	  if (imap->l_info[DT_FINI])
 	    /* Call its termination function.  */
-	    (*(void (*) (void)) ((void *) map->l_addr +
-				 map->l_info[DT_FINI]->d_un.d_ptr)) ();
+	    (*(void (*) (void)) ((void *) imap->l_addr +
+				 imap->l_info[DT_FINI]->d_un.d_ptr)) ();
 
-	  if (map->l_global)
+	  if (imap->l_global)
 	    {
 	      /* This object is in the global scope list.  Remove it.  */
 	      struct link_map **tail = _dl_global_scope_end;
 	      do
 		--tail;
-	      while (*tail != map);
+	      while (*tail != imap);
 	      --_dl_global_scope_end;
 	      memcpy (tail, tail + 1, _dl_global_scope_end - tail);
 	      _dl_global_scope_end[0] = NULL;
@@ -100,24 +100,26 @@ _dl_close (struct link_map *map)
 	    }
 
 	  /* Unmap the segments.  */
-	  for (ph = map->l_phdr; ph < &map->l_phdr[map->l_phnum]; ++ph)
+	  for (ph = imap->l_phdr + (imap->l_phnum - 1);
+	       ph >= imap->l_phdr; --ph)
 	    if (ph->p_type == PT_LOAD)
 	      {
 		ElfW(Addr) mapstart = ph->p_vaddr & ~(ph->p_align - 1);
 		ElfW(Addr) mapend = ((ph->p_vaddr + ph->p_memsz
 				      + ph->p_align - 1)
 				     & ~(ph->p_align - 1));
-		__munmap ((caddr_t) mapstart, mapend - mapstart);
+		__munmap ((caddr_t) (imap->l_addr + mapstart),
+			  mapend - mapstart);
 	      }
 
 	  /* Finally, unlink the data structure and free it.  */
-	  if (map->l_prev)
-	    map->l_prev->l_next = map->l_next;
-	  if (map->l_next)
-	    map->l_next->l_prev = map->l_prev;
-	  if (map->l_searchlist)
-	    free (map->l_searchlist);
-	  free (map);
+	  if (imap->l_prev)
+	    imap->l_prev->l_next = imap->l_next;
+	  if (imap->l_next)
+	    imap->l_next->l_prev = imap->l_prev;
+	  if (imap->l_searchlist)
+	    free (imap->l_searchlist);
+	  free (imap);
 	}
     }
 

@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_get.c	10.22 (Sleepycat) 11/22/97";
+static const char sccsid[] = "@(#)log_get.c	10.24 (Sleepycat) 1/17/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -122,7 +122,7 @@ __log_get(dblp, alsn, dbt, flags, silent)
 	nlsn = dblp->c_lsn;
 	switch (flags) {
 	case DB_CHECKPOINT:
-		nlsn = dblp->lp->c_lsn;
+		nlsn = lp->c_lsn;
 		if (IS_ZERO_LSN(nlsn)) {
 			__db_err(dblp->dbenv,
 	"log_get: unable to find checkpoint record: no checkpoint set.");
@@ -138,26 +138,18 @@ __log_get(dblp, alsn, dbt, flags, silent)
 		}
 		/* FALLTHROUGH */
 	case DB_FIRST:				/* Find the first log record. */
-		/*
-		 * Find any log file.  Note, we may have only entered records
-		 * in the buffer, and not yet written a log file.
-		 */
-		if ((ret = __log_find(dblp, &cnt)) != 0) {
-			__db_err(dblp->dbenv,
-	"log_get: unable to find the first record: no log files found.");
+		/* Find the first log file. */
+		if ((ret = __log_find(dblp, 1, &cnt)) != 0)
 			goto err2;
-		}
 
-		/* If there's anything in the buffer, it belongs to file 1. */
+		/*
+		 * We may have only entered records in the buffer, and not
+		 * yet written a log file.  If no log files were found and
+		 * there's anything in the buffer, it belongs to file 1.
+		 */
 		if (cnt == 0)
 			cnt = 1;
 
-		/* Now go backwards to find the smallest one. */
-		for (; cnt > 1; --cnt)
-			if (__log_valid(dblp, NULL, cnt) != 0) {
-				++cnt;
-				break;
-			}
 		nlsn.file = cnt;
 		nlsn.offset = 0;
 		break;

@@ -1,5 +1,5 @@
 /* Signal number definitions.  Linux version.
-   Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,10 @@
 #define __need_fake_sigfuns
 #define __need_signums
 #include <asm/signal.h>
+
+#ifdef __USE_UNIX98
+# define SIG_HOLD	((__sighandler_t) 2)	/* Add signal to hold mask.  */
+#endif
 
 #endif	/* <signal.h> included.  */
 

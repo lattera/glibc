@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 	   bits/posix1_lim.h bits/posix2_lim.h bits/posix_opt.h 	      \
 	   bits/local_lim.h tar.h bits/utsname.h bits/confname.h	      \
 	   bits/waitflags.h bits/waitstatus.h sys/unistd.h sched.h	      \
-	   bits/sched.h re_comp.h wait.h bits/environments.h
+	   bits/sched.h re_comp.h wait.h bits/environments.h cpio.h
 
 distribute := confstr.h TESTS TESTS2C.sed testcases.h \
 	      globtest.c globtest.sh

@@ -1,16 +1,18 @@
 /* DO NOT EDIT: automatically built by dist/distrib. */
+#ifndef _db_ext_h_
+#define _db_ext_h_
 int __db_pgerr __P((DB *, db_pgno_t));
 int __db_pgfmt __P((DB *, db_pgno_t));
 int __db_addrem_log
     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
     u_int32_t, u_int32_t, db_pgno_t, u_int32_t,
-    size_t, DBT *, DBT *, DB_LSN *));
+    size_t, const DBT *, const DBT *, DB_LSN *));
 int __db_addrem_print
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __db_addrem_read __P((void *, __db_addrem_args **));
 int __db_split_log
     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
-    u_int32_t, u_int32_t, db_pgno_t, DBT *,
+    u_int32_t, u_int32_t, db_pgno_t, const DBT *,
     DB_LSN *));
 int __db_split_print
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
@@ -18,7 +20,7 @@ int __db_split_read __P((void *, __db_split_args **));
 int __db_big_log
     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
     u_int32_t, u_int32_t, db_pgno_t, db_pgno_t,
-    db_pgno_t, DBT *, DB_LSN *, DB_LSN *,
+    db_pgno_t, const DBT *, DB_LSN *, DB_LSN *,
     DB_LSN *));
 int __db_big_print
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
@@ -45,7 +47,7 @@ int __db_addpage_print
 int __db_addpage_read __P((void *, __db_addpage_args **));
 int __db_debug_log
     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
-    DBT *, u_int32_t, DBT *, DBT *,
+    const DBT *, u_int32_t, const DBT *, const DBT *,
     u_int32_t));
 int __db_debug_print
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
@@ -65,13 +67,14 @@ int __db_add_recovery __P((DB_ENV *,
 int __db_txnlist_init __P((void *));
 int __db_txnlist_add __P((void *, u_int32_t));
 int __db_txnlist_find __P((void *, u_int32_t));
+void __db_txnlist_print __P((void *));
 void __db_txnlist_end __P((void *));
 int __db_dput __P((DB *,
    DBT *, PAGE **, db_indx_t *, int (*)(DB *, u_int32_t, PAGE **)));
 int __db_drem __P((DB *,
    PAGE **, u_int32_t, int (*)(DB *, PAGE *)));
 int __db_dend __P((DB *, db_pgno_t, PAGE **));
- int __db_ditem __P((DB *, PAGE *, int, u_int32_t));
+ int __db_ditem __P((DB *, PAGE *, u_int32_t, u_int32_t));
 int __db_pitem
     __P((DB *, PAGE *, u_int32_t, u_int32_t, DBT *, DBT *));
 int __db_relink __P((DB *, PAGE *, PAGE **, int));
@@ -113,3 +116,4 @@ int __db_retcopy __P((DBT *,
    void *, u_int32_t, void **, u_int32_t *, void *(*)(size_t)));
 int __db_gethandle __P((DB *, int (*)(DB *, DB *), DB **));
 int __db_puthandle __P((DB *));
+#endif /* _db_ext_h_ */

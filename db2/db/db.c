@@ -44,7 +44,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db.c	10.44 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)db.c	10.45 (Sleepycat) 12/4/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -110,9 +110,9 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 	DB_ENV *envp, t_dbenv;
 	DB_PGINFO pginfo;
 	HASHHDR *hashm;
-	off_t io;
 	size_t cachesize;
 	ssize_t nr;
+	u_int32_t iopsize;
 	int fd, ftype, need_fileid, restore, ret, retry_cnt, swapped;
 	char *real_name, mbuf[512];
 
@@ -269,17 +269,17 @@ open_retry:	if (LF_ISSET(DB_CREATE)) {
 		 * sizes, we limit the default pagesize to 16K.
 		 */
 		if (dbp->pgsize == 0) {
-			if ((ret =
-			    __db_ioinfo(real_name, fd, NULL, &io)) != 0) {
+			if ((ret = __db_ioinfo(real_name,
+			    fd, NULL, NULL, &iopsize)) != 0) {
 				__db_err(dbenv,
 				    "%s: %s", real_name, strerror(ret));
 				goto err;
 			}
-			if (io < 512)
-				io = 512;
-			if (io > 16 * 1024)
-				io = 16 * 1024;
-			dbp->pgsize = io;
+			if (iopsize < 512)
+				iopsize = 512;
+			if (iopsize > 16 * 1024)
+				iopsize = 16 * 1024;
+			dbp->pgsize = iopsize;
 			F_SET(dbp, DB_AM_PGDEF);
 		}
 

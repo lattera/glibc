@@ -43,7 +43,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)txn.c	10.37 (Sleepycat) 11/28/97";
+static const char sccsid[] = "@(#)txn.c	10.39 (Sleepycat) 1/8/98";
 #endif /* not lint */
 
 
@@ -205,7 +205,12 @@ retry1:	if ((ret = __db_ropen(dbenv, DB_APP_NONE, path, DEFAULT_TXN_FILE,
 		LOCK_TXNREGION(tmgrp);
 		if ((ret = __db_shalloc(tmgrp->mem, sizeof(db_mutex_t),
 		    MUTEX_ALIGNMENT, &tmgrp->mutexp)) == 0)
-			__db_mutex_init(tmgrp->mutexp, -1);
+			/*
+			 * Since we only get here if threading is turned on, we
+			 * know that we have spinlocks, so the offset is going
+			 * to be ignored.  We put 0 here as a valid placeholder.
+			 */
+			__db_mutex_init(tmgrp->mutexp, 0);
 		UNLOCK_TXNREGION(tmgrp);
 		if (ret != 0)
 			goto out;
@@ -735,8 +740,7 @@ __txn_grow_region(tp)
 	DB_TXNMGR *tp;
 {
 	size_t incr;
-	off_t mutex_offset;
-	u_int32_t oldmax;
+	u_int32_t mutex_offset, oldmax;
 	u_int8_t *curaddr;
 	int ret;
 

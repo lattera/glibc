@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1997.
 
@@ -1707,6 +1707,13 @@ modf_test (void)
   check ("modf (-2.5, &x) returns -0.5", result, -0.5);
   check ("modf (-2.5, &x) sets x to -2", intpart, -2);
 
+  result = FUNC(modf) (20, &intpart);
+  check ("modf (20, &x) returns 0", result, 0);
+  check ("modf (20, &x) sets x to 20", intpart, 20);
+
+  result = FUNC(modf) (21, &intpart);
+  check ("modf (21, &x) returns 0", result, 0);
+  check ("modf (21, &x) sets x to 21", intpart, 21);
 }
 
 

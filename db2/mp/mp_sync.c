@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_sync.c	10.17 (Sleepycat) 11/26/97";
+static const char sccsid[] = "@(#)mp_sync.c	10.19 (Sleepycat) 12/3/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -39,7 +39,7 @@ memp_sync(dbmp, lsnp)
 	DB_ENV *dbenv;
 	MPOOL *mp;
 	MPOOLFILE *mfp;
-	int ar_cnt, cnt, nalloc, next, notused, ret, wrote;
+	int ar_cnt, cnt, nalloc, next, ret, wrote;
 
 	dbenv = dbmp->dbenv;
 
@@ -180,32 +180,28 @@ memp_sync(dbmp, lsnp)
 
 		/* Write the buffer. */
 		mfp = R_ADDR(dbmp, bharray[next]->mf_offset);
-		ret =
-		    __memp_bhwrite(dbmp, mfp, bharray[next], &notused, &wrote);
+		ret = __memp_bhwrite(dbmp, mfp, bharray[next], NULL, &wrote);
 
 		/* Release the buffer. */
 		--bharray[next]->ref;
 
 		/* If there's an error, release the rest of the buffers. */
 		if (ret != 0 || !wrote) {
-			while (++next < ar_cnt)
-				--bharray[next]->ref;
-
-			if (ret != 0)
-				goto err;
-
 			/*
 			 * Any process syncing the shared memory buffer pool
 			 * had better be able to write to any underlying file.
 			 * Be understanding, but firm, on this point.
 			 */
-			if (!wrote) {
+			if (ret == 0) {
 				__db_err(dbenv, "%s: unable to flush page: %lu",
 				    __memp_fns(dbmp, mfp),
 				    (u_long)bharray[next]->pgno);
 				ret = EPERM;
-				goto err;
 			}
+
+			while (++next < ar_cnt)
+				--bharray[next]->ref;
+			goto err;
 		}
 	}
 	ret = mp->lsn_cnt ? DB_INCOMPLETE : 0;
@@ -242,7 +238,7 @@ memp_fsync(dbmfp)
 	BH *bhp, **bharray;
 	DB_MPOOL *dbmp;
 	size_t mf_offset;
-	int ar_cnt, cnt, nalloc, next, pincnt, notused, ret, wrote;
+	int ar_cnt, cnt, nalloc, next, pincnt, ret, wrote;
 
 	dbmp = dbmfp->dbmp;
 
@@ -333,7 +329,7 @@ memp_fsync(dbmfp)
 		}
 
 		/* Write the buffer. */
-		ret = __memp_pgwrite(dbmfp, bharray[next], &notused, &wrote);
+		ret = __memp_pgwrite(dbmfp, bharray[next], NULL, &wrote);
 
 		/* Release the buffer. */
 		--bharray[next]->ref;
@@ -379,7 +375,7 @@ memp_trickle(dbmp, pct, nwrotep)
 	MPOOL *mp;
 	MPOOLFILE *mfp;
 	u_long total;
-	int notused, ret, wrote;
+	int ret, wrote;
 
 	mp = dbmp->mp;
 	if (nwrotep != NULL)
@@ -423,8 +419,7 @@ loop:	total = mp->stat.st_page_clean + mp->stat.st_page_dirty;
 		if (F_ISSET(mfp, MP_TEMP))
 			continue;
 
-		if ((ret =
-		    __memp_bhwrite(dbmp, mfp, bhp, &notused, &wrote)) != 0)
+		if ((ret = __memp_bhwrite(dbmp, mfp, bhp, NULL, &wrote)) != 0)
 			goto err;
 
 		/*
