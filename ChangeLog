@@ -2,7 +2,7 @@
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Add support for
 	__ASSUME_GETDENTS32_D_TYPE.
-	* sysdeps/unix/sysv/linux/getdents.c: For 2.6.4+ kernels you
+	* sysdeps/unix/sysv/linux/getdents.c: For 2.6.4+ kernels use
 	getdents syscall again since it provides d_type information.
 
 2004-02-29  Andreas Jaeger  <aj@suse.de>
