@@ -1,3 +1,8 @@
+2003-09-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/syslog.c: Include locale.h.
+	(vsyslog): Add date always in C locale %h %e %T format.
+
 2003-09-24  Paul Eggert  <eggert@twinsun.com>
 
 	* argp/argp-fmtstream.c (__argp_fmtstream_ensure): Check for

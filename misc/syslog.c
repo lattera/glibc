@@ -48,6 +48,7 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 #include <stdlib.h>
 #include <bits/libc-lock.h>
 #include <signal.h>
+#include <locale.h>
 
 #if __STDC__
 #include <stdarg.h>
@@ -187,10 +188,11 @@ vsyslog(pri, fmt, ap)
 	    prioff = fprintf (f, "<%d>", pri);
 	    (void) time (&now);
 #ifdef USE_IN_LIBIO
-	    f->_IO_write_ptr += strftime (f->_IO_write_ptr,
-					  f->_IO_write_end - f->_IO_write_ptr,
-					  "%h %e %T ",
-					  __localtime_r (&now, &now_tm));
+	    f->_IO_write_ptr += __strftime_l (f->_IO_write_ptr,
+					      f->_IO_write_end - f->_IO_write_ptr,
+					      "%h %e %T ",
+					      __localtime_r (&now, &now_tm),
+					      &_nl_C_locobj);
 #else
 	    f->__bufp += strftime (f->__bufp, f->__put_limit - f->__bufp,
 				   "%h %e %T ", __localtime_r (&now, &now_tm));
