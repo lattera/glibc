@@ -1,3 +1,20 @@
+2004-01-09  Bruno Haible  <bruno@clisp.org>
+
+	* intl/gmo.h (MO_REVISION_NUMBER_WITH_SYSDEP_I): New definition.
+	* intl/loadmsgcat.c (get_sysdep_segment_value): Handle "I".
+	(_nl_load_domain): Treat major revision 1 like major revision 0.
+
+2004-01-11  Bruno Haible  <bruno@clisp.org>
+
+	* stdio-common/vfprintf.c (vfprintf): Disallow the 'I' flag after
+	width or precision has been seen.
+
+2004-01-08  Bruno Haible  <bruno@clisp.org>
+
+	* intl/loadmsgcat.c (_nl_load_domain): When a string pair uses a system
+	dependent segment not known to this version of the library, ignore
+	the string pair instead of crashing.
+
 2004-01-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in: Rewrite test to give gcc to clean up after itself.

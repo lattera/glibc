@@ -6286,7 +6286,7 @@ if { ac_try='$libc_unwind_check >&5'
   (exit $ac_status); }; }
 then
   if $libc_unwind_check -v 2>&1 >/dev/null \
-     | grep -q -- --eh-frame-hdr; then
+     | grep -- --eh-frame-hdr 2>&1 >/dev/null; then
     libc_cv_gcc_dwarf2_unwind_info=no_registry_needed
   else
     libc_cv_gcc_dwarf2_unwind_info=static

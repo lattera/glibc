@@ -399,7 +399,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_floathex),	/* for 'A', 'a' */			      \
       REF (mod_ptrdiff_t),      /* for 't' */				      \
       REF (mod_intmax_t),       /* for 'j' */				      \
-      REF (flag_i18n)	        /* for 'I' */				      \
+      REF (form_unknown)        /* for 'I' */				      \
     };									      \
     /* Step 2: after processing precision.  */				      \
     static JUMP_TABLE_TYPE step2_jumps[30] =				      \
@@ -433,7 +433,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_floathex),	/* for 'A', 'a' */			      \
       REF (mod_ptrdiff_t),      /* for 't' */				      \
       REF (mod_intmax_t),       /* for 'j' */				      \
-      REF (flag_i18n)	        /* for 'I' */				      \
+      REF (form_unknown)        /* for 'I' */				      \
     };									      \
     /* Step 3a: after processing first 'h' modifier.  */		      \
     static JUMP_TABLE_TYPE step3a_jumps[30] =				      \
