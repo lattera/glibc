@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,49 +29,46 @@ ENTRY(__start)
   .set noreorder
 
   /* The first thing on the stack is argc.  */
-  lw t0, 0(sp)
+  lw s0, 0(sp)
   nop
 
   /* Set up the global pointer.  */
   la gp, _gp
 
   /* Then set up argv.  */
-  addiu t1, sp, 4
+  addiu s1, sp, 4
 
   /* To compute where envp is, first we have to jump ahead four
      bytes from what argv was.  This will bring us ahead, so we don't
      need to compute the NULL at the end of argv later.  */
-  addiu v1, t1, 4
+  addiu v1, s1, 4
 
   /* Now, compute the space to skip given the number of arguments
      we've got.  We do this by multiplying argc by 4.  */
-  sll v0, t0, 2
+  sll v0, s0, 2
 
   /* Now, add (argv+4) with the space to skip...that's envp.  */
-  addu v1, v1, v0
-  move t2, v1
+  addu s2, v1, v0
 
   /* __environ = envp; */
-  sw t2, __environ
+  sw s2, __environ
 
   addiu sp, sp, -24
 
   /* __libc_init (argc, argv, envp); */
-  move a0, t0
-  move a1, t1
-  move a2, t2
+  move a0, s0
+  move a1, s1
   jal __libc_init
-  nop
+  move a2, s2
 
   /* errno = 0; */
   sw zero, errno
 
   /* exit (main (argc, argv, envp)); */
-  move a0, t0
-  move a1, t1
-  move a2, t2
+  move a0, s0
+  move a1, s1
   jal main
-  nop
+  move a2, s2
 
   /* Make the value returned by main be the argument to exit.  */
   jal exit
