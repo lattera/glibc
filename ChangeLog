@@ -1,3 +1,9 @@
+1999-09-07  Cristian Gafton  <gafton@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/raw.h: New file
+	* sysdeps/unix/sysv/linux/Dist: Add raw.h.
+	* sysdeps/unix/sysv/linux/Makefile [misc] (sysdep_headers): Add raw.h.
+
 1999-09-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/alpha/Dist: Add sys/user.h.
