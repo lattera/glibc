@@ -1,6 +1,5 @@
 /* Inline math functions for powerpc.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000
-   Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,1999,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,18 +20,18 @@
 #if defined __GNUC__ && !defined _SOFT_FLOAT
 
 #ifdef __USE_ISOC99
-#if __GNUC_PREREQ (2,96)
+# if __GNUC_PREREQ (2,96)
 
-#define isgreater(x, y) __builtin_isgreater (x, y)
-#define isgreaterequal(x, y) __builtin_isgreaterequal (x, y)
-#define isless(x, y) __builtin_isless (x, y)
-#define islessequal(x, y) __builtin_islessequal (x, y)
-#define islessgreater(x, y) __builtin_islessgreater (x, y)
-#define isunordered(x, y) __builtin_isunordered (x, y)
+#  define isgreater(x, y) __builtin_isgreater (x, y)
+#  define isgreaterequal(x, y) __builtin_isgreaterequal (x, y)
+#  define isless(x, y) __builtin_isless (x, y)
+#  define islessequal(x, y) __builtin_islessequal (x, y)
+#  define islessgreater(x, y) __builtin_islessgreater (x, y)
+#  define isunordered(x, y) __builtin_isunordered (x, y)
 
-#else
+# else
 
-# define __unordered_cmp(x, y) \
+#  define __unordered_cmp(x, y) \
   (__extension__							      \
    ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
       unsigned __r;							      \
@@ -40,14 +39,14 @@
               : "cr7");  \
       __r; }))
 
-# define isgreater(x, y) (__unordered_cmp (x, y) >> 2 & 1)
-# define isgreaterequal(x, y) ((__unordered_cmp (x, y) & 6) != 0)
-# define isless(x, y) (__unordered_cmp (x, y) >> 3 & 1)
-# define islessequal(x, y) ((__unordered_cmp (x, y) & 0xA) != 0)
-# define islessgreater(x, y) ((__unordered_cmp (x, y) & 0xC) != 0)
-# define isunordered(x, y) (__unordered_cmp (x, y) & 1)
+#  define isgreater(x, y) (__unordered_cmp (x, y) >> 2 & 1)
+#  define isgreaterequal(x, y) ((__unordered_cmp (x, y) & 6) != 0)
+#  define isless(x, y) (__unordered_cmp (x, y) >> 3 & 1)
+#  define islessequal(x, y) ((__unordered_cmp (x, y) & 0xA) != 0)
+#  define islessgreater(x, y) ((__unordered_cmp (x, y) & 0xC) != 0)
+#  define isunordered(x, y) (__unordered_cmp (x, y) & 1)
 
-#endif /* __GNUC_PREREQ (2,97) */
+# endif /* __GNUC_PREREQ (2,97) */
 #endif /* __USE_ISOC99 */
 
 #if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
