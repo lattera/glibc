@@ -1483,8 +1483,8 @@ charclass_symbolic_ellipsis (struct linereader *ldfile,
 	  uint32_t wch;
 
 	  sprintf (tmp, (base == 10 ? "%.*s%0*ld" : "%.*s%0*lX"),
-		   cp - last_str, last_str,
-		   (int) (now->val.str.lenmb - (int) (cp - last_str)),
+		   (int) (cp - last_str), last_str,
+		   (int) (now->val.str.lenmb - (cp - last_str)),
 		   from);
 
 	  get_character (now, charmap, repertoire, &seq, &wch);
