@@ -105,7 +105,7 @@ extern int __lll_mutex_unlock_wait (int *__futex)
   ({ unsigned char ret;							      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1; setne %0"		      \
 		       : "=a" (ret), "=m" (futex)			      \
-		       : "r" (1), "1" (futex), "0" (0)			      \
+		       : "r" (1), "m" (futex), "0" (0)			      \
 		       : "memory");					      \
      ret; })
 
@@ -125,7 +125,7 @@ extern int __lll_mutex_unlock_wait (int *__futex)
 			      ".previous\n"				      \
 			      "1:"					      \
 			      : "=a" (ignore1), "=&c" (ignore2), "=m" (futex) \
-			      : "0" (1), "2" (futex)			      \
+			      : "0" (1), "m" (futex)			      \
 			      : "memory"); })
 
 
@@ -146,7 +146,7 @@ extern int __lll_mutex_unlock_wait (int *__futex)
 			      ".previous\n"				      \
 			      "1:"					      \
 			      : "=a" (ignore1), "=&c" (ignore2), "=m" (futex) \
-			      : "0" (2), "2" (futex)			      \
+			      : "0" (2), "m" (futex)			      \
 			      : "memory"); })
 
 
@@ -167,7 +167,7 @@ extern int __lll_mutex_unlock_wait (int *__futex)
 		       "1:"						      \
 		       : "=a" (result), "=&c" (ignore1), "=&d" (ignore2),     \
 			 "=m" (futex)					      \
-		       : "0" (1), "3" (futex), "m" (timeout)		      \
+		       : "0" (1), "m" (futex), "m" (timeout)		      \
 		       : "memory");					      \
      result; })
 
@@ -186,7 +186,7 @@ extern int __lll_mutex_unlock_wait (int *__futex)
 			      ".previous\n"				      \
 			      "1:"					      \
 			      : "=m" (futex), "=&a" (ignore)		      \
-			      : "0" (futex)				      \
+			      : "m" (futex)				      \
 			      : "memory"); })
 
 
@@ -223,7 +223,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
   ({ unsigned char ret;							      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1; setne %0"		      \
 		       : "=a" (ret), "=m" (futex)			      \
-		       : "r" (0), "1" (futex), "0" (1)			      \
+		       : "r" (0), "m" (futex), "0" (1)			      \
 		       : "memory");					      \
      ret; })
 
@@ -242,7 +242,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      ".previous\n"				      \
 			      "1:"					      \
 			      : "=a" (ignore1), "=&c" (ignore2), "=m" (futex) \
-			      : "0" (-1), "2" (futex)			      \
+			      : "0" (-1), "m" (futex)			      \
 			      : "memory"); })
 
 
@@ -260,7 +260,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      ".previous\n"				      \
 			      "1:"					      \
 			      : "=m" (futex), "=&a" (ignore)		      \
-			      : "0" (futex)				      \
+			      : "m" (futex)				      \
 			      : "memory"); })
 #else
 /* Special versions of the macros for use in libc itself.  They avoid
@@ -276,7 +276,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 		       "lock\n"						      \
 		       "0:\tcmpxchgl %2, %1; setne %0"			      \
 		       : "=a" (ret), "=m" (futex)			      \
-		       : "r" (0), "1" (futex), "0" (1),			      \
+		       : "r" (0), "m" (futex), "0" (1),			      \
 		         "i" (offsetof (tcbhead_t, multiple_threads))	      \
 		       : "memory");					      \
      ret; })
@@ -299,7 +299,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      ".previous\n"				      \
 			      "2:"					      \
 			      : "=a" (ignore1), "=&c" (ignore2), "=m" (futex) \
-			      : "0" (-1), "2" (futex),			      \
+			      : "0" (-1), "m" (futex),			      \
 		                "i" (offsetof (tcbhead_t, multiple_threads))  \
 			      : "memory"); })
 
@@ -321,7 +321,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      ".previous\n"				      \
 			      "2:"					      \
 			      : "=m" (futex), "=&a" (ignore)		      \
-			      : "0" (futex),				      \
+			      : "m" (futex),				      \
 				"i" (offsetof (tcbhead_t, multiple_threads))  \
 			      : "memory"); })
 #endif

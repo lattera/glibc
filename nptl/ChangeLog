@@ -1,5 +1,8 @@
 2003-09-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Don't match memory
+	in parameters of asm with output parameters.
+
 	* pthread_mutex_unlock.c (__pthread_mutex_unlock_usercnt): Change
 	type of DECR parameter to int.
 	* pthreadP.h: Adjust prototype of __pthread_mutex_unlock_usercnt.
