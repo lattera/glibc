@@ -1,3 +1,9 @@
+2001-08-13  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/machine-gmon.h (MCOUNT): Don't use delay slot for
+	jal since it's a macro.
+	Patch by Simon Gee <simong@oz.agile.tv>.
+
 2001-08-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/Makefile: Add rules to build ISO-IR-209 and MAC-SAMI.
