@@ -198,7 +198,9 @@ do_release_all (void *nodep)
 
   /* Unload the shared object.  */
   if (obj->handle != NULL)
-    __libc_dlclose (obj->handle);
+    do
+      __libc_dlclose (obj->handle);
+    while (--obj->counter > 0);
 
   free (obj);
 }
