@@ -158,6 +158,11 @@ is_hwcap_platform (const char *name)
   if (hwcap_idx != -1)
     return 1;
 
+#ifdef USE_TLS
+  if (strcmp (name, "tls") == 0)
+    return 1;
+#endif
+
   return 0;
 }
 
@@ -190,7 +195,14 @@ path_hwcap (const char *path)
 	{
 	  h = _dl_string_platform (ptr + 1);
 	  if (h == (uint64_t) -1)
-	    break;
+	    {
+#ifdef USE_TLS
+	      if (strcmp (ptr + 1, "tls") == 0)
+		h = 63;
+	      else
+#endif
+		break;
+	    }
 	}
       hwcap += 1ULL << h;
 

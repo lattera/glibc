@@ -37,6 +37,7 @@
 #include <dl-procinfo.h>
 #include <dl-osinfo.h>
 #include <hp-timing.h>
+#include <tls.h>
 
 extern char **_environ attribute_hidden;
 extern void _end attribute_hidden;
@@ -291,17 +292,17 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
     if ((masked & (1UL << n)) != 0)
       ++cnt;
 
+#ifdef USE_TLS
+  /* For TLS enabled builds always add 'tls'.  */
+  ++cnt;
+#else
   if (cnt == 0)
     {
       /* If we have platform name and no important capability we only have
 	 the base directory to search.  */
       result = (struct r_strlenpair *) malloc (sizeof (*result));
       if (result == NULL)
-	{
-	no_memory:
-	  INTUSE(_dl_signal_error) (ENOMEM, NULL, NULL,
-				    N_("cannot create capability list"));
-	}
+	goto no_memory;
 
       result[0].str = (char *) result;	/* Does not really matter.  */
       result[0].len = 0;
@@ -309,6 +310,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
       *sz = 1;
       return result;
     }
+#endif
 
   /* Create temporary data structure to generate result table.  */
   temp = (struct r_strlenpair *) alloca (cnt * sizeof (*temp));
@@ -327,6 +329,11 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
       temp[m].len = platform_len;
       ++m;
     }
+#ifdef USE_TLS
+  temp[m].str = "tls";
+  temp[m].len = 3;
+  ++m;
+#endif
   assert (m == cnt);
 
   /* Determine the total size of all strings together.  */
@@ -344,7 +351,11 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   *sz = 1 << cnt;
   result = (struct r_strlenpair *) malloc (*sz * sizeof (*result) + total);
   if (result == NULL)
-    goto no_memory;
+    {
+    no_memory:
+      INTUSE(_dl_signal_error) (ENOMEM, NULL, NULL,
+				N_("cannot create capability list"));
+    }
 
   if (cnt == 1)
     {

@@ -56,7 +56,7 @@ cancel_handler (void *arg)
 {
   __kill (SIGKILL, *(pid_t *) arg);
 
-  TEMP_FAILURE_RETRY (waitpid (*(pid_t *) arg, NULL, 0));
+  TEMP_FAILURE_RETRY (__waitpid (*(pid_t *) arg, NULL, 0));
 
   DO_LOCK ();
 
