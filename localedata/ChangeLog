@@ -1,3 +1,17 @@
+2000-07-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-ctype-de_DE.ISO-8859-1.in: Mark U0000 as cntrl and U00A0 not as
+	space.
+	* tst-ctype.c: Likewise.
+	* tst-ctype.sh: Likewise.
+	* locales/i18n: Likewise.
+	* locales/ja_JP: Likewise.
+	* tests-mbwc/dat_iswcntrl.c: Likewise.
+	* tests-mbwc/dat_iswctype.c: Likewise.
+	* tests-mbwc/dat_iswspace.c: Likewise.
+
+	* tst-ctype.sh: Also test C locale.
+
 2000-07-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: Rewrite rules for tests to run them only when necessary.
