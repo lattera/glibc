@@ -1,5 +1,5 @@
 /* The proper definitions for Linux/Alpha sigaction.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,20 @@
 struct sigaction
   {
     /* Signal handler.  */
+#ifdef __USE_POSIX199309
+    union
+      {
+	/* Used if SA_SIGINFO is not set.  */
+	__sighandler_t sa_handler;
+	/* Used if SA_SIGINFO is set.  */
+	void (*sa_sigaction) (int, siginfo_t *, void *);
+      }
+    __sigaction_handler;
+# define sa_handler	__sigaction_handler.sa_handler
+# define sa_sigaction	__sigaction_handler.sa_sigaction
+#else
     __sighandler_t sa_handler;
+#endif
 
     /* Additional set of signals to be blocked.  */
     __sigset_t sa_mask;
