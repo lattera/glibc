@@ -88,14 +88,18 @@
   movq errno@GOTTPOFF(%rip), %rcx;		\
   xorq %rdx, %rdx;				\
   subq %rax, %rdx;				\
-  movl %eax, %fs:0(%rcx);
+  movl %edx, %fs:(%rcx);			\
+  orq $-1, %rax;				\
+  jmp L(pseudo_end);
 #elif RTLD_PRIVATE_ERRNO
 # define SYSCALL_ERROR_HANDLER			\
 0:						\
   leaq errno(%rip), %rcx;			\
   xorq %rdx, %rdx;				\
   subq %rax, %rdx;				\
-  movl %eax, (%rcx);
+  movl %edx, (%rcx);				\
+  orq $-1, %rax;				\
+  jmp L(pseudo_end);
 #elif defined _LIBC_REENTRANT
 /* Store (- %rax) into errno through the GOT.
    Note that errno occupies only 4 bytes.  */

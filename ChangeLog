@@ -1,5 +1,8 @@
 2002-10-11  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Fix typos.
+
 	* sysdeps/generic/dl-lookupcfg.h: Include <tls.h>.
 	* sysdeps/sh/dl-lookupcfg.h: File removed.
 	* sysdeps/i386/dl-lookupcfg.h: File removed.
