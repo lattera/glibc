@@ -985,11 +985,11 @@ next_prime (uint32_t seed)
 
    Offset   Length       Description
    0000     4            Magic header bytes
-   0004     4            Offset of string table (stoff)
-   0008     4            Offset of name hashing table (hoff)
-   000C     4            Hashing table size (hsize)
-   0010     4            Offset of module table (moff)
-   0014     4            Offset of other conversion module table (ooff)
+   0004     2            Offset of string table (stoff)
+   0006     2            Offset of name hashing table (hoff)
+   0008     2            Hashing table size (hsize)
+   000A     2            Offset of module table (moff)
+   000C     2            Offset of other conversion module table (ooff)
 
    stoff    ???          String table
 
@@ -1177,6 +1177,9 @@ write_output (void)
 	  cur_extra_table += sizeof (gidx_t);
 	}
     }
+
+  /* Clear padding.  */
+  memset (&header, 0, sizeof (struct gconvcache_header));
 
   header.magic = GCONVCACHE_MAGIC;
 

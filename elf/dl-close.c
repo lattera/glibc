@@ -351,36 +351,6 @@ _dl_close (void *_map)
 	      }
 	  assert (found);
 	}
-      else if (new_opencount[i] != 0 && imap->l_type == lt_loaded
-	       && imap->l_searchlist.r_list == NULL
-	       && imap->l_initfini != NULL)
-	{
-	  /* The object is still used.  But the object we are
-	     unloading right now is responsible for loading it.  If
-	     the current object does not have it's own scope yet we
-	     have to create one.  This has to be done before running
-	     the finalizers.
-
-	     To do this count the number of dependencies.  */
-	  unsigned int cnt;
-	  for (cnt = 1; imap->l_initfini[cnt] != NULL; ++cnt)
-	    if (imap->l_initfini[cnt]->l_idx >= i
-		&& imap->l_initfini[cnt]->l_idx < nopencount)
-	      ++new_opencount[imap->l_initfini[cnt]->l_idx];
-	    else
-	      ++imap->l_initfini[cnt]->l_opencount;
-
-	  /* We simply reuse the l_initfini list.  */
-	  imap->l_searchlist.r_list = &imap->l_initfini[cnt + 1];
-	  imap->l_searchlist.r_nlist = cnt;
-
-	  for (cnt = 0; imap->l_scope[cnt] != NULL; ++cnt)
-	    if (imap->l_scope[cnt] == &map->l_searchlist)
-	      {
-		imap->l_scope[cnt] = &imap->l_searchlist;
-		break;
-	      }
-	}
 
       /* Store the new l_opencount value.  */
       imap->l_opencount = new_opencount[i];
