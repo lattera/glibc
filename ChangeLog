@@ -1,3 +1,7 @@
+2000-07-08  Mark Kettenis  <kettenis@gnu.org>
+
+	* hurd/hurd/fd.h: Include <cthreads.h> instead of <lock-intern.h>.
+
 2000-07-07  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/unix/make-syscalls.sh: Tolerate syscalls that

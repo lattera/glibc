@@ -1,5 +1,5 @@
 /* File descriptors.
-   Copyright (C) 1993,94,95,96,97,98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1993,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@
 
 #define	_HURD_FD_H	1
 #include <features.h>
+
+#include <cthreads.h>
 
 #include <hurd/hurd_types.h>
 #include <hurd/port.h>
@@ -47,7 +49,6 @@ extern struct hurd_fd **_hurd_dtable;
 extern struct mutex _hurd_dtable_lock; /* Locks those two variables.  */
 
 #include <hurd/signal.h>
-#include <lock-intern.h>
 
 #ifndef _HURD_FD_H_EXTERN_INLINE
 #define _HURD_FD_H_EXTERN_INLINE extern __inline
