@@ -1,4 +1,4 @@
-/* Adapted for log2 by Ulrich Drepper <drepper@cygnus.com>.
+/* Adapted for log2 by Ulrich Drepper <drepper@cygnus.com>.  */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -127,3 +127,5 @@ static double zero   =  0.0;
 	    return dk-((s*(f-R))-f);
 	}
 }
+
+weak_alias (__log2, log2)

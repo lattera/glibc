@@ -1,5 +1,7 @@
-/* Copyright (C) 1991, 1995, 1997 Free Software Foundation, Inc.
+/* Return current rounding direction.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Richard Henderson <rth@tamu.edu>, 1997
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,28 +18,14 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <string.h>
+#include <fenv.h>
 
-/*
- * Copy no more than N bytes of SRC to DEST, stopping when C is found.
- * Return the position in DEST one byte past where C was copied,
- * or NULL if C was not found in the first N bytes of SRC.
- */
-void *
-__memccpy (dest, src, c, n)
-      void *dest; const void *src;
-      int c; size_t n;
+int
+fegetround (void)
 {
-  register const char *s = src;
-  register char *d = dest;
-  register const int x = (unsigned char) c;
-  register size_t i = n;
+  unsigned long fpcr;
 
-  while (i-- > 0)
-    if ((*d++ = *s++) == x)
-      return d;
+  __asm__ __volatile__("excb; mf_fpcr %0" : "=f"(fpcr));
 
-  return NULL;
+  return (fpcr >> 58) & 3;
 }
-
-weak_alias (__memccpy, memccpy)

@@ -85,6 +85,7 @@
    binary tree.  */
 
 #include <stdlib.h>
+#include <string.h>
 #include <search.h>
 
 typedef struct node_t
@@ -633,16 +634,11 @@ weak_alias (__twalk, twalk)
 static void
 tdestroy_recurse (node root, __free_fn_t freefct)
 {
-  if (root->left == NULL && root->right == NULL)
-    (*freefct) (root->key);
-  else
-    {
-      if (root->left != NULL)
-	tdestroy_recurse (root->left, freefct);
-      if (root->right != NULL)
-	tdestroy_recurse (root->right, freefct);
-      (*freefct) (root->key);
-    }
+  if (root->left != NULL)
+    tdestroy_recurse (root->left, freefct);
+  if (root->right != NULL)
+    tdestroy_recurse (root->right, freefct);
+  (*freefct) ((void *) root->key);
   /* Free the node itself.  */
   free (root);
 }

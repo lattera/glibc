@@ -62,10 +62,10 @@ LEAF(__syscall, 0)
 	mov	a5, a4
 
 	call_pal PAL_callsys	/* Invoke system call */
-	bne	a3, error
+	bne	a3, $error
 	ret
 
-error:
+$error:
 #ifndef PROF
 	br	gp, 2f
 2:	ldgp	gp, 0(gp)

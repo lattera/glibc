@@ -61,14 +61,14 @@
 #ifdef _POSIX_VDISABLE
 # define CEOL		_POSIX_VDISABLE
 #else
-# define CEOL		((unsigned char)'\377')	/* XXX avoid _POSIX_VDISABLE */
+# define CEOL		'\0'		/* XXX avoid _POSIX_VDISABLE */
 #endif
 #define	CERASE		0177
 #define	CINTR		CTRL('c')
 #ifdef _POSIX_VDISABLE
 # define CSTATUS	_POSIX_VDISABLE
 #else
-# define CSTATUS	((unsigned char)'\377')	/* XXX avoid _POSIX_VDISABLE */
+# define CSTATUS	'\0'		/* XXX avoid _POSIX_VDISABLE */
 #endif
 #define	CKILL		CTRL('u')
 #define	CMIN		1

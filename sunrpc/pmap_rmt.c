@@ -235,7 +235,8 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
   AUTH *unix_auth = authunix_create_default ();
   XDR xdr_stream;
   XDR *xdrs = &xdr_stream;
-  int outlen, inlen, fromlen, nets;
+  int outlen, inlen, nets;
+  size_t fromlen;
   int sock;
   int on = 1;
 #ifdef FD_SETSIZE

@@ -25,6 +25,7 @@
 #include <printf.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "_itoa.h"
 #include "../locale/localeinfo.h"
 

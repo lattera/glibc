@@ -1,5 +1,7 @@
-/* Copyright (C) 1991, 1995, 1997 Free Software Foundation, Inc.
+/* Store current floating-point environment.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Richard Henderson <rth@tamu.edu>, 1997
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,28 +18,20 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <string.h>
+#include <fenv.h>
 
-/*
- * Copy no more than N bytes of SRC to DEST, stopping when C is found.
- * Return the position in DEST one byte past where C was copied,
- * or NULL if C was not found in the first N bytes of SRC.
- */
-void *
-__memccpy (dest, src, c, n)
-      void *dest; const void *src;
-      int c; size_t n;
+void
+fegetenv (fenv_t *envp)
 {
-  register const char *s = src;
-  register char *d = dest;
-  register const int x = (unsigned char) c;
-  register size_t i = n;
+  unsigned long fpcr, swcr;
 
-  while (i-- > 0)
-    if ((*d++ = *s++) == x)
-      return d;
+  /* Get status from software and hardware.  Note that we don't need an
+     excb because the callsys is an implied trap barrier.  */
+  swcr = __ieee_get_fp_control();
+  __asm__ __volatile__("mf_fpcr %0" : "=f"(fpcr));
 
-  return NULL;
+  /* Merge the two bits of information.  The magic number at the end is
+     the exception enable mask.  */
+
+  *envp = (fpcr & (3UL << 58)) | (swcr & (FE_ALL_EXCEPT | 0x3e));
 }
-
-weak_alias (__memccpy, memccpy)

@@ -27,6 +27,17 @@
 
 /* IEEE positive infinity (-HUGE_VAL is negative infinity).  */
 
+#ifdef	__GNUC__
+
+#define HUGE_VAL                                                            \
+  (__extension__                                                            \
+   ((union { unsigned __l __attribute__((__mode__(__DI__))); double __d; }) \
+    { __l: 0x7ff0000000000000ULL }).__d)
+
+#else /* not GCC */
+
+typedef union { unsigned char __c[8]; double __d; } __huge_val_t;
+
 #if __BYTE_ORDER == __BIG_ENDIAN
 #define	__HUGE_VAL_bytes	{ 0x7f, 0xf0, 0, 0, 0, 0, 0, 0 }
 #endif
@@ -34,19 +45,26 @@
 #define	__HUGE_VAL_bytes	{ 0, 0, 0, 0, 0, 0, 0xf0, 0x7f }
 #endif
 
-#define __huge_val_t	union { unsigned char __c[8]; double __d; }
-#ifdef	__GNUC__
-#define	HUGE_VAL	(__extension__ \
-			 ((__huge_val_t) { __c: __HUGE_VAL_bytes }).__d)
-#else	/* Not GCC.  */
 static __huge_val_t __huge_val = { __HUGE_VAL_bytes };
 #define	HUGE_VAL	(__huge_val.__d)
+
 #endif	/* GCC.  */
 
 
 /* ISO C 9X extensions: (float) HUGE_VALF and (long double) HUGE_VALL.  */
 
 #ifdef __USE_ISOC9X
+
+#ifdef __GNUC__
+
+#define HUGE_VALF                                                           \
+  (__extension__                                                            \
+   ((union { unsigned __l __attribute__((__mode__(__SI__))); float __d; })  \
+    { __l: 0x7f800000UL }).__d)
+
+#else /* not GCC */
+
+typedef union { unsigned char __c[4]; float __f; } __huge_valf_t;
 
 #if __BYTE_ORDER == __BIG_ENDIAN
 #define	__HUGE_VALF_bytes	{ 0x7f, 0x80, 0, 0 }
@@ -55,13 +73,9 @@ static __huge_val_t __huge_val = { __HUGE_VAL_bytes };
 #define	__HUGE_VALF_bytes	{ 0, 0, 0x80, 0x7f }
 #endif
 
-#define __huge_valf_t	union { unsigned char __c[4]; float __f; }
-#ifdef	__GNUC__
-#define	HUGE_VALF	(__extension__ \
-			 ((__huge_valf_t) { __c: __HUGE_VALF_bytes }).__f)
-#else	/* Not GCC.  */
 static __huge_valf_t __huge_valf = { __HUGE_VALF_bytes };
 #define	HUGE_VALF	(__huge_valf.__f)
+
 #endif	/* GCC.  */
 
 
@@ -69,6 +83,6 @@ static __huge_valf_t __huge_valf = { __HUGE_VALF_bytes };
    same as `double'.  */
 #define HUGE_VALL HUGE_VAL
 
-#endif	/* __USE_ISOC9X.  */
+#endif /* __USE_ISOC9X.  */
 
-#endif	   /* huge_val.h */
+#endif /* huge_val.h */

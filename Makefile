@@ -315,8 +315,9 @@ makeinfo --no-validate --no-warn --no-headers $< -o $@
 endef
 INSTALL: manual/maint.texi; $(format-me)
 NOTES: manual/creature.texi; $(format-me)
-manual/dir-add.texi:
+manual/dir-add.texi: FORCE
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
+FORCE:
 
 rpm/%: subdir_distinfo
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) subdirs='$(subdirs)' $(@F)

@@ -16,7 +16,7 @@ testprogram=$2
 tmp=${TMPDIR:-/tmp}
 tmpdir=$tmp/ftwtest.d
 
-trap 'rm -fr $tmpdir $testout' 1 2 3 15
+trap 'chmod -R a+x $tmpdir; rm -fr $tmpdir $testout' 1 2 3 15
 
 if test -d $tmpdir; then
   chmod -R a+x $tmpdir
@@ -39,7 +39,8 @@ echo > $tmpdir/bar/xo
 chmod a-x,a+r $tmpdir/bar
 
 testout=${TMPDIR:-/tmp}/ftwtest.out
-LD_LIBRARY_PATH=$objpfx $objpfx/elf/ld.so $testprogram $tmpdir |
+
+LD_LIBRARY_PATH=$objpfx ${objpfx}elf/ld.so $testprogram $tmpdir |
     sort > $testout
 
 cat <<EOF | cmp $testout - || exit 1
@@ -58,23 +59,43 @@ base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F
 EOF
 rm $testout
 
-testout=${TMPDIR:-/tmp}/ftwtest.out
-LD_LIBRARY_PATH=$objpfx $objpfx/elf/ld.so $testprogram --depth $tmpdir |
+LD_LIBRARY_PATH=$objpfx ${objpfx}elf/ld.so $testprogram --depth $tmpdir |
     sort > $testout
 
 cat <<EOF | cmp $testout - || exit 1
-base = "/tmp/", file = "ftwtest.d", flag = FTW_DP
-base = "/tmp/ftwtest.d/", file = "bar", flag = FTW_DP
-base = "/tmp/ftwtest.d/", file = "baz", flag = FTW_F
-base = "/tmp/ftwtest.d/", file = "foo", flag = FTW_DP
-base = "/tmp/ftwtest.d/bar/", file = "xo", flag = FTW_NS
-base = "/tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_DP
-base = "/tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F
-base = "/tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN
-base = "/tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_DP
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_DP
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F
+base = "$tmp/", file = "ftwtest.d", flag = FTW_DP
+base = "$tmp/ftwtest.d/", file = "bar", flag = FTW_DP
+base = "$tmp/ftwtest.d/", file = "baz", flag = FTW_F
+base = "$tmp/ftwtest.d/", file = "foo", flag = FTW_DP
+base = "$tmp/ftwtest.d/bar/", file = "xo", flag = FTW_NS
+base = "$tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_DP
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_DP
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_DP
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F
+EOF
+rm $testout
+
+LD_LIBRARY_PATH=$objpfx ${objpfx}elf/ld.so $testprogram --phys $tmpdir |
+    sort > $testout
+
+cat <<EOF | cmp $testout - || exit 1
+base = "$tmp/", file = "ftwtest.d", flag = FTW_D
+base = "$tmp/ftwtest.d/", file = "bar", flag = FTW_D
+base = "$tmp/ftwtest.d/", file = "baz", flag = FTW_F
+base = "$tmp/ftwtest.d/", file = "foo", flag = FTW_D
+base = "$tmp/ftwtest.d/bar/", file = "xo", flag = FTW_NS
+base = "$tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SL
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_D
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "link@2", flag = FTW_SL
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "link@3", flag = FTW_SL
 EOF
 rm $testout
 

@@ -223,7 +223,6 @@ following patterns:
 
 @smallexample
 alpha-@var{anything}-linux
-alpha-@var{anything}-linuxecoff
 i@var{x}86-@var{anything}-gnu
 i@var{x}86-@var{anything}-linux
 m68k-@var{anything}-linux
@@ -234,6 +233,7 @@ versions) used to run on the following configurations:
 
 @smallexample
 alpha-dec-osf1
+alpha-@var{anything}-linuxecoff
 i@var{x}86-@var{anything}-bsd4.3
 i@var{x}86-@var{anything}-isc2.2
 i@var{x}86-@var{anything}-isc3.@var{n}

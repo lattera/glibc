@@ -127,6 +127,7 @@ the executable file might be covered by the GNU General Public License. */
 #define _IO_CURRENTLY_PUTTING 0x800
 #define _IO_IS_APPENDING 0x1000
 #define _IO_IS_FILEBUF 0x2000
+#define _IO_BAD_SEEN 0x4000
 
 /* These are "formatting flags" matching the iostream fmtflags enum values. */
 #define _IO_SKIPWS 01
@@ -145,6 +146,7 @@ the executable file might be covered by the GNU General Public License. */
 #define _IO_UNITBUF 020000
 #define _IO_STDIO 040000
 #define _IO_DONT_CLOSE 0100000
+#define _IO_BOOLALPHA 0200000
 
 
 struct _IO_jump_t;  struct _IO_FILE;

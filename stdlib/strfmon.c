@@ -170,6 +170,13 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	    {
 	    case '=':			/* Set fill character.  */
 	      pad = *++fmt;
+	      if (pad == '\0')
+		{
+		  /* Premature EOS.  */
+		  __set_errno (EINVAL);
+		  va_end (ap);
+		  return -1;
+		}
 	      continue;
 	    case '^':			/* Don't group digits.  */
 	      group = 0;

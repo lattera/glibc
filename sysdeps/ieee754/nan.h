@@ -1,5 +1,5 @@
 /* `NAN' constant for IEEE 754 machines.
-   Copyright (C) 1992, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,23 +23,42 @@
 
 /* IEEE Not A Number.  */
 
+#ifdef	__GNUC__
+
+#define NAN                                                                 \
+  (__extension__                                                            \
+   ((union { unsigned __l __attribute__((__mode__(__DI__))); double __d; }) \
+    { __l: 0x7ff8000000000000ULL }).__d)
+
+#define NANF                                                                \
+  (__extension__                                                            \
+   ((union { unsigned __l __attribute__((__mode__(__SI__))); flaot __d; })  \
+    { __l: 0x7fc00000UL }).__d)
+
+#else
+
 #include <endian.h>
 
 #if __BYTE_ORDER == __BIG_ENDIAN
 #define	__nan_bytes		{ 0x7f, 0xf8, 0, 0, 0, 0, 0, 0 }
+#define	__nanf_bytes		{ 0x7f, 0xc0, 0, 0 }
 #endif
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 #define	__nan_bytes		{ 0, 0, 0, 0, 0, 0, 0xf8, 0x7f }
+#define	__nanf_bytes		{ 0, 0, 0xc0, 0x7f }
 #endif
 
-#ifdef	__GNUC__
-#define	NAN \
-  (__extension__ ((union { unsigned char __c[8];			      \
-			   double __d; })				      \
-		  { __nan_bytes }).__d)
-#else	/* Not GCC.  */
-static CONST char __nan[8] = __nan_bytes;
-#define	NAN	(*(CONST double *) __nan)
+static union { unsigned char __c[8]; double __d; } __nan = { __nan_bytes };
+#define	NAN	(__nan.__d)
+
+static union { unsigned char __c[4]; double __d; } __nanf = { __nanf_bytes };
+#define	NANF	(__nanf.__d)
+
 #endif	/* GCC.  */
+
+/* Generally there is no separate `long double' format and it is the
+   same as `double'.  */
+
+#define NANL  NAN
 
 #endif	/* nan.h */

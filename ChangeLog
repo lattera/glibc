@@ -1,3 +1,112 @@
+1997-05-31 02:33  Ulrich Drepper  <drepper@cygnus.com>
+
+	* io/ftwtest-sh: More tests.
+
+	* misc/tsearch.c: Rewrite tdestroy_recursive.
+
+	* libio/libio.h: Define bits for libg++-2.8.
+
+1997-05-30 22:21  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_nis/nis-hosts.c: Same changes as in
+	nss/nss_files/files-hosts.c (Always use inet_pton).
+	* nis/nss_nisplus/nisplus-hosts.c: Likewise.
+
+1997-05-30 09:50  Richard Henderson  <rth@tamu.edu>
+
+	* manual/maint.texi: ECOFF hasn't been tested in ages and I don't
+	plan on doing so ever again.  Don't say alpha-linuxecoff is known
+	to work.
+
+	* elf/dl-lookup.c: Include <alloca.h>.
+	* misc/tsearch.c: Include <string.h>.
+	* posix/execle.c: Include <alloca.h>.
+	* posix/execlp.c: Likewise.
+	* stdio-common/printf_fphex.c: Include <string.h>.
+	* sunrpc/xdr.c: Include <string.h>.
+	* sysdeps/generic/memccpy.c: Include only <string.h>.
+
+	* sunrpc/clnt_udp.c (clntudp_call): Make fromlen a size_t to fix
+	parameters to network functions.
+	* sunrpc/pmap_rmt.c (clnt_broadcast): Likewise.
+	* sunrpc/svc_tcp.c (svctcp_create): Likewise with `len'.
+	(rendezvous_request): Likewise.
+	* sunrpc/svc_udp.c (svcudp_bufcreate): Likewise.
+	(svcudp_recv): Similar, but go through a local variable.  The old code
+	used &xprt->xp_addrlen.  Someone should determine if the type of the
+	structure member should be changed instead.
+	* sunrpc/xdr_rec.c (xdrrec_create): Expunge a ptr->int cast warning
+	and transform a nonsense for-loop to a closed form calculation.
+	(fill_input_buf): Another ptr->int warning.
+
+	* sysdeps/alpha/Makefile: Temporarily turn on -mieee globally.  This
+	will last until I figure out how to build a parallel libm_ieee.
+
+	* sysdeps/alpha/fpu/fclrexcpt.c,
+	* sysdeps/alpha/fpu/fegetenv.c,
+	* sysdeps/alpha/fpu/fegetround.c,
+	* sysdeps/alpha/fpu/feholdexcpt.c,
+	* sysdeps/alpha/fpu/fenvbits.h,
+	* sysdeps/alpha/fpu/fesetenv.c,
+	* sysdeps/alpha/fpu/fesetround.c,
+	* sysdeps/alpha/fpu/feupdateenv.c,
+	* sysdeps/alpha/fpu/fgetexcptflg.c,
+	* sysdeps/alpha/fpu/fraiseexcpt.c,
+	* sysdeps/alpha/fpu/fsetexcptflg.c,
+	* sysdeps/alpha/fpu/ftestexcept.c: New files.  There is, btw, a small
+	kernel patch that must be applied as of 2.0.31-pre1 and 2.1.41 for
+	this to work properly.
+
+	* sysdeps/alpha/fpu/fpu_control.h: Update copyright.  Change default
+	FP mode to round to nearest, no exceptions as for Intel.
+	* sysdeps/unix/sysv/linux/alpha/setfpucw.c: Add copyright.
+	(rdfpcr): Use excb rather than trapb.  Be more efficient about
+	getting at the fpcr.
+	(wrfpcr): Likewise.
+	(__setfpucw): Reformat.
+
+	* sysdeps/ieee754/huge_val.h: Change GCC's HUGE_VAL definition to use
+	a single DI-mode integer instead of bytes.  This produces better code
+	on Alpha.  Similar for HUGE_VALF.
+	* sysdeps/ieee754/nan.h: Similar for NAN.  Add NANF and NANL.
+
+	* sysdeps/libm-ieee754/s_log2.c: Missing */ and weak_alias.
+
+	* sysdeps/unix/alpha/sysdep.S: Tiny cleanups.
+	* sysdeps/unix/sysv/linux/alpha/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/brk.S: Don't use jmp macro to make
+	sure the stack frame is released the very instruction before the
+	real jump out.
+	* sysdeps/unix/sysv/linux/alpha/ieee_get_fp_control.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/ieee_set_fp_control.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/gnu/types.h: Undef some bits we may
+	have gotten from <linux/posix_types.h>.
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Add definition for Miata.
+
+1997-05-30 13:05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/tst-tsearch.c (mangle_tree): Update casts to prevent
+	warnings.
+
+1997-05-29 14:02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sys/ttydefaults.h (CEOL, CSTATUS): Use
+	correct value for _POSIX_VDISABLE.
+
+1997-05-29 13:59  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (manual/dir-add.texi): Force execution.
+
+1997-05-29 13:57  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysexits.h: New file.
+
+1997-05-29 13:55  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdlib/strfmon.c: Don't run past EOS after `='.
+
 1997-05-29 12:48  Ulrich Drepper  <drepper@cygnus.com>
 
 	* io/ftw.c: Complete rewrite.  Add implementation of `nftw'.
@@ -4075,7 +4184,7 @@
 	header since it is wrong for 64 bit systems.
 	Patch by a sun <asun@zoology.washington.edu>.
 
-1997-02-27 10:34:11  Richard Henderson  <rth@tamu.edu>
+1997-02-27 10:34  Richard Henderson  <rth@tamu.edu>
 
 	* sysdeps/unix/sysv/linux/alpha/brk.S: Support both the Linux/i386
 	and OSF/1 style brk syscalls.  We may want to change Linux/Alpha

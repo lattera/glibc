@@ -80,12 +80,6 @@ contact <bug-glibc@prep.ai.mit.edu>
      work.
 
 
-[ 9] Write nftw() function.  Perhaps it might be good to reimplement the
-     ftw() function as well to share most of the code.
-
-**** Almost done!
-
-
 [10] Extend regex and/or rx to work with wide characters and complete
      implementation of character class and collation class handling.
 
@@ -98,20 +92,11 @@ contact <bug-glibc@prep.ai.mit.edu>
      hard and not all services must be supported at once.
 
 
-[12] Rewrite utmp/wtmp functions to use database functions.  This is much
-     better than the normal flat file format.
-
-**** There are plans for a new approach to this problem.  Please contact
-     bug-glibc@prep.ai.mit.edu before starting to work.)
-
-
 [13] Several more or less small functions have to be written:
 
      + tcgetid() and waitid()			from XPG4.2
      + grantpt(), ptsname(), unlockpt()		from XPG4.2
      + getdate()				from XPG4.2
-	*** Probably underway
-     + fmtmsg()					from SVID
 	*** Probably underway
 
      More information are available on request.

@@ -138,8 +138,8 @@ xdrrec_create (XDR *xdrs, u_int sendsize,
 	       int (*readit) (char *, char *, int),
 	       int (*writeit) (char *, char *, int))
 {
-  RECSTREAM *rstrm =
-  (RECSTREAM *) mem_alloc (sizeof (RECSTREAM));
+  RECSTREAM *rstrm = (RECSTREAM *) mem_alloc (sizeof (RECSTREAM));
+  caddr_t tmp;
 
   if (rstrm == NULL)
     {
@@ -161,10 +161,11 @@ xdrrec_create (XDR *xdrs, u_int sendsize,
       (void) fputs (_("xdrrec_create: out of memory\n"), stderr);
       return;
     }
-  for (rstrm->out_base = rstrm->the_buffer;
-       (u_int) rstrm->out_base % BYTES_PER_XDR_UNIT != 0;
-       rstrm->out_base++);
-  rstrm->in_base = rstrm->out_base + sendsize;
+  tmp = rstrm->the_buffer;
+  if ((size_t)tmp % BYTES_PER_XDR_UNIT)
+    tmp += BYTES_PER_XDR_UNIT - (size_t)tmp % BYTES_PER_XDR_UNIT;
+  rstrm->out_base = tmp;
+  rstrm->in_base = tmp + sendsize;
   /*
    * now the rest ...
    */
@@ -516,11 +517,11 @@ static bool_t	/* knows nothing about records!  Only about input buffers */
 fill_input_buf (RECSTREAM *rstrm)
 {
   caddr_t where;
-  u_int i;
+  size_t i;
   int len;
 
   where = rstrm->in_base;
-  i = (u_int) rstrm->in_boundry % BYTES_PER_XDR_UNIT;
+  i = (size_t) rstrm->in_boundry % BYTES_PER_XDR_UNIT;
   where += i;
   len = rstrm->in_size - i;
   if ((len = (*(rstrm->readit)) (rstrm->tcp_handle, where, len)) == -1)

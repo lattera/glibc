@@ -197,14 +197,14 @@ mangle_tree (enum order how, enum action what, void **root, int lag)
 	case build:
 	  if (i < SIZE)
 	    {
-	      if (tfind (x + j, (const void **) root, cmp_fn) != NULL)
+	      if (tfind (x + j, (void *const *) root, cmp_fn) != NULL)
 		{
 		  fputs ("Found element which is not in tree yet.\n", stdout);
 		  error = 1;
 		}
 	      elem = tsearch (x + j, root, cmp_fn);
 	      if (elem == 0
-		  || tfind (x + j, (const void **) root, cmp_fn) == NULL)
+		  || tfind (x + j, (void *const *) root, cmp_fn) == NULL)
 		{
 		  fputs ("Couldn't find element after it was added.\n",
 			 stdout);
@@ -219,7 +219,7 @@ mangle_tree (enum order how, enum action what, void **root, int lag)
 	  /* fall through */
 
 	case delete:
-	  elem = tfind (x + j, (const void **) root, cmp_fn);
+	  elem = tfind (x + j, (void *const *) root, cmp_fn);
 	  if (elem == NULL || tdelete (x + j, root, cmp_fn) == NULL)
 	    {
 	      fputs ("Error deleting element.\n", stdout);
@@ -228,7 +228,7 @@ mangle_tree (enum order how, enum action what, void **root, int lag)
 	  break;
 
 	case find:
-	  if (tfind (x + j, (const void **) root, cmp_fn) == NULL)
+	  if (tfind (x + j, (void *const *) root, cmp_fn) == NULL)
 	    {
 	      fputs ("Couldn't find element after it was added.\n", stdout);
 	      error = 1;
