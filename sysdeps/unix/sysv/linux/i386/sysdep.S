@@ -33,7 +33,7 @@ __syscall_error:
    `errno' variable (I don't know why, ask Roland), we have to define
    it somewhere else.
 
-   ...and this please is here.  */
+   ...and this place is here.  */
 	.data
 	.globl errno
 errno:

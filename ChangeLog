@@ -1,5 +1,23 @@
+Tue Oct 17 23:00:10 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/_strerror.c: Include stdio-common/_itoa.h instead
+	of stdio/_itoa.h.
+
+Tue Oct 17 19:51:17 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
+
+	* sysdeps/unix/sysv/linux/i386/stat.S [PIC] (__stat): Set GOT
+	register %ebx before calling __xstat through PLT.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.S: Fix typo in comment.
+
+	* sysdeps/unix/sysv/linux/sigset.h: Remove file.
+
 Tue Oct 17 01:21:21 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* hurd/hurdsock.c: Include stdio-common/_itoa.h instead of
+	stdio/_itoa.h.
+	* hurd/hurdlookup.c: Likewise.
+	
 	* hurd/hurd/signal.h: Declare hurd_preempt_signals and
 	hurd_unpreempt_signals.
 

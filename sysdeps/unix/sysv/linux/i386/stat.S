@@ -28,11 +28,20 @@ Cambridge, MA 02139, USA.  */
 ENTRY (__stat)
 	movl 8(%esp), %eax
 	movl 4(%esp), %ecx
+#ifdef	PIC
+	pushl %ebx
+	call 0f
+0:	popl %ebx
+	addl $_GLOBAL_OFFSET_TABLE_+[.-0b], %ebx
+#endif
 	pushl %eax
 	pushl %ecx
 	pushl $_STAT_VER	/* Push extra first arg to syscall.  */
 	call JUMPTARGET(__xstat)/* Jump to xstat implementation.  */
 	addl $12, %esp
+#ifdef	PIC
+	popl %ebx
+#endif
 	ret
 
 weak_alias (__stat, stat)

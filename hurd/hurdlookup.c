@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <limits.h>
 #include <fcntl.h>
-#include "stdio/_itoa.h"
+#include "stdio-common/_itoa.h"
 #include <hurd/term.h>
 
 

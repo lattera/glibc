@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <mach/error.h>
 #include <errorlib.h>
-#include "../stdio/_itoa.h"
+#include "../stdio-common/_itoa.h"
 
 /* Return a string describing the errno code in ERRNUM.  */
 char *
