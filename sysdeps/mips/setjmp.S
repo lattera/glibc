@@ -18,15 +18,14 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-/* The function __setjmp_aux saves all the registers, but it can't
+/* The function __sigsetjmp_aux saves all the registers, but it can't
    reliably access the stack or frame pointers, so we pass them in as
    extra arguments.  */
-ENTRY (__setjmp)
+ENTRY (__sigsetjmp)
 	move a1, sp
 #ifdef __sgi__
 	move a2, fp
 #else
 	move a2, $fp
 #endif
-	j __setjmp_aux
-
+	j __sigsetjmp_aux
