@@ -169,6 +169,9 @@ int __pthread_attr_setstackaddr(pthread_attr_t *attr, void *stackaddr)
 }
 weak_alias (__pthread_attr_setstackaddr, pthread_attr_setstackaddr)
 
+link_warning (pthread_attr_setstackaddr,
+	      "the use of `pthread_attr_setstackaddr' is deprecated, use `pthread_attr_setstack'")
+
 int __pthread_attr_getstackaddr(const pthread_attr_t *attr, void **stackaddr)
 {
   /* XXX This function has a stupid definition.  The standard specifies
@@ -178,6 +181,10 @@ int __pthread_attr_getstackaddr(const pthread_attr_t *attr, void **stackaddr)
   return 0;
 }
 weak_alias (__pthread_attr_getstackaddr, pthread_attr_getstackaddr)
+
+link_warning (pthread_attr_getstackaddr,
+	      "the use of `pthread_attr_getstackaddr' is deprecated, use `pthread_attr_getstack'")
+
 
 int __pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize)
 {
@@ -233,7 +240,7 @@ int __pthread_attr_setstack (pthread_attr_t *attr, void *stackaddr,
     err = __pthread_attr_setstacksize (attr, stacksize);
   if (err == 0)
     {
-#ifdef _STACK_GROWS_UP
+#ifndef _STACK_GROWS_UP
       attr->__stackaddr = (char *) stackaddr + stacksize;
 #else
       attr->__stackaddr = stackaddr;
