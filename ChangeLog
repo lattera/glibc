@@ -1,3 +1,8 @@
+2004-12-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/posix/sysconf.c (__sysconf_check_spec): Only define
+	if it will be actually used.
+
 2004-12-07  Roland McGrath  <roland@redhat.com>
 
 	* rt/tst-timer5.c (setup_test): New function.

@@ -34,7 +34,14 @@
 #include <regex.h>
 
 
+#define NEED_CHECK_SPEC \
+  (!defined _XBS5_ILP32_OFF32 || !defined _XBS5_ILP32_OFFBIG \
+   || !defined _XBS5_LP64_OFF64 || !defined _XBS5_LPBIG_OFFBIG \
+   || !defined _POSIX_V6_ILP32_OFF32 || !defined _POSIX_V6_ILP32_OFFBIG \
+   || !defined _POSIX_V6_LP64_OFF64 || !defined _POSIX_V6_LPBIG_OFFBIG)
+#if NEED_CHECK_SPEC
 static long int __sysconf_check_spec (const char *spec);
+#endif
 
 
 /* Get the value of the system variable NAME.  */
@@ -1210,6 +1217,7 @@ __sysconf (name)
 weak_alias (__sysconf, sysconf)
 libc_hidden_def (__sysconf)
 
+#if NEED_CHECK_SPEC
 static long int
 __sysconf_check_spec (const char *spec)
 {
@@ -1230,3 +1238,4 @@ __sysconf_check_spec (const char *spec)
   __set_errno (save_errno);
   return ret;
 }
+#endif
