@@ -31,6 +31,13 @@
 #include "kernel-features.h"
 
 
+/* If we compile the file for use in ld.so we don't need the feature
+   that getcwd() allocates the buffers itself.  */
+#ifdef IS_IN_rtld
+# define NO_ALLOCATION	1
+#endif
+
+
 #if __ASSUME_GETCWD_SYSCALL > 0
 /* Kernel 2.1.92 introduced a third way to get the current working
    directory: a syscall.  We've got to be careful that even when
@@ -65,11 +72,12 @@ __getcwd (char *buf, size_t size)
   char *path;
   int n;
   char *result;
-  size_t alloc_size = size;
 
   if (no_syscall_getcwd && !have_new_dcache)
     return generic_getcwd (buf, size);
 
+#ifndef NO_ALLOCATION
+  size_t alloc_size = size;
   if (size == 0)
     {
       if (buf != NULL)
@@ -81,14 +89,17 @@ __getcwd (char *buf, size_t size)
       alloc_size = PATH_MAX;
     }
 
-  if (buf != NULL)
-    path = buf;
-  else
+  if (buf == NULL)
     {
       path = malloc (alloc_size);
       if (path == NULL)
 	return NULL;
     }
+  else
+#else
+# define alloc_size size
+#endif
+    path = buf;
 
 #if defined __NR_getcwd || __LINUX_GETCWD_SYSCALL > 0
   if (!no_syscall_getcwd)
@@ -98,6 +109,7 @@ __getcwd (char *buf, size_t size)
       retval = INLINE_SYSCALL (getcwd, 2, CHECK_STRING (path), alloc_size);
       if (retval >= 0)
 	{
+# ifndef NO_ALLOCATION
 	  if (buf == NULL && size == 0)
 	    /* Ensure that the buffer is only as large as necessary.  */
 	    buf = realloc (path, (size_t) retval);
@@ -106,6 +118,7 @@ __getcwd (char *buf, size_t size)
 	    /* Either buf was NULL all along, or `realloc' failed but
 	       we still have the original string.  */
 	    buf = path;
+# endif
 
 	  return buf;
 	}
@@ -116,8 +129,10 @@ __getcwd (char *buf, size_t size)
 	 large enough.  */
       assert (errno != ERANGE || buf != NULL || size != 0);
 
+#  ifndef NO_ALLOCATION
       if (buf == NULL)
 	free (path);
+#  endif
 
       return NULL;
 # else
@@ -128,8 +143,10 @@ __getcwd (char *buf, size_t size)
 	}
       else if (errno != ERANGE || buf != NULL)
 	{
+#  ifndef NO_ALLOCATION
 	  if (buf == NULL)
 	    free (path);
+#  endif
 	  return NULL;
 	}
 # endif
@@ -143,12 +160,15 @@ __getcwd (char *buf, size_t size)
 	{
 	  if ((size_t) n >= alloc_size - 1)
 	    {
+#ifndef NO_ALLOCATION
 	      if (buf == NULL)
 		free (path);
+#endif
 	      return NULL;
 	    }
 
 	  path[n] = '\0';
+#ifndef NO_ALLOCATION
 	  if (buf == NULL && size == 0)
 	    /* Ensure that the buffer is only as large as necessary.  */
 	    buf = realloc (path, (size_t) n + 1);
@@ -156,6 +176,7 @@ __getcwd (char *buf, size_t size)
 	    /* Either buf was NULL all along, or `realloc' failed but
 	       we still have the original string.  */
 	    buf = path;
+#endif
 
 	  return buf;
 	}
@@ -172,17 +193,21 @@ __getcwd (char *buf, size_t size)
     have_new_dcache = 0;
 #endif
 
+#ifndef NO_ALLOCATION
   /* Don't put restrictions on the length of the path unless the user does.  */
   if (size == 0)
     {
       free (path);
       path = NULL;
     }
+#endif
 
   result = generic_getcwd (path, size);
 
+#ifndef NO_ALLOCATION
   if (result == NULL && buf == NULL && size != 0)
     free (path);
+#endif
 
   return result;
 }

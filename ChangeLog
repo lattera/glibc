@@ -1,3 +1,8 @@
+2003-09-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getcwd.c (__getcwd): If compiled for
+	ld.so, don't include NULL buffer pointer handling.
+
 2003-09-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* dlfcn/dlopen.c (dlopen): Add static_link_warning.
