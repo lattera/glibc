@@ -135,8 +135,6 @@ asm (TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup) \
      ".set _dl_runtime_profile, _dl_runtime_resolve");
 #endif
 #define ELF_MACHINE_RUNTIME_FIXUP_ARGS long int save_a0, long int save_a1
-/* The PLT uses Elf32_Rela relocs.  */
-#define elf_machine_relplt elf_machine_rela
 
 
 /* Mask identifying addresses reserved for the user program,
@@ -216,10 +214,17 @@ _dl_start_user:
 #define elf_machine_lookup_noplt_p(type) ((type) == R_68K_JMP_SLOT)
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
-#define ELF_MACHINE_RELOC_NOPLT	R_68K_JMP_SLOT
+#define ELF_MACHINE_JMP_SLOT	R_68K_JMP_SLOT
 
 /* The m68k never uses Elf32_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
+
+static inline void
+elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
+		       Elf32_Addr *reloc_addr, Elf32_Addr value)
+{
+  *reloc_addr = value + reloc->r_addend;
+}
 
 #endif /* !dl_machine_h */
 
@@ -267,7 +272,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  break;
 	case R_68K_GLOB_DAT:
 	case R_68K_JMP_SLOT:
-	  *reloc_addr = value;
+	  *reloc_addr = value + reloc->r_addend;
 	  break;
 	case R_68K_8:
 	  *(char *) reloc_addr = value + reloc->r_addend;
