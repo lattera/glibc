@@ -1,5 +1,5 @@
 /* Return error detail for failing <dlfcn.h> functions.
-   Copyright (C) 1995,1996,1997,1998,1999,2000,2002
+   Copyright (C) 1995,1996,1997,1998,1999,2000,2002, 2003
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -69,9 +69,19 @@ dlerror (void)
   else if (result->errstring != NULL)
     {
       buf = (char *) result->errstring;
-      if (__asprintf (&buf, result->errcode != 0 ? "%s: %s: %s" : "%s: %s",
-		      result->objname, _(result->errstring),
-		      strerror (result->errcode)) != -1)
+      int n;
+      if (result->errcode == 0)
+	n = __asprintf (&buf, "%s%s%s",
+			result->objname,
+			result->objname[0] == '\0' ? "" : ": ",
+			_(result->errstring));
+      else
+	n = __asprintf (&buf, "%s%s%s: %s",
+			result->objname,
+			result->objname[0] == '\0' ? "" : ": ",
+			_(result->errstring),
+			strerror (result->errcode));
+      if (n != -1)
 	{
 	  /* We don't need the error string anymore.  */
 	  if (strcmp (result->errstring, "out of memory") != 0)
