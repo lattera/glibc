@@ -1,7 +1,7 @@
 2002-10-17  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Do CHECK_STATIC_TLS
-	before performing the reloc, not before.
+	before performing the reloc, not after.
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Likewise.
 
 2002-10-17  Ulrich Drepper  <drepper@redhat.com>
