@@ -24,7 +24,7 @@
 
 	* iconvdata/gconv-modules: Fix typo.
 
-	* sysdeps/unix/sysv/linux/configure.in: Remove `crypt´ from one
+	* sysdeps/unix/sysv/linux/configure.in: Remove `crypt' from one
 	more messages.
 
 	* sysdeps/unix/sysv/aix/*: Add initial code for port to AIX 4.3.
