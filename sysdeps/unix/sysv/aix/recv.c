@@ -22,7 +22,7 @@ extern ssize_t recv (int fd, void *buf, size_t n, int flags);
 
 
 ssize_t
-__recv (int fd, void *buf, size_t n, int flags);
+__recv (int fd, void *buf, size_t n, int flags)
 {
   return recv (fd, buf, n, flags);
 }
