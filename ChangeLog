@@ -1,6 +1,20 @@
+1998-01-24 15:13  Ulrich Drepper  <drepper@happy.cygnus.com> 
+
+	* nss/db-Makefile: Handle empty and comment lines better.
+	($(VAR_DB)/services.db): Generate entries with missing protocol
+	value.
+	 
+1998-01-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nss/nss_files/files-service.c (getservbyport): Allow proto ==
+	  NULL.
+	  (getservbyname): Allow proto == NULL.
+	  Pointed out by David N. Welton <davidw@gate.cks.com>.
+	  [PR libc/430].
+
 1998-01-24 11:34  Ulrich Drepper  <drepper@happy.cygnus.com>
 
-	* nis/nislib/nislib.h: Removed.
+	* nis/nislib/nislib.h: Finally removed.
 
 	* lib/mktime.c (__mktime_internal): Work around bug in Irix4.0.5's
 	C compiler.  From Kaveh Ghazi.
