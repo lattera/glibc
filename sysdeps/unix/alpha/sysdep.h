@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -131,7 +131,7 @@ __LABEL(name)					\
 
 #define inline_syscall_clobbers				\
 	"$1", "$2", "$3", "$4", "$5", "$6", "$7", "$8",	\
-	"$22", "$23", "$24", "$25", "$27", "$28"
+	"$22", "$23", "$24", "$25", "$27", "$28", "memory"
 
 /* It is moderately important optimization-wise to limit the lifetime
    of the hard-register variables as much as possible.  Thus we copy
