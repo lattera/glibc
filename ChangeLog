@@ -1,3 +1,27 @@
+2001-06-05  Matthew Wilcox  <willy@ldl.fc.hp.com>
+
+	* sysdeps/hppa/bsd-_setjmp.S: New.
+	* sysdeps/hppa/bsd-setjmp.S: New.
+
+	* sysdeps/hppa/dl-machine.h: Reformat asm statements to remove new
+	gcc warnings about multi-line strings.
+
+	* sysdeps/unix/sysv/linux/hppa/getrlimit.c: Remove.
+	* sysdeps/unix/sysv/linux/hppa/setrlimit.c: Remove.
+
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list: Call getrlimit,
+	setrlimit directly instead of using wrappers.
+
+2001-05-01  Richard Hirst  <rhirst@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/hppa/syscall.S: remove dummy syscall.
+	* sysdeps/unix/sysv/linux/hppa/sysdep.c: implement syscall.
+
+2001-06-05  Philipp Thomas  <pthomas@suse.de>
+
+	* nis/nis_call.c (__nisbind_connect): Don't mark for translation
+	what can't be translated.
+
 2001-06-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* timezone/zic.c: Update from tzcode2001c.
