@@ -144,7 +144,8 @@ $(includedir)/stubs.h: subdir_install
 	 echo '   in the C library which is a stub, meaning it will fail';\
 	 echo '   every time called, usually setting errno to ENOSYS.  */';\
 	 sort $(subdir-stubs)) > $(objpfx)stubs.h
-	if test -r $@ && cmp -s $(objpfx)stubs.h $@; then : ; \
+	if test -r $@ && cmp -s $(objpfx)stubs.h $@;
+	then echo stubs.h unchanged ; \
 	else $(INSTALL_DATA) $(objpfx)stubs.h $@; fi
 	rm -f $(objpfx)stubs.h
 

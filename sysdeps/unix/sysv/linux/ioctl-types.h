@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+/* Structure types for pre-termios terminal ioctls.  Linux version.
+Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,25 +17,11 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef	_SGTTY_H
-#define	_SGTYY_H	1
-#include <features.h>
+#ifndef _IOCTL_TYPES_H
+#define _IOCTL_TYPES_H 1
 
-#include <sys/ioctl.h>
+/* The Linux kernel header defines the types associated with old ioctls.  */
 
-/* On some systems this type is not defined by <ioctl-types.h>;
-   in that case, the functions are just stubs that return ENOSYS.  */
-struct sgttyb;
+#include <asm/termios.h>
 
-__BEGIN_DECLS
-
-/* Fill in *PARAMS with terminal parameters associated with FD.  */
-extern int gtty __P ((int __fd, struct sgttyb * __params));
-
-/* Set the terminal parameters associated with FD to *PARAMS.  */
-extern int stty __P ((int __fd, __const struct sgttyb * __params));
-
-
-__END_DECLS
-
-#endif /* sgtty.h  */
+#endif /* ioctl-types.h */
