@@ -1,5 +1,5 @@
 /* Convert between signal names and numbers.
-   Copyright (C) 1990, 1992, 1993 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1992, 1993, 1995 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -271,5 +271,22 @@ psignal (signal, message)
     fprintf (stderr, "%s: unknown signal", message);
   else
     fprintf (stderr, "%s: %s\n", message, sys_siglist[signal]);
+}
+#endif
+
+#ifndef HAVE_STRSIGNAL
+/* Return the string associated with the signal number.  */
+
+char *
+strsignal (signal)
+     int signal;
+{
+  static char buf[] = "Signal 12345678901234567890";
+ 
+  if (signal > 0 || signal < NSIG)
+    return sys_siglist[signal];
+ 
+  sprintf (buf, "Signal %d", signal);
+  return buf;
 }
 #endif

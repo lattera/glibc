@@ -1,5 +1,5 @@
 /* Convert between signal names and numbers.
-   Copyright (C) 1990, 1992, 1993 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1992, 1993, 1995 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,12 +29,17 @@ char *sig_abbrev (int number);
    signal by that name.  */
 int sig_number (const char *abbrev);
 
-/* Avoid conflicts with a system header file that might define these two.  */
+/* Avoid conflicts with a system header file that might define these three.  */
 
 #ifndef HAVE_PSIGNAL
 /* Print to standard error the name of SIGNAL, preceded by MESSAGE and
    a colon, and followed by a newline.  */
 void psignal (int signal, const char *message);
+#endif
+
+#ifndef HAVE_STRSIGNAL
+/* Return the name of SIGNAL.  */
+char *strsignal (int signal);
 #endif
 
 #if !defined (HAVE_SYS_SIGLIST)
@@ -49,6 +54,9 @@ char *sig_abbrev ();
 int sig_number ();
 #if !defined (HAVE_SYS_SIGLIST) && !defined (HAVE_PSIGNAL)
 void psignal ();
+#endif
+#ifndef HAVE_STRSIGNAL
+char *strsignal (int signal);
 #endif
 #if !defined (HAVE_SYS_SIGLIST)
 extern char *sys_siglist[];

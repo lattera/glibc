@@ -80,10 +80,9 @@ __sigreturn (struct sigcontext *scp)
   *reply_port = scp->sc_reply_port;
 
   if (scp->sc_fpused)
-    {
-  /* XXX should restore FPU state here XXX roland needs 387 manual */
-  /*    abort (); */
-    }
+    /* Restore the FPU state.  Mach conveniently stores the state
+       in the format the i387 `frstor' instruction uses to restore it.  */
+    asm volatile ("frstor %0" : : "m" (scp->sc_fpsave));
 
   {
     /* There are convenient instructions to pop state off the stack, so we
