@@ -1,4 +1,5 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+# Copyright (C) 1991,1992,1993,1994,1995,1996,1997,1998,2003
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +38,7 @@ routines	:= signal raise killpg \
 		   allocrtsig sigtimedwait sigwaitinfo sigqueue \
 		   sighold sigrelse sigignore sigset
 
-tests		:= tst-signal
+tests		:= tst-signal tst-sigset
 
 distribute	:= sigsetops.h testrtsig.h sigset-cvt-mask.h
 
