@@ -1,3 +1,8 @@
+1998-10-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/fcntl.h: Add dummy definition of
+	O_LARGEFILE back.
+
 1998-10-16  Paul Eggert  <eggert@shade.twinsun.com>
 
 	* time/mktime.c: Some systems require <unistd.h> to be

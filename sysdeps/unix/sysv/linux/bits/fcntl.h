@@ -45,6 +45,11 @@
 # define O_DIRECTORY	040000	/* Must be a directory.  */
 #endif
 
+/* XXX missing */
+#ifdef __USE_LARGEFILE64
+# define O_LARGEFILE	0
+#endif
+
 /* For now Linux has synchronisity options for data and read operations.
    We define the symbols here but let them do the same as O_SYNC since
    this is a superset.  */
