@@ -78,8 +78,8 @@ const struct gconv_fcts __wcsmbs_gconv_fcts_c =
 };
 
 
-struct __gconv_step *
 attribute_hidden
+struct __gconv_step *
 __wcsmbs_getfct (const char *to, const char *from, size_t *nstepsp)
 {
   size_t nsteps;

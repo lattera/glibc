@@ -1,3 +1,9 @@
+2004-08-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* wcsmbs/wcsmbsload.c (__wcsmbs_getfct): Move attribute_hidden
+	before return type.
+	* locale/localename.c (__current_locale_name): Likewise.
+
 2004-08-30  Roland McGrath  <roland@frob.com>
 
 	* scripts/extract-abilist.awk: If `lastversion' variable defined, omit
