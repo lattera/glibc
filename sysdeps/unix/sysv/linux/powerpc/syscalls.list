@@ -3,3 +3,5 @@
 s_ioctl		ioctl	ioctl		3	__syscall_ioctl
 s_llseek	llseek	_llseek		5	__sys_llseek
 s_chown		chown	chown		3	__syscall_chown
+s_pread64	pread64	pread		4	__syscall_pread64 
+s_pwrite64	pwrite64 pwrite		4	__syscall_pwrite64 

@@ -1,3 +1,13 @@
+1998-10-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add s_pread64 and
+	s_pwrite64.
+	* sysdeps/unix/sysv/linux/powerpc/pread.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/pread64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite64.c: New file.
+	Patch by Geoffrey KEATING <geoffk@discus.anu.edu.au>.
+
 1998-10-18  Zack Weinberg  <zack@rabi.phys.columbia.edu> 
  
         * sysdeps/unix/opendir.c: Check at runtime for kernel support for 
