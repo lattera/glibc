@@ -1,3 +1,11 @@
+2001-10-25  Andreas Schwab  <schwab@suse.de>
+
+	* stdlib/a64l.c: Expect least significant digit first.
+	* stdlib/l64a.c: Produce least significant digit first.
+	* stdlib/Makefile (tests): Add test-a64l.
+	* stdlib/test-a64l.c: New file.
+	Reported by Masaki Hasegawa <masaki-h@pp.iij4u.or.jp>.
+
 2001-10-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/sk.po: Update from translation team.
