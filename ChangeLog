@@ -1,5 +1,7 @@
 2001-03-06  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/i386/fpu/libm-test-ulps: Add some deltas.
+
 	* sysdeps/sh/dl-machine.h (elf_machine_rela): Add missing comma.
 	Patch by kaz Kojima <kkojima@rr.iij4u.or.jp>.
 
