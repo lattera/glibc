@@ -246,7 +246,7 @@ done:
 #endif
 
   int res;
-  if (status == NSS_STATUS_SUCCESS)
+  if (status == NSS_STATUS_SUCCESS || status == NSS_STATUS_NOTFOUND)
     res = 0;
   /* Don't pass back ERANGE if this is not for a too-small buffer.  */
   else if (errno == ERANGE && status != NSS_STATUS_TRYAGAIN)

@@ -1,3 +1,7 @@
+2004-03-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getXXbyYY_r.c: Return 0 for NSS_STATUS_NOTFOUND.
+
 2004-03-26  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nis/nss_nis/nis-grp.c (_nss_nis_getgrnam_r): Don't
