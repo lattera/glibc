@@ -1,4 +1,4 @@
-pic-ccflag = -fPIC
+pic-ccflag = -fpic
 
 ifeq ($(subdir),gmon)
 sysdep_routines += s390x-mcount

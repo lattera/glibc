@@ -132,15 +132,13 @@
 #define INTERNAL_SYSCALL(name, err, nr, args...)			      \
   ({									      \
     DECLARGS_##nr(args)							      \
-    int _ret;								      \
+    register int _ret asm("2");						      \
     asm volatile (							      \
-    LOADARGS_##nr							      \
     "svc    %b1\n\t"							      \
-    "lr     %0,%%r2\n\t"						      \
     : "=d" (_ret)							      \
-    : "I" (__NR_##name) ASMFMT_##nr					      \
-    : "memory", "cc", "2", "3", "4", "5", "6");				      \
-    (int) _ret; })
+    : "i" (__NR_##name) ASMFMT_##nr					      \
+    : "memory" );							      \
+    _ret; })
 
 #undef INTERNAL_SYSCALL_ERROR_P
 #define INTERNAL_SYSCALL_ERROR_P(val, err)				      \
@@ -151,74 +149,25 @@
 
 #define DECLARGS_0()
 #define DECLARGS_1(arg1) \
-	unsigned int gpr2 = (unsigned int) (arg1);
+	register unsigned long gpr2 asm ("2") = (unsigned long)(arg1);
 #define DECLARGS_2(arg1, arg2) \
 	DECLARGS_1(arg1) \
-	unsigned int gpr3 = (unsigned int) (arg2);
+	register unsigned long gpr3 asm ("3") = (unsigned long)(arg2);
 #define DECLARGS_3(arg1, arg2, arg3) \
 	DECLARGS_2(arg1, arg2) \
-	unsigned int gpr4 = (unsigned int) (arg3);
+	register unsigned long gpr4 asm ("4") = (unsigned long)(arg3);
 #define DECLARGS_4(arg1, arg2, arg3, arg4) \
 	DECLARGS_3(arg1, arg2, arg3) \
-	unsigned int gpr5 = (unsigned int) (arg4);
+	register unsigned long gpr5 asm ("5") = (unsigned long)(arg4);
 #define DECLARGS_5(arg1, arg2, arg3, arg4, arg5) \
 	DECLARGS_4(arg1, arg2, arg3, arg4) \
-	unsigned int gpr6 = (unsigned int) (arg5);
-
-#define LOADARGS_0
-#define LOADARGS_1            "L     2,%2\n\t"
-#define LOADARGS_2 LOADARGS_1 "L     3,%3\n\t"
-#define LOADARGS_3 LOADARGS_2 "L     4,%4\n\t"
-#define LOADARGS_4 LOADARGS_3 "L     5,%5\n\t"
-#define LOADARGS_5 LOADARGS_4 "L     6,%6\n\t"
+	register unsigned long gpr6 asm ("6") = (unsigned long)(arg5);
 
 #define ASMFMT_0
-#define ASMFMT_1 , "m" (gpr2)
-#define ASMFMT_2 , "m" (gpr2), "m" (gpr3)
-#define ASMFMT_3 , "m" (gpr2), "m" (gpr3), "m" (gpr4)
-#define ASMFMT_4 , "m" (gpr2), "m" (gpr3), "m" (gpr4), "m" (gpr5)
-#define ASMFMT_5 , "m" (gpr2), "m" (gpr3), "m" (gpr4), "m" (gpr5), "m" (gpr6)
-
-#if 0
-#undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)                                     \
-  ({                                                                          \
-    DECLARGS_##nr(args)                                                       \
-    asm volatile (                                                            \
-    "svc    %b1\n\t"                                                          \
-    : "+d" (gpr2)                                                             \
-    : "I" (__NR_##name) ASMFMT_##nr : "memory", "cc");                        \
-    if (gpr2 >= 0xfffff001)                                                   \
-     {                                                                        \
-       __set_errno(-gpr2);                                                    \
-       gpr2 = 0xffffffff;                                                     \
-     }                                                                        \
-    (int) gpr2; })
-
-#define DECLARGS_0() \
-	register unsigned int gpr2 asm("2");
-#define DECLARGS_1(arg1) \
-	register unsigned int gpr2 asm("2") = (unsigned int) (arg1);
-#define DECLARGS_2(arg1, arg2) \
-	DECLARGS_1(arg1) \
-	register unsigned int gpr3 asm("3") = (unsigned int) (arg2);
-#define DECLARGS_3(arg1, arg2, arg3) \
-	DECLARGS_2(arg1, arg2) \
-	register unsigned int gpr4 asm("4") = (unsigned int) (arg3);
-#define DECLARGS_4(arg1, arg2, arg3, arg4) \
-	DECLARGS_3(arg1, arg2, arg3) \
-	register unsigned int gpr5 asm("5") = (unsigned int) (arg4);
-#define DECLARGS_5(arg1, arg2, arg3, arg4, arg5) \
-	DECLARGS_4(arg1, arg2, arg3, arg4) \
-	register unsigned int gpr6 asm("6") = (unsigned int) (arg5);
-
-#define ASMFMT_0
-#define ASMFMT_1
-#define ASMFMT_2 , "d" (gpr3)
-#define ASMFMT_3 , "d" (gpr3), "d" (gpr4)
-#define ASMFMT_4 , "d" (gpr3), "d" (gpr4), "d" (gpr5)
-#define ASMFMT_5 , "d" (gpr3), "d" (gpr4), "d" (gpr5), "d" (gpr6)
-
-#endif /* 0 */
+#define ASMFMT_1 , "0" (gpr2)
+#define ASMFMT_2 , "0" (gpr2), "d" (gpr3)
+#define ASMFMT_3 , "0" (gpr2), "d" (gpr3), "d" (gpr4)
+#define ASMFMT_4 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5)
+#define ASMFMT_5 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5), "d" (gpr6)
 
 #endif /* _LINUX_S390_SYSDEP_H */

@@ -1,3 +1,13 @@
+2003-01-20  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h (INTERNAL_SYSCALL):
+	Fix inline assembler constraints.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h (INTERNAL_SYSCALL):
+	Likewise.
+
+	* sysdeps/s390/s390-64/Makefile (pic-ccflag): Use -fpic instead of
+	-fPIC.
+
 2003-01-20  Segher Boessenkool  <segher@koffie.nl>
 
 	* sysdeps/ieee754/dbl-64/sincos32.c (__mpcos): Really
