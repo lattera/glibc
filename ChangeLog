@@ -1,3 +1,7 @@
+1999-01-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/vfork.c: Once again use generic version.
+
 1999-01-18  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/Makefile ($(objpfx)syscall-%.d): Fix
