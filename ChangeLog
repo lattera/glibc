@@ -1,8 +1,22 @@
+2001-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/strtod.c: Never stop prematurely reading digits before the
+	decimal point is found.  Compute exponent limit for negative exponents
+	correctly.  For numbers ending in all zeros eat the zeroes even before
+	the decimal point if the exponent is negative [PR libc/2072].
+	* stdlib/Makefile (tests): Add bug-strtod.
+	* stdlib/bug-strtod.c: New file.
+
 2001-02-07  Andreas Jaeger  <aj@suse.de>
 
 	* posix/bug-regex1.c: Include <wchar.h> for fwide.
 
 2001-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.c (regex_compile): Don't store pointer in wchar_t array.
+	Store index.
+	(compile_range): Handle index being passed, not pointer.
+	Patch by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
 	* posix/regex.c: Fix a cast in the code for bracket handling which
 	caused 8-bit uncleanliness.
