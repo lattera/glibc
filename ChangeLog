@@ -1,5 +1,10 @@
 2002-04-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* intl/tst-gettext.sh: Set GCONV_PATH and LOCPATH to values for the
+	test just before the test runs.
+	* intl/tst-translit.sh: Likewise.
+	* intl/tst-codeset.sh: Likewise.
+
 	* timezone/zic.c: Update from tzcode2002c.
 	* timezone/asia: Update from tzdata2002c.
 	* timezone/backward: Likewise.

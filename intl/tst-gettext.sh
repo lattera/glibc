@@ -1,6 +1,6 @@
 #! /bin/sh
 # Test of gettext functions.
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 
@@ -23,10 +23,6 @@ common_objpfx=$1
 objpfx=$2
 malloc_trace=$3
 
-GCONV_PATH=${common_objpfx}iconvdata
-export GCONV_PATH
-LOCPATH=${common_objpfx}localedata
-export LOCPATH
 LC_ALL=C
 export LC_ALL
 
@@ -56,6 +52,11 @@ msgfmt -o ${objpfx}domaindir/existing-locale/LC_MESSAGES/existing-domain.mo \
        ../po/de.po
 msgfmt -o ${objpfx}domaindir/existing-locale/LC_TIME/existing-time-domain.mo \
        ../po/de.po
+
+GCONV_PATH=${common_objpfx}iconvdata
+export GCONV_PATH
+LOCPATH=${common_objpfx}localedata
+export LOCPATH
 
 # Now run the test.
 MALLOC_TRACE=$malloc_trace LOCPATH=${objpfx}localedir:$LOCPATH \

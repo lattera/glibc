@@ -1,6 +1,6 @@
 #! /bin/sh
 # Test of bind_textdomain_codeset.
-# Copyright (C) 2001 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 
@@ -22,10 +22,6 @@
 common_objpfx=$1
 objpfx=$2
 
-GCONV_PATH=${common_objpfx}iconvdata
-export GCONV_PATH
-LOCPATH=${common_objpfx}localedata
-export LOCPATH
 LC_ALL=C
 export LC_ALL
 
@@ -36,6 +32,11 @@ test -d ${objpfx}domaindir/de_DE || mkdir ${objpfx}domaindir/de_DE
 test -d ${objpfx}domaindir/de_DE/LC_MESSAGES || mkdir ${objpfx}domaindir/de_DE/LC_MESSAGES
 # Populate them.
 msgfmt -o ${objpfx}domaindir/de_DE/LC_MESSAGES/codeset.mo tstcodeset.po
+
+GCONV_PATH=${common_objpfx}iconvdata
+export GCONV_PATH
+LOCPATH=${common_objpfx}localedata
+export LOCPATH
 
 ${common_objpfx}elf/ld.so --library-path $common_objpfx \
 ${objpfx}tst-codeset > ${objpfx}tst-codeset.out

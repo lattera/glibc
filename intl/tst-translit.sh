@@ -1,6 +1,6 @@
 #! /bin/sh
 # Test of transliteration in gettext functions.
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 
@@ -22,16 +22,16 @@
 common_objpfx=$1
 objpfx=$2
 
-GCONV_PATH=${common_objpfx}iconvdata
-export GCONV_PATH
-LOCPATH=${common_objpfx}localedata
-export LOCPATH
 LC_ALL=C
 export LC_ALL
 
 msgfmt -o ${objpfx}domaindir/existing-locale/LC_MESSAGES/translit.mo \
        translit.po
 
+GCONV_PATH=${common_objpfx}iconvdata
+export GCONV_PATH
+LOCPATH=${common_objpfx}localedata
+export LOCPATH
 
 ${common_objpfx}elf/ld.so --library-path $common_objpfx \
 ${objpfx}tst-translit > ${objpfx}tst-translit.out ${objpfx}domaindir
