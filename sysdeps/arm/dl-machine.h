@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  ARM version.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,7 +97,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 in.  Their initial contents will arrange when called to push an
 	 index into the .got section, load ip with &_GLOBAL_OFFSET_TABLE_[3],
 	 and then jump to _GLOBAL_OFFSET_TABLE[2].  */
-      got = (Elf32_Addr *) l->l_info[DT_PLTGOT]->d_un.d_ptr;
+      got = (Elf32_Addr *) D_PTR (l, l_info[DT_PLTGOT]);
       got[1] = (Elf32_Addr) l;	/* Identify this shared object.  */
 
       /* The got[2] entry contains the address of a function which gets
@@ -413,7 +413,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	    {
 	      const char *strtab;
 
-	      strtab = (const void *) map->l_info[DT_STRTAB]->d_un.d_ptr;
+	      strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
 	      _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>",
 				": Symbol `", strtab + refsym->st_name,
 				"' has different size in shared object, "
