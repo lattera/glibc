@@ -19,35 +19,22 @@
 #ifndef	_GLOB_H
 #define	_GLOB_H	1
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
+#include <sys/cdefs.h>
 
-#undef	__ptr_t
-#if defined __cplusplus || (defined __STDC__ && __STDC__) || defined WINDOWS32
-# ifndef __GLIBC__
-#  if !defined __GNUC__ || __GNUC__ < 2
-#   undef __const
-#   define __const const
-#  endif
-# endif
-# define __ptr_t	void *
-#else /* Not C++ or ANSI C.  */
-# undef	__const
-# define __const
-# define __ptr_t	char *
-#endif /* C++ or ANSI C.  */
+__BEGIN_DECLS
 
 /* We need `size_t' for the following definitions.  */
 #ifndef __size_t
 # if defined __GNUC__ && __GNUC__ >= 2
 typedef __SIZE_TYPE__ __size_t;
-#  ifdef _XOPEN_SOURCE
+#  ifdef __USE_XOPEN
 typedef __SIZE_TYPE__ size_t;
 #  endif
 # else
-/* This is a guess.  */
-typedef unsigned long int __size_t;
+#  include <stddef.h>
+#  ifndef __size_t
+#   define __size_t size_t
+#  endif
 # endif
 #else
 /* The GNU CC stddef.h version defines __size_t as empty.  We need a real
@@ -66,8 +53,7 @@ typedef unsigned long int __size_t;
 #define	GLOB_NOESCAPE	(1 << 6)/* Backslashes don't quote metacharacters.  */
 #define	GLOB_PERIOD	(1 << 7)/* Leading `.' can be matched by metachars.  */
 
-#if (!defined _POSIX_C_SOURCE || _POSIX_C_SOURCE < 2 || defined _BSD_SOURCE \
-     || defined _GNU_SOURCE)
+#if !defined __USE_POSIX2 || defined __USE_BSD || defined __USE_GNU
 # define GLOB_MAGCHAR	 (1 << 8)/* Set in gl_flags if any metachars seen.  */
 # define GLOB_ALTDIRFUNC (1 << 9)/* Use gl_opendir et al functions.  */
 # define GLOB_BRACE	 (1 << 10)/* Expand "{a,b}" to "a" "b".  */
@@ -91,17 +77,15 @@ typedef unsigned long int __size_t;
 #define	GLOB_ABORTED	2	/* Read error.  */
 #define	GLOB_NOMATCH	3	/* No matches found.  */
 #define GLOB_NOSYS	4	/* Not implemented.  */
-#ifdef _GNU_SOURCE
+#ifdef __USE_GNU
 /* Previous versions of this file defined GLOB_ABEND instead of
    GLOB_ABORTED.  Provide a compatibility definition here.  */
 # define GLOB_ABEND GLOB_ABORTED
 #endif
 
 /* Structure describing a globbing run.  */
-#if !defined _AMIGA && !defined VMS /* Buggy compiler.   */
-# ifdef _GNU_SOURCE
+#ifdef __USE_GNU
 struct stat;
-# endif
 #endif
 typedef struct
   {
@@ -113,13 +97,13 @@ typedef struct
     /* If the GLOB_ALTDIRFUNC flag is set, the following functions
        are used instead of the normal file access functions.  */
     void (*gl_closedir) (void *);
-#ifdef _GNU_SOURCE
+#ifdef __USE_GNU
     struct dirent *(*gl_readdir) (void *);
 #else
     void *(*gl_readdir) (void *);
 #endif
-    __ptr_t (*gl_opendir) (__const char *);
-#ifdef _GNU_SOURCE
+    void *(*gl_opendir) (__const char *);
+#ifdef __USE_GNU
     int (*gl_lstat) (__const char *__restrict, struct stat *__restrict);
     int (*gl_stat) (__const char *__restrict, struct stat *__restrict);
 #else
@@ -128,8 +112,8 @@ typedef struct
 #endif
   } glob_t;
 
-#ifdef _LARGEFILE64_SOURCE
-# ifdef _GNU_SOURCE
+#ifdef __USE_LARGEFILE64
+# ifdef __USE_GNU
 struct stat64;
 # endif
 typedef struct
@@ -142,13 +126,13 @@ typedef struct
     /* If the GLOB_ALTDIRFUNC flag is set, the following functions
        are used instead of the normal file access functions.  */
     void (*gl_closedir) (void *);
-# ifdef _GNU_SOURCE
+# ifdef __USE_GNU
     struct dirent64 *(*gl_readdir) (void *);
 # else
     void *(*gl_readdir) (void *);
 # endif
-    __ptr_t (*gl_opendir) (__const char *);
-# ifdef _GNU_SOURCE
+    void *(*gl_opendir) (__const char *);
+# ifdef __USE_GNU
     int (*gl_lstat) (__const char *__restrict, struct stat64 *__restrict);
     int (*gl_stat) (__const char *__restrict, struct stat64 *__restrict);
 # else
@@ -158,7 +142,7 @@ typedef struct
   } glob64_t;
 #endif
 
-#if _FILE_OFFSET_BITS == 64 && __GNUC__ < 2
+#if __USE_FILE_OFFSET64 && __GNUC__ < 2
 # define glob glob64
 # define globfree globfree64
 #endif
@@ -171,7 +155,7 @@ typedef struct
    `glob' returns GLOB_ABEND; if it returns zero, the error is ignored.
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
-#if _FILE_OFFSET_BITS != 64 || __GNUC__ < 2
+#if !defined __USE_FILE_OFFSET64 || __GNUC__ < 2
 extern int glob (__const char *__restrict __pattern, int __flags,
 		 int (*__errfunc) (__const char *, int),
 		 glob_t *__restrict __pglob) __THROW;
@@ -187,7 +171,7 @@ extern int __REDIRECT_NTH (glob, (__const char *__restrict __pattern,
 extern void __REDIRECT_NTH (globfree, (glob_t *__pglob), globfree64);
 #endif
 
-#ifdef _LARGEFILE64_SOURCE
+#ifdef __USE_LARGEFILE64
 extern int glob64 (__const char *__restrict __pattern, int __flags,
 		   int (*__errfunc) (__const char *, int),
 		   glob64_t *__restrict __pglob) __THROW;
@@ -196,7 +180,7 @@ extern void globfree64 (glob64_t *__pglob) __THROW;
 #endif
 
 
-#ifdef _GNU_SOURCE
+#ifdef __USE_GNU
 /* Return nonzero if PATTERN contains any metacharacters.
    Metacharacters can be quoted with backslashes if QUOTE is nonzero.
 
@@ -205,8 +189,6 @@ extern void globfree64 (glob64_t *__pglob) __THROW;
 extern int glob_pattern_p (__const char *__pattern, int __quote) __THROW;
 #endif
 
-#ifdef	__cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* glob.h  */
