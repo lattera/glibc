@@ -1,3 +1,8 @@
+Mon Sep 18 15:06:00 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makeconfig (+gccwarn): Remove -Wbad-function-cast, which seems
+	to be useless.
+
 Mon Sep 18 12:39:22 1995  Paul Eggert  <eggert@twinsun.com>
 
 	* mktime.c (localtime_r): Add substitute if the system doesn't
