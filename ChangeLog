@@ -1,3 +1,13 @@
+1998-03-22  NIIBE Yutaka  <gniibe@mri.co.jp>
+
+	* inet/netinet/in.h (IN6_IS_ADDR_UNSPECIFIED, IN6_IS_ADDR_LOOPBACK):
+	Fix paren.
+
+1998-03-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/mach/hurd/setsockopt.c (setsockopt): Make OPTVAL
+	parameter const.  Reported by UCHIYAMA Yasushi <uch@nop.or.jp>.
+
 1998-03-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/ldsodesf.h: New file.

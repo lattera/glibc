@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #define	_NETINET_IN_H	1
 
 #include <features.h>
-#include <inttypes.h>
+#include <stdint.h>
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -244,12 +244,12 @@ extern uint16_t htons __P ((uint16_t __hostshort));
 #endif
 
 #define IN6_IS_ADDR_UNSPECIFIED(a) \
-	((((uint32_t *) (a))[0] == 0) && ((uint32_t *) (a))[1] == 0) && \
-	 (((uint32_t *) (a))[2] == 0) && ((uint32_t *) (a))[3] == 0))
+	(((uint32_t *) (a))[0] == 0 && ((uint32_t *) (a))[1] == 0 && \
+	 ((uint32_t *) (a))[2] == 0 && ((uint32_t *) (a))[3] == 0)
 
 #define IN6_IS_ADDR_LOOPBACK(a) \
-	((((uint32_t *) (a))[0] == 0) && ((uint32_t *) (a))[1] == 0) && \
-	 (((uint32_t *) (a))[2] == 0) && ((uint32_t *) (a))[3] == htonl (1)))
+	(((uint32_t *) (a))[0] == 0 && ((uint32_t *) (a))[1] == 0 && \
+	 ((uint32_t *) (a))[2] == 0 && ((uint32_t *) (a))[3] == htonl (1))
 
 #define IN6_IS_ADDR_MULTICAST(a) (((u_int8_t *) (a))[0] == 0xff)
 

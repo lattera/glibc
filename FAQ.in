@@ -556,7 +556,7 @@ ftp://ftp.kernel.org/pub/linux/utils/net/NIS/ypbind-3.3-glibc3.diff.
        RPC: Unable to receive; errno = Connection refused" when using NIS.
 
 {TK} You need a ypbind version which is 64bit clean.  Some versions
-are not 64bit clean.  A 64bit clean implemention is ypbind-mt.  For
+are not 64bit clean.  A 64bit clean implementation is ypbind-mt.  For
 ypbind 3.3, you need the patch from ftp.kernel.org (See the previous
 question).  I don't know about other versions.
 
@@ -624,7 +624,7 @@ problem.
 2.8.1 (or more recent versions). libg++ 2.7.2 (and the Linux Versions
 2.7.2.x) doesn't work very well with the GNU C library due to vtable thunks.
 If you're upgrading from glibc 2.0.x to 2.1 you have to recompile
-libstc++ since the library compiled for 2.0 is not compatible due to the new
+libstdc++ since the library compiled for 2.0 is not compatible due to the new
 Large File Support (LFS) in version 2.1.
 
 ? Source and binary incompatibilities, and what to do about them
@@ -869,7 +869,7 @@ to do so. For example constructs of the form:
 enum {foo
 #define foo foo
 }
-are  useful for debugging purpuses (you can use foo with your debugger
+are  useful for debugging purposes (you can use foo with your debugger
 that's why we need the enum) and for compatibility (other systems use
 defines and check with #ifdef).
 
@@ -884,6 +884,21 @@ standards with feature flags).
 
 The GNU C library is conforming to ANSI/ISO C - if and only if you're
 only using the headers and library functions defined in the standard.
+
+??	I can't access some functions anymore.  nm shows that they do
+	exist but linking fails nevertheless.
+
+{AJ} With the introduction of versioning in glibc 2.1 it is possible
+to export only those identifiers (functions, variables) that are
+really needed by application programs and by other parts of glibc.
+This way a lot of internal interfaces are now hidden.  nm will still
+show those identifiers but marking them as internal.  ISO C states
+that identifiers beginning with an underscore are internal to the
+libc.  An application program normally shouldn't use those internal
+interfaces (there are exceptions, e.g. __ivaliduser).  If a program
+uses these interfaces, it's broken.  These internal interfaces might
+change between glibc releases or dropped completely.
+
 
 ? Miscellaneous
 
