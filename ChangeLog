@@ -1,9 +1,123 @@
+Fri Jun  7 16:48:13 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/i386/Dist: New file, list sys/perm.h and
+	sys/vm86.h.
+
+	Removed old math code no longer used since the fdlibm integration.
+	* sysdeps/stub/acos.c: File removed.
+	* sysdeps/stub/asin.c: File removed.
+	* sysdeps/stub/atan2.c: File removed.
+	* sysdeps/stub/cosh.c: File removed.
+	* sysdeps/stub/exp.c: File removed.
+	* sysdeps/stub/fmod.c: File removed.
+	* sysdeps/stub/frexp.c: File removed.
+	* sysdeps/stub/log.c: File removed.
+	* sysdeps/stub/log10.c: File removed.
+	* sysdeps/stub/sinh.c: File removed.
+	* sysdeps/stub/tan.c: File removed.
+	* sysdeps/stub/tanh.c: File removed.
+	* sysdeps/generic/acos.c: File removed.
+	* sysdeps/generic/acosh.c: File removed.
+	* sysdeps/generic/asin.c: File removed.
+	* sysdeps/generic/asinh.c: File removed.
+	* sysdeps/generic/atan.c: File removed.
+	* sysdeps/generic/atan2.c: File removed.
+	* sysdeps/generic/atanh.c: File removed.
+	* sysdeps/generic/cabs.c: File removed.
+	* sysdeps/generic/ceil.c: File removed.
+	* sysdeps/generic/copysign.c: File removed.
+	* sysdeps/generic/cosh.c: File removed.
+	* sysdeps/generic/exp.c: File removed.
+	* sysdeps/generic/expm1.c: File removed.
+	* sysdeps/generic/fabs.c: File removed.
+	* sysdeps/generic/floor.c: File removed.
+	* sysdeps/generic/fmod.c: File removed.
+	* sysdeps/generic/frexp.c: File removed.
+	* sysdeps/generic/hypot.c: File removed.
+	* sysdeps/generic/infnan.c: File removed.
+	* sysdeps/generic/isnan.c: File removed.
+	* sysdeps/generic/ldexp.c: File removed.
+	* sysdeps/generic/log.c: File removed.
+	* sysdeps/generic/log10.c: File removed.
+	* sysdeps/generic/log1p.c: File removed.
+	* sysdeps/generic/modf.c: File removed.
+	* sysdeps/generic/pow.c: File removed.
+	* sysdeps/generic/rint.c: File removed.
+	* sysdeps/generic/sinh.c: File removed.
+	* sysdeps/generic/tan.c: File removed.
+	* sysdeps/generic/tanh.c: File removed.
+	* sysdeps/ieee754/cabs.c: File removed.
+	* sysdeps/ieee754/copysign.c: File removed.
+	* sysdeps/ieee754/frexp.c: File removed.
+	* sysdeps/ieee754/hypot.c: File removed.
+	* sysdeps/ieee754/infnan.c: File removed.
+	* sysdeps/ieee754/ldexp.c: File removed.
+	* sysdeps/ieee754/log10.c: File removed.
+
+	* posix/Makefile (headers): Add schedbits.h.
+
+	* math/Makefile (elided-routines): Add long double routines.
+
 Fri Jun  7 11:02:22 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* login/login.c (tty_name): New function.
 	(login): Use it.
 	(PATH_MAX): MACRO removed.
 	<stdlib.h>: New include.
+
+Fri Jun  7 09:11:17 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/Dist: Add sys/sysinfo.h, sys/mount.h,
+	sys/kdaemon.h, sys/io.h, sys/mount.h, sysctl.c.
+
+	* gmon/Makefile (distribute): Add profil-counter.h.
+
+	* sysdeps/unix/sysv/linux/alpha/Dist: New file.
+
+	* sysdeps/unix/Dist: Add s-proto.S.
+
+	* sysdeps/unix/common/mk-local_lim.c: Obsolete file removed.
+
+	* Make-dist (+sysdep-tsrcs): Get all syscalls.list files too.
+
+	* csu/Makefile (distribute): Add start.c.
+
+	* elf/Makefile (distribute): Add dl-machine.h.
+
+	* sysdeps/alpha/Dist: Add _mcount.S.
+
+	* sysdeps/alpha/Makefile (sysdep_routines): Append instead of
+	resetting; don't add bb_init_func.
+
+	* string/Makefile (routines): Add strerror_r.
+	* string/string.h (strerror_r): Use int for BUFLEN arg.
+
+	* Makefile (distribute): Add shlib-versions.
+
+	* po/Makefile (distribute): Add SYS_libc.pot.
+
+	* misc/Makefile (routines): Add lsearch.
+
+	* manual/lang.texi (Consistency Checking): Merge in assert_perror defn
+	and other changes inadvertently made to the obsolete assert.texi.
+	* manual/assert.texi: File removed.
+
+	* mach/mach_syscalls.c: Obsolete file removed.
+	* mach/mach_syscalls.h: Likewise.
+	* mach/mach_traps.S: Likewise.
+	* mach/msg_destroy.c: Likewise.
+	* mach/vm_page_size.c: Likewise.
+
+	* locale/Makefile (distribute): Add weight.h, charset.h.
+
+	* Makefile (distribute): Add version.h.
+
+	* hurd/Makefile (headers): Add hurd/ioctl.h.
+	(distribute): Add intr-rpc.d, intr-rpc.h, faultexc.defs.
+
+	* csu/Makefile (distribute): Add gmon-start.c.
+
+	* Makefile (distribute): Add config.h.in.
 
 Wed Jun  5 22:06:21 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
@@ -110,7 +224,6 @@ Tue Jun  4 22:03:02 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 
 	* sysdeps/m68k/fpu/__math.h: Define long double versions of
 	the inline functions.
-
 	* sysdeps/m68k/fpu/e_asinl.c, sysdeps/m68k/fpu/e_atanl.c,
 	sysdeps/m68k/fpu/e_acosl.c, sysdeps/m68k/fpu/e_expl.c,
 	sysdeps/m68k/fpu/e_fmodl.c, sysdeps/m68k/fpu/e_log10l.c,
@@ -128,7 +241,7 @@ Tue Jun  4 22:03:02 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 	sysdeps/m68k/fpu/s_logbl.c, sysdeps/m68k/fpu/s_modfl.c,
 	sysdeps/m68k/fpu/s_rintl.c, sysdeps/m68k/fpu/s_scalbnl.c,
 	sysdeps/m68k/fpu/s_significandl.c, sysdeps/m68k/fpu/s_sinl.c,
-	sysdeps/m68k/fpu/s_tanhl.c, sysdeps/m68k/fpu/s_tanl.c: New files.
+	sysdeps/m68k/fpu/e_atanhl.c, sysdeps/m68k/fpu/e_coshl.c: New files.
 
 	* sysdeps/m68k/fpu/e_acos.c, sysdeps/m68k/fpu/e_fmod.c,
  	sysdeps/m68k/fpu/k_cos.c, sysdeps/m68k/fpu/k_sin.c,
