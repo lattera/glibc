@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,10 +21,13 @@
 
 #include <features.h>
 #include <signal.h>
+#include <bits/wordsize.h>
 
 /* We need the signal context definitions even if they are not used
    included in <signal.h>.  */
 #include <bits/sigcontext.h>
+
+#if __WORDSIZE == 64
 
 /* Type for general register.  */
 typedef long int greg_t;
@@ -39,11 +42,7 @@ typedef greg_t gregset_t[NGREG];
 /* Number of each register in the `gregset_t' array.  */
 enum
 {
-  REG_GSFS = 0,
-# define REG_GSFS	REG_GSFS
-  REG_ESDS,
-# define REG_ESDS	REG_ESDS
-  REG_R8,
+  REG_R8 = 0,
 # define REG_R8		REG_R8
   REG_R9,
 # define REG_R9		REG_R9
@@ -65,28 +64,133 @@ enum
 # define REG_RSI	REG_RSI
   REG_RBP,
 # define REG_RBP	REG_RBP
-  REG_RSP,
-# define REG_RSP	REG_RSP
   REG_RBX,
 # define REG_RBX	REG_RBX
   REG_RDX,
 # define REG_RDX	REG_RDX
-  REG_RCX,
-# define REG_RCX	REG_RCX
   REG_RAX,
 # define REG_RAX	REG_RAX
+  REG_RCX,
+# define REG_RCX	REG_RCX
+  REG_RSP,
+# define REG_RSP	REG_RSP
+  REG_RIP,
+# define REG_RIP	REG_RIP
+  REG_EFL,
+# define REG_EFL	REG_EFL
+  REG_CSGS,		/* Actually short cs, __csh, gs, __gsh.  */
+# define REG_CSGS	REG_CSGS
+  REG_FS,		/* Actually short gs, __fsh, pad.  */
+# define REG_FS		REG_FS
+  REG_ERR,
+# define REG_ERR	REG_ERR
+  REG_TRAPNO
+# define REG_TRAPNO	REG_TRAPNO
+};
+#endif
+
+struct _libc_fpxreg
+{
+  unsigned short int significand[4];
+  unsigned short int exponent;
+  unsigned short int padding[3];
+};
+
+struct _libc_xmmreg
+{
+  __uint32_t	element[4];
+};
+
+struct _libc_fpstate
+{
+  /* 64-bit FXSAVE format.  */
+  __uint16_t		cwd;
+  __uint16_t		swd;
+  __uint16_t		ftw;
+  __uint16_t		fop;
+  __uint64_t		rip;
+  __uint64_t		rdp;
+  __uint32_t		mxcsr;
+  __uint32_t		mxcr_mask;
+  struct _libc_fpxreg	_st[8];
+  struct _libc_xmmreg	_xmm[16];
+  __uint32_t		padding[24];
+};
+
+/* Structure to describe FPU registers.  */
+typedef struct _libc_fpstate *fpregset_t;
+
+/* Context to describe whole processor state.  */
+typedef struct
+  {
+    gregset_t gregs;
+    /* Note that fpregs is a pointer.  */
+    fpregset_t fpregs;
+    unsigned long __reserved1 [8];
+} mcontext_t;
+
+/* Userlevel context.  */
+typedef struct ucontext
+  {
+    unsigned long int uc_flags;
+    struct ucontext *uc_link;
+    stack_t uc_stack;
+    mcontext_t uc_mcontext;
+    __sigset_t uc_sigmask;
+    struct _libc_fpstate __fpregs_mem;
+  } ucontext_t;
+
+#else /* __WORDSIZE == 32 */
+
+/* Type for general register.  */
+typedef int greg_t;
+
+/* Number of general registers.  */
+#define NGREG	19
+
+/* Container for all general registers.  */
+typedef greg_t gregset_t[NGREG];
+
+#ifdef __USE_GNU
+/* Number of each register is the `gregset_t' array.  */
+enum
+{
+  REG_GS = 0,
+# define REG_GS		REG_GS
+  REG_FS,
+# define REG_FS		REG_FS
+  REG_ES,
+# define REG_ES		REG_ES
+  REG_DS,
+# define REG_DS		REG_DS
+  REG_EDI,
+# define REG_EDI	REG_EDI
+  REG_ESI,
+# define REG_ESI	REG_ESI
+  REG_EBP,
+# define REG_EBP	REG_EBP
+  REG_ESP,
+# define REG_ESP	REG_ESP
+  REG_EBX,
+# define REG_EBX	REG_EBX
+  REG_EDX,
+# define REG_EDX	REG_EDX
+  REG_ECX,
+# define REG_ECX	REG_ECX
+  REG_EAX,
+# define REG_EAX	REG_EAX
   REG_TRAPNO,
 # define REG_TRAPNO	REG_TRAPNO
   REG_ERR,
 # define REG_ERR	REG_ERR
-  REG_RIP,
-# define REG_RIP	REG_RIP
+  REG_EIP,
+# define REG_EIP	REG_EIP
   REG_CS,
 # define REG_CS		REG_CS
   REG_EFL,
 # define REG_EFL	REG_EFL
-  REG_URSP,
-# define REG_URSP	REG_URSP
+  REG_UESP,
+# define REG_UESP	REG_UESP
   REG_SS
 # define REG_SS	REG_SS
 };
@@ -99,21 +203,8 @@ struct _libc_fpreg
   unsigned short int exponent;
 };
 
-struct _libc_fpxreg
-{
-  unsigned short int significand[4];
-  unsigned short int exponent;
-  unsigned short int padding[3];
-};
-
-struct _libc_xmmreg
-{
-  unsigned long int element[4];
-};
-
 struct _libc_fpstate
 {
-  /* Regular FPU environment.  */
   unsigned long int cw;
   unsigned long int sw;
   unsigned long int tag;
@@ -121,26 +212,19 @@ struct _libc_fpstate
   unsigned long int cssel;
   unsigned long int dataoff;
   unsigned long int datasel;
-  struct _libc_fpreg _st[16];
-  unsigned short int status;
-  unsigned short int magic;
-  /* FXSR FPU environment.  */
-  
-  unsigned long	int _fxsr_env[6];
-  unsigned long	int mxcsr;
-  unsigned long	int reserved;
-  struct _libc_fpxreg _fxsr_st[8];
-  struct _libc_xmmreg _xmm[16];
-  unsigned long int padding[32];
+  struct _libc_fpreg _st[8];
+  unsigned long int status;
 };
 
 /* Structure to describe FPU registers.  */
-typedef struct _libc_fpstate fpregset_t;
+typedef struct _libc_fpstate *fpregset_t;
 
 /* Context to describe whole processor state.  */
 typedef struct
   {
     gregset_t gregs;
+    /* Due to Linux's history we have to use a pointer here.  The SysV/i386
+       ABI requires a struct with the values.  */
     fpregset_t fpregs;
     unsigned long int oldmask;
     unsigned long int cr2;
@@ -156,5 +240,7 @@ typedef struct ucontext
     __sigset_t uc_sigmask;
     struct _libc_fpstate __fpregs_mem;
   } ucontext_t;
+
+#endif /* __WORDSIZE == 32 */
 
 #endif /* sys/ucontext.h */

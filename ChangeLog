@@ -1,3 +1,11 @@
+2002-03-26  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/ucontext.h: Add 32-bit
+	compatibilty, adjust for kernel changes.
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h (struct
+	sigcontext): Adjust for kernel changes.
+
 2002-03-25  Andreas Jaeger  <aj@suse.de>
 
 	* iconv/gconv_simple.c (ucs4le_internal_loop_single): Handle

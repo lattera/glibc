@@ -66,7 +66,7 @@ struct _fpstate
   __uint32_t		mxcsr;
   __uint32_t		reserved;
   struct _fpxreg	_fxsr_st[8];
-  struct _xmmreg 	_xmm[8];
+  struct _xmmreg	_xmm[8];
   __uint32_t		padding[56];
 };
 
@@ -96,7 +96,7 @@ struct sigcontext
   unsigned long cr2;
 };
 
-#else
+#else /* __WORDSIZE == 64 */
 
 struct _fpstate
 {
@@ -110,19 +110,16 @@ struct _fpstate
   __uint32_t		mxcsr;
   __uint32_t		mxcr_mask;
   struct _fpxreg	_st[8];
-  struct _xmmreg 	_xmm[16];
+  struct _xmmreg	_xmm[16];
   __uint32_t		padding[24];
 };
 
 struct sigcontext
 {
-  unsigned short gs, __gsh;
-  unsigned short fs, __fsh;
-  unsigned short es, __esh;
-  unsigned short ds, __dsh;
   unsigned long r8;
   unsigned long r9;
   unsigned long r10;
+  unsigned long r11;
   unsigned long r12;
   unsigned long r13;
   unsigned long r14;
@@ -133,21 +130,22 @@ struct sigcontext
   unsigned long rbx;
   unsigned long rdx;
   unsigned long rax;
-  unsigned long trapno;
-  unsigned long err;
-  unsigned long rip;
-  unsigned short cs, __csh;
-  unsigned int __pad0;
-  unsigned long eflags;
-  unsigned long rsp_at_signal;
-  struct _fpstate * fpstate;
-  unsigned long oldmask;
-  unsigned long cr2;
-  unsigned long r11;
   unsigned long rcx;
   unsigned long rsp;
+  unsigned long rip;
+  unsigned long eflags;
+  unsigned short cs, __csh;
+  unsigned short gs, __gsh;
+  unsigned short fs, __fsh;
+  unsigned int __pad0;
+  unsigned long err;
+  unsigned long trapno;
+  unsigned long oldmask;
+  unsigned long cr2;
+  struct _fpstate * fpstate;
+  unsigned long __reserved1 [8];
 };
 
-#endif
+#endif /* __WORDSIZE == 64 */
 
 #endif /* _BITS_SIGCONTEXT_H */
