@@ -1,3 +1,15 @@
+1999-06-19  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/unix/sysv/linux/siglist.c: Moved to ...
+	* sysdeps/gnu/siglist.c: ... here.
+	Use <siglist.h> instead of "siglist.h", to ensure sysdeps-search.
+	Use <bits/wordsize.h> instead of <sizes.h> to determine PTR_SIZE_STR.
+	* sysdeps/gnu/siglist.h: New file, contents from linux version.
+	Add entry for SIGLOST protected by #ifdef.
+	* sysdeps/unix/sysv/linux/siglist.h: Just #include that file,
+	and define OLD_SIGLIST_SIZE_STR.
+	* sysdeps/mach/hurd/siglist.h: New file, likewise.
+
 1999-06-18  Zack Weinberg  <zack@rabi.columbia.edu>
 
 	* include/features.h: Define new macros __GNUC_PREREQ and
