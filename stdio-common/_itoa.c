@@ -260,9 +260,11 @@ _itoa (value, buflim, base, upper_case)
 	   Optimize for frequent cases of 32 bit numbers.  */
 	if ((mp_limb_t) (value >> 32) >= 1)
 	  {
+#if UDIV_TIME > 2 * UMUL_TIME || UDIV_NEEDS_NORMALIZATION
 	    int big_normalization_steps = brec->big.normalization_steps;
-	    mp_limb_t big_base_norm = brec->big.base << big_normalization_steps;
-
+	    mp_limb_t big_base_norm
+	      = brec->big.base << big_normalization_steps;
+#endif
 	    if ((mp_limb_t) (value >> 32) >= brec->big.base)
 	      {
 		mp_limb_t x1hi, x1lo, r;

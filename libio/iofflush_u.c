@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1993 Free Software Foundation
+Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -24,27 +24,18 @@ the executable file might be covered by the GNU General Public License. */
 
 #include "libioP.h"
 
-_IO_size_t
-_IO_fwrite (buf, size, count, fp)
-     const void* buf;
-     _IO_size_t size;
-     _IO_size_t count;
-     _IO_FILE *fp;
+int
+_IO_fflush_unlocked (fp)
+     register _IO_FILE *fp;
 {
-  _IO_size_t request = size*count;
-  _IO_size_t written;
-  CHECK_FILE (fp, 0);
-  if (request == 0)
-    return 0;
-  _IO_flockfile (fp);
-  written = _IO_sputn (fp, (const char *) buf, request);
-  _IO_funlockfile (fp);
-  /* Many traditional implementations return 0 if size==0 && count > 0,
-     but ANSI seems to require us to return count in this case. */
-  if (written == request)
-    return count;
+  if (fp == NULL)
+    return _IO_flush_all ();
   else
-    return written/size;
+    {
+      CHECK_FILE (fp, EOF);
+      return _IO_SYNC (fp) ? EOF : 0;
+    }
 }
 
-weak_alias (_IO_fwrite, fwrite)
+weak_alias (_IO_fflush_unlocked, fflush_unlocked)
+

@@ -32,9 +32,17 @@ _IO_fflush (fp)
     return _IO_flush_all ();
   else
     {
+      int result;
+      _IO_flockfile (fp);
       CHECK_FILE (fp, EOF);
-      return _IO_SYNC (fp) ? EOF : 0;
+      result = _IO_SYNC (fp) ? EOF : 0;
+      _IO_funlockfile (fp);
+      return result;
     }
 }
 
 weak_alias (_IO_fflush, fflush)
+
+#ifdef _IO_MTSAFE_IO
+weak_alias (_IO_fflush, fflush_locked)
+#endif

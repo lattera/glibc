@@ -30,7 +30,10 @@ _IO_gets (buf)
      char* buf;
 {
   _IO_size_t count;
-  int ch = _IO_getc (_IO_stdin);
+  int ch;
+
+  _IO_flockfile (_IO_stdin);
+  ch = _IO_getc_unlocked (_IO_stdin);
   if (ch == EOF)
     return NULL;
   if (ch == '\n')
@@ -42,6 +45,7 @@ _IO_gets (buf)
       if (_IO_stdin->_IO_file_flags & _IO_ERR_SEEN)
 	return NULL;
     }
+  _IO_funlockfile (_IO_stdin);
   buf[count] = 0;
   return buf;
 }

@@ -49,9 +49,9 @@ static char sccsid[] = "@(#)getusershell.c	8.1 (Berkeley) 6/4/93";
  * /etc/shells.
  */
 
-static char *okshells[] = { _PATH_BSHELL, _PATH_CSHELL, NULL };
-static char **curshell, **shells, *strings;
-static char **initshells __P((void));
+static const char *okshells[] = { _PATH_BSHELL, _PATH_CSHELL, NULL };
+static const char **curshell, **shells, *strings;
+static const char **initshells __P((void));
 
 /*
  * Get a list of shells from _PATH_SHELLS, if it exists.
@@ -59,14 +59,14 @@ static char **initshells __P((void));
 char *
 getusershell()
 {
-	char *ret;
+	const char *ret;
 
 	if (curshell == NULL)
 		curshell = initshells();
 	ret = *curshell;
 	if (ret != NULL)
 		curshell++;
-	return (ret);
+	return (char *) ret;	/* Cast away `const' for history reasons.  */
 }
 
 void
@@ -89,7 +89,7 @@ setusershell()
 	curshell = initshells();
 }
 
-static char **
+static const char **
 initshells()
 {
 	register char **sp, *cp;
@@ -97,10 +97,10 @@ initshells()
 	struct stat statb;
 
 	if (shells != NULL)
-		free(shells);
+		free((char *) shells);
 	shells = NULL;
 	if (strings != NULL)
-		free(strings);
+		free((char *) strings);
 	strings = NULL;
 	if ((fp = fopen(_PATH_SHELLS, "r")) == NULL)
 		return (okshells);
@@ -119,8 +119,8 @@ initshells()
 		strings = NULL;
 		return (okshells);
 	}
-	sp = shells;
-	cp = strings;
+	sp = (char *) shells;
+	cp = (char *) strings;
 	while (fgets(cp, statb.st_size - (cp - strings), fp) != NULL) {
 		while (*cp != '#' && *cp != '/' && *cp != '\0')
 			cp++;

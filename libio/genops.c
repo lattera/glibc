@@ -465,6 +465,9 @@ DEFUN(_IO_init, (fp, flags),
   fp->_IO_save_end = NULL;
   fp->_markers = NULL;
   fp->_cur_column = 0;
+#ifdef _IO_MTSAFE_IO
+  _IO_mutex_init (fp->_lock);
+#endif
 }
 
 int
@@ -497,6 +500,10 @@ DEFUN(_IO_default_finish, (fp),
       fp->_IO_save_base = NULL;
     }
 
+#ifdef _IO_MTSAFE_IO
+  _IO_mutex_destroy (fp->_lock);
+#endif
+  
   _IO_un_link(fp);
 }
 

@@ -36,7 +36,9 @@ _IO_fread (buf, size, count, fp)
   CHECK_FILE (fp, 0);
   if (bytes_requested == 0)
     return 0;
+  _IO_flockfile (fp);
   bytes_read = _IO_sgetn (fp, (char *) buf, bytes_requested);
+  _IO_funlockfile (fp);
   return bytes_requested == bytes_read ? count : bytes_read / size;
 }
 weak_alias (_IO_fread, fread)

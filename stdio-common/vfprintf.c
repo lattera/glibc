@@ -62,14 +62,14 @@ ssize_t __printf_pad __P ((FILE *, char pad, size_t n));
 # define ISDIGIT(Ch)	iswdigit (Ch)
 
 # ifdef USE_IN_LIBIO
-# define PUT(F, S, N)	_IO_sputn (F, S, N)
-# define PAD(Padchar)							      \
+#  define PUT(F, S, N)	_IO_sputn (F, S, N)
+#  define PAD(Padchar)							      \
   if (width > 0)							      \
     done += _IO_wpadn (s, Padchar, width)
 # else
 #  define PUTC(C, F)	wputc (C, F)
 ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
-# define PAD(Padchar)							      \
+#  define PAD(Padchar)							      \
   if (width > 0)							      \
     { if (__wprintf_pad (s, Padchar, width) == -1)			      \
 	return -1; else done += width; }
@@ -83,7 +83,7 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 #ifdef USE_IN_LIBIO
 /* This code is for use in libio.  */
 # include <libioP.h>
-# define PUTC(C, F)	_IO_putc (C, F)
+# define PUTC(C, F)	_IO_putc_unlocked (C, F)
 # define vfprintf	_IO_vfprintf
 # define size_t		_IO_size_t
 # define FILE		_IO_FILE
@@ -102,6 +102,8 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 	}								      \
     } while (0)
 # define UNBUFFERED_P(S) ((S)->_IO_file_flags & _IO_UNBUFFERED)
+# define flockfile(S) _IO_flockfile (S)
+# define fUNlockfile(S) _IO_funlockfile (S)
 #else /* ! USE_IN_LIBIO */
 /* This code is for use in the GNU C library.  */
 # include <stdio.h>
@@ -801,13 +803,19 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   /* Find the first format specifier.  */
   f = lead_str_end = find_spec (format, &mbstate);
 
+  /* Lock stream.  */
+  flockfile (s);
+  
   /* Write the literal text before the first format.  */
   outstring ((const UCHAR_T *) format,
 	     lead_str_end - (const UCHAR_T *) format);
 
   /* If we only have to print a simple string, return now.  */
   if (*f == L_('\0'))
-    return done;
+    {
+      funlockfile (s);
+      return done;
+    }
 
   /* Process whole format string.  */
   do
@@ -972,8 +980,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
 	LABEL (form_unknown):
 	  if (spec == L_('\0'))
-	    /* The format string ended before the specifier is complete.  */
-	    return -1;
+	    {
+	      /* The format string ended before the specifier is complete.  */
+	      funlockfile (s);
+	      return -1;
+	    }
 
 	  /* If we are in the fast loop force entering the complicated
 	     one.  */
@@ -988,6 +999,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     }
   while (*f != L_('\0'));
 
+  /* Unlock stream.  */
+  funlockfile (s);
+  
   /* We processed the whole format without any positional parameters.  */
   return done;
 
@@ -1230,7 +1244,10 @@ do_positional:
 	      /* If an error occured we don't have information about #
 		 of chars.  */
 	      if (function_done < 0)
-		return -1;
+		{
+		  funlockfile (s);
+		  return -1;
+		}
 
 	      done += function_done;
 	    }
@@ -1244,6 +1261,9 @@ do_positional:
       }
   }
 
+  /* Unlock the stream.  */
+  funlockfile (s);
+  
   return done;
 }
 
@@ -1378,7 +1398,7 @@ _IO_helper_overflow (_IO_FILE *s, int c)
       _IO_size_t written = _IO_sputn (target, s->_IO_write_base, used);
       s->_IO_write_ptr -= written;
     }
-  return _IO_putc (c, s);
+  return PUTC (c, s);
 }
 
 static const struct _IO_jump_t _IO_helper_jumps =

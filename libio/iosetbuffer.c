@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1993 Free Software Foundation
+Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -31,8 +31,12 @@ _IO_setbuffer (fp, buf, size)
      _IO_size_t size;
 {
   CHECK_FILE (fp, );
+  _IO_flockfile (fp);
   fp->_flags &= ~_IO_LINE_BUF;
   if (!buf)
     size = 0;
   (void) _IO_SETBUF (fp, buf, size);
+  _IO_funlockfile (fp);
 }
+
+weak_alias (_IO_setbuffer, setbuffer)

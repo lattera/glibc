@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1993 Free Software Foundation
+Copyright (C) 1993, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -31,10 +31,15 @@ _IO_fputs (str, fp)
       _IO_FILE *fp;
 {
   _IO_size_t len = strlen (str);
+  int result;
   CHECK_FILE (fp, EOF);
-  if (_IO_sputn( fp, str, len) != len)
-    return EOF;
-  return 1;
+  _IO_flockfile (fp);
+  if (_IO_sputn (fp, str, len) != len)
+    result = EOF;
+  else
+    result = 1;
+  _IO_funlockfile (fp);
+  return result;
 }
 
 weak_alias (_IO_fputs, fputs)

@@ -28,7 +28,7 @@ Boston, MA 02111-1307, USA.  */
 #include <obstack.h>
 #include <stdlib.h>
 #include <string.h>
-#include <wcstr.h>
+#include <wchar.h>
 
 #include "localeinfo.h"
 #include "locales.h"
@@ -36,7 +36,7 @@ Boston, MA 02111-1307, USA.  */
 #include "stringtrans.h"
 
 /* Uncomment the following line in the production version.  */
-/* define NDEBUG 1 */
+/* #define NDEBUG 1 */
 #include <assert.h>
 
 

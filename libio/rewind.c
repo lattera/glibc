@@ -29,5 +29,7 @@ rewind (fp)
      _IO_FILE* fp;
 {
   CHECK_FILE (fp, );
+  _IO_flockfile (fp);
   _IO_rewind (fp);
+  _IO_funlockfile (fp);
 }

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1993, 1995 Free Software Foundation
+Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -28,8 +28,19 @@ the executable file might be covered by the GNU General Public License. */
 #undef getc
 
 int
-getc (stream)
-     FILE *stream;
+getc (fp)
+     FILE *fp;
 {
-  return _IO_getc (stream);
+  int result;
+  CHECK_FILE (fp, EOF);
+  _IO_flockfile (fp);
+  result = _IO_getc_unlocked (fp);
+  _IO_funlockfile (fp);
+  return result;
 }
+
+#ifdef _IO_MTSAFE_IO
+# undef getc_locked
+
+weak_alias (getc_locked, getc)
+#endif

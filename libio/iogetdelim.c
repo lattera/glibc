@@ -42,6 +42,7 @@ _IO_getdelim (lineptr, n, delimiter, fp)
       int delimiter;
       _IO_FILE *fp;
 {
+  int result;
   register _IO_ssize_t cur_len = 0;
   _IO_ssize_t len;
 
@@ -53,22 +54,32 @@ _IO_getdelim (lineptr, n, delimiter, fp)
       return -1;
     }
   CHECK_FILE (fp, -1);
-  if (_IO_ferror (fp))
-    return -1;
+  _IO_flockfile (fp);
+  if (_IO_ferror_unlocked (fp))
+    {
+      result = -1;
+      goto unlock_return;
+    }
 
   if (*lineptr == NULL || *n == 0)
     {
       *n = 120;
       *lineptr = (char *) malloc (*n);
       if (*lineptr == NULL)
-	return -1;
+	{
+	  result = -1;
+	  goto unlock_return;
+	}
     }
 
   len = fp->_IO_read_end - fp->_IO_read_ptr;
   if (len <= 0)
     {
       if (__underflow (fp) == EOF)
-	return -1;
+	{
+	  result = -1;
+	  goto unlock_return;
+	}
       len = fp->_IO_read_end - fp->_IO_read_ptr;
     }
 
@@ -88,7 +99,10 @@ _IO_getdelim (lineptr, n, delimiter, fp)
 	  *n = needed;
 	  *lineptr = (char *) realloc (*lineptr, needed);
 	  if (*lineptr == NULL)
-	    return -1;
+	    {
+	      result = -1;
+	      goto unlock_return;
+	    }
 	}
       memcpy (*lineptr + cur_len, (void *) fp->_IO_read_ptr, len);
       fp->_IO_read_ptr += len;
@@ -98,7 +112,11 @@ _IO_getdelim (lineptr, n, delimiter, fp)
       len = fp->_IO_read_end - fp->_IO_read_ptr;
     }
   (*lineptr)[cur_len] = '\0';
-  return cur_len;
+  result = cur_len;
+
+unlock_return:
+  _IO_funlockfile (fp);
+  return result;
 }
 
 weak_alias (_IO_getdelim, __getdelim)

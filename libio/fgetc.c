@@ -29,6 +29,10 @@ int
 fgetc (fp)
      FILE *fp;
 {
+  int result;
   CHECK_FILE (fp, EOF);
-  return _IO_getc (fp);
+  flockfile (fp);
+  result = _IO_getc_unlocked (fp);
+  funlockfile (fp);
+  return result;
 }

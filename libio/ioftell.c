@@ -32,7 +32,9 @@ _IO_ftell (fp)
 {
   _IO_pos_t pos;
   CHECK_FILE (fp, -1L);
+  _IO_flockfile (fp);
   pos = _IO_seekoff (fp, 0, _IO_seek_cur, 0);
+  _IO_funlockfile (fp);
   if (pos == _IO_pos_BAD)
     {
 #ifdef EIO

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1993, 1995 Free Software Foundation
+Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -31,8 +31,12 @@ freopen (filename, mode, fp)
      const char* mode;
      FILE* fp;
 {
+  FILE *result;
   CHECK_FILE (fp, NULL);
   if (!(fp->_flags & _IO_IS_FILEBUF))
     return NULL;
-  return _IO_freopen (filename, mode, fp);
+  flockfile (fp);
+  result = _IO_freopen (filename, mode, fp);
+  funlockfile (fp);
+  return result;
 }

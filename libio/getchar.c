@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1993 Free Software Foundation
+Copyright (C) 1993, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -30,5 +30,15 @@ the executable file might be covered by the GNU General Public License. */
 int
 getchar ()
 {
-  return _IO_getc (stdin);
+  int result;
+  _IO_flockfile (stdin);
+  result = _IO_getc_unlocked (stdin);
+  _IO_funlockfile (stdin);
+  return result;
 }
+
+#ifdef _IO_MTSAFE_IO
+# undef getchar_locked
+
+weak_alias (getchar_locked, getchar)
+#endif

@@ -23,9 +23,6 @@
 #define HAVE_VPRINTF 1
 
 
-typedef int wint_t;
-
-
 #include_next <config.h>
 
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,5 +25,15 @@ int
 putchar (c)
      int c;
 {
-  return _IO_putc (c, stdout);
+  int result;
+  _IO_flockfile (_IO_stdout);
+  result = _IO_putc_unlocked (c, _IO_stdout);
+  _IO_funlockfile (_IO_stdout);
+  return result;
 }
+
+#ifdef _IO_MTSAFE_IO
+# undef putchar_locked
+
+weak_alias (putchar_locked, putchar)
+#endif

@@ -550,7 +550,6 @@ install-lib := $(filter-out %.so %_pic.a,$(install-lib))
 ifeq (yes,$(build-shared))
 
 install-lib-nosubdir: $(install-lib.so:%=$(libdir)/%)
-install: $(slibdir)/libc.so
 
 # Find which .so's have versions.
 versioned := $(foreach so,$(install-lib.so),\
@@ -567,12 +566,29 @@ ifdef libc.so-version
 # libc.so	->	libc.so.N	(e.g. libc.so.6)
 # libc.so.6	->	libc-VERSION.so	(e.g. libc-1.10.so)
 
-$(slibdir)/libc.so: $(slibdir)/libc.so$(libc.so-version)
-	$(make-link)
 $(slibdir)/libc.so$(libc.so-version): $(slibdir)/libc-$(version).so
 	$(make-link)
 $(slibdir)/libc-$(version).so: $(common-objpfx)libc.so; $(do-install-program)
+
+# What we install as libc.so for programs to link against is in fact an
+# archive.  It contains the various $(static-only-routines) objects, and
+# the special object libc-syms.so that contains just the dynamic symbol
+# table of the shared libc object.
+install: $(libdir)/libc.so
+$(libdir)/libc.so: $(common-objpfx)libc-syms.so subdir_install
+	$(AR) crvs $@ $< `cat $(addprefix $(common-objpfx)sor-,$(subdirs))`
+
+# Extract from the shared object file just the dynamic symbol table
+# needed to link against the shared library.
+$(common-objpfx)libc-syms.so: $(common-objpfx)libc.so
+	AWK='$(AWK)' OBJCOPY='$(OBJCOPY)' OBJDUMP='$(OBJDUMP)' \
+	./extract-dynsym $< $@
+ifndef subdir
+generated += libc-syms.so
+endif
+
 else
+install: $(slibdir)/libc.so
 $(slibdir)/libc.so: $(common-objpfx)libc.so; $(do-install-program)
 endif
 

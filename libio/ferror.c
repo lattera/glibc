@@ -1,5 +1,4 @@
-/*
-Copyright (C) 1993, 1995 Free Software Foundation
+/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -29,6 +28,15 @@ int
 ferror (fp)
      _IO_FILE* fp;
 {
+  int result;
   CHECK_FILE (fp, EOF);
-  return _IO_ferror (fp);
+  _IO_flockfile (fp);
+  result = _IO_ferror_unlocked (fp);
+  _IO_funlockfile (fp);
+  return result;
 }
+
+#ifdef _IO_MTSAFE_IO
+
+weak_alias (ferror, ferror_locked)
+#endif

@@ -1,5 +1,4 @@
-/* 
-Copyright (C) 1993 Free Software Foundation
+/* Copyright (C) 1993, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -26,9 +25,21 @@ the executable file might be covered by the GNU General Public License. */
 #include "stdio.h"
 
 int
-feof(fp)
+feof (fp)
      _IO_FILE* fp;
 {
-  CHECK_FILE(fp, EOF);
-  return _IO_feof(fp);
+  int result;
+  CHECK_FILE (fp, EOF);
+  _IO_flockfile (fp);
+  result = _IO_feof_unlocked (fp);
+  _IO_funlockfile (fp);
+  return result;
 }
+
+#ifdef _IO_MTSAFE_IO
+/* The feof implementation for libio does not require locking because
+   it only accesses once a single variable and this is already atomic
+   (at least at thread level).  */
+
+weak_alias (feof, feof_locked)
+#endif

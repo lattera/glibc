@@ -1,3 +1,53 @@
+Wed May  8 20:04:29 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Rules (subdir_install): Depend on $(common-objpfx)sor-$(subdir).
+	[! libc.so-version]: Clear static-only-routines.
+	($(common-objpfx)sor-$(subdir)): New target.
+	[static-only-routines]: New static pattern rule for these .so's.
+	* Makerules [libc.so-version] ($(slibdir)/libc.so): Target removed.
+	[libc.so-version] ($(libdir)/libc.so, $(common-objpfx)libc-syms.so):
+	New targets replace it.
+	(install) [libc.so-version]: Depend on $(libdir)/libc.so instead of
+	$(slibdir)/libc.so.
+	* io/Makefile (static-only-routines): New variable.
+	* configure.in: Check for tools objdump and objcopy, and for awk.
+	* config.make.in (OBJDUMP, OBJCOPY, AWK): New variables.
+
+Thu May  9 01:24:00 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/config.h: Remove definition of wint_t.
+
+	* locale/programs/ld-collate.c: Include <wchar.h> instead of
+	<wcstr.h>.
+
+	* manual/time.texi: Add some more description for %U and %W
+	format of strftime.  Describe new format %V of strftime.
+
+	* resolv/gethnamaddr.c: Prevent warning by preventing variable
+	definition.
+	* stdio-common/_itoa.c: Ditto.
+
+Tue May  7 23:43:07 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/clearerr.c, libio/feof.c, libio/ferror.c, libio/fgetc.c,
+	libio/fileno.c, libio/fputc.c, libio/freopen.c, libio/fseek.c,
+	libio/genops.c, libio/getc.c, libio/getchar.c, libio/iofclose.c,
+	libio/iofflush.c, libio/iofgetpos.c, libio/iofgets.c,
+	libio/iofputs.c, libio/iofread.c, libio/iofsetpos.c,
+	libio/ioftell.c, libio/iofwrite.c, libio/iogetdelim.c,
+	libio/iogets.c, libio/ioputs.c, libio/iosetbuffer.c,
+	libio/iosetvbuf.c, libio/ioungetc.c, libio/iovsprintf.c,
+	libio/libio.h, libio/putc.c, libio/putchar.c, libio/rewind.c,
+	libio/stdio.h, stdio-common/printf_fp.c, stdio-common/vfprintf.c,
+	stdio-common/vfscanf.c: Prepare for reentrent libio.
+
+	* libio/clearerr_u.c, libio/feof_u.c, libio/ferror_u.c,
+	libio/fputc_u.c, libio/getc_u.c, libio/getchar_u.c,
+	libio/iofflush_u.c, libio/putc_u.c, libio/putchar_u.c: New files.
+	Used in reentrent libio.
+
+	* misc/getusershell.c: Prevent warnings.
+
 Wed May  8 12:08:35 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* Makerules (install-lib.so rules): Undouble $s in target and dep

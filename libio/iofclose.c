@@ -35,6 +35,7 @@ _IO_fclose (fp)
 
   CHECK_FILE(fp, EOF);
 
+  _IO_flockfile (fp);
   if (fp->_IO_file_flags & _IO_IS_FILEBUF)
     status = _IO_file_close_it (fp);
   else
@@ -45,6 +46,7 @@ _IO_fclose (fp)
       fp->_IO_file_flags = 0;
       free(fp);
     }
+  _IO_funlockfile (fp);
   return status;
 }
 

@@ -31,6 +31,10 @@ fseek (fp, offset, whence)
      long int offset;
      int whence;
 {
+  int result;
   CHECK_FILE (fp, -1);
-  return _IO_fseek (fp, offset, whence);
+  flockfile (fp);
+  result = _IO_fseek (fp, offset, whence);
+  funlockfile (fp);
+  return result;
 }

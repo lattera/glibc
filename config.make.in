@@ -33,6 +33,9 @@ CC = @CC@
 AR = @AR@
 RANLIB = @RANLIB@
 AS = $(CC) -c
+OBJDUMP = @OBJDUMP@
+OBJCOPY = @OBJCOPY@
+AWK = @AWK@
 
 # Installation tools.
 INSTALL = @INSTALL@

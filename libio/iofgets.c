@@ -31,14 +31,21 @@ _IO_fgets (buf, n, fp)
      _IO_FILE* fp;
 {
   _IO_size_t count;
+  char *result;
   CHECK_FILE (fp, NULL);
   if (n <= 0)
     return NULL;
+  _IO_flockfile (fp);
   count = _IO_getline (fp, buf, n - 1, '\n', 1);
   if (count == 0 || (fp->_IO_file_flags & _IO_ERR_SEEN))
-    return NULL;
-  buf[count] = 0;
-  return buf;
+    result = NULL;
+  else
+    {
+      buf[count] = '\0';
+      result = buf;
+    }
+  _IO_funlockfile (fp);
+  return result;
 }
 
 weak_alias (_IO_fgets, fgets)

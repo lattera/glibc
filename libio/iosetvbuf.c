@@ -35,7 +35,9 @@ _IO_setvbuf (fp, buf, mode, size)
      int mode;
      _IO_size_t size;
 {
+  int result;
   CHECK_FILE (fp, EOF);
+  _IO_flockfile (fp);
   switch (mode)
     {
     case _IOFBF:
@@ -58,25 +60,36 @@ _IO_setvbuf (fp, buf, mode, size)
 		 A possibly cleaner alternative would be to add an
 		 extra flag, but then flags are a finite resource.  */
 	      if (_IO_DOALLOCATE (fp) < 0)
-		return EOF;
+		{
+		  result = EOF;
+		  goto unlock_return;
+		}
 	      fp->_IO_file_flags &= ~_IO_LINE_BUF;
 	    }
-	  return 0;
+	  result = 0;
+	  goto unlock_return;
 	}
       break;
     case _IOLBF:
       fp->_IO_file_flags |= _IO_LINE_BUF;
       if (buf == NULL)
-	return 0;
+	{
+	  result = 0;
+	  goto unlock_return;
+	}
       break;
     case _IONBF:
       buf = NULL;
       size = 0;
       break;
     default:
-      return EOF;
+      result = EOF;
+      goto unlock_return;
     }
-  return _IO_SETBUF (fp, buf, size) == NULL ? EOF : 0;
+  result = _IO_SETBUF (fp, buf, size) == NULL ? EOF : 0;
+unlock_return:
+  _IO_funlockfile (fp);
+  return result;
 }
 
 weak_alias (_IO_setvbuf, setvbuf)

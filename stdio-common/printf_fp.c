@@ -54,7 +54,7 @@ Cambridge, MA 02139, USA.  */
 /* We use this file GNU C library and GNU I/O library.	So make
    names equal.	 */
 #  undef putc
-#  define putc(c, f) _IO_putc (c, f)
+#  define putc(c, f) _IO_putc_unlocked (c, f)
 #  define size_t     _IO_size_t
 #  define FILE	     _IO_FILE
 #else	/* ! USE_IN_LIBIO */

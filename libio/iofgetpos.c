@@ -33,7 +33,9 @@ _IO_fgetpos (fp, posp)
 {
   _IO_fpos_t pos;
   CHECK_FILE (fp, EOF);
+  _IO_flockfile (fp);
   pos = _IO_seekoff (fp, 0, _IO_seek_cur, 0);
+  _IO_funlockfile (fp);
   if (pos == _IO_pos_BAD)
     {
 #ifdef EIO

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1993, 1995 Free Software Foundation
+Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -36,3 +36,12 @@ fileno (fp)
 
   return _IO_fileno (fp);
 }
+
+#ifdef _IO_MTSAFE_IO
+/* The fileno implementation for libio does not require locking because
+   it only accesses once a single variable and this is already atomic
+   (at least at thread level).  */
+
+weak_alias (fileno_unlocked, fileno)
+weak_alias (fileno_locked, fileno)
+#endif

@@ -19,23 +19,13 @@ Cambridge, MA 02139, USA.  */
 #include "libioP.h"
 #include "stdio.h"
 
-#undef putc
+#undef putc_unlocked
 
 int
-putc (c, fp)
+putc_unlocked (c, fp)
      int c;
      _IO_FILE *fp;
 {
-  int result;
   CHECK_FILE (fp, EOF);
-  _IO_flockfile (fp);
-  result = _IO_putc_unlocked (c, fp);
-  _IO_funlockfile (fp);
-  return result;
+  return _IO_putc_unlocked (c, fp);
 }
-
-#ifdef _IO_MTSAFE_IO
-# undef putc_locked
-
-weak_alias (putc_locked, putc)
-#endif

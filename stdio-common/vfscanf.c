@@ -54,38 +54,59 @@ Cambridge, MA 02139, USA.  */
 
 # define va_list	_IO_va_list
 # define ungetc(c, s)	_IO_ungetc (c, s)
-# define inchar()	((c = _IO_getc (s)), (void) ++read_in, c)
-# define conv_error()	return ((void) (errp != NULL && (*errp |= 2)), \
-				(void) (c == EOF || _IO_ungetc (c, s)), done)
-
-# define input_error()	return ((void) (errp != NULL && (*errp |= 1)), \
-				done == 0 ? EOF : done)
-# define memory_error()	return ((void) (errno = ENOMEM), EOF)
-# define ARGCHECK(s, format)						     \
-  do									     \
-    {									     \
-      /* Check file argument for consistence.  */			     \
-      CHECK_FILE (s, -1);						     \
-      if (s->_flags & _IO_NO_READS || format == NULL)			     \
-       {								     \
-         MAYBE_SET_EINVAL;						     \
-         return -1;							     \
-       }								     \
+# define inchar()	((c = _IO_getc_unlocked (s)), (void) ++read_in, c)
+# define conv_error()	do {						      \
+			  if (errp != NULL) *errp |= 2;			      \
+			  if (c != EOF) _IO_ungetc (c, s);		      \
+			  _IO_funlockfile (s);				      \
+			  return done;					      \
+			} while (0)
+# define input_error()	do {						      \
+			  _IO_funlockfile (s);				      \
+			  if (errp != NULL) *errp |= 1;			      \
+			  return done ?: EOF;				      \
+			} while (0)
+# define memory_error()	do {						      \
+			  _IO_funlockfile (s);				      \
+			  errno = ENOMEM;				      \
+			  return EOF;					      \
+			} while (0)
+# define ARGCHECK(s, format)						      \
+  do									      \
+    {									      \
+      /* Check file argument for consistence.  */			      \
+      CHECK_FILE (s, EOF);						      \
+      if (s->_flags & _IO_NO_READS || format == NULL)			      \
+       {								      \
+         MAYBE_SET_EINVAL;						      \
+         return EOF;							      \
+       }								      \
     } while (0)
 #else
 # define inchar()	((c = getc (s)), (void) ++read_in, c)
-# define conv_error()	return ((void) ungetc (c, s), done)
-# define input_error()	return (done == 0 ? EOF : done)
-# define memory_error()	return ((void) (errno = ENOMEM), EOF)
-# define ARGCHECK(s, format)						     \
-  do									     \
-    {									     \
-      /* Check file argument for consistence.  */			     \
-      if (!__validfp (s) || !s->__mode.__read || format == NULL)	     \
-	{								     \
-	  errno = EINVAL;						     \
-	  return -1;							     \
-	}								     \
+# define conv_error()	do {						      \
+			  funlockfile (s);				      \
+			  ungetc (c, s);				      \
+			  return done;					      \
+			} while (0)
+# define input_error()	do {						      \
+			  funlockfile (s);				      \
+			  return done ?: EOF;				      \
+			} while (0)
+# define memory_error()	do {						      \
+			  funlockfile (s);				      \
+			  errno = ENOMEM;				      \
+			  return EOF;					      \
+			} while (0)
+# define ARGCHECK(s, format)						      \
+  do									      \
+    {									      \
+      /* Check file argument for consistence.  */			      \
+      if (!__validfp (s) || !s->__mode.__read || format == NULL)	      \
+	{								      \
+	  errno = EINVAL;						      \
+	  return EOF;							      \
+	}								      \
     } while (0)
 #endif
 
@@ -173,6 +194,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
     thousands = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
 
+  /* Lock the stream.  */
+  flockfile (s);
+  
   c = inchar ();
 
   /* Run through the format string.  */
@@ -781,6 +805,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
     while (isspace (c))
       (void) inchar ();
 
+  /* Unlock stream.  */
+  funlockfile (s);
+  
   return ((void) (c == EOF || ungetc (c, s)), done);
 }
 

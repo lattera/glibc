@@ -148,15 +148,13 @@ typedef struct
   int (*close) __P ((struct _IO_FILE *));
 } _IO_cookie_io_functions_t;
 
+/* Handle lock.  */
+#ifdef _IO_MTSAFE_IO
+typedef pthread_mutex_t _IO_lock_t;
+#else
+typedef void _IO_lock_t;
+#endif
 
-/* The reentrant version of the libio implementation needs a semaphore for
-   each _IO_FILE struture.  Because we don't know how the semaphore
-   will be implemented we try to be very general.  */
-struct _IO_lock_t {
-  void *ptr;
-  short int field1;
-  short int field2;
-};
 
 /* A streammarker remembers a position in a buffer. */
 
@@ -217,7 +215,7 @@ struct _IO_FILE {
 
   /*  char* _save_gptr;  char* _save_egptr; */
 
-  struct _IO_lock_t _IO_lock;
+  _IO_lock_t *_lock;
 };
 
 #ifndef __cplusplus
@@ -238,25 +236,37 @@ extern int __underflow __P((_IO_FILE*));
 extern int __uflow __P((_IO_FILE*));
 extern int __overflow __P((_IO_FILE*, int));
 
-#define _IO_getc(_fp) \
+#define _IO_getc_unlocked(_fp) \
        ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end ? __uflow(_fp) \
 	: *(unsigned char*)(_fp)->_IO_read_ptr++)
-#define _IO_peekc(_fp) \
+#define _IO_peekc_unlocked(_fp) \
        ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end \
 	  && __underflow(_fp) == EOF ? EOF \
 	: *(unsigned char*)(_fp)->_IO_read_ptr)
 
-#define _IO_putc(_ch, _fp) \
+#define _IO_putc_unlocked(_ch, _fp) \
    (((_fp)->_IO_write_ptr >= (_fp)->_IO_write_end) \
     ? __overflow(_fp, (unsigned char)(_ch)) \
     : (unsigned char)(*(_fp)->_IO_write_ptr++ = (_ch)))
 
-#define _IO_feof(__fp) (((__fp)->_flags & _IO_EOF_SEEN) != 0)
-#define _IO_ferror(__fp) (((__fp)->_flags & _IO_ERR_SEEN) != 0)
+#define _IO_feof_unlocked(__fp) (((__fp)->_flags & _IO_EOF_SEEN) != 0)
+#define _IO_ferror_unlocked(__fp) (((__fp)->_flags & _IO_ERR_SEEN) != 0)
 
 /* This one is for Emacs. */
 #define _IO_PENDING_OUTPUT_COUNT(_fp)	\
 	((_fp)->_IO_write_ptr - (_fp)->_IO_write_base)
+
+extern int _IO_getc_locked __P ((_IO_FILE *));
+extern int _IO_putc_locked __P ((int, _IO_FILE *));
+
+extern void _IO_flockfile __P ((_IO_FILE *));
+extern void _IO_funlockfile __P ((_IO_FILE *));
+
+#if !defined(_REENTRANT) && !defined(_THREAD_SAFE)
+# define _IO_flockfile(FILE) /**/
+# define _IO_funlockfile(FILE) /**/
+#endif /* _REENTRANT || _THREAD_SAFE */
+
 
 extern int _IO_vfscanf __P((_IO_FILE*, const char*, _IO_va_list, int*));
 extern int _IO_vfprintf __P((_IO_FILE*, const char*, _IO_va_list));

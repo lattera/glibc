@@ -672,11 +672,20 @@ The second as a decimal number.
 
 @item %U
 The week number of the current year as a decimal number, starting with
-the first Sunday as the first day of the first week.
+the first Sunday as the first day of the first week.  All days preceding
+the first Sunday in the year are considered to be in week @code{0}.
+
+@item %V
+The week number of the current year as a decimal number, starting with
+the first Monday as the first day of the first week.  If the week
+containing January 1 has four or more days in the new year it is
+considered to be week @code{1}.  Otherwise it is week @code{53} of the
+previous year.  This is standardized in @w{ISO 8601:1988}.
 
 @item %W
 The week number of the current year as a decimal number, starting with
-the first Monday as the first day of the first week.
+the first Monday as the first day of the first week.  All days preceding
+the first Monday in the year are considered to be in week @code{0}.
 
 @item %w
 The day of the week as a decimal number, Sunday being @code{0}.

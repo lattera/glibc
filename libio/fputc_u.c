@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1993 Free Software Foundation
+Copyright (C) 1993, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -23,28 +23,17 @@ This exception does not however invalidate any other reasons why
 the executable file might be covered by the GNU General Public License. */
 
 #include "libioP.h"
+#include "stdio.h"
 
-_IO_size_t
-_IO_fwrite (buf, size, count, fp)
-     const void* buf;
-     _IO_size_t size;
-     _IO_size_t count;
+#undef fputc_unlocked
+
+int
+__fputc_unlocked (c, fp)
+     int c;
      _IO_FILE *fp;
 {
-  _IO_size_t request = size*count;
-  _IO_size_t written;
-  CHECK_FILE (fp, 0);
-  if (request == 0)
-    return 0;
-  _IO_flockfile (fp);
-  written = _IO_sputn (fp, (const char *) buf, request);
-  _IO_funlockfile (fp);
-  /* Many traditional implementations return 0 if size==0 && count > 0,
-     but ANSI seems to require us to return count in this case. */
-  if (written == request)
-    return count;
-  else
-    return written/size;
+  CHECK_FILE (fp, EOF);
+  return _IO_putc_unlocked (c, fp);
 }
 
-weak_alias (_IO_fwrite, fwrite)
+weak_alias (fputc_unlocked, __fputc_unlocked)
