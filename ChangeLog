@@ -1,3 +1,8 @@
+2002-09-12  Roland McGrath  <roland@redhat.com>
+
+	* elf/rtld.c (dl_main) [USE_TLS]: Adjust l_tls_initimage of main
+	executable if needed, in case it's actually a shared object.
+
 2002-09-11  Roland McGrath  <roland@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Use l_addr instead of

@@ -832,6 +832,13 @@ of this helper program; chances are you did not intend to run this program.\n\
 	break;
 #endif
       }
+#ifdef USE_TLS
+    /* Adjust the address of the TLS initialization image in case
+       the executable is actually an ET_DYN object.  */
+    if (GL(dl_loaded)->l_tls_initimage != NULL)
+      GL(dl_loaded)->l_tls_initimage
+	= (char *) GL(dl_loaded)->l_tls_initimage + GL(dl_loaded)->l_addr;
+#endif
   if (! GL(dl_loaded)->l_map_end)
     GL(dl_loaded)->l_map_end = ~0;
   if (! GL(dl_rtld_map).l_libname && GL(dl_rtld_map).l_name)
