@@ -144,46 +144,6 @@ tf (void *arg)
 	}
     }
 
-  int inheritsched1, inheritsched2;
-  err = pthread_attr_getinheritsched (&a, &inheritsched1);
-  if (err)
-    {
-      error (0, err, "pthread_attr_getinheritsched failed");
-      result = tf;
-    }
-  else
-    {
-      err = pthread_attr_getinheritsched (ap, &inheritsched2);
-      if (err)
-	{
-	  error (0, err, "pthread_attr_getinheritsched failed");
-	  result = tf;
-	}
-      else if (inheritsched1 != inheritsched2)
-	{
-	  error (0, 0, "inheritsched differs %d != %d",
-		 inheritsched1, inheritsched2);
-	  result = tf;
-	}
-    }
-
-  cpu_set_t c1, c2;
-  err = pthread_getaffinity_np (pthread_self (), &c1);
-  if (err == 0)
-    {
-      err = pthread_attr_getaffinity_np (&a, &c2);
-      if (err)
-	{
-	  error (0, err, "pthread_attr_getaffinity_np failed");
-	  result = tf;
-	}
-      else if (memcmp (&c1, &c2, sizeof (c1)))
-	{
-	  error (0, 0, "pthread_attr_getaffinity_np returned different CPU mask than pthread_getattr_np");
-	  result = tf;
-	}
-    }
-
   err = pthread_attr_destroy (&a);
   if (err)
     {
@@ -210,19 +170,11 @@ do_test (void)
 {
   int result = 0;
   pthread_attr_t a;
-  cpu_set_t c1, c2;
 
   int err = pthread_attr_init (&a);
   if (err)
     {
       error (0, err, "pthread_attr_init failed");
-      result = 1;
-    }
-
-  err = pthread_attr_getaffinity_np (&a, &c1);
-  if (err && err != ENOSYS)
-    {
-      error (0, err, "pthread_attr_getaffinity_np failed");
       result = 1;
     }
 
@@ -311,22 +263,6 @@ do_test (void)
       error (0, 0, "pthread_attr_getinheritsched returned %d != PTHREAD_INHERIT_SCHED",
 	     inheritsched);
       result = 1;
-    }
-
-  err = pthread_getaffinity_np (pthread_self (), &c1);
-  if (err == 0)
-    {
-      err = pthread_attr_getaffinity_np (&a, &c2);
-      if (err)
-	{
-	  error (0, err, "pthread_attr_getaffinity_np failed");
-	  result = 1;
-	}
-      else if (memcmp (&c1, &c2, sizeof (c1)))
-	{
-	  error (0, 0, "pthread_attr_getaffinity_np returned different CPU mask than pthread_getattr_np");
-	  result = 1;
-	}
     }
 
   err = pthread_attr_destroy (&a);

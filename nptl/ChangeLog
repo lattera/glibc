@@ -1,3 +1,8 @@
+2003-09-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* tst-attr3.c (tf, do_test): Print stack start/end/size and
+	guardsize for each thread.
+
 2003-09-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/pthread.h (pthread_getattr_np): Clarify usage.

@@ -1,3 +1,10 @@
+2003-09-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/pthread.h (pthread_getattr_np): Clarify usage.
+
+	* tst-attr1.c: New test.
+	* Makefile (tests): Add tst-attr1.
+
 2003-09-17  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/vfork.S: Branch to fork if
