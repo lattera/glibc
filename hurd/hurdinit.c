@@ -70,10 +70,6 @@ _hurd_init (int flags, char **argv,
   __task_set_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
 			   portarray[INIT_PORT_BOOTSTRAP]);
 
-  /* Tell the proc server we exist, if it does.  */
-  if (portarray[INIT_PORT_PROC] != MACH_PORT_NULL)
-    _hurd_proc_init (argv);
-
   if (intarraysize > INIT_UMASK)
     _hurd_umask = intarray[INIT_UMASK] & 0777;
   else
@@ -81,6 +77,10 @@ _hurd_init (int flags, char **argv,
 
   if (intarraysize > INIT_TRACEMASK)
     _hurdsig_traced = intarray[INIT_TRACEMASK];
+
+  /* Tell the proc server we exist, if it does.  */
+  if (portarray[INIT_PORT_PROC] != MACH_PORT_NULL)
+    _hurd_proc_init (argv);
 
   /* All done with init ints and ports.  */
   __vm_deallocate (__mach_task_self (),
