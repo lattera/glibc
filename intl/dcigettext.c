@@ -636,6 +636,7 @@ _nl_find_msg (domain_file, domainbinding, msgid, lengthp)
      size_t *lengthp;
 {
   struct loaded_domain *domain;
+  nls_uint32 nstrings;
   size_t act;
   char *result;
   size_t resultlen;
@@ -648,8 +649,10 @@ _nl_find_msg (domain_file, domainbinding, msgid, lengthp)
 
   domain = (struct loaded_domain *) domain_file->data;
 
+  nstrings = domain->nstrings;
+
   /* Locate the MSGID and its translation.  */
-  if (domain->hash_size > 2 && domain->hash_tab != NULL)
+  if (domain->hash_tab != NULL)
     {
       /* Use the hashing table.  */
       nls_uint32 len = strlen (msgid);
@@ -659,22 +662,30 @@ _nl_find_msg (domain_file, domainbinding, msgid, lengthp)
 
       while (1)
 	{
-	  nls_uint32 nstr = W (domain->must_swap, domain->hash_tab[idx]);
+	  nls_uint32 nstr =
+	    W (domain->must_swap_hash_tab, domain->hash_tab[idx]);
 
 	  if (nstr == 0)
 	    /* Hash table entry is empty.  */
 	    return NULL;
 
-	  /* Compare msgid with the original string at index nstr-1.
+	  nstr--;
+
+	  /* Compare msgid with the original string at index nstr.
 	     We compare the lengths with >=, not ==, because plural entries
 	     are represented by strings with an embedded NUL.  */
-	  if (W (domain->must_swap, domain->orig_tab[nstr - 1].length) >= len
-	      && (strcmp (msgid,
-			  domain->data + W (domain->must_swap,
-					    domain->orig_tab[nstr - 1].offset))
-		  == 0))
+	  if (nstr < nstrings
+	      ? W (domain->must_swap, domain->orig_tab[nstr].length) >= len
+		&& (strcmp (msgid,
+			    domain->data + W (domain->must_swap,
+					      domain->orig_tab[nstr].offset))
+		    == 0)
+	      : domain->orig_sysdep_tab[nstr - nstrings].length > len
+		&& (strcmp (msgid,
+			    domain->orig_sysdep_tab[nstr - nstrings].pointer)
+		    == 0))
 	    {
-	      act = nstr - 1;
+	      act = nstr;
 	      goto found;
 	    }
 
@@ -692,7 +703,7 @@ _nl_find_msg (domain_file, domainbinding, msgid, lengthp)
       size_t top, bottom;
 
       bottom = 0;
-      top = domain->nstrings;
+      top = nstrings;
       while (bottom < top)
 	{
 	  int cmp_val;
@@ -715,9 +726,17 @@ _nl_find_msg (domain_file, domainbinding, msgid, lengthp)
  found:
   /* The translation was found at index ACT.  If we have to convert the
      string to use a different character set, this is the time.  */
-  result = ((char *) domain->data
-	    + W (domain->must_swap, domain->trans_tab[act].offset));
-  resultlen = W (domain->must_swap, domain->trans_tab[act].length) + 1;
+  if (act < nstrings)
+    {
+      result = (char *)
+	(domain->data + W (domain->must_swap, domain->trans_tab[act].offset));
+      resultlen = W (domain->must_swap, domain->trans_tab[act].length) + 1;
+    }
+  else
+    {
+      result = (char *) domain->trans_sysdep_tab[act - nstrings].pointer;
+      resultlen = domain->trans_sysdep_tab[act - nstrings].length;
+    }
 
 #if defined _LIBC || HAVE_ICONV
   if (domain->codeset_cntr
@@ -750,8 +769,9 @@ _nl_find_msg (domain_file, domainbinding, msgid, lengthp)
 	 NULs.  */
 
       if (domain->conv_tab == NULL
-	  && ((domain->conv_tab = (char **) calloc (domain->nstrings,
-						    sizeof (char *)))
+	  && ((domain->conv_tab =
+		 (char **) calloc (nstrings + domain->n_sysdep_strings,
+				   sizeof (char *)))
 	      == NULL))
 	/* Mark that we didn't succeed allocating a table.  */
 	domain->conv_tab = (char **) -1;

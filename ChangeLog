@@ -1,3 +1,46 @@
+2002-07-15  Alexandre Oliva  <aoliva@redhat.com>
+
+	* configure.in (static_nss): Set to `yes' if --disable-shared.
+
+2002-07-23  Bruno Haible  <bruno@clisp.org>
+
+	* intl/loadmsgcat.c (PRI*): Redefine the macros if PRI_MACROS_BROKEN
+	is set.
+
+2002-07-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sigcontextinfo.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/profil-counter.h: Fix profil_counter
+	arguments.
+
+2002-07-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/adjtime.c (__adjtimex_internal): Add
+	alias.
+
+2002-07-21  Bruno Haible  <bruno@clisp.org>
+
+	* intl/libintl.h (__GNU_GETTEXT_SUPPORTED_REVISION): New macro.
+	* intl/gettext.h (struct mo_file_header): New fields n_sysdep_segments,
+	sysdep_segments_offset, n_sysdep_strings, orig_sysdep_tab_offset,
+	trans_sysdep_tab_offset.
+	(struct sysdep_segment): New type.
+	(struct sysdep_string): New type.
+	(SEGMENTS_END): New macro.
+	* intl/gettextP.h (struct sysdep_string_desc): New type.
+	(struct loaded_domain): New fields malloced, n_sysdep_strings,
+	orig_sysdep_tab, trans_sysdep_tab, must_swap_hash_tab. Make fields
+	orig_tab, trans_tab, hash_tab to const pointers because they point
+	into read-only memory.
+	* intl/loadmsgcat.c: Include stdint.h, inttypes.h, hash-string.h.
+	(PRI*): Define fallback values.
+	(get_sysdep_segment_value): New function.
+	(_nl_load_domain): Distinguish major and minor revision parts. Add
+	support for minor revision 1 with system dependent strings.
+	(_nl_unload_domain): Also free the 'malloced' field.
+	* intl/dcigettext.c (_nl_find_msg): Remove test for domain->hash_size,
+	now done in loadmsgcat.c. Add support for system dependent strings.
+
 2002-07-16  Stepan Kasal  <kasal@math.cas.cz>
 
 	* posix/bug-regex7.c: New file.

@@ -1,5 +1,4 @@
-/* Machine-dependent SIGPROF signal handler.  IA-64 version.
-   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,16 +16,11 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* In many Unix systems signal handlers are called like this
-   and the interrupted PC is easily findable in the `struct sigcontext'.  */
+#define SIGCONTEXT siginfo_t *_si, struct sigcontext *
+#define SIGCONTEXT_EXTRA_ARGS _si,
+#define GET_PC(ctx)	((void *) 0)
+#define GET_FRAME(ctx)	((void *) 0)
+#define GET_STACK(ctx)	((void *) 0)
 
-static void
-profil_counter (int signr, siginfo_t *si, struct sigcontext *scp)
-{
-  unsigned long ip = scp->sc_ip & ~0X3ULL, slot = scp->sc_ip & 0x3ull;
-
-  /* Note: Linux/ia64 encodes the slot number in bits 0 and 1.  We
-     want to multiply the slot number by four so we can use bins of
-     width 4 to get accurate instruction-level profiling.  */
-  profil_count ((void *) (ip + 4*slot));
-}
+#define CALL_SIGHANDLER(handler, signo, ctx) \
+  (handler)((signo), SIGCONTEXT_EXTRA_ARGS (ctx))

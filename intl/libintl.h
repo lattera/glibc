@@ -1,5 +1,5 @@
 /* Message catalogs for internationalization.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    This file is derived from the file libgettext.h in the GNU gettext package.
 
@@ -26,6 +26,11 @@
 /* We define an additional symbol to signal that we use the GNU
    implementation of gettext.  */
 #define __USE_GNU_GETTEXT 1
+
+/* Provide information about the supported file formats.  Returns the
+   maximum minor revision number supported for a given major revision.  */
+#define __GNU_GETTEXT_SUPPORTED_REVISION(major) \
+  ((major) == 0 ? 1 : -1)
 
 __BEGIN_DECLS
 
