@@ -1,3 +1,7 @@
+1998-03-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/chown.c: Add versioning stuff.
+
 1998-03-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/sysv/linux/chown.c: New file for compatibility of

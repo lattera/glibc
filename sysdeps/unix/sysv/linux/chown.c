@@ -38,7 +38,7 @@ static int __libc_old_chown;
 
 
 int
-__chown (const char *file, uid_t owner, gid_t group)
+__real_chown (const char *file, uid_t owner, gid_t group)
 {
   int result;
 
@@ -56,13 +56,36 @@ __chown (const char *file, uid_t owner, gid_t group)
 
   return __lchown (file, owner, group);
 }
-#else
-/* compiling under older kernels */
+#endif
+
+
+#if !defined __NR_lchown || \
+    (defined HAVE_ELF && defined PIC && defined DO_VERSIONING)
+/* compiling under older kernels or for compatibiity */
 int
-__chown (const char *file, uid_t owner, gid_t group)
+__chown_is_lchown (const char *file, uid_t owner, gid_t group)
 {
-  return __syscall_chown (file, owner, group);
+  return __lchown (file, owner, group);
 }
 #endif
 
-weak_alias (__chown, chown)
+#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+symbol_version (__chown_is_lchown, __chown, GLIBC_2.0)
+symbol_version (__chown_is_lchown, chown, GLIBC_2.0)
+
+# ifdef __NR_lchown
+default_symbol_version (__real_chown, __chown, GLIBC_2.1)
+default_symbol_version (__real_chown, chown, GLIBC_2.1)
+# else
+default_symbol_version (__chown_is_lchown, __chown, GLIBC_2.1)
+default_symbol_version (__chown_is_lchown, chown, GLIBC_2.1)
+# endif
+#else
+# ifdef __NR_lchown
+strong_alias (__real_chown, __chown)
+weak_alias (__real_chown, chown)
+# else
+strong_alias (__chown_is_lchown, __chown)
+weak_alias (__chown_is_lchown, chown)
+# endif
+#endif
