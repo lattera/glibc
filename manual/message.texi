@@ -374,7 +374,7 @@ be escaped using the backslash (i.e., @code{\"} must be written).
 @item
 Any other line must start with a number or an alphanumeric identifier
 (with the underscore character included).  The following characters
-(starting at the first non-whitespace character) will form the string
+(starting after the first whitespace character) will form the string
 which gets associated with the currently selected set and the message
 number represented by the number and identifier respectively.
 
@@ -389,10 +389,6 @@ identifier for a message in another thread.  How to use the symbolic
 identifiers will be explained below (@pxref{Common Usage}).  There is
 one limitation with the identifier: it must not be @code{Set}.  The
 reason will be explained below.
-
-Please note that you must use a quoting character if a message contains
-leading whitespace.  Since one cannot guarantee this never happens it is
-probably a good idea to always use quoting.
 
 The text of the messages can contain escape characters.  The usual bunch
 of characters known from the @w{ISO C} language are recognized
