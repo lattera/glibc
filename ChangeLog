@@ -1,3 +1,8 @@
+Mon Nov  6 16:20:14 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/dlsym.c: Return the proper value, not just the defining
+	object's loadbase.
+
 Sun Nov  5 16:09:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* stdio-common/vfprintf.c (%c): Count the character itself towards

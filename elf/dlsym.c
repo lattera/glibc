@@ -28,12 +28,12 @@ dlsym (void *handle, const char *name)
 {
   struct link_map *map = handle;
   struct link_map *real_next;
-  Elf32_Addr value;
+  Elf32_Addr loadbase;
   int lose;
   void doit (void)
     {
       const Elf32_Sym *ref = NULL;
-      value = _dl_lookup_symbol (name, &ref, map, map->l_name, 1);
+      loadbase = _dl_lookup_symbol (name, &ref, map, map->l_name, 1);
     }
 
   /* Confine the symbol scope to just this map.  */
@@ -42,5 +42,5 @@ dlsym (void *handle, const char *name)
   lose = _dlerror_run (doit);
   map->l_next = real_next;
 
-  return lose ? NULL : (void *) value;
+  return lose ? NULL : (void *) (loadbase + ref->st_value);
 }
