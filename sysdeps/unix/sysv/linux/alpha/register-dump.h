@@ -18,7 +18,7 @@
    02111-1307 USA.  */
 
 #include <stddef.h>
-#include <sys/uio.h>
+#include <string.h>
 
 /* We will print the register dump in this format:
 
@@ -51,7 +51,7 @@
 
 #define NREGS (32+32+3)
 
-static const char regnames[NREGS][8] = 
+static const char __attribute__((aligned(8))) regnames[NREGS][8] = 
 {
   "    V0: ", "    T0: ", "    T1: ",
   "    T2: ", "    T3: ", "    T4: ",
@@ -113,49 +113,45 @@ static const int offsets[NREGS] =
 
 #undef O
 
-static const char linefeed[2] = "\n\n";
-
 static void
 register_dump (int fd, struct sigcontext *ctx)
 {
-  char regs[NREGS][16];
-  struct iovec iov[2*NREGS+24];
-  size_t iov_i = 0, i, j;
+  char buf[NREGS*(8+16) + 25 + 80];
+  char *p = buf;
+  size_t i;
   
-#define ADD_MEM(str, len)			\
-  (iov[iov_i].iov_base = (void *)(str),		\
-   iov[iov_i].iov_len = len,			\
-   ++iov_i)
-
-#define ADD_STRING(str) ADD_MEM(str, strlen(str))
-
-  ADD_STRING ("Register dump:\n\n");
+  p = stpcpy (p, "Register dump:\n\n");
 
   for (i = 0; i < NREGS; ++i)
     {
       int this_offset, this_lf;
       unsigned long val;
+      signed long j;
       
       this_offset = offsets[i];
       this_lf = this_offset & 7;
-      this_offset &= -8;
 
-      val = *(unsigned long *)((char *)ctx + this_offset);
+      val = *(unsigned long *)(((size_t)ctx + this_offset) & -8);
 
-      for (j = 0; j < 16; ++j)
+      memcpy (p, regnames[i], 8);
+      p += 8;
+
+      for (j = 60; j >= 0; j -= 4)
 	{
-	  unsigned long x = (val >> (64 - (j + 1) * 4)) & 15;
+	  unsigned long x = (val >> j) & 15;
 	  x += x < 10 ? '0' : 'a' - 10;
-	  regs[i][j] = x;
+	  *p++ = x;
 	}
 
-      ADD_MEM (regnames[i], 8);
-      ADD_MEM (regs[i], 16);
-      if (this_lf)
-	ADD_MEM (linefeed, this_lf);
+      if (this_lf > 0)
+	{
+	  if (this_lf > 1)
+	    *p++ = '\n';
+	  *p++ = '\n';
+	}
     }
 
-  writev (fd, iov, iov_i);
+  write (fd, buf, p - buf);
 }
 
 #define REGISTER_DUMP register_dump (fd, ctx)
