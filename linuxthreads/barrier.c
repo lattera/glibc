@@ -1,5 +1,5 @@
 /* POSIX barrier implementation for LinuxThreads.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>, 2000.
 
@@ -117,8 +117,8 @@ __pthread_barrierattr_getpshared(const pthread_barrierattr_t *attr,
 int
 pthread_barrierattr_setpshared(pthread_barrierattr_t *attr, int pshared)
 {
-  if (pshared != PTHREAD_PROCESS_PRIVATE && pshared != PTHREAD_PROCESS_SHARED)
-    return EINVAL;
+  if (pshared != PTHREAD_PROCESS_PRIVATE)
+    return ENOSYS;
 
   attr->__pshared = pshared;
   return 0;
