@@ -183,6 +183,13 @@
 # endif	/* _LIBC_REENTRANT */
 #endif	/* PIC */
 
+# ifdef NEED_SYSCALL_INST_PAD
+#  define SYSCALL_INST_PAD \
+	or r0,r0; or r0,r0; or r0,r0; or r0,r0; or r0,r0
+# else
+#  define SYSCALL_INST_PAD
+# endif
+
 #define SYSCALL_INST0	trapa #0x10
 #define SYSCALL_INST1	trapa #0x11
 #define SYSCALL_INST2	trapa #0x12
@@ -195,18 +202,12 @@
 #define DO_CALL(syscall_name, args)	\
     mov.l 1f,r3;			\
     SYSCALL_INST##args;			\
+    SYSCALL_INST_PAD;			\
     bra 2f;				\
      nop;				\
     .align 2;				\
  1: .long SYS_ify (syscall_name);	\
  2:
-
-# ifdef NEED_SYSCALL_INST_PAD
-#  define SYSCALL_INST_PAD \
-	or r0,r0; or r0,r0; or r0,r0; or r0,r0; or r0,r0
-# else
-#  define SYSCALL_INST_PAD
-# endif
 
 #else /* not __ASSEMBLER__ */
 

@@ -1,5 +1,5 @@
 /* Assembler macros for HP/PA.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@cygnus.com>, August 1999.
 
@@ -70,6 +70,7 @@
 #define	PSEUDO_END(name)						      \
   END (name)
 
+#undef JUMPTARGET
 #define JUMPTARGET(name)	name
 #define SYSCALL_PIC_SETUP	/* Nothing.  */
 

@@ -1,3 +1,19 @@
+2003-10-12  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* sysdeps/hppa/sysdep.h: Undef JUMPTARGET before use.
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h: Define PSEUDO_ERRVAL,
+	SYSCALL_ERROR_LABEL under all conditions, INTERNAL_SYSCALL_DECL,
+	INTERNAL_SYSCALL_ERROR_P, INTERNAL_SYSCALL_ERRNO, INTERNAL_SYSCALL,
+	and undef JUMPTARGET before use.
+	[PIC]: Save pic register around syscall.
+	* sysdeps/unix/sysv/linux/hppa/sysdep.c (syscall):
+	Cleanup asm statment.
+
+2003-10-13  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sysdep.h (DO_CALL): Add SYSCALL_INST_PAD
+	after trapa instruction.
+
 2003-10-09  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/syscalls.list: Add waitpid.

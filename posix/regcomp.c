@@ -1149,6 +1149,8 @@ calc_epsdest (dfa, node)
 	       || dfa->nodes[idx].type == OP_CLOSE_SUBEXP
 	       || dfa->nodes[idx].type == OP_BACK_REF)
 	re_node_set_init_1 (dfa->edests + idx, node->next);
+      else
+        assert (!IS_EPSILON_NODE (dfa->nodes[idx].type));
     }
 }
 

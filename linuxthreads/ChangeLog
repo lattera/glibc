@@ -1,5 +1,9 @@
 2003-10-10  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
+	* linuxthreads/sysdeps/unix/sysv/linux/hppa/malloc-machine.h: New file.
+
+2003-10-10  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
 	* sysdeps/unix/sysv/linux/hppa/sysdep-cancel.h: New file.
 
 2003-10-07  Jakub Jelinek  <jakub@redhat.com>
