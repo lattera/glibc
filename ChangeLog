@@ -1,5 +1,8 @@
 2002-10-24  Jakub Jelinek  <jakub@redhat.com>
 
+	* elf/dl-misc.c: Include <sysdep.h>.
+	(_dl_debug_vdprintf): Only take dl_load_lock if not _dl_starting_up.
+
 	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h (INTERNAL_SYSCALL,
 	INTERNAL_SYSCALL_ERROR_P, INTERNAL_SYSCALL_ERRNO): New macros.
 	(INLINE_SYSCALL): Use that.
@@ -26,6 +29,17 @@
 	argument.
 
 2002-10-24  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (_dl_starting_up): Declare it here.
+	* sysdeps/unix/sysv/linux/init-first.c: Not here.
+	* sysdeps/powerpc/elf/libc-start.c: Or here.
+	* sysdeps/unix/sysv/aix/libc-start.c: Or here.
+	* sysdeps/unix/sysv/aix/start-libc.c: Or here.
+	* sysdeps/unix/sysv/aix/init-first.c: Or here.
+	* sysdeps/generic/libc-start.c: Or here.
+	* sysdeps/unix/sysv/linux/init-first.c (init): Protect _dl_starting_up
+	access with [! SHARED].
+	* sysdeps/unix/sysv/aix/init-first.c (init): Likewise.
 
 	* libio/bug-wfflush.c: New file.
 	* libio/Makefile (tests): Add bug-wfflush.

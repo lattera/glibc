@@ -31,8 +31,6 @@ typedef unsigned char uchar;
 extern void __libc_init_first (int argc, char **argv, char **envp);
 
 /* XXX disable for now
-extern int _dl_starting_up;
-weak_extern (_dl_starting_up)
 extern int __libc_multiple_libcs; */
 
 /* XXX normally defined in generic/dl-sydep.c, hack it into existance

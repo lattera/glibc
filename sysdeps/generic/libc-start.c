@@ -24,8 +24,6 @@
 
 extern void __libc_init_first (int argc, char **argv, char **envp);
 
-extern int _dl_starting_up;
-weak_extern (_dl_starting_up)
 extern int __libc_multiple_libcs;
 extern void *__libc_stack_end;
 

@@ -35,9 +35,6 @@
 /* The function is called from assembly stubs the compiler can't see.  */
 static void init (int, char **, char **) __attribute__ ((unused));
 
-extern int _dl_starting_up;
-weak_extern (_dl_starting_up)
-
 /* Set nonzero if we have to be prepared for more then one libc being
    used in the process.  Safe assumption if initializer never runs.  */
 int __libc_multiple_libcs attribute_hidden = 1;
@@ -54,12 +51,15 @@ init (int argc, char **argv, char **envp)
 #ifdef USE_NONOPTION_FLAGS
   extern void __getopt_clean_environment (char **);
 #endif
+
+#ifndef SHARED
   /* The next variable is only here to work around a bug in gcc <= 2.7.2.2.
      If the address would be taken inside the expression the optimizer
      would try to be too smart and throws it away.  Grrr.  */
   int *dummy_addr = &_dl_starting_up;
 
   __libc_multiple_libcs = dummy_addr && !_dl_starting_up;
+#endif
 
   /* Make sure we don't initialize twice.  */
   if (!__libc_multiple_libcs)

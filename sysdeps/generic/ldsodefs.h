@@ -416,6 +416,13 @@ extern const char _dl_out_of_memory[];
 extern const char _dl_out_of_memory_internal[] attribute_hidden;
 #endif
 
+#ifndef SHARED
+/* Flag set at startup and cleared when the last initializer has run.  */
+extern int _dl_starting_up;
+weak_extern (_dl_starting_up)
+#elif defined IS_IN_rtld
+extern int _dl_starting_up_internal attribute_hidden;
+#endif
 
 /* OS-dependent function to open the zero-fill device.  */
 extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */

@@ -24,9 +24,6 @@
 
 extern void __libc_init_first (int argc, char **argv, char **envp);
 
-extern int _dl_starting_up;
-weak_extern (_dl_starting_up)
-
 extern int __cache_line_size;
 weak_extern (__cache_line_size)
 

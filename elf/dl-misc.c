@@ -30,6 +30,7 @@
 #include <sys/param.h>
 #include <sys/stat.h>
 #include <sys/uio.h>
+#include <sysdep.h>
 #include <stdio-common/_itoa.h>
 #include <bits/libc-lock.h>
 
@@ -81,7 +82,7 @@ _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
 }
 
 
-/* Bare-bone printf implementation.  This function only knows about
+/* Bare-bones printf implementation.  This function only knows about
    the formats and flags needed and can handle only up to 64 stripes in
    the output.  */
 static void
@@ -250,10 +251,17 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
   INTERNAL_SYSCALL (writev, 3, fd, iov, niov);
 #elif RTLD_PRIVATE_ERRNO
   /* We have to take this lock just to be sure we don't clobber the private
-     errno when it's being used by another thread that cares about it.  */
-  __libc_lock_lock_recursive (GL(dl_load_lock));
-  __writev (fd, iov, niov);
-  __libc_lock_unlock_recursive (GL(dl_load_lock));
+     errno when it's being used by another thread that cares about it.
+     Yet we must be sure not to try calling the lock functions before
+     the thread library is fully initialized.  */
+  if (__builtin_expect (INTUSE (_dl_starting_up), 0))
+    __writev (fd, iov, niov);
+  else
+    {
+      __libc_lock_lock_recursive (GL(dl_load_lock));
+      __writev (fd, iov, niov);
+      __libc_lock_unlock_recursive (GL(dl_load_lock));
+    }
 #else
   __writev (fd, iov, niov);
 #endif
