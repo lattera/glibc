@@ -61,7 +61,8 @@ libm-routines = $(strip $(libm-support) $(libm-calls) \
 			$(patsubst %_rf,%f_r,$(libm-calls:=f))	\
 			$(long-m-$(long-double-fcts)))
 long-m-routines = $(patsubst %_rl,%l_r,$(libm-calls:=l))
-long-m-yes = $(long-m-routines)
+long-m-support = t_sincosl k_sincosl
+long-m-yes = $(long-m-routines) $(long-m-support)
 distribute += $(long-m-yes:=.c)
 
 # These functions are in libc instead of libm because __printf_fp

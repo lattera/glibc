@@ -264,6 +264,8 @@ extern long double __ieee754_scalbl __P((long double,long double));
 extern long double __kernel_sinl __P((long double,long double,int));
 extern long double __kernel_cosl __P((long double,long double));
 extern long double __kernel_tanl __P((long double,long double,int));
+extern void __kernel_sincosl __P((long double,long double,
+				  long double *,long double *, int));
 extern int   __kernel_rem_pio2l __P((long double*,long double*,int,int,
 				     int,const int*));
 

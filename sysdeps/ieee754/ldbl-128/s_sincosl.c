@@ -23,9 +23,6 @@
 
 #include "math_private.h"
 
-/* Note: We should probably introduce __kernel_sincosl to speed things up,
-   because __kernel_{cos,sin}l sometimes compute both sine and cosine.  */
-
 void
 __sincosl (long double x, long double *sinx, long double *cosx)
 {
@@ -37,10 +34,7 @@ __sincosl (long double x, long double *sinx, long double *cosx)
   /* |x| ~< pi/4 */
   ix &= 0x7fffffffffffffffLL;
   if (ix <= 0x3ffe921fb54442d1LL)
-    {
-      *sinx = __kernel_sinl (x, 0.0, 0);
-      *cosx = __kernel_cosl (x, 0.0);
-    }
+    __kernel_sincosl (x, 0.0L, sinx, cosx, 0);
   else if (ix >= 0x7fff000000000000LL)
     {
       /* sin(Inf or NaN) is NaN */
@@ -56,20 +50,20 @@ __sincosl (long double x, long double *sinx, long double *cosx)
       switch (n & 3)
 	{
 	case 0:
-	  *sinx = __kernel_sinl (y[0], y[1], 1);
-	  *cosx = __kernel_cosl (y[0], y[1]);
+	  __kernel_sincosl (y[0], y[1], sinx, cosx, 1);
 	  break;
 	case 1:
-	  *sinx = __kernel_cosl (y[0], y[1]);
-	  *cosx = -__kernel_sinl (y[0], y[1], 1);
+	  __kernel_sincosl (y[0], y[1], cosx, sinx, 1);
+	  *cosx = -*cosx;
 	  break;
 	case 2:
-	  *sinx = -__kernel_sinl (y[0], y[1], 1);
-	  *cosx = -__kernel_cosl (y[0], y[1]);
+	  __kernel_sincosl (y[0], y[1], sinx, cosx, 1);
+	  *sinx = -*sinx;
+	  *cosx = -*cosx;
 	  break;
 	default:
-	  *sinx = -__kernel_cosl (y[0], y[1]);
-	  *cosx = __kernel_sinl (y[0], y[1], 1);
+	  __kernel_sincosl (y[0], y[1], cosx, sinx, 1);
+	  *sinx = -*sinx;
 	  break;
 	}
     }

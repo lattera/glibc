@@ -1,3 +1,19 @@
+1999-07-15  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	* math/Makefile: Add t_sincosl and k_sincosl support routines.
+	* math/math_private.h (__kernel_sincosl): New declaration.
+	* sysdeps/generic/t_sincosl.c: New file.
+	* sysdeps/generic/k_sincosl.c: New file.
+	* sysdeps/ieee754/ldbl-128/k_cosl.c: New file.
+	* sysdeps/ieee754/ldbl-128/k_sinl.c: New file.
+	* sysdeps/ieee754/ldbl-128/k_sincosl.c: New file.
+	* sysdeps/ieee754/ldbl-128/t_sincosl.c: New file.
+	* sysdeps/ieee754/ldbl-128/e_rem_pio2l.c: New file.
+	* sysdeps/ieee754/ldbl-128/s_sincosl.c (__sincosl): Use
+	__kernel_sincosl.
+	* sysdeps/ieee754/ldbl-128/math_ldbl.h (GET_LDOUBLE_LSW64): New
+	definition.
+
 1999-07-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/unistd.h: Use __PMT for exit.

@@ -80,3 +80,11 @@ do {								\
   (d) = sh_u.value;						\
 } while (0)
 
+/* Get the least significant 64 bits of a long double mantissa.  */
+
+#define GET_LDOUBLE_LSW64(v,d)					\
+do {								\
+  ieee854_long_double_shape_type sh_u;				\
+  sh_u.value = (d);						\
+  (v) = sh_u.parts64.lsw;					\
+} while (0)
