@@ -11,7 +11,7 @@ features has been written, we are publishing it here.
 * Consistency Checking::        Using @code{assert} to abort if
 				 something ``impossible'' happens.
 * Variadic Functions::          Defining functions with varying numbers
-                                 of args. 
+                                 of args.
 * Null Pointer Constant::       The macro @code{NULL}.
 * Important Data Types::        Data types for object sizes.
 * Data Type Measurements::      Parameters of data type representations.
@@ -25,8 +25,8 @@ features has been written, we are publishing it here.
 
 When you're writing a program, it's often a good idea to put in checks
 at strategic places for ``impossible'' errors or violations of basic
-assumptions.  These checks are helpful in debugging problems due to
-misunderstandings between different parts of the program.
+assumptions.  These kinds of checks are helpful in debugging problems
+with the interfaces between different parts of the program, for example.
 
 @pindex assert.h
 The @code{assert} macro, defined in the header file @file{assert.h},
@@ -57,16 +57,19 @@ program (@pxref{Aborting a Program}) after printing a message of the
 form:
 
 @smallexample
-@file{@var{file}}:@var{linenum}: Assertion `@var{expression}' failed.
+@file{@var{file}}:@var{linenum}: @var{function}: Assertion `@var{expression}' failed.
 @end smallexample
 
 @noindent
 on the standard error stream @code{stderr} (@pxref{Standard Streams}).
 The filename and line number are taken from the C preprocessor macros
 @code{__FILE__} and @code{__LINE__} and specify where the call to
-@code{assert} was written.
+@code{assert} was written.  When using the GNU C compiler, the name of
+the function which calls @code{assert} is taken from the built-in
+variable @code{__PRETTY_FUNCTION__}; with older compilers, the function
+name and following colon are omitted.
 
-If the preprocessor macro @code{NDEBUG} is defined at the point where
+If the preprocessor macro @code{NDEBUG} is defined before
 @file{assert.h} is included, the @code{assert} macro is defined to do
 absolutely nothing.
 
@@ -75,6 +78,38 @@ evaluated if @code{NDEBUG} is in effect.  So never use @code{assert}
 with arguments that involve side effects.  For example, @code{assert
 (++i > 0);} is a bad idea, because @code{i} will not be incremented if
 @code{NDEBUG} is defined.
+@end deftypefn
+
+Sometimes the ``impossible'' condition you want to check for is an error
+return from an operating system function.  Then it is useful to display
+not only where the program crashes, but also what error was returned.
+The @code{assert_perror} macro makes this easy.
+
+@comment assert.h
+@comment GNU
+@deftypefn Macro void assert_perror (int @var{errnum})
+Similar to @code{assert}, but verifies that @var{errnum} is zero.
+
+If @code{NDEBUG} is defined, @code{assert_perror} tests the value of
+@var{errnum}.  If it is nonzero, @code{assert_perror} aborts the program
+after a printing a message of the form:
+
+@smallexample
+@file{@var{file}}:@var{linenum}: @var{function}: @var{error text}
+@end smallexample
+
+@noindent
+on the standard error stream.  The file name, line number, and function
+name are as for @code{assert}.  The error text is the result of
+@w{@code{strerror (@var{errnum})}}.  @xref{Error Messages}.
+
+Like @code{assert}, if @code{NDEBUG} is defined before @file{assert.h}
+is included, the @code{assert_perror} macro does absolutely nothing.  It
+does not evaluate the argument, so @var{errnum} should not have any side
+effects.  It is best for @var{errnum} to be a just simple variable
+reference; often it will be @code{errno}.
+
+This macro is a GNU extension.
 @end deftypefn
 
 @strong{Usage note:} The @code{assert} facility is designed for
@@ -86,8 +121,8 @@ The information in the diagnostic messages printed by the @code{assert}
 macro is intended to help you, the programmer, track down the cause of a
 bug, but is not really useful for telling a user of your program why his
 or her input was invalid or why a command could not be carried out.  So
-you can't use @code{assert} to print the error messages for these
-eventualities.
+you can't use @code{assert} or @code{assert_perror} to print the error
+messages for these eventualities.
 
 What's more, your program should not abort when given invalid input, as
 @code{assert} would do---it should exit with nonzero status (@pxref{Exit
@@ -120,7 +155,7 @@ of arguments, using @file{varargs.h}.
 
 @menu
 * Why Variadic::                Reasons for making functions take
-                                 variable arguments. 
+                                 variable arguments.
 * How Variadic::                How to define and call variadic functions.
 * Variadic Example::            A complete example.
 @end menu
@@ -189,7 +224,7 @@ additional variable arguments.  @xref{Calling Variadics}.
 			  with variable arguments.
 * Receiving Arguments::  Steps you must follow to access the
 			  optional argument values.
-* How Many Arguments::   How to decide whether there are more arguments. 
+* How Many Arguments::   How to decide whether there are more arguments.
 * Calling Variadics::    Things you need to know about calling
 			  variable arguments functions.
 * Argument Macros::      Detailed specification of the macros
@@ -205,16 +240,16 @@ additional variable arguments.  @xref{Calling Variadics}.
 
 A function that accepts a variable number of arguments must be declared
 with a prototype that says so.   You write the fixed arguments as usual,
-and then tack on @samp{@dots{}} to indicate the possibility of 
+and then tack on @samp{@dots{}} to indicate the possibility of
 additional arguments.  The syntax of ANSI C requires at least one fixed
 argument before the @samp{@dots{}}.  For example,
 
 @smallexample
-int 
+int
 func (const char *a, int b, @dots{})
 @{
   @dots{}
-@}	
+@}
 @end smallexample
 
 @noindent
@@ -271,7 +306,7 @@ compiler.  But you might as well call @code{va_end} just in case your
 program is someday compiled with a peculiar compiler.)
 @end enumerate
 
-@xref{Argument Macros}, for the full definitions of @code{va_start}, 
+@xref{Argument Macros}, for the full definitions of @code{va_start},
 @code{va_arg} and @code{va_end}.
 
 Steps 1 and 3 must be performed in the function that accepts the
@@ -405,7 +440,7 @@ found in the header file @file{varargs.h}.
 @deftypefn {Macro} @var{type} va_arg (va_list @var{ap}, @var{type})
 The @code{va_arg} macro returns the value of the next optional argument,
 and modifies the value of @var{ap} to point to the subsequent argument.
-Thus, successive uses of @code{va_arg} return successive optional 
+Thus, successive uses of @code{va_arg} return successive optional
 arguments.
 
 The type of the value returned by @code{va_arg} is @var{type} as
@@ -478,7 +513,7 @@ functions:
 @comment Unix
 @deffn Macro va_alist
 This macro stands for the argument name list required in a variadic
-function.  
+function.
 @end deffn
 
 @comment varargs.h
@@ -537,7 +572,7 @@ The result of subtracting two pointers in C is always an integer, but the
 precise data type varies from C compiler to C compiler.  Likewise, the
 data type of the result of @code{sizeof} also varies between compilers.
 ANSI defines standard aliases for these two types, so you can refer to
-them in a portable fashion.  They are defined in the header file 
+them in a portable fashion.  They are defined in the header file
 @file{stddef.h}.
 @pindex stddef.h
 
@@ -601,7 +636,7 @@ which give you this information in full detail.
 * Width of Type::           How many bits does an integer type hold?
 * Range of Type::           What are the largest and smallest values
 			     that an integer type can hold?
-* Floating Type Macros::    Parameters that measure the floating point types. 
+* Floating Type Macros::    Parameters that measure the floating point types.
 * Structure Measurement::   Getting measurements on structure types.
 @end menu
 
@@ -814,7 +849,7 @@ machine.
 * Floating Point Concepts::     Definitions of terminology.
 * Floating Point Parameters::   Details of specific macros.
 * IEEE Floating Point::         The measurements for one common
-                                 representation. 
+                                 representation.
 @end menu
 
 @node Floating Point Concepts
@@ -865,7 +900,7 @@ follows.
 The @dfn{mantissa} or @dfn{significand}, an unsigned integer which is a
 part of each floating point number.
 
-@item 
+@item
 @cindex precision (of floating point number)
 The @dfn{precision} of the mantissa.  If the base of the representation
 is @var{b}, then the precision is the number of base-@var{b} digits in
@@ -1149,7 +1184,7 @@ supposed to be greater than @code{1E-9}.
 
 @node IEEE Floating Point
 @subsubsection IEEE Floating Point
-@cindex IEEE floating point representation 
+@cindex IEEE floating point representation
 @cindex floating point, IEEE
 
 Here is an example showing how the floating type measurements come out

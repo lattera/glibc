@@ -30,7 +30,7 @@ libdl-inhibit-o	= $(filter-out .so,$(object-suffixes)) # Build only shared.
 
 rtld-routines	:= rtld $(addprefix dl-,minimal load lookup object reloc \
 				        deps runtime sysdep error init fini)
-distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h \
+distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		  soinit.c sofini.c ldd.sh.in linux-compat.c
 
 all: # Make this the default target; it will be defined in Rules.

@@ -25,7 +25,7 @@ include ../Makeconfig
 
 
 headers = hurd.h $(interface-headers) \
-	  $(addprefix hurd/,fd.h id.h port.h signal.h sigpreempt.h \
+	  $(addprefix hurd/,fd.h id.h port.h signal.h sigpreempt.h ioctl.h\
 			    userlink.h resource.h threadvar.h lookup.h)
 
 distribute := hurdstartup.h hurdfault.h intr-rpc.defs STATUS
@@ -59,6 +59,7 @@ sig	= hurdsig hurdfault siginfo hurd-raise preempt-sig \
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  getdport openport \
 	  fd-close fd-read fd-write hurdioctl ctty-input ctty-output
+distribute = intr-rpc.defs intr-rpc.h faultexc.defs
 
 # XXX this is a temporary hack; see hurdmalloc.h
 routines += hurdmalloc

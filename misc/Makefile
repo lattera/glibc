@@ -52,7 +52,7 @@ routines := brk sbrk sstk ioctl \
 	    syslog syscall daemon \
 	    mmap munmap mprotect msync madvise \
 	    efgcvt efgcvt_r \
-	    hsearch hsearch_r tsearch \
+	    hsearch hsearch_r tsearch lsearch \
 	    err error
 aux := init-misc
 distribute := bsd-compat.c

@@ -25,7 +25,7 @@ headers	:= string.h strings.h memory.h endian.h bytesex.h \
 	   argz.h envz.h
 
 routines	:= strcat strchr strcmp strcoll strcpy strcspn strdup	\
-		   strerror _strerror strlen strnlen			\
+		   strerror _strerror strerror_r strlen strnlen		\
 		   strncat strncmp strncpy				\
 		   strrchr strpbrk strsignal strspn strstr strtok	\
 		   strtok_r strxfrm memchr memcmp memmove memset	\

@@ -38,6 +38,9 @@ else
 sysdep_dirs := $(addprefix $(..),$(sysdep_dirs))
 endif
 
+# Make sure both stdio and libio get in, whichever is in use.
+subdirs += stdio libio
+
 sysdep-Subdir-files := $(wildcard $(addsuffix /Subdirs,$(sysdep_dirs)))
 ifdef sysdep-Subdir-files
 subdirs := $(sort $(subdirs) \
@@ -165,7 +168,7 @@ foo:=$(shell echo '+sysdep-dist=$(+sysdep-dist)' >&2)
 
 subdirs := $(filter-out crypt,$(subdirs))
 
-+sysdep-tsrcs := $(wildcard $(foreach file,Makefile Implies \
++sysdep-tsrcs := $(wildcard $(foreach file,Makefile Implies syscalls.list\
 				           configure configure.in,\
 				      $(addsuffix /$(file),$(sysdep_dirs)))) \
 		 $(+sysdep-dist)

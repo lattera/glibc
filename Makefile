@@ -223,13 +223,14 @@ parent_echo-distinfo:
 # Make the distribution tarfile.
 
 distribute  := README INSTALL FAQ NOTES NEWS PROJECTS			\
-	        COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]		\
+	       COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]		\
 	       Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
 	       extra-lib.mk o-iterator.mk				\
 	       ansidecl.h mkinstalldirs move-if-change install-sh	\
 	       configure configure.in aclocal.m4 config.sub config.guess\
-	       config.make.in config-name.in Makefile.in		\
-	       munch-tmpl.c munch.awk sysdep.h set-hooks.h libc-symbols.h
+	       config.h.in config.make.in config-name.in Makefile.in	\
+	       munch-tmpl.c munch.awk \
+	       sysdep.h set-hooks.h libc-symbols.h version.h shlib-versions
 
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h

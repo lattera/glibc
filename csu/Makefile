@@ -35,7 +35,7 @@ omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 		             $(csu-dummies))
 install-lib = $(start-installed-name) g$(start-installed-name) \
 	      $(csu-dummies)
-distribute = initfini.c
+distribute = initfini.c gmon-start.c start.c
 
 all: # Make this the default target; it will be defined in Rules.
 

@@ -45,7 +45,7 @@ mo-installed = $(localedir)/%/LC_MESSAGES/$(domainname).mo
 install-others = $(LINGUAS:%=$(mo-installed))
 
 # Files to distribute: all the source and compiled binary translation files.
-distribute = $(ALL_LINGUAS:=.po) $(ALL_LINGUAS:=.mo)
+distribute = $(ALL_LINGUAS:=.po) $(ALL_LINGUAS:=.mo) SYS_libc.pot
 
 
 include ../Rules
