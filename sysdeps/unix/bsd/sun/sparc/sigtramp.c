@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -187,7 +187,7 @@ DEFUN(trampoline, (sig), int sig)
      I don't know what it's for.  Ask Sun.  */
   asm("restore %%g0, 139, %%g1\n"
       "ta 0\n"
-      "mov %0, %0"		/* Useless insn that will never be executed, */
+      "! this should be i0: %0"	/* Useless insn that will never be executed, */
 				/* here to make the compiler happy.  */
       : /* No outputs.  */ :
       /* CONTEXT is bound to %i0.  We reference it as an input here to make
