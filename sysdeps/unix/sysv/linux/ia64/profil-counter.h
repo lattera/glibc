@@ -23,5 +23,10 @@
 static void
 profil_counter (int signr, int code, struct sigcontext *scp)
 {
-  profil_count ((void *) scp->sc_ip);
+  unsigned long ip = scp->sc_ip & ~0X3ULL, slot = scp->sc_ip & 0x3ull;
+
+  /* Note: Linux/ia64 encodes the slot number in bits 0 and 1.  We
+     want to multiply the slot number by four so we can use bins of
+     width 4 to get accurate instruction-level profiling.  */
+  profil_count ((void *) (ip + 4*slot));
 }
