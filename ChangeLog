@@ -1,3 +1,7 @@
+2001-04-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/arm/stackinfo.h: New file.
+
 2001-04-08  Thorsten Kukuk  <kukuk@suse.de>
 
 	* sunrpc/rpc_main.c: If we compile RPC thread safe, allow
