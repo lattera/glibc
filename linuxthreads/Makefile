@@ -79,7 +79,24 @@ $(objpfx)libpthread_nonshared.a: $(addprefix $(objpfx),$(addsuffix .os,$(libpthr
 
 ifeq ($(build-shared),yes)
 
-extra-objs += crti.o crtn.o
+# Set the `multidir' variable by grabbing the variable from the compiler.
+# We do it once and save the result in a generated makefile.
+-include $(objpfx)multidir.mk
+$(objpfx)multidir.mk: $(common-objpfx)config.make
+	dir=`$(CC) $(CFLAGS) $(CPPFLAGS) -print-multi-directory`; \
+	echo "multidir := $$dir" > $@T
+	mv -f $@T $@
+generated += multidir.mk
+
+crti-objs := crti.o
+crtn-objs := crtn.o
+ifneq (,$(patsubst .,,$(multidir)))
+generated-dirs := $(firstword $(subst /, , $(multidir)))
+crti-objs += $(multidir)/crti.o
+crtn-objs += $(multidir)/crtn.o
+omit-deps += $(multidir)/crti $(multidir)/crtn
+endif
+extra-objs += $(crti-objs) $(crtn-objs)
 omit-deps += crti crtn
 
 CFLAGS-pt-initfini.s = -g0 -fPIC -fno-inline-functions
@@ -132,9 +149,9 @@ $(inst_libdir)/libpthread_nonshared.a: $(objpfx)libpthread_nonshared.a
 
 
 extra-B-pthread.so = -B$(common-objpfx)linuxthreads/
-$(objpfx)libpthread.so: $(objpfx)crti.o $(objpfx)crtn.o
-$(objpfx)libpthread.so: +preinit += $(objpfx)crti.o
-$(objpfx)libpthread.so: +postinit += $(objpfx)crtn.o
+$(objpfx)libpthread.so: $(addprefix $(objpfx),$(crti-objs) $(crtn-objs))
+$(objpfx)libpthread.so: +preinit += $(addprefix $(objpfx),$(crti-objs))
+$(objpfx)libpthread.so: +postinit += $(addprefix $(objpfx),$(crtn-objs))
 
 znodelete-yes = -DHAVE_Z_NODELETE
 CFLAGS-mutex.c += -D__NO_WEAK_PTHREAD_ALIASES
@@ -248,6 +265,17 @@ $(objpfx)crti.o: $(objpfx)crti.S $(objpfx)defs.h
 
 $(objpfx)crtn.o: $(objpfx)crtn.S $(objpfx)defs.h
 	$(compile.S) -g0 $(ASFLAGS-.os) -o $@
+
+ifneq ($(multidir),.)
+$(objpfx)$(multidir):
+	@mkdir -p $(objpfx)$(multidir)
+
+$(objpfx)$(multidir)/crti.o: $(objpfx)crti.o $(objpfx)$(multidir)
+	ln -f $< $@
+
+$(objpfx)$(multidir)/crtn.o: $(objpfx)crtn.o $(objpfx)$(multidir)
+	ln -f $< $@
+endif
 
 generated += crti.S crtn.S defs.h pt-initfini.s
 endif
