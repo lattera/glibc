@@ -1548,7 +1548,7 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	dont_insert:
 	}
 
-      if (runp->wcs != NULL)
+      if (runp->used_in_level)
 	{
 	  runp->wcorder = wcact++;
 

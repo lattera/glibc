@@ -79,7 +79,7 @@ __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
   }
 
   {
-    int save_errno, result;
+    int result;
     struct __old_msqid_ds old;
 
 #ifdef __NR_getuid32
@@ -87,7 +87,7 @@ __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
       {
 	if (__libc_missing_32bit_uids < 0)
 	  {
-	    save_errno = errno;
+	    int save_errno = errno;
 
 	    /* Test presence of new IPC by testing for getuid32 syscall.  */
 	    result = INLINE_SYSCALL (getuid32, 0);

@@ -104,7 +104,7 @@ __new_semctl (int semid, int semnum, int cmd, ...)
   }
 
   {
-    int save_errno, result;
+    int result;
     struct __old_semid_ds old;
     struct semid_ds *buf;
 
@@ -113,7 +113,7 @@ __new_semctl (int semid, int semnum, int cmd, ...)
       {
 	if (__libc_missing_32bit_uids < 0)
 	  {
-	    save_errno = errno;
+	    int save_errno = errno;
 
 	    /* Test presence of new IPC by testing for getuid32 syscall.  */
 	    result = INLINE_SYSCALL (getuid32, 0);

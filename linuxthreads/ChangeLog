@@ -1,3 +1,11 @@
+2000-02-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* condvar.c (pthread_cond_timedwait_relative_old): Undo last patch
+	but keep the code around.  A bug in the kernel prevent us from
+	using the code.
+	(pthread_cond_timedwait_relative_new): Likewise.
+	(PR libc/1597 and libc/1598).
+
 2000-02-01  Kaz Kylheku  <kaz@ashi.footprints.net>
 
 	* condvar.c (pthread_cond_timedwait_relative_old): Do tight

@@ -1,4 +1,12 @@
+2000-02-12  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/msgctl.c (__new_msgctl): Move errno
+	declaration to place where it's needed to avoid compiler warning.
+	* sysdeps/unix/sysv/linux/i386/semctl.c (__new_semctl): Likewise.
+
 2000-02-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/weightwc.h (findidx): Correct find index value.
 
 	* locale/nl_langinfo.h: Add casts to prevent warnings.
 

@@ -51,8 +51,7 @@ findidx (const wint_t **cpp)
       const wint_t *usrc = *cpp;
 
       /* The first thing is the index.  */
-      i = cp;
-      ++cp;
+      i = *cp++;
 
       /* Next is the length of the byte sequence.  These are always
 	 short byte sequences so there is no reason to call any
