@@ -97,7 +97,4 @@ __data_start:
 	.weak data_start
 	data_start = __data_start
 
-	.global __libc_ia64_register_backing_store_base
-	.align 8
-__libc_ia64_register_backing_store_base:
-	.space 8
+	.common __libc_ia64_register_backing_store_base, 8, 8
