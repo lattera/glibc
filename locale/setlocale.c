@@ -372,7 +372,7 @@ setlocale (int category, const char *locale)
       /* Critical section left.  */
       __libc_lock_unlock (__libc_setlocale_lock);
 
-      /* Free the resources (the locale path variable.  */
+      /* Free the resources (the locale path variable).  */
       free (locale_path);
 
       return composite;
