@@ -1,3 +1,8 @@
+1999-08-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/errno.h: Fix EILSEQ value
+	changed in last patch.  Reported by Ralf Baechle.
+
 1999-08-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/mips/sysdep.h: Use __syscall_error.
