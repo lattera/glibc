@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -90,6 +90,7 @@ CFLAGS-getsysstats.c = -fexceptions
 CFLAGS-getusershell.c = -fexceptions
 CFLAGS-err.c = -fexceptions
 CFLAGS-tst-tsearch.c = $(stack-align-test-flags)
+CFLAGS-mntent_r.c = -D_IO_MTSAFE_IO
 
 include ../Rules
 

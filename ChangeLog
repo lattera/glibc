@@ -1,5 +1,14 @@
 2004-02-08  Ulrich Drepper  <drepper@redhat.com>
 
+	Make stream locking operations really work.
+	* misc/Makefile (CFLAGS-mntent_r.c): Define.
+	* shadow/Makefile (CFLAGS-fgetspent_r.c): Define.
+	(CFLAGS-putspent.c): Define.
+	* grp/Makefile (CFLAGS-fgetgrent_r.c): Define.
+	(CFLAGS-putgrent.c): Define.
+	* pwd/Makefile (CFLAGS-fgetpwent_r.c): Define.
+	Reported by Shunichi Sagawa <s-sagawa@jp.fujitsu.com>.
+
 	* elf/dl-load.c (lose): Use noinline attribute instead of silly
 	alloca to prevent inlining.
 	* elf/dl-runtime.c (fixup): Likewise.
