@@ -66,7 +66,7 @@ static int cond_extricate_func(void *obj, pthread_descr th)
 
   __pthread_lock(&cond->__c_lock, self);
   did_remove = remove_from_queue(&cond->__c_waiting, th);
-  __pthread_unlock(&cond->__c_lock);
+  __pthread_spin_unlock(&cond->__c_lock);
 
   return did_remove;
 }
@@ -101,7 +101,7 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
     enqueue(&cond->__c_waiting, self);
   else
     already_canceled = 1;
-  __pthread_unlock(&cond->__c_lock);
+  __pthread_spin_unlock(&cond->__c_lock);
 
   if (already_canceled) {
     __pthread_set_own_extricate_if(self, 0);
@@ -161,7 +161,7 @@ pthread_cond_timedwait_relative_old(pthread_cond_t *cond,
     enqueue(&cond->__c_waiting, self);
   else
     already_canceled = 1;
-  __pthread_unlock(&cond->__c_lock);
+  __pthread_spin_unlock(&cond->__c_lock);
 
   if (already_canceled) {
     __pthread_set_own_extricate_if(self, 0);
@@ -231,7 +231,7 @@ pthread_cond_timedwait_relative_old(pthread_cond_t *cond,
       int was_on_queue;
       __pthread_lock(&cond->__c_lock, self);
       was_on_queue = remove_from_queue(&cond->__c_waiting, self);
-      __pthread_unlock(&cond->__c_lock);
+      __pthread_spin_unlock(&cond->__c_lock);
 
       if (was_on_queue) {
 	__pthread_set_own_extricate_if(self, 0);
@@ -295,7 +295,7 @@ pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
     enqueue(&cond->__c_waiting, self);
   else
     already_canceled = 1;
-  __pthread_unlock(&cond->__c_lock);
+  __pthread_spin_unlock(&cond->__c_lock);
 
   if (already_canceled) {
     __pthread_set_own_extricate_if(self, 0);
@@ -361,7 +361,7 @@ pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
 
     __pthread_lock(&cond->__c_lock, self);
     was_on_queue = remove_from_queue(&cond->__c_waiting, self);
-    __pthread_unlock(&cond->__c_lock);
+    __pthread_spin_unlock(&cond->__c_lock);
 
     if (was_on_queue) {
       __pthread_set_own_extricate_if(self, 0);
@@ -402,7 +402,7 @@ int pthread_cond_signal(pthread_cond_t *cond)
 
   __pthread_lock(&cond->__c_lock, NULL);
   th = dequeue(&cond->__c_waiting);
-  __pthread_unlock(&cond->__c_lock);
+  __pthread_spin_unlock(&cond->__c_lock);
   if (th != NULL) restart(th);
   return 0;
 }
@@ -415,7 +415,7 @@ int pthread_cond_broadcast(pthread_cond_t *cond)
   /* Copy the current state of the waiting queue and empty it */
   tosignal = cond->__c_waiting;
   cond->__c_waiting = NULL;
-  __pthread_unlock(&cond->__c_lock);
+  __pthread_spin_unlock(&cond->__c_lock);
   /* Now signal each process in the queue */
   while ((th = dequeue(&tosignal)) != NULL) restart(th);
   return 0;

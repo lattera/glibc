@@ -62,7 +62,7 @@ void pthread_exit(void * retval)
     }
   /* See if someone is joining on us */
   joining = THREAD_GETMEM(self, p_joining);
-  __pthread_unlock(THREAD_GETMEM(self, p_lock));
+  __pthread_spin_unlock(THREAD_GETMEM(self, p_lock));
   /* Restart joining thread if any */
   if (joining != NULL) restart(joining);
   /* If this is the initial thread, block until all threads have terminated.
@@ -93,7 +93,7 @@ static int join_extricate_func(void *obj, pthread_descr th)
   jo = handle->h_descr;
   did_remove = jo->p_joining != NULL;
   jo->p_joining = NULL;
-  __pthread_unlock(&handle->h_lock);
+  __pthread_spin_unlock(&handle->h_lock);
 
   return did_remove;
 }
@@ -113,38 +113,38 @@ int pthread_join(pthread_t thread_id, void ** thread_return)
 
   __pthread_lock(&handle->h_lock, self);
   if (invalid_handle(handle, thread_id)) {
-    __pthread_unlock(&handle->h_lock);
+    __pthread_spin_unlock(&handle->h_lock);
     return ESRCH;
   }
   th = handle->h_descr;
   if (th == self) {
-    __pthread_unlock(&handle->h_lock);
+    __pthread_spin_unlock(&handle->h_lock);
     return EDEADLK;
   }
   /* If detached or already joined, error */
   if (th->p_detached || th->p_joining != NULL) {
-    __pthread_unlock(&handle->h_lock);
+    __pthread_spin_unlock(&handle->h_lock);
     return EINVAL;
   }
   /* If not terminated yet, suspend ourselves. */
   if (! th->p_terminated) {
     /* Register extrication interface */
-    __pthread_set_own_extricate_if(self, &extr); 
+    __pthread_set_own_extricate_if(self, &extr);
     if (!(THREAD_GETMEM(self, p_canceled)
 	&& THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE))
       th->p_joining = self;
     else
       already_canceled = 1;
-    __pthread_unlock(&handle->h_lock);
+    __pthread_spin_unlock(&handle->h_lock);
 
     if (already_canceled) {
-      __pthread_set_own_extricate_if(self, 0); 
+      __pthread_set_own_extricate_if(self, 0);
       pthread_exit(PTHREAD_CANCELED);
     }
 
     suspend(self);
     /* Deregister extrication interface */
-    __pthread_set_own_extricate_if(self, 0); 
+    __pthread_set_own_extricate_if(self, 0);
 
     /* This is a cancellation point */
     if (THREAD_GETMEM(self, p_woken_by_cancel)
@@ -156,7 +156,7 @@ int pthread_join(pthread_t thread_id, void ** thread_return)
   }
   /* Get return value */
   if (thread_return != NULL) *thread_return = th->p_retval;
-  __pthread_unlock(&handle->h_lock);
+  __pthread_spin_unlock(&handle->h_lock);
   /* Send notification to thread manager */
   if (__pthread_manager_request >= 0) {
     request.req_thread = self;
@@ -177,24 +177,24 @@ int pthread_detach(pthread_t thread_id)
 
   __pthread_lock(&handle->h_lock, NULL);
   if (invalid_handle(handle, thread_id)) {
-    __pthread_unlock(&handle->h_lock);
+    __pthread_spin_unlock(&handle->h_lock);
     return ESRCH;
   }
   th = handle->h_descr;
   /* If already detached, error */
   if (th->p_detached) {
-    __pthread_unlock(&handle->h_lock);
+    __pthread_spin_unlock(&handle->h_lock);
     return EINVAL;
   }
   /* If already joining, don't do anything. */
   if (th->p_joining != NULL) {
-    __pthread_unlock(&handle->h_lock);
+    __pthread_spin_unlock(&handle->h_lock);
     return 0;
   }
   /* Mark as detached */
   th->p_detached = 1;
   terminated = th->p_terminated;
-  __pthread_unlock(&handle->h_lock);
+  __pthread_spin_unlock(&handle->h_lock);
   /* If already terminated, notify thread manager to reclaim resources */
   if (terminated && __pthread_manager_request >= 0) {
     request.req_thread = thread_self();

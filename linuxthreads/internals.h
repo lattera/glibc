@@ -131,7 +131,7 @@ struct _pthread_descr_struct {
   pthread_t p_tid;              /* Thread identifier */
   int p_pid;                    /* PID of Unix process */
   int p_priority;               /* Thread priority (== 0 if not realtime) */
-  struct _pthread_fastlock * p_lock; /* Spinlock for synchronized accesses */
+  pthread_spinlock_t * p_lock;  /* Spinlock for synchronized accesses */
   int p_signal;                 /* last signal received */
   sigjmp_buf * p_signal_jmp;    /* where to siglongjmp on a signal or NULL */
   sigjmp_buf * p_cancel_jmp;    /* where to siglongjmp on a cancel or NULL */
@@ -183,7 +183,7 @@ struct _pthread_descr_struct {
 typedef struct pthread_handle_struct * pthread_handle;
 
 struct pthread_handle_struct {
-  struct _pthread_fastlock h_lock; /* Fast lock for sychronized access */
+  pthread_spinlock_t h_lock;    /* Fast lock for sychronized access */
   pthread_descr h_descr;        /* Thread descriptor or NULL if invalid */
   char * h_bottom;              /* Lowest address in the stack thread */
 };

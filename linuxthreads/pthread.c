@@ -458,7 +458,7 @@ int __pthread_initialize_manager(void)
 	      __linuxthreads_create_event ();
 
 	      /* Now restart the thread.  */
-	      __pthread_unlock(__pthread_manager_thread.p_lock);
+	      __pthread_spin_unlock(__pthread_manager_thread.p_lock);
 	    }
 	}
     }
@@ -585,16 +585,16 @@ int pthread_setschedparam(pthread_t thread, int policy,
 
   __pthread_lock(&handle->h_lock, NULL);
   if (invalid_handle(handle, thread)) {
-    __pthread_unlock(&handle->h_lock);
+    __pthread_spin_unlock(&handle->h_lock);
     return ESRCH;
   }
   th = handle->h_descr;
   if (__sched_setscheduler(th->p_pid, policy, param) == -1) {
-    __pthread_unlock(&handle->h_lock);
+    __pthread_spin_unlock(&handle->h_lock);
     return errno;
   }
   th->p_priority = policy == SCHED_OTHER ? 0 : param->sched_priority;
-  __pthread_unlock(&handle->h_lock);
+  __pthread_spin_unlock(&handle->h_lock);
   if (__pthread_manager_request >= 0)
     __pthread_manager_adjust_prio(th->p_priority);
   return 0;
@@ -608,11 +608,11 @@ int pthread_getschedparam(pthread_t thread, int *policy,
 
   __pthread_lock(&handle->h_lock, NULL);
   if (invalid_handle(handle, thread)) {
-    __pthread_unlock(&handle->h_lock);
+    __pthread_spin_unlock(&handle->h_lock);
     return ESRCH;
   }
   pid = handle->h_descr->p_pid;
-  __pthread_unlock(&handle->h_lock);
+  __pthread_spin_unlock(&handle->h_lock);
   pol = __sched_getscheduler(pid);
   if (pol == -1) return errno;
   if (__sched_getparam(pid, param) == -1) return errno;
@@ -809,7 +809,7 @@ void __pthread_set_own_extricate_if(pthread_descr self, pthread_extricate_if *pe
 {
   __pthread_lock(self->p_lock, self);
   THREAD_SETMEM(self, p_extricate, peif);
-  __pthread_unlock(self->p_lock);
+  __pthread_spin_unlock(self->p_lock);
 }
 
 /* Primitives for controlling thread execution */

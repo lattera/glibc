@@ -22,10 +22,10 @@
 #include "spinlock.h"
 #include "restart.h"
 
-/* The status field of a fastlock has the following meaning:
-     0: fastlock is free
-     1: fastlock is taken, no thread is waiting on it
-  ADDR: fastlock is taken, ADDR is address of thread descriptor for
+/* The status field of a spinlock has the following meaning:
+     0: spinlock is free
+     1: spinlock is taken, no thread is waiting on it
+  ADDR: psinlock is taken, ADDR is address of thread descriptor for
         first waiting thread, other waiting threads are linked via
         their p_nextlock field.
    The waiting list is not sorted by priority order.
@@ -36,7 +36,7 @@
    This is safe because there are no concurrent __pthread_unlock
    operations -- only the thread that locked the mutex can unlock it. */
 
-void internal_function __pthread_lock(struct _pthread_fastlock * lock,
+void internal_function __pthread_lock(pthread_spinlock_t * lock,
 				      pthread_descr self)
 {
   long oldstatus, newstatus;
@@ -61,7 +61,7 @@ void internal_function __pthread_lock(struct _pthread_fastlock * lock,
   } while(! compare_and_swap(&lock->__status, oldstatus, newstatus,
                              &lock->__spinlock));
 
-  /* Suspend with guard against spurious wakeup. 
+  /* Suspend with guard against spurious wakeup.
      This can happen in pthread_cond_timedwait_relative, when the thread
      wakes up due to timeout and is still on the condvar queue, and then
      locks the queue to remove itself. At that point it may still be on the
@@ -82,9 +82,17 @@ void internal_function __pthread_lock(struct _pthread_fastlock * lock,
   /* Put back any resumes we caught that don't belong to us. */
   while (spurious_wakeup_count--)
     restart(self);
-}
 
-void internal_function __pthread_unlock(struct _pthread_fastlock * lock)
+  return 0;
+}
+int __pthread_spin_lock(pthread_spinlock_t * lock)
+{
+  __pthread_lock (lock, NULL);
+  return 0;
+}
+weak_alias (__pthread_spin_lock, pthread_spin_lock)
+
+int __pthread_spin_unlock(pthread_spinlock_t * lock)
 {
   long oldstatus;
   pthread_descr thr, * ptr, * maxptr;
@@ -98,7 +106,7 @@ again:
        be done here we would crash further down.  */
     if (! compare_and_swap(&lock->__status, oldstatus, 0, &lock->__spinlock))
       goto again;
-    return;
+    return 0;
   }
   /* Find thread in waiting queue with maximal priority */
   ptr = (pthread_descr *) &lock->__status;
@@ -142,7 +150,34 @@ again:
   /* Wake up the selected waiting thread */
   thr->p_nextlock = NULL;
   restart(thr);
+
+  return 0;
 }
+weak_alias (__pthread_spin_unlock, pthread_spin_unlock)
+
+
+int __pthread_spin_trylock (pthread_spinlock_t *lock)
+{
+  return __pthread_trylock (lock);
+}
+weak_alias (__pthread_spin_trylock, pthread_spin_trylock)
+
+int __pthread_spin_init(pthread_spinlock_t *lock, int pshared)
+{
+  if (pshared != 0)
+    return ENOSYS;
+
+  __pthread_init_lock (lock);
+  return 0;
+}
+weak_alias (__pthread_spin_init, pthread_spin_init)
+
+int __pthread_spin_destroy(pthread_spinlock_t *lock)
+{
+  /* Nothing to do.  */
+  return 0;
+}
+weak_alias (__pthread_spin_destroy, pthread_spin_destroy)
 
 /* Compare-and-swap emulation with a spinlock */
 

@@ -57,11 +57,11 @@ int pthread_kill(pthread_t thread, int signo)
 
   __pthread_lock(&handle->h_lock, NULL);
   if (invalid_handle(handle, thread)) {
-    __pthread_unlock(&handle->h_lock);
+    __pthread_spin_unlock(&handle->h_lock);
     return ESRCH;
   }
   pid = handle->h_descr->p_pid;
-  __pthread_unlock(&handle->h_lock);
+  __pthread_spin_unlock(&handle->h_lock);
   if (kill(pid, signo) == -1)
     return errno;
   else

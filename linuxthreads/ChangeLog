@@ -1,5 +1,33 @@
 2000-04-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/pthread.h: Add prototypes for pthread_spin_init,
+	pthread_spin_destroy, pthread_spin_lock, pthread_spin_trylock,
+	and pthread_spin_unlock.
+	* sysdeps/pthread/bits/pthreadtypes.h: Change struct _pthread_fastlock
+	into pthread_spinlock_t.  Change all uses.
+	* spinlock.c: Implement pthread_spin_lock.
+	Rename __pthread_unlock to __pthread_spin_unlock and define weak
+	alias for real name.
+	Define pthread_spin_trylock, pthread_spin_init, and
+	pthread_spin_destroy.
+	Change all uses of _pthread_fastlock to pthread_spinlock_t.
+	* spinlock.h: Rename __pthread_unlock to __pthread_spin_unlock.
+	Change all uses of _pthread_fastlock to pthread_spinlock_t.
+	* Versions [libpthread] (GLIBC_2.2): Add pthread_spin_init,
+	pthread_spin_destroy, pthread_spin_lock, pthread_spin_trylock,
+	and pthread_spin_unlock.
+	* cancel.c: Use __pthread_spin_unlock instead of __pthread_unlock.
+	Change all uses of _pthread_fastlock to pthread_spinlock_t.
+	* condvar.c: Likewise.
+	* internals.h: Likewise.
+	* join.c: Likewise.
+	* manager.c: Likewise.
+	* mutex.c: Likewise.
+	* pthread.c: Likewise.
+	* rwlock.c: Likewise.
+	* semaphore.c: Likewise.
+	* signals.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Add various new POSIX
 	macros.
 	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: New file.

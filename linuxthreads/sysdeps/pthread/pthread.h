@@ -405,6 +405,27 @@ extern int pthread_rwlockattr_setkind_np (pthread_rwlockattr_t *__attr,
 					  int __pref) __THROW;
 #endif
 
+#ifdef __USE_XOPEN2K
+/* The IEEE Std. 10003.1j-2000 introduces functions to implement
+   spinlocks.  */
+
+/* Initialize the spinlock LOCK.  If PSHARED is nonzero the spinlock can
+   be shared between different processes.  */
+extern int pthread_spin_init (pthread_spinlock_t *__lock, int __pshared);
+
+/* Destroy the spinlock LOCK.  */
+extern int pthread_spin_destroy (pthread_spinlock_t *__lock);
+
+/* Wait until spinlock LOCK is retrieved.  */
+extern int pthread_spin_lock (pthread_spinlock_t *__lock);
+
+/* Try to lock spinlock LOCK.  */
+extern int pthread_spin_trylock (pthread_spinlock_t *__lock);
+
+/* Release spinlock LOCK.  */
+extern int pthread_spin_unlock (pthread_spinlock_t *__lock);
+#endif
+
 
 /* Functions for handling thread-specific data.  */
 

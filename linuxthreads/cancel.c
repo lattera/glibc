@@ -58,14 +58,14 @@ int pthread_cancel(pthread_t thread)
 
   __pthread_lock(&handle->h_lock, NULL);
   if (invalid_handle(handle, thread)) {
-    __pthread_unlock(&handle->h_lock);
+    __pthread_spin_unlock(&handle->h_lock);
     return ESRCH;
   }
 
   th = handle->h_descr;
 
   if (th->p_canceled) {
-    __pthread_unlock(&handle->h_lock);
+    __pthread_spin_unlock(&handle->h_lock);
     return 0;
   }
 
@@ -76,7 +76,7 @@ int pthread_cancel(pthread_t thread)
   /* If the thread has registered an extrication interface, then
      invoke the interface. If it returns 1, then we succeeded in
      dequeuing the thread from whatever waiting object it was enqueued
-     with. In that case, it is our responsibility to wake it up. 
+     with. In that case, it is our responsibility to wake it up.
      And also to set the p_woken_by_cancel flag so the woken thread
      can tell that it was woken by cancellation. */
 
@@ -85,7 +85,7 @@ int pthread_cancel(pthread_t thread)
     th->p_woken_by_cancel = dorestart;
   }
 
-  __pthread_unlock(&handle->h_lock);
+  __pthread_spin_unlock(&handle->h_lock);
 
   /* If the thread has suspended or is about to, then we unblock it by
      issuing a restart, instead of a cancel signal. Otherwise we send
@@ -97,7 +97,7 @@ int pthread_cancel(pthread_t thread)
 
   if (dorestart)
     restart(th);
-  else 
+  else
     kill(pid, __pthread_sig_cancel);
 
   return 0;

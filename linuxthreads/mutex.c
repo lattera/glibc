@@ -109,7 +109,7 @@ int __pthread_mutex_unlock(pthread_mutex_t * mutex)
 {
   switch (mutex->__m_kind) {
   case PTHREAD_MUTEX_FAST_NP:
-    __pthread_unlock(&mutex->__m_lock);
+    __pthread_spin_unlock(&mutex->__m_lock);
     return 0;
   case PTHREAD_MUTEX_RECURSIVE_NP:
     if (mutex->__m_count > 0) {
@@ -117,13 +117,13 @@ int __pthread_mutex_unlock(pthread_mutex_t * mutex)
       return 0;
     }
     mutex->__m_owner = NULL;
-    __pthread_unlock(&mutex->__m_lock);
+    __pthread_spin_unlock(&mutex->__m_lock);
     return 0;
   case PTHREAD_MUTEX_ERRORCHECK_NP:
     if (mutex->__m_owner != thread_self() || mutex->__m_lock.__status == 0)
       return EPERM;
     mutex->__m_owner = NULL;
-    __pthread_unlock(&mutex->__m_lock);
+    __pthread_spin_unlock(&mutex->__m_lock);
     return 0;
   default:
     return EINVAL;
