@@ -67,6 +67,9 @@ libc {
     strchrnul; __strverscmp;
   }
   GLIBC_2.2 {
+    # functions used in macros.
+    __strndup;
+
     # m*
     memrchr;
   }
