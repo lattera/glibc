@@ -41,25 +41,27 @@ static void mcount_internal (u_long frompc, u_long selfpc)
 	blind calls to _mount(), ignoring the fact that _mcount may
 	clobber registers; therefore, _mcount may NOT clobber registers */
 /* if (this_fp!=0) {
-	r0 = this_lr
-	r1 = this_fp
-  	r1 = [r1-4] which is caller's fp
+	r0 = this_fp
+	r1 = this_lr
+  	r1 = [r1-4] which is caller's lr 
 	if (r1!=0) 
 		r1 = caller's lr
 	call mcount_internal(this_lr, caller's_lr)
    }
-*/  
+*/
+
 #define MCOUNT								\
 void _mcount (void)							\
 {									\
   __asm__("stmdb	sp!, {r0, r1, r2, r3};"				\
 	  "movs		fp, fp;"				      	\
-	  "moveq	r0, #0;"					\
-	  "ldrne	r0, [fp, $-4];"					\
-	  "ldrne	r1, [fp, $-12];"				\
-	  "movnes	r1, r1;"					\
-	  "ldrne	r1, [r1, $-4];"					\
-	  "movs		r1, r1;"					\
+          "moveq	r1, #0;"					\
+	  "ldrne	r1, [fp, $-4];"					\
+	  "ldrne	r0, [fp, $-12];"				\
+	  "movnes	r0, r0;"					\
+	  "ldrne	r0, [r0, $-4];"					\
+	  "movs		r0, r0;"					\
 	  "blne		mcount_internal;"				\
 	  "ldmia	sp!, {r0, r1, r2, r3}");			\
 }
+
