@@ -33,8 +33,14 @@
 # define MAXDIG (NDIGIT_MAX + 3)
 # if DBL_MANT_DIG == 53
 #  define NDIGIT_MAX 17
+# elif DBL_MANT_DIG == 24
+#  define NDIGIT_MAX 9
+# elif DBL_MANT_DIG == 56
+#  define NDIGIT_MAX 18
 # else
-/* See IEEE 854 5.6, table 2 for this formula.  */
+/* See IEEE 854 5.6, table 2 for this formula.  Unfortunately we need a
+   compile time constant here, so we cannot use it.  */
+#  error "NDIGIT_MAX must be precomputed"
 #  define NDIGIT_MAX (lrint (ceil (M_LN2 / M_LN10 * DBL_MANT_DIG + 1.0)))
 # endif
 #endif

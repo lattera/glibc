@@ -26,8 +26,16 @@
 #define FLOAT_NAME_EXT l
 #if LDBL_MANT_DIG == 64
 # define NDIGIT_MAX 21
+#elif LDBL_MANT_DIG == 53
+# define NDIGIT_MAX 17
+#elif LDBL_MANT_DIG == 113
+# define NDIGIT_MAX 36
+#elif LDBL_MANT_DIG == 56
+# define NDIGIT_MAX 18
 #else
-/* See IEEE 854 5.6, table 2 for this formula.  */
+/* See IEEE 854 5.6, table 2 for this formula.  Unfortunately we need a
+   compile time constant here, so we cannot use it.  */
+# error "NDIGIT_MAX must be precomputed"
 # define NDIGIT_MAX (lrint (ceil (M_LN2 / M_LN10 * LDBL_MANT_DIG + 1.0)))
 #endif
 

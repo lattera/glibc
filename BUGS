@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <1999-07-06T15:37:11-0700 drepper>
+Time-stamp: <1999-07-29T15:25:53-0700 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -58,10 +58,6 @@ Severity: [  *] to [***]
 
 [  *]  The strftime() implementation cannot handle multibyte locales really
        good since the TOLOWER and TOUPPER are not prepared.
-
-[  *]  The putenv() function copies it's argument which means that the
-       string (and possible later changes to it) are not automatically
-       reflected in the environment.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Ulrich Drepper

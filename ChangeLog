@@ -1,3 +1,12 @@
+1999-07-29  Andreas Schwab  <schwab@suse.de>
+
+	* misc/efgcvt.c (NDIGIT_MAX): Provide precomputed constants for
+	all floating point formats supported by gcc.  Error out for
+	unhandled precisions.
+	* misc/efgcvt_r.c (NDIGIT_MAX): Likewise.
+	* misc/qefgcvt.c (NDIGIT_MAX): Likewise.
+	* misc/qefgcvt_r.c (NDIGIT_MAX): Likewise.
+
 1999-07-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/setenv.c: Move setenv code in new function
