@@ -1907,9 +1907,27 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_IA64_PCREL64I		0x7b	/* @pcrel(sym + add), 64bit inst */
 #define R_IA64_IPLTMSB		0x80	/* dynamic reloc, imported PLT, MSB */
 #define R_IA64_IPLTLSB		0x81	/* dynamic reloc, imported PLT, LSB */
+#define R_IA64_COPY		0x84	/* copy relocation */
 #define R_IA64_SUB		0x85	/* Addend and symbol difference */
 #define R_IA64_LTOFF22X		0x86	/* LTOFF22, relaxable.  */
 #define R_IA64_LDXMOV		0x87	/* Use of LTOFF22X.  */
+#define R_IA64_TPREL14		0x91	/* @tprel(sym + add), imm14 */
+#define R_IA64_TPREL22		0x92	/* @tprel(sym + add), imm22 */
+#define R_IA64_TPREL64I		0x93	/* @tprel(sym + add), imm64 */
+#define R_IA64_TPREL64MSB	0x96	/* @tprel(sym + add), data8 MSB */
+#define R_IA64_TPREL64LSB	0x97	/* @tprel(sym + add), data8 LSB */
+#define R_IA64_LTOFF_TPREL22	0x9a	/* @ltoff(@tprel(s+a)), imm2 */
+#define R_IA64_DTPMOD64MSB	0xa6	/* @dtpmod(sym + add), data8 MSB */
+#define R_IA64_DTPMOD64LSB	0xa7	/* @dtpmod(sym + add), data8 LSB */
+#define R_IA64_LTOFF_DTPMOD22	0xaa	/* @ltoff(@dtpmod(sym + add)), imm22 */
+#define R_IA64_DTPREL14		0xb1	/* @dtprel(sym + add), imm14 */
+#define R_IA64_DTPREL22		0xb2	/* @dtprel(sym + add), imm22 */
+#define R_IA64_DTPREL64I	0xb3	/* @dtprel(sym + add), imm64 */
+#define R_IA64_DTPREL32MSB	0xb4	/* @dtprel(sym + add), data4 MSB */
+#define R_IA64_DTPREL32LSB	0xb5	/* @dtprel(sym + add), data4 LSB */
+#define R_IA64_DTPREL64MSB	0xb6	/* @dtprel(sym + add), data8 MSB */
+#define R_IA64_DTPREL64LSB	0xb7	/* @dtprel(sym + add), data8 LSB */
+#define R_IA64_LTOFF_DTPREL22	0xba	/* @ltoff(@dtprel(s+a)), imm22 */
 
 /* SH specific declarations */
 
