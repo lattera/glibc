@@ -23,7 +23,7 @@ Boston, MA 02111-1307, USA.  */
 
 /* Set scheduling algorithm and/or parameters for a process.  */
 int
-__sched_setscheduler (pid_t pid, int policy, const struct sched_params *param)
+__sched_setscheduler (pid_t pid, int policy, const struct sched_param *param)
 {
   errno = ENOSYS;
   return -1;

@@ -27,7 +27,7 @@ Boston, MA 02111-1307, USA.  */
 #define SCHED_RR	2
 
 /* Data structure to describe a process' schedulability.  */
-struct sched_params
+struct sched_param
 {
   int sched_priority;
 };

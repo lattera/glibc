@@ -21,7 +21,8 @@ ifdef in-Makerules
 subdirs := $(filter-out sunrpc,$(subdirs)) # XXX skip broken dirs
 
 # Look for header files in hurd/ under the top-level library source directory.
-includes += -I$(..)hurd
+# Look for generated header files where they get created.
+includes += -I$(..)hurd -I$(common-objpfx)hurd/
 
 # Do not use any assembly code from sysdeps/unix (and subdirectories).
 # This bypasses all the system call stubs and uses any existing posix or

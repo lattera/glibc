@@ -19,7 +19,8 @@
 ifdef in-Makerules
 
 # Look for header files in mach/ under the top-level library source directory.
-includes += -I$(..)mach
+# Look for generated header files where they get created.
+includes += -I$(..)mach -I$(common-objpfx)mach/
 
 ifneq (mach,$(subdir))
 # Subdirectories other than mach/ might use the generated Mach headers.

@@ -23,7 +23,7 @@ Boston, MA 02111-1307, USA.  */
 
 /* Retrieve scheduling parameters for a particular process.  */
 int
-__sched_getparam (pid_t pid, struct sched_params *param)
+__sched_getparam (pid_t pid, struct sched_param *param)
 {
   errno = ENOSYS;
   return -1;
