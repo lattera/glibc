@@ -168,6 +168,8 @@ create_archive (const char *archivefname, struct locarhandle *ah)
 }
 
 
+/* This structure and qsort comparator function are used below to sort an
+   old archive's locrec table in order of data position in the file.  */
 struct oldlocrecent
 {
   unsigned int cnt;
@@ -179,31 +181,35 @@ oldlocrecentcmp (const void *a, const void *b)
 {
   struct locrecent *la = ((const struct oldlocrecent *) a)->locrec;
   struct locrecent *lb = ((const struct oldlocrecent *) b)->locrec;
+  uint32_t start_a = -1, end_a = 0;
+  uint32_t start_b = -1, end_b = 0;
+  int cnt;
 
-  if (la->record[LC_ALL].offset < lb->record[LC_ALL].offset)
-    return -1;
-  if (la->record[LC_ALL].offset > lb->record[LC_ALL].offset)
-    return 1;
+  for (cnt = 0; cnt < __LC_LAST; ++cnt)
+    if (cnt != LC_ALL)
+      {
+	if (la->record[cnt].offset < start_a)
+	  start_a = la->record[cnt].offset;
+	if (la->record[cnt].offset + la->record[cnt].len > end_a)
+	  end_a = la->record[cnt].offset + la->record[cnt].len;
+      }
+  assert (start_a != (uint32_t)-1);
+  assert (end_a != 0);
 
-  if (la->record[LC_CTYPE].offset < lb->record[LC_CTYPE].offset)
-    return -1;
-  if (la->record[LC_CTYPE].offset > lb->record[LC_CTYPE].offset)
-    return 1;
+  for (cnt = 0; cnt < __LC_LAST; ++cnt)
+    if (cnt != LC_ALL)
+      {
+	if (lb->record[cnt].offset < start_b)
+	  start_b = lb->record[cnt].offset;
+	if (lb->record[cnt].offset + lb->record[cnt].len > end_b)
+	  end_b = lb->record[cnt].offset + lb->record[cnt].len;
+      }
+  assert (start_b != (uint32_t)-1);
+  assert (end_b != 0);
 
-  if (la->record[LC_COLLATE].offset < lb->record[LC_COLLATE].offset)
-    return -1;
-  if (la->record[LC_COLLATE].offset > lb->record[LC_COLLATE].offset)
-    return 1;
-
-  if (((const struct oldlocrecent *) a)->cnt
-      < ((const struct oldlocrecent *) b)->cnt)
-    return -1;
-
-  if (((const struct oldlocrecent *) a)->cnt
-      > ((const struct oldlocrecent *) b)->cnt)
-    return 1;
-
-  return 0;
+  if (start_a != start_b)
+    return (int)start_a - (int)start_b;
+  return (int)end_a - (int)end_b;
 }
 
 
@@ -323,10 +329,11 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
 					   + head->namehash_offset);
   oldlocrectab = (struct locrecent *) ((char *) ah->addr
 				       + head->locrectab_offset);
+
+  /* Sort the old locrec table in order of data position.  */
   oldlocrecarray = (struct oldlocrecent *)
 		   alloca (head->namehash_size
 			   * sizeof (struct oldlocrecent));
-
   for (cnt = 0, loccnt = 0; cnt < head->namehash_size; ++cnt)
     if (oldnamehashtab[cnt].locrec_offset != 0)
       {
@@ -335,7 +342,6 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
 	  = (struct locrecent *) ((char *) ah->addr
 				  + oldnamehashtab[cnt].locrec_offset);
       }
-
   qsort (oldlocrecarray, loccnt, sizeof (struct oldlocrecent),
 	 oldlocrecentcmp);
 

@@ -1,4 +1,4 @@
-2002-08-14  Roland McGrath  <roland@frob.com>
+2002-08-14  Roland McGrath  <roland@redhat.com>
 
 	* locale/locarchive.h (struct locale_category_data): Give this name to
 	the type of locale_data_t's elements.
@@ -8,6 +8,7 @@
 	hard-coding it to do everything but LC_CTYPE and LC_COLLATE.
 	(show_archive_content): Detect categories inside LC_ALL block
 	directly, instead of hard-coding.
+	(oldlocrecentcmp): Compare just on file locations used.
 
 2002-08-14  Jakub Jelinek  <jakub@redhat.com>
 
