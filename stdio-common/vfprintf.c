@@ -891,7 +891,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    s2 = (const wchar_t *) string;				      \
 	    string = alloca (len + 1);					      \
 	    (void) __wcsrtombs (string, &s2, len + 1, &mbstate);	      \
-	    if (prec < min)						      \
+	    if (prec < len)						      \
 	      len = prec;						      \
 	  }								      \
 									      \
