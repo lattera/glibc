@@ -1,3 +1,15 @@
+Mon Sep 23 15:31:04 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* hurd/Makefile ($(includedir)/rpc/netdb.h): There is no make
+	variable `top_srcdir' in libc; use $(..) instead.
+
+	* sysdeps/mach/hurd/Makefile (rtld-installed-name): Delete special
+	definition.  It was a *Mistake*.  (With a capital M.)
+
+	* sysdeps/mach/getsysstats.c (__get_nprocs): Renamed from
+	__get_nproc.
+	(__get_nprocs_conf): Renamed from __get_nproc_conf.
+
 Sun Sep 22 15:18:41 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/init-first.c: Define dummy function

@@ -18,10 +18,6 @@
 
 ifdef in-Makerules
 
-# This should be in a more global place, because the problem it solves
-# is universal, but this is good enough for here.
-rtld-installed-name := ld.so$(libc.so-version)
-
 subdirs := $(filter-out sunrpc,$(subdirs)) # XXX skip broken dirs
 # See hurd/Makefile for commands that install some crucial sunrpc headers.
 

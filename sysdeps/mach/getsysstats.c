@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Return the number of processors configured on the system. */
 int
-__get_nproc_conf ()
+__get_nprocs_conf ()
 {
   struct host_basic_info hbi;
   kern_return_t err;
@@ -42,7 +42,7 @@ __get_nproc_conf ()
 
 /* Return the number of processors currently available on the system. */
 int
-__get_nproc ()
+__get_nprocs ()
 {
   struct host_basic_info hbi;
   kern_return_t err;

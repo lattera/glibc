@@ -73,7 +73,7 @@ include ../Rules
 # from $(subdirs), and this rule arranges for the header in question
 # to get installed.
 install-headers-nosubdir: $(includedir)/rpc/netdb.h
-$(includedir)/rpc/netdb.h: $(top_srcdir)/sunrpc/rpc/netdb.h
+$(includedir)/rpc/netdb.h: $(..)sunrpc/rpc/netdb.h
 	$(do-install)
 
 
