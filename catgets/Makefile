@@ -1,4 +1,4 @@
-# Copyright (C) 1996-2000, 2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1996-2000, 2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -74,7 +74,7 @@ $(objpfx)tst-catgets.out: $(objpfx)de/libc.cat
 
 # Generate a non-simple input file.
 $(objpfx)de.msg: $(..)po/de.po
-	sed -f xopen-msg.sed $< > $@
+	LC_ALL=C sed -f xopen-msg.sed $< > $@
 
 $(objpfx)test-gencat.out: test-gencat.sh $(objpfx)test-gencat \
 			  $(objpfx)sample.SJIS.cat

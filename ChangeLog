@@ -1,5 +1,7 @@
 2004-01-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* catgets/Makefile ($(objpfx)de.msg): Run sed in C locale.
+
 	* sysdeps/unix/sysv/linux/readahead.c (__readahead): Use off64_t
 	instead of loff_t.  Include <fcntl.h>.
 	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Add readahead prototype.
