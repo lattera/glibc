@@ -152,8 +152,9 @@ _dl_close (void *_map)
 
 	  /* Next try the old-style destructor.  */
 	  if (imap->l_info[DT_FINI] != NULL)
-	    (*(void (*) (void)) ((void *) imap->l_addr
-				 + imap->l_info[DT_FINI]->d_un.d_ptr)) ();
+	    (*(void (*) (void)) DL_DT_FINI_ADDRESS
+	      (imap, (void *) imap->l_addr
+		     + imap->l_info[DT_FINI]->d_un.d_ptr)) ();
 	}
 
       /* Store the new l_opencount value.  */

@@ -70,6 +70,8 @@ typedef ElfW(Addr) lookup_t;
 # define DL_SYMBOL_ADDRESS(map, ref) \
  (void *) (LOOKUP_VALUE_ADDRESS (map) + ref->st_value)
 # define DL_LOOKUP_ADDRESS(addr) ((ElfW(Addr)) (addr))
+# define DL_DT_INIT_ADDRESS(map, start) (start)
+# define DL_DT_FINI_ADDRESS(map, start) (start)
 #endif
 
 /* Unmap a loaded object, called by _dl_close (). */

@@ -21,7 +21,7 @@
 #include <dl-machine.h>
 
 void *
-_dl_symbol_address (const struct link_map *map, const ElfW(Sym) *ref)
+_dl_symbol_address (const struct link_map *map, const Elf64_Sym *ref)
 {
   Elf64_Addr value = (map ? map->l_addr : 0) + ref->st_value;
 
@@ -32,8 +32,8 @@ _dl_symbol_address (const struct link_map *map, const ElfW(Sym) *ref)
     return (void *) value;
 }
 
-ElfW(Addr)
-_dl_start_address (const struct link_map *map, ElfW(Addr) start)
+Elf64_Addr
+_dl_function_address (const struct link_map *map, Elf64_Addr start)
 {
   return __ia64_make_fptr (map, start, &__fptr_root, NULL);
 }

@@ -424,14 +424,11 @@ _dl_start_user:
 #define ELF_MACHINE_NO_REL 1
 
 /* Return the address of the entry point. */
-extern ElfW(Addr) _dl_start_address (const struct link_map *map,
-				     ElfW(Addr) start);
-
 #define ELF_MACHINE_START_ADDRESS(map, start) \
-  _dl_start_address ((map), (start))
+  DL_FUNCTION_ADDRESS (map, start)
 
 #define elf_machine_profile_fixup_plt(l, reloc, rel_addr, value) \
-  elf_machine_fixup_plt ((l), (reloc), (rel_addr), (value))
+  elf_machine_fixup_plt (l, reloc, rel_addr, value)
 
 #define elf_machine_profile_plt(reloc_addr) ((Elf64_Addr) (reloc_addr))
 

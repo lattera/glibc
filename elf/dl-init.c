@@ -105,7 +105,8 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
       */
       if (l->l_info[DT_INIT] != NULL)
 	{
-	  init = (init_t) (l->l_addr + l->l_info[DT_INIT]->d_un.d_ptr);
+	  init = (init_t) DL_DT_INIT_ADDRESS
+	    (l, l->l_addr + l->l_info[DT_INIT]->d_un.d_ptr);
 
 	  /* Call the function.  */
 	  init (argc, argv, env);

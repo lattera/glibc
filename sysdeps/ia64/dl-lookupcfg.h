@@ -23,14 +23,22 @@
 #define ELF_FUNCTION_PTR_IS_SPECIAL
 #define DL_UNMAP_IS_SPECIAL
 
-void *_dl_symbol_address (const struct link_map *map, const ElfW(Sym) *ref);
+extern void *_dl_symbol_address (const struct link_map *map,
+				 const Elf64_Sym *ref);
 
 #define DL_SYMBOL_ADDRESS(map, ref) _dl_symbol_address(map, ref)
 
-Elf64_Addr _dl_lookup_address (const void *address);
+extern Elf64_Addr _dl_lookup_address (const void *address);
 
 #define DL_LOOKUP_ADDRESS(addr) _dl_lookup_address (addr)
 
-void _dl_unmap (struct link_map *map);
+extern void _dl_unmap (struct link_map *map);
 
 #define DL_UNMAP(map) _dl_unmap (map)
+
+extern Elf64_Addr _dl_function_address (const struct link_map *map,
+					Elf64_Addr start);
+
+#define DL_FUNCTION_ADDRESS(map, addr) _dl_function_address (map, addr)
+#define DL_DT_INIT_ADDRESS(map, addr) DL_FUNCTION_ADDRESS (map, addr)
+#define DL_DT_FINI_ADDRESS(map, addr) DL_FUNCTION_ADDRESS (map, addr)
