@@ -1,4 +1,4 @@
-/* Copyright (C) 1994,95,96,97,99,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1994,95,96,97,99,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -147,7 +147,11 @@ __fork (void)
 	  __thread_abort (_hurd_msgport_thread);
 #endif
 	  /* Create the child task.  It will inherit a copy of our memory.  */
-	  err = __task_create (__mach_task_self (), 1, &newtask);
+	  err = __task_create (__mach_task_self (),
+#ifdef KERN_INVALID_LEDGER
+			       NULL, 0,	/* OSF Mach */
+#endif
+			       1, &newtask);
 	}
 
       /* Unlock the global signal state lock, so we do not
@@ -252,9 +256,21 @@ __fork (void)
 			__mach_port_deallocate (__mach_task_self (), old);
 		      /* The new task will receive its own exceptions
 			 on its message port.  */
-		      if (err = __task_set_special_port (newtask,
-							 TASK_EXCEPTION_PORT,
-							 port))
+		      if (err =
+#ifdef TASK_EXCEPTION_PORT
+			  __task_set_special_port (newtask,
+						   TASK_EXCEPTION_PORT,
+						   port)
+#elif defined (EXC_MASK_ALL)
+			  __task_set_exception_ports
+			  (newtask, EXC_MASK_ALL & ~(EXC_MASK_SYSCALL
+						     | EXC_MASK_MACH_SYSCALL
+						     | EXC_MASK_RPC_ALERT),
+			   port, EXCEPTION_DEFAULT, MACHINE_THREAD_STATE)
+#else
+# error task_set_exception_port?
+#endif
+			  )
 			LOSE;
 		    }
 		  if (err = __mach_port_insert_right (newtask,

@@ -1,5 +1,5 @@
 /* spawn a new process running an executable.  Hurd version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -211,7 +211,11 @@ __spawni (pid_t *pid, const char *file,
      memory, and then register it as our child like fork does.  See fork.c
      for comments about the sequencing of these proc operations.  */
 
-  err = __task_create (__mach_task_self (), 0, &task);
+  err = __task_create (__mach_task_self (),
+#ifdef KERN_INVALID_LEDGER
+		       NULL, 0,	/* OSF Mach */
+#endif
+		       0, &task);
   if (err)
     return __hurd_fail (err);
   // From here down we must deallocate TASK and PROC before returning.

@@ -1030,7 +1030,6 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	    msg.msgh_local_port = MACH_PORT_NULL;
 	    /* These values do not matter.  */
 	    msg.msgh_id = 8675309; /* Jenny, Jenny.  */
-	    msg.msgh_seqno = 17; /* Random.  */
 	    ss->suspended = MACH_PORT_NULL;
 	    err = __mach_msg (&msg, MACH_SEND_MSG, sizeof msg, 0,
 			      MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE,
@@ -1300,8 +1299,19 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
     }
 
   /* Receive exceptions on the signal port.  */
+#ifdef TASK_EXCEPTION_PORT
   __task_set_special_port (__mach_task_self (),
 			   TASK_EXCEPTION_PORT, _hurd_msgport);
+#elif defined (EXC_MASK_ALL)
+  __task_set_exception_ports (__mach_task_self (),
+			      EXC_MASK_ALL & ~(EXC_MASK_SYSCALL
+					       | EXC_MASK_MACH_SYSCALL
+					       | EXC_MASK_RPC_ALERT),
+			      _hurd_msgport,
+			      EXCEPTION_DEFAULT, MACHINE_THREAD_STATE);
+#else
+# error task_set_exception_port?
+#endif
 
   /* Sanity check.  Any pending, unblocked signals should have been
      taken by our predecessor incarnation (i.e. parent or pre-exec state)

@@ -1,5 +1,5 @@
 /* Handle faults in the signal thread.
-   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994,95,96,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -156,8 +156,19 @@ _hurdsig_fault_init (void)
   assert_perror (err);
 
   /* Direct signal thread exceptions to the proc server.  */
+#ifdef THREAD_EXCEPTION_PORT
   err = __thread_set_special_port (_hurd_msgport_thread,
 				   THREAD_EXCEPTION_PORT, sigexc);
+#elif defined (EXC_MASK_ALL)
+  __thread_set_exception_ports (_hurd_msgport_thread,
+				EXC_MASK_ALL & ~(EXC_MASK_SYSCALL
+						 | EXC_MASK_MACH_SYSCALL
+						 | EXC_MASK_RPC_ALERT),
+				sigexc,
+				EXCEPTION_DEFAULT, MACHINE_THREAD_STATE);
+#else
+# error thread_set_exception_ports?
+#endif
   __mach_port_deallocate (__mach_task_self (), sigexc);
   assert_perror (err);
 }

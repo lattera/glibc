@@ -1,5 +1,18 @@
 2002-01-02  Roland McGrath  <roland@frob.com>
 
+	* hurd/hurdinit.c (_hurd_ports_use): Return error _hurd_ports is null.
+
+	* hurd/hurdsig.c (_hurdsig_init): Conditionalize exception port setup
+	for old CMU and new OSF Mach interface flavors.
+	* hurd/hurdfault.c (_hurdsig_fault_init): Likewise.
+	* sysdeps/mach/hurd/fork.c (__fork): Likewise.
+
+	* hurd/hurdsig.c (_hurd_internal_post_signal): Leave msgh_seqno unset.
+
+	* sysdeps/mach/hurd/spawni.c (__spawni) [KERN_INVALID_LEDGER]:
+	Pass extra arguments to task_create for OSF variant.
+	* sysdeps/mach/hurd/fork.c (__fork): Likewise.
+
 	* sysdeps/powerpc/elf/libc-start.c: Make AUXVEC diddling code
 	conditional on [HAVE_AUX_VECTOR].
 
