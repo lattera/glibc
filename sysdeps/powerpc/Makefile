@@ -3,8 +3,13 @@
 +cflags += -mnew-mnemonics -Wa,-mppc -mpowerpc
 asm-CPPFLAGS += -Wa,-mppc
 
+ifeq ($(with-fp),no)
++cflags += -msoft-float
+sysdep-LDFLAGS += -msoft-float
+else
 ifeq ($(subdir),math)
 libm-support += fenv_const fe_nomask
+endif
 endif
 
 ifeq ($(subdir),gmon)

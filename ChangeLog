@@ -1,3 +1,11 @@
+2001-12-06  Geoff Keating  <geoffk@redhat.com>
+
+	* config.make.in (with-fp): Define from configure.
+	* configure.in: Substitute with_fp.
+	* configure: Regenerate.
+	* sysdeps/powerpc/Makefile: Set -msoft-float when --without-fp is
+	specified, and don't change FPU environment.
+
 2001-12-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/vasprintf.c (_IO_vasprintf): Free buffer on failure.
