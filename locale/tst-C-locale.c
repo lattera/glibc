@@ -405,6 +405,7 @@ run_test (const char *locname)
 	 UCS4.  */
       for (c = 0; c < 128; ++c)
 	{
+#undef CLASSTEST
 #define CLASSTEST(name) \
 	  if (isw##name (c) != __isw##name##_l (c, loc))		      \
 	    {								      \
@@ -428,6 +429,7 @@ run_test (const char *locname)
 	  /* Character mapping tests.  Note that
 	     this only works because we know that the internal encoding is
 	     UCS4.  */
+#undef MAPTEST
 #define MAPTEST(name) \
 	  if (tow##name (c) != __tow##name##_l (c, loc))		      \
 	    {								      \
