@@ -1,6 +1,6 @@
-GLIBC_2.1.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.1.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.1.3 A
-GLIBC_2.1.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.1.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
  td_init F
  td_log F
@@ -39,16 +39,16 @@ GLIBC_2.1.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
  td_thr_sigsetmask F
  td_thr_tsd F
  td_thr_validate F
-GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.2.3 A
-GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
  td_symbol_list F
 GLIBC_2.2.5 x86_64-.*-linux.*
  GLIBC_2.2.5 A
-GLIBC_2.3.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* x86_64-.*-linux.*
+GLIBC_2.3.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
  GLIBC_2.3.3 A
  td_thr_tlsbase F
-GLIBC_2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* x86_64-.*-linux.*
+GLIBC_2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
  GLIBC_2.3 A
  td_thr_tls_get_addr F

@@ -1,6 +1,6 @@
-GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.0 A
-GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
  crypt F
  crypt_r F

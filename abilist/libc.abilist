@@ -1,4 +1,4 @@
-GCC_3.0 i.86-.*-linux.* powerpc-.*-linux.*
+GCC_3.0 i.86-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  GCC_3.0 A
  _Unwind_Find_FDE F
  __deregister_frame_info_bases F
@@ -10,71 +10,26 @@ GLIBC_2.0 i.86-.*-linux.*
  vm86 F
 GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
  GLIBC_2.0 A
- _IO_file_jumps D 0x54
- _IO_list_all D 0x4
  _IO_stderr_ D 0x50
  _IO_stdin_ D 0x50
  _IO_stdout_ D 0x50
- __after_morecore_hook D 0x4
- __ctype32_b D 0x4
- __ctype_b D 0x4
- __ctype_tolower D 0x4
- __ctype_toupper D 0x4
- __curbrk D 0x4
  __deregister_frame F
- __deregister_frame_info F
- __environ D 0x4
  __frame_state_for F
- __free_hook D 0x4
- __malloc_hook D 0x4
- __malloc_initialize_hook D 0x4
- __memalign_hook D 0x4
- __morecore D 0x4
- __progname D 0x4
- __progname_full D 0x4
- __rcmd_errstr D 0x4
- __realloc_hook D 0x4
  __register_frame F
- __register_frame_info F
  __register_frame_info_table F
  __register_frame_table F
  __strtoq_internal F
  __strtouq_internal F
- __timezone D 0x4
- __tzname D 0x8
- _environ D 0x4
- _nl_domain_bindings D 0x4
- _null_auth D 0xc
- _obstack D 0x4
  _sys_errlist D 0x1ec
  _sys_siglist D 0x80
- environ D 0x4
- error_print_progname D 0x4
- h_errlist D 0x14
- loc1 D 0x4
- loc2 D 0x4
- locs D 0x4
- mallwatch D 0x4
- obstack_alloc_failed_handler D 0x4
- optarg D 0x4
- program_invocation_name D 0x4
- program_invocation_short_name D 0x4
- re_syntax_options D 0x4
  res_init F
- rpc_createerr D 0x10
- stderr D 0x4
- stdin D 0x4
- stdout D 0x4
- svcauthdes_stats D 0xc
  sys_errlist D 0x1ec
  sys_sigabbrev D 0x80
  sys_siglist D 0x80
- timezone D 0x4
- tzname D 0x8
 GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.1.2 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 ia64-.*-linux.*
+| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  getaliasbyname_r F
  getaliasent_r F
  getgrent_r F
@@ -104,7 +59,7 @@ GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
 GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 ia64-.*-linux.*
+| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  _IO_do_write F
  _IO_fclose F
  _IO_fdopen F
@@ -134,23 +89,18 @@ GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
 GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 ia64-.*-linux.*
-| GLIBC_2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* x86_64-.*-linux.*
+| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
+| GLIBC_2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
  _sys_nerr D 0x4
  sys_nerr D 0x4
 GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
-| GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+| GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 ia64-.*-linux.*
+| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  fnmatch F
 GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
- __bzero F
- __clone F
- clone F
-GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
-| GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  _IO_fgetpos F
  _IO_fsetpos F
  fgetpos F
@@ -165,6 +115,10 @@ GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
 GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
 | GLIBC_2.2 ia64-.*-linux.*
+ _nl_default_dirname D 0x12
+GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
+| GLIBC_2.2.5 x86_64-.*-linux.*
+| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  _IO_adjust_column F
  _IO_default_doallocate F
  _IO_default_finish F
@@ -355,7 +309,6 @@ GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
  _longjmp F
  _mcleanup F
  _mcount F
- _nl_default_dirname D 0x12
  _nl_msg_cat_cntr D 0x4
  _obstack_allocated_p F
  _obstack_begin F
@@ -1328,8 +1281,8 @@ GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
  xprt_unregister F
 GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 ia64-.*-linux.*
-| GLIBC_2.3.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* x86_64-.*-linux.*
+| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
+| GLIBC_2.3.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
  pthread_cond_broadcast F
  pthread_cond_destroy F
  pthread_cond_init F
@@ -1337,32 +1290,91 @@ GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
  pthread_cond_wait F
 GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 ia64-.*-linux.*
-| GLIBC_2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* x86_64-.*-linux.*
+| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
+| GLIBC_2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
  realpath F
+GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
+| GLIBC_2.2.5 x86_64-.*-linux.*
+| GLIBC_2.2 sh[34].*-.*-linux.*
+ __bzero F
+ __clone F
+ clone F
 GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.2 ia64-.*-linux.*
  __divdi3 F
  __moddi3 F
  __udivdi3 F
  __umoddi3 F
+GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
+| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  atexit F
  bdflush F
+GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
+| GLIBC_2.2 sh[34].*-.*-linux.*
+ _IO_file_jumps D 0x54
+ _IO_list_all D 0x4
+ __after_morecore_hook D 0x4
+ __ctype32_b D 0x4
+ __ctype_b D 0x4
+ __ctype_tolower D 0x4
+ __ctype_toupper D 0x4
+ __curbrk D 0x4
+ __deregister_frame_info F
+ __environ D 0x4
+ __free_hook D 0x4
+ __malloc_hook D 0x4
+ __malloc_initialize_hook D 0x4
+ __memalign_hook D 0x4
+ __morecore D 0x4
+ __progname D 0x4
+ __progname_full D 0x4
+ __rcmd_errstr D 0x4
+ __realloc_hook D 0x4
+ __register_frame_info F
+ __timezone D 0x4
+ __tzname D 0x8
+ _environ D 0x4
+ _nl_domain_bindings D 0x4
+ _null_auth D 0xc
+ _obstack D 0x4
+ environ D 0x4
+ error_print_progname D 0x4
+ h_errlist D 0x14
+ loc1 D 0x4
+ loc2 D 0x4
+ locs D 0x4
+ mallwatch D 0x4
+ obstack_alloc_failed_handler D 0x4
+ optarg D 0x4
+ program_invocation_name D 0x4
+ program_invocation_short_name D 0x4
+ re_syntax_options D 0x4
+ rpc_createerr D 0x10
+ stderr D 0x4
+ stdin D 0x4
+ stdout D 0x4
+ svcauthdes_stats D 0xc
+ timezone D 0x4
+ tzname D 0x8
 GLIBC_2.0 i.86-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
 | GLIBC_2.2 ia64-.*-linux.*
  ioperm F
  iopl F
+GLIBC_2.0 i.86-.*-linux.*
+| GLIBC_2.2.5 x86_64-.*-linux.*
+| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  mcount F
 GLIBC_2.0 i.86-.*-linux.*/notls powerpc-.*-linux.*
- _res D 0x200
-GLIBC_2.0 i.86-.*-linux.*/notls powerpc-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*/notls
-| GLIBC_2.2 ia64-.*-linux.*/notls
+| GLIBC_2.2 ia64-.*-linux.*/notls sh[34].*-.*-linux.*/notls
  _errno D 0x4
  _h_errno D 0x4
  errno D 0x4
  h_errno D 0x4
+GLIBC_2.0 i.86-.*-linux.*/notls powerpc-.*-linux.*
+| GLIBC_2.2 sh[34].*-.*-linux.*/notls
+ _res D 0x200
 GLIBC_2.0 powerpc-.*-linux.*
  __ashldi3 F
  __ashrdi3 F
@@ -1377,7 +1389,7 @@ GLIBC_2.0 powerpc-.*-linux.*
  __ucmpdi2 F
 GLIBC_2.0 powerpc-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 ia64-.*-linux.*
+| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  __fpu_control D 0x4
 GLIBC_2.1.1 i.86-.*-linux.*
  __memcpy_by2 F
@@ -1420,7 +1432,7 @@ GLIBC_2.1.1 i.86-.*-linux.* powerpc-.*-linux.*
  GLIBC_2.1.1 A
 GLIBC_2.1.1 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 ia64-.*-linux.*
+| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  _Exit F
  __mempcpy_small F
  __stpcpy_small F
@@ -1454,50 +1466,31 @@ GLIBC_2.1.2 i.86-.*-linux.* powerpc-.*-linux.*
  GLIBC_2.1.2 A
 GLIBC_2.1.2 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 ia64-.*-linux.*
+| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  __vfork F
 GLIBC_2.1.3 i.86-.*-linux.* powerpc-.*-linux.*
  GLIBC_2.1.3 A
 GLIBC_2.1.3 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 ia64-.*-linux.*
+| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  __cxa_atexit F
  __cxa_finalize F
  __sigsuspend F
 GLIBC_2.1 i.86-.*-linux.*
- _IO_2_1_stderr_ D 0x98
- _IO_2_1_stdin_ D 0x98
- _IO_2_1_stdout_ D 0x98
  __chown F
  scalbln F
  scalblnf F
  scalblnl F
 GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
  GLIBC_2.1 A
- __key_decryptsession_pk_LOCAL D 0x4
- __key_encryptsession_pk_LOCAL D 0x4
- __key_gendes_LOCAL D 0x4
- _sys_errlist D 0x1f4
- _sys_siglist D 0x100
- argp_program_bug_address D 0x4
- argp_program_version D 0x4
- argp_program_version_hook D 0x4
- sys_errlist D 0x1f4
- sys_sigabbrev D 0x100
- sys_siglist D 0x100
 GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.2.2 ia64-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 ia64-.*-linux.*
+| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  wordexp F
 GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.*
- alphasort64 F
- versionsort64 F
-GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
-| GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  _IO_fgetpos64 F
  _IO_fsetpos64 F
  __fxstat64 F
@@ -1512,7 +1505,12 @@ GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
  scandir64 F
 GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 ia64-.*-linux.*
+| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* sh[34].*-.*-linux.*
+ alphasort64 F
+ versionsort64 F
+GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
+| GLIBC_2.2.5 x86_64-.*-linux.*
+| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  _IO_file_finish F
  _IO_getline_info F
  __asprintf F
@@ -1757,6 +1755,19 @@ GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
  xdr_uint32_t F
  xdr_uint8_t F
  xdr_unixcred F
+GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
+| GLIBC_2.2 sh[34].*-.*-linux.*
+ __key_decryptsession_pk_LOCAL D 0x4
+ __key_encryptsession_pk_LOCAL D 0x4
+ __key_gendes_LOCAL D 0x4
+ _sys_errlist D 0x1f4
+ _sys_siglist D 0x100
+ argp_program_bug_address D 0x4
+ argp_program_version D 0x4
+ argp_program_version_hook D 0x4
+ sys_errlist D 0x1f4
+ sys_sigabbrev D 0x100
+ sys_siglist D 0x100
 GLIBC_2.1 i.86-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
  modify_ldt F
@@ -1764,33 +1775,38 @@ GLIBC_2.1 i.86-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
 | GLIBC_2.2 ia64-.*-linux.*
  __signbitl F
+GLIBC_2.1 i.86-.*-linux.*
+| GLIBC_2.2 sh[34].*-.*-linux.*
+ _IO_2_1_stderr_ D 0x98
+ _IO_2_1_stdin_ D 0x98
+ _IO_2_1_stdout_ D 0x98
 GLIBC_2.1 powerpc-.*-linux.*
  _IO_2_1_stderr_ D 0xa0
  _IO_2_1_stdin_ D 0xa0
  _IO_2_1_stdout_ D 0xa0
-GLIBC_2.2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.2.1 A
-GLIBC_2.2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
  pivot_root F
  posix_openpt F
-GLIBC_2.2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.2.2 A
-GLIBC_2.2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
  __nss_hostname_digits_dots F
-GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.2.3 A
-GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
  __rpc_thread_createerr F
  __rpc_thread_svc_fdset F
  __rpc_thread_svc_max_pollfd F
  __rpc_thread_svc_pollfd F
  sprofil F
-GLIBC_2.2.4 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.2.4 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.2.4 A
-GLIBC_2.2.4 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.2.4 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
  dl_iterate_phdr F
  getgrouplist F
@@ -1800,7 +1816,7 @@ GLIBC_2.2.5 x86_64-.*-linux.*
  __arch_prctl F
  arch_prctl F
 GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  _IO_adjust_wcolumn F
  _IO_free_wbackup_area F
  _IO_init_wmarker F
@@ -2013,14 +2029,14 @@ GLIBC_2.2.5 x86_64-.*-linux.*
 GLIBC_2.2.5 x86_64-.*-linux.*/notls
 | GLIBC_2.2 ia64-.*-linux.*/notls
  _res D 0x238
-GLIBC_2.2.6 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* x86_64-.*-linux.*
+GLIBC_2.2.6 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
  GLIBC_2.2.6 A
  __nanosleep F
 GLIBC_2.2.6 ia64-.*-linux.*
  getunwind F
-GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.2 A
-GLIBC_2.2 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.2 i.86-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  __ctype32_tolower D 0x4
  __ctype32_toupper D 0x4
  _res_hconf D 0x30
@@ -2047,25 +2063,27 @@ GLIBC_2.2 ia64-.*-linux.*
  pciconfig_write F
 GLIBC_2.2 powerpc-.*-linux.*
  _IO_wfile_jumps D 0x54
+GLIBC_2.2 sh[34].*-.*-linux.*
+ _nl_default_dirname D 0x20
 GLIBC_2.3.2 i.86-.*-linux.*
  epoll_create F
  epoll_ctl F
  epoll_wait F
-GLIBC_2.3.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* x86_64-.*-linux.*
+GLIBC_2.3.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
  GLIBC_2.3.2 A
  __register_atfork F
  lchmod F
  sched_getaffinity F
  sched_setaffinity F
  strptime_l F
-GLIBC_2.3.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* x86_64-.*-linux.*
+GLIBC_2.3.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
  GLIBC_2.3.3 A
  remap_file_pages F
 GLIBC_2.3.3 ia64-.*-linux.* x86_64-.*-linux.*
-| GLIBC_2.3 i.86-.*-linux.* powerpc-.*-linux.*
+| GLIBC_2.3 i.86-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  strtoll_l F
  strtoull_l F
-GLIBC_2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* x86_64-.*-linux.*
+GLIBC_2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
  GLIBC_2.3 A
  __ctype_b_loc F
  __ctype_tolower_loc F
@@ -2153,7 +2171,7 @@ GLIBC_2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* x86_64-.*-linux.*
  wcsxfrm_l F
  wctrans_l F
  wctype_l F
-GLIBC_2.3 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.3 i.86-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  _sys_errlist D 0x1f8
  sys_errlist D 0x1f8
 GLIBC_2.3 ia64-.*-linux.* x86_64-.*-linux.*

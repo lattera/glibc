@@ -1,6 +1,6 @@
-GLIBC_2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.1 A
-GLIBC_2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
  aio_cancel F
  aio_cancel64 F
@@ -22,7 +22,7 @@ GLIBC_2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
 GLIBC_2.2.5 x86_64-.*-linux.*
  GLIBC_2.2.5 A
 GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  clock_getcpuclockid F
  clock_getres F
  clock_gettime F
@@ -35,5 +35,5 @@ GLIBC_2.2.5 x86_64-.*-linux.*
  timer_getoverrun F
  timer_gettime F
  timer_settime F
-GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.2 A

@@ -1,11 +1,11 @@
-GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.0 A
  dn_expand F
  res_mkquery F
  res_query F
  res_querydomain F
  res_search F
-GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
  __b64_ntop F
  __b64_pton F
@@ -57,7 +57,7 @@ GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
  res_gethostbyname2 F
  res_send_setqhook F
  res_send_setrhook F
-GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  __p_class_syms D 0x54
  __p_type_syms D 0x21c
  _res_opcodes D 0x40
@@ -69,7 +69,7 @@ GLIBC_2.0 ia64-.*-linux.*
 GLIBC_2.2.5 x86_64-.*-linux.*
  GLIBC_2.2.5 A
 GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  __dn_expand F
  __res_hostalias F
  __res_mkquery F
@@ -81,8 +81,8 @@ GLIBC_2.2.5 x86_64-.*-linux.*
  __res_query F
  __res_querydomain F
  __res_search F
-GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.2 A
-GLIBC_2.3.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* x86_64-.*-linux.*
+GLIBC_2.3.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
  GLIBC_2.3.2 A
  __p_rcode F
