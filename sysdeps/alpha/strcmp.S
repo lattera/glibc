@@ -1,6 +1,5 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    Contributed by Richard Henderson (rth@tamu.edu)
-
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,9 +13,9 @@
    Library General Public License for more details.
 
    You should have received a copy of the GNU Library General Public
-   License along with the GNU C Library; see the file COPYING.LIB.  If
-   not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-   Cambridge, MA 02139, USA.  */
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* Bytewise compare two null-terminated strings.  */
 
@@ -178,7 +177,7 @@ $eos:
 	beq	v0, $done	# .. e1 :
 
 	/* Here we have two differing co-aligned words in t0 & t1.
-           Bytewise compare them and return (t0 > t1 ? 1 : -1).  */
+	   Bytewise compare them and return (t0 > t1 ? 1 : -1).  */
 $wordcmp:
 	cmpbge	t0, t1, t2	# e0    : comparison yields bit mask of ge
 	cmpbge	t1, t0, t3	# .. e1 :
