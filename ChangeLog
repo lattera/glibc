@@ -1,3 +1,7 @@
+2001-02-07  Andreas Jaeger  <aj@suse.de>
+
+	* posix/bug-regex1.c: Include <wchar.h> for fwide.
+
 2001-02-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regex.c: Fix a cast in the code for bracket handling which
