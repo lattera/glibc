@@ -1,5 +1,9 @@
 Tue Jul  9 06:19:29 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* sysdeps/unix/sysv/linux/configure.in: Use version number in cache
+ 	variable name, so new a libc with new requirements won't fail to
+ 	notice an insufficient Linux version.
+
 	* sysdeps/unix/sysv/linux/direntry.h: New file from David Mosberger.
 
 	* sysdeps/unix/sysv/linux/configure.in: Check for Linux 2.0.1 headers,

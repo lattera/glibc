@@ -8,7 +8,7 @@ test $stdio = default && stdio=libio
 inhibit_glue=yes
 
 echo $ac_n "checking installed Linux kernel header files""... $ac_c" 1>&6
-if eval "test \"`echo '$''{'libc_cv_linux2'+set}'`\" = set"; then
+if eval "test \"`echo '$''{'libc_cv_linux'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
@@ -17,28 +17,28 @@ else
 #include <linux/version.h>
 int main() { return 0; }
 int t() {
-#if LINUX_VERSION_CODE < (2 *65536+ 0 *256+ 0) /* 2.0.0 */
+#if LINUX_VERSION_CODE < (2 *65536+ 0 *256+ 1) /* 2.0.1 */
 eat flaming death
 #endif
 ; return 0; }
 EOF
 if { (eval echo configure:26: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
-  libc_cv_linux2='2.0 or later'
+  libc_cv_linux='2.0.1 or later'
 else
   rm -rf conftest*
-  libc_cv_linux2='TOO OLD!'
+  libc_cv_linux='TOO OLD!'
 fi
 rm -f conftest*
 
 fi
 
-echo "$ac_t""$libc_cv_linux2" 1>&6
-if test "$libc_cv_linux2" != '2.0 or later'; then
-  { echo "configure: error: GNU libc requires kernel header files from Linux 2.0
+echo "$ac_t""$libc_cv_linux" 1>&6
+if test "$libc_cv_linux" != '2.0.1 or later'; then
+  { echo "configure: error: GNU libc requires kernel header files from Linux 2.0.1
 or later to be installed before configuring.  The kernel header files
 are found usually in /usr/include/asm and /usr/include/linux; make sure
-these directories use files from Linux 2.0 or later.  This check uses
+these directories use files from Linux 2.0.1 or later.  This check uses
 <linux/version.h>, so make sure that file was built correctly when
 installing the kernel header files." 1>&2; exit 1; }
 fi
