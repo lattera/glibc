@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,33 +17,30 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <sys/types.h>
 #include <unistd.h>
-#include <grp.h>
+#include <sys/types.h>
 
 #include <linux/posix_types.h>
 
-extern int __syscall_setgroups __P ((int, const __kernel_gid_t *));
+#include <sys/syscall.h>
+#ifdef __NR_setresgid
 
-/* Set the group set for the current user to GROUPS (N of them).  For
-   Linux we must convert the array of groups into the format that the
-   kernel expects.  */
+extern int __syscall_setresgid (__kernel_gid_t rgid, __kernel_gid_t egid,
+				__kernel_gid_t sgid);
+
 int
-setgroups (n, groups)
-     size_t n;
-     const gid_t *groups;
+setresgid (gid_t rgid, gid_t egid, gid_t sgid)
 {
-  size_t i;
-  __kernel_gid_t kernel_groups[n];
-
-  for (i = 0; i < n; i++)
+  if ((rgid != (gid_t) ((__kernel_gid_t) rgid))
+      || (egid != (gid_t) ((__kernel_gid_t) egid))
+      || (sgid != (gid_t) ((__kernel_gid_t) sgid)))
     {
-      kernel_groups[i] = groups[i];
-      if (groups[i] != (gid_t) ((__kernel_gid_t) groups[i]))
-	{
-	  __set_errno (EINVAL);
-	  return -1;
-	}
+      __set_errno (EINVAL);
+      return -1;
     }
-  return __syscall_setgroups (n, kernel_groups);
+
+  return __syscall_setresgid (rgid, egid, sgid);
 }
+#else
+# include <sysdeps/generic/setresgid.c>
+#endif

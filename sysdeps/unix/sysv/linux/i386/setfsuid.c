@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,33 +17,31 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <sys/syscall.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <grp.h>
 
 #include <linux/posix_types.h>
 
-extern int __syscall_setgroups __P ((int, const __kernel_gid_t *));
+#ifdef __NR_setfsuid
+extern int __syscall_setfsuid (__kernel_uid_t);
 
-/* Set the group set for the current user to GROUPS (N of them).  For
-   Linux we must convert the array of groups into the format that the
-   kernel expects.  */
 int
-setgroups (n, groups)
-     size_t n;
-     const gid_t *groups;
+setfsuid (uid_t uid)
 {
-  size_t i;
-  __kernel_gid_t kernel_groups[n];
-
-  for (i = 0; i < n; i++)
+  if (uid != (uid_t) ((__kernel_uid_t) uid))
     {
-      kernel_groups[i] = groups[i];
-      if (groups[i] != (gid_t) ((__kernel_gid_t) groups[i]))
-	{
-	  __set_errno (EINVAL);
-	  return -1;
-	}
+      __set_errno (EINVAL);
+      return -1;
     }
-  return __syscall_setgroups (n, kernel_groups);
+
+  return __syscall_setfsuid (uid);
 }
+#else
+int
+setfsuid (uid_t uid)
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
+#endif

@@ -38,7 +38,11 @@
 #define O_EXCL		0x0400	/* not fcntl */
 #define O_NOCTTY	0x0800	/* not fcntl */
 #define O_FSYNC		O_SYNC
-#define O_ASYNC		020000
+#define O_ASYNC		0x1000
+
+#ifdef __USE_GNU
+# define O_DIRECTORY	0x2000	/* Must be a directory.  */
+#endif
 
 #define O_NDELAY	O_NONBLOCK
 

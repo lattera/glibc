@@ -2,6 +2,10 @@
 
 s_getgroups	getgroups getgroups	2	__syscall_getgroups
 s_llseek	llseek	_llseek		5	__sys_llseek
+s_setgid	setgid	setgid		1	__syscall_setgid
 s_setgroups	setgroups setgroups	2	__syscall_setgroups
+s_setresuid	setresuid setresuid	3	__syscall_setresuid
+s_setresgid	setresgid setresgid	3	__syscall_setresgid
+s_setuid	setuid	setuid		1	__syscall_setuid
 vm86		-	vm86		1	__vm86		vm86
 syscall		-	syscall		5	syscall

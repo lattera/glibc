@@ -1,5 +1,65 @@
 1998-10-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/opendir.c: Use O_DIRECTORY if available.  If not
+	available double check to verify it's a directory.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Add O_DIRECTORY.
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl: Likewise.
+	* sysdeps/unix/sysv/linux/bits/fcntl.h: Remove O_* constants which
+	are not generally available.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: New file.
+
+	* sysdeps/unix/sysv/linux/i386/setgroups.c: Add range check for values.
+	* sysdeps/unix/sysv/linux/arm/Makefile: New file.
+	* sysdeps/unix/sysv/linux/arm/setegid.c: New file.
+	* sysdeps/unix/sysv/linux/arm/seteuid.c: New file.
+	* sysdeps/unix/sysv/linux/arm/setfsgid.c: New file.
+	* sysdeps/unix/sysv/linux/arm/setfsuid.c: New file.
+	* sysdeps/unix/sysv/linux/arm/setgid.c: New file.
+	* sysdeps/unix/sysv/linux/arm/setgroups.c: New file.
+	* sysdeps/unix/sysv/linux/arm/setresgid.c: New file.
+	* sysdeps/unix/sysv/linux/arm/setresuid.c: New file.
+	* sysdeps/unix/sysv/linux/arm/setuid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/setegid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/seteuid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/setfsgid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/setfsuid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/setgid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/setgroups.c: New file.
+	* sysdeps/unix/sysv/linux/i386/setresgid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/setuid.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/setegid.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/seteuid.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/setfsgid.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/setfsuid.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/setgid.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/setgroups.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/setresgid.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/setresuid.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/setuid.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setegid.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/seteuid.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setfsgid.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setfsuid.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setgid.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setgroups.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setresgid.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setresuid.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setuid.c: New file.
+
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: Add s_setgid, s_setresuid,
+	s_setresgid, and s_setuid.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Makefile [subdir=misc]
+	(sysdep_routines): Add setfsgid, setfsuid, setresgid, and setresuid.
+	* sysdeps/unix/sysv/linux/m68k/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile: Likewise.
+
+1998-10-16  Ulrich Drepper  <drepper@cygnus.com>
+
 	* time/mktime.c: Define _POSIX_THREAD_SAFE_FUNCTIONS to get
 	localtime_t declaration on some systems.
 
@@ -7,7 +67,7 @@
 
 	* iconv/Makefile [! elf]: Define CFLAGS-gconv_simple.c to
 	-DSTATIC_GCONV.
-	* iconv/skeleton.c: Include ELF header only of STATIC?GCONV is not
+	* iconv/skeleton.c: Include ELF header only of STATIC_GCONV is not
 	defined.  Avoid using DL_CLL_FCT if it is not defined.
 
 1998-10-16 10:40 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>

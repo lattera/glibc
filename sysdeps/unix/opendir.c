@@ -29,6 +29,30 @@
 
 #include <dirstream.h>
 
+
+/* We want to be really safe the file we opened is a directory.  Some systems
+   have support for this, others don't.  */
+#ifdef O_DIRECTORY
+# define OPENDIR(NAME) \
+  do {									      \
+    fd = __open (NAME, O_RDONLY|O_NDELAY|O_DIRECTORY);			      \
+    if (fd < 0)								      \
+      return NULL;							      \
+  } while (0)
+#else
+# define OPENDIR(NAME) \
+  do {									      \
+    fd = __open (NAME, O_RDONLY|O_NDELAY);				      \
+    if (fd < 0 || __fstat (fd, &statbuf) < 0 || ! S_ISDIR (statbuf.st_mode))  \
+      {									      \
+	if (fd >= 0)							      \
+	  __close (fd);							      \
+	return NULL;							      \
+      }									      \
+  } while (0)
+#endif
+
+
 /* Open a directory stream on NAME.  */
 DIR *
 __opendir (const char *name)
@@ -58,9 +82,7 @@ __opendir (const char *name)
       return NULL;
     }
 
-  fd = __open (name, O_RDONLY|O_NDELAY);
-  if (fd < 0)
-    return NULL;
+  OPENDIR (name);
 
   if (__fcntl (fd, F_SETFD, FD_CLOEXEC) < 0)
     goto lose;
