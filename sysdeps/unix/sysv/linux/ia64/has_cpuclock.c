@@ -17,29 +17,36 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include <time.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <fcntl.h>
 
 
-#include "has_cpuclock.c"
+static int itc_usable;
 
-
-int
-clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
+static int
+has_cpuclock (void)
 {
-  /* We don't allow any process ID but our own.  */
-  if (pid != 0 && pid != getpid ())
-    return EPERM;
-
-  if (has_cpuclock () > 0)
+  if (__builtin_expect (itc_usable == 0, 0))
     {
-      /* Store the number.  */
-      *clock_id = CLOCK_PROCESS_CPUTIME_ID;
-      retval = 0;
+      int newval = 1;
+      int fd = open ("/proc/sal/itc_drift", O_RDONLY);
+      if (__builtin_expect (fd != -1, 1))
+	{
+	  char buf[16];
+	  /* We expect the file to contain a single digit followed by
+	     a newline.  If the format changes we better not rely on
+	     the file content.  */
+	  if (read (fd, buf, sizeof buf) != 2 || buf[0] != '0'
+	      || buf[1] != '\n')
+	    newval = -1;
+
+	  close (fd);
+	}
+
+      itc_usable = newval;
     }
 
-  return retval;
+  return itc_usable;
 }

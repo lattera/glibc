@@ -1,5 +1,13 @@
 2004-10-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/sysconf.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/Dist: Add has_cpuclock.c.
+	* sysdeps/unix/sysv/linux/ia64/clock_getcpuclockid.c: Move actual
+	testing code to...
+	* sysdeps/unix/sysv/linux/ia64/has_cpuclock.c: ...here.  New file.
+	* sysdeps/unix/sysv/linux/i386/sysconf.c: Add dynamic check for
+	_SC_CPUTIME and _SC_THREAD_CPUTIME.
+
 	* nscd/connections.c (start_threads): Use sysconf in case
 	_POSIX_CLOCK_SELECTION or _POSIX_MONOTONIC_CLOCK is not greater zero.
 

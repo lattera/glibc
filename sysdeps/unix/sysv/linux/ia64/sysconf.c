@@ -1,4 +1,5 @@
-/* Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
+/* Get file-specific information about a file.  Linux version.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,30 +17,29 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <time.h>
+#include <assert.h>
+#include <stdbool.h>
+#include <stdlib.h>
 #include <unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <fcntl.h>
 
 
 #include "has_cpuclock.c"
 
+static long int linux_sysconf (int name);
 
-int
-clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
+
+/* Get the value of the system variable NAME.  */
+long int
+__sysconf (int name)
 {
-  /* We don't allow any process ID but our own.  */
-  if (pid != 0 && pid != getpid ())
-    return EPERM;
+  if (name == _SC_CPUTIME || name == SC_THREAD_CPUTIME)
+    return has_cpuclock () ? 200112L : -1;
 
-  if (has_cpuclock () > 0)
-    {
-      /* Store the number.  */
-      *clock_id = CLOCK_PROCESS_CPUTIME_ID;
-      retval = 0;
-    }
-
-  return retval;
+  /* Everything else is handled by the more general code.  */
+  return linux_sysconf (name);
 }
+
+/* Now the generic Linux version.  */
+#undef __sysconf
+#define __sysconf static linux_sysconf
+#include "../sysconf.c"

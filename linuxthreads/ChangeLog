@@ -1,5 +1,9 @@
 2004-10-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Set _POSIX_CPUTIME
+	and _POSIX_THREAD_CPUTIME to zero.
+	* sysdeps/unix/sysv/linux/ia64/bits/posix_opt.h: Likewise.
+
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define
 	_POSIX_THREAD_PROCESS_SHARED and _POSIX_CLOCK_SELECTION as -1.
 	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.
