@@ -1,3 +1,8 @@
+2000-03-16  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/unix/sysv/linux/i386/sys/procfs.h (prfpregset_t):
+	Typedef for elf_fpregset_t instead of `elf_fpregset_t *'.
+
 2000-04-05  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* Makeconfig: Undo last change.
@@ -1352,6 +1357,11 @@
 
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c (platform): Add entry for
 	Nautilus.  Patch by Soohoon Lee <soohoon.lee@alpha-processor.com>.
+
+2000-03-16  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/unix/sysv/linux/i386/sys/procfs.h (prfpregset_t):
+	Typedef for elf_fpregset_t instead of `elf_fpregset_t *'.
 
 2000-03-08  Andreas Jaeger  <aj@suse.de>
 
