@@ -1,3 +1,8 @@
+2000-09-04  H.J. Lu  <hjl@gnu.org>
+
+	* attr.c (__pthread_attr_setguardsize): Use page_roundup
+	instead of roundup to round up to the page size.
+
 2000-09-03  Mark Kettenis  <kettenis@gnu.org>
 
 	* manager.c (pthread_exited): Correctly report event as TD_REAP

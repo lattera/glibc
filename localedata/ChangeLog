@@ -15,6 +15,12 @@
 	* charmaps/EUC-JP: Nonreversibly map 0xA1C0 to U+005C and 0x8FA2B7 to
 	U+007E.
 
+2000-09-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/INIS-8: Update to use <Uxxxx> format.
+	* charmaps/ISO_2033-1983: Likewise.
+	* charmaps/ISO_5427-EXT: Likewise.
+
 2000-09-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/zh_HK: Use zh_TW data for LC_MESSAGES.

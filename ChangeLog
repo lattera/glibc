@@ -1,3 +1,112 @@
+2000-09-04  Andreas Schwab  <schwab@suse.de>
+
+	* elf/Makefile (all-dl-routines): New variable.
+	(elide-routines.os): Use it instead of $(dl-routines).
+	(all-rtld-routines): New variable.
+	(extra-objs): Use it instead of $(rtld-routines).
+	($(objpfx)dl-allobjs.os): Likewise.
+	* sysdeps/ia64/Makefile [$(subdir) = elf]: Modify
+	sysdep-dl-routines and sysdep_routines instead of rtld-routines
+	and dl-routines.
+
+2000-09-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconv/gconv_trans.c (__gconv_translit_find): Update open_count.
+	Set fname to NULL if the module wasn't found.
+
+2000-09-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconv/gconv_trans.c (__gconv_translit_find): Don't set need_so to
+	true if trans->name already ends in ".so".
+
+2000-09-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconv/gconv_int.h (__gconv_release_shlib): Change return type to
+	void.
+	* iconv/gconv_dl.c (do_release_shlib): Don't decrement the counter
+	below -TRIES_BEFORE_UNLOAD-1, to avoid wraparound.
+	(__gconv_release_shlib): Change return type to void.
+	* iconv/gconv_builtin.c (__gconv_get_builtin_trans): Don't set
+	step->__counter here.
+	* iconv/gconv_db.c (free_derivation): Don't call a step's destructor
+	if the reference is zero.
+	(release_step): New function.
+	(gen_steps): Always initialize the __counter to 1. Use release_step.
+	Don't call the destructor on the step whose initializer failed.
+	(increment_counter): Use release_step. Don't normally run destructors
+	here.
+	(__gconv_close_transform): Use release_step.
+
+2000-09-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconv/gconv_simple.c (encoding_mask, encoding_byte): Remove.
+	(__gconv_transform_internal_utf8) [BODY]: Use simple shifts instead.
+
+2000-09-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/euc-tw.c (BODY for FROM_LOOP): Initialize ch2 correctly.
+	If the first byte is 0x8E, don't ask for 4 bytes until it has been
+	verified that the second byte is valid. Leave it to cns11643_to_ucs4
+	to check for incomplete input.
+	* iconvdata/cns11643.h (cns11643_to_ucs4): The plane number is
+	ch - 0x20 - offset, not ch - 0x21 - offset. Upper bound for
+	__cns11643l1_to_ucs4_tab is 0x21f2, not 0x2196.
+	(ucs4_to_cns11643): Fix mapping for ranges 0x3105..0x3129 and
+	0x9f9d..0x9fa5.
+	* iconvdata/cns11643l1.h (cns11643l1_to_ucs4): Upper bound for
+	__cns11643l1_to_ucs4_tab is 0x21f2, not 0x2196.
+	(ucs4_to_cns11643l1): Fix mapping for range 0x3105..0x3129.
+	* iconvdata/cns11643l1.c (__cns11643l1_from_ucs4_tab6): Extend
+	upto index 0x0052.
+
+2000-09-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconv/gconv_db.c (find_derivation): Always use the least-cost
+	solution.
+
+2000-09-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/big5.c (BODY for FROM_LOOP): Bytes 0x81..0xA0, 0xFA..0xFF
+	are invalid.
+
+2000-09-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/jis0208.c (__jis0208_to_ucs): Map EUC-JP 0xA1C0 to U+005C.
+	* iconvdata/jis0212.c (__jisx0212_to_ucs): Map EUC-JP 0x8FA2B7 to
+	U+007E.
+
+2000-09-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/sjis.c (cjk_block1): Map 0x815F to U+005C.
+
+2000-09-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/iso_6937-2.c (to_ucs4): Map 0xB4 to U+00D7.
+
+2000-09-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/tst-tables.sh: New file.
+	* iconvdata/tst-table.sh: New file.
+	* iconvdata/tst-table-from.c: New file.
+	* iconvdata/tst-table-to.c: New file.
+	* iconvdata/tst-table-charmap.sh: New file.
+	* iconvdata/Makefile (test-srcs): Set to tst-table-from tst-table-to.
+	(distribute): Add tst-tables.sh, tst-table.sh, tst-table-charmap.sh,
+	tst-table-from.c, tst-table-to.c, EUC-JP.irreversible,
+	ISIRI-3342.irreversible, SJIS.irreversible.
+	(tests): Add dependency on tst-tables.out.
+	(tst-tables.out, tst-tables-clean): New rules.
+	(do-tests-clean, common-mostlyclean): Require tst-tables-clean.
+	* iconvdata/ISIRI-3342.irreversible: New file.
+	* iconvdata/EUC-JP.irreversible: New file.
+	* iconvdata/SJIS.irreversible: New file.
+
+2000-09-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/locale.texi (General Numeric): Update description of
+	representation of the grouping information in the locale data.
+	Patch by Gaute B. Strokkenes <gs234@cam.ac.uk>.
+
 2000-09-04  Andreas Jaeger  <aj@suse.de>
 
 	* locale/programs/ld-monetary.c (monetary_read): Fix typo.
@@ -7,7 +116,7 @@
 2000-09-04  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/generic/fegetenv.c: It's __fegetenv.
-        Reported by Rob Levin <lilo@transvirtual.com>.
+	Reported by Rob Levin <lilo@transvirtual.com>.
 
 2000-09-03  Ulrich Drepper  <drepper@redhat.com>
 
