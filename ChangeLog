@@ -1,3 +1,8 @@
+1998-10-24  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/opendir.c (__opendir): Return ENOENT for "".
+	(__opendir): Add trailing slash to name for open, for ENOTDIR check.
+
 1998-10-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/Dist: Add setresuid.c, setresgid.c,
@@ -1653,7 +1658,7 @@
 1998-09-13  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* sysdeps/generic/bits/types.h: Include <features.h>.  Make sure
-	size_t is defined.  Some reordering of defenitions to make
+	size_t is defined.  Some reordering of definitions to make
 	maintaining this file in parallel with the linux-specific file easier.
 
 1998-09-13  Ulrich Drepper  <drepper@cygnus.com>
