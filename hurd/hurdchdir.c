@@ -1,5 +1,5 @@
 /* Change a port cell to a directory by looking up a name.
-   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ _hurd_change_directory_port_from_name (struct hurd_port *portcell,
   /* Append trailing "/." to directory name to force ENOTDIR if it's not a
      directory and EACCES if we don't have search permission.  */
   len = strlen (name);
-  if (name[len - 2] == '/' && name[len - 1] == '.')
+  if (len >= 2 && name[len - 2] == '/' && name[len - 1] == '.')
     lookup = name;
   else
     {
