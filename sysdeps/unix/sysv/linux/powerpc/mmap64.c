@@ -47,7 +47,7 @@ __mmap64 (__ptr_t addr, size_t len, int prot, int flags, int fd, off64_t offset)
 # ifndef __ASSUME_MMAP2_SYSCALL
       ! have_no_mmap2 &&
 # endif
-      ! (offset & -(1 << (PAGE_SHIFT+1))))
+      ! (offset & ((1 << PAGE_SHIFT)-1)))
     {
 # ifndef __ASSUME_MMAP2_SYSCALL
       int saved_errno = errno;

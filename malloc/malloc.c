@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>
    and Doug Lea <dl@cs.oswego.edu>, 1996.
@@ -1538,7 +1538,7 @@ static tsd_key_t arena_key;
 static mutex_t list_lock = MUTEX_INITIALIZER;
 
 #if THREAD_STATS
-static int stat_n_heaps = 0;
+static int stat_n_heaps;
 #define THREAD_STAT(x) x
 #else
 #define THREAD_STAT(x) do ; while(0)
@@ -1556,11 +1556,11 @@ static int           check_action     = DEFAULT_CHECK_ACTION;
 static char* sbrk_base = (char*)(-1);
 
 /* The maximum memory obtained from system via sbrk */
-static unsigned long max_sbrked_mem = 0;
+static unsigned long max_sbrked_mem;
 
 /* The maximum via either sbrk or mmap (too difficult to track with threads) */
 #ifdef NO_THREADS
-static unsigned long max_total_mem = 0;
+static unsigned long max_total_mem;
 #endif
 
 /* The total memory obtained from system via sbrk */
@@ -1568,13 +1568,13 @@ static unsigned long max_total_mem = 0;
 
 /* Tracking mmaps */
 
-static unsigned int n_mmaps = 0;
-static unsigned int max_n_mmaps = 0;
-static unsigned long mmapped_mem = 0;
-static unsigned long max_mmapped_mem = 0;
+static unsigned int n_mmaps;
+static unsigned int max_n_mmaps;
+static unsigned long mmapped_mem;
+static unsigned long max_mmapped_mem;
 
 /* Mapped memory in non-main arenas (reliable only for NO_THREADS). */
-static unsigned long arena_mem = 0;
+static unsigned long arena_mem;
 
 
 
