@@ -248,3 +248,12 @@ _nl_get_walt_digit (unsigned int number)
 
   return (wchar_t *) result;
 }
+
+
+static void
+free_mem (void)
+{
+  free (alt_digits);
+  free (walt_digits);
+}
+text_set_element (__libc_subfreeres, free_mem);
