@@ -35,7 +35,8 @@ do_test (void)
       wint_t wc = fgetwc (fp);
       if (wc != (wint_t) *cp)
 	{
-	  printf ("fgetwc failed: got L'%lc', expected L'%lc'\n", wc, *cp);
+	  printf ("fgetwc failed: got L'%lc', expected L'%lc'\n",
+		  wc, (wint_t) *cp);
 	  return 1;
 	}
       off_t o = ftello (fp);

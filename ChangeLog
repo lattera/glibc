@@ -1,3 +1,7 @@
+2003-11-01  Roland McGrath  <roland@redhat.com>
+
+	* libio/bug-ftell.c (do_test): Add a cast.
+
 2003-09-26  Daniel Jacobowitz  <drow@mvista.com>
 
 	* Makerules (shlib.lds): Make sure that ld doesn't try to link
