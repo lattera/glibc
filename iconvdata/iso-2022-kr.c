@@ -1,5 +1,5 @@
 /* Conversion module for ISO-2022-KR.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -80,7 +80,7 @@ enum
 	data->statep->count = ASCII_set;				      \
       else								      \
 	{								      \
-	  char *outbuf = data->outbuf;					      \
+	  unsigned char *outbuf = data->outbuf;				      \
 	  								      \
 	  /* We are not in the initial state.  To switch back we have	      \
 	     to emit `SI'.  */						      \

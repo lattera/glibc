@@ -1,3 +1,10 @@
+1999-03-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/iconv.c (iconv): Correctly cast parameters for __gconv.
+
+	* iconvdata/iso-2022-kr.c (EMIT_SHIFT_TO_INIT): Change type of
+	outbuf to unsigned char to avoid warning.
+
 1999-03-11  David S. Miller  <davem@redhat.com>
 
 	* sysdeps/sparc/sparc32/fpu/fpu_control.h: Add missing trap enable
