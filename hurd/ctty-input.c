@@ -1,5 +1,5 @@
 /* _hurd_ctty_input -- Do an input RPC and generate SIGTTIN if necessary.
-   Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995,97,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,46 +28,49 @@ _hurd_ctty_input (io_t port, io_t ctty, error_t (*rpc) (io_t))
 {
   error_t err;
 
+  if (ctty == MACH_PORT_NULL)
+    return (*rpc) (port);
+
   do
     {
-      err = (*rpc) (ctty != MACH_PORT_NULL ? ctty : port);
-      if (ctty != MACH_PORT_NULL && err == EBACKGROUND)
+      err = (*rpc) (ctty);
+      if (err == EBACKGROUND)
 	{
 	  /* We are a background job and tried to read from the tty.
 	     We should probably get a SIGTTIN signal.  */
-	  struct hurd_sigstate *ss;
 	  if (_hurd_orphaned)
 	    /* Our process group is orphaned.  Don't stop; just fail.  */
 	    err = EIO;
 	  else
 	    {
-	      ss = _hurd_self_sigstate ();
+	      struct hurd_sigstate *ss = _hurd_self_sigstate ();
 	      __spin_lock (&ss->lock);
 	      if (__sigismember (&ss->blocked, SIGTTIN) ||
 		  ss->actions[SIGTTIN].sa_handler == SIG_IGN)
 		/* We are blocking or ignoring SIGTTIN.  Just fail.  */
 		err = EIO;
 	      __spin_unlock (&ss->lock);
-	    }
-	  if (err == EBACKGROUND)
-	    {
-	      /* Send a SIGTTIN signal to our process group.
 
-		 We must remember here not to clobber ERR, since
-		 the loop condition below uses it to recall that
-		 we should retry after a stop.  */
+	      if (err == EBACKGROUND)
+		{
+		  /* Send a SIGTTIN signal to our process group.
 
-	      __USEPORT (CTTYID, _hurd_sig_post (0, SIGTTIN, port));
-	      /* XXX what to do if error here? */
+		     We must remember here not to clobber ERR, since
+		     the loop condition below uses it to recall that
+		  we should retry after a stop.  */
 
-	      /* At this point we should have just run the handler for
-		 SIGTTIN or resumed after being stopped.  Now this is
-		 still a "system call", so check to see if we should
-		 restart it.  */
-	      __spin_lock (&ss->lock);
-	      if (!(ss->actions[SIGTTIN].sa_flags & SA_RESTART))
-		err = EINTR;
-	      __spin_unlock (&ss->lock);
+		  __USEPORT (CTTYID, _hurd_sig_post (0, SIGTTIN, port));
+		  /* XXX what to do if error here? */
+
+		  /* At this point we should have just run the handler for
+		     SIGTTIN or resumed after being stopped.  Now this is
+		     still a "system call", so check to see if we should
+		  restart it.  */
+		  __spin_lock (&ss->lock);
+		  if (!(ss->actions[SIGTTIN].sa_flags & SA_RESTART))
+		    err = EINTR;
+		  __spin_unlock (&ss->lock);
+		}
 	    }
 	}
       /* If the last RPC generated a SIGTTIN, loop to try it again.  */

@@ -1,3 +1,15 @@
+1999-03-09  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/ioctl.c (__ioctl): Move the marshalling of the
+	arguments into the request message buffer inside `send_rpc'
+	subfunction.  We must repeat the marshalling when retrying the RPC
+	after a SIGTTOU delivery.
+
+	* hurd/ctty-input.c (_hurd_ctty_input): Use early short-circuit code
+	path when there is no ctty port.
+	* hurd/ctty-output.c (_hurd_ctty_output): Likewise.
+	Move sigstate check inside loop so we recheck after handling a signal.
+
 1999-03-05  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/llio.texi (Open-time Flags): Clarify that O_SHLOCK and
