@@ -1,5 +1,9 @@
 1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/generic/libc-start.c: For SUID binaries check whether
+	the standard file descriptors are open.
+	Reported by Chris Evans <chris@ferret.lmh.ox.ac.uk>.
+
 	* sysdeps/unix/sysv/linux/syscalls.list: Remove mmap64 alias for mmap.
 	* sysdeps/unix/sysv/linux/mmap64.c: Test whether mapped area is in
 	range of mmap.  If not fail.
