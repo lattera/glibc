@@ -245,7 +245,8 @@ fnmatch (pattern, string, flags)
 		  {
 		    if (*p == '\0')
 		      return FNM_NOMATCH;
-		    c = FOLD (*p++);
+		    c = FOLD (*p);
+		    ++p;
 
 		    if (c == fn)
 		      goto matched;

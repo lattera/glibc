@@ -1,5 +1,6 @@
 1998-12-12  Ulrich Drepper  <drepper@cygnus.com>
 
+	* charmaps/ISO-8859-13: New file.
 	* charmaps/ISO-8859-14: New file.
 	* charmaps/ISO-8859-15: New file.
 

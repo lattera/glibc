@@ -1,3 +1,8 @@
+1998-12-12  Geoff Keating  <geoffk@ozemail.com.au> 
+ 
+	* posix/fnmatch.c (fnmatch): Arguments to FOLD must not have 
+	side-effects. 
+ 
 1998-12-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/iso-8859-11.h: ISO 8859-11 conversion data.

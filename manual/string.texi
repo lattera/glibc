@@ -800,8 +800,8 @@ void
 sort_strings (char **array, int nstrings)
 @{
   /* @r{Sort @code{temp_array} by comparing the strings.} */
-  qsort (array, sizeof (char *),
-         nstrings, compare_elements);
+  qsort (array, nstrings,
+         sizeof (char *), compare_elements);
 @}
 @end smallexample
 
