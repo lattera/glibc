@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,99,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -164,10 +164,11 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 	  /* Fall through.  */
 
 	case FS_RETRY_NORMAL:
-#ifdef SYMLOOP_MAX
 	  if (nloops++ >= SYMLOOP_MAX)
-	    return ELOOP;
-#endif
+	    {
+	      __mach_port_deallocate (__mach_task_self (), *result);
+	      return ELOOP;
+	    }
 
 	  /* An empty RETRYNAME indicates we have the final port.  */
 	  if (retryname[0] == '\0' &&
@@ -240,6 +241,8 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 	      dirport = INIT_PORT_CRDIR;
 	      if (*result != MACH_PORT_NULL)
 		__mach_port_deallocate (__mach_task_self (), *result);
+	      if (nloops++ >= SYMLOOP_MAX)
+		return ELOOP;
 	      file_name = &retryname[1];
 	      break;
 
