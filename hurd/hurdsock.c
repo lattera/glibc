@@ -56,8 +56,9 @@ _hurd_socket_server (int domain, int dead)
       file_t *new = realloc (servers, (domain + 1) * sizeof (file_t));
       if (new != NULL)
 	{
-	  while (max_domain <= domain)
+	  do
 	    new[++max_domain] = MACH_PORT_NULL;
+	  while (max_domain < domain);
 	  servers = new;
 	}
       else
