@@ -134,9 +134,9 @@ netlink_sendreq (struct netlink_handle *h, int type)
   memset (&nladdr, '\0', sizeof (nladdr));
   nladdr.nl_family = AF_NETLINK;
 
-  return TEMP_FAILURE_RETRY (sendto (h->fd, (void *) &req, sizeof (req), 0,
-				     (struct sockaddr *) &nladdr,
-				     sizeof (nladdr)));
+  return TEMP_FAILURE_RETRY (__sendto (h->fd, (void *) &req, sizeof (req), 0,
+				       (struct sockaddr *) &nladdr,
+				       sizeof (nladdr)));
 }
 
 
@@ -161,7 +161,7 @@ netlink_receive (struct netlink_handle *h)
 	  0
 	};
 
-      read_len = TEMP_FAILURE_RETRY (recvmsg (h->fd, &msg, 0));
+      read_len = TEMP_FAILURE_RETRY (__recvmsg (h->fd, &msg, 0));
       if (read_len < 0)
 	return -1;
 
@@ -230,13 +230,13 @@ netlink_open (struct netlink_handle *h)
 {
   struct sockaddr_nl nladdr;
 
-  h->fd = socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
+  h->fd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
   if (h->fd < 0)
     return -1;
 
   memset (&nladdr, '\0', sizeof (nladdr));
   nladdr.nl_family = AF_NETLINK;
-  if (bind (h->fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) < 0)
+  if (__bind (h->fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) < 0)
     {
       netlink_close (h);
       return -1;

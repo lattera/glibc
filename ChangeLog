@@ -1,5 +1,8 @@
 2003-04-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ifaddrs.c (getifaddrs): Use __ protected
+	variants of socket, bind, recvmsg, and sendto.
+
 	* sysdeps/i386/fpu/ftestexcept.c: Also check SSE status word.
 
 	* include/signal.h: Use libc_hidden_proto for sigaddset and sigdelset.
