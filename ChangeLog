@@ -1,5 +1,8 @@
 2001-12-16  Roland McGrath  <roland@frob.com>
 
+	* nss/nsswitch.c (__nss_next): Don't use __FUNCTION__ as literal.
+	* grp/initgroups.c (internal_getgrouplist): Likewise.
+
 	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): Add `break' after
 	`default:' to silence new GCC warning.
 	Rewrite cast of lvalue to silence new GCC warning.

@@ -176,7 +176,7 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
 
       /* This is really only for debugging.  */
       if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_RETURN)
-	__libc_fatal ("illegal status in " __FUNCTION__);
+	__libc_fatal ("illegal status in internal_getgrouplist");
 
       if (status != NSS_STATUS_SUCCESS
 	  && nss_next_action (nip, status) == NSS_ACTION_RETURN)
@@ -214,7 +214,7 @@ getgrouplist (const char *user, gid_t group, gid_t *groups, int *ngroups)
     }
   else
     *ngroups = result;
-      
+
   memcpy (groups, newgroups, *ngroups * sizeof (gid_t));
 
   free (newgroups);

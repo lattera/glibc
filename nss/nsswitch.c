@@ -178,7 +178,7 @@ __nss_next (service_user **ni, const char *fct_name, void **fctp, int status,
     {
       /* This is really only for debugging.  */
        if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_RETURN)
-	 __libc_fatal ("illegal status in " __FUNCTION__);
+	 __libc_fatal ("illegal status in __nss_next");
 
        if (nss_next_action (*ni, status) == NSS_ACTION_RETURN)
 	 return 1;
