@@ -296,6 +296,73 @@ hosts_keys (int number, char *key[])
   return result;
 }
 
+/* This is for hosts, but using getaddrinfo */
+static int
+ahosts_keys (int number, char *key[])
+{
+  int result = 0;
+  int i;
+  struct hostent *host;
+
+  if (number == 0)
+    {
+      sethostent (0);
+      while ((host = gethostent ()) != NULL)
+	print_hosts (host);
+      endhostent ();
+      return result;
+    }
+
+  struct addrinfo hint;
+  memset (&hint, '\0', sizeof (hint));
+  hint.ai_flags = AI_V4MAPPED | AI_ADDRCONFIG | AI_CANONNAME;
+  hint.ai_family = AF_UNSPEC;
+
+  for (i = 0; i < number; ++i)
+    {
+      struct addrinfo *res;
+
+      if (getaddrinfo (key[i], NULL, &hint, &res) != 0)
+	result = 2;
+      else
+	{
+	  struct addrinfo *runp = res;
+
+	  while (runp != NULL)
+	    {
+	      char sockbuf[20];
+	      const char *sockstr;
+	      if (runp->ai_socktype == SOCK_STREAM)
+		sockstr = "STREAM";
+	      else if (runp->ai_socktype == SOCK_DGRAM)
+		sockstr = "DGRAM";
+	      else if (runp->ai_socktype == SOCK_RAW)
+		sockstr = "RAW";
+	      else
+		{
+		  snprintf (sockbuf, sizeof (sockbuf), "%d",
+			    runp->ai_socktype);
+		  sockstr = sockbuf;
+		}
+
+	      char buf[INET6_ADDRSTRLEN];
+	      printf ("%-15s %-6s %s\n",
+		      inet_ntop (runp->ai_family,
+				 &((struct sockaddr_in *) runp->ai_addr)->sin_addr,
+				 buf, sizeof (buf)),
+		      sockstr,
+		      runp->ai_canonname);
+
+	      runp = runp->ai_next;
+	    }
+
+	  freeaddrinfo (res);
+	}
+    }
+
+  return result;
+}
+
 /* This is for netgroup */
 static int
 netgroup_keys (int number, char *key[])
@@ -688,6 +755,7 @@ struct
   } databases[] =
   {
 #define D(name) { #name, name ## _keys },
+D(ahosts)
 D(aliases)
 D(ethers)
 D(group)

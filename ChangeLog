@@ -1,5 +1,8 @@
 2003-04-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* nss/getent.c: Implement alternative host database lookup via
+	getaddrinfo.
+
 	* include/ifaddrs.h: New file.
 	* include/netdb.h: Move definitions of AI_V4MAPPED, AI_ALL, and
 	AI_ADDRCONFIG...
@@ -43,7 +46,7 @@
 	(__yp_unbind): Add call to free.  Adjust all callers.
 
 	* nis/ypclnt.c (yp_all): Free the dom_binding object after
-	unwinding it.
+	unbinding it.
 
 	* grp/initgroups.c (getgrouplist): Don't copy too much into the
 	user buffer if more groups are found than fit into it.
