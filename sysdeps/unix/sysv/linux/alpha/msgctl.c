@@ -51,6 +51,9 @@ int __new_msgctl (int, int, struct msqid_ds *);
 int
 __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
 {
+  /* This is a misnomer -- Alpha had 32-bit uids at the beginning
+     of time.  However, msg_qnum and msg_qbytes changed size at
+     the same time the size of uid changed elsewhere.  */
 #if __ASSUME_32BITUIDS > 0
   return INLINE_SYSCALL (msgctl, 3, msqid, cmd | __IPC_64, buf);
 #else
