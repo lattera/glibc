@@ -1,3 +1,9 @@
+2003-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/ldconfig.c (parse_conf): Ignore leading whitespace.  Use
+	feof_unlocked instead of feof.
+	(add_dir): Ignore trailing whitespace.
+
 2003-04-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/bug-regex4.c (main): Cap RANGE and STOP arguments to
