@@ -61,8 +61,19 @@
 # define TIME_T_MAX TYPE_MAXIMUM (time_t)
 #endif
 
-#define TM_YEAR_BASE 1900
+/* Verify a requirement at compile-time (unlike assert, which is runtime).  */
+#define verify(name, assertion) struct name { char a[(assertion) ? 1 : -1]; }
+
+verify (time_t_is_integer, (time_t) 0.5 == 0);
+verify (twos_complement_arithmetic, -1 == ~1 + 1);
+verify (right_shift_propagates_sign, -1 >> 1 == -1);
+/* The code also assumes that signed integer overflow silently wraps
+   around, but this assumption can't be stated without causing a
+   diagnostic on some hosts.  */
+
 #define EPOCH_YEAR 1970
+#define TM_YEAR_BASE 1900
+verify (base_year_is_a_multiple_of_100, TM_YEAR_BASE % 100 == 0);
 
 #ifndef __isleap
 /* Nonzero if YEAR is a leap year (every 4 years,
@@ -109,6 +120,8 @@ ydhms_tm_diff (int year, int yday, int hour, int min, int sec,
     return 1;
   else
     {
+      verify (C99_integer_division, -1 / 2 == 0);
+
       /* Compute intervening leap days correctly even if year is negative.
 	 Take care to avoid int overflow.  time_t overflow is OK, since
 	 only the low order bits of the correct time_t answer are needed.
