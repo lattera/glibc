@@ -1,5 +1,7 @@
 2003-09-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/unistd.h: Add back __THROW to sysconf, pathconf, fpathconf.
+
 	* sysdeps/unix/sysv/linux/pathconf.c (__statfs_filesize_max):
 	Report correct value for vxfs.
 	* sysdeps/unix/sysv/linux/linux_fsinfo.h: Dfeine VXFS_SUPER_MAGIC.
@@ -8,7 +10,7 @@
 	data.
 
 	* sysdeps/generic/utmp_file.c: Use not-cancelable syscalls all
-	over the place.  It would be allowed to have these fucntions as
+	over the place.  It would be allowed to have these functions as
 	cancellation points but the cleanup would be ugly and a lot of
 	work.
 
