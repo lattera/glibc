@@ -130,32 +130,38 @@
 #define LOADARGS_1(name, arg1) \
 	LOADARGS_0(name, 0); \
 	extern void __illegally_sized_syscall_##name##_arg1 (void); \
-	if (sizeof (arg1) > 8) __illegally_sized_syscall_##name##_arg1 (); \
+	if (__builtin_classify_type (arg1) != 5 && sizeof (arg1) > 8) \
+	  __illegally_sized_syscall_##name##_arg1 (); \
 	r3 = (long) (arg1)
 #define LOADARGS_2(name, arg1, arg2) \
 	LOADARGS_1(name, arg1); \
 	extern void __illegally_sized_syscall_##name##_arg2 (void); \
-	if (sizeof (arg2) > 8) __illegally_sized_syscall_##name##_arg2 (); \
+	if (__builtin_classify_type (arg2) != 5 && sizeof (arg2) > 8) \
+	  __illegally_sized_syscall_##name##_arg2 (); \
 	r4 = (long) (arg2)
 #define LOADARGS_3(name, arg1, arg2, arg3) \
 	LOADARGS_2(name, arg1, arg2); \
 	extern void __illegally_sized_syscall_##name##_arg3 (void); \
-	if (sizeof (arg3) > 8) __illegally_sized_syscall_##name##_arg3 (); \
+	if (__builtin_classify_type (arg3) != 5 && sizeof (arg3) > 8) \
+	  __illegally_sized_syscall_##name##_arg3 (); \
 	r5 = (long) (arg3)
 #define LOADARGS_4(name, arg1, arg2, arg3, arg4) \
 	LOADARGS_3(name, arg1, arg2, arg3); \
 	extern void __illegally_sized_syscall_##name##_arg4 (void); \
-	if (sizeof (arg4) > 8) __illegally_sized_syscall_##name##_arg4 (); \
+	if (__builtin_classify_type (arg4) != 5 && sizeof (arg4) > 8) \
+	  __illegally_sized_syscall_##name##_arg4 (); \
 	r6 = (long) (arg4)
 #define LOADARGS_5(name, arg1, arg2, arg3, arg4, arg5) \
 	LOADARGS_4(name, arg1, arg2, arg3, arg4); \
 	extern void __illegally_sized_syscall_##name##_arg5 (void); \
-	if (sizeof (arg5) > 8) __illegally_sized_syscall_##name##_arg5 (); \
+	if (__builtin_classify_type (arg5) != 5 && sizeof (arg5) > 8) \
+	  __illegally_sized_syscall_##name##_arg5 (); \
 	r7 = (long) (arg5)
 #define LOADARGS_6(name, arg1, arg2, arg3, arg4, arg5, arg6) \
 	LOADARGS_5(name, arg1, arg2, arg3, arg4, arg5); \
 	extern void __illegally_sized_syscall_##name##_arg6 (void); \
-	if (sizeof (arg6) > 8) __illegally_sized_syscall_##name##_arg6 (); \
+	if (__builtin_classify_type (arg6) != 5 && sizeof (arg6) > 8) \
+	  __illegally_sized_syscall_##name##_arg6 (); \
 	r8 = (long) (arg6)
 
 #define ASM_INPUT_0 "0" (r0)
