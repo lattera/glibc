@@ -35,6 +35,9 @@ nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 ifeq ($(have-thread-library),yes)
 
 others := nscd_nischeck
+ifneq (yesyes,$(have-fpie)$(build-shared))
+others += nscd
+endif
 install-sbin := nscd nscd_nischeck
 
 extra-objs := $(nscd-modules:=.o) nscd_nischeck.o
@@ -84,8 +87,6 @@ $(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
 	  $(LDFLAGS) $(LDFLAGS-$(@F)) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
 	  -o $@ $^ $(common-objpfx)libc_nonshared.a
-else
-others += nscd
 endif
 
 # This makes sure -DNOT_IN_libc is passed for all these modules.
