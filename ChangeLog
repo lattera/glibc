@@ -1,3 +1,12 @@
+2001-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/i386/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/i386/makecontext.S: New file.
+	* sysdeps/unix/sysv/linux/i386/swapcontext.S: New file.
+	* sysdeps/unix/sysv/linux/i386/ucontext_i.h: New file.
+	* sysdeps/unix/sysv/linux/i386/Dist: Add ucontext_i.h.
+
 2001-04-07  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/ldbl-96/e_j1l.c (__ieee754_y1l): Use sincos
