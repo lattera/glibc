@@ -1,5 +1,5 @@
 /* Set thread_state for sighandler, and sigcontext to recover.  MIPS version.
-Copyright (C) 1994 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ struct mach_msg_trap_args
 
 struct sigcontext *
 _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
-			int signo, int sigcode,
+			int signo, long int sigcode,
 			int rpc_wait,
 			struct machine_thread_all_state *state)
 {
@@ -59,7 +59,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	  state->set = (1 << MIPS_THREAD_STATE) | (1 << MIPS_EXC_STATE);
 	  if (state->exc.coproc_state & SC_COPROC_USE_FPU)
 	    {
-	      memcpy (&state->fpu, &ss->context->sc_mips_loat_state,
+	      memcpy (&state->fpu, &ss->context->sc_mips_float_state,
 		      sizeof (state->fpu));
 	      state->set |= (1 << MIPS_FLOAT_STATE);
 	    }
@@ -191,7 +191,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
   asm volatile
     (".set noat; .set noreorder; .set nomacro\n"
      /* Retry the interrupted mach_msg system call.  */
-     "li v0, -25\n"		/* mach_msg_trap */
+     "li $2, -25\n"		/* mach_msg_trap */
      "syscall\n"
      /* When the sigcontext was saved, v0 was MACH_RCV_INTERRUPTED.  But
 	now the message receive has completed and the original caller of
@@ -199,13 +199,13 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	see the final return value of the message receive in v0.  So
 	store the new v0 value into the sc_gpr[1] member of the sigcontext
 	(whose address is in v1 to make this code simpler).  */
-     "sw v0, (v1)\n"
+     "sw $2, ($3)\n"
      /* Since the argument registers needed to have the mach_msg_trap
 	arguments, we've stored the arguments to the handler function
 	in registers s1..s3 ($17..$19).  */
-     "move a0, s1\n"
-     "move a1, s2\n"
-     "move a2, s3\n");
+     "move $4, $17\n"
+     "move $5, $18\n"
+     "move $6, $19\n");
 
  trampoline:
   /* Entry point for running the handler normally.  The arguments to the
@@ -219,7 +219,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
     ("jal $1; nop\n"		/* Call the handler function.  */
      /* Call __sigreturn (SCP); this cannot return.  */
      "j %0\n"
-     "move a0, s0"		/* Set up arg from saved SCP in delay slot.  */
+     "move $4, $16"		/* Set up arg from saved SCP in delay slot.  */
      : : "i" (&__sigreturn));
 
   /* NOTREACHED */
@@ -237,9 +237,12 @@ int
 _hurdsig_rcv_interrupted_p (struct machine_thread_all_state *state,
 			    mach_port_t *port)
 {
-  if (! setjmp (_hurd_sigthread_fault_env))
+  const unsigned int *const pc = (void *) state->basic.pc;
+
+  if (_hurdsig_catch_fault (SIGSEGV))
+    assert (_hurdsig_fault_sigcode == (long int) pc);
+  else
     {
-      const unsigned int *pc = (void *) state->basic.pc;
       if (state->basic.r2 == MACH_RCV_INTERRUPTED &&
 	  pc[-1] == 0xc)	/* syscall */
 	{
