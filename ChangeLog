@@ -1,5 +1,14 @@
 2002-09-29  Jakub Jelinek  <jakub@redhat.com>
 
+	* nss/bug-erange.c (main): Don't fail if /etc/resolv.conf doesn't
+	exist.
+
+2002-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/Makefile: Move bug-erage from tests to xtests.
+
+2002-09-29  Jakub Jelinek  <jakub@redhat.com>
+
 	* stdlib/longlong.h (__udiv_qrnnd): Remove PARAMS from prototype.
 
 2002-09-29  Jakub Jelinek  <jakub@redhat.com>

@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 int
 main (void)
@@ -35,6 +36,13 @@ main (void)
   if (res != 0 || hp == NULL)
     {
       printf ("gethostbyname_r failed: %s (errno: %m)\n", strerror (res));
+
+      if (access ("/etc/resolv.conf", R_OK))
+	{
+	  puts ("DNS probably not set up");
+	  return 0;
+	}
+
       return 1;
     }
 
