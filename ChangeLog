@@ -1,3 +1,7 @@
+2001-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/texinfo.tex: Update from upstream version.
+
 2001-01-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* inet/ether_ntoh.c (lookup_function): Change arguments to match
