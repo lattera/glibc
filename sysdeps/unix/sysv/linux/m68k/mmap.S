@@ -41,3 +41,4 @@ ENTRY (__mmap)
 PSEUDO_END (__mmap)
 
 weak_alias (__mmap, mmap)
+weak_alias (__mmap, mmap64)
