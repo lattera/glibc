@@ -1,6 +1,6 @@
 #! /bin/sh
 # Testing the implementation of localedata.
-# Copyright (C) 1998 Free Software Foundation, Inc.
+# Copyright (C) 1998, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Andreas Jaeger, <aj@arthur.rhein-neckar.de>, 1998.
 #
@@ -39,9 +39,7 @@ test_locale ()
     fi
 }
 
-# I take this out for now since it is a known problem
-# (see [PR libc/229] and [PR libc/454]. --drepper
-# test_locale IBM437 de_DE de_DE.437 mnemonic.ds
+test_locale IBM437 de_DE de_DE.437 mnemonic.ds
 test_locale tests/test1.cm tests/test1.def test1 mnemonic.ds
 test_locale tests/test2.cm tests/test2.def test2 mnemonic.ds
 test_locale tests/test3.cm tests/test3.def test3 mnemonic.ds

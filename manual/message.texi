@@ -180,7 +180,7 @@ First of all the user can specify a path in the message catalog name
 @code{NLSPATH} environment variable is not used.  The catalog must exist
 as specified in the program, perhaps relative to the current working
 directory.  This situation in not desirable and catalogs names never
-should be written this way.  Beside this, this behaviour is not portable
+should be written this way.  Beside this, this behavior is not portable
 to all other platforms providing the @code{catgets} interface.
 
 @cindex LC_ALL environment variable
@@ -220,7 +220,7 @@ translation actually happened must look like this:
 @end smallexample
 
 @noindent
-When an error occured the global variable @var{errno} is set to
+When an error occurred the global variable @var{errno} is set to
 
 @table @var
 @item EBADF
@@ -384,7 +384,7 @@ is an error if the same message number already appeared for this set.
 If the leading token was an identifier the message number gets
 automatically assigned.  The value is the current maximum messages
 number for this set plus one.  It is an error if the identifier was
-already used for a message in this set.  It is ok to reuse the
+already used for a message in this set.  It is OK to reuse the
 identifier for a message in another thread.  How to use the symbolic
 identifiers will be explained below (@pxref{Common Usage}).  There is
 one limitation with the identifier: it must not be @code{Set}.  The
@@ -770,6 +770,7 @@ categories:
 * Locating gettext catalog::    How to determine which catalog to be used.
 * Advanced gettext functions::  Additional functions for more complicated
                                  situations.
+* GUI program problems::        How to use @code{gettext} in GUI programs.
 * Using gettextized software::  The possibilities of the user to influence
                                  the way @code{gettext} works.
 @end menu
@@ -816,7 +817,7 @@ history of the function and does not reflect the way the function should
 be used.
 
 Please note that above we wrote ``message catalogs'' (plural).  This is
-a speciality of the GNU implementation of these functions and we will
+a specialty of the GNU implementation of these functions and we will
 say more about this when we talk about the ways message catalogs are
 selected (@pxref{Locating gettext catalog}).
 
@@ -1110,7 +1111,7 @@ The form how plural forms are build differs.  This is a problem with
 language which have many irregularities.  German, for instance, is a
 drastic case.  Though English and German are part of the same language
 family (Germanic), the almost regular forming of plural noun forms
-(appending an `s') is ardly found in German.
+(appending an `s') is hardly found in German.
 
 @item
 The number of plural forms differ.  This is somewhat surprising for
@@ -1132,7 +1133,7 @@ the numerical argument and the first string as a key, the implementation
 can select using rules specified by the translator the right plural
 form.  The two string arguments then will be used to provide a return
 value in case no message catalog is found (similar to the normal
-@code{gettext} behaviour).  In this case the rules for Germanic language
+@code{gettext} behavior).  In this case the rules for Germanic language
 is used and it is assumed that the first string argument is the singular
 form, the second the plural form.
 
@@ -1197,13 +1198,13 @@ language.
 Therefore the solution implemented is to allow the translator to specify
 the rules of how to select the plural form.  Since the formula varies
 with every language this is the only viable solution except for
-harcoding the information in the code (which still would require the
-possibility of extensionsto not prevent the use of new languages).  The
+hardcoding the information in the code (which still would require the
+possibility of extensions to not prevent the use of new languages).  The
 details are explained in the GNU @code{gettext} manual.  Here only a a
 bit of information is provided.
 
 The information about the plural form selection has to be stored in the
-header entry (the one with the empty (@code{msgid} string).  There shoud
+header entry (the one with the empty (@code{msgid} string).  There should
 be something like:
 
 @smallexample
@@ -1358,6 +1359,140 @@ Languages with this property include:
 Slovenian
 @end table
 @end table
+
+
+@node GUI program problems
+@subsubsection How to use @code{gettext} in GUI programs
+
+One place where the @code{gettext} functions if used normally have big
+programs is within programs with graphical user interfaces (GUIs).  The
+problem is that many of the strings which have to be translated are very
+short.  They have to appear in pull-down menus which restricts the
+length.  But strings which are not containing entire sentences or at
+least large fragments of a sentence may appear in more than one
+situation in the program but might have different translations.  This is
+especially true for the one-word strings which are frequently used in
+GUI programs.
+
+As a consequence many people say that the @code{gettext} approach is
+wrong and instead @code{catgets} should be used which indeed does not
+have this problem.  But there is a very simple and powerful method to
+handle these kind of problems with the @code{gettext} functions.
+
+@noindent
+As as example consider the following fictional situation.  A GUI program
+has a menu bar with the following entries:
+
+@smallexample
++------------+------------+--------------------------------------+
+| File       | Printer    |                                      |
++------------+------------+--------------------------------------+
+| Open     | | Select   |
+| New      | | Open     |
++----------+ | Connect  |
+             +----------+
+@end smallexample
+
+To have the strings @code{File}, @code{Printer}, @code{Open},
+@code{New}, @code{Select}, and @code{Connect} translated there has to be
+at some point in the code a call to a function of the @code{gettext}
+family.  But in two places the string passed into the function would be
+@code{Open}.  The translations might not be the same and therefore we
+are in the dilemma described above.
+
+One solution to this problem is to artificially enlengthen the strings
+to make them unambiguous.  But what would the program do if no
+translation is available?  The enlengthened string is not what should be
+printed.  So we should use a little bit modified version of the functions.
+
+To enlengthen the strings a uniform method should be used.  E.g., in the
+example above the strings could be chosen as
+
+@smallexample
+Menu|File
+Menu|Printer
+Menu|File|Open
+Menu|File|New
+Menu|Printer|Select
+Menu|Printer|Open
+Menu|Printer|Connect
+@end smallexample
+
+Now all the strings are different and if now instead of @code{gettext}
+the following little wrapper function is used, everything works just
+fine:
+
+@cindex sgettext
+@smallexample
+  char *
+  sgettext (const char *msgid)
+  @{
+    char *msgval = gettext (msgid);
+    if (msgval == msgid)
+      msgval = strrchr (msgid, '|') + 1;
+    return msgval;
+  @}
+@end smallexample
+
+What this little function does is to recognize the case when no
+translation is available.  This can be done very efficiently by a
+pointer comparison since the return value is the input value.  If there
+is no translation we know that the input string is in the format we used
+for the Menu entries and therefore contains a @code{|} character.  We
+simply search for the last occurrence of this character and return a
+pointer to the character following it.  That's it!
+
+If one now consistently uses the enlengthened string form and replaces
+the @code{gettext} calls with calls to @code{sgettext} (this is normally
+limited to very few places in the GUI implementation) then it is
+possible to produce a program which can be internationalized.
+
+With advanced compilers (such as GNU C) one can write the
+@code{sgettext} functions as an inline function or as a macro like this:
+
+@cindex sgettext
+@smallexample
+#define sgettext(msgid) \
+  (@{ const char *__msgid = (msgid);            \
+     char *__msgstr = gettext (__msgid);       \
+     if (__msgval == __msgid)                  \
+       __msgval = strrchr (__msgid, '|') + 1;  \
+     __msgval; @})
+@end smallexample
+
+The other @code{gettext} functions (@code{dgettext}, @code{dcgettext}
+and the @code{ngettext} equivalents) can and should have corresponding
+functions as well which look almost identical, except for the parameters
+and the call to the underlying function.
+
+Now there is of course the question why such functions do not exist in
+the GNU C library?  There are two parts of the answer to this question.
+
+@itemize @bullet
+@item
+They are easy to write and therefore can be provided by the project they
+are used in.  This is not an answer by itself and must be seen together
+with the second part which is:
+
+@item
+There is no way the C library can contain a version which can work
+everywhere.  The problem is the selection of the character to separate
+the prefix from the actual string in the enlenghtened string.  The
+examples above used @code{|} which is a quite good choice because it
+resembles a notation frequently used in this context and it also is a
+character not often used in message strings.
+
+But what if the character is used in message strings.  Or if the chose
+character is not available in the character set on the machine one
+compiles (e.g., @code{|} is not required to exist for @w{ISO C}; this is
+why the @file{iso646.h} file exists in @w{ISO C} programming environments).
+@end itemize
+
+There is only one more comment to make left.  The wrapper function above
+require that the translations strings are not enlengthened themselves.
+This is only logical.  There is no need to disambiguate the strings
+(since they are never used as keys for a search) and one also saves
+quite some memory and disk space by doing this.
 
 
 @node Using gettextized software
@@ -1602,4 +1737,4 @@ here it should only be noted that using all the tools in GNU gettext it
 is possible to @emph{completely} automize the handling of message
 catalog.  Beside marking the translatable string in the source code and
 generating the translations the developers do not have anything to do
-themself.
+themselves.

@@ -1,3 +1,7 @@
+2000-01-22  Andreas Jaeger  <aj@suse.de>
+
+	* localedata/tst-locale.sh: Enable test for de_DE.437.
+
 2000-01-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/Versions: Export __strndup.
