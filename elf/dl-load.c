@@ -1760,6 +1760,11 @@ open_path (const char *name, size_t namelen, int preloaded,
   const char *current_what = NULL;
   int any = 0;
 
+  if (__builtin_expect (dirs == NULL, 0))
+    /* We're called before _dl_init_paths when loading the main executable
+       given on the command line when rtld is run directly.  */
+    return -1;
+
   buf = alloca (max_dirnamelen + max_capstrlen + namelen);
   do
     {

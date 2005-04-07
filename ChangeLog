@@ -1,3 +1,44 @@
+2005-04-07  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_discover_osversion)
+	[(NEED_DL_SYSINFO || NEED_DL_SYSINFO_DSO) && SHARED]: Scan
+	GLRO(dl_sysinfo_map) for PT_NOTE giving Linux kernel version,
+	we can skip the uname call if it's there.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Don't use
+	DL_SYSDEP_OSCHECK here.
+	* elf/rtld.c (dl_main) [DL_SYSDEP_OSCHECK]: Do it here instead.
+
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro):
+	Add _dl_sysinfo_map.
+	* elf/rtld.c (dl_main): Don't call _dl_init_paths early in the
+	rtld_is_main case.  Call it unconditionally later.
+	Move GLRO(dl_sysinfo_dso) handling earlier, before _dl_init_paths call.
+	Initialize GLRO(dl_sysinfo_map).
+	* elf/dl-load.c (open_path): Bail out if _dl_init_paths wasn't called.
+	* sysdeps/generic/dl-sysdep.c (_DL_FIRST_EXTRA): New macro.
+	(_dl_important_hwcaps)
+	[(NEED_DL_SYSINFO || NEED_DL_SYSINFO_DSO) && SHARED]: Scan
+	GLRO(dl_sysinfo_map) for PT_NOTE giving synthetic hwcap names
+	and bit values.
+	* elf/ldconfig.c (_DL_FIRST_EXTRA): New macro.
+	(hwcap_extra): New static variable.
+	(is_hwcap_platform): Check hwcap_extra for a matching name.
+	Remove tls special case.
+	(path_hwcap): Likewise.
+	(parse_conf): Parse "hwcap" directive to define synthetic hwcap bits
+	and their names, stored in hwcap_extra.
+	(main) [USE_TLS]: Initialize final synthetic hwcap bit as "tls".
+
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Use uint64_t for
+	_dl_hwcap and _dl_hwcap_mask.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Cast a_val for
+	AT_HWCAP to unsigned long int.
+	* elf/dl-support.c (_dl_aux_init): Likewise.
+	(_dl_hwcap): Update defn.
+
+	* elf/cache.c (print_entry): Pad hwcap value with 0s in diagnostic.
+	* elf/ldconfig.c (search_dir): Likewise.
+
 2005-04-05  Roland McGrath  <roland@redhat.com>
 
 	* NEWS: Copy 2.3.5 section from 2.3 branch.

@@ -1,5 +1,5 @@
 /* Support for dynamic linking code in static libc.
-   Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -121,7 +121,7 @@ int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
 
 ElfW(Phdr) *_dl_phdr;
 size_t _dl_phnum;
-unsigned long int _dl_hwcap __attribute__ ((nocommon));
+uint64_t _dl_hwcap __attribute__ ((nocommon));
 
 /* Prevailing state of the stack, PF_X indicating it's executable.  */
 ElfW(Word) _dl_stack_flags = PF_R|PF_W|PF_X;
@@ -179,7 +179,7 @@ _dl_aux_init (ElfW(auxv_t) *av)
 	GL(dl_phnum) = av->a_un.a_val;
 	break;
       case AT_HWCAP:
-	GLRO(dl_hwcap) = av->a_un.a_val;
+	GLRO(dl_hwcap) = (unsigned long int) av->a_un.a_val;
 	break;
 #ifdef NEED_DL_SYSINFO
       case AT_SYSINFO:

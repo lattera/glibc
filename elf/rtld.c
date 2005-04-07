@@ -958,11 +958,6 @@ of this helper program; chances are you did not intend to run this program.\n\
       --_dl_argc;
       ++INTUSE(_dl_argv);
 
-      /* Initialize the data structures for the search paths for shared
-	 objects.  */
-      _dl_init_paths (library_path);
-
-
       /* The initialization of _dl_stack_flags done below assumes the
 	 executable's PT_GNU_STACK may have been honored by the kernel, and
 	 so a PT_GNU_STACK with PF_X set means the stack started out with
@@ -1229,10 +1224,98 @@ ld.so does not support TLS, but program uses it!\n");
       _exit (has_interp ? 0 : 2);
     }
 
-  if (! rtld_is_main)
-    /* Initialize the data structures for the search paths for shared
-       objects.  */
-    _dl_init_paths (library_path);
+  struct link_map **first_preload = &GL(dl_rtld_map).l_next;
+#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
+  /* Set up the data structures for the system-supplied DSO early,
+     so they can influence _dl_init_paths.  */
+  if (GLRO(dl_sysinfo_dso) != NULL)
+    {
+      /* Do an abridged version of the work _dl_map_object_from_fd would do
+	 to map in the object.  It's already mapped and prelinked (and
+	 better be, since it's read-only and so we couldn't relocate it).
+	 We just want our data structures to describe it as if we had just
+	 mapped and relocated it normally.  */
+      struct link_map *l = _dl_new_object ((char *) "", "", lt_library, NULL,
+					   0, LM_ID_BASE);
+      if (__builtin_expect (l != NULL, 1))
+	{
+	  static ElfW(Dyn) dyn_temp[DL_RO_DYN_TEMP_CNT] attribute_relro;
+
+	  l->l_phdr = ((const void *) GLRO(dl_sysinfo_dso)
+		       + GLRO(dl_sysinfo_dso)->e_phoff);
+	  l->l_phnum = GLRO(dl_sysinfo_dso)->e_phnum;
+	  for (uint_fast16_t i = 0; i < l->l_phnum; ++i)
+	    {
+	      const ElfW(Phdr) *const ph = &l->l_phdr[i];
+	      if (ph->p_type == PT_DYNAMIC)
+		{
+		  l->l_ld = (void *) ph->p_vaddr;
+		  l->l_ldnum = ph->p_memsz / sizeof (ElfW(Dyn));
+		}
+	      else if (ph->p_type == PT_LOAD)
+		{
+		  if (! l->l_addr)
+		    l->l_addr = ph->p_vaddr;
+		  if (ph->p_vaddr + ph->p_memsz >= l->l_map_end)
+		    l->l_map_end = ph->p_vaddr + ph->p_memsz;
+		  if ((ph->p_flags & PF_X)
+			   && ph->p_vaddr + ph->p_memsz >= l->l_text_end)
+		    l->l_text_end = ph->p_vaddr + ph->p_memsz;
+		}
+	      else
+		/* There must be no TLS segment.  */
+		assert (ph->p_type != PT_TLS);
+	    }
+	  l->l_map_start = (ElfW(Addr)) GLRO(dl_sysinfo_dso);
+	  l->l_addr = l->l_map_start - l->l_addr;
+	  l->l_map_end += l->l_addr;
+	  l->l_text_end += l->l_addr;
+	  l->l_ld = (void *) ((ElfW(Addr)) l->l_ld + l->l_addr);
+	  elf_get_dynamic_info (l, dyn_temp);
+	  _dl_setup_hash (l);
+	  l->l_relocated = 1;
+
+	  /* Now that we have the info handy, use the DSO image's soname
+	     so this object can be looked up by name.  Note that we do not
+	     set l_name here.  That field gives the file name of the DSO,
+	     and this DSO is not associated with any file.  */
+	  if (l->l_info[DT_SONAME] != NULL)
+	    {
+	      /* Work around a kernel problem.  The kernel cannot handle
+		 addresses in the vsyscall DSO pages in writev() calls.  */
+	      const char *dsoname = ((char *) D_PTR (l, l_info[DT_STRTAB])
+				     + l->l_info[DT_SONAME]->d_un.d_val);
+	      size_t len = strlen (dsoname);
+	      char *copy = malloc (len);
+	      if (copy == NULL)
+		_dl_fatal_printf ("out of memory\n");
+	      l->l_libname->name = memcpy (copy, dsoname, len);
+	    }
+
+	  /* Rearrange the list so this DSO appears after rtld_map.  */
+	  assert (l->l_next == NULL);
+	  assert (l->l_prev == main_map);
+	  GL(dl_rtld_map).l_next = l;
+	  l->l_prev = &GL(dl_rtld_map);
+	  first_preload = &l->l_next;
+
+	  /* We have a prelinked DSO preloaded by the system.  */
+	  GLRO(dl_sysinfo_map) = l;
+# ifdef NEED_DL_SYSINFO
+	  if (GLRO(dl_sysinfo) == DL_SYSINFO_DEFAULT)
+	    GLRO(dl_sysinfo) = GLRO(dl_sysinfo_dso)->e_entry + l->l_addr;
+# endif
+	}
+    }
+#endif
+
+#ifdef DL_SYSDEP_OSCHECK
+  DL_SYSDEP_OSCHECK (dl_fatal);
+#endif
+
+  /* Initialize the data structures for the search paths for shared
+     objects.  */
+  _dl_init_paths (library_path);
 
   /* Initialize _r_debug.  */
   struct r_debug *r = _dl_debug_initialize (GL(dl_rtld_map).l_addr,
@@ -1477,7 +1560,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
   /* We have two ways to specify objects to preload: via environment
      variable and via the file /etc/ld.so.preload.  The latter can also
      be used when security is enabled.  */
-  assert (GL(dl_rtld_map).l_next == NULL);
+  assert (*first_preload == NULL);
   struct link_map **preloads = NULL;
   unsigned int npreloads = 0;
 
@@ -1589,12 +1672,11 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	}
     }
 
-  if (__builtin_expect (GL(dl_rtld_map).l_next != NULL, 0))
+  if (__builtin_expect (*first_preload != NULL, 0))
     {
       /* Set up PRELOADS with a vector of the preloaded libraries.  */
-      struct link_map *l;
+      struct link_map *l = *first_preload;
       preloads = __alloca (npreloads * sizeof preloads[0]);
-      l = GL(dl_rtld_map).l_next; /* End of the chain before preloads.  */
       i = 0;
       do
 	{
@@ -1603,82 +1685,6 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	} while (l);
       assert (i == npreloads);
     }
-
-#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
-  struct link_map *sysinfo_map = NULL;
-  if (GLRO(dl_sysinfo_dso) != NULL)
-    {
-      /* Do an abridged version of the work _dl_map_object_from_fd would do
-	 to map in the object.  It's already mapped and prelinked (and
-	 better be, since it's read-only and so we couldn't relocate it).
-	 We just want our data structures to describe it as if we had just
-	 mapped and relocated it normally.  */
-      struct link_map *l = _dl_new_object ((char *) "", "", lt_library, NULL,
-					   0, LM_ID_BASE);
-      if (__builtin_expect (l != NULL, 1))
-	{
-	  static ElfW(Dyn) dyn_temp[DL_RO_DYN_TEMP_CNT] attribute_relro;
-
-	  l->l_phdr = ((const void *) GLRO(dl_sysinfo_dso)
-		       + GLRO(dl_sysinfo_dso)->e_phoff);
-	  l->l_phnum = GLRO(dl_sysinfo_dso)->e_phnum;
-	  for (uint_fast16_t i = 0; i < l->l_phnum; ++i)
-	    {
-	      const ElfW(Phdr) *const ph = &l->l_phdr[i];
-	      if (ph->p_type == PT_DYNAMIC)
-		{
-		  l->l_ld = (void *) ph->p_vaddr;
-		  l->l_ldnum = ph->p_memsz / sizeof (ElfW(Dyn));
-		}
-	      else if (ph->p_type == PT_LOAD)
-		{
-		  if (! l->l_addr)
-		    l->l_addr = ph->p_vaddr;
-		  if (ph->p_vaddr + ph->p_memsz >= l->l_map_end)
-		    l->l_map_end = ph->p_vaddr + ph->p_memsz;
-		  if ((ph->p_flags & PF_X)
-			   && ph->p_vaddr + ph->p_memsz >= l->l_text_end)
-		    l->l_text_end = ph->p_vaddr + ph->p_memsz;
-		}
-	      else
-		/* There must be no TLS segment.  */
-		assert (ph->p_type != PT_TLS);
-	    }
-	  l->l_map_start = (ElfW(Addr)) GLRO(dl_sysinfo_dso);
-	  l->l_addr = l->l_map_start - l->l_addr;
-	  l->l_map_end += l->l_addr;
-	  l->l_text_end += l->l_addr;
-	  l->l_ld = (void *) ((ElfW(Addr)) l->l_ld + l->l_addr);
-	  elf_get_dynamic_info (l, dyn_temp);
-	  _dl_setup_hash (l);
-	  l->l_relocated = 1;
-
-	  /* Now that we have the info handy, use the DSO image's soname
-	     so this object can be looked up by name.  Note that we do not
-	     set l_name here.  That field gives the file name of the DSO,
-	     and this DSO is not associated with any file.  */
-	  if (l->l_info[DT_SONAME] != NULL)
-	    {
-	      /* Work around a kernel problem.  The kernel cannot handle
-		 addresses in the vsyscall DSO pages in writev() calls.  */
-	      const char *dsoname = ((char *) D_PTR (l, l_info[DT_STRTAB])
-				     + l->l_info[DT_SONAME]->d_un.d_val);
-	      size_t len = strlen (dsoname);
-	      char *copy = malloc (len);
-	      if (copy == NULL)
-		_dl_fatal_printf ("out of memory\n");
-	      l->l_libname->name = memcpy (copy, dsoname, len);
-	    }
-
-	  /* We have a prelinked DSO preloaded by the system.  */
-	  sysinfo_map = l;
-# ifdef NEED_DL_SYSINFO
-	  if (GLRO(dl_sysinfo) == DL_SYSINFO_DEFAULT)
-	    GLRO(dl_sysinfo) = GLRO(dl_sysinfo_dso)->e_entry + l->l_addr;
-# endif
-	}
-    }
-#endif
 
   /* Load all the libraries specified by DT_NEEDED entries.  If LD_PRELOAD
      specified some libraries to load, these are inserted before the actual
@@ -1724,10 +1730,10 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 				    ? main_map->l_searchlist.r_list[i + 1]
 				    : NULL);
 #if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
-	  if (sysinfo_map != NULL
-	      && GL(dl_rtld_map).l_prev->l_next == sysinfo_map
-	      && GL(dl_rtld_map).l_next != sysinfo_map)
-	    GL(dl_rtld_map).l_prev = sysinfo_map;
+	  if (GLRO(dl_sysinfo_map) != NULL
+	      && GL(dl_rtld_map).l_prev->l_next == GLRO(dl_sysinfo_map)
+	      && GL(dl_rtld_map).l_next != GLRO(dl_sysinfo_map))
+	    GL(dl_rtld_map).l_prev = GLRO(dl_sysinfo_map);
 #endif
 	}
       else

@@ -44,6 +44,12 @@
 
 #include "dl-procinfo.h"
 
+#ifdef _DL_FIRST_PLATFORM
+# define _DL_FIRST_EXTRA (_DL_FIRST_PLATFORM + _DL_PLATFORMS_COUNT)
+#else
+# define _DL_FIRST_EXTRA _DL_HWCAP_COUNT
+#endif
+
 #ifndef LD_SO_CONF
 # define LD_SO_CONF SYSCONFDIR "/ld.so.conf"
 #endif
@@ -115,6 +121,9 @@ static const char *config_file;
 /* Mask to use for important hardware capabilities.  */
 static unsigned long int hwcap_mask = HWCAP_IMPORTANT;
 
+/* Configuration-defined capabilities defined in kernel vDSOs.  */
+static const char *hwcap_extra[64 - _DL_FIRST_EXTRA];
+
 /* Name and version of program.  */
 static void print_version (FILE *stream, struct argp_state *state);
 void (*argp_program_version_hook) (FILE *, struct argp_state *)
@@ -165,10 +174,10 @@ is_hwcap_platform (const char *name)
   if (hwcap_idx != -1)
     return 1;
 
-#ifdef USE_TLS
-  if (strcmp (name, "tls") == 0)
-    return 1;
-#endif
+  for (hwcap_idx = _DL_FIRST_EXTRA; hwcap_idx < 64; ++hwcap_idx)
+    if (hwcap_extra[hwcap_idx - _DL_FIRST_EXTRA] != NULL
+	&& !strcmp (name, hwcap_extra[hwcap_idx - _DL_FIRST_EXTRA]))
+      return 1;
 
   return 0;
 }
@@ -203,11 +212,11 @@ path_hwcap (const char *path)
 	  h = _dl_string_platform (ptr + 1);
 	  if (h == (uint64_t) -1)
 	    {
-#ifdef USE_TLS
-	      if (strcmp (ptr + 1, "tls") == 0)
-		h = 63;
-	      else
-#endif
+	      for (h = _DL_FIRST_EXTRA; h < 64; ++h)
+		if (hwcap_extra[h - _DL_FIRST_EXTRA] != NULL
+		    && !strcmp (ptr + 1, hwcap_extra[h - _DL_FIRST_EXTRA]))
+		  break;
+	      if (h == 64)
 		break;
 	    }
 	}
@@ -636,7 +645,7 @@ search_dir (const struct dir_entry *entry)
   if (opt_verbose)
     {
       if (hwcap != 0)
-	printf ("%s: (hwcap: 0x%" PRIx64 ")\n", entry->path, hwcap);
+	printf ("%s: (hwcap: %#.16" PRIx64 ")\n", entry->path, hwcap);
       else
 	printf ("%s:\n", entry->path);
     }
@@ -1017,6 +1026,53 @@ parse_conf (const char *filename, bool do_chroot)
 	    if (dir[0] != '\0')
 	      parse_conf_include (filename, lineno, do_chroot, dir);
 	}
+      else if (!strncasecmp (cp, "hwcap", 5) && isblank (cp[5]))
+	{
+	  cp += 6;
+	  char *p, *name = NULL;
+	  unsigned long int n = strtoul (cp, &cp, 0);
+	  if (cp != NULL && isblank (*cp))
+	    while ((p = strsep (&cp, " \t")) != NULL)
+	      if (p[0] != '\0')
+		{
+		  if (name == NULL)
+		    name = p;
+		  else
+		    {
+		      name = NULL;
+		      break;
+		    }
+		}
+	  if (name == NULL)
+	    {
+	      error (EXIT_FAILURE, 0, _("%s:%u: bad syntax in hwcap line"),
+		     filename, lineno);
+	      break;
+	    }
+	  if (n >= (64 - _DL_FIRST_EXTRA))
+	    error (EXIT_FAILURE, 0,
+		   _("%s:%u: hwcap index %lu above maximum %u"),
+		   filename, lineno, n, 64 - _DL_FIRST_EXTRA - 1);
+	  if (hwcap_extra[n] == NULL)
+	    {
+	      for (unsigned long int h = 0; h < (64 - _DL_FIRST_EXTRA); ++h)
+		if (hwcap_extra[h] != NULL && !strcmp (name, hwcap_extra[h]))
+		  error (EXIT_FAILURE, 0,
+			 _("%s:%u: hwcap index %lu already defined as %s"),
+			 filename, lineno, h, name);
+	      hwcap_extra[n] = xstrdup (name);
+	    }
+	  else
+	    {
+	      if (strcmp (name, hwcap_extra[n]))
+		error (EXIT_FAILURE, 0,
+		       _("%s:%u: hwcap index %lu already defined as %s"),
+		       filename, lineno, n, hwcap_extra[n]);
+	      if (opt_verbose)
+		error (0, 0, _("%s:%u: duplicate hwcap %lu %s"),
+		       filename, lineno, n, name);
+	    }
+	}
       else
 	add_dir (cp);
     }
@@ -1117,6 +1173,10 @@ main (int argc, char **argv)
 	else
 	  add_dir (argv[i]);
     }
+
+#ifdef USE_TLS
+  hwcap_extra[63 - _DL_FIRST_EXTRA] = "tls";
+#endif
 
   set_hwcap ();
 

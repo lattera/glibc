@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001, 2002, 2003
+/* Copyright (C) 1999,2000,2001,2002,2003,2005
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
@@ -99,7 +99,7 @@ print_entry (const char *lib, int flag, unsigned int osversion,
       break;
     }
   if (hwcap != 0)
-    printf (", hwcap: 0x%" PRIx64, hwcap);
+    printf (", hwcap: %#.16" PRIx64, hwcap);
   if (osversion != 0)
     {
       static const char *const abi_tag_os[] =

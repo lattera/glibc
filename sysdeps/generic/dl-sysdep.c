@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Generic Unix version.
-   Copyright (C) 1995-1998, 2000-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998, 2000-2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,6 +38,12 @@
 #include <dl-osinfo.h>
 #include <hp-timing.h>
 #include <tls.h>
+
+#ifdef _DL_FIRST_PLATFORM
+# define _DL_FIRST_EXTRA (_DL_FIRST_PLATFORM + _DL_PLATFORMS_COUNT)
+#else
+# define _DL_FIRST_EXTRA _DL_HWCAP_COUNT
+#endif
 
 extern char **_environ attribute_hidden;
 extern void _end attribute_hidden;
@@ -149,7 +155,7 @@ _dl_sysdep_start (void **start_argptr,
 	GLRO(dl_platform) = av->a_un.a_ptr;
 	break;
       case AT_HWCAP:
-	GLRO(dl_hwcap) = av->a_un.a_val;
+	GLRO(dl_hwcap) = (unsigned long int) av->a_un.a_val;
 	break;
       case AT_CLKTCK:
 	GLRO(dl_clktck) = av->a_un.a_val;
@@ -171,10 +177,6 @@ _dl_sysdep_start (void **start_argptr,
       DL_PLATFORM_AUXV
 #endif
       }
-
-#ifdef DL_SYSDEP_OSCHECK
-  DL_SYSDEP_OSCHECK (dl_fatal);
-#endif
 
 #ifndef HAVE_AUX_SECURE
   if (seen != -1)
@@ -343,7 +345,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 		      size_t *max_capstrlen)
 {
   /* Determine how many important bits are set.  */
-  unsigned long int masked = GLRO(dl_hwcap) & GLRO(dl_hwcap_mask);
+  uint64_t masked = GLRO(dl_hwcap) & GLRO(dl_hwcap_mask);
   size_t cnt = platform != NULL;
   size_t n, m;
   size_t total;
@@ -353,9 +355,55 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   char *cp;
 
   /* Count the number of bits set in the masked value.  */
-  for (n = 0; (~((1UL << n) - 1) & masked) != 0; ++n)
-    if ((masked & (1UL << n)) != 0)
+  for (n = 0; (~((1ULL << n) - 1) & masked) != 0; ++n)
+    if ((masked & (1ULL << n)) != 0)
       ++cnt;
+
+#if (defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO) && defined SHARED
+  /* The system-supplied DSO can contain a note of type 2, vendor "GNU".
+     This gives us a list of names to treat as fake hwcap bits.  */
+
+  const char *dsocaps = NULL;
+  size_t dsocapslen = 0;
+  if (GLRO(dl_sysinfo_map) != NULL)
+    {
+      const ElfW(Phdr) *const phdr = GLRO(dl_sysinfo_map)->l_phdr;
+      const ElfW(Word) phnum = GLRO(dl_sysinfo_map)->l_phnum;
+      for (uint_fast16_t i = 0; i < phnum; ++i)
+	if (phdr[i].p_type == PT_NOTE)
+	  {
+	    const ElfW(Addr) start = (phdr[i].p_vaddr
+				      + GLRO(dl_sysinfo_map)->l_addr);
+	    const struct
+	    {
+	      ElfW(Word) vendorlen;
+	      ElfW(Word) datalen;
+	      ElfW(Word) type;
+	    } *note = (const void *) start;
+	    while ((ElfW(Addr)) (note + 1) - start < phdr[i].p_memsz)
+	      {
+#define ROUND(len) (((len) + sizeof (ElfW(Word)) - 1) & -sizeof (ElfW(Word)))
+		if (note->type == 2
+		    && note->vendorlen == sizeof "GNU"
+		    && !memcmp ((note + 1), "GNU", sizeof "GNU")
+		    && note->datalen > 2 * sizeof (ElfW(Word)) + 2)
+		  {
+		    const ElfW(Word) *p = ((const void *) (note + 1)
+					   + ROUND (sizeof "GNU"));
+		    cnt += *p++;
+		    ++p;	/* Skip mask word.  */
+		    dsocaps = (const char *) p;
+		    dsocapslen = note->datalen - sizeof *p;
+		    break;
+		  }
+		note = ((const void *) (note + 1)
+			+ ROUND (note->vendorlen) + ROUND (note->datalen));
+	      }
+	    if (dsocaps != NULL)
+	      break;
+	  }
+    }
+#endif
 
 #ifdef USE_TLS
   /* For TLS enabled builds always add 'tls'.  */
@@ -363,8 +411,8 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 #else
   if (cnt == 0)
     {
-      /* If we have platform name and no important capability we only have
-	 the base directory to search.  */
+      /* If we no have platform name and no important capability we only
+	 have the base directory to search.  */
       result = (struct r_strlenpair *) malloc (sizeof (*result));
       if (result == NULL)
 	goto no_memory;
@@ -380,12 +428,26 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   /* Create temporary data structure to generate result table.  */
   temp = (struct r_strlenpair *) alloca (cnt * sizeof (*temp));
   m = 0;
+#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
+  if (dsocaps != NULL)
+    {
+      GLRO(dl_hwcap) |= ((uint64_t) ((const ElfW(Word) *) dsocaps)[-1]
+			 << _DL_FIRST_EXTRA);
+      for (const char *p = dsocaps;
+	   p < dsocaps + dsocapslen;
+	   p += temp[m++].len + 1)
+	{
+	  temp[m].str = p;
+	  temp[m].len = strlen (p);
+	}
+    }
+#endif
   for (n = 0; masked != 0; ++n)
-    if ((masked & (1UL << n)) != 0)
+    if ((masked & (1ULL << n)) != 0)
       {
 	temp[m].str = _dl_hwcap_string (n);
 	temp[m].len = strlen (temp[m].str);
-	masked ^= 1UL << n;
+	masked ^= 1ULL << n;
 	++m;
       }
   if (platform != NULL)
@@ -503,8 +565,8 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
       ++rp;
     }
 
-  /* The second have starts right after the first part of the string of
-     corresponding entry in the first half.  */
+  /* The second half starts right after the first part of the string of
+     the corresponding entry in the first half.  */
   do
     {
       rp[0].str = rp[-(1 << (cnt - 1))].str + temp[cnt - 1].len + 1;
