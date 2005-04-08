@@ -1,3 +1,8 @@
+2005-04-08  Carlos O'Donell <carlos@baldric.uwo.ca>
+
+	* FAQ.in: Explain why `make' might fail running rpcgen.
+	* FAQ: Regenerated.
+
 2005-04-07  Roland McGrath  <roland@redhat.com>
 
 	* po/libc.pot: Regenerated.
