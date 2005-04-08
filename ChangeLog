@@ -1,5 +1,9 @@
 2005-04-07  Roland McGrath  <roland@redhat.com>
 
+	* po/libc.pot: Regenerated.
+
+2005-04-07  Roland McGrath  <roland@redhat.com>
+
 	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_discover_osversion)
 	[(NEED_DL_SYSINFO || NEED_DL_SYSINFO_DSO) && SHARED]: Scan
 	GLRO(dl_sysinfo_map) for PT_NOTE giving Linux kernel version,
