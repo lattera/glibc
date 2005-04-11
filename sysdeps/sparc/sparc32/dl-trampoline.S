@@ -91,7 +91,7 @@ _dl_profile_invoke:
 1:	ldd	[%l2], %g2
 	add	%l2, 0x8, %l2
 	subcc	%l7, 1, %l7
-	stx	%g2, [%l3]
+	std	%g2, [%l3]
 	bne	1b
 	 add	%l3, 0x8, %l3
 

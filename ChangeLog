@@ -2,6 +2,10 @@
 
 	* manual/string.texi: Fix typo in wmemcpy decl.
 
+2005-04-10  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/dl-trampoline.S: Use std not stx.
+
 2005-04-08  Carlos O'Donell <carlos@baldric.uwo.ca>
 
 	* FAQ.in: Explain why `make' might fail running rpcgen.
