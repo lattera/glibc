@@ -386,7 +386,7 @@ memcpy (new, old, arraysize * sizeof (struct foo));
 
 @comment wchar.h
 @comment ISO
-@deftypefun {wchar_t *} wmemcpy (wchar_t *restrict @var{wto}, const wchar_t *restruct @var{wfrom}, size_t @var{size})
+@deftypefun {wchar_t *} wmemcpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom}, size_t @var{size})
 The @code{wmemcpy} function copies @var{size} wide characters from the object
 beginning at @var{wfrom} into the object beginning at @var{wto}.  The
 behavior of this function is undefined if the two arrays @var{wto} and

@@ -1,3 +1,7 @@
+2005-04-11  James A. Morrison  <ja2morri@uwaterloo.ca>
+
+	* manual/string.texi: Fix typo in wmemcpy decl.
+
 2005-04-08  Carlos O'Donell <carlos@baldric.uwo.ca>
 
 	* FAQ.in: Explain why `make' might fail running rpcgen.
