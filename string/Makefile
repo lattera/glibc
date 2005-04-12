@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999,2000,2001,2002 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999,2000,2001,2002, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ strop-tests	:= memchr memcmp memcpy memmove mempcpy memset memccpy	\
 tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   tst-strlen stratcliff tst-svc tst-inlcall		\
 		   bug-strncat1 bug-strspn1 bug-strpbrk1 tst-bswap	\
-		   tst-strtok tst-strxfrm bug-strcoll1			\
+		   tst-strtok tst-strxfrm bug-strcoll1 tst-strfry	\
 		   $(addprefix test-,$(strop-tests))
 distribute	:= memcopy.h pagecopy.h tst-svc.expect test-string.h
 
