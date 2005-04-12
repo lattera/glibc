@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 1995, 2005 Free Software Foundation
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@
    4. Neither the name of the University nor the names of its contributors
       may be used to endorse or promote products derived from this software
       without specific prior written permission.
-   
+
    THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -236,23 +236,20 @@ __initstate_r (seed, arg_state, n, buf)
      size_t n;
      struct random_data *buf;
 {
-  int type;
-  int degree;
-  int separation;
-  int32_t *state;
-  int old_type;
-  int32_t *old_state;
-
   if (buf == NULL)
     goto fail;
 
-  old_type = buf->rand_type;
-  old_state = buf->state;
-  if (old_type == TYPE_0)
-    old_state[-1] = TYPE_0;
-  else
-    old_state[-1] = (MAX_TYPES * (buf->rptr - old_state)) + old_type;
+  int32_t *old_state = buf->state;
+  if (old_state != NULL)
+    {
+      int old_type = buf->rand_type;
+      if (old_type == TYPE_0)
+	old_state[-1] = TYPE_0;
+      else
+	old_state[-1] = (MAX_TYPES * (buf->rptr - old_state)) + old_type;
+    }
 
+  int type;
   if (n >= BREAK_3)
     type = n < BREAK_4 ? TYPE_3 : TYPE_4;
   else if (n < BREAK_1)
@@ -267,13 +264,13 @@ __initstate_r (seed, arg_state, n, buf)
   else
     type = n < BREAK_2 ? TYPE_1 : TYPE_2;
 
-  degree = random_poly_info.degrees[type];
-  separation = random_poly_info.seps[type];
+  int degree = random_poly_info.degrees[type];
+  int separation = random_poly_info.seps[type];
 
   buf->rand_type = type;
   buf->rand_sep = separation;
   buf->rand_deg = degree;
-  state = &((int32_t *) arg_state)[1];	/* First location.  */
+  int32_t *state = &((int32_t *) arg_state)[1];	/* First location.  */
   /* Must set END_PTR before srandom.  */
   buf->end_ptr = &state[degree];
 
