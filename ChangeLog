@@ -1,3 +1,10 @@
+2005-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/execvp.c (execvp): Use file name including path when
+	trying to run it with shell.
+	* posix/Makefile: Add rules to build and run tst-execvp3.
+	* posix/tst-execvp3.c: New file.
+
 2005-04-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/random_r.c (__initstate_r): Don't use non-existing state.

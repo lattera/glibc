@@ -86,7 +86,8 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-getaddrinfo2 bug-glob1 bug-glob2 tst-sysconf \
 		   tst-execvp1 tst-execvp2 tst-execlp1 tst-execlp2 \
 		   tst-execv1 tst-execv2 tst-execl1 tst-execl2 \
-		   tst-execve1 tst-execve2 tst-execle1 tst-execle2
+		   tst-execve1 tst-execve2 tst-execle1 tst-execle2 \
+		   tst-execvp3
 xtests		:= bug-ga2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
@@ -190,6 +191,7 @@ tst-rxspencer-ENV = LOCPATH=$(common-objpfx)localedata
 tst-pcre-ARGS = PCRE.tests
 tst-boost-ARGS = BOOST.tests
 bug-glob1-ARGS = "$(objpfx)"
+tst-execvp3-ARGS = --test-dir=$(objpfx)
 
 testcases.h: TESTS TESTS2C.sed
 	sed -f TESTS2C.sed < $< > $@T
