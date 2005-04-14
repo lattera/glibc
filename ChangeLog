@@ -1,3 +1,36 @@
+2005-04-13  David S. Miller  <davem@davemloft.net>
+
+	Add sparc64 TLS and NPTL support.
+	* elf/tls-macros.h: Add Sparc64 defines.
+	* sysdeps/sparc/sparc64/dl-machine.h (sparc64_fixup_plt): Mark as
+	always_inline.
+	(elf_machine_fixup_plt): Likewise.
+	(elf_machine_rela): Handle TLS relocations.
+	(elf_machine_type_cleaa): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h
+	(SYSCALL_ERROR_HANDLER_ENTRY): Use sethi/or for GOT reloc.
+	It does not always fit in R_SPARC_GOT13 when building -fPIC.
+	Also, add TLS handling.
+	* sysdeps/unix/sysv/linux/configure.in (arch_minimum_kernel):
+	Increase it to 2.4.21 for sparc64.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S: NULL terminate
+	backtrace by zero'ing out %fp.  Store away flags, func_ptr,
+	and func_arg in global registers not local registers.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S: Handle PTID, TLS,
+	and CTID arguments properly.  Add RESET_PID handling.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pause.c: Rework so that we
+	do not invoke __sigprocmask().  We can always assume rt signals
+	are present on sparc64, so just do an inline syscall.
+
+2005-04-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc64/dl-machine.h: Add dl_machine_h multiple
+	inclusion guard for the first half of the header.
+	(elf_machine_type_class, ELF_MACHINE_JMP_SLOT, ELF_MACHINE_NO_REL,
+	ELF_MACHINE_PLTREL_OVERLAP, elf_machine_runtime_setup,
+	elf_machine_relplt, DL_STACK_END, RTLD_START): Move into the
+	#ifndef dl_machine_h guarded part of the header.
+
 2005-04-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/execvp.c (execvp): Use file name including path when

@@ -40,11 +40,19 @@ __clone:
 	save	%sp,-96,%sp
 
 	/* sanity check arguments */
-	tst	%i0
+	orcc	%i0,%g0,%g2
 	be	.Lerror
 	 orcc	%i1,%g0,%o1
 	be	.Lerror
 	 mov	%i2,%o0
+
+	/* The child_stack is the top of the stack, allocate one
+	   whole stack frame from that as this is what the kernel
+	   expects.  */
+	sub	%o1, 96, %o1
+	mov	%i3, %g3
+	mov	%i2, %g4
+
 	/* ptid */
 	mov	%i4,%o2
 	/* tls */
@@ -76,19 +84,21 @@ __clone:
 __thread_start:
 #ifdef RESET_PID
 	sethi	%hi(CLONE_THREAD), %l0
-	andcc	%i2, %l0, %g0
+	andcc	%g4, %l0, %g0
 	bne	1f
-	 andcc	%i2, CLONE_VM, %g0
+	 andcc	%g4, CLONE_VM, %g0
 	bne,a	2f
 	 mov	-1,%o0
 	set	__NR_getpid,%g1
 	ta	0x10
-2:	st	%o0,[%g7 + PID]
+2:
+	st	%o0,[%g7 + PID]
 	st	%o0,[%g7 + TID]
 1:
 #endif
-	call	%i0
-	 mov	%i3,%o0
+	mov	%g0, %fp	/* terminate backtrace */
+	call	%g2
+	 mov	%g3,%o0
 	call	_exit,0
 	 nop
 

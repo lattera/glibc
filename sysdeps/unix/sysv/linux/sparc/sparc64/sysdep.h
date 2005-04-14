@@ -85,11 +85,54 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7;			\
 	call	__sparc64.get_pic.l7;					\
 	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7;			\
-	ldx	[%l7 + rtld_errno], %l0;				\
+	sethi	%hi(rtld_errno), %g1;					\
+	or	%g1, %lo(rtld_errno), %g1;				\
+	ldx	[%l7 + %g1], %l0;					\
 	st	%i0, [%l0];						\
 	jmpl	%i7+8, %g0;						\
 	 restore %g0, -1, %o0;						\
 	.previous;
+#elif USE___THREAD
+# ifndef NOT_IN_libc
+#  define SYSCALL_ERROR_ERRNO __libc_errno
+# else
+#  define SYSCALL_ERROR_ERRNO errno
+# endif
+# ifdef SHARED
+#  define SYSCALL_ERROR_HANDLER						\
+	.section .gnu.linkonce.t.__sparc64.get_pic.l7,"ax",@progbits;	\
+	.globl __sparc64.get_pic.l7;					\
+	.hidden __sparc64.get_pic.l7;					\
+	.type __sparc64.get_pic.l7,@function;				\
+__sparc64.get_pic.l7:							\
+	retl;								\
+	 add	%o7, %l7, %l7;						\
+	.previous;							\
+SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
+	save	%sp,-192,%sp;						\
+	sethi	%tie_hi22(SYSCALL_ERROR_ERRNO), %l1;			\
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7;			\
+	call	__sparc64.get_pic.l7;					\
+	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7;			\
+	add	%l1, %tie_lo10(SYSCALL_ERROR_ERRNO), %l1;		\
+	ldx	[%l7 + %l1], %l1, %tie_ldx(SYSCALL_ERROR_ERRNO);	\
+	st	%i0, [%g7 + %l1], %tie_add(SYSCALL_ERROR_ERRNO);	\
+	jmpl	%i7+8, %g0;						\
+	 restore %g0, -1, %o0;						\
+	.previous;
+# else
+#  define SYSCALL_ERROR_HANDLER						\
+SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
+	sethi	%tie_hi22(SYSCALL_ERROR_ERRNO), %g1;			\
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_), %g2;			\
+	add	%g1, %tie_lo10(SYSCALL_ERROR_ERRNO), %g1;		\
+	add	%g2, %lo(_GLOBAL_OFFSET_TABLE_), %g2;			\
+	ldx	[%g2 + %g1], %g1, %tie_ldx(SYSCALL_ERROR_ERRNO);	\
+	st	%o0, [%g7 + %g1], %tie_add(SYSCALL_ERROR_ERRNO);	\
+	jmpl	%o7+8, %g0;						\
+	 mov	-1, %o0;						\
+	.previous;
+# endif
 #else
 # define SYSCALL_ERROR_HANDLER						\
 SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
