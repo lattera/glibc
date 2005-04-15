@@ -1,3 +1,10 @@
+2005-04-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* old_pthread_cond_init.c: Include <errno.h>.
+	(__pthread_cond_init_2_0): Fail with EINVAL if COND_ATTR is
+	process shared or uses clock other than CLOCK_REALTIME.
+	* pthread_cond_init.c (__pthread_cond_init): Remove bogus comment.
+
 2005-04-13  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc64/jmpbuf-unwind.h: New file.

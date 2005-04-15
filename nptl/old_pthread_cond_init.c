@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include "pthreadP.h"
 #include <shlib-compat.h>
 
@@ -27,14 +28,17 @@ __pthread_cond_init_2_0 (cond, cond_attr)
      pthread_cond_2_0_t *cond;
      const pthread_condattr_t *cond_attr;
 {
-  /* Note that we don't need the COND-ATTR.  It contains only the
-     PSHARED flag which is unimportant here since conditional
-     variables are always usable in multiple processes.  */
+  struct pthread_condattr *icond_attr = (struct pthread_condattr *) cond_attr;
 
   /* The type of the first argument is actually that of the old, too
      small pthread_cond_t.  We use only the first word of it, as a
      pointer.  */
   cond->cond = NULL;
+
+  /* We can't support PSHARED condvars in the old pthread_cond_*
+     functions and neither clocks other than CLOCK_REALTIME.  */
+  if (icond_attr != NULL && icond_attr->value)
+    return EINVAL;
 
   return 0;
 }
