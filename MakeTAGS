@@ -1,5 +1,5 @@
 # Make the TAGS files.
-# Copyright (C) 1992,1994,1995,1996,1998,2002,2003
+# Copyright (C) 1992,1994,1995,1996,1998,2002,2003,2005
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -146,12 +146,13 @@ endif
 define extract
 @rm -f $@.new
 $(XGETTEXT) --keyword=_ --keyword=N_ --add-comments=TRANS  --sort-by-file \
-	    --omit-header -E -n -d - $(XGETTEXTFLAGS-$(@F)) > $@.new $^
+	    --omit-header -E -n -d - $(XGETTEXTFLAGS-$(@F)) > $@.new \
+	    $(filter-out $(objpfx)distinfo,$^)
 mv -f $@.new $@
 endef
 
-text-srcs := $(filter %.c %.h %.cc %.C,$(tags_sources))
-$P/$(domain).pot: $(text-srcs)
+text-srcs := $(filter %.c %.h %.cc %.C %.bash.in,$(tags_sources))
+$P/$(domain).pot: $(objpfx)distinfo $(text-srcs)
 ifeq (,$(text-srcs))
 	cp /dev/null $@
 else

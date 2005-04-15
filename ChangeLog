@@ -1,3 +1,16 @@
+2005-04-14  Roland McGrath  <roland@redhat.com>
+
+	* MakeTAGS ($P/$(domain).pot): Depend on distinfo file as well.
+	(extract): Filter-out distinfo file name.
+
+	[BZ #253]
+	* MakeTAGS (text-srcs): Match %.bash.in files too.
+
+	[BZ #253]
+	* nscd/Makefile (all-nscd-modules): New variable, include selinux
+	module regardless of configuration.
+	(distribute): Use that instead of $(nscd-modules).
+
 2005-04-13  David S. Miller  <davem@davemloft.net>
 
 	Add sparc64 TLS and NPTL support.
