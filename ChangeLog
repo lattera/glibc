@@ -33,6 +33,7 @@
 
 2005-04-14  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #851]
 	* posix/execvp.c (execvp): Use file name including path when
 	trying to run it with shell.
 	* posix/Makefile: Add rules to build and run tst-execvp3.
