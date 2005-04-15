@@ -1,4 +1,4 @@
-# Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1998,1999,2000,2002,2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -190,28 +190,24 @@ $(objpfx)tst-timezone.out: $(addprefix $(testdata)/, \
 test-tz-ENV = TZDIR=$(testdata)
 tst-timezone-ENV = TZDIR=$(testdata)
 
-$(testdata)/America/New_York: northamerica $(objpfx)zic $(leapseconds) \
-			      yearistype
+# Note this must come second in the deps list for $(built-program-cmd) to work.
+zic-deps = $(objpfx)zic $(leapseconds) yearistype
+
+$(testdata)/America/New_York: northamerica $(zic-deps)
 	$(build-testdata)
-$(testdata)/Etc/UTC: etcetera $(objpfx)zic $(leapseconds) yearistype
+$(testdata)/Etc/UTC: etcetera $(zic-deps)
 	$(build-testdata)
-$(testdata)/UTC: simplebackw $(objpfx)zic $(testdata)/Etc/UTC \
-		 $(leapseconds) yearistype
+# Use a pattern rule to indicate the command produces both targets at once.
+# Two separate targets built separately can collide if in parallel.
+%/UTC %/Universal: simplebackw $(zic-deps) %/Etc/UTC
 	$(build-testdata)
-$(testdata)/Europe/Berlin: europe $(objpfx)zic $(leapseconds) yearistype
+$(testdata)/%/Berlin $(testdata)/%/London: europe $(zic-deps)
 	$(build-testdata)
-$(testdata)/Universal: simplebackw $(objpfx)zic $(testdata)/Etc/UTC \
-		       $(leapseconds) yearistype
+$(testdata)/Australia/Melbourne: australasia $(zic-deps)
 	$(build-testdata)
-$(testdata)/Australia/Melbourne: australasia $(objpfx)zic $(leapseconds) \
-				 yearistype
+$(testdata)/America/Sao_Paulo: southamerica $(zic-deps)
 	$(build-testdata)
-$(testdata)/America/Sao_Paulo: southamerica $(objpfx)zic $(leapseconds) \
-			       yearistype
-	$(build-testdata)
-$(testdata)/Asia/Tokyo: asia $(objpfx)zic $(leapseconds) yearistype
-	$(build-testdata)
-$(testdata)/Europe/London: europe $(objpfx)zic $(leapseconds) yearistype
+$(testdata)/Asia/Tokyo: asia $(zic-deps)
 	$(build-testdata)
 
 

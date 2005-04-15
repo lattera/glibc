@@ -1,3 +1,14 @@
+2005-04-15  Roland McGrath  <roland@redhat.com>
+
+	* timezone/Makefile (zic-deps): New variable.
+	($(testdata)/America/New_York): Use it instead of explicit deps.
+	($(testdata)/Etc/UTC, $(testdata)/Australia/Melbourne): Likewise.
+	($(testdata)/America/Sao_Paulo, $(testdata)/Asia/Tokyo): Likewise.
+	(%/UTC %/Universal): New pattern rule, replaces ...
+	($(testdata)/UTC, $(testdata)/Universal): ... these removed targets.
+	($(testdata)/%/Berlin $(testdata)/%/London): New pattern rule.
+	($(testdata)/Europe/London, $(testdata)/Europe/Berlin): Removed.
+
 2005-04-14  Roland McGrath  <roland@redhat.com>
 
 	* MakeTAGS ($P/$(domain).pot): Depend on distinfo file as well.
