@@ -93,3 +93,9 @@ _start:
 	illtrap	0
 
 	.size _start, .-_start
+
+/* Define a symbol for the first piece of initialized data.  */
+	.data
+	.globl	__data_start
+__data_start:
+weak_alias (__data_start, data_start)

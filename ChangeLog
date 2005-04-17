@@ -1,3 +1,8 @@
+2005-04-17  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/elf/start.S: Define __data_start.
+	* sysdeps/sparc/sparc64/elf/start.S: Likewise.
+
 2005-04-15  Roland McGrath  <roland@redhat.com>
 
 	* timezone/Makefile (zic-deps): New variable.
