@@ -1,3 +1,8 @@
+2005-04-21  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Don't use MAP_DENYWRITE,
+	since Linux ignores it in user mmap calls.
+
 2005-04-17  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/elf/start.S: Define __data_start.
