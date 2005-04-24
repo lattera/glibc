@@ -1602,6 +1602,8 @@ _IO_vfscanf (s, format, argptr, errp)
 	  if (c == EOF)
 	    input_error ();
 
+	  got_dot = got_e = 0;
+
 	  /* Check for a sign.  */
 	  if (c == L_('-') || c == L_('+'))
 	    {
@@ -1651,6 +1653,17 @@ _IO_vfscanf (s, format, argptr, errp)
 			}
 
 		      conv_error ();
+		    }
+		  else
+		    {
+                     /* Add all the characters.  */
+                     for (cmpp = decimal; *cmpp != '\0'; ++cmpp)
+                       ADDW ((unsigned char) *cmpp);
+                     if (width > 0)
+                       width = avail;
+                     got_dot = 1;
+
+		      c = inchar ();
 		    }
 		  if (width > 0)
 		    width = avail;
@@ -1759,7 +1772,6 @@ _IO_vfscanf (s, format, argptr, errp)
 		}
 	    }
 
-	  got_dot = got_e = 0;
 	  do
 	    {
 	      if (ISDIGIT (c))
