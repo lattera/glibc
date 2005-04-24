@@ -1,3 +1,8 @@
+2005-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfscanf.c: Fix parsing of decimal point after +-.
+	Patch by Hamed Malek <hamed@bamdad.org>.
+
 2005-04-21  Roland McGrath  <roland@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Don't use MAP_DENYWRITE,
