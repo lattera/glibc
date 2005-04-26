@@ -1,6 +1,6 @@
 # Subroutine makefile for compiling libc modules linked into dynamic linker.
 
-# Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,14 @@
 rtld-all:
 
 # When run from the elf/Makefile to build rtld-libc.a, $(subdir) is elf.
-ifeq ($(subdir),elf)
+ifneq ($(subdir),elf)
+ifndef rtld-modules
+error rtld-modules not set
+endif
+endif
+
+ifndef rtld-modules
+# Running to build rtld-libc.a, driving runs of $(rtld-subdir-make), below.
 
 ifndef rtld-subdirs
 error This makefile is a subroutine of elf/Makefile not to be used directly
