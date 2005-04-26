@@ -43,7 +43,7 @@ typedef union dtv
 
 typedef struct
 {
-  void *tcb;		/* Pointer to the TCB.  Not necessary the
+  void *tcb;		/* Pointer to the TCB.  Not necessarily the
 			   thread descriptor used by libpthread.  */
   dtv_t *dtv;
   void *self;		/* Pointer to the thread descriptor.  */
