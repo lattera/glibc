@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1631,14 +1631,13 @@ _IO_vfscanf (s, format, argptr, errp)
 		  const char *cmpp = decimal;
 		  int avail = width > 0 ? width : INT_MAX;
 
-		  while ((unsigned char) *cmpp == c && avail > 0)
+		  while ((unsigned char) *cmpp == c && avail-- > 0)
 		    if (*++cmpp == '\0')
 		      break;
 		    else
 		      {
 			if (inchar () == EOF)
 			  break;
-			--avail;
 		      }
 
 		  if (*cmpp != '\0')
