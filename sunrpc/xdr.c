@@ -131,7 +131,7 @@ bool_t
 xdr_u_int (XDR *xdrs, u_int *up)
 {
 #if UINT_MAX < ULONG_MAX
-  u_long l;
+  long l;
 
   switch (xdrs->x_op)
     {
@@ -144,7 +144,7 @@ xdr_u_int (XDR *xdrs, u_int *up)
 	{
 	  return FALSE;
 	}
-      *up = (u_int) l;
+      *up = (u_int) (u_long) l;
     case XDR_FREE:
       return TRUE;
     }

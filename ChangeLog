@@ -1,3 +1,12 @@
+2005-04-25  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
+	(INTERNAL_SYSCALL_ERROR_P): Fix typo in last change.
+
+	* sunrpc/xdr.c (xdr_u_int): Use `long' for L and cast where needed.
+
+	* elf/dl-load.c: Revert last change.
+
 2005-04-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfscanf.c: Fix parsing of decimal point after +-.
