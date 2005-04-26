@@ -1,3 +1,8 @@
+2005-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfscanf.c: Correctly account for characters of
+	decimal points right after +-.
+
 2005-04-26  Roland McGrath  <roland@redhat.com>
 
 	* elf/rtld-Rules (rtld-all): Test ifndef rtld-modules instead of
