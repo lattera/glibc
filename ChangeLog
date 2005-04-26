@@ -1,3 +1,8 @@
+2005-04-26  Roland McGrath  <roland@redhat.com>
+
+	* elf/rtld-Rules (rtld-all): Test ifndef rtld-modules instead of
+	ifeq ($(subdir),elf) to distinguish main driver from subdir runs.
+
 2005-04-25  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
