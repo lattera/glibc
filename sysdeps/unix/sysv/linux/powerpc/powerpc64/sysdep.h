@@ -122,7 +122,7 @@
 
 #undef INTERNAL_SYSCALL_ERROR_P
 #define INTERNAL_SYSCALL_ERROR_P(val, err) \
-  ((void) (err), __builtin_expect ((err) & (1 << 28), 0))
+  ((void) (val), __builtin_expect ((err) & (1 << 28), 0))
 
 #undef INTERNAL_SYSCALL_ERRNO
 #define INTERNAL_SYSCALL_ERRNO(val, err)     (val)
