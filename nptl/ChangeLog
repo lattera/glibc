@@ -1,3 +1,11 @@
+2005-04-27  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/timer_create.c (timer_create): Handle
+	CLOCK_PROCESS_CPUTIME_ID and CLOCK_PROCESS_THREAD_ID specially,
+	translating to the kernel clockid_t for our own process/thread clock.
+
+	* sysdeps/unix/sysv/linux/pthread_getcpuclockid.c: New file.
+
 2005-04-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* old_pthread_cond_init.c: Include <errno.h>.

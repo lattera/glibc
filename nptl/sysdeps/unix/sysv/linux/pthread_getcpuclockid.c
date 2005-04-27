@@ -1,5 +1,5 @@
 /* pthread_getcpuclockid -- Get POSIX clockid_t for a pthread_t.  Linux version
-   Copyright (C) 2000, 2001, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2000,2001,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,12 +18,11 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <pthread.h>
+#include <pthreadP.h>
 #include <sys/time.h>
-#include <time.h>
-#include <internals.h>
+#include <tls.h>
 #include "kernel-features.h"
-#include "posix-cpu-timers.h"
+#include "kernel-posix-cpu-timers.h"
 
 
 #if !(__ASSUME_POSIX_CPU_TIMERS > 0)
@@ -34,31 +33,28 @@ int __libc_missing_posix_timers attribute_hidden;
 #endif
 
 int
-pthread_getcpuclockid (pthread_t thread_id, clockid_t *clock_id)
+pthread_getcpuclockid (threadid, clockid)
+     pthread_t threadid;
+     clockid_t *clockid;
 {
+  struct pthread *pd = (struct pthread *) threadid;
+
+  /* Make sure the descriptor is valid.  */
+  if (INVALID_TD_P (pd))
+    /* Not a valid thread handle.  */
+    return ESRCH;
+
 #ifdef __NR_clock_getres
-  pthread_handle handle = thread_handle(thread_id);
-  int pid;
-
-  __pthread_lock (&handle->h_lock, NULL);
-  if (nonexisting_handle (handle, thread_id))
-    {
-      __pthread_unlock (&handle->h_lock);
-      return ESRCH;
-    }
-  pid = handle->h_descr->p_pid;
-  __pthread_unlock (&handle->h_lock);
-
-  /* The clockid_t value is a simple computation from the PID.
+  /* The clockid_t value is a simple computation from the TID.
      But we do a clock_getres call to validate it if we aren't
      yet sure we have the kernel support.  */
 
-  const clockid_t pidclock = MAKE_PROCESS_CPUCLOCK (pid, CPUCLOCK_SCHED);
+  const clockid_t tidclock = MAKE_THREAD_CPUCLOCK (pd->tid, CPUCLOCK_SCHED);
 
 # if !(__ASSUME_POSIX_CPU_TIMERS > 0)
 #  if !(__ASSUME_POSIX_TIMERS > 0)
   if (__libc_missing_posix_timers && !__libc_missing_posix_cpu_timers)
-    __libc_missing_cpu_posix_timers = 1;
+    __libc_missing_posix_cpu_timers = 1;
 #  endif
   if (!__libc_missing_posix_cpu_timers)
     {
@@ -67,7 +63,7 @@ pthread_getcpuclockid (pthread_t thread_id, clockid_t *clock_id)
       if (!INTERNAL_SYSCALL_ERROR_P (r, err))
 # endif
 	{
-	  *clock_id = pidclock;
+	  *clockid = tidclock;
 	  return 0;
 	}
 
@@ -101,12 +97,11 @@ pthread_getcpuclockid (pthread_t thread_id, clockid_t *clock_id)
 
      If some day more clock IDs are needed the ID part can be
      enlarged.  The IDs are entirely internal.  */
-  if (2 * PTHREAD_THREADS_MAX
-      >= 1 << (8 * sizeof (*clock_id) - CLOCK_IDFIELD_SIZE))
+  if (pd->tid >= 1 << (8 * sizeof (*clockid) - CLOCK_IDFIELD_SIZE))
     return ERANGE;
 
   /* Store the number.  */
-  *clock_id = CLOCK_THREAD_CPUTIME_ID | (thread_id << CLOCK_IDFIELD_SIZE);
+  *clockid = CLOCK_THREAD_CPUTIME_ID | (pd->tid << CLOCK_IDFIELD_SIZE);
 
   return 0;
 #else

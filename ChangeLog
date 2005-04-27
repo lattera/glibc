@@ -1,3 +1,52 @@
+2005-04-27  Roland McGrath  <roland@redhat.com>
+
+	* rt/tst-cpuclock1.c: New file.
+	* rt/tst-cpuclock2.c: New file.
+	* rt/tst-cputimer1.c: New file.
+	* rt/tst-cputimer2.c: New file.
+	* rt/tst-cputimer3.c: New file.
+	* rt/Makefile (tests): Add them.
+
+	* sysdeps/unix/sysv/linux/kernel-posix-cpu-timers.h: New file.
+	* sysdeps/unix/sysv/linux/clock_getcpuclockid.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/clock_getcpuclockid.c
+	(HAS_CPUCLOCK): New macro.
+	(clock_getcpuclockid): Function removed.
+	#include the new linux file to define it instead.
+	* sysdeps/unix/clock_gettime.c [HP_TIMING_AVAIL] (hp_timing_gettime):
+	New function, broken out of ...
+	(clock_gettime) [HP_TIMING_AVAIL]: ... here.  Call it.
+	(realtime_gettime): New function, broken out of ...
+	(clock_gettime) [! HANDLED_REALTIME]: ... here.  Call it.
+	(clock_gettime) [SYSDEP_GETTIME_CPU]: Use new macro in default case.
+	* sysdeps/unix/sysv/linux/clock_gettime.c (SYSCALL_GETTIME): New macro.
+	(SYSDEP_GETTIME_CPUTIME): New macro.
+	(SYSDEP_GETTIME): Use both.
+	[! __ASSUME_POSIX_TIMERS] (maybe_syscall_gettime): New function, broken
+	out of ...
+	(SYSDEP_GETTIME): ... here.  Use it.
+	[__NR_clock_gettime] (HANDLED_CPUTIME): Define it.
+	(SYSDEP_GETTIME_CPUTIME): New macro.  Handle CPU timers by trying
+	kernel support and falling back to hp-timing code.
+	* sysdeps/posix/clock_getres.c
+	[HP_TIMING_AVAIL] (hp_timing_getres): New function, broken out of ...
+	(clock_getres) [HP_TIMING_AVAIL]: ... here.  Call it.
+	(realtime_getres): New function, broken out of ...
+	(clock_getres) [! HANDLED_REALTIME]: ... here.  Call it.
+	(clock_getres) [SYSDEP_GETRES_CPU]: Use new macro in default case.
+	* sysdeps/unix/sysv/linux/clock_getres.c (SYSCALL_GETRES): New macro.
+	(SYSDEP_GETRES_CPUTIME): New macro.
+	(SYSDEP_GETRES): Use both.
+	[! __ASSUME_POSIX_TIMERS] (maybe_syscall_getres): New function, broken
+	out of ...
+	(SYSDEP_GETRES): ... here.  Use it.
+	[__NR_clock_getres] (HANDLED_CPUTIME): Define it.
+	(SYSDEP_GETRES_CPUTIME): New macro.  Handle CPU timers by trying
+	kernel support and falling back to hp-timing code.
+	* sysdeps/unix/sysv/linux/clock_nanosleep.c: Handle
+	CLOCK_PROCESS_CPUTIME_ID and CLOCK_PROCESS_THREAD_ID specially,
+	translating to the kernel clockid_t for our own process/thread clock.
+
 2005-04-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/test-canon.c: Make doesExist a directory and add more tests
