@@ -1,3 +1,15 @@
+2005-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/test-canon.c: Make doesExist a directory and add more tests
+	for the new error case.
+
+2004-06-02  Dmitry V. Levin  <ldv@altlinux.org>
+	    Ranjani Murthy <ranmur@gmail.com>
+
+	* stdlib/canonicalize.c (__realpath): Change realpath(3) to
+	return NULL and set errno to ENOTDIR for such pathnames like
+	"/path/to/existing-non-directory/".
+
 2005-04-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/strptime_l.c (__strptime_internal): Handle 'z' to set
