@@ -687,6 +687,42 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	case 'Z':
 	  /* XXX How to handle this?  */
 	  break;
+	case 'z':
+	  /* We recognize two formats: if two digits are given, these
+	     specify hours.  If fours digits are used, minutes are
+	     also specified.  */
+	  {
+	    val = 0;
+	    while (*rp == ' ')
+	      ++rp;
+	    if (*rp != '+' && *rp != '-')
+	      return NULL;
+	    bool neg = *rp++ == '-';
+	    int n = 0;
+	    while (n < 4 && *rp >= '0' && *rp <= '9')
+	      {
+		val = val * 10 + *rp++ - '0';
+		++n;
+	      }
+	    if (n == 2)
+	      val *= 100;
+	    else if (n != 4)
+	      /* Only two or four digits recognized.  */
+	      return NULL;
+	    else
+	      {
+		/* We have to convert the minutes into decimal.  */
+		if (val % 100 >= 60)
+		  return NULL;
+		val = (val / 100) * 100 + ((val % 100) * 50) / 30;
+	      }
+	    if (val > 1200)
+	      return NULL;
+	    tm->tm_gmtoff = (val * 3600) / 100;
+	    if (neg)
+	      tm->tm_gmtoff = -tm->tm_gmtoff;
+	  }
+	  break;
 	case 'E':
 #ifdef _NL_CURRENT
 	  switch (*fmt++)

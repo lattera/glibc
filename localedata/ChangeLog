@@ -1,3 +1,9 @@
+2005-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/fa_IR: Add alt_digits, change date and time
+	representation, and various cleanups.
+	Patch by Hamed Malek <hamed@bamdad.org>.
+
 2005-03-21  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #823]

@@ -1,3 +1,10 @@
+2005-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/strptime_l.c (__strptime_internal): Handle 'z' to set
+	tm_gmtoff.
+	* time/Makefile (tests): Add tst-strptime2.
+	* time/tst-strptime2.c: New file.
+
 2005-04-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-close.c: Include stddef.h.

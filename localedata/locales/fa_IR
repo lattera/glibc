@@ -10,8 +10,8 @@ escape_char  /
 % Fax: +98 21 6019568
 % Language: fa
 % Territory: IR
-% Revision: 2.4
-% Date: 2004-09-04
+% Revision: 3.0
+% Date: 2005-04-06
 % Users: general
 % Repertoiremap:
 % Charset: UTF-8
@@ -28,28 +28,31 @@ tel        "+98 21 6022372"
 fax        "+98 21 6019568"
 language   "Persian"
 territory  "Iran"
-revision   "2.3"
-date       "2004-03-16"
+revision   "3.0"
+date       "2005-04-06"
 %
-category  "fa_IR:2004";LC_IDENTIFICATION
-category  "fa_IR:2004";LC_CTYPE
-category  "fa_IR:2004";LC_COLLATE
-category  "fa_IR:2004";LC_TIME
-category  "fa_IR:2004";LC_NUMERIC
-category  "fa_IR:2004";LC_MONETARY
-category  "fa_IR:2004";LC_MESSAGES
-category  "fa_IR:2004";LC_PAPER
-category  "fa_IR:2004";LC_NAME
-category  "fa_IR:2004";LC_ADDRESS
-category  "fa_IR:2004";LC_TELEPHONE
+category  "fa_IR:2005";LC_IDENTIFICATION
+category  "fa_IR:2005";LC_CTYPE
+category  "fa_IR:2005";LC_COLLATE
+category  "fa_IR:2005";LC_TIME
+category  "fa_IR:2005";LC_NUMERIC
+category  "fa_IR:2005";LC_MONETARY
+category  "fa_IR:2005";LC_MESSAGES
+category  "fa_IR:2005";LC_PAPER
+category  "fa_IR:2005";LC_NAME
+category  "fa_IR:2005";LC_ADDRESS
+category  "fa_IR:2005";LC_TELEPHONE
 
 END LC_IDENTIFICATION
 
 LC_CTYPE
 copy "i18n"
 
+% Persian uses the alternate digits U+06F0..U+06F9
 outdigit <U06F0>..<U06F9>
 
+% This is used in the scanf family of functions to read Persian numbers
+% using "%Id" and such.
 map to_inpunct; /
   (<U0030>,<U06F0>); /
   (<U0031>,<U06F1>); /
@@ -64,6 +67,8 @@ map to_inpunct; /
   (<U002E>,<U066B>); /
   (<U002C>,<U066C>)
 
+% This is used in the printf family of functions to write Persian floating
+% point numbers using "%If" and such.
 map to_outpunct; /
   (<U002E>,<U066B>); /
   (<U002C>,<U066C>)
@@ -76,7 +81,7 @@ copy "iso14651_t1"
 % kinds), BEH, PEH, TEH, JEEM, TCHEH, HAH, KHAH, DAL, THAL, REH, ZAIN, JEH,
 % SEEN, SHEEN, SAD, DAD, TAH, ZAH, AIN, GHAIN, FEH, QAF, KAF, GAF, LAM,
 % MEEM, NOON, WAW, HEH, YEH.
-% The various kind of HAMZA are sorted as ALEF WITH HAMZA ABOVE, ALEF WITH
+% The various kinds of HAMZA are sorted as ALEF WITH HAMZA ABOVE, ALEF WITH
 % HAMZA BELOW, WAW WITH HAMZA ABOVE, YEH WITH HAMZA ABOVE.
 
 collating-symbol <AHY> % accent hamza over yeh
@@ -122,7 +127,7 @@ reorder-after <waw>
 <heh>
 <yeh>
 
-% Persian uses fatha, kasra, damma, fathatan, kasratan, dammatan order.
+% Persian uses this order: Fatha, Kasra, Damma, Fathatan, Kasratan, Dammatan.
 
 reorder-after <U066D>
 <U064E> IGNORE;IGNORE;IGNORE;<U064E> %<fatha_no>
@@ -148,7 +153,7 @@ reorder-after <UFE7F>
 <U0655> IGNORE;IGNORE;IGNORE;<U0655> %<hamzabelow_no>
 <U0670> IGNORE;IGNORE;IGNORE;<U0670> %<supalef_no>
 
-% Persian digits are sorted before Arabic ones: they are the basic forms.
+% The Persian digits are sorted before the Arabic ones: they are the basic forms.
 reorder-after <U0660>
 <U06F0> <0>;<BAS>;<MIN>;IGNORE
 <U0660> <0>;<PCL>;<MIN>;IGNORE
@@ -292,14 +297,72 @@ grouping          3
 END LC_NUMERIC
 
 LC_TIME
-abday   "<U06CC><U002E>";"<U062F><U002E>";"<U0633><U002E>";/
-        "<U0686><U002E>";"<U067E><U002E>";"<U062C><U002E>";/
-        "<U0634><U002E>"
-day     "<U06CC><U06A9><U200C><U0634><U0646><U0628><U0647>";/
+% Alternative digits are used for Persian numerals in date and time. This is
+% a hack, until a new prefix is defined for alternative digits.
+alt_digits	"<U06F0><U06F0>";"<U06F0><U06F1>";/
+		"<U06F0><U06F2>";"<U06F0><U06F3>";/
+		"<U06F0><U06F4>";"<U06F0><U06F5>";/
+		"<U06F0><U06F6>";"<U06F0><U06F7>";/
+		"<U06F0><U06F8>";"<U06F0><U06F9>";/
+		"<U06F1><U06F0>";"<U06F1><U06F1>";/
+		"<U06F1><U06F2>";"<U06F1><U06F3>";/
+		"<U06F1><U06F4>";"<U06F1><U06F5>";/
+		"<U06F1><U06F6>";"<U06F1><U06F7>";/
+		"<U06F1><U06F8>";"<U06F1><U06F9>";/
+		"<U06F2><U06F0>";"<U06F2><U06F1>";/
+		"<U06F2><U06F2>";"<U06F2><U06F3>";/
+		"<U06F2><U06F4>";"<U06F2><U06F5>";/
+		"<U06F2><U06F6>";"<U06F2><U06F7>";/
+		"<U06F2><U06F8>";"<U06F2><U06F9>";/
+		"<U06F3><U06F0>";"<U06F3><U06F1>";/
+		"<U06F3><U06F2>";"<U06F3><U06F3>";/
+		"<U06F3><U06F4>";"<U06F3><U06F5>";/
+		"<U06F3><U06F6>";"<U06F3><U06F7>";/
+		"<U06F3><U06F8>";"<U06F3><U06F9>";/
+		"<U06F4><U06F0>";"<U06F4><U06F1>";/
+		"<U06F4><U06F2>";"<U06F4><U06F3>";/
+		"<U06F4><U06F4>";"<U06F4><U06F5>";/
+		"<U06F4><U06F6>";"<U06F4><U06F7>";/
+		"<U06F4><U06F8>";"<U06F4><U06F9>";/
+		"<U06F5><U06F0>";"<U06F5><U06F1>";/
+		"<U06F5><U06F2>";"<U06F5><U06F3>";/
+		"<U06F5><U06F4>";"<U06F5><U06F5>";/
+		"<U06F5><U06F6>";"<U06F5><U06F7>";/
+		"<U06F5><U06F8>";"<U06F5><U06F9>";/
+		"<U06F6><U06F0>";"<U06F6><U06F1>";/
+		"<U06F6><U06F2>";"<U06F6><U06F3>";/
+		"<U06F6><U06F4>";"<U06F6><U06F5>";/
+		"<U06F6><U06F6>";"<U06F6><U06F7>";/
+		"<U06F6><U06F8>";"<U06F6><U06F9>";/
+		"<U06F7><U06F0>";"<U06F7><U06F1>";/
+		"<U06F7><U06F2>";"<U06F7><U06F3>";/
+		"<U06F7><U06F4>";"<U06F7><U06F5>";/
+		"<U06F7><U06F6>";"<U06F7><U06F7>";/
+		"<U06F7><U06F8>";"<U06F7><U06F9>";/
+		"<U06F8><U06F0>";"<U06F8><U06F1>";/
+		"<U06F8><U06F2>";"<U06F8><U06F3>";/
+		"<U06F8><U06F4>";"<U06F8><U06F5>";/
+		"<U06F8><U06F6>";"<U06F8><U06F7>";/
+		"<U06F8><U06F8>";"<U06F8><U06F9>";/
+		"<U06F9><U06F0>";"<U06F9><U06F1>";/
+		"<U06F9><U06F2>";"<U06F9><U06F3>";/
+		"<U06F9><U06F4>";"<U06F9><U06F5>";/
+		"<U06F9><U06F6>";"<U06F9><U06F7>";/
+		"<U06F9><U06F8>";"<U06F9><U06F9>"
+% Persian doesn't have abbreviations for weekdays and month names, so
+% "abday" is the same as "day" and "abmon" is the same as "mon"
+abday   "<U06CC><U06A9><U0634><U0646><U0628><U0647>";/
         "<U062F><U0648><U0634><U0646><U0628><U0647>";/
         "<U0633><U0647><U200C><U0634><U0646><U0628><U0647>";/
         "<U0686><U0647><U0627><U0631><U0634><U0646><U0628><U0647>";/
-        "<U067E><U0646><U062C><U200C><U0634><U0646><U0628><U0647>";/
+        "<U067E><U0646><U062C><U0634><U0646><U0628><U0647>";/
+        "<U062C><U0645><U0639><U0647>";/
+        "<U0634><U0646><U0628><U0647>"
+day     "<U06CC><U06A9><U0634><U0646><U0628><U0647>";/
+        "<U062F><U0648><U0634><U0646><U0628><U0647>";/
+        "<U0633><U0647><U200C><U0634><U0646><U0628><U0647>";/
+        "<U0686><U0647><U0627><U0631><U0634><U0646><U0628><U0647>";/
+        "<U067E><U0646><U062C><U0634><U0646><U0628><U0647>";/
         "<U062C><U0645><U0639><U0647>";/
         "<U0634><U0646><U0628><U0647>"
 mon     "<U0698><U0627><U0646><U0648><U06CC><U0647>";/
@@ -314,51 +377,74 @@ mon     "<U0698><U0627><U0646><U0648><U06CC><U0647>";/
         "<U0627><U0643><U062A><U0628><U0631>";/
         "<U0646><U0648><U0627><U0645><U0628><U0631>";/
         "<U062F><U0633><U0627><U0645><U0628><U0631>"
-abmon   "<U0698><U0627><U0646>";"<U0641><U0648><U0631>";/
-        "<U0645><U0627><U0631>";"<U0622><U0648><U0631>";/
-        "<U0645><U0640><U0647>";"<U0698><U0648><U0646>";/
-        "<U0698><U0648><U06CC>";"<U0627><U0648><U062A>";/
-        "<U0633><U067E><U062A>";"<U0627><U0643><U062A>";/
-        "<U0646><U0648><U0627>";"<U062F><U0633><U0627>"
-am_pm   "<U0635><U0628><U062D>";"<U0639><U0635><U0631>"
-d_t_fmt "<U202B><U0025><U0041><U0020><U0025><U0065><U0020><U0025>/
-<U0042><U0020><U0025><U0059><U060C><U0020><U0025><U0049><U003A>/
-<U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070><U202C>"
-d_fmt   "<U0025><U0059><U002F><U0025><U006D><U002F><U0025><U0064>"
-t_fmt   "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
-t_fmt_ampm    "<U202B><U0025><U0049><U003A><U0025><U004D><U003A><U0025>/
-<U0053><U0020><U0025><U0070><U202C>"
-%date_fmt "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065><U0020>/
-%<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025>/
-%<U005A><U0020><U0025><U0059>"
+abmon   "<U0698><U0627><U0646><U0648><U06CC><U0647>";/
+        "<U0641><U0648><U0631><U06CC><U0647>";/
+        "<U0645><U0627><U0631><U0633>";/
+        "<U0622><U0648><U0631><U06CC><U0644>";/
+        "<U0645><U0647>";/
+        "<U0698><U0648><U0626><U0646>";/
+        "<U0698><U0648><U0626><U06CC><U0647>";/
+        "<U0627><U0648><U062A>";/
+        "<U0633><U067E><U062A><U0627><U0645><U0628><U0631>";/
+        "<U0627><U0643><U062A><U0628><U0631>";/
+        "<U0646><U0648><U0627><U0645><U0628><U0631>";/
+        "<U062F><U0633><U0627><U0645><U0628><U0631>"
+% Persian does not have the 12-hour format
+am_pm   "";""
+t_fmt_ampm    ""
+%
+% Appropriate date representation (%x)
+%       "%Oy/%Om/%Od"
+d_fmt   "<U0025><U004F><U0079><U002F>/
+<U0025><U004F><U006D><U002F>/
+<U0025><U004F><U0064>"
+%
+% Appropriate time representation (%X)
+%       "%OH:%OM:%OS"
+t_fmt   "<U0025><U004F><U0048><U003A>/
+<U0025><U004F><U004D><U003A>/
+<U0025><U004F><U0053>"
+%
+% FIXME: need to add "HAMZA ABOVE" after January, February, May, July when used
+% before a year
+%
+% Appropriate date and time representation (%c)
+%       "<RLE>%A %Oe %B %Oy<ARABIC COMMA> %OH:%OM:%OS<PDF>"
+d_t_fmt "<U202B><U0025><U0041><U0020>/
+<U0025><U004F><U0065><U0020>/
+<U0025><U0042><U0020>/
+<U0025><U004F><U0079><U060C><U0020>/
+<U0025><U004F><U0048><U003A>/
+<U0025><U004F><U004D><U003A>/
+<U0025><U004F><U0053><U202C>"
+%
+% Appropriate date representation (date(1))
+%       "<RLE>%A %Oe %B %Oy<ARABIC COMMA> <SEEN><ALEF><AIN><TEH> %OH:%OM:%OS (%Z)<PDF>"
+date_fmt "<U202B><U0025><U0041><U0020>/
+<U0025><U004F><U0065><U0020>/
+<U0025><U0042><U0020>/
+<U0025><U004F><U0079><U060C><U0020>/
+<U0633><U0627><U0639><U062A><U0020>/
+<U0025><U004F><U0048><U003A>/
+<U0025><U004F><U004D><U003A>/
+<U0025><U004F><U0053><U0020>/
+<U0028><U0025><U005A><U0029><U202C>"
 first_weekday 7
 first_workday 7
 cal_direction 3
-%week    7;19971206;4
-%time_zone "???"
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U0079><U0059><U0628><U0066><U005D><U002E><U002A>"
-noexpr  "<U005E><U005B><U006E><U004E><U062E><U0646><U006F><U005D><U002E><U002A>"
+% This is "^[yY<ALEF MADDA><BEH>Hf].*"
+yesexpr "<U005E><U005B><U0079><U0059><U0622><U0628><U0048><U0066><U005D><U002E><U002A>"
+% This is "^[nN<KHAH><NOON>ok].*"
+noexpr  "<U005E><U005B><U006E><U004E><U062E><U0646><U006F><U006B><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_PAPER
 height   297
 width    210
 END LC_PAPER
-
-LC_TELEPHONE
-tel_int_fmt    "<U202A><U002B><U0025><U0063><U0020><U0025><U0061><U0020>/
-<U0025><U006C><U202C>"
-tel_dom_fmt    "<U202A><U0025><U0041><U2012><U0025><U006C><U202C>"
-int_select     "<U0030><U0030>"
-int_prefix     "<U0039><U0038>"
-END LC_TELEPHONE
-
-LC_MEASUREMENT
-measurement    1
-END LC_MEASUREMENT
 
 LC_NAME
 name_gen    ""
@@ -371,7 +457,6 @@ name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0073><U0025><U0074>/
 END LC_NAME
 
 LC_ADDRESS
-% FIXME
 postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
@@ -388,3 +473,15 @@ lang_ab        "<U0066><U0061>"
 lang_term      "<U0066><U0061><U0073>"
 lang_lib       "<U0070><U0065><U0072>"
 END LC_ADDRESS
+
+LC_TELEPHONE
+tel_int_fmt    "<U202A><U002B><U0025><U0063><U0020><U0025><U0061><U0020>/
+<U0025><U006C><U202C>"
+tel_dom_fmt    "<U202A><U0025><U0041><U2012><U0025><U006C><U202C>"
+int_select     "<U0030><U0030>"
+int_prefix     "<U0039><U0038>"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+measurement    1
+END LC_MEASUREMENT
