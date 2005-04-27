@@ -1,3 +1,10 @@
+2005-04-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/getcpuclockid.c: Include spinlock.h.
+	Fix a typo in kernel-posix-cpy-timers.h include name, use <> instead
+	of "" includes.
+	(pthread_getcpuclockid): Fix 2 typos.
+
 2005-04-27  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/pthread/getcpuclockid.c (pthread_getcpuclockid)
