@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,9 +17,11 @@
    02111-1307 USA.  */
 
 #include <time.h>
+#include <errno.h>
 
 #include <sysdep-cancel.h>
 #include "kernel-features.h"
+#include "kernel-posix-cpu-timers.h"
 
 
 #ifdef __ASSUME_POSIX_TIMERS
@@ -31,6 +33,11 @@ clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
 {
   INTERNAL_SYSCALL_DECL (err);
   int r;
+
+  if (clock_id == CLOCK_THREAD_CPUTIME_ID)
+    return EINVAL;
+  if (clock_id == CLOCK_PROCESS_CPUTIME_ID)
+    clock_id = MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED);
 
   if (SINGLE_THREAD_P)
     r = INTERNAL_SYSCALL (clock_nanosleep, err, 4, clock_id, flags, req, rem);
@@ -58,12 +65,20 @@ extern int __libc_missing_posix_timers attribute_hidden;
 #  define SYSDEP_NANOSLEEP \
   if (!__libc_missing_posix_timers)					      \
     {									      \
+      clockid_t syscall_clockid;					      \
       INTERNAL_SYSCALL_DECL (err);					      \
+									      \
+      if (clock_id == CLOCK_THREAD_CPUTIME_ID)				      \
+	return EINVAL;							      \
+      if (clock_id == CLOCK_PROCESS_CPUTIME_ID)				      \
+	syscall_clockid = MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED);	      \
+      else								      \
+	syscall_clockid = clock_id;					      \
 									      \
       int oldstate = LIBC_CANCEL_ASYNC ();				      \
 									      \
-      int r = INTERNAL_SYSCALL (clock_nanosleep, err, 4, clock_id, flags,     \
-				req, rem);				      \
+      int r = INTERNAL_SYSCALL (clock_nanosleep, err, 4,		      \
+				syscall_clockid, flags, req, rem);	      \
 									      \
       LIBC_CANCEL_RESET (oldstate);					      \
 									      \
