@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -228,7 +228,7 @@ do_test (void)
 
   size_t len2 = fpathconf (fds[1], _PC_PIPE_BUF);
   size_t page_size = sysconf (_SC_PAGESIZE);
-  len2 = (len2 < page_size ? page_size : len2) + sizeof (mem) + 1;
+  len2 = 20 * (len2 < page_size ? page_size : len2) + sizeof (mem) + 1;
   char *mem2 = malloc (len2);
   if (mem2 == NULL)
     {
