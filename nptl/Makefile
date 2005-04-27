@@ -1,4 +1,4 @@
-# Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -235,7 +235,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-locale1 tst-locale2 \
 	tst-umask1 \
 	tst-popen1 \
-	tst-clock1 tst-clock2 \
+	tst-clock1 \
 	tst-context1 \
 	tst-sched1 \
 	tst-backtrace1 \

@@ -5,6 +5,8 @@
 
 2005-04-27  Roland McGrath  <roland@redhat.com>
 
+	* Makefile (tests): Remove tst-clock2.
+
 	* sysdeps/unix/sysv/linux/timer_create.c (timer_create): Handle
 	CLOCK_PROCESS_CPUTIME_ID and CLOCK_PROCESS_THREAD_ID specially,
 	translating to the kernel clockid_t for our own process/thread clock.

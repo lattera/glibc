@@ -1,5 +1,8 @@
 2005-04-27  Roland McGrath  <roland@redhat.com>
 
+	[BZ #877]
+	* posix/unistd.h: Remove __nonnull from acct decl.
+
 	* rt/tst-cpuclock1.c: New file.
 	* rt/tst-cpuclock2.c: New file.
 	* rt/tst-cputimer1.c: New file.
