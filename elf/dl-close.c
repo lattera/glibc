@@ -20,6 +20,7 @@
 #include <assert.h>
 #include <dlfcn.h>
 #include <libintl.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -105,10 +106,6 @@ _dl_close (void *_map)
   struct link_map *map = _map;
   Lmid_t ns = map->l_ns;
   unsigned int i;
-#ifdef USE_TLS
-  bool any_tls = false;
-#endif
-
   /* First see whether we can remove the object at all.  */
   if (__builtin_expect (map->l_flags_1 & DF_1_NODELETE, 0)
       && map->l_init_called)
@@ -124,9 +121,17 @@ _dl_close (void *_map)
   /* One less direct use.  */
   --map->l_direct_opencount;
 
-  /* Decrement the reference count.  */
-  if (map->l_direct_opencount > 1 || map->l_type != lt_loaded)
+  /* If _dl_close is called recursively (some destructor call dlclose),
+     just record that the parent _dl_close will need to do garbage collection
+     again and return.  */
+  static enum { not_pending, pending, rerun } dl_close_state;
+
+  if (map->l_direct_opencount > 0 || map->l_type != lt_loaded
+      || dl_close_state != not_pending)
     {
+      if (map->l_direct_opencount == 0 && map->l_type == lt_loaded)
+	dl_close_state = rerun;
+
       /* There are still references to this object.  Do nothing more.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
 	_dl_debug_printf ("\nclosing file=%s; direct_opencount=%u\n",
@@ -136,12 +141,18 @@ _dl_close (void *_map)
       return;
     }
 
+ retry:
+  dl_close_state = pending;
+
+#ifdef USE_TLS
+  bool any_tls = false;
+#endif
   const unsigned int nloaded = GL(dl_ns)[ns]._ns_nloaded;
   char used[nloaded];
   char done[nloaded];
   struct link_map *maps[nloaded];
 
-  /* Run over the list and assign indeces to the link maps and enter
+  /* Run over the list and assign indexes to the link maps and enter
      them into the MAPS array.  */
   int idx = 0;
   for (struct link_map *l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
@@ -302,7 +313,7 @@ _dl_close (void *_map)
 	  if (imap->l_searchlist.r_list == NULL
 	      && imap->l_initfini != NULL)
 	    {
-	      /* The object is still used.  But the object we are
+	      /* The object is still used.  But one of the objects we are
 		 unloading right now is responsible for loading it.  If
 		 the current object does not have it's own scope yet we
 		 have to create one.  This has to be done before running
@@ -318,15 +329,27 @@ _dl_close (void *_map)
 	      imap->l_searchlist.r_nlist = cnt;
 
 	      for (cnt = 0; imap->l_scope[cnt] != NULL; ++cnt)
-		if (imap->l_scope[cnt] == &map->l_searchlist)
+		/* This relies on l_scope[] entries being always set either
+		   to its own l_symbolic_searchlist address, or some other map's
+		   l_searchlist address.  */
+		if (imap->l_scope[cnt] != &imap->l_symbolic_searchlist)
 		  {
-		    imap->l_scope[cnt] = &imap->l_searchlist;
-		    break;
+		    struct link_map *tmap;
+
+		    tmap = (struct link_map *) ((char *) imap->l_scope[cnt]
+						- offsetof (struct link_map,
+							    l_searchlist));
+		    assert (tmap->l_ns == ns);
+		    if (tmap->l_idx != -1)
+		      {
+			imap->l_scope[cnt] = &imap->l_searchlist;
+			break;
+		      }
 		  }
 	    }
 
 	  /* The loader is gone, so mark the object as not having one.
-	     Note: l_idx == -1 -> object will be removed.  */
+	     Note: l_idx != -1 -> object will be removed.  */
 	  if (imap->l_loader != NULL && imap->l_loader->l_idx != -1)
 	    imap->l_loader = NULL;
 
@@ -583,8 +606,12 @@ _dl_close (void *_map)
   r->r_state = RT_CONSISTENT;
   _dl_debug_state ();
 
-  /* Release the lock.  */
+  /* Recheck if we need to retry, release the lock.  */
  out:
+  if (dl_close_state == rerun)
+    goto retry;
+
+  dl_close_state = not_pending;
   __rtld_lock_unlock_recursive (GL(dl_load_lock));
 }
 
@@ -654,7 +681,7 @@ libc_freeres_fn (free_mem)
 	free_slotinfo (&GL(dl_tls_dtv_slotinfo_list));
       else
 # endif
-        /* The first element of the list does not have to be deallocated.
+	/* The first element of the list does not have to be deallocated.
 	   It was allocated in the dynamic linker (i.e., with a different
 	   malloc), and in the static library it's in .bss space.  */
 	free_slotinfo (&GL(dl_tls_dtv_slotinfo_list)->next);

@@ -1,3 +1,29 @@
+2005-04-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-close.c: Include stddef.h.
+	(_dl_close): If called recursively, just remember GC needs to be rerun
+	and decrease l_direct_opencount.  Avoid GC if l_direct_opencount
+	decreased to 1.  Rerun GC at the end if any destructor unloaded some
+	additional libraries.
+	* elf/Makefile: Add rules to build and run unload6 test.
+	* elf/unload6.c: New test.
+	* elf/unload6mod1.c: New file.
+	* elf/unload6mod2.c: New file.
+	* elf/unload6mod3.c: New file.
+
+	* malloc/hooks.c (mem2chunk_check): Add magic_p argument, set *magic_p
+	if magic_p is not NULL.
+	(top_check): Invoke MALLOC_FAILURE_ACTION if MORECORE failed.
+	(malloc_check): Fail if sz == -1.
+	(free_check): Adjust mem2chunk_check caller.
+	(realloc_check): Likewise.  Fail if bytes == -1.  If bytes == 0 and
+	oldmem != NULL, call free_check and return NULL.  If reallocating
+	and returning NULL, invert magic byte again to make oldmem valid
+	region for further checking.
+	(memalign_check): Fail if bytes == -1.
+	* malloc/Makefile: Add rules to build and run tst-mcheck.
+	* malloc/tst-mcheck.c: New test.
+
 2005-04-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfscanf.c: Correctly account for characters of
