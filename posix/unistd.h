@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002,2003,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -840,7 +840,7 @@ extern int profil (unsigned short int *__sample_buffer, size_t __size,
 /* Turn accounting on if NAME is an existing file.  The system will then write
    a record for each process as it terminates, to this file.  If NAME is NULL,
    turn accounting off.  This call is restricted to the super-user.  */
-extern int acct (__const char *__name) __THROW __nonnull ((1));
+extern int acct (__const char *__name) __THROW;
 
 
 /* Successive calls return the shells listed in `/etc/shells'.  */
