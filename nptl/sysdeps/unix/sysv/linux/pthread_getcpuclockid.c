@@ -1,5 +1,5 @@
 /* pthread_getcpuclockid -- Get POSIX clockid_t for a pthread_t.  Linux version
-   Copyright (C) 2000,2001,2002,2003,2004 Free Software Foundation, Inc.
+   Copyright (C) 2000,2001,2002,2003,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,8 +21,8 @@
 #include <pthreadP.h>
 #include <sys/time.h>
 #include <tls.h>
-#include "kernel-features.h"
-#include "kernel-posix-cpu-timers.h"
+#include <kernel-features.h>
+#include <kernel-posix-cpu-timers.h>
 
 
 #if !(__ASSUME_POSIX_CPU_TIMERS > 0)
