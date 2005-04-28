@@ -168,16 +168,22 @@ __i686.get_pc_thunk.reg:						      \
 #  else
 #   define SYSCALL_ERROR_HANDLER					      \
 0:pushl %ebx;								      \
+  cfi_adjust_cfa_offset (4);						      \
+  cfi_rel_offset (ebx, 0);						      \
   SETUP_PIC_REG (bx);							      \
   addl $_GLOBAL_OFFSET_TABLE_, %ebx;					      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \
   pushl %edx;								      \
+  cfi_adjust_cfa_offset (4);						      \
   PUSH_ERRNO_LOCATION_RETURN;						      \
   call BP_SYM (__errno_location)@PLT;					      \
   POP_ERRNO_LOCATION_RETURN;						      \
   popl %ecx;								      \
+  cfi_adjust_cfa_offset (-4);						      \
   popl %ebx;								      \
+  cfi_adjust_cfa_offset (-4);						      \
+  cfi_restore (ebx);							      \
   movl %ecx, (%eax);							      \
   orl $-1, %eax;							      \
   jmp L(pseudo_end);
@@ -273,9 +279,11 @@ __i686.get_pc_thunk.reg:						      \
 #define PUSHARGS_1	movl %ebx, %edx; L(SAVEBX1): PUSHARGS_0
 #define	DOARGS_1	_DOARGS_1 (4)
 #define	POPARGS_1	POPARGS_0; movl %edx, %ebx; L(RESTBX1):
-#define	_PUSHARGS_1	pushl %ebx; L(PUSHBX1): _PUSHARGS_0
+#define	_PUSHARGS_1	pushl %ebx; cfi_adjust_cfa_offset (4); \
+			cfi_rel_offset (ebx, 0); L(PUSHBX1): _PUSHARGS_0
 #define _DOARGS_1(n)	movl n(%esp), %ebx; _DOARGS_0(n-4)
-#define	_POPARGS_1	_POPARGS_0; popl %ebx; L(POPBX1):
+#define	_POPARGS_1	_POPARGS_0; popl %ebx; cfi_adjust_cfa_offset (-4); \
+			cfi_restore (ebx); L(POPBX1):
 
 #define PUSHARGS_2	PUSHARGS_1
 #define	DOARGS_2	_DOARGS_2 (8)
@@ -294,23 +302,29 @@ __i686.get_pc_thunk.reg:						      \
 #define PUSHARGS_4	_PUSHARGS_4
 #define DOARGS_4	_DOARGS_4 (24)
 #define POPARGS_4	_POPARGS_4
-#define _PUSHARGS_4	pushl %esi; L(PUSHSI1): _PUSHARGS_3
+#define _PUSHARGS_4	pushl %esi; cfi_adjust_cfa_offset (4); \
+			cfi_rel_offset (esi, 0); L(PUSHSI1): _PUSHARGS_3
 #define _DOARGS_4(n)	movl n(%esp), %esi; _DOARGS_3 (n-4)
-#define _POPARGS_4	_POPARGS_3; popl %esi; L(POPSI1):
+#define _POPARGS_4	_POPARGS_3; popl %esi; cfi_adjust_cfa_offset (-4); \
+			cfi_restore (esi); L(POPSI1):
 
 #define PUSHARGS_5	_PUSHARGS_5
 #define DOARGS_5	_DOARGS_5 (32)
 #define POPARGS_5	_POPARGS_5
-#define _PUSHARGS_5	pushl %edi; L(PUSHDI1): _PUSHARGS_4
+#define _PUSHARGS_5	pushl %edi; cfi_adjust_cfa_offset (4); \
+			cfi_rel_offset (edi, 0); L(PUSHDI1): _PUSHARGS_4
 #define _DOARGS_5(n)	movl n(%esp), %edi; _DOARGS_4 (n-4)
-#define _POPARGS_5	_POPARGS_4; popl %edi; L(POPDI1):
+#define _POPARGS_5	_POPARGS_4; popl %edi; cfi_adjust_cfa_offset (-4); \
+			cfi_restore (edi); L(POPDI1):
 
 #define PUSHARGS_6	_PUSHARGS_6
 #define DOARGS_6	_DOARGS_6 (36)
 #define POPARGS_6	_POPARGS_6
-#define _PUSHARGS_6	pushl %ebp; L(PUSHBP1): _PUSHARGS_5
+#define _PUSHARGS_6	pushl %ebp; cfi_adjust_cfa_offset (4); \
+			cfi_rel_offset (ebp, 0); L(PUSHBP1): _PUSHARGS_5
 #define _DOARGS_6(n)	movl n(%esp), %ebp; _DOARGS_5 (n-4)
-#define _POPARGS_6	_POPARGS_5; popl %ebp; L(POPBP1):
+#define _POPARGS_6	_POPARGS_5; popl %ebp; cfi_adjust_cfa_offset (-4); \
+			cfi_restore (ebp); L(POPBP1):
 
 #else	/* !__ASSEMBLER__ */
 

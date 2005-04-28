@@ -1,5 +1,10 @@
 2005-04-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/sysdep.h: Add cfi instrumentation to asm fragments.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/socket.S: Remove now duplicate
+	cfi_startproc and cfi_endproc.
+
 	* configure.in: Remove ultrasparc names.
 
 	* sysdeps/i386/i686/memcmp.S: Move misplaced END.
