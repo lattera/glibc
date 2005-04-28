@@ -1,3 +1,8 @@
+2005-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (nscd_run): Use time() value in prune_cache
+	call, not timeout value, since the latter might be from another clock.
+
 2005-04-27  Roland McGrath  <roland@redhat.com>
 
 	[BZ #877]

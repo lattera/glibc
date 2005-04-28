@@ -1174,8 +1174,7 @@ handle_request: request received (Version = %d)"), req.version);
 	  /* The pthread_cond_timedwait() call timed out.  It is time
 		 to clean up the cache.  */
 	  assert (my_number < lastdb);
-	  prune_cache (&dbs[my_number],
-		       prune_ts.tv_sec + (prune_ts.tv_nsec >= 500000000));
+	  prune_cache (&dbs[my_number], time (NULL));
 
 	  if (clock_gettime (timeout_clock, &prune_ts) == -1)
 	    /* Should never happen.  */
