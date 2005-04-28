@@ -1,5 +1,38 @@
 2005-04-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/i686/memcmp.S: Move misplaced END.
+
+2005-03-27  Bruno Haible  <bruno@clisp.org>
+
+	Make it possible for multiple threads to use gettext() in different
+	locales.
+	* intl/dcigettext.c (HAVE_PER_THREAD_LOCALE): New macro.
+	(struct known_translation_t): If HAVE_PER_THREAD_LOCALE, add localename
+	field.
+	(transcmp): If HAVE_PER_THREAD_LOCALE, compare localename fields.
+	(DCIGETTEXT): If HAVE_PER_THREAD_LOCALE, fill the localename field in
+	search and newp.
+
+	* intl/tst-gettext4.c: New file.
+	* intl/tst-gettext4.sh: New file.
+	* intl/tst-gettext4-de.po: New file.
+	* intl/tst-gettext4-fr.po: New file.
+	* intl/tst-gettext5.c: New file.
+	* intl/tst-gettext5.sh: New file.
+	* intl/Makefile (distribute): Add tst-gettext4.sh, tst-gettext4-de.po,
+	tst-gettext4-fr.po, tst-gettext5.sh.
+	(multithread-test-srcs): New variable.
+	(test-srcs): Add its contents.
+	(tests): Depend on tst-gettext4.out, tst-gettext5.out.
+	(tst-gettext4.out, tst-gettext5.out): New rules.
+	(CFLAGS-tst-gettext4.c, CFLAGS-tst-gettext5.c): New variables.
+	Add rule for linking the multithread-test-srcs with the appropriate
+	thread-library.
+
+2005-04-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/rw.po: New file.  From translation team.
+
 	* scripts/config.guess: Update from upstream.
 	* scripts/config.sub: Likewise.
 

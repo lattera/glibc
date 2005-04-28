@@ -1,5 +1,5 @@
 /* Compare two memory blocks for differences in the first COUNT bytes.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -350,6 +350,7 @@ L(set):
 	sbbl	$-1, %eax
 	popl	%esi
 	RETURN
+END (BP_SYM (memcmp))
 
 	.section	.rodata
 	ALIGN (2)
@@ -387,7 +388,6 @@ L(table_32bytes) :
 	.long	L(30bytes) - . + 0x78
 	.long	L(31bytes) - . + 0x7c
 
-END (BP_SYM (memcmp))
 
 #undef bcmp
 weak_alias (BP_SYM (memcmp), BP_SYM (bcmp))

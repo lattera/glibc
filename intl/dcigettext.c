@@ -172,6 +172,11 @@ static void *mempcpy PARAMS ((void *dest, const void *src, size_t n));
 # define PATH_MAX _POSIX_PATH_MAX
 #endif
 
+/* Whether to support different locales in different threads.  */
+#if defined _LIBC || HAVE_NL_LOCALE_NAME
+# define HAVE_PER_THREAD_LOCALE
+#endif
+
 /* This is the type used for the search tree where known translations
    are stored.  */
 struct known_translation_t
@@ -181,6 +186,11 @@ struct known_translation_t
 
   /* The category.  */
   int category;
+
+#ifdef HAVE_PER_THREAD_LOCALE
+  /* Name of the relevant locale category, or "" for the global locale.  */
+  const char *localename;
+#endif
 
   /* State of the catalog counter at the point the string was found.  */
   int counter;
@@ -226,10 +236,16 @@ transcmp (p1, p2)
     {
       result = strcmp (s1->domainname, s2->domainname);
       if (result == 0)
-	/* We compare the category last (though this is the cheapest
-	   operation) since it is hopefully always the same (namely
-	   LC_MESSAGES).  */
-	result = s1->category - s2->category;
+	{
+#ifdef HAVE_PER_THREAD_LOCALE
+	  result = strcmp (s1->localename, s2->localename);
+	  if (result == 0)
+#endif
+	    /* We compare the category last (though this is the cheapest
+	       operation) since it is hopefully always the same (namely
+	       LC_MESSAGES).  */
+	    result = s1->category - s2->category;
+	}
     }
 
   return result;
@@ -408,6 +424,9 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
   struct known_translation_t *search;
   struct known_translation_t **foundp = NULL;
   size_t msgid_len;
+# ifdef HAVE_PER_THREAD_LOCALE
+  const char *localename;
+# endif
 #endif
   size_t domainname_len;
 
@@ -442,6 +461,12 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
   memcpy (search->msgid, msgid1, msgid_len);
   search->domainname = domainname;
   search->category = category;
+# ifdef HAVE_PER_THREAD_LOCALE
+#  ifdef _LIBC
+  localename = __current_locale_name (category);
+#  endif
+  search->localename = localename;
+# endif
 
   /* Since tfind/tsearch manage a balanced tree, concurrent tfind and
      tsearch calls can be fatal.  */
@@ -629,19 +654,33 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 	      if (foundp == NULL)
 		{
 		  /* Create a new entry and add it to the search tree.  */
+		  size_t size;
 		  struct known_translation_t *newp;
 
-		  newp = (struct known_translation_t *)
-		    malloc (offsetof (struct known_translation_t, msgid)
-			    + msgid_len + domainname_len + 1);
+		  size = offsetof (struct known_translation_t, msgid)
+			 + msgid_len + domainname_len + 1;
+# ifdef HAVE_PER_THREAD_LOCALE
+		  size += strlen (localename) + 1;
+# endif
+		  newp = (struct known_translation_t *) malloc (size);
 		  if (newp != NULL)
 		    {
 		      char *new_domainname;
+# ifdef HAVE_PER_THREAD_LOCALE
+		      char *new_localename;
+# endif
 
 		      new_domainname = mempcpy (newp->msgid, msgid1, msgid_len);
 		      memcpy (new_domainname, domainname, domainname_len + 1);
+# ifdef HAVE_PER_THREAD_LOCALE
+		      new_localename = new_domainname + domainname_len + 1;
+		      strcpy (new_localename, localename);
+# endif
 		      newp->domainname = new_domainname;
 		      newp->category = category;
+# ifdef HAVE_PER_THREAD_LOCALE
+		      newp->localename = new_localename;
+# endif
 		      newp->counter = _nl_msg_cat_cntr;
 		      newp->domain = domain;
 		      newp->translation = retval;
