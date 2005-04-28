@@ -1,3 +1,8 @@
+2005-04-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* scripts/config.guess: Update from upstream.
+	* scripts/config.sub: Likewise.
+
 2005-04-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/connections.c (nscd_run): Use time() value in prune_cache
