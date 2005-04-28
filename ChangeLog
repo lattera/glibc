@@ -1,5 +1,7 @@
 2005-04-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* configure.in: Remove ultrasparc names.
+
 	* sysdeps/i386/i686/memcmp.S: Move misplaced END.
 
 2005-03-27  Bruno Haible  <bruno@clisp.org>
