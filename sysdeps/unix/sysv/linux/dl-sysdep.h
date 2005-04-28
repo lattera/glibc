@@ -1,5 +1,5 @@
-/* System-specific settings for dynamic linker code.  SPARC version.
-   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* System-specific settings for dynamic linker code.  Linux version.
+   Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,9 @@
 
 #include_next <dl-sysdep.h>
 
-/* _dl_argv cannot be attribute_relro, because _dl_start_user
-   might write into it after _dl_start returns.  */
-#define DL_ARGV_NOT_RELRO 1
+/* On many architectures the kernel provides a virtual DSO and gives
+   AT_SYSINFO_EHDR to point us to it.  As this is introduced for new
+   machines, we should look at it for unwind information even if
+   we aren't making direct use of it.  So enable this across the board.  */
+
+#define NEED_DL_SYSINFO_DSO	1

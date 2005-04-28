@@ -354,22 +354,24 @@
 
 /* The tgkill syscall was instroduced for i386 in 2.5.75.  For Alpha
    it was introduced in 2.6.0-test1 which unfortunately cannot be
-   distinguished from 2.6.0.  On x86-64 it was introduced in
-   2.6.0-test3. */
+   distinguished from 2.6.0.  On x86-64, ppc, and ppc64 it was 
+   introduced in 2.6.0-test3. */
 #if (__LINUX_KERNEL_VERSION >= 132427 && defined __i386__) \
     || (__LINUX_KERNEL_VERSION >= 132609 && defined __alpha__) \
     || (__LINUX_KERNEL_VERSION >= 132609 && defined __x86_64__) \
+    || (__LINUX_KERNEL_VERSION >= 132609 && defined __powerpc__) \
     || (__LINUX_KERNEL_VERSION >= 132609 && defined __sh__)
 # define __ASSUME_TGKILL	1
 #endif
 
 /* The utimes syscall has been available for some architectures
-   forever.  For x86 it was introduced after 2.5.75, for x86-64 in
-   2.6.0-test3.  */
+   forever.  For x86 it was introduced after 2.5.75, for x86-64, 
+   ppc, and ppc64 it was introduced in 2.6.0-test3.  */
 #if defined __alpha__ || defined __ia64__ || defined __hppa__ \
     || defined __sparc__ \
     || (__LINUX_KERNEL_VERSION > 132427 && defined __i386__) \
     || (__LINUX_KERNEL_VERSION > 132609 && defined __x86_64__) \
+    || (__LINUX_KERNEL_VERSION >= 132609 && defined __powerpc__) \
     || (__LINUX_KERNEL_VERSION >= 132609 && defined __sh__)
 # define __ASSUME_UTIMES	1
 #endif
@@ -383,8 +385,11 @@
 #endif
 
 /* The fixed version of the posix_fadvise64 syscall appeared in
-   2.6.0-test3.  At least for x86.  */
-#if __LINUX_KERNEL_VERSION >= 132609 && defined __i386__
+   2.6.0-test3.  At least for x86.  Powerpc support appeared in
+   2.6.2, but for 32-bit userspace only.  */
+#if (__LINUX_KERNEL_VERSION >= 132609 && defined __i386__) \
+    || (__LINUX_KERNEL_VERSION >= 132610 && defined __powerpc__ \
+       && !defined __powerpc64__)
 # define __ASSUME_FADVISE64_64_SYSCALL	1
 #endif
 
@@ -419,8 +424,9 @@
 # define __ASSUME_BRK_PAGE_ROUNDED	1
 #endif
 
-/* Starting with version 2.6.9, the waitid system call is available.  */
-#if __LINUX_KERNEL_VERSION >=  0x020609
+/* Starting with version 2.6.9, the waitid system call is available.
+   Except for powerpc and powerpc64.  */
+#if __LINUX_KERNEL_VERSION >=  0x020609 && !defined __powerpc__
 # define __ASSUME_WAITID_SYSCALL	1
 #endif
 

@@ -1,3 +1,29 @@
+2005-04-28  Roland McGrath  <roland@redhat.com>
+
+	[BZ #796]
+	* sysdeps/unix/sysv/linux/dl-sysdep.h: New file.
+	Define NEED_DL_SYSINFO_DSO for all platforms.
+
+	* sysdeps/generic/dl-sysdep.h: Remove multiple inclusion protection.
+	* sysdeps/alpha/dl-sysdep.h: Likewise.
+	Use #include_next instead of duplicating generic file's contents.
+	* sysdeps/ia64/dl-sysdep.h: Likewise.
+	* sysdeps/sparc/dl-sysdep.h: Likewise.
+
+2005-03-22  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/memset.S (memset): Make ___memset local.
+
+2005-03-07  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #781]
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_TGKILL): Define for powerpc32/64 starting with 2.6.1.
+	(__ASSUME_UTIMES): Define for powerpc32/64 starting with 2.6.1.
+	(__ASSUME_FADVISE64_64_SYSCALL): Define for powerpc32 only starting
+	with 2.6.1.
+	(__ASSUME_WAITID_SYSCALL): Don't define for powerpc32/64.
+
 2005-04-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/sysdep.h: Add cfi instrumentation to asm fragments.
