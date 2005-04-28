@@ -1,6 +1,7 @@
 # This file names the currently supported and somewhat tested locales.
 # If you have any additions please file a glibc bug report.
 SUPPORTED-LOCALES=\
+aa_DJ.UTF-8/UTF-8 \
 aa_DJ/ISO-8859-1 \
 aa_ER/UTF-8 \
 aa_ER@saaho/UTF-8 \
@@ -8,6 +9,7 @@ aa_ET/UTF-8 \
 af_ZA.UTF-8/UTF-8 \
 af_ZA/ISO-8859-1 \
 am_ET/UTF-8 \
+an_ES.UTF-8/UTF-8 \
 an_ES/ISO-8859-15 \
 ar_AE.UTF-8/UTF-8 \
 ar_AE/ISO-8859-6 \
@@ -51,8 +53,10 @@ bg_BG.UTF-8/UTF-8 \
 bg_BG/CP1251 \
 bn_BD/UTF-8 \
 bn_IN/UTF-8 \
+br_FR.UTF-8/UTF-8 \
 br_FR/ISO-8859-1 \
 br_FR@euro/ISO-8859-15 \
+bs_BA.UTF-8/UTF-8 \
 bs_BA/ISO-8859-2 \
 byn_ER/UTF-8 \
 ca_ES.UTF-8/UTF-8 \
@@ -177,6 +181,7 @@ fr_LU@euro/ISO-8859-15 \
 ga_IE.UTF-8/UTF-8 \
 ga_IE/ISO-8859-1 \
 ga_IE@euro/ISO-8859-15 \
+gd_GB.UTF-8/UTF-8 \
 gd_GB/ISO-8859-15 \
 gez_ER/UTF-8 \
 gez_ER@abegede/UTF-8 \
@@ -208,7 +213,9 @@ iw_IL.UTF-8/UTF-8 \
 iw_IL/ISO-8859-8 \
 ja_JP.EUC-JP/EUC-JP \
 ja_JP.UTF-8/UTF-8 \
+ka_GE.UTF-8/UTF-8 \
 ka_GE/GEORGIAN-PS \
+kk_KZ.UTF-8/UTF-8 \
 kk_KZ/PT154 \
 kl_GL.UTF-8/UTF-8 \
 kl_GL/ISO-8859-1 \
@@ -217,12 +224,14 @@ ko_KR.EUC-KR/EUC-KR \
 ko_KR.UTF-8/UTF-8 \
 kw_GB.UTF-8/UTF-8 \
 kw_GB/ISO-8859-1 \
+lg_UG.UTF-8/UTF-8 \
 lg_UG/ISO-8859-10 \
 lo_LA/UTF-8 \
 lt_LT.UTF-8/UTF-8 \
 lt_LT/ISO-8859-13 \
 lv_LV.UTF-8/UTF-8 \
 lv_LV/ISO-8859-13 \
+mi_NZ.UTF-8/UTF-8 \
 mi_NZ/ISO-8859-13 \
 mk_MK.UTF-8/UTF-8 \
 mk_MK/ISO-8859-5 \
@@ -244,8 +253,10 @@ nl_NL/ISO-8859-1 \
 nl_NL@euro/ISO-8859-15 \
 nn_NO.UTF-8/UTF-8 \
 nn_NO/ISO-8859-1 \
+oc_FR.UTF-8/UTF-8 \
 oc_FR/ISO-8859-1 \
 om_ET/UTF-8 \
+om_KE.UTF-8/UTF-8 \
 om_KE/ISO-8859-1 \
 pa_IN/UTF-8 \
 pl_PL.UTF-8/UTF-8 \
@@ -268,9 +279,12 @@ sk_SK.UTF-8/UTF-8 \
 sk_SK/ISO-8859-2 \
 sl_SI.UTF-8/UTF-8 \
 sl_SI/ISO-8859-2 \
+so_DJ.UTF-8/UTF-8 \
 so_DJ/ISO-8859-1 \
 so_ET/UTF-8 \
+so_KE.UTF-8/UTF-8 \
 so_KE/ISO-8859-1 \
+so_SO.UTF-8/UTF-8 \
 so_SO/ISO-8859-1 \
 sq_AL.UTF-8/UTF-8 \
 sq_AL/ISO-8859-1 \
@@ -285,12 +299,14 @@ sv_SE.UTF-8/UTF-8 \
 sv_SE/ISO-8859-1 \
 ta_IN/UTF-8 \
 te_IN/UTF-8 \
+tg_TJ.UTF-8/UTF-8 \
 tg_TJ/KOI8-T \
 th_TH.UTF-8/UTF-8 \
 th_TH/TIS-620 \
 ti_ER/UTF-8 \
 ti_ET/UTF-8 \
 tig_ER/UTF-8 \
+tl_PH.UTF-8/UTF-8 \
 tl_PH/ISO-8859-1 \
 tr_TR.UTF-8/UTF-8 \
 tr_TR/ISO-8859-9 \
@@ -307,6 +323,7 @@ wa_BE@euro/ISO-8859-15 \
 wa_BE.UTF-8/UTF-8 \
 xh_ZA.UTF-8/UTF-8 \
 xh_ZA/ISO-8859-1 \
+yi_US.UTF-8/UTF-8 \
 yi_US/CP1255 \
 zh_CN.GB18030/GB18030 \
 zh_CN.GBK/GBK \
@@ -314,6 +331,7 @@ zh_CN.UTF-8/UTF-8 \
 zh_CN/GB2312 \
 zh_HK.UTF-8/UTF-8 \
 zh_HK/BIG5-HKSCS \
+zh_SG.UTF-8/UTF-8 \
 zh_SG.GBK/GBK \
 zh_SG/GB2312 \
 zh_TW.EUC-TW/EUC-TW \
