@@ -1,3 +1,8 @@
+2005-04-28  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #798]
+	* nscd/Makefile: Help losers who use --with-headers.
+
 2005-04-28  Roland McGrath  <roland@redhat.com>
 
 	[BZ #796]
