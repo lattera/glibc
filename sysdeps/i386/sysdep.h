@@ -94,7 +94,7 @@
 /* The mcount code relies on a normal frame pointer being on the stack
    to locate our caller, so push one just for its benefit.  */
 #define CALL_MCOUNT \
-  pushl %ebp; cfi_adjust_cfa_offset (4); \ movl %esp, %ebp; \
+  pushl %ebp; cfi_adjust_cfa_offset (4); movl %esp, %ebp; \
   cfi_def_cfa_register (ebp); call JUMPTARGET(mcount); \
   popl %ebp; cfi_def_cfa (esp, 4);
 #else
