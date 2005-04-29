@@ -59,6 +59,14 @@ endif
 
 LDLIBS-nscd = $(selinux-LIBS)
 
+# The configure.in check for libselinux and its headers did not use
+# $SYSINCLUDES.  The directory specified by --with-headers usually
+# contains only the basic kernel interface headers, not something like
+# libselinux.  So the simplest thing is to presume that the standard
+# system headers will be ok for this file.
+$(objpfx)nscd_stat.o: sysincludes = # nothing
+$(objpfx)selinux.o: sysincludes = # nothing
+
 distribute := nscd.h nscd-client.h dbg_log.h \
 	      $(addsuffix .c, $(filter-out xmalloc,$(all-nscd-modules))) \
 	      nscd_nischeck.c nscd.conf nscd.init nscd_proto.h \
