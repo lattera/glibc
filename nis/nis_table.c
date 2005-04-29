@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (c) 1997,1998,1999,2003,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -94,9 +94,10 @@ __create_ib_request (const_nis_name name, unsigned int flags)
       if ((search_len + 1) >= size)
         {
           size += 1;
-          search_val = realloc (search_val, size * sizeof (nis_attr));
-	  if (search_val == NULL)
+	  nis_attr *newp = realloc (search_val, size * sizeof (nis_attr));
+	  if (newp == NULL)
 	    goto free_null;
+	  search_val = newp;
 	}
       search_val[search_len].zattr_ndx = strdup (key);
       if ((search_val[search_len].zattr_ndx) == NULL)
