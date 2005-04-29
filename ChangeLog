@@ -1,3 +1,7 @@
+2005-04-29  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/i386/sysdep.h (CALL_MCOUNT): Fix typo in last change.
+
 2005-04-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_table.c: Fix realloc handling.
