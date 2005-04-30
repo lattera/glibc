@@ -1,5 +1,10 @@
 2005-04-29  Roland McGrath  <roland@redhat.com>
 
+	* timezone/africa: Update from tzdata2005i.
+	* timezone/asia: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/yearistype: Likewise.
+
 	* sysdeps/i386/sysdep.h (CALL_MCOUNT): Fix typo in last change.
 
 2005-04-29  Ulrich Drepper  <drepper@redhat.com>
