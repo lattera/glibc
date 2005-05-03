@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,9 +29,8 @@ __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
 {
   struct stat64 st;
   struct statfs64 f;
-  size_t step;
 
-  /* `off64_t´ is a signed type.  Therefore we can determine whether
+  /* `off64_t' is a signed type.  Therefore we can determine whether
      OFFSET + LEN is too large if it is a negative value.  */
   if (offset < 0 || len < 0)
     return EINVAL;
@@ -47,24 +46,48 @@ __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
   if (! S_ISREG (st.st_mode))
     return ENODEV;
 
+  if (len == 0)
+    {
+      if (st.st_size < offset)
+	{
+	  int ret = __ftruncate64 (fd, offset);
+
+	  if (ret != 0)
+	    ret = errno;
+	  return ret;
+	}
+      return 0;
+    }
+
   /* We have to know the block size of the filesystem to get at least some
      sort of performance.  */
   if (__fstatfs64 (fd, &f) != 0)
     return errno;
 
-  /* Align OFFSET to block size and adjust LEN.  */
-  step = (offset + f.f_bsize - 1) % ~f.f_bsize;
-  offset += step;
+  /* Try to play safe.  */
+  if (f.f_bsize == 0)
+    f.f_bsize = 512;
 
   /* Write something to every block.  */
-  while (len > step)
+  for (offset += (len - 1) % f.f_bsize; len > 0; offset += f.f_bsize)
     {
-      len -= step;
+      len -= f.f_bsize;
+
+      if (offset < st.st_size)
+	{
+	  unsigned char c;
+	  ssize_t rsize = __pread64 (fd, &c, 1, offset);
+
+	  if (rsize < 0)
+	    return errno;
+	  /* If there is a non-zero byte, the block must have been
+	     allocated already.  */
+	  else if (rsize == 1 && c != 0)
+	    continue;
+	}
 
       if (__pwrite64 (fd, "", 1, offset) != 1)
 	return errno;
-
-      offset += step;
     }
 
   return 0;
