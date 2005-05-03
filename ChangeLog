@@ -1,3 +1,8 @@
+2005-05-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: waitid is available
+	on ppc in 2.6.12.
+
 2005-04-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/posix/posix_fallocate.c (posix_fallocate): If len == 0,
