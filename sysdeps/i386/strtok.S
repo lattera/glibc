@@ -81,7 +81,7 @@ ENTRY (BP_SYM (FUNCTION))
 	cfi_adjust_cfa_offset (4)
 	call L(here)
 	cfi_adjust_cfa_offset (4)
-	cfi_rel_offset (ebx, 4)
+	cfi_rel_offset (ebx, 0)
 L(here):
 	popl %ebx
 	cfi_adjust_cfa_offset (-4)

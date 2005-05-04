@@ -21,18 +21,15 @@
 # 02111-1307 USA.
 
 common_objpfx=$1
-objpfx=$2
+run_program_prefix=$2
+objpfx=$3
 
 LC_ALL=C
 export LC_ALL
 
-# Generate the test data.
-test -d ${objpfx}domaindir || mkdir ${objpfx}domaindir
 # Create the domain directories.
-test -d ${objpfx}domaindir/de_DE || mkdir ${objpfx}domaindir/de_DE
-test -d ${objpfx}domaindir/de_DE/LC_MESSAGES || mkdir ${objpfx}domaindir/de_DE/LC_MESSAGES
-test -d ${objpfx}domaindir/fr_FR || mkdir ${objpfx}domaindir/fr_FR
-test -d ${objpfx}domaindir/fr_FR/LC_MESSAGES || mkdir ${objpfx}domaindir/fr_FR/LC_MESSAGES
+mkdir -p ${objpfx}domaindir/de_DE/LC_MESSAGES
+mkdir -p ${objpfx}domaindir/fr_FR/LC_MESSAGES
 # Populate them.
 msgfmt -o ${objpfx}domaindir/de_DE/LC_MESSAGES/multithread.mo tst-gettext4-de.po
 msgfmt -o ${objpfx}domaindir/fr_FR/LC_MESSAGES/multithread.mo tst-gettext4-fr.po
@@ -42,7 +39,6 @@ export GCONV_PATH
 LOCPATH=${common_objpfx}localedata
 export LOCPATH
 
-${common_objpfx}elf/ld.so --library-path $common_objpfx \
-${objpfx}tst-gettext4 > ${objpfx}tst-gettext4.out
+${run_program_prefix} ${objpfx}tst-gettext4 > ${objpfx}tst-gettext4.out
 
 exit $?

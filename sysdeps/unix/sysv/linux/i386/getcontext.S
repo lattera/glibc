@@ -1,5 +1,5 @@
 /* Save current context.
-   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -63,12 +63,16 @@ ENTRY(__getcontext)
 
 	/* Save the current signal mask.  */
 	pushl	%ebx
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (ebx, 0)
 	leal	oSIGMASK(%eax), %edx
 	xorl	%ecx, %ecx
 	movl	$SIG_BLOCK, %ebx
 	movl	$__NR_sigprocmask, %eax
 	ENTER_KERNEL
 	popl	%ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebx)
 	cmpl	$-4095, %eax		/* Check %eax for error.  */
 	jae	SYSCALL_ERROR_LABEL	/* Jump to error handler if error.  */
 

@@ -9,7 +9,9 @@
 ENTRY(__nearbyintf)
 	flds	4(%esp)
 	pushl	%eax
+	cfi_adjust_cfa_offset (4)
 	pushl	%ecx
+	cfi_adjust_cfa_offset (4)
 	fnstcw	(%esp)
 	movl	(%esp), %eax
 	orl	$0x20, %eax
@@ -19,7 +21,9 @@ ENTRY(__nearbyintf)
 	fclex
 	fldcw	(%esp)
 	popl	%ecx
+	cfi_adjust_cfa_offset (-4)
 	popl	%eax
+	cfi_adjust_cfa_offset (-4)
 	ret
 END (__nearbyintf)
 weak_alias (__nearbyintf, nearbyintf)

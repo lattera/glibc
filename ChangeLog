@@ -1,3 +1,91 @@
+2005-05-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* intl/Makefile (tst-gettext[45].out): Pass also $(run-program-prefix)
+	as argument to the scripts.
+	* intl/tst-gettext2.sh: Use mkdir -p instead of test -d + mkdir.
+	* intl/tst-gettext4.sh: Likewise.  Use run_program_prefix argument.
+	* intl/tst-gettext5.sh: Likewise.
+
+	* intl/tst-translit.sh: Add mkdir -p.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (SETUP_PIC_REG): Use
+	.ifndef/.endif to allow use of this macro more than once per .S
+	file.
+	(LOAD_PIC_REG): New macro.
+	* sysdeps/unix/sysv/linux/i386/makecontext.S: Add call frame
+	information.
+	* sysdeps/unix/sysv/linux/i386/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/vfork.S: Likewise.
+	* sysdeps/i386/fpu/s_asinh.S: Use LOAD_PIC_REG macro.  Add call frame
+	information.
+	* sysdeps/i386/fpu/e_log10f.S: Likewise.
+	* sysdeps/i386/fpu/s_expm1.S: Likewise.
+	* sysdeps/i386/fpu/e_acoshf.S: Likewise.
+	* sysdeps/i386/fpu/e_log2l.S: Likewise.
+	* sysdeps/i386/fpu/s_log1pf.S: Likewise.
+	* sysdeps/i386/fpu/s_lrint.S: Likewise.
+	* sysdeps/i386/fpu/s_llrint.S: Likewise.
+	* sysdeps/i386/fpu/s_ilogbf.S: Likewise.
+	* sysdeps/i386/fpu/s_cbrtl.S: Likewise.
+	* sysdeps/i386/fpu/s_asinhf.S: Likewise.
+	* sysdeps/i386/fpu/e_log.S: Likewise.
+	* sysdeps/i386/fpu/e_atanhf.S: Likewise.
+	* sysdeps/i386/fpu/s_lrintl.S: Likewise.
+	* sysdeps/i386/fpu/e_atanhl.S: Likewise.
+	* sysdeps/i386/fpu/e_scalb.S: Likewise.
+	* sysdeps/i386/fpu/s_log1p.S: Likewise.
+	* sysdeps/i386/fpu/s_nearbyintl.S: Likewise.
+	* sysdeps/i386/fpu/s_frexpl.S: Likewise.
+	* sysdeps/i386/fpu/s_log1pl.S: Likewise.
+	* sysdeps/i386/fpu/s_nearbyintf.S: Likewise.
+	* sysdeps/i386/fpu/s_cbrt.S: Likewise.
+	* sysdeps/i386/fpu/s_expm1l.S: Likewise.
+	* sysdeps/i386/fpu/s_lrintf.S: Likewise.
+	* sysdeps/i386/fpu/e_acosh.S: Likewise.
+	* sysdeps/i386/fpu/s_cexp.S: Likewise.
+	* sysdeps/i386/fpu/s_ilogbl.S: Likewise.
+	* sysdeps/i386/fpu/s_expm1f.S: Likewise.
+	* sysdeps/i386/fpu/e_powl.S: Likewise.
+	* sysdeps/i386/fpu/e_powf.S: Likewise.
+	* sysdeps/i386/fpu/e_scalbf.S: Likewise.
+	* sysdeps/i386/fpu/e_logl.S: Likewise.
+	* sysdeps/i386/fpu/e_acoshl.S: Likewise.
+	* sysdeps/i386/fpu/s_frexp.S: Likewise.
+	* sysdeps/i386/fpu/e_pow.S: Likewise.
+	* sysdeps/i386/fpu/e_logf.S: Likewise.
+	* sysdeps/i386/fpu/e_log2.S: Likewise.
+	* sysdeps/i386/fpu/s_frexpf.S: Likewise.
+	* sysdeps/i386/fpu/s_cexpl.S: Likewise.
+	* sysdeps/i386/fpu/s_llrintf.S: Likewise.
+	* sysdeps/i386/fpu/s_ilogb.S: Likewise.
+	* sysdeps/i386/fpu/e_scalbl.S: Likewise.
+	* sysdeps/i386/fpu/e_atanh.S: Likewise.
+	* sysdeps/i386/fpu/e_log10.S: Likewise.
+	* sysdeps/i386/fpu/s_cbrtf.S: Likewise.
+	* sysdeps/i386/fpu/s_cexpf.S: Likewise.
+	* sysdeps/i386/fpu/s_llrintl.S: Likewise.
+	* sysdeps/i386/fpu/e_log10l.S: Likewise.
+	* sysdeps/i386/fpu/s_nearbyint.S: Likewise.
+	* sysdeps/i386/fpu/s_asinhl.S: Likewise.
+	* sysdeps/i386/fpu/e_log2f.S: Likewise.
+	* sysdeps/i386/addmul_1.S: Various fixes to cfi handling.
+	* sysdeps/i386/mul_1.S: Likewise.
+	* sysdeps/i386/strtok.S: Likewise.
+	* sysdeps/i386/sub_n.S: Likewise.
+	* sysdeps/i386/submul_1.S: Likewise.
+	* sysdeps/i386/i586/addmul_1.S: Likewise.
+	* sysdeps/i386/i586/memcpy.S: Likewise.
+	* sysdeps/i386/i586/mul_1.S: Likewise.
+	* sysdeps/i386/i586/rshift.S: Likewise.
+	* sysdeps/i386/i586/sub_n.S: Likewise.
+	* sysdeps/i386/i586/submul_1.S: Likewise.
+	* sysdeps/i386/i686/memcmp.S: Likewise.
+	* sysdeps/i386/i686/memmove.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/mmap64.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setcontext.S: Likewise.
+
 2005-05-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/add_n.S: Add call frame information.

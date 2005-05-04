@@ -1,5 +1,5 @@
 /* ix87 specific implementation of pow function.
-   Copyright (C) 1996, 1997, 1998, 1999, 2001, 2004
+   Copyright (C) 1996, 1997, 1998, 1999, 2001, 2004, 2005
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -67,9 +67,7 @@ ENTRY(__ieee754_pow)
 	fxam
 
 #ifdef	PIC
-	call	1f
-1:	popl	%ecx
-	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %ecx
+	LOAD_PIC_REG (cx)
 #endif
 
 	fnstsw
@@ -87,6 +85,7 @@ ENTRY(__ieee754_pow)
 	fldl	4(%esp)		// x : y
 
 	subl	$8,%esp
+	cfi_adjust_cfa_offset (8)
 
 	fxam
 	fnstsw
@@ -120,7 +119,9 @@ ENTRY(__ieee754_pow)
 
 	/* OK, we have an integer value for y.  */
 	popl	%eax
+	cfi_adjust_cfa_offset (-4)
 	popl	%edx
+	cfi_adjust_cfa_offset (-4)
 	orl	$0, %edx
 	fstp	%st(0)		// x
 	jns	4f		// y >= 0, jump
@@ -155,6 +156,7 @@ ENTRY(__ieee754_pow)
 31:	fstp	%st(1)
 	ret
 
+	cfi_adjust_cfa_offset (8)
 	.align ALIGNARG(4)
 2:	/* y is a real number.  */
 	fxch			// x : y
@@ -181,6 +183,7 @@ ENTRY(__ieee754_pow)
 	faddl	MO(one)		// 2^fract(y*log2(x)) : int(y*log2(x))
 	fscale			// 2^fract(y*log2(x))*2^int(y*log2(x)) : int(y*log2(x))
 	addl	$8, %esp
+	cfi_adjust_cfa_offset (-8)
 	fstp	%st(1)		// 2^fract(y*log2(x))*2^int(y*log2(x))
 	ret
 
@@ -219,6 +222,7 @@ ENTRY(__ieee754_pow)
 13:	fldl	4(%esp)		// load x == NaN
 	ret
 
+	cfi_adjust_cfa_offset (8)
 	.align ALIGNARG(4)
 	// x is ±inf
 15:	fstp	%st(0)		// y
@@ -237,7 +241,9 @@ ENTRY(__ieee754_pow)
 	// OK, the value is an integer, but is the number of bits small
 	// enough so that all are coming from the mantissa?
 	popl	%eax
+	cfi_adjust_cfa_offset (-4)
 	popl	%edx
+	cfi_adjust_cfa_offset (-4)
 	andb	$1, %al
 	jz	18f		// jump if not odd
 	movl	%edx, %eax
@@ -251,22 +257,27 @@ ENTRY(__ieee754_pow)
 	fldl	MOX(minf_mzero, %edx, 8)
 	ret
 
+	cfi_adjust_cfa_offset (8)
 	.align ALIGNARG(4)
 16:	fcompl	MO(zero)
 	addl	$8, %esp
+	cfi_adjust_cfa_offset (-8)
 	fnstsw
 	shrl	$5, %eax
 	andl	$8, %eax
 	fldl	MOX(inf_zero, %eax, 1)
 	ret
 
+	cfi_adjust_cfa_offset (8)
 	.align ALIGNARG(4)
 17:	shll	$30, %edx	// sign bit for y in right position
 	addl	$8, %esp
+	cfi_adjust_cfa_offset (-8)
 18:	shrl	$31, %edx
 	fldl	MOX(inf_zero, %edx, 8)
 	ret
 
+	cfi_adjust_cfa_offset (8)
 	.align ALIGNARG(4)
 	// x is ±0
 20:	fstp	%st(0)		// y
@@ -288,7 +299,9 @@ ENTRY(__ieee754_pow)
 	// OK, the value is an integer, but is the number of bits small
 	// enough so that all are coming from the mantissa?
 	popl	%eax
+	cfi_adjust_cfa_offset (-4)
 	popl	%edx
+	cfi_adjust_cfa_offset (-4)
 	andb	$1, %al
 	jz	27f		// jump if not odd
 	cmpl	$0xffe00000, %edx
@@ -300,13 +313,16 @@ ENTRY(__ieee754_pow)
 	fchs
 	ret
 
+	cfi_adjust_cfa_offset (8)
 25:	fstp	%st(0)
 26:	addl	$8, %esp
+	cfi_adjust_cfa_offset (-8)
 27:	// Raise divide-by-zero exception and get infinity value.
 	fldl	MO(one)
 	fdivl	MO(zero)
 	ret
 
+	cfi_adjust_cfa_offset (8)
 	.align ALIGNARG(4)
 	// x is ±0 and y is > 0.  We must find out whether y is an odd integer.
 21:	testb	$2, %dh
@@ -323,7 +339,9 @@ ENTRY(__ieee754_pow)
 	// OK, the value is an integer, but is the number of bits small
 	// enough so that all are coming from the mantissa?
 	popl	%eax
+	cfi_adjust_cfa_offset (-4)
 	popl	%edx
+	cfi_adjust_cfa_offset (-4)
 	andb	$1, %al
 	jz	24f		// jump if not odd
 	cmpl	$0xffe00000, %edx
@@ -332,8 +350,10 @@ ENTRY(__ieee754_pow)
 	fldl	MO(mzero)
 	ret
 
+	cfi_adjust_cfa_offset (8)
 22:	fstp	%st(0)
 23:	addl	$8, %esp	// Don't use 2 x pop
+	cfi_adjust_cfa_offset (-8)
 24:	fldl	MO(zero)
 	ret
 

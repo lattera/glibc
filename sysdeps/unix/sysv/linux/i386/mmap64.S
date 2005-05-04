@@ -130,6 +130,7 @@ L(einval):
 3:
 	/* Save registers.  */
 	movl %ebx, %edx
+	cfi_register (ebx, edx)
 
 	cmpl $0, OFFHI-SVRSP(%esp)
 	jne L(einval2)
@@ -143,6 +144,7 @@ L(einval):
 
 	/* Restore registers.  */
 	movl %edx, %ebx
+	cfi_restore (ebx)
 
 	/* If 0 > %eax > -4096 there was an error.  */
 	cmpl $-4096, %eax
@@ -154,8 +156,10 @@ L(pseudo_end):
 #endif
 	ret
 
+	cfi_register (ebx, edx)
 L(einval2):
 	movl %edx, %ebx
+	cfi_restore (ebx)
 	movl $-EINVAL, %eax
 	jmp SYSCALL_ERROR_LABEL
 #endif

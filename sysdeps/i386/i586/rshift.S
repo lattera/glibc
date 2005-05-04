@@ -165,7 +165,7 @@ L(end2):
 	cfi_rel_offset (edi, 12)
 	cfi_rel_offset (esi, 8)
 	cfi_rel_offset (ebp, 4)
-	cfi_rel_offset (ebx, 3)
+	cfi_rel_offset (ebx, 0)
 L(special):
 	leal	-4(%edi,%ebx,4),%edi
 	leal	-4(%esi,%ebx,4),%esi

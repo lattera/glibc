@@ -1,5 +1,5 @@
 /* Create new context.
-   Copyright (C) 2001,02 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -68,7 +68,9 @@ ENTRY(__makecontext)
 	   below).  */
 #ifdef PIC
 	call	1f
+	cfi_adjust_cfa_offset (4)
 1:	popl	%ecx
+	cfi_adjust_cfa_offset (-4)
 	addl	$L(exitcode)-1b, %ecx
 	movl	%ecx, (%edx)
 #else
@@ -83,6 +85,7 @@ ENTRY(__makecontext)
 	   the context 'makecontext' manipulated at the time of the
 	   'makecontext' call.  If the pointer is NULL the process must
 	   terminate.  */
+	cfi_endproc
 L(exitcode):
 	/* This removes the parameters passed to the function given to
 	   'makecontext' from the stack.  EBX contains the number of
@@ -108,6 +111,7 @@ L(exitcode):
 	/* The 'exit' call should never return.  In case it does cause
 	   the process to terminate.  */
 	hlt
+	cfi_startproc
 END(__makecontext)
 
 weak_alias(__makecontext, makecontext)

@@ -29,7 +29,8 @@
 #define ENTRANCE	pushl %ebx; cfi_adjust_cfa_offset (4); \
 			cfi_rel_offset (ebx, 0); ENTER
 #define RETURN		popl %ebx; cfi_adjust_cfa_offset (-4); \
-			cfi_restore (ebx); LEAVE; ret
+			cfi_restore (ebx); LEAVE; ret; \
+			cfi_adjust_cfa_offset (4); cfi_rel_offset (ebx, 0);
 
 /* Load an entry in a jump table into EBX.  TABLE is a jump table
    with relative offsets.  INDEX is a register contains the index
@@ -79,6 +80,8 @@ L(neq):
 	sbbl	$-1, %eax
 	RETURN
 
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (ebx, 0)
 L(not_1):
 	jl	L(bye)			/* LEN == 0  */
 
@@ -137,8 +140,9 @@ L(0bytes):
 	xorl	%eax, %eax
 	RETURN
 
-	cfi_adjust_cfa_offset (4)
+	cfi_adjust_cfa_offset (8)
 	cfi_rel_offset (esi, 0)
+	cfi_rel_offset (ebx, 4)
 L(29bytes):
 	movl	-29(%esi), %eax
 	movl	-29(%edx), %ecx
@@ -184,8 +188,9 @@ L(1bytes):
 	xorl	%eax, %eax
 	RETURN
 
-	cfi_adjust_cfa_offset (4)
+	cfi_adjust_cfa_offset (8)
 	cfi_rel_offset (esi, 0)
+	cfi_rel_offset (ebx, 4)
 L(30bytes):
 	movl	-30(%esi), %eax
 	movl	-30(%edx), %ecx
@@ -234,8 +239,9 @@ L(2bytes):
 	xorl	%eax, %eax
 	RETURN
 
-	cfi_adjust_cfa_offset (4)
+	cfi_adjust_cfa_offset (8)
 	cfi_rel_offset (esi, 0)
+	cfi_rel_offset (ebx, 4)
 L(31bytes):
 	movl	-31(%esi), %eax
 	movl	-31(%edx), %ecx
@@ -287,8 +293,9 @@ L(3bytes):
 	xorl	%eax, %eax
 	RETURN
 
-	cfi_adjust_cfa_offset (4)
+	cfi_adjust_cfa_offset (8)
 	cfi_rel_offset (esi, 0)
+	cfi_rel_offset (ebx, 4)
 	ALIGN (4)
 /* ECX >= 32.  */
 L(32bytesormore):

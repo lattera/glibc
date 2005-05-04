@@ -26,7 +26,7 @@
 
 ENTRY (__mmap)
 
-/* I don't think it is worthwhile trzing to use mmap2 whenever it
+/* I don't think it is worthwhile trying to use mmap2 whenever it
    is available.  Only use it when we are sure the syscall exists.  */
 #ifdef __ASSUME_MMAP2_SYSCALL
 
@@ -78,6 +78,7 @@ L(skip):
 
 	/* Save registers.  */
 	movl %ebx, %edx
+	cfi_register (ebx, edx)
 
 	movl $SYS_ify(mmap), %eax	/* System call number in %eax.  */
 
@@ -88,6 +89,7 @@ L(skip):
 
 	/* Restore registers.  */
 	movl %edx, %ebx
+	cfi_restore (ebx)
 
 #endif
 

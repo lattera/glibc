@@ -22,11 +22,13 @@ ENTRY(__ilogbl)
 
 	fxtract
 	pushl	%eax
+	cfi_adjust_cfa_offset (4)
 	fstp	%st
 
 	fistpl	(%esp)
 	fwait
 	popl	%eax
+	cfi_adjust_cfa_offset (-4)
 
 	ret
 

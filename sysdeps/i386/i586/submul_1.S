@@ -38,13 +38,13 @@
 ENTRY (BP_SYM (__mpn_submul_1))
 	ENTER
 
-	pushl	%edi
+	pushl	%res_ptr
 	cfi_adjust_cfa_offset (4)
-	pushl	%esi
+	pushl	%s1_ptr
 	cfi_adjust_cfa_offset (4)
 	pushl	%ebp
 	cfi_adjust_cfa_offset (4)
-	pushl	%ebx
+	pushl	%s2_limb
 	cfi_adjust_cfa_offset (4)
 
 	movl	RES(%esp), %res_ptr
@@ -86,18 +86,18 @@ L(oop):	adcl	$0, %ebp
 
 	adcl	$0, %ebp
 	movl	%ebp, %eax
-	popl	%ebx
+	popl	%s2_limb
 	cfi_adjust_cfa_offset (-4)
-	cfi_restore (ebx)
+	cfi_restore (s2_limb)
 	popl	%ebp
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (ebp)
-	popl	%esi
+	popl	%s1_ptr
 	cfi_adjust_cfa_offset (-4)
-	cfi_restore (esi)
-	popl	%edi
+	cfi_restore (s1_ptr)
+	popl	%res_ptr
 	cfi_adjust_cfa_offset (-4)
-	cfi_restore (edi)
+	cfi_restore (res_ptr)
 
 	LEAVE
 	ret

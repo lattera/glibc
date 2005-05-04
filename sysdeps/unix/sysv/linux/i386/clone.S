@@ -88,6 +88,7 @@ ENTRY (BP_SYM (__clone))
 	cfi_adjust_cfa_offset (4)
 	pushl	%edi
 	cfi_adjust_cfa_offset (4)
+
 	movl	TLS+12(%esp),%esi
 	cfi_rel_offset (esi, 4)
 	movl	PTID+12(%esp),%edx
@@ -102,16 +103,14 @@ ENTRY (BP_SYM (__clone))
 	movl	%ebx, (%ecx)
 #endif
 
+	/* End FDE now, because in the child the unwind info will be
+	   wrong.  */
+	cfi_endproc
+
 	int	$0x80
 	popl	%edi
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (edi)
 	popl	%esi
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (esi)
 	popl	%ebx
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (ebx)
 
 	test	%eax,%eax
 	jl	SYSCALL_ERROR_LABEL
@@ -131,10 +130,8 @@ L(haspid):
 	call	*%ebx
 #ifdef PIC
 	call	L(here)
-	cfi_adjust_cfa_offset (4)
 L(here):
 	popl	%ebx
-	cfi_adjust_cfa_offset (-4)
 	addl	$_GLOBAL_OFFSET_TABLE_+[.-L(here)], %ebx
 #endif
 	movl	%eax, %ebx
@@ -156,6 +153,7 @@ L(nomoregetpid):
 	.previous
 #endif
 
+	cfi_startproc
 PSEUDO_END (BP_SYM (__clone))
 
 weak_alias (BP_SYM (__clone), BP_SYM (clone))

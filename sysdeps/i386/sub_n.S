@@ -67,10 +67,12 @@ ENTRY (BP_SYM (__mpn_sub_n))
 /* Calculate start address in loop for PIC.  Due to limitations in some
    assemblers, Loop-L0-3 cannot be put into the leal */
 	call	L(0)
+	cfi_adjust_cfa_offset (4)
 L(0):	leal	(%eax,%eax,8),%eax
 	addl	(%esp),%eax
 	addl	$(L(oop)-L(0)-3),%eax
 	addl	$4,%esp
+	cfi_adjust_cfa_offset (-4)
 #else
 /* Calculate start address in loop for non-PIC.  */
  	leal	(L(oop) - 3)(%eax,%eax,8),%eax

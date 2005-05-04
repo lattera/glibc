@@ -87,9 +87,9 @@ $(objpfx)tst-codeset.out: tst-codeset.sh $(objpfx)tst-codeset
 $(objpfx)tst-gettext3.out: tst-gettext3.sh $(objpfx)tst-gettext3
 	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
 $(objpfx)tst-gettext4.out: tst-gettext4.sh $(objpfx)tst-gettext4
-	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
+	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' $(common-objpfx)intl/
 $(objpfx)tst-gettext5.out: tst-gettext5.sh $(objpfx)tst-gettext5
-	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
+	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' $(common-objpfx)intl/
 endif
 endif
 

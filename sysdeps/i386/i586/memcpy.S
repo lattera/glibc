@@ -46,7 +46,7 @@ ENTRY (BP_SYM (memcpy))
 	movl	DEST(%esp), %edi
 	cfi_rel_offset (edi, 4)
 	movl	SRC(%esp), %esi
-	cfi_rel_offset (esi, 4)
+	cfi_rel_offset (esi, 0)
 	movl	LEN(%esp), %ecx
 	CHECK_BOUNDS_BOTH_WIDE (%edi, DEST(%esp), %ecx)
 	CHECK_BOUNDS_BOTH_WIDE (%esi, SRC(%esp), %ecx)

@@ -1,5 +1,5 @@
 /* ix87 specific implementation of arcsinh.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -50,9 +50,7 @@ ENTRY(__ieee754_acosh)
 	cmpl	$0x41b00000, %ecx
 	ja	3f			// x > 2^28
 #ifdef	PIC
-	call	1f
-1:	popl	%edx
-	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %edx
+	LOAD_PIC_REG (dx)
 #endif
 	cmpl	$0x40000000, %ecx
 	ja	4f			// x > 2

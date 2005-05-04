@@ -61,6 +61,13 @@ ENTRY(__setcontext)
 	movl	oEIP(%eax), %ecx
 
 	/* Load the new stack pointer.  */
+	cfi_def_cfa (eax, 0)
+	cfi_offset (edi, oEDI)
+	cfi_offset (esi, oESI)
+	cfi_offset (ebp, oEBP)
+	cfi_offset (ebx, oEBX)
+	cfi_offset (edx, oEDX)
+	cfi_offset (ecx, oECX)
 	movl	oESP(%eax), %esp
 
 	/* Push the return address on the new stack so we can return there.  */
@@ -75,6 +82,10 @@ ENTRY(__setcontext)
 	movl	oEDX(%eax), %edx
 	movl	oECX(%eax), %ecx
 	movl	oEAX(%eax), %eax
+
+	/* End FDE here, we fall into another context.  */
+	cfi_endproc
+	cfi_startproc
 
 	/* The following 'ret' will pop the address of the code and jump
 	   to it.  */

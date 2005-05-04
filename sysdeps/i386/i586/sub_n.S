@@ -56,8 +56,8 @@ ENTRY (BP_SYM (__mpn_sub_n))
 	CHECK_BOUNDS_BOTH_WIDE (%ebx, S2(%esp), %ecx)
 	shrl	$2, %ecx
 #endif
-	cfi_rel_offset (ebp, 4)
 	movl	(%ebx),%ebp
+	cfi_rel_offset (ebp, 4)
 
 	decl	%ecx
 	movl	%ecx,%edx

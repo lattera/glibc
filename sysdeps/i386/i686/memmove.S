@@ -79,6 +79,10 @@ ENTRY (BP_SYM (memmove))
 	LEAVE
 	RET_PTR
 
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (edi, 0)
+	cfi_register (esi, edx)
+
 	/* Backward copying.  */
 3:	std
 	leal	-1(%edi, %ecx), %edi
