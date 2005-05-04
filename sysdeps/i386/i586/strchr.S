@@ -1,6 +1,6 @@
 /* Find character CH in a NUL terminated string.
    Highly optimized version for ix85, x>=5.
-   Copyright (C) 1995, 1996, 1997, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,2000,2003,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -47,16 +47,21 @@ ENTRY (BP_SYM (strchr))
 	ENTER
 
 	pushl %edi		/* Save callee-safe registers.  */
+	cfi_adjust_cfa_offset (-4)
 	pushl %esi
+	cfi_adjust_cfa_offset (-4)
 
 	pushl %ebx
+	cfi_adjust_cfa_offset (-4)
 	pushl %ebp
+	cfi_adjust_cfa_offset (-4)
 
 	movl STR(%esp), %eax
 	movl CHR(%esp), %edx
 	CHECK_BOUNDS_LOW (%eax, STR(%esp))
 
 	movl %eax, %edi		/* duplicate string pointer for later */
+	cfi_rel_offset (edi, 12)
 	xorl %ecx, %ecx		/* clear %ecx */
 
 	/* At the moment %edx contains C.  What we need for the
@@ -106,6 +111,10 @@ L(0):	movb (%eax), %cl	/* load single byte */
 	je L(3)			/* yes => return NULL */
 
 	incl %eax		/* increment pointer */
+
+	cfi_rel_offset (esi, 8)
+	cfi_rel_offset (ebx, 4)
+	cfi_rel_offset (ebp, 0)
 
 	/* The following code is the preparation for the loop.  The
 	   four instruction up to `L1' will not be executed in the loop
@@ -283,15 +292,28 @@ L(5):	subl $4, %eax		/* adjust pointer */
 
 L(2):	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
 	RETURN_BOUNDED_POINTER (STR(%esp))
-	popl %ebp		/* restore saved registers */
+L(out):	popl %ebp		/* restore saved registers */
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebp)
 	popl %ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebx)
 
 	popl %esi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (esi)
 	popl %edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 	RET_PTR
 
+	cfi_adjust_cfa_offset (16)
+	cfi_rel_offset (edi, 12)
+	cfi_rel_offset (esi, 8)
+	cfi_rel_offset (ebx, 4)
+	cfi_rel_offset (ebp, 0)
 	/* We know there is a NUL byte in the word.  But we have to test
 	   whether there is an C byte before it in the word.  */
 L(4):	subl $4, %eax		/* adjust pointer */
@@ -327,14 +349,7 @@ L(4):	subl $4, %eax		/* adjust pointer */
 
 L(3):	xorl %eax, %eax
 	RETURN_NULL_BOUNDED_POINTER
-	popl %ebp		/* restore saved registers */
-	popl %ebx
-
-	popl %esi
-	popl %edi
-
-	LEAVE
-	RET_PTR
+	jmp L(out)
 END (BP_SYM (strchr))
 
 #undef index

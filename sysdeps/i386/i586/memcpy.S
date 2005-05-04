@@ -1,5 +1,5 @@
 /* Highly optimized version for i586.
-   Copyright (C) 1997, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -39,10 +39,14 @@ ENTRY (BP_SYM (memcpy))
 	ENTER
 
 	pushl	%edi
+	cfi_adjust_cfa_offset (4)
 	pushl	%esi
+	cfi_adjust_cfa_offset (4)
 
 	movl	DEST(%esp), %edi
+	cfi_rel_offset (edi, 4)
 	movl	SRC(%esp), %esi
+	cfi_rel_offset (esi, 4)
 	movl	LEN(%esp), %ecx
 	CHECK_BOUNDS_BOTH_WIDE (%edi, DEST(%esp), %ecx)
 	CHECK_BOUNDS_BOTH_WIDE (%esi, SRC(%esp), %ecx)
@@ -111,7 +115,11 @@ L(1):	rep; movsb
 #endif
 
 	popl	%esi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (esi)
 	popl	%edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 	RET_PTR

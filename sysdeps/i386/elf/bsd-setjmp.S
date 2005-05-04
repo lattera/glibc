@@ -1,5 +1,5 @@
 /* BSD `setjmp' entry point to `sigsetjmp (..., 1)'.  i386 version.
-   Copyright (C) 1995-1997,2000,2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-1997,2000-2003,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,7 +50,9 @@ ENTRY (BP_SYM (setjmp))
 
 	/* Call __sigjmp_save.  */
 	pushl $1
+	cfi_adjust_cfa_offset (4)
 	pushl 8(%esp)
+	cfi_adjust_cfa_offset (4)
 #ifdef	PIC
 	/* We cannot use the PLT, because it requires that %ebx be set, but
            we can't save and restore our caller's value.  Instead, we do an
@@ -64,7 +66,9 @@ ENTRY (BP_SYM (setjmp))
 	call BP_SYM (__sigjmp_save)
 #endif
 	popl %ecx
+	cfi_adjust_cfa_offset (-4)
 	popl %edx
+	cfi_adjust_cfa_offset (-4)
 	ret
 END (BP_SYM (setjmp))
 

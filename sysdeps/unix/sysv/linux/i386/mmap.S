@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,96,97,98,99,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995,96,97,98,99,2000,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,16 +32,24 @@ ENTRY (__mmap)
 
 	/* Save registers.  */
 	pushl %ebp
+	cfi_adjust_cfa_offset (4)
 	pushl %ebx
+	cfi_adjust_cfa_offset (4)
 	pushl %esi
+	cfi_adjust_cfa_offset (4)
 	pushl %edi
+	cfi_adjust_cfa_offset (4)
 
 	movl 20(%esp), %ebx
+	cfi_rel_offset (ebx, 8)
 	movl 24(%esp), %ecx
 	movl 28(%esp), %edx
 	movl 32(%esp), %esi
+	cfi_rel_offset (esi, 4)
 	movl 36(%esp), %edi
+	cfi_rel_offset (edi, 0)
 	movl 40(%esp), %ebp
+	cfi_rel_offset (ebp, 12)
 	testl $0xfff, %ebp
 	movl $-EINVAL, %eax
 	jne L(skip)
@@ -54,9 +62,17 @@ ENTRY (__mmap)
 L(skip):
 	/* Restore registers.  */
 	popl %edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 	popl %esi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (esi)
 	popl %ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebx)
 	popl %ebp
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebp)
 
 #else
 

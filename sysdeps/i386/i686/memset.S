@@ -51,6 +51,7 @@ ENTRY (BP_SYM (memset))
 
 	cld
 	pushl	%edi
+	cfi_adjust_cfa_offset (4)
 	movl	DEST(%esp), %edx
 	movl	LEN(%esp), %ecx
 	CHECK_BOUNDS_BOTH_WIDE (%edx, DEST(%esp), %ecx)
@@ -61,6 +62,7 @@ ENTRY (BP_SYM (memset))
 #endif
 	jecxz	1f
 	movl	%edx, %edi
+	cfi_rel_offset (edi, 0)
 	andl	$3, %edx
 	jz	2f
 	jnp	3f
@@ -92,6 +94,8 @@ ENTRY (BP_SYM (memset))
 	RETURN_BOUNDED_POINTER (DEST(%esp))
 #endif
 	popl	%edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 #if BZERO_P

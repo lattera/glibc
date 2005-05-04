@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,96,97,98,99,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995,96,97,98,99,2000,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,9 +42,13 @@ ENTRY (BP_SYM (__mmap64))
 
 	/* Save registers.  */
 	pushl %ebp
+	cfi_adjust_cfa_offset (4)
 	pushl %ebx
+	cfi_adjust_cfa_offset (4)
 	pushl %esi
+	cfi_adjust_cfa_offset (4)
 	pushl %edi
+	cfi_adjust_cfa_offset (4)
 
 	movl OFFLO(%esp), %edx
 	movl OFFHI(%esp), %ecx
@@ -54,12 +58,16 @@ ENTRY (BP_SYM (__mmap64))
 	shrl $12, %ecx
 	jne L(einval)
 	movl %edx, %ebp
+	cfi_rel_offset (ebp, 12)
 
 	movl ADDR(%esp), %ebx
+	cfi_rel_offset (ebx, 8)
 	movl LEN(%esp), %ecx
 	movl PROT(%esp), %edx
 	movl FLAGS(%esp), %esi
+	cfi_rel_offset (esi, 4)
 	movl FD(%esp), %edi
+	cfi_rel_offset (edi, 0)
 
 	movl $SYS_ify(mmap2), %eax	/* System call number in %eax.  */
 
@@ -69,9 +77,17 @@ L(do_syscall):
 
 	/* Restore registers.  */
 	popl %edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 	popl %esi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (esi)
 	popl %ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebx)
 	popl %ebp
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebp)
 
 #ifndef __ASSUME_MMAP2_SYSCALL
 2:
@@ -87,12 +103,25 @@ L(do_syscall):
 L(pseudo_end):
 	ret
 
+	cfi_adjust_cfa_offset (16)
+	cfi_rel_offset (ebp, 12)
+	cfi_rel_offset (ebx, 8)
+	cfi_rel_offset (esi, 4)
+	cfi_rel_offset (edi, 0)
 	/* This means the offset value is too large.  */
 L(einval):
 	popl %edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 	popl %esi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (esi)
 	popl %ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebx)
 	popl %ebp
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebp)
 	movl $-EINVAL, %eax
 	jmp SYSCALL_ERROR_LABEL
 #endif

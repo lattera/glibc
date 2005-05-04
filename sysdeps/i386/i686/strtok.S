@@ -1,6 +1,6 @@
 /* strtok (str, delim) -- Return next DELIM separated token from STR.
    For Intel 80686.
-   Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2001, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -86,6 +86,8 @@ ENTRY (BP_SYM (FUNCTION))
 
 #if !defined USE_AS_STRTOK_R && defined PIC
 	pushl %ebx			/* Save PIC register.  */
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (ebx, 0)
 	call 0b
 	addl $_GLOBAL_OFFSET_TABLE_, %ebx
 #endif
@@ -97,6 +99,7 @@ ENTRY (BP_SYM (FUNCTION))
 	   table.  */
 	movl %edi, %edx
 	subl $256, %esp
+	cfi_adjust_cfa_offset (256)
 	movl $64, %ecx
 	movl %esp, %edi
 	xorl %eax, %eax
@@ -257,8 +260,11 @@ L(8):	cmpl %eax, %edx
 L(epilogue):
 	/* Remove the stopset table.  */
 	addl $256, %esp
+	cfi_adjust_cfa_offset (-256)
 #if !defined USE_AS_STRTOK_R && defined PIC
 	popl %ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebx)
 #endif
 	LEAVE
 	RET_PTR

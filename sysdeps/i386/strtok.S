@@ -1,6 +1,6 @@
 /* strtok (str, delim) -- Return next DELIM separated token from STR.
    For Intel 80x86, x>=3.
-   Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-1998, 2000, 2001, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -78,9 +78,13 @@ ENTRY (BP_SYM (FUNCTION))
 
 #if !defined USE_AS_STRTOK_R && defined PIC
 	pushl %ebx			/* Save PIC register.  */
+	cfi_adjust_cfa_offset (4)
 	call L(here)
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (ebx, 4)
 L(here):
 	popl %ebx
+	cfi_adjust_cfa_offset (-4)
 	addl $_GLOBAL_OFFSET_TABLE_+[.-L(here)], %ebx
 #endif
 
@@ -125,69 +129,133 @@ L(1):
 	xorl %ecx, %ecx		/* %ecx = 0 !!! */
 
 	pushl %ecx		/* make a 256 bytes long block filled with 0 */
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl %ecx
+	cfi_adjust_cfa_offset (4)
 	pushl $0		/* These immediate values make the label 2 */
+	cfi_adjust_cfa_offset (4)
 	pushl $0		/* to be aligned on a 16 byte boundary to */
+	cfi_adjust_cfa_offset (4)
 	pushl $0		/* get a better performance of the loop.  */
+	cfi_adjust_cfa_offset (4)
 	pushl $0
+	cfi_adjust_cfa_offset (4)
 	pushl $0
+	cfi_adjust_cfa_offset (4)
 	pushl $0
+	cfi_adjust_cfa_offset (4)
 
 /* For understanding the following code remember that %ecx == 0 now.
    Although all the following instruction only modify %cl we always
@@ -284,6 +352,7 @@ L(9):	incl %edx
 
 L(8):	/* Remove the stopset table.  */
 	addl $256, %esp
+	cfi_adjust_cfa_offset (-256)
 
 	cmpl %eax, %edx
 	je L(returnNULL)	/* There was no token anymore.  */
@@ -308,6 +377,8 @@ L(11):
 L(epilogue):
 #if !defined USE_AS_STRTOK_R && defined PIC
 	popl %ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebx)
 #endif
 	LEAVE
 	RET_PTR

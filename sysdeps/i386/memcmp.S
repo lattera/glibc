@@ -1,5 +1,5 @@
 /* Compare two memory blocks for differences in the first COUNT bytes.
-   Copyright (C) 1995, 1996, 1997, 2000, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,2000,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,10 +32,13 @@ ENTRY (BP_SYM (memcmp))
 	ENTER
 
 	pushl %esi		/* Save callee-safe registers.  */
+	cfi_adjust_cfa_offset (4)
 	movl %edi, %edx		/* Note that %edx is not used and can
 				   so be used to save %edi.  It's faster.  */
+	cfi_register (edi, edx)
 
 	movl BLK1(%esp), %esi
+	cfi_rel_offset (esi, 0)
 	movl BLK2(%esp), %edi
 	movl LEN(%esp), %ecx
 	CHECK_BOUNDS_LOW (%esi, BLK1(%esp))
@@ -65,7 +68,10 @@ ENTRY (BP_SYM (memcmp))
 L(1):	CHECK_BOUNDS_HIGH (%esi, BLK1(%esp), jbe)
 	CHECK_BOUNDS_HIGH (%edi, BLK2(%esp), jbe)
 	popl %esi		/* Restore registers.  */
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (esi)
 	movl %edx, %edi
+	cfi_restore (edi)
 
 	LEAVE
 	ret

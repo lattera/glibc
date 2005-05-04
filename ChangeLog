@@ -1,5 +1,52 @@
 2005-05-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/add_n.S: Add call frame information.
+	* sysdeps/i386/addmul_1.S: Likewise.
+	* sysdeps/i386/bsd-setjmp.S: Likewise.
+	* sysdeps/i386/lshift.S: Likewise.
+	* sysdeps/i386/memchr.S: Likewise.
+	* sysdeps/i386/memcmp.S: Likewise.
+	* sysdeps/i386/mul_1.S: Likewise.
+	* sysdeps/i386/rawmemchr.S: Likewise.
+	* sysdeps/i386/rshift.S: Likewise.
+	* sysdeps/i386/stpncpy.S: Likewise.
+	* sysdeps/i386/strchr.S: Likewise.
+	* sysdeps/i386/strchrnul.S: Likewise.
+	* sysdeps/i386/strcspn.S: Likewise.
+	* sysdeps/i386/strpbrk.S: Likewise.
+	* sysdeps/i386/strrchr.S: Likewise.
+	* sysdeps/i386/strspn.S: Likewise.
+	* sysdeps/i386/strtok.S: Likewise.
+	* sysdeps/i386/sub_n.S: Likewise.
+	* sysdeps/i386/submul_1.S: Likewise.
+	* sysdeps/i386/elf/bsd-setjmp.S: Likewise.
+	* sysdeps/i386/i486/strcat.S: Likewise.
+	* sysdeps/i386/i586/add_n.S: Likewise.
+	* sysdeps/i386/i586/addmul_1.S: Likewise.
+	* sysdeps/i386/i586/lshift.S: Likewise.
+	* sysdeps/i386/i586/memcpy.S: Likewise.
+	* sysdeps/i386/i586/memset.S: Likewise.
+	* sysdeps/i386/i586/mul_1.S: Likewise.
+	* sysdeps/i386/i586/rshift.S: Likewise.
+	* sysdeps/i386/i586/strchr.S: Likewise.
+	* sysdeps/i386/i586/strcpy.S: Likewise.
+	* sysdeps/i386/i586/sub_n.S: Likewise.
+	* sysdeps/i386/i586/submul_1.S: Likewise.
+	* sysdeps/i386/i686/add_n.S: Likewise.
+	* sysdeps/i386/i686/memcmp.S: Likewise.
+	* sysdeps/i386/i686/memmove.S: Likewise.
+	* sysdeps/i386/i686/mempcpy.S: Likewise.
+	* sysdeps/i386/i686/memset.S: Likewise.
+	* sysdeps/i386/i686/strtok.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/mmap64.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/posix_fadvise64.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/semtimedop.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setcontext.S: Likewise.
+
+	* sysdeps/i386/fpu/libm-test-ulps: Adjust for gcc 4.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h: waitid is available
 	on ppc in 2.6.12.
 

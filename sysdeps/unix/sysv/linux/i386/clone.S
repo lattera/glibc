@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,98,99,2000,02,03,04 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000,02,03,04,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@tamu.edu)
 
@@ -83,12 +83,18 @@ ENTRY (BP_SYM (__clone))
 
 	/* Do the system call */
 	pushl	%ebx
+	cfi_adjust_cfa_offset (4)
 	pushl	%esi
+	cfi_adjust_cfa_offset (4)
 	pushl	%edi
+	cfi_adjust_cfa_offset (4)
 	movl	TLS+12(%esp),%esi
+	cfi_rel_offset (esi, 4)
 	movl	PTID+12(%esp),%edx
 	movl	FLAGS+12(%esp),%ebx
+	cfi_rel_offset (ebx, 8)
 	movl	CTID+12(%esp),%edi
+	cfi_rel_offset (edi, 0)
 	movl	$SYS_ify(clone),%eax
 
 #ifdef RESET_PID
@@ -98,8 +104,14 @@ ENTRY (BP_SYM (__clone))
 
 	int	$0x80
 	popl	%edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 	popl	%esi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (esi)
 	popl	%ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebx)
 
 	test	%eax,%eax
 	jl	SYSCALL_ERROR_LABEL
@@ -119,13 +131,15 @@ L(haspid):
 	call	*%ebx
 #ifdef PIC
 	call	L(here)
+	cfi_adjust_cfa_offset (4)
 L(here):
 	popl	%ebx
+	cfi_adjust_cfa_offset (-4)
 	addl	$_GLOBAL_OFFSET_TABLE_+[.-L(here)], %ebx
 #endif
 	movl	%eax, %ebx
 	movl	$SYS_ify(exit), %eax
-	int	$0x80
+	ENTER_KERNEL
 
 #ifdef RESET_PID
 	.subsection 2

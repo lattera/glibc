@@ -1,7 +1,7 @@
 /* Copy memory block and return pointer to beginning of destination block
    For Intel 80x86, x>=6.
    This file is part of the GNU C Library.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,11 +42,14 @@ ENTRY (BP_SYM (memmove))
 	ENTER
 
 	pushl	%edi
+	cfi_adjust_cfa_offset (4)
 
 	movl	LEN(%esp), %ecx
 	movl	DEST(%esp), %edi
+	cfi_rel_offset (edi, 0)
 	movl	%esi, %edx
 	movl	SRC(%esp), %esi
+	cfi_register (esi, edx)
 	CHECK_BOUNDS_BOTH_WIDE (%edi, DEST(%esp), %ecx)
 	CHECK_BOUNDS_BOTH_WIDE (%esi, SRC(%esp), %ecx)
 
@@ -65,10 +68,13 @@ ENTRY (BP_SYM (memmove))
 2:	rep
 	movsl
 	movl	%edx, %esi
+	cfi_restore (esi)
 	movl	DEST(%esp), %eax
 	RETURN_BOUNDED_POINTER (DEST(%esp))
 
 	popl	%edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 	RET_PTR
@@ -90,11 +96,14 @@ ENTRY (BP_SYM (memmove))
 	rep
 	movsl
 	movl	%edx, %esi
+	cfi_restore (esi)
 	movl	DEST(%esp), %eax
 	RETURN_BOUNDED_POINTER (DEST(%esp))
 
 	cld
 	popl	%edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 	RET_PTR

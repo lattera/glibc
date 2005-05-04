@@ -1,6 +1,6 @@
 /* memset/bzero -- set memory area to CH/0
    Highly optimized version for ix86, x>=5.
-   Copyright (C) 1996, 1997, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund, <tege@matematik.su.se>
 
@@ -42,8 +42,10 @@ ENTRY (BP_SYM (memset))
 	ENTER
 
 	pushl	%edi
+	cfi_adjust_cfa_offset (4)
 
 	movl	DEST(%esp), %edi
+	cfi_rel_offset (edi, 0)
 	movl	LEN(%esp), %edx
 	CHECK_BOUNDS_BOTH_WIDE (%edi, DEST(%esp), %edx)
 #if BZERO_P
@@ -106,6 +108,8 @@ L(2):	shrl	$2, %ecx	/* convert byte count to longword count */
 	RETURN_BOUNDED_POINTER (DEST(%esp))
 #endif
 	popl	%edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 #if BZERO_P

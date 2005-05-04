@@ -1,6 +1,6 @@
 /* Add two limb vectors of the same length > 0 and store sum in a third
    limb vector.
-   Copyright (C) 1992, 94, 95, 97, 98, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1992,94,95,97,98,2000,2005 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -38,10 +38,14 @@ ENTRY (BP_SYM (__mpn_add_n))
 	ENTER
 
 	pushl %edi
+	cfi_adjust_cfa_offset (4)
 	pushl %esi
+	cfi_adjust_cfa_offset (4)
 
 	movl	RES(%esp),%edi
+	cfi_rel_offset (edi, 4)
 	movl	S1(%esp),%esi
+	cfi_rel_offset (esi, 0)
 	movl	S2(%esp),%edx
 	movl	SIZE(%esp),%ecx
 #if __BOUNDED_POINTERS__
@@ -107,7 +111,11 @@ L(oop):	movl	(%esi),%eax
 	negl	%eax
 
 	popl %esi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (esi)
 	popl %edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 	ret

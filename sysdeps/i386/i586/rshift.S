@@ -1,5 +1,5 @@
 /* Pentium optimized __mpn_rshift --
-   Copyright (C) 1992, 94, 95, 96, 97, 98, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1992,94,95,96,97,98,2000,2005 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -33,13 +33,21 @@ ENTRY (BP_SYM (__mpn_rshift))
 	ENTER
 
 	pushl	%edi
+	cfi_adjust_cfa_offset (4)
 	pushl	%esi
+	cfi_adjust_cfa_offset (4)
 	pushl	%ebp
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (ebp, 0)
 	pushl	%ebx
+	cfi_adjust_cfa_offset (4)
 
 	movl	RES(%esp),%edi
+	cfi_rel_offset (edi, 12)
 	movl	S(%esp),%esi
+	cfi_rel_offset (esi, 8)
 	movl	SIZE(%esp),%ebx
+	cfi_rel_offset (ebx, 0)
 	movl	CNT(%esp),%ecx
 #if __BOUNDED_POINTERS__
 	shll	$2, %ebx		/* convert limbs to bytes */
@@ -64,9 +72,11 @@ L(normal):
 	xorl	%eax,%eax
 	shrdl	%cl,%edx,%eax		/* compute carry limb */
 	pushl	%eax			/* push carry limb onto stack */
+	cfi_adjust_cfa_offset (4)
 
 	decl	%ebx
 	pushl	%ebx
+	cfi_adjust_cfa_offset (4)
 	shrl	$3,%ebx
 	jz	L(end)
 
@@ -110,6 +120,7 @@ L(oop):	movl	28(%edi),%eax		/* fetch destination cache line */
 	jnz	L(oop)
 
 L(end):	popl	%ebx
+	cfi_adjust_cfa_offset (-4)
 	andl	$7,%ebx
 	jz	L(end2)
 L(oop2):
@@ -127,11 +138,20 @@ L(end2):
 	movl	%edx,(%edi)		/* store it */
 
 	popl	%eax			/* pop carry limb */
+	cfi_adjust_cfa_offset (-4)
 
 	popl	%ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebx)
 	popl	%ebp
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebp)
 	popl	%esi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (esi)
 	popl	%edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 	ret
@@ -141,6 +161,11 @@ L(end2):
    function is documented to work for overlapping source and destination.
 */
 
+	cfi_adjust_cfa_offset (16)
+	cfi_rel_offset (edi, 12)
+	cfi_rel_offset (esi, 8)
+	cfi_rel_offset (ebp, 4)
+	cfi_rel_offset (ebx, 3)
 L(special):
 	leal	-4(%edi,%ebx,4),%edi
 	leal	-4(%esi,%ebx,4),%esi
@@ -150,6 +175,7 @@ L(special):
 
 	decl	%ebx
 	pushl	%ebx
+	cfi_adjust_cfa_offset (4)
 	shrl	$3,%ebx
 
 	shrl	$1,%edx
@@ -199,6 +225,7 @@ L(Loop):
 
 L(Lend):
 	popl	%ebx
+	cfi_adjust_cfa_offset (-4)
 	sbbl	%eax,%eax		/* save carry in %eax */
 	andl	$7,%ebx
 	jz	L(Lend2)
@@ -223,9 +250,17 @@ L(L1):	movl	%edx,(%edi)		/* store last limb */
 	rcrl	$1,%eax
 
 	popl	%ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebx)
 	popl	%ebp
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebp)
 	popl	%esi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (esi)
 	popl	%edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 	ret

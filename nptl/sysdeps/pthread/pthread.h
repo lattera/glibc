@@ -62,7 +62,7 @@ enum
 
 /* Mutex initializers.  */
 #define PTHREAD_MUTEX_INITIALIZER \
-  { }
+  { { 0, } }
 #ifdef __USE_GNU
 # if __WORDSIZE == 64
 #  define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
@@ -94,7 +94,7 @@ enum
 
 /* Read-write lock initializers.  */
 # define PTHREAD_RWLOCK_INITIALIZER \
-  { }
+  { { 0, } }
 # ifdef __USE_GNU
 #  if __WORDSIZE == 64
 #   define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
@@ -140,7 +140,7 @@ enum
 
 
 /* Conditional variable handling.  */
-#define PTHREAD_COND_INITIALIZER { }
+#define PTHREAD_COND_INITIALIZER { { 0, } }
 
 
 /* Cleanup buffers */

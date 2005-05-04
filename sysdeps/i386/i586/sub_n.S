@@ -1,6 +1,6 @@
 /* Pentium __mpn_sub_n -- Subtract two limb vectors of the same length > 0
    and store difference in a third limb vector.
-   Copyright (C) 1992, 94, 95, 96, 97, 98, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1992,94,95,96,97,98,2000,2005 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -34,13 +34,20 @@ ENTRY (BP_SYM (__mpn_sub_n))
 	ENTER
 
 	pushl	%edi
+	cfi_adjust_cfa_offset (4)
 	pushl	%esi
+	cfi_adjust_cfa_offset (4)
 	pushl	%ebp
+	cfi_adjust_cfa_offset (4)
 	pushl	%ebx
+	cfi_adjust_cfa_offset (4)
 
 	movl	RES(%esp),%edi
+	cfi_rel_offset (edi, 12)
 	movl	S1(%esp),%esi
+	cfi_rel_offset (esi, 8)
 	movl	S2(%esp),%ebx
+	cfi_rel_offset (ebx, 0)
 	movl	SIZE(%esp),%ecx
 #if __BOUNDED_POINTERS__
 	shll	$2, %ecx	/* convert limbs to bytes */
@@ -49,6 +56,7 @@ ENTRY (BP_SYM (__mpn_sub_n))
 	CHECK_BOUNDS_BOTH_WIDE (%ebx, S2(%esp), %ecx)
 	shrl	$2, %ecx
 #endif
+	cfi_rel_offset (ebp, 4)
 	movl	(%ebx),%ebp
 
 	decl	%ecx
@@ -58,6 +66,7 @@ ENTRY (BP_SYM (__mpn_sub_n))
 	testl	%ecx,%ecx		/* zero carry flag */
 	jz	L(end)
 	pushl	%edx
+	cfi_adjust_cfa_offset (4)
 
 	ALIGN (3)
 L(oop):	movl	28(%edi),%eax		/* fetch destination cache line */
@@ -105,6 +114,7 @@ L(4):	movl	24(%esi),%eax
 	jnz	L(oop)
 
 	popl	%edx
+	cfi_adjust_cfa_offset (-4)
 L(end):
 	decl	%edx			/* test %edx w/o clobbering carry */
 	js	L(end2)
@@ -128,9 +138,17 @@ L(end2):
 	negl	%eax
 
 	popl	%ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebx)
 	popl	%ebp
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebp)
 	popl	%esi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (esi)
 	popl	%edi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 	ret

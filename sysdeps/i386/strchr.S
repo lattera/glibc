@@ -1,6 +1,7 @@
 /* strchr (str, ch) -- Return pointer to first occurrence of CH in STR.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994-1997,1999,2000,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997,1999,2000,2002,2003,2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Some optimisations by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -35,6 +36,8 @@ ENTRY (BP_SYM (strchr))
 	ENTER
 
 	pushl %edi		/* Save callee-safe registers used here.  */
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (edi, 0)
 	movl STR(%esp), %eax
 	movl CHR(%esp), %edx
 	CHECK_BOUNDS_LOW (%eax, STR(%esp))
@@ -244,10 +247,14 @@ L(2):	/* Return NULL.  */
 	xorl %eax, %eax
 	RETURN_NULL_BOUNDED_POINTER
 	popl %edi		/* restore saved register content */
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 	RET_PTR
 
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (edi, 0)
 L(73):	addl $4, %eax		/* adjust pointer */
 L(72):	addl $4, %eax
 L(71):	addl $4, %eax
@@ -283,6 +290,8 @@ L(6):
 	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
 	RETURN_BOUNDED_POINTER (STR(%esp))
 	popl %edi		/* restore saved register content */
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (edi)
 
 	LEAVE
 	RET_PTR
