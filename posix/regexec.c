@@ -219,6 +219,7 @@ regexec (preg, string, nmatch, pmatch, eflags)
 {
   reg_errcode_t err;
   int start, length;
+  re_dfa_t *dfa = (re_dfa_t *)preg->buffer;
 
   if (eflags & ~(REG_NOTBOL | REG_NOTEOL | REG_STARTEND))
     return REG_BADPAT;
@@ -233,12 +234,15 @@ regexec (preg, string, nmatch, pmatch, eflags)
       start = 0;
       length = strlen (string);
     }
+
+  __libc_lock_lock (dfa->lock);
   if (preg->no_sub)
     err = re_search_internal (preg, string, length, start, length - start,
 			      length, 0, NULL, eflags);
   else
     err = re_search_internal (preg, string, length, start, length - start,
 			      length, nmatch, pmatch, eflags);
+  __libc_lock_unlock (dfa->lock);
   return err != REG_NOERROR;
 }
 
@@ -402,6 +406,7 @@ re_search_stub (bufp, string, length, start, range, stop, regs, ret_len)
   regmatch_t *pmatch;
   int nregs, rval;
   int eflags = 0;
+  re_dfa_t *dfa = (re_dfa_t *)bufp->buffer;
 
   /* Check for out-of-range.  */
   if (BE (start < 0 || start > length, 0))
@@ -410,6 +415,8 @@ re_search_stub (bufp, string, length, start, range, stop, regs, ret_len)
     range = length - start;
   else if (BE (start + range < 0, 0))
     range = -start;
+
+  __libc_lock_lock (dfa->lock);
 
   eflags |= (bufp->not_bol) ? REG_NOTBOL : 0;
   eflags |= (bufp->not_eol) ? REG_NOTEOL : 0;
@@ -439,7 +446,10 @@ re_search_stub (bufp, string, length, start, range, stop, regs, ret_len)
     nregs = bufp->re_nsub + 1;
   pmatch = re_malloc (regmatch_t, nregs);
   if (BE (pmatch == NULL, 0))
-    return -2;
+    {
+      rval = -2;
+      goto out;
+    }
 
   result = re_search_internal (bufp, string, length, start, range, stop,
 			       nregs, pmatch, eflags);
@@ -469,6 +479,8 @@ re_search_stub (bufp, string, length, start, range, stop, regs, ret_len)
 	rval = pmatch[0].rm_so;
     }
   re_free (pmatch);
+ out:
+  __libc_lock_unlock (dfa->lock);
   return rval;
 }
 

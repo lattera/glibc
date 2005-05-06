@@ -774,6 +774,8 @@ re_compile_internal (preg, pattern, length, syntax)
     }
   preg->used = sizeof (re_dfa_t);
 
+  __libc_lock_init (dfa->lock);
+
   err = init_dfa (dfa, length);
   if (BE (err != REG_NOERROR, 0))
     {

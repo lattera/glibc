@@ -1,3 +1,12 @@
+2005-05-06  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #934]
+	* posix/regex_internal.h: Include bits/libc-lock.h or define dummy
+	__libc_lock_* macros if not _LIBC.
+	(struct re_dfa_t): Add lock.
+	* posix/regcomp.c (re_compile_internal): Add __libc_lock_init.
+	* posix/regexec.c (regexec, re_search_stub): Add locking.
+
 2005-05-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* intl/Makefile (tst-gettext[45].out): Pass also $(run-program-prefix)
