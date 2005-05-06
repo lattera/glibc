@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -51,7 +51,7 @@
 
 # define SAVE_OLDTYPE_0	movl %eax, %ecx;
 # define SAVE_OLDTYPE_1	SAVE_OLDTYPE_0
-# define SAVE_OLDTYPE_2	pushl %eax;
+# define SAVE_OLDTYPE_2	pushl %eax; cfi_adjust_cfa_offset (4);
 # define SAVE_OLDTYPE_3	SAVE_OLDTYPE_2
 # define SAVE_OLDTYPE_4	SAVE_OLDTYPE_2
 # define SAVE_OLDTYPE_5	SAVE_OLDTYPE_2
@@ -62,11 +62,13 @@
 # define _PUSHCARGS_0	/* No arguments to push.  */
 # define _POPCARGS_0	/* No arguments to pop.  */
 
-# define PUSHCARGS_1	movl %ebx, %edx; PUSHCARGS_0
+# define PUSHCARGS_1	movl %ebx, %edx; cfi_register (ebx, edx); PUSHCARGS_0
 # define DOCARGS_1	_DOARGS_1 (4)
-# define POPCARGS_1	POPCARGS_0; movl %edx, %ebx
-# define _PUSHCARGS_1	pushl %ebx; L(PUSHBX2): _PUSHCARGS_0
-# define _POPCARGS_1	_POPCARGS_0; popl %ebx; L(POPBX2):
+# define POPCARGS_1	POPCARGS_0; movl %edx, %ebx; cfi_restore (ebx);
+# define _PUSHCARGS_1	pushl %ebx; cfi_adjust_cfa_offset (4); \
+			cfi_rel_offset (ebx, 0); _PUSHCARGS_0
+# define _POPCARGS_1	_POPCARGS_0; popl %ebx; \
+			cfi_adjust_cfa_offset (-4); cfi_restore (ebx);
 
 # define PUSHCARGS_2	PUSHCARGS_1
 # define DOCARGS_2	_DOARGS_2 (12)
@@ -83,14 +85,18 @@
 # define PUSHCARGS_4	_PUSHCARGS_4
 # define DOCARGS_4	_DOARGS_4 (28)
 # define POPCARGS_4	_POPCARGS_4
-# define _PUSHCARGS_4	pushl %esi; L(PUSHSI2): _PUSHCARGS_3
-# define _POPCARGS_4	_POPCARGS_3; popl %esi; L(POPSI2):
+# define _PUSHCARGS_4	pushl %esi; cfi_adjust_cfa_offset (4); \
+			cfi_rel_offset (esi, 0); _PUSHCARGS_3
+# define _POPCARGS_4	_POPCARGS_3; popl %esi; \
+			cfi_adjust_cfa_offset (-4); cfi_restore (esi);
 
 # define PUSHCARGS_5	_PUSHCARGS_5
 # define DOCARGS_5	_DOARGS_5 (36)
 # define POPCARGS_5	_POPCARGS_5
-# define _PUSHCARGS_5	pushl %edi; L(PUSHDI2): _PUSHCARGS_4
-# define _POPCARGS_5	_POPCARGS_4; popl %edi; L(POPDI2):
+# define _PUSHCARGS_5	pushl %edi; cfi_adjust_cfa_offset (4); \
+			cfi_rel_offset (edi, 0); _PUSHCARGS_4
+# define _POPCARGS_5	_POPCARGS_4; popl %edi; \
+			cfi_adjust_cfa_offset (-4); cfi_restore (edi);
 
 # ifdef IS_IN_libpthread
 #  define CENABLE	call __pthread_enable_asynccancel;
@@ -115,12 +121,15 @@
 #  define CENABLE	call __libc_enable_asynccancel;
 #  define CDISABLE	call __libc_disable_asynccancel
 # endif
-# define POPSTATE_0	pushl %eax; movl %ecx, %eax; CDISABLE; popl %eax;
+# define POPSTATE_0 \
+ pushl %eax; cfi_adjust_cfa_offset (4); movl %ecx, %eax; \
+ CDISABLE; popl %eax; cfi_adjust_cfa_offset (-4);
 # define POPSTATE_1	POPSTATE_0
-# define POPSTATE_2	xchgl (%esp), %eax; CDISABLE; popl %eax;
+# define POPSTATE_2	xchgl (%esp), %eax; CDISABLE; popl %eax; \
+			cfi_adjust_cfa_offset (-4);
 # define POPSTATE_3	POPSTATE_2
-# define POPSTATE_4	POPSTATE_2
-# define POPSTATE_5	POPSTATE_2
+# define POPSTATE_4	POPSTATE_3
+# define POPSTATE_5	POPSTATE_4
 
 #if !defined NOT_IN_libc
 # define __local_multiple_threads __libc_multiple_threads

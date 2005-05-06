@@ -1,3 +1,8 @@
+2005-05-05  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Remove explicit
+	.eh_frame section, use cfi_* directives.
+
 2005-04-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/getcpuclockid.c: Include spinlock.h.
