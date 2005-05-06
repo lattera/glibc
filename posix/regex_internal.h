@@ -39,6 +39,14 @@
 #if defined HAVE_WCTYPE_H || defined _LIBC
 # include <wctype.h>
 #endif /* HAVE_WCTYPE_H || _LIBC */
+#if defined _LIBC
+# include <bits/libc-lock.h>
+#else
+# define __libc_lock_define(CLASS,NAME)
+# define __libc_lock_init(NAME) do { } while (0)
+# define __libc_lock_lock(NAME) do { } while (0)
+# define __libc_lock_unlock(NAME) do { } while (0)
+#endif
 
 /* In case that the system doesn't have isblank().  */
 #if !defined _LIBC && !defined HAVE_ISBLANK && !defined isblank
@@ -647,6 +655,7 @@ struct re_dfa_t
 #ifdef DEBUG
   char* re_str;
 #endif
+  __libc_lock_define (, lock)
 };
 
 #ifndef RE_NO_INTERNAL_PROTOTYPES
