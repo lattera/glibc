@@ -1,3 +1,9 @@
+2005-05-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/libintl.h: Always use __attribute_format_arg__ for gettext
+	functions since gcc sometimes forgets the attribute for the
+	standard functions.
+
 2005-05-06  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #934]
