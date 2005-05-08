@@ -1,5 +1,7 @@
 2005-05-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* MakeTAGS: Remove - parameter to xgettext.
+
 	* MakeTAGS: Make sure translations in error calls are marked with
 	c-format by xgettext.
 
