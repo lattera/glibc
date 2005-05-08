@@ -146,8 +146,9 @@ endif
 define extract
 @rm -f $@.new
 $(XGETTEXT) --keyword=_ --keyword=N_ --add-comments=TRANS  --sort-by-file \
-	    --omit-header -E -n -d --flag=error:3:c-format \
-	    $(XGETTEXTFLAGS-$(@F)) > $@.new $(filter-out $(objpfx)distinfo,$^)
+	    --omit-header -E -n -d -  --flag=error:3:c-format \
+	    $(XGETTEXTFLAGS-$(@F)) > $@.new \
+	    $(filter-out tst-%,$(filter-out $(objpfx)distinfo,$^)) /dev/null
 mv -f $@.new $@
 endef
 
