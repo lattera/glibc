@@ -122,16 +122,16 @@ elf_machine_dynamic (void)
    `_dl_start' is the real entry point; its return value is the user
    program's entry point.  */
 #define RTLD_START \
-  asm (".section \".text\"\n"						\
+  asm (".pushsection \".text\"\n"					\
 "	.align	2\n"							\
 "	.type	" BODY_PREFIX "_start,@function\n"			\
-"	.section \".opd\",\"aw\"\n"					\
+"	.pushsection \".opd\",\"aw\"\n"					\
 "	.align	3\n"							\
 "	.globl	_start\n"						\
 "	" ENTRY_2(_start) "\n"						\
 "_start:\n"								\
 "	" OPD_ENT(_start) "\n"						\
-"	.previous\n"							\
+"	.popsection\n"							\
 BODY_PREFIX "_start:\n"							\
 /* We start with the following on the stack, from top:			\
    argc (4 bytes);							\
@@ -157,11 +157,11 @@ BODY_PREFIX "_start:\n"							\
 "	.align 2\n"							\
 "	" END_2(_start) "\n"						\
 "	.globl	_dl_start_user\n"					\
-"	.section \".opd\",\"aw\"\n"					\
+"	.pushsection \".opd\",\"aw\"\n"					\
 "_dl_start_user:\n"							\
 "	" OPD_ENT(_dl_start_user) "\n"					\
-"	.previous\n"							\
-"	.section	\".toc\",\"aw\"\n"				\
+"	.popsection\n"							\
+"	.pushsection	\".toc\",\"aw\"\n"				\
 DL_STARTING_UP_DEF							\
 ".LC__rtld_global:\n"							\
 "	.tc _rtld_global[TC],_rtld_global\n"				\
@@ -171,7 +171,7 @@ DL_STARTING_UP_DEF							\
 "	.tc _dl_argv_internal[TC],_dl_argv_internal\n"			\
 ".LC__dl_fini:\n"							\
 "	.tc _dl_fini[TC],_dl_fini\n"					\
-"	.previous\n"							\
+"	.popsection\n"							\
 "	.type	" BODY_PREFIX "_dl_start_user,@function\n"		\
 "	" ENTRY_2(_dl_start_user) "\n"					\
 /* Now, we do our main work of calling initialisation procedures.	\
@@ -245,7 +245,7 @@ BODY_PREFIX "_dl_start_user:\n"						\
 ".LT__dl_start_user_name_end:\n"					\
 "	.align 2\n"							\
 "	" END_2(_dl_start_user) "\n"					\
-"	.previous");
+"	.popsection");
 
 /* Nonzero iff TYPE should not be allowed to resolve to one of
    the main executable's symbols, as for a COPY reloc.  */
