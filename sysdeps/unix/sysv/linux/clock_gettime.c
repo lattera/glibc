@@ -19,6 +19,7 @@
 
 #include <sysdep.h>
 #include <errno.h>
+#include <time.h>
 #include "kernel-posix-cpu-timers.h"
 #include "kernel-features.h"
 

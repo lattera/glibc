@@ -1,3 +1,8 @@
+2005-05-09  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/clock_getres.c: Include <time.h>.
+	* sysdeps/unix/sysv/linux/clock_gettime.c: Likewise.
+
 2005-05-09  Alan Modra  <amodra@bigpond.net.au>
 
 	* sysdeps/powerpc/powerpc64/dl-machine.h (RTLD_START): Use
