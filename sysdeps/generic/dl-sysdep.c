@@ -119,7 +119,7 @@ _dl_sysdep_start (void **start_argptr,
     switch (av->a_type)
       {
       case AT_PHDR:
-	phdr = av->a_un.a_ptr;
+	phdr = (void *) av->a_un.a_val;
 	break;
       case AT_PHNUM:
 	phnum = av->a_un.a_val;
@@ -152,7 +152,7 @@ _dl_sysdep_start (void **start_argptr,
 	INTUSE(__libc_enable_secure) = av->a_un.a_val;
 	break;
       case AT_PLATFORM:
-	GLRO(dl_platform) = av->a_un.a_ptr;
+	GLRO(dl_platform) = (void *) av->a_un.a_val;
 	break;
       case AT_HWCAP:
 	GLRO(dl_hwcap) = (unsigned long int) av->a_un.a_val;
@@ -170,7 +170,7 @@ _dl_sysdep_start (void **start_argptr,
 #endif
 #if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
       case AT_SYSINFO_EHDR:
-	GLRO(dl_sysinfo_dso) = av->a_un.a_ptr;
+	GLRO(dl_sysinfo_dso) = (void *) av->a_un.a_val;
 	break;
 #endif
 #ifdef DL_PLATFORM_AUXV
@@ -312,7 +312,7 @@ _dl_show_auxv (void)
       if (idx < sizeof (auxvars) / sizeof (auxvars[0])
 	  && auxvars[idx].form != unknown)
 	{
-	  const char *val = av->a_un.a_ptr;
+	  const char *val = (char *) av->a_un.a_val;
 
 	  if (__builtin_expect (auxvars[idx].form, dec) == dec)
 	    val = _itoa ((unsigned long int) av->a_un.a_val,

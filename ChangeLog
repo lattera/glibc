@@ -2,6 +2,9 @@
 
 	* elf/elf.h (Elf32_auxv_t): Make cross-compile safe.
 	(Elf64_auxv_t): Likewise.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Adjust for
+	removal of a_ptr element in ElfXX_auxv_t.
+	* elf/dl-support.c (_dl_aux_init): Likewise.
 
 2005-05-09  Daniel Jacobowitz  <dan@codesourcery.com>
 

@@ -173,7 +173,7 @@ _dl_aux_init (ElfW(auxv_t) *av)
 	GLRO(dl_clktck) = av->a_un.a_val;
 	break;
       case AT_PHDR:
-	GL(dl_phdr) = av->a_un.a_ptr;
+	GL(dl_phdr) = (void *) av->a_un.a_val;
 	break;
       case AT_PHNUM:
 	GL(dl_phnum) = av->a_un.a_val;
@@ -188,7 +188,7 @@ _dl_aux_init (ElfW(auxv_t) *av)
 #endif
 #if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
       case AT_SYSINFO_EHDR:
-	GL(dl_sysinfo_dso) = av->a_un.a_ptr;
+	GL(dl_sysinfo_dso) = (void *) av->a_un.a_val;
 	break;
 #endif
       case AT_UID:
