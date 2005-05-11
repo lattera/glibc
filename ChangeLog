@@ -1,3 +1,8 @@
+2005-05-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h (Elf32_auxv_t): Make cross-compile safe.
+	(Elf64_auxv_t): Likewise.
+
 2005-05-09  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/clock_getres.c: Include <time.h>.
