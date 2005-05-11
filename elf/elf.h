@@ -899,23 +899,25 @@ typedef struct
 
 typedef struct
 {
-  int a_type;			/* Entry type */
+  uint32_t a_type;		/* Entry type */
   union
     {
-      long int a_val;		/* Integer value */
-      void *a_ptr;		/* Pointer value */
-      void (*a_fcn) (void);	/* Function pointer value */
+      uint32_t a_val;		/* Integer value */
+      /* We use to have pointer elements added here.  We cannot do that,
+	 though, since it does not work when using 32-bit definitions
+	 on 64-bit platforms and vice versa.  */
     } a_un;
 } Elf32_auxv_t;
 
 typedef struct
 {
-  long int a_type;		/* Entry type */
+  uint64_t a_type;		/* Entry type */
   union
     {
-      long int a_val;		/* Integer value */
-      void *a_ptr;		/* Pointer value */
-      void (*a_fcn) (void);	/* Function pointer value */
+      uint64_t a_val;		/* Integer value */
+      /* We use to have pointer elements added here.  We cannot do that,
+	 though, since it does not work when using 32-bit definitions
+	 on 64-bit platforms and vice versa.  */
     } a_un;
 } Elf64_auxv_t;
 
