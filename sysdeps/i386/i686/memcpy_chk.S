@@ -1,4 +1,4 @@
-/* Checking memcpy for x86-64.
+/* Checking memcpy for i686.
    Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
