@@ -196,10 +196,10 @@ gaih_local (const char *name, const struct gaih_service *service,
   (*pai)->ai_addrlen = sizeof (struct sockaddr_un);
   (*pai)->ai_addr = (void *) (*pai) + sizeof (struct addrinfo);
 
-#if SALEN
+#ifdef _HAVE_SA_LEN
   ((struct sockaddr_un *) (*pai)->ai_addr)->sun_len =
     sizeof (struct sockaddr_un);
-#endif /* SALEN */
+#endif /* _HAVE_SA_LEN */
 
   ((struct sockaddr_un *)(*pai)->ai_addr)->sun_family = AF_LOCAL;
   memset(((struct sockaddr_un *)(*pai)->ai_addr)->sun_path, 0, UNIX_PATH_MAX);
@@ -1076,9 +1076,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    ai->ai_canonname = (char *) canon;
 	    canon = NULL;
 
-#if SALEN
+#ifdef _HAVE_SA_LEN
 	    ai->ai_addr->sa_len = socklen;
-#endif /* SALEN */
+#endif /* _HAVE_SA_LEN */
 	    ai->ai_addr->sa_family = family;
 
 	    if (family == AF_INET6)
