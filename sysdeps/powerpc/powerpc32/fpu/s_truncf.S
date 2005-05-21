@@ -19,13 +19,6 @@
 
 #include <sysdep.h>
 
-	.section	.rodata
-	.align 2
-	.type	TWO23.0,@object
-	.size	TWO23.0,2
-TWO23.0:
-	.long 0x4b000000
-
 	.section	.rodata.cst4,"aM",@progbits,4
 	.align 2
 .LC0:	/* 2**23 */
@@ -38,6 +31,7 @@ TWO23.0:
    We set "round toward Zero" mode and trunc by adding +-2**23 then
    subtracting +-2**23.  */
 
+	.section	".text"
 ENTRY (__truncf)
 	mffs	fp11		/* Save current FPU rounding mode.  */
 #ifdef SHARED

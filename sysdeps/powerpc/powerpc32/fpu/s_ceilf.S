@@ -19,13 +19,6 @@
 
 #include <sysdep.h>
 
-	.section	.rodata
-	.align 2
-	.type	TWO23.0,@object
-	.size	TWO23.0,4
-TWO23.0:
-	.long 0x4b000000
-
 	.section	.rodata.cst4,"aM",@progbits,4
 	.align 2
 .LC0:	/* 2**23 */

@@ -1,3 +1,14 @@
+2005-05-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/tls.h (TLS_INIT_TCB_SIZE, TLS_INIT_TCB_ALIGN): Define to
+	size/alignment of struct pthread rather than tcbhead_t.
+	* sysdeps/x86_64/tls.h (TLS_INIT_TCB_SIZE, TLS_INIT_TCB_ALIGN):
+	Likewise.
+	* sysdeps/s390/tls.h (TLS_INIT_TCB_SIZE, TLS_INIT_TCB_ALIGN):
+	Likewise.
+	* sysdeps/sparc/tls.h (TLS_INIT_TCB_SIZE, TLS_INIT_TCB_ALIGN):
+	Likewise.
+
 2005-05-19  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/ia64/pthread_spin_lock.c (pthread_spin_lock): Use

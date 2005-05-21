@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  nptl/x86_64 version.
-   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -82,11 +82,13 @@ typedef struct
 # endif
 #endif
 
-/* This is the size of the initial TCB.  */
-# define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
+/* This is the size of the initial TCB.  Can't be just sizeof (tcbhead_t),
+   because NPTL getpid, __libc_alloca_cutoff etc. need (almost) the whole
+   struct pthread even when not linked with -lpthread.  */
+# define TLS_INIT_TCB_SIZE sizeof (struct pthread)
 
 /* Alignment requirements for the initial TCB.  */
-# define TLS_INIT_TCB_ALIGN __alignof__ (tcbhead_t)
+# define TLS_INIT_TCB_ALIGN __alignof__ (struct pthread)
 
 /* This is the size of the TCB.  */
 # define TLS_TCB_SIZE sizeof (struct pthread)

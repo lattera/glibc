@@ -1,3 +1,9 @@
+2005-05-19  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/ia64/pspinlock.c (__pthread_spin_lock): Use
+	__sync_val_compare_and_swap, not explicit _si variant.
+	(__pthread_spin_trylock): Likewise.
+
 2005-05-05  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Remove explicit

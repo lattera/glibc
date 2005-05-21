@@ -69,11 +69,13 @@ typedef struct
 
 register struct pthread *__thread_self __asm__("%g7");
 
-/* This is the size of the initial TCB.  */
-# define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
+/* This is the size of the initial TCB.  Can't be just sizeof (tcbhead_t),
+   because NPTL getpid, __libc_alloca_cutoff etc. need (almost) the whole
+   struct pthread even when not linked with -lpthread.  */
+# define TLS_INIT_TCB_SIZE sizeof (struct pthread)
 
 /* Alignment requirements for the initial TCB.  */
-# define TLS_INIT_TCB_ALIGN __alignof__ (tcbhead_t)
+# define TLS_INIT_TCB_ALIGN __alignof__ (struct pthread)
 
 /* This is the size of the TCB.  */
 # define TLS_TCB_SIZE sizeof (struct pthread)
