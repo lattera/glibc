@@ -52,7 +52,7 @@ ENTRY(__setcontext)
 	li	r5,0
 	addi	r4,r3,_UC_SIGMASK
 	li	r3,SIG_SETMASK
-	bl	JUMPTARGET(__sigprocmask)
+	bl	__sigprocmask@local
 	cmpwi	r3,0
 	bne	L(error_exit)
 
@@ -295,7 +295,7 @@ ENTRY(__novec_setcontext)
 	li	r5,0
 	addi	r4,r3,_UC_SIGMASK
 	li	r3,SIG_SETMASK
-	bl	JUMPTARGET(__sigprocmask)
+	bl	__sigprocmask@local
 	cmpwi	r3,0
 	bne	L(novec_error_exit)
 
@@ -405,7 +405,7 @@ compat_symbol (libc, __novec_setcontext, setcontext, GLIBC_2_3_3)
 	compat_text_section
 ENTRY (__setcontext_stub)
 	li	r3,ENOSYS
-	b	JUMPTARGET(__syscall_error)
+	b	__syscall_error@local
 END (__setcontext_stub)
 	.previous
 

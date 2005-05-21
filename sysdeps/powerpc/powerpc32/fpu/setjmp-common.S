@@ -164,5 +164,5 @@ L(aligned_save_vmx):
 	stvx	31,0,r6
 L(no_vmx):
 #endif
-	b JUMPTARGET (BP_SYM (__sigjmp_save))
+	b BP_SYM (__sigjmp_save@local)
 END (BP_SYM (__sigsetjmp))

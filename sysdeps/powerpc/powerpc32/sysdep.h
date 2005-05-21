@@ -124,7 +124,7 @@
 
 #define PSEUDO_RET							      \
     bnslr+;								      \
-    b JUMPTARGET(__syscall_error)
+    b __syscall_error@local
 #define ret PSEUDO_RET
 
 #undef	PSEUDO_END

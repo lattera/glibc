@@ -19,11 +19,10 @@
 
 #include <sysdep.h>
 
-	.section	.rodata.cst8,"aM",@progbits,8
-	.align 3
+	.section	.rodata.cst4,"aM",@progbits,4
+	.align	2
 .LC0:	/* 2**52 */
-	.long 0x43300000
-	.long 0
+	.long 0x59800000
 
 /* double [fp1] trunc (double x [fp1])
    IEEE 1003.1 trunc function.  IEEE specifies "trunc to the integer
@@ -41,10 +40,10 @@ ENTRY (__trunc)
 	mflr	r10
 	lwz	r9,.LC0@got(10)
 	mtlr	r11
-	lfd	fp13,0(r9)
+	lfs	fp13,0(r9)
 #else
 	lis	r9,.LC0@ha
-	lfd	fp13,.LC0@l(r9)
+	lfs	fp13,.LC0@l(r9)
 #endif
 	fabs	fp0,fp1
 	fsub	fp12,fp13,fp13	/* generate 0.0  */

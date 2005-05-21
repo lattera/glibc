@@ -85,14 +85,14 @@
 # define UNDOCARGS_6	lwz 8,40(1); UNDOCARGS_5
 
 # ifdef IS_IN_libpthread
-#  define CENABLE	bl JUMPTARGET(__pthread_enable_asynccancel)
-#  define CDISABLE	bl JUMPTARGET(__pthread_disable_asynccancel)
+#  define CENABLE	bl __pthread_enable_asynccancel@local
+#  define CDISABLE	bl __pthread_disable_asynccancel@local
 # elif !defined NOT_IN_libc
-#  define CENABLE	bl JUMPTARGET(__libc_enable_asynccancel)
-#  define CDISABLE	bl JUMPTARGET(__libc_disable_asynccancel)
+#  define CENABLE	bl __libc_enable_asynccancel@local
+#  define CDISABLE	bl __libc_disable_asynccancel@local
 # elif defined IS_IN_librt
-#  define CENABLE	bl JUMPTARGET(__librt_enable_asynccancel)
-#  define CDISABLE	bl JUMPTARGET(__librt_disable_asynccancel)
+#  define CENABLE	bl __librt_enable_asynccancel@local
+#  define CDISABLE	bl __librt_disable_asynccancel@local
 # else
 #  error Unsupported library
 # endif

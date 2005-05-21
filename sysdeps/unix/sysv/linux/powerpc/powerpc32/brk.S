@@ -48,7 +48,7 @@ ENTRY (BP_SYM (__brk))
 	li	r3,0
 	blelr+
 	li      r3,ENOMEM
-	b	JUMPTARGET(__syscall_error)
+	b	__syscall_error@local
 END (BP_SYM (__brk))
 
 weak_alias (BP_SYM (__brk), BP_SYM (brk))

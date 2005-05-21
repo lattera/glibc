@@ -132,11 +132,11 @@ L(parent):
 #endif
 	addi	r1,r1,32
 	bnslr+
-	b	JUMPTARGET(__syscall_error)
+	b	__syscall_error@local
 
 L(badargs):
 	li	r3,EINVAL
-	b	JUMPTARGET(__syscall_error)
+	b	__syscall_error@local
 END (BP_SYM (__clone))
 
 weak_alias (BP_SYM (__clone), BP_SYM (clone))

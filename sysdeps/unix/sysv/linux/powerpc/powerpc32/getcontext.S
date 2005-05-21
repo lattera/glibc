@@ -251,7 +251,7 @@ L(no_vec):
 	stw	r3,_UC_REGS_PTR(r12)
 	addi	r5,r12,_UC_SIGMASK
 	li	r3,SIG_BLOCK
-	bl	JUMPTARGET(__sigprocmask)
+	bl	__sigprocmask@local
 
 	lwz	r0,_FRAME_LR_SAVE+16(r1)
 	addi	r1,r1,16
@@ -363,7 +363,7 @@ ENTRY(__novec_getcontext)
 	addi	r5,r3,_UC_SIGMASK - _UC_REG_SPACE
 	li	r4,0
 	li	r3,SIG_BLOCK
-	bl	JUMPTARGET(__sigprocmask)
+	bl	__sigprocmask@local
 
 	lwz	r0,20(r1)
 	addi	r1,r1,16
@@ -384,7 +384,7 @@ compat_symbol (libc, __novec_getcontext, getcontext, GLIBC_2_3_3)
 	compat_text_section
 ENTRY (__getcontext_stub)
 	li	r3,ENOSYS
-	b	JUMPTARGET(__syscall_error)
+	b	__syscall_error@local
 END (__getcontext_stub)
 	.previous
 

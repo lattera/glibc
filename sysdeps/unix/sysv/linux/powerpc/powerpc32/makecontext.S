@@ -101,7 +101,7 @@ ENTRY(__makecontext)
 L(exitcode):
 	mr.	r3,r31
 	beq	4f
-	bl	JUMPTARGET(__setcontext)
+	bl	__setcontext@local
 4:	bl	HIDDEN_JUMPTARGET(exit)
 	b	4b
 
@@ -188,7 +188,7 @@ ENTRY(__novec_makecontext)
 L(novec_exitcode):
 	mr.	r3,r31
 	beq	4f
-	bl	JUMPTARGET(__novec_setcontext)
+	bl	__novec_setcontext@local
 4:	bl	HIDDEN_JUMPTARGET(exit)
 	b	4b
 
@@ -206,7 +206,7 @@ compat_symbol (libc, __novec_makecontext, makecontext, GLIBC_2_3_3)
 	compat_text_section
 ENTRY (__makecontext_stub)
 	li	r3,ENOSYS
-	b	JUMPTARGET(__syscall_error)
+	b	__syscall_error@local
 END (__makecontext_stub)
 	.previous
 

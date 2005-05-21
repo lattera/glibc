@@ -20,13 +20,11 @@
 #include <sysdep.h>
 
 	.section	.rodata.cst8,"aM",@progbits,8
-	.align 3
+	.align	2
 .LC0:	/* 0.0 */
 	.long 0x00000000
-	.long 0
 .LC1:	/* 0.5 */
-	.long 0x3fe00000
-	.long 0
+	.long 0x3f000000
 
 	.section	".text"
 	
@@ -47,17 +45,16 @@ ENTRY (__lround)
 	mflr	r10
 	lwz	r9,.LC0@got(10)
 	mtlr	r11
-	lfd	fp12,0(r9)
+	lfs	fp12,0(r9)
 #else
 	lis	r9,.LC0@ha
-	lfd	fp12,.LC0@l(r9)
+	lfs	fp12,.LC0@l(r9)
 #endif
 #ifdef SHARED
-	lwz	r9,.LC1@got(10)
-	lfd	fp10,0(r9)
+	lfs	fp10,.LC1-.LC0(r9)
 #else
 	lis	r9,.LC1@ha
-	lfd	fp10,.LC1@l(r9)
+	lfs	fp10,.LC1@l(r9)
 #endif
 	fcmpu	cr6,fp1,fp12	/* if (x > 0.0)  */
 	ble-	cr6,.L4

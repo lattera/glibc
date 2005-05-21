@@ -1,5 +1,30 @@
 2005-05-17  Alan Modra  <amodra@bigpond.net.au>
 
+	* sysdeps/powerpc/powerpc32/sysdep.h (PSEUDO_RET): Don't use
+	JUMPTARGET.  Instead append @local to __syscall_error.
+	* sysdeps/powerpc/powerpc32/bsd-_setjmp.S: Delete all occurrences
+	of JUMPTARGET.  Instead append @local to labels.
+	* sysdeps/powerpc/powerpc32/bsd-setjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/ppc-mcount.S: Likewise.
+	* sysdeps/powerpc/powerpc32/setjmp-common.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/brk.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/makecontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S: Likewise.
+
+	* sysdeps/powerpc/powerpc32/fpu/s_ceil.S: Use float constants.
+	* sysdeps/powerpc/powerpc32/fpu/s_floor.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_rint.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_trunc.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S: Likewise.  Use one GOT
+	slot to access both constants.
+	* sysdeps/powerpc/powerpc32/fpu/s_round.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_roundf.S: Likewise.
+
 	* sysdeps/powerpc/powerpc32/fpu/s_ceil.S (TWO52.0): Delete.
 	* sysdeps/powerpc/powerpc32/fpu/s_ceilf.S (TWO23.0): Delete.
 	* sysdeps/powerpc/powerpc32/fpu/s_floor.S (TWO52.0): Delete.

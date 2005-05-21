@@ -20,13 +20,11 @@
 #include <sysdep.h>
 
 	.section	.rodata.cst8,"aM",@progbits,8
-	.align 3
+	.align	2
 .LC0:	/* 2**52 */
-	.long 0x43300000
-	.long 0
+	.long 0x59800000
 .LC1:	/* 0.5 */
-	.long 0x3fe00000
-	.long 0
+	.long 0x3f000000
 
 /* double [fp1] round (double x [fp1])
    IEEE 1003.1 round function.  IEEE specifies "round to the nearest 
@@ -47,10 +45,10 @@ ENTRY (__round)
 	mflr	r10
 	lwz	r9,.LC0@got(10)
 	mtlr	r11
-	lfd	fp13,0(r9)
+	lfs	fp13,0(r9)
 #else
 	lis	r9,.LC0@ha
-	lfd	fp13,.LC0@l(r9)
+	lfs	fp13,.LC0@l(r9)
 #endif
 	fabs	fp0,fp1
 	fsub	fp12,fp13,fp13	/* generate 0.0  */
@@ -59,11 +57,10 @@ ENTRY (__round)
 	bnllr-	cr7
 	mtfsfi	7,1		/* Set rounding mode toward 0.  */
 #ifdef SHARED
-	lwz	r9,.LC1@got(10)
-	lfd	fp10,0(r9)
+	lfs	fp10,.LC1-.LC0(r9)
 #else
 	lis	r9,.LC1@ha
-	lfd	fp10,.LC1@l(r9)
+	lfs	fp10,.LC1@l(r9)
 #endif
 	ble-	cr6,.L4
 	fadd	fp1,fp1,fp10	/* x+= 0.5;  */
