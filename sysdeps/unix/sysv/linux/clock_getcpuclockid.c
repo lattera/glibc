@@ -1,5 +1,5 @@
 /* clock_getcpuclockid -- Get a clockid_t for process CPU time.  Linux version.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,11 +38,11 @@ clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
 
 # if !(__ASSUME_POSIX_CPU_TIMERS > 0)
   extern int __libc_missing_posix_cpu_timers attribute_hidden;
-# if !(__ASSUME_POSIX_TIMERS > 0)
+#  if !(__ASSUME_POSIX_TIMERS > 0)
   extern int __libc_missing_posix_timers attribute_hidden;
   if (__libc_missing_posix_timers && !__libc_missing_posix_cpu_timers)
     __libc_missing_posix_cpu_timers = 1;
-# endif
+#  endif
   if (!__libc_missing_posix_cpu_timers)
 # endif
     {
@@ -82,7 +82,7 @@ clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
 	else
 	  return INTERNAL_SYSCALL_ERRNO (r, err);
     }
-# endif
+#endif
 
   /* We don't allow any process ID but our own.  */
   if (pid != 0 && pid != getpid ())
@@ -96,8 +96,8 @@ clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
 
       return 0;
     }
-#else
+#endif
+
   /* We don't have a timer for that.  */
   return ENOENT;
-#endif
 }
