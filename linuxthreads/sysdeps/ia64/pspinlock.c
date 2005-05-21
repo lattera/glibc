@@ -31,7 +31,7 @@ __pthread_spin_lock (pthread_spinlock_t *lock)
 {
   int *p = (int *) lock;
   
-  while (__builtin_expect (__sync_val_compare_and_swap_si (p, 0, 1), 0))
+  while (__builtin_expect (__sync_val_compare_and_swap (p, 0, 1), 0))
     {
       /* Spin without using the atomic instruction.  */
       do
@@ -46,7 +46,7 @@ weak_alias (__pthread_spin_lock, pthread_spin_lock)
 int
 __pthread_spin_trylock (pthread_spinlock_t *lock)
 {
-  return __sync_val_compare_and_swap_si ((int *) lock, 0, 1) == 0 ? 0 : EBUSY;
+  return __sync_val_compare_and_swap ((int *) lock, 0, 1) == 0 ? 0 : EBUSY;
 }
 weak_alias (__pthread_spin_trylock, pthread_spin_trylock)
 

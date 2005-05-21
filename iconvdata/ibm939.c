@@ -1,5 +1,5 @@
 /* Conversion to and from IBM939.
-   Copyright (C) 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 2000-2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@yamato.ibm.co.jp>, 2000.
 
@@ -200,16 +200,14 @@ enum
     if (__builtin_expect (ch >= 0xffff, 0))				      \
       {									      \
 	UNICODE_TAG_HANDLER (ch, 4);					      \
-	rp1 = NULL;							      \
-	rp2 = NULL;							      \
+	goto ibm939_invalid_char;					      \
       }									      \
-    else								      \
-      while (ch > rp1->end)						      \
-	++rp1;								      \
+									      \
+    while (ch > rp1->end)						      \
+      ++rp1;								      \
 									      \
     /* Use the UCS4 table for single byte.  */				      \
-    if (__builtin_expect (rp1 == NULL, 0)				      \
-	|| __builtin_expect (ch < rp1->start, 0)			      \
+    if (__builtin_expect (ch < rp1->start, 0)				      \
 	|| (cp = __ucs4_to_ibm939sb[ch + rp1->idx],			      \
 	    __builtin_expect (cp[0], L'\1') == L'\0' && ch != '\0'))	      \
       {									      \
@@ -217,12 +215,12 @@ enum
 	while (ch > rp2->end)						      \
 	  ++rp2;							      \
 									      \
-	if (__builtin_expect (rp2 == NULL, 0)				      \
-	    || __builtin_expect (ch < rp2->start, 0)			      \
+	if (__builtin_expect (ch < rp2->start, 0)			      \
 	    || (cp = __ucs4_to_ibm939db[ch + rp2->idx],			      \
 		__builtin_expect (cp[0], L'\1')==L'\0' && ch != '\0'))	      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
+	  ibm939_invalid_char:						      \
 	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
 	else								      \

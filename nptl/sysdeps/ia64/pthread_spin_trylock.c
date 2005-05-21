@@ -24,5 +24,5 @@ int
 pthread_spin_trylock (lock)
      pthread_spinlock_t *lock;
 {
-  return __sync_val_compare_and_swap_si ((int *) lock, 0, 1) == 0 ? 0 : EBUSY;
+  return __sync_val_compare_and_swap ((int *) lock, 0, 1) == 0 ? 0 : EBUSY;
 }

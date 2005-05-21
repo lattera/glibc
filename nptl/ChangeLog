@@ -1,3 +1,9 @@
+2005-05-19  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/ia64/pthread_spin_lock.c (pthread_spin_lock): Use
+	__sync_val_compare_and_swap, not explicit _si variant.
+	* sysdeps/ia64/pthread_spin_trylock.c (pthread_spin_trylock): Likewise.
+
 2005-05-03  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #915]

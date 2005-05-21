@@ -1,3 +1,25 @@
+2005-05-19  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/clock_gettime.c (clock_gettime): Fix typo around
+	CLOCK_REALTIME.
+
+	* sysdeps/ia64/bits/atomic.h (__arch_compare_and_exchange_bool_32_acq,
+	__arch_compare_and_exchange_bool_64_acq,
+	__arch_compare_and_exchange_val_32_acq,
+	__arch_compare_and_exchange_val_64_acq, atomic_exchange_and_add):
+	Use __sync builtin without _si or _di suffix.
+
+2005-05-19  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #955]
+	* iconvdata/ibm939.c (BODY): Avoid segfaults with input characters
+	<UFFFF> and above.
+
+2005-05-17  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/clock_getcpuclockid.c
+	(clock_getcpuclockid): Always return a defined value.
+
 2005-05-17  Neal H. Walfield  <neal@gnu.org>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_local): Check [_HAVE_SA_LEN]

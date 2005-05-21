@@ -52,12 +52,12 @@ typedef uintmax_t uatomic_max_t;
   (abort (), 0)
 
 #define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval) \
-  (!__sync_bool_compare_and_swap_si ((void *) (mem), (int) (long) (oldval), \
-				     (int) (long) (newval)))
+  (!__sync_bool_compare_and_swap ((mem), (int) (long) (oldval), \
+				  (int) (long) (newval)))
 
 #define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
-  (!__sync_bool_compare_and_swap_di ((void *) (mem), (long) (oldval), \
-				     (long) (newval)))
+  (!__sync_bool_compare_and_swap ((mem), (long) (oldval), \
+				  (long) (newval)))
 
 #define __arch_compare_and_exchange_val_8_acq(mem, newval, oldval) \
   (abort (), (__typeof (*mem)) 0)
@@ -66,12 +66,11 @@ typedef uintmax_t uatomic_max_t;
   (abort (), (__typeof (*mem)) 0)
 
 #define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
-  __sync_val_compare_and_swap_si ((void *) (mem), (int) (long) (oldval), \
-				  (int) (long) (newval))
+  __sync_val_compare_and_swap ((mem), (int) (long) (oldval), \
+			       (int) (long) (newval))
 
 #define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
-  __sync_val_compare_and_swap_di ((void *) (mem), (long) (oldval), \
-				  (long) (newval))
+  __sync_val_compare_and_swap ((mem), (long) (oldval), (long) (newval))
 
 /* Atomically store newval and return the old value.  */
 #define atomic_exchange_acq(mem, value) \
@@ -80,15 +79,9 @@ typedef uintmax_t uatomic_max_t;
 #define atomic_exchange_rel(mem, value) \
   (__sync_synchronize (), __sync_lock_test_and_set (mem, value))
 
-
 #define atomic_exchange_and_add(mem, value) \
   ({ __typeof (*mem) __result;						      \
-     if (sizeof (*mem) == 4)						      \
-       __result = __sync_fetch_and_add_si ((void *) (mem), (int) (value));    \
-     else if (sizeof (*mem) == 8)					      \
-       __result = __sync_fetch_and_add_di ((void *) (mem), (long) (value));   \
-     else								      \
-       abort ();							      \
+     __result = __sync_fetch_and_add ((mem), (int) (value));		      \
      __result; })
 
 #define atomic_decrement_if_positive(mem) \
