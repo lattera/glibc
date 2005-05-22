@@ -1,3 +1,7 @@
+2005-05-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/mn_MN: Update.  Patch by Sanlig Badral <s_badral@yahoo.com>.
+
 2005-04-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* SUPPORTED: Add UTF-8 locales where UTF-8 was not already supported.
