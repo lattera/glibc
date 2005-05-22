@@ -37,6 +37,7 @@
 #include "dl-librecon.h"
 #include <unsecvars.h>
 #include <dl-cache.h>
+#include <dl-osinfo.h>
 #include <dl-procinfo.h>
 #include <tls.h>
 
