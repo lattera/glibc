@@ -49,8 +49,10 @@ bindresvport (int sd, struct sockaddr_in *sin)
   int i;
 
 #define STARTPORT 600
+#define LOWPORT 200
 #define ENDPORT (IPPORT_RESERVED - 1)
 #define NPORTS	(ENDPORT - STARTPORT + 1)
+  static short startport = STARTPORT;
 
   if (sin == (struct sockaddr_in *) 0)
     {
@@ -71,14 +73,23 @@ bindresvport (int sd, struct sockaddr_in *sin)
   res = -1;
   __set_errno (EADDRINUSE);
 
-  for (i = 0; i < NPORTS && res < 0 && errno == EADDRINUSE; ++i)
+  int nports = ENDPORT - startport + 1;
+ again:
+  for (i = 0; i < nports && res < 0 && errno == EADDRINUSE; ++i)
     {
       sin->sin_port = htons (port++);
       if (port > ENDPORT)
 	{
-	  port = STARTPORT;
+	  port = startport;
 	}
       res = __bind (sd, sin, sizeof (struct sockaddr_in));
+    }
+
+  if (i == nports && startport != LOWPORT)
+    {
+      startport = LOWPORT;
+      nports = STARTPORT - LOWPORT;
+      goto again;
     }
 
   return res;

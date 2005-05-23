@@ -1,5 +1,9 @@
 2005-05-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/bindrsvprt.c (bindresvport): Try harder to find a port.
+	If we tried looking at the usual range without success extend the
+	range to even lower ports.q
+
 	* sysdeps/unix/clock_gettime.c (clock_gettime): Revert last patch.
 
 2005-05-22  Andreas Schwab  <schwab@suse.de>
