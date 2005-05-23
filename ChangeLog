@@ -1,8 +1,15 @@
 2005-05-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/pm_getport.c (__get_socket): New function.
+	(pmap_getport): Use it to open a non-reserved socket to the portmapper
+	for TCP.
+	* include/rpc/pmap_clnt.h (__get_socket): Declare.
+	* sunrpc/pm_getmaps.c (pmap_getmaps): Use __get_socket to get an
+	non-reserved socket for the portmapper.
+
 	* sunrpc/bindrsvprt.c (bindresvport): Try harder to find a port.
 	If we tried looking at the usual range without success extend the
-	range to even lower ports.q
+	range to even lower ports.
 
 	* sysdeps/unix/clock_gettime.c (clock_gettime): Revert last patch.
 
