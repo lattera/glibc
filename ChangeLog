@@ -1,3 +1,9 @@
+2005-05-22  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #961]
+	* io/sys/sendfile.h: Remove __nonnull from sendfile and sendfile64
+	declarations.
+
 2005-05-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sunrpc/pm_getport.c (__get_socket): New function.

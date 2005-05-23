@@ -67,7 +67,7 @@ pmap_getmaps (struct sockaddr_in *address)
   minutetimeout.tv_usec = 0;
   address->sin_port = htons (PMAPPORT);
 
-  /* Don't need a reserver port to get ports from the portmapper */
+  /* Don't need a reserved port to get ports from the portmapper.  */
   int socket = __get_socket (address);
   if (socket != -1)
     closeit = true;

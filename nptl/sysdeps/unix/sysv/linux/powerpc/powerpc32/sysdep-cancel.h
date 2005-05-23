@@ -1,5 +1,5 @@
 /* Cancellable system call stubs.  Linux/PowerPC version.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>, 2003.
 
@@ -91,8 +91,8 @@
 #  define CENABLE	bl __libc_enable_asynccancel@local
 #  define CDISABLE	bl __libc_disable_asynccancel@local
 # elif defined IS_IN_librt
-#  define CENABLE	bl __librt_enable_asynccancel@local
-#  define CDISABLE	bl __librt_disable_asynccancel@local
+#  define CENABLE	bl JUMPTARGET(__librt_enable_asynccancel)
+#  define CDISABLE	bl JUMPTARGET(__librt_disable_asynccancel)
 # else
 #  error Unsupported library
 # endif
