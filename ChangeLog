@@ -6,6 +6,7 @@
 	* include/rpc/pmap_clnt.h (__get_socket): Declare.
 	* sunrpc/pm_getmaps.c (pmap_getmaps): Use __get_socket to get an
 	non-reserved socket for the portmapper.
+	Based on a patch by Steve Dickson <steved@redhat.com>.
 
 	* sunrpc/bindrsvprt.c (bindresvport): Try harder to find a port.
 	If we tried looking at the usual range without success extend the
