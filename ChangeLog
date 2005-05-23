@@ -1,3 +1,7 @@
+2005-05-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/clock_gettime.c (clock_gettime): Revert last patch.
+
 2005-05-22  Andreas Schwab  <schwab@suse.de>
 
 	* elf/rtld.c: Include <dl-osinfo.h>.

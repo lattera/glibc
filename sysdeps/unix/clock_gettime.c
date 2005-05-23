@@ -100,7 +100,7 @@ clock_gettime (clockid_t clock_id, struct timespec *tp)
       SYSDEP_GETTIME;
 #endif
 
-#ifdef HANDLED_REALTIME
+#ifndef HANDLED_REALTIME
     case CLOCK_REALTIME:
       HANDLE_REALTIME;
       break;
