@@ -423,7 +423,6 @@ changequote(,)dnl
 test -n "$base_machine" || case "$machine" in
 a29k | am29000)	base_machine=a29k machine=a29k ;;
 alpha*)		base_machine=alpha machine=alpha/$machine ;;
-arm*)		base_machine=arm machine=arm/arm32/$machine ;;
 c3[012])	base_machine=cx0 machine=cx0/c30 ;;
 c4[04])		base_machine=cx0 machine=cx0/c40 ;;
 hppa*64*)	base_machine=hppa machine=hppa/hppa64 ;;
@@ -479,7 +478,6 @@ sparc64)
 		base_machine=sparc machine=sparc/sparc64 ;;
 sparc64b)
 		base_machine=sparc machine=sparc/sparc64/sparcv9b ;;
-thumb*)		base_machine=thumb machine=arm/thumb/$machine ;;
 *)		base_machine=$machine ;;
 esac
 changequote([,])dnl
