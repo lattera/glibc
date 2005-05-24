@@ -22,9 +22,13 @@ dist-ports: $(foreach Z,.bz2 .gz,$(distname).tar$Z)
 	md5sum $^
 $(distname).tar:
 	@rm -fr $(basename $@)
+	$(MAKE) -q `find sysdeps -name configure`
 	$(do-export) ports
+	find $(basename $@) -name configure -print | xargs touch
 	tar cf $@ $(basename $@)
 	rm -fr $(basename $@)
+
+sysdeps-of-stem = sysdeps/$* sysdeps/unix/sysv/linux/$*
 
 .PRECIOUS: %.gz %.bz2 # Don't delete output as intermediate files.
 dist-port-%: $(foreach Z,.bz2 .gz,glibc-port-%-$(dist-version).tar$Z)
@@ -33,9 +37,10 @@ glibc-port-%-$(dist-version).tar: configure ChangeLog
 	@rm -fr $(basename $@)
 	$(do-export) -l ports
 	rm -f $(basename $@)/ChangeLog.[a-z]*
-	$(do-export) ports/ChangeLog.$* \
-		     ports/sysdeps/$* ports/sysdeps/unix/sysv/linux/$*
+	$(MAKE) -q `find $(sysdeps-of-stem) -name configure`
+	$(do-export) ports/ChangeLog.$* $(addprefix ports/,$(sysdeps-of-stem))
 	mv $(basename $@)/ports/* $(basename $@)/
 	rmdir $(basename $@)/ports
+	find $(basename $@) -name configure -print | xargs touch
 	tar cf $@ $(basename $@)
 	rm -fr $(basename $@)
