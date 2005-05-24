@@ -1,0 +1,4 @@
+case "$machine" in
+arm*)		base_machine=arm machine=arm/arm32/$machine ;;
+thumb*)		base_machine=thumb machine=arm/thumb/$machine ;;
+esac

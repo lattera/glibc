@@ -1,0 +1,13 @@
+2005-05-23  Roland McGrath  <roland@redhat.com>
+
+	* ChangeLog.arm: New file (this one).
+	* sysdeps/arm, sysdeps/unix/arm, sysdeps/unix/sysv/linux/arm:
+	Subdirectories moved here from main repository.
+	* sysdeps/arm/preconfigure: New file.
+	* sysdeps/arm/shlib-versions: New file.
+
+Local Variables:
+mode: change-log
+left-margin: 8
+fill-column: 74
+End:
