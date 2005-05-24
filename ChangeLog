@@ -1,3 +1,9 @@
+2005-03-22  Roland McGrath  <roland@redhat.com>
+
+	* Makefile ($(distname).tar): Fail if sysdeps/.../configure files are
+	not all up to date.  Touch configure files after cvs export.
+	(glibc-port-%-$(dist-version).tar): Likewise.
+
 2004-10-22  Roland McGrath  <roland@frob.com>
 
 	* Makefile (dist, dist-ports): New target.
