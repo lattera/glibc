@@ -131,6 +131,33 @@ lose: SYSCALL_PIC_SETUP							      \
 0:  popl %ebx;								      \
     cfi_adjust_cfa_offset (-4);						      \
     addl $_GLOBAL_OFFSET_TABLE+[.-0b], %ebx;
+
+# ifndef HAVE_HIDDEN
+#  define SETUP_PIC_REG(reg) \
+  call 1f;								      \
+  .subsection 1;							      \
+1:movl (%esp), %e##reg;							      \
+  ret;									      \
+  .previous
+# else
+#  define SETUP_PIC_REG(reg) \
+  .ifndef __i686.get_pc_thunk.reg;					      \
+  .section .gnu.linkonce.t.__i686.get_pc_thunk.reg,"ax",@progbits;	      \
+  .globl __i686.get_pc_thunk.reg;					      \
+  .hidden __i686.get_pc_thunk.reg;					      \
+  .type __i686.get_pc_thunk.reg,@function;				      \
+__i686.get_pc_thunk.reg:						      \
+  movl (%esp), %e##reg;							      \
+  ret;									      \
+  .size __i686.get_pc_thunk.reg, . - __i686.get_pc_thunk.reg;		      \
+  .previous;								      \
+  .endif;								      \
+  call __i686.get_pc_thunk.reg
+# endif
+
+# define LOAD_PIC_REG(reg) \
+  SETUP_PIC_REG(reg); addl $_GLOBAL_OFFSET_TABLE_, %e##reg
+
 #else
 #define JUMPTARGET(name)	name
 #define SYSCALL_PIC_SETUP	/* Nothing.  */
