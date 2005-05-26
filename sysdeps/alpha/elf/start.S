@@ -77,7 +77,7 @@ _start:
 	.end _start
 
 /* For ECOFF backwards compatibility. */
-weak_alias(_start, __start)
+weak_alias (_start, __start)
 
 /* Define a symbol for the first piece of initialized data.  */
 	.data

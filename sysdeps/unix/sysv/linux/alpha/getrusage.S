@@ -145,5 +145,5 @@ strong_alias(__getrusage_tv64, ____getrusage_tv64)
 default_symbol_version (____getrusage_tv64, __getrusage, GLIBC_2.1)
 default_symbol_version (__getrusage_tv64, getrusage, GLIBC_2.1)
 #else
-weak_alias(__getrusage, getrusage)
+weak_alias (__getrusage, getrusage)
 #endif

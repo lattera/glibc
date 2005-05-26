@@ -60,12 +60,12 @@ float __ieee754_lgammaf_r(float x, int* signgam)
 {
     return __libm_lgammaf(x, signgam, sizeof(*signgam));
 }
-weak_alias(__ieee754_lgammaf_r, lgammaf_r)
+weak_alias (__ieee754_lgammaf_r, lgammaf_r)
 
 #ifndef _LIBC
 float __ieee754_gammaf_r(float x, int* signgam)
 {
     return __libm_lgammaf(x, signgam, sizeof(*signgam));
 }
-weak_alias(__ieee754_gammaf_r, gammaf_r)
+weak_alias (__ieee754_gammaf_r, gammaf_r)
 #endif

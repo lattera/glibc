@@ -81,4 +81,4 @@ C_LABEL(_mcount)
 	ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(_mcount))
 
 #undef mcount
-weak_alias(_mcount, mcount)
+weak_alias (_mcount, mcount)

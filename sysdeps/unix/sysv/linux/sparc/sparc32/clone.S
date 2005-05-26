@@ -104,4 +104,4 @@ __thread_start:
 
 	.size	__thread_start, .-__thread_start
 
-weak_alias(__clone, clone)
+weak_alias (__clone, clone)

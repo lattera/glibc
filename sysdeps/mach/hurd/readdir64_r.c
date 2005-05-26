@@ -109,4 +109,4 @@ __readdir64_r (DIR *dirp, struct dirent64 *entry, struct dirent64 **result)
   return dp ? 0 : err ? errno : 0;
 }
 
-weak_alias(__readdir64_r, readdir64_r)
+weak_alias (__readdir64_r, readdir64_r)

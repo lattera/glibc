@@ -66,7 +66,7 @@ double __ieee754_lgamma(double x)
 #endif
     return __libm_lgamma(x, &signgam, sizeof(signgam));
 }
-weak_alias(__ieee754_lgamma, lgamma)
+weak_alias (__ieee754_lgamma, lgamma)
 
 double __ieee754_gamma(double x)
 {
@@ -77,4 +77,4 @@ double __ieee754_gamma(double x)
 #endif
     return __libm_lgamma(x, &signgam, sizeof(signgam));
 }
-weak_alias(__ieee754_gamma, gamma)
+weak_alias (__ieee754_gamma, gamma)

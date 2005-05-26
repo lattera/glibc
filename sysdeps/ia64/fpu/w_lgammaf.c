@@ -66,7 +66,7 @@ float __ieee754_lgammaf(float x)
 #endif
     return __libm_lgammaf(x, &signgam, sizeof(signgam));
 }
-weak_alias(__ieee754_lgammaf, lgammaf)
+weak_alias (__ieee754_lgammaf, lgammaf)
 
 float __ieee754_gammaf(float x)
 {
@@ -77,4 +77,4 @@ float __ieee754_gammaf(float x)
 #endif
     return __libm_lgammaf(x, &signgam, sizeof(signgam));
 }
-weak_alias(__ieee754_gammaf, gammaf)
+weak_alias (__ieee754_gammaf, gammaf)

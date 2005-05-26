@@ -59,12 +59,12 @@ long double __ieee754_lgammal_r(long double x, int* signgam)
 {
     return __libm_lgammal(x, signgam, sizeof(*signgam));
 }
-weak_alias(__ieee754_lgammal_r, lgammal_r)
+weak_alias (__ieee754_lgammal_r, lgammal_r)
 
 #ifndef _LIBC
 long double __ieee754_gammal_r(long double x, int* signgam)
 {
     return __libm_lgammal(x, signgam, sizeof(*signgam));
 }
-weak_alias(__ieee754_gammal_r, gammal_r)
+weak_alias (__ieee754_gammal_r, gammal_r)
 #endif

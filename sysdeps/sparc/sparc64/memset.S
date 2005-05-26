@@ -312,4 +312,4 @@ ENTRY(__bzero)
 	 mov		%o5, %o0
 END(__bzero)
 
-weak_alias(__bzero, bzero)
+weak_alias (__bzero, bzero)

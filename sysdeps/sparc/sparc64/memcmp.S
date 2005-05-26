@@ -139,5 +139,5 @@ ENTRY(memcmp)
 END(memcmp)
 
 #undef bcmp
-weak_alias(memcmp, bcmp)
+weak_alias (memcmp, bcmp)
 libc_hidden_builtin_def (memcmp)

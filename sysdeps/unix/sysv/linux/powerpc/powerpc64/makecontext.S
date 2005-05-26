@@ -180,4 +180,4 @@ L(gotexitcodeaddr):
 #endif
 END(__makecontext)
 
-weak_alias(__makecontext, makecontext)
+weak_alias (__makecontext, makecontext)

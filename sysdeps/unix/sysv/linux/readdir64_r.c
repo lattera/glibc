@@ -4,4 +4,4 @@
 
 #include <sysdeps/unix/readdir_r.c>
 
-weak_alias(__readdir64_r, readdir64_r)
+weak_alias (__readdir64_r, readdir64_r)

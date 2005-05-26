@@ -60,4 +60,4 @@ __sigaltstack (argss, oss)
 
   return 0;
 }
-weak_alias(__sigaltstack, sigaltstack)
+weak_alias (__sigaltstack, sigaltstack)

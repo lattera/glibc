@@ -38,13 +38,13 @@ L(0):	fnabs   fp1,fp1
 	blr
 	END (__copysign)
 
-weak_alias(__copysign,copysign)
+weak_alias (__copysign,copysign)
 
 /* It turns out that it's safe to use this code even for single-precision.  */
-weak_alias(__copysign,copysignf)
+weak_alias (__copysign,copysignf)
 strong_alias(__copysign,__copysignf)
 
 #ifdef NO_LONG_DOUBLE
-weak_alias(__copysign,copysignl)
+weak_alias (__copysign,copysignl)
 strong_alias(__copysign,__copysignl)
 #endif

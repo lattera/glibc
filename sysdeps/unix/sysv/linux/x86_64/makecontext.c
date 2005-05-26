@@ -110,4 +110,4 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 }
 
 
-weak_alias(__makecontext, makecontext)
+weak_alias (__makecontext, makecontext)

@@ -171,7 +171,7 @@ __monstartup (lowpc, highpc)
 
   __moncontrol(1);
 }
-weak_alias(__monstartup, monstartup)
+weak_alias (__monstartup, monstartup)
 
 
 static void

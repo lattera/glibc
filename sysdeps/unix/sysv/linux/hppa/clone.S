@@ -96,4 +96,4 @@ thread_start:
 
 PSEUDO_END(__clone)
 
-weak_alias(__clone, clone)
+weak_alias (__clone, clone)

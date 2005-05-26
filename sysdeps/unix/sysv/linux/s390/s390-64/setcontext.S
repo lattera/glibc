@@ -69,4 +69,4 @@ ENTRY(__setcontext)
 	br	%r14
 END(__setcontext)
 
-weak_alias(__setcontext, setcontext)
+weak_alias (__setcontext, setcontext)

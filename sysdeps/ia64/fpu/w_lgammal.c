@@ -65,7 +65,7 @@ long double __ieee754_lgammal(long double x)
 #endif
     return __libm_lgammal(x, &signgam, sizeof(signgam));
 }
-weak_alias(__ieee754_lgammal, lgammal)
+weak_alias (__ieee754_lgammal, lgammal)
 
 long double __ieee754_gammal(long double x)
 {
@@ -76,4 +76,4 @@ long double __ieee754_gammal(long double x)
 #endif
     return __libm_lgammal(x, &signgam, sizeof(signgam));
 }
-weak_alias(__ieee754_gammal, gammal)
+weak_alias (__ieee754_gammal, gammal)

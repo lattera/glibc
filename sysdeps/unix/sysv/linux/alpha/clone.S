@@ -146,4 +146,4 @@ thread_start:
 
 	.end thread_start
 
-weak_alias(__clone, clone)
+weak_alias (__clone, clone)

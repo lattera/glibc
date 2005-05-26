@@ -152,4 +152,4 @@ ENTRY(memset)
 END(memset)
 libc_hidden_builtin_def (memset)
 
-weak_alias(__bzero, bzero)
+weak_alias (__bzero, bzero)

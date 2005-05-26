@@ -160,6 +160,6 @@ ENTRY(__stpcpy)
 	 nop
 END(__stpcpy)
 
-weak_alias(__stpcpy, stpcpy)
+weak_alias (__stpcpy, stpcpy)
 libc_hidden_def (__stpcpy)
 libc_hidden_builtin_def (stpcpy)

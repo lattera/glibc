@@ -114,4 +114,4 @@ L(exitcode):
 	cfi_startproc
 END(__makecontext)
 
-weak_alias(__makecontext, makecontext)
+weak_alias (__makecontext, makecontext)
