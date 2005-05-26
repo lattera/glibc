@@ -48,4 +48,4 @@ ENTRY(__swapcontext)
 #endif
 
 END(__swapcontext)
-weak_alias(__swapcontext, swapcontext)
+weak_alias (__swapcontext, swapcontext)

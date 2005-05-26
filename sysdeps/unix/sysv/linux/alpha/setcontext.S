@@ -32,4 +32,4 @@
 PSEUDO(__setcontext, sigreturn, 1)
 	ret
 PSEUDO_END(__setcontext)
-weak_alias(__setcontext, setcontext)
+weak_alias (__setcontext, setcontext)

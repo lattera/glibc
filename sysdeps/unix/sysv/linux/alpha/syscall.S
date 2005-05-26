@@ -74,4 +74,4 @@ $error:
 
 END(__syscall)
 
-weak_alias(__syscall, syscall)
+weak_alias (__syscall, syscall)

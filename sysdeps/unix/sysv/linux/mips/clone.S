@@ -163,4 +163,4 @@ L(gotpid):
 
 	END(__thread_start)
 
-weak_alias(__clone, clone)
+weak_alias (__clone, clone)
