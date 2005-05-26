@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux.
-   Copyright (C) 1995-1999, 2000, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,9 +44,9 @@
 #define O_ASYNC		020000	/* fcntl, for BSD compatibility */
 
 #ifdef __USE_GNU
-# define O_DIRECT	040000	/* Direct disk access.  */
 # define O_DIRECTORY	0100000	/* Must be a directory.  */
 # define O_NOFOLLOW	0200000	/* Do not follow links.  */
+# define O_DIRECT	02000000 /* Direct disk access.  */
 # define O_NOATIME	04000000 /* Do not set atime.  */
 #endif
 
