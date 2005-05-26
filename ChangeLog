@@ -1,3 +1,18 @@
+2005-05-26  Andreas Schwab  <schwab@suse.de>
+
+	* locale/Makefile (CFLAGS-loadlocale.c): Don't define.
+
+2005-05-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h (O_DIRECT): Fix value.
+	Reported by Colin Gibbs <colin@gibbsonline.net>.  [BZ #954]
+
+2005-05-17  Alan Modra  <amodra@bigpond.net.au>
+
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S (__longjmp): Corrent
+	_dl_hwcap access in PIC && !SHARED case.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: Likewise.
+
 2005-05-25  Dwayne Grant McConnell  <dgm69@us.ibm.com>
 
 	* gmon/gmon.c: Add space inf weak_alias use.

@@ -100,7 +100,6 @@ locale-CPPFLAGS := -DLOCALE_PATH='$(localepath)' \
 CFLAGS-charmap.c = -Wno-write-strings -Wno-char-subscripts
 CFLAGS-locfile.c = -Wno-write-strings -Wno-char-subscripts
 CFLAGS-charmap-dir.c = -Wno-write-strings
-CFLAGS-loadlocale.c = $(fno-unit-at-a-time)
 
 # This makes sure -DNOT_IN_libc is passed for all these modules.
 cpp-srcs-left := $(addsuffix .c,$(localedef-modules) $(localedef-aux) \

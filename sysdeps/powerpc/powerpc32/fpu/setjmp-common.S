@@ -74,20 +74,20 @@ ENTRY (BP_SYM (__sigsetjmp))
 	stw  r31,((JB_GPRS+17)*4)(3)
 	stfd fp31,((JB_FPRS+17*2)*4)(3)
 #ifndef __NO_VMX__
-#ifdef PIC
+# ifdef PIC
 	mflr    r6
 	bl      _GLOBAL_OFFSET_TABLE_@local-4
 	mflr    r5
-#ifdef SHARED
+#  ifdef SHARED
 	lwz     r5,_rtld_global_ro@got(r5)
 	mtlr    r6
 	lwz     r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r5)
-#else
-	lwz     r5,_rtld_global_ro@got(r5)
+#  else
+	lwz     r5,_dl_hwcap@got(r5)
 	mtlr    r6
 	lwz     r5,0(r5)
-#endif
-#else
+#  endif
+# else
 	lis	r5,_dl_hwcap@ha
 	lwz     r5,_dl_hwcap@l(r5)
 #endif

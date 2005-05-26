@@ -41,7 +41,7 @@ ENTRY (BP_SYM (__longjmp))
 	mtlr    r6
 	lwz     r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r5)
 #  else
-	lwz     r5,_rtld_global_ro@got(r5)
+	lwz     r5,_dl_hwcap@got(r5)
 	mtlr    r6
 	lwz     r5,0(r5)
 #  endif
