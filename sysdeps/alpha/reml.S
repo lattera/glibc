@@ -38,7 +38,7 @@
 	.text
 	.align	4
 	.globl	__reml
-	.type	__reml, @function
+	.type	__reml, @funcnoplt
 	.usepv	__reml, no
 
 	cfi_startproc

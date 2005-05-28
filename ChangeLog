@@ -1,3 +1,23 @@
+2005-05-28  Richard Henderson  <rth@redhat.com>
+
+	* elf/elf.h (DT_ALPHA_PLTRO, DT_ALPHA_NUM): New.
+	* sysdeps/alpha/dl-dtprocnum.h: New file.
+	* sysdeps/alpha/dl-machine.h (DT_ALPHA): New.
+	(elf_machine_load_address): Simplify to rely on gprel relocations.
+	(elf_machine_runtime_setup): Handle DT_ALPHA_PLTRO plt format.
+	Remove thread safety workaround for binutils 2.6.
+	(elf_machine_fixup_plt): Handle DT_ALPHA_PLTRO plt format.
+	* sysdeps/alpha/dl-trampoline.S (_dl_runtime_resolve_new): New.
+	(_dl_runtime_profile_new): New.
+	(_dl_runtime_resolve_old): Rename from _dl_runtime_resolve.
+	(_dl_runtime_profile_old): Rename from _dl_runtime_profile.  Fix
+	typo in _dl_call_pltexit argument loading.
+
+	* sysdeps/alpha/div_libc.h (funcnoplt): New.
+	* sysdeps/alpha/divl.S, sysdeps/alpha/divq.S: Use it.
+	* sysdeps/alpha/divqu.S, sysdeps/alpha/reml.S: Likewise.
+	* sysdeps/alpha/remq.S, sysdeps/alpha/remqu.S: Likewise.
+
 2005-05-26  Andreas Schwab  <schwab@suse.de>
 
 	* locale/Makefile (CFLAGS-loadlocale.c): Don't define.

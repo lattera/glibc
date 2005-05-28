@@ -21,13 +21,202 @@
 
 	.set noat
 
-	.globl	_dl_runtime_resolve
-	.ent	_dl_runtime_resolve
+.macro savei regno, offset
+	stq	$\regno, \offset($30)
+	cfi_rel_offset(\regno, \offset)
+.endm
+
+.macro savef regno, offset
+	stt	$f\regno, \offset($30)
+	cfi_rel_offset(\regno+32, \offset)
+.endm
+
+	.align	4
+	.globl	_dl_runtime_resolve_new
+	.ent	_dl_runtime_resolve_new
+
+#undef FRAMESIZE
+#define FRAMESIZE	14*8
+
+_dl_runtime_resolve_new:
+	.frame	$30, FRAMESIZE, $26, 0
+	.mask	0x4000000, 0
+
+	ldah	$29, 0($27)		!gpdisp!1
+	lda	$30, -FRAMESIZE($30)
+	stq	$26, 0*8($30)
+	stq	$16, 2*8($30)
+
+	stq	$17, 3*8($30)
+	lda	$29, 0($29)		!gpdisp!1
+	stq	$18, 4*8($30)
+	mov	$28, $16		/* link_map from .got.plt */
+
+	stq	$19, 5*8($30)
+	mov	$25, $17		/* offset of reloc entry */
+	stq	$20, 6*8($30)
+	mov	$26, $18		/* return address */
+
+	stq	$21, 7*8($30)
+	stt	$f16, 8*8($30)
+	stt	$f17, 9*8($30)
+	stt	$f18, 10*8($30)
+
+	stt	$f19, 11*8($30)
+	stt	$f20, 12*8($30)
+	stt	$f21, 13*8($30)
+	.prologue 2
+
+	bsr	$26, _dl_fixup		!samegp
+	mov	$0, $27
+
+	ldq	$26, 0*8($30)
+	ldq	$16, 2*8($30)
+	ldq	$17, 3*8($30)
+	ldq	$18, 4*8($30)
+	ldq	$19, 5*8($30)
+	ldq	$20, 6*8($30)
+	ldq	$21, 7*8($30)
+	ldt	$f16, 8*8($30)
+	ldt	$f17, 9*8($30)
+	ldt	$f18, 10*8($30)
+	ldt	$f19, 11*8($30)
+	ldt	$f20, 12*8($30)
+	ldt	$f21, 13*8($30)
+	lda	$30, FRAMESIZE($30)
+	jmp	$31, ($27), 0
+	.end	_dl_runtime_resolve_new
+
+	.globl	_dl_runtime_profile_new
+	.type	_dl_runtime_profile_new, @function
+
+#undef FRAMESIZE
+#define FRAMESIZE	20*8
+
+	/* We save the registers in a different order than desired by
+	   .mask/.fmask, so we have to use explicit cfi directives.  */
+	cfi_startproc
+
+_dl_runtime_profile_new:
+	ldah	$29, 0($27)		!gpdisp!2
+	lda	$30, -FRAMESIZE($30)
+	savei	26, 0*8
+	stq	$16, 2*8($30)
+
+	stq	$17, 3*8($30)
+	lda	$29, 0($29)		!gpdisp!2
+	stq	$18, 4*8($30)
+	lda	$1, FRAMESIZE($30)	/* incoming sp value */
+
+	stq	$1, 1*8($30)
+	stq	$19, 5*8($30)
+	stq	$20, 6*8($30)
+	mov	$28, $16		/* link_map from .got.plt */
+
+	stq	$21, 7*8($30)
+	mov	$25, $17		/* offset of reloc entry */
+	stt	$f16, 8*8($30)
+	mov	$26, $18		/* return address */
+
+	stt	$f17, 9*8($30)
+	mov	$30, $19		/* La_alpha_regs address */
+	stt	$f18, 10*8($30)
+	lda	$20, 14*8($30)		/* framesize address */
+
+	stt	$f19, 11*8($30)
+	stt	$f20, 12*8($30)
+	stt	$f21, 13*8($30)
+	stq	$28, 16*8($30)
+	stq	$25, 17*8($30)
+
+	bsr	$26, _dl_profile_fixup	!samegp
+	mov	$0, $27
+
+	/* Discover if we're wrapping this call.  */
+	ldq	$18, 14*8($30)
+	bge	$18, 1f
+
+	ldq	$26, 0*8($30)
+	ldq	$16, 2*8($30)
+	ldq	$17, 3*8($30)
+	ldq	$18, 4*8($30)
+	ldq	$19, 5*8($30)
+	ldq	$20, 6*8($30)
+	ldq	$21, 7*8($30)
+	ldt	$f16, 8*8($30)
+	ldt	$f17, 9*8($30)
+	ldt	$f18, 10*8($30)
+	ldt	$f19, 11*8($30)
+	ldt	$f20, 12*8($30)
+	ldt	$f21, 13*8($30)
+	lda	$30, FRAMESIZE($30)
+	jmp	$31, ($27), 0
+
+1:
+	/* Create a frame pointer and allocate a new argument frame.  */
+	savei	15, 15*8
+	mov	$30, $15
+	cfi_def_cfa_register (15)
+	addq	$18, 15, $18
+	bic	$18, 15, $18
+	subq	$30, $18, $30
+
+	/* Save the call destination around memcpy.  */
+	stq	$0, 14*8($30)
+
+	/* Copy the stack arguments into place.  */
+	lda	$16, 0($30)
+	lda	$17, FRAMESIZE($15)
+	jsr	$26, memcpy
+	ldgp	$29, 0($26)
+
+	/* Reload the argument registers.  */
+	ldq	$27, 14*8($30)
+	ldq	$16, 2*8($15)
+	ldq	$17, 3*8($15)
+	ldq	$18, 4*8($15)
+	ldq	$19, 5*8($15)
+	ldq	$20, 6*8($15)
+	ldq	$21, 7*8($15)
+	ldt	$f16, 8*8($15)
+	ldt	$f17, 9*8($15)
+	ldt	$f18, 10*8($15)
+	ldt	$f19, 11*8($15)
+	ldt	$f20, 12*8($15)
+	ldt	$f21, 13*8($15)
+
+	jsr	$26, ($27), 0
+	ldgp	$29, 0($26)
+
+	/* Set up for call to _dl_call_pltexit.  */
+	ldq	$16, 16*8($15)
+	ldq	$17, 17*8($15)
+	stq	$0, 16*8($15)
+	lda	$18, 0($15)
+	stq	$1, 17*8($15)
+	lda	$19, 16*8($15)
+	stt	$f0, 18*8($15)
+	stt	$f1, 19*8($15)
+	bsr	$26, _dl_call_pltexit	!samegp
+
+	mov	$15, $30
+	cfi_def_cfa_register (30)
+	ldq	$26, 0($30)
+	ldq	$15, 15*8($30)
+	lda	$30, FRAMESIZE($30)
+	ret
+
+	cfi_endproc
+	.size	_dl_runtime_profile_new, .-_dl_runtime_profile_new
+
+	.align	4
+	.globl	_dl_runtime_resolve_old
+	.ent	_dl_runtime_resolve_old
 
 #undef FRAMESIZE
 #define FRAMESIZE	44*8
 
-_dl_runtime_resolve:
+_dl_runtime_resolve_old:
 	lda	$30, -FRAMESIZE($30)
 	.frame	$30, FRAMESIZE, $26
 	/* Preserve all registers that C normally doesn't.  */
@@ -146,30 +335,21 @@ _dl_runtime_resolve:
 	lda	$30, FRAMESIZE($30)
 	jmp	$31, ($27)
 
-	.end	_dl_runtime_resolve
+	.end	_dl_runtime_resolve_old
 
-	.globl	_dl_runtime_profile
-	.usepv	_dl_runtime_profile, no
-	.type	_dl_runtime_profile, @function
+	.globl	_dl_runtime_profile_old
+	.usepv	_dl_runtime_profile_old, no
+	.type	_dl_runtime_profile_old, @function
 
 	/* We save the registers in a different order than desired by
 	   .mask/.fmask, so we have to use explicit cfi directives.  */
 	cfi_startproc
 
-.macro savei regno, offset
-	stq	$\regno, \offset($30)
-	cfi_rel_offset(\regno, \offset)
-.endm
-
-.macro savef regno, offset
-	stt	$f\regno, \offset($30)
-	cfi_rel_offset(\regno+32, \offset)
-.endm
-
 #undef FRAMESIZE
 #define FRAMESIZE	50*8
 
-_dl_runtime_profile:
+	.align	4
+_dl_runtime_profile_old:
 	lda	$30, -FRAMESIZE($30)
 	cfi_adjust_cfa_offset (FRAMESIZE)
 
@@ -340,8 +520,8 @@ _dl_runtime_profile:
 	ldgp	$29, 0($26)
 
 	/* Set up for call to _dl_call_pltexit.  */
-	ldq	$16, 48($15)
-	ldq	$17, 49($15)
+	ldq	$16, 48*8($15)
+	ldq	$17, 49*8($15)
 	stq	$0, 46*8($15)
 	lda	$18, 0($15)
 	stq	$1, 47*8($15)
@@ -358,4 +538,4 @@ _dl_runtime_profile:
 	ret
 
 	cfi_endproc
-	.size	_dl_runtime_profile, .-_dl_runtime_profile
+	.size	_dl_runtime_profile_old, .-_dl_runtime_profile_old
