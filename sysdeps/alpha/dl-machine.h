@@ -33,6 +33,9 @@
    where the dynamic linker should not map anything.  */
 #define ELF_MACHINE_USER_ADDRESS_MASK	0x120000000UL
 
+/* Translate a processor specific dynamic tag to the index in l_info array.  */
+#define DT_ALPHA(x) (DT_ALPHA_##x - DT_LOPROC + DT_NUM)
+
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
 elf_machine_matches_host (const Elf64_Ehdr *ehdr)
@@ -55,104 +58,73 @@ elf_machine_dynamic (void)
 }
 
 /* Return the run-time load address of the shared object.  */
+
 static inline Elf64_Addr
 elf_machine_load_address (void)
 {
-  /* NOTE: While it is generally unfriendly to put data in the text
-     segment, it is only slightly less so when the "data" is an
-     instruction.  While we don't have to worry about GLD just yet, an
-     optimizing linker might decide that our "data" is an unreachable
-     instruction and throw it away -- with the right switches, DEC's
-     linker will do this.  What ought to happen is we should add
-     something to GAS to allow us access to the new GPREL_HI32/LO32
-     relocation types stolen from OSF/1 3.0.  */
-  /* This code relies on the fact that BRADDR relocations do not
-     appear in dynamic relocation tables.  Not that that would be very
-     useful anyway -- br/bsr has a 4MB range and the shared libraries
-     are usually many many terabytes away.  */
-
-  Elf64_Addr dot;
-  long int zero_disp;
-
-  asm("br %0, 1f\n"
-      "0:\n\t"
-      "br $0, 2f\n"
-      "1:\n\t"
-      ".section\t.data\n"
-      "2:\n\t"
-      ".quad 0b\n\t"
-      ".previous"
-      : "=r"(dot));
-
-  zero_disp = *(int *) dot;
-  zero_disp = (zero_disp << 43) >> 41;
-
-  return dot - *(Elf64_Addr *) (dot + 4 + zero_disp);
+  /* This relies on the compiler using gp-relative addresses for static symbols.  */
+  static void *dot = &dot;
+  return (void *)&dot - dot;
 }
 
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
 static inline int
-elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
+elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 {
-  Elf64_Addr plt;
-  extern void _dl_runtime_resolve (void);
-  extern void _dl_runtime_profile (void);
+  extern char _dl_runtime_resolve_new[] attribute_hidden;
+  extern char _dl_runtime_profile_new[] attribute_hidden;
+  extern char _dl_runtime_resolve_old[] attribute_hidden;
+  extern char _dl_runtime_profile_old[] attribute_hidden;
 
-  if (l->l_info[DT_JMPREL] && lazy)
+  struct pltgot {
+    char *resolve;
+    struct link_map *link;
+  };
+
+  struct pltgot *pg;
+  long secureplt;
+  char *resolve;
+
+  if (map->l_info[DT_JMPREL] == 0 || !lazy)
+    return lazy;
+
+  /* Check to see if we're using the read-only plt form.  */
+  secureplt = map->l_info[DT_ALPHA(PLTRO)] != 0;
+
+  /* If the binary uses the read-only secure plt format, PG points to
+     the .got.plt section, which is the right place for ld.so to place
+     its hooks.  Otherwise, PG is currently pointing at the start of
+     the plt; the hooks go at offset 16.  */
+  pg = (struct pltgot *) D_PTR (map, l_info[DT_PLTGOT]);
+  pg += !secureplt;
+
+  /* This function will be called to perform the relocation.  They're
+     not declared as functions to convince the compiler to use gp
+     relative relocations for them.  */
+  if (secureplt)
+    resolve = _dl_runtime_resolve_new;
+  else
+    resolve = _dl_runtime_resolve_old;
+
+  if (__builtin_expect (profile, 0))
     {
-      /* The GOT entries for the functions in the PLT have not been
-	 filled in yet.  Their initial contents are directed to the
-	 PLT which arranges for the dynamic linker to be called.  */
-      plt = D_PTR (l, l_info[DT_PLTGOT]);
-
-      /* This function will be called to perform the relocation.  */
-      if (__builtin_expect (profile, 0))
-	{
-	  *(Elf64_Addr *)(plt + 16) = (Elf64_Addr) &_dl_runtime_profile;
-
-	  if (GLRO(dl_profile) != NULL
-	      && _dl_name_match_p (GLRO(dl_profile), l))
-	    {
-	      /* This is the object we are looking for.  Say that we really
-		 want profiling and the timers are started.  */
-	      GL(dl_profile_map) = l;
-	    }
-	}
+      if (secureplt)
+	resolve = _dl_runtime_profile_new;
       else
-        *(Elf64_Addr *)(plt + 16) = (Elf64_Addr) &_dl_runtime_resolve;
+	resolve = _dl_runtime_profile_old;
 
-      /* Identify this shared object */
-      *(Elf64_Addr *)(plt + 24) = (Elf64_Addr) l;
-
-      /* If the first instruction of the plt entry is not
-	 "br $28, plt0", we have to reinitialize .plt for lazy relocation.  */
-      if (*(unsigned int *)(plt + 32) != 0xc39ffff7)
+      if (GLRO(dl_profile) && _dl_name_match_p (GLRO(dl_profile), map))
 	{
-	  unsigned int val = 0xc39ffff7;
-	  unsigned int *slot, *end;
-	  const Elf64_Rela *rela = (const Elf64_Rela *)
-				   D_PTR (l, l_info[DT_JMPREL]);
-	  Elf64_Addr l_addr = l->l_addr;
-
-	  /* br t12,.+4; ldq t12,12(t12); nop; jmp t12,(t12),.+4 */
-	  *(unsigned long *)plt = 0xa77b000cc3600000;
-	  *(unsigned long *)(plt + 8) = 0x6b7b000047ff041f;
-	  slot = (unsigned int *)(plt + 32);
-	  end = (unsigned int *)(plt + 32
-				 + l->l_info[DT_PLTRELSZ]->d_un.d_val / 2);
-	  while (slot < end)
-	    {
-	      /* br at,.plt+0 */
-	      *slot = val;
-	      *(Elf64_Addr *) rela->r_offset = (Elf64_Addr) slot - l_addr;
-	      val -= 3;
-	      slot += 3;
-	      ++rela;
-	    }
+	  /* This is the object we are looking for.  Say that we really
+	     want profiling and the timers are started.  */
+	  GL(dl_profile_map) = map;
 	}
     }
+
+  pg->resolve = resolve;
+  pg->link = map;
 
   return lazy;
 }
@@ -280,7 +252,7 @@ $fixup_stack:							\n\
 /* Fix up the instructions of a PLT entry to invoke the function
    rather than the dynamic linker.  */
 static inline Elf64_Addr
-elf_machine_fixup_plt (struct link_map *l, lookup_t t,
+elf_machine_fixup_plt (struct link_map *map, lookup_t t,
 		       const Elf64_Rela *reloc,
 		       Elf64_Addr *got_addr, Elf64_Addr value)
 {
@@ -291,10 +263,16 @@ elf_machine_fixup_plt (struct link_map *l, lookup_t t,
   /* Store the value we are going to load.  */
   *got_addr = value;
 
+  /* If this binary uses the read-only secure plt format, we're done.  */
+  if (map->l_info[DT_ALPHA(PLTRO)])
+    return value;
+
+  /* Otherwise we have to modify the plt entry in place to do the branch.  */
+
   /* Recover the PLT entry address by calculating reloc's index into the
      .rela.plt, and finding that entry in the .plt.  */
-  rela_plt = (void *) D_PTR (l, l_info[DT_JMPREL]);
-  plte = (void *) (D_PTR (l, l_info[DT_PLTGOT]) + 32);
+  rela_plt = (const Elf64_Rela *) D_PTR (map, l_info[DT_JMPREL]);
+  plte = (Elf64_Word *) (D_PTR (map, l_info[DT_PLTGOT]) + 32);
   plte += 3 * (reloc - rela_plt);
 
   /* Find the displacement from the plt entry to the function.  */
