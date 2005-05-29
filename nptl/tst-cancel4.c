@@ -84,6 +84,8 @@ static pthread_barrier_t b2;
 # define IPC_ADDVAL 0
 #endif
 
+#define WRITE_BUFFER_SIZE 4096
+
 /* Cleanup handling test.  */
 static int cl_called;
 
@@ -220,7 +222,7 @@ tf_write  (void *arg)
   ssize_t s;
   pthread_cleanup_push (cl, NULL);
 
-  char buf[100000];
+  char buf[WRITE_BUFFER_SIZE];
   memset (buf, '\0', sizeof (buf));
   s = write (fd, buf, sizeof (buf));
 
@@ -266,7 +268,7 @@ tf_writev  (void *arg)
   ssize_t s;
   pthread_cleanup_push (cl, NULL);
 
-  char buf[100000];
+  char buf[WRITE_BUFFER_SIZE];
   memset (buf, '\0', sizeof (buf));
   struct iovec iov[1] = { [0] = { .iov_base = buf, .iov_len = sizeof (buf) } };
   s = writev (fd, iov, 1);
@@ -2043,11 +2045,29 @@ static struct
 static int
 do_test (void)
 {
-  if (pipe (fds) != 0)
+  int val;
+  socklen_t len;
+
+  if (socketpair (AF_UNIX, SOCK_STREAM, PF_UNIX, fds) != 0)
     {
-      puts ("pipe failed");
+      perror ("socketpair");
       exit (1);
     }
+
+  val = 1;
+  len = sizeof(val);
+  setsockopt (fds[1], SOL_SOCKET, SO_SNDBUF, &val, sizeof(val));
+  if (getsockopt (fds[1], SOL_SOCKET, SO_SNDBUF, &val, &len) < 0)
+    {
+      perror ("getsockopt");
+      exit (1);
+    }
+  if (val >= WRITE_BUFFER_SIZE)
+    {
+      puts ("minimum write buffer size too large");
+      exit (1);
+    }
+  setsockopt (fds[1], SOL_SOCKET, SO_SNDBUF, &val, sizeof(val));
 
   int result = 0;
   size_t cnt;

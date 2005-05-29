@@ -1,3 +1,7 @@
+2005-05-24  Thomas Schwinge  <schwinge@nic-nac-project.de>
+
+	* sysdeps/mach/i386/syscall.S (syscall): Call END.
+
 2005-05-28  Richard Henderson  <rth@redhat.com>
 
 	* elf/elf.h (DT_ALPHA_PLTRO, DT_ALPHA_NUM): New.
