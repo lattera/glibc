@@ -1,3 +1,9 @@
+2005-05-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (DL_SYSDEP_OSCHECK): If
+	GLRO(dl_osversion) has been already set to a value smaller than
+	_dl_discover_osversion (), don't overwrite it here.
+
 2005-05-24  Thomas Schwinge  <schwinge@nic-nac-project.de>
 
 	* sysdeps/mach/i386/syscall.S (syscall): Call END.
@@ -18,9 +24,12 @@
 	typo in _dl_call_pltexit argument loading.
 
 	* sysdeps/alpha/div_libc.h (funcnoplt): New.
-	* sysdeps/alpha/divl.S, sysdeps/alpha/divq.S: Use it.
-	* sysdeps/alpha/divqu.S, sysdeps/alpha/reml.S: Likewise.
-	* sysdeps/alpha/remq.S, sysdeps/alpha/remqu.S: Likewise.
+	* sysdeps/alpha/divl.S: Use it.
+	* sysdeps/alpha/divq.S: Likewise
+	* sysdeps/alpha/divqu.S: Likewise.
+	* sysdeps/alpha/reml.S: Likewise.
+	* sysdeps/alpha/remq.S: Likewise.
+	* sysdeps/alpha/remqu.S: Likewise.
 
 2005-05-26  Andreas Schwab  <schwab@suse.de>
 
@@ -39,7 +48,7 @@
 
 2005-05-25  Dwayne Grant McConnell  <dgm69@us.ibm.com>
 
-	* gmon/gmon.c: Add space inf weak_alias use.
+	* gmon/gmon.c: Add space in weak_alias use.
 	* linuxthreads/sysdeps/unix/sysv/linux/mips/vfork.S: Likewise.
 	* sysdeps/alpha/htonl.S: Likewise.
 	* sysdeps/alpha/htons.S: Likewise.
