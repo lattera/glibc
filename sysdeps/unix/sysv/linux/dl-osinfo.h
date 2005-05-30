@@ -145,7 +145,9 @@ _dl_discover_osversion (void)
     int version = _dl_discover_osversion ();				      \
     if (__builtin_expect (version >= 0, 1))				      \
       {									      \
-	GLRO(dl_osversion) = version;					      \
+	if (__builtin_expect (GLRO(dl_osversion) == 0, 1)		      \
+	    || GLRO(dl_osversion) > version)				      \
+	  GLRO(dl_osversion) = version;					      \
 									      \
 	/* Now we can test with the required version.  */		      \
 	if (__LINUX_KERNEL_VERSION > 0 && version < __LINUX_KERNEL_VERSION)   \
