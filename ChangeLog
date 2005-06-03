@@ -1,3 +1,9 @@
+2005-06-01  Roland McGrath  <roland@redhat.com>
+
+	[BZ #959]
+	* posix/tst-mmap.c (main): Fill the test file with enough data for the
+	page size.
+
 2005-05-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/dl-osinfo.h (DL_SYSDEP_OSCHECK): If
