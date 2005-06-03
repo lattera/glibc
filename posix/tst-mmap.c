@@ -30,7 +30,7 @@ main (void)
   for (c = 0; c < sizeof (buf); ++c)
     buf[c] = '0' + (c % 10);
 
-  for (c = 0; c < 20; ++c)
+  for (c = 0; c < (ps * 4) / sizeof (buf); ++c)
     if (fwrite (buf, 1, sizeof (buf), fp) != sizeof (buf))
       {
 	printf ("`fwrite' failed: %m\n");
@@ -40,7 +40,7 @@ main (void)
   assert (ps + 1000 < c * sizeof (buf));
 
   /* First try something which is not allowed: map at an offset which is
-     not module the pagesize.  */
+     not modulo the pagesize.  */
   ptr = mmap (NULL, 1000, PROT_READ, MAP_SHARED, fd, ps - 1);
   if (ptr != MAP_FAILED)
     {
