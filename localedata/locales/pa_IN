@@ -122,8 +122,8 @@ mon         "<U0A1C><U0A28><U0A35><U0A30><U0A40>";/
 
 %
 % Equivalent of AM PM
-am_pm       "<U0A38><U0035><U0A47><U0A30><U0A47>";/
-            "<U0A36><U0A3E><U002E>"
+am_pm       "<U0A38><U0A35><U0A47><U0A30><U0A47>";/
+            "<U0A36><U0A3E><U0A2E>"
 
 %
 % Appropriate date and time representation

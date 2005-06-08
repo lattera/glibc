@@ -1,3 +1,9 @@
+2005-05-28  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #622]
+	* locales/pa_IN (am_pm): Fix typos.
+	Patch by Denis Barbier <barbier@linuxfr.org>.
+
 2005-05-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/mn_MN: Update.  Patch by Sanlig Badral <s_badral@yahoo.com>.
