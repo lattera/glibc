@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,4 +31,4 @@ ENTRY (__syscall_error)
 	rsb r0, r0, $0
 
 #define __syscall_error __syscall_error_1
-#include <sysdeps/unix/arm/sysdep.S>
+#include <ports/sysdeps/unix/arm/sysdep.S>

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
    02111-1307 USA.  */
 
 #include <sysdeps/unix/sysdep.h>
-#include <sysdeps/arm/sysdep.h>
+#include <ports/sysdeps/arm/sysdep.h>
 
 /* Some definitions to allow the assembler in sysdeps/unix/ to build
    without needing ARM-specific versions of all the files.  */

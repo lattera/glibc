@@ -1,3 +1,9 @@
+2005-06-09  Phil Blundell  <pb@reciva.com>
+
+	* sysdeps/unix/arm/sysdep.h, sysdeps/unix/sysv/linux/arm/sysdep.h,
+	sysdeps/unix/sysv/linux/arm/sysdep.S: Correct paths to included
+	files.
+
 2005-05-23  Roland McGrath  <roland@redhat.com>
 
 	* ChangeLog.arm: New file (this one).

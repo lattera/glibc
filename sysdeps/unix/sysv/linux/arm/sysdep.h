@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 1995-2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 1995-2000, 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
    ARM changes by Philip Blundell, <pjb27@cam.ac.uk>, May 1997.
@@ -22,7 +22,7 @@
 #define _LINUX_ARM_SYSDEP_H 1
 
 /* There is some commonality.  */
-#include <sysdeps/unix/arm/sysdep.h>
+#include <ports/sysdeps/unix/arm/sysdep.h>
 
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
