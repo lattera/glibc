@@ -27,10 +27,17 @@
 	.text
 ENTRY (__mmap64)
 #ifdef __NR_mmap2
+#ifdef __ARMEB__
+	ldr	ip, [sp, $8]		@ offset low part   
+	str	r5, [sp, #-4]!   
+	ldr	r5, [sp, $8]		@ offset high part   
+	str	r4, [sp, #-4]!   
+#else
 	ldr	ip, [sp, $4]		@ offset low part
 	str	r5, [sp, #-4]!
 	ldr	r5, [sp, $12]		@ offset high part
 	str	r4, [sp, #-4]!
+#endif
 	movs	r4, ip, lsl $20		@ check that offset is page-aligned
 	mov	ip, ip, lsr $12
 	moveqs	r4, r5, lsr $12		@ check for overflow

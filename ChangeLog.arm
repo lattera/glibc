@@ -1,3 +1,9 @@
+2005-06-10  Phil Blundell  <pb@reciva.com>
+
+	Bug #957:
+	* sysdeps/unix/sysv/linux/arm/mmap64.S: Handle offset correctly on
+	big endian machines.  Reported by Sven Henkel <shenkel@gmail.com>.
+
 2005-05-09  Daniel Jacobowitz  <dan@codesourcery.com>
 	    Mark Mitchell  <mark@codesourcery.com>
 
