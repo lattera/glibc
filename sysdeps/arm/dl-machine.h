@@ -110,7 +110,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (GLRO(dl_profile), l))
+	  if (GLRO(dl_profile) != NULL
+	      && _dl_name_match_p (GLRO(dl_profile), l))
 	    /* Say that we really want profiling and the timers are
 	       started.  */
 	    GL(dl_profile_map) = l;
@@ -128,119 +129,6 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 #else
 #define BX(x) "mov\tpc, " #x
 #endif
-
-#ifndef PROF
-# define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
-	.text\n\
-	.globl _dl_runtime_resolve\n\
-	.type _dl_runtime_resolve, #function\n\
-	.align 2\n\
-_dl_runtime_resolve:\n\
-	@ we get called with\n\
-	@ 	stack[0] contains the return address from this call\n\
-	@	ip contains &GOT[n+3] (pointer to function)\n\
-	@	lr points to &GOT[2]\n\
-\n\
-	@ stack arguments\n\
-	stmdb	sp!,{r0-r3}\n\
-\n\
-	@ get pointer to linker struct\n\
-	ldr	r0, [lr, #-4]\n\
-\n\
-	@ prepare to call fixup()\n\
-	@ change &GOT[n+3] into 8*n        NOTE: reloc are 8 bytes each\n\
-	sub	r1, ip, lr\n\
-	sub	r1, r1, #4\n\
-	add	r1, r1, r1\n\
-\n\
-	@ call fixup routine\n\
-	bl	fixup\n\
-\n\
-	@ save the return\n\
-	mov	ip, r0\n\
-\n\
-	@ get arguments and return address back\n\
-	ldmia	sp!, {r0-r3,lr}\n\
-\n\
-	@ jump to the newly found address\n\
-	" BX(ip) "\n\
-\n\
-	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
-\n\
-	.globl _dl_runtime_profile\n\
-	.type _dl_runtime_profile, #function\n\
-	.align 2\n\
-_dl_runtime_profile:\n\
-	@ stack arguments\n\
-	stmdb	sp!, {r0-r3}\n\
-\n\
-	@ get pointer to linker struct\n\
-	ldr	r0, [lr, #-4]\n\
-\n\
-	@ prepare to call fixup()\n\
-	@ change &GOT[n+3] into 8*n        NOTE: reloc are 8 bytes each\n\
-	sub	r1, ip, lr\n\
-	sub	r1, r1, #4\n\
-	add	r1, r1, r1\n\
-\n\
-	@ call profiling fixup routine\n\
-	bl	profile_fixup\n\
-\n\
-	@ save the return\n\
-	mov	ip, r0\n\
-\n\
-	@ get arguments and return address back\n\
-	ldmia	sp!, {r0-r3,lr}\n\
-\n\
-	@ jump to the newly found address\n\
-	" BX(ip) "\n\
-\n\
-	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
-	.previous\n\
-");
-#else // PROF
-# define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
-	.text\n\
-	.globl _dl_runtime_resolve\n\
-	.globl _dl_runtime_profile\n\
-	.type _dl_runtime_resolve, #function\n\
-	.type _dl_runtime_profile, #function\n\
-	.align 2\n\
-_dl_runtime_resolve:\n\
-_dl_runtime_profile:\n\
-	@ we get called with\n\
-	@ 	stack[0] contains the return address from this call\n\
-	@	ip contains &GOT[n+3] (pointer to function)\n\
-	@	lr points to &GOT[2]\n\
-\n\
-	@ stack arguments\n\
-	stmdb	sp!, {r0-r3}\n\
-\n\
-	@ get pointer to linker struct\n\
-	ldr	r0, [lr, #-4]\n\
-\n\
-	@ prepare to call fixup()\n\
-	@ change &GOT[n+3] into 8*n        NOTE: reloc are 8 bytes each\n\
-	sub	r1, ip, lr\n\
-	sub	r1, r1, #4\n\
-	add	r1, r1, r1\n\
-\n\
-	@ call profiling fixup routine\n\
-	bl	fixup\n\
-\n\
-	@ save the return\n\
-	mov	ip, r0\n\
-\n\
-	@ get arguments and return address back\n\
-	ldmia	sp!, {r0-r3,lr}\n\
-\n\
-	@ jump to the newly found address\n\
-	" BX(ip) "\n\
-\n\
-	.size _dl_runtime_profile, .-_dl_runtime_profile\n\
-	.previous\n\
-");
-#endif //PROF
 
 /* Mask identifying addresses reserved for the user program,
    where the dynamic linker should not map anything.  */
@@ -355,10 +243,10 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
    Prelinked libraries may use Elf32_Rela though.  */
 #define ELF_MACHINE_NO_RELA defined RTLD_BOOTSTRAP
 
-#ifdef RESOLVE
+#ifdef RESOLVE_MAP
 
 /* Deal with an out-of-range PC24 reloc.  */
-static Elf32_Addr
+auto Elf32_Addr
 fix_bad_pc24 (Elf32_Addr *const reloc_addr, Elf32_Addr value)
 {
   static void *fix_page;
@@ -425,9 +313,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 #endif
     {
       const Elf32_Sym *const refsym = sym;
-      Elf32_Addr value = RESOLVE (&sym, version, r_type);
-      if (sym)
-	value += sym->st_value;
+      struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+      Elf32_Addr value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
 
       switch (r_type)
 	{
@@ -535,9 +422,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 # ifndef RESOLVE_CONFLICT_FIND_MAP
       const Elf32_Sym *const refsym = sym;
 # endif
-      Elf32_Addr value = RESOLVE (&sym, version, r_type);
-      if (sym)
-	value += sym->st_value;
+      struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+      Elf32_Addr value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
 
       switch (r_type)
 	{
@@ -637,4 +523,4 @@ elf_machine_lazy_rel (struct link_map *map,
     _dl_reloc_bad_type (map, r_type, 1);
 }
 
-#endif /* RESOLVE */
+#endif /* RESOLVE_MAP */

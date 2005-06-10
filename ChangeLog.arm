@@ -1,6 +1,18 @@
 2005-05-09  Daniel Jacobowitz  <dan@codesourcery.com>
 	    Mark Mitchell  <mark@codesourcery.com>
 
+	* sysdeps/arm/bits/link.h: New file.
+	* sysdeps/arm/dl-trampoline.S: New file.
+	* sysdeps/arm/dl-machine.h: Check RESOLVE_MAP instead of RESOLVE.
+	(elf_machine_runtime_setup): Check dl_profile before calling
+	_dl_name_match_p.
+	(ELF_MACHINE_RUNTIME_TRAMPOLINE): Delete.
+	(elf_machine_rel, elf_machine_rela): Use RESOLVE_MAP.
+	(fix_bad_pc24): Use auto instead of static.
+
+2005-05-09  Daniel Jacobowitz  <dan@codesourcery.com>
+	    Mark Mitchell  <mark@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/arm/ioperm.c (BUS_ISA): Define for new
 	kernel headers.
 
