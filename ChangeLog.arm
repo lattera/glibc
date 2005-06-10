@@ -1,3 +1,9 @@
+2005-05-09  Daniel Jacobowitz  <dan@codesourcery.com>
+	    Mark Mitchell  <mark@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/ioperm.c (BUS_ISA): Define for new
+	kernel headers.
+
 2005-06-09  Phil Blundell  <pb@reciva.com>
 
 	* sysdeps/unix/arm/sysdep.h, sysdeps/unix/sysv/linux/arm/sysdep.h,

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Phil Blundell, based on the Alpha version by
    David Mosberger.
@@ -44,6 +44,7 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 
+#include <linux/version.h>
 #include <asm/page.h>
 #include <sys/sysctl.h>
 
@@ -80,7 +81,7 @@ static struct platform {
  * Initialize I/O system.  There are several ways to get the information
  * we need.  Each is tried in turn until one succeeds.
  *
- * 1. Sysctl (CTL_BUS, BUS_ISA, ISA_*).  This is the preferred method
+ * 1. Sysctl (CTL_BUS, CTL_BUS_ISA, ISA_*).  This is the preferred method
  *    but not all kernels support it.
  *
  * 2. Read the value (not the contents) of symlink PATH_ARM_SYSTYPE.
@@ -94,6 +95,12 @@ static struct platform {
  *    matches an entry in the platform[] table, use the corresponding
  *    values.
  */
+
+/* The Linux kernel headers renamed this constant between 2.5.26 and
+   2.5.27.  It was backported to 2.4 between 2.4.22 and 2.4.23.  */
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,4,23)
+# define BUS_ISA CTL_BUS_ISA
+#endif
 
 static int
 init_iosys (void)
