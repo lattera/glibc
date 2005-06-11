@@ -1,3 +1,8 @@
+2005-06-11  Phil Blundell  <pb@reciva.com>
+
+	* sysdeps/arm/init-first.c: Deleted.
+	* sysdeps/unix/sysv/linux/arm/linuxthreads/fork.c: New file.
+
 2005-06-10  Phil Blundell  <pb@reciva.com>
 
 	Bug #957:
