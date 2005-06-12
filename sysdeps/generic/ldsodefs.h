@@ -674,7 +674,7 @@ struct rtld_global_ro
   void (*_dl_debug_printf) (const char *, ...)
        __attribute__ ((__format__ (__printf__, 1, 2)));
   int (internal_function *_dl_catch_error) (const char **, const char **,
-					    void (*) (void *), void *);
+					    bool *, void (*) (void *), void *);
   void (internal_function *_dl_signal_error) (int, const char *, const char *,
 					      const char *);
   void (*_dl_mcount) (ElfW(Addr) frompc, ElfW(Addr) selfpc);
@@ -753,10 +753,6 @@ extern char **_dl_argv_internal attribute_hidden
 #else
 # define rtld_progname _dl_argv[0]
 #endif
-
-/* The array with message we print as a last resort.  */
-extern const char _dl_out_of_memory[];
-rtld_hidden_proto (_dl_out_of_memory)
 
 /* Flag set at startup and cleared when the last initializer has run.  */
 extern int _dl_starting_up;
