@@ -504,11 +504,6 @@ void *
 _dl_open (const char *file, int mode, const void *caller_dlopen, Lmid_t nsid,
 	  int argc, char *argv[], char *env[])
 {
-  struct dl_open_args args;
-  const char *objname;
-  const char *errstring;
-  int errcode;
-
   if ((mode & RTLD_BINDING_MASK) == 0)
     /* One of the flags must be set.  */
     _dl_signal_error (EINVAL, file, NULL, N_("invalid mode for dlopen()"));
@@ -543,6 +538,7 @@ no more namespaces available for dlmopen()"));
     _dl_signal_error (EINVAL, file, NULL,
 		      N_("invalid target namespace in dlmopen()"));
 
+  struct dl_open_args args;
   args.file = file;
   args.mode = mode;
   args.caller_dlopen = caller_dlopen;
@@ -552,7 +548,12 @@ no more namespaces available for dlmopen()"));
   args.argc = argc;
   args.argv = argv;
   args.env = env;
-  errcode = _dl_catch_error (&objname, &errstring, dl_open_worker, &args);
+
+  const char *objname;
+  const char *errstring;
+  bool malloced;
+  int errcode = _dl_catch_error (&objname, &errstring, &malloced,
+				 dl_open_worker, &args);
 
 #ifndef MAP_COPY
   /* We must munmap() the cache file.  */
@@ -603,7 +604,7 @@ no more namespaces available for dlmopen()"));
 	  memcpy (local_errstring, errstring, len_errstring);
 	}
 
-      if (errstring != _dl_out_of_memory)
+      if (malloced)
 	free ((char *) errstring);
 
       assert (_dl_debug_initialize (0, args.nsid)->r_state == RT_CONSISTENT);

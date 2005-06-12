@@ -19,6 +19,7 @@
 
 #include <libintl.h>
 #include <setjmp.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -30,6 +31,8 @@ struct catch
   {
     const char *objname;	/* Object/File name.  */
     const char *errstring;	/* Error detail filled in here.  */
+    bool malloced;		/* Nonzero if the string is malloced
+				   by the libc malloc.  */
     jmp_buf env;		/* longjmp here on error.  */
   };
 
@@ -44,8 +47,7 @@ struct catch
 /* This message we return as a last resort.  We define the string in a
    variable since we have to avoid freeing it and so have to enable
    a pointer comparison.  See below and in dlfcn/dlerror.c.  */
-const char _dl_out_of_memory[] = "out of memory";
-rtld_hidden_data_def (_dl_out_of_memory)
+static const char _dl_out_of_memory[] = "out of memory";
 
 
 /* This points to a function which is called when an continuable error is
@@ -87,15 +89,27 @@ _dl_signal_error (int errcode, const char *objname, const char *occation,
 
       lcatch->errstring = (char *) malloc (len_objname + len_errstring);
       if (lcatch->errstring != NULL)
-	/* Make a copy of the object file name and the error string.  */
-	lcatch->objname = memcpy (__mempcpy ((char *) lcatch->errstring,
-					     errstring, len_errstring),
-				  objname, len_objname);
+	{
+	  /* Make a copy of the object file name and the error string.  */
+	  lcatch->objname = memcpy (__mempcpy ((char *) lcatch->errstring,
+					       errstring, len_errstring),
+				    objname, len_objname);
+
+	  /* If the main executable is relocated it means the libc's malloc
+	     is used.  */
+#ifdef SHARED
+	  lcatch->malloced = (GL(dl_ns)[LM_ID_BASE]._ns_loaded->l_relocated
+			      != 0);
+#else
+	  lcatch->malloced = true;
+#endif
+	}
       else
 	{
 	  /* This is better than nothing.  */
 	  lcatch->objname = "";
 	  lcatch->errstring = _dl_out_of_memory;
+	  lcatch->malloced = false;
 	}
       longjmp (lcatch->env, errcode ?: -1);
     }
@@ -140,7 +154,7 @@ _dl_signal_cerror (int errcode, const char *objname, const char *occation,
 int
 internal_function
 _dl_catch_error (const char **objname, const char **errstring,
-		 void (*operate) (void *), void *args)
+		 bool *mallocedp, void (*operate) (void *), void *args)
 {
   int errcode;
   struct catch *volatile old;
@@ -162,6 +176,7 @@ _dl_catch_error (const char **objname, const char **errstring,
       *catchp = old;
       *objname = NULL;
       *errstring = NULL;
+      *mallocedp = false;
       return 0;
     }
 
@@ -169,6 +184,7 @@ _dl_catch_error (const char **objname, const char **errstring,
   *catchp = old;
   *objname = c.objname;
   *errstring = c.errstring;
+  *mallocedp = c.malloced;
   return errcode == -1 ? 0 : errcode;
 }
 

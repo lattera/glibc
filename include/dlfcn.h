@@ -1,6 +1,7 @@
 #ifndef _DLFCN_H
 #include <dlfcn/dlfcn.h>
 #include <link.h>		/* For ElfW.  */
+#include <stdbool.h>
 
 /* Internally used flag.  */
 #define __RTLD_DLOPEN	0x80000000
@@ -67,9 +68,10 @@ extern void *_dl_vsym (void *handle, const char *name, const char *version,
    and the error code passed is the return value and *OBJNAME is set to
    the object name which experienced the problems.  ERRSTRING if nonzero
    points to a malloc'ed string which the caller has to free after use.
-   ARGS is passed as argument to OPERATE.  */
+   ARGS is passed as argument to OPERATE.  MALLOCEDP is set to true only
+   if the returned string is allocated using the libc's malloc.  */
 extern int _dl_catch_error (const char **objname, const char **errstring,
-			    void (*operate) (void *),
+			    bool *mallocedp, void (*operate) (void *),
 			    void *args)
      internal_function;
 

@@ -1,5 +1,5 @@
 /* Handle loading and unloading shared objects for internal libc purposes.
-   Copyright (C) 1999, 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1999,2000,2001,2002,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.columbia.edu>, 1999.
 
@@ -42,12 +42,13 @@ dlerror_run (void (*operate) (void *), void *args)
 {
   const char *objname;
   const char *last_errstring = NULL;
-  int result;
+  bool malloced;
 
-  (void) GLRO(dl_catch_error) (&objname, &last_errstring, operate, args);
+  (void) GLRO(dl_catch_error) (&objname, &last_errstring, &malloced,
+			       operate, args);
 
-  result = last_errstring != NULL;
-  if (result && last_errstring != _dl_out_of_memory)
+  int result = last_errstring != NULL;
+  if (result && malloced)
     free ((char *) last_errstring);
 
   return result;

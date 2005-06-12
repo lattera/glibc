@@ -61,6 +61,9 @@ static void print_missing_version (int errcode, const char *objname,
 /* Print the various times we collected.  */
 static void print_statistics (hp_timing_t *total_timep);
 
+/* Add audit objects.  */
+static void process_dl_audit (char *str);
+
 /* This is a list of all the modes the dynamic loader can be in.  */
 enum mode { normal, list, verify, trace };
 
@@ -771,6 +774,7 @@ do_preload (char *fname, struct link_map *main_map, const char *where)
   const char *objname;
   const char *err_str = NULL;
   struct map_args args;
+  bool malloced;
 
   args.str = fname;
   args.loader = main_map;
@@ -779,7 +783,7 @@ do_preload (char *fname, struct link_map *main_map, const char *where)
 
   unsigned int old_nloaded = GL(dl_ns)[LM_ID_BASE]._ns_nloaded;
 
-  (void) _dl_catch_error (&objname, &err_str, map_doit, &args);
+  (void) _dl_catch_error (&objname, &err_str, &malloced, map_doit, &args);
   if (__builtin_expect (err_str != NULL, 0))
     {
       _dl_error_printf ("\
@@ -927,6 +931,14 @@ dl_main (const ElfW(Phdr) *phdr,
 	    _dl_argc -= 2;
 	    INTUSE(_dl_argv) += 2;
 	  }
+	else if (! strcmp (INTUSE(_dl_argv)[1], "--audit") && _dl_argc > 2)
+	  {
+	    process_dl_audit (INTUSE(_dl_argv)[2]);
+
+	    _dl_skip_args += 2;
+	    _dl_argc -= 2;
+	    INTUSE(_dl_argv) += 2;
+	  }
 	else
 	  break;
 
@@ -983,12 +995,14 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  const char *objname;
 	  const char *err_str = NULL;
 	  struct map_args args;
+	  bool malloced;
 
 	  args.str = rtld_progname;
 	  args.loader = NULL;
 	  args.is_preloaded = 0;
 	  args.mode = __RTLD_OPENEXEC;
-	  (void) _dl_catch_error (&objname, &err_str, map_doit, &args);
+	  (void) _dl_catch_error (&objname, &err_str, &malloced, map_doit,
+				  &args);
 	  if (__builtin_expect (err_str != NULL, 0))
 	    /* We don't free the returned string, the programs stops
 	       anyway.  */
@@ -1398,14 +1412,17 @@ ld.so does not support TLS, but program uses it!\n");
 
 	  const char *objname;
 	  const char *err_str = NULL;
-	  (void) _dl_catch_error (&objname, &err_str, dlmopen_doit, &dlmargs);
+	  bool malloced;
+	  (void) _dl_catch_error (&objname, &err_str, &malloced, dlmopen_doit,
+				  &dlmargs);
 	  if (__builtin_expect (err_str != NULL, 0))
 	    {
 	    not_loaded:
 	      _dl_error_printf ("\
 ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 				al->name, err_str);
-	      free ((char *) err_str);
+	      if (malloced)
+		free ((char *) err_str);
 	    }
 	  else
 	    {
@@ -1414,7 +1431,8 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	      largs.map = dlmargs.map;
 
 	      /* Check whether the interface version matches.  */
-	      (void) _dl_catch_error (&objname, &err_str, lookup_doit, &largs);
+	      (void) _dl_catch_error (&objname, &err_str, &malloced,
+				      lookup_doit, &largs);
 
 	      unsigned int (*laversion) (unsigned int);
 	      unsigned int lav;
@@ -1455,8 +1473,8 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 		  do
 		    {
 		      largs.name = cp;
-		      (void) _dl_catch_error (&objname, &err_str, lookup_doit,
-					      &largs);
+		      (void) _dl_catch_error (&objname, &err_str, &malloced,
+					      lookup_doit, &largs);
 
 		      /* Store the pointer.  */
 		      if (err_str == NULL && largs.result != NULL)

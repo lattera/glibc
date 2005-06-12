@@ -235,16 +235,22 @@ _dl_map_object_deps (struct link_map *map,
 	      {
 		/* Map in the needed object.  */
 		struct link_map *dep;
-		int err;
 
 		/* Recognize DSTs.  */
 		name = expand_dst (l, strtab + d->d_un.d_val, 0);
 		/* Store the tag in the argument structure.  */
 		args.name = name;
 
-		err = _dl_catch_error (&objname, &errstring, openaux, &args);
+		bool malloced;
+		int err = _dl_catch_error (&objname, &errstring, &malloced,
+					   openaux, &args);
 		if (__builtin_expect (errstring != NULL, 0))
 		  {
+		    char *new_errstring = strdupa (errstring);
+		    if (malloced)
+		      free ((char *) errstring);
+		    errstring = new_errstring;
+
 		    if (err)
 		      errno_reason = err;
 		    else
@@ -288,8 +294,6 @@ _dl_map_object_deps (struct link_map *map,
 
 		if (d->d_tag == DT_AUXILIARY)
 		  {
-		    int err;
-
 		    /* Say that we are about to load an auxiliary library.  */
 		    if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS,
 					  0))
@@ -301,13 +305,14 @@ _dl_map_object_deps (struct link_map *map,
 
 		    /* We must be prepared that the addressed shared
 		       object is not available.  */
-		    err = _dl_catch_error (&objname, &errstring, openaux,
-					   &args);
+		    bool malloced;
+		    (void) _dl_catch_error (&objname, &errstring, &malloced,
+					    openaux, &args);
 		    if (__builtin_expect (errstring != NULL, 0))
 		      {
 			/* We are not interested in the error message.  */
 			assert (errstring != NULL);
-			if (errstring != _dl_out_of_memory)
+			if (malloced)
 			  free ((char *) errstring);
 
 			/* Simply ignore this error and continue the work.  */
@@ -316,8 +321,6 @@ _dl_map_object_deps (struct link_map *map,
 		  }
 		else
 		  {
-		    int err;
-
 		    /* Say that we are about to load an auxiliary library.  */
 		    if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS,
 					  0))
@@ -328,10 +331,16 @@ _dl_map_object_deps (struct link_map *map,
 					? l->l_name : rtld_progname);
 
 		    /* For filter objects the dependency must be available.  */
-		    err = _dl_catch_error (&objname, &errstring, openaux,
-					   &args);
+		    bool malloced;
+		    int err = _dl_catch_error (&objname, &errstring, &malloced,
+					       openaux, &args);
 		    if (__builtin_expect (errstring != NULL, 0))
 		      {
+			char *new_errstring = strdupa (errstring);
+			if (malloced)
+			  free ((char *) errstring);
+			errstring = new_errstring;
+
 			if (err)
 			  errno_reason = err;
 			else

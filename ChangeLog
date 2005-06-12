@@ -1,3 +1,21 @@
+2005-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-error.c (_dl_signal_error): Store information about use of
+	real malloc in the catch object.
+	(_dl_catch_error): Forward information about malloc use to caller
+	in new parameter.
+	(_dl_out_of_memory): Make static.
+	* elf/dl-deps.c: Adjust callers of _dl_catch_error.
+	* elf/dl-libc.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/rtld.c: Likewise.
+	Add new --audit option.
+	* sysdeps/generic/ldsodefs.h: Remove _dl_out_of_memory declaration.
+	(rtld_global_ro._dl_signal_error): Add new parameter.
+	* include/dlfcn.h (_dl_catch_error): Add new parameter.
+	* dlfcn/dlfcn.c (_dlerror_run): Pass additional parameter to
+	_dl_catch_error.  Only free if the returned newly value says so.
+
 2005-06-01  Roland McGrath  <roland@redhat.com>
 
 	[BZ #959]

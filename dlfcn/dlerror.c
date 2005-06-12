@@ -19,6 +19,7 @@
 
 #include <dlfcn.h>
 #include <libintl.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -40,6 +41,7 @@ struct dl_action_result
   {
     int errcode;
     int returned;
+    bool malloced;
     const char *objname;
     const char *errstring;
   };
@@ -154,13 +156,13 @@ _dlerror_run (void (*operate) (void *), void *args)
     {
       /* Free the error string from the last failed command.  This can
 	 happen if `dlerror' was not run after an error was found.  */
-      if (strcmp (result->errstring, "out of memory") != 0)
+      if (result->malloced)
 	free ((char *) result->errstring);
       result->errstring = NULL;
     }
 
   result->errcode = GLRO(dl_catch_error) (&result->objname, &result->errstring,
-					  operate, args);
+					  &result->malloced, operate, args);
 
   /* If no error we mark that no error string is available.  */
   result->returned = result->errstring == NULL;
