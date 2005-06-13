@@ -1,3 +1,10 @@
+2005-06-13  Philip Blundell  <philb@gnu.org>
+
+	Patch from addsub@eyou.com:
+	* sysdeps/arm/ieee754.h: Deleted.
+	* sysdeps/arm/gmp-mparam.h: Support VFP and big endian.
+	* sysdeps/arm/bits/endian.h: Likewise.
+	
 2005-06-11  Phil Blundell  <pb@reciva.com>
 
 	* sysdeps/arm/init-first.c: Deleted.
