@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include "config.h"
 #include <error.h>
 #include <errno.h>
 #include <libintl.h>
@@ -30,6 +31,9 @@
 #include <selinux/avc.h>
 #include <selinux/flask.h>
 #include <selinux/selinux.h>
+#ifdef HAVE_LIBAUDIT
+#include <libaudit.h>
+#endif
 
 #include "dbg_log.h"
 #include "selinux.h"
@@ -66,6 +70,11 @@ static struct avc_entry_ref aeref;
 /* Thread to listen for SELinux status changes via netlink.  */
 static pthread_t avc_notify_thread;
 
+#ifdef HAVE_LIBAUDIT
+/* Prototype for supporting the audit daemon */
+static void log_callback (const char *fmt, ...);
+#endif
+
 /* Prototypes for AVC callback functions.  */
 static void *avc_create_thread (void (*run) (void));
 static void avc_stop_thread (void *thread);
@@ -77,7 +86,11 @@ static void avc_free_lock (void *lock);
 /* AVC callback structures for use in avc_init.  */
 static const struct avc_log_callback log_cb =
 {
+#ifdef HAVE_LIBAUDIT
+  .func_log = log_callback,
+#else
   .func_log = dbg_log,
+#endif
   .func_audit = NULL
 };
 static const struct avc_thread_callback thread_cb =
@@ -93,6 +106,30 @@ static const struct avc_lock_callback lock_cb =
   .func_free_lock = avc_free_lock
 };
 
+#ifdef HAVE_LIBAUDIT
+/* The audit system's netlink socket descriptor */
+static int audit_fd = -1;
+
+/* When an avc denial occurs, log it to audit system */
+static void 
+log_callback (const char *fmt, ...)
+{
+  va_list ap;
+
+  va_start (ap, fmt);
+  audit_log_avc (audit_fd, AUDIT_USER_AVC, fmt, ap);
+  va_end (ap);
+}
+
+/* Initialize the connection to the audit system */
+static void 
+audit_init (void)
+{
+  audit_fd = audit_open ();
+  if (audit_fd < 0)
+     dbg_log (_("Failed opening connection to the audit subsystem"));
+}
+#endif /* HAVE_LIBAUDIT */
 
 /* Determine if we are running on an SELinux kernel. Set selinux_enabled
    to the result.  */
@@ -182,6 +219,9 @@ nscd_avc_init (void)
     error (EXIT_FAILURE, errno, _("Failed to start AVC"));
   else
     dbg_log (_("Access Vector Cache (AVC) started"));
+#ifdef HAVE_LIBAUDIT
+  audit_init ();
+#endif
 }
 
 
@@ -262,6 +302,9 @@ void
 nscd_avc_destroy (void)
 {
   avc_destroy ();
+#ifdef HAVE_LIBAUDIT
+  audit_close (audit_fd);
+#endif
 }
 
 #endif /* HAVE_SELINUX */

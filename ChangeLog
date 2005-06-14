@@ -1,5 +1,12 @@
 2005-06-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* configure.in: Add test for availability of libaudit.
+	* config.h.in: Define HAVE_LIBAUDIT.
+	* config.make.in: Define have-libaudit.
+	* nscd/Makefile: If libaudit is available, link nscd with it.
+	* nscd/selinux.c: If HAVE_LIBAUDIT is defined, log using libaudit.
+	Patch by Steve Grubb <sgrubb@redhat.com>.
+
 	* debug/pread64_chk.c: Use __libc_pread64 instead of __pread64.
 	* sysdeps/posix/posix_fallocate64.c: Likewise.
 	* include/string.h: Use libc_hidden_proto for strnlen.

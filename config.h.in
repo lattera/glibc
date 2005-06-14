@@ -21,6 +21,9 @@
 /* Define if building with SELinux support.  Set by --with-selinux.  */
 #undef	HAVE_SELINUX
 
+/* Defined if building with SELinux support & audit libs are detected. */
+#undef	HAVE_LIBAUDIT
+
 /* Define if using XCOFF. Set by --with-xcoff.  */
 #undef	HAVE_XCOFF
 

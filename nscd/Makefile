@@ -53,8 +53,12 @@ endif
 
 all-nscd-modules := $(nscd-modules) selinux
 ifeq (yes,$(have-selinux))
+ifeq (yes,$(have-libaudit))
+libaudit = -laudit
+endif
+
 nscd-modules += selinux
-selinux-LIBS := -lselinux
+selinux-LIBS := -lselinux $(libaudit)
 endif
 
 LDLIBS-nscd = $(selinux-LIBS)
