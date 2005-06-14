@@ -11,6 +11,7 @@ extern char *__dgettext (__const char *__domainname,
 extern char *__dcgettext (__const char *__domainname,
 			  __const char *__msgid, int __category)
      __attribute_format_arg__ (2);
+libc_hidden_proto (__dcgettext)
 extern char *__dcgettext_internal (__const char *__domainname,
 				   __const char *__msgid, int __category)
      __attribute_format_arg__ (2)

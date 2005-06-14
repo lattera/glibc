@@ -1,5 +1,5 @@
 /* Find the length of STRING, but scan at most MAXLEN characters.
-   Copyright (C) 1991, 1993, 1997, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1991,1993,1997,2000,2001,2005 Free Software Foundation, Inc.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 
    Based on strlen written by Torbjorn Granlund (tege@sics.se),
@@ -158,3 +158,4 @@ __strnlen (const char *str, size_t maxlen)
   return char_ptr - str;
 }
 weak_alias (__strnlen, strnlen)
+libc_hidden_def (strnlen)

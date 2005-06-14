@@ -1,5 +1,5 @@
 /* Write formatted list with names for addresses in backtrace to a file.
-   Copyright (C) 1998, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -61,3 +61,4 @@ __backtrace_symbols_fd (array, size, fd)
     }
 }
 weak_alias (__backtrace_symbols_fd, backtrace_symbols_fd)
+libc_hidden_def (__backtrace_symbols_fd)

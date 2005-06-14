@@ -76,7 +76,7 @@ __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
       if (offset < st.st_size)
 	{
 	  unsigned char c;
-	  ssize_t rsize = __pread64 (fd, &c, 1, offset);
+	  ssize_t rsize = __libc_pread64 (fd, &c, 1, offset);
 
 	  if (rsize < 0)
 	    return errno;
@@ -86,7 +86,7 @@ __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
 	    continue;
 	}
 
-      if (__pwrite64 (fd, "", 1, offset) != 1)
+      if (__libc_pwrite64 (fd, "", 1, offset) != 1)
 	return errno;
     }
 

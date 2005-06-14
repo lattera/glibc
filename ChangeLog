@@ -1,3 +1,23 @@
+2005-06-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* debug/pread64_chk.c: Use __libc_pread64 instead of __pread64.
+	* sysdeps/posix/posix_fallocate64.c: Likewise.
+	* include/string.h: Use libc_hidden_proto for strnlen.
+	* sysdeps/generic/strnlen.c: Add libc_hidden_def.
+	* include/libintl.h: Use libc_hidden_proto for __dcgettext.
+	* intl/dcgettext.c: Add libc_hidden_def.
+	* include/execinfo.h: Add libc_hidden_proto for __backtrace and
+	__backtrace_symbols_fd.
+	* sysdeps/generic/backtrace.c: Add libc_hidden_def.
+	* sysdeps/generic/backtracesymsfd.c: Likewise.
+	* sysdeps/generic/elf/backtracesymsfd.c: Likewise.
+	* sysdeps/i386/backtrace.c: Likewise.
+	* sysdeps/ia64/backtrace.c: Likewise.
+	* sysdeps/powerpc/powerpc32/backtrace.c: Likewise.
+	* sysdeps/powerpc/powerpc64/backtrace.c: Likewise.
+	* sysdeps/s390/s390-32/backtrace.c: Likewise.
+	* sysdeps/s390/s390-64/backtrace.c: Likewise.
+
 2005-06-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/clock_gettime.c (clock_gettime): Implement case

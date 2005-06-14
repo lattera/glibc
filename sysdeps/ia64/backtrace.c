@@ -1,5 +1,5 @@
 /* Return backtrace of current program state.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -90,3 +90,4 @@ __backtrace (array, size)
   return arg.cnt != -1 ? arg.cnt : 0;
 }
 weak_alias (__backtrace, backtrace)
+libc_hidden_def (__backtrace)
