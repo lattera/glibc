@@ -1558,6 +1558,23 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	}
     }
 
+  /* Set up debugging before the debugger is notified for the first time.  */
+#ifdef ELF_MACHINE_DEBUG_SETUP
+  /* Some machines (e.g. MIPS) don't use DT_DEBUG in this way.  */
+  ELF_MACHINE_DEBUG_SETUP (main_map, r);
+  ELF_MACHINE_DEBUG_SETUP (&GL(dl_rtld_map), r);
+#else
+  if (main_map->l_info[DT_DEBUG] != NULL)
+    /* There is a DT_DEBUG entry in the dynamic section.  Fill it in
+       with the run-time address of the r_debug structure  */
+    main_map->l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
+
+  /* Fill in the pointer in the dynamic linker's own dynamic section, in
+     case you run gdb on the dynamic linker directly.  */
+  if (GL(dl_rtld_map).l_info[DT_DEBUG] != NULL)
+    GL(dl_rtld_map).l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
+#endif
+
   /* We start adding objects.  */
   r->r_state = RT_ADD;
   _dl_debug_state ();
@@ -2075,30 +2092,6 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 			  prelinked ? "ok" : "failed");
     }
 
-
-  {
-    struct link_map *l = main_map;
-
-#ifdef ELF_MACHINE_DEBUG_SETUP
-
-    /* Some machines (e.g. MIPS) don't use DT_DEBUG in this way.  */
-
-    ELF_MACHINE_DEBUG_SETUP (l, r);
-    ELF_MACHINE_DEBUG_SETUP (&GL(dl_rtld_map), r);
-
-#else
-
-    if (l->l_info[DT_DEBUG] != NULL)
-      /* There is a DT_DEBUG entry in the dynamic section.  Fill it in
-	 with the run-time address of the r_debug structure  */
-      l->l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
-
-    /* Fill in the pointer in the dynamic linker's own dynamic section, in
-       case you run gdb on the dynamic linker directly.  */
-    if (GL(dl_rtld_map).l_info[DT_DEBUG] != NULL)
-      GL(dl_rtld_map).l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
-#endif
-  }
 
   /* Now set up the variable which helps the assembler startup code.  */
   GL(dl_ns)[LM_ID_BASE]._ns_main_searchlist = &main_map->l_searchlist;

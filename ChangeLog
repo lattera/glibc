@@ -1,3 +1,37 @@
+2005-06-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/clock_gettime.c (clock_gettime): Implement case
+	where HANDLED_REALTIME is not defined.  [BZ #966]
+
+2005-06-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/netlinkaccess.h (__netlink_sendreq,
+	__netlink_receive): Remove prototypes.
+	(__netlink_request): New prototype.
+	* sysdeps/unix/sysv/linux/ifaddrs.c: Include <alloca.h> and
+	<stdint.h>.
+	(__netlink_sendreq): Make static.
+	(__netlink_receive): Rename to...
+	(__netlink_request): ... this.  Add type argument, call
+	__netlink_sendreq.  If MSG_TRUNC is set after recvmsg, retry
+	with a bigger buffer.  Don't record buffers that contain no
+	messages we are expecting.
+	(getifaddrs): Use __netlink_request instead of __netlink_sendreq
+	and __netlink_receive pairs.  Formatting.
+	* sysdeps/unix/sysv/linux/if_index.c (if_nameindex_netlink): Use
+	__netlink_request instead of __netlink_sendreq and __netlink_receive
+	pair.
+
+2005-06-13  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/netinet/if_tr.h: Don't include kernel
+	headers, instead copy important structs/defines.
+
+2005-06-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (dl_main): Move DT_DEBUG setup before first
+	_dl_debug_state call.
+
 2005-06-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-error.c (_dl_signal_error): Store information about use of

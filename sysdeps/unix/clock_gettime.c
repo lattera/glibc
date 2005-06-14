@@ -93,6 +93,7 @@ int
 clock_gettime (clockid_t clock_id, struct timespec *tp)
 {
   int retval = -1;
+  struct timeval tv;
 
   switch (clock_id)
     {
@@ -102,7 +103,9 @@ clock_gettime (clockid_t clock_id, struct timespec *tp)
 
 #ifndef HANDLED_REALTIME
     case CLOCK_REALTIME:
-      HANDLE_REALTIME;
+      retval = gettimeofday (&tv, NULL);
+      if (retval == 0)
+	TIMEVAL_TO_TIMESPEC (&tv, tp);
       break;
 #endif
 

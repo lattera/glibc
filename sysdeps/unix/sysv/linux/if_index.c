@@ -1,4 +1,5 @@
-/* Copyright (C) 1997,98,99,2000,2002,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -188,12 +189,8 @@ if_nameindex_netlink (void)
 
 
   /* Tell the kernel that we wish to get a list of all
-     active interfaces.  */
-  if (__netlink_sendreq (&nh, RTM_GETLINK) < 0)
-    goto exit_close;
-
-  /* Collect all data for every interface.  */
-  if (__netlink_receive (&nh) < 0)
+     active interfaces.  Collect all data for every interface.  */
+  if (__netlink_request (&nh, RTM_GETLINK) < 0)
     goto exit_free;
 
   /* Count the interfaces.  */
@@ -290,7 +287,6 @@ if_nameindex_netlink (void)
 
  exit_free:
   __netlink_free_handle (&nh);
- exit_close:
   __netlink_close (&nh);
 
   return idx;
