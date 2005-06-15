@@ -126,7 +126,7 @@ hesiod_init(void **context) {
 	 * If there is no default hesiod realm set, we return an
 	 * error.
 	 */
-	if (!ctx->RHS || ctx->classes[0] == 0 || ctx->classes[0] == ctx->classes[1]) {
+	if (!ctx->RHS) {
 		__set_errno(ENOEXEC);
 		goto cleanup;
 	}
@@ -327,7 +327,8 @@ parse_config_file(struct hesiod_p *ctx, const char *filename) {
 				   nother at all.  */
 				ctx->classes[0] = C_IN;
 				ctx->classes[1] = C_HS;
-			} else if (n == 1)
+			} else if (n == 1
+				   || ctx->classes[0] == ctx->classes[1])
 				ctx->classes[1] = 0;
 		}
 	}
