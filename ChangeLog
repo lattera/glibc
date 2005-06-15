@@ -1,3 +1,13 @@
+2005-06-08  Karl Kelley  <kekelley@iastate.edu>
+
+	* hesiod/hesiod_p.h (struct hesiod_p): Add classes array.
+	* hesiod/hesiod.c (hesiod_init): Initialize classes.  Fail if no
+	valid classes were given or if both are equal.
+	(hesiod_resolve): Use ctx->classes instead of hardcoded C_IN
+	and C_HS order.
+	(parse_config_file): Handle classes keyword.
+	* hesiod/README.hesiod: Mention addition of the classes keyword.
+
 2005-06-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in: Add test for availability of libaudit.
