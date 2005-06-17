@@ -1,5 +1,5 @@
 /* PowerPC-specific implementation of profiling support.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,25 +24,19 @@
 
 #include <sysdep.h>
 
-/* We do profiling as described in the SYSV ELF ABI, _mcount is called
-   with the address of a data word in r0 (that is different for every
-   routine, initialised to 0, and otherwise unused).  The caller has put
-   the address the caller will return to in the usual place on the stack,
-   4(r1).  _mcount is responsible for ensuring that when it returns no
-   argument-passing registers are disturbed, and that the LR is set back
-   to (what the caller sees as) 4(r1).
+/* We do profiling as described in the SYSV ELF ABI, except that glibc
+   _mcount manages its own counters.  The caller has put the address the
+   caller will return to in the usual place on the stack, 4(r1).  _mcount
+   is responsible for ensuring that when it returns no argument-passing
+   registers are disturbed, and that the LR is set back to (what the
+   caller sees as) 4(r1).
 
    This is intended so that the following code can be inserted at the
    front of any routine without changing the routine:
 
 	.data
-	.align	2
-   0:	.long	0
-	.previous
 	mflr	r0
-	lis	r11,0b@ha
 	stw	r0,4(r1)
-	addi	r0,r11,0b@l
 	bl	_mcount
 */
 

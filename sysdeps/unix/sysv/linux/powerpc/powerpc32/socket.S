@@ -39,6 +39,8 @@
 #define NARGS 3
 #endif
 
+/* 0(r1) and 4(r1) are reserved by the ABI, 8(r1), 12(r1), 16(r1) are used
+   for temp saves.  44(r1) is used to save r30.  */
 #define stackblock 20
 
 #ifndef __socket
@@ -69,12 +71,6 @@ ENTRY(__socket)
 	stw  r8,20+stackblock(r1)
 #endif
 #if NARGS >= 7
-	stw  r9,24+stackblock(r1)
-#endif
-#if NARGS >= 8
-	stw  r10,28+stackblock(r1)
-#endif
-#if NARGS >= 9
 #error too many arguments!
 #endif
 
@@ -94,6 +90,7 @@ ENTRY(__socket)
 	mflr	r9
 	stw	r9,52(r1)
 	cfi_offset (lr, 4)
+	CGOTSETUP
 	CENABLE
 	stw	r3,16(r1)
 	li	r3,P(SOCKOP_,socket)
@@ -107,6 +104,7 @@ ENTRY(__socket)
 	lwz	r4,52(r1)
 	lwz	r0,12(r1)
 	lwz	r3,8(r1)
+	CGOTRESTORE
 	mtlr	r4
 	mtcr	r0
 	addi	r1,r1,48

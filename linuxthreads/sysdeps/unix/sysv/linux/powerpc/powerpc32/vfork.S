@@ -31,11 +31,19 @@ ENTRY (__vfork)
 #ifdef __NR_vfork
 # ifdef SHARED
 	mflr	9
+#  ifdef HAVE_ASM_PPC_REL16
+	bcl	20,31,1f
+1:	mflr	10
+	addis	10,10,__libc_pthread_functions-1b@ha
+	lwz	10,__libc_pthread_functions-1b@l(10)
+	mtlr	9
+#  else
 	bl	_GLOBAL_OFFSET_TABLE_@local-4
 	mflr	10
 	mtlr	9
 	lwz	10,__libc_pthread_functions@got(10)
 	lwz	10,0(10)
+#  endif
 # else
 	.weak	pthread_create
 	lis	10,pthread_create@ha

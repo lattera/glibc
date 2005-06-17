@@ -25,6 +25,10 @@
 #include <assert.h>
 #include <dl-tls.h>
 
+/* Translate a processor specific dynamic tag to the index
+   in l_info array.  */
+#define DT_PPC(x) (DT_PPC_##x - DT_LOPROC + DT_NUM)
+
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
 elf_machine_matches_host (const Elf32_Ehdr *ehdr)
@@ -32,24 +36,38 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
   return ehdr->e_machine == EM_PPC;
 }
 
+/* Return the value of the GOT pointer.  */
+static inline Elf32_Addr * __attribute__ ((const))
+ppc_got (void)
+{
+  Elf32_Addr *got;
+#ifdef HAVE_ASM_PPC_REL16
+  asm ("bcl 20,31,1f\n"
+       "1:	mflr %0\n"
+       "	addis %0,%0,_GLOBAL_OFFSET_TABLE_-1b@ha\n"
+       "	addi %0,%0,_GLOBAL_OFFSET_TABLE_-1b@l\n"
+       : "=b" (got) : : "lr");
+#else
+  asm (" bl _GLOBAL_OFFSET_TABLE_-4@local"
+       : "=l" (got));
+#endif
+  return got;
+}
 
 /* Return the link-time address of _DYNAMIC, stored as
    the first value in the GOT. */
-static inline Elf32_Addr
+static inline Elf32_Addr __attribute__ ((const))
 elf_machine_dynamic (void)
 {
-  Elf32_Addr *got;
-  asm (" bl _GLOBAL_OFFSET_TABLE_-4@local"
-       : "=l"(got));
-  return *got;
+  return *ppc_got ();
 }
 
 /* Return the run-time load address of the shared object.  */
-static inline Elf32_Addr
+static inline Elf32_Addr __attribute__ ((const))
 elf_machine_load_address (void)
 {
-  unsigned int *got;
-  unsigned int *branchaddr;
+  Elf32_Addr *branchaddr;
+  Elf32_Addr runtime_dynamic;
 
   /* This is much harder than you'd expect.  Possibly I'm missing something.
      The 'obvious' way:
@@ -80,19 +98,17 @@ elf_machine_load_address (void)
      the address ourselves. That gives us the following code: */
 
   /* Get address of the 'b _DYNAMIC@local'...  */
-  asm ("bl 0f ;"
+  asm ("bcl 20,31,0f;"
        "b _DYNAMIC@local;"
        "0:"
-       : "=l"(branchaddr));
-
-  /* ... and the address of the GOT.  */
-  asm (" bl _GLOBAL_OFFSET_TABLE_-4@local"
-       : "=l"(got));
+       : "=l" (branchaddr));
 
   /* So now work out the difference between where the branch actually points,
      and the offset of that location in memory from the start of the file.  */
-  return ((Elf32_Addr)branchaddr - *got
-	  + ((int)(*branchaddr << 6 & 0xffffff00) >> 6));
+  runtime_dynamic = ((Elf32_Addr) branchaddr
+		     + ((Elf32_Sword) (*branchaddr << 6 & 0xffffff00) >> 6));
+
+  return runtime_dynamic - elf_machine_dynamic ();
 }
 
 #define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info) /* nothing */
@@ -144,13 +160,69 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
 /* The PowerPC never uses REL relocations.  */
 #define ELF_MACHINE_NO_REL 1
 
-/* Set up the loaded object described by L so its unrelocated PLT
+/* Set up the loaded object described by MAP so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.
    Also install a small trampoline to be used by entries that have
    been relocated to an address too far away for a single branch.  */
 extern int __elf_machine_runtime_setup (struct link_map *map,
 					int lazy, int profile);
-#define elf_machine_runtime_setup __elf_machine_runtime_setup
+
+static inline int
+elf_machine_runtime_setup (struct link_map *map,
+			   int lazy, int profile)
+{
+  if (map->l_info[DT_JMPREL] == 0)
+    return lazy;
+
+  if (map->l_info[DT_PPC(GOT)] == 0)
+    /* Handle old style PLT.  */
+    return __elf_machine_runtime_setup (map, lazy, profile);
+
+  /* New style non-exec PLT consisting of an array of addresses.  */
+  map->l_info[DT_PPC(GOT)]->d_un.d_ptr += map->l_addr;
+  if (lazy)
+    {
+      Elf32_Addr *plt, *got, glink;
+      Elf32_Word num_plt_entries;
+      void (*dlrr) (void);
+      extern void _dl_runtime_resolve (void);
+      extern void _dl_prof_resolve (void);
+
+      if (__builtin_expect (!profile, 1))
+	dlrr = _dl_runtime_resolve;
+      else
+	{
+	  if (GLRO(dl_profile) != NULL
+	      &&_dl_name_match_p (GLRO(dl_profile), map))
+	    GL(dl_profile_map) = map;
+	  dlrr = _dl_prof_resolve;
+	}
+      got = (Elf32_Addr *) map->l_info[DT_PPC(GOT)]->d_un.d_ptr;
+      glink = got[1];
+      got[1] = (Elf32_Addr) dlrr;
+      got[2] = (Elf32_Addr) map;
+
+      /* Relocate everything in .plt by the load address offset.  */
+      plt = (Elf32_Addr *) D_PTR (map, l_info[DT_PLTGOT]);
+      num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
+			 / sizeof (Elf32_Rela));
+
+      /* If a library is prelinked but we have to relocate anyway,
+	 we have to be able to undo the prelinking of .plt section.
+	 The prelinker saved us at got[1] address of .glink
+	 section's start.  */
+      if (glink)
+	{
+	  glink += map->l_addr;
+	  while (num_plt_entries-- != 0)
+	    *plt++ = glink, glink += 4;
+	}
+      else
+	while (num_plt_entries-- != 0)
+	  *plt++ += map->l_addr;
+    }
+  return lazy;
+}
 
 /* Change the PLT entry whose reloc is 'reloc' to call the actual routine.  */
 extern Elf32_Addr __elf_machine_fixup_plt (struct link_map *map,
@@ -163,7 +235,12 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t t,
 		       const Elf32_Rela *reloc,
 		       Elf32_Addr *reloc_addr, Elf64_Addr finaladdr)
 {
-  return __elf_machine_fixup_plt (map, reloc, reloc_addr, finaladdr);
+  if (map->l_info[DT_PPC(GOT)] == 0)
+    /* Handle old style PLT.  */
+    return __elf_machine_fixup_plt (map, reloc, reloc_addr, finaladdr);
+
+  *reloc_addr = finaladdr;
+  return finaladdr;
 }
 
 /* Return the final value of a plt relocation.  */
@@ -286,11 +363,16 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       break;
 #endif /* USE_TLS etc. */
 
-#ifdef RESOLVE_CONFLICT_FIND_MAP
     case R_PPC_JMP_SLOT:
+#ifdef RESOLVE_CONFLICT_FIND_MAP
       RESOLVE_CONFLICT_FIND_MAP (map, reloc_addr);
-      /* FALLTHROUGH */
 #endif
+      if (map->l_info[DT_PPC(GOT)] != 0)
+	{
+	  *reloc_addr = value;
+	  break;
+	}
+      /* FALLTHROUGH */
 
     default:
       __process_machine_rela (map, reloc, sym_map, sym, refsym,

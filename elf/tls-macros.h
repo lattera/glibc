@@ -703,6 +703,8 @@ register void *__gp __asm__("$29");
 
 #elif defined __powerpc__ && !defined __powerpc64__
 
+#include "config.h"
+
 # define __TLS_CALL_CLOBBERS						\
 	"0", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",	\
 	"lr", "ctr", "cr0", "cr1", "cr5", "cr6", "cr7"
@@ -715,7 +717,20 @@ register void *__gp __asm__("$29");
      __result; })
 
 /* PowerPC32 Initial Exec TLS access.  */
-# define TLS_IE(x)					\
+# ifdef HAVE_ASM_PPC_REL16
+#  define TLS_IE(x)					\
+  ({ int *__result;					\
+     asm ("bcl 20,31,1f\n1:\t"				\
+	  "mflr %0\n\t"					\
+	  "addis %0,%0,_GLOBAL_OFFSET_TABLE_-1b@ha\n\t"	\
+	  "addi %0,%0,_GLOBAL_OFFSET_TABLE_-1b@l\n\t"	\
+	  "lwz %0," #x "@got@tprel(%0)\n\t"		\
+	  "add %0,%0," #x "@tls"			\
+	  : "=b" (__result) :				\
+	  : "lr");					\
+     __result; })
+# else
+#  define TLS_IE(x)					\
   ({ int *__result;					\
      asm ("bl _GLOBAL_OFFSET_TABLE_@local-4\n\t"	\
 	  "mflr %0\n\t"					\
@@ -724,9 +739,24 @@ register void *__gp __asm__("$29");
 	  : "=b" (__result) :				\
 	  : "lr");					\
      __result; })
+# endif
 
 /* PowerPC32 Local Dynamic TLS access.  */
-# define TLS_LD(x)					\
+# ifdef HAVE_ASM_PPC_REL16
+#  define TLS_LD(x)					\
+  ({ int *__result;					\
+     asm ("bcl 20,31,1f\n1:\t"				\
+	  "mflr 3\n\t"					\
+	  "addis 3,3,_GLOBAL_OFFSET_TABLE_-1b@ha\n\t"	\
+	  "addi 3,3,_GLOBAL_OFFSET_TABLE_-1b@l\n\t"	\
+	  "addi 3,3," #x "@got@tlsld\n\t"		\
+	  "bl __tls_get_addr@plt\n\t"			\
+	  "addi %0,3," #x "@dtprel"			\
+	  : "=r" (__result) :				\
+	  : __TLS_CALL_CLOBBERS);			\
+     __result; })
+# else
+#  define TLS_LD(x)					\
   ({ int *__result;					\
      asm ("bl _GLOBAL_OFFSET_TABLE_@local-4\n\t"	\
 	  "mflr 3\n\t"					\
@@ -736,9 +766,23 @@ register void *__gp __asm__("$29");
 	  : "=r" (__result) :				\
 	  : __TLS_CALL_CLOBBERS);			\
      __result; })
+# endif
 
 /* PowerPC32 General Dynamic TLS access.  */
-# define TLS_GD(x)					\
+# ifdef HAVE_ASM_PPC_REL16
+#  define TLS_GD(x)					\
+  ({ register int *__result __asm__ ("r3");		\
+     asm ("bcl 20,31,1f\n1:\t"				\
+	  "mflr 3\n\t"					\
+	  "addis 3,3,_GLOBAL_OFFSET_TABLE_-1b@ha\n\t"	\
+	  "addi 3,3,_GLOBAL_OFFSET_TABLE_-1b@l\n\t"	\
+	  "addi 3,3," #x "@got@tlsgd\n\t"		\
+	  "bl __tls_get_addr@plt"			\
+	  : :						\
+	  : __TLS_CALL_CLOBBERS);			\
+     __result; })
+# else
+#  define TLS_GD(x)					\
   ({ register int *__result __asm__ ("r3");		\
      asm ("bl _GLOBAL_OFFSET_TABLE_@local-4\n\t"	\
 	  "mflr 3\n\t"					\
@@ -747,6 +791,7 @@ register void *__gp __asm__("$29");
 	  : :						\
 	  : __TLS_CALL_CLOBBERS);			\
      __result; })
+# endif
 
 #elif defined __powerpc__ && defined __powerpc64__
 

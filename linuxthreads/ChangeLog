@@ -1,3 +1,12 @@
+2005-06-14  Alan Modra  <amodra@bigpond.net.au>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h (PSEUDO):
+	Invoke CGOTSETUP and CGOTRESTORE.
+	(CGOTSETUP, CGOTRESTORE): Define.
+	(SINGLE_THREAD_P): Add variant for new PLT/GOT layout.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S (__vfork): Avoid
+	bl into the GOT when HAVE_ASM_PPC_REL16.
+
 2005-05-23  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/arm, sysdeps/unix/sysv/linux/arm: Subdirectories moved to

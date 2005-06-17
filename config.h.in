@@ -220,6 +220,9 @@
 /* Define if inlined system calls are available.  */
 #undef HAVE_INLINED_SYSCALLS
 
+/* Define if your assembler and linker support R_PPC_REL16* relocs.  */
+#undef HAVE_ASM_PPC_REL16
+
 /*
  */
 

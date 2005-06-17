@@ -1,3 +1,76 @@
+2005-06-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_runtime_setup):
+	Handle prelinked libraries and binaries with new style PLT.
+
+2005-06-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/elf.h (R_PPC_REL16, R_PPC_REL16_LO, R_PPC_REL16_HI,
+	R_PPC_REL16_HA): Define.
+
+2005-06-14  Alan Modra  <amodra@bigpond.net.au>
+
+	* config.h.in (HAVE_ASM_PPC_REL16): Add.
+	* elf/elf.h (DT_PPC_GOT, DT_PPC_NUM): Define.
+	* elf/tls-macros.h (PowerPC32): Include config.h.  Add variants of
+	TLS_IE, TLS_LD and TLS_GD for new PLT/GOT layout.
+	* sysdeps/powerpc/powerpc32/configure.in: New file,
+	* sysdeps/powerpc/powerpc32/dl-dtprocnum.h: New file.
+	* sysdeps/powerpc/powerpc32/dl-machine.h (DT_PPC): Define.
+	(ppc_got): New inline function.
+	(elf_machine_dynamic): Use ppc_got.  Add attribute const.
+	(elf_machine_load_address): Add attribute const.  Don't use int vars.
+	Use bcl rather than bl to save trashing branch target stack.  Use
+	elf_machine_dynamic rather than duplicating code here.
+	(elf_machine_runtime_setup): New inline function replacing define.
+	Handle new PLT.
+	(elf_machine_fixup_plt): Handle new PLT.
+	(elf_machine_rela): Likewise.
+	* sysdeps/powerpc/powerpc32/sysdep.h: Include config.h.
+	(CALL_MCOUNT): Don't set up counter vars.
+	* sysdeps/powerpc/powerpc32/ppc-mcount.S: Correct comment.
+	* sysdeps/powerpc/powerpc32/elf/start.S (start_addressesp): Don't
+	define when HAVE_ASM_PPC_REL16.
+	(_start): Add HAVE_ASM_PPC_REL16 code.
+	* sysdeps/powerpc/powerpc32/dl-start.S (_dl_start_user): Don't bl
+	into the GOT when HAVE_ASM_PPC_REL16.
+	* sysdeps/powerpc/powerpc32/memset.S (memset): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S (__longjmp): Ditto.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceil.S (__ceil): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceilf.S (__ceilf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floor.S (__floor): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floorf.S (__floorf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S (__lround): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_rint.S (__rint): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_rintf.S (__rintf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_round.S (__round): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_roundf.S (__roundf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_trunc.S (__trunc): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_truncf.S (__truncf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S (__sigsetjmp):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/brk.S (__brk): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S
+	(__getcontext): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext.S
+	(__setcontext): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S
+	(__swapcontext): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/socket.S (stackblock):
+	Comment.
+	(__socket): Bomb if NARGS >= 7.  Invoke CGOTSETUP and CGOTRESTORE.
+
+2005-06-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/sigignore.c: Include <string.h> to tell the compiler
+	to use __GI_memset.
+	* sysdeps/posix/signal.c: Likewise.
+	* sysdeps/posix/sigset.c: Likewise.
+	* sysdeps/posix/sysv_signal.c: Likewise.
+	* sysdeps/unix/sysv/linux/sleep.c: Likewise.
+	* sysdeps/unix/sysv/linux/sysctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/system.c: Likewise.
+
 2005-06-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* hesiod/hesiod.c (hesiod_init): Don't check for ctx->classes[0] == 0

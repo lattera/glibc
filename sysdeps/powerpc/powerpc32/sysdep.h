@@ -29,31 +29,10 @@
 /* The mcount code relies on a the return address being on the stack
    to locate our caller and so it can restore it; so store one just
    for its benefit.  */
-# ifdef PIC
-#  define CALL_MCOUNT							      \
-  .pushsection;								      \
-  .section ".data";    							      \
-  .align ALIGNARG(2);							      \
-0:.long 0;								      \
-  .previous;								      \
+# define CALL_MCOUNT							      \
   mflr  r0;								      \
   stw   r0,4(r1);	       						      \
-  bl    _GLOBAL_OFFSET_TABLE_@local-4;					      \
-  mflr  r11;								      \
-  lwz   r0,0b@got(r11);							      \
   bl    JUMPTARGET(_mcount);
-# else  /* PIC */
-#  define CALL_MCOUNT							      \
-  .section ".data";							      \
-  .align ALIGNARG(2);							      \
-0:.long 0;								      \
-  .previous;								      \
-  mflr  r0;								      \
-  lis   r11,0b@ha;		       					      \
-  stw   r0,4(r1);	       						      \
-  addi  r0,r11,0b@l;							      \
-  bl    JUMPTARGET(_mcount);
-# endif /* PIC */
 #else  /* PROF */
 # define CALL_MCOUNT		/* Do nothing.  */
 #endif /* PROF */

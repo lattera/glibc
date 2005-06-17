@@ -1,5 +1,5 @@
 /* Read or write system information.  Linux version.
-   Copyright (C) 1996-1999, 2000, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2000,2002,2003,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <string.h>	/* For the real memset prototype.  */
 #include <sys/sysctl.h>
 
 #include <sysdep.h>

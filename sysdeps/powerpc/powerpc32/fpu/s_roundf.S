@@ -41,9 +41,16 @@ ENTRY (__roundf )
 	mffs	fp11		/* Save current FPU rounding mode.  */
 #ifdef SHARED
 	mflr	r11
+# ifdef HAVE_ASM_PPC_REL16
+	bcl	20,31,1f
+1:	mflr	r9
+	addis	r9,r9,.LC0-1b@ha
+	addi	r9,r9,.LC0-1b@l
+# else
 	bl	_GLOBAL_OFFSET_TABLE_@local-4
 	mflr	r10
 	lwz	r9,.LC0@got(10)
+# endif
 	mtlr	r11
 	lfs	fp13,0(r9)
 #else
