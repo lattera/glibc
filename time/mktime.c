@@ -38,10 +38,11 @@
 
 #include <limits.h>
 
+#include <string.h>		/* For the real memcpy prototype.  */
+
 #if DEBUG
 # include <stdio.h>
 # include <stdlib.h>
-# include <string.h>
 /* Make it work even if the system's libc has its own mktime routine.  */
 # define mktime my_mktime
 #endif /* DEBUG */

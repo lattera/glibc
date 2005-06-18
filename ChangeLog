@@ -1,5 +1,14 @@
 2005-06-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/mktime.c: Always include <string.h> for prototype of
+	implicitly used memcpy.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/truncate64.c
+	(truncate64): Use __truncate, not truncate.
+	(__have_no_truncate64): Renamed from have_no_truncate64.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ftruncate64.c
+	(__have_no_truncate64): Renamed from have_no_truncate64.
+
 	* sysdeps/powerpc/fpu/libm-test-ulps: Adjust ulps for complex
 	float functions for gcc 4.
 
