@@ -226,9 +226,9 @@ idouble: 2
 ifloat: 3
 Test "Real part of: cpow (2 + 3 i, 4 + 0 i) == -119.0 - 120.0 i":
 double: 1
-float: 4
+float: 5
 idouble: 1
-ifloat: 4
+ifloat: 5
 Test "Imaginary part of: cpow (2 + 3 i, 4 + 0 i) == -119.0 - 120.0 i":
 float: 2
 ifloat: 2
@@ -351,6 +351,9 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "j0 (2.0) == 0.223890779141235668051827454649948626":
+float: 2
+ifloat: 2
 Test "j0 (10.0) == -0.245935764451348335197760862485328754":
 double: 2
 float: 1
@@ -382,6 +385,9 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "jn (0, 2.0) == 0.223890779141235668051827454649948626":
+float: 2
+ifloat: 2
 Test "jn (0, 10.0) == -0.245935764451348335197760862485328754":
 double: 2
 float: 1
@@ -418,8 +424,8 @@ Test "jn (10, 10.0) == 0.207486106633358857697278723518753428":
 float: 1
 ifloat: 1
 Test "jn (10, 2.0) == 0.251538628271673670963516093751820639e-6":
-float: 3
-ifloat: 3
+float: 4
+ifloat: 4
 Test "jn (3, 0.125) == 0.406503832554912875023029337653442868e-4":
 double: 1
 float: 1
@@ -435,9 +441,9 @@ idouble: 3
 ifloat: 1
 Test "jn (3, 2.0) == 0.128943249474402051098793332969239835":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 
 # lgamma
 Test "lgamma (0.7) == 0.260867246531666514385732417016759578":
@@ -730,9 +736,9 @@ ifloat: 1
 
 Function: Real part of "cpow":
 double: 2
-float: 4
+float: 5
 idouble: 2
-ifloat: 4
+ifloat: 5
 
 Function: Imaginary part of "cpow":
 double: 2
@@ -800,9 +806,9 @@ ifloat: 1
 
 Function: "j0":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 
 Function: "j1":
 double: 1
@@ -812,9 +818,9 @@ ifloat: 2
 
 Function: "jn":
 double: 3
-float: 3
+float: 4
 idouble: 3
-ifloat: 3
+ifloat: 4
 
 Function: "lgamma":
 double: 1
