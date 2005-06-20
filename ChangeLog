@@ -1,5 +1,9 @@
 2005-06-20  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sys/quota.h: Add definitions and types for
+	_LINUX_QUOTA_VERSION >= 2.
+	(_LINUX_QUOTA_VERSION): Define if not yet defined.
+
 	* sysdeps/unix/sysv/linux/bits/resource.h (RLIMIT_NICE,
 	RLIMIT_RTPRIO): Add.
 	(RLIMIT_NLIMITS): Adjust.

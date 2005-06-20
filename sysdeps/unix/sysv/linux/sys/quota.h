@@ -41,6 +41,14 @@
 #include <sys/types.h>
 
 /*
+ * Select between different incompatible quota versions.
+ * Default to the version used by Linux kernel version 2.4.22
+ * or later.  */
+#ifndef _LINUX_QUOTA_VERSION
+# define _LINUX_QUOTA_VERSION 2
+#endif
+
+/*
  * Convert diskblocks to blocks and the other way around.
  * currently only to fool the BSD source. :-)
  */
@@ -94,21 +102,33 @@
 #define SUBCMDSHIFT 8
 #define QCMD(cmd, type)  (((cmd) << SUBCMDSHIFT) | ((type) & SUBCMDMASK))
 
-#define Q_QUOTAON  0x0100	/* enable quotas */
-#define Q_QUOTAOFF 0x0200	/* disable quotas */
-#define Q_GETQUOTA 0x0300	/* get limits and usage */
-#define Q_SETQUOTA 0x0400	/* set limits and usage */
-#define Q_SETUSE   0x0500	/* set usage */
-#define Q_SYNC     0x0600	/* sync disk copy of a filesystems quotas */
-#define Q_SETQLIM  0x0700	/* set limits */
-#define Q_GETSTATS 0x0800	/* get collected stats */
-#define Q_RSQUASH  0x1000	/* set root_squash option */
+#if _LINUX_QUOTA_VERSION < 2
+# define Q_QUOTAON  0x0100	/* enable quotas */
+# define Q_QUOTAOFF 0x0200	/* disable quotas */
+# define Q_GETQUOTA 0x0300	/* get limits and usage */
+# define Q_SETQUOTA 0x0400	/* set limits and usage */
+# define Q_SETUSE   0x0500	/* set usage */
+# define Q_SYNC     0x0600	/* sync disk copy of a filesystems quotas */
+# define Q_SETQLIM  0x0700	/* set limits */
+# define Q_GETSTATS 0x0800	/* get collected stats */
+# define Q_RSQUASH  0x1000	/* set root_squash option */
+#else
+# define Q_SYNC     0x800001	/* sync disk copy of a filesystems quotas */
+# define Q_QUOTAON  0x800002	/* turn quotas on */
+# define Q_QUOTAOFF 0x800003	/* turn quotas off */
+# define Q_GETFMT   0x800004	/* get quota format used on given filesystem */
+# define Q_GETINFO  0x800005	/* get information about quota files */
+# define Q_SETINFO  0x800006	/* set information about quota files */
+# define Q_GETQUOTA 0x800007	/* get user quota structure */
+# define Q_SETQUOTA 0x800008	/* set user quota structure */
+#endif
 
 /*
  * The following structure defines the format of the disk quota file
  * (as it appears on disk) - the file is an array of these structures
  * indexed by user or group number.
  */
+#if _LINUX_QUOTA_VERSION < 2
 struct dqblk
   {
     u_int32_t dqb_bhardlimit;	/* absolute limit on disk blks alloc */
@@ -120,13 +140,45 @@ struct dqblk
     time_t dqb_btime;		/* time limit for excessive disk use */
     time_t dqb_itime;		/* time limit for excessive files */
   };
+#else
+
+/* Flags that indicate which fields in dqblk structure are valid.  */
+#define QIF_BLIMITS	1
+#define QIF_SPACE	2
+#define QIF_ILIMITS	4
+#define QIF_INODES	8
+#define QIF_BTIME	16
+#define QIF_ITIME	32
+#define QIF_LIMITS	(QIF_BLIMITS | QIF_ILIMITS)
+#define QIF_USAGE	(QIF_SPACE | QIF_INODES)
+#define QIF_TIMES	(QIF_BTIME | QIF_ITIME)
+#define QIF_ALL		(QIF_LIMITS | QIF_USAGE | QIF_TIMES)
+
+struct dqblk
+  {
+    u_int64_t dqb_bhardlimit;	/* absolute limit on disk quota blocks alloc */
+    u_int64_t dqb_bsoftlimit;	/* preferred limit on disk quota blocks */
+    u_int64_t dqb_curspace;	/* current quota block count */
+    u_int64_t dqb_ihardlimit;	/* maximum # allocated inodes */
+    u_int64_t dqb_isoftlimit;	/* preferred inode limit */
+    u_int64_t dqb_curinodes;	/* current # allocated inodes */
+    u_int64_t dqb_btime;	/* time limit for excessive disk use */
+    u_int64_t dqb_itime;	/* time limit for excessive files */
+    u_int32_t dqb_valid;	/* bitmask of QIF_* constants */
+  };
+#endif
 
 /*
  * Shorthand notation.
  */
 #define	dq_bhardlimit	dq_dqb.dqb_bhardlimit
 #define	dq_bsoftlimit	dq_dqb.dqb_bsoftlimit
-#define	dq_curblocks	dq_dqb.dqb_curblocks
+#if _LINUX_QUOTA_VERSION < 2
+# define dq_curblocks	dq_dqb.dqb_curblocks
+#else
+# define dq_curspace	dq_dqb.dqb_curspace
+# define dq_valid	dq_dqb.dqb_valid
+#endif
 #define	dq_ihardlimit	dq_dqb.dqb_ihardlimit
 #define	dq_isoftlimit	dq_dqb.dqb_isoftlimit
 #define	dq_curinodes	dq_dqb.dqb_curinodes
@@ -135,6 +187,7 @@ struct dqblk
 
 #define dqoff(UID)      ((loff_t)((UID) * sizeof (struct dqblk)))
 
+#if _LINUX_QUOTA_VERSION < 2
 struct dqstats
   {
     u_int32_t lookups;
@@ -147,6 +200,22 @@ struct dqstats
     u_int32_t free_dquots;
     u_int32_t syncs;
   };
+#else
+
+/* Flags that indicate which fields in dqinfo structure are valid.  */
+# define IIF_BGRACE	1
+# define IIF_IGRACE	2
+# define IIF_FLAGS	4
+# define IIF_ALL	(IIF_BGRACE | IIF_IGRACE | IIF_FLAGS)
+
+struct dqinfo
+  {
+    u_int64_t dqi_bgrace;
+    u_int64_t dqi_igrace;
+    u_int32_t dqi_flags;
+    u_int32_t dqi_valid;
+  };
+#endif
 
 __BEGIN_DECLS
 
