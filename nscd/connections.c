@@ -207,7 +207,7 @@ nscd_init (void)
   if (server_user != NULL && secure_in_use)
     {
       dbg_log (_("Cannot run nscd in secure mode as unprivileged user"));
-      exit (1);
+      exit (4);
     }
 
   /* Look up unprivileged uid/gid/groups before we start listening on the
@@ -512,7 +512,7 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
   if (sock < 0)
     {
       dbg_log (_("cannot open socket: %s"), strerror (errno));
-      exit (1);
+      exit (errno == EACCES ? 4 : 1);
     }
   /* Bind a name to the socket.  */
   struct sockaddr_un sock_addr;
@@ -521,7 +521,7 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
   if (bind (sock, (struct sockaddr *) &sock_addr, sizeof (sock_addr)) < 0)
     {
       dbg_log ("%s: %s", _PATH_NSCDSOCKET, strerror (errno));
-      exit (1);
+      exit (errno == EACCES ? 4 : 1);
     }
 
   /* We don't want to get stuck on accept.  */
@@ -1607,13 +1607,13 @@ finish_drop_privileges (void)
     {
       dbg_log (_("Failed to run nscd as user '%s'"), server_user);
       perror ("setgid");
-      exit (1);
+      exit (4);
     }
 
   if (setuid (server_uid) == -1)
     {
       dbg_log (_("Failed to run nscd as user '%s'"), server_user);
       perror ("setuid");
-      exit (1);
+      exit (4);
     }
 }

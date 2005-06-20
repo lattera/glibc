@@ -1,3 +1,9 @@
+2005-06-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd.init: Get more in line with lsb3.
+	* nscd/nscd.c: Adjust some error codes to fit in better with lsb3.
+	* nscd/connections.c: Likewise.
+
 2005-06-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sys/quota.h: Add definitions and types for

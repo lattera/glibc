@@ -10,6 +10,16 @@
 # processname: /usr/sbin/nscd
 # config: /etc/nscd.conf
 #
+### BEGIN INIT INFO
+# Provides: nscd
+# Required-Start: $syslog
+# Default-Stop: 0 1 6
+# Short-Description: Starts the Name Switch Cache Daemon
+# Description:  This is a daemon which handles passwd and group lookups \
+#		for running programs and cache the results for the next \
+#		query.  You should start this daemon if you use \
+#		slow naming services like NIS, NIS+, LDAP, or hesiod.
+### END INIT INFO
 
 # Sanity checks.
 [ -f /etc/nscd.conf ] || exit 0
@@ -29,7 +39,7 @@ case $(uname -r) in
 	;;
     *)
 	#this is not
-	exit 0
+	exit 1
 	;;
 esac
 
@@ -95,11 +105,11 @@ case "$1" in
 	restart
 	RETVAL=$?
 	;;
-    condrestart)
+    try-restart | condrestart)
 	[ -e /var/lock/subsys/nscd ] && restart
 	RETVAL=$?
 	;;
-    reload)
+    force-reload | reload)
     	echo -n $"Reloading $prog: "
 	killproc /usr/sbin/nscd -HUP
 	RETVAL=$?

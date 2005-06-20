@@ -145,7 +145,7 @@ main (int argc, char **argv)
     {
       error (0, 0, gettext ("wrong number of arguments"));
       argp_help (&argp, stdout, ARGP_HELP_SEE, program_invocation_short_name);
-      exit (EXIT_FAILURE);
+      exit (1);
     }
 
   /* Read the configuration file.  */
@@ -301,7 +301,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
     case 'K':
       if (getuid () != 0)
-	error (EXIT_FAILURE, 0, _("Only root is allowed to use this option!"));
+	error (4, 0, _("Only root is allowed to use this option!"));
       {
 	int sock = nscd_open_socket ();
 	request_header req;
@@ -325,7 +325,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
     case 'i':
       if (getuid () != 0)
-	error (EXIT_FAILURE, 0, _("Only root is allowed to use this option!"));
+	error (4, 0, _("Only root is allowed to use this option!"));
       else
 	{
 	  int sock = nscd_open_socket ();

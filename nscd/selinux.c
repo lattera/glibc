@@ -1,5 +1,5 @@
 /* SELinux access controls for nscd.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Matthew Rickard <mjricka@epoch.ncsc.mil>, 2004.
 
@@ -111,7 +111,7 @@ static const struct avc_lock_callback lock_cb =
 static int audit_fd = -1;
 
 /* When an avc denial occurs, log it to audit system */
-static void 
+static void
 log_callback (const char *fmt, ...)
 {
   va_list ap;
@@ -122,7 +122,7 @@ log_callback (const char *fmt, ...)
 }
 
 /* Initialize the connection to the audit system */
-static void 
+static void
 audit_init (void)
 {
   audit_fd = audit_open ();
