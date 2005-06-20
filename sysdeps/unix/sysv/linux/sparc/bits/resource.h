@@ -1,5 +1,5 @@
 /* Bit values & structures for resource limits.  Linux/SPARC version.
-   Copyright (C) 1994, 1996, 1997, 1998, 1999, 2000, 2004
+   Copyright (C) 1994, 1996, 1997, 1998, 1999, 2000, 2004, 2005
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -89,7 +89,18 @@ enum __rlimit_resource
   __RLIMIT_MSGQUEUE = 12,
 #define RLIMIT_MSGQUEUE __RLIMIT_MSGQUEUE
 
-  __RLIMIT_NLIMITS = 13,
+  /* Maximum nice priority allowed to raise to.
+     Nice levels 19 .. -20 correspond to 0 .. 39
+     values of this resource limit.  */
+  __RLIMIT_NICE = 13,
+#define RLIMIT_NICE __RLIMIT_NICE
+
+  /* Maximum realtime priority allowed for non-priviledged
+     processes.  */
+  __RLIMIT_RTPRIO = 14,
+#define RLIMIT_RTPRIO _RLIMIT_RTPRIO
+
+  __RLIMIT_NLIMITS = 15,
   __RLIM_NLIMITS = __RLIMIT_NLIMITS
 #define RLIMIT_NLIMITS __RLIMIT_NLIMITS
 #define RLIM_NLIMITS __RLIM_NLIMITS

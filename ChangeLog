@@ -1,3 +1,18 @@
+2005-06-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/resource.h (RLIMIT_NICE,
+	RLIMIT_RTPRIO): Add.
+	(RLIMIT_NLIMITS): Adjust.
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h (RLIMIT_NICE,
+	RLIMIT_RTPRIO): Add.
+	(RLIMIT_NLIMITS): Adjust.
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h (RLIMIT_NICE,
+	RLIMIT_RTPRIO): Add.
+	(RLIMIT_NLIMITS): Adjust.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h (RLIMIT_NICE,
+	RLIMIT_RTPRIO): Add.
+	(RLIMIT_NLIMITS): Adjust.
+
 2005-06-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/mktime.c: Always include <string.h> for prototype of
