@@ -1,5 +1,8 @@
 2005-06-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* resource/Makefile (tests): Add tst-getrlimit.
+	* resource/tst-getrlimit.c: New file.
+
 	* sysdeps/unix/sysv/linux/bits/resource.h (RLIMIT_RTPRIO): Fix typo.
 	* sysdeps/unix/sysv/linux/alpha/bits/resource.h: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Likewise.
