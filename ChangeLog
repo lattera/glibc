@@ -1,3 +1,9 @@
+2005-06-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/resource.h (RLIMIT_RTPRIO): Fix typo.
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Likewise.
+
 2005-06-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd.init: Get more in line with lsb3.

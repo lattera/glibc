@@ -98,7 +98,7 @@ enum __rlimit_resource
   /* Maximum realtime priority allowed for non-priviledged
      processes.  */
   __RLIMIT_RTPRIO = 14,
-#define RLIMIT_RTPRIO _RLIMIT_RTPRIO
+#define RLIMIT_RTPRIO __RLIMIT_RTPRIO
 
   __RLIMIT_NLIMITS = 15,
   __RLIM_NLIMITS = __RLIMIT_NLIMITS
