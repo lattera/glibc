@@ -399,6 +399,11 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   pd->schedpolicy = self->schedpolicy;
   pd->schedparam = self->schedparam;
 
+  /* Copy the stack guard canary.  */
+#ifdef THREAD_COPY_STACK_GUARD
+  THREAD_COPY_STACK_GUARD (pd);
+#endif
+
   /* Determine scheduling parameters for the thread.  */
   if (attr != NULL
       && __builtin_expect ((iattr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0, 0)

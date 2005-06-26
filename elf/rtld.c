@@ -80,6 +80,12 @@ char **_dl_argv attribute_relro = NULL;
 #endif
 INTDEF(_dl_argv)
 
+#ifndef THREAD_SET_STACK_GUARD
+/* Only exported for architectures that don't store the stack guard canary
+   in thread local area.  */
+uintptr_t __stack_chk_guard attribute_relro;
+#endif
+
 /* Nonzero if we were run directly.  */
 unsigned int _dl_skip_args attribute_relro attribute_hidden;
 
@@ -1398,9 +1404,6 @@ ld.so does not support TLS, but program uses it!\n");
 	     always allocate the static block, we never defer it even if
 	     no DF_STATIC_TLS bit is set.  The reason is that we know
 	     glibc will use the static model.  */
-# ifndef TLS_INIT_TP_EXPENSIVE
-#  define TLS_INIT_TP_EXPENSIVE 0
-# endif
 
 	  /* Since we start using the auditing DSOs right away we need to
 	     initialize the data structures now.  */
@@ -1807,8 +1810,16 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
      used.  Trying to do it lazily is too hairy to try when there could be
      multiple threads (from a non-TLS-using libpthread).  */
   bool was_tls_init_tp_called = tls_init_tp_called;
-  if (tcbp == NULL && (!TLS_INIT_TP_EXPENSIVE || GL(dl_tls_max_dtv_idx) > 0))
+  if (tcbp == NULL)
     tcbp = init_tls ();
+#endif
+
+  /* Set up the stack checker's canary.  */
+  uintptr_t stack_chk_guard = _dl_setup_stack_chk_guard ();
+#ifdef THREAD_SET_STACK_GUARD
+  THREAD_SET_STACK_GUARD (stack_chk_guard);
+#else
+  __stack_chk_guard = stack_chk_guard;
 #endif
 
   if (__builtin_expect (mode, normal) != normal)
@@ -2230,29 +2241,26 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 #endif
 
 #ifdef USE_TLS
-  if (GL(dl_tls_max_dtv_idx) > 0 || USE___THREAD || !TLS_INIT_TP_EXPENSIVE)
+  if (!was_tls_init_tp_called && GL(dl_tls_max_dtv_idx) > 0)
+    ++GL(dl_tls_generation);
+
+  /* Now that we have completed relocation, the initializer data
+     for the TLS blocks has its final values and we can copy them
+     into the main thread's TLS area, which we allocated above.  */
+  _dl_allocate_tls_init (tcbp);
+
+  /* And finally install it for the main thread.  If ld.so itself uses
+     TLS we know the thread pointer was initialized earlier.  */
+  if (! tls_init_tp_called)
     {
-      if (!was_tls_init_tp_called && GL(dl_tls_max_dtv_idx) > 0)
-	++GL(dl_tls_generation);
-
-      /* Now that we have completed relocation, the initializer data
-	 for the TLS blocks has its final values and we can copy them
-	 into the main thread's TLS area, which we allocated above.  */
-      _dl_allocate_tls_init (tcbp);
-
-      /* And finally install it for the main thread.  If ld.so itself uses
-	 TLS we know the thread pointer was initialized earlier.  */
-      if (! tls_init_tp_called)
-	{
-	  const char *lossage = TLS_INIT_TP (tcbp, USE___THREAD);
-	  if (__builtin_expect (lossage != NULL, 0))
-	    _dl_fatal_printf ("cannot set up thread-local storage: %s\n",
-			      lossage);
-	}
+      const char *lossage = TLS_INIT_TP (tcbp, USE___THREAD);
+      if (__builtin_expect (lossage != NULL, 0))
+	_dl_fatal_printf ("cannot set up thread-local storage: %s\n",
+			  lossage);
     }
-  else
+#else
+  NONTLS_INIT_TP;
 #endif
-    NONTLS_INIT_TP;
 
 #ifdef SHARED
   /* Auditing checkpoint: we have added all objects.  */

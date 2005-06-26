@@ -46,6 +46,8 @@ typedef struct
   dtv_t *dtv;
   void *self;
   int multiple_threads;
+  uintptr_t sysinfo;
+  uintptr_t stack_guard;
 } tcbhead_t;
 
 #else /* __ASSEMBLER__ */
@@ -125,6 +127,13 @@ register struct pthread *__thread_self __asm__("%g7");
   descr->member = (value)
 #define THREAD_SETMEM_NC(descr, member, idx, value) \
   descr->member[idx] = (value)
+
+/* Set the stack guard field in TCB head.  */
+#define THREAD_SET_STACK_GUARD(value) \
+  THREAD_SETMEM (THREAD_SELF, header.stack_guard, value)
+# define THREAD_COPY_STACK_GUARD(descr) \
+  ((descr)->header.stack_guard \
+   = THREAD_GETMEM (THREAD_SELF, header.stack_guard))
 
 #endif /* !ASSEMBLER */
 

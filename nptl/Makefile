@@ -269,7 +269,8 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 	 tst-oncex3 tst-oncex4
 endif
 ifeq ($(build-shared),yes)
-tests += tst-atfork2 tst-tls3 tst-tls4 tst-tls5 tst-_res1 tst-fini1
+tests += tst-atfork2 tst-tls3 tst-tls4 tst-tls5 tst-_res1 tst-fini1 \
+	 tst-stackguard1
 tests-nolibpthread += tst-fini1
 ifeq ($(have-z-execstack),yes)
 tests += tst-execstack
@@ -337,7 +338,8 @@ link-libc-static := $(common-objpfx)libc.a $(static-gnulib) \
 		    $(common-objpfx)libc.a
 
 ifeq ($(build-static),yes)
-tests-static += tst-locale1 tst-locale2
+tests-static += tst-locale1 tst-locale2 tst-stackguard1-static
+tests += tst-stackguard1-static
 xtests-static += tst-setuid1-static
 endif
 # These tests are linked with libc before libpthread
@@ -585,6 +587,9 @@ $(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
 LDFLAGS-tst-execstack = -Wl,-z,noexecstack
 
 $(objpfx)tst-fini1mod.so: $(shared-thread-library)
+
+tst-stackguard1-ARGS = --command "$(built-program-cmd) --child"
+tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child"
 
 # The tests here better do not run in parallel
 ifneq ($(filter %tests,$(MAKECMDGOALS)),)

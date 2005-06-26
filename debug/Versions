@@ -23,5 +23,7 @@ libc {
     __read_chk; __pread_chk; __pread64_chk;
     __readlink_chk; __getcwd_chk; __getwd_chk;
     __recv_chk; __recvfrom_chk;
+
+    __stack_chk_fail;
   }
 }

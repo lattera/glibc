@@ -1,3 +1,34 @@
+2005-06-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* Versions.def (ld): Add GLIBC_2.4.
+	* configure.in: Add --enable-stackguard-randomization option.
+	(ENABLE_STACKGUARD_RANDOMIZE): New define.
+	* config.h.in (ENABLE_STACKGUARD_RANDOMIZE): Add.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: Include stdint.h.
+	(_dl_setup_stack_chk_guard): New inline function.
+	* sysdeps/generic/dl-osinfo.h: Include stdint.h.
+	(_dl_setup_stack_chk_guard): New inline function.
+	* elf/rtld.c (__stack_chk_guard): New variable.
+	(dl_main): Remove all traces of TLS_INIT_TP_EXPENSIVE.
+	Set __stack_chk_guard to _dl_setup_stack_chk_guard (),
+	use THREAD_SET_STACK_GUARD if defined.
+	* elf/Versions (ld): Export __stack_chk_guard@@GLIBC_2.4.
+	* sysdeps/generic/libc-start.c (__stack_chk_guard): New variable.
+	(__libc_start_main): Set __stack_chk_guard to
+	_dl_setup_stack_chk_guard (), use THREAD_SET_STACK_GUARD if defined.
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Remove all
+	traces of TLS_INIT_TP_EXPENSIVE.
+	* debug/Versions (libc): Export __stack_chk_fail@@GLIBC_2.4.
+	* debug/Makefile (routines): Add stack_chk_fail.
+	(static-only-routines): Add stack_chk_fail_local.
+	* debug/stack_chk_fail_local.c: New file.
+	* debug/stack_chk_fail.c: New file.
+	* elf/Makefile: Add rules to build and run tst-stackguard1{,-static}
+	tests.
+	* elf/tst-stackguard1.c: New file.
+	* elf/tst-stackguard1-static.c: New file.
+	* elf/stackguard-macros.h: New file.
+
 2005-06-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* resource/Makefile (tests): Add tst-getrlimit.

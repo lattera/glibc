@@ -873,6 +873,9 @@ Optional Features:
                           objects [default=yes if supported]
   --enable-oldest-abi=ABI configure the oldest ABI supported [e.g. 2.2]
                           [default=glibc default]
+  --enable-stackguard-randomization
+                          initialize __stack_chk_guard canary with a random
+                          number at program start
   --enable-add-ons[=DIRS...]
                           configure and build add-ons in DIR1,DIR2,... search
                           for add-ons if no parameter given
@@ -1596,6 +1599,20 @@ _ACEOF
 
 fi
 
+
+# Check whether --enable-stackguard-randomization or --disable-stackguard-randomization was given.
+if test "${enable_stackguard_randomization+set}" = set; then
+  enableval="$enable_stackguard_randomization"
+  enable_stackguard_randomize=$enableval
+else
+  enable_stackguard_randomize=no
+fi;
+if test "$enable_stackguard_randomize" = yes; then
+  cat >>confdefs.h <<\_ACEOF
+#define ENABLE_STACKGUARD_RANDOMIZE 1
+_ACEOF
+
+fi
 
 # Check whether --enable-add-ons or --disable-add-ons was given.
 if test "${enable_add_ons+set}" = set; then

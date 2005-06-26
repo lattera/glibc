@@ -35,6 +35,11 @@ extern void __pthread_initialize_minimal (void)
      __attribute__ ((weak))
 # endif
      ;
+# ifndef THREAD_SET_STACK_GUARD
+/* Only exported for architectures that don't store the stack guard canary
+   in thread local area.  */
+uintptr_t __stack_chk_guard attribute_relro;
+# endif
 #endif
 
 #ifdef HAVE_PTR_NTHREADS
@@ -150,6 +155,16 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   if (__pthread_initialize_minimal)
 # endif
     __pthread_initialize_minimal ();
+#endif
+
+# ifndef SHARED
+  /* Set up the stack checker's canary.  */
+  uintptr_t stack_chk_guard = _dl_setup_stack_chk_guard ();
+#  ifdef THREAD_SET_STACK_GUARD
+  THREAD_SET_STACK_GUARD (stack_chk_guard);
+#  else
+  __stack_chk_guard = stack_chk_guard;
+#  endif
 #endif
 
   /* Register the destructor of the dynamic linker if there is any.  */

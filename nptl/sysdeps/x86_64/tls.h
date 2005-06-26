@@ -47,6 +47,8 @@ typedef struct
   dtv_t *dtv;
   void *self;		/* Pointer to the thread descriptor.  */
   int multiple_threads;
+  uintptr_t sysinfo;
+  uintptr_t stack_guard;
 } tcbhead_t;
 
 #else /* __ASSEMBLER__ */
@@ -319,6 +321,13 @@ typedef struct
 		     "memory", "cc");					      \
      __res; })
 
+
+/* Set the stack guard field in TCB head.  */
+# define THREAD_SET_STACK_GUARD(value) \
+    THREAD_SETMEM (THREAD_SELF, header.stack_guard, value)
+# define THREAD_COPY_STACK_GUARD(descr) \
+    ((descr)->header.stack_guard					      \
+     = THREAD_GETMEM (THREAD_SELF, header.stack_guard))
 
 #endif /* __ASSEMBLER__ */
 

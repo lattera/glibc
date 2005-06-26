@@ -23,6 +23,7 @@
 #include <sys/utsname.h>
 #include "kernel-features.h"
 #include <dl-sysdep.h>
+#include <stdint.h>
 
 #ifndef MIN
 # define MIN(a,b) (((a)<(b))?(a):(b))
@@ -157,3 +158,24 @@ _dl_discover_osversion (void)
     else if (__LINUX_KERNEL_VERSION > 0)				      \
       FATAL ("FATAL: cannot determine kernel version\n");		      \
   } while (0)
+
+static inline uintptr_t __attribute__ ((always_inline))
+_dl_setup_stack_chk_guard (void)
+{
+  uintptr_t ret;
+#ifdef ENABLE_STACKGUARD_RANDOMIZE
+  int fd = __open ("/dev/urandom", O_RDONLY);
+  if (fd >= 0)
+    {
+      ssize_t reslen = __read (fd, &ret, sizeof (ret));
+      __close (fd);
+      if (reslen == (ssize_t) sizeof (ret))
+	return ret;
+    }
+#endif
+  ret = 0;
+  unsigned char *p = (unsigned char *) &ret;
+  p[sizeof (ret) - 1] = 255;
+  p[sizeof (ret) - 2] = '\n';
+  return ret;
+}

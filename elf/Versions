@@ -43,6 +43,10 @@ ld {
     # runtime interface to TLS
     __tls_get_addr;
   }
+  GLIBC_2.4 {
+    # stack canary
+    __stack_chk_guard;
+  }
   GLIBC_PRIVATE {
     # Those are in the dynamic linker, but used by libc.so.
     __libc_enable_secure;

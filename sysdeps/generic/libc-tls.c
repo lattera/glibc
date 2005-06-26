@@ -133,17 +133,6 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 	  break;
 	}
 
-#ifdef TLS_INIT_TP_EXPENSIVE
-  if (memsz == 0 && tcbsize <= TLS_INIT_TCB_SIZE)
-    {
-      /* We do not need a TLS block and no thread descriptor.  */
-# ifdef NONTLS_INIT_TP
-      NONTLS_INIT_TP;
-# endif
-      return;
-    }
-#endif
-
   /* We have to set up the TCB block which also (possibly) contains
      'errno'.  Therefore we avoid 'malloc' which might touch 'errno'.
      Instead we use 'sbrk' which would only uses 'errno' if it fails.

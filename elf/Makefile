@@ -87,7 +87,8 @@ distribute	:= rtld-Rules \
 		   unload3mod1.c unload3mod2.c unload3mod3.c unload3mod4.c \
 		   unload4mod1.c unload4mod2.c unload4mod3.c unload4mod4.c \
 		   unload6mod1.c unload6mod2.c unload6mod3.c tst-auditmod1.c \
-		   order2mod1.c order2mod2.c order2mod3.c order2mod4.c
+		   order2mod1.c order2mod2.c order2mod3.c order2mod4.c \
+		   tst-stackguard1.c tst-stackguard1-static.c
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
@@ -140,7 +141,7 @@ ifeq (yes,$(have-initfini-array))
 tests += tst-array1 tst-array2 tst-array3 tst-array4
 endif
 ifeq (yes,$(build-static))
-tests-static = tst-tls1-static tst-tls2-static
+tests-static = tst-tls1-static tst-tls2-static tst-stackguard1-static
 ifeq (yesyesyes,$(build-static)$(build-shared)$(elf))
 tests-static += tst-tls9-static
 tst-tls9-static-ENV = \
@@ -162,7 +163,8 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-tls15 tst-align \
 	 tst-align2 $(tests-execstack-$(have-z-execstack)) tst-dlmodcount \
 	 tst-dlopenrpath tst-deep1 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
-	 unload3 unload4 unload5 unload6 tst-audit1 tst-global1 order2
+	 unload3 unload4 unload5 unload6 tst-audit1 tst-global1 order2 \
+	 tst-stackguard1
 #	 reldep9
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
@@ -843,3 +845,6 @@ $(objpfx)order2mod1.so: $(objpfx)order2mod4.so
 $(objpfx)order2mod4.so: $(objpfx)order2mod3.so
 $(objpfx)order2mod2.so: $(objpfx)order2mod3.so
 order2mod2.so-no-z-defs = yes
+
+tst-stackguard1-ARGS = --command "$(built-program-cmd) --child"
+tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child"

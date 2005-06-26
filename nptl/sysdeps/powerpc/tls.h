@@ -65,11 +65,11 @@ typedef union dtv
 /* Get the thread descriptor definition.  */
 # include <nptl/descr.h>
 
-/* This layout is actually wholly private and not affected by the ABI.
-   Nor does it overlap the pthread data structure, so we need nothing
-   extra here at all.  */
+/* The stack_guard is accessed directly by GCC -fstack-protector code,
+   so it is a part of public ABI.  The dtv field is private.  */
 typedef struct
 {
+  uintptr_t stack_guard;
   dtv_t *dtv;
 } tcbhead_t;
 
@@ -127,7 +127,7 @@ register void *__thread_register __asm__ ("r13");
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
-     (((tcbhead_t *) (__thread_register - TLS_TCB_OFFSET))[-1].dtv)
+    (((tcbhead_t *) (__thread_register - TLS_TCB_OFFSET))[-1].dtv)
 
 /* Return the thread descriptor for the current thread.  */
 # define THREAD_SELF \
@@ -136,9 +136,9 @@ register void *__thread_register __asm__ ("r13");
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF							      \
-  REGISTER (32, 32, PT_THREAD_POINTER * 4,					      \
+  REGISTER (32, 32, PT_THREAD_POINTER * 4,				      \
 	    - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE)			      \
-  REGISTER (64, 64, PT_THREAD_POINTER * 8,					      \
+  REGISTER (64, 64, PT_THREAD_POINTER * 8,				      \
 	    - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE)
 
 /* Read member of the thread descriptor directly.  */
@@ -155,6 +155,16 @@ register void *__thread_register __asm__ ("r13");
 /* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
 # define THREAD_SETMEM_NC(descr, member, idx, value) \
     ((void)(descr), (THREAD_SELF)->member[idx] = (value))
+
+/* Set the stack guard field in TCB head.  */
+# define THREAD_SET_STACK_GUARD(value) \
+    (((tcbhead_t *) ((char *) __thread_register				      \
+		     - TLS_TCB_OFFSET))[-1].stack_guard = (value))
+# define THREAD_COPY_STACK_GUARD(descr) \
+    (((tcbhead_t *) ((char *) (descr)					      \
+		     + TLS_PRE_TCB_SIZE))[-1].stack_guard		      \
+     = ((tcbhead_t *) ((char *) __thread_register			      \
+		       - TLS_TCB_OFFSET))[-1].stack_guard)
 
 /* l_tls_offset == 0 is perfectly valid on PPC, so we have to use some
    different value to mean unset l_tls_offset.  */

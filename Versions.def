@@ -102,6 +102,7 @@ ld {
   GLIBC_2.0
   GLIBC_2.1
   GLIBC_2.3
+  GLIBC_2.4
   GLIBC_PRIVATE
 }
 libthread_db {
