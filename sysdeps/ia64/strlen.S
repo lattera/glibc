@@ -1,6 +1,6 @@
 /* Optimized version of the standard strlen() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003, 2005 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -73,7 +73,7 @@ ENTRY(strlen)
 	ld8	val1 = [str], 8;;
 	nop.b	0
 	nop.b 	0
-l2:	ld8.s	val2 = [str], 8		// don't bomb out here
+.l2:	ld8.s	val2 = [str], 8		// don't bomb out here
 	czx1.r	pos0 = val1	
 	;;
 	cmp.ne	p6, p0 = 8, pos0
@@ -81,7 +81,7 @@ l2:	ld8.s	val2 = [str], 8		// don't bomb out here
 	chk.s	val2, .recovery
 .back:
 	mov	val1 = val2	
-	br.cond.dptk l2
+	br.cond.dptk	.l2
 .foundit:
 	sub	tmp = str, origadd	// tmp = crt address - orig
 	add	len = len, pos0;;
