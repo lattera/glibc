@@ -239,7 +239,7 @@ xdr_hyper (XDR *xdrs, quad_t *llp)
       if (!XDR_GETLONG(xdrs, &t1) || !XDR_GETLONG(xdrs, &t2))
 	return FALSE;
       *llp = ((quad_t) t1) << 32;
-      *llp |= (unsigned long int) t2;
+      *llp |= (uint32_t) t2;
       return TRUE;
     }
 
@@ -272,7 +272,7 @@ xdr_u_hyper (XDR *xdrs, u_quad_t *ullp)
       if (!XDR_GETLONG(xdrs, &t1) || !XDR_GETLONG(xdrs, &t2))
 	return FALSE;
       *ullp = ((u_quad_t) t1) << 32;
-      *ullp |= (unsigned long int) t2;
+      *ullp |= (uint32_t) t2;
       return TRUE;
     }
 

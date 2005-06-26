@@ -1,4 +1,14 @@
+2005-06-23  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nscd/nscd_stat.c (receive_print_stats): Replace YESSTR/NOSTR
+	with own translation.
+
 2005-06-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/xdr.c (xdr_hyper, xdr_u_hyper): When decoding, cast
+	t2 to uint32_t instead of ulong.
+	* sunrpc/Makefile (tests): Add tst-xdrmem.
+	* sunrpc/tst-xdrmem.c: New test.
 
 	* Versions.def (ld): Add GLIBC_2.4.
 	* configure.in: Add --enable-stackguard-randomization option.

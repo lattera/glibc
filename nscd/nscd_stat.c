@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
 
@@ -143,8 +143,8 @@ receive_print_stats (void)
   int fd;
   int i;
   uid_t uid = getuid ();
-  const char *yesstr = nl_langinfo (YESSTR);
-  const char *nostr = nl_langinfo (NOSTR);
+  const char *yesstr = _("yes");
+  const char *nostr = _("no");
 
   /* Find out whether there is another user but root allowed to
      request statistics.  */

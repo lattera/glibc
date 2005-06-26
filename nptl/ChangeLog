@@ -1,3 +1,25 @@
+2005-06-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/tls.h (tcbhead_t): Add stack_guard field.
+	(THREAD_SET_STACK_GUARD, THREAD_COPY_STACK_GUARD): Define.
+	* sysdeps/x86_64/tls.h (tcbhead_t): Add sysinfo and stack_guard
+	fields.
+	(THREAD_SET_STACK_GUARD, THREAD_COPY_STACK_GUARD): Define.
+	* sysdeps/s390/tls.h (tcbhead_t): Add stack_guard
+	field.  Put in sysinfo field unconditionally.
+	(THREAD_SET_STACK_GUARD, THREAD_COPY_STACK_GUARD): Define.
+	* sysdeps/powerpc/tls.h (tcbhead_t): Add stack_guard field.
+	(THREAD_SET_STACK_GUARD, THREAD_COPY_STACK_GUARD): Define.
+	* sysdeps/sparc/tls.h (tcbhead_t): Add sysinfo and stack_guard
+	fields.
+	(THREAD_SET_STACK_GUARD, THREAD_COPY_STACK_GUARD): Define.
+	* pthread_create.c (__pthread_create_2_1): Use
+	THREAD_COPY_STACK_GUARD macro.
+	* Makefile: Add rules to build and run tst-stackguard1{,-static}
+	tests.
+	* tst-stackguard1.c: New file.
+	* tst-stackguard1-static.c: New file.
+
 2005-06-14  Alan Modra  <amodra@bigpond.net.au>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h (PSEUDO):

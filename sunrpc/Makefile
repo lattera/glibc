@@ -85,6 +85,7 @@ all: # Make this the default target; it will be defined in Rules.
 
 include ../Makeconfig
 
+tests = tst-xdrmem
 xtests := tst-getmyaddr
 
 ifeq ($(have-thread-library),yes)
