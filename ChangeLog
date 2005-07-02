@@ -1,3 +1,9 @@
+2005-06-27  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	[BZ #1037]
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile: -mv8 is deprecated,
+	use -mcpu=v8.
+
 2005-06-16  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #1016]
