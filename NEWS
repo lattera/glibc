@@ -14,6 +14,11 @@ Version 2.4
 
 * It is now possible to install audit libraries for the dynamic linker using
   LD_AUDIT.  Implemented by Ulrich Drepper.
+
+* The LinuxThreads add-on, providing pthreads on Linux 2.4 kernels, is no
+  longer supported.  The new NPTL implementation requires Linux 2.6 kernels.
+  For a libc and libpthread that works well on Linux 2.4 kernels, we
+  recommend using the stable 2.3 branch.
 
 Version 2.3.5
 

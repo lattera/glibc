@@ -1,5 +1,6 @@
 2005-07-02  Roland McGrath  <roland@redhat.com>
 
+	* NEWS: Note LinuxThreads removal.
 	* manual/install.texi (Installation): Don't mention linuxthreads.
 	(Configuring and compiling): Don't use linuxthreads as example.
 
