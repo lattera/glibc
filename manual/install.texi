@@ -14,15 +14,7 @@ installation.  It is updated more frequently than this manual.
 Features can be added to GNU Libc via @dfn{add-on} bundles.  These are
 separate tar files, which you unpack into the top level of the source
 tree.  Then you give @code{configure} the @samp{--enable-add-ons} option
-to activate them, and they will be compiled into the library.  As of the
-2.2 release, one important component of glibc is distributed as
-``official'' add-ons: the linuxthreads add-on.  Unless you are doing an
-unusual installation, you should get this.
-
-Support for POSIX threads is maintained by someone else, so it's in a
-separate package.  It is only available for GNU/Linux systems, but this will
-change in the future.  Get it from the same place you got the main
-bundle; the file is @file{glibc-linuxthreads-@var{VERSION}.tar.gz}.
+to activate them, and they will be compiled into the library.
 
 You will need recent versions of several GNU tools: definitely GCC and
 GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
@@ -107,7 +99,7 @@ Enable add-on packages in your source tree.  If this option is specified
 with no list, it enables all the add-on packages it finds.  If you do
 not wish to use some add-on packages that you have present in your source
 tree, give this option a list of the add-ons that you @emph{do} want
-used, like this: @samp{--enable-add-ons=linuxthreads}
+used, like this: @samp{--enable-add-ons=nptl}
 
 @item --enable-kernel=@var{version}
 This option is currently only useful on GNU/Linux systems.  The
