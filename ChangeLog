@@ -1,5 +1,9 @@
 2005-07-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regex_internal.c (build_wcs_buffer): Use MB_LEN_MAX not
+	MB_CUR_MAX.
+	(build_wcs_upper_buffer): Likewise.
+
 	* csu/elf-init.c (__libc_csu_fini): Pretty printing.
 
 2005-07-02  Roland McGrath  <roland@redhat.com>

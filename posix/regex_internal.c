@@ -214,8 +214,8 @@ build_wcs_buffer (pstr)
      re_string_t *pstr;
 {
 #ifdef _LIBC
-  unsigned char buf[MB_CUR_MAX];
-  assert (MB_CUR_MAX >= pstr->mb_cur_max);
+  unsigned char buf[MB_LEN_MAX];
+  assert (MB_LEN_MAX >= pstr->mb_cur_max);
 #else
   unsigned char buf[64];
 #endif
@@ -285,8 +285,8 @@ build_wcs_upper_buffer (pstr)
   int src_idx, byte_idx, end_idx, remain_len;
   size_t mbclen;
 #ifdef _LIBC
-  char buf[MB_CUR_MAX];
-  assert (MB_CUR_MAX >= pstr->mb_cur_max);
+  char buf[MB_LEN_MAX];
+  assert (MB_LEN_MAX >= pstr->mb_cur_max);
 #else
   char buf[64];
 #endif
