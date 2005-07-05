@@ -1,3 +1,7 @@
+2005-07-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* csu/elf-init.c (__libc_csu_fini): Pretty printing.
+
 2005-07-02  Roland McGrath  <roland@redhat.com>
 
 	* NEWS: Note LinuxThreads removal.
