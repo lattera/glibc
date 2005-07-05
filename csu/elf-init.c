@@ -93,11 +93,11 @@ void
 __libc_csu_fini (void)
 {
 #ifndef LIBC_NONSHARED
-#ifdef HAVE_INITFINI_ARRAY
+# ifdef HAVE_INITFINI_ARRAY
   size_t i = __fini_array_end - __fini_array_start;
   while (i-- > 0)
     (*__fini_array_start [i]) ();
-#endif
+# endif
 
   _fini ();
 #endif
