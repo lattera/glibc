@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999,2001,2002,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001-2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -453,29 +453,27 @@ static enum nss_status
 getpwnam_plususer (const char *name, struct passwd *result, ent_t *ent,
 		   char *buffer, size_t buflen, int *errnop)
 {
-  struct passwd pwd;
-  char *p;
-  size_t plen;
-
   if (!nss_getpwnam_r)
     return NSS_STATUS_UNAVAIL;
 
+  struct passwd pwd;
   memset (&pwd, '\0', sizeof (struct passwd));
 
   copy_pwd_changes (&pwd, result, NULL, 0);
 
-  plen = pwd_need_buflen (&pwd);
+  size_t plen = pwd_need_buflen (&pwd);
   if (plen > buflen)
     {
       *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
-  p = buffer + (buflen - plen);
+  char *p = buffer + (buflen - plen);
   buflen -= plen;
 
-  if (nss_getpwnam_r (name, result, buffer, buflen, errnop) !=
-      NSS_STATUS_SUCCESS)
-    return NSS_STATUS_NOTFOUND;
+  enum nss_status status = nss_getpwnam_r (name, result, buffer, buflen,
+					   errnop);
+  if (status != NSS_STATUS_SUCCESS)
+    return status;
 
   if (in_blacklist (result->pw_name, strlen (result->pw_name), ent))
     return NSS_STATUS_NOTFOUND;

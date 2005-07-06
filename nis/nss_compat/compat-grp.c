@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999,2001,2002,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001-2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -229,9 +229,10 @@ getgrnam_plusgroup (const char *name, struct group *result, ent_t *ent,
   if (!nss_getgrnam_r)
     return NSS_STATUS_UNAVAIL;
 
-  if (nss_getgrnam_r (name, result, buffer, buflen, errnop) !=
-      NSS_STATUS_SUCCESS)
-    return NSS_STATUS_NOTFOUND;
+  enum nss_status status = nss_getgrnam_r (name, result, buffer, buflen,
+					   errnop);
+  if (status != NSS_STATUS_SUCCESS)
+    return status;
 
   if (in_blacklist (result->gr_name, strlen (result->gr_name), ent))
     return NSS_STATUS_NOTFOUND;
@@ -551,7 +552,7 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
 	     !(parse_res = _nss_files_parse_grent (p, result, data, buflen,
 						   errnop)));
 
-      if (parse_res == -1)
+      if (__builtin_expect (parse_res == -1, 0))
 	/* The parser ran out of space.  */
 	goto erange_reset;
 
@@ -589,9 +590,11 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
       /* +:... */
       if (result->gr_name[0] == '+' && result->gr_name[1] == '\0')
 	{
-	  enum nss_status status;
+	  if (!nss_getgrgid_r)
+	    return NSS_STATUS_UNAVAIL;
 
-	  status = nss_getgrgid_r (gid, result, buffer, buflen, errnop);
+	  enum nss_status status = nss_getgrgid_r (gid, result, buffer, buflen,
+						   errnop);
 	  if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
 	    return NSS_STATUS_NOTFOUND;
 	  else
