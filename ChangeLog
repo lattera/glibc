@@ -1,3 +1,9 @@
+2005-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/s_ctanh.c (__ctanh): Handle case of zero den better.
+	* sysdeps/generic/s_ctanhf.c (__ctanhf): Likewise.
+	* sysdeps/generic/s_ctanhl.c (__ctanhl): Likewise.
+
 2005-04-13  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #974]

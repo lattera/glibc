@@ -1,5 +1,5 @@
 /* Complex hyperbole tangent for float.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -61,8 +61,18 @@ __ctanhf (__complex__ float x)
 
       den = (__ieee754_coshf (2.0 * __real__ x) + cos2ix);
 
-      __real__ res = __ieee754_sinhf (2.0 * __real__ x) / den;
-      __imag__ res = sin2ix / den;
+      if (den == 0.0f)
+	{
+	  __complex__ float ez = __cexpf (x);
+	  __complex__ float emz = __cexpf (-x);
+
+	  res = (ez - emz) / (ez + emz);
+	}
+      else
+	{
+	  __real__ res = __ieee754_sinhf (2.0 * __real__ x) / den;
+	  __imag__ res = sin2ix / den;
+	}
     }
 
   return res;
