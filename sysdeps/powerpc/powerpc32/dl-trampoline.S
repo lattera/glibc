@@ -66,6 +66,7 @@ _dl_runtime_resolve:
 	bctr
 	.size	 _dl_runtime_resolve,.-_dl_runtime_resolve
 
+#ifndef PROF
 	.align 2
 	.globl _dl_prof_resolve
 	.type _dl_prof_resolve,@function
@@ -172,3 +173,4 @@ _dl_prof_resolve:
 	addi r1,r1,320
 	bctr
 	.size	 _dl_prof_resolve,.-_dl_prof_resolve
+#endif

@@ -153,6 +153,9 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 #ifdef SHARED
   /* If we are auditing, install the same handlers we need for profiling.  */
   consider_profiling |= GLRO(dl_audit) != NULL;
+#elif defined PROF
+  /* Never use dynamic linker profiling for gprof profiling code.  */
+# define consider_profiling 0
 #endif
 
   if (l->l_relocated)
@@ -264,6 +267,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 
     ELF_DYNAMIC_RELOCATE (l, lazy, consider_profiling);
 
+#ifndef PROF
     if (__builtin_expect (consider_profiling, 0))
       {
 	/* Allocate the array which will contain the already found
@@ -288,6 +292,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	    goto fatal;
 	  }
       }
+#endif
   }
 
   /* Mark the object so we know this work has been done.  */

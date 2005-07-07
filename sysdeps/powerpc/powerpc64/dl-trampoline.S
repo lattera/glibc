@@ -26,7 +26,7 @@
    and r11 contains the link_map (from PLT0+16).  The link_map becomes
    parm1 (r3) and the index (r0) need to be converted to an offset
    (index * 24) in parm2 (r4).  */
-   
+
 EALIGN(_dl_runtime_resolve, 4, 0)
 /* We need to save the registers used to pass parameters, ie. r3 thru
    r10; the registers are saved in a stack frame.  */
@@ -139,8 +139,8 @@ END(_dl_runtime_resolve)
 	 * Parameter save area, Allocated by the call, at least 8 double words
 	  +40    TOC save area
 	  +32    Reserved for linker
-	  +24    Reserved for compiler 
-	  +16    LR save area 
+	  +24    Reserved for compiler
+	  +16    LR save area
 	  +8     CR save area
 	r1+0     stack back chain
 	*/
@@ -169,7 +169,7 @@ END(_dl_runtime_resolve)
    and r11 contains the link_map (from PLT0+16).  The link_map becomes
    parm1 (r3) and the index (r0) needs to be converted to an offset
    (index * 24) in parm2 (r4).  */
-   
+#ifndef PROF
 EALIGN(_dl_profile_resolve, 4, 0)
 /* Spill r30, r31 to preserve the link_map* and reloc_addr, in case we
    need to call _dl_call_pltexit.  */
@@ -215,23 +215,23 @@ EALIGN(_dl_profile_resolve, 4, 0)
 	li	r12,64
 	stvx	v2,0,r10
 	stvx	v3,0,r9
-	
+
 	stvx	v4,r11,r10
 	stvx	v5,r11,r9
 	addi	r11,r11,64
-	
+
 	stvx	v6,r12,r10
 	stvx	v7,r12,r9
 	addi	r12,r12,64
-	
+
 	stvx	v8,r11,r10
 	stvx	v9,r11,r9
 	addi	r11,r11,64
-	
+
 	stvx	v10,r12,r10
 	stvx	v11,r12,r9
 	mfspr	r0,VRSAVE
-	
+
 	stvx	v12,r11,r10
 	stvx	v13,r11,r9
 L(saveFP):
@@ -262,7 +262,7 @@ L(saveFP):
 	nop
 /* Test *framesizep > 0 to see if need to do pltexit processing.  */
 	ld	r0,STACK_FRAME(r1)
-/* Put the registers back.  */	
+/* Put the registers back.  */
 	lwz	r12,VR_VRSAVE(r1)
 	cmpdi	cr1,r0,0
 	cmpdi	cr0,r12,0
@@ -275,22 +275,22 @@ L(saveFP):
 	li	r12,64
 	lvx	v2,0,r10
 	lvx	v3,0,r9
-	
+
 	lvx	v4,r11,r10
 	lvx	v5,r11,r9
 	addi	r11,r11,64
-	
+
 	lvx	v6,r12,r10
 	lvx	v7,r12,r9
 	addi	r12,r12,64
-	
+
 	lvx	v8,r11,r10
 	lvx	v9,r11,r9
 	addi	r11,r11,64
-	
+
 	lvx	v10,r12,r10
 	lvx	v11,r12,r9
-	
+
 	lvx	v12,r11,r10
 	lvx	v13,r11,r9
 L(restoreFXR):
@@ -339,22 +339,22 @@ L(do_pltexit):
 	li	r12,64
 	lvx	v2,0,r10
 	lvx	v3,0,r9
-	
+
 	lvx	v4,r11,r10
 	lvx	v5,r11,r9
 	addi	r11,r11,64
-	
+
 	lvx	v6,r12,r10
 	lvx	v7,r12,r9
 	addi	r12,r12,64
-	
+
 	lvx	v8,r11,r10
 	lvx	v9,r11,r9
 	addi	r11,r11,64
-	
+
 	lvx	v10,r12,r10
 	lvx	v11,r12,r9
-	
+
 	lvx	v12,r11,r10
 	lvx	v13,r11,r9
 L(restoreFXR2):
@@ -393,7 +393,7 @@ L(restoreFXR2):
 	lfd	fp13,FPR_PARMS+96(r1)
 /* Call the target function.  */
 	bctrl
-	ld	r2,40(r1)	
+	ld	r2,40(r1)
 	lwz	r12,VR_VRSAVE(r1)
 /* But return here and store the return values.  */
 	std	r3,INT_RTN(r1)
@@ -413,7 +413,7 @@ L(callpltexit):
 	addi	r6,r1,INT_RTN
 	bl	JUMPTARGET(_dl_call_pltexit)
 	nop
-/* Restore the return values from target function.  */	
+/* Restore the return values from target function.  */
 	lwz	r12,VR_VRSAVE(r1)
 	ld	r3,INT_RTN(r1)
 	ld	r4,INT_RTN+8(r1)
@@ -433,3 +433,4 @@ L(pltexitreturn):
 	ld	r1,0(r1)
 	blr
 END(_dl_profile_resolve)
+#endif

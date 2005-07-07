@@ -64,6 +64,7 @@ _dl_runtime_resolve:
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve
 
 
+#ifndef PROF
 	.globl _dl_runtime_profile
 	.type _dl_runtime_profile, @function
 	cfi_startproc
@@ -124,10 +125,10 @@ _dl_runtime_profile:
 5:	l      %r14,7f-5b(%r1)
 	la     %r4,32(%r12)		# pointer to struct La_s390_32_regs
 	la     %r5,72(%r12)		# pointer to struct La_s390_32_retval
-	basr   %r14,%r1			# call _dl_call_pltexit	
+	basr   %r14,%r1			# call _dl_call_pltexit
 	j      1b
 6:	.long  _dl_profile_fixup - 0b
 7:	.long  _dl_call_pltexit - 5b
 	cfi_endproc
 	.size _dl_runtime_profile, .-_dl_runtime_profile
-
+#endif

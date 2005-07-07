@@ -1,3 +1,24 @@
+2005-07-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-reloc.c [PROF] (_dl_relocate_object): Define
+	consider_profiling always to zero.  Don't count of compiler to
+	remove unreached if block.
+	* sysdeps/x86_64/dl-trampoline.S [PROF] (_dl_runtime_profile):
+	Don't compile.
+	* sysdeps/i386/dl-trampoline.S [PROF] (_dl_runtime_profile): Likewise.
+	* sysdeps/ia64/dl-trampoline.S [PROF] (_dl_runtime_profile): Likewise.
+	* sysdeps/s390/s390-64/dl-trampoline.S [PROF] (_dl_runtime_profile):
+	Likewise.
+	* sysdeps/s390/s390-32/dl-trampoline.S [PROF] (_dl_runtime_profile):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S [PROF]
+	(_dl_profile_resolve): Likewise.
+	* sysdeps/powerpc/powerpc32/dl-trampoline.S [PROF]
+	(_dl_profile_resolve): Likewise.
+	* gmon/Makefile: Add rules to build and run tst-profile-static.
+	* gmon/tst-profile-static.c: New file.
+	* Makeconfig (+link-static): Allow passing program-specific flags.
+
 2005-07-05  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nis/nss_compat/compat-grp.c (internal_getgrgid_r): Check if NSS

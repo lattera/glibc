@@ -175,7 +175,7 @@ END(_dl_runtime_resolve)
    16byte f13
    16byte f14
    16byte f15
-  
+
   Since stack has to be 16 byte aligned, the stack allocation is in
   16byte increment. Before calling _dl_profile_fixup, the stack will
   look like
@@ -189,6 +189,7 @@ END(_dl_runtime_resolve)
 #define PLTENTER_FRAME_SIZE (4*8 + 8*8 + 8*16 + 2*8 + 16)
 #define PLTEXIT_FRAME_SIZE (PLTENTER_FRAME_SIZE + 4*8 + 8*16)
 
+#ifndef PROF
 ENTRY(_dl_runtime_profile)
 	{ .mii
 	  .prologue
@@ -535,3 +536,4 @@ ENTRY(_dl_runtime_profile)
 	  ;;
 	}
 END(_dl_runtime_profile)
+#endif

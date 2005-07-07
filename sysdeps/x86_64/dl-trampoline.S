@@ -56,7 +56,7 @@ _dl_runtime_resolve:
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve
 
 
-
+#ifndef PROF
 	.globl _dl_runtime_profile
 	.type _dl_runtime_profile, @function
 	.align 16
@@ -186,3 +186,4 @@ _dl_runtime_profile:
 	retq
 	cfi_endproc
 	.size _dl_runtime_profile, .-_dl_runtime_profile
+#endif
