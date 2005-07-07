@@ -1,4 +1,4 @@
-# Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -17,7 +17,7 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 # 02111-1307 USA.
 
-# Makeconfig fragment for linuxthreads add-on.
+# Makeconfig fragment for NPTL add-on.
 # This gets included at the end of the main glibc Makeconfig.
 
 have-thread-library = yes
