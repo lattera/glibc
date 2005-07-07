@@ -3,6 +3,9 @@
 	* sysdeps/generic/s_ctanh.c (__ctanh): Handle case of zero den better.
 	* sysdeps/generic/s_ctanhf.c (__ctanhf): Likewise.
 	* sysdeps/generic/s_ctanhl.c (__ctanhl): Likewise.
+	* sysdeps/generic/s_ctan.c (__ctan): Likewise.
+	* sysdeps/generic/s_ctanf.c (__ctanf): Likewise.
+	* sysdeps/generic/s_ctanl.c (__ctanl): Likewise.
 
 2005-04-13  H.J. Lu  <hongjiu.lu@intel.com>
 

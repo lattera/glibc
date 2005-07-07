@@ -1,5 +1,5 @@
 /* Complex tangent function for double.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -61,8 +61,18 @@ __ctan (__complex__ double x)
 
       den = cos2rx + __ieee754_cosh (2.0 * __imag__ x);
 
-      __real__ res = sin2rx / den;
-      __imag__ res = __ieee754_sinh (2.0 * __imag__ x) / den;
+      if (den == 0.0)
+	{
+	  __complex__ double ez = __cexp (1.0i * x);
+	  __complex__ double emz = __cexp (-1.0i * x);
+
+	  res = (ez - emz) / (ez + emz) * -1.0i;
+	}
+      else
+	{
+	  __real__ res = sin2rx / den;
+	  __imag__ res = __ieee754_sinh (2.0 * __imag__ x) / den;
+	}
     }
 
   return res;
