@@ -1,5 +1,8 @@
 2005-07-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-error.c (_dl_signal_error): When testing for executable
+	being relocated, take into account that nothing might even be loaded.
+
 	* elf/dl-reloc.c [PROF] (_dl_relocate_object): Define
 	consider_profiling always to zero.  Don't count of compiler to
 	remove unreached if block.

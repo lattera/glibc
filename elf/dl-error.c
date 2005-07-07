@@ -98,8 +98,9 @@ _dl_signal_error (int errcode, const char *objname, const char *occation,
 	  /* If the main executable is relocated it means the libc's malloc
 	     is used.  */
 #ifdef SHARED
-	  lcatch->malloced = (GL(dl_ns)[LM_ID_BASE]._ns_loaded->l_relocated
-			      != 0);
+	  lcatch->malloced = (GL(dl_ns)[LM_ID_BASE]._ns_loaded != NULL
+			      && (GL(dl_ns)[LM_ID_BASE]._ns_loaded->l_relocated
+				  != 0));
 #else
 	  lcatch->malloced = true;
 #endif
