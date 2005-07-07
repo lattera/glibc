@@ -80,8 +80,15 @@ register struct pthread *__thread_self __asm__("r13");
 /* This is the size of the TCB.  */
 # define TLS_TCB_SIZE sizeof (tcbhead_t)
 
-/* This is the size we need before TCB.  */
-# define TLS_PRE_TCB_SIZE sizeof (struct pthread)
+/* This is the size we need before TCB.
+   If there is not any room for uintptr_t stack_guard in struct pthread's
+   final padding, we need to put struct pthread 16 byte slower.  */
+# define TLS_PRE_TCB_SIZE \
+  (sizeof (struct pthread)					\
+   + (PTHREAD_STRUCT_END_PADDING < sizeof (uintptr_t)		\
+      ? ((sizeof (uintptr_t) + __alignof__ (struct pthread) - 1)\
+	 & ~(__alignof__ (struct pthread) - 1))			\
+      : 0))
 
 /* Alignment requirements for the TCB.  */
 # define TLS_TCB_ALIGN __alignof__ (struct pthread)
@@ -106,7 +113,8 @@ register struct pthread *__thread_self __asm__("r13");
   (((tcbhead_t *) (descr))->dtv)
 
 #define THREAD_SELF_SYSINFO	(((tcbhead_t *) __thread_self)->private)
-#define THREAD_SYSINFO(pd)	(((tcbhead_t *) ((pd) + 1))->private)
+#define THREAD_SYSINFO(pd) \
+  (((tcbhead_t *) ((char *) (pd) + TLS_PRE_TCB_SIZE))->private)
 
 #if defined NEED_DL_SYSINFO
 # define INIT_SYSINFO   THREAD_SELF_SYSINFO = (void *) GLRO(dl_sysinfo)
@@ -125,10 +133,11 @@ register struct pthread *__thread_self __asm__("r13");
   (((tcbhead_t *)__thread_self)->dtv)
 
 /* Return the thread descriptor for the current thread.  */
-# define THREAD_SELF (__thread_self - 1)
+# define THREAD_SELF \
+  ((struct pthread *) ((char *) __thread_self - TLS_PRE_TCB_SIZE))
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
-# define DB_THREAD_SELF REGISTER (64, 64, 13 * 8, -sizeof (struct pthread))
+# define DB_THREAD_SELF REGISTER (64, 64, 13 * 8, -TLS_PRE_TCB_SIZE)
 
 /* Access to data in the thread descriptor is easy.  */
 #define THREAD_GETMEM(descr, member) \
@@ -139,6 +148,13 @@ register struct pthread *__thread_self __asm__("r13");
   descr->member = (value)
 #define THREAD_SETMEM_NC(descr, member, idx, value) \
   descr->member[idx] = (value)
+
+/* Set the stack guard field in TCB head.  */
+#define THREAD_SET_STACK_GUARD(value) \
+  (((uintptr_t *) __thread_self)[-1] = (value))
+#define THREAD_COPY_STACK_GUARD(descr) \
+  (((uintptr_t *) ((char *) (descr) + TLS_PRE_TCB_SIZE))[-1] \
+   = ((uintptr_t *) __thread_self)[-1])
 
 #endif /* __ASSEMBLER__ */
 

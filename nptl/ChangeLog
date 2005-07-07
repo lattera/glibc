@@ -1,3 +1,16 @@
+2005-07-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* descr.h (PTHREAD_STRUCT_END_PADDING): Define.
+	* sysdeps/ia64/tls.h (TLS_PRE_TCB_SIZE): If PTHREAD_STRUCT_END_PADDING
+	is smaller than 8 bytes, increase TLS_PRE_TCB_SIZE by 16 bytes.
+	(THREAD_SYSINFO, THREAD_SELF, DB_THREAD_SELF): Don't assume
+	TLS_PRE_TCB_SIZE is sizeof (struct pthread).
+	(THREAD_SET_STACK_GUARD, THREAD_COPY_STACK_GUARD): Define.
+	* sysdeps/ia64/tcb-offsets.sym (PID, TID, MULTIPLE_THREADS_OFFSET):
+	Use TLS_PRE_TCB_SIZE instead of sizeof (struct pthread).
+	* sysdeps/unix/sysv/linux/ia64/createthread.c (TLS_VALUE): Don't
+	assume TLS_PRE_TCB_SIZE is sizeof (struct pthread).
+
 2005-06-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/tls.h (tcbhead_t): Add stack_guard field.

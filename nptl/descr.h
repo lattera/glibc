@@ -254,6 +254,13 @@ struct pthread
 
   /* Resolver state.  */
   struct __res_state res;
+
+  /* If you add fields after the res field above, please adjust
+     the following macro.  */
+#define PTHREAD_STRUCT_END_PADDING \
+  (sizeof (struct pthread) - offsetof (struct pthread, res) \
+   - sizeof (((struct pthread *) 0)->res))
+
 } __attribute ((aligned (TCB_ALIGNMENT)));
 
 

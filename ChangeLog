@@ -1,3 +1,10 @@
+2005-07-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/stackguard-macros.h (STACK_CHK_GUARD): Fix s390/s390x definition.
+	Reported by Ulrich Weigand <uweigand@de.ibm.com>.
+
+	* elf/stackguard-macros.h (STACK_CHK_GUARD): Add ia64 definition.
+
 2005-07-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-error.c (_dl_signal_error): When testing for executable

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 
@@ -18,7 +18,7 @@
    02111-1307 USA.  */
 
 /* Value passed to 'clone' for initialization of the thread register.  */
-#define TLS_VALUE (pd + 1)
+#define TLS_VALUE ((char *) pd + TLS_PRE_TCB_SIZE)
 
 #define ARCH_CLONE __clone2
 
