@@ -1,3 +1,7 @@
+2005-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/sched.h: Adjust clone prototype.
+
 2005-07-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/stackguard-macros.h (STACK_CHK_GUARD): Fix s390/s390x definition.
