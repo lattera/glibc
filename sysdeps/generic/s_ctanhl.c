@@ -1,5 +1,5 @@
 /* Complex hyperbole tangent for long double.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -61,8 +61,18 @@ __ctanhl (__complex__ long double x)
 
       den = (__ieee754_coshl (2.0 * __real__ x) + cos2ix);
 
-      __real__ res = __ieee754_sinhl (2.0 * __real__ x) / den;
-      __imag__ res = sin2ix / den;
+      if (den == 0.0L)
+	{
+	  __complex__ long double ez = __cexpl (x);
+	  __complex__ long double emz = __cexpl (-x);
+
+	  res = (ez - emz) / (ez + emz);
+	}
+      else
+	{
+	  __real__ res = __ieee754_sinhl (2.0 * __real__ x) / den;
+	  __imag__ res = sin2ix / den;
+	}
     }
 
   return res;
