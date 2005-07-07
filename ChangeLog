@@ -1,3 +1,28 @@
+2005-04-13  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #974]
+	* csu/elf-init.c (__preinit_array_start): Take int, char **, char **.
+	(__preinit_array_end): Likewise.
+	(__init_array_start): Likewise.
+	(__init_array_end): Likewise.
+	(__libc_csu_init): Take int argc, char **argv, char **envp.
+	Call preinit_array and init_array with argc, argv, envp.
+	* sysdeps/generic/libc-start.c (LIBC_START_MAIN): Remove
+	INIT_MAIN_ARGS.
+	* sysdeps/powerpc/elf/libc-start.c (INIT_MAIN_ARGS): Removed.
+	* elf/Makefile (distribute): Add tst-array5.c, tst-array5-static.c,
+	tst-array5dep.c, and tst-array5.exp.
+	(tests): Add tst-array5.
+	(tests-static): Add tst-array5-static.
+	($(objpfx)tst-array5): New target.
+	($(objpfx)tst-array5.out): Likewise.
+	($(objpfx)tst-array5-static.out): Likewise.
+	* elf/tst-array5-static.c: New file.
+	* elf/tst-array5-static.exp: Likewise.
+	* elf/tst-array5.c: Likewise.
+	* elf/tst-array5.exp: Likewise.
+	* elf/tst-array5dep.c: Likewise.
+
 2005-07-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/sched.h: Adjust clone prototype.

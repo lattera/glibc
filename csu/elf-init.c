@@ -38,10 +38,14 @@
 
 #ifdef HAVE_INITFINI_ARRAY
 /* These magic symbols are provided by the linker.  */
-extern void (*__preinit_array_start []) (void) attribute_hidden;
-extern void (*__preinit_array_end []) (void) attribute_hidden;
-extern void (*__init_array_start []) (void) attribute_hidden;
-extern void (*__init_array_end []) (void) attribute_hidden;
+extern void (*__preinit_array_start []) (int, char **, char **)
+  attribute_hidden;
+extern void (*__preinit_array_end []) (int, char **, char **)
+  attribute_hidden;
+extern void (*__init_array_start []) (int, char **, char **)
+  attribute_hidden;
+extern void (*__init_array_end []) (int, char **, char **)
+  attribute_hidden;
 extern void (*__fini_array_start []) (void) attribute_hidden;
 extern void (*__fini_array_end []) (void) attribute_hidden;
 #endif
@@ -57,7 +61,7 @@ extern void _fini (void);
    the libc.a module in that it doesn't call the preinit array.  */
 
 void
-__libc_csu_init (void)
+__libc_csu_init (int argc, char **argv, char **envp)
 {
 #ifdef HAVE_INITFINI_ARRAY
   /* For dynamically linked executables the preinit array is executed by
@@ -69,7 +73,7 @@ __libc_csu_init (void)
     const size_t size = __preinit_array_end - __preinit_array_start;
     size_t i;
     for (i = 0; i < size; i++)
-      (*__preinit_array_start [i]) ();
+      (*__preinit_array_start [i]) (argc, argv, envp);
   }
 # endif
 #endif
@@ -81,7 +85,7 @@ __libc_csu_init (void)
     const size_t size = __init_array_end - __init_array_start;
     size_t i;
     for (i = 0; i < size; i++)
-      (*__init_array_start [i]) ();
+      (*__init_array_start [i]) (argc, argv, envp);
   }
 #endif
 }

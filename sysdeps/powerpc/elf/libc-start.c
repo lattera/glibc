@@ -30,7 +30,6 @@ weak_extern (__cache_line_size)
 #define LIBC_START_DISABLE_INLINE
 #define LIBC_START_MAIN_AUXVEC_ARG
 #define MAIN_AUXVEC_ARG
-#define INIT_MAIN_ARGS
 #include <sysdeps/generic/libc-start.c>
 
 

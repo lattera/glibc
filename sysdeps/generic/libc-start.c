@@ -75,11 +75,7 @@ STATIC int LIBC_START_MAIN (int (*main) (int, char **, char **
 #ifdef LIBC_START_MAIN_AUXVEC_ARG
 			    ElfW(auxv_t) *__unbounded auxvec,
 #endif
-#ifdef INIT_MAIN_ARGS
 			    __typeof (main) init,
-#else
-			    void (*init) (void),
-#endif
 			    void (*fini) (void),
 			    void (*rtld_fini) (void),
 			    void *__unbounded stack_end)
@@ -95,11 +91,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 #ifdef LIBC_START_MAIN_AUXVEC_ARG
 		 ElfW(auxv_t) *__unbounded auxvec,
 #endif
-#ifdef INIT_MAIN_ARGS
 		 __typeof (main) init,
-#else
-		 void (*init) (void),
-#endif
 		 void (*fini) (void),
 		 void (*rtld_fini) (void), void *__unbounded stack_end)
 {
@@ -195,11 +187,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
     GLRO(dl_debug_printf) ("\ninitialize program: %s\n\n", argv[0]);
 #endif
   if (init)
-    (*init) (
-#ifdef INIT_MAIN_ARGS
-	     argc, argv, __environ MAIN_AUXVEC_PARAM
-#endif
-	     );
+    (*init) (argc, argv, __environ MAIN_AUXVEC_PARAM);
 
 #ifdef SHARED
   /* Auditing checkpoint: we have a new object.  */

@@ -88,7 +88,9 @@ distribute	:= rtld-Rules \
 		   unload4mod1.c unload4mod2.c unload4mod3.c unload4mod4.c \
 		   unload6mod1.c unload6mod2.c unload6mod3.c tst-auditmod1.c \
 		   order2mod1.c order2mod2.c order2mod3.c order2mod4.c \
-		   tst-stackguard1.c tst-stackguard1-static.c
+		   tst-stackguard1.c tst-stackguard1-static.c \
+		   tst-array5.c tst-array5-static.c tst-array5dep.c \
+		   tst-array5.exp 
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
@@ -138,7 +140,7 @@ endif
 
 tests = tst-tls1 tst-tls2 tst-tls9
 ifeq (yes,$(have-initfini-array))
-tests += tst-array1 tst-array2 tst-array3 tst-array4
+tests += tst-array1 tst-array2 tst-array3 tst-array4 tst-array5
 endif
 ifeq (yes,$(build-static))
 tests-static = tst-tls1-static tst-tls2-static tst-stackguard1-static
@@ -148,7 +150,7 @@ tst-tls9-static-ENV = \
        LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)dlfcn
 endif
 ifeq (yes,$(have-initfini-array))
-tests-static += tst-array1-static
+tests-static += tst-array1-static tst-array5-static
 endif
 tests += $(tests-static)
 endif
@@ -206,7 +208,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		unload6mod1 unload6mod2 unload6mod3 \
 		order2mod1 order2mod2 order2mod3 order2mod4
 ifeq (yes,$(have-initfini-array))
-modules-names += tst-array2dep
+modules-names += tst-array2dep tst-array5dep
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
@@ -766,6 +768,17 @@ $(objpfx)tst-array4.out: $(objpfx)tst-array4 $(objpfx)tst-array2dep.so
 	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
 	  $< > $@
 	cmp $@ tst-array4.exp > /dev/null
+
+$(objpfx)tst-array5: $(objpfx)tst-array5dep.so
+$(objpfx)tst-array5.out: $(objpfx)tst-array5
+	$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $(objpfx)tst-array5 > $@
+	cmp $@ tst-array5.exp > /dev/null
+
+$(objpfx)tst-array5-static.out: $(objpfx)tst-array5-static
+	$(objpfx)tst-array5-static > $@
+	cmp $@ tst-array5-static.exp > /dev/null
 
 ifeq (yesyes,$(have-fpie)$(build-shared))
 CFLAGS-tst-pie1.c += -fpie
