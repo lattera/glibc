@@ -1,3 +1,12 @@
+2005-07-08  Carlos O'Donell <carlos@systemhalted.org>
+
+	* sysdeps/hppa/add_n.s (__mpn_add_n): Use sr0 or r0, not 0.
+	* sysdeps/hppa/lshift.s (__mpn_lshift): Likewise.
+	* sysdeps/hppa/rshift.s (__mpn_rshift): Likewise.
+	* sysdeps/hppa/sub_n.s (__mpn_sub_n): Likewise.
+	* sysdeps/hppa/udiv_qrnnd.s (__udiv_qrnnd): Likewise.
+	* sysdeps/hppa/hppa1.1/udiv_qrnnd.s (__udiv_qrnnd): Likewise.
+
 2005-07-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/s_ctanh.c (__ctanh): Handle case of zero den better.
