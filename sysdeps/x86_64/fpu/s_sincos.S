@@ -28,16 +28,17 @@
 #define COSP	SINP+PTR_SIZE
 
 	.text
-ENTRY (BP_SYM (__sincosl))
+ENTRY (BP_SYM (__sincos))
 	ENTER
 
-	fldt	8(%rsp)
+	movsd	%xmm0, -8(%rsp)
+	fldl	-8(%rsp)
 	fsincos
 	fnstsw	%ax
 	testl	$0x400,%eax
 	jnz	1f
-	fstpt	(%rsi)
-	fstpt	(%rdi)
+	fstpl	(%rsi)
+	fstpl	(%rdi)
 
 	LEAVE
 	retq
@@ -51,10 +52,10 @@ ENTRY (BP_SYM (__sincosl))
 	jnz	2b
 	fstp	%st(1)
 	fsincos
-	fstpt	(%rsi)
-	fstpt	(%rdi)
+	fstpl	(%rsi)
+	fstpl	(%rdi)
 
 	LEAVE
 	retq
-END (BP_SYM (__sincosl))
-weak_alias (BP_SYM (__sincosl), BP_SYM (sincosl))
+END (BP_SYM (__sincos))
+weak_alias (BP_SYM (__sincos), BP_SYM (sincos))

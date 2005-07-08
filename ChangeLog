@@ -1,5 +1,9 @@
 2005-07-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/fpu/s_sincosl.S: Use retq not ret.  Remove
+	alignment.
+	* sysdeps/x86_64/fpu/s_sincos.S: New file.
+
 	* include/fenv.h: Add libm_hidden_proto for fesetround and
 	feholdexcept.
 	* sysdeps/alpha/fpu/feholdexcpt.c: Add libm_hidden_def.
