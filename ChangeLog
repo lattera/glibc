@@ -1,5 +1,29 @@
 2005-07-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/fenv.h: Add libm_hidden_proto for fesetround and
+	feholdexcept.
+	* sysdeps/alpha/fpu/feholdexcpt.c: Add libm_hidden_def.
+	* sysdeps/alpha/fpu/fesetround.c: Likewise.
+	* sysdeps/generic/feholdexcpt.c: Likewise.
+	* sysdeps/generic/fesetround.c: Likewise.
+	* sysdeps/i386/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/i386/fpu/fesetround.c: Likewise.
+	* sysdeps/ia64/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/ia64/fpu/fesetround.c: Likewise.
+	* sysdeps/powerpc/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/powerpc/fpu/fesetround.c: Likewise.
+	* sysdeps/s390/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/s390/fpu/fesetround.c: Likewise.
+	* sysdeps/sh/sh4/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/sh/sh4/fpu/fesetround.c: Likewise.
+	* sysdeps/sparc/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/sparc/fpu/fesetround.c: Likewise.
+	* sysdeps/x86_64/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/x86_64/fpu/fesetround.c: Likewise.
+	* sysdeps/generic/s_significand.c (__significand): Use __ilogb not
+	ilogb.
+	* sysdeps/generic/s_significandf.c (__significandf): Use __ilogbf
+	not ilogbf.
 	* sysdeps/ieee754/dbl-64/s_sincos.c (__sincos): Use __sin and
 	__cos, not sin and cos.
 

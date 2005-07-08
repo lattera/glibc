@@ -13,5 +13,7 @@ extern int __feupdateenv (__const fenv_t *__envp);
 
 libm_hidden_proto (feraiseexcept)
 libm_hidden_proto (fesetenv)
+libm_hidden_proto (fesetround)
+libm_hidden_proto (feholdexcept)
 
 #endif

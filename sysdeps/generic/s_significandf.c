@@ -8,7 +8,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -27,6 +27,6 @@ static char rcsid[] = "$NetBSD: s_significandf.c,v 1.3 1995/05/10 20:48:13 jtc E
 	float x;
 #endif
 {
-	return __ieee754_scalbf(x,(float) -ilogbf(x));
+	return __ieee754_scalbf(x,(float) -__ilogbf(x));
 }
 weak_alias (__significandf, significandf)
