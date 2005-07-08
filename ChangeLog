@@ -1,4 +1,10 @@
-2005-07-08  Carlos O'Donell <carlos@systemhalted.org>
+2005-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_send.c (send_dg): Recognize referral results and
+	treat them as server errors.
+	Based on a patch by Jason Vas Dias <jvdias@redhat.com>.
+
+2005-07-08  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/hppa/setjmp.S (__sigsetjmp): Use %r1 not %r19.
 
