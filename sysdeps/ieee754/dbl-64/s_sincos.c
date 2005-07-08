@@ -1,5 +1,5 @@
 /* Compute sine and cosine of argument.
-   Copyright (C) 1997, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2001, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -40,8 +40,8 @@ __sincos (double x, double *sinx, double *cosx)
     }
   else
     {
-      *sinx = sin (x);
-      *cosx = cos (x);
+      *sinx = __sin (x);
+      *cosx = __cos (x);
     }
 }
 weak_alias (__sincos, sincos)

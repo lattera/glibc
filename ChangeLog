@@ -1,3 +1,8 @@
+2005-07-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/s_sincos.c (__sincos): Use __sin and
+	__cos, not sin and cos.
+
 2005-07-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_send.c (send_dg): Recognize referral results and
