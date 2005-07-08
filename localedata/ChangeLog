@@ -1,3 +1,8 @@
+2005-07-08  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #408]
+	* locales/vi_VN: Update locale.
+
 2005-07-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/en_US: Remove duplicate am_pn entry.
