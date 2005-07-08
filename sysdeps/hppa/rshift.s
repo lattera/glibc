@@ -33,31 +33,31 @@ __mpn_rshift:
 	.callinfo	frame=64,no_calls
 	.entry
 
-	ldws,ma		4(0,%r25),%r22
+	ldws,ma		4(%r25),%r22
 	mtsar		%r23
 	addib,=		-1,%r24,L$0004
 	vshd		%r22,%r0,%r28		;! compute carry out limb
-	ldws,ma		4(0,%r25),%r29
+	ldws,ma		4(%r25),%r29
 	addib,=		-1,%r24,L$0002
 	vshd		%r29,%r22,%r20
 
-L$loop:	ldws,ma		4(0,%r25),%r22
-	stws,ma		%r20,4(0,%r26)
+L$loop:	ldws,ma		4(%r25),%r22
+	stws,ma		%r20,4(%r26)
 	addib,=		-1,%r24,L$0003
 	vshd		%r22,%r29,%r20
-	ldws,ma		4(0,%r25),%r29
-	stws,ma		%r20,4(0,%r26)
+	ldws,ma		4(%r25),%r29
+	stws,ma		%r20,4(%r26)
 	addib,<>	-1,%r24,L$loop
 	vshd		%r29,%r22,%r20
 
-L$0002:	stws,ma		%r20,4(0,%r26)
+L$0002:	stws,ma		%r20,4(%r26)
 	vshd		%r0,%r29,%r20
 	bv		0(%r2)
-	stw		%r20,0(0,%r26)
-L$0003:	stws,ma		%r20,4(0,%r26)
+	stw		%r20,0(%r26)
+L$0003:	stws,ma		%r20,4(%r26)
 L$0004:	vshd		%r0,%r22,%r20
 	bv		0(%r2)
-	stw		%r20,0(0,%r26)
+	stw		%r20,0(%r26)
 
 	.exit
 	.procend
