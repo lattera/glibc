@@ -53,17 +53,17 @@ __sigsetjmp:
 
 	stw	%rp, 80(%r26)
 
-	ldo	88(%r26),%r19
-	fstds,ma %fr12, 8(%r19) /* 88 */
-	fstds,ma %fr13, 8(%r19) /* 96 */
-	fstds,ma %fr14, 8(%r19) /* 104 */
-	fstds,ma %fr15, 8(%r19) /* 112 */
-	fstds,ma %fr16, 8(%r19) /* 120 */
-	fstds,ma %fr17, 8(%r19) /* 128 */
-	fstds,ma %fr18, 8(%r19) /* 136 */
-	fstds,ma %fr19, 8(%r19) /* 144 */
-	fstds,ma %fr20, 8(%r19) /* 152 */
-	fstds	 %fr21, 0(%r19) /* 160 */
+	ldo	88(%r26),%r1
+	fstds,ma %fr12, 8(%r1) /* 88 */
+	fstds,ma %fr13, 8(%r1) /* 96 */
+	fstds,ma %fr14, 8(%r1) /* 104 */
+	fstds,ma %fr15, 8(%r1) /* 112 */
+	fstds,ma %fr16, 8(%r1) /* 120 */
+	fstds,ma %fr17, 8(%r1) /* 128 */
+	fstds,ma %fr18, 8(%r1) /* 136 */
+	fstds,ma %fr19, 8(%r1) /* 144 */
+	fstds,ma %fr20, 8(%r1) /* 152 */
+	fstds	 %fr21, 0(%r1) /* 160 */
 	b __sigjmp_save
 	nop
 	.procend

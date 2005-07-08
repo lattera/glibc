@@ -1,5 +1,7 @@
 2005-07-08  Carlos O'Donell <carlos@systemhalted.org>
 
+	* sysdeps/hppa/setjmp.S (__sigsetjmp): Use %r1 not %r19.
+
 	* sysdeps/hppa/add_n.s (__mpn_add_n): Use sr0 or r0, not 0.
 	* sysdeps/hppa/lshift.s (__mpn_lshift): Likewise.
 	* sysdeps/hppa/rshift.s (__mpn_rshift): Likewise.
