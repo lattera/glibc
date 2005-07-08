@@ -1008,10 +1008,18 @@ send_dg(res_state statp,
 			DprintQ(statp->options & RES_DEBUG,
 				(stdout, "server rejected query:\n"),
 				ans, (resplen > anssiz) ? anssiz : resplen);
+		next_ns:
 			res_nclose(statp);
 			/* don't retry if called from dig */
 			if (!statp->pfcode)
 				return (0);
+		}
+		if (anhp->rcode == NOERROR && anhp->ancount == 0
+		    && anhp->aa == 0 && anhp->ra == 0 && anhp->arcount == 0) {
+			DprintQ(statp->options & RES_DEBUG,
+				(stdout, "referred query:\n"),
+				ans, (resplen > anssiz) ? anssiz : resplen);
+			goto next_ns;
 		}
 		if (!(statp->options & RES_IGNTC) && anhp->tc) {
 			/*
