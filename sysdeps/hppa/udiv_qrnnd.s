@@ -38,7 +38,7 @@ __udiv_qrnnd:
 	.callinfo	frame=0,no_calls
 	.entry
 
-	comb,<		%r23,0,L$largedivisor
+	comb,<		%r23,%r0,L$largedivisor
 	 sub		%r0,%r23,%r1		;! clear cy as side-effect
 	ds		%r0,%r1,%r0
 	addc		%r24,%r24,%r24
@@ -107,7 +107,7 @@ __udiv_qrnnd:
 	ds		%r25,%r23,%r25
 	comclr,>=	%r25,%r0,%r0
 	addl		%r25,%r23,%r25
-	stws		%r25,0(0,%r26)
+	stws		%r25,0(%r26)
 	bv		0(%r2)
 	 addc		%r28,%r28,%r28
 
@@ -186,7 +186,7 @@ L$largedivisor:
 	comclr,>=	%r25,%r0,%r0
 	addl		%r25,%r22,%r25
 	sh1addl		%r25,%r20,%r25
-	stws		%r25,0(0,%r26)
+	stws		%r25,0(%r26)
 	bv		0(%r2)
 	 addc		%r24,%r24,%r28
 
@@ -269,7 +269,7 @@ L$odd:	addib,sv,n	1,%r22,L$FF..		;! r22 = (d / 2 + 1)
 	addc		%r0,%r28,%r28
 	sub,<<		%r25,%r23,%r0
 	addl		%r25,%r1,%r25
-	stws		%r25,0(0,%r26)
+	stws		%r25,0(%r26)
 	bv		0(%r2)
 	 addc		%r0,%r28,%r28
 
@@ -278,7 +278,7 @@ L$odd:	addib,sv,n	1,%r22,L$FF..		;! r22 = (d / 2 + 1)
 L$FF..:	add,uv		%r25,%r24,%r24
 	sub,<<		%r24,%r23,%r0
 	ldo		1(%r24),%r24
-	stws		%r24,0(0,%r26)
+	stws		%r24,0(%r26)
 	bv		0(%r2)
 	 addc		%r0,%r25,%r28
 
