@@ -774,8 +774,6 @@ re_compile_internal (preg, pattern, length, syntax)
     }
   preg->used = sizeof (re_dfa_t);
 
-  __libc_lock_init (dfa->lock);
-
   err = init_dfa (dfa, length);
   if (BE (err != REG_NOERROR, 0))
     {
@@ -788,6 +786,8 @@ re_compile_internal (preg, pattern, length, syntax)
   dfa->re_str = re_malloc (char, length + 1);
   strncpy (dfa->re_str, pattern, length + 1);
 #endif
+
+  __libc_lock_init (dfa->lock);
 
   err = re_string_construct (&regexp, pattern, length, preg->translate,
 			     syntax & RE_ICASE, dfa);
