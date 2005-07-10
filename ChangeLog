@@ -1,6 +1,6 @@
-2005-06-27  Carlos O'Donell <carlos@systemhalted.org>
+2005-06-27  Carlos O'Donell  <carlos@systemhalted.org>
 
-	* posix/regcomp.c (re_compile_internal): __libc_lock_init
+	* posix/regcomp.c (re_compile_internal): Call __libc_lock_init
 	after init_dfa.
 
 2005-07-08  Ulrich Drepper  <drepper@redhat.com>
