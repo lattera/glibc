@@ -1,3 +1,9 @@
+2005-07-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h (pthread_rwlock_t):
+	Make sure __flags are located at offset 48 from the start of the
+	structure.
+
 2005-07-02  Roland McGrath  <roland@redhat.com>
 
 	* Makeconfig: Comment fix.
