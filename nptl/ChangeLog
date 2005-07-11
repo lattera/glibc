@@ -1,5 +1,18 @@
 2005-07-11  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/pthread/pthread.h (PTHREAD_MUTEX_INITIALIZER,
+	PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP,
+	PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP,
+	PTHREAD_MUTEX_ADAPTIVE_NP, PTHREAD_RWLOCK_INITIALIZER,
+	PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+	PTHREAD_COND_INITIALIZER): Supply zeros for all fields
+	in the structure.
+	* Makefile (tests): Add tst-initializers1.
+	(CFLAGS-tst-initializers1.c): Set.
+	* tst-initializers1.c: New test.
+
+2005-07-11  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h (pthread_rwlock_t):
 	Make sure __flags are located at offset 48 from the start of the
 	structure.

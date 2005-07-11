@@ -62,22 +62,22 @@ enum
 
 /* Mutex initializers.  */
 #define PTHREAD_MUTEX_INITIALIZER \
-  { { 0, } }
+  { { 0, 0, 0, 0, 0, 0 } }
 #ifdef __USE_GNU
 # if __WORDSIZE == 64
 #  define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, 0, PTHREAD_MUTEX_RECURSIVE_NP } }
+  { { 0, 0, 0, 0, PTHREAD_MUTEX_RECURSIVE_NP, 0 } }
 #  define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, 0, PTHREAD_MUTEX_ERRORCHECK_NP } }
+  { { 0, 0, 0, 0, PTHREAD_MUTEX_ERRORCHECK_NP, 0 } }
 #  define PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, 0, PTHREAD_MUTEX_ADAPTIVE_NP } }
+  { { 0, 0, 0, 0, PTHREAD_MUTEX_ADAPTIVE_NP, 0 } }
 # else
 #  define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, PTHREAD_MUTEX_RECURSIVE_NP } }
+  { { 0, 0, 0, PTHREAD_MUTEX_RECURSIVE_NP, 0, 0 } }
 #  define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, PTHREAD_MUTEX_ERRORCHECK_NP } }
+  { { 0, 0, 0, PTHREAD_MUTEX_ERRORCHECK_NP, 0, 0 } }
 #  define PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP \
-  { { 0, 0, 0, PTHREAD_MUTEX_ADAPTIVE_NP } }
+  { { 0, 0, 0, PTHREAD_MUTEX_ADAPTIVE_NP, 0, 0 } }
 # endif
 #endif
 
@@ -93,8 +93,13 @@ enum
 };
 
 /* Read-write lock initializers.  */
-# define PTHREAD_RWLOCK_INITIALIZER \
-  { { 0, } }
+# if __WORDSIZE == 64
+#  define PTHREAD_RWLOCK_INITIALIZER \
+  { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
+# else
+#  define PTHREAD_RWLOCK_INITIALIZER \
+  { { 0, 0, 0, 0, 0, 0, 0, 0 } }
+# endif
 # ifdef __USE_GNU
 #  if __WORDSIZE == 64
 #   define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
@@ -102,7 +107,7 @@ enum
       PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP } }
 #  else
 #   define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
-  { { 0, 0, 0, 0, 0, 0, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP } }
+  { { 0, 0, 0, 0, 0, 0, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP, 0 } }
 #  endif
 # endif
 #endif  /* Unix98 or XOpen2K */
@@ -140,7 +145,7 @@ enum
 
 
 /* Conditional variable handling.  */
-#define PTHREAD_COND_INITIALIZER { { 0, } }
+#define PTHREAD_COND_INITIALIZER { { 0, 0, 0, 0, 0, (void *) 0, 0, 0 } }
 
 
 /* Cleanup buffers */
