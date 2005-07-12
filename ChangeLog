@@ -1,5 +1,9 @@
 2005-07-12  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/has_cpuclock.c: Include not-cancel.h.
+	(has_cpuclock): Use open_not_cancel_2 instead of open, read_not_cancel
+	instead of read and close_not_cancel_no_status instead of close.
+
 	* sysdeps/s390/s390-64/bcopy.S (__bcopy): Use
 	HIDDEN_BUILTIN_JUMPTARGET to jump to memmove.
 
