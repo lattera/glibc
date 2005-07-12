@@ -1,3 +1,8 @@
+2005-07-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/s390/s390-64/bcopy.S (__bcopy): Use
+	HIDDEN_BUILTIN_JUMPTARGET to jump to memmove.
+
 2005-06-27  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* posix/regcomp.c (re_compile_internal): Call __libc_lock_init
