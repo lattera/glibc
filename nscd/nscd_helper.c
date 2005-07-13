@@ -26,6 +26,7 @@
 #include <sys/poll.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <sys/uio.h>
 #include <sys/un.h>
 #include <not-cancel.h>
@@ -135,6 +136,36 @@ __nscd_unmap (struct mapped_database *mapped)
 }
 
 
+static int
+wait_on_socket (int sock)
+{
+  struct pollfd fds[1];
+  fds[0].fd = sock;
+  fds[0].events = POLLIN | POLLERR | POLLHUP;
+  int n = __poll (fds, 1, 5 * 1000);
+  if (n == -1 && __builtin_expect (errno == EINTR, 0))
+    {
+      /* Handle the case where the poll() call is interrupted by a
+	 signal.  We cannot just use TEMP_FAILURE_RETRY since it might
+	 lead to infinite loops.  */
+      struct timeval now;
+      (void) __gettimeofday (&now, NULL);
+      long int end = (now.tv_sec + 5) * 1000 + (now.tv_usec + 500) / 1000;
+      while (1)
+	{
+	  long int timeout = end - (now.tv_sec * 1000
+				    + (now.tv_usec + 500) / 1000);
+	  n = __poll (fds, 1, timeout);
+	  if (n != -1 || errno != EINTR)
+	    break;
+	  (void) __gettimeofday (&now, NULL);
+	}
+    }
+
+  return n;
+}
+
+
 /* Try to get a file descriptor for the shared meory segment
    containing the database.  */
 static struct mapped_database *
@@ -176,24 +207,27 @@ get_mapping (request_type type, const char *key,
   iov[0].iov_base = resdata;
   iov[0].iov_len = keylen;
 
-  char buf[CMSG_SPACE (sizeof (int))];
+  union
+  {
+    struct cmsghdr hdr;
+    char bytes[CMSG_SPACE (sizeof (int))];
+  } buf;
   struct msghdr msg = { .msg_iov = iov, .msg_iovlen = 1,
-			.msg_control = buf, .msg_controllen = sizeof (buf) };
+			.msg_control = buf.bytes,
+			.msg_controllen = sizeof (buf) };
   struct cmsghdr *cmsg = CMSG_FIRSTHDR (&msg);
 
   cmsg->cmsg_level = SOL_SOCKET;
   cmsg->cmsg_type = SCM_RIGHTS;
   cmsg->cmsg_len = CMSG_LEN (sizeof (int));
 
+  /* This access is well-aligned since BUF is correctly aligned for an
+     int and CMSG_DATA preserves this alignment.  */
   *(int *) CMSG_DATA (cmsg) = -1;
 
   msg.msg_controllen = cmsg->cmsg_len;
 
-  struct pollfd fds[1];
-  fds[0].fd = sock;
-  fds[0].events = POLLIN | POLLERR | POLLHUP;
-  if (__poll (fds, 1, 5 * 1000) <= 0)
-    /* Failure or timeout.  */
+  if (wait_on_socket (sock) <= 0)
     goto out_close2;
 
 #ifndef MSG_NOSIGNAL
@@ -236,13 +270,11 @@ get_mapping (request_type type, const char *key,
   if (mapping != MAP_FAILED)
     {
       /* Allocate a record for the mapping.  */
-      struct mapped_database *newp;
-
-      newp = malloc (sizeof (*newp));
+      struct mapped_database *newp = malloc (sizeof (*newp));
       if (newp == NULL)
 	{
 	  /* Ugh, after all we went through the memory allocation failed.  */
-	  __munmap (result, size);
+	  __munmap (mapping, size);
 	  goto out_close;
 	}
 
@@ -372,19 +404,13 @@ __nscd_open_socket (const char *key, size_t keylen, request_type type,
       vec[1].iov_len = keylen;
 
       ssize_t nbytes = TEMP_FAILURE_RETRY (__writev (sock, vec, 2));
-      if (nbytes == (ssize_t) (sizeof (request_header) + keylen))
-	{
+      if (nbytes == (ssize_t) (sizeof (request_header) + keylen)
 	  /* Wait for data.  */
-	  struct pollfd fds[1];
-	  fds[0].fd = sock;
-	  fds[0].events = POLLIN | POLLERR | POLLHUP;
-	  if (__poll (fds, 1, 5 * 1000) > 0)
-	    {
-	      nbytes = TEMP_FAILURE_RETRY (__read (sock, response,
-						   responselen));
-	      if (nbytes == (ssize_t) responselen)
-		return sock;
-	    }
+	  && wait_on_socket (sock) > 0)
+	{
+	  nbytes = TEMP_FAILURE_RETRY (__read (sock, response, responselen));
+	  if (nbytes == (ssize_t) responselen)
+	    return sock;
 	}
 
       close_not_cancel_no_status (sock);
