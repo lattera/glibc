@@ -131,3 +131,4 @@ clock_gettime (clockid_t clock_id, struct timespec *tp)
 
   return retval;
 }
+librt_hidden_def (clock_gettime)

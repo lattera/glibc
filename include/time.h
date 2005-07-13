@@ -17,6 +17,8 @@ libc_hidden_proto (localtime)
 libc_hidden_proto (strftime)
 libc_hidden_proto (strptime)
 
+librt_hidden_proto (clock_gettime)
+
 /* Now define the internal interfaces.  */
 struct tm;
 

@@ -1,5 +1,10 @@
 2005-07-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/libc-symbols.h: Define macros for librt hidden symbols.
+	* include/time.h: Add librt_hidden_proto definition for clock_gettime.
+	* sysdeps/generic/clock_gettime.c: Add librt_hidden_def.
+	* sysdeps/unix/clock_gettime.c: Likewise.
+
 	* stdlib/bits/stdlib.h: New file.
 	* stdlib/stdlib.h: Include <bits/stdlib.h> if fortification is
 	requested.
