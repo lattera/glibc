@@ -31,7 +31,8 @@ routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    printf_chk fprintf_chk vprintf_chk vfprintf_chk \
 	    gets_chk chk_fail readonly-area fgets_chk fgets_u_chk \
 	    read_chk pread_chk pread64_chk recv_chk recvfrom_chk \
-	    readlink_chk getwd_chk getcwd_chk stack_chk_fail \
+	    readlink_chk getwd_chk getcwd_chk realpath_chk ptsname_r_chk \
+	    wctomb_chk stack_chk_fail \
 	    $(static-only-routines)
 static-only-routines := warning-nop stack_chk_fail_local
 

@@ -1,3 +1,21 @@
+2005-07-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/bits/stdlib.h: New file.
+	* stdlib/stdlib.h: Include <bits/stdlib.h> if fortification is
+	requested.
+	* Makefile (headers): Add bits/stdlib.h.
+	* include/bits/stdlib.h: New file.
+	* debug/Depend: New file.
+	* debug/ptsname_r_chk.c: New file.
+	* debug/realpath_chk.c: New file.
+	* debug/wctomb_chk.c: New file.
+	* debug/Makefile (routines): Add ptsname_r_chk, realpath_chk, and
+	wctomb_chk.
+	* debug/Versions: Export __ptsname_r_chk, __realpath_chk, and
+	__wctomb_chk.
+	* debug/tst-chk1.c: Add tests for __ptsname_r_chk, __realpath_chk, and
+	__wctomb_chk.
+
 2005-07-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/has_cpuclock.c: Include not-cancel.h.

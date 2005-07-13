@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <fcntl.h>
+#include <locale.h>
 #include <paths.h>
 #include <setjmp.h>
 #include <signal.h>
@@ -790,6 +791,70 @@ do_test (void)
   *enddir = '\0';
   if (rmdir (fname) != 0)
     FAIL ();
+
+
+#if PATH_MAX > 0
+  char largebuf[PATH_MAX];
+  char *realres = realpath (".", largebuf);
+#endif
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  char realbuf[1];
+  realres = realpath (".", realbuf);
+  CHK_FAIL_END
+#endif
+
+  if (setlocale (LC_ALL, "de_DE.UTF-8") != NULL)
+    {
+      /* First a simple test.  */
+      char enough[MB_CUR_MAX];
+      if (wctomb (enough, L'A') != 1)
+	{
+	  puts ("first wctomb test failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      /* We know the wchar_t encoding is ISO 10646.  So pick a
+	 character which has a multibyte representation which does not
+	 fit.  */
+      CHK_FAIL_START
+      char smallbuf[2];
+      if (wctomb (smallbuf, L'\x100') != 2)
+	{
+	  puts ("second wctomb test failed");
+	  ret = 1;
+	}
+      CHK_FAIL_END
+#endif
+    }
+  else
+    {
+      puts ("cannot set locale");
+      ret = 1;
+    }
+
+  fd = posix_openpt (O_RDWR);
+  if (fd != -1)
+    {
+      char enough[1000];
+      if (ptsname_r (fd, enough, sizeof (enough)) != 0)
+	{
+	  puts ("first ptsname_r failed");
+	  ret = 1;
+	}
+
+#if __USE_FORTIFY_LEVEL >= 1
+      CHK_FAIL_START
+      char smallbuf[2];
+      if (ptsname_r (fd, smallbuf, sizeof (smallbuf) + 1) == 0)
+	{
+	  puts ("second ptsname_r somehow suceeded");
+	  ret = 1;
+	}
+      CHK_FAIL_END
+#endif
+    }
 
   return ret;
 }

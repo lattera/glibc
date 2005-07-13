@@ -961,6 +961,12 @@ extern int getloadavg (double __loadavg[], int __nelem)
      __THROW __nonnull ((1));
 #endif
 
+
+/* Define some macros helping to catch buffer overflows.  */
+#if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
+# include <bits/stdlib.h>
+#endif
+
 #endif /* don't just need malloc and calloc */
 #undef __need_malloc_and_calloc
 
