@@ -604,9 +604,14 @@ send_ro_fd (struct database_dyn *db, char *key, int fd)
   iov[0].iov_len = strlen (key) + 1;
 
   /* Prepare the control message to transfer the descriptor.  */
-  char buf[CMSG_SPACE (sizeof (int))];
+  union
+  {
+    struct cmsghdr hdr;
+    char bytes[CMSG_SPACE (sizeof (int))];
+  } buf;
   struct msghdr msg = { .msg_iov = iov, .msg_iovlen = 1,
-			.msg_control = buf, .msg_controllen = sizeof (buf) };
+			.msg_control = buf.bytes,
+			.msg_controllen = sizeof (buf) };
   struct cmsghdr *cmsg = CMSG_FIRSTHDR (&msg);
 
   cmsg->cmsg_level = SOL_SOCKET;
