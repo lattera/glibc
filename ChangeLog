@@ -1,5 +1,7 @@
 2005-07-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd_helper.c: Add a few __builtin_expect.
+
 	* nscd/connections.c (send_ro_fd): Make sure BUF is aligned correctly.
 	* nscd/nscd_helper.c (wait_on_socket): New function.
 	(get_mapping): Use wait_on_socket instead of poll.  The former handles

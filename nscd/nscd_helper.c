@@ -197,8 +197,8 @@ get_mapping (request_type type, const char *key,
   iov[1].iov_base = (void *) key;
   iov[1].iov_len = keylen;
 
-  if (TEMP_FAILURE_RETRY (__writev (sock, iov, 2))
-      != iov[0].iov_len + iov[1].iov_len)
+  if (__builtin_expect (TEMP_FAILURE_RETRY (__writev (sock, iov, 2))
+			!= iov[0].iov_len + iov[1].iov_len, 0))
     /* We cannot even write the request.  */
     goto out_close2;
 
@@ -233,41 +233,47 @@ get_mapping (request_type type, const char *key,
 #ifndef MSG_NOSIGNAL
 # define MSG_NOSIGNAL 0
 #endif
-  if (TEMP_FAILURE_RETRY (__recvmsg (sock, &msg, MSG_NOSIGNAL)) != keylen)
+  if (__builtin_expect (TEMP_FAILURE_RETRY (__recvmsg (sock, &msg,
+						       MSG_NOSIGNAL))
+			!= keylen, 0))
     goto out_close2;
 
   mapfd = *(int *) CMSG_DATA (cmsg);
 
-  if (CMSG_FIRSTHDR (&msg)->cmsg_len != CMSG_LEN (sizeof (int)))
+  if (__builtin_expect (CMSG_FIRSTHDR (&msg)->cmsg_len
+			!= CMSG_LEN (sizeof (int)), 0))
     goto out_close;
 
   struct stat64 st;
-  if (strcmp (resdata, key) != 0
-      || fstat64 (mapfd, &st) != 0
-      || st.st_size < sizeof (struct database_pers_head))
+  if (__builtin_expect (strcmp (resdata, key) != 0, 0)
+      || __builtin_expect (fstat64 (mapfd, &st) != 0, 0)
+      || __builtin_expect (st.st_size < sizeof (struct database_pers_head), 0))
     goto out_close;
 
   struct database_pers_head head;
-  if (TEMP_FAILURE_RETRY (__pread (mapfd, &head, sizeof (head), 0))
-      != sizeof (head))
+  if (__builtin_expect (TEMP_FAILURE_RETRY (__pread (mapfd, &head,
+						     sizeof (head), 0))
+			!= sizeof (head), 0))
     goto out_close;
 
-  if (head.version != DB_VERSION || head.header_size != sizeof (head)
+  if (__builtin_expect (head.version != DB_VERSION, 0)
+      || __builtin_expect (head.header_size != sizeof (head), 0)
       /* This really should not happen but who knows, maybe the update
 	 thread got stuck.  */
-      || (! head.nscd_certainly_running
-	  && head.timestamp + MAPPING_TIMEOUT < time (NULL)))
+      || __builtin_expect (! head.nscd_certainly_running
+			   && head.timestamp + MAPPING_TIMEOUT < time (NULL),
+			   0))
     goto out_close;
 
   size_t size = (sizeof (head) + roundup (head.module * sizeof (ref_t), ALIGN)
 		 + head.data_size);
 
-  if (st.st_size < size)
+  if (__builtin_expect (st.st_size < size, 0))
     goto out_close;
 
   /* The file is large enough, map it now.  */
   void *mapping = __mmap (NULL, size, PROT_READ, MAP_SHARED, mapfd, 0);
-  if (mapping != MAP_FAILED)
+  if (__builtin_expect (mapping != MAP_FAILED, 1))
     {
       /* Allocate a record for the mapping.  */
       struct mapped_database *newp = malloc (sizeof (*newp));
