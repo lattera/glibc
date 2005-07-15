@@ -25,9 +25,10 @@
 extern wchar_t *__wmemcpy_chk (wchar_t *__restrict __s1,
 			       __const wchar_t *__restrict __s2, size_t __n,
 			       size_t __ns1) __THROW;
-extern wchar_t *__REDIRECT (__wmemcpy_alias, (wchar_t *__restrict __s1,
-					      __const wchar_t *__restrict __s2,
-					      size_t __n), wmemcpy) __THROW;
+extern wchar_t *__REDIRECT_NTH (__wmemcpy_alias,
+				(wchar_t *__restrict __s1,
+				 __const wchar_t *__restrict __s2, size_t __n),
+				wmemcpy);
 
 extern __always_inline wchar_t *
 wmemcpy (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
@@ -41,9 +42,9 @@ wmemcpy (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
 
 extern wchar_t *__wmemmove_chk (wchar_t *__s1, __const wchar_t *__s2,
 				size_t __n, size_t __ns1) __THROW;
-extern wchar_t *__REDIRECT (__wmemmove_alias, (wchar_t *__s1,
-					       __const wchar_t *__s2,
-					       size_t __n), wmemmove) __THROW;
+extern wchar_t *__REDIRECT_NTH (__wmemmove_alias, (wchar_t *__s1,
+						   __const wchar_t *__s2,
+						   size_t __n), wmemmove);
 
 extern __always_inline wchar_t *
 wmemmove (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
@@ -59,10 +60,10 @@ wmemmove (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
 extern wchar_t *__wmempcpy_chk (wchar_t *__restrict __s1,
 				__const wchar_t *__restrict __s2, size_t __n,
 				size_t __ns1) __THROW;
-extern wchar_t *__REDIRECT (__wmempcpy_alias,
-			    (wchar_t *__restrict __s1,
-			     __const wchar_t *__restrict __s2,
-			     size_t __n), wmempcpy) __THROW;
+extern wchar_t *__REDIRECT_NTH (__wmempcpy_alias,
+				(wchar_t *__restrict __s1,
+				 __const wchar_t *__restrict __s2,
+				 size_t __n), wmempcpy);
 
 extern __always_inline wchar_t *
 wmempcpy (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
@@ -77,8 +78,8 @@ wmempcpy (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
 
 extern wchar_t *__wmemset_chk (wchar_t *__s, wchar_t __c, size_t __n,
 			       size_t __ns) __THROW;
-extern wchar_t *__REDIRECT (__wmemset_alias, (wchar_t *__s, wchar_t __c,
-					      size_t __n), wmemset) __THROW;
+extern wchar_t *__REDIRECT_NTH (__wmemset_alias, (wchar_t *__s, wchar_t __c,
+						  size_t __n), wmemset);
 
 extern __always_inline wchar_t *
 wmemset (wchar_t *__restrict __s, wchar_t __c, size_t __n)
@@ -92,10 +93,9 @@ wmemset (wchar_t *__restrict __s, wchar_t __c, size_t __n)
 extern wchar_t *__wcscpy_chk (wchar_t *__restrict __dest,
 			      __const wchar_t *__restrict __src,
 			      size_t __n) __THROW;
-extern wchar_t *__REDIRECT (__wcscpy_alias,
-			    (wchar_t *__restrict __dest,
-			     __const wchar_t *__restrict __src), wcscpy)
-  __THROW;
+extern wchar_t *__REDIRECT_NTH (__wcscpy_alias,
+				(wchar_t *__restrict __dest,
+				 __const wchar_t *__restrict __src), wcscpy);
 
 extern __always_inline wchar_t *
 wcscpy (wchar_t *__dest, __const wchar_t *__src)
@@ -108,9 +108,9 @@ wcscpy (wchar_t *__dest, __const wchar_t *__src)
 
 extern wchar_t *__wcpcpy_chk (wchar_t *__dest, __const wchar_t *__src,
 			      size_t __destlen) __THROW;
-extern wchar_t *__REDIRECT (__wcpcpy_alias, (wchar_t *__dest,
-					     __const wchar_t *__src), wcpcpy)
-  __THROW;
+extern wchar_t *__REDIRECT_NTH (__wcpcpy_alias, (wchar_t *__dest,
+						 __const wchar_t *__src),
+				wcpcpy);
 
 extern __always_inline wchar_t *
 wcpcpy (wchar_t *__dest, __const wchar_t *__src)
@@ -124,10 +124,10 @@ wcpcpy (wchar_t *__dest, __const wchar_t *__src)
 extern wchar_t *__wcsncpy_chk (wchar_t *__restrict __dest,
 			       __const wchar_t *__restrict __src, size_t __n,
 			       size_t __destlen) __THROW;
-extern wchar_t *__REDIRECT (__wcsncpy_alias,
-			    (wchar_t *__restrict __dest,
-			     __const wchar_t *__restrict __src, size_t __n),
-			    wcsncpy) __THROW;
+extern wchar_t *__REDIRECT_NTH (__wcsncpy_alias,
+				(wchar_t *__restrict __dest,
+				 __const wchar_t *__restrict __src,
+				 size_t __n), wcsncpy);
 
 extern __always_inline wchar_t *
 wcsncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n)
@@ -143,10 +143,10 @@ wcsncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n)
 extern wchar_t *__wcpncpy_chk (wchar_t *__restrict __dest,
 			       __const wchar_t *__restrict __src, size_t __n,
 			       size_t __destlen) __THROW;
-extern wchar_t *__REDIRECT (__wcpncpy_alias,
-			    (wchar_t *__restrict __dest,
-			     __const wchar_t *__restrict __src, size_t __n),
-			    wcpncpy) __THROW;
+extern wchar_t *__REDIRECT_NTH (__wcpncpy_alias,
+				(wchar_t *__restrict __dest,
+				 __const wchar_t *__restrict __src,
+				 size_t __n), wcpncpy);
 
 extern __always_inline wchar_t *
 wcpncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n)
@@ -162,10 +162,9 @@ wcpncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n)
 extern wchar_t *__wcscat_chk (wchar_t *__restrict __dest,
 			      __const wchar_t *__restrict __src,
 			      size_t __destlen) __THROW;
-extern wchar_t *__REDIRECT (__wcscat_alias,
-			    (wchar_t *__restrict __dest,
-			     __const wchar_t *__restrict __src), wcscat)
-  __THROW;
+extern wchar_t *__REDIRECT_NTH (__wcscat_alias,
+				(wchar_t *__restrict __dest,
+				 __const wchar_t *__restrict __src), wcscat);
 
 extern __always_inline wchar_t *
 wcscat (wchar_t *__dest, __const wchar_t *__src)
@@ -179,10 +178,10 @@ wcscat (wchar_t *__dest, __const wchar_t *__src)
 extern wchar_t *__wcsncat_chk (wchar_t *__restrict __dest,
 			       __const wchar_t *__restrict __src,
 			       size_t __n, size_t __destlen) __THROW;
-extern wchar_t *__REDIRECT (__wcsncat_alias,
-			    (wchar_t *__restrict __dest,
-			     __const wchar_t *__restrict __src, size_t __n),
-			    wcsncat) __THROW;
+extern wchar_t *__REDIRECT_NTH (__wcsncat_alias,
+				(wchar_t *__restrict __dest,
+				 __const wchar_t *__restrict __src,
+				 size_t __n), wcsncat);
 
 extern __always_inline wchar_t *
 wcsncat (wchar_t *__dest, __const wchar_t *__src, size_t __n)
@@ -212,11 +211,11 @@ extern int __vswprintf_chk (wchar_t *__restrict __s, size_t __n,
 			    __const wchar_t *__restrict __format,
 			    __gnuc_va_list __arg)
      __THROW /* __attribute__ ((__format__ (__wprintf__, 5, 0))) */;
-extern int __REDIRECT (__vswprintf_alias,
-		       (wchar_t *__restrict __s, size_t __n,
-			__const wchar_t *__restrict __format,
-			__gnuc_va_list __arg), vswprintf)
-     __THROW /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
+extern int __REDIRECT_NTH (__vswprintf_alias,
+			   (wchar_t *__restrict __s, size_t __n,
+			    __const wchar_t *__restrict __format,
+			    __gnuc_va_list __arg), vswprintf)
+     /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
 
 
 extern __always_inline int
