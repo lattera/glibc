@@ -148,7 +148,7 @@ __strncpy_ichk (char *__restrict __dest, const char *__restrict __src,
 extern char *__stpncpy_chk (char *__dest, const char *__src, size_t __n,
 			    size_t __destlen) __THROW;
 extern char *__REDIRECT (__stpncpy_alias, (char *__dest, const char *__src,
-					   size_t __n), stpncpy)__THROW;
+					   size_t __n), stpncpy) __THROW;
 
 extern __always_inline char *
 stpncpy (char *__dest, const char *__src, size_t __n)
