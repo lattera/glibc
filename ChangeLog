@@ -1,3 +1,15 @@
+2005-07-15  Andreas Jaeger  <aj@suse.de>
+
+	* debug/Makefile (tst-lfschk3-ENV): New, set locale.
+	(tst-lfschk2-ENV): New.
+	(tst-lfschk1-ENV): New.
+	(tst-chk3-ENV): New.
+	(tst-chk2-ENV): New.
+	(tst-chk1-ENV): New.
+
+	* include/stdlib.h: Remove malloc attribute from __posix_memalign.
+	* stdlib/stdlib.h: Likewise.
+
 2005-07-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* wcsmbs/bits/wchar2.h: New file.

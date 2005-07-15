@@ -67,6 +67,13 @@ CFLAGS-pread64_chk.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recv_chk.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvfrom_chk.c = -fexceptions -fasynchronous-unwind-tables
 
+tst-chk1-ENV = LOCPATH=$(common-objpfx)localedata
+tst-chk2-ENV = LOCPATH=$(common-objpfx)localedata
+tst-chk3-ENV = LOCPATH=$(common-objpfx)localedata
+tst-lfschk1-ENV = LOCPATH=$(common-objpfx)localedata
+tst-lfschk2-ENV = LOCPATH=$(common-objpfx)localedata
+tst-lfschk3-ENV = LOCPATH=$(common-objpfx)localedata
+
 tests = backtrace-tst tst-chk1 tst-chk2 tst-chk3 \
 	tst-lfschk1 tst-lfschk2 tst-lfschk3 test-strcpy_chk test-stpcpy_chk
 
