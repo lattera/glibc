@@ -95,8 +95,8 @@ extern int __cxa_atexit_internal (void (*func) (void *), void *arg, void *d)
 
 extern void __cxa_finalize (void *d);
 
-extern int __posix_memalign (void **memptr, size_t alignment, size_t size)
-     __attribute_malloc__;
+extern int __posix_memalign (void **memptr, size_t alignment, size_t size);
+
 extern void *__libc_memalign (size_t alignment, size_t size)
      __attribute_malloc__;
 
